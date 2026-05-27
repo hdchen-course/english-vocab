@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+<title>大九九乘法訓練 - Multiplication Master</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+  background: linear-gradient(135deg, #0a0a2e 0%, #1a1a4e 30%, #2d1b69 60%, #1a0a3e 100%);
+  color: #fff;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+.container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 8px 12px;
+  height: 100vh;
+  height: 100dvh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== Screens ===== */
+.screen { display: none; flex-direction: column; height: 100%; overflow: hidden; }
+.screen.active { display: flex; }
+
+/* ===== Common Header ===== */
+.header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 0; flex-shrink: 0;
+}
+.header h1 { font-size: 1.2rem; text-shadow: 0 0 10px #7c4dff; }
+.back-btn {
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
+  color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; cursor: pointer;
+  transition: transform 0.1s;
+}
+.back-btn:active { transform: scale(0.92); }
+
+/* ===== Home Screen ===== */
+#homeScreen { overflow-y: auto; padding-bottom: 20px; }
+.home-title { text-align: center; padding: 16px 0 8px; }
+.home-title h1 { font-size: 1.7rem; text-shadow: 0 0 20px #7c4dff, 0 0 40px rgba(124,77,255,0.4); margin-bottom: 2px; }
+.home-title p { font-size: 0.8rem; color: #aaa; }
+
+.sound-toggle {
+  position: fixed; top: 10px; right: 10px; background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 5px 10px;
+  border-radius: 14px; font-size: 0.75rem; cursor: pointer; z-index: 50;
+}
+
+.home-stats {
+  background: linear-gradient(135deg, rgba(124,77,255,0.1), rgba(77,171,255,0.05));
+  border-radius: 16px; padding: 14px; margin: 8px 0 12px;
+  border: 1px solid rgba(124,77,255,0.3); backdrop-filter: blur(4px);
+}
+.rank-display { text-align: center; font-size: 1.4rem; margin-bottom: 6px; font-weight: bold; }
+.exp-bar-container { margin: 8px 20px; }
+.exp-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
+.exp-bar .fill { height: 100%; background: linear-gradient(90deg, #7c4dff, #448aff, #4dd0e1); border-radius: 3px; transition: width 0.5s ease; }
+.exp-label { text-align: center; font-size: 0.7rem; color: #888; margin-top: 3px; }
+.stats-row { display: flex; justify-content: space-around; font-size: 0.8rem; color: #aaa; margin-top: 8px; }
+.stats-row span { text-align: center; }
+.stats-row .val { display: block; font-size: 1.1rem; color: #fff; font-weight: bold; }
+
+.save-note { text-align: center; font-size: 0.7rem; color: #666; margin: 8px 0; }
+
+.mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 4px 0 16px; }
+.mode-btn {
+  background: linear-gradient(145deg, rgba(124,77,255,0.2), rgba(77,171,255,0.1));
+  border: 1px solid rgba(124,77,255,0.4); border-radius: 14px; padding: 20px 12px;
+  text-align: center; cursor: pointer; transition: all 0.15s;
+  position: relative; overflow: hidden;
+}
+.mode-btn::before {
+  content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+  opacity: 0; transition: opacity 0.3s;
+}
+.mode-btn:active { transform: scale(0.95); }
+.mode-btn:active::before { opacity: 1; }
+.mode-btn .icon { font-size: 1.8rem; margin-bottom: 6px; }
+.mode-btn .label { font-size: 0.95rem; font-weight: bold; }
+.mode-btn .desc { font-size: 0.7rem; color: #999; margin-top: 3px; }
+
+/* ===== Stage Select ===== */
+.stage-list {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  overflow-y: auto; flex: 1; padding: 4px 0 16px;
+  -webkit-overflow-scrolling: touch;
+}
+.stage-card {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(124,77,255,0.25);
+  border-radius: 12px; padding: 12px; text-align: center; cursor: pointer;
+  transition: all 0.15s; position: relative;
+}
+.stage-card.locked { opacity: 0.35; cursor: not-allowed; }
+.stage-card.locked::after { content: '🔒'; position: absolute; top: 6px; right: 6px; font-size: 0.9rem; }
+.stage-card.cleared { border-color: rgba(76,175,80,0.4); background: rgba(76,175,80,0.05); }
+.stage-card:not(.locked):active { transform: scale(0.95); background: rgba(124,77,255,0.15); }
+.stage-card .stage-num { font-size: 0.75rem; color: #7c4dff; font-weight: bold; }
+.stage-card .stage-name { font-size: 0.85rem; margin: 3px 0; }
+.stage-card .stage-stars { font-size: 1rem; margin-top: 2px; }
+
+/* ===== Game Screen ===== */
+#gameScreen { padding-bottom: 0; }
+.game-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px 0; flex-shrink: 0;
+}
+.game-progress { font-size: 0.8rem; color: #aaa; }
+.game-top {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 4px 0; flex-shrink: 0;
+}
+.game-score {
+  font-size: 1rem; font-weight: bold;
+  background: linear-gradient(90deg, #7c4dff, #448aff);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.game-combo { font-size: 1rem; min-width: 60px; text-align: right; }
+
+.timer-bar { height: 5px; background: rgba(255,255,255,0.08); border-radius: 3px; margin: 4px 0; overflow: hidden; flex-shrink: 0; }
+.timer-bar .fill { height: 100%; background: linear-gradient(90deg, #f44336, #ff9800, #4caf50); transition: width 0.1s linear; border-radius: 3px; }
+
+.question-area {
+  flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
+  position: relative; min-height: 0;
+}
+.question-text {
+  font-size: 3.2rem; font-weight: 800; letter-spacing: 2px;
+  text-shadow: 0 0 20px rgba(124,77,255,0.6), 0 2px 4px rgba(0,0,0,0.3);
+  margin-bottom: 12px; transition: all 0.2s; line-height: 1.2;
+}
+.question-text.correct-flash {
+  color: #69f0ae; text-shadow: 0 0 30px rgba(105,240,174,0.8), 0 0 60px rgba(76,175,80,0.4);
+}
+.question-text.wrong-shake { animation: shake 0.4s ease-out; color: #ff5252; text-shadow: 0 0 20px rgba(255,82,82,0.6); }
+
+.equals-sign { font-size: 2rem; color: #7c4dff; margin-bottom: 8px; font-weight: bold; }
+
+.answer-display {
+  font-size: 2.8rem; font-weight: bold; min-height: 56px; padding: 6px 24px; min-width: 130px;
+  border-bottom: 3px solid rgba(124,77,255,0.7); text-align: center;
+  background: rgba(124,77,255,0.08); border-radius: 8px;
+  text-shadow: 0 0 10px rgba(255,255,255,0.3);
+  transition: border-color 0.2s;
+}
+.answer-display:focus { border-color: #7c4dff; }
+.answer-display.correct-border { border-color: #69f0ae; background: rgba(105,240,174,0.1); }
+.answer-display.wrong-border { border-color: #ff5252; background: rgba(255,82,82,0.1); }
+
+.feedback-text {
+  font-size: 1rem; margin-top: 10px; min-height: 28px; text-align: center;
+  font-weight: 500; transition: opacity 0.3s;
+}
+
+.points-fly {
+  position: absolute; animation: flyUp 0.8s ease-out forwards;
+  font-size: 1.4rem; font-weight: bold; color: #69f0ae; pointer-events: none;
+  text-shadow: 0 0 8px rgba(105,240,174,0.5);
+}
+
+.hint-btn {
+  position: absolute; bottom: 0; right: 0; background: rgba(255,193,7,0.15);
+  border: 1px solid rgba(255,193,7,0.4); color: #ffc107; padding: 5px 12px;
+  border-radius: 10px; font-size: 0.75rem; cursor: pointer; transition: transform 0.1s;
+}
+.hint-btn:active { transform: scale(0.9); }
+
+/* ===== Numpad ===== */
+.numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 8px 0; flex-shrink: 0; }
+.numpad-btn {
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+  color: #fff; font-size: 1.5rem; padding: 14px 0; border-radius: 12px;
+  cursor: pointer; transition: all 0.08s; text-align: center; font-weight: bold;
+  -webkit-tap-highlight-color: transparent;
+}
+.numpad-btn:active { transform: scale(0.88); background: rgba(124,77,255,0.35); }
+.numpad-btn.enter { background: rgba(76,175,80,0.2); border-color: rgba(76,175,80,0.4); color: #69f0ae; }
+.numpad-btn.enter:active { background: rgba(76,175,80,0.4); }
+.numpad-btn.backspace { background: rgba(244,67,54,0.12); border-color: rgba(244,67,54,0.3); color: #ff8a80; font-size: 1.3rem; }
+.numpad-btn.backspace:active { background: rgba(244,67,54,0.3); }
+
+/* ===== Table View ===== */
+.table-controls { display: flex; gap: 6px; padding: 6px 0; flex-shrink: 0; flex-wrap: wrap; align-items: center; }
+.table-controls button {
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+  color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; cursor: pointer;
+  transition: all 0.15s;
+}
+.table-controls button:active { transform: scale(0.95); }
+.table-controls button.active { background: rgba(124,77,255,0.35); border-color: #7c4dff; }
+.table-legend { font-size: 0.65rem; color: #777; margin-left: auto; }
+
+.table-wrapper {
+  flex: 1; overflow: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);
+  -webkit-overflow-scrolling: touch; min-height: 0;
+}
+.mult-table { border-collapse: separate; border-spacing: 0; font-size: 0.68rem; width: max-content; }
+.mult-table th, .mult-table td {
+  border: 1px solid rgba(255,255,255,0.06); padding: 5px 3px; text-align: center;
+  min-width: 34px; height: 30px; white-space: nowrap;
+}
+.mult-table thead th {
+  background: rgba(124,77,255,0.35); position: sticky; top: 0; z-index: 10;
+  font-weight: bold; color: #e0d0ff; border-bottom: 2px solid rgba(124,77,255,0.5);
+}
+.mult-table thead th:first-child { left: 0; z-index: 20; background: rgba(80,40,180,0.9); }
+.mult-table tbody td:first-child {
+  position: sticky; left: 0; z-index: 5; background: rgba(80,40,180,0.85);
+  font-weight: bold; color: #e0d0ff; border-right: 2px solid rgba(124,77,255,0.5);
+}
+.mult-table td.mastered { background: rgba(76,175,80,0.18); color: #a5d6a7; }
+.mult-table td.learning { background: rgba(255,193,7,0.12); color: #fff59d; }
+.mult-table td.not-attempted { background: rgba(255,255,255,0.01); color: #555; }
+.mult-table td.hidden-answer { color: transparent !important; }
+.mult-table td.hidden-answer:active { color: inherit !important; background: rgba(124,77,255,0.3); }
+.mult-table td:not(:first-child) { cursor: pointer; transition: background 0.15s; }
+.mult-table td:not(:first-child):active { background: rgba(124,77,255,0.35) !important; }
+
+/* ===== Weakness Screen ===== */
+.weakness-list { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 4px 0; }
+.weakness-item {
+  display: flex; justify-content: space-between; align-items: center;
+  background: rgba(255,255,255,0.04); border-radius: 10px; padding: 11px 14px;
+  margin-bottom: 7px; border-left: 3px solid #ff5252;
+  transition: transform 0.1s;
+}
+.weakness-item:active { transform: scale(0.98); }
+.weakness-item .problem { font-size: 1rem; font-weight: bold; }
+.weakness-item .count { font-size: 0.8rem; color: #ff8a80; background: rgba(244,67,54,0.1); padding: 2px 8px; border-radius: 8px; }
+.no-weakness { text-align: center; padding: 40px 20px; color: #aaa; font-size: 1rem; line-height: 1.8; }
+
+.start-drill-btn {
+  background: linear-gradient(135deg, #e53935, #ff5722); border: none; color: #fff;
+  padding: 14px; border-radius: 12px; font-size: 1rem; cursor: pointer;
+  margin-top: 10px; font-weight: bold; flex-shrink: 0;
+  box-shadow: 0 4px 15px rgba(229,57,53,0.3); transition: transform 0.1s;
+}
+.start-drill-btn:active { transform: scale(0.95); }
+
+/* ===== Modal ===== */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.88); display: none; justify-content: center;
+  align-items: center; z-index: 100; backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease;
+}
+.modal-overlay.show { display: flex; }
+.modal-content {
+  background: linear-gradient(145deg, #1a1a4e, #2d1b69); border-radius: 20px;
+  padding: 28px 24px; text-align: center; max-width: 300px; width: 88%;
+  border: 2px solid rgba(124,77,255,0.4); position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(124,77,255,0.1);
+  animation: modalIn 0.3s ease;
+}
+.modal-content h2 { font-size: 1.4rem; margin-bottom: 10px; }
+.modal-stars { font-size: 2.2rem; margin: 12px 0; }
+.modal-score { font-size: 1rem; color: #aaa; margin-bottom: 6px; }
+.modal-btn {
+  background: linear-gradient(135deg, #7c4dff, #448aff); border: none; color: #fff;
+  padding: 12px 24px; border-radius: 12px; font-size: 0.95rem; cursor: pointer;
+  margin: 6px 4px; font-weight: bold; transition: transform 0.1s;
+  box-shadow: 0 4px 12px rgba(124,77,255,0.3);
+}
+.modal-btn:active { transform: scale(0.93); }
+.modal-btn.secondary { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.25); box-shadow: none; }
+
+/* ===== Confetti ===== */
+.confetti-piece {
+  position: fixed; top: -10px; pointer-events: none; z-index: 200;
+  animation: confettiFall var(--fall-duration, 3s) ease-in forwards;
+  animation-delay: var(--fall-delay, 0s);
+}
+
+/* ===== Animations ===== */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-8px) rotate(-1deg); }
+  30% { transform: translateX(8px) rotate(1deg); }
+  45% { transform: translateX(-6px); }
+  60% { transform: translateX(6px); }
+  75% { transform: translateX(-3px); }
+  90% { transform: translateX(3px); }
+}
+@keyframes flyUp {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  50% { opacity: 1; transform: translateY(-30px) scale(1.2); }
+  100% { opacity: 0; transform: translateY(-60px) scale(0.8); }
+}
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateY(100vh) rotate(var(--spin, 720deg)) scale(0.5); opacity: 0; }
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modalIn { from { opacity: 0; transform: scale(0.9) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(124,77,255,0.3); }
+  50% { box-shadow: 0 0 20px rgba(124,77,255,0.6), 0 0 40px rgba(124,77,255,0.2); }
+}
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.combo-fire { animation: pulse 0.4s infinite; display: inline-block; }
+.stage-unlock-glow { animation: glow 1.5s infinite; }
+
+/* ===== Responsive ===== */
+@media (max-width: 380px) {
+  .question-text { font-size: 2.6rem; }
+  .answer-display { font-size: 2.2rem; min-height: 48px; }
+  .numpad-btn { padding: 12px 0; font-size: 1.3rem; }
+  .mult-table th, .mult-table td { min-width: 28px; height: 26px; font-size: 0.6rem; padding: 3px 2px; }
+  .mode-btn { padding: 16px 10px; }
+  .mode-btn .icon { font-size: 1.5rem; }
+}
+@media (min-height: 800px) {
+  .question-text { font-size: 3.8rem; }
+  .numpad-btn { padding: 18px 0; }
+}
+
+/* ===== Dark scrollbar ===== */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(124,77,255,0.3); border-radius: 2px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- ===== Home Screen ===== -->
+  <div class="screen active" id="homeScreen">
+    <div class="home-title">
+      <h1>🧮 大九九乘法訓練</h1>
+      <p>Multiplication Master | 1x1 ~ 19x19</p>
+    </div>
+    <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊</button>
+
+    <div class="home-stats">
+      <div class="rank-display" id="rankDisplay">🐣 乘法菜鳥</div>
+      <div class="exp-bar-container">
+        <div class="exp-bar"><div class="fill" id="expBarFill" style="width:0%"></div></div>
+        <div class="exp-label" id="expLabel">EXP: 0 / 100</div>
+      </div>
+      <div class="stats-row">
+        <span><span class="val" id="statCorrect">0</span>答對</span>
+        <span><span class="val" id="statAccuracy">0%</span>正確率</span>
+        <span><span class="val" id="statStages">0</span>過關</span>
+        <span><span class="val" id="statBest">0</span>計時</span>
+      </div>
+    </div>
+
+    <p class="save-note">💾 進度存在本機瀏覽器，請固定用同一台設備</p>
+
+    <div class="mode-grid">
+      <div class="mode-btn" onclick="showStageSelect()">
+        <div class="icon">🏰</div>
+        <div class="label">闖關模式</div>
+        <div class="desc">16關逐步解鎖</div>
+      </div>
+      <div class="mode-btn" onclick="startSpeedMode()">
+        <div class="icon">⏱️</div>
+        <div class="label">計時挑戰</div>
+        <div class="desc">60秒衝最高分</div>
+      </div>
+      <div class="mode-btn" onclick="showTableView()">
+        <div class="icon">📊</div>
+        <div class="label">大九九表</div>
+        <div class="desc">19x19完整乘法表</div>
+      </div>
+      <div class="mode-btn" onclick="showWeaknessDrill()">
+        <div class="icon">🎯</div>
+        <div class="label">弱點特訓</div>
+        <div class="desc">針對錯題加強</div>
+      </div>
+    </div>
+
+    <div style="text-align:center; padding: 8px 0;">
+      <button onclick="resetProgress()" style="background:none; border:1px solid rgba(255,255,255,0.15); color:#666; padding:6px 14px; border-radius:8px; font-size:0.7rem; cursor:pointer;">重置進度</button>
+    </div>
+  </div>
+
+  <!-- ===== Stage Select Screen ===== -->
+  <div class="screen" id="stageSelectScreen">
+    <div class="header">
+      <h1>🏰 闖關模式</h1>
+      <button class="back-btn" onclick="goHome()">← 返回</button>
+    </div>
+    <div class="stage-list" id="stageList"></div>
+  </div>
+
+  <!-- ===== Game Screen ===== -->
+  <div class="screen" id="gameScreen">
+    <div class="game-header">
+      <span class="game-progress" id="gameProgress">1 / 20</span>
+      <button class="back-btn" onclick="confirmQuit()">✕</button>
+    </div>
+    <div class="timer-bar" id="timerBarContainer" style="display:none;">
+      <div class="fill" id="timerBarFill" style="width:100%"></div>
+    </div>
+    <div class="game-top">
+      <div class="game-score" id="gameScore">0 分</div>
+      <div class="game-combo" id="gameCombo"></div>
+    </div>
+    <div class="question-area" id="questionArea">
+      <div class="question-text" id="questionText">5 × 7</div>
+      <div class="equals-sign">=</div>
+      <div class="answer-display" id="answerDisplay"></div>
+      <div class="feedback-text" id="feedbackText"></div>
+      <button class="hint-btn" id="hintBtn" onclick="showHint()" style="display:none;">💡 提示</button>
+    </div>
+    <div class="numpad" id="numpad">
+      <div class="numpad-btn" onclick="numpadInput('1')">1</div>
+      <div class="numpad-btn" onclick="numpadInput('2')">2</div>
+      <div class="numpad-btn" onclick="numpadInput('3')">3</div>
+      <div class="numpad-btn" onclick="numpadInput('4')">4</div>
+      <div class="numpad-btn" onclick="numpadInput('5')">5</div>
+      <div class="numpad-btn" onclick="numpadInput('6')">6</div>
+      <div class="numpad-btn" onclick="numpadInput('7')">7</div>
+      <div class="numpad-btn" onclick="numpadInput('8')">8</div>
+      <div class="numpad-btn" onclick="numpadInput('9')">9</div>
+      <div class="numpad-btn backspace" onclick="numpadInput('back')">⌫</div>
+      <div class="numpad-btn" onclick="numpadInput('0')">0</div>
+      <div class="numpad-btn enter" onclick="numpadInput('enter')">OK</div>
+    </div>
+  </div>
+
+  <!-- ===== Table View Screen ===== -->
+  <div class="screen" id="tableScreen">
+    <div class="header">
+      <h1>📊 大九九表</h1>
+      <button class="back-btn" onclick="goHome()">← 返回</button>
+    </div>
+    <div class="table-controls">
+      <button id="toggleAnswersBtn" onclick="toggleTableAnswers()">隱藏答案</button>
+      <button onclick="resetTableView()">重置顯示</button>
+      <span class="table-legend">🟢熟 🟡練 ⬜未</span>
+    </div>
+    <div class="table-wrapper" id="tableWrapper"></div>
+  </div>
+
+  <!-- ===== Weakness Screen ===== -->
+  <div class="screen" id="weaknessScreen">
+    <div class="header">
+      <h1>🎯 弱點特訓</h1>
+      <button class="back-btn" onclick="goHome()">← 返回</button>
+    </div>
+    <div class="weakness-list" id="weaknessList"></div>
+    <button class="start-drill-btn" id="startDrillBtn" onclick="startWeaknessDrill()" style="display:none;">
+      🚀 開始特訓 (20題)
+    </button>
+  </div>
+
+  <!-- ===== Modal ===== -->
+  <div class="modal-overlay" id="modalOverlay" onclick="handleModalOverlayClick(event)">
+    <div class="modal-content" id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+// ====================================================================
+// DATA DEFINITIONS
+// ====================================================================
+const STAGES = [
+  { id: 1, name: '1×1 ~ 5×5', desc: '簡單暖身', gen: () => genPairs(1,5,1,5) },
+  { id: 2, name: '6×6 ~ 9×9', desc: '九九乘法表', gen: () => genPairs(6,9,6,9) },
+  { id: 3, name: '×10 系列', desc: '1~9 × 10', gen: () => genFixed(10,1,9) },
+  { id: 4, name: '×11 系列', desc: '11×1 ~ 11×9', gen: () => genFixed(11,1,9) },
+  { id: 5, name: '×12 系列', desc: '12×1 ~ 12×9', gen: () => genFixed(12,1,9) },
+  { id: 6, name: '×13 系列', desc: '13×1 ~ 13×9', gen: () => genFixed(13,1,9) },
+  { id: 7, name: '×14 系列', desc: '14×1 ~ 14×9', gen: () => genFixed(14,1,9) },
+  { id: 8, name: '×15 系列', desc: '15×1 ~ 15×9', gen: () => genFixed(15,1,9) },
+  { id: 9, name: '×16 系列', desc: '16×1 ~ 16×9', gen: () => genFixed(16,1,9) },
+  { id: 10, name: '×17 系列', desc: '17×1 ~ 17×9', gen: () => genFixed(17,1,9) },
+  { id: 11, name: '×18 系列', desc: '18×1 ~ 18×9', gen: () => genFixed(18,1,9) },
+  { id: 12, name: '×19 系列', desc: '19×1 ~ 19×9', gen: () => genFixed(19,1,9) },
+  { id: 13, name: '11~15 互乘', desc: '11×11 ~ 15×15', gen: () => genPairs(11,15,11,15) },
+  { id: 14, name: '11~15 × 16~19', desc: '大數混合', gen: () => genPairs(11,15,16,19) },
+  { id: 15, name: '16~19 互乘', desc: '最難關卡', gen: () => genPairs(16,19,16,19) },
+  { id: 16, name: '👑 BOSS', desc: '1~19全部隨機', gen: () => genPairs(1,19,1,19) }
+];
+
+const RANKS = [
+  { min: 0, max: 99, title: '乘法菜鳥', icon: '🐣' },
+  { min: 100, max: 299, title: '計算新手', icon: '🌱' },
+  { min: 300, max: 599, title: '九九戰士', icon: '⚔️' },
+  { min: 600, max: 999, title: '乘法達人', icon: '🌟' },
+  { min: 1000, max: 1999, title: '心算高手', icon: '🔥' },
+  { min: 2000, max: 3499, title: '大九九王者', icon: '👑' },
+  { min: 3500, max: Infinity, title: '乘法之神', icon: '🏆' }
+];
+
+// ====================================================================
+// STATE
+// ====================================================================
+let progress = loadProgress();
+let currentGame = null;
+let soundEnabled = true;
+let audioCtx = null;
+let tableAnswersHidden = false;
+let answerTimeout = null;
+
+// ====================================================================
+// PERSISTENCE
+// ====================================================================
+function getDefaultProgress() {
+  return { stages: {}, mastery: {}, mistakes: {}, totalCorrect: 0, totalAttempts: 0, bestSpeed: 0, exp: 0 };
+}
+function loadProgress() {
+  try {
+    const s = localStorage.getItem('mult_progress');
+    if (s) {
+      const p = JSON.parse(s);
+      // Ensure all fields exist
+      return { ...getDefaultProgress(), ...p };
+    }
+  } catch(e) {}
+  return getDefaultProgress();
+}
+function saveProgress() {
+  try { localStorage.setItem('mult_progress', JSON.stringify(progress)); } catch(e) {}
+}
+function resetProgress() {
+  if (confirm('確定要重置所有進度嗎？此操作無法復原！')) {
+    progress = getDefaultProgress();
+    saveProgress();
+    updateHomeStats();
+  }
+}
+
+// ====================================================================
+// AUDIO (Web Audio API)
+// ====================================================================
+function getAudioCtx() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+function playSound(type) {
+  if (!soundEnabled) return;
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+
+    if (type === 'click') {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.connect(g); g.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, now);
+      g.gain.setValueAtTime(0.08, now);
+      g.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+      osc.start(now); osc.stop(now + 0.04);
+    } else if (type === 'correct') {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.connect(g); g.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, now);
+      osc.frequency.exponentialRampToValueAtTime(1320, now + 0.08);
+      g.gain.setValueAtTime(0.25, now);
+      g.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+      osc.start(now); osc.stop(now + 0.15);
+    } else if (type === 'wrong') {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.connect(g); g.connect(ctx.destination);
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(220, now);
+      osc.frequency.exponentialRampToValueAtTime(110, now + 0.2);
+      g.gain.setValueAtTime(0.15, now);
+      g.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+      osc.start(now); osc.stop(now + 0.25);
+    } else if (type === 'combo') {
+      [660, 880, 1100].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.connect(g); g.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + i * 0.06);
+        g.gain.setValueAtTime(0, now);
+        g.gain.linearRampToValueAtTime(0.2, now + i * 0.06);
+        g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.1);
+        osc.start(now + i * 0.06); osc.stop(now + i * 0.06 + 0.1);
+      });
+    } else if (type === 'stageClear') {
+      const notes = [523.25, 659.25, 783.99, 1046.5];
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.connect(g); g.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + i * 0.12);
+        g.gain.setValueAtTime(0, now);
+        g.gain.linearRampToValueAtTime(0.25, now + i * 0.12);
+        g.gain.setValueAtTime(0.25, now + i * 0.12 + 0.1);
+        g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.12 + 0.3);
+        osc.start(now + i * 0.12); osc.stop(now + i * 0.12 + 0.3);
+      });
+    } else if (type === 'levelup') {
+      const notes = [440, 554, 659, 880];
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.connect(g); g.connect(ctx.destination);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, now + i * 0.1);
+        g.gain.setValueAtTime(0, now);
+        g.gain.linearRampToValueAtTime(0.2, now + i * 0.1);
+        g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.2);
+        osc.start(now + i * 0.1); osc.stop(now + i * 0.1 + 0.2);
+      });
+    }
+  } catch(e) {}
+}
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  document.getElementById('soundToggle').textContent = soundEnabled ? '🔊' : '🔇';
+  if (soundEnabled) playSound('click');
+}
+
+// ====================================================================
+// HELPERS
+// ====================================================================
+function genPairs(a1, a2, b1, b2) {
+  const p = [];
+  for (let a = a1; a <= a2; a++) for (let b = b1; b <= b2; b++) p.push([a, b]);
+  return p;
+}
+function genFixed(n, b1, b2) {
+  const p = [];
+  for (let b = b1; b <= b2; b++) { p.push([n, b]); p.push([b, n]); }
+  // deduplicate
+  const seen = new Set();
+  return p.filter(([a,b]) => { const k = a+','+b; if(seen.has(k)) return false; seen.add(k); return true; });
+}
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+function getRank(exp) {
+  for (let i = RANKS.length - 1; i >= 0; i--) { if (exp >= RANKS[i].min) return { ...RANKS[i], index: i }; }
+  return { ...RANKS[0], index: 0 };
+}
+function getNextRank(exp) {
+  const current = getRank(exp);
+  if (current.index < RANKS.length - 1) return RANKS[current.index + 1];
+  return null;
+}
+function isStageUnlocked(stageId) {
+  if (stageId === 1) return true;
+  return (progress.stages[stageId - 1] || 0) > 0;
+}
+function masteryKey(a, b) {
+  return Math.min(a,b) + '×' + Math.max(a,b);
+}
+function getMasteryLevel(key) {
+  const c = progress.mastery[key] || 0;
+  if (c >= 3) return 'mastered';
+  if (c >= 1) return 'learning';
+  return 'not-attempted';
+}
+function countStagesCleared() {
+  return Object.values(progress.stages).filter(s => s > 0).length;
+}
+
+// ====================================================================
+// NAVIGATION
+// ====================================================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function goHome() {
+  cleanupGame();
+  showScreen('homeScreen');
+  updateHomeStats();
+}
+function cleanupGame() {
+  if (answerTimeout) { clearTimeout(answerTimeout); answerTimeout = null; }
+  if (currentGame && currentGame.timer) { clearInterval(currentGame.timer); currentGame.timer = null; }
+  currentGame = null;
+}
+
+// ====================================================================
+// HOME SCREEN
+// ====================================================================
+function updateHomeStats() {
+  const rank = getRank(progress.exp);
+  const next = getNextRank(progress.exp);
+  document.getElementById('rankDisplay').textContent = rank.icon + ' ' + rank.title;
+
+  // EXP bar
+  let pct = 100;
+  let label = 'EXP: ' + progress.exp + ' (MAX)';
+  if (next) {
+    const range = next.min - rank.min;
+    const current = progress.exp - rank.min;
+    pct = Math.min(100, Math.round(current / range * 100));
+    label = 'EXP: ' + progress.exp + ' / ' + next.min + ' (→ ' + next.icon + ' ' + next.title + ')';
+  }
+  document.getElementById('expBarFill').style.width = pct + '%';
+  document.getElementById('expLabel').textContent = label;
+
+  document.getElementById('statCorrect').textContent = progress.totalCorrect;
+  const acc = progress.totalAttempts > 0 ? Math.round(progress.totalCorrect / progress.totalAttempts * 100) : 0;
+  document.getElementById('statAccuracy').textContent = acc + '%';
+  document.getElementById('statStages').textContent = countStagesCleared() + '/16';
+  document.getElementById('statBest').textContent = progress.bestSpeed;
+}
+
+// ====================================================================
+// STAGE SELECT
+// ====================================================================
+function showStageSelect() {
+  showScreen('stageSelectScreen');
+  renderStageList();
+}
+
+function renderStageList() {
+  const el = document.getElementById('stageList');
+  el.innerHTML = STAGES.map((stage, i) => {
+    const id = stage.id;
+    const stars = progress.stages[id] || 0;
+    const unlocked = isStageUnlocked(id);
+    const cleared = stars > 0;
+    const starsStr = stars >= 3 ? '⭐⭐⭐' : stars >= 2 ? '⭐⭐☆' : stars >= 1 ? '⭐☆☆' : '☆☆☆';
+    const cls = 'stage-card' + (unlocked ? '' : ' locked') + (cleared ? ' cleared' : '');
+    return `<div class="${cls}" onclick="${unlocked ? 'startStage('+id+')' : ''}">
+      <div class="stage-num">第 ${id} 關</div>
+      <div class="stage-name">${stage.name}</div>
+      <div class="stage-stars">${starsStr}</div>
+    </div>`;
+  }).join('');
+}
+
+// ====================================================================
+// GAME ENGINE
+// ====================================================================
+function startStage(stageId) {
+  const stage = STAGES[stageId - 1];
+  const pool = stage.gen();
+  let questions = shuffle(pool).slice(0, 20);
+  // Pad if pool < 20
+  while (questions.length < 20) {
+    questions.push(pool[Math.floor(Math.random() * pool.length)]);
+  }
+  questions = shuffle(questions);
+
+  currentGame = {
+    mode: 'stage', stageId, questions,
+    idx: 0, score: 0, combo: 0, maxCombo: 0, correct: 0, total: 20,
+    input: '', answered: false, qStart: 0, hintUsed: false
+  };
+  enterGameScreen(false);
+}
+
+function startSpeedMode() {
+  // Use all unlocked stage pools
+  let pool = [];
+  for (let i = 0; i < STAGES.length; i++) {
+    if (isStageUnlocked(STAGES[i].id)) pool.push(...STAGES[i].gen());
+  }
+  if (pool.length === 0) pool = genPairs(1, 9, 1, 9);
+  // Deduplicate
+  const seen = new Set();
+  pool = pool.filter(([a,b]) => { const k = a+','+b; if(seen.has(k)) return false; seen.add(k); return true; });
+
+  currentGame = {
+    mode: 'speed', pool,
+    idx: 0, score: 0, combo: 0, maxCombo: 0, correct: 0, total: 0,
+    input: '', answered: false, qStart: 0, hintUsed: false,
+    timeLeft: 60, timer: null, startTime: 0, currentPair: null
+  };
+  enterGameScreen(true);
+  nextSpeedQuestion();
+  currentGame.startTime = Date.now();
+  currentGame.timer = setInterval(speedTick, 50);
+}
+
+function startWeaknessDrill() {
+  const weak = getWeakItems().slice(0, 10);
+  if (weak.length === 0) return;
+
+  let questions = [];
+  weak.forEach(w => {
+    const [a, b] = w.key.split('×').map(Number);
+    questions.push([a, b]); questions.push([a, b]);
+    if (a !== b) questions.push([b, a]);
+  });
+  while (questions.length < 20 && weak.length > 0) {
+    const w = weak[Math.floor(Math.random() * weak.length)];
+    const [a, b] = w.key.split('×').map(Number);
+    questions.push([a, b]);
+  }
+  questions = shuffle(questions).slice(0, 20);
+
+  currentGame = {
+    mode: 'weakness', questions,
+    idx: 0, score: 0, combo: 0, maxCombo: 0, correct: 0, total: questions.length,
+    input: '', answered: false, qStart: 0, hintUsed: false
+  };
+  enterGameScreen(false);
+}
+
+function enterGameScreen(showTimer) {
+  showScreen('gameScreen');
+  document.getElementById('timerBarContainer').style.display = showTimer ? 'block' : 'none';
+  if (showTimer) document.getElementById('timerBarFill').style.width = '100%';
+  document.getElementById('hintBtn').style.display = (currentGame.mode === 'speed') ? 'none' : 'block';
+  showCurrentQuestion();
+}
+
+function showCurrentQuestion() {
+  if (!currentGame) return;
+  let pair;
+  if (currentGame.mode === 'speed') {
+    pair = currentGame.currentPair;
+  } else {
+    if (currentGame.idx >= currentGame.total) {
+      endGame();
+      return;
+    }
+    pair = currentGame.questions[currentGame.idx];
+  }
+  if (!pair) return;
+
+  currentGame.currentPair = pair;
+  currentGame.input = '';
+  currentGame.answered = false;
+  currentGame.hintUsed = false;
+  currentGame.qStart = Date.now();
+
+  const qEl = document.getElementById('questionText');
+  qEl.textContent = pair[0] + ' × ' + pair[1];
+  qEl.className = 'question-text';
+  document.getElementById('answerDisplay').textContent = '';
+  document.getElementById('answerDisplay').className = 'answer-display';
+  document.getElementById('feedbackText').textContent = '';
+  document.getElementById('feedbackText').style.color = '';
+  updateGameUI();
+}
+
+function nextSpeedQuestion() {
+  if (!currentGame || currentGame.mode !== 'speed') return;
+  const pair = currentGame.pool[Math.floor(Math.random() * currentGame.pool.length)];
+  currentGame.currentPair = pair;
+  currentGame.total++;
+  showCurrentQuestion();
+}
+
+function speedTick() {
+  if (!currentGame) return;
+  const elapsed = (Date.now() - currentGame.startTime) / 1000;
+  const remaining = Math.max(0, 60 - elapsed);
+  currentGame.timeLeft = remaining;
+  const pct = (remaining / 60) * 100;
+  document.getElementById('timerBarFill').style.width = pct + '%';
+  if (remaining <= 0) {
+    clearInterval(currentGame.timer);
+    currentGame.timer = null;
+    endGame();
+  }
+}
+
+function updateGameUI() {
+  if (!currentGame) return;
+  const comboEl = document.getElementById('gameCombo');
+  if (currentGame.combo >= 10) {
+    comboEl.innerHTML = '<span class="combo-fire">⚡</span> x' + currentGame.combo;
+  } else if (currentGame.combo >= 5) {
+    comboEl.innerHTML = '<span class="combo-fire">🔥</span> x' + currentGame.combo;
+  } else if (currentGame.combo >= 3) {
+    comboEl.textContent = '🔥 x' + currentGame.combo;
+  } else {
+    comboEl.textContent = '';
+  }
+  document.getElementById('gameScore').textContent = currentGame.score + ' 分';
+  if (currentGame.mode === 'speed') {
+    document.getElementById('gameProgress').textContent = '答對: ' + currentGame.correct;
+  } else {
+    document.getElementById('gameProgress').textContent = (currentGame.idx + 1) + ' / ' + currentGame.total;
+  }
+}
+
+// ====================================================================
+// INPUT HANDLING
+// ====================================================================
+function numpadInput(key) {
+  if (!currentGame || currentGame.answered) return;
+
+  if (key === 'back') {
+    playSound('click');
+    currentGame.input = currentGame.input.slice(0, -1);
+    document.getElementById('answerDisplay').textContent = currentGame.input;
+  } else if (key === 'enter') {
+    if (currentGame.input === '') return;
+    playSound('click');
+    submitAnswer();
+  } else {
+    if (currentGame.input.length >= 3) return;
+    playSound('click');
+    currentGame.input += key;
+    document.getElementById('answerDisplay').textContent = currentGame.input;
+  }
+}
+
+function submitAnswer() {
+  if (!currentGame || currentGame.answered) return;
+  currentGame.answered = true;
+
+  const pair = currentGame.currentPair;
+  const correctAnswer = pair[0] * pair[1];
+  const userAnswer = parseInt(currentGame.input, 10);
+  const timeTaken = (Date.now() - currentGame.qStart) / 1000;
+  const key = masteryKey(pair[0], pair[1]);
+
+  progress.totalAttempts++;
+
+  if (userAnswer === correctAnswer) {
+    handleCorrect(pair, key, timeTaken);
+  } else {
+    handleWrong(pair, key, correctAnswer, userAnswer);
+  }
+  saveProgress();
+}
+
+function handleCorrect(pair, key, timeTaken) {
+  currentGame.correct++;
+  currentGame.combo++;
+  if (currentGame.combo > currentGame.maxCombo) currentGame.maxCombo = currentGame.combo;
+  progress.totalCorrect++;
+  progress.mastery[key] = (progress.mastery[key] || 0) + 1;
+
+  // Points calculation
+  let points = 10;
+  if (timeTaken <= 3) points += 5; // speed bonus
+  // Combo multiplier: 1, 1.5, 2, 2.5, 3 (max)
+  const mult = Math.min(3, 1 + (currentGame.combo - 1) * 0.5);
+  points = Math.round(points * mult);
+  currentGame.score += points;
+
+  // Check rank up before adding exp
+  const oldRank = getRank(progress.exp);
+  progress.exp += points;
+  const newRank = getRank(progress.exp);
+
+  // Visual feedback
+  document.getElementById('questionText').classList.add('correct-flash');
+  document.getElementById('answerDisplay').classList.add('correct-border');
+
+  let feedbackMsg = '✓ +' + points;
+  if (timeTaken <= 3) feedbackMsg += ' ⚡快速!';
+  if (currentGame.combo >= 5) feedbackMsg += ' 🔥連擊x' + currentGame.combo;
+  document.getElementById('feedbackText').textContent = feedbackMsg;
+  document.getElementById('feedbackText').style.color = '#69f0ae';
+
+  showPointsFly('+' + points);
+
+  if (currentGame.combo >= 5) playSound('combo');
+  else playSound('correct');
+
+  // Rank up notification
+  if (newRank.index > oldRank.index) {
+    setTimeout(() => playSound('levelup'), 300);
+  }
+
+  updateGameUI();
+  answerTimeout = setTimeout(() => advanceQuestion(), 500);
+}
+
+function handleWrong(pair, key, correctAnswer, userAnswer) {
+  currentGame.combo = 0;
+  currentGame.score = Math.max(0, currentGame.score - 5);
+  progress.mistakes[key] = (progress.mistakes[key] || 0) + 1;
+
+  document.getElementById('questionText').classList.add('wrong-shake');
+  document.getElementById('answerDisplay').classList.add('wrong-border');
+  document.getElementById('feedbackText').innerHTML =
+    '✗ <b>' + pair[0] + ' × ' + pair[1] + ' = ' + correctAnswer + '</b>，不是 ' + userAnswer;
+  document.getElementById('feedbackText').style.color = '#ff5252';
+
+  playSound('wrong');
+  updateGameUI();
+  answerTimeout = setTimeout(() => advanceQuestion(), 2200);
+}
+
+function advanceQuestion() {
+  answerTimeout = null;
+  if (!currentGame) return;
+  if (currentGame.mode === 'speed') {
+    if (currentGame.timeLeft > 0) nextSpeedQuestion();
+  } else {
+    currentGame.idx++;
+    showCurrentQuestion();
+  }
+}
+
+function showHint() {
+  if (!currentGame || currentGame.answered || currentGame.hintUsed) return;
+  currentGame.hintUsed = true;
+  const pair = currentGame.currentPair;
+  const ans = pair[0] * pair[1];
+  const s = String(ans);
+  const hint = s[0] + '_'.repeat(s.length - 1);
+  document.getElementById('feedbackText').textContent = '💡 ' + hint + ' (' + s.length + '位數)';
+  document.getElementById('feedbackText').style.color = '#ffc107';
+}
+
+function showPointsFly(text) {
+  const area = document.getElementById('questionArea');
+  const el = document.createElement('div');
+  el.className = 'points-fly';
+  el.textContent = text;
+  el.style.left = '50%';
+  el.style.top = '20%';
+  el.style.transform = 'translateX(-50%)';
+  area.appendChild(el);
+  setTimeout(() => el.remove(), 800);
+}
+
+// ====================================================================
+// END GAME
+// ====================================================================
+function endGame() {
+  if (!currentGame) return;
+  const mode = currentGame.mode;
+
+  if (mode === 'stage') endStageGame();
+  else if (mode === 'speed') endSpeedGame();
+  else if (mode === 'weakness') endWeaknessGame();
+}
+
+function endStageGame() {
+  const { stageId, correct, score, maxCombo } = currentGame;
+  let stars = 0;
+  if (correct >= 20) stars = 3;
+  else if (correct >= 18) stars = 2;
+  else if (correct >= 16) stars = 1;
+
+  const prev = progress.stages[stageId] || 0;
+  if (stars > prev) progress.stages[stageId] = stars;
+  saveProgress();
+
+  const passed = stars > 0;
+  const starsStr = stars >= 3 ? '⭐⭐⭐' : stars >= 2 ? '⭐⭐' : stars >= 1 ? '⭐' : '💔';
+
+  if (passed) playSound('stageClear');
+  else playSound('wrong');
+  if (stars === 3) spawnConfetti();
+
+  const nextBtn = (passed && stageId < 16)
+    ? `<button class="modal-btn" onclick="closeModal(); startStage(${stageId + 1})">下一關 →</button>`
+    : '';
+  const newUnlock = (passed && stageId < 16 && prev === 0)
+    ? `<div style="color:#69f0ae; margin:8px 0; font-size:0.9rem;">🔓 第 ${stageId + 1} 關已解鎖!</div>`
+    : '';
+
+  showModal(`
+    <h2>${passed ? '🎉 過關!' : '😢 再接再厲'}</h2>
+    <div class="modal-stars">${starsStr}</div>
+    <div class="modal-score">答對 ${correct} / 20</div>
+    <div class="modal-score">得分: ${score} | 最高連擊: ${maxCombo}</div>
+    ${!passed ? '<div style="color:#ff5252; margin:8px 0; font-size:0.85rem;">需要 16/20 正確才能過關</div>' : ''}
+    ${newUnlock}
+    <div style="margin-top:12px;">
+      <button class="modal-btn" onclick="closeModal(); startStage(${stageId})">再試一次</button>
+      ${nextBtn}
+    </div>
+    <button class="modal-btn secondary" onclick="closeModal(); showStageSelect()">選關卡</button>
+  `);
+}
+
+function endSpeedGame() {
+  const { correct, score, maxCombo } = currentGame;
+  const isNewBest = correct > progress.bestSpeed;
+  if (isNewBest) progress.bestSpeed = correct;
+  saveProgress();
+
+  if (isNewBest && correct > 0) spawnConfetti();
+  playSound(isNewBest ? 'stageClear' : 'correct');
+
+  showModal(`
+    <h2>⏱️ 時間到!</h2>
+    <div style="font-size:3rem; margin:12px 0; font-weight:bold; text-shadow: 0 0 10px rgba(124,77,255,0.5);">${correct}</div>
+    <div class="modal-score">答對 ${correct} 題 | 得分 ${score}</div>
+    <div class="modal-score">最高連擊: ${maxCombo}</div>
+    ${isNewBest ? '<div style="color:#ffc107; margin:8px 0;">🏆 新紀錄!</div>' : '<div class="modal-score">個人最佳: ' + progress.bestSpeed + '</div>'}
+    <div style="margin-top:12px;">
+      <button class="modal-btn" onclick="closeModal(); startSpeedMode()">再來一次</button>
+      <button class="modal-btn secondary" onclick="closeModal(); goHome()">返回</button>
+    </div>
+  `);
+}
+
+function endWeaknessGame() {
+  const { correct, total, score } = currentGame;
+  playSound(correct >= total * 0.8 ? 'stageClear' : 'correct');
+
+  showModal(`
+    <h2>🎯 特訓完成!</h2>
+    <div style="font-size:2.2rem; margin:12px 0;">${correct} / ${total}</div>
+    <div class="modal-score">得分: ${score}</div>
+    <div style="color:#aaa; margin:8px 0; font-size:0.85rem;">繼續練習弱點會越來越少!</div>
+    <div style="margin-top:12px;">
+      <button class="modal-btn" onclick="closeModal(); showWeaknessDrill()">繼續特訓</button>
+      <button class="modal-btn secondary" onclick="closeModal(); goHome()">返回</button>
+    </div>
+  `);
+}
+
+function confirmQuit() {
+  if (currentGame && currentGame.mode === 'speed' && currentGame.timeLeft > 0) {
+    // In speed mode, quitting early ends the game
+    if (currentGame.timer) { clearInterval(currentGame.timer); currentGame.timer = null; }
+    endGame();
+  } else {
+    goHome();
+  }
+}
+
+// ====================================================================
+// TABLE VIEW
+// ====================================================================
+function showTableView() {
+  showScreen('tableScreen');
+  renderTable();
+}
+
+function renderTable() {
+  const w = document.getElementById('tableWrapper');
+  let h = '<table class="mult-table"><thead><tr><th>×</th>';
+  for (let c = 1; c <= 19; c++) h += '<th>' + c + '</th>';
+  h += '</tr></thead><tbody>';
+  for (let r = 1; r <= 19; r++) {
+    h += '<tr><td>' + r + '</td>';
+    for (let c = 1; c <= 19; c++) {
+      const key = masteryKey(r, c);
+      const level = getMasteryLevel(key);
+      const val = r * c;
+      const hiddenCls = tableAnswersHidden ? ' hidden-answer' : '';
+      h += '<td class="' + level + hiddenCls + '" onclick="practiceCell(' + r + ',' + c + ')" title="' + r + '×' + c + '=' + val + '">' + val + '</td>';
+    }
+    h += '</tr>';
+  }
+  h += '</tbody></table>';
+  w.innerHTML = h;
+}
+
+function toggleTableAnswers() {
+  tableAnswersHidden = !tableAnswersHidden;
+  const btn = document.getElementById('toggleAnswersBtn');
+  btn.textContent = tableAnswersHidden ? '顯示答案' : '隱藏答案';
+  btn.classList.toggle('active', tableAnswersHidden);
+  renderTable();
+}
+
+function resetTableView() {
+  tableAnswersHidden = false;
+  document.getElementById('toggleAnswersBtn').textContent = '隱藏答案';
+  document.getElementById('toggleAnswersBtn').classList.remove('active');
+  renderTable();
+}
+
+function practiceCell(r, c) {
+  // Create a mini practice with this cell and neighbors
+  let questions = [];
+  // Add the target multiple times
+  for (let i = 0; i < 5; i++) questions.push([r, c]);
+  // Add neighbors
+  for (let dr = -2; dr <= 2; dr++) {
+    for (let dc = -2; dc <= 2; dc++) {
+      if (dr === 0 && dc === 0) continue;
+      const nr = r + dr, nc = c + dc;
+      if (nr >= 1 && nr <= 19 && nc >= 1 && nc <= 19 && Math.abs(dr) + Math.abs(dc) <= 2) {
+        questions.push([nr, nc]);
+      }
+    }
+  }
+  questions = shuffle(questions).slice(0, 10);
+
+  currentGame = {
+    mode: 'weakness', questions,
+    idx: 0, score: 0, combo: 0, maxCombo: 0, correct: 0, total: questions.length,
+    input: '', answered: false, qStart: 0, hintUsed: false
+  };
+  enterGameScreen(false);
+}
+
+// ====================================================================
+// WEAKNESS DRILL
+// ====================================================================
+function showWeaknessDrill() {
+  showScreen('weaknessScreen');
+  renderWeaknessList();
+}
+
+function getWeakItems() {
+  return Object.entries(progress.mistakes)
+    .map(([key, wrongCount]) => {
+      const correctCount = progress.mastery[key] || 0;
+      // Show items where wrong count is significant relative to correct count
+      const ratio = wrongCount / Math.max(1, correctCount);
+      return { key, wrongCount, correctCount, ratio };
+    })
+    .filter(item => item.wrongCount > 0 && item.ratio > 0.3)
+    .sort((a, b) => b.wrongCount - a.wrongCount || b.ratio - a.ratio);
+}
+
+function renderWeaknessList() {
+  const list = document.getElementById('weaknessList');
+  const items = getWeakItems().slice(0, 20);
+
+  if (items.length === 0) {
+    list.innerHTML = '<div class="no-weakness">🎉 目前沒有明顯弱點!<br><br>繼續闖關練習，<br>系統會自動記錄需要加強的乘法。</div>';
+    document.getElementById('startDrillBtn').style.display = 'none';
+    return;
+  }
+
+  list.innerHTML = items.map(item => {
+    const [a, b] = item.key.split('×').map(Number);
+    return `<div class="weakness-item">
+      <span class="problem">${item.key} = ${a * b}</span>
+      <span class="count">錯 ${item.wrongCount} 次</span>
+    </div>`;
+  }).join('');
+  document.getElementById('startDrillBtn').style.display = 'block';
+}
+
+// ====================================================================
+// MODAL
+// ====================================================================
+function showModal(html) {
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('show');
+}
+function handleModalOverlayClick(e) {
+  if (e.target === document.getElementById('modalOverlay')) {
+    // Don't close on overlay click during game to prevent accidental dismissal
+  }
+}
+
+// ====================================================================
+// CONFETTI
+// ====================================================================
+function spawnConfetti() {
+  const colors = ['#ff5252', '#ff4081', '#e040fb', '#7c4dff', '#448aff', '#69f0ae', '#ffd740', '#ff6e40'];
+  const shapes = ['circle', 'rect', 'triangle'];
+  for (let i = 0; i < 60; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const shape = shapes[Math.floor(Math.random() * shapes.length)];
+    const size = 6 + Math.random() * 10;
+    el.style.left = (Math.random() * 100) + 'vw';
+    el.style.setProperty('--fall-duration', (2.5 + Math.random() * 2) + 's');
+    el.style.setProperty('--fall-delay', (Math.random() * 0.6) + 's');
+    el.style.setProperty('--spin', (360 + Math.random() * 720) + 'deg');
+    el.style.width = size + 'px';
+    el.style.height = size + 'px';
+    el.style.background = color;
+    if (shape === 'circle') el.style.borderRadius = '50%';
+    else if (shape === 'triangle') {
+      el.style.width = '0'; el.style.height = '0';
+      el.style.background = 'transparent';
+      el.style.borderLeft = (size/2) + 'px solid transparent';
+      el.style.borderRight = (size/2) + 'px solid transparent';
+      el.style.borderBottom = size + 'px solid ' + color;
+    }
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 5000);
+  }
+}
+
+// ====================================================================
+// KEYBOARD SUPPORT (for desktop/testing)
+// ====================================================================
+document.addEventListener('keydown', (e) => {
+  if (!currentGame || currentGame.answered) return;
+  if (e.key >= '0' && e.key <= '9') { e.preventDefault(); numpadInput(e.key); }
+  else if (e.key === 'Backspace') { e.preventDefault(); numpadInput('back'); }
+  else if (e.key === 'Enter') { e.preventDefault(); numpadInput('enter'); }
+});
+
+// Prevent zoom on double tap
+let lastTouchEnd = 0;
+document.addEventListener('touchend', (e) => {
+  const now = Date.now();
+  if (now - lastTouchEnd <= 300) e.preventDefault();
+  lastTouchEnd = now;
+}, false);
+
+// Resume audio context on first interaction
+document.addEventListener('touchstart', () => {
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}, { once: true });
+document.addEventListener('click', () => {
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}, { once: true });
+
+// ====================================================================
+// INIT
+// ====================================================================
+updateHomeStats();
+</script>
+</body>
+</html>

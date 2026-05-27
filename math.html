@@ -1,0 +1,3091 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>數學冒險王 - Math Adventure</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background: #1a1a2e;
+  overflow-x: hidden;
+}
+
+#app {
+  width: 100%;
+  max-width: 500px;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Screens */
+.screen {
+  display: none;
+  width: 100%;
+  min-height: 100vh;
+  padding: 16px;
+  padding-bottom: 80px;
+  animation: fadeIn 0.3s ease;
+}
+
+.screen.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  margin-bottom: 16px;
+}
+
+.header-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.header-btn {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.header-btn:active {
+  transform: scale(0.9);
+}
+
+/* Save notice */
+.save-notice {
+  text-align: center;
+  color: rgba(255,255,255,0.6);
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+/* Stats bar */
+.stats-bar {
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(10px);
+}
+
+.stat-item {
+  text-align: center;
+  color: white;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.stat-label {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+/* EXP bar */
+.exp-bar-container {
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.exp-info {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.exp-bar {
+  height: 8px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.exp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #fbbf24, #f59e0b);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+/* Level Map */
+.level-map {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 20px;
+}
+
+.level-card {
+  background: rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: 20px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.level-card:active {
+  transform: scale(0.97);
+}
+
+.level-card.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.level-card.locked::after {
+  content: '🔒';
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  font-size: 24px;
+}
+
+.level-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.level-icon {
+  font-size: 32px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.15);
+  border-radius: 12px;
+}
+
+.level-name {
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.level-grade {
+  color: rgba(255,255,255,0.7);
+  font-size: 13px;
+}
+
+.level-stars {
+  color: rgba(255,255,255,0.6);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Stage Select */
+.stage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stage-card {
+  background: rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: transform 0.2s;
+  border: 2px solid transparent;
+}
+
+.stage-card:active {
+  transform: scale(0.97);
+}
+
+.stage-card.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.stage-card.boss {
+  border-color: rgba(255,215,0,0.5);
+  background: rgba(255,215,0,0.1);
+}
+
+.stage-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stage-num {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  font-size: 16px;
+}
+
+.stage-name {
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.stage-stars-display {
+  color: #fbbf24;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
+/* Gameplay */
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.progress-dots {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.progress-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: white;
+  transition: all 0.3s;
+}
+
+.progress-dot.correct {
+  background: #22c55e;
+}
+
+.progress-dot.wrong {
+  background: #ef4444;
+}
+
+.progress-dot.current {
+  background: rgba(255,255,255,0.5);
+  transform: scale(1.2);
+}
+
+.combo-display {
+  text-align: center;
+  margin-bottom: 12px;
+  min-height: 36px;
+}
+
+.combo-text {
+  font-size: 24px;
+  font-weight: bold;
+  color: #fbbf24;
+  animation: comboPulse 0.5s ease;
+}
+
+@keyframes comboPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.question-card {
+  background: rgba(255,255,255,0.95);
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  margin-bottom: 20px;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.question-text {
+  font-size: 28px;
+  font-weight: bold;
+  color: #1a1a2e;
+  line-height: 1.4;
+}
+
+.question-sub {
+  font-size: 16px;
+  color: #666;
+  margin-top: 8px;
+}
+
+/* Fraction display */
+.frac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 4px;
+}
+
+.frac .num {
+  border-bottom: 2px solid #1a1a2e;
+  padding: 0 4px 2px;
+  font-size: 22px;
+}
+
+.frac .den {
+  padding: 2px 4px 0;
+  font-size: 22px;
+}
+
+/* Object counting display */
+.objects-display {
+  font-size: 32px;
+  line-height: 1.6;
+  letter-spacing: 4px;
+  word-break: break-all;
+  max-width: 300px;
+}
+
+/* Choices */
+.choices-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.choice-btn {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 12px;
+  padding: 16px;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.choice-btn:active {
+  transform: scale(0.95);
+}
+
+.choice-btn.correct {
+  background: #22c55e;
+  border-color: #22c55e;
+}
+
+.choice-btn.wrong {
+  background: #ef4444;
+  border-color: #ef4444;
+}
+
+.choice-btn.reveal {
+  background: #22c55e;
+  border-color: #22c55e;
+  opacity: 0.7;
+}
+
+/* Number Pad */
+.numpad-input {
+  background: rgba(255,255,255,0.9);
+  border-radius: 12px;
+  padding: 12px 16px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  color: #1a1a2e;
+  margin-bottom: 16px;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-break: break-all;
+}
+
+.numpad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.numpad-btn {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  color: white;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.15s;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.numpad-btn:active {
+  transform: scale(0.9);
+  background: rgba(255,255,255,0.3);
+}
+
+.numpad-btn.submit {
+  background: #22c55e;
+  color: white;
+}
+
+.numpad-btn.submit:active {
+  background: #16a34a;
+}
+
+.numpad-btn.backspace {
+  background: rgba(239,68,68,0.3);
+}
+
+.numpad-btn.negative {
+  background: rgba(139,92,246,0.3);
+}
+
+/* Feedback overlay */
+.feedback-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.feedback-overlay.show {
+  display: flex;
+}
+
+.feedback-correct {
+  font-size: 80px;
+  animation: correctAnim 0.8s ease forwards;
+}
+
+@keyframes correctAnim {
+  0% { transform: scale(0); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+.feedback-wrong {
+  font-size: 80px;
+  animation: wrongAnim 0.8s ease forwards;
+}
+
+@keyframes wrongAnim {
+  0% { transform: scale(0) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.2) rotate(10deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 0; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.shake {
+  animation: shake 0.3s ease;
+}
+
+/* Result Screen */
+.result-card {
+  background: rgba(255,255,255,0.95);
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.result-stars {
+  font-size: 48px;
+  margin-bottom: 16px;
+  letter-spacing: 8px;
+}
+
+.result-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #1a1a2e;
+  margin-bottom: 12px;
+}
+
+.result-stats {
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 24px;
+  line-height: 1.8;
+}
+
+.result-exp {
+  font-size: 20px;
+  font-weight: bold;
+  color: #f59e0b;
+  margin-bottom: 24px;
+}
+
+.result-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btn {
+  border: none;
+  border-radius: 12px;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+}
+
+.btn-secondary {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: 2px solid rgba(255,255,255,0.3);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+}
+
+/* Daily Challenge */
+.daily-timer {
+  text-align: center;
+  font-size: 36px;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 16px;
+}
+
+.daily-timer.warning {
+  color: #ef4444;
+  animation: timerPulse 0.5s infinite;
+}
+
+@keyframes timerPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.daily-score {
+  text-align: center;
+  color: white;
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+/* Wrong Book */
+.wrong-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wrong-item {
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 16px;
+  color: white;
+}
+
+.wrong-question {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.wrong-answers {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.wrong-answers .wrong-ans {
+  color: #ef4444;
+  text-decoration: line-through;
+}
+
+.wrong-answers .correct-ans {
+  color: #22c55e;
+  font-weight: bold;
+}
+
+/* Bottom nav */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 500px;
+  background: rgba(26, 26, 46, 0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 0;
+  padding-bottom: max(8px, env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(255,255,255,0.1);
+  z-index: 50;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 12px;
+  transition: color 0.2s;
+}
+
+.nav-btn.active {
+  color: white;
+}
+
+.nav-btn .nav-icon {
+  font-size: 22px;
+}
+
+/* Confetti */
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 200;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: -10px;
+  animation: confettiFall 3s linear forwards;
+}
+
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* Flying stars */
+@keyframes starFly {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-100px) scale(0); opacity: 0; }
+}
+
+.flying-star {
+  position: absolute;
+  font-size: 20px;
+  animation: starFly 0.8s ease-out forwards;
+  pointer-events: none;
+}
+
+/* Fire animation for combo */
+@keyframes fireGrow {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.fire-anim {
+  animation: fireGrow 0.5s ease infinite;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px;
+}
+
+/* Tab content */
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
+
+/* Achievements in stats */
+.achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.achievement-item {
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 12px 8px;
+  text-align: center;
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+}
+
+.achievement-item.unlocked {
+  color: white;
+  background: rgba(255,215,0,0.15);
+  border: 1px solid rgba(255,215,0,0.3);
+}
+
+.achievement-item .ach-icon {
+  font-size: 24px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* Correct answer reveal */
+.correct-reveal {
+  background: rgba(34, 197, 94, 0.1);
+  border: 2px solid #22c55e;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-top: 12px;
+  text-align: center;
+  color: #22c55e;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Sound toggle */
+.sound-toggle {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- Home Screen -->
+  <div id="screen-home" class="screen active">
+    <div class="header">
+      <div class="header-title">🎮 數學冒險王</div>
+      <button class="header-btn" id="btn-sound" onclick="toggleSound()">🔊</button>
+    </div>
+    <div class="save-notice">💾 進度存在本機瀏覽器</div>
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-value" id="home-rank">數學新手</div>
+        <div class="stat-label">稱號</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="home-exp">0</div>
+        <div class="stat-label">經驗值</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="home-streak">0</div>
+        <div class="stat-label">連續天數</div>
+      </div>
+    </div>
+    <div class="exp-bar-container">
+      <div class="exp-info">
+        <span id="exp-rank-label">數學新手</span>
+        <span id="exp-progress-label">0 / 100</span>
+      </div>
+      <div class="exp-bar">
+        <div class="exp-fill" id="exp-fill" style="width: 0%"></div>
+      </div>
+    </div>
+    <div class="level-map" id="level-map"></div>
+  </div>
+
+  <!-- Stage Select Screen -->
+  <div id="screen-stages" class="screen">
+    <div class="header">
+      <button class="header-btn" onclick="showScreen('home')">🏠</button>
+      <div class="header-title" id="stage-screen-title">關卡選擇</div>
+      <div style="width:40px"></div>
+    </div>
+    <div class="stage-list" id="stage-list"></div>
+  </div>
+
+  <!-- Gameplay Screen -->
+  <div id="screen-game" class="screen">
+    <div class="game-header">
+      <button class="header-btn" onclick="confirmQuit()">🏠</button>
+      <div class="header-title" id="game-title">Stage</div>
+      <div style="width:40px"></div>
+    </div>
+    <div class="progress-dots" id="progress-dots"></div>
+    <div class="combo-display" id="combo-display"></div>
+    <div class="question-card" id="question-card">
+      <div class="question-text" id="question-text"></div>
+      <div class="question-sub" id="question-sub"></div>
+    </div>
+    <div id="answer-area"></div>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="screen-result" class="screen">
+    <div class="header">
+      <button class="header-btn" onclick="showScreen('home')">🏠</button>
+      <div class="header-title">結果</div>
+      <div style="width:40px"></div>
+    </div>
+    <div class="result-card" id="result-card"></div>
+  </div>
+
+  <!-- Daily Challenge Screen -->
+  <div id="screen-daily" class="screen">
+    <div class="header">
+      <button class="header-btn" onclick="endDaily()">🏠</button>
+      <div class="header-title">每日挑戰</div>
+      <div style="width:40px"></div>
+    </div>
+    <div class="daily-timer" id="daily-timer">60</div>
+    <div class="daily-score" id="daily-score">得分: 0</div>
+    <div class="progress-dots" id="daily-progress"></div>
+    <div class="question-card" id="daily-question-card">
+      <div class="question-text" id="daily-question-text"></div>
+      <div class="question-sub" id="daily-question-sub"></div>
+    </div>
+    <div id="daily-answer-area"></div>
+  </div>
+
+  <!-- Wrong Book Screen -->
+  <div id="screen-wrong" class="screen">
+    <div class="header">
+      <button class="header-btn" onclick="showScreen('home')">🏠</button>
+      <div class="header-title">📕 錯題本</div>
+      <div style="width:40px"></div>
+    </div>
+    <div id="wrong-book-content"></div>
+  </div>
+
+  <!-- Stats Screen -->
+  <div id="screen-stats" class="screen">
+    <div class="header">
+      <button class="header-btn" onclick="showScreen('home')">🏠</button>
+      <div class="header-title">📊 統計</div>
+      <div style="width:40px"></div>
+    </div>
+    <div id="stats-content"></div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav" id="bottom-nav">
+    <button class="nav-btn active" onclick="showScreen('home')">
+      <span class="nav-icon">🗺️</span>
+      <span>冒險</span>
+    </button>
+    <button class="nav-btn" onclick="startDaily()">
+      <span class="nav-icon">⚡</span>
+      <span>每日</span>
+    </button>
+    <button class="nav-btn" onclick="showScreen('wrong')">
+      <span class="nav-icon">📕</span>
+      <span>錯題</span>
+    </button>
+    <button class="nav-btn" onclick="showScreen('stats')">
+      <span class="nav-icon">📊</span>
+      <span>統計</span>
+    </button>
+  </nav>
+
+  <!-- Feedback overlay -->
+  <div class="feedback-overlay" id="feedback-overlay"></div>
+  <!-- Confetti container -->
+  <div class="confetti-container" id="confetti-container"></div>
+</div>
+
+<script>
+// ==================== GAME STATE ====================
+const LEVELS = [
+  { name: '小一', grade: 'Grade 1', color: '#22c55e', icon: '🌱', stages: ['10以內加法','10以內減法','比大小','數物品','BOSS混合'] },
+  { name: '小二', grade: 'Grade 2', color: '#3b82f6', icon: '🌊', stages: ['100以內加法','100以內減法','九九乘法','填空題','BOSS混合'] },
+  { name: '小三', grade: 'Grade 3', color: '#f59e0b', icon: '🌟', stages: ['三位數加減','兩位×一位','基本除法','單位換算','BOSS混合'] },
+  { name: '小四', grade: 'Grade 4', color: '#ef4444', icon: '🔥', stages: ['多位數乘法','長除法','分數比較與加減','長方形面積','BOSS混合'] },
+  { name: '小五', grade: 'Grade 5', color: '#8b5cf6', icon: '💜', stages: ['異分母加減','分數乘除','小數運算','百分比','BOSS混合'] },
+  { name: '小六', grade: 'Grade 6', color: '#ec4899', icon: '🌸', stages: ['分數小數混合','比與比例','圓周與面積','速率問題','BOSS混合'] },
+  { name: '國一', grade: 'Grade 7', color: '#14b8a6', icon: '🧊', stages: ['正負數運算','一元方程式','座標象限','三角形','BOSS混合'] }
+];
+
+const RANKS = [
+  { min: 0, max: 100, name: '數學新手' },
+  { min: 100, max: 300, name: '計算小兵' },
+  { min: 300, max: 600, name: '算術戰士' },
+  { min: 600, max: 1000, name: '數學騎士' },
+  { min: 1000, max: 1500, name: '運算大師' },
+  { min: 1500, max: 2500, name: '數學王者' },
+  { min: 2500, max: Infinity, name: '數學神童' }
+];
+
+let state = {
+  progress: { stars: {}, exp: 0 },
+  stats: { totalCorrect: 0, totalAttempts: 0, bestCombo: 0, streak: 0, lastPlay: null },
+  wrong: [],
+  daily: {}
+};
+
+let gameState = {
+  level: 0,
+  stage: 0,
+  questions: [],
+  current: 0,
+  errors: 0,
+  combo: 0,
+  maxCombo: 0,
+  expEarned: 0,
+  answers: []
+};
+
+let dailyState = {
+  questions: [],
+  current: 0,
+  score: 0,
+  timer: 60,
+  interval: null,
+  active: false
+};
+
+let soundEnabled = true;
+let audioCtx = null;
+
+// ==================== PERSISTENCE ====================
+function loadState() {
+  try {
+    const p = localStorage.getItem('math_progress');
+    const s = localStorage.getItem('math_stats');
+    const w = localStorage.getItem('math_wrong');
+    const d = localStorage.getItem('math_daily');
+    if (p) state.progress = JSON.parse(p);
+    if (s) state.stats = JSON.parse(s);
+    if (w) state.wrong = JSON.parse(w);
+    if (d) state.daily = JSON.parse(d);
+    if (!state.progress.stars) state.progress.stars = {};
+    if (!state.progress.exp) state.progress.exp = 0;
+  } catch(e) { console.error('Load error', e); }
+
+  // Check streak
+  const today = new Date().toISOString().split('T')[0];
+  if (state.stats.lastPlay) {
+    const last = new Date(state.stats.lastPlay);
+    const diff = Math.floor((new Date(today) - last) / 86400000);
+    if (diff > 1) state.stats.streak = 0;
+  }
+}
+
+function saveState() {
+  try {
+    localStorage.setItem('math_progress', JSON.stringify(state.progress));
+    localStorage.setItem('math_stats', JSON.stringify(state.stats));
+    localStorage.setItem('math_wrong', JSON.stringify(state.wrong));
+    localStorage.setItem('math_daily', JSON.stringify(state.daily));
+  } catch(e) { console.error('Save error', e); }
+}
+
+// ==================== SOUND ====================
+function getAudioCtx() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  return audioCtx;
+}
+
+function playSound(type) {
+  if (!soundEnabled) return;
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    switch(type) {
+      case 'correct':
+        osc.frequency.setValueAtTime(523, ctx.currentTime);
+        osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.3);
+        break;
+      case 'wrong':
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(200, ctx.currentTime);
+        osc.frequency.setValueAtTime(150, ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.3);
+        break;
+      case 'combo':
+        osc.frequency.setValueAtTime(600 + gameState.combo * 100, ctx.currentTime);
+        osc.frequency.setValueAtTime(800 + gameState.combo * 100, ctx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.2);
+        break;
+      case 'levelup':
+        osc.frequency.setValueAtTime(523, ctx.currentTime);
+        osc.frequency.setValueAtTime(659, ctx.currentTime + 0.15);
+        osc.frequency.setValueAtTime(784, ctx.currentTime + 0.3);
+        osc.frequency.setValueAtTime(1047, ctx.currentTime + 0.45);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.7);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.7);
+        break;
+      case 'click':
+        osc.frequency.setValueAtTime(800, ctx.currentTime);
+        gain.gain.setValueAtTime(0.1, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.05);
+        break;
+    }
+  } catch(e) {}
+}
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  document.getElementById('btn-sound').textContent = soundEnabled ? '🔊' : '🔇';
+}
+
+// ==================== UTILITY ====================
+function randInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function gcd(a, b) {
+  a = Math.abs(a); b = Math.abs(b);
+  while (b) { [a, b] = [b, a % b]; }
+  return a;
+}
+
+function lcm(a, b) {
+  return (a * b) / gcd(a, b);
+}
+
+function getRank(exp) {
+  for (const r of RANKS) {
+    if (exp < r.max) return r;
+  }
+  return RANKS[RANKS.length - 1];
+}
+
+function getRankName(exp) {
+  return getRank(exp).name;
+}
+
+function isLevelUnlocked(level) {
+  if (level === 0) return true;
+  // Previous level's boss (stage 5) must be cleared
+  const bossKey = `${level}-5`;
+  return (state.progress.stars[bossKey] || 0) > 0;
+}
+
+function isStageUnlocked(level, stage) {
+  if (stage === 1) return isLevelUnlocked(level);
+  // Previous stage must be cleared
+  const prevKey = `${level + 1}-${stage - 1}`;
+  return (state.progress.stars[prevKey] || 0) > 0;
+}
+
+function getStageStars(level, stage) {
+  const key = `${level + 1}-${stage}`;
+  return state.progress.stars[key] || 0;
+}
+
+function getTotalStars() {
+  return Object.values(state.progress.stars).reduce((s, v) => s + v, 0);
+}
+
+// ==================== QUESTION GENERATORS ====================
+
+// Level 1, Stage 1: Addition within 10
+function genL1S1() {
+  const a = randInt(0, 10);
+  const b = randInt(0, 10 - a);
+  return { question: `${a} + ${b} = ?`, answer: a + b, type: 'input' };
+}
+
+// Level 1, Stage 2: Subtraction within 10
+function genL1S2() {
+  const a = randInt(1, 10);
+  const b = randInt(0, a);
+  return { question: `${a} - ${b} = ?`, answer: a - b, type: 'input' };
+}
+
+// Level 1, Stage 3: Compare numbers
+function genL1S3() {
+  const a = randInt(0, 20);
+  let b = randInt(0, 20);
+  // Sometimes make them equal
+  if (Math.random() < 0.2) b = a;
+  const correct = a > b ? '>' : (a < b ? '<' : '=');
+  return { question: `${a} ○ ${b}`, answer: correct, type: 'choice', choices: ['>', '<', '='], questionSub: '選擇正確的符號' };
+}
+
+// Level 1, Stage 4: Count objects
+function genL1S4() {
+  const emojis = ['🍎','🌟','🐱','🌈','🎈','🐶','🍕','🦋','🌺','🚗'];
+  const emoji = emojis[randInt(0, emojis.length - 1)];
+  const count = randInt(1, 10);
+  const display = emoji.repeat(count);
+  return { question: display, answer: count, type: 'input', isObjects: true, questionSub: '數一數，有幾個？' };
+}
+
+// Level 1, Stage 5: Boss mixed
+function genL1S5() {
+  const r = randInt(1, 4);
+  if (r === 1) return genL1S1();
+  if (r === 2) return genL1S2();
+  if (r === 3) return genL1S3();
+  return genL1S4();
+}
+
+// Level 2, Stage 1: Addition within 100 (with carrying)
+function genL2S1() {
+  const a = randInt(10, 99);
+  const b = randInt(1, 99 - Math.min(a, 50));
+  const sum = a + b;
+  if (sum > 100) {
+    const a2 = randInt(10, 50);
+    const b2 = randInt(10, 50);
+    return { question: `${a2} + ${b2} = ?`, answer: a2 + b2, type: 'input' };
+  }
+  return { question: `${a} + ${b} = ?`, answer: sum, type: 'input' };
+}
+
+// Level 2, Stage 2: Subtraction within 100 (with borrowing)
+function genL2S2() {
+  const a = randInt(20, 100);
+  const b = randInt(1, a - 1);
+  return { question: `${a} - ${b} = ?`, answer: a - b, type: 'input' };
+}
+
+// Level 2, Stage 3: Multiplication table
+function genL2S3() {
+  const a = randInt(1, 9);
+  const b = randInt(1, 9);
+  return { question: `${a} × ${b} = ?`, answer: a * b, type: 'input' };
+}
+
+// Level 2, Stage 4: Fill the blank
+function genL2S4() {
+  const type = randInt(1, 4);
+  if (type === 1) {
+    // ? + b = c
+    const ans = randInt(1, 50);
+    const b = randInt(1, 50);
+    const c = ans + b;
+    return { question: `? + ${b} = ${c}`, answer: ans, type: 'input', questionSub: '找出 ? 的值' };
+  } else if (type === 2) {
+    // a + ? = c
+    const a = randInt(1, 50);
+    const ans = randInt(1, 50);
+    const c = a + ans;
+    return { question: `${a} + ? = ${c}`, answer: ans, type: 'input', questionSub: '找出 ? 的值' };
+  } else if (type === 3) {
+    // ? - b = c
+    const b = randInt(1, 30);
+    const c = randInt(0, 30);
+    const ans = b + c;
+    return { question: `? - ${b} = ${c}`, answer: ans, type: 'input', questionSub: '找出 ? 的值' };
+  } else {
+    // a - ? = c
+    const a = randInt(10, 60);
+    const ans = randInt(1, a);
+    const c = a - ans;
+    return { question: `${a} - ? = ${c}`, answer: ans, type: 'input', questionSub: '找出 ? 的值' };
+  }
+}
+
+// Level 2, Stage 5: Boss mixed
+function genL2S5() {
+  const r = randInt(1, 4);
+  if (r === 1) return genL2S1();
+  if (r === 2) return genL2S2();
+  if (r === 3) return genL2S3();
+  return genL2S4();
+}
+
+// Level 3, Stage 1: Three-digit addition/subtraction
+function genL3S1() {
+  if (Math.random() < 0.5) {
+    const a = randInt(100, 500);
+    const b = randInt(100, 499);
+    return { question: `${a} + ${b} = ?`, answer: a + b, type: 'input' };
+  } else {
+    const a = randInt(200, 999);
+    const b = randInt(100, a - 1);
+    return { question: `${a} - ${b} = ?`, answer: a - b, type: 'input' };
+  }
+}
+
+// Level 3, Stage 2: Two-digit × one-digit
+function genL3S2() {
+  const a = randInt(10, 99);
+  const b = randInt(2, 9);
+  return { question: `${a} × ${b} = ?`, answer: a * b, type: 'input' };
+}
+
+// Level 3, Stage 3: Basic division (exact)
+function genL3S3() {
+  const b = randInt(2, 9);
+  const ans = randInt(2, 12);
+  const a = b * ans;
+  return { question: `${a} ÷ ${b} = ?`, answer: ans, type: 'input' };
+}
+
+// Level 3, Stage 4: Unit conversion
+function genL3S4() {
+  const type = randInt(1, 4);
+  if (type === 1) {
+    // cm to m
+    const m = randInt(1, 9);
+    const cm = m * 100;
+    return { question: `${cm} 公分 = ? 公尺`, answer: m, type: 'input', questionSub: '100公分 = 1公尺' };
+  } else if (type === 2) {
+    // m to cm
+    const m = randInt(1, 9);
+    const cm = m * 100;
+    return { question: `${m} 公尺 = ? 公分`, answer: cm, type: 'input', questionSub: '1公尺 = 100公分' };
+  } else if (type === 3) {
+    // g to kg
+    const kg = randInt(1, 9);
+    const g = kg * 1000;
+    return { question: `${g} 公克 = ? 公斤`, answer: kg, type: 'input', questionSub: '1000公克 = 1公斤' };
+  } else {
+    // kg to g
+    const kg = randInt(1, 9);
+    const g = kg * 1000;
+    return { question: `${kg} 公斤 = ? 公克`, answer: g, type: 'input', questionSub: '1公斤 = 1000公克' };
+  }
+}
+
+// Level 3, Stage 5: Boss mixed
+function genL3S5() {
+  const r = randInt(1, 4);
+  if (r === 1) return genL3S1();
+  if (r === 2) return genL3S2();
+  if (r === 3) return genL3S3();
+  return genL3S4();
+}
+
+// Level 4, Stage 1: Multi-digit multiplication (two-digit × two-digit)
+function genL4S1() {
+  const a = randInt(11, 50);
+  const b = randInt(11, 50);
+  return { question: `${a} × ${b} = ?`, answer: a * b, type: 'input' };
+}
+
+// Level 4, Stage 2: Long division (integer result)
+function genL4S2() {
+  const b = randInt(2, 20);
+  const ans = randInt(5, 50);
+  const a = b * ans;
+  return { question: `${a} ÷ ${b} = ?`, answer: ans, type: 'input' };
+}
+
+// Level 4, Stage 3: Fractions - compare and same-denominator add/subtract
+function genL4S3() {
+  const type = randInt(1, 3);
+  if (type === 1) {
+    // Compare fractions with same denominator
+    const den = randInt(2, 10);
+    const n1 = randInt(1, den - 1);
+    let n2 = randInt(1, den - 1);
+    if (Math.random() < 0.15) n2 = n1;
+    const correct = n1 > n2 ? '>' : (n1 < n2 ? '<' : '=');
+    return {
+      question: `${n1}/${den} ○ ${n2}/${den}`,
+      answer: correct,
+      type: 'choice',
+      choices: ['>', '<', '='],
+      questionSub: '比較兩個分數的大小'
+    };
+  } else if (type === 2) {
+    // Same denominator addition
+    const den = randInt(2, 10);
+    const n1 = randInt(1, den - 1);
+    const n2 = randInt(1, den - n1);
+    const ansNum = n1 + n2;
+    const g = gcd(ansNum, den);
+    return {
+      question: `${n1}/${den} + ${n2}/${den} = ?`,
+      answer: `${ansNum/g}/${den/g}`,
+      type: 'fraction',
+      answerNum: ansNum/g,
+      answerDen: den/g,
+      questionSub: '答案請化為最簡分數 (如 1/2)'
+    };
+  } else {
+    // Same denominator subtraction
+    const den = randInt(2, 10);
+    const n1 = randInt(2, den - 1);
+    const n2 = randInt(1, n1 - 1);
+    const ansNum = n1 - n2;
+    const g = gcd(ansNum, den);
+    return {
+      question: `${n1}/${den} - ${n2}/${den} = ?`,
+      answer: `${ansNum/g}/${den/g}`,
+      type: 'fraction',
+      answerNum: ansNum/g,
+      answerDen: den/g,
+      questionSub: '答案請化為最簡分數 (如 1/2)'
+    };
+  }
+}
+
+// Level 4, Stage 4: Area of rectangles
+function genL4S4() {
+  const l = randInt(2, 20);
+  const w = randInt(2, 20);
+  const type = randInt(1, 3);
+  if (type === 1) {
+    return { question: `長方形：長 ${l} 公分，寬 ${w} 公分\n面積 = ? 平方公分`, answer: l * w, type: 'input', questionSub: '面積 = 長 × 寬' };
+  } else if (type === 2) {
+    const area = l * w;
+    return { question: `長方形面積 ${area} 平方公分，長 ${l} 公分\n寬 = ? 公分`, answer: w, type: 'input', questionSub: '寬 = 面積 ÷ 長' };
+  } else {
+    // Perimeter
+    const p = 2 * (l + w);
+    return { question: `長方形：長 ${l} 公分，寬 ${w} 公分\n周長 = ? 公分`, answer: p, type: 'input', questionSub: '周長 = 2 × (長 + 寬)' };
+  }
+}
+
+// Level 4, Stage 5: Boss mixed
+function genL4S5() {
+  const r = randInt(1, 4);
+  if (r === 1) return genL4S1();
+  if (r === 2) return genL4S2();
+  if (r === 3) return genL4S3();
+  return genL4S4();
+}
+
+// Level 5, Stage 1: Unlike fraction add/subtract
+function genL5S1() {
+  const d1 = randInt(2, 8);
+  let d2 = randInt(2, 8);
+  while (d2 === d1) d2 = randInt(2, 8);
+  const commonDen = lcm(d1, d2);
+  const n1 = randInt(1, d1 - 1);
+  const n2 = randInt(1, d2 - 1);
+  const newN1 = n1 * (commonDen / d1);
+  const newN2 = n2 * (commonDen / d2);
+
+  if (Math.random() < 0.5 || newN1 <= newN2) {
+    // Addition
+    const resNum = newN1 + newN2;
+    const g = gcd(resNum, commonDen);
+    return {
+      question: `${n1}/${d1} + ${n2}/${d2} = ?`,
+      answer: `${resNum/g}/${commonDen/g}`,
+      type: 'fraction',
+      answerNum: resNum/g,
+      answerDen: commonDen/g,
+      questionSub: '答案請化為最簡分數'
+    };
+  } else {
+    // Subtraction
+    const resNum = newN1 - newN2;
+    if (resNum <= 0) {
+      const resNum2 = newN1 + newN2;
+      const g = gcd(resNum2, commonDen);
+      return {
+        question: `${n1}/${d1} + ${n2}/${d2} = ?`,
+        answer: `${resNum2/g}/${commonDen/g}`,
+        type: 'fraction',
+        answerNum: resNum2/g,
+        answerDen: commonDen/g,
+        questionSub: '答案請化為最簡分數'
+      };
+    }
+    const g = gcd(resNum, commonDen);
+    return {
+      question: `${n1}/${d1} - ${n2}/${d2} = ?`,
+      answer: `${resNum/g}/${commonDen/g}`,
+      type: 'fraction',
+      answerNum: resNum/g,
+      answerDen: commonDen/g,
+      questionSub: '答案請化為最簡分數'
+    };
+  }
+}
+
+// Level 5, Stage 2: Fraction multiply/divide
+function genL5S2() {
+  if (Math.random() < 0.5) {
+    // Multiplication
+    const n1 = randInt(1, 7);
+    const d1 = randInt(2, 9);
+    const n2 = randInt(1, 7);
+    const d2 = randInt(2, 9);
+    const resNum = n1 * n2;
+    const resDen = d1 * d2;
+    const g = gcd(resNum, resDen);
+    return {
+      question: `${n1}/${d1} × ${n2}/${d2} = ?`,
+      answer: `${resNum/g}/${resDen/g}`,
+      type: 'fraction',
+      answerNum: resNum/g,
+      answerDen: resDen/g,
+      questionSub: '答案請化為最簡分數'
+    };
+  } else {
+    // Division (multiply by reciprocal)
+    const n1 = randInt(1, 7);
+    const d1 = randInt(2, 9);
+    const n2 = randInt(1, 7);
+    const d2 = randInt(2, 9);
+    const resNum = n1 * d2;
+    const resDen = d1 * n2;
+    const g = gcd(resNum, resDen);
+    return {
+      question: `${n1}/${d1} ÷ ${n2}/${d2} = ?`,
+      answer: `${resNum/g}/${resDen/g}`,
+      type: 'fraction',
+      answerNum: resNum/g,
+      answerDen: resDen/g,
+      questionSub: '答案請化為最簡分數'
+    };
+  }
+}
+
+// Level 5, Stage 3: Decimal arithmetic
+function genL5S3() {
+  const op = randInt(1, 4);
+  if (op === 1) {
+    const a = (randInt(1, 99) / 10).toFixed(1);
+    const b = (randInt(1, 99) / 10).toFixed(1);
+    const ans = (parseFloat(a) + parseFloat(b)).toFixed(1);
+    return { question: `${a} + ${b} = ?`, answer: ans, type: 'decimal', questionSub: '答案保留一位小數' };
+  } else if (op === 2) {
+    let a = (randInt(20, 99) / 10).toFixed(1);
+    let b = (randInt(1, 50) / 10).toFixed(1);
+    if (parseFloat(a) < parseFloat(b)) [a, b] = [b, a];
+    const ans = (parseFloat(a) - parseFloat(b)).toFixed(1);
+    return { question: `${a} - ${b} = ?`, answer: ans, type: 'decimal', questionSub: '答案保留一位小數' };
+  } else if (op === 3) {
+    const a = (randInt(1, 20) / 10).toFixed(1);
+    const b = randInt(2, 9);
+    const ans = (parseFloat(a) * b).toFixed(1);
+    return { question: `${a} × ${b} = ?`, answer: ans, type: 'decimal', questionSub: '答案保留一位小數' };
+  } else {
+    const b = randInt(2, 9);
+    const ans = (randInt(1, 30) / 10).toFixed(1);
+    const a = (parseFloat(ans) * b).toFixed(1);
+    return { question: `${a} ÷ ${b} = ?`, answer: ans, type: 'decimal', questionSub: '答案保留一位小數' };
+  }
+}
+
+// Level 5, Stage 4: Percentage
+function genL5S4() {
+  const type = randInt(1, 4);
+  if (type === 1) {
+    // Fraction to percent
+    const fracs = [[1,2],[1,4],[3,4],[1,5],[2,5],[3,5],[4,5],[1,10],[3,10],[7,10]];
+    const [n, d] = fracs[randInt(0, fracs.length - 1)];
+    const pct = Math.round((n / d) * 100);
+    return { question: `${n}/${d} = ?%`, answer: pct, type: 'input', questionSub: '將分數轉換為百分比' };
+  } else if (type === 2) {
+    // Decimal to percent
+    const dec = (randInt(1, 99) / 100);
+    const pct = Math.round(dec * 100);
+    return { question: `${dec} = ?%`, answer: pct, type: 'input', questionSub: '將小數轉換為百分比' };
+  } else if (type === 3) {
+    // Percent to decimal (choose from multiple choice)
+    const pct = randInt(1, 9) * 10;
+    const correct = (pct / 100).toFixed(1);
+    const choices = [correct];
+    while (choices.length < 4) {
+      const c = ((randInt(1, 9) * 10) / 100).toFixed(1);
+      if (!choices.includes(c)) choices.push(c);
+    }
+    return { question: `${pct}% = ?`, answer: correct, type: 'choice', choices: shuffle(choices), questionSub: '選擇對應的小數' };
+  } else {
+    // Calculate percentage
+    const whole = randInt(2, 10) * 10;
+    const pct = randInt(1, 9) * 10;
+    const ans = whole * pct / 100;
+    return { question: `${whole} 的 ${pct}% = ?`, answer: ans, type: 'input', questionSub: '計算百分比的值' };
+  }
+}
+
+// Level 5, Stage 5: Boss mixed
+function genL5S5() {
+  const r = randInt(1, 4);
+  if (r === 1) return genL5S1();
+  if (r === 2) return genL5S2();
+  if (r === 3) return genL5S3();
+  return genL5S4();
+}
+
+// Level 6, Stage 1: Mixed fraction/decimal operations
+function genL6S1() {
+  const type = randInt(1, 3);
+  if (type === 1) {
+    // Fraction + decimal
+    const n = randInt(1, 4);
+    const d = randInt(2, 5);
+    const dec = (randInt(1, 20) / 10).toFixed(1);
+    const fracVal = n / d;
+    const ans = (fracVal + parseFloat(dec)).toFixed(2);
+    // Use choice since answer is decimal
+    const correct = parseFloat(ans);
+    const choices = [correct.toFixed(2)];
+    while (choices.length < 4) {
+      const c = (correct + (randInt(-5, 5) * 0.1)).toFixed(2);
+      if (!choices.includes(c) && parseFloat(c) > 0) choices.push(c);
+    }
+    return { question: `${n}/${d} + ${dec} = ?`, answer: choices[0], type: 'choice', choices: shuffle(choices), questionSub: '先把分數轉小數再計算' };
+  } else if (type === 2) {
+    // Decimal × fraction
+    const dec = randInt(2, 9);
+    const n = randInt(1, 5);
+    const d = randInt(2, 6);
+    const ans = (dec * n / d);
+    if (ans !== Math.floor(ans)) {
+      const ans2 = ans.toFixed(1);
+      const choices = [ans2];
+      while (choices.length < 4) {
+        const c = (parseFloat(ans2) + (randInt(-3, 3) * 0.5)).toFixed(1);
+        if (!choices.includes(c) && parseFloat(c) > 0) choices.push(c);
+      }
+      return { question: `${dec} × ${n}/${d} = ?`, answer: ans2, type: 'choice', choices: shuffle(choices) };
+    }
+    return { question: `${dec} × ${n}/${d} = ?`, answer: ans, type: 'input' };
+  } else {
+    // Compare fraction and decimal
+    const n = randInt(1, 7);
+    const d = randInt(2, 8);
+    const fracVal = n / d;
+    const dec = (Math.round(fracVal * 10 + randInt(-3, 3)) / 10).toFixed(1);
+    const correct = fracVal > parseFloat(dec) ? '>' : (fracVal < parseFloat(dec) ? '<' : '=');
+    return { question: `${n}/${d} ○ ${dec}`, answer: correct, type: 'choice', choices: ['>', '<', '='], questionSub: '比較大小' };
+  }
+}
+
+// Level 6, Stage 2: Ratio and proportion
+function genL6S2() {
+  const type = randInt(1, 3);
+  if (type === 1) {
+    // Simplify ratio
+    const g = randInt(2, 5);
+    const a = randInt(1, 6) * g;
+    const b = randInt(1, 6) * g;
+    const ga = gcd(a, b);
+    const ans = `${a/ga}:${b/ga}`;
+    const choices = [ans];
+    while (choices.length < 4) {
+      const c = `${randInt(1, 8)}:${randInt(1, 8)}`;
+      if (!choices.includes(c)) choices.push(c);
+    }
+    return { question: `化簡比 ${a}:${b} = ?`, answer: ans, type: 'choice', choices: shuffle(choices), questionSub: '選擇最簡比' };
+  } else if (type === 2) {
+    // Proportion: a/b = c/?
+    const a = randInt(1, 6);
+    const b = randInt(2, 8);
+    const mult = randInt(2, 5);
+    const c = a * mult;
+    const ans = b * mult;
+    return { question: `${a}:${b} = ${c}:?`, answer: ans, type: 'input', questionSub: '求未知數' };
+  } else {
+    // Divide in ratio
+    const total = randInt(3, 10) * 10;
+    const a = randInt(1, 4);
+    const b = randInt(1, 4);
+    const partA = total * a / (a + b);
+    if (partA !== Math.floor(partA)) {
+      // Ensure integer answer
+      const total2 = (a + b) * randInt(2, 8);
+      const partA2 = total2 * a / (a + b);
+      return { question: `${total2} 按 ${a}:${b} 分配\n較大的部分 = ?`, answer: Math.max(partA2, total2 - partA2), type: 'input', questionSub: '按比例分配' };
+    }
+    return { question: `${total} 按 ${a}:${b} 分配\n較大的部分 = ?`, answer: Math.max(partA, total - partA), type: 'input', questionSub: '按比例分配' };
+  }
+}
+
+// Level 6, Stage 3: Circle circumference and area
+function genL6S3() {
+  const type = randInt(1, 3);
+  if (type === 1) {
+    // Circumference
+    const r = randInt(1, 10);
+    const ans = (2 * 3.14 * r).toFixed(2);
+    const choices = [ans];
+    while (choices.length < 4) {
+      const c = (2 * 3.14 * randInt(1, 10)).toFixed(2);
+      if (!choices.includes(c)) choices.push(c);
+    }
+    return { question: `圓的半徑 = ${r}\n周長 = ? (π=3.14)`, answer: ans, type: 'choice', choices: shuffle(choices), questionSub: '周長 = 2πr' };
+  } else if (type === 2) {
+    // Area
+    const r = randInt(1, 8);
+    const ans = (3.14 * r * r).toFixed(2);
+    const choices = [ans];
+    while (choices.length < 4) {
+      const c = (3.14 * randInt(1, 8) * randInt(1, 8)).toFixed(2);
+      if (!choices.includes(c)) choices.push(c);
+    }
+    return { question: `圓的半徑 = ${r}\n面積 = ? (π=3.14)`, answer: ans, type: 'choice', choices: shuffle(choices), questionSub: '面積 = πr²' };
+  } else {
+    // Diameter to circumference
+    const d = randInt(2, 14);
+    const ans = (3.14 * d).toFixed(2);
+    const choices = [ans];
+    while (choices.length < 4) {
+      const c = (3.14 * randInt(2, 14)).toFixed(2);
+      if (!choices.includes(c)) choices.push(c);
+    }
+    return { question: `圓的直徑 = ${d}\n周長 = ? (π=3.14)`, answer: ans, type: 'choice', choices: shuffle(choices), questionSub: '周長 = πd' };
+  }
+}
+
+// Level 6, Stage 4: Speed/distance/time problems
+function genL6S4() {
+  const type = randInt(1, 3);
+  if (type === 1) {
+    // distance = speed × time
+    const speed = randInt(3, 12) * 10;
+    const time = randInt(1, 5);
+    const dist = speed * time;
+    return { question: `速率 ${speed} 公里/時，走 ${time} 小時\n距離 = ? 公里`, answer: dist, type: 'input', questionSub: '距離 = 速率 × 時間' };
+  } else if (type === 2) {
+    // speed = distance / time
+    const time = randInt(2, 6);
+    const speed = randInt(3, 15) * 10;
+    const dist = speed * time;
+    return { question: `距離 ${dist} 公里，時間 ${time} 小時\n速率 = ? 公里/時`, answer: speed, type: 'input', questionSub: '速率 = 距離 ÷ 時間' };
+  } else {
+    // time = distance / speed
+    const speed = randInt(3, 12) * 10;
+    const time = randInt(2, 6);
+    const dist = speed * time;
+    return { question: `距離 ${dist} 公里，速率 ${speed} 公里/時\n時間 = ? 小時`, answer: time, type: 'input', questionSub: '時間 = 距離 ÷ 速率' };
+  }
+}
+
+// Level 6, Stage 5: Boss mixed
+function genL6S5() {
+  const r = randInt(1, 4);
+  if (r === 1) return genL6S1();
+  if (r === 2) return genL6S2();
+  if (r === 3) return genL6S3();
+  return genL6S4();
+}
+
+// Level 7, Stage 1: Positive/negative number arithmetic
+function genL7S1() {
+  const op = randInt(1, 4);
+  if (op === 1) {
+    const a = randInt(-20, 20);
+    const b = randInt(-20, 20);
+    return { question: `(${a}) + (${b}) = ?`, answer: a + b, type: 'input', allowNegative: true };
+  } else if (op === 2) {
+    const a = randInt(-20, 20);
+    const b = randInt(-20, 20);
+    return { question: `(${a}) - (${b}) = ?`, answer: a - b, type: 'input', allowNegative: true };
+  } else if (op === 3) {
+    const a = randInt(-10, 10);
+    const b = randInt(-10, 10);
+    return { question: `(${a}) × (${b}) = ?`, answer: a * b, type: 'input', allowNegative: true };
+  } else {
+    const b = randInt(1, 10) * (Math.random() < 0.5 ? 1 : -1);
+    const ans = randInt(-10, 10);
+    const a = b * ans;
+    return { question: `(${a}) ÷ (${b}) = ?`, answer: ans, type: 'input', allowNegative: true };
+  }
+}
+
+// Level 7, Stage 2: Simple linear equations
+function genL7S2() {
+  const type = randInt(1, 4);
+  if (type === 1) {
+    // ax + b = c
+    const a = randInt(2, 8);
+    const x = randInt(-10, 10);
+    const b = randInt(-15, 15);
+    const c = a * x + b;
+    return { question: `${a}x + ${b >= 0 ? b : '(' + b + ')'} = ${c}\nx = ?`, answer: x, type: 'input', allowNegative: true, questionSub: '解方程式' };
+  } else if (type === 2) {
+    // ax - b = c
+    const a = randInt(2, 6);
+    const x = randInt(1, 10);
+    const b = randInt(1, 15);
+    const c = a * x - b;
+    return { question: `${a}x - ${b} = ${c}\nx = ?`, answer: x, type: 'input', allowNegative: true, questionSub: '解方程式' };
+  } else if (type === 3) {
+    // x/a + b = c
+    const a = randInt(2, 6);
+    const x = a * randInt(1, 8);
+    const b = randInt(1, 10);
+    const c = x / a + b;
+    return { question: `x/${a} + ${b} = ${c}\nx = ?`, answer: x, type: 'input', allowNegative: true, questionSub: '解方程式' };
+  } else {
+    // a(x + b) = c
+    const a = randInt(2, 5);
+    const x = randInt(-5, 10);
+    const b = randInt(1, 8);
+    const c = a * (x + b);
+    return { question: `${a}(x + ${b}) = ${c}\nx = ?`, answer: x, type: 'input', allowNegative: true, questionSub: '解方程式' };
+  }
+}
+
+// Level 7, Stage 3: Coordinate plane (which quadrant)
+function genL7S3() {
+  const type = randInt(1, 3);
+  if (type === 1) {
+    // Which quadrant
+    const x = randInt(1, 10) * (Math.random() < 0.5 ? 1 : -1);
+    const y = randInt(1, 10) * (Math.random() < 0.5 ? 1 : -1);
+    let quadrant;
+    if (x > 0 && y > 0) quadrant = '第一象限';
+    else if (x < 0 && y > 0) quadrant = '第二象限';
+    else if (x < 0 && y < 0) quadrant = '第三象限';
+    else quadrant = '第四象限';
+    return {
+      question: `點 (${x}, ${y}) 在哪個象限？`,
+      answer: quadrant,
+      type: 'choice',
+      choices: ['第一象限', '第二象限', '第三象限', '第四象限'],
+      questionSub: '判斷座標點所在象限'
+    };
+  } else if (type === 2) {
+    // Distance from origin (choose)
+    const x = randInt(1, 5) * (Math.random() < 0.5 ? 1 : -1);
+    const y = randInt(1, 5) * (Math.random() < 0.5 ? 1 : -1);
+    // Use only Pythagorean triples for integer answers
+    const triples = [[3,4,5],[5,12,13],[6,8,10],[8,15,17]];
+    const t = triples[randInt(0, triples.length - 1)];
+    const px = t[0] * (Math.random() < 0.5 ? 1 : -1);
+    const py = t[1] * (Math.random() < 0.5 ? 1 : -1);
+    return { question: `點 (${px}, ${py}) 到原點的距離 = ?`, answer: t[2], type: 'input', questionSub: '距離 = √(x² + y²)' };
+  } else {
+    // Which axis
+    const onX = Math.random() < 0.5;
+    const val = randInt(-10, 10);
+    const point = onX ? `(${val}, 0)` : `(0, ${val})`;
+    const correct = onX ? 'x 軸' : 'y 軸';
+    return { question: `點 ${point} 在哪條軸上？`, answer: correct, type: 'choice', choices: ['x 軸', 'y 軸', '原點', '不在軸上'], questionSub: '判斷點的位置' };
+  }
+}
+
+// Level 7, Stage 4: Triangle area and angle sum
+function genL7S4() {
+  const type = randInt(1, 3);
+  if (type === 1) {
+    // Triangle area
+    const base = randInt(3, 15);
+    const height = randInt(2, 12);
+    // Ensure even product for integer area
+    const b2 = base % 2 === 0 ? base : base + 1;
+    const area = b2 * height / 2;
+    return { question: `三角形：底 ${b2}，高 ${height}\n面積 = ?`, answer: area, type: 'input', questionSub: '面積 = 底 × 高 ÷ 2' };
+  } else if (type === 2) {
+    // Angle sum (find missing angle)
+    const a1 = randInt(20, 80);
+    const a2 = randInt(20, 80);
+    const a3 = 180 - a1 - a2;
+    if (a3 <= 0) {
+      return { question: `三角形兩角為 30° 和 60°\n第三角 = ?°`, answer: 90, type: 'input', questionSub: '三角形內角和 = 180°' };
+    }
+    return { question: `三角形兩角為 ${a1}° 和 ${a2}°\n第三角 = ?°`, answer: a3, type: 'input', questionSub: '三角形內角和 = 180°' };
+  } else {
+    // Triangle type
+    const types = [
+      { angles: [60, 60, 60], name: '等邊三角形' },
+      { angles: [90, 45, 45], name: '等腰直角三角形' },
+      { angles: [90, 30, 60], name: '直角三角形' },
+      { angles: [50, 50, 80], name: '等腰三角形' }
+    ];
+    const t = types[randInt(0, types.length - 1)];
+    const shuffledAngles = shuffle(t.angles);
+    return {
+      question: `三角形三角為 ${shuffledAngles[0]}°, ${shuffledAngles[1]}°, ${shuffledAngles[2]}°\n這是什麼三角形？`,
+      answer: t.name,
+      type: 'choice',
+      choices: shuffle(['等邊三角形', '等腰直角三角形', '直角三角形', '等腰三角形']),
+      questionSub: '判斷三角形類型'
+    };
+  }
+}
+
+// Level 7, Stage 5: Boss mixed
+function genL7S5() {
+  const r = randInt(1, 4);
+  if (r === 1) return genL7S1();
+  if (r === 2) return genL7S2();
+  if (r === 3) return genL7S3();
+  return genL7S4();
+}
+
+// Master generator
+const generators = [
+  [genL1S1, genL1S2, genL1S3, genL1S4, genL1S5],
+  [genL2S1, genL2S2, genL2S3, genL2S4, genL2S5],
+  [genL3S1, genL3S2, genL3S3, genL3S4, genL3S5],
+  [genL4S1, genL4S2, genL4S3, genL4S4, genL4S5],
+  [genL5S1, genL5S2, genL5S3, genL5S4, genL5S5],
+  [genL6S1, genL6S2, genL6S3, genL6S4, genL6S5],
+  [genL7S1, genL7S2, genL7S3, genL7S4, genL7S5]
+];
+
+function generateQuestion(level, stage) {
+  return generators[level][stage]();
+}
+
+function generateQuestions(level, stage, count) {
+  const questions = [];
+  for (let i = 0; i < count; i++) {
+    questions.push(generateQuestion(level, stage));
+  }
+  return questions;
+}
+
+// ==================== SCREEN MANAGEMENT ====================
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(`screen-${name}`).classList.add('active');
+
+  // Update nav
+  document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+    btn.classList.remove('active');
+  });
+  const navMap = { home: 0, daily: 1, wrong: 2, stats: 3 };
+  if (navMap[name] !== undefined) {
+    document.querySelectorAll('.nav-btn')[navMap[name]].classList.add('active');
+  }
+
+  // Show/hide nav during game
+  const hideNav = ['game', 'result', 'daily'].includes(name);
+  document.getElementById('bottom-nav').style.display = hideNav ? 'none' : 'flex';
+
+  // Refresh screen content
+  if (name === 'home') renderHome();
+  if (name === 'wrong') renderWrongBook();
+  if (name === 'stats') renderStats();
+}
+
+// ==================== HOME SCREEN ====================
+function renderHome() {
+  const rank = getRankName(state.progress.exp);
+  document.getElementById('home-rank').textContent = rank;
+  document.getElementById('home-exp').textContent = state.progress.exp;
+  document.getElementById('home-streak').textContent = state.stats.streak;
+
+  // EXP bar
+  const r = getRank(state.progress.exp);
+  document.getElementById('exp-rank-label').textContent = r.name;
+  const nextRankIdx = RANKS.indexOf(r);
+  const nextRank = RANKS[Math.min(nextRankIdx + 1, RANKS.length - 1)];
+  const expInRank = state.progress.exp - r.min;
+  const expNeeded = r.max === Infinity ? 1000 : (r.max - r.min);
+  document.getElementById('exp-progress-label').textContent = r.max === Infinity ? `${state.progress.exp}` : `${state.progress.exp} / ${r.max}`;
+  document.getElementById('exp-fill').style.width = `${Math.min(100, (expInRank / expNeeded) * 100)}%`;
+
+  // Level map
+  const map = document.getElementById('level-map');
+  map.innerHTML = '';
+
+  // Set background gradient
+  document.getElementById('screen-home').style.background = `linear-gradient(180deg, #1a1a2e 0%, #16213e 100%)`;
+
+  LEVELS.forEach((level, i) => {
+    const unlocked = isLevelUnlocked(i);
+    const totalStars = [1,2,3,4,5].reduce((s, st) => s + getStageStars(i, st), 0);
+    const maxStars = 15;
+
+    const card = document.createElement('div');
+    card.className = `level-card${unlocked ? '' : ' locked'}`;
+    card.style.borderColor = unlocked ? level.color + '80' : 'transparent';
+    card.innerHTML = `
+      <div class="level-card-header">
+        <div class="level-icon" style="background:${level.color}30">${level.icon}</div>
+        <div>
+          <div class="level-name" style="color:${level.color}">${level.name}</div>
+          <div class="level-grade">${level.grade}</div>
+        </div>
+      </div>
+      <div class="level-stars">⭐ ${totalStars} / ${maxStars}</div>
+    `;
+
+    if (unlocked) {
+      card.onclick = () => showStages(i);
+    }
+
+    map.appendChild(card);
+  });
+}
+
+// ==================== STAGE SELECT ====================
+function showStages(level) {
+  gameState.level = level;
+  const levelInfo = LEVELS[level];
+
+  document.getElementById('stage-screen-title').textContent = `${levelInfo.icon} ${levelInfo.name}`;
+  document.getElementById('screen-stages').style.background = `linear-gradient(180deg, ${levelInfo.color}20 0%, #1a1a2e 100%)`;
+
+  const list = document.getElementById('stage-list');
+  list.innerHTML = '';
+
+  levelInfo.stages.forEach((name, i) => {
+    const stageNum = i + 1;
+    const unlocked = isStageUnlocked(level, stageNum);
+    const stars = getStageStars(level, stageNum);
+    const isBoss = stageNum === 5;
+
+    const card = document.createElement('div');
+    card.className = `stage-card${unlocked ? '' : ' locked'}${isBoss ? ' boss' : ''}`;
+
+    const starsDisplay = stars > 0 ? '⭐'.repeat(stars) + '☆'.repeat(3 - stars) : '☆☆☆';
+
+    card.innerHTML = `
+      <div class="stage-info">
+        <div class="stage-num" style="background:${levelInfo.color}">${isBoss ? '👑' : stageNum}</div>
+        <div class="stage-name" style="color:white">${name}</div>
+      </div>
+      <div class="stage-stars-display">${unlocked ? starsDisplay : '🔒'}</div>
+    `;
+
+    if (unlocked) {
+      card.onclick = () => startStage(level, i);
+    }
+
+    list.appendChild(card);
+  });
+
+  showScreen('stages');
+}
+
+// ==================== GAMEPLAY ====================
+function startStage(level, stage) {
+  gameState = {
+    level,
+    stage,
+    questions: generateQuestions(level, stage, 10),
+    current: 0,
+    errors: 0,
+    combo: 0,
+    maxCombo: 0,
+    expEarned: 0,
+    answers: []
+  };
+
+  const levelInfo = LEVELS[level];
+  document.getElementById('game-title').textContent = `${levelInfo.icon} ${levelInfo.stages[stage]}`;
+  document.getElementById('screen-game').style.background = `linear-gradient(180deg, ${levelInfo.color}30 0%, #1a1a2e 100%)`;
+
+  showScreen('game');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = gameState.questions[gameState.current];
+
+  // Progress dots
+  const dots = document.getElementById('progress-dots');
+  dots.innerHTML = '';
+  for (let i = 0; i < 10; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'progress-dot';
+    if (i < gameState.current) {
+      dot.className += gameState.answers[i] ? ' correct' : ' wrong';
+      dot.textContent = gameState.answers[i] ? '✓' : '✗';
+    } else if (i === gameState.current) {
+      dot.className += ' current';
+      dot.textContent = i + 1;
+    } else {
+      dot.textContent = i + 1;
+    }
+    dots.appendChild(dot);
+  }
+
+  // Combo display
+  const comboEl = document.getElementById('combo-display');
+  if (gameState.combo >= 2) {
+    const fireLevel = Math.min(gameState.combo, 5);
+    const fires = '🔥'.repeat(Math.min(fireLevel, 3));
+    comboEl.innerHTML = `<span class="combo-text ${fireLevel >= 4 ? 'fire-anim' : ''}">${fires} ×${gameState.combo} COMBO!</span>`;
+  } else {
+    comboEl.innerHTML = '';
+  }
+
+  // Question
+  const questionText = document.getElementById('question-text');
+  const questionSub = document.getElementById('question-sub');
+
+  if (q.isObjects) {
+    questionText.innerHTML = `<div class="objects-display">${q.question}</div>`;
+  } else if (q.question.includes('\n')) {
+    questionText.innerHTML = q.question.split('\n').join('<br>');
+  } else {
+    questionText.textContent = q.question;
+  }
+  questionSub.textContent = q.questionSub || '';
+
+  // Answer area
+  const area = document.getElementById('answer-area');
+  area.innerHTML = '';
+
+  if (q.type === 'choice') {
+    renderChoices(area, q);
+  } else if (q.type === 'fraction') {
+    renderFractionInput(area, q);
+  } else if (q.type === 'decimal') {
+    renderDecimalInput(area, q);
+  } else {
+    renderNumpad(area, q);
+  }
+}
+
+function renderChoices(container, q) {
+  const grid = document.createElement('div');
+  grid.className = 'choices-grid';
+  if (q.choices.length === 3) {
+    grid.style.gridTemplateColumns = '1fr 1fr 1fr';
+  }
+
+  q.choices.forEach(choice => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = choice;
+    btn.onclick = () => handleChoiceAnswer(choice, q, grid);
+    grid.appendChild(btn);
+  });
+
+  container.appendChild(grid);
+}
+
+function handleChoiceAnswer(selected, q, grid) {
+  const correct = String(selected) === String(q.answer);
+  const buttons = grid.querySelectorAll('.choice-btn');
+
+  buttons.forEach(btn => {
+    btn.onclick = null;
+    if (btn.textContent === String(q.answer)) {
+      btn.classList.add('correct');
+    }
+    if (btn.textContent === selected && !correct) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  processAnswer(correct, selected, q);
+}
+
+function renderNumpad(container, q) {
+  const inputDisplay = document.createElement('div');
+  inputDisplay.className = 'numpad-input';
+  inputDisplay.id = 'numpad-display';
+  inputDisplay.textContent = '';
+  container.appendChild(inputDisplay);
+
+  const numpad = document.createElement('div');
+  numpad.className = 'numpad';
+
+  const buttons = ['7','8','9','⌫','4','5','6','C','1','2','3','',
+    q.allowNegative ? '(-)' : '0', q.allowNegative ? '0' : '', q.allowNegative ? '' : '', '✓'];
+
+  // Better layout
+  const layout = q.allowNegative ?
+    ['7','8','9','⌫','4','5','6','C','1','2','3','(-)','','0','','✓'] :
+    ['7','8','9','⌫','4','5','6','C','1','2','3','','','0','','✓'];
+
+  layout.forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'numpad-btn';
+    if (key === '✓') btn.className += ' submit';
+    if (key === '⌫') btn.className += ' backspace';
+    if (key === '(-)') btn.className += ' negative';
+    btn.textContent = key;
+    btn.style.visibility = key === '' ? 'hidden' : 'visible';
+
+    btn.onclick = () => {
+      playSound('click');
+      const display = document.getElementById('numpad-display');
+      if (!display) return;
+
+      if (key === '⌫') {
+        display.textContent = display.textContent.slice(0, -1);
+      } else if (key === 'C') {
+        display.textContent = '';
+      } else if (key === '(-)') {
+        if (display.textContent.startsWith('-')) {
+          display.textContent = display.textContent.slice(1);
+        } else {
+          display.textContent = '-' + display.textContent;
+        }
+      } else if (key === '✓') {
+        submitNumpadAnswer(q);
+      } else {
+        display.textContent += key;
+      }
+    };
+
+    numpad.appendChild(btn);
+  });
+
+  container.appendChild(numpad);
+}
+
+function renderDecimalInput(container, q) {
+  const inputDisplay = document.createElement('div');
+  inputDisplay.className = 'numpad-input';
+  inputDisplay.id = 'numpad-display';
+  inputDisplay.textContent = '';
+  container.appendChild(inputDisplay);
+
+  const numpad = document.createElement('div');
+  numpad.className = 'numpad';
+
+  const layout = ['7','8','9','⌫','4','5','6','C','1','2','3','.','','0','','✓'];
+
+  layout.forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'numpad-btn';
+    if (key === '✓') btn.className += ' submit';
+    if (key === '⌫') btn.className += ' backspace';
+    btn.textContent = key;
+    btn.style.visibility = key === '' ? 'hidden' : 'visible';
+
+    btn.onclick = () => {
+      playSound('click');
+      const display = document.getElementById('numpad-display');
+      if (!display) return;
+
+      if (key === '⌫') {
+        display.textContent = display.textContent.slice(0, -1);
+      } else if (key === 'C') {
+        display.textContent = '';
+      } else if (key === '✓') {
+        submitNumpadAnswer(q);
+      } else if (key === '.') {
+        if (!display.textContent.includes('.')) {
+          display.textContent += key;
+        }
+      } else {
+        display.textContent += key;
+      }
+    };
+
+    numpad.appendChild(btn);
+  });
+
+  container.appendChild(numpad);
+}
+
+function renderFractionInput(container, q) {
+  const inputDisplay = document.createElement('div');
+  inputDisplay.className = 'numpad-input';
+  inputDisplay.id = 'numpad-display';
+  inputDisplay.textContent = '';
+  container.appendChild(inputDisplay);
+
+  const hint = document.createElement('div');
+  hint.style.cssText = 'text-align:center;color:rgba(255,255,255,0.6);font-size:13px;margin-bottom:12px;';
+  hint.textContent = '輸入格式: 分子/分母 (例如 1/2)';
+  container.appendChild(hint);
+
+  const numpad = document.createElement('div');
+  numpad.className = 'numpad';
+
+  const layout = ['7','8','9','⌫','4','5','6','C','1','2','3','/','','0','','✓'];
+
+  layout.forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'numpad-btn';
+    if (key === '✓') btn.className += ' submit';
+    if (key === '⌫') btn.className += ' backspace';
+    btn.textContent = key;
+    btn.style.visibility = key === '' ? 'hidden' : 'visible';
+
+    btn.onclick = () => {
+      playSound('click');
+      const display = document.getElementById('numpad-display');
+      if (!display) return;
+
+      if (key === '⌫') {
+        display.textContent = display.textContent.slice(0, -1);
+      } else if (key === 'C') {
+        display.textContent = '';
+      } else if (key === '✓') {
+        submitFractionAnswer(q);
+      } else if (key === '/') {
+        if (!display.textContent.includes('/')) {
+          display.textContent += key;
+        }
+      } else {
+        display.textContent += key;
+      }
+    };
+
+    numpad.appendChild(btn);
+  });
+
+  container.appendChild(numpad);
+}
+
+function submitNumpadAnswer(q) {
+  const display = document.getElementById('numpad-display');
+  if (!display || !display.textContent) return;
+
+  const userAnswer = display.textContent.trim();
+  let correct = false;
+
+  if (q.type === 'decimal') {
+    correct = parseFloat(userAnswer) === parseFloat(q.answer);
+  } else {
+    correct = parseInt(userAnswer) === parseInt(q.answer);
+  }
+
+  // Show correct answer if wrong
+  if (!correct) {
+    const area = document.getElementById('answer-area');
+    const reveal = document.createElement('div');
+    reveal.className = 'correct-reveal';
+    reveal.textContent = `正確答案: ${q.answer}`;
+    area.appendChild(reveal);
+  }
+
+  processAnswer(correct, userAnswer, q);
+}
+
+function submitFractionAnswer(q) {
+  const display = document.getElementById('numpad-display');
+  if (!display || !display.textContent) return;
+
+  const userAnswer = display.textContent.trim();
+  let correct = false;
+
+  // Parse user fraction
+  if (userAnswer.includes('/')) {
+    const parts = userAnswer.split('/');
+    const userNum = parseInt(parts[0]);
+    const userDen = parseInt(parts[1]);
+    if (!isNaN(userNum) && !isNaN(userDen) && userDen !== 0) {
+      // Compare by simplifying both
+      const userG = gcd(Math.abs(userNum), Math.abs(userDen));
+      const simpNum = userNum / userG;
+      const simpDen = userDen / userG;
+      correct = (simpNum === q.answerNum && simpDen === q.answerDen);
+    }
+  } else {
+    // Maybe they entered a whole number
+    const num = parseInt(userAnswer);
+    if (!isNaN(num) && q.answerDen === 1) {
+      correct = (num === q.answerNum);
+    }
+  }
+
+  if (!correct) {
+    const area = document.getElementById('answer-area');
+    const reveal = document.createElement('div');
+    reveal.className = 'correct-reveal';
+    reveal.textContent = `正確答案: ${q.answer}`;
+    area.appendChild(reveal);
+  }
+
+  processAnswer(correct, userAnswer, q);
+}
+
+function processAnswer(correct, userAnswer, q) {
+  state.stats.totalAttempts++;
+
+  if (correct) {
+    state.stats.totalCorrect++;
+    gameState.combo++;
+    if (gameState.combo > gameState.maxCombo) gameState.maxCombo = gameState.combo;
+    if (gameState.combo > state.stats.bestCombo) state.stats.bestCombo = gameState.combo;
+
+    const comboBonus = Math.min(gameState.combo - 1, 4) * 5;
+    const exp = 10 + comboBonus;
+    gameState.expEarned += exp;
+    state.progress.exp += exp;
+
+    gameState.answers.push(true);
+
+    playSound(gameState.combo >= 3 ? 'combo' : 'correct');
+    showFeedback(true);
+  } else {
+    gameState.errors++;
+    gameState.combo = 0;
+    gameState.answers.push(false);
+
+    playSound('wrong');
+    showFeedback(false);
+
+    // Record wrong answer (skip during wrong book practice)
+    if (gameState.level >= 0 && gameState.stage >= 0) {
+      state.wrong.unshift({
+        question: q.question,
+        userAnswer: String(userAnswer),
+        correctAnswer: String(q.answer),
+        level: gameState.level + 1,
+        stage: gameState.stage + 1,
+        timestamp: Date.now()
+      });
+      if (state.wrong.length > 50) state.wrong.pop();
+    }
+
+    // Shake question card
+    document.getElementById('question-card').classList.add('shake');
+    setTimeout(() => {
+      document.getElementById('question-card').classList.remove('shake');
+    }, 300);
+  }
+
+  saveState();
+
+  // Move to next question after delay
+  setTimeout(() => {
+    gameState.current++;
+    if (gameState.current >= 10) {
+      finishStage();
+    } else {
+      renderQuestion();
+    }
+  }, correct ? 800 : 1500);
+}
+
+function showFeedback(correct) {
+  const overlay = document.getElementById('feedback-overlay');
+  overlay.innerHTML = correct ?
+    '<div class="feedback-correct">⭐</div>' :
+    '<div class="feedback-wrong">❌</div>';
+  overlay.classList.add('show');
+  setTimeout(() => overlay.classList.remove('show'), 800);
+}
+
+function finishStage() {
+  const errors = gameState.errors;
+  let stars = 0;
+  if (errors === 0) stars = 3;
+  else if (errors === 1) stars = 2;
+  else if (errors === 2) stars = 1;
+  else stars = 0;
+
+  // Save stars (keep best) - skip for wrong book practice
+  if (gameState.level >= 0 && gameState.stage >= 0) {
+    const key = `${gameState.level + 1}-${gameState.stage + 1}`;
+    const prevStars = state.progress.stars[key] || 0;
+    if (stars > prevStars) {
+      state.progress.stars[key] = stars;
+    }
+  }
+
+  // Update streak
+  const today = new Date().toISOString().split('T')[0];
+  if (state.stats.lastPlay !== today) {
+    if (state.stats.lastPlay) {
+      const last = new Date(state.stats.lastPlay);
+      const diff = Math.floor((new Date(today) - last) / 86400000);
+      if (diff === 1) state.stats.streak++;
+      else if (diff > 1) state.stats.streak = 1;
+    } else {
+      state.stats.streak = 1;
+    }
+    state.stats.lastPlay = today;
+  }
+
+  saveState();
+
+  // Show result
+  showResult(stars, errors);
+}
+
+function showResult(stars, errors) {
+  const starsText = stars > 0 ? '⭐'.repeat(stars) + '☆'.repeat(3 - stars) : '💔💔💔';
+  let title = '';
+  if (stars === 3) title = '完美通關！';
+  else if (stars === 2) title = '表現不錯！';
+  else if (stars === 1) title = '勉強過關！';
+  else title = '再試一次吧！';
+
+  const correct = 10 - errors;
+  const card = document.getElementById('result-card');
+  card.innerHTML = `
+    <div class="result-stars">${starsText}</div>
+    <div class="result-title">${title}</div>
+    <div class="result-stats">
+      正確: ${correct} / 10<br>
+      最高連擊: ×${gameState.maxCombo}
+    </div>
+    <div class="result-exp">+${gameState.expEarned} EXP 🎉</div>
+    <div class="result-buttons">
+      <button class="btn btn-secondary" onclick="startStage(${gameState.level}, ${gameState.stage})">🔄 重玩</button>
+      ${stars > 0 ? `<button class="btn btn-primary" onclick="showStages(${gameState.level})">➡️ 繼續</button>` : ''}
+    </div>
+  `;
+
+  showScreen('result');
+
+  if (stars === 3) {
+    playSound('levelup');
+    launchConfetti();
+  } else if (stars > 0) {
+    playSound('correct');
+  }
+}
+
+function confirmQuit() {
+  if (confirm('確定要離開嗎？進度不會保存。')) {
+    showScreen('home');
+  }
+}
+
+// ==================== DAILY CHALLENGE ====================
+function startDaily() {
+  const today = new Date().toISOString().split('T')[0];
+
+  // Generate questions from unlocked levels
+  const unlockedLevels = [];
+  for (let i = 0; i < 7; i++) {
+    if (isLevelUnlocked(i)) unlockedLevels.push(i);
+  }
+  if (unlockedLevels.length === 0) unlockedLevels.push(0);
+
+  const questions = [];
+  for (let i = 0; i < 10; i++) {
+    const level = unlockedLevels[randInt(0, unlockedLevels.length - 1)];
+    const stage = randInt(0, 3); // Not boss stages
+    questions.push(generateQuestion(level, stage));
+  }
+
+  dailyState = {
+    questions,
+    current: 0,
+    score: 0,
+    timer: 60,
+    interval: null,
+    active: true
+  };
+
+  showScreen('daily');
+  renderDailyQuestion();
+  startDailyTimer();
+}
+
+function startDailyTimer() {
+  document.getElementById('daily-timer').textContent = dailyState.timer;
+  dailyState.interval = setInterval(() => {
+    dailyState.timer--;
+    const timerEl = document.getElementById('daily-timer');
+    timerEl.textContent = dailyState.timer;
+    if (dailyState.timer <= 10) {
+      timerEl.classList.add('warning');
+    }
+    if (dailyState.timer <= 0) {
+      endDaily();
+    }
+  }, 1000);
+}
+
+function renderDailyQuestion() {
+  if (dailyState.current >= 10) {
+    endDaily();
+    return;
+  }
+
+  const q = dailyState.questions[dailyState.current];
+
+  // Progress
+  const prog = document.getElementById('daily-progress');
+  prog.innerHTML = '';
+  for (let i = 0; i < 10; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'progress-dot';
+    if (i < dailyState.current) {
+      dot.className += ' correct';
+      dot.textContent = '✓';
+    } else if (i === dailyState.current) {
+      dot.className += ' current';
+      dot.textContent = i + 1;
+    } else {
+      dot.textContent = i + 1;
+    }
+    prog.appendChild(dot);
+  }
+
+  document.getElementById('daily-score').textContent = `得分: ${dailyState.score}`;
+
+  const questionText = document.getElementById('daily-question-text');
+  const questionSub = document.getElementById('daily-question-sub');
+
+  if (q.isObjects) {
+    questionText.innerHTML = `<div class="objects-display">${q.question}</div>`;
+  } else if (q.question.includes('\n')) {
+    questionText.innerHTML = q.question.split('\n').join('<br>');
+  } else {
+    questionText.textContent = q.question;
+  }
+  questionSub.textContent = q.questionSub || '';
+
+  const area = document.getElementById('daily-answer-area');
+  area.innerHTML = '';
+
+  if (q.type === 'choice') {
+    renderDailyChoices(area, q);
+  } else if (q.type === 'fraction') {
+    renderDailyFractionInput(area, q);
+  } else if (q.type === 'decimal') {
+    renderDailyDecimalInput(area, q);
+  } else {
+    renderDailyNumpad(area, q);
+  }
+}
+
+function renderDailyChoices(container, q) {
+  const grid = document.createElement('div');
+  grid.className = 'choices-grid';
+  if (q.choices.length === 3) {
+    grid.style.gridTemplateColumns = '1fr 1fr 1fr';
+  }
+
+  q.choices.forEach(choice => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = choice;
+    btn.onclick = () => {
+      const correct = String(choice) === String(q.answer);
+      if (correct) dailyState.score += 10;
+      grid.querySelectorAll('.choice-btn').forEach(b => { b.onclick = null; });
+      btn.classList.add(correct ? 'correct' : 'wrong');
+      playSound(correct ? 'correct' : 'wrong');
+      setTimeout(() => { dailyState.current++; renderDailyQuestion(); }, 600);
+    };
+    grid.appendChild(btn);
+  });
+
+  container.appendChild(grid);
+}
+
+function renderDailyNumpad(container, q) {
+  const inputDisplay = document.createElement('div');
+  inputDisplay.className = 'numpad-input';
+  inputDisplay.id = 'daily-numpad-display';
+  inputDisplay.textContent = '';
+  container.appendChild(inputDisplay);
+
+  const numpad = document.createElement('div');
+  numpad.className = 'numpad';
+
+  const layout = q.allowNegative ?
+    ['7','8','9','⌫','4','5','6','C','1','2','3','(-)','','0','','✓'] :
+    ['7','8','9','⌫','4','5','6','C','1','2','3','','','0','','✓'];
+
+  layout.forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'numpad-btn';
+    if (key === '✓') btn.className += ' submit';
+    if (key === '⌫') btn.className += ' backspace';
+    if (key === '(-)') btn.className += ' negative';
+    btn.textContent = key;
+    btn.style.visibility = key === '' ? 'hidden' : 'visible';
+
+    btn.onclick = () => {
+      playSound('click');
+      const display = document.getElementById('daily-numpad-display');
+      if (!display) return;
+
+      if (key === '⌫') {
+        display.textContent = display.textContent.slice(0, -1);
+      } else if (key === 'C') {
+        display.textContent = '';
+      } else if (key === '(-)') {
+        if (display.textContent.startsWith('-')) {
+          display.textContent = display.textContent.slice(1);
+        } else {
+          display.textContent = '-' + display.textContent;
+        }
+      } else if (key === '✓') {
+        const val = display.textContent.trim();
+        if (!val) return;
+        const correct = parseInt(val) === parseInt(q.answer);
+        if (correct) dailyState.score += 10;
+        playSound(correct ? 'correct' : 'wrong');
+        setTimeout(() => { dailyState.current++; renderDailyQuestion(); }, 600);
+      } else {
+        display.textContent += key;
+      }
+    };
+
+    numpad.appendChild(btn);
+  });
+
+  container.appendChild(numpad);
+}
+
+function renderDailyDecimalInput(container, q) {
+  const inputDisplay = document.createElement('div');
+  inputDisplay.className = 'numpad-input';
+  inputDisplay.id = 'daily-numpad-display';
+  inputDisplay.textContent = '';
+  container.appendChild(inputDisplay);
+
+  const numpad = document.createElement('div');
+  numpad.className = 'numpad';
+
+  const layout = ['7','8','9','⌫','4','5','6','C','1','2','3','.','','0','','✓'];
+
+  layout.forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'numpad-btn';
+    if (key === '✓') btn.className += ' submit';
+    if (key === '⌫') btn.className += ' backspace';
+    btn.textContent = key;
+    btn.style.visibility = key === '' ? 'hidden' : 'visible';
+
+    btn.onclick = () => {
+      playSound('click');
+      const display = document.getElementById('daily-numpad-display');
+      if (!display) return;
+
+      if (key === '⌫') {
+        display.textContent = display.textContent.slice(0, -1);
+      } else if (key === 'C') {
+        display.textContent = '';
+      } else if (key === '✓') {
+        const val = display.textContent.trim();
+        if (!val) return;
+        const correct = parseFloat(val) === parseFloat(q.answer);
+        if (correct) dailyState.score += 10;
+        playSound(correct ? 'correct' : 'wrong');
+        setTimeout(() => { dailyState.current++; renderDailyQuestion(); }, 600);
+      } else if (key === '.') {
+        const display2 = document.getElementById('daily-numpad-display');
+        if (!display2.textContent.includes('.')) display2.textContent += key;
+      } else {
+        display.textContent += key;
+      }
+    };
+
+    numpad.appendChild(btn);
+  });
+
+  container.appendChild(numpad);
+}
+
+function renderDailyFractionInput(container, q) {
+  const inputDisplay = document.createElement('div');
+  inputDisplay.className = 'numpad-input';
+  inputDisplay.id = 'daily-numpad-display';
+  inputDisplay.textContent = '';
+  container.appendChild(inputDisplay);
+
+  const hint = document.createElement('div');
+  hint.style.cssText = 'text-align:center;color:rgba(255,255,255,0.6);font-size:13px;margin-bottom:12px;';
+  hint.textContent = '輸入格式: 分子/分母';
+  container.appendChild(hint);
+
+  const numpad = document.createElement('div');
+  numpad.className = 'numpad';
+
+  const layout = ['7','8','9','⌫','4','5','6','C','1','2','3','/','','0','','✓'];
+
+  layout.forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'numpad-btn';
+    if (key === '✓') btn.className += ' submit';
+    if (key === '⌫') btn.className += ' backspace';
+    btn.textContent = key;
+    btn.style.visibility = key === '' ? 'hidden' : 'visible';
+
+    btn.onclick = () => {
+      playSound('click');
+      const display = document.getElementById('daily-numpad-display');
+      if (!display) return;
+
+      if (key === '⌫') {
+        display.textContent = display.textContent.slice(0, -1);
+      } else if (key === 'C') {
+        display.textContent = '';
+      } else if (key === '✓') {
+        const val = display.textContent.trim();
+        if (!val) return;
+        let correct = false;
+        if (val.includes('/')) {
+          const parts = val.split('/');
+          const userNum = parseInt(parts[0]);
+          const userDen = parseInt(parts[1]);
+          if (!isNaN(userNum) && !isNaN(userDen) && userDen !== 0) {
+            const userG = gcd(Math.abs(userNum), Math.abs(userDen));
+            correct = (userNum/userG === q.answerNum && userDen/userG === q.answerDen);
+          }
+        } else {
+          const num = parseInt(val);
+          if (!isNaN(num) && q.answerDen === 1) correct = (num === q.answerNum);
+        }
+        if (correct) dailyState.score += 10;
+        playSound(correct ? 'correct' : 'wrong');
+        setTimeout(() => { dailyState.current++; renderDailyQuestion(); }, 600);
+      } else if (key === '/') {
+        if (!display.textContent.includes('/')) display.textContent += key;
+      } else {
+        display.textContent += key;
+      }
+    };
+
+    numpad.appendChild(btn);
+  });
+
+  container.appendChild(numpad);
+}
+
+function endDaily() {
+  dailyState.active = false;
+  if (dailyState.interval) {
+    clearInterval(dailyState.interval);
+    dailyState.interval = null;
+  }
+
+  const today = new Date().toISOString().split('T')[0];
+  const prevBest = (state.daily[today] && state.daily[today].best) || 0;
+  const newBest = Math.max(dailyState.score, prevBest);
+  state.daily[today] = { score: dailyState.score, best: newBest };
+  saveState();
+
+  // Show result
+  const card = document.getElementById('result-card');
+  card.innerHTML = `
+    <div class="result-stars">⚡</div>
+    <div class="result-title">每日挑戰完成！</div>
+    <div class="result-stats">
+      本次得分: ${dailyState.score}<br>
+      今日最佳: ${newBest}<br>
+      回答: ${dailyState.current} / 10
+    </div>
+    <div class="result-buttons">
+      <button class="btn btn-primary" onclick="showScreen('home')">🏠 返回</button>
+      <button class="btn btn-success" onclick="startDaily()">🔄 再挑戰</button>
+    </div>
+  `;
+
+  showScreen('result');
+  if (dailyState.score >= 80) {
+    playSound('levelup');
+    launchConfetti();
+  }
+}
+
+// ==================== WRONG BOOK ====================
+function renderWrongBook() {
+  const content = document.getElementById('wrong-book-content');
+
+  if (state.wrong.length === 0) {
+    content.innerHTML = `
+      <div style="text-align:center;color:rgba(255,255,255,0.6);padding:40px 20px;">
+        <div style="font-size:48px;margin-bottom:16px;">🎉</div>
+        <div style="font-size:16px;">太棒了！目前沒有錯題</div>
+        <div style="font-size:14px;margin-top:8px;">繼續練習，錯題會自動記錄在這裡</div>
+      </div>
+    `;
+    return;
+  }
+
+  let html = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <span style="color:rgba(255,255,255,0.7);font-size:14px;">共 ${state.wrong.length} 題</span>
+      <button class="btn btn-danger" style="padding:8px 16px;font-size:14px;" onclick="practiceWrong()">📝 練習錯題</button>
+    </div>
+    <div class="wrong-list">
+  `;
+
+  state.wrong.slice(0, 20).forEach((item, i) => {
+    html += `
+      <div class="wrong-item">
+        <div class="wrong-question">${item.question}</div>
+        <div class="wrong-answers">
+          你的答案: <span class="wrong-ans">${item.userAnswer}</span> &nbsp;
+          正確答案: <span class="correct-ans">${item.correctAnswer}</span>
+        </div>
+        <div style="font-size:11px;opacity:0.5;margin-top:4px;">L${item.level}-S${item.stage}</div>
+      </div>
+    `;
+  });
+
+  html += '</div>';
+
+  if (state.wrong.length > 0) {
+    html += `<button class="btn btn-secondary" style="width:100%;margin-top:16px;" onclick="clearWrongBook()">🗑️ 清空錯題本</button>`;
+  }
+
+  content.innerHTML = html;
+}
+
+function practiceWrong() {
+  if (state.wrong.length === 0) return;
+
+  // Generate questions from wrong book
+  const wrongItems = shuffle(state.wrong).slice(0, 10);
+  const questions = wrongItems.map(item => {
+    // Try to regenerate a similar question
+    const level = item.level - 1;
+    const stage = item.stage - 1;
+    return generateQuestion(level, stage);
+  });
+
+  gameState = {
+    level: -1,
+    stage: -1,
+    questions: questions,
+    current: 0,
+    errors: 0,
+    combo: 0,
+    maxCombo: 0,
+    expEarned: 0,
+    answers: []
+  };
+
+  document.getElementById('game-title').textContent = '📕 錯題練習';
+  document.getElementById('screen-game').style.background = `linear-gradient(180deg, #ef444430 0%, #1a1a2e 100%)`;
+
+  showScreen('game');
+  renderQuestion();
+}
+
+function clearWrongBook() {
+  if (confirm('確定要清空錯題本嗎？')) {
+    state.wrong = [];
+    saveState();
+    renderWrongBook();
+  }
+}
+
+// ==================== STATS ====================
+function renderStats() {
+  const content = document.getElementById('stats-content');
+  const accuracy = state.stats.totalAttempts > 0 ? Math.round((state.stats.totalCorrect / state.stats.totalAttempts) * 100) : 0;
+  const totalStars = getTotalStars();
+  const maxPossibleStars = 7 * 5 * 3;
+
+  const rank = getRankName(state.progress.exp);
+
+  let html = `
+    <div style="background:rgba(255,255,255,0.1);border-radius:16px;padding:24px;margin-bottom:16px;">
+      <div style="text-align:center;margin-bottom:16px;">
+        <div style="font-size:48px;margin-bottom:8px;">🏆</div>
+        <div style="font-size:24px;font-weight:bold;color:white;">${rank}</div>
+        <div style="font-size:14px;color:rgba(255,255,255,0.6);">EXP: ${state.progress.exp}</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div style="text-align:center;background:rgba(255,255,255,0.05);border-radius:8px;padding:12px;">
+          <div style="font-size:24px;font-weight:bold;color:#22c55e;">${state.stats.totalCorrect}</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.6);">答對題數</div>
+        </div>
+        <div style="text-align:center;background:rgba(255,255,255,0.05);border-radius:8px;padding:12px;">
+          <div style="font-size:24px;font-weight:bold;color:#3b82f6;">${accuracy}%</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.6);">正確率</div>
+        </div>
+        <div style="text-align:center;background:rgba(255,255,255,0.05);border-radius:8px;padding:12px;">
+          <div style="font-size:24px;font-weight:bold;color:#f59e0b;">×${state.stats.bestCombo}</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.6);">最高連擊</div>
+        </div>
+        <div style="text-align:center;background:rgba(255,255,255,0.05);border-radius:8px;padding:12px;">
+          <div style="font-size:24px;font-weight:bold;color:#ec4899;">⭐${totalStars}</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.6);">總星星 / ${maxPossibleStars}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:rgba(255,255,255,0.1);border-radius:16px;padding:24px;margin-bottom:16px;">
+      <div style="font-size:16px;font-weight:bold;color:white;margin-bottom:12px;">🎖️ 成就</div>
+      <div class="achievement-grid">
+        ${renderAchievement('🌱', '初心者', state.stats.totalCorrect >= 10, '答對10題')}
+        ${renderAchievement('🔥', '連擊王', state.stats.bestCombo >= 5, '5連擊')}
+        ${renderAchievement('⭐', '集星達人', totalStars >= 15, '收集15星')}
+        ${renderAchievement('💯', '百題達人', state.stats.totalCorrect >= 100, '答對100題')}
+        ${renderAchievement('🏆', '全能數學', totalStars >= 50, '收集50星')}
+        ${renderAchievement('👑', '數學之神', totalStars >= 100, '收集100星')}
+        ${renderAchievement('📅', '勤奮者', state.stats.streak >= 3, '連續3天')}
+        ${renderAchievement('🎯', '精準射手', accuracy >= 90 && state.stats.totalAttempts >= 20, '90%正確率')}
+        ${renderAchievement('🚀', '千里之行', state.progress.exp >= 1000, '1000 EXP')}
+      </div>
+    </div>
+
+    <div style="background:rgba(255,255,255,0.1);border-radius:16px;padding:24px;">
+      <div style="font-size:16px;font-weight:bold;color:white;margin-bottom:12px;">📊 各關卡進度</div>
+      ${LEVELS.map((level, i) => {
+        const stars = [1,2,3,4,5].reduce((s, st) => s + getStageStars(i, st), 0);
+        const pct = Math.round((stars / 15) * 100);
+        return `
+          <div style="margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;color:rgba(255,255,255,0.8);font-size:13px;margin-bottom:4px;">
+              <span>${level.icon} ${level.name}</span>
+              <span>⭐${stars}/15</span>
+            </div>
+            <div style="height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden;">
+              <div style="height:100%;width:${pct}%;background:${level.color};border-radius:3px;"></div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+
+  content.innerHTML = html;
+}
+
+function renderAchievement(icon, name, unlocked, desc) {
+  return `
+    <div class="achievement-item ${unlocked ? 'unlocked' : ''}">
+      <span class="ach-icon">${icon}</span>
+      <div>${name}</div>
+      <div style="font-size:10px;opacity:0.7;">${desc}</div>
+    </div>
+  `;
+}
+
+// ==================== CONFETTI ====================
+function launchConfetti() {
+  const container = document.getElementById('confetti-container');
+  container.innerHTML = '';
+
+  const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500', '#ff69b4'];
+
+  for (let i = 0; i < 50; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = `${Math.random() * 100}%`;
+    piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = `${Math.random() * 0.5}s`;
+    piece.style.animationDuration = `${2 + Math.random() * 2}s`;
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+    piece.style.width = `${6 + Math.random() * 8}px`;
+    piece.style.height = `${6 + Math.random() * 8}px`;
+    container.appendChild(piece);
+  }
+
+  setTimeout(() => { container.innerHTML = ''; }, 4000);
+}
+
+// ==================== INITIALIZATION ====================
+function init() {
+  loadState();
+  renderHome();
+
+  // Check sound preference
+  const savedSound = localStorage.getItem('math_sound');
+  if (savedSound === 'off') {
+    soundEnabled = false;
+    document.getElementById('btn-sound').textContent = '🔇';
+  }
+}
+
+// Override toggleSound to save preference
+const originalToggleSound = toggleSound;
+window.toggleSound = function() {
+  soundEnabled = !soundEnabled;
+  document.getElementById('btn-sound').textContent = soundEnabled ? '🔊' : '🔇';
+  localStorage.setItem('math_sound', soundEnabled ? 'on' : 'off');
+};
+
+// Initialize
+init();
+</script>
+</body>
+</html>
