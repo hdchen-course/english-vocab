@@ -1,0 +1,1822 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vocabulary Learning App</title>
+<style>
+:root {
+  --primary: #7c3aed;
+  --primary-light: #a78bfa;
+  --bg: #f8fafc;
+  --card-bg: #ffffff;
+  --text: #1e293b;
+  --text-secondary: #64748b;
+  --border: #e2e8f0;
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+  --purple: #7c3aed;
+  --green: #10b981;
+  --blue: #3b82f6;
+  --orange: #f97316;
+  --red: #ef4444;
+  --gold: #d97706;
+  --radius: 12px;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+}
+
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --card-bg: #1e293b;
+  --text: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border: #334155;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.4);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans TC', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+
+.app-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 16px 20px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-lg);
+}
+
+.app-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.header-btn {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.header-btn:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.tab-bar {
+  display: flex;
+  overflow-x: auto;
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 8px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tab-bar::-webkit-scrollbar {
+  height: 3px;
+}
+
+.tab-bar::-webkit-scrollbar-thumb {
+  background: var(--primary-light);
+  border-radius: 3px;
+}
+
+.tab-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  color: var(--text-secondary);
+}
+
+.tab-item:hover {
+  color: var(--text);
+}
+
+.tab-item.active {
+  border-bottom-color: var(--tab-color, var(--primary));
+  color: var(--tab-color, var(--primary));
+}
+
+.main-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 12px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.mode-selector {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.mode-btn {
+  background: var(--card-bg);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 4px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.mode-btn:hover {
+  border-color: var(--tab-color, var(--primary));
+  transform: translateY(-2px);
+}
+
+.mode-btn.active {
+  background: var(--tab-color, var(--primary));
+  color: white;
+  border-color: var(--tab-color, var(--primary));
+}
+
+.mode-btn .mode-icon {
+  font-size: 1.3rem;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* Flashcard */
+.flashcard-container {
+  perspective: 1000px;
+  margin: 20px 0;
+  min-height: 300px;
+}
+
+.flashcard {
+  width: 100%;
+  height: 300px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.flashcard.flipped {
+  transform: rotateY(180deg);
+}
+
+.flashcard-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  background: var(--card-bg);
+  overflow-y: auto;
+}
+
+.flashcard-back {
+  transform: rotateY(180deg);
+}
+
+.flashcard-emoji {
+  font-size: 3.5rem;
+  margin-bottom: 12px;
+}
+
+.flashcard-word {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--tab-color, var(--primary));
+}
+
+.flashcard-chinese {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.flashcard-sentence {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  text-align: center;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.flashcard-sentence strong {
+  color: var(--tab-color, var(--primary));
+  font-weight: 700;
+}
+
+.flashcard-tip {
+  font-size: 0.85rem;
+  color: var(--warning);
+  background: rgba(245, 158, 11, 0.1);
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.flashcard-roots {
+  display: flex;
+  gap: 2px;
+  margin-top: 8px;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.root-part {
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.sound-btn {
+  background: var(--tab-color, var(--primary));
+  color: white;
+  border: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  font-size: 1.3rem;
+  cursor: pointer;
+  margin: 8px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: var(--shadow);
+}
+
+.sound-btn:hover {
+  transform: scale(1.1);
+}
+
+.sound-btn:active {
+  transform: scale(0.95);
+}
+
+.sound-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* SRS Buttons */
+.srs-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.srs-btn {
+  padding: 14px 8px;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: white;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: var(--shadow);
+}
+
+.srs-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.srs-btn:active {
+  transform: translateY(0);
+}
+
+.srs-btn.again { background: linear-gradient(135deg, #ef4444, #dc2626); }
+.srs-btn.hard { background: linear-gradient(135deg, #f97316, #ea580c); }
+.srs-btn.good { background: linear-gradient(135deg, #10b981, #059669); }
+.srs-btn.easy { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+
+.srs-btn-label {
+  display: block;
+  font-size: 0.7rem;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+/* Quiz */
+.quiz-container {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow-lg);
+  margin: 20px 0;
+}
+
+.quiz-question {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.quiz-word {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--tab-color, var(--primary));
+}
+
+.quiz-emoji {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+.quiz-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.quiz-option {
+  padding: 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  background: var(--card-bg);
+  color: var(--text);
+  text-align: center;
+}
+
+.quiz-option:hover {
+  border-color: var(--tab-color, var(--primary));
+  transform: translateY(-2px);
+}
+
+.quiz-option.correct {
+  background: #d1fae5;
+  border-color: #10b981;
+  color: #065f46;
+}
+
+.quiz-option.wrong {
+  background: #fee2e2;
+  border-color: #ef4444;
+  color: #991b1b;
+}
+
+[data-theme="dark"] .quiz-option.correct {
+  background: #064e3b;
+  color: #6ee7b7;
+}
+
+[data-theme="dark"] .quiz-option.wrong {
+  background: #7f1d1d;
+  color: #fca5a5;
+}
+
+/* Spelling */
+.spelling-container {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow-lg);
+  margin: 20px 0;
+  text-align: center;
+}
+
+.spelling-hint {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.spelling-boxes {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.letter-box {
+  width: 40px;
+  height: 48px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--tab-color, var(--primary));
+  transition: all 0.2s;
+}
+
+.letter-box.filled {
+  border-color: var(--tab-color, var(--primary));
+  background: rgba(124, 58, 237, 0.05);
+}
+
+.letter-box.correct {
+  border-color: var(--success);
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.letter-box.wrong {
+  border-color: var(--danger);
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.spelling-input {
+  width: 100%;
+  max-width: 300px;
+  padding: 12px 16px;
+  font-size: 1.2rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  text-align: center;
+  outline: none;
+  background: var(--card-bg);
+  color: var(--text);
+  transition: border-color 0.2s;
+}
+
+.spelling-input:focus {
+  border-color: var(--tab-color, var(--primary));
+}
+
+.hint-btn {
+  background: var(--warning);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 12px;
+}
+
+/* Listening */
+.listening-container {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow-lg);
+  margin: 20px 0;
+  text-align: center;
+}
+
+.listen-play-btn {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--tab-color, var(--primary)), #764ba2);
+  color: white;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  margin: 16px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  transition: transform 0.2s;
+}
+
+.listen-play-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Matching */
+.matching-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 20px 0;
+  align-items: start;
+}
+
+.matching-container > div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.match-item {
+  padding: 16px 12px;
+  min-height: 52px;
+  background: var(--card-bg);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  text-align: center;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.match-item:hover {
+  transform: translateY(-2px);
+}
+
+.match-item.selected {
+  border-color: var(--tab-color, var(--primary));
+  background: rgba(124, 58, 237, 0.1);
+}
+
+.match-item.matched {
+  border-color: var(--success);
+  background: #d1fae5;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.match-item.wrong-match {
+  border-color: var(--danger);
+  background: #fee2e2;
+  animation: shake 0.5s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+/* Progress */
+.progress-section {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.progress-title {
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress-bar-wrapper {
+  background: var(--border);
+  border-radius: 10px;
+  height: 12px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.5s ease;
+  background: linear-gradient(90deg, var(--tab-color, var(--primary)), var(--primary-light));
+}
+
+.progress-text {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* Heatmap */
+.heatmap {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.heatmap-day {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+}
+
+.heatmap-day.level-1 { background: #c4b5fd; }
+.heatmap-day.level-2 { background: #a78bfa; }
+.heatmap-day.level-3 { background: #7c3aed; color: white; }
+.heatmap-day.level-4 { background: #5b21b6; color: white; }
+
+/* Settings Modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-overlay.show {
+  display: flex;
+}
+
+.modal {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 24px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.setting-label {
+  font-weight: 500;
+}
+
+.setting-control input[type="number"] {
+  width: 60px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  text-align: center;
+  font-size: 1rem;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.toggle-switch {
+  width: 48px;
+  height: 26px;
+  background: var(--border);
+  border-radius: 13px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.toggle-switch.active {
+  background: var(--success);
+}
+
+.toggle-switch::after {
+  content: '';
+  width: 22px;
+  height: 22px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.toggle-switch.active::after {
+  transform: translateX(22px);
+}
+
+.speed-select {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.reset-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--danger);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 16px;
+  font-size: 1rem;
+}
+
+.modal-close {
+  width: 100%;
+  padding: 12px;
+  background: var(--border);
+  color: var(--text);
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+  font-size: 1rem;
+}
+
+/* Confetti */
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: -10px;
+  animation: confetti-fall 2s ease-out forwards;
+}
+
+@keyframes confetti-fall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* Dashboard */
+.dashboard {
+  display: none;
+}
+
+.dashboard.show {
+  display: block;
+}
+
+.streak-display {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: var(--radius);
+  color: white;
+  margin-bottom: 16px;
+}
+
+.streak-number {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.streak-label {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-secondary);
+}
+
+.empty-state-emoji {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+/* Next button */
+.next-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--tab-color, var(--primary)), #764ba2);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 12px;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s;
+}
+
+.next-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .mode-selector {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+  }
+  .mode-btn {
+    padding: 8px 2px;
+    font-size: 0.65rem;
+  }
+  .quiz-options {
+    grid-template-columns: 1fr;
+  }
+  .flashcard-word {
+    font-size: 1.6rem;
+  }
+  .srs-buttons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.tap-hint {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  opacity: 0.7;
+}
+
+.word-counter {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="app-header">
+    <div class="app-title">📚 Vocabulary Master <span style="margin-left:12px;background:rgba(255,255,255,0.2);padding:4px 10px;border-radius:12px;">💾 進度存在本機瀏覽器，請固定用同一台設備</span></div>
+    <div class="header-actions">
+      <button class="header-btn" onclick="showDashboard()" title="Stats">📊</button>
+      <button class="header-btn" onclick="showSettings()" title="Settings">⚙️</button>
+    </div>
+  </header>
+
+  <nav class="tab-bar" id="tabBar"></nav>
+
+  <main class="main-content">
+    <div class="stats-bar" id="statsBar">
+      <div class="stat-card">
+        <div class="stat-number" id="dueCount">0</div>
+        <div class="stat-label">待複習</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="newCount">0</div>
+        <div class="stat-label">新單字</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="learnedCount">0</div>
+        <div class="stat-label">已學會</div>
+      </div>
+    </div>
+
+    <div class="mode-selector" id="modeSelector">
+      <button class="mode-btn active" data-mode="flashcard">
+        <span class="mode-icon">🃏</span>閃卡
+      </button>
+      <button class="mode-btn" data-mode="quiz">
+        <span class="mode-icon">❓</span>測驗
+      </button>
+      <button class="mode-btn" data-mode="spelling">
+        <span class="mode-icon">✍️</span>拼字
+      </button>
+      <button class="mode-btn" data-mode="listening">
+        <span class="mode-icon">👂</span>聽力
+      </button>
+      <button class="mode-btn" data-mode="matching">
+        <span class="mode-icon">🔗</span>配對
+      </button>
+    </div>
+
+    <div id="learningArea"></div>
+
+    <div class="dashboard" id="dashboard">
+      <div class="streak-display">
+        <div class="streak-number" id="streakNumber">0</div>
+        <div class="streak-label">天連續學習</div>
+      </div>
+      <div class="progress-section">
+        <div class="progress-title">📅 本週學習</div>
+        <div class="heatmap" id="heatmap"></div>
+      </div>
+      <div id="tabProgressBars"></div>
+      <button class="next-btn" onclick="hideDashboard()" style="margin-top:20px;">返回學習</button>
+    </div>
+  </main>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <div class="modal-title">⚙️ 設定</div>
+    <div class="setting-row">
+      <span class="setting-label">每日新單字數</span>
+      <div class="setting-control">
+        <input type="number" id="dailyNewInput" min="1" max="50" value="10">
+      </div>
+    </div>
+    <div class="setting-row">
+      <span class="setting-label">語速</span>
+      <div class="setting-control">
+        <select class="speed-select" id="speedSelect">
+          <option value="0.7">0.7x 慢速</option>
+          <option value="1.0" selected>1.0x 正常</option>
+          <option value="1.3">1.3x 快速</option>
+        </select>
+      </div>
+    </div>
+    <div class="setting-row">
+      <span class="setting-label">深色模式</span>
+      <div class="setting-control">
+        <div class="toggle-switch" id="darkModeToggle" onclick="toggleDarkMode()"></div>
+      </div>
+    </div>
+    <button class="reset-btn" onclick="resetProgress()">🗑️ 重置所有進度</button>
+    <button class="modal-close" onclick="hideSettings()">關閉</button>
+  </div>
+</div>
+
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>const WORD_DATA = {};</script>
+<script src="https://hdchen-course.github.io/english-vocab/vocab_data_competition_mid.js"></script>
+<script src="https://hdchen-course.github.io/english-vocab/vocab_data_competition_upper.js"></script>
+<script src="https://hdchen-course.github.io/english-vocab/vocab_data_coca_L1.js"></script>
+<script src="https://hdchen-course.github.io/english-vocab/vocab_data_coca_L2.js"></script>
+<script src="https://hdchen-course.github.io/english-vocab/vocab_data_coca_L3.js"></script>
+<script src="https://hdchen-course.github.io/english-vocab/vocab_data_coca_L4.js"></script>
+<script src="https://hdchen-course.github.io/english-vocab/vocab_data_coca_L5.js"></script>
+<script src="https://hdchen-course.github.io/english-vocab/vocab_data_coca_L6.js"></script>
+<script src="https://hdchen-course.github.io/english-vocab/vocab_data_coca_L7.js"></script>
+<script src="https://hdchen-course.github.io/english-vocab/vocab_data_coca_L8.js"></script>
+<script src="https://hdchen-course.github.io/english-vocab/vocab_data_coca_L9.js"></script>
+<script src="https://hdchen-course.github.io/english-vocab/vocab_data_coca_L10.js"></script>
+<script src="https://hdchen-course.github.io/english-vocab/vocab_data_toeic.js"></script>
+<script>
+// ==================== SRS ENGINE ====================
+class SRSEngine {
+  constructor() {
+    this.data = this.load();
+  }
+
+  load() {
+    try {
+      const stored = localStorage.getItem('vocab_srs');
+      return stored ? JSON.parse(stored) : {};
+    } catch(e) {
+      return {};
+    }
+  }
+
+  save() {
+    localStorage.setItem('vocab_srs', JSON.stringify(this.data));
+  }
+
+  getCard(word) {
+    if (!this.data[word]) {
+      this.data[word] = {
+        ease: 2.5,
+        interval: 0,
+        due: null,
+        reps: 0,
+        status: 'new'
+      };
+    }
+    return this.data[word];
+  }
+
+  isDue(word) {
+    const card = this.getCard(word);
+    if (card.status === 'new') return false;
+    if (!card.due) return true;
+    return new Date(card.due) <= new Date();
+  }
+
+  isNew(word) {
+    const card = this.getCard(word);
+    return card.status === 'new';
+  }
+
+  isLearned(word) {
+    const card = this.getCard(word);
+    return card.status === 'review' && card.interval >= 1;
+  }
+
+  review(word, quality) {
+    // quality: 0=again, 1=hard, 2=good, 3=easy
+    const card = this.getCard(word);
+    const now = new Date();
+
+    if (quality === 0) {
+      // Again
+      card.interval = 0;
+      card.status = 'learning';
+      card.due = new Date(now.getTime() + 60000).toISOString(); // 1 min
+    } else if (quality === 1) {
+      // Hard
+      card.interval = Math.max(card.interval * 1.2, 0.25);
+      card.status = 'learning';
+      card.due = new Date(now.getTime() + 6 * 3600000).toISOString(); // 6hr
+    } else if (quality === 2) {
+      // Good
+      if (card.interval === 0) {
+        card.interval = 1;
+      } else {
+        card.interval = card.interval * card.ease;
+      }
+      card.status = 'review';
+      card.due = new Date(now.getTime() + card.interval * 86400000).toISOString();
+    } else if (quality === 3) {
+      // Easy
+      if (card.interval === 0) {
+        card.interval = 3;
+      } else {
+        card.interval = card.interval * card.ease * 1.3;
+      }
+      card.ease = Math.min(card.ease + 0.15, 3.0);
+      card.status = 'review';
+      card.due = new Date(now.getTime() + card.interval * 86400000).toISOString();
+    }
+
+    card.reps++;
+    this.save();
+    return card;
+  }
+
+  startLearning(word) {
+    const card = this.getCard(word);
+    if (card.status === 'new') {
+      card.status = 'learning';
+      card.due = new Date().toISOString();
+      this.save();
+    }
+    return card;
+  }
+
+  getStats(tabWords) {
+    let due = 0, newCount = 0, learned = 0;
+    const now = new Date();
+    tabWords.forEach(w => {
+      const card = this.getCard(w.word);
+      if (card.status === 'new') {
+        newCount++;
+      } else if (card.status === 'review' && card.interval >= 1) {
+        learned++;
+        if (card.due && new Date(card.due) <= now) due++;
+      } else {
+        if (!card.due || new Date(card.due) <= now) due++;
+      }
+    });
+    return { due, new: newCount, learned };
+  }
+
+  getStudyQueue(tabWords, dailyNew) {
+    const now = new Date();
+    const queue = [];
+
+    // First: due reviews
+    tabWords.forEach(w => {
+      const card = this.getCard(w.word);
+      if (card.status !== 'new' && card.due && new Date(card.due) <= now) {
+        queue.push(w);
+      }
+    });
+
+    // Then: learning cards without due date
+    tabWords.forEach(w => {
+      const card = this.getCard(w.word);
+      if (card.status === 'learning' && !card.due) {
+        queue.push(w);
+      }
+    });
+
+    // Then: new cards up to daily limit
+    let newAdded = 0;
+    tabWords.forEach(w => {
+      const card = this.getCard(w.word);
+      if (card.status === 'new' && newAdded < dailyNew) {
+        queue.push(w);
+        newAdded++;
+      }
+    });
+
+    return queue;
+  }
+}
+
+// ==================== APP STATE ====================
+let currentTab = 'competition_mid';
+let currentMode = 'flashcard';
+let currentWordIndex = 0;
+let studyQueue = [];
+let isFlipped = false;
+let matchState = { selected: null, matched: [] };
+let srs = new SRSEngine();
+
+// ==================== SETTINGS ====================
+function getSettings() {
+  try {
+    const s = localStorage.getItem('vocab_settings');
+    return s ? JSON.parse(s) : { dailyNew: 10, speed: 1.0, darkMode: false };
+  } catch(e) {
+    return { dailyNew: 10, speed: 1.0, darkMode: false };
+  }
+}
+
+function saveSettings(settings) {
+  localStorage.setItem('vocab_settings', JSON.stringify(settings));
+}
+
+// ==================== STATS ====================
+function getStudyStats() {
+  try {
+    const s = localStorage.getItem('vocab_stats');
+    return s ? JSON.parse(s) : { streak: 0, lastStudy: null, history: {} };
+  } catch(e) {
+    return { streak: 0, lastStudy: null, history: {} };
+  }
+}
+
+function recordStudy() {
+  const stats = getStudyStats();
+  const today = new Date().toISOString().split('T')[0];
+
+  if (!stats.history[today]) {
+    stats.history[today] = 0;
+  }
+  stats.history[today]++;
+
+  // Update streak
+  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+  if (stats.lastStudy === yesterday || stats.lastStudy === today) {
+    if (stats.lastStudy !== today) {
+      stats.streak++;
+    }
+  } else if (stats.lastStudy !== today) {
+    stats.streak = 1;
+  }
+  stats.lastStudy = today;
+
+  localStorage.setItem('vocab_stats', JSON.stringify(stats));
+}
+
+// ==================== PRONUNCIATION ====================
+function speak(text, isWord = true) {
+  const settings = getSettings();
+
+  // Try Web Speech API first
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = settings.speed;
+
+    const voices = window.speechSynthesis.getVoices();
+    const englishVoice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Samantha')) ||
+                         voices.find(v => v.lang.startsWith('en-US')) ||
+                         voices.find(v => v.lang.startsWith('en'));
+    if (englishVoice) utterance.voice = englishVoice;
+
+    window.speechSynthesis.speak(utterance);
+  } else {
+    // Fallback: Google TTS
+    const audio = new Audio(`https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=en&client=tw-ob`);
+    audio.playbackRate = settings.speed;
+    audio.play().catch(() => {});
+  }
+}
+
+// ==================== CONFETTI ====================
+function showConfetti() {
+  const container = document.getElementById('confettiContainer');
+  const colors = ['#7c3aed', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899'];
+
+  for (let i = 0; i < 30; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 0.5 + 's';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+    piece.style.width = (Math.random() * 8 + 6) + 'px';
+    piece.style.height = (Math.random() * 8 + 6) + 'px';
+    container.appendChild(piece);
+  }
+
+  setTimeout(() => { container.innerHTML = ''; }, 2500);
+}
+
+// ==================== UI RENDERING ====================
+function initTabs() {
+  const tabBar = document.getElementById('tabBar');
+  const tabs = Object.entries(WORD_DATA);
+  tabBar.innerHTML = tabs.map(([key, data]) =>
+    `<div class="tab-item ${key === currentTab ? 'active' : ''}" style="--tab-color: ${data.color}" data-tab="${key}">${data.name}</div>`
+  ).join('');
+
+  tabBar.querySelectorAll('.tab-item').forEach(el => {
+    el.addEventListener('click', () => {
+      currentTab = el.dataset.tab;
+      currentWordIndex = 0;
+      initTabs();
+      updateStats();
+      refreshQueue();
+      renderMode();
+    });
+  });
+}
+
+function updateStats() {
+  const words = WORD_DATA[currentTab].words;
+  const stats = srs.getStats(words);
+  document.getElementById('dueCount').textContent = stats.due;
+  document.getElementById('newCount').textContent = stats.new;
+  document.getElementById('learnedCount').textContent = stats.learned;
+
+  // Set tab color
+  document.documentElement.style.setProperty('--tab-color', WORD_DATA[currentTab].color);
+}
+
+function refreshQueue() {
+  const settings = getSettings();
+  const words = WORD_DATA[currentTab].words;
+  studyQueue = srs.getStudyQueue(words, settings.dailyNew);
+  if (studyQueue.length === 0) {
+    studyQueue = [...words];
+  }
+  currentWordIndex = 0;
+}
+
+function getCurrentWord() {
+  if (studyQueue.length === 0) return WORD_DATA[currentTab].words[0];
+  return studyQueue[currentWordIndex % studyQueue.length];
+}
+
+function nextWord() {
+  currentWordIndex++;
+  if (currentWordIndex >= studyQueue.length) {
+    currentWordIndex = 0;
+    refreshQueue();
+  }
+  isFlipped = false;
+  renderMode();
+}
+
+// ==================== MODE RENDERERS ====================
+function renderMode() {
+  const area = document.getElementById('learningArea');
+  document.getElementById('dashboard').classList.remove('show');
+
+  switch(currentMode) {
+    case 'flashcard': renderFlashcard(area); break;
+    case 'quiz': renderQuiz(area); break;
+    case 'spelling': renderSpelling(area); break;
+    case 'listening': renderListening(area); break;
+    case 'matching': renderMatching(area); break;
+  }
+}
+
+function renderFlashcard(area) {
+  const word = getCurrentWord();
+  if (!word) { area.innerHTML = '<div class="empty-state"><div class="empty-state-emoji">🎉</div><p>No words to study!</p></div>'; return; }
+
+  const rootColors = ['#7c3aed', '#10b981', '#f59e0b', '#3b82f6', '#ef4444', '#ec4899'];
+  const rootsHtml = word.roots.map((r, i) =>
+    `<span class="root-part" style="background:${rootColors[i % rootColors.length]}22;color:${rootColors[i % rootColors.length]}">${r}</span>`
+  ).join('');
+
+  area.innerHTML = `
+    <div class="word-counter">${currentWordIndex + 1} / ${studyQueue.length}</div>
+    <div class="flashcard-container">
+      <div class="flashcard ${isFlipped ? 'flipped' : ''}" onclick="flipCard()">
+        <div class="flashcard-face">
+          <div class="flashcard-emoji">${word.emoji}</div>
+          <div class="flashcard-word">${word.word}</div>
+          <div class="flashcard-roots">${rootsHtml}</div>
+          <button class="sound-btn" onclick="event.stopPropagation(); speak('${word.word.replace(/'/g, "\\'")}')">🔊</button>
+          <div class="tap-hint">點擊翻轉</div>
+        </div>
+        <div class="flashcard-face flashcard-back">
+          <div class="flashcard-chinese">${word.chinese}</div>
+          <div class="flashcard-sentence">${word.sentence}</div>
+          <div class="flashcard-tip">💡 ${word.tip}</div>
+          <div class="sound-row">
+            <button class="sound-btn" onclick="event.stopPropagation(); speak('${word.word.replace(/'/g, "\\'")}')">🔊</button>
+            <button class="sound-btn" onclick="event.stopPropagation(); speak('${word.sentence.replace(/<[^>]*>/g, '').replace(/'/g, "\\'") }', false)">📢</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="srs-buttons">
+      <button class="srs-btn again" onclick="reviewWord(0)">Again<span class="srs-btn-label">1分鐘</span></button>
+      <button class="srs-btn hard" onclick="reviewWord(1)">Hard<span class="srs-btn-label">6小時</span></button>
+      <button class="srs-btn good" onclick="reviewWord(2)">Good<span class="srs-btn-label">1天</span></button>
+      <button class="srs-btn easy" onclick="reviewWord(3)">Easy<span class="srs-btn-label">3天</span></button>
+    </div>
+  `;
+}
+
+function flipCard() {
+  isFlipped = !isFlipped;
+  const card = document.querySelector('.flashcard');
+  if (card) card.classList.toggle('flipped');
+
+  const word = getCurrentWord();
+  if (word && isFlipped) {
+    srs.startLearning(word.word);
+  }
+}
+
+function reviewWord(quality) {
+  const word = getCurrentWord();
+  if (word) {
+    const card = srs.review(word.word, quality);
+    recordStudy();
+    if (quality >= 2) showConfetti();
+    const msgs = ['1分鐘後再見 👋', '6小時後複習 📝', '明天再見 ✅', '3天後複習 🚀'];
+    showToast(msgs[quality]);
+    updateStats();
+    setTimeout(nextWord, 600);
+  }
+}
+
+function showToast(msg) {
+  let toast = document.getElementById('toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'toast';
+    toast.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);padding:10px 20px;background:rgba(0,0,0,0.8);color:white;border-radius:20px;font-size:0.9rem;font-weight:600;z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  setTimeout(() => { toast.style.opacity = '0'; }, 1500);
+}
+
+function renderQuiz(area) {
+  const word = getCurrentWord();
+  if (!word) { area.innerHTML = '<div class="empty-state"><div class="empty-state-emoji">🎉</div><p>No words to study!</p></div>'; return; }
+
+  const allWords = WORD_DATA[currentTab].words;
+  const options = [word.chinese];
+  while (options.length < 4) {
+    const rand = allWords[Math.floor(Math.random() * allWords.length)];
+    if (!options.includes(rand.chinese)) options.push(rand.chinese);
+  }
+  options.sort(() => Math.random() - 0.5);
+
+  area.innerHTML = `
+    <div class="word-counter">${currentWordIndex + 1} / ${studyQueue.length}</div>
+    <div class="quiz-container">
+      <div class="quiz-question">
+        <div class="quiz-emoji">${word.emoji}</div>
+        <div class="quiz-word">${word.word}</div>
+        <button class="sound-btn" onclick="speak('${word.word.replace(/'/g, "\\'")}')">🔊</button>
+      </div>
+      <div class="quiz-options">
+        ${options.map(opt => `<div class="quiz-option" onclick="checkQuizAnswer(this, '${opt.replace(/'/g, "\\'")}', '${word.chinese.replace(/'/g, "\\'")}')">${opt}</div>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function checkQuizAnswer(el, selected, correct) {
+  const options = document.querySelectorAll('.quiz-option');
+  options.forEach(opt => {
+    opt.style.pointerEvents = 'none';
+    if (opt.textContent === correct) opt.classList.add('correct');
+  });
+
+  if (selected === correct) {
+    el.classList.add('correct');
+    showConfetti();
+    const word = getCurrentWord();
+    srs.review(word.word, 2);
+    recordStudy();
+  } else {
+    el.classList.add('wrong');
+    const word = getCurrentWord();
+    srs.review(word.word, 0);
+    recordStudy();
+  }
+
+  updateStats();
+  setTimeout(nextWord, 1200);
+}
+
+function renderSpelling(area) {
+  const word = getCurrentWord();
+  if (!word) { area.innerHTML = '<div class="empty-state"><div class="empty-state-emoji">🎉</div><p>No words to study!</p></div>'; return; }
+
+  const letters = word.word.split('');
+  const boxes = letters.map((_, i) => `<div class="letter-box" id="lb${i}"></div>`).join('');
+
+  area.innerHTML = `
+    <div class="word-counter">${currentWordIndex + 1} / ${studyQueue.length}</div>
+    <div class="spelling-container">
+      <div class="quiz-emoji">${word.emoji}</div>
+      <div class="spelling-hint">${word.chinese}</div>
+      <div class="spelling-boxes">${boxes}</div>
+      <input type="text" class="spelling-input" id="spellingInput" placeholder="輸入單字..." autocomplete="off" autocapitalize="off" onkeyup="checkSpelling(event)">
+      <br>
+      <button class="hint-btn" onclick="showSpellingHint()">💡 提示</button>
+      <button class="sound-btn" onclick="speak('${word.word.replace(/'/g, "\\'")}')">🔊</button>
+    </div>
+  `;
+
+  setTimeout(() => { document.getElementById('spellingInput').focus(); }, 100);
+}
+
+function checkSpelling(e) {
+  const word = getCurrentWord();
+  const input = document.getElementById('spellingInput').value.toLowerCase();
+  const target = word.word.toLowerCase();
+  const letters = target.split('');
+
+  letters.forEach((letter, i) => {
+    const box = document.getElementById('lb' + i);
+    if (i < input.length) {
+      box.textContent = input[i];
+      box.classList.add('filled');
+      if (input[i] === letter) {
+        box.classList.remove('wrong');
+        box.classList.add('correct');
+      } else {
+        box.classList.remove('correct');
+        box.classList.add('wrong');
+      }
+    } else {
+      box.textContent = '';
+      box.classList.remove('filled', 'correct', 'wrong');
+    }
+  });
+
+  if (input === target) {
+    showConfetti();
+    srs.review(word.word, 2);
+    recordStudy();
+    updateStats();
+    setTimeout(nextWord, 1000);
+  } else if (e && e.key === 'Enter' && input.length === target.length) {
+    srs.review(word.word, 0);
+    recordStudy();
+    updateStats();
+    // Show correct answer
+    letters.forEach((letter, i) => {
+      const box = document.getElementById('lb' + i);
+      box.textContent = letter;
+      box.classList.add('correct');
+    });
+    setTimeout(nextWord, 1500);
+  }
+}
+
+function showSpellingHint() {
+  const word = getCurrentWord();
+  const target = word.word.toLowerCase();
+  const input = document.getElementById('spellingInput');
+  const current = input.value.toLowerCase();
+
+  // Reveal next letter
+  if (current.length < target.length) {
+    input.value = target.substring(0, current.length + 1);
+    checkSpelling(null);
+  }
+}
+
+function renderListening(area) {
+  const word = getCurrentWord();
+  if (!word) { area.innerHTML = '<div class="empty-state"><div class="empty-state-emoji">🎉</div><p>No words to study!</p></div>'; return; }
+
+  const allWords = WORD_DATA[currentTab].words;
+  const options = [word.word];
+  while (options.length < 4) {
+    const rand = allWords[Math.floor(Math.random() * allWords.length)];
+    if (!options.includes(rand.word)) options.push(rand.word);
+  }
+  options.sort(() => Math.random() - 0.5);
+
+  area.innerHTML = `
+    <div class="word-counter">${currentWordIndex + 1} / ${studyQueue.length}</div>
+    <div class="listening-container">
+      <p style="font-size:1.1rem; margin-bottom:8px; color:var(--text-secondary)">聽一聽，選出正確的單字</p>
+      <button class="listen-play-btn" onclick="speak('${word.word.replace(/'/g, "\\'")}')">🔊</button>
+      <div class="quiz-options" style="margin-top:20px;">
+        ${options.map(opt => `<div class="quiz-option" onclick="checkListeningAnswer(this, '${opt.replace(/'/g, "\\'")}', '${word.word.replace(/'/g, "\\'")}')">${opt}</div>`).join('')}
+      </div>
+    </div>
+  `;
+
+  // Auto play
+  setTimeout(() => speak(word.word), 300);
+}
+
+function checkListeningAnswer(el, selected, correct) {
+  const options = document.querySelectorAll('.quiz-option');
+  options.forEach(opt => {
+    opt.style.pointerEvents = 'none';
+    if (opt.textContent === correct) opt.classList.add('correct');
+  });
+
+  if (selected === correct) {
+    el.classList.add('correct');
+    showConfetti();
+    const word = getCurrentWord();
+    srs.review(word.word, 2);
+    recordStudy();
+  } else {
+    el.classList.add('wrong');
+    const word = getCurrentWord();
+    srs.review(word.word, 0);
+    recordStudy();
+  }
+
+  updateStats();
+  setTimeout(nextWord, 1200);
+}
+
+function renderMatching(area) {
+  const allWords = WORD_DATA[currentTab].words;
+  const shuffled = [...allWords].sort(() => Math.random() - 0.5).slice(0, 5);
+
+  const englishItems = shuffled.map(w => ({ type: 'en', word: w.word, pair: w.chinese }));
+  const chineseItems = shuffled.map(w => ({ type: 'zh', word: w.chinese, pair: w.word }));
+
+  const leftCol = englishItems.sort(() => Math.random() - 0.5);
+  const rightCol = chineseItems.sort(() => Math.random() - 0.5);
+
+  matchState = { selected: null, matched: [], pairs: shuffled };
+
+  area.innerHTML = `
+    <div style="text-align:center; margin-bottom:12px; color:var(--text-secondary)">配對英文和中文</div>
+    <div class="matching-container">
+      <div>
+        ${leftCol.map((item, i) => `<div class="match-item" data-type="en" data-word="${item.word}" data-pair="${item.pair}" onclick="selectMatch(this)">${item.word}</div>`).join('')}
+      </div>
+      <div>
+        ${rightCol.map((item, i) => `<div class="match-item" data-type="zh" data-word="${item.word}" data-pair="${item.pair}" onclick="selectMatch(this)">${item.word}</div>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function selectMatch(el) {
+  if (el.classList.contains('matched')) return;
+
+  if (matchState.selected && matchState.selected.dataset.type === el.dataset.type) {
+    // Same type - deselect first, select new
+    matchState.selected.classList.remove('selected');
+    matchState.selected = el;
+    el.classList.add('selected');
+    return;
+  }
+
+  if (!matchState.selected) {
+    matchState.selected = el;
+    el.classList.add('selected');
+  } else {
+    // Check match
+    const first = matchState.selected;
+    const second = el;
+
+    let isMatch = false;
+    if (first.dataset.type === 'en' && second.dataset.pair === first.dataset.word) isMatch = true;
+    if (first.dataset.type === 'zh' && second.dataset.pair === first.dataset.word) isMatch = true;
+    if (second.dataset.type === 'en' && first.dataset.pair === second.dataset.word) isMatch = true;
+    if (second.dataset.type === 'zh' && first.dataset.pair === second.dataset.word) isMatch = true;
+
+    if (isMatch) {
+      first.classList.remove('selected');
+      first.classList.add('matched');
+      second.classList.add('matched');
+      matchState.matched.push(first.dataset.word);
+
+      // Find the english word to record SRS
+      const enWord = first.dataset.type === 'en' ? first.dataset.word : second.dataset.word;
+      srs.startLearning(enWord);
+      srs.review(enWord, 2);
+      recordStudy();
+
+      if (matchState.matched.length >= 5) {
+        showConfetti();
+        updateStats();
+        setTimeout(() => renderMatching(document.getElementById('learningArea')), 1500);
+      }
+    } else {
+      second.classList.add('wrong-match');
+      first.classList.add('wrong-match');
+      setTimeout(() => {
+        first.classList.remove('selected', 'wrong-match');
+        second.classList.remove('wrong-match');
+      }, 500);
+    }
+    matchState.selected = null;
+  }
+}
+
+// ==================== DASHBOARD ====================
+function showDashboard() {
+  document.getElementById('learningArea').innerHTML = '';
+  const dash = document.getElementById('dashboard');
+  dash.classList.add('show');
+
+  const stats = getStudyStats();
+  document.getElementById('streakNumber').textContent = stats.streak || 0;
+
+  // Heatmap
+  const heatmap = document.getElementById('heatmap');
+  const days = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(Date.now() - i * 86400000);
+    const key = d.toISOString().split('T')[0];
+    const count = (stats.history && stats.history[key]) || 0;
+    const dayName = ['日','一','二','三','四','五','六'][d.getDay()];
+    let level = '';
+    if (count > 0) level = 'level-1';
+    if (count > 5) level = 'level-2';
+    if (count > 15) level = 'level-3';
+    if (count > 30) level = 'level-4';
+    days.push(`<div class="heatmap-day ${level}" title="${key}: ${count}次">${dayName}</div>`);
+  }
+  heatmap.innerHTML = days.join('');
+
+  // Tab progress
+  const barsDiv = document.getElementById('tabProgressBars');
+  barsDiv.innerHTML = Object.entries(WORD_DATA).map(([key, data]) => {
+    const total = data.words.length;
+    const learned = data.words.filter(w => srs.isLearned(w.word)).length;
+    const pct = total > 0 ? Math.round(learned / total * 100) : 0;
+    return `
+      <div class="progress-section" style="margin-top:12px;">
+        <div class="progress-title" style="color:${data.color}">${data.name}</div>
+        <div class="progress-bar-wrapper">
+          <div class="progress-bar-fill" style="width:${pct}%; background:linear-gradient(90deg, ${data.color}, ${data.color}88)"></div>
+        </div>
+        <div class="progress-text">${learned} / ${total} (${pct}%)</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function hideDashboard() {
+  document.getElementById('dashboard').classList.remove('show');
+  renderMode();
+}
+
+// ==================== SETTINGS ====================
+function showSettings() {
+  const settings = getSettings();
+  document.getElementById('dailyNewInput').value = settings.dailyNew;
+  document.getElementById('speedSelect').value = String(settings.speed);
+  const toggle = document.getElementById('darkModeToggle');
+  if (settings.darkMode) toggle.classList.add('active');
+  else toggle.classList.remove('active');
+  document.getElementById('settingsModal').classList.add('show');
+}
+
+function hideSettings() {
+  const settings = getSettings();
+  settings.dailyNew = parseInt(document.getElementById('dailyNewInput').value) || 10;
+  settings.speed = parseFloat(document.getElementById('speedSelect').value) || 1.0;
+  saveSettings(settings);
+  document.getElementById('settingsModal').classList.remove('show');
+  refreshQueue();
+  renderMode();
+}
+
+function toggleDarkMode() {
+  const settings = getSettings();
+  settings.darkMode = !settings.darkMode;
+  saveSettings(settings);
+  applyTheme();
+  const toggle = document.getElementById('darkModeToggle');
+  if (settings.darkMode) toggle.classList.add('active');
+  else toggle.classList.remove('active');
+}
+
+function applyTheme() {
+  const settings = getSettings();
+  document.documentElement.setAttribute('data-theme', settings.darkMode ? 'dark' : 'light');
+}
+
+function resetProgress() {
+  if (confirm('確定要重置所有學習進度嗎？此操作無法復原。')) {
+    localStorage.removeItem('vocab_srs');
+    localStorage.removeItem('vocab_stats');
+    srs = new SRSEngine();
+    updateStats();
+    refreshQueue();
+    renderMode();
+    hideSettings();
+  }
+}
+
+// ==================== MODE SELECTOR ====================
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentMode = btn.dataset.mode;
+    currentWordIndex = 0;
+    isFlipped = false;
+    renderMode();
+  });
+});
+
+// ==================== INIT ====================
+function init() {
+  applyTheme();
+  initTabs();
+  updateStats();
+  refreshQueue();
+  renderMode();
+
+  // Load voices
+  if ('speechSynthesis' in window) {
+    speechSynthesis.getVoices();
+    speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+  }
+}
+
+init();
+</script>
+</body>
+</html>
