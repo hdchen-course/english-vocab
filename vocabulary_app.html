@@ -1381,11 +1381,12 @@ function renderMode() {
   const area = document.getElementById('learningArea');
   document.getElementById('dashboard').classList.remove('show');
 
+  const isCloze = WORD_DATA[currentTab].isCloze;
   switch(currentMode) {
-    case 'flashcard': renderFlashcard(area); break;
-    case 'quiz': renderQuiz(area); break;
-    case 'spelling': renderSpelling(area); break;
-    case 'listening': renderListening(area); break;
+    case 'flashcard': isCloze ? renderClozeFront(area) : renderFlashcard(area); break;
+    case 'quiz': isCloze ? renderClozeQuiz(area) : renderQuiz(area); break;
+    case 'spelling': isCloze ? renderClozeSpelling(area) : renderSpelling(area); break;
+    case 'listening': isCloze ? renderClozeListening(area) : renderListening(area); break;
     case 'matching': renderMatching(area); break;
   }
 }
@@ -1476,10 +1477,15 @@ function renderQuiz(area) {
   if (!word) { area.innerHTML = '<div class="empty-state"><div class="empty-state-emoji">🎉</div><p>No words to study!</p></div>'; return; }
 
   const allWords = WORD_DATA[currentTab].words;
-  const options = [word.chinese];
-  while (options.length < 4) {
+  const getMeaning = (w) => w.definition || w.chinese || w.word;
+  const correctAnswer = getMeaning(word);
+  const options = [correctAnswer];
+  let attempts = 0;
+  while (options.length < 4 && attempts < 100) {
     const rand = allWords[Math.floor(Math.random() * allWords.length)];
-    if (!options.includes(rand.chinese)) options.push(rand.chinese);
+    const m = getMeaning(rand);
+    if (m && !options.includes(m)) options.push(m);
+    attempts++;
   }
   options.sort(() => Math.random() - 0.5);
 
@@ -1492,7 +1498,7 @@ function renderQuiz(area) {
         <button class="sound-btn" onclick="speak('${word.word.replace(/'/g, "\\'")}')">🔊</button>
       </div>
       <div class="quiz-options">
-        ${options.map(opt => `<div class="quiz-option" onclick="checkQuizAnswer(this, '${opt.replace(/'/g, "\\'")}', '${word.chinese.replace(/'/g, "\\'")}')">${opt}</div>`).join('')}
+        ${options.map(opt => `<div class="quiz-option" onclick="checkQuizAnswer(this, '${opt.replace(/'/g, "\\'")}', '${correctAnswer.replace(/'/g, "\\'")}')">${opt}</div>`).join('')}
       </div>
     </div>
   `;
@@ -1533,7 +1539,7 @@ function renderSpelling(area) {
     <div class="word-counter">${currentWordIndex + 1} / ${studyQueue.length}</div>
     <div class="spelling-container">
       <div class="quiz-emoji">${word.emoji}</div>
-      <div class="spelling-hint">${word.chinese}</div>
+      <div class="spelling-hint">${word.definition || word.chinese || ''}</div>
       <div class="spelling-boxes">${boxes}</div>
       <input type="text" class="spelling-input" id="spellingInput" placeholder="輸入單字..." autocomplete="off" autocapitalize="off" onkeyup="checkSpelling(event)">
       <br>
@@ -1653,12 +1659,137 @@ function checkListeningAnswer(el, selected, correct) {
   setTimeout(nextWord, 1200);
 }
 
+// ==================== CLOZE MODE (for CEFR) ====================
+function renderClozeFront(area) {
+  const word = getCurrentWord();
+  if (!word) { area.innerHTML = '<div class="empty-state"><div class="empty-state-emoji">🎉</div><p>No words to study!</p></div>'; return; }
+
+  area.innerHTML = `
+    <div class="word-counter">${currentWordIndex + 1} / ${studyQueue.length}</div>
+    <div class="flashcard-container">
+      <div class="flashcard ${isFlipped ? 'flipped' : ''}" onclick="flipCard()">
+        <div class="flashcard-face">
+          <div style="font-size:1.1rem;text-align:center;line-height:1.8;padding:20px;">${word.cloze || word.sentence}</div>
+          <div class="tap-hint">點擊翻轉看答案</div>
+        </div>
+        <div class="flashcard-face flashcard-back">
+          <div class="flashcard-word" style="font-size:2rem;margin-bottom:12px;">${word.word}</div>
+          <div class="flashcard-definition">${word.definition || ''}</div>
+          <div class="flashcard-sentence">${word.sentence}</div>
+          <div class="sound-row">
+            <button class="sound-btn" onclick="event.stopPropagation(); speak('${word.word.replace(/'/g, "\\'")}')">🔊</button>
+            <button class="sound-btn" onclick="event.stopPropagation(); speak('${word.sentence.replace(/<[^>]*>/g, '').replace(/'/g, "\\'") }', false)">📢</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="srs-buttons">
+      <button class="srs-btn again" onclick="reviewWord(0)">Again<span class="srs-btn-label">1分鐘</span></button>
+      <button class="srs-btn hard" onclick="reviewWord(1)">Hard<span class="srs-btn-label">6小時</span></button>
+      <button class="srs-btn good" onclick="reviewWord(2)">Good<span class="srs-btn-label">1天</span></button>
+      <button class="srs-btn easy" onclick="reviewWord(3)">Easy<span class="srs-btn-label">3天</span></button>
+    </div>
+  `;
+}
+
+function renderClozeQuiz(area) {
+  const word = getCurrentWord();
+  if (!word) { area.innerHTML = '<div class="empty-state"><div class="empty-state-emoji">🎉</div><p>No words to study!</p></div>'; return; }
+
+  // Pick 5 random options from the word's option list + ensure answer is included
+  let choices = (word.options || []).filter(o => o !== word.word);
+  choices = choices.sort(() => Math.random() - 0.5).slice(0, 5);
+  choices.push(word.word);
+  choices = choices.sort(() => Math.random() - 0.5);
+
+  area.innerHTML = `
+    <div class="word-counter">${currentWordIndex + 1} / ${studyQueue.length}</div>
+    <div class="quiz-container">
+      <div class="quiz-question">
+        <div style="font-size:1.05rem;text-align:center;line-height:1.8;margin-bottom:12px;">${word.cloze || word.sentence}</div>
+      </div>
+      <div class="quiz-options" style="grid-template-columns:1fr 1fr;">
+        ${choices.map(opt => `<div class="quiz-option" onclick="checkClozeAnswer(this, '${opt.replace(/'/g, "\\'")}', '${word.word.replace(/'/g, "\\'")}')">${opt}</div>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function checkClozeAnswer(el, selected, correct) {
+  const options = document.querySelectorAll('.quiz-option');
+  options.forEach(opt => {
+    opt.style.pointerEvents = 'none';
+    if (opt.textContent === correct) opt.classList.add('correct');
+  });
+
+  const word = getCurrentWord();
+  if (selected === correct) {
+    el.classList.add('correct');
+    showConfetti();
+    srs.review(word.word, 2);
+    recordStudy();
+  } else {
+    el.classList.add('wrong');
+    srs.review(word.word, 0);
+    recordStudy();
+  }
+  updateStats();
+  setTimeout(nextWord, 1200);
+}
+
+function renderClozeSpelling(area) {
+  const word = getCurrentWord();
+  if (!word) { area.innerHTML = '<div class="empty-state"><div class="empty-state-emoji">🎉</div><p>No words to study!</p></div>'; return; }
+
+  const letters = word.word.split('');
+  const boxes = letters.map((_, i) => `<div class="letter-box" id="lb${i}"></div>`).join('');
+
+  area.innerHTML = `
+    <div class="word-counter">${currentWordIndex + 1} / ${studyQueue.length}</div>
+    <div class="spelling-container">
+      <div style="font-size:1rem;text-align:center;line-height:1.8;margin-bottom:12px;color:var(--text-secondary);">${word.cloze || word.sentence}</div>
+      <div style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:10px;font-style:italic;">${word.definition || ''}</div>
+      <div class="spelling-boxes">${boxes}</div>
+      <input type="text" class="spelling-input" id="spellingInput" placeholder="輸入單字..." autocomplete="off" autocapitalize="off" onkeyup="checkSpelling(event)">
+      <br>
+      <button class="hint-btn" onclick="showSpellingHint()">💡 提示</button>
+      <button class="sound-btn" onclick="speak('${word.word.replace(/'/g, "\\'")}')">🔊</button>
+    </div>
+  `;
+  setTimeout(() => { document.getElementById('spellingInput').focus(); }, 100);
+}
+
+function renderClozeListening(area) {
+  const word = getCurrentWord();
+  if (!word) { area.innerHTML = '<div class="empty-state"><div class="empty-state-emoji">🎉</div><p>No words to study!</p></div>'; return; }
+
+  // Show sentence with blank, play the word audio, select from options
+  let choices = (word.options || []).filter(o => o !== word.word);
+  choices = choices.sort(() => Math.random() - 0.5).slice(0, 5);
+  choices.push(word.word);
+  choices = choices.sort(() => Math.random() - 0.5);
+
+  area.innerHTML = `
+    <div class="word-counter">${currentWordIndex + 1} / ${studyQueue.length}</div>
+    <div class="listening-container">
+      <div style="font-size:1rem;text-align:center;line-height:1.8;margin-bottom:12px;color:var(--text-secondary);">${word.cloze || word.sentence}</div>
+      <p style="font-size:0.9rem; margin-bottom:8px; color:var(--text-secondary)">聽一聽，選出正確的單字填入空格</p>
+      <button class="listen-play-btn" onclick="speak('${word.word.replace(/'/g, "\\'")}')">🔊</button>
+      <div class="quiz-options" style="margin-top:16px;grid-template-columns:1fr 1fr;">
+        ${choices.map(opt => `<div class="quiz-option" onclick="checkClozeAnswer(this, '${opt.replace(/'/g, "\\'")}', '${word.word.replace(/'/g, "\\'")}')">${opt}</div>`).join('')}
+      </div>
+    </div>
+  `;
+  setTimeout(() => speak(word.word), 300);
+}
+
 function renderMatching(area) {
   const allWords = WORD_DATA[currentTab].words;
   const shuffled = [...allWords].sort(() => Math.random() - 0.5).slice(0, 5);
 
-  const englishItems = shuffled.map(w => ({ type: 'en', word: w.word, pair: w.chinese }));
-  const chineseItems = shuffled.map(w => ({ type: 'zh', word: w.chinese, pair: w.word }));
+  const getMeaning = (w) => w.definition || w.chinese || w.word;
+  const englishItems = shuffled.map(w => ({ type: 'en', word: w.word, pair: getMeaning(w) }));
+  const chineseItems = shuffled.map(w => ({ type: 'zh', word: getMeaning(w), pair: w.word }));
 
   const leftCol = englishItems.sort(() => Math.random() - 0.5);
   const rightCol = chineseItems.sort(() => Math.random() - 0.5);
