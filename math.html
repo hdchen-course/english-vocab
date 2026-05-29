@@ -1072,7 +1072,21 @@ function saveState() {
     localStorage.setItem('math_stats', JSON.stringify(state.stats));
     localStorage.setItem('math_wrong', JSON.stringify(state.wrong));
     localStorage.setItem('math_daily', JSON.stringify(state.daily));
-  } catch(e) { console.error('Save error', e); }
+  } catch(e) {
+    console.error('Save error', e);
+    showSaveError();
+  }
+}
+
+function showSaveError() {
+  let el = document.getElementById('save-warning');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'save-warning';
+    el.style.cssText = 'position:fixed;top:0;left:0;right:0;padding:8px;background:#ef4444;color:white;text-align:center;font-size:0.8rem;z-index:9999;';
+    el.textContent = '⚠️ 無法儲存進度！請直接從 GitHub Pages 網址開啟，不要使用嵌入模式。';
+    document.body.prepend(el);
+  }
 }
 
 // ==================== SOUND ====================
@@ -2532,9 +2546,19 @@ function showResult(stars, errors) {
 }
 
 function confirmQuit() {
-  if (confirm('確定要離開嗎？進度不會保存。')) {
-    showScreen('home');
-  }
+  // Use custom dialog instead of confirm() which may be blocked in iframes
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:9999;';
+  overlay.innerHTML = `
+    <div style="background:#1e293b;border-radius:16px;padding:24px;text-align:center;max-width:280px;">
+      <div style="font-size:1.1rem;margin-bottom:16px;">確定要離開嗎？</div>
+      <div style="display:flex;gap:12px;justify-content:center;">
+        <button onclick="this.closest('div[style]').remove()" style="padding:10px 20px;border:none;border-radius:8px;background:#64748b;color:white;font-size:1rem;cursor:pointer;">繼續</button>
+        <button onclick="this.closest('div[style]').remove();showScreen('home')" style="padding:10px 20px;border:none;border-radius:8px;background:#ef4444;color:white;font-size:1rem;cursor:pointer;">離開</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
 }
 
 // ==================== DAILY CHALLENGE ====================
@@ -3065,6 +3089,14 @@ function launchConfetti() {
 
 // ==================== INITIALIZATION ====================
 function init() {
+  // Check localStorage availability
+  try {
+    localStorage.setItem('_test', '1');
+    localStorage.removeItem('_test');
+  } catch(e) {
+    showSaveError();
+  }
+
   loadState();
   renderHome();
 
