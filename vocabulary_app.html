@@ -264,6 +264,36 @@ body {
   color: var(--text);
 }
 
+.flashcard-definition {
+  font-size: 1.1rem;
+  color: var(--text);
+  text-align: center;
+  line-height: 1.6;
+  margin-bottom: 10px;
+  font-style: italic;
+}
+
+.chinese-toggle {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.chinese-btn {
+  padding: 6px 16px;
+  border: 1px dashed var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 16px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+}
+
+.chinese-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
 .flashcard-sentence {
   font-size: 1rem;
   color: var(--text-secondary);
@@ -1033,6 +1063,9 @@ body {
 <script src="https://hdchen-course.github.io/english-vocab/vocab_data_yle_movers.js"></script>
 <script src="https://hdchen-course.github.io/english-vocab/vocab_data_yle_flyers.js"></script>
 <script src="https://hdchen-course.github.io/english-vocab/vocab_data_gept_elementary.js"></script>
+<script src="https://hdchen-course.github.io/english-vocab/vocab_data_cefr_a1.js"></script>
+<script src="https://hdchen-course.github.io/english-vocab/vocab_data_cefr_a2.js"></script>
+<script src="https://hdchen-course.github.io/english-vocab/vocab_data_cefr_b1.js"></script>
 <script>
 // ==================== SRS ENGINE ====================
 class SRSEngine {
@@ -1378,9 +1411,13 @@ function renderFlashcard(area) {
           <div class="tap-hint">點擊翻轉</div>
         </div>
         <div class="flashcard-face flashcard-back">
-          <div class="flashcard-chinese">${word.chinese}</div>
+          ${word.definition ? `<div class="flashcard-definition">${word.definition}</div>` : ''}
           <div class="flashcard-sentence">${word.sentence}</div>
-          <div class="flashcard-tip">💡 ${word.tip}</div>
+          ${word.tip ? `<div class="flashcard-tip">💡 ${word.tip}</div>` : ''}
+          ${word.chinese ? `<div class="chinese-toggle">
+            <button class="chinese-btn" onclick="event.stopPropagation(); this.nextElementSibling.style.display='block'; this.style.display='none';">顯示中文</button>
+            <div class="flashcard-chinese" style="display:none">${word.chinese}</div>
+          </div>` : ''}
           <div class="sound-row">
             <button class="sound-btn" onclick="event.stopPropagation(); speak('${word.word.replace(/'/g, "\\'")}')">🔊</button>
             <button class="sound-btn" onclick="event.stopPropagation(); speak('${word.sentence.replace(/<[^>]*>/g, '').replace(/'/g, "\\'") }', false)">📢</button>
