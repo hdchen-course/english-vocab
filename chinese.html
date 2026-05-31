@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>國語大冒險 - Chinese Adventure</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+#app {
+  width: 100%;
+  max-width: 500px;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.screen {
+  display: none;
+  width: 100%;
+  min-height: 100vh;
+  padding: 16px;
+  padding-bottom: 80px;
+  animation: fadeIn 0.3s ease;
+}
+
+.screen.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  margin-bottom: 16px;
+}
+
+.header-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.header-btn {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.header-btn:active {
+  transform: scale(0.9);
+}
+
+.save-notice {
+  text-align: center;
+  color: rgba(255,255,255,0.6);
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+.stats-bar {
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(10px);
+}
+
+.stat-item {
+  text-align: center;
+  color: white;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.stat-label {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.exp-bar-container {
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.exp-info {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.exp-bar {
+  height: 8px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.exp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #fbbf24, #f59e0b);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding-bottom: 20px;
+}
+
+.category-card {
+  background: rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: 20px 16px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 2px solid transparent;
+  text-align: center;
+}
+
+.category-card:active {
+  transform: scale(0.95);
+}
+
+.category-card:nth-child(1) { border-color: rgba(239,68,68,0.5); }
+.category-card:nth-child(2) { border-color: rgba(59,130,246,0.5); }
+.category-card:nth-child(3) { border-color: rgba(16,185,129,0.5); }
+.category-card:nth-child(4) { border-color: rgba(168,85,247,0.5); }
+.category-card:nth-child(5) { border-color: rgba(245,158,11,0.5); }
+.category-card:nth-child(6) { border-color: rgba(236,72,153,0.5); }
+
+.category-emoji {
+  font-size: 40px;
+  margin-bottom: 8px;
+}
+
+.category-name {
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.category-progress {
+  color: rgba(255,255,255,0.6);
+  font-size: 12px;
+}
+
+.level-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.level-card {
+  background: rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: transform 0.2s;
+  border: 2px solid transparent;
+}
+
+.level-card:active {
+  transform: scale(0.97);
+}
+
+.level-card.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.level-card-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.level-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  font-size: 16px;
+}
+
+.level-card:nth-child(1) .level-badge { background: linear-gradient(135deg, #34d399, #10b981); }
+.level-card:nth-child(2) .level-badge { background: linear-gradient(135deg, #60a5fa, #3b82f6); }
+.level-card:nth-child(3) .level-badge { background: linear-gradient(135deg, #f472b6, #ec4899); }
+.level-card:nth-child(4) .level-badge { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
+
+.level-card-info {
+  color: white;
+}
+
+.level-card-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.level-card-sub {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.level-stars {
+  font-size: 20px;
+}
+
+/* Question screen */
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.progress-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.progress-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+}
+
+.progress-dot.correct { background: #34d399; }
+.progress-dot.wrong { background: #ef4444; }
+.progress-dot.current { background: #fbbf24; }
+
+.combo-display {
+  color: #fbbf24;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.question-box {
+  background: rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 24px 20px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.question-text {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.passage-text {
+  color: rgba(255,255,255,0.9);
+  font-size: 15px;
+  line-height: 1.8;
+  margin-bottom: 16px;
+  padding: 16px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  border-left: 3px solid #60a5fa;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.option-btn {
+  background: rgba(255,255,255,0.12);
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  padding: 16px 12px;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  line-height: 1.4;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.option-btn:active {
+  transform: scale(0.95);
+}
+
+.option-btn.correct {
+  background: rgba(16,185,129,0.3);
+  border-color: #10b981;
+  animation: popIn 0.3s ease;
+}
+
+.option-btn.wrong {
+  background: rgba(239,68,68,0.3);
+  border-color: #ef4444;
+  animation: shake 0.3s ease;
+}
+
+.option-btn.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.option-btn.show-correct {
+  border-color: #10b981;
+  background: rgba(16,185,129,0.2);
+}
+
+.explanation-box {
+  background: rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 16px;
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.explanation-box.show {
+  display: block;
+}
+
+.explanation-text {
+  color: rgba(255,255,255,0.9);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.next-btn {
+  display: none;
+  width: 100%;
+  padding: 16px;
+  margin-top: 16px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.next-btn.show {
+  display: block;
+}
+
+.next-btn:active {
+  transform: scale(0.97);
+}
+
+/* Result screen */
+.result-container {
+  text-align: center;
+  padding-top: 40px;
+}
+
+.result-stars {
+  font-size: 48px;
+  margin-bottom: 16px;
+  animation: popIn 0.5s ease;
+}
+
+.result-score {
+  color: white;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.result-detail {
+  color: rgba(255,255,255,0.7);
+  font-size: 16px;
+  margin-bottom: 24px;
+}
+
+.result-exp {
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  color: #fbbf24;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.result-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.result-btn {
+  padding: 16px;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.result-btn:active {
+  transform: scale(0.97);
+}
+
+.result-btn.primary {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+}
+
+.result-btn.secondary {
+  background: rgba(255,255,255,0.15);
+  color: white;
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- Home Screen -->
+  <div class="screen active" id="home-screen">
+    <div class="header">
+      <div class="header-title">國語大冒險</div>
+      <button class="header-btn" id="sound-toggle">🔊</button>
+    </div>
+    <div class="save-notice">💾 進度存在本機瀏覽器</div>
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-value" id="stat-exp">0</div>
+        <div class="stat-label">EXP</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="stat-rank">國語小白</div>
+        <div class="stat-label">稱號</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="stat-combo">0</div>
+        <div class="stat-label">最高連擊</div>
+      </div>
+    </div>
+    <div class="exp-bar-container">
+      <div class="exp-info">
+        <span id="rank-current">國語小白</span>
+        <span id="rank-next">→ 語文新手 (100)</span>
+      </div>
+      <div class="exp-bar">
+        <div class="exp-fill" id="exp-fill" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="category-grid" id="category-grid"></div>
+  </div>
+
+  <!-- Level Select Screen -->
+  <div class="screen" id="level-screen">
+    <div class="header">
+      <button class="header-btn" id="back-to-home">←</button>
+      <div class="header-title" id="level-screen-title">選擇關卡</div>
+      <div style="width:40px"></div>
+    </div>
+    <div class="level-list" id="level-list"></div>
+  </div>
+
+  <!-- Question Screen -->
+  <div class="screen" id="question-screen">
+    <div class="question-header">
+      <div class="progress-dots" id="progress-dots"></div>
+      <div class="combo-display" id="combo-display"></div>
+    </div>
+    <div id="passage-container"></div>
+    <div class="question-box">
+      <div class="question-text" id="question-text"></div>
+    </div>
+    <div class="options-grid" id="options-grid"></div>
+    <div class="explanation-box" id="explanation-box">
+      <div class="explanation-text" id="explanation-text"></div>
+    </div>
+    <button class="next-btn" id="next-btn">下一題 →</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div class="screen" id="result-screen">
+    <div class="result-container">
+      <div class="result-stars" id="result-stars"></div>
+      <div class="result-score" id="result-score"></div>
+      <div class="result-detail" id="result-detail"></div>
+      <div class="result-exp" id="result-exp"></div>
+      <div class="result-buttons">
+        <button class="result-btn primary" id="result-next">下一關 →</button>
+        <button class="result-btn secondary" id="result-retry">再試一次 🔄</button>
+        <button class="result-btn secondary" id="result-home">回主畫面 🏠</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== QUESTION DATA =====
+const QUESTIONS = {
+  idiom: [
+    // type: fill (20)
+    {type:"fill",question:"畫蛇添___",options:["足","手","腳","趾"],answer:0,explanation:"比喻做多餘的事反而弄巧成拙"},
+    {type:"fill",question:"守株待___",options:["兔","鬼","人","魚"],answer:0,explanation:"比喻不知變通，死守舊方法"},
+    {type:"fill",question:"拔苗助___",options:["長","高","大","壯"],answer:0,explanation:"比喻急於求成反而壞事"},
+    {type:"fill",question:"亡羊補___",options:["牢","圈","欄","柵"],answer:0,explanation:"出了問題後趕快補救"},
+    {type:"fill",question:"掩耳盜___",options:["鈴","鐘","鼓","鑼"],answer:0,explanation:"自欺欺人"},
+    {type:"fill",question:"井底之___",options:["蛙","魚","蟲","蛇"],answer:0,explanation:"見識狹隘的人"},
+    {type:"fill",question:"狐假虎___",options:["威","勇","猛","力"],answer:0,explanation:"借別人的勢力嚇唬人"},
+    {type:"fill",question:"對牛彈___",options:["琴","箏","笛","鼓"],answer:0,explanation:"對不懂的人說深奧的道理"},
+    {type:"fill",question:"雪中送___",options:["炭","火","柴","暖"],answer:0,explanation:"在別人最需要幫助時伸出援手"},
+    {type:"fill",question:"火上加___",options:["油","柴","薪","炭"],answer:0,explanation:"使情況更嚴重"},
+    {type:"fill",question:"一箭雙___",options:["鵰","鳥","雕","鷹"],answer:0,explanation:"一次行動達成兩個目的"},
+    {type:"fill",question:"鶴立雞___",options:["群","中","旁","間"],answer:0,explanation:"才能出眾，跟周圍的人不同"},
+    {type:"fill",question:"望梅止___",options:["渴","飢","饑","餓"],answer:0,explanation:"用空想來安慰自己"},
+    {type:"fill",question:"畫龍點___",options:["睛","眼","目","珠"],answer:0,explanation:"在關鍵處加上精彩內容"},
+    {type:"fill",question:"錦上添___",options:["花","葉","色","彩"],answer:0,explanation:"好上加好"},
+    {type:"fill",question:"胸有成___",options:["竹","畫","計","略"],answer:0,explanation:"做事前已有完整計畫"},
+    {type:"fill",question:"水落石___",options:["出","現","見","露"],answer:0,explanation:"事情真相終於明白"},
+    {type:"fill",question:"刻舟求___",options:["劍","刀","針","矛"],answer:0,explanation:"不知變通"},
+    {type:"fill",question:"杯弓蛇___",options:["影","形","像","跡"],answer:0,explanation:"疑神疑鬼"},
+    {type:"fill",question:"班門弄___",options:["斧","刀","劍","錘"],answer:0,explanation:"在行家面前賣弄"},
+    // type: meaning (10)
+    {type:"meaning",question:"「一石二鳥」的意思是？",options:["做一件事同時達到兩個目的","用石頭打兩隻鳥","石頭很大可以打到兩隻鳥","一次只能做一件事"],answer:0,explanation:"一石二鳥：一個行動同時達到兩個目的"},
+    {type:"meaning",question:"「半途而廢」的意思是？",options:["事情做到一半就放棄","走到一半迷路了","把東西丟掉一半","只做了一半就完成"],answer:0,explanation:"半途而廢：做事沒有恆心，中途停止"},
+    {type:"meaning",question:"「自相矛盾」的意思是？",options:["自己的說法前後不一致","自己跟自己打架","用矛去刺盾","買了矛又買盾"],answer:0,explanation:"自相矛盾：說話或行為前後不一，互相抵觸"},
+    {type:"meaning",question:"「三顧茅廬」的意思是？",options:["多次誠心拜訪邀請","去茅草屋三次","看了三間房子","住在茅草屋三天"],answer:0,explanation:"三顧茅廬：劉備三次拜訪諸葛亮，比喻誠心邀請"},
+    {type:"meaning",question:"「愚公移山」的意思是？",options:["有恆心毅力終能成功","愚笨的人搬山","叫別人幫忙搬山","搬家到山的另一邊"],answer:0,explanation:"愚公移山：只要有決心和毅力，就能克服困難"},
+    {type:"meaning",question:"「塞翁失馬」的意思是？",options:["壞事有可能變好事","老人弄丟了馬","馬跑到很遠的地方","不要養馬"],answer:0,explanation:"塞翁失馬：禍福相依，壞事可能變好事"},
+    {type:"meaning",question:"「揠苗助長」的意思是？",options:["急於求成反而壞事","幫忙農夫種田","拔草讓苗長大","種出很高的植物"],answer:0,explanation:"揠苗助長：違反事物發展規律，反而壞事"},
+    {type:"meaning",question:"「破釜沉舟」的意思是？",options:["下定決心不留退路","把鍋子打破","船沉到水底","在船上煮飯"],answer:0,explanation:"破釜沉舟：下定決心，義無反顧"},
+    {type:"meaning",question:"「臥薪嘗膽」的意思是？",options:["刻苦自勵等待時機報仇","睡在柴火上","吃苦的東西","住在很差的地方"],answer:0,explanation:"臥薪嘗膽：忍辱負重，發憤圖強"},
+    {type:"meaning",question:"「東施效顰」的意思是？",options:["不顧條件盲目模仿反而弄巧成拙","東邊的人很美","學別人皺眉頭","模仿別人很成功"],answer:0,explanation:"東施效顰：盲目模仿別人反而適得其反"},
+    // type: usage (20)
+    {type:"usage",question:"小明考試都不準備卻期望考滿分，這叫做？",options:["緣木求魚","守株待兔","對牛彈琴","畫蛇添足"],answer:0,explanation:"緣木求魚：方法不對，不可能達到目的"},
+    {type:"usage",question:"弟弟明明做錯事卻說是別人的錯，這叫做？",options:["指鹿為馬","掩耳盜鈴","狐假虎威","井底之蛙"],answer:0,explanation:"指鹿為馬：顛倒是非，混淆黑白"},
+    {type:"usage",question:"姐姐文章已經寫得很好了，硬要多加一段結果反而不好，這叫做？",options:["畫蛇添足","錦上添花","雪中送炭","拔苗助長"],answer:0,explanation:"畫蛇添足：多此一舉反而弄巧成拙"},
+    {type:"usage",question:"同學在大家都很難過的時候說了笑話讓大家開心，這叫做？",options:["雪中送炭","火上加油","錦上添花","落井下石"],answer:0,explanation:"雪中送炭：在別人困難時給予幫助"},
+    {type:"usage",question:"他總是驕傲看不起人，有天比賽卻輸了，這叫做？",options:["驕兵必敗","班門弄斧","自相矛盾","一箭雙鵰"],answer:0,explanation:"驕兵必敗：驕傲自大必定失敗"},
+    {type:"usage",question:"小華只待在家裡，從不出去看看外面的世界，這叫做？",options:["井底之蛙","守株待兔","掩耳盜鈴","對牛彈琴"],answer:0,explanation:"井底之蛙：見識狹窄，不知天高地厚"},
+    {type:"usage",question:"爸爸明明說要少吃甜食，自己卻天天吃巧克力，這叫做？",options:["自相矛盾","指鹿為馬","掩耳盜鈴","狐假虎威"],answer:0,explanation:"自相矛盾：言行不一致"},
+    {type:"usage",question:"妹妹在書法大師面前炫耀自己的字寫得好，這叫做？",options:["班門弄斧","對牛彈琴","鶴立雞群","畫龍點睛"],answer:0,explanation:"班門弄斧：在行家面前炫耀本領"},
+    {type:"usage",question:"老師一邊教英文一邊帶大家認識外國文化，這叫做？",options:["一石二鳥","畫蛇添足","錦上添花","半途而廢"],answer:0,explanation:"一石二鳥：一舉兩得"},
+    {type:"usage",question:"哥哥練鋼琴練了三天就不想練了，這叫做？",options:["半途而廢","守株待兔","揠苗助長","緣木求魚"],answer:0,explanation:"半途而廢：事情做到中途就放棄"},
+    {type:"usage",question:"小美每天讀課文，日積月累成績變好了，這叫做？",options:["水滴石穿","守株待兔","拔苗助長","刻舟求劍"],answer:0,explanation:"水滴石穿：持之以恆必有成果"},
+    {type:"usage",question:"壞同學仗著他爸爸是校長就欺負人，這叫做？",options:["狐假虎威","指鹿為馬","班門弄斧","井底之蛙"],answer:0,explanation:"狐假虎威：借助別人的權勢來欺壓人"},
+    {type:"usage",question:"弟弟把耳朵摀住說『我沒聽到媽媽叫我』，這叫做？",options:["掩耳盜鈴","對牛彈琴","井底之蛙","守株待兔"],answer:0,explanation:"掩耳盜鈴：自欺欺人"},
+    {type:"usage",question:"比賽之前教練早就計畫好戰術了，這叫做？",options:["胸有成竹","水落石出","錦上添花","刻舟求劍"],answer:0,explanation:"胸有成竹：事前已有周全計畫"},
+    {type:"usage",question:"爺爺對小嬰兒講股票的事，小嬰兒當然聽不懂，這叫做？",options:["對牛彈琴","班門弄斧","井底之蛙","畫蛇添足"],answer:0,explanation:"對牛彈琴：對不懂的人說高深道理"},
+    {type:"usage",question:"作文最後加了一句精彩的結語，讓整篇文章更好，這叫做？",options:["畫龍點睛","錦上添花","雪中送炭","火上加油"],answer:0,explanation:"畫龍點睛：在關鍵處加上精彩的點綴"},
+    {type:"usage",question:"爸爸媽媽吵架，弟弟又在旁邊搗蛋，讓氣氛更糟，這叫做？",options:["火上加油","雪中送炭","落井下石","畫蛇添足"],answer:0,explanation:"火上加油：使不好的情況更加惡化"},
+    {type:"usage",question:"同學已經很厲害了還得到大獎，大家紛紛恭喜他，這叫做？",options:["錦上添花","雪中送炭","火上加油","畫蛇添足"],answer:0,explanation:"錦上添花：好上加好"},
+    {type:"usage",question:"小明用十年前的方法來解決現在的問題，當然行不通，這叫做？",options:["刻舟求劍","守株待兔","揠苗助長","緣木求魚"],answer:0,explanation:"刻舟求劍：不知變通，用舊方法應對新情況"},
+    {type:"usage",question:"小美數學考試表現傑出，在一群同學中特別突出，這叫做？",options:["鶴立雞群","井底之蛙","班門弄斧","一箭雙鵰"],answer:0,explanation:"鶴立雞群：才能特別突出"}
+  ],
+  phonetics: [
+    // 的得地 (10)
+    {type:"dededi",question:"他跑___很快",options:["得","的","地","德"],answer:0,explanation:"得：用在動詞後面表示程度補語"},
+    {type:"dededi",question:"她開心___笑了",options:["地","的","得","底"],answer:0,explanation:"地：用在動詞前面修飾動作方式"},
+    {type:"dededi",question:"這是我___書包",options:["的","得","地","底"],answer:0,explanation:"的：表示所屬關係"},
+    {type:"dededi",question:"他說___很有道理",options:["得","的","地","德"],answer:0,explanation:"得：動詞後表程度補語"},
+    {type:"dededi",question:"我們快樂___唱歌",options:["地","的","得","底"],answer:0,explanation:"地：副詞修飾動詞"},
+    {type:"dededi",question:"美麗___花朵開了",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他寫字寫___很漂亮",options:["得","的","地","德"],answer:0,explanation:"得：動詞後表程度"},
+    {type:"dededi",question:"小狗高興___搖尾巴",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞的方式"},
+    {type:"dededi",question:"圓圓___月亮掛在天上",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"姐姐唱歌唱___好聽",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    // 做/作 (5)
+    {type:"zuozuo",question:"媽媽在___飯",options:["做","作"],answer:0,explanation:"做：具體的動作行為"},
+    {type:"zuozuo",question:"這是他的___品",options:["作","做"],answer:0,explanation:"作：抽象的創作成果"},
+    {type:"zuozuo",question:"我在___功課",options:["做","作"],answer:0,explanation:"做功課：具體行為"},
+    {type:"zuozuo",question:"他___了一首詩",options:["作","做"],answer:0,explanation:"作詩：文學創作"},
+    {type:"zuozuo",question:"不要___壞事",options:["做","作"],answer:0,explanation:"做壞事：具體行為"},
+    // 在/再 (5)
+    {type:"zaizai",question:"我___家裡",options:["在","再"],answer:0,explanation:"在：表示位置所在"},
+    {type:"zaizai",question:"請你___說一次",options:["再","在"],answer:0,explanation:"再：表示重複動作"},
+    {type:"zaizai",question:"他___學校上課",options:["在","再"],answer:0,explanation:"在：表示地點"},
+    {type:"zaizai",question:"___見！明天見",options:["再","在"],answer:0,explanation:"再見：表示下次再見面"},
+    {type:"zaizai",question:"我___也不遲到了",options:["再","在"],answer:0,explanation:"再也不：表示以後不再"},
+    // 錯字辨識 (10)
+    {type:"wrong",question:"哪個詞語有錯字？",options:["誠肯","誠懇","誠實","誠心"],answer:0,explanation:"正確寫法是「誠懇」，不是「誠肯」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["辛苦","幸苦","辛勤","辛酸"],answer:1,explanation:"正確寫法是「辛苦」，不是「幸苦」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["蜜蜂","密蜂","蜂蜜","蜂巢"],answer:1,explanation:"正確寫法是「蜜蜂」，不是「密蜂」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["感恩","感動","感想","感受"],answer:3,explanation:"這題所有都正確，選第四個。（教學用：提醒注意同音字）"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["以經","已經","已然","以為"],answer:0,explanation:"正確寫法是「已經」，不是「以經」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["在見","再見","再來","再次"],answer:0,explanation:"正確寫法是「再見」，不是「在見」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["遊戲","游戲","遊玩","遊客"],answer:1,explanation:"正確寫法是「遊戲」，不是「游戲」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["必需品","必須品","日用品","生活品"],answer:1,explanation:"正確是「必需品」（必需=必要的東西）"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["坐位","座位","席位","座椅"],answer:0,explanation:"正確寫法是「座位」，不是「坐位」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["報怨","抱怨","報復","抱歉"],answer:0,explanation:"正確寫法是「抱怨」，不是「報怨」"},
+    // 破音字 (20)
+    {type:"bopomofo",question:"「行」在「銀行」中讀作？",options:["ㄏㄤˊ","ㄒㄧㄥˊ","ㄏㄤˋ","ㄒㄧㄥˋ"],answer:0,explanation:"銀行的「行」讀ㄏㄤˊ"},
+    {type:"bopomofo",question:"「長」在「長大」中讀作？",options:["ㄓㄤˇ","ㄔㄤˊ","ㄓㄤˋ","ㄔㄤˇ"],answer:0,explanation:"長大的「長」讀ㄓㄤˇ（成長）"},
+    {type:"bopomofo",question:"「好」在「好奇」中讀作？",options:["ㄏㄠˋ","ㄏㄠˇ","ㄏㄠ","ㄏㄠˊ"],answer:0,explanation:"好奇的「好」讀ㄏㄠˋ（喜好）"},
+    {type:"bopomofo",question:"「樂」在「音樂」中讀作？",options:["ㄩㄝˋ","ㄌㄜˋ","ㄧㄠˋ","ㄌㄠˋ"],answer:0,explanation:"音樂的「樂」讀ㄩㄝˋ"},
+    {type:"bopomofo",question:"「數」在「數學」中讀作？",options:["ㄕㄨˋ","ㄕㄨˇ","ㄙㄨˋ","ㄕㄨ"],answer:0,explanation:"數學的「數」讀ㄕㄨˋ（名詞）"},
+    {type:"bopomofo",question:"「還」在「還是」中讀作？",options:["ㄏㄞˊ","ㄏㄨㄢˊ","ㄏㄞˋ","ㄏㄨㄢˋ"],answer:0,explanation:"還是的「還」讀ㄏㄞˊ（仍然）"},
+    {type:"bopomofo",question:"「了」在「了解」中讀作？",options:["ㄌㄧㄠˇ","ㄌㄜ˙","ㄌㄧㄠˊ","ㄌㄜˋ"],answer:0,explanation:"了解的「了」讀ㄌㄧㄠˇ"},
+    {type:"bopomofo",question:"「種」在「種花」中讀作？",options:["ㄓㄨㄥˋ","ㄓㄨㄥˇ","ㄔㄨㄥˊ","ㄓㄨㄥ"],answer:0,explanation:"種花的「種」讀ㄓㄨㄥˋ（動詞）"},
+    {type:"bopomofo",question:"「假」在「放假」中讀作？",options:["ㄐㄧㄚˋ","ㄐㄧㄚˇ","ㄐㄧㄚ","ㄐㄧㄝˇ"],answer:0,explanation:"放假的「假」讀ㄐㄧㄚˋ（假期）"},
+    {type:"bopomofo",question:"「差」在「差別」中讀作？",options:["ㄔㄚ","ㄔㄚˋ","ㄔㄞ","ㄔㄞˋ"],answer:0,explanation:"差別的「差」讀ㄔㄚ（差異）"},
+    {type:"bopomofo",question:"「教」在「教室」中讀作？",options:["ㄐㄧㄠˋ","ㄐㄧㄠ","ㄐㄧㄠˇ","ㄐㄧㄠˊ"],answer:0,explanation:"教室的「教」讀ㄐㄧㄠˋ（名詞用法）"},
+    {type:"bopomofo",question:"「看」在「看守」中讀作？",options:["ㄎㄢ","ㄎㄢˋ","ㄎㄢˇ","ㄎㄢˊ"],answer:0,explanation:"看守的「看」讀ㄎㄢ（看守、看管）"},
+    {type:"bopomofo",question:"「空」在「空地」中讀作？",options:["ㄎㄨㄥˋ","ㄎㄨㄥ","ㄎㄨㄥˇ","ㄎㄨㄥˊ"],answer:0,explanation:"空地的「空」讀ㄎㄨㄥˋ（空出來的）"},
+    {type:"bopomofo",question:"「都」在「首都」中讀作？",options:["ㄉㄨ","ㄉㄡ","ㄉㄨˇ","ㄉㄡˇ"],answer:0,explanation:"首都的「都」讀ㄉㄨ（都市）"},
+    {type:"bopomofo",question:"「乾」在「乾淨」中讀作？",options:["ㄍㄢ","ㄑㄧㄢˊ","ㄍㄢˋ","ㄍㄢˇ"],answer:0,explanation:"乾淨的「乾」讀ㄍㄢ"},
+    {type:"bopomofo",question:"「傳」在「傳記」中讀作？",options:["ㄓㄨㄢˋ","ㄔㄨㄢˊ","ㄓㄨㄢˇ","ㄔㄨㄢˋ"],answer:0,explanation:"傳記的「傳」讀ㄓㄨㄢˋ（人物故事）"},
+    {type:"bopomofo",question:"「量」在「測量」中讀作？",options:["ㄌㄧㄤˊ","ㄌㄧㄤˋ","ㄌㄧㄤ","ㄌㄧㄤˇ"],answer:0,explanation:"測量的「量」讀ㄌㄧㄤˊ（動詞）"},
+    {type:"bopomofo",question:"「為」在「因為」中讀作？",options:["ㄨㄟˋ","ㄨㄟˊ","ㄨㄟ","ㄨㄟˇ"],answer:0,explanation:"因為的「為」讀ㄨㄟˋ"},
+    {type:"bopomofo",question:"「得」在「得到」中讀作？",options:["ㄉㄜˊ","ㄉㄜ˙","ㄉㄟˇ","ㄉㄜˇ"],answer:0,explanation:"得到的「得」讀ㄉㄜˊ（獲得）"},
+    {type:"bopomofo",question:"「累」在「勞累」中讀作？",options:["ㄌㄟˋ","ㄌㄟˊ","ㄌㄟˇ","ㄌㄩˇ"],answer:0,explanation:"勞累的「累」讀ㄌㄟˋ（疲累）"}
+  ],
+  sentence: [
+    // Conjunctions (15)
+    {type:"conjunction",question:"___下雨了，___我還是走路去學校",options:["雖然...但是","因為...所以","如果...就","不但...而且"],answer:0,explanation:"雖然...但是：表示轉折"},
+    {type:"conjunction",question:"___他很用功，___每次都考第一名",options:["因為...所以","雖然...但是","即使...也","不但...而且"],answer:0,explanation:"因為...所以：表示因果關係"},
+    {type:"conjunction",question:"他___會畫畫，___會彈鋼琴",options:["不但...而且","雖然...但是","因為...所以","如果...就"],answer:0,explanation:"不但...而且：表示遞進"},
+    {type:"conjunction",question:"___明天放假，我們___去公園玩",options:["如果...就","因為...所以","雖然...但是","不但...而且"],answer:0,explanation:"如果...就：表示假設條件"},
+    {type:"conjunction",question:"___天氣很冷，他___堅持晨跑",options:["即使...也","因為...所以","如果...就","不但...而且"],answer:0,explanation:"即使...也：表示讓步"},
+    {type:"conjunction",question:"___你不努力，___不會進步",options:["如果...就","因為...所以","雖然...但是","不但...而且"],answer:0,explanation:"如果...就：表示條件假設"},
+    {type:"conjunction",question:"他___功課好，___體育也棒",options:["不但...而且","雖然...但是","因為...所以","如果...就"],answer:0,explanation:"不但...而且：表示遞進加強"},
+    {type:"conjunction",question:"___她生病了，___還是來上學",options:["雖然...但是","因為...所以","如果...就","不但...而且"],answer:0,explanation:"雖然...但是：表示轉折"},
+    {type:"conjunction",question:"___我有錢，我___買一台腳踏車",options:["如果...就","因為...所以","雖然...但是","不但...而且"],answer:0,explanation:"如果...就：假設條件"},
+    {type:"conjunction",question:"___下大雨，比賽___照常舉行",options:["即使...也","如果...就","因為...所以","雖然...但是"],answer:0,explanation:"即使...也：讓步關係"},
+    {type:"conjunction",question:"___太陽很大，___我們戴帽子出門",options:["因為...所以","雖然...但是","如果...就","即使...也"],answer:0,explanation:"因為...所以：因果關係"},
+    {type:"conjunction",question:"妹妹___會唱歌___會跳舞",options:["不但...還","雖然...但是","因為...所以","如果...就"],answer:0,explanation:"不但...還：遞進關係"},
+    {type:"conjunction",question:"___你答應了別人，___要做到",options:["既然...就","如果...就","因為...所以","雖然...但是"],answer:0,explanation:"既然...就：既定事實的推論"},
+    {type:"conjunction",question:"___是誰做的，都___受到處罰",options:["不管...都","如果...就","因為...所以","即使...也"],answer:0,explanation:"不管...都：表示無條件"},
+    {type:"conjunction",question:"他___聰明，___很勤勞",options:["不僅...還","雖然...但是","因為...所以","如果...就"],answer:0,explanation:"不僅...還：遞進關係"},
+    // Best word choice (25)
+    {type:"word",question:"花園裡的花___了",options:["盛開","打開","開始","展開"],answer:0,explanation:"盛開：形容花朵綻放最恰當"},
+    {type:"word",question:"天空下起了___大雨",options:["傾盆","巨大","超級","很多"],answer:0,explanation:"傾盆大雨：形容雨下得又大又急"},
+    {type:"word",question:"小鳥在樹上___地唱歌",options:["快樂","高興","開心","愉快"],answer:0,explanation:"快樂地唱歌：最自然通順的搭配"},
+    {type:"word",question:"他___地完成了作業",options:["認真","努力","拚命","用力"],answer:0,explanation:"認真地完成：形容態度"},
+    {type:"word",question:"春天來了，大地一片___",options:["生機盎然","開開心心","漂漂亮亮","快快樂樂"],answer:0,explanation:"生機盎然：形容春天萬物充滿活力"},
+    {type:"word",question:"這件事讓我感到很___",options:["感動","高興","美好","溫暖"],answer:0,explanation:"感動：表達被觸動心靈的感覺"},
+    {type:"word",question:"老師___地叮嚀我們要注意安全",options:["再三","一直","不停","反覆"],answer:0,explanation:"再三叮嚀：多次叮囑最為恰當"},
+    {type:"word",question:"清晨的空氣特別___",options:["清新","乾淨","好聞","舒服"],answer:0,explanation:"清新：形容空氣最恰當的詞"},
+    {type:"word",question:"他的表現讓大家___",options:["刮目相看","很佩服","嚇一跳","非常驚訝"],answer:0,explanation:"刮目相看：對人改變看法，表示讚嘆"},
+    {type:"word",question:"夜空中的星星___",options:["閃爍","發亮","亮亮","很多"],answer:0,explanation:"閃爍：形容星星一閃一閃的樣子"},
+    {type:"word",question:"小河的水___地流著",options:["潺潺","慢慢","靜靜","嘩嘩"],answer:0,explanation:"潺潺：形容小河流水聲的擬聲詞"},
+    {type:"word",question:"她___地走進教室",options:["悄悄","偷偷","默默","靜靜"],answer:0,explanation:"悄悄地走：形容輕手輕腳最恰當"},
+    {type:"word",question:"弟弟___地躲在門後面",options:["偷偷","悄悄","靜靜","默默"],answer:0,explanation:"偷偷地躲：有「不想被發現」的意味"},
+    {type:"word",question:"這棵大樹非常___",options:["高大","巨大","很高","超大"],answer:0,explanation:"高大：形容樹木最自然的搭配"},
+    {type:"word",question:"教室裡___，一點聲音都沒有",options:["鴉雀無聲","很安靜","沒聲音","靜悄悄"],answer:0,explanation:"鴉雀無聲：形容非常安靜的成語"},
+    {type:"word",question:"這個消息讓大家___",options:["歡天喜地","很快樂","很開心","笑嘻嘻"],answer:0,explanation:"歡天喜地：形容非常高興的樣子"},
+    {type:"word",question:"他的成績___，令人羨慕",options:["名列前茅","很好","不錯","最高"],answer:0,explanation:"名列前茅：形容成績優秀"},
+    {type:"word",question:"這道菜聞起來___",options:["香噴噴","很好吃","好味道","香香的"],answer:0,explanation:"香噴噴：形容食物香氣的疊詞"},
+    {type:"word",question:"爺爺每天___地去公園散步",options:["悠閒","快樂","開心","無聊"],answer:0,explanation:"悠閒地散步：形容輕鬆自在"},
+    {type:"word",question:"風___地吹著",options:["徐徐","慢慢","一直","大大"],answer:0,explanation:"徐徐：形容風慢慢吹的樣子"},
+    {type:"word",question:"妹妹的臉紅得像___一樣",options:["蘋果","火","番茄","太陽"],answer:0,explanation:"紅得像蘋果：常用且恰當的譬喻"},
+    {type:"word",question:"他跑得像___一樣快",options:["風","車","火箭","閃電"],answer:0,explanation:"跑得像風一樣快：最常用的譬喻"},
+    {type:"word",question:"時間過得真___",options:["快","慢","長","飛"],answer:0,explanation:"時間過得真快：常見說法"},
+    {type:"word",question:"下課鐘___了",options:["響","叫","唱","打"],answer:0,explanation:"鐘響了：最自然的搭配動詞"},
+    {type:"word",question:"窗外的雨___地下著",options:["淅瀝淅瀝","滴滴答答","嘩啦嘩啦","叮叮咚咚"],answer:0,explanation:"淅瀝淅瀝：形容細雨的擬聲詞"}
+  ],
+  reading: [
+    {passage:"小明每天早上六點起床，先刷牙洗臉，再吃早餐。他最喜歡吃媽媽做的三明治和一杯牛奶。吃完早餐後，他會背著書包走路去學校，路上會經過一個小公園，公園裡有很多小鳥在唱歌。",questions:[
+      {q:"小明最喜歡的早餐是什麼？",options:["三明治和牛奶","麵包和果汁","飯糰和豆漿","蛋餅和紅茶"],answer:0},
+      {q:"小明怎麼去學校？",options:["走路","騎腳踏車","搭公車","媽媽開車"],answer:0},
+      {q:"小明路上會經過什麼地方？",options:["小公園","便利商店","圖書館","游泳池"],answer:0}
+    ]},
+    {passage:"春天到了，校園裡的櫻花開得好漂亮。粉紅色的花瓣隨風飄落，就像下了一場花瓣雨。同學們都很開心，趁下課時間跑到櫻花樹下拍照。老師也帶著全班到戶外畫櫻花，大家畫得又認真又快樂。",questions:[
+      {q:"校園裡開了什麼花？",options:["櫻花","玫瑰","荷花","百合"],answer:0},
+      {q:"花瓣是什麼顏色？",options:["粉紅色","白色","紅色","紫色"],answer:0},
+      {q:"老師帶全班做什麼？",options:["到戶外畫櫻花","去操場跑步","到圖書館看書","去教室寫字"],answer:0}
+    ]},
+    {passage:"小美養了一隻小貓，名字叫「小橘」，因為牠全身是橘色的毛。小橘最喜歡趴在窗台上曬太陽，有時候還會伸出舌頭舔自己的毛。每天小美放學回家，小橘都會跑到門口迎接她，喵喵地叫著，好像在說「歡迎回來」。",questions:[
+      {q:"小美的貓叫什麼名字？",options:["小橘","小白","小花","小黑"],answer:0},
+      {q:"小橘最喜歡做什麼？",options:["趴在窗台曬太陽","在院子跑步","吃魚","睡覺"],answer:0},
+      {q:"小美放學回家時小橘會怎樣？",options:["跑到門口迎接她","繼續睡覺","躲起來","跑到外面"],answer:0}
+    ]},
+    {passage:"暑假時，爸爸帶全家去海邊玩。我們在沙灘上堆了一座大城堡，還在海裡游泳。弟弟第一次看到海，興奮得一直跳。媽媽在岸邊撐著陽傘看書。傍晚時，我們一起看夕陽，橘紅色的太陽慢慢沉入海中，美極了。",questions:[
+      {q:"他們去哪裡玩？",options:["海邊","山上","公園","遊樂園"],answer:0},
+      {q:"媽媽在做什麼？",options:["在岸邊看書","在游泳","在堆城堡","在煮飯"],answer:0},
+      {q:"傍晚他們看到什麼？",options:["夕陽沉入海中","月亮升起","星星出現","彩虹"],answer:0}
+    ]},
+    {passage:"圖書館是我最喜歡的地方。那裡有好多好多的書，從故事書到科學百科都有。每個星期六，我都會去圖書館借兩本書回家看。圖書館的阿姨人很好，常常推薦好看的新書給我。我最喜歡坐在窗邊的位子，安靜地看書。",questions:[
+      {q:"他最喜歡的地方是哪裡？",options:["圖書館","學校","公園","家裡"],answer:0},
+      {q:"他每週六借幾本書？",options:["兩本","一本","三本","五本"],answer:0},
+      {q:"他喜歡坐在哪裡看書？",options:["窗邊的位子","門口","樓梯旁","角落"],answer:0}
+    ]},
+    {passage:"今天是校慶運動會，每個班級都派出選手參加各種比賽。我參加了一百公尺賽跑，雖然沒有得到第一名，但我已經跑出自己最好的成績了。最令人興奮的是拔河比賽，全班同學一起喊「加油！」，最後我們班贏了冠軍！",questions:[
+      {q:"今天有什麼活動？",options:["校慶運動會","期末考試","戶外教學","校外旅行"],answer:0},
+      {q:"他參加了什麼比賽？",options:["一百公尺賽跑","跳遠","拔河","跳高"],answer:0},
+      {q:"他們班哪個比賽得了冠軍？",options:["拔河","賽跑","跳遠","接力賽"],answer:0}
+    ]},
+    {passage:"螞蟻是一種很勤勞的昆蟲。牠們住在地底下的蟻巢裡，分工合作，有的負責找食物，有的負責照顧幼蟲，有的負責保護蟻巢。螞蟻雖然很小，卻能搬動比自己重很多倍的東西。牠們告訴我們團結合作的力量有多大。",questions:[
+      {q:"螞蟻住在哪裡？",options:["地底下的蟻巢","樹上","水裡","石頭下"],answer:0},
+      {q:"螞蟻能搬多重的東西？",options:["比自己重很多倍","跟自己一樣重","很輕的東西","只能搬食物"],answer:0},
+      {q:"文章告訴我們什麼道理？",options:["團結合作的力量很大","螞蟻很厲害","要努力找食物","要住在地底下"],answer:0}
+    ]},
+    {passage:"下課了，小華和同學們在操場上打籃球。突然，球飛到校門外的馬路上。小華正要衝出去撿球，旁邊的警衛叔叔趕緊把他拉住，告訴他馬路上很危險，要先看左右有沒有車子。小華嚇了一跳，向警衛叔叔道謝。",questions:[
+      {q:"球飛到哪裡？",options:["校門外的馬路上","屋頂上","水溝裡","別班教室"],answer:0},
+      {q:"誰拉住了小華？",options:["警衛叔叔","老師","同學","媽媽"],answer:0},
+      {q:"這個故事告訴我們什麼？",options:["過馬路要注意安全","不要打籃球","不要下課","球不重要"],answer:0}
+    ]},
+    {passage:"台灣的水果種類很多，不同季節有不同的水果。夏天有西瓜、芒果和荔枝；秋天有柚子和柿子；冬天有橘子和草莓。台灣的水果又甜又好吃，很多外國人都喜歡。其中芒果和鳳梨更是外銷到很多國家。",questions:[
+      {q:"夏天有什麼水果？",options:["西瓜、芒果和荔枝","橘子和草莓","柚子和柿子","蘋果和葡萄"],answer:0},
+      {q:"哪些水果外銷到很多國家？",options:["芒果和鳳梨","西瓜和荔枝","柚子和柿子","橘子和草莓"],answer:0}
+    ]},
+    {passage:"姐姐的生日快到了，我想送她一份特別的禮物。我決定自己動手做一張卡片。我用彩色紙剪了很多愛心和星星貼上去，還畫了姐姐最喜歡的兔子。最後我在卡片裡寫了：「姐姐，生日快樂！我最喜歡妳了！」希望姐姐會喜歡。",questions:[
+      {q:"他要送姐姐什麼？",options:["自己做的卡片","買的玩具","一本書","一隻兔子"],answer:0},
+      {q:"卡片上畫了什麼？",options:["兔子","貓咪","小狗","小鳥"],answer:0}
+    ]},
+    {passage:"颱風天的時候，外面的風很大，雨也很大，我們全家都待在家裡。爸爸把窗戶關緊，媽媽準備了很多食物和水。停電的時候，我們點蠟燭玩撲克牌。雖然不能出去玩，但全家在一起也覺得很溫暖。",questions:[
+      {q:"颱風天他們在哪裡？",options:["家裡","學校","避難所","親戚家"],answer:0},
+      {q:"停電時他們做什麼？",options:["點蠟燭玩撲克牌","睡覺","看電視","玩手機"],answer:0},
+      {q:"媽媽準備了什麼？",options:["食物和水","玩具","書本","衣服"],answer:0}
+    ]},
+    {passage:"端午節是每年農曆五月五日，這天大家會吃粽子、划龍舟。傳說這是為了紀念愛國詩人屈原。屈原因為國家滅亡而投江自盡，人們為了不讓魚蝦吃掉他的身體，就包了粽子丟進江裡。這個習俗一直流傳到現在。",questions:[
+      {q:"端午節是農曆幾月幾日？",options:["五月五日","一月一日","八月十五","九月九日"],answer:0},
+      {q:"端午節紀念的是誰？",options:["屈原","孔子","李白","杜甫"],answer:0},
+      {q:"人們包粽子丟進江裡的原因是？",options:["不讓魚蝦吃屈原","餵魚","慶祝節日","比賽"],answer:0}
+    ]},
+    {passage:"校外教學那天，我們搭遊覽車去動物園。我最喜歡的動物是長頸鹿，因為牠的脖子好長好長，可以吃到最高的樹葉。我們還看到了猴子在樹上盪來盪去，大象用長鼻子噴水。午餐時間，大家坐在草地上吃便當，度過了快樂的一天。",questions:[
+      {q:"他們去哪裡校外教學？",options:["動物園","博物館","海邊","遊樂園"],answer:0},
+      {q:"他最喜歡什麼動物？",options:["長頸鹿","猴子","大象","獅子"],answer:0},
+      {q:"午餐他們在哪裡吃？",options:["草地上","餐廳","車上","涼亭"],answer:0}
+    ]},
+    {passage:"爺爺住在鄉下，他有一塊小小的菜園。每次我去爺爺家，他都會帶我去菜園澆水、拔草。爺爺種了番茄、黃瓜、茄子和空心菜。爺爺說：「自己種的菜，吃起來特別甜。」我覺得爺爺說得對，因為那是用心照顧的成果。",questions:[
+      {q:"爺爺住在哪裡？",options:["鄉下","城市","山上","海邊"],answer:0},
+      {q:"爺爺沒有種什麼？",options:["玉米","番茄","黃瓜","茄子"],answer:0},
+      {q:"爺爺說自己種的菜怎樣？",options:["吃起來特別甜","長得特別大","可以賣錢","很難種"],answer:0}
+    ]},
+    {passage:"小明的奶奶今年七十歲了，但她每天都很活潑。她早上會去公園跳舞，下午跟朋友一起唱歌。奶奶還學會了用手機拍照和傳訊息。她常說：「活到老學到老，每天都要快快樂樂。」小明覺得奶奶是全世界最年輕的老人家。",questions:[
+      {q:"奶奶今年幾歲？",options:["七十歲","六十歲","八十歲","六十五歲"],answer:0},
+      {q:"奶奶早上做什麼？",options:["去公園跳舞","去市場","看電視","睡覺"],answer:0},
+      {q:"奶奶學會用手機做什麼？",options:["拍照和傳訊息","玩遊戲","看影片","打電話"],answer:0}
+    ]}
+  ],
+  knowledge: [
+    // 農業 (5)
+    {type:"agri",question:"農夫「休耕」的主要目的是什麼？",options:["讓土地恢復養分","因為懶得種","等待下雨","蓋房子"],answer:0,explanation:"休耕讓土壤恢復肥力，下期才能種出好作物"},
+    {type:"agri",question:"「水耕」是什麼意思？",options:["不用土壤用水來種植物","在水田種稻子","用很多水澆花","在河邊種菜"],answer:0,explanation:"水耕：利用營養液取代土壤來栽培植物"},
+    {type:"agri",question:"台灣一年可以種幾期稻米？",options:["二期","一期","三期","四期"],answer:0,explanation:"台灣因氣候溫暖，一年可種兩期稻"},
+    {type:"agri",question:"「插秧」是什麼？",options:["把稻苗種到水田裡","用筷子吃飯","把花插到花瓶","砍竹子"],answer:0,explanation:"插秧：將育好的稻苗移植到水田中"},
+    {type:"agri",question:"哪個季節是台灣第一期稻作的插秧期？",options:["春天(2-3月)","夏天(6-7月)","秋天(9-10月)","冬天(12-1月)"],answer:0,explanation:"台灣第一期稻作約在農曆年後的春天插秧"},
+    // 自然科學 (10)
+    {type:"science",question:"植物行光合作用需要什麼？",options:["陽光和水","月光和土","風和沙","火和冰"],answer:0,explanation:"光合作用需要陽光、水和二氧化碳"},
+    {type:"science",question:"水的三態是什麼？",options:["固態液態氣態","大中小","冷溫熱","紅藍綠"],answer:0,explanation:"水的三態：冰(固態)、水(液態)、水蒸氣(氣態)"},
+    {type:"science",question:"蝌蚪長大會變成什麼？",options:["青蛙","蜻蜓","蝴蝶","金魚"],answer:0,explanation:"蝌蚪是青蛙的幼體，經變態發育長成青蛙"},
+    {type:"science",question:"彩虹有幾種顏色？",options:["七種","五種","三種","十種"],answer:0,explanation:"彩虹七色：紅橙黃綠藍靛紫"},
+    {type:"science",question:"下列哪個是哺乳類動物？",options:["鯨魚","鯊魚","烏龜","蜥蜴"],answer:0,explanation:"鯨魚雖然生活在水中，但是用肺呼吸、胎生哺乳"},
+    {type:"science",question:"蝴蝶的一生經過哪些階段？",options:["卵→幼蟲→蛹→成蟲","卵→成蟲","幼蟲→成蟲","卵→蛹→成蟲"],answer:0,explanation:"蝴蝶經歷完全變態：卵、幼蟲、蛹、成蟲四個階段"},
+    {type:"science",question:"地球繞太陽一圈需要多久？",options:["一年","一天","一個月","一小時"],answer:0,explanation:"地球公轉一圈約365天，就是一年"},
+    {type:"science",question:"哪個不是人體的感覺器官？",options:["心臟","眼睛","耳朵","鼻子"],answer:0,explanation:"心臟是循環器官，不是感覺器官"},
+    {type:"science",question:"植物的哪個部分吸收水分？",options:["根","葉子","花","果實"],answer:0,explanation:"植物的根負責從土壤中吸收水分和養分"},
+    {type:"science",question:"月亮會發光嗎？",options:["不會，是反射太陽光","會，自己會發光","有時候會","只有滿月會"],answer:0,explanation:"月亮本身不發光，是反射太陽的光"},
+    // 台灣地理 (8)
+    {type:"geo",question:"台灣最高的山是？",options:["玉山","阿里山","合歡山","雪山"],answer:0,explanation:"玉山海拔3952公尺，是台灣第一高峰"},
+    {type:"geo",question:"台灣最長的河流是？",options:["濁水溪","淡水河","高屏溪","大甲溪"],answer:0,explanation:"濁水溪全長約186公里，是台灣最長的河流"},
+    {type:"geo",question:"台北盆地是被什麼包圍的平地？",options:["山","海","河","湖"],answer:0,explanation:"台北盆地四面環山，是一個盆地地形"},
+    {type:"geo",question:"台灣四面環什麼？",options:["海","山","沙漠","平原"],answer:0,explanation:"台灣是一個海島，四面環海"},
+    {type:"geo",question:"台灣位於哪個洋和哪個海之間？",options:["太平洋和台灣海峽","大西洋和印度洋","北冰洋和太平洋","印度洋和大西洋"],answer:0,explanation:"台灣東臨太平洋，西臨台灣海峽"},
+    {type:"geo",question:"日月潭位於台灣哪裡？",options:["南投縣","台北市","花蓮縣","屏東縣"],answer:0,explanation:"日月潭位於南投縣魚池鄉"},
+    {type:"geo",question:"台灣最南端的地方是？",options:["鵝鑾鼻","墾丁","高雄","台東"],answer:0,explanation:"鵝鑾鼻位於屏東縣恆春半島最南端"},
+    {type:"geo",question:"台灣有幾個直轄市？",options:["六個","五個","四個","三個"],answer:0,explanation:"台灣有六個直轄市：台北、新北、桃園、台中、台南、高雄"},
+    // 節氣文化 (12)
+    {type:"culture",question:"「清明節」通常在幾月？",options:["四月","一月","七月","十月"],answer:0,explanation:"清明節在每年四月初，是掃墓祭祖的日子"},
+    {type:"culture",question:"端午節要吃什麼？",options:["粽子","月餅","湯圓","年糕"],answer:0,explanation:"端午節吃粽子、划龍舟紀念屈原"},
+    {type:"culture",question:"中秋節要做什麼？",options:["賞月吃月餅","放鞭炮","掃墓","包粽子"],answer:0,explanation:"中秋節一家團圓賞月、吃月餅、吃柚子"},
+    {type:"culture",question:"過年時晚輩會收到什麼？",options:["紅包(壓歲錢)","月餅","粽子","蛋糕"],answer:0,explanation:"過年長輩給晚輩紅包，象徵祝福"},
+    {type:"culture",question:"元宵節的傳統活動是什麼？",options:["提燈籠猜燈謎","划龍舟","放風箏","掃墓"],answer:0,explanation:"元宵節在農曆正月十五，有賞花燈、猜燈謎的傳統"},
+    {type:"culture",question:"農曆新年是幾月幾日？",options:["農曆一月一日","國曆一月一日","農曆五月五日","國曆十二月二十五日"],answer:0,explanation:"農曆新年是農曆正月初一"},
+    {type:"culture",question:"哪個節日要登高、插茱萸？",options:["重陽節","端午節","中秋節","清明節"],answer:0,explanation:"重陽節(九月九日)有登高望遠、插茱萸的習俗"},
+    {type:"culture",question:"冬至要吃什麼？",options:["湯圓","粽子","月餅","年糕"],answer:0,explanation:"冬至吃湯圓象徵團圓，也代表長了一歲"},
+    {type:"culture",question:"台灣的國慶日是幾月幾日？",options:["十月十日","一月一日","七月四日","三月八日"],answer:0,explanation:"台灣國慶日(雙十節)是每年十月十日"},
+    {type:"culture",question:"教師節是紀念哪位聖人？",options:["孔子","孟子","老子","莊子"],answer:0,explanation:"教師節(9月28日)是紀念至聖先師孔子"},
+    {type:"culture",question:"下列哪個不是台灣的傳統節日？",options:["感恩節","端午節","中秋節","元宵節"],answer:0,explanation:"感恩節是美國的節日，不是台灣傳統節日"},
+    {type:"culture",question:"台灣原住民共有幾族被政府認定？",options:["16族","9族","12族","20族"],answer:0,explanation:"目前政府認定的台灣原住民共有16族"},
+    // 生活常識 (15)
+    {type:"life",question:"紅綠燈中，紅燈表示什麼？",options:["停止","前進","注意","快走"],answer:0,explanation:"紅燈停、綠燈行、黃燈注意"},
+    {type:"life",question:"火災時應該打哪個電話？",options:["119","110","104","112"],answer:0,explanation:"119是消防局電話，火災和救護都打119"},
+    {type:"life",question:"地震時在室內應該怎麼做？",options:["躲在桌子下保護頭部","跑出去","站在窗邊","搭電梯"],answer:0,explanation:"地震時應「趴下、掩護、穩住」，躲在堅固桌子下"},
+    {type:"life",question:"過馬路時要注意什麼？",options:["先看左右有沒有車","閉著眼睛跑過去","只看紅綠燈","跟著別人走"],answer:0,explanation:"過馬路要左看右看確認安全再通行"},
+    {type:"life",question:"台灣的急救電話是幾號？",options:["119","911","999","110"],answer:0,explanation:"台灣的急救(救護車)電話是119"},
+    {type:"life",question:"回收時，寶特瓶屬於哪一類？",options:["塑膠類","紙類","金屬類","玻璃類"],answer:0,explanation:"寶特瓶是塑膠材質，屬於塑膠類回收"},
+    {type:"life",question:"一天有幾個小時？",options:["24小時","12小時","36小時","48小時"],answer:0,explanation:"一天=24小時=1440分鐘"},
+    {type:"life",question:"一公斤等於幾公克？",options:["1000公克","100公克","10000公克","500公克"],answer:0,explanation:"1公斤=1000公克"},
+    {type:"life",question:"指南針的紅色指針指向哪個方向？",options:["北方","南方","東方","西方"],answer:0,explanation:"指南針的紅色(N)指針永遠指向北方"},
+    {type:"life",question:"下列哪個是良好的用眼習慣？",options:["每30分鐘休息10分鐘","在黑暗中看書","把書靠很近看","一直盯著螢幕"],answer:0,explanation:"用眼30分鐘要休息10分鐘，保護視力"},
+    {type:"life",question:"洗手的正確步驟口訣是什麼？",options:["濕搓沖捧擦","洗沖擦","沖一下就好","用水沖就乾淨"],answer:0,explanation:"正確洗手五步驟：濕、搓、沖、捧、擦"},
+    {type:"life",question:"一週有幾天？",options:["七天","五天","六天","十天"],answer:0,explanation:"一週=七天（星期一到星期日）"},
+    {type:"life",question:"垃圾分類中，廚餘屬於哪一類？",options:["有機垃圾(廚餘桶)","一般垃圾","資源回收","大型垃圾"],answer:0,explanation:"廚餘是有機廢棄物，要放在廚餘桶回收"},
+    {type:"life",question:"台灣哪個城市是首都？",options:["台北","台中","高雄","台南"],answer:0,explanation:"台北市是中華民國的首都"},
+    {type:"life",question:"一年有幾個月？",options:["12個月","10個月","14個月","6個月"],answer:0,explanation:"一年有12個月，365天（閏年366天）"}
+  ],
+  wordchain: [
+    {type:"chain",question:"學校 → ?",options:["校園","校長","校門","校服"],answer:0,explanation:"語詞接龍：用前一個詞的最後一個字開頭"},
+    {type:"chain",question:"校園 → ?",options:["園丁","園藝","園地","園區"],answer:0,explanation:"園丁：照顧花園的人"},
+    {type:"chain",question:"快樂 → ?",options:["樂園","樂器","樂趣","樂曲"],answer:0,explanation:"樂園：快樂的地方"},
+    {type:"chain",question:"老師 → ?",options:["師父","師生","師傅","師資"],answer:0,explanation:"師父：傳授技藝的人"},
+    {type:"chain",question:"天空 → ?",options:["空氣","空間","空地","空曠"],answer:0,explanation:"空氣：包圍地球的氣體"},
+    {type:"chain",question:"花園 → ?",options:["園遊會","園區","園藝","園地"],answer:0,explanation:"園遊會：學校常辦的活動"},
+    {type:"chain",question:"電話 → ?",options:["話題","話語","話劇","話術"],answer:0,explanation:"話題：談話的主題"},
+    {type:"chain",question:"書本 → ?",options:["本來","本事","本領","本分"],answer:0,explanation:"本來：原來、原本的意思"},
+    {type:"chain",question:"明天 → ?",options:["天氣","天空","天才","天地"],answer:0,explanation:"天氣：大氣的狀態"},
+    {type:"chain",question:"水果 → ?",options:["果汁","果園","果實","果凍"],answer:0,explanation:"果汁：水果榨出的汁"},
+    {type:"chain",question:"音樂 → ?",options:["樂隊","樂器","樂團","樂曲"],answer:0,explanation:"樂隊：演奏音樂的團體"},
+    {type:"chain",question:"上課 → ?",options:["課本","課程","課堂","課桌"],answer:0,explanation:"課本：上課用的書"},
+    {type:"chain",question:"公園 → ?",options:["園遊會","園丁","園藝","園區"],answer:0,explanation:"園遊會：在戶外舉辦的活動"},
+    {type:"chain",question:"春天 → ?",options:["天然","天空","天氣","天地"],answer:0,explanation:"天然：自然形成的"},
+    {type:"chain",question:"大家 → ?",options:["家人","家庭","家具","家鄉"],answer:0,explanation:"家人：一起生活的親人"},
+    {type:"chain",question:"開心 → ?",options:["心情","心理","心得","心願"],answer:0,explanation:"心情：內心的感受"},
+    {type:"chain",question:"小朋友 → ?",options:["友誼","友情","友善","友好"],answer:0,explanation:"友誼：朋友之間的情誼"},
+    {type:"chain",question:"生日 → ?",options:["日記","日曆","日出","日光"],answer:0,explanation:"日記：每天記錄的文章"},
+    {type:"chain",question:"動物 → ?",options:["物品","物理","物質","物價"],answer:0,explanation:"物品：各種東西"},
+    {type:"chain",question:"風景 → ?",options:["景色","景點","景象","景觀"],answer:0,explanation:"景色：美麗的風光"},
+    {type:"chain",question:"教室 → ?",options:["室內","室外","室友","室溫"],answer:0,explanation:"室內：房間裡面"},
+    {type:"chain",question:"美麗 → ?",options:["麗日","麗人","麗質","麗景"],answer:0,explanation:"麗日：美好的天氣"},
+    {type:"chain",question:"海洋 → ?",options:["洋裝","洋人","洋蔥","洋溢"],answer:0,explanation:"洋裝：西式的裙子"},
+    {type:"chain",question:"國語 → ?",options:["語文","語言","語詞","語氣"],answer:0,explanation:"語文：語言和文字"},
+    {type:"chain",question:"早安 → ?",options:["安全","安靜","安心","安排"],answer:0,explanation:"安全：沒有危險"},
+    {type:"chain",question:"故事 → ?",options:["事情","事件","事實","事物"],answer:0,explanation:"事情：發生的事"},
+    {type:"chain",question:"太陽 → ?",options:["陽光","陽台","陽明山","陽春"],answer:0,explanation:"陽光：太陽發出的光"},
+    {type:"chain",question:"自然 → ?",options:["然後","然而","然則","然而"],answer:0,explanation:"然後：接下來、之後"},
+    {type:"chain",question:"遊戲 → ?",options:["戲劇","戲院","戲曲","戲台"],answer:0,explanation:"戲劇：表演的藝術形式"},
+    {type:"chain",question:"飛機 → ?",options:["機會","機場","機器","機車"],answer:0,explanation:"機會：適當的時機"}
+  ]
+};
+
+// ===== CATEGORIES =====
+const CATEGORIES = [
+  {id:"idiom", name:"成語大挑戰", emoji:"📚", color:"#ef4444"},
+  {id:"phonetics", name:"字音字形", emoji:"✍️", color:"#3b82f6"},
+  {id:"sentence", name:"造句填空", emoji:"📝", color:"#10b981"},
+  {id:"reading", name:"閱讀理解", emoji:"📖", color:"#a855f7"},
+  {id:"knowledge", name:"常識百科", emoji:"🌍", color:"#f59e0b"},
+  {id:"wordchain", name:"語詞接龍", emoji:"🔗", color:"#ec4899"}
+];
+
+const RANKS = [
+  {name:"國語小白", exp:0},
+  {name:"語文新手", exp:100},
+  {name:"造句達人", exp:300},
+  {name:"成語高手", exp:600},
+  {name:"閱讀王者", exp:1000},
+  {name:"國學大師", exp:2000}
+];
+
+const LEVEL_NAMES = ["L1 基礎","L2 進階","L3 挑戰","L4 大師"];
+
+// ===== GAME STATE =====
+let state = {
+  exp: 0,
+  maxCombo: 0,
+  categoryStars: {},  // {idiom: {0:3, 1:2, ...}, ...}
+  soundOn: true
+};
+
+let currentGame = {
+  categoryId: null,
+  level: 0,
+  questions: [],
+  questionIndex: 0,
+  score: 0,
+  combo: 0,
+  answers: []
+};
+
+// ===== AUDIO =====
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playSound(type) {
+  if (!state.soundOn) return;
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    if (type === 'correct') {
+      osc.frequency.setValueAtTime(523, ctx.currentTime);
+      osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1);
+      osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.4);
+    } else if (type === 'wrong') {
+      osc.frequency.setValueAtTime(200, ctx.currentTime);
+      osc.frequency.setValueAtTime(150, ctx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.3);
+    } else if (type === 'star') {
+      osc.frequency.setValueAtTime(440, ctx.currentTime);
+      osc.frequency.setValueAtTime(554, ctx.currentTime + 0.1);
+      osc.frequency.setValueAtTime(659, ctx.currentTime + 0.2);
+      osc.frequency.setValueAtTime(880, ctx.currentTime + 0.3);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.5);
+    } else if (type === 'tap') {
+      osc.frequency.setValueAtTime(400, ctx.currentTime);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.1);
+    }
+  } catch(e) {}
+}
+
+// ===== SAVE/LOAD =====
+function saveState() {
+  localStorage.setItem('chinese_game_state', JSON.stringify(state));
+}
+
+function loadState() {
+  const saved = localStorage.getItem('chinese_game_state');
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    state = {...state, ...parsed};
+  }
+}
+
+// ===== RANK FUNCTIONS =====
+function getCurrentRank() {
+  let rank = RANKS[0];
+  for (let i = RANKS.length - 1; i >= 0; i--) {
+    if (state.exp >= RANKS[i].exp) {
+      rank = RANKS[i];
+      break;
+    }
+  }
+  return rank;
+}
+
+function getNextRank() {
+  for (let i = 0; i < RANKS.length; i++) {
+    if (state.exp < RANKS[i].exp) return RANKS[i];
+  }
+  return null;
+}
+
+// ===== SCREEN MANAGEMENT =====
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ===== HOME SCREEN =====
+function renderHome() {
+  // Stats
+  document.getElementById('stat-exp').textContent = state.exp;
+  document.getElementById('stat-rank').textContent = getCurrentRank().name;
+  document.getElementById('stat-combo').textContent = state.maxCombo;
+
+  // EXP bar
+  const current = getCurrentRank();
+  const next = getNextRank();
+  document.getElementById('rank-current').textContent = current.name;
+  if (next) {
+    document.getElementById('rank-next').textContent = `→ ${next.name} (${next.exp})`;
+    const progress = ((state.exp - current.exp) / (next.exp - current.exp)) * 100;
+    document.getElementById('exp-fill').style.width = Math.min(100, progress) + '%';
+  } else {
+    document.getElementById('rank-next').textContent = '已達最高!';
+    document.getElementById('exp-fill').style.width = '100%';
+  }
+
+  // Category grid
+  const grid = document.getElementById('category-grid');
+  grid.innerHTML = '';
+  CATEGORIES.forEach(cat => {
+    const stars = getCategoryTotalStars(cat.id);
+    const maxStars = 4 * 3; // 4 levels * 3 max stars
+    const card = document.createElement('div');
+    card.className = 'category-card';
+    card.innerHTML = `
+      <div class="category-emoji">${cat.emoji}</div>
+      <div class="category-name">${cat.name}</div>
+      <div class="category-progress">⭐ ${stars}/${maxStars}</div>
+    `;
+    card.onclick = () => {
+      playSound('tap');
+      openCategory(cat.id);
+    };
+    grid.appendChild(card);
+  });
+
+  showScreen('home-screen');
+}
+
+function getCategoryTotalStars(catId) {
+  if (!state.categoryStars[catId]) return 0;
+  return Object.values(state.categoryStars[catId]).reduce((a, b) => a + b, 0);
+}
+
+// ===== LEVEL SELECT =====
+function openCategory(catId) {
+  currentGame.categoryId = catId;
+  const cat = CATEGORIES.find(c => c.id === catId);
+  document.getElementById('level-screen-title').textContent = cat.emoji + ' ' + cat.name;
+
+  const list = document.getElementById('level-list');
+  list.innerHTML = '';
+
+  for (let i = 0; i < 4; i++) {
+    const stars = (state.categoryStars[catId] && state.categoryStars[catId][i]) || 0;
+    const locked = i > 0 && !((state.categoryStars[catId] && state.categoryStars[catId][i-1]) >= 1);
+
+    const card = document.createElement('div');
+    card.className = 'level-card' + (locked ? ' locked' : '');
+    card.innerHTML = `
+      <div class="level-card-left">
+        <div class="level-badge">${LEVEL_NAMES[i].split(' ')[0]}</div>
+        <div class="level-card-info">
+          <div class="level-card-title">${LEVEL_NAMES[i]}</div>
+          <div class="level-card-sub">10 題挑戰</div>
+        </div>
+      </div>
+      <div class="level-stars">${stars > 0 ? '⭐'.repeat(stars) : (locked ? '🔒' : '—')}</div>
+    `;
+
+    if (!locked) {
+      card.onclick = () => {
+        playSound('tap');
+        startGame(catId, i);
+      };
+    }
+    list.appendChild(card);
+  }
+
+  showScreen('level-screen');
+}
+
+// ===== QUESTION GENERATION =====
+function getQuestionsForLevel(catId, level) {
+  if (catId === 'reading') {
+    return getReadingQuestions(level);
+  }
+
+  const allQ = QUESTIONS[catId];
+  const total = allQ.length;
+  const perLevel = Math.floor(total / 4);
+
+  // Divide questions into level ranges
+  const start = level * perLevel;
+  let end = (level + 1) * perLevel;
+  if (level === 3) end = total; // Last level gets remaining
+
+  const pool = allQ.slice(start, end);
+  // Shuffle and pick 10
+  const shuffled = pool.sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, 10);
+}
+
+function getReadingQuestions(level) {
+  const passages = QUESTIONS.reading;
+  const perLevel = Math.floor(passages.length / 4);
+  const start = level * perLevel;
+  let end = (level + 1) * perLevel;
+  if (level === 3) end = passages.length;
+
+  const pool = passages.slice(start, end);
+  const shuffled = pool.sort(() => Math.random() - 0.5);
+
+  // Flatten passage questions, take up to 10
+  let questions = [];
+  for (const p of shuffled) {
+    for (const q of p.questions) {
+      questions.push({
+        ...q,
+        passage: p.passage,
+        question: q.q,
+        explanation: ""
+      });
+      if (questions.length >= 10) break;
+    }
+    if (questions.length >= 10) break;
+  }
+  return questions.slice(0, 10);
+}
+
+// ===== GAME ENGINE =====
+function startGame(catId, level) {
+  currentGame = {
+    categoryId: catId,
+    level: level,
+    questions: getQuestionsForLevel(catId, level),
+    questionIndex: 0,
+    score: 0,
+    combo: 0,
+    answers: []
+  };
+
+  showScreen('question-screen');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = currentGame.questions[currentGame.questionIndex];
+
+  // Progress dots
+  const dotsEl = document.getElementById('progress-dots');
+  dotsEl.innerHTML = '';
+  for (let i = 0; i < currentGame.questions.length; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'progress-dot';
+    if (i < currentGame.questionIndex) {
+      dot.className += currentGame.answers[i] ? ' correct' : ' wrong';
+    } else if (i === currentGame.questionIndex) {
+      dot.className += ' current';
+    }
+    dotsEl.appendChild(dot);
+  }
+
+  // Combo
+  const comboEl = document.getElementById('combo-display');
+  comboEl.textContent = currentGame.combo > 1 ? `🔥 ${currentGame.combo} 連擊!` : '';
+
+  // Passage (for reading)
+  const passageContainer = document.getElementById('passage-container');
+  if (q.passage) {
+    passageContainer.innerHTML = `<div class="passage-text">${q.passage}</div>`;
+  } else {
+    passageContainer.innerHTML = '';
+  }
+
+  // Question text
+  document.getElementById('question-text').textContent = q.question;
+
+  // Options
+  const optGrid = document.getElementById('options-grid');
+  optGrid.innerHTML = '';
+  q.options.forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = opt;
+    btn.onclick = () => selectAnswer(idx);
+    optGrid.appendChild(btn);
+  });
+
+  // Hide explanation and next button
+  document.getElementById('explanation-box').classList.remove('show');
+  document.getElementById('next-btn').classList.remove('show');
+}
+
+function selectAnswer(idx) {
+  const q = currentGame.questions[currentGame.questionIndex];
+  const correct = idx === q.answer;
+  const buttons = document.querySelectorAll('.option-btn');
+
+  // Disable all buttons
+  buttons.forEach(btn => btn.classList.add('disabled'));
+
+  // Show correct/wrong
+  if (correct) {
+    buttons[idx].classList.add('correct');
+    currentGame.score++;
+    currentGame.combo++;
+    if (currentGame.combo > state.maxCombo) {
+      state.maxCombo = currentGame.combo;
+    }
+    playSound('correct');
+  } else {
+    buttons[idx].classList.add('wrong');
+    buttons[q.answer].classList.add('show-correct');
+    currentGame.combo = 0;
+    playSound('wrong');
+  }
+
+  currentGame.answers.push(correct);
+
+  // Update combo display
+  const comboEl = document.getElementById('combo-display');
+  comboEl.textContent = currentGame.combo > 1 ? `🔥 ${currentGame.combo} 連擊!` : '';
+
+  // Show explanation
+  if (q.explanation) {
+    document.getElementById('explanation-text').textContent = (correct ? '✅ 正確！' : '❌ 錯了！') + ' ' + q.explanation;
+    document.getElementById('explanation-box').classList.add('show');
+  } else {
+    document.getElementById('explanation-text').textContent = correct ? '✅ 正確！' : '❌ 答錯了，正確答案是「' + q.options[q.answer] + '」';
+    document.getElementById('explanation-box').classList.add('show');
+  }
+
+  // Show next button
+  document.getElementById('next-btn').classList.add('show');
+}
+
+function nextQuestion() {
+  currentGame.questionIndex++;
+  if (currentGame.questionIndex >= currentGame.questions.length) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+// ===== RESULT SCREEN =====
+function showResult() {
+  const score = currentGame.score;
+  const total = currentGame.questions.length;
+  let stars = 0;
+  if (score >= 10) stars = 3;
+  else if (score >= 8) stars = 2;
+  else if (score >= 6) stars = 1;
+
+  // Calculate EXP
+  const baseExp = score * 5;
+  const comboBonus = Math.min(currentGame.combo, 10) * 2;
+  const starBonus = stars * 10;
+  const totalExp = baseExp + comboBonus + starBonus;
+
+  // Update state
+  state.exp += totalExp;
+  if (!state.categoryStars[currentGame.categoryId]) {
+    state.categoryStars[currentGame.categoryId] = {};
+  }
+  const prevStars = state.categoryStars[currentGame.categoryId][currentGame.level] || 0;
+  if (stars > prevStars) {
+    state.categoryStars[currentGame.categoryId][currentGame.level] = stars;
+  }
+  saveState();
+
+  // Render result
+  document.getElementById('result-stars').textContent = stars > 0 ? '⭐'.repeat(stars) : '😢';
+  document.getElementById('result-score').textContent = `${score} / ${total}`;
+  document.getElementById('result-detail').textContent = stars >= 3 ? '太厲害了！滿分過關！' : stars >= 2 ? '很棒！繼續加油！' : stars >= 1 ? '及格了！再練習會更好！' : '再試一次吧！加油！';
+  document.getElementById('result-exp').textContent = `+${totalExp} EXP (答對${baseExp} + 連擊${comboBonus} + 星星${starBonus})`;
+
+  // Button visibility
+  const nextBtn = document.getElementById('result-next');
+  if (stars >= 1 && currentGame.level < 3) {
+    nextBtn.style.display = 'block';
+    nextBtn.textContent = '下一關 →';
+  } else if (stars >= 1) {
+    nextBtn.style.display = 'block';
+    nextBtn.textContent = '回到關卡選擇';
+  } else {
+    nextBtn.style.display = 'none';
+  }
+
+  showScreen('result-screen');
+  playSound('star');
+}
+
+// ===== EVENT LISTENERS =====
+document.getElementById('sound-toggle').onclick = function() {
+  state.soundOn = !state.soundOn;
+  this.textContent = state.soundOn ? '🔊' : '🔇';
+  saveState();
+};
+
+document.getElementById('back-to-home').onclick = function() {
+  playSound('tap');
+  renderHome();
+};
+
+document.getElementById('next-btn').onclick = function() {
+  playSound('tap');
+  nextQuestion();
+};
+
+document.getElementById('result-next').onclick = function() {
+  playSound('tap');
+  if (currentGame.level < 3) {
+    startGame(currentGame.categoryId, currentGame.level + 1);
+  } else {
+    openCategory(currentGame.categoryId);
+  }
+};
+
+document.getElementById('result-retry').onclick = function() {
+  playSound('tap');
+  startGame(currentGame.categoryId, currentGame.level);
+};
+
+document.getElementById('result-home').onclick = function() {
+  playSound('tap');
+  renderHome();
+};
+
+// ===== INIT =====
+loadState();
+renderHome();
+</script>
+</body>
+</html>
