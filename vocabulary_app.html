@@ -586,22 +586,15 @@ body {
 
 /* Matching */
 .matching-container {
-  display: flex;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
   margin: 20px 0;
-}
-
-.matching-container > div {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
 }
 
 .match-item {
   padding: 14px 10px;
-  min-height: 52px;
-  flex: 1;
+  min-height: 48px;
   background: var(--card-bg);
   border: 2px solid var(--border);
   border-radius: var(--radius);
@@ -1796,15 +1789,17 @@ function renderMatching(area) {
 
   matchState = { selected: null, matched: [], pairs: shuffled };
 
+  // Interleave left and right into flat grid (row by row for alignment)
+  let gridItems = '';
+  for (let i = 0; i < 5; i++) {
+    gridItems += `<div class="match-item" data-type="en" data-word="${leftCol[i].word}" data-pair="${leftCol[i].pair}" onclick="selectMatch(this)">${leftCol[i].word}</div>`;
+    gridItems += `<div class="match-item" data-type="zh" data-word="${rightCol[i].word}" data-pair="${rightCol[i].pair}" onclick="selectMatch(this)">${rightCol[i].word}</div>`;
+  }
+
   area.innerHTML = `
     <div style="text-align:center; margin-bottom:12px; color:var(--text-secondary)">配對英文和中文</div>
     <div class="matching-container">
-      <div>
-        ${leftCol.map((item, i) => `<div class="match-item" data-type="en" data-word="${item.word}" data-pair="${item.pair}" onclick="selectMatch(this)">${item.word}</div>`).join('')}
-      </div>
-      <div>
-        ${rightCol.map((item, i) => `<div class="match-item" data-type="zh" data-word="${item.word}" data-pair="${item.pair}" onclick="selectMatch(this)">${item.word}</div>`).join('')}
-      </div>
+      ${gridItems}
     </div>
   `;
 }
