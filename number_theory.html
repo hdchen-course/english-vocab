@@ -1,0 +1,1976 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>數字魔法師 - 數論大冒險</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  background: #1a1a2e;
+  color: white;
+  overflow-x: hidden;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+/* Navigation */
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(26, 26, 46, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 8px 12px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.top-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-btn {
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.nav-btn:active, .nav-btn.active {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+/* Page Container */
+.page-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 16px;
+  padding-bottom: 60px;
+}
+
+/* Page Title */
+.page-title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin: 20px 0;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b, #ff6b6b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page-subtitle {
+  text-align: center;
+  font-size: 16px;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 30px;
+}
+
+/* Section */
+.section {
+  margin-bottom: 50px;
+  scroll-margin-top: 60px;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(102,126,234,0.3), rgba(118,75,162,0.3));
+  border-left: 4px solid #667eea;
+}
+
+.section-desc {
+  font-size: 18px;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 16px;
+  padding: 0 4px;
+}
+
+/* Visual Box */
+.visual-box {
+  background: rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.visual-box h3 {
+  font-size: 20px;
+  margin-bottom: 12px;
+  color: #fbbf24;
+}
+
+.visual-box p {
+  font-size: 17px;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 8px;
+}
+
+/* SVG containers */
+.svg-container {
+  display: flex;
+  justify-content: center;
+  margin: 16px 0;
+}
+
+/* Game Area */
+.game-area {
+  background: rgba(255,255,255,0.05);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 2px solid rgba(102,126,234,0.3);
+}
+
+.game-title {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 16px;
+  color: #a78bfa;
+}
+
+.game-question {
+  font-size: 36px;
+  font-weight: bold;
+  text-align: center;
+  margin: 20px 0;
+  color: #fbbf24;
+}
+
+.game-prompt {
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 16px;
+  color: rgba(255,255,255,0.8);
+}
+
+/* Buttons */
+.btn-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+
+.game-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  color: white;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  min-width: 120px;
+  min-height: 52px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+}
+
+.game-btn:active {
+  transform: scale(0.95);
+}
+
+.game-btn.green {
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 4px 15px rgba(16,185,129,0.3);
+}
+
+.game-btn.red {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  box-shadow: 0 4px 15px rgba(239,68,68,0.3);
+}
+
+.game-btn.orange {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 4px 15px rgba(245,158,11,0.3);
+}
+
+.game-btn.small {
+  padding: 10px 18px;
+  font-size: 16px;
+  min-width: 60px;
+  min-height: 44px;
+}
+
+.reset-btn {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  display: block;
+  margin: 16px auto;
+  transition: background 0.2s;
+}
+
+.reset-btn:active {
+  background: rgba(255,255,255,0.25);
+}
+
+/* Feedback */
+.feedback {
+  text-align: center;
+  font-size: 22px;
+  min-height: 40px;
+  margin: 12px 0;
+  transition: opacity 0.3s;
+}
+
+.feedback.correct {
+  color: #10b981;
+  animation: popIn 0.3s ease;
+}
+
+.feedback.wrong {
+  color: #f87171;
+  animation: shake 0.4s ease;
+}
+
+/* Score */
+.score-display {
+  text-align: center;
+  font-size: 18px;
+  color: rgba(255,255,255,0.8);
+  margin: 12px 0;
+}
+
+.score-display span {
+  color: #fbbf24;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+/* Grid for sieve / factor games */
+.number-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.number-grid.cols-10 {
+  grid-template-columns: repeat(10, 1fr);
+}
+
+.grid-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.12);
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.grid-cell:active {
+  transform: scale(0.9);
+}
+
+.grid-cell.selected {
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-color: #34d399;
+  color: white;
+}
+
+.grid-cell.eliminated {
+  background: rgba(239,68,68,0.3);
+  border-color: #f87171;
+  color: rgba(255,255,255,0.4);
+  text-decoration: line-through;
+}
+
+.grid-cell.prime-highlight {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  border-color: #fbbf24;
+  color: #1a1a2e;
+}
+
+.grid-cell.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Rule card */
+.rule-card {
+  background: rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  border-left: 4px solid #a78bfa;
+}
+
+.rule-card h4 {
+  font-size: 18px;
+  color: #a78bfa;
+  margin-bottom: 8px;
+}
+
+.rule-card p {
+  font-size: 16px;
+  color: rgba(255,255,255,0.8);
+}
+
+.rule-example {
+  background: rgba(167,139,250,0.1);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-top: 8px;
+  font-size: 15px;
+  color: #c4b5fd;
+}
+
+/* Fun fact */
+.fun-fact {
+  background: linear-gradient(135deg, rgba(251,191,36,0.1), rgba(245,158,11,0.1));
+  border: 1px solid rgba(251,191,36,0.3);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin: 16px 0;
+  font-size: 16px;
+  color: #fbbf24;
+}
+
+/* Number line */
+.number-line-container {
+  overflow-x: auto;
+  padding: 20px 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.number-line {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: max-content;
+  padding: 0 16px;
+}
+
+.nl-cell {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: rgba(255,255,255,0.1);
+  flex-shrink: 0;
+}
+
+.nl-cell:active {
+  transform: scale(0.9);
+}
+
+.nl-cell.hit {
+  background: linear-gradient(135deg, #10b981, #059669);
+  animation: bounce 0.4s ease;
+}
+
+.nl-cell.miss {
+  background: rgba(239,68,68,0.4);
+  animation: shake 0.3s ease;
+}
+
+/* Factor tree */
+.factor-tree {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.tree-node {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tree-node.prime {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #1a1a2e;
+}
+
+.tree-node:active {
+  transform: scale(0.9);
+}
+
+.tree-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.tree-connector {
+  color: rgba(255,255,255,0.4);
+  font-size: 20px;
+}
+
+/* Slider */
+.slider-container {
+  margin: 16px 0;
+  text-align: center;
+}
+
+.slider-container input[type="range"] {
+  width: 100%;
+  max-width: 300px;
+  height: 8px;
+  -webkit-appearance: none;
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+  outline: none;
+}
+
+.slider-container input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  cursor: pointer;
+}
+
+.slider-value {
+  font-size: 20px;
+  font-weight: bold;
+  color: #fbbf24;
+  margin-top: 8px;
+}
+
+/* Venn Diagram */
+.venn-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 16px 0;
+}
+
+/* Animations */
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes confetti {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+}
+
+@keyframes starBurst {
+  0% { transform: scale(0) rotate(0deg); opacity: 1; }
+  100% { transform: scale(2) rotate(180deg); opacity: 0; }
+}
+
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  animation: confettiFall 1.5s ease-out forwards;
+}
+
+@keyframes confettiFall {
+  0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* Final score card */
+.score-card {
+  background: linear-gradient(135deg, rgba(102,126,234,0.2), rgba(118,75,162,0.2));
+  border: 2px solid rgba(102,126,234,0.5);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  margin: 20px 0;
+  animation: popIn 0.4s ease;
+}
+
+.score-card .big-score {
+  font-size: 48px;
+  font-weight: bold;
+  color: #fbbf24;
+  margin: 12px 0;
+}
+
+.score-card .message {
+  font-size: 20px;
+  color: rgba(255,255,255,0.9);
+}
+
+/* Hint box */
+.hint-box {
+  background: rgba(16,185,129,0.1);
+  border: 1px solid rgba(16,185,129,0.3);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 12px 0;
+  font-size: 16px;
+  color: #6ee7b7;
+}
+
+/* Step reveal */
+.step-reveal {
+  margin: 12px 0;
+}
+
+.step-btn {
+  background: rgba(251,191,36,0.2);
+  border: 1px solid rgba(251,191,36,0.4);
+  color: #fbbf24;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  display: block;
+  margin: 8px auto;
+}
+
+.step-content {
+  display: none;
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 8px;
+  font-size: 17px;
+  color: rgba(255,255,255,0.85);
+  animation: fadeIn 0.3s ease;
+}
+
+.step-content.visible {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Multiple choice */
+.choice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.choice-btn {
+  background: rgba(255,255,255,0.1);
+  border: 2px solid rgba(255,255,255,0.2);
+  color: white;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 52px;
+}
+
+.choice-btn:active {
+  transform: scale(0.95);
+}
+
+.choice-btn.correct-choice {
+  background: rgba(16,185,129,0.3);
+  border-color: #10b981;
+}
+
+.choice-btn.wrong-choice {
+  background: rgba(239,68,68,0.3);
+  border-color: #ef4444;
+}
+
+/* Responsive */
+@media (max-width: 400px) {
+  .number-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+  }
+  .grid-cell {
+    font-size: 15px;
+    min-width: 38px;
+    min-height: 38px;
+  }
+  .game-question {
+    font-size: 30px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav class="top-nav" id="topNav">
+  <button class="nav-btn" onclick="scrollToSection('sec1')">奇偶數</button>
+  <button class="nav-btn" onclick="scrollToSection('sec2')">質數</button>
+  <button class="nav-btn" onclick="scrollToSection('sec3')">因數倍數</button>
+  <button class="nav-btn" onclick="scrollToSection('sec4')">整除規則</button>
+  <button class="nav-btn" onclick="scrollToSection('sec5')">最大公因數</button>
+  <button class="nav-btn" onclick="scrollToSection('sec6')">最小公倍數</button>
+  <button class="nav-btn" onclick="scrollToSection('sec7')">因數分解</button>
+  <button class="nav-btn" onclick="scrollToSection('sec8')">趣味挑戰</button>
+</nav>
+
+<div class="page-container">
+
+<h1 class="page-title">🧙‍♂️ 數字魔法師</h1>
+<p class="page-subtitle">一起來探索數字的神奇世界吧！</p>
+
+<!-- ==================== SECTION 1: Odd & Even ==================== -->
+<div class="section" id="sec1">
+  <h2 class="section-title">🎯 奇數偶數大挑戰</h2>
+
+  <div class="visual-box">
+    <h3>什麼是偶數？</h3>
+    <p>偶數可以剛好平均分成兩組，一個都不剩！</p>
+    <div class="svg-container">
+      <svg width="280" height="80" viewBox="0 0 280 80">
+        <text x="10" y="20" fill="#fbbf24" font-size="14">6 顆蘋果 → 分成 3 + 3</text>
+        <circle cx="30" cy="50" r="12" fill="#ef4444"/><text x="26" y="55" fill="white" font-size="12">🍎</text>
+        <circle cx="60" cy="50" r="12" fill="#ef4444"/><text x="56" y="55" fill="white" font-size="12">🍎</text>
+        <circle cx="90" cy="50" r="12" fill="#ef4444"/><text x="86" y="55" fill="white" font-size="12">🍎</text>
+        <line x1="115" y1="50" x2="135" y2="50" stroke="white" stroke-width="2"/>
+        <circle cx="160" cy="50" r="12" fill="#10b981"/><text x="156" y="55" fill="white" font-size="12">🍎</text>
+        <circle cx="190" cy="50" r="12" fill="#10b981"/><text x="186" y="55" fill="white" font-size="12">🍎</text>
+        <circle cx="220" cy="50" r="12" fill="#10b981"/><text x="216" y="55" fill="white" font-size="12">🍎</text>
+        <text x="240" y="55" fill="#10b981" font-size="16">✓</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="visual-box">
+    <h3>什麼是奇數？</h3>
+    <p>奇數沒辦法平均分成兩組，會多出一個！</p>
+    <div class="svg-container">
+      <svg width="280" height="80" viewBox="0 0 280 80">
+        <text x="10" y="20" fill="#fbbf24" font-size="14">5 顆蘋果 → 2 + 2 + 剩 1 個！</text>
+        <circle cx="30" cy="50" r="12" fill="#ef4444"/><text x="26" y="55" fill="white" font-size="12">🍎</text>
+        <circle cx="60" cy="50" r="12" fill="#ef4444"/><text x="56" y="55" fill="white" font-size="12">🍎</text>
+        <line x1="85" y1="50" x2="105" y2="50" stroke="white" stroke-width="2"/>
+        <circle cx="130" cy="50" r="12" fill="#10b981"/><text x="126" y="55" fill="white" font-size="12">🍎</text>
+        <circle cx="160" cy="50" r="12" fill="#10b981"/><text x="156" y="55" fill="white" font-size="12">🍎</text>
+        <line x1="185" y1="50" x2="205" y2="50" stroke="white" stroke-width="2"/>
+        <circle cx="230" cy="50" r="12" fill="#fbbf24"/><text x="226" y="55" fill="white" font-size="12">🍎</text>
+        <text x="250" y="55" fill="#f87171" font-size="14">剩1個!</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="fun-fact">💡 小秘訣：看個位數字！0、2、4、6、8 結尾就是偶數，1、3、5、7、9 結尾就是奇數！</div>
+
+  <!-- Odd/Even Game -->
+  <div class="game-area" id="oddEvenGame">
+    <div class="game-title">🎮 快速判斷！這是奇數還是偶數？</div>
+    <div class="score-display">第 <span id="oeRound">1</span> / 10 題 ｜ 得分：<span id="oeScore">0</span></div>
+    <div class="game-question" id="oeNumber">—</div>
+    <div class="btn-row">
+      <button class="game-btn orange" onclick="answerOddEven('odd')">奇數</button>
+      <button class="game-btn green" onclick="answerOddEven('even')">偶數</button>
+    </div>
+    <div class="feedback" id="oeFeedback"></div>
+    <div id="oeResult" style="display:none;"></div>
+    <button class="reset-btn" onclick="startOddEven()">🔄 重新開始</button>
+  </div>
+</div>
+
+<!-- ==================== SECTION 2: Prime Numbers ==================== -->
+<div class="section" id="sec2">
+  <h2 class="section-title">💎 認識質數</h2>
+
+  <div class="visual-box">
+    <h3>質數是什麼？</h3>
+    <p>質數就是<strong>只能被 1 和自己整除</strong>的數字（而且要大於 1 喔）</p>
+    <p style="margin-top:12px;">例如 7 是質數：</p>
+    <div style="padding:8px; font-size:16px; color:rgba(255,255,255,0.8);">
+      7 ÷ 2 = 3 餘 <span style="color:#f87171;">1</span> ❌<br>
+      7 ÷ 3 = 2 餘 <span style="color:#f87171;">1</span> ❌<br>
+      7 ÷ 4 = 1 餘 <span style="color:#f87171;">3</span> ❌<br>
+      7 ÷ 5 = 1 餘 <span style="color:#f87171;">2</span> ❌<br>
+      7 ÷ 6 = 1 餘 <span style="color:#f87171;">1</span> ❌<br>
+      <span style="color:#10b981;">→ 7 只能被 1 和 7 整除，所以 7 是質數！✨</span>
+    </div>
+  </div>
+
+  <div class="fun-fact">🤓 有趣的事：2 是唯一的偶數質數！其他偶數都能被 2 整除，所以不是質數。</div>
+
+  <!-- Sieve Game -->
+  <div class="game-area" id="sieveGame">
+    <div class="game-title">🔍 質數篩選器！把「不是質數」的數字點掉</div>
+    <p style="text-align:center; font-size:15px; color:rgba(255,255,255,0.7); margin-bottom:12px;">點擊可以被其他數整除的合數，讓質數留下來！</p>
+    <div class="number-grid cols-10" id="sieveGrid"></div>
+    <div class="btn-row">
+      <button class="game-btn small" onclick="checkSieve()">✅ 檢查答案</button>
+      <button class="game-btn small orange" onclick="startSieve()">🔄 重來</button>
+    </div>
+    <div class="feedback" id="sieveFeedback"></div>
+  </div>
+
+  <!-- Prime Quiz -->
+  <div class="game-area" id="primeQuiz">
+    <div class="game-title">❓ 這個數是質數嗎？</div>
+    <div class="score-display">第 <span id="pqRound">1</span> / 10 題 ｜ 得分：<span id="pqScore">0</span></div>
+    <div class="game-question" id="pqNumber">—</div>
+    <div class="btn-row">
+      <button class="game-btn green" onclick="answerPrime(true)">是質數 ✨</button>
+      <button class="game-btn red" onclick="answerPrime(false)">不是質數 ❌</button>
+    </div>
+    <div class="feedback" id="pqFeedback"></div>
+    <div id="pqResult" style="display:none;"></div>
+    <button class="reset-btn" onclick="startPrimeQuiz()">🔄 重新開始</button>
+  </div>
+</div>
+
+<!-- ==================== SECTION 3: Factors & Multiples ==================== -->
+<div class="section" id="sec3">
+  <h2 class="section-title">🧩 因數與倍數</h2>
+
+  <div class="visual-box">
+    <h3>什麼是因數？</h3>
+    <p>能夠<strong>整除</strong>某個數的數字，就是它的因數</p>
+    <p style="margin-top:10px;">12 的因數：</p>
+    <div style="padding:8px; font-size:16px; color:rgba(255,255,255,0.8);">
+      12 ÷ <span style="color:#10b981;">1</span> = 12 ✓ &nbsp;
+      12 ÷ <span style="color:#10b981;">2</span> = 6 ✓ &nbsp;
+      12 ÷ <span style="color:#10b981;">3</span> = 4 ✓<br>
+      12 ÷ <span style="color:#10b981;">4</span> = 3 ✓ &nbsp;
+      12 ÷ 5 = 2...餘2 ✗<br>
+      12 ÷ <span style="color:#10b981;">6</span> = 2 ✓ &nbsp;
+      12 ÷ <span style="color:#10b981;">12</span> = 1 ✓<br>
+      <span style="color:#fbbf24;">→ 12 的因數 = {1, 2, 3, 4, 6, 12}</span>
+    </div>
+  </div>
+
+  <div class="visual-box">
+    <h3>什麼是倍數？</h3>
+    <p>一個數字乘以 1、2、3... 得到的就是它的倍數</p>
+    <p style="margin-top:10px; color:#a78bfa;">3 的倍數：3, 6, 9, 12, 15, 18, 21, 24, 27, 30...</p>
+  </div>
+
+  <!-- Factor Game -->
+  <div class="game-area" id="factorGame">
+    <div class="game-title">🎯 找出所有因數！</div>
+    <div class="game-prompt">找出 <span id="factorTarget" style="color:#fbbf24; font-size:28px; font-weight:bold;">24</span> 的所有因數</div>
+    <div class="number-grid" id="factorGrid"></div>
+    <div class="btn-row">
+      <button class="game-btn small" onclick="checkFactors()">✅ 確認答案</button>
+      <button class="game-btn small orange" onclick="startFactorGame()">🔄 換一題</button>
+    </div>
+    <div class="feedback" id="factorFeedback"></div>
+  </div>
+
+  <!-- Multiple Jump Game -->
+  <div class="game-area" id="multipleGame">
+    <div class="game-title">🐸 倍數跳跳樂！</div>
+    <div class="game-prompt">點擊 <span id="multipleTarget" style="color:#fbbf24; font-size:24px; font-weight:bold;">3</span> 的所有倍數</div>
+    <div class="number-line-container">
+      <div class="number-line" id="multipleLine"></div>
+    </div>
+    <div class="btn-row">
+      <button class="game-btn small" onclick="checkMultiples()">✅ 確認答案</button>
+      <button class="game-btn small orange" onclick="startMultipleGame()">🔄 換一題</button>
+    </div>
+    <div class="feedback" id="multipleFeedback"></div>
+  </div>
+</div>
+
+<!-- ==================== SECTION 4: Divisibility Rules ==================== -->
+<div class="section" id="sec4">
+  <h2 class="section-title">✨ 整除規則 — 魔法口訣</h2>
+
+  <div class="section-desc">學會這些口訣，你不用算就知道一個數能不能被整除！</div>
+
+  <div class="rule-card">
+    <h4>÷2 的魔法 🪄</h4>
+    <p>個位數字是 <strong>0、2、4、6、8</strong> 就能被 2 整除</p>
+    <div class="rule-example">例：12<strong>4</strong> → 個位是 4（偶數）→ 能被 2 整除 ✓</div>
+  </div>
+
+  <div class="rule-card">
+    <h4>÷3 的魔法 🪄</h4>
+    <p>把所有位數<strong>加起來</strong>，如果和能被 3 整除，原本的數也能</p>
+    <div class="rule-example">例：123 → 1+2+3 = 6 → 6÷3=2 ✓ 所以 123 能被 3 整除</div>
+  </div>
+
+  <div class="rule-card">
+    <h4>÷4 的魔法 🪄</h4>
+    <p>看<strong>最後兩位數</strong>能不能被 4 整除</p>
+    <div class="rule-example">例：516 → 看 16 → 16÷4=4 ✓ 所以 516 能被 4 整除</div>
+  </div>
+
+  <div class="rule-card">
+    <h4>÷5 的魔法 🪄</h4>
+    <p>個位數字是 <strong>0 或 5</strong> 就能被 5 整除</p>
+    <div class="rule-example">例：235 → 個位是 5 → 能被 5 整除 ✓</div>
+  </div>
+
+  <div class="rule-card">
+    <h4>÷9 的魔法 🪄</h4>
+    <p>把所有位數<strong>加起來</strong>，如果和能被 9 整除，原本的數也能</p>
+    <div class="rule-example">例：729 → 7+2+9 = 18 → 18÷9=2 ✓ 所以 729 能被 9 整除</div>
+  </div>
+
+  <div class="rule-card">
+    <h4>÷10 的魔法 🪄</h4>
+    <p>個位數字是 <strong>0</strong> 就能被 10 整除</p>
+    <div class="rule-example">例：250 → 個位是 0 → 能被 10 整除 ✓</div>
+  </div>
+
+  <!-- Divisibility Game -->
+  <div class="game-area" id="divGame">
+    <div class="game-title">🧙 用魔法口訣判斷！</div>
+    <div class="score-display">第 <span id="divRound">1</span> / 10 題 ｜ 得分：<span id="divScore">0</span></div>
+    <div class="game-prompt" id="divPrompt">—</div>
+    <div class="game-question" id="divNumber">—</div>
+    <div class="btn-row">
+      <button class="game-btn green" onclick="answerDiv(true)">可以 ✓</button>
+      <button class="game-btn red" onclick="answerDiv(false)">不行 ✗</button>
+    </div>
+    <div class="feedback" id="divFeedback"></div>
+    <div id="divResult" style="display:none;"></div>
+    <button class="reset-btn" onclick="startDivGame()">🔄 重新開始</button>
+  </div>
+</div>
+
+<!-- ==================== SECTION 5: GCD ==================== -->
+<div class="section" id="sec5">
+  <h2 class="section-title">🤝 最大公因數 (GCD)</h2>
+
+  <div class="visual-box">
+    <h3>什麼是最大公因數？</h3>
+    <p>兩個數<strong>共同的因數</strong>中，最大的那一個！</p>
+    <div style="margin-top:12px; padding:10px; font-size:16px; color:rgba(255,255,255,0.85);">
+      <span style="color:#667eea;">12 的因數：{1, 2, 3, <strong>4</strong>, <strong>6</strong>, 12}</span><br>
+      <span style="color:#a78bfa;">18 的因數：{1, 2, 3, <strong>6</strong>, 9, 18}</span><br>
+      <span style="color:#10b981;">共同的因數：{1, 2, 3, <strong style="font-size:20px;">6</strong>}</span><br>
+      <span style="color:#fbbf24;">→ 最大公因數 = 6 🎉</span>
+    </div>
+  </div>
+
+  <div class="visual-box">
+    <h3>生活中的例子 🍬</h3>
+    <p>哥哥有 12 顆糖，妹妹有 18 顆糖。他們想平均分給朋友，每個朋友拿到的一樣多。最多可以分給幾個朋友？</p>
+    <p style="margin-top:8px; color:#fbbf24;">→ 答案就是 GCD(12, 18) = <strong>6</strong> 個朋友！</p>
+  </div>
+
+  <!-- GCD Game -->
+  <div class="game-area" id="gcdGame">
+    <div class="game-title">🧮 找出最大公因數！</div>
+    <div class="score-display">第 <span id="gcdRound">1</span> / 8 題 ｜ 得分：<span id="gcdScore">0</span></div>
+    <div class="game-prompt">GCD(<span id="gcdA" style="color:#667eea; font-weight:bold;">12</span>, <span id="gcdB" style="color:#a78bfa; font-weight:bold;">18</span>) = ?</div>
+    <div class="choice-grid" id="gcdChoices"></div>
+    <div class="feedback" id="gcdFeedback"></div>
+    <div id="gcdResult" style="display:none;"></div>
+    <button class="reset-btn" onclick="startGcdGame()">🔄 重新開始</button>
+  </div>
+</div>
+
+<!-- ==================== SECTION 6: LCM ==================== -->
+<div class="section" id="sec6">
+  <h2 class="section-title">🏃 最小公倍數 (LCM)</h2>
+
+  <div class="visual-box">
+    <h3>什麼是最小公倍數？</h3>
+    <p>兩個數<strong>共同的倍數</strong>中，最小的那一個！</p>
+    <div style="margin-top:12px; padding:10px; font-size:16px; color:rgba(255,255,255,0.85);">
+      <span style="color:#667eea;">4 的倍數：4, 8, <strong>12</strong>, 16, 20, <strong>24</strong>, 28...</span><br>
+      <span style="color:#a78bfa;">6 的倍數：6, <strong>12</strong>, 18, <strong>24</strong>, 30...</span><br>
+      <span style="color:#fbbf24;">→ 第一個交會點 = 最小公倍數 = 12 🎉</span>
+    </div>
+  </div>
+
+  <div class="visual-box">
+    <h3>生活中的例子 🌱</h3>
+    <p>小明每 <strong>3 天</strong>澆花一次，每 <strong>5 天</strong>施肥一次。今天兩件事同時做了，下次什麼時候會再同一天做？</p>
+    <p style="margin-top:8px; color:#fbbf24;">→ 答案就是 LCM(3, 5) = <strong>15</strong> 天後！</p>
+  </div>
+
+  <!-- LCM Race Game -->
+  <div class="game-area" id="lcmGame">
+    <div class="game-title">🏁 倍數賽跑！找最小公倍數</div>
+    <div class="score-display">第 <span id="lcmRound">1</span> / 8 題 ｜ 得分：<span id="lcmScore">0</span></div>
+    <div class="game-prompt">LCM(<span id="lcmA" style="color:#667eea; font-weight:bold;">4</span>, <span id="lcmB" style="color:#a78bfa; font-weight:bold;">6</span>) = ?</div>
+    <div class="choice-grid" id="lcmChoices"></div>
+    <div class="feedback" id="lcmFeedback"></div>
+    <div id="lcmResult" style="display:none;"></div>
+    <button class="reset-btn" onclick="startLcmGame()">🔄 重新開始</button>
+  </div>
+</div>
+
+<!-- ==================== SECTION 7: Factor Trees ==================== -->
+<div class="section" id="sec7">
+  <h2 class="section-title">🌳 因數分解樹</h2>
+
+  <div class="visual-box">
+    <h3>什麼是因數分解？</h3>
+    <p>把一個數字拆成<strong>質數的乘積</strong>，就像把大石頭敲成最小的碎片！</p>
+    <div style="margin-top:12px; text-align:center; font-size:18px; color:rgba(255,255,255,0.9);">
+      <div>36</div>
+      <div style="color:rgba(255,255,255,0.4);">↙ ↘</div>
+      <div>4 × 9</div>
+      <div style="color:rgba(255,255,255,0.4);">↙↘ &nbsp; ↙↘</div>
+      <div><span style="color:#fbbf24;">2</span> × <span style="color:#fbbf24;">2</span> × <span style="color:#fbbf24;">3</span> × <span style="color:#fbbf24;">3</span></div>
+      <div style="margin-top:8px; color:#10b981;">36 = 2 × 2 × 3 × 3 = 2² × 3²</div>
+    </div>
+  </div>
+
+  <div class="fun-fact">🔐 每個數字都有自己專屬的「質因數密碼」，不管怎麼拆，最後答案都一樣！（這叫做唯一分解定理）</div>
+
+  <!-- Factor Tree Game -->
+  <div class="game-area" id="treeGame">
+    <div class="game-title">🌲 建造因數分解樹！</div>
+    <div class="score-display">第 <span id="treeRound">1</span> / 8 題 ｜ 得分：<span id="treeScore">0</span></div>
+    <div class="game-prompt">把 <span id="treeTarget" style="color:#fbbf24; font-size:28px; font-weight:bold;">—</span> 分解成質因數的乘積</div>
+    <div class="choice-grid" id="treeChoices"></div>
+    <div class="feedback" id="treeFeedback"></div>
+    <div id="treeResult" style="display:none;"></div>
+    <button class="reset-btn" onclick="startTreeGame()">🔄 重新開始</button>
+  </div>
+</div>
+
+<!-- ==================== SECTION 8: Fun Challenges ==================== -->
+<div class="section" id="sec8">
+  <h2 class="section-title">🎪 趣味數論題</h2>
+
+  <!-- Chickens & Rabbits -->
+  <div class="game-area" id="crGame">
+    <div class="game-title">🐔🐰 雞兔同籠</div>
+    <div class="game-prompt" id="crPrompt">籠子裡有 <strong id="crHeads">20</strong> 個頭，<strong id="crLegs">56</strong> 條腿。<br>幾隻雞？幾隻兔？</div>
+    <div class="slider-container">
+      <label style="font-size:16px;">🐔 雞的數量：</label>
+      <input type="range" id="crSlider" min="0" max="20" value="10" oninput="updateCR()">
+      <div class="slider-value" id="crSliderVal">雞：10 隻 ｜ 兔：10 隻</div>
+      <div style="font-size:16px; margin-top:8px;" id="crLegCount">腿的數量：10×2 + 10×4 = 60</div>
+    </div>
+    <div class="btn-row">
+      <button class="game-btn" onclick="checkCR()">確認答案！</button>
+      <button class="game-btn small orange" onclick="newCR()">🔄 換一題</button>
+    </div>
+    <div class="feedback" id="crFeedback"></div>
+    <div class="hint-box" style="display:none;" id="crHint"></div>
+  </div>
+
+  <!-- Age Problem -->
+  <div class="game-area" id="ageGame">
+    <div class="game-title">👨‍👦 年齡問題</div>
+    <div class="game-prompt" id="agePrompt">—</div>
+    <div class="choice-grid" id="ageChoices"></div>
+    <div class="feedback" id="ageFeedback"></div>
+    <div class="step-reveal" id="ageSteps">
+      <button class="step-btn" onclick="revealAgeHint()">💡 看提示</button>
+      <div class="step-content" id="ageHintContent"></div>
+    </div>
+    <button class="reset-btn" onclick="newAgeQuestion()">🔄 換一題</button>
+  </div>
+
+  <!-- Remainder Problem -->
+  <div class="game-area" id="remGame">
+    <div class="game-title">🍬 餘數問題</div>
+    <div class="game-prompt" id="remPrompt">—</div>
+    <div class="choice-grid" id="remChoices"></div>
+    <div class="feedback" id="remFeedback"></div>
+    <button class="reset-btn" onclick="newRemQuestion()">🔄 換一題</button>
+  </div>
+</div>
+
+</div><!-- end page-container -->
+
+<!-- Confetti container -->
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>
+// ========== UTILITIES ==========
+function scrollToSection(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function randInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function isPrime(n) {
+  if (n < 2) return false;
+  if (n === 2) return true;
+  if (n % 2 === 0) return false;
+  for (let i = 3; i <= Math.sqrt(n); i += 2) {
+    if (n % i === 0) return false;
+  }
+  return true;
+}
+
+function getFactors(n) {
+  const factors = [];
+  for (let i = 1; i <= n; i++) {
+    if (n % i === 0) factors.push(i);
+  }
+  return factors;
+}
+
+function gcd(a, b) {
+  while (b !== 0) { [a, b] = [b, a % b]; }
+  return a;
+}
+
+function lcm(a, b) {
+  return (a * b) / gcd(a, b);
+}
+
+function primeFactorize(n) {
+  const factors = [];
+  let d = 2;
+  while (n > 1) {
+    while (n % d === 0) {
+      factors.push(d);
+      n /= d;
+    }
+    d++;
+  }
+  return factors;
+}
+
+function showConfetti() {
+  const container = document.getElementById('confettiContainer');
+  const colors = ['#fbbf24', '#ef4444', '#10b981', '#667eea', '#a78bfa', '#f59e0b', '#ec4899'];
+  for (let i = 0; i < 30; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = randInt(10, 90) + '%';
+    piece.style.top = randInt(20, 50) + '%';
+    piece.style.backgroundColor = colors[randInt(0, colors.length - 1)];
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+    piece.style.width = randInt(6, 12) + 'px';
+    piece.style.height = randInt(6, 12) + 'px';
+    piece.style.animationDelay = (Math.random() * 0.5) + 's';
+    piece.style.animationDuration = (1 + Math.random()) + 's';
+    container.appendChild(piece);
+  }
+  setTimeout(() => { container.innerHTML = ''; }, 2000);
+}
+
+function getScoreMessage(score, total) {
+  const pct = score / total;
+  if (pct === 1) return '🎉 太厲害了！滿分！你是數學天才！';
+  if (pct >= 0.8) return '🌟 好棒！你已經掌握得很好了！';
+  if (pct >= 0.6) return '👍 不錯喔！再多練習就能更好！';
+  if (pct >= 0.4) return '💪 繼續加油！你已經學到很多了！';
+  return '🌱 慢慢來，多練幾次就會進步囉！';
+}
+
+function showScoreCard(container, score, total) {
+  container.style.display = 'block';
+  container.innerHTML = `
+    <div class="score-card">
+      <div class="message">${getScoreMessage(score, total)}</div>
+      <div class="big-score">${score} / ${total}</div>
+    </div>`;
+  if (score >= total * 0.8) showConfetti();
+}
+
+// ========== SECTION 1: ODD / EVEN ==========
+let oeState = {};
+
+function startOddEven() {
+  oeState = { round: 0, score: 0, numbers: [], answered: false };
+  // Generate 10 numbers with increasing difficulty
+  for (let i = 0; i < 4; i++) oeState.numbers.push(randInt(1, 20));
+  for (let i = 0; i < 3; i++) oeState.numbers.push(randInt(20, 100));
+  for (let i = 0; i < 3; i++) oeState.numbers.push(randInt(100, 999));
+  oeState.numbers = shuffle(oeState.numbers);
+  document.getElementById('oeResult').style.display = 'none';
+  nextOddEven();
+}
+
+function nextOddEven() {
+  if (oeState.round >= 10) {
+    showScoreCard(document.getElementById('oeResult'), oeState.score, 10);
+    document.getElementById('oeNumber').textContent = '—';
+    return;
+  }
+  oeState.answered = false;
+  document.getElementById('oeRound').textContent = oeState.round + 1;
+  document.getElementById('oeScore').textContent = oeState.score;
+  document.getElementById('oeNumber').textContent = oeState.numbers[oeState.round];
+  document.getElementById('oeFeedback').textContent = '';
+  document.getElementById('oeFeedback').className = 'feedback';
+}
+
+function answerOddEven(answer) {
+  if (oeState.answered || oeState.round >= 10) return;
+  oeState.answered = true;
+  const num = oeState.numbers[oeState.round];
+  const correct = num % 2 === 0 ? 'even' : 'odd';
+  const fb = document.getElementById('oeFeedback');
+  if (answer === correct) {
+    oeState.score++;
+    fb.textContent = '✅ 答對了！太棒了！';
+    fb.className = 'feedback correct';
+  } else {
+    const ans = correct === 'even' ? '偶數' : '奇數';
+    fb.textContent = `差一點！${num} 是${ans}喔`;
+    fb.className = 'feedback wrong';
+  }
+  document.getElementById('oeScore').textContent = oeState.score;
+  oeState.round++;
+  setTimeout(nextOddEven, 1200);
+}
+
+// ========== SECTION 2: SIEVE ==========
+function startSieve() {
+  const grid = document.getElementById('sieveGrid');
+  grid.innerHTML = '';
+  document.getElementById('sieveFeedback').textContent = '';
+  for (let i = 1; i <= 50; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'grid-cell';
+    cell.textContent = i;
+    cell.dataset.num = i;
+    if (i === 1) {
+      cell.classList.add('disabled');
+      cell.style.opacity = '0.3';
+    } else {
+      cell.onclick = function() {
+        this.classList.toggle('eliminated');
+      };
+    }
+    grid.appendChild(cell);
+  }
+}
+
+function checkSieve() {
+  const cells = document.querySelectorAll('#sieveGrid .grid-cell');
+  let correct = 0, total = 0;
+  cells.forEach(cell => {
+    const num = parseInt(cell.dataset.num);
+    if (num === 1) return;
+    total++;
+    const shouldBeEliminated = !isPrime(num);
+    const isEliminated = cell.classList.contains('eliminated');
+    if (shouldBeEliminated === isEliminated) {
+      correct++;
+      if (isPrime(num) && !isEliminated) {
+        cell.classList.add('prime-highlight');
+      }
+    } else {
+      cell.style.border = '2px solid #f87171';
+    }
+  });
+  const fb = document.getElementById('sieveFeedback');
+  if (correct === total) {
+    fb.textContent = '🎉 完美！你找出了所有質數！';
+    fb.className = 'feedback correct';
+    showConfetti();
+  } else {
+    fb.textContent = `還差一點！答對了 ${correct}/${total}，紅框的再看看喔`;
+    fb.className = 'feedback wrong';
+  }
+}
+
+// ========== SECTION 2: PRIME QUIZ ==========
+let pqState = {};
+
+function startPrimeQuiz() {
+  const numbers = [];
+  // Mix of primes and non-primes
+  const primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47];
+  const composites = [4, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 22, 24, 25, 26, 27, 28, 33, 35, 39, 49];
+  for (let i = 0; i < 5; i++) numbers.push(primes[randInt(0, primes.length - 1)]);
+  for (let i = 0; i < 5; i++) numbers.push(composites[randInt(0, composites.length - 1)]);
+  pqState = { round: 0, score: 0, numbers: shuffle(numbers), answered: false };
+  document.getElementById('pqResult').style.display = 'none';
+  nextPrimeQuiz();
+}
+
+function nextPrimeQuiz() {
+  if (pqState.round >= 10) {
+    showScoreCard(document.getElementById('pqResult'), pqState.score, 10);
+    document.getElementById('pqNumber').textContent = '—';
+    return;
+  }
+  pqState.answered = false;
+  document.getElementById('pqRound').textContent = pqState.round + 1;
+  document.getElementById('pqScore').textContent = pqState.score;
+  document.getElementById('pqNumber').textContent = pqState.numbers[pqState.round];
+  document.getElementById('pqFeedback').textContent = '';
+  document.getElementById('pqFeedback').className = 'feedback';
+}
+
+function answerPrime(answer) {
+  if (pqState.answered || pqState.round >= 10) return;
+  pqState.answered = true;
+  const num = pqState.numbers[pqState.round];
+  const correct = isPrime(num);
+  const fb = document.getElementById('pqFeedback');
+  if (answer === correct) {
+    pqState.score++;
+    fb.textContent = '✅ 答對了！';
+    fb.className = 'feedback correct';
+  } else {
+    if (correct) {
+      fb.textContent = `差一點！${num} 是質數，只能被 1 和 ${num} 整除`;
+    } else {
+      // Find a factor
+      let factor = 2;
+      for (let i = 2; i < num; i++) {
+        if (num % i === 0) { factor = i; break; }
+      }
+      fb.textContent = `差一點！${num} 不是質數，因為 ${num} = ${factor} × ${num / factor}`;
+    }
+    fb.className = 'feedback wrong';
+  }
+  document.getElementById('pqScore').textContent = pqState.score;
+  pqState.round++;
+  setTimeout(nextPrimeQuiz, 1800);
+}
+
+// ========== SECTION 3: FACTOR GAME ==========
+let factorState = {};
+
+function startFactorGame() {
+  const targets = [12, 15, 16, 18, 20, 24, 28, 30, 36, 40, 42, 48];
+  const target = targets[randInt(0, targets.length - 1)];
+  const correctFactors = getFactors(target);
+  factorState = { target, correctFactors, selected: new Set() };
+
+  document.getElementById('factorTarget').textContent = target;
+  document.getElementById('factorFeedback').textContent = '';
+  document.getElementById('factorFeedback').className = 'feedback';
+
+  const grid = document.getElementById('factorGrid');
+  grid.innerHTML = '';
+  // Show numbers 1 through target (max 24 for display)
+  const maxShow = Math.min(target, 24);
+  for (let i = 1; i <= maxShow; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'grid-cell';
+    cell.textContent = i;
+    cell.dataset.num = i;
+    cell.onclick = function() {
+      const n = parseInt(this.dataset.num);
+      if (factorState.selected.has(n)) {
+        factorState.selected.delete(n);
+        this.classList.remove('selected');
+      } else {
+        factorState.selected.add(n);
+        this.classList.add('selected');
+      }
+    };
+    grid.appendChild(cell);
+  }
+}
+
+function checkFactors() {
+  const fb = document.getElementById('factorFeedback');
+  const correct = factorState.correctFactors;
+  const selected = [...factorState.selected];
+
+  const missed = correct.filter(f => !factorState.selected.has(f) && f <= Math.min(factorState.target, 24));
+  const extra = selected.filter(s => !correct.includes(s));
+
+  if (missed.length === 0 && extra.length === 0) {
+    fb.textContent = `🎉 完美！${factorState.target} 的因數就是 {${correct.join(', ')}}`;
+    fb.className = 'feedback correct';
+    showConfetti();
+  } else {
+    let msg = `差一點！${factorState.target} 的因數是 {${correct.join(', ')}}`;
+    if (missed.length > 0) msg += ` 漏了 ${missed.join(', ')}`;
+    if (extra.length > 0) msg += ` 多了 ${extra.join(', ')}`;
+    fb.textContent = msg;
+    fb.className = 'feedback wrong';
+  }
+}
+
+// ========== SECTION 3: MULTIPLE GAME ==========
+let multipleState = {};
+
+function startMultipleGame() {
+  const bases = [2, 3, 4, 5, 6, 7, 8, 9];
+  const base = bases[randInt(0, bases.length - 1)];
+  const max = base * 10 + randInt(1, 5);
+  multipleState = { base, max, selected: new Set() };
+
+  document.getElementById('multipleTarget').textContent = base;
+  document.getElementById('multipleFeedback').textContent = '';
+  document.getElementById('multipleFeedback').className = 'feedback';
+
+  const line = document.getElementById('multipleLine');
+  line.innerHTML = '';
+  for (let i = 1; i <= Math.min(max, 30); i++) {
+    const cell = document.createElement('div');
+    cell.className = 'nl-cell';
+    cell.textContent = i;
+    cell.dataset.num = i;
+    cell.onclick = function() {
+      const n = parseInt(this.dataset.num);
+      if (multipleState.selected.has(n)) {
+        multipleState.selected.delete(n);
+        this.classList.remove('hit');
+      } else {
+        multipleState.selected.add(n);
+        this.classList.add('hit');
+      }
+    };
+    line.appendChild(cell);
+  }
+}
+
+function checkMultiples() {
+  const fb = document.getElementById('multipleFeedback');
+  const base = multipleState.base;
+  const max = Math.min(multipleState.max, 30);
+  const correctMultiples = [];
+  for (let i = base; i <= max; i += base) correctMultiples.push(i);
+
+  const selected = [...multipleState.selected];
+  const missed = correctMultiples.filter(m => !multipleState.selected.has(m));
+  const extra = selected.filter(s => s % base !== 0);
+
+  if (missed.length === 0 && extra.length === 0) {
+    fb.textContent = `🎉 太棒了！${base} 的倍數你全找到了！`;
+    fb.className = 'feedback correct';
+    showConfetti();
+  } else {
+    fb.textContent = `差一點！${base} 的倍數是 ${correctMultiples.join(', ')}`;
+    fb.className = 'feedback wrong';
+  }
+}
+
+// ========== SECTION 4: DIVISIBILITY GAME ==========
+let divState = {};
+
+function isDivisible(num, by) {
+  return num % by === 0;
+}
+
+function startDivGame() {
+  const divisors = [2, 3, 4, 5, 9, 10];
+  const questions = [];
+  for (let i = 0; i < 10; i++) {
+    const d = divisors[randInt(0, divisors.length - 1)];
+    let num;
+    if (Math.random() > 0.4) {
+      // Make it divisible
+      num = d * randInt(10, 99);
+    } else {
+      // Make it not divisible
+      num = d * randInt(10, 99) + randInt(1, d - 1);
+    }
+    questions.push({ num, divisor: d });
+  }
+  divState = { round: 0, score: 0, questions, answered: false };
+  document.getElementById('divResult').style.display = 'none';
+  nextDivQuestion();
+}
+
+function nextDivQuestion() {
+  if (divState.round >= 10) {
+    showScoreCard(document.getElementById('divResult'), divState.score, 10);
+    document.getElementById('divNumber').textContent = '—';
+    document.getElementById('divPrompt').textContent = '—';
+    return;
+  }
+  divState.answered = false;
+  const q = divState.questions[divState.round];
+  document.getElementById('divRound').textContent = divState.round + 1;
+  document.getElementById('divScore').textContent = divState.score;
+  document.getElementById('divNumber').textContent = q.num;
+  document.getElementById('divPrompt').textContent = `${q.num} 能被 ${q.divisor} 整除嗎？`;
+  document.getElementById('divFeedback').textContent = '';
+  document.getElementById('divFeedback').className = 'feedback';
+}
+
+function answerDiv(answer) {
+  if (divState.answered || divState.round >= 10) return;
+  divState.answered = true;
+  const q = divState.questions[divState.round];
+  const correct = isDivisible(q.num, q.divisor);
+  const fb = document.getElementById('divFeedback');
+
+  if (answer === correct) {
+    divState.score++;
+    fb.textContent = '✅ 答對了！魔法口訣用得好！';
+    fb.className = 'feedback correct';
+  } else {
+    if (correct) {
+      fb.textContent = `差一點！${q.num} 可以被 ${q.divisor} 整除（${q.num} ÷ ${q.divisor} = ${q.num / q.divisor}）`;
+    } else {
+      fb.textContent = `差一點！${q.num} 不能被 ${q.divisor} 整除（餘 ${q.num % q.divisor}）`;
+    }
+    fb.className = 'feedback wrong';
+  }
+  document.getElementById('divScore').textContent = divState.score;
+  divState.round++;
+  setTimeout(nextDivQuestion, 1500);
+}
+
+// ========== SECTION 5: GCD GAME ==========
+let gcdState = {};
+
+function startGcdGame() {
+  const pairs = [];
+  for (let i = 0; i < 8; i++) {
+    const a = randInt(6, 36);
+    const b = randInt(6, 36);
+    if (a !== b) pairs.push([a, b]);
+    else pairs.push([a, a + randInt(2, 10)]);
+  }
+  gcdState = { round: 0, score: 0, pairs, answered: false };
+  document.getElementById('gcdResult').style.display = 'none';
+  nextGcdQuestion();
+}
+
+function nextGcdQuestion() {
+  if (gcdState.round >= 8) {
+    showScoreCard(document.getElementById('gcdResult'), gcdState.score, 8);
+    document.getElementById('gcdA').textContent = '—';
+    document.getElementById('gcdB').textContent = '—';
+    document.getElementById('gcdChoices').innerHTML = '';
+    return;
+  }
+  gcdState.answered = false;
+  const [a, b] = gcdState.pairs[gcdState.round];
+  const answer = gcd(a, b);
+
+  document.getElementById('gcdRound').textContent = gcdState.round + 1;
+  document.getElementById('gcdScore').textContent = gcdState.score;
+  document.getElementById('gcdA').textContent = a;
+  document.getElementById('gcdB').textContent = b;
+  document.getElementById('gcdFeedback').textContent = '';
+  document.getElementById('gcdFeedback').className = 'feedback';
+
+  // Generate choices
+  const choices = new Set([answer]);
+  const factorsA = getFactors(a);
+  const factorsB = getFactors(b);
+  while (choices.size < 4) {
+    const pool = [...factorsA, ...factorsB, answer * 2, answer + 1, answer - 1, Math.max(a, b)];
+    const c = pool[randInt(0, pool.length - 1)];
+    if (c > 0 && c !== answer) choices.add(c);
+    if (choices.size < 4) choices.add(randInt(1, Math.max(a, b)));
+  }
+
+  const grid = document.getElementById('gcdChoices');
+  grid.innerHTML = '';
+  shuffle([...choices]).forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = c;
+    btn.onclick = function() { checkGcdAnswer(c, answer, a, b); };
+    grid.appendChild(btn);
+  });
+}
+
+function checkGcdAnswer(chosen, answer, a, b) {
+  if (gcdState.answered) return;
+  gcdState.answered = true;
+  const fb = document.getElementById('gcdFeedback');
+  const btns = document.querySelectorAll('#gcdChoices .choice-btn');
+  btns.forEach(btn => {
+    if (parseInt(btn.textContent) === answer) btn.classList.add('correct-choice');
+    else if (parseInt(btn.textContent) === chosen && chosen !== answer) btn.classList.add('wrong-choice');
+  });
+
+  if (chosen === answer) {
+    gcdState.score++;
+    fb.textContent = `✅ 答對了！GCD(${a}, ${b}) = ${answer}`;
+    fb.className = 'feedback correct';
+  } else {
+    fb.textContent = `差一點！GCD(${a}, ${b}) = ${answer}`;
+    fb.className = 'feedback wrong';
+  }
+  document.getElementById('gcdScore').textContent = gcdState.score;
+  gcdState.round++;
+  setTimeout(nextGcdQuestion, 1500);
+}
+
+// ========== SECTION 6: LCM GAME ==========
+let lcmState = {};
+
+function startLcmGame() {
+  const pairs = [];
+  for (let i = 0; i < 8; i++) {
+    const a = randInt(2, 12);
+    const b = randInt(2, 12);
+    if (a !== b) pairs.push([a, b]);
+    else pairs.push([a, a + randInt(1, 5)]);
+  }
+  lcmState = { round: 0, score: 0, pairs, answered: false };
+  document.getElementById('lcmResult').style.display = 'none';
+  nextLcmQuestion();
+}
+
+function nextLcmQuestion() {
+  if (lcmState.round >= 8) {
+    showScoreCard(document.getElementById('lcmResult'), lcmState.score, 8);
+    document.getElementById('lcmA').textContent = '—';
+    document.getElementById('lcmB').textContent = '—';
+    document.getElementById('lcmChoices').innerHTML = '';
+    return;
+  }
+  lcmState.answered = false;
+  const [a, b] = lcmState.pairs[lcmState.round];
+  const answer = lcm(a, b);
+
+  document.getElementById('lcmRound').textContent = lcmState.round + 1;
+  document.getElementById('lcmScore').textContent = lcmState.score;
+  document.getElementById('lcmA').textContent = a;
+  document.getElementById('lcmB').textContent = b;
+  document.getElementById('lcmFeedback').textContent = '';
+  document.getElementById('lcmFeedback').className = 'feedback';
+
+  // Generate choices
+  const choices = new Set([answer]);
+  while (choices.size < 4) {
+    const options = [a * b, answer + a, answer + b, answer - a, answer * 2, a * randInt(2, 5), b * randInt(2, 5)];
+    const c = options[randInt(0, options.length - 1)];
+    if (c > 0 && c !== answer) choices.add(c);
+  }
+
+  const grid = document.getElementById('lcmChoices');
+  grid.innerHTML = '';
+  shuffle([...choices]).forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = c;
+    btn.onclick = function() { checkLcmAnswer(c, answer, a, b); };
+    grid.appendChild(btn);
+  });
+}
+
+function checkLcmAnswer(chosen, answer, a, b) {
+  if (lcmState.answered) return;
+  lcmState.answered = true;
+  const fb = document.getElementById('lcmFeedback');
+  const btns = document.querySelectorAll('#lcmChoices .choice-btn');
+  btns.forEach(btn => {
+    if (parseInt(btn.textContent) === answer) btn.classList.add('correct-choice');
+    else if (parseInt(btn.textContent) === chosen && chosen !== answer) btn.classList.add('wrong-choice');
+  });
+
+  if (chosen === answer) {
+    lcmState.score++;
+    fb.textContent = `✅ 答對了！LCM(${a}, ${b}) = ${answer}`;
+    fb.className = 'feedback correct';
+  } else {
+    fb.textContent = `差一點！LCM(${a}, ${b}) = ${answer}`;
+    fb.className = 'feedback wrong';
+  }
+  document.getElementById('lcmScore').textContent = lcmState.score;
+  lcmState.round++;
+  setTimeout(nextLcmQuestion, 1500);
+}
+
+// ========== SECTION 7: FACTOR TREE GAME ==========
+let treeState = {};
+
+function startTreeGame() {
+  const numbers = [12, 18, 20, 24, 28, 30, 36, 40, 42, 45, 48, 50, 54, 56, 60, 72, 80, 90, 100];
+  const questions = [];
+  for (let i = 0; i < 8; i++) {
+    questions.push(numbers[randInt(0, numbers.length - 1)]);
+  }
+  treeState = { round: 0, score: 0, questions, answered: false };
+  document.getElementById('treeResult').style.display = 'none';
+  nextTreeQuestion();
+}
+
+function nextTreeQuestion() {
+  if (treeState.round >= 8) {
+    showScoreCard(document.getElementById('treeResult'), treeState.score, 8);
+    document.getElementById('treeTarget').textContent = '—';
+    document.getElementById('treeChoices').innerHTML = '';
+    return;
+  }
+  treeState.answered = false;
+  const num = treeState.questions[treeState.round];
+  const factors = primeFactorize(num);
+  const answer = factors.join(' × ');
+
+  document.getElementById('treeRound').textContent = treeState.round + 1;
+  document.getElementById('treeScore').textContent = treeState.score;
+  document.getElementById('treeTarget').textContent = num;
+  document.getElementById('treeFeedback').textContent = '';
+  document.getElementById('treeFeedback').className = 'feedback';
+
+  // Generate wrong answers
+  const choices = new Set([answer]);
+  while (choices.size < 4) {
+    // Create plausible wrong factorizations
+    const wrongFactors = [...factors];
+    const method = randInt(0, 3);
+    if (method === 0 && wrongFactors.length > 1) {
+      // Combine two factors
+      const i = randInt(0, wrongFactors.length - 2);
+      wrongFactors[i] = wrongFactors[i] * wrongFactors[i + 1];
+      wrongFactors.splice(i + 1, 1);
+    } else if (method === 1) {
+      // Change one factor
+      const i = randInt(0, wrongFactors.length - 1);
+      wrongFactors[i] = wrongFactors[i] + (Math.random() > 0.5 ? 1 : -1);
+      if (wrongFactors[i] < 2) wrongFactors[i] = 2;
+    } else if (method === 2) {
+      // Add an extra factor
+      wrongFactors.push(randInt(2, 5));
+    } else {
+      // Remove a factor
+      if (wrongFactors.length > 1) wrongFactors.splice(randInt(0, wrongFactors.length - 1), 1);
+    }
+    const wrong = wrongFactors.sort((a,b) => a-b).join(' × ');
+    if (wrong !== answer) choices.add(wrong);
+  }
+
+  const grid = document.getElementById('treeChoices');
+  grid.innerHTML = '';
+  shuffle([...choices]).forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = c;
+    btn.onclick = function() { checkTreeAnswer(c, answer, num); };
+    grid.appendChild(btn);
+  });
+}
+
+function checkTreeAnswer(chosen, answer, num) {
+  if (treeState.answered) return;
+  treeState.answered = true;
+  const fb = document.getElementById('treeFeedback');
+  const btns = document.querySelectorAll('#treeChoices .choice-btn');
+  btns.forEach(btn => {
+    if (btn.textContent === answer) btn.classList.add('correct-choice');
+    else if (btn.textContent === chosen && chosen !== answer) btn.classList.add('wrong-choice');
+  });
+
+  if (chosen === answer) {
+    treeState.score++;
+    fb.textContent = `✅ 答對了！${num} = ${answer}`;
+    fb.className = 'feedback correct';
+  } else {
+    fb.textContent = `差一點！${num} = ${answer}`;
+    fb.className = 'feedback wrong';
+  }
+  document.getElementById('treeScore').textContent = treeState.score;
+  treeState.round++;
+  setTimeout(nextTreeQuestion, 1500);
+}
+
+// ========== SECTION 8: CHICKENS & RABBITS ==========
+let crState = {};
+
+function newCR() {
+  const rabbits = randInt(3, 15);
+  const chickens = randInt(3, 20);
+  const heads = rabbits + chickens;
+  const legs = chickens * 2 + rabbits * 4;
+  crState = { heads, legs, chickens, rabbits };
+
+  document.getElementById('crHeads').textContent = heads;
+  document.getElementById('crLegs').textContent = legs;
+  document.getElementById('crSlider').max = heads;
+  document.getElementById('crSlider').value = Math.floor(heads / 2);
+  document.getElementById('crFeedback').textContent = '';
+  document.getElementById('crFeedback').className = 'feedback';
+  document.getElementById('crHint').style.display = 'none';
+  updateCR();
+}
+
+function updateCR() {
+  const slider = document.getElementById('crSlider');
+  const chickenVal = parseInt(slider.value);
+  const rabbitVal = crState.heads - chickenVal;
+  const legVal = chickenVal * 2 + rabbitVal * 4;
+  document.getElementById('crSliderVal').textContent = `雞：${chickenVal} 隻 ｜ 兔：${rabbitVal} 隻`;
+  document.getElementById('crLegCount').textContent = `腿的數量：${chickenVal}×2 + ${rabbitVal}×4 = ${legVal}`;
+  document.getElementById('crLegCount').style.color = legVal === crState.legs ? '#10b981' : 'rgba(255,255,255,0.8)';
+}
+
+function checkCR() {
+  const chickenVal = parseInt(document.getElementById('crSlider').value);
+  const rabbitVal = crState.heads - chickenVal;
+  const fb = document.getElementById('crFeedback');
+
+  if (chickenVal === crState.chickens) {
+    fb.textContent = `🎉 答對了！${crState.chickens} 隻雞 + ${crState.rabbits} 隻兔 = ${crState.heads} 個頭、${crState.legs} 條腿`;
+    fb.className = 'feedback correct';
+    showConfetti();
+  } else {
+    const legVal = chickenVal * 2 + rabbitVal * 4;
+    if (legVal > crState.legs) {
+      fb.textContent = `腿太多了（${legVal} > ${crState.legs}），試試多一些雞！`;
+    } else {
+      fb.textContent = `腿太少了（${legVal} < ${crState.legs}），試試多一些兔！`;
+    }
+    fb.className = 'feedback wrong';
+    // Show hint
+    const hint = document.getElementById('crHint');
+    hint.style.display = 'block';
+    hint.textContent = `💡 提示：假設全部是雞，${crState.heads} 個頭就有 ${crState.heads * 2} 條腿。但現在有 ${crState.legs} 條腿，多了 ${crState.legs - crState.heads * 2} 條。每把一隻雞換成兔子就多 2 條腿，所以兔子有 ${(crState.legs - crState.heads * 2) / 2} 隻！`;
+  }
+}
+
+// ========== SECTION 8: AGE PROBLEM ==========
+let ageState = {};
+
+function newAgeQuestion() {
+  const types = [
+    function() {
+      const childAge = randInt(5, 12);
+      const mult = randInt(2, 4);
+      const parentAge = childAge * mult;
+      const diff = parentAge - childAge;
+      return {
+        prompt: `爸爸的年齡是小明的 ${mult} 倍，兩人相差 ${diff} 歲。小明幾歲？`,
+        answer: childAge,
+        hint: `如果小明是 1 份，爸爸就是 ${mult} 份。差了 ${mult}-1 = ${mult - 1} 份 = ${diff} 歲。所以 1 份 = ${diff} ÷ ${mult - 1} = ${childAge} 歲！`,
+        choices: [childAge, childAge + 2, childAge - 2, childAge + mult]
+      };
+    },
+    function() {
+      const childAge = randInt(6, 14);
+      const sibDiff = randInt(2, 5);
+      const sibAge = childAge + sibDiff;
+      const sum = childAge + sibAge;
+      return {
+        prompt: `姐姐比弟弟大 ${sibDiff} 歲，兩人年齡加起來是 ${sum} 歲。弟弟幾歲？`,
+        answer: childAge,
+        hint: `兩人加起來 ${sum} 歲，姐姐比弟弟大 ${sibDiff} 歲。先把差距去掉：${sum} - ${sibDiff} = ${sum - sibDiff}，這是兩個「弟弟的年齡」。所以弟弟 = ${sum - sibDiff} ÷ 2 = ${childAge} 歲！`,
+        choices: [childAge, childAge + 1, childAge - 1, sibAge]
+      };
+    },
+    function() {
+      const age = randInt(4, 10);
+      const yearsLater = randInt(3, 8);
+      const mult = 2;
+      // Currently parent is mult*(age) but we ask about future
+      const parentNow = age * mult + yearsLater * (mult - 1);
+      return {
+        prompt: `媽媽今年 ${parentNow} 歲，小華今年 ${age} 歲。幾年前媽媽的年齡是小華的 ${mult + 1} 倍？`,
+        answer: (parentNow - age * (mult + 1)) / (mult + 1 - 1),
+        hint: `設 x 年前：媽媽 ${parentNow}-x 歲，小華 ${age}-x 歲。${parentNow}-x = ${mult + 1}×(${age}-x)`,
+        choices: [] // will be generated
+      };
+    }
+  ];
+
+  // Use simpler types for kids
+  const gen = types[randInt(0, 1)]();
+  ageState = gen;
+
+  document.getElementById('agePrompt').innerHTML = gen.prompt;
+  document.getElementById('ageFeedback').textContent = '';
+  document.getElementById('ageFeedback').className = 'feedback';
+  document.getElementById('ageHintContent').className = 'step-content';
+  document.getElementById('ageHintContent').textContent = '';
+
+  const choices = new Set(gen.choices.filter(c => c > 0));
+  while (choices.size < 4) {
+    choices.add(gen.answer + randInt(-4, 4) || gen.answer + 1);
+  }
+
+  const grid = document.getElementById('ageChoices');
+  grid.innerHTML = '';
+  shuffle([...choices]).forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = c + ' 歲';
+    btn.onclick = function() { checkAgeAnswer(c); };
+    grid.appendChild(btn);
+  });
+}
+
+function checkAgeAnswer(chosen) {
+  const fb = document.getElementById('ageFeedback');
+  const btns = document.querySelectorAll('#ageChoices .choice-btn');
+  btns.forEach(btn => {
+    if (parseInt(btn.textContent) === ageState.answer) btn.classList.add('correct-choice');
+    else if (parseInt(btn.textContent) === chosen && chosen !== ageState.answer) btn.classList.add('wrong-choice');
+  });
+
+  if (chosen === ageState.answer) {
+    fb.textContent = `✅ 答對了！答案是 ${ageState.answer} 歲！`;
+    fb.className = 'feedback correct';
+    showConfetti();
+  } else {
+    fb.textContent = `差一點！答案是 ${ageState.answer} 歲`;
+    fb.className = 'feedback wrong';
+  }
+}
+
+function revealAgeHint() {
+  const content = document.getElementById('ageHintContent');
+  content.textContent = ageState.hint;
+  content.className = 'step-content visible';
+}
+
+// ========== SECTION 8: REMAINDER PROBLEM ==========
+let remState = {};
+
+function newRemQuestion() {
+  const divisor = [3, 4, 5, 6, 7][randInt(0, 4)];
+  const remainder = randInt(1, divisor - 1);
+  const base = randInt(2, 5);
+  const correctAnswer = divisor * base + remainder;
+
+  const scenarios = [
+    `${correctAnswer} 顆糖果分給 ${divisor} 個小朋友，每人一樣多，會剩幾顆？`,
+    `把 ${correctAnswer} 個球裝進箱子，每箱 ${divisor} 個，最後一箱剩幾個？`,
+    `${correctAnswer} 本書平均放在 ${divisor} 個書架上，會多出幾本？`
+  ];
+
+  remState = { divisor, remainder, number: correctAnswer };
+
+  document.getElementById('remPrompt').innerHTML = scenarios[randInt(0, scenarios.length - 1)];
+  document.getElementById('remFeedback').textContent = '';
+  document.getElementById('remFeedback').className = 'feedback';
+
+  const choices = new Set([remainder]);
+  while (choices.size < 4) {
+    const c = randInt(0, divisor);
+    choices.add(c);
+  }
+
+  const grid = document.getElementById('remChoices');
+  grid.innerHTML = '';
+  shuffle([...choices]).forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = c + (c === 0 ? '（剛好分完）' : ' 個');
+    btn.onclick = function() { checkRemAnswer(c); };
+    grid.appendChild(btn);
+  });
+}
+
+function checkRemAnswer(chosen) {
+  const fb = document.getElementById('remFeedback');
+  const btns = document.querySelectorAll('#remChoices .choice-btn');
+  btns.forEach(btn => {
+    if (parseInt(btn.textContent) === remState.remainder) btn.classList.add('correct-choice');
+    else if (parseInt(btn.textContent) === chosen && chosen !== remState.remainder) btn.classList.add('wrong-choice');
+  });
+
+  if (chosen === remState.remainder) {
+    fb.textContent = `✅ 答對了！${remState.number} ÷ ${remState.divisor} = ${Math.floor(remState.number / remState.divisor)} 餘 ${remState.remainder}`;
+    fb.className = 'feedback correct';
+    showConfetti();
+  } else {
+    fb.textContent = `差一點！${remState.number} ÷ ${remState.divisor} = ${Math.floor(remState.number / remState.divisor)} 餘 ${remState.remainder}`;
+    fb.className = 'feedback wrong';
+  }
+}
+
+// ========== INITIALIZATION ==========
+function init() {
+  startOddEven();
+  startSieve();
+  startPrimeQuiz();
+  startFactorGame();
+  startMultipleGame();
+  startDivGame();
+  startGcdGame();
+  startLcmGame();
+  startTreeGame();
+  newCR();
+  newAgeQuestion();
+  newRemQuestion();
+}
+
+// Highlight active nav on scroll
+function updateNavOnScroll() {
+  const sections = ['sec1','sec2','sec3','sec4','sec5','sec6','sec7','sec8'];
+  const navBtns = document.querySelectorAll('.nav-btn');
+  let current = 0;
+
+  sections.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= 100) {
+      current = i;
+    }
+  });
+
+  navBtns.forEach((btn, i) => {
+    btn.classList.toggle('active', i === current);
+  });
+}
+
+window.addEventListener('scroll', updateNavOnScroll);
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
