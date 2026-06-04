@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>數字魔法師 - 數論大冒險</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
 * {
   margin: 0;
   padding: 0;
@@ -13,10 +14,10 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   min-height: 100vh;
-  background: #1a1a2e;
-  color: white;
+  background: linear-gradient(180deg, #e8f4fd 0%, #f0f9ff 50%, #fef9e7 100%);
+  color: #2d3436;
   overflow-x: hidden;
   font-size: 18px;
   line-height: 1.6;
@@ -27,14 +28,15 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(26, 26, 46, 0.95);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   padding: 8px 12px;
   display: flex;
+  justify-content: center;
   gap: 8px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 2px solid #e8f0fe;
 }
 
 .top-nav::-webkit-scrollbar {
@@ -43,19 +45,21 @@ body {
 
 .nav-btn {
   flex-shrink: 0;
-  background: rgba(255,255,255,0.1);
+  background: #e8f0fe;
   border: none;
-  color: white;
+  color: #2d3436;
   padding: 8px 14px;
-  border-radius: 20px;
+  border-radius: 14px;
   font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
   transition: background 0.2s;
 }
 
 .nav-btn:active, .nav-btn.active {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: #0984e3;
+  color: white;
 }
 
 /* Page Container */
@@ -70,18 +74,15 @@ body {
 .page-title {
   text-align: center;
   font-size: 28px;
-  font-weight: bold;
+  font-weight: 800;
   margin: 20px 0;
-  background: linear-gradient(135deg, #fbbf24, #f59e0b, #ff6b6b);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #2d3436;
 }
 
 .page-subtitle {
   text-align: center;
   font-size: 16px;
-  color: rgba(255,255,255,0.7);
+  color: #636e72;
   margin-bottom: 30px;
 }
 
@@ -93,39 +94,43 @@ body {
 
 .section-title {
   font-size: 24px;
-  font-weight: bold;
+  font-weight: 800;
   margin-bottom: 16px;
   padding: 12px 16px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, rgba(102,126,234,0.3), rgba(118,75,162,0.3));
-  border-left: 4px solid #667eea;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 2px solid #e8f0fe;
+  border-left: 4px solid #0984e3;
+  color: #2d3436;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
 .section-desc {
   font-size: 18px;
-  color: rgba(255,255,255,0.85);
+  color: #636e72;
   margin-bottom: 16px;
   padding: 0 4px;
 }
 
 /* Visual Box */
 .visual-box {
-  background: rgba(255,255,255,0.08);
-  border-radius: 16px;
+  background: #ffffff;
+  border-radius: 20px;
   padding: 20px;
   margin-bottom: 20px;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 2px solid #e8f0fe;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
 
 .visual-box h3 {
   font-size: 20px;
   margin-bottom: 12px;
-  color: #fbbf24;
+  color: #f59e0b;
 }
 
 .visual-box p {
   font-size: 17px;
-  color: rgba(255,255,255,0.85);
+  color: #636e72;
   margin-bottom: 8px;
 }
 
@@ -133,24 +138,26 @@ body {
 .svg-container {
   display: flex;
   justify-content: center;
+  justify-content: center;
   margin: 16px 0;
 }
 
 /* Game Area */
 .game-area {
-  background: rgba(255,255,255,0.05);
-  border-radius: 16px;
+  background: #ffffff;
+  border-radius: 20px;
   padding: 20px;
   margin-bottom: 20px;
-  border: 2px solid rgba(102,126,234,0.3);
+  border: 2px solid #e8f0fe;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
 
 .game-title {
   font-size: 20px;
-  font-weight: bold;
+  font-weight: 800;
   text-align: center;
   margin-bottom: 16px;
-  color: #a78bfa;
+  color: #a29bfe;
 }
 
 .game-question {
@@ -158,19 +165,20 @@ body {
   font-weight: bold;
   text-align: center;
   margin: 20px 0;
-  color: #fbbf24;
+  color: #0984e3;
 }
 
 .game-prompt {
   font-size: 18px;
   text-align: center;
   margin-bottom: 16px;
-  color: rgba(255,255,255,0.8);
+  color: #636e72;
 }
 
 /* Buttons */
 .btn-row {
   display: flex;
+  justify-content: center;
   gap: 12px;
   justify-content: center;
   flex-wrap: wrap;
@@ -178,18 +186,18 @@ body {
 }
 
 .game-btn {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: #0984e3;
   border: none;
   color: white;
   padding: 14px 28px;
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 20px;
   font-weight: bold;
   cursor: pointer;
   min-width: 120px;
   min-height: 52px;
   transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+  box-shadow: 0 4px 15px rgba(9,132,227,0.2);
 }
 
 .game-btn:active {
@@ -197,18 +205,19 @@ body {
 }
 
 .game-btn.green {
-  background: linear-gradient(135deg, #10b981, #059669);
-  box-shadow: 0 4px 15px rgba(16,185,129,0.3);
+  background: #00b894;
+  box-shadow: 0 4px 15px rgba(0,184,148,0.2);
 }
 
 .game-btn.red {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
-  box-shadow: 0 4px 15px rgba(239,68,68,0.3);
+  background: #fd79a8;
+  box-shadow: 0 4px 15px rgba(253,121,168,0.2);
 }
 
 .game-btn.orange {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  box-shadow: 0 4px 15px rgba(245,158,11,0.3);
+  background: #fdcb6e;
+  color: #2d3436;
+  box-shadow: 0 4px 15px rgba(253,203,110,0.2);
 }
 
 .game-btn.small {
@@ -219,12 +228,13 @@ body {
 }
 
 .reset-btn {
-  background: rgba(255,255,255,0.15);
-  border: 1px solid rgba(255,255,255,0.3);
-  color: white;
+  background: #e8f0fe;
+  border: none;
+  color: #0984e3;
   padding: 10px 20px;
-  border-radius: 10px;
+  border-radius: 14px;
   font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
   display: block;
   margin: 16px auto;
@@ -232,7 +242,7 @@ body {
 }
 
 .reset-btn:active {
-  background: rgba(255,255,255,0.25);
+  background: #dfe6fd;
 }
 
 /* Feedback */
@@ -245,12 +255,12 @@ body {
 }
 
 .feedback.correct {
-  color: #10b981;
+  color: #00b894;
   animation: popIn 0.3s ease;
 }
 
 .feedback.wrong {
-  color: #f87171;
+  color: #fd79a8;
   animation: shake 0.4s ease;
 }
 
@@ -258,12 +268,12 @@ body {
 .score-display {
   text-align: center;
   font-size: 18px;
-  color: rgba(255,255,255,0.8);
+  color: #636e72;
   margin: 12px 0;
 }
 
 .score-display span {
-  color: #fbbf24;
+  color: #0984e3;
   font-weight: bold;
   font-size: 22px;
 }
@@ -283,17 +293,19 @@ body {
 .grid-cell {
   aspect-ratio: 1;
   display: flex;
+  justify-content: center;
   align-items: center;
   justify-content: center;
-  background: rgba(255,255,255,0.12);
-  border-radius: 10px;
+  background: #f0f9ff;
+  border-radius: 12px;
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s;
-  border: 2px solid transparent;
+  border: 2px solid #e8f0fe;
   min-width: 44px;
   min-height: 44px;
+  color: #2d3436;
 }
 
 .grid-cell:active {
@@ -301,22 +313,22 @@ body {
 }
 
 .grid-cell.selected {
-  background: linear-gradient(135deg, #10b981, #059669);
-  border-color: #34d399;
-  color: white;
+  background: #d4f8d4;
+  border-color: #00b894;
+  color: #00b894;
 }
 
 .grid-cell.eliminated {
-  background: rgba(239,68,68,0.3);
-  border-color: #f87171;
-  color: rgba(255,255,255,0.4);
+  background: #ffe8f0;
+  border-color: #fd79a8;
+  color: #b2bec3;
   text-decoration: line-through;
 }
 
 .grid-cell.prime-highlight {
-  background: linear-gradient(135deg, #fbbf24, #f59e0b);
-  border-color: #fbbf24;
-  color: #1a1a2e;
+  background: #fef9e7;
+  border-color: #fdcb6e;
+  color: #f59e0b;
 }
 
 .grid-cell.disabled {
@@ -326,42 +338,45 @@ body {
 
 /* Rule card */
 .rule-card {
-  background: rgba(255,255,255,0.08);
-  border-radius: 12px;
+  background: #ffffff;
+  border-radius: 14px;
   padding: 16px;
   margin-bottom: 12px;
-  border-left: 4px solid #a78bfa;
+  border-left: 4px solid #a29bfe;
+  border: 2px solid #e8f0fe;
+  border-left: 4px solid #a29bfe;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
 .rule-card h4 {
   font-size: 18px;
-  color: #a78bfa;
+  color: #a29bfe;
   margin-bottom: 8px;
 }
 
 .rule-card p {
   font-size: 16px;
-  color: rgba(255,255,255,0.8);
+  color: #636e72;
 }
 
 .rule-example {
-  background: rgba(167,139,250,0.1);
-  border-radius: 8px;
+  background: #f0f9ff;
+  border-radius: 10px;
   padding: 8px 12px;
   margin-top: 8px;
   font-size: 15px;
-  color: #c4b5fd;
+  color: #0984e3;
 }
 
 /* Fun fact */
 .fun-fact {
-  background: linear-gradient(135deg, rgba(251,191,36,0.1), rgba(245,158,11,0.1));
-  border: 1px solid rgba(251,191,36,0.3);
-  border-radius: 12px;
+  background: #fef9e7;
+  border: 2px solid #fdcb6e;
+  border-radius: 14px;
   padding: 14px 16px;
   margin: 16px 0;
   font-size: 16px;
-  color: #fbbf24;
+  color: #f59e0b;
 }
 
 /* Number line */
@@ -373,6 +388,7 @@ body {
 
 .number-line {
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 4px;
   min-width: max-content;
@@ -383,6 +399,7 @@ body {
   width: 44px;
   height: 44px;
   display: flex;
+  justify-content: center;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
@@ -390,8 +407,10 @@ body {
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s;
-  background: rgba(255,255,255,0.1);
+  background: #f0f9ff;
+  border: 2px solid #e8f0fe;
   flex-shrink: 0;
+  color: #2d3436;
 }
 
 .nl-cell:active {
@@ -399,18 +418,22 @@ body {
 }
 
 .nl-cell.hit {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: #d4f8d4;
+  border-color: #00b894;
+  color: #00b894;
   animation: bounce 0.4s ease;
 }
 
 .nl-cell.miss {
-  background: rgba(239,68,68,0.4);
+  background: #ffe8f0;
+  border-color: #fd79a8;
   animation: shake 0.3s ease;
 }
 
 /* Factor tree */
 .factor-tree {
   display: flex;
+  justify-content: center;
   flex-direction: column;
   align-items: center;
   gap: 8px;
@@ -418,12 +441,13 @@ body {
 }
 
 .tree-node {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: #0984e3;
   color: white;
   width: 50px;
   height: 50px;
   border-radius: 50%;
   display: flex;
+  justify-content: center;
   align-items: center;
   justify-content: center;
   font-size: 18px;
@@ -433,8 +457,8 @@ body {
 }
 
 .tree-node.prime {
-  background: linear-gradient(135deg, #fbbf24, #f59e0b);
-  color: #1a1a2e;
+  background: #fdcb6e;
+  color: #2d3436;
 }
 
 .tree-node:active {
@@ -443,13 +467,14 @@ body {
 
 .tree-row {
   display: flex;
+  justify-content: center;
   gap: 20px;
   align-items: center;
   justify-content: center;
 }
 
 .tree-connector {
-  color: rgba(255,255,255,0.4);
+  color: #b2bec3;
   font-size: 20px;
 }
 
@@ -464,7 +489,7 @@ body {
   max-width: 300px;
   height: 8px;
   -webkit-appearance: none;
-  background: rgba(255,255,255,0.2);
+  background: #e8f0fe;
   border-radius: 4px;
   outline: none;
 }
@@ -481,13 +506,14 @@ body {
 .slider-value {
   font-size: 20px;
   font-weight: bold;
-  color: #fbbf24;
+  color: #d97706;
   margin-top: 8px;
 }
 
 /* Venn Diagram */
 .venn-container {
   display: flex;
+  justify-content: center;
   justify-content: center;
   align-items: center;
   margin: 16px 0;
@@ -546,36 +572,37 @@ body {
 
 /* Final score card */
 .score-card {
-  background: linear-gradient(135deg, rgba(102,126,234,0.2), rgba(118,75,162,0.2));
-  border: 2px solid rgba(102,126,234,0.5);
-  border-radius: 16px;
+  background: #ffffff;
+  border: 2px solid #e8f0fe;
+  border-radius: 20px;
   padding: 24px;
   text-align: center;
   margin: 20px 0;
   animation: popIn 0.4s ease;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
 
 .score-card .big-score {
   font-size: 48px;
   font-weight: bold;
-  color: #fbbf24;
+  color: #0984e3;
   margin: 12px 0;
 }
 
 .score-card .message {
   font-size: 20px;
-  color: rgba(255,255,255,0.9);
+  color: #2d3436;
 }
 
 /* Hint box */
 .hint-box {
-  background: rgba(16,185,129,0.1);
-  border: 1px solid rgba(16,185,129,0.3);
-  border-radius: 10px;
+  background: #d4f8d4;
+  border: 2px solid #00b894;
+  border-radius: 14px;
   padding: 12px 16px;
   margin: 12px 0;
   font-size: 16px;
-  color: #6ee7b7;
+  color: #00b894;
 }
 
 /* Step reveal */
@@ -584,12 +611,13 @@ body {
 }
 
 .step-btn {
-  background: rgba(251,191,36,0.2);
-  border: 1px solid rgba(251,191,36,0.4);
-  color: #fbbf24;
+  background: #fef9e7;
+  border: 2px solid #fdcb6e;
+  color: #f59e0b;
   padding: 10px 20px;
-  border-radius: 10px;
+  border-radius: 14px;
   font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
   display: block;
   margin: 8px auto;
@@ -597,12 +625,12 @@ body {
 
 .step-content {
   display: none;
-  background: rgba(255,255,255,0.05);
-  border-radius: 10px;
+  background: #f0f9ff;
+  border-radius: 14px;
   padding: 14px;
   margin-top: 8px;
   font-size: 17px;
-  color: rgba(255,255,255,0.85);
+  color: #636e72;
   animation: fadeIn 0.3s ease;
 }
 
@@ -624,12 +652,13 @@ body {
 }
 
 .choice-btn {
-  background: rgba(255,255,255,0.1);
-  border: 2px solid rgba(255,255,255,0.2);
-  color: white;
+  background: #ffffff;
+  border: 2px solid #e8f0fe;
+  color: #2d3436;
   padding: 14px;
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 18px;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
   min-height: 52px;
@@ -640,13 +669,15 @@ body {
 }
 
 .choice-btn.correct-choice {
-  background: rgba(16,185,129,0.3);
-  border-color: #10b981;
+  background: #d4f8d4;
+  border-color: #00b894;
+  color: #00b894;
 }
 
 .choice-btn.wrong-choice {
-  background: rgba(239,68,68,0.3);
-  border-color: #ef4444;
+  background: #ffe8f0;
+  border-color: #fd79a8;
+  color: #fd79a8;
 }
 
 /* Responsive */
@@ -681,7 +712,7 @@ body {
 </nav>
 
 <div class="page-container">
-<a href="index.html" style="display:block;padding:10px 0;color:#a0a0c0;text-decoration:none;font-size:14px;">← 回首頁</a>
+<a href="index.html" style="display:inline-block;padding:8px 16px;margin-bottom:16px;background:#e8f0fe;border-radius:10px;color:#0984e3;text-decoration:none;font-size:14px;font-weight:600;">← 回首頁</a>
 
 <h1 class="page-title">🧙‍♂️ 數字魔法師</h1>
 <p class="page-subtitle">一起來探索數字的神奇世界吧！</p>
@@ -751,7 +782,7 @@ body {
     <h3>質數是什麼？</h3>
     <p>質數就是<strong>只能被 1 和自己整除</strong>的數字（而且要大於 1 喔）</p>
     <p style="margin-top:12px;">例如 7 是質數：</p>
-    <div style="padding:8px; font-size:16px; color:rgba(255,255,255,0.8);">
+    <div style="padding:8px; font-size:16px; color:#636e72;">
       7 ÷ 2 = 3 餘 <span style="color:#f87171;">1</span> ❌<br>
       7 ÷ 3 = 2 餘 <span style="color:#f87171;">1</span> ❌<br>
       7 ÷ 4 = 1 餘 <span style="color:#f87171;">3</span> ❌<br>
@@ -766,7 +797,7 @@ body {
   <!-- Sieve Game -->
   <div class="game-area" id="sieveGame">
     <div class="game-title">🔍 質數篩選器！把「不是質數」的數字點掉</div>
-    <p style="text-align:center; font-size:15px; color:rgba(255,255,255,0.7); margin-bottom:12px;">點擊可以被其他數整除的合數，讓質數留下來！</p>
+    <p style="text-align:center; font-size:15px; color:#636e72; margin-bottom:12px;">點擊可以被其他數整除的合數，讓質數留下來！</p>
     <div class="number-grid cols-10" id="sieveGrid"></div>
     <div class="btn-row">
       <button class="game-btn small" onclick="checkSieve()">✅ 檢查答案</button>
@@ -798,7 +829,7 @@ body {
     <h3>什麼是因數？</h3>
     <p>能夠<strong>整除</strong>某個數的數字，就是它的因數</p>
     <p style="margin-top:10px;">12 的因數：</p>
-    <div style="padding:8px; font-size:16px; color:rgba(255,255,255,0.8);">
+    <div style="padding:8px; font-size:16px; color:#636e72;">
       12 ÷ <span style="color:#10b981;">1</span> = 12 ✓ &nbsp;
       12 ÷ <span style="color:#10b981;">2</span> = 6 ✓ &nbsp;
       12 ÷ <span style="color:#10b981;">3</span> = 4 ✓<br>
@@ -806,7 +837,7 @@ body {
       12 ÷ 5 = 2...餘2 ✗<br>
       12 ÷ <span style="color:#10b981;">6</span> = 2 ✓ &nbsp;
       12 ÷ <span style="color:#10b981;">12</span> = 1 ✓<br>
-      <span style="color:#fbbf24;">→ 12 的因數 = {1, 2, 3, 4, 6, 12}</span>
+      <span style="color:#d97706;">→ 12 的因數 = {1, 2, 3, 4, 6, 12}</span>
     </div>
   </div>
 
@@ -819,7 +850,7 @@ body {
   <!-- Factor Game -->
   <div class="game-area" id="factorGame">
     <div class="game-title">🎯 找出所有因數！</div>
-    <div class="game-prompt">找出 <span id="factorTarget" style="color:#fbbf24; font-size:28px; font-weight:bold;">24</span> 的所有因數</div>
+    <div class="game-prompt">找出 <span id="factorTarget" style="color:#d97706; font-size:28px; font-weight:bold;">24</span> 的所有因數</div>
     <div class="number-grid" id="factorGrid"></div>
     <div class="btn-row">
       <button class="game-btn small" onclick="checkFactors()">✅ 確認答案</button>
@@ -831,7 +862,7 @@ body {
   <!-- Multiple Jump Game -->
   <div class="game-area" id="multipleGame">
     <div class="game-title">🐸 倍數跳跳樂！</div>
-    <div class="game-prompt">點擊 <span id="multipleTarget" style="color:#fbbf24; font-size:24px; font-weight:bold;">3</span> 的所有倍數</div>
+    <div class="game-prompt">點擊 <span id="multipleTarget" style="color:#d97706; font-size:24px; font-weight:bold;">3</span> 的所有倍數</div>
     <div class="number-line-container">
       <div class="number-line" id="multipleLine"></div>
     </div>
@@ -908,18 +939,18 @@ body {
   <div class="visual-box">
     <h3>什麼是最大公因數？</h3>
     <p>兩個數<strong>共同的因數</strong>中，最大的那一個！</p>
-    <div style="margin-top:12px; padding:10px; font-size:16px; color:rgba(255,255,255,0.85);">
+    <div style="margin-top:12px; padding:10px; font-size:16px; color:#636e72;">
       <span style="color:#667eea;">12 的因數：{1, 2, 3, <strong>4</strong>, <strong>6</strong>, 12}</span><br>
       <span style="color:#a78bfa;">18 的因數：{1, 2, 3, <strong>6</strong>, 9, 18}</span><br>
       <span style="color:#10b981;">共同的因數：{1, 2, 3, <strong style="font-size:20px;">6</strong>}</span><br>
-      <span style="color:#fbbf24;">→ 最大公因數 = 6 🎉</span>
+      <span style="color:#d97706;">→ 最大公因數 = 6 🎉</span>
     </div>
   </div>
 
   <div class="visual-box">
     <h3>生活中的例子 🍬</h3>
     <p>哥哥有 12 顆糖，妹妹有 18 顆糖。他們想平均分給朋友，每個朋友拿到的一樣多。最多可以分給幾個朋友？</p>
-    <p style="margin-top:8px; color:#fbbf24;">→ 答案就是 GCD(12, 18) = <strong>6</strong> 個朋友！</p>
+    <p style="margin-top:8px; color:#d97706;">→ 答案就是 GCD(12, 18) = <strong>6</strong> 個朋友！</p>
   </div>
 
   <!-- GCD Game -->
@@ -941,17 +972,17 @@ body {
   <div class="visual-box">
     <h3>什麼是最小公倍數？</h3>
     <p>兩個數<strong>共同的倍數</strong>中，最小的那一個！</p>
-    <div style="margin-top:12px; padding:10px; font-size:16px; color:rgba(255,255,255,0.85);">
+    <div style="margin-top:12px; padding:10px; font-size:16px; color:#636e72;">
       <span style="color:#667eea;">4 的倍數：4, 8, <strong>12</strong>, 16, 20, <strong>24</strong>, 28...</span><br>
       <span style="color:#a78bfa;">6 的倍數：6, <strong>12</strong>, 18, <strong>24</strong>, 30...</span><br>
-      <span style="color:#fbbf24;">→ 第一個交會點 = 最小公倍數 = 12 🎉</span>
+      <span style="color:#d97706;">→ 第一個交會點 = 最小公倍數 = 12 🎉</span>
     </div>
   </div>
 
   <div class="visual-box">
     <h3>生活中的例子 🌱</h3>
     <p>小明每 <strong>3 天</strong>澆花一次，每 <strong>5 天</strong>施肥一次。今天兩件事同時做了，下次什麼時候會再同一天做？</p>
-    <p style="margin-top:8px; color:#fbbf24;">→ 答案就是 LCM(3, 5) = <strong>15</strong> 天後！</p>
+    <p style="margin-top:8px; color:#d97706;">→ 答案就是 LCM(3, 5) = <strong>15</strong> 天後！</p>
   </div>
 
   <!-- LCM Race Game -->
@@ -973,12 +1004,12 @@ body {
   <div class="visual-box">
     <h3>什麼是因數分解？</h3>
     <p>把一個數字拆成<strong>質數的乘積</strong>，就像把大石頭敲成最小的碎片！</p>
-    <div style="margin-top:12px; text-align:center; font-size:18px; color:rgba(255,255,255,0.9);">
+    <div style="margin-top:12px; text-align:center; font-size:18px; color:#636e72;">
       <div>36</div>
-      <div style="color:rgba(255,255,255,0.4);">↙ ↘</div>
+      <div style="color:#636e72;">↙ ↘</div>
       <div>4 × 9</div>
-      <div style="color:rgba(255,255,255,0.4);">↙↘ &nbsp; ↙↘</div>
-      <div><span style="color:#fbbf24;">2</span> × <span style="color:#fbbf24;">2</span> × <span style="color:#fbbf24;">3</span> × <span style="color:#fbbf24;">3</span></div>
+      <div style="color:#636e72;">↙↘ &nbsp; ↙↘</div>
+      <div><span style="color:#d97706;">2</span> × <span style="color:#d97706;">2</span> × <span style="color:#d97706;">3</span> × <span style="color:#d97706;">3</span></div>
       <div style="margin-top:8px; color:#10b981;">36 = 2 × 2 × 3 × 3 = 2² × 3²</div>
     </div>
   </div>
@@ -989,7 +1020,7 @@ body {
   <div class="game-area" id="treeGame">
     <div class="game-title">🌲 建造因數分解樹！</div>
     <div class="score-display">第 <span id="treeRound">1</span> / 8 題 ｜ 得分：<span id="treeScore">0</span></div>
-    <div class="game-prompt">把 <span id="treeTarget" style="color:#fbbf24; font-size:28px; font-weight:bold;">—</span> 分解成質因數的乘積</div>
+    <div class="game-prompt">把 <span id="treeTarget" style="color:#d97706; font-size:28px; font-weight:bold;">—</span> 分解成質因數的乘積</div>
     <div class="choice-grid" id="treeChoices"></div>
     <div class="feedback" id="treeFeedback"></div>
     <div id="treeResult" style="display:none;"></div>
@@ -1759,7 +1790,7 @@ function updateCR() {
   const legVal = chickenVal * 2 + rabbitVal * 4;
   document.getElementById('crSliderVal').textContent = `雞：${chickenVal} 隻 ｜ 兔：${rabbitVal} 隻`;
   document.getElementById('crLegCount').textContent = `腿的數量：${chickenVal}×2 + ${rabbitVal}×4 = ${legVal}`;
-  document.getElementById('crLegCount').style.color = legVal === crState.legs ? '#10b981' : 'rgba(255,255,255,0.8)';
+  document.getElementById('crLegCount').style.color = legVal === crState.legs ? '#10b981' : '#636e72';
 }
 
 function checkCR() {
