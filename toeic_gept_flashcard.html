@@ -349,6 +349,10 @@ function getWord() {
   if (studyQueue.length === 0) return null;
   return studyQueue[currentIndex % studyQueue.length];
 }
+function currentWord() {
+  const w = getWord();
+  return w ? w.word : '';
+}
 
 function nextWord() {
   currentIndex++;
@@ -402,8 +406,14 @@ function renderFlashcard() {
           <div class="tap-hint">tap to flip</div>
         </div>
         <div class="flashcard-face flashcard-back">
-          <div class="flashcard-word">${word.word}</div>
-          <div class="flashcard-sentence">${word.sentence || ''}</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:8px;">
+            <button onclick="event.stopPropagation();new Audio('audio/word_'+currentWord().replace(/ /g,'_').replace(/\\//g,'_')+'.mp3').play()" style="background:#e8f0fe;border:none;border-radius:10px;padding:6px 10px;font-size:16px;cursor:pointer;">🔊</button>
+            <div class="flashcard-word">${word.word}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;justify-content:center;margin-top:8px;">
+            <button onclick="event.stopPropagation();new Audio('audio/sent_'+currentWord().replace(/ /g,'_').replace(/\\//g,'_')+'.mp3').play()" style="background:#e8f0fe;border:none;border-radius:10px;padding:5px 8px;font-size:14px;cursor:pointer;">🔊</button>
+            <div class="flashcard-sentence">${word.sentence || ''}</div>
+          </div>
           ${word.tip ? `<div class="flashcard-tip">${word.tip}</div>` : ''}
         </div>
       </div>

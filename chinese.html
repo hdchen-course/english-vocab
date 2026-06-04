@@ -2200,7 +2200,7 @@ function openCategory(catId) {
         <div class="level-badge">${LEVEL_NAMES[i].split(' ')[0]}</div>
         <div class="level-card-info">
           <div class="level-card-title">${LEVEL_NAMES[i]}</div>
-          <div class="level-card-sub">10 題挑戰</div>
+          <div class="level-card-sub">25 題挑戰</div>
         </div>
       </div>
       <div class="level-stars">${stars > 0 ? '⭐'.repeat(stars) : (locked ? '🔒' : '—')}</div>
@@ -2236,7 +2236,7 @@ function getQuestionsForLevel(catId, level) {
   const pool = allQ.slice(start, end);
   // Shuffle and pick 10
   const shuffled = pool.sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, 10);
+  return shuffled.slice(0, 25);
 }
 
 function getReadingQuestions(level) {
@@ -2259,11 +2259,11 @@ function getReadingQuestions(level) {
         question: q.q,
         explanation: ""
       });
-      if (questions.length >= 10) break;
+      if (questions.length >= 25) break;
     }
-    if (questions.length >= 10) break;
+    if (questions.length >= 25) break;
   }
-  return questions.slice(0, 10);
+  return questions.slice(0, 25);
 }
 
 // ===== GAME ENGINE =====
@@ -2387,7 +2387,7 @@ function showResult() {
   const score = currentGame.score;
   const total = currentGame.questions.length;
   let stars = 0;
-  if (score >= 10) stars = 3;
+  if (score >= 20) stars = 3;
   else if (score >= 8) stars = 2;
   else if (score >= 6) stars = 1;
 
