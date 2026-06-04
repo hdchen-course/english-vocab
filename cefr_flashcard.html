@@ -169,19 +169,19 @@ header p { color: #636e72; font-size: 14px; margin-top: 4px; }
 }
 
 /* Audio buttons */
+.word-row, .sent-row { display: flex; align-items: center; gap: 8px; justify-content: center; margin: 8px 0; }
 .audio-btn {
   background: #e8f0fe;
   border: none;
   border-radius: 10px;
-  padding: 8px 16px;
+  padding: 6px 10px;
   font-size: 16px;
   cursor: pointer;
-  margin: 8px auto;
-  display: block;
   transition: all .2s;
+  flex-shrink: 0;
 }
 .audio-btn:active { transform: scale(0.95); background: #d0ebff; }
-.audio-btn-sm { font-size: 13px; padding: 6px 12px; }
+.audio-btn-sm { font-size: 14px; padding: 5px 8px; }
 
 /* Action buttons */
 .action-buttons {
@@ -438,10 +438,8 @@ header p { color: #636e72; font-size: 14px; margin-top: 4px; }
       </div>
       <div class="card-back">
         <div class="word-emoji" id="backEmoji"></div>
-        <div class="word-text" id="backWord"></div>
-        <button class="audio-btn" onclick="playWordAudio()" title="聽單字">🔊</button>
-        <div class="sentence-text" id="backSentence"></div>
-        <button class="audio-btn audio-btn-sm" onclick="playSentenceAudio()" title="聽例句">🔊 例句</button>
+        <div class="word-row"><button class="audio-btn" onclick="playWordAudio()">🔊</button><span class="word-text" id="backWord"></span></div>
+        <div class="sent-row"><button class="audio-btn audio-btn-sm" onclick="playSentenceAudio()">🔊</button><span class="sentence-text" id="backSentence"></span></div>
       </div>
     </div>
   </div>
@@ -596,12 +594,12 @@ header p { color: #636e72; font-size: 14px; margin-top: 4px; }
   };
 
   window.playWordAudio = function() {
-    const word = words[currentIndex].word.replace(/ /g, '_').replace(/\//g, '_');
-    new Audio('audio/word_' + word + '.mp3').play();
+    const w = cards[currentIndex].word.replace(/ /g, '_').replace(/\//g, '_');
+    new Audio('audio/word_' + w + '.mp3').play();
   };
   window.playSentenceAudio = function() {
-    const word = words[currentIndex].word.replace(/ /g, '_').replace(/\//g, '_');
-    new Audio('audio/sent_' + word + '.mp3').play();
+    const w = cards[currentIndex].word.replace(/ /g, '_').replace(/\//g, '_');
+    new Audio('audio/sent_' + w + '.mp3').play();
   };
 
   window.markKnown = function() {
