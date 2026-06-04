@@ -1,0 +1,1888 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>數論進階冒險 - Advanced Number Theory</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  background: #1a1a2e;
+  color: white;
+  overflow-x: hidden;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(26, 26, 46, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 8px 12px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.top-nav::-webkit-scrollbar { display: none; }
+
+.nav-btn {
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.nav-btn:active, .nav-btn.active {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.back-link {
+  color: #a78bfa;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: rgba(167,139,250,0.15);
+  flex-shrink: 0;
+}
+
+.page-container {
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 16px;
+  padding-bottom: 60px;
+}
+
+.page-title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin: 20px 0 8px;
+  background: linear-gradient(135deg, #a78bfa, #06b6d4, #fbbf24);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page-subtitle {
+  text-align: center;
+  font-size: 16px;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 30px;
+}
+
+.section {
+  margin-bottom: 50px;
+  scroll-margin-top: 60px;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(102,126,234,0.3), rgba(118,75,162,0.3));
+  border-left: 4px solid #667eea;
+}
+
+.section-desc {
+  font-size: 18px;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 16px;
+  padding: 0 4px;
+}
+
+.visual-box {
+  background: rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.visual-box h3 {
+  font-size: 20px;
+  margin-bottom: 12px;
+  color: #fbbf24;
+}
+
+.visual-box p {
+  font-size: 17px;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 8px;
+}
+
+.svg-container {
+  display: flex;
+  justify-content: center;
+  margin: 16px 0;
+}
+
+.game-area {
+  background: rgba(255,255,255,0.05);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 2px solid rgba(102,126,234,0.3);
+}
+
+.game-title {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 16px;
+  color: #a78bfa;
+}
+
+.game-question {
+  font-size: 30px;
+  font-weight: bold;
+  text-align: center;
+  margin: 20px 0;
+  color: #fbbf24;
+  word-break: break-all;
+}
+
+.game-prompt {
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 16px;
+  color: rgba(255,255,255,0.8);
+}
+
+.btn-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+
+.game-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  color: white;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  min-width: 100px;
+  min-height: 52px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+}
+
+.game-btn:active { transform: scale(0.95); }
+
+.game-btn.green {
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 4px 15px rgba(16,185,129,0.3);
+}
+
+.game-btn.orange {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 4px 15px rgba(245,158,11,0.3);
+}
+
+.game-btn.red {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  box-shadow: 0 4px 15px rgba(239,68,68,0.3);
+}
+
+.game-btn.small {
+  padding: 10px 18px;
+  font-size: 16px;
+  min-width: 70px;
+  min-height: 42px;
+}
+
+.game-btn.cyan {
+  background: linear-gradient(135deg, #06b6d4, #0891b2);
+  box-shadow: 0 4px 15px rgba(6,182,212,0.3);
+}
+
+.step-display {
+  background: rgba(0,0,0,0.3);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 12px 0;
+  font-family: 'Courier New', monospace;
+  font-size: 18px;
+  line-height: 1.8;
+  min-height: 60px;
+}
+
+.step-line {
+  margin: 4px 0;
+  padding: 4px 8px;
+  border-radius: 6px;
+  animation: fadeSlide 0.3s ease;
+}
+
+.step-line.highlight {
+  background: rgba(251,191,36,0.2);
+  color: #fbbf24;
+}
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.feedback {
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  padding: 12px;
+  border-radius: 12px;
+  margin: 12px 0;
+  animation: popIn 0.3s ease;
+}
+
+.feedback.correct {
+  background: rgba(16,185,129,0.2);
+  color: #34d399;
+}
+
+.feedback.wrong {
+  background: rgba(239,68,68,0.2);
+  color: #f87171;
+  animation: shake 0.4s ease;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+.confetti-container {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  animation: confettiFall 1.5s ease forwards;
+}
+
+@keyframes confettiFall {
+  0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+.input-field {
+  background: rgba(255,255,255,0.1);
+  border: 2px solid rgba(102,126,234,0.5);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 22px;
+  color: white;
+  width: 120px;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-field:focus {
+  border-color: #667eea;
+}
+
+.math-expr {
+  font-size: 24px;
+  font-weight: bold;
+  color: #e0e7ff;
+  text-align: center;
+  margin: 12px 0;
+  font-family: 'Courier New', monospace;
+  line-height: 1.6;
+}
+
+.level-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-left: 8px;
+}
+
+.level-ms { background: rgba(16,185,129,0.3); color: #34d399; }
+.level-hs { background: rgba(251,191,36,0.3); color: #fbbf24; }
+.level-uni { background: rgba(239,68,68,0.3); color: #f87171; }
+
+.score-display {
+  text-align: center;
+  font-size: 16px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 12px;
+}
+
+.clock-svg { max-width: 200px; margin: 0 auto; display: block; }
+
+.reset-btn {
+  display: block;
+  margin: 16px auto 0;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  padding: 10px 24px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.reset-btn:active { transform: scale(0.95); }
+
+.comparison-box {
+  display: flex;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.comparison-col {
+  flex: 1;
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+}
+
+.comparison-col h4 {
+  font-size: 14px;
+  color: #a78bfa;
+  margin-bottom: 6px;
+}
+
+.comparison-col .big-num {
+  font-size: 28px;
+  font-weight: bold;
+  color: #fbbf24;
+}
+
+.info-tag {
+  display: inline-block;
+  background: rgba(102,126,234,0.2);
+  border: 1px solid rgba(102,126,234,0.4);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 14px;
+  margin: 4px;
+  color: #c4b5fd;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  margin: 8px 0;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea, #a78bfa);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.pulse { animation: pulse 0.6s ease; }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a href="number_theory.html" class="back-link">← 回基礎版</a>
+  <button class="nav-btn" onclick="scrollToSection('s1')">輾轉相除</button>
+  <button class="nav-btn" onclick="scrollToSection('s2')">同餘</button>
+  <button class="nav-btn" onclick="scrollToSection('s3')">費馬/歐拉</button>
+  <button class="nav-btn" onclick="scrollToSection('s4')">中國剩餘</button>
+  <button class="nav-btn" onclick="scrollToSection('s5')">RSA</button>
+  <button class="nav-btn" onclick="scrollToSection('s6')">完全數</button>
+  <button class="nav-btn" onclick="scrollToSection('s7')">二次剩餘</button>
+  <button class="nav-btn" onclick="scrollToSection('s8')">Diophantine</button>
+</nav>
+
+<div class="page-container">
+
+<h1 class="page-title">🧠 數論進階冒險</h1>
+<p class="page-subtitle">從輾轉相除法到 RSA 加密，探索數字的深層秘密！</p>
+
+<!-- ========== Section 1: Euclidean Algorithm ========== -->
+<div class="section" id="s1">
+  <h2 class="section-title">1. 輾轉相除法 <span class="level-badge level-ms">國中</span></h2>
+  <p class="section-desc">想找兩個數的最大公因數？不斷用小的去除大的，直到餘數是 0，最後那個除數就是答案！這招叫做「輾轉相除法」（歐幾里得算法），已經有 2300 年歷史了。</p>
+
+  <div class="visual-box">
+    <h3>🔍 看看怎麼運作</h3>
+    <p>求 gcd(48, 18)：「不斷用小的去除大的，直到餘數是 0」</p>
+    <div id="gcd-demo" class="step-display"></div>
+    <div class="btn-row">
+      <button class="game-btn small green" onclick="gcdDemoStep()">下一步 →</button>
+      <button class="game-btn small" onclick="gcdDemoReset()">重來</button>
+    </div>
+    <div class="svg-container">
+      <svg id="gcd-bars" width="320" height="100" viewBox="0 0 320 100">
+        <text x="10" y="18" fill="rgba(255,255,255,0.6)" font-size="11">大數 a</text>
+        <rect id="bar-a" x="10" y="22" width="240" height="28" rx="6" fill="#667eea" opacity="0.8">
+          <animate id="bar-a-anim" attributeName="width" dur="0.4s" fill="freeze"/>
+        </rect>
+        <text id="bar-a-text" x="130" y="42" fill="white" text-anchor="middle" font-size="15" font-weight="bold">48</text>
+        <text x="10" y="68" fill="rgba(255,255,255,0.6)" font-size="11">小數 b</text>
+        <rect id="bar-b" x="10" y="72" width="90" height="28" rx="6" fill="#f59e0b" opacity="0.8">
+          <animate id="bar-b-anim" attributeName="width" dur="0.4s" fill="freeze"/>
+        </rect>
+        <text id="bar-b-text" x="55" y="92" fill="white" text-anchor="middle" font-size="15" font-weight="bold">18</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="visual-box">
+    <h3>⚡ 哪個方法快？</h3>
+    <p>找 gcd(252, 105)：</p>
+    <div class="comparison-box">
+      <div class="comparison-col">
+        <h4>列出因數法</h4>
+        <p style="font-size:13px; color:rgba(255,255,255,0.6)">252 的因數：1,2,3,4,6,7,9,12,14,18,21,28,36,42,63,84,126,252</p>
+        <p style="font-size:13px; color:rgba(255,255,255,0.6)">105 的因數：1,3,5,7,15,21,35,105</p>
+        <div class="big-num">要列 26 個數</div>
+      </div>
+      <div class="comparison-col">
+        <h4>輾轉相除法</h4>
+        <p style="font-size:13px; color:rgba(255,255,255,0.6)">252÷105=2 餘 42</p>
+        <p style="font-size:13px; color:rgba(255,255,255,0.6)">105÷42=2 餘 21</p>
+        <p style="font-size:13px; color:rgba(255,255,255,0.6)">42÷21=2 餘 0 → 答案 21</p>
+        <div class="big-num">只要 3 步！</div>
+      </div>
+    </div>
+    <p style="font-size:15px; color:rgba(255,255,255,0.5);">數字越大差距越明顯。gcd(10946, 6765) 列因數要花超久，但輾轉相除法也只要幾步！</p>
+  </div>
+
+  <div class="game-area">
+    <div class="game-title">🎮 輾轉相除挑戰</div>
+    <div class="score-display" id="gcd-score">第 1 題 / 共 8 題</div>
+    <div class="game-question" id="gcd-q"></div>
+    <div class="game-prompt" id="gcd-prompt">按「下一步」開始計算！</div>
+    <div class="step-display" id="gcd-steps"></div>
+    <div class="btn-row">
+      <button class="game-btn green" id="gcd-next-btn" onclick="gcdGameStep()">下一步</button>
+    </div>
+    <div id="gcd-feedback"></div>
+    <button class="reset-btn" onclick="gcdGameReset()">🔄 新的一組題目</button>
+  </div>
+</div>
+
+<!-- ========== Section 2: Modular Arithmetic ========== -->
+<div class="section" id="s2">
+  <h2 class="section-title">2. 同餘與模運算 <span class="level-badge level-ms">國中/高中</span></h2>
+  <p class="section-desc">13 點其實就是下午 1 點——因為時鐘只有 12 格！這就是「模運算」：只看除法的餘數。數學裡寫成 a ≡ b (mod n)。</p>
+
+  <div class="visual-box">
+    <h3>🕐 時鐘類比</h3>
+    <p>a ≡ b (mod n) 意思是「a 和 b 除以 n 的餘數一樣」</p>
+    <p>例如：13 ≡ 1 (mod 12)，因為 13 ÷ 12 = 1 餘 <strong>1</strong></p>
+    <p>又如：25 ≡ 1 (mod 12)，因為 25 ÷ 12 = 2 餘 <strong>1</strong></p>
+    <div class="svg-container">
+      <svg class="clock-svg" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+        <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(102,126,234,0.3)" stroke-width="1" stroke-dasharray="4,4"/>
+        <g id="clock-numbers"></g>
+        <line id="clock-hand" x1="100" y1="100" x2="100" y2="25" stroke="#f59e0b" stroke-width="4" stroke-linecap="round">
+          <animateTransform id="clock-anim" attributeName="transform" type="rotate" from="0 100 100" to="0 100 100" dur="0.5s" fill="freeze"/>
+        </line>
+        <circle cx="100" cy="100" r="6" fill="#f59e0b"/>
+        <text id="clock-label" x="100" y="155" text-anchor="middle" fill="#fbbf24" font-size="16" font-weight="bold"></text>
+      </svg>
+    </div>
+    <div class="btn-row">
+      <button class="game-btn small" onclick="animateClock(13)">13 點</button>
+      <button class="game-btn small" onclick="animateClock(25)">25 點</button>
+      <button class="game-btn small orange" onclick="animateClock(37)">37 點</button>
+      <button class="game-btn small cyan" onclick="animateClock(100)">100 點</button>
+    </div>
+  </div>
+
+  <div class="visual-box">
+    <h3>✨ 模運算的超能力</h3>
+    <p><strong>加法性質：</strong></p>
+    <p style="font-size:16px">(a + b) mod n = ((a mod n) + (b mod n)) mod n</p>
+    <p style="font-size:15px; color:rgba(255,255,255,0.6)">例：(17+23) mod 5 = (2+3) mod 5 = 5 mod 5 = 0 ✓</p>
+    <p style="margin-top:12px"><strong>乘法性質：</strong></p>
+    <p style="font-size:16px">(a × b) mod n = ((a mod n) × (b mod n)) mod n</p>
+    <p style="font-size:15px; color:rgba(255,255,255,0.6)">例：(17×23) mod 5 = (2×3) mod 5 = 6 mod 5 = 1 ✓</p>
+    <p style="margin-top:12px"><strong>為什麼有用？</strong></p>
+    <p style="font-size:15px; color:rgba(255,255,255,0.6)">計算 99^99 mod 7：直接算 99^99 是天文數字，但 99 mod 7 = 1，所以 99^99 mod 7 = 1^99 mod 7 = 1！</p>
+  </div>
+
+  <div class="game-area">
+    <div class="game-title">🎮 模運算大挑戰</div>
+    <div class="score-display" id="mod-score">第 1 題 / 共 8 題</div>
+    <div class="game-question" id="mod-q"></div>
+    <div class="game-prompt" id="mod-prompt"></div>
+    <div class="btn-row" id="mod-choices"></div>
+    <div id="mod-feedback"></div>
+    <button class="reset-btn" onclick="modGameReset()">🔄 新題目</button>
+  </div>
+</div>
+
+<!-- ========== Section 3: Fermat & Euler ========== -->
+<div class="section" id="s3">
+  <h2 class="section-title">3. 費馬小定理 & 歐拉定理 <span class="level-badge level-hs">高中</span></h2>
+  <p class="section-desc">如果 p 是質數，而 a 不是 p 的倍數，那麼 a^(p-1) ≡ 1 (mod p)。這是 1640 年費馬發現的魔法定理！</p>
+
+  <div class="visual-box">
+    <h3>🔮 費馬小定理的魔法</h3>
+    <p>觀察 2 的各種次方 mod 7：</p>
+    <div class="step-display" id="fermat-demo-box">
+      2¹ mod 7 = 2<br>
+      2² mod 7 = 4<br>
+      2³ mod 7 = 8 mod 7 = 1 ← 哇？<br>
+      2⁴ mod 7 = 16 mod 7 = 2 ← 又回來了！<br>
+      2⁵ mod 7 = 32 mod 7 = 4<br>
+      2⁶ mod 7 = 64 mod 7 = <span style="color:#34d399; font-weight:bold">1</span> ← 費馬保證 p-1=6 次方一定回到 1！
+    </div>
+    <p style="margin-top:12px; font-size:16px"><strong>定理：</strong>若 p 是質數且 gcd(a,p) = 1，則 a^(p-1) ≡ 1 (mod p)</p>
+    <div class="btn-row">
+      <button class="game-btn small" onclick="showFermatDemo(3,7)">試 3^? mod 7</button>
+      <button class="game-btn small" onclick="showFermatDemo(2,11)">試 2^? mod 11</button>
+      <button class="game-btn small" onclick="showFermatDemo(5,13)">試 5^? mod 13</button>
+    </div>
+    <div id="fermat-demo-result" class="step-display" style="min-height:40px"></div>
+  </div>
+
+  <div class="visual-box">
+    <h3>🌟 歐拉定理（費馬的推廣）</h3>
+    <p><strong>歐拉定理：</strong>若 gcd(a,n) = 1，則 a^φ(n) ≡ 1 (mod n)</p>
+    <p style="margin-top:8px">φ(n)（歐拉函數）= 小於 n 且與 n 互質的正整數個數</p>
+    <p style="margin-top:12px"><strong>如何計算 φ(n)：</strong></p>
+    <p style="font-size:16px">先做質因數分解 n = p₁^a₁ × p₂^a₂ × ...</p>
+    <p style="font-size:16px">然後 φ(n) = n × (1-1/p₁) × (1-1/p₂) × ...</p>
+    <p style="margin-top:12px"><strong>範例：</strong>φ(12) = ?</p>
+    <p style="font-size:15px; color:rgba(255,255,255,0.7)">12 = 2² × 3</p>
+    <p style="font-size:15px; color:rgba(255,255,255,0.7)">φ(12) = 12 × (1-1/2) × (1-1/3) = 12 × 1/2 × 2/3 = 4</p>
+    <p style="font-size:15px; color:rgba(255,255,255,0.7)">驗證：與 12 互質的數 = {1, 5, 7, 11}，共 4 個 ✓</p>
+    <div class="btn-row">
+      <button class="game-btn small" onclick="showEulerPhi(15)">算 φ(15)</button>
+      <button class="game-btn small" onclick="showEulerPhi(20)">算 φ(20)</button>
+      <button class="game-btn small" onclick="showEulerPhi(7)">算 φ(7)</button>
+      <button class="game-btn small orange" onclick="showEulerPhi(30)">算 φ(30)</button>
+    </div>
+    <div id="phi-result" class="step-display" style="min-height:40px"></div>
+  </div>
+
+  <div class="game-area">
+    <div class="game-title">🎮 快速冪魔法</div>
+    <div class="score-display" id="fermat-score">第 1 題 / 共 6 題</div>
+    <div class="game-prompt">利用費馬小定理計算大次方 mod 小質數<br><span style="font-size:14px; color:rgba(255,255,255,0.5)">技巧：a^(p-1) ≡ 1，所以先把指數除以 (p-1) 取餘數</span></div>
+    <div class="game-question" id="fermat-q"></div>
+    <div class="step-display" id="fermat-hint"></div>
+    <div class="btn-row" id="fermat-choices"></div>
+    <div id="fermat-feedback"></div>
+    <button class="reset-btn" onclick="fermatGameReset()">🔄 新題目</button>
+  </div>
+</div>
+
+<!-- ========== Section 4: Chinese Remainder Theorem ========== -->
+<div class="section" id="s4">
+  <h2 class="section-title">4. 中國剩餘定理 <span class="level-badge level-hs">高中</span></h2>
+  <p class="section-desc">古代的「韓信點兵」問題——士兵排 3 人一列餘 2，排 5 人一列餘 3，排 7 人一列餘 2，問最少幾人？這個 1800 年前的定理至今仍是密碼學的基石！</p>
+
+  <div class="visual-box">
+    <h3>📜 韓信點兵的故事</h3>
+    <p>數學語言：找最小正整數 x 使得</p>
+    <div class="math-expr">x ≡ 2 (mod 3)<br>x ≡ 3 (mod 5)<br>x ≡ 2 (mod 7)</div>
+    <p style="margin-top:8px"><strong>解題思路：</strong>列出每個條件的候選人，找交集！</p>
+    <div id="crt-visual" class="step-display">
+      <div style="color:#667eea">x mod 3 = 2 → 2, 5, 8, 11, 14, 17, 20, <span style="color:#34d399; font-weight:bold">23</span>, 26, 29...</div>
+      <div style="color:#f59e0b">x mod 5 = 3 → 3, 8, 13, 18, <span style="color:#34d399; font-weight:bold">23</span>, 28, 33, 38...</div>
+      <div style="color:#a78bfa">x mod 7 = 2 → 2, 9, 16, <span style="color:#34d399; font-weight:bold">23</span>, 30, 37, 44...</div>
+      <div style="color:#fbbf24; margin-top:8px; font-weight:bold">→ 三條線交在 x = 23！</div>
+    </div>
+    <p style="font-size:15px; color:rgba(255,255,255,0.6); margin-top:8px">驗算：23÷3=7 餘 2 ✓ | 23÷5=4 餘 3 ✓ | 23÷7=3 餘 2 ✓</p>
+    <p style="font-size:15px; color:rgba(255,255,255,0.6)">所有解：23, 23+105, 23+210, ... （解之間差 3×5×7=105）</p>
+  </div>
+
+  <div class="visual-box">
+    <h3>🔧 建構式解法</h3>
+    <p style="font-size:16px">N = 3×5×7 = 105</p>
+    <p style="font-size:16px">N₁ = 105/3 = 35, 找 35t₁ ≡ 1 (mod 3) → t₁ = 2</p>
+    <p style="font-size:16px">N₂ = 105/5 = 21, 找 21t₂ ≡ 1 (mod 5) → t₂ = 1</p>
+    <p style="font-size:16px">N₃ = 105/7 = 15, 找 15t₃ ≡ 1 (mod 7) → t₃ = 1</p>
+    <p style="font-size:16px; margin-top:8px; color:#fbbf24">x = 2×35×2 + 3×21×1 + 2×15×1 = 140+63+30 = 233 ≡ 23 (mod 105)</p>
+  </div>
+
+  <div class="game-area">
+    <div class="game-title">🎮 古代將軍問你...</div>
+    <div class="score-display" id="crt-score">第 1 題 / 共 6 題</div>
+    <div class="game-prompt" id="crt-prompt">找出滿足所有條件的最小正整數</div>
+    <div class="game-question" id="crt-q" style="font-size:20px; white-space:pre-line"></div>
+    <div class="btn-row">
+      <input class="input-field" type="number" id="crt-input" placeholder="?">
+      <button class="game-btn green" onclick="crtCheck()">確認</button>
+    </div>
+    <div id="crt-feedback"></div>
+    <button class="reset-btn" onclick="crtGameReset()">🔄 新題目</button>
+  </div>
+</div>
+
+<!-- ========== Section 5: RSA Encryption ========== -->
+<div class="section" id="s5">
+  <h2 class="section-title">5. RSA 加密 <span class="level-badge level-hs">高中/大學</span></h2>
+  <p class="section-desc">每次你上網購物、傳送訊息，背後都有 RSA 在保護你！它的安全性來自一個簡單的事實：把兩個大質數乘起來很容易，但要從乘積反推回去，全世界的電腦一起算也要花上千年。</p>
+
+  <div class="visual-box">
+    <h3>🔐 迷你 RSA 一步一步來</h3>
+    <div id="rsa-demo" class="step-display"><span style="color:rgba(255,255,255,0.5)">按「下一步」看 RSA 如何運作...</span></div>
+    <div class="btn-row">
+      <button class="game-btn small green" onclick="rsaDemoStep()">下一步 →</button>
+      <button class="game-btn small" onclick="rsaDemoReset()">重來</button>
+    </div>
+  </div>
+
+  <div class="visual-box">
+    <h3>🤔 為什麼安全？</h3>
+    <p>乘法很容易：5 × 11 = 55 → 一秒鐘</p>
+    <p>分解很難：91 = ? × ? → 要試好幾個（答案是 7×13）</p>
+    <p style="margin-top:8px; font-size:15px; color:rgba(255,255,255,0.6)">真正的 RSA 用 300 位數的質數，乘積有 600 位數。要分解它？目前人類做不到！</p>
+    <div class="btn-row">
+      <button class="game-btn small orange" onclick="factorChallenge(91)">分解 91</button>
+      <button class="game-btn small orange" onclick="factorChallenge(143)">分解 143</button>
+      <button class="game-btn small orange" onclick="factorChallenge(221)">分解 221</button>
+    </div>
+    <div id="factor-result" class="step-display" style="min-height:40px"></div>
+  </div>
+
+  <div class="game-area">
+    <div class="game-title">🎮 你是密碼大師！</div>
+    <div class="game-prompt">選一個秘密數字（1~50），看它如何被加密再解密</div>
+    <div class="math-expr" style="font-size:16px">公鑰 (n=55, e=3) | 私鑰 (n=55, d=27)</div>
+    <div class="btn-row">
+      <input class="input-field" type="number" id="rsa-msg" placeholder="1-50" min="1" max="50">
+      <button class="game-btn orange" onclick="rsaEncrypt()">🔒 加密！</button>
+    </div>
+    <div id="rsa-result" class="step-display" style="min-height:60px"></div>
+    <div class="btn-row">
+      <button class="game-btn green" id="rsa-decrypt-btn" onclick="rsaDecrypt()" style="display:none">🔓 解密！</button>
+    </div>
+    <div id="rsa-feedback"></div>
+  </div>
+
+  <div class="game-area">
+    <div class="game-title">🎮 RSA 解密挑戰</div>
+    <div class="score-display" id="rsa-game-score">第 1 題 / 共 5 題</div>
+    <div class="game-prompt">已知 n=55, d=27，解密以下密文！</div>
+    <div class="game-question" id="rsa-game-q"></div>
+    <div class="btn-row" id="rsa-game-choices"></div>
+    <div id="rsa-game-feedback"></div>
+    <button class="reset-btn" onclick="rsaGameReset()">🔄 新題目</button>
+  </div>
+</div>
+
+<!-- ========== Section 6: Perfect Numbers ========== -->
+<div class="section" id="s6">
+  <h2 class="section-title">6. 完全數與特殊數 <span class="level-badge level-ms">國中/高中</span></h2>
+  <p class="section-desc">古希臘人認為某些數字擁有「完美」的性質：它所有因數（不含自己）加起來，剛好等於自己！2500 年後，我們仍然不知道有沒有「奇數完全數」存在。</p>
+
+  <div class="visual-box">
+    <h3>✨ 完全數 (Perfect Numbers)</h3>
+    <p><strong>定義：</strong>σ(n) - n = n，即真因數之和等於自己</p>
+    <p style="margin-top:8px">6 的真因數：1, 2, 3 → 1+2+3 = <span style="color:#34d399">6</span> → 完全！</p>
+    <p>28 的真因數：1, 2, 4, 7, 14 → 1+2+4+7+14 = <span style="color:#34d399">28</span> → 完全！</p>
+    <p>496 的真因數之和 = <span style="color:#34d399">496</span> → 第三個完全數！</p>
+    <p style="margin-top:12px"><strong>過剩數 (Abundant)：</strong>因數之和 > 自己</p>
+    <p style="font-size:15px; color:rgba(255,255,255,0.6)">12：1+2+3+4+6 = 16 > 12</p>
+    <p style="margin-top:8px"><strong>不足數 (Deficient)：</strong>因數之和 < 自己</p>
+    <p style="font-size:15px; color:rgba(255,255,255,0.6)">8：1+2+4 = 7 < 8</p>
+  </div>
+
+  <div class="visual-box">
+    <h3>💕 友誼數 (Amicable Numbers)</h3>
+    <p>220 的真因數之和 = 284</p>
+    <p>284 的真因數之和 = 220</p>
+    <p style="color:#a78bfa; margin-top:8px">它們互相指向對方，像一對好朋友！</p>
+    <p style="font-size:14px; color:rgba(255,255,255,0.5); margin-top:8px">其他友誼數對：(1184, 1210), (2620, 2924), (5020, 5564)...</p>
+  </div>
+
+  <div class="visual-box">
+    <h3>🌊 梅森質數 (Mersenne Primes)</h3>
+    <p>形式：M_p = 2^p - 1（p 本身必須是質數）</p>
+    <div class="step-display">
+      M₂ = 2²-1 = 3 ← 質數 ✓<br>
+      M₃ = 2³-1 = 7 ← 質數 ✓<br>
+      M₅ = 2⁵-1 = 31 ← 質數 ✓<br>
+      M₇ = 2⁷-1 = 127 ← 質數 ✓<br>
+      M₁₁ = 2¹¹-1 = 2047 = 23×89 ← 不是質數 ✗<br>
+      M₁₃ = 2¹³-1 = 8191 ← 質數 ✓
+    </div>
+    <p style="font-size:14px; color:rgba(255,255,255,0.5); margin-top:8px">🏆 目前最大已知質數是 2^136279841 - 1，有超過 4100 萬位數！由 GIMPS 分散式計算計畫在 2024 年發現。</p>
+    <p style="font-size:14px; color:rgba(255,255,255,0.5)">💡 每個偶完全數都可以寫成 2^(p-1) × (2^p - 1)，其中 2^p-1 是梅森質數。</p>
+  </div>
+
+  <div class="game-area">
+    <div class="game-title">🎮 這個數完全嗎？</div>
+    <div class="score-display" id="perfect-score">第 1 題 / 共 8 題</div>
+    <div class="game-question" id="perfect-q"></div>
+    <div class="game-prompt" id="perfect-prompt">判斷：完全數、過剩數、還是不足數？</div>
+    <div class="btn-row">
+      <button class="game-btn green" onclick="perfectCheck('perfect')">完全數 ✓</button>
+      <button class="game-btn orange" onclick="perfectCheck('abundant')">過剩數 ↑</button>
+      <button class="game-btn" onclick="perfectCheck('deficient')">不足數 ↓</button>
+    </div>
+    <div id="perfect-feedback"></div>
+    <button class="reset-btn" onclick="perfectGameReset()">🔄 新題目</button>
+  </div>
+</div>
+
+<!-- ========== Section 7: Quadratic Residues ========== -->
+<div class="section" id="s7">
+  <h2 class="section-title">7. 二次剩餘與原根 <span class="level-badge level-uni">大學</span></h2>
+  <p class="section-desc">在 mod p 的世界裡，有些數可以被「平方」得到，有些不行。而「原根」是一個超級基底——它的各種次方能產生所有非零元素！</p>
+
+  <div class="visual-box">
+    <h3>🔢 二次剩餘 (Quadratic Residues)</h3>
+    <p><strong>問題：</strong>x² ≡ a (mod p) 有沒有整數解 x？</p>
+    <p style="margin-top:8px">以 mod 7 為例，計算所有平方：</p>
+    <div class="step-display">
+      1² mod 7 = 1 ✓<br>
+      2² mod 7 = 4 ✓<br>
+      3² mod 7 = 9 mod 7 = 2 ✓<br>
+      4² mod 7 = 16 mod 7 = 2（重複）<br>
+      5² mod 7 = 25 mod 7 = 4（重複）<br>
+      6² mod 7 = 36 mod 7 = 1（重複）
+    </div>
+    <p style="margin-top:8px"><span class="info-tag">QR mod 7 = {1, 2, 4}</span> <span class="info-tag" style="background:rgba(239,68,68,0.2); border-color:rgba(239,68,68,0.4); color:#fca5a5">NQR = {3, 5, 6}</span></p>
+    <p style="font-size:15px; color:rgba(255,255,255,0.6); margin-top:8px">x² ≡ 3 (mod 7) 無解！因為 3 不在 QR 裡面。</p>
+    <p style="margin-top:12px"><strong>Legendre 符號：</strong>(a/p) = 1 若 a 是 QR，= -1 若是 NQR，= 0 若 p|a</p>
+    <p style="font-size:15px; color:rgba(255,255,255,0.6)">快速判斷：(a/p) ≡ a^((p-1)/2) (mod p)（歐拉判準）</p>
+  </div>
+
+  <div class="visual-box">
+    <h3>⚡ 原根 (Primitive Root)</h3>
+    <p><strong>定義：</strong>g 是 mod p 的原根 ⟺ {g¹, g², ..., g^(p-1)} mod p = {1, 2, ..., p-1}</p>
+    <p style="margin-top:8px">即 g 的次方能「生出」所有非零元素！</p>
+    <p style="margin-top:12px"><strong>範例：</strong>3 是 mod 7 的原根嗎？</p>
+    <div class="step-display">
+      3¹ mod 7 = 3<br>
+      3² mod 7 = 9 mod 7 = 2<br>
+      3³ mod 7 = 27 mod 7 = 6<br>
+      3⁴ mod 7 = 81 mod 7 = 4<br>
+      3⁵ mod 7 = 243 mod 7 = 5<br>
+      3⁶ mod 7 = 729 mod 7 = 1<br>
+      <span style="color:#34d399; font-weight:bold">→ 生出了 {3,2,6,4,5,1} = {1,2,3,4,5,6} 全部！是原根！</span>
+    </div>
+    <p style="margin-top:12px"><strong>2 是 mod 7 的原根嗎？</strong></p>
+    <div class="step-display">
+      2¹=2, 2²=4, 2³=1, 2⁴=2, 2⁵=4, 2⁶=1<br>
+      <span style="color:#f87171">只生出 {1,2,4}，週期是 3 不是 6。不是原根！</span>
+    </div>
+    <p style="font-size:14px; color:rgba(255,255,255,0.5); margin-top:8px">每個質數 p 都有原根。原根的個數 = φ(p-1)。</p>
+  </div>
+
+  <div class="game-area">
+    <div class="game-title">🎮 找原根！</div>
+    <div class="score-display" id="qr-score">第 1 題 / 共 5 題</div>
+    <div class="game-question" id="qr-q"></div>
+    <div class="game-prompt" id="qr-prompt"></div>
+    <div class="btn-row" id="qr-choices"></div>
+    <div id="qr-feedback"></div>
+    <button class="reset-btn" onclick="qrGameReset()">🔄 新題目</button>
+  </div>
+</div>
+
+<!-- ========== Section 8: Diophantine Equations ========== -->
+<div class="section" id="s8">
+  <h2 class="section-title">8. Diophantine 方程 <span class="level-badge level-uni">大學</span></h2>
+  <p class="section-desc">只要求「整數解」的方程式，以古希臘數學家丟番圖命名。從畢達哥拉斯的直角三角形到費馬最後定理，這些問題困擾了數學家幾千年！</p>
+
+  <div class="visual-box">
+    <h3>📐 線性 Diophantine 方程</h3>
+    <p><strong>問題：</strong>ax + by = c，何時有整數解 (x, y)？</p>
+    <p style="margin-top:8px; color:#34d399; font-weight:bold">定理：有整數解 ⟺ gcd(a,b) | c</p>
+    <p style="margin-top:12px"><strong>例 1：</strong>3x + 5y = 1</p>
+    <p style="font-size:15px">gcd(3,5) = 1，而 1|1 → <span style="color:#34d399">有解！</span></p>
+    <p style="font-size:15px">一組解：x=2, y=-1（驗算：6-5=1 ✓）</p>
+    <p style="margin-top:8px"><strong>例 2：</strong>6x + 4y = 3</p>
+    <p style="font-size:15px">gcd(6,4) = 2，而 2∤3 → <span style="color:#f87171">無解！</span></p>
+    <p style="font-size:14px; color:rgba(255,255,255,0.5)">（左邊永遠是偶數，不可能等於奇數 3）</p>
+  </div>
+
+  <div class="visual-box">
+    <h3>🔄 擴展歐幾里得算法</h3>
+    <p>不只能找 gcd，還能找出 ax + by = gcd(a,b) 的解！</p>
+    <p style="margin-top:8px"><strong>範例：</strong>找 x, y 使得 35x + 15y = gcd(35,15) = 5</p>
+    <div id="ext-gcd-demo" class="step-display"><span style="color:rgba(255,255,255,0.5)">按下方按鈕觀看步驟...</span></div>
+    <div class="btn-row">
+      <button class="game-btn small green" onclick="extGcdDemoStep()">下一步 →</button>
+      <button class="game-btn small" onclick="extGcdDemoReset()">重來</button>
+    </div>
+  </div>
+
+  <div class="visual-box">
+    <h3>📐 畢氏三元組 (Pythagorean Triples)</h3>
+    <p><strong>問題：</strong>找所有正整數 (a, b, c) 使得 a² + b² = c²</p>
+    <p style="margin-top:8px"><strong>公式：</strong>所有原始畢氏三元組可以寫成：</p>
+    <div class="math-expr" style="font-size:18px">a = m²-n², b = 2mn, c = m²+n²</div>
+    <p style="font-size:15px; text-align:center; color:rgba(255,255,255,0.6)">（m > n > 0，m 和 n 互質且奇偶不同）</p>
+    <div class="step-display">
+      m=2, n=1 → a=3, b=4, c=5 | 9+16=25 ✓<br>
+      m=3, n=2 → a=5, b=12, c=13 | 25+144=169 ✓<br>
+      m=4, n=1 → a=15, b=8, c=17 | 225+64=289 ✓<br>
+      m=4, n=3 → a=7, b=24, c=25 | 49+576=625 ✓<br>
+      m=5, n=2 → a=21, b=20, c=29 | 441+400=841 ✓<br>
+      m=5, n=4 → a=9, b=40, c=41 | 81+1600=1681 ✓
+    </div>
+    <p style="font-size:14px; color:rgba(255,255,255,0.5); margin-top:8px">💡 費馬最後定理：a^n + b^n = c^n 在 n≥3 時沒有正整數解！（1995 年 Andrew Wiles 證明）</p>
+  </div>
+
+  <div class="game-area">
+    <div class="game-title">🎮 找畢氏三元組！</div>
+    <div class="score-display" id="dio-score">第 1 題 / 共 5 題</div>
+    <div class="game-prompt">哪一組滿足 a² + b² = c²？</div>
+    <div class="game-question" id="dio-q"></div>
+    <div class="btn-row" id="dio-choices"></div>
+    <div id="dio-feedback"></div>
+    <button class="reset-btn" onclick="dioGameReset()">🔄 新題目</button>
+  </div>
+
+  <div class="visual-box">
+    <h3>🌀 Pell 方程</h3>
+    <p><strong>問題：</strong>x² - Dy² = 1（D 不是完全平方數）</p>
+    <p style="margin-top:8px">以 D=2 為例：x² - 2y² = 1</p>
+    <div class="step-display">
+      (x, y) = (1, 0) — 平凡解<br>
+      (x, y) = (3, 2) — 9 - 8 = 1 ✓<br>
+      (x, y) = (17, 12) — 289 - 288 = 1 ✓<br>
+      (x, y) = (99, 70) — 9801 - 9800 = 1 ✓<br>
+      (x, y) = (577, 408) — 332929 - 332928 = 1 ✓
+    </div>
+    <p style="margin-top:8px; color:#a78bfa"><strong>遞推公式：</strong>x_{n+1} = 3x_n + 4y_n，y_{n+1} = 2x_n + 3y_n</p>
+    <p style="font-size:14px; color:rgba(255,255,255,0.5); margin-top:8px">Pell 方程保證有無限多組解！最小正解可以用連分數展開 √D 來找。</p>
+  </div>
+
+  <div class="game-area">
+    <div class="game-title">🎮 Diophantine 判斷</div>
+    <div class="score-display" id="dio2-score">第 1 題 / 共 5 題</div>
+    <div class="game-prompt">判斷以下方程是否有整數解</div>
+    <div class="game-question" id="dio2-q" style="font-size:22px"></div>
+    <div class="btn-row">
+      <button class="game-btn green" onclick="dio2Check(true)">有整數解 ✓</button>
+      <button class="game-btn red" onclick="dio2Check(false)">無整數解 ✗</button>
+    </div>
+    <div id="dio2-feedback"></div>
+    <button class="reset-btn" onclick="dio2GameReset()">🔄 新題目</button>
+  </div>
+</div>
+
+</div><!-- end page-container -->
+
+<script>
+// ===== Utility Functions =====
+function scrollToSection(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
+  if (event && event.target) event.target.classList.add('active');
+}
+
+function showConfetti() {
+  var container = document.createElement('div');
+  container.className = 'confetti-container';
+  document.body.appendChild(container);
+  var colors = ['#667eea','#f59e0b','#10b981','#ef4444','#a78bfa','#06b6d4','#fbbf24'];
+  for (var i = 0; i < 35; i++) {
+    var c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    c.style.animationDelay = Math.random() * 0.6 + 's';
+    c.style.width = (6 + Math.random() * 8) + 'px';
+    c.style.height = (6 + Math.random() * 8) + 'px';
+    container.appendChild(c);
+  }
+  setTimeout(function() { container.remove(); }, 2200);
+}
+
+function showFeedback(elId, correct, msg) {
+  var el = document.getElementById(elId);
+  if (correct) {
+    el.innerHTML = '<div class="feedback correct">太厲害了！🧠 ' + (msg || '') + '</div>';
+    showConfetti();
+  } else {
+    el.innerHTML = '<div class="feedback wrong">再想想！' + (msg || '') + '</div>';
+  }
+}
+
+function gcd(a, b) { while (b) { var t = b; b = a % b; a = t; } return a; }
+
+function modPow(base, exp, mod) {
+  var result = 1;
+  base = ((base % mod) + mod) % mod;
+  while (exp > 0) {
+    if (exp % 2 === 1) result = (result * base) % mod;
+    exp = Math.floor(exp / 2);
+    base = (base * base) % mod;
+  }
+  return result;
+}
+
+function eulerPhi(n) {
+  var result = n;
+  var temp = n;
+  for (var p = 2; p * p <= temp; p++) {
+    if (temp % p === 0) {
+      result -= Math.floor(result / p);
+      while (temp % p === 0) temp = Math.floor(temp / p);
+    }
+  }
+  if (temp > 1) result -= Math.floor(result / temp);
+  return result;
+}
+
+function getFactors(n) {
+  var factors = [];
+  for (var p = 2; p * p <= n; p++) {
+    if (n % p === 0) { factors.push(p); while (n % p === 0) n = Math.floor(n / p); }
+  }
+  if (n > 1) factors.push(n);
+  return factors;
+}
+
+// ===== Section 1: GCD Demo =====
+var gcdDemoState = { a: 48, b: 18, step: 0, lines: [] };
+
+function gcdDemoReset() {
+  gcdDemoState = { a: 48, b: 18, step: 0, lines: [] };
+  document.getElementById('gcd-demo').innerHTML = '<span style="color:rgba(255,255,255,0.5)">按「下一步」觀看 gcd(48, 18) 的計算過程...</span>';
+  document.getElementById('bar-a').setAttribute('width', 240);
+  document.getElementById('bar-a-text').textContent = '48';
+  document.getElementById('bar-b').setAttribute('width', 90);
+  document.getElementById('bar-b-text').textContent = '18';
+}
+
+function gcdDemoStep() {
+  var s = gcdDemoState;
+  if (s.b === 0) { gcdDemoReset(); return; }
+  var q = Math.floor(s.a / s.b);
+  var r = s.a % s.b;
+  s.lines.push(s.a + ' ÷ ' + s.b + ' = ' + q + ' ... 餘 ' + r);
+  if (r === 0) {
+    s.lines.push('✨ 餘數為 0 → gcd = ' + s.b + ' 🎉');
+  }
+  var html = s.lines.map(function(l, i) {
+    return '<div class="step-line' + (i === s.lines.length - 1 ? ' highlight' : '') + '">' + l + '</div>';
+  }).join('');
+  document.getElementById('gcd-demo').innerHTML = html;
+  var maxVal = 48;
+  var newA = s.b;
+  var newB = r;
+  document.getElementById('bar-a').setAttribute('width', Math.max(20, (newA / maxVal) * 260));
+  document.getElementById('bar-a-text').textContent = newA;
+  document.getElementById('bar-b').setAttribute('width', Math.max(5, (newB / maxVal) * 260));
+  document.getElementById('bar-b-text').textContent = newB || '0';
+  s.a = newA;
+  s.b = newB;
+}
+gcdDemoReset();
+
+// GCD Game
+var gcdGame = { problems: [], current: 0, a: 0, b: 0, steps: [], done: false };
+
+function generateGCDProblems() {
+  var pairs = [];
+  while (pairs.length < 8) {
+    var a = 30 + Math.floor(Math.random() * 170);
+    var b = 15 + Math.floor(Math.random() * 90);
+    if (a < b) { var t = a; a = b; b = t; }
+    if (gcd(a, b) > 1 && a !== b && b > 0) pairs.push([a, b]);
+  }
+  return pairs;
+}
+
+function gcdGameReset() {
+  gcdGame.problems = generateGCDProblems();
+  gcdGame.current = 0;
+  gcdGameLoad();
+}
+
+function gcdGameLoad() {
+  if (gcdGame.current >= gcdGame.problems.length) {
+    document.getElementById('gcd-q').textContent = '全部完成！🎉';
+    document.getElementById('gcd-steps').innerHTML = '<div style="text-align:center; color:#34d399">太棒了，你已經掌握輾轉相除法！</div>';
+    document.getElementById('gcd-prompt').textContent = '';
+    document.getElementById('gcd-feedback').innerHTML = '';
+    showConfetti();
+    return;
+  }
+  var p = gcdGame.problems[gcdGame.current];
+  gcdGame.a = p[0]; gcdGame.b = p[1];
+  gcdGame.steps = []; gcdGame.done = false;
+  document.getElementById('gcd-score').textContent = '第 ' + (gcdGame.current + 1) + ' 題 / 共 8 題';
+  document.getElementById('gcd-q').textContent = 'gcd(' + p[0] + ', ' + p[1] + ') = ?';
+  document.getElementById('gcd-steps').innerHTML = '<div class="step-line">開始：gcd(' + p[0] + ', ' + p[1] + ')</div>';
+  document.getElementById('gcd-prompt').textContent = '按「下一步」執行每一步除法';
+  document.getElementById('gcd-feedback').innerHTML = '';
+  document.getElementById('gcd-next-btn').textContent = '下一步';
+}
+
+function gcdGameStep() {
+  if (gcdGame.done) { gcdGame.current++; gcdGameLoad(); return; }
+  var a = gcdGame.a, b = gcdGame.b;
+  if (b === 0) {
+    gcdGame.done = true;
+    document.getElementById('gcd-next-btn').textContent = '下一題 →';
+    showFeedback('gcd-feedback', true, 'gcd = ' + a);
+    return;
+  }
+  var q = Math.floor(a / b);
+  var r = a % b;
+  gcdGame.steps.push(a + ' ÷ ' + b + ' = ' + q + ' ... 餘 ' + r);
+  var html = gcdGame.steps.map(function(l, i) {
+    return '<div class="step-line' + (i === gcdGame.steps.length - 1 ? ' highlight' : '') + '">' + l + '</div>';
+  }).join('');
+  if (r === 0) {
+    html += '<div class="step-line highlight" style="color:#34d399">→ gcd = ' + b + '</div>';
+    gcdGame.done = true;
+    document.getElementById('gcd-next-btn').textContent = '下一題 →';
+    showFeedback('gcd-feedback', true, 'gcd = ' + b);
+  }
+  document.getElementById('gcd-steps').innerHTML = html;
+  gcdGame.a = b; gcdGame.b = r;
+}
+gcdGameReset();
+
+// ===== Section 2: Clock & Mod Game =====
+(function initClock() {
+  var g = document.getElementById('clock-numbers');
+  for (var i = 1; i <= 12; i++) {
+    var angle = (i - 3) * 30 * Math.PI / 180;
+    var x = 100 + 72 * Math.cos(angle);
+    var y = 100 + 72 * Math.sin(angle);
+    var t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    t.setAttribute('x', x); t.setAttribute('y', y + 5);
+    t.setAttribute('text-anchor', 'middle');
+    t.setAttribute('fill', 'rgba(255,255,255,0.8)');
+    t.setAttribute('font-size', '14');
+    t.textContent = i;
+    g.appendChild(t);
+  }
+})();
+
+function animateClock(hour) {
+  var h = ((hour % 12) || 12);
+  var angle = (h * 30) - 90;
+  var rad = angle * Math.PI / 180;
+  var x2 = 100 + 55 * Math.cos(rad);
+  var y2 = 100 + 55 * Math.sin(rad);
+  var hand = document.getElementById('clock-hand');
+  hand.setAttribute('x2', x2);
+  hand.setAttribute('y2', y2);
+  document.getElementById('clock-label').textContent = hour + ' 點 → ' + h + ' 點 (mod 12)';
+}
+
+// Mod game
+var modGame = { problems: [], current: 0 };
+
+function generateModProblems() {
+  var probs = [];
+  var templates = [
+    function() {
+      var d = Math.floor(Math.random() * 7);
+      var n = 50 + Math.floor(Math.random() * 250);
+      var days = ['日','一','二','三','四','五','六'];
+      var ans = (d + n) % 7;
+      return { q: '今天星期' + days[d] + '，' + n + ' 天後星期幾？', ans: ans, choices: [0,1,2,3,4,5,6], format: function(a) { return '星期' + days[a]; } };
+    },
+    function() {
+      var a = 20 + Math.floor(Math.random() * 50);
+      var b = 20 + Math.floor(Math.random() * 50);
+      var m = 3 + Math.floor(Math.random() * 7);
+      var ans = (a + b) % m;
+      return { q: '(' + a + ' + ' + b + ') mod ' + m + ' = ?', ans: ans, choices: null, format: function(v) { return '' + v; } };
+    },
+    function() {
+      var a = 5 + Math.floor(Math.random() * 20);
+      var b = 5 + Math.floor(Math.random() * 20);
+      var m = 3 + Math.floor(Math.random() * 6);
+      var ans = (a * b) % m;
+      return { q: '(' + a + ' × ' + b + ') mod ' + m + ' = ?', ans: ans, choices: null, format: function(v) { return '' + v; } };
+    },
+    function() {
+      var h = 13 + Math.floor(Math.random() * 35);
+      var ans = ((h % 12) || 12);
+      return { q: h + ' 點在時鐘上顯示幾點？', ans: ans, choices: null, format: function(v) { return v + ' 點'; } };
+    },
+    function() {
+      var a = 10 + Math.floor(Math.random() * 30);
+      var m = 4 + Math.floor(Math.random() * 6);
+      var exp = 2;
+      var ans = (a * a) % m;
+      return { q: a + '² mod ' + m + ' = ?', ans: ans, choices: null, format: function(v) { return '' + v; } };
+    }
+  ];
+  for (var i = 0; i < 8; i++) {
+    probs.push(templates[i % templates.length]());
+  }
+  return probs;
+}
+
+function modGameReset() {
+  modGame.problems = generateModProblems();
+  modGame.current = 0;
+  modGameLoad();
+}
+
+function modGameLoad() {
+  if (modGame.current >= modGame.problems.length) {
+    document.getElementById('mod-q').textContent = '全部完成！🎉';
+    document.getElementById('mod-choices').innerHTML = '';
+    document.getElementById('mod-prompt').textContent = '模運算大師！';
+    document.getElementById('mod-feedback').innerHTML = '';
+    showConfetti();
+    return;
+  }
+  var p = modGame.problems[modGame.current];
+  document.getElementById('mod-score').textContent = '第 ' + (modGame.current + 1) + ' 題 / 共 8 題';
+  document.getElementById('mod-q').textContent = p.q;
+  document.getElementById('mod-prompt').textContent = '';
+  document.getElementById('mod-feedback').innerHTML = '';
+  var choices = [];
+  if (p.choices) {
+    choices = p.choices.slice();
+  } else {
+    choices = [p.ans];
+    while (choices.length < 4) {
+      var c = Math.max(0, p.ans + Math.floor(Math.random() * 8) - 3);
+      if (choices.indexOf(c) === -1) choices.push(c);
+    }
+  }
+  choices.sort(function() { return Math.random() - 0.5; });
+  if (choices.length > 5) choices = choices.slice(0, 5);
+  var html = choices.map(function(c) {
+    return '<button class="game-btn small" onclick="modCheck(' + c + ',' + p.ans + ')">' + p.format(c) + '</button>';
+  }).join('');
+  document.getElementById('mod-choices').innerHTML = html;
+}
+
+function modCheck(chosen, correct) {
+  if (chosen === correct) {
+    showFeedback('mod-feedback', true);
+    modGame.current++;
+    setTimeout(modGameLoad, 800);
+  } else {
+    showFeedback('mod-feedback', false, ' 答案是 ' + correct);
+    setTimeout(function() { modGame.current++; modGameLoad(); }, 1500);
+  }
+}
+modGameReset();
+
+// ===== Section 3: Fermat Game =====
+function showFermatDemo(base, p) {
+  var html = '';
+  for (var i = 1; i <= p - 1; i++) {
+    var val = modPow(base, i, p);
+    var marker = (i === p - 1) ? ' ← <span style="color:#34d399">= 1！費馬小定理 ✓</span>' : '';
+    html += base + '^' + i + ' mod ' + p + ' = ' + val + marker + '<br>';
+  }
+  document.getElementById('fermat-demo-result').innerHTML = html;
+}
+
+function showEulerPhi(n) {
+  var result = n;
+  var temp = n;
+  var factors = [];
+  for (var p = 2; p * p <= temp; p++) {
+    if (temp % p === 0) {
+      factors.push(p);
+      result -= Math.floor(result / p);
+      while (temp % p === 0) temp = Math.floor(temp / p);
+    }
+  }
+  if (temp > 1) { factors.push(temp); result -= Math.floor(result / temp); }
+  var html = '<strong>φ(' + n + ')</strong><br>';
+  html += n + ' 的質因數：' + factors.join(', ') + '<br>';
+  html += 'φ(' + n + ') = ' + n;
+  factors.forEach(function(f) { html += ' × (1-1/' + f + ')'; });
+  html += ' = <span style="color:#fbbf24; font-weight:bold">' + result + '</span><br>';
+  var coprimes = [];
+  for (var i = 1; i < n; i++) { if (gcd(i, n) === 1) coprimes.push(i); }
+  html += '<span style="font-size:14px; color:rgba(255,255,255,0.6)">互質的數：' + coprimes.join(', ') + ' (' + coprimes.length + '個)</span>';
+  document.getElementById('phi-result').innerHTML = html;
+}
+
+var fermatGame = { problems: [], current: 0 };
+
+function generateFermatProblems() {
+  var primes = [5, 7, 11, 13];
+  var probs = [];
+  for (var i = 0; i < 6; i++) {
+    var p = primes[Math.floor(Math.random() * primes.length)];
+    var base = 2 + Math.floor(Math.random() * (p - 2));
+    var exp = 20 + Math.floor(Math.random() * 80);
+    var ans = modPow(base, exp, p);
+    var remainder = exp % (p - 1);
+    var hint = base + '^(' + (p-1) + ') ≡ 1 (mod ' + p + ')<br>' + exp + ' = ' + Math.floor(exp/(p-1)) + '×' + (p-1) + ' + ' + remainder + '<br>所以 ' + base + '^' + exp + ' ≡ ' + base + '^' + remainder + ' ≡ ' + ans + ' (mod ' + p + ')';
+    probs.push({ q: base + '^' + exp + ' mod ' + p + ' = ?', ans: ans, hint: hint, p: p });
+  }
+  return probs;
+}
+
+function fermatGameReset() {
+  fermatGame.problems = generateFermatProblems();
+  fermatGame.current = 0;
+  fermatGameLoad();
+}
+
+function fermatGameLoad() {
+  if (fermatGame.current >= fermatGame.problems.length) {
+    document.getElementById('fermat-q').textContent = '全部完成！🎉';
+    document.getElementById('fermat-choices').innerHTML = '';
+    document.getElementById('fermat-hint').innerHTML = '<div style="text-align:center; color:#34d399">快速冪大師！</div>';
+    document.getElementById('fermat-feedback').innerHTML = '';
+    showConfetti();
+    return;
+  }
+  var p = fermatGame.problems[fermatGame.current];
+  document.getElementById('fermat-score').textContent = '第 ' + (fermatGame.current + 1) + ' 題 / 共 6 題';
+  document.getElementById('fermat-q').textContent = p.q;
+  document.getElementById('fermat-hint').innerHTML = '<span style="font-size:14px; color:rgba(255,255,255,0.4)">💡 提示：' + p.hint + '</span>';
+  document.getElementById('fermat-feedback').innerHTML = '';
+  var choices = [p.ans];
+  while (choices.length < 4) {
+    var c = Math.floor(Math.random() * p.p);
+    if (choices.indexOf(c) === -1) choices.push(c);
+  }
+  choices.sort(function() { return Math.random() - 0.5; });
+  var html = choices.map(function(c) {
+    return '<button class="game-btn small" onclick="fermatCheck(' + c + ',' + p.ans + ')">' + c + '</button>';
+  }).join('');
+  document.getElementById('fermat-choices').innerHTML = html;
+}
+
+function fermatCheck(chosen, correct) {
+  if (chosen === correct) {
+    showFeedback('fermat-feedback', true);
+    fermatGame.current++;
+    setTimeout(fermatGameLoad, 800);
+  } else {
+    showFeedback('fermat-feedback', false, ' 答案是 ' + correct);
+    setTimeout(function() { fermatGame.current++; fermatGameLoad(); }, 1500);
+  }
+}
+fermatGameReset();
+
+// ===== Section 4: CRT Game =====
+var crtGame = { problems: [], current: 0 };
+
+function generateCRTProblems() {
+  var probs = [];
+  var modSets = [[3,5,7],[3,4,5],[2,5,7],[3,7,11],[4,5,7],[2,3,7]];
+  for (var i = 0; i < 6; i++) {
+    var ms = modSets[i];
+    var r0 = 1 + Math.floor(Math.random() * (ms[0] - 1));
+    var r1 = 1 + Math.floor(Math.random() * (ms[1] - 1));
+    var r2 = Math.floor(Math.random() * ms[2]);
+    var product = ms[0] * ms[1] * ms[2];
+    var ans = -1;
+    for (var x = 1; x <= product; x++) {
+      if (x % ms[0] === r0 && x % ms[1] === r1 && x % ms[2] === r2) { ans = x; break; }
+    }
+    if (ans <= 0) { r2 = 1; for (var x2 = 1; x2 <= product; x2++) { if (x2 % ms[0] === r0 && x2 % ms[1] === r1 && x2 % ms[2] === r2) { ans = x2; break; } } }
+    var q = 'x ≡ ' + r0 + ' (mod ' + ms[0] + ')\nx ≡ ' + r1 + ' (mod ' + ms[1] + ')\nx ≡ ' + r2 + ' (mod ' + ms[2] + ')';
+    probs.push({ q: q, ans: ans, mods: ms, rems: [r0, r1, r2] });
+  }
+  return probs;
+}
+
+function crtGameReset() {
+  crtGame.problems = generateCRTProblems();
+  crtGame.current = 0;
+  crtGameLoad();
+}
+
+function crtGameLoad() {
+  if (crtGame.current >= crtGame.problems.length) {
+    document.getElementById('crt-q').textContent = '全部完成！🎉';
+    document.getElementById('crt-prompt').textContent = '你已經掌握中國剩餘定理！';
+    document.getElementById('crt-feedback').innerHTML = '';
+    showConfetti();
+    return;
+  }
+  var p = crtGame.problems[crtGame.current];
+  document.getElementById('crt-score').textContent = '第 ' + (crtGame.current + 1) + ' 題 / 共 6 題';
+  document.getElementById('crt-q').textContent = p.q;
+  document.getElementById('crt-prompt').textContent = '將軍問：符合所有條件的最小正整數是？';
+  document.getElementById('crt-feedback').innerHTML = '';
+  document.getElementById('crt-input').value = '';
+}
+
+function crtCheck() {
+  var p = crtGame.problems[crtGame.current];
+  var val = parseInt(document.getElementById('crt-input').value);
+  if (isNaN(val)) {
+    showFeedback('crt-feedback', false, ' 請輸入數字');
+    return;
+  }
+  if (val === p.ans) {
+    showFeedback('crt-feedback', true, '驗算：' + val + ' mod ' + p.mods[0] + '=' + (val%p.mods[0]) + ', mod ' + p.mods[1] + '=' + (val%p.mods[1]) + ', mod ' + p.mods[2] + '=' + (val%p.mods[2]));
+    crtGame.current++;
+    setTimeout(crtGameLoad, 1200);
+  } else {
+    var checks = p.mods.map(function(m, i) { return val + ' mod ' + m + '=' + (val%m) + (val%m === p.rems[i] ? '✓' : '✗'); });
+    showFeedback('crt-feedback', false, '<br><span style="font-size:14px">' + checks.join(', ') + '</span><br>正確答案是 ' + p.ans);
+    setTimeout(function() { crtGame.current++; crtGameLoad(); }, 2500);
+  }
+}
+crtGameReset();
+
+// ===== Section 5: RSA =====
+var rsaDemoState = { step: 0 };
+var rsaSteps = [
+  '① 選兩個質數：p = 5, q = 11',
+  '② 計算 n = p × q = 5 × 11 = 55',
+  '③ 計算 φ(n) = (p-1)(q-1) = 4 × 10 = 40',
+  '④ 選公鑰指數 e = 3（需要 gcd(3, 40) = 1 ✓）',
+  '⑤ 求私鑰 d：e×d ≡ 1 (mod 40)',
+  '   3×27 = 81 = 2×40 + 1 → d = 27 ✓',
+  '⑥ 公鑰 = (n=55, e=3)  ← 公開給全世界',
+  '   私鑰 = (n=55, d=27) ← 自己保管',
+  '⑦ 加密：m=2 → c = 2³ mod 55 = 8',
+  '⑧ 解密：c=8 → m = 8²⁷ mod 55 = 2 ✓ 🎉'
+];
+
+function rsaDemoReset() {
+  rsaDemoState.step = 0;
+  document.getElementById('rsa-demo').innerHTML = '<span style="color:rgba(255,255,255,0.5)">按「下一步」看 RSA 如何運作...</span>';
+}
+
+function rsaDemoStep() {
+  if (rsaDemoState.step >= rsaSteps.length) { rsaDemoReset(); return; }
+  var html = '';
+  for (var i = 0; i <= rsaDemoState.step; i++) {
+    html += '<div class="step-line' + (i === rsaDemoState.step ? ' highlight' : '') + '">' + rsaSteps[i] + '</div>';
+  }
+  document.getElementById('rsa-demo').innerHTML = html;
+  rsaDemoState.step++;
+}
+rsaDemoReset();
+
+function factorChallenge(n) {
+  var html = '分解 ' + n + '：<br>';
+  for (var i = 2; i * i <= n; i++) {
+    if (n % i === 0) {
+      html += '嘗試 ' + i + '... ' + n + ' ÷ ' + i + ' = ' + (n/i) + ' ✓<br>';
+      html += '<span style="color:#34d399; font-weight:bold">' + n + ' = ' + i + ' × ' + (n/i) + '</span>';
+      document.getElementById('factor-result').innerHTML = html;
+      return;
+    }
+    html += '嘗試 ' + i + '... 不整除<br>';
+  }
+  html += '<span style="color:#34d399">' + n + ' 是質數！</span>';
+  document.getElementById('factor-result').innerHTML = html;
+}
+
+var rsaEncrypted = 0;
+var rsaOriginal = 0;
+
+function rsaEncrypt() {
+  var m = parseInt(document.getElementById('rsa-msg').value);
+  if (isNaN(m) || m < 1 || m > 50) {
+    document.getElementById('rsa-result').innerHTML = '<span style="color:#f87171">請輸入 1~50 的數字</span>';
+    return;
+  }
+  rsaOriginal = m;
+  var c = modPow(m, 3, 55);
+  rsaEncrypted = c;
+  document.getElementById('rsa-result').innerHTML =
+    '📝 你的秘密：m = <span style="color:#34d399">' + m + '</span><br>' +
+    '🔒 加密：c = m^e mod n = ' + m + '³ mod 55<br>' +
+    '   = ' + (m*m*m) + ' mod 55 = <span style="color:#f59e0b; font-size:26px; font-weight:bold">' + c + '</span><br>' +
+    '<span style="font-size:14px; color:rgba(255,255,255,0.5)">↑ 別人看到的只有密文 ' + c + '，猜不出原文！</span>';
+  document.getElementById('rsa-decrypt-btn').style.display = 'inline-block';
+  document.getElementById('rsa-feedback').innerHTML = '';
+}
+
+function rsaDecrypt() {
+  var c = rsaEncrypted;
+  var m = modPow(c, 27, 55);
+  document.getElementById('rsa-feedback').innerHTML =
+    '<div class="feedback correct">🔓 解密：m = ' + c + '^27 mod 55 = <strong>' + m + '</strong><br>原文完美還原！魔法就是 e×d = 3×27 = 81 ≡ 1 (mod 40)</div>';
+  document.getElementById('rsa-decrypt-btn').style.display = 'none';
+  showConfetti();
+}
+
+// RSA Decrypt Game
+var rsaGame = { problems: [], current: 0 };
+
+function generateRSAProblems() {
+  var probs = [];
+  var messages = [2, 4, 7, 8, 9, 13, 16, 18, 19, 23];
+  var used = [];
+  for (var i = 0; i < 5; i++) {
+    var idx = Math.floor(Math.random() * messages.length);
+    while (used.indexOf(idx) !== -1) idx = Math.floor(Math.random() * messages.length);
+    used.push(idx);
+    var m = messages[idx];
+    var c = modPow(m, 3, 55);
+    probs.push({ cipher: c, plain: m });
+  }
+  return probs;
+}
+
+function rsaGameReset() {
+  rsaGame.problems = generateRSAProblems();
+  rsaGame.current = 0;
+  rsaGameLoad();
+}
+
+function rsaGameLoad() {
+  if (rsaGame.current >= rsaGame.problems.length) {
+    document.getElementById('rsa-game-q').textContent = '全部完成！🎉';
+    document.getElementById('rsa-game-choices').innerHTML = '';
+    document.getElementById('rsa-game-feedback').innerHTML = '';
+    showConfetti();
+    return;
+  }
+  var p = rsaGame.problems[rsaGame.current];
+  document.getElementById('rsa-game-score').textContent = '第 ' + (rsaGame.current + 1) + ' 題 / 共 5 題';
+  document.getElementById('rsa-game-q').textContent = '密文 c = ' + p.cipher + '，原文 m = ?';
+  document.getElementById('rsa-game-feedback').innerHTML = '';
+  var choices = [p.plain];
+  while (choices.length < 4) {
+    var c = 2 + Math.floor(Math.random() * 48);
+    if (choices.indexOf(c) === -1) choices.push(c);
+  }
+  choices.sort(function() { return Math.random() - 0.5; });
+  document.getElementById('rsa-game-choices').innerHTML = choices.map(function(c) {
+    return '<button class="game-btn small" onclick="rsaGameCheck(' + c + ',' + p.plain + ')">' + c + '</button>';
+  }).join('');
+}
+
+function rsaGameCheck(chosen, correct) {
+  if (chosen === correct) {
+    showFeedback('rsa-game-feedback', true, 'c^d mod n = ' + modPow(rsaGame.problems[rsaGame.current].cipher, 27, 55));
+    rsaGame.current++;
+    setTimeout(rsaGameLoad, 900);
+  } else {
+    showFeedback('rsa-game-feedback', false, ' 用 c^27 mod 55 計算！答案是 ' + correct);
+    setTimeout(function() { rsaGame.current++; rsaGameLoad(); }, 1800);
+  }
+}
+rsaGameReset();
+
+// ===== Section 6: Perfect Numbers =====
+var perfectGame = { problems: [], current: 0 };
+
+function classifyNumber(n) {
+  var sum = 0;
+  for (var i = 1; i < n; i++) { if (n % i === 0) sum += i; }
+  if (sum === n) return 'perfect';
+  if (sum > n) return 'abundant';
+  return 'deficient';
+}
+
+function getDivisors(n) {
+  var divs = [];
+  for (var i = 1; i < n; i++) { if (n % i === 0) divs.push(i); }
+  return divs;
+}
+
+function generatePerfectProblems() {
+  var numbers = [6, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 24, 25, 27, 28, 30, 32, 33, 35, 36, 40, 42, 44, 45, 48, 50];
+  var probs = [];
+  var used = [];
+  while (probs.length < 8 && used.length < numbers.length) {
+    var idx = Math.floor(Math.random() * numbers.length);
+    if (used.indexOf(idx) === -1) {
+      used.push(idx);
+      var n = numbers[idx];
+      var divs = getDivisors(n);
+      probs.push({ n: n, type: classifyNumber(n), divisors: divs, sum: divs.reduce(function(a, b) { return a + b; }, 0) });
+    }
+  }
+  return probs;
+}
+
+function perfectGameReset() {
+  perfectGame.problems = generatePerfectProblems();
+  perfectGame.current = 0;
+  perfectGameLoad();
+}
+
+function perfectGameLoad() {
+  if (perfectGame.current >= perfectGame.problems.length) {
+    document.getElementById('perfect-q').textContent = '全部完成！🎉';
+    document.getElementById('perfect-prompt').textContent = '你已經認識各種特殊數了！';
+    document.getElementById('perfect-feedback').innerHTML = '';
+    showConfetti();
+    return;
+  }
+  var p = perfectGame.problems[perfectGame.current];
+  document.getElementById('perfect-score').textContent = '第 ' + (perfectGame.current + 1) + ' 題 / 共 8 題';
+  document.getElementById('perfect-q').textContent = p.n;
+  document.getElementById('perfect-prompt').textContent = '真因數：' + p.divisors.join(' + ') + ' = ' + p.sum;
+  document.getElementById('perfect-feedback').innerHTML = '';
+}
+
+function perfectCheck(type) {
+  var p = perfectGame.problems[perfectGame.current];
+  var typeNames = { perfect: '完全數', abundant: '過剩數', deficient: '不足數' };
+  var symbol = p.sum > p.n ? '>' : (p.sum < p.n ? '<' : '=');
+  if (type === p.type) {
+    showFeedback('perfect-feedback', true, p.sum + ' ' + symbol + ' ' + p.n + ' → ' + typeNames[p.type]);
+    perfectGame.current++;
+    setTimeout(perfectGameLoad, 800);
+  } else {
+    showFeedback('perfect-feedback', false, ' ' + p.sum + ' ' + symbol + ' ' + p.n + ' → 是' + typeNames[p.type] + '！');
+    setTimeout(function() { perfectGame.current++; perfectGameLoad(); }, 1800);
+  }
+}
+perfectGameReset();
+
+// ===== Section 7: Primitive Roots Game =====
+var qrGame = { problems: [], current: 0 };
+
+function isPrimitiveRoot(g, p) {
+  var seen = {};
+  var val = 1;
+  for (var i = 1; i < p; i++) {
+    val = (val * g) % p;
+    if (seen[val]) return false;
+    seen[val] = true;
+  }
+  return Object.keys(seen).length === p - 1;
+}
+
+function findPrimitiveRoots(p) {
+  var roots = [];
+  for (var g = 2; g < p; g++) {
+    if (isPrimitiveRoot(g, p)) roots.push(g);
+  }
+  return roots;
+}
+
+function generateQRProblems() {
+  var primes = [5, 7, 11, 13, 17];
+  var probs = [];
+  var shuffled = primes.sort(function() { return Math.random() - 0.5; });
+  for (var i = 0; i < 5; i++) {
+    var p = shuffled[i % shuffled.length];
+    var roots = findPrimitiveRoots(p);
+    var nonRoots = [];
+    for (var g = 2; g < p; g++) { if (roots.indexOf(g) === -1) nonRoots.push(g); }
+    probs.push({ p: p, roots: roots, nonRoots: nonRoots });
+  }
+  return probs;
+}
+
+function qrGameReset() {
+  qrGame.problems = generateQRProblems();
+  qrGame.current = 0;
+  qrGameLoad();
+}
+
+function qrGameLoad() {
+  if (qrGame.current >= qrGame.problems.length) {
+    document.getElementById('qr-q').textContent = '全部完成！🎉';
+    document.getElementById('qr-choices').innerHTML = '';
+    document.getElementById('qr-prompt').textContent = '原根大師！';
+    document.getElementById('qr-feedback').innerHTML = '';
+    showConfetti();
+    return;
+  }
+  var p = qrGame.problems[qrGame.current];
+  document.getElementById('qr-score').textContent = '第 ' + (qrGame.current + 1) + ' 題 / 共 5 題';
+  document.getElementById('qr-q').textContent = '找 mod ' + p.p + ' 的原根';
+  document.getElementById('qr-prompt').textContent = '哪個數的次方（1 到 ' + (p.p-1) + '）能生出所有 1~' + (p.p - 1) + '？';
+  document.getElementById('qr-feedback').innerHTML = '';
+  var choices = [];
+  var root = p.roots[Math.floor(Math.random() * p.roots.length)];
+  choices.push(root);
+  var nrCopy = p.nonRoots.slice().sort(function() { return Math.random() - 0.5; });
+  for (var i = 0; i < Math.min(3, nrCopy.length); i++) choices.push(nrCopy[i]);
+  while (choices.length < 4 && p.roots.length > 1) {
+    var r2 = p.roots[Math.floor(Math.random() * p.roots.length)];
+    if (choices.indexOf(r2) === -1) { choices.push(r2); break; }
+  }
+  choices.sort(function(a, b) { return a - b; });
+  var html = choices.map(function(c) {
+    return '<button class="game-btn small" onclick="qrCheck(' + c + ',' + p.p + ')">' + c + '</button>';
+  }).join('');
+  document.getElementById('qr-choices').innerHTML = html;
+}
+
+function qrCheck(g, p) {
+  if (isPrimitiveRoot(g, p)) {
+    var powers = [];
+    var val = 1;
+    for (var i = 1; i < p; i++) { val = (val * g) % p; powers.push(val); }
+    showFeedback('qr-feedback', true, '<br><span style="font-size:13px">' + g + ' 的次方：' + powers.join(', ') + ' → 全部！</span>');
+    qrGame.current++;
+    setTimeout(qrGameLoad, 1500);
+  } else {
+    var val2 = 1;
+    var generated = [];
+    for (var j = 1; j < p; j++) {
+      val2 = (val2 * g) % p;
+      if (generated.indexOf(val2) !== -1) break;
+      generated.push(val2);
+    }
+    showFeedback('qr-feedback', false, ' ' + g + ' 只能生出 ' + generated.length + ' 個數（需要 ' + (p-1) + ' 個）');
+    setTimeout(function() { document.getElementById('qr-feedback').innerHTML = ''; }, 2000);
+  }
+}
+qrGameReset();
+
+// ===== Section 8: Diophantine =====
+// Extended GCD demo
+var extGcdState = { step: 0, steps: [] };
+
+function computeExtGcdSteps() {
+  // 35x + 15y = 5
+  // Forward pass
+  var forward = [
+    { text: '輾轉相除法（前進）：', type: 'header' },
+    { text: '35 = 2 × 15 + 5', type: 'step' },
+    { text: '15 = 3 × 5 + 0 → gcd = 5', type: 'step' },
+    { text: '', type: 'space' },
+    { text: '回代法（倒退）：', type: 'header' },
+    { text: '從 35 = 2 × 15 + 5 得到：', type: 'step' },
+    { text: '5 = 35 - 2 × 15', type: 'highlight' },
+    { text: '即 5 = 1×35 + (-2)×15', type: 'highlight' },
+    { text: '', type: 'space' },
+    { text: '答案：x = 1, y = -2', type: 'result' },
+    { text: '驗算：35×1 + 15×(-2) = 35 - 30 = 5 ✓ 🎉', type: 'result' }
+  ];
+  return forward;
+}
+
+function extGcdDemoReset() {
+  extGcdState.step = 0;
+  extGcdState.steps = computeExtGcdSteps();
+  document.getElementById('ext-gcd-demo').innerHTML = '<span style="color:rgba(255,255,255,0.5)">求解 35x + 15y = 5...</span>';
+}
+
+function extGcdDemoStep() {
+  if (extGcdState.step >= extGcdState.steps.length) { extGcdDemoReset(); return; }
+  var html = '';
+  for (var i = 0; i <= extGcdState.step; i++) {
+    var s = extGcdState.steps[i];
+    if (s.type === 'header') html += '<div style="color:#a78bfa; font-weight:bold; margin-top:8px">' + s.text + '</div>';
+    else if (s.type === 'highlight') html += '<div class="step-line highlight">' + s.text + '</div>';
+    else if (s.type === 'result') html += '<div style="color:#34d399; font-weight:bold">' + s.text + '</div>';
+    else if (s.type === 'space') html += '<br>';
+    else html += '<div class="step-line">' + s.text + '</div>';
+  }
+  document.getElementById('ext-gcd-demo').innerHTML = html;
+  extGcdState.step++;
+}
+extGcdDemoReset();
+
+// Pythagorean Triples Game
+var dioGame = { problems: [], current: 0 };
+
+function generatePythTriples() {
+  var triples = [];
+  for (var a = 3; a < 50; a++) {
+    for (var b = a; b < 50; b++) {
+      var c2 = a * a + b * b;
+      var c = Math.round(Math.sqrt(c2));
+      if (c * c === c2 && c < 50) {
+        triples.push([a, b, c]);
+      }
+    }
+  }
+  return triples;
+}
+
+function generateDioProblems() {
+  var allTriples = generatePythTriples();
+  var probs = [];
+  var usedIdx = [];
+  for (var i = 0; i < 5; i++) {
+    var idx = Math.floor(Math.random() * allTriples.length);
+    while (usedIdx.indexOf(idx) !== -1) idx = Math.floor(Math.random() * allTriples.length);
+    usedIdx.push(idx);
+    var triple = allTriples[idx];
+    var wrong = [];
+    var attempts = 0;
+    while (wrong.length < 3 && attempts < 50) {
+      attempts++;
+      var da = Math.floor(Math.random() * 3) - 1;
+      var db = Math.floor(Math.random() * 5) - 2;
+      var fa = triple[0] + da;
+      var fb = triple[1] + db;
+      if (fa <= 0 || fb <= 0) continue;
+      var fc = Math.round(Math.sqrt(fa*fa + fb*fb));
+      if (fc <= 0) continue;
+      if (fa*fa + fb*fb !== fc*fc) {
+        var ws = '(' + fa + ', ' + fb + ', ' + fc + ')';
+        if (wrong.indexOf(ws) === -1) wrong.push(ws);
+      }
+    }
+    while (wrong.length < 3) {
+      wrong.push('(' + (triple[0]+2) + ', ' + (triple[1]+1) + ', ' + (triple[2]+1) + ')');
+    }
+    var correctStr = '(' + triple[0] + ', ' + triple[1] + ', ' + triple[2] + ')';
+    probs.push({ correct: correctStr, triple: triple, wrong: wrong });
+  }
+  return probs;
+}
+
+function dioGameReset() {
+  dioGame.problems = generateDioProblems();
+  dioGame.current = 0;
+  dioGameLoad();
+}
+
+function dioGameLoad() {
+  if (dioGame.current >= dioGame.problems.length) {
+    document.getElementById('dio-q').textContent = '全部完成！🎉';
+    document.getElementById('dio-choices').innerHTML = '';
+    document.getElementById('dio-feedback').innerHTML = '';
+    showConfetti();
+    return;
+  }
+  var p = dioGame.problems[dioGame.current];
+  document.getElementById('dio-score').textContent = '第 ' + (dioGame.current + 1) + ' 題 / 共 5 題';
+  document.getElementById('dio-q').textContent = '哪一組是畢氏三元組？';
+  document.getElementById('dio-feedback').innerHTML = '';
+  var choices = [p.correct].concat(p.wrong);
+  choices.sort(function() { return Math.random() - 0.5; });
+  var html = choices.map(function(c) {
+    var escaped = c.replace(/'/g, "\\'");
+    return '<button class="game-btn small" onclick="dioCheck(\'' + escaped + '\',\'' + p.correct.replace(/'/g, "\\'") + '\')" style="font-size:15px; min-width:130px">' + c + '</button>';
+  }).join('');
+  document.getElementById('dio-choices').innerHTML = html;
+}
+
+function dioCheck(chosen, correct) {
+  var nums = chosen.replace(/[()]/g, '').split(', ').map(Number);
+  var sum = nums[0]*nums[0] + nums[1]*nums[1];
+  var csq = nums[2]*nums[2];
+  if (chosen === correct) {
+    showFeedback('dio-feedback', true, nums[0] + '²+' + nums[1] + '²=' + sum + '=' + nums[2] + '² ✓');
+    dioGame.current++;
+    setTimeout(dioGameLoad, 1200);
+  } else {
+    showFeedback('dio-feedback', false, ' ' + nums[0] + '²+' + nums[1] + '²=' + sum + ' ≠ ' + csq + '=' + nums[2] + '²');
+    setTimeout(function() { document.getElementById('dio-feedback').innerHTML = ''; }, 2000);
+  }
+}
+dioGameReset();
+
+// Linear Diophantine Game
+var dio2Game = { problems: [], current: 0 };
+
+function generateDio2Problems() {
+  var probs = [];
+  var configs = [
+    { a: 6, b: 9, c: 12, has: true },  // gcd(6,9)=3, 3|12
+    { a: 4, b: 6, c: 5, has: false },   // gcd(4,6)=2, 2∤5
+    { a: 15, b: 10, c: 25, has: true },  // gcd(15,10)=5, 5|25
+    { a: 12, b: 8, c: 7, has: false },   // gcd(12,8)=4, 4∤7
+    { a: 7, b: 11, c: 3, has: true },    // gcd(7,11)=1, 1|3
+    { a: 9, b: 6, c: 4, has: false },    // gcd(9,6)=3, 3∤4
+    { a: 14, b: 21, c: 35, has: true },  // gcd(14,21)=7, 7|35
+    { a: 10, b: 15, c: 9, has: false }   // gcd(10,15)=5, 5∤9
+  ];
+  var shuffled = configs.sort(function() { return Math.random() - 0.5; });
+  for (var i = 0; i < 5; i++) {
+    var cfg = shuffled[i];
+    probs.push({ q: cfg.a + 'x + ' + cfg.b + 'y = ' + cfg.c, has: cfg.has, a: cfg.a, b: cfg.b, c: cfg.c });
+  }
+  return probs;
+}
+
+function dio2GameReset() {
+  dio2Game.problems = generateDio2Problems();
+  dio2Game.current = 0;
+  dio2GameLoad();
+}
+
+function dio2GameLoad() {
+  if (dio2Game.current >= dio2Game.problems.length) {
+    document.getElementById('dio2-q').textContent = '全部完成！🎉';
+    document.getElementById('dio2-feedback').innerHTML = '';
+    showConfetti();
+    return;
+  }
+  var p = dio2Game.problems[dio2Game.current];
+  document.getElementById('dio2-score').textContent = '第 ' + (dio2Game.current + 1) + ' 題 / 共 5 題';
+  document.getElementById('dio2-q').textContent = p.q;
+  document.getElementById('dio2-feedback').innerHTML = '';
+}
+
+function dio2Check(answer) {
+  var p = dio2Game.problems[dio2Game.current];
+  var g = gcd(p.a, p.b);
+  if (answer === p.has) {
+    var reason = p.has ? 'gcd(' + p.a + ',' + p.b + ')=' + g + '，' + g + '|' + p.c + ' ✓' : 'gcd(' + p.a + ',' + p.b + ')=' + g + '，' + g + '∤' + p.c + ' ✗';
+    showFeedback('dio2-feedback', true, reason);
+    dio2Game.current++;
+    setTimeout(dio2GameLoad, 1200);
+  } else {
+    var reason2 = p.has ? 'gcd(' + p.a + ',' + p.b + ')=' + g + '，' + g + ' 整除 ' + p.c + '，所以有解！' : 'gcd(' + p.a + ',' + p.b + ')=' + g + '，' + g + ' 不整除 ' + p.c + '，所以無解！';
+    showFeedback('dio2-feedback', false, ' ' + reason2);
+    setTimeout(function() { dio2Game.current++; dio2GameLoad(); }, 2200);
+  }
+}
+dio2GameReset();
+
+// ===== Handle Enter key =====
+document.getElementById('crt-input').addEventListener('keypress', function(e) { if (e.key === 'Enter') crtCheck(); });
+document.getElementById('rsa-msg').addEventListener('keypress', function(e) { if (e.key === 'Enter') rsaEncrypt(); });
+
+// ===== Scroll spy for nav =====
+var sectionIds = ['s1','s2','s3','s4','s5','s6','s7','s8'];
+var navBtns = document.querySelectorAll('.nav-btn');
+window.addEventListener('scroll', function() {
+  var scrollPos = window.scrollY + 80;
+  for (var i = sectionIds.length - 1; i >= 0; i--) {
+    var el = document.getElementById(sectionIds[i]);
+    if (el && el.offsetTop <= scrollPos) {
+      navBtns.forEach(function(b) { b.classList.remove('active'); });
+      if (navBtns[i]) navBtns[i].classList.add('active');
+      break;
+    }
+  }
+});
+</script>
+</body>
+</html>
