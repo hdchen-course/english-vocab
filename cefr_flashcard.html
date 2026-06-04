@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>CEFR 閃卡學習 🃏</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #e8f4fd 0%, #f0f9ff 50%, #fef9e7 100%);
+  color: #2d3436;
+  padding: 24px;
+}
+.container { max-width: 560px; margin: 0 auto; }
+
+/* Back link */
+.back-link {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #636e72;
+  text-decoration: none;
+  margin-bottom: 16px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: #0984e3; }
+
+/* Header */
+header { text-align: center; margin-bottom: 24px; }
+header .emoji { font-size: 48px; display: block; margin-bottom: 8px; }
+header h1 { font-size: 28px; font-weight: 800; color: #2d3436; }
+header p { color: #636e72; font-size: 14px; margin-top: 4px; }
+
+/* Level buttons */
+.level-selector { display: flex; gap: 12px; margin-bottom: 20px; }
+.level-btn {
+  flex: 1;
+  padding: 16px 8px;
+  border: 3px solid transparent;
+  border-radius: 16px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 56px;
+}
+.level-btn:active { transform: scale(0.95); }
+.level-btn.a1 { background: #d4f8d4; color: #16a34a; border-color: #86efac; }
+.level-btn.a1:hover, .level-btn.a1.active { background: #16a34a; color: #fff; border-color: #16a34a; }
+.level-btn.a2 { background: #dbeafe; color: #2563eb; border-color: #93c5fd; }
+.level-btn.a2:hover, .level-btn.a2.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+.level-btn.b1 { background: #ede9fe; color: #7c3aed; border-color: #c4b5fd; }
+.level-btn.b1:hover, .level-btn.b1.active { background: #7c3aed; color: #fff; border-color: #7c3aed; }
+
+/* Mode toggle */
+.mode-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.mode-btn {
+  padding: 10px 20px;
+  border: 2px solid #e8f0fe;
+  border-radius: 12px;
+  background: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  color: #636e72;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 48px;
+}
+.mode-btn.active {
+  background: #0984e3;
+  color: #fff;
+  border-color: #0984e3;
+}
+.mode-btn:active { transform: scale(0.95); }
+
+/* Progress */
+.progress-bar {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #636e72;
+  margin-bottom: 16px;
+}
+
+/* Card container */
+.card-container {
+  perspective: 1000px;
+  margin-bottom: 20px;
+  min-height: 280px;
+}
+.card-inner {
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+  position: relative;
+  width: 100%;
+  min-height: 280px;
+}
+.card-inner.flipped { transform: rotateY(180deg); }
+.card-front, .card-back {
+  backface-visibility: hidden;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background: #fff;
+  border-radius: 24px;
+  padding: 32px 24px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  border: 2px solid #e8f0fe;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.card-back { transform: rotateY(180deg); }
+
+.card-front .hint-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #b2bec3;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+.card-front .definition-text {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2d3436;
+  text-align: center;
+  line-height: 1.5;
+}
+.card-front .tap-hint {
+  margin-top: 24px;
+  font-size: 13px;
+  color: #b2bec3;
+}
+
+.card-back .word-emoji {
+  font-size: 40px;
+  margin-bottom: 8px;
+}
+.card-back .word-text {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0984e3;
+  margin-bottom: 12px;
+}
+.card-back .sentence-text {
+  font-size: 16px;
+  color: #636e72;
+  text-align: center;
+  line-height: 1.6;
+}
+.card-back .sentence-text strong {
+  color: #0984e3;
+  font-weight: 700;
+}
+
+/* Action buttons */
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.action-btn {
+  flex: 1;
+  max-width: 180px;
+  padding: 16px 12px;
+  border: none;
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 54px;
+}
+.action-btn:active { transform: scale(0.95); }
+.btn-know { background: #d4f8d4; color: #16a34a; }
+.btn-know:hover { background: #16a34a; color: #fff; }
+.btn-again { background: #ffe0e6; color: #e17055; }
+.btn-again:hover { background: #e17055; color: #fff; }
+.btn-flip {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  margin: 0 auto 16px;
+  padding: 14px 20px;
+  border: 2px solid #74b9ff;
+  border-radius: 14px;
+  background: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0984e3;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 50px;
+}
+.btn-flip:hover { background: #0984e3; color: #fff; }
+.btn-flip:active { transform: scale(0.95); }
+
+/* Quiz mode */
+.quiz-container {
+  background: #fff;
+  border-radius: 24px;
+  padding: 28px 24px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  border: 2px solid #e8f0fe;
+  margin-bottom: 20px;
+}
+.quiz-definition {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2d3436;
+  text-align: center;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+.quiz-cloze {
+  font-size: 15px;
+  color: #636e72;
+  text-align: center;
+  margin-bottom: 24px;
+  line-height: 1.5;
+  font-style: italic;
+}
+.quiz-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.quiz-option {
+  padding: 14px 12px;
+  border: 2px solid #e8f0fe;
+  border-radius: 12px;
+  background: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  color: #2d3436;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 50px;
+}
+.quiz-option:hover { border-color: #74b9ff; background: #f0f9ff; }
+.quiz-option:active { transform: scale(0.95); }
+.quiz-option.correct {
+  background: #d4f8d4;
+  border-color: #16a34a;
+  color: #16a34a;
+  animation: popIn 0.3s;
+}
+.quiz-option.wrong {
+  background: #ffe0e6;
+  border-color: #e17055;
+  color: #e17055;
+  animation: shake 0.4s;
+}
+.quiz-option.highlight {
+  background: #d4f8d4;
+  border-color: #16a34a;
+  color: #16a34a;
+}
+
+.quiz-feedback {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 18px;
+  font-weight: 700;
+  min-height: 30px;
+}
+.quiz-next-btn {
+  display: block;
+  margin: 16px auto 0;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 12px;
+  background: #0984e3;
+  color: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  min-height: 48px;
+  transition: all 0.2s;
+}
+.quiz-next-btn:hover { background: #0770c2; }
+.quiz-next-btn:active { transform: scale(0.95); }
+
+/* Completion screen */
+.complete-screen {
+  text-align: center;
+  padding: 40px 20px;
+}
+.complete-screen .big-emoji { font-size: 64px; margin-bottom: 16px; }
+.complete-screen h2 { font-size: 24px; font-weight: 800; margin-bottom: 12px; }
+.complete-screen p { font-size: 16px; color: #636e72; margin-bottom: 24px; }
+.restart-btn {
+  padding: 14px 28px;
+  border: none;
+  border-radius: 14px;
+  background: #0984e3;
+  color: #fff;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  min-height: 50px;
+  margin: 6px;
+  transition: all 0.2s;
+}
+.restart-btn:hover { background: #0770c2; }
+.restart-btn:active { transform: scale(0.95); }
+
+/* Confetti */
+.confetti-container {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: -10px;
+  border-radius: 2px;
+  animation: confettiFall 1.5s ease-out forwards;
+}
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+@keyframes popIn {
+  0% { transform: scale(0.9); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Hidden state */
+.hidden { display: none !important; }
+
+/* Welcome placeholder */
+.welcome-msg {
+  text-align: center;
+  padding: 40px 20px;
+  color: #636e72;
+  font-size: 16px;
+}
+.welcome-msg .big-emoji { font-size: 56px; display: block; margin-bottom: 12px; }
+
+@media (max-width: 480px) {
+  body { padding: 16px; }
+  header h1 { font-size: 24px; }
+  .card-front .definition-text { font-size: 18px; }
+  .card-back .word-text { font-size: 28px; }
+  .level-btn { font-size: 14px; padding: 14px 6px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<a href="index.html" class="back-link">← 首頁</a>
+
+<header>
+  <span class="emoji">🃏</span>
+  <h1>CEFR 閃卡學習</h1>
+  <p>看定義，猜單字！翻面看答案</p>
+</header>
+
+<!-- Level Selector -->
+<div class="level-selector">
+  <button class="level-btn a1" onclick="selectLevel('cefr_a1')">A1</button>
+  <button class="level-btn a2" onclick="selectLevel('cefr_a2')">A2</button>
+  <button class="level-btn b1" onclick="selectLevel('cefr_b1')">B1</button>
+</div>
+
+<!-- Mode Toggle -->
+<div class="mode-toggle hidden" id="modeToggle">
+  <button class="mode-btn active" id="btnFlashcard" onclick="switchMode('flashcard')">閃卡模式</button>
+  <button class="mode-btn" id="btnQuiz" onclick="switchMode('quiz')">測驗模式</button>
+</div>
+
+<!-- Progress -->
+<div class="progress-bar hidden" id="progressBar"></div>
+
+<!-- Welcome -->
+<div id="welcomeMsg" class="welcome-msg">
+  <span class="big-emoji">👆</span>
+  <p>選擇一個等級開始學習吧！</p>
+</div>
+
+<!-- Flashcard Mode -->
+<div id="flashcardArea" class="hidden">
+  <div class="card-container" onclick="flipCard()">
+    <div class="card-inner" id="cardInner">
+      <div class="card-front">
+        <div class="hint-label">Definition</div>
+        <div class="definition-text" id="frontDefinition"></div>
+        <div class="tap-hint">點擊翻面 👆</div>
+      </div>
+      <div class="card-back">
+        <div class="word-emoji" id="backEmoji"></div>
+        <div class="word-text" id="backWord"></div>
+        <div class="sentence-text" id="backSentence"></div>
+      </div>
+    </div>
+  </div>
+  <button class="btn-flip" id="flipBtn" onclick="flipCard()">翻面</button>
+  <div class="action-buttons hidden" id="actionButtons">
+    <button class="action-btn btn-know" onclick="markKnown()">✓ 我知道</button>
+    <button class="action-btn btn-again" onclick="markAgain()">✗ 再看一次</button>
+  </div>
+</div>
+
+<!-- Quiz Mode -->
+<div id="quizArea" class="hidden">
+  <div class="quiz-container">
+    <div class="quiz-definition" id="quizDefinition"></div>
+    <div class="quiz-cloze" id="quizCloze"></div>
+    <div class="quiz-options" id="quizOptions"></div>
+    <div class="quiz-feedback" id="quizFeedback"></div>
+    <button class="quiz-next-btn hidden" id="quizNextBtn" onclick="quizNext()">下一題</button>
+  </div>
+</div>
+
+<!-- Completion Screen -->
+<div id="completeScreen" class="hidden complete-screen">
+  <div class="big-emoji">🎉</div>
+  <h2>恭喜完成！</h2>
+  <p id="completeMsg"></p>
+  <button class="restart-btn" onclick="restartLevel()">再來一次</button>
+  <button class="restart-btn" onclick="resetAll()">換等級</button>
+</div>
+
+</div>
+
+<!-- Confetti container -->
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>var WORD_DATA = {};</script>
+<script src="vocab_data_cefr_a1.js"></script>
+<script src="vocab_data_cefr_a2.js"></script>
+<script src="vocab_data_cefr_b1.js"></script>
+<script>
+(function() {
+  // State
+  let currentLevel = null;
+  let currentMode = 'flashcard';
+  let cards = [];
+  let currentIndex = 0;
+  let knownCount = 0;
+  let isFlipped = false;
+  let quizScore = 0;
+  let quizTotal = 0;
+  let quizAnswered = false;
+
+  // DOM refs
+  const modeToggle = document.getElementById('modeToggle');
+  const progressBar = document.getElementById('progressBar');
+  const welcomeMsg = document.getElementById('welcomeMsg');
+  const flashcardArea = document.getElementById('flashcardArea');
+  const quizArea = document.getElementById('quizArea');
+  const completeScreen = document.getElementById('completeScreen');
+  const cardInner = document.getElementById('cardInner');
+  const flipBtn = document.getElementById('flipBtn');
+  const actionButtons = document.getElementById('actionButtons');
+  const btnFlashcard = document.getElementById('btnFlashcard');
+  const btnQuiz = document.getElementById('btnQuiz');
+
+  // Shuffle array (Fisher-Yates)
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // Select level
+  window.selectLevel = function(level) {
+    if (!WORD_DATA[level]) return;
+    currentLevel = level;
+    cards = shuffle(WORD_DATA[level].words);
+    currentIndex = 0;
+    knownCount = 0;
+    quizScore = 0;
+    quizTotal = 0;
+
+    // Update active button
+    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+    const cls = level === 'cefr_a1' ? 'a1' : level === 'cefr_a2' ? 'a2' : 'b1';
+    document.querySelector('.level-btn.' + cls).classList.add('active');
+
+    welcomeMsg.classList.add('hidden');
+    modeToggle.classList.remove('hidden');
+    progressBar.classList.remove('hidden');
+    completeScreen.classList.add('hidden');
+
+    showCurrentMode();
+  };
+
+  // Switch mode
+  window.switchMode = function(mode) {
+    currentMode = mode;
+    btnFlashcard.classList.toggle('active', mode === 'flashcard');
+    btnQuiz.classList.toggle('active', mode === 'quiz');
+    // Reset progress on mode switch
+    currentIndex = 0;
+    knownCount = 0;
+    quizScore = 0;
+    quizTotal = 0;
+    cards = shuffle(WORD_DATA[currentLevel].words);
+    showCurrentMode();
+  };
+
+  function showCurrentMode() {
+    completeScreen.classList.add('hidden');
+    if (currentMode === 'flashcard') {
+      flashcardArea.classList.remove('hidden');
+      quizArea.classList.add('hidden');
+      showFlashcard();
+    } else {
+      flashcardArea.classList.add('hidden');
+      quizArea.classList.remove('hidden');
+      showQuiz();
+    }
+  }
+
+  // --- FLASHCARD MODE ---
+  function showFlashcard() {
+    if (currentIndex >= cards.length) {
+      showComplete();
+      return;
+    }
+    const card = cards[currentIndex];
+    isFlipped = false;
+    cardInner.classList.remove('flipped');
+    flipBtn.classList.remove('hidden');
+    actionButtons.classList.add('hidden');
+
+    document.getElementById('frontDefinition').textContent = card.definition;
+    document.getElementById('backEmoji').textContent = card.emoji;
+    document.getElementById('backWord').textContent = card.word;
+    document.getElementById('backSentence').innerHTML = card.sentence;
+
+    updateProgress();
+  }
+
+  window.flipCard = function() {
+    if (isFlipped) return;
+    isFlipped = true;
+    cardInner.classList.add('flipped');
+    flipBtn.classList.add('hidden');
+    actionButtons.classList.remove('hidden');
+  };
+
+  window.markKnown = function() {
+    knownCount++;
+    currentIndex++;
+    showFlashcard();
+  };
+
+  window.markAgain = function() {
+    // Put current card at a random later position
+    const card = cards[currentIndex];
+    cards.splice(currentIndex, 1);
+    const insertAt = currentIndex + Math.floor(Math.random() * Math.min(5, cards.length - currentIndex)) + 1;
+    cards.splice(Math.min(insertAt, cards.length), 0, card);
+    showFlashcard();
+  };
+
+  // --- QUIZ MODE ---
+  function showQuiz() {
+    if (currentIndex >= cards.length) {
+      showComplete();
+      return;
+    }
+    quizAnswered = false;
+    const card = cards[currentIndex];
+    document.getElementById('quizDefinition').textContent = card.definition;
+    document.getElementById('quizCloze').textContent = card.cloze;
+    document.getElementById('quizFeedback').textContent = '';
+    document.getElementById('quizNextBtn').classList.add('hidden');
+
+    // Pick 4 options: 1 correct + 3 wrong
+    const wrongOptions = card.options.filter(o => o !== card.word);
+    const shuffledWrong = shuffle(wrongOptions).slice(0, 3);
+    const options = shuffle([card.word, ...shuffledWrong]);
+
+    const optionsEl = document.getElementById('quizOptions');
+    optionsEl.innerHTML = '';
+    options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-option';
+      btn.textContent = opt;
+      btn.onclick = function() { quizAnswer(opt, card.word, btn); };
+      optionsEl.appendChild(btn);
+    });
+
+    updateProgress();
+  }
+
+  function quizAnswer(selected, correct, btnEl) {
+    if (quizAnswered) return;
+    quizAnswered = true;
+    quizTotal++;
+
+    if (selected === correct) {
+      quizScore++;
+      btnEl.classList.add('correct');
+      document.getElementById('quizFeedback').textContent = '太棒了！ 🎉';
+      showConfetti();
+      setTimeout(() => {
+        currentIndex++;
+        showQuiz();
+      }, 1500);
+    } else {
+      btnEl.classList.add('wrong');
+      // Highlight correct
+      document.querySelectorAll('.quiz-option').forEach(b => {
+        if (b.textContent === correct) b.classList.add('highlight');
+      });
+      document.getElementById('quizFeedback').textContent = '正確答案：' + correct;
+      document.getElementById('quizNextBtn').classList.remove('hidden');
+    }
+  }
+
+  window.quizNext = function() {
+    currentIndex++;
+    showQuiz();
+  };
+
+  // --- PROGRESS ---
+  function updateProgress() {
+    const total = cards.length;
+    if (currentMode === 'flashcard') {
+      progressBar.textContent = '第 ' + (currentIndex + 1) + ' 張 / 共 ' + total + ' 張　（已學 ' + knownCount + '）';
+    } else {
+      progressBar.textContent = '第 ' + (currentIndex + 1) + ' 題 / 共 ' + total + ' 題　（' + quizScore + ' / ' + quizTotal + ' 正確）';
+    }
+  }
+
+  // --- COMPLETE ---
+  function showComplete() {
+    flashcardArea.classList.add('hidden');
+    quizArea.classList.add('hidden');
+    progressBar.classList.add('hidden');
+    completeScreen.classList.remove('hidden');
+
+    if (currentMode === 'flashcard') {
+      document.getElementById('completeMsg').textContent =
+        '你學完了所有 ' + knownCount + ' 張卡片！';
+    } else {
+      document.getElementById('completeMsg').textContent =
+        '測驗結果：' + quizScore + ' / ' + quizTotal + ' 正確';
+    }
+  }
+
+  window.restartLevel = function() {
+    if (currentLevel) selectLevel(currentLevel);
+  };
+
+  window.resetAll = function() {
+    currentLevel = null;
+    modeToggle.classList.add('hidden');
+    progressBar.classList.add('hidden');
+    flashcardArea.classList.add('hidden');
+    quizArea.classList.add('hidden');
+    completeScreen.classList.add('hidden');
+    welcomeMsg.classList.remove('hidden');
+    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+  };
+
+  // --- CONFETTI ---
+  function showConfetti() {
+    const container = document.getElementById('confettiContainer');
+    const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd'];
+    for (let i = 0; i < 30; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.left = Math.random() * 100 + '%';
+      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.animationDelay = Math.random() * 0.5 + 's';
+      piece.style.width = (Math.random() * 8 + 6) + 'px';
+      piece.style.height = (Math.random() * 8 + 6) + 'px';
+      container.appendChild(piece);
+    }
+    setTimeout(() => { container.innerHTML = ''; }, 2000);
+  }
+})();
+</script>
+</body>
+</html>

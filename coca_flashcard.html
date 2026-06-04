@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>COCA Vocabulary Flashcards</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Nunito', -apple-system, sans-serif;
+  background: linear-gradient(180deg, #e8f4fd 0%, #f0f9ff 50%, #fef9e7 100%);
+  color: #2d3436;
+  padding: 24px;
+  max-width: 560px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.back-link {
+  display: inline-block;
+  padding: 8px 16px;
+  background: #e8f0fe;
+  border-radius: 10px;
+  color: #0984e3;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  transition: background 0.2s;
+}
+.back-link:hover { background: #dfe6fd; }
+
+header { text-align: center; margin-bottom: 24px; }
+header h1 { font-size: 28px; font-weight: 800; color: #2d3436; }
+header p { color: #636e72; font-size: 14px; margin-top: 6px; }
+
+.level-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.level-btn {
+  padding: 10px 16px;
+  border: 2px solid #e8f0fe;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  background: #ffffff;
+  color: #2d3436;
+  transition: all 0.2s;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.level-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.level-btn.active { color: #fff; border-color: transparent; }
+
+.mode-toggle {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.mode-btn {
+  padding: 10px 24px;
+  border: 2px solid #e8f0fe;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  background: #ffffff;
+  color: #636e72;
+  transition: all 0.2s;
+  min-height: 48px;
+}
+.mode-btn:hover { border-color: #74b9ff; }
+.mode-btn.active { background: #0984e3; color: #fff; border-color: #0984e3; }
+
+.score-bar {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #636e72;
+}
+.score-bar span { display: flex; align-items: center; gap: 4px; }
+.score-known { color: #00b894; }
+.score-again { color: #fd79a8; }
+
+.word-counter {
+  text-align: center;
+  font-size: 13px;
+  color: #636e72;
+  margin-bottom: 8px;
+}
+
+/* Flashcard */
+.flashcard-container {
+  perspective: 1000px;
+  margin: 16px 0;
+  min-height: 280px;
+}
+.flashcard {
+  width: 100%;
+  height: 280px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+.flashcard.flipped { transform: rotateY(180deg); }
+.flashcard-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  background: #ffffff;
+  overflow-y: auto;
+}
+.flashcard-back { transform: rotateY(180deg); }
+
+.flashcard-front-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #b2bec3;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.flashcard-definition {
+  font-size: 1.15rem;
+  color: #2d3436;
+  text-align: center;
+  line-height: 1.7;
+  font-style: italic;
+}
+.flashcard-chinese-hint {
+  font-size: 0.95rem;
+  color: #636e72;
+  margin-top: 10px;
+}
+.flashcard-emoji {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+.tap-hint {
+  font-size: 12px;
+  color: #b2bec3;
+  margin-top: 14px;
+}
+
+.flashcard-word {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0984e3;
+  margin-bottom: 8px;
+}
+.flashcard-sentence {
+  font-size: 0.95rem;
+  color: #636e72;
+  text-align: center;
+  line-height: 1.7;
+}
+.flashcard-sentence strong { color: #0984e3; font-weight: 700; }
+.flashcard-tip {
+  font-size: 0.8rem;
+  color: #fdcb6e;
+  background: rgba(253, 203, 110, 0.12);
+  padding: 6px 12px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+/* Flashcard buttons */
+.flashcard-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 16px;
+}
+.action-btn {
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.95rem;
+  min-height: 48px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.action-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.action-btn:active { transform: translateY(0); }
+.btn-know { background: #d4f8d4; color: #00b894; }
+.btn-again { background: #ffe8f0; color: #fd79a8; }
+
+/* Quiz */
+.quiz-container {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  margin: 16px 0;
+}
+.quiz-prompt {
+  font-size: 1.1rem;
+  text-align: center;
+  line-height: 1.7;
+  color: #2d3436;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+.quiz-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.quiz-option {
+  padding: 14px 10px;
+  border: 2px solid #e8f0fe;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  background: #ffffff;
+  color: #2d3436;
+  text-align: center;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.quiz-option:hover { border-color: #74b9ff; transform: translateY(-2px); }
+.quiz-option.correct { background: #d4f8d4; border-color: #00b894; color: #00b894; }
+.quiz-option.wrong { background: #ffe8f0; border-color: #fd79a8; color: #fd79a8; }
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #636e72;
+}
+.empty-state-emoji { font-size: 3rem; margin-bottom: 12px; }
+
+@media (max-width: 480px) {
+  body { padding: 16px; }
+  header h1 { font-size: 22px; }
+  .level-btn { padding: 8px 10px; font-size: 11px; min-height: 40px; }
+  .flashcard { height: 260px; }
+  .flashcard-word { font-size: 1.6rem; }
+  .quiz-options { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-link">&larr; 首頁</a>
+
+<header>
+  <h1>COCA Vocabulary Flashcards</h1>
+  <p>學術頻率分級 10 級 - 看定義猜單字</p>
+</header>
+
+<div class="level-selector" id="levelSelector"></div>
+
+<div class="mode-toggle">
+  <button class="mode-btn active" data-mode="flashcard" onclick="switchMode('flashcard')">閃卡模式</button>
+  <button class="mode-btn" data-mode="quiz" onclick="switchMode('quiz')">測驗模式</button>
+</div>
+
+<div class="score-bar">
+  <span class="score-known">&#10003; 知道: <b id="knownCount">0</b></span>
+  <span class="score-again">&#10007; 再看: <b id="againCount">0</b></span>
+</div>
+
+<div id="learningArea"></div>
+
+<script>var WORD_DATA = {};</script>
+<script src="vocab_data_coca_L1.js"></script>
+<script src="vocab_data_coca_L2.js"></script>
+<script src="vocab_data_coca_L3.js"></script>
+<script src="vocab_data_coca_L4.js"></script>
+<script src="vocab_data_coca_L5.js"></script>
+<script src="vocab_data_coca_L6.js"></script>
+<script src="vocab_data_coca_L7.js"></script>
+<script src="vocab_data_coca_L8.js"></script>
+<script src="vocab_data_coca_L9.js"></script>
+<script src="vocab_data_coca_L10.js"></script>
+<script>
+// ==================== STATE ====================
+const LEVELS = [
+  { key: 'coca_l1', label: 'L1', color: '#22c55e' },
+  { key: 'coca_l2', label: 'L2', color: '#4ade80' },
+  { key: 'coca_l3', label: 'L3', color: '#86efac' },
+  { key: 'coca_l4', label: 'L4', color: '#facc15' },
+  { key: 'coca_l5', label: 'L5', color: '#fbbf24' },
+  { key: 'coca_l6', label: 'L6', color: '#f97316' },
+  { key: 'coca_l7', label: 'L7', color: '#fb923c' },
+  { key: 'coca_l8', label: 'L8', color: '#f87171' },
+  { key: 'coca_l9', label: 'L9', color: '#ef4444' },
+  { key: 'coca_l10', label: 'L10', color: '#dc2626' }
+];
+
+let currentLevel = LEVELS[0].key;
+let currentMode = 'flashcard';
+let currentIndex = 0;
+let isFlipped = false;
+let knownCount = 0;
+let againCount = 0;
+let studyQueue = [];
+
+// ==================== INIT ====================
+function init() {
+  renderLevelSelector();
+  resetQueue();
+  render();
+}
+
+function renderLevelSelector() {
+  const container = document.getElementById('levelSelector');
+  container.innerHTML = LEVELS.map(lv => {
+    const active = lv.key === currentLevel ? 'active' : '';
+    const bgStyle = lv.key === currentLevel ? `background:${lv.color};` : '';
+    return `<button class="level-btn ${active}" style="${bgStyle}" data-key="${lv.key}" onclick="selectLevel('${lv.key}')">${lv.label}</button>`;
+  }).join('');
+}
+
+function selectLevel(key) {
+  currentLevel = key;
+  currentIndex = 0;
+  isFlipped = false;
+  knownCount = 0;
+  againCount = 0;
+  updateScore();
+  resetQueue();
+  renderLevelSelector();
+  render();
+}
+
+function switchMode(mode) {
+  currentMode = mode;
+  currentIndex = 0;
+  isFlipped = false;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.mode-btn[data-mode="${mode}"]`).classList.add('active');
+  render();
+}
+
+function resetQueue() {
+  const data = WORD_DATA[currentLevel];
+  if (!data) { studyQueue = []; return; }
+  studyQueue = [...data.words].sort(() => Math.random() - 0.5);
+}
+
+function getWord() {
+  if (studyQueue.length === 0) return null;
+  return studyQueue[currentIndex % studyQueue.length];
+}
+
+function nextWord() {
+  currentIndex++;
+  if (currentIndex >= studyQueue.length) {
+    currentIndex = 0;
+    resetQueue();
+  }
+  isFlipped = false;
+  render();
+}
+
+function updateScore() {
+  document.getElementById('knownCount').textContent = knownCount;
+  document.getElementById('againCount').textContent = againCount;
+}
+
+// ==================== RENDER ====================
+function render() {
+  if (currentMode === 'flashcard') renderFlashcard();
+  else renderQuiz();
+}
+
+function getDefinitionText(word) {
+  // Prefer English definition, fall back to Chinese, then sentence
+  if (word.definition) return word.definition;
+  if (word.chinese) return word.chinese;
+  return word.sentence ? word.sentence.replace(/<[^>]*>/g, '') : word.word;
+}
+
+function renderFlashcard() {
+  const area = document.getElementById('learningArea');
+  const word = getWord();
+  if (!word) {
+    area.innerHTML = '<div class="empty-state"><div class="empty-state-emoji">📭</div><p>No words loaded for this level.</p></div>';
+    return;
+  }
+
+  const defText = getDefinitionText(word);
+  const total = studyQueue.length;
+
+  area.innerHTML = `
+    <div class="word-counter">${currentIndex + 1} / ${total}</div>
+    <div class="flashcard-container">
+      <div class="flashcard ${isFlipped ? 'flipped' : ''}" onclick="flipCard()">
+        <div class="flashcard-face">
+          <div class="flashcard-front-label">Definition</div>
+          <div class="flashcard-emoji">${word.emoji || '📖'}</div>
+          <div class="flashcard-definition">${defText}</div>
+          <div class="tap-hint">tap to flip</div>
+        </div>
+        <div class="flashcard-face flashcard-back">
+          <div class="flashcard-word">${word.word}</div>
+          <div class="flashcard-sentence">${word.sentence || ''}</div>
+          ${word.tip ? `<div class="flashcard-tip">${word.tip}</div>` : ''}
+        </div>
+      </div>
+    </div>
+    <div class="flashcard-actions">
+      <button class="action-btn btn-know" onclick="markKnown()">&#10003; 知道</button>
+      <button class="action-btn btn-again" onclick="markAgain()">&#10007; 再看一次</button>
+    </div>
+  `;
+}
+
+function flipCard() {
+  isFlipped = !isFlipped;
+  const card = document.querySelector('.flashcard');
+  if (card) card.classList.toggle('flipped');
+}
+
+function markKnown() {
+  knownCount++;
+  updateScore();
+  nextWord();
+}
+
+function markAgain() {
+  againCount++;
+  updateScore();
+  // Put word back near end of queue
+  const word = getWord();
+  if (word && studyQueue.length > 3) {
+    const insertAt = Math.min(currentIndex + 3 + Math.floor(Math.random() * 5), studyQueue.length);
+    studyQueue.splice(insertAt, 0, word);
+  }
+  nextWord();
+}
+
+function renderQuiz() {
+  const area = document.getElementById('learningArea');
+  const word = getWord();
+  if (!word) {
+    area.innerHTML = '<div class="empty-state"><div class="empty-state-emoji">📭</div><p>No words loaded for this level.</p></div>';
+    return;
+  }
+
+  const data = WORD_DATA[currentLevel];
+  const total = studyQueue.length;
+  const defText = getDefinitionText(word);
+
+  // Build 4 options from the word's options array or from random words
+  let choices = [];
+  if (word.options && word.options.length >= 4) {
+    choices = word.options.filter(o => o !== word.word);
+    choices = choices.sort(() => Math.random() - 0.5).slice(0, 3);
+    choices.push(word.word);
+  } else {
+    choices = [word.word];
+    const allWords = data.words;
+    let attempts = 0;
+    while (choices.length < 4 && attempts < 50) {
+      const rand = allWords[Math.floor(Math.random() * allWords.length)];
+      if (!choices.includes(rand.word)) choices.push(rand.word);
+      attempts++;
+    }
+  }
+  choices = choices.sort(() => Math.random() - 0.5);
+
+  area.innerHTML = `
+    <div class="word-counter">${currentIndex + 1} / ${total}</div>
+    <div class="quiz-container">
+      <div class="quiz-prompt">${defText}</div>
+      <div class="quiz-options">
+        ${choices.map(opt => `<div class="quiz-option" onclick="checkAnswer(this, '${opt.replace(/'/g, "\\'")}', '${word.word.replace(/'/g, "\\'")}')">${opt}</div>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function checkAnswer(el, selected, correct) {
+  const options = document.querySelectorAll('.quiz-option');
+  options.forEach(opt => {
+    opt.style.pointerEvents = 'none';
+    if (opt.textContent === correct) opt.classList.add('correct');
+  });
+
+  if (selected === correct) {
+    el.classList.add('correct');
+    knownCount++;
+  } else {
+    el.classList.add('wrong');
+    againCount++;
+  }
+  updateScore();
+  setTimeout(nextWord, 1000);
+}
+
+// ==================== START ====================
+init();
+</script>
+</body>
+</html>
