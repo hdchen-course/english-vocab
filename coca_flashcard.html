@@ -393,10 +393,13 @@ function render() {
 }
 
 function getDefinitionText(word) {
-  // Prefer English definition, fall back to Chinese, then sentence
+  // Prefer English definition first
   if (word.definition) return word.definition;
-  if (word.chinese) return word.chinese;
-  return word.sentence ? word.sentence.replace(/<[^>]*>/g, '') : word.word;
+  // For COCA data: use cloze sentence (blanked) as the "clue"
+  if (word.cloze) return word.cloze;
+  // Fallback: show sentence with word hidden
+  if (word.sentence) return word.sentence.replace(/<strong>.*?<\/strong>/g, '______');
+  return word.tip || '(no clue available)';
 }
 
 function renderFlashcard() {

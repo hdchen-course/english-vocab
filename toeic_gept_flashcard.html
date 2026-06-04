@@ -372,9 +372,12 @@ function render() {
 }
 
 function getDefinitionText(word) {
+  // Prefer English definition
   if (word.definition) return word.definition;
-  if (word.chinese) return word.chinese;
-  return word.sentence ? word.sentence.replace(/<[^>]*>/g, '') : word.word;
+  // For data without English definition: use cloze or blanked sentence as clue
+  if (word.cloze) return word.cloze;
+  if (word.sentence) return word.sentence.replace(/<strong>.*?<\/strong>/g, '______');
+  return word.tip || '(no clue available)';
 }
 
 function renderFlashcard() {
