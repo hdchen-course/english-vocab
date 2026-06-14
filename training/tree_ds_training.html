@@ -34,6 +34,7 @@ pre{background:#1e1e2e;border-radius:8px;padding:16px 20px;overflow-x:auto;margi
   <button class="nav-btn" onclick="showSection('trie')">Trie</button>
   <button class="nav-btn" onclick="showSection('segment')">Segment Tree</button>
   <button class="nav-btn" onclick="showSection('bit')">BIT (Fenwick)</button>
+  <button class="nav-btn" onclick="showSection('skiplist')">Skip List</button>
   <button class="nav-btn" onclick="showSection('advanced')">Advanced Trees</button>
 </div>
 
@@ -888,6 +889,148 @@ ListNode dummy = <span class="kw">new</span> ListNode(<span class="num">0</span>
   <li><span class="title"><a href="https://leetcode.com/problems/booking-concert-tickets-in-groups/" target="_blank">2286. Booking Concert Tickets in Groups</a></span><span class="tag tag-hard">Hard</span></li>
   <li><span class="title"><a href="https://leetcode.com/problems/rectangle-area-ii/" target="_blank">850. Rectangle Area II (segment tree + sweep)</a></span><span class="tag tag-hard">Hard</span></li>
 </ul>
+</div>
+</div>
+
+<!-- ===== Skip List ===== -->
+<div class="section" id="skiplist">
+<div class="card">
+<h2>Skip List</h2>
+<p>A probabilistic data structure that provides O(log n) search, insert, and delete — like a balanced BST but much simpler to implement. <strong>Used by Redis</strong> for its Sorted Set (ZSET) implementation.</p>
+
+<h3>Why Skip List Over BST?</h3>
+<table>
+<tr><th>Aspect</th><th>Skip List</th><th>Balanced BST (AVL/Red-Black)</th></tr>
+<tr><td>Implementation complexity</td><td>Simple (pointer manipulation)</td><td>Complex (rotations, color/height tracking)</td></tr>
+<tr><td>Expected time</td><td>O(log n) all ops</td><td>O(log n) all ops</td></tr>
+<tr><td>Range queries</td><td>Natural (linked list at bottom)</td><td>In-order traversal</td></tr>
+<tr><td>Concurrency</td><td>Easy to make lock-free</td><td>Hard (rotation conflicts)</td></tr>
+<tr><td>Space</td><td>O(n) expected (2n pointers avg)</td><td>O(n) (3 pointers per node)</td></tr>
+<tr><td>Cache behavior</td><td>Good (sequential at bottom level)</td><td>Poor (pointer chasing)</td></tr>
+</table>
+
+<div class="insight">
+<p><strong>Why Redis chose Skip List:</strong> (1) Simple to implement correctly. (2) Easy to support ZRANGEBYSCORE (range queries by traversing forward pointers). (3) Lock-free concurrent variant (ConcurrentSkipListMap in Java). (4) Comparable performance to balanced BST in practice.</p>
+</div>
+
+<h3>Structure</h3>
+<p>Multiple sorted linked lists layered on top of each other. Bottom layer = all elements. Each higher layer is a "fast lane" containing a random subset (~50%) of the layer below.</p>
+<pre><span class="cm">// Conceptual picture (MAX_LEVEL = 4):
+// Level 3:  HEAD ─────────────────────── 50 ──────── NIL
+// Level 2:  HEAD ──── 10 ─────────────── 50 ──── 70  NIL
+// Level 1:  HEAD ──── 10 ──── 30 ─────── 50 ──── 70  NIL
+// Level 0:  HEAD ─ 5 ─ 10 ─ 20 ─ 30 ─ 40 ─ 50 ─ 70 ─ 90  NIL</span></pre>
+
+<h3>Java Implementation (LC 1206)</h3>
+<pre><span class="kw">class</span> <span class="type">Skiplist</span> {
+    <span class="kw">private static final</span> <span class="type">int</span> MAX_LEVEL = <span class="num">16</span>;
+    <span class="kw">private static final</span> <span class="type">double</span> P = <span class="num">0.5</span>;
+    <span class="kw">private</span> <span class="type">Node</span> head = <span class="kw">new</span> Node(-<span class="num">1</span>, MAX_LEVEL);
+    <span class="kw">private</span> <span class="type">int</span> level = <span class="num">0</span>;
+    <span class="kw">private</span> Random rand = <span class="kw">new</span> Random();
+
+    <span class="kw">private int</span> <span class="fn">randomLevel</span>() {
+        <span class="type">int</span> lvl = <span class="num">0</span>;
+        <span class="kw">while</span> (lvl &lt; MAX_LEVEL - <span class="num">1</span> &amp;&amp; rand.nextDouble() &lt; P) lvl++;
+        <span class="kw">return</span> lvl;
+    }
+
+    <span class="kw">public boolean</span> <span class="fn">search</span>(<span class="type">int</span> target) {
+        Node curr = head;
+        <span class="kw">for</span> (<span class="type">int</span> i = level; i &gt;= <span class="num">0</span>; i--)
+            <span class="kw">while</span> (curr.next[i] != <span class="kw">null</span> &amp;&amp; curr.next[i].val &lt; target)
+                curr = curr.next[i];
+        curr = curr.next[<span class="num">0</span>];
+        <span class="kw">return</span> curr != <span class="kw">null</span> &amp;&amp; curr.val == target;
+    }
+
+    <span class="kw">public void</span> <span class="fn">add</span>(<span class="type">int</span> num) {
+        Node[] update = <span class="kw">new</span> Node[MAX_LEVEL];
+        Node curr = head;
+        <span class="kw">for</span> (<span class="type">int</span> i = level; i &gt;= <span class="num">0</span>; i--) {
+            <span class="kw">while</span> (curr.next[i] != <span class="kw">null</span> &amp;&amp; curr.next[i].val &lt; num)
+                curr = curr.next[i];
+            update[i] = curr;
+        }
+        <span class="type">int</span> newLevel = randomLevel();
+        <span class="kw">if</span> (newLevel &gt; level) {
+            <span class="kw">for</span> (<span class="type">int</span> i = level + <span class="num">1</span>; i &lt;= newLevel; i++) update[i] = head;
+            level = newLevel;
+        }
+        Node newNode = <span class="kw">new</span> Node(num, newLevel + <span class="num">1</span>);
+        <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt;= newLevel; i++) {
+            newNode.next[i] = update[i].next[i];
+            update[i].next[i] = newNode;
+        }
+    }
+
+    <span class="kw">public boolean</span> <span class="fn">erase</span>(<span class="type">int</span> num) {
+        Node[] update = <span class="kw">new</span> Node[MAX_LEVEL];
+        Node curr = head;
+        <span class="kw">for</span> (<span class="type">int</span> i = level; i &gt;= <span class="num">0</span>; i--) {
+            <span class="kw">while</span> (curr.next[i] != <span class="kw">null</span> &amp;&amp; curr.next[i].val &lt; num)
+                curr = curr.next[i];
+            update[i] = curr;
+        }
+        curr = curr.next[<span class="num">0</span>];
+        <span class="kw">if</span> (curr == <span class="kw">null</span> || curr.val != num) <span class="kw">return false</span>;
+        <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt;= level; i++) {
+            <span class="kw">if</span> (update[i].next[i] != curr) <span class="kw">break</span>;
+            update[i].next[i] = curr.next[i];
+        }
+        <span class="kw">while</span> (level &gt; <span class="num">0</span> &amp;&amp; head.next[level] == <span class="kw">null</span>) level--;
+        <span class="kw">return true</span>;
+    }
+
+    <span class="kw">private class</span> <span class="type">Node</span> {
+        <span class="type">int</span> val;
+        Node[] next;
+        Node(<span class="type">int</span> val, <span class="type">int</span> levels) { <span class="kw">this</span>.val = val; next = <span class="kw">new</span> Node[levels]; }
+    }
+}</pre>
+
+<h3>Key Operations Explained</h3>
+<h4>Search: "Highway exit" pattern</h4>
+<p>Start at top level. Move right while next value &lt; target. Drop down one level. Repeat. Like taking highways then local roads.</p>
+
+<h4>Insert: Random promotion</h4>
+<p>After finding the position (same search logic), flip coins to determine the new node's level. Each level has 50% chance (P=0.5). On average, a node appears in 2 levels.</p>
+
+<h4>Delete: Update all level pointers</h4>
+<p>Track the "update" array (last node at each level before the target), then unlink the target at every level it appears.</p>
+
+<h3>Redis ZSET Use Case</h3>
+<pre><span class="cm">// Redis Sorted Set operations mapped to skip list:
+// ZADD key score member   → skiplist.add(score, member)
+// ZREM key member         → skiplist.erase(member)
+// ZRANK key member        → count nodes before member (traverse + count)
+// ZRANGEBYSCORE min max   → find min, traverse forward until > max
+// ZREVRANGE               → backward pointers (doubly-linked at bottom level)</span></pre>
+
+<div class="warning">
+<p><strong>Redis optimization:</strong> Redis's skip list is doubly-linked at level 0 (backward pointer) for reverse traversal, and stores a <code>span</code> field at each forward pointer to enable O(log n) rank queries without counting.</p>
+</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/design-skiplist/" target="_blank">1206. Design Skiplist</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Design</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/design-a-food-rating-system/" target="_blank">2353. Design a Food Rating System (can use ConcurrentSkipListMap)</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+
+<h3>Interview Tips</h3>
+<div class="tip">
+<p><strong>When to mention skip list:</strong> (1) System design: "Redis uses skip list for sorted sets because it supports range queries efficiently and is simpler to implement than red-black trees." (2) If asked "implement a sorted data structure" — skip list is often easier to code correctly in 20 minutes than AVL/red-black tree.</p>
+</div>
+
+<h3>Complexity Summary</h3>
+<table>
+<tr><th>Operation</th><th>Average</th><th>Worst Case</th></tr>
+<tr><td>Search</td><td>O(log n)</td><td>O(n) — extremely unlikely</td></tr>
+<tr><td>Insert</td><td>O(log n)</td><td>O(n)</td></tr>
+<tr><td>Delete</td><td>O(log n)</td><td>O(n)</td></tr>
+<tr><td>Range query (k results)</td><td>O(log n + k)</td><td>O(n + k)</td></tr>
+<tr><td>Space</td><td>O(n)</td><td>O(n log n) — unlikely</td></tr>
+</table>
 </div>
 </div>
 
