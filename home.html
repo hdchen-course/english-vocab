@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interview Prep Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #0f172a;
+  min-height: 100vh;
+  color: #f8fafc;
+}
+
+.hero {
+  text-align: center;
+  padding: 80px 24px 40px;
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+}
+
+.hero h1 {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero p {
+  font-size: 16px;
+  color: #94a3b8;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 16px;
+  padding: 32px 28px;
+  text-decoration: none;
+  color: inherit;
+  transition: all .2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  border-radius: 16px 16px 0 0;
+}
+
+.card:hover {
+  border-color: #475569;
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.card-icon {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.card h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #f1f5f9;
+}
+
+.card p {
+  font-size: 14px;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.card-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.06);
+  color: #94a3b8;
+  border: 1px solid #334155;
+}
+
+/* Color accents per card */
+.card-sd::before { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+.card-sd .card-icon { background: #1e40af20; color: #60a5fa; }
+.card-sd:hover { border-color: #3b82f6; }
+
+.card-cr::before { background: linear-gradient(90deg, #8b5cf6, #7c3aed); }
+.card-cr .card-icon { background: #5b21b620; color: #a78bfa; }
+.card-cr:hover { border-color: #8b5cf6; }
+
+.card-lc::before { background: linear-gradient(90deg, #f59e0b, #d97706); }
+.card-lc .card-icon { background: #92400e20; color: #fbbf24; }
+.card-lc:hover { border-color: #f59e0b; }
+
+.card-ml::before { background: linear-gradient(90deg, #10b981, #059669); }
+.card-ml .card-icon { background: #06543420; color: #34d399; }
+.card-ml:hover { border-color: #10b981; }
+
+.card-ai::before { background: linear-gradient(90deg, #ec4899, #db2777); }
+.card-ai .card-icon { background: #9d174d20; color: #f472b6; }
+.card-ai:hover { border-color: #ec4899; }
+
+.card-hd::before { background: linear-gradient(90deg, #6b7280, #374151); }
+.card-hd .card-icon { background: #37415120; color: #9ca3af; }
+.card-hd:hover { border-color: #6b7280; }
+
+.card-dp::before { background: linear-gradient(90deg, #f97316, #ea580c); }
+.card-dp .card-icon { background: #9a341220; color: #fb923c; }
+.card-dp:hover { border-color: #f97316; }
+
+.card-math::before { background: linear-gradient(90deg, #14b8a6, #0d9488); }
+.card-math .card-icon { background: #115e5920; color: #5eead4; }
+.card-math:hover { border-color: #14b8a6; }
+
+.card-graph::before { background: linear-gradient(90deg, #6366f1, #4f46e5); }
+.card-graph .card-icon { background: #3730a320; color: #a5b4fc; }
+.card-graph:hover { border-color: #6366f1; }
+
+.card-arr::before { background: linear-gradient(90deg, #22d3ee, #06b6d4); }
+.card-arr .card-icon { background: #15505820; color: #67e8f9; }
+.card-arr:hover { border-color: #22d3ee; }
+
+.card-sort::before { background: linear-gradient(90deg, #a855f7, #9333ea); }
+.card-sort .card-icon { background: #581c8720; color: #c084fc; }
+.card-sort:hover { border-color: #a855f7; }
+
+.card-tree::before { background: linear-gradient(90deg, #84cc16, #65a30d); }
+.card-tree .card-icon { background: #3f621220; color: #bef264; }
+.card-tree:hover { border-color: #84cc16; }
+
+.footer {
+  text-align: center;
+  padding: 24px;
+  color: #475569;
+  font-size: 12px;
+  border-top: 1px solid #1e293b;
+}
+
+@media (max-width: 700px) {
+  .hero h1 { font-size: 32px; }
+  .grid { grid-template-columns: 1fr; padding: 24px 16px 60px; }
+  .hero { padding: 48px 16px 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>Interview Prep Hub</h1>
+  <p>System Design, Algorithms, Code Review, ML, and GenAI — all in one place.</p>
+</div>
+
+<div class="grid">
+
+  <a href="https://sites.google.com/view/hdleetcode/system_design_tips" target="_top" onclick="try{window.top.location.href=this.href}catch(e){window.open(this.href,'_blank')};return false;" class="card card-sd">
+    <div class="card-icon">&#9881;</div>
+    <h2>System Design</h2>
+    <p>Framework, key concepts, common patterns, database deep dive, caching, load balancing, message queues, and real-world case studies.</p>
+    <div class="card-tags">
+      <span class="tag">20 Sections</span>
+      <span class="tag">SVG Diagrams</span>
+      <span class="tag">Interview Phrasings</span>
+    </div>
+  </a>
+
+  <a href="https://sites.google.com/view/hdleetcode/code_review_training" target="_top" onclick="try{window.top.location.href=this.href}catch(e){window.open(this.href,'_blank')};return false;" class="card card-cr">
+    <div class="card-icon">&#128269;</div>
+    <h2>Code Review Training</h2>
+    <p>Interactive challenges to find bugs, performance issues, security vulnerabilities, and AI-generated code smells. Includes structured review checklist.</p>
+    <div class="card-tags">
+      <span class="tag">14 Challenges</span>
+      <span class="tag">Scoring System</span>
+      <span class="tag">Bad/Good Tables</span>
+    </div>
+  </a>
+
+  <a href="https://sites.google.com/view/hdleetcode/leetcode_practice_plan" target="_top" onclick="try{window.top.location.href=this.href}catch(e){window.open(this.href,'_blank')};return false;" class="card card-lc">
+    <div class="card-icon">&#128187;</div>
+    <h2>LeetCode Practice Plan</h2>
+    <p>Pattern-based study plan with 150+ problems across 15 topics. Key insights, traps, string algorithms, and think process training.</p>
+    <div class="card-tags">
+      <span class="tag">15 Topics</span>
+      <span class="tag">Think Process</span>
+      <span class="tag">4-Week Plan</span>
+    </div>
+  </a>
+
+  <a href="https://sites.google.com/view/hdleetcode/ml_system_design_learning" target="_top" onclick="try{window.top.location.href=this.href}catch(e){window.open(this.href,'_blank')};return false;" class="card card-ml">
+    <div class="card-icon">&#129302;</div>
+    <h2>ML System Design</h2>
+    <p>End-to-end ML system design for interviews — feature engineering, model training, serving, monitoring, and MLOps patterns.</p>
+    <div class="card-tags">
+      <span class="tag">ML Pipeline</span>
+      <span class="tag">Feature Store</span>
+      <span class="tag">A/B Testing</span>
+    </div>
+  </a>
+
+  <a href="https://sites.google.com/view/hdleetcode/genai_learning" target="_top" onclick="try{window.top.location.href=this.href}catch(e){window.open(this.href,'_blank')};return false;" class="card card-ai">
+    <div class="card-icon">&#10024;</div>
+    <h2>Generative AI</h2>
+    <p>LLMs, RAG, fine-tuning, prompt engineering, and GenAI application architecture for modern AI interviews.</p>
+    <div class="card-tags">
+      <span class="tag">LLM Architecture</span>
+      <span class="tag">RAG Patterns</span>
+      <span class="tag">Prompt Engineering</span>
+    </div>
+  </a>
+
+  <a href="https://hdchen-course.github.io/english-vocab/cses_hints.html" target="_blank" class="card card-lc">
+    <div class="card-icon">&#127942;</div>
+    <h2>CSES Problem Set Hints</h2>
+    <p>All 400 CSES problems — thinking, approach steps, Java code templates. 18 sections from Introductory to Advanced Techniques.</p>
+    <div class="card-tags">
+      <span class="tag">400 Problems</span>
+      <span class="tag">Java</span>
+      <span class="tag">Verified</span>
+    </div>
+  </a>
+
+  <a href="https://hdchen-course.github.io/english-vocab/training/dp_training.html" target="_blank" class="card card-dp">
+    <div class="card-icon">&#127922;</div>
+    <h2>Dynamic Programming</h2>
+    <p>Complete DP training — recognition, 1D/2D/3D, knapsack, string, interval, tree, graph, digit, bitmask, sorting+DP, BIT+DP, monotone optimization.</p>
+    <div class="card-tags">
+      <span class="tag">14 Categories</span>
+      <span class="tag">Java Templates</span>
+      <span class="tag">100+ Problems</span>
+    </div>
+  </a>
+
+  <a href="https://hdchen-course.github.io/english-vocab/training/array_string_training.html" target="_blank" class="card card-arr">
+    <div class="card-icon">&#128290;</div>
+    <h2>Array &amp; String</h2>
+    <p>Two pointers, sliding window, prefix sum, HashMap, binary search, monotone stack, intervals, KMP, Z-algorithm, Manacher, Trie.</p>
+    <div class="card-tags">
+      <span class="tag">13 Techniques</span>
+      <span class="tag">In-Place Tricks</span>
+      <span class="tag">String Algos</span>
+    </div>
+  </a>
+
+  <a href="https://hdchen-course.github.io/english-vocab/training/graph_topo_training.html" target="_blank" class="card card-graph">
+    <div class="card-icon">&#128376;</div>
+    <h2>Graph &amp; Topological Sort</h2>
+    <p>BFS/DFS, topological sort (Kahn's + DFS), shortest path (Dijkstra/Bellman-Ford/Floyd), Union-Find, MST, cycle detection, SCC, bridges.</p>
+    <div class="card-tags">
+      <span class="tag">10 Sections</span>
+      <span class="tag">Premium Problems</span>
+      <span class="tag">Kahn's + DFS</span>
+    </div>
+  </a>
+
+  <a href="https://hdchen-course.github.io/english-vocab/training/math_training.html" target="_blank" class="card card-math">
+    <div class="card-icon">&#128200;</div>
+    <h2>Math for Interviews</h2>
+    <p>Primes &amp; sieve, modular arithmetic, combinatorics, GCD/LCM, fast power, geometry, bit manipulation, probability, matrix exponentiation.</p>
+    <div class="card-tags">
+      <span class="tag">11 Topics</span>
+      <span class="tag">Number Theory</span>
+      <span class="tag">Combinatorics</span>
+    </div>
+  </a>
+
+  <a href="https://hdchen-course.github.io/english-vocab/training/sorting_training.html" target="_blank" class="card card-sort">
+    <div class="card-icon">&#128203;</div>
+    <h2>Sorting-Based Solving</h2>
+    <p>Sort as preprocessing, custom comparators, counting/bucket/radix sort, merge sort applications, QuickSelect, sweep line, sort + greedy.</p>
+    <div class="card-tags">
+      <span class="tag">9 Patterns</span>
+      <span class="tag">Merge Sort Tricks</span>
+      <span class="tag">Sweep Line</span>
+    </div>
+  </a>
+
+  <a href="https://hdchen-course.github.io/english-vocab/training/tree_ds_training.html" target="_blank" class="card card-tree">
+    <div class="card-icon">&#127794;</div>
+    <h2>Tree Data Structures</h2>
+    <p>BST, TreeMap/TreeSet, Heap/PQ, Trie, Segment Tree, Binary Indexed Tree (Fenwick), interval tree, persistent segment tree.</p>
+    <div class="card-tags">
+      <span class="tag">7 Structures</span>
+      <span class="tag">BIT vs SegTree</span>
+      <span class="tag">Lazy Propagation</span>
+    </div>
+  </a>
+
+  <a href="https://hdchen-course.github.io/english-vocab/training/binary_tree_training.html" target="_blank" class="card card-tree">
+    <div class="card-icon">&#127795;</div>
+    <h2>Binary Tree</h2>
+    <p>Traversals (recursive + iterative + Morris), construction, path problems, LCA, views &amp; boundaries, BST operations. Both versions for Google interviews.</p>
+    <div class="card-tags">
+      <span class="tag">9 Sections</span>
+      <span class="tag">Recursive &harr; Iterative</span>
+      <span class="tag">Morris O(1)</span>
+    </div>
+  </a>
+
+  <a href="https://hdchen-course.github.io/english-vocab/training/greedy_training.html" target="_blank" class="card card-math">
+    <div class="card-icon">&#9889;</div>
+    <h2>Greedy Algorithms</h2>
+    <p>Proof techniques, interval scheduling, exchange argument, jump/coverage, two-pass, sort+greedy, greedy+heap. When greedy works vs DP.</p>
+    <div class="card-tags">
+      <span class="tag">10 Sections</span>
+      <span class="tag">Exchange Argument</span>
+      <span class="tag">Greedy vs DP</span>
+    </div>
+  </a>
+
+  <a href="https://hdchen-course.github.io/english-vocab/training/stack_queue_training.html" target="_blank" class="card card-arr">
+    <div class="card-icon">&#128218;</div>
+    <h2>Stack &amp; Queue</h2>
+    <p>Parentheses, calculator, design (MinStack, MaxFreq), monotone stack, BFS patterns, deque, advanced stack. Stack-recursion conversion.</p>
+    <div class="card-tags">
+      <span class="tag">9 Sections</span>
+      <span class="tag">Calculator I/II/III</span>
+      <span class="tag">Design Problems</span>
+    </div>
+  </a>
+
+  <a href="https://hdchen-course.github.io/english-vocab/training/linked_list_training.html" target="_blank" class="card card-sort">
+    <div class="card-icon">&#128279;</div>
+    <h2>Linked List</h2>
+    <p>Reversal (recursive + iterative), fast/slow pointers, merge/sort, cycle detection, LRU Cache design. Both versions for every operation.</p>
+    <div class="card-tags">
+      <span class="tag">9 Sections</span>
+      <span class="tag">LRU Cache</span>
+      <span class="tag">K-Group Reverse</span>
+    </div>
+  </a>
+
+  <a href="https://hdchen-course.github.io/english-vocab/training/backtracking_training.html" target="_blank" class="card card-graph">
+    <div class="card-icon">&#128256;</div>
+    <h2>Backtracking &amp; Recursion</h2>
+    <p>Subsets, permutations, combinations, partitioning, N-Queens, Sudoku, grid DFS. Pruning techniques, deduplication, constraint satisfaction.</p>
+    <div class="card-tags">
+      <span class="tag">9 Sections</span>
+      <span class="tag">Pruning</span>
+      <span class="tag">Dedup Templates</span>
+    </div>
+  </a>
+
+  <a href="https://hdchen-course.github.io/english-vocab/training/pattern_finding_training.html" target="_blank" class="card card-dp">
+    <div class="card-icon">&#128300;</div>
+    <h2>Pattern Finding &amp; Induction</h2>
+    <p>Compute small cases, spot the pattern, prove by induction. Bit tricks, Gray code, recursive halving, cycle detection, constructive algorithms, OEIS sequences.</p>
+    <div class="card-tags">
+      <span class="tag">7 Sections</span>
+      <span class="tag">Bit Patterns</span>
+      <span class="tag">Think Backwards</span>
+    </div>
+  </a>
+
+  <a href="https://hdchen-course.github.io/english-vocab/training/advanced_algorithms_training.html" target="_blank" class="card card-hd">
+    <div class="card-icon">&#128302;</div>
+    <h2>Advanced Algorithms</h2>
+    <p>Knuth optimization, network flow (Edmonds-Karp), bipartite matching (Hopcroft-Karp), Hungarian algorithm with full explanation. Rarely in interviews.</p>
+    <div class="card-tags">
+      <span class="tag">7 Sections</span>
+      <span class="tag">Max Flow</span>
+      <span class="tag">Hungarian</span>
+    </div>
+  </a>
+
+  <a href="https://sites.google.com/view/codingtraining" target="_blank" onclick="try{window.top.location.href=this.href}catch(e){window.open(this.href,'_blank')};return false;" class="card card-hd">
+    <div class="card-icon">&#128274;</div>
+    <h2>HD Personal</h2>
+    <p>Personal Plan. Restricted access.</p>
+    <div class="card-tags">
+      <span class="tag">Private</span>
+    </div>
+  </a>
+
+</div>
+
+<div class="footer">
+  Interview Prep Hub &middot; Last updated June 2026
+</div>
+
+</body>
+</html>
