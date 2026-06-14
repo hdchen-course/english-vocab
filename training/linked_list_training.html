@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linked List — Complete Training Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fa;
+  --bg2: #ffffff;
+  --bg3: #f1f3f5;
+  --bg4: #e9ecef;
+  --border: #dee2e6;
+  --text: #212529;
+  --text2: #495057;
+  --text3: #868e96;
+  --blue: #1971c2;
+  --blue-l: #d0ebff;
+  --green: #2f9e44;
+  --green-l: #d3f9d8;
+  --yellow: #e67700;
+  --yellow-l: #fff3bf;
+  --red: #c92a2a;
+  --red-l: #ffe3e3;
+  --purple: #7048e8;
+  --purple-l: #e5dbff;
+  --orange: #d9480f;
+  --cyan: #0c8599;
+  --r: 12px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+header { text-align: center; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+header .sub { color: var(--text3); font-size: 14px; }
+
+.nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 40px;  position: sticky; top: 0; background: var(--bg); padding: 16px 0; z-index: 100; border-bottom: 1px solid var(--border); }
+.nav-btn {
+  padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg2); color: var(--text2); cursor: pointer;
+  font-size: 13px; font-weight: 600; transition: all .2s; font-family: 'Inter', sans-serif;
+}
+.nav-btn:hover { background: var(--bg3); color: var(--text); }
+.nav-btn.active { background: var(--blue-l); color: var(--blue); border-color: var(--blue); }
+
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+h2 { font-size: 24px; font-weight: 700; margin: 32px 0 16px; color: var(--blue); }
+h3 { font-size: 18px; font-weight: 600; margin: 24px 0 12px; }
+h4 { font-size: 15px; font-weight: 600; margin: 16px 0 8px; color: var(--text2); }
+p { margin-bottom: 12px; color: var(--text2); }
+ul, ol { margin: 8px 0 16px 24px; color: var(--text2); }
+li { margin-bottom: 6px; }
+strong { color: var(--text); }
+
+pre {
+  background: #1e1e2e; border-radius: 8px;
+  padding: 16px 20px; overflow-x: auto; margin: 12px 0;
+  font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6;
+  color: #cdd6f4;
+}
+code { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+p code, li code {
+  background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--purple);
+}
+pre .kw { color: #cba6f7; }
+pre .type { color: #f9e2af; }
+pre .str { color: #a6e3a1; }
+pre .cm { color: #6c7086; }
+pre .num { color: #fab387; }
+pre .fn { color: #89b4fa; }
+
+.insight {
+  background: var(--blue-l); border-left: 3px solid var(--blue);
+  padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+}
+.insight p { color: var(--blue); margin: 0; }
+
+.warning {
+  background: var(--yellow-l); border-left: 3px solid var(--yellow);
+  padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+}
+.warning p { color: var(--yellow); margin: 0; }
+
+.danger {
+  background: var(--red-l); border-left: 3px solid var(--red);
+  padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+}
+.danger p { color: var(--red); margin: 0; }
+
+.tip {
+  background: var(--green-l); border-left: 3px solid var(--green);
+  padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+}
+.tip p { color: var(--green); margin: 0; }
+
+.card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r); margin-bottom: 20px; padding: 24px 28px;
+  box-shadow: var(--shadow);
+}
+
+table {
+  width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px;
+}
+th, td { padding: 10px 14px; border: 1px solid var(--border); text-align: left; }
+th { background: var(--bg3); font-weight: 600; color: var(--text); }
+tr:hover { background: var(--bg3); }
+
+.tag {
+  display: inline-block; padding: 2px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; margin: 2px 4px 2px 0;
+}
+.tag-easy { background: var(--green-l); color: var(--green); }
+.tag-medium { background: var(--yellow-l); color: var(--yellow); }
+.tag-hard { background: var(--red-l); color: var(--red); }
+.tag-freq { background: var(--purple-l); color: var(--purple); }
+
+.problem-list { list-style: none; padding: 0; margin: 12px 0; }
+.problem-list li {
+  padding: 10px 14px; border-left: 3px solid var(--blue);
+  margin-bottom: 8px; background: var(--bg3);
+  border-radius: 0 8px 8px 0; display: flex;
+  justify-content: flex-start; align-items: center;
+  gap: 8px;
+}
+.problem-list .title { color: var(--text); font-weight: 500; font-size: 14px; flex: 1; }
+.problem-list .title a { color: var(--text); text-decoration: none; border-bottom: 1px dashed var(--border); transition: all .2s; }
+.problem-list .title a:hover { color: var(--blue); border-bottom-color: var(--blue); }
+
+.decision-tree {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 20px; margin: 12px 0;
+  font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 2;
+  white-space: pre-wrap;
+}
+.decision-tree .q { color: var(--blue); font-weight: bold; }
+.decision-tree .a { color: var(--green); }
+.decision-tree .arrow { color: var(--orange); }
+
+@media (max-width: 768px) {
+  .container { padding: 20px 12px; }
+  .nav { position: static; flex-direction: column; align-items: stretch; }
+  .nav-btn { text-align: center; }
+  pre { font-size: 11px; padding: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<header>
+  <h1>Linked List &mdash; Complete Training Guide</h1>
+  <div class="sub">Reversal &bull; Fast/Slow Pointers &bull; Merge &bull; Sort &bull; Cycle &bull; Design</div>
+</header>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection('overview')">Overview</button>
+  <button class="nav-btn" onclick="showSection('reversal')">Reversal</button>
+  <button class="nav-btn" onclick="showSection('fastslow')">Fast &amp; Slow</button>
+  <button class="nav-btn" onclick="showSection('merge')">Merge</button>
+  <button class="nav-btn" onclick="showSection('intersection')">Intersection</button>
+  <button class="nav-btn" onclick="showSection('modify')">Modification</button>
+  <button class="nav-btn" onclick="showSection('design')">Design</button>
+  <button class="nav-btn" onclick="showSection('advanced')">Advanced</button>
+  <button class="nav-btn" onclick="showSection('tips')">Tips</button>
+</div>
+
+<!-- ===== 1. Overview ===== -->
+<div class="section active" id="overview">
+<div class="card">
+<h2>Linked List Fundamentals</h2>
+
+<h3>Singly vs Doubly Linked List</h3>
+<table>
+  <tr><th>Feature</th><th>Singly Linked List</th><th>Doubly Linked List</th></tr>
+  <tr><td>Node Structure</td><td><code>val</code> + <code>next</code></td><td><code>val</code> + <code>next</code> + <code>prev</code></td></tr>
+  <tr><td>Access</td><td>O(n) forward only</td><td>O(n) both directions</td></tr>
+  <tr><td>Insert at head</td><td>O(1)</td><td>O(1)</td></tr>
+  <tr><td>Insert at tail</td><td>O(n) without tail pointer</td><td>O(1) with tail pointer</td></tr>
+  <tr><td>Delete given node</td><td>O(n) need prev</td><td>O(1) have prev</td></tr>
+  <tr><td>Space per node</td><td>Less (1 pointer)</td><td>More (2 pointers)</td></tr>
+  <tr><td>Use case</td><td>Stack, simple chains</td><td>LRU Cache, browser history</td></tr>
+</table>
+
+<h3>Complexity Summary</h3>
+<table>
+  <tr><th>Operation</th><th>Array</th><th>Linked List</th><th>Notes</th></tr>
+  <tr><td>Access by index</td><td>O(1)</td><td>O(n)</td><td>Array wins for random access</td></tr>
+  <tr><td>Insert at beginning</td><td>O(n)</td><td>O(1)</td><td>LL wins for frequent head ops</td></tr>
+  <tr><td>Insert at end</td><td>O(1) amortized</td><td>O(1) with tail</td><td>Both good</td></tr>
+  <tr><td>Insert in middle</td><td>O(n)</td><td>O(1) if position known</td><td>LL wins if you have the node ref</td></tr>
+  <tr><td>Delete</td><td>O(n)</td><td>O(1) if position known</td><td>Same as insert</td></tr>
+  <tr><td>Search</td><td>O(n) / O(log n) sorted</td><td>O(n)</td><td>Array wins with binary search</td></tr>
+</table>
+
+<h3>The Dummy Head Technique</h3>
+<p>The single most useful trick for linked list problems. A dummy node before the actual head eliminates special cases for head insertion/deletion.</p>
+
+<pre><span class="cm">// Without dummy head: must handle head specially</span>
+<span class="kw">if</span> (head.val == target) {
+    head = head.next;  <span class="cm">// special case</span>
+}
+
+<span class="cm">// With dummy head: uniform handling</span>
+<span class="type">ListNode</span> dummy = <span class="kw">new</span> <span class="type">ListNode</span>(<span class="num">0</span>);
+dummy.next = head;
+<span class="type">ListNode</span> prev = dummy;
+<span class="kw">while</span> (prev.next != <span class="kw">null</span>) {
+    <span class="kw">if</span> (prev.next.val == target) {
+        prev.next = prev.next.next;
+    } <span class="kw">else</span> {
+        prev = prev.next;
+    }
+}
+<span class="kw">return</span> dummy.next;</pre>
+
+<div class="insight">
+  <p><strong>Key Insight:</strong> In interviews, linked list problems test pointer manipulation. Off-by-one errors and null pointer exceptions are the main bugs. Always trace through your code with a 1-node and 2-node list before submitting.</p>
+</div>
+
+<h3>Standard ListNode Definition</h3>
+<pre><span class="kw">public class</span> <span class="type">ListNode</span> {
+    <span class="type">int</span> val;
+    <span class="type">ListNode</span> next;
+    <span class="fn">ListNode</span>(<span class="type">int</span> val) { <span class="kw">this</span>.val = val; }
+    <span class="fn">ListNode</span>(<span class="type">int</span> val, <span class="type">ListNode</span> next) { <span class="kw">this</span>.val = val; <span class="kw">this</span>.next = next; }
+}</pre>
+</div>
+</div>
+
+<!-- ===== 2. Reversal ===== -->
+<div class="section" id="reversal">
+<div class="card">
+<h2>Reversal &mdash; The Most Important Operation</h2>
+
+<div class="danger">
+  <p><strong>Google WILL ask you to do both recursive and iterative reversal.</strong> Be ready to switch between them in under 2 minutes. This is the foundation for 50% of linked list problems.</p>
+</div>
+
+<h3>Iterative Reversal (LC 206)</h3>
+<p>The classic three-pointer approach: <code>prev</code>, <code>curr</code>, <code>next</code>.</p>
+
+<pre><span class="cm">// Iterative: O(n) time, O(1) space</span>
+<span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">reverseList</span>(<span class="type">ListNode</span> head) {
+    <span class="type">ListNode</span> prev = <span class="kw">null</span>, curr = head;
+    <span class="kw">while</span> (curr != <span class="kw">null</span>) {
+        <span class="type">ListNode</span> next = curr.next;  <span class="cm">// save next</span>
+        curr.next = prev;           <span class="cm">// reverse pointer</span>
+        prev = curr;                <span class="cm">// advance prev</span>
+        curr = next;                <span class="cm">// advance curr</span>
+    }
+    <span class="kw">return</span> prev;  <span class="cm">// prev is the new head</span>
+}</pre>
+
+<h3>Recursive Reversal (LC 206)</h3>
+<p>Elegant but uses O(n) stack space. The key insight: after recursive call returns, <code>head.next</code> is the tail of the reversed sublist.</p>
+
+<pre><span class="cm">// Recursive: O(n) time, O(n) space (call stack)</span>
+<span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">reverseList</span>(<span class="type">ListNode</span> head) {
+    <span class="kw">if</span> (head == <span class="kw">null</span> || head.next == <span class="kw">null</span>) <span class="kw">return</span> head;
+    <span class="type">ListNode</span> newHead = <span class="fn">reverseList</span>(head.next);
+    head.next.next = head;  <span class="cm">// head.next points back to head</span>
+    head.next = <span class="kw">null</span>;        <span class="cm">// head becomes tail</span>
+    <span class="kw">return</span> newHead;
+}</pre>
+
+<div class="insight">
+  <p><strong>Why does this work?</strong> After <code>reverseList(head.next)</code>, everything from <code>head.next</code> onward is reversed. <code>head.next</code> is now the LAST node of that reversed sublist. So <code>head.next.next = head</code> appends <code>head</code> to the end.</p>
+</div>
+
+<h3>Reverse Between Positions (LC 92)</h3>
+<p>Reverse only the sublist from position <code>left</code> to <code>right</code>. Key: navigate to the node before <code>left</code>, then reverse exactly <code>right - left</code> links.</p>
+
+<pre><span class="cm">// Reverse sublist [left, right]: O(n) time, O(1) space</span>
+<span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">reverseBetween</span>(<span class="type">ListNode</span> head, <span class="type">int</span> left, <span class="type">int</span> right) {
+    <span class="type">ListNode</span> dummy = <span class="kw">new</span> <span class="type">ListNode</span>(<span class="num">0</span>, head);
+    <span class="type">ListNode</span> prev = dummy;
+
+    <span class="cm">// Move prev to the node before position 'left'</span>
+    <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">1</span>; i &lt; left; i++) {
+        prev = prev.next;
+    }
+
+    <span class="cm">// curr is the first node to reverse</span>
+    <span class="type">ListNode</span> curr = prev.next;
+
+    <span class="cm">// Reverse (right - left) links using "insert at front" technique</span>
+    <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; right - left; i++) {
+        <span class="type">ListNode</span> next = curr.next;
+        curr.next = next.next;
+        next.next = prev.next;
+        prev.next = next;
+    }
+
+    <span class="kw">return</span> dummy.next;
+}</pre>
+
+<div class="tip">
+  <p><strong>Trick:</strong> The "insert at front" technique repeatedly takes the next node after <code>curr</code> and inserts it right after <code>prev</code>. This reverses the sublist in-place without needing to reconnect boundaries afterwards.</p>
+</div>
+
+<h3>Reverse in K-Groups (LC 25)</h3>
+<p>The hardest reversal variant. Strategy: count K nodes, reverse them, recursively/iteratively handle the rest.</p>
+
+<pre><span class="cm">// Iterative approach: O(n) time, O(1) space</span>
+<span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">reverseKGroup</span>(<span class="type">ListNode</span> head, <span class="type">int</span> k) {
+    <span class="type">ListNode</span> dummy = <span class="kw">new</span> <span class="type">ListNode</span>(<span class="num">0</span>, head);
+    <span class="type">ListNode</span> groupPrev = dummy;
+
+    <span class="kw">while</span> (<span class="kw">true</span>) {
+        <span class="cm">// Check if there are k nodes remaining</span>
+        <span class="type">ListNode</span> kth = <span class="fn">getKth</span>(groupPrev, k);
+        <span class="kw">if</span> (kth == <span class="kw">null</span>) <span class="kw">break</span>;
+
+        <span class="type">ListNode</span> groupNext = kth.next;
+
+        <span class="cm">// Reverse the group</span>
+        <span class="type">ListNode</span> prev = groupNext, curr = groupPrev.next;
+        <span class="kw">while</span> (curr != groupNext) {
+            <span class="type">ListNode</span> next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+
+        <span class="cm">// Connect with previous part</span>
+        <span class="type">ListNode</span> tmp = groupPrev.next;  <span class="cm">// this was first, now last in group</span>
+        groupPrev.next = kth;           <span class="cm">// kth is now first in group</span>
+        groupPrev = tmp;                <span class="cm">// move to end of reversed group</span>
+    }
+
+    <span class="kw">return</span> dummy.next;
+}
+
+<span class="kw">private</span> <span class="type">ListNode</span> <span class="fn">getKth</span>(<span class="type">ListNode</span> curr, <span class="type">int</span> k) {
+    <span class="kw">while</span> (curr != <span class="kw">null</span> &amp;&amp; k &gt; <span class="num">0</span>) {
+        curr = curr.next;
+        k--;
+    }
+    <span class="kw">return</span> curr;
+}</pre>
+
+<h4>Recursive version of Reverse K-Group</h4>
+<pre><span class="cm">// Recursive: O(n) time, O(n/k) space</span>
+<span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">reverseKGroup</span>(<span class="type">ListNode</span> head, <span class="type">int</span> k) {
+    <span class="cm">// Count k nodes</span>
+    <span class="type">ListNode</span> curr = head;
+    <span class="type">int</span> count = <span class="num">0</span>;
+    <span class="kw">while</span> (curr != <span class="kw">null</span> &amp;&amp; count &lt; k) {
+        curr = curr.next;
+        count++;
+    }
+    <span class="kw">if</span> (count &lt; k) <span class="kw">return</span> head;  <span class="cm">// fewer than k, don't reverse</span>
+
+    <span class="cm">// Reverse first k nodes</span>
+    <span class="type">ListNode</span> prev = <span class="fn">reverseKGroup</span>(curr, k);  <span class="cm">// recurse on rest</span>
+    <span class="kw">while</span> (count-- &gt; <span class="num">0</span>) {
+        <span class="type">ListNode</span> next = head.next;
+        head.next = prev;
+        prev = head;
+        head = next;
+    }
+    <span class="kw">return</span> prev;
+}</pre>
+
+<h3>Practice Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/reverse-linked-list/" target="_blank">206. Reverse Linked List</a></span><span><span class="tag tag-easy">Easy</span><span class="tag tag-freq">Must Know</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/reverse-linked-list-ii/" target="_blank">92. Reverse Linked List II</a></span><span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google Freq</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/reverse-nodes-in-k-group/" target="_blank">25. Reverse Nodes in k-Group</a></span><span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google Freq</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/swap-nodes-in-pairs/" target="_blank">24. Swap Nodes in Pairs</a></span><span><span class="tag tag-medium">Medium</span></span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== 3. Fast & Slow Pointers ===== -->
+<div class="section" id="fastslow">
+<div class="card">
+<h2>Fast &amp; Slow Pointers (Floyd's Technique)</h2>
+
+<p>Two pointers moving at different speeds reveal structural properties of the list: cycles, midpoints, and distances from end.</p>
+
+<h3>Cycle Detection (LC 141)</h3>
+<p>Floyd's Tortoise and Hare: slow moves 1 step, fast moves 2 steps. If there's a cycle, they meet.</p>
+
+<pre><span class="cm">// O(n) time, O(1) space</span>
+<span class="kw">public boolean</span> <span class="fn">hasCycle</span>(<span class="type">ListNode</span> head) {
+    <span class="type">ListNode</span> slow = head, fast = head;
+    <span class="kw">while</span> (fast != <span class="kw">null</span> &amp;&amp; fast.next != <span class="kw">null</span>) {
+        slow = slow.next;
+        fast = fast.next.next;
+        <span class="kw">if</span> (slow == fast) <span class="kw">return true</span>;
+    }
+    <span class="kw">return false</span>;
+}</pre>
+
+<h3>Find Cycle Start (LC 142)</h3>
+<p>After detecting a cycle, reset one pointer to head. Move both at speed 1 &mdash; they meet at the cycle start.</p>
+
+<div class="insight">
+  <p><strong>Math Proof:</strong> Let distance from head to cycle start = <code>a</code>, cycle start to meeting point = <code>b</code>, meeting point back to cycle start = <code>c</code>. Slow travels <code>a + b</code>. Fast travels <code>a + b + (b + c) * k</code> = <code>2(a + b)</code>. So <code>a + b = k(b + c)</code>, meaning <code>a = (k-1)(b+c) + c</code>. Thus moving <code>a</code> steps from meeting point lands at cycle start!</p>
+</div>
+
+<pre><span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">detectCycle</span>(<span class="type">ListNode</span> head) {
+    <span class="type">ListNode</span> slow = head, fast = head;
+    <span class="kw">while</span> (fast != <span class="kw">null</span> &amp;&amp; fast.next != <span class="kw">null</span>) {
+        slow = slow.next;
+        fast = fast.next.next;
+        <span class="kw">if</span> (slow == fast) {
+            <span class="type">ListNode</span> entry = head;
+            <span class="kw">while</span> (entry != slow) {
+                entry = entry.next;
+                slow = slow.next;
+            }
+            <span class="kw">return</span> entry;
+        }
+    }
+    <span class="kw">return null</span>;
+}</pre>
+
+<h3>Find Middle (LC 876)</h3>
+<p>When fast reaches the end, slow is at the middle. For even-length lists, this gives the second middle node.</p>
+
+<pre><span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">middleNode</span>(<span class="type">ListNode</span> head) {
+    <span class="type">ListNode</span> slow = head, fast = head;
+    <span class="kw">while</span> (fast != <span class="kw">null</span> &amp;&amp; fast.next != <span class="kw">null</span>) {
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+    <span class="kw">return</span> slow;  <span class="cm">// second middle for even length</span>
+}
+
+<span class="cm">// To get FIRST middle (useful for merge sort split):</span>
+<span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">firstMiddle</span>(<span class="type">ListNode</span> head) {
+    <span class="type">ListNode</span> slow = head, fast = head.next;  <span class="cm">// fast starts one ahead</span>
+    <span class="kw">while</span> (fast != <span class="kw">null</span> &amp;&amp; fast.next != <span class="kw">null</span>) {
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+    <span class="kw">return</span> slow;  <span class="cm">// first middle for even length</span>
+}</pre>
+
+<div class="warning">
+  <p><strong>Subtle difference:</strong> <code>fast = head</code> gives second middle. <code>fast = head.next</code> gives first middle. This matters for merge sort where you need to split exactly in half.</p>
+</div>
+
+<h3>Remove Nth from End (LC 19)</h3>
+<p>Fast pointer moves n steps ahead, then both move together. When fast reaches end, slow is at the (n-1)th from end.</p>
+
+<pre><span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">removeNthFromEnd</span>(<span class="type">ListNode</span> head, <span class="type">int</span> n) {
+    <span class="type">ListNode</span> dummy = <span class="kw">new</span> <span class="type">ListNode</span>(<span class="num">0</span>, head);
+    <span class="type">ListNode</span> fast = dummy, slow = dummy;
+
+    <span class="cm">// Advance fast by n+1 steps</span>
+    <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt;= n; i++) {
+        fast = fast.next;
+    }
+
+    <span class="cm">// Move both until fast reaches null</span>
+    <span class="kw">while</span> (fast != <span class="kw">null</span>) {
+        slow = slow.next;
+        fast = fast.next;
+    }
+
+    slow.next = slow.next.next;  <span class="cm">// delete the nth node</span>
+    <span class="kw">return</span> dummy.next;
+}</pre>
+
+<h3>Palindrome Check (LC 234)</h3>
+<p>Find middle, reverse second half, compare both halves. O(1) space (excluding the reversal modification).</p>
+
+<pre><span class="kw">public boolean</span> <span class="fn">isPalindrome</span>(<span class="type">ListNode</span> head) {
+    <span class="cm">// 1. Find middle</span>
+    <span class="type">ListNode</span> slow = head, fast = head;
+    <span class="kw">while</span> (fast != <span class="kw">null</span> &amp;&amp; fast.next != <span class="kw">null</span>) {
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+
+    <span class="cm">// 2. Reverse second half</span>
+    <span class="type">ListNode</span> prev = <span class="kw">null</span>;
+    <span class="kw">while</span> (slow != <span class="kw">null</span>) {
+        <span class="type">ListNode</span> next = slow.next;
+        slow.next = prev;
+        prev = slow;
+        slow = next;
+    }
+
+    <span class="cm">// 3. Compare</span>
+    <span class="type">ListNode</span> left = head, right = prev;
+    <span class="kw">while</span> (right != <span class="kw">null</span>) {
+        <span class="kw">if</span> (left.val != right.val) <span class="kw">return false</span>;
+        left = left.next;
+        right = right.next;
+    }
+    <span class="kw">return true</span>;
+}</pre>
+
+<h3>Practice Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/linked-list-cycle/" target="_blank">141. Linked List Cycle</a></span><span><span class="tag tag-easy">Easy</span><span class="tag tag-freq">Must Know</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/linked-list-cycle-ii/" target="_blank">142. Linked List Cycle II</a></span><span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google Freq</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/middle-of-the-linked-list/" target="_blank">876. Middle of the Linked List</a></span><span><span class="tag tag-easy">Easy</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/remove-nth-node-from-end-of-list/" target="_blank">19. Remove Nth Node From End of List</a></span><span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google Freq</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/palindrome-linked-list/" target="_blank">234. Palindrome Linked List</a></span><span><span class="tag tag-easy">Easy</span><span class="tag tag-freq">Google Freq</span></span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== 4. Merge Operations ===== -->
+<div class="section" id="merge">
+<div class="card">
+<h2>Merge Operations</h2>
+
+<h3>Merge Two Sorted Lists (LC 21)</h3>
+<p>The building block for merge sort and merge K lists. Use a dummy head for clean code.</p>
+
+<pre><span class="cm">// Iterative with dummy: O(n + m) time, O(1) space</span>
+<span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">mergeTwoLists</span>(<span class="type">ListNode</span> l1, <span class="type">ListNode</span> l2) {
+    <span class="type">ListNode</span> dummy = <span class="kw">new</span> <span class="type">ListNode</span>(<span class="num">0</span>);
+    <span class="type">ListNode</span> curr = dummy;
+
+    <span class="kw">while</span> (l1 != <span class="kw">null</span> &amp;&amp; l2 != <span class="kw">null</span>) {
+        <span class="kw">if</span> (l1.val &lt;= l2.val) {
+            curr.next = l1;
+            l1 = l1.next;
+        } <span class="kw">else</span> {
+            curr.next = l2;
+            l2 = l2.next;
+        }
+        curr = curr.next;
+    }
+    curr.next = (l1 != <span class="kw">null</span>) ? l1 : l2;
+    <span class="kw">return</span> dummy.next;
+}</pre>
+
+<h3>Merge K Sorted Lists (LC 23)</h3>
+
+<h4>Approach 1: Min-Heap (Priority Queue)</h4>
+<pre><span class="cm">// O(N log k) time, O(k) space where N = total nodes, k = num lists</span>
+<span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">mergeKLists</span>(<span class="type">ListNode</span>[] lists) {
+    <span class="type">PriorityQueue</span>&lt;<span class="type">ListNode</span>&gt; pq = <span class="kw">new</span> <span class="type">PriorityQueue</span>&lt;&gt;(
+        (a, b) -&gt; a.val - b.val
+    );
+
+    <span class="kw">for</span> (<span class="type">ListNode</span> node : lists) {
+        <span class="kw">if</span> (node != <span class="kw">null</span>) pq.<span class="fn">offer</span>(node);
+    }
+
+    <span class="type">ListNode</span> dummy = <span class="kw">new</span> <span class="type">ListNode</span>(<span class="num">0</span>);
+    <span class="type">ListNode</span> curr = dummy;
+
+    <span class="kw">while</span> (!pq.<span class="fn">isEmpty</span>()) {
+        <span class="type">ListNode</span> node = pq.<span class="fn">poll</span>();
+        curr.next = node;
+        curr = curr.next;
+        <span class="kw">if</span> (node.next != <span class="kw">null</span>) pq.<span class="fn">offer</span>(node.next);
+    }
+
+    <span class="kw">return</span> dummy.next;
+}</pre>
+
+<h4>Approach 2: Divide and Conquer</h4>
+<pre><span class="cm">// O(N log k) time, O(log k) space (recursion)</span>
+<span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">mergeKLists</span>(<span class="type">ListNode</span>[] lists) {
+    <span class="kw">if</span> (lists.length == <span class="num">0</span>) <span class="kw">return null</span>;
+    <span class="kw">return</span> <span class="fn">merge</span>(lists, <span class="num">0</span>, lists.length - <span class="num">1</span>);
+}
+
+<span class="kw">private</span> <span class="type">ListNode</span> <span class="fn">merge</span>(<span class="type">ListNode</span>[] lists, <span class="type">int</span> lo, <span class="type">int</span> hi) {
+    <span class="kw">if</span> (lo == hi) <span class="kw">return</span> lists[lo];
+    <span class="type">int</span> mid = lo + (hi - lo) / <span class="num">2</span>;
+    <span class="type">ListNode</span> left = <span class="fn">merge</span>(lists, lo, mid);
+    <span class="type">ListNode</span> right = <span class="fn">merge</span>(lists, mid + <span class="num">1</span>, hi);
+    <span class="kw">return</span> <span class="fn">mergeTwoLists</span>(left, right);
+}</pre>
+
+<div class="insight">
+  <p><strong>Which to choose?</strong> Both are O(N log k). Heap approach is simpler to code but uses a PQ. Divide-and-conquer reuses the merge-two-lists subroutine and is often preferred in interviews because it shows you understand the merge sort pattern.</p>
+</div>
+
+<h3>Sort List (LC 148)</h3>
+<p>Merge sort on a linked list. Find middle, split, recursively sort, then merge.</p>
+
+<pre><span class="cm">// O(n log n) time, O(log n) space for recursion</span>
+<span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">sortList</span>(<span class="type">ListNode</span> head) {
+    <span class="kw">if</span> (head == <span class="kw">null</span> || head.next == <span class="kw">null</span>) <span class="kw">return</span> head;
+
+    <span class="cm">// Find middle (use first middle to split evenly)</span>
+    <span class="type">ListNode</span> slow = head, fast = head.next;
+    <span class="kw">while</span> (fast != <span class="kw">null</span> &amp;&amp; fast.next != <span class="kw">null</span>) {
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+
+    <span class="type">ListNode</span> mid = slow.next;
+    slow.next = <span class="kw">null</span>;  <span class="cm">// cut the list</span>
+
+    <span class="type">ListNode</span> left = <span class="fn">sortList</span>(head);
+    <span class="type">ListNode</span> right = <span class="fn">sortList</span>(mid);
+    <span class="kw">return</span> <span class="fn">mergeTwoLists</span>(left, right);
+}</pre>
+
+<h3>Insertion Sort List (LC 147)</h3>
+<pre><span class="cm">// O(n^2) time, O(1) space</span>
+<span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">insertionSortList</span>(<span class="type">ListNode</span> head) {
+    <span class="type">ListNode</span> dummy = <span class="kw">new</span> <span class="type">ListNode</span>(<span class="num">0</span>);
+    <span class="type">ListNode</span> curr = head;
+
+    <span class="kw">while</span> (curr != <span class="kw">null</span>) {
+        <span class="type">ListNode</span> next = curr.next;
+
+        <span class="cm">// Find insertion position</span>
+        <span class="type">ListNode</span> prev = dummy;
+        <span class="kw">while</span> (prev.next != <span class="kw">null</span> &amp;&amp; prev.next.val &lt; curr.val) {
+            prev = prev.next;
+        }
+
+        <span class="cm">// Insert curr after prev</span>
+        curr.next = prev.next;
+        prev.next = curr;
+        curr = next;
+    }
+
+    <span class="kw">return</span> dummy.next;
+}</pre>
+
+<h3>Practice Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/merge-two-sorted-lists/" target="_blank">21. Merge Two Sorted Lists</a></span><span><span class="tag tag-easy">Easy</span><span class="tag tag-freq">Must Know</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/merge-k-sorted-lists/" target="_blank">23. Merge k Sorted Lists</a></span><span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google Freq</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/sort-list/" target="_blank">148. Sort List</a></span><span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google Freq</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/insertion-sort-list/" target="_blank">147. Insertion Sort List</a></span><span><span class="tag tag-medium">Medium</span></span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== 5. Intersection & Combination ===== -->
+<div class="section" id="intersection">
+<div class="card">
+<h2>Intersection &amp; Combination</h2>
+
+<h3>Intersection of Two Lists (LC 160)</h3>
+<p>Two-pointer trick: when one pointer reaches the end, redirect it to the other list's head. They meet at the intersection after traversing equal distances.</p>
+
+<pre><span class="cm">// O(n + m) time, O(1) space</span>
+<span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">getIntersectionNode</span>(<span class="type">ListNode</span> headA, <span class="type">ListNode</span> headB) {
+    <span class="type">ListNode</span> a = headA, b = headB;
+    <span class="kw">while</span> (a != b) {
+        a = (a != <span class="kw">null</span>) ? a.next : headB;
+        b = (b != <span class="kw">null</span>) ? b.next : headA;
+    }
+    <span class="kw">return</span> a;  <span class="cm">// either intersection node or null</span>
+}</pre>
+
+<div class="insight">
+  <p><strong>Why does this work?</strong> Pointer A travels: <code>lenA + lenB - common</code>. Pointer B travels: <code>lenB + lenA - common</code>. Same total distance, so they arrive at the intersection simultaneously.</p>
+</div>
+
+<h3>Add Two Numbers (LC 2)</h3>
+<p>Numbers stored in reverse order (least significant digit first). Process digit by digit with carry.</p>
+
+<pre><span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">addTwoNumbers</span>(<span class="type">ListNode</span> l1, <span class="type">ListNode</span> l2) {
+    <span class="type">ListNode</span> dummy = <span class="kw">new</span> <span class="type">ListNode</span>(<span class="num">0</span>);
+    <span class="type">ListNode</span> curr = dummy;
+    <span class="type">int</span> carry = <span class="num">0</span>;
+
+    <span class="kw">while</span> (l1 != <span class="kw">null</span> || l2 != <span class="kw">null</span> || carry != <span class="num">0</span>) {
+        <span class="type">int</span> sum = carry;
+        <span class="kw">if</span> (l1 != <span class="kw">null</span>) { sum += l1.val; l1 = l1.next; }
+        <span class="kw">if</span> (l2 != <span class="kw">null</span>) { sum += l2.val; l2 = l2.next; }
+        carry = sum / <span class="num">10</span>;
+        curr.next = <span class="kw">new</span> <span class="type">ListNode</span>(sum % <span class="num">10</span>);
+        curr = curr.next;
+    }
+
+    <span class="kw">return</span> dummy.next;
+}</pre>
+
+<h3>Add Two Numbers II (LC 445)</h3>
+<p>Numbers stored in forward order (most significant first). Use stacks to process from the end.</p>
+
+<pre><span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">addTwoNumbers</span>(<span class="type">ListNode</span> l1, <span class="type">ListNode</span> l2) {
+    <span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; s1 = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    <span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; s2 = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+
+    <span class="kw">while</span> (l1 != <span class="kw">null</span>) { s1.<span class="fn">push</span>(l1.val); l1 = l1.next; }
+    <span class="kw">while</span> (l2 != <span class="kw">null</span>) { s2.<span class="fn">push</span>(l2.val); l2 = l2.next; }
+
+    <span class="type">ListNode</span> head = <span class="kw">null</span>;
+    <span class="type">int</span> carry = <span class="num">0</span>;
+
+    <span class="kw">while</span> (!s1.<span class="fn">isEmpty</span>() || !s2.<span class="fn">isEmpty</span>() || carry != <span class="num">0</span>) {
+        <span class="type">int</span> sum = carry;
+        <span class="kw">if</span> (!s1.<span class="fn">isEmpty</span>()) sum += s1.<span class="fn">pop</span>();
+        <span class="kw">if</span> (!s2.<span class="fn">isEmpty</span>()) sum += s2.<span class="fn">pop</span>();
+        carry = sum / <span class="num">10</span>;
+        <span class="type">ListNode</span> node = <span class="kw">new</span> <span class="type">ListNode</span>(sum % <span class="num">10</span>);
+        node.next = head;
+        head = node;  <span class="cm">// build result in reverse</span>
+    }
+
+    <span class="kw">return</span> head;
+}</pre>
+
+<h3>Copy List with Random Pointer (LC 138)</h3>
+
+<h4>Approach 1: HashMap</h4>
+<pre><span class="cm">// O(n) time, O(n) space</span>
+<span class="kw">public</span> <span class="type">Node</span> <span class="fn">copyRandomList</span>(<span class="type">Node</span> head) {
+    <span class="type">Map</span>&lt;<span class="type">Node</span>, <span class="type">Node</span>&gt; map = <span class="kw">new</span> <span class="type">HashMap</span>&lt;&gt;();
+    <span class="type">Node</span> curr = head;
+
+    <span class="cm">// First pass: create all nodes</span>
+    <span class="kw">while</span> (curr != <span class="kw">null</span>) {
+        map.<span class="fn">put</span>(curr, <span class="kw">new</span> <span class="type">Node</span>(curr.val));
+        curr = curr.next;
+    }
+
+    <span class="cm">// Second pass: wire next and random pointers</span>
+    curr = head;
+    <span class="kw">while</span> (curr != <span class="kw">null</span>) {
+        map.<span class="fn">get</span>(curr).next = map.<span class="fn">get</span>(curr.next);
+        map.<span class="fn">get</span>(curr).random = map.<span class="fn">get</span>(curr.random);
+        curr = curr.next;
+    }
+
+    <span class="kw">return</span> map.<span class="fn">get</span>(head);
+}</pre>
+
+<h4>Approach 2: Interleave (O(1) space)</h4>
+<pre><span class="cm">// O(n) time, O(1) space</span>
+<span class="kw">public</span> <span class="type">Node</span> <span class="fn">copyRandomList</span>(<span class="type">Node</span> head) {
+    <span class="kw">if</span> (head == <span class="kw">null</span>) <span class="kw">return null</span>;
+
+    <span class="cm">// Step 1: Interleave copies: A->A'->B->B'->C->C'</span>
+    <span class="type">Node</span> curr = head;
+    <span class="kw">while</span> (curr != <span class="kw">null</span>) {
+        <span class="type">Node</span> copy = <span class="kw">new</span> <span class="type">Node</span>(curr.val);
+        copy.next = curr.next;
+        curr.next = copy;
+        curr = copy.next;
+    }
+
+    <span class="cm">// Step 2: Set random pointers for copies</span>
+    curr = head;
+    <span class="kw">while</span> (curr != <span class="kw">null</span>) {
+        <span class="kw">if</span> (curr.random != <span class="kw">null</span>) {
+            curr.next.random = curr.random.next;
+        }
+        curr = curr.next.next;
+    }
+
+    <span class="cm">// Step 3: Separate the two lists</span>
+    <span class="type">Node</span> newHead = head.next;
+    curr = head;
+    <span class="kw">while</span> (curr != <span class="kw">null</span>) {
+        <span class="type">Node</span> copy = curr.next;
+        curr.next = copy.next;
+        copy.next = (copy.next != <span class="kw">null</span>) ? copy.next.next : <span class="kw">null</span>;
+        curr = curr.next;
+    }
+
+    <span class="kw">return</span> newHead;
+}</pre>
+
+<h3>Flatten a Multilevel Doubly Linked List (LC 430)</h3>
+<pre><span class="cm">// DFS approach: O(n) time, O(depth) space</span>
+<span class="kw">public</span> <span class="type">Node</span> <span class="fn">flatten</span>(<span class="type">Node</span> head) {
+    <span class="type">Node</span> curr = head;
+    <span class="kw">while</span> (curr != <span class="kw">null</span>) {
+        <span class="kw">if</span> (curr.child != <span class="kw">null</span>) {
+            <span class="type">Node</span> next = curr.next;
+            <span class="type">Node</span> child = <span class="fn">flatten</span>(curr.child);
+
+            curr.next = child;
+            child.prev = curr;
+            curr.child = <span class="kw">null</span>;
+
+            <span class="cm">// Find tail of flattened child</span>
+            <span class="type">Node</span> tail = child;
+            <span class="kw">while</span> (tail.next != <span class="kw">null</span>) tail = tail.next;
+
+            tail.next = next;
+            <span class="kw">if</span> (next != <span class="kw">null</span>) next.prev = tail;
+        }
+        curr = curr.next;
+    }
+    <span class="kw">return</span> head;
+}</pre>
+
+<h3>Practice Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/intersection-of-two-linked-lists/" target="_blank">160. Intersection of Two Linked Lists</a></span><span><span class="tag tag-easy">Easy</span><span class="tag tag-freq">Google Freq</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/add-two-numbers/" target="_blank">2. Add Two Numbers</a></span><span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Must Know</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/add-two-numbers-ii/" target="_blank">445. Add Two Numbers II</a></span><span><span class="tag tag-medium">Medium</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/copy-list-with-random-pointer/" target="_blank">138. Copy List with Random Pointer</a></span><span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google Freq</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/flatten-a-multilevel-doubly-linked-list/" target="_blank">430. Flatten a Multilevel Doubly Linked List</a></span><span><span class="tag tag-medium">Medium</span></span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== 6. Modification & Rearrangement ===== -->
+<div class="section" id="modify">
+<div class="card">
+<h2>Modification &amp; Rearrangement</h2>
+
+<h3>Remove Duplicates from Sorted List (LC 83)</h3>
+<pre><span class="cm">// Keep one of each duplicate: O(n) time, O(1) space</span>
+<span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">deleteDuplicates</span>(<span class="type">ListNode</span> head) {
+    <span class="type">ListNode</span> curr = head;
+    <span class="kw">while</span> (curr != <span class="kw">null</span> &amp;&amp; curr.next != <span class="kw">null</span>) {
+        <span class="kw">if</span> (curr.val == curr.next.val) {
+            curr.next = curr.next.next;
+        } <span class="kw">else</span> {
+            curr = curr.next;
+        }
+    }
+    <span class="kw">return</span> head;
+}</pre>
+
+<h3>Remove All Duplicates (LC 82)</h3>
+<pre><span class="cm">// Remove all nodes with duplicate values: O(n) time, O(1) space</span>
+<span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">deleteDuplicates</span>(<span class="type">ListNode</span> head) {
+    <span class="type">ListNode</span> dummy = <span class="kw">new</span> <span class="type">ListNode</span>(<span class="num">0</span>, head);
+    <span class="type">ListNode</span> prev = dummy;
+
+    <span class="kw">while</span> (prev.next != <span class="kw">null</span>) {
+        <span class="type">ListNode</span> curr = prev.next;
+        <span class="kw">while</span> (curr.next != <span class="kw">null</span> &amp;&amp; curr.next.val == curr.val) {
+            curr = curr.next;
+        }
+        <span class="kw">if</span> (curr != prev.next) {
+            <span class="cm">// duplicates found, skip all of them</span>
+            prev.next = curr.next;
+        } <span class="kw">else</span> {
+            prev = prev.next;
+        }
+    }
+
+    <span class="kw">return</span> dummy.next;
+}</pre>
+
+<h3>Partition List (LC 86)</h3>
+<p>Create two separate lists (less-than and greater-or-equal), then join them.</p>
+
+<pre><span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">partition</span>(<span class="type">ListNode</span> head, <span class="type">int</span> x) {
+    <span class="type">ListNode</span> lessHead = <span class="kw">new</span> <span class="type">ListNode</span>(<span class="num">0</span>);
+    <span class="type">ListNode</span> greaterHead = <span class="kw">new</span> <span class="type">ListNode</span>(<span class="num">0</span>);
+    <span class="type">ListNode</span> less = lessHead, greater = greaterHead;
+
+    <span class="kw">while</span> (head != <span class="kw">null</span>) {
+        <span class="kw">if</span> (head.val &lt; x) {
+            less.next = head;
+            less = less.next;
+        } <span class="kw">else</span> {
+            greater.next = head;
+            greater = greater.next;
+        }
+        head = head.next;
+    }
+
+    greater.next = <span class="kw">null</span>;  <span class="cm">// important: terminate!</span>
+    less.next = greaterHead.next;
+    <span class="kw">return</span> lessHead.next;
+}</pre>
+
+<div class="warning">
+  <p><strong>Common bug:</strong> Forgetting <code>greater.next = null</code> creates a cycle in the resulting list!</p>
+</div>
+
+<h3>Reorder List (LC 143)</h3>
+<p>Transform L0 &rarr; L1 &rarr; ... &rarr; Ln into L0 &rarr; Ln &rarr; L1 &rarr; Ln-1 &rarr; ...</p>
+<p>Three steps: find middle, reverse second half, interleave.</p>
+
+<pre><span class="kw">public void</span> <span class="fn">reorderList</span>(<span class="type">ListNode</span> head) {
+    <span class="kw">if</span> (head == <span class="kw">null</span> || head.next == <span class="kw">null</span>) <span class="kw">return</span>;
+
+    <span class="cm">// 1. Find middle</span>
+    <span class="type">ListNode</span> slow = head, fast = head;
+    <span class="kw">while</span> (fast.next != <span class="kw">null</span> &amp;&amp; fast.next.next != <span class="kw">null</span>) {
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+
+    <span class="cm">// 2. Reverse second half</span>
+    <span class="type">ListNode</span> second = slow.next;
+    slow.next = <span class="kw">null</span>;
+    <span class="type">ListNode</span> prev = <span class="kw">null</span>;
+    <span class="kw">while</span> (second != <span class="kw">null</span>) {
+        <span class="type">ListNode</span> next = second.next;
+        second.next = prev;
+        prev = second;
+        second = next;
+    }
+
+    <span class="cm">// 3. Interleave</span>
+    <span class="type">ListNode</span> first = head;
+    second = prev;
+    <span class="kw">while</span> (second != <span class="kw">null</span>) {
+        <span class="type">ListNode</span> tmp1 = first.next, tmp2 = second.next;
+        first.next = second;
+        second.next = tmp1;
+        first = tmp1;
+        second = tmp2;
+    }
+}</pre>
+
+<h3>Swap Nodes in Pairs (LC 24)</h3>
+
+<h4>Iterative</h4>
+<pre><span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">swapPairs</span>(<span class="type">ListNode</span> head) {
+    <span class="type">ListNode</span> dummy = <span class="kw">new</span> <span class="type">ListNode</span>(<span class="num">0</span>, head);
+    <span class="type">ListNode</span> prev = dummy;
+
+    <span class="kw">while</span> (prev.next != <span class="kw">null</span> &amp;&amp; prev.next.next != <span class="kw">null</span>) {
+        <span class="type">ListNode</span> first = prev.next;
+        <span class="type">ListNode</span> second = first.next;
+
+        first.next = second.next;
+        second.next = first;
+        prev.next = second;
+        prev = first;
+    }
+
+    <span class="kw">return</span> dummy.next;
+}</pre>
+
+<h4>Recursive</h4>
+<pre><span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">swapPairs</span>(<span class="type">ListNode</span> head) {
+    <span class="kw">if</span> (head == <span class="kw">null</span> || head.next == <span class="kw">null</span>) <span class="kw">return</span> head;
+    <span class="type">ListNode</span> second = head.next;
+    head.next = <span class="fn">swapPairs</span>(second.next);
+    second.next = head;
+    <span class="kw">return</span> second;
+}</pre>
+
+<h3>Rotate List (LC 61)</h3>
+<p>Connect tail to head (make circular), then break at the right position.</p>
+
+<pre><span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">rotateRight</span>(<span class="type">ListNode</span> head, <span class="type">int</span> k) {
+    <span class="kw">if</span> (head == <span class="kw">null</span> || head.next == <span class="kw">null</span>) <span class="kw">return</span> head;
+
+    <span class="cm">// Find length and tail</span>
+    <span class="type">int</span> len = <span class="num">1</span>;
+    <span class="type">ListNode</span> tail = head;
+    <span class="kw">while</span> (tail.next != <span class="kw">null</span>) { tail = tail.next; len++; }
+
+    k %= len;
+    <span class="kw">if</span> (k == <span class="num">0</span>) <span class="kw">return</span> head;
+
+    <span class="cm">// Make circular</span>
+    tail.next = head;
+
+    <span class="cm">// Move to the new tail (len - k - 1 steps from head, or len - k from tail)</span>
+    <span class="type">ListNode</span> newTail = head;
+    <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; len - k - <span class="num">1</span>; i++) {
+        newTail = newTail.next;
+    }
+
+    <span class="type">ListNode</span> newHead = newTail.next;
+    newTail.next = <span class="kw">null</span>;
+    <span class="kw">return</span> newHead;
+}</pre>
+
+<h3>Odd Even Linked List (LC 328)</h3>
+<pre><span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">oddEvenList</span>(<span class="type">ListNode</span> head) {
+    <span class="kw">if</span> (head == <span class="kw">null</span>) <span class="kw">return null</span>;
+    <span class="type">ListNode</span> odd = head, even = head.next, evenHead = even;
+
+    <span class="kw">while</span> (even != <span class="kw">null</span> &amp;&amp; even.next != <span class="kw">null</span>) {
+        odd.next = even.next;
+        odd = odd.next;
+        even.next = odd.next;
+        even = even.next;
+    }
+
+    odd.next = evenHead;
+    <span class="kw">return</span> head;
+}</pre>
+
+<h3>Practice Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/remove-duplicates-from-sorted-list/" target="_blank">83. Remove Duplicates from Sorted List</a></span><span><span class="tag tag-easy">Easy</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/" target="_blank">82. Remove Duplicates from Sorted List II</a></span><span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google Freq</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/partition-list/" target="_blank">86. Partition List</a></span><span><span class="tag tag-medium">Medium</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/reorder-list/" target="_blank">143. Reorder List</a></span><span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google Freq</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/swap-nodes-in-pairs/" target="_blank">24. Swap Nodes in Pairs</a></span><span><span class="tag tag-medium">Medium</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/rotate-list/" target="_blank">61. Rotate List</a></span><span><span class="tag tag-medium">Medium</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/odd-even-linked-list/" target="_blank">328. Odd Even Linked List</a></span><span><span class="tag tag-medium">Medium</span></span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== 7. Design Problems ===== -->
+<div class="section" id="design">
+<div class="card">
+<h2>Design Problems</h2>
+
+<h3>LRU Cache (LC 146)</h3>
+<p>The most important design problem using a linked list. Doubly linked list + HashMap gives O(1) for both get and put.</p>
+
+<div class="danger">
+  <p><strong>Google asks this frequently.</strong> You must be able to code the full implementation in under 15 minutes without bugs.</p>
+</div>
+
+<pre><span class="kw">class</span> <span class="type">LRUCache</span> {
+    <span class="kw">private</span> <span class="type">int</span> capacity;
+    <span class="kw">private</span> <span class="type">Map</span>&lt;<span class="type">Integer</span>, <span class="type">Node</span>&gt; map;
+    <span class="kw">private</span> <span class="type">Node</span> head, tail;  <span class="cm">// dummy sentinels</span>
+
+    <span class="kw">class</span> <span class="type">Node</span> {
+        <span class="type">int</span> key, val;
+        <span class="type">Node</span> prev, next;
+        <span class="fn">Node</span>(<span class="type">int</span> k, <span class="type">int</span> v) { key = k; val = v; }
+    }
+
+    <span class="kw">public</span> <span class="fn">LRUCache</span>(<span class="type">int</span> capacity) {
+        <span class="kw">this</span>.capacity = capacity;
+        map = <span class="kw">new</span> <span class="type">HashMap</span>&lt;&gt;();
+        head = <span class="kw">new</span> <span class="type">Node</span>(<span class="num">0</span>, <span class="num">0</span>);
+        tail = <span class="kw">new</span> <span class="type">Node</span>(<span class="num">0</span>, <span class="num">0</span>);
+        head.next = tail;
+        tail.prev = head;
+    }
+
+    <span class="kw">public int</span> <span class="fn">get</span>(<span class="type">int</span> key) {
+        <span class="kw">if</span> (!map.<span class="fn">containsKey</span>(key)) <span class="kw">return</span> -<span class="num">1</span>;
+        <span class="type">Node</span> node = map.<span class="fn">get</span>(key);
+        <span class="fn">remove</span>(node);
+        <span class="fn">insertAtHead</span>(node);
+        <span class="kw">return</span> node.val;
+    }
+
+    <span class="kw">public void</span> <span class="fn">put</span>(<span class="type">int</span> key, <span class="type">int</span> value) {
+        <span class="kw">if</span> (map.<span class="fn">containsKey</span>(key)) {
+            <span class="fn">remove</span>(map.<span class="fn">get</span>(key));
+        }
+        <span class="type">Node</span> node = <span class="kw">new</span> <span class="type">Node</span>(key, value);
+        map.<span class="fn">put</span>(key, node);
+        <span class="fn">insertAtHead</span>(node);
+
+        <span class="kw">if</span> (map.<span class="fn">size</span>() &gt; capacity) {
+            <span class="type">Node</span> lru = tail.prev;
+            <span class="fn">remove</span>(lru);
+            map.<span class="fn">remove</span>(lru.key);
+        }
+    }
+
+    <span class="kw">private void</span> <span class="fn">remove</span>(<span class="type">Node</span> node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+
+    <span class="kw">private void</span> <span class="fn">insertAtHead</span>(<span class="type">Node</span> node) {
+        node.next = head.next;
+        node.prev = head;
+        head.next.prev = node;
+        head.next = node;
+    }
+}</pre>
+
+<div class="insight">
+  <p><strong>Key Design Decision:</strong> Head = most recently used, Tail = least recently used. Every access moves the node to head. Eviction removes from tail. Both operations are O(1) with doubly linked list.</p>
+</div>
+
+<h3>LFU Cache (LC 460)</h3>
+<p>Extension of LRU: evict the least <em>frequently</em> used. Use a frequency map where each frequency maps to an ordered set (or doubly linked list) of nodes. Track the minimum frequency.</p>
+
+<div class="tip">
+  <p><strong>Structure:</strong> <code>Map&lt;Integer, Node&gt; keyMap</code> + <code>Map&lt;Integer, DoublyLinkedList&gt; freqMap</code> + <code>int minFreq</code>. On access, move node from freq F list to freq F+1 list. If freq F list becomes empty and F == minFreq, increment minFreq.</p>
+</div>
+
+<h3>Design Linked List (LC 707)</h3>
+<pre><span class="kw">class</span> <span class="type">MyLinkedList</span> {
+    <span class="kw">private</span> <span class="type">Node</span> head, tail;
+    <span class="kw">private int</span> size;
+
+    <span class="kw">class</span> <span class="type">Node</span> {
+        <span class="type">int</span> val;
+        <span class="type">Node</span> prev, next;
+        <span class="fn">Node</span>(<span class="type">int</span> v) { val = v; }
+    }
+
+    <span class="kw">public</span> <span class="fn">MyLinkedList</span>() {
+        head = <span class="kw">new</span> <span class="type">Node</span>(<span class="num">0</span>);
+        tail = <span class="kw">new</span> <span class="type">Node</span>(<span class="num">0</span>);
+        head.next = tail;
+        tail.prev = head;
+        size = <span class="num">0</span>;
+    }
+
+    <span class="kw">public int</span> <span class="fn">get</span>(<span class="type">int</span> index) {
+        <span class="kw">if</span> (index &lt; <span class="num">0</span> || index &gt;= size) <span class="kw">return</span> -<span class="num">1</span>;
+        <span class="type">Node</span> curr = head.next;
+        <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; index; i++) curr = curr.next;
+        <span class="kw">return</span> curr.val;
+    }
+
+    <span class="kw">public void</span> <span class="fn">addAtIndex</span>(<span class="type">int</span> index, <span class="type">int</span> val) {
+        <span class="kw">if</span> (index &gt; size) <span class="kw">return</span>;
+        <span class="kw">if</span> (index &lt; <span class="num">0</span>) index = <span class="num">0</span>;
+        <span class="type">Node</span> pred = head;
+        <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; index; i++) pred = pred.next;
+        <span class="type">Node</span> node = <span class="kw">new</span> <span class="type">Node</span>(val);
+        node.next = pred.next;
+        node.prev = pred;
+        pred.next.prev = node;
+        pred.next = node;
+        size++;
+    }
+
+    <span class="kw">public void</span> <span class="fn">addAtHead</span>(<span class="type">int</span> val) { <span class="fn">addAtIndex</span>(<span class="num">0</span>, val); }
+    <span class="kw">public void</span> <span class="fn">addAtTail</span>(<span class="type">int</span> val) { <span class="fn">addAtIndex</span>(size, val); }
+
+    <span class="kw">public void</span> <span class="fn">deleteAtIndex</span>(<span class="type">int</span> index) {
+        <span class="kw">if</span> (index &lt; <span class="num">0</span> || index &gt;= size) <span class="kw">return</span>;
+        <span class="type">Node</span> pred = head;
+        <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; index; i++) pred = pred.next;
+        pred.next = pred.next.next;
+        pred.next.prev = pred;
+        size--;
+    }
+}</pre>
+
+<h3>Flatten Nested List Iterator (LC 341)</h3>
+<pre><span class="kw">class</span> <span class="type">NestedIterator</span> <span class="kw">implements</span> <span class="type">Iterator</span>&lt;<span class="type">Integer</span>&gt; {
+    <span class="kw">private</span> <span class="type">Deque</span>&lt;<span class="type">Iterator</span>&lt;<span class="type">NestedInteger</span>&gt;&gt; stack;
+    <span class="kw">private</span> <span class="type">Integer</span> nextVal;
+
+    <span class="kw">public</span> <span class="fn">NestedIterator</span>(<span class="type">List</span>&lt;<span class="type">NestedInteger</span>&gt; nestedList) {
+        stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+        stack.<span class="fn">push</span>(nestedList.<span class="fn">iterator</span>());
+    }
+
+    <span class="kw">public boolean</span> <span class="fn">hasNext</span>() {
+        <span class="kw">while</span> (!stack.<span class="fn">isEmpty</span>()) {
+            <span class="type">Iterator</span>&lt;<span class="type">NestedInteger</span>&gt; it = stack.<span class="fn">peek</span>();
+            <span class="kw">if</span> (!it.<span class="fn">hasNext</span>()) {
+                stack.<span class="fn">pop</span>();
+                <span class="kw">continue</span>;
+            }
+            <span class="type">NestedInteger</span> ni = it.<span class="fn">next</span>();
+            <span class="kw">if</span> (ni.<span class="fn">isInteger</span>()) {
+                nextVal = ni.<span class="fn">getInteger</span>();
+                <span class="kw">return true</span>;
+            }
+            stack.<span class="fn">push</span>(ni.<span class="fn">getList</span>().<span class="fn">iterator</span>());
+        }
+        <span class="kw">return false</span>;
+    }
+
+    <span class="kw">public</span> <span class="type">Integer</span> <span class="fn">next</span>() { <span class="kw">return</span> nextVal; }
+}</pre>
+
+<h3>Practice Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/lru-cache/" target="_blank">146. LRU Cache</a></span><span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google Freq</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/lfu-cache/" target="_blank">460. LFU Cache</a></span><span><span class="tag tag-hard">Hard</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/design-linked-list/" target="_blank">707. Design Linked List</a></span><span><span class="tag tag-medium">Medium</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/flatten-nested-list-iterator/" target="_blank">341. Flatten Nested List Iterator</a></span><span><span class="tag tag-medium">Medium</span></span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== 8. Advanced ===== -->
+<div class="section" id="advanced">
+<div class="card">
+<h2>Advanced Problems</h2>
+
+<h3>Reverse Nodes in Even Length Groups (LC 2074)</h3>
+<p>Traverse the list in groups of increasing size (1, 2, 3, ...). Reverse the group only if its actual length is even.</p>
+
+<pre><span class="kw">public</span> <span class="type">ListNode</span> <span class="fn">reverseEvenLengthGroups</span>(<span class="type">ListNode</span> head) {
+    <span class="type">ListNode</span> prev = head;
+    <span class="type">int</span> groupSize = <span class="num">2</span>;  <span class="cm">// first group of 1 is never reversed</span>
+
+    <span class="kw">while</span> (prev.next != <span class="kw">null</span>) {
+        <span class="cm">// Count actual nodes in this group</span>
+        <span class="type">ListNode</span> node = prev;
+        <span class="type">int</span> count = <span class="num">0</span>;
+        <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; groupSize &amp;&amp; node.next != <span class="kw">null</span>; i++) {
+            node = node.next;
+            count++;
+        }
+
+        <span class="kw">if</span> (count % <span class="num">2</span> == <span class="num">0</span>) {
+            <span class="cm">// Reverse 'count' nodes starting from prev.next</span>
+            <span class="type">ListNode</span> curr = prev.next;
+            <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; count - <span class="num">1</span>; i++) {
+                <span class="type">ListNode</span> next = curr.next;
+                curr.next = next.next;
+                next.next = prev.next;
+                prev.next = next;
+            }
+            prev = curr;
+        } <span class="kw">else</span> {
+            <span class="cm">// Skip this group</span>
+            <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; count; i++) {
+                prev = prev.next;
+            }
+        }
+
+        groupSize++;
+    }
+
+    <span class="kw">return</span> head;
+}</pre>
+
+<h3>Detect and Remove Loop</h3>
+<p>Combine Floyd's cycle detection with removal: once you find the cycle start, traverse to find the node whose <code>next</code> points to the cycle start, then set it to null.</p>
+
+<pre><span class="kw">public void</span> <span class="fn">removeLoop</span>(<span class="type">ListNode</span> head) {
+    <span class="type">ListNode</span> slow = head, fast = head;
+
+    <span class="cm">// Detect cycle</span>
+    <span class="kw">while</span> (fast != <span class="kw">null</span> &amp;&amp; fast.next != <span class="kw">null</span>) {
+        slow = slow.next;
+        fast = fast.next.next;
+        <span class="kw">if</span> (slow == fast) <span class="kw">break</span>;
+    }
+
+    <span class="kw">if</span> (fast == <span class="kw">null</span> || fast.next == <span class="kw">null</span>) <span class="kw">return</span>;  <span class="cm">// no cycle</span>
+
+    <span class="cm">// Find cycle start</span>
+    slow = head;
+    <span class="kw">if</span> (slow == fast) {
+        <span class="cm">// Special case: cycle starts at head</span>
+        <span class="kw">while</span> (fast.next != slow) fast = fast.next;
+    } <span class="kw">else</span> {
+        <span class="kw">while</span> (slow.next != fast.next) {
+            slow = slow.next;
+            fast = fast.next;
+        }
+    }
+
+    fast.next = <span class="kw">null</span>;  <span class="cm">// remove the loop</span>
+}</pre>
+
+<h3>Copy List with Random Pointer (LC 138)</h3>
+<p>See the Intersection section for full implementation with both HashMap and interleave approaches.</p>
+
+<h3>Linked List in Binary Tree (LC 1367)</h3>
+<p>Check if a linked list corresponds to any downward path in a binary tree. Use DFS with a helper that matches from the current tree node.</p>
+
+<pre><span class="kw">public boolean</span> <span class="fn">isSubPath</span>(<span class="type">ListNode</span> head, <span class="type">TreeNode</span> root) {
+    <span class="kw">if</span> (root == <span class="kw">null</span>) <span class="kw">return false</span>;
+    <span class="kw">return</span> <span class="fn">matches</span>(head, root) ||
+           <span class="fn">isSubPath</span>(head, root.left) ||
+           <span class="fn">isSubPath</span>(head, root.right);
+}
+
+<span class="kw">private boolean</span> <span class="fn">matches</span>(<span class="type">ListNode</span> list, <span class="type">TreeNode</span> tree) {
+    <span class="kw">if</span> (list == <span class="kw">null</span>) <span class="kw">return true</span>;   <span class="cm">// entire list matched</span>
+    <span class="kw">if</span> (tree == <span class="kw">null</span>) <span class="kw">return false</span>;  <span class="cm">// tree ended before list</span>
+    <span class="kw">if</span> (list.val != tree.val) <span class="kw">return false</span>;
+    <span class="kw">return</span> <span class="fn">matches</span>(list.next, tree.left) ||
+           <span class="fn">matches</span>(list.next, tree.right);
+}</pre>
+
+<div class="tip">
+  <p><strong>Optimization:</strong> For very long lists, precompute KMP failure function on the list values to avoid re-scanning. But for interviews, the simple DFS approach is sufficient and expected.</p>
+</div>
+
+<h3>Practice Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/reverse-nodes-in-even-length-groups/" target="_blank">2074. Reverse Nodes in Even Length Groups</a></span><span><span class="tag tag-medium">Medium</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/copy-list-with-random-pointer/" target="_blank">138. Copy List with Random Pointer</a></span><span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google Freq</span></span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/linked-list-in-binary-tree/" target="_blank">1367. Linked List in Binary Tree</a></span><span><span class="tag tag-medium">Medium</span></span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== 9. Interview Tips ===== -->
+<div class="section" id="tips">
+<div class="card">
+<h2>Interview Tips</h2>
+
+<h3>Time Management</h3>
+<div class="warning">
+  <p><strong>Linked list problems should take 10-15 minutes, not 25+.</strong> If you're spending more than 15 minutes, you're missing the pattern. Step back and identify which template applies.</p>
+</div>
+
+<h3>Core Techniques Checklist</h3>
+<table>
+  <tr><th>Technique</th><th>Signal / When to Use</th><th>Key Problems</th></tr>
+  <tr><td>Dummy Head</td><td>Head might change; insertion/deletion at front</td><td>LC 21, 82, 86, 203</td></tr>
+  <tr><td>Reversal</td><td>"Reverse", reorder, K-group, palindrome</td><td>LC 206, 92, 25, 143</td></tr>
+  <tr><td>Fast/Slow Pointers</td><td>Cycle, middle, nth from end</td><td>LC 141, 142, 876, 19</td></tr>
+  <tr><td>Two Pointers (same speed)</td><td>Intersection, merge, compare</td><td>LC 160, 21</td></tr>
+  <tr><td>Merge</td><td>"Sorted", combine, K-way</td><td>LC 21, 23, 148</td></tr>
+  <tr><td>HashMap</td><td>Copy with random, LRU, detect intersection</td><td>LC 138, 146</td></tr>
+  <tr><td>Stack</td><td>Reverse order processing, nested structures</td><td>LC 445, 341</td></tr>
+  <tr><td>Partition into sublists</td><td>Separate by condition, odd/even</td><td>LC 86, 328</td></tr>
+</table>
+
+<h3>Dummy Head Rules</h3>
+<div class="insight">
+  <p><strong>When to use dummy head:</strong> (1) Deletion might affect head. (2) Insertion before head. (3) Merging lists. (4) Any time the first node needs the same treatment as others. When in doubt, use a dummy head &mdash; it costs nothing and prevents bugs.</p>
+</div>
+
+<h3>Common Bugs to Avoid</h3>
+<ol>
+  <li><strong>Forgetting to save <code>next</code> before overwriting.</strong> Classic in reversal: <code>ListNode next = curr.next</code> BEFORE <code>curr.next = prev</code>.</li>
+  <li><strong>Null pointer on empty list or single node.</strong> Always check <code>head == null</code> and <code>head.next == null</code> at the start.</li>
+  <li><strong>Not terminating a rearranged list.</strong> After partition or rotation, the last node's <code>next</code> might still point somewhere &mdash; set it to null!</li>
+  <li><strong>Off-by-one in counting.</strong> "Remove nth from end" &mdash; do you advance n or n+1 steps? Use dummy head to avoid this.</li>
+  <li><strong>Modifying the list while traversing.</strong> In "remove duplicates", make sure you don't skip nodes by advancing only in the else branch.</li>
+</ol>
+
+<h3>Google Follow-up Patterns</h3>
+<div class="card">
+<h4>Common follow-ups:</h4>
+<ul>
+  <li><strong>"Can you do it in O(1) space?"</strong> &rarr; Usually means reverse-in-place instead of using a stack or extra data structure.</li>
+  <li><strong>"Can you do it iteratively?"</strong> &rarr; After you show recursive. Convert using explicit stack or prev/curr pattern.</li>
+  <li><strong>"What if the list is doubly linked?"</strong> &rarr; Usually makes the problem easier. Don't forget to update both prev and next pointers.</li>
+  <li><strong>"Can you do it in one pass?"</strong> &rarr; Think fast/slow pointers or maintain a fixed gap between two pointers.</li>
+  <li><strong>"What about thread safety?"</strong> &rarr; LRU Cache follow-up. Discuss ConcurrentHashMap + ReentrantLock on the list operations.</li>
+</ul>
+</div>
+
+<h3>Drawing Pointer Diagrams</h3>
+<div class="tip">
+  <p><strong>Always draw before you code.</strong> For each pointer manipulation, draw the state before and after. Label each step. This takes 1-2 minutes but saves 5-10 minutes of debugging. In virtual interviews, use the drawing tool or describe the state verbally to the interviewer.</p>
+</div>
+
+<h3>Pattern Recognition Quick Reference</h3>
+<div class="decision-tree"><span class="q">What does the problem ask?</span>
+  <span class="arrow">&boxur;&mdash; "Reverse" in the description &rarr;</span> <span class="a">Iterative prev/curr/next or Recursive</span>
+  <span class="arrow">&boxur;&mdash; "Cycle" or "loop" &rarr;</span> <span class="a">Floyd's fast/slow pointers</span>
+  <span class="arrow">&boxur;&mdash; "Middle" or "palindrome" &rarr;</span> <span class="a">Fast/slow to find mid, then reverse second half</span>
+  <span class="arrow">&boxur;&mdash; "Nth from end" or "remove from end" &rarr;</span> <span class="a">Two pointers with n-gap</span>
+  <span class="arrow">&boxur;&mdash; "Merge" or "sorted" &rarr;</span> <span class="a">Dummy head + compare + advance smaller</span>
+  <span class="arrow">&boxur;&mdash; "Intersection" &rarr;</span> <span class="a">Two pointers swap at end</span>
+  <span class="arrow">&boxur;&mdash; "Copy" or "clone" &rarr;</span> <span class="a">HashMap or interleave trick</span>
+  <span class="arrow">&boxur;&mdash; "Reorder" or "rearrange" &rarr;</span> <span class="a">Find mid + reverse + interleave</span>
+  <span class="arrow">&boxur;&mdash; "Partition" or "separate" &rarr;</span> <span class="a">Two dummy lists then concatenate</span>
+  <span class="arrow">&boxur;&mdash; "Cache" or "recent/frequent" &rarr;</span> <span class="a">Doubly linked list + HashMap</span></div>
+
+<h3>Complexity Summary</h3>
+<table>
+  <tr><th>Problem Type</th><th>Time</th><th>Space</th><th>Notes</th></tr>
+  <tr><td>Reversal (iterative)</td><td>O(n)</td><td>O(1)</td><td>Always prefer in interviews</td></tr>
+  <tr><td>Reversal (recursive)</td><td>O(n)</td><td>O(n)</td><td>Stack space, but shows understanding</td></tr>
+  <tr><td>Fast/Slow pointer</td><td>O(n)</td><td>O(1)</td><td>Cycle, middle, nth from end</td></tr>
+  <tr><td>Merge two sorted</td><td>O(n+m)</td><td>O(1)</td><td>In-place with dummy</td></tr>
+  <tr><td>Merge K sorted (heap)</td><td>O(N log k)</td><td>O(k)</td><td>N = total nodes</td></tr>
+  <tr><td>Sort list (merge sort)</td><td>O(n log n)</td><td>O(log n)</td><td>Recursion stack</td></tr>
+  <tr><td>LRU Cache</td><td>O(1) per op</td><td>O(capacity)</td><td>DLL + HashMap</td></tr>
+</table>
+</div>
+</div>
+
+</div><!-- container -->
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

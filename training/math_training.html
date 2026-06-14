@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math for Coding Interviews — Training Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fa; --bg2: #ffffff; --bg3: #f1f3f5; --bg4: #e9ecef;
+  --border: #dee2e6; --text: #212529; --text2: #495057; --text3: #868e96;
+  --blue: #1971c2; --blue-l: #d0ebff; --green: #2f9e44; --green-l: #d3f9d8;
+  --yellow: #e67700; --yellow-l: #fff3bf; --red: #c92a2a; --red-l: #ffe3e3;
+  --purple: #7048e8; --purple-l: #e5dbff; --orange: #d9480f; --cyan: #0c8599;
+  --r: 12px; --shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.8; }
+.container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+header { text-align: center; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+header .sub { color: var(--text3); font-size: 14px; }
+
+.nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 40px;  position: sticky; top: 0; background: var(--bg); padding: 16px 0; z-index: 100; border-bottom: 1px solid var(--border); }
+.nav-btn { padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s; font-family: 'Inter', sans-serif; }
+.nav-btn:hover { background: var(--bg3); color: var(--text); }
+.nav-btn.active { background: var(--blue-l); color: var(--blue); border-color: var(--blue); }
+
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+h2 { font-size: 24px; font-weight: 700; margin: 32px 0 16px; color: var(--blue); }
+h3 { font-size: 18px; font-weight: 600; margin: 24px 0 12px; }
+h4 { font-size: 15px; font-weight: 600; margin: 16px 0 8px; color: var(--text2); }
+p { margin-bottom: 12px; color: var(--text2); }
+ul, ol { margin: 8px 0 16px 24px; color: var(--text2); }
+li { margin-bottom: 6px; }
+strong { color: var(--text); }
+
+pre { background: #1e1e2e; border-radius: 8px; padding: 16px 20px; overflow-x: auto; margin: 12px 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; color: #cdd6f4; }
+code { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+p code, li code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--purple); }
+pre .kw { color: #cba6f7; } pre .type { color: #f9e2af; } pre .str { color: #a6e3a1; }
+pre .cm { color: #6c7086; } pre .num { color: #fab387; } pre .fn { color: #89b4fa; }
+
+.insight { background: var(--blue-l); border-left: 3px solid var(--blue); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.insight p { color: var(--blue); margin: 0; }
+.warning { background: var(--yellow-l); border-left: 3px solid var(--yellow); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.warning p { color: var(--yellow); margin: 0; }
+.danger { background: var(--red-l); border-left: 3px solid var(--red); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.danger p { color: var(--red); margin: 0; }
+.tip { background: var(--green-l); border-left: 3px solid var(--green); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.tip p { color: var(--green); margin: 0; }
+
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 20px; padding: 24px 28px; box-shadow: var(--shadow); }
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+th, td { padding: 10px 14px; border: 1px solid var(--border); text-align: left; }
+th { background: var(--bg3); font-weight: 600; color: var(--text); }
+tr:hover { background: var(--bg3); }
+
+.tag { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; margin: 2px 4px 2px 0; }
+.tag-easy { background: var(--green-l); color: var(--green); }
+.tag-medium { background: var(--yellow-l); color: var(--yellow); }
+.tag-hard { background: var(--red-l); color: var(--red); }
+.tag-freq { background: var(--purple-l); color: var(--purple); }
+
+.problem-list { list-style: none; padding: 0; margin: 12px 0; }
+.problem-list li { padding: 10px 14px; border-left: 3px solid var(--blue); margin-bottom: 8px; background: var(--bg3); border-radius: 0 8px 8px 0; display: flex; justify-content: flex-start; align-items: center; gap: 8px; }
+.problem-list .title { color: var(--text); font-weight: 500; font-size: 14px; flex: 1; }
+.problem-list .title a { color: var(--text); text-decoration: none; border-bottom: 1px dashed var(--border); transition: all .2s; }
+.problem-list .title a:hover { color: var(--blue); border-bottom-color: var(--blue); }
+
+.formula { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; margin: 12px 0; font-family: 'JetBrains Mono', monospace; font-size: 14px; text-align: center; color: var(--text); }
+
+@media (max-width: 768px) { .container { padding: 20px 12px; } .nav { position: static; } pre { font-size: 11px; } }
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>Math for Coding Interviews</h1>
+  <div class="sub">Number Theory &bull; Combinatorics &bull; Geometry &bull; Probability &bull; Bit Manipulation</div>
+</header>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection('overview')">Overview</button>
+  <button class="nav-btn" onclick="showSection('primes')">Primes &amp; Factors</button>
+  <button class="nav-btn" onclick="showSection('modular')">Modular Arithmetic</button>
+  <button class="nav-btn" onclick="showSection('combinatorics')">Combinatorics</button>
+  <button class="nav-btn" onclick="showSection('gcd')">GCD / LCM</button>
+  <button class="nav-btn" onclick="showSection('power')">Fast Power</button>
+  <button class="nav-btn" onclick="showSection('geometry')">Geometry</button>
+  <button class="nav-btn" onclick="showSection('bits')">Bit Manipulation</button>
+  <button class="nav-btn" onclick="showSection('probability')">Probability</button>
+  <button class="nav-btn" onclick="showSection('sequences')">Sequences</button>
+  <button class="nav-btn" onclick="showSection('matrix')">Matrix Expo</button>
+</div>
+
+<!-- ===== Overview ===== -->
+<div class="section active" id="overview">
+<div class="card">
+<h2>When Math Shows Up in Interviews</h2>
+<p>Math problems in coding interviews fall into patterns. Recognizing the category is half the battle.</p>
+
+<h3>Category Map</h3>
+<table>
+  <tr><th>Category</th><th>Key Concepts</th><th>Frequency</th></tr>
+  <tr><td>Primes &amp; Factors</td><td>Sieve, prime factorization, divisors</td><td>Medium</td></tr>
+  <tr><td>Modular Arithmetic</td><td>mod properties, modular inverse, mod 10^9+7</td><td>High (in DP/combo)</td></tr>
+  <tr><td>Combinatorics</td><td>C(n,k), permutations, Catalan, inclusion-exclusion</td><td>Medium-High</td></tr>
+  <tr><td>GCD / LCM</td><td>Euclidean algorithm, properties</td><td>Medium</td></tr>
+  <tr><td>Fast Power</td><td>Binary exponentiation</td><td>Medium</td></tr>
+  <tr><td>Geometry</td><td>Distance, cross product, convex hull</td><td>Low-Medium</td></tr>
+  <tr><td>Bit Manipulation</td><td>XOR, masks, counting bits</td><td>High</td></tr>
+  <tr><td>Probability</td><td>Reservoir sampling, expected value, random</td><td>Low-Medium</td></tr>
+  <tr><td>Sequences</td><td>Arithmetic, geometric, Fibonacci</td><td>Low</td></tr>
+  <tr><td>Matrix Exponentiation</td><td>O(log n) recurrence solving</td><td>Rare (Hard)</td></tr>
+</table>
+</div>
+</div>
+
+<!-- ===== Primes ===== -->
+<div class="section" id="primes">
+<div class="card">
+<h2>Primes &amp; Factorization</h2>
+
+<h3>Primality Test: O(sqrt(n))</h3>
+<pre><span class="kw">boolean</span> <span class="fn">isPrime</span>(<span class="kw">int</span> n) {
+    <span class="kw">if</span> (n &lt; <span class="num">2</span>) <span class="kw">return false</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">2</span>; i * i &lt;= n; i++)
+        <span class="kw">if</span> (n % i == <span class="num">0</span>) <span class="kw">return false</span>;
+    <span class="kw">return true</span>;
+}
+</pre>
+
+<h3>Sieve of Eratosthenes: O(n log log n)</h3>
+<pre><span class="kw">boolean</span>[] sieve = <span class="kw">new boolean</span>[n + <span class="num">1</span>];
+Arrays.<span class="fn">fill</span>(sieve, <span class="kw">true</span>);
+sieve[<span class="num">0</span>] = sieve[<span class="num">1</span>] = <span class="kw">false</span>;
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">2</span>; i * i &lt;= n; i++) {
+    <span class="kw">if</span> (sieve[i]) {
+        <span class="kw">for</span> (<span class="kw">int</span> j = i * i; j &lt;= n; j += i)
+            sieve[j] = <span class="kw">false</span>;
+    }
+}
+</pre>
+
+<h3>Prime Factorization: O(sqrt(n))</h3>
+<pre>List&lt;int[]&gt; <span class="fn">factorize</span>(<span class="kw">int</span> n) {
+    List&lt;int[]&gt; factors = <span class="kw">new</span> ArrayList&lt;&gt;();
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">2</span>; i * i &lt;= n; i++) {
+        <span class="kw">int</span> count = <span class="num">0</span>;
+        <span class="kw">while</span> (n % i == <span class="num">0</span>) { n /= i; count++; }
+        <span class="kw">if</span> (count &gt; <span class="num">0</span>) factors.add(<span class="kw">new int</span>[]{i, count});
+    }
+    <span class="kw">if</span> (n &gt; <span class="num">1</span>) factors.add(<span class="kw">new int</span>[]{n, <span class="num">1</span>});
+    <span class="kw">return</span> factors;
+}
+</pre>
+
+<h3>Count Divisors from Prime Factorization</h3>
+<div class="formula">n = p1^a1 * p2^a2 * ... &rarr; divisor count = (a1+1)(a2+1)...</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/count-primes/" target="_blank">204. Count Primes (Sieve)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/closest-prime-numbers-in-range/" target="_blank">2523. Closest Prime Numbers in Range</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/largest-component-size-by-common-factor/" target="_blank">952. Largest Component Size by Common Factor</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-ways-to-make-array-with-product/" target="_blank">1735. Count Ways to Make Array With Product</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-the-number-of-ideal-arrays/" target="_blank">2338. Count the Number of Ideal Arrays</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/greatest-common-divisor-traversal/" target="_blank">2709. Greatest Common Divisor Traversal</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Modular ===== -->
+<div class="section" id="modular">
+<div class="card">
+<h2>Modular Arithmetic</h2>
+
+<h3>Key Properties</h3>
+<div class="insight">
+  <p><strong>(a + b) % m = ((a % m) + (b % m)) % m</strong><br>
+  <strong>(a * b) % m = ((a % m) * (b % m)) % m</strong><br>
+  <strong>(a - b) % m = ((a % m) - (b % m) + m) % m</strong> (avoid negative)<br>
+  Division requires modular inverse!</p>
+</div>
+
+<h3>Modular Inverse (when mod is prime)</h3>
+<div class="formula">a^(-1) mod p = a^(p-2) mod p &nbsp;&nbsp; (Fermat's Little Theorem)</div>
+<pre><span class="kw">static final int</span> MOD = <span class="num">1_000_000_007</span>;
+
+<span class="kw">long</span> <span class="fn">modInverse</span>(<span class="kw">long</span> a, <span class="kw">long</span> mod) {
+    <span class="kw">return</span> <span class="fn">power</span>(a, mod - <span class="num">2</span>, mod);
+}
+
+<span class="kw">long</span> <span class="fn">power</span>(<span class="kw">long</span> base, <span class="kw">long</span> exp, <span class="kw">long</span> mod) {
+    <span class="kw">long</span> result = <span class="num">1</span>;
+    base %= mod;
+    <span class="kw">while</span> (exp &gt; <span class="num">0</span>) {
+        <span class="kw">if</span> ((exp &amp; <span class="num">1</span>) == <span class="num">1</span>) result = result * base % mod;
+        base = base * base % mod;
+        exp &gt;&gt;= <span class="num">1</span>;
+    }
+    <span class="kw">return</span> result;
+}
+</pre>
+
+<h3>When to Use mod 10^9+7</h3>
+<div class="warning">
+  <p><strong>Signal:</strong> "Return the answer modulo 10^9+7" &mdash; means the answer can be astronomically large. Apply mod at every addition/multiplication step to prevent overflow.</p>
+</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/pow/" target="_blank">50. Pow(x, n) (fast power)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/super-pow/" target="_blank">372. Super Pow</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-good-numbers/" target="_blank">1922. Count Good Numbers</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-collisions-of-monkeys-on-a-polygon/" target="_blank">2550. Count Collisions of Monkeys on a Polygon</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Combinatorics ===== -->
+<div class="section" id="combinatorics">
+<div class="card">
+<h2>Combinatorics</h2>
+
+<h3>Core Formulas</h3>
+<div class="formula">C(n, k) = n! / (k! * (n-k)!) &nbsp;&nbsp; | &nbsp;&nbsp; P(n, k) = n! / (n-k)!</div>
+
+<h3>Computing C(n, k) mod p</h3>
+<pre><span class="cm">// Precompute factorials and inverse factorials</span>
+<span class="kw">long</span>[] fact = <span class="kw">new long</span>[N];
+<span class="kw">long</span>[] inv = <span class="kw">new long</span>[N];
+fact[<span class="num">0</span>] = <span class="num">1</span>;
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt; N; i++)
+    fact[i] = fact[i-<span class="num">1</span>] * i % MOD;
+inv[N-<span class="num">1</span>] = <span class="fn">power</span>(fact[N-<span class="num">1</span>], MOD - <span class="num">2</span>, MOD);
+<span class="kw">for</span> (<span class="kw">int</span> i = N-<span class="num">2</span>; i &gt;= <span class="num">0</span>; i--)
+    inv[i] = inv[i+<span class="num">1</span>] * (i+<span class="num">1</span>) % MOD;
+
+<span class="kw">long</span> <span class="fn">comb</span>(<span class="kw">int</span> n, <span class="kw">int</span> k) {
+    <span class="kw">if</span> (k &lt; <span class="num">0</span> || k &gt; n) <span class="kw">return</span> <span class="num">0</span>;
+    <span class="kw">return</span> fact[n] * inv[k] % MOD * inv[n-k] % MOD;
+}
+</pre>
+
+<h3>Catalan Numbers</h3>
+<div class="formula">C_n = C(2n, n) / (n+1) = (2n)! / ((n+1)! * n!)</div>
+<div class="insight">
+  <p><strong>Catalan appears in:</strong> valid parentheses count, BST count with n nodes, polygon triangulation, non-crossing partitions, Dyck paths</p>
+</div>
+
+<h3>Stars and Bars</h3>
+<div class="formula">Ways to place n identical items into k distinct bins = C(n+k-1, k-1)</div>
+
+<h3>Inclusion-Exclusion Principle</h3>
+<pre><span class="cm">// |A1 ∪ A2 ∪ ... ∪ An| = Σ|Ai| - Σ|Ai∩Aj| + Σ|Ai∩Aj∩Ak| - ...</span>
+<span class="cm">// Common use: count numbers NOT divisible by any in a set</span>
+<span class="kw">long</span> count = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span> mask = <span class="num">1</span>; mask &lt; (<span class="num">1</span> &lt;&lt; primes.length); mask++) {
+    <span class="kw">long</span> product = <span class="num">1</span>;
+    <span class="kw">int</span> bits = Integer.<span class="fn">bitCount</span>(mask);
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; primes.length; i++)
+        <span class="kw">if</span> ((mask &amp; (<span class="num">1</span> &lt;&lt; i)) != <span class="num">0</span>) product *= primes[i];
+    count += (bits % <span class="num">2</span> == <span class="num">1</span> ? <span class="num">1</span> : -<span class="num">1</span>) * (n / product);
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/unique-paths/" target="_blank">62. Unique Paths (C(m+n-2, m-1))</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/unique-binary-search-trees/" target="_blank">96. Unique Binary Search Trees (Catalan)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/generate-parentheses/" target="_blank">22. Generate Parentheses (Catalan)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-all-valid-pickup-and-delivery/" target="_blank">1359. Count All Valid Pickup and Delivery</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/kth-smallest-instructions/" target="_blank">1643. Kth Smallest Instructions</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-the-number-of-ideal-arrays/" target="_blank">2338. Count the Number of Ideal Arrays</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-ways-to-build-rooms/" target="_blank">1916. Count Ways to Build Rooms (Tree Combo)</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== GCD ===== -->
+<div class="section" id="gcd">
+<div class="card">
+<h2>GCD / LCM</h2>
+
+<h3>Euclidean Algorithm: O(log(min(a,b)))</h3>
+<pre><span class="kw">int</span> <span class="fn">gcd</span>(<span class="kw">int</span> a, <span class="kw">int</span> b) {
+    <span class="kw">return</span> b == <span class="num">0</span> ? a : <span class="fn">gcd</span>(b, a % b);
+}
+
+<span class="kw">long</span> <span class="fn">lcm</span>(<span class="kw">long</span> a, <span class="kw">long</span> b) {
+    <span class="kw">return</span> a / <span class="fn">gcd</span>(a, b) * b;  <span class="cm">// divide first to avoid overflow</span>
+}
+</pre>
+
+<h3>Key Properties</h3>
+<div class="insight">
+  <p><strong>gcd(a, b) * lcm(a, b) = a * b</strong><br>
+  <strong>gcd(a, 0) = a</strong><br>
+  <strong>gcd(a, b) = gcd(b, a % b)</strong><br>
+  <strong>gcd(ka, kb) = k * gcd(a, b)</strong><br>
+  <strong>If gcd(a, b) = 1</strong>, a and b are coprime</p>
+</div>
+
+<h3>Extended Euclidean (ax + by = gcd(a,b))</h3>
+<pre><span class="cm">// Returns gcd, sets x and y such that ax + by = gcd</span>
+<span class="kw">int</span>[] <span class="fn">extGcd</span>(<span class="kw">int</span> a, <span class="kw">int</span> b) {
+    <span class="kw">if</span> (b == <span class="num">0</span>) <span class="kw">return new int</span>[]{a, <span class="num">1</span>, <span class="num">0</span>};
+    <span class="kw">int</span>[] r = <span class="fn">extGcd</span>(b, a % b);
+    <span class="kw">return new int</span>[]{r[<span class="num">0</span>], r[<span class="num">2</span>], r[<span class="num">1</span>] - (a/b) * r[<span class="num">2</span>]};
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/greatest-common-divisor-of-strings/" target="_blank">1071. Greatest Common Divisor of Strings</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/water-and-jug-problem/" target="_blank">365. Water and Jug Problem (Bezout)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-deletions-to-make-array-divisible/" target="_blank">2344. Minimum Deletions to Make Array Divisible</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/replace-non-coprime-numbers/" target="_blank">2197. Replace Non-Coprime Numbers</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-number-of-operations-to-make-all-array-elements-equal-to-1/" target="_blank">2654. Minimum Number of Operations to Make All Array Elements Equal to 1</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/check-if-it-is-a-good-array/" target="_blank">1250. Check If It Is a Good Array (Bezout)</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Fast Power ===== -->
+<div class="section" id="power">
+<div class="card">
+<h2>Fast Power (Binary Exponentiation)</h2>
+
+<h3>Template: O(log n)</h3>
+<pre><span class="kw">long</span> <span class="fn">power</span>(<span class="kw">long</span> base, <span class="kw">long</span> exp, <span class="kw">long</span> mod) {
+    <span class="kw">long</span> result = <span class="num">1</span>;
+    base %= mod;
+    <span class="kw">while</span> (exp &gt; <span class="num">0</span>) {
+        <span class="kw">if</span> ((exp &amp; <span class="num">1</span>) == <span class="num">1</span>)
+            result = result * base % mod;
+        base = base * base % mod;
+        exp &gt;&gt;= <span class="num">1</span>;
+    }
+    <span class="kw">return</span> result;
+}
+</pre>
+
+<h3>Applications</h3>
+<div class="insight">
+  <p><strong>Modular inverse:</strong> a^(p-2) mod p<br>
+  <strong>Large exponent mod:</strong> compute x^(10^18) mod m<br>
+  <strong>Matrix exponentiation:</strong> M^n for recurrence solving<br>
+  <strong>Geometric sum:</strong> (r^n - 1) / (r - 1) mod p</p>
+</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/pow/" target="_blank">50. Pow(x, n)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/super-pow/" target="_blank">372. Super Pow</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-good-numbers/" target="_blank">1922. Count Good Numbers</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/double-modular-exponentiation/" target="_blank">2961. Double Modular Exponentiation</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Geometry ===== -->
+<div class="section" id="geometry">
+<div class="card">
+<h2>Computational Geometry</h2>
+
+<h3>Distance &amp; Cross Product</h3>
+<pre><span class="cm">// Euclidean distance squared (avoid sqrt for comparison)</span>
+<span class="kw">long</span> <span class="fn">dist2</span>(<span class="kw">int</span>[] a, <span class="kw">int</span>[] b) {
+    <span class="kw">long</span> dx = a[<span class="num">0</span>] - b[<span class="num">0</span>], dy = a[<span class="num">1</span>] - b[<span class="num">1</span>];
+    <span class="kw">return</span> dx*dx + dy*dy;
+}
+
+<span class="cm">// Cross product of vectors OA and OB</span>
+<span class="cm">// &gt; 0: counter-clockwise, &lt; 0: clockwise, = 0: collinear</span>
+<span class="kw">long</span> <span class="fn">cross</span>(<span class="kw">int</span>[] O, <span class="kw">int</span>[] A, <span class="kw">int</span>[] B) {
+    <span class="kw">return</span> (<span class="kw">long</span>)(A[<span class="num">0</span>]-O[<span class="num">0</span>])*(B[<span class="num">1</span>]-O[<span class="num">1</span>])
+         - (<span class="kw">long</span>)(A[<span class="num">1</span>]-O[<span class="num">1</span>])*(B[<span class="num">0</span>]-O[<span class="num">0</span>]);
+}
+</pre>
+
+<h3>Convex Hull (Andrew's Monotone Chain): O(n log n)</h3>
+<pre><span class="cm">// Sort points, build lower then upper hull</span>
+Arrays.<span class="fn">sort</span>(points, (a, b) -&gt; a[<span class="num">0</span>] != b[<span class="num">0</span>] ? a[<span class="num">0</span>]-b[<span class="num">0</span>] : a[<span class="num">1</span>]-b[<span class="num">1</span>]);
+<span class="kw">int</span> n = points.length, k = <span class="num">0</span>;
+<span class="kw">int</span>[][] hull = <span class="kw">new int</span>[<span class="num">2</span>*n][<span class="num">2</span>];
+
+<span class="cm">// Lower hull</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+    <span class="kw">while</span> (k &gt;= <span class="num">2</span> &amp;&amp; <span class="fn">cross</span>(hull[k-<span class="num">2</span>], hull[k-<span class="num">1</span>], points[i]) &lt;= <span class="num">0</span>) k--;
+    hull[k++] = points[i];
+}
+<span class="cm">// Upper hull</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = n-<span class="num">2</span>, t = k+<span class="num">1</span>; i &gt;= <span class="num">0</span>; i--) {
+    <span class="kw">while</span> (k &gt;= t &amp;&amp; <span class="fn">cross</span>(hull[k-<span class="num">2</span>], hull[k-<span class="num">1</span>], points[i]) &lt;= <span class="num">0</span>) k--;
+    hull[k++] = points[i];
+}
+</pre>
+
+<h3>Collinearity &amp; Area</h3>
+<div class="formula">Triangle area = |cross(A,B,C)| / 2<br>Three points collinear iff cross = 0</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/max-points-on-a-line/" target="_blank">149. Max Points on a Line</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/erect-the-fence/" target="_blank">587. Erect the Fence (Convex Hull)</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/k-closest-points-to-origin/" target="_blank">973. K Closest Points to Origin</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/line-reflection/" target="_blank">356. Line Reflection</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-area-rectangle-ii/" target="_blank">963. Minimum Area Rectangle II</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/check-if-it-is-a-straight-line/" target="_blank">1232. Check If It Is a Straight Line</a></span><span class="tag tag-easy">Easy</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Bits ===== -->
+<div class="section" id="bits">
+<div class="card">
+<h2>Bit Manipulation</h2>
+
+<h3>Essential Operations</h3>
+<table>
+  <tr><th>Operation</th><th>Code</th><th>Purpose</th></tr>
+  <tr><td>Get bit i</td><td><code>(n >> i) & 1</code></td><td>Check if bit i is set</td></tr>
+  <tr><td>Set bit i</td><td><code>n | (1 << i)</code></td><td>Turn on bit i</td></tr>
+  <tr><td>Clear bit i</td><td><code>n & ~(1 << i)</code></td><td>Turn off bit i</td></tr>
+  <tr><td>Toggle bit i</td><td><code>n ^ (1 << i)</code></td><td>Flip bit i</td></tr>
+  <tr><td>Lowest set bit</td><td><code>n & (-n)</code></td><td>Isolate rightmost 1</td></tr>
+  <tr><td>Clear lowest bit</td><td><code>n & (n-1)</code></td><td>Turn off rightmost 1</td></tr>
+  <tr><td>Is power of 2</td><td><code>n > 0 && (n & (n-1)) == 0</code></td><td>Only one bit set</td></tr>
+  <tr><td>Count bits</td><td><code>Integer.bitCount(n)</code></td><td>Population count</td></tr>
+</table>
+
+<h3>XOR Properties</h3>
+<div class="insight">
+  <p><strong>a ^ a = 0</strong> (self-cancellation)<br>
+  <strong>a ^ 0 = a</strong> (identity)<br>
+  <strong>Commutative &amp; Associative</strong><br>
+  <strong>Find single number:</strong> XOR all elements, pairs cancel out</p>
+</div>
+
+<h3>Common Patterns</h3>
+<pre><span class="cm">// Find the only element appearing once (others appear twice)</span>
+<span class="kw">int</span> result = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span> num : nums) result ^= num;
+
+<span class="cm">// Find two unique numbers (others appear twice)</span>
+<span class="kw">int</span> xorAll = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span> num : nums) xorAll ^= num;
+<span class="kw">int</span> diffBit = xorAll &amp; (-xorAll);  <span class="cm">// lowest differing bit</span>
+<span class="kw">int</span> a = <span class="num">0</span>, b = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span> num : nums) {
+    <span class="kw">if</span> ((num &amp; diffBit) == <span class="num">0</span>) a ^= num;
+    <span class="kw">else</span> b ^= num;
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/single-number/" target="_blank">136. Single Number</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/single-number-ii/" target="_blank">137. Single Number II (appears 3 times)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/single-number-iii/" target="_blank">260. Single Number III (two unique)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/number-of-1-bits/" target="_blank">191. Number of 1 Bits</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/counting-bits/" target="_blank">338. Counting Bits</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/sum-of-two-integers/" target="_blank">371. Sum of Two Integers (no + operator)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/bitwise-and-of-numbers-range/" target="_blank">201. Bitwise AND of Numbers Range</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-flips-to-make-a-or-b-equal-to-c/" target="_blank">1318. Minimum Flips to Make a OR b Equal to c</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/largest-combination-with-bitwise-and-0/" target="_blank">2275. Largest Combination With Bitwise AND > 0</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/" target="_blank">421. Maximum XOR of Two Numbers in an Array</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Trie+Bit</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Probability ===== -->
+<div class="section" id="probability">
+<div class="card">
+<h2>Probability &amp; Random</h2>
+
+<h3>Reservoir Sampling: O(1) space for random selection from stream</h3>
+<pre><span class="cm">// Select k items uniformly from a stream of unknown length</span>
+<span class="kw">int</span>[] reservoir = <span class="kw">new int</span>[k];
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+    <span class="kw">if</span> (i &lt; k) {
+        reservoir[i] = stream[i];
+    } <span class="kw">else</span> {
+        <span class="kw">int</span> j = random.nextInt(i + <span class="num">1</span>);
+        <span class="kw">if</span> (j &lt; k) reservoir[j] = stream[i];
+    }
+}
+</pre>
+
+<h3>Fisher-Yates Shuffle: O(n)</h3>
+<pre><span class="kw">for</span> (<span class="kw">int</span> i = n - <span class="num">1</span>; i &gt; <span class="num">0</span>; i--) {
+    <span class="kw">int</span> j = random.nextInt(i + <span class="num">1</span>);
+    swap(arr, i, j);
+}
+</pre>
+
+<h3>Random Pick with Weight</h3>
+<pre><span class="cm">// LC 528: prefix sum + binary search</span>
+<span class="kw">int</span>[] prefix;  <span class="cm">// prefix[i] = sum of weights [0..i]</span>
+<span class="kw">int</span> <span class="fn">pickIndex</span>() {
+    <span class="kw">int</span> target = random.nextInt(prefix[prefix.length - <span class="num">1</span>]) + <span class="num">1</span>;
+    <span class="kw">return</span> lowerBound(prefix, target);
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/linked-list-random-node/" target="_blank">382. Linked List Random Node (Reservoir)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/random-pick-index/" target="_blank">398. Random Pick Index (Reservoir)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/random-pick-with-weight/" target="_blank">528. Random Pick with Weight</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/shuffle-an-array/" target="_blank">384. Shuffle an Array (Fisher-Yates)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/implement-rand10-using-rand7/" target="_blank">470. Implement Rand10() Using Rand7()</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/random-pick-with-blacklist/" target="_blank">710. Random Pick with Blacklist</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Sequences ===== -->
+<div class="section" id="sequences">
+<div class="card">
+<h2>Sequences &amp; Series</h2>
+
+<h3>Arithmetic Series</h3>
+<div class="formula">Sum = n * (first + last) / 2 &nbsp;&nbsp; | &nbsp;&nbsp; nth term = a + (n-1)*d</div>
+
+<h3>Geometric Series</h3>
+<div class="formula">Sum = a * (r^n - 1) / (r - 1) &nbsp;&nbsp; | &nbsp;&nbsp; nth term = a * r^(n-1)</div>
+
+<h3>Fibonacci &amp; Recurrences</h3>
+<pre><span class="cm">// O(log n) via matrix exponentiation</span>
+<span class="cm">// [F(n+1)]   [1 1]^n   [F(1)]</span>
+<span class="cm">// [F(n)  ] = [1 0]   * [F(0)]</span>
+</pre>
+
+<h3>Sum of Squares / Cubes</h3>
+<div class="formula">1^2 + 2^2 + ... + n^2 = n(n+1)(2n+1) / 6<br>
+1^3 + 2^3 + ... + n^3 = [n(n+1)/2]^2</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/fibonacci-number/" target="_blank">509. Fibonacci Number</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/n-th-tribonacci-number/" target="_blank">1137. N-th Tribonacci Number</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/consecutive-numbers-sum/" target="_blank">829. Consecutive Numbers Sum</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/arithmetic-slices/" target="_blank">413. Arithmetic Slices</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/find-the-winner-of-the-circular-game/" target="_blank">1823. Find the Winner of the Circular Game (Josephus)</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+
+<h3>Josephus Problem</h3>
+<div class="insight">
+  <p><strong>n people in a circle, eliminate every k-th person. Who survives?</strong><br>
+  Recurrence: J(n, k) = (J(n-1, k) + k) % n, with J(1, k) = 0.<br>
+  O(n) iterative. For k=2, closed form: J(n) = 2*L + 1 where n = 2^m + L.</p>
+</div>
+<pre><span class="cm">// LC 1823: Josephus problem, 0-indexed</span>
+<span class="kw">int</span> <span class="fn">findTheWinner</span>(<span class="kw">int</span> n, <span class="kw">int</span> k) {
+    <span class="kw">int</span> survivor = <span class="num">0</span>;  <span class="cm">// base case: 1 person, index 0</span>
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">2</span>; i &lt;= n; i++)
+        survivor = (survivor + k) % i;
+    <span class="kw">return</span> survivor + <span class="num">1</span>;  <span class="cm">// convert to 1-indexed</span>
+}
+</pre>
+</div>
+</div>
+
+<!-- ===== Matrix Expo ===== -->
+<div class="section" id="matrix">
+<div class="card">
+<h2>Matrix Exponentiation</h2>
+<p>Solve linear recurrences in O(k^3 * log n) where k is the matrix size.</p>
+
+<h3>Template</h3>
+<pre><span class="kw">long</span>[][] <span class="fn">multiply</span>(<span class="kw">long</span>[][] A, <span class="kw">long</span>[][] B, <span class="kw">long</span> mod) {
+    <span class="kw">int</span> n = A.length;
+    <span class="kw">long</span>[][] C = <span class="kw">new long</span>[n][n];
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++)
+        <span class="kw">for</span> (<span class="kw">int</span> k = <span class="num">0</span>; k &lt; n; k++)
+            <span class="kw">if</span> (A[i][k] != <span class="num">0</span>)
+                <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">0</span>; j &lt; n; j++)
+                    C[i][j] = (C[i][j] + A[i][k] * B[k][j]) % mod;
+    <span class="kw">return</span> C;
+}
+
+<span class="kw">long</span>[][] <span class="fn">matPow</span>(<span class="kw">long</span>[][] M, <span class="kw">long</span> exp, <span class="kw">long</span> mod) {
+    <span class="kw">int</span> n = M.length;
+    <span class="kw">long</span>[][] result = <span class="kw">new long</span>[n][n];
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) result[i][i] = <span class="num">1</span>; <span class="cm">// identity</span>
+    <span class="kw">while</span> (exp &gt; <span class="num">0</span>) {
+        <span class="kw">if</span> ((exp &amp; <span class="num">1</span>) == <span class="num">1</span>) result = <span class="fn">multiply</span>(result, M, mod);
+        M = <span class="fn">multiply</span>(M, M, mod);
+        exp &gt;&gt;= <span class="num">1</span>;
+    }
+    <span class="kw">return</span> result;
+}
+</pre>
+
+<h3>Applications</h3>
+<div class="insight">
+  <p><strong>Fibonacci in O(log n):</strong> M = [[1,1],[1,0]], M^n gives F(n)<br>
+  <strong>Any linear recurrence:</strong> f(n) = a*f(n-1) + b*f(n-2) + ...<br>
+  <strong>Graph paths of length k:</strong> (adjacency matrix)^k<br>
+  <strong>State machine transitions:</strong> transition matrix ^ steps</p>
+</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/fibonacci-number/" target="_blank">509. Fibonacci (matrix method)</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-vowels-permutation/" target="_blank">1220. Count Vowels Permutation</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/domino-and-tromino-tiling/" target="_blank">790. Domino and Tromino Tiling</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/student-attendance-record-ii/" target="_blank">552. Student Attendance Record II</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/string-transformation/" target="_blank">2851. String Transformation (KMP + Matrix)</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

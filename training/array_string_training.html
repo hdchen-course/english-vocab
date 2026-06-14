@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Array &amp; String — Complete Training Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fa; --bg2: #ffffff; --bg3: #f1f3f5; --bg4: #e9ecef;
+  --border: #dee2e6; --text: #212529; --text2: #495057; --text3: #868e96;
+  --blue: #1971c2; --blue-l: #d0ebff; --green: #2f9e44; --green-l: #d3f9d8;
+  --yellow: #e67700; --yellow-l: #fff3bf; --red: #c92a2a; --red-l: #ffe3e3;
+  --purple: #7048e8; --purple-l: #e5dbff; --orange: #d9480f; --cyan: #0c8599;
+  --r: 12px; --shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.8; }
+.container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+header { text-align: center; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+header .sub { color: var(--text3); font-size: 14px; }
+
+.nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 40px;  position: sticky; top: 0; background: var(--bg); padding: 16px 0; z-index: 100; border-bottom: 1px solid var(--border); }
+.nav-btn { padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s; font-family: 'Inter', sans-serif; }
+.nav-btn:hover { background: var(--bg3); color: var(--text); }
+.nav-btn.active { background: var(--blue-l); color: var(--blue); border-color: var(--blue); }
+
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+h2 { font-size: 24px; font-weight: 700; margin: 32px 0 16px; color: var(--blue); }
+h3 { font-size: 18px; font-weight: 600; margin: 24px 0 12px; }
+h4 { font-size: 15px; font-weight: 600; margin: 16px 0 8px; color: var(--text2); }
+p { margin-bottom: 12px; color: var(--text2); }
+ul, ol { margin: 8px 0 16px 24px; color: var(--text2); }
+li { margin-bottom: 6px; }
+strong { color: var(--text); }
+
+pre { background: #1e1e2e; border-radius: 8px; padding: 16px 20px; overflow-x: auto; margin: 12px 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; color: #cdd6f4; }
+code { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+p code, li code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--purple); }
+pre .kw { color: #cba6f7; } pre .type { color: #f9e2af; } pre .str { color: #a6e3a1; }
+pre .cm { color: #6c7086; } pre .num { color: #fab387; } pre .fn { color: #89b4fa; }
+
+.insight { background: var(--blue-l); border-left: 3px solid var(--blue); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.insight p { color: var(--blue); margin: 0; }
+.warning { background: var(--yellow-l); border-left: 3px solid var(--yellow); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.warning p { color: var(--yellow); margin: 0; }
+.danger { background: var(--red-l); border-left: 3px solid var(--red); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.danger p { color: var(--red); margin: 0; }
+.tip { background: var(--green-l); border-left: 3px solid var(--green); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.tip p { color: var(--green); margin: 0; }
+
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 20px; padding: 24px 28px; box-shadow: var(--shadow); }
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+th, td { padding: 10px 14px; border: 1px solid var(--border); text-align: left; }
+th { background: var(--bg3); font-weight: 600; color: var(--text); }
+tr:hover { background: var(--bg3); }
+
+.tag { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; margin: 2px 4px 2px 0; }
+.tag-easy { background: var(--green-l); color: var(--green); }
+.tag-medium { background: var(--yellow-l); color: var(--yellow); }
+.tag-hard { background: var(--red-l); color: var(--red); }
+.tag-freq { background: var(--purple-l); color: var(--purple); }
+
+.problem-list { list-style: none; padding: 0; margin: 12px 0; }
+.problem-list li { padding: 10px 14px; border-left: 3px solid var(--blue); margin-bottom: 8px; background: var(--bg3); border-radius: 0 8px 8px 0; display: flex; justify-content: flex-start; align-items: center; gap: 8px; }
+.problem-list .title { color: var(--text); font-weight: 500; font-size: 14px; flex: 1; }
+.problem-list .title a { color: var(--text); text-decoration: none; border-bottom: 1px dashed var(--border); transition: all .2s; }
+.problem-list .title a:hover { color: var(--blue); border-bottom-color: var(--blue); }
+
+@media (max-width: 768px) { .container { padding: 20px 12px; } .nav { position: static; } pre { font-size: 11px; } }
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>Array &amp; String &mdash; Complete Training Guide</h1>
+  <div class="sub">Two Pointers &bull; Sliding Window &bull; Prefix Sum &bull; Hashing &bull; Sorting Tricks &bull; String Algorithms</div>
+</header>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection('overview')">Overview</button>
+  <button class="nav-btn" onclick="showSection('twoptr')">Two Pointers</button>
+  <button class="nav-btn" onclick="showSection('sliding')">Sliding Window</button>
+  <button class="nav-btn" onclick="showSection('prefix')">Prefix Sum</button>
+  <button class="nav-btn" onclick="showSection('hash')">HashMap</button>
+  <button class="nav-btn" onclick="showSection('sorting')">Sorting Tricks</button>
+  <button class="nav-btn" onclick="showSection('binary')">Binary Search</button>
+  <button class="nav-btn" onclick="showSection('monotone')">Monotone Stack</button>
+  <button class="nav-btn" onclick="showSection('intervals')">Intervals</button>
+  <button class="nav-btn" onclick="showSection('matrix')">Matrix</button>
+  <button class="nav-btn" onclick="showSection('stralgo')">String Algos</button>
+  <button class="nav-btn" onclick="showSection('inplace')">In-Place</button>
+  <button class="nav-btn" onclick="showSection('tips')">Interview Tips</button>
+</div>
+
+<!-- ===== Overview ===== -->
+<div class="section active" id="overview">
+<div class="card">
+<h2>Technique Selection Guide</h2>
+<p>Array and String problems form ~40% of coding interviews. The key is quickly recognizing which technique applies.</p>
+
+<h3>Decision Framework</h3>
+<table>
+  <tr><th>Signal</th><th>Technique</th><th>Time</th></tr>
+  <tr><td>Sorted array + find pair/triplet</td><td>Two Pointers</td><td>O(n) or O(n&sup2;)</td></tr>
+  <tr><td>"Longest/shortest subarray with property"</td><td>Sliding Window</td><td>O(n)</td></tr>
+  <tr><td>"Subarray sum equals k"</td><td>Prefix Sum + HashMap</td><td>O(n)</td></tr>
+  <tr><td>"Find duplicate / count frequency"</td><td>HashMap / HashSet</td><td>O(n)</td></tr>
+  <tr><td>"Kth largest" / "top K"</td><td>QuickSelect / Heap</td><td>O(n) / O(n log k)</td></tr>
+  <tr><td>"Search in sorted"</td><td>Binary Search</td><td>O(log n)</td></tr>
+  <tr><td>"Next greater element"</td><td>Monotone Stack</td><td>O(n)</td></tr>
+  <tr><td>"Merge overlapping"</td><td>Sort + Sweep</td><td>O(n log n)</td></tr>
+  <tr><td>"Pattern matching in string"</td><td>KMP / Rabin-Karp</td><td>O(n+m)</td></tr>
+  <tr><td>"O(1) space, modify in-place"</td><td>Index tricks / Cyclic sort</td><td>O(n)</td></tr>
+</table>
+
+<h3>Complexity Quick Reference</h3>
+<div class="insight">
+  <p><strong>n = 10^5:</strong> O(n log n) is safe, O(n&sup2;) will TLE<br>
+  <strong>n = 10^4:</strong> O(n&sup2;) borderline, O(n&sup2; log n) TLE<br>
+  <strong>n = 10^3:</strong> O(n&sup2;) safe, O(n&sup3;) borderline<br>
+  <strong>n = 20:</strong> O(2^n) or O(n * 2^n) fine</p>
+</div>
+</div>
+</div>
+
+<!-- ===== Two Pointers ===== -->
+<div class="section" id="twoptr">
+<div class="card">
+<h2>Two Pointers</h2>
+<p>Use two indices to traverse the array in a coordinated way. Works best on sorted arrays or when comparing elements from both ends.</p>
+
+<h3>Pattern 1: Opposite Direction (left + right)</h3>
+<pre><span class="cm">// LC 167 Two Sum II (sorted array)</span>
+<span class="kw">int</span> left = <span class="num">0</span>, right = n - <span class="num">1</span>;
+<span class="kw">while</span> (left &lt; right) {
+    <span class="kw">int</span> sum = nums[left] + nums[right];
+    <span class="kw">if</span> (sum == target) <span class="kw">return new int</span>[]{left, right};
+    <span class="kw">else if</span> (sum &lt; target) left++;
+    <span class="kw">else</span> right--;
+}
+</pre>
+
+<h3>Pattern 2: Same Direction (fast + slow)</h3>
+<pre><span class="cm">// LC 26 Remove Duplicates from Sorted Array</span>
+<span class="kw">int</span> slow = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span> fast = <span class="num">1</span>; fast &lt; n; fast++) {
+    <span class="kw">if</span> (nums[fast] != nums[slow]) {
+        slow++;
+        nums[slow] = nums[fast];
+    }
+}
+<span class="kw">return</span> slow + <span class="num">1</span>;
+</pre>
+
+<h3>Pattern 3: Three Pointers (3Sum)</h3>
+<pre><span class="cm">// LC 15 3Sum: sort + fix one + two pointers</span>
+Arrays.<span class="fn">sort</span>(nums);
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n - <span class="num">2</span>; i++) {
+    <span class="kw">if</span> (i &gt; <span class="num">0</span> &amp;&amp; nums[i] == nums[i-<span class="num">1</span>]) <span class="kw">continue</span>;  <span class="cm">// skip dup</span>
+    <span class="kw">int</span> lo = i + <span class="num">1</span>, hi = n - <span class="num">1</span>;
+    <span class="kw">while</span> (lo &lt; hi) {
+        <span class="kw">int</span> sum = nums[i] + nums[lo] + nums[hi];
+        <span class="kw">if</span> (sum == <span class="num">0</span>) {
+            result.add(Arrays.asList(nums[i], nums[lo], nums[hi]));
+            <span class="kw">while</span> (lo &lt; hi &amp;&amp; nums[lo] == nums[lo+<span class="num">1</span>]) lo++;
+            <span class="kw">while</span> (lo &lt; hi &amp;&amp; nums[hi] == nums[hi-<span class="num">1</span>]) hi--;
+            lo++; hi--;
+        } <span class="kw">else if</span> (sum &lt; <span class="num">0</span>) lo++;
+        <span class="kw">else</span> hi--;
+    }
+}
+</pre>
+
+<h3>Pattern 4: Partition (Dutch National Flag)</h3>
+<pre><span class="cm">// LC 75 Sort Colors: 0s left, 2s right, 1s middle</span>
+<span class="kw">int</span> lo = <span class="num">0</span>, mid = <span class="num">0</span>, hi = n - <span class="num">1</span>;
+<span class="kw">while</span> (mid &lt;= hi) {
+    <span class="kw">if</span> (nums[mid] == <span class="num">0</span>) swap(nums, lo++, mid++);
+    <span class="kw">else if</span> (nums[mid] == <span class="num">2</span>) swap(nums, mid, hi--);
+    <span class="kw">else</span> mid++;
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/" target="_blank">167. Two Sum II - Input Array Is Sorted</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/3sum/" target="_blank">15. 3Sum</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/container-with-most-water/" target="_blank">11. Container With Most Water</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/trapping-rain-water/" target="_blank">42. Trapping Rain Water</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/" target="_blank">26. Remove Duplicates from Sorted Array</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/sort-colors/" target="_blank">75. Sort Colors</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/move-zeroes/" target="_blank">283. Move Zeroes</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/long-pressed-name/" target="_blank">925. Long Pressed Name</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/squares-of-a-sorted-array/" target="_blank">977. Squares of a Sorted Array</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/3sum-closest/" target="_blank">16. 3Sum Closest</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Sliding Window ===== -->
+<div class="section" id="sliding">
+<div class="card">
+<h2>Sliding Window</h2>
+<p>Maintain a window [left, right] that expands right and shrinks left. O(n) for "longest/shortest subarray/substring with property X".</p>
+
+<h3>Template: Variable-Size Window (Longest)</h3>
+<pre><span class="kw">int</span> left = <span class="num">0</span>, maxLen = <span class="num">0</span>;
+<span class="cm">// state: e.g., HashMap for char frequency</span>
+
+<span class="kw">for</span> (<span class="kw">int</span> right = <span class="num">0</span>; right &lt; n; right++) {
+    <span class="cm">// 1. Expand: add nums[right] to window state</span>
+    addToWindow(nums[right]);
+
+    <span class="cm">// 2. Shrink: while window is invalid</span>
+    <span class="kw">while</span> (!isValid()) {
+        removeFromWindow(nums[left]);
+        left++;
+    }
+
+    <span class="cm">// 3. Update answer</span>
+    maxLen = Math.<span class="fn">max</span>(maxLen, right - left + <span class="num">1</span>);
+}
+</pre>
+
+<h3>Template: Variable-Size Window (Shortest)</h3>
+<pre><span class="kw">int</span> left = <span class="num">0</span>, minLen = Integer.MAX_VALUE;
+
+<span class="kw">for</span> (<span class="kw">int</span> right = <span class="num">0</span>; right &lt; n; right++) {
+    addToWindow(nums[right]);
+
+    <span class="cm">// Shrink while window IS valid (find minimum)</span>
+    <span class="kw">while</span> (isValid()) {
+        minLen = Math.<span class="fn">min</span>(minLen, right - left + <span class="num">1</span>);
+        removeFromWindow(nums[left]);
+        left++;
+    }
+}
+</pre>
+
+<h3>Template: Fixed-Size Window</h3>
+<pre><span class="kw">for</span> (<span class="kw">int</span> right = <span class="num">0</span>; right &lt; n; right++) {
+    addToWindow(nums[right]);
+    <span class="kw">if</span> (right &gt;= k - <span class="num">1</span>) {
+        <span class="cm">// window [right-k+1, right] is full</span>
+        updateAnswer();
+        removeFromWindow(nums[right - k + <span class="num">1</span>]);
+    }
+}
+</pre>
+
+<h3>When to Use Which</h3>
+<div class="warning">
+  <p><strong>"Longest substring without repeating"</strong> &rarr; expand right, shrink left when invalid<br>
+  <strong>"Minimum window substring"</strong> &rarr; expand right, shrink left while valid<br>
+  <strong>"Max sum of subarray size k"</strong> &rarr; fixed window<br>
+  <strong>"At most K distinct"</strong> &rarr; variable, shrink when distinct &gt; K</p>
+</div>
+
+<h3>Classic: Minimum Window Substring</h3>
+<pre><span class="cm">// LC 76: find shortest substring of s containing all chars of t</span>
+<span class="kw">int</span>[] need = <span class="kw">new int</span>[<span class="num">128</span>], have = <span class="kw">new int</span>[<span class="num">128</span>];
+<span class="kw">for</span> (<span class="kw">char</span> c : t.toCharArray()) need[c]++;
+<span class="kw">int</span> required = t.length(), formed = <span class="num">0</span>;
+<span class="kw">int</span> left = <span class="num">0</span>, minLen = Integer.MAX_VALUE, start = <span class="num">0</span>;
+
+<span class="kw">for</span> (<span class="kw">int</span> right = <span class="num">0</span>; right &lt; s.length(); right++) {
+    <span class="kw">char</span> c = s.charAt(right);
+    have[c]++;
+    <span class="kw">if</span> (have[c] &lt;= need[c]) formed++;
+
+    <span class="kw">while</span> (formed == required) {
+        <span class="kw">if</span> (right - left + <span class="num">1</span> &lt; minLen) {
+            minLen = right - left + <span class="num">1</span>;
+            start = left;
+        }
+        <span class="kw">char</span> d = s.charAt(left);
+        have[d]--;
+        <span class="kw">if</span> (have[d] &lt; need[d]) formed--;
+        left++;
+    }
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-substring-without-repeating-characters/" target="_blank">3. Longest Substring Without Repeating Characters</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-window-substring/" target="_blank">76. Minimum Window Substring</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-size-subarray-sum/" target="_blank">209. Minimum Size Subarray Sum</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-repeating-character-replacement/" target="_blank">424. Longest Repeating Character Replacement</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/permutation-in-string/" target="_blank">567. Permutation in String</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/find-all-anagrams-in-a-string/" target="_blank">438. Find All Anagrams in a String</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/max-consecutive-ones-iii/" target="_blank">1004. Max Consecutive Ones III</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-substring-with-at-most-k-distinct/" target="_blank">340. Longest Substring with At Most K Distinct</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Premium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/subarrays-with-k-different-integers/" target="_blank">992. Subarrays with K Different Integers</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/sliding-window-maximum/" target="_blank">239. Sliding Window Maximum</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Deque</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Prefix Sum ===== -->
+<div class="section" id="prefix">
+<div class="card">
+<h2>Prefix Sum</h2>
+<p>Precompute cumulative sums to answer range sum queries in O(1). Combines powerfully with HashMap for "subarray sum = k" problems.</p>
+
+<h3>Basic Template</h3>
+<pre><span class="cm">// prefix[i] = sum of nums[0..i-1]</span>
+<span class="kw">int</span>[] prefix = <span class="kw">new int</span>[n + <span class="num">1</span>];
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++)
+    prefix[i + <span class="num">1</span>] = prefix[i] + nums[i];
+
+<span class="cm">// Sum of nums[l..r] = prefix[r+1] - prefix[l]</span>
+</pre>
+
+<h3>Pattern: Subarray Sum Equals K (Prefix + HashMap)</h3>
+<pre><span class="cm">// LC 560: count subarrays with sum = k</span>
+Map&lt;Integer, Integer&gt; map = <span class="kw">new</span> HashMap&lt;&gt;();
+map.put(<span class="num">0</span>, <span class="num">1</span>);  <span class="cm">// empty prefix</span>
+<span class="kw">int</span> sum = <span class="num">0</span>, count = <span class="num">0</span>;
+
+<span class="kw">for</span> (<span class="kw">int</span> num : nums) {
+    sum += num;
+    count += map.getOrDefault(sum - k, <span class="num">0</span>);
+    map.merge(sum, <span class="num">1</span>, Integer::sum);
+}
+</pre>
+
+<h3>2D Prefix Sum</h3>
+<pre><span class="cm">// LC 304 Range Sum Query 2D</span>
+<span class="cm">// prefix[i][j] = sum of rectangle (0,0) to (i-1,j-1)</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= m; i++)
+    <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">1</span>; j &lt;= n; j++)
+        prefix[i][j] = matrix[i-<span class="num">1</span>][j-<span class="num">1</span>]
+            + prefix[i-<span class="num">1</span>][j] + prefix[i][j-<span class="num">1</span>] - prefix[i-<span class="num">1</span>][j-<span class="num">1</span>];
+
+<span class="cm">// Sum of (r1,c1) to (r2,c2):</span>
+<span class="cm">// prefix[r2+1][c2+1] - prefix[r1][c2+1] - prefix[r2+1][c1] + prefix[r1][c1]</span>
+</pre>
+
+<h3>Difference Array (range update in O(1))</h3>
+<pre><span class="cm">// Add val to range [l, r]:</span>
+diff[l] += val;
+diff[r + <span class="num">1</span>] -= val;
+<span class="cm">// Reconstruct: prefix sum of diff gives actual array</span>
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/subarray-sum-equals-k/" target="_blank">560. Subarray Sum Equals K</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/continuous-subarray-sum/" target="_blank">523. Continuous Subarray Sum (mod k)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/contiguous-array/" target="_blank">525. Contiguous Array (convert 0 to -1)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/range-sum-query-2d/" target="_blank">304. Range Sum Query 2D</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/product-of-array-except-self/" target="_blank">238. Product of Array Except Self</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-number-of-nice-subarrays/" target="_blank">1248. Count Number of Nice Subarrays</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/subarray-sums-divisible-by-k/" target="_blank">974. Subarray Sums Divisible by K</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/corporate-flight-bookings/" target="_blank">1109. Corporate Flight Bookings (diff array)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/shifting-letters-ii/" target="_blank">2381. Shifting Letters II (diff array)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/" target="_blank">862. Shortest Subarray with Sum at Least K</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== HashMap ===== -->
+<div class="section" id="hash">
+<div class="card">
+<h2>HashMap / HashSet Techniques</h2>
+<p>Trade space for time. O(1) lookup transforms O(n&sup2;) brute force into O(n).</p>
+
+<h3>Pattern 1: Two Sum (complement lookup)</h3>
+<pre><span class="cm">// LC 1 Two Sum</span>
+Map&lt;Integer, Integer&gt; map = <span class="kw">new</span> HashMap&lt;&gt;();
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+    <span class="kw">int</span> complement = target - nums[i];
+    <span class="kw">if</span> (map.containsKey(complement))
+        <span class="kw">return new int</span>[]{map.get(complement), i};
+    map.put(nums[i], i);
+}
+</pre>
+
+<h3>Pattern 2: Frequency Count</h3>
+<pre><span class="cm">// LC 347 Top K Frequent Elements</span>
+Map&lt;Integer, Integer&gt; freq = <span class="kw">new</span> HashMap&lt;&gt;();
+<span class="kw">for</span> (<span class="kw">int</span> num : nums) freq.merge(num, <span class="num">1</span>, Integer::sum);
+<span class="cm">// Then use bucket sort or heap to get top k</span>
+</pre>
+
+<h3>Pattern 3: Index Mapping (group anagrams)</h3>
+<pre><span class="cm">// LC 49 Group Anagrams: sort each word as key</span>
+Map&lt;String, List&lt;String&gt;&gt; map = <span class="kw">new</span> HashMap&lt;&gt;();
+<span class="kw">for</span> (String s : strs) {
+    <span class="kw">char</span>[] chars = s.toCharArray();
+    Arrays.<span class="fn">sort</span>(chars);
+    String key = <span class="kw">new</span> String(chars);
+    map.computeIfAbsent(key, k -&gt; <span class="kw">new</span> ArrayList&lt;&gt;()).add(s);
+}
+</pre>
+
+<h3>Pattern 4: First Non-Repeating / LRU</h3>
+<pre><span class="cm">// LinkedHashMap maintains insertion order</span>
+<span class="cm">// Or use array of size 26 for lowercase chars</span>
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/two-sum/" target="_blank">1. Two Sum</a></span><span class="tag tag-easy">Easy</span><span class="tag tag-freq">Classic</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/group-anagrams/" target="_blank">49. Group Anagrams</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/top-k-frequent-elements/" target="_blank">347. Top K Frequent Elements</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-consecutive-sequence/" target="_blank">128. Longest Consecutive Sequence</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/valid-anagram/" target="_blank">242. Valid Anagram</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/insert-delete-getrandom-o/" target="_blank">380. Insert Delete GetRandom O(1)</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/lru-cache/" target="_blank">146. LRU Cache</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/lfu-cache/" target="_blank">460. LFU Cache</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/intersection-of-two-arrays/" target="_blank">349. Intersection of Two Arrays</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/4sum-ii/" target="_blank">454. 4Sum II</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Sorting Tricks ===== -->
+<div class="section" id="sorting">
+<div class="card">
+<h2>Sorting Tricks</h2>
+<p>Sort to impose structure, then apply linear scan or binary search.</p>
+
+<h3>Custom Comparators</h3>
+<pre><span class="cm">// LC 179 Largest Number: custom string comparison</span>
+String[] strs = <span class="kw">new</span> String[nums.length];
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; nums.length; i++) strs[i] = String.valueOf(nums[i]);
+Arrays.<span class="fn">sort</span>(strs, (a, b) -&gt; (b + a).compareTo(a + b));
+</pre>
+
+<h3>Bucket Sort: O(n) when range is bounded</h3>
+<pre><span class="cm">// LC 347 Top K Frequent: bucket[freq] = list of elements with that freq</span>
+List&lt;Integer&gt;[] buckets = <span class="kw">new</span> List[n + <span class="num">1</span>];
+<span class="kw">for</span> (Map.Entry&lt;Integer, Integer&gt; e : freq.entrySet()) {
+    <span class="kw">int</span> f = e.getValue();
+    <span class="kw">if</span> (buckets[f] == <span class="kw">null</span>) buckets[f] = <span class="kw">new</span> ArrayList&lt;&gt;();
+    buckets[f].add(e.getKey());
+}
+</pre>
+
+<h3>Cyclic Sort: Find missing/duplicate in [1, n]</h3>
+<pre><span class="cm">// LC 268 Missing Number / LC 442 Find Duplicates</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+    <span class="kw">while</span> (nums[i] &gt; <span class="num">0</span> &amp;&amp; nums[i] &lt;= n &amp;&amp; nums[nums[i] - <span class="num">1</span>] != nums[i])
+        swap(nums, i, nums[i] - <span class="num">1</span>);
+}
+<span class="cm">// After: nums[i] should be i+1. Anything else = missing/dup</span>
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/largest-number/" target="_blank">179. Largest Number</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/top-k-frequent/" target="_blank">347. Top K Frequent (bucket sort)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/kth-largest-element/" target="_blank">215. Kth Largest Element (quickselect)</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/wiggle-sort-ii/" target="_blank">324. Wiggle Sort II</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/find-all-duplicates/" target="_blank">442. Find All Duplicates (cyclic sort)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/find-all-numbers-disappeared/" target="_blank">448. Find All Numbers Disappeared</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/first-missing-positive/" target="_blank">41. First Missing Positive</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/h-index/" target="_blank">274. H-Index</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Binary Search ===== -->
+<div class="section" id="binary">
+<div class="card">
+<h2>Binary Search on Arrays</h2>
+<p>Not just for sorted arrays! Use binary search on the answer space when the predicate is monotone.</p>
+
+<h3>Template: Find Exact / Lower Bound / Upper Bound</h3>
+<pre><span class="cm">// Lower bound: first index where nums[i] >= target</span>
+<span class="kw">int</span> lo = <span class="num">0</span>, hi = n;
+<span class="kw">while</span> (lo &lt; hi) {
+    <span class="kw">int</span> mid = lo + (hi - lo) / <span class="num">2</span>;
+    <span class="kw">if</span> (nums[mid] &lt; target) lo = mid + <span class="num">1</span>;
+    <span class="kw">else</span> hi = mid;
+}
+<span class="cm">// lo = insertion point (first >= target)</span>
+</pre>
+
+<h3>Template: Binary Search on Answer</h3>
+<pre><span class="cm">// "Find minimum X such that condition(X) is true"</span>
+<span class="kw">int</span> lo = minPossible, hi = maxPossible;
+<span class="kw">while</span> (lo &lt; hi) {
+    <span class="kw">int</span> mid = lo + (hi - lo) / <span class="num">2</span>;
+    <span class="kw">if</span> (<span class="fn">condition</span>(mid)) hi = mid;  <span class="cm">// can do it, try smaller</span>
+    <span class="kw">else</span> lo = mid + <span class="num">1</span>;             <span class="cm">// can't, need larger</span>
+}
+</pre>
+
+<h3>Search in Rotated Array</h3>
+<pre><span class="cm">// LC 33: one half is always sorted</span>
+<span class="kw">int</span> lo = <span class="num">0</span>, hi = n - <span class="num">1</span>;
+<span class="kw">while</span> (lo &lt;= hi) {
+    <span class="kw">int</span> mid = lo + (hi - lo) / <span class="num">2</span>;
+    <span class="kw">if</span> (nums[mid] == target) <span class="kw">return</span> mid;
+    <span class="kw">if</span> (nums[lo] &lt;= nums[mid]) {  <span class="cm">// left half sorted</span>
+        <span class="kw">if</span> (target &gt;= nums[lo] &amp;&amp; target &lt; nums[mid]) hi = mid - <span class="num">1</span>;
+        <span class="kw">else</span> lo = mid + <span class="num">1</span>;
+    } <span class="kw">else</span> {  <span class="cm">// right half sorted</span>
+        <span class="kw">if</span> (target &gt; nums[mid] &amp;&amp; target &lt;= nums[hi]) lo = mid + <span class="num">1</span>;
+        <span class="kw">else</span> hi = mid - <span class="num">1</span>;
+    }
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/search-in-rotated-sorted-array/" target="_blank">33. Search in Rotated Sorted Array</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/find-first-and-last-position/" target="_blank">34. Find First and Last Position</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/" target="_blank">153. Find Minimum in Rotated Sorted Array</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/median-of-two-sorted-arrays/" target="_blank">4. Median of Two Sorted Arrays</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/koko-eating-bananas/" target="_blank">875. Koko Eating Bananas (search on answer)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/capacity-to-ship-packages/" target="_blank">1011. Capacity To Ship Packages</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/split-array-largest-sum/" target="_blank">410. Split Array Largest Sum</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/find-peak-element/" target="_blank">162. Find Peak Element</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/search-a-2d-matrix/" target="_blank">74. Search a 2D Matrix</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/search-a-2d-matrix-ii/" target="_blank">240. Search a 2D Matrix II</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Monotone Stack ===== -->
+<div class="section" id="monotone">
+<div class="card">
+<h2>Monotone Stack</h2>
+<p>Stack that maintains elements in monotone order. Solves "next greater/smaller element" and related problems in O(n).</p>
+
+<h3>Template: Next Greater Element</h3>
+<pre><span class="cm">// For each element, find the next element that is greater</span>
+<span class="kw">int</span>[] result = <span class="kw">new int</span>[n];
+Arrays.<span class="fn">fill</span>(result, -<span class="num">1</span>);
+Deque&lt;Integer&gt; stack = <span class="kw">new</span> ArrayDeque&lt;&gt;();  <span class="cm">// stores indices</span>
+
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+    <span class="kw">while</span> (!stack.isEmpty() &amp;&amp; nums[stack.peek()] &lt; nums[i]) {
+        result[stack.pop()] = nums[i];
+    }
+    stack.push(i);
+}
+</pre>
+
+<h3>Template: Previous Smaller Element</h3>
+<pre><span class="cm">// For each element, find distance to previous smaller</span>
+<span class="kw">int</span>[] prevSmaller = <span class="kw">new int</span>[n];
+Deque&lt;Integer&gt; stack = <span class="kw">new</span> ArrayDeque&lt;&gt;();
+
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+    <span class="kw">while</span> (!stack.isEmpty() &amp;&amp; nums[stack.peek()] &gt;= nums[i])
+        stack.pop();
+    prevSmaller[i] = stack.isEmpty() ? -<span class="num">1</span> : stack.peek();
+    stack.push(i);
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/next-greater-element-i/" target="_blank">496. Next Greater Element I</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/next-greater-element-ii/" target="_blank">503. Next Greater Element II (circular)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/daily-temperatures/" target="_blank">739. Daily Temperatures</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/largest-rectangle-in-histogram/" target="_blank">84. Largest Rectangle in Histogram</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Classic</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximal-rectangle/" target="_blank">85. Maximal Rectangle</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/sum-of-subarray-minimums/" target="_blank">907. Sum of Subarray Minimums</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/remove-k-digits/" target="_blank">402. Remove K Digits</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/remove-duplicate-letters/" target="_blank">316. Remove Duplicate Letters</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/trapping-rain-water/" target="_blank">42. Trapping Rain Water (stack approach)</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Intervals ===== -->
+<div class="section" id="intervals">
+<div class="card">
+<h2>Interval Problems</h2>
+<p>Sort by start (or end) time, then sweep. Core technique for scheduling and merging problems.</p>
+
+<h3>Pattern 1: Merge Intervals</h3>
+<pre><span class="cm">// LC 56 Merge Intervals</span>
+Arrays.<span class="fn">sort</span>(intervals, (a, b) -&gt; a[<span class="num">0</span>] - b[<span class="num">0</span>]);
+List&lt;<span class="kw">int</span>[]&gt; merged = <span class="kw">new</span> ArrayList&lt;&gt;();
+<span class="kw">for</span> (<span class="kw">int</span>[] interval : intervals) {
+    <span class="kw">if</span> (merged.isEmpty() || merged.get(merged.size()-<span class="num">1</span>)[<span class="num">1</span>] &lt; interval[<span class="num">0</span>])
+        merged.add(interval);
+    <span class="kw">else</span>
+        merged.get(merged.size()-<span class="num">1</span>)[<span class="num">1</span>] =
+            Math.<span class="fn">max</span>(merged.get(merged.size()-<span class="num">1</span>)[<span class="num">1</span>], interval[<span class="num">1</span>]);
+}
+</pre>
+
+<h3>Pattern 2: Non-overlapping (Greedy by end time)</h3>
+<pre><span class="cm">// LC 435 Non-overlapping Intervals: min removals</span>
+Arrays.<span class="fn">sort</span>(intervals, (a, b) -&gt; a[<span class="num">1</span>] - b[<span class="num">1</span>]);  <span class="cm">// sort by END</span>
+<span class="kw">int</span> end = Integer.MIN_VALUE, remove = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span>[] interval : intervals) {
+    <span class="kw">if</span> (interval[<span class="num">0</span>] &gt;= end) end = interval[<span class="num">1</span>];  <span class="cm">// keep</span>
+    <span class="kw">else</span> remove++;  <span class="cm">// overlaps, remove</span>
+}
+</pre>
+
+<h3>Pattern 3: Meeting Rooms (sweep line)</h3>
+<pre><span class="cm">// LC 253 Meeting Rooms II: min rooms needed = max concurrent</span>
+<span class="kw">int</span>[] starts = <span class="kw">new int</span>[n], ends = <span class="kw">new int</span>[n];
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) { starts[i] = intervals[i][<span class="num">0</span>]; ends[i] = intervals[i][<span class="num">1</span>]; }
+Arrays.<span class="fn">sort</span>(starts); Arrays.<span class="fn">sort</span>(ends);
+
+<span class="kw">int</span> rooms = <span class="num">0</span>, maxRooms = <span class="num">0</span>, s = <span class="num">0</span>, e = <span class="num">0</span>;
+<span class="kw">while</span> (s &lt; n) {
+    <span class="kw">if</span> (starts[s] &lt; ends[e]) { rooms++; s++; }
+    <span class="kw">else</span> { rooms--; e++; }
+    maxRooms = Math.<span class="fn">max</span>(maxRooms, rooms);
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/merge-intervals/" target="_blank">56. Merge Intervals</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/insert-interval/" target="_blank">57. Insert Interval</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/non-overlapping-intervals/" target="_blank">435. Non-overlapping Intervals</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/meeting-rooms/" target="_blank">252. Meeting Rooms</a></span><span class="tag tag-easy">Easy</span><span class="tag tag-freq">Premium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/meeting-rooms-ii/" target="_blank">253. Meeting Rooms II</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Premium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/remove-covered-intervals/" target="_blank">1288. Remove Covered Intervals</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/interval-list-intersections/" target="_blank">986. Interval List Intersections</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/" target="_blank">452. Minimum Number of Arrows to Burst Balloons</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-profit-in-job-scheduling/" target="_blank">1235. Maximum Profit in Job Scheduling</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Matrix ===== -->
+<div class="section" id="matrix">
+<div class="card">
+<h2>Matrix Traversal</h2>
+
+<h3>Spiral Order</h3>
+<pre><span class="cm">// LC 54 Spiral Matrix</span>
+<span class="kw">int</span> top = <span class="num">0</span>, bottom = m-<span class="num">1</span>, left = <span class="num">0</span>, right = n-<span class="num">1</span>;
+<span class="kw">while</span> (top &lt;= bottom &amp;&amp; left &lt;= right) {
+    <span class="kw">for</span> (<span class="kw">int</span> j = left; j &lt;= right; j++) result.add(matrix[top][j]);
+    top++;
+    <span class="kw">for</span> (<span class="kw">int</span> i = top; i &lt;= bottom; i++) result.add(matrix[i][right]);
+    right--;
+    <span class="kw">if</span> (top &lt;= bottom) {
+        <span class="kw">for</span> (<span class="kw">int</span> j = right; j &gt;= left; j--) result.add(matrix[bottom][j]);
+        bottom--;
+    }
+    <span class="kw">if</span> (left &lt;= right) {
+        <span class="kw">for</span> (<span class="kw">int</span> i = bottom; i &gt;= top; i--) result.add(matrix[i][left]);
+        left++;
+    }
+}
+</pre>
+
+<h3>Rotate 90 Degrees</h3>
+<pre><span class="cm">// LC 48: transpose + reverse each row</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++)
+    <span class="kw">for</span> (<span class="kw">int</span> j = i + <span class="num">1</span>; j &lt; n; j++)
+        swap(matrix[i][j], matrix[j][i]);
+<span class="kw">for</span> (<span class="kw">int</span>[] row : matrix)
+    reverse(row);
+</pre>
+
+<h3>Set Matrix Zeroes (in-place markers)</h3>
+<pre><span class="cm">// LC 73: use first row/col as markers</span>
+<span class="kw">boolean</span> firstRowZero = <span class="kw">false</span>, firstColZero = <span class="kw">false</span>;
+<span class="cm">// 1. Mark: if matrix[i][j]=0, set matrix[i][0]=0, matrix[0][j]=0</span>
+<span class="cm">// 2. Zero out based on markers (skip first row/col)</span>
+<span class="cm">// 3. Handle first row/col last</span>
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/spiral-matrix/" target="_blank">54. Spiral Matrix</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/rotate-image/" target="_blank">48. Rotate Image</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/set-matrix-zeroes/" target="_blank">73. Set Matrix Zeroes</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/valid-sudoku/" target="_blank">36. Valid Sudoku</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/game-of-life/" target="_blank">289. Game of Life</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/diagonal-traverse/" target="_blank">498. Diagonal Traverse</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/spiral-matrix-ii/" target="_blank">59. Spiral Matrix II</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== String Algorithms ===== -->
+<div class="section" id="stralgo">
+<div class="card">
+<h2>String Algorithms</h2>
+
+<h3>KMP (Knuth-Morris-Pratt): O(n+m) pattern matching</h3>
+<pre><span class="cm">// Build failure function (longest proper prefix-suffix)</span>
+<span class="kw">int</span>[] <span class="fn">buildLPS</span>(String pattern) {
+    <span class="kw">int</span> m = pattern.length();
+    <span class="kw">int</span>[] lps = <span class="kw">new int</span>[m];
+    <span class="kw">int</span> len = <span class="num">0</span>, i = <span class="num">1</span>;
+    <span class="kw">while</span> (i &lt; m) {
+        <span class="kw">if</span> (pattern.charAt(i) == pattern.charAt(len)) {
+            lps[i++] = ++len;
+        } <span class="kw">else if</span> (len &gt; <span class="num">0</span>) {
+            len = lps[len - <span class="num">1</span>];
+        } <span class="kw">else</span> {
+            lps[i++] = <span class="num">0</span>;
+        }
+    }
+    <span class="kw">return</span> lps;
+}
+</pre>
+
+<h3>Rabin-Karp: Rolling Hash for pattern matching</h3>
+<pre><span class="cm">// Hash = s[0]*base^(m-1) + s[1]*base^(m-2) + ... + s[m-1]</span>
+<span class="cm">// Roll: remove leftmost char, add new rightmost char</span>
+<span class="kw">long</span> hash = <span class="num">0</span>, patHash = <span class="num">0</span>, power = <span class="num">1</span>;
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; m; i++) {
+    hash = (hash * BASE + s.charAt(i)) % MOD;
+    patHash = (patHash * BASE + pattern.charAt(i)) % MOD;
+    <span class="kw">if</span> (i &gt; <span class="num">0</span>) power = power * BASE % MOD;
+}
+<span class="cm">// Slide: hash = (hash - s[i]*power) * BASE + s[i+m]</span>
+</pre>
+
+<h3>Trie (Prefix Tree)</h3>
+<pre><span class="kw">class</span> <span class="type">TrieNode</span> {
+    <span class="type">TrieNode</span>[] children = <span class="kw">new</span> <span class="type">TrieNode</span>[<span class="num">26</span>];
+    <span class="kw">boolean</span> isEnd;
+}
+
+<span class="kw">void</span> <span class="fn">insert</span>(String word) {
+    <span class="type">TrieNode</span> node = root;
+    <span class="kw">for</span> (<span class="kw">char</span> c : word.toCharArray()) {
+        <span class="kw">if</span> (node.children[c - <span class="str">'a'</span>] == <span class="kw">null</span>)
+            node.children[c - <span class="str">'a'</span>] = <span class="kw">new</span> <span class="type">TrieNode</span>();
+        node = node.children[c - <span class="str">'a'</span>];
+    }
+    node.isEnd = <span class="kw">true</span>;
+}
+</pre>
+
+<h3>Palindrome: Expand from Center O(n&sup2;)</h3>
+<pre><span class="kw">int</span> <span class="fn">expand</span>(String s, <span class="kw">int</span> left, <span class="kw">int</span> right) {
+    <span class="kw">while</span> (left &gt;= <span class="num">0</span> &amp;&amp; right &lt; s.length()
+           &amp;&amp; s.charAt(left) == s.charAt(right)) {
+        left--; right++;
+    }
+    <span class="kw">return</span> right - left - <span class="num">1</span>;
+}
+<span class="cm">// Call expand(s, i, i) for odd, expand(s, i, i+1) for even</span>
+</pre>
+
+<h3>Manacher's Algorithm: O(n) all palindromes</h3>
+<div class="insight">
+  <p><strong>Purpose:</strong> Find the longest palindromic substring (or all palindrome radii) in O(n).<br>
+  <strong>Key idea:</strong> Reuse previously computed palindrome info. Maintain center C and right boundary R of the rightmost known palindrome.</p>
+</div>
+<pre><span class="cm">// Transform: "abc" -> "^#a#b#c#$" (handles odd/even uniformly)</span>
+<span class="kw">int</span>[] <span class="fn">manacher</span>(String s) {
+    <span class="cm">// Build transformed string</span>
+    StringBuilder t = <span class="kw">new</span> StringBuilder(<span class="str">"^"</span>);
+    <span class="kw">for</span> (<span class="kw">char</span> c : s.toCharArray()) t.append(<span class="str">'#'</span>).append(c);
+    t.append(<span class="str">"#$"</span>);
+    <span class="kw">int</span> n = t.length();
+    <span class="kw">int</span>[] p = <span class="kw">new int</span>[n];  <span class="cm">// p[i] = radius of palindrome at i</span>
+
+    <span class="kw">int</span> C = <span class="num">0</span>, R = <span class="num">0</span>;  <span class="cm">// center, right boundary</span>
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt; n - <span class="num">1</span>; i++) {
+        <span class="kw">int</span> mirror = <span class="num">2</span> * C - i;
+        <span class="kw">if</span> (i &lt; R) p[i] = Math.<span class="fn">min</span>(R - i, p[mirror]);
+
+        <span class="cm">// Attempt to expand</span>
+        <span class="kw">while</span> (t.charAt(i + p[i] + <span class="num">1</span>) == t.charAt(i - p[i] - <span class="num">1</span>))
+            p[i]++;
+
+        <span class="cm">// Update center if expanded past R</span>
+        <span class="kw">if</span> (i + p[i] &gt; R) { C = i; R = i + p[i]; }
+    }
+    <span class="kw">return</span> p;
+    <span class="cm">// Longest palindrome length = max(p), start = (maxIdx - maxP) / 2</span>
+}
+</pre>
+
+<h3>Z-Algorithm: O(n) pattern matching &amp; string analysis</h3>
+<div class="insight">
+  <p><strong>Z[i]</strong> = length of the longest substring starting at i that is also a prefix of the string.<br>
+  <strong>Pattern matching:</strong> Concatenate pattern + "$" + text, then Z[i] == len(pattern) indicates a match.<br>
+  <strong>Also useful for:</strong> longest prefix-suffix, string period, counting distinct substrings.</p>
+</div>
+<pre><span class="kw">int</span>[] <span class="fn">zFunction</span>(String s) {
+    <span class="kw">int</span> n = s.length();
+    <span class="kw">int</span>[] z = <span class="kw">new int</span>[n];
+    <span class="kw">int</span> l = <span class="num">0</span>, r = <span class="num">0</span>;  <span class="cm">// [l, r] = rightmost Z-box</span>
+
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt; n; i++) {
+        <span class="kw">if</span> (i &lt; r)
+            z[i] = Math.<span class="fn">min</span>(r - i, z[i - l]);
+
+        <span class="cm">// Try to extend</span>
+        <span class="kw">while</span> (i + z[i] &lt; n &amp;&amp; s.charAt(z[i]) == s.charAt(i + z[i]))
+            z[i]++;
+
+        <span class="cm">// Update Z-box</span>
+        <span class="kw">if</span> (i + z[i] &gt; r) { l = i; r = i + z[i]; }
+    }
+    <span class="kw">return</span> z;
+}
+
+<span class="cm">// Pattern matching with Z:</span>
+<span class="cm">// String combined = pattern + "$" + text;</span>
+<span class="cm">// int[] z = zFunction(combined);</span>
+<span class="cm">// Match at i if z[i] == pattern.length()</span>
+</pre>
+
+<h3>Algorithm Comparison</h3>
+<table>
+  <tr><th>Algorithm</th><th>Time</th><th>Best For</th></tr>
+  <tr><td>Expand from center</td><td>O(n&sup2;)</td><td>Simple, interview default for palindrome</td></tr>
+  <tr><td>Manacher</td><td>O(n)</td><td>All palindrome radii, longest palindrome</td></tr>
+  <tr><td>KMP</td><td>O(n+m)</td><td>Single pattern match, prefix function</td></tr>
+  <tr><td>Z-Algorithm</td><td>O(n)</td><td>Pattern match, prefix analysis, cleaner than KMP</td></tr>
+  <tr><td>Rabin-Karp</td><td>O(n) avg</td><td>Multiple pattern match, substring dedup</td></tr>
+</table>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/find-the-index-of-the-first-occurrence/" target="_blank">28. Find the Index of the First Occurrence (KMP)</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-palindromic-substring/" target="_blank">5. Longest Palindromic Substring</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/implement-trie/" target="_blank">208. Implement Trie</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/word-search-ii/" target="_blank">212. Word Search II (Trie + DFS)</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/palindromic-substrings/" target="_blank">647. Palindromic Substrings</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-happy-prefix/" target="_blank">1392. Longest Happy Prefix (KMP/Z)</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/repeated-dna-sequences/" target="_blank">187. Repeated DNA Sequences (Rolling Hash)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/shortest-palindrome/" target="_blank">214. Shortest Palindrome (KMP / Z-algo)</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/palindrome-pairs/" target="_blank">336. Palindrome Pairs (Trie / Manacher)</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-palindromic-substring/" target="_blank">5. Longest Palindromic Substring (Manacher O(n))</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/palindromic-substrings/" target="_blank">647. Palindromic Substrings (Manacher count)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-substring-without-repeating/" target="_blank">3. Longest Substring Without Repeating (Z-function variant)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/rotate-string/" target="_blank">796. Rotate String (Z-algo / KMP on concat)</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/repeated-substring-pattern/" target="_blank">459. Repeated Substring Pattern (KMP / Z)</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-word-in-dictionary/" target="_blank">720. Longest Word in Dictionary (Trie)</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== In-Place ===== -->
+<div class="section" id="inplace">
+<div class="card">
+<h2>In-Place Manipulation</h2>
+<p>Modify array without extra space. Common in "O(1) space" follow-up questions.</p>
+
+<h3>Pattern 1: Use array itself as hash (mark visited)</h3>
+<pre><span class="cm">// LC 41 First Missing Positive</span>
+<span class="cm">// Place each number at its "correct" index: nums[i] should be i+1</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+    <span class="kw">while</span> (nums[i] &gt; <span class="num">0</span> &amp;&amp; nums[i] &lt;= n &amp;&amp; nums[nums[i]-<span class="num">1</span>] != nums[i])
+        swap(nums, i, nums[i] - <span class="num">1</span>);
+}
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++)
+    <span class="kw">if</span> (nums[i] != i + <span class="num">1</span>) <span class="kw">return</span> i + <span class="num">1</span>;
+</pre>
+
+<h3>Pattern 2: Negate to mark (for range [1, n])</h3>
+<pre><span class="cm">// LC 442 Find Duplicates: negate nums[abs(nums[i])-1]</span>
+<span class="kw">for</span> (<span class="kw">int</span> num : nums) {
+    <span class="kw">int</span> idx = Math.<span class="fn">abs</span>(num) - <span class="num">1</span>;
+    <span class="kw">if</span> (nums[idx] &lt; <span class="num">0</span>) result.add(idx + <span class="num">1</span>);  <span class="cm">// seen before!</span>
+    <span class="kw">else</span> nums[idx] = -nums[idx];
+}
+</pre>
+
+<h3>Pattern 3: Encode two values in one cell</h3>
+<pre><span class="cm">// LC 289 Game of Life: encode (current, next) in same cell</span>
+<span class="cm">// Use: 0=dead->dead, 1=live->dead, 2=dead->live, 3=live->live</span>
+<span class="cm">// Current state: val & 1, Next state: val >> 1</span>
+</pre>
+
+<h3>Pattern 4: Reverse segments</h3>
+<pre><span class="cm">// LC 189 Rotate Array by k: reverse all, reverse [0,k-1], reverse [k,n-1]</span>
+<span class="fn">reverse</span>(nums, <span class="num">0</span>, n - <span class="num">1</span>);
+<span class="fn">reverse</span>(nums, <span class="num">0</span>, k - <span class="num">1</span>);
+<span class="fn">reverse</span>(nums, k, n - <span class="num">1</span>);
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/first-missing-positive/" target="_blank">41. First Missing Positive</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/find-all-duplicates-in-an-array/" target="_blank">442. Find All Duplicates in an Array</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/find-all-numbers-disappeared/" target="_blank">448. Find All Numbers Disappeared</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/rotate-array/" target="_blank">189. Rotate Array</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/game-of-life/" target="_blank">289. Game of Life</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/find-the-duplicate-number/" target="_blank">287. Find the Duplicate Number (Floyd's)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/missing-number/" target="_blank">268. Missing Number</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/majority-element/" target="_blank">169. Majority Element (Boyer-Moore)</a></span><span class="tag tag-easy">Easy</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Interview Tips ===== -->
+<div class="section" id="tips">
+<div class="card">
+<h2>Interview Tips for Array &amp; String</h2>
+
+<h3>Common Clarifying Questions to Ask</h3>
+<div class="tip">
+  <p><strong>"Is the array sorted?"</strong> &rarr; two pointers / binary search<br>
+  <strong>"Can I modify the input?"</strong> &rarr; in-place tricks<br>
+  <strong>"Are there duplicates?"</strong> &rarr; affects dedup logic<br>
+  <strong>"What's the range of values?"</strong> &rarr; bucket sort / counting<br>
+  <strong>"Is it ASCII or Unicode?"</strong> &rarr; array[128] vs HashMap</p>
+</div>
+
+<h3>Optimization Progression (show in interview)</h3>
+<table>
+  <tr><th>Step</th><th>Approach</th><th>Complexity</th></tr>
+  <tr><td>1. Brute Force</td><td>Nested loops, check all pairs</td><td>O(n&sup2;) or O(n&sup3;)</td></tr>
+  <tr><td>2. Sort First</td><td>Sort + two pointers / binary search</td><td>O(n log n)</td></tr>
+  <tr><td>3. Hash Table</td><td>One pass with lookup</td><td>O(n) time, O(n) space</td></tr>
+  <tr><td>4. In-Place</td><td>Modify array as storage</td><td>O(n) time, O(1) space</td></tr>
+</table>
+
+<h3>Edge Cases to Always Check</h3>
+<div class="danger">
+  <p><strong>Empty array / string</strong><br>
+  <strong>Single element</strong><br>
+  <strong>All same elements</strong><br>
+  <strong>Already sorted / reverse sorted</strong><br>
+  <strong>Negative numbers</strong> (affects product, modular arithmetic)<br>
+  <strong>Integer overflow</strong> (use long for sums, products)<br>
+  <strong>Off-by-one</strong> in window boundaries</p>
+</div>
+
+<h3>Google/Meta High-Frequency Top 20</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/two-sum/" target="_blank">1. Two Sum</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-substring-without-repeating/" target="_blank">3. Longest Substring Without Repeating</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/3sum/" target="_blank">15. 3Sum</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/trapping-rain-water/" target="_blank">42. Trapping Rain Water</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/merge-intervals/" target="_blank">56. Merge Intervals</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-window-substring/" target="_blank">76. Minimum Window Substring</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-consecutive-sequence/" target="_blank">128. Longest Consecutive Sequence</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/product-of-array-except-self/" target="_blank">238. Product of Array Except Self</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/subarray-sum-equals-k/" target="_blank">560. Subarray Sum Equals K</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/median-of-two-sorted-arrays/" target="_blank">4. Median of Two Sorted Arrays</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/search-in-rotated-sorted-array/" target="_blank">33. Search in Rotated Sorted Array</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/group-anagrams/" target="_blank">49. Group Anagrams</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-palindromic-substring/" target="_blank">5. Longest Palindromic Substring</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/container-with-most-water/" target="_blank">11. Container With Most Water</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/lru-cache/" target="_blank">146. LRU Cache</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/kth-largest-element/" target="_blank">215. Kth Largest Element</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/first-missing-positive/" target="_blank">41. First Missing Positive</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/largest-rectangle-in-histogram/" target="_blank">84. Largest Rectangle in Histogram</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/sliding-window-maximum/" target="_blank">239. Sliding Window Maximum</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-profit-in-job-scheduling/" target="_blank">1235. Maximum Profit in Job Scheduling</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

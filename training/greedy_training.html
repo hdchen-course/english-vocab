@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Greedy Algorithms — Training Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fa;
+  --bg2: #ffffff;
+  --bg3: #f1f3f5;
+  --bg4: #e9ecef;
+  --border: #dee2e6;
+  --text: #212529;
+  --text2: #495057;
+  --text3: #868e96;
+  --blue: #1971c2;
+  --blue-l: #d0ebff;
+  --green: #2f9e44;
+  --green-l: #d3f9d8;
+  --yellow: #e67700;
+  --yellow-l: #fff3bf;
+  --red: #c92a2a;
+  --red-l: #ffe3e3;
+  --purple: #7048e8;
+  --purple-l: #e5dbff;
+  --orange: #d9480f;
+  --cyan: #0c8599;
+  --r: 12px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+header { text-align: center; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+header .sub { color: var(--text3); font-size: 14px; }
+
+.nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 40px;  position: sticky; top: 0; background: var(--bg); padding: 16px 0; z-index: 100; border-bottom: 1px solid var(--border); }
+.nav-btn {
+  padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg2); color: var(--text2); cursor: pointer;
+  font-size: 13px; font-weight: 600; transition: all .2s; font-family: 'Inter', sans-serif;
+}
+.nav-btn:hover { background: var(--bg3); color: var(--text); }
+.nav-btn.active { background: var(--blue-l); color: var(--blue); border-color: var(--blue); }
+
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+h2 { font-size: 24px; font-weight: 700; margin: 32px 0 16px; color: var(--blue); }
+h3 { font-size: 18px; font-weight: 600; margin: 24px 0 12px; }
+h4 { font-size: 15px; font-weight: 600; margin: 16px 0 8px; color: var(--text2); }
+p { margin-bottom: 12px; color: var(--text2); }
+ul, ol { margin: 8px 0 16px 24px; color: var(--text2); }
+li { margin-bottom: 6px; }
+strong { color: var(--text); }
+
+pre {
+  background: #1e1e2e; border-radius: 8px;
+  padding: 16px 20px; overflow-x: auto; margin: 12px 0;
+  font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6;
+  color: #cdd6f4;
+}
+code { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+p code, li code {
+  background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--purple);
+}
+pre .kw { color: #cba6f7; }
+pre .type { color: #f9e2af; }
+pre .str { color: #a6e3a1; }
+pre .cm { color: #6c7086; }
+pre .num { color: #fab387; }
+pre .fn { color: #89b4fa; }
+
+.insight {
+  background: var(--blue-l); border-left: 3px solid var(--blue);
+  padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+}
+.insight p { color: var(--blue); margin: 0; }
+
+.warning {
+  background: var(--yellow-l); border-left: 3px solid var(--yellow);
+  padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+}
+.warning p { color: var(--yellow); margin: 0; }
+
+.danger {
+  background: var(--red-l); border-left: 3px solid var(--red);
+  padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+}
+.danger p { color: var(--red); margin: 0; }
+
+.tip {
+  background: var(--green-l); border-left: 3px solid var(--green);
+  padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+}
+.tip p { color: var(--green); margin: 0; }
+
+.card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r); margin-bottom: 20px; padding: 24px 28px;
+  box-shadow: var(--shadow);
+}
+
+table {
+  width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px;
+}
+th, td { padding: 10px 14px; border: 1px solid var(--border); text-align: left; }
+th { background: var(--bg3); font-weight: 600; color: var(--text); }
+tr:hover { background: var(--bg3); }
+
+.tag {
+  display: inline-block; padding: 2px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; margin: 2px 4px 2px 0;
+}
+.tag-easy { background: var(--green-l); color: var(--green); }
+.tag-medium { background: var(--yellow-l); color: var(--yellow); }
+.tag-hard { background: var(--red-l); color: var(--red); }
+.tag-freq { background: var(--purple-l); color: var(--purple); }
+
+.problem-list { list-style: none; padding: 0; margin: 12px 0; }
+.problem-list li {
+  padding: 10px 14px; border-left: 3px solid var(--blue);
+  margin-bottom: 8px; background: var(--bg3);
+  border-radius: 0 8px 8px 0; display: flex;
+  justify-content: flex-start; align-items: center;
+  gap: 8px;
+}
+.problem-list .title { color: var(--text); font-weight: 500; font-size: 14px; flex: 1; }
+.problem-list .title a { color: var(--text); text-decoration: none; border-bottom: 1px dashed var(--border); transition: all .2s; }
+.problem-list .title a:hover { color: var(--blue); border-bottom-color: var(--blue); }
+
+.decision-tree {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 20px; margin: 12px 0;
+  font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 2;
+  white-space: pre-wrap;
+}
+.decision-tree .q { color: var(--blue); font-weight: bold; }
+.decision-tree .a { color: var(--green); }
+.decision-tree .arrow { color: var(--orange); }
+
+@media (max-width: 768px) {
+  .container { padding: 20px 12px; }
+  .nav { position: static; flex-direction: column; align-items: stretch; }
+  .nav-btn { text-align: center; }
+  pre { font-size: 11px; padding: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<header>
+  <h1>Greedy Algorithms &mdash; Training Guide</h1>
+  <div class="sub">Proof Techniques &bull; Interval Scheduling &bull; Exchange Argument &bull; Activity Selection</div>
+</header>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection('overview')">Overview</button>
+  <button class="nav-btn" onclick="showSection('proof')">Proof Techniques</button>
+  <button class="nav-btn" onclick="showSection('interval')">Interval Scheduling</button>
+  <button class="nav-btn" onclick="showSection('jump')">Jump &amp; Coverage</button>
+  <button class="nav-btn" onclick="showSection('twopass')">Two-Pass</button>
+  <button class="nav-btn" onclick="showSection('sortgreedy')">Sort + Greedy</button>
+  <button class="nav-btn" onclick="showSection('exchange')">Exchange Argument</button>
+  <button class="nav-btn" onclick="showSection('heap')">Greedy + Heap</button>
+  <button class="nav-btn" onclick="showSection('vsdp')">Greedy vs DP</button>
+  <button class="nav-btn" onclick="showSection('tips')">Interview Tips</button>
+</div>
+
+<!-- ===== Overview ===== -->
+<div class="section active" id="overview">
+<div class="card">
+<h2>When Does Greedy Work?</h2>
+
+<h3>The Greedy Paradigm</h3>
+<p>A greedy algorithm makes the <strong>locally optimal choice</strong> at each step, hoping that this leads to a <strong>globally optimal solution</strong>. Unlike DP, greedy never reconsiders previous choices.</p>
+
+<h3>Two Required Properties</h3>
+<ol>
+  <li><strong>Greedy Choice Property</strong> &mdash; A globally optimal solution can be arrived at by making locally optimal (greedy) choices.</li>
+  <li><strong>Optimal Substructure</strong> &mdash; An optimal solution to the problem contains optimal solutions to sub-problems.</li>
+</ol>
+
+<h3>Signal Words That Suggest Greedy</h3>
+<div class="insight">
+  <p><strong>High probability greedy when you see:</strong> "minimum number of ...", "maximum number of non-overlapping ...", "earliest/latest deadline", "lexicographically smallest", "assign resources optimally", "schedule tasks", "minimum cost to ..."</p>
+</div>
+
+<h3>Decision Tree: Greedy vs DP vs Backtracking</h3>
+<div class="decision-tree"><span class="q">Q1: Does each local choice lock in without needing future info?</span>
+  <span class="arrow">&boxur;&mdash; Yes &rarr;</span> <span class="a">Likely Greedy</span>
+  <span class="arrow">&boxur;&mdash; No  &rarr;</span>
+
+<span class="q">Q2: Does the problem have overlapping subproblems?</span>
+  <span class="arrow">&boxur;&mdash; Yes &rarr;</span> <span class="a">Dynamic Programming</span>
+  <span class="arrow">&boxur;&mdash; No  &rarr;</span>
+
+<span class="q">Q3: Do you need to enumerate all solutions?</span>
+  <span class="arrow">&boxur;&mdash; Yes &rarr;</span> <span class="a">Backtracking</span>
+  <span class="arrow">&boxur;&mdash; No  &rarr;</span> <span class="a">Divide &amp; Conquer / Other</span></div>
+
+<h3>Common Greedy Patterns</h3>
+<table>
+  <tr><th>Pattern</th><th>Key Idea</th><th>Example</th></tr>
+  <tr><td>Sort + Scan</td><td>Sort by one criterion, scan linearly</td><td>Activity Selection</td></tr>
+  <tr><td>Two-Pass</td><td>Left-to-right then right-to-left</td><td>Candy, Trapping Rain Water</td></tr>
+  <tr><td>Exchange Argument</td><td>Custom comparator proves ordering</td><td>Largest Number</td></tr>
+  <tr><td>Greedy + Heap</td><td>Sort + maintain heap for regret</td><td>Course Schedule III</td></tr>
+  <tr><td>Interval Greedy</td><td>Sort by end/start, track coverage</td><td>Merge Intervals</td></tr>
+  <tr><td>Jump/Coverage</td><td>Track farthest reachable point</td><td>Jump Game II</td></tr>
+</table>
+
+<div class="warning">
+  <p><strong>Greedy trap:</strong> If you cannot articulate WHY the greedy choice is safe (i.e., you cannot sketch an exchange argument or greedy-stays-ahead proof), it probably is not greedy. Consider DP instead.</p>
+</div>
+</div>
+</div>
+
+<!-- ===== Proof Techniques ===== -->
+<div class="section" id="proof">
+<div class="card">
+<h2>Proof Techniques for Greedy Algorithms</h2>
+
+<h3>Why Proofs Matter in Interviews</h3>
+<p>At Google L5, interviewers expect you to <strong>justify</strong> why your greedy approach is correct. You do not need a formal proof, but you must articulate the key insight. The three main techniques are:</p>
+
+<h3>1. Exchange Argument (Most Common)</h3>
+<p>Assume an optimal solution O differs from your greedy solution G. Show you can <strong>swap</strong> an element in O with the greedy choice and the result is <strong>no worse</strong>. This implies G is also optimal.</p>
+
+<div class="tip">
+  <p><strong>Template:</strong> "Suppose OPT makes a different choice at step k. If we swap OPT's choice with our greedy choice, the solution does not get worse because [reason]. Therefore, greedy is also optimal."</p>
+</div>
+
+<h4>Concrete Example: Activity Selection (Sort by End Time)</h4>
+<p><strong>Claim:</strong> Choosing the activity with the earliest finish time that is compatible with previously selected activities yields a maximum-size set.</p>
+<p><strong>Proof sketch:</strong></p>
+<ol>
+  <li>Let G = {g1, g2, ..., gk} be greedy's solution (sorted by finish time).</li>
+  <li>Let O = {o1, o2, ..., om} be an optimal solution with m &ge; k (sorted by finish time).</li>
+  <li><strong>Exchange step:</strong> Consider the first index i where gi &ne; oi. Since greedy picks the earliest finish time compatible activity, finish(gi) &le; finish(oi).</li>
+  <li>Replace oi with gi in O. Since finish(gi) &le; finish(oi), all subsequent activities in O remain compatible.</li>
+  <li>The new O is still valid and has the same size. We can repeat until O = G.</li>
+  <li>Therefore m = k: greedy is optimal.</li>
+</ol>
+
+<h3>2. Greedy Stays Ahead (Induction)</h3>
+<p>Show by induction that after each step, the greedy solution is <strong>at least as good</strong> as any other solution at that point.</p>
+<div class="insight">
+  <p><strong>Structure:</strong> Define a measure M(i) after step i. Prove M_greedy(i) &ge; M_other(i) for all i. Conclude greedy's final answer is at least as good as optimal.</p>
+</div>
+
+<h3>3. Structural / Cut-and-Paste</h3>
+<p>Show that any optimal solution can be <strong>transformed</strong> into the greedy solution by a series of local modifications, each preserving optimality.</p>
+<p>Often used for problems like Huffman coding where the structure (tree shape) matters.</p>
+
+<h3>Interview Communication Pattern</h3>
+<pre><span class="cm">// In interview, say something like:</span>
+<span class="cm">// "The key insight is that choosing [greedy criterion] is safe because</span>
+<span class="cm">//  if there were a better choice X, we could swap X with our choice</span>
+<span class="cm">//  and the solution would not improve, because [specific reason]."</span>
+<span class="cm">//</span>
+<span class="cm">// This shows you understand correctness without writing a formal proof.</span></pre>
+</div>
+</div>
+
+<!-- ===== Interval Scheduling ===== -->
+<div class="section" id="interval">
+<div class="card">
+<h2>Interval Scheduling</h2>
+
+<h3>Pattern 1: Maximum Non-Overlapping Intervals</h3>
+<p><strong>Strategy:</strong> Sort by <strong>end time</strong>. Greedily pick the interval that ends earliest and is compatible with the last picked interval.</p>
+
+<pre><span class="cm">// Template: Maximum non-overlapping intervals</span>
+<span class="kw">public int</span> <span class="fn">maxNonOverlapping</span>(<span class="kw">int</span>[][] intervals) {
+    Arrays.<span class="fn">sort</span>(intervals, (a, b) -> a[<span class="num">1</span>] - b[<span class="num">1</span>]); <span class="cm">// sort by end time</span>
+    <span class="kw">int</span> count = <span class="num">0</span>, prevEnd = Integer.MIN_VALUE;
+    <span class="kw">for</span> (<span class="kw">int</span>[] interval : intervals) {
+        <span class="kw">if</span> (interval[<span class="num">0</span>] >= prevEnd) { <span class="cm">// compatible</span>
+            count++;
+            prevEnd = interval[<span class="num">1</span>];
+        }
+    }
+    <span class="kw">return</span> count;
+}
+<span class="cm">// LC 435: eraseOverlapIntervals = n - maxNonOverlapping</span></pre>
+
+<h3>Pattern 2: Minimum Intervals to Cover All Points</h3>
+<p><strong>Strategy:</strong> Sort by <strong>start time</strong>. For each uncovered point, greedily extend coverage as far as possible using available intervals.</p>
+
+<pre><span class="cm">// Template: Minimum intervals to cover a range [0, T]</span>
+<span class="kw">public int</span> <span class="fn">minIntervalsToCover</span>(<span class="kw">int</span>[][] intervals, <span class="kw">int</span> T) {
+    Arrays.<span class="fn">sort</span>(intervals, (a, b) -> a[<span class="num">0</span>] - b[<span class="num">0</span>]);
+    <span class="kw">int</span> count = <span class="num">0</span>, i = <span class="num">0</span>, curEnd = <span class="num">0</span>;
+    <span class="kw">while</span> (curEnd < T) {
+        <span class="kw">int</span> farthest = curEnd;
+        <span class="kw">while</span> (i < intervals.length && intervals[i][<span class="num">0</span>] <= curEnd) {
+            farthest = Math.<span class="fn">max</span>(farthest, intervals[i][<span class="num">1</span>]);
+            i++;
+        }
+        <span class="kw">if</span> (farthest == curEnd) <span class="kw">return</span> -<span class="num">1</span>; <span class="cm">// gap, impossible</span>
+        count++;
+        curEnd = farthest;
+    }
+    <span class="kw">return</span> count;
+}</pre>
+
+<h3>Pattern 3: Minimum Number of Arrows (Interval Intersection)</h3>
+<pre><span class="cm">// LC 452: Minimum Number of Arrows to Burst Balloons</span>
+<span class="kw">public int</span> <span class="fn">findMinArrowShots</span>(<span class="kw">int</span>[][] points) {
+    Arrays.<span class="fn">sort</span>(points, (a, b) -> Integer.<span class="fn">compare</span>(a[<span class="num">1</span>], b[<span class="num">1</span>]));
+    <span class="kw">int</span> arrows = <span class="num">1</span>;
+    <span class="kw">int</span> prevEnd = points[<span class="num">0</span>][<span class="num">1</span>];
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i < points.length; i++) {
+        <span class="kw">if</span> (points[i][<span class="num">0</span>] > prevEnd) { <span class="cm">// no overlap</span>
+            arrows++;
+            prevEnd = points[i][<span class="num">1</span>];
+        }
+    }
+    <span class="kw">return</span> arrows;
+}</pre>
+
+<h3>Meeting Rooms Pattern (Sweep Line / Heap)</h3>
+<pre><span class="cm">// LC 253: Meeting Rooms II - minimum rooms needed</span>
+<span class="kw">public int</span> <span class="fn">minMeetingRooms</span>(<span class="kw">int</span>[][] intervals) {
+    Arrays.<span class="fn">sort</span>(intervals, (a, b) -> a[<span class="num">0</span>] - b[<span class="num">0</span>]);
+    PriorityQueue&lt;Integer&gt; pq = <span class="kw">new</span> PriorityQueue&lt;&gt;(); <span class="cm">// min-heap of end times</span>
+    <span class="kw">for</span> (<span class="kw">int</span>[] interval : intervals) {
+        <span class="kw">if</span> (!pq.<span class="fn">isEmpty</span>() && pq.<span class="fn">peek</span>() <= interval[<span class="num">0</span>]) {
+            pq.<span class="fn">poll</span>(); <span class="cm">// reuse room</span>
+        }
+        pq.<span class="fn">offer</span>(interval[<span class="num">1</span>]);
+    }
+    <span class="kw">return</span> pq.<span class="fn">size</span>();
+}</pre>
+
+<div class="insight">
+  <p><strong>Key insight:</strong> "Sort by end time" maximizes non-overlapping count. "Sort by start time + heap" counts concurrent overlaps. Know both patterns cold.</p>
+</div>
+
+<h3>Practice Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/non-overlapping-intervals/" target="_blank">435. Non-overlapping Intervals</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/" target="_blank">452. Minimum Number of Arrows to Burst Balloons</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/meeting-rooms-ii/" target="_blank">253. Meeting Rooms II</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/merge-intervals/" target="_blank">56. Merge Intervals</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/insert-interval/" target="_blank">57. Insert Interval</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/interval-list-intersections/" target="_blank">986. Interval List Intersections</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/remove-covered-intervals/" target="_blank">1288. Remove Covered Intervals</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Jump & Coverage ===== -->
+<div class="section" id="jump">
+<div class="card">
+<h2>Jump &amp; Coverage Greedy</h2>
+
+<h3>Core Pattern: Track Farthest Reachable</h3>
+<p>At each position, maintain the <strong>farthest reachable</strong> index. When you reach the boundary of the current jump, you must take another jump (increment count) and extend boundary to farthest.</p>
+
+<pre><span class="cm">// Template: Minimum jumps to reach end (BFS-style greedy)</span>
+<span class="kw">public int</span> <span class="fn">minJumps</span>(<span class="kw">int</span>[] nums) {
+    <span class="kw">int</span> jumps = <span class="num">0</span>, curEnd = <span class="num">0</span>, farthest = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i < nums.length - <span class="num">1</span>; i++) {
+        farthest = Math.<span class="fn">max</span>(farthest, i + nums[i]);
+        <span class="kw">if</span> (i == curEnd) { <span class="cm">// must jump</span>
+            jumps++;
+            curEnd = farthest;
+            <span class="kw">if</span> (curEnd >= nums.length - <span class="num">1</span>) <span class="kw">break</span>;
+        }
+    }
+    <span class="kw">return</span> jumps;
+}</pre>
+
+<h3>Can Reach (Jump Game I)</h3>
+<pre><span class="cm">// LC 55: Jump Game - can you reach the end?</span>
+<span class="kw">public boolean</span> <span class="fn">canJump</span>(<span class="kw">int</span>[] nums) {
+    <span class="kw">int</span> farthest = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i < nums.length; i++) {
+        <span class="kw">if</span> (i > farthest) <span class="kw">return false</span>;
+        farthest = Math.<span class="fn">max</span>(farthest, i + nums[i]);
+    }
+    <span class="kw">return true</span>;
+}</pre>
+
+<h3>Video Stitching / Minimum Taps</h3>
+<pre><span class="cm">// LC 1024: Video Stitching / LC 1326: Minimum Taps</span>
+<span class="cm">// Convert to intervals, then use "min intervals to cover [0, T]" template</span>
+<span class="kw">public int</span> <span class="fn">videoStitching</span>(<span class="kw">int</span>[][] clips, <span class="kw">int</span> time) {
+    Arrays.<span class="fn">sort</span>(clips, (a, b) -> a[<span class="num">0</span>] - b[<span class="num">0</span>]);
+    <span class="kw">int</span> count = <span class="num">0</span>, i = <span class="num">0</span>, curEnd = <span class="num">0</span>;
+    <span class="kw">while</span> (curEnd < time) {
+        <span class="kw">int</span> farthest = curEnd;
+        <span class="kw">while</span> (i < clips.length && clips[i][<span class="num">0</span>] <= curEnd) {
+            farthest = Math.<span class="fn">max</span>(farthest, clips[i][<span class="num">1</span>]);
+            i++;
+        }
+        <span class="kw">if</span> (farthest == curEnd) <span class="kw">return</span> -<span class="num">1</span>;
+        count++;
+        curEnd = farthest;
+    }
+    <span class="kw">return</span> count;
+}</pre>
+
+<div class="tip">
+  <p><strong>Why it works:</strong> At each "level" (BFS analogy), we explore all reachable positions and extend to the farthest. This is essentially BFS on implicit graph where edges are jumps, but implemented in O(n) with the greedy trick.</p>
+</div>
+
+<h3>Practice Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/jump-game/" target="_blank">55. Jump Game</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/jump-game-ii/" target="_blank">45. Jump Game II</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/video-stitching/" target="_blank">1024. Video Stitching</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-number-of-taps-to-open-to-water-a-garden/" target="_blank">1326. Minimum Number of Taps to Open to Water a Garden</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/farthest-building-you-can-reach/" target="_blank">1642. Furthest Building You Can Reach</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Two-Pass Greedy ===== -->
+<div class="section" id="twopass">
+<div class="card">
+<h2>Two-Pass Greedy</h2>
+
+<h3>Core Pattern</h3>
+<p>When the answer at position i depends on <strong>both neighbors</strong> (left and right), make two passes:</p>
+<ol>
+  <li><strong>Left-to-right:</strong> Satisfy constraints from the left neighbor.</li>
+  <li><strong>Right-to-left:</strong> Satisfy constraints from the right neighbor.</li>
+  <li><strong>Combine:</strong> Take the max (or merge) of both passes.</li>
+</ol>
+
+<h3>Candy (LC 135)</h3>
+<pre><span class="cm">// LC 135: Candy - minimum candies satisfying both neighbor constraints</span>
+<span class="kw">public int</span> <span class="fn">candy</span>(<span class="kw">int</span>[] ratings) {
+    <span class="kw">int</span> n = ratings.length;
+    <span class="kw">int</span>[] candies = <span class="kw">new int</span>[n];
+    Arrays.<span class="fn">fill</span>(candies, <span class="num">1</span>);
+
+    <span class="cm">// Left-to-right: if rating[i] > rating[i-1], give more than left</span>
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i < n; i++) {
+        <span class="kw">if</span> (ratings[i] > ratings[i - <span class="num">1</span>]) {
+            candies[i] = candies[i - <span class="num">1</span>] + <span class="num">1</span>;
+        }
+    }
+
+    <span class="cm">// Right-to-left: if rating[i] > rating[i+1], must be more than right</span>
+    <span class="kw">for</span> (<span class="kw">int</span> i = n - <span class="num">2</span>; i >= <span class="num">0</span>; i--) {
+        <span class="kw">if</span> (ratings[i] > ratings[i + <span class="num">1</span>]) {
+            candies[i] = Math.<span class="fn">max</span>(candies[i], candies[i + <span class="num">1</span>] + <span class="num">1</span>);
+        }
+    }
+
+    <span class="kw">int</span> sum = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> c : candies) sum += c;
+    <span class="kw">return</span> sum;
+}</pre>
+
+<h3>Trapping Rain Water (LC 42)</h3>
+<pre><span class="cm">// LC 42: Trapping Rain Water - two-pointer approach (optimized two-pass)</span>
+<span class="kw">public int</span> <span class="fn">trap</span>(<span class="kw">int</span>[] height) {
+    <span class="kw">int</span> left = <span class="num">0</span>, right = height.length - <span class="num">1</span>;
+    <span class="kw">int</span> leftMax = <span class="num">0</span>, rightMax = <span class="num">0</span>, water = <span class="num">0</span>;
+    <span class="kw">while</span> (left < right) {
+        <span class="kw">if</span> (height[left] < height[right]) {
+            leftMax = Math.<span class="fn">max</span>(leftMax, height[left]);
+            water += leftMax - height[left];
+            left++;
+        } <span class="kw">else</span> {
+            rightMax = Math.<span class="fn">max</span>(rightMax, height[right]);
+            water += rightMax - height[right];
+            right--;
+        }
+    }
+    <span class="kw">return</span> water;
+}</pre>
+
+<h3>Gas Station (LC 134)</h3>
+<pre><span class="cm">// LC 134: Gas Station - single pass greedy</span>
+<span class="kw">public int</span> <span class="fn">canCompleteCircuit</span>(<span class="kw">int</span>[] gas, <span class="kw">int</span>[] cost) {
+    <span class="kw">int</span> totalSurplus = <span class="num">0</span>, currentSurplus = <span class="num">0</span>, start = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i < gas.length; i++) {
+        <span class="kw">int</span> diff = gas[i] - cost[i];
+        totalSurplus += diff;
+        currentSurplus += diff;
+        <span class="kw">if</span> (currentSurplus < <span class="num">0</span>) { <span class="cm">// cannot start from any station before i+1</span>
+            start = i + <span class="num">1</span>;
+            currentSurplus = <span class="num">0</span>;
+        }
+    }
+    <span class="kw">return</span> totalSurplus >= <span class="num">0</span> ? start : -<span class="num">1</span>;
+}</pre>
+
+<div class="insight">
+  <p><strong>Gas Station insight:</strong> If total gas &ge; total cost, a solution exists. The start point is the station after the last point where cumulative surplus went negative. This is a "reset" greedy pattern.</p>
+</div>
+
+<h3>Practice Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/candy/" target="_blank">135. Candy</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/trapping-rain-water/" target="_blank">42. Trapping Rain Water</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/gas-station/" target="_blank">134. Gas Station</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/product-of-array-except-self/" target="_blank">238. Product of Array Except Self</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-mountain-in-array/" target="_blank">845. Longest Mountain in Array</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Sort + Greedy ===== -->
+<div class="section" id="sortgreedy">
+<div class="card">
+<h2>Sort + Greedy</h2>
+
+<h3>Core Idea</h3>
+<p>Many greedy problems become straightforward once you sort by the right criterion. The sort exposes the greedy order, and a single scan produces the answer.</p>
+
+<div class="warning">
+  <p><strong>Sorting criterion is everything.</strong> If you sort by the wrong key, greedy fails. Always ask: "What should I sort by, and why does this ordering let me make irrevocable decisions?"</p>
+</div>
+
+<h3>Task Scheduler (LC 621)</h3>
+<pre><span class="cm">// LC 621: Task Scheduler - greedy by most frequent task</span>
+<span class="kw">public int</span> <span class="fn">leastInterval</span>(<span class="kw">char</span>[] tasks, <span class="kw">int</span> n) {
+    <span class="kw">int</span>[] freq = <span class="kw">new int</span>[<span class="num">26</span>];
+    <span class="kw">for</span> (<span class="kw">char</span> t : tasks) freq[t - <span class="str">'A'</span>]++;
+    Arrays.<span class="fn">sort</span>(freq);
+    <span class="kw">int</span> maxFreq = freq[<span class="num">25</span>];
+    <span class="kw">int</span> idleSlots = (maxFreq - <span class="num">1</span>) * n;
+
+    <span class="cm">// Fill idle slots with other tasks</span>
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">24</span>; i >= <span class="num">0</span> && freq[i] > <span class="num">0</span>; i--) {
+        idleSlots -= Math.<span class="fn">min</span>(freq[i], maxFreq - <span class="num">1</span>);
+    }
+    idleSlots = Math.<span class="fn">max</span>(<span class="num">0</span>, idleSlots);
+    <span class="kw">return</span> tasks.length + idleSlots;
+}</pre>
+
+<h3>Boats to Save People (LC 881)</h3>
+<pre><span class="cm">// LC 881: Boats to Save People - sort + two pointers</span>
+<span class="kw">public int</span> <span class="fn">numRescueBoats</span>(<span class="kw">int</span>[] people, <span class="kw">int</span> limit) {
+    Arrays.<span class="fn">sort</span>(people);
+    <span class="kw">int</span> left = <span class="num">0</span>, right = people.length - <span class="num">1</span>, boats = <span class="num">0</span>;
+    <span class="kw">while</span> (left <= right) {
+        <span class="kw">if</span> (people[left] + people[right] <= limit) {
+            left++; <span class="cm">// pair lightest with heaviest</span>
+        }
+        right--; <span class="cm">// heaviest always takes a boat</span>
+        boats++;
+    }
+    <span class="kw">return</span> boats;
+}</pre>
+
+<h3>Queue Reconstruction by Height (LC 406)</h3>
+<pre><span class="cm">// LC 406: Sort by height desc, then by k asc. Insert at index k.</span>
+<span class="kw">public int</span>[][] <span class="fn">reconstructQueue</span>(<span class="kw">int</span>[][] people) {
+    <span class="cm">// Taller people first; among same height, fewer people-in-front first</span>
+    Arrays.<span class="fn">sort</span>(people, (a, b) ->
+        a[<span class="num">0</span>] != b[<span class="num">0</span>] ? b[<span class="num">0</span>] - a[<span class="num">0</span>] : a[<span class="num">1</span>] - b[<span class="num">1</span>]);
+    List&lt;<span class="kw">int</span>[]&gt; result = <span class="kw">new</span> ArrayList&lt;&gt;();
+    <span class="kw">for</span> (<span class="kw">int</span>[] p : people) {
+        result.<span class="fn">add</span>(p[<span class="num">1</span>], p); <span class="cm">// insert at index k</span>
+    }
+    <span class="kw">return</span> result.<span class="fn">toArray</span>(<span class="kw">new int</span>[<span class="num">0</span>][]);
+}</pre>
+
+<div class="tip">
+  <p><strong>Why height-desc works:</strong> When we insert a shorter person, they do not affect the k-value of already-placed taller people. This is a "process in order of decreasing influence" pattern.</p>
+</div>
+
+<h3>Practice Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/task-scheduler/" target="_blank">621. Task Scheduler</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/boats-to-save-people/" target="_blank">881. Boats to Save People</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/queue-reconstruction-by-height/" target="_blank">406. Queue Reconstruction by Height</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/reduce-array-size-to-the-half/" target="_blank">1338. Reduce Array Size to The Half</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/meeting-rooms-ii/" target="_blank">253. Meeting Rooms II</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/two-city-scheduling/" target="_blank">1029. Two City Scheduling</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/assign-cookies/" target="_blank">455. Assign Cookies</a></span><span class="tag tag-easy">Easy</span></li>
+</ul>
+
+<h3>Smallest Non-Constructible Sum (CSES: MissingCoinSum)</h3>
+<div class="insight">
+  <p><strong>Problem:</strong> Given coins, find the smallest sum you CANNOT make.<br>
+  <strong>Key insight:</strong> Sort coins. If you can make all sums in [0, reach], and next coin &le; reach+1, then you can now make [0, reach+coin]. If next coin &gt; reach+1, answer is reach+1.</p>
+</div>
+<pre><span class="cm">// Sort + greedy: O(n log n)</span>
+Arrays.<span class="fn">sort</span>(coins);
+<span class="kw">long</span> reach = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span> coin : coins) {
+    <span class="kw">if</span> (coin &gt; reach + <span class="num">1</span>) <span class="kw">break</span>;
+    reach += coin;
+}
+<span class="kw">return</span> reach + <span class="num">1</span>;  <span class="cm">// smallest non-constructible</span>
+</pre>
+</div>
+</div>
+
+<!-- ===== Exchange Argument Problems ===== -->
+<div class="section" id="exchange">
+<div class="card">
+<h2>Exchange Argument Problems</h2>
+
+<h3>The Pattern</h3>
+<p>Design a <strong>custom comparator</strong> that defines the optimal ordering. Prove via exchange argument: if two adjacent elements are in the wrong order, swapping them improves (or does not worsen) the solution.</p>
+
+<div class="insight">
+  <p><strong>Template:</strong> For elements A and B, compare f(A, B) vs f(B, A). If placing A before B is always at least as good, sort by this comparator. The proof shows any inversion can be fixed by swapping.</p>
+</div>
+
+<h3>Largest Number (LC 179)</h3>
+<pre><span class="cm">// LC 179: Largest Number</span>
+<span class="cm">// Exchange argument: compare "AB" vs "BA" as strings</span>
+<span class="kw">public</span> String <span class="fn">largestNumber</span>(<span class="kw">int</span>[] nums) {
+    String[] strs = <span class="kw">new</span> String[nums.length];
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i < nums.length; i++) strs[i] = String.<span class="fn">valueOf</span>(nums[i]);
+
+    <span class="cm">// If "ab" > "ba", then a should come before b</span>
+    Arrays.<span class="fn">sort</span>(strs, (a, b) -> (b + a).<span class="fn">compareTo</span>(a + b));
+
+    <span class="kw">if</span> (strs[<span class="num">0</span>].<span class="fn">equals</span>(<span class="str">"0"</span>)) <span class="kw">return</span> <span class="str">"0"</span>;
+    StringBuilder sb = <span class="kw">new</span> StringBuilder();
+    <span class="kw">for</span> (String s : strs) sb.<span class="fn">append</span>(s);
+    <span class="kw">return</span> sb.<span class="fn">toString</span>();
+}
+<span class="cm">// Proof: If we have ...X Y... and "YX" > "XY", swapping gives a larger number.</span>
+<span class="cm">// So the optimal arrangement has no inversions under this comparator = sorted order.</span></pre>
+
+<h3>Minimum Initial Energy (LC 1665)</h3>
+<pre><span class="cm">// LC 1665: Minimum Initial Energy to Finish Tasks</span>
+<span class="cm">// Each task [actual_i, minimum_i]: need energy >= minimum_i, spend actual_i</span>
+<span class="cm">// Exchange argument: sort by (minimum_i - actual_i) descending</span>
+<span class="kw">public int</span> <span class="fn">minimumEffort</span>(<span class="kw">int</span>[][] tasks) {
+    <span class="cm">// Sort by (minimum - actual) descending = sort by "surplus needed" desc</span>
+    Arrays.<span class="fn">sort</span>(tasks, (a, b) -> (b[<span class="num">1</span>] - b[<span class="num">0</span>]) - (a[<span class="num">1</span>] - a[<span class="num">0</span>]));
+
+    <span class="kw">int</span> energy = <span class="num">0</span>, curEnergy = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="kw">int</span>[] task : tasks) {
+        <span class="kw">int</span> actual = task[<span class="num">0</span>], minimum = task[<span class="num">1</span>];
+        <span class="kw">if</span> (curEnergy < minimum) {
+            energy += minimum - curEnergy;
+            curEnergy = minimum;
+        }
+        curEnergy -= actual;
+    }
+    <span class="kw">return</span> energy;
+}
+<span class="cm">// Proof: For adjacent tasks A, B: placing A first needs max(minA, minB + actA)</span>
+<span class="cm">// Placing B first needs max(minB, minA + actB). Compare to find optimal order.</span></pre>
+
+<h3>Earliest Full Bloom (LC 2136)</h3>
+<pre><span class="cm">// LC 2136: Earliest Possible Day of Full Bloom</span>
+<span class="cm">// Plant seeds sequentially. Plant i takes plantTime[i] days, then growTime[i] days.</span>
+<span class="cm">// Exchange argument: sort by growTime descending (plant slow-growers first)</span>
+<span class="kw">public int</span> <span class="fn">earliestFullBloom</span>(<span class="kw">int</span>[] plantTime, <span class="kw">int</span>[] growTime) {
+    <span class="kw">int</span> n = plantTime.length;
+    Integer[] idx = <span class="kw">new</span> Integer[n];
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i < n; i++) idx[i] = i;
+    <span class="cm">// Sort by growTime descending</span>
+    Arrays.<span class="fn">sort</span>(idx, (a, b) -> growTime[b] - growTime[a]);
+
+    <span class="kw">int</span> curDay = <span class="num">0</span>, ans = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> i : idx) {
+        curDay += plantTime[i];
+        ans = Math.<span class="fn">max</span>(ans, curDay + growTime[i]);
+    }
+    <span class="kw">return</span> ans;
+}
+<span class="cm">// Proof: For tasks A, B consider "A then B" vs "B then A".</span>
+<span class="cm">// "A then B" finishes at max(pA + gA, pA + pB + gB)</span>
+<span class="cm">// "B then A" finishes at max(pB + gB, pB + pA + gA)</span>
+<span class="cm">// A first is better when gA >= gB. So sort by growTime desc.</span></pre>
+
+<div class="danger">
+  <p><strong>Common mistake:</strong> Sorting by total time (plant + grow) does NOT work. The exchange argument specifically proves growTime-descending is optimal. Always derive the comparator from the exchange, not from intuition alone.</p>
+</div>
+
+<h3>Practice Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/largest-number/" target="_blank">179. Largest Number</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-initial-energy-to-finish-tasks/" target="_blank">1665. Minimum Initial Energy to Finish Tasks</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/earliest-possible-day-of-full-bloom/" target="_blank">2136. Earliest Possible Day of Full Bloom</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/optimal-account-balancing/" target="_blank">465. Optimal Account Balancing</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimize-maximum-of-array/" target="_blank">2439. Minimize Maximum of Array</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/smallest-string-with-a-given-numeric-value/" target="_blank">1663. Smallest String With A Given Numeric Value</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Greedy with Heap ===== -->
+<div class="section" id="heap">
+<div class="card">
+<h2>Greedy with Heap</h2>
+
+<h3>Core Pattern: Sort + Heap for Regret/Replacement</h3>
+<p>When a simple sort-and-scan greedy is not optimal because an early greedy choice might be suboptimal later, use a <strong>heap to enable regret</strong>: undo a previous choice when a better one appears.</p>
+
+<div class="insight">
+  <p><strong>Key idea:</strong> Sort items by one criterion. Process them in order, maintaining a heap that tracks your current selections. When a new item is better than your worst current selection, swap them (regret the old choice).</p>
+</div>
+
+<h3>Course Schedule III (LC 630)</h3>
+<pre><span class="cm">// LC 630: Schedule Maximum Courses</span>
+<span class="cm">// Sort by deadline. Greedily take courses; if time exceeds deadline,</span>
+<span class="cm">// drop the longest course taken so far (regret via max-heap).</span>
+<span class="kw">public int</span> <span class="fn">scheduleCourse</span>(<span class="kw">int</span>[][] courses) {
+    Arrays.<span class="fn">sort</span>(courses, (a, b) -> a[<span class="num">1</span>] - b[<span class="num">1</span>]); <span class="cm">// sort by deadline</span>
+    PriorityQueue&lt;Integer&gt; maxHeap = <span class="kw">new</span> PriorityQueue&lt;&gt;(Collections.<span class="fn">reverseOrder</span>());
+    <span class="kw">int</span> time = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="kw">int</span>[] course : courses) {
+        <span class="kw">int</span> duration = course[<span class="num">0</span>], deadline = course[<span class="num">1</span>];
+        time += duration;
+        maxHeap.<span class="fn">offer</span>(duration);
+        <span class="kw">if</span> (time > deadline) { <span class="cm">// exceeded deadline, drop longest</span>
+            time -= maxHeap.<span class="fn">poll</span>();
+        }
+    }
+    <span class="kw">return</span> maxHeap.<span class="fn">size</span>();
+}</pre>
+
+<h3>IPO (LC 502)</h3>
+<pre><span class="cm">// LC 502: IPO - maximize capital after k investments</span>
+<span class="cm">// Sort projects by capital needed. Use max-heap for profit of affordable projects.</span>
+<span class="kw">public int</span> <span class="fn">findMaximizedCapital</span>(<span class="kw">int</span> k, <span class="kw">int</span> w, <span class="kw">int</span>[] profits, <span class="kw">int</span>[] capital) {
+    <span class="kw">int</span> n = profits.length;
+    <span class="kw">int</span>[][] projects = <span class="kw">new int</span>[n][<span class="num">2</span>];
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i < n; i++) projects[i] = <span class="kw">new int</span>[]{capital[i], profits[i]};
+    Arrays.<span class="fn">sort</span>(projects, (a, b) -> a[<span class="num">0</span>] - b[<span class="num">0</span>]); <span class="cm">// sort by capital</span>
+
+    PriorityQueue&lt;Integer&gt; maxHeap = <span class="kw">new</span> PriorityQueue&lt;&gt;(Collections.<span class="fn">reverseOrder</span>());
+    <span class="kw">int</span> i = <span class="num">0</span>;
+    <span class="kw">while</span> (k-- > <span class="num">0</span>) {
+        <span class="kw">while</span> (i < n && projects[i][<span class="num">0</span>] <= w) {
+            maxHeap.<span class="fn">offer</span>(projects[i][<span class="num">1</span>]);
+            i++;
+        }
+        <span class="kw">if</span> (maxHeap.<span class="fn">isEmpty</span>()) <span class="kw">break</span>;
+        w += maxHeap.<span class="fn">poll</span>(); <span class="cm">// take most profitable affordable project</span>
+    }
+    <span class="kw">return</span> w;
+}</pre>
+
+<h3>Hire K Workers (LC 857)</h3>
+<pre><span class="cm">// LC 857: Minimum Cost to Hire K Workers</span>
+<span class="cm">// Sort by wage/quality ratio. For each worker as the "max ratio" worker,</span>
+<span class="cm">// pick K-1 workers with smallest quality (using max-heap to maintain).</span>
+<span class="kw">public double</span> <span class="fn">mincostToHireWorkers</span>(<span class="kw">int</span>[] quality, <span class="kw">int</span>[] wage, <span class="kw">int</span> k) {
+    <span class="kw">int</span> n = quality.length;
+    <span class="kw">double</span>[][] workers = <span class="kw">new double</span>[n][<span class="num">2</span>];
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i < n; i++)
+        workers[i] = <span class="kw">new double</span>[]{(<span class="kw">double</span>) wage[i] / quality[i], quality[i]};
+    Arrays.<span class="fn">sort</span>(workers, (a, b) -> Double.<span class="fn">compare</span>(a[<span class="num">0</span>], b[<span class="num">0</span>])); <span class="cm">// sort by ratio</span>
+
+    PriorityQueue&lt;Integer&gt; maxHeap = <span class="kw">new</span> PriorityQueue&lt;&gt;(Collections.<span class="fn">reverseOrder</span>());
+    <span class="kw">int</span> sumQ = <span class="num">0</span>;
+    <span class="kw">double</span> ans = Double.MAX_VALUE;
+    <span class="kw">for</span> (<span class="kw">double</span>[] w : workers) {
+        <span class="kw">int</span> q = (<span class="kw">int</span>) w[<span class="num">1</span>];
+        maxHeap.<span class="fn">offer</span>(q);
+        sumQ += q;
+        <span class="kw">if</span> (maxHeap.<span class="fn">size</span>() > k) sumQ -= maxHeap.<span class="fn">poll</span>();
+        <span class="kw">if</span> (maxHeap.<span class="fn">size</span>() == k) ans = Math.<span class="fn">min</span>(ans, sumQ * w[<span class="num">0</span>]);
+    }
+    <span class="kw">return</span> ans;
+}</pre>
+
+<div class="tip">
+  <p><strong>When to use heap with greedy:</strong> (1) You need to maintain top-K or bottom-K elements. (2) You want to "regret" a previous choice when a better option appears. (3) You process items in sorted order but need to track a dynamic set of selections.</p>
+</div>
+
+<h3>Practice Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/course-schedule-iii/" target="_blank">630. Course Schedule III</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/ipo/" target="_blank">502. IPO</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-cost-to-hire-k-workers/" target="_blank">857. Minimum Cost to Hire K Workers</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/furthest-building-you-can-reach/" target="_blank">1642. Furthest Building You Can Reach</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/single-threaded-cpu/" target="_blank">1834. Single-Threaded CPU</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/process-tasks-using-servers/" target="_blank">1882. Process Tasks Using Servers</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-subsequence-score/" target="_blank">2542. Maximum Subsequence Score</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Greedy vs DP ===== -->
+<div class="section" id="vsdp">
+<div class="card">
+<h2>Greedy vs Dynamic Programming</h2>
+
+<h3>When Greedy Fails</h3>
+<p>Greedy fails when the <strong>locally optimal choice does not lead to globally optimal</strong>. Classic example:</p>
+
+<h4>Coin Change with Arbitrary Denominations</h4>
+<pre><span class="cm">// Greedy approach: always pick largest coin. FAILS for some denominations!</span>
+<span class="cm">// Example: coins = [1, 3, 4], amount = 6</span>
+<span class="cm">// Greedy: 4 + 1 + 1 = 3 coins</span>
+<span class="cm">// Optimal: 3 + 3 = 2 coins</span>
+<span class="cm">// Must use DP when coin denominations are arbitrary.</span>
+
+<span class="cm">// Greedy WORKS for canonical coin systems (US coins: 1,5,10,25)</span>
+<span class="cm">// Greedy FAILS for arbitrary denominations - use DP</span></pre>
+
+<h3>Comparison Table</h3>
+<table>
+  <tr><th>Aspect</th><th>Greedy</th><th>Dynamic Programming</th></tr>
+  <tr><td>Choice timing</td><td>Makes irrevocable choice before solving subproblems</td><td>Makes choice after seeing subproblem solutions</td></tr>
+  <tr><td>Subproblems</td><td>Only one subproblem remains after choice</td><td>Multiple overlapping subproblems</td></tr>
+  <tr><td>Correctness proof</td><td>Exchange argument / greedy stays ahead</td><td>Optimal substructure + recurrence</td></tr>
+  <tr><td>Efficiency</td><td>Usually O(n log n) or O(n)</td><td>O(states x transitions), often O(n^2) or more</td></tr>
+  <tr><td>Implementation</td><td>Sort + single pass</td><td>Table filling or memoization</td></tr>
+  <tr><td>When to use</td><td>Local choice is provably safe</td><td>Need to explore multiple choices</td></tr>
+  <tr><td>Revisits</td><td>Never reconsiders</td><td>Considers all combinations via memo</td></tr>
+</table>
+
+<h3>Decision Guide: Is This Greedy or DP?</h3>
+<div class="decision-tree"><span class="q">Q1: Can I sort and make one irrevocable pass?</span>
+  <span class="arrow">&boxur;&mdash; Yes, and I can prove each choice is safe &rarr;</span> <span class="a">Greedy</span>
+  <span class="arrow">&boxur;&mdash; Not sure &rarr;</span>
+
+<span class="q">Q2: Does current choice affect which subproblems I can solve?</span>
+  <span class="arrow">&boxur;&mdash; No (only one subproblem remains) &rarr;</span> <span class="a">Probably Greedy</span>
+  <span class="arrow">&boxur;&mdash; Yes (choice branches into multiple subproblems) &rarr;</span> <span class="a">DP</span>
+
+<span class="q">Q3: Can I find a counterexample where greedy fails?</span>
+  <span class="arrow">&boxur;&mdash; Yes &rarr;</span> <span class="a">Definitely DP</span>
+  <span class="arrow">&boxur;&mdash; No &rarr;</span> <span class="a">Try Greedy (but prove it!)</span></div>
+
+<h3>Problems That Look Greedy But Are DP</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/coin-change/" target="_blank">322. Coin Change</a> (arbitrary denominations)</span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-increasing-subsequence/" target="_blank">300. Longest Increasing Subsequence</a> (patience sorting is greedy+BS)</span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/word-break/" target="_blank">139. Word Break</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/house-robber/" target="_blank">198. House Robber</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+
+<h3>Problems That Look DP But Are Greedy</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/jump-game-ii/" target="_blank">45. Jump Game II</a> (BFS-style greedy, not DP needed)</span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/gas-station/" target="_blank">134. Gas Station</a> (one-pass greedy with reset)</span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/" target="_blank">122. Best Time to Buy and Sell Stock II</a> (just sum all positive diffs)</span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/partition-labels/" target="_blank">763. Partition Labels</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+
+<div class="warning">
+  <p><strong>Interview strategy:</strong> If you suspect greedy, try to find a counterexample in 30 seconds. If you cannot, propose greedy and explain the exchange argument. If the interviewer pushes back, switch to DP. Showing this thought process is what L5 interviews reward.</p>
+</div>
+</div>
+</div>
+
+<!-- ===== Interview Tips ===== -->
+<div class="section" id="tips">
+<div class="card">
+<h2>Interview Tips for Greedy Problems</h2>
+
+<h3>Step-by-Step Communication</h3>
+<ol>
+  <li><strong>Identify the greedy signal:</strong> "This problem asks for the minimum/maximum of something with a sorting-friendly constraint."</li>
+  <li><strong>State your greedy criterion:</strong> "I will sort by [X] and greedily choose [Y] at each step."</li>
+  <li><strong>Justify correctness (30 seconds):</strong> "The exchange argument shows that if we had a different choice, swapping would not improve the solution because [reason]."</li>
+  <li><strong>Analyze complexity:</strong> "Sort is O(n log n), single pass is O(n), total O(n log n)."</li>
+  <li><strong>Code it up.</strong></li>
+</ol>
+
+<h3>"Prove It's Optimal" Quick Techniques</h3>
+<table>
+  <tr><th>Technique</th><th>When to Use</th><th>What to Say</th></tr>
+  <tr><td>Exchange Argument</td><td>Custom sort order</td><td>"If we swap A and B, the result is no better because..."</td></tr>
+  <tr><td>Greedy Stays Ahead</td><td>Sequential selection</td><td>"After k steps, greedy has selected at least as many as any other strategy."</td></tr>
+  <tr><td>Counterexample Check</td><td>Any greedy claim</td><td>"I tried [edge case] and greedy still works, so I'm fairly confident."</td></tr>
+  <tr><td>Reduction to Known</td><td>Interval/activity</td><td>"This reduces to activity selection, which is a classic greedy problem."</td></tr>
+</table>
+
+<h3>Common Follow-Up Questions</h3>
+<div class="card" style="background: var(--bg3);">
+<ul>
+  <li><strong>"What if the constraints change?"</strong> &mdash; Often breaks greedy. Discuss when you would switch to DP.</li>
+  <li><strong>"Can you prove this is correct?"</strong> &mdash; Use exchange argument: "Assume OPT differs at position k..."</li>
+  <li><strong>"What's the time complexity?"</strong> &mdash; Usually O(n log n) for sort-based, O(n) for scan-based.</li>
+  <li><strong>"Can you do better?"</strong> &mdash; If O(n log n), check if sorting is avoidable (e.g., bucket sort, counting).</li>
+  <li><strong>"What if items have weights/values?"</strong> &mdash; Usually signals knapsack (DP), not greedy.</li>
+</ul>
+</div>
+
+<h3>Red Flags That Greedy Won't Work</h3>
+<div class="danger">
+  <p><strong>Greedy likely fails when:</strong></p>
+</div>
+<ul>
+  <li>The problem involves <strong>choosing subsets with constraints</strong> (knapsack variant)</li>
+  <li>Current choice affects <strong>future available choices</strong> in complex ways</li>
+  <li>Problem says "number of ways" (usually DP/combinatorics)</li>
+  <li>Small counterexample can be constructed easily</li>
+  <li>Items have two independent dimensions that both matter (weight AND value)</li>
+</ul>
+
+<h3>Green Flags That Greedy Will Work</h3>
+<div class="tip">
+  <p><strong>Greedy likely works when:</strong></p>
+</div>
+<ul>
+  <li>Problem involves intervals/events with deadlines</li>
+  <li>There is an obvious <strong>sorting criterion</strong> that "unlocks" the problem</li>
+  <li>The problem has a "coverage" or "farthest reachable" flavor</li>
+  <li>You need to minimize/maximize something with a <strong>single constraint</strong></li>
+  <li>The problem structure allows exchange argument (pairwise comparison works)</li>
+  <li>Classic pattern: "assign resources to tasks one by one"</li>
+</ul>
+
+<h3>Top Greedy Problems for Google L5</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/jump-game-ii/" target="_blank">45. Jump Game II</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/task-scheduler/" target="_blank">621. Task Scheduler</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/meeting-rooms-ii/" target="_blank">253. Meeting Rooms II</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/candy/" target="_blank">135. Candy</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/" target="_blank">452. Minimum Number of Arrows to Burst Balloons</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/course-schedule-iii/" target="_blank">630. Course Schedule III</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/earliest-possible-day-of-full-bloom/" target="_blank">2136. Earliest Possible Day of Full Bloom</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-cost-to-hire-k-workers/" target="_blank">857. Minimum Cost to Hire K Workers</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/largest-number/" target="_blank">179. Largest Number</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/trapping-rain-water/" target="_blank">42. Trapping Rain Water</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google Freq</span></li>
+</ul>
+</div>
+</div>
+
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

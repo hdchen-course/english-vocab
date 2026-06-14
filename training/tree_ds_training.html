@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tree Data Structures — Training Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f8f9fa;--bg2:#ffffff;--bg3:#f1f3f5;--bg4:#e9ecef;--border:#dee2e6;--text:#212529;--text2:#495057;--text3:#868e96;--blue:#1971c2;--blue-l:#d0ebff;--green:#2f9e44;--green-l:#d3f9d8;--yellow:#e67700;--yellow-l:#fff3bf;--red:#c92a2a;--red-l:#ffe3e3;--purple:#7048e8;--purple-l:#e5dbff;--orange:#d9480f;--cyan:#0c8599;--r:12px;--shadow:0 4px 20px rgba(0,0,0,0.06)}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.8}.container{max-width:1100px;margin:0 auto;padding:40px 24px}header{text-align:center;margin-bottom:48px;padding-bottom:32px;border-bottom:1px solid var(--border)}header h1{font-size:32px;font-weight:800;margin-bottom:8px}header .sub{color:var(--text3);font-size:14px}
+.nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:40px;position:sticky;top:0;background:var(--bg);padding:16px 0;z-index:100;border-bottom:1px solid var(--border)}.nav-btn{padding:10px 20px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;font-family:'Inter',sans-serif}.nav-btn:hover{background:var(--bg3);color:var(--text)}.nav-btn.active{background:var(--blue-l);color:var(--blue);border-color:var(--blue)}
+.section{display:none}.section.active{display:block;animation:fadeIn .3s ease}@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+h2{font-size:24px;font-weight:700;margin:32px 0 16px;color:var(--blue)}h3{font-size:18px;font-weight:600;margin:24px 0 12px}h4{font-size:15px;font-weight:600;margin:16px 0 8px;color:var(--text2)}p{margin-bottom:12px;color:var(--text2)}ul,ol{margin:8px 0 16px 24px;color:var(--text2)}li{margin-bottom:6px}strong{color:var(--text)}
+pre{background:#1e1e2e;border-radius:8px;padding:16px 20px;overflow-x:auto;margin:12px 0;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;color:#cdd6f4}code{font-family:'JetBrains Mono',monospace;font-size:13px}p code,li code{background:var(--bg3);padding:2px 6px;border-radius:4px;font-size:12px;color:var(--purple)}pre .kw{color:#cba6f7}pre .type{color:#f9e2af}pre .str{color:#a6e3a1}pre .cm{color:#6c7086}pre .num{color:#fab387}pre .fn{color:#89b4fa}
+.insight{background:var(--blue-l);border-left:3px solid var(--blue);padding:14px 18px;border-radius:0 8px 8px 0;margin:16px 0}.insight p{color:var(--blue);margin:0}.warning{background:var(--yellow-l);border-left:3px solid var(--yellow);padding:14px 18px;border-radius:0 8px 8px 0;margin:16px 0}.warning p{color:var(--yellow);margin:0}.danger{background:var(--red-l);border-left:3px solid var(--red);padding:14px 18px;border-radius:0 8px 8px 0;margin:16px 0}.danger p{color:var(--red);margin:0}.tip{background:var(--green-l);border-left:3px solid var(--green);padding:14px 18px;border-radius:0 8px 8px 0;margin:16px 0}.tip p{color:var(--green);margin:0}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:20px;padding:24px 28px;box-shadow:var(--shadow)}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px}th,td{padding:10px 14px;border:1px solid var(--border);text-align:left}th{background:var(--bg3);font-weight:600;color:var(--text)}tr:hover{background:var(--bg3)}
+.tag{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;margin:2px 4px 2px 0}.tag-easy{background:var(--green-l);color:var(--green)}.tag-medium{background:var(--yellow-l);color:var(--yellow)}.tag-hard{background:var(--red-l);color:var(--red)}.tag-freq{background:var(--purple-l);color:var(--purple)}
+.problem-list{list-style:none;padding:0;margin:12px 0}.problem-list li{padding:10px 14px;border-left:3px solid var(--blue);margin-bottom:8px;background:var(--bg3);border-radius:0 8px 8px 0;display:flex;justify-content:flex-start;align-items:center;gap:8px}.problem-list .title{color:var(--text);font-weight:500;font-size:14px;flex:1}.problem-list .title a{color:var(--text);text-decoration:none;border-bottom:1px dashed var(--border);transition:all .2s}.problem-list .title a:hover{color:var(--blue);border-bottom-color:var(--blue)}
+@media(max-width:768px){.container{padding:20px 12px}.nav{position:static}pre{font-size:11px}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>Tree Data Structures &mdash; Training Guide</h1>
+  <div class="sub">BST &bull; TreeMap/TreeSet &bull; Heap &bull; Trie &bull; Segment Tree &bull; Binary Indexed Tree &bull; Balanced BST</div>
+</header>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection('overview')">Overview</button>
+  <button class="nav-btn" onclick="showSection('bst')">BST</button>
+  <button class="nav-btn" onclick="showSection('treemap')">TreeMap/TreeSet</button>
+  <button class="nav-btn" onclick="showSection('heap')">Heap / PQ</button>
+  <button class="nav-btn" onclick="showSection('trie')">Trie</button>
+  <button class="nav-btn" onclick="showSection('segment')">Segment Tree</button>
+  <button class="nav-btn" onclick="showSection('bit')">BIT (Fenwick)</button>
+  <button class="nav-btn" onclick="showSection('advanced')">Advanced Trees</button>
+</div>
+
+<!-- Overview -->
+<div class="section active" id="overview">
+<div class="card">
+<h2>Tree Data Structure Selection Guide</h2>
+<table>
+  <tr><th>Need</th><th>Data Structure</th><th>Key Operations</th><th>Time</th></tr>
+  <tr><td>Ordered set, range queries</td><td>TreeMap / TreeSet</td><td>floor, ceiling, subSet</td><td>O(log n)</td></tr>
+  <tr><td>Kth largest, top-K stream</td><td>Heap (PriorityQueue)</td><td>offer, poll, peek</td><td>O(log n)</td></tr>
+  <tr><td>Prefix lookup, autocomplete</td><td>Trie</td><td>insert, search, startsWith</td><td>O(L)</td></tr>
+  <tr><td>Range sum/min/max query + update</td><td>Segment Tree</td><td>query, update</td><td>O(log n)</td></tr>
+  <tr><td>Prefix sum + point update</td><td>BIT (Fenwick Tree)</td><td>update, prefixSum</td><td>O(log n)</td></tr>
+  <tr><td>BST validation, successor, LCA</td><td>Binary Search Tree</td><td>search, insert</td><td>O(h)</td></tr>
+</table>
+</div>
+</div>
+
+<!-- BST -->
+<div class="section" id="bst">
+<div class="card">
+<h2>Binary Search Tree (BST)</h2>
+<p>In-order traversal of BST gives sorted order. Key property: left &lt; root &lt; right.</p>
+
+<h3>BST Validation</h3>
+<pre><span class="kw">boolean</span> <span class="fn">isValidBST</span>(TreeNode node, <span class="kw">long</span> min, <span class="kw">long</span> max) {
+    <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">return true</span>;
+    <span class="kw">if</span> (node.val &lt;= min || node.val &gt;= max) <span class="kw">return false</span>;
+    <span class="kw">return</span> <span class="fn">isValidBST</span>(node.left, min, node.val)
+        &amp;&amp; <span class="fn">isValidBST</span>(node.right, node.val, max);
+}
+</pre>
+
+<h3>Inorder Successor / Predecessor</h3>
+<pre><span class="cm">// Successor: smallest node greater than p</span>
+TreeNode <span class="fn">successor</span>(TreeNode root, TreeNode p) {
+    TreeNode succ = <span class="kw">null</span>;
+    <span class="kw">while</span> (root != <span class="kw">null</span>) {
+        <span class="kw">if</span> (root.val &gt; p.val) { succ = root; root = root.left; }
+        <span class="kw">else</span> root = root.right;
+    }
+    <span class="kw">return</span> succ;
+}
+</pre>
+
+<h3>Lowest Common Ancestor in BST</h3>
+<pre><span class="cm">// LC 235: exploit BST property</span>
+TreeNode <span class="fn">lcaBST</span>(TreeNode root, TreeNode p, TreeNode q) {
+    <span class="kw">while</span> (root != <span class="kw">null</span>) {
+        <span class="kw">if</span> (p.val &lt; root.val &amp;&amp; q.val &lt; root.val) root = root.left;
+        <span class="kw">else if</span> (p.val &gt; root.val &amp;&amp; q.val &gt; root.val) root = root.right;
+        <span class="kw">else return</span> root;
+    }
+    <span class="kw">return null</span>;
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/validate-binary-search-tree/" target="_blank">98. Validate Binary Search Tree</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/lowest-common-ancestor-of-bst/" target="_blank">235. Lowest Common Ancestor of BST</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/kth-smallest-element-in-a-bst/" target="_blank">230. Kth Smallest Element in a BST</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/inorder-successor-in-bst/" target="_blank">285. Inorder Successor in BST</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Premium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/delete-node-in-a-bst/" target="_blank">450. Delete Node in a BST</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/convert-sorted-array-to-bst/" target="_blank">108. Convert Sorted Array to BST</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/binary-search-tree-iterator/" target="_blank">173. Binary Search Tree Iterator</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/recover-binary-search-tree/" target="_blank">99. Recover Binary Search Tree</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- TreeMap/TreeSet -->
+<div class="section" id="treemap">
+<div class="card">
+<h2>TreeMap / TreeSet (Sorted Containers)</h2>
+<p>Java's <code>TreeMap</code> and <code>TreeSet</code> are Red-Black trees. All operations O(log n). Essential for "sorted order with dynamic insert/delete".</p>
+
+<h3>Key Operations</h3>
+<table>
+  <tr><th>Method</th><th>Returns</th><th>Use Case</th></tr>
+  <tr><td><code>floorKey(k)</code></td><td>Greatest key &le; k</td><td>Find closest smaller</td></tr>
+  <tr><td><code>ceilingKey(k)</code></td><td>Smallest key &ge; k</td><td>Find closest larger</td></tr>
+  <tr><td><code>lowerKey(k)</code></td><td>Greatest key &lt; k</td><td>Strictly smaller</td></tr>
+  <tr><td><code>higherKey(k)</code></td><td>Smallest key &gt; k</td><td>Strictly larger</td></tr>
+  <tr><td><code>subMap(lo, hi)</code></td><td>View of keys in [lo, hi)</td><td>Range queries</td></tr>
+  <tr><td><code>firstKey() / lastKey()</code></td><td>Min / Max</td><td>Extremes</td></tr>
+</table>
+
+<h3>Pattern: Sliding Window with Sorted Container</h3>
+<pre><span class="cm">// LC 220 Contains Duplicate III: |nums[i]-nums[j]| <= t, |i-j| <= k</span>
+TreeSet&lt;Long&gt; set = <span class="kw">new</span> TreeSet&lt;&gt;();
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+    Long ceiling = set.<span class="fn">ceiling</span>((<span class="kw">long</span>)nums[i] - t);
+    <span class="kw">if</span> (ceiling != <span class="kw">null</span> &amp;&amp; ceiling &lt;= (<span class="kw">long</span>)nums[i] + t)
+        <span class="kw">return true</span>;
+    set.add((<span class="kw">long</span>)nums[i]);
+    <span class="kw">if</span> (set.size() &gt; k) set.remove((<span class="kw">long</span>)nums[i - k]);
+}
+</pre>
+
+<h3>Pattern: Interval Management with TreeMap</h3>
+<pre><span class="cm">// LC 729 My Calendar: no double-booking</span>
+TreeMap&lt;Integer, Integer&gt; calendar = <span class="kw">new</span> TreeMap&lt;&gt;();
+
+<span class="kw">boolean</span> <span class="fn">book</span>(<span class="kw">int</span> start, <span class="kw">int</span> end) {
+    Integer prev = calendar.<span class="fn">floorKey</span>(start);
+    Integer next = calendar.<span class="fn">ceilingKey</span>(start);
+    <span class="kw">if</span> (prev != <span class="kw">null</span> &amp;&amp; calendar.get(prev) &gt; start) <span class="kw">return false</span>;
+    <span class="kw">if</span> (next != <span class="kw">null</span> &amp;&amp; next &lt; end) <span class="kw">return false</span>;
+    calendar.put(start, end);
+    <span class="kw">return true</span>;
+}
+</pre>
+
+<h3>Pattern: Sliding Median / Sliding Window with Sorted Container</h3>
+<pre><span class="cm">// LC 480 Sliding Window Median: two TreeMaps (or two heaps)</span>
+<span class="cm">// Left half (max): stores smaller half, Right half (min): stores larger half</span>
+TreeMap&lt;Integer, Integer&gt; lo = <span class="kw">new</span> TreeMap&lt;&gt;(Collections.reverseOrder());
+TreeMap&lt;Integer, Integer&gt; hi = <span class="kw">new</span> TreeMap&lt;&gt;();
+<span class="kw">int</span> loSize = <span class="num">0</span>, hiSize = <span class="num">0</span>;
+
+<span class="kw">void</span> <span class="fn">add</span>(<span class="kw">int</span> num) {
+    lo.merge(num, <span class="num">1</span>, Integer::sum); loSize++;
+    <span class="cm">// Move max of lo to hi</span>
+    <span class="kw">int</span> move = lo.firstKey();
+    hi.merge(move, <span class="num">1</span>, Integer::sum); hiSize++;
+    <span class="fn">remove</span>(lo, move); loSize--;
+    <span class="cm">// Balance: lo.size >= hi.size</span>
+    <span class="kw">if</span> (loSize &lt; hiSize) {
+        move = hi.firstKey();
+        lo.merge(move, <span class="num">1</span>, Integer::sum); loSize++;
+        <span class="fn">remove</span>(hi, move); hiSize--;
+    }
+}
+
+<span class="kw">double</span> <span class="fn">getMedian</span>() {
+    <span class="kw">return</span> loSize &gt; hiSize ? lo.firstKey() : ((long)lo.firstKey() + hi.firstKey()) / <span class="num">2.0</span>;
+}
+
+<span class="kw">void</span> <span class="fn">remove</span>(TreeMap&lt;Integer,Integer&gt; map, <span class="kw">int</span> val) {
+    <span class="kw">if</span> (map.get(val) == <span class="num">1</span>) map.remove(val);
+    <span class="kw">else</span> map.merge(val, -<span class="num">1</span>, Integer::sum);
+}
+</pre>
+
+<h3>Pattern: Ordered Statistics (count less than X)</h3>
+<div class="warning">
+  <p>Java TreeMap doesn't support <code>rank()</code> directly. For order-statistics, use:<br>
+  &bull; BIT (Fenwick Tree) with coordinate compression<br>
+  &bull; Segment Tree on value domain<br>
+  &bull; Or maintain a size field in custom BST</p>
+</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/sliding-window-median/" target="_blank">480. Sliding Window Median (two TreeMaps)</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/contains-duplicate-iii/" target="_blank">220. Contains Duplicate III</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/my-calendar-i/" target="_blank">729. My Calendar I</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/my-calendar-ii/" target="_blank">731. My Calendar II</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/data-stream-as-disjoint-intervals/" target="_blank">352. Data Stream as Disjoint Intervals</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/exam-room/" target="_blank">855. Exam Room</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/time-based-key-value-store/" target="_blank">981. Time Based Key-Value Store</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/132-pattern/" target="_blank">456. 132 Pattern (TreeMap / stack)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/stock-price-fluctuation/" target="_blank">2034. Stock Price Fluctuation</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- Heap -->
+<div class="section" id="heap">
+<div class="card">
+<h2>Heap / Priority Queue</h2>
+<p>Max/min element in O(1), insert/remove in O(log n). Use when you need repeated access to extremes.</p>
+
+<h3>Common Patterns</h3>
+<table>
+  <tr><th>Pattern</th><th>Approach</th><th>Example</th></tr>
+  <tr><td>Top-K</td><td>Min-heap of size K</td><td>215 Kth Largest</td></tr>
+  <tr><td>Merge K sorted</td><td>Min-heap of K heads</td><td>23 Merge K Lists</td></tr>
+  <tr><td>Running median</td><td>Max-heap + Min-heap</td><td>295 Find Median</td></tr>
+  <tr><td>Greedy scheduling</td><td>Sort + heap for tracking</td><td>253 Meeting Rooms II</td></tr>
+  <tr><td>Dijkstra</td><td>Min-heap for next closest</td><td>743 Network Delay</td></tr>
+</table>
+
+<h3>Two-Heap (Running Median)</h3>
+<pre><span class="cm">// LC 295 Find Median from Data Stream</span>
+PriorityQueue&lt;Integer&gt; lo = <span class="kw">new</span> PriorityQueue&lt;&gt;(Collections.reverseOrder()); <span class="cm">// max-heap</span>
+PriorityQueue&lt;Integer&gt; hi = <span class="kw">new</span> PriorityQueue&lt;&gt;(); <span class="cm">// min-heap</span>
+
+<span class="kw">void</span> <span class="fn">addNum</span>(<span class="kw">int</span> num) {
+    lo.offer(num);
+    hi.offer(lo.poll());
+    <span class="kw">if</span> (hi.size() &gt; lo.size()) lo.offer(hi.poll());
+}
+
+<span class="kw">double</span> <span class="fn">findMedian</span>() {
+    <span class="kw">return</span> lo.size() &gt; hi.size() ? lo.peek() : (lo.peek() + hi.peek()) / <span class="num">2.0</span>;
+}
+</pre>
+
+<h3>Merge K Sorted Lists</h3>
+<pre><span class="cm">// LC 23: maintain heap of list heads</span>
+PriorityQueue&lt;ListNode&gt; pq = <span class="kw">new</span> PriorityQueue&lt;&gt;((a,b) -&gt; a.val - b.val);
+<span class="kw">for</span> (ListNode head : lists)
+    <span class="kw">if</span> (head != <span class="kw">null</span>) pq.offer(head);
+
+ListNode dummy = <span class="kw">new</span> ListNode(<span class="num">0</span>), curr = dummy;
+<span class="kw">while</span> (!pq.isEmpty()) {
+    ListNode node = pq.poll();
+    curr.next = node;
+    curr = curr.next;
+    <span class="kw">if</span> (node.next != <span class="kw">null</span>) pq.offer(node.next);
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/kth-largest-element/" target="_blank">215. Kth Largest Element</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/merge-k-sorted-lists/" target="_blank">23. Merge K Sorted Lists</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/find-median-from-data-stream/" target="_blank">295. Find Median from Data Stream</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/meeting-rooms-ii/" target="_blank">253. Meeting Rooms II (sort + heap)</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Premium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/top-k-frequent-elements/" target="_blank">347. Top K Frequent Elements</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/k-closest-points-to-origin/" target="_blank">973. K Closest Points to Origin</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/task-scheduler/" target="_blank">621. Task Scheduler</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/kth-smallest-element-in-sorted-matrix/" target="_blank">378. Kth Smallest Element in Sorted Matrix</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/reorganize-string/" target="_blank">767. Reorganize String</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/furthest-building-you-can-reach/" target="_blank">1642. Furthest Building You Can Reach</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- Trie -->
+<div class="section" id="trie">
+<div class="card">
+<h2>Trie (Prefix Tree)</h2>
+
+<h3>Implementation</h3>
+<pre><span class="kw">class</span> <span class="type">Trie</span> {
+    <span class="type">Trie</span>[] children = <span class="kw">new</span> <span class="type">Trie</span>[<span class="num">26</span>];
+    <span class="kw">boolean</span> isEnd;
+
+    <span class="kw">void</span> <span class="fn">insert</span>(String word) {
+        <span class="type">Trie</span> node = <span class="kw">this</span>;
+        <span class="kw">for</span> (<span class="kw">char</span> c : word.toCharArray()) {
+            <span class="kw">int</span> idx = c - <span class="str">'a'</span>;
+            <span class="kw">if</span> (node.children[idx] == <span class="kw">null</span>)
+                node.children[idx] = <span class="kw">new</span> <span class="type">Trie</span>();
+            node = node.children[idx];
+        }
+        node.isEnd = <span class="kw">true</span>;
+    }
+
+    <span class="kw">boolean</span> <span class="fn">search</span>(String word) {
+        <span class="type">Trie</span> node = <span class="fn">searchPrefix</span>(word);
+        <span class="kw">return</span> node != <span class="kw">null</span> &amp;&amp; node.isEnd;
+    }
+
+    <span class="kw">boolean</span> <span class="fn">startsWith</span>(String prefix) {
+        <span class="kw">return</span> <span class="fn">searchPrefix</span>(prefix) != <span class="kw">null</span>;
+    }
+
+    <span class="type">Trie</span> <span class="fn">searchPrefix</span>(String s) {
+        <span class="type">Trie</span> node = <span class="kw">this</span>;
+        <span class="kw">for</span> (<span class="kw">char</span> c : s.toCharArray()) {
+            node = node.children[c - <span class="str">'a'</span>];
+            <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">return null</span>;
+        }
+        <span class="kw">return</span> node;
+    }
+}
+</pre>
+
+<h3>Applications Beyond Basic Search</h3>
+<div class="insight">
+  <p><strong>Word Search II (LC 212):</strong> Trie + DFS on board &mdash; prune branches efficiently<br>
+  <strong>Maximum XOR (LC 421):</strong> Bit-trie, insert numbers bit by bit, greedily choose opposite<br>
+  <strong>Autocomplete (LC 642):</strong> Trie with frequency, DFS to find top-K<br>
+  <strong>Trie + DP (LC 139, 140, 472):</strong> Word Break / Concatenated Words &mdash; at each position, walk Trie to find all matching words, transition DP</p>
+</div>
+
+<h3>Trie + DP Pattern (Word Break family)</h3>
+<pre><span class="cm">// LC 139 Word Break: dp[i] = can s[0..i-1] be segmented?</span>
+<span class="cm">// At each i, walk Trie from i to find all words starting at i</span>
+<span class="kw">boolean</span> <span class="fn">wordBreak</span>(String s, List&lt;String&gt; wordDict) {
+    <span class="type">Trie</span> root = <span class="fn">buildTrie</span>(wordDict);
+    <span class="kw">int</span> n = s.length();
+    <span class="kw">boolean</span>[] dp = <span class="kw">new boolean</span>[n + <span class="num">1</span>];
+    dp[<span class="num">0</span>] = <span class="kw">true</span>;
+
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+        <span class="kw">if</span> (!dp[i]) <span class="kw">continue</span>;
+        <span class="type">Trie</span> node = root;
+        <span class="kw">for</span> (<span class="kw">int</span> j = i; j &lt; n; j++) {
+            node = node.children[s.charAt(j) - <span class="str">'a'</span>];
+            <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">break</span>;
+            <span class="kw">if</span> (node.isEnd) dp[j + <span class="num">1</span>] = <span class="kw">true</span>;
+        }
+    }
+    <span class="kw">return</span> dp[n];
+}
+<span class="cm">// Advantage over HashSet: early termination when no word has this prefix</span>
+<span class="cm">// LC 472 Concatenated Words: same pattern, check if word = concat of others</span>
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/implement-trie/" target="_blank">208. Implement Trie</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/word-search-ii/" target="_blank">212. Word Search II</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/design-add-and-search-words/" target="_blank">211. Design Add and Search Words</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-xor-of-two-numbers/" target="_blank">421. Maximum XOR of Two Numbers (bit-trie)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/design-search-autocomplete/" target="_blank">642. Design Search Autocomplete</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Premium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/prefix-and-suffix-search/" target="_blank">745. Prefix and Suffix Search</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/concatenated-words/" target="_blank">472. Concatenated Words</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/search-suggestions-system/" target="_blank">1268. Search Suggestions System</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- Segment Tree -->
+<div class="section" id="segment">
+<div class="card">
+<h2>Segment Tree</h2>
+<p>Supports range queries (sum, min, max) and point/range updates in O(log n). Build in O(n).</p>
+
+<h3>Implementation (Array-based)</h3>
+<pre><span class="kw">class</span> <span class="type">SegTree</span> {
+    <span class="kw">int</span>[] tree;
+    <span class="kw">int</span> n;
+
+    <span class="fn">SegTree</span>(<span class="kw">int</span>[] nums) {
+        n = nums.length;
+        tree = <span class="kw">new int</span>[<span class="num">4</span> * n];
+        <span class="fn">build</span>(nums, <span class="num">1</span>, <span class="num">0</span>, n - <span class="num">1</span>);
+    }
+
+    <span class="kw">void</span> <span class="fn">build</span>(<span class="kw">int</span>[] nums, <span class="kw">int</span> node, <span class="kw">int</span> lo, <span class="kw">int</span> hi) {
+        <span class="kw">if</span> (lo == hi) { tree[node] = nums[lo]; <span class="kw">return</span>; }
+        <span class="kw">int</span> mid = (lo + hi) / <span class="num">2</span>;
+        <span class="fn">build</span>(nums, <span class="num">2</span>*node, lo, mid);
+        <span class="fn">build</span>(nums, <span class="num">2</span>*node+<span class="num">1</span>, mid+<span class="num">1</span>, hi);
+        tree[node] = tree[<span class="num">2</span>*node] + tree[<span class="num">2</span>*node+<span class="num">1</span>];
+    }
+
+    <span class="kw">void</span> <span class="fn">update</span>(<span class="kw">int</span> node, <span class="kw">int</span> lo, <span class="kw">int</span> hi, <span class="kw">int</span> idx, <span class="kw">int</span> val) {
+        <span class="kw">if</span> (lo == hi) { tree[node] = val; <span class="kw">return</span>; }
+        <span class="kw">int</span> mid = (lo + hi) / <span class="num">2</span>;
+        <span class="kw">if</span> (idx &lt;= mid) <span class="fn">update</span>(<span class="num">2</span>*node, lo, mid, idx, val);
+        <span class="kw">else</span> <span class="fn">update</span>(<span class="num">2</span>*node+<span class="num">1</span>, mid+<span class="num">1</span>, hi, idx, val);
+        tree[node] = tree[<span class="num">2</span>*node] + tree[<span class="num">2</span>*node+<span class="num">1</span>];
+    }
+
+    <span class="kw">int</span> <span class="fn">query</span>(<span class="kw">int</span> node, <span class="kw">int</span> lo, <span class="kw">int</span> hi, <span class="kw">int</span> l, <span class="kw">int</span> r) {
+        <span class="kw">if</span> (r &lt; lo || hi &lt; l) <span class="kw">return</span> <span class="num">0</span>;
+        <span class="kw">if</span> (l &lt;= lo &amp;&amp; hi &lt;= r) <span class="kw">return</span> tree[node];
+        <span class="kw">int</span> mid = (lo + hi) / <span class="num">2</span>;
+        <span class="kw">return</span> <span class="fn">query</span>(<span class="num">2</span>*node, lo, mid, l, r)
+             + <span class="fn">query</span>(<span class="num">2</span>*node+<span class="num">1</span>, mid+<span class="num">1</span>, hi, l, r);
+    }
+}
+</pre>
+
+<h3>Range Min/Max Query</h3>
+<pre><span class="cm">// Change merge function from sum to min/max</span>
+<span class="kw">class</span> <span class="type">SegTreeMin</span> {
+    <span class="kw">int</span>[] tree;
+    <span class="kw">int</span> n;
+
+    <span class="fn">SegTreeMin</span>(<span class="kw">int</span>[] nums) {
+        n = nums.length;
+        tree = <span class="kw">new int</span>[<span class="num">4</span> * n];
+        Arrays.<span class="fn">fill</span>(tree, Integer.MAX_VALUE);
+        <span class="fn">build</span>(nums, <span class="num">1</span>, <span class="num">0</span>, n - <span class="num">1</span>);
+    }
+
+    <span class="kw">void</span> <span class="fn">build</span>(<span class="kw">int</span>[] nums, <span class="kw">int</span> node, <span class="kw">int</span> lo, <span class="kw">int</span> hi) {
+        <span class="kw">if</span> (lo == hi) { tree[node] = nums[lo]; <span class="kw">return</span>; }
+        <span class="kw">int</span> mid = (lo + hi) / <span class="num">2</span>;
+        <span class="fn">build</span>(nums, <span class="num">2</span>*node, lo, mid);
+        <span class="fn">build</span>(nums, <span class="num">2</span>*node+<span class="num">1</span>, mid+<span class="num">1</span>, hi);
+        tree[node] = Math.<span class="fn">min</span>(tree[<span class="num">2</span>*node], tree[<span class="num">2</span>*node+<span class="num">1</span>]);
+    }
+
+    <span class="kw">void</span> <span class="fn">update</span>(<span class="kw">int</span> node, <span class="kw">int</span> lo, <span class="kw">int</span> hi, <span class="kw">int</span> idx, <span class="kw">int</span> val) {
+        <span class="kw">if</span> (lo == hi) { tree[node] = val; <span class="kw">return</span>; }
+        <span class="kw">int</span> mid = (lo + hi) / <span class="num">2</span>;
+        <span class="kw">if</span> (idx &lt;= mid) <span class="fn">update</span>(<span class="num">2</span>*node, lo, mid, idx, val);
+        <span class="kw">else</span> <span class="fn">update</span>(<span class="num">2</span>*node+<span class="num">1</span>, mid+<span class="num">1</span>, hi, idx, val);
+        tree[node] = Math.<span class="fn">min</span>(tree[<span class="num">2</span>*node], tree[<span class="num">2</span>*node+<span class="num">1</span>]);
+    }
+
+    <span class="kw">int</span> <span class="fn">query</span>(<span class="kw">int</span> node, <span class="kw">int</span> lo, <span class="kw">int</span> hi, <span class="kw">int</span> l, <span class="kw">int</span> r) {
+        <span class="kw">if</span> (r &lt; lo || hi &lt; l) <span class="kw">return</span> Integer.MAX_VALUE;
+        <span class="kw">if</span> (l &lt;= lo &amp;&amp; hi &lt;= r) <span class="kw">return</span> tree[node];
+        <span class="kw">int</span> mid = (lo + hi) / <span class="num">2</span>;
+        <span class="kw">return</span> Math.<span class="fn">min</span>(
+            <span class="fn">query</span>(<span class="num">2</span>*node, lo, mid, l, r),
+            <span class="fn">query</span>(<span class="num">2</span>*node+<span class="num">1</span>, mid+<span class="num">1</span>, hi, l, r));
+    }
+}
+<span class="cm">// For max: replace Math.min → Math.max, MAX_VALUE → MIN_VALUE</span>
+</pre>
+
+<h3>Lazy Propagation (Range Update + Range Query)</h3>
+<div class="insight">
+  <p><strong>Problem:</strong> "Add val to all elements in [l, r]" + "Query sum of [l, r]"<br>
+  <strong>Key idea:</strong> Don't push updates immediately to children. Store pending updates in a <code>lazy[]</code> array. Push down only when needed (during query or child update).</p>
+</div>
+<pre><span class="kw">class</span> <span class="type">LazySegTree</span> {
+    <span class="kw">long</span>[] tree, lazy;
+    <span class="kw">int</span> n;
+
+    <span class="fn">LazySegTree</span>(<span class="kw">int</span>[] nums) {
+        n = nums.length;
+        tree = <span class="kw">new long</span>[<span class="num">4</span> * n];
+        lazy = <span class="kw">new long</span>[<span class="num">4</span> * n];
+        <span class="fn">build</span>(nums, <span class="num">1</span>, <span class="num">0</span>, n - <span class="num">1</span>);
+    }
+
+    <span class="kw">void</span> <span class="fn">build</span>(<span class="kw">int</span>[] nums, <span class="kw">int</span> node, <span class="kw">int</span> lo, <span class="kw">int</span> hi) {
+        <span class="kw">if</span> (lo == hi) { tree[node] = nums[lo]; <span class="kw">return</span>; }
+        <span class="kw">int</span> mid = (lo + hi) / <span class="num">2</span>;
+        <span class="fn">build</span>(nums, <span class="num">2</span>*node, lo, mid);
+        <span class="fn">build</span>(nums, <span class="num">2</span>*node+<span class="num">1</span>, mid+<span class="num">1</span>, hi);
+        tree[node] = tree[<span class="num">2</span>*node] + tree[<span class="num">2</span>*node+<span class="num">1</span>];
+    }
+
+    <span class="kw">void</span> <span class="fn">pushDown</span>(<span class="kw">int</span> node, <span class="kw">int</span> lo, <span class="kw">int</span> hi) {
+        <span class="kw">if</span> (lazy[node] != <span class="num">0</span>) {
+            <span class="kw">int</span> mid = (lo + hi) / <span class="num">2</span>;
+            <span class="fn">apply</span>(<span class="num">2</span>*node, lo, mid, lazy[node]);
+            <span class="fn">apply</span>(<span class="num">2</span>*node+<span class="num">1</span>, mid+<span class="num">1</span>, hi, lazy[node]);
+            lazy[node] = <span class="num">0</span>;
+        }
+    }
+
+    <span class="kw">void</span> <span class="fn">apply</span>(<span class="kw">int</span> node, <span class="kw">int</span> lo, <span class="kw">int</span> hi, <span class="kw">long</span> val) {
+        tree[node] += val * (hi - lo + <span class="num">1</span>);  <span class="cm">// sum += val * count</span>
+        lazy[node] += val;
+    }
+
+    <span class="cm">// Range update: add val to all elements in [l, r]</span>
+    <span class="kw">void</span> <span class="fn">update</span>(<span class="kw">int</span> node, <span class="kw">int</span> lo, <span class="kw">int</span> hi, <span class="kw">int</span> l, <span class="kw">int</span> r, <span class="kw">long</span> val) {
+        <span class="kw">if</span> (r &lt; lo || hi &lt; l) <span class="kw">return</span>;
+        <span class="kw">if</span> (l &lt;= lo &amp;&amp; hi &lt;= r) { <span class="fn">apply</span>(node, lo, hi, val); <span class="kw">return</span>; }
+        <span class="fn">pushDown</span>(node, lo, hi);
+        <span class="kw">int</span> mid = (lo + hi) / <span class="num">2</span>;
+        <span class="fn">update</span>(<span class="num">2</span>*node, lo, mid, l, r, val);
+        <span class="fn">update</span>(<span class="num">2</span>*node+<span class="num">1</span>, mid+<span class="num">1</span>, hi, l, r, val);
+        tree[node] = tree[<span class="num">2</span>*node] + tree[<span class="num">2</span>*node+<span class="num">1</span>];
+    }
+
+    <span class="cm">// Range query: sum of [l, r]</span>
+    <span class="kw">long</span> <span class="fn">query</span>(<span class="kw">int</span> node, <span class="kw">int</span> lo, <span class="kw">int</span> hi, <span class="kw">int</span> l, <span class="kw">int</span> r) {
+        <span class="kw">if</span> (r &lt; lo || hi &lt; l) <span class="kw">return</span> <span class="num">0</span>;
+        <span class="kw">if</span> (l &lt;= lo &amp;&amp; hi &lt;= r) <span class="kw">return</span> tree[node];
+        <span class="fn">pushDown</span>(node, lo, hi);
+        <span class="kw">int</span> mid = (lo + hi) / <span class="num">2</span>;
+        <span class="kw">return</span> <span class="fn">query</span>(<span class="num">2</span>*node, lo, mid, l, r)
+             + <span class="fn">query</span>(<span class="num">2</span>*node+<span class="num">1</span>, mid+<span class="num">1</span>, hi, l, r);
+    }
+}
+</pre>
+
+<h3>Lazy for Range Set (assign val to [l, r])</h3>
+<pre><span class="cm">// Instead of adding, overwrite: tree[node] = val * (hi - lo + 1)</span>
+<span class="cm">// lazy[node] = val (use a sentinel like Long.MIN_VALUE for "no pending")</span>
+<span class="kw">void</span> <span class="fn">apply</span>(<span class="kw">int</span> node, <span class="kw">int</span> lo, <span class="kw">int</span> hi, <span class="kw">long</span> val) {
+    tree[node] = val * (hi - lo + <span class="num">1</span>);
+    lazy[node] = val;  <span class="cm">// overwrite (not add)</span>
+}
+</pre>
+
+<h3>Sparse Table (Static RMQ in O(1))</h3>
+<div class="tip">
+  <p><strong>When array is immutable</strong> (no updates), Sparse Table gives O(1) range min/max after O(n log n) preprocessing. Faster than Segment Tree for static queries.</p>
+</div>
+<pre><span class="cm">// sparse[k][i] = min of range [i, i + 2^k - 1]</span>
+<span class="kw">int</span>[][] sparse;
+<span class="kw">int</span>[] log;
+
+<span class="kw">void</span> <span class="fn">buildSparse</span>(<span class="kw">int</span>[] arr) {
+    <span class="kw">int</span> n = arr.length, K = Integer.<span class="fn">numberOfTrailingZeros</span>(Integer.<span class="fn">highestOneBit</span>(n)) + <span class="num">1</span>;
+    sparse = <span class="kw">new int</span>[K][n];
+    sparse[<span class="num">0</span>] = arr.clone();
+    <span class="kw">for</span> (<span class="kw">int</span> k = <span class="num">1</span>; k &lt; K; k++)
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i + (<span class="num">1</span> &lt;&lt; k) &lt;= n; i++)
+            sparse[k][i] = Math.<span class="fn">min</span>(sparse[k-<span class="num">1</span>][i], sparse[k-<span class="num">1</span>][i + (<span class="num">1</span> &lt;&lt; (k-<span class="num">1</span>))]);
+}
+
+<span class="cm">// O(1) query: overlap two precomputed ranges</span>
+<span class="kw">int</span> <span class="fn">queryMin</span>(<span class="kw">int</span> l, <span class="kw">int</span> r) {
+    <span class="kw">int</span> k = <span class="num">31</span> - Integer.<span class="fn">numberOfLeadingZeros</span>(r - l + <span class="num">1</span>);
+    <span class="kw">return</span> Math.<span class="fn">min</span>(sparse[k][l], sparse[k][r - (<span class="num">1</span> &lt;&lt; k) + <span class="num">1</span>]);
+}
+</pre>
+
+<h3>Choosing the Right Structure</h3>
+<table>
+  <tr><th>Need</th><th>Structure</th><th>Build</th><th>Query</th><th>Update</th></tr>
+  <tr><td>Static RMQ (no update)</td><td>Sparse Table</td><td>O(n log n)</td><td>O(1)</td><td>N/A</td></tr>
+  <tr><td>Point update + range query</td><td>Segment Tree (basic)</td><td>O(n)</td><td>O(log n)</td><td>O(log n)</td></tr>
+  <tr><td>Range update + range query</td><td>Segment Tree (lazy)</td><td>O(n)</td><td>O(log n)</td><td>O(log n)</td></tr>
+  <tr><td>Prefix sum + point update</td><td>BIT</td><td>O(n)</td><td>O(log n)</td><td>O(log n)</td></tr>
+  <tr><td>Range add + point query</td><td>BIT (difference trick)</td><td>O(n)</td><td>O(log n)</td><td>O(log n)</td></tr>
+</table>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/range-sum-query-mutable/" target="_blank">307. Range Sum Query - Mutable</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-of-smaller-numbers-after-self/" target="_blank">315. Count of Smaller Numbers After Self</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-of-range-sum/" target="_blank">327. Count of Range Sum</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/reverse-pairs/" target="_blank">493. Reverse Pairs</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/falling-squares/" target="_blank">699. Falling Squares</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/my-calendar-iii/" target="_blank">732. My Calendar III</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-increasing-subsequence-ii/" target="_blank">2407. Longest Increasing Subsequence II</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- BIT -->
+<div class="section" id="bit">
+<div class="card">
+<h2>Binary Indexed Tree (Fenwick Tree)</h2>
+<p>Simpler than Segment Tree. Supports prefix sum query and point update in O(log n). Preferred when you only need prefix operations.</p>
+
+<h3>Implementation</h3>
+<pre><span class="kw">class</span> <span class="type">BIT</span> {
+    <span class="kw">int</span>[] tree;
+    <span class="kw">int</span> n;
+
+    <span class="fn">BIT</span>(<span class="kw">int</span> n) {
+        <span class="kw">this</span>.n = n;
+        tree = <span class="kw">new int</span>[n + <span class="num">1</span>];
+    }
+
+    <span class="kw">void</span> <span class="fn">update</span>(<span class="kw">int</span> i, <span class="kw">int</span> delta) {
+        <span class="kw">for</span> (; i &lt;= n; i += i &amp; (-i))
+            tree[i] += delta;
+    }
+
+    <span class="kw">int</span> <span class="fn">query</span>(<span class="kw">int</span> i) {
+        <span class="kw">int</span> sum = <span class="num">0</span>;
+        <span class="kw">for</span> (; i &gt; <span class="num">0</span>; i -= i &amp; (-i))
+            sum += tree[i];
+        <span class="kw">return</span> sum;
+    }
+
+    <span class="kw">int</span> <span class="fn">rangeQuery</span>(<span class="kw">int</span> l, <span class="kw">int</span> r) {
+        <span class="kw">return</span> <span class="fn">query</span>(r) - <span class="fn">query</span>(l - <span class="num">1</span>);
+    }
+}
+</pre>
+
+<h3>BIT for Max (instead of sum)</h3>
+<pre><span class="kw">void</span> <span class="fn">update</span>(<span class="kw">int</span> i, <span class="kw">int</span> val) {
+    <span class="kw">for</span> (; i &lt;= n; i += i &amp; (-i))
+        tree[i] = Math.<span class="fn">max</span>(tree[i], val);
+}
+
+<span class="kw">int</span> <span class="fn">query</span>(<span class="kw">int</span> i) {
+    <span class="kw">int</span> res = <span class="num">0</span>;
+    <span class="kw">for</span> (; i &gt; <span class="num">0</span>; i -= i &amp; (-i))
+        res = Math.<span class="fn">max</span>(res, tree[i]);
+    <span class="kw">return</span> res;
+}
+</pre>
+
+<h3>BIT for (length, count) pair — Number of LIS (LC 673)</h3>
+<div class="insight">
+  <p><strong>Idea:</strong> Store <code>(maxLen, count)</code> at each BIT position. Query prefix max-length and sum of counts that achieve it. This solves "Number of Longest Increasing Subsequence" in O(n log n).</p>
+</div>
+<pre><span class="cm">// LC 673: Number of Longest Increasing Subsequence</span>
+<span class="cm">// BIT stores (len, cnt) pairs — merge by taking max-len and summing counts</span>
+<span class="kw">int</span>[] bitLen, bitCnt;  <span class="cm">// parallel arrays</span>
+
+<span class="kw">void</span> <span class="fn">update</span>(<span class="kw">int</span> i, <span class="kw">int</span> len, <span class="kw">int</span> cnt) {
+    <span class="kw">for</span> (; i &lt;= n; i += i &amp; (-i)) {
+        <span class="kw">if</span> (bitLen[i] &lt; len) {
+            bitLen[i] = len;
+            bitCnt[i] = cnt;
+        } <span class="kw">else if</span> (bitLen[i] == len) {
+            bitCnt[i] += cnt;
+        }
+    }
+}
+
+<span class="cm">// Query prefix [1, i]: return (maxLen, totalCount)</span>
+<span class="kw">int</span>[] <span class="fn">query</span>(<span class="kw">int</span> i) {
+    <span class="kw">int</span> len = <span class="num">0</span>, cnt = <span class="num">0</span>;
+    <span class="kw">for</span> (; i &gt; <span class="num">0</span>; i -= i &amp; (-i)) {
+        <span class="kw">if</span> (bitLen[i] &gt; len) {
+            len = bitLen[i];
+            cnt = bitCnt[i];
+        } <span class="kw">else if</span> (bitLen[i] == len) {
+            cnt += bitCnt[i];
+        }
+    }
+    <span class="kw">return new int</span>[]{len, cnt};
+}
+
+<span class="kw">int</span> <span class="fn">findNumberOfLIS</span>(<span class="kw">int</span>[] nums) {
+    <span class="kw">int</span> m = nums.length;
+    <span class="cm">// Coordinate compression via index sorting</span>
+    <span class="cm">// Sort indices by value; rank = position in sorted order</span>
+    Integer[] idx = <span class="kw">new</span> Integer[m];
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; m; i++) idx[i] = i;
+    Arrays.<span class="fn">sort</span>(idx, (a, b) -&gt; nums[a] != nums[b] ? nums[a] - nums[b] : a - b);
+
+    <span class="kw">int</span>[] rank = <span class="kw">new int</span>[m];
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; m; i++) {
+        <span class="cm">// Same value gets same rank to handle duplicates in strict LIS</span>
+        rank[idx[i]] = (i &gt; <span class="num">0</span> &amp;&amp; nums[idx[i]] == nums[idx[i-<span class="num">1</span>]])
+            ? rank[idx[i-<span class="num">1</span>]] : i + <span class="num">1</span>;
+    }
+
+    n = m;
+    bitLen = <span class="kw">new int</span>[n + <span class="num">1</span>];
+    bitCnt = <span class="kw">new int</span>[n + <span class="num">1</span>];
+
+    <span class="kw">int</span> maxLen = <span class="num">0</span>, ans = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; m; i++) {
+        <span class="kw">int</span> v = rank[i];
+        <span class="kw">int</span>[] prev = <span class="fn">query</span>(v - <span class="num">1</span>);  <span class="cm">// best LIS for values strictly &lt; nums[i]</span>
+        <span class="kw">int</span> curLen = prev[<span class="num">0</span>] + <span class="num">1</span>;
+        <span class="kw">int</span> curCnt = Math.<span class="fn">max</span>(prev[<span class="num">1</span>], <span class="num">1</span>);
+        <span class="fn">update</span>(v, curLen, curCnt);
+        <span class="kw">if</span> (curLen &gt; maxLen) { maxLen = curLen; ans = curCnt; }
+        <span class="kw">else if</span> (curLen == maxLen) ans += curCnt;
+    }
+    <span class="kw">return</span> ans;
+}
+</pre>
+
+<h3>Common Applications</h3>
+<div class="insight">
+  <p><strong>Count inversions:</strong> Process right to left, query count of smaller seen so far<br>
+  <strong>LIS in O(n log n):</strong> Use value domain as index, query max LIS for values &lt; current<br>
+  <strong>Number of LIS:</strong> BIT stores (length, count) pair, merge by max-len + sum-count<br>
+  <strong>Range frequency:</strong> Coordinate compress, then BIT on compressed values<br>
+  <strong>2D BIT:</strong> For 2D prefix sums with point updates</p>
+</div>
+
+<h3>BIT vs Segment Tree</h3>
+<table>
+  <tr><th>Aspect</th><th>BIT</th><th>Segment Tree</th></tr>
+  <tr><td>Code complexity</td><td>~15 lines</td><td>~50 lines</td></tr>
+  <tr><td>Operations</td><td>Prefix sum/max + point update</td><td>Any range query + range update</td></tr>
+  <tr><td>Space</td><td>O(n)</td><td>O(4n)</td></tr>
+  <tr><td>Constant factor</td><td>Faster</td><td>Slower</td></tr>
+  <tr><td>When to use</td><td>Prefix queries suffice</td><td>Need arbitrary range queries/updates</td></tr>
+</table>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/range-sum-query-mutable/" target="_blank">307. Range Sum Query - Mutable</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-of-smaller-numbers-after-self/" target="_blank">315. Count of Smaller Numbers After Self</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/reverse-pairs/" target="_blank">493. Reverse Pairs</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/create-sorted-array-through-instructions/" target="_blank">1649. Create Sorted Array through Instructions</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-good-triplets-in-an-array/" target="_blank">2179. Count Good Triplets in an Array</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/range-sum-query-2d-mutable/" target="_blank">308. Range Sum Query 2D - Mutable (2D BIT)</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Premium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-number-of-teams/" target="_blank">1395. Count Number of Teams</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/number-of-longest-increasing-subsequence/" target="_blank">673. Number of Longest Increasing Subsequence (BIT pair)</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Classic</span></li>
+</ul>
+</div>
+</div>
+
+<!-- Advanced Trees -->
+<div class="section" id="advanced">
+<div class="card">
+<h2>Advanced Tree Structures</h2>
+
+<h3>AVL / Red-Black Tree</h3>
+<div class="insight">
+  <p>Rarely implement from scratch in interviews. Know that TreeMap/TreeSet use Red-Black trees internally. Understand: rotation, balance factor, O(log n) guarantee.</p>
+</div>
+
+<h3>Interval Tree</h3>
+<pre><span class="cm">// Find all intervals overlapping with a query interval</span>
+<span class="cm">// Each node stores: interval + max endpoint in subtree</span>
+<span class="cm">// Search: if query.low <= node.max, search left; check node; search right</span>
+</pre>
+
+<h3>Merge Sort Tree (offline range rank queries)</h3>
+<pre><span class="cm">// Build: each segment tree node stores sorted subarray</span>
+<span class="cm">// Query "count of elements <= k in range [l, r]": binary search at each node</span>
+<span class="cm">// O(n log^2 n) build, O(log^2 n) per query</span>
+</pre>
+
+<h3>Binary Lifting + LCA (Lowest Common Ancestor)</h3>
+<div class="insight">
+  <p><strong>Binary Lifting:</strong> Precompute <code>up[v][k]</code> = 2^k-th ancestor of v. Enables jumping to any ancestor in O(log n).<br>
+  <strong>LCA:</strong> Bring both nodes to same depth, then lift both until they meet. O(log n) per query after O(n log n) preprocessing.</p>
+</div>
+<pre><span class="kw">int</span> LOG = <span class="num">20</span>;  <span class="cm">// log2(max_n)</span>
+<span class="kw">int</span>[][] up;    <span class="cm">// up[v][k] = 2^k-th ancestor of v</span>
+<span class="kw">int</span>[] depth;
+
+<span class="cm">// Preprocessing: O(n log n)</span>
+<span class="kw">void</span> <span class="fn">preprocess</span>(<span class="kw">int</span> n, List&lt;List&lt;Integer&gt;&gt; adj) {
+    up = <span class="kw">new int</span>[n][LOG];
+    depth = <span class="kw">new int</span>[n];
+    <span class="fn">dfs</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, adj);
+    <span class="cm">// Fill sparse table</span>
+    <span class="kw">for</span> (<span class="kw">int</span> k = <span class="num">1</span>; k &lt; LOG; k++)
+        <span class="kw">for</span> (<span class="kw">int</span> v = <span class="num">0</span>; v &lt; n; v++)
+            up[v][k] = up[up[v][k-<span class="num">1</span>]][k-<span class="num">1</span>];
+}
+
+<span class="kw">void</span> <span class="fn">dfs</span>(<span class="kw">int</span> v, <span class="kw">int</span> parent, <span class="kw">int</span> d, List&lt;List&lt;Integer&gt;&gt; adj) {
+    up[v][<span class="num">0</span>] = parent;
+    depth[v] = d;
+    <span class="kw">for</span> (<span class="kw">int</span> u : adj.get(v))
+        <span class="kw">if</span> (u != parent) <span class="fn">dfs</span>(u, v, d + <span class="num">1</span>, adj);
+}
+
+<span class="cm">// LCA query: O(log n)</span>
+<span class="kw">int</span> <span class="fn">lca</span>(<span class="kw">int</span> u, <span class="kw">int</span> v) {
+    <span class="cm">// Step 1: bring to same depth</span>
+    <span class="kw">if</span> (depth[u] &lt; depth[v]) { <span class="kw">int</span> t = u; u = v; v = t; }
+    <span class="kw">int</span> diff = depth[u] - depth[v];
+    <span class="kw">for</span> (<span class="kw">int</span> k = <span class="num">0</span>; k &lt; LOG; k++)
+        <span class="kw">if</span> (((diff &gt;&gt; k) &amp; <span class="num">1</span>) == <span class="num">1</span>) u = up[u][k];
+
+    <span class="kw">if</span> (u == v) <span class="kw">return</span> u;
+
+    <span class="cm">// Step 2: lift both until just below LCA</span>
+    <span class="kw">for</span> (<span class="kw">int</span> k = LOG - <span class="num">1</span>; k &gt;= <span class="num">0</span>; k--)
+        <span class="kw">if</span> (up[u][k] != up[v][k]) { u = up[u][k]; v = up[v][k]; }
+
+    <span class="kw">return</span> up[u][<span class="num">0</span>];
+}
+</pre>
+
+<h4>Kth Ancestor (LC 1483)</h4>
+<pre><span class="cm">// Jump k steps up from node using binary lifting</span>
+<span class="kw">int</span> <span class="fn">getKthAncestor</span>(<span class="kw">int</span> node, <span class="kw">int</span> k) {
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; LOG &amp;&amp; node != -<span class="num">1</span>; i++)
+        <span class="kw">if</span> (((k &gt;&gt; i) &amp; <span class="num">1</span>) == <span class="num">1</span>) node = up[node][i];
+    <span class="kw">return</span> node;
+}
+</pre>
+
+<h4>Euler Tour (tin/tout) + O(1) Ancestor Check</h4>
+<div class="insight">
+  <p><strong>Key insight (cp-algorithms style):</strong> During DFS, record entry time <code>tin[v]</code> and exit time <code>tout[v]</code>. Node u is an ancestor of v if and only if <code>tin[u] &le; tin[v] &amp;&amp; tout[v] &le; tout[u]</code>. This is O(1) after O(n) preprocessing.</p>
+</div>
+<pre><span class="kw">int</span>[] tin, tout;
+<span class="kw">int</span> timer = <span class="num">0</span>;
+
+<span class="kw">void</span> <span class="fn">eulerTour</span>(<span class="kw">int</span> v, <span class="kw">int</span> parent, List&lt;List&lt;Integer&gt;&gt; adj) {
+    tin[v] = timer++;
+    up[v][<span class="num">0</span>] = parent;
+    <span class="kw">for</span> (<span class="kw">int</span> k = <span class="num">1</span>; k &lt; LOG; k++)
+        up[v][k] = up[up[v][k-<span class="num">1</span>]][k-<span class="num">1</span>];
+
+    <span class="kw">for</span> (<span class="kw">int</span> u : adj.get(v))
+        <span class="kw">if</span> (u != parent) <span class="fn">eulerTour</span>(u, v, adj);
+
+    tout[v] = timer++;
+}
+
+<span class="cm">// O(1) ancestor check</span>
+<span class="kw">boolean</span> <span class="fn">isAncestor</span>(<span class="kw">int</span> u, <span class="kw">int</span> v) {
+    <span class="kw">return</span> tin[u] &lt;= tin[v] &amp;&amp; tout[v] &lt;= tout[u];
+}
+</pre>
+
+<h4>Full LCA using Euler Tour + Binary Lifting (cp-algorithms template)</h4>
+<pre><span class="kw">int</span> LOG = <span class="num">20</span>;
+<span class="kw">int</span>[][] up;
+<span class="kw">int</span>[] tin, tout, depth;
+<span class="kw">int</span> timer = <span class="num">0</span>;
+
+<span class="kw">void</span> <span class="fn">init</span>(<span class="kw">int</span> n, List&lt;List&lt;Integer&gt;&gt; adj) {
+    up = <span class="kw">new int</span>[n][LOG];
+    tin = <span class="kw">new int</span>[n];
+    tout = <span class="kw">new int</span>[n];
+    depth = <span class="kw">new int</span>[n];
+    <span class="fn">dfs</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, adj);
+}
+
+<span class="kw">void</span> <span class="fn">dfs</span>(<span class="kw">int</span> v, <span class="kw">int</span> parent, <span class="kw">int</span> d, List&lt;List&lt;Integer&gt;&gt; adj) {
+    tin[v] = timer++;
+    depth[v] = d;
+    up[v][<span class="num">0</span>] = parent;
+    <span class="kw">for</span> (<span class="kw">int</span> k = <span class="num">1</span>; k &lt; LOG; k++)
+        up[v][k] = up[up[v][k-<span class="num">1</span>]][k-<span class="num">1</span>];
+    <span class="kw">for</span> (<span class="kw">int</span> u : adj.get(v))
+        <span class="kw">if</span> (u != parent) <span class="fn">dfs</span>(u, v, d + <span class="num">1</span>, adj);
+    tout[v] = timer++;
+}
+
+<span class="kw">boolean</span> <span class="fn">isAncestor</span>(<span class="kw">int</span> u, <span class="kw">int</span> v) {
+    <span class="kw">return</span> tin[u] &lt;= tin[v] &amp;&amp; tout[v] &lt;= tout[u];
+}
+
+<span class="kw">int</span> <span class="fn">lca</span>(<span class="kw">int</span> u, <span class="kw">int</span> v) {
+    <span class="kw">if</span> (<span class="fn">isAncestor</span>(u, v)) <span class="kw">return</span> u;
+    <span class="kw">if</span> (<span class="fn">isAncestor</span>(v, u)) <span class="kw">return</span> v;
+    <span class="cm">// Lift u until its ancestor covers v</span>
+    <span class="kw">for</span> (<span class="kw">int</span> k = LOG - <span class="num">1</span>; k &gt;= <span class="num">0</span>; k--)
+        <span class="kw">if</span> (!<span class="fn">isAncestor</span>(up[u][k], v))
+            u = up[u][k];
+    <span class="kw">return</span> up[u][<span class="num">0</span>];
+}
+</pre>
+<div class="tip">
+  <p><strong>Why this version is elegant:</strong> The LCA function uses <code>isAncestor()</code> directly in binary lifting. Instead of equalizing depths first, it simply lifts u until its ancestor contains v. Cleaner logic, same O(log n).</p>
+</div>
+
+<h4>Distance Between Two Nodes</h4>
+<pre><span class="cm">// dist(u, v) = depth[u] + depth[v] - 2 * depth[lca(u, v)]</span>
+<span class="kw">int</span> <span class="fn">dist</span>(<span class="kw">int</span> u, <span class="kw">int</span> v) {
+    <span class="kw">return</span> depth[u] + depth[v] - <span class="num">2</span> * depth[<span class="fn">lca</span>(u, v)];
+}
+</pre>
+
+<h4>Euler Tour Flattening (subtree queries)</h4>
+<pre><span class="cm">// Euler Tour maps subtree(v) to contiguous range [tin[v], tout[v]]</span>
+<span class="cm">// This enables using BIT/SegTree for subtree sum/update:</span>
+<span class="cm">//   - "Add x to all nodes in subtree(v)" → range update [tin[v], tout[v]]</span>
+<span class="cm">//   - "Sum of values in subtree(v)" → range query [tin[v], tout[v]]</span>
+<span class="cm">// Flatten tree into array order[tin[v]] = v, then operate on the array</span>
+</pre>
+
+<h4>Applications</h4>
+<div class="warning">
+  <p><strong>O(1) ancestor check:</strong> tin[u] &le; tin[v] &amp;&amp; tout[v] &le; tout[u]<br>
+  <strong>LCA in O(log n):</strong> Binary lifting with isAncestor<br>
+  <strong>Kth ancestor:</strong> Jump via binary decomposition<br>
+  <strong>Distance on tree:</strong> depth[u] + depth[v] - 2*depth[lca]<br>
+  <strong>Subtree queries:</strong> Euler Tour flattens subtree to array range<br>
+  <strong>Path queries:</strong> Split path at LCA, query each half</p>
+</div>
+
+<h3>Persistent Segment Tree</h3>
+<div class="warning">
+  <p>Create a new "version" of the tree on each update by only creating new nodes on the path from root to updated leaf. Shares unchanged subtrees. Used for "Kth smallest in range" (LC 2286).</p>
+</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/kth-ancestor-of-a-tree-node/" target="_blank">1483. Kth Ancestor of a Tree Node (Binary Lifting)</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/" target="_blank">236. Lowest Common Ancestor of a Binary Tree</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/lowest-common-ancestor-of-deepest-leaves/" target="_blank">1123. Lowest Common Ancestor of Deepest Leaves</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/sum-of-distances-in-tree/" target="_blank">834. Sum of Distances in Tree (re-rooting)</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-difference-between-node-and-ancestor/" target="_blank">1026. Maximum Difference Between Node and Ancestor</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/the-skyline-problem/" target="_blank">218. The Skyline Problem (segment tree / sweep)</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/range-module/" target="_blank">715. Range Module (interval management)</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/data-stream-as-disjoint-intervals/" target="_blank">352. Data Stream as Disjoint Intervals</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/booking-concert-tickets-in-groups/" target="_blank">2286. Booking Concert Tickets in Groups</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/rectangle-area-ii/" target="_blank">850. Rectangle Area II (segment tree + sweep)</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+</div>
+<script>
+function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');event.target.classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+</script>
+</body>
+</html>

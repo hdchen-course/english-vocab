@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stack &amp; Queue — Complete Training Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fa; --bg2: #ffffff; --bg3: #f1f3f5; --bg4: #e9ecef;
+  --border: #dee2e6; --text: #212529; --text2: #495057; --text3: #868e96;
+  --blue: #1971c2; --blue-l: #d0ebff; --green: #2f9e44; --green-l: #d3f9d8;
+  --yellow: #e67700; --yellow-l: #fff3bf; --red: #c92a2a; --red-l: #ffe3e3;
+  --purple: #7048e8; --purple-l: #e5dbff; --orange: #d9480f; --cyan: #0c8599;
+  --r: 12px; --shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.8; }
+.container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+header { text-align: center; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+header .sub { color: var(--text3); font-size: 14px; }
+
+.nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 40px;  position: sticky; top: 0; background: var(--bg); padding: 16px 0; z-index: 100; border-bottom: 1px solid var(--border); }
+.nav-btn { padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s; font-family: 'Inter', sans-serif; }
+.nav-btn:hover { background: var(--bg3); color: var(--text); }
+.nav-btn.active { background: var(--blue-l); color: var(--blue); border-color: var(--blue); }
+
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+h2 { font-size: 24px; font-weight: 700; margin: 32px 0 16px; color: var(--blue); }
+h3 { font-size: 18px; font-weight: 600; margin: 24px 0 12px; }
+h4 { font-size: 15px; font-weight: 600; margin: 16px 0 8px; color: var(--text2); }
+p { margin-bottom: 12px; color: var(--text2); }
+ul, ol { margin: 8px 0 16px 24px; color: var(--text2); }
+li { margin-bottom: 6px; }
+strong { color: var(--text); }
+
+pre { background: #1e1e2e; border-radius: 8px; padding: 16px 20px; overflow-x: auto; margin: 12px 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; color: #cdd6f4; }
+code { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+p code, li code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--purple); }
+pre .kw { color: #cba6f7; } pre .type { color: #f9e2af; } pre .str { color: #a6e3a1; }
+pre .cm { color: #6c7086; } pre .num { color: #fab387; } pre .fn { color: #89b4fa; }
+
+.insight { background: var(--blue-l); border-left: 3px solid var(--blue); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.insight p { color: var(--blue); margin: 0; }
+.warning { background: var(--yellow-l); border-left: 3px solid var(--yellow); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.warning p { color: var(--yellow); margin: 0; }
+.danger { background: var(--red-l); border-left: 3px solid var(--red); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.danger p { color: var(--red); margin: 0; }
+.tip { background: var(--green-l); border-left: 3px solid var(--green); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.tip p { color: var(--green); margin: 0; }
+
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 20px; padding: 24px 28px; box-shadow: var(--shadow); }
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+th, td { padding: 10px 14px; border: 1px solid var(--border); text-align: left; }
+th { background: var(--bg3); font-weight: 600; color: var(--text); }
+tr:hover { background: var(--bg3); }
+
+.tag { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; margin: 2px 4px 2px 0; }
+.tag-easy { background: var(--green-l); color: var(--green); }
+.tag-medium { background: var(--yellow-l); color: var(--yellow); }
+.tag-hard { background: var(--red-l); color: var(--red); }
+.tag-freq { background: var(--purple-l); color: var(--purple); }
+
+.problem-list { list-style: none; padding: 0; margin: 12px 0; }
+.problem-list li { padding: 10px 14px; border-left: 3px solid var(--blue); margin-bottom: 8px; background: var(--bg3); border-radius: 0 8px 8px 0; display: flex; justify-content: flex-start; align-items: center; gap: 8px; }
+.problem-list .title { color: var(--text); font-weight: 500; font-size: 14px; flex: 1; }
+.problem-list .title a { color: var(--text); text-decoration: none; border-bottom: 1px dashed var(--border); transition: all .2s; }
+.problem-list .title a:hover { color: var(--blue); border-bottom-color: var(--blue); }
+
+@media (max-width: 768px) { .container { padding: 20px 12px; } .nav { position: static; } pre { font-size: 11px; } }
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>Stack &amp; Queue &mdash; Complete Training Guide</h1>
+  <div class="sub">Parentheses &bull; Calculator &bull; Design Problems &bull; Monotone Stack &bull; BFS Patterns</div>
+</header>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection('overview')">Overview</button>
+  <button class="nav-btn" onclick="showSection('parens')">Parentheses</button>
+  <button class="nav-btn" onclick="showSection('calc')">Calculator</button>
+  <button class="nav-btn" onclick="showSection('design')">Design</button>
+  <button class="nav-btn" onclick="showSection('monotone')">Monotone Stack</button>
+  <button class="nav-btn" onclick="showSection('bfs')">BFS Queue</button>
+  <button class="nav-btn" onclick="showSection('deque')">Deque</button>
+  <button class="nav-btn" onclick="showSection('advanced')">Advanced Stack</button>
+  <button class="nav-btn" onclick="showSection('tips')">Interview Tips</button>
+</div>
+
+<!-- ===== Overview ===== -->
+<div class="section active" id="overview">
+<div class="card">
+<h2>Stack vs Queue vs Deque</h2>
+<p>These three data structures differ in their access pattern. Choosing correctly is the first step to solving the problem efficiently.</p>
+
+<table>
+  <tr><th>Structure</th><th>Order</th><th>Operations</th><th>Java Implementation</th></tr>
+  <tr><td><strong>Stack</strong></td><td>LIFO</td><td>push, pop, peek</td><td><code>ArrayDeque</code> (as stack)</td></tr>
+  <tr><td><strong>Queue</strong></td><td>FIFO</td><td>offer, poll, peek</td><td><code>ArrayDeque</code> (as queue)</td></tr>
+  <tr><td><strong>Deque</strong></td><td>Both ends</td><td>offerFirst/Last, pollFirst/Last</td><td><code>ArrayDeque</code></td></tr>
+</table>
+
+<div class="danger">
+  <p><strong>Never use java.util.Stack!</strong> It extends Vector (synchronized, slow). Always use <code>ArrayDeque</code> as your stack.</p>
+</div>
+
+<h3>Java ArrayDeque as Stack</h3>
+<pre><span class="cm">// ArrayDeque as Stack (preferred)</span>
+<span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+stack.<span class="fn">push</span>(<span class="num">1</span>);       <span class="cm">// addFirst internally</span>
+stack.<span class="fn">pop</span>();         <span class="cm">// removeFirst internally</span>
+stack.<span class="fn">peek</span>();        <span class="cm">// peekFirst internally</span>
+stack.<span class="fn">isEmpty</span>();     <span class="cm">// check before pop!</span>
+</pre>
+
+<h3>Java ArrayDeque as Queue</h3>
+<pre><span class="cm">// ArrayDeque as Queue (preferred over LinkedList)</span>
+<span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; queue = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+queue.<span class="fn">offer</span>(<span class="num">1</span>);      <span class="cm">// addLast internally</span>
+queue.<span class="fn">poll</span>();         <span class="cm">// removeFirst internally</span>
+queue.<span class="fn">peek</span>();         <span class="cm">// peekFirst internally</span>
+</pre>
+
+<h3>When to Use Each</h3>
+<table>
+  <tr><th>Signal in Problem</th><th>Data Structure</th></tr>
+  <tr><td>Matching / nesting (parens, tags)</td><td>Stack</td></tr>
+  <tr><td>Undo / backtrack / DFS</td><td>Stack</td></tr>
+  <tr><td>Evaluate expression / calculator</td><td>Stack (numbers + operators)</td></tr>
+  <tr><td>Level-order traversal / BFS</td><td>Queue</td></tr>
+  <tr><td>Sliding window min/max</td><td>Monotone Deque</td></tr>
+  <tr><td>Next greater/smaller element</td><td>Monotone Stack</td></tr>
+  <tr><td>"Design" with min/max in O(1)</td><td>Two stacks or augmented stack</td></tr>
+</table>
+
+<div class="insight">
+  <p><strong>Key insight:</strong> Stack problems often have O(n) amortized time because each element is pushed and popped at most once.</p>
+</div>
+</div>
+</div>
+
+<!-- ===== Parentheses ===== -->
+<div class="section" id="parens">
+<div class="card">
+<h2>Parentheses Problems</h2>
+<p>The stack tracks either characters or indices. Index-based stacks enable computing lengths and positions of valid segments.</p>
+
+<h3>Template: Index-based Stack for Parentheses</h3>
+<pre><span class="cm">// Template: stack stores INDICES (not chars)</span>
+<span class="cm">// Used for: longest valid, min removals, etc.</span>
+<span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+stack.<span class="fn">push</span>(-<span class="num">1</span>); <span class="cm">// sentinel for length calculation</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; s.<span class="fn">length</span>(); i++) {
+    <span class="kw">if</span> (s.<span class="fn">charAt</span>(i) == <span class="str">'('</span>) {
+        stack.<span class="fn">push</span>(i);
+    } <span class="kw">else</span> {
+        stack.<span class="fn">pop</span>();
+        <span class="kw">if</span> (stack.<span class="fn">isEmpty</span>()) {
+            stack.<span class="fn">push</span>(i); <span class="cm">// new sentinel</span>
+        } <span class="kw">else</span> {
+            maxLen = Math.<span class="fn">max</span>(maxLen, i - stack.<span class="fn">peek</span>());
+        }
+    }
+}
+</pre>
+
+<h3>Template: Counter-based (no stack needed)</h3>
+<pre><span class="cm">// For simple valid parentheses check</span>
+<span class="kw">int</span> open = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">char</span> c : s.<span class="fn">toCharArray</span>()) {
+    <span class="kw">if</span> (c == <span class="str">'('</span>) open++;
+    <span class="kw">else</span> open--;
+    <span class="kw">if</span> (open &lt; <span class="num">0</span>) <span class="kw">return false</span>; <span class="cm">// too many ')'</span>
+}
+<span class="kw">return</span> open == <span class="num">0</span>;
+</pre>
+
+<h3>LC 20 &mdash; Valid Parentheses</h3>
+<pre><span class="kw">public boolean</span> <span class="fn">isValid</span>(<span class="type">String</span> s) {
+    <span class="type">Deque</span>&lt;<span class="type">Character</span>&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    <span class="kw">for</span> (<span class="kw">char</span> c : s.<span class="fn">toCharArray</span>()) {
+        <span class="kw">if</span> (c == <span class="str">'('</span>) stack.<span class="fn">push</span>(<span class="str">')'</span>);
+        <span class="kw">else if</span> (c == <span class="str">'['</span>) stack.<span class="fn">push</span>(<span class="str">']'</span>);
+        <span class="kw">else if</span> (c == <span class="str">'{'</span>) stack.<span class="fn">push</span>(<span class="str">'}'</span>);
+        <span class="kw">else if</span> (stack.<span class="fn">isEmpty</span>() || stack.<span class="fn">pop</span>() != c)
+            <span class="kw">return false</span>;
+    }
+    <span class="kw">return</span> stack.<span class="fn">isEmpty</span>();
+}
+</pre>
+
+<div class="tip">
+  <p><strong>Trick:</strong> Push the expected closing bracket instead of the opening one. Simplifies the matching logic.</p>
+</div>
+
+<h3>LC 1249 &mdash; Minimum Remove to Make Valid</h3>
+<pre><span class="kw">public</span> <span class="type">String</span> <span class="fn">minRemoveToMakeValid</span>(<span class="type">String</span> s) {
+    <span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    <span class="type">Set</span>&lt;<span class="type">Integer</span>&gt; remove = <span class="kw">new</span> <span class="type">HashSet</span>&lt;&gt;();
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; s.<span class="fn">length</span>(); i++) {
+        <span class="kw">char</span> c = s.<span class="fn">charAt</span>(i);
+        <span class="kw">if</span> (c == <span class="str">'('</span>) stack.<span class="fn">push</span>(i);
+        <span class="kw">else if</span> (c == <span class="str">')'</span>) {
+            <span class="kw">if</span> (stack.<span class="fn">isEmpty</span>()) remove.<span class="fn">add</span>(i);
+            <span class="kw">else</span> stack.<span class="fn">pop</span>();
+        }
+    }
+    <span class="kw">while</span> (!stack.<span class="fn">isEmpty</span>()) remove.<span class="fn">add</span>(stack.<span class="fn">pop</span>());
+    <span class="type">StringBuilder</span> sb = <span class="kw">new</span> <span class="type">StringBuilder</span>();
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; s.<span class="fn">length</span>(); i++)
+        <span class="kw">if</span> (!remove.<span class="fn">contains</span>(i)) sb.<span class="fn">append</span>(s.<span class="fn">charAt</span>(i));
+    <span class="kw">return</span> sb.<span class="fn">toString</span>();
+}
+</pre>
+
+<h3>LC 32 &mdash; Longest Valid Parentheses</h3>
+<pre><span class="kw">public int</span> <span class="fn">longestValidParentheses</span>(<span class="type">String</span> s) {
+    <span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    stack.<span class="fn">push</span>(-<span class="num">1</span>);
+    <span class="kw">int</span> max = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; s.<span class="fn">length</span>(); i++) {
+        <span class="kw">if</span> (s.<span class="fn">charAt</span>(i) == <span class="str">'('</span>) {
+            stack.<span class="fn">push</span>(i);
+        } <span class="kw">else</span> {
+            stack.<span class="fn">pop</span>();
+            <span class="kw">if</span> (stack.<span class="fn">isEmpty</span>()) stack.<span class="fn">push</span>(i);
+            <span class="kw">else</span> max = Math.<span class="fn">max</span>(max, i - stack.<span class="fn">peek</span>());
+        }
+    }
+    <span class="kw">return</span> max;
+}
+</pre>
+
+<h3>LC 22 &mdash; Generate Parentheses (Backtracking)</h3>
+<pre><span class="kw">public</span> <span class="type">List</span>&lt;<span class="type">String</span>&gt; <span class="fn">generateParenthesis</span>(<span class="kw">int</span> n) {
+    <span class="type">List</span>&lt;<span class="type">String</span>&gt; res = <span class="kw">new</span> <span class="type">ArrayList</span>&lt;&gt;();
+    <span class="fn">backtrack</span>(res, <span class="kw">new</span> <span class="type">StringBuilder</span>(), <span class="num">0</span>, <span class="num">0</span>, n);
+    <span class="kw">return</span> res;
+}
+<span class="kw">private void</span> <span class="fn">backtrack</span>(<span class="type">List</span>&lt;<span class="type">String</span>&gt; res, <span class="type">StringBuilder</span> sb, <span class="kw">int</span> open, <span class="kw">int</span> close, <span class="kw">int</span> n) {
+    <span class="kw">if</span> (sb.<span class="fn">length</span>() == <span class="num">2</span> * n) { res.<span class="fn">add</span>(sb.<span class="fn">toString</span>()); <span class="kw">return</span>; }
+    <span class="kw">if</span> (open &lt; n) { sb.<span class="fn">append</span>(<span class="str">'('</span>); <span class="fn">backtrack</span>(res, sb, open+<span class="num">1</span>, close, n); sb.<span class="fn">deleteCharAt</span>(sb.<span class="fn">length</span>()-<span class="num">1</span>); }
+    <span class="kw">if</span> (close &lt; open) { sb.<span class="fn">append</span>(<span class="str">')'</span>); <span class="fn">backtrack</span>(res, sb, open, close+<span class="num">1</span>, n); sb.<span class="fn">deleteCharAt</span>(sb.<span class="fn">length</span>()-<span class="num">1</span>); }
+}
+</pre>
+
+<h3>Problem List</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/valid-parentheses/" target="_blank">20. Valid Parentheses</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-remove-to-make-valid-parentheses/" target="_blank">1249. Minimum Remove to Make Valid Parentheses</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-valid-parentheses/" target="_blank">32. Longest Valid Parentheses</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/generate-parentheses/" target="_blank">22. Generate Parentheses</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/score-of-parentheses/" target="_blank">856. Score of Parentheses</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Calculator ===== -->
+<div class="section" id="calc">
+<div class="card">
+<h2>Calculator Problems</h2>
+<p>Expression evaluation is a classic stack problem. The key patterns are: number stack + sign handling, or recursive descent for nested parentheses.</p>
+
+<h3>Template: Basic Calculator (with +, -, parens)</h3>
+<pre><span class="cm">// LC 224 - Basic Calculator I: +, -, (, )</span>
+<span class="kw">public int</span> <span class="fn">calculate</span>(<span class="type">String</span> s) {
+    <span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    <span class="kw">int</span> result = <span class="num">0</span>, num = <span class="num">0</span>, sign = <span class="num">1</span>;
+    stack.<span class="fn">push</span>(<span class="num">1</span>); <span class="cm">// initial sign context</span>
+    <span class="kw">for</span> (<span class="kw">char</span> c : s.<span class="fn">toCharArray</span>()) {
+        <span class="kw">if</span> (Character.<span class="fn">isDigit</span>(c)) {
+            num = num * <span class="num">10</span> + (c - <span class="str">'0'</span>);
+        } <span class="kw">else if</span> (c == <span class="str">'+'</span> || c == <span class="str">'-'</span>) {
+            result += sign * num;
+            num = <span class="num">0</span>;
+            sign = stack.<span class="fn">peek</span>() * (c == <span class="str">'+'</span> ? <span class="num">1</span> : -<span class="num">1</span>);
+        } <span class="kw">else if</span> (c == <span class="str">'('</span>) {
+            stack.<span class="fn">push</span>(sign);
+        } <span class="kw">else if</span> (c == <span class="str">')'</span>) {
+            stack.<span class="fn">pop</span>();
+        }
+    }
+    <span class="kw">return</span> result + sign * num;
+}
+</pre>
+
+<h3>Template: Calculator II (with *, / but no parens)</h3>
+<pre><span class="cm">// LC 227 - Basic Calculator II: +, -, *, /</span>
+<span class="kw">public int</span> <span class="fn">calculate</span>(<span class="type">String</span> s) {
+    <span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    <span class="kw">int</span> num = <span class="num">0</span>;
+    <span class="kw">char</span> prevOp = <span class="str">'+'</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; s.<span class="fn">length</span>(); i++) {
+        <span class="kw">char</span> c = s.<span class="fn">charAt</span>(i);
+        <span class="kw">if</span> (Character.<span class="fn">isDigit</span>(c)) {
+            num = num * <span class="num">10</span> + (c - <span class="str">'0'</span>);
+        }
+        <span class="kw">if</span> ((!Character.<span class="fn">isDigit</span>(c) &amp;&amp; c != <span class="str">' '</span>) || i == s.<span class="fn">length</span>() - <span class="num">1</span>) {
+            <span class="kw">if</span> (prevOp == <span class="str">'+'</span>) stack.<span class="fn">push</span>(num);
+            <span class="kw">else if</span> (prevOp == <span class="str">'-'</span>) stack.<span class="fn">push</span>(-num);
+            <span class="kw">else if</span> (prevOp == <span class="str">'*'</span>) stack.<span class="fn">push</span>(stack.<span class="fn">pop</span>() * num);
+            <span class="kw">else if</span> (prevOp == <span class="str">'/'</span>) stack.<span class="fn">push</span>(stack.<span class="fn">pop</span>() / num);
+            prevOp = c;
+            num = <span class="num">0</span>;
+        }
+    }
+    <span class="kw">int</span> result = <span class="num">0</span>;
+    <span class="kw">while</span> (!stack.<span class="fn">isEmpty</span>()) result += stack.<span class="fn">pop</span>();
+    <span class="kw">return</span> result;
+}
+</pre>
+
+<h3>Template: Calculator III (Recursive Descent)</h3>
+<pre><span class="cm">// LC 772 - Basic Calculator III: +, -, *, /, (, )</span>
+<span class="cm">// Use recursive descent: each '(' triggers a recursive call</span>
+<span class="kw">int</span> i = <span class="num">0</span>;
+<span class="kw">public int</span> <span class="fn">calculate</span>(<span class="type">String</span> s) {
+    <span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    <span class="kw">int</span> num = <span class="num">0</span>;
+    <span class="kw">char</span> op = <span class="str">'+'</span>;
+    <span class="kw">while</span> (i &lt; s.<span class="fn">length</span>()) {
+        <span class="kw">char</span> c = s.<span class="fn">charAt</span>(i++);
+        <span class="kw">if</span> (Character.<span class="fn">isDigit</span>(c)) num = num * <span class="num">10</span> + (c - <span class="str">'0'</span>);
+        <span class="kw">if</span> (c == <span class="str">'('</span>) num = <span class="fn">calculate</span>(s); <span class="cm">// recurse</span>
+        <span class="kw">if</span> (c == <span class="str">')'</span> || i == s.<span class="fn">length</span>() || (!Character.<span class="fn">isDigit</span>(c) &amp;&amp; c != <span class="str">' '</span>)) {
+            <span class="kw">if</span> (op == <span class="str">'+'</span>) stack.<span class="fn">push</span>(num);
+            <span class="kw">else if</span> (op == <span class="str">'-'</span>) stack.<span class="fn">push</span>(-num);
+            <span class="kw">else if</span> (op == <span class="str">'*'</span>) stack.<span class="fn">push</span>(stack.<span class="fn">pop</span>() * num);
+            <span class="kw">else if</span> (op == <span class="str">'/'</span>) stack.<span class="fn">push</span>(stack.<span class="fn">pop</span>() / num);
+            op = c; num = <span class="num">0</span>;
+            <span class="kw">if</span> (c == <span class="str">')'</span>) <span class="kw">break</span>;
+        }
+    }
+    <span class="kw">int</span> result = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> x : stack) result += x;
+    <span class="kw">return</span> result;
+}
+</pre>
+
+<h3>LC 150 &mdash; Evaluate Reverse Polish Notation</h3>
+<pre><span class="kw">public int</span> <span class="fn">evalRPN</span>(<span class="type">String</span>[] tokens) {
+    <span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    <span class="kw">for</span> (<span class="type">String</span> t : tokens) {
+        <span class="kw">if</span> (<span class="str">"+-*/"</span>.<span class="fn">contains</span>(t)) {
+            <span class="kw">int</span> b = stack.<span class="fn">pop</span>(), a = stack.<span class="fn">pop</span>();
+            <span class="kw">switch</span> (t) {
+                <span class="kw">case</span> <span class="str">"+"</span>: stack.<span class="fn">push</span>(a + b); <span class="kw">break</span>;
+                <span class="kw">case</span> <span class="str">"-"</span>: stack.<span class="fn">push</span>(a - b); <span class="kw">break</span>;
+                <span class="kw">case</span> <span class="str">"*"</span>: stack.<span class="fn">push</span>(a * b); <span class="kw">break</span>;
+                <span class="kw">case</span> <span class="str">"/"</span>: stack.<span class="fn">push</span>(a / b); <span class="kw">break</span>;
+            }
+        } <span class="kw">else</span> {
+            stack.<span class="fn">push</span>(Integer.<span class="fn">parseInt</span>(t));
+        }
+    }
+    <span class="kw">return</span> stack.<span class="fn">peek</span>();
+}
+</pre>
+
+<div class="insight">
+  <p><strong>Pattern:</strong> Calculator I = sign stack. Calculator II = prevOp with lazy evaluation. Calculator III = recursive descent or combine both.</p>
+</div>
+
+<h3>Problem List</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/basic-calculator/" target="_blank">224. Basic Calculator</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/basic-calculator-ii/" target="_blank">227. Basic Calculator II</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/basic-calculator-iii/" target="_blank">772. Basic Calculator III</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/evaluate-reverse-polish-notation/" target="_blank">150. Evaluate Reverse Polish Notation</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Design Problems ===== -->
+<div class="section" id="design">
+<div class="card">
+<h2>Design Problems</h2>
+<p>These problems test your ability to compose data structures. The trick is maintaining auxiliary state alongside the primary structure.</p>
+
+<h3>LC 155 &mdash; Min Stack</h3>
+<pre><span class="kw">class</span> <span class="type">MinStack</span> {
+    <span class="type">Deque</span>&lt;<span class="kw">int</span>[]&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    <span class="cm">// Each entry: [value, currentMin]</span>
+
+    <span class="kw">public void</span> <span class="fn">push</span>(<span class="kw">int</span> val) {
+        <span class="kw">int</span> min = stack.<span class="fn">isEmpty</span>() ? val : Math.<span class="fn">min</span>(val, stack.<span class="fn">peek</span>()[<span class="num">1</span>]);
+        stack.<span class="fn">push</span>(<span class="kw">new int</span>[]{val, min});
+    }
+    <span class="kw">public void</span> <span class="fn">pop</span>() { stack.<span class="fn">pop</span>(); }
+    <span class="kw">public int</span> <span class="fn">top</span>() { <span class="kw">return</span> stack.<span class="fn">peek</span>()[<span class="num">0</span>]; }
+    <span class="kw">public int</span> <span class="fn">getMin</span>() { <span class="kw">return</span> stack.<span class="fn">peek</span>()[<span class="num">1</span>]; }
+}
+</pre>
+
+<h3>LC 716 &mdash; Max Stack (with popMax)</h3>
+<pre><span class="cm">// Approach: TreeMap + DoublyLinkedList for O(log n) popMax</span>
+<span class="kw">class</span> <span class="type">MaxStack</span> {
+    <span class="type">TreeMap</span>&lt;<span class="type">Integer</span>, <span class="type">List</span>&lt;<span class="type">Node</span>&gt;&gt; map = <span class="kw">new</span> <span class="type">TreeMap</span>&lt;&gt;();
+    <span class="type">DoublyLinkedList</span> dll = <span class="kw">new</span> <span class="type">DoublyLinkedList</span>();
+
+    <span class="kw">public void</span> <span class="fn">push</span>(<span class="kw">int</span> x) {
+        <span class="type">Node</span> node = dll.<span class="fn">addLast</span>(x);
+        map.<span class="fn">computeIfAbsent</span>(x, k -&gt; <span class="kw">new</span> <span class="type">ArrayList</span>&lt;&gt;()).<span class="fn">add</span>(node);
+    }
+    <span class="kw">public int</span> <span class="fn">pop</span>() {
+        <span class="type">Node</span> node = dll.<span class="fn">removeLast</span>();
+        <span class="type">List</span>&lt;<span class="type">Node</span>&gt; list = map.<span class="fn">get</span>(node.val);
+        list.<span class="fn">remove</span>(list.<span class="fn">size</span>() - <span class="num">1</span>);
+        <span class="kw">if</span> (list.<span class="fn">isEmpty</span>()) map.<span class="fn">remove</span>(node.val);
+        <span class="kw">return</span> node.val;
+    }
+    <span class="kw">public int</span> <span class="fn">peekMax</span>() { <span class="kw">return</span> map.<span class="fn">lastKey</span>(); }
+    <span class="kw">public int</span> <span class="fn">popMax</span>() {
+        <span class="kw">int</span> max = map.<span class="fn">lastKey</span>();
+        <span class="type">List</span>&lt;<span class="type">Node</span>&gt; list = map.<span class="fn">get</span>(max);
+        <span class="type">Node</span> node = list.<span class="fn">remove</span>(list.<span class="fn">size</span>() - <span class="num">1</span>);
+        <span class="kw">if</span> (list.<span class="fn">isEmpty</span>()) map.<span class="fn">remove</span>(max);
+        dll.<span class="fn">remove</span>(node);
+        <span class="kw">return</span> max;
+    }
+}
+</pre>
+
+<h3>LC 225 &mdash; Stack using Queues</h3>
+<pre><span class="cm">// Push-expensive approach: O(n) push, O(1) pop</span>
+<span class="kw">class</span> <span class="type">MyStack</span> {
+    <span class="type">Queue</span>&lt;<span class="type">Integer</span>&gt; q = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+
+    <span class="kw">public void</span> <span class="fn">push</span>(<span class="kw">int</span> x) {
+        q.<span class="fn">offer</span>(x);
+        <span class="cm">// Rotate all previous elements to back</span>
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; q.<span class="fn">size</span>() - <span class="num">1</span>; i++)
+            q.<span class="fn">offer</span>(q.<span class="fn">poll</span>());
+    }
+    <span class="kw">public int</span> <span class="fn">pop</span>() { <span class="kw">return</span> q.<span class="fn">poll</span>(); }
+    <span class="kw">public int</span> <span class="fn">top</span>() { <span class="kw">return</span> q.<span class="fn">peek</span>(); }
+    <span class="kw">public boolean</span> <span class="fn">empty</span>() { <span class="kw">return</span> q.<span class="fn">isEmpty</span>(); }
+}
+</pre>
+
+<h3>LC 232 &mdash; Queue using Stacks</h3>
+<pre><span class="cm">// Amortized O(1) per operation</span>
+<span class="kw">class</span> <span class="type">MyQueue</span> {
+    <span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; in = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    <span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; out = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+
+    <span class="kw">public void</span> <span class="fn">push</span>(<span class="kw">int</span> x) { in.<span class="fn">push</span>(x); }
+    <span class="kw">public int</span> <span class="fn">pop</span>() { <span class="fn">transfer</span>(); <span class="kw">return</span> out.<span class="fn">pop</span>(); }
+    <span class="kw">public int</span> <span class="fn">peek</span>() { <span class="fn">transfer</span>(); <span class="kw">return</span> out.<span class="fn">peek</span>(); }
+    <span class="kw">public boolean</span> <span class="fn">empty</span>() { <span class="kw">return</span> in.<span class="fn">isEmpty</span>() &amp;&amp; out.<span class="fn">isEmpty</span>(); }
+    <span class="kw">private void</span> <span class="fn">transfer</span>() {
+        <span class="kw">if</span> (out.<span class="fn">isEmpty</span>())
+            <span class="kw">while</span> (!in.<span class="fn">isEmpty</span>()) out.<span class="fn">push</span>(in.<span class="fn">pop</span>());
+    }
+}
+</pre>
+
+<div class="insight">
+  <p><strong>Amortized analysis:</strong> Each element moves from <code>in</code> to <code>out</code> exactly once, giving O(1) amortized per operation.</p>
+</div>
+
+<h3>LC 895 &mdash; Maximum Frequency Stack</h3>
+<pre><span class="kw">class</span> <span class="type">FreqStack</span> {
+    <span class="type">Map</span>&lt;<span class="type">Integer</span>, <span class="type">Integer</span>&gt; freq = <span class="kw">new</span> <span class="type">HashMap</span>&lt;&gt;();
+    <span class="type">Map</span>&lt;<span class="type">Integer</span>, <span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt;&gt; group = <span class="kw">new</span> <span class="type">HashMap</span>&lt;&gt;();
+    <span class="kw">int</span> maxFreq = <span class="num">0</span>;
+
+    <span class="kw">public void</span> <span class="fn">push</span>(<span class="kw">int</span> val) {
+        <span class="kw">int</span> f = freq.<span class="fn">merge</span>(val, <span class="num">1</span>, Integer::sum);
+        maxFreq = Math.<span class="fn">max</span>(maxFreq, f);
+        group.<span class="fn">computeIfAbsent</span>(f, k -&gt; <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;()).<span class="fn">push</span>(val);
+    }
+    <span class="kw">public int</span> <span class="fn">pop</span>() {
+        <span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; stk = group.<span class="fn">get</span>(maxFreq);
+        <span class="kw">int</span> val = stk.<span class="fn">pop</span>();
+        freq.<span class="fn">merge</span>(val, -<span class="num">1</span>, Integer::sum);
+        <span class="kw">if</span> (stk.<span class="fn">isEmpty</span>()) { group.<span class="fn">remove</span>(maxFreq); maxFreq--; }
+        <span class="kw">return</span> val;
+    }
+}
+</pre>
+
+<h3>Problem List</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/min-stack/" target="_blank">155. Min Stack</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/max-stack/" target="_blank">716. Max Stack</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/implement-stack-using-queues/" target="_blank">225. Implement Stack using Queues</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/implement-queue-using-stacks/" target="_blank">232. Implement Queue using Stacks</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-frequency-stack/" target="_blank">895. Maximum Frequency Stack</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Monotone Stack ===== -->
+<div class="section" id="monotone">
+<div class="card">
+<h2>Monotone Stack</h2>
+<p>A monotone stack maintains elements in sorted order (increasing or decreasing). When a new element violates the invariant, we pop until the invariant is restored. Each element is pushed/popped at most once: O(n) total.</p>
+
+<h3>Template: Monotone Decreasing Stack (Next Greater)</h3>
+<pre><span class="cm">// Find next greater element for each position</span>
+<span class="cm">// Stack stores INDICES, maintains decreasing order of values</span>
+<span class="kw">int</span>[] result = <span class="kw">new int</span>[n];
+Arrays.<span class="fn">fill</span>(result, -<span class="num">1</span>);
+<span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+    <span class="kw">while</span> (!stack.<span class="fn">isEmpty</span>() &amp;&amp; nums[stack.<span class="fn">peek</span>()] &lt; nums[i]) {
+        result[stack.<span class="fn">pop</span>()] = nums[i];
+    }
+    stack.<span class="fn">push</span>(i);
+}
+</pre>
+
+<h3>Template: Monotone Increasing Stack (Next Smaller)</h3>
+<pre><span class="cm">// Find next smaller element for each position</span>
+<span class="cm">// Stack stores INDICES, maintains increasing order of values</span>
+<span class="kw">int</span>[] result = <span class="kw">new int</span>[n];
+Arrays.<span class="fn">fill</span>(result, -<span class="num">1</span>);
+<span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+    <span class="kw">while</span> (!stack.<span class="fn">isEmpty</span>() &amp;&amp; nums[stack.<span class="fn">peek</span>()] &gt; nums[i]) {
+        result[stack.<span class="fn">pop</span>()] = nums[i];
+    }
+    stack.<span class="fn">push</span>(i);
+}
+</pre>
+
+<div class="warning">
+  <p><strong>Naming confusion:</strong> "Monotone decreasing stack" means the stack values decrease from bottom to top. We pop when a LARGER element arrives (to find "next greater"). "Monotone increasing stack" is the reverse.</p>
+</div>
+
+<h3>LC 739 &mdash; Daily Temperatures</h3>
+<pre><span class="kw">public int</span>[] <span class="fn">dailyTemperatures</span>(<span class="kw">int</span>[] temps) {
+    <span class="kw">int</span> n = temps.length;
+    <span class="kw">int</span>[] ans = <span class="kw">new int</span>[n];
+    <span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+        <span class="kw">while</span> (!stack.<span class="fn">isEmpty</span>() &amp;&amp; temps[stack.<span class="fn">peek</span>()] &lt; temps[i]) {
+            <span class="kw">int</span> j = stack.<span class="fn">pop</span>();
+            ans[j] = i - j;
+        }
+        stack.<span class="fn">push</span>(i);
+    }
+    <span class="kw">return</span> ans;
+}
+</pre>
+
+<h3>LC 84 &mdash; Largest Rectangle in Histogram</h3>
+<pre><span class="kw">public int</span> <span class="fn">largestRectangleArea</span>(<span class="kw">int</span>[] heights) {
+    <span class="kw">int</span> n = heights.length, max = <span class="num">0</span>;
+    <span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt;= n; i++) {
+        <span class="kw">int</span> h = (i == n) ? <span class="num">0</span> : heights[i];
+        <span class="kw">while</span> (!stack.<span class="fn">isEmpty</span>() &amp;&amp; heights[stack.<span class="fn">peek</span>()] &gt; h) {
+            <span class="kw">int</span> height = heights[stack.<span class="fn">pop</span>()];
+            <span class="kw">int</span> width = stack.<span class="fn">isEmpty</span>() ? i : i - stack.<span class="fn">peek</span>() - <span class="num">1</span>;
+            max = Math.<span class="fn">max</span>(max, height * width);
+        }
+        stack.<span class="fn">push</span>(i);
+    }
+    <span class="kw">return</span> max;
+}
+</pre>
+
+<div class="tip">
+  <p><strong>Key trick for LC 84:</strong> Iterate to <code>i <= n</code> with a virtual bar of height 0 at the end. This forces all remaining bars off the stack.</p>
+</div>
+
+<h3>LC 85 &mdash; Maximal Rectangle (extends LC 84)</h3>
+<pre><span class="kw">public int</span> <span class="fn">maximalRectangle</span>(<span class="kw">char</span>[][] matrix) {
+    <span class="kw">int</span> m = matrix.length, n = matrix[<span class="num">0</span>].length, max = <span class="num">0</span>;
+    <span class="kw">int</span>[] heights = <span class="kw">new int</span>[n];
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; m; i++) {
+        <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">0</span>; j &lt; n; j++)
+            heights[j] = matrix[i][j] == <span class="str">'1'</span> ? heights[j] + <span class="num">1</span> : <span class="num">0</span>;
+        max = Math.<span class="fn">max</span>(max, <span class="fn">largestRectangleArea</span>(heights));
+    }
+    <span class="kw">return</span> max;
+}
+</pre>
+
+<h3>LC 907 &mdash; Sum of Subarray Minimums</h3>
+<pre><span class="kw">public int</span> <span class="fn">sumSubarrayMins</span>(<span class="kw">int</span>[] arr) {
+    <span class="kw">int</span> MOD = (<span class="kw">int</span>)<span class="num">1e9</span> + <span class="num">7</span>, n = arr.length;
+    <span class="kw">long</span> ans = <span class="num">0</span>;
+    <span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt;= n; i++) {
+        <span class="kw">int</span> val = (i == n) ? <span class="num">0</span> : arr[i];
+        <span class="kw">while</span> (!stack.<span class="fn">isEmpty</span>() &amp;&amp; arr[stack.<span class="fn">peek</span>()] &gt;= val) {
+            <span class="kw">int</span> mid = stack.<span class="fn">pop</span>();
+            <span class="kw">int</span> left = stack.<span class="fn">isEmpty</span>() ? -<span class="num">1</span> : stack.<span class="fn">peek</span>();
+            <span class="kw">int</span> right = i;
+            <span class="cm">// arr[mid] is min for (mid-left) * (right-mid) subarrays</span>
+            ans = (ans + (<span class="kw">long</span>)arr[mid] * (mid - left) * (right - mid)) % MOD;
+        }
+        stack.<span class="fn">push</span>(i);
+    }
+    <span class="kw">return</span> (<span class="kw">int</span>)ans;
+}
+</pre>
+
+<h3>LC 402 &mdash; Remove K Digits</h3>
+<pre><span class="kw">public</span> <span class="type">String</span> <span class="fn">removeKdigits</span>(<span class="type">String</span> num, <span class="kw">int</span> k) {
+    <span class="type">Deque</span>&lt;<span class="type">Character</span>&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    <span class="kw">for</span> (<span class="kw">char</span> c : num.<span class="fn">toCharArray</span>()) {
+        <span class="kw">while</span> (k &gt; <span class="num">0</span> &amp;&amp; !stack.<span class="fn">isEmpty</span>() &amp;&amp; stack.<span class="fn">peek</span>() &gt; c) {
+            stack.<span class="fn">pop</span>(); k--;
+        }
+        stack.<span class="fn">push</span>(c);
+    }
+    <span class="kw">while</span> (k-- &gt; <span class="num">0</span>) stack.<span class="fn">pop</span>();
+    <span class="cm">// Build result, skip leading zeros</span>
+    <span class="type">StringBuilder</span> sb = <span class="kw">new</span> <span class="type">StringBuilder</span>();
+    <span class="kw">while</span> (!stack.<span class="fn">isEmpty</span>()) sb.<span class="fn">append</span>(stack.<span class="fn">pollLast</span>());
+    <span class="kw">while</span> (sb.<span class="fn">length</span>() &gt; <span class="num">1</span> &amp;&amp; sb.<span class="fn">charAt</span>(<span class="num">0</span>) == <span class="str">'0'</span>) sb.<span class="fn">deleteCharAt</span>(<span class="num">0</span>);
+    <span class="kw">return</span> sb.<span class="fn">length</span>() == <span class="num">0</span> ? <span class="str">"0"</span> : sb.<span class="fn">toString</span>();
+}
+</pre>
+
+<h3>Problem List</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/next-greater-element-i/" target="_blank">496. Next Greater Element I</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/next-greater-element-ii/" target="_blank">503. Next Greater Element II</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/daily-temperatures/" target="_blank">739. Daily Temperatures</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/largest-rectangle-in-histogram/" target="_blank">84. Largest Rectangle in Histogram</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximal-rectangle/" target="_blank">85. Maximal Rectangle</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/sum-of-subarray-minimums/" target="_blank">907. Sum of Subarray Minimums</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/remove-k-digits/" target="_blank">402. Remove K Digits</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== BFS with Queue ===== -->
+<div class="section" id="bfs">
+<div class="card">
+<h2>BFS with Queue</h2>
+<p>BFS uses a queue to process nodes level by level. The key template is the "level-by-level" loop that processes all nodes at the current depth before moving deeper.</p>
+
+<h3>Template: Level-by-Level BFS</h3>
+<pre><span class="cm">// Template: process tree/graph level by level</span>
+<span class="type">Queue</span>&lt;<span class="type">TreeNode</span>&gt; queue = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+queue.<span class="fn">offer</span>(root);
+<span class="kw">int</span> depth = <span class="num">0</span>;
+<span class="kw">while</span> (!queue.<span class="fn">isEmpty</span>()) {
+    <span class="kw">int</span> size = queue.<span class="fn">size</span>(); <span class="cm">// MUST capture size before loop</span>
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; size; i++) {
+        <span class="type">TreeNode</span> node = queue.<span class="fn">poll</span>();
+        <span class="cm">// process node at current level</span>
+        <span class="kw">if</span> (node.left != <span class="kw">null</span>) queue.<span class="fn">offer</span>(node.left);
+        <span class="kw">if</span> (node.right != <span class="kw">null</span>) queue.<span class="fn">offer</span>(node.right);
+    }
+    depth++;
+}
+</pre>
+
+<div class="warning">
+  <p><strong>Common bug:</strong> Forgetting to capture <code>queue.size()</code> before the inner loop. The queue size changes as you add children!</p>
+</div>
+
+<h3>LC 102 &mdash; Binary Tree Level Order Traversal</h3>
+<pre><span class="kw">public</span> <span class="type">List</span>&lt;<span class="type">List</span>&lt;<span class="type">Integer</span>&gt;&gt; <span class="fn">levelOrder</span>(<span class="type">TreeNode</span> root) {
+    <span class="type">List</span>&lt;<span class="type">List</span>&lt;<span class="type">Integer</span>&gt;&gt; res = <span class="kw">new</span> <span class="type">ArrayList</span>&lt;&gt;();
+    <span class="kw">if</span> (root == <span class="kw">null</span>) <span class="kw">return</span> res;
+    <span class="type">Queue</span>&lt;<span class="type">TreeNode</span>&gt; q = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    q.<span class="fn">offer</span>(root);
+    <span class="kw">while</span> (!q.<span class="fn">isEmpty</span>()) {
+        <span class="kw">int</span> size = q.<span class="fn">size</span>();
+        <span class="type">List</span>&lt;<span class="type">Integer</span>&gt; level = <span class="kw">new</span> <span class="type">ArrayList</span>&lt;&gt;();
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; size; i++) {
+            <span class="type">TreeNode</span> node = q.<span class="fn">poll</span>();
+            level.<span class="fn">add</span>(node.val);
+            <span class="kw">if</span> (node.left != <span class="kw">null</span>) q.<span class="fn">offer</span>(node.left);
+            <span class="kw">if</span> (node.right != <span class="kw">null</span>) q.<span class="fn">offer</span>(node.right);
+        }
+        res.<span class="fn">add</span>(level);
+    }
+    <span class="kw">return</span> res;
+}
+</pre>
+
+<h3>LC 103 &mdash; Zigzag Level Order Traversal</h3>
+<pre><span class="kw">public</span> <span class="type">List</span>&lt;<span class="type">List</span>&lt;<span class="type">Integer</span>&gt;&gt; <span class="fn">zigzagLevelOrder</span>(<span class="type">TreeNode</span> root) {
+    <span class="type">List</span>&lt;<span class="type">List</span>&lt;<span class="type">Integer</span>&gt;&gt; res = <span class="kw">new</span> <span class="type">ArrayList</span>&lt;&gt;();
+    <span class="kw">if</span> (root == <span class="kw">null</span>) <span class="kw">return</span> res;
+    <span class="type">Queue</span>&lt;<span class="type">TreeNode</span>&gt; q = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    q.<span class="fn">offer</span>(root);
+    <span class="kw">boolean</span> leftToRight = <span class="kw">true</span>;
+    <span class="kw">while</span> (!q.<span class="fn">isEmpty</span>()) {
+        <span class="kw">int</span> size = q.<span class="fn">size</span>();
+        <span class="type">LinkedList</span>&lt;<span class="type">Integer</span>&gt; level = <span class="kw">new</span> <span class="type">LinkedList</span>&lt;&gt;();
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; size; i++) {
+            <span class="type">TreeNode</span> node = q.<span class="fn">poll</span>();
+            <span class="kw">if</span> (leftToRight) level.<span class="fn">addLast</span>(node.val);
+            <span class="kw">else</span> level.<span class="fn">addFirst</span>(node.val);
+            <span class="kw">if</span> (node.left != <span class="kw">null</span>) q.<span class="fn">offer</span>(node.left);
+            <span class="kw">if</span> (node.right != <span class="kw">null</span>) q.<span class="fn">offer</span>(node.right);
+        }
+        res.<span class="fn">add</span>(level);
+        leftToRight = !leftToRight;
+    }
+    <span class="kw">return</span> res;
+}
+</pre>
+
+<h3>LC 199 &mdash; Binary Tree Right Side View</h3>
+<pre><span class="kw">public</span> <span class="type">List</span>&lt;<span class="type">Integer</span>&gt; <span class="fn">rightSideView</span>(<span class="type">TreeNode</span> root) {
+    <span class="type">List</span>&lt;<span class="type">Integer</span>&gt; res = <span class="kw">new</span> <span class="type">ArrayList</span>&lt;&gt;();
+    <span class="kw">if</span> (root == <span class="kw">null</span>) <span class="kw">return</span> res;
+    <span class="type">Queue</span>&lt;<span class="type">TreeNode</span>&gt; q = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    q.<span class="fn">offer</span>(root);
+    <span class="kw">while</span> (!q.<span class="fn">isEmpty</span>()) {
+        <span class="kw">int</span> size = q.<span class="fn">size</span>();
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; size; i++) {
+            <span class="type">TreeNode</span> node = q.<span class="fn">poll</span>();
+            <span class="kw">if</span> (i == size - <span class="num">1</span>) res.<span class="fn">add</span>(node.val); <span class="cm">// rightmost</span>
+            <span class="kw">if</span> (node.left != <span class="kw">null</span>) q.<span class="fn">offer</span>(node.left);
+            <span class="kw">if</span> (node.right != <span class="kw">null</span>) q.<span class="fn">offer</span>(node.right);
+        }
+    }
+    <span class="kw">return</span> res;
+}
+</pre>
+
+<h3>LC 994 &mdash; Rotting Oranges (Multi-source BFS)</h3>
+<pre><span class="kw">public int</span> <span class="fn">orangesRotting</span>(<span class="kw">int</span>[][] grid) {
+    <span class="kw">int</span> m = grid.length, n = grid[<span class="num">0</span>].length;
+    <span class="type">Queue</span>&lt;<span class="kw">int</span>[]&gt; q = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    <span class="kw">int</span> fresh = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; m; i++)
+        <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">0</span>; j &lt; n; j++) {
+            <span class="kw">if</span> (grid[i][j] == <span class="num">2</span>) q.<span class="fn">offer</span>(<span class="kw">new int</span>[]{i, j});
+            <span class="kw">else if</span> (grid[i][j] == <span class="num">1</span>) fresh++;
+        }
+    <span class="kw">int</span>[][] dirs = {{<span class="num">1</span>,<span class="num">0</span>},{-<span class="num">1</span>,<span class="num">0</span>},{<span class="num">0</span>,<span class="num">1</span>},{<span class="num">0</span>,-<span class="num">1</span>}};
+    <span class="kw">int</span> minutes = <span class="num">0</span>;
+    <span class="kw">while</span> (!q.<span class="fn">isEmpty</span>() &amp;&amp; fresh &gt; <span class="num">0</span>) {
+        <span class="kw">int</span> size = q.<span class="fn">size</span>();
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; size; i++) {
+            <span class="kw">int</span>[] cell = q.<span class="fn">poll</span>();
+            <span class="kw">for</span> (<span class="kw">int</span>[] d : dirs) {
+                <span class="kw">int</span> r = cell[<span class="num">0</span>] + d[<span class="num">0</span>], c = cell[<span class="num">1</span>] + d[<span class="num">1</span>];
+                <span class="kw">if</span> (r &gt;= <span class="num">0</span> &amp;&amp; r &lt; m &amp;&amp; c &gt;= <span class="num">0</span> &amp;&amp; c &lt; n &amp;&amp; grid[r][c] == <span class="num">1</span>) {
+                    grid[r][c] = <span class="num">2</span>;
+                    fresh--;
+                    q.<span class="fn">offer</span>(<span class="kw">new int</span>[]{r, c});
+                }
+            }
+        }
+        minutes++;
+    }
+    <span class="kw">return</span> fresh == <span class="num">0</span> ? minutes : -<span class="num">1</span>;
+}
+</pre>
+
+<div class="insight">
+  <p><strong>Multi-source BFS:</strong> Add ALL starting points to the queue first, then BFS. This naturally computes shortest distance from any source. Classic for grid problems.</p>
+</div>
+
+<h3>Problem List</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/binary-tree-level-order-traversal/" target="_blank">102. Binary Tree Level Order Traversal</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/" target="_blank">103. Binary Tree Zigzag Level Order Traversal</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/binary-tree-right-side-view/" target="_blank">199. Binary Tree Right Side View</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-depth-of-binary-tree/" target="_blank">111. Minimum Depth of Binary Tree</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/rotting-oranges/" target="_blank">994. Rotting Oranges</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Deque Applications ===== -->
+<div class="section" id="deque">
+<div class="card">
+<h2>Deque Applications</h2>
+<p>Monotone deque maintains a window of candidates in sorted order. As the window slides, we remove elements that fall out of range from the front, and maintain monotonicity from the back.</p>
+
+<h3>Template: Monotone Deque (Sliding Window Max)</h3>
+<pre><span class="cm">// Maintain decreasing deque: front is always the max in window</span>
+<span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; dq = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;(); <span class="cm">// stores indices</span>
+<span class="kw">int</span>[] result = <span class="kw">new int</span>[n - k + <span class="num">1</span>];
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+    <span class="cm">// Remove elements outside window</span>
+    <span class="kw">while</span> (!dq.<span class="fn">isEmpty</span>() &amp;&amp; dq.<span class="fn">peekFirst</span>() &lt;= i - k)
+        dq.<span class="fn">pollFirst</span>();
+    <span class="cm">// Maintain decreasing order (remove smaller from back)</span>
+    <span class="kw">while</span> (!dq.<span class="fn">isEmpty</span>() &amp;&amp; nums[dq.<span class="fn">peekLast</span>()] &lt;= nums[i])
+        dq.<span class="fn">pollLast</span>();
+    dq.<span class="fn">offerLast</span>(i);
+    <span class="cm">// Window is full</span>
+    <span class="kw">if</span> (i &gt;= k - <span class="num">1</span>)
+        result[i - k + <span class="num">1</span>] = nums[dq.<span class="fn">peekFirst</span>()];
+}
+</pre>
+
+<h3>LC 239 &mdash; Sliding Window Maximum</h3>
+<pre><span class="kw">public int</span>[] <span class="fn">maxSlidingWindow</span>(<span class="kw">int</span>[] nums, <span class="kw">int</span> k) {
+    <span class="kw">int</span> n = nums.length;
+    <span class="kw">int</span>[] res = <span class="kw">new int</span>[n - k + <span class="num">1</span>];
+    <span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; dq = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+        <span class="kw">while</span> (!dq.<span class="fn">isEmpty</span>() &amp;&amp; dq.<span class="fn">peekFirst</span>() &lt;= i - k)
+            dq.<span class="fn">pollFirst</span>();
+        <span class="kw">while</span> (!dq.<span class="fn">isEmpty</span>() &amp;&amp; nums[dq.<span class="fn">peekLast</span>()] &lt;= nums[i])
+            dq.<span class="fn">pollLast</span>();
+        dq.<span class="fn">offerLast</span>(i);
+        <span class="kw">if</span> (i &gt;= k - <span class="num">1</span>) res[i - k + <span class="num">1</span>] = nums[dq.<span class="fn">peekFirst</span>()];
+    }
+    <span class="kw">return</span> res;
+}
+</pre>
+
+<h3>LC 862 &mdash; Shortest Subarray with Sum at Least K</h3>
+<pre><span class="cm">// Key insight: prefix sum + monotone deque</span>
+<span class="cm">// Need shortest subarray with sum >= k (can have negative numbers)</span>
+<span class="kw">public int</span> <span class="fn">shortestSubarray</span>(<span class="kw">int</span>[] nums, <span class="kw">int</span> k) {
+    <span class="kw">int</span> n = nums.length, ans = n + <span class="num">1</span>;
+    <span class="kw">long</span>[] prefix = <span class="kw">new long</span>[n + <span class="num">1</span>];
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++)
+        prefix[i + <span class="num">1</span>] = prefix[i] + nums[i];
+    <span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; dq = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt;= n; i++) {
+        <span class="cm">// If prefix[i] - prefix[dq.front] >= k, update answer</span>
+        <span class="kw">while</span> (!dq.<span class="fn">isEmpty</span>() &amp;&amp; prefix[i] - prefix[dq.<span class="fn">peekFirst</span>()] &gt;= k)
+            ans = Math.<span class="fn">min</span>(ans, i - dq.<span class="fn">pollFirst</span>());
+        <span class="cm">// Maintain increasing deque of prefix sums</span>
+        <span class="kw">while</span> (!dq.<span class="fn">isEmpty</span>() &amp;&amp; prefix[dq.<span class="fn">peekLast</span>()] &gt;= prefix[i])
+            dq.<span class="fn">pollLast</span>();
+        dq.<span class="fn">offerLast</span>(i);
+    }
+    <span class="kw">return</span> ans &lt;= n ? ans : -<span class="num">1</span>;
+}
+</pre>
+
+<div class="tip">
+  <p><strong>Why monotone deque for LC 862?</strong> Unlike standard sliding window, negative numbers make the prefix sum non-monotone. The deque maintains an increasing sequence of prefix sums so we can binary-search-style find valid left boundaries.</p>
+</div>
+
+<h3>LC 1425 &mdash; Constrained Subsequence Sum</h3>
+<pre><span class="cm">// dp[i] = max sum of subsequence ending at i, with gap <= k</span>
+<span class="cm">// dp[i] = nums[i] + max(0, max(dp[i-k..i-1]))</span>
+<span class="cm">// Use monotone deque to get max in sliding window of dp values</span>
+<span class="kw">public int</span> <span class="fn">constrainedSubsetSum</span>(<span class="kw">int</span>[] nums, <span class="kw">int</span> k) {
+    <span class="kw">int</span> n = nums.length, ans = Integer.MIN_VALUE;
+    <span class="kw">int</span>[] dp = <span class="kw">new int</span>[n];
+    <span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; dq = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+        dp[i] = nums[i];
+        <span class="kw">if</span> (!dq.<span class="fn">isEmpty</span>()) dp[i] += Math.<span class="fn">max</span>(<span class="num">0</span>, dp[dq.<span class="fn">peekFirst</span>()]);
+        <span class="cm">// Remove out-of-window elements</span>
+        <span class="kw">while</span> (!dq.<span class="fn">isEmpty</span>() &amp;&amp; dq.<span class="fn">peekFirst</span>() &lt;= i - k)
+            dq.<span class="fn">pollFirst</span>();
+        <span class="cm">// Maintain decreasing deque</span>
+        <span class="kw">while</span> (!dq.<span class="fn">isEmpty</span>() &amp;&amp; dp[dq.<span class="fn">peekLast</span>()] &lt;= dp[i])
+            dq.<span class="fn">pollLast</span>();
+        dq.<span class="fn">offerLast</span>(i);
+        ans = Math.<span class="fn">max</span>(ans, dp[i]);
+    }
+    <span class="kw">return</span> ans;
+}
+</pre>
+
+<h3>Problem List</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/sliding-window-maximum/" target="_blank">239. Sliding Window Maximum</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/" target="_blank">862. Shortest Subarray with Sum at Least K</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/constrained-subsequence-sum/" target="_blank">1425. Constrained Subsequence Sum</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Advanced Stack ===== -->
+<div class="section" id="advanced">
+<div class="card">
+<h2>Advanced Stack Problems</h2>
+<p>These problems use stacks in creative ways: simulating physics, parsing nested structures, maintaining state across events.</p>
+
+<h3>LC 735 &mdash; Asteroid Collision</h3>
+<pre><span class="kw">public int</span>[] <span class="fn">asteroidCollision</span>(<span class="kw">int</span>[] asteroids) {
+    <span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    <span class="kw">for</span> (<span class="kw">int</span> a : asteroids) {
+        <span class="kw">boolean</span> alive = <span class="kw">true</span>;
+        <span class="cm">// Collision: stack top is positive, current is negative</span>
+        <span class="kw">while</span> (alive &amp;&amp; !stack.<span class="fn">isEmpty</span>() &amp;&amp; stack.<span class="fn">peek</span>() &gt; <span class="num">0</span> &amp;&amp; a &lt; <span class="num">0</span>) {
+            <span class="kw">if</span> (stack.<span class="fn">peek</span>() &lt; -a) stack.<span class="fn">pop</span>(); <span class="cm">// top explodes</span>
+            <span class="kw">else if</span> (stack.<span class="fn">peek</span>() == -a) { stack.<span class="fn">pop</span>(); alive = <span class="kw">false</span>; } <span class="cm">// both</span>
+            <span class="kw">else</span> alive = <span class="kw">false</span>; <span class="cm">// current explodes</span>
+        }
+        <span class="kw">if</span> (alive) stack.<span class="fn">push</span>(a);
+    }
+    <span class="kw">int</span>[] res = <span class="kw">new int</span>[stack.<span class="fn">size</span>()];
+    <span class="kw">for</span> (<span class="kw">int</span> i = res.length - <span class="num">1</span>; i &gt;= <span class="num">0</span>; i--) res[i] = stack.<span class="fn">pop</span>();
+    <span class="kw">return</span> res;
+}
+</pre>
+
+<h3>LC 394 &mdash; Decode String</h3>
+<pre><span class="cm">// Iterative approach with two stacks</span>
+<span class="kw">public</span> <span class="type">String</span> <span class="fn">decodeString</span>(<span class="type">String</span> s) {
+    <span class="type">Deque</span>&lt;<span class="type">Integer</span>&gt; counts = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    <span class="type">Deque</span>&lt;<span class="type">StringBuilder</span>&gt; strings = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    <span class="type">StringBuilder</span> cur = <span class="kw">new</span> <span class="type">StringBuilder</span>();
+    <span class="kw">int</span> k = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="kw">char</span> c : s.<span class="fn">toCharArray</span>()) {
+        <span class="kw">if</span> (Character.<span class="fn">isDigit</span>(c)) {
+            k = k * <span class="num">10</span> + (c - <span class="str">'0'</span>);
+        } <span class="kw">else if</span> (c == <span class="str">'['</span>) {
+            counts.<span class="fn">push</span>(k);
+            strings.<span class="fn">push</span>(cur);
+            cur = <span class="kw">new</span> <span class="type">StringBuilder</span>();
+            k = <span class="num">0</span>;
+        } <span class="kw">else if</span> (c == <span class="str">']'</span>) {
+            <span class="type">StringBuilder</span> tmp = cur;
+            cur = strings.<span class="fn">pop</span>();
+            <span class="kw">int</span> repeat = counts.<span class="fn">pop</span>();
+            <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; repeat; i++) cur.<span class="fn">append</span>(tmp);
+        } <span class="kw">else</span> {
+            cur.<span class="fn">append</span>(c);
+        }
+    }
+    <span class="kw">return</span> cur.<span class="fn">toString</span>();
+}
+</pre>
+
+<h3>LC 394 &mdash; Decode String (Recursive)</h3>
+<pre><span class="kw">int</span> idx = <span class="num">0</span>;
+<span class="kw">public</span> <span class="type">String</span> <span class="fn">decodeString</span>(<span class="type">String</span> s) {
+    <span class="type">StringBuilder</span> sb = <span class="kw">new</span> <span class="type">StringBuilder</span>();
+    <span class="kw">while</span> (idx &lt; s.<span class="fn">length</span>() &amp;&amp; s.<span class="fn">charAt</span>(idx) != <span class="str">']'</span>) {
+        <span class="kw">if</span> (Character.<span class="fn">isDigit</span>(s.<span class="fn">charAt</span>(idx))) {
+            <span class="kw">int</span> k = <span class="num">0</span>;
+            <span class="kw">while</span> (Character.<span class="fn">isDigit</span>(s.<span class="fn">charAt</span>(idx)))
+                k = k * <span class="num">10</span> + (s.<span class="fn">charAt</span>(idx++) - <span class="str">'0'</span>);
+            idx++; <span class="cm">// skip '['</span>
+            <span class="type">String</span> inner = <span class="fn">decodeString</span>(s);
+            idx++; <span class="cm">// skip ']'</span>
+            <span class="kw">while</span> (k-- &gt; <span class="num">0</span>) sb.<span class="fn">append</span>(inner);
+        } <span class="kw">else</span> {
+            sb.<span class="fn">append</span>(s.<span class="fn">charAt</span>(idx++));
+        }
+    }
+    <span class="kw">return</span> sb.<span class="fn">toString</span>();
+}
+</pre>
+
+<h3>LC 636 &mdash; Exclusive Time of Functions</h3>
+<pre><span class="kw">public int</span>[] <span class="fn">exclusiveTime</span>(<span class="kw">int</span> n, <span class="type">List</span>&lt;<span class="type">String</span>&gt; logs) {
+    <span class="kw">int</span>[] res = <span class="kw">new int</span>[n];
+    <span class="type">Deque</span>&lt;<span class="kw">int</span>[]&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;(); <span class="cm">// [id, startTime]</span>
+    <span class="kw">for</span> (<span class="type">String</span> log : logs) {
+        <span class="type">String</span>[] parts = log.<span class="fn">split</span>(<span class="str">":"</span>);
+        <span class="kw">int</span> id = Integer.<span class="fn">parseInt</span>(parts[<span class="num">0</span>]);
+        <span class="kw">int</span> time = Integer.<span class="fn">parseInt</span>(parts[<span class="num">2</span>]);
+        <span class="kw">if</span> (parts[<span class="num">1</span>].<span class="fn">equals</span>(<span class="str">"start"</span>)) {
+            stack.<span class="fn">push</span>(<span class="kw">new int</span>[]{id, time});
+        } <span class="kw">else</span> {
+            <span class="kw">int</span>[] top = stack.<span class="fn">pop</span>();
+            <span class="kw">int</span> duration = time - top[<span class="num">1</span>] + <span class="num">1</span>;
+            res[id] += duration;
+            <span class="cm">// Subtract from parent (it was suspended)</span>
+            <span class="kw">if</span> (!stack.<span class="fn">isEmpty</span>()) res[stack.<span class="fn">peek</span>()[<span class="num">0</span>]] -= duration;
+        }
+    }
+    <span class="kw">return</span> res;
+}
+</pre>
+
+<h3>LC 901 &mdash; Online Stock Span</h3>
+<pre><span class="kw">class</span> <span class="type">StockSpanner</span> {
+    <span class="type">Deque</span>&lt;<span class="kw">int</span>[]&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;(); <span class="cm">// [price, span]</span>
+
+    <span class="kw">public int</span> <span class="fn">next</span>(<span class="kw">int</span> price) {
+        <span class="kw">int</span> span = <span class="num">1</span>;
+        <span class="kw">while</span> (!stack.<span class="fn">isEmpty</span>() &amp;&amp; stack.<span class="fn">peek</span>()[<span class="num">0</span>] &lt;= price)
+            span += stack.<span class="fn">pop</span>()[<span class="num">1</span>];
+        stack.<span class="fn">push</span>(<span class="kw">new int</span>[]{price, span});
+        <span class="kw">return</span> span;
+    }
+}
+</pre>
+
+<h3>LC 341 &mdash; Flatten Nested List Iterator</h3>
+<pre><span class="kw">class</span> <span class="type">NestedIterator</span> <span class="kw">implements</span> <span class="type">Iterator</span>&lt;<span class="type">Integer</span>&gt; {
+    <span class="type">Deque</span>&lt;<span class="type">NestedInteger</span>&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+
+    <span class="kw">public</span> <span class="fn">NestedIterator</span>(<span class="type">List</span>&lt;<span class="type">NestedInteger</span>&gt; list) {
+        <span class="cm">// Push in reverse so first element is on top</span>
+        <span class="kw">for</span> (<span class="kw">int</span> i = list.<span class="fn">size</span>() - <span class="num">1</span>; i &gt;= <span class="num">0</span>; i--)
+            stack.<span class="fn">push</span>(list.<span class="fn">get</span>(i));
+    }
+    <span class="kw">public</span> <span class="type">Integer</span> <span class="fn">next</span>() { <span class="kw">return</span> stack.<span class="fn">pop</span>().<span class="fn">getInteger</span>(); }
+    <span class="kw">public boolean</span> <span class="fn">hasNext</span>() {
+        <span class="kw">while</span> (!stack.<span class="fn">isEmpty</span>() &amp;&amp; !stack.<span class="fn">peek</span>().<span class="fn">isInteger</span>()) {
+            <span class="type">List</span>&lt;<span class="type">NestedInteger</span>&gt; list = stack.<span class="fn">pop</span>().<span class="fn">getList</span>();
+            <span class="kw">for</span> (<span class="kw">int</span> i = list.<span class="fn">size</span>() - <span class="num">1</span>; i &gt;= <span class="num">0</span>; i--)
+                stack.<span class="fn">push</span>(list.<span class="fn">get</span>(i));
+        }
+        <span class="kw">return</span> !stack.<span class="fn">isEmpty</span>();
+    }
+}
+</pre>
+
+<h3>Problem List</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/asteroid-collision/" target="_blank">735. Asteroid Collision</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/decode-string/" target="_blank">394. Decode String</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/exclusive-time-of-functions/" target="_blank">636. Exclusive Time of Functions</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/online-stock-span/" target="_blank">901. Online Stock Span</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/flatten-nested-list-iterator/" target="_blank">341. Flatten Nested List Iterator</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Interview Tips ===== -->
+<div class="section" id="tips">
+<div class="card">
+<h2>Interview Tips</h2>
+
+<h3>Stack vs Recursion Equivalence</h3>
+<p>Every recursive solution can be converted to an iterative one using an explicit stack. <strong>Google specifically asks candidates to do this conversion.</strong></p>
+
+<div class="danger">
+  <p><strong>Google favorite:</strong> "Now implement it iteratively." Be ready to convert any DFS/backtracking solution to use an explicit stack.</p>
+</div>
+
+<h4>Converting Recursion to Stack</h4>
+<pre><span class="cm">// Recursive DFS</span>
+<span class="kw">void</span> <span class="fn">dfs</span>(<span class="type">TreeNode</span> node) {
+    <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">return</span>;
+    <span class="fn">process</span>(node);
+    <span class="fn">dfs</span>(node.left);
+    <span class="fn">dfs</span>(node.right);
+}
+
+<span class="cm">// Iterative equivalent (preorder)</span>
+<span class="kw">void</span> <span class="fn">dfsIterative</span>(<span class="type">TreeNode</span> root) {
+    <span class="type">Deque</span>&lt;<span class="type">TreeNode</span>&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+    stack.<span class="fn">push</span>(root);
+    <span class="kw">while</span> (!stack.<span class="fn">isEmpty</span>()) {
+        <span class="type">TreeNode</span> node = stack.<span class="fn">pop</span>();
+        <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">continue</span>;
+        <span class="fn">process</span>(node);
+        stack.<span class="fn">push</span>(node.right); <span class="cm">// right first (LIFO)</span>
+        stack.<span class="fn">push</span>(node.left);
+    }
+}
+</pre>
+
+<h4>Iterative Inorder (Harder)</h4>
+<pre><span class="cm">// Iterative inorder traversal</span>
+<span class="type">Deque</span>&lt;<span class="type">TreeNode</span>&gt; stack = <span class="kw">new</span> <span class="type">ArrayDeque</span>&lt;&gt;();
+<span class="type">TreeNode</span> cur = root;
+<span class="kw">while</span> (cur != <span class="kw">null</span> || !stack.<span class="fn">isEmpty</span>()) {
+    <span class="kw">while</span> (cur != <span class="kw">null</span>) {
+        stack.<span class="fn">push</span>(cur);
+        cur = cur.left;
+    }
+    cur = stack.<span class="fn">pop</span>();
+    <span class="fn">process</span>(cur); <span class="cm">// visit node</span>
+    cur = cur.right;
+}
+</pre>
+
+<h3>When Stack Simulates Recursion</h3>
+<table>
+  <tr><th>Recursive Pattern</th><th>Stack Simulation</th></tr>
+  <tr><td>Simple DFS (pre-order)</td><td>Push children in reverse order</td></tr>
+  <tr><td>In-order traversal</td><td>Push-left loop + pop + go right</td></tr>
+  <tr><td>Post-order traversal</td><td>Two stacks, or flag-based (prev pointer)</td></tr>
+  <tr><td>Backtracking</td><td>Stack of states (path + decision point)</td></tr>
+  <tr><td>Nested structure (decode string)</td><td>Stack of partial results</td></tr>
+</table>
+
+<h3>Common Interview Patterns</h3>
+<div class="card">
+<h4>Pattern 1: Stack for Matching</h4>
+<p>Parentheses, HTML tags, brackets. Push openers, pop on closers.</p>
+
+<h4>Pattern 2: Stack for Monotone Property</h4>
+<p>Next greater/smaller, histogram, stock prices. Maintain sorted invariant.</p>
+
+<h4>Pattern 3: Stack for Undo/State</h4>
+<p>Calculator, decode string, browser history. Push state before nested call.</p>
+
+<h4>Pattern 4: Queue for Level-by-Level</h4>
+<p>BFS, shortest path in unweighted graph, rotting oranges.</p>
+
+<h4>Pattern 5: Deque for Sliding Window Optimization</h4>
+<p>Replace O(nk) brute force with O(n) monotone deque.</p>
+</div>
+
+<h3>Complexity Cheat Sheet</h3>
+<table>
+  <tr><th>Problem Type</th><th>Time</th><th>Space</th></tr>
+  <tr><td>Valid parentheses</td><td>O(n)</td><td>O(n)</td></tr>
+  <tr><td>Calculator</td><td>O(n)</td><td>O(n)</td></tr>
+  <tr><td>Monotone stack (next greater)</td><td>O(n)</td><td>O(n)</td></tr>
+  <tr><td>Largest rectangle</td><td>O(n)</td><td>O(n)</td></tr>
+  <tr><td>BFS level order</td><td>O(n)</td><td>O(w) where w = max width</td></tr>
+  <tr><td>Sliding window max (deque)</td><td>O(n)</td><td>O(k)</td></tr>
+  <tr><td>Min Stack</td><td>O(1) all ops</td><td>O(n)</td></tr>
+  <tr><td>Queue using Stacks</td><td>O(1) amortized</td><td>O(n)</td></tr>
+</table>
+
+<div class="warning">
+  <p><strong>Edge cases to always check:</strong> empty input, single element, all same elements, all increasing/decreasing (for monotone stack problems).</p>
+</div>
+
+<div class="tip">
+  <p><strong>Interview communication:</strong> Before coding, explicitly state: "I'll use a stack because [matching/monotone/state saving]. Elements in the stack represent [indices/values/partial results]."</p>
+</div>
+</div>
+</div>
+
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

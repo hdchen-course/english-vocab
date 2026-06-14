@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dynamic Programming — Complete Training Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fa;
+  --bg2: #ffffff;
+  --bg3: #f1f3f5;
+  --bg4: #e9ecef;
+  --border: #dee2e6;
+  --text: #212529;
+  --text2: #495057;
+  --text3: #868e96;
+  --blue: #1971c2;
+  --blue-l: #d0ebff;
+  --green: #2f9e44;
+  --green-l: #d3f9d8;
+  --yellow: #e67700;
+  --yellow-l: #fff3bf;
+  --red: #c92a2a;
+  --red-l: #ffe3e3;
+  --purple: #7048e8;
+  --purple-l: #e5dbff;
+  --orange: #d9480f;
+  --cyan: #0c8599;
+  --r: 12px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+header { text-align: center; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+header .sub { color: var(--text3); font-size: 14px; }
+
+.nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 40px;  position: sticky; top: 0; background: var(--bg); padding: 16px 0; z-index: 100; border-bottom: 1px solid var(--border); }
+.nav-btn {
+  padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg2); color: var(--text2); cursor: pointer;
+  font-size: 13px; font-weight: 600; transition: all .2s; font-family: 'Inter', sans-serif;
+}
+.nav-btn:hover { background: var(--bg3); color: var(--text); }
+.nav-btn.active { background: var(--blue-l); color: var(--blue); border-color: var(--blue); }
+
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+h2 { font-size: 24px; font-weight: 700; margin: 32px 0 16px; color: var(--blue); }
+h3 { font-size: 18px; font-weight: 600; margin: 24px 0 12px; }
+h4 { font-size: 15px; font-weight: 600; margin: 16px 0 8px; color: var(--text2); }
+p { margin-bottom: 12px; color: var(--text2); }
+ul, ol { margin: 8px 0 16px 24px; color: var(--text2); }
+li { margin-bottom: 6px; }
+strong { color: var(--text); }
+
+pre {
+  background: #1e1e2e; border-radius: 8px;
+  padding: 16px 20px; overflow-x: auto; margin: 12px 0;
+  font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6;
+  color: #cdd6f4;
+}
+code { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+p code, li code {
+  background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--purple);
+}
+pre .kw { color: #cba6f7; }
+pre .type { color: #f9e2af; }
+pre .str { color: #a6e3a1; }
+pre .cm { color: #6c7086; }
+pre .num { color: #fab387; }
+pre .fn { color: #89b4fa; }
+
+.insight {
+  background: var(--blue-l); border-left: 3px solid var(--blue);
+  padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+}
+.insight p { color: var(--blue); margin: 0; }
+
+.warning {
+  background: var(--yellow-l); border-left: 3px solid var(--yellow);
+  padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+}
+.warning p { color: var(--yellow); margin: 0; }
+
+.danger {
+  background: var(--red-l); border-left: 3px solid var(--red);
+  padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+}
+.danger p { color: var(--red); margin: 0; }
+
+.tip {
+  background: var(--green-l); border-left: 3px solid var(--green);
+  padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+}
+.tip p { color: var(--green); margin: 0; }
+
+.card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r); margin-bottom: 20px; padding: 24px 28px;
+  box-shadow: var(--shadow);
+}
+
+table {
+  width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px;
+}
+th, td { padding: 10px 14px; border: 1px solid var(--border); text-align: left; }
+th { background: var(--bg3); font-weight: 600; color: var(--text); }
+tr:hover { background: var(--bg3); }
+
+.tag {
+  display: inline-block; padding: 2px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; margin: 2px 4px 2px 0;
+}
+.tag-easy { background: var(--green-l); color: var(--green); }
+.tag-medium { background: var(--yellow-l); color: var(--yellow); }
+.tag-hard { background: var(--red-l); color: var(--red); }
+.tag-freq { background: var(--purple-l); color: var(--purple); }
+
+.problem-list { list-style: none; padding: 0; margin: 12px 0; }
+.problem-list li {
+  padding: 10px 14px; border-left: 3px solid var(--blue);
+  margin-bottom: 8px; background: var(--bg3);
+  border-radius: 0 8px 8px 0; display: flex;
+  justify-content: flex-start; align-items: center;
+  gap: 8px;
+}
+.problem-list .title { color: var(--text); font-weight: 500; font-size: 14px; flex: 1; }
+.problem-list .title a { color: var(--text); text-decoration: none; border-bottom: 1px dashed var(--border); transition: all .2s; }
+.problem-list .title a:hover { color: var(--blue); border-bottom-color: var(--blue); }
+
+.decision-tree {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 20px; margin: 12px 0;
+  font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 2;
+  white-space: pre-wrap;
+}
+.decision-tree .q { color: var(--blue); font-weight: bold; }
+.decision-tree .a { color: var(--green); }
+.decision-tree .arrow { color: var(--orange); }
+
+@media (max-width: 768px) {
+  .container { padding: 20px 12px; }
+  .nav { position: static; flex-direction: column; align-items: stretch; }
+  .nav-btn { text-align: center; }
+  pre { font-size: 11px; padding: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<header>
+  <h1>Dynamic Programming &mdash; Complete Training Guide</h1>
+  <div class="sub">Pattern Recognition &bull; Templates &bull; LeetCode Problems &bull; Interview Strategy</div>
+</header>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection('recognize')">Recognition</button>
+  <button class="nav-btn" onclick="showSection('dp1d')">1D DP</button>
+  <button class="nav-btn" onclick="showSection('dp2d')">2D DP</button>
+  <button class="nav-btn" onclick="showSection('dp3d')">3D DP</button>
+  <button class="nav-btn" onclick="showSection('knapsack')">Knapsack</button>
+  <button class="nav-btn" onclick="showSection('string')">String DP</button>
+  <button class="nav-btn" onclick="showSection('interval')">Interval DP</button>
+  <button class="nav-btn" onclick="showSection('tree')">Tree DP</button>
+  <button class="nav-btn" onclick="showSection('graph')">Graph DP</button>
+  <button class="nav-btn" onclick="showSection('digit')">Digit DP</button>
+  <button class="nav-btn" onclick="showSection('bitmask')">Bitmask DP</button>
+  <button class="nav-btn" onclick="showSection('sortdp')">Sort + DP</button>
+  <button class="nav-btn" onclick="showSection('statemachine')">State Machine</button>
+  <button class="nav-btn" onclick="showSection('bitdp')">BIT + DP</button>
+  <button class="nav-btn" onclick="showSection('monotone')">Monotone Opt</button>
+  <button class="nav-btn" onclick="showSection('probability')">Probability</button>
+  <button class="nav-btn" onclick="showSection('gametheory')">Game Theory</button>
+  <button class="nav-btn" onclick="showSection('tricks')">Interview Tips</button>
+</div>
+
+<!-- ===== Recognition ===== -->
+<div class="section active" id="recognize">
+<div class="card">
+<h2>How to Recognize a DP Problem</h2>
+
+<h3>Two Core Properties</h3>
+<ol>
+  <li><strong>Optimal Substructure</strong> &mdash; The optimal solution can be constructed from optimal solutions of its subproblems.</li>
+  <li><strong>Overlapping Subproblems</strong> &mdash; The same subproblem is solved multiple times during recursion.</li>
+</ol>
+
+<h3>Quick Signal Words</h3>
+<div class="insight">
+  <p><strong>High probability DP when you see:</strong> "minimum", "maximum", "longest", "shortest", "number of ways", "is it possible", "count all", "optimal cost under constraint"</p>
+</div>
+
+<h3>Decision Tree</h3>
+<div class="decision-tree"><span class="q">Q1: Does the problem ask to enumerate ALL permutations/combinations?</span>
+  <span class="arrow">&boxur;&mdash; Yes &rarr;</span> <span class="a">Backtracking (not DP)</span>
+  <span class="arrow">&boxur;&mdash; No  &rarr;</span>
+
+<span class="q">Q2: Does it have Optimal Substructure? (answer = f(sub-answers))</span>
+  <span class="arrow">&boxur;&mdash; No  &rarr;</span> <span class="a">Greedy / BFS / Other</span>
+  <span class="arrow">&boxur;&mdash; Yes &rarr;</span>
+
+<span class="q">Q3: Do subproblems overlap?</span>
+  <span class="arrow">&boxur;&mdash; No  &rarr;</span> <span class="a">Divide &amp; Conquer</span>
+  <span class="arrow">&boxur;&mdash; Yes &rarr;</span> <span class="a">Dynamic Programming</span></div>
+
+<h3>DP vs Greedy vs Backtracking</h3>
+<table>
+  <tr><th>Aspect</th><th>DP</th><th>Greedy</th><th>Backtracking</th></tr>
+  <tr><td>What it finds</td><td>Optimum / count</td><td>Optimum (local = global)</td><td>All solutions</td></tr>
+  <tr><td>Subproblems</td><td>Overlapping</td><td>No look-back needed</td><td>No overlap</td></tr>
+  <tr><td>Time</td><td>O(states x transition)</td><td>O(n log n) typical</td><td>O(2^n) or O(n!)</td></tr>
+  <tr><td>Signal</td><td>"how many ways" / "min cost"</td><td>"earliest deadline"</td><td>"print all" / "enumerate"</td></tr>
+</table>
+
+<h3>The 5-Step DP Framework</h3>
+<div class="tip">
+  <p><strong>1. Define State</strong> &mdash; What does dp[i] represent? Say it in one sentence.<br>
+  <strong>2. Transition</strong> &mdash; How to compute dp[i] from smaller subproblems?<br>
+  <strong>3. Base Case</strong> &mdash; What are the trivial sub-answers?<br>
+  <strong>4. Computation Order</strong> &mdash; Bottom-up or Top-down? Ensure dependencies are met.<br>
+  <strong>5. Answer Location</strong> &mdash; Is the final answer dp[n]? dp[n][m]? max(dp[...])?</p>
+</div>
+</div>
+
+<div class="card">
+<h2>DP Category Overview</h2>
+<table>
+  <tr><th>Category</th><th>State Shape</th><th>Typical Problems</th><th>Difficulty</th></tr>
+  <tr><td>1D Linear DP</td><td>dp[i]</td><td>Climbing Stairs, House Robber, LIS</td><td>Easy~Medium</td></tr>
+  <tr><td>2D DP</td><td>dp[i][j]</td><td>Grid Path, LCS, Edit Distance</td><td>Medium</td></tr>
+  <tr><td>3D DP</td><td>dp[i][j][k]</td><td>Cherry Pickup, K transactions</td><td>Hard</td></tr>
+  <tr><td>Knapsack</td><td>dp[i][w]</td><td>0/1, Unbounded, Grouped</td><td>Medium~Hard</td></tr>
+  <tr><td>String DP</td><td>dp[i][j] on two strings</td><td>LCS, Edit Dist, Palindrome</td><td>Medium~Hard</td></tr>
+  <tr><td>Interval DP</td><td>dp[l][r]</td><td>Burst Balloons, Matrix Chain</td><td>Hard</td></tr>
+  <tr><td>Tree DP</td><td>dp on subtree</td><td>House Robber III, Max Path</td><td>Medium~Hard</td></tr>
+  <tr><td>Graph DP</td><td>dp on DAG / state</td><td>Shortest Path DAG, TSP</td><td>Hard</td></tr>
+  <tr><td>Digit DP</td><td>dp[pos][tight][state]</td><td>Count numbers with property</td><td>Hard</td></tr>
+  <tr><td>Bitmask DP</td><td>dp[mask]</td><td>TSP, Assignment</td><td>Hard</td></tr>
+  <tr><td>Sort + DP</td><td>Sort then dp[i]</td><td>LIS variants, Russian Dolls</td><td>Medium~Hard</td></tr>
+  <tr><td>BIT/Seg + DP</td><td>dp[i] + query</td><td>LIS O(nlogn), Count inversions</td><td>Hard</td></tr>
+  <tr><td>Monotone Stack/Deque</td><td>dp[i] + monotone</td><td>Largest Rectangle, Sliding Max</td><td>Hard</td></tr>
+  <tr><td>State Machine DP</td><td>dp[i][state]</td><td>Stock series, Vowel Permutation</td><td>Medium~Hard</td></tr>
+  <tr><td>Probability DP</td><td>dp[i] = double</td><td>Knight Prob, New 21 Game</td><td>Medium</td></tr>
+  <tr><td>Game Theory DP</td><td>dp[i][j] = score diff</td><td>Stone Game, Can I Win</td><td>Medium~Hard</td></tr>
+</table>
+</div>
+</div>
+
+<!-- ===== 1D DP ===== -->
+<div class="section" id="dp1d">
+<div class="card">
+<h2>1D Dynamic Programming</h2>
+<p>State has one dimension: <code>dp[i]</code> typically represents "the optimal answer considering the first i elements".</p>
+
+<h3>Generic Template</h3>
+<pre><span class="kw">int</span>[] dp = <span class="kw">new int</span>[n + <span class="num">1</span>];
+dp[<span class="num">0</span>] = base_case;
+
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= n; i++) {
+    <span class="kw">for</span> (<span class="kw">int</span> choice : choices) {
+        dp[i] = Math.<span class="fn">max</span>(dp[i], dp[prev] + cost);
+    }
+}
+<span class="kw">return</span> dp[n];
+</pre>
+
+<h3>Subtype 1: Fibonacci-like (sum of fixed previous states)</h3>
+<pre><span class="cm">// LC 70 Climbing Stairs</span>
+<span class="cm">// dp[i] = number of ways to reach step i</span>
+dp[i] = dp[i-<span class="num">1</span>] + dp[i-<span class="num">2</span>];
+</pre>
+
+<h3>Subtype 2: Take-or-Skip (House Robber pattern)</h3>
+<pre><span class="cm">// LC 198 House Robber</span>
+<span class="cm">// dp[i] = max profit considering first i houses</span>
+dp[i] = Math.<span class="fn">max</span>(dp[i-<span class="num">1</span>], dp[i-<span class="num">2</span>] + nums[i]);
+<span class="cm">// skip house i  vs  rob house i</span>
+</pre>
+
+<h3>Subtype 3: LIS-like (enumerate all j &lt; i)</h3>
+<pre><span class="cm">// LC 300 Longest Increasing Subsequence</span>
+<span class="cm">// dp[i] = length of LIS ending at nums[i]</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+    dp[i] = <span class="num">1</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">0</span>; j &lt; i; j++) {
+        <span class="kw">if</span> (nums[j] &lt; nums[i])
+            dp[i] = Math.<span class="fn">max</span>(dp[i], dp[j] + <span class="num">1</span>);
+    }
+}
+</pre>
+
+<h3>Subtype 4: Jump-forward (transition from i to i+k)</h3>
+<pre><span class="cm">// LC 1326 Minimum Number of Taps</span>
+<span class="cm">// dp[i] = minimum operations to cover position i</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt;= n; i++) {
+    <span class="kw">for</span> (reachable position j from i) {
+        dp[j] = Math.<span class="fn">min</span>(dp[j], dp[i] + <span class="num">1</span>);
+    }
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/climbing-stairs/" target="_blank">70. Climbing Stairs</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/house-robber/" target="_blank">198. House Robber</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/house-robber-ii/" target="_blank">213. House Robber II (circular)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-increasing-subsequence/" target="_blank">300. Longest Increasing Subsequence</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/word-break/" target="_blank">139. Word Break</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/coin-change/" target="_blank">322. Coin Change</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/decode-ways/" target="_blank">91. Decode Ways</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-product-subarray/" target="_blank">152. Maximum Product Subarray</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-profit-in-job-scheduling/" target="_blank">1235. Maximum Profit in Job Scheduling</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-valid-parentheses/" target="_blank">32. Longest Valid Parentheses</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== 2D DP ===== -->
+<div class="section" id="dp2d">
+<div class="card">
+<h2>2D Dynamic Programming</h2>
+<p>State has two dimensions. Common scenarios: grid traversal, comparing two sequences, or adding a constraint dimension.</p>
+
+<h3>Type A: Grid Path</h3>
+<pre><span class="cm">// LC 62 Unique Paths / LC 64 Minimum Path Sum</span>
+<span class="cm">// dp[i][j] = min cost (or path count) from (0,0) to (i,j)</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; m; i++) {
+    <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">0</span>; j &lt; n; j++) {
+        <span class="kw">if</span> (i == <span class="num">0</span> &amp;&amp; j == <span class="num">0</span>) dp[i][j] = grid[<span class="num">0</span>][<span class="num">0</span>];
+        <span class="kw">else</span> dp[i][j] = Math.<span class="fn">min</span>(
+            i &gt; <span class="num">0</span> ? dp[i-<span class="num">1</span>][j] : INF,
+            j &gt; <span class="num">0</span> ? dp[i][j-<span class="num">1</span>] : INF
+        ) + grid[i][j];
+    }
+}
+</pre>
+
+<h3>Type B: Two-Sequence Comparison</h3>
+<pre><span class="cm">// LC 1143 Longest Common Subsequence</span>
+<span class="cm">// dp[i][j] = LCS length of s[0..i-1] and t[0..j-1]</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= m; i++) {
+    <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">1</span>; j &lt;= n; j++) {
+        <span class="kw">if</span> (s.charAt(i-<span class="num">1</span>) == t.charAt(j-<span class="num">1</span>))
+            dp[i][j] = dp[i-<span class="num">1</span>][j-<span class="num">1</span>] + <span class="num">1</span>;
+        <span class="kw">else</span>
+            dp[i][j] = Math.<span class="fn">max</span>(dp[i-<span class="num">1</span>][j], dp[i][j-<span class="num">1</span>]);
+    }
+}
+</pre>
+
+<h3>Type C: 1D + Extra Constraint Dimension</h3>
+<pre><span class="cm">// LC 123 Best Time to Buy and Sell Stock III</span>
+<span class="cm">// dp[i][k] = max profit at day i with k transactions done</span>
+dp[i][k][<span class="num">0</span>] = Math.<span class="fn">max</span>(dp[i-<span class="num">1</span>][k][<span class="num">0</span>], dp[i-<span class="num">1</span>][k][<span class="num">1</span>] + prices[i]);
+dp[i][k][<span class="num">1</span>] = Math.<span class="fn">max</span>(dp[i-<span class="num">1</span>][k][<span class="num">1</span>], dp[i-<span class="num">1</span>][k-<span class="num">1</span>][<span class="num">0</span>] - prices[i]);
+</pre>
+
+<h3>Space Optimization: Rolling Array</h3>
+<div class="insight">
+  <p><strong>Key idea:</strong> If dp[i] only depends on dp[i-1], compress to one row. Reverse iteration order to avoid overwriting needed values.</p>
+</div>
+<pre><span class="cm">// Before: dp[i][j] depends on dp[i-1][j] and dp[i-1][j-1]</span>
+<span class="cm">// After: single array + reverse traversal</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= m; i++)
+    <span class="kw">for</span> (<span class="kw">int</span> j = n; j &gt;= <span class="num">1</span>; j--)  <span class="cm">// reverse!</span>
+        dp[j] = dp[j] + dp[j-<span class="num">1</span>];
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/unique-paths/" target="_blank">62. Unique Paths</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-path-sum/" target="_blank">64. Minimum Path Sum</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-common-subsequence/" target="_blank">1143. Longest Common Subsequence</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/edit-distance/" target="_blank">72. Edit Distance</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/interleaving-string/" target="_blank">97. Interleaving String</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximal-square/" target="_blank">221. Maximal Square</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/coin-change-ii/" target="_blank">518. Coin Change II (2D knapsack)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/min-insertion-steps-to-make-palindrome/" target="_blank">1312. Min Insertion Steps to Make Palindrome</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/distinct-subsequences/" target="_blank">115. Distinct Subsequences</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/regular-expression-matching/" target="_blank">10. Regular Expression Matching</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== 3D DP ===== -->
+<div class="section" id="dp3d">
+<div class="card">
+<h2>3D Dynamic Programming</h2>
+<p>When 2D is insufficient to capture state. Common in: dual-path, multi-operation, or extra-constraint problems.</p>
+
+<h3>Type A: Dual-Path (Cherry Pickup)</h3>
+<pre><span class="cm">// LC 741 Cherry Pickup</span>
+<span class="cm">// Two people walk from (0,0) to (n-1,n-1) simultaneously</span>
+<span class="cm">// dp[r1][c1][r2] -- c2 = r1+c1-r2 (same step count)</span>
+<span class="kw">for</span> (<span class="kw">int</span> step = <span class="num">0</span>; step &lt; <span class="num">2</span>*n-<span class="num">2</span>; step++) {
+    <span class="kw">for</span> (<span class="kw">int</span> r1 ...) {
+        <span class="kw">for</span> (<span class="kw">int</span> r2 ...) {
+            <span class="cm">// 4 combos: (down,down),(down,right),(right,down),(right,right)</span>
+            dp[r1][c1][r2] = max of 4 prev states + cherries;
+        }
+    }
+}
+</pre>
+
+<h3>Type B: K Transactions (Stock Series)</h3>
+<pre><span class="cm">// LC 188 Best Time to Buy and Sell Stock IV</span>
+<span class="cm">// dp[i][k][hold] = day i, k transactions done, holding or not</span>
+<span class="kw">int</span>[][][] dp = <span class="kw">new int</span>[n][K+<span class="num">1</span>][<span class="num">2</span>];
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt; n; i++) {
+    <span class="kw">for</span> (<span class="kw">int</span> k = <span class="num">1</span>; k &lt;= K; k++) {
+        dp[i][k][<span class="num">0</span>] = Math.<span class="fn">max</span>(dp[i-<span class="num">1</span>][k][<span class="num">0</span>], dp[i-<span class="num">1</span>][k][<span class="num">1</span>] + prices[i]);
+        dp[i][k][<span class="num">1</span>] = Math.<span class="fn">max</span>(dp[i-<span class="num">1</span>][k][<span class="num">1</span>], dp[i-<span class="num">1</span>][k-<span class="num">1</span>][<span class="num">0</span>] - prices[i]);
+    }
+}
+</pre>
+
+<h3>Type C: 3D Coordinate / Constraint</h3>
+<pre><span class="cm">// LC 1444 Number of Ways of Cutting a Pizza</span>
+<span class="cm">// dp[k][i][j] = ways after k cuts, remaining top-left at (i,j)</span>
+<span class="cm">// Needs prefix sum to check if sub-region has apples</span>
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/cherry-pickup/" target="_blank">741. Cherry Pickup</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/cherry-pickup-ii/" target="_blank">1463. Cherry Pickup II (two robots)</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/" target="_blank">188. Best Time to Buy and Sell Stock IV</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/number-of-ways-of-cutting-a-pizza/" target="_blank">1444. Number of Ways of Cutting a Pizza</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/profitable-schemes/" target="_blank">879. Profitable Schemes</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-vowels-permutation/" target="_blank">1220. Count Vowels Permutation</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/scramble-string/" target="_blank">87. Scramble String</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Knapsack ===== -->
+<div class="section" id="knapsack">
+<div class="card">
+<h2>Knapsack DP</h2>
+<p>Given a capacity constraint, select items to maximize value. The most classic DP family.</p>
+
+<h3>0/1 Knapsack (each item used at most once)</h3>
+<pre><span class="cm">// dp[i][w] = max value using first i items with capacity w</span>
+<span class="cm">// Transition: take or skip item i</span>
+dp[i][w] = Math.<span class="fn">max</span>(dp[i-<span class="num">1</span>][w], dp[i-<span class="num">1</span>][w - weight[i]] + value[i]);
+
+<span class="cm">// Space-optimized (1D, reverse order)</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++)
+    <span class="kw">for</span> (<span class="kw">int</span> w = W; w &gt;= weight[i]; w--)
+        dp[w] = Math.<span class="fn">max</span>(dp[w], dp[w - weight[i]] + value[i]);
+</pre>
+
+<h3>Unbounded Knapsack (each item unlimited)</h3>
+<pre><span class="cm">// Difference: forward iteration (allows repeated selection)</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++)
+    <span class="kw">for</span> (<span class="kw">int</span> w = weight[i]; w &lt;= W; w++)  <span class="cm">// forward!</span>
+        dp[w] = Math.<span class="fn">max</span>(dp[w], dp[w - weight[i]] + value[i]);
+</pre>
+
+<h3>Knapsack Variants</h3>
+<div class="warning">
+  <p><strong>Count ways:</strong> dp[w] += dp[w - weight[i]] (not max)<br>
+  <strong>Feasibility:</strong> dp[w] = dp[w] || dp[w - weight[i]]<br>
+  <strong>Exactly fill W:</strong> init dp[0]=0, rest=-INF<br>
+  <strong>At most W:</strong> init all to 0</p>
+</div>
+
+<h3>Common Transformation</h3>
+<div class="insight">
+  <p><strong>Target Sum (LC 494):</strong> P - N = target, P + N = sum, so P = (sum + target) / 2. Convert to 0/1 knapsack counting ways with capacity P.</p>
+</div>
+
+<h3>Combinations vs Permutations (Loop Order!)</h3>
+<div class="danger">
+  <p><strong>This is the #1 coin change trap. The two-loop order determines the answer semantics:</strong></p>
+</div>
+<pre><span class="cm">// LC 518: How many COMBINATIONS sum to target?</span>
+<span class="cm">// {1,2} and {2,1} are the SAME → count once</span>
+<span class="cm">// Coins OUTER, amount INNER:</span>
+<span class="kw">for</span> (<span class="kw">int</span> coin : coins)            <span class="cm">// consider each coin in sequence</span>
+    <span class="kw">for</span> (<span class="kw">int</span> j = coin; j &lt;= target; j++)
+        dp[j] += dp[j - coin];
+
+<span class="cm">// LC 377: How many PERMUTATIONS (ordered) sum to target?</span>
+<span class="cm">// {1,2} and {2,1} are DIFFERENT → count both</span>
+<span class="cm">// Amount OUTER, coins INNER:</span>
+<span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">1</span>; j &lt;= target; j++)  <span class="cm">// for each amount, try ALL coins</span>
+    <span class="kw">for</span> (<span class="kw">int</span> coin : coins)
+        <span class="kw">if</span> (j &gt;= coin) dp[j] += dp[j - coin];
+</pre>
+<div class="tip">
+  <p><strong>How to never get this wrong (intuition, not memorization):</strong><br>
+  &bull; <strong>Coins outer</strong> = "I decide coin1's contribution, then coin2's, then coin3's..." — order of coins is fixed → no duplicate orderings → <strong>combinations</strong><br>
+  &bull; <strong>Amount outer</strong> = "At each amount, I can pick ANY coin" — so reaching 3 via [1,2] and [2,1] are separate decisions → <strong>permutations</strong><br><br>
+  <strong>Interview phrasing:</strong> "If I loop coins outside, I process each denomination in a fixed sequence, so I'll never count choosing coin A after coin B AND coin B after coin A — that gives combinations. If I loop amount outside, at every amount I'm free to pick any coin again, which creates ordered sequences."</p>
+</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/partition-equal-subset-sum/" target="_blank">416. Partition Equal Subset Sum (0/1)</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/target-sum/" target="_blank">494. Target Sum (0/1 variant)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/coin-change/" target="_blank">322. Coin Change (unbounded)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/coin-change-ii/" target="_blank">518. Coin Change II (unbounded, count ways)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/ones-and-zeroes/" target="_blank">474. Ones and Zeroes (multi-dim 0/1)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/last-stone-weight-ii/" target="_blank">1049. Last Stone Weight II (0/1)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/profitable-schemes/" target="_blank">879. Profitable Schemes (multi-dim)</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/tallest-billboard/" target="_blank">956. Tallest Billboard (difference knapsack)</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== String DP ===== -->
+<div class="section" id="string">
+<div class="card">
+<h2>String DP</h2>
+<p>DP on one or two strings. State <code>dp[i][j]</code> usually represents a relationship between <code>s[0..i-1]</code> and <code>t[0..j-1]</code>.</p>
+
+<h3>Template A: Two-String Comparison (LCS / Edit Distance)</h3>
+<pre><span class="cm">// dp[i][j] = answer for s[0..i-1] vs t[0..j-1]</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= m; i++) {
+    <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">1</span>; j &lt;= n; j++) {
+        <span class="kw">if</span> (s.charAt(i-<span class="num">1</span>) == t.charAt(j-<span class="num">1</span>))
+            dp[i][j] = dp[i-<span class="num">1</span>][j-<span class="num">1</span>] + <span class="num">1</span>;
+        <span class="kw">else</span>
+            dp[i][j] = Math.<span class="fn">max</span>(dp[i-<span class="num">1</span>][j], dp[i][j-<span class="num">1</span>]);
+    }
+}
+</pre>
+
+<h3>Template B: Single-String Palindrome (Interval-style)</h3>
+<pre><span class="cm">// LC 516 Longest Palindromic Subsequence</span>
+<span class="cm">// dp[i][j] = longest palindromic subseq in s[i..j]</span>
+<span class="kw">for</span> (<span class="kw">int</span> len = <span class="num">2</span>; len &lt;= n; len++) {
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i + len - <span class="num">1</span> &lt; n; i++) {
+        <span class="kw">int</span> j = i + len - <span class="num">1</span>;
+        <span class="kw">if</span> (s.charAt(i) == s.charAt(j))
+            dp[i][j] = dp[i+<span class="num">1</span>][j-<span class="num">1</span>] + <span class="num">2</span>;
+        <span class="kw">else</span>
+            dp[i][j] = Math.<span class="fn">max</span>(dp[i+<span class="num">1</span>][j], dp[i][j-<span class="num">1</span>]);
+    }
+}
+</pre>
+
+<h3>Template C: Regex / Wildcard Matching</h3>
+<pre><span class="cm">// LC 10 Regular Expression Matching</span>
+<span class="cm">// dp[i][j] = s[0..i-1] matches p[0..j-1]</span>
+<span class="kw">if</span> (p.charAt(j-<span class="num">1</span>) == <span class="str">'*'</span>) {
+    dp[i][j] = dp[i][j-<span class="num">2</span>];  <span class="cm">// zero occurrence</span>
+    <span class="kw">if</span> (match(s, p, i, j-<span class="num">1</span>))
+        dp[i][j] |= dp[i-<span class="num">1</span>][j];  <span class="cm">// one+ occurrence</span>
+} <span class="kw">else</span> {
+    dp[i][j] = match(s, p, i, j) &amp;&amp; dp[i-<span class="num">1</span>][j-<span class="num">1</span>];
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-common-subsequence/" target="_blank">1143. Longest Common Subsequence</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/edit-distance/" target="_blank">72. Edit Distance</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-palindromic-subsequence/" target="_blank">516. Longest Palindromic Subsequence</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-palindromic-substring/" target="_blank">5. Longest Palindromic Substring</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/regular-expression-matching/" target="_blank">10. Regular Expression Matching</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/wildcard-matching/" target="_blank">44. Wildcard Matching</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/distinct-subsequences/" target="_blank">115. Distinct Subsequences</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/min-insertion-steps-to-make-palindrome/" target="_blank">1312. Min Insertion Steps to Make Palindrome</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/min-ascii-delete-sum-for-two-strings/" target="_blank">712. Min ASCII Delete Sum for Two Strings</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/delete-operation-for-two-strings/" target="_blank">583. Delete Operation for Two Strings</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Interval DP ===== -->
+<div class="section" id="interval">
+<div class="card">
+<h2>Interval DP</h2>
+<p>State <code>dp[l][r]</code> = optimal answer for the interval [l, r]. Enumerate split point k in [l, r-1].</p>
+
+<h3>Core Template</h3>
+<pre><span class="cm">// enumerate length -> left endpoint -> split point</span>
+<span class="kw">for</span> (<span class="kw">int</span> len = <span class="num">2</span>; len &lt;= n; len++) {
+    <span class="kw">for</span> (<span class="kw">int</span> l = <span class="num">0</span>; l + len - <span class="num">1</span> &lt; n; l++) {
+        <span class="kw">int</span> r = l + len - <span class="num">1</span>;
+        dp[l][r] = INF;
+        <span class="kw">for</span> (<span class="kw">int</span> k = l; k &lt; r; k++) {
+            dp[l][r] = Math.<span class="fn">min</span>(dp[l][r],
+                dp[l][k] + dp[k+<span class="num">1</span>][r] + cost(l, k, r));
+        }
+    }
+}
+</pre>
+
+<h3>Recognition Signals</h3>
+<div class="insight">
+  <p><strong>Merge adjacent elements</strong> &rarr; Stone merge, Matrix chain multiplication<br>
+  <strong>Pop/remove then neighbors merge</strong> &rarr; Burst Balloons<br>
+  <strong>Operate on both ends</strong> &rarr; Stone Game<br>
+  <strong>Palindrome (interval shrinks)</strong> &rarr; Palindrome Partitioning</p>
+</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/burst-balloons/" target="_blank">312. Burst Balloons</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Classic</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/min-score-triangulation-of-polygon/" target="_blank">1039. Min Score Triangulation of Polygon</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-palindromic-subsequence/" target="_blank">516. Longest Palindromic Subsequence</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-cost-to-cut-a-stick/" target="_blank">1547. Minimum Cost to Cut a Stick</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/stone-game/" target="_blank">877. Stone Game</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-cost-to-merge-stones/" target="_blank">1000. Minimum Cost to Merge Stones</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/strange-printer/" target="_blank">664. Strange Printer</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/remove-boxes/" target="_blank">546. Remove Boxes</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Tree DP ===== -->
+<div class="section" id="tree">
+<div class="card">
+<h2>Tree DP</h2>
+<p>DP on tree structures. Typically uses post-order DFS &mdash; children report results upward.</p>
+
+<h3>Core Template</h3>
+<pre><span class="cm">// dp[node][0] = optimal NOT selecting node</span>
+<span class="cm">// dp[node][1] = optimal selecting node</span>
+<span class="kw">void</span> <span class="fn">dfs</span>(TreeNode node) {
+    <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">return</span>;
+    <span class="fn">dfs</span>(node.left);
+    <span class="fn">dfs</span>(node.right);
+
+    <span class="cm">// Don't select: children can be either</span>
+    dp[node][<span class="num">0</span>] = Math.<span class="fn">max</span>(dp[left][<span class="num">0</span>], dp[left][<span class="num">1</span>])
+               + Math.<span class="fn">max</span>(dp[right][<span class="num">0</span>], dp[right][<span class="num">1</span>]);
+    <span class="cm">// Select: children must NOT be selected</span>
+    dp[node][<span class="num">1</span>] = node.val + dp[left][<span class="num">0</span>] + dp[right][<span class="num">0</span>];
+}
+</pre>
+
+<h3>Common Subtypes</h3>
+<table>
+  <tr><th>Subtype</th><th>State Design</th><th>Representative</th></tr>
+  <tr><td>Select/Skip</td><td>dp[node][0/1]</td><td>337 House Robber III</td></tr>
+  <tr><td>Path problem</td><td>max path through node</td><td>124 Binary Tree Max Path Sum</td></tr>
+  <tr><td>Subtree depth</td><td>dfs returns depth</td><td>543 Diameter of Binary Tree</td></tr>
+  <tr><td>Coloring/Coverage</td><td>dp[node][color]</td><td>968 Binary Tree Cameras</td></tr>
+</table>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/house-robber-iii/" target="_blank">337. House Robber III</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/binary-tree-maximum-path-sum/" target="_blank">124. Binary Tree Maximum Path Sum</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/diameter-of-binary-tree/" target="_blank">543. Diameter of Binary Tree</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/binary-tree-cameras/" target="_blank">968. Binary Tree Cameras</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-height-trees/" target="_blank">310. Minimum Height Trees</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/sum-of-distances-in-tree/" target="_blank">834. Sum of Distances in Tree</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-zigzag-path/" target="_blank">1372. Longest ZigZag Path</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-path-with-different-adjacent-chars/" target="_blank">2246. Longest Path With Different Adjacent Chars</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Graph DP ===== -->
+<div class="section" id="graph">
+<div class="card">
+<h2>Graph DP</h2>
+<p>DP on graphs. Prerequisite: graph must be a DAG, or use topological sort / bitmask for cycles.</p>
+
+<h3>Template A: Longest/Shortest Path on DAG</h3>
+<pre><span class="cm">// Topological sort + DP</span>
+<span class="cm">// dp[node] = longest path to reach node</span>
+<span class="kw">for</span> (<span class="kw">int</span> node : topologicalOrder) {
+    <span class="kw">for</span> (<span class="kw">int</span> next : adj[node]) {
+        dp[next] = Math.<span class="fn">max</span>(dp[next], dp[node] + weight[node][next]);
+    }
+}
+</pre>
+
+<h3>Template B: All-Pairs Shortest Path (Floyd-Warshall)</h3>
+<pre><span class="cm">// dp[k][i][j] = shortest i-&gt;j using first k nodes as intermediaries</span>
+<span class="kw">for</span> (<span class="kw">int</span> k = <span class="num">0</span>; k &lt; n; k++)
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++)
+        <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">0</span>; j &lt; n; j++)
+            dp[i][j] = Math.<span class="fn">min</span>(dp[i][j], dp[i][k] + dp[k][j]);
+</pre>
+
+<h3>Template C: Stateful Graph DP</h3>
+<pre><span class="cm">// LC 787 Cheapest Flights Within K Stops</span>
+<span class="cm">// dp[k][node] = min cost to reach node with at most k stops</span>
+<span class="kw">for</span> (<span class="kw">int</span> step = <span class="num">1</span>; step &lt;= K+<span class="num">1</span>; step++) {
+    <span class="kw">for</span> (<span class="kw">int</span>[] edge : flights) {
+        <span class="kw">int</span> u = edge[<span class="num">0</span>], v = edge[<span class="num">1</span>], w = edge[<span class="num">2</span>];
+        dp[step][v] = Math.<span class="fn">min</span>(dp[step][v], dp[step-<span class="num">1</span>][u] + w);
+    }
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/cheapest-flights-within-k-stops/" target="_blank">787. Cheapest Flights Within K Stops</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/find-city-with-smallest-number-of-neighbors/" target="_blank">1334. Find City With Smallest Number of Neighbors</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/course-schedule-iv/" target="_blank">1462. Course Schedule IV</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-increasing-path-in-a-matrix/" target="_blank">329. Longest Increasing Path in a Matrix</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/largest-color-value-in-a-directed-graph/" target="_blank">1857. Largest Color Value in a Directed Graph</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/parallel-courses-iii/" target="_blank">2050. Parallel Courses III</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/optimize-water-distribution/" target="_blank">1168. Optimize Water Distribution</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/find-the-shortest-superstring/" target="_blank">943. Find the Shortest Superstring (TSP)</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Digit DP ===== -->
+<div class="section" id="digit">
+<div class="card">
+<h2>Digit DP</h2>
+<p>For counting problems: "How many numbers in [L, R] satisfy property X?" Build number digit by digit.</p>
+
+<h3>Core Idea</h3>
+<div class="insight">
+  <p><strong>count(R) - count(L-1)</strong>: Convert range query to "count of numbers &le; X".<br>
+  Build digit by digit from MSB to LSB, tracking <code>tight</code> (whether still bounded by upper limit).</p>
+</div>
+
+<h3>Generic Template</h3>
+<pre><span class="cm">// dp[pos][tight][state] -- memoized recursion</span>
+<span class="kw">int</span>[][][] memo;
+<span class="type">String</span> num;  <span class="cm">// upper bound as string</span>
+
+<span class="kw">int</span> <span class="fn">solve</span>(<span class="kw">int</span> pos, <span class="kw">boolean</span> tight, <span class="kw">int</span> state) {
+    <span class="kw">if</span> (pos == num.length()) <span class="kw">return</span> isValid(state) ? <span class="num">1</span> : <span class="num">0</span>;
+    <span class="kw">if</span> (memo[pos][tight?<span class="num">1</span>:<span class="num">0</span>][state] != -<span class="num">1</span>)
+        <span class="kw">return</span> memo[pos][tight?<span class="num">1</span>:<span class="num">0</span>][state];
+
+    <span class="kw">int</span> limit = tight ? (num.charAt(pos) - <span class="str">'0'</span>) : <span class="num">9</span>;
+    <span class="kw">int</span> res = <span class="num">0</span>;
+
+    <span class="kw">for</span> (<span class="kw">int</span> d = <span class="num">0</span>; d &lt;= limit; d++) {
+        res += <span class="fn">solve</span>(pos + <span class="num">1</span>,
+                     tight &amp;&amp; (d == limit),
+                     newState(state, d));
+    }
+
+    memo[pos][tight?<span class="num">1</span>:<span class="num">0</span>][state] = res;
+    <span class="kw">return</span> res;
+}
+</pre>
+
+<h3>Common State Designs</h3>
+<table>
+  <tr><th>Requirement</th><th>State Definition</th><th>Range</th></tr>
+  <tr><td>Digit sum &le; k</td><td>Current digit sum</td><td>[0, 9*digits]</td></tr>
+  <tr><td>Exclude certain digit</td><td>Boolean flag</td><td>[0, 1]</td></tr>
+  <tr><td>Digit sum mod k</td><td>sum % k</td><td>[0, k-1]</td></tr>
+  <tr><td>Number mod k</td><td>num % k</td><td>[0, k-1]</td></tr>
+  <tr><td>Adjacent digits differ</td><td>Previous digit</td><td>[0, 9]</td></tr>
+  <tr><td>Which digits used</td><td>Bitmask of digits</td><td>[0, 1023]</td></tr>
+</table>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/number-of-digit-one/" target="_blank">233. Number of Digit One</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-numbers-with-unique-digits/" target="_blank">357. Count Numbers with Unique Digits</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/non-negative-integers-without-consecutive-ones/" target="_blank">600. Non-negative Integers without Consecutive Ones</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/numbers-at-most-n-given-digit-set/" target="_blank">902. Numbers At Most N Given Digit Set</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/numbers-with-repeated-digits/" target="_blank">1012. Numbers With Repeated Digits</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-special-integers/" target="_blank">2376. Count Special Integers</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-of-integers/" target="_blank">2719. Count of Integers (digit sum in range)</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-stepping-numbers-in-range/" target="_blank">2801. Count Stepping Numbers in Range</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Bitmask DP ===== -->
+<div class="section" id="bitmask">
+<div class="card">
+<h2>Bitmask DP (State Compression)</h2>
+<p>Use a binary bitmask to represent "which elements have been selected". Works when n &le; 20.</p>
+
+<h3>Core Template</h3>
+<pre><span class="cm">// dp[mask] = optimal answer when selected set = mask</span>
+<span class="cm">// n elements, 2^n total states</span>
+<span class="kw">int</span>[] dp = <span class="kw">new int</span>[<span class="num">1</span> &lt;&lt; n];
+Arrays.<span class="fn">fill</span>(dp, INF);
+dp[<span class="num">0</span>] = <span class="num">0</span>;
+
+<span class="kw">for</span> (<span class="kw">int</span> mask = <span class="num">0</span>; mask &lt; (<span class="num">1</span> &lt;&lt; n); mask++) {
+    <span class="kw">int</span> bits = Integer.<span class="fn">bitCount</span>(mask);
+    <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">0</span>; j &lt; n; j++) {
+        <span class="kw">if</span> ((mask &amp; (<span class="num">1</span> &lt;&lt; j)) == <span class="num">0</span>) {  <span class="cm">// j not selected</span>
+            <span class="kw">int</span> newMask = mask | (<span class="num">1</span> &lt;&lt; j);
+            dp[newMask] = Math.<span class="fn">min</span>(dp[newMask],
+                dp[mask] + cost[bits][j]);
+        }
+    }
+}
+</pre>
+
+<h3>TSP (Traveling Salesman)</h3>
+<pre><span class="cm">// dp[mask][i] = shortest path visiting cities in mask, at city i</span>
+<span class="kw">int</span>[][] dp = <span class="kw">new int</span>[<span class="num">1</span> &lt;&lt; n][n];
+<span class="cm">// Transition: from i, go to unvisited j</span>
+dp[mask | (<span class="num">1</span> &lt;&lt; j)][j] = Math.<span class="fn">min</span>(..., dp[mask][i] + dist[i][j]);
+</pre>
+
+<h3>When to Use</h3>
+<div class="danger">
+  <p><strong>n &le; 20</strong> (2^20 ~ 1M states, acceptable)<br>
+  <strong>Track "which selected/visited"</strong><br>
+  <strong>Permutation assignment:</strong> n people &rarr; n tasks<br>
+  <strong>Set cover:</strong> select fewest subsets to cover universe</p>
+</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/can-i-win/" target="_blank">464. Can I Win</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/beautiful-arrangement/" target="_blank">526. Beautiful Arrangement</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/stickers-to-spell-word/" target="_blank">691. Stickers to Spell Word</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/shortest-path-visiting-all-nodes/" target="_blank">847. Shortest Path Visiting All Nodes</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/find-the-shortest-superstring/" target="_blank">943. Find the Shortest Superstring</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/smallest-sufficient-team/" target="_blank">1125. Smallest Sufficient Team</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-cost-to-connect-two-groups/" target="_blank">1595. Minimum Cost to Connect Two Groups</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-and-sum-of-array/" target="_blank">2172. Maximum AND Sum of Array</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Sort + DP ===== -->
+<div class="section" id="sortdp">
+<div class="card">
+<h2>Sorting + DP</h2>
+<p>Sort first to eliminate one dimension of comparison, then apply DP on the remaining problem.</p>
+
+<h3>Why Sort First?</h3>
+<div class="insight">
+  <p><strong>Eliminate bidirectional comparison</strong> &mdash; after sorting, only one direction matters.<br>
+  <strong>Greedy + DP fusion</strong> &mdash; sorting provides locally optimal processing order.<br>
+  <strong>Reduce to LIS</strong> &mdash; sort one dimension, the other becomes LIS.</p>
+</div>
+
+<h3>Classic: Russian Doll Envelopes</h3>
+<pre><span class="cm">// LC 354: envelopes (w, h), find max nesting depth</span>
+<span class="cm">// Sort: w ascending; same w -> h descending</span>
+<span class="cm">// Then LIS on h (w already non-decreasing)</span>
+Arrays.<span class="fn">sort</span>(envelopes, (a, b) -&gt;
+    a[<span class="num">0</span>] != b[<span class="num">0</span>] ? a[<span class="num">0</span>] - b[<span class="num">0</span>] : b[<span class="num">1</span>] - a[<span class="num">1</span>]);
+
+<span class="cm">// h descending ensures same-w picks at most one</span>
+<span class="kw">int</span>[] h = extractHeights(envelopes);
+<span class="kw">return</span> <span class="fn">lengthOfLIS</span>(h);  <span class="cm">// O(n log n)</span>
+</pre>
+
+<h3>Job Scheduling Pattern</h3>
+<pre><span class="cm">// LC 1235 Maximum Profit in Job Scheduling</span>
+<span class="cm">// Sort by end time, dp[i] = max profit first i jobs</span>
+Arrays.<span class="fn">sort</span>(jobs, (a, b) -&gt; a.end - b.end);
+dp[i] = Math.<span class="fn">max</span>(
+    dp[i-<span class="num">1</span>],  <span class="cm">// skip job i</span>
+    dp[<span class="fn">binarySearch</span>(lastNonOverlap)] + profit[i]  <span class="cm">// take</span>
+);
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/russian-doll-envelopes/" target="_blank">354. Russian Doll Envelopes</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Classic</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-profit-in-job-scheduling/" target="_blank">1235. Maximum Profit in Job Scheduling</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/max-height-by-stacking-cuboids/" target="_blank">1691. Max Height by Stacking Cuboids</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-length-of-pair-chain/" target="_blank">646. Maximum Length of Pair Chain</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-string-chain/" target="_blank">1048. Longest String Chain</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/largest-divisible-subset/" target="_blank">368. Largest Divisible Subset</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/number-of-weak-characters/" target="_blank">1996. Number of Weak Characters</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-earnings-from-taxi/" target="_blank">2008. Maximum Earnings From Taxi</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== State Machine DP ===== -->
+<div class="section" id="statemachine">
+<div class="card">
+<h2>State Machine DP</h2>
+<p>Model the problem as states with transitions. Each state represents a "mode" (holding stock, in cooldown, etc). Track the best value for each state at each step.</p>
+
+<h3>Core Idea</h3>
+<div class="insight">
+  <p><strong>Define states</strong> (e.g., hold, not-hold, cooldown) and <strong>transitions</strong> between them. At each step, compute each state's optimal value from previous step's states. The answer is the best among final states.</p>
+</div>
+
+<h3>Template: Stock with Cooldown (LC 309)</h3>
+<pre><span class="cm">// States: hold (have stock), sold (just sold), rest (cooldown done)</span>
+<span class="kw">int</span> hold = -prices[<span class="num">0</span>], sold = <span class="num">0</span>, rest = <span class="num">0</span>;
+
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt; n; i++) {
+    <span class="kw">int</span> prevHold = hold, prevSold = sold, prevRest = rest;
+    hold = Math.<span class="fn">max</span>(prevHold, prevRest - prices[i]);  <span class="cm">// keep or buy</span>
+    sold = prevHold + prices[i];                       <span class="cm">// sell</span>
+    rest = Math.<span class="fn">max</span>(prevRest, prevSold);               <span class="cm">// wait</span>
+}
+<span class="kw">return</span> Math.<span class="fn">max</span>(sold, rest);
+</pre>
+
+<h3>Template: Stock with Transaction Fee (LC 714)</h3>
+<pre><span class="cm">// Two states: hold, cash (not holding)</span>
+<span class="kw">int</span> hold = -prices[<span class="num">0</span>], cash = <span class="num">0</span>;
+
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt; n; i++) {
+    hold = Math.<span class="fn">max</span>(hold, cash - prices[i]);
+    cash = Math.<span class="fn">max</span>(cash, hold + prices[i] - fee);
+}
+<span class="kw">return</span> cash;
+</pre>
+
+<h3>Template: At Most K Transactions (LC 188)</h3>
+<pre><span class="cm">// dp[k][0] = max profit with k transactions, not holding</span>
+<span class="cm">// dp[k][1] = max profit with k transactions, holding</span>
+<span class="kw">int</span>[][] dp = <span class="kw">new int</span>[K + <span class="num">1</span>][<span class="num">2</span>];
+<span class="kw">for</span> (<span class="kw">int</span> k = <span class="num">0</span>; k &lt;= K; k++) dp[k][<span class="num">1</span>] = Integer.MIN_VALUE;
+
+<span class="kw">for</span> (<span class="kw">int</span> price : prices) {
+    <span class="kw">for</span> (<span class="kw">int</span> k = K; k &gt;= <span class="num">1</span>; k--) {
+        dp[k][<span class="num">0</span>] = Math.<span class="fn">max</span>(dp[k][<span class="num">0</span>], dp[k][<span class="num">1</span>] + price);    <span class="cm">// sell</span>
+        dp[k][<span class="num">1</span>] = Math.<span class="fn">max</span>(dp[k][<span class="num">1</span>], dp[k-<span class="num">1</span>][<span class="num">0</span>] - price);  <span class="cm">// buy</span>
+    }
+}
+<span class="kw">return</span> dp[K][<span class="num">0</span>];
+</pre>
+
+<h3>General State Machine Pattern</h3>
+<pre><span class="cm">// LC 1220 Count Vowels Permutation</span>
+<span class="cm">// States: which vowel is the last character</span>
+<span class="cm">// Transitions: defined by rules (e.g., 'a' can follow 'e','i','u')</span>
+<span class="kw">long</span>[] dp = {<span class="num">1</span>,<span class="num">1</span>,<span class="num">1</span>,<span class="num">1</span>,<span class="num">1</span>}; <span class="cm">// a, e, i, o, u</span>
+
+<span class="kw">for</span> (<span class="kw">int</span> step = <span class="num">1</span>; step &lt; n; step++) {
+    <span class="kw">long</span>[] next = <span class="kw">new long</span>[<span class="num">5</span>];
+    next[<span class="num">0</span>] = (dp[<span class="num">1</span>] + dp[<span class="num">2</span>] + dp[<span class="num">4</span>]) % MOD;  <span class="cm">// a <- e,i,u</span>
+    next[<span class="num">1</span>] = (dp[<span class="num">0</span>] + dp[<span class="num">2</span>]) % MOD;           <span class="cm">// e <- a,i</span>
+    next[<span class="num">2</span>] = (dp[<span class="num">1</span>] + dp[<span class="num">3</span>]) % MOD;           <span class="cm">// i <- e,o</span>
+    next[<span class="num">3</span>] = (dp[<span class="num">2</span>]) % MOD;                   <span class="cm">// o <- i</span>
+    next[<span class="num">4</span>] = (dp[<span class="num">2</span>] + dp[<span class="num">3</span>]) % MOD;           <span class="cm">// u <- i,o</span>
+    dp = next;
+}
+</pre>
+
+<h3>When to Recognize State Machine DP</h3>
+<div class="warning">
+  <p><strong>Multiple "modes" or "states" at each position</strong> (holding/not, cooldown, last action)<br>
+  <strong>Transitions depend on current state + decision</strong> (buy, sell, rest)<br>
+  <strong>Finite, small set of states</strong> (2-5 typically)<br>
+  <strong>Examples:</strong> Stock series, House Robber (take/skip), Paint House (colors), Vowel Permutation</p>
+</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/" target="_blank">309. Best Time to Buy and Sell Stock with Cooldown</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/" target="_blank">714. Best Time to Buy and Sell Stock with Transaction Fee</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/" target="_blank">123. Best Time to Buy and Sell Stock III</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/" target="_blank">188. Best Time to Buy and Sell Stock IV</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-vowels-permutation/" target="_blank">1220. Count Vowels Permutation</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/paint-house/" target="_blank">256. Paint House</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Premium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/paint-house-ii/" target="_blank">265. Paint House II</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Premium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/string-compression-ii/" target="_blank">1531. String Compression II</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/domino-and-tromino-tiling/" target="_blank">790. Domino and Tromino Tiling</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-v/" target="_blank">3573. Best Time to Buy and Sell Stock V</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== BIT + DP ===== -->
+<div class="section" id="bitdp">
+<div class="card">
+<h2>BIT (Binary Indexed Tree) + DP</h2>
+<p>When DP transitions require fast prefix max/sum queries, use BIT or Segment Tree to accelerate from O(n&sup2;) to O(n log n).</p>
+
+<h3>Core Application: LIS in O(n log n)</h3>
+<pre><span class="cm">// Naive LIS O(n^2): dp[i] = max(dp[j]+1) for j&lt;i, nums[j]&lt;nums[i]</span>
+<span class="cm">// BIT: use value domain as index, query max dp in [0, nums[i]-1]</span>
+
+<span class="kw">int</span>[] sorted = <span class="fn">compress</span>(nums);  <span class="cm">// map values to [1, n]</span>
+BIT bit = <span class="kw">new</span> <span class="fn">BIT</span>(n);
+
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+    <span class="kw">int</span> val = sorted[i];
+    <span class="kw">int</span> best = bit.<span class="fn">query</span>(val - <span class="num">1</span>);  <span class="cm">// max LIS for values &lt; nums[i]</span>
+    bit.<span class="fn">update</span>(val, best + <span class="num">1</span>);     <span class="cm">// update LIS at nums[i]</span>
+}
+</pre>
+
+<h3>BIT Structure</h3>
+<pre><span class="kw">class</span> <span class="type">BIT</span> {
+    <span class="kw">int</span>[] tree;
+    <span class="kw">int</span> n;
+
+    <span class="fn">BIT</span>(<span class="kw">int</span> n) { <span class="kw">this</span>.n = n; tree = <span class="kw">new int</span>[n + <span class="num">1</span>]; }
+
+    <span class="kw">void</span> <span class="fn">update</span>(<span class="kw">int</span> i, <span class="kw">int</span> val) {
+        <span class="kw">for</span> (; i &lt;= n; i += i &amp; (-i))
+            tree[i] = Math.<span class="fn">max</span>(tree[i], val);
+    }
+
+    <span class="kw">int</span> <span class="fn">query</span>(<span class="kw">int</span> i) {
+        <span class="kw">int</span> res = <span class="num">0</span>;
+        <span class="kw">for</span> (; i &gt; <span class="num">0</span>; i -= i &amp; (-i))
+            res = Math.<span class="fn">max</span>(res, tree[i]);
+        <span class="kw">return</span> res;
+    }
+}
+</pre>
+
+<h3>When Needed</h3>
+<div class="warning">
+  <p><strong>Pattern:</strong> dp[i] = max/min(dp[j]) + ... for j in some range<br>
+  <strong>Brute force:</strong> O(n) per transition &rarr; O(n&sup2;) total<br>
+  <strong>With BIT:</strong> O(log n) per transition &rarr; O(n log n) total</p>
+</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-increasing-subsequence/" target="_blank">300. LIS (BIT O(nlogn) solution)</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Must-know</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-of-smaller-numbers-after-self/" target="_blank">315. Count of Smaller Numbers After Self</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/russian-doll-envelopes/" target="_blank">354. Russian Doll Envelopes (Sort + BIT)</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/reverse-pairs/" target="_blank">493. Reverse Pairs</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/create-sorted-array-through-instructions/" target="_blank">1649. Create Sorted Array through Instructions</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/number-of-pairs-satisfying-inequality/" target="_blank">2426. Number of Pairs Satisfying Inequality</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-number-of-teams/" target="_blank">1395. Count Number of Teams</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-good-triplets-in-an-array/" target="_blank">2179. Count Good Triplets in an Array</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Monotone Optimization ===== -->
+<div class="section" id="monotone">
+<div class="card">
+<h2>Monotone Stack / Deque Optimization</h2>
+<p>When DP transitions involve sliding-window max/min, use a monotone deque for O(1) amortized access.</p>
+
+<h3>Monotone Deque Template</h3>
+<pre><span class="cm">// dp[i] = min(dp[j] + cost(j,i)) for j in [i-k, i-1]</span>
+Deque&lt;Integer&gt; deque = <span class="kw">new</span> ArrayDeque&lt;&gt;();
+
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+    <span class="cm">// Remove elements outside window</span>
+    <span class="kw">while</span> (!deque.isEmpty() &amp;&amp; deque.peekFirst() &lt; i - k)
+        deque.pollFirst();
+
+    <span class="cm">// Transition: use deque front (optimal j)</span>
+    dp[i] = dp[deque.peekFirst()] + cost;
+
+    <span class="cm">// Maintain monotonicity</span>
+    <span class="kw">while</span> (!deque.isEmpty() &amp;&amp; dp[deque.peekLast()] &gt;= dp[i])
+        deque.pollLast();
+    deque.offerLast(i);
+}
+</pre>
+
+<h3>Monotone Stack: Largest Rectangle</h3>
+<pre><span class="cm">// LC 84 Largest Rectangle in Histogram</span>
+Deque&lt;Integer&gt; stack = <span class="kw">new</span> ArrayDeque&lt;&gt;();
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt;= n; i++) {
+    <span class="kw">int</span> h = (i == n) ? <span class="num">0</span> : heights[i];
+    <span class="kw">while</span> (!stack.isEmpty() &amp;&amp; heights[stack.peek()] &gt; h) {
+        <span class="kw">int</span> height = heights[stack.pop()];
+        <span class="kw">int</span> width = stack.isEmpty() ? i : i - stack.peek() - <span class="num">1</span>;
+        maxArea = Math.<span class="fn">max</span>(maxArea, height * width);
+    }
+    stack.push(i);
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/sliding-window-maximum/" target="_blank">239. Sliding Window Maximum</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Classic</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/largest-rectangle-in-histogram/" target="_blank">84. Largest Rectangle in Histogram</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Classic</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximal-rectangle/" target="_blank">85. Maximal Rectangle</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/constrained-subsequence-sum/" target="_blank">1425. Constrained Subsequence Sum</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/" target="_blank">862. Shortest Subarray with Sum at Least K</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/jump-game-vi/" target="_blank">1696. Jump Game VI</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/max-robots-within-budget/" target="_blank">2398. Max Robots Within Budget</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/max-value-of-equation/" target="_blank">1499. Max Value of Equation</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Probability DP ===== -->
+<div class="section" id="probability">
+<div class="card">
+<h2>Probability DP</h2>
+<p>State represents a probability or expected value. Transitions multiply/divide by probability of each event. Use <code>double[]</code> or track fractions.</p>
+
+<h3>Template: Knight Probability (LC 688)</h3>
+<pre><span class="cm">// dp[r][c] = probability of being at (r,c) after k moves</span>
+<span class="kw">double</span>[][] dp = <span class="kw">new double</span>[n][n];
+dp[row][col] = <span class="num">1.0</span>;
+
+<span class="kw">for</span> (<span class="kw">int</span> step = <span class="num">0</span>; step &lt; k; step++) {
+    <span class="kw">double</span>[][] next = <span class="kw">new double</span>[n][n];
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++)
+        <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">0</span>; j &lt; n; j++)
+            <span class="kw">if</span> (dp[i][j] &gt; <span class="num">0</span>)
+                <span class="kw">for</span> (<span class="kw">int</span>[] dir : dirs) {
+                    <span class="kw">int</span> x = i + dir[<span class="num">0</span>], y = j + dir[<span class="num">1</span>];
+                    <span class="kw">if</span> (x &gt;= <span class="num">0</span> &amp;&amp; x &lt; n &amp;&amp; y &gt;= <span class="num">0</span> &amp;&amp; y &lt; n)
+                        next[x][y] += dp[i][j] / <span class="num">8.0</span>;
+                }
+    dp = next;
+}
+<span class="cm">// Sum all dp[i][j] = total probability of staying on board</span>
+</pre>
+
+<h3>Template: New 21 Game (LC 837)</h3>
+<pre><span class="cm">// dp[i] = probability of reaching score exactly i</span>
+<span class="cm">// Draw uniformly from [1, maxPts], stop when score >= k</span>
+<span class="kw">double</span>[] dp = <span class="kw">new double</span>[n + <span class="num">1</span>];
+dp[<span class="num">0</span>] = <span class="num">1.0</span>;
+<span class="kw">double</span> windowSum = <span class="num">1.0</span>;
+
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= n; i++) {
+    dp[i] = windowSum / maxPts;
+    <span class="kw">if</span> (i &lt; k) windowSum += dp[i];   <span class="cm">// still drawing</span>
+    <span class="kw">if</span> (i &gt;= maxPts) windowSum -= dp[i - maxPts];
+}
+<span class="cm">// Answer = sum(dp[k..n])</span>
+</pre>
+
+<h3>Recognition Signals</h3>
+<div class="insight">
+  <p><strong>"What is the probability of..."</strong><br>
+  <strong>"Expected value of..."</strong><br>
+  <strong>Transition involves division</strong> (each outcome equally likely)<br>
+  <strong>dp values are in [0, 1]</strong> or represent expected counts</p>
+</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/knight-probability-in-chessboard/" target="_blank">688. Knight Probability in Chessboard</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/new-21-game/" target="_blank">837. New 21 Game</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/soup-servings/" target="_blank">808. Soup Servings</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/champagne-tower/" target="_blank">799. Champagne Tower</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/toss-strange-coins/" target="_blank">1230. Toss Strange Coins</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Premium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/airplane-seat-assignment-probability/" target="_blank">1227. Airplane Seat Assignment Probability</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/probability-of-a-two-boxes-having-the-same-number-of-distinct-balls/" target="_blank">1467. Probability of Two Boxes Having Same Distinct Balls</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Game Theory DP ===== -->
+<div class="section" id="gametheory">
+<div class="card">
+<h2>Game Theory DP (Minimax)</h2>
+<p>Two players take turns. Each plays optimally. Determine winner or optimal score difference.</p>
+
+<h3>Template: Stone Game (LC 877 / 1140)</h3>
+<pre><span class="cm">// dp[i][j] = max score difference (current player - opponent) for piles[i..j]</span>
+<span class="kw">for</span> (<span class="kw">int</span> len = <span class="num">1</span>; len &lt;= n; len++) {
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i + len - <span class="num">1</span> &lt; n; i++) {
+        <span class="kw">int</span> j = i + len - <span class="num">1</span>;
+        <span class="kw">if</span> (len == <span class="num">1</span>) dp[i][j] = piles[i];
+        <span class="kw">else</span> dp[i][j] = Math.<span class="fn">max</span>(
+            piles[i] - dp[i+<span class="num">1</span>][j],   <span class="cm">// take left</span>
+            piles[j] - dp[i][j-<span class="num">1</span>]    <span class="cm">// take right</span>
+        );
+    }
+}
+<span class="cm">// First player wins if dp[0][n-1] > 0</span>
+</pre>
+
+<h3>Template: Minimax with Memoization</h3>
+<pre><span class="cm">// LC 464 Can I Win / LC 1728 Cat and Mouse II</span>
+Map&lt;Integer, Boolean&gt; memo = <span class="kw">new</span> HashMap&lt;&gt;();
+
+<span class="kw">boolean</span> <span class="fn">canWin</span>(<span class="kw">int</span> state) {
+    <span class="kw">if</span> (memo.containsKey(state)) <span class="kw">return</span> memo.get(state);
+
+    <span class="kw">for</span> (each possible move) {
+        <span class="kw">int</span> nextState = applyMove(state, move);
+        <span class="kw">if</span> (isWin(nextState) || !<span class="fn">canWin</span>(nextState)) {
+            memo.put(state, <span class="kw">true</span>);
+            <span class="kw">return true</span>;  <span class="cm">// current player can force a win</span>
+        }
+    }
+    memo.put(state, <span class="kw">false</span>);
+    <span class="kw">return false</span>;
+}
+</pre>
+
+<h3>Key Insight: Score Difference Trick</h3>
+<div class="warning">
+  <p><strong>Instead of tracking both players' scores separately:</strong><br>
+  dp[state] = (current player's score) - (opponent's score from remaining game).<br>
+  When current player takes value V: dp = V - dp[next_state].<br>
+  This works because opponent's best = our worst, and vice versa.</p>
+</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/stone-game/" target="_blank">877. Stone Game</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/stone-game-ii/" target="_blank">1140. Stone Game II</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/stone-game-iv/" target="_blank">1510. Stone Game IV</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/can-i-win/" target="_blank">464. Can I Win</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/predict-the-winner/" target="_blank">486. Predict the Winner</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/cat-and-mouse/" target="_blank">913. Cat and Mouse</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/cat-and-mouse-ii/" target="_blank">1728. Cat and Mouse II</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/guess-number-higher-or-lower-ii/" target="_blank">375. Guess Number Higher or Lower II</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/nim-game/" target="_blank">292. Nim Game</a></span><span class="tag tag-easy">Easy</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Interview Tips ===== -->
+<div class="section" id="tricks">
+<div class="card">
+<h2>Interview Tips for DP Problems</h2>
+
+<h3>Step 1: Identify and Communicate</h3>
+<div class="tip">
+  <p>"I think this is a DP problem because we're looking for the minimum/maximum/count, and I can see overlapping subproblems in the recursive structure."</p>
+</div>
+
+<h3>Step 2: Define State and Confirm</h3>
+<div class="tip">
+  <p>"Let me define dp[i] as the maximum profit considering the first i jobs. Does that sound right?"</p>
+</div>
+
+<h3>Step 3: Write Transition and Explain Why</h3>
+<div class="tip">
+  <p>"For each state, I have two choices: take or skip. If I take job i, I need to find the latest non-overlapping job using binary search."</p>
+</div>
+
+<h3>Common Follow-ups</h3>
+<table>
+  <tr><th>Interviewer Asks</th><th>Your Response</th></tr>
+  <tr><td>"Can you optimize space?"</td><td>Rolling array, compress dimensions, check dependency direction</td></tr>
+  <tr><td>"Better than O(n&sup2;)?"</td><td>BIT/Segment Tree, monotone stack/deque, binary search</td></tr>
+  <tr><td>"Very large input?"</td><td>Space compression, stream processing</td></tr>
+  <tr><td>"Print the actual solution?"</td><td>Extra parent/choice array, backtrack to reconstruct</td></tr>
+</table>
+
+<h3>Top-Down vs Bottom-Up</h3>
+<table>
+  <tr><th>Aspect</th><th>Top-Down (Memo)</th><th>Bottom-Up (Table)</th></tr>
+  <tr><td>When</td><td>Sparse states, natural recursion</td><td>Dense states, need space opt</td></tr>
+  <tr><td>Pros</td><td>Only computes needed subproblems</td><td>No stack overhead, rolling array</td></tr>
+  <tr><td>Cons</td><td>Stack depth limit</td><td>May compute unnecessary states</td></tr>
+  <tr><td>Tip</td><td>Write memo first for correctness</td><td>Convert for optimization</td></tr>
+</table>
+
+<h3>Recursive &harr; Iterative Conversion (Google loves this!)</h3>
+<div class="danger">
+  <p><strong>Google interviewers WILL ask you to convert.</strong> If you write bottom-up, they may say "can you do it recursively?" or vice versa. Be ready to do both instantly.</p>
+</div>
+<pre><span class="cm">// BOTTOM-UP (iterative):</span>
+<span class="kw">int</span>[] dp = <span class="kw">new int</span>[n + <span class="num">1</span>];
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= n; i++)
+    <span class="kw">for</span> (<span class="kw">int</span> coin : coins)
+        <span class="kw">if</span> (i &gt;= coin) dp[i] = Math.<span class="fn">min</span>(dp[i], dp[i - coin] + <span class="num">1</span>);
+
+<span class="cm">// TOP-DOWN (recursive) — exact same logic, different structure:</span>
+<span class="kw">int</span>[] memo = <span class="kw">new int</span>[n + <span class="num">1</span>];
+Arrays.<span class="fn">fill</span>(memo, -<span class="num">1</span>);
+
+<span class="kw">int</span> <span class="fn">solve</span>(<span class="kw">int</span> amount) {
+    <span class="kw">if</span> (amount == <span class="num">0</span>) <span class="kw">return</span> <span class="num">0</span>;
+    <span class="kw">if</span> (amount &lt; <span class="num">0</span>) <span class="kw">return</span> Integer.MAX_VALUE;
+    <span class="kw">if</span> (memo[amount] != -<span class="num">1</span>) <span class="kw">return</span> memo[amount];
+    <span class="kw">int</span> res = Integer.MAX_VALUE;
+    <span class="kw">for</span> (<span class="kw">int</span> coin : coins)
+        res = Math.<span class="fn">min</span>(res, <span class="fn">solve</span>(amount - coin) + <span class="num">1</span>);
+    <span class="kw">return</span> memo[amount] = res;
+}
+</pre>
+
+<h3>2D &rarr; 1D Space Optimization (Common Follow-up)</h3>
+<div class="insight">
+  <p><strong>"Can you reduce space from O(mn) to O(n)?"</strong><br>
+  If dp[i][j] only depends on dp[i-1][...], keep only one row. Check dependency direction to decide iteration order.</p>
+</div>
+<pre><span class="cm">// 2D version: O(m*n) space</span>
+<span class="kw">int</span>[][] dp = <span class="kw">new int</span>[m+<span class="num">1</span>][n+<span class="num">1</span>];
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= m; i++)
+    <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">1</span>; j &lt;= n; j++)
+        dp[i][j] = dp[i-<span class="num">1</span>][j-<span class="num">1</span>] + <span class="num">1</span>;  <span class="cm">// depends on prev row</span>
+
+<span class="cm">// 1D version: O(n) space — iterate j in REVERSE if depends on dp[i-1][j-1]</span>
+<span class="kw">int</span>[] dp = <span class="kw">new int</span>[n+<span class="num">1</span>];
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= m; i++)
+    <span class="kw">for</span> (<span class="kw">int</span> j = n; j &gt;= <span class="num">1</span>; j--)  <span class="cm">// REVERSE to avoid overwriting!</span>
+        dp[j] = dp[j-<span class="num">1</span>] + <span class="num">1</span>;
+
+<span class="cm">// Rules:</span>
+<span class="cm">// - Depends on dp[i-1][j] and dp[i-1][j-1] → reverse j</span>
+<span class="cm">// - Depends on dp[i][j-1] (same row, left) → forward j is fine</span>
+<span class="cm">// - Depends on both → need a "prev" variable to save dp[j-1] before overwrite</span>
+</pre>
+
+<h4>Advanced: Knuth's Optimization</h4>
+<p>Reduces interval DP from O(n&sup3;) to O(n&sup2;) when optimal split is monotone. Applies to LC 1547 (Cut Stick). Won't be asked in interviews &mdash; interviewers likely don't know it either &mdash; but useful for competitive programming.</p>
+
+<h3>Common Pitfalls</h3>
+<div class="danger">
+  <p><strong>Missing base case:</strong> dp[0] = ? Often 0 or 1, think carefully.<br>
+  <strong>Wrong iteration order:</strong> 0/1 knapsack reverse; unbounded forward.<br>
+  <strong>Ambiguous state:</strong> "first i items" vs "ending at i" &mdash; huge difference!<br>
+  <strong>Integer overflow:</strong> Counting problems need mod 10^9+7.<br>
+  <strong>Boundary:</strong> i-1 &lt; 0? j-weight &lt; 0? Always check.</p>
+</div>
+
+<h3>Google/Meta High-Frequency DP Top 15</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/edit-distance/" target="_blank">72. Edit Distance</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-increasing-subsequence/" target="_blank">300. Longest Increasing Subsequence</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-profit-in-job-scheduling/" target="_blank">1235. Maximum Profit in Job Scheduling</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-increasing-path-in-a-matrix/" target="_blank">329. Longest Increasing Path in a Matrix</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/regular-expression-matching/" target="_blank">10. Regular Expression Matching</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/word-break/" target="_blank">139. Word Break</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/binary-tree-maximum-path-sum/" target="_blank">124. Binary Tree Maximum Path Sum</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/burst-balloons/" target="_blank">312. Burst Balloons</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximal-square/" target="_blank">221. Maximal Square</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/partition-equal-subset-sum/" target="_blank">416. Partition Equal Subset Sum</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-product-subarray/" target="_blank">152. Maximum Product Subarray</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-common-subsequence/" target="_blank">1143. Longest Common Subsequence</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/unique-paths/" target="_blank">62. Unique Paths</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/coin-change/" target="_blank">322. Coin Change</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/coin-change-ii/" target="_blank">518. Coin Change II</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

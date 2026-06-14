@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sorting-Based Problem Solving — Training Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f8f9fa;--bg2:#ffffff;--bg3:#f1f3f5;--bg4:#e9ecef;--border:#dee2e6;--text:#212529;--text2:#495057;--text3:#868e96;--blue:#1971c2;--blue-l:#d0ebff;--green:#2f9e44;--green-l:#d3f9d8;--yellow:#e67700;--yellow-l:#fff3bf;--red:#c92a2a;--red-l:#ffe3e3;--purple:#7048e8;--purple-l:#e5dbff;--orange:#d9480f;--cyan:#0c8599;--r:12px;--shadow:0 4px 20px rgba(0,0,0,0.06)}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.8}.container{max-width:1100px;margin:0 auto;padding:40px 24px}header{text-align:center;margin-bottom:48px;padding-bottom:32px;border-bottom:1px solid var(--border)}header h1{font-size:32px;font-weight:800;margin-bottom:8px}header .sub{color:var(--text3);font-size:14px}
+.nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:40px;position:sticky;top:0;background:var(--bg);padding:16px 0;z-index:100;border-bottom:1px solid var(--border)}.nav-btn{padding:10px 20px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;font-family:'Inter',sans-serif}.nav-btn:hover{background:var(--bg3);color:var(--text)}.nav-btn.active{background:var(--blue-l);color:var(--blue);border-color:var(--blue)}
+.section{display:none}.section.active{display:block;animation:fadeIn .3s ease}@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+h2{font-size:24px;font-weight:700;margin:32px 0 16px;color:var(--blue)}h3{font-size:18px;font-weight:600;margin:24px 0 12px}h4{font-size:15px;font-weight:600;margin:16px 0 8px;color:var(--text2)}p{margin-bottom:12px;color:var(--text2)}ul,ol{margin:8px 0 16px 24px;color:var(--text2)}li{margin-bottom:6px}strong{color:var(--text)}
+pre{background:#1e1e2e;border-radius:8px;padding:16px 20px;overflow-x:auto;margin:12px 0;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;color:#cdd6f4}code{font-family:'JetBrains Mono',monospace;font-size:13px}p code,li code{background:var(--bg3);padding:2px 6px;border-radius:4px;font-size:12px;color:var(--purple)}pre .kw{color:#cba6f7}pre .type{color:#f9e2af}pre .str{color:#a6e3a1}pre .cm{color:#6c7086}pre .num{color:#fab387}pre .fn{color:#89b4fa}
+.insight{background:var(--blue-l);border-left:3px solid var(--blue);padding:14px 18px;border-radius:0 8px 8px 0;margin:16px 0}.insight p{color:var(--blue);margin:0}.warning{background:var(--yellow-l);border-left:3px solid var(--yellow);padding:14px 18px;border-radius:0 8px 8px 0;margin:16px 0}.warning p{color:var(--yellow);margin:0}.danger{background:var(--red-l);border-left:3px solid var(--red);padding:14px 18px;border-radius:0 8px 8px 0;margin:16px 0}.danger p{color:var(--red);margin:0}.tip{background:var(--green-l);border-left:3px solid var(--green);padding:14px 18px;border-radius:0 8px 8px 0;margin:16px 0}.tip p{color:var(--green);margin:0}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:20px;padding:24px 28px;box-shadow:var(--shadow)}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px}th,td{padding:10px 14px;border:1px solid var(--border);text-align:left}th{background:var(--bg3);font-weight:600;color:var(--text)}tr:hover{background:var(--bg3)}
+.tag{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;margin:2px 4px 2px 0}.tag-easy{background:var(--green-l);color:var(--green)}.tag-medium{background:var(--yellow-l);color:var(--yellow)}.tag-hard{background:var(--red-l);color:var(--red)}.tag-freq{background:var(--purple-l);color:var(--purple)}
+.problem-list{list-style:none;padding:0;margin:12px 0}.problem-list li{padding:10px 14px;border-left:3px solid var(--blue);margin-bottom:8px;background:var(--bg3);border-radius:0 8px 8px 0;display:flex;justify-content:flex-start;align-items:center;gap:8px}.problem-list .title{color:var(--text);font-weight:500;font-size:14px;flex:1}.problem-list .title a{color:var(--text);text-decoration:none;border-bottom:1px dashed var(--border);transition:all .2s}.problem-list .title a:hover{color:var(--blue);border-bottom-color:var(--blue)}
+@media(max-width:768px){.container{padding:20px 12px}.nav{position:static}pre{font-size:11px}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>Sorting-Based Problem Solving</h1>
+  <div class="sub">Sort as Preprocessing &bull; Custom Comparators &bull; Counting/Bucket/Radix &bull; Merge Sort Applications</div>
+</header>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection('overview')">Overview</button>
+  <button class="nav-btn" onclick="showSection('algos')">Sort Algorithms</button>
+  <button class="nav-btn" onclick="showSection('preprocess')">Sort as Preprocess</button>
+  <button class="nav-btn" onclick="showSection('custom')">Custom Comparators</button>
+  <button class="nav-btn" onclick="showSection('counting')">Counting / Bucket</button>
+  <button class="nav-btn" onclick="showSection('mergesort')">Merge Sort Tricks</button>
+  <button class="nav-btn" onclick="showSection('quickselect')">QuickSelect</button>
+  <button class="nav-btn" onclick="showSection('sweep')">Sweep Line</button>
+  <button class="nav-btn" onclick="showSection('greedy')">Sort + Greedy</button>
+</div>
+
+<!-- Overview -->
+<div class="section active" id="overview">
+<div class="card">
+<h2>Why Sorting Matters</h2>
+<p>Sorting is rarely the final answer&mdash;it's a powerful preprocessing step that unlocks simpler algorithms.</p>
+
+<h3>What Sorting Buys You</h3>
+<table>
+  <tr><th>After Sorting</th><th>Enables</th><th>Example</th></tr>
+  <tr><td>Adjacent duplicates</td><td>O(n) dedup</td><td>Remove duplicates</td></tr>
+  <tr><td>Binary search</td><td>O(log n) lookup</td><td>Two Sum in sorted</td></tr>
+  <tr><td>Two pointers from ends</td><td>O(n) pair finding</td><td>3Sum, Container Water</td></tr>
+  <tr><td>Greedy left-to-right</td><td>Locally optimal = global</td><td>Interval scheduling</td></tr>
+  <tr><td>Merge step</td><td>Count inversions</td><td>Reverse pairs</td></tr>
+  <tr><td>Reduce dimensions</td><td>Focus on remaining dim</td><td>Russian Doll Envelopes</td></tr>
+</table>
+
+<h3>Sorting Complexity Reminder</h3>
+<div class="insight">
+  <p><strong>Comparison-based lower bound:</strong> O(n log n)<br>
+  <strong>Non-comparison:</strong> Counting O(n+k), Radix O(d*(n+k)), Bucket O(n) average<br>
+  <strong>Java Arrays.sort:</strong> Dual-pivot Quicksort for primitives, TimSort for objects (stable)</p>
+</div>
+</div>
+</div>
+
+<!-- Sort Algorithms -->
+<div class="section" id="algos">
+<div class="card">
+<h2>Sorting Algorithms You Should Know</h2>
+
+<h3>Comparison Table</h3>
+<table>
+  <tr><th>Algorithm</th><th>Best</th><th>Average</th><th>Worst</th><th>Space</th><th>Stable</th></tr>
+  <tr><td>Merge Sort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n)</td><td>Yes</td></tr>
+  <tr><td>Quick Sort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n&sup2;)</td><td>O(log n)</td><td>No</td></tr>
+  <tr><td>Heap Sort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(1)</td><td>No</td></tr>
+  <tr><td>Counting Sort</td><td>O(n+k)</td><td>O(n+k)</td><td>O(n+k)</td><td>O(k)</td><td>Yes</td></tr>
+  <tr><td>Radix Sort</td><td>O(dn)</td><td>O(dn)</td><td>O(dn)</td><td>O(n+k)</td><td>Yes</td></tr>
+  <tr><td>Bucket Sort</td><td>O(n)</td><td>O(n)</td><td>O(n&sup2;)</td><td>O(n)</td><td>Yes</td></tr>
+</table>
+
+<h3>Merge Sort Template (for counting problems)</h3>
+<pre><span class="kw">void</span> <span class="fn">mergeSort</span>(<span class="kw">int</span>[] arr, <span class="kw">int</span> lo, <span class="kw">int</span> hi) {
+    <span class="kw">if</span> (lo &gt;= hi) <span class="kw">return</span>;
+    <span class="kw">int</span> mid = lo + (hi - lo) / <span class="num">2</span>;
+    <span class="fn">mergeSort</span>(arr, lo, mid);
+    <span class="fn">mergeSort</span>(arr, mid + <span class="num">1</span>, hi);
+    <span class="fn">merge</span>(arr, lo, mid, hi);
+}
+
+<span class="kw">void</span> <span class="fn">merge</span>(<span class="kw">int</span>[] arr, <span class="kw">int</span> lo, <span class="kw">int</span> mid, <span class="kw">int</span> hi) {
+    <span class="kw">int</span>[] temp = Arrays.copyOfRange(arr, lo, hi + <span class="num">1</span>);
+    <span class="kw">int</span> i = <span class="num">0</span>, j = mid - lo + <span class="num">1</span>, k = lo;
+    <span class="kw">while</span> (i &lt;= mid - lo &amp;&amp; j &lt;= hi - lo) {
+        <span class="kw">if</span> (temp[i] &lt;= temp[j]) arr[k++] = temp[i++];
+        <span class="kw">else</span> { arr[k++] = temp[j++]; count += (mid - lo - i + <span class="num">1</span>); }
+    }
+    <span class="kw">while</span> (i &lt;= mid - lo) arr[k++] = temp[i++];
+    <span class="kw">while</span> (j &lt;= hi - lo) arr[k++] = temp[j++];
+}
+</pre>
+
+<h3>Quick Select: O(n) average Kth element</h3>
+<pre><span class="kw">int</span> <span class="fn">quickSelect</span>(<span class="kw">int</span>[] nums, <span class="kw">int</span> lo, <span class="kw">int</span> hi, <span class="kw">int</span> k) {
+    <span class="kw">int</span> pivot = nums[hi], i = lo;
+    <span class="kw">for</span> (<span class="kw">int</span> j = lo; j &lt; hi; j++)
+        <span class="kw">if</span> (nums[j] &lt;= pivot) swap(nums, i++, j);
+    swap(nums, i, hi);
+
+    <span class="kw">if</span> (i == k) <span class="kw">return</span> nums[i];
+    <span class="kw">else if</span> (i &lt; k) <span class="kw">return</span> <span class="fn">quickSelect</span>(nums, i + <span class="num">1</span>, hi, k);
+    <span class="kw">else return</span> <span class="fn">quickSelect</span>(nums, lo, i - <span class="num">1</span>, k);
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/sort-an-array/" target="_blank">912. Sort an Array (implement from scratch)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/sort-list/" target="_blank">148. Sort List (merge sort linked list)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/kth-largest-element/" target="_blank">215. Kth Largest Element (quickselect)</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/sort-colors/" target="_blank">75. Sort Colors (Dutch flag)</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- Sort as Preprocess -->
+<div class="section" id="preprocess">
+<div class="card">
+<h2>Sorting as Preprocessing</h2>
+
+<h3>Pattern: Sort then Two Pointers</h3>
+<pre><span class="cm">// LC 15 3Sum: sort + fix one + two pointers on rest</span>
+<span class="cm">// LC 16 3Sum Closest: same pattern, track closest</span>
+<span class="cm">// LC 18 4Sum: two nested loops + two pointers</span>
+Arrays.<span class="fn">sort</span>(nums);
+<span class="cm">// Now duplicates are adjacent (easy skip) and two-pointer works</span>
+</pre>
+
+<h3>Pattern: Sort then Binary Search</h3>
+<pre><span class="cm">// LC 300 LIS with patience sorting</span>
+<span class="cm">// Maintain sorted "tails" array, binary search for insertion point</span>
+List&lt;Integer&gt; tails = <span class="kw">new</span> ArrayList&lt;&gt;();
+<span class="kw">for</span> (<span class="kw">int</span> num : nums) {
+    <span class="kw">int</span> pos = Collections.<span class="fn">binarySearch</span>(tails, num);
+    <span class="kw">if</span> (pos &lt; <span class="num">0</span>) pos = -(pos + <span class="num">1</span>);
+    <span class="kw">if</span> (pos == tails.size()) tails.add(num);
+    <span class="kw">else</span> tails.set(pos, num);
+}
+<span class="kw">return</span> tails.size();
+</pre>
+
+<h3>Pattern: Sort to Reduce Dimension</h3>
+<div class="insight">
+  <p><strong>Russian Doll Envelopes (LC 354):</strong> Sort by width, then LIS on height.<br>
+  <strong>Meeting Rooms (LC 253):</strong> Sort by start, use heap for end times.<br>
+  <strong>Job Scheduling (LC 1235):</strong> Sort by end, DP + binary search.</p>
+</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/3sum/" target="_blank">15. 3Sum</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/russian-doll-envelopes/" target="_blank">354. Russian Doll Envelopes</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Classic</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-profit-in-job-scheduling/" target="_blank">1235. Maximum Profit in Job Scheduling</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-increasing-subsequence/" target="_blank">300. LIS (patience sorting)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/meeting-rooms-ii/" target="_blank">253. Meeting Rooms II</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Premium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/max-height-by-stacking-cuboids/" target="_blank">1691. Max Height by Stacking Cuboids</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-length-of-pair-chain/" target="_blank">646. Maximum Length of Pair Chain</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/number-of-weak-characters/" target="_blank">1996. Number of Weak Characters</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- Custom Comparators -->
+<div class="section" id="custom">
+<div class="card">
+<h2>Custom Comparators</h2>
+
+<h3>Multi-Key Sorting</h3>
+<pre><span class="cm">// Sort by key1 ascending, then key2 descending</span>
+Arrays.<span class="fn">sort</span>(arr, (a, b) -&gt; {
+    <span class="kw">if</span> (a[<span class="num">0</span>] != b[<span class="num">0</span>]) <span class="kw">return</span> a[<span class="num">0</span>] - b[<span class="num">0</span>];
+    <span class="kw">return</span> b[<span class="num">1</span>] - a[<span class="num">1</span>];  <span class="cm">// descending</span>
+});
+</pre>
+
+<h3>String Concatenation Comparator</h3>
+<pre><span class="cm">// LC 179 Largest Number</span>
+Arrays.<span class="fn">sort</span>(strs, (a, b) -&gt; (b + a).compareTo(a + b));
+<span class="cm">// "9" + "34" = "934" > "349" = "34" + "9", so "9" first</span>
+</pre>
+
+<h3>Event-Based Sorting (start/end events)</h3>
+<pre><span class="cm">// Create events: +1 at start, -1 at end</span>
+<span class="kw">int</span>[][] events = <span class="kw">new int</span>[<span class="num">2</span> * n][<span class="num">2</span>];
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+    events[<span class="num">2</span>*i] = <span class="kw">new int</span>[]{intervals[i][<span class="num">0</span>], <span class="num">1</span>};   <span class="cm">// start</span>
+    events[<span class="num">2</span>*i+<span class="num">1</span>] = <span class="kw">new int</span>[]{intervals[i][<span class="num">1</span>], -<span class="num">1</span>}; <span class="cm">// end</span>
+}
+Arrays.<span class="fn">sort</span>(events, (a, b) -&gt; a[<span class="num">0</span>] != b[<span class="num">0</span>] ? a[<span class="num">0</span>]-b[<span class="num">0</span>] : a[<span class="num">1</span>]-b[<span class="num">1</span>]);
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/largest-number/" target="_blank">179. Largest Number</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/queue-reconstruction-by-height/" target="_blank">406. Queue Reconstruction by Height</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/campus-bikes/" target="_blank">1057. Campus Bikes (multi-key)</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Premium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/reorder-data-in-log-files/" target="_blank">937. Reorder Data in Log Files</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/custom-sort-string/" target="_blank">791. Custom Sort String</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/sort-the-jumbled-numbers/" target="_blank">2191. Sort the Jumbled Numbers</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- Counting / Bucket -->
+<div class="section" id="counting">
+<div class="card">
+<h2>Counting Sort / Bucket Sort / Radix Sort</h2>
+
+<h3>Counting Sort: O(n + k)</h3>
+<pre><span class="cm">// When values are in a bounded range [0, k]</span>
+<span class="kw">int</span>[] count = <span class="kw">new int</span>[k + <span class="num">1</span>];
+<span class="kw">for</span> (<span class="kw">int</span> num : nums) count[num]++;
+<span class="kw">int</span> idx = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span> val = <span class="num">0</span>; val &lt;= k; val++)
+    <span class="kw">while</span> (count[val]-- &gt; <span class="num">0</span>) nums[idx++] = val;
+</pre>
+
+<h3>Bucket Sort: distribute into buckets, sort each</h3>
+<pre><span class="cm">// LC 164 Maximum Gap: bucket sort guarantee</span>
+<span class="cm">// If n elements in [min, max], max gap >= ceil((max-min)/(n-1))</span>
+<span class="cm">// Use buckets of that size, max gap is between consecutive non-empty buckets</span>
+<span class="kw">int</span> bucketSize = Math.<span class="fn">max</span>(<span class="num">1</span>, (max - min) / (n - <span class="num">1</span>));
+<span class="kw">int</span> bucketCount = (max - min) / bucketSize + <span class="num">1</span>;
+<span class="cm">// Track min/max per bucket, answer = max(bucket[i].min - bucket[i-1].max)</span>
+</pre>
+
+<h3>Frequency Bucket Sort</h3>
+<pre><span class="cm">// LC 347 Top K Frequent: bucket[freq] = elements with that frequency</span>
+<span class="cm">// LC 451 Sort Characters By Frequency: same idea</span>
+List&lt;Integer&gt;[] buckets = <span class="kw">new</span> List[n + <span class="num">1</span>];
+<span class="kw">for</span> (var entry : freqMap.entrySet()) {
+    <span class="kw">int</span> freq = entry.getValue();
+    <span class="kw">if</span> (buckets[freq] == <span class="kw">null</span>) buckets[freq] = <span class="kw">new</span> ArrayList&lt;&gt;();
+    buckets[freq].add(entry.getKey());
+}
+<span class="cm">// Iterate from high to low frequency</span>
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-gap/" target="_blank">164. Maximum Gap (bucket sort)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/top-k-frequent-elements/" target="_blank">347. Top K Frequent Elements (bucket)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/sort-characters-by-frequency/" target="_blank">451. Sort Characters By Frequency</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/h-index/" target="_blank">274. H-Index (counting sort)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/array-partition/" target="_blank">561. Array Partition</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/relative-sort-array/" target="_blank">1122. Relative Sort Array</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/campus-bikes/" target="_blank">1057. Campus Bikes (bucket sort)</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Premium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- Merge Sort Tricks -->
+<div class="section" id="mergesort">
+<div class="card">
+<h2>Merge Sort Applications</h2>
+<p>The merge step naturally counts cross-inversions. Any problem about counting pairs (i, j) where i &lt; j and f(nums[i], nums[j]) holds can often be solved during merge.</p>
+
+<h3>Count Inversions</h3>
+<pre><span class="cm">// During merge: when right element is placed before left elements,</span>
+<span class="cm">// it forms inversions with ALL remaining left elements</span>
+<span class="kw">long</span> inversions = <span class="num">0</span>;
+<span class="cm">// In merge step:</span>
+<span class="kw">if</span> (left[i] &lt;= right[j]) sorted[k++] = left[i++];
+<span class="kw">else</span> {
+    sorted[k++] = right[j++];
+    inversions += leftRemaining;  <span class="cm">// all left[i..mid] > right[j]</span>
+}
+</pre>
+
+<h3>Count Reverse Pairs (nums[i] > 2*nums[j])</h3>
+<pre><span class="cm">// LC 493: count pairs before merge, then merge normally</span>
+<span class="kw">int</span> j = mid + <span class="num">1</span>;
+<span class="kw">for</span> (<span class="kw">int</span> i = lo; i &lt;= mid; i++) {
+    <span class="kw">while</span> (j &lt;= hi &amp;&amp; nums[i] &gt; <span class="num">2</span>L * nums[j]) j++;
+    count += (j - mid - <span class="num">1</span>);
+}
+<span class="cm">// Then do standard merge</span>
+</pre>
+
+<h3>Count Smaller Numbers After Self</h3>
+<pre><span class="cm">// LC 315: merge sort on indices, count during merge</span>
+<span class="cm">// When element from right half is placed first,</span>
+<span class="cm">// it means it's smaller than remaining left elements</span>
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/count-of-smaller-numbers-after-self/" target="_blank">315. Count of Smaller Numbers After Self</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/reverse-pairs/" target="_blank">493. Reverse Pairs</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-of-range-sum/" target="_blank">327. Count of Range Sum</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/sort-list/" target="_blank">148. Sort List (merge sort on linked list)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/number-of-pairs-satisfying-inequality/" target="_blank">2426. Number of Pairs Satisfying Inequality</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- QuickSelect -->
+<div class="section" id="quickselect">
+<div class="card">
+<h2>QuickSelect &amp; Partition</h2>
+
+<h3>Kth Largest / Kth Smallest in O(n) average</h3>
+<pre><span class="cm">// LC 215 Kth Largest Element</span>
+<span class="cm">// Partition: elements <= pivot on left, > pivot on right</span>
+<span class="cm">// If pivot lands at index k, done. Otherwise recurse on one side.</span>
+<span class="kw">int</span> <span class="fn">findKthLargest</span>(<span class="kw">int</span>[] nums, <span class="kw">int</span> k) {
+    <span class="kw">int</span> target = nums.length - k;  <span class="cm">// convert to kth smallest</span>
+    <span class="kw">return</span> <span class="fn">quickSelect</span>(nums, <span class="num">0</span>, nums.length - <span class="num">1</span>, target);
+}
+</pre>
+
+<h3>3-Way Partition (handle duplicates)</h3>
+<pre><span class="cm">// Dutch National Flag: partition into [< pivot | == pivot | > pivot]</span>
+<span class="kw">int</span> lt = lo, gt = hi, i = lo;
+<span class="kw">int</span> pivot = nums[lo];
+<span class="kw">while</span> (i &lt;= gt) {
+    <span class="kw">if</span> (nums[i] &lt; pivot) swap(nums, lt++, i++);
+    <span class="kw">else if</span> (nums[i] &gt; pivot) swap(nums, i, gt--);
+    <span class="kw">else</span> i++;
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/kth-largest-element-in-an-array/" target="_blank">215. Kth Largest Element in an Array</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/k-closest-points-to-origin/" target="_blank">973. K Closest Points to Origin</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/top-k-frequent-elements/" target="_blank">347. Top K Frequent Elements</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/wiggle-sort-ii/" target="_blank">324. Wiggle Sort II</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/sort-colors/" target="_blank">75. Sort Colors (3-way partition)</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- Sweep Line -->
+<div class="section" id="sweep">
+<div class="card">
+<h2>Sweep Line (Event Sorting)</h2>
+<p>Convert intervals/rectangles into events (start/end), sort events, sweep left-to-right.</p>
+
+<h3>Template</h3>
+<pre><span class="cm">// Create events: (time, type) where type: +1=start, -1=end</span>
+List&lt;<span class="kw">int</span>[]&gt; events = <span class="kw">new</span> ArrayList&lt;&gt;();
+<span class="kw">for</span> (<span class="kw">int</span>[] interval : intervals) {
+    events.add(<span class="kw">new int</span>[]{interval[<span class="num">0</span>], <span class="num">1</span>});   <span class="cm">// open</span>
+    events.add(<span class="kw">new int</span>[]{interval[<span class="num">1</span>], -<span class="num">1</span>});  <span class="cm">// close</span>
+}
+events.<span class="fn">sort</span>((a, b) -&gt; a[<span class="num">0</span>] != b[<span class="num">0</span>] ? a[<span class="num">0</span>] - b[<span class="num">0</span>] : a[<span class="num">1</span>] - b[<span class="num">1</span>]);
+
+<span class="kw">int</span> active = <span class="num">0</span>, maxActive = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span>[] event : events) {
+    active += event[<span class="num">1</span>];
+    maxActive = Math.<span class="fn">max</span>(maxActive, active);
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/meeting-rooms-ii/" target="_blank">253. Meeting Rooms II (max concurrent)</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Premium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/merge-intervals/" target="_blank">56. Merge Intervals</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/meeting-rooms/" target="_blank">252. Meeting Rooms</a></span><span class="tag tag-easy">Easy</span><span class="tag tag-freq">Premium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/car-pooling/" target="_blank">1094. Car Pooling</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/the-skyline-problem/" target="_blank">218. The Skyline Problem</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/employee-free-time/" target="_blank">759. Employee Free Time</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Premium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/amount-of-new-area-painted-each-day/" target="_blank">2158. Amount of New Area Painted Each Day</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- Sort + Greedy -->
+<div class="section" id="greedy">
+<div class="card">
+<h2>Sorting + Greedy</h2>
+<p>Sort imposes an order that makes greedy choices provably optimal.</p>
+
+<h3>Interval Scheduling (sort by end time)</h3>
+<pre><span class="cm">// LC 435 Non-overlapping Intervals / LC 452 Min Arrows</span>
+<span class="cm">// Greedy: always pick the interval that ends earliest</span>
+Arrays.<span class="fn">sort</span>(intervals, (a, b) -&gt; a[<span class="num">1</span>] - b[<span class="num">1</span>]);
+<span class="kw">int</span> end = Integer.MIN_VALUE, count = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span>[] iv : intervals) {
+    <span class="kw">if</span> (iv[<span class="num">0</span>] &gt;= end) { end = iv[<span class="num">1</span>]; count++; }
+}
+</pre>
+
+<h3>Task Assignment (sort tasks + workers)</h3>
+<pre><span class="cm">// LC 881 Boats to Save People: sort, pair heaviest with lightest</span>
+Arrays.<span class="fn">sort</span>(people);
+<span class="kw">int</span> lo = <span class="num">0</span>, hi = people.length - <span class="num">1</span>, boats = <span class="num">0</span>;
+<span class="kw">while</span> (lo &lt;= hi) {
+    <span class="kw">if</span> (people[lo] + people[hi] &lt;= limit) lo++;
+    hi--;
+    boats++;
+}
+</pre>
+
+<h3>Exchange Argument (prove greedy is optimal)</h3>
+<div class="warning">
+  <p><strong>Technique:</strong> Assume two adjacent elements are in wrong order. Show swapping them improves (or doesn't worsen) the answer. This proves the sorted order is optimal.<br>
+  <strong>Examples:</strong> LC 179 (largest number), LC 1665 (minimum initial energy)</p>
+</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/non-overlapping-intervals/" target="_blank">435. Non-overlapping Intervals</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-number-of-arrows/" target="_blank">452. Minimum Number of Arrows</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/boats-to-save-people/" target="_blank">881. Boats to Save People</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/assign-cookies/" target="_blank">455. Assign Cookies</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/two-city-scheduling/" target="_blank">1029. Two City Scheduling</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/task-scheduler/" target="_blank">621. Task Scheduler</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-initial-energy/" target="_blank">1665. Minimum Initial Energy</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/earliest-possible-day-of-full-bloom/" target="_blank">2136. Earliest Possible Day of Full Bloom</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/course-schedule-iii/" target="_blank">630. Course Schedule III (sort + greedy + heap)</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+</div>
+<script>
+function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');event.target.classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+</script>
+</body>
+</html>

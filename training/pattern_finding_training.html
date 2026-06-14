@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pattern Finding &amp; Mathematical Induction — Training Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f8f9fa;--bg2:#ffffff;--bg3:#f1f3f5;--bg4:#e9ecef;--border:#dee2e6;--text:#212529;--text2:#495057;--text3:#868e96;--blue:#1971c2;--blue-l:#d0ebff;--green:#2f9e44;--green-l:#d3f9d8;--yellow:#e67700;--yellow-l:#fff3bf;--red:#c92a2a;--red-l:#ffe3e3;--purple:#7048e8;--purple-l:#e5dbff;--orange:#d9480f;--cyan:#0c8599;--r:12px;--shadow:0 4px 20px rgba(0,0,0,0.06)}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.8}.container{max-width:1100px;margin:0 auto;padding:40px 24px}header{text-align:center;margin-bottom:48px;padding-bottom:32px;border-bottom:1px solid var(--border)}header h1{font-size:32px;font-weight:800;margin-bottom:8px}header .sub{color:var(--text3);font-size:14px}
+.nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:40px;position:sticky;top:0;background:var(--bg);padding:16px 0;z-index:100;border-bottom:1px solid var(--border)}.nav-btn{padding:10px 20px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;font-family:'Inter',sans-serif}.nav-btn:hover{background:var(--bg3);color:var(--text)}.nav-btn.active{background:var(--blue-l);color:var(--blue);border-color:var(--blue)}
+.section{display:none}.section.active{display:block;animation:fadeIn .3s ease}@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+h2{font-size:24px;font-weight:700;margin:32px 0 16px;color:var(--blue)}h3{font-size:18px;font-weight:600;margin:24px 0 12px}h4{font-size:15px;font-weight:600;margin:16px 0 8px;color:var(--text2)}p{margin-bottom:12px;color:var(--text2)}ul,ol{margin:8px 0 16px 24px;color:var(--text2)}li{margin-bottom:6px}strong{color:var(--text)}
+pre{background:#1e1e2e;border-radius:8px;padding:16px 20px;overflow-x:auto;margin:12px 0;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;color:#cdd6f4}code{font-family:'JetBrains Mono',monospace;font-size:13px}p code,li code{background:var(--bg3);padding:2px 6px;border-radius:4px;font-size:12px;color:var(--purple)}pre .kw{color:#cba6f7}pre .type{color:#f9e2af}pre .str{color:#a6e3a1}pre .cm{color:#6c7086}pre .num{color:#fab387}pre .fn{color:#89b4fa}
+.insight{background:var(--blue-l);border-left:3px solid var(--blue);padding:14px 18px;border-radius:0 8px 8px 0;margin:16px 0}.insight p{color:var(--blue);margin:0}.warning{background:var(--yellow-l);border-left:3px solid var(--yellow);padding:14px 18px;border-radius:0 8px 8px 0;margin:16px 0}.warning p{color:var(--yellow);margin:0}.danger{background:var(--red-l);border-left:3px solid var(--red);padding:14px 18px;border-radius:0 8px 8px 0;margin:16px 0}.danger p{color:var(--red);margin:0}.tip{background:var(--green-l);border-left:3px solid var(--green);padding:14px 18px;border-radius:0 8px 8px 0;margin:16px 0}.tip p{color:var(--green);margin:0}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:20px;padding:24px 28px;box-shadow:var(--shadow)}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px}th,td{padding:10px 14px;border:1px solid var(--border);text-align:left}th{background:var(--bg3);font-weight:600;color:var(--text)}tr:hover{background:var(--bg3)}
+.tag{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;margin:2px 4px 2px 0}.tag-easy{background:var(--green-l);color:var(--green)}.tag-medium{background:var(--yellow-l);color:var(--yellow)}.tag-hard{background:var(--red-l);color:var(--red)}.tag-freq{background:var(--purple-l);color:var(--purple)}
+.cases{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin:12px 0;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8}
+.problem-list{list-style:none;padding:0;margin:12px 0}.problem-list li{padding:10px 14px;border-left:3px solid var(--blue);margin-bottom:8px;background:var(--bg3);border-radius:0 8px 8px 0;display:flex;justify-content:flex-start;align-items:center;gap:8px}.problem-list .title{color:var(--text);font-weight:500;font-size:14px;flex:1}.problem-list .title a{color:var(--text);text-decoration:none;border-bottom:1px dashed var(--border);transition:all .2s}.problem-list .title a:hover{color:var(--blue);border-bottom-color:var(--blue)}
+@media(max-width:768px){.container{padding:20px 12px}.nav{position:static}pre{font-size:11px}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>Pattern Finding &amp; Mathematical Induction</h1>
+  <div class="sub">Compute Small Cases &bull; Spot the Pattern &bull; Prove by Induction &bull; Bit Tricks &bull; Recursive Structure</div>
+</header>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection('methodology')">Methodology</button>
+  <button class="nav-btn" onclick="showSection('bitpattern')">Bit Patterns</button>
+  <button class="nav-btn" onclick="showSection('recursive')">Recursive Structure</button>
+  <button class="nav-btn" onclick="showSection('cycle')">Cycle Detection</button>
+  <button class="nav-btn" onclick="showSection('constructive')">Constructive</button>
+  <button class="nav-btn" onclick="showSection('bintree')">Binary Tree Thinking</button>
+  <button class="nav-btn" onclick="showSection('sequence')">Sequence Patterns</button>
+  <button class="nav-btn" onclick="showSection('mitm')">Meet in the Middle</button>
+  <button class="nav-btn" onclick="showSection('interview')">Interview Approach</button>
+</div>
+
+<!-- ===== Methodology ===== -->
+<div class="section active" id="methodology">
+<div class="card">
+<h2>The Pattern Finding Process</h2>
+<p>These problems look unsolvable at first. The key: <strong>compute small cases by hand, observe the pattern, then prove/implement it</strong>.</p>
+
+<h3>The 4-Step Method</h3>
+<div class="tip">
+  <p><strong>Step 1: Brute Force Small Cases</strong> &mdash; Compute f(0), f(1), f(2), f(3), f(4) by hand or with code.<br>
+  <strong>Step 2: Look for Structure</strong> &mdash; Is it Fibonacci? Powers of 2? Catalan? Bit-reversal? Cycle?<br>
+  <strong>Step 3: Form a Hypothesis</strong> &mdash; f(n) = 2*f(n-1)? f(n) = f(n/2) XOR something?<br>
+  <strong>Step 4: Verify &amp; Implement</strong> &mdash; Check f(5), f(6). If holds, implement. If not, revise.</p>
+</div>
+
+<h3>Common Patterns You'll Discover</h3>
+<table>
+  <tr><th>Pattern Observed</th><th>Likely Formula</th><th>Example</th></tr>
+  <tr><td>1, 1, 2, 3, 5, 8...</td><td>Fibonacci</td><td>Climbing Stairs</td></tr>
+  <tr><td>1, 1, 2, 5, 14, 42...</td><td>Catalan</td><td>Unique BSTs</td></tr>
+  <tr><td>1, 2, 4, 8, 16...</td><td>Powers of 2</td><td>Subsets count</td></tr>
+  <tr><td>Output mirrors/flips after doubling</td><td>Recursive halving + XOR/flip</td><td>Gray Code, Kth Grammar</td></tr>
+  <tr><td>State repeats after K steps</td><td>Cycle detection (mod period)</td><td>Prison Cells</td></tr>
+  <tr><td>Answer for n = f(n/2) or f(n-1) with bit op</td><td>Bit-based recurrence</td><td>Integer Replacement</td></tr>
+  <tr><td>n=1:0, n=2:1, n=3:2, n=4:2...</td><td>floor(log2(n)) or bit count</td><td>Min Operations</td></tr>
+</table>
+
+<h3>When to Suspect "Pattern Finding"</h3>
+<div class="warning">
+  <p><strong>Signals:</strong><br>
+  &bull; Problem seems impossible with standard algorithms<br>
+  &bull; Constraint is very large (n up to 10^9 or 10^18) but answer is small<br>
+  &bull; Problem involves binary/tree structure with recursive self-similarity<br>
+  &bull; "Find the k-th element in a sequence defined by rule X"<br>
+  &bull; Standard DP would be O(n) but n is too large &mdash; needs O(log n) via pattern</p>
+</div>
+</div>
+</div>
+
+<!-- ===== Bit Patterns ===== -->
+<div class="section" id="bitpattern">
+<div class="card">
+<h2>Bit-Based Pattern Discovery</h2>
+<p>Many problems have elegant solutions once you write the answers in binary and observe structure.</p>
+
+<h3>Example: K-th Symbol in Grammar (LC 779)</h3>
+<div class="cases">n=1: 0
+n=2: 01
+n=3: 0110
+n=4: 01101001
+Pattern: each row = prev + complement(prev)
+Key insight: k-th symbol = popcount(k-1) % 2</div>
+<pre><span class="cm">// LC 779: the k-th bit in row n</span>
+<span class="cm">// Observe: answer only depends on number of 1-bits in (k-1)</span>
+<span class="kw">int</span> <span class="fn">kthGrammar</span>(<span class="kw">int</span> n, <span class="kw">int</span> k) {
+    <span class="kw">return</span> Integer.<span class="fn">bitCount</span>(k - <span class="num">1</span>) % <span class="num">2</span>;
+}
+<span class="cm">// Or recursive: kthGrammar(n, k) = kthGrammar(n-1, (k+1)/2) ^ ((k-1)&1)</span>
+</pre>
+
+<h3>Example: Minimum One Bit Operations (LC 1611)</h3>
+<div class="cases">Goal: transform n to 0 using specific bit ops
+Key: this is Gray code in reverse!
+n=1(01): 1 step,  n=2(10): 3 steps,  n=3(11): 2 steps
+n=4(100): 7 steps, n=5(101): 6 steps
+Pattern: f(n) = f(n XOR (n>>1))... it's Gray-to-binary conversion</div>
+<pre><span class="cm">// Gray code to binary = number of operations</span>
+<span class="kw">int</span> <span class="fn">minimumOneBitOperations</span>(<span class="kw">int</span> n) {
+    <span class="kw">int</span> result = <span class="num">0</span>;
+    <span class="kw">while</span> (n > <span class="num">0</span>) {
+        result ^= n;
+        n >>= <span class="num">1</span>;
+    }
+    <span class="kw">return</span> result;
+}
+</pre>
+
+<h3>Example: Integer Replacement (LC 397)</h3>
+<div class="cases">n even: n/2
+n odd: n+1 or n-1
+n=7(111): 7→8→4→2→1 (4 steps) vs 7→6→3→2→1 (4 steps)
+n=15(1111): best is +1→16→8→4→2→1
+Pattern: if last 2 bits are 11, prefer +1 (except n=3)</div>
+<pre><span class="kw">int</span> <span class="fn">integerReplacement</span>(<span class="kw">int</span> n) {
+    <span class="kw">int</span> steps = <span class="num">0</span>;
+    <span class="kw">long</span> x = n;
+    <span class="kw">while</span> (x != <span class="num">1</span>) {
+        <span class="kw">if</span> ((x & <span class="num">1</span>) == <span class="num">0</span>) x >>= <span class="num">1</span>;
+        <span class="kw">else if</span> (x == <span class="num">3</span> || (x & <span class="num">3</span>) == <span class="num">1</span>) x--;
+        <span class="kw">else</span> x++;
+        steps++;
+    }
+    <span class="kw">return</span> steps;
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/k-th-symbol-in-grammar/" target="_blank">779. K-th Symbol in Grammar</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-one-bit-operations-to-make-integers-zero/" target="_blank">1611. Minimum One Bit Operations to Make Integers Zero</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/integer-replacement/" target="_blank">397. Integer Replacement</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/gray-code/" target="_blank">89. Gray Code</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/circular-permutation-in-binary-representation/" target="_blank">1238. Circular Permutation in Binary Representation</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/concatenation-of-consecutive-binary-numbers/" target="_blank">1680. Concatenation of Consecutive Binary Numbers</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/total-hamming-distance/" target="_blank">477. Total Hamming Distance</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Recursive Structure ===== -->
+<div class="section" id="recursive">
+<div class="card">
+<h2>Recursive Structure (Divide &amp; Conquer Patterns)</h2>
+<p>The problem has self-similar structure: f(n) can be expressed in terms of f(n/2) or f(n-1) with a simple transformation.</p>
+
+<h3>Example: Beautiful Array (LC 932)</h3>
+<div class="cases">For any i &lt; k &lt; j: A[k]*2 != A[i] + A[j]
+n=1: [1]
+n=2: [1,2]
+n=3: [1,3,2]
+n=4: [1,3,2,4]
+Key: if A is beautiful, then 2*A-1 (odds) and 2*A (evens) are beautiful.
+odd + even = odd, so cross-pairs can never violate 2*A[k] = A[i]+A[j]</div>
+<pre><span class="cm">// LC 932: divide into odd/even positions recursively</span>
+<span class="kw">int</span>[] <span class="fn">beautifulArray</span>(<span class="kw">int</span> n) {
+    List&lt;Integer&gt; res = <span class="kw">new</span> ArrayList&lt;&gt;();
+    res.add(<span class="num">1</span>);
+    <span class="kw">while</span> (res.size() &lt; n) {
+        List&lt;Integer&gt; next = <span class="kw">new</span> ArrayList&lt;&gt;();
+        <span class="kw">for</span> (<span class="kw">int</span> x : res) <span class="kw">if</span> (<span class="num">2</span>*x - <span class="num">1</span> &lt;= n) next.add(<span class="num">2</span>*x - <span class="num">1</span>); <span class="cm">// odds</span>
+        <span class="kw">for</span> (<span class="kw">int</span> x : res) <span class="kw">if</span> (<span class="num">2</span>*x &lt;= n) next.add(<span class="num">2</span>*x);         <span class="cm">// evens</span>
+        res = next;
+    }
+    <span class="kw">return</span> res.stream().mapToInt(Integer::intValue).toArray();
+}
+</pre>
+
+<h3>Example: Elimination Game (LC 390)</h3>
+<div class="cases">Start: 1,2,3,...,n. Alternately eliminate from left/right.
+n=1: 1
+n=2: 2 (remove 1 from left)
+n=3: 2 (1,2,3 → 2 → 2)
+n=4: 2 (1,2,3,4 → 2,4 → 2)
+n=5: 2 (1..5 → 2,4 → 4) wait...
+Pattern: f(n) = 2*(n/2 + 1 - f(n/2)) when going left-to-right
+Flip perspective: after one pass, remaining = evens/2, play in reverse</div>
+<pre><span class="cm">// LC 390: f(n) relates to f(n/2) with flip</span>
+<span class="kw">int</span> <span class="fn">lastRemaining</span>(<span class="kw">int</span> n) {
+    <span class="kw">return</span> n == <span class="num">1</span> ? <span class="num">1</span> : <span class="num">2</span> * (n / <span class="num">2</span> + <span class="num">1</span> - <span class="fn">lastRemaining</span>(n / <span class="num">2</span>));
+}
+</pre>
+
+<h3>Example: Handshakes That Don't Cross (LC 1259)</h3>
+<div class="cases">n=2: 1 way
+n=4: 2 ways
+n=6: 5 ways
+n=8: 14 ways
+1, 2, 5, 14... = Catalan numbers!</div>
+<pre><span class="cm">// This IS Catalan(n/2). Once you see 1,2,5,14,42... it's instant.</span>
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/beautiful-array/" target="_blank">932. Beautiful Array</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/elimination-game/" target="_blank">390. Elimination Game</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/handshakes-that-dont-cross/" target="_blank">1259. Handshakes That Don't Cross</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Premium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-good-numbers/" target="_blank">1922. Count Good Numbers</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/poor-pigs/" target="_blank">458. Poor Pigs</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/super-egg-drop/" target="_blank">887. Super Egg Drop</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/reaching-points/" target="_blank">780. Reaching Points</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Cycle Detection ===== -->
+<div class="section" id="cycle">
+<div class="card">
+<h2>State Cycle Detection</h2>
+<p>When n is huge but the state space is bounded, the sequence must cycle. Find the period, then answer = f(n mod period).</p>
+
+<h3>Example: Prison Cells After N Days (LC 957)</h3>
+<div class="cases">8 cells, only 6 inner cells matter → at most 2^6 = 64 states
+After at most 64 steps, must repeat → find cycle length
+Typically cycle = 14 for this problem</div>
+<pre><span class="cm">// LC 957: detect cycle, then mod</span>
+<span class="kw">int</span>[] <span class="fn">prisonAfterNDays</span>(<span class="kw">int</span>[] cells, <span class="kw">int</span> n) {
+    Map&lt;String, Integer&gt; seen = <span class="kw">new</span> HashMap&lt;&gt;();
+    <span class="kw">while</span> (n &gt; <span class="num">0</span>) {
+        String key = Arrays.toString(cells);
+        <span class="kw">if</span> (seen.containsKey(key)) {
+            <span class="kw">int</span> cycle = seen.get(key) - n;
+            n %= cycle;  <span class="cm">// skip full cycles</span>
+        }
+        seen.put(key, n);
+        <span class="kw">if</span> (n &gt;= <span class="num">1</span>) { cells = <span class="fn">nextDay</span>(cells); n--; }
+    }
+    <span class="kw">return</span> cells;
+}
+</pre>
+
+<h3>General Cycle Detection Template</h3>
+<pre><span class="cm">// When state space is bounded: find first repeat</span>
+Map&lt;State, Integer&gt; seen = <span class="kw">new</span> HashMap&lt;&gt;();
+State state = initial;
+<span class="kw">for</span> (<span class="kw">int</span> step = <span class="num">0</span>; step &lt; n; step++) {
+    <span class="kw">if</span> (seen.containsKey(state)) {
+        <span class="kw">int</span> cycleStart = seen.get(state);
+        <span class="kw">int</span> cycleLen = step - cycleStart;
+        <span class="kw">int</span> remaining = (n - step) % cycleLen;
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; remaining; i++) state = <span class="fn">next</span>(state);
+        <span class="kw">return</span> state;
+    }
+    seen.put(state, step);
+    state = <span class="fn">next</span>(state);
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/prison-cells-after-n-days/" target="_blank">957. Prison Cells After N Days</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/champagne-tower/" target="_blank">799. Champagne Tower</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/broken-calculator/" target="_blank">991. Broken Calculator</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/race-car/" target="_blank">818. Race Car</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/transform-to-chessboard/" target="_blank">782. Transform to Chessboard</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Constructive ===== -->
+<div class="section" id="constructive">
+<div class="card">
+<h2>Constructive Algorithms</h2>
+<p>Build the answer directly by understanding its structure. Often involves bit-by-bit construction or greedy with insight.</p>
+
+<h3>Example: Minimize XOR (LC 2429)</h3>
+<div class="cases">Make result have same popcount as num2, minimizing XOR with num1.
+Insight: set high bits of num1 first (to cancel them), then fill low bits.</div>
+<pre><span class="cm">// Set bits greedily from MSB to minimize XOR with num1</span>
+<span class="kw">int</span> <span class="fn">minimizeXor</span>(<span class="kw">int</span> num1, <span class="kw">int</span> num2) {
+    <span class="kw">int</span> target = Integer.<span class="fn">bitCount</span>(num2);
+    <span class="kw">int</span> result = <span class="num">0</span>;
+    <span class="cm">// First: set bits that are in num1 (cancels XOR)</span>
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">30</span>; i >= <span class="num">0</span> &amp;&amp; target > <span class="num">0</span>; i--)
+        <span class="kw">if</span> ((num1 &amp; (<span class="num">1</span> &lt;&lt; i)) != <span class="num">0</span>) { result |= (<span class="num">1</span> &lt;&lt; i); target--; }
+    <span class="cm">// Then: set remaining bits from LSB (adds to XOR)</span>
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt;= <span class="num">30</span> &amp;&amp; target > <span class="num">0</span>; i++)
+        <span class="kw">if</span> ((result &amp; (<span class="num">1</span> &lt;&lt; i)) == <span class="num">0</span>) { result |= (<span class="num">1</span> &lt;&lt; i); target--; }
+    <span class="kw">return</span> result;
+}
+</pre>
+
+<h3>Example: Maximum XOR Product (LC 2939)</h3>
+<div class="cases">Choose bits of x to maximize (a XOR x) * (b XOR x).
+For each bit position: if a and b differ on this bit, set x to make the smaller one larger.
+If same, both benefit equally from flipping (set to make both have 1).</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/minimize-xor/" target="_blank">2429. Minimize XOR</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-xor-product/" target="_blank">2939. Maximum XOR Product</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/find-xor-beauty-of-array/" target="_blank">2527. Find XOR Beauty of Array</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-xor-for-each-query/" target="_blank">1829. Maximum XOR for Each Query</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/find-the-original-array-of-prefix-xor/" target="_blank">2433. Find the Original Array of Prefix XOR</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Binary Tree Thinking ===== -->
+<div class="section" id="bintree">
+<div class="card">
+<h2>Binary Tree / Divide-by-2 Thinking</h2>
+<p>Visualize the problem as a binary tree where n splits into n/2. Often leads to O(log n) solutions.</p>
+
+<h3>Example: Kth Smallest Instructions (LC 1643)</h3>
+<div class="cases">Grid path from (0,0) to (r,c) using r 'V' and c 'H' moves.
+Think: at each step, how many paths start with 'H'? = C(remaining-1, r)
+If k &lt;= that count, go 'H'. Otherwise go 'V', subtract.</div>
+
+<h3>Example: Broken Calculator (LC 991)</h3>
+<div class="cases">Start at X, target Y. Can *2 or -1.
+Forward thinking is hard. Think BACKWARD from Y:
+If Y is even: Y/2 (reverse of *2)
+If Y is odd: Y+1 (reverse of -1)
+Stop when Y &lt;= X, then answer += X - Y</div>
+<pre><span class="kw">int</span> <span class="fn">brokenCalc</span>(<span class="kw">int</span> x, <span class="kw">int</span> y) {
+    <span class="kw">int</span> steps = <span class="num">0</span>;
+    <span class="kw">while</span> (y > x) {
+        <span class="kw">if</span> (y % <span class="num">2</span> == <span class="num">0</span>) y /= <span class="num">2</span>;
+        <span class="kw">else</span> y++;
+        steps++;
+    }
+    <span class="kw">return</span> steps + (x - y);
+}
+</pre>
+
+<h3>Key Technique: Think Backwards</h3>
+<div class="insight">
+  <p><strong>When forward exploration branches too much, work backwards from the target.</strong> Division/halving backwards becomes multiplication, which has less branching. Used in: Broken Calculator, Reaching Points, Race Car.</p>
+</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/broken-calculator/" target="_blank">991. Broken Calculator</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/reaching-points/" target="_blank">780. Reaching Points</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/kth-smallest-instructions/" target="_blank">1643. Kth Smallest Instructions</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/number-of-steps-to-reduce-a-number-to-zero/" target="_blank">1342. Number of Steps to Reduce to Zero</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/race-car/" target="_blank">818. Race Car</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/super-egg-drop/" target="_blank">887. Super Egg Drop</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Sequence Patterns ===== -->
+<div class="section" id="sequence">
+<div class="card">
+<h2>Sequence Pattern Recognition</h2>
+<p>Compute the sequence, then look it up or recognize it.</p>
+
+<h3>Famous Sequences to Know</h3>
+<table>
+  <tr><th>Sequence</th><th>First Values</th><th>Formula</th><th>Appears In</th></tr>
+  <tr><td>Fibonacci</td><td>1,1,2,3,5,8,13</td><td>f(n) = f(n-1)+f(n-2)</td><td>Climbing Stairs, Tiling</td></tr>
+  <tr><td>Catalan</td><td>1,1,2,5,14,42</td><td>C(n) = C(2n,n)/(n+1)</td><td>BST count, Parentheses, Triangulation</td></tr>
+  <tr><td>Powers of 2</td><td>1,2,4,8,16,32</td><td>2^n</td><td>Subsets, XOR properties</td></tr>
+  <tr><td>Triangular</td><td>0,1,3,6,10,15</td><td>n(n+1)/2</td><td>Minimum ops, ranges</td></tr>
+  <tr><td>Bell</td><td>1,1,2,5,15,52</td><td>Sum of Stirling S(n,k)</td><td>Set partitions</td></tr>
+  <tr><td>Derangements</td><td>1,0,1,2,9,44</td><td>D(n) = (n-1)(D(n-1)+D(n-2))</td><td>Permutations with no fixed point</td></tr>
+</table>
+
+<h3>How to Identify: Use OEIS</h3>
+<div class="tip">
+  <p><strong>Compute first 5-6 values, search on OEIS (Online Encyclopedia of Integer Sequences).</strong> If it matches a known sequence, you'll get the formula and generating function. In interviews, recognizing Catalan/Fibonacci is usually enough.</p>
+</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/unique-binary-search-trees/" target="_blank">96. Unique Binary Search Trees (Catalan)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/domino-and-tromino-tiling/" target="_blank">790. Domino and Tromino Tiling (recurrence)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-sorted-vowel-strings/" target="_blank">1641. Count Sorted Vowel Strings (stars &amp; bars)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/nth-magical-number/" target="_blank">878. Nth Magical Number (LCM pattern)</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/consecutive-numbers-sum/" target="_blank">829. Consecutive Numbers Sum</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Meet in the Middle ===== -->
+<div class="section" id="mitm">
+<div class="card">
+<h2>Meet in the Middle</h2>
+<p>Split input in half, enumerate all possibilities for each half, then combine. Reduces O(2^n) to O(2^(n/2)).</p>
+
+<h3>When to Use</h3>
+<div class="insight">
+  <p><strong>n is around 30-40</strong> (too large for full 2^n, but 2^20 ~ 1M is fine)<br>
+  <strong>Need to find pairs/sums/counts across all subsets</strong><br>
+  <strong>Classic signals:</strong> "find subset with sum closest to target", "count subsets satisfying condition"</p>
+</div>
+
+<h3>Template: Closest Subset Sum</h3>
+<pre><span class="cm">// Split array into two halves, enumerate all subset sums for each</span>
+<span class="cm">// Then for each sum in left half, binary search in right half</span>
+<span class="kw">int</span> <span class="fn">closestSum</span>(<span class="kw">int</span>[] nums, <span class="kw">int</span> target) {
+    <span class="kw">int</span> n = nums.length, half = n / <span class="num">2</span>;
+
+    <span class="cm">// Generate all subset sums for left half</span>
+    List&lt;Long&gt; left = <span class="kw">new</span> ArrayList&lt;&gt;();
+    <span class="kw">for</span> (<span class="kw">int</span> mask = <span class="num">0</span>; mask &lt; (<span class="num">1</span> &lt;&lt; half); mask++) {
+        <span class="kw">long</span> sum = <span class="num">0</span>;
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; half; i++)
+            <span class="kw">if</span> ((mask &amp; (<span class="num">1</span> &lt;&lt; i)) != <span class="num">0</span>) sum += nums[i];
+        left.add(sum);
+    }
+    Collections.<span class="fn">sort</span>(left);
+
+    <span class="cm">// For each right subset sum, binary search in left</span>
+    <span class="kw">long</span> best = Long.MAX_VALUE;
+    <span class="kw">int</span> right = n - half;
+    <span class="kw">for</span> (<span class="kw">int</span> mask = <span class="num">0</span>; mask &lt; (<span class="num">1</span> &lt;&lt; right); mask++) {
+        <span class="kw">long</span> sum = <span class="num">0</span>;
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; right; i++)
+            <span class="kw">if</span> ((mask &amp; (<span class="num">1</span> &lt;&lt; i)) != <span class="num">0</span>) sum += nums[half + i];
+
+        <span class="kw">long</span> need = target - sum;
+        <span class="kw">int</span> idx = Collections.<span class="fn">binarySearch</span>(left, need);
+        <span class="kw">if</span> (idx &lt; <span class="num">0</span>) idx = -(idx + <span class="num">1</span>);
+        <span class="kw">if</span> (idx &lt; left.size())
+            best = Math.<span class="fn">min</span>(best, Math.<span class="fn">abs</span>(target - sum - left.get(idx)));
+        <span class="kw">if</span> (idx &gt; <span class="num">0</span>)
+            best = Math.<span class="fn">min</span>(best, Math.<span class="fn">abs</span>(target - sum - left.get(idx - <span class="num">1</span>)));
+    }
+    <span class="kw">return</span> (<span class="kw">int</span>) best;
+}
+</pre>
+
+<h3>Complexity</h3>
+<div class="warning">
+  <p><strong>Time:</strong> O(2^(n/2) * log(2^(n/2))) = O(2^(n/2) * n)<br>
+  <strong>Space:</strong> O(2^(n/2))<br>
+  <strong>vs brute force:</strong> O(2^n) &rarr; O(2^(n/2)) — exponentially better for n=36+</p>
+</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/closest-subsequence-sum/" target="_blank">1755. Closest Subsequence Sum</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/partition-array-into-two-arrays-to-minimize-sum-difference/" target="_blank">2035. Partition Array Into Two Arrays to Minimize Sum Difference</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/4sum/" target="_blank">18. 4Sum (n^3 normal, but meet-in-middle for 4Sum II)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/4sum-ii/" target="_blank">454. 4Sum II (HashMap meet-in-middle)</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Interview Approach ===== -->
+<div class="section" id="interview">
+<div class="card">
+<h2>Interview Strategy for Pattern Problems</h2>
+
+<h3>Step-by-Step Communication</h3>
+<div class="tip">
+  <p><strong>1.</strong> "Let me compute some small examples to see if there's a pattern."<br>
+  <strong>2.</strong> Write out n=1,2,3,4,5 explicitly on the whiteboard.<br>
+  <strong>3.</strong> "I notice that f(4) = 2*f(2), and f(5) = 2*f(2)+1... it seems like f(n) relates to f(n/2)."<br>
+  <strong>4.</strong> "Let me verify with f(6) and f(7)..."<br>
+  <strong>5.</strong> "This gives us an O(log n) recursive solution."</p>
+</div>
+
+<h3>When You're Stuck</h3>
+<div class="warning">
+  <p><strong>Try these lenses:</strong><br>
+  &bull; Write answers in <strong>binary</strong> &mdash; often reveals XOR/shift patterns<br>
+  &bull; Think <strong>backwards</strong> from the answer &mdash; reverse operations are often simpler<br>
+  &bull; Split into <strong>odd/even</strong> cases &mdash; often different recurrences<br>
+  &bull; Look at <strong>differences</strong> between consecutive answers &mdash; is the delta pattern simpler?<br>
+  &bull; Check if it's a <strong>known sequence</strong> (Fibonacci, Catalan, powers of 2)</p>
+</div>
+
+<h3>Common Traps</h3>
+<div class="danger">
+  <p><strong>Don't assume the pattern holds without checking!</strong> Always verify at least 2 extra cases beyond what you used to form the hypothesis.<br>
+  <strong>Watch for off-by-one:</strong> Is it 0-indexed or 1-indexed? Is n the count or the max value?<br>
+  <strong>Edge cases:</strong> n=0, n=1 often need special handling.</p>
+</div>
+</div>
+</div>
+
+</div>
+<script>
+function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');event.target.classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+</script>
+</body>
+</html>

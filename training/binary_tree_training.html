@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Binary Tree — Complete Training Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fa; --bg2: #ffffff; --bg3: #f1f3f5; --bg4: #e9ecef;
+  --border: #dee2e6; --text: #212529; --text2: #495057; --text3: #868e96;
+  --blue: #1971c2; --blue-l: #d0ebff; --green: #2f9e44; --green-l: #d3f9d8;
+  --yellow: #e67700; --yellow-l: #fff3bf; --red: #c92a2a; --red-l: #ffe3e3;
+  --purple: #7048e8; --purple-l: #e5dbff; --orange: #d9480f; --cyan: #0c8599;
+  --r: 12px; --shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.8; }
+.container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+header { text-align: center; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+header .sub { color: var(--text3); font-size: 14px; }
+
+.nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 40px;  position: sticky; top: 0; background: var(--bg); padding: 16px 0; z-index: 100; border-bottom: 1px solid var(--border); }
+.nav-btn { padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s; font-family: 'Inter', sans-serif; }
+.nav-btn:hover { background: var(--bg3); color: var(--text); }
+.nav-btn.active { background: var(--blue-l); color: var(--blue); border-color: var(--blue); }
+
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+h2 { font-size: 24px; font-weight: 700; margin: 32px 0 16px; color: var(--blue); }
+h3 { font-size: 18px; font-weight: 600; margin: 24px 0 12px; }
+h4 { font-size: 15px; font-weight: 600; margin: 16px 0 8px; color: var(--text2); }
+p { margin-bottom: 12px; color: var(--text2); }
+ul, ol { margin: 8px 0 16px 24px; color: var(--text2); }
+li { margin-bottom: 6px; }
+strong { color: var(--text); }
+
+pre { background: #1e1e2e; border-radius: 8px; padding: 16px 20px; overflow-x: auto; margin: 12px 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; color: #cdd6f4; }
+code { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+p code, li code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--purple); }
+pre .kw { color: #cba6f7; } pre .type { color: #f9e2af; } pre .str { color: #a6e3a1; }
+pre .cm { color: #6c7086; } pre .num { color: #fab387; } pre .fn { color: #89b4fa; }
+
+.insight { background: var(--blue-l); border-left: 3px solid var(--blue); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.insight p { color: var(--blue); margin: 0; }
+.warning { background: var(--yellow-l); border-left: 3px solid var(--yellow); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.warning p { color: var(--yellow); margin: 0; }
+.danger { background: var(--red-l); border-left: 3px solid var(--red); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.danger p { color: var(--red); margin: 0; }
+.tip { background: var(--green-l); border-left: 3px solid var(--green); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.tip p { color: var(--green); margin: 0; }
+
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 20px; padding: 24px 28px; box-shadow: var(--shadow); }
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+th, td { padding: 10px 14px; border: 1px solid var(--border); text-align: left; }
+th { background: var(--bg3); font-weight: 600; color: var(--text); }
+tr:hover { background: var(--bg3); }
+
+.tag { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; margin: 2px 4px 2px 0; }
+.tag-easy { background: var(--green-l); color: var(--green); }
+.tag-medium { background: var(--yellow-l); color: var(--yellow); }
+.tag-hard { background: var(--red-l); color: var(--red); }
+.tag-freq { background: var(--purple-l); color: var(--purple); }
+
+.problem-list { list-style: none; padding: 0; margin: 12px 0; }
+.problem-list li { padding: 10px 14px; border-left: 3px solid var(--blue); margin-bottom: 8px; background: var(--bg3); border-radius: 0 8px 8px 0; display: flex; justify-content: flex-start; align-items: center; gap: 8px; }
+.problem-list .title { color: var(--text); font-weight: 500; font-size: 14px; flex: 1; }
+.problem-list .title a { color: var(--text); text-decoration: none; border-bottom: 1px dashed var(--border); transition: all .2s; }
+.problem-list .title a:hover { color: var(--blue); border-bottom-color: var(--blue); }
+
+@media (max-width: 768px) { .container { padding: 20px 12px; } .nav { position: static; } pre { font-size: 11px; } }
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>Binary Tree &mdash; Complete Training Guide</h1>
+  <div class="sub">Traversals &bull; Construction &bull; Path Problems &bull; LCA &bull; Serialization &bull; Morris</div>
+</header>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection('overview')">Overview</button>
+  <button class="nav-btn" onclick="showSection('traversals')">Traversals</button>
+  <button class="nav-btn" onclick="showSection('construction')">Construction</button>
+  <button class="nav-btn" onclick="showSection('path')">Path Problems</button>
+  <button class="nav-btn" onclick="showSection('lca')">LCA</button>
+  <button class="nav-btn" onclick="showSection('views')">Views &amp; Boundaries</button>
+  <button class="nav-btn" onclick="showSection('modification')">Modification</button>
+  <button class="nav-btn" onclick="showSection('bst')">BST Operations</button>
+  <button class="nav-btn" onclick="showSection('tips')">Interview Tips</button>
+</div>
+
+<!-- ===== Overview ===== -->
+<div class="section active" id="overview">
+<div class="card">
+<h2>When to Use Which Traversal</h2>
+<p>Binary tree problems account for ~15-20% of Google interviews. Choosing the right traversal order is half the battle.</p>
+
+<h3>Traversal Selection Guide</h3>
+<table>
+  <tr><th>Problem Type</th><th>Traversal</th><th>Why</th></tr>
+  <tr><td>BST operations (validate, search, kth)</td><td>Inorder</td><td>Inorder of BST = sorted order</td></tr>
+  <tr><td>Serialize / clone / reconstruct</td><td>Preorder</td><td>Root-first makes reconstruction natural</td></tr>
+  <tr><td>Delete nodes / free memory</td><td>Postorder</td><td>Process children before parent</td></tr>
+  <tr><td>Shortest path / level-by-level</td><td>Level-order (BFS)</td><td>Natural level separation</td></tr>
+  <tr><td>Path sum / diameter / height</td><td>Postorder (bottom-up)</td><td>Need subtree info before deciding at node</td></tr>
+  <tr><td>Top-down propagation (path from root)</td><td>Preorder (top-down)</td><td>Pass info from parent to children</td></tr>
+</table>
+
+<h3>Complexity Reference</h3>
+<table>
+  <tr><th>Operation</th><th>Time</th><th>Space</th></tr>
+  <tr><td>Any traversal (recursive)</td><td>O(n)</td><td>O(h) stack</td></tr>
+  <tr><td>Any traversal (iterative)</td><td>O(n)</td><td>O(h) stack</td></tr>
+  <tr><td>Level-order (BFS)</td><td>O(n)</td><td>O(w) queue, w = max width</td></tr>
+  <tr><td>Morris traversal</td><td>O(n)</td><td>O(1)</td></tr>
+  <tr><td>Build tree from traversals</td><td>O(n)</td><td>O(n) hashmap</td></tr>
+  <tr><td>LCA (binary lifting)</td><td>O(log n) per query</td><td>O(n log n) preprocessing</td></tr>
+</table>
+
+<div class="insight">
+  <p><strong>Key insight:</strong> Most binary tree problems boil down to one question: "What info do I need from subtrees (postorder) vs. what info do I pass down (preorder)?"</p>
+</div>
+
+<h3>TreeNode Definition (used throughout)</h3>
+<pre><span class="kw">class</span> <span class="fn">TreeNode</span> {
+    <span class="kw">int</span> val;
+    TreeNode left, right;
+    <span class="fn">TreeNode</span>(<span class="kw">int</span> val) { <span class="kw">this</span>.val = val; }
+}</pre>
+</div>
+</div>
+
+<!-- ===== Traversals ===== -->
+<div class="section" id="traversals">
+<div class="card">
+<h2>Traversals</h2>
+<p>Master all four traversals in both recursive and iterative form. This is non-negotiable for Google interviews.</p>
+
+<div class="warning">
+  <p><strong>Google interviewers may ask you to convert between recursive and iterative on the spot.</strong> Practice writing both forms without hesitation.</p>
+</div>
+
+<h3>Inorder (Left, Root, Right)</h3>
+<h4>Recursive</h4>
+<pre><span class="kw">void</span> <span class="fn">inorder</span>(TreeNode node, List&lt;Integer&gt; res) {
+    <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">return</span>;
+    <span class="fn">inorder</span>(node.left, res);
+    res.<span class="fn">add</span>(node.val);
+    <span class="fn">inorder</span>(node.right, res);
+}</pre>
+
+<h4>Iterative (Stack)</h4>
+<pre>List&lt;Integer&gt; <span class="fn">inorderIterative</span>(TreeNode root) {
+    List&lt;Integer&gt; res = <span class="kw">new</span> ArrayList&lt;&gt;();
+    Deque&lt;TreeNode&gt; stack = <span class="kw">new</span> ArrayDeque&lt;&gt;();
+    TreeNode cur = root;
+    <span class="kw">while</span> (cur != <span class="kw">null</span> || !stack.<span class="fn">isEmpty</span>()) {
+        <span class="kw">while</span> (cur != <span class="kw">null</span>) {
+            stack.<span class="fn">push</span>(cur);
+            cur = cur.left;
+        }
+        cur = stack.<span class="fn">pop</span>();
+        res.<span class="fn">add</span>(cur.val);
+        cur = cur.right;
+    }
+    <span class="kw">return</span> res;
+}</pre>
+
+<h4>Morris Inorder (O(1) space)</h4>
+<div class="tip">
+  <p><strong>Rarely asked directly</strong>, but good to know. It modifies the tree temporarily by threading right pointers, then restores it.</p>
+</div>
+<pre>List&lt;Integer&gt; <span class="fn">morrisInorder</span>(TreeNode root) {
+    List&lt;Integer&gt; res = <span class="kw">new</span> ArrayList&lt;&gt;();
+    TreeNode cur = root;
+    <span class="kw">while</span> (cur != <span class="kw">null</span>) {
+        <span class="kw">if</span> (cur.left == <span class="kw">null</span>) {
+            res.<span class="fn">add</span>(cur.val);
+            cur = cur.right;
+        } <span class="kw">else</span> {
+            <span class="cm">// Find inorder predecessor</span>
+            TreeNode pred = cur.left;
+            <span class="kw">while</span> (pred.right != <span class="kw">null</span> &amp;&amp; pred.right != cur) {
+                pred = pred.right;
+            }
+            <span class="kw">if</span> (pred.right == <span class="kw">null</span>) {
+                <span class="cm">// Thread: make predecessor point back to cur</span>
+                pred.right = cur;
+                cur = cur.left;
+            } <span class="kw">else</span> {
+                <span class="cm">// Unthread: restore tree, visit cur</span>
+                pred.right = <span class="kw">null</span>;
+                res.<span class="fn">add</span>(cur.val);
+                cur = cur.right;
+            }
+        }
+    }
+    <span class="kw">return</span> res;
+}</pre>
+
+<h3>Preorder (Root, Left, Right)</h3>
+<h4>Recursive</h4>
+<pre><span class="kw">void</span> <span class="fn">preorder</span>(TreeNode node, List&lt;Integer&gt; res) {
+    <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">return</span>;
+    res.<span class="fn">add</span>(node.val);
+    <span class="fn">preorder</span>(node.left, res);
+    <span class="fn">preorder</span>(node.right, res);
+}</pre>
+
+<h4>Iterative (Stack)</h4>
+<pre>List&lt;Integer&gt; <span class="fn">preorderIterative</span>(TreeNode root) {
+    List&lt;Integer&gt; res = <span class="kw">new</span> ArrayList&lt;&gt;();
+    <span class="kw">if</span> (root == <span class="kw">null</span>) <span class="kw">return</span> res;
+    Deque&lt;TreeNode&gt; stack = <span class="kw">new</span> ArrayDeque&lt;&gt;();
+    stack.<span class="fn">push</span>(root);
+    <span class="kw">while</span> (!stack.<span class="fn">isEmpty</span>()) {
+        TreeNode node = stack.<span class="fn">pop</span>();
+        res.<span class="fn">add</span>(node.val);
+        <span class="cm">// Push right first so left is processed first</span>
+        <span class="kw">if</span> (node.right != <span class="kw">null</span>) stack.<span class="fn">push</span>(node.right);
+        <span class="kw">if</span> (node.left != <span class="kw">null</span>) stack.<span class="fn">push</span>(node.left);
+    }
+    <span class="kw">return</span> res;
+}</pre>
+
+<h3>Postorder (Left, Right, Root)</h3>
+<h4>Recursive</h4>
+<pre><span class="kw">void</span> <span class="fn">postorder</span>(TreeNode node, List&lt;Integer&gt; res) {
+    <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">return</span>;
+    <span class="fn">postorder</span>(node.left, res);
+    <span class="fn">postorder</span>(node.right, res);
+    res.<span class="fn">add</span>(node.val);
+}</pre>
+
+<h4>Iterative (Two Stacks / Reverse Preorder)</h4>
+<pre><span class="cm">// Trick: modified preorder (Root, Right, Left) then reverse</span>
+List&lt;Integer&gt; <span class="fn">postorderIterative</span>(TreeNode root) {
+    LinkedList&lt;Integer&gt; res = <span class="kw">new</span> LinkedList&lt;&gt;();
+    <span class="kw">if</span> (root == <span class="kw">null</span>) <span class="kw">return</span> res;
+    Deque&lt;TreeNode&gt; stack = <span class="kw">new</span> ArrayDeque&lt;&gt;();
+    stack.<span class="fn">push</span>(root);
+    <span class="kw">while</span> (!stack.<span class="fn">isEmpty</span>()) {
+        TreeNode node = stack.<span class="fn">pop</span>();
+        res.<span class="fn">addFirst</span>(node.val); <span class="cm">// add to front</span>
+        <span class="kw">if</span> (node.left != <span class="kw">null</span>) stack.<span class="fn">push</span>(node.left);
+        <span class="kw">if</span> (node.right != <span class="kw">null</span>) stack.<span class="fn">push</span>(node.right);
+    }
+    <span class="kw">return</span> res;
+}</pre>
+
+<h4>Iterative (Single Stack, True Postorder)</h4>
+<pre>List&lt;Integer&gt; <span class="fn">postorderSingleStack</span>(TreeNode root) {
+    List&lt;Integer&gt; res = <span class="kw">new</span> ArrayList&lt;&gt;();
+    Deque&lt;TreeNode&gt; stack = <span class="kw">new</span> ArrayDeque&lt;&gt;();
+    TreeNode cur = root, lastVisited = <span class="kw">null</span>;
+    <span class="kw">while</span> (cur != <span class="kw">null</span> || !stack.<span class="fn">isEmpty</span>()) {
+        <span class="kw">while</span> (cur != <span class="kw">null</span>) {
+            stack.<span class="fn">push</span>(cur);
+            cur = cur.left;
+        }
+        TreeNode peek = stack.<span class="fn">peek</span>();
+        <span class="kw">if</span> (peek.right != <span class="kw">null</span> &amp;&amp; peek.right != lastVisited) {
+            cur = peek.right;
+        } <span class="kw">else</span> {
+            res.<span class="fn">add</span>(peek.val);
+            lastVisited = stack.<span class="fn">pop</span>();
+        }
+    }
+    <span class="kw">return</span> res;
+}</pre>
+
+<h3>Level-Order (BFS)</h3>
+<h4>Recursive (DFS with depth tracking)</h4>
+<pre><span class="kw">void</span> <span class="fn">levelOrderDFS</span>(TreeNode node, <span class="kw">int</span> depth, List&lt;List&lt;Integer&gt;&gt; res) {
+    <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">return</span>;
+    <span class="kw">if</span> (depth == res.<span class="fn">size</span>()) res.<span class="fn">add</span>(<span class="kw">new</span> ArrayList&lt;&gt;());
+    res.<span class="fn">get</span>(depth).<span class="fn">add</span>(node.val);
+    <span class="fn">levelOrderDFS</span>(node.left, depth + <span class="num">1</span>, res);
+    <span class="fn">levelOrderDFS</span>(node.right, depth + <span class="num">1</span>, res);
+}</pre>
+
+<h4>Iterative (Queue)</h4>
+<pre>List&lt;List&lt;Integer&gt;&gt; <span class="fn">levelOrder</span>(TreeNode root) {
+    List&lt;List&lt;Integer&gt;&gt; res = <span class="kw">new</span> ArrayList&lt;&gt;();
+    <span class="kw">if</span> (root == <span class="kw">null</span>) <span class="kw">return</span> res;
+    Queue&lt;TreeNode&gt; q = <span class="kw">new</span> LinkedList&lt;&gt;();
+    q.<span class="fn">offer</span>(root);
+    <span class="kw">while</span> (!q.<span class="fn">isEmpty</span>()) {
+        <span class="kw">int</span> size = q.<span class="fn">size</span>();
+        List&lt;Integer&gt; level = <span class="kw">new</span> ArrayList&lt;&gt;();
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; size; i++) {
+            TreeNode node = q.<span class="fn">poll</span>();
+            level.<span class="fn">add</span>(node.val);
+            <span class="kw">if</span> (node.left != <span class="kw">null</span>) q.<span class="fn">offer</span>(node.left);
+            <span class="kw">if</span> (node.right != <span class="kw">null</span>) q.<span class="fn">offer</span>(node.right);
+        }
+        res.<span class="fn">add</span>(level);
+    }
+    <span class="kw">return</span> res;
+}</pre>
+
+<div class="insight">
+  <p><strong>Pattern:</strong> <code>int size = q.size()</code> before the inner loop is the key trick for level separation in BFS.</p>
+</div>
+
+<h3>Related Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/binary-tree-inorder-traversal/" target="_blank">94. Binary Tree Inorder Traversal</a></span><span class="tag tag-easy">Easy</span><span class="tag tag-freq">Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/binary-tree-preorder-traversal/" target="_blank">144. Binary Tree Preorder Traversal</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/binary-tree-postorder-traversal/" target="_blank">145. Binary Tree Postorder Traversal</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/binary-tree-level-order-traversal/" target="_blank">102. Binary Tree Level Order Traversal</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/" target="_blank">103. Binary Tree Zigzag Level Order Traversal</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/recover-a-tree-from-preorder-traversal/" target="_blank">1028. Recover a Tree From Preorder Traversal</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Construction ===== -->
+<div class="section" id="construction">
+<div class="card">
+<h2>Construction &amp; Serialization</h2>
+<p>Building trees from traversal arrays and serializing/deserializing are classic Google problems. The key insight: you need TWO traversals (one must be inorder) to uniquely define a tree, OR you can serialize with null markers.</p>
+
+<h3>Build from Preorder + Inorder (LC 105)</h3>
+<pre><span class="kw">int</span> preIdx = <span class="num">0</span>;
+Map&lt;Integer, Integer&gt; inMap = <span class="kw">new</span> HashMap&lt;&gt;();
+
+TreeNode <span class="fn">buildTree</span>(<span class="kw">int</span>[] preorder, <span class="kw">int</span>[] inorder) {
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; inorder.length; i++)
+        inMap.<span class="fn">put</span>(inorder[i], i);
+    <span class="kw">return</span> <span class="fn">build</span>(preorder, <span class="num">0</span>, inorder.length - <span class="num">1</span>);
+}
+
+TreeNode <span class="fn">build</span>(<span class="kw">int</span>[] preorder, <span class="kw">int</span> inLeft, <span class="kw">int</span> inRight) {
+    <span class="kw">if</span> (inLeft &gt; inRight) <span class="kw">return null</span>;
+    <span class="kw">int</span> rootVal = preorder[preIdx++];
+    TreeNode root = <span class="kw">new</span> TreeNode(rootVal);
+    <span class="kw">int</span> idx = inMap.<span class="fn">get</span>(rootVal);
+    root.left = <span class="fn">build</span>(preorder, inLeft, idx - <span class="num">1</span>);
+    root.right = <span class="fn">build</span>(preorder, idx + <span class="num">1</span>, inRight);
+    <span class="kw">return</span> root;
+}</pre>
+
+<div class="insight">
+  <p><strong>Why it works:</strong> Preorder gives us the root. Inorder tells us which elements are in the left vs. right subtree (everything left of root in inorder = left subtree).</p>
+</div>
+
+<h3>Build from Inorder + Postorder (LC 106)</h3>
+<pre><span class="kw">int</span> postIdx;
+Map&lt;Integer, Integer&gt; inMap = <span class="kw">new</span> HashMap&lt;&gt;();
+
+TreeNode <span class="fn">buildTree</span>(<span class="kw">int</span>[] inorder, <span class="kw">int</span>[] postorder) {
+    postIdx = postorder.length - <span class="num">1</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; inorder.length; i++)
+        inMap.<span class="fn">put</span>(inorder[i], i);
+    <span class="kw">return</span> <span class="fn">build</span>(postorder, <span class="num">0</span>, inorder.length - <span class="num">1</span>);
+}
+
+TreeNode <span class="fn">build</span>(<span class="kw">int</span>[] postorder, <span class="kw">int</span> inLeft, <span class="kw">int</span> inRight) {
+    <span class="kw">if</span> (inLeft &gt; inRight) <span class="kw">return null</span>;
+    <span class="kw">int</span> rootVal = postorder[postIdx--];
+    TreeNode root = <span class="kw">new</span> TreeNode(rootVal);
+    <span class="kw">int</span> idx = inMap.<span class="fn">get</span>(rootVal);
+    <span class="cm">// Build RIGHT first (postorder processes right before left in reverse)</span>
+    root.right = <span class="fn">build</span>(postorder, idx + <span class="num">1</span>, inRight);
+    root.left = <span class="fn">build</span>(postorder, inLeft, idx - <span class="num">1</span>);
+    <span class="kw">return</span> root;
+}</pre>
+
+<h3>Serialize / Deserialize (LC 297)</h3>
+<pre><span class="cm">// Preorder with null markers</span>
+<span class="kw">public</span> String <span class="fn">serialize</span>(TreeNode root) {
+    StringBuilder sb = <span class="kw">new</span> StringBuilder();
+    <span class="fn">serDFS</span>(root, sb);
+    <span class="kw">return</span> sb.<span class="fn">toString</span>();
+}
+
+<span class="kw">void</span> <span class="fn">serDFS</span>(TreeNode node, StringBuilder sb) {
+    <span class="kw">if</span> (node == <span class="kw">null</span>) { sb.<span class="fn">append</span>(<span class="str">"#,"</span>); <span class="kw">return</span>; }
+    sb.<span class="fn">append</span>(node.val).<span class="fn">append</span>(<span class="str">","</span>);
+    <span class="fn">serDFS</span>(node.left, sb);
+    <span class="fn">serDFS</span>(node.right, sb);
+}
+
+<span class="kw">public</span> TreeNode <span class="fn">deserialize</span>(String data) {
+    Queue&lt;String&gt; q = <span class="kw">new</span> LinkedList&lt;&gt;(Arrays.<span class="fn">asList</span>(data.<span class="fn">split</span>(<span class="str">","</span>)));
+    <span class="kw">return</span> <span class="fn">desDFS</span>(q);
+}
+
+TreeNode <span class="fn">desDFS</span>(Queue&lt;String&gt; q) {
+    String val = q.<span class="fn">poll</span>();
+    <span class="kw">if</span> (val.<span class="fn">equals</span>(<span class="str">"#"</span>)) <span class="kw">return null</span>;
+    TreeNode node = <span class="kw">new</span> TreeNode(Integer.<span class="fn">parseInt</span>(val));
+    node.left = <span class="fn">desDFS</span>(q);
+    node.right = <span class="fn">desDFS</span>(q);
+    <span class="kw">return</span> node;
+}</pre>
+
+<h3>BST from Preorder (LC 1008)</h3>
+<pre><span class="kw">int</span> idx = <span class="num">0</span>;
+
+TreeNode <span class="fn">bstFromPreorder</span>(<span class="kw">int</span>[] preorder) {
+    <span class="kw">return</span> <span class="fn">build</span>(preorder, Integer.MAX_VALUE);
+}
+
+TreeNode <span class="fn">build</span>(<span class="kw">int</span>[] preorder, <span class="kw">int</span> upperBound) {
+    <span class="kw">if</span> (idx == preorder.length || preorder[idx] &gt; upperBound)
+        <span class="kw">return null</span>;
+    TreeNode root = <span class="kw">new</span> TreeNode(preorder[idx++]);
+    root.left = <span class="fn">build</span>(preorder, root.val);
+    root.right = <span class="fn">build</span>(preorder, upperBound);
+    <span class="kw">return</span> root;
+}</pre>
+
+<div class="tip">
+  <p><strong>BST property eliminates the need for inorder!</strong> The preorder alone suffices because we know left children are smaller, right children are larger.</p>
+</div>
+
+<h3>Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/" target="_blank">105. Construct Binary Tree from Preorder and Inorder Traversal</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/" target="_blank">106. Construct Binary Tree from Inorder and Postorder Traversal</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/construct-binary-tree-from-preorder-and-postorder-traversal/" target="_blank">889. Construct Binary Tree from Preorder and Postorder Traversal</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/serialize-and-deserialize-binary-tree/" target="_blank">297. Serialize and Deserialize Binary Tree</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/serialize-and-deserialize-bst/" target="_blank">449. Serialize and Deserialize BST</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/construct-binary-search-tree-from-preorder-traversal/" target="_blank">1008. Construct BST from Preorder Traversal</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Path Problems ===== -->
+<div class="section" id="path">
+<div class="card">
+<h2>Path Problems</h2>
+<p>Path problems use a common pattern: compute the answer at each node using subtree information (postorder), and track the global best with an instance variable.</p>
+
+<h3>Binary Tree Maximum Path Sum (LC 124)</h3>
+<pre><span class="kw">int</span> maxSum = Integer.MIN_VALUE;
+
+<span class="kw">int</span> <span class="fn">maxPathSum</span>(TreeNode root) {
+    <span class="fn">dfs</span>(root);
+    <span class="kw">return</span> maxSum;
+}
+
+<span class="cm">// Returns max "one-arm" path sum starting at node going down</span>
+<span class="kw">int</span> <span class="fn">dfs</span>(TreeNode node) {
+    <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">return</span> <span class="num">0</span>;
+    <span class="kw">int</span> left = Math.<span class="fn">max</span>(<span class="num">0</span>, <span class="fn">dfs</span>(node.left));   <span class="cm">// clamp negative to 0</span>
+    <span class="kw">int</span> right = Math.<span class="fn">max</span>(<span class="num">0</span>, <span class="fn">dfs</span>(node.right));
+    <span class="cm">// Update global: path through this node as "turning point"</span>
+    maxSum = Math.<span class="fn">max</span>(maxSum, left + right + node.val);
+    <span class="cm">// Return one-arm to parent</span>
+    <span class="kw">return</span> Math.<span class="fn">max</span>(left, right) + node.val;
+}</pre>
+
+<div class="danger">
+  <p><strong>Common mistake:</strong> Forgetting to clamp negative subtree sums to 0. A negative subtree should be ignored, not included in the path.</p>
+</div>
+
+<h3>Diameter of Binary Tree (LC 543)</h3>
+<pre><span class="kw">int</span> diameter = <span class="num">0</span>;
+
+<span class="kw">int</span> <span class="fn">diameterOfBinaryTree</span>(TreeNode root) {
+    <span class="fn">height</span>(root);
+    <span class="kw">return</span> diameter;
+}
+
+<span class="kw">int</span> <span class="fn">height</span>(TreeNode node) {
+    <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">return</span> <span class="num">0</span>;
+    <span class="kw">int</span> left = <span class="fn">height</span>(node.left);
+    <span class="kw">int</span> right = <span class="fn">height</span>(node.right);
+    diameter = Math.<span class="fn">max</span>(diameter, left + right); <span class="cm">// edges, not nodes</span>
+    <span class="kw">return</span> Math.<span class="fn">max</span>(left, right) + <span class="num">1</span>;
+}</pre>
+
+<h3>Path Sum III (LC 437) - Prefix Sum on Tree</h3>
+<pre><span class="kw">int</span> count = <span class="num">0</span>;
+
+<span class="kw">int</span> <span class="fn">pathSum</span>(TreeNode root, <span class="kw">int</span> targetSum) {
+    Map&lt;Long, Integer&gt; prefixMap = <span class="kw">new</span> HashMap&lt;&gt;();
+    prefixMap.<span class="fn">put</span>(<span class="num">0</span>L, <span class="num">1</span>);
+    <span class="fn">dfs</span>(root, <span class="num">0</span>L, targetSum, prefixMap);
+    <span class="kw">return</span> count;
+}
+
+<span class="kw">void</span> <span class="fn">dfs</span>(TreeNode node, <span class="kw">long</span> curSum, <span class="kw">int</span> target, Map&lt;Long, Integer&gt; map) {
+    <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">return</span>;
+    curSum += node.val;
+    count += map.<span class="fn">getOrDefault</span>(curSum - target, <span class="num">0</span>);
+    map.<span class="fn">merge</span>(curSum, <span class="num">1</span>, Integer::sum);
+    <span class="fn">dfs</span>(node.left, curSum, target, map);
+    <span class="fn">dfs</span>(node.right, curSum, target, map);
+    map.<span class="fn">merge</span>(curSum, -<span class="num">1</span>, Integer::sum); <span class="cm">// backtrack</span>
+}</pre>
+
+<div class="insight">
+  <p><strong>Pattern recognition:</strong> "Path Sum III" is just the "Subarray Sum Equals K" technique (prefix sum + hashmap) applied to tree paths from root to node.</p>
+</div>
+
+<h3>Longest Univalue Path (LC 687)</h3>
+<pre><span class="kw">int</span> longest = <span class="num">0</span>;
+
+<span class="kw">int</span> <span class="fn">longestUnivaluePath</span>(TreeNode root) {
+    <span class="fn">dfs</span>(root);
+    <span class="kw">return</span> longest;
+}
+
+<span class="kw">int</span> <span class="fn">dfs</span>(TreeNode node) {
+    <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">return</span> <span class="num">0</span>;
+    <span class="kw">int</span> left = <span class="fn">dfs</span>(node.left);
+    <span class="kw">int</span> right = <span class="fn">dfs</span>(node.right);
+    <span class="kw">int</span> arrowLeft = <span class="num">0</span>, arrowRight = <span class="num">0</span>;
+    <span class="kw">if</span> (node.left != <span class="kw">null</span> &amp;&amp; node.left.val == node.val)
+        arrowLeft = left + <span class="num">1</span>;
+    <span class="kw">if</span> (node.right != <span class="kw">null</span> &amp;&amp; node.right.val == node.val)
+        arrowRight = right + <span class="num">1</span>;
+    longest = Math.<span class="fn">max</span>(longest, arrowLeft + arrowRight);
+    <span class="kw">return</span> Math.<span class="fn">max</span>(arrowLeft, arrowRight);
+}</pre>
+
+<h3>Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/binary-tree-maximum-path-sum/" target="_blank">124. Binary Tree Maximum Path Sum</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/diameter-of-binary-tree/" target="_blank">543. Diameter of Binary Tree</a></span><span class="tag tag-easy">Easy</span><span class="tag tag-freq">Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/path-sum/" target="_blank">112. Path Sum</a></span><span class="tag tag-easy">Easy</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/path-sum-ii/" target="_blank">113. Path Sum II</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/path-sum-iii/" target="_blank">437. Path Sum III</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-univalue-path/" target="_blank">687. Longest Univalue Path</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== LCA ===== -->
+<div class="section" id="lca">
+<div class="card">
+<h2>Lowest Common Ancestor (LCA)</h2>
+<p>LCA is one of the most frequently asked binary tree problems at Google. Know all three variants cold.</p>
+
+<h3>LCA of Binary Tree (LC 236) - Recursive</h3>
+<pre>TreeNode <span class="fn">lowestCommonAncestor</span>(TreeNode root, TreeNode p, TreeNode q) {
+    <span class="kw">if</span> (root == <span class="kw">null</span> || root == p || root == q) <span class="kw">return</span> root;
+    TreeNode left = <span class="fn">lowestCommonAncestor</span>(root.left, p, q);
+    TreeNode right = <span class="fn">lowestCommonAncestor</span>(root.right, p, q);
+    <span class="kw">if</span> (left != <span class="kw">null</span> &amp;&amp; right != <span class="kw">null</span>) <span class="kw">return</span> root;
+    <span class="kw">return</span> left != <span class="kw">null</span> ? left : right;
+}</pre>
+
+<div class="insight">
+  <p><strong>How this works:</strong> If both left and right subtrees return non-null, current node is the LCA. If only one side returns non-null, the LCA is in that subtree (or is that returned node itself).</p>
+</div>
+
+<h3>LCA of Binary Tree - Iterative with Parent Pointers</h3>
+<pre>TreeNode <span class="fn">lcaIterative</span>(TreeNode root, TreeNode p, TreeNode q) {
+    Map&lt;TreeNode, TreeNode&gt; parent = <span class="kw">new</span> HashMap&lt;&gt;();
+    parent.<span class="fn">put</span>(root, <span class="kw">null</span>);
+    Deque&lt;TreeNode&gt; stack = <span class="kw">new</span> ArrayDeque&lt;&gt;();
+    stack.<span class="fn">push</span>(root);
+    <span class="cm">// Step 1: Build parent map until both p and q are found</span>
+    <span class="kw">while</span> (!parent.<span class="fn">containsKey</span>(p) || !parent.<span class="fn">containsKey</span>(q)) {
+        TreeNode node = stack.<span class="fn">pop</span>();
+        <span class="kw">if</span> (node.left != <span class="kw">null</span>) {
+            parent.<span class="fn">put</span>(node.left, node);
+            stack.<span class="fn">push</span>(node.left);
+        }
+        <span class="kw">if</span> (node.right != <span class="kw">null</span>) {
+            parent.<span class="fn">put</span>(node.right, node);
+            stack.<span class="fn">push</span>(node.right);
+        }
+    }
+    <span class="cm">// Step 2: Collect ancestors of p</span>
+    Set&lt;TreeNode&gt; ancestors = <span class="kw">new</span> HashSet&lt;&gt;();
+    <span class="kw">while</span> (p != <span class="kw">null</span>) {
+        ancestors.<span class="fn">add</span>(p);
+        p = parent.<span class="fn">get</span>(p);
+    }
+    <span class="cm">// Step 3: First ancestor of q that's also ancestor of p</span>
+    <span class="kw">while</span> (!ancestors.<span class="fn">contains</span>(q)) {
+        q = parent.<span class="fn">get</span>(q);
+    }
+    <span class="kw">return</span> q;
+}</pre>
+
+<h3>LCA of BST (LC 235)</h3>
+<pre><span class="cm">// Exploit BST property: if both p,q &lt; node, go left; both &gt; node, go right</span>
+TreeNode <span class="fn">lowestCommonAncestor</span>(TreeNode root, TreeNode p, TreeNode q) {
+    TreeNode cur = root;
+    <span class="kw">while</span> (cur != <span class="kw">null</span>) {
+        <span class="kw">if</span> (p.val &lt; cur.val &amp;&amp; q.val &lt; cur.val)
+            cur = cur.left;
+        <span class="kw">else if</span> (p.val &gt; cur.val &amp;&amp; q.val &gt; cur.val)
+            cur = cur.right;
+        <span class="kw">else</span>
+            <span class="kw">return</span> cur; <span class="cm">// split point = LCA</span>
+    }
+    <span class="kw">return null</span>;
+}</pre>
+
+<h3>LCA with Parent Pointer (LC 1650)</h3>
+<pre><span class="cm">// Same as "Intersection of Two Linked Lists" (LC 160)</span>
+Node <span class="fn">lowestCommonAncestor</span>(Node p, Node q) {
+    Node a = p, b = q;
+    <span class="kw">while</span> (a != b) {
+        a = (a != <span class="kw">null</span>) ? a.parent : q;
+        b = (b != <span class="kw">null</span>) ? b.parent : p;
+    }
+    <span class="kw">return</span> a;
+}</pre>
+
+<div class="tip">
+  <p><strong>Elegant trick:</strong> When two pointers reach their respective "end" (root's parent = null), redirect to the other's starting point. They meet at LCA because they travel equal total distance.</p>
+</div>
+
+<h3>Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/" target="_blank">236. Lowest Common Ancestor of a Binary Tree</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/" target="_blank">235. Lowest Common Ancestor of a BST</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-ii/" target="_blank">1644. LCA of a Binary Tree II (nodes may not exist)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-iii/" target="_blank">1650. LCA of a Binary Tree III (with parent pointer)</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-iv/" target="_blank">1676. LCA of a Binary Tree IV (multiple nodes)</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Views & Boundaries ===== -->
+<div class="section" id="views">
+<div class="card">
+<h2>Views &amp; Boundaries</h2>
+<p>These problems test your ability to define traversal order precisely and handle edge cases with coordinates or depths.</p>
+
+<h3>Right Side View (LC 199)</h3>
+<pre>List&lt;Integer&gt; <span class="fn">rightSideView</span>(TreeNode root) {
+    List&lt;Integer&gt; res = <span class="kw">new</span> ArrayList&lt;&gt;();
+    <span class="fn">dfs</span>(root, <span class="num">0</span>, res);
+    <span class="kw">return</span> res;
+}
+
+<span class="kw">void</span> <span class="fn">dfs</span>(TreeNode node, <span class="kw">int</span> depth, List&lt;Integer&gt; res) {
+    <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">return</span>;
+    <span class="kw">if</span> (depth == res.<span class="fn">size</span>()) res.<span class="fn">add</span>(node.val);
+    <span class="fn">dfs</span>(node.right, depth + <span class="num">1</span>, res); <span class="cm">// right first!</span>
+    <span class="fn">dfs</span>(node.left, depth + <span class="num">1</span>, res);
+}</pre>
+
+<div class="insight">
+  <p><strong>Key trick:</strong> Visit right child first. The first node encountered at each depth is the rightmost one. For left view, visit left first instead.</p>
+</div>
+
+<h3>Boundary of Binary Tree (LC 545)</h3>
+<pre>List&lt;Integer&gt; <span class="fn">boundaryOfBinaryTree</span>(TreeNode root) {
+    List&lt;Integer&gt; res = <span class="kw">new</span> ArrayList&lt;&gt;();
+    <span class="kw">if</span> (root == <span class="kw">null</span>) <span class="kw">return</span> res;
+    res.<span class="fn">add</span>(root.val);
+    <span class="fn">leftBoundary</span>(root.left, res);
+    <span class="fn">leaves</span>(root.left, res);
+    <span class="fn">leaves</span>(root.right, res);
+    <span class="fn">rightBoundary</span>(root.right, res);
+    <span class="kw">return</span> res;
+}
+
+<span class="kw">void</span> <span class="fn">leftBoundary</span>(TreeNode node, List&lt;Integer&gt; res) {
+    <span class="kw">while</span> (node != <span class="kw">null</span>) {
+        <span class="kw">if</span> (!<span class="fn">isLeaf</span>(node)) res.<span class="fn">add</span>(node.val);
+        node = (node.left != <span class="kw">null</span>) ? node.left : node.right;
+    }
+}
+
+<span class="kw">void</span> <span class="fn">rightBoundary</span>(TreeNode node, List&lt;Integer&gt; res) {
+    Deque&lt;Integer&gt; stack = <span class="kw">new</span> ArrayDeque&lt;&gt;();
+    <span class="kw">while</span> (node != <span class="kw">null</span>) {
+        <span class="kw">if</span> (!<span class="fn">isLeaf</span>(node)) stack.<span class="fn">push</span>(node.val);
+        node = (node.right != <span class="kw">null</span>) ? node.right : node.left;
+    }
+    <span class="kw">while</span> (!stack.<span class="fn">isEmpty</span>()) res.<span class="fn">add</span>(stack.<span class="fn">pop</span>());
+}
+
+<span class="kw">void</span> <span class="fn">leaves</span>(TreeNode node, List&lt;Integer&gt; res) {
+    <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">return</span>;
+    <span class="kw">if</span> (<span class="fn">isLeaf</span>(node)) { res.<span class="fn">add</span>(node.val); <span class="kw">return</span>; }
+    <span class="fn">leaves</span>(node.left, res);
+    <span class="fn">leaves</span>(node.right, res);
+}
+
+<span class="kw">boolean</span> <span class="fn">isLeaf</span>(TreeNode node) {
+    <span class="kw">return</span> node.left == <span class="kw">null</span> &amp;&amp; node.right == <span class="kw">null</span>;
+}</pre>
+
+<h3>Vertical Order Traversal (LC 987)</h3>
+<pre>List&lt;List&lt;Integer&gt;&gt; <span class="fn">verticalTraversal</span>(TreeNode root) {
+    <span class="cm">// TreeMap&lt;col, TreeMap&lt;row, PriorityQueue&gt;&gt;</span>
+    TreeMap&lt;Integer, TreeMap&lt;Integer, PriorityQueue&lt;Integer&gt;&gt;&gt; map = <span class="kw">new</span> TreeMap&lt;&gt;();
+    <span class="fn">dfs</span>(root, <span class="num">0</span>, <span class="num">0</span>, map);
+    List&lt;List&lt;Integer&gt;&gt; res = <span class="kw">new</span> ArrayList&lt;&gt;();
+    <span class="kw">for</span> (<span class="kw">var</span> colMap : map.<span class="fn">values</span>()) {
+        List&lt;Integer&gt; col = <span class="kw">new</span> ArrayList&lt;&gt;();
+        <span class="kw">for</span> (<span class="kw">var</span> pq : colMap.<span class="fn">values</span>()) {
+            <span class="kw">while</span> (!pq.<span class="fn">isEmpty</span>()) col.<span class="fn">add</span>(pq.<span class="fn">poll</span>());
+        }
+        res.<span class="fn">add</span>(col);
+    }
+    <span class="kw">return</span> res;
+}
+
+<span class="kw">void</span> <span class="fn">dfs</span>(TreeNode node, <span class="kw">int</span> row, <span class="kw">int</span> col,
+         TreeMap&lt;Integer, TreeMap&lt;Integer, PriorityQueue&lt;Integer&gt;&gt;&gt; map) {
+    <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">return</span>;
+    map.<span class="fn">computeIfAbsent</span>(col, k -&gt; <span class="kw">new</span> TreeMap&lt;&gt;())
+       .<span class="fn">computeIfAbsent</span>(row, k -&gt; <span class="kw">new</span> PriorityQueue&lt;&gt;())
+       .<span class="fn">offer</span>(node.val);
+    <span class="fn">dfs</span>(node.left, row + <span class="num">1</span>, col - <span class="num">1</span>, map);
+    <span class="fn">dfs</span>(node.right, row + <span class="num">1</span>, col + <span class="num">1</span>, map);
+}</pre>
+
+<div class="warning">
+  <p><strong>LC 314 vs LC 987:</strong> They look similar but have different tie-breaking rules. LC 314 uses insertion order (BFS) while LC 987 sorts by value when row and column are equal.</p>
+</div>
+
+<h3>Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/binary-tree-right-side-view/" target="_blank">199. Binary Tree Right Side View</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/boundary-of-binary-tree/" target="_blank">545. Boundary of Binary Tree</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/binary-tree-vertical-order-traversal/" target="_blank">314. Binary Tree Vertical Order Traversal</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/" target="_blank">987. Vertical Order Traversal of a Binary Tree</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/find-bottom-left-tree-value/" target="_blank">513. Find Bottom Left Tree Value</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Modification ===== -->
+<div class="section" id="modification">
+<div class="card">
+<h2>Tree Modification</h2>
+<p>Problems that require restructuring the tree. The key is understanding how pointer manipulation works in a recursive context.</p>
+
+<h3>Invert Binary Tree (LC 226)</h3>
+<pre>TreeNode <span class="fn">invertTree</span>(TreeNode root) {
+    <span class="kw">if</span> (root == <span class="kw">null</span>) <span class="kw">return null</span>;
+    TreeNode left = <span class="fn">invertTree</span>(root.left);
+    TreeNode right = <span class="fn">invertTree</span>(root.right);
+    root.left = right;
+    root.right = left;
+    <span class="kw">return</span> root;
+}</pre>
+
+<h3>Flatten Binary Tree to Linked List (LC 114)</h3>
+<pre><span class="cm">// In-place, preorder, right pointers form the linked list</span>
+<span class="kw">void</span> <span class="fn">flatten</span>(TreeNode root) {
+    TreeNode cur = root;
+    <span class="kw">while</span> (cur != <span class="kw">null</span>) {
+        <span class="kw">if</span> (cur.left != <span class="kw">null</span>) {
+            <span class="cm">// Find rightmost node in left subtree</span>
+            TreeNode pred = cur.left;
+            <span class="kw">while</span> (pred.right != <span class="kw">null</span>) pred = pred.right;
+            <span class="cm">// Connect it to cur.right</span>
+            pred.right = cur.right;
+            <span class="cm">// Move left subtree to right</span>
+            cur.right = cur.left;
+            cur.left = <span class="kw">null</span>;
+        }
+        cur = cur.right;
+    }
+}</pre>
+
+<div class="insight">
+  <p><strong>Alternative approach (reverse postorder):</strong> Process right, left, root. Maintain a <code>prev</code> pointer. Set <code>node.right = prev; node.left = null; prev = node</code>.</p>
+</div>
+
+<h3>Populating Next Right Pointers (LC 116 - Perfect BT)</h3>
+<pre><span class="cm">// O(1) space using already-established next pointers</span>
+Node <span class="fn">connect</span>(Node root) {
+    Node levelStart = root;
+    <span class="kw">while</span> (levelStart != <span class="kw">null</span> &amp;&amp; levelStart.left != <span class="kw">null</span>) {
+        Node cur = levelStart;
+        <span class="kw">while</span> (cur != <span class="kw">null</span>) {
+            cur.left.next = cur.right;
+            <span class="kw">if</span> (cur.next != <span class="kw">null</span>)
+                cur.right.next = cur.next.left;
+            cur = cur.next;
+        }
+        levelStart = levelStart.left;
+    }
+    <span class="kw">return</span> root;
+}</pre>
+
+<h3>Populating Next Right Pointers II (LC 117 - Any BT)</h3>
+<pre>Node <span class="fn">connect</span>(Node root) {
+    Node cur = root;
+    <span class="kw">while</span> (cur != <span class="kw">null</span>) {
+        Node dummy = <span class="kw">new</span> Node(<span class="num">0</span>); <span class="cm">// dummy for next level</span>
+        Node tail = dummy;
+        <span class="kw">while</span> (cur != <span class="kw">null</span>) {
+            <span class="kw">if</span> (cur.left != <span class="kw">null</span>) { tail.next = cur.left; tail = tail.next; }
+            <span class="kw">if</span> (cur.right != <span class="kw">null</span>) { tail.next = cur.right; tail = tail.next; }
+            cur = cur.next;
+        }
+        cur = dummy.next; <span class="cm">// move to next level</span>
+    }
+    <span class="kw">return</span> root;
+}</pre>
+
+<h3>Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/invert-binary-tree/" target="_blank">226. Invert Binary Tree</a></span><span class="tag tag-easy">Easy</span><span class="tag tag-freq">Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/flatten-binary-tree-to-linked-list/" target="_blank">114. Flatten Binary Tree to Linked List</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/populating-next-right-pointers-in-each-node/" target="_blank">116. Populating Next Right Pointers in Each Node</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/" target="_blank">117. Populating Next Right Pointers in Each Node II</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-binary-tree/" target="_blank">654. Maximum Binary Tree</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/merge-two-binary-trees/" target="_blank">617. Merge Two Binary Trees</a></span><span class="tag tag-easy">Easy</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== BST Operations ===== -->
+<div class="section" id="bst">
+<div class="card">
+<h2>BST Operations</h2>
+<p>BST problems exploit the ordering invariant: <code>left.val &lt; node.val &lt; right.val</code>. Inorder traversal of a BST yields sorted order.</p>
+
+<h3>Validate BST (LC 98)</h3>
+<pre><span class="kw">boolean</span> <span class="fn">isValidBST</span>(TreeNode root) {
+    <span class="kw">return</span> <span class="fn">validate</span>(root, Long.MIN_VALUE, Long.MAX_VALUE);
+}
+
+<span class="kw">boolean</span> <span class="fn">validate</span>(TreeNode node, <span class="kw">long</span> min, <span class="kw">long</span> max) {
+    <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">return true</span>;
+    <span class="kw">if</span> (node.val &lt;= min || node.val &gt;= max) <span class="kw">return false</span>;
+    <span class="kw">return</span> <span class="fn">validate</span>(node.left, min, node.val)
+        &amp;&amp; <span class="fn">validate</span>(node.right, node.val, max);
+}</pre>
+
+<div class="danger">
+  <p><strong>Pitfall:</strong> Using <code>int</code> bounds fails when node values are Integer.MIN_VALUE or MAX_VALUE. Always use <code>long</code> for bounds.</p>
+</div>
+
+<h3>BST Iterator (LC 173)</h3>
+<pre><span class="kw">class</span> <span class="fn">BSTIterator</span> {
+    Deque&lt;TreeNode&gt; stack = <span class="kw">new</span> ArrayDeque&lt;&gt;();
+
+    <span class="fn">BSTIterator</span>(TreeNode root) {
+        <span class="fn">pushLeft</span>(root);
+    }
+
+    <span class="kw">int</span> <span class="fn">next</span>() {
+        TreeNode node = stack.<span class="fn">pop</span>();
+        <span class="fn">pushLeft</span>(node.right);
+        <span class="kw">return</span> node.val;
+    }
+
+    <span class="kw">boolean</span> <span class="fn">hasNext</span>() {
+        <span class="kw">return</span> !stack.<span class="fn">isEmpty</span>();
+    }
+
+    <span class="kw">void</span> <span class="fn">pushLeft</span>(TreeNode node) {
+        <span class="kw">while</span> (node != <span class="kw">null</span>) {
+            stack.<span class="fn">push</span>(node);
+            node = node.left;
+        }
+    }
+}</pre>
+
+<div class="insight">
+  <p><strong>O(h) space, O(1) amortized next().</strong> This is the controlled version of iterative inorder traversal. Each node is pushed and popped exactly once across all next() calls.</p>
+</div>
+
+<h3>Kth Smallest Element in BST (LC 230)</h3>
+<pre><span class="kw">int</span> <span class="fn">kthSmallest</span>(TreeNode root, <span class="kw">int</span> k) {
+    Deque&lt;TreeNode&gt; stack = <span class="kw">new</span> ArrayDeque&lt;&gt;();
+    TreeNode cur = root;
+    <span class="kw">while</span> (cur != <span class="kw">null</span> || !stack.<span class="fn">isEmpty</span>()) {
+        <span class="kw">while</span> (cur != <span class="kw">null</span>) {
+            stack.<span class="fn">push</span>(cur);
+            cur = cur.left;
+        }
+        cur = stack.<span class="fn">pop</span>();
+        <span class="kw">if</span> (--k == <span class="num">0</span>) <span class="kw">return</span> cur.val;
+        cur = cur.right;
+    }
+    <span class="kw">return</span> -<span class="num">1</span>; <span class="cm">// shouldn't reach here</span>
+}</pre>
+
+<h3>Delete Node in BST (LC 450)</h3>
+<pre>TreeNode <span class="fn">deleteNode</span>(TreeNode root, <span class="kw">int</span> key) {
+    <span class="kw">if</span> (root == <span class="kw">null</span>) <span class="kw">return null</span>;
+    <span class="kw">if</span> (key &lt; root.val) {
+        root.left = <span class="fn">deleteNode</span>(root.left, key);
+    } <span class="kw">else if</span> (key &gt; root.val) {
+        root.right = <span class="fn">deleteNode</span>(root.right, key);
+    } <span class="kw">else</span> {
+        <span class="cm">// Found the node to delete</span>
+        <span class="kw">if</span> (root.left == <span class="kw">null</span>) <span class="kw">return</span> root.right;
+        <span class="kw">if</span> (root.right == <span class="kw">null</span>) <span class="kw">return</span> root.left;
+        <span class="cm">// Two children: replace with inorder successor</span>
+        TreeNode succ = root.right;
+        <span class="kw">while</span> (succ.left != <span class="kw">null</span>) succ = succ.left;
+        root.val = succ.val;
+        root.right = <span class="fn">deleteNode</span>(root.right, succ.val);
+    }
+    <span class="kw">return</span> root;
+}</pre>
+
+<h3>Recover BST (LC 99)</h3>
+<pre><span class="cm">// Two nodes are swapped. Find them via inorder (detect inversions).</span>
+TreeNode first, second, prev;
+
+<span class="kw">void</span> <span class="fn">recoverTree</span>(TreeNode root) {
+    <span class="fn">inorder</span>(root);
+    <span class="cm">// Swap values of the two misplaced nodes</span>
+    <span class="kw">int</span> tmp = first.val;
+    first.val = second.val;
+    second.val = tmp;
+}
+
+<span class="kw">void</span> <span class="fn">inorder</span>(TreeNode node) {
+    <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">return</span>;
+    <span class="fn">inorder</span>(node.left);
+    <span class="kw">if</span> (prev != <span class="kw">null</span> &amp;&amp; prev.val &gt; node.val) {
+        <span class="kw">if</span> (first == <span class="kw">null</span>) first = prev;
+        second = node;
+    }
+    prev = node;
+    <span class="fn">inorder</span>(node.right);
+}</pre>
+
+<div class="tip">
+  <p><strong>Two cases:</strong> If swapped nodes are adjacent in inorder, there's one inversion. If non-adjacent, there are two inversions. The code handles both: <code>first</code> is set on the first inversion, <code>second</code> is updated on every inversion.</p>
+</div>
+
+<h3>Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/validate-binary-search-tree/" target="_blank">98. Validate Binary Search Tree</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/binary-search-tree-iterator/" target="_blank">173. Binary Search Tree Iterator</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/kth-smallest-element-in-a-bst/" target="_blank">230. Kth Smallest Element in a BST</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Freq</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/delete-node-in-a-bst/" target="_blank">450. Delete Node in a BST</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/recover-binary-search-tree/" target="_blank">99. Recover Binary Search Tree</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/inorder-successor-in-bst/" target="_blank">285. Inorder Successor in BST</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/convert-bst-to-greater-tree/" target="_blank">538. Convert BST to Greater Tree</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Interview Tips ===== -->
+<div class="section" id="tips">
+<div class="card">
+<h2>Interview Tips</h2>
+
+<h3>Recursive vs Iterative Conversion Strategy</h3>
+<p>When asked to convert recursive to iterative:</p>
+<ol>
+  <li><strong>Identify what the call stack stores</strong> (current node, state of which children have been processed)</li>
+  <li><strong>Replace implicit stack with explicit stack</strong> (Deque/ArrayDeque in Java)</li>
+  <li><strong>Simulate the "return" via a loop condition</strong> (while stack not empty)</li>
+  <li><strong>For postorder:</strong> track "last visited" or use the reverse-preorder trick</li>
+</ol>
+
+<div class="warning">
+  <p><strong>Don't overthink it.</strong> For preorder, just push right then left. For inorder, use the "go left as far as possible" pattern. Postorder is the tricky one - use the reverse trick unless they insist on true iterative.</p>
+</div>
+
+<h3>Common Patterns</h3>
+<div class="card">
+<h4>Pattern 1: Return value = "info from subtree"</h4>
+<p>The recursive function returns something that helps the parent make decisions.</p>
+<pre><span class="cm">// Example: height, max path going down, validity info</span>
+<span class="kw">int</span> <span class="fn">height</span>(TreeNode node) {
+    <span class="kw">if</span> (node == <span class="kw">null</span>) <span class="kw">return</span> <span class="num">0</span>;
+    <span class="kw">return</span> <span class="num">1</span> + Math.<span class="fn">max</span>(<span class="fn">height</span>(node.left), <span class="fn">height</span>(node.right));
+}
+<span class="cm">// Used in: diameter, balanced check, max path sum</span></pre>
+</div>
+
+<div class="card">
+<h4>Pattern 2: Global variable for "best so far"</h4>
+<p>When the answer isn't at the root but could be at any node.</p>
+<pre><span class="kw">int</span> best = <span class="num">0</span>; <span class="cm">// or Integer.MIN_VALUE</span>
+
+<span class="kw">int</span> <span class="fn">solve</span>(TreeNode node) {
+    <span class="cm">// ... compute local answer using subtree info</span>
+    best = Math.<span class="fn">max</span>(best, localAnswer);
+    <span class="cm">// ... return something useful to parent</span>
+}
+<span class="cm">// Used in: max path sum (124), diameter (543), longest univalue (687)</span></pre>
+</div>
+
+<div class="card">
+<h4>Pattern 3: Pass info down (top-down)</h4>
+<p>Parent passes constraints or accumulated state to children via parameters.</p>
+<pre><span class="kw">void</span> <span class="fn">dfs</span>(TreeNode node, <span class="kw">int</span> depth, <span class="kw">long</span> min, <span class="kw">long</span> max) {
+    <span class="cm">// Use depth for level tracking, min/max for BST validation</span>
+}
+<span class="cm">// Used in: validate BST (98), path sum (112), right view (199)</span></pre>
+</div>
+
+<h3>Edge Cases Checklist</h3>
+<ul>
+  <li><strong>Empty tree</strong> (<code>root == null</code>) - always handle first</li>
+  <li><strong>Single node</strong> - no children, height = 0 or 1 depending on definition</li>
+  <li><strong>Skewed tree (linked list)</strong> - O(n) height, stack overflow risk for recursion</li>
+  <li><strong>Negative values</strong> - affects path sum problems (can't prune early)</li>
+  <li><strong>Duplicate values</strong> - affects BST operations (strict vs. non-strict inequality)</li>
+  <li><strong>Integer overflow</strong> - use <code>long</code> for bounds in BST validation</li>
+</ul>
+
+<h3>Time Management in Interviews</h3>
+<div class="tip">
+  <p><strong>For binary tree problems at Google:</strong><br>
+  - 2 min: clarify input/output, edge cases, confirm approach<br>
+  - 3 min: explain your approach (traversal type, what you return/pass)<br>
+  - 10 min: code the solution<br>
+  - 3 min: trace through an example<br>
+  - 2 min: discuss complexity, potential follow-ups</p>
+</div>
+
+<h3>Common Follow-Up Questions</h3>
+<ul>
+  <li>"Can you do it iteratively?" (traversal conversion)</li>
+  <li>"What if the tree is very deep?" (iterative to avoid stack overflow)</li>
+  <li>"What if nodes don't have unique values?" (affects construction, LCA)</li>
+  <li>"Can you do it in O(1) space?" (Morris traversal, parent pointers)</li>
+  <li>"What if this is a BST?" (exploit ordering for O(h) solutions)</li>
+</ul>
+
+<h3>Must-Know Problems (Sorted by Priority)</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/" target="_blank">236. LCA of Binary Tree</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Top</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/binary-tree-maximum-path-sum/" target="_blank">124. Binary Tree Maximum Path Sum</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Top</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/serialize-and-deserialize-binary-tree/" target="_blank">297. Serialize and Deserialize Binary Tree</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Top</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/binary-tree-right-side-view/" target="_blank">199. Binary Tree Right Side View</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Top</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/validate-binary-search-tree/" target="_blank">98. Validate Binary Search Tree</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Top</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/" target="_blank">105. Construct BT from Preorder and Inorder</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Top</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/diameter-of-binary-tree/" target="_blank">543. Diameter of Binary Tree</a></span><span class="tag tag-easy">Easy</span><span class="tag tag-freq">Top</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/flatten-binary-tree-to-linked-list/" target="_blank">114. Flatten Binary Tree to Linked List</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Top</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/binary-search-tree-iterator/" target="_blank">173. BST Iterator</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Top</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/boundary-of-binary-tree/" target="_blank">545. Boundary of Binary Tree</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Top</span></li>
+</ul>
+</div>
+</div>
+
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

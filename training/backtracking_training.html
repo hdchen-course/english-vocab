@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Backtracking &amp; Recursion — Complete Training Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f8f9fa;--bg2:#ffffff;--bg3:#f1f3f5;--bg4:#e9ecef;--border:#dee2e6;--text:#212529;--text2:#495057;--text3:#868e96;--blue:#1971c2;--blue-l:#d0ebff;--green:#2f9e44;--green-l:#d3f9d8;--yellow:#e67700;--yellow-l:#fff3bf;--red:#c92a2a;--red-l:#ffe3e3;--purple:#7048e8;--purple-l:#e5dbff;--orange:#d9480f;--cyan:#0c8599;--r:12px;--shadow:0 4px 20px rgba(0,0,0,0.06)}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.8}.container{max-width:1100px;margin:0 auto;padding:40px 24px}header{text-align:center;margin-bottom:48px;padding-bottom:32px;border-bottom:1px solid var(--border)}header h1{font-size:32px;font-weight:800;margin-bottom:8px}header .sub{color:var(--text3);font-size:14px}
+.nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:40px;position:sticky;top:0;background:var(--bg);padding:16px 0;z-index:100;border-bottom:1px solid var(--border)}.nav-btn{padding:10px 20px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;font-family:'Inter',sans-serif}.nav-btn:hover{background:var(--bg3);color:var(--text)}.nav-btn.active{background:var(--blue-l);color:var(--blue);border-color:var(--blue)}
+.section{display:none}.section.active{display:block;animation:fadeIn .3s ease}@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+h2{font-size:24px;font-weight:700;margin:32px 0 16px;color:var(--blue)}h3{font-size:18px;font-weight:600;margin:24px 0 12px}h4{font-size:15px;font-weight:600;margin:16px 0 8px;color:var(--text2)}p{margin-bottom:12px;color:var(--text2)}ul,ol{margin:8px 0 16px 24px;color:var(--text2)}li{margin-bottom:6px}strong{color:var(--text)}
+pre{background:#1e1e2e;border-radius:8px;padding:16px 20px;overflow-x:auto;margin:12px 0;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;color:#cdd6f4}code{font-family:'JetBrains Mono',monospace;font-size:13px}p code,li code{background:var(--bg3);padding:2px 6px;border-radius:4px;font-size:12px;color:var(--purple)}pre .kw{color:#cba6f7}pre .type{color:#f9e2af}pre .str{color:#a6e3a1}pre .cm{color:#6c7086}pre .num{color:#fab387}pre .fn{color:#89b4fa}
+.insight{background:var(--blue-l);border-left:3px solid var(--blue);padding:14px 18px;border-radius:0 8px 8px 0;margin:16px 0}.insight p{color:var(--blue);margin:0}.warning{background:var(--yellow-l);border-left:3px solid var(--yellow);padding:14px 18px;border-radius:0 8px 8px 0;margin:16px 0}.warning p{color:var(--yellow);margin:0}.danger{background:var(--red-l);border-left:3px solid var(--red);padding:14px 18px;border-radius:0 8px 8px 0;margin:16px 0}.danger p{color:var(--red);margin:0}.tip{background:var(--green-l);border-left:3px solid var(--green);padding:14px 18px;border-radius:0 8px 8px 0;margin:16px 0}.tip p{color:var(--green);margin:0}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:20px;padding:24px 28px;box-shadow:var(--shadow)}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px}th,td{padding:10px 14px;border:1px solid var(--border);text-align:left}th{background:var(--bg3);font-weight:600;color:var(--text)}tr:hover{background:var(--bg3)}
+.tag{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;margin:2px 4px 2px 0}.tag-easy{background:var(--green-l);color:var(--green)}.tag-medium{background:var(--yellow-l);color:var(--yellow)}.tag-hard{background:var(--red-l);color:var(--red)}.tag-freq{background:var(--purple-l);color:var(--purple)}
+.problem-list{list-style:none;padding:0;margin:12px 0}.problem-list li{padding:10px 14px;border-left:3px solid var(--blue);margin-bottom:8px;background:var(--bg3);border-radius:0 8px 8px 0;display:flex;justify-content:flex-start;align-items:center;gap:8px}.problem-list .title{color:var(--text);font-weight:500;font-size:14px;flex:1}.problem-list .title a{color:var(--text);text-decoration:none;border-bottom:1px dashed var(--border);transition:all .2s}.problem-list .title a:hover{color:var(--blue);border-bottom-color:var(--blue)}
+@media(max-width:768px){.container{padding:20px 12px}.nav{position:static}pre{font-size:11px}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>Backtracking &amp; Recursion</h1>
+  <div class="sub">Subsets &bull; Permutations &bull; Combinations &bull; Pruning &bull; Constraint Satisfaction &bull; DFS Patterns</div>
+</header>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection('overview')">Overview</button>
+  <button class="nav-btn" onclick="showSection('template')">Core Template</button>
+  <button class="nav-btn" onclick="showSection('subsets')">Subsets</button>
+  <button class="nav-btn" onclick="showSection('permutations')">Permutations</button>
+  <button class="nav-btn" onclick="showSection('combinations')">Combinations</button>
+  <button class="nav-btn" onclick="showSection('partition')">Partitioning</button>
+  <button class="nav-btn" onclick="showSection('constraint')">Constraint Solving</button>
+  <button class="nav-btn" onclick="showSection('pruning')">Pruning Techniques</button>
+  <button class="nav-btn" onclick="showSection('grid')">Grid Search</button>
+  <button class="nav-btn" onclick="showSection('tips')">Interview Tips</button>
+</div>
+
+<!-- ===== Overview ===== -->
+<div class="section active" id="overview">
+<div class="card">
+<h2>When to Use Backtracking</h2>
+
+<h3>Recognition Signals</h3>
+<div class="insight">
+  <p><strong>"Find all..."</strong> / <strong>"Generate all..."</strong> / <strong>"List every possible..."</strong><br>
+  <strong>"Print all permutations/combinations/subsets"</strong><br>
+  <strong>"Is there a valid assignment?"</strong> (Sudoku, N-Queens)<br>
+  <strong>"Partition into groups satisfying..."</strong></p>
+</div>
+
+<h3>Backtracking vs Other Approaches</h3>
+<table>
+  <tr><th>Problem Type</th><th>Approach</th><th>Why</th></tr>
+  <tr><td>Find ALL solutions</td><td>Backtracking</td><td>Must enumerate</td></tr>
+  <tr><td>Count solutions</td><td>DP (if overlapping subproblems)</td><td>Avoid re-enumeration</td></tr>
+  <tr><td>Find ONE solution</td><td>Backtracking + early return</td><td>Stop at first valid</td></tr>
+  <tr><td>Optimal value</td><td>DP or Greedy</td><td>Don't need all solutions</td></tr>
+  <tr><td>Constraint satisfaction</td><td>Backtracking + pruning</td><td>Search space is finite</td></tr>
+</table>
+
+<h3>Complexity</h3>
+<div class="warning">
+  <p><strong>Subsets:</strong> O(2^n) &mdash; each element in or out<br>
+  <strong>Permutations:</strong> O(n!) &mdash; n choices, then n-1, then n-2...<br>
+  <strong>Combinations C(n,k):</strong> O(C(n,k)) &mdash; choose k from n<br>
+  <strong>With pruning:</strong> much less in practice, but worst case unchanged</p>
+</div>
+</div>
+</div>
+
+<!-- ===== Core Template ===== -->
+<div class="section" id="template">
+<div class="card">
+<h2>Core Backtracking Template</h2>
+
+<h3>The Universal Pattern</h3>
+<pre><span class="kw">void</span> <span class="fn">backtrack</span>(State state, List&lt;Result&gt; results) {
+    <span class="cm">// Base case: found a complete solution</span>
+    <span class="kw">if</span> (isComplete(state)) {
+        results.add(copy(state));
+        <span class="kw">return</span>;
+    }
+
+    <span class="cm">// Iterate over all choices at current decision point</span>
+    <span class="kw">for</span> (Choice choice : getChoices(state)) {
+        <span class="cm">// Prune: skip invalid choices early</span>
+        <span class="kw">if</span> (!isValid(state, choice)) <span class="kw">continue</span>;
+
+        <span class="cm">// Make choice</span>
+        state.apply(choice);
+
+        <span class="cm">// Recurse</span>
+        <span class="fn">backtrack</span>(state, results);
+
+        <span class="cm">// Undo choice (backtrack)</span>
+        state.undo(choice);
+    }
+}
+</pre>
+
+<h3>Key Decisions When Designing</h3>
+<table>
+  <tr><th>Decision</th><th>Options</th><th>Impact</th></tr>
+  <tr><td>What is "state"?</td><td>Path so far, remaining items, current position</td><td>Determines memory usage</td></tr>
+  <tr><td>What are "choices"?</td><td>Next element to add, position to fill, value to try</td><td>Determines branching factor</td></tr>
+  <tr><td>When is it "complete"?</td><td>Path length = n, all positions filled, target reached</td><td>Determines tree depth</td></tr>
+  <tr><td>How to prune?</td><td>Skip duplicates, bound checking, constraint propagation</td><td>Critical for performance</td></tr>
+</table>
+
+<h3>Two Flavors: Choose/Not-Choose vs Iterate-Choices</h3>
+<pre><span class="cm">// Flavor 1: For each element, choose to include or exclude</span>
+<span class="cm">// Good for: subsets, partition problems</span>
+<span class="kw">void</span> <span class="fn">backtrack</span>(<span class="kw">int</span> index) {
+    <span class="kw">if</span> (index == n) { collect(); <span class="kw">return</span>; }
+    <span class="cm">// Include nums[index]</span>
+    path.add(nums[index]);
+    <span class="fn">backtrack</span>(index + <span class="num">1</span>);
+    path.removeLast();
+    <span class="cm">// Exclude nums[index]</span>
+    <span class="fn">backtrack</span>(index + <span class="num">1</span>);
+}
+
+<span class="cm">// Flavor 2: At each step, try all remaining candidates</span>
+<span class="cm">// Good for: permutations, combinations with constraints</span>
+<span class="kw">void</span> <span class="fn">backtrack</span>(<span class="kw">int</span> start) {
+    collect();  <span class="cm">// every partial state is valid (for subsets)</span>
+    <span class="kw">for</span> (<span class="kw">int</span> i = start; i &lt; n; i++) {
+        path.add(nums[i]);
+        <span class="fn">backtrack</span>(i + <span class="num">1</span>);  <span class="cm">// i+1 for combinations, i for reuse</span>
+        path.removeLast();
+    }
+}
+</pre>
+</div>
+</div>
+
+<!-- ===== Subsets ===== -->
+<div class="section" id="subsets">
+<div class="card">
+<h2>Subsets (Power Set)</h2>
+
+<h3>Basic Subsets (LC 78)</h3>
+<pre><span class="cm">// All subsets of distinct elements</span>
+List&lt;List&lt;Integer&gt;&gt; result = <span class="kw">new</span> ArrayList&lt;&gt;();
+
+<span class="kw">void</span> <span class="fn">backtrack</span>(<span class="kw">int</span>[] nums, <span class="kw">int</span> start, List&lt;Integer&gt; path) {
+    result.add(<span class="kw">new</span> ArrayList&lt;&gt;(path));  <span class="cm">// every state is a valid subset</span>
+    <span class="kw">for</span> (<span class="kw">int</span> i = start; i &lt; nums.length; i++) {
+        path.add(nums[i]);
+        <span class="fn">backtrack</span>(nums, i + <span class="num">1</span>, path);
+        path.remove(path.size() - <span class="num">1</span>);
+    }
+}
+</pre>
+
+<h3>Subsets with Duplicates (LC 90)</h3>
+<pre><span class="cm">// Sort first, then skip consecutive duplicates at same level</span>
+Arrays.<span class="fn">sort</span>(nums);
+
+<span class="kw">void</span> <span class="fn">backtrack</span>(<span class="kw">int</span>[] nums, <span class="kw">int</span> start, List&lt;Integer&gt; path) {
+    result.add(<span class="kw">new</span> ArrayList&lt;&gt;(path));
+    <span class="kw">for</span> (<span class="kw">int</span> i = start; i &lt; nums.length; i++) {
+        <span class="kw">if</span> (i &gt; start &amp;&amp; nums[i] == nums[i-<span class="num">1</span>]) <span class="kw">continue</span>;  <span class="cm">// skip dup!</span>
+        path.add(nums[i]);
+        <span class="fn">backtrack</span>(nums, i + <span class="num">1</span>, path);
+        path.remove(path.size() - <span class="num">1</span>);
+    }
+}
+</pre>
+
+<h3>Deduplication Rule</h3>
+<div class="danger">
+  <p><strong>Sort + "skip if same as previous at same decision level":</strong><br>
+  <code>if (i > start && nums[i] == nums[i-1]) continue;</code><br>
+  This ensures we only pick the FIRST occurrence of each value at each recursion level. Works for subsets, combinations, and permutations.</p>
+</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/subsets/" target="_blank">78. Subsets</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/subsets-ii/" target="_blank">90. Subsets II (with duplicates)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/letter-combinations-of-a-phone-number/" target="_blank">17. Letter Combinations of a Phone Number</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/sum-of-all-subset-xor-totals/" target="_blank">1863. Sum of All Subset XOR Totals</a></span><span class="tag tag-easy">Easy</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Permutations ===== -->
+<div class="section" id="permutations">
+<div class="card">
+<h2>Permutations</h2>
+
+<h3>Basic Permutations (LC 46)</h3>
+<pre><span class="cm">// All permutations of distinct elements</span>
+<span class="kw">void</span> <span class="fn">backtrack</span>(<span class="kw">int</span>[] nums, <span class="kw">boolean</span>[] used, List&lt;Integer&gt; path) {
+    <span class="kw">if</span> (path.size() == nums.length) {
+        result.add(<span class="kw">new</span> ArrayList&lt;&gt;(path));
+        <span class="kw">return</span>;
+    }
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; nums.length; i++) {
+        <span class="kw">if</span> (used[i]) <span class="kw">continue</span>;
+        used[i] = <span class="kw">true</span>;
+        path.add(nums[i]);
+        <span class="fn">backtrack</span>(nums, used, path);
+        path.remove(path.size() - <span class="num">1</span>);
+        used[i] = <span class="kw">false</span>;
+    }
+}
+</pre>
+
+<h3>Permutations with Duplicates (LC 47)</h3>
+<pre><span class="cm">// Sort + skip rule: only use a duplicate if the previous copy was used</span>
+Arrays.<span class="fn">sort</span>(nums);
+
+<span class="kw">void</span> <span class="fn">backtrack</span>(<span class="kw">int</span>[] nums, <span class="kw">boolean</span>[] used, List&lt;Integer&gt; path) {
+    <span class="kw">if</span> (path.size() == nums.length) { result.add(<span class="kw">new</span> ArrayList&lt;&gt;(path)); <span class="kw">return</span>; }
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; nums.length; i++) {
+        <span class="kw">if</span> (used[i]) <span class="kw">continue</span>;
+        <span class="kw">if</span> (i &gt; <span class="num">0</span> &amp;&amp; nums[i] == nums[i-<span class="num">1</span>] &amp;&amp; !used[i-<span class="num">1</span>]) <span class="kw">continue</span>; <span class="cm">// key!</span>
+        used[i] = <span class="kw">true</span>;
+        path.add(nums[i]);
+        <span class="fn">backtrack</span>(nums, used, path);
+        path.remove(path.size() - <span class="num">1</span>);
+        used[i] = <span class="kw">false</span>;
+    }
+}
+</pre>
+
+<h3>Swap-based Permutation (in-place, O(1) extra)</h3>
+<pre><span class="cm">// Swap element at index with all positions >= index</span>
+<span class="kw">void</span> <span class="fn">backtrack</span>(<span class="kw">int</span>[] nums, <span class="kw">int</span> start) {
+    <span class="kw">if</span> (start == nums.length) { result.add(toList(nums)); <span class="kw">return</span>; }
+    <span class="kw">for</span> (<span class="kw">int</span> i = start; i &lt; nums.length; i++) {
+        swap(nums, start, i);
+        <span class="fn">backtrack</span>(nums, start + <span class="num">1</span>);
+        swap(nums, start, i);  <span class="cm">// undo</span>
+    }
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/permutations/" target="_blank">46. Permutations</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/permutations-ii/" target="_blank">47. Permutations II (with duplicates)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/next-permutation/" target="_blank">31. Next Permutation</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/permutation-sequence/" target="_blank">60. Permutation Sequence (k-th)</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/beautiful-arrangement/" target="_blank">526. Beautiful Arrangement</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Combinations ===== -->
+<div class="section" id="combinations">
+<div class="card">
+<h2>Combinations</h2>
+
+<h3>Choose k from n (LC 77)</h3>
+<pre><span class="cm">// C(n, k): choose k elements from [1..n]</span>
+<span class="kw">void</span> <span class="fn">backtrack</span>(<span class="kw">int</span> start, <span class="kw">int</span> n, <span class="kw">int</span> k, List&lt;Integer&gt; path) {
+    <span class="kw">if</span> (path.size() == k) { result.add(<span class="kw">new</span> ArrayList&lt;&gt;(path)); <span class="kw">return</span>; }
+    <span class="kw">for</span> (<span class="kw">int</span> i = start; i &lt;= n - (k - path.size()) + <span class="num">1</span>; i++) { <span class="cm">// pruning!</span>
+        path.add(i);
+        <span class="fn">backtrack</span>(i + <span class="num">1</span>, n, k, path);
+        path.remove(path.size() - <span class="num">1</span>);
+    }
+}
+</pre>
+
+<h3>Combination Sum (LC 39 — unlimited use)</h3>
+<pre><span class="cm">// Each number can be used unlimited times, find all combos summing to target</span>
+<span class="kw">void</span> <span class="fn">backtrack</span>(<span class="kw">int</span>[] candidates, <span class="kw">int</span> start, <span class="kw">int</span> remain, List&lt;Integer&gt; path) {
+    <span class="kw">if</span> (remain == <span class="num">0</span>) { result.add(<span class="kw">new</span> ArrayList&lt;&gt;(path)); <span class="kw">return</span>; }
+    <span class="kw">for</span> (<span class="kw">int</span> i = start; i &lt; candidates.length; i++) {
+        <span class="kw">if</span> (candidates[i] &gt; remain) <span class="kw">break</span>;  <span class="cm">// sort first for this pruning</span>
+        path.add(candidates[i]);
+        <span class="fn">backtrack</span>(candidates, i, remain - candidates[i], path); <span class="cm">// i, not i+1</span>
+        path.remove(path.size() - <span class="num">1</span>);
+    }
+}
+</pre>
+
+<h3>Combination Sum II (LC 40 — each used once, with duplicates)</h3>
+<pre><span class="cm">// Sort + skip duplicates at same level</span>
+<span class="kw">void</span> <span class="fn">backtrack</span>(<span class="kw">int</span>[] candidates, <span class="kw">int</span> start, <span class="kw">int</span> remain, List&lt;Integer&gt; path) {
+    <span class="kw">if</span> (remain == <span class="num">0</span>) { result.add(<span class="kw">new</span> ArrayList&lt;&gt;(path)); <span class="kw">return</span>; }
+    <span class="kw">for</span> (<span class="kw">int</span> i = start; i &lt; candidates.length; i++) {
+        <span class="kw">if</span> (candidates[i] &gt; remain) <span class="kw">break</span>;
+        <span class="kw">if</span> (i &gt; start &amp;&amp; candidates[i] == candidates[i-<span class="num">1</span>]) <span class="kw">continue</span>; <span class="cm">// dedup</span>
+        path.add(candidates[i]);
+        <span class="fn">backtrack</span>(candidates, i + <span class="num">1</span>, remain - candidates[i], path);
+        path.remove(path.size() - <span class="num">1</span>);
+    }
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/combinations/" target="_blank">77. Combinations</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/combination-sum/" target="_blank">39. Combination Sum (unlimited)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/combination-sum-ii/" target="_blank">40. Combination Sum II (dedup)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/combination-sum-iii/" target="_blank">216. Combination Sum III</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/factor-combinations/" target="_blank">254. Factor Combinations</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Premium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Partitioning ===== -->
+<div class="section" id="partition">
+<div class="card">
+<h2>String &amp; Array Partitioning</h2>
+
+<h3>Palindrome Partitioning (LC 131)</h3>
+<pre><span class="cm">// Partition string so every part is a palindrome</span>
+<span class="kw">void</span> <span class="fn">backtrack</span>(String s, <span class="kw">int</span> start, List&lt;String&gt; path) {
+    <span class="kw">if</span> (start == s.length()) { result.add(<span class="kw">new</span> ArrayList&lt;&gt;(path)); <span class="kw">return</span>; }
+    <span class="kw">for</span> (<span class="kw">int</span> end = start + <span class="num">1</span>; end &lt;= s.length(); end++) {
+        String sub = s.substring(start, end);
+        <span class="kw">if</span> (<span class="fn">isPalindrome</span>(sub)) {
+            path.add(sub);
+            <span class="fn">backtrack</span>(s, end, path);
+            path.remove(path.size() - <span class="num">1</span>);
+        }
+    }
+}
+</pre>
+
+<h3>Restore IP Addresses (LC 93)</h3>
+<pre><span class="cm">// Partition string into exactly 4 valid IP segments (0-255)</span>
+<span class="kw">void</span> <span class="fn">backtrack</span>(String s, <span class="kw">int</span> start, <span class="kw">int</span> parts, List&lt;String&gt; path) {
+    <span class="kw">if</span> (parts == <span class="num">4</span> &amp;&amp; start == s.length()) { result.add(String.join(<span class="str">"."</span>, path)); <span class="kw">return</span>; }
+    <span class="kw">if</span> (parts == <span class="num">4</span> || start == s.length()) <span class="kw">return</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> len = <span class="num">1</span>; len &lt;= <span class="num">3</span> &amp;&amp; start + len &lt;= s.length(); len++) {
+        String seg = s.substring(start, start + len);
+        <span class="kw">if</span> (seg.length() &gt; <span class="num">1</span> &amp;&amp; seg.charAt(<span class="num">0</span>) == <span class="str">'0'</span>) <span class="kw">break</span>; <span class="cm">// no leading zero</span>
+        <span class="kw">if</span> (Integer.parseInt(seg) &gt; <span class="num">255</span>) <span class="kw">break</span>;
+        path.add(seg);
+        <span class="fn">backtrack</span>(s, start + len, parts + <span class="num">1</span>, path);
+        path.remove(path.size() - <span class="num">1</span>);
+    }
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/palindrome-partitioning/" target="_blank">131. Palindrome Partitioning</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/restore-ip-addresses/" target="_blank">93. Restore IP Addresses</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/split-a-string-into-the-max-number-of-unique-substrings/" target="_blank">1593. Split String Into Max Unique Substrings</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/expression-add-operators/" target="_blank">282. Expression Add Operators</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/additive-number/" target="_blank">306. Additive Number</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Constraint Solving ===== -->
+<div class="section" id="constraint">
+<div class="card">
+<h2>Constraint Satisfaction (N-Queens, Sudoku)</h2>
+
+<h3>N-Queens (LC 51)</h3>
+<pre><span class="cm">// Place N queens on N×N board, no two attack each other</span>
+<span class="kw">boolean</span>[] cols, diag1, diag2;  <span class="cm">// track attacked columns &amp; diagonals</span>
+
+<span class="kw">void</span> <span class="fn">backtrack</span>(<span class="kw">int</span> row) {
+    <span class="kw">if</span> (row == n) { result.add(buildBoard()); <span class="kw">return</span>; }
+    <span class="kw">for</span> (<span class="kw">int</span> col = <span class="num">0</span>; col &lt; n; col++) {
+        <span class="kw">if</span> (cols[col] || diag1[row-col+n] || diag2[row+col]) <span class="kw">continue</span>;
+        queens[row] = col;
+        cols[col] = diag1[row-col+n] = diag2[row+col] = <span class="kw">true</span>;
+        <span class="fn">backtrack</span>(row + <span class="num">1</span>);
+        cols[col] = diag1[row-col+n] = diag2[row+col] = <span class="kw">false</span>;
+    }
+}
+</pre>
+
+<h3>Sudoku Solver (LC 37)</h3>
+<pre><span class="cm">// Fill empty cells, checking row/col/box constraints</span>
+<span class="kw">boolean</span> <span class="fn">solve</span>(<span class="kw">char</span>[][] board) {
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; <span class="num">9</span>; i++) {
+        <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">0</span>; j &lt; <span class="num">9</span>; j++) {
+            <span class="kw">if</span> (board[i][j] != <span class="str">'.'</span>) <span class="kw">continue</span>;
+            <span class="kw">for</span> (<span class="kw">char</span> c = <span class="str">'1'</span>; c &lt;= <span class="str">'9'</span>; c++) {
+                <span class="kw">if</span> (<span class="fn">isValid</span>(board, i, j, c)) {
+                    board[i][j] = c;
+                    <span class="kw">if</span> (<span class="fn">solve</span>(board)) <span class="kw">return true</span>;
+                    board[i][j] = <span class="str">'.'</span>;  <span class="cm">// backtrack</span>
+                }
+            }
+            <span class="kw">return false</span>;  <span class="cm">// no valid digit works here</span>
+        }
+    }
+    <span class="kw">return true</span>;  <span class="cm">// all cells filled</span>
+}
+</pre>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/n-queens/" target="_blank">51. N-Queens</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/n-queens-ii/" target="_blank">52. N-Queens II (count only)</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/sudoku-solver/" target="_blank">37. Sudoku Solver</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/word-search/" target="_blank">79. Word Search</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/word-search-ii/" target="_blank">212. Word Search II (Trie+DFS)</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/android-unlock-patterns/" target="_blank">351. Android Unlock Patterns</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Premium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Pruning ===== -->
+<div class="section" id="pruning">
+<div class="card">
+<h2>Pruning Techniques</h2>
+<p>Pruning is what makes backtracking practical. Without it, you search the entire tree. With it, you cut branches early.</p>
+
+<h3>Common Pruning Strategies</h3>
+<table>
+  <tr><th>Strategy</th><th>When</th><th>How</th></tr>
+  <tr><td>Sort + Skip Duplicates</td><td>Input has duplicates</td><td><code>if (i > start && a[i] == a[i-1]) continue</code></td></tr>
+  <tr><td>Early Termination</td><td>Remaining can't reach goal</td><td><code>if (remain < 0) return</code></td></tr>
+  <tr><td>Upper Bound</td><td>Best possible from here < current best</td><td>Branch and bound</td></tr>
+  <tr><td>Constraint Propagation</td><td>Choices constrain future</td><td>N-Queens: track cols/diags</td></tr>
+  <tr><td>Sort Descending</td><td>Larger items first = fewer branches</td><td>Fail faster on sum problems</td></tr>
+  <tr><td>Symmetry Breaking</td><td>Symmetric solutions</td><td>Fix first choice, halve search</td></tr>
+</table>
+
+<h3>Example: Combination Sum with Sorting Prune</h3>
+<pre><span class="cm">// Without sorting: must check all candidates even if too large</span>
+<span class="cm">// With sorting: once candidates[i] > remain, break (all further are bigger)</span>
+Arrays.<span class="fn">sort</span>(candidates);
+<span class="kw">for</span> (<span class="kw">int</span> i = start; i &lt; candidates.length; i++) {
+    <span class="kw">if</span> (candidates[i] &gt; remain) <span class="kw">break</span>;  <span class="cm">// prune entire subtree!</span>
+    ...
+}
+</pre>
+
+<h3>Example: K-Sum Pruning</h3>
+<pre><span class="cm">// Need k numbers summing to target from sorted array</span>
+<span class="cm">// Prune: if smallest k remaining > target, impossible</span>
+<span class="cm">// Prune: if largest k remaining < target, impossible</span>
+<span class="kw">if</span> (nums[start] * k &gt; remain) <span class="kw">return</span>;  <span class="cm">// min possible too big</span>
+<span class="kw">if</span> (nums[n-<span class="num">1</span>] * k &lt; remain) <span class="kw">return</span>;  <span class="cm">// max possible too small</span>
+</pre>
+</div>
+</div>
+
+<!-- ===== Grid Search ===== -->
+<div class="section" id="grid">
+<div class="card">
+<h2>Grid-Based Backtracking</h2>
+
+<h3>Word Search (LC 79)</h3>
+<pre><span class="kw">boolean</span> <span class="fn">dfs</span>(<span class="kw">char</span>[][] board, String word, <span class="kw">int</span> i, <span class="kw">int</span> j, <span class="kw">int</span> k) {
+    <span class="kw">if</span> (k == word.length()) <span class="kw">return true</span>;
+    <span class="kw">if</span> (i &lt; <span class="num">0</span> || i &gt;= m || j &lt; <span class="num">0</span> || j &gt;= n) <span class="kw">return false</span>;
+    <span class="kw">if</span> (board[i][j] != word.charAt(k)) <span class="kw">return false</span>;
+
+    <span class="kw">char</span> tmp = board[i][j];
+    board[i][j] = <span class="str">'#'</span>;  <span class="cm">// mark visited</span>
+
+    <span class="kw">boolean</span> found = <span class="fn">dfs</span>(board, word, i+<span class="num">1</span>, j, k+<span class="num">1</span>)
+                  || <span class="fn">dfs</span>(board, word, i-<span class="num">1</span>, j, k+<span class="num">1</span>)
+                  || <span class="fn">dfs</span>(board, word, i, j+<span class="num">1</span>, k+<span class="num">1</span>)
+                  || <span class="fn">dfs</span>(board, word, i, j-<span class="num">1</span>, k+<span class="num">1</span>);
+
+    board[i][j] = tmp;  <span class="cm">// unmark (backtrack)</span>
+    <span class="kw">return</span> found;
+}
+</pre>
+
+<h3>Robot Room Cleaner (LC 489)</h3>
+<div class="insight">
+  <p><strong>Pattern:</strong> DFS with relative direction. At each cell: try all 4 directions. If can move, recurse. Backtrack by turning 180° and moving back. Key: track visited using (relative row, relative col).</p>
+</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/word-search/" target="_blank">79. Word Search</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/word-search-ii/" target="_blank">212. Word Search II</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/robot-room-cleaner/" target="_blank">489. Robot Room Cleaner</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Premium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/unique-paths-iii/" target="_blank">980. Unique Paths III</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/path-with-maximum-gold/" target="_blank">1219. Path with Maximum Gold</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Interview Tips ===== -->
+<div class="section" id="tips">
+<div class="card">
+<h2>Interview Tips</h2>
+
+<h3>How to Communicate</h3>
+<div class="tip">
+  <p><strong>1.</strong> "This asks for all valid solutions, so I'll use backtracking."<br>
+  <strong>2.</strong> "My state is [path built so far]. My choices at each step are [remaining candidates]."<br>
+  <strong>3.</strong> "I can prune by [sorting + skip duplicates / early termination when sum exceeds target]."<br>
+  <strong>4.</strong> "Time complexity is O(2^n) for subsets / O(n!) for permutations, which is optimal since we need all solutions."</p>
+</div>
+
+<h3>Template Choice Quick Reference</h3>
+<table>
+  <tr><th>Problem Type</th><th>Loop Start</th><th>Recurse With</th><th>Collect When</th></tr>
+  <tr><td>Subsets</td><td><code>i = start</code></td><td><code>i + 1</code></td><td>Every call</td></tr>
+  <tr><td>Combinations (k items)</td><td><code>i = start</code></td><td><code>i + 1</code></td><td>path.size() == k</td></tr>
+  <tr><td>Combination Sum (reuse)</td><td><code>i = start</code></td><td><code>i</code> (same element)</td><td>remain == 0</td></tr>
+  <tr><td>Permutations</td><td><code>i = 0</code></td><td>skip if used[i]</td><td>path.size() == n</td></tr>
+  <tr><td>Partitioning</td><td><code>end = start+1</code></td><td><code>end</code> (next segment)</td><td>start == n</td></tr>
+</table>
+
+<h3>Common Mistakes</h3>
+<div class="danger">
+  <p><strong>Forgetting to copy:</strong> <code>result.add(new ArrayList<>(path))</code> not <code>result.add(path)</code><br>
+  <strong>Wrong loop start:</strong> Combinations use <code>start</code>, permutations use <code>0</code><br>
+  <strong>Missing dedup:</strong> Sort + skip same value at same level<br>
+  <strong>Not restoring state:</strong> Every <code>add</code> must have matching <code>remove</code><br>
+  <strong>Infinite recursion:</strong> Ensure progress toward base case</p>
+</div>
+
+<h3>Google/Meta High-Frequency</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/generate-parentheses/" target="_blank">22. Generate Parentheses</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/word-search/" target="_blank">79. Word Search</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/letter-combinations-of-a-phone-number/" target="_blank">17. Letter Combinations</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/combination-sum/" target="_blank">39. Combination Sum</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/permutations/" target="_blank">46. Permutations</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/subsets/" target="_blank">78. Subsets</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/n-queens/" target="_blank">51. N-Queens</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/word-break-ii/" target="_blank">140. Word Break II</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/expression-add-operators/" target="_blank">282. Expression Add Operators</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Google</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/remove-invalid-parentheses/" target="_blank">301. Remove Invalid Parentheses</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+</div>
+<script>
+function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');event.target.classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+</script>
+</body>
+</html>

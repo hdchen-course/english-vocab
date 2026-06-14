@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Algorithms — Deep Dive</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fa;
+  --bg2: #ffffff;
+  --bg3: #f1f3f5;
+  --bg4: #e9ecef;
+  --border: #dee2e6;
+  --text: #212529;
+  --text2: #495057;
+  --text3: #868e96;
+  --blue: #1971c2;
+  --blue-l: #d0ebff;
+  --green: #2f9e44;
+  --green-l: #d3f9d8;
+  --yellow: #e67700;
+  --yellow-l: #fff3bf;
+  --red: #c92a2a;
+  --red-l: #ffe3e3;
+  --purple: #7048e8;
+  --purple-l: #e5dbff;
+  --orange: #d9480f;
+  --cyan: #0c8599;
+  --r: 12px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+header { text-align: center; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+header .sub { color: var(--text3); font-size: 14px; }
+
+.nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 40px;  position: sticky; top: 0; background: var(--bg); padding: 16px 0; z-index: 100; border-bottom: 1px solid var(--border); }
+.nav-btn {
+  padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg2); color: var(--text2); cursor: pointer;
+  font-size: 13px; font-weight: 600; transition: all .2s; font-family: 'Inter', sans-serif;
+}
+.nav-btn:hover { background: var(--bg3); color: var(--text); }
+.nav-btn.active { background: var(--blue-l); color: var(--blue); border-color: var(--blue); }
+
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+h2 { font-size: 24px; font-weight: 700; margin: 32px 0 16px; color: var(--blue); }
+h3 { font-size: 18px; font-weight: 600; margin: 24px 0 12px; }
+h4 { font-size: 15px; font-weight: 600; margin: 16px 0 8px; color: var(--text2); }
+p { margin-bottom: 12px; color: var(--text2); }
+ul, ol { margin: 8px 0 16px 24px; color: var(--text2); }
+li { margin-bottom: 6px; }
+strong { color: var(--text); }
+
+pre {
+  background: #1e1e2e; border-radius: 8px;
+  padding: 16px 20px; overflow-x: auto; margin: 12px 0;
+  font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6;
+  color: #cdd6f4;
+}
+code { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+p code, li code {
+  background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--purple);
+}
+pre .kw { color: #cba6f7; }
+pre .type { color: #f9e2af; }
+pre .str { color: #a6e3a1; }
+pre .cm { color: #6c7086; }
+pre .num { color: #fab387; }
+pre .fn { color: #89b4fa; }
+
+.insight {
+  background: var(--blue-l); border-left: 3px solid var(--blue);
+  padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+}
+.insight p { color: var(--blue); margin: 0; }
+
+.warning {
+  background: var(--yellow-l); border-left: 3px solid var(--yellow);
+  padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+}
+.warning p { color: var(--yellow); margin: 0; }
+
+.danger {
+  background: var(--red-l); border-left: 3px solid var(--red);
+  padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+}
+.danger p { color: var(--red); margin: 0; }
+
+.tip {
+  background: var(--green-l); border-left: 3px solid var(--green);
+  padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+}
+.tip p { color: var(--green); margin: 0; }
+
+.card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r); margin-bottom: 20px; padding: 24px 28px;
+  box-shadow: var(--shadow);
+}
+
+table {
+  width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px;
+}
+th, td { padding: 10px 14px; border: 1px solid var(--border); text-align: left; }
+th { background: var(--bg3); font-weight: 600; color: var(--text); }
+tr:hover { background: var(--bg3); }
+
+.tag {
+  display: inline-block; padding: 2px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; margin: 2px 4px 2px 0;
+}
+.tag-easy { background: var(--green-l); color: var(--green); }
+.tag-medium { background: var(--yellow-l); color: var(--yellow); }
+.tag-hard { background: var(--red-l); color: var(--red); }
+.tag-freq { background: var(--purple-l); color: var(--purple); }
+
+.problem-list { list-style: none; padding: 0; margin: 12px 0; }
+.problem-list li {
+  padding: 10px 14px; border-left: 3px solid var(--blue);
+  margin-bottom: 8px; background: var(--bg3);
+  border-radius: 0 8px 8px 0; display: flex;
+  justify-content: flex-start; align-items: center;
+  gap: 8px;
+}
+.problem-list .title { color: var(--text); font-weight: 500; font-size: 14px; flex: 1; }
+.problem-list .title a { color: var(--text); text-decoration: none; border-bottom: 1px dashed var(--border); transition: all .2s; }
+.problem-list .title a:hover { color: var(--blue); border-bottom-color: var(--blue); }
+
+.decision-tree {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 20px; margin: 12px 0;
+  font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 2;
+  white-space: pre-wrap;
+}
+.decision-tree .q { color: var(--blue); font-weight: bold; }
+.decision-tree .a { color: var(--green); }
+.decision-tree .arrow { color: var(--orange); }
+
+@media (max-width: 768px) {
+  .container { padding: 20px 12px; }
+  .nav { position: static; flex-direction: column; align-items: stretch; }
+  .nav-btn { text-align: center; }
+  pre { font-size: 11px; padding: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<header>
+  <h1>Advanced Algorithms &mdash; Deep Dive</h1>
+  <div class="sub">Knuth Optimization &bull; Network Flow &bull; Bipartite Matching &bull; Hungarian Algorithm</div>
+</header>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection('overview')">Overview</button>
+  <button class="nav-btn" onclick="showSection('knuth')">Knuth Opt</button>
+  <button class="nav-btn" onclick="showSection('flow')">Network Flow</button>
+  <button class="nav-btn" onclick="showSection('bipartite')">Bipartite Matching</button>
+  <button class="nav-btn" onclick="showSection('hungarian')">Hungarian</button>
+  <button class="nav-btn" onclick="showSection('mcmf')">MCMF</button>
+  <button class="nav-btn" onclick="showSection('tips')">Interview Tips</button>
+</div>
+
+<!-- ===== Overview ===== -->
+<div class="section active" id="overview">
+<div class="card">
+<h2>Algorithm Overview</h2>
+
+<div class="warning">
+  <p><strong>These are rarely asked in coding interviews.</strong> They appear in competitive programming and system design discussions. Study them for deep understanding, not for direct interview prep.</p>
+</div>
+
+<table>
+  <tr><th>Algorithm</th><th>Complexity</th><th>When to Apply</th></tr>
+  <tr><td>Knuth's Optimization</td><td>O(n&sup2;) from O(n&sup3;)</td><td>Interval DP where cost satisfies quadrangle inequality</td></tr>
+  <tr><td>Edmonds-Karp (Max Flow)</td><td>O(VE&sup2;)</td><td>Network flow, min cut, bipartite matching via flow</td></tr>
+  <tr><td>Hopcroft-Karp</td><td>O(E&radic;V)</td><td>Maximum bipartite matching (unweighted)</td></tr>
+  <tr><td>Hungarian Algorithm</td><td>O(n&sup3;)</td><td>Minimum cost / maximum profit assignment (weighted bipartite)</td></tr>
+  <tr><td>Min Cost Max Flow (MCMF)</td><td>O(V&sup2; &middot; E) typical</td><td>Assignment with capacities, complex flow cost optimization</td></tr>
+</table>
+
+<h3>Relationship Between Algorithms</h3>
+<div class="decision-tree"><span class="q">What kind of matching/assignment problem?</span>
+  <span class="arrow">&boxur;&mdash; Unweighted bipartite matching &rarr;</span> <span class="a">Hopcroft-Karp O(E&radic;V)</span>
+  <span class="arrow">&boxur;&mdash; Weighted assignment (n&times;n) &rarr;</span> <span class="a">Hungarian O(n&sup3;)</span>
+  <span class="arrow">&boxur;&mdash; General flow network &rarr;</span> <span class="a">Edmonds-Karp O(VE&sup2;)</span>
+  <span class="arrow">&boxur;&mdash; Flow + cost optimization &rarr;</span> <span class="a">MCMF (SPFA-based)</span>
+  <span class="arrow">&boxur;&mdash; Interval DP too slow? &rarr;</span> <span class="a">Check Knuth's Opt conditions</span></div>
+
+<h3>Interview Frequency</h3>
+<table>
+  <tr><th>Algorithm</th><th>Google</th><th>Meta</th><th>Competitive Programming</th></tr>
+  <tr><td>Knuth's Optimization</td><td>Never</td><td>Never</td><td>Frequent</td></tr>
+  <tr><td>Network Flow</td><td>Rare (design discussion)</td><td>Never</td><td>Very Frequent</td></tr>
+  <tr><td>Bipartite Matching</td><td>Rare</td><td>Never</td><td>Very Frequent</td></tr>
+  <tr><td>Hungarian Algorithm</td><td>Very Rare</td><td>Never</td><td>Frequent</td></tr>
+  <tr><td>MCMF</td><td>Never</td><td>Never</td><td>Frequent</td></tr>
+</table>
+</div>
+</div>
+
+<!-- ===== Knuth's Optimization ===== -->
+<div class="section" id="knuth">
+<div class="card">
+<h2>Knuth's Optimization</h2>
+<p>Reduces interval DP from <strong>O(n&sup3;)</strong> to <strong>O(n&sup2;)</strong> by exploiting the monotonicity of optimal split points.</p>
+
+<h3>Core Idea</h3>
+<p>In standard interval DP, we compute <code>dp[i][j] = min over k in [i, j-1] of (dp[i][k] + dp[k+1][j] + cost(i, j))</code>. This requires O(n) choices for k per state, giving O(n&sup3;) total.</p>
+
+<div class="insight">
+  <p><strong>Key Insight:</strong> If the cost function satisfies the <em>quadrangle inequality</em>, then the optimal split point <code>opt[i][j]</code> is monotone: <code>opt[i][j-1] &le; opt[i][j] &le; opt[i+1][j]</code>. This means as the interval grows, the optimal split point can only move right.</p>
+</div>
+
+<h3>Conditions (Both Required)</h3>
+<ol>
+  <li><strong>Quadrangle Inequality:</strong> For all a &le; b &le; c &le; d: <code>cost(a,c) + cost(b,d) &le; cost(a,d) + cost(b,c)</code></li>
+  <li><strong>Monotonicity of opt:</strong> <code>opt[i][j-1] &le; opt[i][j] &le; opt[i+1][j]</code></li>
+</ol>
+
+<p>The second condition follows from the first in most practical cases, but you should verify it.</p>
+
+<h3>Intuition</h3>
+<p>Instead of trying all k in [i, j-1] for each (i, j), we only try k in [opt[i][j-1], opt[i+1][j]]. Summing over all states, the total work becomes O(n&sup2;) because the ranges telescope.</p>
+
+<h3>Standard O(n&sup3;) Interval DP</h3>
+<pre><span class="cm">// Standard interval DP: O(n^3)</span>
+<span class="kw">public</span> <span class="type">int</span> <span class="fn">intervalDP</span>(<span class="type">int</span>[] arr) {
+    <span class="type">int</span> n = arr.length;
+    <span class="type">int</span>[][] dp = <span class="kw">new</span> <span class="type">int</span>[n][n];
+    <span class="type">int</span>[] prefix = <span class="kw">new</span> <span class="type">int</span>[n + <span class="num">1</span>];
+    <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; n; i++)
+        prefix[i + <span class="num">1</span>] = prefix[i] + arr[i];
+
+    <span class="cm">// cost(i, j) = prefix[j+1] - prefix[i] (sum of elements)</span>
+    <span class="kw">for</span> (<span class="type">int</span> len = <span class="num">2</span>; len &lt;= n; len++) {
+        <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i + len - <span class="num">1</span> &lt; n; i++) {
+            <span class="type">int</span> j = i + len - <span class="num">1</span>;
+            dp[i][j] = Integer.MAX_VALUE;
+            <span class="kw">for</span> (<span class="type">int</span> k = i; k &lt; j; k++) { <span class="cm">// O(n) choices</span>
+                dp[i][j] = Math.<span class="fn">min</span>(dp[i][j],
+                    dp[i][k] + dp[k + <span class="num">1</span>][j] + prefix[j + <span class="num">1</span>] - prefix[i]);
+            }
+        }
+    }
+    <span class="kw">return</span> dp[<span class="num">0</span>][n - <span class="num">1</span>];
+}</pre>
+
+<h3>Knuth-Optimized O(n&sup2;) Version</h3>
+<pre><span class="cm">// Knuth's Optimization: O(n^2)</span>
+<span class="kw">public</span> <span class="type">int</span> <span class="fn">knuthOptimized</span>(<span class="type">int</span>[] arr) {
+    <span class="type">int</span> n = arr.length;
+    <span class="type">int</span>[][] dp = <span class="kw">new</span> <span class="type">int</span>[n][n];
+    <span class="type">int</span>[][] opt = <span class="kw">new</span> <span class="type">int</span>[n][n]; <span class="cm">// optimal split point</span>
+    <span class="type">int</span>[] prefix = <span class="kw">new</span> <span class="type">int</span>[n + <span class="num">1</span>];
+    <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+        prefix[i + <span class="num">1</span>] = prefix[i] + arr[i];
+        opt[i][i] = i; <span class="cm">// base: single element, split at itself</span>
+    }
+
+    <span class="kw">for</span> (<span class="type">int</span> len = <span class="num">2</span>; len &lt;= n; len++) {
+        <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i + len - <span class="num">1</span> &lt; n; i++) {
+            <span class="type">int</span> j = i + len - <span class="num">1</span>;
+            dp[i][j] = Integer.MAX_VALUE;
+
+            <span class="cm">// KEY: only search k in [opt[i][j-1], opt[i+1][j]]</span>
+            <span class="type">int</span> lo = opt[i][j - <span class="num">1</span>];
+            <span class="type">int</span> hi = (j &lt; n - <span class="num">1</span>) ? opt[i + <span class="num">1</span>][j] : j - <span class="num">1</span>;
+
+            <span class="kw">for</span> (<span class="type">int</span> k = lo; k &lt;= Math.<span class="fn">min</span>(hi, j - <span class="num">1</span>); k++) {
+                <span class="type">int</span> val = dp[i][k] + dp[k + <span class="num">1</span>][j] + prefix[j + <span class="num">1</span>] - prefix[i];
+                <span class="kw">if</span> (val &lt; dp[i][j]) {
+                    dp[i][j] = val;
+                    opt[i][j] = k;
+                }
+            }
+        }
+    }
+    <span class="kw">return</span> dp[<span class="num">0</span>][n - <span class="num">1</span>];
+}</pre>
+
+<h3>How to Verify the Condition</h3>
+<div class="tip">
+  <p><strong>Practical check:</strong> Run the O(n&sup3;) version on small inputs and record <code>opt[i][j]</code>. Print the opt table and visually verify monotonicity: each row should be non-decreasing left to right, each column non-decreasing top to bottom.</p>
+</div>
+
+<h3>Related Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-cost-to-cut-a-stick/" target="_blank">1547. Minimum Cost to Cut a Stick</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/burst-balloons/" target="_blank">312. Burst Balloons</a> (does NOT satisfy condition)</span><span class="tag tag-hard">Hard</span></li>
+</ul>
+
+<div class="warning">
+  <p><strong>LC 312 (Burst Balloons):</strong> The cost function here does NOT satisfy the quadrangle inequality because the cost depends on which balloons remain (multiplicative, not additive). Knuth's optimization does not apply. Always verify the condition before applying!</p>
+</div>
+
+<div class="insight">
+  <p><strong>LC 1547 (Minimum Cost to Cut a Stick):</strong> After sorting the cut positions, this becomes a classic "merge stones" style interval DP where cost(i,j) = length of the stick segment. The sum cost satisfies the quadrangle inequality, making Knuth's optimization applicable.</p>
+</div>
+</div>
+</div>
+
+<!-- ===== Network Flow ===== -->
+<div class="section" id="flow">
+<div class="card">
+<h2>Network Flow (Max Flow / Min Cut)</h2>
+
+<h3>Core Concept</h3>
+<p><strong>Max-Flow Min-Cut Theorem:</strong> The maximum flow from source s to sink t equals the minimum capacity of any s-t cut.</p>
+
+<div class="insight">
+  <p><strong>Intuition:</strong> Imagine water flowing through pipes. The max flow is limited by the "bottleneck" &mdash; the minimum capacity cut that separates source from sink. No matter how you route the water, you cannot exceed this bottleneck.</p>
+</div>
+
+<h3>Ford-Fulkerson Method</h3>
+<ol>
+  <li>Start with zero flow</li>
+  <li>While there exists an augmenting path from s to t in the residual graph:</li>
+  <li>&nbsp;&nbsp;&nbsp;Find the path (BFS for Edmonds-Karp variant)</li>
+  <li>&nbsp;&nbsp;&nbsp;Push maximum possible flow along this path</li>
+  <li>&nbsp;&nbsp;&nbsp;Update residual capacities (forward edges decrease, backward edges increase)</li>
+</ol>
+
+<p><strong>Edmonds-Karp</strong> (BFS-based Ford-Fulkerson): O(VE&sup2;) &mdash; using BFS guarantees shortest augmenting paths, giving polynomial time.</p>
+
+<h3>Edmonds-Karp Implementation (Java)</h3>
+<pre><span class="kw">class</span> <span class="type">MaxFlow</span> {
+    <span class="type">int</span>[][] capacity;  <span class="cm">// capacity[u][v] = edge capacity</span>
+    <span class="type">int</span>[][] flow;      <span class="cm">// flow[u][v] = current flow</span>
+    <span class="type">int</span> n;
+
+    <span class="fn">MaxFlow</span>(<span class="type">int</span> n) {
+        <span class="kw">this</span>.n = n;
+        capacity = <span class="kw">new</span> <span class="type">int</span>[n][n];
+        flow = <span class="kw">new</span> <span class="type">int</span>[n][n];
+    }
+
+    <span class="kw">void</span> <span class="fn">addEdge</span>(<span class="type">int</span> u, <span class="type">int</span> v, <span class="type">int</span> cap) {
+        capacity[u][v] += cap; <span class="cm">// support multiple edges</span>
+    }
+
+    <span class="type">int</span> <span class="fn">maxflow</span>(<span class="type">int</span> s, <span class="type">int</span> t) {
+        <span class="type">int</span> totalFlow = <span class="num">0</span>;
+        <span class="kw">while</span> (<span class="kw">true</span>) {
+            <span class="cm">// BFS to find augmenting path</span>
+            <span class="type">int</span>[] parent = <span class="kw">new</span> <span class="type">int</span>[n];
+            Arrays.<span class="fn">fill</span>(parent, -<span class="num">1</span>);
+            parent[s] = s;
+            Queue&lt;Integer&gt; queue = <span class="kw">new</span> LinkedList&lt;&gt;();
+            queue.<span class="fn">offer</span>(s);
+
+            <span class="kw">while</span> (!queue.<span class="fn">isEmpty</span>() && parent[t] == -<span class="num">1</span>) {
+                <span class="type">int</span> u = queue.<span class="fn">poll</span>();
+                <span class="kw">for</span> (<span class="type">int</span> v = <span class="num">0</span>; v &lt; n; v++) {
+                    <span class="cm">// residual capacity = capacity - current flow</span>
+                    <span class="kw">if</span> (parent[v] == -<span class="num">1</span> && capacity[u][v] - flow[u][v] &gt; <span class="num">0</span>) {
+                        parent[v] = u;
+                        queue.<span class="fn">offer</span>(v);
+                    }
+                }
+            }
+
+            <span class="kw">if</span> (parent[t] == -<span class="num">1</span>) <span class="kw">break</span>; <span class="cm">// no augmenting path</span>
+
+            <span class="cm">// Find bottleneck</span>
+            <span class="type">int</span> pathFlow = Integer.MAX_VALUE;
+            <span class="kw">for</span> (<span class="type">int</span> v = t; v != s; v = parent[v]) {
+                <span class="type">int</span> u = parent[v];
+                pathFlow = Math.<span class="fn">min</span>(pathFlow, capacity[u][v] - flow[u][v]);
+            }
+
+            <span class="cm">// Update flow along the path</span>
+            <span class="kw">for</span> (<span class="type">int</span> v = t; v != s; v = parent[v]) {
+                <span class="type">int</span> u = parent[v];
+                flow[u][v] += pathFlow;  <span class="cm">// forward edge: add flow</span>
+                flow[v][u] -= pathFlow;  <span class="cm">// backward edge: allow "undo"</span>
+            }
+
+            totalFlow += pathFlow;
+        }
+        <span class="kw">return</span> totalFlow;
+    }
+}</pre>
+
+<h3>Finding the Min Cut</h3>
+<div class="tip">
+  <p><strong>After computing max flow:</strong> Run BFS from source on the residual graph (edges with remaining capacity &gt; 0). All reachable nodes form set S, unreachable nodes form set T. The edges crossing from S to T with full capacity constitute the minimum cut.</p>
+</div>
+
+<pre><span class="cm">// Find min cut after running maxflow</span>
+<span class="type">boolean</span>[] <span class="fn">minCut</span>(<span class="type">int</span> s) {
+    <span class="type">boolean</span>[] reachable = <span class="kw">new</span> <span class="type">boolean</span>[n];
+    Queue&lt;Integer&gt; queue = <span class="kw">new</span> LinkedList&lt;&gt;();
+    queue.<span class="fn">offer</span>(s);
+    reachable[s] = <span class="kw">true</span>;
+    <span class="kw">while</span> (!queue.<span class="fn">isEmpty</span>()) {
+        <span class="type">int</span> u = queue.<span class="fn">poll</span>();
+        <span class="kw">for</span> (<span class="type">int</span> v = <span class="num">0</span>; v &lt; n; v++) {
+            <span class="kw">if</span> (!reachable[v] && capacity[u][v] - flow[u][v] &gt; <span class="num">0</span>) {
+                reachable[v] = <span class="kw">true</span>;
+                queue.<span class="fn">offer</span>(v);
+            }
+        }
+    }
+    <span class="kw">return</span> reachable; <span class="cm">// reachable = S side of min cut</span>
+}</pre>
+
+<h3>Applications</h3>
+<table>
+  <tr><th>Application</th><th>Modeling</th></tr>
+  <tr><td>Maximum Bipartite Matching</td><td>Source &rarr; left nodes (cap 1), left &rarr; right (cap 1), right &rarr; sink (cap 1)</td></tr>
+  <tr><td>Minimum Cut / Critical Edges</td><td>Max flow = min cut capacity</td></tr>
+  <tr><td>Project Selection</td><td>Source = select project, Sink = skip. Profit edges from source, cost edges to sink.</td></tr>
+  <tr><td>Image Segmentation</td><td>Pixels as nodes, similarity as edge capacity</td></tr>
+</table>
+
+<h3>Related Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-number-of-accepted-invitations/" target="_blank">1820. Maximum Number of Accepted Invitations</a> (bipartite via flow)</span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/critical-connections-in-a-network/" target="_blank">1192. Critical Connections in a Network</a> (min cut analogy)</span><span class="tag tag-hard">Hard</span></li>
+</ul>
+
+<div class="warning">
+  <p><strong>Note:</strong> Direct max-flow problems are rare on LeetCode. The concept is more important for system design discussions (load balancing, network capacity planning) and as a reduction technique in competitive programming.</p>
+</div>
+</div>
+</div>
+
+<!-- ===== Bipartite Matching ===== -->
+<div class="section" id="bipartite">
+<div class="card">
+<h2>Bipartite Matching</h2>
+<p>Find the maximum number of edges in a bipartite graph such that no vertex is matched more than once.</p>
+
+<h3>Hopcroft-Karp Algorithm</h3>
+<p>Faster than naive augmenting path approach: <strong>O(E&radic;V)</strong> vs O(VE).</p>
+
+<div class="insight">
+  <p><strong>Key Idea:</strong> Instead of finding augmenting paths one at a time, Hopcroft-Karp finds a maximal set of shortest augmenting paths simultaneously using BFS layering, then augments all of them via DFS. Each phase takes O(E) and there are at most O(&radic;V) phases.</p>
+</div>
+
+<h3>Algorithm Steps</h3>
+<ol>
+  <li><strong>BFS Phase:</strong> Build a layered graph from all free (unmatched) left vertices. Stop when we reach free right vertices or no more progress.</li>
+  <li><strong>DFS Phase:</strong> For each free left vertex, find an augmenting path through the layered graph. Flip matched/unmatched edges along the path.</li>
+  <li><strong>Repeat</strong> until BFS finds no augmenting path.</li>
+</ol>
+
+<h3>Full Implementation (Java)</h3>
+<pre><span class="kw">class</span> <span class="type">HopcroftKarp</span> {
+    <span class="type">int</span> leftSize, rightSize;
+    List&lt;List&lt;Integer&gt;&gt; adj; <span class="cm">// adj[left] = list of right neighbors</span>
+    <span class="type">int</span>[] matchL, matchR;    <span class="cm">// matchL[l] = matched right, matchR[r] = matched left</span>
+    <span class="type">int</span>[] dist;              <span class="cm">// BFS layer distance for left nodes</span>
+    <span class="kw">static final</span> <span class="type">int</span> INF = Integer.MAX_VALUE;
+
+    <span class="fn">HopcroftKarp</span>(<span class="type">int</span> left, <span class="type">int</span> right) {
+        leftSize = left;
+        rightSize = right;
+        adj = <span class="kw">new</span> ArrayList&lt;&gt;();
+        <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; left; i++) adj.<span class="fn">add</span>(<span class="kw">new</span> ArrayList&lt;&gt;());
+        matchL = <span class="kw">new</span> <span class="type">int</span>[left];
+        matchR = <span class="kw">new</span> <span class="type">int</span>[right];
+        dist = <span class="kw">new</span> <span class="type">int</span>[left];
+        Arrays.<span class="fn">fill</span>(matchL, -<span class="num">1</span>);
+        Arrays.<span class="fn">fill</span>(matchR, -<span class="num">1</span>);
+    }
+
+    <span class="kw">void</span> <span class="fn">addEdge</span>(<span class="type">int</span> l, <span class="type">int</span> r) {
+        adj.<span class="fn">get</span>(l).<span class="fn">add</span>(r);
+    }
+
+    <span class="cm">// BFS: build layered graph from free left vertices</span>
+    <span class="type">boolean</span> <span class="fn">bfs</span>() {
+        Queue&lt;Integer&gt; queue = <span class="kw">new</span> LinkedList&lt;&gt;();
+        <span class="kw">for</span> (<span class="type">int</span> l = <span class="num">0</span>; l &lt; leftSize; l++) {
+            <span class="kw">if</span> (matchL[l] == -<span class="num">1</span>) {
+                dist[l] = <span class="num">0</span>;
+                queue.<span class="fn">offer</span>(l);
+            } <span class="kw">else</span> {
+                dist[l] = INF;
+            }
+        }
+        <span class="type">boolean</span> found = <span class="kw">false</span>;
+        <span class="kw">while</span> (!queue.<span class="fn">isEmpty</span>()) {
+            <span class="type">int</span> l = queue.<span class="fn">poll</span>();
+            <span class="kw">for</span> (<span class="type">int</span> r : adj.<span class="fn">get</span>(l)) {
+                <span class="type">int</span> nextL = matchR[r]; <span class="cm">// who is r matched to?</span>
+                <span class="kw">if</span> (nextL == -<span class="num">1</span>) {
+                    found = <span class="kw">true</span>; <span class="cm">// found free right vertex = augmenting path exists</span>
+                } <span class="kw">else if</span> (dist[nextL] == INF) {
+                    dist[nextL] = dist[l] + <span class="num">1</span>;
+                    queue.<span class="fn">offer</span>(nextL);
+                }
+            }
+        }
+        <span class="kw">return</span> found;
+    }
+
+    <span class="cm">// DFS: find augmenting path through layered graph</span>
+    <span class="type">boolean</span> <span class="fn">dfs</span>(<span class="type">int</span> l) {
+        <span class="kw">for</span> (<span class="type">int</span> r : adj.<span class="fn">get</span>(l)) {
+            <span class="type">int</span> nextL = matchR[r];
+            <span class="kw">if</span> (nextL == -<span class="num">1</span> || (dist[nextL] == dist[l] + <span class="num">1</span> && <span class="fn">dfs</span>(nextL))) {
+                matchL[l] = r;
+                matchR[r] = l;
+                <span class="kw">return true</span>;
+            }
+        }
+        dist[l] = INF; <span class="cm">// remove from layered graph (optimization)</span>
+        <span class="kw">return false</span>;
+    }
+
+    <span class="type">int</span> <span class="fn">maxMatching</span>() {
+        <span class="type">int</span> result = <span class="num">0</span>;
+        <span class="kw">while</span> (<span class="fn">bfs</span>()) { <span class="cm">// each BFS phase = O(E)</span>
+            <span class="kw">for</span> (<span class="type">int</span> l = <span class="num">0</span>; l &lt; leftSize; l++) {
+                <span class="kw">if</span> (matchL[l] == -<span class="num">1</span> && <span class="fn">dfs</span>(l)) {
+                    result++;
+                }
+            }
+        }
+        <span class="kw">return</span> result;
+    }
+}</pre>
+
+<h3>K&ouml;nig's Theorem</h3>
+<div class="insight">
+  <p><strong>In any bipartite graph:</strong> Maximum Matching = Minimum Vertex Cover. This means the minimum number of vertices needed to "cover" all edges equals the size of the maximum matching.</p>
+</div>
+<p>Corollary: Maximum Independent Set = Total Vertices - Maximum Matching (in bipartite graphs).</p>
+
+<h3>Applications</h3>
+<ul>
+  <li><strong>Task Assignment:</strong> Assign workers to tasks (each worker does at most one task)</li>
+  <li><strong>Scheduling:</strong> Schedule jobs on machines without conflicts</li>
+  <li><strong>Tiling:</strong> Domino tiling of a grid (each cell = node, adjacent cells = edge)</li>
+  <li><strong>Minimum Vertex Cover:</strong> Via K&ouml;nig's theorem</li>
+</ul>
+
+<h3>Related Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-students-taking-exam/" target="_blank">1349. Maximum Students Taking Exam</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/is-graph-bipartite/" target="_blank">785. Is Graph Bipartite?</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-number-of-accepted-invitations/" target="_blank">1820. Maximum Number of Accepted Invitations</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+
+<div class="tip">
+  <p><strong>Interview alternative:</strong> For n &le; 20, bitmask DP is the interview-friendly way to solve matching problems. Hopcroft-Karp is for when n is large (thousands).</p>
+</div>
+</div>
+</div>
+
+<!-- ===== Hungarian Algorithm ===== -->
+<div class="section" id="hungarian">
+<div class="card">
+<h2>Hungarian Algorithm (Weighted Bipartite Matching)</h2>
+<p>Finds the minimum cost (or maximum profit) perfect matching in a weighted bipartite graph. <strong>O(n&sup3;)</strong> for an n&times;n assignment.</p>
+
+<h3>Problem Statement</h3>
+<p>Given n workers and n jobs with a cost matrix <code>cost[i][j]</code> = cost of assigning worker i to job j, find the assignment that minimizes total cost.</p>
+
+<h3>Building Intuition Step by Step</h3>
+
+<h4>Step 1: Labels (Dual Variables)</h4>
+<p>Assign a "label" to each worker and each job:</p>
+<ul>
+  <li><code>labelWorker[x]</code> = potential of worker x</li>
+  <li><code>labelJob[y]</code> = potential of job y</li>
+</ul>
+<p><strong>Invariant (feasibility):</strong> For all x, y: <code>labelWorker[x] + labelJob[y] &le; cost[x][y]</code></p>
+<p>This means labels are always a lower bound on the true cost of any assignment.</p>
+
+<h4>Step 2: Equality Graph</h4>
+<p>The <strong>equality graph</strong> contains only "tight" edges where <code>labelWorker[x] + labelJob[y] == cost[x][y]</code>.</p>
+
+<div class="insight">
+  <p><strong>Key Theorem:</strong> If we can find a perfect matching using ONLY edges in the equality graph, that matching is optimal! Because the sum of labels = sum of costs along those edges, and labels are a lower bound for any other assignment.</p>
+</div>
+
+<h4>Step 3: Growing the Equality Graph</h4>
+<p>If the current equality graph doesn't have a perfect matching, we adjust labels to add new tight edges:</p>
+<ul>
+  <li>Find <code>delta</code> = minimum slack among edges not yet in the equality graph</li>
+  <li>Decrease worker labels in the alternating tree by delta</li>
+  <li>Increase job labels in the alternating tree by delta</li>
+  <li>This makes at least one new edge tight (added to equality graph)</li>
+</ul>
+
+<h4>Step 4: The Sentinel Trick (Index 0)</h4>
+<div class="warning">
+  <p><strong>Why does the code use index 0 as a sentinel?</strong></p>
+  <p><code>jobMatch[0] = i</code> means "we are currently trying to match worker i." Index 0 is a virtual "unmatched" state. When we trace the augmenting path backward, hitting job 0 means we've reached the starting point. The final answer accumulates into <code>-labelJob[0]</code> because every time we adjust labels, the sentinel absorbs the delta that doesn't get applied to a real job.</p>
+</div>
+
+<h3>The Main Loop Explained</h3>
+<pre><span class="cm">// For each worker i:</span>
+<span class="cm">//   Start by "assigning" worker i to virtual job 0</span>
+<span class="cm">//   Then repeatedly:</span>
+<span class="cm">//     1. Find the job with minimum slack (closest to being tight)</span>
+<span class="cm">//     2. If slack > 0: adjust labels (dual update) to make it tight</span>
+<span class="cm">//     3. If that job is unmatched: augment! (flip the alternating path)</span>
+<span class="cm">//        If that job is matched: add its worker to tree, continue</span></pre>
+
+<h3>Full Annotated Implementation (Minimum Cost)</h3>
+<pre><span class="cm">/**
+ * Hungarian Algorithm for minimum cost assignment.
+ * Workers: 1..n, Jobs: 1..n (0 is sentinel)
+ * cost[i][j] = cost of assigning worker i to job j (1-indexed)
+ * Returns minimum total assignment cost.
+ */</span>
+<span class="kw">public static</span> <span class="type">long</span> <span class="fn">hungarian</span>(<span class="type">int</span>[][] cost, <span class="type">int</span> n) {
+    <span class="cm">// Labels (dual variables): labelWorker[x] + labelJob[y] &lt;= cost[x][y]</span>
+    <span class="type">long</span>[] labelWorker = <span class="kw">new</span> <span class="type">long</span>[n + <span class="num">1</span>]; <span class="cm">// potential for each worker</span>
+    <span class="type">long</span>[] labelJob = <span class="kw">new</span> <span class="type">long</span>[n + <span class="num">1</span>];    <span class="cm">// potential for each job</span>
+
+    <span class="cm">// jobMatch[j] = worker assigned to job j (0 = unassigned)</span>
+    <span class="type">int</span>[] jobMatch = <span class="kw">new</span> <span class="type">int</span>[n + <span class="num">1</span>];
+
+    <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">1</span>; i &lt;= n; i++) { <span class="cm">// for each worker</span>
+        <span class="cm">// === Start augmenting from worker i ===</span>
+        <span class="cm">// Trick: "assign" worker i to sentinel job 0</span>
+        jobMatch[<span class="num">0</span>] = i;
+
+        <span class="cm">// inSetT[j] = true if job j is already in the alternating tree</span>
+        <span class="type">boolean</span>[] inSetT = <span class="kw">new</span> <span class="type">boolean</span>[n + <span class="num">1</span>];
+
+        <span class="cm">// minSlack[j] = minimum (labelWorker[x] + labelJob[j] - cost[x][j])</span>
+        <span class="cm">//               over all workers x currently in the tree</span>
+        <span class="cm">// This tracks how close job j is to becoming a tight edge</span>
+        <span class="type">long</span>[] minSlack = <span class="kw">new</span> <span class="type">long</span>[n + <span class="num">1</span>];
+        Arrays.<span class="fn">fill</span>(minSlack, Long.MAX_VALUE);
+
+        <span class="cm">// replaceBy[j] = the worker that achieves minSlack[j]</span>
+        <span class="cm">// Used to trace back the augmenting path</span>
+        <span class="type">int</span>[] replaceBy = <span class="kw">new</span> <span class="type">int</span>[n + <span class="num">1</span>];
+
+        <span class="type">int</span> currentJob = <span class="num">0</span>; <span class="cm">// start from sentinel</span>
+
+        <span class="kw">do</span> {
+            inSetT[currentJob] = <span class="kw">true</span>;
+            <span class="type">int</span> currentWorker = jobMatch[currentJob];
+            <span class="type">long</span> delta = Long.MAX_VALUE;
+            <span class="type">int</span> nextJob = -<span class="num">1</span>;
+
+            <span class="cm">// Phase 1: Update minimum slack for all jobs not in tree</span>
+            <span class="kw">for</span> (<span class="type">int</span> j = <span class="num">1</span>; j &lt;= n; j++) {
+                <span class="kw">if</span> (inSetT[j]) <span class="kw">continue</span>;
+                <span class="cm">// Slack = how far this edge is from being tight</span>
+                <span class="type">long</span> slack = (<span class="type">long</span>)cost[currentWorker][j]
+                           - labelWorker[currentWorker] - labelJob[j];
+                <span class="kw">if</span> (slack &lt; minSlack[j]) {
+                    minSlack[j] = slack;
+                    replaceBy[j] = currentJob; <span class="cm">// trace: came from currentJob</span>
+                }
+                <span class="kw">if</span> (minSlack[j] &lt; delta) {
+                    delta = minSlack[j];
+                    nextJob = j; <span class="cm">// job with smallest slack</span>
+                }
+            }
+
+            <span class="cm">// Phase 2: Adjust labels (dual update)</span>
+            <span class="cm">// For jobs IN tree: increase label (tighter constraint)</span>
+            <span class="cm">// For workers IN tree (via their jobs): decrease label</span>
+            <span class="cm">// Net effect: makes nextJob's edge tight</span>
+            <span class="kw">for</span> (<span class="type">int</span> j = <span class="num">0</span>; j &lt;= n; j++) {
+                <span class="kw">if</span> (inSetT[j]) {
+                    <span class="cm">// Jobs in tree: increase their label</span>
+                    labelWorker[jobMatch[j]] -= delta;
+                    labelJob[j] += delta;
+                } <span class="kw">else</span> {
+                    <span class="cm">// Jobs not in tree: reduce their slack</span>
+                    minSlack[j] -= delta;
+                }
+            }
+
+            <span class="cm">// Phase 3: Move to nextJob</span>
+            currentJob = nextJob;
+
+        } <span class="kw">while</span> (jobMatch[currentJob] != <span class="num">0</span>);
+        <span class="cm">// Loop ends when nextJob is unmatched (augmenting path found!)</span>
+
+        <span class="cm">// Trace back and flip the augmenting path</span>
+        <span class="kw">while</span> (currentJob != <span class="num">0</span>) {
+            <span class="type">int</span> prevJob = replaceBy[currentJob];
+            jobMatch[currentJob] = jobMatch[prevJob];
+            currentJob = prevJob;
+        }
+    }
+
+    <span class="cm">// The answer accumulates into -labelJob[0]</span>
+    <span class="cm">// Why? Every dual update adds delta to labelJob[0] (sentinel is always in tree)</span>
+    <span class="cm">// The sum of all deltas = total assignment cost</span>
+    <span class="kw">return</span> -labelJob[<span class="num">0</span>];
+}</pre>
+
+<h3>Why the Answer is <code>-labelJob[0]</code></h3>
+<div class="insight">
+  <p><strong>The sentinel absorbs cost:</strong> Job 0 is always in the tree (inSetT[0] = true from the start). Every dual update adds <code>delta</code> to <code>labelJob[0]</code>. Since <code>labelJob[0]</code> starts at 0 and only increases, the total accumulated value equals the negative of the minimum assignment cost. Hence the answer is <code>-labelJob[0]</code>.</p>
+</div>
+
+<h3>Maximum Profit Version</h3>
+<p>For maximum profit assignment, negate all costs: <code>cost'[i][j] = -cost[i][j]</code>, then run min-cost Hungarian. Or equivalently, flip the inequality direction and sign conventions:</p>
+
+<pre><span class="cm">/**
+ * Hungarian Algorithm for MAXIMUM profit assignment.
+ * profit[i][j] = profit of assigning worker i to job j (1-indexed)
+ * Returns maximum total assignment profit.
+ */</span>
+<span class="kw">public static</span> <span class="type">long</span> <span class="fn">hungarianMaxProfit</span>(<span class="type">int</span>[][] profit, <span class="type">int</span> n) {
+    <span class="cm">// For max profit: labels satisfy labelWorker[x] + labelJob[y] &gt;= profit[x][y]</span>
+    <span class="cm">// Initialize labelWorker[x] = max(profit[x][*]), labelJob[y] = 0</span>
+    <span class="type">long</span>[] labelWorker = <span class="kw">new</span> <span class="type">long</span>[n + <span class="num">1</span>];
+    <span class="type">long</span>[] labelJob = <span class="kw">new</span> <span class="type">long</span>[n + <span class="num">1</span>];
+    <span class="type">int</span>[] jobMatch = <span class="kw">new</span> <span class="type">int</span>[n + <span class="num">1</span>];
+
+    <span class="cm">// Initialize: each worker's label = max profit they can achieve</span>
+    <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">1</span>; i &lt;= n; i++) {
+        labelWorker[i] = Long.MIN_VALUE;
+        <span class="kw">for</span> (<span class="type">int</span> j = <span class="num">1</span>; j &lt;= n; j++)
+            labelWorker[i] = Math.<span class="fn">max</span>(labelWorker[i], profit[i][j]);
+    }
+
+    <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">1</span>; i &lt;= n; i++) {
+        jobMatch[<span class="num">0</span>] = i;
+        <span class="type">boolean</span>[] inSetT = <span class="kw">new</span> <span class="type">boolean</span>[n + <span class="num">1</span>];
+        <span class="type">long</span>[] minSlack = <span class="kw">new</span> <span class="type">long</span>[n + <span class="num">1</span>];
+        Arrays.<span class="fn">fill</span>(minSlack, Long.MAX_VALUE);
+        <span class="type">int</span>[] replaceBy = <span class="kw">new</span> <span class="type">int</span>[n + <span class="num">1</span>];
+        <span class="type">int</span> currentJob = <span class="num">0</span>;
+
+        <span class="kw">do</span> {
+            inSetT[currentJob] = <span class="kw">true</span>;
+            <span class="type">int</span> w = jobMatch[currentJob];
+            <span class="type">long</span> delta = Long.MAX_VALUE;
+            <span class="type">int</span> nextJob = -<span class="num">1</span>;
+
+            <span class="kw">for</span> (<span class="type">int</span> j = <span class="num">1</span>; j &lt;= n; j++) {
+                <span class="kw">if</span> (inSetT[j]) <span class="kw">continue</span>;
+                <span class="cm">// Slack for max: labelWorker[w] + labelJob[j] - profit[w][j]</span>
+                <span class="type">long</span> slack = labelWorker[w] + labelJob[j] - profit[w][j];
+                <span class="kw">if</span> (slack &lt; minSlack[j]) {
+                    minSlack[j] = slack;
+                    replaceBy[j] = currentJob;
+                }
+                <span class="kw">if</span> (minSlack[j] &lt; delta) {
+                    delta = minSlack[j];
+                    nextJob = j;
+                }
+            }
+
+            <span class="cm">// Dual update: decrease worker labels, increase job labels</span>
+            <span class="kw">for</span> (<span class="type">int</span> j = <span class="num">0</span>; j &lt;= n; j++) {
+                <span class="kw">if</span> (inSetT[j]) {
+                    labelWorker[jobMatch[j]] -= delta;
+                    labelJob[j] += delta;
+                } <span class="kw">else</span> {
+                    minSlack[j] -= delta;
+                }
+            }
+
+            currentJob = nextJob;
+        } <span class="kw">while</span> (jobMatch[currentJob] != <span class="num">0</span>);
+
+        <span class="kw">while</span> (currentJob != <span class="num">0</span>) {
+            <span class="type">int</span> prevJob = replaceBy[currentJob];
+            jobMatch[currentJob] = jobMatch[prevJob];
+            currentJob = prevJob;
+        }
+    }
+
+    <span class="cm">// For max profit, answer is labelJob[0] (positive accumulation)</span>
+    <span class="kw">return</span> labelJob[<span class="num">0</span>];
+}</pre>
+
+<h3>Complexity Analysis</h3>
+<div class="tip">
+  <p><strong>O(n&sup3;):</strong> n workers &times; (at most n label adjustments per worker &times; n jobs scanned per adjustment). The inner do-while loop runs at most n times because each iteration either adds a job to the tree or finds an augmenting path.</p>
+</div>
+
+<h3>Related Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-students-taking-exam/" target="_blank">1349. Maximum Students Taking Exam</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-and-sum-of-array/" target="_blank">2172. Maximum AND Sum of Array</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/campus-bikes-ii/" target="_blank">1066. Campus Bikes II</a> (Hungarian instead of bitmask DP)</span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-cost-to-connect-two-groups-of-points/" target="_blank">1595. Minimum Cost to Connect Two Groups of Points</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+
+<div class="warning">
+  <p><strong>LC 1066 (Campus Bikes II):</strong> The standard approach is bitmask DP O(n &middot; 2^m) where m = number of bikes. But if n and m are both large and equal, Hungarian gives O(n&sup3;) which can be better. For LC constraints (n, m &le; 10), bitmask DP is simpler.</p>
+</div>
+</div>
+</div>
+
+<!-- ===== MCMF ===== -->
+<div class="section" id="mcmf">
+<div class="card">
+<h2>Minimum Cost Maximum Flow (MCMF)</h2>
+<p>Combines shortest path algorithms with flow augmentation to find the maximum flow with minimum total cost.</p>
+
+<h3>When to Use</h3>
+<ul>
+  <li>Assignment problems with <strong>capacities</strong> (one worker can do multiple jobs up to a limit)</li>
+  <li>Problems where you need both maximum throughput AND minimum cost</li>
+  <li>Complex matching with constraints that don't fit pure bipartite matching</li>
+</ul>
+
+<div class="insight">
+  <p><strong>Core Idea:</strong> Repeatedly find the shortest path (minimum cost augmenting path) from source to sink using SPFA (or Bellman-Ford), then push flow along it. Each augmentation increases flow by at least 1 while keeping total cost minimal.</p>
+</div>
+
+<h3>Algorithm</h3>
+<ol>
+  <li>Build residual graph with costs (forward edge has cost c, backward edge has cost -c)</li>
+  <li>Find shortest path from s to t using SPFA (handles negative edges from backward edges)</li>
+  <li>Push maximum flow along this path</li>
+  <li>Update residual graph</li>
+  <li>Repeat until no path exists</li>
+</ol>
+
+<h3>Simplified SPFA-based MCMF (Java)</h3>
+<pre><span class="kw">class</span> <span class="type">MCMF</span> {
+    <span class="kw">static final</span> <span class="type">int</span> INF = Integer.MAX_VALUE;
+    <span class="type">int</span> n;
+    List&lt;<span class="type">int</span>[]&gt;[] graph; <span class="cm">// each edge: [to, cap, cost, reverseIdx]</span>
+
+    <span class="fn">MCMF</span>(<span class="type">int</span> n) {
+        <span class="kw">this</span>.n = n;
+        graph = <span class="kw">new</span> ArrayList[n];
+        <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; n; i++) graph[i] = <span class="kw">new</span> ArrayList&lt;&gt;();
+    }
+
+    <span class="kw">void</span> <span class="fn">addEdge</span>(<span class="type">int</span> u, <span class="type">int</span> v, <span class="type">int</span> cap, <span class="type">int</span> cost) {
+        graph[u].<span class="fn">add</span>(<span class="kw">new</span> <span class="type">int</span>[]{v, cap, cost, graph[v].<span class="fn">size</span>()});
+        graph[v].<span class="fn">add</span>(<span class="kw">new</span> <span class="type">int</span>[]{u, <span class="num">0</span>, -cost, graph[u].<span class="fn">size</span>() - <span class="num">1</span>});
+    }
+
+    <span class="cm">// Returns [maxFlow, minCost]</span>
+    <span class="type">int</span>[] <span class="fn">solve</span>(<span class="type">int</span> s, <span class="type">int</span> t) {
+        <span class="type">int</span> totalFlow = <span class="num">0</span>, totalCost = <span class="num">0</span>;
+        <span class="kw">while</span> (<span class="kw">true</span>) {
+            <span class="cm">// SPFA to find shortest path (min cost)</span>
+            <span class="type">int</span>[] dist = <span class="kw">new</span> <span class="type">int</span>[n];
+            Arrays.<span class="fn">fill</span>(dist, INF);
+            dist[s] = <span class="num">0</span>;
+            <span class="type">boolean</span>[] inQueue = <span class="kw">new</span> <span class="type">boolean</span>[n];
+            <span class="type">int</span>[] prevNode = <span class="kw">new</span> <span class="type">int</span>[n];
+            <span class="type">int</span>[] prevEdge = <span class="kw">new</span> <span class="type">int</span>[n];
+            Arrays.<span class="fn">fill</span>(prevNode, -<span class="num">1</span>);
+
+            Queue&lt;Integer&gt; queue = <span class="kw">new</span> LinkedList&lt;&gt;();
+            queue.<span class="fn">offer</span>(s);
+            inQueue[s] = <span class="kw">true</span>;
+
+            <span class="kw">while</span> (!queue.<span class="fn">isEmpty</span>()) {
+                <span class="type">int</span> u = queue.<span class="fn">poll</span>();
+                inQueue[u] = <span class="kw">false</span>;
+                <span class="kw">for</span> (<span class="type">int</span> idx = <span class="num">0</span>; idx &lt; graph[u].<span class="fn">size</span>(); idx++) {
+                    <span class="type">int</span>[] e = graph[u].<span class="fn">get</span>(idx);
+                    <span class="type">int</span> v = e[<span class="num">0</span>], cap = e[<span class="num">1</span>], cost = e[<span class="num">2</span>];
+                    <span class="kw">if</span> (cap &gt; <span class="num">0</span> && dist[u] + cost &lt; dist[v]) {
+                        dist[v] = dist[u] + cost;
+                        prevNode[v] = u;
+                        prevEdge[v] = idx;
+                        <span class="kw">if</span> (!inQueue[v]) {
+                            queue.<span class="fn">offer</span>(v);
+                            inQueue[v] = <span class="kw">true</span>;
+                        }
+                    }
+                }
+            }
+
+            <span class="kw">if</span> (dist[t] == INF) <span class="kw">break</span>; <span class="cm">// no more augmenting paths</span>
+
+            <span class="cm">// Find bottleneck along shortest path</span>
+            <span class="type">int</span> pathFlow = INF;
+            <span class="kw">for</span> (<span class="type">int</span> v = t; v != s; v = prevNode[v])
+                pathFlow = Math.<span class="fn">min</span>(pathFlow, graph[prevNode[v]].<span class="fn">get</span>(prevEdge[v])[<span class="num">1</span>]);
+
+            <span class="cm">// Update flow and residual</span>
+            <span class="kw">for</span> (<span class="type">int</span> v = t; v != s; v = prevNode[v]) {
+                <span class="type">int</span>[] e = graph[prevNode[v]].<span class="fn">get</span>(prevEdge[v]);
+                e[<span class="num">1</span>] -= pathFlow; <span class="cm">// reduce forward capacity</span>
+                graph[v].<span class="fn">get</span>(e[<span class="num">3</span>])[<span class="num">1</span>] += pathFlow; <span class="cm">// increase backward capacity</span>
+            }
+
+            totalFlow += pathFlow;
+            totalCost += pathFlow * dist[t];
+        }
+        <span class="kw">return new</span> <span class="type">int</span>[]{totalFlow, totalCost};
+    }
+}</pre>
+
+<h3>MCMF vs Hungarian</h3>
+<table>
+  <tr><th>Aspect</th><th>Hungarian</th><th>MCMF</th></tr>
+  <tr><td>Problem type</td><td>n&times;n perfect assignment</td><td>General flow with costs</td></tr>
+  <tr><td>Capacities</td><td>All edges capacity 1</td><td>Arbitrary capacities</td></tr>
+  <tr><td>Complexity</td><td>O(n&sup3;)</td><td>O(V&sup2; &middot; E) typical</td></tr>
+  <tr><td>When to prefer</td><td>Pure assignment (one-to-one)</td><td>Many-to-many with capacity constraints</td></tr>
+</table>
+
+<div class="danger">
+  <p><strong>Usually overkill for interviews.</strong> MCMF is elegant for modeling complex assignment problems (worker can do up to k jobs, jobs need exactly m workers), but you'll almost never implement it in an interview. Know the concept for system design discussions.</p>
+</div>
+</div>
+</div>
+
+<!-- ===== Interview Tips ===== -->
+<div class="section" id="tips">
+<div class="card">
+<h2>Interview Tips</h2>
+
+<h3>When Would You Mention These?</h3>
+<p>Almost never code them in an interview. But they come up in two scenarios:</p>
+<ol>
+  <li><strong>"How would you optimize further?"</strong> &mdash; If you solve a problem with O(n&sup3;) interval DP, you can mention Knuth's optimization brings it to O(n&sup2;).</li>
+  <li><strong>"What's the theoretical best approach?"</strong> &mdash; For assignment-type problems, mentioning Hungarian shows you know the optimal algorithm exists.</li>
+</ol>
+
+<h3>Interview-Friendly Alternatives</h3>
+<table>
+  <tr><th>Advanced Algorithm</th><th>Interview Alternative</th><th>When Alternative Works</th></tr>
+  <tr><td>Hungarian O(n&sup3;)</td><td>Bitmask DP O(n &middot; 2^n)</td><td>n &le; 20 (most LC problems)</td></tr>
+  <tr><td>Hopcroft-Karp</td><td>Simple DFS augmenting path O(VE)</td><td>Small graphs (n &le; 1000)</td></tr>
+  <tr><td>Edmonds-Karp</td><td>BFS/DFS with visited</td><td>When problem reduces to reachability</td></tr>
+  <tr><td>Knuth's Optimization</td><td>Standard interval DP O(n&sup3;)</td><td>n &le; 500 (most LC constraints)</td></tr>
+  <tr><td>MCMF</td><td>Greedy + priority queue</td><td>When flow structure is simple</td></tr>
+</table>
+
+<h3>Name-Dropping Guide</h3>
+<div class="tip">
+  <p><strong>Safe to mention:</strong> "This is essentially a bipartite matching problem. The optimal algorithm is Hopcroft-Karp at O(E&radic;V), but for these constraints, a simple DFS-based approach works."</p>
+</div>
+
+<div class="warning">
+  <p><strong>Don't over-engineer:</strong> If the interviewer gives you n &le; 15 and it's an assignment problem, just use bitmask DP. Saying "I'll implement Hungarian" for a tiny problem signals poor judgment about time management.</p>
+</div>
+
+<h3>The Decision Framework</h3>
+<div class="decision-tree"><span class="q">Is it an assignment/matching problem?</span>
+  <span class="arrow">&boxur;&mdash; n &le; 20? &rarr;</span> <span class="a">Bitmask DP (interview standard)</span>
+  <span class="arrow">&boxur;&mdash; n &le; 1000, unweighted? &rarr;</span> <span class="a">Augmenting path DFS</span>
+  <span class="arrow">&boxur;&mdash; n large, unweighted? &rarr;</span> <span class="a">Hopcroft-Karp</span>
+  <span class="arrow">&boxur;&mdash; n large, weighted? &rarr;</span> <span class="a">Hungarian</span>
+  <span class="arrow">&boxur;&mdash; Capacities &gt; 1? &rarr;</span> <span class="a">MCMF or Flow</span>
+
+<span class="q">Is it an interval DP that's too slow?</span>
+  <span class="arrow">&boxur;&mdash; Cost satisfies quadrangle inequality? &rarr;</span> <span class="a">Knuth's Optimization</span>
+  <span class="arrow">&boxur;&mdash; DP is convex? &rarr;</span> <span class="a">Divide &amp; Conquer optimization</span>
+  <span class="arrow">&boxur;&mdash; Transitions linear? &rarr;</span> <span class="a">Convex Hull Trick</span></div>
+
+<h3>What Competitive Programmers Know That Interviewees Don't</h3>
+<ul>
+  <li><strong>Modeling skill:</strong> Reducing a problem to max-flow or bipartite matching is the hard part, not the implementation.</li>
+  <li><strong>Duality:</strong> Max matching = Min vertex cover (K&ouml;nig), Max flow = Min cut. These let you solve "minimum" problems by solving "maximum" problems.</li>
+  <li><strong>Template library:</strong> In competitive programming, you pre-write these algorithms. In interviews, you shouldn't need them.</li>
+</ul>
+
+<h3>Study Priority</h3>
+<div class="card" style="background: var(--bg3);">
+<table>
+  <tr><th>Priority</th><th>Topic</th><th>Why</th></tr>
+  <tr><td><span class="tag tag-hard">P0</span></td><td>Bitmask DP for assignment</td><td>Actually appears in Google/Meta interviews</td></tr>
+  <tr><td><span class="tag tag-medium">P1</span></td><td>Hungarian (understand concept)</td><td>Shows deep algorithmic knowledge</td></tr>
+  <tr><td><span class="tag tag-medium">P1</span></td><td>Max-Flow Min-Cut theorem</td><td>System design discussions</td></tr>
+  <tr><td><span class="tag tag-easy">P2</span></td><td>Hopcroft-Karp</td><td>Competitive programming only</td></tr>
+  <tr><td><span class="tag tag-easy">P2</span></td><td>Knuth's Optimization</td><td>Competitive programming only</td></tr>
+  <tr><td><span class="tag tag-easy">P3</span></td><td>MCMF</td><td>Almost never needed</td></tr>
+</table>
+</div>
+
+</div>
+</div>
+
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
