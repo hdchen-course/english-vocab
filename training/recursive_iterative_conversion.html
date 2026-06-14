@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recursive ↔ Iterative Conversion — Complete Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fa;
+  --bg2: #ffffff;
+  --bg3: #f1f3f5;
+  --bg4: #e9ecef;
+  --border: #dee2e6;
+  --text: #212529;
+  --text2: #495057;
+  --text3: #868e96;
+  --blue: #1971c2;
+  --blue-l: #d0ebff;
+  --green: #2f9e44;
+  --green-l: #d3f9d8;
+  --yellow: #e67700;
+  --yellow-l: #fff3bf;
+  --red: #c92a2a;
+  --red-l: #ffe3e3;
+  --purple: #7048e8;
+  --purple-l: #e5dbff;
+  --orange: #d9480f;
+  --cyan: #0c8599;
+  --r: 12px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+header { text-align: center; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+header .sub { color: var(--text3); font-size: 14px; }
+
+.nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 40px; position: sticky; top: 0; background: var(--bg); padding: 16px 0; z-index: 100; border-bottom: 1px solid var(--border); }
+.nav-btn {
+  padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg2); color: var(--text2); cursor: pointer;
+  font-size: 13px; font-weight: 600; transition: all .2s; font-family: 'Inter', sans-serif;
+}
+.nav-btn:hover { background: var(--bg3); color: var(--text); }
+.nav-btn.active { background: var(--blue-l); color: var(--blue); border-color: var(--blue); }
+
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+h2 { font-size: 24px; font-weight: 700; margin: 32px 0 16px; color: var(--blue); }
+h3 { font-size: 18px; font-weight: 600; margin: 24px 0 12px; }
+h4 { font-size: 15px; font-weight: 600; margin: 16px 0 8px; color: var(--text2); }
+p { margin-bottom: 12px; color: var(--text2); }
+ul, ol { margin: 8px 0 16px 24px; color: var(--text2); }
+li { margin-bottom: 6px; }
+strong { color: var(--text); }
+
+pre {
+  background: #1e1e2e; border-radius: 8px;
+  padding: 16px 20px; overflow-x: auto; margin: 12px 0;
+  font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6;
+  color: #cdd6f4;
+}
+code { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+p code, li code {
+  background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--purple);
+}
+pre .kw { color: #cba6f7; }
+pre .type { color: #f9e2af; }
+pre .str { color: #a6e3a1; }
+pre .cm { color: #6c7086; }
+pre .num { color: #fab387; }
+pre .fn { color: #89b4fa; }
+
+.insight {
+  background: var(--blue-l); border-left: 3px solid var(--blue);
+  padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+}
+.insight p { color: var(--blue); margin: 0; }
+
+.warning {
+  background: var(--yellow-l); border-left: 3px solid var(--yellow);
+  padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+}
+.warning p { color: var(--yellow); margin: 0; }
+
+.danger {
+  background: var(--red-l); border-left: 3px solid var(--red);
+  padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+}
+.danger p { color: var(--red); margin: 0; }
+
+.tip {
+  background: var(--green-l); border-left: 3px solid var(--green);
+  padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+}
+.tip p { color: var(--green); margin: 0; }
+
+.card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r); margin-bottom: 20px; padding: 24px 28px;
+  box-shadow: var(--shadow);
+}
+
+table {
+  width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px;
+}
+th, td { padding: 10px 14px; border: 1px solid var(--border); text-align: left; }
+th { background: var(--bg3); font-weight: 600; color: var(--text); }
+tr:hover { background: var(--bg3); }
+
+.decision-tree {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 20px; margin: 12px 0;
+  font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 2;
+  white-space: pre-wrap;
+}
+.decision-tree .q { color: var(--blue); font-weight: bold; }
+.decision-tree .a { color: var(--green); }
+.decision-tree .arrow { color: var(--orange); }
+
+@media (max-width: 768px) {
+  .container { padding: 20px 12px; }
+  .nav { position: static; flex-direction: column; align-items: stretch; }
+  .nav-btn { text-align: center; }
+  pre { font-size: 11px; padding: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<header>
+  <h1>Recursive &harr; Iterative Conversion</h1>
+  <div class="sub">When to Convert &bull; How to Convert &bull; Complexity Traps &bull; Java Templates</div>
+</header>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection('decide')">Decision Framework</button>
+  <button class="nav-btn" onclick="showSection('general')">General Technique</button>
+  <button class="nav-btn" onclick="showSection('dp')">DP: Top-down &harr; Bottom-up</button>
+  <button class="nav-btn" onclick="showSection('tree')">Tree/DFS &rarr; Iterative</button>
+  <button class="nav-btn" onclick="showSection('traps')">Complexity Traps</button>
+  <button class="nav-btn" onclick="showSection('problems')">Practice Problems</button>
+</div>
+
+<!-- ===== Decision Framework ===== -->
+<div class="section active" id="decide">
+<div class="card">
+<h2>When Should You Convert?</h2>
+
+<h3>Decision Tree</h3>
+<div class="decision-tree"><span class="q">Interviewer asks: "Can you do it iteratively?"</span>
+<span class="arrow">├─</span> <span class="q">Is it a tree traversal?</span>
+<span class="arrow">│  ├─ YES →</span> <span class="a">Use standard iterative template (preorder/inorder/postorder)</span>
+<span class="arrow">│  └─ NO →</span> <span class="q">Is it a DFS on graph/grid?</span>
+<span class="arrow">│     ├─ YES →</span> <span class="a">Replace call stack with explicit Stack&lt;int[]&gt; holding state</span>
+<span class="arrow">│     └─ NO →</span> <span class="q">Is it DP with memoization?</span>
+<span class="arrow">│        ├─ YES →</span> <span class="q">Can you define a topological fill order?</span>
+<span class="arrow">│        │  ├─ YES →</span> <span class="a">Convert to bottom-up table</span>
+<span class="arrow">│        │  └─ NO →</span> <span class="a">Keep top-down (tree DP, sparse states)</span>
+<span class="arrow">│        └─ NO →</span> <span class="a">Mechanical stack simulation (see General Technique)</span>
+</div>
+
+<h3>When NOT to Convert</h3>
+<table>
+<tr><th>Situation</th><th>Keep Recursive Because...</th></tr>
+<tr><td>Tree DP (dp on children)</td><td>Bottom-up requires explicit topo-sort of tree; recursive DFS IS the natural order</td></tr>
+<tr><td>Memoization with heavy pruning</td><td>Top-down only visits reachable states; bottom-up fills entire table wastefully</td></tr>
+<tr><td>Sparse state space</td><td>HashMap memoization visits O(k) states; bottom-up allocates O(N^d) table</td></tr>
+<tr><td>Complex state transitions</td><td>When the recursion has many branches/parameters, iterative stack becomes unreadable</td></tr>
+<tr><td>Backtracking with undo</td><td>The call stack naturally handles state save/restore</td></tr>
+</table>
+
+<h3>When You SHOULD Convert</h3>
+<table>
+<tr><th>Situation</th><th>Convert Because...</th></tr>
+<tr><td>Deep recursion (n &gt; 10^4)</td><td>StackOverflowError; Java default stack ~512 frames</td></tr>
+<tr><td>DP needs space optimization</td><td>Only bottom-up allows rolling array (2D&rarr;1D, 1D&rarr;2 variables)</td></tr>
+<tr><td>Interviewer explicitly asks</td><td>Shows mastery; Google L5 expects fluency in both forms</td></tr>
+<tr><td>Need to parallelize</td><td>Iterative loops are easier to reason about for optimization</td></tr>
+</table>
+</div>
+</div>
+
+<!-- ===== General Technique ===== -->
+<div class="section" id="general">
+<div class="card">
+<h2>Mechanical Stack Simulation</h2>
+<p>Any recursion can be converted to iteration by simulating the call stack. Each "frame" on our explicit stack stores the same state the recursive call would have.</p>
+
+<h3>Template: Simulating Any Recursion</h3>
+<pre><span class="cm">// RECURSIVE version</span>
+<span class="kw">void</span> <span class="fn">solve</span>(<span class="type">int</span> node, <span class="type">int</span> parent) {
+    <span class="cm">// PRE-ORDER work</span>
+    preWork(node);
+    <span class="kw">for</span> (<span class="type">int</span> child : adj[node]) {
+        <span class="kw">if</span> (child != parent) {
+            solve(child, node);
+            <span class="cm">// BETWEEN-CHILDREN work</span>
+            mergeChild(node, child);
+        }
+    }
+    <span class="cm">// POST-ORDER work</span>
+    postWork(node);
+}
+
+<span class="cm">// ITERATIVE version — explicit stack of frames</span>
+<span class="kw">void</span> <span class="fn">solveIterative</span>(<span class="type">int</span> root) {
+    <span class="cm">// Frame: [node, parent, childIndex]</span>
+    Deque&lt;<span class="type">int</span>[]&gt; stack = <span class="kw">new</span> ArrayDeque&lt;&gt;();
+    stack.push(<span class="kw">new</span> <span class="type">int</span>[]{root, -<span class="num">1</span>, <span class="num">0</span>});
+
+    <span class="kw">while</span> (!stack.isEmpty()) {
+        <span class="type">int</span>[] frame = stack.peek();
+        <span class="type">int</span> node = frame[<span class="num">0</span>], parent = frame[<span class="num">1</span>], ci = frame[<span class="num">2</span>];
+
+        <span class="kw">if</span> (ci == <span class="num">0</span>) {
+            preWork(node); <span class="cm">// first visit</span>
+        }
+
+        <span class="cm">// Find next unvisited child</span>
+        List&lt;Integer&gt; children = adj[node];
+        <span class="kw">while</span> (ci &lt; children.size() &amp;&amp; children.get(ci) == parent) ci++;
+
+        <span class="kw">if</span> (ci &lt; children.size()) {
+            frame[<span class="num">2</span>] = ci + <span class="num">1</span>; <span class="cm">// advance child pointer</span>
+            stack.push(<span class="kw">new</span> <span class="type">int</span>[]{children.get(ci), node, <span class="num">0</span>});
+        } <span class="kw">else</span> {
+            postWork(node); <span class="cm">// all children done</span>
+            stack.pop();
+            <span class="kw">if</span> (!stack.isEmpty()) {
+                mergeChild(stack.peek()[<span class="num">0</span>], node);
+            }
+        }
+    }
+}</pre>
+
+<div class="insight">
+<p><strong>Key insight:</strong> The child index <code>ci</code> in each frame is what "resumes" the function after returning from a child call. It's the iterative equivalent of the instruction pointer.</p>
+</div>
+
+<h3>When This Pattern is Overkill</h3>
+<p>For simple DFS without post-order work, just use a basic stack:</p>
+<pre><span class="cm">// Simple DFS (pre-order only) — no need for frame simulation</span>
+Deque&lt;Integer&gt; stack = <span class="kw">new</span> ArrayDeque&lt;&gt;();
+stack.push(start);
+<span class="kw">while</span> (!stack.isEmpty()) {
+    <span class="type">int</span> node = stack.pop();
+    <span class="kw">if</span> (visited[node]) <span class="kw">continue</span>;
+    visited[node] = <span class="kw">true</span>;
+    process(node);
+    <span class="kw">for</span> (<span class="type">int</span> next : adj[node]) stack.push(next);
+}</pre>
+</div>
+</div>
+
+<!-- ===== DP: Top-down ↔ Bottom-up ===== -->
+<div class="section" id="dp">
+<div class="card">
+<h2>DP: Top-down &harr; Bottom-up Conversion</h2>
+
+<h3>The Core Idea</h3>
+<p><strong>Top-down</strong> = recursive + memo. <strong>Bottom-up</strong> = iterative table-filling. They compute the same values, but differ in:</p>
+<table>
+<tr><th>Aspect</th><th>Top-down</th><th>Bottom-up</th></tr>
+<tr><td>States visited</td><td>Only reachable states</td><td>All states in table</td></tr>
+<tr><td>Space optimization</td><td>Not possible (need full memo)</td><td>Rolling array possible</td></tr>
+<tr><td>Stack depth</td><td>O(depth) — can overflow</td><td>O(1) stack</td></tr>
+<tr><td>Code clarity</td><td>Often more natural</td><td>Can be tricky for complex recurrences</td></tr>
+<tr><td>Pruning</td><td>Natural (don't call unreachable)</td><td>Must manually skip</td></tr>
+</table>
+
+<h3>Conversion Recipe</h3>
+<ol>
+<li><strong>Identify state variables</strong> — what parameters does the recursive function take?</li>
+<li><strong>Determine fill order</strong> — which states must be computed before which? (topological order of the dependency DAG)</li>
+<li><strong>Allocate table</strong> — dp[state_var_1][state_var_2]...</li>
+<li><strong>Set base cases</strong> — same as the recursion's base returns</li>
+<li><strong>Fill in order</strong> — loop through states respecting dependencies</li>
+<li><strong>Read answer</strong> — dp[original_call_params]</li>
+</ol>
+
+<h3>Example: Coin Change</h3>
+<pre><span class="cm">// TOP-DOWN</span>
+<span class="type">int</span>[] memo = <span class="kw">new</span> <span class="type">int</span>[amount + <span class="num">1</span>];
+Arrays.fill(memo, -<span class="num">1</span>);
+<span class="type">int</span> <span class="fn">solve</span>(<span class="type">int</span> remain) {
+    <span class="kw">if</span> (remain == <span class="num">0</span>) <span class="kw">return</span> <span class="num">0</span>;
+    <span class="kw">if</span> (remain &lt; <span class="num">0</span>) <span class="kw">return</span> Integer.MAX_VALUE;
+    <span class="kw">if</span> (memo[remain] != -<span class="num">1</span>) <span class="kw">return</span> memo[remain];
+    <span class="type">int</span> res = Integer.MAX_VALUE;
+    <span class="kw">for</span> (<span class="type">int</span> c : coins)
+        res = Math.min(res, solve(remain - c));
+    <span class="kw">return</span> memo[remain] = (res == Integer.MAX_VALUE) ? res : res + <span class="num">1</span>;
+}
+
+<span class="cm">// BOTTOM-UP (converted)</span>
+<span class="type">int</span>[] dp = <span class="kw">new</span> <span class="type">int</span>[amount + <span class="num">1</span>];
+Arrays.fill(dp, Integer.MAX_VALUE);
+dp[<span class="num">0</span>] = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">1</span>; i &lt;= amount; i++)
+    <span class="kw">for</span> (<span class="type">int</span> c : coins)
+        <span class="kw">if</span> (c &lt;= i &amp;&amp; dp[i - c] != Integer.MAX_VALUE)
+            dp[i] = Math.min(dp[i], dp[i - c] + <span class="num">1</span>);</pre>
+<p>Fill order: increasing <code>i</code> (each state depends on smaller states).</p>
+
+<h3>Example: LCS (2D)</h3>
+<pre><span class="cm">// TOP-DOWN</span>
+<span class="type">int</span> <span class="fn">lcs</span>(<span class="type">int</span> i, <span class="type">int</span> j) {
+    <span class="kw">if</span> (i == <span class="num">0</span> || j == <span class="num">0</span>) <span class="kw">return</span> <span class="num">0</span>;
+    <span class="kw">if</span> (memo[i][j] != -<span class="num">1</span>) <span class="kw">return</span> memo[i][j];
+    <span class="kw">if</span> (a[i-<span class="num">1</span>] == b[j-<span class="num">1</span>]) <span class="kw">return</span> memo[i][j] = lcs(i-<span class="num">1</span>, j-<span class="num">1</span>) + <span class="num">1</span>;
+    <span class="kw">return</span> memo[i][j] = Math.max(lcs(i-<span class="num">1</span>, j), lcs(i, j-<span class="num">1</span>));
+}
+
+<span class="cm">// BOTTOM-UP → enables space optimization to O(n)</span>
+<span class="type">int</span>[] prev = <span class="kw">new</span> <span class="type">int</span>[n + <span class="num">1</span>], curr = <span class="kw">new</span> <span class="type">int</span>[n + <span class="num">1</span>];
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">1</span>; i &lt;= m; i++) {
+    <span class="kw">for</span> (<span class="type">int</span> j = <span class="num">1</span>; j &lt;= n; j++)
+        curr[j] = (a[i-<span class="num">1</span>] == b[j-<span class="num">1</span>]) ? prev[j-<span class="num">1</span>] + <span class="num">1</span> : Math.max(prev[j], curr[j-<span class="num">1</span>]);
+    <span class="type">int</span>[] tmp = prev; prev = curr; curr = tmp;
+    Arrays.fill(curr, <span class="num">0</span>);
+}</pre>
+<div class="tip">
+<p><strong>Space win:</strong> Top-down needs O(m&times;n) memo. Bottom-up with rolling array: O(n). This is the #1 reason to convert.</p>
+</div>
+
+<h3>Example: Knapsack 0/1 (Space Optimization)</h3>
+<pre><span class="cm">// 2D bottom-up: dp[i][w] — O(n*W) space</span>
+<span class="cm">// 1D optimization: iterate w BACKWARDS to avoid using updated values</span>
+<span class="type">int</span>[] dp = <span class="kw">new</span> <span class="type">int</span>[W + <span class="num">1</span>];
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; n; i++)
+    <span class="kw">for</span> (<span class="type">int</span> w = W; w &gt;= weight[i]; w--)
+        dp[w] = Math.max(dp[w], dp[w - weight[i]] + value[i]);</pre>
+
+<div class="warning">
+<p><strong>Trap:</strong> Unbounded knapsack iterates w FORWARD (reuse current item). 0/1 knapsack iterates BACKWARD (each item used once). Getting this wrong is a classic bug.</p>
+</div>
+
+<h3>When Bottom-up is WORSE</h3>
+
+<h4>Case 1: Sparse Reachable States</h4>
+<pre><span class="cm">// Top-down visits only reachable states from (0, 0, initialMask)</span>
+<span class="cm">// State space: dp[n][m][2^k] — but only ~1% of states are reachable</span>
+<span class="cm">// Top-down with HashMap: visits O(reachable) states</span>
+<span class="cm">// Bottom-up: allocates and fills ALL n*m*2^k entries → TLE</span>
+Map&lt;Long, Integer&gt; memo = <span class="kw">new</span> HashMap&lt;&gt;();
+<span class="type">int</span> <span class="fn">solve</span>(<span class="type">int</span> i, <span class="type">int</span> j, <span class="type">int</span> mask) {
+    <span class="type">long</span> key = (((<span class="type">long</span>)i * m) + j) * (<span class="num">1</span> &lt;&lt; k) + mask;
+    <span class="kw">if</span> (memo.containsKey(key)) <span class="kw">return</span> memo.get(key);
+    <span class="cm">// ... compute</span>
+}</pre>
+
+<h4>Case 2: Top-down with Pruning</h4>
+<pre><span class="cm">// Branch-and-bound style: if current cost already exceeds best known, prune</span>
+<span class="type">int</span> <span class="fn">solve</span>(<span class="type">int</span> state, <span class="type">int</span> cost) {
+    <span class="kw">if</span> (cost &gt;= bestKnown) <span class="kw">return</span> INF; <span class="cm">// PRUNE — bottom-up can't do this</span>
+    <span class="cm">// ...</span>
+}</pre>
+
+<h4>Case 3: Tree DP — Natural Recursion</h4>
+<pre><span class="cm">// Tree DP: children must be computed before parent</span>
+<span class="cm">// Recursive DFS naturally processes in correct order</span>
+<span class="cm">// Bottom-up requires: (1) find leaves (2) BFS inward (3) awkward iteration</span>
+<span class="type">int</span> <span class="fn">treeDp</span>(<span class="type">int</span> v, <span class="type">int</span> parent) {
+    <span class="type">int</span> res = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="type">int</span> u : adj[v]) <span class="kw">if</span> (u != parent)
+        res += treeDp(u, v); <span class="cm">// children first — the recursion IS the topo order</span>
+    <span class="kw">return</span> dp[v] = f(res);
+}</pre>
+<div class="danger">
+<p><strong>Don't convert tree DP to bottom-up.</strong> The recursive DFS is already the correct traversal order. Converting adds complexity for zero benefit.</p>
+</div>
+
+<h3>DP Conversion Cheat Sheet</h3>
+<table>
+<tr><th>DP Type</th><th>Convert?</th><th>Fill Order</th><th>Space Optimization</th></tr>
+<tr><td>Linear (1D)</td><td>Always</td><td>Left to right</td><td>O(1) or O(k) variables</td></tr>
+<tr><td>Grid (2D)</td><td>Always</td><td>Row by row</td><td>O(n) rolling array</td></tr>
+<tr><td>Interval [i][j]</td><td>Yes</td><td>By length (j-i)</td><td>Not easily</td></tr>
+<tr><td>Knapsack</td><td>Always</td><td>Item by item, capacity direction matters</td><td>O(W) 1D</td></tr>
+<tr><td>Digit DP</td><td>Possible but tricky</td><td>Digit by digit</td><td>Usually keep top-down</td></tr>
+<tr><td>Bitmask DP</td><td>Yes</td><td>By popcount or mask value</td><td>Not easily</td></tr>
+<tr><td>Tree DP</td><td>No</td><td>Post-order (recursive DFS)</td><td>Keep recursive</td></tr>
+<tr><td>DAG DP</td><td>Sometimes</td><td>Topological sort</td><td>Depends</td></tr>
+</table>
+</div>
+</div>
+
+<!-- ===== Tree/DFS → Iterative ===== -->
+<div class="section" id="tree">
+<div class="card">
+<h2>Tree DFS &rarr; Iterative Conversion</h2>
+
+<h3>Preorder (easiest)</h3>
+<pre><span class="cm">// Push right first, then left → left is processed first (LIFO)</span>
+Deque&lt;TreeNode&gt; stack = <span class="kw">new</span> ArrayDeque&lt;&gt;();
+stack.push(root);
+<span class="kw">while</span> (!stack.isEmpty()) {
+    TreeNode node = stack.pop();
+    result.add(node.val); <span class="cm">// process</span>
+    <span class="kw">if</span> (node.right != <span class="kw">null</span>) stack.push(node.right);
+    <span class="kw">if</span> (node.left != <span class="kw">null</span>) stack.push(node.left);
+}</pre>
+
+<h3>Inorder (go-left pattern)</h3>
+<pre><span class="cm">// Go as far left as possible, then process, then go right</span>
+Deque&lt;TreeNode&gt; stack = <span class="kw">new</span> ArrayDeque&lt;&gt;();
+TreeNode curr = root;
+<span class="kw">while</span> (curr != <span class="kw">null</span> || !stack.isEmpty()) {
+    <span class="kw">while</span> (curr != <span class="kw">null</span>) { stack.push(curr); curr = curr.left; }
+    curr = stack.pop();
+    result.add(curr.val); <span class="cm">// process</span>
+    curr = curr.right;
+}</pre>
+
+<h3>Postorder (two approaches)</h3>
+<h4>Approach 1: Modified preorder + reverse</h4>
+<pre><span class="cm">// Preorder but visit right before left → reverse gives postorder</span>
+Deque&lt;TreeNode&gt; stack = <span class="kw">new</span> ArrayDeque&lt;&gt;();
+List&lt;Integer&gt; result = <span class="kw">new</span> ArrayList&lt;&gt;();
+stack.push(root);
+<span class="kw">while</span> (!stack.isEmpty()) {
+    TreeNode node = stack.pop();
+    result.add(node.val);
+    <span class="kw">if</span> (node.left != <span class="kw">null</span>) stack.push(node.left); <span class="cm">// left first this time</span>
+    <span class="kw">if</span> (node.right != <span class="kw">null</span>) stack.push(node.right);
+}
+Collections.reverse(result);</pre>
+
+<h4>Approach 2: True iterative (track last visited)</h4>
+<pre>Deque&lt;TreeNode&gt; stack = <span class="kw">new</span> ArrayDeque&lt;&gt;();
+TreeNode curr = root, lastVisited = <span class="kw">null</span>;
+<span class="kw">while</span> (curr != <span class="kw">null</span> || !stack.isEmpty()) {
+    <span class="kw">while</span> (curr != <span class="kw">null</span>) { stack.push(curr); curr = curr.left; }
+    TreeNode peek = stack.peek();
+    <span class="kw">if</span> (peek.right != <span class="kw">null</span> &amp;&amp; peek.right != lastVisited) {
+        curr = peek.right;
+    } <span class="kw">else</span> {
+        result.add(peek.val);
+        lastVisited = stack.pop();
+    }
+}</pre>
+
+<h3>Morris Traversal — O(1) Space</h3>
+<pre><span class="cm">// Inorder traversal without stack or recursion</span>
+TreeNode curr = root;
+<span class="kw">while</span> (curr != <span class="kw">null</span>) {
+    <span class="kw">if</span> (curr.left == <span class="kw">null</span>) {
+        result.add(curr.val);
+        curr = curr.right;
+    } <span class="kw">else</span> {
+        <span class="cm">// Find inorder predecessor</span>
+        TreeNode pred = curr.left;
+        <span class="kw">while</span> (pred.right != <span class="kw">null</span> &amp;&amp; pred.right != curr) pred = pred.right;
+        <span class="kw">if</span> (pred.right == <span class="kw">null</span>) {
+            pred.right = curr; <span class="cm">// create thread</span>
+            curr = curr.left;
+        } <span class="kw">else</span> {
+            pred.right = <span class="kw">null</span>; <span class="cm">// restore</span>
+            result.add(curr.val);
+            curr = curr.right;
+        }
+    }
+}</pre>
+<div class="insight">
+<p><strong>Morris:</strong> Temporarily modifies the tree (threading), so only use when you're allowed to modify (or restore). Doesn't work on immutable trees.</p>
+</div>
+
+<h3>Generic DFS with Post-order Work</h3>
+<p>When you need to compute something AFTER all children are processed (subtree size, tree DP):</p>
+<pre><span class="cm">// Two-pass approach: push with flag</span>
+Deque&lt;<span class="type">int</span>[]&gt; stack = <span class="kw">new</span> ArrayDeque&lt;&gt;();
+stack.push(<span class="kw">new</span> <span class="type">int</span>[]{root, <span class="num">0</span>}); <span class="cm">// [node, processed]</span>
+<span class="kw">while</span> (!stack.isEmpty()) {
+    <span class="type">int</span>[] top = stack.peek();
+    <span class="kw">if</span> (top[<span class="num">1</span>] == <span class="num">0</span>) {
+        top[<span class="num">1</span>] = <span class="num">1</span>; <span class="cm">// mark as "children pushed"</span>
+        <span class="kw">for</span> (<span class="type">int</span> child : adj[top[<span class="num">0</span>]]) <span class="kw">if</span> (child != parent[top[<span class="num">0</span>]])
+            stack.push(<span class="kw">new</span> <span class="type">int</span>[]{child, <span class="num">0</span>});
+    } <span class="kw">else</span> {
+        stack.pop();
+        <span class="cm">// POST-ORDER: all children already processed</span>
+        <span class="kw">for</span> (<span class="type">int</span> child : adj[top[<span class="num">0</span>]])
+            dp[top[<span class="num">0</span>]] += dp[child]; <span class="cm">// merge children results</span>
+    }
+}</pre>
+</div>
+</div>
+
+<!-- ===== Complexity Traps ===== -->
+<div class="section" id="traps">
+<div class="card">
+<h2>Complexity Traps When Converting</h2>
+
+<h3>Trap 1: Bottom-up fills unreachable states</h3>
+<div class="danger">
+<p><strong>Example:</strong> Bitmask DP with dp[mask][last] where mask ranges over 2^n subsets but only O(n!) permutation-like paths are reachable from the start. Top-down with memo: O(n! × n). Bottom-up: O(2^n × n × n) — exponentially more states computed.</p>
+</div>
+<p><strong>Rule:</strong> If reachable states &lt;&lt; total state space, keep top-down.</p>
+
+<h3>Trap 2: Bottom-up loses pruning power</h3>
+<div class="warning">
+<p><strong>Example:</strong> TSP with branch-and-bound. Top-down prunes entire subtrees when partial cost exceeds best known. Bottom-up must compute ALL dp[mask][v] entries regardless — no early termination. Can be 10-100x slower in practice.</p>
+</div>
+
+<h3>Trap 3: Wrong fill order causes O(N) blowup</h3>
+<pre><span class="cm">// Interval DP: dp[i][j] depends on dp[i][k] and dp[k+1][j] for i ≤ k &lt; j</span>
+<span class="cm">// WRONG: filling row by row → dp[i][k] might not be ready</span>
+<span class="cm">// RIGHT: filling by LENGTH (j - i)</span>
+<span class="kw">for</span> (<span class="type">int</span> len = <span class="num">2</span>; len &lt;= n; len++)       <span class="cm">// ← by length!</span>
+    <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i + len - <span class="num">1</span> &lt; n; i++) {
+        <span class="type">int</span> j = i + len - <span class="num">1</span>;
+        <span class="kw">for</span> (<span class="type">int</span> k = i; k &lt; j; k++)
+            dp[i][j] = Math.min(dp[i][j], dp[i][k] + dp[k+<span class="num">1</span>][j] + cost(i, j));
+    }</pre>
+
+<h3>Trap 4: Space optimization breaks path reconstruction</h3>
+<div class="warning">
+<p><strong>Problem:</strong> After rolling array optimization (2D&rarr;1D), you can no longer backtrack through the DP table to reconstruct the actual solution. If you need the solution (not just the optimal value), either:</p>
+</div>
+<ol>
+<li>Keep the full table (no space optimization), OR</li>
+<li>Use Hirschberg's trick (divide-and-conquer on the DP) for O(n) space + reconstruction</li>
+</ol>
+
+<h3>Trap 5: Digit DP — keep top-down</h3>
+<p>Digit DP has states (position, tight, leading_zero, ...) where the "tight" constraint means many states are unreachable. Bottom-up requires iterating all combinations of these flags, most of which are invalid. Top-down naturally only visits valid states.</p>
+
+<h3>Summary Table</h3>
+<table>
+<tr><th>Trap</th><th>Symptom</th><th>Solution</th></tr>
+<tr><td>Filling unreachable states</td><td>Bottom-up TLE despite same O() as top-down</td><td>Keep top-down + HashMap</td></tr>
+<tr><td>Lost pruning</td><td>Bottom-up 10-100x slower in practice</td><td>Keep top-down with bounds</td></tr>
+<tr><td>Wrong fill order</td><td>WA (reading uninitialized states)</td><td>Think carefully about dependencies</td></tr>
+<tr><td>Lost reconstruction</td><td>Can compute optimal value but not the path</td><td>Keep full table or use Hirschberg</td></tr>
+<tr><td>Overflow/deep recursion</td><td>StackOverflow in top-down for n&gt;10^4</td><td>Convert to bottom-up or increase stack size</td></tr>
+</table>
+</div>
+</div>
+
+<!-- ===== Practice Problems ===== -->
+<div class="section" id="problems">
+<div class="card">
+<h2>Practice Problems</h2>
+
+<h3>DP Conversion Practice</h3>
+<table>
+<tr><th>Problem</th><th>Exercise</th><th>Key Learning</th></tr>
+<tr><td>LC 322 Coin Change</td><td>Write both top-down and bottom-up</td><td>Basic 1D conversion</td></tr>
+<tr><td>LC 1143 Longest Common Subsequence</td><td>Convert to O(n) space bottom-up</td><td>Rolling array on 2D</td></tr>
+<tr><td>LC 416 Partition Equal Subset Sum</td><td>Convert to 1D knapsack</td><td>Backward iteration for 0/1</td></tr>
+<tr><td>LC 312 Burst Balloons</td><td>Write bottom-up interval DP</td><td>Fill by length, not by row</td></tr>
+<tr><td>LC 1547 Min Cost to Cut a Stick</td><td>Top-down vs bottom-up (Knuth opt)</td><td>Bottom-up enables Knuth optimization</td></tr>
+<tr><td>LC 943 Shortest Superstring</td><td>Keep top-down (sparse bitmask)</td><td>Don't convert — state space too sparse</td></tr>
+<tr><td>LC 337 House Robber III</td><td>Keep recursive tree DP</td><td>Don't convert tree DP</td></tr>
+<tr><td>CSES Counting Tilings</td><td>Profile DP: must be bottom-up</td><td>Top-down impossible (need column-by-column)</td></tr>
+</table>
+
+<h3>Tree Iterative Conversion Practice</h3>
+<table>
+<tr><th>Problem</th><th>Exercise</th><th>Key Learning</th></tr>
+<tr><td>LC 94 Inorder Traversal</td><td>Write iterative</td><td>Go-left pattern</td></tr>
+<tr><td>LC 145 Postorder Traversal</td><td>Write true iterative (no reverse)</td><td>lastVisited tracking</td></tr>
+<tr><td>LC 99 Recover BST</td><td>Morris inorder to find swapped nodes</td><td>O(1) space traversal</td></tr>
+<tr><td>LC 114 Flatten BT to Linked List</td><td>Iterative preorder with reconnection</td><td>Morris-like threading</td></tr>
+<tr><td>LC 968 Binary Tree Cameras</td><td>Keep recursive (post-order DP on tree)</td><td>Don't convert</td></tr>
+<tr><td>CSES Subordinates</td><td>Write both recursive and iterative</td><td>Subtree size with explicit stack</td></tr>
+<tr><td>CSES Tree Distances I/II</td><td>Iterative re-rooting</td><td>Two-pass DFS with stack</td></tr>
+</table>
+
+<h3>Google L5 Interview Tips</h3>
+<div class="insight">
+<p><strong>What they actually ask:</strong> "Can you convert this to iterative?" usually means one of:</p>
+</div>
+<ol>
+<li><strong>Tree traversal</strong> — know all 3 orders iteratively cold. Morris is bonus points.</li>
+<li><strong>DFS on graph</strong> — simple stack replacement. They want to see you handle it smoothly.</li>
+<li><strong>DP space optimization</strong> — "Can you do this in O(n) space?" = rolling array.</li>
+<li><strong>Avoid StackOverflow</strong> — "What if n is 10^6?" = you must go iterative.</li>
+</ol>
+<p>They almost NEVER ask you to convert tree DP or complex backtracking to iterative. If the recursion is naturally post-order, saying "I'd keep this recursive because the DFS order IS the topological order" shows judgment.</p>
+</div>
+</div>
+
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
