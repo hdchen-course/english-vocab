@@ -138,23 +138,37 @@ Equivalently: convert n from Gray code to binary integer.</div>
 </pre>
 
 <h3>Example: Integer Replacement (LC 397)</h3>
-<div class="cases">n even: n/2
-n odd: n+1 or n-1
-n=7(111): 7→8→4→2→1 (4 steps) vs 7→6→3→2→1 (4 steps)
-n=15(1111): best is +1→16→8→4→2→1
-Pattern: if last 2 bits are 11, prefer +1 (except n=3)</div>
+<p>Given n, reach 1 using: if even → n/2, if odd → n+1 or n-1. Minimize steps.</p>
+
+<div class="cases">Compute small cases (binary view):
+n=2  (10)   → 1           : 1 step  (÷2)
+n=3  (11)   → 2 → 1      : 2 steps (-1, ÷2)
+n=4  (100)  → 2 → 1      : 2 steps
+n=7  (111)  → 8 → 4 → 2 → 1 : 4 steps (+1 path)
+             → 6 → 3 → 2 → 1 : 4 steps (-1 path)  ← same!
+n=15 (1111) → 16 → 8 → 4 → 2 → 1 : 5 steps (+1 clears all bits at once!)
+             → 14 → 7 → ... → 1    : 6 steps (-1 is worse)
+
+Pattern in binary:
+- Last 2 bits = 01 (e.g. 5=101): prefer -1 (removes the 1, next step ÷2)
+- Last 2 bits = 11 (e.g. 7=111): prefer +1 (carries propagate, clears trailing 1s)
+- Exception: n=3 (11) → prefer -1 (3→2→1 is 2 steps, 3→4→2→1 is 3 steps)</div>
+
+<div class="insight">
+  <p><strong>Why +1 when bits end in ...11?</strong> Adding 1 to ...0111 gives ...1000 — it clears all trailing 1s in one carry, creating a power of 2 which halves away quickly. Subtracting gives ...0110 which still has multiple 1-bits to deal with.</p>
+</div>
+
 <pre><span class="kw">int</span> <span class="fn">integerReplacement</span>(<span class="kw">int</span> n) {
     <span class="kw">int</span> steps = <span class="num">0</span>;
     <span class="kw">long</span> x = n;
     <span class="kw">while</span> (x != <span class="num">1</span>) {
-        <span class="kw">if</span> ((x & <span class="num">1</span>) == <span class="num">0</span>) x >>= <span class="num">1</span>;
-        <span class="kw">else if</span> (x == <span class="num">3</span> || (x & <span class="num">3</span>) == <span class="num">1</span>) x--;
-        <span class="kw">else</span> x++;
+        <span class="kw">if</span> ((x & <span class="num">1</span>) == <span class="num">0</span>) x >>= <span class="num">1</span>;        <span class="cm">// even: always halve</span>
+        <span class="kw">else if</span> (x == <span class="num">3</span> || (x & <span class="num">3</span>) == <span class="num">1</span>) x--; <span class="cm">// ...01: subtract</span>
+        <span class="kw">else</span> x++;                            <span class="cm">// ...11: add (carry clears trailing 1s)</span>
         steps++;
     }
     <span class="kw">return</span> steps;
-}
-</pre>
+}</pre>
 
 <h3>LeetCode Problems</h3>
 <ul class="problem-list">
@@ -176,14 +190,27 @@ Pattern: if last 2 bits are 11, prefer +1 (except n=3)</div>
 <p>The problem has self-similar structure: f(n) can be expressed in terms of f(n/2) or f(n-1) with a simple transformation.</p>
 
 <h3>Example: Beautiful Array (LC 932)</h3>
-<div class="cases">For any i &lt; k &lt; j: A[k]*2 != A[i] + A[j]
+<p>Construct a permutation of [1..n] where no three indices i &lt; k &lt; j satisfy A[k]*2 = A[i] + A[j] (no arithmetic triple).</p>
+
+<div class="cases">Compute small cases:
 n=1: [1]
-n=2: [1,2]
-n=3: [1,3,2]
+n=2: [1,2]  (no triple possible with 2 elements)
+n=3: [1,3,2] ✓  (check: 3*2≠1+2, 3*2≠1+2... no violation)
 n=4: [1,3,2,4]
-Key: if A is beautiful, then 2*A-1 (odds) and 2*A (evens) are beautiful.
-odd + even = odd, so cross-pairs can never violate 2*A[k] = A[i]+A[j]</div>
-<pre><span class="cm">// LC 932: divide into odd/even positions recursively</span>
+n=5: [1,5,3,2,4]
+
+Key observations:
+1. If A is beautiful, then (2*A - 1) is also beautiful (affine transform preserves the property)
+2. If A is beautiful, then (2*A) is also beautiful
+3. odd + even = odd → an odd number can NEVER be the average of an odd and an even
+4. So: put all odds on the left, all evens on the right → cross-pairs never violate!
+5. Recurse: make the odd-half and even-half each beautiful independently</div>
+
+<div class="insight">
+  <p><strong>Why it works:</strong> A[i] + A[j] = 2*A[k] requires all three to have the same parity. By separating odds and evens, we eliminate all cross-parity triples. Within each group, we recursively apply the same trick (odd positions / even positions of a smaller beautiful array).</p>
+</div>
+
+<pre><span class="cm">// LC 932: iteratively double the array</span>
 <span class="kw">int</span>[] <span class="fn">beautifulArray</span>(<span class="kw">int</span> n) {
     List&lt;Integer&gt; res = <span class="kw">new</span> ArrayList&lt;&gt;();
     res.add(<span class="num">1</span>);
@@ -198,18 +225,35 @@ odd + even = odd, so cross-pairs can never violate 2*A[k] = A[i]+A[j]</div>
 </pre>
 
 <h3>Example: Elimination Game (LC 390)</h3>
-<div class="cases">Start: 1,2,3,...,n. Alternately eliminate from left/right.
-n=1: 1
-n=2: 2 (remove 1 from left)
-n=3: 2 (1,2,3 → 2 → 2)
-n=4: 2 (1,2,3,4 → 2,4 → 2)
-n=5: 2 (1..5 → 2,4 → 4) wait...
-Pattern: f(n) = 2*(n/2 + 1 - f(n/2)) when going left-to-right
-Flip perspective: after one pass, remaining = evens/2, play in reverse</div>
-<pre><span class="cm">// LC 390: f(n) relates to f(n/2) with flip</span>
+<p>Start with 1,2,...,n. Alternately eliminate from left then from right. What's the last number?</p>
+
+<div class="cases">Trace through:
+n=1: [1]                            → 1
+n=2: [1,2] →remove 1 from left     → 2
+n=3: [1,2,3] →remove 1,3 from left → [2] → 2
+n=4: [1,2,3,4] →remove 1,3         → [2,4] →remove 4 from right → 2
+n=5: [1,2,3,4,5] →remove 1,3,5     → [2,4] →remove 2 from right → 4
+n=6: [1..6] →remove 1,3,5          → [2,4,6] →remove 6,2         → 4
+
+Pattern: after removing from left, survivors are 2,4,6,...
+= 2 * [1,2,3,...,n/2] but now eliminate from RIGHT
+= 2 * "mirror problem on n/2 elements"
+
+f(n) = 2 * (n/2 + 1 - f(n/2))
+
+Why the formula: remaining elements after left-pass are the evens.
+Divide by 2 → reduced to same game on n/2 elements, but direction flipped.
+"Flipped" position k in [1..m] = m+1-k, hence the (n/2 + 1 - f(n/2)).</div>
+
+<pre><span class="cm">// LC 390: recursive one-liner</span>
 <span class="kw">int</span> <span class="fn">lastRemaining</span>(<span class="kw">int</span> n) {
     <span class="kw">return</span> n == <span class="num">1</span> ? <span class="num">1</span> : <span class="num">2</span> * (n / <span class="num">2</span> + <span class="num">1</span> - <span class="fn">lastRemaining</span>(n / <span class="num">2</span>));
 }
+<span class="cm">// Derivation:
+// After left-pass: survivors = {2, 4, ..., 2*floor(n/2)} (n/2 elements)
+// Divide by 2: same game on [1..n/2] but starting from RIGHT
+// Position of survivor in right-first game on m elems = m+1 - f(m) where f = left-first
+// So f(n) = 2 * (n/2 + 1 - f(n/2))</span>
 </pre>
 
 <h3>Example: Handshakes That Don't Cross (LC 1259)</h3>
@@ -312,9 +356,40 @@ Insight: set high bits of num1 first (to cancel them), then fill low bits.</div>
 </pre>
 
 <h3>Example: Maximum XOR Product (LC 2939)</h3>
-<div class="cases">Choose bits of x to maximize (a XOR x) * (b XOR x).
-For each bit position: if a and b differ on this bit, set x to make the smaller one larger.
-If same, both benefit equally from flipping (set to make both have 1).</div>
+<p>Choose x (within n bits) to maximize (a XOR x) * (b XOR x).</p>
+
+<div class="cases">Insight: maximize product = make the two values as close as possible (AM-GM).
+
+For each bit position i (from MSB to LSB):
+  Let a_i = bit i of a, b_i = bit i of b.
+
+  Case 1: a_i == b_i (both 0 or both 1)
+    → Set x_i to flip both to 1 (if both are 0) or keep both 1 (if both are 1).
+    → This adds 2^i to BOTH values. Always good.
+
+  Case 2: a_i != b_i (one is 0, one is 1)
+    → x_i can give the bit to either a or b (XOR flips the one that has 0).
+    → Give it to whichever is currently SMALLER (balance the two values).
+    → This is greedy: making them closer maximizes the product.
+
+After processing all bits: answer = (a XOR x) * (b XOR x) mod 10^9+7.</div>
+
+<pre><span class="cm">// LC 2939: greedy bit-by-bit, balance a and b</span>
+<span class="kw">long</span> <span class="fn">maximumXorProduct</span>(<span class="kw">long</span> a, <span class="kw">long</span> b, <span class="kw">int</span> n) {
+    <span class="kw">long</span> MOD = <span class="num">1_000_000_007</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> i = n - <span class="num">1</span>; i >= <span class="num">0</span>; i--) {
+        <span class="kw">long</span> bit = <span class="num">1</span>L &lt;&lt; i;
+        <span class="kw">if</span> (((a >> i) & <span class="num">1</span>) == ((b >> i) & <span class="num">1</span>)) {
+            <span class="cm">// same bit: set both to 1</span>
+            a |= bit; b |= bit;
+        } <span class="kw">else</span> {
+            <span class="cm">// different: give the 1-bit to the smaller value</span>
+            <span class="kw">if</span> (a &lt; b) { a |= bit; b &amp;= ~bit; }
+            <span class="kw">else</span> { b |= bit; a &amp;= ~bit; }
+        }
+    }
+    <span class="kw">return</span> (a % MOD) * (b % MOD) % MOD;
+}</pre>
 
 <h3>LeetCode Problems</h3>
 <ul class="problem-list">
