@@ -384,12 +384,56 @@ dist[src] = <span class="num">0</span>;
 }
 </pre>
 
+<h3>Floyd-Warshall (All-Pairs Shortest Paths)</h3>
+<p>Computes shortest paths between ALL pairs of nodes. O(V&sup3;) — only use when V &le; 400 and you need all-pairs distances.</p>
+
+<div class="insight">
+  <p><strong>Key idea:</strong> "Can going through node k improve the shortest path from i to j?" Try every intermediate node k in the outer loop. The loop order MUST be k → i → j (not i → j → k).</p>
+</div>
+
+<pre><span class="cm">// Floyd-Warshall: dist[i][j] = shortest path from i to j</span>
+<span class="kw">int</span> INF = Integer.MAX_VALUE / <span class="num">2</span>;
+<span class="kw">int</span>[][] dist = <span class="kw">new int</span>[n][n];
+<span class="kw">for</span> (<span class="kw">int</span>[] row : dist) Arrays.<span class="fn">fill</span>(row, INF);
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) dist[i][i] = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span>[] e : edges) dist[e[<span class="num">0</span>]][e[<span class="num">1</span>]] = e[<span class="num">2</span>]; <span class="cm">// or min if multiple edges</span>
+
+<span class="cm">// THE core triple loop — k MUST be outermost</span>
+<span class="kw">for</span> (<span class="kw">int</span> k = <span class="num">0</span>; k &lt; n; k++)
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++)
+        <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">0</span>; j &lt; n; j++)
+            dist[i][j] = Math.<span class="fn">min</span>(dist[i][j], dist[i][k] + dist[k][j]);</pre>
+
+<div class="warning">
+  <p><strong>Common bug:</strong> Using <code>Integer.MAX_VALUE</code> directly causes overflow when adding <code>dist[i][k] + dist[k][j]</code>. Use <code>MAX_VALUE / 2</code> or check for INF before adding.</p>
+</div>
+
+<h4>When to Use Floyd vs Dijkstra</h4>
+<table>
+  <tr><th>Scenario</th><th>Choose</th></tr>
+  <tr><td>Single source, non-negative weights</td><td>Dijkstra O((V+E)logV)</td></tr>
+  <tr><td>Single source, negative weights</td><td>Bellman-Ford O(VE)</td></tr>
+  <tr><td>All pairs, V &le; 400</td><td>Floyd-Warshall O(V&sup3;)</td></tr>
+  <tr><td>All pairs, V &gt; 400, non-negative</td><td>Run Dijkstra from each node O(V(V+E)logV)</td></tr>
+  <tr><td>Detect negative cycle</td><td>Check dist[i][i] &lt; 0 after Floyd</td></tr>
+</table>
+
+<h4>Floyd Variants</h4>
+<ul>
+  <li><strong>Transitive closure:</strong> Replace min with OR, weights with boolean reachability. <code>reach[i][j] |= reach[i][k] &amp;&amp; reach[k][j]</code></li>
+  <li><strong>Minimax path:</strong> Replace <code>min(dist[i][j], dist[i][k] + dist[k][j])</code> with <code>min(dist[i][j], max(dist[i][k], dist[k][j]))</code></li>
+  <li><strong>Count shortest paths:</strong> Maintain parallel <code>count[i][j]</code> array</li>
+  <li><strong>Path reconstruction:</strong> Store <code>next[i][j] = k</code> when improving, trace recursively</li>
+</ul>
+
 <h3>LeetCode Problems</h3>
 <ul class="problem-list">
   <li><span class="title"><a href="https://leetcode.com/problems/network-delay-time/" target="_blank">743. Network Delay Time (Dijkstra)</a></span><span class="tag tag-medium">Medium</span></li>
   <li><span class="title"><a href="https://leetcode.com/problems/cheapest-flights-within-k-stops/" target="_blank">787. Cheapest Flights Within K Stops (Bellman-Ford)</a></span><span class="tag tag-medium">Medium</span></li>
   <li><span class="title"><a href="https://leetcode.com/problems/path-with-minimum-effort/" target="_blank">1631. Path With Minimum Effort (Dijkstra/BinarySearch)</a></span><span class="tag tag-medium">Medium</span></li>
-  <li><span class="title"><a href="https://leetcode.com/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/" target="_blank">1334. Find City With Smallest Neighbors (Floyd)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/" target="_blank">1334. Find City With Smallest Neighbors (Floyd-Warshall)</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Classic Floyd</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/course-schedule-iv/" target="_blank">1462. Course Schedule IV (Floyd transitive closure)</a></span><span class="tag tag-medium">Medium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/shortest-path-visiting-all-nodes/" target="_blank">847. Shortest Path Visiting All Nodes (Floyd + bitmask BFS)</a></span><span class="tag tag-hard">Hard</span></li>
   <li><span class="title"><a href="https://leetcode.com/problems/swim-in-rising-water/" target="_blank">778. Swim in Rising Water (Dijkstra on grid)</a></span><span class="tag tag-hard">Hard</span></li>
   <li><span class="title"><a href="https://leetcode.com/problems/path-with-maximum-probability/" target="_blank">1514. Path with Maximum Probability</a></span><span class="tag tag-medium">Medium</span></li>
   <li><span class="title"><a href="https://leetcode.com/problems/minimum-obstacle-removal/" target="_blank">2290. Minimum Obstacle Removal (0-1 BFS)</a></span><span class="tag tag-hard">Hard</span></li>
