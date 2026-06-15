@@ -178,6 +178,7 @@ tr:hover { background: var(--bg3); }
   <button class="nav-btn" onclick="showSection('graph')">Graph DP</button>
   <button class="nav-btn" onclick="showSection('digit')">Digit DP</button>
   <button class="nav-btn" onclick="showSection('bitmask')">Bitmask DP</button>
+  <button class="nav-btn" onclick="showSection('sosdp')">SOS DP</button>
   <button class="nav-btn" onclick="showSection('sortdp')">Sort + DP</button>
   <button class="nav-btn" onclick="showSection('statemachine')">State Machine</button>
   <button class="nav-btn" onclick="showSection('bitdp')">BIT + DP</button>
@@ -829,6 +830,71 @@ dp[mask | (<span class="num">1</span> &lt;&lt; j)][j] = Math.<span class="fn">mi
   <li><span class="title"><a href="https://leetcode.com/problems/smallest-sufficient-team/" target="_blank">1125. Smallest Sufficient Team</a></span><span class="tag tag-hard">Hard</span></li>
   <li><span class="title"><a href="https://leetcode.com/problems/minimum-cost-to-connect-two-groups/" target="_blank">1595. Minimum Cost to Connect Two Groups</a></span><span class="tag tag-hard">Hard</span></li>
   <li><span class="title"><a href="https://leetcode.com/problems/maximum-and-sum-of-array/" target="_blank">2172. Maximum AND Sum of Array</a></span><span class="tag tag-hard">Hard</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== SOS DP ===== -->
+<div class="section" id="sosdp">
+<div class="card">
+<h2>SOS DP (Sum over Subsets)</h2>
+<p>For each bitmask, compute the sum/count over ALL its submasks. Naive = O(3^n), SOS DP = O(n &middot; 2^n).</p>
+
+<h3>Problem Statement</h3>
+<p>Given <code>f[mask]</code> for all masks, compute <code>g[mask] = sum of f[s]</code> for all submasks <code>s</code> of <code>mask</code> (i.e., <code>s &amp; mask == s</code>).</p>
+
+<h3>The Key Insight</h3>
+<div class="insight">
+  <p><strong>Process one bit at a time.</strong> In iteration i, for each mask with bit i set, add the contribution from the version without bit i. After processing all bits, dp[mask] contains the sum over all submasks.</p>
+</div>
+
+<h3>Template</h3>
+<pre><span class="cm">// SOS DP: dp[mask] = sum of f[s] for all submasks s of mask</span>
+<span class="kw">int</span> n = <span class="num">20</span>; <span class="cm">// number of bits</span>
+<span class="kw">long</span>[] dp = <span class="kw">new long</span>[<span class="num">1</span> &lt;&lt; n];
+
+<span class="cm">// Initialize dp[mask] = f[mask]</span>
+<span class="kw">for</span> (<span class="kw">int</span> mask = <span class="num">0</span>; mask &lt; (<span class="num">1</span> &lt;&lt; n); mask++)
+    dp[mask] = f[mask];
+
+<span class="cm">// SOS: process one bit dimension at a time</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++)
+    <span class="kw">for</span> (<span class="kw">int</span> mask = <span class="num">0</span>; mask &lt; (<span class="num">1</span> &lt;&lt; n); mask++)
+        <span class="kw">if</span> ((mask &amp; (<span class="num">1</span> &lt;&lt; i)) != <span class="num">0</span>)
+            dp[mask] += dp[mask ^ (<span class="num">1</span> &lt;&lt; i)];
+
+<span class="cm">// After this: dp[mask] = sum of f[s] for all s ⊆ mask</span></pre>
+
+<h3>Why It Works</h3>
+<p>Think of each mask as a point in an n-dimensional hypercube. Each iteration "accumulates" along one dimension. After n iterations, every point has accumulated from all its lower neighbors = all submasks.</p>
+
+<div class="warning">
+  <p><strong>Loop order matters:</strong> Outer loop = bit position, inner loop = all masks. This ensures when we process bit i, all lower-bit contributions are already included. (Same principle as unbounded knapsack's forward iteration.)</p>
+</div>
+
+<h3>Variant: Supermask Sum (invert direction)</h3>
+<pre><span class="cm">// dp[mask] = sum of f[s] for all SUPERmasks s ⊇ mask</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++)
+    <span class="kw">for</span> (<span class="kw">int</span> mask = (<span class="num">1</span> &lt;&lt; n) - <span class="num">1</span>; mask &gt;= <span class="num">0</span>; mask--)
+        <span class="kw">if</span> ((mask &amp; (<span class="num">1</span> &lt;&lt; i)) == <span class="num">0</span>)
+            dp[mask] += dp[mask | (<span class="num">1</span> &lt;&lt; i)];</pre>
+
+<h3>Applications</h3>
+<table>
+  <tr><th>Use Case</th><th>Setup</th></tr>
+  <tr><td>Count elements where <code>x &amp; mask == x</code></td><td>f[x] = 1 for each element x; query dp[mask]</td></tr>
+  <tr><td>Maximum AND pair</td><td>Count supermasks; find highest mask with count &ge; 2</td></tr>
+  <tr><td>Number of subsets with AND = 0</td><td>M&ouml;bius inversion on SOS result</td></tr>
+  <tr><td>Covering all requirements</td><td>f[mask] = 1 if task covers mask; dp[full] = answer</td></tr>
+</table>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/minimum-xor-sum-of-two-arrays/" target="_blank">1879. Minimum XOR Sum of Two Arrays</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Bitmask DP</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/count-pairs-with-xor-in-a-range/" target="_blank">1803. Count Pairs With XOR in Range</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Trie variant</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/maximum-and-sum-of-array/" target="_blank">2172. Maximum AND Sum</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/number-of-valid-words-for-each-puzzle/" target="_blank">1178. Number of Valid Words for Each Puzzle</a></span><span class="tag tag-hard">Hard</span><span class="tag tag-freq">Classic SOS</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/smallest-sufficient-team/" target="_blank">1125. Smallest Sufficient Team</a></span><span class="tag tag-hard">Hard</span></li>
 </ul>
 </div>
 </div>

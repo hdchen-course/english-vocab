@@ -93,6 +93,7 @@ tr:hover { background: var(--bg3); }
   <button class="nav-btn" onclick="showSection('intervals')">Intervals</button>
   <button class="nav-btn" onclick="showSection('matrix')">Matrix</button>
   <button class="nav-btn" onclick="showSection('stralgo')">String Algos</button>
+  <button class="nav-btn" onclick="showSection('suffixarray')">Suffix Array</button>
   <button class="nav-btn" onclick="showSection('inplace')">In-Place</button>
   <button class="nav-btn" onclick="showSection('tips')">Interview Tips</button>
 </div>
@@ -839,6 +840,97 @@ Arrays.<span class="fn">sort</span>(starts); Arrays.<span class="fn">sort</span>
   <li><span class="title"><a href="https://leetcode.com/problems/rotate-string/" target="_blank">796. Rotate String (Z-algo / KMP on concat)</a></span><span class="tag tag-easy">Easy</span></li>
   <li><span class="title"><a href="https://leetcode.com/problems/repeated-substring-pattern/" target="_blank">459. Repeated Substring Pattern (KMP / Z)</a></span><span class="tag tag-easy">Easy</span></li>
   <li><span class="title"><a href="https://leetcode.com/problems/longest-word-in-dictionary/" target="_blank">720. Longest Word in Dictionary (Trie)</a></span><span class="tag tag-medium">Medium</span></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Suffix Array ===== -->
+<div class="section" id="suffixarray">
+<div class="card">
+<h2>Suffix Array + LCP Array</h2>
+<p>The Suffix Array is the sorted order of all suffixes. Combined with the LCP (Longest Common Prefix) array, it solves many string problems in O(n log n) or O(n).</p>
+
+<h3>What It Is</h3>
+<div class="insight">
+  <p><strong>Suffix Array SA[]:</strong> SA[i] = starting index of the i-th smallest suffix in sorted order.<br>
+  <strong>LCP Array:</strong> LCP[i] = length of longest common prefix between suffix SA[i] and SA[i-1].<br>
+  <strong>Power:</strong> Together they give you O(1) comparison between any two suffixes, count of distinct substrings, longest repeated substring, etc.</p>
+</div>
+
+<h3>Build Suffix Array: O(n log n)</h3>
+<pre><span class="cm">// O(n log n) suffix array construction using radix sort + doubling</span>
+<span class="kw">int</span>[] <span class="fn">buildSuffixArray</span>(String s) {
+    <span class="kw">int</span> n = s.length();
+    Integer[] sa = <span class="kw">new</span> Integer[n];
+    <span class="kw">int</span>[] rank = <span class="kw">new int</span>[n], tmp = <span class="kw">new int</span>[n];
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) { sa[i] = i; rank[i] = s.charAt(i); }
+
+    <span class="kw">for</span> (<span class="kw">int</span> k = <span class="num">1</span>; k &lt; n; k &lt;&lt;= <span class="num">1</span>) {
+        <span class="kw">final int</span> kk = k;
+        <span class="kw">final int</span>[] r = rank;
+        Arrays.<span class="fn">sort</span>(sa, (a, b) -&gt; {
+            <span class="kw">if</span> (r[a] != r[b]) <span class="kw">return</span> r[a] - r[b];
+            <span class="kw">int</span> ra = a + kk &lt; n ? r[a + kk] : -<span class="num">1</span>;
+            <span class="kw">int</span> rb = b + kk &lt; n ? r[b + kk] : -<span class="num">1</span>;
+            <span class="kw">return</span> ra - rb;
+        });
+        tmp[sa[<span class="num">0</span>]] = <span class="num">0</span>;
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt; n; i++) {
+            tmp[sa[i]] = tmp[sa[i-<span class="num">1</span>]];
+            <span class="kw">int</span> prev2 = sa[i-<span class="num">1</span>]+kk &lt; n ? r[sa[i-<span class="num">1</span>]+kk] : -<span class="num">1</span>;
+            <span class="kw">int</span> curr2 = sa[i]+kk &lt; n ? r[sa[i]+kk] : -<span class="num">1</span>;
+            <span class="kw">if</span> (r[sa[i]] != r[sa[i-<span class="num">1</span>]] || prev2 != curr2) tmp[sa[i]]++;
+        }
+        System.arraycopy(tmp, <span class="num">0</span>, rank, <span class="num">0</span>, n);
+    }
+    <span class="kw">int</span>[] result = <span class="kw">new int</span>[n];
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) result[i] = sa[i];
+    <span class="kw">return</span> result;
+}</pre>
+
+<h3>Build LCP Array: O(n) — Kasai's Algorithm</h3>
+<pre><span class="cm">// Kasai's algorithm: compute LCP in O(n) using the inverse SA</span>
+<span class="kw">int</span>[] <span class="fn">buildLCP</span>(String s, <span class="kw">int</span>[] sa) {
+    <span class="kw">int</span> n = s.length();
+    <span class="kw">int</span>[] rank = <span class="kw">new int</span>[n], lcp = <span class="kw">new int</span>[n];
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) rank[sa[i]] = i;
+
+    <span class="kw">int</span> h = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+        <span class="kw">if</span> (rank[i] &gt; <span class="num">0</span>) {
+            <span class="kw">int</span> j = sa[rank[i] - <span class="num">1</span>];
+            <span class="kw">while</span> (i + h &lt; n &amp;&amp; j + h &lt; n &amp;&amp; s.charAt(i+h) == s.charAt(j+h)) h++;
+            lcp[rank[i]] = h;
+            <span class="kw">if</span> (h &gt; <span class="num">0</span>) h--;
+        } <span class="kw">else</span> { h = <span class="num">0</span>; }
+    }
+    <span class="kw">return</span> lcp;
+}</pre>
+
+<h3>Classic Applications</h3>
+<table>
+  <tr><th>Problem</th><th>Formula</th></tr>
+  <tr><td>Count distinct substrings</td><td><code>n*(n+1)/2 - sum(LCP[i])</code></td></tr>
+  <tr><td>Longest repeated substring</td><td><code>max(LCP[i])</code></td></tr>
+  <tr><td>Longest common substring of 2 strings</td><td>Concatenate with separator, max LCP between suffixes from different strings</td></tr>
+  <tr><td>k-th smallest substring</td><td>Walk SA: each suffix i contributes (n-SA[i])-LCP[i] new substrings</td></tr>
+  <tr><td>Number of distinct substrings per length</td><td>Difference array on LCP contributions</td></tr>
+</table>
+
+<h3>When to Use SA vs Trie vs Rolling Hash</h3>
+<div class="warning">
+  <p><strong>Suffix Array:</strong> When you need global sorted order of suffixes, distinct substring counting, or LCP queries between arbitrary suffixes. O(n log n) build, O(1) LCP with sparse table.<br>
+  <strong>Trie:</strong> When you need prefix matching, autocomplete, or XOR maximization. Better for multiple short strings.<br>
+  <strong>Rolling Hash:</strong> When you need to compare arbitrary substrings for equality in O(1). Simpler but probabilistic.</p>
+</div>
+
+<h3>LeetCode Problems</h3>
+<ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-common-subpath/" target="_blank">1923. Longest Common Subpath (SA + binary search)</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/longest-repeating-substring/" target="_blank">1062. Longest Repeating Substring (max LCP)</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Premium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/distinct-echo-substrings/" target="_blank">1316. Distinct Echo Substrings</a></span><span class="tag tag-hard">Hard</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/number-of-distinct-substrings-in-a-string/" target="_blank">1698. Number of Distinct Substrings (n(n+1)/2 - sum LCP)</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Premium</span></li>
+  <li><span class="title"><a href="https://leetcode.com/problems/last-substring-in-lexicographic-order/" target="_blank">1163. Last Substring in Lexicographic Order</a></span><span class="tag tag-hard">Hard</span></li>
 </ul>
 </div>
 </div>
