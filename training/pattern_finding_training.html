@@ -99,12 +99,30 @@ Key insight: k-th symbol = popcount(k-1) % 2</div>
 </pre>
 
 <h3>Example: Minimum One Bit Operations (LC 1611)</h3>
-<div class="cases">Goal: transform n to 0 using specific bit ops
-Key: this is Gray code in reverse!
-n=1(01): 1 step,  n=2(10): 3 steps,  n=3(11): 2 steps
-n=4(100): 7 steps, n=5(101): 6 steps
-Pattern: f(n) = f(n XOR (n>>1))... it's Gray-to-binary conversion</div>
-<pre><span class="cm">// Gray code to binary = number of operations</span>
+<p>Two allowed operations: (1) flip rightmost bit, (2) flip bit left of the rightmost 1. Goal: reach 0 from n.</p>
+
+<div class="cases">Compute small cases:
+n = 1 (001) → 0          : 1 step
+n = 2 (010) → 011 → 001 → 0 : 3 steps
+n = 3 (011) → 010 → 0*       : 2 steps  (*shortcut via op2)
+n = 4 (100) → ... → 0        : 7 steps
+n = 5 (101) → ... → 0        : 6 steps
+n = 6 (110) → ... → 0        : 5 steps
+n = 7 (111) → ... → 0        : 4 steps
+
+Sequence of answers: 0, 1, 3, 2, 7, 6, 5, 4, 15, 14, ...
+This IS the Gray code sequence!
+
+Insight: the answer for n = the position of n in Gray code order.
+Equivalently: convert n from Gray code to binary integer.</div>
+
+<div class="insight">
+  <p><strong>Why Gray code?</strong> The two allowed operations are exactly how you step through a Gray code: each step flips exactly one bit, and the allowed flip positions follow the Gray code generation rule. So "number of steps to reach 0" = "position of n in the Gray code sequence" = Gray-to-binary conversion of n.</p>
+</div>
+
+<pre><span class="cm">// Gray code → binary conversion = the answer</span>
+<span class="cm">// Binary of Gray code g: b[i] = g[i] ^ g[i+1] ^ g[i+2] ^ ...</span>
+<span class="cm">// Efficiently: b = g ^ (g>>1) ^ (g>>2) ^ ... = running XOR</span>
 <span class="kw">int</span> <span class="fn">minimumOneBitOperations</span>(<span class="kw">int</span> n) {
     <span class="kw">int</span> result = <span class="num">0</span>;
     <span class="kw">while</span> (n > <span class="num">0</span>) {
@@ -113,6 +131,10 @@ Pattern: f(n) = f(n XOR (n>>1))... it's Gray-to-binary conversion</div>
     }
     <span class="kw">return</span> result;
 }
+<span class="cm">// Why this works:
+// Gray-to-binary: binary[i] = XOR of all Gray bits from MSB to position i
+// The loop computes exactly this: result accumulates n, n>>1, n>>2, ...
+// Each XOR "propagates" the Gray code bits into binary position values</span>
 </pre>
 
 <h3>Example: Integer Replacement (LC 397)</h3>
