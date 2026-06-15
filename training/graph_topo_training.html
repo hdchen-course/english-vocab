@@ -664,9 +664,101 @@ List&lt;<span class="kw">int</span>[]&gt; bridges = <span class="kw">new</span> 
 </pre>
 
 <h3>Kosaraju's SCC (2-pass DFS)</h3>
+<div class="insight">
+  <p><strong>Intuition:</strong> If we process nodes in reverse finish-time order on the reversed graph, each DFS tree we encounter is exactly one SCC. This works because a node finished late in pass 1 is a "root" of its SCC — reversing edges ensures its SCC members are only reachable from it, not from other SCCs.</p>
+</div>
+
+<pre><span class="cm">// Kosaraju's Algorithm — returns list of SCCs</span>
+<span class="kw">List</span>&lt;List&lt;Integer&gt;&gt; <span class="fn">kosaraju</span>(<span class="kw">int</span> n, List&lt;List&lt;Integer&gt;&gt; graph) {
+    <span class="cm">// Pass 1: DFS on original graph, record finish order</span>
+    <span class="kw">boolean</span>[] visited = <span class="kw">new boolean</span>[n];
+    Deque&lt;Integer&gt; finishOrder = <span class="kw">new</span> ArrayDeque&lt;&gt;();
+
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++)
+        <span class="kw">if</span> (!visited[i]) dfs1(i, graph, visited, finishOrder);
+
+    <span class="cm">// Build reversed graph</span>
+    List&lt;List&lt;Integer&gt;&gt; rev = <span class="kw">new</span> ArrayList&lt;&gt;();
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) rev.add(<span class="kw">new</span> ArrayList&lt;&gt;());
+    <span class="kw">for</span> (<span class="kw">int</span> u = <span class="num">0</span>; u &lt; n; u++)
+        <span class="kw">for</span> (<span class="kw">int</span> v : graph.get(u)) rev.get(v).add(u);
+
+    <span class="cm">// Pass 2: DFS on reversed graph in reverse finish order</span>
+    Arrays.<span class="fn">fill</span>(visited, <span class="kw">false</span>);
+    List&lt;List&lt;Integer&gt;&gt; sccs = <span class="kw">new</span> ArrayList&lt;&gt;();
+    <span class="kw">while</span> (!finishOrder.isEmpty()) {
+        <span class="kw">int</span> node = finishOrder.pop();
+        <span class="kw">if</span> (!visited[node]) {
+            List&lt;Integer&gt; scc = <span class="kw">new</span> ArrayList&lt;&gt;();
+            dfs2(node, rev, visited, scc);
+            sccs.add(scc);
+        }
+    }
+    <span class="kw">return</span> sccs;
+}
+
+<span class="kw">void</span> <span class="fn">dfs1</span>(<span class="kw">int</span> u, List&lt;List&lt;Integer&gt;&gt; g, <span class="kw">boolean</span>[] vis, Deque&lt;Integer&gt; order) {
+    vis[u] = <span class="kw">true</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> v : g.get(u)) <span class="kw">if</span> (!vis[v]) dfs1(v, g, vis, order);
+    order.push(u); <span class="cm">// record finish time</span>
+}
+
+<span class="kw">void</span> <span class="fn">dfs2</span>(<span class="kw">int</span> u, List&lt;List&lt;Integer&gt;&gt; g, <span class="kw">boolean</span>[] vis, List&lt;Integer&gt; scc) {
+    vis[u] = <span class="kw">true</span>;
+    scc.add(u);
+    <span class="kw">for</span> (<span class="kw">int</span> v : g.get(u)) <span class="kw">if</span> (!vis[v]) dfs2(v, g, vis, scc);
+}</pre>
+
+<h3>Tarjan's SCC (single-pass, stack-based)</h3>
+<div class="insight">
+  <p><strong>Intuition:</strong> Maintain a stack of "currently in progress" nodes. A node is the root of its SCC if <code>low[u] == disc[u]</code> — meaning no node in its subtree can reach anything earlier. Pop everything above it from the stack = one SCC.</p>
+</div>
+
+<pre><span class="cm">// Tarjan's SCC Algorithm</span>
+<span class="kw">int</span> timer = <span class="num">0</span>;
+<span class="kw">int</span>[] disc, low, comp; <span class="cm">// comp[u] = which SCC node u belongs to</span>
+<span class="kw">boolean</span>[] onStack;
+Deque&lt;Integer&gt; stack = <span class="kw">new</span> ArrayDeque&lt;&gt;();
+<span class="kw">int</span> numSCC = <span class="num">0</span>;
+
+<span class="kw">void</span> <span class="fn">tarjanSCC</span>(<span class="kw">int</span> u) {
+    disc[u] = low[u] = timer++;
+    stack.push(u);
+    onStack[u] = <span class="kw">true</span>;
+
+    <span class="kw">for</span> (<span class="kw">int</span> v : graph.get(u)) {
+        <span class="kw">if</span> (disc[v] == -<span class="num">1</span>) {
+            tarjanSCC(v);
+            low[u] = Math.<span class="fn">min</span>(low[u], low[v]);
+        } <span class="kw">else if</span> (onStack[v]) {
+            low[u] = Math.<span class="fn">min</span>(low[u], disc[v]);
+        }
+    }
+
+    <span class="cm">// If u is root of an SCC</span>
+    <span class="kw">if</span> (low[u] == disc[u]) {
+        <span class="kw">while</span> (<span class="kw">true</span>) {
+            <span class="kw">int</span> v = stack.pop();
+            onStack[v] = <span class="kw">false</span>;
+            comp[v] = numSCC;
+            <span class="kw">if</span> (v == u) <span class="kw">break</span>;
+        }
+        numSCC++;
+    }
+}</pre>
+
+<h3>Kosaraju vs Tarjan</h3>
+<table>
+  <tr><th>Aspect</th><th>Kosaraju</th><th>Tarjan</th></tr>
+  <tr><td>Passes</td><td>2 DFS passes</td><td>1 DFS pass</td></tr>
+  <tr><td>Extra structure</td><td>Reversed graph (2x memory)</td><td>Stack + onStack array</td></tr>
+  <tr><td>Ease of understanding</td><td>Easier (clear 2-step logic)</td><td>Harder (low-link subtlety)</td></tr>
+  <tr><td>Output order</td><td>SCCs in reverse topological order</td><td>SCCs in reverse topological order</td></tr>
+  <tr><td>Interview recommendation</td><td>Use this one (easier to explain)</td><td>Use if memory is tight</td></tr>
+</table>
+
 <div class="warning">
-  <p><strong>Pass 1:</strong> DFS on original graph, record finish order<br>
-  <strong>Pass 2:</strong> DFS on reversed graph in reverse finish order &mdash; each DFS tree is one SCC</p>
+  <p><strong>Interview tip:</strong> SCC problems rarely appear directly at Google L5. More common: "Can all nodes reach each other?" → just check if SCC count == 1. Or the problem reduces to DAG after condensation. Know Kosaraju well enough to code it; mention Tarjan for bonus points.</p>
 </div>
 
 <h3>LeetCode Problems</h3>
@@ -684,20 +776,134 @@ List&lt;<span class="kw">int</span>[]&gt; bridges = <span class="kw">new</span> 
 <h2>Advanced Graph Topics</h2>
 
 <h3>Euler Path / Circuit</h3>
+
+<h4>What is it?</h4>
+<p>An <strong>Euler path</strong> visits every EDGE exactly once. An <strong>Euler circuit</strong> is an Euler path that starts and ends at the same vertex. (Contrast with Hamiltonian path which visits every VERTEX once — that's NP-hard.)</p>
+
+<h4>Existence Conditions</h4>
+<table>
+  <tr><th>Graph type</th><th>Euler Circuit exists if</th><th>Euler Path exists if</th></tr>
+  <tr><td>Undirected</td><td>All vertices have even degree AND graph is connected</td><td>Exactly 0 or 2 vertices have odd degree</td></tr>
+  <tr><td>Directed</td><td>Every vertex has in-degree = out-degree AND graph is strongly connected</td><td>At most one vertex has out-in=1 (start), at most one has in-out=1 (end)</td></tr>
+</table>
+
+<h4>Hierholzer's Algorithm (Euler Circuit/Path)</h4>
 <div class="insight">
-  <p><strong>Euler Circuit exists if:</strong> all vertices have even degree (undirected) or in-degree = out-degree (directed)<br>
-  <strong>Euler Path exists if:</strong> exactly 0 or 2 vertices have odd degree<br>
-  <strong>Algorithm:</strong> Hierholzer's &mdash; DFS with edge removal</p>
+  <p><strong>Key idea:</strong> DFS but remove edges as you traverse them. When you get stuck (no more edges from current node), add current node to the result and backtrack. The result (reversed) is the Euler path. This is NOT regular DFS — you must delete edges to avoid reuse.</p>
+</div>
+
+<pre><span class="cm">// Hierholzer's for DIRECTED graph (LC 332 Reconstruct Itinerary)</span>
+Map&lt;String, PriorityQueue&lt;String&gt;&gt; graph = <span class="kw">new</span> HashMap&lt;&gt;();
+List&lt;String&gt; result = <span class="kw">new</span> ArrayList&lt;&gt;();
+
+<span class="kw">void</span> <span class="fn">dfs</span>(String node) {
+    PriorityQueue&lt;String&gt; neighbors = graph.get(node);
+    <span class="kw">while</span> (neighbors != <span class="kw">null</span> &amp;&amp; !neighbors.isEmpty()) {
+        String next = neighbors.poll();  <span class="cm">// remove edge (use it up)</span>
+        dfs(next);
+    }
+    result.add(node);  <span class="cm">// add to front when "stuck"</span>
+}
+
+<span class="cm">// Call: dfs(startNode); Collections.reverse(result);</span>
+
+<span class="cm">// For UNDIRECTED graph — mark edges as used (need edge IDs)</span>
+<span class="kw">void</span> <span class="fn">hierholzerUndirected</span>(<span class="kw">int</span> start) {
+    Deque&lt;Integer&gt; stack = <span class="kw">new</span> ArrayDeque&lt;&gt;();
+    List&lt;Integer&gt; path = <span class="kw">new</span> ArrayList&lt;&gt;();
+    stack.push(start);
+    <span class="kw">while</span> (!stack.isEmpty()) {
+        <span class="kw">int</span> u = stack.peek();
+        <span class="kw">if</span> (hasUnusedEdge(u)) {
+            <span class="kw">int</span>[] edge = getNextUnusedEdge(u);
+            markUsed(edge);
+            stack.push(edge[<span class="num">1</span>]); <span class="cm">// go to other endpoint</span>
+        } <span class="kw">else</span> {
+            path.add(stack.pop()); <span class="cm">// backtrack: add to result</span>
+        }
+    }
+    Collections.reverse(path);
+}</pre>
+
+<div class="warning">
+  <p><strong>Common interview disguise:</strong> "Reconstruct Itinerary" (LC 332) = Euler path on directed multigraph. "Cracking the Safe" (LC 753) = Euler circuit on de Bruijn graph. Recognize these as Euler problems and Hierholzer's follows naturally.</p>
+</div>
+
+<h4>Real-world uses</h4>
+<ul>
+  <li>Chinese Postman Problem (mail delivery visiting every street)</li>
+  <li>DNA sequencing (Euler path on de Bruijn graph of k-mers)</li>
+  <li>Drawing puzzles ("draw without lifting your pen")</li>
+</ul>
+
+<h3>A* Search</h3>
+
+<h4>What is it?</h4>
+<p>Informed search that uses a heuristic to guide exploration. Like Dijkstra, but instead of expanding the node with smallest <code>g(n)</code> (cost so far), it expands the node with smallest <code>f(n) = g(n) + h(n)</code> where <code>h(n)</code> estimates remaining cost to goal.</p>
+
+<h4>When is it useful?</h4>
+<ul>
+  <li><strong>Games:</strong> pathfinding on maps (characters navigating obstacles)</li>
+  <li><strong>Grid problems:</strong> when BFS is too slow and you have a natural distance heuristic</li>
+  <li><strong>State-space search:</strong> sliding puzzles, Rubik's cube</li>
+  <li><strong>Interviews:</strong> rare, but LC 1197 (Minimum Knight Moves) can use it</li>
+</ul>
+
+<h4>Key Property: Admissibility</h4>
+<div class="insight">
+  <p><strong>h(n) must be admissible:</strong> it never OVERestimates the true remaining cost. If admissible, A* finds the optimal path. Common heuristics: Manhattan distance (grid, 4-directional), Euclidean distance (continuous), Chebyshev distance (8-directional).</p>
+</div>
+
+<pre><span class="cm">// A* Search Template</span>
+<span class="kw">int</span> <span class="fn">aStar</span>(<span class="kw">int</span>[][] grid, <span class="kw">int</span>[] start, <span class="kw">int</span>[] goal) {
+    <span class="kw">int</span> n = grid.length, m = grid[<span class="num">0</span>].length;
+    <span class="kw">int</span>[][] dist = <span class="kw">new int</span>[n][m];
+    <span class="kw">for</span> (<span class="kw">int</span>[] row : dist) Arrays.<span class="fn">fill</span>(row, Integer.MAX_VALUE);
+    dist[start[<span class="num">0</span>]][start[<span class="num">1</span>]] = <span class="num">0</span>;
+
+    <span class="cm">// PQ ordered by f = g + h</span>
+    PriorityQueue&lt;<span class="kw">int</span>[]&gt; pq = <span class="kw">new</span> PriorityQueue&lt;&gt;((a, b) -&gt; a[<span class="num">2</span>] - b[<span class="num">2</span>]);
+    <span class="kw">int</span> h = heuristic(start, goal);
+    pq.offer(<span class="kw">new int</span>[]{start[<span class="num">0</span>], start[<span class="num">1</span>], h}); <span class="cm">// {row, col, f}</span>
+
+    <span class="kw">int</span>[][] dirs = {{<span class="num">0</span>,<span class="num">1</span>},{<span class="num">0</span>,-<span class="num">1</span>},{<span class="num">1</span>,<span class="num">0</span>},{-<span class="num">1</span>,<span class="num">0</span>}};
+    <span class="kw">while</span> (!pq.isEmpty()) {
+        <span class="kw">int</span>[] curr = pq.poll();
+        <span class="kw">int</span> r = curr[<span class="num">0</span>], c = curr[<span class="num">1</span>];
+        <span class="kw">if</span> (r == goal[<span class="num">0</span>] &amp;&amp; c == goal[<span class="num">1</span>]) <span class="kw">return</span> dist[r][c];
+        <span class="kw">if</span> (curr[<span class="num">2</span>] &gt; dist[r][c] + heuristic(<span class="kw">new int</span>[]{r,c}, goal)) <span class="kw">continue</span>;
+
+        <span class="kw">for</span> (<span class="kw">int</span>[] d : dirs) {
+            <span class="kw">int</span> nr = r + d[<span class="num">0</span>], nc = c + d[<span class="num">1</span>];
+            <span class="kw">if</span> (nr &lt; <span class="num">0</span> || nr &gt;= n || nc &lt; <span class="num">0</span> || nc &gt;= m) <span class="kw">continue</span>;
+            <span class="kw">int</span> newDist = dist[r][c] + grid[nr][nc]; <span class="cm">// edge cost</span>
+            <span class="kw">if</span> (newDist &lt; dist[nr][nc]) {
+                dist[nr][nc] = newDist;
+                pq.offer(<span class="kw">new int</span>[]{nr, nc, newDist + heuristic(<span class="kw">new int</span>[]{nr,nc}, goal)});
+            }
+        }
+    }
+    <span class="kw">return</span> -<span class="num">1</span>;
+}
+
+<span class="kw">int</span> <span class="fn">heuristic</span>(<span class="kw">int</span>[] a, <span class="kw">int</span>[] b) {
+    <span class="kw">return</span> Math.<span class="fn">abs</span>(a[<span class="num">0</span>] - b[<span class="num">0</span>]) + Math.<span class="fn">abs</span>(a[<span class="num">1</span>] - b[<span class="num">1</span>]); <span class="cm">// Manhattan</span>
+}</pre>
+
+<h4>A* vs Dijkstra vs BFS</h4>
+<table>
+  <tr><th>Algorithm</th><th>When to use</th><th>Explores</th></tr>
+  <tr><td>BFS</td><td>Unweighted, guaranteed shortest</td><td>All nodes at distance d before d+1</td></tr>
+  <tr><td>Dijkstra</td><td>Weighted, no heuristic available</td><td>Expands by cheapest g(n)</td></tr>
+  <tr><td>A*</td><td>Weighted, good heuristic available</td><td>Expands by cheapest g(n) + h(n) → fewer nodes explored</td></tr>
+</table>
+
+<div class="tip">
+  <p><strong>Interview context:</strong> If asked "how to speed up Dijkstra on a grid?", mention A* with Manhattan heuristic. In practice, A* explores far fewer nodes when the heuristic is tight. For LC problems, BFS/Dijkstra usually suffice — A* is more of a system design / game dev topic.</p>
 </div>
 
 <h3>Network Flow (rarely in interviews)</h3>
-<p>Max Flow = Min Cut (Ford-Fulkerson). Sometimes disguised as bipartite matching.</p>
-
-<h3>A* Search</h3>
-<pre><span class="cm">// Like Dijkstra but with heuristic: f(n) = g(n) + h(n)</span>
-<span class="cm">// h(n) must be admissible (never overestimates)</span>
-<span class="cm">// Common heuristic: Manhattan distance for grid problems</span>
-</pre>
+<p>Max Flow = Min Cut (Ford-Fulkerson). Sometimes disguised as bipartite matching. See <a href="advanced_algorithms_training.html">Advanced Algorithms</a> for full templates.</p>
 
 <h3>LeetCode Problems</h3>
 <ul class="problem-list">
