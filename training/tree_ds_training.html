@@ -708,18 +708,46 @@ ListNode dummy = <span class="kw">new</span> ListNode(<span class="num">0</span>
 <span class="kw">for</span> (<span class="kw">int</span> i = pos; i &lt;= n; i += i &amp; -i) bit[i]--; <span class="cm">// remove from set</span>
 </pre>
 
+<h4>Concrete Example: CSES List Removals</h4>
+<pre><span class="cm">// Problem: Array of n elements. Given q queries, each says "remove the k-th remaining element."
+// Output the removed element each time.
+//
+// array: [2, 6, 1, 4, 5]
+// query: 3 → remove 3rd remaining (=1), array becomes [2, 6, _, 4, 5]
+// query: 1 → remove 1st remaining (=2), array becomes [_, 6, _, 4, 5]
+// query: 3 → remove 3rd remaining (=5), array becomes [_, 6, _, 4, _]
+//
+// BIT stores 1 for "still present", 0 for "removed".
+// findKth(bit, n, k) = find the position of the k-th remaining element.</span>
+
+<span class="kw">int</span> n = arr.length;
+<span class="kw">int</span>[] bit = <span class="kw">new int</span>[n + <span class="num">1</span>];
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= n; i++) {
+    bit[i] += <span class="num">1</span>;
+    <span class="kw">int</span> j = i + (i &amp; -i);
+    <span class="kw">if</span> (j &lt;= n) bit[j] += bit[i];
+}
+
+<span class="kw">for</span> (<span class="kw">int</span> k : queries) {
+    <span class="kw">int</span> pos = findKth(bit, n, k);    <span class="cm">// O(log n): find k-th remaining</span>
+    System.out.print(arr[pos - <span class="num">1</span>] + <span class="str">" "</span>); <span class="cm">// output removed element</span>
+    <span class="kw">for</span> (<span class="kw">int</span> i = pos; i &lt;= n; i += i &amp; -i)
+        bit[i]--;                      <span class="cm">// O(log n): mark as removed</span>
+}
+</pre>
+
 <h4>Why this works</h4>
 <p>The BIT stores prefix count of available elements. Binary search descends bit by bit (like binary search on a sorted array) — at each level, if the left half has fewer than target elements, skip to the right half. This gives O(log n) per query instead of O(n) linear scan.</p>
 
 <h4>Problems using this template</h4>
 <table>
   <tr><th>Problem</th><th>What "k-th element" means</th></tr>
-  <tr><td>LC 406 Queue Reconstruction</td><td>Find (k+1)-th empty slot to place person</td></tr>
-  <tr><td>LC 315 Count Smaller After Self</td><td>Count elements in prefix (query prefix sum)</td></tr>
-  <tr><td>LC 1649 Create Sorted Array</td><td>Count elements &lt; x and &gt; x via prefix queries</td></tr>
-  <tr><td>CSES Josephus Problem II</td><td>Find k-th remaining person in circle</td></tr>
-  <tr><td>CSES List Removals</td><td>Find k-th remaining element, then remove it</td></tr>
-  <tr><td>LC 2179 Count Good Triplets</td><td>Count elements in range via two prefix queries</td></tr>
+  <tr><td><a href="https://leetcode.com/problems/queue-reconstruction-by-height/" target="_blank">LC 406 Queue Reconstruction</a></td><td>Find (k+1)-th empty slot to place person</td></tr>
+  <tr><td><a href="https://leetcode.com/problems/count-of-smaller-numbers-after-self/" target="_blank">LC 315 Count Smaller After Self</a></td><td>Count elements in prefix (query prefix sum)</td></tr>
+  <tr><td><a href="https://leetcode.com/problems/create-sorted-array-through-instructions/" target="_blank">LC 1649 Create Sorted Array</a></td><td>Count elements &lt; x and &gt; x via prefix queries</td></tr>
+  <tr><td><a href="https://cses.fi/problemset/task/2163" target="_blank">CSES Josephus Problem II</a></td><td>Find k-th remaining person in circle</td></tr>
+  <tr><td><a href="https://cses.fi/problemset/task/1749" target="_blank">CSES List Removals</a></td><td>Find k-th remaining element, then remove it</td></tr>
+  <tr><td><a href="https://leetcode.com/problems/count-good-triplets-in-an-array/" target="_blank">LC 2179 Count Good Triplets</a></td><td>Count elements in range via two prefix queries</td></tr>
 </table>
 
 <h3>BIT vs Segment Tree</h3>
