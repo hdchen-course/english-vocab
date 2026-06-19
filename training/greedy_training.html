@@ -580,6 +580,44 @@ tr:hover { background: var(--bg3); }
   <p><strong>Why height-desc works:</strong> When we insert a shorter person, they do not affect the k-value of already-placed taller people. This is a "process in order of decreasing influence" pattern.</p>
 </div>
 
+<h4>O(n log n) with BIT — Follow-up if asked "can you do better?"</h4>
+<pre><span class="cm">// Sort by height ASC (same height: k DESC)</span>
+<span class="cm">// Then find the (k+1)-th empty slot using BIT</span>
+<span class="kw">public int</span>[][] <span class="fn">reconstructQueue</span>(<span class="kw">int</span>[][] people) {
+    <span class="kw">int</span> n = people.length;
+    Arrays.<span class="fn">sort</span>(people, (a, b) ->
+        a[<span class="num">0</span>] != b[<span class="num">0</span>] ? a[<span class="num">0</span>] - b[<span class="num">0</span>] : b[<span class="num">1</span>] - a[<span class="num">1</span>]);
+
+    <span class="cm">// BIT tracks available slots (initially all 1)</span>
+    <span class="kw">int</span>[] bit = <span class="kw">new int</span>[n + <span class="num">1</span>];
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= n; i++) {
+        bit[i] += <span class="num">1</span>;
+        <span class="kw">int</span> j = i + (i &amp; -i);
+        <span class="kw">if</span> (j &lt;= n) bit[j] += bit[i];
+    }
+
+    <span class="kw">int</span>[][] result = <span class="kw">new int</span>[n][<span class="num">2</span>];
+    <span class="kw">for</span> (<span class="kw">int</span>[] p : people) {
+        <span class="cm">// Find (k+1)-th empty slot via binary search on BIT prefix sums</span>
+        <span class="kw">int</span> target = p[<span class="num">1</span>] + <span class="num">1</span>; <span class="cm">// need target-th available slot</span>
+        <span class="kw">int</span> pos = <span class="num">0</span>;
+        <span class="kw">for</span> (<span class="kw">int</span> mask = Integer.<span class="fn">highestOneBit</span>(n); mask &gt; <span class="num">0</span>; mask &gt;&gt;= <span class="num">1</span>) {
+            <span class="kw">if</span> (pos + mask &lt;= n &amp;&amp; bit[pos + mask] &lt; target) {
+                target -= bit[pos + mask];
+                pos += mask;
+            }
+        }
+        result[pos] = p;
+        <span class="cm">// Mark slot as occupied</span>
+        <span class="kw">for</span> (<span class="kw">int</span> i = pos + <span class="num">1</span>; i &lt;= n; i += i &amp; -i) bit[i]--;
+    }
+    <span class="kw">return</span> result;
+}
+</pre>
+<div class="insight">
+  <p><strong>Key idea:</strong> Sort shortest first. For each person, "k+1 people taller or equal in front" means they need to be placed at the (k+1)-th available slot. BIT tracks which slots are free, binary search on prefix sum finds the slot in O(log n).</p>
+</div>
+
 <h3>Practice Problems</h3>
 <ul class="problem-list">
   <li><span class="title"><a href="https://leetcode.com/problems/task-scheduler/" target="_blank">621. Task Scheduler</a></span><span class="tag tag-medium">Medium</span></li>
