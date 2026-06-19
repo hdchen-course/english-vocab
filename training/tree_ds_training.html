@@ -678,6 +678,50 @@ ListNode dummy = <span class="kw">new</span> ListNode(<span class="num">0</span>
   <strong>2D BIT:</strong> For 2D prefix sums with point updates</p>
 </div>
 
+<h3>BIT Binary Search: Find k-th Element in Dynamic Set</h3>
+<div class="insight">
+  <p><strong>Pattern:</strong> "Find the k-th remaining/available element" in a set that changes dynamically (elements removed or added). BIT stores 1 for present, 0 for removed. Binary search on prefix sum to find position where prefix == k.</p>
+</div>
+<pre><span class="cm">// BIT Binary Search: find smallest pos where prefixSum(pos) == target</span>
+<span class="cm">// O(log n) — no linear scan needed</span>
+<span class="kw">int</span> <span class="fn">findKth</span>(<span class="kw">int</span>[] bit, <span class="kw">int</span> n, <span class="kw">int</span> target) {
+    <span class="kw">int</span> pos = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> mask = Integer.<span class="fn">highestOneBit</span>(n); mask &gt; <span class="num">0</span>; mask &gt;&gt;= <span class="num">1</span>) {
+        <span class="kw">if</span> (pos + mask &lt;= n &amp;&amp; bit[pos + mask] &lt; target) {
+            target -= bit[pos + mask];
+            pos += mask;
+        }
+    }
+    <span class="kw">return</span> pos + <span class="num">1</span>; <span class="cm">// 1-indexed position</span>
+}
+
+<span class="cm">// Usage: Initialize BIT with all 1s (all slots available)</span>
+<span class="kw">int</span>[] bit = <span class="kw">new int</span>[n + <span class="num">1</span>];
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt;= n; i++) {
+    bit[i] += <span class="num">1</span>;
+    <span class="kw">int</span> j = i + (i &amp; -i);
+    <span class="kw">if</span> (j &lt;= n) bit[j] += bit[i];
+}
+
+<span class="cm">// Find k-th available slot, then mark it as taken</span>
+<span class="kw">int</span> pos = findKth(bit, n, k);
+<span class="kw">for</span> (<span class="kw">int</span> i = pos; i &lt;= n; i += i &amp; -i) bit[i]--; <span class="cm">// remove from set</span>
+</pre>
+
+<h4>Why this works</h4>
+<p>The BIT stores prefix count of available elements. Binary search descends bit by bit (like binary search on a sorted array) — at each level, if the left half has fewer than target elements, skip to the right half. This gives O(log n) per query instead of O(n) linear scan.</p>
+
+<h4>Problems using this template</h4>
+<table>
+  <tr><th>Problem</th><th>What "k-th element" means</th></tr>
+  <tr><td>LC 406 Queue Reconstruction</td><td>Find (k+1)-th empty slot to place person</td></tr>
+  <tr><td>LC 315 Count Smaller After Self</td><td>Count elements in prefix (query prefix sum)</td></tr>
+  <tr><td>LC 1649 Create Sorted Array</td><td>Count elements &lt; x and &gt; x via prefix queries</td></tr>
+  <tr><td>CSES Josephus Problem II</td><td>Find k-th remaining person in circle</td></tr>
+  <tr><td>CSES List Removals</td><td>Find k-th remaining element, then remove it</td></tr>
+  <tr><td>LC 2179 Count Good Triplets</td><td>Count elements in range via two prefix queries</td></tr>
+</table>
+
 <h3>BIT vs Segment Tree</h3>
 <table>
   <tr><th>Aspect</th><th>BIT</th><th>Segment Tree</th></tr>
