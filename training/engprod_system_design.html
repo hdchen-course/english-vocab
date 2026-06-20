@@ -118,22 +118,39 @@ tr:hover { background: var(--bg3); }
 </ul>
 
 <h3>Architecture</h3>
-<pre>
-┌─────────────┐     ┌──────────────┐     ┌─────────────────┐
-│  Engineers   │────▶│  Job Queue   │────▶│   Scheduler     │
-│  (submit)   │     │  (priority)  │     │  (match &amp; assign)│
-└─────────────┘     └──────────────┘     └────────┬────────┘
-                                                   │
-                    ┌──────────────┐     ┌─────────▼────────┐
-                    │  Dashboard   │◀────│  Test Executor   │
-                    │  (results)   │     │  (per device)    │
-                    └──────────────┘     └─────────┬────────┘
-                                                   │
-                                         ┌─────────▼────────┐
-                                         │  Device Pool     │
-                                         │  (health monitor)│
-                                         └──────────────────┘
-</pre>
+<svg viewBox="0 0 700 320" style="width:100%;max-width:700px;margin:16px auto;display:block;" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+  <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#495057"/></marker></defs>
+  <!-- Engineers -->
+  <rect x="10" y="20" width="130" height="50" rx="8" fill="#d0ebff" stroke="#1971c2"/>
+  <text x="75" y="42" text-anchor="middle" font-size="11" font-weight="600" fill="#1971c2">Engineers</text>
+  <text x="75" y="58" text-anchor="middle" font-size="9" fill="#495057">(submit jobs)</text>
+  <!-- Job Queue -->
+  <rect x="200" y="20" width="130" height="50" rx="8" fill="#fff3bf" stroke="#e67700"/>
+  <text x="265" y="42" text-anchor="middle" font-size="11" font-weight="600" fill="#e67700">Job Queue</text>
+  <text x="265" y="58" text-anchor="middle" font-size="9" fill="#495057">(priority)</text>
+  <!-- Scheduler -->
+  <rect x="390" y="20" width="140" height="50" rx="8" fill="#d3f9d8" stroke="#2f9e44"/>
+  <text x="460" y="42" text-anchor="middle" font-size="11" font-weight="600" fill="#2f9e44">Scheduler</text>
+  <text x="460" y="58" text-anchor="middle" font-size="9" fill="#495057">(match &amp; assign)</text>
+  <!-- Test Executor -->
+  <rect x="390" y="120" width="140" height="50" rx="8" fill="#e5dbff" stroke="#7048e8"/>
+  <text x="460" y="142" text-anchor="middle" font-size="11" font-weight="600" fill="#7048e8">Test Executor</text>
+  <text x="460" y="158" text-anchor="middle" font-size="9" fill="#495057">(per device host)</text>
+  <!-- Device Pool -->
+  <rect x="390" y="220" width="140" height="50" rx="8" fill="#ffe3e3" stroke="#c92a2a"/>
+  <text x="460" y="242" text-anchor="middle" font-size="11" font-weight="600" fill="#c92a2a">Device Pool</text>
+  <text x="460" y="258" text-anchor="middle" font-size="9" fill="#495057">(health monitor)</text>
+  <!-- Dashboard -->
+  <rect x="200" y="120" width="130" height="50" rx="8" fill="#f1f3f5" stroke="#495057"/>
+  <text x="265" y="142" text-anchor="middle" font-size="11" font-weight="600" fill="#495057">Dashboard</text>
+  <text x="265" y="158" text-anchor="middle" font-size="9" fill="#495057">(results)</text>
+  <!-- Arrows -->
+  <line x1="140" y1="45" x2="195" y2="45" stroke="#495057" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="330" y1="45" x2="385" y2="45" stroke="#495057" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="460" y1="70" x2="460" y2="115" stroke="#495057" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="460" y1="170" x2="460" y2="215" stroke="#495057" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="390" y1="145" x2="335" y2="145" stroke="#495057" stroke-width="1.5" marker-end="url(#arr)"/>
+</svg>
 
 <h3>Components</h3>
 
@@ -201,20 +218,31 @@ tr:hover { background: var(--bg3); }
 <p>Design an AI agent that automatically triages incoming bugs: reads the bug report + logs, identifies likely root cause, assigns to the right team/person.</p>
 
 <h3>Architecture</h3>
-<pre>
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│  Bug Filed   │────▶│  AI Agent    │────▶│  Assignment  │
-│  (tracker)   │     │  (LLM + RAG) │     │  (team/owner)│
-└──────────────┘     └──────┬───────┘     └──────────────┘
-                            │
-                     ┌──────▼───────┐
-                     │  Knowledge   │
-                     │  Base (RAG)  │
-                     │  - code ownership │
-                     │  - past bugs      │
-                     │  - team expertise  │
-                     └──────────────┘
-</pre>
+<svg viewBox="0 0 650 250" style="width:100%;max-width:650px;margin:16px auto;display:block;" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+  <defs><marker id="arr2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#495057"/></marker></defs>
+  <!-- Bug Filed -->
+  <rect x="10" y="30" width="130" height="50" rx="8" fill="#ffe3e3" stroke="#c92a2a"/>
+  <text x="75" y="52" text-anchor="middle" font-size="11" font-weight="600" fill="#c92a2a">Bug Filed</text>
+  <text x="75" y="68" text-anchor="middle" font-size="9" fill="#495057">(bug tracker)</text>
+  <!-- AI Agent -->
+  <rect x="210" y="30" width="150" height="50" rx="8" fill="#d0ebff" stroke="#1971c2"/>
+  <text x="285" y="52" text-anchor="middle" font-size="11" font-weight="600" fill="#1971c2">AI Agent</text>
+  <text x="285" y="68" text-anchor="middle" font-size="9" fill="#495057">(LLM + RAG)</text>
+  <!-- Assignment -->
+  <rect x="430" y="30" width="140" height="50" rx="8" fill="#d3f9d8" stroke="#2f9e44"/>
+  <text x="500" y="52" text-anchor="middle" font-size="11" font-weight="600" fill="#2f9e44">Assignment</text>
+  <text x="500" y="68" text-anchor="middle" font-size="9" fill="#495057">(team / owner)</text>
+  <!-- Knowledge Base -->
+  <rect x="210" y="140" width="150" height="80" rx="8" fill="#e5dbff" stroke="#7048e8"/>
+  <text x="285" y="162" text-anchor="middle" font-size="11" font-weight="600" fill="#7048e8">Knowledge Base</text>
+  <text x="285" y="180" text-anchor="middle" font-size="9" fill="#495057">- code ownership</text>
+  <text x="285" y="195" text-anchor="middle" font-size="9" fill="#495057">- past bugs</text>
+  <text x="285" y="210" text-anchor="middle" font-size="9" fill="#495057">- team expertise</text>
+  <!-- Arrows -->
+  <line x1="140" y1="55" x2="205" y2="55" stroke="#495057" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <line x1="360" y1="55" x2="425" y2="55" stroke="#495057" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <line x1="285" y1="80" x2="285" y2="135" stroke="#495057" stroke-width="1.5" marker-end="url(#arr2)"/>
+</svg>
 
 <h3>How It Works</h3>
 <ol>
@@ -249,9 +277,29 @@ tr:hover { background: var(--bg3); }
 <p>Design CI/CD pipeline for device firmware. Must build for multiple hardware targets, flash onto real devices for testing, and gate releases on test results.</p>
 
 <h3>Pipeline Stages</h3>
-<pre>
-Code Push → Build (multi-arch) → Unit Tests → Flash Device → Integration Tests → Soak Test → Release
-</pre>
+<svg viewBox="0 0 750 60" style="width:100%;max-width:750px;margin:16px auto;display:block;" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+  <defs><marker id="arr3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#495057"/></marker></defs>
+  <rect x="5" y="15" width="80" height="30" rx="6" fill="#d0ebff" stroke="#1971c2"/>
+  <text x="45" y="35" text-anchor="middle" font-size="9" font-weight="600" fill="#1971c2">Code Push</text>
+  <line x1="85" y1="30" x2="100" y2="30" stroke="#495057" marker-end="url(#arr3)"/>
+  <rect x="102" y="15" width="90" height="30" rx="6" fill="#fff3bf" stroke="#e67700"/>
+  <text x="147" y="35" text-anchor="middle" font-size="9" font-weight="600" fill="#e67700">Build (multi)</text>
+  <line x1="192" y1="30" x2="207" y2="30" stroke="#495057" marker-end="url(#arr3)"/>
+  <rect x="209" y="15" width="80" height="30" rx="6" fill="#d3f9d8" stroke="#2f9e44"/>
+  <text x="249" y="35" text-anchor="middle" font-size="9" font-weight="600" fill="#2f9e44">Unit Tests</text>
+  <line x1="289" y1="30" x2="304" y2="30" stroke="#495057" marker-end="url(#arr3)"/>
+  <rect x="306" y="15" width="90" height="30" rx="6" fill="#e5dbff" stroke="#7048e8"/>
+  <text x="351" y="35" text-anchor="middle" font-size="9" font-weight="600" fill="#7048e8">Flash Device</text>
+  <line x1="396" y1="30" x2="411" y2="30" stroke="#495057" marker-end="url(#arr3)"/>
+  <rect x="413" y="15" width="100" height="30" rx="6" fill="#ffe3e3" stroke="#c92a2a"/>
+  <text x="463" y="35" text-anchor="middle" font-size="9" font-weight="600" fill="#c92a2a">Integration</text>
+  <line x1="513" y1="30" x2="528" y2="30" stroke="#495057" marker-end="url(#arr3)"/>
+  <rect x="530" y="15" width="80" height="30" rx="6" fill="#fff3bf" stroke="#e67700"/>
+  <text x="570" y="35" text-anchor="middle" font-size="9" font-weight="600" fill="#e67700">Soak Test</text>
+  <line x1="610" y1="30" x2="625" y2="30" stroke="#495057" marker-end="url(#arr3)"/>
+  <rect x="627" y="15" width="70" height="30" rx="6" fill="#d3f9d8" stroke="#2f9e44"/>
+  <text x="662" y="35" text-anchor="middle" font-size="9" font-weight="600" fill="#2f9e44">Release</text>
+</svg>
 
 <h3>Key Challenges</h3>
 <table>
@@ -312,17 +360,32 @@ Code Push → Build (multi-arch) → Unit Tests → Flash Device → Integration
 </ul>
 
 <h3>Execution Flow</h3>
-<pre>
-User submits task (UI/Slack/API)
-  → Job created in DB
-  → Worker picks up Job → creates JobRun
-  → Agent initialized (load persona + skills + model config)
-  → LLM generates plan (function calls)
-  → Execute tools (RAG query, API call, code execution)
-  → Stream intermediate results to user
-  → Final result stored → JobRun marked COMPLETED
-  → Metrics logged (tokens, duration, tool invocations)
-</pre>
+<svg viewBox="0 0 700 340" style="width:100%;max-width:700px;margin:16px auto;display:block;" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+  <defs><marker id="arr4" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#495057"/></marker></defs>
+  <rect x="250" y="5" width="200" height="30" rx="6" fill="#d0ebff" stroke="#1971c2"/>
+  <text x="350" y="25" text-anchor="middle" font-size="10" font-weight="600" fill="#1971c2">User submits task (UI/Slack/API)</text>
+  <line x1="350" y1="35" x2="350" y2="50" stroke="#495057" marker-end="url(#arr4)"/>
+  <rect x="250" y="52" width="200" height="28" rx="6" fill="#fff3bf" stroke="#e67700"/>
+  <text x="350" y="71" text-anchor="middle" font-size="10" fill="#495057">Job created in DB</text>
+  <line x1="350" y1="80" x2="350" y2="95" stroke="#495057" marker-end="url(#arr4)"/>
+  <rect x="250" y="97" width="200" height="28" rx="6" fill="#fff3bf" stroke="#e67700"/>
+  <text x="350" y="116" text-anchor="middle" font-size="10" fill="#495057">Worker picks up → JobRun created</text>
+  <line x1="350" y1="125" x2="350" y2="140" stroke="#495057" marker-end="url(#arr4)"/>
+  <rect x="220" y="142" width="260" height="28" rx="6" fill="#e5dbff" stroke="#7048e8"/>
+  <text x="350" y="161" text-anchor="middle" font-size="10" fill="#495057">Agent init (persona + skills + model)</text>
+  <line x1="350" y1="170" x2="350" y2="185" stroke="#495057" marker-end="url(#arr4)"/>
+  <rect x="220" y="187" width="260" height="28" rx="6" fill="#e5dbff" stroke="#7048e8"/>
+  <text x="350" y="206" text-anchor="middle" font-size="10" fill="#495057">LLM → function calls (plan)</text>
+  <line x1="350" y1="215" x2="350" y2="230" stroke="#495057" marker-end="url(#arr4)"/>
+  <rect x="220" y="232" width="260" height="28" rx="6" fill="#d3f9d8" stroke="#2f9e44"/>
+  <text x="350" y="251" text-anchor="middle" font-size="10" fill="#495057">Execute tools (RAG, API, code)</text>
+  <line x1="350" y1="260" x2="350" y2="275" stroke="#495057" marker-end="url(#arr4)"/>
+  <rect x="220" y="277" width="260" height="28" rx="6" fill="#d3f9d8" stroke="#2f9e44"/>
+  <text x="350" y="296" text-anchor="middle" font-size="10" fill="#495057">Result stored → COMPLETED</text>
+  <line x1="350" y1="305" x2="350" y2="320" stroke="#495057" marker-end="url(#arr4)"/>
+  <rect x="220" y="322" width="260" height="14" rx="4" fill="#f1f3f5" stroke="#dee2e6"/>
+  <text x="350" y="333" text-anchor="middle" font-size="8" fill="#868e96">Metrics: tokens, duration, tool invocations</text>
+</svg>
 
 <h3>How to Talk About This in Interview</h3>
 <div class="tip">
