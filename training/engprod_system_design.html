@@ -64,6 +64,7 @@ tr:hover { background: var(--bg3); }
   <button class="nav-btn" onclick="showSection('cicd')">Firmware CI/CD</button>
   <button class="nav-btn" onclick="showSection('aiplatform')">AI Agent Platform</button>
   <button class="nav-btn" onclick="showSection('questions')">Interview Questions</button>
+  <button class="nav-btn" onclick="showSection('howtoem')">How to EM</button>
   <button class="nav-btn" onclick="showSection('selling')">Selling Points</button>
 </div>
 
@@ -653,6 +654,96 @@ def search_bugs(query: str, max_results: int = 10) -> str:
 
 <h4>"How do you balance platform work vs feature requests from other teams?"</h4>
 <p><strong>Answer:</strong> "70/20/10 rule: 70% on committed roadmap items (reduce build time, improve test reliability). 20% on high-priority requests from partner teams (unblock a launch). 10% on tech debt and exploration (AI tools, new approaches). Requests from other teams go through a lightweight intake process — prevents drive-by interruptions while keeping us responsive. If a request is truly blocking a launch, we interrupt our roadmap. If it's 'nice to have,' it goes in the backlog and gets prioritized next quarter."</p>
+</div>
+</div>
+
+<!-- ===== How to EM ===== -->
+<div class="section" id="howtoem">
+<div class="card">
+<h2>How to Be a Good EngProd EM (Day-to-Day)</h2>
+
+<h3>The Core Job</h3>
+<div class="insight">
+  <p><strong>EM = multiplier, not doer.</strong> Your success metric is not "what did I build" but "what did my team ship, and would they have shipped it without me?" If you disappeared for 2 weeks and nothing changed, you're either very good (self-sufficient team) or very bad (not adding value).</p>
+</div>
+
+<h3>Weekly Rhythm</h3>
+<table>
+  <tr><th>Activity</th><th>Time</th><th>Purpose</th></tr>
+  <tr><td>1:1 with each report</td><td>30 min × N</td><td>Unblock, career growth, feedback, pulse check</td></tr>
+  <tr><td>Team standup / sync</td><td>15 min × 3-5</td><td>Surface blockers early, not status reporting</td></tr>
+  <tr><td>Design / code review</td><td>3-5 hrs</td><td>Stay technical, catch arch issues early</td></tr>
+  <tr><td>Cross-team sync</td><td>1-2 hrs</td><td>Dependency coordination, roadmap alignment</td></tr>
+  <tr><td>Planning / roadmap</td><td>2-3 hrs</td><td>Next quarter direction, priority calls</td></tr>
+  <tr><td>Hiring</td><td>2-4 hrs</td><td>Resume review, interviews, debrief</td></tr>
+</table>
+
+<h3>What Makes the Difference Between L5 and L6 EM</h3>
+<table>
+  <tr><th>Dimension</th><th>L5 EM</th><th>L6 EM</th></tr>
+  <tr><td>Scope</td><td>Manage one team, deliver assigned roadmap</td><td>Define the roadmap, influence org direction</td></tr>
+  <tr><td>Ambiguity</td><td>Execute clear goals</td><td>Turn ambiguous problems into clear goals for team</td></tr>
+  <tr><td>Cross-team</td><td>Coordinate with partner teams when needed</td><td>Proactively build relationships, shape other teams' priorities</td></tr>
+  <tr><td>People</td><td>Manage performance, give feedback</td><td>Build team culture, hire A-players, develop future leaders</td></tr>
+  <tr><td>Technical</td><td>Review designs, catch issues</td><td>Set technical vision, define "what good looks like" for the org</td></tr>
+  <tr><td>Impact framing</td><td>"My team did X"</td><td>"Because of X, the whole org can now do Y"</td></tr>
+</table>
+
+<h3>How to Measure and Record Impact (Without Being Self-Promotional)</h3>
+<div class="warning">
+  <p><strong>Problem:</strong> "I can't quantify my impact because I didn't track metrics before/after."<br><br>
+  <strong>Reality:</strong> You don't need before/after dashboards. You need to document the PROBLEM (what was broken), the ACTION (what you did), and the OUTCOME (what changed). Specific anecdotes with timestamps are more credible than made-up percentages.</p>
+</div>
+
+<h4>What to Track Weekly (takes 5 min)</h4>
+<ul>
+  <li><strong>Unblocks:</strong> "Team X was stuck on Y, I connected them with Z" — date, who, what</li>
+  <li><strong>Decisions:</strong> "Decided to prioritize A over B because C" — captures judgment</li>
+  <li><strong>People moments:</strong> "Gave feedback to X about Y, their response was Z"</li>
+  <li><strong>Shipped:</strong> "Feature Y launched, used by N teams"</li>
+  <li><strong>Incidents:</strong> "Pipeline broke, RCA found X, prevention: Y"</li>
+</ul>
+
+<h4>How to Quantify Without Pre-existing Metrics</h4>
+<table>
+  <tr><th>Instead of</th><th>Say</th></tr>
+  <tr><td>"Improved build speed"</td><td>"Engineers were complaining builds took 30+ min. After the change, the common case is under 10 min. I know because I asked 5 engineers and they confirmed."</td></tr>
+  <tr><td>"Reduced flaky tests"</td><td>"Before: team Slack had 3-4 flaky test complaints per day. After: about 1 per week. I tracked this for 2 weeks before and after."</td></tr>
+  <tr><td>"Improved team morale"</td><td>"Two engineers told me separately they feel more productive since we changed the code review process. One said they ship 2x faster."</td></tr>
+  <tr><td>"Unblocked the team"</td><td>"Firmware team was stuck for a month. I resolved the root cause in 2 days. They shipped their feature the same week."</td></tr>
+</table>
+
+<div class="tip">
+  <p><strong>Rule of thumb:</strong> If you can say "who was affected, how long was the problem, what's different now" — that's quantified enough. You don't need a Grafana dashboard for everything. Anecdotes with specifics (dates, names, durations) are credible because they can be verified.</p>
+</div>
+
+<h3>Common EM Anti-Patterns (Avoid These)</h3>
+<table>
+  <tr><th>Anti-pattern</th><th>Why it's bad</th><th>What to do instead</th></tr>
+  <tr><td>Doing IC work yourself because it's faster</td><td>Team doesn't learn, you become bottleneck, can't scale</td><td>Coach through questions: "what did you try? what would you look at next?"</td></tr>
+  <tr><td>Being a "meeting proxy" (just relay info between teams)</td><td>No value-add, could be an email</td><td>Synthesize: "here's the decision, here's why, here's what it means for us"</td></tr>
+  <tr><td>Avoiding difficult conversations</td><td>Underperformers drag down the whole team</td><td>Address early, be specific, give concrete actionable feedback</td></tr>
+  <tr><td>Over-shielding team from context</td><td>Team can't make good decisions without understanding the why</td><td>Share context, explain trade-offs, let them participate in priority decisions</td></tr>
+  <tr><td>Metrics theater (track everything, improve nothing)</td><td>Dashboards don't fix problems, actions do</td><td>Pick 3 metrics max. Act on them. Kill metrics nobody looks at.</td></tr>
+</table>
+
+<h3>EngProd-Specific EM Responsibilities</h3>
+<ul>
+  <li><strong>Serve internal customers:</strong> Your customers are other engineering teams. Meet with them regularly. Ask "what slows you down?"</li>
+  <li><strong>Balance platform vs requests:</strong> 70% roadmap / 20% partner requests / 10% tech debt</li>
+  <li><strong>Own reliability:</strong> If CI is broken, your team is on the hook. Treat CI uptime like production uptime.</li>
+  <li><strong>Measure developer experience:</strong> Survey engineers quarterly. "How productive do you feel? What's your biggest friction?"</li>
+  <li><strong>Build for self-service:</strong> Every tool should be usable without your team's help. If engineers Slack your team 10x/day for help, the tool's UX is broken.</li>
+  <li><strong>Deprecate boldly:</strong> Old tools that "sort of work" are worse than no tool (they create false confidence). Kill them and migrate.</li>
+</ul>
+
+<h3>How to Frame EM Experience in Interview</h3>
+<div class="insight">
+  <p><strong>Frame shift for different questions:</strong><br><br>
+  "Tell me about your team" → Talk about the PROBLEM SPACE, not org chart. "My team owns the developer productivity for 200+ engineers. We build test infrastructure, CI/CD, and AI tools that reduce friction in their daily workflow."<br><br>
+  "What's your management style?" → "Context over control. I share the why (business context, trade-offs), set clear expectations on the what (quality bar, timelines), and give autonomy on the how (they choose the technical approach). I intervene when I see design decisions that will cause pain in 6 months."<br><br>
+  "How technical are you?" → "I review every design doc. I can read any PR on my team and give meaningful feedback. I prototype AI tools myself to validate feasibility before putting engineers on it. I don't write production code daily anymore, but I could if needed — and I did when I took over an urgent pipeline issue and fixed it in 2 days."</p>
+</div>
 </div>
 </div>
 
