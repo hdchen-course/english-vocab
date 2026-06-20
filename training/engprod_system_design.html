@@ -192,21 +192,52 @@ tr:hover { background: var(--bg3); }
   <li>Regression detection: pass rate drop after specific commit</li>
 </ul>
 
+<h3>Detailed Design: Scheduler Algorithm</h3>
+<pre>
+while (true):
+    device = waitForAvailableDevice()           // event-driven, not polling
+    job = findBestMatchingJob(device)           // query DB: match device caps + priority
+    if job == null: continue
+
+    markDevice(device, IN_USE)
+    markJob(job, RUNNING, assigned_device=device)
+    notifyExecutor(device.host, job)            // RPC or queue message
+</pre>
+
+<h4>Matching Logic</h4>
+<ul>
+  <li><strong>Hard constraints:</strong> device_type must match, OS version must match (or "any")</li>
+  <li><strong>Soft preferences:</strong> prefer device with most recent successful test (less likely broken)</li>
+  <li><strong>Priority tiebreaker:</strong> within same priority, FIFO by creation time</li>
+  <li><strong>Starvation prevention:</strong> if a job waits > 30 min, boost priority by 1 level</li>
+</ul>
+
+<h3>Detailed Design: Flaky Test Detection</h3>
+<table>
+  <tr><th>Signal</th><th>Detection</th><th>Action</th></tr>
+  <tr><td>Same test, same code, different results</td><td>Track (test_id, commit_hash) → pass/fail ratio</td><td>If ratio between 20%-80% over 5+ runs → mark flaky</td></tr>
+  <tr><td>Fails only on specific device</td><td>Compare pass rate per device for same test</td><td>Quarantine device, not test</td></tr>
+  <tr><td>Fails only at certain time</td><td>Correlate with time-of-day, other running jobs</td><td>Likely resource contention → isolate or add capacity</td></tr>
+</table>
+
 <h3>Design Decisions (Talking Points)</h3>
 <div class="insight">
-  <p><strong>"Why not use VMs?"</strong> — Devices have hardware-specific sensors (cameras, IMUs, displays). Must test on real hardware.</p>
+  <p><strong>"Why not use VMs/emulators?"</strong> — Hardware-specific sensors (cameras, IMUs, displays, payment chip readers) can't be virtualized. Timing-sensitive tests (Bluetooth, NFC) behave differently on emulators.</p>
 </div>
 <div class="insight">
-  <p><strong>"How to handle flaky tests?"</strong> — Auto-retry up to 2x. If still flaky, quarantine and notify owner. Track flake rate per test.</p>
+  <p><strong>"How to handle flaky tests?"</strong> — Auto-retry up to 2x. If still flaky, quarantine and notify owner. Track flake rate per test. Distinguish "test flake" from "device flake" from "infra flake."</p>
 </div>
 <div class="insight">
-  <p><strong>"How to scale?"</strong> — Add more devices + hosts. Scheduler is stateless (reads from DB). Device hosts are independent workers.</p>
+  <p><strong>"How to scale?"</strong> — Devices + hosts scale horizontally. Scheduler is stateless (reads from DB). No single point of failure. Can add devices from new geo locations (multi-site lab).</p>
 </div>
 <div class="insight">
-  <p><strong>"Scheduler goes down?"</strong> — Jobs stay in DB queue. Scheduler restarts, picks up. No job loss.</p>
+  <p><strong>"Scheduler goes down?"</strong> — Jobs stay in DB queue. Scheduler restarts, picks up. Running jobs continue on their hosts — executor reports result directly to DB. No coordinator dependency during execution.</p>
 </div>
 <div class="insight">
-  <p><strong>"Fair scheduling?"</strong> — Weighted fair queuing: each team gets a proportional share. Burst allowed if others idle.</p>
+  <p><strong>"Fair scheduling?"</strong> — Weighted fair queuing: each team gets a proportional share. Burst allowed if others idle. Age-based priority boosting prevents starvation.</p>
+</div>
+<div class="insight">
+  <p><strong>"Device breaks mid-test?"</strong> — Executor has watchdog timer. If no heartbeat from device for 60s, mark test as DEVICE_ERROR (not test failure). Auto-quarantine device. Requeue job for another device.</p>
 </div>
 </div>
 </div>
@@ -337,27 +368,117 @@ tr:hover { background: var(--bg3); }
 <div class="section" id="aiplatform">
 <div class="card">
 <h2>AI Agent Platform Design Patterns</h2>
-<p>Key architectural patterns for building scalable AI agent platforms that non-technical users can compose.</p>
+<p>Key architectural patterns for building scalable AI agent platforms that non-technical users can compose. Based on studying production systems.</p>
 
 <h3>Core Primitives</h3>
 <table>
   <tr><th>Primitive</th><th>What It Is</th><th>Analogy</th></tr>
-  <tr><td><strong>Agent (Teammate)</strong></td><td>Execution unit — AI configured with persona, guardrails, skills, model config</td><td>A trained colleague with a specific role</td></tr>
-  <tr><td><strong>Skill</strong></td><td>Specialized expertise: Knowledge Bases (RAG), Tool Servers (MCP), Sub-agents</td><td>Domain expertise and tools the colleague has</td></tr>
-  <tr><td><strong>Tool Provider</strong></td><td>Reusable tool sources with stored connection config</td><td>Shared capability library</td></tr>
-  <tr><td><strong>Job</strong></td><td>Task definition + trigger (UI, Slack, API, scheduled, event-driven)</td><td>A work order / standing instruction</td></tr>
-  <tr><td><strong>JobRun</strong></td><td>Single execution: QUEUED → STARTED → IN_PROGRESS → COMPLETED/FAILED</td><td>One execution of the work order</td></tr>
+  <tr><td><strong>Agent (Teammate)</strong></td><td>Execution unit — AI configured with persona, guardrails, skills, model config. Has lifecycle: DRAFT → PUBLISHED → DEPRECATED with versioning.</td><td>A trained colleague with a specific role</td></tr>
+  <tr><td><strong>Skill</strong></td><td>Three types: (1) Knowledge Base — RAG retrieval, (2) Tool Server — MCP protocol giving tool access, (3) Sub-Agent — delegate complex reasoning</td><td>Domain expertise and tools the colleague has</td></tr>
+  <tr><td><strong>Tool Provider</strong></td><td>Reusable tool sources with stored connection config and auth. Registered in a "Skill Store" for discovery.</td><td>Shared capability library</td></tr>
+  <tr><td><strong>Job</strong></td><td>Task definition + trigger source (UI, Slack, JIRA, API, scheduled, event-driven)</td><td>A work order / standing instruction</td></tr>
+  <tr><td><strong>JobRun</strong></td><td>Single execution: QUEUED → STARTED → IN_PROGRESS → COMPLETED/FAILED/CANCELLED. Tracks duration, token usage, tool invocations.</td><td>One execution of the work order</td></tr>
+</table>
+
+<h3>System Architecture</h3>
+<svg viewBox="0 0 750 400" style="width:100%;max-width:750px;margin:16px auto;display:block;" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+  <defs><marker id="arr5" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#495057"/></marker></defs>
+  <!-- Clients -->
+  <rect x="10" y="20" width="140" height="100" rx="8" fill="#d0ebff" stroke="#1971c2"/>
+  <text x="80" y="42" text-anchor="middle" font-size="11" font-weight="600" fill="#1971c2">Clients</text>
+  <text x="80" y="60" text-anchor="middle" font-size="9" fill="#495057">Web UI</text>
+  <text x="80" y="75" text-anchor="middle" font-size="9" fill="#495057">Slack Bot</text>
+  <text x="80" y="90" text-anchor="middle" font-size="9" fill="#495057">JIRA Integration</text>
+  <text x="80" y="105" text-anchor="middle" font-size="9" fill="#495057">Scheduled (cron)</text>
+  <!-- API -->
+  <rect x="200" y="30" width="160" height="80" rx="8" fill="#d3f9d8" stroke="#2f9e44"/>
+  <text x="280" y="52" text-anchor="middle" font-size="11" font-weight="600" fill="#2f9e44">Backend API</text>
+  <text x="280" y="70" text-anchor="middle" font-size="9" fill="#495057">Auth + Authz (per-resource)</text>
+  <text x="280" y="85" text-anchor="middle" font-size="9" fill="#495057">Create JobRun → Queue</text>
+  <text x="280" y="100" text-anchor="middle" font-size="9" fill="#495057">SSE streaming to client</text>
+  <!-- Queue -->
+  <rect x="410" y="40" width="130" height="50" rx="8" fill="#fff3bf" stroke="#e67700"/>
+  <text x="475" y="62" text-anchor="middle" font-size="11" font-weight="600" fill="#e67700">Message Queue</text>
+  <text x="475" y="78" text-anchor="middle" font-size="9" fill="#495057">(SNS / SQS)</text>
+  <!-- Worker -->
+  <rect x="590" y="30" width="140" height="80" rx="8" fill="#e5dbff" stroke="#7048e8"/>
+  <text x="660" y="52" text-anchor="middle" font-size="11" font-weight="600" fill="#7048e8">Agent Worker</text>
+  <text x="660" y="70" text-anchor="middle" font-size="9" fill="#495057">Load Agent config</text>
+  <text x="660" y="85" text-anchor="middle" font-size="9" fill="#495057">Bind skills as tools</text>
+  <text x="660" y="100" text-anchor="middle" font-size="9" fill="#495057">Execute LLM loop</text>
+  <!-- Skills -->
+  <rect x="500" y="160" width="230" height="120" rx="8" fill="#f1f3f5" stroke="#495057"/>
+  <text x="615" y="182" text-anchor="middle" font-size="11" font-weight="600" fill="#495057">Skill Layer</text>
+  <rect x="515" y="195" width="90" height="30" rx="5" fill="#d0ebff" stroke="#1971c2"/>
+  <text x="560" y="214" text-anchor="middle" font-size="9" fill="#1971c2">MCP Tools</text>
+  <rect x="620" y="195" width="95" height="30" rx="5" fill="#d3f9d8" stroke="#2f9e44"/>
+  <text x="667" y="214" text-anchor="middle" font-size="9" fill="#2f9e44">Knowledge Base</text>
+  <rect x="515" y="235" width="90" height="30" rx="5" fill="#e5dbff" stroke="#7048e8"/>
+  <text x="560" y="254" text-anchor="middle" font-size="9" fill="#7048e8">Sub-Agents</text>
+  <rect x="620" y="235" width="95" height="30" rx="5" fill="#ffe3e3" stroke="#c92a2a"/>
+  <text x="667" y="254" text-anchor="middle" font-size="9" fill="#c92a2a">Code Executor</text>
+  <!-- DB -->
+  <rect x="200" y="160" width="160" height="50" rx="8" fill="#fff3bf" stroke="#e67700"/>
+  <text x="280" y="182" text-anchor="middle" font-size="11" font-weight="600" fill="#e67700">Persistence</text>
+  <text x="280" y="198" text-anchor="middle" font-size="9" fill="#495057">DynamoDB / PostgreSQL + S3</text>
+  <!-- Arrows -->
+  <line x1="150" y1="70" x2="195" y2="70" stroke="#495057" stroke-width="1.5" marker-end="url(#arr5)"/>
+  <line x1="360" y1="70" x2="405" y2="65" stroke="#495057" stroke-width="1.5" marker-end="url(#arr5)"/>
+  <line x1="540" y1="65" x2="585" y2="70" stroke="#495057" stroke-width="1.5" marker-end="url(#arr5)"/>
+  <line x1="660" y1="110" x2="660" y2="155" stroke="#495057" stroke-width="1.5" marker-end="url(#arr5)"/>
+  <line x1="280" y1="110" x2="280" y2="155" stroke="#495057" stroke-width="1.5" marker-end="url(#arr5)"/>
+  <!-- Result arrow back -->
+  <path d="M590,110 L450,140 L360,140 L280,130" fill="none" stroke="#868e96" stroke-width="1" stroke-dasharray="4" marker-end="url(#arr5)"/>
+  <text x="430" y="135" text-anchor="middle" font-size="8" fill="#868e96">results + metrics</text>
+</svg>
+
+<h3>Three Skill Types (Detail)</h3>
+<table>
+  <tr><th>Type</th><th>How It Works</th><th>When to Use</th><th>Example</th></tr>
+  <tr><td><strong>MCP Tool Server</strong></td><td>Remote server implementing Model Context Protocol. Agent calls tools via authenticated HTTP. Stateless request/response.</td><td>When agent needs to take actions (read/write external systems)</td><td>Slack, JIRA, Confluence, database query, API call</td></tr>
+  <tr><td><strong>Knowledge Base (RAG)</strong></td><td>Vector store with embeddings. Creates sub-agent with retrieval tool. Searches docs, returns relevant chunks as context.</td><td>When agent needs domain knowledge that changes frequently</td><td>Team wikis, runbooks, past incident reports, code docs</td></tr>
+  <tr><td><strong>Sub-Agent</strong></td><td>A full autonomous agent with its own tools and reasoning loop. Called as a tool by parent agent. Can have different model/config.</td><td>When a task requires multi-step reasoning too complex for a single tool call</td><td>Code analysis, multi-file refactoring, complex investigation</td></tr>
 </table>
 
 <h3>Key Architecture Decisions</h3>
-<ul>
-  <li><strong>Credential-free automation:</strong> Service-account model (no human credentials) enables long-running tasks without token expiry</li>
-  <li><strong>Skill composability:</strong> Agents compose skills from a "Skill Store" — non-engineers can build agents by selecting pre-built skills</li>
-  <li><strong>Streaming responses:</strong> SSE (Server-Sent Events) for real-time chat/progress updates</li>
-  <li><strong>Function calling:</strong> Constrain LLM into deterministic tool invocations (not free-form generation)</li>
-  <li><strong>Semantic caching:</strong> Cache query embeddings → avoid redundant LLM calls for similar questions</li>
-  <li><strong>Guardrails:</strong> Input/output filters, rate limiting, cost tracking per agent per team</li>
-</ul>
+<table>
+  <tr><th>Decision</th><th>Choice</th><th>Why</th></tr>
+  <tr><td>Credential model</td><td>Service-account (no human creds)</td><td>Enables long-running automation without token expiry</td></tr>
+  <tr><td>Skill discovery</td><td>"Skill Store" with registration</td><td>Non-engineers can compose agents from pre-built skills</td></tr>
+  <tr><td>Response delivery</td><td>SSE (Server-Sent Events)</td><td>Real-time streaming for chat UX, progress updates</td></tr>
+  <tr><td>LLM constraint</td><td>Function calling (tools)</td><td>Deterministic, testable behavior vs free-form text</td></tr>
+  <tr><td>Caching</td><td>Semantic embedding cache</td><td>Avoid redundant LLM calls for similar questions</td></tr>
+  <tr><td>Auth granularity</td><td>Per-resource policies</td><td>Owner can do all, team members can access shared, public is read-only</td></tr>
+  <tr><td>Compute isolation</td><td>Separate container per code execution task</td><td>Sandboxing: agent code tasks can't affect API or other agents</td></tr>
+  <tr><td>Async dispatch</td><td>Queue between API and worker</td><td>Decouple submission from execution, handle bursts</td></tr>
+  <tr><td>Multi-tenancy</td><td>Team vs User ownership</td><td>Teams share agents/skills; individuals own drafts</td></tr>
+  <tr><td>Observability</td><td>Per-JobRun metrics (tokens, duration, tool calls)</td><td>Cost attribution, performance monitoring, debugging</td></tr>
+</table>
+
+<h3>Pre-Built Connector Categories (Skill Store)</h3>
+<table>
+  <tr><th>Category</th><th>Examples</th></tr>
+  <tr><td>Communication</td><td>Slack (messages, files, user lookup), Email</td></tr>
+  <tr><td>Project Management</td><td>JIRA (CRUD, transitions, sprints), Confluence</td></tr>
+  <tr><td>Development</td><td>Git (clone, branch, PR/CR), browser automation</td></tr>
+  <tr><td>Data</td><td>SQL databases, S3, dashboards</td></tr>
+  <tr><td>Custom</td><td>Any MCP-compatible server you build</td></tr>
+</table>
+
+<h3>How to Build a Skill (MCP Tool Server)</h3>
+<pre>
+# 1. Define tool with clear docstring (LLM reads this to decide when to call)
+@mcp.tool()
+def search_bugs(query: str, max_results: int = 10) -> str:
+    """Search bug tracker for issues matching the query.
+    Returns JSON array of {id, title, status, assignee}."""
+    results = bug_api.search(query, limit=max_results)
+    return json.dumps(results)
+
+# 2. Deploy as HTTP server (stateless, healthcheck endpoint)
+# 3. Register in Skill Store with connection config + auth
+# 4. Attach to Agent → Agent can now call search_bugs() as a tool
+</pre>
 
 <h3>Execution Flow</h3>
 <svg viewBox="0 0 700 340" style="width:100%;max-width:700px;margin:16px auto;display:block;" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
