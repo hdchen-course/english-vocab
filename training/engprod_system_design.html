@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engineering Productivity — System Design & Interview Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fa; --bg2: #ffffff; --bg3: #f1f3f5; --border: #dee2e6;
+  --text: #212529; --text2: #495057; --text3: #868e96;
+  --blue: #1971c2; --blue-l: #d0ebff; --green: #2f9e44; --green-l: #d3f9d8;
+  --yellow: #e67700; --yellow-l: #fff3bf; --red: #c92a2a; --red-l: #ffe3e3;
+  --purple: #7048e8; --purple-l: #e5dbff; --r: 12px; --shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.8; }
+.container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+header { text-align: center; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+header .sub { color: var(--text3); font-size: 14px; }
+.nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 40px; position: sticky; top: 0; background: var(--bg); padding: 16px 0; z-index: 100; border-bottom: 1px solid var(--border); }
+.nav-btn { padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s; font-family: 'Inter', sans-serif; }
+.nav-btn:hover { background: var(--bg3); color: var(--text); }
+.nav-btn.active { background: var(--blue-l); color: var(--blue); border-color: var(--blue); }
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+h2 { font-size: 24px; font-weight: 700; margin: 32px 0 16px; color: var(--blue); }
+h3 { font-size: 18px; font-weight: 600; margin: 24px 0 12px; }
+h4 { font-size: 15px; font-weight: 600; margin: 16px 0 8px; color: var(--text2); }
+p { margin-bottom: 12px; color: var(--text2); }
+ul, ol { margin: 8px 0 16px 24px; color: var(--text2); }
+li { margin-bottom: 6px; }
+strong { color: var(--text); }
+pre { background: #1e1e2e; border-radius: 8px; padding: 16px 20px; overflow-x: auto; margin: 12px 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; color: #cdd6f4; white-space: pre-wrap; }
+code { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+p code, li code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--purple); }
+.insight { background: var(--blue-l); border-left: 3px solid var(--blue); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.insight p { color: var(--blue); margin: 0; }
+.warning { background: var(--yellow-l); border-left: 3px solid var(--yellow); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.warning p { color: var(--yellow); margin: 0; }
+.tip { background: var(--green-l); border-left: 3px solid var(--green); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.tip p { color: var(--green); margin: 0; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 20px; padding: 24px 28px; box-shadow: var(--shadow); }
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+th, td { padding: 10px 14px; border: 1px solid var(--border); text-align: left; }
+th { background: var(--bg3); font-weight: 600; color: var(--text); }
+tr:hover { background: var(--bg3); }
+@media (max-width: 768px) { .container { padding: 20px 12px; } .nav { position: static; flex-direction: column; } .nav-btn { text-align: center; } pre { font-size: 11px; } }
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>Engineering Productivity &mdash; System Design</h1>
+  <div class="sub">Device Test Lab &bull; AI Bug Triage &bull; CI/CD for Firmware &bull; AI Agent Platform &bull; Interview Questions</div>
+</header>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection('overview')">Overview</button>
+  <button class="nav-btn" onclick="showSection('testlab')">Device Test Lab</button>
+  <button class="nav-btn" onclick="showSection('aitriage')">AI Bug Triage</button>
+  <button class="nav-btn" onclick="showSection('cicd')">Firmware CI/CD</button>
+  <button class="nav-btn" onclick="showSection('aiplatform')">AI Agent Platform</button>
+  <button class="nav-btn" onclick="showSection('questions')">Interview Questions</button>
+  <button class="nav-btn" onclick="showSection('selling')">Selling Points</button>
+</div>
+
+<!-- ===== Overview ===== -->
+<div class="section active" id="overview">
+<div class="card">
+<h2>What EngProd Teams Typically Own</h2>
+
+<table>
+  <tr><th>System</th><th>What It Does</th><th>Why It Matters</th></tr>
+  <tr><td><strong>Device Test Lab</strong></td><td>Pool of physical devices, automated scheduling, test execution</td><td>Hardware can't be virtualized — must test on real devices</td></tr>
+  <tr><td><strong>CI/CD Pipeline</strong></td><td>Build → flash → test → release automation for firmware/apps</td><td>Multi-target builds, physical device dependency</td></tr>
+  <tr><td><strong>Quality Dashboards</strong></td><td>Test pass rates, flaky detection, coverage metrics</td><td>Cross-team visibility into release readiness</td></tr>
+  <tr><td><strong>AI Developer Tools</strong></td><td>AI-generated tests, bug triage agent, code review assistant</td><td>Multiply engineer productivity with AI</td></tr>
+  <tr><td><strong>Test Framework</strong></td><td>Unified API across unit/integration/device tests</td><td>Minimize boilerplate, enable non-experts to write tests</td></tr>
+</table>
+
+<h3>Common EngProd Metrics</h3>
+<ul>
+  <li><strong>Developer velocity:</strong> time from code push to test result</li>
+  <li><strong>Test reliability:</strong> flaky test rate, false failure rate</li>
+  <li><strong>Device utilization:</strong> % of time devices are running tests vs idle</li>
+  <li><strong>MTTR:</strong> mean time to detect and fix regressions</li>
+  <li><strong>Coverage:</strong> % of code paths exercised by automated tests</li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Device Test Lab ===== -->
+<div class="section" id="testlab">
+<div class="card">
+<h2>System Design: Device Test Lab</h2>
+<p>Design a system that manages a pool of physical devices for automated testing. Engineers submit test requests, the system schedules them on available devices, executes tests, and reports results.</p>
+
+<h3>Requirements</h3>
+<h4>Functional</h4>
+<ul>
+  <li>Submit test job (specify: test suite, device type, OS version, timeout)</li>
+  <li>Queue management (priority, FIFO within priority)</li>
+  <li>Device allocation (match device capabilities to test requirements)</li>
+  <li>Test execution (flash firmware if needed → run suite → collect results)</li>
+  <li>Result reporting (pass/fail, logs, screenshots, video)</li>
+  <li>Retry on flaky failures</li>
+</ul>
+<h4>Non-functional</h4>
+<ul>
+  <li>100+ devices across multiple device types</li>
+  <li>1000+ test jobs per day</li>
+  <li>Fair scheduling (no team starves)</li>
+  <li>Device health monitoring (detect broken/offline devices)</li>
+  <li>99.9% scheduler uptime</li>
+</ul>
+
+<h3>Architecture</h3>
+<pre>
+┌─────────────┐     ┌──────────────┐     ┌─────────────────┐
+│  Engineers   │────▶│  Job Queue   │────▶│   Scheduler     │
+│  (submit)   │     │  (priority)  │     │  (match &amp; assign)│
+└─────────────┘     └──────────────┘     └────────┬────────┘
+                                                   │
+                    ┌──────────────┐     ┌─────────▼────────┐
+                    │  Dashboard   │◀────│  Test Executor   │
+                    │  (results)   │     │  (per device)    │
+                    └──────────────┘     └─────────┬────────┘
+                                                   │
+                                         ┌─────────▼────────┐
+                                         │  Device Pool     │
+                                         │  (health monitor)│
+                                         └──────────────────┘
+</pre>
+
+<h3>Components</h3>
+
+<h4>1. Job Queue (Priority Queue + Persistence)</h4>
+<ul>
+  <li>Store: Database (PostgreSQL or Spanner)</li>
+  <li>Schema: job_id, submitter, priority, device_requirements, test_suite, status, created_at</li>
+  <li>Priority: P0 (release blocking) &gt; P1 (presubmit) &gt; P2 (nightly)</li>
+</ul>
+
+<h4>2. Scheduler</h4>
+<ul>
+  <li>Matches job requirements to available devices</li>
+  <li>Considers: device type, OS version, hardware revision, health status</li>
+  <li>Fair scheduling: round-robin across teams at same priority</li>
+  <li>Trigger: device becomes available → pull next matching job</li>
+</ul>
+
+<h4>3. Device Manager</h4>
+<ul>
+  <li>Device states: AVAILABLE, IN_USE, FLASHING, OFFLINE, MAINTENANCE</li>
+  <li>Health checks: periodic heartbeat, detect unresponsive</li>
+  <li>Auto-quarantine: 3 consecutive test failures → MAINTENANCE</li>
+</ul>
+
+<h4>4. Test Executor (per device host)</h4>
+<ul>
+  <li>Flash firmware if job requires specific version</li>
+  <li>Execute test suite with timeout</li>
+  <li>Collect artifacts: logs, logcat, screenshots, crash dumps</li>
+  <li>Watchdog: kill stuck tests → report timeout</li>
+</ul>
+
+<h4>5. Result Store + Dashboard</h4>
+<ul>
+  <li>All results with full artifacts</li>
+  <li>Aggregations: pass rate by suite/device/date</li>
+  <li>Flaky detection: same test, same code, different results</li>
+  <li>Regression detection: pass rate drop after specific commit</li>
+</ul>
+
+<h3>Design Decisions (Talking Points)</h3>
+<div class="insight">
+  <p><strong>"Why not use VMs?"</strong> — Devices have hardware-specific sensors (cameras, IMUs, displays). Must test on real hardware.</p>
+</div>
+<div class="insight">
+  <p><strong>"How to handle flaky tests?"</strong> — Auto-retry up to 2x. If still flaky, quarantine and notify owner. Track flake rate per test.</p>
+</div>
+<div class="insight">
+  <p><strong>"How to scale?"</strong> — Add more devices + hosts. Scheduler is stateless (reads from DB). Device hosts are independent workers.</p>
+</div>
+<div class="insight">
+  <p><strong>"Scheduler goes down?"</strong> — Jobs stay in DB queue. Scheduler restarts, picks up. No job loss.</p>
+</div>
+<div class="insight">
+  <p><strong>"Fair scheduling?"</strong> — Weighted fair queuing: each team gets a proportional share. Burst allowed if others idle.</p>
+</div>
+</div>
+</div>
+
+<!-- ===== AI Bug Triage ===== -->
+<div class="section" id="aitriage">
+<div class="card">
+<h2>System Design: AI Bug Triage Agent</h2>
+<p>Design an AI agent that automatically triages incoming bugs: reads the bug report + logs, identifies likely root cause, assigns to the right team/person.</p>
+
+<h3>Architecture</h3>
+<pre>
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│  Bug Filed   │────▶│  AI Agent    │────▶│  Assignment  │
+│  (tracker)   │     │  (LLM + RAG) │     │  (team/owner)│
+└──────────────┘     └──────┬───────┘     └──────────────┘
+                            │
+                     ┌──────▼───────┐
+                     │  Knowledge   │
+                     │  Base (RAG)  │
+                     │  - code ownership │
+                     │  - past bugs      │
+                     │  - team expertise  │
+                     └──────────────┘
+</pre>
+
+<h3>How It Works</h3>
+<ol>
+  <li><strong>Bug filed</strong> → trigger agent</li>
+  <li><strong>Extract context:</strong> stack trace, affected component, device type, OS version</li>
+  <li><strong>RAG lookup:</strong> similar past bugs, code ownership for affected files</li>
+  <li><strong>LLM reasoning:</strong> "Given this crash in <code>libdisplay.so</code> at <code>RenderFrame()</code>, and past bugs in this file owned by Display team → assign to Display team"</li>
+  <li><strong>Confidence check:</strong> if confidence &lt; threshold → human triage queue</li>
+  <li><strong>Feedback loop:</strong> if reassigned by human → learn from correction</li>
+</ol>
+
+<h3>Key Design Decisions</h3>
+<table>
+  <tr><th>Question</th><th>Answer</th></tr>
+  <tr><td>Why RAG, not just LLM?</td><td>Code ownership changes weekly. LLM training data stale. RAG gives fresh context from OWNERS files + recent git blame.</td></tr>
+  <tr><td>How to measure success?</td><td>% of bugs correctly auto-assigned (no human reassignment). Target: 70%+</td></tr>
+  <tr><td>What about hallucination?</td><td>Always include confidence score. Low confidence → human triage. Never auto-close.</td></tr>
+  <tr><td>Cold start?</td><td>Bootstrap from historical bug assignments (last 6 months). Fine-tune on reassignment corrections.</td></tr>
+</table>
+
+<h3>AI Agent Execution Model</h3>
+<div class="insight">
+  <p><strong>From studying real AI agent platforms:</strong> The key primitives are: <strong>Agent</strong> (configured with persona + tools + model), <strong>Skill</strong> (reusable expertise: RAG knowledge base, tool access, sub-agents), <strong>Job</strong> (task definition + trigger), <strong>JobRun</strong> (single execution with lifecycle: QUEUED → STARTED → IN_PROGRESS → COMPLETED/FAILED). This decomposition enables non-engineers to compose agents from pre-built skills.</p>
+</div>
+</div>
+</div>
+
+<!-- ===== Firmware CI/CD ===== -->
+<div class="section" id="cicd">
+<div class="card">
+<h2>System Design: CI/CD for Device Firmware</h2>
+<p>Design CI/CD pipeline for device firmware. Must build for multiple hardware targets, flash onto real devices for testing, and gate releases on test results.</p>
+
+<h3>Pipeline Stages</h3>
+<pre>
+Code Push → Build (multi-arch) → Unit Tests → Flash Device → Integration Tests → Soak Test → Release
+</pre>
+
+<h3>Key Challenges</h3>
+<table>
+  <tr><th>Challenge</th><th>Solution</th></tr>
+  <tr><td>Multi-target build (3+ hardware variants)</td><td>Parallel build matrix, shared source with target-specific configs</td></tr>
+  <tr><td>Physical device dependency</td><td>Device Test Lab integration (previous design)</td></tr>
+  <tr><td>Long build times (30-60 min)</td><td>Incremental builds, cache object files, only rebuild changed modules</td></tr>
+  <tr><td>Bricked device risk</td><td>Recovery bootloader that can reflash even if main OS is broken</td></tr>
+  <tr><td>Sidecar/container image staleness</td><td>Version-pinned images per environment, pipeline gates on image freshness</td></tr>
+</table>
+
+<h3>Release Strategy</h3>
+<ul>
+  <li><strong>Canary:</strong> Flash 5% of test devices first, wait 1hr, then rest</li>
+  <li><strong>Environment promotion:</strong> dev → gamma → staging → prod (gated by test pass rate)</li>
+  <li><strong>Rollback:</strong> Auto-rollback if error rate &gt; threshold within 30 min of deploy</li>
+  <li><strong>Image tagging:</strong> Environment-specific tags (e.g., <code>:gamma</code>, <code>:prod</code>) to prevent cross-environment contamination</li>
+</ul>
+
+<div class="warning">
+  <p><strong>Real-world lesson (from experience):</strong> A pipeline's "publish-to-live" step was blocked for 2 months due to a cross-platform build failure. All downstream services ran stale images. New code merged but never deployed. Lesson: pipeline health monitoring must alert on promotion failures, not just build failures.</p>
+</div>
+
+<h3>Monitoring Must-Haves</h3>
+<ul>
+  <li>Alert on pipeline stage failure (not just final result)</li>
+  <li>Alert on image age &gt; threshold per environment</li>
+  <li>Dashboard: last successful deploy date per service per environment</li>
+  <li>Compare image digests across environments (detect staleness)</li>
+</ul>
+</div>
+</div>
+
+<!-- ===== AI Agent Platform ===== -->
+<div class="section" id="aiplatform">
+<div class="card">
+<h2>AI Agent Platform Design Patterns</h2>
+<p>Key architectural patterns for building scalable AI agent platforms that non-technical users can compose.</p>
+
+<h3>Core Primitives</h3>
+<table>
+  <tr><th>Primitive</th><th>What It Is</th><th>Analogy</th></tr>
+  <tr><td><strong>Agent (Teammate)</strong></td><td>Execution unit — AI configured with persona, guardrails, skills, model config</td><td>A trained colleague with a specific role</td></tr>
+  <tr><td><strong>Skill</strong></td><td>Specialized expertise: Knowledge Bases (RAG), Tool Servers (MCP), Sub-agents</td><td>Domain expertise and tools the colleague has</td></tr>
+  <tr><td><strong>Tool Provider</strong></td><td>Reusable tool sources with stored connection config</td><td>Shared capability library</td></tr>
+  <tr><td><strong>Job</strong></td><td>Task definition + trigger (UI, Slack, API, scheduled, event-driven)</td><td>A work order / standing instruction</td></tr>
+  <tr><td><strong>JobRun</strong></td><td>Single execution: QUEUED → STARTED → IN_PROGRESS → COMPLETED/FAILED</td><td>One execution of the work order</td></tr>
+</table>
+
+<h3>Key Architecture Decisions</h3>
+<ul>
+  <li><strong>Credential-free automation:</strong> Service-account model (no human credentials) enables long-running tasks without token expiry</li>
+  <li><strong>Skill composability:</strong> Agents compose skills from a "Skill Store" — non-engineers can build agents by selecting pre-built skills</li>
+  <li><strong>Streaming responses:</strong> SSE (Server-Sent Events) for real-time chat/progress updates</li>
+  <li><strong>Function calling:</strong> Constrain LLM into deterministic tool invocations (not free-form generation)</li>
+  <li><strong>Semantic caching:</strong> Cache query embeddings → avoid redundant LLM calls for similar questions</li>
+  <li><strong>Guardrails:</strong> Input/output filters, rate limiting, cost tracking per agent per team</li>
+</ul>
+
+<h3>Execution Flow</h3>
+<pre>
+User submits task (UI/Slack/API)
+  → Job created in DB
+  → Worker picks up Job → creates JobRun
+  → Agent initialized (load persona + skills + model config)
+  → LLM generates plan (function calls)
+  → Execute tools (RAG query, API call, code execution)
+  → Stream intermediate results to user
+  → Final result stored → JobRun marked COMPLETED
+  → Metrics logged (tokens, duration, tool invocations)
+</pre>
+
+<h3>How to Talk About This in Interview</h3>
+<div class="tip">
+  <p><strong>Frame it as:</strong> "I've studied how AI agent platforms are designed internally — the decomposition into agents, skills, and jobs. I applied these patterns when building an AI-powered analytics platform: function calling for deterministic behavior, RAG for fresh data, streaming for UX, and semantic caching for cost optimization."</p>
+</div>
+</div>
+</div>
+
+<!-- ===== Interview Questions ===== -->
+<div class="section" id="questions">
+<div class="card">
+<h2>Likely Interview Questions</h2>
+
+<h3>Technical Leadership</h3>
+<ul>
+  <li>"How would you prioritize: fixing flaky tests vs building new AI tools vs improving build speed?"</li>
+  <li>"A team is blocked because the device lab has no available devices. What do you do?"</li>
+  <li>"How do you measure engineering productivity? What metrics?"</li>
+  <li>"Your AI bug triage tool has 60% accuracy. Ship it or wait for 80%?"</li>
+</ul>
+
+<h3>People Management</h3>
+<ul>
+  <li>"How do you grow engineers on your team?"</li>
+  <li>"Tell me about a time you gave difficult feedback"</li>
+  <li>"How do you handle an underperformer?"</li>
+  <li>"How do you manage across multiple teams/locations?"</li>
+</ul>
+
+<h3>System Design</h3>
+<ul>
+  <li>"Design a test scheduler for a pool of physical devices"</li>
+  <li>"Design an AI agent that auto-triages bugs"</li>
+  <li>"How would you build a CI/CD pipeline for firmware on real hardware?"</li>
+  <li>"Design a flaky test detection and quarantine system"</li>
+</ul>
+
+<h3>AI/LLM</h3>
+<ul>
+  <li>"How would you use LLMs to generate unit tests?"</li>
+  <li>"What are the risks of AI-generated test code?"</li>
+  <li>"How would you measure if an AI code review tool is actually helpful?"</li>
+  <li>"How do you handle LLM hallucination in an automated system?"</li>
+</ul>
+
+<h3>Debugging / RCA</h3>
+<ul>
+  <li>"Tests pass locally but fail in CI. How do you debug?"</li>
+  <li>"A pipeline has been silently broken for weeks. How do you detect and prevent this?"</li>
+  <li>"How do you debug a device test that fails intermittently?"</li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Selling Points ===== -->
+<div class="section" id="selling">
+<div class="card">
+<h2>Selling Points</h2>
+
+<h3>1. Test Automation EM Experience</h3>
+<ul>
+  <li>Took over undocumented test automation system, migrated Jenkins → ECS Fargate (40% cost reduction)</li>
+  <li>5000+ lines of operational documentation, one-command setup</li>
+  <li>70% unit test coverage + automated API tests in CI/CD (Golang microservice)</li>
+</ul>
+
+<h3>2. AI Tools for Engineering</h3>
+<ul>
+  <li>Built AI-powered self-service analytics platform (LLM + RAG + function calling + semantic caching)</li>
+  <li>Presented AI-assisted development methodology to team → adopted as standard practice</li>
+  <li>Used AI to ramp up on unfamiliar codebase in half a day (vs 2 weeks without)</li>
+  <li>Studied internal AI agent platform architecture (primitives: Agent, Skill, Job, JobRun)</li>
+</ul>
+
+<h3>3. People Management</h3>
+<ul>
+  <li>6 years EM: 16 people across Android/iOS/backend, promoted junior → EM in 2 years</li>
+  <li>Cross-team coordination: factory device lifecycle (10 repos, 5 teams)</li>
+  <li>Mentored underperforming team to meet deadline in 2 weeks</li>
+</ul>
+
+<h3>4. Device/Hardware Adjacent</h3>
+<ul>
+  <li>IoT device firmware testing pipeline (Sidewalk)</li>
+  <li>Blu-ray player firmware in C++ (CyberLink, 4 years)</li>
+  <li>Payment terminal protocol understanding (TLV, binary serialization)</li>
+</ul>
+
+<h3>5. Systematic Debugging</h3>
+<ul>
+  <li>RDS RCA: cascading failure from missing index → EBS burst exhaustion</li>
+  <li>EP Metrics: cross-service (6 services, 2 AWS accounts) → stale container image root cause</li>
+  <li>SQL injection audit: self-initiated, 7 vulnerabilities fixed</li>
+  <li>Pipeline staleness detection: ImageVending blocked 2 months unnoticed</li>
+</ul>
+
+<h3>Addressing the Platform Gap</h3>
+<div class="tip">
+  <p><strong>How to address "no Android/Linux experience":</strong><br><br>
+  "I haven't worked directly on Android framework or Linux kernel, but my experience is at the same layer this role operates — the test infrastructure and developer tooling layer that sits above the OS. I build test automation for IoT devices without needing to write firmware. The domain knowledge I can ramp up on — the engineering productivity skills and management experience take years to build."</p>
+</div>
+</div>
+</div>
+
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
