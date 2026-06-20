@@ -586,6 +586,73 @@ def search_bugs(query: str, max_results: int = 10) -> str:
 
 <h4>"How do you debug a device test that fails intermittently?"</h4>
 <p><strong>Answer:</strong> "Three suspects: (1) Device hardware — run same test on multiple devices, if it only fails on one device → device issue. (2) Timing/race condition — add retries, check if failure correlates with concurrent tests on same device or network traffic. (3) Environmental — correlate with time of day, other running jobs, or infrastructure state. Collect: full device logs, host logs, network state at time of failure. The hardest bugs are 'once a day' failures — for those I instrument heavily and wait."</p>
+
+<h3>Ownership &amp; Initiative</h3>
+
+<h4>"Tell me about a time you took ownership of something nobody wanted to own"</h4>
+<p><strong>Use story:</strong> REP Infrastructure takeover — undocumented system, previous owner left, zero handover.<br>
+<strong>Key points:</strong> Didn't wait for documentation. Read code line by line. Built the docs myself (5000+ lines). Migrated to modern infra (40% cost reduction). Made it self-sustaining so the team doesn't depend on me.</p>
+
+<h4>"Tell me about a time you identified a problem before others noticed"</h4>
+<p><strong>Use story:</strong> SQL injection security audit — self-initiated. Nobody asked me to look.<br>
+<strong>Key points:</strong> While reverse-engineering the DB schema for another fix, I noticed parameterized queries weren't used anywhere. Audited the whole codebase. Found 7 injection vulnerabilities. Fixed all with tests. Brought service to security compliance.</p>
+
+<h4>"Tell me about a time you improved a process for the whole team"</h4>
+<p><strong>Use story:</strong> AI-assisted development methodology.<br>
+<strong>Key points:</strong> Used AI to analyze unfamiliar codebases in half a day vs weeks. Documented the approach. Presented to team during AI sprint. Now adopted as standard practice for onboarding new services. Other engineers started using it and reporting faster ramp-up.</p>
+
+<h3>Cross-team Collaboration</h3>
+
+<h4>"Tell me about a time you had to coordinate with many teams to deliver a feature"</h4>
+<p><strong>Use story:</strong> Factory device lifecycle — 10+ repositories, 5 teams (Cloud, MCU, SDET, Customer Docs, Data Science).<br>
+<strong>Key points:</strong> Single feature required changes across Go, Java, Kotlin, Smithy. Designed state machine for the lifecycle. Coordinated testing plan across teams. Used AI to ramp up on services I'd never touched. Delivered within the sprint.</p>
+
+<h4>"Describe a time you had to influence without authority"</h4>
+<p><strong>Use story:</strong> AI Agent — challenged bad technical direction from data science team lead.<br>
+<strong>Key points:</strong> They wanted to build monolithic prompting. I proposed function calling architecture for deterministic behavior. I didn't have authority (was embedded temporarily). Convinced them with a working prototype that showed testable, reproducible results vs their flaky free-form approach. They adopted my design.</p>
+
+<h4>"Tell me about a time you unblocked another team"</h4>
+<p><strong>Use story:</strong> EP Metrics pipeline — firmware team blocked for a month.<br>
+<strong>Key points:</strong> Took over with zero context. Used AI to ramp up in half a day. Found root cause in 2 days that previous engineer couldn't find in 2 weeks (stale container image due to blocked pipeline). Firmware team started testing within hours of my fix.</p>
+
+<h3>Technical Judgment</h3>
+
+<h4>"Tell me about a time you chose the simpler solution over the more elegant one"</h4>
+<p><strong>Use story:</strong> Barrage feature revenue model change.<br>
+<strong>Key points:</strong> PM wanted to build a complex revenue-sharing system like gifts. I analyzed the user behavior data and proposed: just don't share revenue for this feature type. Simpler backend, faster to ship, same business outcome. PM agreed after seeing the data. Shipped in 2 weeks instead of 6.</p>
+
+<h4>"Tell me about a time you had to make a decision with incomplete information"</h4>
+<p><strong>Use story:</strong> Log pipeline discovery at streaming company.<br>
+<strong>Key points:</strong> Found a broken pipeline nobody knew about. No docs, no owner, no one who could explain. Had to decide: ignore it or invest time? Talked to data team first — they confirmed they needed the data. That was enough signal. Fixed it. Designed generic format so it wouldn't break again. Still running years later.</p>
+
+<h4>"Tell me about a time your technical judgment was challenged"</h4>
+<p><strong>Use story:</strong> Architecture disagreement — recording feature design.<br>
+<strong>Key points:</strong> My team proposed one architecture, streaming team proposed another that was simpler but less flexible. I initially pushed back. Then I realized their simpler approach covered 90% of use cases and mine was over-engineering for hypothetical future needs. I conceded, we shipped faster. Learned: don't optimize for cases that might never happen.</p>
+
+<h3>Handling Failure</h3>
+
+<h4>"Tell me about a time something went wrong on your watch"</h4>
+<p><strong>Use story:</strong> Missed deployment at streaming company — helped another team, broke their service.<br>
+<strong>Key points:</strong> Was doing a favor — picked up work outside my team. Made a mistake in their codebase. Took full accountability. Immediate fix. Then established process: no cross-team commits without the owning team's review, even for small changes. Turned personal failure into team-wide process improvement.</p>
+
+<h4>"Tell me about a time you received critical feedback"</h4>
+<p><strong>Answer framework:</strong> "I received feedback that I was spending too much time diving deep into technical problems myself instead of delegating. My manager pointed out that when I fix things directly, it's fast but my team doesn't learn. I shifted to coaching mode: when something breaks, I ask the engineer questions to guide them to the answer instead of solving it myself. Took discipline — it's slower in the short term but builds team capability long-term."</p>
+
+<h3>Scaling &amp; Strategy</h3>
+
+<h4>"How would you build a team from scratch for this role?"</h4>
+<p><strong>Answer:</strong> "First hire: a senior engineer who knows the device/platform well (compensates for my ramp-up time). Second: an infra engineer who can build CI/CD and test frameworks. Third: an AI/ML engineer for the tooling roadmap. First 90 days: understand current pain points by embedding with the teams we serve. Don't build anything until I've talked to 10+ engineers about what slows them down."</p>
+
+<h4>"What would your first 30/60/90 days look like?"</h4>
+<p><strong>Answer:</strong></p>
+<ul>
+  <li><strong>30 days:</strong> Listen. 1:1 with every team member + key stakeholders. Understand current systems, pain points, ongoing projects. Build relationship with partner teams (firmware, app, infra).</li>
+  <li><strong>60 days:</strong> Identify top 3 pain points. Propose roadmap. Quick win: fix the most-complained-about issue (usually flaky tests or slow builds). Start hiring if headcount available.</li>
+  <li><strong>90 days:</strong> Ship first improvement. Establish metrics dashboard. Set team goals for next quarter aligned with org priorities. Have regular syncs with partner teams.</li>
+</ul>
+
+<h4>"How do you balance platform work vs feature requests from other teams?"</h4>
+<p><strong>Answer:</strong> "70/20/10 rule: 70% on committed roadmap items (reduce build time, improve test reliability). 20% on high-priority requests from partner teams (unblock a launch). 10% on tech debt and exploration (AI tools, new approaches). Requests from other teams go through a lightweight intake process — prevents drive-by interruptions while keeping us responsive. If a request is truly blocking a launch, we interrupt our roadmap. If it's 'nice to have,' it goes in the backlog and gets prioritized next quarter."</p>
 </div>
 </div>
 
