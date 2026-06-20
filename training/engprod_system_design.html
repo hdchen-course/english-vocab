@@ -770,6 +770,75 @@ def search_bugs(query: str, max_results: int = 10) -> str:
 </ul>
 <p><strong>Goal:</strong> Within 2 weeks, you should be able to draw the system architecture on a whiteboard without anyone teaching you. This earns instant respect.</p>
 
+<h3>How to Build a Roadmap When You're New (and Not from the Domain)</h3>
+
+<div class="warning">
+  <p><strong>Problem:</strong> "I don't know the domain well enough to define what we should build next."<br><br>
+  <strong>Answer:</strong> EngProd roadmaps are demand-driven, not vision-driven. You don't invent what to build — you listen to what hurts and fix it in priority order. This is actually easier than product roadmaps (where you have to predict what users want).</p>
+</div>
+
+<h4>Step 1: Collect Pain Points (Week 1-2)</h4>
+<ul>
+  <li>Ask every partner team: "What slows you down the most day-to-day?"</li>
+  <li>Ask your own team: "What support requests do you get most often?"</li>
+  <li>Look at Slack: search for "broken", "stuck", "help", "flaky" in engineering channels</li>
+  <li>Look at incident history: what keeps breaking?</li>
+  <li>Run a 5-question survey if you have 50+ engineers (keep it short)</li>
+</ul>
+
+<h4>Step 2: Categorize and Prioritize (Week 3)</h4>
+<table>
+  <tr><th>Priority</th><th>Criteria</th><th>Example</th></tr>
+  <tr><td>P0: Broken</td><td>Something is actively broken, teams are working around it daily</td><td>CI flakes 15% of runs, engineers re-trigger manually</td></tr>
+  <tr><td>P1: Slow</td><td>Works but painfully slow, every engineer feels it</td><td>Build takes 40 min, could be 10 with caching</td></tr>
+  <tr><td>P2: Missing</td><td>Feature doesn't exist, teams manually do something that should be automated</td><td>No automated device regression — QA does it by hand every release</td></tr>
+  <tr><td>P3: Nice-to-have</td><td>Would improve DX but nobody is blocked without it</td><td>AI code review suggestions</td></tr>
+</table>
+
+<h4>Step 3: Frame as Roadmap (Week 4)</h4>
+<pre>
+Q3 2026 Roadmap: Engineering Productivity
+
+Theme: "Fix the foundation before building new things"
+
+P0 (must-do):
+  - Reduce CI flake rate from 15% to &lt;3% [blocks every team]
+  - Fix device lab scheduling deadlock [QA blocked 2x/week]
+
+P1 (should-do):
+  - Build cache layer to cut build time 40min → 15min [200 engineers affected]
+  - Unified test report dashboard [currently 3 separate tools]
+
+P2 (stretch):
+  - AI-assisted bug triage pilot (start with 1 team)
+  - Automated device provisioning (eliminate manual setup)
+
+Not doing this quarter:
+  - Full rewrite of test framework (too risky, defer to Q4)
+  - AI code review (P1/P0 items come first)
+</pre>
+
+<h4>The Trick: You Don't Need Domain Expertise for This</h4>
+<div class="insight">
+  <p><strong>Notice:</strong> Nothing in the roadmap above requires knowing how the firmware works, what the device architecture is, or what the product features are. You just need to know: (1) what's broken, (2) how many people it affects, (3) how hard it is to fix. That's universal EngProd reasoning.</p>
+</div>
+
+<h4>How to Present Roadmap to Leadership</h4>
+<ul>
+  <li><strong>Lead with the problem, not the solution:</strong> "200 engineers lose 30 min/day to flaky CI" not "we're implementing a retry mechanism"</li>
+  <li><strong>Show impact in engineer-hours:</strong> "This saves 100 engineer-hours per week" → that's 2.5 FTEs worth of recovered time</li>
+  <li><strong>Show what you're NOT doing and why:</strong> This proves you made priority calls, not just listed everything</li>
+  <li><strong>Get buy-in from partner team leads:</strong> If they agree with your priorities, leadership will too</li>
+</ul>
+
+<h4>Ongoing: How to Keep Roadmap Updated</h4>
+<ul>
+  <li>Monthly check-in with top 3 partner teams: "Is your biggest pain still X? Did anything new come up?"</li>
+  <li>Track support request volume: if a category spikes, it's telling you something</li>
+  <li>After every incident: ask "could tooling have prevented this or detected it faster?"</li>
+  <li>Quarterly retro: what shipped, what impact did it have, what's next</li>
+</ul>
+
 <h3>Common EM Anti-Patterns (Avoid These)</h3>
 <table>
   <tr><th>Anti-pattern</th><th>Why it's bad</th><th>What to do instead</th></tr>
