@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2-Week Ramp-Up — 84 Problems (R:1800-2280)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#f8f9fa; --bg2:#fff; --bg3:#f1f3f5; --border:#dee2e6; --text:#212529; --text2:#495057; --text3:#868e96; --blue:#1971c2; --blue-l:#d0ebff; --green:#2f9e44; --green-l:#d3f9d8; --yellow:#e67700; --yellow-l:#fff3bf; --purple:#7048e8; --purple-l:#e5dbff; --red:#c92a2a; --red-l:#ffe3e3; --r:10px; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.7; padding: 20px; }
+.container { max-width: 800px; margin: 0 auto; }
+h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; color: var(--blue); }
+.sub { color: var(--text3); font-size: 13px; margin-bottom: 20px; }
+.rules { background: var(--blue-l); border-left: 3px solid var(--blue); padding: 12px 16px; border-radius: 0 8px 8px 0; margin-bottom: 16px; font-size: 13px; color: var(--blue); }
+.week-toggle { display: flex; gap: 8px; margin-bottom: 20px; }
+.week-btn { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif; }
+.week-btn.active { background: var(--blue-l); color: var(--blue); border-color: var(--blue); }
+.week { display: none; }
+.week.active { display: block; }
+.cat { margin-bottom: 20px; }
+.cat-header { font-size: 15px; font-weight: 700; color: var(--text); padding: 10px 14px; background: var(--bg3); border-radius: var(--r); margin-bottom: 8px; }
+.problem { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 6px; }
+.problem:hover { border-color: var(--blue); }
+.problem .check { width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 4px; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.problem .check.done { background: var(--green); border-color: var(--green); }
+.problem .check.done::after { content: '✓'; color: white; font-size: 12px; font-weight: 700; }
+.problem .info { flex: 1; min-width: 0; }
+.problem .title { font-size: 14px; font-weight: 600; }
+.problem .title a { color: var(--text); text-decoration: none; }
+.problem .title a:hover { color: var(--blue); }
+.problem .hint { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.problem .rating { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 12px; flex-shrink: 0; }
+.r1 { background: var(--yellow-l); color: var(--yellow); }
+.r2 { background: var(--purple-l); color: var(--purple); }
+.r3 { background: var(--red-l); color: var(--red); }
+.progress { position: sticky; top: 0; background: var(--bg); padding: 12px 0; border-bottom: 1px solid var(--border); margin-bottom: 20px; z-index: 10; }
+.progress-bar { height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--green); transition: width 0.3s; }
+.progress-text { font-size: 12px; color: var(--text3); margin-top: 4px; }
+@media (max-width: 600px) { body { padding: 12px; } .problem { padding: 8px 10px; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>2-Week Ramp-Up</h1>
+<div class="sub">84 Problems · Rating 1700-2280 · 14 Categories × 6</div>
+
+<div class="progress">
+  <div class="progress-bar"><div class="progress-fill" id="pbar"></div></div>
+  <div class="progress-text" id="ptext">0 / 84 completed</div>
+</div>
+
+<div class="rules">
+  <strong>Rules:</strong> &lt;15 min → skip · Stuck &gt;30 min → read hint, move on · Week 1 = foundation · Week 2 = harder variants + new sub-patterns
+</div>
+
+<div class="week-toggle">
+  <button class="week-btn active" onclick="showWeek(1)">Week 1 (42)</button>
+  <button class="week-btn" onclick="showWeek(2)">Week 2 (42)</button>
+</div>
+
+<!-- ===== WEEK 1 ===== -->
+<div class="week active" id="week1">
+
+<div class="cat"><div class="cat-header">Two Pointer / Sliding Window</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/frequency-of-the-most-frequent-element/" target="_blank">1838. Frequency of the Most Frequent Element</a></div><div class="hint">Sort + sliding window, track sum of increments needed</div></div><div class="rating r1">1876</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/count-the-number-of-good-subarrays/" target="_blank">2537. Count the Number of Good Subarrays</a></div><div class="hint">Sliding window + count pairs, shrink when pairs ≥ k</div></div><div class="rating r1">1892</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/subarrays-with-k-different-integers/" target="_blank">992. Subarrays with K Different Integers</a></div><div class="hint">atMost(k) - atMost(k-1)</div></div><div class="rating r2">2210</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">Stack / Monotone Stack</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/sum-of-subarray-ranges/" target="_blank">2104. Sum of Subarray Ranges</a></div><div class="hint">Contribution: max contribution - min contribution per element</div></div><div class="rating r1">1870</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/sum-of-subarray-minimums/" target="_blank">907. Sum of Subarray Minimums</a></div><div class="hint">Monotone stack: left/right boundary for each as min</div></div><div class="rating r1">1976</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/number-of-visible-people-in-a-queue/" target="_blank">1944. Number of Visible People in a Queue</a></div><div class="hint">Monotone decreasing stack from right</div></div><div class="rating r2">2065</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">Binary Search</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/" target="_blank">1011. Capacity To Ship Packages</a></div><div class="hint">Binary search on answer, greedy feasibility check</div></div><div class="rating r1">1725</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/minimum-time-to-complete-trips/" target="_blank">2187. Minimum Time to Complete Trips</a></div><div class="hint">Binary search on time, sum(time/t[i]) ≥ total</div></div><div class="rating r1">1856</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/minimum-number-of-days-to-make-m-bouquets/" target="_blank">1482. Minimum Days to Make m Bouquets</a></div><div class="hint">Binary search on days, greedy count consecutive</div></div><div class="rating r1">1946</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">Tree / DFS</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/longest-zigzag-path-in-a-binary-tree/" target="_blank">1372. Longest ZigZag Path</a></div><div class="hint">DFS with (node, direction, length) state</div></div><div class="rating r1">1795</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/recover-a-tree-from-preorder-traversal/" target="_blank">1028. Recover Tree From Preorder</a></div><div class="hint">Stack: depth = dashes count, push/pop by depth</div></div><div class="rating r1">1797</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/amount-of-time-for-binary-tree-to-be-infected/" target="_blank">2385. Amount of Time to Be Infected</a></div><div class="hint">Tree → graph, BFS from source, max distance</div></div><div class="rating r1">1832</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">Graph / BFS / Topo / Union-Find</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/remove-max-number-of-edges-to-keep-graph-fully-traversable/" target="_blank">1579. Remove Max Edges</a></div><div class="hint">Two UFs (Alice, Bob), add type-3 first</div></div><div class="rating r1">1913</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/critical-connections-in-a-network/" target="_blank">1192. Critical Connections</a></div><div class="hint">Tarjan bridge: low[v] > disc[u]</div></div><div class="rating r1">1982</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/divide-nodes-into-the-maximum-number-of-groups/" target="_blank">2493. Divide Nodes Max Groups</a></div><div class="hint">BFS layering + bipartite check per component</div></div><div class="rating r2">2078</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">DP (Linear / Knapsack)</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/solving-questions-with-brainpower/" target="_blank">2140. Solving Questions With Brainpower</a></div><div class="hint">DP from right: max(skip, points + dp[i+brain+1])</div></div><div class="rating r1">1709</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/find-the-longest-valid-obstacle-course-at-each-position/" target="_blank">1964. Longest Valid Obstacle Course</a></div><div class="hint">LIS (non-decreasing), bisect_right</div></div><div class="rating r1">1865</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/maximum-profit-in-job-scheduling/" target="_blank">1235. Maximum Profit in Job Scheduling</a></div><div class="hint">Sort by end, dp + binary search for last non-overlapping</div></div><div class="rating r2">2023</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">DP (Interval / 2D / Bitmask)</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/minimum-cost-to-cut-a-stick/" target="_blank">1547. Minimum Cost to Cut a Stick</a></div><div class="hint">Interval DP: dp[i][j] = min cost between cuts[i] and cuts[j]</div></div><div class="rating r2">2116</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/minimum-xor-sum-of-two-arrays/" target="_blank">1879. Minimum XOR Sum</a></div><div class="hint">Bitmask DP: dp[mask] = min XOR assigning mask of nums2</div></div><div class="rating r2">2145</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/maximize-palindrome-length-from-subsequences/" target="_blank">1771. Maximize Palindrome From Subsequences</a></div><div class="hint">LPS on concat, track chars from both strings</div></div><div class="rating r2">2182</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">Greedy</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/merge-triplets-to-form-target-triplet/" target="_blank">1899. Merge Triplets</a></div><div class="hint">Filter valid triplets, check max per position = target</div></div><div class="rating r1">1809</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/find-valid-matrix-given-row-and-column-sums/" target="_blank">1605. Find Valid Matrix</a></div><div class="hint">Greedy: cell = min(rowSum, colSum), subtract</div></div><div class="rating r1">1867</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/earliest-possible-day-of-full-bloom/" target="_blank">2136. Earliest Day of Full Bloom</a></div><div class="hint">Sort by grow time desc, plant in that order</div></div><div class="rating r2">2033</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">Design / OOP</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/lru-cache/" target="_blank">146. LRU Cache</a></div><div class="hint">HashMap + doubly linked list</div></div><div class="rating r1">~1800</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/design-skiplist/" target="_blank">1206. Design Skiplist</a></div><div class="hint">Levels + random promotion</div></div><div class="rating r1">1907</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/lfu-cache/" target="_blank">460. LFU Cache</a></div><div class="hint">HashMap + frequency buckets (LinkedHashSet)</div></div><div class="rating r2">~2040</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">Backtracking / Bitmask</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/fair-distribution-of-cookies/" target="_blank">2305. Fair Distribution of Cookies</a></div><div class="hint">Backtrack k groups, prune if max ≥ best</div></div><div class="rating r1">1887</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/find-minimum-time-to-finish-all-jobs/" target="_blank">1723. Min Time to Finish All Jobs</a></div><div class="hint">Binary search + backtrack (same as 2305)</div></div><div class="rating r2">2023</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/maximum-number-of-groups-getting-fresh-donuts/" target="_blank">1815. Max Groups Fresh Donuts</a></div><div class="hint">Bitmask DP on remainder frequency</div></div><div class="rating r2">2200</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">String / Rolling Hash</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/longest-duplicate-substring/" target="_blank">1044. Longest Duplicate Substring</a></div><div class="hint">Binary search length + rolling hash</div></div><div class="rating r2">2021</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/find-substring-with-given-hash-value/" target="_blank">2156. Substring With Given Hash</a></div><div class="hint">Reverse rolling hash (avoid mod inverse)</div></div><div class="rating r2">2063</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/longest-common-subpath/" target="_blank">1923. Longest Common Subpath</a></div><div class="hint">Binary search + hash per path, intersect</div></div><div class="rating r2">2118</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">Heap / Priority Queue</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/find-median-from-data-stream/" target="_blank">295. Find Median from Data Stream</a></div><div class="hint">Two heaps: maxHeap lower + minHeap upper</div></div><div class="rating r1">~1880</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/minimum-difference-in-sums-after-removal-of-elements/" target="_blank">2163. Min Diff After Removal</a></div><div class="hint">Prefix min-sum (maxHeap) + suffix max-sum (minHeap)</div></div><div class="rating r2">2009</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/minimum-interval-to-include-each-query/" target="_blank">1851. Min Interval for Query</a></div><div class="hint">Sort + PQ by size, lazy removal</div></div><div class="rating r2">2085</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">Segment Tree / BIT</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/count-of-smaller-numbers-after-self/" target="_blank">315. Count Smaller After Self</a></div><div class="hint">BIT on values, process right to left</div></div><div class="rating r1">~1900</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/count-good-triplets-in-an-array/" target="_blank">2179. Count Good Triplets</a></div><div class="hint">BIT: smaller-left × larger-right per middle</div></div><div class="rating r2">2004</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/create-sorted-array-through-instructions/" target="_blank">1649. Create Sorted Array</a></div><div class="hint">BIT: min(count<x, count>x) per insert</div></div><div class="rating r2">2208</div></div>
+</div>
+
+</div>
+
+<!-- ===== WEEK 2 ===== -->
+<div class="week" id="week2">
+
+<div class="cat"><div class="cat-header">Two Pointer / Sliding Window</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/count-subarrays-with-fixed-bounds/" target="_blank">2444. Count Subarrays With Fixed Bounds</a></div><div class="hint">Track lastMin, lastMax, lastBad positions</div></div><div class="rating r2">2093</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/minimum-operations-to-reduce-x-to-zero/" target="_blank">1658. Min Operations to Reduce X to Zero</a></div><div class="hint">Flip: find longest subarray with sum = total - x</div></div><div class="rating r1">1817</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/count-subarrays-with-score-less-than-k/" target="_blank">2302. Count Subarrays Score &lt; K</a></div><div class="hint">Sliding window: score = sum × length, shrink when ≥ k</div></div><div class="rating r1">1808</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">Stack / Monotone Stack</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/next-greater-element-iv/" target="_blank">2454. Next Greater Element IV</a></div><div class="hint">Double monotone stack (second greater)</div></div><div class="rating r2">2175</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/maximum-score-of-a-good-subarray/" target="_blank">1793. Max Score of Good Subarray</a></div><div class="hint">Expand from k, track min, greedy expand larger side</div></div><div class="rating r1">1946</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/beautiful-towers-ii/" target="_blank">2866. Beautiful Towers II</a></div><div class="hint">Monotone stack: left prefix sum + right prefix sum, max at each peak</div></div><div class="rating r2">2072</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">Binary Search</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/maximize-the-minimum-powered-city/" target="_blank">2528. Maximize Min Powered City</a></div><div class="hint">Binary search on answer + greedy prefix sum simulation</div></div><div class="rating r3">2236</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/maximum-value-at-a-given-index-in-a-bounded-array/" target="_blank">1802. Max Value at Given Index</a></div><div class="hint">Binary search on value, calculate sum with arithmetic series</div></div><div class="rating r1">1869</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/minimize-maximum-of-array/" target="_blank">2439. Minimize Maximum of Array</a></div><div class="hint">Binary search or prefix average (ceil of max prefix avg)</div></div><div class="rating r1">1965</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">Tree / DFS</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/longest-path-with-different-adjacent-characters/" target="_blank">2246. Longest Path Different Adj Chars</a></div><div class="hint">DFS: track top-2 children paths with different char</div></div><div class="rating r2">2126</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/minimum-time-to-collect-all-apples-in-a-tree/" target="_blank">1443. Min Time Collect Apples</a></div><div class="hint">DFS: if subtree has apple, add 2 for edge traversal</div></div><div class="rating r1">1853</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/number-of-nodes-in-the-sub-tree-with-the-same-label/" target="_blank">1519. Nodes With Same Label</a></div><div class="hint">DFS: pass up frequency array, count before/after</div></div><div class="rating r1">1808</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">Graph / BFS / Topo / Union-Find</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/number-of-good-paths/" target="_blank">2421. Number of Good Paths</a></div><div class="hint">Sort nodes by value, Union-Find: merge and count same-value pairs</div></div><div class="rating r2">2165</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/path-with-minimum-effort/" target="_blank">1631. Path With Minimum Effort</a></div><div class="hint">Dijkstra or binary search + BFS on grid</div></div><div class="rating r1">1948</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/find-all-people-with-secret/" target="_blank">2092. Find All People With Secret</a></div><div class="hint">Sort meetings by time, Union-Find per time group, reset non-connected</div></div><div class="rating r2">2003</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">DP (Linear / Knapsack)</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/maximum-value-of-k-coins-from-piles/" target="_blank">2218. Max Value of K Coins From Piles</a></div><div class="hint">Group knapsack: dp[j] = max value picking j coins total across piles</div></div><div class="rating r2">2158</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended-ii/" target="_blank">1751. Max Events Attended II</a></div><div class="hint">Sort by end, dp[i][k] + binary search (like job scheduling)</div></div><div class="rating r2">2040</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/make-the-xor-of-all-segments-equal-to-zero/" target="_blank">1787. Make XOR of Segments Zero</a></div><div class="hint">Group by position mod k, DP on XOR prefix state</div></div><div class="rating r2">2220</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">DP (Interval / 2D / Bitmask)</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/painting-a-grid-with-three-different-colors/" target="_blank">1931. Painting Grid Three Colors</a></div><div class="hint">Profile DP: enumerate valid column patterns, transition matrix</div></div><div class="rating r2">2170</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/distribute-repeating-integers/" target="_blank">1655. Distribute Repeating Integers</a></div><div class="hint">Bitmask DP: dp[i][mask] = can assign freq[i] to satisfy customers in mask</div></div><div class="rating r2">2044</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/parallel-courses-ii/" target="_blank">1494. Parallel Courses II</a></div><div class="hint">Bitmask DP: dp[mask] = min semesters, enumerate submasks of available</div></div><div class="rating r2">2082</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">Greedy</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/maximum-running-time-of-n-computers/" target="_blank">2141. Max Running Time N Computers</a></div><div class="hint">Binary search on time, check if sum of min(battery, T) ≥ N*T</div></div><div class="rating r2">2065</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/maximum-performance-of-a-team/" target="_blank">1383. Max Performance of a Team</a></div><div class="hint">Sort by efficiency desc, maintain top-k speeds with minHeap</div></div><div class="rating r2">2091</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/maximum-number-of-tasks-you-can-assign/" target="_blank">2071. Max Tasks Assignable</a></div><div class="hint">Binary search on answer + greedy matching with sorted deque</div></div><div class="rating r2">2164</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">Design / OOP</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/dinner-plate-stacks/" target="_blank">1172. Dinner Plate Stacks</a></div><div class="hint">List of stacks + TreeSet tracking non-full stacks</div></div><div class="rating r2">2109</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/all-oone-data-structure/" target="_blank">432. All O'one Data Structure</a></div><div class="hint">Doubly linked list of count buckets + HashMap</div></div><div class="rating r1">1940</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/maximum-frequency-stack/" target="_blank">895. Maximum Frequency Stack</a></div><div class="hint">Map freq→stack, track maxFreq</div></div><div class="rating r2">2028</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">Backtracking / Bitmask</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/minimum-incompatibility/" target="_blank">1681. Minimum Incompatibility</a></div><div class="hint">Bitmask DP over valid subsets, precompute subset costs</div></div><div class="rating r2">2200</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/minimum-number-of-work-sessions-to-finish-the-tasks/" target="_blank">1986. Min Work Sessions</a></div><div class="hint">Bitmask DP: dp[mask] = (sessions, remaining time in current)</div></div><div class="rating r1">1995</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/partition-to-k-equal-sum-subsets/" target="_blank">698. Partition to K Equal Sum</a></div><div class="hint">Backtrack assign to k groups OR bitmask DP</div></div><div class="rating r1">1979</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">String / Rolling Hash</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/distinct-echo-substrings/" target="_blank">1316. Distinct Echo Substrings</a></div><div class="hint">Rolling hash: check s[i..i+len] == s[i+len..i+2len]</div></div><div class="rating r2">2060</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/sum-of-scores-of-built-strings/" target="_blank">2223. Sum of Scores of Built Strings</a></div><div class="hint">Z-function: sum of all Z[i] values</div></div><div class="rating r2">2219</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/longest-happy-prefix/" target="_blank">1392. Longest Happy Prefix</a></div><div class="hint">KMP failure function: answer = last value of lps array</div></div><div class="rating r1">1876</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">Heap / Priority Queue</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/minimize-deviation-in-array/" target="_blank">1675. Minimize Deviation</a></div><div class="hint">Max all odds (×2), then repeatedly halve max in maxHeap</div></div><div class="rating r2">2134</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/maximum-subsequence-score/" target="_blank">2542. Max Subsequence Score</a></div><div class="hint">Sort by second array desc, maintain top-k of first with minHeap</div></div><div class="rating r2">2056</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/single-threaded-cpu/" target="_blank">1834. Single-Threaded CPU</a></div><div class="hint">Sort by enqueue time, PQ by processing time, simulate</div></div><div class="rating r1">1898</div></div>
+</div>
+
+<div class="cat"><div class="cat-header">Segment Tree / BIT</div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/longest-increasing-subsequence-ii/" target="_blank">2407. LIS II (with value constraint)</a></div><div class="hint">Segment tree range max query on dp values by value domain</div></div><div class="rating r3">2280</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/minimum-possible-integer-after-at-most-k-adjacent-swaps-on-digits/" target="_blank">1505. Min Integer After K Swaps</a></div><div class="hint">BIT: greedily pick smallest available digit, track shifted positions</div></div><div class="rating r2">2200</div></div>
+<div class="problem"><div class="check" onclick="toggle(this)"></div><div class="info"><div class="title"><a href="https://leetcode.com/problems/booking-concert-tickets-in-groups/" target="_blank">2286. Booking Concert Tickets</a></div><div class="hint">Segment tree: range max for gather, range sum for scatter</div></div><div class="rating r3">2240</div></div>
+</div>
+
+</div>
+
+</div>
+
+<script>
+function showWeek(n) {
+  document.querySelectorAll('.week').forEach(w => w.classList.remove('active'));
+  document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('week' + n).classList.add('active');
+  document.querySelectorAll('.week-btn')[n-1].classList.add('active');
+}
+
+function toggle(el) {
+  el.classList.toggle('done');
+  updateProgress();
+  saveState();
+}
+
+function updateProgress() {
+  const total = document.querySelectorAll('.check').length;
+  const done = document.querySelectorAll('.check.done').length;
+  document.getElementById('pbar').style.width = (done/total*100) + '%';
+  document.getElementById('ptext').textContent = done + ' / ' + total + ' completed';
+}
+
+function saveState() {
+  const checks = document.querySelectorAll('.check');
+  const state = Array.from(checks).map(c => c.classList.contains('done') ? 1 : 0);
+  localStorage.setItem('rampup84', JSON.stringify(state));
+}
+
+function loadState() {
+  const saved = localStorage.getItem('rampup84');
+  if (saved) {
+    const state = JSON.parse(saved);
+    const checks = document.querySelectorAll('.check');
+    state.forEach((v, i) => { if (v && checks[i]) checks[i].classList.add('done'); });
+  }
+  updateProgress();
+}
+
+loadState();
+</script>
+</body>
+</html>
