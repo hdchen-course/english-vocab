@@ -64,6 +64,7 @@ tr:hover { background: var(--bg3); }
   <button class="nav-btn" onclick="showSection('cicd')">Firmware CI/CD</button>
   <button class="nav-btn" onclick="showSection('aiplatform')">AI Agent Platform</button>
   <button class="nav-btn" onclick="showSection('questions')">Interview Questions</button>
+  <button class="nav-btn" onclick="showSection('knowledge')">EngProd Knowledge</button>
   <button class="nav-btn" onclick="showSection('howtoem')">How to EM</button>
   <button class="nav-btn" onclick="showSection('selling')">Selling Points</button>
 </div>
@@ -913,6 +914,167 @@ help me understand which P0/P1 item you'd swap it with."
   "What's your management style?" → "Context over control. I share the why (business context, trade-offs), set clear expectations on the what (quality bar, timelines), and give autonomy on the how (they choose the technical approach). I intervene when I see design decisions that will cause pain in 6 months."<br><br>
   "How technical are you?" → "I review every design doc. I can read any PR on my team and give meaningful feedback. I prototype AI tools myself to validate feasibility before putting engineers on it. I don't write production code daily anymore, but I could if needed — and I did when I took over an urgent pipeline issue and fixed it in 2 days."</p>
 </div>
+</div>
+</div>
+
+<!-- ===== EngProd Knowledge ===== -->
+<div class="section" id="knowledge">
+<div class="card">
+<h2>EngProd Domain Knowledge (Crash Course)</h2>
+<p>Key concepts you need to know for the role — not deep expertise, but enough to have informed conversations.</p>
+
+<h3>Flaky Tests</h3>
+<div class="insight">
+  <p><strong>Definition:</strong> A test that sometimes passes and sometimes fails with the same code. Not a bug in the product — a bug in the test (or test environment).</p>
+</div>
+
+<h4>Common Causes</h4>
+<table>
+  <tr><th>Cause</th><th>Example</th><th>Fix</th></tr>
+  <tr><td>Timing / race condition</td><td>Test checks UI element before it renders; test depends on thread scheduling order</td><td>Add explicit waits, use synchronization primitives, don't depend on timing</td></tr>
+  <tr><td>Shared state</td><td>Test A writes to DB, test B reads it — passes when A runs first, fails otherwise</td><td>Isolate test data: each test creates its own data, teardown after</td></tr>
+  <tr><td>Order dependency</td><td>Test assumes previous test set up some state</td><td>Each test must be independently runnable (setup from scratch)</td></tr>
+  <tr><td>External dependency</td><td>Test calls real API that's occasionally slow or down</td><td>Mock external services, use contract testing</td></tr>
+  <tr><td>Resource exhaustion</td><td>Test passes alone but fails when 50 tests run in parallel (port conflict, memory)</td><td>Unique ports per test, proper resource cleanup</td></tr>
+  <tr><td>Non-deterministic data</td><td>Test uses current timestamp, random values, or floating-point comparison</td><td>Inject time/random seed, use epsilon comparison</td></tr>
+  <tr><td>Environment difference</td><td>Passes on Mac, fails on Linux CI (path separator, locale, timezone)</td><td>Standardize CI environment, test in container matching CI</td></tr>
+</table>
+
+<h4>How to Detect Flaky Tests</h4>
+<ul>
+  <li><strong>Re-run failed tests:</strong> If it passes on retry without code change → flaky</li>
+  <li><strong>Track pass rate per test:</strong> If a test has 80% pass rate over last 20 runs → flaky</li>
+  <li><strong>Correlation analysis:</strong> Fails only at certain time / only on certain machine / only with certain parallel tests</li>
+</ul>
+
+<h4>How to Handle Flaky Tests (as EM)</h4>
+<ol>
+  <li><strong>Detect:</strong> Automated flaky detection (track pass/fail per test per commit)</li>
+  <li><strong>Quarantine:</strong> Move flaky test out of critical path (don't block merges/releases)</li>
+  <li><strong>Notify owner:</strong> Auto-assign bug to test owner with flake data</li>
+  <li><strong>SLA:</strong> Flaky tests must be fixed within 1 week or deleted</li>
+  <li><strong>Metrics:</strong> Track flaky rate as team KPI (target: &lt;2%)</li>
+</ol>
+
+<div class="warning">
+  <p><strong>Why flaky tests are dangerous:</strong> Engineers start ignoring test failures ("probably just flaky"). Then a real bug slips through because nobody looked. Flaky tests erode trust in CI — once trust is gone, CI becomes useless.</p>
+</div>
+
+<h3>Test Pyramid</h3>
+<pre>
+         /\
+        /  \        E2E Tests (few, slow, expensive)
+       /    \       - Real device, real network, full stack
+      /------\
+     /        \     Integration Tests (moderate)
+    /          \    - Multiple services, real DB, mocked externals
+   /------------\
+  /              \  Unit Tests (many, fast, cheap)
+ /________________\ - Single function, mocked dependencies
+</pre>
+
+<table>
+  <tr><th>Level</th><th>Speed</th><th>Reliability</th><th>Coverage</th><th>Cost to Fix</th></tr>
+  <tr><td>Unit</td><td>ms</td><td>Very high (deterministic)</td><td>Logic only</td><td>Low</td></tr>
+  <tr><td>Integration</td><td>seconds</td><td>High</td><td>Service interactions</td><td>Medium</td></tr>
+  <tr><td>E2E / Device</td><td>minutes</td><td>Low (often flaky)</td><td>Full user flow</td><td>High</td></tr>
+</table>
+
+<div class="tip">
+  <p><strong>EM insight:</strong> Most teams have too many E2E tests and not enough unit tests. E2E tests are slow, flaky, and expensive to maintain. Push teams to move coverage DOWN the pyramid — more unit tests, fewer E2E. Only use E2E for critical user paths.</p>
+</div>
+
+<h3>CI/CD Concepts</h3>
+
+<h4>Continuous Integration (CI)</h4>
+<ul>
+  <li>Every code push triggers: build → lint → unit test → integration test</li>
+  <li>Goal: catch problems within minutes of commit, not days later</li>
+  <li>Key metric: <strong>time from push to green/red signal</strong> (target: &lt;10 min for unit, &lt;30 min for full)</li>
+</ul>
+
+<h4>Continuous Deployment (CD)</h4>
+<ul>
+  <li>After CI passes: auto-deploy to staging → canary → production</li>
+  <li>Gate: only deploy if all tests pass + no open P0 bugs</li>
+  <li>Rollback: auto-rollback if error rate spikes after deploy</li>
+</ul>
+
+<h4>Pipeline Health Metrics</h4>
+<table>
+  <tr><th>Metric</th><th>What it means</th><th>Target</th></tr>
+  <tr><td>Build success rate</td><td>% of builds that pass</td><td>&gt;95%</td></tr>
+  <tr><td>Build time P50/P90</td><td>How long a build takes</td><td>&lt;10 min / &lt;20 min</td></tr>
+  <tr><td>Flaky rate</td><td>% of test runs that are flaky</td><td>&lt;2%</td></tr>
+  <tr><td>MTTR (Mean Time to Recover)</td><td>Time from break to fix</td><td>&lt;1 hour</td></tr>
+  <tr><td>Deploy frequency</td><td>How often code reaches production</td><td>Daily+</td></tr>
+  <tr><td>Lead time</td><td>Commit to production</td><td>&lt;1 day</td></tr>
+</table>
+
+<h3>Test Automation Framework Concepts</h3>
+
+<h4>What a Good Test Framework Provides</h4>
+<ul>
+  <li><strong>Test runner:</strong> Discover, execute, and report tests</li>
+  <li><strong>Assertions:</strong> Verify expected vs actual results</li>
+  <li><strong>Fixtures / Setup-Teardown:</strong> Prepare environment before, cleanup after</li>
+  <li><strong>Mocking:</strong> Replace real dependencies with controllable fakes</li>
+  <li><strong>Parameterization:</strong> Run same test with different inputs</li>
+  <li><strong>Reporting:</strong> Pass/fail summary, failure details, screenshots/logs</li>
+  <li><strong>Retry:</strong> Automatic retry for flaky-prone tests</li>
+  <li><strong>Parallelization:</strong> Run tests concurrently to reduce total time</li>
+</ul>
+
+<h4>Device-Specific Test Challenges</h4>
+<table>
+  <tr><th>Challenge</th><th>Why it's hard</th><th>How to handle</th></tr>
+  <tr><td>Physical device availability</td><td>Can't spin up a new phone like a VM</td><td>Device lab with scheduler (see design section)</td></tr>
+  <tr><td>Flashing firmware</td><td>Takes 2-5 min per flash, can brick device</td><td>Only flash when version differs, recovery mode</td></tr>
+  <tr><td>Non-deterministic hardware</td><td>Bluetooth/WiFi/GPS signal varies</td><td>Control environment (Faraday cage, WiFi AP), retry with threshold</td></tr>
+  <tr><td>Long test cycles</td><td>Boot device + flash + test = 10-30 min per run</td><td>Parallelize across devices, incremental testing</td></tr>
+  <tr><td>Device state pollution</td><td>Previous test left device in bad state</td><td>Factory reset between test suites, or use checkpoint/restore</td></tr>
+</table>
+
+<h3>Code Coverage</h3>
+
+<h4>Types</h4>
+<ul>
+  <li><strong>Line coverage:</strong> % of lines executed by tests (most common, easy to game)</li>
+  <li><strong>Branch coverage:</strong> % of if/else branches taken (better signal)</li>
+  <li><strong>Mutation testing:</strong> Inject bugs → check if tests catch them (best signal, expensive)</li>
+</ul>
+
+<h4>EM Perspective on Coverage</h4>
+<div class="warning">
+  <p><strong>Coverage is a lagging indicator, not a goal.</strong> 80% coverage with meaningful assertions > 95% coverage with trivial tests. Don't mandate a number — mandate that every PR includes tests for the new logic. Review test quality in code review, not just coverage %.</p>
+</div>
+
+<h3>Developer Experience (DX) Metrics</h3>
+<table>
+  <tr><th>Metric</th><th>How to measure</th><th>What it tells you</th></tr>
+  <tr><td>Inner loop time</td><td>Time from code change to seeing result locally</td><td>If &gt;30s, developers lose flow state</td></tr>
+  <tr><td>Outer loop time</td><td>Time from push to CI result</td><td>If &gt;30 min, developers context-switch and forget</td></tr>
+  <tr><td>Onboarding time</td><td>Days for new engineer to submit first PR</td><td>If &gt;1 week, tooling/docs need work</td></tr>
+  <tr><td>Support requests</td><td>Slack messages asking for help with tools</td><td>If high, tools aren't self-service enough</td></tr>
+  <tr><td>Developer satisfaction</td><td>Quarterly survey: "How productive do you feel?"</td><td>Subjective but catches things metrics miss</td></tr>
+</table>
+
+<h3>Google-Specific Testing Concepts (to know about)</h3>
+<table>
+  <tr><th>Term</th><th>What it is</th></tr>
+  <tr><td>TAP (Test Automation Platform)</td><td>Google's internal CI system — runs tests on every commit across entire monorepo</td></tr>
+  <tr><td>Forge</td><td>Google's build system (like Bazel externally)</td></tr>
+  <tr><td>Sponge</td><td>Test result storage and visualization</td></tr>
+  <tr><td>Test size (small/medium/large)</td><td>Google categorizes tests by resource needs: small=unit (1 thread, no I/O), medium=integration, large=E2E</td></tr>
+  <tr><td>Hermetic tests</td><td>Tests that don't depend on external state — completely self-contained and reproducible</td></tr>
+  <tr><td>Test flake SLO</td><td>Teams have a flake budget — exceed it and your tests get auto-disabled</td></tr>
+  <tr><td>Presubmit vs Postsubmit</td><td>Presubmit = runs before merge (blocks). Postsubmit = runs after merge (detects, doesn't block)</td></tr>
+</table>
+
+<div class="tip">
+  <p><strong>Interview tip:</strong> You don't need to know Google internal tools. But if asked "how would you categorize tests?" — mention small/medium/large classification. If asked about flake handling — mention quarantine + SLO. These show you've read about Google's testing culture.</p>
+</div>
+
 </div>
 </div>
 
