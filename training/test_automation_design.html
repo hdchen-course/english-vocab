@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design a Test Automation System at Scale — System Design Interview</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8fafc;
+  --bg2: #ffffff;
+  --bg3: #f1f5f9;
+  --bg4: #e2e8f0;
+  --border: #cbd5e1;
+  --text: #0f172a;
+  --text2: #334155;
+  --text3: #64748b;
+  --blue: #2563eb;
+  --blue-l: #dbeafe;
+  --blue-d: #1d4ed8;
+  --green: #16a34a;
+  --green-l: #dcfce7;
+  --yellow: #d97706;
+  --yellow-l: #fef3c7;
+  --red: #dc2626;
+  --red-l: #fee2e2;
+  --purple: #7c3aed;
+  --purple-l: #ede9fe;
+  --orange: #ea580c;
+  --orange-l: #ffedd5;
+  --teal: #0d9488;
+  --teal-l: #ccfbf1;
+  --sw: 260px;
+  --r: 12px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.06);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+#sb {
+  width: var(--sw);
+  background: #fff;
+  border-right: 1px solid var(--border);
+  position: fixed; top: 0; left: 0; bottom: 0;
+  overflow-y: auto; z-index: 100;
+  transition: width .3s ease;
+}
+#sb::-webkit-scrollbar { width: 4px; }
+#sb::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 2px; }
+
+.sbh {
+  padding: 20px 16px 14px;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; background: #fff; z-index: 1;
+}
+.sbt { font-size: 13px; font-weight: 700; color: var(--blue-d); text-transform: uppercase; letter-spacing: 1px; }
+.sbs { font-size: 11px; color: var(--text3); margin-top: 3px; }
+
+.ng { padding: 12px 8px 0; }
+.ngl { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; padding: 0 8px 6px; }
+.ni {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: 8px;
+  cursor: pointer; font-size: 13px; color: var(--text2);
+  transition: all .15s; border: none; background: none; width: 100%; text-align: left;
+}
+.ni:hover { background: var(--bg3); color: var(--text); }
+.ni.active { background: var(--blue-l); color: var(--blue-d); font-weight: 600; }
+.ni-icon { font-size: 15px; flex-shrink: 0; width: 20px; text-align: center; }
+.ni-text { flex: 1; font-size: 12px; }
+.badge { margin-left: auto; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 8px; }
+.bh { background: var(--red-l); color: var(--red); }
+.bg { background: var(--green-l); color: var(--green); }
+.bp { background: var(--purple-l); color: var(--purple); }
+.bt { background: var(--teal-l); color: var(--teal); }
+.bo { background: var(--orange-l); color: var(--orange); }
+
+/* MAIN */
+#main { position: fixed; top: 0; right: 0; bottom: 0; left: var(--sw); overflow-y: auto; background: var(--bg); }
+
+/* HEADER */
+.ph {
+  background: linear-gradient(135deg, #1e3a5f 0%, #1e40af 40%, #3b82f6 100%);
+  padding: 40px 44px;
+}
+.htag { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.6); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+.ht { font-size: 32px; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 8px; }
+.ht span { color: #93c5fd; }
+.hd { color: rgba(255,255,255,0.8); font-size: 14px; max-width: 650px; }
+.hm { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.chip { font-size: 11px; color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 16px; }
+.chip b { color: #fff; }
+
+/* SECTIONS */
+.sec { padding: 36px 44px; display: none; }
+.sec.active { display: block; }
+.stitle { font-size: 24px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.sdesc { color: var(--text3); margin-bottom: 24px; font-size: 13px; }
+
+/* CARDS */
+.card {
+  background: #fff; border-radius: var(--r); margin-bottom: 12px;
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border); overflow: hidden;
+}
+.ch {
+  padding: 12px 16px; display: flex; align-items: center; gap: 10px;
+  cursor: pointer; user-select: none; transition: background .15s;
+}
+.ch:hover { background: var(--bg3); }
+.ct { font-size: 14px; font-weight: 600; color: var(--text); flex: 1; }
+.cn { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text3); background: var(--bg3); padding: 2px 7px; border-radius: 5px; }
+.db { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 5px; letter-spacing: .5px; }
+.dh { background: var(--red-l); color: var(--red); }
+.dm { background: var(--orange-l); color: var(--orange); }
+.de { background: var(--green-l); color: var(--green); }
+.chv { color: var(--text3); font-size: 11px; transition: transform .2s; }
+.chv.open { transform: rotate(90deg); }
+.cb { padding: 16px 18px; display: none; font-size: 13px; color: var(--text2); line-height: 1.7; border-top: 1px solid var(--bg3); }
+.cb.open { display: block; }
+
+/* INTERVIEW QUOTE */
+.iq {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 1px solid #bae6fd;
+  border-left: 4px solid var(--blue);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin: 14px 0;
+  font-style: italic;
+  color: var(--text2);
+  font-size: 13px;
+  position: relative;
+}
+.iq::before {
+  content: 'SAY THIS';
+  position: absolute;
+  top: -8px; left: 14px;
+  font-size: 9px; font-weight: 700; font-style: normal;
+  background: var(--blue);
+  color: #fff;
+  padding: 1px 8px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+
+/* CALLOUTS */
+.tip { background: var(--green-l); border-left: 4px solid var(--green); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.tipl { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--green); margin-bottom: 4px; }
+.tip p { color: var(--text2); font-size: 13px; }
+
+.warn { background: var(--yellow-l); border-left: 4px solid var(--yellow); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.warnl { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--yellow); margin-bottom: 4px; }
+.warn p { color: var(--text2); font-size: 13px; }
+
+.trap { background: var(--red-l); border-left: 4px solid var(--red); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.trapl { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--red); margin-bottom: 4px; }
+.trap p { color: var(--text2); font-size: 13px; }
+
+.note { background: var(--purple-l); border-left: 4px solid var(--purple); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.notel { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--purple); margin-bottom: 4px; }
+.note p { color: var(--text2); font-size: 13px; }
+
+/* TABLES */
+.tbl { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13px; border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+.tbl th { background: var(--bg3); color: var(--text2); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+.tbl td { padding: 10px 14px; border-bottom: 1px solid var(--bg3); color: var(--text2); }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr:hover td { background: var(--bg); }
+
+/* CODE */
+code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: var(--bg3); padding: 1px 5px; border-radius: 4px; color: var(--blue-d); }
+
+pre.codeblock {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 12px 0;
+  overflow-x: auto;
+  line-height: 1.6;
+  color: var(--text2);
+}
+
+/* SUB HEADINGS */
+h3.sub { font-size: 17px; font-weight: 700; color: var(--text); margin: 28px 0 10px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+h4.sub2 { font-size: 11px; font-weight: 700; color: var(--text3); margin: 18px 0 8px; text-transform: uppercase; letter-spacing: .8px; }
+
+/* BULLET LIST */
+.blist { padding-left: 20px; margin: 10px 0; }
+.blist li { font-size: 13px; color: var(--text2); margin-bottom: 6px; }
+.blist li strong { color: var(--text); }
+
+/* GRID */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+@media (max-width: 900px) { .g2, .g3 { grid-template-columns: 1fr; } }
+
+/* SVG */
+.svg-container { margin: 20px 0; text-align: center; overflow-x: auto; }
+.svg-container svg { max-width: 100%; height: auto; }
+
+/* TIMELINE */
+.timeline { margin: 16px 0; padding-left: 20px; border-left: 3px solid var(--blue-l); }
+.timeline-item { margin-bottom: 16px; position: relative; padding-left: 16px; }
+.timeline-item::before { content: ''; position: absolute; left: -26px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--blue); border: 2px solid #fff; }
+.timeline-time { font-size: 11px; font-weight: 700; color: var(--blue-d); text-transform: uppercase; letter-spacing: .5px; }
+.timeline-title { font-size: 14px; font-weight: 600; color: var(--text); margin: 2px 0; }
+.timeline-desc { font-size: 12px; color: var(--text2); }
+
+/* TAGS */
+.tag { display: inline-block; padding: 3px 10px; border-radius: 14px; background: var(--blue-l); color: var(--blue-d); font-size: 11px; font-weight: 500; margin: 2px; }
+
+/* SEPARATOR */
+.sep { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+/* RESPONSIVE */
+@media (max-width: 800px) {
+  #sb { width: 0; overflow: hidden; }
+  #main { left: 0; }
+  .ph { padding: 30px 20px; }
+  .sec { padding: 24px 18px; }
+  .ht { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav id="sb">
+  <div class="sbh">
+    <div class="sbt">Test Automation</div>
+    <div class="sbs">System Design &middot; At Scale</div>
+  </div>
+  <div class="ng"><div class="ngl">Foundation</div>
+    <button class="ni active" onclick="go('overview')"><span class="ni-icon">1</span><span class="ni-text">System Overview</span><span class="badge bh">Start</span></button>
+    <button class="ni" onclick="go('requirements')"><span class="ni-icon">2</span><span class="ni-text">Requirements &amp; Scale</span><span class="badge bp">Critical</span></button>
+    <button class="ni" onclick="go('architecture')"><span class="ni-icon">3</span><span class="ni-text">High-Level Architecture</span><span class="badge bp">Critical</span></button>
+  </div>
+  <div class="ng"><div class="ngl">Core Systems</div>
+    <button class="ni" onclick="go('selection')"><span class="ni-icon">4</span><span class="ni-text">Test Selection</span><span class="badge bh">Hard</span></button>
+    <button class="ni" onclick="go('scheduling')"><span class="ni-icon">5</span><span class="ni-text">Scheduling &amp; Execution</span><span class="badge bp">Core</span></button>
+    <button class="ni" onclick="go('devicefarm')"><span class="ni-icon">6</span><span class="ni-text">Device Farm</span><span class="badge bo">Unique</span></button>
+    <button class="ni" onclick="go('flaky')"><span class="ni-icon">7</span><span class="ni-text">Flaky Test Management</span><span class="badge bh">Key</span></button>
+    <button class="ni" onclick="go('results')"><span class="ni-icon">8</span><span class="ni-text">Results &amp; Root Cause</span></button>
+  </div>
+  <div class="ng"><div class="ngl">Advanced</div>
+    <button class="ni" onclick="go('aiml')"><span class="ni-icon">9</span><span class="ni-text">AI/ML in Testing</span><span class="badge bt">Bonus</span></button>
+    <button class="ni" onclick="go('scalability')"><span class="ni-icon">10</span><span class="ni-text">Scalability Deep Dive</span></button>
+    <button class="ni" onclick="go('observability')"><span class="ni-icon">11</span><span class="ni-text">Observability</span></button>
+  </div>
+  <div class="ng"><div class="ngl">Interview Prep</div>
+    <button class="ni" onclick="go('realworld')"><span class="ni-icon">12</span><span class="ni-text">Real-World Systems</span><span class="badge bg">Name Drop</span></button>
+    <button class="ni" onclick="go('script')"><span class="ni-icon">13</span><span class="ni-text">Interview Script</span><span class="badge bh">Must</span></button>
+    <button class="ni" onclick="go('pitfalls')"><span class="ni-icon">14</span><span class="ni-text">Pitfalls &amp; Trade-offs</span><span class="badge bo">Avoid</span></button>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div id="main">
+
+<!-- HEADER -->
+<div class="ph">
+  <div class="htag">System Design Interview Preparation</div>
+  <h1 class="ht">Design a Test Automation System <span>at Scale</span></h1>
+  <p class="hd">Infrastructure and platform design for running millions of tests daily across thousands of services, device types, and code changes. Targeting Google L5 / Amazon L6.</p>
+  <div class="hm">
+    <span class="chip"><b>14</b> Sections</span>
+    <span class="chip"><b>150M+</b> Tests/Day (Google)</span>
+    <span class="chip">Device Farm</span>
+    <span class="chip">ML Test Selection</span>
+    <span class="chip">Flaky Detection</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 1: Overview -->
+<!-- ============================================================ -->
+<div class="sec active" id="tab-overview">
+  <h2 class="stitle">Test Automation System Overview</h2>
+  <p class="sdesc">What interviewers actually test when they ask "Design a Test Automation System" and the scale context you need to set.</p>
+
+  <h3 class="sub">What Interviewers Are Testing</h3>
+  <ul class="blist">
+    <li><strong>Systems thinking:</strong> Can you design infrastructure that serves thousands of developers?</li>
+    <li><strong>Scale awareness:</strong> Do you understand what breaks at 100K+ tests/hour?</li>
+    <li><strong>Trade-off reasoning:</strong> Speed vs. thoroughness, cost vs. coverage, isolation vs. performance</li>
+    <li><strong>Real-world experience:</strong> Have you dealt with flaky tests, slow feedback loops, device testing?</li>
+    <li><strong>Prioritization:</strong> What do you build first vs. what can wait?</li>
+  </ul>
+
+  <h3 class="sub">Scale Context (Set This Early)</h3>
+  <div class="tip">
+    <div class="tipl">IMPRESSIVE NUMBERS TO CITE</div>
+    <p>
+      Google runs <strong>150M+ test executions/day</strong> across <strong>4.2M test cases</strong> in their monorepo.<br>
+      Meta processes <strong>100K+ code changes/week</strong> and uses ML to select which tests to run.<br>
+      Amazon tests across <strong>hundreds of device types</strong> (Echo, Ring, Sidewalk, Fire TV) simultaneously.
+    </p>
+  </div>
+
+  <h3 class="sub">Different Angles This Question Can Take</h3>
+  <table class="tbl">
+    <tr><th>Angle</th><th>Focus</th><th>Key Challenge</th></tr>
+    <tr><td>CI/CD Infrastructure</td><td>Build &rarr; test &rarr; deploy pipeline</td><td>Speed + reliability at scale</td></tr>
+    <tr><td>Device Farm</td><td>Hardware testing platform</td><td>Physical device management + isolation</td></tr>
+    <tr><td>Test Selection</td><td>Which tests to run for a change</td><td>Coverage vs. speed trade-off</td></tr>
+    <tr><td>Flaky Test Management</td><td>Non-deterministic test handling</td><td>Detection, quarantine, repair</td></tr>
+    <tr><td>Test Analytics Platform</td><td>Results, trends, root cause</td><td>Actionable insights at scale</td></tr>
+  </table>
+
+  <h3 class="sub">Key Principles to Drive Your Design</h3>
+  <div class="g2">
+    <div class="card">
+      <div class="ch" onclick="toggle(this)">
+        <span class="ct">Determinism</span>
+        <span class="chv">&#9654;</span>
+      </div>
+      <div class="cb">Same code + same test = same result. Every time. Non-deterministic tests destroy developer trust. This means: no shared state, no timing dependencies, hermetic environments.</div>
+    </div>
+    <div class="card">
+      <div class="ch" onclick="toggle(this)">
+        <span class="ct">Speed (10-min Feedback)</span>
+        <span class="chv">&#9654;</span>
+      </div>
+      <div class="cb">Developers need feedback within 10 minutes for presubmit. If tests take longer, developers context-switch and productivity drops. This drives test selection, parallelism, and caching decisions.</div>
+    </div>
+    <div class="card">
+      <div class="ch" onclick="toggle(this)">
+        <span class="ct">Isolation</span>
+        <span class="chv">&#9654;</span>
+      </div>
+      <div class="cb">Each test runs in its own sandbox. No test can affect another. Container per test, fresh database, mocked external services. The enemy is shared mutable state.</div>
+    </div>
+    <div class="card">
+      <div class="ch" onclick="toggle(this)">
+        <span class="ct">Actionable Results</span>
+        <span class="chv">&#9654;</span>
+      </div>
+      <div class="cb">A red test means nothing if the developer cannot quickly identify WHY it failed and WHO caused it. Stack traces, logs, screenshots, blame assignment, root cause grouping.</div>
+    </div>
+  </div>
+
+  <div class="iq">
+    "Let me start by clarifying the scope. Test automation at scale is really about designing infrastructure that enables thousands of developers to get fast, reliable test feedback on every code change. At Google scale, we're talking 150 million test executions per day. I'll design the full platform: test selection, scheduling, execution, device testing, and flaky test management."
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 2: Requirements & Scale -->
+<!-- ============================================================ -->
+<div class="sec" id="tab-requirements">
+  <h2 class="stitle">Requirements &amp; Scale</h2>
+  <p class="sdesc">Functional and non-functional requirements. Always start by defining these in the interview.</p>
+
+  <h3 class="sub">Functional Requirements</h3>
+  <ul class="blist">
+    <li><strong>Automatic test discovery:</strong> Submit code change &rarr; system determines which tests to run</li>
+    <li><strong>Parallel execution:</strong> Run tests across thousands of workers simultaneously</li>
+    <li><strong>Rich result reporting:</strong> Logs, screenshots, stack traces, video recordings</li>
+    <li><strong>Flaky test detection:</strong> Identify and quarantine non-deterministic tests automatically</li>
+    <li><strong>Multi-type support:</strong> Unit, integration, end-to-end, device, performance, security tests</li>
+    <li><strong>Health tracking:</strong> Test reliability scores, duration trends, ownership tracking</li>
+    <li><strong>Device testing:</strong> Execute tests on physical devices (phones, IoT, smart speakers)</li>
+    <li><strong>Blame assignment:</strong> Identify which code change broke a test</li>
+  </ul>
+
+  <h3 class="sub">Non-Functional Requirements</h3>
+  <table class="tbl">
+    <tr><th>Requirement</th><th>Target</th><th>Why</th></tr>
+    <tr><td>Latency (feedback time)</td><td>&lt; 10 minutes for presubmit</td><td>Developer productivity threshold</td></tr>
+    <tr><td>Throughput</td><td>5M+ test executions/hour at peak</td><td>100K changes/day, each triggers 1K-50K tests</td></tr>
+    <tr><td>Availability</td><td>99.9% for the test platform itself</td><td>Blocking all developers is catastrophic</td></tr>
+    <tr><td>Cost efficiency</td><td>Selective execution, caching</td><td>Running ALL tests for EVERY change is 10x too expensive</td></tr>
+    <tr><td>Correctness</td><td>99.9% failure detection rate</td><td>Skipped tests must not miss real bugs</td></tr>
+  </table>
+
+  <h3 class="sub">Scale Estimates (Google-Level)</h3>
+  <div class="note">
+    <div class="notel">BACK-OF-ENVELOPE CALCULATION</div>
+    <p>
+      <strong>Developers:</strong> 100K engineers<br>
+      <strong>Test cases:</strong> 4.2M+ in the monorepo<br>
+      <strong>Code changes:</strong> 50K/day (peak hours: 5K/hour)<br>
+      <strong>Tests per change:</strong> 1K-50K (median ~5K after selection)<br>
+      <strong>Daily executions:</strong> 50K changes x 5K tests = 250M test executions/day<br>
+      <strong>Peak throughput:</strong> 5K changes/hour x 5K tests = 25M tests/hour<br>
+      <strong>Workers needed:</strong> avg test = 30s, so 25M x 30s / 3600s = ~210K worker-slots at peak<br>
+      <strong>With container reuse:</strong> ~10K-15K physical workers (each running 15-20 tests/hour)
+    </p>
+  </div>
+
+  <h3 class="sub">Device Farm Scale</h3>
+  <ul class="blist">
+    <li><strong>10K+ physical devices</strong> across 200+ models (phones, tablets, IoT, speakers)</li>
+    <li><strong>Device utilization target:</strong> 70-80% (too high = queuing, too low = waste)</li>
+    <li><strong>Device reset time:</strong> 30s (container) to 5min (full factory reset for physical)</li>
+    <li><strong>Multi-device tests:</strong> some scenarios need 2-5 devices communicating (BLE mesh, WiFi Direct)</li>
+  </ul>
+
+  <div class="iq">
+    "For requirements, I want to focus on three key non-functional constraints. First, latency: developers need feedback within 10 minutes. Second, scale: at Google we'd see 50K code changes per day each triggering thousands of tests. Third, reliability: if the test system goes down, it blocks ALL developers. These constraints will drive every architectural decision."
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 3: High-Level Architecture -->
+<!-- ============================================================ -->
+<div class="sec" id="tab-architecture">
+  <h2 class="stitle">High-Level Architecture</h2>
+  <p class="sdesc">The end-to-end system from code change to developer feedback.</p>
+
+  <h3 class="sub">System Architecture Diagram</h3>
+  <div class="svg-container">
+    <svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" style="font-family: Inter, sans-serif;">
+      <!-- Background -->
+      <rect width="900" height="620" fill="#fafbfc" rx="12"/>
+
+      <!-- Title -->
+      <text x="450" y="30" text-anchor="middle" font-size="14" font-weight="700" fill="#1e293b">Test Automation System - High-Level Architecture</text>
+
+      <!-- Code Change (Entry) -->
+      <rect x="30" y="60" width="140" height="50" rx="8" fill="#fff" stroke="#2563eb" stroke-width="2"/>
+      <text x="100" y="82" text-anchor="middle" font-size="10" font-weight="600" fill="#1d4ed8">CODE CHANGE</text>
+      <text x="100" y="98" text-anchor="middle" font-size="9" fill="#64748b">Developer submits CL</text>
+
+      <!-- Build System -->
+      <rect x="220" y="60" width="140" height="50" rx="8" fill="#fff" stroke="#7c3aed" stroke-width="2"/>
+      <text x="290" y="82" text-anchor="middle" font-size="10" font-weight="600" fill="#7c3aed">BUILD SYSTEM</text>
+      <text x="290" y="98" text-anchor="middle" font-size="9" fill="#64748b">Bazel / Buck / Gradle</text>
+
+      <!-- Test Selector -->
+      <rect x="410" y="60" width="140" height="50" rx="8" fill="#fff" stroke="#dc2626" stroke-width="2"/>
+      <text x="480" y="82" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626">TEST SELECTOR</text>
+      <text x="480" y="98" text-anchor="middle" font-size="9" fill="#64748b">Dep Graph + ML Model</text>
+
+      <!-- Test Scheduler -->
+      <rect x="600" y="60" width="140" height="50" rx="8" fill="#fff" stroke="#ea580c" stroke-width="2"/>
+      <text x="670" y="82" text-anchor="middle" font-size="10" font-weight="600" fill="#ea580c">TEST SCHEDULER</text>
+      <text x="670" y="98" text-anchor="middle" font-size="9" fill="#64748b">Priority Queue + Bin-pack</text>
+
+      <!-- Arrows row 1 -->
+      <line x1="170" y1="85" x2="220" y2="85" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <line x1="360" y1="85" x2="410" y2="85" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <line x1="550" y1="85" x2="600" y2="85" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- Test Executors (Large Box) -->
+      <rect x="30" y="160" width="530" height="110" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4"/>
+      <text x="295" y="180" text-anchor="middle" font-size="10" font-weight="700" fill="#16a34a">TEST EXECUTOR POOL (Auto-scaling)</text>
+
+      <!-- Worker boxes -->
+      <rect x="50" y="195" width="100" height="55" rx="6" fill="#fff" stroke="#16a34a" stroke-width="1"/>
+      <text x="100" y="215" text-anchor="middle" font-size="9" font-weight="600" fill="#1e293b">Container Workers</text>
+      <text x="100" y="230" text-anchor="middle" font-size="8" fill="#64748b">Unit + Integration</text>
+      <text x="100" y="242" text-anchor="middle" font-size="8" fill="#64748b">~10K containers</text>
+
+      <rect x="170" y="195" width="100" height="55" rx="6" fill="#fff" stroke="#16a34a" stroke-width="1"/>
+      <text x="220" y="215" text-anchor="middle" font-size="9" font-weight="600" fill="#1e293b">VM Workers</text>
+      <text x="220" y="230" text-anchor="middle" font-size="8" fill="#64748b">E2E + Browser</text>
+      <text x="220" y="242" text-anchor="middle" font-size="8" fill="#64748b">~2K VMs</text>
+
+      <rect x="290" y="195" width="100" height="55" rx="6" fill="#fff" stroke="#16a34a" stroke-width="1"/>
+      <text x="340" y="215" text-anchor="middle" font-size="9" font-weight="600" fill="#1e293b">Perf Workers</text>
+      <text x="340" y="230" text-anchor="middle" font-size="8" fill="#64748b">Load + Benchmark</text>
+      <text x="340" y="242" text-anchor="middle" font-size="8" fill="#64748b">Dedicated HW</text>
+
+      <rect x="410" y="195" width="130" height="55" rx="6" fill="#fff" stroke="#ea580c" stroke-width="1"/>
+      <text x="475" y="215" text-anchor="middle" font-size="9" font-weight="600" fill="#ea580c">Device Farm</text>
+      <text x="475" y="230" text-anchor="middle" font-size="8" fill="#64748b">Physical Devices</text>
+      <text x="475" y="242" text-anchor="middle" font-size="8" fill="#64748b">10K+ devices, 200+ models</text>
+
+      <!-- Arrow from Scheduler to Executors -->
+      <path d="M670,110 L670,140 L295,140 L295,160" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- Results Aggregator -->
+      <rect x="30" y="310" width="180" height="50" rx="8" fill="#fff" stroke="#0d9488" stroke-width="2"/>
+      <text x="120" y="332" text-anchor="middle" font-size="10" font-weight="600" fill="#0d9488">RESULT AGGREGATOR</text>
+      <text x="120" y="348" text-anchor="middle" font-size="9" fill="#64748b">Collect + Analyze + Store</text>
+
+      <!-- Flaky Detector -->
+      <rect x="240" y="310" width="160" height="50" rx="8" fill="#fff" stroke="#dc2626" stroke-width="2"/>
+      <text x="320" y="332" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626">FLAKY DETECTOR</text>
+      <text x="320" y="348" text-anchor="middle" font-size="9" fill="#64748b">Statistical + Re-run</text>
+
+      <!-- Historical Store -->
+      <rect x="430" y="310" width="160" height="50" rx="8" fill="#fff" stroke="#7c3aed" stroke-width="2"/>
+      <text x="510" y="332" text-anchor="middle" font-size="10" font-weight="600" fill="#7c3aed">HISTORICAL STORE</text>
+      <text x="510" y="348" text-anchor="middle" font-size="9" fill="#64748b">ML Training Data</text>
+
+      <!-- Arrow from executors to aggregator -->
+      <line x1="120" y1="270" x2="120" y2="310" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <line x1="320" y1="270" x2="320" y2="310" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- Arrow from aggregator to historical -->
+      <line x1="210" y1="335" x2="240" y2="335" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <line x1="400" y1="335" x2="430" y2="335" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- Feedback from historical to test selector -->
+      <path d="M510,310 L510,290 L780,290 L780,50 L480,50 L480,60" fill="none" stroke="#7c3aed" stroke-width="1" stroke-dasharray="4" marker-end="url(#arrow)"/>
+      <text x="780" y="170" font-size="8" fill="#7c3aed" transform="rotate(-90 780 170)">ML Feedback Loop</text>
+
+      <!-- Developer-facing outputs -->
+      <rect x="30" y="400" width="140" height="50" rx="8" fill="#fff" stroke="#2563eb" stroke-width="2"/>
+      <text x="100" y="422" text-anchor="middle" font-size="10" font-weight="600" fill="#2563eb">DASHBOARD</text>
+      <text x="100" y="438" text-anchor="middle" font-size="9" fill="#64748b">Results + Trends + Health</text>
+
+      <rect x="200" y="400" width="140" height="50" rx="8" fill="#fff" stroke="#2563eb" stroke-width="2"/>
+      <text x="270" y="422" text-anchor="middle" font-size="10" font-weight="600" fill="#2563eb">NOTIFICATIONS</text>
+      <text x="270" y="438" text-anchor="middle" font-size="9" fill="#64748b">Email / Chat / IDE</text>
+
+      <rect x="370" y="400" width="140" height="50" rx="8" fill="#fff" stroke="#2563eb" stroke-width="2"/>
+      <text x="440" y="422" text-anchor="middle" font-size="10" font-weight="600" fill="#2563eb">CODE REVIEW</text>
+      <text x="440" y="438" text-anchor="middle" font-size="9" fill="#64748b">Inline test results</text>
+
+      <rect x="540" y="400" width="160" height="50" rx="8" fill="#fff" stroke="#2563eb" stroke-width="2"/>
+      <text x="620" y="422" text-anchor="middle" font-size="10" font-weight="600" fill="#2563eb">ARTIFACT STORAGE</text>
+      <text x="620" y="438" text-anchor="middle" font-size="9" fill="#64748b">Logs / Screenshots / Video</text>
+
+      <!-- Arrows from aggregator to outputs -->
+      <line x1="80" y1="360" x2="80" y2="400" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <line x1="120" y1="360" x2="200" y2="400" stroke="#94a3b8" stroke-width="1" marker-end="url(#arrow)"/>
+      <line x1="150" y1="360" x2="370" y2="400" stroke="#94a3b8" stroke-width="1" marker-end="url(#arrow)"/>
+      <line x1="160" y1="360" x2="540" y2="400" stroke="#94a3b8" stroke-width="1" marker-end="url(#arrow)"/>
+
+      <!-- Legend -->
+      <rect x="30" y="480" width="860" height="130" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+      <text x="50" y="500" font-size="10" font-weight="700" fill="#1e293b">COMPONENT SUMMARY</text>
+
+      <rect x="50" y="515" width="8" height="8" rx="2" fill="#2563eb"/>
+      <text x="65" y="523" font-size="9" fill="#334155"><tspan font-weight="600">Build System:</tspan> Compiles affected targets, produces test binaries (Bazel, Buck, Gradle)</text>
+
+      <rect x="50" y="535" width="8" height="8" rx="2" fill="#dc2626"/>
+      <text x="65" y="543" font-size="9" fill="#334155"><tspan font-weight="600">Test Selector:</tspan> Determines which tests to run via dependency graph analysis + ML prediction</text>
+
+      <rect x="50" y="555" width="8" height="8" rx="2" fill="#ea580c"/>
+      <text x="65" y="563" font-size="9" fill="#334155"><tspan font-weight="600">Test Scheduler:</tspan> Distributes tests across workers with priority queues and bin-packing</text>
+
+      <rect x="50" y="575" width="8" height="8" rx="2" fill="#16a34a"/>
+      <text x="65" y="583" font-size="9" fill="#334155"><tspan font-weight="600">Executors:</tspan> Isolated environments (containers/VMs/physical devices) running actual tests</text>
+
+      <rect x="50" y="595" width="8" height="8" rx="2" fill="#0d9488"/>
+      <text x="65" y="603" font-size="9" fill="#334155"><tspan font-weight="600">Result Aggregator:</tspan> Collects results, detects flaky tests, feeds ML model, triggers notifications</text>
+
+      <!-- Arrow marker -->
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L8,3 L0,6 Z" fill="#94a3b8"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <h3 class="sub">Component Responsibilities</h3>
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="cn">1</span>
+      <span class="ct">Build System (Bazel/Buck/Gradle)</span>
+      <span class="db de">FOUNDATION</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li>Compiles only <strong>affected targets</strong> based on changed files</li>
+        <li>Produces test binaries and their transitive dependencies</li>
+        <li>Provides the <strong>dependency graph</strong> that test selection uses</li>
+        <li>Caches build artifacts (remote cache) to avoid recompilation</li>
+        <li>Key: Bazel's <code>query</code> command can find all reverse dependencies of a file</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="cn">2</span>
+      <span class="ct">Test Selector</span>
+      <span class="db dh">HARDEST PART</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li><strong>Input:</strong> list of changed files + build dependency graph + historical data</li>
+        <li><strong>Output:</strong> ordered list of tests to run with confidence scores</li>
+        <li>Combines: dependency-based selection (deterministic) + ML prediction (probabilistic)</li>
+        <li>Must balance: coverage (don't miss failures) vs. speed (don't run everything)</li>
+        <li>Target: 70% reduction in test executions while maintaining 99.9% failure detection</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="cn">3</span>
+      <span class="ct">Test Scheduler</span>
+      <span class="db dm">SCALE CRITICAL</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li><strong>Priority queues:</strong> presubmit (blocking) &gt; postsubmit (fast feedback) &gt; nightly (comprehensive)</li>
+        <li><strong>Bin-packing:</strong> group short tests on same worker, long tests get dedicated workers</li>
+        <li><strong>Resource matching:</strong> route GPU tests to GPU workers, device tests to device farm</li>
+        <li><strong>Load balancing:</strong> distribute across workers considering locality and warm caches</li>
+        <li><strong>Retry logic:</strong> auto-retry failed tests 1-2 times before reporting failure</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="cn">4</span>
+      <span class="ct">Test Executors</span>
+      <span class="db de">WORKHORSE</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li><strong>Container workers:</strong> Docker-based, fast startup (~2s), good for unit + integration tests</li>
+        <li><strong>VM workers:</strong> stronger isolation, needed for tests requiring kernel access or specific OS</li>
+        <li><strong>Device workers:</strong> physical devices managed by device farm controller</li>
+        <li><strong>Key properties:</strong> stateless, hermetic, auto-scaling, health-monitored</li>
+        <li><strong>Warm pool:</strong> pre-built containers with common dependencies already installed</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="cn">5</span>
+      <span class="ct">Result Aggregator &amp; Flaky Detector</span>
+      <span class="db dm">HIGH VALUE</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li>Collects pass/fail, duration, logs, artifacts from all executors</li>
+        <li>Groups failures by likely root cause (same stack trace = same bug)</li>
+        <li>Runs flakiness analysis: statistical tracking over rolling window</li>
+        <li>Triggers notifications to code change authors and test owners</li>
+        <li>Feeds historical data back to ML model for improved test selection</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="iq">
+    "The architecture has six major components. The flow is: code change triggers the build system, which feeds the test selector. The selector uses both dependency analysis and ML prediction to choose tests. The scheduler distributes them across our executor pool — containers for fast tests, VMs for isolated tests, and a device farm for hardware tests. Results flow to an aggregator that handles flaky detection, root cause analysis, and feeds data back to improve selection."
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 4: Test Selection -->
+<!-- ============================================================ -->
+<div class="sec" id="tab-selection">
+  <h2 class="stitle">Test Selection (The Hard Problem)</h2>
+  <p class="sdesc">The most impressive part to discuss. This is where you differentiate from junior candidates.</p>
+
+  <div class="warn">
+    <div class="warnl">WHY THIS MATTERS</div>
+    <p>
+      At Google scale with 4.2M tests, running ALL tests for EVERY change would cost $50M+/year in compute alone and take hours per change. Test selection is the key to making the system economically viable and fast enough for developers.
+    </p>
+  </div>
+
+  <h3 class="sub">Test Selection Flow</h3>
+  <div class="svg-container">
+    <svg viewBox="0 0 850 400" xmlns="http://www.w3.org/2000/svg" style="font-family: Inter, sans-serif;">
+      <rect width="850" height="400" fill="#fafbfc" rx="12"/>
+      <text x="425" y="25" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">Test Selection Pipeline</text>
+
+      <!-- Input -->
+      <rect x="30" y="50" width="130" height="60" rx="8" fill="#fff" stroke="#2563eb" stroke-width="2"/>
+      <text x="95" y="72" text-anchor="middle" font-size="9" font-weight="700" fill="#1d4ed8">CODE CHANGE</text>
+      <text x="95" y="86" text-anchor="middle" font-size="8" fill="#64748b">files_changed[]</text>
+      <text x="95" y="98" text-anchor="middle" font-size="8" fill="#64748b">author, size, module</text>
+
+      <!-- Phase 1: Dependency -->
+      <rect x="200" y="40" width="180" height="80" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="290" y="60" text-anchor="middle" font-size="9" font-weight="700" fill="#7c3aed">PHASE 1: DEPENDENCY GRAPH</text>
+      <text x="290" y="78" text-anchor="middle" font-size="8" fill="#334155">Bazel rdeps(changed_files)</text>
+      <text x="290" y="92" text-anchor="middle" font-size="8" fill="#334155">Find all transitively</text>
+      <text x="290" y="106" text-anchor="middle" font-size="8" fill="#334155">dependent test targets</text>
+
+      <!-- Phase 2: ML -->
+      <rect x="420" y="40" width="180" height="80" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+      <text x="510" y="60" text-anchor="middle" font-size="9" font-weight="700" fill="#dc2626">PHASE 2: ML PREDICTION</text>
+      <text x="510" y="78" text-anchor="middle" font-size="8" fill="#334155">P(fail | change features)</text>
+      <text x="510" y="92" text-anchor="middle" font-size="8" fill="#334155">Add high-risk tests not</text>
+      <text x="510" y="106" text-anchor="middle" font-size="8" fill="#334155">in dep graph results</text>
+
+      <!-- Merge -->
+      <rect x="640" y="50" width="130" height="60" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+      <text x="705" y="72" text-anchor="middle" font-size="9" font-weight="700" fill="#16a34a">MERGED SET</text>
+      <text x="705" y="86" text-anchor="middle" font-size="8" fill="#334155">Dep + ML + Priority</text>
+      <text x="705" y="98" text-anchor="middle" font-size="8" fill="#334155">Ordered by risk score</text>
+
+      <!-- Arrows -->
+      <line x1="160" y1="80" x2="200" y2="80" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr2)"/>
+      <line x1="380" y1="80" x2="420" y2="80" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr2)"/>
+      <line x1="600" y1="80" x2="640" y2="80" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr2)"/>
+
+      <!-- Results boxes below -->
+      <rect x="30" y="160" width="380" height="105" rx="8" fill="#fff" stroke="#7c3aed" stroke-width="1"/>
+      <text x="50" y="180" font-size="10" font-weight="700" fill="#7c3aed">Dependency-Based Selection (Deterministic)</text>
+      <text x="50" y="198" font-size="9" fill="#334155">+ Fast, predictable, no false negatives for direct deps</text>
+      <text x="50" y="214" font-size="9" fill="#334155">+ Works with: Bazel rdeps, Buck target graph, module ownership</text>
+      <text x="50" y="230" font-size="9" fill="#334155">- Overly broad: change in utils/ may trigger 50K tests</text>
+      <text x="50" y="246" font-size="9" fill="#334155">- Misses: behavioral deps, config changes, env-specific bugs</text>
+      <text x="50" y="262" font-size="9" fill="#dc2626">Typical reduction: 30-50% (still too many for large changes)</text>
+
+      <rect x="440" y="160" width="380" height="105" rx="8" fill="#fff" stroke="#dc2626" stroke-width="1"/>
+      <text x="460" y="180" font-size="10" font-weight="700" fill="#dc2626">ML-Based Predictive Selection (Probabilistic)</text>
+      <text x="460" y="198" font-size="9" fill="#334155">+ 70% reduction in executions (Meta paper, 2018)</text>
+      <text x="460" y="214" font-size="9" fill="#334155">+ Catches non-obvious correlations (time-of-day, author patterns)</text>
+      <text x="460" y="230" font-size="9" fill="#334155">+ Learns from history: "changes to auth/ always break payment tests"</text>
+      <text x="460" y="246" font-size="9" fill="#334155">- Risk: can miss novel failure modes (99.9% not 100%)</text>
+      <text x="460" y="262" font-size="9" fill="#16a34a">Failure detection rate: 99.9% with proper threshold tuning</text>
+
+      <!-- Hybrid Approach -->
+      <rect x="30" y="290" width="790" height="100" rx="8" fill="#f0f9ff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="425" y="312" text-anchor="middle" font-size="11" font-weight="700" fill="#1d4ed8">RECOMMENDED: Hybrid Approach (Say This in Interview)</text>
+
+      <text x="50" y="335" font-size="9" font-weight="600" fill="#1e293b">Pass 1 (Fast, Deterministic):</text>
+      <text x="220" y="335" font-size="9" fill="#334155">Dependency graph analysis - find all tests with build-level dependency on changed code</text>
+
+      <text x="50" y="355" font-size="9" font-weight="600" fill="#1e293b">Pass 2 (Smart, Probabilistic):</text>
+      <text x="230" y="355" font-size="9" fill="#334155">ML model adds high-risk tests NOT already captured by dependency analysis</text>
+
+      <text x="50" y="375" font-size="9" font-weight="600" fill="#1e293b">Fallback (Comprehensive):</text>
+      <text x="210" y="375" font-size="9" fill="#334155">Nightly full-suite run catches anything missed - validates model accuracy continuously</text>
+
+      <defs>
+        <marker id="arr2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L8,3 L0,6 Z" fill="#94a3b8"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <h3 class="sub">Naive Approach (Mention to Show You Know Why It Fails)</h3>
+  <div class="trap">
+    <div class="trapl">DON'T SAY THIS AS YOUR SOLUTION</div>
+    <p>"Just run all tests for every change" — At Google scale this means 4.2M tests x 50K changes/day = economically impossible and hours of latency.</p>
+  </div>
+
+  <h3 class="sub">Dependency-Based Selection (Your First Pass)</h3>
+  <ul class="blist">
+    <li><strong>Build the dependency graph:</strong> Every module/package declares its dependencies</li>
+    <li><strong>Reverse lookup:</strong> Code change in module X &rarr; find all tests that transitively depend on X</li>
+    <li><strong>Tool:</strong> <code>bazel query 'rdeps(//..., //path/to/changed:target)'</code></li>
+    <li><strong>Pros:</strong> Deterministic, no ML training needed, catches all direct-dependency failures</li>
+    <li><strong>Cons:</strong> Over-selects for foundational libraries (change in logging &rarr; triggers ALL tests)</li>
+  </ul>
+
+<pre class="codeblock">
+# Bazel: Find all test targets affected by changes in //auth/...
+$ bazel query 'kind(test, rdeps(//..., //auth/...))'
+//auth:auth_test
+//payment:payment_integration_test
+//user:user_service_test
+//api:api_gateway_test
+... (potentially 10K+ targets for core modules)
+</pre>
+
+  <h3 class="sub">ML-Based Predictive Selection (Meta's Approach)</h3>
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">ML Model Design</span>
+      <span class="db dh">KEY DIFFERENTIATOR</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <h4 class="sub2">Training Data</h4>
+      <ul class="blist">
+        <li>Historical record: (code_change_features, test_id) &rarr; pass/fail</li>
+        <li>Millions of data points from every test execution</li>
+      </ul>
+      <h4 class="sub2">Features</h4>
+      <ul class="blist">
+        <li><strong>File-level:</strong> which files changed, file path patterns, file type</li>
+        <li><strong>Directory-level:</strong> which modules/packages were touched</li>
+        <li><strong>Change metadata:</strong> author, change size (LOC), time of day</li>
+        <li><strong>Historical:</strong> how often does this test fail? which files correlate with its failures?</li>
+        <li><strong>Code features:</strong> is this a refactor or logic change? API surface change?</li>
+      </ul>
+      <h4 class="sub2">Model Output</h4>
+      <ul class="blist">
+        <li>For each test: P(fail | this change) — probability of failure</li>
+        <li>Run tests where P(fail) &gt; threshold (tuned for 99.9% recall)</li>
+        <li>Rank tests by P(fail) descending — run highest-risk first</li>
+      </ul>
+      <h4 class="sub2">Results (Meta, 2018 paper "Predictive Test Selection")</h4>
+      <ul class="blist">
+        <li><strong>70% reduction</strong> in test executions</li>
+        <li><strong>99.9% failure detection rate</strong> maintained</li>
+        <li>Saved millions of compute-hours per year</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">Recommended Hybrid Strategy (Interview Answer)</h3>
+  <div class="iq">
+    "I'd use a hybrid approach for test selection. First pass is dependency-based: use the build graph to find all tests that transitively depend on changed code. This is fast and deterministic. Second pass is ML-enhanced: a trained model identifies additional high-risk tests based on historical correlations — things like 'changes to the auth module historically break payment tests even though there's no direct dependency.' Finally, a nightly full-suite run catches anything both passes missed and continuously validates the model's accuracy. Meta published that this approach gives 70% reduction in executions with 99.9% failure detection."
+  </div>
+
+  <h3 class="sub">Handling Edge Cases</h3>
+  <table class="tbl">
+    <tr><th>Scenario</th><th>Strategy</th></tr>
+    <tr><td>Change to foundational library (logging, utils)</td><td>Cap at top-N tests by risk score, don't run all 50K</td></tr>
+    <tr><td>Configuration file change</td><td>Run all tests that read that config (requires config-dependency tracking)</td></tr>
+    <tr><td>New test added</td><td>Always run new tests in first 7 days regardless of selection</td></tr>
+    <tr><td>ML model retrained</td><td>Shadow mode: run old + new model in parallel, compare before switching</td></tr>
+    <tr><td>Build file change (BUILD, pom.xml)</td><td>Treat as high-risk: expand selection scope for that module</td></tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 5: Scheduling & Execution -->
+<!-- ============================================================ -->
+<div class="sec" id="tab-scheduling">
+  <h2 class="stitle">Test Scheduling &amp; Execution</h2>
+  <p class="sdesc">How to distribute millions of tests across thousands of workers efficiently.</p>
+
+  <h3 class="sub">Scheduling Strategies</h3>
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Priority Queues</span>
+      <span class="db dh">MOST IMPORTANT</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <table class="tbl">
+        <tr><th>Priority</th><th>Type</th><th>SLA</th><th>% of Load</th></tr>
+        <tr><td>P0 - Critical</td><td>Presubmit (blocking merge)</td><td>&lt; 10 min</td><td>30%</td></tr>
+        <tr><td>P1 - High</td><td>Postsubmit (fast feedback)</td><td>&lt; 30 min</td><td>40%</td></tr>
+        <tr><td>P2 - Normal</td><td>Periodic/nightly comprehensive</td><td>&lt; 4 hours</td><td>20%</td></tr>
+        <tr><td>P3 - Low</td><td>Flaky re-verification, deflake builds</td><td>&lt; 24 hours</td><td>10%</td></tr>
+      </table>
+      <p style="margin-top:10px;">Key insight: presubmit tests are <strong>blocking developers</strong> (they're waiting), so they always jump the queue. Nightly runs can use cheap off-peak compute.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Bin-Packing &amp; Sharding</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li><strong>Short tests (&lt;30s):</strong> Batch 10-20 onto one worker. Amortize container startup.</li>
+        <li><strong>Medium tests (30s-5min):</strong> One per container, standard scheduling.</li>
+        <li><strong>Long tests (&gt;5min):</strong> Dedicated worker, potentially shard the test itself across N workers.</li>
+        <li><strong>Test sharding:</strong> Split a test suite of 1000 test cases into 10 shards of 100 each, run in parallel.</li>
+      </ul>
+<pre class="codeblock">
+# JUnit sharding example
+$ java -Dshard.index=3 -Dshard.total=10 -jar test-runner.jar
+# Runs only test cases where hash(testName) % 10 == 3
+
+# pytest-xdist parallel execution
+$ pytest --dist=loadfile -n 10 tests/
+</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Locality &amp; Caching</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li><strong>Data locality:</strong> Schedule test on worker that already has the test binary cached</li>
+        <li><strong>Affinity:</strong> Same test tends to run on same worker (warm Docker layers)</li>
+        <li><strong>Remote cache:</strong> If code + test unchanged since last run, skip execution entirely (Bazel remote cache)</li>
+        <li><strong>Geographic:</strong> Schedule tests close to developer's region for faster artifact upload</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">Execution Isolation Models</h3>
+  <table class="tbl">
+    <tr><th>Model</th><th>Startup</th><th>Isolation</th><th>Best For</th><th>Cost</th></tr>
+    <tr><td>Container (Docker)</td><td>~2s</td><td>Filesystem + process</td><td>Unit, integration tests</td><td>Low</td></tr>
+    <tr><td>Micro-VM (Firecracker)</td><td>~125ms</td><td>Full kernel</td><td>Security-sensitive tests</td><td>Medium</td></tr>
+    <tr><td>Full VM</td><td>~30s</td><td>Complete machine</td><td>OS-level, driver tests</td><td>High</td></tr>
+    <tr><td>Physical device</td><td>~60s (reset)</td><td>Real hardware</td><td>Device tests, RF tests</td><td>Very high</td></tr>
+  </table>
+
+  <h3 class="sub">Worker Pool Management</h3>
+  <ul class="blist">
+    <li><strong>Auto-scaling:</strong> Scale workers based on queue depth. Target: &lt;30s wait in P0 queue.</li>
+    <li><strong>Spot/preemptible instances:</strong> Tests are idempotent and retryable. Use 60-70% spot for P1+ queues.</li>
+    <li><strong>Warm pool:</strong> Keep 20% of max capacity always running (pre-built containers with deps installed).</li>
+    <li><strong>Health checks:</strong> Workers report heartbeat every 10s. No heartbeat for 30s &rarr; kill + reschedule tests.</li>
+    <li><strong>Resource quotas:</strong> Each test gets CPU/memory limit. OOM-kill = test failure, not worker corruption.</li>
+  </ul>
+
+  <div class="tip">
+    <div class="tipl">COST OPTIMIZATION INSIGHT</div>
+    <p>
+      At Google scale, test infrastructure costs $100M+/year. Using spot instances for non-blocking tests saves 60-70%. Combined with test selection (70% fewer tests) and caching (skip unchanged), you can reduce costs by 80%+ vs. naive "run everything on-demand."
+    </p>
+  </div>
+
+  <div class="iq">
+    "For scheduling, I'd use priority queues with strict SLAs. Presubmit tests that block developers get P0 with a 10-minute SLA. I'd bin-pack short tests together and shard long test suites across workers. The worker pool auto-scales based on queue depth, uses spot instances for non-blocking work, and maintains a warm pool to avoid cold-start latency. Each test runs in an isolated container with resource limits."
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 6: Device Farm Architecture -->
+<!-- ============================================================ -->
+<div class="sec" id="tab-devicefarm">
+  <h2 class="stitle">Device Farm Architecture</h2>
+  <p class="sdesc">For Google (Pixel, Nest), Amazon (Echo, Ring, Sidewalk) — hardware testing at scale is a unique challenge.</p>
+
+  <div class="note">
+    <div class="notel">YOUR DIFFERENTIATOR</div>
+    <p>
+      Your Sidewalk experience is directly relevant here. Mention multi-device BLE/WiFi mesh testing, device state management, and the challenges of testing across heterogeneous hardware. Most candidates cannot speak to this.
+    </p>
+  </div>
+
+  <h3 class="sub">Device Farm Architecture Diagram</h3>
+  <div class="svg-container">
+    <svg viewBox="0 0 850 520" xmlns="http://www.w3.org/2000/svg" style="font-family: Inter, sans-serif;">
+      <rect width="850" height="520" fill="#fafbfc" rx="12"/>
+      <text x="425" y="25" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">Device Farm Architecture</text>
+
+      <!-- Test Scheduler Input -->
+      <rect x="340" y="45" width="170" height="45" rx="8" fill="#fff" stroke="#ea580c" stroke-width="2"/>
+      <text x="425" y="65" text-anchor="middle" font-size="9" font-weight="700" fill="#ea580c">TEST SCHEDULER</text>
+      <text x="425" y="78" text-anchor="middle" font-size="8" fill="#64748b">Routes device tests here</text>
+
+      <!-- Device Farm Controller -->
+      <rect x="300" y="120" width="250" height="55" rx="8" fill="#ffedd5" stroke="#ea580c" stroke-width="1.5"/>
+      <text x="425" y="140" text-anchor="middle" font-size="10" font-weight="700" fill="#ea580c">DEVICE FARM CONTROLLER</text>
+      <text x="425" y="155" text-anchor="middle" font-size="8" fill="#334155">Allocation | Scheduling | Health Monitoring</text>
+      <text x="425" y="167" text-anchor="middle" font-size="8" fill="#334155">Firmware Management | Multi-device Coordination</text>
+
+      <!-- Arrow -->
+      <line x1="425" y1="90" x2="425" y2="120" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr3)"/>
+
+      <!-- Device Pools -->
+      <rect x="30" y="205" width="790" height="170" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1" stroke-dasharray="4"/>
+      <text x="425" y="225" text-anchor="middle" font-size="10" font-weight="700" fill="#16a34a">DEVICE POOLS (Grouped by Model/Capability)</text>
+
+      <!-- Pool 1: Phones -->
+      <rect x="50" y="240" width="160" height="120" rx="6" fill="#fff" stroke="#cbd5e1" stroke-width="1"/>
+      <text x="130" y="258" text-anchor="middle" font-size="9" font-weight="700" fill="#1e293b">Phones</text>
+      <rect x="65" y="268" width="50" height="25" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="0.5"/>
+      <text x="90" y="284" text-anchor="middle" font-size="7" fill="#1d4ed8">Pixel 8</text>
+      <rect x="120" y="268" width="50" height="25" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="0.5"/>
+      <text x="145" y="284" text-anchor="middle" font-size="7" fill="#1d4ed8">Pixel 7a</text>
+      <rect x="65" y="298" width="50" height="25" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="0.5"/>
+      <text x="90" y="314" text-anchor="middle" font-size="7" fill="#1d4ed8">Samsung</text>
+      <rect x="120" y="298" width="50" height="25" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="0.5"/>
+      <text x="145" y="314" text-anchor="middle" font-size="7" fill="#1d4ed8">iPhone</text>
+      <text x="130" y="345" text-anchor="middle" font-size="8" fill="#64748b">~3000 devices</text>
+
+      <!-- Pool 2: IoT -->
+      <rect x="230" y="240" width="160" height="120" rx="6" fill="#fff" stroke="#cbd5e1" stroke-width="1"/>
+      <text x="310" y="258" text-anchor="middle" font-size="9" font-weight="700" fill="#1e293b">IoT / Smart Home</text>
+      <rect x="245" y="268" width="50" height="25" rx="4" fill="#ffedd5" stroke="#ea580c" stroke-width="0.5"/>
+      <text x="270" y="284" text-anchor="middle" font-size="7" fill="#ea580c">Echo</text>
+      <rect x="300" y="268" width="50" height="25" rx="4" fill="#ffedd5" stroke="#ea580c" stroke-width="0.5"/>
+      <text x="325" y="284" text-anchor="middle" font-size="7" fill="#ea580c">Ring</text>
+      <rect x="245" y="298" width="50" height="25" rx="4" fill="#ffedd5" stroke="#ea580c" stroke-width="0.5"/>
+      <text x="270" y="314" text-anchor="middle" font-size="7" fill="#ea580c">Nest</text>
+      <rect x="300" y="298" width="50" height="25" rx="4" fill="#ffedd5" stroke="#ea580c" stroke-width="0.5"/>
+      <text x="325" y="314" text-anchor="middle" font-size="7" fill="#ea580c">Sidewalk</text>
+      <text x="310" y="345" text-anchor="middle" font-size="8" fill="#64748b">~4000 devices</text>
+
+      <!-- Pool 3: Wearables -->
+      <rect x="410" y="240" width="160" height="120" rx="6" fill="#fff" stroke="#cbd5e1" stroke-width="1"/>
+      <text x="490" y="258" text-anchor="middle" font-size="9" font-weight="700" fill="#1e293b">Wearables / TV</text>
+      <rect x="425" y="268" width="50" height="25" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="0.5"/>
+      <text x="450" y="284" text-anchor="middle" font-size="7" fill="#16a34a">Watch</text>
+      <rect x="480" y="268" width="50" height="25" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="0.5"/>
+      <text x="505" y="284" text-anchor="middle" font-size="7" fill="#16a34a">Fire TV</text>
+      <rect x="425" y="298" width="50" height="25" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="0.5"/>
+      <text x="450" y="314" text-anchor="middle" font-size="7" fill="#16a34a">Chromecast</text>
+      <rect x="480" y="298" width="50" height="25" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="0.5"/>
+      <text x="505" y="314" text-anchor="middle" font-size="7" fill="#16a34a">Tablet</text>
+      <text x="490" y="345" text-anchor="middle" font-size="8" fill="#64748b">~2000 devices</text>
+
+      <!-- Pool 4: Special -->
+      <rect x="590" y="240" width="210" height="120" rx="6" fill="#fff" stroke="#cbd5e1" stroke-width="1"/>
+      <text x="695" y="258" text-anchor="middle" font-size="9" font-weight="700" fill="#1e293b">Special (RF / Multi-device)</text>
+      <rect x="605" y="268" width="80" height="25" rx="4" fill="#ede9fe" stroke="#7c3aed" stroke-width="0.5"/>
+      <text x="645" y="284" text-anchor="middle" font-size="7" fill="#7c3aed">RF Chamber</text>
+      <rect x="690" y="268" width="90" height="25" rx="4" fill="#ede9fe" stroke="#7c3aed" stroke-width="0.5"/>
+      <text x="735" y="284" text-anchor="middle" font-size="7" fill="#7c3aed">BLE Mesh Set</text>
+      <rect x="605" y="298" width="80" height="25" rx="4" fill="#ede9fe" stroke="#7c3aed" stroke-width="0.5"/>
+      <text x="645" y="314" text-anchor="middle" font-size="7" fill="#7c3aed">WiFi Lab</text>
+      <rect x="690" y="298" width="90" height="25" rx="4" fill="#ede9fe" stroke="#7c3aed" stroke-width="0.5"/>
+      <text x="735" y="314" text-anchor="middle" font-size="7" fill="#7c3aed">Power Monitor</text>
+      <text x="695" y="345" text-anchor="middle" font-size="8" fill="#64748b">~1000 setups</text>
+
+      <!-- Arrow from controller to pools -->
+      <line x1="425" y1="175" x2="425" y2="205" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr3)"/>
+
+      <!-- Per-device components -->
+      <rect x="30" y="400" width="790" height="105" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+      <text x="50" y="420" font-size="10" font-weight="700" fill="#1e293b">PER-DEVICE STACK</text>
+
+      <rect x="50" y="435" width="130" height="35" rx="6" fill="#fff" stroke="#2563eb" stroke-width="1"/>
+      <text x="115" y="455" text-anchor="middle" font-size="8" font-weight="600" fill="#1d4ed8">Device Agent</text>
+      <text x="115" y="466" text-anchor="middle" font-size="7" fill="#64748b">Command execution</text>
+
+      <rect x="200" y="435" width="130" height="35" rx="6" fill="#fff" stroke="#16a34a" stroke-width="1"/>
+      <text x="265" y="455" text-anchor="middle" font-size="8" font-weight="600" fill="#16a34a">State Manager</text>
+      <text x="265" y="466" text-anchor="middle" font-size="7" fill="#64748b">Clean/dirty/busy/broken</text>
+
+      <rect x="350" y="435" width="130" height="35" rx="6" fill="#fff" stroke="#ea580c" stroke-width="1"/>
+      <text x="415" y="455" text-anchor="middle" font-size="8" font-weight="600" fill="#ea580c">Log Collector</text>
+      <text x="415" y="466" text-anchor="middle" font-size="7" fill="#64748b">logcat, syslog, serial</text>
+
+      <rect x="500" y="435" width="130" height="35" rx="6" fill="#fff" stroke="#7c3aed" stroke-width="1"/>
+      <text x="565" y="455" text-anchor="middle" font-size="8" font-weight="600" fill="#7c3aed">Health Monitor</text>
+      <text x="565" y="466" text-anchor="middle" font-size="7" fill="#64748b">Liveness, battery, temp</text>
+
+      <rect x="650" y="435" width="150" height="35" rx="6" fill="#fff" stroke="#0d9488" stroke-width="1"/>
+      <text x="725" y="455" text-anchor="middle" font-size="8" font-weight="600" fill="#0d9488">Firmware Manager</text>
+      <text x="725" y="466" text-anchor="middle" font-size="7" fill="#64748b">Flash target build</text>
+
+      <text x="425" y="498" text-anchor="middle" font-size="8" fill="#64748b">Each device runs these components. Health Monitor auto-quarantines unhealthy devices (battery &lt;20%, no response, overheating).</text>
+
+      <defs>
+        <marker id="arr3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L8,3 L0,6 Z" fill="#94a3b8"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <h3 class="sub">Key Device Farm Challenges</h3>
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Device Allocation (Mutex Model)</span>
+      <span class="db dh">CRITICAL</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li><strong>One test at a time per device</strong> — physical devices cannot be shared like VMs</li>
+        <li>Device states: <code>AVAILABLE</code> &rarr; <code>ALLOCATED</code> &rarr; <code>TESTING</code> &rarr; <code>RESETTING</code> &rarr; <code>AVAILABLE</code></li>
+        <li>Timeout: if test doesn't release device in 30 min, force-release + quarantine device</li>
+        <li>Priority allocation: presubmit tests can preempt nightly tests (with graceful abort)</li>
+        <li>For multi-device tests: allocate all devices atomically (avoid deadlock)</li>
+      </ul>
+<pre class="codeblock">
+// Device allocation - must be atomic for multi-device
+DeviceSet allocate(TestRequest req) {
+    List&lt;DeviceSpec&gt; needed = req.getDeviceSpecs();
+    synchronized(devicePool) {
+        List&lt;Device&gt; candidates = findAvailable(needed);
+        if (candidates.size() == needed.size()) {
+            candidates.forEach(d -&gt; d.setState(ALLOCATED));
+            return new DeviceSet(candidates);
+        }
+        return null; // Queue the request
+    }
+}
+</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Device Reset &amp; Clean State</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li><strong>Between every test:</strong> device must return to known clean state</li>
+        <li><strong>Light reset (~30s):</strong> clear app data, kill processes, reset WiFi/BLE settings</li>
+        <li><strong>Full reset (~5min):</strong> factory reset, re-flash firmware, re-pair with hub</li>
+        <li><strong>Strategy:</strong> light reset after every test, full reset after 50 tests or on failure</li>
+        <li><strong>Key insight:</strong> incomplete resets are the #1 cause of device test flakiness</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Multi-Device Tests (BLE/WiFi Mesh)</span>
+      <span class="db dm">YOUR EXPERIENCE</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li><strong>Scenario:</strong> Test BLE mesh with 5 Sidewalk devices communicating</li>
+        <li><strong>Challenge:</strong> Must allocate all devices in same RF-isolated chamber</li>
+        <li><strong>Topology awareness:</strong> scheduler knows which devices can "see" each other</li>
+        <li><strong>Coordination:</strong> test orchestrator sends commands to multiple devices in sequence</li>
+        <li><strong>Failure attribution:</strong> which device in the mesh caused the failure?</li>
+      </ul>
+      <div class="tip">
+        <div class="tipl">SIDEWALK EXPERIENCE TIE-IN</div>
+        <p>"At Amazon Sidewalk, I worked on testing BLE mesh networks across multiple device types. The key challenge was ensuring RF isolation — you can't have two mesh tests in adjacent racks interfering with each other. We used shielded chambers and frequency hopping to isolate test environments."</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Firmware Management</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li><strong>Before test:</strong> flash device to the target firmware build being tested</li>
+        <li><strong>Firmware cache:</strong> keep N recent builds on local server near device rack</li>
+        <li><strong>Flash time:</strong> 2-10 minutes depending on device type (major latency cost)</li>
+        <li><strong>Optimization:</strong> batch tests for same firmware version, avoid unnecessary reflashes</li>
+        <li><strong>Rollback:</strong> if flash fails, mark device as BROKEN, auto-recover with known-good image</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">Real Companies' Device Farms</h3>
+  <table class="tbl">
+    <tr><th>Company</th><th>Farm</th><th>Scale</th><th>Key Feature</th></tr>
+    <tr><td>Google</td><td>Android Test Infrastructure (ATI)</td><td>50K+ devices</td><td>Automated CTS across all Pixel builds</td></tr>
+    <tr><td>Google</td><td>Firebase Test Lab (public)</td><td>Cloud devices</td><td>Virtual + physical devices as a service</td></tr>
+    <tr><td>Amazon</td><td>Internal Lab126 farm</td><td>10K+ devices</td><td>Echo, Ring, Fire TV, Sidewalk testing</td></tr>
+    <tr><td>Amazon</td><td>AWS Device Farm (public)</td><td>Cloud service</td><td>2K+ device configs for mobile testing</td></tr>
+    <tr><td>Meta</td><td>Mobile Device Lab</td><td>10K+ phones</td><td>Instagram, WhatsApp cross-device testing</td></tr>
+    <tr><td>Samsung</td><td>SmartThings Test Lab</td><td>5K+ IoT devices</td><td>Interoperability testing across brands</td></tr>
+  </table>
+
+  <div class="iq">
+    "For the device farm, the key difference from software-only testing is that physical devices are scarce, slow to reset, and can break. I'd design a device farm controller that manages allocation as a mutex — one test per device at a time. Each device has a state machine: available, allocated, testing, resetting. For multi-device tests like BLE mesh scenarios, I allocate all required devices atomically to avoid deadlock. From my Sidewalk experience, the biggest reliability challenge is ensuring complete state reset between tests — incomplete resets cause 60% of device test flakiness."
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 7: Flaky Test Management -->
+<!-- ============================================================ -->
+<div class="sec" id="tab-flaky">
+  <h2 class="stitle">Flaky Test Management</h2>
+  <p class="sdesc">The #1 developer productivity killer at scale. If you nail this section, interviewers will be impressed.</p>
+
+  <div class="trap">
+    <div class="trapl">THE CORE PROBLEM</div>
+    <p>
+      A flaky test is one that passes and fails non-deterministically with <strong>no code change</strong>. At Google, ~1.5% of all tests are flaky at any given time. That's 63K flaky tests. If developers can't trust results, they stop looking at them — and real bugs slip through.
+    </p>
+  </div>
+
+  <h3 class="sub">What Makes Tests Flaky</h3>
+  <table class="tbl">
+    <tr><th>Cause</th><th>Example</th><th>% of Flakes</th></tr>
+    <tr><td>Timing/race conditions</td><td><code>Thread.sleep(100)</code> that's too short under load</td><td>35%</td></tr>
+    <tr><td>External dependencies</td><td>Test calls real network service that times out</td><td>25%</td></tr>
+    <tr><td>Shared state</td><td>Database not cleaned between test runs</td><td>20%</td></tr>
+    <tr><td>Order dependence</td><td>Test B assumes test A ran first and set up data</td><td>10%</td></tr>
+    <tr><td>Resource limits</td><td>OOM under CI load, file descriptor exhaustion</td><td>5%</td></tr>
+    <tr><td>Non-deterministic code</td><td>Tests depending on <code>HashMap</code> iteration order</td><td>5%</td></tr>
+  </table>
+
+  <h3 class="sub">Detection Strategies</h3>
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Strategy 1: Automatic Retry</span>
+      <span class="db de">SIMPLEST</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li>Test fails &rarr; automatically retry 2-3 times</li>
+        <li>If passes on retry: mark as <strong>flaky</strong> (not truly failing)</li>
+        <li>Pros: immediate signal, no historical data needed</li>
+        <li>Cons: adds latency (retry takes time), misses rarely-flaky tests</li>
+        <li>Used by: most CI systems as first line of defense</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Strategy 2: Statistical Analysis</span>
+      <span class="db dh">MOST ROBUST</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li>Track every test outcome over a rolling window (e.g., last 100 runs)</li>
+        <li>Compute failure rate <strong>excluding runs with code changes</strong></li>
+        <li>If failure_rate &gt; 1% with no code change &rarr; flaky</li>
+        <li>Flakiness score: 0% (perfectly reliable) to 100% (coin flip)</li>
+        <li>Advantage: catches tests that are flaky 2% of the time (retry won't catch these)</li>
+      </ul>
+<pre class="codeblock">
+// Flakiness Score Calculation
+flakiness_score = (
+    failures_without_code_change /
+    total_runs_without_code_change
+) * 100
+
+// Quarantine threshold
+if flakiness_score > 1.0% over last 100 runs:
+    quarantine(test_id)
+    notify(test_owner, "7 days to fix")
+</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Strategy 3: Deflake Builds</span>
+      <span class="db dm">THOROUGH</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li>Periodically (nightly/weekly) run the entire test suite <strong>10 times</strong></li>
+        <li>Any test that doesn't pass 10/10 times = flaky</li>
+        <li>Catches: rarely-flaky tests that statistical analysis needs weeks to detect</li>
+        <li>Expensive: 10x compute cost, so run during off-peak hours</li>
+        <li>Google uses this as the definitive flakiness signal</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">Management Policies</h3>
+  <div class="tip">
+    <div class="tipl">THE POLICY FRAMEWORK</div>
+    <p>
+      <strong>Detection &rarr; Quarantine &rarr; Notify &rarr; Deadline &rarr; Disable</strong><br><br>
+      1. Detect: statistical analysis identifies flaky test<br>
+      2. Quarantine: remove from blocking pipeline (still runs, but non-blocking)<br>
+      3. Notify: alert test owner with flakiness data and reproduction steps<br>
+      4. Deadline: 7 days to fix or acknowledge<br>
+      5. Disable: if unfixed after 14 days, test is completely disabled and tech-debt ticket created
+    </p>
+  </div>
+
+  <ul class="blist">
+    <li><strong>Auto-quarantine:</strong> Flaky tests removed from blocking pipeline. Won't block developers.</li>
+    <li><strong>Separate queue:</strong> Quarantined tests run in low-priority queue. When stable for 48h, auto-promote back.</li>
+    <li><strong>Owner accountability:</strong> Flakiness shows up in team health dashboards and sprint metrics.</li>
+    <li><strong>Root cause tagging:</strong> When fixed, engineer tags the cause (timing, shared state, etc.) for analytics.</li>
+    <li><strong>Prevention:</strong> Lint rules that catch common flaky patterns (e.g., <code>Thread.sleep</code> in tests).</li>
+  </ul>
+
+  <h3 class="sub">Impact Metrics</h3>
+  <table class="tbl">
+    <tr><th>Metric</th><th>Before Flaky Management</th><th>After</th></tr>
+    <tr><td>Developer trust in test results</td><td>~60%</td><td>~95%</td></tr>
+    <tr><td>Time investigating false failures</td><td>2 hrs/dev/week</td><td>15 min/dev/week</td></tr>
+    <tr><td>Tests in quarantine at any time</td><td>N/A (all blocking)</td><td>~1.5% (managed)</td></tr>
+    <tr><td>Mean time to fix flaky test</td><td>Never (ignored)</td><td>5 days</td></tr>
+  </table>
+
+  <div class="iq">
+    "Flaky tests are the number one productivity killer at scale. If developers can't trust test results, they stop looking at them, and real bugs slip through. I'd implement automatic flakiness detection using statistical analysis — track every test over a rolling window, and if it has greater than 1% failure rate without corresponding code changes, it's automatically quarantined from the blocking pipeline. The test owner gets notified with a 7-day fix deadline. Meanwhile, the test still runs in a non-blocking queue, and when it passes consistently for 48 hours, it auto-promotes back. This maintains developer trust while giving owners incentive to fix."
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 8: Result Aggregation & Root Cause -->
+<!-- ============================================================ -->
+<div class="sec" id="tab-results">
+  <h2 class="stitle">Result Aggregation &amp; Root Cause Analysis</h2>
+  <p class="sdesc">Getting from "test failed" to "here's why and who should fix it" — automatically.</p>
+
+  <h3 class="sub">What Developers Need from Results</h3>
+  <ul class="blist">
+    <li><strong>Quick answer:</strong> Red/green status per test within seconds of completion</li>
+    <li><strong>If red:</strong> Stack trace, relevant logs, screenshots/video, reproduction command</li>
+    <li><strong>Blame assignment:</strong> Which specific code change broke this test?</li>
+    <li><strong>Grouping:</strong> 50 tests failing for same root cause &rarr; show as 1 issue, not 50</li>
+    <li><strong>History:</strong> "This test has been failing since commit abc123 3 hours ago"</li>
+  </ul>
+
+  <h3 class="sub">Root Cause Identification Techniques</h3>
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">First-Failure Analysis (Bisection)</span>
+      <span class="db dh">MOST VALUABLE</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <p>In a monorepo, multiple commits land between test runs. When a test starts failing, which commit caused it?</p>
+      <ul class="blist">
+        <li><strong>Binary search:</strong> 10 commits landed since last green. Test commit 5 &rarr; green. Test commit 8 &rarr; red. Test 6 &rarr; green. Test 7 &rarr; RED. Commit 7 broke it.</li>
+        <li><strong>Automated:</strong> Google TAP does this automatically for every new failure</li>
+        <li><strong>Cost:</strong> O(log N) additional test runs per new failure</li>
+        <li><strong>Value:</strong> developer gets a specific commit to investigate, not "something broke recently"</li>
+      </ul>
+<pre class="codeblock">
+// Bisection algorithm for blame assignment
+function findBreakingCommit(test, commits[0..N]):
+    if N == 1: return commits[0]
+    mid = N / 2
+    result = runTest(test, commits[mid])
+    if result == PASS:
+        return findBreakingCommit(test, commits[mid+1..N])
+    else:
+        return findBreakingCommit(test, commits[0..mid])
+// O(log N) test runs to find the culprit
+</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Failure Correlation (Infrastructure vs. Code)</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li><strong>Pattern:</strong> 500 tests fail simultaneously across unrelated modules</li>
+        <li><strong>Signal:</strong> this is NOT a code bug — it's infrastructure failure (worker crash, network outage)</li>
+        <li><strong>Detection:</strong> if &gt; N tests fail within T seconds on same worker/rack &rarr; infrastructure alert</li>
+        <li><strong>Action:</strong> suppress individual notifications, send single infra alert, auto-retry on different worker</li>
+        <li><strong>Key metric:</strong> "blast radius" — how many tests did this infra issue affect?</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Stack Trace Clustering</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li><strong>Problem:</strong> 50 tests fail with similar (but not identical) stack traces &rarr; same root cause</li>
+        <li><strong>Solution:</strong> normalize stack traces (remove line numbers, timestamps, variable data)</li>
+        <li><strong>Cluster:</strong> group failures with &gt;80% stack trace similarity</li>
+        <li><strong>Display:</strong> "23 tests failing — likely same root cause" with single grouped notification</li>
+        <li><strong>Reduces noise:</strong> developer sees 1 bug to fix, not 23 separate failures</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">AI-Assisted Root Cause (Emerging)</span>
+      <span class="db bt">BONUS POINTS</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li>LLM analyzes: stack trace + recent code diff + test code</li>
+        <li>Produces: natural language explanation "This test fails because the API now returns a 404 for deleted users, but the test expected a 200. The change in commit X modified the delete endpoint behavior."</li>
+        <li>Confidence score: high-confidence suggestions auto-assigned, low-confidence flagged for human review</li>
+        <li>Value: saves 15-30 min of developer investigation per failure</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">Result Storage Architecture</h3>
+  <table class="tbl">
+    <tr><th>Data</th><th>Storage</th><th>Retention</th><th>Access Pattern</th></tr>
+    <tr><td>Pass/fail results</td><td>Time-series DB (InfluxDB/BigQuery)</td><td>2 years</td><td>Dashboards, ML training</td></tr>
+    <tr><td>Logs &amp; stack traces</td><td>Object storage (S3/GCS)</td><td>30 days</td><td>On-demand by developer</td></tr>
+    <tr><td>Screenshots &amp; video</td><td>Object storage with CDN</td><td>14 days</td><td>Linked from failure report</td></tr>
+    <tr><td>Test metadata</td><td>Relational DB (ownership, tags)</td><td>Forever</td><td>Selector, scheduler queries</td></tr>
+    <tr><td>Flakiness scores</td><td>Redis (hot) + time-series (cold)</td><td>90 days</td><td>Real-time quarantine decisions</td></tr>
+  </table>
+
+  <div class="iq">
+    "For result aggregation, the most valuable feature is automatic blame assignment through bisection. When a test starts failing, the system binary-searches through recent commits to find exactly which one broke it. Combined with stack trace clustering — grouping 50 failures with similar traces into a single root cause — developers get actionable information instead of noise. I'd also detect infrastructure failures by correlation: if 500 unrelated tests fail simultaneously, that's a worker crash, not a code bug."
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 9: AI/ML in Testing -->
+<!-- ============================================================ -->
+<div class="sec" id="tab-aiml">
+  <h2 class="stitle">AI/ML in Test Automation</h2>
+  <p class="sdesc">The cutting edge — mention this for bonus points. Shows you're forward-thinking.</p>
+
+  <h3 class="sub">AI Agent for Automatic Test Fix</h3>
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">The AI Fix Pipeline (Future/Emerging)</span>
+      <span class="db bt">IMPRESSIVE TO MENTION</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ol class="blist">
+        <li><strong>Detect:</strong> Test fails, extract error message + stack trace + assertion details</li>
+        <li><strong>Analyze:</strong> Identify the failing assertion and relevant source code</li>
+        <li><strong>Reason:</strong> LLM analyzes: "test expects X, code now returns Y, change Z modified behavior"</li>
+        <li><strong>Decide:</strong> Is the test wrong (update test) or the code wrong (revert/fix code)?</li>
+        <li><strong>Propose:</strong> Generate fix patch (to test OR code depending on analysis)</li>
+        <li><strong>Verify:</strong> Run fix locally — if all tests pass, submit as fix CL</li>
+        <li><strong>Review:</strong> Human review required before merge (safety net)</li>
+      </ol>
+      <div class="warn">
+        <div class="warnl">IMPORTANT NUANCE</div>
+        <p>The hardest part is step 4: deciding if the test or the code is wrong. If a test expectation changes because of intentional behavior change, the test should update. If the test catches a regression, the code should be fixed. This requires understanding developer <em>intent</em>.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub">Real-World AI Testing Systems</h3>
+  <table class="tbl">
+    <tr><th>Company</th><th>System</th><th>What It Does</th></tr>
+    <tr><td>Meta</td><td>SapFix</td><td>Auto-generates patches for crashes detected by Sapienz fuzzer</td></tr>
+    <tr><td>Meta</td><td>TestPilot</td><td>ML-based test selection — 70% reduction in test executions</td></tr>
+    <tr><td>Google</td><td>AI Bug Fixing (internal)</td><td>LLM suggests fixes for test failures with confidence scores</td></tr>
+    <tr><td>Microsoft</td><td>IntelliCode</td><td>Predictive code completion, detects patterns that lead to bugs</td></tr>
+    <tr><td>Amazon</td><td>CodeGuru Reviewer</td><td>ML-powered code review suggesting improvements and bug fixes</td></tr>
+    <tr><td>Uber</td><td>Piranha</td><td>Auto-removes stale feature flags that cause test complexity</td></tr>
+  </table>
+
+  <h3 class="sub">ML-Powered Test Generation</h3>
+  <ul class="blist">
+    <li><strong>LLM test generation:</strong> Given function signature + docstring, generate comprehensive unit tests</li>
+    <li><strong>Mutation testing:</strong> Automatically inject bugs into code, verify tests catch them. If not, generate new tests that do.</li>
+    <li><strong>Property-based testing:</strong> QuickCheck-style — define invariants, generate random inputs, find edge cases automatically</li>
+    <li><strong>Coverage-guided generation:</strong> identify untested code paths, generate inputs that exercise them</li>
+  </ul>
+
+<pre class="codeblock">
+// AI-generated test example (from function signature + docs)
+// Input: function transferMoney(from: Account, to: Account, amount: Money)
+// AI generates:
+@Test void transferMoney_sufficientBalance_debitsCreditsBothAccounts() { ... }
+@Test void transferMoney_insufficientBalance_throwsException() { ... }
+@Test void transferMoney_zeroAmount_noOp() { ... }
+@Test void transferMoney_sameAccount_throwsException() { ... }
+@Test void transferMoney_negativeAmount_throwsException() { ... }
+@Test void transferMoney_concurrentTransfers_maintainsConsistency() { ... }
+</pre>
+
+  <h3 class="sub">Predictive Failure Detection</h3>
+  <ul class="blist">
+    <li><strong>Pre-commit warning:</strong> "Based on similar past changes, this is likely to break PaymentServiceTest"</li>
+    <li><strong>Risk scoring:</strong> Assign risk level to each code change before any tests run</li>
+    <li><strong>Proactive testing:</strong> For high-risk changes, automatically expand test selection scope</li>
+    <li><strong>Trend detection:</strong> "TestX has gotten 20% slower over last month — investigate before it times out"</li>
+  </ul>
+
+  <div class="iq">
+    "For the AI/ML layer, beyond test selection which we discussed, I'd add three capabilities. First, automatic root cause analysis where an LLM examines the stack trace, test code, and recent diff to produce a natural language explanation of why the test failed. Second, AI-assisted test generation — given new code without tests, generate comprehensive test cases covering edge cases and error paths. Third, predictive warnings: before a developer even submits, the system can warn 'this change pattern historically breaks these 5 tests.' Meta's SapFix system already auto-generates patches for crashes with high success rates."
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 10: Scalability Deep Dive -->
+<!-- ============================================================ -->
+<div class="sec" id="tab-scalability">
+  <h2 class="stitle">Scalability Deep Dive</h2>
+  <p class="sdesc">How each component scales horizontally and what optimizations matter most.</p>
+
+  <h3 class="sub">Scaling Strategy by Component</h3>
+  <table class="tbl">
+    <tr><th>Component</th><th>Scaling Approach</th><th>Bottleneck</th></tr>
+    <tr><td>Test Selector</td><td>Stateless — scale horizontally behind LB</td><td>Graph query latency for large repos</td></tr>
+    <tr><td>Test Scheduler</td><td>Partitioned by priority queue + region</td><td>Queue depth during peak hours</td></tr>
+    <tr><td>Executors (containers)</td><td>Auto-scale on queue depth, 10K+ nodes</td><td>Container image pull time</td></tr>
+    <tr><td>Executors (devices)</td><td>Cannot scale on-demand — fixed inventory</td><td>Device availability (hardware lead time)</td></tr>
+    <tr><td>Result Aggregator</td><td>Partitioned by test suite / time window</td><td>Write throughput at peak</td></tr>
+    <tr><td>ML Model</td><td>Pre-compute predictions, cache per file-path</td><td>Model retraining frequency</td></tr>
+  </table>
+
+  <h3 class="sub">Key Scaling Optimizations</h3>
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Test Result Caching (Biggest Win)</span>
+      <span class="db dh">HIGH IMPACT</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li><strong>Principle:</strong> If code hasn't changed and test hasn't changed &rarr; result is the same. Skip execution.</li>
+        <li><strong>Implementation:</strong> Hash(test binary + all inputs + environment) = cache key</li>
+        <li><strong>Bazel remote cache:</strong> test results stored by content hash, reused across developers</li>
+        <li><strong>Hit rate:</strong> typically 40-60% of test executions can be skipped via cache</li>
+        <li><strong>Caveat:</strong> Only works for hermetic tests (no external dependencies that change)</li>
+      </ul>
+<pre class="codeblock">
+// Cache key computation
+cache_key = SHA256(
+    test_binary_hash +
+    input_files_hash +
+    environment_config_hash +
+    runtime_deps_hash
+)
+
+// Lookup before execution
+cached_result = remote_cache.get(cache_key)
+if cached_result != null:
+    return cached_result  // Skip execution entirely!
+</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Horizontal Scaling of Workers</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li><strong>Workers are stateless:</strong> any test can run on any worker. No affinity required.</li>
+        <li><strong>Auto-scaling rule:</strong> if P0 queue wait &gt; 30s, add workers. If utilization &lt; 30%, remove.</li>
+        <li><strong>Scale-up time:</strong> containers ~10s, VMs ~60s (keep warm pool to hide this)</li>
+        <li><strong>Spot instances:</strong> 60-70% of workers on spot (tests are idempotent, auto-retry on eviction)</li>
+        <li><strong>Multi-region:</strong> workers in US, EU, APAC — schedule based on developer timezone</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Test Sharding &amp; Parallelism</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li><strong>Suite-level sharding:</strong> Split 10K tests across 100 workers (100 tests each)</li>
+        <li><strong>Test-level sharding:</strong> Single parameterized test with 10K cases &rarr; split into 100 shards</li>
+        <li><strong>Smart sharding:</strong> Balance shard duration (not just count) — put fast tests together</li>
+        <li><strong>Dynamic rebalancing:</strong> If shard 3 finishes early, steal work from shard 7</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Cost Optimization</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <table class="tbl">
+        <tr><th>Optimization</th><th>Savings</th><th>Trade-off</th></tr>
+        <tr><td>Test selection (run fewer tests)</td><td>70%</td><td>0.1% risk of missed failure</td></tr>
+        <tr><td>Result caching (skip unchanged)</td><td>40-60%</td><td>Only works for hermetic tests</td></tr>
+        <tr><td>Spot instances (cheaper compute)</td><td>60-70% per instance</td><td>Occasional eviction + retry</td></tr>
+        <tr><td>Off-peak scheduling (nightly runs)</td><td>30% (cheaper rates)</td><td>Delayed feedback for comprehensive suite</td></tr>
+        <tr><td>Container reuse (amortize startup)</td><td>20%</td><td>Risk of leaked state between tests</td></tr>
+      </table>
+      <p style="margin-top:10px;"><strong>Combined:</strong> These optimizations together can reduce infrastructure cost by 85-90% vs. naive approach.</p>
+    </div>
+  </div>
+
+  <h3 class="sub">Resource Management</h3>
+  <ul class="blist">
+    <li><strong>CPU/memory quotas:</strong> Each test gets resource limits. Prevents noisy neighbors.</li>
+    <li><strong>Timeout enforcement:</strong> Tests killed after max_duration (prevents hung tests blocking workers)</li>
+    <li><strong>Disk quota:</strong> Tests cannot fill up worker disk — bounded tmpdir per test</li>
+    <li><strong>Network isolation:</strong> Tests cannot access production services (mock external deps)</li>
+  </ul>
+
+  <div class="iq">
+    "For scalability, the key insight is that test workers are stateless — we can scale horizontally by simply adding more containers. I'd use auto-scaling based on queue depth, with spot instances for non-blocking work to save 60-70% on compute costs. The biggest optimization is test result caching: if the code and test binary haven't changed, we can skip execution entirely and return the cached result. At Google, this gives a 40-60% cache hit rate. Combined with ML-based test selection reducing executions by 70%, the total cost reduction vs. naive approach is approximately 85-90%."
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 11: Observability -->
+<!-- ============================================================ -->
+<div class="sec" id="tab-observability">
+  <h2 class="stitle">Observability for the Test System</h2>
+  <p class="sdesc">The test platform itself needs monitoring. It's infrastructure that thousands of developers depend on.</p>
+
+  <h3 class="sub">Key Metrics Dashboard</h3>
+  <table class="tbl">
+    <tr><th>Metric</th><th>Target</th><th>Alert If</th><th>Why It Matters</th></tr>
+    <tr><td>P0 queue wait time</td><td>&lt; 30s</td><td>&gt; 2 min</td><td>Developers blocked waiting</td></tr>
+    <tr><td>P0 end-to-end latency</td><td>&lt; 10 min</td><td>&gt; 15 min</td><td>Feedback loop too slow</td></tr>
+    <tr><td>Worker utilization</td><td>60-80%</td><td>&gt; 90% or &lt; 30%</td><td>Over/under-provisioned</td></tr>
+    <tr><td>Overall flakiness rate</td><td>&lt; 2%</td><td>&gt; 5%</td><td>Developer trust eroding</td></tr>
+    <tr><td>Device farm availability</td><td>&gt; 85%</td><td>&lt; 70%</td><td>Device tests queuing</td></tr>
+    <tr><td>Test selection accuracy</td><td>99.9% recall</td><td>&lt; 99.5%</td><td>Missing real failures</td></tr>
+    <tr><td>Cache hit rate</td><td>&gt; 40%</td><td>&lt; 25%</td><td>Cost/speed regression</td></tr>
+    <tr><td>Infrastructure failure rate</td><td>&lt; 0.1%</td><td>&gt; 0.5%</td><td>Workers/network unreliable</td></tr>
+  </table>
+
+  <h3 class="sub">Developer Experience Metrics</h3>
+  <ul class="blist">
+    <li><strong>Time-to-feedback:</strong> p50, p90, p99 from code submission to test results. The SLA metric.</li>
+    <li><strong>False positive rate:</strong> How often do tests fail due to infrastructure, not code bugs?</li>
+    <li><strong>Developer action rate:</strong> When tests fail, do developers actually look at results? (engagement signal)</li>
+    <li><strong>Revert rate:</strong> How often are code changes reverted due to test failures found postsubmit?</li>
+    <li><strong>Test execution trends:</strong> Are we running more tests over time? Is latency growing?</li>
+  </ul>
+
+  <h3 class="sub">Alerting Strategy</h3>
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Tier 1: Page Immediately</span>
+      <span class="db dh">P0</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li>Test scheduler is down (no tests being dispatched)</li>
+        <li>P0 queue wait time &gt; 5 minutes (developers completely blocked)</li>
+        <li>Result aggregator losing data (test results disappearing)</li>
+        <li>Device farm controller crash (all device tests halted)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Tier 2: Alert Team Channel</span>
+      <span class="db dm">P1</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li>Flakiness rate trending up (&gt;3% for 1 hour)</li>
+        <li>Worker pool scaling issues (can't provision new workers)</li>
+        <li>Device availability dropping below 70%</li>
+        <li>Test selection model accuracy degrading</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Tier 3: Daily Report</span>
+      <span class="db de">P2</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li>Cost trending up (more tests than expected, cache hit rate dropping)</li>
+        <li>Test duration creep (average test taking 10% longer than last month)</li>
+        <li>New flaky tests detected (daily summary to owners)</li>
+        <li>Device firmware flash failures (non-critical, retry usually works)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="iq">
+    "The test system itself needs observability because thousands of developers depend on it. I'd track three categories: infrastructure health like queue wait time and worker utilization, developer experience metrics like time-to-feedback p50/p90, and system correctness metrics like test selection accuracy. The most critical alert is P0 queue wait time exceeding 5 minutes — that means developers are blocked, which at scale means millions in lost productivity per hour."
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 12: Real-World Systems -->
+<!-- ============================================================ -->
+<div class="sec" id="tab-realworld">
+  <h2 class="stitle">Real-World Systems (Name-Drop)</h2>
+  <p class="sdesc">Mentioning specific systems shows you've done research and understand industry practices.</p>
+
+  <h3 class="sub">System Comparison</h3>
+  <table class="tbl">
+    <tr><th>Company</th><th>System</th><th>Key Innovation</th><th>What to Learn</th></tr>
+    <tr><td>Google</td><td>TAP (Test Automation Platform)</td><td>150M+ tests/day, automatic bisection</td><td>Blame assignment at monorepo scale</td></tr>
+    <tr><td>Google</td><td>Borg/Forge</td><td>Distributed build + test execution</td><td>Resource scheduling for heterogeneous workloads</td></tr>
+    <tr><td>Meta</td><td>TestPilot</td><td>ML-based test selection, 70% reduction</td><td>Predictive models for test optimization</td></tr>
+    <tr><td>Meta</td><td>SapFix</td><td>AI-generated patches for test failures</td><td>Automated bug repair is production-ready</td></tr>
+    <tr><td>Netflix</td><td>CI/CD platform</td><td>Canary analysis as a "test"</td><td>Production is the ultimate test environment</td></tr>
+    <tr><td>Uber</td><td>SubmitQueue</td><td>Speculative merging with test gates</td><td>Optimistic concurrency for fast merges</td></tr>
+    <tr><td>LinkedIn</td><td>Test Intelligence</td><td>Change-based test selection</td><td>Dependency graph + history hybrid</td></tr>
+    <tr><td>Spotify</td><td>Hermetic Test Framework</td><td>Docker-based isolation per test</td><td>Containers solve shared-state flakiness</td></tr>
+    <tr><td>Stripe</td><td>Test system</td><td>Split by bounded context</td><td>Service ownership = test ownership</td></tr>
+  </table>
+
+  <h3 class="sub">Deep Dive: Google TAP</h3>
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Google TAP Architecture</span>
+      <span class="db dh">MOST RELEVANT</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li><strong>Scale:</strong> 150M+ test executions/day across Google's monorepo (billions of lines)</li>
+        <li><strong>Key feature:</strong> Automatic bisection — when a test breaks, TAP binary-searches through commits to find the cause</li>
+        <li><strong>Integration:</strong> Deeply integrated with code review (Critique) — test results show inline</li>
+        <li><strong>Speed:</strong> Most presubmit results within 5-10 minutes</li>
+        <li><strong>Build system:</strong> Bazel provides the dependency graph and remote caching</li>
+        <li><strong>Test selection:</strong> Combination of <code>bazel query rdeps</code> and learned correlations</li>
+        <li><strong>Flaky management:</strong> Tests assigned flakiness scores, auto-quarantined at threshold</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">Deep Dive: Meta TestPilot</h3>
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Meta's ML-Powered Test Selection</span>
+      <span class="db bp">KEY PAPER</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li><strong>Paper:</strong> "Predictive Test Selection" (ICSE 2018)</li>
+        <li><strong>Approach:</strong> ML model predicts P(test_fail | code_change_features)</li>
+        <li><strong>Features used:</strong> files changed, directories, author, change size, historical correlations</li>
+        <li><strong>Result:</strong> 70% reduction in test executions, 99.9% failure detection maintained</li>
+        <li><strong>Model:</strong> Gradient boosted trees (fast inference, interpretable features)</li>
+        <li><strong>Training:</strong> Updated daily on previous day's test outcomes</li>
+        <li><strong>Threshold tuning:</strong> Set P(fail) threshold to achieve target recall (99.9%)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">Deep Dive: Uber SubmitQueue</h3>
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Speculative Merging</span>
+      <span class="db bt">UNIQUE ANGLE</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <ul class="blist">
+        <li><strong>Problem:</strong> In a busy monorepo, commits conflict — serial testing creates a bottleneck</li>
+        <li><strong>Solution:</strong> Optimistically merge multiple PRs together, run tests on the merged result</li>
+        <li><strong>If tests pass:</strong> All PRs merge simultaneously</li>
+        <li><strong>If tests fail:</strong> Bisect to find the conflicting PR, remove it, retry the rest</li>
+        <li><strong>Speedup:</strong> 10x faster merge throughput for large monorepos</li>
+        <li><strong>Risk:</strong> Requires good test coverage — silent conflicts can slip through</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">Name-Dropping Tips</h3>
+  <div class="tip">
+    <div class="tipl">HOW TO USE THESE IN INTERVIEW</div>
+    <p>
+      Don't just list systems. Connect them to your design decisions:<br><br>
+      "Similar to Google's TAP, I'd implement automatic bisection for blame assignment..."<br>
+      "Meta published results showing ML-based selection reduces executions by 70% — I'd adopt that approach..."<br>
+      "Like Uber's SubmitQueue, I'd use speculative merging to increase throughput..."
+    </p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 13: Interview Script -->
+<!-- ============================================================ -->
+<div class="sec" id="tab-script">
+  <h2 class="stitle">Complete Interview Script</h2>
+  <p class="sdesc">45-minute walkthrough from start to finish. Know the beats, adapt to interviewer signals.</p>
+
+  <h3 class="sub">Timeline</h3>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-time">0-5 MIN: CLARIFY REQUIREMENTS</div>
+      <div class="timeline-title">Set Scope &amp; Constraints</div>
+      <div class="timeline-desc">Ask: What types of tests? What scale? Device testing needed? Is this a monorepo?</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-time">5-15 MIN: ARCHITECTURE + TEST SELECTION</div>
+      <div class="timeline-title">High-Level Design &amp; The Hard Problem</div>
+      <div class="timeline-desc">Draw the 6 components. Deep dive into test selection (hybrid approach). This impresses most.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-time">15-25 MIN: SCHEDULING + EXECUTION + DEVICES</div>
+      <div class="timeline-title">Where Tests Actually Run</div>
+      <div class="timeline-desc">Priority queues, worker pools, container isolation, device farm. Tie in your Sidewalk experience.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-time">25-35 MIN: FLAKY TESTS + RESULTS</div>
+      <div class="timeline-title">Reliability &amp; Developer Experience</div>
+      <div class="timeline-desc">Flaky detection/quarantine, bisection for blame, stack trace clustering. High-impact section.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-time">35-40 MIN: AI/ML + OBSERVABILITY</div>
+      <div class="timeline-title">Advanced &amp; Forward-Looking</div>
+      <div class="timeline-desc">ML for test selection, AI for root cause, system-level monitoring. Shows vision.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-time">40-45 MIN: TRADE-OFFS + Q&A</div>
+      <div class="timeline-title">Wrap Up Strong</div>
+      <div class="timeline-desc">Discuss trade-offs proactively. Answer follow-ups. Summarize key decisions.</div>
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <h3 class="sub">Opening Script (0-5 minutes)</h3>
+  <div class="iq">
+    "Before I dive in, let me clarify a few things. When you say 'test automation system,' are we designing the full infrastructure platform — the thing that Google TAP or Meta TestPilot represents — or a specific subsystem like a device farm or test selection engine?<br><br>
+    ...Great, so full platform. A few more questions:<br>
+    - What scale are we targeting? Thousands of developers, millions of tests per day?<br>
+    - Do we need hardware/device testing, or just software-in-software?<br>
+    - Is this a monorepo or polyrepo environment?<br>
+    - What's the primary concern: speed, cost, or correctness?<br><br>
+    OK, let me set context. At this scale — say Google-level with 150M test executions per day — the core challenge isn't 'how do tests work,' it's 'how do you make testing fast, cheap, and trustworthy at massive scale.' I'll design a system that addresses all three."
+  </div>
+
+  <h3 class="sub">Architecture Script (5-15 minutes)</h3>
+  <div class="iq">
+    "Let me draw the high-level architecture. The flow starts with a developer submitting a code change. This triggers the Build System — Bazel in Google's case — which compiles affected targets. Then the Test Selector kicks in: it uses the dependency graph plus an ML model to determine which of the 4 million tests are relevant to this specific change. The selected tests go to the Scheduler, which distributes them across our executor pool — thousands of containers, VMs, and physical devices.<br><br>
+    Results flow to an Aggregator that handles flaky detection, root cause clustering, and blame assignment. Finally, everything feeds back to a Historical Store that trains the ML model for better future selection.<br><br>
+    The most interesting component is the Test Selector. Let me deep dive there...<br><br>
+    [Explain hybrid approach: dependency graph + ML + nightly fallback]"
+  </div>
+
+  <h3 class="sub">Execution Script (15-25 minutes)</h3>
+  <div class="iq">
+    "For test execution, I use a priority queue system. P0 is presubmit — these block the developer, so they have a 10-minute SLA. P1 is postsubmit for fast feedback. P2 is nightly comprehensive runs. The worker pool auto-scales based on queue depth.<br><br>
+    Each test runs in isolation — a fresh container with resource limits. Workers are stateless and use spot instances for non-blocking work, saving 60-70% on compute.<br><br>
+    For device testing — which is my area of expertise from Amazon Sidewalk — the key difference is that physical devices are scarce and slow to reset. I'd design a device farm controller that manages allocation as a mutex: one test per device, atomic allocation for multi-device tests, automatic quarantine for unhealthy devices. The biggest challenge is state isolation — incomplete resets between tests cause 60% of device test flakiness in my experience."
+  </div>
+
+  <h3 class="sub">Reliability Script (25-35 minutes)</h3>
+  <div class="iq">
+    "Now the part that separates a good system from a great one: reliability.<br><br>
+    Flaky tests are the #1 developer productivity killer. My approach: statistical detection over a rolling window. If a test has &gt;1% failure rate without code changes, it's automatically quarantined — removed from the blocking pipeline. The owner gets 7 days to fix. The test still runs in a non-blocking queue, and auto-promotes back when stable for 48 hours.<br><br>
+    For results, the most valuable feature is automatic bisection. When a test newly fails, the system binary-searches through recent commits — O(log N) — to identify exactly which commit broke it. Combined with stack trace clustering, developers see '1 root cause affecting 23 tests' instead of 23 separate failures.<br><br>
+    This combination means: developers trust test results, know exactly what to fix, and the system self-heals over time."
+  </div>
+
+  <h3 class="sub">Closing Script (35-45 minutes)</h3>
+  <div class="iq">
+    "For the advanced layer, I'd add ML-powered test selection — Meta showed 70% reduction in executions — plus AI-assisted root cause analysis where an LLM explains failures in natural language. The system also needs its own observability: queue wait time, flakiness trends, selection accuracy.<br><br>
+    Key trade-offs I made:<br>
+    1. Speed vs. coverage: ML selection trades 0.1% failure detection for 70% cost reduction. Nightly full runs catch the rest.<br>
+    2. Isolation vs. speed: container-per-test is slower than shared workers but eliminates shared-state flakiness.<br>
+    3. Automation vs. control: auto-quarantine saves time but needs escape hatches for critical tests that must never be disabled.<br><br>
+    If I had to build this incrementally: start with dependency-based selection and container isolation. Add ML selection once you have 6 months of historical data. Add AI features last — they need the foundation in place."
+  </div>
+
+  <h3 class="sub">Follow-Up Questions You Might Get</h3>
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Prepared Answers for Common Follow-Ups</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+      <table class="tbl">
+        <tr><th>Question</th><th>Key Points</th></tr>
+        <tr><td>"How do you handle a test that takes 30 minutes?"</td><td>Shard it across N workers. Also investigate: can it be split into smaller tests? Long tests are expensive and slow feedback.</td></tr>
+        <tr><td>"What if the ML model makes a mistake?"</td><td>Nightly full-suite catches misses within 24h. Track recall metric. If accuracy drops, widen selection threshold.</td></tr>
+        <tr><td>"How do you handle a test that needs a real database?"</td><td>Ephemeral database per test (testcontainers), pre-loaded with fixtures. Destroy after test. Never share DB state.</td></tr>
+        <tr><td>"What about security/compliance tests?"</td><td>Always run for relevant changes — never skip via ML selection. These are in a "must-run" allowlist.</td></tr>
+        <tr><td>"How do you test the test system itself?"</td><td>Dogfooding: the test platform runs its own tests. Plus chaos engineering: inject failures to verify retry/recovery.</td></tr>
+        <tr><td>"How would you migrate from the current system?"</td><td>Shadow mode: new system runs in parallel, compare results. Gradual rollout by team. Feature flags per team.</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 14: Pitfalls & Trade-offs -->
+<!-- ============================================================ -->
+<div class="sec" id="tab-pitfalls">
+  <h2 class="stitle">Common Pitfalls &amp; Trade-offs</h2>
+  <p class="sdesc">What to avoid saying, what trade-offs to discuss proactively, and where candidates typically fail.</p>
+
+  <h3 class="sub">Pitfalls (Don't Do These)</h3>
+  <div class="trap">
+    <div class="trapl">PITFALL #1: IGNORING FLAKY TESTS</div>
+    <p>Many candidates design the "happy path" and forget that at scale, 1-2% of tests are non-deterministic. If you don't address flakiness, your entire system's credibility collapses. Always mention detection + quarantine + incentives to fix.</p>
+  </div>
+
+  <div class="trap">
+    <div class="trapl">PITFALL #2: "RUN ALL TESTS EVERY TIME"</div>
+    <p>This is the biggest red flag. At Google scale (4.2M tests, 50K changes/day), running everything is physically impossible and economically insane. You MUST discuss test selection.</p>
+  </div>
+
+  <div class="trap">
+    <div class="trapl">PITFALL #3: TREATING DEVICE TESTS LIKE SOFTWARE TESTS</div>
+    <p>Physical devices cannot be spun up on demand, cannot be shared, take minutes to reset, and break physically. If device testing is in scope, design a separate subsystem with mutex allocation, health monitoring, and firmware management.</p>
+  </div>
+
+  <div class="trap">
+    <div class="trapl">PITFALL #4: FORGETTING TEST ISOLATION</div>
+    <p>Shared mutable state between tests is the root of all evil in test automation. Every test must run in isolation: own container, own database, own network namespace. If you say "tests share a database," you've lost the interviewer.</p>
+  </div>
+
+  <div class="trap">
+    <div class="trapl">PITFALL #5: OVER-ENGINEERING FROM DAY 1</div>
+    <p>Don't propose ML-based selection without first explaining the simpler dependency-based approach. Show you understand the evolution: simple &rarr; sophisticated. Start with what works, add ML once you have historical data.</p>
+  </div>
+
+  <div class="trap">
+    <div class="trapl">PITFALL #6: IGNORING DEVELOPER EXPERIENCE</div>
+    <p>The system exists to serve developers. If you don't mention the 10-minute feedback target, actionable error messages, or one-click reproduction — you've designed infrastructure without empathy for the user.</p>
+  </div>
+
+  <h3 class="sub">Key Trade-offs to Discuss Proactively</h3>
+  <table class="tbl">
+    <tr><th>Trade-off</th><th>Option A</th><th>Option B</th><th>My Recommendation</th></tr>
+    <tr><td>Speed vs. Coverage</td><td>Run all tests (slow, expensive, complete)</td><td>ML selection (fast, cheap, 99.9%)</td><td>ML selection + nightly full run as safety net</td></tr>
+    <tr><td>Isolation vs. Speed</td><td>Fresh container per test (slow, reliable)</td><td>Reuse containers (fast, risky)</td><td>Fresh container with warm pool (best of both)</td></tr>
+    <tr><td>Cost vs. Latency</td><td>Spot instances (cheap, may be evicted)</td><td>On-demand (expensive, reliable)</td><td>On-demand for P0, spot for P1+</td></tr>
+    <tr><td>Automation vs. Control</td><td>Auto-quarantine flaky tests</td><td>Manual triage (safe, slow)</td><td>Auto-quarantine with escape hatch for critical tests</td></tr>
+    <tr><td>Simple vs. Smart</td><td>Dependency-only selection</td><td>ML-powered selection</td><td>Start with deps, add ML after 6 months of data</td></tr>
+    <tr><td>Local vs. Remote</td><td>Local execution (fast, limited)</td><td>Remote farm (scalable, latency)</td><td>Local for unit tests, remote for integration+</td></tr>
+  </table>
+
+  <h3 class="sub">Incremental Build Strategy</h3>
+  <div class="tip">
+    <div class="tipl">IF ASKED "HOW WOULD YOU BUILD THIS INCREMENTALLY?"</div>
+    <p>
+      <strong>Phase 1 (Month 1-3):</strong> Basic CI pipeline + dependency-based test selection + container isolation. Gives immediate value.<br><br>
+      <strong>Phase 2 (Month 4-6):</strong> Flaky test detection + quarantine system + result aggregation. Builds trust in results.<br><br>
+      <strong>Phase 3 (Month 7-12):</strong> ML-based test selection (needs 6 months of historical data) + device farm controller. Major cost reduction.<br><br>
+      <strong>Phase 4 (Year 2):</strong> AI-assisted root cause analysis + automatic bisection + predictive warnings. Polish and delight.
+    </p>
+  </div>
+
+  <h3 class="sub">Cost Estimation (For Senior Interviews)</h3>
+  <div class="card">
+    <div class="ch" onclick="toggle(this)">
+      <span class="ct">Back-of-Envelope Cost Model</span>
+      <span class="chv">&#9654;</span>
+    </div>
+    <div class="cb">
+<pre class="codeblock">
+// Google-scale cost estimation
+Workers needed at peak: ~15K containers + 2K VMs
+Average instance cost: $0.04/hour (spot) to $0.12/hour (on-demand)
+Assuming 70% spot, 30% on-demand:
+  Container cost: 15K * 0.7 * $0.04 + 15K * 0.3 * $0.12 = $420 + $540 = $960/hour
+  VM cost: 2K * 0.7 * $0.08 + 2K * 0.3 * $0.24 = $112 + $144 = $256/hour
+Total compute: ~$1,200/hour * 8760 hours = ~$10.5M/year
+
+Device farm (physical): 10K devices * $200/device/month = $24M/year
+Storage (results, artifacts): ~$2M/year
+Networking: ~$1M/year
+Engineering team (20 people): ~$6M/year
+
+Total: ~$44M/year for Google-scale test infrastructure
+
+With optimizations (selection + caching + spot):
+  Naive cost would be: ~$200M/year
+  Savings: ~80% = $156M/year saved
+</pre>
+    </div>
+  </div>
+
+  <h3 class="sub">What L5/L6 Interviewers Specifically Look For</h3>
+  <div class="note">
+    <div class="notel">GOOGLE L5 / AMAZON L6 EVALUATION CRITERIA</div>
+    <p>
+      <strong>Breadth:</strong> Can you design the full system end-to-end? (all 6 components)<br>
+      <strong>Depth:</strong> Can you deep dive on the hardest parts? (test selection, flaky management)<br>
+      <strong>Trade-offs:</strong> Do you discuss alternatives and explain your choices?<br>
+      <strong>Scale awareness:</strong> Do your numbers make sense? Do you mention what breaks at scale?<br>
+      <strong>Real experience:</strong> Can you tie this to things you've actually built? (Sidewalk!)<br>
+      <strong>Communication:</strong> Is your explanation structured and easy to follow?<br>
+      <strong>Evolution:</strong> Do you show how to build incrementally, not just the end state?
+    </p>
+  </div>
+
+  <div class="iq">
+    "To summarize the key trade-offs in my design: I chose ML-based test selection over running everything — it's 70% cheaper with only 0.1% risk, backstopped by nightly full runs. I chose container-per-test isolation over shared workers — it's slower to start but eliminates shared-state flakiness entirely. And I designed for incremental buildout: start with dependency-based selection in month one, add ML after six months of historical data. This way we deliver value immediately while building toward the optimal system."
+  </div>
+</div>
+
+</div><!-- end #main -->
+
+<script>
+function go(id) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById('tab-' + id);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
+  if (event && event.currentTarget) event.currentTarget.classList.add('active');
+  document.getElementById('main').scrollTop = 0;
+}
+
+function toggle(el) {
+  const body = el.nextElementSibling;
+  const chevron = el.querySelector('.chv');
+  body.classList.toggle('open');
+  if (chevron) chevron.classList.toggle('open');
+}
+</script>
+</body>
+</html>
