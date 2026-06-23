@@ -64,6 +64,8 @@ tr:hover { background: var(--bg3); }
   <button class="nav-btn" onclick="showSection('cicd')">Firmware CI/CD</button>
   <button class="nav-btn" onclick="showSection('aiplatform')">AI Agent Platform</button>
   <button class="nav-btn" onclick="showSection('questions')">Interview Questions</button>
+  <button class="nav-btn" onclick="showSection('testselection')">Test Selection Engine</button>
+  <button class="nav-btn" onclick="showSection('buildspeed')">Build Speed Optimization</button>
   <button class="nav-btn" onclick="showSection('knowledge')">EngProd Knowledge</button>
   <button class="nav-btn" onclick="showSection('howtoem')">How to EM</button>
   <button class="nav-btn" onclick="showSection('selling')">Selling Points</button>
@@ -917,6 +919,207 @@ help me understand which P0/P1 item you'd swap it with."
 </div>
 </div>
 
+<!-- ===== Test Selection Engine ===== -->
+<div class="section" id="testselection">
+<div class="card">
+<h2>System Design: Test Selection Engine</h2>
+<p><strong>Problem:</strong> You have 4 million tests. A developer pushes a 10-line code change. Running all 4M tests takes 8 hours. How do you select the relevant subset to run in &lt;10 minutes?</p>
+
+<h3>Why This Is the Hardest Problem in Test Automation</h3>
+<div class="insight">
+  <p>Too few tests → miss a bug → production incident.<br>
+  Too many tests → 8 hour feedback loop → developers hate CI.<br>
+  The sweet spot is: run exactly the tests that could possibly be affected by this change.</p>
+</div>
+
+<h3>Approach 1: Dependency Graph (Static Analysis)</h3>
+<p><strong>Idea:</strong> Build a graph: "file A is imported by file B, which is tested by test C." If file A changes, run test C.</p>
+<ul>
+  <li><strong>How:</strong> Parse import statements / build dependencies (Bazel does this natively)</li>
+  <li><strong>Pros:</strong> Deterministic, no training data needed, zero false negatives</li>
+  <li><strong>Cons:</strong> Over-selects (interface change → everything depends on it → run thousands). Can't handle cross-service effects (service A's API change affects service B's integration test)</li>
+</ul>
+
+<h3>Approach 2: Historical Correlation (ML-based)</h3>
+<p><strong>Idea:</strong> Historically, when file X changed, tests T1, T2, T3 failed. Learn this pattern. When X changes again, predict T1-T3 might fail.</p>
+<ul>
+  <li><strong>How:</strong> Train model on (changed_files, failed_tests) pairs from last 6 months</li>
+  <li><strong>Pros:</strong> Catches non-obvious dependencies, cross-service effects, config changes</li>
+  <li><strong>Cons:</strong> Can miss new tests (no history). Can have false negatives (never seen this file fail this test before). Needs retraining.</li>
+</ul>
+
+<h3>Approach 3: Hybrid (Recommended for Interview)</h3>
+<pre>
+For every code change:
+1. ALWAYS run: dependency-graph-selected tests (guaranteed safety)
+2. ALSO run: ML-predicted high-risk tests (catches cross-boundary effects)
+3. SKIP: tests with zero dependency + zero historical correlation
+4. NIGHTLY: run ALL tests as safety net (catch what we missed)
+5. LEARN: if nightly catches something we skipped → retrain model
+</pre>
+
+<h3>Architecture</h3>
+<svg viewBox="0 0 700 200" style="width:100%;max-width:1000px;margin:16px auto;display:block;" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+  <defs><marker id="arr6" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#495057"/></marker></defs>
+  <rect x="10" y="70" width="100" height="50" rx="6" fill="#d0ebff" stroke="#1971c2"/>
+  <text x="60" y="98" text-anchor="middle" font-size="10" font-weight="600" fill="#1971c2">Code Change</text>
+  <line x1="110" y1="95" x2="145" y2="95" stroke="#495057" marker-end="url(#arr6)"/>
+
+  <rect x="150" y="40" width="120" height="40" rx="6" fill="#d3f9d8" stroke="#2f9e44"/>
+  <text x="210" y="64" text-anchor="middle" font-size="9" font-weight="600" fill="#2f9e44">Dep Graph</text>
+
+  <rect x="150" y="100" width="120" height="40" rx="6" fill="#e5dbff" stroke="#7048e8"/>
+  <text x="210" y="124" text-anchor="middle" font-size="9" font-weight="600" fill="#7048e8">ML Predictor</text>
+
+  <line x1="270" y1="60" x2="320" y2="85" stroke="#495057" marker-end="url(#arr6)"/>
+  <line x1="270" y1="120" x2="320" y2="95" stroke="#495057" marker-end="url(#arr6)"/>
+
+  <rect x="325" y="70" width="80" height="50" rx="6" fill="#fff3bf" stroke="#e67700"/>
+  <text x="365" y="98" text-anchor="middle" font-size="9" font-weight="600" fill="#e67700">Union</text>
+
+  <line x1="405" y1="95" x2="440" y2="95" stroke="#495057" marker-end="url(#arr6)"/>
+
+  <rect x="445" y="70" width="100" height="50" rx="6" fill="#f1f3f5" stroke="#495057"/>
+  <text x="495" y="92" text-anchor="middle" font-size="9" font-weight="600" fill="#495057">Selected</text>
+  <text x="495" y="108" text-anchor="middle" font-size="9" fill="#495057">Tests</text>
+
+  <line x1="545" y1="95" x2="580" y2="95" stroke="#495057" marker-end="url(#arr6)"/>
+
+  <rect x="585" y="70" width="100" height="50" rx="6" fill="#ffe3e3" stroke="#c92a2a"/>
+  <text x="635" y="92" text-anchor="middle" font-size="9" font-weight="600" fill="#c92a2a">Execute</text>
+  <text x="635" y="108" text-anchor="middle" font-size="9" fill="#495057">&lt;10 min</text>
+</svg>
+
+<h3>Key Trade-offs (Discussion Points)</h3>
+<table>
+  <tr><th>Trade-off</th><th>Option A</th><th>Option B</th><th>Recommendation</th></tr>
+  <tr><td>Safety vs Speed</td><td>Run all (safe, slow)</td><td>Run subset (fast, risk)</td><td>Subset for presubmit + nightly full run as safety net</td></tr>
+  <tr><td>Graph granularity</td><td>File-level (coarse, over-selects)</td><td>Function-level (precise, expensive to compute)</td><td>File-level for most, function-level for hot paths</td></tr>
+  <tr><td>ML model freshness</td><td>Retrain daily (accurate)</td><td>Retrain weekly (cheaper)</td><td>Daily retrain, model is small (not expensive)</td></tr>
+  <tr><td>New tests (no history)</td><td>Always run (safe)</td><td>Skip until history builds</td><td>Always run new tests for first 2 weeks</td></tr>
+</table>
+
+<h3>Real-World References</h3>
+<ul>
+  <li><strong>Google TAP:</strong> Uses build dependency graph (Bazel targets) + historical flake data to skip known-flaky</li>
+  <li><strong>Meta TestPilot:</strong> ML-based predictive test selection, claims 50%+ reduction in test execution</li>
+  <li><strong>Uber SubmitQueue:</strong> Optimistic merging — merge first, test after. If test fails, auto-revert. Radically different philosophy.</li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Build Speed Optimization ===== -->
+<div class="section" id="buildspeed">
+<div class="card">
+<h2>System Design: Build Speed Optimization</h2>
+<p><strong>Problem:</strong> Firmware builds take 40 minutes. Developers get coffee, context-switch, forget what they were doing. How do you get it under 10 minutes?</p>
+
+<h3>Why Build Speed Matters (Numbers)</h3>
+<div class="insight">
+  <p>200 engineers × 5 builds/day × 30 min wasted per build = <strong>500 engineer-hours/day wasted</strong>.<br>
+  Cutting build time from 40 min to 10 min = saving 375 engineer-hours/day = <strong>~9 FTEs worth of recovered time</strong>.</p>
+</div>
+
+<h3>Optimization Strategies (in order of impact)</h3>
+
+<h4>1. Remote Caching (biggest win)</h4>
+<ul>
+  <li><strong>Idea:</strong> If someone else already built the same target with the same inputs, reuse their output</li>
+  <li><strong>How:</strong> Hash all inputs (source files + dependencies + compiler flags) → check remote cache → hit = skip build</li>
+  <li><strong>Impact:</strong> 60-80% cache hit rate in practice → build goes from 40 min to 8-10 min</li>
+  <li><strong>Tools:</strong> Bazel remote cache, ccache (C++), Gradle build cache, Turborepo (JS)</li>
+</ul>
+
+<h4>2. Incremental Builds</h4>
+<ul>
+  <li><strong>Idea:</strong> Only rebuild what actually changed (and its dependents)</li>
+  <li><strong>How:</strong> Dependency graph + file modification timestamps → minimal rebuild set</li>
+  <li><strong>Pitfall:</strong> C++ header files can trigger massive rebuilds (one .h change → recompile everything that includes it)</li>
+  <li><strong>Fix:</strong> Forward declarations, pimpl pattern, module boundaries</li>
+</ul>
+
+<h4>3. Distributed Build (parallel across machines)</h4>
+<ul>
+  <li><strong>Idea:</strong> Split compilation across a cluster of build workers</li>
+  <li><strong>How:</strong> Build graph has natural parallelism → ship independent targets to different machines</li>
+  <li><strong>Tools:</strong> Bazel remote execution, distcc (C++), BuildBuddy, EngFlow</li>
+  <li><strong>Limit:</strong> Critical path can't be parallelized (longest dependency chain)</li>
+</ul>
+
+<h4>4. Build Avoidance</h4>
+<ul>
+  <li><strong>Idea:</strong> Don't build what you don't need for this test</li>
+  <li><strong>How:</strong> If test only needs library A, don't build library B even if it changed</li>
+  <li><strong>Requires:</strong> Fine-grained dependency declaration (Bazel targets, not Makefile blobs)</li>
+</ul>
+
+<h4>5. Pre-built Dependencies (artifact registry)</h4>
+<ul>
+  <li><strong>Idea:</strong> Third-party deps and stable internal deps → pre-built binaries from registry</li>
+  <li><strong>How:</strong> Only rebuild from source when dependency version changes</li>
+  <li><strong>Tools:</strong> Maven/Nexus (Java), npm registry, Conan (C++), internal artifact stores</li>
+</ul>
+
+<h3>Architecture: Build Acceleration System</h3>
+<svg viewBox="0 0 700 220" style="width:100%;max-width:1000px;margin:16px auto;display:block;" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+  <defs><marker id="arr7" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#495057"/></marker></defs>
+  <!-- Developer -->
+  <rect x="10" y="80" width="90" height="45" rx="6" fill="#d0ebff" stroke="#1971c2"/>
+  <text x="55" y="106" text-anchor="middle" font-size="10" font-weight="600" fill="#1971c2">Developer</text>
+  <line x1="100" y1="102" x2="135" y2="102" stroke="#495057" marker-end="url(#arr7)"/>
+  <!-- Build request -->
+  <rect x="140" y="80" width="100" height="45" rx="6" fill="#fff3bf" stroke="#e67700"/>
+  <text x="190" y="100" text-anchor="middle" font-size="9" font-weight="600" fill="#e67700">Build System</text>
+  <text x="190" y="115" text-anchor="middle" font-size="8" fill="#495057">(Bazel/Gradle)</text>
+  <!-- Cache check -->
+  <rect x="280" y="30" width="100" height="40" rx="6" fill="#d3f9d8" stroke="#2f9e44"/>
+  <text x="330" y="50" text-anchor="middle" font-size="9" font-weight="600" fill="#2f9e44">Remote Cache</text>
+  <text x="330" y="63" text-anchor="middle" font-size="8" fill="#495057">60-80% hit</text>
+  <!-- Remote exec -->
+  <rect x="280" y="130" width="100" height="40" rx="6" fill="#e5dbff" stroke="#7048e8"/>
+  <text x="330" y="150" text-anchor="middle" font-size="9" font-weight="600" fill="#7048e8">Remote Workers</text>
+  <text x="330" y="163" text-anchor="middle" font-size="8" fill="#495057">parallel build</text>
+  <!-- Arrows -->
+  <line x1="240" y1="90" x2="275" y2="55" stroke="#495057" marker-end="url(#arr7)"/>
+  <line x1="240" y1="115" x2="275" y2="148" stroke="#495057" marker-end="url(#arr7)"/>
+  <!-- Result -->
+  <rect x="430" y="80" width="90" height="45" rx="6" fill="#f1f3f5" stroke="#495057"/>
+  <text x="475" y="100" text-anchor="middle" font-size="9" font-weight="600" fill="#495057">Artifacts</text>
+  <text x="475" y="115" text-anchor="middle" font-size="8" fill="#495057">(binaries)</text>
+  <line x1="380" y1="50" x2="425" y2="90" stroke="#2f9e44" marker-end="url(#arr7)"/>
+  <text x="410" y="62" font-size="8" fill="#2f9e44">cache hit</text>
+  <line x1="380" y1="150" x2="425" y2="112" stroke="#7048e8" marker-end="url(#arr7)"/>
+  <text x="410" y="145" font-size="8" fill="#7048e8">cache miss</text>
+  <!-- Final -->
+  <line x1="520" y1="102" x2="555" y2="102" stroke="#495057" marker-end="url(#arr7)"/>
+  <rect x="560" y="80" width="110" height="45" rx="6" fill="#d0ebff" stroke="#1971c2"/>
+  <text x="615" y="100" text-anchor="middle" font-size="9" font-weight="600" fill="#1971c2">Test Execution</text>
+  <text x="615" y="115" text-anchor="middle" font-size="8" fill="#495057">(if build passes)</text>
+</svg>
+
+<h3>Key Trade-offs</h3>
+<table>
+  <tr><th>Trade-off</th><th>Option A</th><th>Option B</th><th>Recommendation</th></tr>
+  <tr><td>Cache correctness</td><td>Conservative hash (include compiler version, flags)</td><td>Aggressive (just source hash)</td><td>Conservative — cache poisoning is worse than cache miss</td></tr>
+  <tr><td>Local vs Remote build</td><td>Build locally (fast for small changes)</td><td>Always remote (consistent environment)</td><td>Hybrid: local for &lt;10 files, remote for large changes</td></tr>
+  <tr><td>Monorepo vs Polyrepo</td><td>Monorepo (one build graph, easy caching)</td><td>Polyrepo (independent, parallel CI)</td><td>Monorepo for co-evolving code (Google/Meta style)</td></tr>
+  <tr><td>Build reproducibility</td><td>Hermetic (sandboxed, reproducible)</td><td>Non-hermetic (faster, can use host tools)</td><td>Hermetic — remote cache only works if builds are reproducible</td></tr>
+</table>
+
+<h3>Metrics to Track</h3>
+<ul>
+  <li><strong>Build time P50/P90:</strong> Target &lt;5 min / &lt;15 min</li>
+  <li><strong>Cache hit rate:</strong> Target &gt;70% (below = cache invalidation too aggressive)</li>
+  <li><strong>Build success rate:</strong> &gt;95% (failures from infra, not code)</li>
+  <li><strong>Developer wait time:</strong> Time from "save" to "test result" (includes build + test)</li>
+</ul>
+
+<div class="tip">
+  <p><strong>Interview script:</strong> "The single biggest ROI optimization for build speed is remote caching. At Google-scale with 60-80% cache hit rate, most builds become artifact downloads rather than compilations. For XR firmware specifically, C++ compile times dominate — so caching object files per translation unit gives the biggest win."</p>
+</div>
+</div>
+</div>
+
 <!-- ===== EngProd Knowledge ===== -->
 <div class="section" id="knowledge">
 <div class="card">
@@ -960,18 +1163,52 @@ help me understand which P0/P1 item you'd swap it with."
   <p><strong>Why flaky tests are dangerous:</strong> Engineers start ignoring test failures ("probably just flaky"). Then a real bug slips through because nobody looked. Flaky tests erode trust in CI — once trust is gone, CI becomes useless.</p>
 </div>
 
+<h4>Real-World Stats (use in interview for credibility)</h4>
+<table>
+  <tr><th>Company</th><th>Stat</th><th>Source</th></tr>
+  <tr><td>Google</td><td><strong>84%</strong> of pass-to-fail transitions are flaky, not real bugs. 16% of all tests exhibit some flakiness.</td><td>Google Testing Blog 2016</td></tr>
+  <tr><td>Atlassian</td><td><strong>150,000 developer hours/year</strong> wasted on flaky tests before their management system</td><td>Atlassian Engineering Blog</td></tr>
+  <tr><td>Slack</td><td><strong>57%</strong> of build failures caused by test job failures (mix of flaky + real)</td><td>Slack Engineering 2022</td></tr>
+  <tr><td>Microsoft</td><td>Built comprehensive flaky test management: infer → triage → quarantine pipeline</td><td>MS Engineering Blog</td></tr>
+</table>
+
+<h4>Industry Best Practices</h4>
+<ul>
+  <li><strong>Google:</strong> Auto-detect via re-run correlation. Quarantine flaky tests from presubmit (still run in postsubmit). Teams have flake SLO — exceed budget and your tests get auto-disabled.</li>
+  <li><strong>Meta:</strong> ML model predicts which tests are likely flaky based on historical data. Skip re-running them for known-flaky patterns.</li>
+  <li><strong>Netflix:</strong> Test health scorecards per team. Gamification: "flake-free streak" badge. Blameless postmortems for new flakes.</li>
+  <li><strong>Spotify:</strong> Ownership model — every test has an owner. Flaky test auto-creates a P2 bug assigned to owner. 1-week SLA to fix or delete.</li>
+</ul>
+
+<div class="tip">
+  <p><strong>Interview power move:</strong> When discussing flaky tests, drop one stat: "At Google, 84% of pass-to-fail transitions are flaky — so any test system without flake management is basically unusable at scale." This shows you've researched the problem space.</p>
+</div>
+
 <h3>Test Pyramid</h3>
-<pre>
-         /\
-        /  \        E2E Tests (few, slow, expensive)
-       /    \       - Real device, real network, full stack
-      /------\
-     /        \     Integration Tests (moderate)
-    /          \    - Multiple services, real DB, mocked externals
-   /------------\
-  /              \  Unit Tests (many, fast, cheap)
- /________________\ - Single function, mocked dependencies
-</pre>
+<svg viewBox="0 0 600 280" style="width:100%;max-width:600px;margin:16px auto;display:block;" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+  <!-- Pyramid -->
+  <polygon points="300,20 500,250 100,250" fill="#f1f3f5" stroke="#dee2e6" stroke-width="1.5"/>
+  <!-- E2E layer -->
+  <polygon points="300,20 370,100 230,100" fill="#ffe3e3" stroke="#c92a2a" stroke-width="1"/>
+  <text x="300" y="65" text-anchor="middle" font-size="11" font-weight="600" fill="#c92a2a">E2E / Device</text>
+  <text x="300" y="82" text-anchor="middle" font-size="9" fill="#495057">Few, Slow, Expensive, Flaky</text>
+  <!-- Integration layer -->
+  <polygon points="230,100 370,100 435,175 165,175" fill="#fff3bf" stroke="#e67700" stroke-width="1"/>
+  <text x="300" y="135" text-anchor="middle" font-size="11" font-weight="600" fill="#e67700">Integration</text>
+  <text x="300" y="152" text-anchor="middle" font-size="9" fill="#495057">Moderate, Multi-service, Real DB</text>
+  <!-- Unit layer -->
+  <polygon points="165,175 435,175 500,250 100,250" fill="#d3f9d8" stroke="#2f9e44" stroke-width="1"/>
+  <text x="300" y="210" text-anchor="middle" font-size="11" font-weight="600" fill="#2f9e44">Unit Tests</text>
+  <text x="300" y="227" text-anchor="middle" font-size="9" fill="#495057">Many, Fast (ms), Cheap, Deterministic</text>
+  <!-- Labels on right -->
+  <text x="510" y="65" font-size="9" fill="#c92a2a">~5% of tests</text>
+  <text x="510" y="140" font-size="9" fill="#e67700">~15% of tests</text>
+  <text x="510" y="215" font-size="9" fill="#2f9e44">~80% of tests</text>
+  <!-- Arrow on left -->
+  <text x="60" y="60" font-size="9" fill="#868e96">Slow</text>
+  <text x="60" y="245" font-size="9" fill="#868e96">Fast</text>
+  <line x1="75" y1="70" x2="75" y2="235" stroke="#868e96" stroke-width="1" marker-end="url(#arr5)"/>
+</svg>
 
 <table>
   <tr><th>Level</th><th>Speed</th><th>Reliability</th><th>Coverage</th><th>Cost to Fix</th></tr>
