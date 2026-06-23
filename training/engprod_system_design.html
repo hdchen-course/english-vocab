@@ -999,12 +999,40 @@ For every code change:
   <tr><td>New tests (no history)</td><td>Always run (safe)</td><td>Skip until history builds</td><td>Always run new tests for first 2 weeks</td></tr>
 </table>
 
-<h3>Real-World References</h3>
-<ul>
-  <li><strong>Google TAP:</strong> Uses build dependency graph (Bazel targets) + historical flake data to skip known-flaky</li>
-  <li><strong>Meta TestPilot:</strong> ML-based predictive test selection, claims 50%+ reduction in test execution</li>
-  <li><strong>Uber SubmitQueue:</strong> Optimistic merging — merge first, test after. If test fails, auto-revert. Radically different philosophy.</li>
-</ul>
+<h3>Deep Dive: Meta's Predictive Test Selection (2018)</h3>
+<div class="insight">
+  <p><strong>The Numbers:</strong> Catches <strong>&gt;99.9%</strong> of regressions while running only <strong>1/3</strong> of transitively dependent tests. <strong>Doubled</strong> testing infrastructure efficiency.</p>
+</div>
+
+<h4>Why Traditional Approach Fails at Meta Scale</h4>
+<p>In Meta's monorepo, dependency-graph-based selection triggers ~25% of ALL tests for each mobile code change (because low-level libraries are depended on by everything). That's way too many.</p>
+
+<h4>How It Works</h4>
+<ol>
+  <li><strong>Model:</strong> Gradient-boosted decision trees (explainable, fast to train, already in Meta's ML infra)</li>
+  <li><strong>Training:</strong> Historical (code_change, test_outcome) pairs. Retrained regularly on recent data.</li>
+  <li><strong>Prediction:</strong> For each new change, extract features → predict failure probability per test</li>
+  <li><strong>Selection:</strong> Run tests most likely to fail. Skip those extremely unlikely to find anything.</li>
+  <li><strong>Flake handling:</strong> Aggressively retry failures during training data collection to distinguish real failures from flakes</li>
+</ol>
+
+<h4>Key Design Decision: Why ML over Static Analysis?</h4>
+<p>Static change-impact analysis (who imports this file?) was impractical due to codebase size + language diversity. ML catches non-obvious correlations (e.g., "config file X changes often break test Y even though there's no direct import").</p>
+
+<h4>Safety Net</h4>
+<p>The system requires: predict &gt;95% of test outcomes correctly AND catch at least one failing test for &gt;99.9% of problematic changes. Nightly full test runs catch the remaining 0.1%.</p>
+
+<h3>Real-World References Summary</h3>
+<table>
+  <tr><th>Company</th><th>System</th><th>Approach</th><th>Key Result</th></tr>
+  <tr><td>Meta</td><td>Predictive Test Selection</td><td>ML (gradient boosted trees) predicts failure probability</td><td>1/3 of tests run, &gt;99.9% regressions caught</td></tr>
+  <tr><td>Google</td><td>TAP</td><td>Build dependency graph (Bazel targets) + flake filtering</td><td>Only affected targets tested, integrated with monorepo</td></tr>
+  <tr><td>Uber</td><td>SubmitQueue</td><td>Optimistic merge → test after → auto-revert on failure</td><td>Faster developer velocity, accepts occasional reverts</td></tr>
+</table>
+
+<div class="tip">
+  <p><strong>Interview talking point:</strong> "Meta showed that ML-based test selection catches 99.9% of regressions while running only a third of tests. The key insight: instead of asking 'which tests COULD be affected', ask 'which tests are LIKELY to find a bug.' This reframes test selection from a graph problem to a prediction problem."</p>
+</div>
 </div>
 </div>
 
