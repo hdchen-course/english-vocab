@@ -310,6 +310,22 @@ Backup: Async write to PostgreSQL every 30s for recovery</pre>
 </div>
 </div>
 
+<div class="card collapsed">
+<div class="card-header">Industry Insight: Voice Integration Patterns</div>
+<div class="card-body">
+<div class="ins">
+  <p><strong>How real AI contact center platforms handle audio:</strong></p>
+  <ul>
+    <li><strong>Protocols:</strong> SIP TRUNK, SIPREC, WebSocket streaming, gRPC streams, raw RTP packets. AI Agent needs bidirectional; Agent Assist only needs listen-only dual-channel.</li>
+    <li><strong>Latency target:</strong> Sub-300ms for natural conversation flow. Above 800ms, conversational quality "degrades sharply."</li>
+    <li><strong>Correlation challenge:</strong> Audio streams and call metadata arrive via SEPARATE channels with mismatched identifiers. Must correlate before agent answers.</li>
+    <li><strong>Vendor state machines:</strong> Each CCaaS vendor (Cisco, Five9, Genesys) fires different event sequences for identical actions (e.g., consultative transfer). Each requires its own state machine implementation.</li>
+    <li><strong>Design pattern:</strong> Treat AI agents and human agents as equivalent entities on the same platform — same tools, same monitoring, same orchestration.</li>
+  </ul>
+</div>
+</div>
+</div>
+
 <div class="card">
 <div class="card-header">Your Experience</div>
 <div class="card-body">
@@ -819,6 +835,22 @@ func ScoreAgent(escalation Escalation, agent Agent) float64 {
 </div>
 </div>
 
+<div class="card collapsed">
+<div class="card-header">Industry Insight: Real-time Supervision & Handoff</div>
+<div class="card-body">
+<div class="ins">
+  <p><strong>How real platforms handle AI supervision and handoff:</strong></p>
+  <ul>
+    <li><strong>Grid view:</strong> Supervisors monitor 100+ concurrent AI conversations. Visual hierarchy (color, motion) encodes priority — scan, then drill into specific conversations.</li>
+    <li><strong>Demand/supply routing:</strong> Works like ride-hailing — AI agent requests (demand) matched to supervisor skills/availability (supply). Handles overflow, timeouts, and re-surfacing.</li>
+    <li><strong>Multi-turn takeover:</strong> Supervisor pauses AI → engages customer directly for multiple turns → stabilizes → hands back to AI. Not just a one-shot transfer.</li>
+    <li><strong>Transfer types:</strong> Cold (direct handoff), Warm (AI introduces human first), Conference (AI stays to brief human, then exits).</li>
+    <li><strong>Unified entity model:</strong> AI and human agents treated as equivalent entities on same platform — same monitoring tools, same orchestration, same escalation patterns.</li>
+  </ul>
+</div>
+</div>
+</div>
+
 <div class="card">
 <div class="card-header">Your Experience</div>
 <div class="card-body">
@@ -984,6 +1016,23 @@ type EvaluationResult struct {
   <li><strong>Real-time vs batch scoring:</strong> Could batch-score hourly for cost efficiency. Chose: near-real-time for compliance (5 min), batch for coaching scores (daily refresh acceptable).</li>
   <li><strong>Transparency vs complexity:</strong> Agents need to understand why they scored low. Rule results are transparent ("you didn't verify identity at 0:45"). ML scores are opaque. Chose: always show rule evidence; for ML, show example phrases that influenced the score.</li>
 </ul>
+</div>
+</div>
+
+<div class="card collapsed">
+<div class="card-header">Industry Insight: STT Evaluation & QA Framework</div>
+<div class="card-body">
+<div class="ins">
+  <p><strong>How real platforms evaluate speech and conversation quality:</strong></p>
+  <ul>
+    <li><strong>4-layer evaluation:</strong> Lexical (WER/CER) → Entity (keyword recall, entity accuracy with 3-5x weight multiplier) → Semantic (LLM-as-judge) → Task (end-to-end success rate). Task layer is the ultimate gate.</li>
+    <li><strong>LLM-as-judge patterns:</strong> Three modes — (1) Judge: reference vs hypothesis, rated 1-5; (2) Extractor: independently extract facts from both, compare; (3) Consistency-checker: single-transcript contradiction detection.</li>
+    <li><strong>Critical insight:</strong> "LLMs do not fail gracefully on STT errors — they fail confidently." One digit swap triggers wrong tool calls. A missed negation flips intent entirely.</li>
+    <li><strong>Test coverage from real data:</strong> Mine historical conversations for test cases. 3 types — happy path (early), critical deviations (pre-launch), post-launch feedback (continuous regression).</li>
+    <li><strong>Evaluator drift:</strong> Human-rated samples required to catch LLM judge drift. When disagreements occur, "humans win and the judge gets re-tuned." Loop until agreement rates stabilize.</li>
+    <li><strong>Slice-based evaluation:</strong> Segment by language × noise condition × speaker role. Worst-slice behavior matters more than averages.</li>
+  </ul>
+</div>
 </div>
 </div>
 
