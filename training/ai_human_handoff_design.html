@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-to-Human Handoff — System Design</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8fafc;
+  --bg2: #ffffff;
+  --bg3: #f1f5f9;
+  --bg4: #e2e8f0;
+  --border: #cbd5e1;
+  --text: #0f172a;
+  --text2: #334155;
+  --text3: #64748b;
+  --blue: #2563eb;
+  --blue-l: #dbeafe;
+  --blue-d: #1d4ed8;
+  --green: #16a34a;
+  --green-l: #dcfce7;
+  --yellow: #d97706;
+  --yellow-l: #fef3c7;
+  --red: #dc2626;
+  --red-l: #fee2e2;
+  --purple: #7c3aed;
+  --purple-l: #ede9fe;
+  --orange: #ea580c;
+  --orange-l: #ffedd5;
+  --teal: #0d9488;
+  --teal-l: #ccfbf1;
+  --sw: 270px;
+  --r: 12px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.06);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+#sb {
+  width: var(--sw);
+  background: #fff;
+  border-right: 1px solid var(--border);
+  position: fixed; top: 0; left: 0; bottom: 0;
+  overflow-y: auto; z-index: 100;
+  transition: width .3s ease;
+}
+#sb::-webkit-scrollbar { width: 4px; }
+#sb::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 2px; }
+
+.sbh {
+  padding: 20px 16px 14px;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; background: #fff; z-index: 1;
+}
+.sbt { font-size: 13px; font-weight: 700; color: var(--blue-d); text-transform: uppercase; letter-spacing: 1px; }
+.sbs { font-size: 11px; color: var(--text3); margin-top: 3px; }
+
+.ng { padding: 12px 8px 0; }
+.ngl { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; padding: 0 8px 6px; }
+.ni {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: 8px;
+  cursor: pointer; font-size: 13px; color: var(--text2);
+  transition: all .15s; border: none; background: none; width: 100%; text-align: left;
+}
+.ni:hover { background: var(--bg3); color: var(--text); }
+.ni.active { background: var(--blue-l); color: var(--blue-d); font-weight: 600; }
+.ni-icon { font-size: 15px; flex-shrink: 0; width: 20px; text-align: center; }
+.ni-text { flex: 1; font-size: 12px; }
+.badge { margin-left: auto; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 8px; }
+.bh { background: var(--red-l); color: var(--red); }
+.bg { background: var(--green-l); color: var(--green); }
+.bp { background: var(--purple-l); color: var(--purple); }
+.bt { background: var(--teal-l); color: var(--teal); }
+.bo { background: var(--orange-l); color: var(--orange); }
+
+/* MAIN */
+#main { position: fixed; top: 0; right: 0; bottom: 0; left: var(--sw); overflow-y: auto; background: var(--bg); }
+
+/* HEADER */
+.ph {
+  background: linear-gradient(135deg, #1e3a5f 0%, #1e40af 40%, #3b82f6 100%);
+  padding: 40px 44px;
+}
+.htag { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.6); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+.ht { font-size: 32px; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 8px; }
+.ht span { color: #93c5fd; }
+.hd { color: rgba(255,255,255,0.8); font-size: 14px; max-width: 650px; }
+.hm { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.chip { font-size: 11px; color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 16px; }
+.chip b { color: #fff; }
+
+/* SECTIONS */
+.sec { padding: 36px 44px; display: none; }
+.sec.active { display: block; }
+.stitle { font-size: 24px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.sdesc { color: var(--text3); margin-bottom: 24px; font-size: 13px; }
+
+/* CARDS */
+.card {
+  background: #fff; border-radius: var(--r); margin-bottom: 12px;
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border); overflow: hidden;
+}
+.ch {
+  padding: 12px 16px; display: flex; align-items: center; gap: 10px;
+  cursor: pointer; user-select: none; transition: background .15s;
+}
+.ch:hover { background: var(--bg3); }
+.ct { font-size: 14px; font-weight: 600; color: var(--text); flex: 1; }
+.cn { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text3); background: var(--bg3); padding: 2px 7px; border-radius: 5px; }
+.db { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 5px; letter-spacing: .5px; }
+.dh { background: var(--red-l); color: var(--red); }
+.dm { background: var(--orange-l); color: var(--orange); }
+.de { background: var(--green-l); color: var(--green); }
+.chv { color: var(--text3); font-size: 11px; transition: transform .2s; }
+.chv.open { transform: rotate(90deg); }
+.cb { padding: 16px 18px; display: none; font-size: 13px; color: var(--text2); line-height: 1.7; border-top: 1px solid var(--bg3); }
+.cb.open { display: block; }
+
+/* CALLOUTS */
+.ins { background: var(--blue-l); border-left: 4px solid var(--blue); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.insl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--blue-d); margin-bottom: 4px; }
+.ins p { color: var(--text); font-size: 13px; }
+
+.tip { background: var(--green-l); border-left: 4px solid var(--green); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.tipl { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--green); margin-bottom: 4px; }
+.tip p { color: var(--text2); font-size: 13px; }
+
+.warn { background: var(--yellow-l); border-left: 4px solid var(--yellow); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.warnl { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--yellow); margin-bottom: 4px; }
+.warn p { color: var(--text2); font-size: 13px; }
+
+.trap { background: var(--red-l); border-left: 4px solid var(--red); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.trapl { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--red); margin-bottom: 4px; }
+.trap p { color: var(--text2); font-size: 13px; }
+
+.note { background: var(--purple-l); border-left: 4px solid var(--purple); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.notel { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--purple); margin-bottom: 4px; }
+.note p { color: var(--text2); font-size: 13px; }
+
+/* TABLES */
+.tbl { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13px; border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+.tbl th { background: var(--bg3); color: var(--text2); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+.tbl td { padding: 10px 14px; border-bottom: 1px solid var(--bg3); color: var(--text2); }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr:hover td { background: var(--bg); }
+
+/* TAGS */
+.tag { display: inline-block; padding: 3px 10px; border-radius: 14px; background: var(--blue-l); color: var(--blue-d); font-size: 11px; font-weight: 500; margin: 2px; }
+
+/* GRID */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+@media (max-width: 900px) { .g2, .g3 { grid-template-columns: 1fr; } }
+
+/* INTERVIEW QUOTE */
+.iq {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 1px solid #bae6fd;
+  border-left: 4px solid var(--blue);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin: 14px 0;
+  font-style: italic;
+  color: var(--text2);
+  font-size: 13px;
+  position: relative;
+}
+.iq::before {
+  content: 'SAY THIS';
+  position: absolute;
+  top: -8px; left: 14px;
+  font-size: 9px; font-weight: 700; font-style: normal;
+  background: var(--blue);
+  color: #fff;
+  padding: 1px 8px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+
+/* SUB HEADINGS */
+h3.sub { font-size: 17px; font-weight: 700; color: var(--text); margin: 28px 0 10px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+h4.sub2 { font-size: 11px; font-weight: 700; color: var(--text3); margin: 18px 0 8px; text-transform: uppercase; letter-spacing: .8px; }
+
+/* SKILL BOX */
+.skill-box {
+  background: #fff; border: 1px solid var(--border); border-radius: var(--r);
+  padding: 18px; margin: 10px 0; box-shadow: var(--shadow-sm);
+}
+.skill-box h4 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.skill-box ul { padding-left: 18px; font-size: 13px; color: var(--text2); }
+.skill-box li { margin-bottom: 4px; }
+
+/* PROGRESS */
+.prog { display: flex; gap: 12px; margin: 16px 0; flex-wrap: wrap; }
+.pc { flex: 1; min-width: 120px; background: #fff; border: 1px solid var(--border); border-radius: var(--r); padding: 16px; box-shadow: var(--shadow-sm); text-align: center; }
+.pc .num { font-size: 28px; font-weight: 800; color: var(--blue-d); }
+.pc .lbl { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: var(--bg3); padding: 1px 5px; border-radius: 4px; color: var(--blue-d); }
+
+pre.codeblock {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 12px 0;
+  overflow-x: auto;
+  line-height: 1.6;
+  color: var(--text2);
+}
+
+/* LIST STYLING */
+.content-list { padding-left: 20px; margin: 8px 0; }
+.content-list li { margin-bottom: 6px; font-size: 13px; color: var(--text2); }
+.content-list li strong { color: var(--text); }
+
+/* DECISION GRID */
+.decision-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 14px 0;
+}
+.decision-item {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px;
+  box-shadow: var(--shadow-sm);
+}
+.decision-item h5 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--blue-d);
+  margin-bottom: 6px;
+}
+.decision-item p {
+  font-size: 12px;
+  color: var(--text2);
+  margin-bottom: 4px;
+}
+.decision-item .di-key {
+  font-size: 10px;
+  color: var(--text3);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+/* TIMELINE */
+.timeline { margin: 16px 0; padding-left: 20px; border-left: 3px solid var(--blue-l); }
+.timeline-item { margin-bottom: 16px; position: relative; padding-left: 16px; }
+.timeline-item::before { content: ''; position: absolute; left: -26px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--blue); border: 2px solid #fff; }
+.timeline-time { font-size: 11px; font-weight: 700; color: var(--blue-d); text-transform: uppercase; letter-spacing: .5px; }
+.timeline-title { font-size: 14px; font-weight: 600; color: var(--text); margin: 2px 0; }
+.timeline-desc { font-size: 12px; color: var(--text2); }
+
+@media (max-width: 768px) {
+  #sb { width: 0; overflow: hidden; }
+  #main { left: 0; }
+  .sec { padding: 20px 16px; }
+  .ph { padding: 24px 16px; }
+}
+a.lc { color: var(--blue); text-decoration: none; font-weight: 500; }
+a.lc:hover { text-decoration: underline; color: var(--blue-d); }
+</style>
+</head>
+<body>
+
+<nav id="sb">
+  <div class="sbh">
+    <div class="sbt">Handoff Design</div>
+    <div class="sbs">AI-to-Human Transfer &middot; Interview Prep</div>
+  </div>
+  <div class="ng"><div class="ngl">Foundations</div>
+    <button class="ni active" onclick="go('overview')"><span class="ni-icon">1</span><span class="ni-text">Overview</span><span class="badge bh">Start</span></button>
+    <button class="ni" onclick="go('requirements')"><span class="ni-icon">2</span><span class="ni-text">Requirements &amp; Scale</span><span class="badge bp">Critical</span></button>
+    <button class="ni" onclick="go('architecture')"><span class="ni-icon">3</span><span class="ni-text">High-Level Architecture</span><span class="badge bp">Core</span></button>
+  </div>
+  <div class="ng"><div class="ngl">Deep Dives</div>
+    <button class="ni" onclick="go('triggers')"><span class="ni-icon">4</span><span class="ni-text">Escalation Triggers</span><span class="badge bp">Critical</span></button>
+    <button class="ni" onclick="go('context')"><span class="ni-icon">5</span><span class="ni-text">Context Assembly</span><span class="badge bh">Must Build</span></button>
+    <button class="ni" onclick="go('routing')"><span class="ni-icon">6</span><span class="ni-text">Agent Routing</span><span class="badge bt">Real-time</span></button>
+    <button class="ni" onclick="go('queue')"><span class="ni-icon">7</span><span class="ni-text">Queue Management</span><span class="badge bt">Real-time</span></button>
+  </div>
+  <div class="ng"><div class="ngl">Infrastructure</div>
+    <button class="ni" onclick="go('transfer')"><span class="ni-icon">8</span><span class="ni-text">Transfer Orchestration</span></button>
+    <button class="ni" onclick="go('monitoring')"><span class="ni-icon">9</span><span class="ni-text">Monitoring &amp; SLA</span></button>
+    <button class="ni" onclick="go('failover')"><span class="ni-icon">10</span><span class="ni-text">Failover &amp; Reliability</span></button>
+    <button class="ni" onclick="go('scaling')"><span class="ni-icon">11</span><span class="ni-text">Scaling &amp; Multi-Region</span></button>
+  </div>
+  <div class="ng"><div class="ngl">Execution</div>
+    <button class="ni" onclick="go('script')"><span class="ni-icon">12</span><span class="ni-text">Interview Script</span><span class="badge bg">45min</span></button>
+    <button class="ni" onclick="go('experience')"><span class="ni-icon">13</span><span class="ni-text">Your Experience</span><span class="badge bo">Personal</span></button>
+    <button class="ni" onclick="go('pitfalls')"><span class="ni-icon">14</span><span class="ni-text">Pitfalls &amp; Follow-ups</span><span class="badge bo">Avoid</span></button>
+  </div>
+</nav>
+
+<div id="main">
+
+<div class="ph">
+  <div class="htag">Contact Center AI &middot; System Design Interview</div>
+  <div class="ht">AI-to-Human Handoff <span>System Design</span></div>
+  <div class="hd">Design a system that seamlessly transfers conversations from AI chatbots to human agents with full context preservation. The challenge: match demand (escalating customers) to supply (available agents) in real-time &mdash; like ride-hailing for support.</div>
+  <div class="hm">
+    <div class="chip">Sections <b>14</b></div>
+    <div class="chip">Transition <b>&lt;2s</b></div>
+    <div class="chip">Focus <b>Routing + Context</b></div>
+    <div class="chip">Scale <b>50K Agents</b></div>
+  </div>
+</div>
+
+<!-- ======= SECTION 1: OVERVIEW ======= -->
+<div id="tab-overview" class="sec active">
+<div class="stitle">AI-to-Human Handoff Overview</div>
+<div class="sdesc">What this system does, why bad handoffs destroy customer experience, and how to frame it in an interview.</div>
+
+<h3 class="sub">What Is AI-to-Human Handoff?</h3>
+
+<p>AI-to-Human Handoff is the system that <strong>transfers a conversation from an AI chatbot to a human agent</strong> when the AI cannot resolve the issue. The critical requirement: the human agent must receive <strong>full context</strong> so the customer never repeats themselves.</p>
+
+<div class="trap">
+  <div class="trapl">THE CORE PROBLEM</div>
+  <p>Bad handoff = customer repeats everything = rage. Studies show 72% of customers cite "having to repeat themselves" as their #1 frustration with support. A handoff system that loses context is worse than no AI at all.</p>
+</div>
+
+<h3 class="sub">The Ride-Hailing Analogy</h3>
+
+<div class="ins">
+  <div class="insl">KEY MENTAL MODEL</div>
+  <p>Think of this as <strong>ride-hailing for support</strong>. Escalating customers are "riders" (demand). Available agents are "drivers" (supply). The system must match demand to supply in real-time, considering skill requirements, priority, and geographic/language constraints &mdash; with the added complexity of transferring rich conversation context.</p>
+</div>
+
+<h3 class="sub">Transfer Types</h3>
+
+<div class="decision-grid">
+  <div class="decision-item">
+    <h5>Cold Transfer</h5>
+    <p>AI disconnects, customer enters queue. Agent picks up with context packet. Simplest but worst CX.</p>
+    <div class="di-key">Use: Low-priority, long queues expected</div>
+  </div>
+  <div class="decision-item">
+    <h5>Warm Transfer</h5>
+    <p>AI remains connected while agent reviews context. Seamless switch once agent is ready. Best CX.</p>
+    <div class="di-key">Use: Default for most escalations</div>
+  </div>
+  <div class="decision-item">
+    <h5>Conference Transfer</h5>
+    <p>AI + agent + customer in three-way. AI introduces context aloud, then drops off. Human-like handoff.</p>
+    <div class="di-key">Use: Complex issues needing verbal summary</div>
+  </div>
+</div>
+
+<h3 class="sub">Scale Targets</h3>
+
+<div class="prog">
+  <div class="pc"><div class="num">50K</div><div class="lbl">Agents Online</div></div>
+  <div class="pc"><div class="num">&lt;2s</div><div class="lbl">Transition Time</div></div>
+  <div class="pc"><div class="num">1000</div><div class="lbl">Concurrent Handoffs</div></div>
+  <div class="pc"><div class="num">99.99%</div><div class="lbl">Availability</div></div>
+</div>
+
+<h3 class="sub">What Interviewers Evaluate</h3>
+
+<div class="decision-grid">
+  <div class="decision-item">
+    <h5>Demand/Supply Matching</h5>
+    <p>Can you design real-time matching under constraint (skills, language, load)?</p>
+    <div class="di-key">Key: Scoring algorithms, Redis sorted sets</div>
+  </div>
+  <div class="decision-item">
+    <h5>Context Preservation</h5>
+    <p>How do you assemble and transfer 5-20KB of context without losing critical info?</p>
+    <div class="di-key">Key: Prioritized context assembly</div>
+  </div>
+  <div class="decision-item">
+    <h5>Queue Fairness</h5>
+    <p>How do you balance priority customers against starvation of regular ones?</p>
+    <div class="di-key">Key: Priority aging, SLA tracking</div>
+  </div>
+  <div class="decision-item">
+    <h5>Failure Handling</h5>
+    <p>What if no agent is available? Agent rejects? Network drops mid-transfer?</p>
+    <div class="di-key">Key: Timeouts, retries, callback offers</div>
+  </div>
+</div>
+
+<div class="iq">"I'll design an AI-to-human handoff system that seamlessly transfers conversations with full context when the AI cannot resolve an issue. The core challenge is a real-time demand/supply matching problem &mdash; like ride-hailing &mdash; matching escalating customers to available agents based on skills, priority, and load, with a strict sub-2-second transition target across 50K agents handling 1000 concurrent handoffs."</div>
+
+</div>
+
+<!-- ======= SECTION 2: REQUIREMENTS & SCALE ======= -->
+<div id="tab-requirements" class="sec">
+<div class="stitle">Requirements &amp; Scale</div>
+<div class="sdesc">Functional requirements, non-functional constraints, and back-of-envelope capacity estimates.</div>
+
+<h3 class="sub">Functional Requirements</h3>
+
+<table class="tbl">
+<tr><th>Requirement</th><th>Description</th><th>Priority</th></tr>
+<tr><td><strong>Escalation Detection</strong></td><td>Detect when AI should transfer to human (explicit request, confidence drop, sentiment)</td><td>P0</td></tr>
+<tr><td><strong>Context Assembly</strong></td><td>Package conversation history, intent, entities, actions taken into handoff context</td><td>P0</td></tr>
+<tr><td><strong>Agent Routing</strong></td><td>Select optimal available agent based on skills, load, and performance</td><td>P0</td></tr>
+<tr><td><strong>Queue Management</strong></td><td>Priority queuing with SLA tracking and position updates</td><td>P0</td></tr>
+<tr><td><strong>Transfer Orchestration</strong></td><td>Execute cold/warm/conference transfer with &lt;2s transition</td><td>P0</td></tr>
+<tr><td><strong>Supervisor Console</strong></td><td>Real-time view of queue depth, wait times, and stuck transfers</td><td>P1</td></tr>
+<tr><td><strong>Callback Offer</strong></td><td>Offer customer a callback when estimated wait exceeds threshold</td><td>P1</td></tr>
+<tr><td><strong>Multi-tenant</strong></td><td>Per-tenant escalation rules, routing logic, and SLA targets</td><td>P1</td></tr>
+</table>
+
+<h3 class="sub">Non-Functional Requirements</h3>
+
+<div class="g2">
+  <div class="skill-box">
+    <h4>Performance</h4>
+    <ul>
+      <li>Escalation decision: <strong>&lt;100ms</strong></li>
+      <li>Context assembly: <strong>&lt;200ms</strong></li>
+      <li>Agent selection: <strong>&lt;500ms</strong></li>
+      <li>End-to-end transition: <strong>&lt;2s</strong></li>
+    </ul>
+  </div>
+  <div class="skill-box">
+    <h4>Reliability</h4>
+    <ul>
+      <li>Availability: <strong>99.99%</strong> (52 sec downtime/year)</li>
+      <li>Zero lost handoffs (at-least-once delivery)</li>
+      <li>Graceful degradation: queue if no agent available</li>
+    </ul>
+  </div>
+  <div class="skill-box">
+    <h4>Scalability</h4>
+    <ul>
+      <li><strong>50K agents</strong> online simultaneously</li>
+      <li><strong>5K agents</strong> in available state at any time</li>
+      <li><strong>1000 concurrent handoffs</strong> in progress</li>
+      <li>Handle 3x peak spikes without degradation</li>
+    </ul>
+  </div>
+  <div class="skill-box">
+    <h4>Consistency</h4>
+    <ul>
+      <li>No double-assignment (one customer to one agent)</li>
+      <li>Agent state updates within 1s of status change</li>
+      <li>Queue position accurate within 2 positions</li>
+    </ul>
+  </div>
+</div>
+
+<h3 class="sub">Back-of-Envelope Math</h3>
+
+<table class="tbl">
+<tr><th>Metric</th><th>Calculation</th><th>Result</th></tr>
+<tr><td><strong>Agents online</strong></td><td>50K total, 10% available at any time</td><td>5K available</td></tr>
+<tr><td><strong>Routing decisions</strong></td><td>1000 handoffs/min &divide; 60</td><td>~17 routing decisions/sec</td></tr>
+<tr><td><strong>Context payload</strong></td><td>Summary + transcript + entities + metadata</td><td>5-20 KB per handoff</td></tr>
+<tr><td><strong>Agent heartbeats</strong></td><td>50K agents &times; 1 heartbeat/10s</td><td>5K updates/sec</td></tr>
+<tr><td><strong>Queue state reads</strong></td><td>1000 customers checking position &times; 2/sec</td><td>2K reads/sec</td></tr>
+<tr><td><strong>Redis memory</strong></td><td>50K agent states (500B each) + 5K queue entries (2KB each)</td><td>~35 MB hot data</td></tr>
+<tr><td><strong>WebSocket connections</strong></td><td>50K agents + 1000 queued customers + supervisors</td><td>~52K connections</td></tr>
+</table>
+
+<div class="ins">
+  <div class="insl">Bottleneck Insight</div>
+  <p>The bottleneck is NOT throughput (17 routing decisions/sec is trivial). It's <strong>consistency under concurrency</strong> &mdash; preventing double-assignment when multiple handoffs target the same agent simultaneously, and maintaining accurate availability state with 5K heartbeat updates/sec.</p>
+</div>
+
+<div class="iq">"At 50K agents with 5K available and 1000 concurrent handoffs, we're making 17 routing decisions per second with 5K heartbeat updates maintaining agent state. The bottleneck isn't throughput &mdash; it's consistency: preventing double-assignment when two escalations target the same agent within milliseconds. Redis sorted sets for availability and atomic CAS operations for assignment solve this."</div>
+
+</div>
+
+<!-- ======= SECTION 3: HIGH-LEVEL ARCHITECTURE ======= -->
+<div id="tab-architecture" class="sec">
+<div class="stitle">High-Level Architecture</div>
+<div class="sdesc">End-to-end flow from AI escalation to agent desktop, with component responsibilities.</div>
+
+<h3 class="sub">Architecture Diagram</h3>
+
+<pre class="codeblock">
+  AI Chatbot                                    Agent Desktop
+      |                                              ^
+      v                                              |
++-------------------+                    +---------------------+
+| Escalation        |                    | Transfer            |
+| Trigger Service   |                    | Orchestrator        |
+| (Detect handoff)  |                    | (Execute transfer)  |
++---------+---------+                    +----------+----------+
+          |                                         ^
+          v                                         |
++-------------------+                    +---------------------+
+| Context           |                    | Queue Manager       |
+| Assembler         |                    | (Priority queues,   |
+| (Package context) |                    |  SLA tracking)      |
++---------+---------+                    +----------+----------+
+          |                                         ^
+          v                                         |
++-------------------+                    +---------------------+
+| Agent Router      |------------------->| Agent State Store   |
+| (Score & select)  |                    | (Redis: avail,      |
++-------------------+                    |  skills, load)      |
+                                         +---------------------+
+                                                    ^
+                                                    |
+                                         +---------------------+
+                                         | Supervisor Console  |
+                                         | (Monitor & override)|
+                                         +---------------------+
+</pre>
+
+<h3 class="sub">Component Inventory</h3>
+
+<table class="tbl">
+<tr><th>Component</th><th>Responsibility</th><th>Tech Choice</th></tr>
+<tr><td><strong>Escalation Trigger</strong></td><td>Evaluate rules: explicit request, confidence drop, sentiment, compliance, loop</td><td>Go service, rule engine</td></tr>
+<tr><td><strong>Context Assembler</strong></td><td>Package conversation summary, intent, entities, auth status, actions taken</td><td>Go + Redis read</td></tr>
+<tr><td><strong>Agent Router</strong></td><td>Score agents by skill match, load, availability duration, performance</td><td>Go + Redis sorted sets</td></tr>
+<tr><td><strong>Queue Manager</strong></td><td>Priority queue per skill group, wait time estimation, position updates</td><td>Go + Redis sorted sets</td></tr>
+<tr><td><strong>Transfer Orchestrator</strong></td><td>Execute cold/warm/conference handoff, manage state machine</td><td>Go + WebSocket</td></tr>
+<tr><td><strong>Agent State Store</strong></td><td>Track availability, skills, current load, heartbeats for all agents</td><td>Redis hashes + sorted sets</td></tr>
+<tr><td><strong>Supervisor Console</strong></td><td>Real-time dashboard: queue depth, wait times, stuck transfers, manual override</td><td>React + WebSocket</td></tr>
+</table>
+
+<h3 class="sub">Data Flow (Happy Path)</h3>
+
+<div class="timeline">
+  <div class="timeline-item">
+    <div class="timeline-time">T+0ms</div>
+    <div class="timeline-title">AI detects escalation trigger</div>
+    <div class="timeline-desc">Customer says "I want to talk to a human" or sentiment drops below -0.7</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">T+100ms</div>
+    <div class="timeline-title">Escalation decision confirmed</div>
+    <div class="timeline-desc">Trigger service evaluates rules, emits EscalationDecision event with priority and required skills</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">T+300ms</div>
+    <div class="timeline-title">Context assembled</div>
+    <div class="timeline-desc">Context Assembler packages summary, transcript, entities, auth status into HandoffContext (5-20KB)</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">T+800ms</div>
+    <div class="timeline-title">Agent selected</div>
+    <div class="timeline-desc">Router scores available agents, selects best match, reserves with atomic CAS</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">T+1500ms</div>
+    <div class="timeline-title">Transfer executed</div>
+    <div class="timeline-desc">Orchestrator delivers context to agent desktop, establishes connection, AI hands off</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">T+2000ms</div>
+    <div class="timeline-title">Agent greets customer</div>
+    <div class="timeline-desc">Agent sees full context, addresses customer by name, references their issue directly</div>
+  </div>
+</div>
+
+<div class="iq">"The architecture flows: AI Chatbot triggers escalation, the Context Assembler packages 5-20KB of conversation state, the Agent Router scores available agents using skill match and load, the Queue Manager handles waiting if needed, and the Transfer Orchestrator executes the handoff delivering full context to the agent's desktop. The Agent State Store in Redis is the shared backbone &mdash; tracking availability, skills, and load for all 50K agents via heartbeats and sorted sets."</div>
+
+<div class="note">
+  <div class="notel">DESIGN PRINCIPLE</div>
+  <p><strong>Optimistic assignment with atomic reservation.</strong> We optimistically select the best agent but use Redis CAS (compare-and-swap via Lua script) to atomically reserve them. If the CAS fails (agent was grabbed by another handoff), we immediately retry with the next-best candidate. This avoids distributed locks while preventing double-assignment.</p>
+</div>
+
+</div>
+
+<!-- ======= SECTION 4: ESCALATION TRIGGERS ======= -->
+<div id="tab-triggers" class="sec">
+<div class="stitle">Escalation Triggers</div>
+<div class="sdesc">When and why the AI decides to hand off &mdash; configurable rules evaluated in real-time.</div>
+
+<h3 class="sub">Trigger Types</h3>
+
+<table class="tbl">
+<tr><th>Trigger</th><th>Signal</th><th>Threshold</th><th>Priority</th></tr>
+<tr><td><strong>Explicit Request</strong></td><td>Customer says "talk to a human", "agent please", "representative"</td><td>Keyword match + intent confirm</td><td>HIGH</td></tr>
+<tr><td><strong>Confidence Drop</strong></td><td>AI confidence below threshold for 3+ consecutive turns</td><td>&lt;0.4 for 3 turns</td><td>MEDIUM</td></tr>
+<tr><td><strong>Sentiment Deterioration</strong></td><td>Customer sentiment trending negative across window</td><td>&lt;-0.7 sustained</td><td>HIGH</td></tr>
+<tr><td><strong>Compliance Escalation</strong></td><td>Transaction amount exceeds AI authorization limit</td><td>Amount &gt; $X (configurable)</td><td>CRITICAL</td></tr>
+<tr><td><strong>Loop Detection</strong></td><td>AI generates same/similar response 3 times</td><td>Cosine similarity &gt;0.9 across 3 responses</td><td>HIGH</td></tr>
+</table>
+
+<div class="warn">
+  <div class="warnl">CONFIGURABLE PER TENANT</div>
+  <p>Every threshold above is configurable per tenant. A bank may escalate at $500 transactions; an e-commerce site at $5000. Sentiment thresholds vary by industry &mdash; telecom customers are angrier by default. Store rules in a tenant config service, not hardcoded.</p>
+</div>
+
+<h3 class="sub">Escalation Decision Struct</h3>
+
+<pre class="codeblock">
+// EscalationDecision is emitted when any trigger fires
+type EscalationDecision struct {
+    SessionID      string            `json:"session_id"`
+    TenantID       string            `json:"tenant_id"`
+    Trigger        TriggerType       `json:"trigger"`         // EXPLICIT | CONFIDENCE | SENTIMENT | COMPLIANCE | LOOP
+    Priority       Priority          `json:"priority"`        // CRITICAL | HIGH | MEDIUM | LOW
+    RequiredSkills []string          `json:"required_skills"` // ["billing", "spanish"]
+    Reason         string            `json:"reason"`          // Human-readable for agent
+    Confidence     float64           `json:"confidence"`      // How sure are we about escalation
+    Metadata       map[string]string `json:"metadata"`        // Trigger-specific data
+    Timestamp      time.Time         `json:"timestamp"`
+}
+
+type TriggerType string
+const (
+    TriggerExplicit   TriggerType = "EXPLICIT_REQUEST"
+    TriggerConfidence TriggerType = "CONFIDENCE_DROP"
+    TriggerSentiment  TriggerType = "SENTIMENT_DETERIORATION"
+    TriggerCompliance TriggerType = "COMPLIANCE_ESCALATION"
+    TriggerLoop       TriggerType = "LOOP_DETECTION"
+)
+</pre>
+
+<h3 class="sub">Trigger Evaluation Engine</h3>
+
+<pre class="codeblock">
+// TriggerEvaluator runs all configured rules against conversation state
+type TriggerEvaluator struct {
+    rules      []EscalationRule
+    tenantCfg  TenantConfigStore
+}
+
+func (te *TriggerEvaluator) Evaluate(ctx ConversationState) *EscalationDecision {
+    tenantRules := te.tenantCfg.GetRules(ctx.TenantID)
+    for _, rule := range tenantRules {
+        if decision := rule.Evaluate(ctx); decision != nil {
+            return decision // First matching rule wins (ordered by priority)
+        }
+    }
+    return nil
+}
+
+// Example: Sentiment rule checks last N turns below threshold
+func (r *SentimentRule) Evaluate(ctx ConversationState) *EscalationDecision {
+    if len(ctx.Turns) < r.MinTurns { return nil }
+    recent := ctx.Turns[len(ctx.Turns)-r.WindowSize:]
+    for _, turn := range recent {
+        if turn.Sentiment > r.Threshold { return nil }
+    }
+    return &EscalationDecision{
+        Trigger:  TriggerSentiment,
+        Priority: PriorityHigh,
+        Reason:   fmt.Sprintf("Sentiment below %.1f for %d turns", r.Threshold, r.WindowSize),
+    }
+}
+</pre>
+
+<div class="tip">
+  <div class="tipl">MULTI-SIGNAL FUSION</div>
+  <p>In production, combine multiple weak signals into a strong escalation decision. A customer with slightly negative sentiment (-0.5) AND low AI confidence (0.5) AND a long conversation (10+ turns) should escalate even though no single threshold is breached. Use weighted scoring across signals.</p>
+</div>
+
+<div class="iq">"Escalation triggers are configurable per tenant: explicit customer request, confidence dropping below threshold for 3+ turns, sentiment deterioration below -0.7, compliance limits on transaction amounts, and loop detection via response similarity. Each rule is evaluated against conversation state and the first matching rule produces an EscalationDecision with priority and required skills. I'd also add multi-signal fusion for cases where no single threshold fires but combined signals indicate trouble."</div>
+
+</div>
+
+<!-- ======= SECTION 5: CONTEXT ASSEMBLY ======= -->
+<div id="tab-context" class="sec">
+<div class="stitle">Context Assembly</div>
+<div class="sdesc">Packaging everything the agent needs to continue the conversation without asking the customer to repeat.</div>
+
+<h3 class="sub">What Gets Transferred</h3>
+
+<div class="skill-box">
+  <h4>HandoffContext Contents</h4>
+  <ul>
+    <li><strong>Conversation summary:</strong> AI-generated 2-3 sentence summary of the issue</li>
+    <li><strong>Customer intent:</strong> What the customer is trying to accomplish</li>
+    <li><strong>Sentiment trajectory:</strong> How sentiment changed over the conversation</li>
+    <li><strong>Entities extracted:</strong> Account numbers, order IDs, product names, dates</li>
+    <li><strong>Actions already taken:</strong> What the AI tried (looked up order, checked status, offered refund)</li>
+    <li><strong>Authentication status:</strong> Is the customer verified? What method? When?</li>
+    <li><strong>KB articles referenced:</strong> Knowledge base articles the AI used (agent can reference same)</li>
+    <li><strong>Escalation reason:</strong> Why the handoff happened (for agent awareness)</li>
+    <li><strong>Last 10 messages:</strong> Recent conversation for quick context scan</li>
+    <li><strong>Customer metadata:</strong> Account tier, language, previous contacts</li>
+  </ul>
+</div>
+
+<h3 class="sub">HandoffContext Struct</h3>
+
+<pre class="codeblock">
+type HandoffContext struct {
+    // Core identification
+    SessionID    string    `json:"session_id"`
+    CustomerID   string    `json:"customer_id"`
+    TenantID     string    `json:"tenant_id"`
+    Timestamp    time.Time `json:"timestamp"`
+
+    // Conversation intelligence
+    Summary      string             `json:"summary"`           // AI-generated 2-3 sentences
+    Intent       string             `json:"intent"`            // "cancel_subscription"
+    Sentiment    SentimentTrajectory `json:"sentiment"`
+    Entities     map[string]string  `json:"entities"`          // {"order_id": "ORD-123", "product": "Widget Pro"}
+    TopicFlow    []string           `json:"topic_flow"`        // ["greeting", "complaint", "refund_request"]
+
+    // Actions & state
+    ActionsTaken []ActionRecord     `json:"actions_taken"`     // What AI already did
+    AuthStatus   AuthInfo           `json:"auth_status"`       // Verified? How? When?
+    KBArticles   []string           `json:"kb_articles"`       // Article IDs referenced
+    EscReason    string             `json:"escalation_reason"` // Human-readable
+
+    // Raw conversation
+    RecentMsgs   []Message          `json:"recent_messages"`   // Last 10 messages
+    FullTransLen int                `json:"full_transcript_len"` // Total turns (not sent, just count)
+
+    // Customer metadata
+    CustomerTier string             `json:"customer_tier"`     // "premium", "standard"
+    Language     string             `json:"language"`          // "en", "es"
+    PrevContacts int                `json:"previous_contacts"` // In last 7 days
+}
+
+type SentimentTrajectory struct {
+    Current  float64   `json:"current"`   // Latest sentiment score
+    Trend    string    `json:"trend"`     // "declining", "stable", "improving"
+    History  []float64 `json:"history"`   // Last 5 sentiment scores
+}
+
+type ActionRecord struct {
+    Action    string `json:"action"`    // "checked_order_status"
+    Result    string `json:"result"`    // "Order shipped 2 days ago"
+    Timestamp string `json:"timestamp"`
+}
+</pre>
+
+<h3 class="sub">Size Budget &amp; Prioritization</h3>
+
+<div class="warn">
+  <div class="warnl">SIZE CONSTRAINT</div>
+  <p>Context payload must stay under <strong>20KB</strong>. Larger payloads increase transfer time and overwhelm agents. If the conversation is long (50+ turns), you must prioritize what to include.</p>
+</div>
+
+<table class="tbl">
+<tr><th>Field</th><th>Typical Size</th><th>Priority</th><th>Cut Strategy</th></tr>
+<tr><td>Summary</td><td>200-500B</td><td>ALWAYS include</td><td>Never cut</td></tr>
+<tr><td>Intent + Entities</td><td>100-300B</td><td>ALWAYS include</td><td>Never cut</td></tr>
+<tr><td>Actions taken</td><td>200-800B</td><td>ALWAYS include</td><td>Keep last 5 if &gt;10</td></tr>
+<tr><td>Auth status</td><td>50-100B</td><td>ALWAYS include</td><td>Never cut</td></tr>
+<tr><td>Last 10 messages</td><td>2-8KB</td><td>HIGH</td><td>Reduce to last 5</td></tr>
+<tr><td>Sentiment trajectory</td><td>100-200B</td><td>MEDIUM</td><td>Keep current + trend only</td></tr>
+<tr><td>KB articles</td><td>200-500B</td><td>MEDIUM</td><td>Keep top 3</td></tr>
+<tr><td>Customer metadata</td><td>100-300B</td><td>MEDIUM</td><td>Keep tier + language only</td></tr>
+</table>
+
+<pre class="codeblock">
+// Assemble context with size budget enforcement
+func (ca *ContextAssembler) Assemble(sessionID string, budget int) (*HandoffContext, error) {
+    ctx := &HandoffContext{}
+    // Phase 1: Always-include (never cut) ~1.2KB
+    ctx.Summary = ca.generateSummary(sessionID)
+    ctx.Intent = ca.getIntent(sessionID)
+    ctx.Entities = ca.getEntities(sessionID)
+    ctx.ActionsTaken = ca.getActions(sessionID, 5)
+    ctx.AuthStatus = ca.getAuth(sessionID)
+    ctx.EscReason = ca.getEscalationReason(sessionID)
+    remaining := budget - ca.currentSize(ctx)
+
+    // Phase 2: High-priority if space permits
+    if remaining > 2000 {
+        ctx.RecentMsgs = ca.getRecentMessages(sessionID, 10)
+        remaining -= ca.messagesSize(ctx.RecentMsgs)
+    }
+    // Phase 3: Medium-priority
+    if remaining > 500 {
+        ctx.Sentiment = ca.getSentimentTrajectory(sessionID)
+        ctx.KBArticles = ca.getKBArticles(sessionID, 3)
+    }
+    return ctx, nil
+}
+</pre>
+
+<div class="iq">"Context assembly packages everything the agent needs: a 2-3 sentence AI summary, detected intent, extracted entities, actions already taken, auth status, and the last 10 messages. I enforce a 20KB budget with three priority tiers &mdash; core fields are always included, recent messages are high priority, and metadata is medium priority. If the conversation is long, I trim lower-priority fields first. The goal: agent can greet the customer by name and reference their issue without asking a single repeat question."</div>
+
+</div>
+
+<!-- ======= SECTION 6: AGENT ROUTING ======= -->
+<div id="tab-routing" class="sec">
+<div class="stitle">Agent Routing</div>
+<div class="sdesc">Scoring and selecting the optimal agent from 5K available candidates in under 500ms.</div>
+
+<h3 class="sub">Scoring Formula</h3>
+
+<div class="ins">
+  <div class="insl">SCORING ALGORITHM</div>
+  <p><code>score(agent) = w1 * skill_match + w2 * (1 - load) + w3 * availability_duration + w4 * performance</code><br><br>Default weights: w1=0.4, w2=0.25, w3=0.15, w4=0.2. Configurable per tenant.</p>
+</div>
+
+<table class="tbl">
+<tr><th>Factor</th><th>Range</th><th>Weight</th><th>Rationale</th></tr>
+<tr><td><strong>Skill match</strong></td><td>0.0 - 1.0</td><td>0.40</td><td>Primary requirement: can this agent handle the issue?</td></tr>
+<tr><td><strong>Load (inverse)</strong></td><td>0.0 - 1.0</td><td>0.25</td><td>Prefer agents with fewer active conversations</td></tr>
+<tr><td><strong>Availability duration</strong></td><td>0.0 - 1.0</td><td>0.15</td><td>Fairness: agents waiting longest get priority (prevents starvation)</td></tr>
+<tr><td><strong>Performance score</strong></td><td>0.0 - 1.0</td><td>0.20</td><td>Historical CSAT, resolution rate, handle time</td></tr>
+</table>
+
+<h3 class="sub">Routing Algorithm</h3>
+
+<pre class="codeblock">
+// Agent routing: filter -> score -> select -> reserve
+func (r *AgentRouter) Route(decision *EscalationDecision) (*AgentAssignment, error) {
+    // Step 1: Filter by required skills
+    candidates := r.filterBySkills(decision.RequiredSkills)
+    if len(candidates) == 0 {
+        return nil, r.enqueue(decision) // No match -> queue
+    }
+
+    // Step 2: Score all candidates
+    scored := make([]ScoredAgent, 0, len(candidates))
+    for _, agent := range candidates {
+        score := r.scoreAgent(agent, decision)
+        scored = append(scored, ScoredAgent{Agent: agent, Score: score})
+    }
+    sort.Slice(scored, func(i, j int) bool {
+        return scored[i].Score > scored[j].Score
+    })
+
+    // Step 3: Try to reserve top candidate (with retry)
+    for i := 0; i < min(3, len(scored)); i++ {
+        assigned, err := r.tryReserve(scored[i].Agent, decision.SessionID)
+        if err == nil {
+            return assigned, nil
+        }
+        // CAS failed: agent was grabbed by another handoff, try next
+    }
+
+    // Step 4: All top candidates taken, enqueue with 10s timeout
+    return nil, r.enqueueWithTimeout(decision, 10*time.Second)
+}
+
+func (r *AgentRouter) scoreAgent(agent AgentState, decision *EscalationDecision) float64 {
+    skillMatch := r.computeSkillMatch(agent.Skills, decision.RequiredSkills)
+    load := 1.0 - (float64(agent.ActiveConversations) / float64(agent.MaxConcurrency))
+    availDuration := min(1.0, agent.AvailableSince.Sub(time.Now()).Minutes()/30.0)
+    performance := agent.PerformanceScore
+
+    cfg := r.tenantCfg.GetWeights(decision.TenantID)
+    return cfg.W1*skillMatch + cfg.W2*load + cfg.W3*availDuration + cfg.W4*performance
+}
+</pre>
+
+<h3 class="sub">Redis Data Structures</h3>
+
+<pre class="codeblock">
+# Agent availability: sorted set per skill group
+# Score = timestamp when agent became available (for FIFO fairness)
+ZADD agents:available:billing 1720100000 "agent_001"
+ZADD agents:available:billing 1720100005 "agent_002"
+ZADD agents:available:tech    1720100002 "agent_003"
+
+# Agent state: hash per agent
+HSET agent:agent_001 status "available" skills "billing,retention" \
+     active_conversations 2 max_concurrency 5 \
+     performance_score 0.87 available_since 1720100000
+
+# Atomic reservation via Lua script
+-- KEYS[1] = agent hash, KEYS[2] = available sorted set
+-- ARGV[1] = session_id, ARGV[2] = skill group
+local status = redis.call('HGET', KEYS[1], 'status')
+if status == 'available' then
+    local active = tonumber(redis.call('HGET', KEYS[1], 'active_conversations'))
+    local max = tonumber(redis.call('HGET', KEYS[1], 'max_concurrency'))
+    if active < max then
+        redis.call('HINCRBY', KEYS[1], 'active_conversations', 1)
+        redis.call('HSET', KEYS[1], 'current_session', ARGV[1])
+        if active + 1 >= max then
+            redis.call('HSET', KEYS[1], 'status', 'busy')
+            redis.call('ZREM', KEYS[2], KEYS[1])
+        end
+        return 1  -- Reserved successfully
+    end
+end
+return 0  -- Agent not available or at capacity
+</pre>
+
+<div class="trap">
+  <div class="trapl">RACE CONDITION: DOUBLE ASSIGNMENT</div>
+  <p>Without atomic CAS, two concurrent handoffs can both "see" the same agent as available and both assign to them. The Lua script above executes atomically in Redis single-threaded execution, guaranteeing exactly one winner. The loser retries with the next candidate.</p>
+</div>
+
+<div class="tip">
+  <div class="tipl">FALLBACK CHAIN</div>
+  <p>If no exact skill match: (1) Try agents with partial skill overlap, (2) Try agents in adjacent skill groups, (3) Enqueue to the skill group's queue, (4) After 10s timeout, offer callback. Never leave a customer in limbo.</p>
+</div>
+
+<div class="iq">"Agent routing uses a weighted scoring formula: 40% skill match, 25% inverse load, 15% availability duration for fairness, and 20% historical performance. I filter candidates from Redis sorted sets indexed by skill group, score the top candidates, and reserve the best one atomically using a Lua script to prevent double-assignment. If the CAS fails, I immediately retry with the next candidate. If all top 3 fail, the customer enters a priority queue with a 10-second timeout before offering a callback."</div>
+
+</div>
+
+<!-- ======= SECTION 7: QUEUE MANAGEMENT ======= -->
+<div id="tab-queue" class="sec">
+<div class="stitle">Queue Management</div>
+<div class="sdesc">Priority queuing with SLA tracking, wait estimation, and graceful degradation when demand exceeds supply.</div>
+
+<h3 class="sub">Queue Architecture</h3>
+
+<div class="ins">
+  <div class="insl">KEY DESIGN</div>
+  <p>One priority queue per skill group, implemented as a Redis sorted set. Score = <code>priority * 1000 + timestamp</code>. Higher priority customers sort first; within same priority, FIFO ordering by timestamp. This gives O(log N) enqueue/dequeue with built-in priority + fairness.</p>
+</div>
+
+<pre class="codeblock">
+# Queue structure: Redis sorted set per skill group
+# Score formula: priority_weight * 1000 + unix_timestamp
+# Lower score = higher priority (ZPOPMIN)
+
+# CRITICAL priority (weight=1): score = 1000 + timestamp
+ZADD queue:billing 1001720100000 "handoff_req_001"
+
+# HIGH priority (weight=2): score = 2000 + timestamp
+ZADD queue:billing 2001720100005 "handoff_req_002"
+
+# MEDIUM priority (weight=3): score = 3000 + timestamp
+ZADD queue:billing 3001720100010 "handoff_req_003"
+
+# Dequeue next highest priority
+ZPOPMIN queue:billing 1
+# Returns: "handoff_req_001" (CRITICAL, earliest)
+
+# Check queue depth
+ZCARD queue:billing
+# Returns: 2
+
+# Get position for a specific customer
+ZRANK queue:billing "handoff_req_002"
+# Returns: 0 (next in line after CRITICAL was popped)
+</pre>
+
+<h3 class="sub">Queue Entry</h3>
+
+<pre class="codeblock">
+type QueueEntry struct {
+    HandoffID      string          `json:"handoff_id"`
+    SessionID      string          `json:"session_id"`
+    TenantID       string          `json:"tenant_id"`
+    Priority       Priority        `json:"priority"`
+    RequiredSkills []string        `json:"required_skills"`
+    EnqueuedAt     time.Time       `json:"enqueued_at"`
+    SLADeadline    time.Time       `json:"sla_deadline"`    // Must be served by this time
+    Context        *HandoffContext `json:"context"`         // Pre-assembled, ready to deliver
+    CustomerConn   string          `json:"customer_conn"`   // WebSocket conn for position updates
+    CallbackOffer  bool            `json:"callback_offer"`  // Has callback been offered?
+}
+</pre>
+
+<h3 class="sub">SLA Tracking</h3>
+
+<table class="tbl">
+<tr><th>Priority</th><th>Target Wait</th><th>Max Wait</th><th>Action on Breach</th></tr>
+<tr><td><strong>CRITICAL</strong></td><td>&lt;30s</td><td>60s</td><td>Alert supervisor, page on-call</td></tr>
+<tr><td><strong>HIGH</strong></td><td>&lt;60s</td><td>120s</td><td>Alert supervisor, boost priority</td></tr>
+<tr><td><strong>MEDIUM</strong></td><td>&lt;3min</td><td>5min</td><td>Offer callback</td></tr>
+<tr><td><strong>LOW</strong></td><td>&lt;5min</td><td>10min</td><td>Offer callback + self-service</td></tr>
+</table>
+
+<h3 class="sub">Wait Time Estimation</h3>
+
+<pre class="codeblock">
+// Estimate wait time based on queue position and service rate
+func (qm *QueueManager) EstimateWait(skillGroup string, position int) time.Duration {
+    // Service rate: avg handoffs completed per minute for this skill group
+    serviceRate := qm.metrics.GetServiceRate(skillGroup) // e.g., 5 per minute
+
+    if serviceRate == 0 {
+        return 10 * time.Minute // No data, conservative estimate
+    }
+
+    // Little's Law: wait = position / service_rate
+    waitMinutes := float64(position) / serviceRate
+    estimated := time.Duration(waitMinutes * float64(time.Minute))
+
+    // Add buffer for variability (1.3x multiplier)
+    return time.Duration(float64(estimated) * 1.3)
+}
+</pre>
+
+<h3 class="sub">Position Updates via WebSocket</h3>
+
+<pre class="codeblock">
+// Push position updates to waiting customers every 10 seconds
+func (qm *QueueManager) BroadcastPositions(skillGroup string) {
+    entries, _ := qm.redis.ZRangeWithScores(ctx,
+        fmt.Sprintf("queue:%s", skillGroup), 0, -1).Result()
+    for pos, entry := range entries {
+        qm.wsGateway.SendToCustomer(entry.Member.(string), QueueUpdate{
+            Position: pos + 1, EstimatedWait: qm.EstimateWait(skillGroup, pos+1),
+        })
+    }
+}
+// Customer receives: {"position": 3, "estimated_wait": "1m30s", "queue_depth": 7}
+</pre>
+
+<h3 class="sub">Abandonment &amp; Callback</h3>
+
+<div class="warn">
+  <div class="warnl">CRITICAL: 5-MINUTE CALLBACK OFFER</div>
+  <p>At 5 minutes wait time, proactively offer a callback. 60% of customers prefer callback over waiting. This reduces queue pressure AND improves CSAT. But you must guarantee the callback happens within the promised window.</p>
+</div>
+
+<pre class="codeblock">
+// Monitor loop: callback offers, SLA breach, abandonment
+func (qm *QueueManager) MonitorWaitTimes() {
+    ticker := time.NewTicker(10 * time.Second)
+    for range ticker.C {
+        for _, entry := range qm.getQueueEntries() {
+            waitTime := time.Since(entry.EnqueuedAt)
+            if waitTime > 5*time.Minute && !entry.CallbackOffer {
+                qm.offerCallback(entry)
+            }
+            if time.Now().After(entry.SLADeadline) {
+                qm.escalateToSupervisor(entry)
+            }
+            if !qm.wsGateway.IsConnected(entry.CustomerConn) {
+                qm.handleAbandonment(entry) // Remove + record metric + proactive callback for premium
+            }
+        }
+    }
+}
+</pre>
+
+<div class="note">
+  <div class="notel">PRIORITY AGING</div>
+  <p>Prevent starvation of low-priority customers: every 60 seconds in queue, boost effective priority by one level. A MEDIUM customer waiting 3 minutes becomes effectively HIGH. This ensures no customer waits forever even during surges.</p>
+</div>
+
+<div class="iq">"Queue management uses Redis sorted sets with score = priority * 1000 + timestamp, giving us priority ordering with FIFO fairness within each tier. I track SLA deadlines per priority level and alert supervisors on breach. Customers get real-time position updates via WebSocket every 10 seconds. At 5 minutes, I proactively offer a callback &mdash; 60% of customers prefer it, which reduces queue pressure. Priority aging prevents starvation: low-priority customers get boosted every 60 seconds. Abandonment detection removes disconnected customers and can trigger proactive outreach for premium tiers."</div>
+
+</div>
+
+<!-- ======= SECTIONS 8-14: PLACEHOLDERS ======= -->
+
+<!-- Section 8: Transfer Orchestration -->
+<div id="tab-transfer" class="sec">
+<div class="stitle">Transfer Orchestration</div>
+<div class="sdesc">Executing cold, warm, and conference transfers with state machine management.</div>
+<p>Content coming soon.</p>
+</div>
+
+<!-- Section 9: Monitoring & SLA -->
+<div id="tab-monitoring" class="sec">
+<div class="stitle">Monitoring &amp; SLA</div>
+<div class="sdesc">Real-time dashboards, alerting, and SLA compliance tracking.</div>
+<p>Content coming soon.</p>
+</div>
+
+<!-- Section 10: Failover & Reliability -->
+<div id="tab-failover" class="sec">
+<div class="stitle">Failover &amp; Reliability</div>
+<div class="sdesc">Handling failures at every stage: agent rejection, network drops, Redis failover.</div>
+<p>Content coming soon.</p>
+</div>
+
+<!-- Section 11: Scaling & Multi-Region -->
+<div id="tab-scaling" class="sec">
+<div class="stitle">Scaling &amp; Multi-Region</div>
+<div class="sdesc">Horizontal scaling, multi-region deployment, and cross-region agent routing.</div>
+<p>Content coming soon.</p>
+</div>
+
+<!-- Section 12: Interview Script -->
+<div id="tab-script" class="sec">
+<div class="stitle">Interview Script</div>
+<div class="sdesc">Complete 45-minute interview walkthrough with timing and talking points.</div>
+<p>Content coming soon.</p>
+</div>
+
+<!-- Section 13: Your Experience -->
+<div id="tab-experience" class="sec">
+<div class="stitle">Your Experience</div>
+<div class="sdesc">How to connect this design to your personal engineering background.</div>
+<p>Content coming soon.</p>
+</div>
+
+<!-- Section 14: Pitfalls & Follow-ups -->
+<div id="tab-pitfalls" class="sec">
+<div class="stitle">Pitfalls &amp; Follow-ups</div>
+<div class="sdesc">Common mistakes candidates make and likely follow-up questions from interviewers.</div>
+<p>Content coming soon.</p>
+</div>
+
+</div><!-- end #main -->
+
+<script>
+function go(id) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById('tab-' + id);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
+  if (event && event.currentTarget) event.currentTarget.classList.add('active');
+  document.getElementById('main').scrollTop = 0;
+}
+
+function toggle(el) {
+  const body = el.nextElementSibling;
+  const chevron = el.querySelector('.chv');
+  body.classList.toggle('open');
+  if (chevron) chevron.classList.toggle('open');
+}
+</script>
+</body>
+</html>

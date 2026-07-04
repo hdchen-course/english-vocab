@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conversation Analytics Pipeline — System Design</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8fafc;
+  --bg2: #ffffff;
+  --bg3: #f1f5f9;
+  --bg4: #e2e8f0;
+  --border: #cbd5e1;
+  --text: #0f172a;
+  --text2: #334155;
+  --text3: #64748b;
+  --blue: #2563eb;
+  --blue-l: #dbeafe;
+  --blue-d: #1d4ed8;
+  --green: #16a34a;
+  --green-l: #dcfce7;
+  --yellow: #d97706;
+  --yellow-l: #fef3c7;
+  --red: #dc2626;
+  --red-l: #fee2e2;
+  --purple: #7c3aed;
+  --purple-l: #ede9fe;
+  --orange: #ea580c;
+  --orange-l: #ffedd5;
+  --teal: #0d9488;
+  --teal-l: #ccfbf1;
+  --sw: 270px;
+  --r: 12px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.06);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+#sb {
+  width: var(--sw);
+  background: #fff;
+  border-right: 1px solid var(--border);
+  position: fixed; top: 0; left: 0; bottom: 0;
+  overflow-y: auto; z-index: 100;
+  transition: width .3s ease;
+}
+#sb::-webkit-scrollbar { width: 4px; }
+#sb::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 2px; }
+
+.sbh {
+  padding: 20px 16px 14px;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; background: #fff; z-index: 1;
+}
+.sbt { font-size: 13px; font-weight: 700; color: var(--blue-d); text-transform: uppercase; letter-spacing: 1px; }
+.sbs { font-size: 11px; color: var(--text3); margin-top: 3px; }
+
+.ng { padding: 12px 8px 0; }
+.ngl { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; padding: 0 8px 6px; }
+.ni {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: 8px;
+  cursor: pointer; font-size: 13px; color: var(--text2);
+  transition: all .15s; border: none; background: none; width: 100%; text-align: left;
+}
+.ni:hover { background: var(--bg3); color: var(--text); }
+.ni.active { background: var(--blue-l); color: var(--blue-d); font-weight: 600; }
+.ni-icon { font-size: 15px; flex-shrink: 0; width: 20px; text-align: center; }
+.ni-text { flex: 1; font-size: 12px; }
+.badge { margin-left: auto; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 8px; }
+.bh { background: var(--red-l); color: var(--red); }
+.bg { background: var(--green-l); color: var(--green); }
+.bp { background: var(--purple-l); color: var(--purple); }
+.bt { background: var(--teal-l); color: var(--teal); }
+.bo { background: var(--orange-l); color: var(--orange); }
+
+/* MAIN */
+#main { position: fixed; top: 0; right: 0; bottom: 0; left: var(--sw); overflow-y: auto; background: var(--bg); }
+
+/* HEADER */
+.ph {
+  background: linear-gradient(135deg, #1e3a5f 0%, #1e40af 40%, #3b82f6 100%);
+  padding: 40px 44px;
+}
+.htag { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.6); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+.ht { font-size: 32px; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 8px; }
+.ht span { color: #93c5fd; }
+.hd { color: rgba(255,255,255,0.8); font-size: 14px; max-width: 650px; }
+.hm { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.chip { font-size: 11px; color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 16px; }
+.chip b { color: #fff; }
+
+/* SECTIONS */
+.sec { padding: 36px 44px; display: none; }
+.sec.active { display: block; }
+.stitle { font-size: 24px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.sdesc { color: var(--text3); margin-bottom: 24px; font-size: 13px; }
+
+/* CARDS */
+.card { background: #fff; border-radius: var(--r); margin-bottom: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); overflow: hidden; }
+.ch { padding: 12px 16px; display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; transition: background .15s; }
+.ch:hover { background: var(--bg3); }
+.ct { font-size: 14px; font-weight: 600; color: var(--text); flex: 1; }
+.cn { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text3); background: var(--bg3); padding: 2px 7px; border-radius: 5px; }
+.chv { color: var(--text3); font-size: 11px; transition: transform .2s; }
+.chv.open { transform: rotate(90deg); }
+.cb { padding: 16px 18px; display: none; font-size: 13px; color: var(--text2); line-height: 1.7; border-top: 1px solid var(--bg3); }
+.cb.open { display: block; }
+
+/* CALLOUTS */
+.ins { background: var(--blue-l); border-left: 4px solid var(--blue); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.insl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--blue-d); margin-bottom: 4px; }
+.ins p { color: var(--text); font-size: 13px; }
+
+.tip { background: var(--green-l); border-left: 4px solid var(--green); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.tipl { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--green); margin-bottom: 4px; }
+.tip p { color: var(--text2); font-size: 13px; }
+
+.warn { background: var(--yellow-l); border-left: 4px solid var(--yellow); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.warnl { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--yellow); margin-bottom: 4px; }
+.warn p { color: var(--text2); font-size: 13px; }
+
+.trap { background: var(--red-l); border-left: 4px solid var(--red); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.trapl { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--red); margin-bottom: 4px; }
+.trap p { color: var(--text2); font-size: 13px; }
+
+.note { background: var(--purple-l); border-left: 4px solid var(--purple); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.notel { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--purple); margin-bottom: 4px; }
+.note p { color: var(--text2); font-size: 13px; }
+
+/* TABLES */
+.tbl { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13px; border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+.tbl th { background: var(--bg3); color: var(--text2); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+.tbl td { padding: 10px 14px; border-bottom: 1px solid var(--bg3); color: var(--text2); }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr:hover td { background: var(--bg); }
+
+/* TAGS */
+.tag { display: inline-block; padding: 3px 10px; border-radius: 14px; background: var(--blue-l); color: var(--blue-d); font-size: 11px; font-weight: 500; margin: 2px; }
+
+/* GRID */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+@media (max-width: 900px) { .g2, .g3 { grid-template-columns: 1fr; } }
+
+/* INTERVIEW QUOTE */
+.iq {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 1px solid #bae6fd;
+  border-left: 4px solid var(--blue);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin: 14px 0;
+  font-style: italic;
+  color: var(--text2);
+  font-size: 13px;
+  position: relative;
+}
+.iq::before {
+  content: 'SAY THIS';
+  position: absolute;
+  top: -8px; left: 14px;
+  font-size: 9px; font-weight: 700; font-style: normal;
+  background: var(--blue);
+  color: #fff;
+  padding: 1px 8px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+
+/* SUB HEADINGS */
+h3.sub { font-size: 17px; font-weight: 700; color: var(--text); margin: 28px 0 10px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+h4.sub2 { font-size: 11px; font-weight: 700; color: var(--text3); margin: 18px 0 8px; text-transform: uppercase; letter-spacing: .8px; }
+
+/* SKILL BOX */
+.skill-box {
+  background: #fff; border: 1px solid var(--border); border-radius: var(--r);
+  padding: 18px; margin: 10px 0; box-shadow: var(--shadow-sm);
+}
+.skill-box h4 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.skill-box ul { padding-left: 18px; font-size: 13px; color: var(--text2); }
+.skill-box li { margin-bottom: 4px; }
+
+/* PROGRESS */
+.prog { display: flex; gap: 12px; margin: 16px 0; flex-wrap: wrap; }
+.pc { flex: 1; min-width: 120px; background: #fff; border: 1px solid var(--border); border-radius: var(--r); padding: 16px; box-shadow: var(--shadow-sm); text-align: center; }
+.pc .num { font-size: 28px; font-weight: 800; color: var(--blue-d); }
+.pc .lbl { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: var(--bg3); padding: 1px 5px; border-radius: 4px; color: var(--blue-d); }
+
+pre.codeblock {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 12px 0;
+  overflow-x: auto;
+  line-height: 1.6;
+  color: var(--text2);
+}
+
+/* LIST STYLING */
+.content-list { padding-left: 20px; margin: 8px 0; }
+.content-list li { margin-bottom: 6px; font-size: 13px; color: var(--text2); }
+.content-list li strong { color: var(--text); }
+
+/* DECISION GRID */
+.decision-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 14px 0; }
+.decision-item { background: #fff; border: 1px solid var(--border); border-radius: var(--r); padding: 14px; box-shadow: var(--shadow-sm); }
+.decision-item h5 { font-size: 13px; font-weight: 700; color: var(--blue-d); margin-bottom: 6px; }
+.decision-item p { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
+.decision-item .di-key { font-size: 10px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+
+/* TIMELINE */
+.timeline { margin: 16px 0; padding-left: 20px; border-left: 3px solid var(--blue-l); }
+.timeline-item { margin-bottom: 16px; position: relative; padding-left: 16px; }
+.timeline-item::before { content: ''; position: absolute; left: -26px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--blue); border: 2px solid #fff; }
+.timeline-time { font-size: 11px; font-weight: 700; color: var(--blue-d); text-transform: uppercase; letter-spacing: .5px; }
+.timeline-title { font-size: 14px; font-weight: 600; color: var(--text); margin: 2px 0; }
+.timeline-desc { font-size: 12px; color: var(--text2); }
+
+@media (max-width: 768px) {
+  #sb { width: 0; overflow: hidden; }
+  #main { left: 0; }
+  .sec { padding: 20px 16px; }
+  .ph { padding: 24px 16px; }
+}
+a.lc { color: var(--blue); text-decoration: none; font-weight: 500; }
+a.lc:hover { text-decoration: underline; color: var(--blue-d); }
+</style>
+</head>
+<body>
+
+<nav id="sb">
+  <div class="sbh">
+    <div class="sbt">Analytics Pipeline</div>
+    <div class="sbs">Conversation Intelligence &middot; Interview Prep</div>
+  </div>
+  <div class="ng"><div class="ngl">Foundations</div>
+    <button class="ni active" onclick="go('overview')"><span class="ni-icon">1</span><span class="ni-text">Overview</span><span class="badge bh">Start</span></button>
+    <button class="ni" onclick="go('requirements')"><span class="ni-icon">2</span><span class="ni-text">Requirements &amp; Scale</span><span class="badge bp">Critical</span></button>
+    <button class="ni" onclick="go('architecture')"><span class="ni-icon">3</span><span class="ni-text">High-Level Architecture</span><span class="badge bp">Core</span></button>
+  </div>
+  <div class="ng"><div class="ngl">Deep Dives</div>
+    <button class="ni" onclick="go('ingestion')"><span class="ni-icon">4</span><span class="ni-text">Event Ingestion &amp; Streaming</span><span class="badge bp">Critical</span></button>
+    <button class="ni" onclick="go('transcript')"><span class="ni-icon">5</span><span class="ni-text">Transcript Processing</span><span class="badge bh">Must Build</span></button>
+    <button class="ni" onclick="go('ml')"><span class="ni-icon">6</span><span class="ni-text">ML Enrichment</span><span class="badge bp">Core</span></button>
+    <button class="ni" onclick="go('storage')"><span class="ni-icon">7</span><span class="ni-text">Data Storage Design</span><span class="badge bt">Multi-tier</span></button>
+  </div>
+  <div class="ng"><div class="ngl">Infrastructure</div>
+    <button class="ni" onclick="go('aggregation')"><span class="ni-icon">8</span><span class="ni-text">Aggregation &amp; Dashboards</span></button>
+    <button class="ni" onclick="go('api')"><span class="ni-icon">9</span><span class="ni-text">API Design</span></button>
+    <button class="ni" onclick="go('scaling')"><span class="ni-icon">10</span><span class="ni-text">Scaling &amp; Reliability</span></button>
+    <button class="ni" onclick="go('monitoring')"><span class="ni-icon">11</span><span class="ni-text">Monitoring &amp; Alerting</span></button>
+  </div>
+  <div class="ng"><div class="ngl">Execution</div>
+    <button class="ni" onclick="go('script')"><span class="ni-icon">12</span><span class="ni-text">Interview Script</span><span class="badge bg">45min</span></button>
+    <button class="ni" onclick="go('experience')"><span class="ni-icon">13</span><span class="ni-text">Your Experience</span><span class="badge bo">Personal</span></button>
+    <button class="ni" onclick="go('pitfalls')"><span class="ni-icon">14</span><span class="ni-text">Pitfalls &amp; Follow-ups</span><span class="badge bo">Avoid</span></button>
+  </div>
+</nav>
+
+<div id="main">
+
+<div class="ph">
+  <div class="htag">Conversation Intelligence &middot; System Design Interview</div>
+  <div class="ht">Conversation Analytics <span>Pipeline Design</span></div>
+  <div class="hd">Design a system that processes millions of customer conversations to extract insights, detect compliance issues, and power business dashboards. Covers event streaming, transcript processing, ML enrichment, and multi-tier storage with a Lambda architecture.</div>
+  <div class="hm">
+    <div class="chip">Sections <b>14</b></div>
+    <div class="chip">Throughput <b>500K conv/day</b></div>
+    <div class="chip">Focus <b>Lambda Architecture</b></div>
+    <div class="chip">ML Invocations <b>2.5M/day</b></div>
+  </div>
+</div>
+
+<!-- ======= SECTION 1: OVERVIEW ======= -->
+<div id="tab-overview" class="sec active">
+<div class="stitle">Conversation Analytics Overview</div>
+<div class="sdesc">What this system does, the paradigm shift from sampling to full coverage, and how interviewers evaluate your design.</div>
+
+<h3 class="sub">What Is Conversation Analytics?</h3>
+
+<p>A Conversation Analytics Pipeline ingests <strong>every customer conversation</strong> (voice, chat, email) and extracts structured insights at scale. Unlike real-time agent assist which works during the call, analytics processes conversations <strong>after completion</strong> to power dashboards, compliance audits, and trend detection.</p>
+
+<div class="skill-box">
+  <h4>Core Capabilities</h4>
+  <ul>
+    <li><strong>100% coverage:</strong> Analyze every conversation, not the traditional 2-5% random sample by QA teams</li>
+    <li><strong>Topic classification:</strong> Automatically categorize conversations by reason (billing, churn, technical, etc.)</li>
+    <li><strong>Sentiment tracking:</strong> Measure customer and agent sentiment trends over time</li>
+    <li><strong>Compliance scoring:</strong> Detect policy violations, missed disclosures, script adherence</li>
+    <li><strong>Intent extraction:</strong> Identify what customers actually want vs. what agents resolve</li>
+    <li><strong>Entity extraction:</strong> Pull structured data (account numbers, product names, dates) from unstructured text</li>
+  </ul>
+</div>
+
+<h3 class="sub">The Paradigm Shift</h3>
+
+<div class="g2">
+  <div class="skill-box">
+    <h4>Old World (2-5% Sampling)</h4>
+    <ul>
+      <li>QA team manually reviews random calls</li>
+      <li>Weeks of delay before insights surface</li>
+      <li>Statistically unreliable at low sample rates</li>
+      <li>High labor cost per conversation reviewed</li>
+      <li>Compliance gaps hidden in unsampled 95%</li>
+    </ul>
+  </div>
+  <div class="skill-box">
+    <h4>New World (100% Coverage)</h4>
+    <ul>
+      <li>Every conversation analyzed automatically</li>
+      <li>Real-time streaming + nightly batch reports</li>
+      <li>Statistically complete, no sampling bias</li>
+      <li>Marginal cost per conversation near zero</li>
+      <li>100% compliance coverage, zero blind spots</li>
+    </ul>
+  </div>
+</div>
+
+<h3 class="sub">Lambda Architecture</h3>
+
+<div class="ins">
+  <div class="insl">Architecture Pattern</div>
+  <p>We use a <strong>Lambda architecture</strong> with two parallel paths: a <strong>streaming layer</strong> for real-time alerts and live dashboards (seconds latency), and a <strong>batch layer</strong> for deep analysis and historical aggregation (hours latency). Both feed into a serving layer that unifies results for consumers.</p>
+</div>
+
+<h3 class="sub">What Interviewers Evaluate</h3>
+
+<div class="decision-grid">
+  <div class="decision-item">
+    <h5>Stream vs. Batch Tradeoffs</h5>
+    <p>When do you use streaming? When batch? How do you reconcile both?</p>
+    <div class="di-key">Key: Lambda/Kappa, exactly-once, late arrivals</div>
+  </div>
+  <div class="decision-item">
+    <h5>Scale Reasoning</h5>
+    <p>Can you derive storage, throughput, and compute from first principles?</p>
+    <div class="di-key">Key: 500K/day, 1B words, 2.5M ML calls</div>
+  </div>
+  <div class="decision-item">
+    <h5>ML Integration</h5>
+    <p>How do you orchestrate black-box ML services with retry, batching, and validation?</p>
+    <div class="di-key">Key: Circuit breaker, batch vs streaming mode</div>
+  </div>
+  <div class="decision-item">
+    <h5>Multi-tier Storage</h5>
+    <p>How do you pick the right storage for each data pattern?</p>
+    <div class="di-key">Key: S3, PostgreSQL, BigQuery, Redis</div>
+  </div>
+</div>
+
+<h3 class="sub">Scale Targets</h3>
+
+<div class="prog">
+  <div class="pc"><div class="num">500K</div><div class="lbl">Conversations/Day</div></div>
+  <div class="pc"><div class="num">1B</div><div class="lbl">Words Processed/Day</div></div>
+  <div class="pc"><div class="num">2.5M</div><div class="lbl">ML Invocations/Day</div></div>
+  <div class="pc"><div class="num">150</div><div class="lbl">Analytics QPS</div></div>
+</div>
+
+<div class="iq">"I'll design a conversation analytics pipeline that processes 500K conversations per day with 100% coverage using a Lambda architecture. The streaming path provides real-time alerts and live metrics, while the batch path runs deep ML enrichment and historical aggregation. The key challenge is orchestrating 2.5 million ML invocations daily while maintaining data consistency between the two paths."</div>
+
+</div>
+
+<!-- ======= SECTION 2: REQUIREMENTS & SCALE ======= -->
+<div id="tab-requirements" class="sec">
+<div class="stitle">Requirements &amp; Scale</div>
+<div class="sdesc">Functional requirements, non-functional constraints, and back-of-envelope capacity estimates.</div>
+
+<h3 class="sub">Functional Requirements</h3>
+
+<table class="tbl">
+<tr><th>Requirement</th><th>Description</th><th>Priority</th></tr>
+<tr><td><strong>Event Ingestion</strong></td><td>Capture conversation lifecycle events (started, transcript, completed) in real-time</td><td>P0</td></tr>
+<tr><td><strong>Transcript Processing</strong></td><td>Normalize, redact PII, detect language, separate speakers</td><td>P0</td></tr>
+<tr><td><strong>ML Enrichment</strong></td><td>Topic classification, sentiment, intent, entity, compliance scoring</td><td>P0</td></tr>
+<tr><td><strong>Real-time Alerts</strong></td><td>Stream processing for immediate compliance/escalation notifications</td><td>P0</td></tr>
+<tr><td><strong>Analytics Dashboard</strong></td><td>Aggregated metrics, trends, drill-down by tenant/agent/topic</td><td>P1</td></tr>
+<tr><td><strong>Multi-tenant</strong></td><td>Data isolation, per-tenant ML models, configurable pipelines</td><td>P1</td></tr>
+<tr><td><strong>Historical Analysis</strong></td><td>Query across months/years of conversation data</td><td>P1</td></tr>
+<tr><td><strong>Export &amp; Integration</strong></td><td>API access, webhook notifications, data lake integration</td><td>P2</td></tr>
+</table>
+
+<h3 class="sub">Non-Functional Requirements</h3>
+
+<div class="g2">
+  <div class="skill-box">
+    <h4>Performance</h4>
+    <ul>
+      <li>Streaming path: <strong>&lt;30 seconds</strong> event to alert</li>
+      <li>Batch path: <strong>&lt;4 hours</strong> end-to-end for daily reports</li>
+      <li>Dashboard queries: <strong>&lt;2 seconds</strong> p95 response time</li>
+      <li>Analytics API: <strong>150 QPS</strong> sustained</li>
+    </ul>
+  </div>
+  <div class="skill-box">
+    <h4>Reliability</h4>
+    <ul>
+      <li>Zero data loss (exactly-once processing semantics)</li>
+      <li>Availability: <strong>99.9%</strong> for ingestion, 99.5% for dashboards</li>
+      <li>Graceful degradation: skip ML enrichment if models are down</li>
+      <li>Idempotent processing (safe to replay)</li>
+    </ul>
+  </div>
+  <div class="skill-box">
+    <h4>Scalability</h4>
+    <ul>
+      <li><strong>500K conversations/day</strong> baseline (1M peak)</li>
+      <li>Linear horizontal scaling with partitioned Kafka</li>
+      <li>Multi-region for data residency requirements</li>
+    </ul>
+  </div>
+  <div class="skill-box">
+    <h4>Data Governance</h4>
+    <ul>
+      <li>PII redaction before storage (GDPR/CCPA)</li>
+      <li>Configurable retention per tenant (30-365 days)</li>
+      <li>Audit trail for all data access</li>
+      <li>Encryption at rest and in transit</li>
+    </ul>
+  </div>
+</div>
+
+<h3 class="sub">Back-of-Envelope Math</h3>
+
+<div class="tip">
+  <div class="tipl">WHY THIS MATTERS</div>
+  <p>These numbers determine partition counts, storage tiers, and batch job sizing. Get them right and your architecture decisions are defensible.</p>
+</div>
+
+<table class="tbl">
+<tr><th>Metric</th><th>Calculation</th><th>Result</th></tr>
+<tr><td><strong>Words/day</strong></td><td>500K conversations &times; 2000 words avg</td><td>1 billion words/day</td></tr>
+<tr><td><strong>Raw transcript storage</strong></td><td>~12KB per conversation &times; 500K</td><td>6 GB/day, ~2 TB/year</td></tr>
+<tr><td><strong>Event throughput</strong></td><td>500K conversations &times; ~5 events each</td><td>2.5M events/day (~30 events/sec avg)</td></tr>
+<tr><td><strong>Peak event rate</strong></td><td>3x average during business hours (8h window)</td><td>~90 events/sec peak</td></tr>
+<tr><td><strong>ML invocations</strong></td><td>500K &times; 5 models (topic, sentiment, intent, entity, compliance)</td><td>2.5M invocations/day</td></tr>
+<tr><td><strong>ML throughput</strong></td><td>2.5M / 8 hours (batch window)</td><td>~87 requests/sec to ML cluster</td></tr>
+<tr><td><strong>Analytics queries</strong></td><td>150 QPS from dashboards + API consumers</td><td>~13M queries/day</td></tr>
+<tr><td><strong>Enriched record size</strong></td><td>Transcript + ML results + metadata</td><td>~25KB per conversation</td></tr>
+<tr><td><strong>Data warehouse growth</strong></td><td>25KB &times; 500K/day</td><td>12.5 GB/day, ~4.5 TB/year</td></tr>
+</table>
+
+<div class="ins">
+  <div class="insl">Bottleneck Insight</div>
+  <p>The bottleneck is <strong>ML throughput</strong>. Processing 2.5M model invocations within an 8-hour batch window requires ~87 req/sec sustained to the ML cluster. With p99 latency of 200ms per inference, you need at least 18 parallel workers to keep up. Batching multiple conversations per ML request is essential.</p>
+</div>
+
+<div class="iq">"At 500K conversations per day averaging 2000 words each, we process 1 billion words daily. Storage is modest at 6GB/day for raw transcripts, growing to ~2TB/year. The real challenge is 2.5 million ML invocations daily across 5 model types. Within an 8-hour batch window that's 87 requests/sec sustained, requiring at least 18 parallel workers with batching to meet throughput."</div>
+
+</div>
+
+<!-- ======= SECTION 3: HIGH-LEVEL ARCHITECTURE ======= -->
+<div id="tab-architecture" class="sec">
+<div class="stitle">High-Level Architecture</div>
+<div class="sdesc">Lambda architecture with streaming and batch paths converging on a unified serving layer.</div>
+
+<h3 class="sub">Architecture Diagram</h3>
+
+<pre class="codeblock">
+                         LAMBDA ARCHITECTURE
+
+  ┌─────────────────────── STREAMING PATH ───────────────────────┐
+  │                                                               │
+  │  Events ──► Kafka ──► Stream Processor ──► ML [Black Box] ──►│──► Alerts
+  │                              │                                │      +
+  │                              └─────────────────────────────── │──► Redis
+  │                                                               │   (live metrics)
+  └───────────────────────────────────────────────────────────────┘
+
+  ┌──────────────────────── BATCH PATH ──────────────────────────┐
+  │                                                               │
+  │  Transcripts ──► Scheduler ──► ML [Black Box] ──► Warehouse ─│──► Aggregation
+  │       (S3)           │              (Batch)         (BigQuery) │       │
+  │                      │                                        │       v
+  │                      └────────────────────────────────────────│── Dashboard
+  └───────────────────────────────────────────────────────────────┘
+
+  ┌──────────────────── SHARED COMPONENTS ───────────────────────┐
+  │                                                               │
+  │  Schema Registry (Protobuf) │ Dead Letter Queue │ Monitoring  │
+  │  Tenant Config Service      │ PII Redaction     │ Audit Log   │
+  └───────────────────────────────────────────────────────────────┘
+</pre>
+
+<h3 class="sub">Component Inventory</h3>
+
+<table class="tbl">
+<tr><th>Component</th><th>Responsibility</th><th>Tech Choice</th><th>Owns</th></tr>
+<tr><td><strong>Event Producer</strong></td><td>Emit conversation lifecycle events from source systems</td><td>SDK/Webhook adapters</td><td>You</td></tr>
+<tr><td><strong>Kafka Cluster</strong></td><td>Durable event streaming with partitioned topics</td><td>Kafka + Schema Registry</td><td>You</td></tr>
+<tr><td><strong>Stream Processor</strong></td><td>Real-time event filtering, lightweight enrichment, alert routing</td><td>Go consumers (Kafka)</td><td>You</td></tr>
+<tr><td><strong>Transcript Processor</strong></td><td>PII redaction, normalization, language detection, diarization</td><td>Go microservice</td><td>You</td></tr>
+<tr><td><strong>ML Services</strong></td><td>Topic/sentiment/intent/entity/compliance classification</td><td>Black box (gRPC endpoints)</td><td>ML team</td></tr>
+<tr><td><strong>Batch Orchestrator</strong></td><td>Schedule and coordinate batch ML enrichment jobs</td><td>Go + job scheduler</td><td>You</td></tr>
+<tr><td><strong>Data Warehouse</strong></td><td>Historical analytics, ad-hoc queries, dashboards</td><td>BigQuery (partitioned)</td><td>You</td></tr>
+<tr><td><strong>Redis</strong></td><td>Real-time counters, live dashboard metrics</td><td>Redis Cluster</td><td>You</td></tr>
+<tr><td><strong>Object Storage</strong></td><td>Raw transcripts, audio files, ML artifacts</td><td>S3</td><td>You</td></tr>
+<tr><td><strong>PostgreSQL</strong></td><td>Conversation metadata, tenant config, session state</td><td>PostgreSQL</td><td>You</td></tr>
+</table>
+
+<h3 class="sub">Streaming vs. Batch: When to Use Each</h3>
+
+<div class="g2">
+  <div class="skill-box">
+    <h4>Streaming Path (seconds)</h4>
+    <ul>
+      <li>Compliance violation alerts</li>
+      <li>Escalation triggers (negative sentiment spike)</li>
+      <li>Live dashboard counters (active calls, queue depth)</li>
+      <li>Simple keyword/regex-based detection</li>
+      <li>Event counting and rate metrics</li>
+    </ul>
+  </div>
+  <div class="skill-box">
+    <h4>Batch Path (hours)</h4>
+    <ul>
+      <li>Full ML enrichment (topic, intent, entity)</li>
+      <li>Historical trend aggregation</li>
+      <li>Cross-conversation correlation</li>
+      <li>Model retraining data preparation</li>
+      <li>Compliance reports and audit trails</li>
+    </ul>
+  </div>
+</div>
+
+<div class="warn">
+  <div class="warnl">LAMBDA VS. KAPPA</div>
+  <p>Interviewers may ask why not Kappa (stream-only). Answer: ML models are expensive and have high tail latency. Batch allows <strong>cost optimization</strong> (batching requests), <strong>retry without time pressure</strong>, and <strong>full-transcript context</strong> (streaming only sees partial data as it arrives). The streaming path handles only lightweight, latency-sensitive operations.</p>
+</div>
+
+<div class="iq">"I'm using a Lambda architecture with two parallel paths. The streaming path processes events through Kafka consumers for real-time alerts and live metrics, using lightweight rules and keyword detection. The batch path runs deep ML enrichment on complete transcripts, loading results into BigQuery for analytics. Both paths feed a unified serving layer. I chose Lambda over Kappa because ML inference is expensive and benefits from batching, full-transcript context, and retry without time pressure."</div>
+
+</div>
+
+<!-- ======= SECTION 4: EVENT INGESTION & STREAMING ======= -->
+<div id="tab-ingestion" class="sec">
+<div class="stitle">Event Ingestion &amp; Streaming</div>
+<div class="sdesc">Kafka topic design, partitioning strategy, schema evolution, and exactly-once processing guarantees.</div>
+
+<h3 class="sub">Kafka Topic Design</h3>
+
+<table class="tbl">
+<tr><th>Topic</th><th>Events</th><th>Partitions</th><th>Retention</th></tr>
+<tr><td><code>conversations.started</code></td><td>New conversation initiated</td><td>16</td><td>7 days</td></tr>
+<tr><td><code>conversations.transcript</code></td><td>Transcript chunks (partial + final)</td><td>32</td><td>3 days</td></tr>
+<tr><td><code>conversations.completed</code></td><td>Conversation ended, ready for processing</td><td>16</td><td>7 days</td></tr>
+<tr><td><code>conversations.enriched</code></td><td>ML enrichment results</td><td>16</td><td>7 days</td></tr>
+<tr><td><code>conversations.dlq</code></td><td>Failed events (dead letter queue)</td><td>4</td><td>30 days</td></tr>
+</table>
+
+<h3 class="sub">Partitioning Strategy</h3>
+
+<div class="ins">
+  <div class="insl">Key Design Decision</div>
+  <p>Partition by <code>tenant_id</code> to guarantee ordering within a tenant and enable per-tenant consumer scaling. This ensures all events for one tenant's conversation land on the same partition, preserving causal order (started before transcript before completed).</p>
+</div>
+
+<ul class="content-list">
+  <li><strong>Partition key:</strong> <code>tenant_id</code> (not conversation_id) for tenant-level ordering</li>
+  <li><strong>32 partitions on transcript topic:</strong> Highest throughput topic, allows 32 parallel consumers</li>
+  <li><strong>Consumer groups:</strong> Separate groups for streaming alerts, batch loading, and audit logging</li>
+  <li><strong>Backpressure:</strong> Consumer lag monitoring with auto-scaling triggers</li>
+</ul>
+
+<h3 class="sub">Protobuf Schema</h3>
+
+<pre class="codeblock">
+// Schema Registry: Protobuf for type safety and backward compatibility
+syntax = "proto3";
+package analytics.v1;
+
+message ConversationEvent {
+  string event_id = 1;          // UUID, idempotency key
+  string tenant_id = 2;         // Partition key
+  string conversation_id = 3;
+  EventType type = 4;
+  int64 timestamp_ms = 5;       // Unix millis
+  oneof payload {
+    ConversationStarted started = 10;
+    TranscriptChunk transcript = 11;
+    ConversationCompleted completed = 12;
+    EnrichmentResult enriched = 13;
+  }
+}
+
+enum EventType {
+  EVENT_TYPE_UNSPECIFIED = 0;
+  CONVERSATION_STARTED = 1;
+  TRANSCRIPT_CHUNK = 2;
+  CONVERSATION_COMPLETED = 3;
+  ENRICHMENT_RESULT = 4;
+}
+
+message ConversationStarted {
+  string agent_id = 1;
+  string customer_id = 2;
+  string channel = 3;           // "voice" | "chat" | "email"
+  map&lt;string, string&gt; metadata = 4;
+}
+
+message TranscriptChunk {
+  string speaker = 1;           // "agent" | "customer"
+  string text = 2;
+  bool is_final = 3;
+  double confidence = 4;
+  int64 offset_ms = 5;          // Offset from conversation start
+}
+
+message ConversationCompleted {
+  int32 duration_sec = 1;
+  string disposition = 2;       // "resolved" | "transferred" | "abandoned"
+  int32 utterance_count = 3;
+}
+
+message EnrichmentResult {
+  string model_name = 1;        // "topic_v3", "sentiment_v2"
+  string model_version = 2;
+  bytes result_json = 3;        // Model-specific JSON payload
+  double latency_ms = 4;
+}
+</pre>
+
+<h3 class="sub">Exactly-Once Semantics</h3>
+
+<div class="trap">
+  <div class="trapl">COMMON PITFALL</div>
+  <p>Without exactly-once, you'll double-count conversations in analytics. A conversation counted twice skews every metric downstream. Kafka's transactional API + idempotent consumers solve this, but you must understand the tradeoffs.</p>
+</div>
+
+<table class="tbl">
+<tr><th>Guarantee</th><th>Mechanism</th><th>Tradeoff</th></tr>
+<tr><td><strong>Producer idempotency</strong></td><td><code>enable.idempotence=true</code> + event_id dedup</td><td>Minor latency increase</td></tr>
+<tr><td><strong>Consumer exactly-once</strong></td><td>Commit offset + write result in same transaction</td><td>Requires transactional store</td></tr>
+<tr><td><strong>DLQ for poison pills</strong></td><td>After 3 retries, route to dead letter queue</td><td>Manual intervention needed</td></tr>
+<tr><td><strong>Backpressure</strong></td><td>Monitor consumer lag, pause fetch if processing falls behind</td><td>Increases end-to-end latency</td></tr>
+</table>
+
+<h3 class="sub">Consumer Group Design</h3>
+
+<pre class="codeblock">
+// Multiple consumer groups process the same events independently
+// Each group has its own offset tracking and scaling
+
+// Group 1: Real-time alerts (low latency, simple rules)
+// Group 2: Batch loader (high throughput, buffers to S3)
+// Group 3: Audit logger (compliance, writes everything to append-only log)
+
+type StreamConsumer struct {
+    group    string
+    topics   []string
+    handler  EventHandler
+    dlq      *kafka.Producer  // For failed events
+    metrics  *prometheus.Counter
+}
+
+func (c *StreamConsumer) ProcessMessage(msg *kafka.Message) error {
+    var event analytics.ConversationEvent
+    if err := proto.Unmarshal(msg.Value, &event); err != nil {
+        c.metrics.WithLabelValues("deserialize_error").Inc()
+        return c.sendToDLQ(msg, err)
+    }
+
+    // Idempotency check: have we seen this event_id before?
+    if c.dedup.Exists(event.EventId) {
+        c.metrics.WithLabelValues("duplicate_skipped").Inc()
+        return nil // Already processed, skip
+    }
+
+    // Process based on event type
+    if err := c.handler.Handle(event); err != nil {
+        c.metrics.WithLabelValues("process_error").Inc()
+        return err // Will be retried
+    }
+
+    // Mark as processed
+    c.dedup.Add(event.EventId, 24*time.Hour)
+    c.metrics.WithLabelValues("success").Inc()
+    return nil
+}
+</pre>
+
+<div class="tip">
+  <div class="tipl">SCHEMA EVOLUTION</div>
+  <p>Use Protobuf's <strong>backward compatibility rules</strong>: never remove or renumber fields, only add new optional fields. The Schema Registry rejects breaking changes. This allows rolling upgrades where producers and consumers run different schema versions simultaneously.</p>
+</div>
+
+<div class="iq">"Events flow through Kafka partitioned by tenant_id, using Protobuf schemas managed by a Schema Registry for type safety and backward-compatible evolution. I use separate consumer groups for streaming alerts, batch loading, and audit logging. Exactly-once semantics come from producer idempotency plus transactional offset commits. Failed events go to a DLQ with 30-day retention for investigation. Backpressure is monitored via consumer lag metrics with auto-scaling triggers."</div>
+
+</div>
+
+<!-- ======= SECTION 5: TRANSCRIPT PROCESSING ======= -->
+<div id="tab-transcript" class="sec">
+<div class="stitle">Transcript Processing</div>
+<div class="sdesc">The pipeline that transforms raw conversation data into clean, enrichable transcripts. Triggered on conversation completion.</div>
+
+<h3 class="sub">Processing Pipeline</h3>
+
+<div class="timeline">
+  <div class="timeline-item">
+    <div class="timeline-time">Step 1</div>
+    <div class="timeline-title">Trigger: conversation.completed event</div>
+    <div class="timeline-desc">Consumer picks up event, fetches full transcript from S3 (assembled from chunks)</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">Step 2</div>
+    <div class="timeline-title">Speaker Diarization</div>
+    <div class="timeline-desc">Verify/correct speaker labels. For single-channel audio, run ML diarization to separate speakers.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">Step 3</div>
+    <div class="timeline-title">Language Detection</div>
+    <div class="timeline-desc">Identify transcript language to route to correct ML models. Support 20+ languages.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">Step 4</div>
+    <div class="timeline-title">PII Redaction</div>
+    <div class="timeline-desc">Two-pass: regex patterns (SSN, credit cards, phone) + NER model (names, addresses). Replace with tokens.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">Step 5</div>
+    <div class="timeline-title">Normalization</div>
+    <div class="timeline-desc">Lowercase, remove filler words, fix common STT errors, standardize timestamps.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">Step 6</div>
+    <div class="timeline-title">Store Processed Transcript</div>
+    <div class="timeline-desc">Write to S3 (redacted full text) + PostgreSQL (metadata + status) + emit enrichment-ready event.</div>
+  </div>
+</div>
+
+<h3 class="sub">PII Redaction: Defense in Depth</h3>
+
+<div class="trap">
+  <div class="trapl">COMPLIANCE CRITICAL</div>
+  <p>PII leaking into your data warehouse is a GDPR/CCPA violation. Use <strong>two independent detection methods</strong> (regex + NER) and <strong>redact before any ML enrichment</strong>. ML models must never see raw PII.</p>
+</div>
+
+<pre class="codeblock">
+// Two-pass PII redaction: fast regex + ML-based NER
+
+type PIIRedactor struct {
+    patterns  []*regexp.Regexp   // Fast: regex for structured PII
+    nerClient NERServiceClient   // Thorough: ML-based entity detection
+}
+
+type RedactionResult struct {
+    RedactedText string
+    Redactions   []Redaction
+}
+
+type Redaction struct {
+    Type       string  // "SSN", "CREDIT_CARD", "PHONE", "NAME", "ADDRESS"
+    Original   string  // Only kept in secure audit log
+    Offset     int
+    Length     int
+    Method     string  // "regex" | "ner"
+}
+
+// Pass 1: Regex patterns for structured PII (fast, high precision)
+var piiPatterns = map[string]*regexp.Regexp{
+    "SSN":         regexp.MustCompile(`\b\d{3}-\d{2}-\d{4}\b`),
+    "CREDIT_CARD": regexp.MustCompile(`\b\d{4}[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{4}\b`),
+    "PHONE":       regexp.MustCompile(`\b(\+1[\s-]?)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}\b`),
+    "EMAIL":       regexp.MustCompile(`\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b`),
+}
+
+// Pass 2: NER model for unstructured PII (names, addresses)
+func (r *PIIRedactor) Redact(text string) (*RedactionResult, error) {
+    result := &RedactionResult{RedactedText: text}
+
+    // Pass 1: regex
+    for piiType, pattern := range piiPatterns {
+        matches := pattern.FindAllStringIndex(result.RedactedText, -1)
+        for _, match := range matches {
+            result.Redactions = append(result.Redactions, Redaction{
+                Type: piiType, Offset: match[0], Length: match[1] - match[0], Method: "regex",
+            })
+        }
+        result.RedactedText = pattern.ReplaceAllString(result.RedactedText, "["+piiType+"]")
+    }
+
+    // Pass 2: NER for names, addresses (run on already regex-redacted text)
+    entities, err := r.nerClient.DetectPII(context.Background(), result.RedactedText)
+    if err != nil {
+        // NER failure: log warning but don't block pipeline
+        // Regex pass already caught structured PII
+        return result, nil
+    }
+    for _, entity := range entities {
+        result.RedactedText = strings.Replace(result.RedactedText, entity.Text, "["+entity.Type+"]", 1)
+        result.Redactions = append(result.Redactions, Redaction{
+            Type: entity.Type, Offset: entity.Offset, Length: len(entity.Text), Method: "ner",
+        })
+    }
+
+    return result, nil
+}
+</pre>
+
+<h3 class="sub">Transcript Data Structure</h3>
+
+<pre class="codeblock">
+// Processed transcript ready for ML enrichment
+type ProcessedTranscript struct {
+    ConversationID string            `json:"conversation_id"`
+    TenantID       string            `json:"tenant_id"`
+    Language       string            `json:"language"`       // ISO 639-1: "en", "es", "ja"
+    Channel        string            `json:"channel"`        // "voice" | "chat"
+    DurationSec    int               `json:"duration_sec"`
+    Utterances     []ProcessedUtterance `json:"utterances"`
+    WordCount      int               `json:"word_count"`
+    RedactionCount int               `json:"redaction_count"`
+    ProcessedAt    time.Time         `json:"processed_at"`
+    Status         string            `json:"status"`         // "ready" | "failed" | "partial"
+    S3Path         string            `json:"s3_path"`        // Full transcript in S3
+}
+
+type ProcessedUtterance struct {
+    Speaker    string  `json:"speaker"`     // "agent" | "customer"
+    Text       string  `json:"text"`        // PII-redacted
+    StartMs    int64   `json:"start_ms"`    // Offset from conversation start
+    EndMs      int64   `json:"end_ms"`
+    Confidence float64 `json:"confidence"`  // STT confidence
+}
+</pre>
+
+<h3 class="sub">Error Handling Strategy</h3>
+
+<table class="tbl">
+<tr><th>Failure</th><th>Impact</th><th>Recovery</th></tr>
+<tr><td>S3 fetch timeout</td><td>Cannot process transcript</td><td>Retry 3x with exponential backoff, then DLQ</td></tr>
+<tr><td>NER service down</td><td>PII may not be fully redacted</td><td>Proceed with regex-only, flag for re-processing</td></tr>
+<tr><td>Language detection failure</td><td>Wrong ML models may be used</td><td>Default to tenant's primary language</td></tr>
+<tr><td>Malformed transcript</td><td>Processing fails entirely</td><td>Send to DLQ, alert ops team</td></tr>
+</table>
+
+<div class="iq">"Transcript processing triggers on the conversation.completed event. The pipeline fetches the full transcript from S3, runs speaker diarization, detects language, performs two-pass PII redaction (regex for structured patterns, NER for names and addresses), normalizes the text, and stores the result. PII redaction happens before any ML enrichment to ensure models never see raw personal data. If NER fails, I fall back to regex-only and flag for re-processing."</div>
+
+</div>
+
+<!-- ======= SECTION 6: ML ENRICHMENT ======= -->
+<div id="tab-ml" class="sec">
+<div class="stitle">ML Enrichment</div>
+<div class="sdesc">Orchestrating black-box ML services with batching, retry, circuit breaking, and result validation. Your code wraps models you don't control.</div>
+
+<h3 class="sub">ML Service Inventory</h3>
+
+<table class="tbl">
+<tr><th>Model</th><th>Input</th><th>Output</th><th>Latency (p50/p99)</th></tr>
+<tr><td><strong>Topic Classification</strong></td><td>Full transcript text</td><td>Top-3 topics + confidence scores</td><td>80ms / 250ms</td></tr>
+<tr><td><strong>Sentiment Analysis</strong></td><td>Per-utterance text</td><td>Score -1.0 to 1.0 per utterance</td><td>30ms / 100ms</td></tr>
+<tr><td><strong>Intent Detection</strong></td><td>Customer utterances</td><td>Primary + secondary intents</td><td>60ms / 200ms</td></tr>
+<tr><td><strong>Entity Extraction</strong></td><td>Full transcript</td><td>Named entities with types and spans</td><td>100ms / 350ms</td></tr>
+<tr><td><strong>Compliance Scoring</strong></td><td>Agent utterances + rules</td><td>Compliance score 0-100, violations list</td><td>120ms / 400ms</td></tr>
+</table>
+
+<h3 class="sub">Ownership Boundary</h3>
+
+<div class="g2">
+  <div class="skill-box">
+    <h4>YOUR Code (Orchestration)</h4>
+    <ul>
+      <li>Request batching (group N transcripts per ML call)</li>
+      <li>Retry with exponential backoff</li>
+      <li>Circuit breaker per model endpoint</li>
+      <li>Result validation and schema checking</li>
+      <li>Timeout enforcement</li>
+      <li>Streaming vs. batch mode routing</li>
+      <li>Metrics and observability</li>
+    </ul>
+  </div>
+  <div class="skill-box">
+    <h4>ML Team's Black Box</h4>
+    <ul>
+      <li>Model training and evaluation</li>
+      <li>Model serving infrastructure</li>
+      <li>Feature engineering</li>
+      <li>A/B testing model versions</li>
+      <li>Accuracy monitoring and drift detection</li>
+      <li>GPU cluster management</li>
+      <li>Model versioning and rollback</li>
+    </ul>
+  </div>
+</div>
+
+<h3 class="sub">Batch vs. Streaming Mode</h3>
+
+<div class="note">
+  <div class="notel">KEY ARCHITECTURE DECISION</div>
+  <p>The same ML models serve both paths, but how you call them differs dramatically. Streaming mode sends single requests with tight timeouts. Batch mode groups many transcripts into one request for efficiency.</p>
+</div>
+
+<table class="tbl">
+<tr><th>Aspect</th><th>Streaming Mode</th><th>Batch Mode</th></tr>
+<tr><td><strong>Trigger</strong></td><td>Each event as it arrives</td><td>Scheduled (hourly/daily)</td></tr>
+<tr><td><strong>Batch size</strong></td><td>1 transcript per request</td><td>50-100 transcripts per request</td></tr>
+<tr><td><strong>Timeout</strong></td><td>200ms hard cutoff</td><td>30 seconds per batch</td></tr>
+<tr><td><strong>On failure</strong></td><td>Skip enrichment, use rule-based fallback</td><td>Retry entire batch up to 3x</td></tr>
+<tr><td><strong>Models used</strong></td><td>Lightweight only (keyword, simple sentiment)</td><td>All 5 models (full enrichment)</td></tr>
+<tr><td><strong>Cost</strong></td><td>Higher per-unit (no batching benefit)</td><td>Lower per-unit (GPU amortization)</td></tr>
+</table>
+
+<h3 class="sub">Circuit Breaker Pattern</h3>
+
+<pre class="codeblock">
+// Circuit breaker protects against cascading failures when ML service is unhealthy
+type CircuitBreaker struct {
+    mu           sync.Mutex
+    state        State           // CLOSED, OPEN, HALF_OPEN
+    failCount    int
+    successCount int
+    threshold    int             // Failures before opening
+    timeout      time.Duration   // How long to stay open before trying again
+    lastFailure  time.Time
+}
+
+type State int
+const (
+    Closed   State = iota  // Normal operation
+    Open                   // All requests fail fast
+    HalfOpen              // Allow one probe request
+)
+
+func (cb *CircuitBreaker) Execute(fn func() error) error {
+    cb.mu.Lock()
+    if cb.state == Open {
+        if time.Since(cb.lastFailure) > cb.timeout {
+            cb.state = HalfOpen
+        } else {
+            cb.mu.Unlock()
+            return ErrCircuitOpen  // Fail fast
+        }
+    }
+    cb.mu.Unlock()
+
+    err := fn()
+
+    cb.mu.Lock()
+    defer cb.mu.Unlock()
+    if err != nil {
+        cb.failCount++
+        cb.lastFailure = time.Now()
+        if cb.failCount >= cb.threshold {
+            cb.state = Open
+        }
+        return err
+    }
+
+    // Success
+    if cb.state == HalfOpen {
+        cb.state = Closed
+        cb.failCount = 0
+    }
+    cb.successCount++
+    return nil
+}
+</pre>
+
+<h3 class="sub">Batch ML Orchestrator</h3>
+
+<pre class="codeblock">
+// Orchestrate batch ML enrichment across all 5 models
+type BatchOrchestrator struct {
+    models   map[string]MLClient       // model_name -> client
+    breakers map[string]*CircuitBreaker // model_name -> circuit breaker
+    workers  int                        // Parallel workers per model
+}
+
+func (o *BatchOrchestrator) EnrichBatch(transcripts []ProcessedTranscript) []EnrichmentResult {
+    results := make([]EnrichmentResult, len(transcripts))
+    var wg sync.WaitGroup
+
+    // Run all 5 models in parallel for the same batch
+    for modelName, client := range o.models {
+        wg.Add(1)
+        go func(name string, c MLClient) {
+            defer wg.Done()
+            breaker := o.breakers[name]
+
+            // Batch into chunks of 50
+            for i := 0; i &lt; len(transcripts); i += 50 {
+                end := min(i+50, len(transcripts))
+                chunk := transcripts[i:end]
+
+                err := breaker.Execute(func() error {
+                    resp, err := c.BatchPredict(context.Background(), chunk)
+                    if err != nil {
+                        return err
+                    }
+                    // Validate response matches input count
+                    if len(resp.Results) != len(chunk) {
+                        return fmt.Errorf("result count mismatch: got %d, want %d",
+                            len(resp.Results), len(chunk))
+                    }
+                    // Store results
+                    for j, r := range resp.Results {
+                        results[i+j].AddModel(name, r)
+                    }
+                    return nil
+                })
+                if err != nil {
+                    // Log and continue — partial enrichment is acceptable
+                    log.Warnf("model %s failed for chunk %d: %v", name, i/50, err)
+                }
+            }
+        }(modelName, client)
+    }
+
+    wg.Wait()
+    return results
+}
+</pre>
+
+<h3 class="sub">Result Validation</h3>
+
+<div class="warn">
+  <div class="warnl">TRUST BUT VERIFY</div>
+  <p>ML models can return garbage (empty results, scores outside valid range, wrong schema). Always validate before storing. Bad data in your warehouse corrupts every downstream report.</p>
+</div>
+
+<ul class="content-list">
+  <li><strong>Schema validation:</strong> Does the response match expected Protobuf/JSON schema?</li>
+  <li><strong>Count validation:</strong> Does batch response have same count as batch request?</li>
+  <li><strong>Range validation:</strong> Are scores within valid ranges (e.g., sentiment -1.0 to 1.0)?</li>
+  <li><strong>Confidence threshold:</strong> Discard results below minimum confidence (e.g., topic &lt; 0.3)</li>
+  <li><strong>Staleness check:</strong> Is the model version still current? (reject if deprecated)</li>
+</ul>
+
+<div class="iq">"My code orchestrates 5 black-box ML services with batching (50 transcripts per request in batch mode), circuit breakers per endpoint, and strict result validation. Streaming mode uses tight 200ms timeouts with rule-based fallbacks. Batch mode processes hourly with retries. I validate every ML response for schema correctness, count matching, and score ranges before writing to the warehouse. If a model is down, the circuit breaker fails fast and enrichment continues with available models."</div>
+
+</div>
+
+<!-- ======= SECTION 7: DATA STORAGE DESIGN ======= -->
+<div id="tab-storage" class="sec">
+<div class="stitle">Data Storage Design</div>
+<div class="sdesc">Multi-tier storage architecture: hot data in Redis, warm data in PostgreSQL, cold data in S3, analytics in BigQuery.</div>
+
+<h3 class="sub">Storage Tier Overview</h3>
+
+<table class="tbl">
+<tr><th>Tier</th><th>Technology</th><th>Data</th><th>Access Pattern</th><th>Retention</th></tr>
+<tr><td><strong>Hot</strong></td><td>Redis Cluster</td><td>Real-time metrics, live counters, active processing state</td><td>Sub-ms reads, high write throughput</td><td>24 hours</td></tr>
+<tr><td><strong>Warm</strong></td><td>PostgreSQL</td><td>Conversation metadata, tenant config, recent transcripts</td><td>Indexed queries, joins, transactions</td><td>90 days</td></tr>
+<tr><td><strong>Cold</strong></td><td>S3</td><td>Raw audio, full transcripts, ML artifacts</td><td>Bulk reads, sequential scan</td><td>1-7 years</td></tr>
+<tr><td><strong>Analytics</strong></td><td>BigQuery</td><td>Enriched conversations, aggregations, historical trends</td><td>OLAP queries, dashboard feeds</td><td>3 years</td></tr>
+</table>
+
+<h3 class="sub">S3: Raw Data Lake</h3>
+
+<pre class="codeblock">
+// S3 key structure for conversation data
+// Partitioned by date and tenant for efficient batch processing
+
+s3://analytics-raw/{tenant_id}/audio/{date}/{conversation_id}.wav
+s3://analytics-raw/{tenant_id}/transcripts/{date}/{conversation_id}.json
+s3://analytics-processed/{tenant_id}/enriched/{date}/{conversation_id}.json
+s3://analytics-processed/{tenant_id}/redacted/{date}/{conversation_id}.json
+
+// Example: tenant "acme_corp", conversation on 2026-07-04
+s3://analytics-raw/acme_corp/transcripts/2026-07-04/conv_abc123.json
+s3://analytics-processed/acme_corp/enriched/2026-07-04/conv_abc123.json
+</pre>
+
+<div class="tip">
+  <div class="tipl">S3 LIFECYCLE RULES</div>
+  <p>Use S3 lifecycle policies to automatically transition data: Standard (0-30 days) for active processing, Infrequent Access (30-90 days) for recent lookups, Glacier (90+ days) for compliance retention. Saves ~60% on storage costs.</p>
+</div>
+
+<h3 class="sub">PostgreSQL: Metadata Store</h3>
+
+<pre class="codeblock">
+-- Core conversation metadata table
+CREATE TABLE conversations (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id       UUID NOT NULL REFERENCES tenants(id),
+    conversation_id VARCHAR(64) NOT NULL UNIQUE,
+    agent_id        VARCHAR(64) NOT NULL,
+    customer_id     VARCHAR(64),
+    channel         VARCHAR(16) NOT NULL,    -- 'voice', 'chat', 'email'
+    language        VARCHAR(8),              -- ISO 639-1
+    started_at      TIMESTAMPTZ NOT NULL,
+    ended_at        TIMESTAMPTZ,
+    duration_sec    INTEGER,
+    disposition     VARCHAR(32),             -- 'resolved', 'transferred', 'abandoned'
+    word_count      INTEGER,
+    utterance_count INTEGER,
+    status          VARCHAR(16) NOT NULL DEFAULT 'pending',  -- 'pending', 'processed', 'enriched', 'failed'
+    s3_transcript   TEXT,                    -- S3 path to redacted transcript
+    s3_audio        TEXT,                    -- S3 path to audio file
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Indexes for common query patterns
+CREATE INDEX idx_conversations_tenant_started ON conversations(tenant_id, started_at DESC);
+CREATE INDEX idx_conversations_status ON conversations(status) WHERE status != 'enriched';
+CREATE INDEX idx_conversations_agent ON conversations(tenant_id, agent_id, started_at DESC);
+
+-- ML enrichment results (one row per model per conversation)
+CREATE TABLE enrichment_results (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    conversation_id UUID NOT NULL REFERENCES conversations(id),
+    model_name      VARCHAR(64) NOT NULL,    -- 'topic_v3', 'sentiment_v2'
+    model_version   VARCHAR(32) NOT NULL,
+    result_json     JSONB NOT NULL,          -- Model-specific output
+    confidence      FLOAT,
+    latency_ms      INTEGER,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE(conversation_id, model_name)
+);
+
+CREATE INDEX idx_enrichment_conversation ON enrichment_results(conversation_id);
+CREATE INDEX idx_enrichment_model ON enrichment_results(model_name, created_at DESC);
+
+-- Partition by month for conversations table (for large tenants)
+-- CREATE TABLE conversations_2026_07 PARTITION OF conversations
+--   FOR VALUES FROM ('2026-07-01') TO ('2026-08-01');
+</pre>
+
+<h3 class="sub">BigQuery: Analytics Warehouse</h3>
+
+<div class="ins">
+  <div class="insl">WHY BIGQUERY</div>
+  <p>BigQuery is optimized for OLAP workloads: scan terabytes in seconds, auto-scales compute, columnar storage compresses well. Partition by date (filter most queries to recent days) and cluster by tenant_id (skip irrelevant tenant data during scans).</p>
+</div>
+
+<pre class="codeblock">
+-- BigQuery table: enriched conversations (denormalized for query speed)
+-- Partitioned by conversation_date, clustered by tenant_id
+
+CREATE TABLE `project.analytics.conversations_enriched`
+(
+    conversation_id     STRING NOT NULL,
+    tenant_id           STRING NOT NULL,
+    agent_id            STRING NOT NULL,
+    customer_id         STRING,
+    channel             STRING,              -- 'voice', 'chat', 'email'
+    language            STRING,
+    conversation_date   DATE NOT NULL,       -- PARTITION key
+    started_at          TIMESTAMP,
+    duration_sec        INT64,
+    disposition         STRING,
+    word_count          INT64,
+    utterance_count     INT64,
+
+    -- ML enrichment results (denormalized)
+    topic_primary       STRING,              -- Top topic classification
+    topic_secondary     STRING,
+    topic_confidence    FLOAT64,
+    sentiment_avg       FLOAT64,             -- Average across utterances
+    sentiment_min       FLOAT64,             -- Worst moment
+    sentiment_trend     STRING,              -- 'improving', 'declining', 'stable'
+    intent_primary      STRING,
+    intent_resolved     BOOL,                -- Was the customer's intent fulfilled?
+    compliance_score    INT64,               -- 0-100
+    compliance_violations ARRAY&lt;STRING&gt;,     -- List of violation types
+    entities            ARRAY&lt;STRUCT&lt;type STRING, value STRING&gt;&gt;,
+
+    -- Processing metadata
+    processed_at        TIMESTAMP,
+    model_versions      ARRAY&lt;STRUCT&lt;model STRING, version STRING&gt;&gt;,
+    enrichment_status   STRING               -- 'full', 'partial', 'failed'
+)
+PARTITION BY conversation_date
+CLUSTER BY tenant_id
+OPTIONS(
+    description='Enriched conversation analytics, partitioned by date, clustered by tenant',
+    require_partition_filter=true   -- Prevent full-table scans
+);
+</pre>
+
+<h3 class="sub">Redis: Real-time Metrics</h3>
+
+<pre class="codeblock">
+// Redis stores live metrics for the streaming path dashboard
+
+// Pattern 1: Real-time counters (using INCR)
+// Key: "metrics:{tenant_id}:conversations:today"  -> count
+// Key: "metrics:{tenant_id}:alerts:today"          -> count
+
+// Pattern 2: Sliding window metrics (using Sorted Sets)
+// Key: "metrics:{tenant_id}:sentiment:5min"        -> sorted set (score=timestamp, member=value)
+
+// Pattern 3: Processing state (using Hash)
+// Key: "processing:{conversation_id}"              -> hash {status, stage, started_at}
+
+type RealtimeMetrics struct {
+    redis *redis.ClusterClient
+}
+
+func (m *RealtimeMetrics) IncrementConversationCount(tenantID string) {
+    key := fmt.Sprintf("metrics:%s:conversations:%s", tenantID, today())
+    m.redis.Incr(ctx, key)
+    m.redis.Expire(ctx, key, 48*time.Hour) // Auto-cleanup
+}
+
+func (m *RealtimeMetrics) RecordSentiment(tenantID string, score float64) {
+    key := fmt.Sprintf("metrics:%s:sentiment:5min", tenantID)
+    m.redis.ZAdd(ctx, key, &redis.Z{
+        Score:  float64(time.Now().UnixMilli()),
+        Member: fmt.Sprintf("%f", score),
+    })
+    // Trim to last 5 minutes
+    cutoff := float64(time.Now().Add(-5 * time.Minute).UnixMilli())
+    m.redis.ZRemRangeByScore(ctx, key, "-inf", fmt.Sprintf("%f", cutoff))
+}
+
+func (m *RealtimeMetrics) GetLiveStats(tenantID string) *LiveDashboard {
+    pipe := m.redis.Pipeline()
+    convCount := pipe.Get(ctx, fmt.Sprintf("metrics:%s:conversations:%s", tenantID, today()))
+    alertCount := pipe.Get(ctx, fmt.Sprintf("metrics:%s:alerts:%s", tenantID, today()))
+    sentiments := pipe.ZRange(ctx, fmt.Sprintf("metrics:%s:sentiment:5min", tenantID), 0, -1)
+    pipe.Exec(ctx)
+
+    return &LiveDashboard{
+        ConversationsToday: parseIntOr(convCount, 0),
+        AlertsToday:        parseIntOr(alertCount, 0),
+        AvgSentiment5Min:   avgFloats(sentiments),
+    }
+}
+</pre>
+
+<h3 class="sub">Data Flow Between Tiers</h3>
+
+<div class="timeline">
+  <div class="timeline-item">
+    <div class="timeline-time">T+0s</div>
+    <div class="timeline-title">Event arrives in Kafka</div>
+    <div class="timeline-desc">Redis counters updated immediately by stream processor</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">T+5s</div>
+    <div class="timeline-title">Transcript chunks stored to S3</div>
+    <div class="timeline-desc">Raw data preserved in cold storage for compliance</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">T+30s</div>
+    <div class="timeline-title">PostgreSQL metadata row created</div>
+    <div class="timeline-desc">Conversation record with status='pending', S3 paths set</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">T+1h</div>
+    <div class="timeline-title">Batch enrichment completes</div>
+    <div class="timeline-desc">PostgreSQL status='enriched', enrichment_results rows inserted</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">T+2h</div>
+    <div class="timeline-title">BigQuery load job runs</div>
+    <div class="timeline-desc">Denormalized enriched record loaded into warehouse partition</div>
+  </div>
+</div>
+
+<div class="warn">
+  <div class="warnl">CONSISTENCY NOTE</div>
+  <p>The streaming path (Redis) and batch path (BigQuery) may show different numbers for the same metric during the reconciliation window. Your dashboard must indicate data freshness: "Live: 5,230 conversations (as of 10:30 AM)" vs. "Daily Report: 5,187 conversations (fully enriched)". The delta is conversations still in-flight through the batch pipeline.</p>
+</div>
+
+<div class="iq">"I use a four-tier storage strategy. Redis holds real-time counters and sliding-window metrics for the live dashboard. PostgreSQL stores conversation metadata with indexes for status-based queries driving the batch pipeline. S3 holds raw audio and transcripts with lifecycle policies transitioning to Glacier after 90 days. BigQuery is the analytics warehouse, partitioned by date and clustered by tenant_id for efficient OLAP queries. Data flows from hot to cold tiers over hours, with the dashboard indicating freshness to handle temporary inconsistencies between stream and batch counts."</div>
+
+</div>
+
+<!-- ======= SECTIONS 8-14: PLACEHOLDERS ======= -->
+
+<!-- Section 8: Aggregation & Dashboards -->
+<div id="tab-aggregation" class="sec">
+<div class="stitle">Aggregation &amp; Dashboards</div>
+<div class="sdesc">Pre-computed rollups, materialized views, and dashboard query patterns.</div>
+<p>Content coming soon.</p>
+</div>
+
+<!-- Section 9: API Design -->
+<div id="tab-api" class="sec">
+<div class="stitle">API Design</div>
+<div class="sdesc">REST APIs for analytics queries, webhook delivery, and data export.</div>
+<p>Content coming soon.</p>
+</div>
+
+<!-- Section 10: Scaling & Reliability -->
+<div id="tab-scaling" class="sec">
+<div class="stitle">Scaling &amp; Reliability</div>
+<div class="sdesc">Horizontal scaling, partition rebalancing, and fault tolerance strategies.</div>
+<p>Content coming soon.</p>
+</div>
+
+<!-- Section 11: Monitoring & Alerting -->
+<div id="tab-monitoring" class="sec">
+<div class="stitle">Monitoring &amp; Alerting</div>
+<div class="sdesc">Pipeline health metrics, SLO dashboards, and incident response automation.</div>
+<p>Content coming soon.</p>
+</div>
+
+<!-- Section 12: Interview Script -->
+<div id="tab-script" class="sec">
+<div class="stitle">Interview Script</div>
+<div class="sdesc">Complete 45-minute interview walkthrough with timing and talking points.</div>
+<p>Content coming soon.</p>
+</div>
+
+<!-- Section 13: Your Experience -->
+<div id="tab-experience" class="sec">
+<div class="stitle">Your Experience</div>
+<div class="sdesc">How to connect this design to your personal engineering background.</div>
+<p>Content coming soon.</p>
+</div>
+
+<!-- Section 14: Pitfalls & Follow-ups -->
+<div id="tab-pitfalls" class="sec">
+<div class="stitle">Pitfalls &amp; Follow-ups</div>
+<div class="sdesc">Common mistakes candidates make and likely follow-up questions from interviewers.</div>
+<p>Content coming soon.</p>
+</div>
+
+</div><!-- end #main -->
+
+<script>
+function go(id) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById('tab-' + id);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
+  if (event && event.currentTarget) event.currentTarget.classList.add('active');
+  document.getElementById('main').scrollTop = 0;
+}
+
+function toggle(el) {
+  const body = el.nextElementSibling;
+  const chevron = el.querySelector('.chv');
+  body.classList.toggle('open');
+  if (chevron) chevron.classList.toggle('open');
+}
+</script>
+</body>
+</html>
