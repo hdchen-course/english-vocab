@@ -491,36 +491,79 @@ a.lc:hover { text-decoration: underline; color: var(--blue-d); }
 
 <h3 class="sub">Architecture Diagram</h3>
 
-<pre class="codeblock">
-  AI Chatbot                                    Agent Desktop
-      |                                              ^
-      v                                              |
-+-------------------+                    +---------------------+
-| Escalation        |                    | Transfer            |
-| Trigger Service   |                    | Orchestrator        |
-| (Detect handoff)  |                    | (Execute transfer)  |
-+---------+---------+                    +----------+----------+
-          |                                         ^
-          v                                         |
-+-------------------+                    +---------------------+
-| Context           |                    | Queue Manager       |
-| Assembler         |                    | (Priority queues,   |
-| (Package context) |                    |  SLA tracking)      |
-+---------+---------+                    +----------+----------+
-          |                                         ^
-          v                                         |
-+-------------------+                    +---------------------+
-| Agent Router      |------------------->| Agent State Store   |
-| (Score & select)  |                    | (Redis: avail,      |
-+-------------------+                    |  skills, load)      |
-                                         +---------------------+
-                                                    ^
-                                                    |
-                                         +---------------------+
-                                         | Supervisor Console  |
-                                         | (Monitor & override)|
-                                         +---------------------+
-</pre>
+<div style="overflow-x:auto; margin:14px 0;">
+<svg width="760" height="470" viewBox="0 0 760 470" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,sans-serif; max-width:100%; height:auto;">
+  <defs>
+    <marker id="arr4" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#64748b"/>
+    </marker>
+    <style>
+      .box{fill:#fff;stroke:#cbd5e1;stroke-width:1.5;}
+      .redis{fill:#ede9fe;stroke:#7c3aed;stroke-width:1.5;}
+      .sup{fill:#dcfce7;stroke:#16a34a;stroke-width:1.5;}
+      .lbl{font-size:12px;font-weight:600;fill:#0f172a;}
+      .sub{font-size:9px;fill:#64748b;}
+      .flow{stroke:#64748b;stroke-width:1.5;fill:none;}
+    </style>
+  </defs>
+
+  <text x="110" y="22" class="lbl" text-anchor="middle">🤖 AI Chatbot</text>
+  <text x="620" y="22" class="lbl" text-anchor="middle">💻 Agent Desktop</text>
+
+  <!-- Left column: detect & route -->
+  <rect class="box" x="35" y="45" width="160" height="56" rx="8"/>
+  <text x="115" y="67" class="lbl" text-anchor="middle">Escalation Trigger</text>
+  <text x="115" y="83" class="sub" text-anchor="middle">Detect handoff need</text>
+
+  <rect class="box" x="35" y="150" width="160" height="56" rx="8"/>
+  <text x="115" y="172" class="lbl" text-anchor="middle">Context Assembler</text>
+  <text x="115" y="188" class="sub" text-anchor="middle">Package context</text>
+
+  <rect class="box" x="35" y="255" width="160" height="56" rx="8"/>
+  <text x="115" y="277" class="lbl" text-anchor="middle">Agent Router</text>
+  <text x="115" y="293" class="sub" text-anchor="middle">Score &amp; select</text>
+
+  <!-- Right column: queue & transfer -->
+  <rect class="box" x="545" y="45" width="180" height="56" rx="8"/>
+  <text x="635" y="67" class="lbl" text-anchor="middle">Transfer Orchestrator</text>
+  <text x="635" y="83" class="sub" text-anchor="middle">Execute transfer</text>
+
+  <rect class="box" x="545" y="150" width="180" height="56" rx="8"/>
+  <text x="635" y="172" class="lbl" text-anchor="middle">Queue Manager</text>
+  <text x="635" y="188" class="sub" text-anchor="middle">Priority queues · SLA</text>
+
+  <!-- Center bottom: state store -->
+  <rect class="box redis" x="300" y="255" width="180" height="56" rx="8"/>
+  <text x="390" y="277" class="lbl" text-anchor="middle">Agent State Store</text>
+  <text x="390" y="293" class="sub" text-anchor="middle">Redis: avail · skills · load</text>
+
+  <rect class="box sup" x="300" y="370" width="180" height="56" rx="8"/>
+  <text x="390" y="392" class="lbl" text-anchor="middle">Supervisor Console</text>
+  <text x="390" y="408" class="sub" text-anchor="middle">Monitor &amp; override</text>
+
+  <!-- Left flow (down) -->
+  <line class="flow" x1="110" y1="26" x2="115" y2="45" marker-end="url(#arr4)"/>
+  <line class="flow" x1="115" y1="101" x2="115" y2="150" marker-end="url(#arr4)"/>
+  <line class="flow" x1="115" y1="206" x2="115" y2="255" marker-end="url(#arr4)"/>
+
+  <!-- Router -> State Store -->
+  <line class="flow" x1="195" y1="283" x2="300" y2="283" marker-end="url(#arr4)"/>
+
+  <!-- Right flow (up to desktop) -->
+  <line class="flow" x1="635" y1="150" x2="635" y2="101" marker-end="url(#arr4)"/>
+  <line class="flow" x1="635" y1="45" x2="625" y2="26" marker-end="url(#arr4)"/>
+
+  <!-- State store feeds queue + router selection to transfer -->
+  <line class="flow" style="stroke-dasharray:4 3;stroke:#a78bfa" x1="480" y1="270" x2="545" y2="185"/>
+  <line class="flow" x1="480" y1="290" x2="545" y2="290" marker-end="url(#arr4)" opacity="0"/>
+
+  <!-- Queue -> Transfer -->
+  <line class="flow" x1="635" y1="150" x2="635" y2="101" opacity="0"/>
+
+  <!-- Supervisor monitors state store -->
+  <line class="flow" style="stroke-dasharray:4 3;stroke:#16a34a" x1="390" y1="370" x2="390" y2="311"/>
+</svg>
+</div>
 
 <h3 class="sub">Component Inventory</h3>
 
@@ -811,45 +854,34 @@ func (ca *ContextAssembler) Assemble(sessionID string, budget int) (*HandoffCont
 <h3 class="sub">Routing Algorithm</h3>
 
 <pre class="codeblock">
-// Agent routing: filter -> score -> select -> reserve
+// Agent routing: filter -> score -> select -> reserve (atomic CAS)
 func (r *AgentRouter) Route(decision *EscalationDecision) (*AgentAssignment, error) {
-    // Step 1: Filter by required skills
     candidates := r.filterBySkills(decision.RequiredSkills)
     if len(candidates) == 0 {
-        return nil, r.enqueue(decision) // No match -> queue
+        return nil, r.enqueue(decision)
     }
-
-    // Step 2: Score all candidates
+    // Score and sort candidates
     scored := make([]ScoredAgent, 0, len(candidates))
     for _, agent := range candidates {
-        score := r.scoreAgent(agent, decision)
-        scored = append(scored, ScoredAgent{Agent: agent, Score: score})
+        scored = append(scored, ScoredAgent{Agent: agent, Score: r.scoreAgent(agent, decision)})
     }
-    sort.Slice(scored, func(i, j int) bool {
-        return scored[i].Score > scored[j].Score
-    })
+    sort.Slice(scored, func(i, j int) bool { return scored[i].Score > scored[j].Score })
 
-    // Step 3: Try to reserve top candidate (with retry)
+    // Try top 3 with atomic reserve (CAS via Lua)
     for i := 0; i < min(3, len(scored)); i++ {
-        assigned, err := r.tryReserve(scored[i].Agent, decision.SessionID)
-        if err == nil {
+        if assigned, err := r.tryReserve(scored[i].Agent, decision.SessionID); err == nil {
             return assigned, nil
         }
-        // CAS failed: agent was grabbed by another handoff, try next
     }
-
-    // Step 4: All top candidates taken, enqueue with 10s timeout
     return nil, r.enqueueWithTimeout(decision, 10*time.Second)
 }
 
-func (r *AgentRouter) scoreAgent(agent AgentState, decision *EscalationDecision) float64 {
-    skillMatch := r.computeSkillMatch(agent.Skills, decision.RequiredSkills)
-    load := 1.0 - (float64(agent.ActiveConversations) / float64(agent.MaxConcurrency))
-    availDuration := min(1.0, agent.AvailableSince.Sub(time.Now()).Minutes()/30.0)
-    performance := agent.PerformanceScore
-
-    cfg := r.tenantCfg.GetWeights(decision.TenantID)
-    return cfg.W1*skillMatch + cfg.W2*load + cfg.W3*availDuration + cfg.W4*performance
+func (r *AgentRouter) scoreAgent(agent AgentState, d *EscalationDecision) float64 {
+    cfg := r.tenantCfg.GetWeights(d.TenantID)
+    skill := r.computeSkillMatch(agent.Skills, d.RequiredSkills)
+    load := 1.0 - float64(agent.ActiveConversations)/float64(agent.MaxConcurrency)
+    avail := min(1.0, time.Since(agent.AvailableSince).Minutes()/30.0)
+    return cfg.W1*skill + cfg.W2*load + cfg.W3*avail + cfg.W4*agent.PerformanceScore
 }
 </pre>
 
@@ -970,21 +1002,12 @@ type QueueEntry struct {
 <h3 class="sub">Wait Time Estimation</h3>
 
 <pre class="codeblock">
-// Estimate wait time based on queue position and service rate
+// Little's Law: wait = position / service_rate (with 1.3x buffer)
 func (qm *QueueManager) EstimateWait(skillGroup string, position int) time.Duration {
-    // Service rate: avg handoffs completed per minute for this skill group
-    serviceRate := qm.metrics.GetServiceRate(skillGroup) // e.g., 5 per minute
-
-    if serviceRate == 0 {
-        return 10 * time.Minute // No data, conservative estimate
-    }
-
-    // Little's Law: wait = position / service_rate
+    serviceRate := qm.metrics.GetServiceRate(skillGroup) // handoffs/min
+    if serviceRate == 0 { return 10 * time.Minute }
     waitMinutes := float64(position) / serviceRate
-    estimated := time.Duration(waitMinutes * float64(time.Minute))
-
-    // Add buffer for variability (1.3x multiplier)
-    return time.Duration(float64(estimated) * 1.3)
+    return time.Duration(float64(waitMinutes) * 1.3 * float64(time.Minute))
 }
 </pre>
 
@@ -1046,50 +1069,248 @@ func (qm *QueueManager) MonitorWaitTimes() {
 <!-- Section 8: Transfer Orchestration -->
 <div id="tab-transfer" class="sec">
 <div class="stitle">Transfer Orchestration</div>
-<div class="sdesc">Executing cold, warm, and conference transfers with state machine management.</div>
-<p>Content coming soon.</p>
+<div class="sdesc">The state machine that executes the actual handoff.</div>
+
+<h3 class="sub">Three Transfer Types</h3>
+<table class="tbl">
+<tr><th>Type</th><th>How It Works</th><th>When to Use</th></tr>
+<tr><td><strong>Cold</strong></td><td>AI drops off, human picks up. No overlap.</td><td>Simple queries, low emotional stakes</td></tr>
+<tr><td><strong>Warm</strong></td><td>AI introduces the human ("I'm connecting you to Sarah who can help"), then exits.</td><td>Most cases — sets expectations, reduces friction</td></tr>
+<tr><td><strong>Conference</strong></td><td>AI stays on briefly to brief the human live, then exits.</td><td>Complex context, VIP customers</td></tr>
+</table>
+
+<h3 class="sub">Transfer State Machine</h3>
+<pre class="codeblock">INITIATED → CONTEXT_READY → AGENT_OFFERED → AGENT_ACCEPTED → TRANSFERRING → COMPLETED
+                                  │                                    │
+                                  ├─ (timeout 10s) → REROUTING         └─ (drop) → RECOVERING
+                                  └─ (rejected)   → REROUTING
+
+// Each state transition is logged for audit + debugging
+type TransferState struct {
+    HandoffID    string
+    State        string
+    AgentID      string    // once assigned
+    Attempts     int       // reroute count
+    StartedAt    time.Time
+    Transitions  []StateTransition  // full audit trail
+}</pre>
+
+<div class="warn">
+  <div class="warnl">The Mid-Transfer Failure</div>
+  <p>The hardest case: agent accepted, but the connection drops during TRANSFERRING. You can't just re-queue — the customer is in limbo. Recovery: hold the context, immediately re-offer to the next agent with a "reconnecting" message to the customer, and never lose the assembled context.</p>
+</div>
+
+<h3 class="sub">Rollback on Rejection</h3>
+<p>If the offered agent doesn't accept within 10s (busy, away), the state machine transitions back to REROUTING, releases the tentative reservation on that agent, and re-runs routing excluding them. The context is already assembled — no need to rebuild it.</p>
 </div>
 
 <!-- Section 9: Monitoring & SLA -->
 <div id="tab-monitoring" class="sec">
-<div class="stitle">Monitoring &amp; SLA</div>
-<div class="sdesc">Real-time dashboards, alerting, and SLA compliance tracking.</div>
-<p>Content coming soon.</p>
+<div class="stitle">Real-time Supervision &amp; SLA</div>
+<div class="sdesc">Giving supervisors a live view and enforcing SLAs.</div>
+
+<h3 class="sub">The Grid View</h3>
+<p>Supervisors monitor 100+ concurrent handoffs on one screen. Use visual hierarchy — color and motion — to encode priority so a supervisor can scan and spot the one conversation that needs intervention.</p>
+<table class="tbl">
+<tr><th>Signal</th><th>Visual Treatment</th></tr>
+<tr><td>Normal, within SLA</td><td>Muted / baseline</td></tr>
+<tr><td>Approaching SLA breach</td><td>Amber, gentle pulse</td></tr>
+<tr><td>Breached / needs intervention</td><td>Red, prominent</td></tr>
+</table>
+
+<h3 class="sub">Multi-Turn Takeover</h3>
+<p>A supervisor can pause the AI, take over the conversation directly for several turns to stabilize a bad situation, then hand control back. This "trust through control" pattern is what makes supervisors comfortable deploying AI at all.</p>
+
+<h3 class="sub">SLA Tracking</h3>
+<ul class="content-list">
+  <li><strong>Time-to-answer:</strong> how long from escalation to human pickup (the core SLA)</li>
+  <li><strong>Queue wait by priority:</strong> VIP queue must stay under 30s; standard under 3 min</li>
+  <li><strong>Abandonment rate:</strong> customers who hang up while waiting — the failure metric</li>
+  <li><strong>Context-loss reports:</strong> did the human have to ask the customer to repeat? (quality signal)</li>
+</ul>
+
+<div class="ins">
+  <div class="insl">Demand/Supply Dashboard</div>
+  <p>Like a ride-hailing ops screen: show handoff demand vs available agent supply in real time. When demand spikes above supply, supervisors can pull agents from other queues or enable callback offers before SLAs breach.</p>
+</div>
 </div>
 
 <!-- Section 10: Failover & Reliability -->
 <div id="tab-failover" class="sec">
 <div class="stitle">Failover &amp; Reliability</div>
-<div class="sdesc">Handling failures at every stage: agent rejection, network drops, Redis failover.</div>
-<p>Content coming soon.</p>
+<div class="sdesc">The escalation path is the most critical path in the system — it cannot fail.</div>
+
+<div class="trap">
+  <div class="trapl">99.99% on the Escalation Path</div>
+  <p>When a customer is angry enough that the AI is escalating, the handoff system failing is catastrophic. 99.99% availability = only 52 seconds of downtime per year. This path gets more reliability investment than the AI agent itself.</p>
+</div>
+
+<h3 class="sub">Failure Modes</h3>
+<div class="g2">
+  <div class="skill-box">
+    <h4>No agent available</h4>
+    <ul><li>Expand to secondary skills</li><li>Offer callback with ETA</li><li>Last resort: any available agent (partial skill match beats infinite wait)</li></ul>
+  </div>
+  <div class="skill-box">
+    <h4>Router service down</h4>
+    <ul><li>Fall back to simple round-robin over available agents</li><li>Degraded matching, but handoffs still flow</li></ul>
+  </div>
+  <div class="skill-box">
+    <h4>Context assembly slow/fails</h4>
+    <ul><li>Transfer anyway with partial context</li><li>Partial context &gt; no transfer — the human can ask</li></ul>
+  </div>
+  <div class="skill-box">
+    <h4>Redis (agent state) fails</h4>
+    <ul><li>Cluster fails over to replica</li><li>Brief rebuild of availability from agent heartbeats</li></ul>
+  </div>
+</div>
+
+<h3 class="sub">The Guiding Principle</h3>
+<div class="ins">
+  <div class="insl">Degrade Quality, Never Availability</div>
+  <p>Every failure path preserves the ability to connect the customer to <em>a</em> human. You can lose optimal routing, lose full context, lose the fancy warm transfer — but you must never leave the customer stranded. Design each fallback to sacrifice quality, never the handoff itself.</p>
+</div>
 </div>
 
 <!-- Section 11: Scaling & Multi-Region -->
 <div id="tab-scaling" class="sec">
 <div class="stitle">Scaling &amp; Multi-Region</div>
-<div class="sdesc">Horizontal scaling, multi-region deployment, and cross-region agent routing.</div>
-<p>Content coming soon.</p>
+<div class="sdesc">Scaling routing decisions and agent state across regions.</div>
+
+<h3 class="sub">Scaling the Components</h3>
+<table class="tbl">
+<tr><th>Component</th><th>Scaling Strategy</th><th>Bottleneck</th></tr>
+<tr><td>Escalation Trigger</td><td>Stateless, horizontal, runs per-conversation</td><td>None (embarrassingly parallel)</td></tr>
+<tr><td>Agent Router</td><td>Stateless workers; reads shared Redis state</td><td>Redis hot keys under contention</td></tr>
+<tr><td>Agent State Store</td><td>Redis Cluster, shard by skill group</td><td>Write throughput on heartbeats</td></tr>
+<tr><td>Queue Manager</td><td>Redis sorted sets per skill queue</td><td>Hot queue contention</td></tr>
+</table>
+
+<h3 class="sub">The Heartbeat Load</h3>
+<p>50K agents × heartbeat every 10s = 5K writes/sec just for availability. Optimize: use lightweight Redis operations (a single HSET + ZADD), batch where possible, and expire stale agents via TTL rather than explicit cleanup.</p>
+
+<h3 class="sub">Multi-Region Agent Routing</h3>
+<ul class="content-list">
+  <li><strong>Regional pools:</strong> route to agents in the customer's region first (language, timezone, latency)</li>
+  <li><strong>Cross-region overflow:</strong> if the local pool is exhausted, spill to another region rather than making the customer wait</li>
+  <li><strong>State locality:</strong> keep agent state in the agent's region; a global router queries regional stores</li>
+</ul>
+
+<div class="warn">
+  <div class="warnl">Avoid the Global Lock</div>
+  <p>Don't put all agent state in one global Redis that every region hits — that's a latency and single-point-of-failure disaster. Regional state stores with a coordination layer for overflow keeps routing fast and resilient.</p>
+</div>
 </div>
 
 <!-- Section 12: Interview Script -->
 <div id="tab-script" class="sec">
-<div class="stitle">Interview Script</div>
-<div class="sdesc">Complete 45-minute interview walkthrough with timing and talking points.</div>
-<p>Content coming soon.</p>
+<div class="stitle">Interview Script — 45 Minutes</div>
+<div class="sdesc">A timed walkthrough: what to say and when.</div>
+
+<div class="timeline">
+  <div class="timeline-item">
+    <div class="timeline-time">0–5 min · Scope</div>
+    <div class="timeline-title">Frame the stakes</div>
+    <div class="timeline-desc">"A bad handoff means the customer repeats everything to a human — the worst experience. So this is about zero context loss and fast, smart routing. It's essentially a ride-hailing matching problem: escalation requests are demand, available agents are supply."</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">5–10 min · Requirements + math</div>
+    <div class="timeline-title">Size it</div>
+    <div class="timeline-desc">50K agents, 1000 concurrent handoffs, ~17 routing decisions/sec, 5K heartbeats/sec. Emphasize the 99.99% availability requirement on the escalation path — this is the differentiator.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">10–20 min · Architecture</div>
+    <div class="timeline-title">Trigger → Context → Route → Queue → Transfer</div>
+    <div class="timeline-desc">Walk the pipeline. Highlight the two halves: detection/routing (left) and queue/transfer execution (right), with the Redis agent-state store in the middle.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">20–35 min · Deep dive</div>
+    <div class="timeline-title">Routing algorithm + context assembly</div>
+    <div class="timeline-desc">The scoring function (skill × availability × load × performance), Redis sorted sets for availability, atomic reservation via Lua to prevent double-booking. Then context assembly with the 20KB budget and prioritization.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">35–43 min · Failure &amp; scale</div>
+    <div class="timeline-title">Degrade quality, never availability</div>
+    <div class="timeline-desc">Mid-transfer failures, no-agent fallback (callback), router-down round-robin, partial-context transfer. State the guiding principle explicitly.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">43–45 min · Wrap</div>
+    <div class="timeline-title">Summarize + trade-offs</div>
+    <div class="timeline-desc">"Demand/supply matching, Redis-backed agent state, weighted routing with atomic reservation, and a failure philosophy of degrading quality but never availability. With more time I'd detail multi-region overflow and the supervisor takeover flow."</div>
+  </div>
+</div>
 </div>
 
 <!-- Section 13: Your Experience -->
 <div id="tab-experience" class="sec">
 <div class="stitle">Your Experience</div>
-<div class="sdesc">How to connect this design to your personal engineering background.</div>
-<p>Content coming soon.</p>
+<div class="sdesc">Connecting your background to this design.</div>
+
+<div class="note">
+  <div class="notel">17Live — Push Notification Routing (Pub/Sub)</div>
+  <p>You redesigned notification delivery to route messages to the right recipients with delivery guarantees. <strong>Talking point:</strong> "Routing escalations to the right agent is the same problem as routing notifications to the right subscriber — matching, delivery guarantees, and verifying it actually arrived. I built per-stage monitoring to confirm end-to-end delivery, which maps to tracking a handoff through its state machine."</p>
+</div>
+
+<div class="note">
+  <div class="notel">17Live — MongoDB Sharding (5M Followers)</div>
+  <p>You sharded a system to handle 5M+ followers with automatic scaling. <strong>Talking point:</strong> "Managing 50K agents' state with heartbeats at 5K writes/sec is a similar state-at-scale problem. Sharding by skill group mirrors how I sharded by follower partition — keep related state together, scale horizontally."</p>
+</div>
+
+<div class="note">
+  <div class="notel">17Live — Goroutine Pool (Concurrency Control)</div>
+  <p>You fixed an OOM by capping concurrency with a bounded worker pool. <strong>Talking point:</strong> "Preventing double-booking an agent is a concurrency problem — two routers must not reserve the same agent. I'd solve it with atomic Redis operations (Lua), the same rigor I applied to bounding goroutines under high QPS."</p>
+</div>
+
+<div class="note">
+  <div class="notel">Amazon — SQS/SNS Queue Patterns</div>
+  <p>You worked with SQS/SNS for messaging. <strong>Talking point:</strong> "Priority queues, dead-letter handling, visibility timeouts — these SQS concepts map directly to the handoff queue design. A handoff that isn't accepted in time is like a message that returns to the queue after visibility timeout."</p>
+</div>
 </div>
 
 <!-- Section 14: Pitfalls & Follow-ups -->
 <div id="tab-pitfalls" class="sec">
 <div class="stitle">Pitfalls &amp; Follow-ups</div>
-<div class="sdesc">Common mistakes candidates make and likely follow-up questions from interviewers.</div>
-<p>Content coming soon.</p>
+<div class="sdesc">Mistakes to avoid and how to answer the hard questions.</div>
+
+<h3 class="sub">Common Pitfalls</h3>
+<div class="trap">
+  <div class="trapl">Pitfall 1 — No-transfer over partial-transfer</div>
+  <p>Blocking the handoff until full context is assembled. If context assembly is slow, transfer anyway with partial context — a human asking one clarifying question beats the customer waiting in silence.</p>
+</div>
+<div class="trap">
+  <div class="trapl">Pitfall 2 — Double-booking agents</div>
+  <p>Two routers selecting the same idle agent simultaneously. You need atomic reservation (Redis Lua / transaction), not a read-then-write race.</p>
+</div>
+<div class="trap">
+  <div class="trapl">Pitfall 3 — Over-engineering the routing score</div>
+  <p>A 12-factor ML-driven routing model when skill + availability + load + performance covers 95% of cases. Start simple, add factors only when data shows they matter.</p>
+</div>
+<div class="trap">
+  <div class="trapl">Pitfall 4 — Treating escalation path like normal traffic</div>
+  <p>Giving the handoff system the same reliability budget as the AI agent. The escalation path is where angry customers are — it needs the highest availability tier.</p>
+</div>
+
+<h3 class="sub">Likely Follow-up Questions</h3>
+<div class="card">
+  <div class="ch" onclick="toggle(this)"><span class="ct">Q: How do you prevent double-booking an agent?</span><span class="chv">▶</span></div>
+  <div class="cb"><p>Atomic reservation. When the router selects an agent, it runs a Redis Lua script that checks availability AND marks them reserved in one atomic operation. If two routers race, only one succeeds; the other re-routes. Never read-then-write separately.</p></div>
+</div>
+<div class="card">
+  <div class="ch" onclick="toggle(this)"><span class="ct">Q: What if no agent has the required skill?</span><span class="chv">▶</span></div>
+  <div class="cb"><p>Tiered fallback: (1) expand to secondary/related skills, (2) offer callback with ETA, (3) last resort route to any available agent. Partial skill match plus context beats an infinite wait. Track how often this happens — it signals a staffing gap.</p></div>
+</div>
+<div class="card">
+  <div class="ch" onclick="toggle(this)"><span class="ct">Q: The connection drops mid-transfer — now what?</span><span class="chv">▶</span></div>
+  <div class="cb"><p>The state machine enters RECOVERING. The assembled context is held (never discarded). Immediately re-offer to the next best agent with a "reconnecting" message to the customer. The customer keeps their place; only the connection is rebuilt.</p></div>
+</div>
+<div class="card">
+  <div class="ch" onclick="toggle(this)"><span class="ct">Q: How big is the context payload, and what if it's too big?</span><span class="chv">▶</span></div>
+  <div class="cb"><p>Target under 20KB. If over budget, prioritize: keep the summary, intent, and entities; drop the full transcript and KB articles first. The human needs the gist, not every word — and can pull full history on demand from the conversation store.</p></div>
+</div>
+<div class="card">
+  <div class="ch" onclick="toggle(this)"><span class="ct">Q: Cold vs warm vs conference transfer — when?</span><span class="chv">▶</span></div>
+  <div class="cb"><p>Warm is the default — the AI introduces the human, setting expectations and reducing friction. Cold for simple low-stakes queries. Conference (AI stays to brief live) for complex context or VIP customers where a smooth handoff justifies the extra overlap.</p></div>
+</div>
 </div>
 
 </div><!-- end #main -->
