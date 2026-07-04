@@ -494,36 +494,82 @@ a.lc:hover { text-decoration: underline; color: var(--blue-d); }
 
 <h3 class="sub">Architecture Diagram</h3>
 
-<pre class="codeblock">
-    Phone/SIP                            Agent Browser
-        |                                     ^
-        v                                     |
-  +------------------+              +-------------------+
-  |  Audio Gateway   |              | WebSocket Gateway |
-  |  (Protocol Norm) |              | (Push to Agent)   |
-  +--------+---------+              +---------+---------+
-           |                                  ^
-           v                                  |
-  +------------------+              +-------------------+
-  |   STT Service    |              |  Post-Processor   |
-  |  [BLACK BOX]     |              |  (Rank, Dedup,    |
-  |  Audio -> Text   |              |   Format)         |
-  +--------+---------+              +---------+---------+
-           |                                  ^
-           v                                  |
-  +------------------+              +-------------------+
-  | NLP Pipeline     |              | Suggestion Engine |
-  | (Intent, Entity, |  -------->  | [BLACK BOX ML]    |
-  |  Context Assembly)|             | (Generate Recs)   |
-  +--------+---------+              +-------------------+
-           |
-           v
-  +----------------------------------------------+
-  |          Session Manager (Redis)             |
-  |  Conversation state, context, transcript     |
-  |  Reads/writes from ALL components above      |
-  +----------------------------------------------+
-</pre>
+<div style="overflow-x:auto; margin:14px 0;">
+<svg width="760" height="440" viewBox="0 0 760 440" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,sans-serif; max-width:100%; height:auto;">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#64748b"/>
+    </marker>
+    <style>
+      .box{fill:#fff;stroke:#cbd5e1;stroke-width:1.5;rx:8;}
+      .bb{fill:#fef3c7;stroke:#d97706;stroke-width:1.5;}
+      .redis{fill:#ede9fe;stroke:#7c3aed;stroke-width:1.5;}
+      .lbl{font-size:12px;font-weight:600;fill:#0f172a;}
+      .sub{font-size:10px;fill:#64748b;}
+      .tag{font-size:9px;font-weight:700;fill:#d97706;}
+      .flow{stroke:#64748b;stroke-width:1.5;fill:none;}
+    </style>
+  </defs>
+
+  <!-- Endpoints -->
+  <text x="90" y="24" class="lbl" text-anchor="middle">📞 Phone / SIP</text>
+  <text x="670" y="24" class="lbl" text-anchor="middle">💻 Agent Browser</text>
+
+  <!-- INBOUND column (left) -->
+  <rect class="box" x="20" y="40" width="150" height="52" rx="8"/>
+  <text x="95" y="62" class="lbl" text-anchor="middle">Audio Gateway</text>
+  <text x="95" y="78" class="sub" text-anchor="middle">Protocol Norm.</text>
+
+  <rect class="box bb" x="20" y="140" width="150" height="60" rx="8"/>
+  <text x="95" y="160" class="tag" text-anchor="middle">BLACK BOX</text>
+  <text x="95" y="176" class="lbl" text-anchor="middle">STT Service</text>
+  <text x="95" y="191" class="sub" text-anchor="middle">Audio → Text</text>
+
+  <rect class="box" x="20" y="248" width="150" height="60" rx="8"/>
+  <text x="95" y="268" class="lbl" text-anchor="middle">NLP Pipeline</text>
+  <text x="95" y="283" class="sub" text-anchor="middle">Intent, Entity,</text>
+  <text x="95" y="297" class="sub" text-anchor="middle">Context Assembly</text>
+
+  <!-- OUTBOUND column (right) -->
+  <rect class="box" x="590" y="40" width="150" height="52" rx="8"/>
+  <text x="665" y="62" class="lbl" text-anchor="middle">WebSocket GW</text>
+  <text x="665" y="78" class="sub" text-anchor="middle">Push to Agent</text>
+
+  <rect class="box" x="590" y="140" width="150" height="60" rx="8"/>
+  <text x="665" y="164" class="lbl" text-anchor="middle">Post-Processor</text>
+  <text x="665" y="179" class="sub" text-anchor="middle">Rank, Dedup,</text>
+  <text x="665" y="193" class="sub" text-anchor="middle">Format</text>
+
+  <rect class="box bb" x="590" y="248" width="150" height="60" rx="8"/>
+  <text x="665" y="268" class="tag" text-anchor="middle">BLACK BOX ML</text>
+  <text x="665" y="284" class="lbl" text-anchor="middle">Suggestion Engine</text>
+  <text x="665" y="299" class="sub" text-anchor="middle">Generate Recs</text>
+
+  <!-- Session Manager (bottom center) -->
+  <rect class="box redis" x="230" y="360" width="300" height="60" rx="8"/>
+  <text x="380" y="382" class="lbl" text-anchor="middle">Session Manager (Redis)</text>
+  <text x="380" y="398" class="sub" text-anchor="middle">Conversation state · context · transcript</text>
+  <text x="380" y="412" class="sub" text-anchor="middle">Read/write from ALL components</text>
+
+  <!-- Inbound flow arrows -->
+  <line class="flow" x1="90" y1="24" x2="95" y2="40" marker-end="url(#arr)"/>
+  <line class="flow" x1="95" y1="92" x2="95" y2="140" marker-end="url(#arr)"/>
+  <line class="flow" x1="95" y1="200" x2="95" y2="248" marker-end="url(#arr)"/>
+
+  <!-- Cross flow: NLP -> Suggestion Engine -->
+  <line class="flow" x1="170" y1="278" x2="590" y2="278" marker-end="url(#arr)"/>
+  <text x="380" y="270" class="sub" text-anchor="middle">assemble ML request</text>
+
+  <!-- Outbound flow arrows -->
+  <line class="flow" x1="665" y1="248" x2="665" y2="200" marker-end="url(#arr)"/>
+  <line class="flow" x1="665" y1="140" x2="665" y2="92" marker-end="url(#arr)"/>
+  <line class="flow" x1="665" y1="40" x2="665" y2="24" marker-end="url(#arr)"/>
+
+  <!-- Session manager connectors (dashed) -->
+  <line class="flow" style="stroke-dasharray:4 3;stroke:#a78bfa" x1="170" y1="290" x2="230" y2="380"/>
+  <line class="flow" style="stroke-dasharray:4 3;stroke:#a78bfa" x1="590" y1="290" x2="530" y2="380"/>
+</svg>
+</div>
 
 <h3 class="sub">Component Inventory</h3>
 
@@ -1244,50 +1290,291 @@ func (gw *WSGateway) HandleReconnect(sessionID, lastMsgID string) {
 <!-- Section 8: Database & Storage -->
 <div id="tab-database" class="sec">
 <div class="stitle">Database &amp; Storage Design</div>
-<div class="sdesc">Persistent storage for transcripts, analytics, and session archives.</div>
-<p>Content coming soon.</p>
+<div class="sdesc">Where each type of data lives — hot session state vs cold archives.</div>
+
+<h3 class="sub">Storage Tiers</h3>
+<p>Agent Assist has four distinct data-access patterns, each needing a different store. The classic mistake is putting everything in one database. Match the store to the access pattern.</p>
+
+<table class="tbl">
+<tr><th>Data</th><th>Store</th><th>Access Pattern</th><th>Why</th></tr>
+<tr><td>Live session state</td><td>Redis</td><td>Read/write every few seconds, 10K concurrent</td><td>Sub-ms latency, TTL-based cleanup</td></tr>
+<tr><td>Conversation history</td><td>PostgreSQL</td><td>Write once at session end, query for reports</td><td>Relational queries, durability</td></tr>
+<tr><td>Searchable transcripts</td><td>Elasticsearch</td><td>Full-text search across past calls</td><td>"Find all calls mentioning refund"</td></tr>
+<tr><td>Raw audio</td><td>S3 / object store</td><td>Write once, rarely read (compliance/audit)</td><td>Cheap, immutable, lifecycle policies</td></tr>
+</table>
+
+<h3 class="sub">The Lifecycle of Session Data</h3>
+<div class="timeline">
+  <div class="timeline-item">
+    <div class="timeline-time">During call</div>
+    <div class="timeline-title">Redis (hot)</div>
+    <div class="timeline-desc">Session state, sliding transcript window, recent suggestions — all in Redis for sub-ms access by every pipeline component.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">Call ends</div>
+    <div class="timeline-title">Flush to PostgreSQL + S3</div>
+    <div class="timeline-desc">Full transcript written to Postgres, raw audio archived to S3, searchable copy indexed into Elasticsearch. Redis entry gets a 30-min TTL then evicts.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">Later</div>
+    <div class="timeline-title">Analytics &amp; compliance</div>
+    <div class="timeline-desc">Postgres serves scorecards and reports; Elasticsearch serves search; S3 serves audit/compliance retrieval. Audio auto-deletes per tenant retention policy.</div>
+  </div>
+</div>
+
+<h3 class="sub">PostgreSQL Schema (Conversation Archive)</h3>
+<pre class="codeblock">CREATE TABLE conversations (
+    id            UUID PRIMARY KEY,
+    tenant_id     UUID NOT NULL,
+    agent_id      UUID NOT NULL,
+    customer_id   VARCHAR(255),
+    started_at    TIMESTAMPTZ NOT NULL,
+    ended_at      TIMESTAMPTZ,
+    duration_sec  INT,
+    channel       VARCHAR(20),        -- 'voice' | 'chat'
+    audio_s3_key  VARCHAR(512),       -- pointer to raw audio in S3
+    created_at    TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX idx_conv_tenant_time ON conversations(tenant_id, started_at DESC);
+
+CREATE TABLE suggestions_shown (
+    id              UUID PRIMARY KEY,
+    conversation_id UUID REFERENCES conversations(id),
+    suggestion_text TEXT,
+    category        VARCHAR(50),
+    confidence      REAL,
+    shown_at        TIMESTAMPTZ,
+    was_accepted    BOOLEAN            -- did the agent use it? (feedback loop)
+);</pre>
+
+<div class="ins">
+  <div class="insl">The Feedback Loop Angle</div>
+  <p>Storing <code>was_accepted</code> on every suggestion is gold — it becomes the training signal that improves the ML model over time. Mention this: your storage design isn't just for archival, it closes the loop that makes suggestions better.</p>
+</div>
 </div>
 
 <!-- Section 9: API Design -->
 <div id="tab-api" class="sec">
 <div class="stitle">API Design</div>
-<div class="sdesc">REST and gRPC APIs for session management, configuration, and analytics.</div>
-<p>Content coming soon.</p>
+<div class="sdesc">REST for management, WebSocket for real-time delivery, gRPC for internal calls.</div>
+
+<h3 class="sub">Three Protocols, Three Jobs</h3>
+<table class="tbl">
+<tr><th>Protocol</th><th>Used For</th><th>Why</th></tr>
+<tr><td>REST</td><td>Session CRUD, config, analytics queries</td><td>Simple, cacheable, standard tooling</td></tr>
+<tr><td>WebSocket</td><td>Pushing suggestions to agent UI</td><td>Server-initiated, persistent, low overhead</td></tr>
+<tr><td>gRPC</td><td>Internal service-to-service (NLP → ML)</td><td>Binary, streaming, low latency</td></tr>
+</table>
+
+<h3 class="sub">REST — Session Management</h3>
+<pre class="codeblock">POST /v1/sessions
+  { "tenant_id": "t_123", "agent_id": "a_456", "channel": "voice" }
+  → 201 { "session_id": "sess_abc", "ws_url": "wss://.../ws/sess_abc" }
+
+GET /v1/sessions/{id}
+  → 200 { "session_id": "sess_abc", "status": "active", "started_at": "...",
+          "suggestions_count": 12, "current_intent": "billing_dispute" }
+
+PATCH /v1/sessions/{id}
+  { "status": "closed" }
+  → 200  (triggers flush to Postgres/S3)
+
+GET /v1/analytics/agents/{id}/summary?from=2026-07-01&to=2026-07-04
+  → 200 { "calls": 84, "avg_handle_time": 312, "suggestion_accept_rate": 0.67 }</pre>
+
+<h3 class="sub">WebSocket — Real-time Delivery</h3>
+<p>The agent's browser opens one WebSocket per session. The server pushes typed messages; the client sends feedback (accepted/dismissed). Message envelope:</p>
+<pre class="codeblock">// All messages share a "type" discriminator
+{ "type": "suggestion",  "session_id": "sess_abc", "payload": { ... } }
+{ "type": "transcript",  "session_id": "sess_abc", "payload": { ... } }
+{ "type": "alert",       "session_id": "sess_abc", "payload": { ... } }  // compliance
+{ "type": "heartbeat",   "ts": 1720000000 }
+
+// Client → Server (feedback)
+{ "type": "feedback", "suggestion_id": "sug_1", "action": "accepted" }</pre>
+
+<h3 class="sub">gRPC — Internal ML Calls</h3>
+<div class="tip">
+  <div class="tipl">Why gRPC Internally, REST Externally</div>
+  <p>gRPC's binary protobuf + HTTP/2 multiplexing shaves precious milliseconds off the NLP→ML hop that sits in your 200ms budget. But externally, REST/WebSocket is what browsers and integration partners expect. Use the right tool per boundary — a common senior signal.</p>
+</div>
 </div>
 
 <!-- Section 10: Caching & Performance -->
 <div id="tab-caching" class="sec">
 <div class="stitle">Caching &amp; Performance</div>
-<div class="sdesc">Multi-layer caching strategy for ML responses, tenant configs, and session state.</div>
-<p>Content coming soon.</p>
+<div class="sdesc">Where caching buys you latency, and where it's a trap.</div>
+
+<h3 class="sub">What to Cache</h3>
+<table class="tbl">
+<tr><th>Cached Item</th><th>TTL</th><th>Hit Benefit</th></tr>
+<tr><td>Tenant config (models, rules, thresholds)</td><td>5 min</td><td>Avoids DB lookup on every request</td></tr>
+<tr><td>Knowledge-base snippets</td><td>1 hour</td><td>Popular answers served instantly</td></tr>
+<tr><td>Agent profile / skills</td><td>10 min</td><td>Routing decisions without DB hit</td></tr>
+<tr><td>Recent suggestions (per session)</td><td>session life</td><td>Dedup + fallback when ML is slow</td></tr>
+</table>
+
+<h3 class="sub">The Suggestion Cache = Your Fallback</h3>
+<p>Caching recent suggestions per session isn't just for speed — it's the graceful-degradation safety net. If the ML service times out at 50ms, serve the last relevant cached suggestion for this intent rather than showing the agent nothing.</p>
+
+<div class="warn">
+  <div class="warnl">Don't Cache the Wrong Thing</div>
+  <p>Never cache the <em>final suggestion→conversation mapping</em> across sessions. Two customers with the same intent may need different answers based on account state, history, and context. Cache the building blocks (KB snippets, configs), not the personalized output.</p>
+</div>
+
+<h3 class="sub">Performance Levers</h3>
+<ul class="content-list">
+  <li><strong>Parallel where possible:</strong> the pipeline is mostly sequential, but context fetch + KB lookup can run concurrently with the STT partial</li>
+  <li><strong>Connection pooling:</strong> reuse gRPC connections to ML services (handshake cost is real)</li>
+  <li><strong>Redis pipelining:</strong> batch session reads/writes into one round-trip</li>
+  <li><strong>Protobuf over JSON internally:</strong> smaller payloads, faster parse</li>
+</ul>
 </div>
 
 <!-- Section 11: Scaling & Reliability -->
 <div id="tab-scaling" class="sec">
 <div class="stitle">Scaling &amp; Reliability</div>
-<div class="sdesc">Horizontal scaling, fault tolerance, and multi-region deployment strategies.</div>
-<p>Content coming soon.</p>
+<div class="sdesc">Scaling each component independently and surviving component failures.</div>
+
+<h3 class="sub">Scaling Each Component</h3>
+<table class="tbl">
+<tr><th>Component</th><th>Scaling Strategy</th><th>Bottleneck</th></tr>
+<tr><td>Audio Gateway</td><td>Horizontal, stateless, LB by session</td><td>Network I/O</td></tr>
+<tr><td>WebSocket Gateway</td><td>Horizontal; ~5K conns/node</td><td>Open connections / memory</td></tr>
+<tr><td>NLP Pipeline</td><td>Horizontal, stateless workers</td><td>ML service throughput</td></tr>
+<tr><td>Session Manager (Redis)</td><td>Redis Cluster, shard by session_id</td><td>Memory, hot keys</td></tr>
+<tr><td>ML Suggestion Engine</td><td>ML team's concern; you set timeouts</td><td>GPU inference capacity</td></tr>
+</table>
+
+<h3 class="sub">Failure Modes &amp; Responses</h3>
+<div class="g2">
+  <div class="skill-box">
+    <h4>STT is slow / down</h4>
+    <ul><li>Timeout at budget (50ms)</li><li>Fall back to last partial transcript</li><li>Agent still hears the call — assist is degraded, not the call</li></ul>
+  </div>
+  <div class="skill-box">
+    <h4>ML Suggestion Engine down</h4>
+    <ul><li>Circuit breaker opens after N failures</li><li>Serve cached suggestions for the intent</li><li>Silently degrade — never block the agent</li></ul>
+  </div>
+  <div class="skill-box">
+    <h4>Redis node fails</h4>
+    <ul><li>Redis Cluster fails over to replica</li><li>Sessions on that shard briefly reconstruct from transcript stream</li><li>Worst case: lose recent context, not the whole session</li></ul>
+  </div>
+  <div class="skill-box">
+    <h4>WebSocket disconnects</h4>
+    <ul><li>Client auto-reconnects with session_id</li><li>Server replays missed suggestions from cache</li><li>Heartbeat detects dead conns in 90s</li></ul>
+  </div>
+</div>
+
+<div class="trap">
+  <div class="trapl">The Golden Rule</div>
+  <p>Agent Assist failing must NEVER degrade the actual customer call. The call runs on the phone/CCaaS infrastructure; assist is an overlay. If everything in your system dies, the agent simply loses their AI helper — the customer never knows. Design every failure path around this principle.</p>
+</div>
 </div>
 
 <!-- Section 12: Interview Script -->
 <div id="tab-script" class="sec">
-<div class="stitle">Interview Script</div>
-<div class="sdesc">Complete 45-minute interview walkthrough with timing and talking points.</div>
-<p>Content coming soon.</p>
+<div class="stitle">Interview Script — 45 Minutes</div>
+<div class="sdesc">A timed walkthrough: what to say and when.</div>
+
+<div class="timeline">
+  <div class="timeline-item">
+    <div class="timeline-time">0–5 min · Scope</div>
+    <div class="timeline-title">Clarify &amp; frame</div>
+    <div class="timeline-desc">"Let me confirm scope: real-time suggestions to human agents during live calls, voice + chat, 10K concurrent, sub-200ms. Should I include the supervisor dashboard, or focus on the core assist pipeline?" — then state the black-box boundary up front.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">5–10 min · Requirements</div>
+    <div class="timeline-title">Functional + non-functional + scale math</div>
+    <div class="timeline-desc">List P0 functional reqs, state the 200ms/99.9% NFRs, then do the capacity math (20K streams, 640MB/s, 1K suggestions/sec, 100MB Redis). Land the point: "the bottleneck is latency through a sequential ML pipeline, not throughput."</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">10–20 min · High-level design</div>
+    <div class="timeline-title">Draw the architecture + latency budget</div>
+    <div class="timeline-desc">Sketch inbound (Audio→STT→NLP) and outbound (ML→Post-process→WebSocket) with Session Manager in the middle. Walk the 200ms budget stage by stage. Mark black boxes explicitly.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">20–35 min · Deep dive</div>
+    <div class="timeline-title">Session Manager + graceful degradation</div>
+    <div class="timeline-desc">This is where you win. Show the Redis data model, sliding context window, atomic updates via Lua. Then pivot to failure handling: timeouts, circuit breakers, cached-suggestion fallback. State the golden rule (assist never breaks the call).</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">35–43 min · Scale &amp; follow-ups</div>
+    <div class="timeline-title">Bottlenecks + trade-offs</div>
+    <div class="timeline-desc">Discuss WebSocket connection scaling, Redis sharding, multi-tenancy. Answer follow-ups on consistency, hot keys, ML latency spikes.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">43–45 min · Wrap</div>
+    <div class="timeline-title">Summarize + acknowledge trade-offs</div>
+    <div class="timeline-desc">"To summarize: event-driven pipeline, Redis-backed session state, strict latency budget with graceful degradation. If I had more time I'd detail the feedback loop for model improvement and multi-region failover."</div>
+  </div>
+</div>
+
+<div class="iq">"I'd start by confirming scope and the black-box boundary, then size the system to find the real bottleneck — which here is latency, not throughput. My deep dive would be the Session Manager and the graceful-degradation story, because in real-time assist, how you fail matters more than how you succeed."</div>
 </div>
 
 <!-- Section 13: Your Experience -->
 <div id="tab-experience" class="sec">
 <div class="stitle">Your Experience</div>
-<div class="sdesc">How to connect this design to your personal engineering background.</div>
-<p>Content coming soon.</p>
+<div class="sdesc">Connecting your background to this design — specific talking points.</div>
+
+<div class="note">
+  <div class="notel">17Live — Push Notification Redesign (Pub/Sub)</div>
+  <p>You replaced unreliable K8s inter-pod routing with Google Pub/Sub for distributed message delivery. <strong>Talking point:</strong> "This is the same fan-out problem — routing real-time messages to the right recipient with delivery guarantees. I built per-stage monitoring to verify end-to-end delivery, which maps directly to tracking suggestion delivery through this pipeline."</p>
+</div>
+
+<div class="note">
+  <div class="notel">17Live — Goroutine Pool OOM Fix</div>
+  <p>You traced a recurring OOM to unbounded goroutine spawning under high QPS and fixed it with a bounded worker pool. <strong>Talking point:</strong> "Managing 10K concurrent WebSocket connections is exactly this problem — unbounded per-connection goroutines will OOM you. I'd cap concurrency with a worker pool, which I've done in production for a service handling 70% of company revenue."</p>
+</div>
+
+<div class="note">
+  <div class="notel">17Live — API Throughput 700%</div>
+  <p>You boosted throughput 700% by deferring non-critical writes to async background jobs. <strong>Talking point:</strong> "The same async pattern applies here — the suggestion feedback write and analytics logging shouldn't block the real-time path. Keep the hot path synchronous, defer everything else."</p>
+</div>
+
+<div class="note">
+  <div class="notel">Amazon — ECS/Fargate + Redis</div>
+  <p>You migrated systems to ECS Fargate and have production Redis experience. <strong>Talking point:</strong> "Stateless components like the NLP pipeline and post-processor are ideal Fargate workloads with autoscaling on connection count. For session state, I've tuned Redis in production — TTLs, memory management, data-format choices to cut footprint."</p>
+</div>
 </div>
 
 <!-- Section 14: Pitfalls & Follow-ups -->
 <div id="tab-pitfalls" class="sec">
 <div class="stitle">Pitfalls &amp; Follow-ups</div>
-<div class="sdesc">Common mistakes candidates make and likely follow-up questions from interviewers.</div>
-<p>Content coming soon.</p>
+<div class="sdesc">Mistakes to avoid and how to answer the hard questions.</div>
+
+<h3 class="sub">Common Pitfalls</h3>
+<div class="trap">
+  <div class="trapl">Pitfall 1 — Designing the ML model</div>
+  <p>Candidates waste time discussing NLP model architecture. That's the ML team's job. Say "the suggestion engine is a black box with a defined gRPC contract" and move on to orchestration.</p>
+</div>
+<div class="trap">
+  <div class="trapl">Pitfall 2 — Ignoring graceful degradation</div>
+  <p>Only designing the happy path. The interviewer WILL ask "what if the ML service is slow?" Have the timeout + cached-fallback answer ready before they ask.</p>
+</div>
+<div class="trap">
+  <div class="trapl">Pitfall 3 — One database for everything</div>
+  <p>Putting live session state in PostgreSQL. Hot, high-frequency session state belongs in Redis; Postgres is for the archive. Match store to access pattern.</p>
+</div>
+
+<h3 class="sub">Likely Follow-up Questions</h3>
+<div class="card">
+  <div class="ch" onclick="toggle(this)"><span class="ct">Q: What if ML latency spikes to 500ms?</span><span class="chv">▶</span></div>
+  <div class="cb"><p>Timeout at the 50ms budget. Return the best cached suggestion for the current intent (last successful one). Show stale rather than nothing. Emit a metric so P99 drift triggers an alert and possibly autoscaling on the ML side.</p></div>
+</div>
+<div class="card">
+  <div class="ch" onclick="toggle(this)"><span class="ct">Q: How do you handle agent disconnection mid-call?</span><span class="chv">▶</span></div>
+  <div class="cb"><p>Session state lives in Redis, independent of the WebSocket connection. On reconnect (same session_id), replay the last N suggestions from cache. The session survives the connection dying.</p></div>
+</div>
+<div class="card">
+  <div class="ch" onclick="toggle(this)"><span class="ct">Q: How do you A/B test suggestion models?</span><span class="chv">▶</span></div>
+  <div class="cb"><p>Route at the <em>session</em> level, not request level, for consistency within a call. Tag each session with an experiment variant in the Session Manager; the post-processor routes to model A or B by tag. Track acceptance rate per variant.</p></div>
+</div>
+<div class="card">
+  <div class="ch" onclick="toggle(this)"><span class="ct">Q: How do you prevent cross-tenant data leakage?</span><span class="chv">▶</span></div>
+  <div class="cb"><p>tenant_id is a mandatory filter on every query and Redis key namespace (<code>t_{tenant}:sess:{id}</code>). ML routing selects the tenant's model endpoint. For strict isolation, separate Redis logical DBs or clusters per large tenant.</p></div>
+</div>
 </div>
 
 </div><!-- end #main -->
