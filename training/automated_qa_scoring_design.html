@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Automated QA Scoring — System Design</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8fafc; --bg2: #ffffff; --bg3: #f1f5f9; --bg4: #e2e8f0;
+  --border: #cbd5e1; --text: #0f172a; --text2: #334155; --text3: #64748b;
+  --blue: #2563eb; --blue-l: #dbeafe; --blue-d: #1d4ed8;
+  --green: #16a34a; --green-l: #dcfce7; --yellow: #d97706; --yellow-l: #fef3c7;
+  --red: #dc2626; --red-l: #fee2e2; --purple: #7c3aed; --purple-l: #ede9fe;
+  --orange: #ea580c; --orange-l: #ffedd5; --teal: #0d9488; --teal-l: #ccfbf1;
+  --sw: 270px; --r: 12px; --shadow: 0 4px 20px rgba(0,0,0,0.06); --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.7; min-height: 100vh; }
+#sb { width: var(--sw); background: #fff; border-right: 1px solid var(--border); position: fixed; top: 0; left: 0; bottom: 0; overflow-y: auto; z-index: 100; transition: width .3s ease; }
+#sb::-webkit-scrollbar { width: 4px; }
+#sb::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 2px; }
+.sbh { padding: 20px 16px 14px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: #fff; z-index: 1; }
+.sbt { font-size: 13px; font-weight: 700; color: var(--blue-d); text-transform: uppercase; letter-spacing: 1px; }
+.sbs { font-size: 11px; color: var(--text3); margin-top: 3px; }
+.ng { padding: 12px 8px 0; }
+.ngl { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; padding: 0 8px 6px; }
+.ni { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 13px; color: var(--text2); transition: all .15s; border: none; background: none; width: 100%; text-align: left; }
+.ni:hover { background: var(--bg3); color: var(--text); }
+.ni.active { background: var(--blue-l); color: var(--blue-d); font-weight: 600; }
+.ni-icon { font-size: 15px; flex-shrink: 0; width: 20px; text-align: center; }
+.ni-text { flex: 1; font-size: 12px; }
+.badge { margin-left: auto; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 8px; }
+.bh { background: var(--red-l); color: var(--red); }
+.bg { background: var(--green-l); color: var(--green); }
+.bp { background: var(--purple-l); color: var(--purple); }
+.bt { background: var(--teal-l); color: var(--teal); }
+.bo { background: var(--orange-l); color: var(--orange); }
+#main { position: fixed; top: 0; right: 0; bottom: 0; left: var(--sw); overflow-y: auto; background: var(--bg); }
+.ph { background: linear-gradient(135deg, #1e3a5f 0%, #1e40af 40%, #3b82f6 100%); padding: 40px 44px; }
+.htag { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.6); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+.ht { font-size: 32px; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 8px; }
+.ht span { color: #93c5fd; }
+.hd { color: rgba(255,255,255,0.8); font-size: 14px; max-width: 650px; }
+.hm { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.chip { font-size: 11px; color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 16px; }
+.chip b { color: #fff; }
+.sec { padding: 36px 44px; display: none; }
+.sec.active { display: block; }
+.stitle { font-size: 24px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.sdesc { color: var(--text3); margin-bottom: 24px; font-size: 13px; }
+.card { background: #fff; border-radius: var(--r); margin-bottom: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); overflow: hidden; }
+.ch { padding: 12px 16px; display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; transition: background .15s; }
+.ch:hover { background: var(--bg3); }
+.ct { font-size: 14px; font-weight: 600; color: var(--text); flex: 1; }
+.chv { color: var(--text3); font-size: 11px; transition: transform .2s; }
+.chv.open { transform: rotate(90deg); }
+.cb { padding: 16px 18px; display: none; font-size: 13px; color: var(--text2); line-height: 1.7; border-top: 1px solid var(--bg3); }
+.cb.open { display: block; }
+.ins { background: var(--blue-l); border-left: 4px solid var(--blue); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.insl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--blue-d); margin-bottom: 4px; }
+.ins p { color: var(--text); font-size: 13px; }
+.tip { background: var(--green-l); border-left: 4px solid var(--green); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.tipl { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--green); margin-bottom: 4px; }
+.tip p { color: var(--text2); font-size: 13px; }
+.warn { background: var(--yellow-l); border-left: 4px solid var(--yellow); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.warnl { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--yellow); margin-bottom: 4px; }
+.warn p { color: var(--text2); font-size: 13px; }
+.trap { background: var(--red-l); border-left: 4px solid var(--red); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.trapl { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--red); margin-bottom: 4px; }
+.trap p { color: var(--text2); font-size: 13px; }
+.note { background: var(--purple-l); border-left: 4px solid var(--purple); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+.notel { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--purple); margin-bottom: 4px; }
+.note p { color: var(--text2); font-size: 13px; }
+.tbl { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13px; border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+.tbl th { background: var(--bg3); color: var(--text2); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+.tbl td { padding: 10px 14px; border-bottom: 1px solid var(--bg3); color: var(--text2); }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr:hover td { background: var(--bg); }
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 900px) { .g2 { grid-template-columns: 1fr; } }
+.iq { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #bae6fd; border-left: 4px solid var(--blue); border-radius: 8px; padding: 14px 18px; margin: 14px 0; font-style: italic; color: var(--text2); font-size: 13px; position: relative; }
+.iq::before { content: 'SAY THIS'; position: absolute; top: -8px; left: 14px; font-size: 9px; font-weight: 700; font-style: normal; background: var(--blue); color: #fff; padding: 1px 8px; border-radius: 4px; letter-spacing: 1px; }
+h3.sub { font-size: 17px; font-weight: 700; color: var(--text); margin: 28px 0 10px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+.skill-box { background: #fff; border: 1px solid var(--border); border-radius: var(--r); padding: 18px; margin: 10px 0; box-shadow: var(--shadow-sm); }
+.skill-box h4 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.skill-box ul { padding-left: 18px; font-size: 13px; color: var(--text2); }
+.skill-box li { margin-bottom: 4px; }
+.prog { display: flex; gap: 12px; margin: 16px 0; flex-wrap: wrap; }
+.pc { flex: 1; min-width: 120px; background: #fff; border: 1px solid var(--border); border-radius: var(--r); padding: 16px; box-shadow: var(--shadow-sm); text-align: center; }
+.pc .num { font-size: 28px; font-weight: 800; color: var(--blue-d); }
+.pc .lbl { font-size: 11px; color: var(--text3); margin-top: 2px; }
+code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: var(--bg3); padding: 1px 5px; border-radius: 4px; color: var(--blue-d); }
+pre.codeblock { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin: 12px 0; overflow-x: auto; line-height: 1.6; color: var(--text2); }
+.content-list { padding-left: 20px; margin: 8px 0; }
+.content-list li { margin-bottom: 6px; font-size: 13px; color: var(--text2); }
+.content-list li strong { color: var(--text); }
+.decision-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 14px 0; }
+.decision-item { background: #fff; border: 1px solid var(--border); border-radius: var(--r); padding: 14px; box-shadow: var(--shadow-sm); }
+.decision-item h5 { font-size: 13px; font-weight: 700; color: var(--blue-d); margin-bottom: 6px; }
+.decision-item p { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
+.decision-item .di-key { font-size: 10px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+.timeline { margin: 16px 0; padding-left: 20px; border-left: 3px solid var(--blue-l); }
+.timeline-item { margin-bottom: 16px; position: relative; padding-left: 16px; }
+.timeline-item::before { content: ''; position: absolute; left: -26px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--blue); border: 2px solid #fff; }
+.timeline-time { font-size: 11px; font-weight: 700; color: var(--blue-d); text-transform: uppercase; letter-spacing: .5px; }
+.timeline-title { font-size: 14px; font-weight: 600; color: var(--text); margin: 2px 0; }
+.timeline-desc { font-size: 12px; color: var(--text2); }
+@media (max-width: 768px) { #sb { width: 0; overflow: hidden; } #main { left: 0; } .sec { padding: 20px 16px; } .ph { padding: 24px 16px; } }
+</style>
+</head>
+<body>
+
+<nav id="sb">
+  <div class="sbh">
+    <div class="sbt">Automated QA Scoring</div>
+    <div class="sbs">100% Coverage &middot; Interview Prep</div>
+  </div>
+  <div class="ng"><div class="ngl">Foundations</div>
+    <button class="ni active" onclick="go('overview')"><span class="ni-icon">1</span><span class="ni-text">Overview</span><span class="badge bh">Start</span></button>
+    <button class="ni" onclick="go('requirements')"><span class="ni-icon">2</span><span class="ni-text">Requirements &amp; Scale</span><span class="badge bp">Critical</span></button>
+    <button class="ni" onclick="go('architecture')"><span class="ni-icon">3</span><span class="ni-text">High-Level Architecture</span><span class="badge bp">Core</span></button>
+  </div>
+  <div class="ng"><div class="ngl">Deep Dives</div>
+    <button class="ni" onclick="go('dimensions')"><span class="ni-icon">4</span><span class="ni-text">Scoring Dimensions</span><span class="badge bp">Critical</span></button>
+    <button class="ni" onclick="go('rules')"><span class="ni-icon">5</span><span class="ni-text">Rule Engine</span><span class="badge bh">Must Build</span></button>
+    <button class="ni" onclick="go('llm')"><span class="ni-icon">6</span><span class="ni-text">LLM-as-Judge</span><span class="badge bp">Core</span></button>
+    <button class="ni" onclick="go('aggregation')"><span class="ni-icon">7</span><span class="ni-text">Score Aggregation</span><span class="badge bt">Scorecards</span></button>
+  </div>
+  <div class="ng"><div class="ngl">Infrastructure</div>
+    <button class="ni" onclick="go('alerts')"><span class="ni-icon">8</span><span class="ni-text">Alerts &amp; Compliance</span></button>
+    <button class="ni" onclick="go('calibration')"><span class="ni-icon">9</span><span class="ni-text">Calibration &amp; Drift</span></button>
+    <button class="ni" onclick="go('storage')"><span class="ni-icon">10</span><span class="ni-text">Storage Design</span></button>
+    <button class="ni" onclick="go('scaling')"><span class="ni-icon">11</span><span class="ni-text">Scaling &amp; Cost</span></button>
+  </div>
+  <div class="ng"><div class="ngl">Execution</div>
+    <button class="ni" onclick="go('script')"><span class="ni-icon">12</span><span class="ni-text">Interview Script</span><span class="badge bg">45min</span></button>
+    <button class="ni" onclick="go('experience')"><span class="ni-icon">13</span><span class="ni-text">Your Experience</span><span class="badge bo">Personal</span></button>
+    <button class="ni" onclick="go('pitfalls')"><span class="ni-icon">14</span><span class="ni-text">Pitfalls &amp; Follow-ups</span><span class="badge bo">Avoid</span></button>
+  </div>
+</nav>
+
+<div id="main">
+
+<div class="ph">
+  <div class="htag">Contact Center AI &middot; System Design Interview</div>
+  <div class="ht">Automated QA <span>Scoring</span></div>
+  <div class="hd">Design a system that evaluates 100% of customer conversations for quality — compliance, tone, resolution, efficiency — replacing manual sampling of 2-5% of calls. Combines a deterministic rule engine with LLM-as-judge scoring, at 500K conversations per day.</div>
+  <div class="hm">
+    <div class="chip">Sections <b>14</b></div>
+    <div class="chip">Coverage <b>100%</b></div>
+    <div class="chip">Throughput <b>500K/day</b></div>
+    <div class="chip">Latency <b>&lt;5 min</b></div>
+  </div>
+</div>
+
+<!-- SECTION 1: OVERVIEW -->
+<div id="tab-overview" class="sec active">
+<div class="stitle">Automated QA Scoring Overview</div>
+<div class="sdesc">What it does, why it matters, and what interviewers evaluate.</div>
+
+<h3 class="sub">The Old Way vs The New Way</h3>
+<p>Traditionally, a QA manager listens to ~20 random calls per agent per month and scores them on a rubric. This means <strong>only 2-5% of conversations are ever reviewed</strong> — riddled with sampling bias, expensive in human hours, and feedback arrives weeks late.</p>
+<p>Automated QA scores <strong>every single conversation</strong> within minutes of it ending, across multiple quality dimensions. Every agent gets complete, timely, objective feedback.</p>
+
+<div class="ins">
+  <div class="insl">The Core Idea</div>
+  <p>This is <strong>test automation for human conversations</strong>. Just as CI runs assertions against every code commit, this system runs quality checks against every conversation — some deterministic (rules), some judgment-based (LLM-as-judge).</p>
+</div>
+
+<h3 class="sub">What Gets Scored</h3>
+<div class="skill-box">
+  <h4>Quality Dimensions</h4>
+  <ul>
+    <li><strong>Compliance:</strong> did the agent verify identity, read required disclosures?</li>
+    <li><strong>Tone:</strong> was the agent empathetic and professional?</li>
+    <li><strong>Resolution:</strong> was the customer's issue actually solved?</li>
+    <li><strong>Efficiency:</strong> unnecessary transfers, excessive hold time?</li>
+    <li><strong>Knowledge accuracy:</strong> did the agent give correct information?</li>
+  </ul>
+</div>
+
+<h3 class="sub">What Interviewers Evaluate</h3>
+<div class="decision-grid">
+  <div class="decision-item">
+    <h5>Rule vs ML Split</h5>
+    <p>Do you know when to use deterministic rules vs probabilistic ML scoring?</p>
+    <div class="di-key">Key: precision vs nuance</div>
+  </div>
+  <div class="decision-item">
+    <h5>Configurability</h5>
+    <p>Can non-engineers change scoring rules without a deploy?</p>
+    <div class="di-key">Key: config-driven rule engine</div>
+  </div>
+  <div class="decision-item">
+    <h5>LLM Integration</h5>
+    <p>How do you use LLMs as judges reliably and affordably?</p>
+    <div class="di-key">Key: batching, caching, calibration</div>
+  </div>
+  <div class="decision-item">
+    <h5>Cost at Scale</h5>
+    <p>500K conversations/day of LLM scoring — how do you not go bankrupt?</p>
+    <div class="di-key">Key: tiered scoring, caching</div>
+  </div>
+</div>
+
+<div class="iq">"I'll design QA scoring as two complementary systems: a deterministic rule engine for compliance — where I need auditable, zero-false-positive pass/fail — and LLM-as-judge scoring for soft dimensions like empathy. The rules protect the business; the ML coaches the agents. And I'll treat the ML models as black boxes, focusing on orchestration, configurability, and cost."</div>
+</div>
+
+<!-- SECTION 2: REQUIREMENTS & SCALE -->
+<div id="tab-requirements" class="sec">
+<div class="stitle">Requirements &amp; Scale</div>
+<div class="sdesc">Functional and non-functional requirements, plus capacity and cost math.</div>
+
+<h3 class="sub">Functional Requirements</h3>
+<table class="tbl">
+<tr><th>Requirement</th><th>Description</th><th>Priority</th></tr>
+<tr><td><strong>Score every conversation</strong></td><td>100% coverage across all quality dimensions</td><td>P0</td></tr>
+<tr><td><strong>Configurable rules</strong></td><td>Non-engineers add/edit rules without a code deploy</td><td>P0</td></tr>
+<tr><td><strong>Agent scorecards</strong></td><td>Aggregate scores into daily/weekly/monthly views</td><td>P0</td></tr>
+<tr><td><strong>Compliance alerts</strong></td><td>Real-time flags for critical violations</td><td>P0</td></tr>
+<tr><td><strong>Coaching recommendations</strong></td><td>Auto-generated improvement suggestions per agent</td><td>P1</td></tr>
+<tr><td><strong>Evidence &amp; audit</strong></td><td>Every score cites the transcript excerpt that produced it</td><td>P1</td></tr>
+</table>
+
+<h3 class="sub">Non-Functional Requirements</h3>
+<div class="g2">
+  <div class="skill-box">
+    <h4>Performance</h4>
+    <ul><li>Score within <strong>5 minutes</strong> of conversation end</li><li>Rule evaluation: &lt;50ms</li><li>ML scoring: 600-1500ms per conversation</li></ul>
+  </div>
+  <div class="skill-box">
+    <h4>Reliability</h4>
+    <ul><li>Zero missed compliance violations</li><li>Score-later-than-never: retry, don't drop</li><li>Auditable, immutable score records</li></ul>
+  </div>
+  <div class="skill-box">
+    <h4>Scale</h4>
+    <ul><li><strong>500K conversations/day</strong></li><li>Sustained ~6/sec, peaks ~20/sec</li><li>2-year score retention</li></ul>
+  </div>
+  <div class="skill-box">
+    <h4>Cost</h4>
+    <ul><li>LLM cost is the dominant expense</li><li>Must optimize aggressively (batch, cache, tier)</li></ul>
+  </div>
+</div>
+
+<h3 class="sub">Capacity &amp; Cost Math</h3>
+<table class="tbl">
+<tr><th>Metric</th><th>Calculation</th><th>Result</th></tr>
+<tr><td>Throughput</td><td>500K / 86400 sec</td><td>~6/sec sustained, ~20/sec peak</td></tr>
+<tr><td>Rule evals</td><td>~5 rules &times; 500K</td><td>2.5M rule checks/day (cheap, local)</td></tr>
+<tr><td>ML scoring calls</td><td>~3 dimensions &times; 500K</td><td>1.5M LLM calls/day</td></tr>
+<tr><td>Score storage</td><td>~5KB/conversation &times; 500K &times; 730 days</td><td>~1.8 TB (2-year retention)</td></tr>
+<tr><td><strong>Naive LLM cost</strong></td><td>$0.02/conversation &times; 500K</td><td><strong>$10K/day = $3.6M/year</strong></td></tr>
+</table>
+
+<div class="trap">
+  <div class="trapl">The Cost Bomb</div>
+  <p>$3.6M/year in raw LLM cost is a non-starter. The entire scaling story of this system is <strong>cost optimization</strong> — batching, caching similar conversations, and tiered scoring (cheap model for obvious cases, expensive only for ambiguous ones). Bring this up early; it's the defining constraint.</p>
+</div>
+
+<div class="iq">"At 500K conversations a day, naive LLM scoring costs about $3.6M a year. So cost isn't an afterthought — it's the central design constraint. I'll batch requests, cache scores for near-duplicate conversations, and use a tiered approach where an expensive model only handles the genuinely ambiguous cases."</div>
+</div>
+
+<!-- SECTION 3: HIGH-LEVEL ARCHITECTURE -->
+<div id="tab-architecture" class="sec">
+<div class="stitle">High-Level Architecture</div>
+<div class="sdesc">From completed conversation to scorecard, alert, and coaching output.</div>
+
+<h3 class="sub">Architecture Diagram</h3>
+<div style="overflow-x:auto; margin:14px 0;">
+<svg width="760" height="430" viewBox="0 0 760 430" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,sans-serif; max-width:100%; height:auto;">
+  <defs>
+    <marker id="arrq" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#64748b"/>
+    </marker>
+    <style>
+      .box{fill:#fff;stroke:#cbd5e1;stroke-width:1.5;}
+      .bb{fill:#fef3c7;stroke:#d97706;stroke-width:1.5;}
+      .rule{fill:#dbeafe;stroke:#2563eb;stroke-width:1.5;}
+      .out{fill:#dcfce7;stroke:#16a34a;stroke-width:1.5;}
+      .lbl{font-size:11px;font-weight:600;fill:#0f172a;}
+      .sub{font-size:9px;fill:#64748b;}
+      .tag{font-size:8px;font-weight:700;fill:#d97706;}
+      .flow{stroke:#64748b;stroke-width:1.5;fill:none;}
+    </style>
+  </defs>
+
+  <rect class="box" x="30" y="180" width="130" height="56" rx="8"/>
+  <text x="95" y="202" class="lbl" text-anchor="middle">Transcript</text>
+  <text x="95" y="217" class="sub" text-anchor="middle">Ingestion</text>
+
+  <!-- Scoring pipeline (parallel rule + ML) -->
+  <rect class="box rule" x="230" y="120" width="150" height="56" rx="8"/>
+  <text x="305" y="142" class="lbl" text-anchor="middle">Rule Engine</text>
+  <text x="305" y="157" class="sub" text-anchor="middle">deterministic · &lt;50ms</text>
+
+  <rect class="box bb" x="230" y="240" width="150" height="60" rx="8"/>
+  <text x="305" y="258" class="tag" text-anchor="middle">BLACK BOX</text>
+  <text x="305" y="274" class="lbl" text-anchor="middle">ML Scoring</text>
+  <text x="305" y="289" class="sub" text-anchor="middle">LLM-as-judge</text>
+
+  <rect class="box" x="440" y="180" width="140" height="56" rx="8"/>
+  <text x="510" y="202" class="lbl" text-anchor="middle">Score</text>
+  <text x="510" y="217" class="sub" text-anchor="middle">Aggregator</text>
+
+  <!-- Outputs -->
+  <rect class="box out" x="630" y="70" width="110" height="42" rx="8"/>
+  <text x="685" y="96" class="lbl" text-anchor="middle">Scorecards</text>
+  <rect class="box out" x="630" y="185" width="110" height="42" rx="8"/>
+  <text x="685" y="211" class="lbl" text-anchor="middle">Alerts</text>
+  <rect class="box out" x="630" y="300" width="110" height="42" rx="8"/>
+  <text x="685" y="320" class="lbl" text-anchor="middle">Coaching</text>
+  <text x="685" y="333" class="sub" text-anchor="middle">recommendations</text>
+
+  <!-- flows -->
+  <line class="flow" x1="160" y1="200" x2="230" y2="150" marker-end="url(#arrq)"/>
+  <line class="flow" x1="160" y1="216" x2="230" y2="265" marker-end="url(#arrq)"/>
+  <line class="flow" x1="380" y1="150" x2="440" y2="198" marker-end="url(#arrq)"/>
+  <line class="flow" x1="380" y1="270" x2="440" y2="218" marker-end="url(#arrq)"/>
+  <line class="flow" x1="580" y1="200" x2="630" y2="95" marker-end="url(#arrq)"/>
+  <line class="flow" x1="580" y1="206" x2="630" y2="206" marker-end="url(#arrq)"/>
+  <line class="flow" x1="580" y1="212" x2="630" y2="318" marker-end="url(#arrq)"/>
+
+  <text x="305" y="335" class="sub" text-anchor="middle">rule + ML scores merge in the aggregator</text>
+</svg>
+</div>
+
+<h3 class="sub">Component Inventory</h3>
+<table class="tbl">
+<tr><th>Component</th><th>Responsibility</th><th>Owner</th></tr>
+<tr><td><strong>Transcript Ingestion</strong></td><td>Receive completed conversation, trigger scoring</td><td>You</td></tr>
+<tr><td><strong>Rule Engine</strong></td><td>Evaluate config-driven deterministic rules</td><td>You</td></tr>
+<tr><td><strong>ML Scoring</strong></td><td>LLM-as-judge for soft dimensions</td><td>Black box + your orchestration</td></tr>
+<tr><td><strong>Score Aggregator</strong></td><td>Merge rule + ML scores into a conversation score</td><td>You</td></tr>
+<tr><td><strong>Scorecard Generator</strong></td><td>Roll up into per-agent scorecards</td><td>You</td></tr>
+<tr><td><strong>Alert Service</strong></td><td>Fire real-time compliance alerts</td><td>You</td></tr>
+</table>
+
+<div class="tip">
+  <div class="tipl">Why Rules and ML Run in Parallel</div>
+  <p>Rules are fast (&lt;50ms) and local; ML is slow (~1s) and remote. Run them concurrently, not sequentially — the aggregator waits for both, so total latency is max(rule, ML), not sum. And if ML is down, rules still produce a compliance verdict immediately.</p>
+</div>
+</div>
+
+<!-- SECTION 4: SCORING DIMENSIONS -->
+<div id="tab-dimensions" class="sec">
+<div class="stitle">Scoring Dimensions Design</div>
+<div class="sdesc">The critical distinction: deterministic rules vs probabilistic ML.</div>
+
+<h3 class="sub">Two Fundamentally Different Score Types</h3>
+<div class="g2">
+  <div class="skill-box">
+    <h4>Rule-Based (Deterministic)</h4>
+    <ul>
+      <li>Binary pass/fail</li>
+      <li>High precision, zero false positives</li>
+      <li>Auditable — "you didn't verify ID at 0:45"</li>
+      <li>Used for <strong>compliance</strong> (must be defensible)</li>
+    </ul>
+  </div>
+  <div class="skill-box">
+    <h4>ML-Based (Probabilistic)</h4>
+    <ul>
+      <li>Score 1-5, nuanced</li>
+      <li>Captures tone, empathy, clarity</li>
+      <li>Tolerates some noise</li>
+      <li>Used for <strong>coaching</strong> (improvement, not punishment)</li>
+    </ul>
+  </div>
+</div>
+
+<h3 class="sub">Dimension-to-Type Mapping</h3>
+<table class="tbl">
+<tr><th>Dimension</th><th>Type</th><th>SLA</th><th>Use Case</th></tr>
+<tr><td>Identity verification</td><td>Rule</td><td>Must pass</td><td>Compliance</td></tr>
+<tr><td>Legal disclaimer read</td><td>Rule</td><td>Must pass</td><td>Compliance</td></tr>
+<tr><td>Profanity / PII leak</td><td>Rule</td><td>Must pass</td><td>Compliance</td></tr>
+<tr><td>Empathy &amp; tone</td><td>ML</td><td>Score 1-5</td><td>Coaching</td></tr>
+<tr><td>Knowledge accuracy</td><td>ML</td><td>Score 1-5</td><td>Coaching</td></tr>
+<tr><td>Resolution quality</td><td>ML</td><td>Score 1-5</td><td>Performance</td></tr>
+<tr><td>Efficiency (hold time)</td><td>Rule + ML</td><td>Hybrid</td><td>Performance</td></tr>
+</table>
+
+<div class="ins">
+  <div class="insl">The Design Decision That Wins Points</div>
+  <p>Don't use ML for everything. Compliance MUST be a rule — a probabilistic "87% likely the agent verified identity" is legally useless. You need a defensible binary answer with evidence. Reserve ML for the subjective dimensions where nuance matters and some noise is acceptable.</p>
+</div>
+</div>
+
+<!-- SECTION 5: RULE ENGINE -->
+<div id="tab-rules" class="sec">
+<div class="stitle">Rule Engine Deep Dive</div>
+<div class="sdesc">Config-driven rules that non-engineers can change without a deploy.</div>
+
+<h3 class="sub">Why Configurable Matters</h3>
+<p>Compliance requirements change constantly — new regulations, new products, new scripts. If every rule change needs an engineer and a deploy, the system can't keep up. Rules must be <strong>data, not code</strong>.</p>
+
+<h3 class="sub">Rule Format (Config-Driven)</h3>
+<pre class="codeblock">{
+  "rule_id": "identity_verification",
+  "name": "Customer Identity Verification",
+  "description": "Agent must verify identity within first 2 minutes",
+  "condition": {
+    "type": "pattern_match",
+    "speaker": "agent",
+    "patterns": ["verify your identity", "confirm your name",
+                 "date of birth", "last four digits"],
+    "time_window": { "from_sec": 0, "to_sec": 120 }
+  },
+  "severity": "critical",
+  "score_impact": { "pass": 0, "fail": -100 },
+  "applies_to": ["billing", "account_changes"],
+  "version": 3,
+  "active": true
+}</pre>
+
+<h3 class="sub">Rule Types</h3>
+<table class="tbl">
+<tr><th>Type</th><th>Checks</th><th>Example</th></tr>
+<tr><td>Pattern match</td><td>Keyword/phrase presence</td><td>Did agent say the disclaimer?</td></tr>
+<tr><td>Time-based</td><td>Action within a window</td><td>ID verified in first 2 min?</td></tr>
+<tr><td>Sequence</td><td>Step A before step B</td><td>Verified before discussing account?</td></tr>
+<tr><td>Composite</td><td>AND/OR of conditions</td><td>IF refund &gt; $500 THEN supervisor mention</td></tr>
+<tr><td>Absence</td><td>Something must NOT occur</td><td>No profanity, no unauthorized promises</td></tr>
+</table>
+
+<h3 class="sub">Data Models</h3>
+<pre class="codeblock">type Rule struct {
+    ID          string
+    TenantID    string
+    Name        string
+    Condition   RuleCondition
+    Severity    string        // "critical" | "major" | "minor"
+    ScoreImpact ScoreImpact
+    AppliesTo   []string      // conversation categories
+    Version     int           // immutable versions for audit
+    Active      bool
+    CreatedBy   string
+    CreatedAt   time.Time
+}
+
+type RuleResult struct {
+    RuleID     string
+    Passed     bool
+    Evidence   string      // transcript excerpt that triggered/satisfied it
+    Timestamp  time.Time   // where in the conversation it was detected
+}</pre>
+
+<div class="tip">
+  <div class="tipl">Rule Versioning &amp; A/B Testing</div>
+  <p>Rules are immutable versions, never edited in place. This gives you a full audit trail (which rule version scored this call?) and lets you A/B test a new rule against the old one before full rollout. A non-engineer edits rules through an admin UI with dropdowns — never raw JSON.</p>
+</div>
+
+<div class="ins">
+  <div class="insl">Evidence Is Non-Negotiable</div>
+  <p>Every rule result stores the exact transcript excerpt and timestamp. When an agent disputes "you didn't verify identity," you show them 0:45 in the transcript. Without evidence, the score is unauditable and agents won't trust it.</p>
+</div>
+</div>
+
+<!-- SECTION 6: LLM-AS-JUDGE -->
+<div id="tab-llm" class="sec">
+<div class="stitle">LLM-as-Judge Integration</div>
+<div class="sdesc">Using AI to evaluate soft dimensions — reliably and affordably.</div>
+
+<h3 class="sub">Three Evaluation Patterns</h3>
+<table class="tbl">
+<tr><th>Pattern</th><th>How</th><th>Best For</th></tr>
+<tr><td><strong>Judge</strong></td><td>"Rate empathy 1-5 using this rubric"</td><td>Subjective quality scores</td></tr>
+<tr><td><strong>Extractor</strong></td><td>"Extract all commitments the agent made", then verify against reality</td><td>Fact-checking, promise tracking</td></tr>
+<tr><td><strong>Consistency checker</strong></td><td>"Find contradictions in what the agent said"</td><td>Catching "no fee"→"$25 fee"</td></tr>
+</table>
+
+<h3 class="sub">Judge Prompt Example</h3>
+<pre class="codeblock">You are a QA evaluator. Rate the AGENT's empathy on a 1-5 scale.
+
+Rubric:
+  5 = Actively acknowledged emotion, personalized response
+  3 = Polite but transactional
+  1 = Dismissive or robotic
+
+Transcript:
+{{transcript}}
+
+Return JSON: { "score": &lt;1-5&gt;, "reasoning": "...", "evidence": "&lt;quote&gt;" }</pre>
+
+<div class="trap">
+  <div class="trapl">LLMs Fail Confidently, Not Gracefully</div>
+  <p>A subtly-wrong transcript produces a confidently-wrong score, which produces wrong coaching. Never trust a single LLM judgment blindly. Mitigate with confidence scoring, human review of edge cases, and the calibration loop (Section 9).</p>
+</div>
+
+<h3 class="sub">Cost Optimization (The Whole Game)</h3>
+<div class="skill-box">
+  <h4>Three Levers to Kill the $3.6M Bill</h4>
+  <ul>
+    <li><strong>Batch:</strong> score 10 conversations in one API call — amortizes fixed overhead</li>
+    <li><strong>Cache:</strong> near-duplicate conversations (same topic, same flow) get cached scores — contact centers have huge repetition</li>
+    <li><strong>Tiered:</strong> a cheap model handles obvious cases (clear 1 or clear 5); the expensive model only judges ambiguous middle (2-4)</li>
+  </ul>
+</div>
+
+<div class="tip">
+  <div class="tipl">Tiered Scoring in Practice</div>
+  <p>Run a cheap, fast classifier first. If it's highly confident the call is clearly great or clearly bad, accept that score. Only escalate the uncertain 20-30% to the expensive model. This alone can cut LLM cost by 60-70%.</p>
+</div>
+</div>
+
+<!-- SECTION 7: SCORE AGGREGATION -->
+<div id="tab-aggregation" class="sec">
+<div class="stitle">Score Aggregation &amp; Scorecards</div>
+<div class="sdesc">From per-conversation scores to per-agent scorecards.</div>
+
+<h3 class="sub">Per-Conversation Score</h3>
+<p>Combine rule results and ML scores into one number with a weighted formula:</p>
+<pre class="codeblock">conversation_score = 0.40 * compliance_score   (from rules)
+                   + 0.30 * quality_score      (from ML)
+                   + 0.30 * efficiency_score   (hybrid)
+
+// CRITICAL OVERRIDE: any failed critical rule caps the total.
+if anyCriticalRuleFailed {
+    conversation_score = min(conversation_score, 50)  // cap at 50%
+}</pre>
+<div class="ins">
+  <div class="insl">The Critical-Rule Cap</div>
+  <p>A conversation where the agent was warm, efficient, and helpful but <em>forgot to verify identity</em> cannot score well — that's a compliance failure regardless of everything else. The cap enforces this: critical rules are gates, not just weighted factors.</p>
+</div>
+
+<h3 class="sub">Per-Agent Scorecard</h3>
+<pre class="codeblock">type AgentScorecard struct {
+    AgentID            string
+    Period             string    // "daily" | "weekly" | "monthly"
+    PeriodStart        time.Time
+    TotalConversations int
+    OverallScore       float64
+    Dimensions         map[string]float64  // per-dimension breakdown
+    Trend              float64   // +improving / -declining vs prior period
+    Percentile         int       // rank among peers (0-100)
+    TopStrength        string
+    TopWeakness        string
+    Recommendations    []string  // auto-generated coaching
+}</pre>
+
+<h3 class="sub">Statistical Significance</h3>
+<div class="warn">
+  <div class="warnl">Don't Rank on Tiny Samples</div>
+  <p>An agent with 5 conversations shouldn't be ranked against one with 200 — the small sample is noise. Require a minimum (say 30 conversations) before generating a reliable scorecard or percentile ranking. Otherwise a single bad call tanks a new agent unfairly.</p>
+</div>
+
+<h3 class="sub">Coaching Recommendations</h3>
+<p>Auto-generate from pattern analysis: "Agent X scores low on empathy specifically on billing calls — recommend empathy training for billing scenarios." The value isn't the score; it's the actionable, specific next step.</p>
+</div>
+
+<!-- SECTION 8: ALERTS & COMPLIANCE -->
+<div id="tab-alerts" class="sec">
+<div class="stitle">Alerts &amp; Compliance System</div>
+<div class="sdesc">Real-time flags for violations that can't wait for a scorecard.</div>
+
+<h3 class="sub">Alert Tiers by Urgency</h3>
+<table class="tbl">
+<tr><th>Tier</th><th>Trigger</th><th>Latency</th><th>Action</th></tr>
+<tr><td>Immediate</td><td>PII leaked, profanity</td><td>&lt;1 min</td><td>Page compliance team now</td></tr>
+<tr><td>Same-day</td><td>Missed ID verification</td><td>&lt;5 min</td><td>Notify supervisor</td></tr>
+<tr><td>Trending</td><td>Quality declining 3+ days</td><td>Daily</td><td>Flag for coaching</td></tr>
+</table>
+
+<h3 class="sub">Alert Rules Engine</h3>
+<pre class="codeblock">type AlertRule struct {
+    Metric     string   // "critical_rule_failure" | "sentiment_drop"
+    Window     string   // "immediate" | "1h" | "1d"
+    Condition  string   // "any" | "gt" | "trend_down"
+    Threshold  float64
+    Severity   string   // "critical" | "warning"
+    Channels   []string // "pagerduty" | "slack" | "email"
+}</pre>
+
+<h3 class="sub">Alert Fatigue Prevention</h3>
+<div class="warn">
+  <div class="warnl">Too Many Alerts = No Alerts</div>
+  <p>If supervisors get 200 alerts a day, they ignore all of them. Group related alerts (5 agents missed the same new disclaimer → one alert about the disclaimer, not five). Support snoozing and de-duplication. An alert system nobody reads is worse than none.</p>
+</div>
+
+<h3 class="sub">Compliance Audit Trail</h3>
+<p>Every compliance alert and its resolution is logged immutably. When a regulator asks "how do you ensure agents verify identity?", you show the rule, the 100% coverage, the violation alerts, and the remediation — a complete, defensible record.</p>
+</div>
+
+<!-- SECTION 9: CALIBRATION & DRIFT -->
+<div id="tab-calibration" class="sec">
+<div class="stitle">Calibration &amp; Drift Detection</div>
+<div class="sdesc">Keeping LLM judges accurate as they drift over time.</div>
+
+<h3 class="sub">The Drift Problem</h3>
+<p>LLM judges drift — model updates, prompt tweaks, or subtle distribution shifts change how they score. A "4/5 empathy" today might be a "3/5" next month for identical behavior. Undetected, this corrupts every downstream scorecard and coaching decision.</p>
+
+<h3 class="sub">The Human Calibration Loop</h3>
+<div class="timeline">
+  <div class="timeline-item">
+    <div class="timeline-time">Ongoing</div>
+    <div class="timeline-title">Maintain a golden set</div>
+    <div class="timeline-desc">A fixed set of conversations with expert human-assigned scores — the ground truth.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">Periodic</div>
+    <div class="timeline-title">Re-score the golden set</div>
+    <div class="timeline-desc">Run the LLM judge against the golden set regularly and compare to human scores.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">On divergence</div>
+    <div class="timeline-title">Humans win, re-tune the judge</div>
+    <div class="timeline-desc">When agreement drops below threshold, the human scores are truth — re-tune the prompt/model until agreement stabilizes.</div>
+  </div>
+</div>
+
+<div class="ins">
+  <div class="insl">"Humans Win, The Judge Gets Re-Tuned"</div>
+  <p>This one line captures the whole philosophy. The LLM is a scalable approximation of human judgment, continuously validated against real human judgment. When they disagree, humans are the ground truth and the judge is corrected — never the reverse.</p>
+</div>
+
+<h3 class="sub">A/B Testing Scoring Models</h3>
+<p>Before rolling out a new judge model, run it in shadow mode against the current one on live traffic. Compare their scores and their agreement with the golden set. Only promote the new model if it matches humans better than the incumbent.</p>
+</div>
+
+<!-- SECTION 10: STORAGE DESIGN -->
+<div id="tab-storage" class="sec">
+<div class="stitle">Storage Design</div>
+<div class="sdesc">Where scores, rules, and evidence live.</div>
+
+<h3 class="sub">Storage by Access Pattern</h3>
+<table class="tbl">
+<tr><th>Data</th><th>Store</th><th>Why</th></tr>
+<tr><td>Conversation scores</td><td>PostgreSQL (time-partitioned)</td><td>Structured, queryable, 2-year retention</td></tr>
+<tr><td>Rule configs (versioned)</td><td>PostgreSQL / config store</td><td>Immutable versions, audit trail</td></tr>
+<tr><td>Scorecards</td><td>Materialized views + Redis cache</td><td>Fast dashboard reads</td></tr>
+<tr><td>Alert log</td><td>PostgreSQL (append-only)</td><td>Immutable compliance record</td></tr>
+<tr><td>Transcript evidence</td><td>Reference to transcript store (S3)</td><td>Don't duplicate; store pointers</td></tr>
+</table>
+
+<h3 class="sub">Score Schema</h3>
+<pre class="codeblock">CREATE TABLE conversation_scores (
+    id                UUID PRIMARY KEY,
+    conversation_id   UUID NOT NULL,
+    tenant_id         UUID NOT NULL,
+    agent_id          UUID NOT NULL,
+    scored_at         TIMESTAMPTZ NOT NULL,
+    overall_score     REAL,
+    compliance_passed BOOLEAN,       -- did all critical rules pass?
+    dimensions        JSONB,          -- per-dimension scores + evidence
+    rule_version_set  JSONB,          -- which rule versions were applied
+    model_version     VARCHAR(50)     -- which judge model scored it
+) PARTITION BY RANGE (scored_at);
+CREATE INDEX idx_scores_agent_time ON conversation_scores(agent_id, scored_at DESC);</pre>
+
+<div class="tip">
+  <div class="tipl">Store the Version Set</div>
+  <p>Recording <code>rule_version_set</code> and <code>model_version</code> on every score is what makes the system auditable and reproducible. Six months later you can answer "why did this call score 45?" by replaying the exact rules and model that scored it.</p>
+</div>
+
+<h3 class="sub">Partitioning</h3>
+<p>Partition scores by time (monthly) and cluster by tenant_id. Recent partitions stay hot for dashboards; old partitions move to cheaper storage but remain queryable for audits.</p>
+</div>
+
+<!-- SECTION 11: SCALING & COST -->
+<div id="tab-scaling" class="sec">
+<div class="stitle">Scaling &amp; Cost</div>
+<div class="sdesc">Handling 500K/day and keeping the LLM bill sane.</div>
+
+<h3 class="sub">Scaling the Pipeline</h3>
+<ul class="content-list">
+  <li><strong>Rule engine:</strong> trivially parallel, stateless workers — scale horizontally, cheap</li>
+  <li><strong>ML scoring:</strong> the bottleneck. Batch, cache, and tier to control both latency and cost</li>
+  <li><strong>Queue-based:</strong> completed conversations land in a queue; workers pull and score. Backpressure is natural — if scoring falls behind, the queue absorbs it (score-later, never drop)</li>
+</ul>
+
+<h3 class="sub">The Cost Optimization Stack</h3>
+<table class="tbl">
+<tr><th>Technique</th><th>Savings</th><th>Trade-off</th></tr>
+<tr><td>Batching (10/call)</td><td>~20-30%</td><td>Slight latency increase</td></tr>
+<tr><td>Caching near-duplicates</td><td>~30-40%</td><td>Cache staleness risk</td></tr>
+<tr><td>Tiered (cheap→expensive)</td><td>~60-70%</td><td>Cheap model must be well-calibrated</td></tr>
+</table>
+<div class="ins">
+  <div class="insl">Stack Them</div>
+  <p>These compound. Tiered scoring on cached, batched requests can take the naive $3.6M/year down toward $500K-800K/year — the difference between a viable product and a money pit. This is the single most important scaling conversation for this system.</p>
+</div>
+
+<h3 class="sub">Failure Handling</h3>
+<div class="g2">
+  <div class="skill-box">
+    <h4>LLM service down</h4>
+    <ul><li>Rules still produce compliance verdict immediately</li><li>ML scores marked pending, retried later</li><li>Compliance never blocks on ML</li></ul>
+  </div>
+  <div class="skill-box">
+    <h4>Scoring falls behind</h4>
+    <ul><li>Queue absorbs backlog</li><li>Prioritize compliance-critical conversations first</li><li>Score-later beats score-never</li></ul>
+  </div>
+</div>
+</div>
+
+<!-- SECTION 12: INTERVIEW SCRIPT -->
+<div id="tab-script" class="sec">
+<div class="stitle">Interview Script — 45 Minutes</div>
+<div class="sdesc">A timed walkthrough: what to say and when.</div>
+
+<div class="timeline">
+  <div class="timeline-item">
+    <div class="timeline-time">0–5 min · Scope</div>
+    <div class="timeline-title">Frame the rule/ML split</div>
+    <div class="timeline-desc">"I'll split scoring into two systems: a deterministic rule engine for compliance where I need auditable pass/fail, and LLM-as-judge for soft dimensions like empathy. Rules protect the business; ML coaches the agents."</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">5–10 min · Requirements + cost math</div>
+    <div class="timeline-title">Surface the cost bomb early</div>
+    <div class="timeline-desc">500K/day, and here's the punchline: naive LLM scoring is $3.6M/year. "So cost is the central design constraint, not an afterthought." This framing impresses interviewers immediately.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">10–20 min · Architecture</div>
+    <div class="timeline-title">Parallel rule + ML pipeline</div>
+    <div class="timeline-desc">Draw transcript → parallel (rules ∥ ML) → aggregator → scorecards/alerts/coaching. Explain why parallel: latency = max not sum, and rules survive ML outages.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">20–35 min · Deep dive</div>
+    <div class="timeline-title">Rule engine + LLM cost optimization</div>
+    <div class="timeline-desc">Config-driven rules (data not code), versioning, evidence. Then the LLM cost stack: batch + cache + tiered scoring, and the critical-rule cap in aggregation. This is where you win.</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">35–43 min · Calibration &amp; scale</div>
+    <div class="timeline-title">Drift + statistical significance</div>
+    <div class="timeline-desc">The human calibration loop ("humans win, judge gets re-tuned"), minimum sample size for scorecards, and failure handling (rules survive ML down).</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">43–45 min · Wrap</div>
+    <div class="timeline-title">Summarize + trade-offs</div>
+    <div class="timeline-desc">"Rules for compliance, ML for coaching, aggressive cost optimization, and a human calibration loop to fight drift. With more time I'd detail the A/B testing of scoring models and the compliance audit trail."</div>
+  </div>
+</div>
+</div>
+
+<!-- SECTION 13: YOUR EXPERIENCE -->
+<div id="tab-experience" class="sec">
+<div class="stitle">Your Experience</div>
+<div class="sdesc">Connecting your background to this design.</div>
+
+<div class="note">
+  <div class="notel">Amazon — Test Automation (281 commits)</div>
+  <p>You built and owned a test automation system that evaluates test results at scale. <strong>Talking point:</strong> "This is conceptually identical to test automation — running assertions against every item, collecting results, generating reports, flagging failures. I'd frame QA scoring as 'CI for conversations.' The rule engine is my assertion framework; the aggregator is my results reporter."</p>
+</div>
+
+<div class="note">
+  <div class="notel">Kronos — Data Accuracy + Grafana Alerting</div>
+  <p>You achieved 100% data accuracy and built Grafana alerting for integrity monitoring. <strong>Talking point:</strong> "The alert service here is the same problem — threshold rules, grouping to prevent fatigue, tiered severity. I've built alerting that supervisors actually act on, which means fighting alert fatigue from day one."</p>
+</div>
+
+<div class="note">
+  <div class="notel">17Live — Log Pipeline Schema-Driven Interface</div>
+  <p>You designed a generic, schema-driven interface so the data team could add event types without infrastructure changes. <strong>Talking point:</strong> "The config-driven rule engine is the same instinct — make rules data, not code, so non-engineers add compliance rules without a deploy. I've built exactly this kind of configurable interface that decouples the people changing rules from the people running the system."</p>
+</div>
+
+<div class="note">
+  <div class="notel">17Live — Batch Optimization (Gift Processing)</div>
+  <p>You cut DB/Redis calls 90% via batch fetching and bulk updates. <strong>Talking point:</strong> "Batching 10 conversations per LLM call is the same optimization — amortize fixed per-call overhead across many items. I've done batch optimization in production to eliminate load spikes."</p>
+</div>
+</div>
+
+<!-- SECTION 14: PITFALLS & FOLLOW-UPS -->
+<div id="tab-pitfalls" class="sec">
+<div class="stitle">Pitfalls &amp; Follow-ups</div>
+<div class="sdesc">Mistakes to avoid and how to answer the hard questions.</div>
+
+<h3 class="sub">Common Pitfalls</h3>
+<div class="trap">
+  <div class="trapl">Pitfall 1 — LLM for everything</div>
+  <p>Using an LLM to check compliance. A probabilistic "87% likely verified" is legally useless. Compliance MUST be deterministic rules with evidence. LLM is for subjective coaching dimensions only.</p>
+</div>
+<div class="trap">
+  <div class="trapl">Pitfall 2 — Ignoring cost</div>
+  <p>Designing the scoring pipeline without addressing the $3.6M/year LLM bill. Cost IS the design here — batch, cache, tier. If you don't bring it up, the interviewer will, and you'll look naive.</p>
+</div>
+<div class="trap">
+  <div class="trapl">Pitfall 3 — Ignoring drift</div>
+  <p>Assuming the LLM judge scores consistently forever. It drifts. Without a human calibration loop, every scorecard silently corrupts over time.</p>
+</div>
+<div class="trap">
+  <div class="trapl">Pitfall 4 — Ranking on tiny samples</div>
+  <p>Generating a percentile ranking for an agent with 5 calls. Statistical noise. Require a minimum sample (~30) before ranking or the scores are unfair and untrusted.</p>
+</div>
+
+<h3 class="sub">Likely Follow-up Questions</h3>
+<div class="card">
+  <div class="ch" onclick="toggle(this)"><span class="ct">Q: How do you keep the LLM cost under control?</span><span class="chv">▶</span></div>
+  <div class="cb"><p>Three stacked techniques: batch 10 conversations per call (~25% savings), cache scores for near-duplicate conversations (~35%), and tiered scoring where a cheap model handles obvious cases and the expensive model only judges the ambiguous 20-30% (~65%). Stacked, this takes $3.6M/year toward ~$600K.</p></div>
+</div>
+<div class="card">
+  <div class="ch" onclick="toggle(this)"><span class="ct">Q: Why not use ML for compliance too?</span><span class="chv">▶</span></div>
+  <div class="cb"><p>Compliance needs a defensible, auditable binary answer. "87% likely the agent verified identity" is useless to a regulator or in a dispute. A deterministic rule with a cited transcript excerpt is defensible. Reserve ML for subjective dimensions where nuance beats precision.</p></div>
+</div>
+<div class="card">
+  <div class="ch" onclick="toggle(this)"><span class="ct">Q: How do you know the LLM judge is still accurate?</span><span class="chv">▶</span></div>
+  <div class="cb"><p>A golden set of human-scored conversations. Periodically re-run the judge against it and measure agreement. When agreement drops below threshold, humans are truth — re-tune the judge until it stabilizes. New models run in shadow mode against the golden set before promotion.</p></div>
+</div>
+<div class="card">
+  <div class="ch" onclick="toggle(this)"><span class="ct">Q: An agent disputes their score. What happens?</span><span class="chv">▶</span></div>
+  <div class="cb"><p>Every score stores evidence — the exact transcript excerpt and timestamp — plus the rule versions and model version used. You show the agent "at 0:45 you discussed the account before verifying identity." Reproducible and auditable, which is why agents trust it.</p></div>
+</div>
+<div class="card">
+  <div class="ch" onclick="toggle(this)"><span class="ct">Q: What if the ML scoring service goes down?</span><span class="chv">▶</span></div>
+  <div class="cb"><p>Rules and ML run in parallel, so rules still produce the compliance verdict immediately — the critical path is unaffected. ML scores get marked pending and retried when the service recovers. Compliance never blocks on the availability of the coaching-oriented ML.</p></div>
+</div>
+</div>
+
+</div><!-- end #main -->
+
+<script>
+function go(id) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById('tab-' + id);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
+  if (event && event.currentTarget) event.currentTarget.classList.add('active');
+  document.getElementById('main').scrollTop = 0;
+}
+function toggle(el) {
+  const body = el.nextElementSibling;
+  const chevron = el.querySelector('.chv');
+  body.classList.toggle('open');
+  if (chevron) chevron.classList.toggle('open');
+}
+</script>
+</body>
+</html>

@@ -1080,12 +1080,55 @@ func (qm *QueueManager) MonitorWaitTimes() {
 </table>
 
 <h3 class="sub">Transfer State Machine</h3>
-<pre class="codeblock">INITIATED → CONTEXT_READY → AGENT_OFFERED → AGENT_ACCEPTED → TRANSFERRING → COMPLETED
-                                  │                                    │
-                                  ├─ (timeout 10s) → REROUTING         └─ (drop) → RECOVERING
-                                  └─ (rejected)   → REROUTING
+<div style="overflow-x:auto; margin:14px 0;">
+<svg width="760" height="220" viewBox="0 0 760 220" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,sans-serif; max-width:100%; height:auto;">
+  <defs>
+    <marker id="arrsm" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#64748b"/>
+    </marker>
+    <style>
+      .st{fill:#dbeafe;stroke:#2563eb;stroke-width:1.5;}
+      .stgood{fill:#dcfce7;stroke:#16a34a;stroke-width:1.5;}
+      .stbad{fill:#fef3c7;stroke:#d97706;stroke-width:1.5;}
+      .stl{font-size:10px;font-weight:600;fill:#0f172a;}
+      .fl{stroke:#64748b;stroke-width:1.5;fill:none;}
+      .flt{font-size:9px;fill:#dc2626;}
+    </style>
+  </defs>
+  <!-- happy path row -->
+  <rect class="st" x="10" y="20" width="100" height="34" rx="6"/><text x="60" y="41" class="stl" text-anchor="middle">INITIATED</text>
+  <rect class="st" x="135" y="20" width="115" height="34" rx="6"/><text x="192" y="41" class="stl" text-anchor="middle">CONTEXT_READY</text>
+  <rect class="st" x="275" y="20" width="115" height="34" rx="6"/><text x="332" y="41" class="stl" text-anchor="middle">AGENT_OFFERED</text>
+  <rect class="st" x="415" y="20" width="120" height="34" rx="6"/><text x="475" y="41" class="stl" text-anchor="middle">AGENT_ACCEPTED</text>
+  <rect class="st" x="560" y="20" width="100" height="34" rx="6"/><text x="610" y="41" class="stl" text-anchor="middle">TRANSFERRING</text>
+  <rect class="stgood" x="685" y="20" width="65" height="34" rx="6"/><text x="717" y="41" class="stl" text-anchor="middle">DONE</text>
 
-// Each state transition is logged for audit + debugging
+  <line class="fl" x1="110" y1="37" x2="135" y2="37" marker-end="url(#arrsm)"/>
+  <line class="fl" x1="250" y1="37" x2="275" y2="37" marker-end="url(#arrsm)"/>
+  <line class="fl" x1="390" y1="37" x2="415" y2="37" marker-end="url(#arrsm)"/>
+  <line class="fl" x1="535" y1="37" x2="560" y2="37" marker-end="url(#arrsm)"/>
+  <line class="fl" x1="660" y1="37" x2="685" y2="37" marker-end="url(#arrsm)"/>
+
+  <!-- failure states -->
+  <rect class="stbad" x="275" y="130" width="115" height="34" rx="6"/><text x="332" y="151" class="stl" text-anchor="middle">REROUTING</text>
+  <rect class="stbad" x="560" y="130" width="100" height="34" rx="6"/><text x="610" y="151" class="stl" text-anchor="middle">RECOVERING</text>
+
+  <!-- offered -> rerouting (timeout / rejected) -->
+  <line class="fl" x1="332" y1="54" x2="332" y2="130" marker-end="url(#arrsm)"/>
+  <text x="340" y="95" class="flt">timeout 10s / rejected</text>
+  <!-- rerouting loops back to offered -->
+  <line class="fl" x1="390" y1="140" x2="450" y2="140" />
+  <line class="fl" x1="450" y1="140" x2="450" y2="54" marker-end="url(#arrsm)"/>
+  <text x="455" y="100" class="flt">retry next agent</text>
+  <!-- transferring -> recovering (drop) -->
+  <line class="fl" x1="610" y1="54" x2="610" y2="130" marker-end="url(#arrsm)"/>
+  <text x="618" y="95" class="flt">connection drop</text>
+  <!-- recovering re-offers -->
+  <line class="fl" x1="560" y1="147" x2="390" y2="147" marker-end="url(#arrsm)"/>
+  <text x="440" y="162" class="flt">re-offer, keep context</text>
+</svg>
+</div>
+<pre class="codeblock">// Each state transition is logged for audit + debugging
 type TransferState struct {
     HandoffID    string
     State        string
