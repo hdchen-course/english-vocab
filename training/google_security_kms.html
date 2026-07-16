@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Key Management &amp; Encryption at Rest | Google Security Deep-Dive</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fa; --bg2: #ffffff; --bg3: #f1f3f5; --border: #dee2e6;
+  --text: #212529; --text2: #495057; --text3: #868e96;
+  --blue: #1971c2; --blue-l: #d0ebff; --green: #2f9e44; --green-l: #d3f9d8;
+  --yellow: #e67700; --yellow-l: #fff3bf; --red: #c92a2a; --red-l: #ffe3e3;
+  --purple: #7048e8; --purple-l: #e5dbff; --r: 12px; --shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.8; }
+.container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+header { text-align: center; margin-bottom: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+header .sub { color: var(--text3); font-size: 14px; }
+.crumb { text-align:center; margin-bottom: 24px; font-size: 13px; color: var(--text3); }
+.crumb a { color: var(--blue); text-decoration: none; }
+.nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 40px; position: sticky; top: 0; background: var(--bg); padding: 16px 0; z-index: 100; border-bottom: 1px solid var(--border); }
+.nav-btn { padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s; font-family: 'Inter', sans-serif; }
+.nav-btn:hover { background: var(--bg3); color: var(--text); }
+.nav-btn.active { background: var(--blue-l); color: var(--blue); border-color: var(--blue); }
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+h2 { font-size: 24px; font-weight: 700; margin: 32px 0 16px; color: var(--blue); }
+h3 { font-size: 18px; font-weight: 600; margin: 24px 0 12px; }
+h4 { font-size: 15px; font-weight: 600; margin: 16px 0 8px; color: var(--text2); }
+p { margin-bottom: 12px; color: var(--text2); }
+ul, ol { margin: 8px 0 16px 24px; color: var(--text2); }
+li { margin-bottom: 6px; }
+strong { color: var(--text); }
+pre { background: #1e1e2e; border-radius: 8px; padding: 16px 20px; overflow-x: auto; margin: 12px 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; color: #cdd6f4; white-space: pre-wrap; }
+code { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+p code, li code, td code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--purple); }
+.insight { background: var(--blue-l); border-left: 3px solid var(--blue); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.insight p { color: #114f8c; margin: 0; }
+.warning { background: var(--yellow-l); border-left: 3px solid var(--yellow); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.warning p { color: #a85700; margin: 0; }
+.tip { background: var(--green-l); border-left: 3px solid var(--green); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.tip p { color: #1d6b2e; margin: 0; }
+.iv { background: var(--purple-l); border-left: 3px solid var(--purple); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.iv p { color: #4a2fa8; margin: 0 0 8px 0; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 20px; padding: 24px 28px; box-shadow: var(--shadow); }
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+th, td { padding: 10px 14px; border: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { background: var(--bg3); font-weight: 600; color: var(--text); }
+tr:hover { background: var(--bg3); }
+.svg-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 20px; margin: 20px 0; text-align: center; overflow-x: auto; }
+.qa { border-left: 3px solid var(--purple); padding: 4px 0 4px 16px; margin: 18px 0; }
+.qa .q { font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.tag { display:inline-block; font-size:11px; font-weight:700; padding:2px 8px; border-radius: 20px; background: var(--purple-l); color: var(--purple); margin-left:6px; }
+@media (max-width: 768px) { .container { padding: 20px 12px; } .nav { position: static; flex-direction: column; } .nav-btn { text-align: center; } pre { font-size: 11px; } }
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>Key Management &amp; Encryption at Rest</h1>
+  <div class="sub">Cloud KMS, Keystore, envelope encryption &amp; the master-key hierarchy · deep-dive &amp; interview prep</div>
+</header>
+<div class="crumb">📚 <a href="google_security_index.html">Google Security Systems — Index</a> &nbsp;›&nbsp; Key Management</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection(event,'overview')">Overview</button>
+  <button class="nav-btn" onclick="showSection(event,'design')">How it's designed</button>
+  <button class="nav-btn" onclick="showSection(event,'why')">Why this way</button>
+  <button class="nav-btn" onclick="showSection(event,'challenges')">Challenges</button>
+  <button class="nav-btn" onclick="showSection(event,'scale')">Scale &amp; throughput</button>
+  <button class="nav-btn" onclick="showSection(event,'interview')">Interview angle</button>
+</div>
+
+<!-- OVERVIEW -->
+<div class="section active" id="overview">
+<div class="card">
+<h2>The core idea: envelope encryption</h2>
+<p>
+Google doesn't encrypt petabytes of data with one key. Instead it uses <strong>envelope encryption</strong>: a <strong>Data Encryption Key (DEK)</strong> encrypts the actual data chunks, and a <strong>Key Encryption Key (KEK)</strong> encrypts ("wraps") the DEK. The wrapped DEK can then be stored right next to the data it protects, because it's useless without the KEK — which lives in a separate, hardened key-management service.
+</p>
+<div class="insight"><p><strong>Mental model:</strong> the data is in a locked box (DEK). The DEK is a small key you can leave taped to the box — but it's itself inside a smaller locked box (KEK). Only the key-management service (Keystore / Cloud KMS) holds the key to <em>that</em> box, and that service's own master key is guarded by a chain that bottoms out at an offline root.</p></div>
+</div>
+
+<div class="card">
+<h3>Two related systems</h3>
+<ul>
+  <li><strong>Keystore</strong> — Google's <em>internal</em> key-management service, the root of trust for encryption at rest across Google's own storage systems (Spanner, Bigtable, Colossus, etc.).</li>
+  <li><strong>Cloud KMS</strong> — the <em>customer-facing</em> product on Google Cloud. It uses the <em>same root of trust</em> as Keystore, and lets customers control their KEKs across software, HSM, and external backends. Key material <strong>never leaves the Cloud KMS system boundary</strong>.</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>Key structure &amp; protection levels</h3>
+<table>
+  <tr><th>Concept</th><th>Meaning</th></tr>
+  <tr><td>Key version</td><td>Holds the actual key material. Symmetric keys have a <strong>primary version</strong> used for new encryption; decryption auto-selects the correct version.</td></tr>
+  <tr><td>Key ring</td><td>Groups keys within a project/location for shared IAM policy.</td></tr>
+  <tr><td><code>SOFTWARE</code></td><td>BoringCrypto (BoringSSL), FIPS 140-2 Level 1; CTR-DRBG w/ AES-256 seeded from kernel RNG.</td></tr>
+  <tr><td><code>HSM</code> / <code>HSM_SINGLE_TENANT</code></td><td>FIPS 140-2 Level 3 HSMs (multi-tenant vs dedicated). Key material <strong>never accessed decrypted</strong> by KMS API jobs.</td></tr>
+  <tr><td><code>EXTERNAL</code> / <code>EXTERNAL_VPC</code></td><td>Off-cloud keys managed by an External Key Manager (EKM).</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h3>Jargon buster — read this first</h3>
+<p>Plain-English versions of the key-management terms used below:</p>
+<table>
+  <tr><th>Term</th><th>Plain meaning</th></tr>
+  <tr><td><strong>encryption at rest</strong></td><td>Encrypting data while it's <em>stored</em> (on disk), so a stolen drive is useless. (vs. "in transit" = while moving over the network.)</td></tr>
+  <tr><td><strong>DEK</strong> (data encryption key)</td><td>The key that actually encrypts a chunk of your data.</td></tr>
+  <tr><td><strong>KEK</strong> (key encryption key)</td><td>A key whose only job is to encrypt ("wrap") the DEK — so the DEK can be stored safely next to the data.</td></tr>
+  <tr><td><strong>envelope encryption</strong></td><td>The whole idea: encrypt data with a DEK, then lock the DEK inside a KEK, then lock the KEK inside a master key… like nested envelopes. Only the innermost secret is truly high-value.</td></tr>
+  <tr><td><strong>wrap / unwrap</strong></td><td>Encrypt a key with another key ("wrap"), or decrypt it back ("unwrap"). Lets you store a key in the open safely.</td></tr>
+  <tr><td><strong>HSM</strong> (hardware security module)</td><td>Tamper-resistant hardware that stores keys and does crypto <em>inside</em> itself — the key material never comes out in plaintext.</td></tr>
+  <tr><td><strong>root of trust</strong></td><td>The bottom of the chain — the master key everything else is locked under. Guarded hardest of all.</td></tr>
+  <tr><td><strong>quorum</strong></td><td>"Enough authorized people must act together before it happens." The key is split into shares (one per admin); you need enough of them combined to use it — not a vote, actual key-shares. The ultimate root key can't be touched by any single person — like a bank vault needing several keyholders.</td></tr>
+  <tr><td><strong>bound the blast radius</strong></td><td>Design so one leak causes limited damage. A per-chunk DEK leaking exposes only that chunk, not everything — that's bounding the blast radius.</td></tr>
+  <tr><td><strong>rotation</strong></td><td>Swapping in fresh keys periodically. Here it's cheap because you re-wrap <em>keys</em>, not re-encrypt petabytes of data.</td></tr>
+  <tr><td><strong>FIPS 140-2 Level 1 / 3</strong></td><td>A US security certification for crypto modules. Higher level = stronger guarantees (L3 = the key never appears in software plaintext).</td></tr>
+</table>
+</div>
+</div>
+
+<!-- DESIGN -->
+<div class="section" id="design">
+<div class="card">
+<h2>The master-key wrapping chain (root of trust)</h2>
+<p>This is the part interviewers love, because it's turtles-all-the-way-down until you hit an offline root. Walking from the data up:</p>
+<div class="svg-wrap">
+<svg viewBox="0 0 560 470" width="100%" style="max-width:760px" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+  <rect x="150" y="15" width="260" height="46" rx="8" fill="#495057"/>
+  <text x="280" y="34" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">Data chunks</text>
+  <text x="280" y="52" text-anchor="middle" fill="#ced4da" font-size="10">stored on Colossus / Spanner / etc.</text>
+
+  <line x1="280" y1="61" x2="280" y2="83" stroke="#868e96" stroke-width="2" marker-end="url(#k)"/>
+  <text x="300" y="76" fill="#868e96" font-size="10">encrypted by</text>
+
+  <rect x="150" y="85" width="260" height="46" rx="8" fill="#2f9e44"/>
+  <text x="280" y="104" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">DEK — Data Encryption Key</text>
+  <text x="280" y="122" text-anchor="middle" fill="#d3f9d8" font-size="10">stored (wrapped) alongside the data</text>
+
+  <line x1="280" y1="131" x2="280" y2="153" stroke="#868e96" stroke-width="2" marker-end="url(#k)"/>
+  <text x="300" y="146" fill="#868e96" font-size="10">wrapped by</text>
+
+  <rect x="150" y="155" width="260" height="46" rx="8" fill="#1971c2"/>
+  <text x="280" y="174" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">KEK — Key Encryption Key</text>
+  <text x="280" y="192" text-anchor="middle" fill="#d0ebff" font-size="10">customer-controlled; never leaves KMS boundary</text>
+
+  <line x1="280" y1="201" x2="280" y2="223" stroke="#868e96" stroke-width="2" marker-end="url(#k)"/>
+  <text x="300" y="216" fill="#868e96" font-size="10">encrypted by</text>
+
+  <rect x="150" y="225" width="260" height="46" rx="8" fill="#7048e8"/>
+  <text x="280" y="244" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">KMS master key</text>
+  <text x="280" y="262" text-anchor="middle" fill="#e5dbff" font-size="10">per KMS location · stored in Keystore</text>
+
+  <line x1="280" y1="271" x2="280" y2="293" stroke="#868e96" stroke-width="2" marker-end="url(#k)"/>
+  <text x="300" y="286" fill="#868e96" font-size="10">re-encrypted by</text>
+
+  <rect x="150" y="295" width="260" height="46" rx="8" fill="#7048e8" opacity="0.8"/>
+  <text x="280" y="314" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">Keystore master key</text>
+  <text x="280" y="332" text-anchor="middle" fill="#e5dbff" font-size="10">ciphertext max age 90 days</text>
+
+  <line x1="280" y1="341" x2="280" y2="363" stroke="#868e96" stroke-width="2" marker-end="url(#k)"/>
+  <text x="300" y="356" fill="#868e96" font-size="10">protected by</text>
+
+  <rect x="120" y="365" width="320" height="52" rx="8" fill="#c92a2a"/>
+  <text x="280" y="386" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">Root Keystore master key</text>
+  <text x="280" y="405" text-anchor="middle" fill="#ffe3e3" font-size="10">the bottom of the chain — cannot be accessed by any individual</text>
+
+  <rect x="120" y="430" width="320" height="30" rx="6" fill="none" stroke="#c92a2a" stroke-dasharray="4"/>
+  <text x="280" y="450" text-anchor="middle" fill="#c92a2a" font-size="11" font-weight="bold">HSM path: a location HSM wrapping key sits between KEK and KMS master key</text>
+  <defs><marker id="k" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#868e96"/></marker></defs>
+</svg>
+</div>
+
+<h3>How the wrapping differs by protection level</h3>
+<table>
+  <tr><th>Level</th><th>Wrapping chain above the KEK</th></tr>
+  <tr><td>Software</td><td>KMS master key (per location) encrypts the KEK → re-encrypted periodically by the Keystore master key → protected by the <strong>root</strong> Keystore master key.</td></tr>
+  <tr><td>Hardware</td><td>A location-specific <strong>HSM wrapping key</strong> encrypts the KEK, and that HSM wrapping key is then encrypted with the KMS master key.</td></tr>
+  <tr><td>External</td><td>An <strong>EKM wrapping key</strong> encrypts the wrapped DEK, then is itself encrypted with the KMS master key.</td></tr>
+</table>
+<p>KMS servers fetch the KMS master key at startup as a <strong>hard dependency</strong> and refresh it daily.</p>
+</div>
+
+<div class="card">
+<h3>Encryption at rest, end to end</h3>
+<ol>
+  <li>Data is chunked; each chunk gets a DEK.</li>
+  <li>The DEK is wrapped by a KEK and stored <em>with</em> the data.</li>
+  <li>To read, the storage system asks the key service to unwrap the DEK (authorized by IAM), decrypts the chunk, and discards the plaintext DEK.</li>
+  <li>Key material is <strong>always encrypted at rest and in transit</strong>, decrypted only during customer use or Google's internal rotation/integrity checks.</li>
+  <li>Client↔server RPC is secured by <a href="google_security_alts.html">ALTS</a>; customer↔GFE by TLS.</li>
+</ol>
+<div class="insight"><p><strong>Datastore protection nuance:</strong> key material is encrypted at the <em>application layer</em> before it hits storage — so even engineers with datastore access never see plaintext customer key material. Metadata is authenticated with HMAC and scanned hourly for integrity (verify HMAC + successful decryption).</p></div>
+</div>
+
+<div class="card">
+<h3>Rotation &amp; destruction</h3>
+<ul>
+  <li>A new key <em>version</em> = new key material. Autokey rotates yearly; the Keystore master key has a ciphertext max age of 90 days; KMS refreshes master keys every 24h and <strong>re-encrypts all customer keys monthly</strong>.</li>
+  <li>Rotation behavior is product-dependent: Spanner re-encrypts the DEK; Cloud Storage encrypts only new resources; BigQuery doesn't auto-rotate table keys.</li>
+  <li>Destruction: a default 30-day <em>Scheduled for destruction</em> state precedes logical deletion. Keys/rings/versions themselves can't be deleted — only version <em>material</em> is destroyed.</li>
+</ul>
+</div>
+</div>
+
+<!-- WHY -->
+<div class="section" id="why">
+<div class="card">
+<h2>Why this design</h2>
+
+<h3>Why envelope encryption instead of one big key?</h3>
+<ul>
+  <li><strong>Blast radius.</strong> A DEK protects one chunk; compromising it doesn't expose everything. The high-value KEK is used rarely and never leaves the boundary.</li>
+  <li><strong>Cheap rotation.</strong> Rotating a KEK means re-wrapping DEKs, not re-encrypting petabytes. You get "rotate the key" semantics without rewriting the data.</li>
+  <li><strong>Locality.</strong> The wrapped DEK travels with the data, so the hot path only calls the key service to <em>unwrap</em> a small blob — not to stream data through it.</li>
+</ul>
+
+<h3>Why a multi-level master-key chain?</h3>
+<div class="insight"><p>Each layer exists so that <em>no single key and no single human</em> is the whole game. The root Keystore master key can't be accessed by any individual; the KMS master key is refreshed daily; customer keys are re-wrapped monthly. Compromising one layer still leaves the layer above it protecting the secret — defense in depth applied to keys themselves.</p></div>
+
+<h3>Why three protection levels?</h3>
+<p>Different customers have different threat models and compliance needs. Software (FIPS L1) is the cheap default; HSM (FIPS L3) guarantees key material is never seen in plaintext by software; External/EKM lets a customer hold the ultimate key entirely off Google's cloud. Same envelope model, different root anchor.</p>
+
+<h3>Why "key material never leaves the boundary"?</h3>
+<p>It reduces the problem of "protect the data everywhere" to "protect the key service." As long as the KMS/Keystore boundary holds and no employee can read plaintext key material, the data at rest is safe even if storage media are physically stolen.</p>
+</div>
+</div>
+
+<!-- CHALLENGES -->
+<div class="section" id="scale">
+<div class="card">
+<h2>Scale &amp; throughput — keeping the key service off the hot path</h2>
+<p>If every read of encrypted data had to call the key service, that service would be a global bottleneck and a hard availability dependency. The envelope model is specifically shaped to avoid that:</p>
+<ul>
+  <li><strong>The wrapped DEK travels with the data.</strong> The hot path decrypts a chunk using a DEK stored next to it — the key service is only needed to <em>unwrap</em> a small blob, never to stream data through it.</li>
+  <li><strong>Rotation re-wraps keys, not petabytes.</strong> Rotating a KEK/master key re-encrypts other <em>keys</em>, not the underlying data — so "rotate the key" is cheap regardless of data volume (KMS re-encrypts customer keys monthly, refreshes master keys every 24h).</li>
+  <li><strong>Master key cached, bounded staleness.</strong> KMS fetches the master key at startup and refreshes daily; the Keystore master key has a 90-day ciphertext max age with a 1-day client cache — reads hit local cache, not a central call each time.</li>
+  <li><strong>HSM only where required.</strong> FIPS-L3 HSM operations are more expensive, so they back only the keys that must never appear in software plaintext; the software tier (BoringSSL) handles the cheap common case.</li>
+</ul>
+<div class="insight"><p><strong>The scaling lesson:</strong> keep the expensive, centralized resource (the key service) off the per-request hot path — store a cheap wrapped credential next to the data, unwrap rarely, cache the roots with bounded staleness, and make rotation a key-level not data-level operation.</p></div>
+</div>
+</div>
+
+<div class="section" id="challenges">
+<div class="card">
+<h2>Hard problems</h2>
+
+<h4>Availability of the key service is a hard dependency</h4>
+<p>If KMS/Keystore is down, nothing can decrypt. KMS fetches the master key at startup as a hard dependency and refreshes daily — the design must make the key service extremely available and its master key highly cached-yet-fresh (90-day ciphertext max age, one-day client cache).</p>
+
+<h4>Rotation without rewriting the world</h4>
+<p>Re-encrypting petabytes on every rotation is impossible, so rotation happens at the <em>key-wrapping</em> layer (re-wrap DEKs, re-encrypt customer keys monthly). The subtlety: different products (Spanner vs GCS vs BigQuery) can only rotate what they can afford to rewrite, so rotation semantics deliberately vary.</p>
+
+<h4>Integrity, not just secrecy</h4>
+<p>An attacker who can tamper with a wrapped DEK or metadata could cause silent corruption. Hence HMAC-authenticated metadata and hourly integrity scans (verify HMAC + successful decryption) — catching tampering proactively, not on next read.</p>
+
+<h4>Keeping humans out</h4>
+<div class="warning"><p>The hardest guarantee: <strong>no Google employee has access to unencrypted customer key material</strong>, and the master key can't be accessed by any individual. That requires the application-layer encryption of key material, quorum/root controls, Access Transparency, and Key Access Justifications — organizational and cryptographic controls working together.</p></div>
+</div>
+</div>
+
+<!-- INTERVIEW -->
+<div class="section" id="interview">
+<div class="card">
+<h2>Interview angle</h2>
+<div class="iv"><p><strong>Why this matters:</strong> "encryption at rest" and "key hierarchy" are among the most common security-backend system-design prompts, and the envelope + master-key-chain model is the canonical answer. The key move is being able to reason cleanly about <em>why each layer exists</em> and how the chain bottoms out at an offline root.</p></div>
+
+<h3>The transferable pattern to internalize</h3>
+<table>
+  <tr><th>KMS concept</th><th>The general principle</th></tr>
+  <tr><td>Master key chain bottoming out at an offline root</td><td>A layered chain (data key → wrapping key → master key → offline root) so no single key or human is the whole game</td></tr>
+  <tr><td>Key material never leaves the HSM / boundary</td><td>High-value keys are used, never exported; cryptographic operations happen inside the hardened boundary</td></tr>
+  <tr><td>HSM-backed protection level (FIPS L3)</td><td>When key material must never appear in software plaintext, back it with a certified HSM</td></tr>
+  <tr><td>Separation of key and access secret</td><td>Deliver a device/key and the secret that unlocks it through separate channels so neither alone is enough</td></tr>
+</table>
+<div class="tip"><p>The strong framing: envelope encryption applies the same "hardware-rooted key hierarchy" idea to <em>data at rest</em> that hardware roots of trust apply to <em>device identity</em> — a data key wrapped by a key-encryption key, wrapped by a master key, anchored at an offline root. Same pattern, different asset.</p></div>
+
+<h3>Likely questions</h3>
+<div class="qa"><div class="q">Q: "Design encryption at rest for a large storage system."</div>
+<p>DEK-per-chunk, wrap with KEK, store wrapped DEK with data, KEK in a hardened key service, master-key chain to an offline root. Then discuss rotation at the wrapping layer, availability of the key service, and integrity (HMAC + scans).</p></div>
+<div class="qa"><div class="q">Q: "How do you rotate keys without re-encrypting all the data?"</div>
+<p>Rotate/re-wrap at the KEK/master layer; only new writes use new DEKs; product-specific choices for whether to re-encrypt existing data.</p></div>
+<div class="qa"><div class="q">Q: "How do you ensure even insiders can't read customer keys?"</div>
+<p>Application-layer encryption of key material before storage, root key inaccessible to any individual, quorum controls, Access Transparency, Key Access Justifications.</p></div>
+<div class="qa"><div class="q">Q: "Software vs HSM vs external keys — when would you pick each?"</div>
+<p>Map to threat model / compliance: default software; HSM when key material must never be in software plaintext (FIPS L3); external/EKM when the customer must physically hold the root off-cloud.</p></div>
+
+<div class="tip"><p><strong>System-of-systems close:</strong> "KMS protects the data; ALTS protects the RPCs that carry key-unwrap requests; the machines running KMS are rooted in Titan; BeyondProd authorizes which services may call KMS at all." Tie it together.</p></div>
+</div>
+</div>
+
+</div>
+<script>
+function showSection(evt, id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  evt.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Protection &amp; Broadcast Encryption — Notes (AACS ↔ Titan)</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fa; --bg2: #ffffff; --bg3: #f1f3f5; --border: #dee2e6;
+  --text: #212529; --text2: #495057; --text3: #868e96;
+  --blue: #1971c2; --blue-l: #d0ebff; --green: #2f9e44; --green-l: #d3f9d8;
+  --yellow: #e67700; --yellow-l: #fff3bf; --red: #c92a2a; --red-l: #ffe3e3;
+  --purple: #7048e8; --purple-l: #e5dbff; --r: 12px; --shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.8; }
+.container { max-width: 980px; margin: 0 auto; padding: 40px 24px; }
+header { text-align: center; margin-bottom: 32px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 30px; font-weight: 800; margin-bottom: 8px; }
+header .sub { color: var(--text3); font-size: 14px; }
+.crumb { text-align:center; margin-bottom: 24px; font-size: 13px; color: var(--text3); }
+.crumb a { color: var(--blue); text-decoration: none; }
+h2 { font-size: 23px; font-weight: 700; margin: 32px 0 14px; color: var(--blue); }
+h3 { font-size: 17px; font-weight: 600; margin: 22px 0 10px; }
+p { margin-bottom: 12px; color: var(--text2); }
+ul, ol { margin: 8px 0 16px 24px; color: var(--text2); }
+li { margin-bottom: 6px; }
+strong { color: var(--text); }
+pre { background: #1e1e2e; border-radius: 8px; padding: 16px 20px; overflow-x: auto; margin: 12px 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; color: #cdd6f4; white-space: pre-wrap; }
+code { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+p code, li code, td code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--purple); }
+.insight { background: var(--blue-l); border-left: 3px solid var(--blue); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.insight p { color: #114f8c; margin: 0; }
+.tip { background: var(--green-l); border-left: 3px solid var(--green); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.tip p { color: #1d6b2e; margin: 0; }
+.warn { background: var(--yellow-l); border-left: 3px solid var(--yellow); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.warn p { color: #a85700; margin: 0; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 20px; padding: 24px 28px; box-shadow: var(--shadow); }
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+th, td { padding: 10px 14px; border: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { background: var(--bg3); font-weight: 600; color: var(--text); }
+tr:hover { background: var(--bg3); }
+.svg-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 20px; margin: 20px 0; text-align: center; overflow-x: auto; }
+.iv { background: var(--purple-l); border-left: 3px solid var(--purple); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.iv p { color: #4a2fa8; margin: 0; }
+@media (max-width: 768px) { .container { padding: 20px 12px; } }
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>Content Protection &amp; Broadcast Encryption</h1>
+  <div class="sub">Beginner notes — symmetric vs asymmetric, how AACS lets many keys open one disc, and how it bridges to Titan / HSM per-device identity</div>
+</header>
+<div class="crumb">📚 <a href="google_security_index.html">Google Security Systems — Index</a> &nbsp;›&nbsp; Content Protection (bridge note)</div>
+
+<div class="card">
+<h2>Why this note exists</h2>
+<p>A quick, honest primer that connects <strong>content-protection key management</strong> (the AACS / Blu-ray world) to the <strong>per-device hardware identity</strong> world (Titan, HSM-based device provisioning). It answers a natural question — <em>"can one encrypted file be opened by many different keys?"</em> — and shows why "shared software key" is fragile while "per-device key" is not. Useful as an interview bridge: the same problem (protecting a secret against copying, and revoking it when it leaks) shows up across a whole career.</p>
+</div>
+
+<div class="card">
+<h2>1. First, the basics: symmetric vs. asymmetric (ECC)</h2>
+<table>
+  <tr><th>Type</th><th>How keys work</th><th>Example</th></tr>
+  <tr><td><strong>Symmetric</strong></td><td><strong>Same key</strong> encrypts and decrypts. One key, one lock.</td><td>AES</td></tr>
+  <tr><td><strong>Asymmetric</strong></td><td>A <strong>pair</strong>: public key encrypts → the <em>matching</em> private key decrypts (or: private signs → public verifies).</td><td>RSA, <strong>ECC / elliptic-curve</strong></td></tr>
+</table>
+<div class="insight"><p><strong>What ECC (elliptic-curve) actually is:</strong> just a <em>method</em> for doing asymmetric crypto that needs a <strong>much shorter key</strong> for the same strength (a 256-bit ECC key ≈ a 3072-bit RSA key). It's still "a matched pair of keys," not "any key opens it." Great for small/embedded devices — which is why modern IoT device certs commonly use Ed25519 / P-256 (both elliptic curves).</p></div>
+<p><strong>So can one encrypted file be opened by many <em>different</em> keys?</strong> In plain symmetric or asymmetric crypto — <strong>no</strong>. One key (or one matched pair) per lock. To get "many different keys can open the same disc," you need a special scheme layered on top: <em>broadcast encryption</em>.</p>
+</div>
+
+<div class="card">
+<h2>2. Broadcast encryption — how AACS lets many keys open one disc</h2>
+<p>This is the Blu-ray / AACS model. The goal: press <strong>one</strong> disc, and let <strong>millions of different players</strong> (each with its own key) play it — while still being able to <strong>cut off</strong> any player whose key gets stolen.</p>
+<div class="svg-wrap">
+<svg viewBox="0 0 720 260" width="100%" style="max-width:820px" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+  <text x="360" y="24" text-anchor="middle" fill="#212529" font-size="14" font-weight="bold">One disc, many device keys</text>
+  <!-- disc -->
+  <rect x="40" y="50" width="230" height="150" rx="10" fill="#f1f3f5" stroke="#dee2e6"/>
+  <text x="155" y="72" text-anchor="middle" fill="#212529" font-size="12" font-weight="bold">The Blu-ray disc</text>
+  <rect x="58" y="86" width="194" height="42" rx="6" fill="#e5dbff" stroke="#7048e8"/>
+  <text x="155" y="104" text-anchor="middle" fill="#4a2fa8" font-size="11" font-weight="bold">Movie, encrypted with</text>
+  <text x="155" y="120" text-anchor="middle" fill="#4a2fa8" font-size="11">ONE Media Key (same worldwide)</text>
+  <rect x="58" y="138" width="194" height="52" rx="6" fill="#fff3bf" stroke="#e67700"/>
+  <text x="155" y="157" text-anchor="middle" fill="#a85700" font-size="11" font-weight="bold">MKB (Media Key Block):</text>
+  <text x="155" y="173" text-anchor="middle" fill="#a85700" font-size="10">the Media Key, wrapped separately</text>
+  <text x="155" y="185" text-anchor="middle" fill="#a85700" font-size="10">for thousands of device keys</text>
+  <!-- players -->
+  <line x1="270" y1="164" x2="330" y2="120" stroke="#868e96" stroke-width="1.5" marker-end="url(#bc)"/>
+  <line x1="270" y1="164" x2="330" y2="164" stroke="#868e96" stroke-width="1.5" marker-end="url(#bc)"/>
+  <line x1="270" y1="164" x2="330" y2="208" stroke="#868e96" stroke-width="1.5" marker-end="url(#bc)"/>
+  <rect x="335" y="100" width="345" height="40" rx="6" fill="#d0ebff" stroke="#1971c2"/>
+  <text x="507" y="118" text-anchor="middle" fill="#114f8c" font-size="11" font-weight="bold">PS5 (its device key) → unwraps → Media Key → plays</text>
+  <text x="507" y="133" text-anchor="middle" fill="#114f8c" font-size="10">&nbsp;</text>
+  <rect x="335" y="144" width="345" height="40" rx="6" fill="#d3f9d8" stroke="#2f9e44"/>
+  <text x="507" y="162" text-anchor="middle" fill="#1d6b2e" font-size="11" font-weight="bold">Panasonic player (different key) → same Media Key</text>
+  <text x="507" y="177" text-anchor="middle" fill="#1d6b2e" font-size="10">different key in, SAME media key out</text>
+  <rect x="335" y="188" width="345" height="34" rx="6" fill="#ffe3e3" stroke="#c92a2a"/>
+  <text x="507" y="209" text-anchor="middle" fill="#c92a2a" font-size="11" font-weight="bold">Revoked player → new MKB omits its key → can't unwrap</text>
+  <defs><marker id="bc" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#868e96"/></marker></defs>
+</svg>
+</div>
+<ol>
+  <li>The movie is encrypted with <strong>one Media Key</strong> (same on every copy of that title).</li>
+  <li>The disc carries an <strong>MKB</strong> — the Media Key <em>wrapped separately for thousands of different device keys</em>.</li>
+  <li>Each player uses <strong>its own device key</strong> to unwrap the <em>same</em> Media Key from the MKB, then decrypts the movie.</li>
+</ol>
+<p>So the answer to "can many different keys open one file?" is <strong>yes — via this indirection</strong>: many device keys → each unwraps the <em>same</em> content key → opens the same file.</p>
+<div class="tip"><p><strong>Revocation is the killer feature:</strong> if a device's key leaks, future discs are pressed with a new MKB that simply <em>leaves that key out</em>. The cracked device can't play new titles anymore (old discs still work). This is the same idea Titan calls <em>remediation</em>.</p></div>
+</div>
+
+<div class="card">
+<h2>3. "Doesn't issuing keys per device not scale?" — good instinct</h2>
+<p>Exactly the right question. Two ways to hand out device keys:</p>
+<table>
+  <tr><th>Approach</th><th>Scale?</th><th>Reality</th></tr>
+  <tr><td><strong>One unique key per physical unit</strong> (per PS5)</td><td>❌ poor</td><td>The MKB would need a slot for every single unit — billions of them. AACS does <em>not</em> do this.</td></tr>
+  <tr><td><strong>One key set per <em>model</em> / product line / firmware version</strong></td><td>✅ workable</td><td>What AACS actually does. All copies of "PowerDVD v12," or all units of one player model, share a key set. The MKB only has to cover tens of thousands of <em>models/vendors</em>, not billions of units.</td></tr>
+</table>
+<p>Your hunch — <em>"some devices are probably on the same key"</em> — is right: the sharing unit is a <strong>model / product line</strong>, not each individual unit.</p>
+<h3>How it stays revocable despite sharing: the subset-difference tree</h3>
+<p>The clever trick that makes "shared <em>and</em> individually revocable" possible: each device gets <strong>a set of keys</strong> corresponding to its position on a giant binary tree.</p>
+<ul>
+  <li>Because keys map to <em>subsets</em> of the tree, <strong>many devices share the upper-level keys</strong> → the MKB stays small (scales).</li>
+  <li>But the MKB can <strong>precisely cut off one model / one batch</strong> from the tree without affecting anyone else → revocation.</li>
+</ul>
+<div class="insight"><p><strong>One line:</strong> sharing is for scale; the tree structure is what lets you still revoke precisely under that sharing. The cost: crack the shared key set and the <em>whole model</em> goes down together (and gets revoked together).</p></div>
+</div>
+
+<div class="card">
+<h2>4. The real point: shared-software-key vs per-device-key (blast radius)</h2>
+<p>This is the same "bound the blast radius" idea from the KMS/Titan notes — seen from the content-protection side.</p>
+<table>
+  <tr><th></th><th>Software player (e.g. a PC app)</th><th>Physical device (console / hardware player)</th></tr>
+  <tr><td>Where the key lives</td><td><strong>In the software — same key in every copy</strong></td><td><strong>Burned per unit/model into hardware</strong> (a secure element)</td></tr>
+  <tr><td>Crack it once →</td><td>Extract the key → <strong>every copy is broken</strong></td><td>Breaks only that unit/model — and it can be revoked</td></tr>
+  <tr><td>Blast radius</td><td><strong>Huge</strong> (one break = everything)</td><td><strong>Small</strong> (contained)</td></tr>
+  <tr><td>So the defense is…</td><td><strong>Anti-debugging, obfuscation, kernel-mode (Ring 0) protection</strong> — make it painfully hard to pull the shared key out</td><td>Hardware hides the key; being per-device is already the defense</td></tr>
+</table>
+<div class="warn"><p><strong>Honest scope note:</strong> in a software-player role, the job is usually the <em>right-hand mitigations</em> — anti-debug / obfuscation / tamper protection to defend a key that, by design, is shared across all copies. The broadcast-encryption/MKB/tree machinery is a separate layer (the disc-format + licensing side). Knowing how they fit together is the value; you don't have to have built the MKB tree to explain why per-device beats shared-software keys.</p></div>
+</div>
+
+<div class="card">
+<h2>5. Bridge to the modern per-device world (Titan / HSM)</h2>
+<table>
+  <tr><th></th><th>AACS device key</th><th>Titan / HSM device provisioning</th></tr>
+  <tr><td>Issued per</td><td><strong>Model / product line</strong> (shared)</td><td><strong>Each unit / chip</strong> (unique)</td></tr>
+  <tr><td>How it scales</td><td>Subset-difference <strong>tree</strong> lets shared keys still be revoked</td><td>Keys are <strong>generated on the production line by each unit itself</strong> — no central authority hands out billions of keys</td></tr>
+  <tr><td>Crack cost</td><td>Whole model revoked together</td><td>Only that one unit fails</td></tr>
+  <tr><td>Revocation</td><td>New MKB omits the key</td><td>CA re-issues so only patched/genuine units are trusted (Titan "remediation")</td></tr>
+</table>
+<div class="insight"><p><strong>The historical arc:</strong> AACS is a <em>math</em> workaround (subset tree) invented <em>before</em> cheap per-device secure elements existed — it approximates per-device revocation using shared keys. Titan/HSM is the <em>hardware</em> answer that arrived once every device could cheaply carry a secure element and generate its own key — so "one key per unit" finally scales, because each unit makes its own key instead of a central authority issuing them.</p></div>
+</div>
+
+<div class="card">
+<h2>6. Interview angle</h2>
+<div class="iv"><p>This is a strong, genuine bridge across a long career: the same problem — <em>protect a secret from copying, and revoke it cleanly when it leaks</em> — recurs from Blu-ray content protection to data-center hardware roots of trust. You've stood at two points on that arc.</p></div>
+<h3>How to say it (honest, not overclaiming)</h3>
+<p><em>"Early in my career at CyberLink I worked on software content protection — anti-debugging, obfuscation, kernel-mode techniques to protect the AACS decryption keys inside the player. The hard part there was that a software player's key is shared across every copy, so one successful reverse-engineer breaks everyone — the blast radius is huge. That's exactly the weakness that per-device hardware identity solves: systems like Google's Titan, or HSM-based device provisioning on IoT products, give each unit its own key at manufacture, so a compromise is contained to one device and can be revoked — the same 'revocation' idea Blu-ray did with its MKB, but rooted in hardware instead of a shared software secret."</em></p>
+<h3>Likely follow-ups</h3>
+<ul>
+  <li><strong>"Did you design the AACS key system?"</strong> — "No — I worked on the software-side tamper protection defending the keys. The broadcast-encryption / key-distribution scheme was a separate layer. But that experience is exactly why I understand <em>why</em> shared software keys are fragile and per-device hardware keys aren't."</li>
+  <li><strong>"How do you revoke a compromised key?"</strong> — "Content side: press new media whose key block excludes the leaked key. Hardware side: the CA stops honoring it and re-issues trust only to genuine/patched units. Both are 'exclude the bad one going forward,' just anchored differently."</li>
+  <li><strong>"Why not one key per physical unit for Blu-ray?"</strong> — "Didn't scale at the time — the key block would need a slot per unit. So AACS shared keys per model and used a subset-difference tree to keep precise revocation. Per-unit only became practical once devices could generate their own keys in hardware."</li>
+</ul>
+</div>
+
+<div class="card">
+<h2>Sources / further reading</h2>
+<ul>
+  <li>AACS specification (aacsla.com) — Media Key Block, device keys, revocation</li>
+  <li>Naor–Naor–Lotspiech, "Revocation and Tracing Schemes for Stateless Receivers" (2001) — the subset-difference method behind AACS</li>
+  <li>See also the <a href="google_security_titan.html">Titan</a> and <a href="google_security_kms.html">KMS</a> notes for the per-device / envelope-encryption side.</li>
+</ul>
+<p style="color:var(--text3);font-size:13px;">Beginner bridge note. Technical concepts are public/textbook; the interview-angle framing is private prep.</p>
+</div>
+
+</div>
+</body>
+</html>

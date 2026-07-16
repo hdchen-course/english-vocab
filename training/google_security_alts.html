@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALTS — Application Layer Transport Security | Google Security Deep-Dive</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fa; --bg2: #ffffff; --bg3: #f1f3f5; --border: #dee2e6;
+  --text: #212529; --text2: #495057; --text3: #868e96;
+  --blue: #1971c2; --blue-l: #d0ebff; --green: #2f9e44; --green-l: #d3f9d8;
+  --yellow: #e67700; --yellow-l: #fff3bf; --red: #c92a2a; --red-l: #ffe3e3;
+  --purple: #7048e8; --purple-l: #e5dbff; --r: 12px; --shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.8; }
+.container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+header { text-align: center; margin-bottom: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+header .sub { color: var(--text3); font-size: 14px; }
+.crumb { text-align:center; margin-bottom: 24px; font-size: 13px; color: var(--text3); }
+.crumb a { color: var(--blue); text-decoration: none; }
+.nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 40px; position: sticky; top: 0; background: var(--bg); padding: 16px 0; z-index: 100; border-bottom: 1px solid var(--border); }
+.nav-btn { padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s; font-family: 'Inter', sans-serif; }
+.nav-btn:hover { background: var(--bg3); color: var(--text); }
+.nav-btn.active { background: var(--blue-l); color: var(--blue); border-color: var(--blue); }
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+h2 { font-size: 24px; font-weight: 700; margin: 32px 0 16px; color: var(--blue); }
+h3 { font-size: 18px; font-weight: 600; margin: 24px 0 12px; }
+h4 { font-size: 15px; font-weight: 600; margin: 16px 0 8px; color: var(--text2); }
+p { margin-bottom: 12px; color: var(--text2); }
+ul, ol { margin: 8px 0 16px 24px; color: var(--text2); }
+li { margin-bottom: 6px; }
+strong { color: var(--text); }
+pre { background: #1e1e2e; border-radius: 8px; padding: 16px 20px; overflow-x: auto; margin: 12px 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; color: #cdd6f4; white-space: pre-wrap; }
+code { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+p code, li code, td code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--purple); }
+.insight { background: var(--blue-l); border-left: 3px solid var(--blue); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.insight p { color: #114f8c; margin: 0; }
+.warning { background: var(--yellow-l); border-left: 3px solid var(--yellow); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.warning p { color: #a85700; margin: 0; }
+.tip { background: var(--green-l); border-left: 3px solid var(--green); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.tip p { color: #1d6b2e; margin: 0; }
+.iv { background: var(--purple-l); border-left: 3px solid var(--purple); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.iv p { color: #4a2fa8; margin: 0 0 8px 0; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 20px; padding: 24px 28px; box-shadow: var(--shadow); }
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+th, td { padding: 10px 14px; border: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { background: var(--bg3); font-weight: 600; color: var(--text); }
+tr:hover { background: var(--bg3); }
+.svg-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 20px; margin: 20px 0; text-align: center; overflow-x: auto; }
+.qa { border-left: 3px solid var(--purple); padding: 4px 0 4px 16px; margin: 18px 0; }
+.qa .q { font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.tag { display:inline-block; font-size:11px; font-weight:700; padding:2px 8px; border-radius: 20px; background: var(--purple-l); color: var(--purple); margin-left:6px; }
+@media (max-width: 768px) { .container { padding: 20px 12px; } .nav { position: static; flex-direction: column; } .nav-btn { text-align: center; } pre { font-size: 11px; } }
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>ALTS — Application Layer Transport Security</h1>
+  <div class="sub">Google's mutual-auth &amp; transport encryption for service-to-service RPC · deep-dive &amp; interview prep</div>
+</header>
+<div class="crumb">📚 <a href="google_security_index.html">Google Security Systems — Index</a> &nbsp;›&nbsp; ALTS</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection(event,'overview')">Overview</button>
+  <button class="nav-btn" onclick="showSection(event,'design')">How it's designed</button>
+  <button class="nav-btn" onclick="showSection(event,'why')">Why this way</button>
+  <button class="nav-btn" onclick="showSection(event,'challenges')">Challenges</button>
+  <button class="nav-btn" onclick="showSection(event,'scale')">Scale &amp; throughput</button>
+  <button class="nav-btn" onclick="showSection(event,'interview')">Interview angle</button>
+</div>
+
+<!-- ================= OVERVIEW ================= -->
+<div class="section active" id="overview">
+<div class="card">
+<h2>What ALTS is, in one paragraph</h2>
+<p>
+ALTS is Google's in-house equivalent of "mutual TLS for everything internal." It's the layer that authenticates <em>both</em> ends of a connection and encrypts the traffic for the roughly <strong>10<sup>10</sup> RPCs per second</strong> flowing between Google's microservices. It is <strong>zero-configuration</strong>: any workload scheduled in production has its RPCs secured by default — an engineer writing a service does nothing to get mutual authentication and encryption. Development began in <strong>2007</strong>, because TLS at the time bundled legacy protocol baggage that didn't meet Google's minimum security bar.
+</p>
+<div class="insight"><p><strong>Mental model:</strong> ALTS is to internal service traffic what HTTPS is to the public web — but built around <em>service identity</em> instead of <em>hostnames</em>, serialized with Protocol Buffers instead of X.509/ASN.1, and provisioned automatically by the cluster scheduler instead of by a human buying a certificate.</p></div>
+</div>
+
+<div class="card">
+<h3>Where it's used</h3>
+<ul>
+  <li><strong>Every internal RPC.</strong> Service A calling service B inside Google is an ALTS-protected channel. It's the substrate the entire microservice fleet sits on.</li>
+  <li><strong>Foundation for BeyondProd.</strong> ALTS provides the service-identity + mutual-auth primitives that Google's "zero-trust for production" model (BeyondProd) builds on. See the <a href="google_security_beyondprod.html">BeyondProd deep-dive</a>.</li>
+  <li><strong>Cloud KMS internals.</strong> Cloud KMS secures its own client↔server RPC via ALTS (customer↔GFE uses TLS). See <a href="google_security_kms.html">KMS deep-dive</a>.</li>
+  <li><strong>Enables elasticity.</strong> Because identity isn't bound to a host, workloads can be replicated, load-balanced, and rescheduled across machines without re-issuing host certs.</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>ALTS vs TLS at a glance</h3>
+<table>
+  <tr><th>Dimension</th><th>TLS (with HTTPS)</th><th>ALTS</th></tr>
+  <tr><td>Primary identity</td><td>Host name (server cert bound to a name)</td><td><strong>Service / workload identity</strong> — one identity works across many naming schemes</td></tr>
+  <tr><td>Certificate format</td><td>X.509 + ASN.1</td><td><strong>Protocol Buffers</strong> (simpler to parse, easier to fuzz/audit)</td></tr>
+  <tr><td>Provisioning</td><td>Human obtains a cert per host/name</td><td>Automatic — the scheduler (Borg) issues workload certs</td></tr>
+  <tr><td>Mutual auth</td><td>Optional (usually server-only on the web)</td><td><strong>Always mutual</strong></td></tr>
+  <tr><td>Forward secrecy</td><td>Default in modern TLS</td><td>Supported but <em>not</em> default — frequent cert rotation is the primary mechanism</td></tr>
+  <tr><td>Design driver</td><td>Interop with the whole internet</td><td>Simplicity + auditability inside a controlled fleet</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h3>Jargon buster — read this first</h3>
+<p>Plain-English versions of the transport-security terms used below:</p>
+<table>
+  <tr><th>Term</th><th>Plain meaning</th></tr>
+  <tr><td><strong>RPC</strong></td><td>Remote Procedure Call — one service calling another over the network. ALTS secures every one of these.</td></tr>
+  <tr><td><strong>mutual auth</strong></td><td>Both ends prove who they are (not just the server, like most websites). Client proves itself to server AND server to client.</td></tr>
+  <tr><td><strong>authN / authZ</strong></td><td>authN = "who are you?" (ALTS does this). authZ = "are you allowed?" (a different layer). Same "Auth…" prefix, different jobs.</td></tr>
+  <tr><td><strong>handshake</strong></td><td>The short back-and-forth at the start of a connection where both sides prove identity and agree on an encryption key.</td></tr>
+  <tr><td><strong>TLS</strong></td><td>The standard encryption-in-transit protocol behind HTTPS. ALTS is Google's simpler in-house alternative for internal traffic.</td></tr>
+  <tr><td><strong>certificate</strong></td><td>A signed document proving "this key belongs to this identity." A <strong>CA</strong> (Certificate Authority) is the trusted party that signs them.</td></tr>
+  <tr><td><strong>CSR</strong> (certificate signing request)</td><td>A request to the CA: "here's my <em>public</em> key — sign a cert saying it's mine." The private key never leaves the machine; only the public half travels. Like a passport application — you hand in the form, not your fingerprints.</td></tr>
+  <tr><td><strong>PFS</strong> (perfect forward secrecy)</td><td>Protects the <em>past</em> from a <em>future</em> leak: even if the long-term private key leaks later, traffic recorded earlier still can't be decrypted. Done by giving each session a <em>throw-away</em> key (derived fresh via Diffie-Hellman and discarded), so the long-term key only <em>signs</em> — it never produces the encryption key. Like using a one-time lock per room and destroying the key on the way out, vs. one master key that opens every room past and present. ALTS supports it but defaults to <em>frequent key rotation</em> for a similar effect at lower per-connection cost.</td></tr>
+  <tr><td><strong>rotation</strong></td><td>Replacing keys/certs frequently so a stolen one is only useful for a short window.</td></tr>
+  <tr><td><strong>bound the blast radius</strong></td><td>Design so one compromise causes limited damage. Short-lived, frequently-rotated credentials do exactly this.</td></tr>
+  <tr><td><strong>1-RTT</strong></td><td>"one round trip" — the handshake completes in a single there-and-back, keeping connection setup fast.</td></tr>
+</table>
+</div>
+</div>
+
+<!-- ================= DESIGN ================= -->
+<div class="section" id="design">
+<div class="card">
+<h2>Trust model: identity, not hostname</h2>
+<p>
+Every network entity — a user, a machine, or a workload — has an <strong>identity</strong> embedded in its ALTS certificates, and communications are <strong>mutually authenticated by identity</strong>. Production services run as production entities (managed by SREs); dev builds run as test entities, and production configs are set <em>not to trust</em> dev entities. This is what makes replication trivial: five replicas of a service all present the <em>same</em> identity, so a caller doesn't care which host or IP answered.
+</p>
+</div>
+
+<div class="card">
+<h3>The certificate chain &amp; root of trust</h3>
+<div class="svg-wrap">
+<svg viewBox="0 0 720 300" width="100%" style="max-width:1000px" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+  <rect x="230" y="15" width="260" height="56" rx="8" fill="#7048e8"/>
+  <text x="360" y="38" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">Signing Service verification key</text>
+  <text x="360" y="58" text-anchor="middle" fill="#e5dbff" font-size="11">ROOT OF TRUST — installed on every prod/corp machine</text>
+
+  <line x1="360" y1="71" x2="360" y2="103" stroke="#868e96" stroke-width="2" marker-end="url(#ar)"/>
+  <text x="375" y="92" fill="#868e96" font-size="10">signs</text>
+
+  <rect x="230" y="105" width="260" height="56" rx="8" fill="#1971c2"/>
+  <text x="360" y="128" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">Master certificate</text>
+  <text x="360" y="148" text-anchor="middle" fill="#d0ebff" font-size="11">per machine/scheduler · rotated every few months</text>
+
+  <line x1="360" y1="161" x2="360" y2="193" stroke="#868e96" stroke-width="2" marker-end="url(#ar)"/>
+  <text x="375" y="182" fill="#868e96" font-size="10">signs (locally, by master private key)</text>
+
+  <rect x="200" y="195" width="320" height="60" rx="8" fill="#2f9e44"/>
+  <text x="360" y="218" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">Handshake certificate</text>
+  <text x="360" y="238" text-anchor="middle" fill="#d3f9d8" font-size="11">static DH params + ciphers · rotated every few hours</text>
+
+  <rect x="20" y="105" width="150" height="150" rx="8" fill="none" stroke="#dee2e6" stroke-dasharray="4"/>
+  <text x="95" y="128" text-anchor="middle" fill="#495057" font-size="11" font-weight="bold">Sometimes rooted</text>
+  <text x="95" y="146" text-anchor="middle" fill="#495057" font-size="11">in hardware:</text>
+  <text x="95" y="170" text-anchor="middle" fill="#c92a2a" font-size="12" font-weight="bold">Titan chip</text>
+  <text x="95" y="190" text-anchor="middle" fill="#868e96" font-size="10">(machine root</text>
+  <text x="95" y="204" text-anchor="middle" fill="#868e96" font-size="10">of trust)</text>
+  <line x1="170" y1="180" x2="228" y2="140" stroke="#c92a2a" stroke-width="1.5" stroke-dasharray="3" marker-end="url(#arr)"/>
+
+  <defs>
+    <marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#868e96"/></marker>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#c92a2a"/></marker>
+  </defs>
+</svg>
+</div>
+<p>Three certificate types make up the system:</p>
+<ol>
+  <li><strong>Master certificate</strong> — signed by a remote <em>Signing Service</em>; contains a public key (e.g. RSA) and acts as a constrained intermediate CA. Issued to machines and to schedulers (Borgmaster).</li>
+  <li><strong>Handshake certificate</strong> — created and signed <em>locally</em> by the master private key; carries handshake parameters (static Diffie-Hellman params, ciphers). Short-lived.</li>
+  <li><strong>Resumption key</strong> — a secret that encrypts resumption tickets, indexed by a <em>Resumption Identifier</em> (ID_R) shared by workloads with the same identity in the same datacenter cell.</li>
+</ol>
+<p>The <strong>Signing Service verification keys are the root of trust</strong>, pre-installed on all Google production and corporate machines. On machines with a <a href="google_security_titan.html">Titan chip</a>, trust can be rooted in that hardware.</p>
+</div>
+
+<div class="card">
+<h3>Provisioning — who gets a certificate, and how</h3>
+<table>
+  <tr><th>Entity</th><th>How it's issued</th><th>Rotation</th></tr>
+  <tr><td>Human</td><td>Authenticate to internal CA with username + password + 2FA → receive a handshake cert</td><td>Valid ~20 hours (forces daily re-auth)</td></tr>
+  <tr><td>Machine</td><td>Each prod machine holds a master certificate; trust sometimes rooted in Titan</td><td>Master ~every few months; handshake ~every few hours</td></tr>
+  <tr><td>Workload (Borg)</td><td>Borgmaster verifies authorization, schedules the workload, and issues a <em>Workload Handshake Certificate</em> delivered over an already-ALTS-protected channel</td><td>Base Workload Master Cert ~every 2 days</td></tr>
+</table>
+<div class="insight"><p><strong>Bootstrapping insight:</strong> workload credentials are delivered <em>over an ALTS channel that the machine credential already secured.</em> The machine identity (rooted in hardware/secure-boot) is the anchor that lets the cluster hand a fresh identity to a brand-new workload safely.</p></div>
+</div>
+
+<div class="card">
+<h3>The handshake (1-RTT, DH-authenticated)</h3>
+<p>Four serialized Protocol Buffer messages implement a Diffie-Hellman authenticated key exchange with optional Perfect Forward Secrecy and session resumption:</p>
+<div class="svg-wrap">
+<svg viewBox="0 0 720 300" width="100%" style="max-width:1000px" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+  <rect x="40" y="20" width="120" height="40" rx="6" fill="#1971c2"/><text x="100" y="45" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">Client</text>
+  <rect x="560" y="20" width="120" height="40" rx="6" fill="#2f9e44"/><text x="620" y="45" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">Server</text>
+  <line x1="100" y1="60" x2="100" y2="285" stroke="#dee2e6" stroke-width="2"/>
+  <line x1="620" y1="60" x2="620" y2="285" stroke="#dee2e6" stroke-width="2"/>
+
+  <line x1="100" y1="90" x2="618" y2="90" stroke="#1971c2" stroke-width="2" marker-end="url(#a1)"/>
+  <text x="360" y="82" text-anchor="middle" fill="#1971c2" font-size="12" font-weight="bold">① ClientInit</text>
+  <text x="360" y="104" text-anchor="middle" fill="#868e96" font-size="10">handshake cert + ciphers (+ optional resumption ticket)</text>
+
+  <line x1="620" y1="150" x2="102" y2="150" stroke="#2f9e44" stroke-width="2" marker-end="url(#a2)"/>
+  <text x="360" y="142" text-anchor="middle" fill="#2f9e44" font-size="12" font-weight="bold">② ServerInit + ③ ServerFinished</text>
+  <text x="360" y="164" text-anchor="middle" fill="#868e96" font-size="10">verifies client, does DH, derives M/R/A via HKDF, sends cert + chosen cipher + authenticator</text>
+
+  <line x1="100" y1="215" x2="618" y2="215" stroke="#1971c2" stroke-width="2" marker-end="url(#a1)"/>
+  <text x="360" y="207" text-anchor="middle" fill="#1971c2" font-size="12" font-weight="bold">④ ClientFinished</text>
+  <text x="360" y="229" text-anchor="middle" fill="#868e96" font-size="10">verifies server, derives matching M/R/A, sends its authenticator</text>
+
+  <rect x="180" y="255" width="360" height="30" rx="6" fill="#d3f9d8" stroke="#2f9e44"/>
+  <text x="360" y="275" text-anchor="middle" fill="#1d6b2e" font-size="12" font-weight="bold">→ both encrypt traffic with record key M</text>
+  <defs>
+    <marker id="a1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1971c2"/></marker>
+    <marker id="a2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#2f9e44"/></marker>
+  </defs>
+</svg>
+</div>
+<p>The server uses HKDF (extract/expand, RFC-5869) to derive three secrets from the DH result:</p>
+<ul>
+  <li><strong>M</strong> — the record-protocol key (encrypts subsequent traffic)</li>
+  <li><strong>R</strong> — the resumption secret</li>
+  <li><strong>A</strong> — the authenticator secret (an HMAC over a predefined bit string proves possession)</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>Record protocol (ALTSRP) &amp; the boundary-based encryption choice</h3>
+<p>Once M is established, traffic is framed (32-bit Length, 32-bit Type, Payload; max frame ~1MB). The clever bit is <strong>mode selection by physical boundary</strong>:</p>
+<table>
+  <tr><th>Where the traffic flows</th><th>Mode</th><th>Meaning</th></tr>
+  <tr><td>Within a Google-controlled physical boundary</td><td>AES-128-GMAC / VMAC (integrity-only)</td><td>Payload in plaintext + a cryptographic tag — cheaper, upgradable by data sensitivity</td></tr>
+  <tr><td>Crossing a boundary / over the WAN</td><td>AES-128-GCM / VCM (authenticated encryption)</td><td>Automatically upgraded to full confidentiality + integrity</td></tr>
+</table>
+<p>Both peers keep request/response counters (never sent on the wire) and drop out-of-order or repeated frames.</p>
+<div class="insight"><p><strong>Why integrity-only inside a datacenter?</strong> If you already trust the physical boundary, you pay only for tamper-detection, not encryption — a deliberate performance/security trade at 10<sup>10</sup> RPCs/sec. The moment traffic leaves that boundary, ALTS transparently upgrades to authenticated encryption.</p></div>
+</div>
+
+<div class="card">
+<h3>Session resumption &amp; revocation</h3>
+<p><strong>Resumption</strong> avoids repeating expensive asymmetric ops. Tickets are indexed by ID_R and symmetrically encrypted. Because ID_R ties to <em>identity</em>, not a specific connection, <strong>a client can resume with a server it never previously contacted</strong> — extremely useful behind load balancers. On resumption, R derives fresh M′/R′/A′ (R itself is never reused).</p>
+<p><strong>Revocation:</strong> certificates are invalidated by expiration or via a <em>Certificate Revocation List (CRL)</em>. Human certs expire daily; production machine certs often <em>omit</em> timestamps (to avoid clock-sync outages) and rely on the CRL as source of truth. A revocation ID is 64-bit (8-bit category + 56-bit id). The CRL DB is hundreds of MB but compresses to a few MB and is distributed to every machine.</p>
+<p><strong>Policy enforcement</strong> happens at <em>verification</em> time (not issuance): the ALTS policy lists which issuers may issue which cert categories for which identities, enabling flexible per-cluster policies while blocking impersonation by unauthorized issuers.</p>
+</div>
+</div>
+
+<!-- ================= WHY ================= -->
+<div class="section" id="why">
+<div class="card">
+<h2>Why Google built it this way</h2>
+
+<h3>Why not just use TLS?</h3>
+<ul>
+  <li><strong>2007 TLS carried legacy baggage</strong> that fell below Google's minimum security standards. Rather than fight the interop-driven complexity, Google built a narrower protocol it fully controlled.</li>
+  <li><strong>Simplicity = auditability.</strong> A simpler protocol with Protobuf serialization is far easier to audit by inspection and fuzzing than X.509/ASN.1 parsing (historically a rich source of CVEs).</li>
+  <li><strong>Full control of the endpoints.</strong> Google owns both ends of every internal connection, so it doesn't need the internet's flexibility — it can standardize on strong choices.</li>
+</ul>
+
+<h3>Why identity instead of hostname?</h3>
+<div class="insight"><p>In a fleet where workloads are constantly rescheduled, replicated, and load-balanced, binding trust to a <em>hostname</em> is a nightmare — every move needs a new cert. Binding to a <em>service identity</em> means N replicas share one identity and can move freely. This single decision is what makes Google's elasticity and BeyondProd's "trust the workload, not the network location" model possible.</p></div>
+
+<h3>Why frequent rotation instead of PFS-by-default?</h3>
+<p>PFS is supported but not the default; instead ALTS rotates certificates <em>very frequently</em> (handshake certs every few hours, human certs daily). At Google's scale, aggressive rotation bounds the exposure window of any compromised key while avoiding the per-connection cost of always-on PFS. When PFS is enabled, it also covers resumed sessions.</p>
+
+<h3>Why no 0-RTT?</h3>
+<p>Deliberately excluded. Google's RPC connections are long-lived, so 0-RTT's extra complexity and weaker security guarantees weren't worth it — the handshake cost amortizes across a long-lived connection.</p>
+</div>
+</div>
+
+<!-- ================= CHALLENGES ================= -->
+<div class="section" id="scale">
+<div class="card">
+<h2>Scale &amp; throughput — making crypto free enough to be always-on</h2>
+<p>ALTS protects ~10<sup>10</sup> RPCs/sec, so the whole design is bent toward making per-RPC security cost almost nothing. The whitepaper frames these as security choices, but they're equally <em>throughput</em> choices:</p>
+<ul>
+  <li><strong>Session resumption skips asymmetric crypto.</strong> The expensive part of a handshake is the public-key op. Resumption tickets (indexed by ID_R) re-key with cheap symmetric ops; because ID_R ties to <em>identity</em> not connection, a client can even resume with a server it never talked to — huge behind load balancers.</li>
+  <li><strong>Long-lived connections amortize the handshake.</strong> The 1-RTT handshake is paid once and spread over millions of messages. (Also why 0-RTT was skipped — not worth it for long-lived channels.)</li>
+  <li><strong>Boundary-aware modes save CPU.</strong> Inside a trusted physical boundary, integrity-only (GMAC/VMAC) avoids full-encryption cost; only cross-boundary traffic pays for AEAD. Spend crypto cycles only where the threat is.</li>
+  <li><strong>Local CRL copies.</strong> The revocation list compresses to a few MB and sits on every machine, so a handshake checks revocation <em>locally</em> — no per-connection call to a central service.</li>
+  <li><strong>Rotation instead of always-on PFS.</strong> Frequent cert rotation gives forward-secrecy-like properties without PFS's per-connection asymmetric cost by default.</li>
+</ul>
+<div class="insight"><p><strong>The scaling lesson:</strong> to make a security check "always on" fleet-wide, drive its marginal cost toward zero — cache/resume to skip the asymmetric step, amortize setup over long-lived connections, and pay for the strongest protection only where the threat model demands it.</p></div>
+</div>
+</div>
+
+<div class="section" id="challenges">
+<div class="card">
+<h2>Hard problems &amp; deliberate trade-offs</h2>
+
+<h4>Bootstrapping trust for a brand-new workload</h4>
+<p>A freshly scheduled workload has no identity yet. The resolution: the <em>machine's</em> credential (anchored in secure boot / Titan) secures the channel over which Borgmaster delivers the <em>workload's</em> credential. Trust is layered from hardware → machine → workload.</p>
+
+<h4>Revocation at fleet scale without clock dependence</h4>
+<p>Timestamps on machine certs would make the fleet vulnerable to clock-sync outages, so those certs often omit expiry and rely on the CRL. The challenge becomes distributing a hundreds-of-MB revocation database everywhere — solved by compression (to a few MB) plus local copies checked during each handshake.</p>
+
+<h4>Accepting KCI susceptibility on purpose</h4>
+<div class="warning"><p>ALTS is, by design, susceptible to <strong>Key Compromise Impersonation (KCI)</strong> attacks — an accepted trade-off given the resumption threat model. A KCI-resistant variant exists but is only used where resumption isn't needed. This is a great example of a security system making an <em>explicit, documented</em> trade rather than chasing theoretical purity.</p></div>
+
+<h4>Handshake privacy</h4>
+<p>Handshake messages aren't encrypted, so peer identities aren't hidden during the handshake — acceptable inside a controlled network, and a cost of the 1-RTT simplicity.</p>
+
+<h4>Performance at 10<sup>10</sup> RPC/s</h4>
+<p>The integrity-only-inside-the-boundary mode, session resumption (skip asymmetric ops), and long-lived connections are all in service of one thing: making per-RPC crypto cheap enough to be on by default for the entire fleet.</p>
+</div>
+</div>
+
+<!-- ================= INTERVIEW ================= -->
+<div class="section" id="interview">
+<div class="card">
+<h2>Interview angle</h2>
+<div class="iv"><p><strong>Why this matters for a Security Backend / Silicon role:</strong> ALTS is the connective tissue of Google's production security. If the team does service security, key/identity infrastructure, or anything touching the hardware root of trust, ALTS is the vocabulary they think in. You don't need to have built ALTS — you need to show you understand <em>the principles</em> and can reason about the trade-offs.</p></div>
+
+<h3>What the team likely does (so you can speak their language)</h3>
+<ul>
+  <li>Service identity / credential issuance &amp; rotation infrastructure (the CA, Signing Service, CRL side).</li>
+  <li>Rooting service identity in <strong>hardware</strong> (Titan) — the "machine credential only decryptable if secure boot passed" flow is exactly the Silicon ↔ Security seam.</li>
+  <li>Making mutual auth zero-config and cheap enough to be always-on.</li>
+</ul>
+
+<h3>Transferable principles worth being fluent in</h3>
+<table>
+  <tr><th>ALTS principle</th><th>The general takeaway</th></tr>
+  <tr><td>Identity rooted in hardware, per-device attestation</td><td>Mint a per-unit identity at manufacture, signed by a CA whose key sits in tamper-resistant hardware, validated back to a root — "manufacture identity, attest later."</td></tr>
+  <tr><td>Automatic credential provisioning + rotation</td><td>Provision and rotate credentials automatically through the platform/scheduler so mutual auth is zero-config and always current.</td></tr>
+  <tr><td>"Don't trust the green status / network position"</td><td>Trust verified reality, not a reported "healthy" state or a network location. Mirrors BeyondProd's "don't trust network location."</td></tr>
+  <tr><td>Explicit, documented security trade-offs</td><td>Choose the structural root-fix over a suppression, and document <em>why</em> the trade-off was made.</td></tr>
+</table>
+
+<h3>Likely interview questions &amp; how to approach them</h3>
+<div class="qa"><div class="q">Q: "Design a service-to-service authentication system for a large microservice fleet."</div>
+<p>Lead with <strong>identity over hostname</strong>, mutual auth by default, and credential provisioning through the scheduler. Bring up rotation-vs-PFS trade-off, and rooting machine identity in hardware. Mention revocation (CRL) and policy-at-verification-time.</p></div>
+<div class="qa"><div class="q">Q: "Why not just use mutual TLS?"</div>
+<p>Talk about simplicity/auditability, Protobuf vs X.509/ASN.1 parsing risk, identity-vs-hostname for elasticity, and controlling both endpoints. Show you know TLS well enough to know <em>when</em> to deviate from it.</p></div>
+<div class="qa"><div class="q">Q: "How would you bound the blast radius of a leaked credential?"</div>
+<p>Frequent rotation (short-lived handshake certs), CRL-based revocation, hardware-rooted machine identity so a stolen software cred is useless off its bound machine, and identity policy enforced at verification.</p></div>
+<div class="qa"><div class="q">Q: "How do you make crypto cheap enough to be always-on?"</div>
+<p>Boundary-aware modes (integrity-only inside trusted physical boundary; upgrade to AEAD crossing it), session resumption to skip asymmetric ops, long-lived connections amortizing the handshake.</p></div>
+
+<div class="tip"><p><strong>Closing move in an interview:</strong> connect ALTS to the bigger picture — "ALTS gives you identity + mutual auth; BeyondProd builds authorization and code-provenance on top; Titan roots the machine identity in hardware; KMS protects the data those services touch. They're one coherent zero-trust story." Showing you see the <em>system of systems</em> is what distinguishes a senior/staff-level answer.</p></div>
+</div>
+</div>
+
+</div>
+<script>
+function showSection(evt, id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  evt.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

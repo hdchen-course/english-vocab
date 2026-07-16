@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zanzibar — Global Authorization at Scale | Google Security Deep-Dive</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fa; --bg2: #ffffff; --bg3: #f1f3f5; --border: #dee2e6;
+  --text: #212529; --text2: #495057; --text3: #868e96;
+  --blue: #1971c2; --blue-l: #d0ebff; --green: #2f9e44; --green-l: #d3f9d8;
+  --yellow: #e67700; --yellow-l: #fff3bf; --red: #c92a2a; --red-l: #ffe3e3;
+  --purple: #7048e8; --purple-l: #e5dbff; --r: 12px; --shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.8; }
+.container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+header { text-align: center; margin-bottom: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+header .sub { color: var(--text3); font-size: 14px; }
+.crumb { text-align:center; margin-bottom: 24px; font-size: 13px; color: var(--text3); }
+.crumb a { color: var(--blue); text-decoration: none; }
+.nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 40px; position: sticky; top: 0; background: var(--bg); padding: 16px 0; z-index: 100; border-bottom: 1px solid var(--border); }
+.nav-btn { padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s; font-family: 'Inter', sans-serif; }
+.nav-btn:hover { background: var(--bg3); color: var(--text); }
+.nav-btn.active { background: var(--blue-l); color: var(--blue); border-color: var(--blue); }
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+h2 { font-size: 24px; font-weight: 700; margin: 32px 0 16px; color: var(--blue); }
+h3 { font-size: 18px; font-weight: 600; margin: 24px 0 12px; }
+h4 { font-size: 15px; font-weight: 600; margin: 16px 0 8px; color: var(--text2); }
+p { margin-bottom: 12px; color: var(--text2); }
+ul, ol { margin: 8px 0 16px 24px; color: var(--text2); }
+li { margin-bottom: 6px; }
+strong { color: var(--text); }
+pre { background: #1e1e2e; border-radius: 8px; padding: 16px 20px; overflow-x: auto; margin: 12px 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; color: #cdd6f4; white-space: pre-wrap; }
+code { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+p code, li code, td code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--purple); }
+.insight { background: var(--blue-l); border-left: 3px solid var(--blue); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.insight p { color: #114f8c; margin: 0; }
+.warning { background: var(--yellow-l); border-left: 3px solid var(--yellow); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.warning p { color: #a85700; margin: 0; }
+.tip { background: var(--green-l); border-left: 3px solid var(--green); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.tip p { color: #1d6b2e; margin: 0; }
+.iv { background: var(--purple-l); border-left: 3px solid var(--purple); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.iv p { color: #4a2fa8; margin: 0 0 8px 0; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 20px; padding: 24px 28px; box-shadow: var(--shadow); }
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+th, td { padding: 10px 14px; border: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { background: var(--bg3); font-weight: 600; color: var(--text); }
+tr:hover { background: var(--bg3); }
+.svg-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 20px; margin: 20px 0; text-align: center; overflow-x: auto; }
+.qa { border-left: 3px solid var(--purple); padding: 4px 0 4px 16px; margin: 18px 0; }
+.qa .q { font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.tag { display:inline-block; font-size:11px; font-weight:700; padding:2px 8px; border-radius: 20px; background: var(--purple-l); color: var(--purple); margin-left:6px; }
+.statgrid { display:flex; flex-wrap:wrap; gap:12px; margin:16px 0; }
+.stat { flex:1 1 150px; background:var(--bg3); border-radius:10px; padding:14px 16px; text-align:center; }
+.stat .n { font-size:22px; font-weight:800; color:var(--blue); }
+.stat .l { font-size:12px; color:var(--text3); }
+@media (max-width: 768px) { .container { padding: 20px 12px; } .nav { position: static; flex-direction: column; } .nav-btn { text-align: center; } pre { font-size: 11px; } }
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>Zanzibar — Global Authorization at Scale</h1>
+  <div class="sub">Google's consistent, planet-scale ACL system · the "security + backend scale" deep-dive · &amp; interview prep</div>
+</header>
+<div class="crumb">📚 <a href="google_security_index.html">Google Security Systems — Index</a> &nbsp;›&nbsp; Zanzibar</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection(event,'overview')">Overview</button>
+  <button class="nav-btn" onclick="showSection(event,'design')">How it's designed</button>
+  <button class="nav-btn" onclick="showSection(event,'scale')">Scale &amp; throughput</button>
+  <button class="nav-btn" onclick="showSection(event,'why')">Why this way</button>
+  <button class="nav-btn" onclick="showSection(event,'challenges')">Challenges</button>
+  <button class="nav-btn" onclick="showSection(event,'interview')">Interview angle</button>
+</div>
+
+<!-- ================= OVERVIEW ================= -->
+<div class="section active" id="overview">
+<div class="card">
+<h2>What Zanzibar is, in one paragraph</h2>
+<p>
+Zanzibar is Google's <strong>global authorization system</strong> — the service that answers one deceptively simple question: <em>"Does user U have relation R to object O?"</em> (e.g. "can Alice view this Doc?"). Instead of every product building its own permission logic, Calendar, Cloud, Drive, Maps, Photos, and YouTube all delegate that decision to Zanzibar. It stores <strong>&gt;2 trillion access-control lists (ACLs)</strong> and serves <strong>&gt;10 million authorization checks per second</strong> at <strong>&lt;10&nbsp;ms p95</strong>, with <strong>&gt;99.999% availability over 3 years</strong>.
+</p>
+<div class="insight"><p><strong>Why this doc exists:</strong> the other four systems (Titan, ALTS, BeyondProd, KMS) are security whitepapers — they explain <em>how to be secure</em>, not <em>how to scale a backend</em>. Zanzibar is the one that's explicitly both: a security system whose paper is largely about <strong>how to serve authorization at planet scale with strong consistency</strong>. That makes it the best single artifact for a "security backend" interview.</p></div>
+</div>
+
+<div class="card">
+<h3>Where it's used</h3>
+<ul>
+  <li><strong>The permission check behind the product.</strong> Sharing a Doc, opening a Photos album, viewing a private video — each triggers a Zanzibar <code>Check</code>. A single search query can fan out to <em>tens to hundreds</em> of checks (one per candidate result).</li>
+  <li><strong>The blueprint for the industry.</strong> Zanzibar directly inspired open-source clones — Auth0/Okta <em>FGA</em>, <em>OpenFGA</em>, <em>SpiceDB</em>, Airbnb's <em>Himeji</em>, Carta's <em>AuthZ</em>. "ReBAC" (relationship-based access control) as a category comes from this paper.</li>
+  <li><strong>Complements the stack.</strong> ALTS answers "which service is calling?"; BeyondProd's EUC ticket answers "on whose behalf?"; <strong>Zanzibar answers "is that user actually allowed to touch this object?"</strong></li>
+</ul>
+</div>
+
+<div class="card">
+<h3>The four goals it was built to hit (all at once)</h3>
+<table>
+  <tr><th>Goal</th><th>What it means</th></tr>
+  <tr><td><strong>Correctness</strong></td><td>Respect the causal order of ACL changes — never apply a stale ACL to new content (the "new enemy problem")</td></tr>
+  <tr><td><strong>Flexibility</strong></td><td>One data model + config language rich enough for every Google product's permission scheme</td></tr>
+  <tr><td><strong>Low latency</strong></td><td>Checks sit in the critical path of user interactions; tail latency especially matters (hundreds of checks per action)</td></tr>
+  <tr><td><strong>Scale + availability</strong></td><td>Billions of objects, billions of users, deployed globally near clients</td></tr>
+</table>
+<p>The hard part is that these fight each other — strong consistency usually costs latency and availability. Most of the design is about <em>having all four without trading one away</em>.</p>
+</div>
+
+<div class="card">
+<h3>Jargon buster — read this first</h3>
+<p>A few terms show up everywhere below. Plain-English versions so nothing trips you up:</p>
+<table>
+  <tr><th>Term</th><th>Plain meaning</th></tr>
+  <tr><td><strong>ACL</strong> (access-control list)</td><td>The list of "who can do what" on a thing. "Alice can view this doc" is one ACL entry.</td></tr>
+  <tr><td><strong>authorization</strong> (authZ)</td><td>Deciding <em>"are you allowed to do this?"</em> — different from <em>authentication</em> (authN = "who are you?"). Zanzibar does authZ.</td></tr>
+  <tr><td><strong>latency</strong></td><td>How long one request takes. Lower = snappier.</td></tr>
+  <tr><td><strong>tail latency</strong> / <strong>p95, p99</strong></td><td>The <em>slowest</em> requests, not the average. "p99 = 10ms" means 99% of requests finish under 10ms; the slowest 1% (the "tail") is what users actually complain about. When one screen fires hundreds of checks, the <em>slowest</em> check decides how slow the page feels — so the tail matters more than the average.</td></tr>
+  <tr><td><strong>QPS</strong></td><td>Queries per second — how much traffic. Zanzibar does &gt;10 million/sec.</td></tr>
+  <tr><td><strong>replica</strong></td><td>A copy of the data kept in another location so users worldwide have something nearby. Copies take a moment to sync — that lag is the root of the "new enemy problem."</td></tr>
+  <tr><td><strong>consistency</strong></td><td>Whether everyone sees the same, up-to-date data. "Strong" = always current; "stale" = slightly behind. Strong is safer but slower.</td></tr>
+  <tr><td><strong>ReBAC</strong></td><td>Relationship-Based Access Control — deciding access from <em>relationships</em> ("viewer of the folder this doc is in") rather than fixed roles. Zanzibar created this category.</td></tr>
+</table>
+</div>
+</div>
+
+<!-- ================= DESIGN ================= -->
+<div class="section" id="design">
+<div class="card">
+<h2>The data model: relation tuples</h2>
+<p>Everything in Zanzibar is a <strong>relation tuple</strong> — one tiny fact about who relates to what. The trick to reading it: <strong>it's just a sentence</strong> — <em>subject → verb → object</em>, but written back-to-front.</p>
+
+<div class="svg-wrap">
+<svg viewBox="0 0 720 210" width="100%" style="max-width:820px" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+  <text x="360" y="26" text-anchor="middle" fill="#212529" font-size="14" font-weight="bold">How to read a relation tuple</text>
+  <!-- the tuple -->
+  <rect x="60" y="46" width="200" height="46" rx="8" fill="#d0ebff" stroke="#1971c2"/>
+  <text x="160" y="75" text-anchor="middle" fill="#114f8c" font-size="15" font-weight="bold" font-family="JetBrains Mono, monospace">doc:readme</text>
+  <text x="278" y="76" text-anchor="middle" fill="#868e96" font-size="22" font-weight="bold">#</text>
+  <rect x="296" y="46" width="120" height="46" rx="8" fill="#fff3bf" stroke="#e67700"/>
+  <text x="356" y="75" text-anchor="middle" fill="#a85700" font-size="15" font-weight="bold" font-family="JetBrains Mono, monospace">owner</text>
+  <text x="434" y="76" text-anchor="middle" fill="#868e96" font-size="22" font-weight="bold">@</text>
+  <rect x="452" y="46" width="200" height="46" rx="8" fill="#d3f9d8" stroke="#2f9e44"/>
+  <text x="552" y="75" text-anchor="middle" fill="#1d6b2e" font-size="15" font-weight="bold" font-family="JetBrains Mono, monospace">user:alice</text>
+  <!-- labels -->
+  <text x="160" y="112" text-anchor="middle" fill="#1971c2" font-size="12" font-weight="bold">the OBJECT (thing)</text>
+  <text x="356" y="112" text-anchor="middle" fill="#e67700" font-size="12" font-weight="bold">the RELATION (role)</text>
+  <text x="552" y="112" text-anchor="middle" fill="#2f9e44" font-size="12" font-weight="bold">the USER (who)</text>
+  <!-- reads as -->
+  <rect x="120" y="138" width="480" height="40" rx="8" fill="#f1f3f5" stroke="#dee2e6"/>
+  <text x="360" y="163" text-anchor="middle" fill="#212529" font-size="14">reads as: &nbsp;&ldquo;<tspan font-weight="bold" fill="#2f9e44">alice</tspan> is the <tspan font-weight="bold" fill="#e67700">owner</tspan> of <tspan font-weight="bold" fill="#1971c2">doc:readme</tspan>&rdquo;</text>
+  <text x="360" y="196" text-anchor="middle" fill="#868e96" font-size="11">(the <tspan font-family="JetBrains Mono, monospace">#</tspan> separates object from relation; the <tspan font-family="JetBrains Mono, monospace">@</tspan> says &ldquo;granted to&rdquo;)</text>
+</svg>
+</div>
+
+<p>More examples — read each one right-to-left as a sentence:</p>
+<pre>doc:readme#owner@user:alice          "alice is the owner of doc:readme"
+folder:proj#parent@folder:root       "folder:proj's parent is folder:root"
+doc:readme#viewer@group:eng#member   "every member of group:eng can view doc:readme"</pre>
+
+<h4>The one clever bit: a userset (that third line)</h4>
+<p>Usually the "who" is a single person (<code>user:alice</code>). But it can also be <strong>a whole group</strong>, written <code>group:eng#member</code> — which itself is just "the <em>members</em> of <code>group:eng</code>." So instead of writing one tuple per person, you point at the group once:</p>
+<ul>
+  <li><code>group:eng#member@user:bob</code> — "bob is a member of group:eng"</li>
+  <li><code>doc:readme#viewer@group:eng#member</code> — "anyone who is a member of group:eng can view doc:readme"</li>
+</ul>
+<p>Add bob to the group, and he can now view the doc — <strong>without touching the doc's tuples at all</strong>. And because a group can point at another group, <strong>nested groups just work</strong>. This is the key insight: <em>a group is nothing special — it's the exact same tuple structure as a permission.</em> ("ACLs and groups are the same data structure.")</p>
+
+<div class="insight"><p><strong>Why tuples instead of a permissions blob per object?</strong> One uniform little fact-format serves every product, can be indexed generically, and lets Zanzibar reason about the ordering of each individual change (which matters for the "new enemy problem" below). Think of it like OAuth vs Zanzibar: <em>"if OAuth is handing someone a key, Zanzibar is deciding which rooms that key opens."</em></p></div>
+</div>
+
+<div class="card">
+<h3>Userset rewrite rules — computed permissions</h3>
+<p>Stored tuples don't capture rules like "editors can also view." Those live in the <strong>namespace config</strong> as <em>userset rewrite rules</em>, evaluated at check time into a boolean expression tree:</p>
+<table>
+  <tr><th>Rule</th><th>Meaning</th></tr>
+  <tr><td><code>_this</code></td><td>The tuples stored directly for this relation</td></tr>
+  <tr><td><code>computed_userset</code></td><td>"also include another relation on the same object" (e.g. viewer ⊇ editor ⊇ owner)</td></tr>
+  <tr><td><code>tuple_to_userset</code></td><td>The powerful one: <strong>inheritance</strong> — "viewer of this doc = viewer of its parent folder." Follows a tuple to another object, then evaluates a relation there.</td></tr>
+  <tr><td><code>union</code> / <code>intersection</code> / <code>exclusion</code></td><td>Boolean combination of the above</td></tr>
+</table>
+<p>So "can Alice view doc:readme?" becomes: check direct viewers ∪ editors ∪ owners ∪ (viewers of the parent folder) … — a tree Zanzibar evaluates concurrently.</p>
+</div>
+
+<div class="card">
+<h3>The API</h3>
+<table>
+  <tr><th>Method</th><th>Purpose</th></tr>
+  <tr><td><code>Check</code></td><td>"Does U have relation R to object O?" → the hot path, &gt;80% of traffic</td></tr>
+  <tr><td><code>Read</code></td><td>Read relation tuples directly (for a client's own bookkeeping)</td></tr>
+  <tr><td><code>Write</code></td><td>Modify tuples (add/remove a share) — 2 orders of magnitude rarer than reads</td></tr>
+  <tr><td><code>Expand</code></td><td>Return the full effective userset tree of an object (for UIs / debugging "who has access?")</td></tr>
+  <tr><td><code>Watch</code></td><td>Stream of tuple changes — used to keep secondary indexes (Leopard) up to date</td></tr>
+  <tr><td><code>content-change check</code></td><td>Special check issued when content changes, to mint a <strong>zookie</strong> (see consistency)</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h3>The "new enemy problem" — what it is, and why it's scary</h3>
+<p>This is the one correctness bug that makes a permission system dangerous. The name says it: someone you <em>just kicked out</em> becomes a "new enemy" who can still see new secrets, because a permission change and a content change got applied <strong>out of order</strong>.</p>
+
+<div class="svg-wrap">
+<svg viewBox="0 0 740 250" width="100%" style="max-width:840px" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+  <text x="370" y="24" text-anchor="middle" fill="#212529" font-size="14" font-weight="bold">The classic scenario</text>
+  <!-- timeline -->
+  <line x1="60" y1="70" x2="680" y2="70" stroke="#868e96" stroke-width="2" marker-end="url(#ne)"/>
+  <text x="690" y="74" fill="#868e96" font-size="11">time</text>
+  <!-- event 1 -->
+  <circle cx="160" cy="70" r="7" fill="#c92a2a"/>
+  <text x="160" y="55" text-anchor="middle" fill="#c92a2a" font-size="12" font-weight="bold">① Alice removes Bob</text>
+  <text x="160" y="96" text-anchor="middle" fill="#495057" font-size="11">from the doc's ACL</text>
+  <!-- event 2 -->
+  <circle cx="380" cy="70" r="7" fill="#1971c2"/>
+  <text x="380" y="55" text-anchor="middle" fill="#1971c2" font-size="12" font-weight="bold">② Alice adds a secret</text>
+  <text x="380" y="96" text-anchor="middle" fill="#495057" font-size="11">to the same doc</text>
+  <!-- event 3 -->
+  <circle cx="600" cy="70" r="7" fill="#2f9e44"/>
+  <text x="600" y="55" text-anchor="middle" fill="#2f9e44" font-size="12" font-weight="bold">③ Bob opens the doc</text>
+  <text x="600" y="96" text-anchor="middle" fill="#495057" font-size="11">system checks his access</text>
+  <!-- the bug -->
+  <rect x="120" y="130" width="500" height="86" rx="8" fill="#ffe3e3" stroke="#c92a2a"/>
+  <text x="370" y="154" text-anchor="middle" fill="#c92a2a" font-size="13" font-weight="bold">The bug: the check at ③ uses a STALE copy of the ACL —</text>
+  <text x="370" y="176" text-anchor="middle" fill="#c92a2a" font-size="13" font-weight="bold">one from BEFORE step ① removed Bob.</text>
+  <text x="370" y="200" text-anchor="middle" fill="#742020" font-size="12">→ Bob (the "new enemy") reads the brand-new secret he should never see.</text>
+  <defs><marker id="ne" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#868e96"/></marker></defs>
+</svg>
+</div>
+
+<p>Why does a "stale copy" even exist? Because Zanzibar is <strong>global</strong> — the ACL lives in many data centers, and a change takes a moment to spread everywhere. During that gap, a nearby replica still has the old permissions. If a check reads that replica, it uses yesterday's rules on today's content. (Same bug, second flavor: even ordering aside, evaluating a check at a stale moment applies an old ACL to new content.)</p>
+
+<h3>The fix: zookies — a "freshness receipt"</h3>
+<p>A <strong>zookie</strong> is Zanzibar's consistency token. The analogy that makes it click: <strong>it's a timestamped receipt.</strong></p>
+<div class="svg-wrap">
+<svg viewBox="0 0 740 210" width="100%" style="max-width:840px" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+  <!-- write path -->
+  <rect x="30" y="30" width="330" height="150" rx="10" fill="#f1f3f5" stroke="#dee2e6"/>
+  <text x="195" y="52" text-anchor="middle" fill="#212529" font-size="12" font-weight="bold">When content changes (rare)</text>
+  <rect x="50" y="66" width="290" height="30" rx="6" fill="#d0ebff" stroke="#1971c2"/>
+  <text x="195" y="86" text-anchor="middle" fill="#114f8c" font-size="11">app saves the doc → asks Zanzibar for a zookie</text>
+  <rect x="50" y="104" width="290" height="30" rx="6" fill="#fff3bf" stroke="#e67700"/>
+  <text x="195" y="124" text-anchor="middle" fill="#a85700" font-size="11">zookie = "permissions were fresh as of time T"</text>
+  <rect x="50" y="142" width="290" height="30" rx="6" fill="#d3f9d8" stroke="#2f9e44"/>
+  <text x="195" y="162" text-anchor="middle" fill="#1d6b2e" font-size="11">store the zookie NEXT TO the content</text>
+  <!-- arrow -->
+  <line x1="362" y1="105" x2="398" y2="105" stroke="#868e96" stroke-width="2" marker-end="url(#zk)"/>
+  <!-- check path -->
+  <rect x="400" y="30" width="310" height="150" rx="10" fill="#f1f3f5" stroke="#dee2e6"/>
+  <text x="555" y="52" text-anchor="middle" fill="#212529" font-size="12" font-weight="bold">On every access check (common)</text>
+  <rect x="418" y="66" width="274" height="30" rx="6" fill="#d0ebff" stroke="#1971c2"/>
+  <text x="555" y="86" text-anchor="middle" fill="#114f8c" font-size="11">app sends the stored zookie with the Check</text>
+  <rect x="418" y="104" width="274" height="30" rx="6" fill="#fff3bf" stroke="#e67700"/>
+  <text x="555" y="124" text-anchor="middle" fill="#a85700" font-size="11">Zanzibar: "evaluate at a moment ≥ T"</text>
+  <rect x="418" y="142" width="274" height="30" rx="6" fill="#d3f9d8" stroke="#2f9e44"/>
+  <text x="555" y="162" text-anchor="middle" fill="#1d6b2e" font-size="11">→ never uses an ACL older than the content</text>
+  <defs><marker id="zk" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#868e96"/></marker></defs>
+</svg>
+</div>
+<p>The receipt travels <em>with the content</em>. Later, any check hands the receipt back and says "give me an answer at least this fresh." So a check can never be evaluated against permissions older than the content it's guarding — the new-enemy window is closed. (Zookies are opaque byte strings, so clients can't forge a timestamp.) Under the hood this rides on <strong>Spanner</strong> and its <strong>TrueTime</strong> clock, which hands out globally-agreed timestamps — that's what makes "time T" mean the same thing in every data center.</p>
+
+<h3 id="cheap-consistency">Why this doesn't cost a slow global round-trip</h3>
+<p>Here's the clever part, spelled out. The naïve way to be correct is "always read the very latest permissions everywhere" — but that forces a slow cross-region sync on <em>every single check</em>. Zanzibar avoids it because the zookie only demands <strong>"at least this fresh," not "the absolute newest."</strong></p>
+<p>That one word — <em>at least</em> — is the whole trick. It splits checks into two buckets:</p>
+<table>
+  <tr><th>Bucket</th><th>What it needs</th><th>Where it's served</th><th>Speed</th></tr>
+  <tr><td><strong>"Safe" (zookie older than ~10s)</strong></td><td>Any replica already has data this fresh</td><td>A <strong>nearby local replica</strong> — no cross-region trip</td><td>Fast (single-digit ms)</td></tr>
+  <tr><td><strong>"Recent" (zookie within ~10s)</strong></td><td>Might need the freshest data</td><td>May take a <strong>cross-region round-trip</strong></td><td>Slower (~tens of ms)</td></tr>
+</table>
+<div class="insight"><p><strong>The payoff:</strong> "safe" checks outnumber "recent" ones by roughly <strong>100 : 1</strong> — by design. The vast majority of checks are served from fast local data and are still <em>provably</em> correct, because the zookie guarantees they're fresh enough. Only the rare just-changed case pays for a global trip. That's how Zanzibar gets strong consistency <em>and</em> low latency instead of trading one for the other.</p></div>
+</div>
+
+<div class="card">
+<h3>Architecture at a glance</h3>
+<div class="svg-wrap">
+<svg viewBox="0 0 780 340" width="100%" style="max-width:1000px" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+  <rect x="30" y="20" width="140" height="44" rx="8" fill="#495057"/>
+  <text x="100" y="40" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">Client service</text>
+  <text x="100" y="56" text-anchor="middle" fill="#ced4da" font-size="10">Drive / Photos / …</text>
+  <line x1="170" y1="42" x2="216" y2="42" stroke="#868e96" stroke-width="2" marker-end="url(#za)"/>
+  <text x="193" y="34" text-anchor="middle" fill="#868e96" font-size="9">Check</text>
+
+  <rect x="220" y="15" width="300" height="120" rx="10" fill="#d0ebff" stroke="#1971c2"/>
+  <text x="370" y="36" text-anchor="middle" fill="#114f8c" font-size="12" font-weight="bold">aclserver cluster (~500 servers)</text>
+  <rect x="240" y="50" width="120" height="34" rx="6" fill="#fff" stroke="#1971c2"/>
+  <text x="300" y="72" text-anchor="middle" fill="#114f8c" font-size="11">evaluate tree</text>
+  <rect x="380" y="50" width="120" height="34" rx="6" fill="#fff" stroke="#1971c2"/>
+  <text x="440" y="72" text-anchor="middle" fill="#114f8c" font-size="11">fan out / recurse</text>
+  <rect x="240" y="94" width="260" height="30" rx="6" fill="#fff" stroke="#1971c2"/>
+  <text x="370" y="114" text-anchor="middle" fill="#114f8c" font-size="10">distributed cache + lock table (dedup hot keys) · Slicer</text>
+
+  <line x1="370" y1="135" x2="370" y2="167" stroke="#868e96" stroke-width="2" marker-end="url(#za)"/>
+  <rect x="220" y="169" width="300" height="44" rx="8" fill="#2f9e44"/>
+  <text x="370" y="190" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">Spanner (global DB)</text>
+  <text x="370" y="206" text-anchor="middle" fill="#d3f9d8" font-size="10">stores tuples · TrueTime → external consistency · &gt;30 locations</text>
+
+  <rect x="560" y="15" width="200" height="120" rx="10" fill="#e5dbff" stroke="#7048e8"/>
+  <text x="660" y="36" text-anchor="middle" fill="#4a2fa8" font-size="12" font-weight="bold">Leopard index</text>
+  <text x="660" y="58" text-anchor="middle" fill="#4a2fa8" font-size="10">flattens deeply-nested</text>
+  <text x="660" y="72" text-anchor="middle" fill="#4a2fa8" font-size="10">group membership</text>
+  <text x="660" y="90" text-anchor="middle" fill="#4a2fa8" font-size="10">(T,s,e) sets + skip lists</text>
+  <text x="660" y="108" text-anchor="middle" fill="#4a2fa8" font-size="10">union/intersect fast</text>
+  <line x1="520" y1="70" x2="558" y2="70" stroke="#7048e8" stroke-width="2" marker-end="url(#zb)"/>
+
+  <rect x="560" y="169" width="200" height="44" rx="8" fill="#fff" stroke="#7048e8"/>
+  <text x="660" y="190" text-anchor="middle" fill="#4a2fa8" font-size="11" font-weight="bold">watchserver</text>
+  <text x="660" y="206" text-anchor="middle" fill="#868e96" font-size="10">Watch stream → keeps Leopard fresh</text>
+  <line x1="660" y1="169" x2="660" y2="137" stroke="#7048e8" stroke-width="2" marker-end="url(#zb)"/>
+  <line x1="560" y1="191" x2="522" y2="191" stroke="#868e96" stroke-width="1.5" stroke-dasharray="3" marker-end="url(#za)"/>
+
+  <text x="390" y="250" text-anchor="middle" fill="#495057" font-size="12" font-weight="bold">&gt;10,000 servers · several dozen clusters · &gt;30 regions · request hedging to Spanner &amp; Leopard</text>
+  <text x="390" y="272" text-anchor="middle" fill="#868e96" font-size="11">A single Check fans out across servers; each may recurse into others to traverse nested groups.</text>
+  <defs>
+    <marker id="za" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#868e96"/></marker>
+    <marker id="zb" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#7048e8"/></marker>
+  </defs>
+</svg>
+</div>
+</div>
+</div>
+
+<!-- ================= SCALE ================= -->
+<div class="section" id="scale">
+<div class="card">
+<h2>Scale &amp; throughput — the part the other papers skip</h2>
+<div class="statgrid">
+  <div class="stat"><div class="n">&gt;10M</div><div class="l">client QPS</div></div>
+  <div class="stat"><div class="n">&gt;2 trillion</div><div class="l">stored ACL tuples</div></div>
+  <div class="stat"><div class="n">&lt;10 ms</div><div class="l">p95 check latency</div></div>
+  <div class="stat"><div class="n">&gt;99.999%</div><div class="l">availability (3 yrs)</div></div>
+  <div class="stat"><div class="n">&gt;10,000</div><div class="l">servers</div></div>
+  <div class="stat"><div class="n">&gt;30</div><div class="l">regions</div></div>
+</div>
+<p>From a sample 7-day window: <strong>Check ≈ 8.2M QPS, Expand ≈ 760K, Write ≈ 25K</strong> — reads outnumber writes by ~two orders of magnitude. Clusters range from &lt;100 to &gt;1,000 servers (median ~500), sized to regional load. This is the read-heavy, latency-critical, globally-distributed workload profile — and every technique below exists to serve it.</p>
+</div>
+
+<div class="card">
+<h3>1 · Consistency that doesn't cost a global round-trip</h3>
+<p>The zookie's "at-least-as-fresh" semantics let Zanzibar evaluate most checks against <strong>locally-replicated, slightly-stale snapshots</strong> instead of forcing every check to read the global latest (which would need high-latency cross-region synchronization). Each server also tracks safe staleness bounds and even runs a <strong>two-proportion z-test</strong> before increasing the default staleness — pushing more traffic onto local data without violating correctness.</p>
+</div>
+
+<div class="card">
+<h3>2 · Leopard — precomputing the expensive part</h3>
+<p>The costly operation is <strong>deeply/widely nested group membership</strong> ("is Alice in a group, that's in a group, that's in a group … that can view this?"). Recursive pointer-chasing at check time is slow. <strong>Leopard</strong> is a specialized index that:</p>
+<ul>
+  <li>Represents sets as <code>(T, s, e)</code> tuples (type, set-id, element-id) and <strong>flattens group-to-group paths</strong> so reachability is a set lookup, not a traversal.</li>
+  <li>Stores them in <strong>skip-list</strong>-style structures so <em>union</em> and <em>intersection</em> across large sets are efficient (intersecting A and B skips ahead instead of scanning).</li>
+  <li>Is kept fresh by consuming the <code>Watch</code> stream of tuple changes — an offline builder + online serving split, shards served from memory.</li>
+</ul>
+<div class="insight"><p><strong>The pattern:</strong> denormalize the expensive read (nested reachability) into a precomputed index, and keep it eventually-fresh via a change stream — without denormalizing the <em>primary</em> data (which stays normalized in Spanner for consistency).</p></div>
+</div>
+
+<div class="card">
+<h3>3 · Hot-spot handling — the real scaling lever</h3>
+<p>ACL workloads are bursty: a search query checks many results that <em>share</em> common groups; a viral object draws a flood of checks. Zanzibar's defenses:</p>
+<ul>
+  <li><strong>Distributed cache across the cluster.</strong> Cache entries are distributed with consistent hashing; internal RPCs are forwarded by a key so the same check/read lands on the same server (cache trees). Snapshot timestamp is part of the cache key, so caching never breaks consistency.</li>
+  <li><strong>Lock table (single-flight).</strong> When many identical requests arrive before the cache is warm (a "flash hot spot"), a per-server lock table tracks outstanding reads/checks so only <em>one</em> does the work and the rest wait for the result — collapsing a thundering herd into one query.</li>
+  <li><strong>Read-and-cache-all for hot objects.</strong> A popular object hit by many checks-for-different-users would hammer the storage server; Zanzibar detects hot objects (by counting outstanding reads) and reads+caches <em>all</em> its tuples at once.</li>
+  <li><strong>Slicer</strong> redistributes hot keys across servers dynamically.</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>4 · Tail latency — request hedging</h3>
+<p>For calls to Spanner and Leopard, Zanzibar uses <strong>request hedging</strong>: send the same request to multiple replicas, take the first response, cancel the rest. To avoid doubling load, it sends one request first and only fires hedged copies once the first is <em>known to be slow</em> — using a per-server delay estimator that computes an Nth-percentile latency from recent measurements. It also places ≥2 replicas near every Zanzibar server. Hedging requires similar-cost requests, so evaluation is structured to keep sub-requests comparable.</p>
+<div class="insight"><p><strong>Why hedging matters:</strong> at &lt;10ms p95 across &gt;10M QPS, a few slow replicas would wreck the tail. Hedging trades a little extra load for a dramatically tighter tail — the classic "tail at scale" technique.</p></div>
+</div>
+
+<div class="card">
+<h3>5 · Concurrency &amp; cancellation</h3>
+<p>All leaf nodes of the boolean check tree are evaluated <strong>concurrently</strong>. Because a boolean result can short-circuit (one <code>true</code> in a union is enough), indirect sub-checks are frequently cancelled once the answer is known — though Zanzibar delays eager cancellation when other requests are waiting on the same in-flight work, so it doesn't throw away a result someone else needs.</p>
+</div>
+</div>
+
+<!-- ================= WHY ================= -->
+<div class="section" id="why">
+<div class="card">
+<h2>Why this design</h2>
+
+<h3>Why centralize authorization at all?</h3>
+<ul>
+  <li><strong>Consistency of a hard problem.</strong> Authorization bugs are privacy incidents. Solving ordering/staleness <em>once</em>, correctly, beats every team reinventing it (and getting the "new enemy problem" wrong).</li>
+  <li><strong>Uniformity.</strong> One data model + config language means tooling, auditing, and the Leopard index work for every client.</li>
+  <li><strong>Operational leverage.</strong> One system to run at 5-nines instead of dozens of bespoke permission stores.</li>
+</ul>
+
+<h3>Why relationship tuples (ReBAC) instead of roles (RBAC)?</h3>
+<div class="insight"><p>Real products are graphs: docs in folders, folders shared with groups, groups nested in groups. Roles (RBAC) can't express "viewer of a doc = viewer of its parent folder" cleanly. Modeling permissions as <em>relationships</em> + rewrite rules captures inheritance and nesting directly — which is exactly why the whole industry copied this model (OpenFGA, SpiceDB, etc.).</p></div>
+
+<h3>Why lean on Spanner + zookies rather than "always read latest"?</h3>
+<p>Always reading the freshest ACL would give correctness trivially — but at the cost of a global synchronization round-trip on <em>every</em> check, destroying latency and availability. Zookies invert it: capture just enough ordering (a timestamp bound tied to content) so that <em>slightly stale local reads are provably safe</em>. It's the minimal consistency needed, and no more.</p>
+
+<h3>Why normalized storage + a separate index?</h3>
+<p>Denormalizing ACLs into storage would speed reads but make consistent, ordered updates a nightmare. Keeping the source of truth normalized in Spanner (for correctness) and pushing denormalization into a separately-maintained, eventually-fresh index (Leopard, for speed) cleanly separates the two concerns.</p>
+</div>
+</div>
+
+<!-- ================= CHALLENGES ================= -->
+<div class="section" id="challenges">
+<div class="card">
+<h2>Hard problems</h2>
+
+<h4>The new enemy problem</h4>
+<p>The defining correctness challenge: never let a removed user see new content, and never apply a stale ACL to fresh content. Solved by zookies + Spanner external consistency — but note it requires <em>client cooperation</em> (clients must store the zookie with their content and send it back). A client that skips zookies gets default staleness, not ordering guarantees.</p>
+
+<h4>Deeply nested groups</h4>
+<p>Group-in-group-in-group membership can make a single check traverse a huge subgraph. Leopard's flattened reachability index is the answer, but it introduces its own freshness challenge (kept current via the Watch stream), and a consistency gap: Leopard can't always evaluate at a perfectly fresh snapshot, so it's used where its staleness is acceptable.</p>
+
+<h4>Hot spots &amp; the thundering herd</h4>
+<div class="warning"><p>A viral object or a popular shared group can concentrate enormous load on a few tuples. Without the distributed cache + lock table + hot-object read-all + Slicer, these would overload individual storage servers. Much of the engineering is specifically about <em>flattening bursty, skewed load</em>.</p></div>
+
+<h4>Tail latency at 5-nines</h4>
+<p>Being in the critical path of user actions at &gt;10M QPS means the p95/p99 tail is the product. Hedging, concurrent tree evaluation, local snapshots, and caching all exist to keep the tail under 10ms while maintaining &gt;99.999% availability.</p>
+</div>
+</div>
+
+<!-- ================= INTERVIEW ================= -->
+<div class="section" id="interview">
+<div class="card">
+<h2>Interview angle</h2>
+<div class="iv"><p><strong>Why this is the highest-ROI system to know:</strong> it's the one paper that is simultaneously a <em>security</em> system and a <em>large-scale backend</em> system. For a Security Backend role, being able to whiteboard "design a global authorization service" using Zanzibar's ideas demonstrates both domains at once — which is exactly the intersection the role sits at.</p></div>
+
+<h3>The transferable patterns to internalize</h3>
+<table>
+  <tr><th>Zanzibar technique</th><th>The general principle (reusable in any system-design answer)</th></tr>
+  <tr><td>Zookie / consistency token</td><td>Capture the <em>minimal</em> ordering guarantee needed (a freshness bound), so you can serve stale-but-safe local reads instead of paying for global "read latest."</td></tr>
+  <tr><td>Normalized truth + denormalized index</td><td>Keep the source of truth normalized for correctness; precompute the expensive read into a separate index kept fresh via a change stream.</td></tr>
+  <tr><td>Lock table / single-flight</td><td>Collapse a thundering herd of identical requests into one in-flight computation; everyone else waits on the result.</td></tr>
+  <tr><td>Request hedging</td><td>Tame tail latency by racing replicas — but fire the hedge only after the first is known slow, to bound extra load.</td></tr>
+  <tr><td>Consistent-hash cache forwarding</td><td>Route by key so identical work lands on the same node and shares a cache; put the snapshot in the cache key so caching never breaks consistency.</td></tr>
+  <tr><td>Relationship model (ReBAC)</td><td>Model permissions as a graph of relationships + rewrite rules to capture inheritance/nesting that roles can't.</td></tr>
+</table>
+
+<h3>Likely interview questions</h3>
+<div class="qa"><div class="q">Q: "Design a global authorization / permissions service."</div>
+<p>This is <em>the</em> Zanzibar question. Lead with the relation-tuple model (<code>object#relation@user</code>, usersets for groups), rewrite rules for inheritance (<code>tuple_to_userset</code>), the <code>Check</code> API, then consistency (zookies + a Spanner-like externally-consistent store to prevent the "new enemy problem"), then scale (local snapshots, a Leopard-style flattening index for nested groups, distributed cache + lock table for hot spots, hedging for tail latency).</p></div>
+<div class="qa"><div class="q">Q: "How do you keep a permission check correct when ACLs and content change concurrently?"</div>
+<p>The new-enemy problem. Store ACLs in an externally-consistent DB with global timestamps; issue a consistency token (zookie) tied to content version; evaluate checks at a snapshot at least as fresh as the token. Explain why "always read latest" is correct but too slow, and why "at-least-as-fresh" is the right minimal guarantee.</p></div>
+<div class="qa"><div class="q">Q: "A single object is getting a flood of permission checks — how do you not fall over?"</div>
+<p>Distributed cache with consistent-hash forwarding, per-server lock table to single-flight duplicate checks, detect hot objects and read+cache all their tuples at once, Slicer to spread hot keys. Snapshot in the cache key to stay consistent.</p></div>
+<div class="qa"><div class="q">Q: "How do you get &lt;10ms p95 across millions of QPS globally?"</div>
+<p>Serve from local replicated snapshots (zookie makes it safe), precompute nested membership (Leopard), evaluate the check tree concurrently with short-circuit cancellation, and hedge slow backend calls. Availability from replication across 30+ regions.</p></div>
+
+<div class="tip"><p><strong>System-of-systems close:</strong> "ALTS proves which service is calling; BeyondProd's EUC ticket carries which user it's acting for; <em>Zanzibar decides whether that user is actually allowed to touch the object</em> — and does it at 10M QPS with &lt;10ms tail by trading 'always fresh' for 'provably fresh enough.' It's where security correctness and backend scale meet." That framing shows you see the whole picture, not just one paper.</p></div>
+</div>
+</div>
+
+</div>
+<script>
+function showSection(evt, id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  evt.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

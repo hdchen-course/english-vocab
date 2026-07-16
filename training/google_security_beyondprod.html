@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BeyondProd — Zero-Trust for Production Services | Google Security Deep-Dive</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fa; --bg2: #ffffff; --bg3: #f1f3f5; --border: #dee2e6;
+  --text: #212529; --text2: #495057; --text3: #868e96;
+  --blue: #1971c2; --blue-l: #d0ebff; --green: #2f9e44; --green-l: #d3f9d8;
+  --yellow: #e67700; --yellow-l: #fff3bf; --red: #c92a2a; --red-l: #ffe3e3;
+  --purple: #7048e8; --purple-l: #e5dbff; --r: 12px; --shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.8; }
+.container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+header { text-align: center; margin-bottom: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+header .sub { color: var(--text3); font-size: 14px; }
+.crumb { text-align:center; margin-bottom: 24px; font-size: 13px; color: var(--text3); }
+.crumb a { color: var(--blue); text-decoration: none; }
+.nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 40px; position: sticky; top: 0; background: var(--bg); padding: 16px 0; z-index: 100; border-bottom: 1px solid var(--border); }
+.nav-btn { padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s; font-family: 'Inter', sans-serif; }
+.nav-btn:hover { background: var(--bg3); color: var(--text); }
+.nav-btn.active { background: var(--blue-l); color: var(--blue); border-color: var(--blue); }
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+h2 { font-size: 24px; font-weight: 700; margin: 32px 0 16px; color: var(--blue); }
+h3 { font-size: 18px; font-weight: 600; margin: 24px 0 12px; }
+h4 { font-size: 15px; font-weight: 600; margin: 16px 0 8px; color: var(--text2); }
+p { margin-bottom: 12px; color: var(--text2); }
+ul, ol { margin: 8px 0 16px 24px; color: var(--text2); }
+li { margin-bottom: 6px; }
+strong { color: var(--text); }
+pre { background: #1e1e2e; border-radius: 8px; padding: 16px 20px; overflow-x: auto; margin: 12px 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; color: #cdd6f4; white-space: pre-wrap; }
+code { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+p code, li code, td code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--purple); }
+.insight { background: var(--blue-l); border-left: 3px solid var(--blue); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.insight p { color: #114f8c; margin: 0; }
+.warning { background: var(--yellow-l); border-left: 3px solid var(--yellow); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.warning p { color: #a85700; margin: 0; }
+.tip { background: var(--green-l); border-left: 3px solid var(--green); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.tip p { color: #1d6b2e; margin: 0; }
+.iv { background: var(--purple-l); border-left: 3px solid var(--purple); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.iv p { color: #4a2fa8; margin: 0 0 8px 0; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 20px; padding: 24px 28px; box-shadow: var(--shadow); }
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+th, td { padding: 10px 14px; border: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { background: var(--bg3); font-weight: 600; color: var(--text); }
+tr:hover { background: var(--bg3); }
+.svg-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 20px; margin: 20px 0; text-align: center; overflow-x: auto; }
+.qa { border-left: 3px solid var(--purple); padding: 4px 0 4px 16px; margin: 18px 0; }
+.qa .q { font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.tag { display:inline-block; font-size:11px; font-weight:700; padding:2px 8px; border-radius: 20px; background: var(--purple-l); color: var(--purple); margin-left:6px; }
+@media (max-width: 768px) { .container { padding: 20px 12px; } .nav { position: static; flex-direction: column; } .nav-btn { text-align: center; } pre { font-size: 11px; } }
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>BeyondProd</h1>
+  <div class="sub">Zero-trust security for production services &amp; microservices · deep-dive &amp; interview prep</div>
+</header>
+<div class="crumb">📚 <a href="google_security_index.html">Google Security Systems — Index</a> &nbsp;›&nbsp; BeyondProd</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection(event,'overview')">Overview</button>
+  <button class="nav-btn" onclick="showSection(event,'design')">How it's designed</button>
+  <button class="nav-btn" onclick="showSection(event,'why')">Why this way</button>
+  <button class="nav-btn" onclick="showSection(event,'challenges')">Challenges</button>
+  <button class="nav-btn" onclick="showSection(event,'scale')">Scale &amp; throughput</button>
+  <button class="nav-btn" onclick="showSection(event,'interview')">Interview angle</button>
+</div>
+
+<!-- OVERVIEW -->
+<div class="section active" id="overview">
+<div class="card">
+<h2>The one-line idea</h2>
+<p>
+BeyondProd is <strong>"zero-trust, but for production services instead of users."</strong> It replaces the old assumption — "if you're inside the network perimeter, you're trusted" — with: <strong>trust a service based on its code provenance, the hardware it runs on, and its cryptographic identity — never its IP address or hostname.</strong>
+</p>
+<div class="insight"><p><strong>The explicit analogy Google draws:</strong> BeyondProd is to production <em>services</em> what BeyondCorp / Chrome Enterprise Premium is to <em>users</em>. For users, trust depends on device context, not on being on the corporate network. For services, trust depends on code provenance + hardware + identity, not on network location.</p></div>
+</div>
+
+<div class="card">
+<h3>Why the perimeter model breaks for microservices</h3>
+<p>Google's own framing: <em>"Microservices move and are deployed in different environments, across heterogeneous hosts, and operate at various levels of trust and sensitivity."</em> Borg deploys <strong>several billion containers a week</strong>. A firewall around the datacenter can't express "service A may call service B but not C" for ephemeral workloads that reschedule constantly. So the trust decision has to move <em>into</em> every service-to-service call.</p>
+<div class="insight"><p><strong>The one idea, stated carefully (easy to get backwards):</strong> the old model says <em>"trust = you're inside the wall."</em> BeyondProd doesn't say "trust everything regardless of where it's from" — it says the opposite: <strong>network location stops being a trust signal at all.</strong> A call isn't trusted because it came from inside; it's re-verified <em>every time</em> on its own merits — the caller's <strong>identity</strong> (cert), the <strong>provenance</strong> of the code it's running (built by the trusted pipeline?), and the <strong>hardware</strong> it sits on (verified boot). Location tells you nothing; identity + provenance + hardware do. "It came from inside the network" is worth exactly zero.</p></div>
+</div>
+
+<div class="card">
+<h3>The building blocks (and where they're documented separately)</h3>
+<table>
+  <tr><th>Control</th><th>Role</th></tr>
+  <tr><td><a href="google_security_alts.html">ALTS</a></td><td>RPC authentication, integrity, encryption, and <strong>service identities</strong> bound to services (not hosts)</td></tr>
+  <tr><td><a href="google_security_titan.html">Titan</a> + host integrity</td><td>Hardware root of trust; ALTS machine credential only decryptable if secure boot verified</td></tr>
+  <tr><td>Borg / Borg Prime</td><td>Container orchestration; grants microservice credentials by identity</td></tr>
+  <tr><td>Binary Authorization for Borg (BAB)</td><td>Deploy-time code-provenance enforcement</td></tr>
+  <tr><td>Google Front End (GFE)</td><td>Edge: TLS termination, routing, load balancing, DoS defense</td></tr>
+  <tr><td>Service access management + EUC tickets</td><td>Service-level authorization &amp; end-user context propagation</td></tr>
+  <tr><td>gVisor</td><td>User-space kernel sandboxing untrusted workloads</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h3>Jargon buster — read this first</h3>
+<p>BeyondProd is heavy on acronyms. Plain-English versions so nothing trips you up:</p>
+<table>
+  <tr><th>Term</th><th>Plain meaning</th></tr>
+  <tr><td><strong>authN</strong> (authentication)</td><td><em>"Who are you?"</em> — proving identity. Like badging in with your card.</td></tr>
+  <tr><td><strong>authZ</strong> (authorization)</td><td><em>"Are you allowed to do this?"</em> — checking permission. Like whether your badge opens <em>this</em> room. (Written authN/authZ because both start with "Auth…".)</td></tr>
+  <tr><td><strong>code provenance</strong></td><td>The <em>origin / pedigree</em> of the running code — can you prove this binary came from the trusted pipeline and was reviewed, not slipped in by someone? Like a food supply-chain trail.</td></tr>
+  <tr><td><strong>BAB</strong> (Binary Authorization for Borg)</td><td>The deploy-time gate that enforces code provenance: only binaries with a signed "build manifest" (2nd-engineer review + built on trusted infra) may launch. Borg = Google's container scheduler (Kubernetes' ancestor).</td></tr>
+  <tr><td><strong>EUC ticket</strong> (End-User Context)</td><td>A pass that says <em>"this request is on behalf of user alice"</em>, forwarded between services. Separate from <em>service</em> identity ("which service is calling"). Like a visitor sticker vs. an employee badge.</td></tr>
+  <tr><td><strong>confused deputy</strong></td><td>The bug EUC tickets prevent: a service that <em>has</em> permission is tricked into doing something for a user who <em>doesn't</em>. Keeping "who is calling" and "on whose behalf" separate stops it.</td></tr>
+  <tr><td><strong>RPC</strong></td><td>Remote Procedure Call — one service calling another over the network. This is what ALTS secures and BeyondProd authorizes.</td></tr>
+  <tr><td><strong>GFE</strong> (Google Front End)</td><td>The edge proxy every external request hits first — terminates TLS, routes, load-balances, absorbs DoS before traffic reaches backends.</td></tr>
+</table>
+<div class="insight"><p><strong>How they chain in one request:</strong> <strong>authN</strong> (ALTS proves which service is calling) → <strong>provenance/BAB</strong> (the code running is known-good) → <strong>EUC ticket</strong> (which real user this is for) → <strong>authZ</strong> (is that user actually allowed — possibly answered by Zanzibar). All must pass, or the request is denied.</p></div>
+</div>
+</div>
+
+<!-- DESIGN -->
+<div class="section" id="design">
+<div class="card">
+<h2>How service identity &amp; trust are established</h2>
+<p>The chain of trust runs from silicon up to an authorized RPC:</p>
+<div class="svg-wrap">
+<svg viewBox="0 0 640 330" width="100%" style="max-width:900px" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+  <rect x="200" y="10" width="240" height="44" rx="8" fill="#c92a2a"/>
+  <text x="320" y="30" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">Titan — hardware root of trust</text>
+  <text x="320" y="47" text-anchor="middle" fill="#ffe3e3" font-size="10">verifies secure boot (BIOS/BMC/bootloader/kernel)</text>
+  <line x1="320" y1="54" x2="320" y2="74" stroke="#868e96" stroke-width="2" marker-end="url(#b)"/>
+
+  <rect x="200" y="76" width="240" height="44" rx="8" fill="#7048e8"/>
+  <text x="320" y="96" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">Machine ALTS credential</text>
+  <text x="320" y="113" text-anchor="middle" fill="#e5dbff" font-size="10">decryptable only if host integrity verified boot</text>
+  <line x1="320" y1="120" x2="320" y2="140" stroke="#868e96" stroke-width="2" marker-end="url(#b)"/>
+
+  <rect x="200" y="142" width="240" height="44" rx="8" fill="#1971c2"/>
+  <text x="320" y="162" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">Borg Prime grants workload cred</text>
+  <text x="320" y="179" text-anchor="middle" fill="#d0ebff" font-size="10">by microservice identity, over machine-secured channel</text>
+  <line x1="320" y1="186" x2="320" y2="206" stroke="#868e96" stroke-width="2" marker-end="url(#b)"/>
+
+  <rect x="160" y="208" width="320" height="44" rx="8" fill="#2f9e44"/>
+  <text x="320" y="228" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">BAB: only known-provenance code can deploy</text>
+  <text x="320" y="245" text-anchor="middle" fill="#d3f9d8" font-size="10">signed verifiable build manifest checked at deploy time</text>
+  <line x1="320" y1="252" x2="320" y2="272" stroke="#868e96" stroke-width="2" marker-end="url(#b)"/>
+
+  <rect x="140" y="274" width="360" height="46" rx="8" fill="#495057"/>
+  <text x="320" y="294" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">Authorized RPC over ALTS</text>
+  <text x="320" y="311" text-anchor="middle" fill="#ced4da" font-size="10">service access management checks identity + policy + EUC ticket</text>
+  <defs><marker id="b" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#868e96"/></marker></defs>
+</svg>
+</div>
+<ul>
+  <li>Each machine's ALTS credential is provisioned via the host integrity system and is <strong>only decryptable if secure boot was verified</strong> — so only verified-boot hosts can run workloads.</li>
+  <li><strong>Borg Prime</strong> (the centralized controller) grants microservice ALTS credentials based on <em>microservice identity</em>, using the machine-level credential as the secure channel.</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>First, clear up: identity vs. code vs. provenance</h3>
+<p>These three get muddled easily — and BeyondProd's whole "trust by identity <em>+</em> provenance" idea only makes sense once they're separate. Note <strong>"code" here means the actual software/binary running on the machine</strong> — not an ID or a password.</p>
+<table>
+  <tr><th>Thing</th><th>Answers</th><th>Everyday analogy</th></tr>
+  <tr><td><strong>identity</strong></td><td>"<em>Who</em> is calling?" — which service (or which user)</td><td>the <strong>name</strong> on your badge</td></tr>
+  <tr><td><strong>code / binary</strong></td><td>The actual <em>program</em> currently running on that machine</td><td>the <strong>tools/cargo</strong> you're carrying</td></tr>
+  <tr><td><strong>provenance</strong></td><td>"Where did that <em>program</em> come from — is it from the trusted pipeline, reviewed, not slipped in?"</td><td>the <strong>supply-chain / inspection sticker</strong> on the cargo</td></tr>
+</table>
+<p><strong>Why identity alone isn't enough:</strong> a service can have a perfectly <em>real</em> identity (ALTS proves "I'm the Photos backend" ✅) but be running a <em>tampered</em> binary that nobody reviewed. Identity-only trust would let it through — the name is genuine. So BeyondProd requires <strong>both</strong>: a trusted identity <em>and</em> known-provenance code, before it ever gets to "is this allowed?" (authZ).</p>
+<div class="insight"><p>So <em>"how identity + provenance become an authorization model"</em> just means: combine <strong>who is calling</strong> (identity) with <strong>what code is running</strong> (provenance) as two trust signals, then decide <strong>whether to allow</strong> the action (authZ). Badge name + inspected toolbox, both checked, before you're let into the server room.</p></div>
+</div>
+
+<div class="card">
+<h3>Binary Authorization for Borg (BAB) — provenance you can't fake</h3>
+<p>BAB is a <strong>deploy-time enforcement check</strong> ensuring code meets security requirements before it can run. It enforces:</p>
+<ul>
+  <li>Second-engineer code review before submission,</li>
+  <li>Binaries <strong>verifiably built on dedicated infrastructure</strong>,</li>
+  <li>Blocking deployment of unauthorized microservices.</li>
+</ul>
+<p>Flow: approved change → trusted build system produces <strong>a package with a signed, verifiable build-manifest certificate</strong> → BAB validates that certificate at deploy time. So "what's running" is provably "what was reviewed and built by the trusted pipeline."</p>
+<div class="insight"><p><strong>Key insight:</strong> BAB turns "we trust this binary" into a cryptographic fact anchored in the build system, not a hope. Combined with immutable containers (they don't change after deploy), you know exactly what code is running and where it came from.</p></div>
+</div>
+
+<div class="card">
+<h3>Ingress, containers, and isolation</h3>
+<ul>
+  <li><strong>Google Front End (GFE)</strong> is the first point of entry: terminates TLS, enforces TLS best practices, routes to the right microservice, load-balances, reroutes across regions, and defends against DoS. <em>Cloud Front End</em> is a GFE variant on the Compute Engine network stack.</li>
+  <li><strong>Containers on Borg are immutable</strong> — they don't change after deployment and are rebuilt/redeployed frequently. Borg tooling does <strong>blue-green deployments</strong>, migrating traffic gradually with no downtime.</li>
+  <li><strong>gVisor</strong> is a user-space kernel that isolates workloads sharing an OS by intercepting syscalls — shrinking the host attack surface, especially for untrusted external code.</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>End-to-end data access flow (layered enforcement)</h3>
+<pre>User
+ → GFE            (TLS termination at the edge)
+ → frontend       (over ALTS)
+ → EUA service    (issues an EUC ticket attesting end-user identity)
+ → backend RPC    (over ALTS, forwarding the EUC ticket)
+ → backend verifies ALL of:
+       • cert valid &amp; unrevoked
+       • ALTS identity authorized (service access management)
+       • EUC ticket valid
+       • the end user is authorized
+   any failure → request denied</pre>
+<p><strong>EUC (End-User Context) tickets</strong> are integrity-protected, centrally-issued, forwardable credentials that attest to the end user's identity — kept <em>separate</em> from service identity so the two concerns don't get conflated.</p>
+</div>
+</div>
+
+<!-- WHY -->
+<div class="section" id="why">
+<div class="card">
+<h2>Why this design</h2>
+
+<h3>Why abandon the perimeter?</h3>
+<p>A perimeter gives you one wall and total trust inside it — so a single breach is catastrophic, and it can't express fine-grained "who may talk to whom" for workloads that move constantly. BeyondProd assumes <strong>no inherent mutual trust between services</strong>, so every call is authenticated and authorized on its own merits. The blast radius of any single compromise is bounded.</p>
+
+<h3>Why separate service identity from end-user identity?</h3>
+<div class="insight"><p>A backend needs to know two <em>different</em> things: "which service is calling me?" (ALTS identity) and "on whose behalf?" (EUC ticket). Conflating them is a classic confused-deputy setup. Keeping them separate lets a service prove its own identity <em>and</em> forward the user's context without impersonation.</p></div>
+
+<h3>Why enforce provenance at deploy time (BAB)?</h3>
+<p>Authentication tells you <em>who</em> is running; provenance tells you <em>what</em> is running and whether it came from the trusted pipeline. Without BAB, a valid service identity could still run unreviewed or maliciously-built code. BAB closes that gap by making "known-provenance code" a precondition for deployment.</p>
+
+<h3>Why root everything in hardware?</h3>
+<p>The whole chain is only as trustworthy as its anchor. If the machine credential could be extracted from a compromised host, service identity would be forgeable. Tying the machine credential's decryptability to verified secure boot (via Titan) means a tampered host simply can't obtain a working identity.</p>
+</div>
+</div>
+
+<!-- CHALLENGES -->
+<div class="section" id="scale">
+<div class="card">
+<h2>Scale &amp; throughput — per-call authZ that's near-free</h2>
+<p>BeyondProd authorizes <em>every</em> service-to-service call — cert validity + revocation + service-access policy + EUC ticket — for a fleet that deploys billions of containers a week. For that to be viable, each check must be almost free:</p>
+<ul>
+  <li><strong>Built on ALTS's cheap identity.</strong> Mutual auth is already amortized by ALTS (resumption, long-lived connections), so BeyondProd's authorization rides on top without re-paying for handshakes.</li>
+  <li><strong>Policy &amp; CRL evaluated locally.</strong> Service-access policy and revocation lists are distributed to machines and checked at verification time — no central authorization call on every RPC.</li>
+  <li><strong>Identity, not location, enables elasticity.</strong> Because trust binds to service identity (not host/IP), workloads replicate, load-balance, and reschedule freely — the security model doesn't fight autoscaling.</li>
+  <li><strong>Edge absorbs the crowd.</strong> GFE terminates TLS, load-balances, reroutes across regions, and absorbs DoS at the edge, so backends only see already-filtered, already-routed traffic.</li>
+  <li><strong>Immutable containers + blue-green.</strong> Immutable images and gradual traffic migration let the fleet roll out constantly without downtime — provenance (BAB) is checked once at deploy, not per request.</li>
+</ul>
+<div class="insight"><p><strong>The scaling lesson:</strong> push authorization checks to <em>local, cached</em> data evaluated at the point of use, bind trust to identity so security doesn't block elasticity, and let the edge shed load before it reaches backends.</p></div>
+</div>
+</div>
+
+<div class="section" id="challenges">
+<div class="card">
+<h2>Hard problems</h2>
+
+<h4>Migrating an existing fleet off the perimeter</h4>
+<p>Google didn't start zero-trust; it retrofitted a massive existing production estate. Doing that without breaking billions of RPCs means making the new controls <em>default and invisible</em> (ALTS zero-config) and rolling them out gradually — the same lesson as BeyondCorp for users.</p>
+
+<h4>Performance of per-call authorization</h4>
+<p>Checking cert validity + revocation + service policy + EUC ticket on <em>every</em> RPC, at Google scale, must be near-free. This is why ALTS resumption, local CRL copies, and cached policy exist — the security checks have to disappear into the noise.</p>
+
+<h4>Trust bootstrapping (the chicken-and-egg)</h4>
+<p>A workload needs an identity to be trusted, but issuing that identity requires a trusted channel. Resolved by layering: hardware (Titan) → machine credential (needs verified boot) → workload credential (issued by Borg Prime over the machine-secured channel).</p>
+
+<h4>Isolating untrusted / multi-tenant code</h4>
+<div class="warning"><p>Running customer or untrusted code next to Google services on shared hosts is dangerous at the kernel-syscall level. gVisor addresses this with a user-space kernel, but sandboxing always trades some performance/compatibility for a smaller attack surface — a deliberate, ongoing tension.</p></div>
+</div>
+</div>
+
+<!-- INTERVIEW -->
+<div class="section" id="interview">
+<div class="card">
+<h2>Interview angle</h2>
+<div class="iv"><p><strong>Why this matters:</strong> BeyondProd is the umbrella story that ties ALTS, Titan, and KMS together. For a Security Backend / Silicon role, being able to narrate "how a request stays secure from silicon to authorized RPC" is exactly the systems-thinking they want.</p></div>
+
+<h3>The principles worth being able to argue from</h3>
+<table>
+  <tr><th>BeyondProd principle</th><th>How to reason about it</th></tr>
+  <tr><td>Don't trust network location / reported state — verify</td><td>A reported "healthy / in-sync" status is not proof; authenticate identity per-call and verify actual deployed reality rather than trusting a green dashboard.</td></tr>
+  <tr><td>Bound the blast radius; root-fix vs band-aid</td><td>Fix the structural root cause and put the resource under version control so the problem can't silently drift back, instead of repeatedly suppressing it.</td></tr>
+  <tr><td>Code provenance / build integrity (BAB)</td><td>Only known-provenance, reviewed, trusted-pipeline-built code should deploy — verify what is actually running, not what you assume shipped.</td></tr>
+  <tr><td>Hardware-rooted identity</td><td>Anchor identity in tamper-resistant hardware so trust doesn't depend on the environment a workload happens to run in.</td></tr>
+  <tr><td>Least-privilege service access</td><td>Grant each service the minimal access it needs; authorize every inter-service call on its own merits.</td></tr>
+</table>
+
+<h3>Likely questions</h3>
+<div class="qa"><div class="q">Q: "Design security for a microservice platform where you can't trust the network."</div>
+<p>Service identity (ALTS) not host; mutual auth on every call; hardware-rooted machine identity + verified boot; deploy-time provenance (BAB); separate service identity from end-user context (EUC); edge termination (GFE); least-privilege service access management. Then discuss performance and gradual migration.</p></div>
+<div class="qa"><div class="q">Q: "How is this different from a firewall / VPN?"</div>
+<p>Perimeter = one wall, total interior trust, coarse and static. Zero-trust = per-call authN/authZ, no interior trust, fine-grained and dynamic — bounds blast radius and handles ephemeral workloads.</p></div>
+<div class="qa"><div class="q">Q: "How do you know the code running is the code you reviewed?"</div>
+<p>Trusted build system emits a signed build-manifest certificate; BAB validates it at deploy; immutable containers; second-engineer review as a gate. Provenance becomes a cryptographic fact.</p></div>
+<div class="qa"><div class="q">Q: "Service A shouldn't be able to act as user X unless user X called it — how?"</div>
+<p>Separate identities: ALTS proves service identity; EUC ticket (integrity-protected, forwardable) carries end-user context; backend verifies both independently. Prevents confused-deputy.</p></div>
+
+<div class="tip"><p><strong>Signature senior move:</strong> narrate the full data-access flow (User → GFE → ALTS → EUC → backend verifies four things → deny on any failure), then generalize it to the operating principle — don't trust the reported/perimeter state; verify identity and provenance at the point of use.</p></div>
+</div>
+</div>
+
+</div>
+<script>
+function showSection(evt, id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  evt.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
