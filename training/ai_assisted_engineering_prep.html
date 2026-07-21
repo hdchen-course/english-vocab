@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Assisted Engineering — Interview Prep Card</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fa; --bg2: #ffffff; --bg3: #f1f3f5; --border: #dee2e6;
+  --text: #212529; --text2: #495057; --text3: #868e96;
+  --blue: #1971c2; --blue-l: #d0ebff; --green: #2f9e44; --green-l: #d3f9d8;
+  --yellow: #e67700; --yellow-l: #fff3bf; --red: #c92a2a; --red-l: #ffe3e3;
+  --purple: #7048e8; --purple-l: #e5dbff; --r: 12px; --shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.8; }
+.container { max-width: 1000px; margin: 0 auto; padding: 40px 24px; }
+header { text-align: center; margin-bottom: 24px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 30px; font-weight: 800; margin-bottom: 8px; }
+header .sub { color: var(--text3); font-size: 14px; }
+.crumb { text-align:center; margin-bottom: 24px; font-size: 13px; color: var(--text3); }
+.crumb a { color: var(--blue); text-decoration: none; }
+.nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 40px; position: sticky; top: 0; background: var(--bg); padding: 16px 0; z-index: 100; border-bottom: 1px solid var(--border); }
+.nav-btn { padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s; font-family: 'Inter', sans-serif; }
+.nav-btn:hover { background: var(--bg3); color: var(--text); }
+.nav-btn.active { background: var(--blue-l); color: var(--blue); border-color: var(--blue); }
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+h2 { font-size: 24px; font-weight: 700; margin: 32px 0 16px; color: var(--blue); }
+h3 { font-size: 18px; font-weight: 600; margin: 24px 0 12px; }
+h4 { font-size: 15px; font-weight: 600; margin: 16px 0 8px; color: var(--text2); }
+p { margin-bottom: 12px; color: var(--text2); }
+ul, ol { margin: 8px 0 16px 24px; color: var(--text2); }
+li { margin-bottom: 6px; }
+strong { color: var(--text); }
+pre { background: #1e1e2e; border-radius: 8px; padding: 16px 20px; overflow-x: auto; margin: 12px 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; color: #cdd6f4; white-space: pre-wrap; }
+code { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+p code, li code, td code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--purple); }
+.insight { background: var(--blue-l); border-left: 3px solid var(--blue); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.insight p { color: #114f8c; margin: 0; }
+.warning { background: var(--yellow-l); border-left: 3px solid var(--yellow); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.warning p { color: #a85700; margin: 0; }
+.tip { background: var(--green-l); border-left: 3px solid var(--green); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.tip p { color: #1d6b2e; margin: 0; }
+.iv { background: var(--purple-l); border-left: 3px solid var(--purple); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.iv p { color: #4a2fa8; margin: 0; }
+.say { background: linear-gradient(135deg,#f0f9ff,#e0f2fe); border: 1px solid #bae6fd; border-left: 4px solid var(--blue); border-radius: 8px; padding: 14px 18px; margin: 14px 0; font-style: italic; color: var(--text2); position: relative; }
+.say::before { content: 'SAY THIS'; position: absolute; top: -8px; left: 14px; font-size: 9px; font-weight: 700; font-style: normal; background: var(--blue); color: #fff; padding: 1px 8px; border-radius: 4px; letter-spacing: 1px; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 20px; padding: 24px 28px; box-shadow: var(--shadow); }
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+th, td { padding: 10px 14px; border: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { background: var(--bg3); font-weight: 600; color: var(--text); }
+tr:hover { background: var(--bg3); }
+.qa { border-left: 3px solid var(--purple); padding: 4px 0 4px 16px; margin: 18px 0; }
+.qa .q { font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.tag { display:inline-block; font-size:11px; font-weight:700; padding:2px 8px; border-radius: 20px; background: var(--purple-l); color: var(--purple); margin-left:6px; }
+.step { display:flex; gap:14px; margin:14px 0; align-items:flex-start; }
+.step .n { flex:0 0 30px; height:30px; border-radius:50%; background:var(--blue); color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:14px; }
+.step .b { flex:1; }
+.step .b strong { color: var(--text); }
+@media (max-width: 768px) { .container { padding: 20px 12px; } .nav { position: static; flex-direction: column; } .nav-btn { text-align: center; } pre { font-size: 11px; } }
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>AI-Assisted Engineering</h1>
+  <div class="sub">How to talk about using AI in your work — for "AI prompting" rounds &amp; "how do you use AI?" questions</div>
+</header>
+<div class="crumb">🎧 Interview prep · reusable for Cresta / Google / any AI-enabled role</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection(event,'why')">The mindset</button>
+  <button class="nav-btn" onclick="showSection(event,'method')">My method (4 moves)</button>
+  <button class="nav-btn" onclick="showSection(event,'stories')">Real stories</button>
+  <button class="nav-btn" onclick="showSection(event,'override')">When to override AI</button>
+  <button class="nav-btn" onclick="showSection(event,'questions')">Likely questions</button>
+</div>
+
+<!-- WHY -->
+<div class="section active" id="why">
+<div class="card">
+<h2>What this round is really testing</h2>
+<p>An "AI prompting" / "how do you use AI" round is <strong>not</strong> testing whether you know magic incantations. It's testing whether you use AI with <strong>judgment</strong> — the exact phrase these JDs use is <em>"know when AI output should be trusted, verified, or overridden."</em> They want someone who is faster <em>because of</em> AI but still <strong>owns the correctness</strong>.</p>
+<div class="insight"><p><strong>Your reframe (important):</strong> you told yourself "I just talk to it like a person, no method." That's actually the <em>right</em> approach — giving context and iterating is exactly how effective prompting works. You're not missing a method; you just need the <em>language</em> to describe what you already do, and to emphasize the verify/judgment part.</p></div>
+</div>
+
+<div class="card">
+<h3>The one-liner to anchor on</h3>
+<div class="say">"I treat AI like a very fast junior engineer I'm directing. I give it context, have it do the legwork — reading code, drafting, correlating — and iterate. But the judgment is mine: I always verify its output against ground truth, and I've caught plenty of confident-but-wrong answers. AI accelerates the work; I own the outcome."</div>
+<p>That single paragraph hits everything they want: <strong>speed from AI</strong>, <strong>you direct it</strong>, <strong>you verify</strong>, <strong>you own correctness</strong>. Memorize the shape, not the words.</p>
+</div>
+</div>
+
+<!-- METHOD -->
+<div class="section" id="method">
+<div class="card">
+<h2>My method — 4 moves (this IS your "prompting technique")</h2>
+<p>You already do these. Naming them turns "I just chat with it" into a described methodology.</p>
+
+<div class="step"><div class="n">1</div><div class="b"><strong>Give context like briefing a new teammate.</strong> Don't drop a one-liner. Give the background, the goal, the constraints, the relevant files — the same brief you'd give a person joining the problem. Better context in → better output.</div></div>
+<div class="step"><div class="n">2</div><div class="b"><strong>Make it show evidence, not just answers.</strong> For anything factual, I have it <em>pull the actual code / logs / source</em> to back a claim — a data-flow from the real code, not a plausible guess. "Show me where" beats "tell me what."</div></div>
+<div class="step"><div class="n">3</div><div class="b"><strong>Iterate — first output is a draft.</strong> I treat the first answer as a starting point, then refine: "that's wrong here, because…", "now handle this edge case", "tighten this". It's a conversation, not a one-shot.</div></div>
+<div class="step"><div class="n">4</div><div class="b"><strong>Verify against ground truth — I own the call.</strong> I check the output against reality — run it, diff it against logs, compare to a known-good case. The diagnostic judgment (what to suspect, how to verify each step) stays mine. <em>This is the move they care about most.</em></div></div>
+
+<div class="tip"><p><strong>The framing that lands:</strong> "Think of me as the tech lead and AI as a member I'm directing — I set the direction and make every call; AI accelerates the parts I'd otherwise do slowly, like reading an unfamiliar codebase. I own the outcome either way."</p></div>
+</div>
+</div>
+
+<!-- STORIES -->
+<div class="section" id="stories">
+<div class="card">
+<h2>Real stories — you have strong ones, use them</h2>
+<p>Don't speak in the abstract. These are things you actually did; each shows the method + judgment. (Keep them generalized — no internal system names / secrets.)</p>
+
+<h3>① The distributed-system bug others were stuck on for weeks</h3>
+<div class="say">"I root-caused a failure a team had been stuck on for weeks. My method: I drove an AI agent to pull the relevant code and produce a data-flow diagram <em>backed by code evidence</em> — not guesses. Then I validated that model against real logs, stage by stage, until I found the one stage that was silently failing. The AI accelerated the reading and mapping; the judgment — what to suspect, how to verify each stage — was mine. I left the model behind as a runbook."</div>
+<p>Shows: context + evidence (move 2) + verify against logs (move 4) + you own the diagnosis. <strong>Your single best AI story.</strong></p>
+
+<h3>② Ramping into an unfamiliar system fast</h3>
+<div class="say">"Dropped into a system I'd never touched, two days before a deadline. I fed an AI agent the codebase, tickets, and chat history to generate an architecture summary and trace service relationships — got from zero to a working mental model in a day instead of a week. Then I did the actual root-causing myself."</div>
+<p>Shows: AI for the <em>legwork</em> (reading/summarizing) so you spend energy on the hard part.</p>
+
+<h3>③ Full-stack fix on an unfamiliar codebase, solo</h3>
+<div class="say">"I directed AI to help me trace an unfamiliar full-stack flow and draft the verification steps, then I drove the end-to-end testing myself and confirmed each fix. I set what to trace and what 'correct' meant; AI accelerated the slow parts. Tech lead directing a member — I own the result."</div>
+
+<h3>④ Verify-before-acting (judgment story)</h3>
+<div class="say">"An automated security finding flagged an old credential. Instead of blindly rotating it, I used the audit trail to find <em>what actually used it</em> — it turned out to be an automation, not a person — then took the reversible action. AI/tools accelerate the investigation, but I decide the safe move based on verified evidence, not the alert's face value."</div>
+<p>Shows: judgment + "don't trust the surface" — exactly the "when to verify/override" theme.</p>
+</div>
+</div>
+
+<!-- OVERRIDE -->
+<div class="section" id="override">
+<div class="card">
+<h2>"When do you NOT trust AI?" — have a real answer</h2>
+<p>This is the question that separates thoughtful users from hype. Have concrete examples of catching AI being wrong.</p>
+<table>
+  <tr><th>When AI output is risky</th><th>What I do</th></tr>
+  <tr><td><strong>Anything factual / security-critical</strong> (an API exists? a config is safe?)</td><td>Verify against the real source — AI confidently invents plausible-but-wrong APIs ("hallucinations"). I check before trusting.</td></tr>
+  <tr><td><strong>It sounds confident but I can't see the evidence</strong></td><td>Make it show the source/code. No evidence → treat as a hypothesis, not a fact.</td></tr>
+  <tr><td><strong>Subtle correctness</strong> (concurrency, security, edge cases)</td><td>These are where AI (and humans) miss quietly — I reason through them myself and test.</td></tr>
+  <tr><td><strong>It's confidently agreeing with me</strong></td><td>Sycophancy is real — I'll ask it to argue the opposite, or I verify independently.</td></tr>
+</table>
+<div class="say">"I've caught AI plenty of times — a confidently-wrong API that didn't exist, a 'fix' that missed an edge case. So for anything factual or security-critical I verify against ground truth before I trust it. AI is a force multiplier on speed, not a substitute for judgment — the rigor and the final call have to come from me, not the AI."</div>
+<div class="insight"><p><strong>Why this matters to them:</strong> the JDs literally say "maintain rigor, originality, and judgment that do not come from AI." This answer proves you have exactly that — you're not someone who blindly ships AI output.</p></div>
+</div>
+</div>
+
+<!-- QUESTIONS -->
+<div class="section" id="questions">
+<div class="card">
+<h2>Likely questions &amp; how to answer</h2>
+
+<div class="qa"><div class="q">Q: "How do you use AI in your day-to-day work?"</div>
+<p>Lead with the one-liner (fast junior engineer I direct), then the 4 moves briefly, then <em>one</em> concrete story (the distributed-system bug). End on "the judgment is mine." Don't list tools — describe the <em>method</em>.</p></div>
+
+<div class="qa"><div class="q">Q: "Walk me through how you'd prompt AI to solve [X]."</div>
+<p>Narrate the 4 moves on the actual problem: "First I'd give it context — the goal, constraints, relevant code. Then have it pull evidence rather than guess. I'd iterate on the draft. And I'd verify the result against [logs/tests/known-good] before trusting it." Show the loop, not a single magic prompt.</p></div>
+
+<div class="qa"><div class="q">Q: "When has AI been wrong, and how did you catch it?"</div>
+<p>The override examples — a hallucinated API, a fix missing an edge case. "That's why I verify anything factual against the real source." This is a <em>strength</em> question disguised as a gotcha — you want them to ask it.</p></div>
+
+<div class="qa"><div class="q">Q: "How is your work different from just asking ChatGPT?"</div>
+<p>"I set the direction and make every call — what to investigate, what 'correct' means, how to verify. AI accelerates the slow legwork; it doesn't decide anything. Tech lead directing a member. I own the outcome, including when the AI is wrong."</p></div>
+
+<div class="qa"><div class="q">Q: "Doesn't relying on AI make engineers weaker?"</div>
+<p>"It shifts where the skill is. Less time memorizing API surface, more on judgment, design, and verification — which is where the value always was. The risk is people who ship AI output without understanding it; I use it to go faster on things I could do slower, not to skip understanding."</p></div>
+
+<div class="tip"><p><strong>Closing frame (fits an AI company like Cresta):</strong> "AI-assisted is just how I work now — I've used it to crack bugs teams were stuck on, ramp into unfamiliar systems in days, and turn one-off debugging into reusable runbooks. But I treat it as acceleration with mandatory verification, never as a replacement for owning the correctness."</p></div>
+</div>
+</div>
+
+</div>
+<script>
+function showSection(evt, id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  evt.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
