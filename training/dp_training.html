@@ -818,6 +818,40 @@ dp[<span class="num">0</span>] = <span class="num">0</span>;
 dp[mask | (<span class="num">1</span> &lt;&lt; j)][j] = Math.<span class="fn">min</span>(..., dp[mask][i] + dist[i][j]);
 </pre>
 
+<h3>Submask Enumeration &amp; Partition into k Groups</h3>
+<p>Classic pattern: split <code>n</code> items into <code>k</code> groups to optimize some per-group cost (LC 2305 Fair Distribution of Cookies, LC 1723, LC 1681). The key primitive is iterating over <strong>every submask of a mask</strong>.</p>
+<pre><span class="cm">// Enumerate all non-empty submasks of `avail`</span>
+<span class="kw">for</span> (<span class="kw">int</span> s = avail; s &gt; <span class="num">0</span>; s = (s - <span class="num">1</span>) &amp; avail) {
+    <span class="cm">// s ranges over every subset of avail, largest -&gt; smallest</span>
+}</pre>
+
+<div class="insight">
+  <p><strong>Cost counting.</strong> One submask loop over a mask with <code>p</code> set bits runs <code>2^p - 1</code> times. Summed over the <em>whole</em> recursion tree (submasks of submasks), the total is <strong>3^n</strong> &mdash; each bit is independently "not in avail / chosen now / already taken". For n = 8 that is only 3^8 = 6561, so brute force already passes; DP just removes the k factor's blowup.</p>
+</div>
+
+<h3>DP formulation (LC 2305)</h3>
+<pre><span class="cm">// dp[k][mask] = min possible MAX-group-sum when</span>
+<span class="cm">// distributing cookies in `mask` among k children</span>
+<span class="cm">// Transition: child k takes submask s, rest go to k-1 children</span>
+dp[k][mask] = <span class="fn">min</span> over s &sube; mask of
+              Math.<span class="fn">max</span>( sum[s], dp[k-<span class="num">1</span>][mask ^ s] );</pre>
+
+<div class="warning">
+  <p><strong>Why the naive backtracking version can't memoize.</strong> If you pass the running <code>max</code> down as a parameter, the state becomes <code>(k, mask, max)</code> &mdash; the same <code>(k, mask)</code> reached via different paths carries a different <code>max</code>, so it isn't reusable. Fix: <strong>don't pass <code>max</code> down &mdash; bubble it up</strong> by returning the subproblem's answer and combining with <code>Math.max(sum[s], dfs(k-1, mask^s))</code>. State collapses to <code>(k, mask)</code> and memoization works. This "accumulated-arg &rarr; returned-value merge" flip is the general backtracking&rarr;DP trick.</p>
+</div>
+
+<h3>Group-sum precompute (no numberOfTrailingZeros)</h3>
+<pre><span class="cm">// Seed single-bit masks straight from the array (index is free)</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) sum[<span class="num">1</span> &lt;&lt; i] = cookies[i];
+<span class="cm">// Strip the lowest set bit; source is strictly smaller = already done</span>
+<span class="kw">for</span> (<span class="kw">int</span> m = <span class="num">1</span>; m &lt; (<span class="num">1</span> &lt;&lt; n); m++) {
+    <span class="kw">int</span> lb = m &amp; -m;              <span class="cm">// lowest set bit (a VALUE, never 0 for m!=0)</span>
+    sum[m] = sum[m ^ lb] + sum[lb];  <span class="cm">// m^lb zeroes it out, not m&-m</span>
+}</pre>
+<div class="danger">
+  <p><strong>Two easy slips:</strong> (1) <code>m &amp; -m</code> on a single-bit mask returns <em>itself</em>, not 0 &mdash; the value that hits 0 is <code>m ^ lb</code>. (2) No duplicate accumulation: the outer loop <em>assigns</em> (<code>=</code>, not <code>+=</code>) each mask exactly once, and each recurrence strips only the lowest bit, so every bit is added once. Total O(2^n), no <code>Integer.numberOfTrailingZeros</code> needed.</p>
+</div>
+
 <h3>When to Use</h3>
 <div class="danger">
   <p><strong>n &le; 20</strong> (2^20 ~ 1M states, acceptable)<br>
@@ -828,6 +862,7 @@ dp[mask | (<span class="num">1</span> &lt;&lt; j)][j] = Math.<span class="fn">mi
 
 <h3>LeetCode Problems</h3>
 <ul class="problem-list">
+  <li><span class="title"><a href="https://leetcode.com/problems/fair-distribution-of-cookies/" target="_blank">2305. Fair Distribution of Cookies</a></span><span class="tag tag-medium">Medium</span><span class="tag tag-freq">Partition k groups</span></li>
   <li><span class="title"><a href="https://leetcode.com/problems/can-i-win/" target="_blank">464. Can I Win</a></span><span class="tag tag-medium">Medium</span></li>
   <li><span class="title"><a href="https://leetcode.com/problems/beautiful-arrangement/" target="_blank">526. Beautiful Arrangement</a></span><span class="tag tag-medium">Medium</span></li>
   <li><span class="title"><a href="https://leetcode.com/problems/stickers-to-spell-word/" target="_blank">691. Stickers to Spell Word</a></span><span class="tag tag-hard">Hard</span></li>
