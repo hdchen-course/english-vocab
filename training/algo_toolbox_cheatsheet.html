@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Algorithm Toolbox — Pre-Contest Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fa; --bg2: #ffffff; --bg3: #f1f3f5; --border: #dee2e6;
+  --text: #212529; --text2: #495057; --text3: #868e96;
+  --blue: #1971c2; --blue-l: #d0ebff; --green: #2f9e44; --green-l: #d3f9d8;
+  --yellow: #e67700; --yellow-l: #fff3bf; --red: #c92a2a; --red-l: #ffe3e3;
+  --purple: #7048e8; --purple-l: #e5dbff; --r: 10px; --shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; }
+.container { max-width: 1150px; margin: 0 auto; padding: 32px 20px; }
+header { text-align: center; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 2px solid var(--border); }
+header h1 { font-size: 26px; font-weight: 800; margin-bottom: 6px; }
+header .sub { color: var(--text3); font-size: 13px; }
+.nav { display:flex; justify-content:center; gap:6px; flex-wrap:wrap; margin: 16px 0 24px; position: sticky; top: 0; background: var(--bg); padding: 10px 0; z-index: 50; border-bottom: 1px solid var(--border); }
+.nav a { font-size:12px; font-weight:600; padding:5px 11px; border-radius:6px; background:var(--bg2); border:1px solid var(--border); color:var(--text2); text-decoration:none; }
+.nav a:hover { background: var(--blue-l); color: var(--blue); }
+h2 { font-size:18px; font-weight:800; margin:28px 0 10px; color:var(--blue); scroll-margin-top:70px; padding-bottom:5px; border-bottom:1px solid var(--border); }
+table { width:100%; border-collapse:collapse; margin:10px 0 18px; font-size:13px; background:var(--bg2); border-radius:var(--r); overflow:hidden; box-shadow:var(--shadow); }
+th { background:var(--text); color:#fff; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; padding:8px 11px; text-align:left; }
+td { padding:8px 11px; border-bottom:1px solid var(--bg3); vertical-align:top; }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background: var(--bg3); }
+.sig { color: var(--red); font-weight:600; }
+code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--bg3); padding:1px 5px; border-radius:4px; color:var(--purple); }
+pre { font-family:'JetBrains Mono',monospace; font-size:11.5px; background:#1e1e2e; color:#cdd6f4; border-radius:8px; padding:12px 14px; margin:8px 0; overflow-x:auto; line-height:1.5; white-space:pre; }
+.tip { background:var(--green-l); border-left:3px solid var(--green); padding:10px 14px; border-radius:0 8px 8px 0; margin:12px 0; font-size:13px; color:#1d6b2e; }
+.warn { background:var(--yellow-l); border-left:3px solid var(--yellow); padding:10px 14px; border-radius:0 8px 8px 0; margin:12px 0; font-size:13px; color:#a85700; }
+.col2 { column-count:2; column-gap:20px; }
+@media (max-width:820px){ .col2{column-count:1;} }
+.k { font-weight:700; color:var(--text); }
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>🧰 Algorithm Toolbox — Cheat Sheet</h1>
+  <div class="sub">"See this signal → reach for this tool." Skim before a timed test to reload the whole toolbox into your head.</div>
+</header>
+
+<div class="nav">
+  <a href="#howto">How to use</a>
+  <a href="#signals">Signal → Tool</a>
+  <a href="#arraystr">Array/String</a>
+  <a href="#hash">Hashing</a>
+  <a href="#twoptr">Two Pointers</a>
+  <a href="#window">Sliding Window</a>
+  <a href="#stack">Stack/Queue</a>
+  <a href="#binsearch">Binary Search</a>
+  <a href="#sort">Sorting/Greedy</a>
+  <a href="#tree">Tree</a>
+  <a href="#graph">Graph</a>
+  <a href="#dp">DP</a>
+  <a href="#backtrack">Backtracking</a>
+  <a href="#math">Math/Bit</a>
+  <a href="#java">Java snippets</a>
+  <a href="#checklist">Test checklist</a>
+</div>
+
+<h2 id="howto">How to use this (30-sec read)</h2>
+<div class="tip"><b>Purpose:</b> not to re-learn — to <b>reload which tools exist</b> and the <b>trigger signal</b> for each, so when a problem hits, your brain jumps to candidates fast. Skim the "Signal → Tool" table first; dip into a section only if a tool feels rusty.</div>
+<div class="warn"><b>For this Cresta-style test</b> (function signature, examples-heavy, weird return like an <i>index</i> not a value): (1) <b>trace every example by hand first</b> — the examples ARE the spec; (2) confirm <b>exactly what to return</b> (value? index? count? format?) before coding; (3) write your own edge-case tests. Signal-spotting matters more than raw difficulty.</div>
+
+<h2 id="signals">⚡ Signal → Tool (the master table)</h2>
+<table>
+<tr><th>When you see…</th><th>Reach for</th><th>Why</th></tr>
+<tr><td class="sig">"count / frequency / seen before / duplicates / pairs summing to X"</td><td class="k">HashMap / HashSet</td><td>O(1) lookup; count or remember what you've seen</td></tr>
+<tr><td class="sig">sorted array, or "find pair/triplet", or "in-place from both ends"</td><td class="k">Two Pointers</td><td>Move ends inward; O(n) instead of O(n²)</td></tr>
+<tr><td class="sig">"longest/shortest substring/subarray with condition", "at most K"</td><td class="k">Sliding Window</td><td>Grow/shrink a window, maintain a running state</td></tr>
+<tr><td class="sig">"nested / matching / most-recent / undo / valid parentheses"</td><td class="k">Stack</td><td>LIFO — pair things, track most recent</td></tr>
+<tr><td class="sig">"next greater / smaller element", "temperatures"</td><td class="k">Monotonic Stack</td><td>Keep stack sorted; pop while violating</td></tr>
+<tr><td class="sig">"sorted + find/threshold", "minimize the max", "first true"</td><td class="k">Binary Search</td><td>Halve the space; also "binary search on the answer"</td></tr>
+<tr><td class="sig">"shortest path (unweighted)", "level by level", "min steps"</td><td class="k">BFS</td><td>Queue; explores by distance → first hit = shortest</td></tr>
+<tr><td class="sig">"all paths / connected components / flood fill / cycle"</td><td class="k">DFS</td><td>Recursion or stack; explore fully</td></tr>
+<tr><td class="sig">"dependencies / ordering / prerequisites"</td><td class="k">Topological Sort</td><td>BFS(indegree) or DFS; detects cycles too</td></tr>
+<tr><td class="sig">"groups / merge / are-they-connected"</td><td class="k">Union-Find (DSU)</td><td>Near-O(1) union &amp; find with path compression</td></tr>
+<tr><td class="sig">"max/min ways / can you reach / best score", overlapping subproblems</td><td class="k">DP</td><td>Cache subresults; define state + transition</td></tr>
+<tr><td class="sig">"all combinations / permutations / subsets / place N things"</td><td class="k">Backtracking</td><td>Choose → recurse → undo</td></tr>
+<tr><td class="sig">"maximize/minimize by picking locally best", "intervals", "schedule"</td><td class="k">Greedy (+ sort)</td><td>Sort, then take the locally optimal each step</td></tr>
+<tr><td class="sig">"top K / K largest / running median / merge K lists"</td><td class="k">Heap (PriorityQueue)</td><td>O(log n) get-min/max</td></tr>
+<tr><td class="sig">"prefix sum / range sum / subarray sums to K"</td><td class="k">Prefix Sum (+ HashMap)</td><td>sum[j]-sum[i]; store prefix counts</td></tr>
+<tr><td class="sig">"just follow the rules step by step" (like package sorting)</td><td class="k">Simulation</td><td>No trick — translate the rules faithfully, watch edge cases</td></tr>
+</table>
+
+<div class="col2">
+
+<h2 id="arraystr">Array / String</h2>
+<table>
+<tr><th>Tool</th><th>Note</th></tr>
+<tr><td class="k">In-place reverse</td><td>swap ends with two pointers</td></tr>
+<tr><td class="k">Prefix sum</td><td><code>pre[i]=pre[i-1]+a[i]</code>; range = pre[r]-pre[l-1]</td></tr>
+<tr><td class="k">Kadane's</td><td>max subarray: <code>cur=max(a,cur+a); best=max(best,cur)</code></td></tr>
+<tr><td class="k">Char count</td><td><code>int[26]</code> or <code>int[128]</code> for ASCII</td></tr>
+<tr><td class="k">Dutch flag</td><td>3-way partition (0/1/2) with 3 pointers</td></tr>
+</table>
+
+<h2 id="hash">Hashing</h2>
+<table>
+<tr><th>Pattern</th><th>Note</th></tr>
+<tr><td class="k">Two-sum</td><td>store <code>value→index</code>; check <code>target-x</code></td></tr>
+<tr><td class="k">Group anagrams</td><td>key = sorted string or count signature</td></tr>
+<tr><td class="k">Dedup / seen</td><td>HashSet</td></tr>
+<tr><td class="k">Freq count</td><td><code>map.merge(k,1,Integer::sum)</code></td></tr>
+</table>
+
+<h2 id="twoptr">Two Pointers</h2>
+<table>
+<tr><th>Shape</th><th>Note</th></tr>
+<tr><td class="k">Opposite ends</td><td>sorted pair/triplet, container-with-water</td></tr>
+<tr><td class="k">Fast/slow</td><td>cycle detection, middle of list</td></tr>
+<tr><td class="k">Same direction</td><td>remove dups, merge two sorted</td></tr>
+</table>
+
+<h2 id="window">Sliding Window</h2>
+<pre>int l=0; for(int r=0;r&lt;n;r++){
+  add(a[r]);
+  while(invalid) remove(a[l++]);
+  best = update(r-l+1);
+}</pre>
+<div class="tip">Fixed-size: slide by 1. Variable: shrink while condition breaks. Track state in a map/count.</div>
+
+<h2 id="stack">Stack / Queue</h2>
+<table>
+<tr><th>Use</th><th>Note</th></tr>
+<tr><td class="k">Parentheses</td><td>push open, pop &amp; match on close</td></tr>
+<tr><td class="k">Monotonic stack</td><td>next-greater: pop while top &lt; cur</td></tr>
+<tr><td class="k">Queue/Deque</td><td>BFS; sliding-window-max uses deque</td></tr>
+</table>
+
+<h2 id="binsearch">Binary Search</h2>
+<pre>int lo=0, hi=n-1;
+while(lo&lt;=hi){
+  int m=lo+(hi-lo)/2;
+  if(ok(m)) hi=m-1; else lo=m+1;
+}
+return lo; // first index where ok() true</pre>
+<div class="warn">"Binary search on the answer": if you can check "is X feasible?" monotonically, binary-search X. (minimize-the-max problems)</div>
+
+<h2 id="sort">Sorting / Greedy</h2>
+<table>
+<tr><th>Pattern</th><th>Note</th></tr>
+<tr><td class="k">Sort then scan</td><td>most greedy starts here</td></tr>
+<tr><td class="k">Intervals</td><td>sort by start (merge) or end (max non-overlap)</td></tr>
+<tr><td class="k">Custom sort</td><td><code>Arrays.sort(a,(x,y)-&gt;...)</code></td></tr>
+<tr><td class="k">Heap greedy</td><td>always take best available → PriorityQueue</td></tr>
+</table>
+
+<h2 id="tree">Tree</h2>
+<table>
+<tr><th>Tool</th><th>Note</th></tr>
+<tr><td class="k">DFS traversal</td><td>pre/in/post — recursion</td></tr>
+<tr><td class="k">BFS level order</td><td>queue, process level-size at a time</td></tr>
+<tr><td class="k">BST</td><td>in-order = sorted; left&lt;root&lt;right</td></tr>
+<tr><td class="k">LCA</td><td>recurse; return node if found in both sides</td></tr>
+</table>
+
+<h2 id="graph">Graph</h2>
+<table>
+<tr><th>Tool</th><th>Note</th></tr>
+<tr><td class="k">BFS</td><td>shortest path unweighted; grid = 4/8 dirs</td></tr>
+<tr><td class="k">DFS</td><td>components, cycle, flood fill</td></tr>
+<tr><td class="k">Topo sort</td><td>indegree + queue (Kahn's)</td></tr>
+<tr><td class="k">Union-Find</td><td>connectivity, cycle in undirected</td></tr>
+<tr><td class="k">Dijkstra</td><td>weighted shortest path; PQ of (dist,node)</td></tr>
+</table>
+
+<h2 id="dp">Dynamic Programming</h2>
+<table>
+<tr><th>Classic</th><th>State</th></tr>
+<tr><td class="k">Climb stairs / Fib</td><td><code>dp[i]=dp[i-1]+dp[i-2]</code></td></tr>
+<tr><td class="k">Coin change</td><td><code>dp[amt]=min(dp[amt-coin]+1)</code></td></tr>
+<tr><td class="k">LCS</td><td>2D: match→+1 diag, else max(up,left)</td></tr>
+<tr><td class="k">0/1 Knapsack</td><td><code>dp[w]=max(dp[w],dp[w-wt]+val)</code>, w desc</td></tr>
+<tr><td class="k">House robber</td><td><code>dp[i]=max(dp[i-1],dp[i-2]+a[i])</code></td></tr>
+</table>
+<div class="tip">DP recipe: (1) what's the state? (2) transition? (3) base case? (4) order? Start recursive+memo, convert to table if needed.</div>
+
+<h2 id="backtrack">Backtracking</h2>
+<pre>void bt(path, choices){
+  if(done){ save(path); return; }
+  for(c : choices){
+    path.add(c);
+    bt(path, next(choices,c));
+    path.remove(last);   // undo
+  }
+}</pre>
+<div class="tip">subsets / permutations / combinations / N-queens / word search. Prune early when possible.</div>
+
+<h2 id="math">Math / Bit</h2>
+<table>
+<tr><th>Trick</th><th>Note</th></tr>
+<tr><td class="k">GCD</td><td><code>gcd(a,b)=gcd(b,a%b)</code></td></tr>
+<tr><td class="k">Overflow</td><td>use <code>long</code>; <code>lo+(hi-lo)/2</code></td></tr>
+<tr><td class="k">Bit</td><td><code>x&amp;1</code> odd; <code>x&amp;(x-1)</code> clears lowest bit</td></tr>
+<tr><td class="k">Mod</td><td><code>((a%m)+m)%m</code> for negatives</td></tr>
+</table>
+
+</div>
+
+<h2 id="java">Java quick snippets (禁貼平台要手打 — 背這些)</h2>
+<pre>// read/collections
+Map&lt;Integer,Integer&gt; m = new HashMap&lt;&gt;();
+m.merge(key, 1, Integer::sum);          // freq count
+m.getOrDefault(key, 0);
+Set&lt;Integer&gt; seen = new HashSet&lt;&gt;();
+Deque&lt;Integer&gt; st = new ArrayDeque&lt;&gt;(); // stack: push/pop/peek
+Queue&lt;Integer&gt; q = new ArrayDeque&lt;&gt;();  // queue: offer/poll/peek
+PriorityQueue&lt;int[]&gt; pq = new PriorityQueue&lt;&gt;((a,b)-&gt;a[0]-b[0]); // min-heap
+
+// sort
+Arrays.sort(arr);
+Arrays.sort(mat, (a,b)-&gt;a[0]-b[0]);     // by first col
+Collections.sort(list, Comparator.reverseOrder());
+
+// 2D dp init
+int[][] dp = new int[n+1][m+1];
+
+// grid dirs
+int[][] D = {{0,1},{0,-1},{1,0},{-1,0}};
+
+// char
+int[] cnt = new int[26];
+cnt[c-'a']++;</pre>
+<div class="warn"><b>Python 版</b>(如果你用 Python):<code>collections.Counter</code>, <code>defaultdict(int)</code>, <code>heapq</code>, <code>bisect</code>, <code>from functools import lru_cache</code> for memo. But if Java is your fastest, stick with Java under time pressure.</div>
+
+<h2 id="checklist">✅ Per-question checklist (每題開始前 30 秒)</h2>
+<table>
+<tr><th>Step</th><th>Do</th></tr>
+<tr><td>1</td><td><b>Trace every example by hand</b> — reverse-engineer the rule (esp. weird returns like index/count/format)</td></tr>
+<tr><td>2</td><td><b>Confirm the return</b>: value? index? count? boolean? what format?</td></tr>
+<tr><td>3</td><td><b>Match a signal → tool</b> from the master table</td></tr>
+<tr><td>4</td><td><b>Note constraints</b>: n size → target complexity (n≤10⁴ ok O(n²); n≥10⁵ needs O(n log n))</td></tr>
+<tr><td>5</td><td><b>Code the simplest correct version</b> — AC first, optimize only if needed</td></tr>
+<tr><td>6</td><td><b>Test edge cases</b>: empty, single element, all same, negatives, boundaries — write your own tests</td></tr>
+</table>
+<div class="tip"><b>Mindset:</b> vague/animation-only problems favor you — you've done 470+ contests. Stay calm, let the examples be the spec, and let the signal table jump the tool to your hand.</div>
+
+</div>
+</body>
+</html>
