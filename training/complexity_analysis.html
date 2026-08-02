@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complexity Analysis — Training Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fa; --bg2: #ffffff; --bg3: #f1f3f5; --bg4: #e9ecef;
+  --border: #dee2e6; --text: #212529; --text2: #495057; --text3: #868e96;
+  --blue: #1971c2; --blue-l: #d0ebff; --green: #2f9e44; --green-l: #d3f9d8;
+  --yellow: #e67700; --yellow-l: #fff3bf; --red: #c92a2a; --red-l: #ffe3e3;
+  --purple: #7048e8; --purple-l: #e5dbff; --orange: #d9480f; --cyan: #0c8599;
+  --r: 12px; --shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.8; }
+.container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+header { text-align: center; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+header .sub { color: var(--text3); font-size: 14px; }
+
+.nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 40px; position: sticky; top: 0; background: var(--bg); padding: 16px 0; z-index: 100; border-bottom: 1px solid var(--border); }
+.nav-btn { padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s; font-family: 'Inter', sans-serif; }
+.nav-btn:hover { background: var(--bg3); color: var(--text); }
+.nav-btn.active { background: var(--blue-l); color: var(--blue); border-color: var(--blue); }
+
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+h2 { font-size: 24px; font-weight: 700; margin: 32px 0 16px; color: var(--blue); }
+h3 { font-size: 18px; font-weight: 600; margin: 24px 0 12px; }
+h4 { font-size: 15px; font-weight: 600; margin: 16px 0 8px; color: var(--text2); }
+p { margin-bottom: 12px; color: var(--text2); }
+ul, ol { margin: 8px 0 16px 24px; color: var(--text2); }
+li { margin-bottom: 6px; }
+strong { color: var(--text); }
+
+pre { background: #1e1e2e; border-radius: 8px; padding: 16px 20px; overflow-x: auto; margin: 12px 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; color: #cdd6f4; }
+code { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+p code, li code, td code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--purple); }
+pre .kw { color: #cba6f7; } pre .type { color: #f9e2af; } pre .str { color: #a6e3a1; }
+pre .cm { color: #6c7086; } pre .num { color: #fab387; } pre .fn { color: #89b4fa; }
+
+.insight { background: var(--blue-l); border-left: 3px solid var(--blue); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.insight p { color: var(--blue); margin: 0; }
+.warning { background: var(--yellow-l); border-left: 3px solid var(--yellow); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.warning p { color: var(--yellow); margin: 0; }
+.danger { background: var(--red-l); border-left: 3px solid var(--red); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.danger p { color: var(--red); margin: 0; }
+.tip { background: var(--green-l); border-left: 3px solid var(--green); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.tip p { color: var(--green); margin: 0; }
+
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 20px; padding: 24px 28px; box-shadow: var(--shadow); }
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+th, td { padding: 10px 14px; border: 1px solid var(--border); text-align: left; }
+th { background: var(--bg3); font-weight: 600; color: var(--text); }
+tr:hover { background: var(--bg3); }
+
+/* centered math display */
+.math { background: var(--bg3); border-radius: 8px; padding: 14px 18px; margin: 14px 0; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 15px; color: var(--text); overflow-x: auto; }
+.math .op { color: var(--purple); }
+.derive { border-left: 3px solid var(--cyan); padding-left: 16px; margin: 16px 0; }
+.derive .step { margin: 6px 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text2); }
+
+.tag { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; margin: 2px 4px 2px 0; }
+.tag-easy { background: var(--green-l); color: var(--green); }
+.tag-medium { background: var(--yellow-l); color: var(--yellow); }
+.tag-hard { background: var(--red-l); color: var(--red); }
+
+@media (max-width: 768px) { .container { padding: 20px 12px; } .nav { position: static; } pre { font-size: 11px; } }
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>Complexity Analysis</h1>
+  <div class="sub">Big-O 數學基礎 &bull; 求和技巧 &bull; 遞迴式 &bull; Master Theorem &bull; 攤還分析</div>
+</header>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection('intro')">為什麼 &amp; 定義</button>
+  <button class="nav-btn" onclick="showSection('growth')">成長階層</button>
+  <button class="nav-btn" onclick="showSection('sums')">求和技巧</button>
+  <button class="nav-btn" onclick="showSection('loops')">迴圈分析</button>
+  <button class="nav-btn" onclick="showSection('recurrence')">遞迴式</button>
+  <button class="nav-btn" onclick="showSection('master')">Master Theorem</button>
+  <button class="nav-btn" onclick="showSection('amortized')">攤還分析</button>
+  <button class="nav-btn" onclick="showSection('practice')">實戰推算</button>
+</div>
+
+<!-- ===== Intro ===== -->
+<div class="section active" id="intro">
+<div class="card">
+<h2>為什麼要精確分析,而不是「感覺」</h2>
+<p>你這幾天刷題卡關的分數,幾乎都在 <strong>「這個會不會超時 / 溢位」</strong> 的判斷上。複雜度分析就是把「感覺」變成「可計算」:給定 <code>n</code> 的上限,算出操作數的量級,對照機器每秒約 <code>10^8 ~ 10^9</code> 次操作,就能判斷會不會 TLE。</p>
+
+<div class="insight">
+  <p><strong>核心心法:</strong>複雜度 = 「當輸入 <code>n</code> 變大時,操作數如何成長」。我們只在意 <strong>成長的量級</strong>,不在意常數與低階項——因為當 n 夠大,最高階項會主導一切。</p>
+</div>
+
+<h3>三個漸進符號 (Asymptotic Notation)</h3>
+<table>
+  <tr><th>符號</th><th>意義</th><th>白話</th></tr>
+  <tr><td><code>O(f)</code></td><td>上界 (upper bound)</td><td>「最多」不超過 f 的量級 — 最常用</td></tr>
+  <tr><td><code>Ω(f)</code></td><td>下界 (lower bound)</td><td>「至少」有 f 的量級</td></tr>
+  <tr><td><code>Θ(f)</code></td><td>緊界 (tight bound)</td><td>上下界相同 — 「就是」f 的量級</td></tr>
+</table>
+
+<h4>Big-O 的正式定義</h4>
+<div class="math"><span class="op">T(n) = O(f(n))</span> &nbsp;⟺&nbsp; 存在常數 c &gt; 0, n₀,使得對所有 n ≥ n₀,&nbsp; T(n) ≤ c · f(n)</div>
+<p>白話翻譯:<strong>從某個 n₀ 之後,T(n) 永遠被 c·f(n) 壓在下面</strong>。那個常數 c 讓我們忽略係數,n₀ 讓我們忽略小 n 的雜訊。</p>
+
+<div class="derive">
+  <p style="margin:0"><strong>例:證明 <code>3n² + 5n + 100 = O(n²)</code></strong></p>
+  <div class="step">要找 c、n₀ 使 3n² + 5n + 100 ≤ c·n²</div>
+  <div class="step">當 n ≥ 1:5n ≤ 5n²,100 ≤ 100n²</div>
+  <div class="step">所以 3n² + 5n + 100 ≤ 3n² + 5n² + 100n² = 108n²</div>
+  <div class="step">取 c = 108, n₀ = 1 即成立 → 是 O(n²) ✓</div>
+</div>
+
+<div class="tip">
+  <p><strong>實務上不用這樣證。</strong>你只要記住規則:<strong>丟掉常數係數、只留最高階項</strong>。<code>3n² + 5n + 100</code> → <code>O(n²)</code>。上面的正式證明是給你知道「為什麼可以這樣丟」。</p>
+</div>
+
+<h3>丟棄規則 (Simplification Rules)</h3>
+<ul>
+  <li><strong>丟常數係數:</strong> <code>O(3n)</code> = <code>O(n)</code>,<code>O(n/2)</code> = <code>O(n)</code></li>
+  <li><strong>只留最高階:</strong> <code>O(n² + n)</code> = <code>O(n²)</code></li>
+  <li><strong>加法取大者:</strong>兩段接續執行 → <code>O(f) + O(g) = O(max(f,g))</code></li>
+  <li><strong>乘法相乘:</strong>巢狀 → <code>O(f) × O(g) = O(f·g)</code></li>
+  <li><strong>log 的底數無關:</strong> <code>log₂n</code>、<code>log₁₀n</code> 只差常數倍 → 都寫 <code>O(log n)</code></li>
+</ul>
+</div>
+</div>
+
+<!-- ===== Growth hierarchy ===== -->
+<div class="section" id="growth">
+<div class="card">
+<h2>成長階層 — 誰比誰快</h2>
+<p>由慢到快(n 大時操作數由少到多)。<strong>背起來</strong>,判斷 TLE 全靠它。</p>
+
+<div class="math"><span class="op">O(1) &lt; O(log n) &lt; O(√n) &lt; O(n) &lt; O(n log n) &lt; O(n²) &lt; O(n³) &lt; O(2ⁿ) &lt; O(n!)</span></div>
+
+<h3>各量級在 n 不同時的操作數</h3>
+<table>
+  <tr><th>n</th><th>log n</th><th>n</th><th>n log n</th><th>n²</th><th>2ⁿ</th></tr>
+  <tr><td>10</td><td>3</td><td>10</td><td>33</td><td>100</td><td>1,024</td></tr>
+  <tr><td>100</td><td>7</td><td>100</td><td>664</td><td>10,000</td><td>~10³⁰</td></tr>
+  <tr><td>1,000</td><td>10</td><td>1,000</td><td>~10⁴</td><td>10⁶</td><td>爆炸</td></tr>
+  <tr><td>10⁶</td><td>20</td><td>10⁶</td><td>~2×10⁷</td><td>10¹²</td><td>—</td></tr>
+</table>
+
+<div class="insight">
+  <p><strong>TLE 判斷表(約 1 秒 = 10⁸ 次操作):</strong>看到 constraints 的 n 上限,直接對照該用什麼複雜度。</p>
+</div>
+
+<table>
+  <tr><th>n 上限</th><th>可接受的複雜度</th><th>典型解法</th></tr>
+  <tr><td>n ≤ 12</td><td>O(n!)</td><td>全排列、暴力枚舉</td></tr>
+  <tr><td>n ≤ 20</td><td>O(2ⁿ)</td><td>子集枚舉、狀壓 DP</td></tr>
+  <tr><td>n ≤ 500</td><td>O(n³)</td><td>區間 DP、Floyd</td></tr>
+  <tr><td>n ≤ 5,000</td><td>O(n²)</td><td>一般 DP、雙層迴圈</td></tr>
+  <tr><td>n ≤ 10⁵</td><td>O(n log n)</td><td>排序、二分、堆、單調棧</td></tr>
+  <tr><td>n ≤ 10⁶</td><td>O(n) 或 O(n log n)</td><td>線性掃、前綴和、雙指針</td></tr>
+  <tr><td>n ≥ 10⁸</td><td>O(log n) 或 O(1)</td><td>數學公式、快速冪</td></tr>
+</table>
+
+<div class="tip">
+  <p><strong>反推技巧:</strong>看到 <code>n ≤ 500</code> → 「哦,O(n³) 能過」→ 想區間 DP。看到 <code>n ≤ 10⁵</code> → 「要 O(n log n)」→ 想排序或二分。<strong>constraints 是在暗示解法</strong>。你之前那題 <code>n ≤ 500</code> 的 count orders(O(n²) 打表)、和 <code>n ≤ 2000</code> 的 echo substring(O(n²) 過)就是這樣判的。</p>
+</div>
+
+<h3>為什麼 log n 出現得這麼頻繁</h3>
+<p><code>log n</code> = 「n 能被 2 除幾次直到剩 1」。每次操作把問題規模<strong>減半</strong>,就是 <code>O(log n)</code>:</p>
+<div class="derive">
+  <div class="step">n → n/2 → n/4 → ... → 1</div>
+  <div class="step">除了 k 次後剩 1:n / 2ᵏ = 1 → 2ᵏ = n → k = log₂n</div>
+</div>
+<p>所以二分搜尋、平衡樹、堆的高度、快速冪都是 <code>O(log n)</code>——它們的共同點都是「每步砍半」。</p>
+</div>
+</div>
+
+<!-- ===== Summation ===== -->
+<div class="section" id="sums">
+<div class="card">
+<h2>求和技巧 — 迴圈複雜度的數學核心</h2>
+<p>分析迴圈,本質是<strong>把每層迴圈的執行次數加起來</strong>。掌握幾個常見級數和,就能秒算。</p>
+
+<h3>1. 等差級數 (Arithmetic Series)</h3>
+<div class="math"><span class="op">1 + 2 + 3 + ... + n = n(n+1)/2 = Θ(n²)</span></div>
+<div class="derive">
+  <p style="margin:0"><strong>推導(高斯配對法):</strong></p>
+  <div class="step">S = 1 + 2 + ... + (n-1) + n</div>
+  <div class="step">S = n + (n-1) + ... + 2 + 1 &nbsp;(反過來寫)</div>
+  <div class="step">兩式相加:2S = (n+1) + (n+1) + ... + (n+1) = n 個 (n+1)</div>
+  <div class="step">2S = n(n+1) → S = n(n+1)/2</div>
+</div>
+<div class="insight">
+  <p><strong>這就是為什麼「巢狀迴圈跑三角形」是 O(n²)。</strong>你之前 count orders 那題的內層 <code>Σj = (2i-1)(2i)/2 = i(2i-1)</code>,以及 fair pairs 的雙迴圈,底層都是這條等差和。</p>
+</div>
+
+<h3>2. 平方和</h3>
+<div class="math"><span class="op">1² + 2² + ... + n² = n(n+1)(2n+1)/6 = Θ(n³)</span></div>
+
+<h3>3. 等比級數 (Geometric Series)</h3>
+<div class="math"><span class="op">1 + 2 + 4 + ... + 2ᵏ = 2^(k+1) − 1 = Θ(2ᵏ)</span></div>
+<p>一般式:<code>1 + r + r² + ... + rᵏ = (r^(k+1) − 1)/(r − 1)</code></p>
+<div class="insight">
+  <p><strong>關鍵洞見:等比級數的和 ≈ 最大那一項。</strong> <code>1+2+4+...+n = 2n−1 ≈ 2n = O(n)</code>。所以「每次規模砍半的總工作量」是 <code>O(n)</code> 不是 <code>O(n log n)</code>——最後一層(最大)就佔了一半。這個 <b>反直覺</b> 的事實在 Master Theorem 和 build-heap 分析裡是關鍵。</p>
+</div>
+
+<h3>4. 調和級數 (Harmonic Series)</h3>
+<div class="math"><span class="op">1 + 1/2 + 1/3 + ... + 1/n = Θ(log n)</span></div>
+<p>用途:埃拉托斯特尼篩法的複雜度 <code>Σ n/i = n·(1+1/2+...+1/n) = n·Θ(log n) = Θ(n log n)</code>(其實更精確是 <code>O(n log log n)</code>)。</p>
+
+<h3>常見級數速查</h3>
+<table>
+  <tr><th>級數</th><th>和</th><th>量級</th></tr>
+  <tr><td>Σ 1 (i=1..n)</td><td>n</td><td>Θ(n)</td></tr>
+  <tr><td>Σ i</td><td>n(n+1)/2</td><td>Θ(n²)</td></tr>
+  <tr><td>Σ i²</td><td>n(n+1)(2n+1)/6</td><td>Θ(n³)</td></tr>
+  <tr><td>Σ 2ⁱ (i=0..k)</td><td>2^(k+1)−1</td><td>Θ(2ᵏ)</td></tr>
+  <tr><td>Σ 1/i</td><td>≈ ln n</td><td>Θ(log n)</td></tr>
+  <tr><td>Σ i·2ⁱ</td><td>≈ (n−1)2^(n+1)</td><td>Θ(n·2ⁿ)</td></tr>
+</table>
+</div>
+</div>
+
+<!-- ===== Loops ===== -->
+<div class="section" id="loops">
+<div class="card">
+<h2>迴圈分析 — 從程式碼到 Big-O</h2>
+<p>方法:<strong>從最內層往外,數每層跑幾次,相乘</strong>。變動邊界的用求和。</p>
+
+<h3>範例 1:固定巢狀 → 相乘</h3>
+<pre><span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++)       <span class="cm">// n 次</span>
+    <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">0</span>; j &lt; n; j++)   <span class="cm">// n 次</span>
+        sum++;                    <span class="cm">// O(1)</span>
+<span class="cm">// 總計 n × n = O(n²)</span></pre>
+
+<h3>範例 2:三角形巢狀 → 等差和</h3>
+<pre><span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++)       <span class="cm">// i = 0..n-1</span>
+    <span class="kw">for</span> (<span class="kw">int</span> j = i; j &lt; n; j++)   <span class="cm">// 跑 (n-i) 次</span>
+        sum++;</pre>
+<div class="derive">
+  <div class="step">總次數 = Σ(n−i) for i=0..n-1 = n + (n−1) + ... + 1</div>
+  <div class="step">= n(n+1)/2 = Θ(n²)</div>
+</div>
+<div class="warning">
+  <p><strong>常見誤判:</strong>看到「內層從 i 開始」以為是 O(n·something) 就慌。其實三角形巢狀還是 <code>O(n²)</code>——只是常數變 1/2,而常數要丟掉。</p>
+</div>
+
+<h3>範例 3:規模砍半 → log</h3>
+<pre><span class="kw">for</span> (<span class="kw">int</span> i = n; i &gt; <span class="num">1</span>; i = i / <span class="num">2</span>)   <span class="cm">// 砍半直到 1</span>
+    sum++;
+<span class="cm">// n → n/2 → n/4 → ... → 1,共 log₂n 次 → O(log n)</span></pre>
+
+<h3>範例 4:內層與外層變數綁定 → 相乘後求和</h3>
+<pre><span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">1</span>; i &lt; n; i *= <span class="num">2</span>)      <span class="cm">// log n 次</span>
+    <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">0</span>; j &lt; i; j++)      <span class="cm">// i 次</span>
+        sum++;</pre>
+<div class="derive">
+  <div class="step">i = 1, 2, 4, ..., n → 內層跑 1 + 2 + 4 + ... + n 次</div>
+  <div class="step">= 等比級數 ≈ 2n = Θ(n) &nbsp;(不是 O(n log n)!)</div>
+</div>
+<div class="insight">
+  <p><strong>陷阱:</strong>外層 log n 次、內層最多 n 次,直覺以為 <code>O(n log n)</code>。但內層次數是 <code>1,2,4,...,n</code> 的<strong>等比級數</strong>,和 ≈ 最大項 = <code>2n = O(n)</code>。等比級數「和 ≈ 最大項」的威力。</p>
+</div>
+
+<h3>範例 5:兩段接續 → 取大者</h3>
+<pre>sort(arr);                    <span class="cm">// O(n log n)</span>
+<span class="kw">for</span> (<span class="kw">int</span> x : arr) process(x);   <span class="cm">// O(n)</span>
+<span class="cm">// O(n log n) + O(n) = O(n log n)  ← 取大者</span></pre>
+
+<h3>while + 雙指針 → 攤還 O(n)</h3>
+<pre><span class="kw">int</span> j = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) {
+    <span class="kw">while</span> (j &lt; n &amp;&amp; cond) j++;   <span class="cm">// j 只增不減</span>
+}
+<span class="cm">// 看似巢狀,但 j 全程最多走 n 步 → 總計 O(n),不是 O(n²)</span></pre>
+<div class="tip">
+  <p><strong>你熟的模式:</strong>滑動窗口、robotWithString 的 stack、非互質合併——都是「看似巢狀,但內層指標全程只走 O(n) 步」→ 攤還 O(n)。判斷關鍵:<strong>內層變數會不會在外層迭代間「重置」</strong>?不重置 → 攤還。</p>
+</div>
+</div>
+</div>
+
+<!-- ===== Recurrence ===== -->
+<div class="section" id="recurrence">
+<div class="card">
+<h2>遞迴式 (Recurrence Relations)</h2>
+<p>遞迴/分治演算法的複雜度,寫成<strong>遞迴式</strong>:<code>T(n)</code> 用更小的 <code>T</code> 表示。解它就得到複雜度。</p>
+
+<h3>遞迴式怎麼寫</h3>
+<p>一個分治演算法通常長這樣:</p>
+<div class="math"><span class="op">T(n) = a · T(n/b) + f(n)</span></div>
+<ul>
+  <li><code>a</code> = 遞迴呼叫幾次(分成幾個子問題)</li>
+  <li><code>n/b</code> = 每個子問題的規模(除以幾)</li>
+  <li><code>f(n)</code> = 分割 + 合併的成本(非遞迴部分)</li>
+</ul>
+
+<h3>方法一:遞迴樹 (Recursion Tree)</h3>
+<p>把每層的工作量畫成樹,加總所有層。以 <strong>Merge Sort</strong> <code>T(n) = 2T(n/2) + n</code> 為例:</p>
+<pre><span class="cm">層 0:            n                    工作 = n</span>
+<span class="cm">層 1:       n/2     n/2               工作 = n/2 + n/2 = n</span>
+<span class="cm">層 2:    n/4 n/4   n/4 n/4            工作 = 4 × n/4 = n</span>
+<span class="cm">  ...                                每層都是 n</span>
+<span class="cm">層 k:   1  1  1  ...  1  (n 個葉)     工作 = n</span></pre>
+<div class="derive">
+  <div class="step">每層工作量都是 n</div>
+  <div class="step">層數 = 樹高 = log₂n(每層砍半)</div>
+  <div class="step">總工作 = n × log₂n = Θ(n log n)</div>
+</div>
+
+<h3>方法二:代入展開法 (Substitution)</h3>
+<p>以 <code>T(n) = 2T(n/2) + n</code> 反覆展開:</p>
+<div class="derive">
+  <div class="step">T(n) = 2T(n/2) + n</div>
+  <div class="step">     = 2[2T(n/4) + n/2] + n = 4T(n/4) + 2n</div>
+  <div class="step">     = 8T(n/8) + 3n</div>
+  <div class="step">     = 2ᵏT(n/2ᵏ) + k·n &nbsp;(展開 k 次)</div>
+  <div class="step">當 n/2ᵏ = 1 → k = log₂n,T(1)=1</div>
+  <div class="step">     = n·T(1) + n·log₂n = n + n log n = Θ(n log n)</div>
+</div>
+
+<h3>常見遞迴式對照</h3>
+<table>
+  <tr><th>遞迴式</th><th>解</th><th>典型演算法</th></tr>
+  <tr><td>T(n) = T(n/2) + O(1)</td><td>O(log n)</td><td>二分搜尋</td></tr>
+  <tr><td>T(n) = T(n−1) + O(1)</td><td>O(n)</td><td>線性遞迴</td></tr>
+  <tr><td>T(n) = 2T(n/2) + O(n)</td><td>O(n log n)</td><td>Merge Sort、快排(平均)</td></tr>
+  <tr><td>T(n) = 2T(n/2) + O(1)</td><td>O(n)</td><td>樹遍歷、build heap</td></tr>
+  <tr><td>T(n) = T(n−1) + O(n)</td><td>O(n²)</td><td>快排(最壞)、選擇排序</td></tr>
+  <tr><td>T(n) = 2T(n−1) + O(1)</td><td>O(2ⁿ)</td><td>河內塔、樸素費氏</td></tr>
+</table>
+
+<div class="warning">
+  <p><strong>注意 T(n/2) 和 T(n−1) 的天壤之別:</strong><code>T(n−1)+O(1)</code> 是 O(n),但 <code>T(n/2)+O(1)</code> 是 O(log n)。前者每次減 1(線性次數),後者每次砍半(對數次數)。這也是為什麼「砍半」的演算法快得多。</p>
+</div>
+</div>
+</div>
+
+<!-- ===== Master Theorem ===== -->
+<div class="section" id="master">
+<div class="card">
+<h2>Master Theorem — 分治遞迴式的速解公式</h2>
+<p>對形如 <code>T(n) = a·T(n/b) + f(n)</code> 的遞迴式,不用展開,直接套公式。這是分治複雜度的<strong>萬用鑰匙</strong>。</p>
+
+<div class="math"><span class="op">T(n) = a·T(n/b) + f(n)</span>,&nbsp; a ≥ 1, b &gt; 1</div>
+
+<h3>比較 f(n) 與 n^(log_b a)</h3>
+<p>關鍵是比較「合併成本 <code>f(n)</code>」和「葉子總數 <code>n^(log_b a)</code>」誰大。令 <code>c* = log_b a</code>:</p>
+
+<table>
+  <tr><th>情況</th><th>條件</th><th>結果</th><th>誰主導</th></tr>
+  <tr><td>Case 1</td><td>f(n) = O(n^(c*−ε))</td><td>Θ(n^c*)</td><td>葉子(遞迴)主導</td></tr>
+  <tr><td>Case 2</td><td>f(n) = Θ(n^c*)</td><td>Θ(n^c* · log n)</td><td>兩者平衡</td></tr>
+  <tr><td>Case 3</td><td>f(n) = Ω(n^(c*+ε))</td><td>Θ(f(n))</td><td>根(合併)主導</td></tr>
+</table>
+
+<div class="insight">
+  <p><strong>直覺:</strong> <code>n^(log_b a)</code> 是遞迴樹「葉子的總數」= 純遞迴的工作量。<code>f(n)</code> 是每層合併的工作量。<strong>誰成長得快,誰就決定總複雜度</strong>;一樣快就多一個 <code>log n</code> 因子(每層都貢獻同樣多,共 log 層)。</p>
+</div>
+
+<h3>怎麼算 log_b a</h3>
+<div class="derive">
+  <div class="step">log_b a = 「b 的幾次方等於 a」</div>
+  <div class="step">log₂2 = 1 (2¹=2), &nbsp; log₂4 = 2 (2²=4), &nbsp; log₂8 = 3</div>
+  <div class="step">log₃9 = 2 (3²=9), &nbsp; log₄2 = 0.5 (4^0.5=2)</div>
+</div>
+
+<h3>三個經典套用</h3>
+
+<h4>Merge Sort: T(n) = 2T(n/2) + n</h4>
+<div class="derive">
+  <div class="step">a=2, b=2, f(n)=n → c* = log₂2 = 1</div>
+  <div class="step">f(n) = n = Θ(n¹) = Θ(n^c*) → Case 2</div>
+  <div class="step">結果 = Θ(n · log n) ✓</div>
+</div>
+
+<h4>二分搜尋: T(n) = T(n/2) + 1</h4>
+<div class="derive">
+  <div class="step">a=1, b=2, f(n)=1 → c* = log₂1 = 0</div>
+  <div class="step">f(n) = 1 = Θ(n⁰) = Θ(n^c*) → Case 2</div>
+  <div class="step">結果 = Θ(n⁰ · log n) = Θ(log n) ✓</div>
+</div>
+
+<h4>樸素矩陣相乘子問題: T(n) = 8T(n/2) + n²</h4>
+<div class="derive">
+  <div class="step">a=8, b=2, f(n)=n² → c* = log₂8 = 3</div>
+  <div class="step">f(n) = n² = O(n^(3−ε)) (ε=1) → Case 1(葉子主導)</div>
+  <div class="step">結果 = Θ(n³) ✓ (這也是為什麼 Strassen 用 a=7 來壓成 n^2.81)</div>
+</div>
+
+<div class="warning">
+  <p><strong>Master Theorem 的限制:</strong>只適用 <code>a·T(n/b)+f(n)</code> 這種「等分」遞迴。<code>T(n)=T(n/3)+T(2n/3)+n</code>(不等分)、<code>T(n)=T(n−1)+n</code>(減法型)不能套,要用遞迴樹或代入法。</p>
+</div>
+</div>
+</div>
+
+<!-- ===== Amortized ===== -->
+<div class="section" id="amortized">
+<div class="card">
+<h2>攤還分析 (Amortized Analysis)</h2>
+<p>有些操作<strong>偶爾很貴,但多數很便宜</strong>。攤還分析算的是「一連串操作的平均成本」,而非單次最壞成本。</p>
+
+<div class="insight">
+  <p><strong>核心區別:</strong>攤還 ≠ 平均(average case)。平均是對「隨機輸入」取期望;攤還是對「一連串操作」保證總成本上界,<strong>不依賴機率</strong>——即使最壞輸入也成立。</p>
+</div>
+
+<h3>經典例:動態陣列 (ArrayList) 的 push</h3>
+<p>陣列滿了要「擴容」= 開兩倍大的新陣列 + 複製全部元素(O(n))。單次 push 最壞 O(n),但攤還是 <strong>O(1)</strong>。</p>
+<div class="derive">
+  <p style="margin:0"><strong>聚合法 (aggregate):</strong>算 n 次 push 的總成本</p>
+  <div class="step">擴容發生在 size = 1, 2, 4, 8, ..., n</div>
+  <div class="step">複製成本總和 = 1 + 2 + 4 + ... + n = 等比級數 ≈ 2n</div>
+  <div class="step">n 次 push 總成本 = n(每次寫入) + 2n(複製) = 3n</div>
+  <div class="step">平均每次 = 3n / n = O(1) 攤還 ✓</div>
+</div>
+<div class="insight">
+  <p>又是<strong>等比級數「和 ≈ 最大項」</strong>在起作用:所有擴容複製加起來只有 <code>2n</code>,不是 <code>n × n</code>。這解答了你之前 <code>new ArrayList(n)</code> 的另一面——正常擴容其實很便宜,問題只在「一開始就開 n 大 × n 個」。</p>
+</div>
+
+<h3>三種攤還分析方法</h3>
+<table>
+  <tr><th>方法</th><th>做法</th></tr>
+  <tr><td>聚合法 (Aggregate)</td><td>算 n 次操作總成本 T(n),攤還 = T(n)/n</td></tr>
+  <tr><td>記帳法 (Accounting)</td><td>便宜操作「預存」代價,貴操作「提領」</td></tr>
+  <tr><td>位能法 (Potential)</td><td>定義位能函數 Φ,攤還成本 = 實際 + ΔΦ</td></tr>
+</table>
+
+<h3>你已經用過的攤還例子</h3>
+<ul>
+  <li><strong>單調棧</strong>(robotWithString、非互質合併、min-product):每個元素<strong>最多入棧一次、出棧一次</strong> → n 個元素總共 2n 次棧操作 → 攤還 O(n),即使某次 while 彈很多個。</li>
+  <li><strong>滑動窗口</strong>(longest nice subarray):左右指標各自單調前進,全程各走 n 步 → O(n)。</li>
+  <li><strong>Union-Find 路徑壓縮</strong>:單次操作攤還 <code>O(α(n))</code>(反阿克曼函數,幾乎是常數)。</li>
+</ul>
+
+<div class="tip">
+  <p><strong>面試判斷法:</strong>看到「內層迴圈看似 O(n) 但變數只增不減、不重置」→ 用攤還論證「總步數 O(n)」,別報成 O(n²)。你之前對這些題的複雜度判斷都對,這裡是幫你補上「為什麼可以這樣說」的理論名字:<strong>攤還分析</strong>。</p>
+</div>
+</div>
+</div>
+
+<!-- ===== Practice ===== -->
+<div class="section" id="practice">
+<div class="card">
+<h2>實戰推算 — 用你刷過的題練習</h2>
+<p>把前面的技巧套到你最近實際遇到的題目上。</p>
+
+<h3>1. Count Orders (LC 1359) — 打表 DP</h3>
+<pre><span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">2</span>; i &lt;= n; i++)
+    <span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">1</span>; j &lt;= <span class="num">2</span>*i-<span class="num">1</span>; j++)
+        dp[i] += dp[i-1] * j;</pre>
+<div class="derive">
+  <div class="step">內層次數 = Σ(2i−1) for i=2..n ≈ Σ 2i = 2·Σi = 2·n²/2 = n²</div>
+  <div class="step">→ O(n²)。n≤500 → 250,000 次,遠低於 10⁸ → 穩過</div>
+  <div class="step">(可優化:內層等差和有封閉解 i(2i−1) → O(n))</div>
+</div>
+
+<h3>2. Echo Substring (LC 1316) — 暴力剪枝</h3>
+<div class="derive">
+  <div class="step">枚舉半長 len × 起點 i × 比對 len 字元</div>
+  <div class="step">= Σ_len Σ_i len ≈ n × n × n / 常數 = O(n³)</div>
+  <div class="step">n≤2000 → 8×10⁹ 理論爆,但 while 很少跑滿 → 實測過</div>
+  <div class="step">穩健版:lcp DP 或 rolling hash → O(n²) = 4×10⁶</div>
+</div>
+
+<h3>3. Fair Distribution of Cookies (LC 2305) — 子集枚舉</h3>
+<div class="derive">
+  <div class="step">枚舉子集的子集:Σ_{mask} 2^(popcount(mask))</div>
+  <div class="step">= 每個 bit 三種狀態(不在/在大集/在小集)= 3ⁿ</div>
+  <div class="step">n≤8 → 3⁸ = 6561 → 極快</div>
+</div>
+<div class="insight">
+  <p><strong>「枚舉子集的子集 = 3ⁿ」的推導:</strong>對每個元素,它可以 (a) 不在 mask、(b) 在 mask 但不在子集、(c) 在子集。三選一,n 個獨立 → 3ⁿ。這是狀壓 DP 常見的複雜度。</p>
+</div>
+
+<h3>4. 二分答案類 (LC 2861 合金) — n × 二分</h3>
+<div class="derive">
+  <div class="step">每台機器二分答案:log(上界) 次</div>
+  <div class="step">每次二分內檢查所有金屬:O(n)</div>
+  <div class="step">k 台機器 → O(k · n · log(上界))</div>
+  <div class="step">全 ≤ 10⁵ 級 → 約 10⁵ × 30 = 3×10⁶ → 穩過</div>
+</div>
+
+<h3>5. Tarjan 找橋 (LC 1192) — 圖遍歷</h3>
+<div class="derive">
+  <div class="step">DFS 每個節點訪問一次、每條邊看兩次(無向)</div>
+  <div class="step">= O(V + E)</div>
+  <div class="step">V,E ≤ 10⁵ → 2×10⁵ → 穩過</div>
+</div>
+
+<div class="tip">
+  <p><strong>推算流程 SOP:</strong>(1) 找出主導的迴圈/遞迴結構 →(2) 用求和 / 遞迴式 / Master Theorem 算量級 →(3) 代入 n 上限算實際操作數 →(4) 對照 10⁸/秒 判斷 TLE →(5) 若超,想能不能降階(等差和封閉解、二分、單調棧、攤還)。</p>
+</div>
+
+<h3>空間複雜度別忘了</h3>
+<ul>
+  <li><strong>額外空間</strong>:不含輸入輸出,只算你開的輔助結構。</li>
+  <li>DP 表 <code>dp[n][m]</code> → O(n·m);滾動陣列可壓到 O(m)(你在 minDifficulty 用過)。</li>
+  <li>遞迴的隱藏空間:呼叫堆疊深度。DFS 鏈狀圖深度 O(n) 可能爆棧。</li>
+  <li><code>new ArrayList(n)</code> × n 個 → O(n²) 空間 → MLE(你踩過的坑)。</li>
+</ul>
+</div>
+</div>
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
