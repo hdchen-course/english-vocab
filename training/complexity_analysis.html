@@ -95,7 +95,7 @@ tr:hover { background: var(--bg3); }
 <div class="section active" id="intro">
 <div class="card">
 <h2>為什麼要精確分析,而不是「感覺」</h2>
-<p>你這幾天刷題卡關的分數,幾乎都在 <strong>「這個會不會超時 / 溢位」</strong> 的判斷上。複雜度分析就是把「感覺」變成「可計算」:給定 <code>n</code> 的上限,算出操作數的量級,對照機器每秒約 <code>10^8 ~ 10^9</code> 次操作,就能判斷會不會 TLE。</p>
+<p>刷題最常見的判斷是 <strong>「這個解會不會超時 / 溢位」</strong>。複雜度分析就是把「感覺」變成「可計算」:給定 <code>n</code> 的上限,算出操作數的量級,對照機器每秒約 <code>10^8 ~ 10^9</code> 次操作,就能判斷會不會 TLE。</p>
 
 <div class="insight">
   <p><strong>核心心法:</strong>複雜度 = 「當輸入 <code>n</code> 變大時,操作數如何成長」。我們只在意 <strong>成長的量級</strong>,不在意常數與低階項——因為當 n 夠大,最高階項會主導一切。</p>
@@ -122,7 +122,7 @@ tr:hover { background: var(--bg3); }
 </div>
 
 <div class="tip">
-  <p><strong>實務上不用這樣證。</strong>你只要記住規則:<strong>丟掉常數係數、只留最高階項</strong>。<code>3n² + 5n + 100</code> → <code>O(n²)</code>。上面的正式證明是給你知道「為什麼可以這樣丟」。</p>
+  <p><strong>實務上不用這樣證。</strong>只要記住規則:<strong>丟掉常數係數、只留最高階項</strong>。<code>3n² + 5n + 100</code> → <code>O(n²)</code>。上面的正式證明是說明「為什麼可以這樣丟」。</p>
 </div>
 
 <h3>丟棄規則 (Simplification Rules)</h3>
@@ -169,7 +169,7 @@ tr:hover { background: var(--bg3); }
 </table>
 
 <div class="tip">
-  <p><strong>反推技巧:</strong>看到 <code>n ≤ 500</code> → 「哦,O(n³) 能過」→ 想區間 DP。看到 <code>n ≤ 10⁵</code> → 「要 O(n log n)」→ 想排序或二分。<strong>constraints 是在暗示解法</strong>。你之前那題 <code>n ≤ 500</code> 的 count orders(O(n²) 打表)、和 <code>n ≤ 2000</code> 的 echo substring(O(n²) 過)就是這樣判的。</p>
+  <p><strong>反推技巧:</strong>看到 <code>n ≤ 500</code> → 「哦,O(n³) 能過」→ 想區間 DP。看到 <code>n ≤ 10⁵</code> → 「要 O(n log n)」→ 想排序或二分。<strong>constraints 是在暗示解法</strong>。例如 <code>n ≤ 500</code> 的 LC 1359 Count Orders(O(n²) 打表)、<code>n ≤ 2000</code> 的 LC 1316 Echo Substring(O(n²))都是這樣判的。</p>
 </div>
 
 <h3>為什麼 log n 出現得這麼頻繁</h3>
@@ -198,7 +198,7 @@ tr:hover { background: var(--bg3); }
   <div class="step">2S = n(n+1) → S = n(n+1)/2</div>
 </div>
 <div class="insight">
-  <p><strong>這就是為什麼「巢狀迴圈跑三角形」是 O(n²)。</strong>你之前 count orders 那題的內層 <code>Σj = (2i-1)(2i)/2 = i(2i-1)</code>,以及 fair pairs 的雙迴圈,底層都是這條等差和。</p>
+  <p><strong>這就是為什麼「巢狀迴圈跑三角形」是 O(n²)。</strong>例如 LC 1359 Count Orders 的內層 <code>Σj = (2i-1)(2i)/2 = i(2i-1)</code>,以及 LC 2563 Fair Pairs 的雙迴圈,底層都是這條等差和。</p>
 </div>
 
 <h3>2. 平方和</h3>
@@ -281,7 +281,7 @@ tr:hover { background: var(--bg3); }
 }
 <span class="cm">// 看似巢狀,但 j 全程最多走 n 步 → 總計 O(n),不是 O(n²)</span></pre>
 <div class="tip">
-  <p><strong>你熟的模式:</strong>滑動窗口、robotWithString 的 stack、非互質合併——都是「看似巢狀,但內層指標全程只走 O(n) 步」→ 攤還 O(n)。判斷關鍵:<strong>內層變數會不會在外層迭代間「重置」</strong>?不重置 → 攤還。</p>
+  <p><strong>常見模式:</strong>滑動窗口、LC 2434 robotWithString 的 stack、LC 2197 非互質合併——都是「看似巢狀,但內層指標全程只走 O(n) 步」→ 攤還 O(n)。判斷關鍵:<strong>內層變數會不會在外層迭代間「重置」</strong>?不重置 → 攤還。</p>
 </div>
 </div>
 </div>
@@ -420,7 +420,7 @@ tr:hover { background: var(--bg3); }
   <div class="step">平均每次 = 3n / n = O(1) 攤還 ✓</div>
 </div>
 <div class="insight">
-  <p>又是<strong>等比級數「和 ≈ 最大項」</strong>在起作用:所有擴容複製加起來只有 <code>2n</code>,不是 <code>n × n</code>。這解答了你之前 <code>new ArrayList(n)</code> 的另一面——正常擴容其實很便宜,問題只在「一開始就開 n 大 × n 個」。</p>
+  <p>又是<strong>等比級數「和 ≈ 最大項」</strong>在起作用:所有擴容複製加起來只有 <code>2n</code>,不是 <code>n × n</code>。所以動態陣列的正常擴容其實很便宜;真正會爆記憶體的是「一開始就對每個節點預配大容量」的用法(見下方空間複雜度)。</p>
 </div>
 
 <h3>三種攤還分析方法</h3>
@@ -431,7 +431,7 @@ tr:hover { background: var(--bg3); }
   <tr><td>位能法 (Potential)</td><td>定義位能函數 Φ,攤還成本 = 實際 + ΔΦ</td></tr>
 </table>
 
-<h3>你已經用過的攤還例子</h3>
+<h3>常見的攤還例子</h3>
 <ul>
   <li><strong>單調棧</strong>(robotWithString、非互質合併、min-product):每個元素<strong>最多入棧一次、出棧一次</strong> → n 個元素總共 2n 次棧操作 → 攤還 O(n),即使某次 while 彈很多個。</li>
   <li><strong>滑動窗口</strong>(longest nice subarray):左右指標各自單調前進,全程各走 n 步 → O(n)。</li>
@@ -439,7 +439,7 @@ tr:hover { background: var(--bg3); }
 </ul>
 
 <div class="tip">
-  <p><strong>面試判斷法:</strong>看到「內層迴圈看似 O(n) 但變數只增不減、不重置」→ 用攤還論證「總步數 O(n)」,別報成 O(n²)。你之前對這些題的複雜度判斷都對,這裡是幫你補上「為什麼可以這樣說」的理論名字:<strong>攤還分析</strong>。</p>
+  <p><strong>面試判斷法:</strong>看到「內層迴圈看似 O(n) 但變數只增不減、不重置」→ 用攤還論證「總步數 O(n)」,別報成 O(n²)。這個論證的理論名字就是 <strong>攤還分析</strong>。</p>
 </div>
 </div>
 </div>
@@ -447,8 +447,8 @@ tr:hover { background: var(--bg3); }
 <!-- ===== Practice ===== -->
 <div class="section" id="practice">
 <div class="card">
-<h2>實戰推算 — 用你刷過的題練習</h2>
-<p>把前面的技巧套到你最近實際遇到的題目上。</p>
+<h2>實戰推算 — 用經典題練習</h2>
+<p>把前面的技巧套到幾道常見的 LeetCode 題目上。</p>
 
 <h3>1. Count Orders (LC 1359) — 打表 DP</h3>
 <pre><span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">2</span>; i &lt;= n; i++)
@@ -499,10 +499,10 @@ tr:hover { background: var(--bg3); }
 
 <h3>空間複雜度別忘了</h3>
 <ul>
-  <li><strong>額外空間</strong>:不含輸入輸出,只算你開的輔助結構。</li>
-  <li>DP 表 <code>dp[n][m]</code> → O(n·m);滾動陣列可壓到 O(m)(你在 minDifficulty 用過)。</li>
+  <li><strong>額外空間</strong>:不含輸入輸出,只算額外開的輔助結構。</li>
+  <li>DP 表 <code>dp[n][m]</code> → O(n·m);滾動陣列可壓到 O(m)(如 LC 1335 minDifficulty)。</li>
   <li>遞迴的隱藏空間:呼叫堆疊深度。DFS 鏈狀圖深度 O(n) 可能爆棧。</li>
-  <li><code>new ArrayList(n)</code> × n 個 → O(n²) 空間 → MLE(你踩過的坑)。</li>
+  <li><code>new ArrayList(n)</code> × n 個 → O(n²) 空間 → MLE(常見陷阱:對每個節點都預配大容量)。</li>
 </ul>
 </div>
 </div>
