@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DGX Cloud Automation — Skills Prep (K8s · IaC · CI/CD · Virtualization)</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fa; --bg2: #ffffff; --bg3: #f1f3f5; --border: #dee2e6;
+  --text: #212529; --text2: #495057; --text3: #868e96;
+  --blue: #1971c2; --blue-l: #d0ebff; --green: #2f9e44; --green-l: #d3f9d8;
+  --yellow: #e67700; --yellow-l: #fff3bf; --red: #c92a2a; --red-l: #ffe3e3;
+  --purple: #7048e8; --purple-l: #e5dbff; --nv: #76b900; --nv-l: #e8f5cc; --r: 12px; --shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.75; }
+.container { max-width: 1050px; margin: 0 auto; padding: 40px 24px; }
+header { text-align: center; margin-bottom: 18px; padding-bottom: 22px; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 29px; font-weight: 800; margin-bottom: 6px; }
+header .sub { color: var(--text3); font-size: 14px; }
+.nav { display: flex; justify-content: center; gap: 7px; flex-wrap: wrap; margin: 16px 0 30px; position: sticky; top: 0; background: var(--bg); padding: 13px 0; z-index: 100; border-bottom: 1px solid var(--border); }
+.nav-btn { padding: 9px 15px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; font-size: 12.5px; font-weight: 600; transition: all .2s; font-family: 'Inter', sans-serif; }
+.nav-btn:hover { background: var(--bg3); color: var(--text); }
+.nav-btn.active { background: var(--nv-l); color: #4d7a00; border-color: var(--nv); }
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+h2 { font-size: 23px; font-weight: 700; margin: 26px 0 14px; color: #4d7a00; }
+h3 { font-size: 17px; font-weight: 600; margin: 22px 0 10px; }
+h4 { font-size: 13px; font-weight: 700; margin: 14px 0 6px; color: var(--text2); text-transform: uppercase; letter-spacing: .5px; }
+p { margin-bottom: 12px; color: var(--text2); }
+ul, ol { margin: 8px 0 16px 22px; color: var(--text2); }
+li { margin-bottom: 6px; }
+strong { color: var(--text); }
+pre { background: #1e1e2e; border-radius: 8px; padding: 14px 18px; overflow-x: auto; margin: 10px 0; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.55; color: #cdd6f4; white-space: pre; }
+code { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+p code, li code, td code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--purple); }
+.insight { background: var(--blue-l); border-left: 3px solid var(--blue); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 14px 0; } .insight p { color: #114f8c; margin: 0; }
+.tip { background: var(--green-l); border-left: 3px solid var(--green); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 14px 0; } .tip p { color: #1d6b2e; margin: 0; }
+.warn { background: var(--yellow-l); border-left: 3px solid var(--yellow); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 14px 0; } .warn p { color: #a85700; margin: 0; }
+.gap { background: var(--red-l); border-left: 3px solid var(--red); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 14px 0; } .gap p { color: #8a1c1c; margin: 0; }
+.have { background: var(--nv-l); border-left: 3px solid var(--nv); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 14px 0; } .have p { color: #4d7a00; margin: 0; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 18px; padding: 22px 26px; box-shadow: var(--shadow); }
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13.5px; }
+th, td { padding: 9px 12px; border: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { background: var(--bg3); font-weight: 600; color: var(--text); }
+.qa { border-left: 3px solid var(--purple); padding: 4px 0 4px 16px; margin: 14px 0; }
+.qa .q { font-weight: 700; color: var(--text); margin-bottom: 5px; }
+@media (max-width: 768px) { .container { padding: 20px 12px; } .nav { position: static; flex-direction: column; } .nav-btn { text-align: center; } }
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>DGX Cloud Automation — Skills Prep</h1>
+  <div class="sub">Working knowledge for the NVIDIA Senior DGX Cloud Automation Engineer role · refresh what you have + learn the gaps (K8s, virtualization)</div>
+</header>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="sc(event,'context')">The role &amp; context</button>
+  <button class="nav-btn" onclick="sc(event,'have')">What you already have</button>
+  <button class="nav-btn" onclick="sc(event,'k8s')">Kubernetes (the gap)</button>
+  <button class="nav-btn" onclick="sc(event,'virt')">Virtualization</button>
+  <button class="nav-btn" onclick="sc(event,'cicd')">CI/CD &amp; IaC refresh</button>
+  <button class="nav-btn" onclick="sc(event,'interview')">If interviewed</button>
+</div>
+
+<!-- CONTEXT -->
+<div class="section active" id="context">
+<div class="card">
+<h2>What this team actually does</h2>
+<p><strong>DGX</strong> = NVIDIA's top-end AI supercomputer (a rack full of GPUs). <strong>DGX Cloud</strong> = renting that GPU power as a cloud service, so companies train/deploy AI without buying the hardware. <strong>"AI Factories"</strong> = NVIDIA's term for large-scale AI training/inference infrastructure — clusters of GPUs running AI workloads.</p>
+<div class="insight"><p><strong>The role in one line:</strong> despite the "Automation" title, this is a <strong>Platform / DevInfra / Release Engineering</strong> job — you build the <strong>CI/CD, IaC, and deployment infrastructure</strong> that lets the DGX Cloud <em>platform</em> be developed, tested, released, and deployed (on-prem + cloud). You're NOT writing AI or GPU code; you're building the plumbing that ships the platform.</p></div>
+</div>
+
+<div class="card">
+<h3>PaaS vs IaaS (JD says "build cloud systems for PaaS/IaaS")</h3>
+<table>
+<tr><th>Layer</th><th>What it is</th><th>Example</th></tr>
+<tr><td><b>IaaS</b> (Infrastructure)</td><td>Raw compute/storage/network — you manage the OS &amp; up</td><td>EC2, a VM, GPU instances</td></tr>
+<tr><td><b>PaaS</b> (Platform)</td><td>A managed platform to run apps — you just deploy code</td><td>App Engine, managed K8s, Fargate</td></tr>
+<tr><td>(SaaS)</td><td>Finished software</td><td>Gmail — not relevant here</td></tr>
+</table>
+<p>DGX Cloud offers <b>GPU IaaS/PaaS</b> — customers get GPU infrastructure/platform to run AI. Your job is building the systems that deliver that.</p>
+</div>
+
+<div class="card">
+<h3>Honest read of your fit</h3>
+<div class="have"><p><strong>Strong:</strong> CI/CD, IaC, AWS (Fargate/EC2/IAM/ECR/Route53), Docker/containers, RESTful, distributed systems, Go &amp; Python, secrets management — all in your recent Amazon + 17LIVE work. This is your DevInfra home turf.</p></div>
+<div class="gap"><p><strong>Gap:</strong> <b>"Expertise in Kubernetes"</b> is a <em>required</em> item and you're at operational-exposure level (things ran on K8s, &lt;20 commands). Also the stand-out virtualization stack (Firecracker/KVM/OpenStack/Nutanix/OpenShift) you don't have. K8s is the real hurdle — but it's <em>rampable</em> because you have the container foundation. This page gets you to working knowledge.</p></div>
+</div>
+</div>
+
+<!-- HAVE -->
+<div class="section" id="have">
+<div class="card">
+<h2>What you already have (refresh + how to talk about it)</h2>
+<p>These map 1:1 to the JD. You don't need to learn them — just be ready to speak to them.</p>
+<table>
+<tr><th>JD requirement</th><th>Your evidence</th></tr>
+<tr><td>CI/CD</td><td>Built automated docker pipeline: new SDK → CodeBuild → ECR → ECS deploy, daily, zero manual steps</td></tr>
+<tr><td>Infrastructure as Code</td><td>REP rebuild = full CDK IaC (CloudFront + Functions, cross-account cert/DNS)</td></tr>
+<tr><td>AWS: Fargate, EC2, IAM, ECR, Route53</td><td>ECS Fargate migration; ECR; IAM (REP-667 key rotation); Route53/CloudFront (REP); EC2</td></tr>
+<tr><td>Docker / Containers</td><td>Containerized services, ECS, image build pipelines</td></tr>
+<tr><td>RESTful web services</td><td>Your core backend work across all roles</td></tr>
+<tr><td>Distributed systems + security</td><td>SNS-drift RCA, cross-account, CloudFrontSigner/Midway auth</td></tr>
+<tr><td>Go &amp; Python (stand-out)</td><td>17LIVE Go; Amazon Python</td></tr>
+<tr><td>Secrets management (stand-out)</td><td>IAM key rotation (REP-667), CloudFrontSigner, encrypted PIN delivery (HSM intake)</td></tr>
+<tr><td>Complex problems / delivery (stand-out)</td><td>SNS drift, REP saga, Army delivery</td></tr>
+</table>
+<div class="tip"><p>Lead with these. Your DevInfra/CI-CD/IaC/AWS story is genuinely strong and recent — it's most of what this role is. K8s is the one thing to be honest about.</p></div>
+</div>
+</div>
+
+<!-- K8S -->
+<div class="section" id="k8s">
+<div class="card">
+<h2>Kubernetes — from exposure to working knowledge</h2>
+<p>You know Docker/containers, so this is the delta. K8s = <strong>orchestrator for containers at scale</strong>: it schedules containers across many machines, keeps them running, scales them, networks them. (You already met its ancestor concept — this is "Docker, but managing thousands across a cluster".)</p>
+
+<h3>The mental model</h3>
+<pre>You give K8s a DESIRED STATE ("run 5 copies of this container").
+K8s constantly makes REALITY match it (a pod dies → it starts a new one).
+This is the whole idea: declarative desired-state + a control loop that reconciles.</pre>
+<div class="insight"><p><strong>The one sentence that shows you get K8s:</strong> "Kubernetes is a declarative control loop — you declare the desired state, and controllers continuously reconcile actual state toward it. Everything else is objects that express desired state." Say this and you sound like you understand it, not just ran commands.</p></div>
+
+<h3>Core objects (know these ~8)</h3>
+<table>
+<tr><th>Object</th><th>What it is</th></tr>
+<tr><td><b>Pod</b></td><td>Smallest unit — one (or few tightly-coupled) containers sharing network/storage. You rarely manage pods directly.</td></tr>
+<tr><td><b>Deployment</b></td><td>Manages a set of identical pods — desired replica count, rolling updates, rollback. Your main workhorse.</td></tr>
+<tr><td><b>ReplicaSet</b></td><td>Keeps N copies of a pod running (Deployment manages this for you).</td></tr>
+<tr><td><b>Service</b></td><td>Stable network endpoint + load-balancing across a set of pods (pods are ephemeral, Service gives a fixed address).</td></tr>
+<tr><td><b>Ingress</b></td><td>HTTP(S) routing from outside into Services (host/path rules, TLS). Like an L7 router.</td></tr>
+<tr><td><b>ConfigMap / Secret</b></td><td>Config &amp; secrets injected into pods (Secret = base64, needs encryption-at-rest / external KMS for real security).</td></tr>
+<tr><td><b>Namespace</b></td><td>Logical partition of a cluster (team/env isolation).</td></tr>
+<tr><td><b>StatefulSet / DaemonSet / Job</b></td><td>Stateful apps (stable identity/storage) / one-pod-per-node / run-to-completion tasks.</td></tr>
+</table>
+
+<h3>Architecture (control plane vs nodes)</h3>
+<table>
+<tr><th>Part</th><th>Role</th></tr>
+<tr><td><b>API server</b></td><td>The front door — everything talks to it (kubectl, controllers). Stores state in <b>etcd</b>.</td></tr>
+<tr><td><b>etcd</b></td><td>The cluster's database (key-value) — the source of truth for desired + actual state.</td></tr>
+<tr><td><b>Scheduler</b></td><td>Decides which node a new pod runs on (bin-packing by resource).</td></tr>
+<tr><td><b>Controller manager</b></td><td>Runs the reconcile loops (e.g. "5 replicas wanted, 4 exist → start 1").</td></tr>
+<tr><td><b>kubelet</b></td><td>Agent on each node — actually runs the containers the API server assigned.</td></tr>
+</table>
+<div class="insight"><p>Ties to what you read: this is exactly Borg's shape (Borgmaster ≈ control plane, Borglet ≈ kubelet). K8s <em>is</em> the open-source descendant of Borg. You've seen this pattern.</p></div>
+
+<h3>kubectl commands (the operational bit you've touched)</h3>
+<pre>kubectl get pods / deployments / services / nodes    # list
+kubectl describe pod &lt;name&gt;        # detail + events (debug why it won't start)
+kubectl logs &lt;pod&gt; [-f]            # container logs
+kubectl apply -f manifest.yaml     # declarative create/update (the K8s way)
+kubectl rollout status/undo deployment/&lt;name&gt;   # rolling update / rollback
+kubectl exec -it &lt;pod&gt; -- /bin/sh  # shell into a container
+kubectl scale deployment/&lt;name&gt; --replicas=5
+kubectl get events --sort-by=.lastTimestamp     # what's happening / failing</pre>
+
+<h3>A minimal manifest (recognize this shape)</h3>
+<pre>apiVersion: apps/v1
+kind: Deployment
+metadata: { name: my-svc }
+spec:
+  replicas: 3
+  selector: { matchLabels: { app: my-svc } }
+  template:
+    metadata: { labels: { app: my-svc } }
+    spec:
+      containers:
+      - name: my-svc
+        image: myregistry/my-svc:1.2.3
+        ports: [{ containerPort: 8080 }]
+        resources:
+          requests: { cpu: "500m", memory: "512Mi" }
+          limits:   { cpu: "1",    memory: "1Gi" }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: my-svc }
+spec:
+  selector: { app: my-svc }
+  ports: [{ port: 80, targetPort: 8080 }]</pre>
+
+<h3>GPU + K8s (relevant to DGX Cloud)</h3>
+<ul>
+<li>GPUs are exposed to pods via the <b>NVIDIA device plugin</b> — pods request <code>nvidia.com/gpu: 1</code> in resources.</li>
+<li>Scheduling GPU workloads, bin-packing GPUs, node pools with GPUs — this is DGX Cloud's world.</li>
+<li>You don't need depth here now, but know: <b>K8s schedules GPU workloads via the NVIDIA device plugin + resource requests.</b></li>
+</ul>
+
+<div class="warn"><p><b>Honesty line for interviews:</b> "My K8s is operational — I've deployed and debugged services running on it, used kubectl, read manifests. I'm not deep on cluster administration or operators yet, but with my Docker/container and IaC background it's a fast ramp, not a new paradigm." Don't claim cluster-design expertise you don't have — but do claim the solid foundation you do have.</p></div>
+
+<h3>EKS (AWS's managed K8s — JD lists it)</h3>
+<p>EKS = AWS runs the K8s control plane for you; you bring worker nodes (EC2 or Fargate). You know the AWS side (IAM, VPC, ECR) — EKS is K8s <em>on</em> that. So "K8s + your AWS knowledge" = EKS is within reach.</p>
+</div>
+</div>
+
+<!-- VIRT -->
+<div class="section" id="virt">
+<div class="card">
+<h2>Virtualization (the "stand out" stack)</h2>
+<p>JD's stand-out list: Firecracker, KVM, OpenStack, Nutanix AHV, RedHat OpenShift. You don't have these — but <strong>knowing what each IS</strong> (working knowledge) is enough to not be lost. Depth is nice-to-have, not required.</p>
+<table>
+<tr><th>Tech</th><th>What it is (one line)</th></tr>
+<tr><td><b>VM vs Container</b></td><td>VM = full guest OS on a hypervisor (heavy, strong isolation). Container = shares host kernel (light, weaker isolation). Know this distinction cold.</td></tr>
+<tr><td><b>Hypervisor</b></td><td>Software that runs VMs. Type-1 = on bare metal (KVM, ESXi); Type-2 = on an OS (VirtualBox).</td></tr>
+<tr><td><b>KVM</b></td><td>Linux's built-in hypervisor (kernel module) — turns Linux into a Type-1 hypervisor. The foundation most clouds' VMs sit on.</td></tr>
+<tr><td><b>Firecracker</b></td><td>AWS's <b>microVM</b> — ultra-lightweight VMs (boot in ~125ms) built on KVM. Powers Lambda/Fargate. Gives VM-level isolation with near-container speed. <em>Key idea: microVM = isolation of a VM, lightness of a container.</em></td></tr>
+<tr><td><b>OpenStack</b></td><td>Open-source "build your own IaaS cloud" — orchestrates VMs/storage/network on your own hardware. The DIY AWS.</td></tr>
+<tr><td><b>Nutanix AHV</b></td><td>Nutanix's hypervisor (hyperconverged infra — compute+storage in one).</td></tr>
+<tr><td><b>OpenShift</b></td><td>RedHat's <b>enterprise Kubernetes</b> distribution — K8s + extra tooling/security/CI-CD baked in. If you know K8s, OpenShift is K8s+.</td></tr>
+</table>
+<div class="insight"><p><strong>The connective idea (say this):</strong> "For a GPU cloud, the core tension is isolation vs efficiency — you want to safely multi-tenant expensive GPUs. That's why microVMs like Firecracker matter: VM-grade isolation without the VM weight. Containers/K8s handle orchestration; the virtualization layer handles safe isolation of tenants on shared hardware." That shows you grasp <em>why</em> these exist, even without hands-on depth.</p></div>
+</div>
+</div>
+
+<!-- CICD -->
+<div class="section" id="cicd">
+<div class="card">
+<h2>CI/CD &amp; IaC — your strength, sharpened</h2>
+<p>This is your home turf; just have the concepts crisp since it's the heart of the role.</p>
+<h4>CI/CD in one breath</h4>
+<ul>
+<li><b>CI (Continuous Integration):</b> every commit → auto build + test → catch breakage early.</li>
+<li><b>CD (Continuous Delivery/Deployment):</b> passing builds auto-deploy (to staging, then prod). Delivery = ready to deploy; Deployment = actually auto-deploys.</li>
+<li><b>Release engineering:</b> the whole discipline of getting code from commit to production safely — versioning, artifacts, staged rollout, rollback. (This role's core.)</li>
+</ul>
+<h4>Concepts to have ready</h4>
+<table>
+<tr><th>Concept</th><th>Crisp take</th></tr>
+<tr><td>Pipeline stages</td><td>build → test → package (artifact/image) → deploy → verify. Gate each stage on the previous.</td></tr>
+<tr><td>Artifacts / registry</td><td>Build once, promote the same artifact through envs. Container images in a registry (ECR).</td></tr>
+<tr><td>Staged rollout</td><td>Canary → % ramp → 100%, with health gates + auto-rollback. Bounds blast radius of a bad release. (You know this from your work.)</td></tr>
+<tr><td>Blue-green</td><td>Two envs; switch traffic to the new one, instant rollback by switching back.</td></tr>
+<tr><td>On-prem + cloud (JD)</td><td>Same pipeline deploys to both — harder because envs differ; IaC + containers make it reproducible.</td></tr>
+</table>
+<h4>IaC</h4>
+<ul>
+<li><b>Idea:</b> infrastructure defined in code (declarative), version-controlled, repeatable — no ClickOps. (Your REP rebuild is the poster child: from ClickOps → CDK.)</li>
+<li><b>Tools:</b> Terraform (cloud-agnostic, most common), AWS CDK (you used), CloudFormation, Pulumi.</li>
+<li><b>Why it matters here:</b> "apply" is idempotent — converge to desired state whether run once or thrice. Same declarative-reconcile idea as K8s.</li>
+</ul>
+<div class="tip"><p><b>Tie it together for the interview:</b> "IaC and Kubernetes are the same philosophy — declare desired state, let a reconcile loop converge to it. My IaC/CDK background maps directly onto how K8s thinks, which is part of why I ramp on K8s fast."</p></div>
+</div>
+</div>
+
+<!-- INTERVIEW -->
+<div class="section" id="interview">
+<div class="card">
+<h2>If you get an interview</h2>
+<div class="insight"><p>Strategy: <b>lead from strength (CI/CD, IaC, AWS, containers, release eng), be honest about K8s depth, frame the gap as a fast ramp.</b> Don't fake K8s expertise — this team lives in K8s, you'd be exposed. But your DevInfra foundation is real and most of the role.</p></div>
+
+<h3>Likely questions &amp; how to approach</h3>
+<div class="qa"><div class="q">"Design a CI/CD pipeline for deploying a service to both on-prem and cloud."</div>
+<p>build → test → build one container image → push to registry → deploy via IaC to each target → health-gate + rollback. Emphasize: build-once-promote-everywhere, staged rollout, idempotent IaC apply, same image both places. This is your strength — go deep.</p></div>
+<div class="qa"><div class="q">"How does Kubernetes work / how would you deploy on K8s?"</div>
+<p>Declarative desired-state + reconcile loop. Deployment (replicas, rolling update) + Service (stable endpoint) + Ingress (routing). <code>kubectl apply</code> manifests. Be honest on depth, strong on the model.</p></div>
+<div class="qa"><div class="q">"How do you manage secrets in a pipeline / cluster?"</div>
+<p>Never in code/images. Inject at runtime from a secrets manager (Vault, AWS Secrets Manager, K8s Secret backed by KMS). Rotate; least privilege via IAM roles. (You did IAM key rotation + CloudFrontSigner — cite it.)</p></div>
+<div class="qa"><div class="q">"Why isolation matters on a GPU cloud / VM vs container?"</div>
+<p>Multi-tenant on expensive shared GPUs → need strong isolation but can't afford VM overhead → microVMs (Firecracker) = VM isolation + container speed. Containers/K8s for orchestration.</p></div>
+<div class="qa"><div class="q">"How do you make a bad release safe?"</div>
+<p>Staged rollout (canary → ramp), health gates, auto-rollback, blue-green for instant revert, immutable artifacts. Bounds blast radius.</p></div>
+
+<h3>The honest positioning line</h3>
+<div class="tip"><p>"My core strength is exactly this role — CI/CD, IaC, AWS, containers, release engineering — I've built automated pipelines and rebuilt infrastructure as code recently. On Kubernetes I'm at operational level, not deep cluster admin — but given my container and IaC foundation, and that K8s is the same declarative-reconcile model as IaC, it's a fast ramp for me, not a new world."</p></div>
+</div>
+</div>
+
+</div>
+<script>
+function sc(evt, id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  evt.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
