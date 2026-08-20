@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-game-wired="chinese">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小小作家 · 寫作工廠 ✍️</title>
+<!-- 統一遊戲化引擎：先載共用設計 token（assets/app.css），再載 HUD/toast 樣式
+     （game_core.css），最後同步載入引擎（game_core.js）。
+     本頁透過 Game.recordAnswer('chinese', ...) 即時記帳，XP 匯入同一個國語角色。
+     於 <html>＋<body> 宣告 data-game-wired="chinese"（與 chinese.html 一致）：
+     此為全站黏著旗標，對應 legacy 的 chinese_game_state.exp；宣告後 delta-sync 只
+     前移 shadow、絕不對該 legacy 值補發 XP，確保與本頁即時記帳不重複計分。本頁自身
+     不寫 chinese_game_state.exp，故此宣告純為與國語科既有接線保持一致、萬無一失。
+     兒童安全（§3.6）：金幣＝純記錄努力的學習點數，不綁任何可兌換造型／物品（清資料才不會讓孩子失落）；無抽卡／轉蛋／隨機獎勵／真錢／
+     懲罰性計時／損失厭惡文案；答錯不扣分，答錯後會揭示正解與範例讓孩子看懂再離開。
+     國語正確性（第一優先）：成語／修辭標籤依教育部標準；排序題只收「唯一合理順序」
+     （靠時間／因果／關聯詞鎖定）；造句選擇題的干擾項一律「明顯不通」，不放「其實也對」，
+     以免自動批改懲罰正確思考。自由寫作（我的小作文）「零評分、零內容比對」，
+     只以「完成反思」這個行為給鼓勵。全繁體中文，無簡體字。 -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<style>
+/* =====================================================================
+ * composition.html — 本頁樣式（建立在 assets/app.css 的設計 token 上，
+ * 自動亮／暗色主題化、與學習基地視覺一致）。強調色沿用國語科的暖黃。
+ * =================================================================== */
+:root {
+  --accent: var(--c-chinese);
+  --accent-tint: var(--tint-chinese);
+  --accent-ink: var(--c-chinese-ink);
+}
+
+body { overflow-x: hidden; }
+
+/* 頁面頂列（回選單、標題） */
+.cp-topbar { display: flex; align-items: center; gap: var(--s2); margin-bottom: var(--s4); }
+.cp-topbar .cp-title { flex: 1; font-size: var(--fs-h2); font-weight: 800; color: var(--ink); min-width: 0; }
+
+/* 夥伴「小墨」歡迎卡 */
+.cp-hello { display: flex; align-items: center; gap: var(--s3); padding: var(--s4);
+  background: var(--accent-tint); border: 1px solid var(--card-border); border-radius: var(--r-lg); margin-bottom: var(--s4); }
+.cp-hello .cp-bot { font-size: 46px; flex: none; line-height: 1; }
+.cp-hello .cp-bot.pop { animation: cp-pop 0.7s ease; }
+@keyframes cp-pop { 0%{transform:scale(1);} 40%{transform:scale(1.25) rotate(-8deg);} 100%{transform:scale(1);} }
+.cp-hello .cp-hello-text { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+.cp-hello .cp-hello-sub { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; }
+
+/* 安全提示條 */
+.cp-note {
+  display: flex; align-items: center; gap: var(--s2);
+  padding: 10px var(--s3); margin: 0 auto var(--s3); max-width: 42ch;
+  background: var(--accent-tint); border: 1px dashed var(--accent);
+  border-radius: var(--r-md); color: var(--ink); font-weight: 700; font-size: var(--fs-small);
+}
+.cp-note .cp-note-ico { font-size: 20px; flex: none; }
+
+/* 看圖寫話：用大 emoji 當「圖」 */
+.cp-scene { text-align: center; font-size: clamp(46px, 14vw, 72px); line-height: 1.1; margin: var(--s3) 0;
+  letter-spacing: 6px; }
+
+/* 範例／示範盒（worked example） */
+.cp-example { margin: var(--s2) auto var(--s3); max-width: 42ch; padding: var(--s3);
+  background: var(--card); border: 2px solid var(--card-border); border-radius: var(--r-md);
+  text-align: left; font-weight: 700; color: var(--ink); line-height: 1.7; }
+.cp-example b { color: var(--accent-ink); }
+
+/* 提示盒 */
+.cp-hintbox { margin: var(--s2) auto; max-width: 40ch; padding: var(--s2) var(--s3);
+  background: var(--accent-tint); border-radius: var(--r-md); font-size: var(--fs-small);
+  font-weight: 700; color: var(--ink); line-height: 1.6; display: none; text-align: left; }
+.cp-hintbox.show { display: block; }
+
+/* =========== 排排隊／排段落：可重用的 .order-game ============ */
+.order-game { display: grid; gap: var(--s3); margin: var(--s3) 0; }
+.og-lane-lbl { font-size: var(--fs-small); font-weight: 800; color: var(--ink-soft); text-align: left; }
+.og-slots { display: grid; gap: var(--s2); }
+.og-slot { display: flex; align-items: center; gap: var(--s2); width: 100%;
+  min-height: 52px; padding: 10px var(--s3); text-align: left;
+  border: 2px dashed var(--card-border); border-radius: 14px; background: var(--card);
+  color: var(--ink); font-family: var(--font); font-size: clamp(14px, 3.2vw, 17px); font-weight: 700; cursor: pointer; }
+.og-slot.filled { border-style: solid; border-color: var(--accent); background: var(--accent-tint); }
+.og-slot .og-num { flex: none; width: 26px; height: 26px; border-radius: 999px; background: var(--accent);
+  color: #1a1a1a; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+.og-slot .og-text { flex: 1; min-width: 0; }
+.og-slot.correct { border-color: var(--c-correct); background: var(--tint-english); }
+.og-slot.wrong { border-color: var(--c-wrong); }
+.og-bank { display: flex; flex-wrap: wrap; gap: var(--s2); justify-content: center;
+  padding: var(--s2); border-top: 1px dashed var(--card-border); }
+.og-chip { min-height: 48px; padding: 10px var(--s3); border: 2px solid var(--card-border); border-radius: 14px;
+  background: var(--card); color: var(--ink); font-family: var(--font); font-size: clamp(14px, 3.2vw, 17px);
+  font-weight: 700; cursor: pointer; max-width: 100%; }
+.og-chip:active { transform: scale(0.97); }
+.og-chip.used { display: none; }
+
+/* =========== 拼句（slot-fill）：逐槽從詞庫挑選拼句，引導式填空 ============ */
+/* 沿用 .order-game / .og-* 結構；差別在每個槽有「角色標籤」（誰／在哪裡…）當鷹架。 */
+.og-slot .og-role { flex: none; font-size: var(--fs-small); font-weight: 800; color: var(--accent-ink);
+  background: var(--accent-tint); border-radius: 999px; padding: 2px 10px; white-space: nowrap; }
+.og-slot.filled .og-role { opacity: 0.75; }
+.fill-reveal { margin: var(--s2) auto 0; max-width: 42ch; padding: var(--s2) var(--s3);
+  background: var(--card); border: 2px solid var(--accent); border-radius: var(--r-md);
+  font-weight: 800; color: var(--accent-ink); line-height: 1.7; text-align: center; }
+
+/* 檢核表（我的小作文自我檢核；不評分、不強制） */
+.cp-checklist { display: grid; gap: var(--s2); margin: var(--s3) auto; max-width: 42ch; text-align: left; }
+.cp-check { display: flex; align-items: center; gap: var(--s2); min-height: 48px; padding: 8px var(--s3);
+  border: 2px solid var(--card-border); border-radius: 14px; background: var(--card); color: var(--ink);
+  font-weight: 700; font-size: var(--fs-small); cursor: pointer; }
+.cp-check input { width: 24px; height: 24px; flex: none; accent-color: var(--accent); }
+.cp-check.on { border-color: var(--accent); background: var(--accent-tint); }
+.cp-textarea { width: 100%; min-height: 160px; resize: vertical; padding: var(--s3); border: 2px solid var(--card-border);
+  border-radius: var(--r-md); background: var(--card); color: var(--ink); font-family: var(--font);
+  font-size: var(--fs-body); font-weight: 600; line-height: 1.8; }
+.cp-topic { margin: 0 auto var(--s3); max-width: 42ch; padding: var(--s3); text-align: center;
+  background: var(--accent-tint); border-radius: var(--r-md); font-weight: 800; color: var(--ink); }
+
+/* 佳句收藏卡 */
+.cp-quote-card { margin: var(--s3) auto; max-width: 42ch; padding: var(--s4);
+  background: linear-gradient(135deg, var(--accent-tint), var(--card)); border: 2px solid var(--accent);
+  border-radius: var(--r-lg); color: var(--ink); font-weight: 700; font-size: var(--fs-body); line-height: 1.8; text-align: center; }
+.cp-quote-card .cp-quote-mark { font-size: 34px; color: var(--accent-ink); line-height: 1; }
+
+.cp-footnote { text-align: center; color: var(--ink-soft); font-size: var(--fs-small); margin-top: var(--s5); font-weight: 600; max-width: 34em; margin-inline: auto; }
+
+.u-card__blueprint { font-size: var(--fs-small); font-weight: 700; color: var(--accent-ink); }
+.cp-due { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 800;
+  color: var(--ink); background: var(--accent-tint); border-radius: 999px; padding: 2px 10px; }
+</style>
+</head>
+<body data-game-wired="chinese">
+<!-- ===== 共用頂部應用列（全站一致） ===== -->
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">小小作家 · 寫作工廠 ✍️</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle
+          aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+
+  <!-- ============================= 選單 / 首頁 ============================= -->
+  <section id="screen-menu" class="u-screen active">
+    <div class="cp-hello">
+      <span class="cp-bot" id="hello-bot" aria-hidden="true">🦉</span>
+      <div>
+        <div class="cp-hello-text" id="hello-text">嗨！我是小墨，我們一起從「詞」蓋到「句」，再蓋出一整篇文章吧！</div>
+        <div class="cp-hello-sub" id="hello-sub">選一項寫作工具，慢慢想沒關係，寫錯也不會扣分喔。</div>
+      </div>
+    </div>
+
+    <div class="cp-note">
+      <span class="cp-note-ico" aria-hidden="true">💡</span>
+      <span>這裡的金幣是「學習點數」，記錄你努力的成果，不是真的錢、也不能拿去買東西喔！答錯不會扣分，「我的小作文」更是想怎麼寫都可以。</span>
+    </div>
+
+    <div class="u-overview">
+      <div class="stat-tile"><span class="stat-value" id="ov-done">0/10</span><span class="stat-label">學會的工具</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-xp">0</span><span class="stat-label">國語經驗值</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-quotes">0</span><span class="stat-label">佳句收藏</span></div>
+    </div>
+
+    <div class="u-grid" id="unit-list"><!-- 由 JS 產生 --></div>
+
+    <a class="cn-nextup" href="chinese_advanced.html" style="display:flex;align-items:center;gap:12px;margin-top:16px;padding:14px 16px;background:var(--accent-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:26px;flex:none" aria-hidden="true">🚀</span><span>準備好了？挑戰「進階國文挑戰」→</span></a>
+    <a class="cn-nextup" href="chinese_concepts.html" style="display:flex;align-items:center;gap:12px;margin-top:10px;padding:14px 16px;background:var(--accent-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:26px;flex:none" aria-hidden="true">📖</span><span>← 先回「國語觀念養成」複習部首、標點</span></a>
+    <p class="cp-footnote">會判斷，就能學會自己寫！把好句子收進「佳句收藏冊」，寫作文時就有用不完的好材料。🖋️</p>
+  </section>
+
+  <!-- ============================= 進行中 ============================= -->
+  <section id="screen-play" class="u-screen">
+    <div class="cp-topbar">
+      <button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button>
+      <span class="cp-title" id="play-title">寫作工具</span>
+    </div>
+    <div class="q-progress" id="step-dots" aria-hidden="true"></div>
+    <div class="play-column">
+      <div id="stage"><!-- 由 JS 產生每一步 --></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---- 安全呼叫引擎（引擎已於 <head> 同步載入，仍防禦式檢查） ----
+  function record(correct) {
+    try { if (window.Game && Game.recordAnswer) Game.recordAnswer('chinese', !!correct); }
+    catch (e) { /* 靜默：不阻斷孩子的練習 */ }
+  }
+  function toast(msg, kind) { try { if (window.Game && Game.showToast) Game.showToast(msg, kind); } catch (e) {} }
+  function speak(text) {
+    /* 已移除 TTS：本頁非英文發音頁，不需朗讀 */
+  }
+  function botPop() { var b = document.getElementById('hello-bot'); if (b) { b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); } }
+
+  // ---- 本頁進度 + 輕量 Leitner（獨立 key，不碰 player_profile_v1 / vocab_srs） ----
+  var PROG_KEY = 'composition_progress_v1';
+  function loadProg() { try { return JSON.parse(localStorage.getItem(PROG_KEY)) || {}; } catch (e) { return {}; } }
+  function saveProg() { try { localStorage.setItem(PROG_KEY, JSON.stringify(progress)); } catch (e) {} }
+  var progress = loadProg(); // { units:{id:{done,best}}, leitner:{itemId:{box}}, quotes:{text:1} }
+  if (!progress.units) progress.units = {};
+  if (!progress.leitner) progress.leitner = {};
+  if (!progress.quotes) progress.quotes = {};
+
+  function quoteCount() { var n = 0; for (var k in progress.quotes) if (progress.quotes.hasOwnProperty(k)) n++; return n; }
+
+  // Leitner：答對晉級（上限 box3），答錯回 box1；box<3 視為「待複習」。
+  function leitnerUpdate(id, correct) {
+    if (!id) return;
+    var rec = progress.leitner[id] || { box: 2 };
+    if (correct) rec.box = Math.min(3, (rec.box || 2) + 1);
+    else rec.box = 1;
+    progress.leitner[id] = rec;
+    saveProg();
+  }
+  function dueItems() {
+    var out = [];
+    for (var id in progress.leitner) {
+      if (progress.leitner.hasOwnProperty(id) && progress.leitner[id].box < 3 && ITEM_REGISTRY[id]) out.push(id);
+    }
+    return out;
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  function shuffle(arr) {
+    for (var i = arr.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = arr[i]; arr[i] = arr[j]; arr[j] = t; }
+    return arr;
+  }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+  // =====================================================================
+  // 課程內容（全繁體中文）。計分步型別：choose / order。
+  // 非計分：fact（範例先行）、collect（佳句收藏）、freewrite（自由寫作，零評分）。
+  // 每個計分步只呼叫一次 record('chinese', ...)。
+  // 正確性：choose 干擾項一律「明顯不通」；order 只收唯一合理順序（時間／因果／關聯詞鎖定）。
+  // =====================================================================
+  var SCORED = { choose: 1, order: 1, fill: 1 };
+
+  var UNITS = [
+    // ---------------- U1：句子積木·擴句 ----------------
+    {
+      id: 'u1', emoji: '🧱', name: '句子積木·擴句', blueprint: '工具 1',
+      steps: [
+        { t: 'fact', bot: '把句子變清楚', s: '「擴句」就是幫句子加上「什麼樣的、怎麼樣地、在哪裡、什麼時候」，讓句子更清楚、更生動。',
+          exampleHtml: '原句：<b>鳥飛。</b><br>擴句：一群小鳥<b>在藍天上</b><b>快樂地</b>飛。',
+          more: '加詞語的時候要「通順」：讀起來順、意思對，才算把句子蓋得更漂亮。' },
+        { t: 'fill', s: '看小墨示範完，換你！照「幾隻→什麼樣的→誰→在哪裡→做什麼」把積木拼成一個更清楚的句子：',
+          slots: ['（幾隻）', '（什麼樣的）', '（誰）', '（在哪裡）', '（做什麼）'],
+          answer: ['一隻', '可愛的', '小狗', '在草地上', '奔跑'],
+          reveal: '一隻可愛的小狗在草地上奔跑。',
+          why: '把「幾隻、什麼樣的、誰、在哪裡、做什麼」按順序拼起來，就是又清楚又通順的句子。（「一隻」是數量，「可愛的」才是形容小狗的樣子）' },
+        { t: 'fill', s: '再拼一句（這次多了一塊用不到的積木，別被騙囉）：照「什麼時候→誰→怎麼樣地→做什麼」拼好。',
+          slots: ['（什麼時候）', '（誰）', '（怎麼樣地）', '（做什麼）'],
+          answer: ['清晨', '農夫', '辛勤地', '工作'], extra: ['甜甜的'],
+          reveal: '清晨，農夫辛勤地工作。',
+          why: '「清晨＋農夫＋辛勤地＋工作」拼起來最通順；「甜甜的」放進任何一格都不通順，是多出來的積木。' },
+        { t: 'choose', s: '「一隻可愛的小狗在草地上奔跑。」哪個詞是在形容「小狗」長什麼樣子？',
+          opts: ['可愛的', '在草地上', '奔跑', '一隻'], ans: 0,
+          why: '「可愛的」形容小狗的樣子；「在草地上」是地點、「奔跑」是動作、「一隻」是數量。' },
+        { t: 'choose', s: '想讓「妹妹唱歌。」更生動，加上哪個詞語最合適又通順？',
+          opts: ['開心地', '桌子上面', '一台', '綠色的'], ans: 0,
+          why: '「妹妹開心地唱歌」通順又生動；其他放進去都不通順。' },
+        { t: 'choose', s: '下面哪一句「擴充」得最完整（有：什麼樣的＋在哪裡＋做什麼）？',
+          opts: ['美麗的蝴蝶在花園裡飛舞。', '蝴蝶。', '飛舞花園。', '蝴蝶蝴蝶飛。'], ans: 0,
+          why: '「美麗的（樣子）＋在花園裡（地點）＋飛舞（動作）」三樣都有，最完整。' }
+      ]
+    },
+
+    // ---------------- U2：句子瘦身·縮句 ----------------
+    {
+      id: 'u2', emoji: '✂️', name: '句子瘦身·縮句', blueprint: '工具 2',
+      steps: [
+        { t: 'fact', bot: '只留主幹', s: '「縮句」和擴句相反：只留下「誰＋做什麼（＋什麼）」的主幹，把形容、地點、時間都拿掉。',
+          exampleHtml: '長句：可愛的小貓<b>在沙發上</b><b>開心地</b>睡覺。<br>縮句：<b>小貓睡覺。</b>',
+          more: '問自己兩個問題：「誰？」「做什麼？」剩下的修飾詞先拿掉，就找到主幹了。' },
+        { t: 'choose', s: '「一隻美麗的蝴蝶在花園裡輕輕地飛舞。」縮句（只留主幹）後是？',
+          opts: ['蝴蝶飛舞。', '美麗的蝴蝶飛舞。', '蝴蝶在花園裡飛舞。', '花園飛舞。'], ans: 0,
+          why: '主幹是「誰（蝴蝶）＋做什麼（飛舞）」，形容、地點都要拿掉。' },
+        { t: 'choose', s: '「勤勞的農夫在田裡辛苦地工作。」縮句後是？',
+          opts: ['農夫工作。', '勤勞的農夫工作。', '農夫在田裡工作。', '田裡工作。'], ans: 0,
+          why: '只留「農夫（誰）＋工作（做什麼）」，其他都是修飾詞。' },
+        { t: 'choose', s: '「可愛的小妹妹甜甜地笑了。」縮句後是？',
+          opts: ['妹妹笑了。', '小妹妹甜甜地笑。', '可愛的妹妹笑。', '甜甜地笑。'], ans: 0,
+          why: '主幹是「妹妹（誰）＋笑了（做什麼）」，「可愛的、甜甜地」都拿掉。' },
+        { t: 'choose', s: '縮句的時候，下面哪一種詞語應該「拿掉」？',
+          opts: ['形容樣子、地點、時間的詞', '句子裡的「誰」', '句子裡「做什麼」的動作', '整個主幹'], ans: 0,
+          why: '縮句只留主幹（誰＋做什麼），要拿掉的是形容、地點、時間這些修飾詞。' }
+      ]
+    },
+
+    // ---------------- U3：句型範式 ----------------
+    {
+      id: 'u3', emoji: '🧩', name: '句型範式', blueprint: '工具 3',
+      steps: [
+        { t: 'fact', bot: '認識句型', s: '常見的句型有：把字句、被字句、問句、驚嘆句。認得它們，寫句子就更靈活。',
+          exampleHtml: '把字句：弟弟<b>把</b>蛋糕吃光了。<br>被字句：蛋糕<b>被</b>弟弟吃光了。<br>問句：你吃過了<b>嗎</b>？　驚嘆句：好好吃<b>啊</b>！',
+          more: '「把字句」強調「動作的人怎麼處理東西」；「被字句」強調「東西被怎麼樣了」。' },
+        { t: 'choose', s: '「弟弟把蛋糕吃光了。」這是哪一種句型？',
+          opts: ['把字句', '被字句', '問句'], ans: 0,
+          why: '句子裡有「把」，是「把字句」。' },
+        { t: 'choose', s: '把「小明打破了花瓶。」改寫成「被」字句，正確又意思一樣的是？',
+          opts: ['花瓶被小明打破了。', '小明被花瓶打破了。', '花瓶把小明打破了。'], ans: 0,
+          why: '被字句要說「東西（花瓶）＋被＋做動作的人（小明）＋動作」，意思才一樣。' },
+        { t: 'choose', s: '下面哪一句是「問句」？',
+          opts: ['你今天有沒有寫功課？', '我今天寫完功課了。', '快去寫功課！'], ans: 0,
+          why: '「有沒有……？」在問人，句尾有問號，是問句。' },
+        { t: 'choose', s: '下面哪一句是「驚嘆句」（表達強烈的心情）？',
+          opts: ['這場煙火好美啊！', '煙火在天上。', '你看過煙火嗎？'], ans: 0,
+          why: '「好美啊！」表達強烈的驚嘆心情，句尾有驚嘆號。' },
+        { t: 'choose', s: '「這本書被我看完了。」句子裡「做動作的人」是誰？',
+          opts: ['我', '書', '看完'], ans: 0,
+          why: '被字句裡，「被」後面的「我」才是做動作的人。' }
+      ]
+    },
+
+    // ---------------- U4：關聯詞高手 ----------------
+    {
+      id: 'u4', emoji: '🔗', name: '關聯詞高手', blueprint: '工具 4',
+      steps: [
+        { t: 'fact', bot: '把兩件事連起來', s: '關聯詞把兩件事連起來，說清楚它們的關係。',
+          exampleHtml: '因為……所以……（原因）<br>雖然……但是……（轉折）<br>如果……就……（假設）<br>不但……而且……（遞進）<br>只要……就……（條件）',
+          more: '選關聯詞要先想：這兩件事是「原因、相反、假設、還是更進一步」的關係？' },
+        { t: 'choose', s: '「＿＿天氣很冷，＿＿他還是堅持去晨跑。」填哪一組最合適？',
+          opts: ['雖然……但是……', '因為……所以……', '如果……就……'], ans: 0,
+          why: '天氣冷卻還是去跑，前後相反，用轉折的「雖然……但是……」。' },
+        { t: 'choose', s: '「＿＿明天不下雨，我們＿＿去爬山。」填哪一組？',
+          opts: ['如果……就……', '雖然……但是……', '不但……而且……'], ans: 0,
+          why: '「明天會不會下雨」還不確定，是假設，用「如果……就……」。' },
+        { t: 'choose', s: '「他＿＿功課好，＿＿很會打球。」填哪一組？',
+          opts: ['不但……而且……', '因為……所以……', '雖然……但是……'], ans: 0,
+          why: '功課好又會打球，是更進一步（遞進），用「不但……而且……」。' },
+        { t: 'choose', s: '「＿＿昨天生病了，＿＿小華今天沒來上課。」填哪一組？',
+          opts: ['因為……所以……', '雖然……但是……', '如果……就……'], ans: 0,
+          why: '生病是原因、沒來是結果，用「因為……所以……」。' },
+        { t: 'choose', s: '「只要多練習，成績就會進步。」這句話在說什麼關係？',
+          opts: ['條件（只要……就……）', '轉折（雖然……但是……）', '原因（因為……所以……）'], ans: 0,
+          why: '「只要……就……」表示達到某個條件，就會有結果，是條件關係。' }
+      ]
+    },
+
+    // ---------------- U5：佳句仿寫＋佳句收藏冊 ----------------
+    {
+      id: 'u5', emoji: '🌟', name: '佳句仿寫＋收藏冊', blueprint: '工具 5',
+      steps: [
+        { t: 'fact', bot: '讓句子更美', s: '修辭讓句子更美：譬喻（用「像／好像」比一比）、擬人（把東西當人）、排比（三個結構一樣的句子並排）。',
+          exampleHtml: '譬喻：月亮<b>像</b>一條小船。<br>擬人：小草向我<b>點頭</b>。<br>排比：讀書使我快樂，運動使我健康，交友使我成長。',
+          more: '小提醒：句子裡有「像／好像／彷彿」把一樣東西比成另一樣，是最好認的譬喻（明喻）；等你更大還會學到不用「像」的譬喻（如「時間是金錢」）。把東西當人（會做人的動作）則是擬人。別把它們弄混囉。' },
+        { t: 'choose', s: '下面哪一句用了「譬喻」（用「像／好像」把一樣東西比成另一樣）？',
+          opts: ['彎彎的月亮像一條小船。', '月亮升上了天空。', '我抬頭看月亮。'], ans: 0,
+          why: '「月亮像一條小船」用「像」把月亮比成小船，是譬喻。' },
+        { t: 'choose', s: '「小草在微風中向我點頭。」用了什麼修辭？',
+          opts: ['擬人（把小草當人）', '譬喻', '排比'], ans: 0,
+          why: '「點頭」是人的動作，把小草當成人，是擬人。' },
+        { t: 'choose', s: '下面哪一句是「排比」（三個結構相同的句子並排）？',
+          opts: ['讀書使我快樂，運動使我健康，交友使我成長。', '我很喜歡讀書。', '讀書好像爬山。'], ans: 0,
+          why: '三個「……使我……」結構相同、並排在一起，是排比。' },
+        { t: 'choose', s: '仿照「棉花糖像白雲一樣軟」的譬喻，下面哪一句也是譬喻？',
+          opts: ['湖水像一面鏡子。', '湖水很清澈。', '我在湖邊散步。'], ans: 0,
+          why: '「湖水像一面鏡子」用「像」比一比，和例句一樣是譬喻。' },
+        { t: 'collect', bot: '收進收藏冊', s: '你已經會分辨修辭了！把這句漂亮的譬喻收進「佳句收藏冊」，以後寫作文就能用上。',
+          quote: '彎彎的月亮像一條小船，載著我的夢，慢慢劃向天空。' }
+      ]
+    },
+
+    // ---------------- U6：句子排排隊（排序） ----------------
+    {
+      id: 'u6', emoji: '🚋', name: '句子排排隊', blueprint: '工具 6',
+      steps: [
+        { t: 'fact', bot: '照順序排好', s: '把打散的句子照「時間或道理」的順序排好，故事讀起來才通順。',
+          exampleHtml: '找線索：<b>先……接著……然後……最後……</b>；或<b>早上／中午／晚上</b>這些時間詞。',
+          more: '看到「最後、然後、接著」這些詞，就知道哪句在前、哪句在後了。' },
+        { t: 'order', s: '把這幾句照「時間順序」排成通順的一段話：',
+          items: ['早上，我起床刷牙洗臉。', '接著，我吃完了早餐。', '然後，我背起書包出門。', '最後，我開心地走進學校。'],
+          why: '照「早上→接著→然後→最後」的時間順序排，就通順了。' },
+        { t: 'order', s: '把這幾句照「事情發生的順序」排好：',
+          items: ['天空忽然烏雲密布。', '接著下起了大雨。', '我趕快躲進屋簷下。', '雨停後，天邊出現了美麗的彩虹。'],
+          why: '先烏雲、再下雨、躲雨、最後雨停出現彩虹，是事情發生的先後順序。' },
+        { t: 'order', s: '照「做事的步驟」把煮麵條的過程排好：',
+          items: ['奶奶先把麵粉加水揉成麵團。', '再把麵團擀平，切成細條。', '然後放進滾燙的熱水裡煮。', '不久，香噴噴的麵條就煮好了。'],
+          why: '「先揉→再擀切→然後煮→最後煮好」，照做事的步驟排才對。' }
+      ]
+    },
+
+    // ---------------- U7：看圖寫話 ----------------
+    {
+      id: 'u7', emoji: '🖼️', name: '看圖寫話', blueprint: '工具 7',
+      steps: [
+        { t: 'fact', bot: '看圖問四件事', s: '看圖說話，先問自己四件事：誰？在哪裡？在做什麼？心情怎麼樣？把它們串成一句話就好了。',
+          sceneHtml: '🧒⚽🌳',
+          exampleHtml: '這張圖：一個男孩（誰）在公園的樹下（在哪裡）踢足球（做什麼），玩得很開心（心情）。',
+          more: '把「誰＋在哪裡＋做什麼」說清楚，句子就完整了；再加上心情會更生動。' },
+        { t: 'fill', s: '看這張圖，用積木拼出「誰＋在哪裡＋做什麼」的句子（有一塊和圖不合，別放進去）：',
+          sceneHtml: '👦🎣🏞️',
+          slots: ['（誰）', '（在哪裡）', '（做什麼）'],
+          answer: ['一個男孩', '在河邊', '釣魚'], extra: ['寫作業'],
+          reveal: '一個男孩在河邊釣魚。',
+          why: '圖上是男孩在河邊釣魚，所以拼成「一個男孩＋在河邊＋釣魚」；「寫作業」和圖不合，是多出來的積木。' },
+        { t: 'choose', s: '看這張圖，哪一句把「誰、在哪、做什麼」說得最清楚？', sceneHtml: '🧒⚽🌳',
+          opts: ['一個男孩在公園的樹下踢足球。', '踢。', '足球男孩。', '男孩。'], ans: 0,
+          why: '「男孩（誰）＋在公園的樹下（在哪）＋踢足球（做什麼）」最完整清楚。' },
+        { t: 'choose', s: '看這張圖，哪一句最符合又最完整？', sceneHtml: '👧🌧️☂️',
+          opts: ['下雨天，小女孩撐著雨傘走路。', '雨。', '女孩傘。', '走。'], ans: 0,
+          why: '把時間（下雨天）、誰（小女孩）、做什麼（撐傘走路）都說清楚了。' },
+        { t: 'choose', s: '看這張圖，哪一句寫得最完整？', sceneHtml: '👦📖🛋️',
+          opts: ['哥哥坐在沙發上看書。', '看書。', '哥哥書。', '沙發。'], ans: 0,
+          why: '「哥哥（誰）＋坐在沙發上（在哪）＋看書（做什麼）」最完整。' },
+        { t: 'choose', s: '看這張圖，哪一句把「做什麼」和「心情」都說出來了？', sceneHtml: '👩‍🍳🍳😊',
+          opts: ['媽媽開心地在廚房煎蛋。', '蛋。', '媽媽蛋。', '煎。'], ans: 0,
+          why: '「開心地（心情）＋在廚房（在哪）＋煎蛋（做什麼）」都說到了。' }
+      ]
+    },
+
+    // ---------------- U8：段落建築師（排序） ----------------
+    {
+      id: 'u8', emoji: '🏗️', name: '段落建築師', blueprint: '工具 8',
+      steps: [
+        { t: 'fact', bot: '一段話的骨架', s: '一個段落有骨架：先寫「主題句」（這段在講什麼），中間用「說明句」舉例，最後用「結尾句」收起來。',
+          exampleHtml: '主題句：我最喜歡的水果是西瓜。<br>說明句：因為它又紅又甜／夏天吃最消暑。<br>結尾句：所以我每年夏天都很期待西瓜。',
+          more: '主題句放最前面當開頭，結尾句放最後把整段收好，中間才放舉例說明的句子。' },
+        { t: 'choose', s: '這一段要介紹「我最喜歡的水果」。哪一句最適合當「主題句」（放在最前面）？',
+          opts: ['我最喜歡的水果是西瓜。', '它紅紅的，吃起來很甜。', '所以每到夏天我都會吃西瓜。'], ans: 0,
+          why: '主題句要先講「這段在說什麼」，「我最喜歡的水果是西瓜」最適合當開頭。' },
+        { t: 'order', s: '把這幾句排成一段通順的話（先主題、再說明、最後收尾）：',
+          items: ['我最喜歡的季節是夏天。', '因為夏天可以到海邊玩水。', '還可以吃到冰涼的西瓜。', '所以我每年都好期待夏天的到來。'],
+          why: '主題句（最喜歡夏天）→說明（因為…、還可以…）→結尾（所以…期待），一段就完整了。' },
+        { t: 'order', s: '再排一段：介紹「我的好朋友」。',
+          items: ['我的好朋友小明很熱心。', '有一次我忘了帶鉛筆，他立刻借我。', '還有一次，同學跌倒了，他也趕快去扶。', '有這樣的好朋友，我覺得很幸運。'],
+          why: '主題句（小明很熱心）→第一個例子（借鉛筆）→用「還有一次」接第二個例子（扶同學）→結尾（覺得很幸運）；「還有一次」要放在第一個例子後面才通順。' }
+      ]
+    },
+
+    // ---------------- U9：起承轉合入門 ----------------
+    {
+      id: 'u9', emoji: '🎬', name: '起承轉合入門', blueprint: '工具 9',
+      steps: [
+        { t: 'fact', bot: '把一件事分四格', s: '寫一件事可以分成四格：起（開頭，交代時間地點人物）、承（經過，事情怎麼開始）、轉（高潮，最特別或意想不到的一刻）、合（結尾，結果和心情）。',
+          exampleHtml: '起：星期天，我到公園騎腳踏車。<br>承：一開始，我騎得又穩又順。<br>轉：忽然衝出一隻小狗，我差點跌倒。<br>合：還好及時煞車，我學會騎車要小心。',
+          more: '「轉」是最精彩的一格，寫最特別、最讓你意外的那一刻，故事才好看。' },
+        { t: 'choose', s: '寫一件事分成四格，「轉」這一格通常寫什麼？',
+          opts: ['最特別或意想不到的一刻', '開頭交代時間和地點', '結尾的結果和心情'], ans: 0,
+          why: '「轉」是故事的高潮，寫最特別、最意外的那一刻。' },
+        { t: 'order', s: '照「起→承→轉→合」把這件事排好：',
+          items: ['星期天，我和爸爸到公園騎腳踏車。', '一開始，我騎得又穩又順。', '忽然，前面衝出一隻小狗，我緊張得差點跌倒。', '還好我及時煞車，這件事讓我學會騎車要更小心。'],
+          why: '起（星期天到公園）→承（一開始很順）→轉（忽然衝出小狗）→合（及時煞車、學到教訓）。' },
+        { t: 'order', s: '再排一件事：學做蛋炒飯。',
+          items: ['昨天中午，媽媽說要教我做蛋炒飯。', '我先照著步驟把蛋打散、下鍋。', '沒想到火太大，飯差點燒焦了。', '最後在媽媽幫忙下完成，我覺得下廚真不簡單。'],
+          why: '起（昨天中午要學）→承（先照步驟做）→轉（沒想到差點燒焦）→合（完成、覺得不簡單）。' }
+      ]
+    },
+
+    // ---------------- U10：我的小作文（自由寫作，零評分） ----------------
+    {
+      id: 'u10', emoji: '📓', name: '我的小作文', blueprint: '工具 10',
+      steps: [
+        { t: 'fact', bot: '自由寫作區', s: '這裡是你的「自由寫作區」：想怎麼寫都可以，不會被打分數、不會比對答案，寫錯也完全沒關係！',
+          exampleHtml: '寫完後，用下面的「檢核表」自己勾一勾，看看有沒有做到，就完成任務囉。這是給你和爸媽一起看的，不是考試。',
+          more: '寫作最重要的是「敢寫、願意寫」。慢慢來，把想說的話寫下來就很棒了。' },
+        { t: 'freewrite', s: '題目：《一件開心的事》', topic: '想一件讓你開心的事，用「起承轉合」把它寫下來吧！',
+          checklist: [
+            '我有寫出「開頭」（什麼時候、在哪裡、發生什麼事）',
+            '我有寫出「經過」和「最特別的一刻」',
+            '我有寫出「結尾」的結果和心情',
+            '我用了至少一個關聯詞或一句佳句'
+          ] }
+      ]
+    },
+
+    // ---------------- REVIEW：綜合複習（交錯 + Leitner） ----------------
+    { id: 'review', emoji: '🔁', name: '綜合複習（交錯練習）', blueprint: '複習關卡', review: true, steps: [] }
+  ];
+
+  // ---- 建立題目登錄簿（供 Leitner 複習調用）：id = unitId#index（僅計分步） ----
+  var ITEM_REGISTRY = {};
+  (function buildRegistry() {
+    for (var u = 0; u < UNITS.length; u++) {
+      var unit = UNITS[u];
+      if (unit.review) continue;
+      for (var i = 0; i < unit.steps.length; i++) {
+        var st = unit.steps[i];
+        if (SCORED[st.t]) { st.id = unit.id + '#' + i; ITEM_REGISTRY[st.id] = st; }
+      }
+    }
+  })();
+
+  // 動態組出複習關卡：先放待複習（box<3）題，交錯打散；不足再補新鮮題。
+  function buildReviewSteps() {
+    var ids = shuffle(dueItems().slice());
+    var steps = [];
+    for (var i = 0; i < ids.length && steps.length < 8; i++) steps.push(ITEM_REGISTRY[ids[i]]);
+    if (steps.length < 5) {
+      var pool = [];
+      for (var id in ITEM_REGISTRY) if (ITEM_REGISTRY.hasOwnProperty(id) && steps.indexOf(ITEM_REGISTRY[id]) === -1) pool.push(ITEM_REGISTRY[id]);
+      shuffle(pool);
+      for (var k = 0; k < pool.length && steps.length < 6; k++) steps.push(pool[k]);
+    }
+    shuffle(steps);
+    return steps;
+  }
+
+  // =====================================================================
+  // DOM 參照
+  // =====================================================================
+  var screenMenu = $('screen-menu'), screenPlay = $('screen-play');
+  var unitList = $('unit-list'), stage = $('stage'), stepDots = $('step-dots'), playTitle = $('play-title');
+  var cur = null;
+
+  function scoringSteps(steps) { var n = 0; for (var i = 0; i < steps.length; i++) if (SCORED[steps[i].t]) n++; return n; }
+
+  // =====================================================================
+  // 選單渲染
+  // =====================================================================
+  function renderMenu() {
+    var doneCount = 0, playable = 0;
+    for (var i = 0; i < UNITS.length; i++) {
+      if (UNITS[i].review) continue;
+      playable++;
+      if (progress.units[UNITS[i].id] && progress.units[UNITS[i].id].done) doneCount++;
+    }
+    $('ov-done').textContent = doneCount + '/' + playable;
+
+    var p = null;
+    try { p = window.Game && Game.getProfile ? Game.getProfile() : null; } catch (e) {}
+    $('ov-xp').textContent = (p && p.subjects && p.subjects.chinese ? p.subjects.chinese.xp : 0);
+    $('ov-quotes').textContent = quoteCount();
+    var due = dueItems().length;
+
+    if (doneCount > 0) {
+      $('hello-text').textContent = '歡迎回來，小作家！你已經學會 ' + doneCount + ' 項寫作工具了！';
+      $('hello-sub').textContent = doneCount >= playable ? '每一項工具都學會了，太厲害了！去「綜合複習」把它們磨得更熟吧。🏆' : '接著挑戰還沒學過的工具吧！';
+    }
+
+    unitList.innerHTML = '';
+    for (var u = 0; u < UNITS.length; u++) {
+      (function (unit) {
+        var st = progress.units[unit.id] || {};
+        var done = !!st.done;
+        var stars = st.best || 0;
+        var total = unit.review ? 0 : scoringSteps(unit.steps);
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'card u-card' + (unit.review ? ' is-flagship' : '');
+        card.setAttribute('aria-label', unit.blueprint + '：' + unit.name);
+        var dots = '';
+        for (var d = 0; d < total; d++) dots += '<i class="' + (d < stars ? 'on' : '') + '"></i>';
+        var footRight = unit.review
+          ? '<span class="cp-due">🔁 待複習 ' + due + ' 題</span>'
+          : (total > 0 ? '<span class="u-card__dots" aria-hidden="true">' + dots + '</span>' : '');
+        card.innerHTML =
+          '<div class="u-card__top">' +
+            '<span class="u-card__icon" aria-hidden="true">' + unit.emoji + '</span>' +
+            '<div>' +
+              '<div class="u-card__blueprint">' + unit.blueprint + '</div>' +
+              '<div class="u-card__name">' + unit.name + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="u-card__foot">' +
+            '<span class="u-card__status ' + (done ? 'done' : 'todo') + '">' + (done ? '✅ 學會了' : ((unit.review || !total) ? '▶️ 開始學' : '▶️ 開始學（共 ' + total + ' 題）')) + '</span>' +
+            footRight +
+          '</div>';
+        card.addEventListener('click', function () { startUnit(unit); });
+        unitList.appendChild(card);
+      })(UNITS[u]);
+    }
+  }
+
+  // =====================================================================
+  // 遊玩流程
+  // =====================================================================
+  function show(screen) {
+    screenMenu.classList.remove('active'); screenPlay.classList.remove('active');
+    screen.classList.add('active'); window.scrollTo(0, 0);
+  }
+
+  function startUnit(unit) {
+    var steps = unit.review ? buildReviewSteps() : unit.steps;
+    if (unit.review && !steps.length) {
+      toast('目前沒有需要複習的題目，先去學新的寫作工具吧！', 'info');
+      return;
+    }
+    cur = { unit: unit, idx: 0, correctCount: 0, total: scoringSteps(steps), steps: steps };
+    playTitle.textContent = unit.emoji + ' ' + unit.name;
+    show(screenPlay);
+    renderStep();
+  }
+
+  function renderStepDots() {
+    stepDots.innerHTML = '';
+    for (var i = 0; i < cur.steps.length; i++) {
+      var b = document.createElement('i');
+      if (i < cur.idx) b.className = 'on';
+      else if (i === cur.idx) b.className = 'cur';
+      stepDots.appendChild(b);
+    }
+  }
+
+  function next() { cur.idx++; if (cur.idx >= cur.steps.length) finishUnit(); else renderStep(); }
+
+  function ttsButton(text) {
+    /* 已移除 TTS：本頁非英文發音頁，不再顯示朗讀按鈕 */
+    return '';
+  }
+  function bindTts(root) {
+    /* 已移除 TTS：本頁非英文發音頁，無朗讀按鈕可綁定 */
+  }
+
+  function scoreOnce(step, correct) {
+    record(correct);
+    leitnerUpdate(step.id, correct);
+    if (correct) cur.correctCount++;
+  }
+
+  function renderStep() {
+    renderStepDots();
+    var step = cur.steps[cur.idx];
+    var fn = { fact: renderFact, choose: renderChoose, order: renderOrder, fill: renderFill, collect: renderCollect, freewrite: renderFreewrite }[step.t];
+    if (fn) fn(step); else next();
+  }
+
+  // 通用：範例／情境圖 HTML（放在題目上方）
+  function stageVisual(step) {
+    var h = '';
+    if (step.sceneHtml) h += '<div class="cp-scene" aria-hidden="true">' + step.sceneHtml + '</div>';
+    return h;
+  }
+
+  // ---- fact（非計分：示範／範例先行） ----
+  function renderFact(step) {
+    stage.innerHTML =
+      '<div class="q-stage">' +
+        stageVisual(step) +
+        '<p class="q-prompt">' + step.s + '</p>' +
+        (step.exampleHtml ? '<div class="cp-example">' + step.exampleHtml + '</div>' : '') +
+        '<div class="q-toolrow">' + ttsButton(step.s) +
+          (step.more ? '<button type="button" class="btn" id="btn-more">💡 小墨說更多</button>' : '') + '</div>' +
+        (step.more ? '<div class="cp-hintbox" id="reveal">' + step.more + '</div>' : '') +
+      '</div>' +
+      '<div class="q-actions"><button type="button" class="btn btn-primary btn-block" id="btn-next">開始挑戰 ➡️</button></div>';
+    bindTts(stage);
+    if (step.more) $('btn-more').addEventListener('click', function () { $('reveal').classList.add('show'); speak(step.more); });
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // ---- choose（tap-pick；干擾項一律明顯不通，恰一正解） ----
+  function renderChoose(step) {
+    var order = [];
+    for (var oi = 0; oi < step.opts.length; oi++) order.push(oi);
+    shuffle(order);
+    var optsHtml = '';
+    for (var k = 0; k < order.length; k++) {
+      var oi2 = order[k];
+      optsHtml += '<button type="button" class="q-opt" data-i="' + oi2 + '">' +
+        '<span>' + step.opts[oi2] + '</span><span class="q-opt__mark" aria-hidden="true"></span></button>';
+    }
+    stage.innerHTML =
+      '<div class="q-stage">' +
+        stageVisual(step) +
+        '<p class="q-prompt">' + step.s + '</p>' +
+        '<div class="q-toolrow">' + ttsButton(step.s) + '</div>' +
+        '<div class="q-options">' + optsHtml + '</div>' +
+        '<div class="q-feedback" id="reveal"></div>' +
+      '</div>' +
+      '<div class="q-actions" id="afteract" style="display:none">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">繼續 ➡️</button></div>';
+    bindTts(stage);
+
+    var answered = false;
+    var btns = stage.querySelectorAll('.q-opt');
+    for (var b = 0; b < btns.length; b++) {
+      btns[b].addEventListener('click', function () {
+        var i = parseInt(this.getAttribute('data-i'), 10);
+        var isCorrect = (i === step.ans);
+        var markEl = this.querySelector('.q-opt__mark');
+        if (answered) {
+          this.classList.add(isCorrect ? 'correct' : 'wrong');
+          if (markEl) markEl.textContent = isCorrect ? '✅' : '❌';
+          return;
+        }
+        answered = true;
+        scoreOnce(step, isCorrect);
+        if (isCorrect) {
+          this.classList.add('correct'); if (markEl) markEl.textContent = '✅';
+        } else {
+          this.classList.add('wrong'); if (markEl) markEl.textContent = '❌';
+          var correctBtn = stage.querySelector('.q-opt[data-i="' + step.ans + '"]');
+          if (correctBtn) { correctBtn.classList.add('correct'); var m2 = correctBtn.querySelector('.q-opt__mark'); if (m2) m2.textContent = '✅'; }
+        }
+        var rev = $('reveal');
+        rev.innerHTML = (isCorrect ? '答對了！' : '沒關係，再看看喔～答案是這個！') + (step.why || '');
+        rev.classList.add('show', isCorrect ? 'is-ok' : 'is-no');
+        $('afteract').style.display = 'flex';
+        var all = stage.querySelectorAll('.q-opt'); for (var q = 0; q < all.length; q++) all[q].disabled = true;
+        if (isCorrect) toast('說得對！✍️', 'badge');
+      });
+    }
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // ---- order（句／段排序：點卡片進編號槽；只收唯一合理順序） ----
+  function renderOrder(step) {
+    var n = step.items.length;
+    var display = shuffle(n === 0 ? [] : (function () { var a = []; for (var i = 0; i < n; i++) a.push(i); return a; })());
+    var slots = [];              // slots[slotIndex] = 原始正解索引 or -1
+    for (var s = 0; s < n; s++) slots.push(-1);
+    var answered = false;
+
+    stage.innerHTML =
+      '<div class="q-stage">' +
+        '<p class="q-prompt">' + step.s + '</p>' +
+        '<div class="q-toolrow">' + ttsButton(step.s) + '</div>' +
+        '<div class="order-game">' +
+          '<div class="og-lane-lbl">① 點卡片，照順序放進格子（點格子可以拿回來）</div>' +
+          '<div class="og-slots" id="og-slots"></div>' +
+          '<div class="og-bank" id="og-bank"></div>' +
+        '</div>' +
+        '<div class="q-feedback" id="reveal"></div>' +
+      '</div>' +
+      '<div class="q-actions">' +
+        '<button type="button" class="btn btn-primary" id="btn-check">排好了，檢查 ✓</button>' +
+        '<button type="button" class="btn btn-primary" id="btn-next" style="display:none">繼續 ➡️</button></div>';
+    bindTts(stage);
+
+    function firstEmpty() { for (var i = 0; i < slots.length; i++) if (slots[i] === -1) return i; return -1; }
+    function redraw() {
+      var slotHtml = '';
+      for (var i = 0; i < slots.length; i++) {
+        var filled = slots[i] !== -1;
+        slotHtml += '<button type="button" class="og-slot' + (filled ? ' filled' : '') + '" data-slot="' + i + '"' +
+          (answered ? ' disabled' : '') + '>' +
+          '<span class="og-num">' + (i + 1) + '</span>' +
+          '<span class="og-text">' + (filled ? esc(step.items[slots[i]]) : '（點下面的句子放進來）') + '</span></button>';
+      }
+      $('og-slots').innerHTML = slotHtml;
+      var bankHtml = '';
+      for (var d = 0; d < display.length; d++) {
+        var idx = display[d];
+        var used = slots.indexOf(idx) !== -1;
+        bankHtml += '<button type="button" class="og-chip' + (used ? ' used' : '') + '" data-idx="' + idx + '"' +
+          (answered ? ' disabled' : '') + '>' + esc(step.items[idx]) + '</button>';
+      }
+      $('og-bank').innerHTML = bankHtml;
+      bind();
+    }
+    function bind() {
+      if (answered) return;
+      var chips = $('og-bank').querySelectorAll('.og-chip');
+      for (var c = 0; c < chips.length; c++) chips[c].addEventListener('click', function () {
+        if (answered) return;
+        var idx = parseInt(this.getAttribute('data-idx'), 10);
+        if (slots.indexOf(idx) !== -1) return;
+        var e = firstEmpty(); if (e === -1) return;
+        slots[e] = idx; redraw();
+      });
+      var sl = $('og-slots').querySelectorAll('.og-slot');
+      for (var s2 = 0; s2 < sl.length; s2++) sl[s2].addEventListener('click', function () {
+        if (answered) return;
+        var i = parseInt(this.getAttribute('data-slot'), 10);
+        if (slots[i] !== -1) { slots[i] = -1; redraw(); }
+      });
+    }
+
+    $('btn-check').addEventListener('click', function () {
+      if (answered) return;
+      if (firstEmpty() !== -1) { toast('先把每一格都放滿句子喔！', 'info'); return; }
+      // 正解＝原始索引 0,1,2,...（items 已按正確順序排）。可選 step.accept 提供替代順序。
+      var got = slots.join(',');
+      var accepts = step.accept ? step.accept.slice() : [];
+      var canonical = []; for (var i = 0; i < n; i++) canonical.push(i);
+      accepts.push(canonical);
+      var ok = false;
+      for (var a = 0; a < accepts.length; a++) if (accepts[a].join(',') === got) { ok = true; break; }
+      answered = true;
+      scoreOnce(step, ok);
+      if (!ok) { for (var j = 0; j < slots.length; j++) slots[j] = j; } // 演示正解
+      redraw();
+      var sl = $('og-slots').querySelectorAll('.og-slot');
+      for (var k = 0; k < sl.length; k++) sl[k].classList.add(ok ? 'correct' : 'wrong');
+      var rev = $('reveal');
+      rev.innerHTML = (ok ? '排對了！' : '沒關係～正確的順序是這樣喔！') + (step.why || '');
+      rev.classList.add('show', ok ? 'is-ok' : 'is-no');
+      this.style.display = 'none'; $('btn-next').style.display = 'inline-flex';
+      if (ok) { toast('順序排得真好！🚋', 'badge'); botPop(); }
+    });
+    $('btn-next').addEventListener('click', next);
+    redraw();
+  }
+
+  // ---- fill（拼句：逐槽從詞庫挑選，引導式填空；恰一正解、完成後揭示範例＝生成效應） ----
+  // step: { t:'fill', s, slots:['（誰）',...], answer:['小狗',...], extra:[干擾詞...], reveal, why, sceneHtml? }
+  // 正解 = 每個編號槽放入 answer[i]；bank = answer + extra 打散。詞面皆相異，比對無歧義。
+  function renderFill(step) {
+    var roles = step.slots || [];
+    var n = step.answer.length;
+    var bankItems = step.answer.concat(step.extra || []); // 索引穩定：0..n-1 為正解、其後為干擾
+    var display = shuffle((function () { var a = []; for (var i = 0; i < bankItems.length; i++) a.push(i); return a; })());
+    var slots = []; for (var s = 0; s < n; s++) slots.push(-1); // slots[i] = bankItems 的索引 or -1
+    var answered = false;
+
+    stage.innerHTML =
+      '<div class="q-stage">' +
+        stageVisual(step) +
+        '<p class="q-prompt">' + step.s + '</p>' +
+        '<div class="q-toolrow">' + ttsButton(step.s) + '</div>' +
+        '<div class="order-game">' +
+          '<div class="og-lane-lbl">① 點下面的詞語積木，照順序放進格子（點格子可以拿回來）</div>' +
+          '<div class="og-slots" id="og-slots"></div>' +
+          '<div class="og-bank" id="og-bank"></div>' +
+        '</div>' +
+        '<div class="q-feedback" id="reveal"></div>' +
+      '</div>' +
+      '<div class="q-actions">' +
+        '<button type="button" class="btn btn-primary" id="btn-check">拼好了，檢查 ✓</button>' +
+        '<button type="button" class="btn btn-primary" id="btn-next" style="display:none">繼續 ➡️</button></div>';
+    bindTts(stage);
+
+    function firstEmpty() { for (var i = 0; i < slots.length; i++) if (slots[i] === -1) return i; return -1; }
+    function redraw() {
+      var slotHtml = '';
+      for (var i = 0; i < slots.length; i++) {
+        var filled = slots[i] !== -1;
+        slotHtml += '<button type="button" class="og-slot' + (filled ? ' filled' : '') + '" data-slot="' + i + '"' +
+          (answered ? ' disabled' : '') + '>' +
+          '<span class="og-num">' + (i + 1) + '</span>' +
+          (roles[i] ? '<span class="og-role">' + esc(roles[i]) + '</span>' : '') +
+          '<span class="og-text">' + (filled ? esc(bankItems[slots[i]]) : '（點詞語放進來）') + '</span></button>';
+      }
+      $('og-slots').innerHTML = slotHtml;
+      var bankHtml = '';
+      for (var d = 0; d < display.length; d++) {
+        var idx = display[d];
+        var used = slots.indexOf(idx) !== -1;
+        bankHtml += '<button type="button" class="og-chip' + (used ? ' used' : '') + '" data-idx="' + idx + '"' +
+          (answered ? ' disabled' : '') + '>' + esc(bankItems[idx]) + '</button>';
+      }
+      $('og-bank').innerHTML = bankHtml;
+      bind();
+    }
+    function bind() {
+      if (answered) return;
+      var chips = $('og-bank').querySelectorAll('.og-chip');
+      for (var c = 0; c < chips.length; c++) chips[c].addEventListener('click', function () {
+        if (answered) return;
+        var idx = parseInt(this.getAttribute('data-idx'), 10);
+        if (slots.indexOf(idx) !== -1) return;
+        var e = firstEmpty(); if (e === -1) return;
+        slots[e] = idx; redraw();
+      });
+      var sl = $('og-slots').querySelectorAll('.og-slot');
+      for (var s2 = 0; s2 < sl.length; s2++) sl[s2].addEventListener('click', function () {
+        if (answered) return;
+        var i = parseInt(this.getAttribute('data-slot'), 10);
+        if (slots[i] !== -1) { slots[i] = -1; redraw(); }
+      });
+    }
+
+    $('btn-check').addEventListener('click', function () {
+      if (answered) return;
+      if (firstEmpty() !== -1) { toast('先把每一格都放滿詞語喔！', 'info'); return; }
+      var ok = true;
+      for (var i = 0; i < n; i++) { if (bankItems[slots[i]] !== step.answer[i]) { ok = false; break; } }
+      answered = true;
+      scoreOnce(step, ok);
+      if (!ok) { for (var j = 0; j < n; j++) slots[j] = j; } // 演示正解（answer[i] 就是 bankItems[i]）
+      redraw();
+      var sl = $('og-slots').querySelectorAll('.og-slot');
+      for (var k = 0; k < sl.length; k++) sl[k].classList.add(ok ? 'correct' : 'wrong');
+      var rev = $('reveal');
+      var revealLine = step.reveal ? '<div class="fill-reveal">「' + esc(step.reveal) + '」</div>' : '';
+      rev.innerHTML = (ok ? '拼對了！' : '沒關係～正確的句子是這樣喔！') + (step.why || '') + revealLine;
+      rev.classList.add('show', ok ? 'is-ok' : 'is-no');
+      this.style.display = 'none'; $('btn-next').style.display = 'inline-flex';
+      if (ok) { toast('句子拼得真好！🧱', 'badge'); botPop(); }
+      if (step.reveal) speak(step.reveal);
+    });
+    $('btn-next').addEventListener('click', next);
+    redraw();
+  }
+
+  // ---- collect（佳句收藏；非計分，生成效應／素材庫） ----
+  function renderCollect(step) {
+    var already = !!progress.quotes[step.quote];
+    stage.innerHTML =
+      '<div class="q-stage">' +
+        '<p class="q-prompt">' + step.s + '</p>' +
+        '<div class="cp-quote-card"><div class="cp-quote-mark" aria-hidden="true">❝</div>' + esc(step.quote) + '</div>' +
+        '<div class="q-toolrow">' + ttsButton(step.quote) + '</div>' +
+        '<div class="q-feedback" id="reveal"></div>' +
+      '</div>' +
+      '<div class="q-actions">' +
+        '<button type="button" class="btn btn-primary" id="btn-collect">' + (already ? '已在收藏冊 ✓' : '收藏這句佳句 ⭐') + '</button>' +
+        '<button type="button" class="btn" id="btn-next">繼續 ➡️</button></div>';
+    bindTts(stage);
+    var btn = $('btn-collect');
+    if (already) btn.disabled = true;
+    btn.addEventListener('click', function () {
+      if (progress.quotes[step.quote]) return;
+      progress.quotes[step.quote] = 1; saveProg();
+      btn.textContent = '已收藏 ⭐'; btn.disabled = true;
+      var rev = $('reveal');
+      rev.innerHTML = '收進「佳句收藏冊」了！寫作文的時候就能拿出來用。';
+      rev.classList.add('show', 'is-ok');
+      toast('佳句 +1 ⭐', 'badge'); botPop();
+    });
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // ---- freewrite（我的小作文：零評分、零內容比對；只獎勵「完成反思」的行為） ----
+  function renderFreewrite(step) {
+    var checks = step.checklist || [];
+    var chkHtml = '';
+    for (var i = 0; i < checks.length; i++) {
+      chkHtml += '<label class="cp-check"><input type="checkbox" data-c="' + i + '"><span>' + checks[i] + '</span></label>';
+    }
+    stage.innerHTML =
+      '<div class="q-stage">' +
+        '<div class="cp-topic">' + step.topic + '</div>' +
+        '<p class="q-prompt">' + step.s + '</p>' +
+        '<div class="q-toolrow">' + ttsButton(step.topic) + '</div>' +
+        '<textarea class="cp-textarea" id="fw-text" aria-label="在這裡寫你的小作文" ' +
+          'placeholder="在這裡開始寫吧……想怎麼寫都可以，不會被打分數喔！"></textarea>' +
+        '<p class="og-lane-lbl" style="margin-top:var(--s3)">寫完了，自己勾一勾（不勾也沒關係）：</p>' +
+        '<div class="cp-checklist">' + chkHtml + '</div>' +
+        '<div class="q-feedback" id="reveal"></div>' +
+      '</div>' +
+      '<div class="q-actions">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-done">我完成了小作文 ✍️</button>' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next" style="display:none">回到選單 ➡️</button></div>';
+    bindTts(stage);
+
+    var labels = stage.querySelectorAll('.cp-check');
+    for (var l = 0; l < labels.length; l++) {
+      (function (lab) {
+        var inp = lab.querySelector('input');
+        inp.addEventListener('change', function () { lab.classList.toggle('on', inp.checked); });
+      })(labels[l]);
+    }
+
+    var done = false;
+    $('btn-done').addEventListener('click', function () {
+      if (done) return; done = true;
+      // 不讀取、不比對、不儲存 textarea 內容；只因「完成寫作與反思」這個行為給鼓勵 XP。
+      record(true);
+      var rev = $('reveal');
+      rev.innerHTML = '太棒了！你完成了自己的小作文，願意動手寫就是最了不起的事。🌟';
+      rev.classList.add('show', 'is-ok');
+      this.style.display = 'none'; $('btn-next').style.display = 'inline-flex';
+      toast('完成小作文！你真棒 🌟', 'badge'); botPop();
+    });
+    $('btn-next').addEventListener('click', goMenu);
+  }
+
+  // =====================================================================
+  // 完成單元
+  // =====================================================================
+  function finishUnit() {
+    var unit = cur.unit, stars = cur.correctCount, total = cur.total;
+    if (!unit.review) {
+      var prev = progress.units[unit.id] || {};
+      progress.units[unit.id] = { done: true, best: Math.max(prev.best || 0, stars) };
+      saveProg();
+    }
+    var starStr = '';
+    for (var i = 0; i < total; i++) starStr += (i < stars ? '⭐' : '☆');
+
+    stage.innerHTML =
+      '<div class="result-card">' +
+        '<div class="result-card__emoji" aria-hidden="true">' + (unit.review ? '🔁' : '🎉') + '</div>' +
+        '<div class="result-card__title">' + (unit.review ? '複習完成！' : '學會「' + unit.name + '」！') + '</div>' +
+        (total > 0 ? '<div class="result-card__stars" aria-label="得到 ' + stars + ' 顆星">' + starStr + '</div>' +
+          '<p class="result-card__sub">你答對了 ' + stars + ' / ' + total + ' 題，好棒！</p>'
+          : '<p class="result-card__sub">你完成了這一關，好棒！</p>') +
+      '</div>' +
+      '<div class="q-actions">' +
+        '<button type="button" class="btn" id="btn-menu">回到選單</button>' +
+        (nextUnitOf(unit) ? '<button type="button" class="btn btn-primary" id="btn-nextunit">下一項工具 ➡️</button>' : '') +
+      '</div>';
+
+    toast('完成：' + unit.emoji + ' ' + unit.name + '！', 'badge');
+    botPop();
+    $('btn-menu').addEventListener('click', goMenu);
+    var nu = nextUnitOf(unit);
+    if (nu) $('btn-nextunit').addEventListener('click', function () { startUnit(nu); });
+  }
+
+  function nextUnitOf(unit) {
+    for (var i = 0; i < UNITS.length; i++) if (UNITS[i].id === unit.id) return UNITS[i + 1] || null;
+    return null;
+  }
+  function goMenu() {
+    cur = null; renderMenu(); show(screenMenu);
+  }
+
+  // =====================================================================
+  // 頂列 / 啟動
+  // =====================================================================
+  $('btn-back').addEventListener('click', goMenu);
+  // 主題切換交給共用 .app-bar 的 [data-theme-toggle]（game_core 自動接線）。
+
+  renderMenu();
+})();
+</script>
+</body>
+</html>

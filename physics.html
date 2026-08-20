@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>物理探險 🧲</title>
+<!-- 統一遊戲化引擎（canon 載入序）：先載共用設計 token（assets/app.css），
+     再載 HUD/toast 樣式（game_core.css），最後同步載入引擎（game_core.js）。
+     -------------------------------------------------------------------
+     本頁為「物理」，計入 science 科目（理化／生物／地科共用），讓學生升上國中理化、
+     高中物理時獎勵不中斷：宣告 data-game-wired="science"，每題只呼叫一次
+     Game.recordAnswer('science', 對錯)（answered 鎖定、重試不記帳）；「不」呼叫
+     Game.award / recordSession，本地徽章冊（StampBook）為純本地無 XP，故無 double-count。
+     其餘只使用引擎的『唯讀 / UI』API：Game.showToast、Game.localDate、
+     Game.getProfile().settings.reduceMotion，以及共用 app-bar 的 [data-theme-toggle]
+     （主題切換由引擎自動接線，本頁不自寫主題 JS）。 -->
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<style>
+/* =====================================================================
+ * physics.html — 本頁樣式（全部建立在 assets/app.css 的設計 token 上，
+ * 因此自動亮/暗色主題化、與學習基地視覺一致）。
+ * 強調色綁「一科色三件組」：本頁物理採藍色系（沿用 --c-math 藍紫）。
+ * =================================================================== */
+:root {
+  --ph: var(--c-math);
+  --ph-tint: var(--tint-math);
+  --ph-ink: var(--c-math-ink);
+}
+
+body { overflow-x: hidden; }
+
+/* 頁面頂列（返回、標題） */
+.ph-topbar {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  margin-bottom: var(--s4);
+}
+.ph-topbar .ph-title {
+  flex: 1;
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  color: var(--ink);
+  min-width: 0;
+}
+
+/* 螢幕切換 */
+.ph-screen { display: none; animation: ph-fade 0.3s ease; }
+.ph-screen.active { display: block; }
+@keyframes ph-fade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes ph-pop {
+  0%   { transform: scale(0.8); }
+  60%  { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+/* 尊重減動偏好（prefers-reduced-motion 或 profile.settings.reduceMotion→.ph-reduce） */
+@media (prefers-reduced-motion: reduce) {
+  .ph-screen, .ph-reveal.show { animation: none; }
+}
+.ph-reduce .ph-screen,
+.ph-reduce .ph-reveal.show,
+.ph-reduce .ph-opt.is-correct,
+.ph-reduce .ph-visual { animation: none !important; }
+
+/* 吉祥物歡迎卡 */
+.ph-hello {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s4);
+  background: var(--ph-tint);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  margin-bottom: var(--s4);
+}
+.ph-hello .ph-mascot { font-size: 46px; flex: none; line-height: 1; }
+.ph-hello .ph-hello-text { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+.ph-hello .ph-hello-sub { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; }
+.ph-today {
+  display: inline-flex; align-items: center; gap: 4px;
+  margin-top: 6px;
+  font-size: var(--fs-small); font-weight: 700;
+  color: var(--ph-ink);
+}
+
+/* 等級選單 grid */
+.ph-levels {
+  display: grid;
+  gap: var(--s4);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.ph-level {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  padding: var(--s4);
+  text-align: left;
+  cursor: pointer;
+  border: 2px solid var(--card-border);
+  background: var(--card);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  font-family: var(--font);
+  color: var(--ink);
+}
+.ph-level:hover { box-shadow: var(--shadow-lg); border-color: var(--ph); }
+.ph-level:active { transform: scale(0.98); }
+.ph-level-top { display: flex; align-items: center; gap: var(--s3); }
+.ph-level-emoji {
+  font-size: 34px;
+  width: 56px; height: 56px;
+  flex: none;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--ph-tint);
+  border-radius: 16px;
+}
+.ph-level-num { font-size: var(--fs-small); font-weight: 700; color: var(--ph-ink); }
+.ph-level-name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); line-height: 1.25; }
+.ph-level-concept { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; }
+.ph-level-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-top: 2px; }
+.ph-level-status {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: var(--fs-small); font-weight: 700;
+}
+.ph-level-status.done { color: var(--ink); }
+.ph-level-status.todo { color: var(--ink-soft); }
+.ph-level-dots { display: inline-flex; gap: 3px; flex-wrap: wrap; max-width: 55%; justify-content: flex-end; }
+.ph-level-dots i {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--card-border); display: inline-block;
+}
+.ph-level-dots i.on { background: var(--ph); }
+
+/* 進行中：一題一畫面的大卡 */
+.ph-stage {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--s5) var(--s4);
+  text-align: center;
+}
+.ph-visual {
+  font-size: clamp(64px, 22vw, 108px);
+  line-height: 1.1;
+  margin: var(--s2) 0 var(--s3);
+  user-select: none;
+  display: inline-block;
+}
+.ph-sentence {
+  font-size: clamp(19px, 4.5vw, 24px);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.45;
+  margin: 0 auto var(--s4);
+  max-width: 32ch;
+}
+.ph-toolrow { display: flex; justify-content: center; gap: var(--s2); flex-wrap: wrap; margin-bottom: var(--s3); }
+
+/* 進度：本等級第幾步 */
+.ph-steps {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  margin-bottom: var(--s3); flex-wrap: wrap;
+}
+.ph-steps i { width: 20px; height: 6px; border-radius: 999px; background: var(--card-border); }
+.ph-steps i.on { background: var(--ph); }
+.ph-steps i.cur { background: var(--ph); box-shadow: 0 0 0 3px var(--ph-tint); }
+
+/* 選項按鈕（tap 作答；命中區 ≥56px） */
+.ph-options { display: grid; gap: var(--s3); margin-top: var(--s2); }
+.ph-opt {
+  display: flex; align-items: center; gap: var(--s2);
+  min-height: 56px;
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid var(--card-border);
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: clamp(16px, 3.4vw, 19px);
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.ph-opt:active { transform: scale(0.98); }
+.ph-opt:disabled { cursor: default; }
+/* 對錯不只靠色：加 ✅/❌ 圖示 + 左粗邊 + 動效 */
+.ph-opt.correct { border-color: var(--c-correct); background: var(--tint-english); color: var(--ink); border-left-width: 8px; }
+.ph-opt.wrong { border-color: var(--c-wrong); background: rgba(255,118,117,0.14); color: var(--ink); border-left-width: 8px; }
+.ph-opt.is-correct { animation: ph-pop 0.32s ease; }
+.ph-opt .ph-opt-mark { margin-left: auto; font-size: 22px; }
+
+/* 揭示區（答對/答錯解說、tap-to-reveal「看更多」） */
+.ph-reveal {
+  margin-top: var(--s4);
+  padding: var(--s3) var(--s4);
+  background: var(--ph-tint);
+  border-radius: var(--r-md);
+  font-size: var(--fs-body);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.55;
+  text-align: left;
+  display: none;
+}
+.ph-reveal.show { display: block; animation: ph-fade 0.3s ease; }
+/* 「看更多」長解說的分段小標題與關鍵詞／公式強調（僅視覺節奏，不改內容） */
+.ph-reveal .ph-more-h {
+  display: block;
+  font-weight: 800;
+  color: var(--ph-ink);
+  margin-top: var(--s3);
+  margin-bottom: 2px;
+}
+.ph-reveal .ph-more-h:first-child { margin-top: 0; }
+.ph-reveal b { color: var(--ph-ink); font-weight: 800; }
+
+/* 完成畫面 */
+.ph-done { text-align: center; padding: var(--s5) var(--s4); }
+.ph-done-emoji { font-size: clamp(64px, 22vw, 100px); }
+.ph-done-stars { font-size: 30px; letter-spacing: 3px; margin: var(--s2) 0; line-height: 1.3; }
+.ph-done-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin: var(--s2) auto 0;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--ph-tint);
+  color: var(--ph-ink);
+  font-weight: 800;
+}
+.ph-done-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); }
+
+/* 底部行動列 */
+.ph-actions { display: flex; gap: var(--s3); margin-top: var(--s4); flex-wrap: wrap; }
+.ph-actions .btn { flex: 1; min-width: 140px; }
+
+/* 進度總覽小列（刻意不顯示主科 XP／連續天數） */
+.ph-overview {
+  display: flex; align-items: center; gap: var(--s3);
+  margin-bottom: var(--s4); flex-wrap: wrap;
+}
+.ph-overview .stat-tile { flex: 1; min-width: 96px; }
+
+.ph-footnote { text-align: center; color: var(--ink-soft); font-size: var(--fs-small); margin-top: var(--s5); font-weight: 600; }
+
+/* ===== 徽章冊：入口 FAB（右下固定，≥48px 觸控） ===== */
+.ph-fab {
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 60;
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: 48px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 999px;
+  background: var(--ph);
+  color: #fff;
+  font-family: var(--font);
+  font-size: var(--fs-body);
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+}
+.ph-fab:active { transform: scale(0.97); }
+.ph-fab-count {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 22px; height: 22px; padding: 0 6px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.34);
+  font-size: var(--fs-small); font-weight: 800;
+}
+
+/* ===== 徽章冊：浮層 ===== */
+.ph-overlay {
+  position: fixed; inset: 0;
+  z-index: 90;
+  display: flex; align-items: center; justify-content: center;
+  padding: var(--s4);
+  background: rgba(0,0,0,0.45);
+}
+/* 浮層鐵則：class .ph-overlay 的 display:flex（author 特異度）會蓋過 UA 的
+   [hidden]{display:none}，若不加下面這條更高特異度防護，overlay 會恆顯遮頁
+   （沿用 gemMineOverlay 的教訓）。 */
+#phBadgeOverlay[hidden] { display: none !important; }
+
+.ph-overlay-card {
+  width: min(680px, 96vw);
+  max-height: 88vh;
+  overflow: auto;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--s4);
+}
+.ph-overlay-head {
+  display: flex; align-items: center; gap: var(--s2);
+  margin-bottom: var(--s3);
+}
+.ph-overlay-head .ph-overlay-title {
+  flex: 1;
+  font-size: var(--fs-h2); font-weight: 800; color: var(--ink);
+}
+.ph-badge-grid {
+  display: grid; gap: var(--s3);
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+.ph-badge-card {
+  padding: var(--s3);
+  border: 2px solid var(--card-border);
+  border-radius: var(--r-md);
+  background: var(--card);
+  text-align: center;
+}
+.ph-badge-card .ph-badge-emoji { font-size: 40px; line-height: 1.1; }
+.ph-badge-card .ph-badge-name { font-weight: 800; color: var(--ink); margin-top: 6px; font-size: var(--fs-small); }
+.ph-badge-card .ph-badge-date { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; margin-top: 4px; }
+/* 已得＝彩色 emoji + 藍框；未得＝◇ 虛線、去彩、半透明（雙碼：形狀＋色相＋文字） */
+.ph-badge-card.earned { border-color: var(--ph); background: var(--ph-tint); }
+.ph-badge-card.locked { border-style: dashed; opacity: 0.6; }
+.ph-badge-card.locked .ph-badge-emoji { filter: grayscale(1); }
+.ph-badge-empty {
+  text-align: center; color: var(--ink-soft); font-weight: 600;
+  padding: var(--s3); line-height: 1.6;
+}
+</style>
+</head>
+<body data-game-wired="science" data-game-maturity="advanced">
+<!-- ===== 共用頂部應用列（全站一致；貼在 <body> 內第一個元素） ===== -->
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">物理探險 🧲</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle
+          aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+
+  <!-- ============================= 選單 / 首頁 ============================= -->
+  <section id="screen-menu" class="ph-screen active">
+    <div class="ph-topbar">
+      <span class="ph-title">物理探險 🧲</span>
+    </div>
+
+    <a href="physics_concepts.html" style="display:flex;align-items:center;gap:10px;margin:0 0 var(--s4);padding:12px 16px;background:var(--card);border:2px dashed var(--card-border);border-radius:14px;color:var(--ink);font-weight:700;text-decoration:none;line-height:1.4"><span style="font-size:22px" aria-hidden="true">🧠</span><span>還沒學過嗎？先到「物理觀念養成」用圖學會，再回來練習 →</span></a>
+
+    <div class="ph-hello">
+      <span class="ph-mascot" aria-hidden="true">🧲</span>
+      <div>
+        <div class="ph-hello-text" id="hello-text">嗨！我是小物理，一起去發現力、光、聲、熱和電的祕密吧！</div>
+        <div class="ph-hello-sub" id="hello-sub">選一個等級，玩一玩、想一想。</div>
+        <div class="ph-today" id="hello-today" style="display:none">✨ 今天也來玩物理了，真棒！</div>
+      </div>
+    </div>
+
+    <div class="ph-overview">
+      <div class="stat-tile"><span class="stat-value" id="ov-levels">0/16</span><span class="stat-label">完成等級</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-badges">0/16</span><span class="stat-label">收集徽章</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-stars">0</span><span class="stat-label">收藏星星</span></div>
+    </div>
+
+    <div class="ph-levels" id="level-list"><!-- 由 JS 產生 --></div>
+
+    <p class="ph-footnote">物理就在生活裡：推、拉、光、聲、冷熱和電，每一個都是好玩的祕密。🔎</p>
+  </section>
+
+  <!-- ============================= 進行中 ============================= -->
+  <section id="screen-play" class="ph-screen">
+    <div class="ph-topbar">
+      <button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button>
+      <span class="ph-title" id="play-title">等級</span>
+    </div>
+    <div class="ph-steps" id="step-dots" aria-hidden="true"></div>
+    <div class="play-column">
+      <div id="stage"><!-- 由 JS 產生每一步 --></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== 徽章冊：FAB + 浮層（浮層以 hidden 屬性切換；已加更高特異度防護） ===== -->
+<button type="button" class="ph-fab" id="phBadgeFab" aria-label="打開徽章冊">
+  🏅 徽章冊 <span class="ph-fab-count" id="phBadgeCount">0/16</span>
+</button>
+<div id="phBadgeOverlay" class="ph-overlay" hidden role="dialog" aria-modal="true" aria-label="徽章冊">
+  <div class="ph-overlay-card">
+    <div class="ph-overlay-head">
+      <span class="ph-overlay-title">🏅 我的徽章冊</span>
+      <button type="button" class="btn btn-icon" id="phBadgeClose" aria-label="關閉徽章冊">✕</button>
+    </div>
+    <div class="ph-badge-grid" id="phBadgeGrid"><!-- 由 JS 產生 --></div>
+    <div class="ph-badge-empty" id="phBadgeEmpty" style="display:none">還沒有徽章，玩一個等級就會亮起一枚 ✨。</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---- 只用引擎「唯讀 / UI」API：showToast、localDate、reduceMotion。 ----
+  // 計分只透過每題一次的 Game.recordAnswer('science', …)（見 <head>）；不呼叫 Game.award / recordSession。
+  function toast(msg, kind) {
+    try { if (window.Game && Game.showToast) Game.showToast(msg, kind); } catch (e) {}
+  }
+  function today() {
+    try { if (window.Game && Game.localDate) return Game.localDate(); } catch (e) {}
+    // 後備：本地 YYYY-MM-DD（不使用 UTC）。
+    var d = new Date();
+    return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+  }
+  function reduceMotion() {
+    try { return !!(window.Game && Game.getProfile && Game.getProfile().settings && Game.getProfile().settings.reduceMotion); }
+    catch (e) { return false; }
+  }
+  if (reduceMotion()) { try { document.documentElement.classList.add('ph-reduce'); } catch (e) {} }
+
+  // ---- Web Speech TTS（繁中，可選、無網路依賴、失敗即靜默） ----
+  function speak(text) { /* 科學頁不朗讀：已移除 TTS（非英文發音頁，機器中文語音難聽又會重疊） */ }
+
+  // ---- 本頁進度（獨立 key，與 player_profile_v1 完全隔離；try/catch 靜默降級） ----
+  var PROG_KEY = 'physics_progress_v1';
+  function loadProg() {
+    try {
+      var p = JSON.parse(localStorage.getItem(PROG_KEY)) || {};
+      if (!p.levels) p.levels = {};
+      if (!p.badges) p.badges = {};
+      if (!p.awarded) p.awarded = {};
+      return p;
+    } catch (e) { return { levels: {}, badges: {}, awarded: {} }; }
+  }
+  function saveProg(p) {
+    try { localStorage.setItem(PROG_KEY, JSON.stringify(p)); } catch (e) { /* 配額滿：靜默降級 */ }
+  }
+  var progress = loadProg(); // { levels:{[id]:{done,best,correct}}, badges:{[id]:{earnedAt}}, awarded:{} }
+
+  // =====================================================================
+  // 課程內容（全繁體中文；物理事實／定義／公式以年齡適當、且正確為準；
+  // 電與熱只講「原理／現象／觀察」，絕不出現任何可被模仿的危險操作步驟）。
+  // 每個等級：step0 = worked-example 型 fact 卡（先於練習），其後皆為 choose 題。
+  // =====================================================================
+  var LEVELS = [
+    {
+      id: 'l1', emoji: '🧲', name: '等級1・生活中的推、拉與現象',
+      concept: '力、重力、摩擦、磁鐵、光與聲',
+      badge: { icon: '🧲', label: '力的偵探' },
+      fact: { v: '🧲', s: '力就是「推」或「拉」。力可以讓東西開始動、停下來，或改變方向。',
+        more: '生活裡到處都是力：推門、拉抽屜、球往下掉（重力）、磁鐵吸迴紋針，都是力在作用。摩擦力還會讓東西變熱喔！' },
+      questions: [
+        { v: '🚪', q: '用手把門推開，這個動作對門施加了什麼？', options: ['力', '熱', '光'], ans: 0,
+          why: '推和拉都是「力」，力可以讓物體開始動、停下或改變方向。' },
+        { v: '⬆️', q: '把球往上丟，球最後會怎樣？', options: ['掉回地面', '一直往上飛走', '停在半空中'], ans: 0,
+          why: '地球的重力會把物體往下拉，所以球最後會掉回地面。' },
+        { v: '📦', q: '在粗糙的地面推箱子比在光滑地面費力，這是因為？', options: ['摩擦力較大', '箱子突然變重', '地面沒有空氣'], ans: 0,
+          why: '兩個表面接觸滑動會產生摩擦力，粗糙表面摩擦力較大，所以較費力。' },
+        { v: '🧲', q: '磁鐵可以吸住下面哪一樣東西？', options: ['鐵製迴紋針', '塑膠尺', '木頭筷子'], ans: 0,
+          why: '磁鐵會吸引鐵、鎳等金屬，不會吸塑膠或木頭。' },
+        { v: '🌑', q: '在完全黑暗、沒有任何光的房間裡，我們會？', options: ['看不見東西', '看得更清楚', '只看得見紅色'], ans: 0,
+          why: '要有光進入眼睛我們才看得見；沒有光就看不見物體。' },
+        { v: '🥁', q: '敲一下鼓，鼓面會發生什麼事而發出聲音？', options: ['振動', '融化', '發光'], ans: 0,
+          why: '聲音來自物體的振動，鼓面振動時就發出聲音。' },
+        { v: '🛝', q: '溜滑梯時屁股覺得有點熱，這說明摩擦力還會產生？', options: ['熱', '光', '電'], ans: 0,
+          why: '摩擦除了阻礙運動，也會把一部分能量變成熱。' },
+        { v: '🐶', q: '下面哪一個是「拉力」的例子？', options: ['用繩子把小狗牽回來', '把門往外推開', '把積木往下壓'], ans: 0,
+          why: '拉是把物體朝自己方向移動的力，牽繩就是拉力。' },
+        { v: '🛒', q: '要讓靜止的購物車開始移動，必須？', options: ['對它施力', '什麼都不用做', '只要看著它'], ans: 0,
+          why: '靜止的物體要有力作用才會開始運動。' },
+        { v: '🧲', q: '把兩塊磁鐵「相同的磁極」靠近，會發生什麼？', options: ['互相排斥（推開）', '互相吸住', '完全沒反應'], ans: 0,
+          why: '同名磁極相斥、異名磁極相吸。' }
+      ]
+    },
+    {
+      id: 'l2', emoji: '📏', name: '等級2・測量與單位',
+      concept: '長度、質量、時間、溫度與單位換算',
+      badge: { icon: '📏', label: '測量高手' },
+      fact: { v: '📏', s: '測量就是用「單位」來描述東西有多長、多重、多久或多冷熱。',
+        more: '長度用公尺（m）、質量用公斤（kg）、時間用秒（s）、溫度用攝氏（°C）。記住：1 公尺＝100 公分、1 公斤＝1000 公克、1 分＝60 秒。' },
+      questions: [
+        { v: '📏', q: '測量「長度」時常用的國際基本單位是？', options: ['公尺（m）', '公斤（kg）', '秒（s）'], ans: 0,
+          why: '長度的國際基本單位是公尺（m）；公斤量質量、秒量時間。' },
+        { v: '🍎', q: '要知道一顆蘋果的「質量」（也就是它含有多少物質），最適合用哪個工具？', options: ['天平', '溫度計', '尺'], ans: 0,
+          why: '質量是「物體含有多少物質」，用天平來量；尺量長度，溫度計量溫度。（提醒：重量是地球拉住物體的力，那要用磅秤量，和質量不一樣喔！）' },
+        { v: '📐', q: '1 公尺等於幾公分？', options: ['100 公分', '10 公分', '1000 公分'], ans: 0,
+          why: '1 公尺（m）＝100 公分（cm）。' },
+        { v: '⏱️', q: '時間的國際基本單位是？', options: ['秒', '分', '小時'], ans: 0,
+          why: '秒（s）是時間的國際基本單位。' },
+        { v: '⚖️', q: '1 公斤等於幾公克？', options: ['1000 公克', '100 公克', '10 公克'], ans: 0,
+          why: '1 公斤（kg）＝1000 公克（g）。' },
+        { v: '🌡️', q: '台灣天氣預報說「今天 30 度」，用的是哪種溫度刻度？', options: ['攝氏（°C）', '華氏（°F）', '公尺'], ans: 0,
+          why: '台灣日常用攝氏溫標；標準大氣壓下純水約 0°C 結冰、100°C 沸騰。' },
+        { v: '🗺️', q: '下面哪一個長度最長？', options: ['1 公里', '1 公尺', '1 公分'], ans: 0,
+          why: '1 公里＝1000 公尺＝100000 公分，最長。' },
+        { v: '📐', q: '要量教室的長度，最適合用哪個工具？', options: ['捲尺', '天平', '碼錶'], ans: 0,
+          why: '較長的距離用捲尺量最方便。' },
+        { v: '❄️', q: '標準大氣壓下，純水結成冰的溫度大約是？', options: ['0°C', '100°C', '-100°C'], ans: 0,
+          why: '標準大氣壓下純水約在 0°C 結冰、100°C 沸騰。' },
+        { v: '⏲️', q: '1 分鐘等於幾秒？', options: ['60 秒', '100 秒', '30 秒'], ans: 0,
+          why: '1 分鐘＝60 秒。' },
+        { v: '⏱️', q: '「碼錶」最適合用來測量什麼？', options: ['一段時間', '一段長度', '溫度'], ans: 0,
+          why: '碼錶用來精確測量時間長短。' }
+      ]
+    },
+    {
+      id: 'l3', emoji: '🌈', name: '等級3・光與聲音的世界',
+      concept: '直線、影子、反射、折射、光速與聲音',
+      badge: { icon: '🌈', label: '光聲探索者' },
+      fact: { v: '🌈', s: '光沿著直線前進，讓我們看見東西；聲音則是由振動產生的。',
+        more: '光遇到鏡子會反射、進入水中會折射；聲音需要空氣、水或固體當「介質」才能傳，真空中傳不出聲音。光速遠比聲速快，所以先看到閃電、後聽到雷聲。' },
+      questions: [
+        { v: '➡️', q: '光在同一種透明物質裡前進的路徑是？', options: ['直線', '波浪形', '螺旋圈'], ans: 0,
+          why: '光在均勻介質中沿直線前進，這也是影子形成的原因。' },
+        { v: '🌑', q: '影子是怎麼形成的？', options: ['光被物體擋住', '物體自己發光', '空氣變黑了'], ans: 0,
+          why: '光沿直線前進，被不透明物體擋住，後方照不到光就形成影子。' },
+        { v: '🪞', q: '照鏡子時看到自己，這是光的什麼現象？', options: ['反射', '折射', '燃燒'], ans: 0,
+          why: '光照到鏡面被反彈回來（反射），我們才會在鏡中看到影像。' },
+        { v: '🥢', q: '把筷子斜插進水裡看起來像「折斷」，這是光的？', options: ['折射', '反射', '消失'], ans: 0,
+          why: '光從水進入空氣時前進方向改變（折射），看起來就像筷子彎折。' },
+        { v: '⚡', q: '打雷時常先看到閃電、過一會兒才聽到雷聲，這代表？', options: ['光比聲音快', '聲音比光快', '兩者一樣快'], ans: 0,
+          why: '光速遠比聲速快，所以先看到閃電、後聽到雷聲。' },
+        { v: '🌌', q: '聲音沒辦法在下面哪種環境中傳播？', options: ['真空（沒有空氣）', '空氣中', '水中'], ans: 0,
+          why: '聲音需要介質（空氣、水、固體）才能傳播，真空中沒有介質就傳不出去。' },
+        { v: '🏔️', q: '對著山谷大喊，過一會兒聽到自己的聲音回來，這叫？', options: ['回音（回聲）', '折射', '影子'], ans: 0,
+          why: '聲音遇到遠處障礙物被反射回來，就形成回音。' },
+        { v: '🔺', q: '白光（例如太陽光）通過三稜鏡後會？', options: ['分散成許多顏色（像彩虹）', '只剩下黑色', '完全消失'], ans: 0,
+          why: '白光其實由多種顏色的光組成，經三稜鏡折射會分散成彩色光譜。' },
+        { v: '🎸', q: '把吉他弦拉得更緊再撥動，弦振動變快，聲音會？', options: ['變高（音調高）', '變低（音調低）', '完全沒聲音'], ans: 0,
+          why: '弦振動得越快（頻率越高），音調就越高。' },
+        { v: '🌸', q: '我們能看見一朵不會發光的花，是因為？', options: ['光照到花再反射進我們眼睛', '花自己會發光', '眼睛射出光去照它'], ans: 0,
+          why: '不發光的物體是把照到它的光反射進我們眼睛，我們才看得見。' }
+      ]
+    },
+    {
+      id: 'l4', emoji: '🔥', name: '等級4・熱、狀態變化與浮力',
+      concept: '溫度、傳導、三態變化、熱脹冷縮、密度與浮力',
+      badge: { icon: '🔥', label: '熱與浮力達人' },
+      fact: { v: '🔥', s: '溫度表示東西的冷熱程度；熱會從溫度高的地方傳到溫度低的地方。',
+        more: '水遇冷結冰、加熱沸騰成水蒸氣；大多數東西熱脹冷縮。密度＝質量÷體積，密度比水小的會浮、比水大的會沉。這一關只要觀察和理解原理，不用真的去碰燙的東西喔！' },
+      questions: [
+        { v: '🥄', q: '把金屬湯匙放進熱湯，湯匙柄也變熱，熱主要靠哪種方式傳過去？', options: ['傳導', '反射', '摩擦'], ans: 0,
+          why: '熱透過固體從高溫端傳到低溫端，叫做熱傳導。' },
+        { v: '🧊', q: '水結成冰，是從液態變成？', options: ['固態', '氣態', '什麼都沒變'], ans: 0,
+          why: '水（液態）遇冷凝固成冰（固態）。' },
+        { v: '♨️', q: '水煮沸變成水蒸氣，是從液態變成？', options: ['氣態', '固態', '液態不變'], ans: 0,
+          why: '水加熱到沸騰會汽化成水蒸氣（氣態）。' },
+        { v: '🌡️', q: '大多數物體受熱時，體積通常會？', options: ['膨脹（變大）', '縮小', '完全不變'], ans: 0,
+          why: '大多數物質有「熱脹冷縮」的性質，受熱體積變大、遇冷變小。' },
+        { v: '🌡️', q: '關於「溫度」和「熱」，下面哪個說法正確？', options: ['溫度高低表示物體的冷熱程度', '溫度就是物體的重量', '溫度越高一定越重'], ans: 0,
+          why: '溫度是用來表示物體冷熱程度的量，和重量無關。' },
+        { v: '🪵', q: '一塊木頭放進水裡通常會浮起來，是因為木頭的密度？', options: ['比水小', '比水大', '和水一樣'], ans: 0,
+          why: '密度比水小的物體會浮在水面，比水大的會下沉。' },
+        { v: '🔩', q: '鐵塊放進水裡會下沉，是因為鐵的密度？', options: ['比水大', '比水小', '等於零'], ans: 0,
+          why: '鐵的密度比水大，所以會沉到水底。' },
+        { v: '🛟', q: '物體泡在水裡時，水對它有一個向上托的力，這個力叫？', options: ['浮力', '重力', '摩擦力'], ans: 0,
+          why: '液體對浸入其中的物體會產生向上的浮力。' },
+        { v: '📦', q: '「密度」的意思最接近下面哪一個？', options: ['一定體積裡有多少質量', '物體有多長', '物體有多熱'], ans: 0,
+          why: '密度＝質量÷體積，代表單位體積內有多少質量。' },
+        { v: '🧊', q: '同一房間裡摸金屬比摸木頭覺得冰，主要是因為金屬？', options: ['傳熱較快，很快把手上的熱帶走', '溫度比木頭低很多', '會自己放出冷氣'], ans: 0,
+          why: '同房間兩者溫度其實接近，但金屬導熱快，很快把手的熱帶走，所以摸起來較冰。' }
+      ]
+    },
+    {
+      id: 'l5', emoji: '🚀', name: '等級5・運動與運動定律',
+      concept: '速率、速度、慣性、F＝ma、作用與反作用',
+      badge: { icon: '🚀', label: '運動法則家' },
+      fact: { v: '🚀', s: '物體怎麼動、動多快，背後都有「力」和牛頓運動定律在幫忙。',
+        more: '速率＝距離÷時間；速度還要看方向。沒有合外力時，靜者恆靜、動者等速前進（慣性）；F＝ma；作用力與反作用力大小相等、方向相反。' },
+      questions: [
+        { v: '🚗', q: '汽車 2 小時行駛 120 公里，平均速率是多少？', options: ['60 公里／小時', '120 公里／小時', '240 公里／小時'], ans: 0,
+          why: '速率＝距離÷時間＝120÷2＝60 公里／小時。' },
+        { v: '🧭', q: '「速度」除了大小（快慢），還包含什麼？', options: ['方向', '顏色', '重量'], ans: 0,
+          why: '速度是有方向的量（向量），除了快慢還要說明往哪個方向。' },
+        { v: '🚌', q: '公車突然煞車時站著的乘客會往前傾，這是因為？', options: ['慣性', '重力', '浮力'], ans: 0,
+          why: '物體有保持原本運動狀態的性質（慣性），車停了但人還想繼續前進。' },
+        { v: '🛑', q: '牛頓第一定律（慣性定律）說：不受合外力時，靜止的物體會？', options: ['保持靜止', '自己開始移動', '突然消失'], ans: 0,
+          why: '沒有合外力時，靜者恆靜、動者以等速直線運動，這就是慣性定律。' },
+        { v: '⚖️', q: '用同樣大小的力去推，質量越大的物體得到的加速度會？', options: ['越小', '越大', '完全不變'], ans: 0,
+          why: '由 F＝ma，力相同時質量越大加速度越小（越難推動）。' },
+        { v: '🏊', q: '游泳時往後撥水，人卻往前進，這最能說明牛頓第幾定律？', options: ['第三定律（作用與反作用）', '第一定律（慣性）', '沒有任何定律'], ans: 0,
+          why: '你對水施力向後，水同時對你施一個大小相等、方向相反的反作用力，把你往前推。' },
+        { v: '🌙', q: '同一個人到了月球上，和在地球上比會怎樣？', options: ['體重變輕，但質量不變', '質量變輕，體重不變', '什麼都不變'], ans: 0,
+          why: '月球重力約地球的 1／6，所以在月球上體重（重力的作用）較輕；但質量是物體所含物質的多寡，到哪裡都一樣。' },
+        { v: '🏎️', q: '推質量相同的兩台小車，用越大的力去推，車子的加速度會？', options: ['越大', '越小', '不變'], ans: 0,
+          why: '由 F＝ma，質量相同時，力越大加速度越大。' },
+        { v: '⚽', q: '用腳踢球，球飛出去的同時，球也對腳做了什麼？', options: ['給腳一個大小相等、方向相反的反作用力', '完全沒有力', '一個比踢的力更大的力'], ans: 0,
+          why: '作用力與反作用力大小相等、方向相反：腳踢球，球也「踢」腳。' },
+        { v: '📖', q: '一本書靜靜放在桌上不動，是因為？', options: ['重力和桌面向上的支撐力剛好平衡', '書上沒有任何力', '只有重力在作用'], ans: 0,
+          why: '書受向下的重力和桌面向上的支撐力，兩力平衡、合力為零，所以保持靜止。' }
+      ]
+    },
+    {
+      id: 'l6', emoji: '⚙️', name: '等級6・功、能量與簡單機械',
+      concept: '功、動能與位能、能量守恆、槓桿滑輪斜面',
+      badge: { icon: '⚙️', label: '功與能量家' },
+      fact: { v: '⚙️', s: '用力讓東西移動就是「作功」；能量是讓事情發生的本領，而且會守恆。',
+        more: '功＝力×沿力方向移動的距離，沒移動就沒作功。動能來自運動、位能來自高度，能量只會在形式間轉換、總量不會消失。槓桿、滑輪、斜面是三種簡單機械。' },
+      questions: [
+        { v: '💪', q: '在物理學裡，要對物體「作功」，一定要讓物體怎麼樣？', options: ['沿著施力方向移動一段距離', '發出聲音', '變熱'], ans: 0,
+          why: '功＝力×沿力方向移動的距離；物體沒有移動就沒有作功。' },
+        { v: '🧱', q: '小明用力推一面牆，牆卻完全沒有移動，這時他對牆作的功是？', options: ['沒有作功（功為零）', '作了很多功', '作了一半的功'], ans: 0,
+          why: '物體沒有移動，就算再用力，作的功也是零。' },
+        { v: '🏃', q: '正在奔跑的獵豹，因為「運動」而具有的能量叫做？', options: ['動能', '位能', '沒有能量'], ans: 0,
+          why: '動能是物體因為運動而具有的能量。' },
+        { v: '🏔️', q: '站在高處的石頭，因為「高度」而儲存的能量叫做？', options: ['（重力）位能', '動能', '電能'], ans: 0,
+          why: '位能是物體因為位置（高度）而具有的能量。' },
+        { v: '🎢', q: '雲霄飛車從高處往下衝、越來越快，這時能量發生了什麼？', options: ['位能轉換成動能', '能量憑空消失', '能量憑空變多'], ans: 0,
+          why: '能量守恆——下降時高度的位能轉換成運動的動能，總量不變。' },
+        { v: '⚖️', q: '翹翹板和剪刀，都是利用哪一種簡單機械？', options: ['槓桿', '滑輪', '斜面'], ans: 0,
+          why: '槓桿有支點，翹翹板、剪刀都是槓桿的應用。' },
+        { v: '🚩', q: '升旗時繩子往下拉、旗子卻往上升，這是利用了？', options: ['滑輪', '斜面', '螺絲'], ans: 0,
+          why: '滑輪可以改變施力的方向，往下拉就能把旗子往上升。' },
+        { v: '🛝', q: '把重物沿著斜坡推上去，會比直接抬起來省力，但要付出什麼代價？', options: ['移動的距離變長', '重物真的變輕了', '完全沒有代價'], ans: 0,
+          why: '斜面能省力，但移動的距離會變長；它只是讓推東西更省力，並不會使物體真的變輕。' },
+        { v: '🔋', q: '關於「能量」，下面哪個說法正確？', options: ['能量只會在不同形式間轉換，總量不會消失', '能量會越用越少、最後不見', '能量可以無中生有'], ans: 0,
+          why: '這就是能量守恆：能量只在形式之間轉換，總量保持不變。' }
+      ]
+    },
+    {
+      id: 'l7', emoji: '⚡', name: '等級7・電、電磁與波',
+      concept: '電壓電流電阻、歐姆定律、導體絕緣、電磁鐵與波',
+      badge: { icon: '⚡', label: '電磁與波高手' },
+      fact: { v: '⚡', s: '電和波看不見卻很有用；這一關只認識原理，不動手玩電喔！',
+        more: '電壓（伏特 V）推動電流（安培 A），電阻（歐姆 Ω）擋住電流，歐姆定律 V＝I×R。金屬會導電、橡膠是絕緣體（電線包絕緣層是為了保護安全）。波傳遞的是能量，光和無線電波都是電磁波。' },
+      questions: [
+        { v: '🔌', q: '電流的強弱，我們用哪一個單位來表示？', options: ['安培（A）', '公尺（m）', '秒（s）'], ans: 0,
+          why: '電流的單位是安培（A）；電壓用伏特（V）、電阻用歐姆（Ω）。' },
+        { v: '🔋', q: '推動電流的「電壓」，用什麼單位表示？', options: ['伏特（V）', '公斤（kg）', '赫茲（Hz）'], ans: 0,
+          why: '電壓的單位是伏特（V）。' },
+        { v: '🧮', q: '歐姆定律 V＝I×R 告訴我們：電阻固定時，電壓越大，電流會？', options: ['越大', '越小', '不變'], ans: 0,
+          why: '由 V＝I×R，電阻 R 固定時，電壓 V 越大，電流 I 就越大。' },
+        { v: '🪙', q: '下面哪一種材料是電的「良導體」，容易讓電流通過？', options: ['銅（金屬）', '橡膠', '乾木頭'], ans: 0,
+          why: '金屬（例如銅）是良導體；橡膠、乾木頭是絕緣體，不容易讓電流通過。' },
+        { v: '🧤', q: '電線外面為什麼要包一層橡膠或塑膠（絕緣層）？', options: ['防止漏電、保護使用的人安全', '讓電線比較好看', '讓電流變大'], ans: 0,
+          why: '絕緣層可以防止漏電、保護大家的安全；所以千萬不要玩弄或拆開電線和插座。' },
+        { v: '🧲', q: '把導線繞在鐵釘上通電，鐵釘會暫時變成？', options: ['電磁鐵', '永久磁鐵', '絕緣體'], ans: 0,
+          why: '線圈繞著鐵芯通電就成為電磁鐵；斷電後磁性會大致消失。' },
+        { v: '🔕', q: '電磁鐵和一般（永久）磁鐵最不一樣的地方是？', options: ['斷電後磁性會大致消失', '永遠都有磁性', '完全不會吸鐵'], ans: 0,
+          why: '電磁鐵要通電才有磁性，斷電後磁性大致消失，這點和永久磁鐵不同。' },
+        { v: '🌊', q: '水波往前傳，水面的葉子卻只在原地上下擺動，這說明波傳遞的是？', options: ['能量', '水本身', '石頭'], ans: 0,
+          why: '波傳遞的是能量，介質（水）只在原地附近振動，並沒有跟著跑到遠方。' },
+        { v: '📻', q: '波每秒振動的次數叫「頻率」，它的單位是？', options: ['赫茲（Hz）', '公尺（m）', '伏特（V）'], ans: 0,
+          why: '頻率的單位是赫茲（Hz），表示每秒振動幾次。' },
+        { v: '🛰️', q: '光和無線電波有一個共同的特別本領，下面哪一個正確？', options: ['都是電磁波，可以在真空中傳播', '都需要空氣才能傳播', '都是聲音的一種'], ans: 0,
+          why: '光和無線電波都是電磁波，就算在沒有空氣的真空（例如太空）中也能傳播。' },
+        { v: '📏', q: '波速固定時，波長越長，頻率會？', options: ['越低', '越高', '不變'], ans: 0,
+          why: '波速＝波長×頻率；波速固定時，波長越長，頻率就越低。' }
+      ]
+    },
+    // ===== 加法式新增：帶公式的數值計算型較高階等級（l8–l14；不重複既有定性題） =====
+    {
+      id: 'l8', emoji: '🏃', name: '等級8・運動學計算（★★）',
+      concept: '平均速率 v=d÷t、加速度 a=Δv÷t、位移、單位換算',
+      badge: { icon: '🏃', label: '運動計算家' },
+      fact: { v: '🏃', s: '速率＝距離÷時間（v=d÷t）；加速度＝速度變化÷所花時間（a=Δv÷t）。',
+        more: '<b class="ph-more-h">原理</b>等速前進時，位移＝速率×時間（<b>d＝v×t</b>）。速率單位常用 <b>m/s</b> 或 <b>km/h</b>，加速度單位是 <b>m/s²</b>。' +
+          '<b class="ph-more-h">重點</b>速度是<b>向量</b>，除了大小還要有方向；位移也有方向，路程沒有。' +
+          '<b class="ph-more-h">範例</b>車子 4 秒內速度從 0 增加到 20 m/s，加速度＝<b>(20−0)÷4＝5 m/s²</b>。' },
+      questions: [
+        { v: '🚗', q: '一輛車 3 小時行駛 180 公里，平均速率是多少？', options: ['60 公里/小時', '90 公里/小時', '540 公里/小時'], ans: 0,
+          why: '速率＝距離÷時間＝180÷3＝60 公里/小時。' },
+        { v: '🏃', q: '跑者 20 秒跑完 100 公尺，平均速率約是？', options: ['5 m/s', '20 m/s', '2000 m/s'], ans: 0,
+          why: '速率＝距離÷時間＝100÷20＝5 m/s。' },
+        { v: '📈', q: '「加速度」是速度的變化量除以什麼？', options: ['所花的時間', '移動的距離', '物體的質量'], ans: 0,
+          why: '加速度 a＝速度變化量 Δv÷所花時間 t，代表速度改變得多快。' },
+        { v: '🚦', q: '靜止的車子 5 秒後速度達到 15 m/s，平均加速度是？', options: ['3 m/s²', '5 m/s²', '75 m/s²'], ans: 0,
+          why: 'a＝Δv÷t＝(15−0)÷5＝3 m/s²。' },
+        { v: '➡️', q: '物體以 8 m/s 等速前進 6 秒，位移是多少？', options: ['48 公尺', '14 公尺', '1.3 公尺'], ans: 0,
+          why: '等速時位移＝速率×時間＝8×6＝48 公尺。' },
+        { v: '🧭', q: '「速度」除了大小（快慢），還一定包含什麼？', options: ['方向', '顏色', '溫度'], ans: 0,
+          why: '速度是向量，除了快慢還要說明往哪個方向。' },
+        { v: '🛑', q: '汽車速度由 20 m/s 減到 5 m/s 花了 3 秒，加速度大小是？', options: ['5 m/s²（減速）', '15 m/s²', '75 m/s²'], ans: 0,
+          why: 'a＝(5−20)÷3＝−5 m/s²；大小是 5 m/s²，負號表示方向與運動相反（減速）。' },
+        { v: '🔁', q: '72 公里/小時 等於多少 m/s？', options: ['20 m/s', '72 m/s', '2 m/s'], ans: 0,
+          why: '72 km/h＝72×1000÷3600＝20 m/s。' },
+        { v: '🚲', q: '腳踏車 10 秒內等加速，從 2 m/s 變成 12 m/s，加速度是？', options: ['1 m/s²', '10 m/s²', '14 m/s²'], ans: 0,
+          why: 'a＝(12−2)÷10＝1 m/s²。' },
+        { v: '📍', q: '下面哪一個是「向量」（有方向）？', options: ['位移', '路程', '兩者都沒有方向'], ans: 0,
+          why: '位移有方向（是向量）；路程只有長短、沒有方向。' },
+        { v: '🏎️', q: '物體以固定 4 m/s² 加速、從靜止出發，3 秒後速度是？', options: ['12 m/s', '7 m/s', '1.3 m/s'], ans: 0,
+          why: '從靜止出發 v＝a×t＝4×3＝12 m/s。' },
+        { v: '🚄', q: '高鐵 300 公里的行程要 1.5 小時，平均速率是？', options: ['200 公里/小時', '450 公里/小時', '150 公里/小時'], ans: 0,
+          why: '速率＝距離÷時間＝300÷1.5＝200 公里/小時。' }
+      ]
+    },
+    {
+      id: 'l9', emoji: '🍎', name: '等級9・牛頓第二定律計算 F=ma（★★★）',
+      concept: '合力 F=ma、重量 W=mg、合力求法（取 g≈10）',
+      badge: { icon: '🍎', label: 'F=ma 大師' },
+      fact: { v: '🍎', s: '合力＝質量×加速度（F＝m×a）；力的單位是牛頓（N）。',
+        more: '<b class="ph-more-h">原理</b>1 <b>牛頓</b>的力能讓 1 公斤的物體產生 <b>1 m/s²</b> 的加速度。重量是地球拉住物體的力：<b>W＝m×g</b>，本關為了計算方便取 <b>g≈10 N/kg</b>（實際約 9.8）。' +
+          '<b class="ph-more-h">重點</b><b>質量</b>到哪裡都不變，<b>重量</b>會隨重力改變。' +
+          '<b class="ph-more-h">範例</b>2 kg 物體受 6 N 合力，a＝F÷m＝<b>6÷2＝3 m/s²</b>。' },
+      questions: [
+        { v: '🍎', q: '質量 2 kg、加速度 5 m/s²，合力 F=ma 是多少？', options: ['10 N', '2.5 N', '7 N'], ans: 0,
+          why: 'F＝m×a＝2×5＝10 N。' },
+        { v: '📦', q: '合力 20 N 作用在 4 kg 的物體上，加速度是？', options: ['5 m/s²', '80 m/s²', '16 m/s²'], ans: 0,
+          why: 'a＝F÷m＝20÷4＝5 m/s²。' },
+        { v: '❓', q: '12 N 的合力讓某物體產生 3 m/s² 的加速度，它的質量是？', options: ['4 kg', '36 kg', '9 kg'], ans: 0,
+          why: 'm＝F÷a＝12÷3＝4 kg。' },
+        { v: '📛', q: '力的單位是什麼？', options: ['牛頓（N）', '公斤（kg）', '焦耳（J）'], ans: 0,
+          why: '力的單位是牛頓（N）；公斤是質量單位、焦耳是能量單位。' },
+        { v: '⚖️', q: '質量 5 kg 的物體在地表的重量約是多少？（取 g≈10 N/kg）', options: ['50 N', '5 N', '0.5 N'], ans: 0,
+          why: 'W＝m×g＝5×10＝50 N。' },
+        { v: '🐘', q: '用同樣大小的力去推，質量越大的物體，得到的加速度會？', options: ['越小', '越大', '一樣'], ans: 0,
+          why: '由 F＝ma，力相同時質量越大加速度越小（越難推動）。' },
+        { v: '🎯', q: '要讓 10 kg 物體產生 2 m/s² 的加速度，需要多大的合力？', options: ['20 N', '5 N', '12 N'], ans: 0,
+          why: 'F＝m×a＝10×2＝20 N。' },
+        { v: '↔️', q: '同一物體同時受向右 10 N、向左 4 N，合力是？', options: ['6 N（向右）', '14 N', '40 N'], ans: 0,
+          why: '同直線反向的力相減：10−4＝6 N，方向朝較大的右邊。' },
+        { v: '✖️', q: '質量不變，合力變成原來的兩倍，加速度會？', options: ['變兩倍', '變一半', '不變'], ans: 0,
+          why: '由 F＝ma，質量固定時加速度與合力成正比，合力兩倍加速度也兩倍。' },
+        { v: '🧱', q: '3 kg 物體受到 15 N 的合力，加速度是？', options: ['5 m/s²', '45 m/s²', '18 m/s²'], ans: 0,
+          why: 'a＝F÷m＝15÷3＝5 m/s²。' },
+        { v: '🌗', q: '把物體帶到月球，重量會改變，但什麼不變？', options: ['質量', '重量', '體積和重量都會變'], ans: 0,
+          why: '質量是物體所含物質的多寡，到哪裡都一樣；重量會因重力不同而改變。' },
+        { v: '🏋️', q: '一個物體重 60 N（取 g≈10 N/kg），它的質量是？', options: ['6 kg', '600 kg', '70 kg'], ans: 0,
+          why: 'm＝W÷g＝60÷10＝6 kg。' }
+      ]
+    },
+    {
+      id: 'l10', emoji: '⚙️', name: '等級10・功、功率與能量計算（★★★）',
+      concept: '功 W=Fd、功率 P=W÷t、動能 ½mv²、位能 mgh、能量守恆（取 g≈10）',
+      badge: { icon: '⚙️', label: '能量計算師' },
+      fact: { v: '⚙️', s: '功＝力×沿力方向移動的距離（W＝F×d），單位焦耳（J）；功率＝功÷時間（P＝W÷t），單位瓦特（W）。',
+        more: '<b class="ph-more-h">原理</b>1 <b>瓦特</b>＝每秒做 1 焦耳的功。動能 <b>KE＝½×m×v²</b>（因為有 v²，速度加倍動能變四倍）；重力位能 <b>PE＝m×g×h</b>（取 g≈10）。' +
+          '<b class="ph-more-h">重點</b><b>能量守恆</b>：能量只會在形式間轉換、總量不變。物體沒移動就沒作功。' +
+          '<b class="ph-more-h">範例</b>用 10 N 把箱子沿地面推 3 m，功＝<b>10×3＝30 J</b>。' },
+      questions: [
+        { v: '📦', q: '用 20 N 的力把物體沿力方向移動 5 m，作了多少功？', options: ['100 J', '4 J', '25 J'], ans: 0,
+          why: '功＝力×距離＝20×5＝100 J。' },
+        { v: '📛', q: '功（和能量）的單位是什麼？', options: ['焦耳（J）', '牛頓（N）', '瓦特（W）'], ans: 0,
+          why: '功與能量的單位是焦耳（J）。' },
+        { v: '⏱️', q: '做了 200 J 的功花了 4 秒，功率是多少？', options: ['50 W', '800 W', '204 W'], ans: 0,
+          why: '功率＝功÷時間＝200÷4＝50 W。' },
+        { v: '💡', q: '功率的單位是什麼？', options: ['瓦特（W）', '焦耳（J）', '安培（A）'], ans: 0,
+          why: '功率的單位是瓦特（W），代表每秒做多少功。' },
+        { v: '🏃', q: '質量 2 kg、速度 3 m/s 的物體，動能 KE＝½mv² 是？', options: ['9 J', '6 J', '18 J'], ans: 0,
+          why: 'KE＝½×2×3²＝½×2×9＝9 J。' },
+        { v: '🏔️', q: '質量 3 kg 的物體在高 2 m 處，重力位能 PE＝mgh 是？（取 g≈10）', options: ['60 J', '6 J', '30 J'], ans: 0,
+          why: 'PE＝m×g×h＝3×10×2＝60 J。' },
+        { v: '🧱', q: '用力推牆但牆完全沒有移動，對牆作的功是？', options: ['0 J（沒有位移）', '很大', '一半'], ans: 0,
+          why: '功＝力×距離；沒有移動距離，作的功就是零。' },
+        { v: '🎢', q: '雲霄飛車從高處往下衝、越來越快，能量主要如何變化？', options: ['位能轉換成動能', '能量憑空消失', '能量憑空變多'], ans: 0,
+          why: '能量守恆——下降時位能轉換成動能，總量不變。' },
+        { v: '⚡', q: '兩台機器做同樣多的功，花時間較短的那台，功率會？', options: ['較大', '較小', '一樣'], ans: 0,
+          why: '功相同時，時間越短功率越大（P＝W÷t）。' },
+        { v: '🔦', q: '一顆 100 W 的燈泡，每秒消耗多少能量？', options: ['100 J', '1 J', '100 分'], ans: 0,
+          why: '1 W＝每秒 1 J，所以 100 W 每秒消耗 100 J。' },
+        { v: '✖️', q: '動能 KE＝½mv²，若速度變成兩倍，動能會變成？', options: ['四倍', '兩倍', '一半'], ans: 0,
+          why: '動能和速度的平方成正比，速度兩倍時 2²＝4，動能變四倍。' },
+        { v: '⬆️', q: '把 50 N 重的物體垂直往上抬高 2 m，對它作了多少功？', options: ['100 J', '25 J', '52 J'], ans: 0,
+          why: '功＝力×距離＝50×2＝100 J。' }
+      ]
+    },
+    {
+      id: 'l11', emoji: '🌊', name: '等級11・壓力與浮力計算（★★★）',
+      concept: '壓力 P=F÷A、阿基米德浮力＝排開液體重、視重差',
+      badge: { icon: '🌊', label: '壓力浮力家' },
+      fact: { v: '🌊', s: '壓力＝力÷受力面積（P＝F÷A），單位帕斯卡（Pa，1 Pa＝1 N/m²）。',
+        more: '<b class="ph-more-h">原理</b>力相同時，受力面積越小<b>壓力</b>越大（所以刀刃薄、圖釘尖）。<b>阿基米德原理</b>：浸在液體中的物體受到的<b>浮力</b>＝它「排開液體的重量」。' +
+          '<b class="ph-more-h">應用</b>在水中用彈簧秤量到的視重會變小，減少的量就等於浮力；密度比液體小的物體會浮。' +
+          '<b class="ph-more-h">範例</b>20 N 的力平均壓在 4 m² 上，壓力＝<b>20÷4＝5 Pa</b>。' },
+      questions: [
+        { v: '📐', q: '壓力 P＝F÷A。40 N 的力平均壓在 8 m² 面積上，壓力是？', options: ['5 Pa', '320 Pa', '48 Pa'], ans: 0,
+          why: 'P＝力÷面積＝40÷8＝5 Pa。' },
+        { v: '📛', q: '壓力的單位是什麼？', options: ['帕斯卡（Pa）', '牛頓（N）', '焦耳（J）'], ans: 0,
+          why: '壓力單位是帕斯卡（Pa），1 Pa＝1 N/m²。' },
+        { v: '🔻', q: '施力相同時，受力面積越小，壓力會？', options: ['越大', '越小', '不變'], ans: 0,
+          why: 'P＝F÷A，面積越小壓力越大。' },
+        { v: '🔪', q: '刀子磨得很利（刃很薄）比較好切，主要是因為？', options: ['受力面積變小、壓力變大', '施的力變大', '刀子變重'], ans: 0,
+          why: '薄刃使接觸面積很小，同樣的力產生很大的壓力，容易切開。' },
+        { v: '🛟', q: '阿基米德原理：物體在水中受到的浮力，等於？', options: ['它排開水的重量', '物體自己的重量', '水的溫度'], ans: 0,
+          why: '浮力＝物體排開液體的重量，這就是阿基米德原理。' },
+        { v: '💧', q: '一個物體在水中排開了 30 N 重的水，它受到的浮力是？', options: ['30 N', '3 N', '300 N'], ans: 0,
+          why: '浮力＝排開液體的重量＝30 N。' },
+        { v: '🪵', q: '物體的密度比水小，放進水中會？', options: ['浮起', '下沉', '溶解'], ans: 0,
+          why: '密度比液體小的物體會浮起，比液體大的會下沉。' },
+        { v: '📏', q: '100 N 的力平均壓在 2 m² 的面積上，壓力是？', options: ['50 Pa', '200 Pa', '102 Pa'], ans: 0,
+          why: 'P＝力÷面積＝100÷2＝50 Pa。' },
+        { v: '🌊', q: '在同一杯水裡，越深的地方水壓通常會？', options: ['越大', '越小', '不變'], ans: 0,
+          why: '液體越深，上方水柱越重，該處的壓力越大。' },
+        { v: '🛶', q: '一塊木頭靜止漂浮在水面，它受到的浮力和重力關係是？', options: ['大小相等（平衡）', '浮力比較小', '重力等於零'], ans: 0,
+          why: '漂浮靜止時合力為零，向上的浮力和向下的重力大小相等。' },
+        { v: '🥾', q: '在鬆軟雪地穿寬大的雪鞋比較不會陷下去，因為雪鞋？', options: ['增大接觸面積、減小壓力', '讓人變輕', '增大壓力'], ans: 0,
+          why: '面積變大使壓力（P＝F÷A）變小，比較不會陷入雪中。' },
+        { v: '🎣', q: '物體在空氣中重 50 N，在水中用彈簧秤量得 30 N，它受到的浮力是？', options: ['20 N', '80 N', '30 N'], ans: 0,
+          why: '浮力＝空氣中重量−水中視重＝50−30＝20 N。' }
+      ]
+    },
+    {
+      id: 'l12', emoji: '⚖️', name: '等級12・力矩與槓桿計算（★★★）',
+      concept: '力矩 τ=F×力臂、槓桿平衡 F₁d₁=F₂d₂、機械利益',
+      badge: { icon: '⚖️', label: '槓桿平衡家' },
+      fact: { v: '⚖️', s: '力矩＝力×力臂（施力點到支點的垂直距離），τ＝F×d；槓桿平衡時「兩邊力矩相等」：F₁×d₁＝F₂×d₂。',
+        more: '<b class="ph-more-h">原理</b><b>力臂</b>越長，同樣的力產生的<b>力矩</b>越大（所以用長棍撬東西省力）。<b>機械利益＝抗力÷施力</b>。' +
+          '<b class="ph-more-h">應用</b>斜面、滑輪等<b>簡單機械</b>可以省力或改變方向，但要付出移動距離變長的代價，所作的功（能量）不會減少。' +
+          '<b class="ph-more-h">範例</b>支點左邊 20 N 距 2 m，右邊在 4 m 處要 <b>20×2＝F×4 → F＝10 N</b> 才平衡。' },
+      questions: [
+        { v: '🔧', q: '力矩＝力×力臂。10 N 的力作用在離支點 3 m 處，力矩是？', options: ['30 N·m', '13 N·m', '3.3 N·m'], ans: 0,
+          why: '力矩＝力×力臂＝10×3＝30 N·m。' },
+        { v: '🛝', q: '翹翹板左邊小孩重 300 N 坐在離支點 1 m 處，右邊小孩坐在離支點 2 m 處，要多重才平衡？', options: ['150 N', '600 N', '300 N'], ans: 0,
+          why: '槓桿平衡 300×1＝F×2，F＝150 N。' },
+        { v: '🪝', q: '要用比較小的力撬動重物，應該把施力的「力臂」？', options: ['加長', '縮短', '沒有差別'], ans: 0,
+          why: '力臂越長，同樣的力矩只需較小的力，比較省力。' },
+        { v: '📐', q: '槓桿要平衡，條件是？', options: ['兩邊的力矩相等', '兩邊的長度相等', '兩邊的重量相等'], ans: 0,
+          why: '槓桿平衡的條件是兩側力矩相等：F₁×d₁＝F₂×d₂。' },
+        { v: '🔩', q: '一根槓桿，支點左邊 40 N 距 3 m，右邊在 6 m 處需要施多少力才平衡？', options: ['20 N', '120 N', '240 N'], ans: 0,
+          why: '40×3＝F×6，F＝120÷6＝20 N。' },
+        { v: '🛗', q: '斜面（斜坡）可以省力，但要付出的代價是？', options: ['移動的距離變長', '物體真的變重', '沒有任何代價'], ans: 0,
+          why: '斜面省力但費距離；它不會讓物體變輕，所作的功不變。' },
+        { v: '🔄', q: '滑輪、斜面等簡單機械能省力或省距離，但什麼不會減少？', options: ['所作的功（能量）', '施力', '距離'], ans: 0,
+          why: '簡單機械只改變施力或方向，作的功（能量）並不會變少。' },
+        { v: '✂️', q: '剪刀、開瓶器、鑷子主要利用哪一種簡單機械？', options: ['槓桿', '斜面', '螺旋'], ans: 0,
+          why: '它們都有支點，是槓桿的應用。' },
+        { v: '✖️', q: '力保持不變，把力臂加倍，力矩會？', options: ['加倍', '減半', '不變'], ans: 0,
+          why: '力矩＝力×力臂，力臂加倍力矩也加倍。' },
+        { v: '🏗️', q: '一部機械用 5 N 的施力就能舉起 15 N 的重物，機械利益（抗力÷施力）是？', options: ['3', '75', '10'], ans: 0,
+          why: '機械利益＝抗力÷施力＝15÷5＝3。' },
+        { v: '🪛', q: '螺絲起子的握把做得比較粗，主要是為了？', options: ['增大力臂、轉起來較省力', '比較好看', '增加重量'], ans: 0,
+          why: '握把越粗（半徑越大）力臂越長，轉動時較省力。' },
+        { v: '🟰', q: '支點兩邊力臂相等的槓桿要平衡，兩邊的力必須？', options: ['相等', '左邊比較大', '右邊比較大'], ans: 0,
+          why: '力臂相等時，只有兩邊力相等才能使力矩相等而平衡。' }
+      ]
+    },
+    {
+      id: 'l13', emoji: '🔌', name: '等級13・電路：歐姆定律與串並聯計算（★★★★）',
+      concept: '歐姆定律 V=IR、串聯電阻相加、並聯總電阻變小、電功率 P=VI',
+      badge: { icon: '🔌', label: '電路計算高手' },
+      fact: { v: '🔌', s: '歐姆定律：電壓＝電流×電阻（V＝I×R）。單位：電壓伏特（V）、電流安培（A）、電阻歐姆（Ω）。',
+        more: '<b class="ph-more-h">原理</b><b>串聯</b>：電阻相加（<b>R＝R₁+R₂</b>），電流處處相同。<b>並聯</b>：總電阻比任何一個都小，兩個相同電阻並聯總電阻＝一半。電功率 <b>P＝V×I</b>，單位瓦特（W）。' +
+          '<b class="ph-more-h">安全提醒</b>這一關是紙上計算，千萬不要真的去玩弄插座或電線。' +
+          '<b class="ph-more-h">範例</b>6 V 接 3 Ω，電流 I＝V÷R＝<b>6÷3＝2 A</b>。' },
+      questions: [
+        { v: '🧮', q: '歐姆定律 V＝I×R。電流 2 A 通過 5 Ω 電阻，兩端電壓是？', options: ['10 V', '2.5 V', '7 V'], ans: 0,
+          why: 'V＝I×R＝2×5＝10 V。' },
+        { v: '🔋', q: '12 V 電池接一個 4 Ω 電阻，電路電流 I＝V÷R 是？', options: ['3 A', '48 A', '16 A'], ans: 0,
+          why: 'I＝V÷R＝12÷4＝3 A。' },
+        { v: '🔍', q: '電壓 9 V、電流 3 A，電阻 R＝V÷I 是？', options: ['3 Ω', '27 Ω', '12 Ω'], ans: 0,
+          why: 'R＝V÷I＝9÷3＝3 Ω。' },
+        { v: '➕', q: '把 2 Ω 和 3 Ω 兩個電阻「串聯」，總電阻是？', options: ['5 Ω', '1.2 Ω', '6 Ω'], ans: 0,
+          why: '串聯電阻相加：2+3＝5 Ω。' },
+        { v: '🔗', q: '串聯電路中，通過每個元件的電流是？', options: ['都相同', '越後面越小', '只有一半'], ans: 0,
+          why: '串聯只有一條路徑，電流處處相同。' },
+        { v: '🍴', q: '兩個相同的 6 Ω 電阻「並聯」，總電阻是？', options: ['3 Ω', '12 Ω', '6 Ω'], ans: 0,
+          why: '兩個相同電阻並聯，總電阻是一半：6÷2＝3 Ω（並聯總電阻比任一個都小）。' },
+        { v: '💡', q: '電功率 P＝V×I。電壓 10 V、電流 2 A，功率是？', options: ['20 W', '5 W', '12 W'], ans: 0,
+          why: 'P＝V×I＝10×2＝20 W。' },
+        { v: '📛', q: '電流的單位是什麼？', options: ['安培（A）', '伏特（V）', '歐姆（Ω）'], ans: 0,
+          why: '電流單位是安培（A）；電壓用伏特、電阻用歐姆。' },
+        { v: '✖️', q: '電阻不變，電壓變成兩倍，電流會？', options: ['變兩倍', '變一半', '不變'], ans: 0,
+          why: '由 V＝I×R，R 固定時電流與電壓成正比，電壓兩倍電流也兩倍。' },
+        { v: '🔢', q: '三個 2 Ω 電阻「串聯」，總電阻是？', options: ['6 Ω', '2 Ω', '0.67 Ω'], ans: 0,
+          why: '串聯相加：2+2+2＝6 Ω。' },
+        { v: '🏠', q: '家裡的電器大多接成並聯，好處之一是？', options: ['每個可獨立開關、且電壓相同', '要全部一起才會亮', '比較省電線'], ans: 0,
+          why: '並聯時每個電器電壓相同、可各自獨立開關，一個壞了其他仍能用。' },
+        { v: '⚡', q: '3 A 電流通過一個 6 Ω 的元件，它兩端的電壓是？', options: ['18 V', '2 V', '9 V'], ans: 0,
+          why: 'V＝I×R＝3×6＝18 V。' }
+      ]
+    },
+    {
+      id: 'l14', emoji: '🎵', name: '等級14・波、聲與光的計算（★★★）',
+      concept: '波速 v=f×λ、聲速約 340 m/s、回聲距離、光速',
+      badge: { icon: '🎵', label: '波動計算家' },
+      fact: { v: '🎵', s: '波速＝頻率×波長（v＝f×λ）；頻率是每秒振動的次數，單位赫茲（Hz）。',
+        more: '<b class="ph-more-h">原理</b>波速固定時，<b>頻率</b>越高<b>波長</b>越短。聲音在空氣中約 <b>340 m/s</b>；光速約 30 萬公里/秒（<b>3×10⁸ m/s</b>），比聲音快很多。' +
+          '<b class="ph-more-h">應用</b>先看到閃電後聽到雷聲。回聲是聲音來回，聽到回聲時：<b>距離＝聲速×時間÷2</b>。' +
+          '<b class="ph-more-h">範例</b>頻率 2 Hz、波長 3 m，波速＝<b>2×3＝6 m/s</b>。' },
+      questions: [
+        { v: '🌊', q: '波速 v＝f×λ。頻率 5 Hz、波長 4 m，波速是？', options: ['20 m/s', '1.25 m/s', '9 m/s'], ans: 0,
+          why: 'v＝頻率×波長＝5×4＝20 m/s。' },
+        { v: '📛', q: '頻率的單位是什麼？', options: ['赫茲（Hz）', '公尺（m）', '焦耳（J）'], ans: 0,
+          why: '頻率單位是赫茲（Hz），表示每秒振動幾次。' },
+        { v: '📉', q: '波速固定時，頻率越高，波長會？', options: ['越短', '越長', '不變'], ans: 0,
+          why: 'v＝f×λ，波速固定時頻率與波長成反比，頻率越高波長越短。' },
+        { v: '🧮', q: '一個波波速 12 m/s、波長 3 m，頻率 f＝v÷λ 是？', options: ['4 Hz', '36 Hz', '15 Hz'], ans: 0,
+          why: 'f＝v÷λ＝12÷3＝4 Hz。' },
+        { v: '🎧', q: '聲音在空氣中的傳播速度大約是多少？', options: ['約 340 m/s', '約 3 m/s', '和光一樣快'], ans: 0,
+          why: '常溫空氣中聲速約 340 m/s，比光速慢很多。' },
+        { v: '⚡', q: '閃電和打雷幾乎同時發生，我們卻先看到閃電、後聽到雷聲，因為？', options: ['光速比聲速快很多', '聲速比光速快', '兩者一樣快'], ans: 0,
+          why: '光速約每秒 30 萬公里，遠比聲速（約 340 m/s）快，所以先看到閃電。' },
+        { v: '💡', q: '光在真空中的速度大約是多少？', options: ['約 30 萬公里/秒', '約 340 公尺/秒', '約 100 公里/小時'], ans: 0,
+          why: '光速約 3×10⁸ m/s，也就是每秒約 30 萬公里。' },
+        { v: '🏔️', q: '對著山壁大喊，2 秒後聽到回聲。聲速取 340 m/s，山壁大約多遠？', options: ['約 340 公尺', '約 680 公尺', '約 170 公尺'], ans: 0,
+          why: '聲音來回共走 340×2＝680 m，距離是一半：680÷2＝340 公尺。' },
+        { v: '🧮', q: '波速 20 m/s、頻率 4 Hz，波長 λ＝v÷f 是？', options: ['5 m', '80 m', '16 m'], ans: 0,
+          why: 'λ＝v÷f＝20÷4＝5 m。' },
+        { v: '📈', q: '同一條繩上的波，波速不變，若波長變成兩倍，頻率會？', options: ['變一半', '變兩倍', '不變'], ans: 0,
+          why: 'v＝f×λ，波速固定時頻率與波長成反比，波長兩倍頻率變一半。' },
+        { v: '🔔', q: '一個振動源每秒振動 6 次，它的頻率是？', options: ['6 Hz', '6 m', '6 秒'], ans: 0,
+          why: '頻率是每秒振動的次數，每秒 6 次就是 6 Hz。' },
+        { v: '🎶', q: '頻率 10 Hz、波長 2 m 的波，波速是？', options: ['20 m/s', '5 m/s', '12 m/s'], ans: 0,
+          why: 'v＝f×λ＝10×2＝20 m/s。' }
+      ]
+    },
+    {"id":"l15","emoji":"🍳","name":"生活中的物理・廚房與居家","concept":"用物理的眼睛，看穿廚房與居家裡的每個小祕密。","badge":{"icon":"🍳","label":"居家物理達人"},"fact":{"v":"🏠","s":"廚房和居家裡藏著滿滿的物理——熱的傳導、對流、輻射、壓力、電和槓桿，天天都在你身邊發生。","more":"這一關用生活小場景帶你看穿現象背後的原理：為什麼鍋把不燙、冷氣要裝高、壓力鍋煮得快、濕手不能碰電……學會用物理的眼睛看家裡，科學其實一點都不遙遠！"},"questions":[{"v":"🍳","q":"炒菜用的金屬鍋，鍋把卻常包一層塑膠或木頭，這樣拿才不燙手。背後的物理原理是什麼？","options":["塑膠和木頭比金屬更會散熱，所以摸起來涼涼的","塑膠和木頭是熱的不良導體，能減緩熱從鍋身傳到手上","塑膠和木頭會把熱吸光，讓鍋子整個不會變熱"],"ans":1,"why":"金屬是熱的良導體，塑膠、木頭是不良導體（絕緣體），能阻擋熱以「傳導」方式傳到手，所以不燙。它們並不會「吸光」熱，也不是比金屬更會散熱。"},{"v":"🍵","q":"保溫瓶的瓶身做成雙層，中間抽成真空，保溫效果特別好。真空層主要擋住了哪種熱的傳遞方式？","options":["只擋住輻射，傳導完全不受影響","讓熱量憑空消失，所以完全不會散熱","傳導與對流——沒有介質，熱幾乎傳不過去"],"ans":2,"why":"熱的傳導和對流都需要「介質」（物質）才能進行，真空裡幾乎沒有物質，所以傳導與對流都被切斷；瓶內壁再做成亮面反射輻射。熱不會憑空消失。"},{"v":"❄️","q":"冷氣機通常裝在牆壁高處，而不是靠近地板。為什麼裝高處反而能讓整個房間都變涼？","options":["冷空氣密度大會往下沉，由高處往下形成對流，讓全室循環變涼","冷空氣比較輕會往上飄，所以要裝高處才接得到它","高處離太陽比較近，冷氣在那裡比較容易發揮效果"],"ans":0,"why":"同體積的冷空氣較重（密度大）會下沉，暖空氣則上升，形成對流循環。冷氣裝高處，冷空氣往下沉、暖空氣被吸上去，整室才涼得均勻。冷空氣不會上飄，也與離太陽遠近無關。"},{"v":"🔥","q":"電暖器或暖氣多半放在地面附近。從對流的角度看，為什麼放低處比放高處更暖和？","options":["熱空氣比較重會沉在地板，所以要放低處才追得到","暖空氣密度小會上升，放低處能讓熱空氣往上帶動全室對流","放低處只是因為離插座比較近，和空氣流動無關"],"ans":1,"why":"暖空氣受熱膨脹、密度變小而上升，冷空氣下沉補位，形成對流。暖氣放低處，熱空氣自然往上循環，全室才會暖起來。熱空氣並不會下沉。"},{"v":"📡","q":"微波爐能快速加熱食物，尤其是含水多的食物特別快。它讓食物變熱的原理是什麼？","options":["微波像瓦斯火一樣，從食物外面把它燒熱","微波先把爐內空氣加熱，再靠熱空氣把食物烤熟","微波讓食物裡的水分子隨微波不停快速轉向、擾動而生熱"],"ans":2,"why":"微波是一種電磁波，會使食物中的水分子劇烈振動（轉動），分子互相摩擦、碰撞而生熱，所以含水多的食物熱得特別快。它不是靠火焰，也不是先加熱空氣。"},{"v":"♨️","q":"用壓力鍋燉肉比普通鍋快很多。壓力鍋加快烹煮的物理原理是什麼？","options":["密封使鍋內壓力升高，水的沸點跟著升到超過 100°C，溫度更高就煮得更快","壓力鍋能讓水的沸點降低，所以水比較快滾開","壓力鍋把食物壓扁，增加受熱面積才變快"],"ans":0,"why":"液體的沸點會隨壓力增大而升高。壓力鍋密封後，蒸氣使內部壓力上升，水要到 100°C 以上才沸騰，鍋內溫度更高，食物就熟得更快。沸點是「升高」而不是降低。"},{"v":"⚡","q":"電磁爐的爐面本身不太熱，卻能把鍋子燒得滾燙。它讓鍋子發熱的原理是什麼？","options":["爐面先燒到很燙，再用傳導把熱傳給鍋子","靠電磁感應在鍋底產生感應電流（渦電流），電流通過鍋底的電阻而發熱","靠紅外線輻射直接穿過鍋子把裡面的食物照熟"],"ans":1,"why":"電磁爐內線圈通有變化的電流，產生變化的磁場，依電磁感應在導磁的鍋底感應出「渦電流」，電流通過有電阻的鍋底而生熱。所以爐面本身不必先變燙；也因此電磁爐要用鐵磁性（可被磁鐵吸）的鍋具。"},{"v":"💡","q":"同樣拿來照明，傳統白熾燈泡摸起來很燙、又比 LED 耗電。從能量轉換的角度看，原因是什麼？","options":["白熾燈把電能「全部」變成光，只是那些光本身比較熱","LED 不耗電，是因為它根本不需要用到電流","白熾燈靠鎢絲通電到高溫才發光，大部分電能變成熱散失；LED 把較多電能直接轉成光"],"ans":2,"why":"白熾燈是把鎢絲通電加熱到高溫才發光，大部分電能以熱（和看不見的輻射）散失，效率低；LED 靠半導體直接把電能轉成光，發熱少、比較省電。LED 仍需要通電，只是轉換效率高很多。"},{"v":"⚠️","q":"大人常提醒：不可以用濕手去碰插座或插拔電器。從導電的角度看，濕手為什麼特別危險？","options":["日常的水含有雜質離子會導電，潮濕使電阻變小，電流更容易通過人體","純水是最強的導體，一沾到水電流就絕對通不過去","水會把電完全擋住，所以濕手其實比乾手更安全"],"ans":0,"why":"生活中的水（自來水、汗水）含有礦物質等雜質離子，能導電；手潮濕時電阻變小，一旦碰到帶電處，電流更容易流過身體而觸電。純水導電性其實很差，但日常幾乎沒有純水，所以千萬別用濕手碰電。"},{"v":"🍶","q":"用開瓶器（撬瓶蓋那種）輕輕一撬，瓶蓋就開了。它其實是一種「省力槓桿」，原理是什麼？","options":["抗力臂比施力臂長，所以反而要用更大的力才撬得開","施力臂比抗力臂長，用較小的力就能產生較大的作用，所以省力","它是靠磁力把瓶蓋吸起來，和槓桿一點關係都沒有"],"ans":1,"why":"開瓶器以瓶緣為支點，你的手離支點遠（施力臂長），瓶蓋離支點近（抗力臂短）。由槓桿原理，施力臂比抗力臂長時，就能用較小的力撬開瓶蓋，屬於「省力槓桿」。"},{"v":"🚪","q":"門把幾乎都裝在離門軸（轉軸）最遠的那一側，而不是靠近門軸。這樣設計為什麼比較好開？","options":["離轉軸越遠其實越費力，設計者只是為了好看","門把裝哪裡和開門省不省力完全無關","施力點離轉軸越遠，力臂越長，同樣的力就能產生更大的力矩（轉動效果）"],"ans":2,"why":"開門是繞著門軸的轉動，轉動效果（力矩）= 力 × 力臂。門把離轉軸越遠，力臂越長，同樣大小的力就能產生更大的力矩，更容易把門推開，這也是槓桿與力臂的生活應用。"}]},
+    {"id":"l16","emoji":"🚴","name":"生活中的物理・運動與交通","concept":"鞋底、剎車、安全帶、旋球、齒輪——拆解馬路與運動場上的力學祕密","badge":{"icon":"🚲","label":"運動物理達人"},"fact":{"v":"🚦","s":"從鞋底紋路到安全氣囊，馬路與運動場上處處是物理——摩擦力、慣性、向心力和重心都在默默保護你。","more":"這一關把課本裡的力學搬到生活現場：為什麼下雨路滑、急剎車會前傾、球會在空中轉彎、腳踏車換檔能省力。看懂背後的原理，你會發現物理其實很「接地氣」，也更懂得怎麼保護自己。"},"questions":[{"v":"👟","q":"登山鞋、球鞋的鞋底常做出深深的紋路，主要是為了什麼？","options":["紋路讓鞋底和地面的接觸面積變大，面積越大摩擦力就一定越大","紋路能排開水與碎屑、增加抓地（摩擦）力，讓鞋子比較不會打滑","紋路只是為了好看，對防滑其實沒有什麼幫助"],"ans":1,"why":"鞋底紋路能把水和小碎屑排開，讓鞋底直接咬住地面、維持足夠的摩擦力，尤其在潮濕地面更明顯。至於「接觸面積越大摩擦力一定越大」是常見迷思：理想情況下摩擦力主要看材質和正向力，並不是單純由面積決定。"},{"v":"🌧️","q":"下雨天走在磁磚或大理石地面上特別容易滑倒，背後的原因是？","options":["雨水增加了地面的摩擦力，反而把人往前推倒","下雨時重力變小，人站不穩才會滑倒","雨水在鞋底和地面之間形成一層水膜，減少了兩者的摩擦力"],"ans":2,"why":"水填進鞋底和地面之間形成薄薄的水膜，讓兩者不能好好接觸，摩擦力大幅下降，人就容易滑倒。重力並不會因為下雨而改變，摩擦力也不會憑空「把人往前推」。"},{"v":"🛑","q":"腳踏車或汽車踩剎車時，是靠什麼讓車子慢下來、停住？","options":["剎車皮夾住輪子或碟盤，用摩擦力把車子的動能轉換成熱，車就慢下來","剎車時輪子被磁鐵吸住不動，所以停下來","剎車其實是切斷空氣供應，車子失去動力就自然停了"],"ans":0,"why":"剎車靠的是摩擦：剎車皮緊夾輪圈或碟盤，把車子原本的動能（運動能量）轉成熱能散掉，速度就降下來。這也是為什麼長下坡一直剎車，剎車片會發燙。"},{"v":"🚗","q":"汽車緊急剎車時，為什麼坐在車上的人身體會往前衝？（安全帶就是為了拉住你）","options":["剎車時產生了一股向前的力，把人往前推出去","因為慣性，身體本來和車一起前進，車突然變慢，身體仍想維持原本的前進運動","剎車讓車內的重力方向改變，把人往前拉"],"ans":1,"why":"這是慣性：運動中的身體會傾向維持原本的速度和方向。車子被剎車減速，人卻還想「繼續往前」，所以感覺被往前甩。安全帶的作用就是提供向後的力，安全地拉住你。"},{"v":"💺","q":"汽車座椅上方的「頭枕」，在車子被後方追撞時能發揮什麼保護作用？","options":["頭枕純粹是讓頭靠著睡覺比較舒服，沒有安全功能","被追撞時頭枕會自動彈開，順勢把頭往前推","支撐頭部，避免頭部因慣性突然後仰，造成頸部的「揮鞭式」傷害"],"ans":2,"why":"被後車追撞時，座椅推著身體向前，但頭部因慣性來不及跟上而猛然後仰，頸部像鞭子一樣被甩動（揮鞭式頸部傷害）。頭枕頂住後腦，讓頭和身體一起前進，減少頸椎受傷。"},{"v":"🎈","q":"安全氣囊、機車安全帽的泡棉、運動護具，它們保護人的共同原理是什麼？","options":["延長碰撞時受力的時間，讓衝擊力變小，藉此減輕傷害","縮短碰撞的時間，讓衝擊力也跟著一起變大","讓人完全不受到任何力，達到「零衝擊」"],"ans":0,"why":"撞擊時要改變的動量是固定的，但把「受力的時間」拉長，平均作用力就會變小（衝量＝力×時間）。氣囊、泡棉、護具都是靠變形來延長這段時間，把猛烈的一擊化成較溫和的推。它們能減輕傷害，但沒辦法讓人完全不受力。"},{"v":"⚙️","q":"腳踏車遇到上坡時，切換到「省力檔」會比較好踩，背後的原理是什麼？","options":["省力檔讓你憑空多出力氣，所以爬坡才變輕鬆","用省力檔時，踏板要多轉幾圈輪子才前進一點，是用「多費一點距離」換「比較省力」","省力檔會減少車子受到的重力，所以整台車變輕了"],"ans":1,"why":"變速就是在調整齒輪比。省力檔踩起來輕，但踏板要轉很多圈車子才前進一小段——省了力卻費了距離。這正是機械原理的核心：力氣不會憑空多出來，總功不變，只是在「力」和「距離」之間做交換。"},{"v":"🚌","q":"坐公車轉彎時，為什麼會覺得身體被「甩」向外側？","options":["轉彎時有一股真實的「離心力」從外面把你往外推","轉彎時是輪胎的摩擦力主動把乘客往外側推","轉彎（改變方向）需要向心力，乘客因慣性想繼續直線前進，才感覺被甩向外"],"ans":2,"why":"車子轉彎是不斷改變運動方向，需要指向圓心的向心力。乘客因慣性想「維持直線前進」，相對於轉彎的車就好像被推向外側。所謂「離心力」其實是慣性造成的錯覺，並不是真的有股力從外面把你推出去。"},{"v":"⚾","q":"把球斜斜地往上丟出去（先不管空氣阻力），球在空中飛行的路徑會是什麼形狀？","options":["拋物線，因為水平方向近似等速前進、垂直方向受重力做等加速，兩者合成","一個完美的正圓形","先直線斜著上升到最高點，再垂直往下掉"],"ans":0,"why":"拋體運動可以拆成兩個方向：水平方向不受力（近似等速），垂直方向只受重力（等加速上升再下降）。兩者合起來就畫出一條對稱的拋物線，而不是圓形，也不是先上再直直落下。"},{"v":"🌀","q":"足球的「香蕉球」、桌球的旋球，能在空中轉彎，主要是因為什麼？","options":["球旋轉時重量會變輕，所以比較容易被風吹偏","球高速旋轉帶動兩側空氣流速不同，形成壓力差，產生使球偏向的側向力","旋轉的球會產生磁力，吸著它轉彎"],"ans":1,"why":"這是馬格努斯效應：旋轉的球會帶動表面空氣，使球兩側的空氣流速不一樣，快的一側壓力較小、慢的一側壓力較大，壓力差就推著球往一邊偏，形成漂亮的弧線。這和重量變輕或磁力都無關。"},{"v":"🐣","q":"不倒翁不管你怎麼推，都會自己搖回來站好，這是為什麼？","options":["它裡面裝了彈簧，被推倒後靠彈簧把它彈回來","它的重心很高，所以站得特別穩、推不倒","它底部重、重心很低，一傾斜重心就被抬高，放手後重力會把它轉回最穩的位置"],"ans":2,"why":"不倒翁底部加重、重心很低。傾斜時重心會被抬高，這是不穩定、能量較高的狀態；一放手，重力就把它拉回重心最低、最穩定的位置，所以總是搖回來站好。重心低才穩，重心高反而容易倒。"},{"v":"🎪","q":"特技演員走鋼索時，常拿一根又長又重、兩端還微微下垂的長桿，長桿如何幫助平衡？","options":["長桿兩端下垂能降低整體重心，又增大轉動慣量，讓身體不容易快速傾倒、比較好調整","長桿很重，可以把人牢牢壓在鋼索上，就不會掉下來","長桿會產生一股向上的力，抵消掉人的重力"],"ans":0,"why":"兩端下垂的長桿把重量分散到低處，降低了人與桿整體的重心，比較穩定；同時長桿加大了「轉動慣量」，讓身體傾倒（轉動）變得緩慢，演員就有更多時間微調、把重心拉回鋼索正上方。長桿不會產生向上的力，也不是靠重量壓住人。"}]}
+  ];
+
+  // =====================================================================
+  // DOM 參照
+  // =====================================================================
+  var $ = function (id) { return document.getElementById(id); };
+  var screenMenu = $('screen-menu');
+  var screenPlay = $('screen-play');
+  var levelList = $('level-list');
+  var stage = $('stage');
+  var stepDots = $('step-dots');
+  var playTitle = $('play-title');
+
+  var cur = null; // { level, idx, correctCount }
+
+  // 計分題數（所有 choose 題；fact 卡不計分）＝ questions.length。
+  function scoringCount(level) { return level.questions.length; }
+
+  // 一個等級的總步數（fact 卡 + 題數）。
+  function stepCount(level) { return 1 + level.questions.length; }
+
+  // =====================================================================
+  // 選單渲染
+  // =====================================================================
+  function badgeCount() { return Object.keys(progress.badges || {}).length; }
+
+  function totalStars() {
+    var t = 0;
+    for (var i = 0; i < LEVELS.length; i++) {
+      var lp = progress.levels[LEVELS[i].id];
+      if (lp && lp.best) t += lp.best;
+    }
+    return t;
+  }
+
+  function renderMenu() {
+    var doneCount = 0;
+    for (var i = 0; i < LEVELS.length; i++) {
+      var lp = progress.levels[LEVELS[i].id];
+      if (lp && lp.done) doneCount++;
+    }
+    var LN = LEVELS.length;
+    $('ov-levels').textContent = doneCount + '/' + LN;
+    $('ov-badges').textContent = badgeCount() + '/' + LN;
+    $('ov-stars').textContent = totalStars();
+    $('phBadgeCount').textContent = badgeCount() + '/' + LN;
+
+    // 回訪歡迎語（無 dark pattern；只鼓勵、不催促）。
+    if (doneCount > 0) {
+      $('hello-text').textContent = '歡迎回來！你已經完成 ' + doneCount + ' 個等級，好棒！';
+      $('hello-sub').textContent = doneCount >= LN ? '所有等級都完成了，你是物理小偵探！🧲' : '繼續探索沒玩過的等級吧！';
+    }
+    // 溫和的「今日已練」標記（非 streak 懲罰）。
+    if (progress.lastPlayed === today()) $('hello-today').style.display = 'inline-flex';
+
+    levelList.innerHTML = '';
+    for (var u = 0; u < LEVELS.length; u++) {
+      (function (level, num) {
+        var lp = progress.levels[level.id] || {};
+        var done = !!lp.done;
+        var stars = lp.best || 0;
+        var total = scoringCount(level);
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'ph-level';
+        card.setAttribute('aria-label', level.name);
+        var dots = '';
+        for (var d = 0; d < total; d++) dots += '<i class="' + (d < stars ? 'on' : '') + '"></i>';
+        card.innerHTML =
+          '<div class="ph-level-top">' +
+            '<span class="ph-level-emoji" aria-hidden="true">' + level.emoji + '</span>' +
+            '<div>' +
+              '<div class="ph-level-num">' + level.badge.icon + ' ' + level.badge.label + '</div>' +
+              '<div class="ph-level-name">' + level.name + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="ph-level-concept">' + level.concept + '</div>' +
+          '<div class="ph-level-foot">' +
+            '<span class="ph-level-status ' + (done ? 'done' : 'todo') + '">' +
+              (done ? '✅ 已完成' : '▶️ 開始挑戰（共 ' + total + ' 題）') + '</span>' +
+            '<span class="ph-level-dots" aria-hidden="true">' + dots + '</span>' +
+          '</div>';
+        card.addEventListener('click', function () { startLevel(level); });
+        levelList.appendChild(card);
+      })(LEVELS[u], u + 1);
+    }
+  }
+
+  // =====================================================================
+  // 遊玩流程
+  // =====================================================================
+  function show(screen) {
+    screenMenu.classList.remove('active');
+    screenPlay.classList.remove('active');
+    screen.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function startLevel(level) {
+    cur = { level: level, idx: 0, correctCount: 0 };
+    playTitle.textContent = level.emoji + ' ' + level.name;
+    show(screenPlay);
+    renderStep();
+  }
+
+  function renderStepDots() {
+    stepDots.innerHTML = '';
+    var n = stepCount(cur.level);
+    for (var i = 0; i < n; i++) {
+      var b = document.createElement('i');
+      if (i < cur.idx) b.className = 'on';
+      else if (i === cur.idx) b.className = 'cur';
+      stepDots.appendChild(b);
+    }
+  }
+
+  function next() {
+    cur.idx++;
+    if (cur.idx >= stepCount(cur.level)) finishLevel();
+    else renderStep();
+  }
+
+  function ttsButton(text) { return ''; }  /* 科學頁不需朗讀鈕（移除 🔊 TTS） */
+  function bindTts(root) {
+    var btns = root.querySelectorAll('.ph-tts');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].addEventListener('click', function () { speak(this.getAttribute('data-tts')); });
+    }
+  }
+
+  function renderStep() {
+    renderStepDots();
+    if (cur.idx === 0) return renderFact(cur.level.fact);
+    return renderChoose(cur.level.questions[cur.idx - 1]);
+  }
+
+  // ---- fact（worked-example，先於練習） ----
+  function renderFact(fact) {
+    stage.innerHTML =
+      '<div class="ph-stage">' +
+        '<div class="ph-visual" aria-hidden="true">' + fact.v + '</div>' +
+        '<p class="ph-sentence">' + fact.s + '</p>' +
+        '<div class="ph-toolrow">' + ttsButton(fact.s) +
+          '<button type="button" class="btn" id="btn-more">💡 看更多</button></div>' +
+        '<div class="ph-reveal" id="reveal">' + (fact.more || '') + '</div>' +
+      '</div>' +
+      '<div class="ph-actions">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">開始挑戰 ➡️</button>' +
+      '</div>';
+    bindTts(stage);
+    $('btn-more').addEventListener('click', function () {
+      $('reveal').classList.add('show');
+      speak(fact.more || fact.s);
+    });
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // ---- choose（單選題；選項 Fisher–Yates 洗牌，正解絕不固定第一個） ----
+  function renderChoose(step) {
+    // 洗牌顯示順序；data-i 記「原始索引」，判斷 i === step.ans 仍正確。
+    var order = [];
+    for (var oi = 0; oi < step.options.length; oi++) order.push(oi);
+    for (var m = order.length - 1; m > 0; m--) {
+      var r = Math.floor(Math.random() * (m + 1));
+      var tt = order[m]; order[m] = order[r]; order[r] = tt;
+    }
+    var optsHtml = '';
+    for (var k = 0; k < order.length; k++) {
+      var origIdx = order[k];
+      optsHtml += '<button type="button" class="ph-opt" data-i="' + origIdx + '">' +
+        '<span>' + step.options[origIdx] + '</span><span class="ph-opt-mark" aria-hidden="true"></span></button>';
+    }
+    stage.innerHTML =
+      '<div class="ph-stage">' +
+        '<div class="ph-visual" aria-hidden="true">' + step.v + '</div>' +
+        '<p class="ph-sentence">' + step.q + '</p>' +
+        '<div class="ph-toolrow">' + ttsButton(step.q) + '</div>' +
+        '<div class="ph-options">' + optsHtml + '</div>' +
+        '<div class="ph-reveal" id="reveal"></div>' +
+      '</div>' +
+      '<div class="ph-actions" id="afteract" style="display:none">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">繼續 ➡️</button>' +
+      '</div>';
+    bindTts(stage);
+
+    var answered = false; // 單次記帳守衛：第一次作答才計入 correctCount。
+    var btns = stage.querySelectorAll('.ph-opt');
+    for (var b = 0; b < btns.length; b++) {
+      btns[b].addEventListener('click', function () {
+        var i = parseInt(this.getAttribute('data-i'), 10);
+        var isCorrect = (i === step.ans);
+        if (answered) {
+          // 已答過（第一次答錯後的重試）：只給視覺提示，不再改動任何計數。
+          if (isCorrect) {
+            this.classList.add('correct');
+            this.querySelector('.ph-opt-mark').textContent = '✅';
+          } else {
+            this.classList.add('wrong');
+            this.querySelector('.ph-opt-mark').textContent = '❌';
+          }
+          return;
+        }
+        answered = true;
+        if (window.Game && window.Game.recordAnswer) Game.recordAnswer('science', isCorrect);
+        if (isCorrect) {
+          this.classList.add('correct', 'is-correct');
+          this.querySelector('.ph-opt-mark').textContent = '✅';
+          cur.correctCount++; // 每題只計一次（第一次作答）
+          revealAndAdvance(step, true);
+        } else {
+          this.classList.add('wrong');
+          this.querySelector('.ph-opt-mark').textContent = '❌';
+          // 標出正解（用原始索引找到正解按鈕，選項已洗牌）。
+          var correctBtn = stage.querySelector('.ph-opt[data-i="' + step.ans + '"]');
+          if (correctBtn) {
+            correctBtn.classList.add('correct');
+            correctBtn.querySelector('.ph-opt-mark').textContent = '✅';
+          }
+          revealAndAdvance(step, false);
+        }
+      });
+    }
+
+    function revealAndAdvance(step, correct) {
+      var rev = $('reveal');
+      rev.textContent = (correct ? '答對了！' : '再想想～答案是這個！') + (step.why || '');
+      rev.classList.add('show');
+      $('afteract').style.display = 'flex';
+      var all = stage.querySelectorAll('.ph-opt');
+      for (var k = 0; k < all.length; k++) all[k].disabled = true;
+    }
+
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // =====================================================================
+  // 完成等級（本地 StampBook：只增不減；點亮概念徽章；發本地 toast）
+  // =====================================================================
+  function finishLevel() {
+    var level = cur.level;
+    var stars = cur.correctCount;
+    var total = scoringCount(level);
+
+    // 進度：保留最佳星等（只增不減）。
+    var prev = progress.levels[level.id] || {};
+    progress.levels[level.id] = {
+      done: true,
+      best: Math.max(prev.best || 0, stars),
+      correct: Math.max(prev.correct || 0, stars)
+    };
+    progress.lastPlayed = today();
+
+    // 概念徽章：只增不減、第一次到手才發 toast。
+    var newlyBadged = false;
+    if (!progress.badges[level.id]) {
+      progress.badges[level.id] = { earnedAt: today() };
+      newlyBadged = true;
+    }
+
+    // 跨級成就（awarded 守衛，避免重複發 toast）。
+    var bc = badgeCount();
+    var achievements = [];
+    if (bc >= 1 && !progress.awarded.first_badge) { progress.awarded.first_badge = true; achievements.push('🏅 挖到第一枚徽章，太棒了！'); }
+    if (bc >= Math.ceil(LEVELS.length / 2) && !progress.awarded.half_badges) { progress.awarded.half_badges = true; achievements.push('✨ 徽章已收集一半，繼續加油！'); }
+    if (bc >= LEVELS.length && !progress.awarded.all_badges) { progress.awarded.all_badges = true; achievements.push('🏆 徽章全部到手，你是物理小偵探！'); }
+
+    saveProg(progress);
+
+    var starStr = '';
+    for (var i = 0; i < total; i++) starStr += (i < stars ? '⭐' : '☆');
+
+    stage.innerHTML =
+      '<div class="ph-stage ph-done">' +
+        '<div class="ph-done-emoji" aria-hidden="true">🎉</div>' +
+        '<div class="ph-done-title">完成「' + level.name + '」！</div>' +
+        '<div class="ph-done-stars" aria-label="得到 ' + stars + ' 顆星">' + starStr + '</div>' +
+        '<p class="ph-sentence" style="font-size:clamp(16px,3.6vw,19px)">你答對了 ' + stars + ' / ' + total + ' 題，好棒！</p>' +
+        '<div class="ph-done-badge" aria-label="點亮徽章">' + level.badge.icon + ' 點亮徽章：' + level.badge.label + '</div>' +
+      '</div>' +
+      '<div class="ph-actions">' +
+        '<button type="button" class="btn" id="btn-menu">回到選單</button>' +
+        (nextLevelOf(level) ? '<button type="button" class="btn btn-primary" id="btn-nextlevel">下一個等級 ➡️</button>' : '') +
+      '</div>';
+
+    // 本地 toast（不觸碰主 XP）。
+    if (newlyBadged) toast('🏅 點亮徽章：' + level.badge.label + '！', 'badge');
+    for (var a = 0; a < achievements.length; a++) toast(achievements[a], 'badge');
+
+    $('btn-menu').addEventListener('click', goMenu);
+    var nl = nextLevelOf(level);
+    if (nl) $('btn-nextlevel').addEventListener('click', function () { startLevel(nl); });
+  }
+
+  function nextLevelOf(level) {
+    for (var i = 0; i < LEVELS.length; i++) {
+      if (LEVELS[i].id === level.id) return LEVELS[i + 1] || null;
+    }
+    return null;
+  }
+
+  function goMenu() {
+    cur = null;
+    renderMenu();
+    show(screenMenu);
+  }
+
+  // =====================================================================
+  // 徽章冊浮層（overlay 以 hidden 屬性切換；已加更高特異度 [hidden] 防護）
+  // =====================================================================
+  var overlay = $('phBadgeOverlay');
+
+  function renderBadgeBook() {
+    var grid = $('phBadgeGrid');
+    var empty = $('phBadgeEmpty');
+    grid.innerHTML = '';
+    var count = badgeCount();
+    empty.style.display = count === 0 ? 'block' : 'none';
+    for (var i = 0; i < LEVELS.length; i++) {
+      var lv = LEVELS[i];
+      var got = progress.badges[lv.id];
+      var card = document.createElement('div');
+      card.className = 'ph-badge-card ' + (got ? 'earned' : 'locked');
+      card.innerHTML =
+        '<div class="ph-badge-emoji" aria-hidden="true">' + (got ? lv.badge.icon : '◇') + '</div>' +
+        '<div class="ph-badge-name">' + lv.badge.label + '</div>' +
+        '<div class="ph-badge-date">' + (got ? '得到：' + got.earnedAt : '尚未點亮') + '</div>';
+      grid.appendChild(card);
+    }
+  }
+  function openBadgeBook() { renderBadgeBook(); overlay.hidden = false; }
+  function closeBadgeBook() { overlay.hidden = true; }
+
+  $('phBadgeFab').addEventListener('click', openBadgeBook);
+  $('phBadgeClose').addEventListener('click', closeBadgeBook);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) closeBadgeBook(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !overlay.hidden) closeBadgeBook(); });
+
+  // 頁內返回（主題切換交由共用 app-bar 的 [data-theme-toggle]，引擎自動接線）。
+  $('btn-back').addEventListener('click', goMenu);
+
+  // =====================================================================
+  // 啟動
+  // =====================================================================
+  renderMenu();
+})();
+</script>
+</body>
+</html>

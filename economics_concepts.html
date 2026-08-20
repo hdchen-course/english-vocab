@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>理財觀念養成 💰</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<link rel="stylesheet" href="concept.css">
+<script src="game_core.js"></script>
+<style>:root{ --su:#ca8a04; --su-tint:rgba(202,138,4,0.16); }</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">理財觀念養成 💰</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="cn-screen active cn-wrap">
+    <div class="cn-topbar"><span class="cn-title">理財觀念養成 💰</span></div>
+    <div class="cn-hello"><span class="cn-mascot" aria-hidden="true">💰</span>
+      <div><div class="cn-htext" id="hello">需要與想要、金錢、儲蓄、預算——用圖學會聰明用錢。</div>
+      <div class="cn-hsub">每個觀念都是「教一小段 → 馬上練習」，慢慢來。</div></div></div>
+    <div class="cn-lessons" id="lesson-list"></div>
+    <a class="cn-nextup" href="finance.html" style="display:flex;align-items:center;gap:12px;margin-top:16px;padding:14px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:26px;flex:none" aria-hidden="true">🚀</span><span>學會了？接著到「理財小達人」邊玩邊練習 →</span></a>
+    <p class="cn-note">這裡是「先學觀念」的教學小旅程，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
+  </section>
+  <section id="screen-play" class="cn-screen cn-wrap">
+    <div class="cn-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="cn-title" id="play-title">觀念</span></div>
+    <div class="cn-progress" id="prog" aria-hidden="true"></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+// ---- 理財專用 SVG 概念圖（文字 currentColor = --ink；結構線 currentColor 主題自適應）----
+// 需要 vs 想要：兩個並排的框
+function needsWants(){
+  var s='<svg viewBox="0 0 260 122" role="img" aria-label="需要與想要的比較：需要是生活必需，想要是有更好但非必需">';
+  s+='<rect x="8" y="10" width="118" height="100" rx="14" fill="rgba(22,163,74,0.10)" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+='<rect x="134" y="10" width="118" height="100" rx="14" fill="rgba(202,138,4,0.12)" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+='<text x="67" y="32" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">需要</text>';
+  s+='<text x="193" y="32" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">想要</text>';
+  s+='<text x="67" y="62" text-anchor="middle" font-size="24">🍚💧</text>';
+  s+='<text x="67" y="90" text-anchor="middle" font-size="24">👕🏠</text>';
+  s+='<text x="193" y="62" text-anchor="middle" font-size="24">🍭🎮</text>';
+  s+='<text x="193" y="90" text-anchor="middle" font-size="24">🧸🍦</text>';
+  return s+'</svg>';
+}
+// 金錢與交換：上排以物易物（難），下排用錢（方便）
+function moneyExchange(){
+  var s='<svg viewBox="0 0 280 150" role="img" aria-label="以物易物需要雙方剛好都想要，用錢交換比較方便">';
+  // 以物易物
+  s+='<text x="14" y="34" font-size="11" font-weight="800" fill="currentColor">以物易物</text>';
+  s+='<text x="120" y="42" text-anchor="middle" font-size="26">🍎</text>';
+  s+='<text x="170" y="38" text-anchor="middle" font-size="16" fill="currentColor">↔</text>';
+  s+='<text x="220" y="42" text-anchor="middle" font-size="26">🐟</text>';
+  s+='<text x="258" y="40" text-anchor="middle" font-size="15" fill="#dc2626">✗</text>';
+  s+='<text x="150" y="66" text-anchor="middle" font-size="11" fill="currentColor">要剛好雙方都想要對方的東西，很難</text>';
+  // 用錢
+  s+='<text x="14" y="108" font-size="11" font-weight="800" fill="currentColor">用錢</text>';
+  s+='<text x="96" y="116" text-anchor="middle" font-size="24">🍎</text>';
+  s+='<text x="132" y="112" text-anchor="middle" font-size="15" fill="currentColor">→</text>';
+  s+='<text x="168" y="116" text-anchor="middle" font-size="22">💰</text>';
+  s+='<text x="204" y="112" text-anchor="middle" font-size="15" fill="currentColor">→</text>';
+  s+='<text x="238" y="116" text-anchor="middle" font-size="24">🐟</text>';
+  s+='<text x="266" y="114" text-anchor="middle" font-size="15" fill="#16a34a">✓</text>';
+  s+='<text x="150" y="138" text-anchor="middle" font-size="11" fill="currentColor">錢大家都願意收，交換更方便</text>';
+  return s+'</svg>';
+}
+// 儲蓄：撲滿 + 一點一點存
+function savings(){
+  var s='<svg viewBox="0 0 240 130" role="img" aria-label="把錢一點一點存進撲滿，之後可以買更想要的東西">';
+  s+='<text x="70" y="80" text-anchor="middle" font-size="60">🐷</text>';
+  // 投幣
+  s+='<text x="150" y="40" text-anchor="middle" font-size="22">🪙</text>';
+  s+='<line x1="150" y1="48" x2="98" y2="60" stroke="#ca8a04" stroke-width="2.5"/><polygon points="98,60 108,58 104,68" fill="#ca8a04"/>';
+  s+='<text x="180" y="86" text-anchor="middle" font-size="22">🪙🪙</text>';
+  s+='<text x="150" y="118" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">每次存一點，越存越多</text>';
+  return s+'</svg>';
+}
+// 預算：收入 = 支出 + 剩下（存起來）
+function budgetBar(){
+  var s='<svg viewBox="0 0 280 130" role="img" aria-label="收入分成支出和存起來兩部分">';
+  var x=20, y=34, w=240, h=30;
+  // 收入整條
+  s+='<text x="20" y="26" font-size="11" font-weight="800" fill="currentColor">收入 100 元</text>';
+  s+='<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="6" fill="none" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  // 支出 70
+  var sp=w*0.7;
+  s+='<rect x="'+x+'" y="'+(y+46)+'" width="'+sp+'" height="'+h+'" rx="6" fill="rgba(220,38,38,0.30)" stroke="currentColor" stroke-opacity="0.6" stroke-width="1.5"/>';
+  s+='<text x="'+(x+sp/2)+'" y="'+(y+66)+'" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">支出 70</text>';
+  // 剩下 30
+  s+='<rect x="'+(x+sp)+'" y="'+(y+46)+'" width="'+(w-sp)+'" height="'+h+'" rx="6" fill="rgba(22,163,74,0.30)" stroke="currentColor" stroke-opacity="0.6" stroke-width="1.5"/>';
+  s+='<text x="'+(x+sp+(w-sp)/2)+'" y="'+(y+66)+'" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">存 30</text>';
+  s+='<text x="140" y="122" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">收入 100 = 支出 70 ＋ 存下來 30</text>';
+  return s+'</svg>';
+}
+
+window.CONCEPT = {
+  progKey:'economics_concepts_v1', practiceHref:'finance.html',
+  lessons:[
+   { id:'need', name:'需要 vs 想要', emoji:'🛒', color:'#16a34a', sub:'分清楚必需和額外', done:'記得：需要是「生活一定要」的（食物、水、衣服、住），想要是「有更好、但沒有也能生活」的（玩具、糖果）。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'需要：生活一定要',svg:needsWants(),text:'<b>需要</b>是<b>生活一定要</b>的東西：食物、乾淨的水、衣服、住的地方。沒有這些會很難生活，所以要優先花錢。'},
+      {type:'teach',kicker:'比一比',title:'想要：有更好，但非必需',svg:needsWants(),text:'<b>想要</b>是<b>有了更開心、但沒有也能好好生活</b>的東西：玩具、糖果、電動、冰淇淋。買之前先想：這是需要，還是想要？'},
+      {type:'quiz',kicker:'換你試試',title:'下列哪一個是「需要」？',options:['食物和乾淨的水','新玩具','糖果','電動遊戲'],answer:0,why:'食物和水是生活一定要的，屬於「需要」；玩具、糖果、電動是「想要」。'},
+      {type:'quiz',kicker:'想一想',title:'「想要」指的是什麼？',options:['有更好、但沒有也能生活的東西','生活一定要、缺了活不下去的東西','完全不能買的東西','別人的東西'],answer:0,why:'想要是「有會更開心、但沒有也能生活」的東西，和「需要」不同。'}
+     ]},
+   { id:'money', name:'金錢與交換', emoji:'💵', color:'#ca8a04', sub:'錢讓交換更方便', done:'記得：以物易物要剛好雙方都想要對方的東西，很難；錢大家都願意收，讓買賣交換變簡單。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'以前用東西換東西',svg:moneyExchange(),text:'很久以前沒有錢，大家<b>用東西換東西</b>（<b>以物易物</b>）。但要<b>剛好雙方都想要</b>對方的東西才換得成——你有蘋果想換魚，對方卻不想要蘋果，就換不成，很麻煩。'},
+      {type:'teach',kicker:'錢的好處',title:'錢大家都願意收',svg:moneyExchange(),text:'後來有了<b>錢</b>：你先把蘋果賣掉換到錢，再用錢去買魚。因為<b>錢大家都願意收</b>，不用剛好互相想要，交換就<b>方便多了</b>。'},
+      {type:'quiz',kicker:'換你試試',title:'「以物易物」是什麼意思？',options:['直接用東西換東西','用錢買東西','把東西送人','把東西丟掉'],answer:0,why:'以物易物就是不用錢、直接拿東西交換東西。'},
+      {type:'quiz',kicker:'想一想',title:'為什麼用錢比以物易物方便？',options:['錢大家都願意收，不用剛好互相想要對方的東西','因為錢比較重','因為錢很漂亮','因為東西不能交換'],answer:0,why:'錢是大家都接受的交換工具，不必雙方剛好都想要對方的東西，交換更容易。'}
+     ]},
+   { id:'save', name:'儲蓄', emoji:'🐷', color:'#0891b2', sub:'先存起來，之後更有用', done:'記得：把錢先存起來（儲蓄），一點一點累積，就能達成自己重要的目標，也能應付突然的急用。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'把錢先存起來',svg:savings(),text:'<b>儲蓄</b>就是把錢<b>先存起來、不馬上花光</b>。每次存一點，錢會<b>越存越多</b>，像撲滿一樣慢慢變重。'},
+      {type:'teach',kicker:'為什麼要存',title:'存錢幫你達成目標',svg:savings(),text:'有想達成的<b>目標</b>（一次錢不夠），就<b>每次存一點</b>，存到足夠再實現。存錢還能<b>應付突然需要用錢</b>的時候，讓人比較安心。'},
+      {type:'quiz',kicker:'換你試試',title:'「儲蓄」是什麼意思？',options:['把錢先存起來，之後再用','把錢馬上全部花掉','把錢送給別人','把錢藏起來永遠不用'],answer:0,why:'儲蓄是把錢存下來、不馬上花光，之後需要時再用。'},
+      {type:'quiz',kicker:'想一想',title:'想買一個很貴、現在錢不夠的東西，最好怎麼做？',options:['每次存一點，存到足夠再買','跟別人用搶的','馬上把零用錢全花在別的東西','放棄，什麼都不買'],answer:0,why:'一點一點儲蓄、存到足夠再買，是最聰明的做法。'}
+     ]},
+   { id:'budget', name:'預算', emoji:'📊', color:'#7c3aed', sub:'計畫錢怎麼花', done:'記得：收入 = 支出 ＋ 存下來。先計畫好花多少、存多少，就是做「預算」。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'收入分成兩份',svg:budgetBar(),text:'拿到的錢叫<b>收入</b>（例如零用錢 100 元）。花掉的錢叫<b>支出</b>。收入分成兩部分：<b>支出</b> ＋ <b>存下來的</b>。'},
+      {type:'teach',kicker:'算算看',title:'收入 = 支出 ＋ 存下來',svg:budgetBar(),text:'如果收入 100 元、花掉（支出）70 元，就<b>剩下 100 − 70 = 30 元</b>可以存起來。事先計畫「花多少、存多少」，就叫做<b>預算</b>。'},
+      {type:'quiz',kicker:'換你試試',title:'收入 100 元，支出 70 元，可以存下多少？',options:['30 元','170 元','70 元','100 元'],answer:0,why:'存下來 = 收入 − 支出 = 100 − 70 = 30 元。'},
+      {type:'quiz',kicker:'想一想',title:'「做預算」是什麼意思？',options:['事先計畫錢要花多少、存多少','把錢全部花光','不去想錢的事','把錢借給別人'],answer:0,why:'預算就是事先計畫收入怎麼分配——花多少、存多少，才不會亂花。'}
+     ]}
+  ]
+};
+</script>
+<script src="concept_engine.js"></script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英文句型觀念養成 🎯</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<link rel="stylesheet" href="concept.css">
+<script src="game_core.js"></script>
+<style>:root{ --su:#0d9488; --su-tint:rgba(13,148,136,0.14); }</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">英文句型觀念養成 🎯</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="cn-screen active cn-wrap">
+    <div class="cn-topbar"><span class="cn-title">英文句型觀念養成 🎯</span></div>
+    <div class="cn-hello"><span class="cn-mascot" aria-hidden="true">🎯</span>
+      <div><div class="cn-htext" id="hello">be 動詞、單複數、現在式、in／on／at——把最常用的英文句型觀念一次弄懂。</div>
+      <div class="cn-hsub">每個觀念都是「教一小段 → 馬上練習」，慢慢來就好。</div></div></div>
+    <div class="cn-lessons" id="lesson-list"></div>
+    <a class="cn-nextup" href="english_sense.html" style="display:flex;align-items:center;gap:12px;margin-top:16px;padding:14px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:26px;flex:none" aria-hidden="true">🗣️</span><span>學會了嗎？接著到「英文語感」開始練習 →</span></a>
+    <p class="cn-note">這裡是「先學觀念」的教學小旅程，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
+  </section>
+  <section id="screen-play" class="cn-screen cn-wrap">
+    <div class="cn-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="cn-title" id="play-title">觀念</span></div>
+    <div class="cn-progress" id="prog" aria-hidden="true"></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+// ---- 英文專用 SVG 概念圖（資訊文字 fill=currentColor；結構線 currentColor + 透明度）----
+var AC = '#0d9488', FILL = 'rgba(13,148,136,0.12)';
+function arrow(x1,y1,x2,y2,color,w){
+  var dx=x2-x1, dy=y2-y1, len=Math.sqrt(dx*dx+dy*dy)||1, ux=dx/len, uy=dy/len;
+  var s='<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+color+'" stroke-width="'+w+'" stroke-linecap="round"/>';
+  s+='<polygon points="'+x2+','+y2+' '+(x2-ux*11-uy*6).toFixed(1)+','+(y2-uy*11+ux*6).toFixed(1)+' '+(x2-ux*11+uy*6).toFixed(1)+','+(y2-uy*11-ux*6).toFixed(1)+'" fill="'+color+'"/>';
+  return s;
+}
+// be 動詞對照：主詞 → be 動詞（三列）
+function beMap(){
+  var rows=[['I','am'],['He / She / It','is'],['You / We / They','are']];
+  var s='<svg viewBox="0 0 250 168" role="img" aria-label="主詞決定 be 動詞：I am、He is、You are">';
+  var y=14;
+  rows.forEach(function(r){
+    s+='<rect x="8" y="'+y+'" width="140" height="40" rx="10" fill="'+FILL+'" stroke="currentColor" stroke-opacity="0.6" stroke-width="1.8"/>';
+    s+='<text x="78" y="'+(y+26)+'" text-anchor="middle" font-size="15" font-weight="800" fill="currentColor">'+r[0]+'</text>';
+    s+=arrow(150,y+20,182,y+20,'currentColor',3);
+    s+='<rect x="184" y="'+y+'" width="58" height="40" rx="10" fill="'+FILL+'" stroke="'+AC+'" stroke-width="2"/>';
+    s+='<text x="213" y="'+(y+26)+'" text-anchor="middle" font-size="16" font-weight="800" fill="currentColor">'+r[1]+'</text>';
+    y+=52;
+  });
+  return s+'</svg>';
+}
+// 單複數：一個 vs 兩個，字尾加 s
+function pluralDemo(){
+  var s='<svg viewBox="0 0 250 130" role="img" aria-label="一個 apple 對兩個 apples">';
+  s+='<rect x="8" y="10" width="112" height="108" rx="12" fill="'+FILL+'" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+='<text x="64" y="62" text-anchor="middle" font-size="34">🍎</text>';
+  s+='<text x="64" y="92" text-anchor="middle" font-size="14" font-weight="800" fill="currentColor">apple</text>';
+  s+='<text x="64" y="110" text-anchor="middle" font-size="11" fill="currentColor">一個（單數）</text>';
+  s+='<rect x="130" y="10" width="112" height="108" rx="12" fill="'+FILL+'" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+='<text x="186" y="56" text-anchor="middle" font-size="30">🍎🍎</text>';
+  s+='<text x="186" y="92" text-anchor="middle" font-size="14" font-weight="800" fill="currentColor">apple<tspan fill="currentColor" text-decoration="underline">s</tspan></text>';
+  s+='<text x="186" y="110" text-anchor="middle" font-size="11" fill="currentColor">兩個以上（加 s）</text>';
+  return s+'</svg>';
+}
+// 字尾 s/x/ch/sh → 加 es
+function esDemo(){
+  var pairs=[['box','boxes'],['bus','buses'],['watch','watches']];
+  var s='<svg viewBox="0 0 250 150" role="img" aria-label="字尾 s/x/ch/sh 加 es：box 變 boxes 等">';
+  var y=16;
+  pairs.forEach(function(p){
+    s+='<rect x="8" y="'+y+'" width="92" height="34" rx="9" fill="'+FILL+'" stroke="currentColor" stroke-opacity="0.6" stroke-width="1.6"/>';
+    s+='<text x="54" y="'+(y+22)+'" text-anchor="middle" font-size="14" font-weight="800" fill="currentColor">'+p[0]+'</text>';
+    s+=arrow(102,y+17,136,y+17,'currentColor',3);
+    s+='<rect x="138" y="'+y+'" width="104" height="34" rx="9" fill="'+FILL+'" stroke="'+AC+'" stroke-width="2"/>';
+    s+='<text x="190" y="'+(y+22)+'" text-anchor="middle" font-size="14" font-weight="800" fill="currentColor">'+p[0]+'<tspan text-decoration="underline">es</tspan></text>';
+    y+=44;
+  });
+  return s+'</svg>';
+}
+// 不規則變化：child → children 等
+function irregular(){
+  var pairs=[['child','children'],['man','men'],['foot','feet']];
+  var s='<svg viewBox="0 0 250 150" role="img" aria-label="特殊變化：child 變 children 等">';
+  var y=16;
+  pairs.forEach(function(p){
+    s+='<rect x="8" y="'+y+'" width="92" height="34" rx="9" fill="'+FILL+'" stroke="currentColor" stroke-opacity="0.6" stroke-width="1.6"/>';
+    s+='<text x="54" y="'+(y+22)+'" text-anchor="middle" font-size="14" font-weight="800" fill="currentColor">'+p[0]+'</text>';
+    s+=arrow(102,y+17,136,y+17,'currentColor',3);
+    s+='<rect x="138" y="'+y+'" width="104" height="34" rx="9" fill="'+FILL+'" stroke="'+AC+'" stroke-width="2"/>';
+    s+='<text x="190" y="'+(y+22)+'" text-anchor="middle" font-size="14" font-weight="800" fill="currentColor">'+p[1]+'</text>';
+    y+=44;
+  });
+  return s+'</svg>';
+}
+// 現在簡單式 vs 進行式
+function tenseDemo(){
+  var s='<svg viewBox="0 0 250 138" role="img" aria-label="每天做（簡單式）對正在做（進行式）">';
+  s+='<rect x="8" y="10" width="112" height="118" rx="12" fill="'+FILL+'" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+='<text x="64" y="52" text-anchor="middle" font-size="30">🕐🚶</text>';
+  s+='<text x="64" y="86" text-anchor="middle" font-size="13" font-weight="800" fill="currentColor">I walk.</text>';
+  s+='<text x="64" y="106" text-anchor="middle" font-size="11" fill="currentColor">每天、常常做</text>';
+  s+='<text x="64" y="122" text-anchor="middle" font-size="11" fill="currentColor">現在簡單式</text>';
+  s+='<rect x="130" y="10" width="112" height="118" rx="12" fill="'+FILL+'" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+='<text x="186" y="52" text-anchor="middle" font-size="32">🏃</text>';
+  s+='<text x="186" y="86" text-anchor="middle" font-size="13" font-weight="800" fill="currentColor">I <tspan fill="currentColor" text-decoration="underline">am walking</tspan>.</text>';
+  s+='<text x="186" y="106" text-anchor="middle" font-size="11" fill="currentColor">此刻正在做</text>';
+  s+='<text x="186" y="122" text-anchor="middle" font-size="11" fill="currentColor">現在進行式</text>';
+  return s+'</svg>';
+}
+// 介系詞 in / on / at（時間）
+function prepDemo(){
+  var s='<svg viewBox="0 0 264 150" role="img" aria-label="at 是時間點、on 是某一天、in 是較長的一段時間">';
+  // at = 一個時間點
+  s+='<rect x="6" y="10" width="80" height="112" rx="12" fill="'+FILL+'" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+='<text x="46" y="38" text-anchor="middle" font-size="16" font-weight="800" fill="currentColor">at</text>';
+  s+='<circle cx="46" cy="66" r="7" fill="'+AC+'"/>';
+  s+='<text x="46" y="98" text-anchor="middle" font-size="11" fill="currentColor">一個時間點</text>';
+  s+='<text x="46" y="114" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">at 7:00</text>';
+  // on = 某一天
+  s+='<rect x="92" y="10" width="80" height="112" rx="12" fill="'+FILL+'" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+='<text x="132" y="38" text-anchor="middle" font-size="16" font-weight="800" fill="currentColor">on</text>';
+  s+='<text x="132" y="70" text-anchor="middle" font-size="26">📅</text>';
+  s+='<text x="132" y="98" text-anchor="middle" font-size="11" fill="currentColor">某一天</text>';
+  s+='<text x="132" y="114" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">on Monday</text>';
+  // in = 較長時段
+  s+='<rect x="178" y="10" width="80" height="112" rx="12" fill="'+FILL+'" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+='<text x="218" y="38" text-anchor="middle" font-size="16" font-weight="800" fill="currentColor">in</text>';
+  s+='<rect x="192" y="56" width="52" height="18" rx="6" fill="none" stroke="'+AC+'" stroke-width="2.5"/>';
+  s+='<text x="218" y="98" text-anchor="middle" font-size="11" fill="currentColor">較長的時段</text>';
+  s+='<text x="218" y="114" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">in May</text>';
+  return s+'</svg>';
+}
+
+window.CONCEPT = {
+  progKey:'english_concepts_v1', practiceHref:'english_sense.html',
+  lessons:[
+   { id:'beverb', name:'be 動詞（am / is / are）', emoji:'🎯', color:'#0d9488', sub:'主詞決定用 am、is 還是 are', done:'記得：I → am；He / She / It → is；You / We / They → are。主詞是誰，就決定 be 動詞。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'主詞決定 be 動詞',svg:beMap(),text:'英文的 <b>be 動詞</b>有三種：<b>am、is、are</b>。用哪一個，要看<b>主詞</b>是誰：<b>I</b> 配 <b>am</b>、<b>He / She / It</b> 配 <b>is</b>、<b>You / We / They</b> 配 <b>are</b>。'},
+      {type:'teach',kicker:'記住配對',title:'一個主詞，一個 be',svg:beMap(),text:'只有 <b>I</b> 用 <b>am</b>；<b>單數的他／她／它</b>用 <b>is</b>；<b>複數（你們、我們、他們）</b>用 <b>are</b>。先找主詞，再選 be 動詞就不會錯。'},
+      {type:'quiz',kicker:'換你試試',title:'選出正確的：I ___ a student.',eq:'I ___ a student.',options:['am','is','are','be'],answer:0,why:'主詞是 I，要配 am，所以是 I am a student.'},
+      {type:'quiz',kicker:'想一想',title:'選出正確的：She ___ happy.',eq:'She ___ happy.',options:['is','am','are','be'],answer:0,why:'She 是單數（她），要配 is，所以是 She is happy.'},
+      {type:'quiz',kicker:'想一想',title:'選出正確的：They ___ my friends.',eq:'They ___ my friends.',options:['are','am','is','be'],answer:0,why:'They 是複數（他們），要配 are，所以是 They are my friends.'}
+     ]},
+   { id:'plural', name:'名詞單複數', emoji:'🍎', color:'#0891b2', sub:'一個加 s、字尾 s/x/ch/sh 加 es、特殊變化', done:'記得：兩個以上通常在字尾加 -s（apple→apples）；字尾是 s/x/ch/sh 加 -es（box→boxes）；有些字要整個換（child→children）。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'兩個以上，字尾加 -s',svg:pluralDemo(),text:'一個東西用<b>單數</b>（apple）。<b>兩個以上</b>要用<b>複數</b>，最常見的做法是<b>字尾加 -s</b>：apple → <b>apples</b>、book → <b>books</b>。'},
+      {type:'teach',kicker:'特別的字尾',title:'字尾 s / x / ch / sh 加 -es',svg:esDemo(),text:'如果字尾是 <b>s、x、ch、sh</b>，複數要加 <b>-es</b> 才好唸：bus → <b>buses</b>、box → <b>boxes</b>、watch → <b>watches</b>。'},
+      {type:'teach',kicker:'要背的特例',title:'特殊變化：整個換掉',svg:irregular(),text:'有些字的複數不加 s，而是<b>整個換</b>：child → <b>children</b>、man → <b>men</b>、foot → <b>feet</b>。這些要特別記起來。'},
+      {type:'quiz',kicker:'換你試試',title:'兩個蘋果，英文怎麼寫？',eq:'two ___',options:['apples','apple','applees',"apple's"],answer:0,why:'apple 的複數是字尾加 -s → apples。（apple’s 是「蘋果的」，不是複數。）'},
+      {type:'quiz',kicker:'想一想',title:'一個以上的 child（小孩）要怎麼說？',options:['children','childs','childrens','child'],answer:0,why:'child 是特殊變化，複數是 children（不是 childs）。'},
+      {type:'quiz',kicker:'想一想',title:'三個箱子（box）要怎麼寫？',eq:'three ___',options:['boxes','boxs','box','boxess'],answer:0,why:'box 字尾是 x，複數要加 -es → boxes。'}
+     ]},
+   { id:'tense', name:'現在簡單式 vs 現在進行式', emoji:'⏱️', color:'#0e7490', sub:'常常做 vs 此刻正在做', done:'記得：常常、每天做的事用現在簡單式（I walk）；此刻正在做的事用現在進行式＝be 動詞 + Ving（I am walking）。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'兩種「現在」不一樣',svg:tenseDemo(),text:'<b>現在簡單式</b>講「<b>常常、每天</b>做」的事：I <b>walk</b> to school every day.<br><b>現在進行式</b>講「<b>此刻正在</b>做」的事：I <b>am walking</b> now.'},
+      {type:'teach',kicker:'看動詞形式',title:'進行式＝be + Ving',svg:tenseDemo(),text:'現在進行式的公式是 <b>be 動詞（am/is/are）＋ 動詞 -ing</b>，例如 <b>is walking</b>、<b>am eating</b>。看到 now、Look! 這類字，常常就是在講「正在做」。'},
+      {type:'quiz',kicker:'換你試試',title:'選出正確的（他現在正在跑）：Look! He ___ now.',eq:'Look! He ___ now.',options:['is running','runs','run','ran'],answer:0,why:'now 表示此刻正在做，要用現在進行式 be + Ving → is running。'},
+      {type:'quiz',kicker:'想一想',title:'選出正確的（每天走路上學）：Every day I ___ to school.',eq:'Every day I ___ to school.',options:['walk','am walking','walked','walking'],answer:0,why:'every day 表示常常做的習慣，用現在簡單式 → walk。'},
+      {type:'quiz',kicker:'想一想',title:'現在進行式的動詞形式是？',options:['be 動詞 + 動詞-ing','動詞加 -ed','只用原形動詞','動詞加 -s'],answer:0,why:'現在進行式＝be 動詞（am/is/are）＋ 動詞-ing，例如 is walking。'}
+     ]},
+   { id:'prep', name:'常見介系詞 in / on / at', emoji:'📍', color:'#0d9488', sub:'時間點用 at、某一天用 on、長時段用 in', done:'記得（時間）：at ＝ 時間點（at 7:00）；on ＝ 某一天／星期幾（on Monday）；in ＝ 較長的時段：月份、年、季節（in May、in 2024）。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'at、on、in 管的長度不一樣',svg:prepDemo(),text:'講時間時：<b>at</b> 用在很短的<b>時間點</b>（at 7:00）；<b>on</b> 用在<b>某一天</b>或星期幾（on Monday）；<b>in</b> 用在<b>比較長的一段</b>：月份、年、季節（in May、in 2024）。'},
+      {type:'teach',kicker:'常見小陷阱',title:'某一天用 on，不是 in',svg:prepDemo(),text:'指到<b>某一天</b>時，就算是那天的早上也用 <b>on</b>：正確是 <b>on Monday morning</b> ✔，不是 in Monday morning ✗。範圍越大用 in、某一天用 on、精確的一點用 at。'},
+      {type:'quiz',kicker:'換你試試',title:'選出正確的：I get up ___ 7 o’clock.',eq:'I get up ___ 7 o’clock.',options:['at','on','in','of'],answer:0,why:'7 點是一個精確的時間點，用 at → at 7 o’clock。'},
+      {type:'quiz',kicker:'想一想',title:'選出正確的：We have a test ___ Monday.',eq:'We have a test ___ Monday.',options:['on','at','in','of'],answer:0,why:'星期幾（某一天）用 on → on Monday。'},
+      {type:'quiz',kicker:'想一想',title:'選出正確的：My birthday is ___ May.',eq:'My birthday is ___ May.',options:['in','at','on','of'],answer:0,why:'月份是比較長的一段時間，用 in → in May。'}
+     ]}
+  ]
+};
+</script>
+<script src="concept_engine.js"></script>
+</body>
+</html>

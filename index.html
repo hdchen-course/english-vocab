@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<!-- §5.7 裁決：移除 viewport 鎖定，恢復 pinch-zoom（低視力孩子/家長需求）。 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>學習冒險基地 🚀</title>
+<!-- 內嵌 emoji favicon，避免瀏覽器對 /favicon.ico 發出 404 請求。 -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%9A%80%3C/text%3E%3C/svg%3E">
+
+<!-- 品牌字體（Nunito）：沿用既有 Google Fonts，缺網路時 app.css 會 fallback 到系統字型。 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap">
+
+<!-- §5.1 共用設計 token 層 -->
+<link rel="stylesheet" href="assets/app.css">
+<!-- §4.2 統一遊戲化引擎樣式 + 同步 script（於 <head> 末端，確保 render 前 window.Game 已存在） -->
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+
+<style>
+/* =====================================================================
+ * index.html 專屬版面：「學習冒險基地」唯一 hub（§5.3）
+ * iPad ≥1024px：左 sticky rail + 多欄儀表板；手機：緊湊 header + 底部 tab。
+ * 只用 assets/app.css 的 token 與元件，不再散寫顏色/尺寸。
+ * ===================================================================== */
+
+/* 錨點跳轉平滑捲動（sidebar / 底部導覽點區段時） */
+html { scroll-behavior: smooth; }
+
+/* --- 版面骨架 --- */
+.hub {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding: var(--s4);
+  /* 手機底部讓開固定 tab bar + iOS home indicator */
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 84px);
+  display: grid;
+  gap: var(--s5);
+}
+@media (min-width: 1024px) {
+  .hub {
+    grid-template-columns: 280px 1fr;   /* 左 rail 260–300px + 主區 */
+    align-items: start;
+    gap: var(--s6);
+    padding-bottom: var(--s6);          /* iPad 無底部 tab，不需讓位 */
+  }
+}
+
+.rail { display: flex; flex-direction: column; gap: var(--s4); min-width: 0; }
+@media (min-width: 1024px) {
+  .rail { position: sticky; top: calc(var(--app-bar-h, 56px) + env(safe-area-inset-top, 0px) + var(--s4));
+    /* 釘住時限制高度並可內部捲動，避免 iPad 橫向(768 高)時 rail 底端超出視窗、末項被裁而點不到 */
+    max-height: calc(100vh - var(--app-bar-h, 56px) - env(safe-area-inset-top, 0px) - var(--s4) - var(--s4));
+    overflow-y: auto; }
+}
+
+.main { display: flex; flex-direction: column; gap: var(--s5); min-width: 0; }
+
+/* --- Profile 卡：頭部 + 編輯 --- */
+.profile-top { display: flex; align-items: center; gap: var(--s3); }
+.profile-top .profile-avatar { cursor: pointer; border: none; }
+.profile-id { min-width: 0; flex: 1; }
+.profile-id .profile-name { display: flex; align-items: center; gap: var(--s2); }
+.name-edit-btn {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  min-width: var(--tap-min); min-height: var(--tap-min);
+  font-size: 18px; line-height: 1;
+  background: var(--tint-primary); color: var(--c-primary-ink);
+  border: none; border-radius: 999px; padding: 0; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.profile-xp-wrap { display: flex; flex-direction: column; gap: 4px; }
+.profile-xp-text { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 700; }
+
+/* --- rail 垂直科目導覽（僅 iPad 顯示；手機用底部 tab） --- */
+.rail-nav { display: none; }
+@media (min-width: 1024px) {
+  .rail-nav { display: flex; flex-direction: column; gap: var(--s2); }
+}
+.rail-nav a {
+  display: flex; align-items: center; gap: var(--s3);
+  min-height: var(--tap-min);
+  padding: 10px var(--s3);
+  border-radius: var(--r-sm);
+  text-decoration: none; color: var(--ink); font-weight: 700;
+  background: var(--card); border: 1px solid var(--card-border);
+}
+.rail-nav a:hover { border-color: var(--c-primary-soft); }
+.rail-nav .rail-icon { font-size: 22px; }
+
+/* --- 歡迎語 --- */
+.greeting h1 { margin-bottom: var(--s1); }
+.greeting p { color: var(--ink-soft); font-weight: 700; }
+
+/* --- 區塊標題 --- */
+.section-label {
+  font-size: var(--fs-small); font-weight: 800; color: var(--ink-soft);
+  letter-spacing: 1px; margin: var(--s2) 0 0; padding-left: var(--s1);
+}
+.section-note { font-size: 12px; color: var(--ink-soft); font-weight: 700; padding-left: var(--s1); margin-top: 2px; }
+
+/* --- 橫式活動卡（各科更多練習 / 進階 / 挑戰） --- */
+.row-card {
+  display: flex; align-items: center; gap: var(--s3);
+  text-decoration: none; color: inherit;
+  transition: transform .15s ease, box-shadow .2s ease, border-color .2s ease;
+  /* 卡片一律一列一張（grid-auto 為固定 grid-template-columns:1fr 單欄，不橫向平分） */
+}
+a.row-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--c-primary-soft); }
+a.row-card:active { transform: scale(0.98); }
+.row-card .icon {
+  width: 48px; height: 48px; border-radius: var(--r-sm); flex: none;
+  display: flex; align-items: center; justify-content: center; font-size: 24px;
+  background: var(--tint-primary);
+}
+.row-card .icon.t-math { background: var(--tint-math); }
+.row-card .icon.t-english { background: var(--tint-english); }
+.row-card .icon.t-chinese { background: var(--tint-chinese); }
+.row-card .icon.t-social { background: var(--tint-social); }
+.row-card .icon.t-finance { background: var(--tint-finance); }
+.row-card .icon.t-science { background: var(--tint-science); }
+.row-card .icon.t-adv { background: rgba(99,110,114,0.12); }
+.row-card .info { min-width: 0; flex: 1; }
+.row-card .info h3 { font-size: var(--fs-body); font-weight: 800; margin: 0 0 2px; }
+.row-card .info p { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 700; margin: 0; }
+.row-card .arrow { margin-left: auto; color: var(--c-primary-ink); font-size: 20px; }
+
+/* --- 區段外框：每個子區段（觀念/練習/進階/單一大組）都用一致的框包起來，一眼看出「這是同一區」 --- */
+.section-box {
+  margin-top: var(--s3);
+  padding: var(--s3) var(--s4) var(--s4);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  background: rgba(99,110,114,0.04);
+}
+/* 框內首個標註一律貼齊框頂 padding；用 !important 蓋掉各處殘留的 inline margin-top，
+   讓外觀相同的 .section-box 頂部間距一致（先學觀念／練習／閃卡庫等框皆齊平）。 */
+.section-box > .section-note:first-child,
+.section-box > .section-label:first-child { margin-top: 0 !important; }
+.section-box > .grid-auto { margin-top: var(--s3); }
+
+/* --- 進階挑戰書架：沿用 .section-box 外框，僅保留可收合行為 --- */
+.challenge-shelf {
+  margin-top: var(--s3);
+  padding: var(--s3) var(--s4) var(--s4);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  background: rgba(99,110,114,0.04);
+}
+/* （已移除孤兒 CSS：.challenge-shelf .shelf-head/.shelf-badge/.shelf-note —— challenge-shelf 已改用 <details><summary>，這些 class 全檔無元素使用） */
+
+.hub-footer { text-align: center; color: var(--ink-soft); font-size: 12px; font-weight: 700; padding: var(--s4) 0; }
+
+/* --- 頭像/暱稱編輯 sheet --- */
+.edit-label { font-size: var(--fs-small); font-weight: 800; color: var(--ink-soft); margin: var(--s3) 0 var(--s2); }
+.name-input {
+  width: 100%; min-height: var(--tap-min);
+  padding: 12px var(--s3); font-family: var(--font); font-size: var(--fs-body); font-weight: 700;
+  border: 2px solid var(--card-border); border-radius: var(--r-sm); background: var(--card); color: var(--ink);
+}
+.emoji-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(52px, 1fr)); gap: var(--s2); }
+.emoji-grid button {
+  min-height: 52px; font-size: 28px;
+  border: 2px solid var(--card-border); border-radius: var(--r-sm); background: var(--card); cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.emoji-grid button.sel { border-color: var(--c-primary); background: var(--tint-primary); }
+.edit-actions { display: flex; gap: var(--s3); margin-top: var(--s5); }
+.edit-actions .btn { flex: 1; }
+
+/* ── 徽章牆（成就；提供長期可見目標，一路小四→高一都有得追） ── */
+.badge-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s2); flex-wrap: wrap; }
+.badge-count { font-size: var(--fs-small); font-weight: 700; color: var(--ink-soft); }
+.badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: var(--s3); margin-top: var(--s3); }
+.badge-item { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--s1);
+  padding: var(--s3) var(--s2); background: var(--card); border: 1px solid var(--card-border); border-radius: var(--r-sm); }
+.badge-item .b-ico { font-size: 30px; line-height: 1.15; }
+.badge-item .b-name { font-size: var(--fs-small); font-weight: 700; color: var(--ink); }
+.badge-item .b-desc { font-size: 11px; color: var(--ink-soft); line-height: 1.4; }
+/* 已解鎖：金色邊框 + 陰影凸顯；未解鎖：僅灰階/淡化 icon，文字維持 AA 對比（不整體降透明度） */
+.badge-item.is-earned { border-color: var(--c-coin); box-shadow: var(--shadow-sm); }
+.badge-item.is-locked { background: var(--bg); }
+.badge-item.is-locked .b-ico { filter: grayscale(1); opacity: 0.5; }
+.badge-item .b-state { font-size: 11px; font-weight: 700; }
+.badge-item.is-earned .b-state { color: var(--c-finance-ink); }
+.badge-item.is-locked .b-state { color: var(--ink-soft); }
+
+/* ── 單一「從這裡開始」hero：畫面上唯一最醒目的下一步 ── */
+.hero-start {
+  display: flex; align-items: center; gap: var(--s4);
+  text-decoration: none; color: inherit;
+  background: linear-gradient(135deg, var(--tint-primary), var(--tint-english));
+  border: 1px solid var(--c-primary-soft);
+  transition: transform .15s ease, box-shadow .2s ease;
+}
+.hero-start:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.hero-start:active { transform: scale(0.99); }
+.hero-start:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 3px; }
+.hero-icon { font-size: 34px; line-height: 1; flex: none; }
+.hero-text { flex: 1; min-width: 0; }
+.hero-eyebrow { font-size: var(--fs-small); font-weight: 800; color: var(--c-primary-ink); letter-spacing: .5px; }
+.hero-title { font-size: var(--fs-h2); font-weight: 800; margin: 2px 0; }
+.hero-sub { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 700; }
+.hero-cta {
+  margin-left: auto; flex: none;
+  min-width: var(--tap-min); min-height: var(--tap-min);
+  display: flex; align-items: center; justify-content: center;
+  /* §a11y：實心 accent 底上的圖示走 --on-accent（亮=白 3.87:1、暗=深墨 7.17:1），
+   *  暗色主題白字僅 2.30:1 不足；改深墨字使圖示/大字對比 ≥3。 */
+  background: var(--c-primary); color: var(--on-accent); border-radius: 999px;
+  font-size: 22px; font-weight: 800;
+}
+
+/* ── 學習區段（安全 / 6 科 / 科技）：全部常態展開、風格一致 ──
+ *  既然有 sidebar/底部導覽可跳，區段內容一律直接可見，不折疊、不需點擊展開。
+ *  每個區段 = 一致的 section 標題列（圖示＋名稱＋提示）＋底下的 row-card。 */
+.paths { display: flex; flex-direction: column; gap: var(--s6); }
+.path {
+  /* sticky app-bar 讓位：錨點跳轉時標題不被頂部應用列蓋住 */
+  scroll-margin-top: calc(var(--app-bar-h) + env(safe-area-inset-top, 0px) + var(--s4));
+}
+.path-head {
+  display: flex; align-items: baseline; gap: var(--s2); flex-wrap: wrap;
+  padding-bottom: var(--s2);
+  margin-bottom: var(--s1);
+  border-bottom: 2px solid var(--card-border);
+}
+.path-head .path-icon { font-size: 24px; line-height: 1; flex: none; align-self: center; }
+.path-head .path-title { font-size: var(--fs-h2); font-weight: 800; margin: 0; }
+.path-head .path-hint { font-size: 12px; color: var(--ink-soft); font-weight: 700; margin-left: auto; }
+.path-body .section-note:first-child { margin-top: var(--s2); }
+
+/* #top（greeting）與 #main-content（skip-link 目標）錨點/略過跳轉時讓開 sticky app-bar（含瀏海 safe-area），與 .path 一致 */
+#top,
+#main-content { scroll-margin-top: calc(var(--app-bar-h) + env(safe-area-inset-top, 0px) + var(--s4)); }
+
+/* ── 跳到主要內容 skip-link：預設藏在畫面外，鍵盤 focus 時才顯示於左上 ── */
+.skip-link {
+  position: absolute; left: var(--s3); top: -80px; z-index: 9000;
+  /* §a11y：一般文字需 ≥4.5:1。改用實心鈕 token：亮=白字 on #0b6bb5 5.55:1、
+   *  暗=深墨字 on #63B2EE 7.17:1（原本白字 on --c-primary 亮 3.87 / 暗 2.30 皆不足）。 */
+  background: var(--c-primary-btn); color: var(--on-accent);
+  padding: 10px var(--s4); border-radius: var(--r-sm);
+  font-weight: 800; text-decoration: none;
+  transition: top .15s ease;
+}
+.skip-link:focus { top: var(--s3); }
+
+/* ── 家長導向副標（僅首訪顯示；中性年段、免登入、進度存本機、放輕鬆練） ── */
+.hero-parent-note {
+  font-size: 12px; color: var(--ink-soft); font-weight: 700;
+  margin: var(--s2) 0 0; padding-left: var(--s1);
+  /* 寬螢幕避免超長單行難讀：限制行寬 */
+  max-width: 46ch;
+}
+/* hero 進度即時回饋：獨立 role=status，避免整個可點連結被反覆朗讀 */
+.hero-status { display: block; font-size: var(--fs-small); color: var(--ink-soft); font-weight: 700; margin-top: var(--s1); padding-left: var(--s1); }
+.hero-status:empty { display: none; }
+
+/* ── 進階挑戰次層：原生 <details> 漸進揭示（桌面預設展開、手機收合），套 challenge-shelf 虛線視覺 ── */
+details.adv-details > summary {
+  list-style: none; cursor: pointer;
+  display: flex; align-items: center; gap: var(--s2);
+  min-height: var(--tap-min);
+  font-size: 12px; font-weight: 800; color: var(--ink-soft);
+  -webkit-tap-highlight-color: transparent;
+}
+details.adv-details > summary::-webkit-details-marker { display: none; }
+details.adv-details > summary:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; border-radius: var(--r-sm); }
+details.adv-details > summary .adv-caret { margin-left: 4px; transition: transform .15s ease; }
+details.adv-details[open] > summary .adv-caret { transform: rotate(180deg); }
+/* challenge-shelf 已提供 margin-top，details 不再另加 */
+details.adv-details.challenge-shelf { margin-top: var(--s3); }
+
+/* ── scroll-spy：目前所在區段高亮（rail-nav + bottom-nav 的『更多』） ── */
+.rail-nav a.is-active { border-color: var(--c-primary); background: var(--tint-primary); color: var(--c-primary-ink); }
+
+/* ── 『更多』bottom-sheet 的科目清單（沿用 rail-nav 視覺） ── */
+.more-list { display: flex; flex-direction: column; gap: var(--s2); }
+.more-list a {
+  display: flex; align-items: center; gap: var(--s3);
+  min-height: var(--tap-min); padding: 10px var(--s3);
+  border-radius: var(--r-sm); text-decoration: none; color: var(--ink); font-weight: 700;
+  background: var(--card); border: 1px solid var(--card-border);
+}
+.more-list a:hover, .more-list a:focus-visible { border-color: var(--c-primary-soft); }
+.more-list .rail-icon { font-size: 22px; }
+
+/* ── 首訪（totalXp==0）：壓縮 Profile 卡，隱藏空經驗條與 0 火焰/0 金幣 noise ── */
+body.first-visit .profile-xp-wrap,
+body.first-visit .profile-chips { display: none; }
+
+/* ── prefers-reduced-motion：關閉錨點平滑捲動與 hero/row-card 位移動畫（前庭安全） ── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .hero-start, a.row-card { transition: none; }
+  .hero-start:hover, .hero-start:active,
+  a.row-card:hover, a.row-card:active { transform: none; }
+  details.adv-details > summary .adv-caret { transition: none; }
+}
+</style>
+</head>
+
+<!-- data-game-hud="native"：hub 用自己的 Profile 卡呈現統一角色，不注入浮動 HUD（§4.5）。 -->
+<body data-game-hud="native">
+
+<!-- 鍵盤/切換裝置使用者：focus 才顯示的跳轉入口，直接進主要內容 -->
+<a class="skip-link" href="#main-content">跳到主要內容</a>
+
+<!-- ===== 共用頂部應用列（index 變體：回首頁控制為非連結品牌） ===== -->
+<header class="app-bar">
+  <span class="app-bar__home app-bar__brand" aria-current="page">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </span>
+  <button type="button" class="app-bar__theme" data-theme-toggle
+          aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+
+<div class="hub">
+
+  <!-- ============ 左 rail（iPad sticky）/ 手機頂部緊湊 header ============ -->
+  <aside class="rail profile-rail">
+    <section class="profile-card" aria-label="我的角色">
+      <div class="profile-top">
+        <button class="profile-avatar" id="avatar-btn" type="button" aria-label="更換頭像">🦊</button>
+        <div class="profile-id">
+          <div class="profile-name">
+            <span id="pf-name">小小探險家</span>
+            <button class="name-edit-btn" id="name-btn" type="button" aria-label="編輯暱稱">✏️</button>
+          </div>
+          <div class="profile-level" id="pf-rank">🌱 探險新手 · 第 1 級</div>
+        </div>
+      </div>
+
+      <div class="profile-xp-wrap">
+        <div class="xp-bar" role="progressbar" aria-label="經驗值進度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="pf-xpbar">
+          <div class="xp-fill" id="pf-xpfill"></div>
+        </div>
+        <span class="profile-xp-text" id="pf-xptext">距離下一級還差 0 點經驗值</span>
+      </div>
+
+      <div class="profile-chips">
+        <span class="chip" id="pf-streak" title="連續學習天數">🔥 <span id="pf-streak-num">0</span> 天</span>
+        <span class="chip chip-chinese" id="pf-coins" title="金幣：累積的學習點數（記錄努力，不能兌換物品）">🪙 <span id="pf-coins-num">0</span></span>
+      </div>
+    </section>
+
+    <!-- 垂直區段導覽（僅 iPad 顯示）：點一下平滑捲到對應區段（全展開，只需捲動） -->
+    <nav class="rail-nav" aria-label="區段導覽">
+      <a href="#top"><span class="rail-icon">⬆️</span>最上</a>
+      <a href="#path-safety"><span class="rail-icon">🛡️</span>安全</a>
+      <a href="#path-math"><span class="rail-icon">📐</span>數學</a>
+      <a href="#path-english"><span class="rail-icon">📚</span>英文</a>
+      <a href="#path-chinese"><span class="rail-icon">🀄</span>國語</a>
+      <a href="#path-social"><span class="rail-icon">🗺️</span>社會</a>
+      <a href="#path-finance"><span class="rail-icon">🪙</span>理財</a>
+      <a href="#path-science"><span class="rail-icon">🔬</span>自然探索</a>
+      <a href="#path-tech"><span class="rail-icon">💡</span>科技與發明探索</a>
+    </nav>
+  </aside>
+
+  <!-- ============ 主區 ============ -->
+  <main class="main" id="main-content" tabindex="-1">
+
+    <div class="greeting" id="top">
+      <h1 id="greet-title">學習冒險基地 🏰</h1>
+      <p id="greet-sub">選一個科目，開始今天的冒險吧！</p>
+    </div>
+
+    <!-- 單一「從這裡開始」hero：畫面上唯一最醒目的下一步。
+         回訪（totalXp>0）→繼續上次；首訪（totalXp==0）→推薦友善起點，並隱藏「今日任務 0%」noise。
+         內容由 render() 依 profile 填入，href 亦動態設定。 -->
+    <a class="card hero-start" id="hero-start" href="#path-safety">
+      <span class="hero-icon" id="hero-icon" aria-hidden="true">🚀</span>
+      <div class="hero-text">
+        <div class="hero-eyebrow" id="hero-eyebrow">從這裡開始</div>
+        <div class="hero-title" id="hero-title">今天就從這裡開始 ▶</div>
+        <div class="hero-sub" id="hero-sub"></div>
+      </div>
+      <span class="hero-cta" aria-hidden="true">▶</span>
+    </a>
+    <!-- 家長導向副標：只在首訪顯示（render 依 totalXp 切換） -->
+    <p class="hero-parent-note" id="hero-parent-note" hidden></p>
+    <!-- 今日進度即時回饋：獨立 role=status，不再讓整個 hero 連結被反覆朗讀 -->
+    <span class="hero-status" id="hero-status" role="status"></span>
+
+    <!-- ============ 全部學習區段（安全 → 6 科 → 科技）：常態全展開、風格一致 ============ -->
+    <div class="paths">
+
+    <!-- 生活安全：排第一，直接列出四組（純本地教學，不計經驗值） -->
+    <section class="path" id="path-safety">
+      <div class="path-head">
+        <span class="path-icon" aria-hidden="true">🛡️</span>
+        <h2 class="path-title">生活安全</h2>
+        <span class="path-hint">保護自己的本領 · 不計經驗值</span>
+      </div>
+      <div class="path-body">
+      <div class="section-box">
+      <div class="section-note">學會保護自己：以下四大主題放輕鬆學，這些本領會一直保護你。</div>
+      <div class="grid-auto" style="margin-top: var(--s3)">
+        <a class="card row-card" href="safety.html#personal">
+          <span class="icon">🙅</span>
+          <div class="info"><h3>個人安全</h3><p>財不露白 · 應對陌生人 · 記住路線地標 · 提高警覺 · 被跟蹤或走失</p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="safety.html#home">
+          <span class="icon">🏠</span>
+          <div class="info"><h3>居家與衛生</h3><p>洗手與咳嗽禮節 · 安全用電 · 瓦斯與一氧化碳 · 藥品清潔劑 · 獨自在家</p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="safety.html#emergency">
+          <span class="icon">🚨</span>
+          <div class="info"><h3>緊急應變與求救</h3><p>火災逃生 · 地震避難 · 受傷處理 · 打對電話求救 · 記住家人電話地址</p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="safety.html#traffic">
+          <span class="icon">🚦</span>
+          <div class="info"><h3>交通與戶外</h3><p>安全過馬路 · 乘車習慣 · 玩水安全 · 山林不迷路 · 颱風打雷</p></div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      </div>
+      </div>
+    </section>
+
+    <!-- 數學：觀念 → 練習 → 進階 -->
+    <section class="path" id="path-math">
+      <div class="path-head">
+        <span class="path-icon" aria-hidden="true">📐</span>
+        <h2 class="path-title">數學</h2>
+        <span class="path-hint">觀念 → 練習 → 進階</span>
+      </div>
+      <div class="path-body">
+      <div class="section-box">
+      <div class="section-note" style="margin-top: var(--s2)">🧠 先學觀念（先教再練）</div>
+      <div class="grid-auto" style="margin-top: var(--s3)">
+        <a class="card row-card" href="math_concepts.html">
+          <span class="icon t-adv">🧮</span>
+          <div class="info"><h3>數學觀念養成</h3><p>用圖先看懂「為什麼」：天平解方程式 · 數線與負數 · 分數 · 面積周長</p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="math2_concepts.html">
+          <span class="icon t-adv">📊</span>
+          <div class="info"><h3>數學觀念養成 2</h3><p>用圖先看懂：座標數對 (x, y) · 比與比例 · 機率</p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="number_theory_concepts.html">
+          <span class="icon t-adv">🔢</span>
+          <div class="info"><h3>數論觀念養成</h3><p>用點陣與圖先看懂：因數倍數 · 質數 · 質因數分解 · 最大公因數 · 最小公倍數</p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="geometry_concepts.html">
+          <span class="icon t-adv">📐</span>
+          <div class="info"><h3>幾何觀念養成</h3><p>用圖先看懂：立體與展開圖 · 體積（數積木）· 直角銳角鈍角</p></div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      </div>
+      <div class="section-box">
+      <div class="section-note" style="margin-top: var(--s4)">✏️ 練習</div>
+      <div class="grid-auto" style="margin-top: var(--s3)">
+        <a class="card row-card" href="math.html">
+          <span class="icon t-math">➕</span>
+          <div class="info"><h3>數學冒險王</h3><p>加減乘除到方程式、幾何、統計 <span class="chip chip-math" style="font-size:11px">進階</span></p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="multiply.html">
+          <span class="icon t-math">✖️</span>
+          <div class="info"><h3>乘法樂園</h3><p>乘法速算特訓</p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="number_theory.html">
+          <span class="icon t-math">🔢</span>
+          <div class="info"><h3>數字魔法師 · 數論基礎</h3><p>奇偶數 · 質數 · 因數倍數</p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="geometry.html">
+          <span class="icon t-math">🧊</span>
+          <div class="info"><h3>立體積木工坊</h3><p>立體 · 展開圖 · 數方塊 · 對稱 <span class="chip chip-math" style="font-size:11px">進階</span></p></div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      </div>
+      <details class="challenge-shelf adv-details section-box">
+        <summary><span>🏆 進階挑戰 (4)</span><span class="adv-caret" aria-hidden="true">▾</span></summary>
+      <div class="grid-auto" style="margin-top: var(--s3)">
+        <a class="card row-card" href="math_advanced.html">
+          <span class="icon t-adv">🧮</span>
+          <div class="info"><h3>進階數學挑戰</h3><p>方程式 · 函數 · 三角 · 對數 · 向量 · 微積分入門</p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="number_theory_advanced.html">
+          <span class="icon t-adv">🔐</span>
+          <div class="info"><h3>數論進階冒險</h3><p>輾轉相除 · 模運算 · 費馬 · RSA 加密</p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="math_modeling.html">
+          <span class="icon t-adv">🕵️</span>
+          <div class="info"><h3>數學偵探 · 看穿問題</h3><p>剝掉冗長故事，看穿背後的數學模型：翻成算式 · 經典題型 · 設未知數 · 鴿籠／計數／圖論（有漸進提示）</p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="logic_reasoning.html">
+          <span class="icon t-adv">🧠</span>
+          <div class="info"><h3>推理偵探 · 邏輯推理</h3><p>一步步嚴謹推理、不被似是而非騙到：若P則Q · 逆否等價 · 有效推論vs謬誤 · 數獨式排除 · 德摩根／量詞 · 說謊者謎題（有漸進提示）</p></div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      </details>
+      </div>
+    </section>
+
+    <!-- 英文：觀念 → 練習 → 進階語感 → 閃卡庫 -->
+    <section class="path" id="path-english">
+      <div class="path-head">
+        <span class="path-icon" aria-hidden="true">📚</span>
+        <h2 class="path-title">英文</h2>
+        <span class="path-hint">觀念 → 練習 → 進階 → 閃卡庫</span>
+      </div>
+      <div class="path-body">
+      <div class="section-box">
+      <div class="section-note" style="margin-top: var(--s2)">🧠 先學觀念</div>
+      <div class="grid-auto" style="margin-top: var(--s3)">
+        <a class="card row-card" href="english_concepts.html">
+          <span class="icon t-adv">🎯</span>
+          <div class="info"><h3>英文句型觀念養成</h3><p>用圖先看懂：be 動詞 · 名詞單複數 · 現在式vs進行式 · 介系詞 in/on/at</p></div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      </div>
+      <div class="section-box">
+      <div class="section-note" style="margin-top: var(--s4)">✏️ 練習</div>
+      <div class="grid-auto" style="margin-top: var(--s3)">
+        <a class="card row-card" href="vocabulary_app.html">
+          <span class="icon t-english">📚</span>
+          <div class="info"><h3>單字大師</h3><p>用「間隔複習」把單字記牢（和「單字探險家」的圖像記憶互補）</p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="english_sense.html">
+          <span class="icon t-adv">🗣️</span>
+          <div class="info"><h3>英文語感</h3><p>哪個最自然 · 情境對話 · 看圖說英文 · 聽力（有語音）· 語調上揚↗下降↘（有語音）</p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="practice.html">
+          <span class="icon t-adv">🔎</span>
+          <div class="info"><h3>單字探險家 · 看圖記單字</h3><p>用圖像記憶學單字 · 基礎＆進階（和「單字大師」的間隔複習互補）</p></div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      </div>
+      <details class="challenge-shelf adv-details section-box">
+        <summary><span>🏆 進階語感 (1)</span><span class="adv-caret" aria-hidden="true">▾</span></summary>
+      <div class="grid-auto" style="margin-top: var(--s3)">
+        <a class="card row-card" href="english_advanced.html">
+          <span class="icon t-adv">🎧</span>
+          <div class="info"><h3>進階英文語感</h3><p>用感覺抓時間：現在/過去/已完成 · 未來 · 比較 · 語氣 · 被動 · 順口搭配（不背文法）</p></div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      </details>
+
+      <!-- 英文閃卡庫：分級/平行字彙，不屬於難度階梯；併入英文路徑，展開後仍可見 -->
+            <div class="section-box">
+      <div class="section-note" style="margin-top: 0">🃏 英文閃卡庫（分級字彙）</div>
+      <div class="section-note" style="margin-top: 2px">依分級／用途整理的字彙閃卡，隨時可挑一組來背，不是難度更高的「進階」。</div>
+      <div class="grid-auto" style="margin-top: var(--s3)">
+        <a class="card row-card" href="cefr_flashcard.html">
+          <span class="icon t-adv">🃏</span>
+          <div class="info"><h3>CEFR 閃卡</h3><p>A1 / A2 / B1 分級字彙</p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="coca_flashcard.html">
+          <span class="icon t-adv">📖</span>
+          <div class="info"><h3>COCA 學術字彙</h3><p>學術頻率字彙</p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="toeic_gept_flashcard.html">
+          <span class="icon t-adv">📝</span>
+          <div class="info"><h3>多益 / 英檢閃卡</h3><p>多益 · 全民英檢</p></div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      </div>
+      </div>
+    </section>
+
+    <!-- 國語：觀念 → 練習 → 進階 -->
+    <section class="path" id="path-chinese">
+      <div class="path-head">
+        <span class="path-icon" aria-hidden="true">🀄</span>
+        <h2 class="path-title">國語</h2>
+        <span class="path-hint">觀念 → 練習 → 進階</span>
+      </div>
+      <div class="path-body">
+      <div class="section-box">
+      <div class="section-note" style="margin-top: var(--s2)">🧠 先學觀念</div>
+      <div class="grid-auto" style="margin-top: var(--s3)">
+        <a class="card row-card" href="chinese_concepts.html">
+          <span class="icon t-chinese">📖</span>
+          <div class="info"><h3>國語觀念養成</h3><p>用圖先看懂：部首與字義 · 筆畫順序 · 從標題抓重點 · 標點符號</p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="idiom_stories.html">
+          <span class="icon t-chinese">📖</span>
+          <div class="info"><h3>成語故事館</h3><p>用小故事把成語講清楚：守株待兔 · 塞翁失馬 · 愚公移山 · 三顧茅廬…（先聽故事再懂意思）</p></div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      </div>
+      <div class="section-box">
+      <div class="section-note" style="margin-top: var(--s4)">✏️ 練習</div>
+      <div class="grid-auto" style="margin-top: var(--s3)">
+        <a class="card row-card" href="chinese.html">
+          <span class="icon t-chinese">🀄</span>
+          <div class="info"><h3>國語大冒險</h3><p>認字 · 詞語 · 閱讀理解闖關</p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="composition.html">
+          <span class="icon t-chinese">✍️</span>
+          <div class="info"><h3>小小作家 · 寫作工廠</h3><p>擴句 · 縮句 · 修辭 · 排段落 · 小作文 <span class="chip chip-chinese" style="font-size:11px">進階</span></p></div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      </div>
+      <details class="challenge-shelf adv-details section-box">
+        <summary><span>🏆 進階挑戰 (1)</span><span class="adv-caret" aria-hidden="true">▾</span></summary>
+      <div class="grid-auto" style="margin-top: var(--s3)">
+        <a class="card row-card" href="chinese_advanced.html">
+          <span class="icon t-adv">📖</span>
+          <div class="info"><h3>進階國文挑戰</h3><p>成語 · 字詞辨析 · 修辭 · 閱讀理解 · 文言文 · 對聯格律</p></div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      </details>
+      </div>
+    </section>
+
+    <!-- 社會：觀念 → 練習 → 進階 -->
+    <section class="path" id="path-social">
+      <div class="path-head">
+        <span class="path-icon" aria-hidden="true">🗺️</span>
+        <h2 class="path-title">社會</h2>
+        <span class="path-hint">觀念 → 練習 → 進階</span>
+      </div>
+      <div class="path-body">
+      <div class="section-box">
+      <div class="section-note" style="margin-top: var(--s2)">🧠 先學觀念</div>
+      <div class="grid-auto" style="margin-top: var(--s3)">
+        <a class="card row-card" href="social_concepts.html">
+          <span class="icon t-adv">🧭</span>
+          <div class="info"><h3>社會觀念養成</h3><p>用圖先看懂：東西南北 · 地圖與圖例 · 時間軸與年代 · 文化vs自然</p></div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      </div>
+      <div class="section-box">
+      <div class="section-note" style="margin-top: var(--s4)">✏️ 練習</div>
+      <div class="grid-auto" style="margin-top: var(--s3)">
+        <a class="card row-card" href="social_studies.html">
+          <span class="icon t-social">🗺️</span>
+          <div class="info"><h3>社會大冒險 · 我們的台灣</h3><p>地圖與方位 · 家鄉與社區 · 生活中的社會</p></div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      </div>
+      <details class="challenge-shelf adv-details section-box">
+        <summary><span>🏆 進階挑戰 (1)</span><span class="adv-caret" aria-hidden="true">▾</span></summary>
+      <div class="grid-auto" style="margin-top: var(--s3)">
+        <a class="card row-card" href="social_advanced.html">
+          <span class="icon t-adv">🌏</span>
+          <div class="info"><h3>進階社會探索</h3><p>台灣地理 · 世界地圖 · 台灣史 · 世界史 · 公民與民主 · 台灣與世界</p></div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      </details>
+      </div>
+    </section>
+
+    <!-- 理財：觀念 → 練習 → 進階 -->
+    <section class="path" id="path-finance">
+      <div class="path-head">
+        <span class="path-icon" aria-hidden="true">🪙</span>
+        <h2 class="path-title">理財</h2>
+        <span class="path-hint">觀念 → 練習 → 進階</span>
+      </div>
+      <div class="path-body">
+      <div class="section-box">
+      <div class="section-note" style="margin-top: var(--s2)">🧠 先學觀念（先教再練）</div>
+      <div class="grid-auto" style="margin-top: var(--s3)">
+        <a class="card row-card" href="economics_concepts.html">
+          <span class="icon t-adv">💰</span>
+          <div class="info"><h3>理財觀念養成</h3><p>用圖先看懂：需要 vs 想要 · 金錢與交換 · 儲蓄 · 預算收支</p></div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      </div>
+      <div class="section-box">
+      <div class="section-note" style="margin-top: var(--s4)">✏️ 練習</div>
+      <div class="grid-auto" style="margin-top: var(--s3)">
+        <a class="card row-card" href="finance.html">
+          <span class="icon t-finance">🪙</span>
+          <div class="info"><h3>理財小達人 · 錢的探險</h3><p>開一間小店，學收支 · 存錢 · 預算</p></div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      </div>
+      <details class="challenge-shelf adv-details section-box">
+        <summary><span>🏆 進階挑戰 (1)</span><span class="adv-caret" aria-hidden="true">▾</span></summary>
+      <div class="grid-auto" style="margin-top: var(--s3)">
+        <a class="card row-card" href="economics_advanced.html">
+          <span class="icon t-adv">💹</span>
+          <div class="info"><h3>經濟與資本探索</h3><p>供需與價格 · 分工與市場 · 貨幣通膨 · 複利投資 · 公司資本 · 經濟與全球</p></div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      </details>
+      </div>
+    </section>
+
+    <!-- 自然探索：觀念 → 練習 -->
+    <section class="path" id="path-science">
+      <div class="path-head">
+        <span class="path-icon" aria-hidden="true">🔬</span>
+        <h2 class="path-title">自然探索</h2>
+        <span class="path-hint">觀念 → 練習</span>
+      </div>
+      <div class="path-body">
+      <div class="section-box">
+      <div class="section-note" style="margin-top: 0">從生活現象開始，慢慢往上探索。放輕鬆玩就好！</div>
+      <div class="section-note" style="margin-top: var(--s4)">🧠 先學觀念（先教再練）</div>
+      <div class="grid-auto" style="margin-top: var(--s3)">
+        <a class="card row-card" href="physics_concepts.html">
+          <span class="icon t-adv">🧲</span>
+          <div class="info"><h3>物理觀念養成</h3><p>用箭頭與圖先看懂：力與合力 · 簡單電路 · 浮力</p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="chemistry_concepts.html">
+          <span class="icon t-adv">⚗️</span>
+          <div class="info"><h3>化學觀念養成</h3><p>用粒子與積木先看懂：三態 · 原子分子 · 化學式 · 質量守恆 · pH</p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="biology_concepts.html">
+          <span class="icon t-adv">🌱</span>
+          <div class="info"><h3>生物觀念養成</h3><p>用箭頭圖先看懂：食物鏈 · 光合作用 · 生命週期 · 動物分類</p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="earth_science_concepts.html">
+          <span class="icon t-adv">🌍</span>
+          <div class="info"><h3>地球科學觀念養成</h3><p>用圖先看懂：白天晚上（自轉）· 一年與四季 · 水循環 · 月相</p></div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      </div>
+      <div class="section-box">
+      <div class="section-note" style="margin-top: 0">✏️ 練習</div>
+      <div class="section-note" style="margin-top: 2px">進階內容已含在各科練習卡中（見「進階」標籤）。</div>
+      <div class="grid-auto" style="margin-top: var(--s3)">
+        <a class="card row-card" href="physics.html">
+          <span class="icon t-science">🧲</span>
+          <div class="info"><h3>物理探險</h3><p>力 · 運動 · 能量 · 電 · 光 <span class="chip chip-math" style="font-size:11px">進階</span></p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="chemistry.html">
+          <span class="icon t-science">⚗️</span>
+          <div class="info"><h3>化學實驗室</h3><p>物質 · 元素 · 反應 · 酸鹼 <span class="chip chip-math" style="font-size:11px">進階</span></p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="biology.html">
+          <span class="icon t-science">🧬</span>
+          <div class="info"><h3>基礎生物</h3><p>細胞 · 人體 · 植物 · 動物 · 生態 <span class="chip chip-math" style="font-size:11px">進階</span></p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="earth_science.html">
+          <span class="icon t-science">🌏</span>
+          <div class="info"><h3>地球與太空探索</h3><p>地球構造 · 岩石化石 · 大氣天氣 · 海洋 · 太陽系 · 星星宇宙與太空 <span class="chip chip-math" style="font-size:11px">進階</span></p></div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      </div>
+      </div>
+    </section>
+
+    <!-- 科技與發明探索：跨學科延伸（資訊科技／科學發明史），與其他科一致的常態展開區段 -->
+    <section class="path" id="path-tech">
+      <div class="path-head">
+        <span class="path-icon" aria-hidden="true">💡</span>
+        <h2 class="path-title">科技與發明探索</h2>
+        <span class="path-hint">跨學科延伸</span>
+      </div>
+      <div class="path-body">
+      <div class="section-box">
+      <div class="section-note">橫跨科學、科技與歷史，從生活裡的科技開始，越後面越進階，慢慢玩就好。</div>
+      <div class="grid-auto" style="margin-top: var(--s3)">
+        <a class="card row-card" href="computer_science.html">
+          <span class="icon t-adv">💻</span>
+          <div class="info"><h3>電腦與網路探索</h3><p>硬體 · 二進位 · 資料 · 網際網路 · 演算法思維 · 網路安全 <span class="chip chip-math" style="font-size:11px">進階</span></p></div>
+          <span class="arrow">→</span>
+        </a>
+        <a class="card row-card" href="innovators.html">
+          <span class="icon t-adv">💡</span>
+          <div class="info"><h3>改變世界的人</h3><p>交通飛行 · 電力光明 · 電腦通訊 · 醫學救命 · 探索宇宙 · 台灣與現代創新</p></div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      </div>
+      </div>
+    </section>
+
+    </div><!-- /.paths -->
+
+    <p class="section-note" style="margin-top: var(--s4)">「先學觀念」是純學習、不算進度，放輕鬆學就好；大部分「練習」和「進階挑戰」會累積你的冒險等級與經驗值。少數思考挑戰（像數學偵探、推理偵探、電腦與網路、發明家、英文語感、地球科學）有自己的關卡星等，玩了一樣會延續你的每日連續學習紀錄（火焰），值得你挑戰喔！「生活安全」則是純安全教學，不計冒險等級、也沒有星等，但每天來練一樣會延續你的火焰。</p>
+
+    <!-- 成就徽章牆：顯示全部徽章（已解鎖＋還沒解鎖的當目標），一路小四→高一都有得追 -->
+    <div id="badge-wall" style="margin-top: var(--s5)">
+      <div class="badge-head">
+        <h2 class="section-label">🏅 我的成就徽章</h2>
+        <span class="badge-count" id="badge-count">已收集 0 / 0</span>
+      </div>
+      <p class="section-note" style="margin-top: var(--s2)">每一個都是你努力的紀錄。還沒亮起來的是下一個小目標，別急，慢慢來就會收集到！</p>
+      <div class="badge-grid" id="badge-grid" aria-label="成就徽章清單"></div>
+    </div>
+
+    <div class="hub-footer">🌟 每天學一點，每天進步一點！</div>
+  </main>
+</div>
+
+<!-- ============ 手機固定底部 tab bar（iPad 隱藏；safe-area） ============
+     收斂為 ≤6 個第一級：首頁·安全·數學·英文·國語·更多；一屏塞得下、不橫向溢出。
+     其餘科目（社會/理財/自然/科技）收進「更多」bottom-sheet。安全維持第一級（硬約束①）。
+     目前所在區段由 scroll-spy 動態高亮（不再寫死 active）。 -->
+<nav class="bottom-nav" aria-label="主導覽">
+  <a href="#top"><span class="nav-icon">🏠</span>首頁</a>
+  <a href="#path-safety"><span class="nav-icon">🛡️</span>安全</a>
+  <a href="#path-math"><span class="nav-icon">📐</span>數學</a>
+  <a href="#path-english"><span class="nav-icon">📚</span>英文</a>
+  <a href="#path-chinese"><span class="nav-icon">🀄</span>國語</a>
+  <button type="button" class="more-btn" id="more-btn" aria-haspopup="dialog" aria-expanded="false"><span class="nav-icon">☰</span>更多</button>
+</nav>
+
+<!-- ============ 「更多」科目 bottom-sheet（沿用 edit-sheet 樣式） ============ -->
+<div class="sheet-overlay" id="more-overlay" role="dialog" aria-modal="true" aria-labelledby="more-title" hidden>
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <h2 id="more-title">更多科目</h2>
+    <nav class="more-list" aria-label="更多科目導覽">
+      <a href="#path-social"><span class="rail-icon">🗺️</span>社會</a>
+      <a href="#path-finance"><span class="rail-icon">🪙</span>理財</a>
+      <a href="#path-science"><span class="rail-icon">🔬</span>自然探索</a>
+      <a href="#path-tech"><span class="rail-icon">💡</span>科技與發明探索</a>
+    </nav>
+    <div class="edit-actions">
+      <button class="btn" id="more-close" type="button">關閉</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 頭像 / 暱稱編輯 bottom-sheet ============ -->
+<div class="sheet-overlay" id="edit-overlay" role="dialog" aria-modal="true" aria-labelledby="edit-title" hidden>
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <h2 id="edit-title">我的角色</h2>
+    <label class="edit-label" for="name-input">暱稱</label>
+    <input id="name-input" class="name-input" type="text" maxlength="12" autocomplete="off"
+           placeholder="小小探險家" aria-label="輸入暱稱">
+    <p class="edit-label">選一個頭像</p>
+    <div class="emoji-grid" id="emoji-grid"></div>
+    <div class="edit-actions">
+      <button class="btn" id="edit-cancel" type="button">取消</button>
+      <button class="btn btn-primary" id="edit-save" type="button">儲存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var G = window.Game;
+
+  // lastRoute → 友善名稱（供「繼續上次」深連結）。
+  var ROUTE_NAMES = {
+    'math.html': '數學冒險王', 'multiply.html': '乘法樂園',
+    'number_theory.html': '數字魔法師 · 數論基礎', 'number_theory_advanced.html': '數論進階冒險', 'math_modeling.html': '數學偵探 · 看穿問題', 'logic_reasoning.html': '推理偵探 · 邏輯推理',
+    'geometry.html': '立體積木工坊',
+    'vocabulary_app.html': '單字大師', 'english_sense.html': '英文語感', 'english_advanced.html': '進階英文語感', 'cefr_flashcard.html': 'CEFR 閃卡',
+    'coca_flashcard.html': 'COCA 學術字彙', 'toeic_gept_flashcard.html': '多益 / 英檢閃卡',
+    'practice.html': '單字探險家', 'chinese.html': '國語大冒險',
+    'chinese_advanced.html': '進階國文挑戰',
+    'social_advanced.html': '進階社會探索',
+    'computer_science.html': '電腦與網路探索',
+    'economics_advanced.html': '經濟與資本探索',
+    'earth_science.html': '地球與太空探索',
+    'innovators.html': '改變世界的人',
+    'math_concepts.html': '數學觀念養成',
+    'math2_concepts.html': '數學觀念養成 2',
+    'physics_concepts.html': '物理觀念養成',
+    'chemistry_concepts.html': '化學觀念養成',
+    'number_theory_concepts.html': '數論觀念養成',
+    'geometry_concepts.html': '幾何觀念養成',
+    'biology_concepts.html': '生物觀念養成',
+    'earth_science_concepts.html': '地球科學觀念養成',
+    'economics_concepts.html': '理財觀念養成',
+    'chinese_concepts.html': '國語觀念養成',
+    'english_concepts.html': '英文句型觀念養成',
+    'social_concepts.html': '社會觀念養成',
+    'composition.html': '小小作家 · 寫作工廠',
+    'finance.html': '理財小達人',
+    'social_studies.html': '社會大冒險',
+    'physics.html': '物理探險',
+    'chemistry.html': '化學實驗室',
+    'biology.html': '基礎生物',
+    'math_advanced.html': '進階數學挑戰',
+    'safety.html': '安全小達人',
+    'idiom_stories.html': '成語故事館'
+  };
+
+  var AVATARS = ['🦊','🐰','🐼','🐯','🐶','🐱','🦁','🐨','🐸','🦉','🐢','🦄'];
+
+  // 首訪推薦的友善起點：導向「生活安全」——最要緊、最低壓力、科目中性（與硬約束①一致）。
+  // href 為頁內錨點（平滑捲到 #path-safety），走與導覽相同的「捲動＋聚焦」路徑。
+  var FRIENDLY_START = { href: '#path-safety', name: '生活安全' };
+
+  // 回訪無 lastRoute 時的「挑一個科目繼續玩」目標：同樣導向頁內安全區，不再寫死英文。
+  var RETURN_START = { href: '#path-safety' };
+
+  function $(id) { return document.getElementById(id); }
+
+  // 有效的頁內錨點（區段 / 主要內容 / 最上）。
+  var HASH_RE = /^#(top|main-content|path-[a-z]+)$/;
+
+  // 尊重使用者的「減少動態效果」偏好（前庭安全）。
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  // 把焦點移到錨點目標（SR/鍵盤使用者「跳了真的有跳」）。
+  function focusTarget(el) {
+    if (!el) return;
+    if (el.getAttribute('tabindex') === null) el.setAttribute('tabindex', '-1');
+    try { el.focus({ preventScroll: true }); }
+    catch (e) { el.focus(); }
+  }
+
+  // ---- 統一的「捲動 + 聚焦」錨點導覽：scrollToHash 與 rail/bottom-nav 點擊共用 ----
+  //      區段全展開，只需捲動；用 scrollIntoView + CSS scroll-margin-top 讓開 sticky app-bar，
+  //      並把焦點移到區段標題；reduce-motion 時瞬間定位（不做平滑動畫）。
+  function goToHash(h) {
+    if (!HASH_RE.test(h)) return false;
+    var el = document.querySelector(h);
+    if (!el) return false;
+    var behavior = reduceMotion.matches ? 'auto' : 'smooth';
+    try { el.scrollIntoView({ behavior: behavior, block: 'start' }); }
+    catch (e) { el.scrollIntoView(); }
+    focusTarget(el);
+    return true;
+  }
+  function scrollToHash() { goToHash(location.hash || ''); }
+
+  // ---- 徽章牆：全部徽章（已解鎖 + 未解鎖當目標） ----
+  function renderBadges() {
+    if (!G || !G.getBadgeWall) return;
+    var wall = G.getBadgeWall();
+    var grid = $('badge-grid');
+    if (!grid) return;
+    var earned = 0;
+    grid.innerHTML = '';
+    wall.forEach(function (b) {
+      if (b.earned) earned++;
+      var el = document.createElement('div');
+      el.className = 'badge-item ' + (b.earned ? 'is-earned' : 'is-locked');
+      var ico = document.createElement('div'); ico.className = 'b-ico'; ico.textContent = b.icon;
+      var nm = document.createElement('div'); nm.className = 'b-name'; nm.textContent = b.name;
+      var ds = document.createElement('div'); ds.className = 'b-desc'; ds.textContent = b.desc;
+      var st = document.createElement('div'); st.className = 'b-state'; st.textContent = b.earned ? '✓ 已解鎖' : '尚未解鎖';
+      el.appendChild(ico); el.appendChild(nm); el.appendChild(ds); el.appendChild(st);
+      el.setAttribute('aria-label', b.name + '：' + b.desc + '，' + (b.earned ? '已解鎖' : '尚未解鎖'));
+      grid.appendChild(el);
+    });
+    var cnt = $('badge-count');
+    if (cnt) cnt.textContent = '已收集 ' + earned + ' / ' + wall.length;
+  }
+
+  // ---- 依 profile 更新所有動態內容 ----
+  function render() {
+    if (!G || !G.getProfile) return;
+    var p = G.getProfile();
+    if (!p) return;
+    var d = p.derived || {};
+
+    // Profile 頭部
+    $('avatar-btn').textContent = p.avatar || '🦊';
+    $('pf-name').textContent = p.displayName || '小小探險家';
+    $('pf-rank').textContent = (d.rankIcon || '🌱') + ' ' + (d.rankName || '探險新手') + ' · 第 ' + (p.level || 1) + ' 級';
+
+    // XP bar
+    var prog = d.levelProgress || 0;
+    $('pf-xpfill').style.width = Math.round(prog * 100) + '%';
+    var bar = $('pf-xpbar'); if (bar) bar.setAttribute('aria-valuenow', Math.round(prog * 100));
+    $('pf-xptext').textContent = d.isMaxLevel
+      ? '已達最高等級，你太厲害了！'
+      : '距離下一級還差 ' + (d.xpToNext || 0) + ' 點經驗值';
+
+    // 火焰 / 金幣
+    $('pf-streak-num').textContent = (p.streak && p.streak.current) || 0;
+    $('pf-coins-num').textContent = p.coins || 0;
+
+    // 歡迎語（正向、非失落厭惡；斷線只在回來時暖心，不預警「保住火焰」）
+    // 首訪判定只看是否真的賺過經驗值；streak 一載入就會被 pingActive 設為 1 天，
+    // 不能拿它當「回訪」依據（否則第一次來就被說「歡迎回來」）。
+    var cur = (p.streak && p.streak.current) || 0;
+    // 首訪判定：真的賺過 XP、或連續學習≥2天（純 pingActive 的思考挑戰頁也算數）、
+    // 或曾造訪任一科目頁（lastRoute；recordRoute 已排除 hub/home，不會是首訪假象）。
+    // 不能只看 totalXp：思考挑戰頁只 pingActive 不發 XP，否則天天玩仍被當首訪、且與「連續 N 天」自相矛盾。
+    var returning = (p.totalXp > 0) || cur >= 2 || !!(p.lastRoute && ROUTE_NAMES[p.lastRoute]);
+    // 首訪壓縮 Profile 卡（隱藏空經驗條與 0 火焰/0 金幣 noise）：由 body class 控制。
+    document.body.classList.toggle('first-visit', !returning);
+    $('greet-title').textContent = returning ? '歡迎回來！🎒' : '歡迎來到學習冒險基地！🏰';
+    if (cur >= 2) {
+      $('greet-sub').textContent = '你已經連續學習 ' + cur + ' 天，好棒！繼續今天的冒險吧！';
+    } else {
+      $('greet-sub').textContent = returning ? '很高興再看到你，選一個科目繼續玩吧！' : '選一個科目，開始今天的冒險吧！';
+    }
+
+    // 單一「從這裡開始」hero：整併「繼續上次」＋「今日任務」，畫面上只有一個最醒目的下一步。
+    var hero = $('hero-start');
+    var heroStatus = $('hero-status');
+    var parentNote = $('hero-parent-note');
+    var done = !!(p.daily && p.daily.done);
+    var dprog = done ? 1 : (d.dailyProgress || 0);
+    var dailyLine = done
+      ? '今天做完囉！繼續玩還是有經驗值喔 🎉'
+      : '今日任務 ' + Math.round(dprog * 100) + '%，再玩幾題就完成（大約 5–8 分鐘）';
+    if (returning) {
+      // 回訪：優先「繼續上次」；若無 lastRoute 則導向友善起點。今日進度改由獨立 role=status 承載。
+      if (p.lastRoute && ROUTE_NAMES[p.lastRoute]) {
+        $('hero-eyebrow').textContent = '繼續上次';
+        $('hero-title').textContent = ROUTE_NAMES[p.lastRoute];
+        hero.setAttribute('href', p.lastRoute);
+      } else {
+        $('hero-eyebrow').textContent = '繼續冒險';
+        $('hero-title').textContent = '挑一個科目繼續玩 ▶';
+        hero.setAttribute('href', RETURN_START.href);
+      }
+      $('hero-icon').textContent = '▶️';
+      $('hero-sub').textContent = '';
+      if (heroStatus) heroStatus.textContent = dailyLine;
+      if (parentNote) { parentNote.hidden = true; parentNote.textContent = ''; }
+    } else {
+      // 首訪：導向「生活安全」友善起點；eyebrow 用全形「？」且與 title 不重複；隱藏「今日任務 0%」noise。
+      $('hero-eyebrow').textContent = '第一次來？';
+      $('hero-title').textContent = '先看最要緊的「' + FRIENDLY_START.name + '」 ▶';
+      $('hero-sub').textContent = '放輕鬆看，一次幾分鐘就好，這些本領會一直保護你。';
+      hero.setAttribute('href', FRIENDLY_START.href);
+      $('hero-icon').textContent = '🛡️';
+      if (heroStatus) heroStatus.textContent = '';
+      if (parentNote) {
+        parentNote.textContent = '給家長：這是國小到高中的分科練習，孩子想練哪一科都行；免註冊、進度存在本機裝置，陪他放輕鬆練就好。';
+        parentNote.hidden = false;
+      }
+    }
+
+    // 成就徽章牆
+    renderBadges();
+  }
+
+  // ---- bottom-sheet 共用 a11y：焦點移入 / Tab 焦點陷阱 / 關閉還原焦點（更多 & 編輯共用） ----
+  var FOCUSABLE_SEL = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  function getFocusable(container) {
+    return Array.prototype.slice.call(container.querySelectorAll(FOCUSABLE_SEL))
+      .filter(function (el) {
+        return el === document.activeElement ||
+          (el.offsetWidth > 0 || el.offsetHeight > 0 || el.getClientRects().length > 0);
+      });
+  }
+  function focusFirstIn(container) {
+    var f = getFocusable(container);
+    if (f.length) { f[0].focus(); }
+    else if (container && container.focus) { container.focus(); }
+  }
+  // 於指定 sheet（未 hidden 時）套用 Tab 焦點陷阱，避免焦點跑出 dialog。
+  function trapTab(container, e) {
+    if (e.key !== 'Tab' || !container || container.hidden) return;
+    var f = getFocusable(container);
+    if (!f.length) { e.preventDefault(); return; }
+    var first = f[0], last = f[f.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first || !container.contains(document.activeElement)) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last || !container.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+    }
+  }
+
+  // ---- 頭像 / 暱稱編輯 sheet ----
+  var overlay = $('edit-overlay');
+  // 開啟 bottom-sheet 時，把背景三大容器設 inert + aria-hidden（縱深防護，勝過只攔 Tab；overlay 為其同層兄弟不受影響）
+  function setBgInert(on) {
+    ['.app-bar', '.hub', '.bottom-nav'].forEach(function (sel) {
+      var el = document.querySelector(sel); if (!el) return;
+      if (on) { el.setAttribute('inert', ''); el.setAttribute('aria-hidden', 'true'); }
+      else { el.removeAttribute('inert'); el.removeAttribute('aria-hidden'); }
+    });
+  }
+  var editLastFocus = null;   // 開啟前的觸發元素，關閉時還原焦點
+  function openEdit() {
+    if (!G) return;
+    editLastFocus = document.activeElement;
+    var p = G.getProfile() || {};
+    $('name-input').value = p.displayName || '';
+    var grid = $('emoji-grid');
+    grid.innerHTML = '';
+    AVATARS.forEach(function (em) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = em;
+      if (em === p.avatar) b.classList.add('sel');
+      b.addEventListener('click', function () {
+        Array.prototype.forEach.call(grid.children, function (c) { c.classList.remove('sel'); });
+        b.classList.add('sel');
+      });
+      grid.appendChild(b);
+    });
+    overlay.hidden = false;
+    setBgInert(true);
+    requestAnimationFrame(function () {
+      overlay.classList.add('open');
+      focusFirstIn(overlay);   // 焦點移入 sheet 內首個可聚焦元素
+    });
+  }
+  function closeEdit() {
+    overlay.classList.remove('open');
+    setBgInert(false);
+    setTimeout(function () { overlay.hidden = true; }, 300);
+    // 還原焦點至開啟前的觸發鈕
+    if (editLastFocus && editLastFocus.focus) { try { editLastFocus.focus(); } catch (err) {} }
+    editLastFocus = null;
+  }
+  function saveEdit() {
+    if (!G || !G.setProfileField) { closeEdit(); return; }
+    var name = ($('name-input').value || '').trim();
+    if (name) G.setProfileField('displayName', name);
+    var sel = $('emoji-grid').querySelector('.sel');
+    if (sel) G.setProfileField('avatar', sel.textContent);
+    closeEdit();
+    render();
+  }
+
+  // ---- 事件綁定 ----
+  $('avatar-btn').addEventListener('click', openEdit);
+  $('name-btn').addEventListener('click', openEdit);
+  $('edit-cancel').addEventListener('click', closeEdit);
+  $('edit-save').addEventListener('click', saveEdit);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) closeEdit(); });
+
+  // 夜間模式切換：改由共用 app-bar 的 [data-theme-toggle] 按鈕負責，
+  // 由 game_core.js 自動綁定與圖示同步，這裡不再另設按鈕。
+
+  // 遊戲事件 → 重繪（含跨分頁 storage 觸發的 xp 事件）
+  if (G && G.on) {
+    ['xp', 'levelup', 'streak', 'badge', 'daily-complete'].forEach(function (evt) {
+      G.on(evt, render);
+    });
+  }
+
+  // ---- 「更多」科目 bottom-sheet（沿用 edit-sheet 樣式與開合動線） ----
+  var moreOverlay = $('more-overlay');
+  var moreBtn = $('more-btn');
+  var moreLastFocus = null;   // 開啟前的觸發元素，關閉時還原焦點
+  function openMore() {
+    if (!moreOverlay) return;
+    moreLastFocus = document.activeElement;
+    moreOverlay.hidden = false;
+    setBgInert(true);
+    if (moreBtn) moreBtn.setAttribute('aria-expanded', 'true');
+    requestAnimationFrame(function () {
+      moreOverlay.classList.add('open');
+      focusFirstIn(moreOverlay);   // 焦點移入 sheet 內首個可聚焦元素
+    });
+  }
+  function closeMore() {
+    if (!moreOverlay) return;
+    moreOverlay.classList.remove('open');
+    setBgInert(false);
+    if (moreBtn) moreBtn.setAttribute('aria-expanded', 'false');
+    setTimeout(function () { moreOverlay.hidden = true; }, 300);
+    // 還原焦點至開啟前的觸發鈕（若 focus 已在錨點導覽轉移，則不搶回）
+    if (moreLastFocus && moreLastFocus.focus &&
+        (moreOverlay.contains(document.activeElement) || document.activeElement === document.body)) {
+      try { moreLastFocus.focus(); } catch (err) {}
+    }
+    moreLastFocus = null;
+  }
+  if (moreBtn) moreBtn.addEventListener('click', openMore);
+  var moreClose = $('more-close');
+  if (moreClose) moreClose.addEventListener('click', closeMore);
+  if (moreOverlay) moreOverlay.addEventListener('click', function (e) { if (e.target === moreOverlay) closeMore(); });
+  // Esc 關閉 + Tab 焦點陷阱：更多 & 編輯 兩個 aria-modal sheet 皆處理。
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      if (moreOverlay && !moreOverlay.hidden) { closeMore(); return; }
+      if (overlay && !overlay.hidden) { closeEdit(); return; }
+    }
+    if (e.key === 'Tab') {
+      if (moreOverlay && !moreOverlay.hidden) { trapTab(moreOverlay, e); return; }
+      if (overlay && !overlay.hidden) { trapTab(overlay, e); return; }
+    }
+  });
+
+  // ---- 統一錨點導覽：所有頁內 # 連結（skip-link / rail-nav / bottom-nav / 更多 / hero）走同一條「捲動＋聚焦」 ----
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (!a) return;
+    var href = a.getAttribute('href') || '';
+    if (!HASH_RE.test(href)) return;
+    e.preventDefault();
+    var inMore = moreOverlay && moreOverlay.contains(a);
+    if (inMore) closeMore();
+    goToHash(href);
+    if (history.pushState) { try { history.pushState(null, '', href); } catch (err) {} }
+  });
+
+  // ---- 進階挑戰次層：桌面/iPad 預設展開、手機預設收合（matchMedia 判斷；opt-in 揭示非隱藏） ----
+  var advDetails = Array.prototype.slice.call(document.querySelectorAll('details.adv-details'));
+  var wideMq = window.matchMedia('(min-width: 1024px)');
+  function syncAdvDetails() {
+    advDetails.forEach(function (d) { if (!d.dataset.userToggled) d.open = wideMq.matches; });
+  }
+  syncAdvDetails();
+  // 使用者手動展開/收合後標記該層，斷點切換（iPad 旋轉／分割畫面跨 1024px）時不再覆寫其選擇。
+  advDetails.forEach(function (d) {
+    var sm = d.querySelector('summary');
+    if (sm) sm.addEventListener('click', function () { d.dataset.userToggled = '1'; });
+  });
+  if (wideMq.addEventListener) wideMq.addEventListener('change', syncAdvDetails);
+  else if (wideMq.addListener) wideMq.addListener(syncAdvDetails);
+
+  // ---- scroll-spy：IntersectionObserver 依目前所在 .path 高亮 rail-nav 與 bottom-nav，並更新 aria-current ----
+  var MORE_PATHS = ['path-social', 'path-finance', 'path-science', 'path-tech'];
+  var railLinks = Array.prototype.slice.call(document.querySelectorAll('.rail-nav a'));
+  var bottomLinks = Array.prototype.slice.call(document.querySelectorAll('.bottom-nav a'));
+  var currentActive = null;
+  function setActive(id) {
+    if (id === currentActive) return;
+    currentActive = id;
+    railLinks.forEach(function (a) {
+      var on = a.getAttribute('href') === '#' + id;
+      a.classList.toggle('is-active', on);
+      if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+    });
+    var moreActive = MORE_PATHS.indexOf(id) >= 0;
+    bottomLinks.forEach(function (a) {
+      var on = a.getAttribute('href') === '#' + id;
+      a.classList.toggle('active', on);
+      if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+    });
+    if (moreBtn) {
+      moreBtn.classList.toggle('active', moreActive);
+      if (moreActive) moreBtn.setAttribute('aria-current', 'true'); else moreBtn.removeAttribute('aria-current');
+    }
+  }
+  var spyTargets = Array.prototype.slice.call(document.querySelectorAll('#top, .path[id]'));
+  if ('IntersectionObserver' in window && spyTargets.length) {
+    var visible = {};
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) visible[en.target.id] = en.boundingClientRect.top;
+        else delete visible[en.target.id];
+      });
+      // 取目前落在觀測帶內、最靠近頂端的區段當「你在這裡」。
+      var pick = null, pickTop = Infinity;
+      spyTargets.forEach(function (t) {
+        if (t.id in visible) {
+          var top = t.getBoundingClientRect().top;
+          if (top < pickTop) { pickTop = top; pick = t.id; }
+        }
+      });
+      // 在頁面最上方時，觀測帶可能已越過 #top 而選到下方區段；此時一律以「最上」為準。
+      if (window.scrollY < 80) setActive('top');
+      else if (pick) setActive(pick);
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    spyTargets.forEach(function (t) { spy.observe(t); });
+    // 捲回頁面最上方時，觀測帶內可能沒有任何區段；直接把「首頁/最上」標為目前位置。
+    window.addEventListener('scroll', function () {
+      if (window.scrollY < 80) setActive('top');
+    }, { passive: true });
+  }
+
+  // ---- hashchange：手動改網址列 hash（或前進/後退）到任何區段都重跑「捲動＋聚焦」，與點擊一致 ----
+  window.addEventListener('hashchange', function () { scrollToHash(); });
+
+  render();
+  // 首次載入即帶 #path-xxx 深連結時，於非同步內容（徽章牆）渲染後校正最終位置並移焦點。
+  if (location.hash) scrollToHash();
+  else setActive('top');
+})();
+</script>
+</body>
+</html>

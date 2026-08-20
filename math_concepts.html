@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>數學觀念養成 🧠</title>
+<!-- 教學頁（教一小段 → 馬上練習）；共用 concept_engine.js + concept.css。純本地、不餵主 XP。 -->
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<link rel="stylesheet" href="concept.css">
+<script src="game_core.js"></script>
+<style>:root{ --su:#2563eb; --su-tint:rgba(37,99,235,0.14); }</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">數學觀念養成 🧠</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="cn-screen active cn-wrap">
+    <div class="cn-topbar"><span class="cn-title">數學觀念養成 🧠</span></div>
+    <div class="cn-hello"><span class="cn-mascot" aria-hidden="true">🧠</span>
+      <div><div class="cn-htext" id="hello">先看懂「為什麼」，再動手練習——用圖來想，數學其實很好懂。</div>
+      <div class="cn-hsub">每個觀念都是「教一小段 → 馬上練習」，慢慢來。</div></div></div>
+    <div class="cn-lessons" id="lesson-list"></div>
+    <a class="cn-nextup" href="math.html" style="display:flex;align-items:center;gap:12px;margin-top:16px;padding:14px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:26px;flex:none" aria-hidden="true">🚀</span><span>學會了？接著到「數學冒險王」練習 →</span></a>
+    <p class="cn-note">這裡是「先學觀念」的教學小旅程，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
+  </section>
+  <section id="screen-play" class="cn-screen cn-wrap">
+    <div class="cn-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="cn-title" id="play-title">觀念</span></div>
+    <div class="cn-progress" id="prog" aria-hidden="true"></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+// ---- 數學專用 SVG 概念圖 helper（文字用 currentColor = --ink，亮暗皆清楚）----
+function balance(l,r,tilt){ var d=tilt==='left'?-10:(tilt==='right'?10:0);
+  return '<svg viewBox="0 0 300 165" role="img" aria-label="天平 左'+l+' 右'+r+'"><polygon points="150,49 121,150 179,150" fill="#8a8a8a"/><g class="beam" style="transform:rotate('+d+'deg)"><line x1="45" y1="45" x2="255" y2="45" stroke="currentColor" stroke-opacity="0.6" stroke-width="7" stroke-linecap="round"/><line x1="80" y1="45" x2="80" y2="72" stroke="#9a9a9a" stroke-width="3"/><path d="M52 72 Q80 100 108 72" fill="none" stroke="currentColor" stroke-opacity="0.6" stroke-width="4"/><text x="80" y="66" text-anchor="middle" font-size="19" font-weight="800" fill="currentColor">'+l+'</text><line x1="220" y1="45" x2="220" y2="72" stroke="#9a9a9a" stroke-width="3"/><path d="M192 72 Q220 100 248 72" fill="none" stroke="currentColor" stroke-opacity="0.6" stroke-width="4"/><text x="220" y="66" text-anchor="middle" font-size="19" font-weight="800" fill="currentColor">'+r+'</text></g></svg>'; }
+function blocks(label,n){ var s='<svg viewBox="0 0 300 90" role="img" aria-label="'+n+'個'+label+'">',x=(300-n*52)/2; for(var i=0;i<n;i++){ s+='<rect x="'+x+'" y="24" width="42" height="42" rx="8" fill="none" stroke="currentColor" stroke-width="3"/><text x="'+(x+21)+'" y="51" text-anchor="middle" font-size="18" font-weight="800" fill="currentColor">'+label+'</text>'; x+=52; } return s+'</svg>'; }
+function numline(mark, arrow){ var W=300,pad=20,span=W-2*pad,y=55, x=function(v){return pad+((v+5)/10)*span;};
+  var s='<svg viewBox="0 0 300 90" role="img" aria-label="數線"><line x1="'+pad+'" y1="'+y+'" x2="'+(W-pad)+'" y2="'+y+'" stroke="#8a8a8a" stroke-width="3"/>';
+  for(var v=-5; v<=5; v++){ var xx=x(v); s+='<line x1="'+xx+'" y1="'+(y-5)+'" x2="'+xx+'" y2="'+(y+5)+'" stroke="#8a8a8a" stroke-width="2"/><text x="'+xx+'" y="'+(y+20)+'" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">'+v+'</text>'; }
+  if(arrow){ var x1=x(arrow.from),x2=x(arrow.to),ay=y-16, dir=x2>=x1?1:-1; s+='<line x1="'+x1+'" y1="'+ay+'" x2="'+x2+'" y2="'+ay+'" stroke="#2563eb" stroke-width="3"/><polygon points="'+x2+','+ay+' '+(x2-dir*7)+','+(ay-5)+' '+(x2-dir*7)+','+(ay+5)+'" fill="#2563eb"/><circle cx="'+x1+'" cy="'+y+'" r="4" fill="#2563eb"/>'; }
+  if(mark!=null){ var arr=Array.isArray(mark)?mark:[mark]; arr.forEach(function(mv){ var mx=x(mv); s+='<circle cx="'+mx+'" cy="'+y+'" r="6" fill="#e11d48"/><text x="'+mx+'" y="'+(y-12)+'" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">'+mv+'</text>'; }); }
+  return s+'</svg>'; }
+function fracbar(parts, shaded, color){ color=color||'#2563eb'; var W=300,pad=14,bw=W-2*pad,cw=bw/parts,s='<svg viewBox="0 0 300 70" role="img" aria-label="'+shaded+'/'+parts+'">'; for(var i=0;i<parts;i++){ var xx=pad+i*cw; s+='<rect x="'+xx+'" y="16" width="'+cw+'" height="38" fill="'+(i<shaded?color:'none')+'" stroke="currentColor" stroke-width="2"/>'; } return s+'</svg>'; }
+function fraccircle(parts, shaded, color){ color=color||'#2563eb'; var cx=150,cy=42,r=34,s='<svg viewBox="0 0 300 90" role="img" aria-label="'+shaded+'/'+parts+'">'; for(var i=0;i<parts;i++){ var a0=(i/parts)*2*Math.PI-Math.PI/2, a1=((i+1)/parts)*2*Math.PI-Math.PI/2; var x0=cx+r*Math.cos(a0),y0=cy+r*Math.sin(a0),x1=cx+r*Math.cos(a1),y1=cy+r*Math.sin(a1); var large=(a1-a0)>Math.PI?1:0; s+='<path d="M'+cx+','+cy+' L'+x0.toFixed(1)+','+y0.toFixed(1)+' A'+r+','+r+' 0 '+large+' 1 '+x1.toFixed(1)+','+y1.toFixed(1)+' Z" fill="'+(i<shaded?color:'none')+'" stroke="currentColor" stroke-width="2"/>'; } return s+'</svg>'; }
+// 方格長方形：mode 'area'（鋪滿藍格）｜'perim'（紅粗外框）
+function gridRect(cols, rows, mode){ var u=26,W=cols*u,H=rows*u,pad=10,vw=W+2*pad,vh=H+2*pad,s='<svg viewBox="0 0 '+vw+' '+vh+'" role="img" aria-label="'+cols+'乘'+rows+'長方形">';
+  for(var r=0;r<rows;r++){ for(var c=0;c<cols;c++){ var xx=pad+c*u,yy=pad+r*u; s+='<rect x="'+xx+'" y="'+yy+'" width="'+u+'" height="'+u+'" fill="'+(mode==='area'?'rgba(37,99,235,0.20)':'none')+'" stroke="#9aa1ab" stroke-width="1"/>'; } }
+  s+='<rect x="'+pad+'" y="'+pad+'" width="'+W+'" height="'+H+'" fill="none" stroke="'+(mode==='perim'?'#e11d48':'currentColor')+'" stroke-opacity="'+(mode==='perim'?1:0.6)+'" stroke-width="'+(mode==='perim'?5:2)+'"/>'; return s+'</svg>'; }
+
+window.CONCEPT = {
+  progKey:'math_concepts_v1', practiceHref:'math.html',
+  lessons:[
+   { id:'frac', name:'分數是什麼', emoji:'🍕', color:'#f59e0b', sub:'分割、比大小、等值分數', done:'記得：分母是分成幾份、分子是拿幾份；分越少份每份越大。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'把一個東西平分',svg:fraccircle(4,1,'#f59e0b'),text:'一個披薩<b>平分成 4 份</b>，拿走其中 <b>1 份</b>，就是 <b>1/4</b>。下面那個數（分母）是「分成幾份」，上面那個數（分子）是「拿了幾份」。'},
+      {type:'teach',kicker:'看長條',title:'分子 / 分母',svg:fracbar(4,3,'#f59e0b')+'<div class="cn-eq">3/4</div>',text:'這條分成 4 份、塗了 3 份，就是 <b>3/4</b>。分母 4＝總份數，分子 3＝塗色份數。'},
+      {type:'quiz',kicker:'換你試試',title:'塗色的部分是幾分之幾？',svg:fracbar(5,2,'#f59e0b'),options:['2/5','5/2','2/3','3/5'],answer:0,why:'分成 5 份、塗了 2 份，就是 2/5（分子在上、分母在下）。'},
+      {type:'teach',kicker:'比大小',title:'同樣拿 1 份，分越少份、每份越大',svg:fracbar(2,1,'#f59e0b')+fracbar(4,1,'#f59e0b'),text:'兩條一樣長：上面 <b>1/2</b>（分成 2 份、拿 1 份）比下面 <b>1/4</b>（分成 4 份、拿 1 份）<b>大</b>——分的份數越少，每一份反而越大。'},
+      {type:'quiz',kicker:'換你試試',title:'1/2 和 1/4，哪個比較大？',options:['1/2','1/4','一樣大','不能比'],answer:0,why:'分成 2 份的每一份，比分成 4 份的每一份大，所以 1/2 比較大。'},
+      {type:'teach',kicker:'等值分數',title:'長度一樣 = 一樣大',svg:fracbar(2,1,'#f59e0b')+fracbar(4,2,'#f59e0b'),text:'<b>1/2</b> 和 <b>2/4</b> 塗色的長度<b>一模一樣</b>，其實是同樣多！這叫<b>等值分數</b>：1/2 = 2/4。'},
+      {type:'quiz',kicker:'換你試試',title:'2/4 等於下面哪一個？',options:['1/2','1/4','2/2','4/2'],answer:0,why:'2/4 塗色長度和 1/2 一樣，所以 2/4 = 1/2。'}
+     ]},
+   { id:'area', name:'面積 vs 周長', emoji:'📐', color:'#16a34a', sub:'裡面有多大 vs 邊上一圈多長', done:'記得：面積算「裡面」（幾格）、周長算「邊上」（繞一圈）。兩個不一樣喔！',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'面積 = 裡面鋪滿幾格',svg:gridRect(4,3,'area')+'<div class="cn-eq">面積 = 4 × 3 = 12</div>',text:'這個長方形長 <b>4</b>、寬 <b>3</b>，裡面鋪滿 <b>12</b> 個小方格。<b>面積 = 長 × 寬</b>，算的是<b>裡面</b>有多大。'},
+      {type:'teach',kicker:'換個角度',title:'周長 = 沿著邊走一圈',svg:gridRect(4,3,'perim')+'<div class="cn-eq">周長 = 4+3+4+3 = 14</div>',text:'沿著紅色的<b>邊</b>走一圈，總長就是<b>周長</b>：4 + 3 + 4 + 3 = <b>14</b>。周長算的是<b>邊上</b>一圈有多長。'},
+      {type:'teach',kicker:'別搞混',title:'一個算「裡面」，一個算「邊上」',svg:gridRect(4,3,'area'),text:'同一個長方形：<b>面積</b>看<b>裡面</b>有幾格（12）、<b>周長</b>看<b>邊上</b>繞一圈（14）。兩個是<b>不一樣</b>的東西，別搞混囉！'},
+      {type:'quiz',kicker:'換你試試',title:'長 5、寬 2 的長方形，面積是多少？',options:['10','14','7','20'],answer:0,why:'面積 = 長 × 寬 = 5 × 2 = 10。'},
+      {type:'quiz',kicker:'換你試試',title:'同一個長 5、寬 2 的長方形，周長是多少？',options:['14','10','7','20'],answer:0,why:'周長 = 四邊相加 = 5 + 2 + 5 + 2 = 14。'},
+      {type:'quiz',kicker:'想深一點',title:'兩個長方形面積都是 12，周長一定一樣嗎？',options:['不一定，面積一樣周長也可能不同','一定一樣','周長一定是面積的兩倍','沒辦法知道'],answer:0,why:'例如 3×4（周長 14）和 2×6（周長 16），面積都是 12，但周長不一樣！'}
+     ]},
+   { id:'neg', name:'數線與負數', emoji:'🌡️', color:'#7c3aed', sub:'負數比大小與加減（進階挑戰）', done:'記得：數線越右邊越大；加往右、減往左。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'數線：0 在中間',svg:numline(0,null),text:'把數字排成一條線，<b>0 在中間</b>，右邊是正數（1、2、3…），左邊是<b>負數</b>（−1、−2、−3…），像溫度計一樣。'},
+      {type:'teach',kicker:'比大小',title:'越右邊，數字越大',svg:numline([-3,-1],null),text:'在數線上<b>越靠右邊就越大</b>。看圖：<b>−1 在 −3 的右邊</b>，所以 <b>−1 比 −3 大</b>；負數裡，離 0 越近反而越大。'},
+      {type:'quiz',kicker:'換你試試',title:'−3 和 1，哪個比較大？',options:['1','−3','一樣大','無法比較'],answer:0,why:'1 在數線右邊、−3 在左邊，右邊較大，所以 1 比較大。'},
+      {type:'teach',kicker:'學加減',title:'加 = 往右走，減 = 往左走',svg:numline(null,{from:-2,to:1}),text:'算 <b>−2 + 3</b>：從 <b>−2</b> 出發，<b>往右走 3 格</b>，走到 <b>1</b>。所以 −2 + 3 = <b>1</b>。加就往右、減就往左。'},
+      {type:'quiz',kicker:'換你試試',title:'−2 + 3 = ？',options:['1','−5','5','−1'],answer:0,why:'從 −2 往右走 3 格 → −1 → 0 → 1，答案是 1。'},
+      {type:'quiz',kicker:'再試一題',title:'1 − 4 = ？',options:['−3','3','5','−5'],answer:0,why:'從 1 往左走 4 格 → 0 → −1 → −2 → −3，答案是 −3。'}
+     ]},
+   { id:'eq', name:'用天平學方程式', emoji:'⚖️', color:'#0ea5e9', sub:'一元一次方程式（進階挑戰）', done:'記得訣竅：兩邊做一樣的事，天平就平衡。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'等號 = 就像一座天平',svg:balance('x + 3','5','level'),text:'方程式 <b>x + 3 = 5</b> 是說：左邊和右邊<b>一樣重</b>，天平剛好平衡。我們要找出 <b>x</b> 是多少。'},
+      {type:'teach',kicker:'關鍵祕訣',title:'兩邊做「一樣的事」還是平衡',svg:balance('x','2','level'),text:'把<b>兩邊都拿掉 3</b>：左邊剩 <b>x</b>，右邊 5−3 剩 <b>2</b>。所以 <b>x = 2</b>。只要兩邊做一樣的事，天平永遠平衡。'},
+      {type:'quiz',kicker:'換你試試',title:'x + 2 = 6，x 是多少？',eq:'x + 2 = 6',options:['4','8','2','6'],answer:0,why:'兩邊都拿掉 2：6−2＝4，所以 x = 4。'},
+      {type:'teach',kicker:'再學一招',title:'遇到 2x：兩邊「平分」',svg:blocks('x',2)+'<div class="cn-eq">2x = 8</div>',text:'<b>2x</b> 是「兩個 x」合起來 8。要知道一個 x，把兩邊<b>平分成 2 份</b>：8 ÷ 2 = 4，所以 <b>x = 4</b>。'},
+      {type:'quiz',kicker:'換你試試',title:'3x = 12，x 是多少？',eq:'3x = 12',options:['4','9','36','3'],answer:0,why:'三個 x 合起來 12，平分成 3 份：12 ÷ 3 = 4。'},
+      {type:'quiz',kicker:'綜合一下',title:'x + 5 = 9，x 是多少？',eq:'x + 5 = 9',options:['4','14','5','9'],answer:0,why:'兩邊都拿掉 5：9−5＝4。'}
+     ]}
+  ]
+};
+</script>
+<script src="concept_engine.js"></script>
+</body>
+</html>

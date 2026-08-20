@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>基礎生物 🌿 — 生命的祕密</title>
+<!-- 統一遊戲化引擎：先載共用設計 token（assets/app.css），再載 HUD/toast 樣式
+     （game_core.css），最後同步載入引擎（game_core.js）。
+     本頁為「生物」，計入 science 科目（理化／生物／地科共用；game_core.SUBJECTS 已含
+     'science'），讓學生升上國中理化、高中生物時獎勵不中斷：
+       1. 宣告 <body data-game-wired="science">，顯示共用 HUD。
+       2. 每題作答只呼叫一次 Game.recordAnswer('science', 對錯)（answered 旗標鎖定、
+          重試不再記帳）；「不」呼叫 Game.award / recordSession / awardBadge，
+          本地徽章冊為純本地（自有 key、無 XP），故無 double-count。
+       3. 其餘只用純 UI/唯讀 Game 介面：Game.showToast（只彈提示、不計分），
+          以及由 app-bar 的 [data-theme-toggle] 自動接線的主題切換
+          （game_core 於 DOMContentLoaded 自動 wireThemeToggles，本頁零主題 JS）。
+     所有 Game 呼叫皆包 try/catch，Game 不存在也不報錯。
+     零聲音：本頁絕不使用任何語音合成 API，也不放朗讀鈕（全站非英文頁鐵則）。 -->
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<style>
+/* =====================================================================
+ * biology.html — 本頁樣式（全部建立在 assets/app.css 的設計 token 上，
+ * 因此自動亮/暗色主題化、與學習基地視覺一致）。
+ * 只做強調色映射（不新增全域變數）：本頁走綠色系（green），映射到既有的
+ * 英語/正解青綠 token，貼合「生命／自然」的清新意象。
+ * =================================================================== */
+:root {
+  --bio: var(--c-english);
+  --bio-tint: var(--tint-english);
+  --bio-ink: var(--c-english-ink);
+}
+
+body { overflow-x: hidden; }
+
+/* 頁面頂列（返回、標題） */
+.bio-topbar {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  margin-bottom: var(--s4);
+}
+.bio-topbar .bio-title {
+  flex: 1;
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  color: var(--ink);
+  min-width: 0;
+}
+
+/* 螢幕切換 */
+.bio-screen { display: none; animation: bio-fade 0.3s ease; }
+.bio-screen.active { display: block; }
+@keyframes bio-fade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bio-screen { animation: none; }
+}
+
+/* 吉祥物歡迎卡 */
+.bio-hello {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s4);
+  background: var(--bio-tint);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  margin: 0 auto var(--s4);
+  max-width: 720px;        /* 護眼：寬螢幕不讓開場語拉成超長單行 */
+}
+.bio-hello .bio-mascot { font-size: 46px; flex: none; line-height: 1; }
+.bio-hello .bio-hello-text { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+.bio-hello .bio-hello-sub { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; }
+
+/* 進度總覽小列 */
+.bio-overview {
+  display: flex; align-items: center; gap: var(--s3);
+  margin-bottom: var(--s4); flex-wrap: wrap;
+}
+.bio-overview .stat-tile { flex: 1; min-width: 96px; }
+
+/* 等級（關卡）選單 grid */
+.bio-levels {
+  display: grid;
+  gap: var(--s4);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.bio-level {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  padding: var(--s4);
+  text-align: left;
+  cursor: pointer;
+  border: 2px solid var(--card-border);
+  background: var(--card);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  font-family: var(--font);
+  color: var(--ink);
+}
+.bio-level:hover { box-shadow: var(--shadow-lg); border-color: var(--bio); }
+.bio-level:active { transform: scale(0.98); }
+.bio-level-top { display: flex; align-items: center; gap: var(--s3); }
+.bio-level-emoji {
+  font-size: 34px;
+  width: 56px; height: 56px;
+  flex: none;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bio-tint);
+  border-radius: 16px;
+}
+.bio-level-num { font-size: var(--fs-small); font-weight: 700; color: var(--bio-ink); }
+.bio-level-name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); line-height: 1.25; }
+.bio-level-sub { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; }
+.bio-level-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-top: 2px; }
+.bio-level-status {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: var(--fs-small); font-weight: 700;
+}
+.bio-level-status.done { color: var(--c-correct-ink); }
+.bio-level-status.todo { color: var(--ink-soft); }
+.bio-level-dots { display: inline-flex; gap: 3px; flex-wrap: wrap; max-width: 120px; justify-content: flex-end; }
+.bio-level-dots i {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--card-border); display: inline-block;
+}
+.bio-level-dots i.on { background: var(--bio); }
+
+/* 進行中：一步一畫面的大卡 */
+.bio-stage {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--s5) var(--s4);
+  text-align: center;
+}
+.bio-visual {
+  font-size: clamp(64px, 22vw, 108px);
+  line-height: 1.1;
+  margin: var(--s2) 0 var(--s3);
+  user-select: none;
+}
+.bio-sentence {
+  font-size: clamp(19px, 4.5vw, 24px);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.45;
+  margin: 0 auto var(--s4);
+  max-width: 32ch;
+}
+.bio-toolrow { display: flex; justify-content: center; gap: var(--s2); flex-wrap: wrap; margin-bottom: var(--s3); }
+
+/* 進度：本關卡第幾步 */
+.bio-steps {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  margin-bottom: var(--s3); flex-wrap: wrap;
+}
+.bio-steps i { width: 22px; height: 6px; border-radius: 999px; background: var(--card-border); }
+.bio-steps i.on { background: var(--bio); }
+.bio-steps i.cur { background: var(--bio); box-shadow: 0 0 0 3px var(--bio-tint); }
+
+/* 選項按鈕（tap 作答；命中區 ≥56px） */
+.bio-options { display: grid; gap: var(--s3); margin-top: var(--s2); }
+.bio-opt {
+  display: flex; align-items: center; gap: var(--s2);
+  min-height: 56px;
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid var(--card-border);
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: clamp(16px, 3.4vw, 19px);
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.bio-opt:active { transform: scale(0.98); }
+.bio-opt:disabled { cursor: default; }
+/* 對/錯雙碼：邊框色 + 圖示（✅/❌），不只靠顏色 */
+.bio-opt.correct { border-color: var(--c-correct); background: var(--tint-english); color: var(--ink); }
+.bio-opt.wrong { border-color: var(--c-wrong); background: rgba(255,118,117,0.12); color: var(--ink); }
+.bio-opt .bio-opt-mark { margin-left: auto; font-size: 22px; }
+
+/* 揭示區（看更多 / 答案解說） */
+.bio-reveal {
+  margin-top: var(--s4);
+  padding: var(--s3) var(--s4);
+  background: var(--bio-tint);
+  border-radius: var(--r-md);
+  font-size: var(--fs-body);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.55;
+  text-align: left;
+  display: none;
+}
+.bio-reveal.show { display: block; animation: bio-fade 0.3s ease; }
+@media (prefers-reduced-motion: reduce) { .bio-reveal.show { animation: none; } }
+
+/* 完成畫面 */
+.bio-done { text-align: center; padding: var(--s5) var(--s4); }
+.bio-done-emoji { font-size: clamp(64px, 22vw, 100px); }
+.bio-done-stars { font-size: 30px; letter-spacing: 3px; margin: var(--s2) 0; }
+.bio-done-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); }
+
+/* 底部行動列 */
+.bio-actions { display: flex; gap: var(--s3); margin-top: var(--s4); flex-wrap: wrap; }
+.bio-actions .btn { flex: 1; min-width: 140px; }
+
+.bio-footnote {
+  text-align: left; color: var(--ink-soft); font-size: var(--fs-small);
+  margin-top: var(--s5); font-weight: 600; line-height: 1.7;
+  max-width: 680px; margin-inline: auto;    /* 護眼：桌機寬版限行長 */
+  background: var(--bio-tint); border-radius: var(--r-md);
+  padding: var(--s3) var(--s4);
+}
+
+/* =====================================================================
+ * 徽章櫃（StampBook 式）：入口 FAB + [hidden] 浮層
+ * =================================================================== */
+#bioBadgeFab {
+  position: fixed; right: 16px; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  z-index: 55; display: inline-flex; align-items: center; gap: 6px;
+  min-height: 48px; min-width: 48px; padding: 10px 16px;
+  background: #0a7d63; color: #fff; border: none;  /* 深綠底白字 ≈5.1:1 過 WCAG AA（原 var(--bio) 淺綠白字僅 2.5:1）；兩主題同值 */
+  border-radius: 999px; font-family: var(--font); font-weight: 800;
+  font-size: clamp(14px, 3vw, 16px); cursor: pointer; box-shadow: var(--shadow-lg);
+}
+#bioBadgeFab:active { transform: scale(0.96); }
+#bioBadgeFabCount {
+  display: inline-flex; align-items: center;
+  background: #fff; color: #087a5f; /* 固定深綠：白底藥丸兩主題皆 ~5.1:1 過 AA（勿用會隨暗色翻淺綠的 --bio-ink，暗色僅 1.89:1） */
+  border-radius: 999px; padding: 1px 8px; font-size: 13px; font-weight: 800;
+}
+
+/* 浮層外殼（用 class 給了 display:flex，author 特異度會壓過 UA 的
+   [hidden]{display:none}，故必須加更高特異度 !important 防護，否則浮層恆顯） */
+.bio-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 60; padding: 16px;
+}
+#bioBadgeOverlay[hidden] { display: none !important; }
+#bioBadgeSheet[hidden] { display: none !important; }
+
+.bio-badge-sheet {
+  position: relative; background: var(--card); border: 2px solid var(--card-border);
+  border-radius: var(--r-lg); box-shadow: var(--shadow-lg);
+  width: 100%; max-width: 560px; max-height: 88vh; overflow-y: auto;
+  padding: 20px 18px 22px; color: var(--ink);
+}
+.bio-badge-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.bio-badge-head h2 { font-size: clamp(1.1rem, 4vw, 1.4rem); font-weight: 800; margin: 0; color: var(--ink); flex: 1; }
+.bio-badge-back {
+  background: var(--card); border: 2px solid var(--card-border); color: var(--bio-ink);
+  font-family: var(--font); font-weight: 800; font-size: 15px; cursor: pointer;
+  min-height: 44px; padding: 8px 14px; border-radius: 14px;
+}
+.bio-badge-back:active { transform: scale(0.96); }
+.bio-badge-note {
+  background: var(--bio-tint); color: var(--bio-ink); border-radius: var(--r-md);
+  font-size: var(--fs-small); font-weight: 600; line-height: 1.7; padding: 10px 12px; margin: 4px 0 14px;
+}
+.bio-badge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+.bio-badge {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  border-radius: 16px; background: var(--card); border: 2px solid var(--card-border);
+  padding: 14px 10px; text-align: center;
+}
+.bio-badge .bio-badge-glyph { font-size: clamp(1.8rem, 8vw, 2.4rem); line-height: 1; }
+.bio-badge .bio-badge-name { font-size: var(--fs-small); font-weight: 800; color: var(--ink); line-height: 1.2; }
+.bio-badge .bio-badge-state { font-size: clamp(0.62rem, 2.4vw, 0.72rem); font-weight: 700; color: var(--ink-soft); line-height: 1.4; }
+/* 未解鎖：虛線邊 + 去彩 + 半透明（雙碼：形狀虛線 + 去彩） */
+.bio-badge.locked { border-style: dashed; opacity: 0.55; filter: grayscale(1); }
+/* 已解鎖：實線主題色邊 + 右上 ✓ 角標（雙碼：✓ 角標 + 實線邊） */
+.bio-badge.earned { border-color: var(--bio); background: var(--bio-tint); }
+.bio-badge.earned .bio-badge-check { position: absolute; right: 6px; top: 5px; font-size: 14px; color: var(--c-correct-ink); font-weight: 900; }
+.bio-badge .bio-badge-go {
+  margin-top: 4px; background: #0a7d63; border: none; color: #fff;  /* 深綠底白字 ≈5.1:1 過 WCAG AA（原 var(--bio) 淺綠白字亮 2.54:1／暗 1.89:1）；兩主題同值 */
+  min-height: 44px; padding: 6px 12px; border-radius: 12px; font-size: 13px;
+  cursor: pointer; font-weight: 800; font-family: var(--font);
+}
+.bio-badge .bio-badge-go:active { transform: scale(0.96); }
+.bio-badge-empty { text-align: center; color: var(--ink-soft); font-weight: 700; font-size: var(--fs-small); line-height: 1.7; margin: 8px 0 4px; }
+</style>
+</head>
+<body data-game-wired="science" data-game-maturity="advanced">
+<!-- ===== 共用頂部應用列（全站一致；貼在 <body> 內第一個元素） ===== -->
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">基礎生物 🌿</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle
+          aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+
+  <!-- ============================= 選單 / 首頁 ============================= -->
+  <section id="screen-menu" class="bio-screen active">
+    <div class="bio-topbar">
+      <span class="bio-title">生命的祕密 🌿</span>
+    </div>
+
+    <div class="bio-hello">
+      <span class="bio-mascot" aria-hidden="true">🌿</span>
+      <div>
+        <div class="bio-hello-text" id="hello-text">嗨！我是小葉（🌿），一起用眼睛和好奇心，探索生命的祕密吧！</div>
+        <div class="bio-hello-sub" id="hello-sub">選一個等級，慢慢玩、慢慢懂。</div>
+      </div>
+    </div>
+
+    <a href="biology_concepts.html" style="display:flex;align-items:center;gap:10px;margin:0 0 var(--s4);padding:12px 16px;background:var(--card);border:2px dashed var(--card-border);border-radius:14px;color:var(--ink);font-weight:700;text-decoration:none;line-height:1.4"><span style="font-size:22px" aria-hidden="true">🌱</span><span>還沒學過嗎？先到「生物觀念養成」用圖學會食物鏈、光合作用、動物分類，再回來玩 →</span></a>
+
+    <div class="bio-overview">
+      <div class="stat-tile"><span class="stat-value" id="ov-done">0/16</span><span class="stat-label">完成等級</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-badges">0/17</span><span class="stat-label">解鎖徽章</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-stars">0</span><span class="stat-label">得到的星星</span></div>
+    </div>
+
+    <div class="bio-levels" id="level-list"><!-- 由 JS 產生 --></div>
+
+    <p class="bio-footnote">
+      🌱 觀察小提醒：認識大自然最好的方法是用眼睛看、用心觀察。
+      在野外看到不認識的植物、菇類、動物，不要隨便摘、不要嚐、不要碰——
+      有些看起來漂亮卻有毒或會咬人。觀察完記得洗手，探索自然時請有大人陪同喔！
+    </p>
+  </section>
+
+  <!-- ============================= 進行中 ============================= -->
+  <section id="screen-play" class="bio-screen">
+    <div class="bio-topbar">
+      <button type="button" class="btn btn-icon" id="btn-back" aria-label="回到等級選單">←</button>
+      <span class="bio-title" id="play-title">等級</span>
+    </div>
+    <div class="bio-steps" id="step-dots" aria-hidden="true"></div>
+    <div class="play-column">
+      <div id="stage"><!-- 由 JS 產生每一步 --></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== 徽章櫃：入口 FAB + [hidden] 浮層（純本地、只增不減） ===== -->
+<button id="bioBadgeFab" type="button" aria-label="打開生物徽章櫃" aria-haspopup="dialog" aria-controls="bioBadgeOverlay">
+  🏅 徽章櫃 <span id="bioBadgeFabCount">0/17</span>
+</button>
+<div id="bioBadgeOverlay" class="bio-overlay" hidden>
+  <div id="bioBadgeSheet" class="bio-badge-sheet" role="dialog" aria-modal="true" aria-label="生物徽章櫃">
+    <div class="bio-badge-head">
+      <h2>🏅 我的生物徽章櫃</h2>
+      <button type="button" class="bio-badge-back" id="bio-badge-close">← 返回</button>
+    </div>
+    <div class="bio-badge-note" id="bio-badge-note">每完成一個等級，就會解鎖一枚徽章。徽章只會亮起、不會消失——慢慢收集就好！</div>
+    <div class="bio-badge-grid" id="bio-badge-grid"><!-- 由 JS 產生 --></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---------------------------------------------------------------------
+  // 純 UI/唯讀 Game 介面（防禦式）：只用 showToast 做慶祝，絕不呼叫任何寫入 API。
+  //   零重複計分論證：game_core 的 SUBJECTS 不含 'biology'，且本頁完全不呼叫
+  //   recordAnswer/award/recordSession/awardBadge/pingActive → player_profile_v1
+  //   永遠不會被本頁寫入 → 不污染既有科目、不可能重複計分。
+  // ---------------------------------------------------------------------
+  function toast(msg, kind) {
+    try { if (window.Game && Game.showToast) Game.showToast(msg, kind); } catch (e) { /* 靜默 */ }
+  }
+
+  // 零聲音：生物頁不朗讀（非英文發音頁，機器中文語音難聽又重疊）；此處完全不使用
+  // 任何語音合成 API，也不放朗讀鈕。
+
+  // =====================================================================
+  // 獨立 localStorage keys（與 player_profile_v1 / chemistry_* /
+  // social_studies_* / nta_stamps_v1 完全不同名，互不干擾）。
+  // 載入皆 try/catch，解析失敗回 {}。
+  // =====================================================================
+  var PROG_KEY = 'biology_progress_v1';   // { [levelId]: { done:true, best:<stars> } }
+  var BADGE_KEY = 'biology_badges_v1';     // { [badgeId]: { earnedAt:<ISO> } }
+  function loadJSON(key) {
+    try { return JSON.parse(localStorage.getItem(key)) || {}; } catch (e) { return {}; }
+  }
+  function saveJSON(key, obj) {
+    try { localStorage.setItem(key, JSON.stringify(obj)); } catch (e) { /* 配額滿也不崩潰 */ }
+  }
+  var progress = loadJSON(PROG_KEY);
+  var badges = loadJSON(BADGE_KEY);
+
+  // =====================================================================
+  // 徽章清單（levelId → badgeId）＋ 全通關總成就。純本地、只增不減。
+  // =====================================================================
+  var BADGE_DEFS = [
+    { id: 'b_cell',      level: 'L1', emoji: '🔬', name: '細胞觀察家' },
+    { id: 'b_plant',     level: 'L2', emoji: '🌱', name: '光合作用達人' },
+    { id: 'b_animal',    level: 'L3', emoji: '🐾', name: '動物分類家' },
+    { id: 'b_foodchain', level: 'L4', emoji: '🍃', name: '食物鏈偵探' },
+    { id: 'b_ecosystem', level: 'L5', emoji: '🌍', name: '生態系嚮導' },
+    { id: 'b_body',      level: 'L6', emoji: '❤️', name: '人體探險家' },
+    { id: 'b_microbe',   level: 'L7', emoji: '🦠', name: '衛生小達人' },
+    // ↓↓↓ 加法式新增（進階等級 L8–L14 對應徽章；插在 b_master 之前，維持
+    //     b_master 為陣列最後一枚＝全通關總成就的假設不變） ↓↓↓
+    { id: 'b_organelle', level: 'L8',  emoji: '🏭', name: '胞器工程師' },
+    { id: 'b_division',  level: 'L9',  emoji: '🧫', name: '分裂觀察員' },
+    { id: 'b_genetics',  level: 'L10', emoji: '🧬', name: '遺傳解密員' },
+    { id: 'b_evolution', level: 'L11', emoji: '🦖', name: '演化追蹤者' },
+    { id: 'b_taxonomy',  level: 'L12', emoji: '🗂️', name: '分類大師' },
+    { id: 'b_body2',     level: 'L13', emoji: '🫀', name: '人體工程師' },
+    { id: 'b_cycle',     level: 'L14', emoji: '🔄', name: '能量與碳循環嚮導' },
+    { id: 'b_life_food',   level: 'L15', emoji: '🍞', name: '廚房生物家' },
+    { id: 'b_life_health', level: 'L16', emoji: '🧼', name: '健康生活家' },
+    { id: 'b_master',    level: null, emoji: '🎓', name: '生物小博士' }  // 全部等級完成
+  ];
+  var BADGE_BY_LEVEL = {};
+  BADGE_DEFS.forEach(function (b) { if (b.level) BADGE_BY_LEVEL[b.level] = b; });
+
+  // =====================================================================
+  // 課程內容（全繁體中文；生物事實以標準教科書為準、年齡適當、可獨立查核）。
+  // 每個等級 = 一個「關卡」：第一步為 fact（worked example 先行），其後為
+  // 8~9 題 choose 單選題（每題只問一件事）。
+  // step 類型：
+  //   fact   一句話 + 大圖示 + 「看更多」揭示
+  //   choose 單選題（tap 作答；選項洗牌；每題最多計一次分）
+  // =====================================================================
+  var LEVELS = [
+    {
+      id: 'L1', emoji: '🔬', title: '細胞：生命的積木', subtitle: '所有生物都由細胞組成',
+      steps: [
+        { t: 'fact', v: '🔬', s: '所有的生物，都是由「細胞」組成的。細胞是生命的基本單位。',
+          more: '細胞非常小，通常要用顯微鏡才看得清楚。有些生物只有一個細胞（單細胞，例如草履蟲、變形蟲），有些由很多很多細胞組成（多細胞，例如人和大樹）。' },
+        { t: 'choose', v: '🧩', s: '組成所有生物、最基本的小單位是什麼？',
+          opts: ['細胞', '石頭', '空氣'], ans: 0,
+          why: '細胞是生命的基本單位，所有生物都是由細胞組成的。' },
+        { t: 'choose', v: '🔬', s: '細胞非常小，我們通常要用什麼工具才看得清楚？',
+          opts: ['顯微鏡', '望遠鏡', '什麼都不用'], ans: 0,
+          why: '大多數細胞很小，肉眼看不清，要用顯微鏡放大才看得到。' },
+        { t: 'choose', v: '🎛️', s: '細胞裡像「指揮中心」、帶有遺傳訊息的構造是？',
+          opts: ['細胞核', '細胞壁', '葉綠體'], ans: 0,
+          why: '細胞核像細胞的指揮中心，裡面帶有遺傳訊息，指揮細胞運作。' },
+        { t: 'choose', v: '🛡️', s: '包在細胞最外面、控制東西進出的薄膜叫做？',
+          opts: ['細胞膜', '細胞核', '細胞質'], ans: 0,
+          why: '細胞膜包住細胞，像門口守衛，控制哪些東西可以進出。' },
+        { t: 'choose', v: '🧱', s: '植物細胞有、但動物細胞「沒有」的堅固外層是？',
+          opts: ['細胞壁', '細胞核', '細胞膜'], ans: 0,
+          why: '植物細胞在細胞膜外還有一層細胞壁，讓植物比較堅挺；動物細胞沒有細胞壁。' },
+        { t: 'choose', v: '🟢', s: '植物細胞裡綠綠的、負責行光合作用的構造是？',
+          opts: ['葉綠體', '細胞核', '液泡'], ans: 0,
+          why: '葉綠體是綠色的，裡面的葉綠素能行光合作用；動物細胞沒有，是植物細胞才有的構造。' },
+        { t: 'choose', v: '🐾', s: '下面哪一項是「動物細胞和植物細胞都有」的構造？',
+          opts: ['細胞核、細胞膜、細胞質', '細胞壁', '葉綠體'], ans: 0,
+          why: '細胞核、細胞膜、細胞質是兩種細胞共有的；細胞壁和葉綠體只有植物細胞才有。' },
+        { t: 'choose', v: '🦠', s: '只由「一個細胞」組成的生物，我們叫它？',
+          opts: ['單細胞生物', '多細胞生物', '沒有細胞的生物'], ans: 0,
+          why: '像草履蟲、變形蟲只有一個細胞，是單細胞生物；人和樹由許多細胞組成，是多細胞生物。' },
+        { t: 'choose', v: '🌳', s: '人和大樹身上有非常多細胞，它們屬於？',
+          opts: ['多細胞生物', '單細胞生物', '沒有細胞'], ans: 0,
+          why: '人和樹由許許多多細胞組成，是多細胞生物。' }
+      ]
+    },
+    {
+      id: 'L2', emoji: '🌱', title: '植物的身體與光合作用', subtitle: '根莖葉花，還有陽光工廠',
+      steps: [
+        { t: 'fact', v: '🌿', s: '植物有根、莖、葉、花。葉子能靠陽光「自己做養分」，這叫光合作用。',
+          more: '光合作用需要：陽光、水、二氧化碳。植物用它們做出養分（醣），還會放出氧氣給我們呼吸。可以記成：陽光 + 水 + 二氧化碳 → 養分 + 氧氣。' },
+        { t: 'choose', v: '🌱', s: '植物用哪個部位吸收土裡的水分，還能固定住身體？',
+          opts: ['根', '花', '葉子'], ans: 0,
+          why: '根伸進土裡吸收水分和養分，也把植物固定住，不容易被吹倒。' },
+        { t: 'choose', v: '🎋', s: '植物哪個部位負責「支撐身體、把水分運送到各處」？',
+          opts: ['莖', '根', '花'], ans: 0,
+          why: '莖像水管兼支柱，撐起植物，也把水分和養分運送到葉子和其他地方。' },
+        { t: 'choose', v: '🍃', s: '植物主要在哪個部位進行光合作用、製造養分？',
+          opts: ['葉子', '根', '花'], ans: 0,
+          why: '葉子裡有很多葉綠體，是行光合作用、製造養分的主要地方。' },
+        { t: 'choose', v: '🌸', s: '植物哪個部位和「繁殖、產生種子」有關？',
+          opts: ['花', '根', '莖'], ans: 0,
+          why: '花是植物繁殖的部位，授粉後能結出果實和種子，長出新的植物。' },
+        { t: 'choose', v: '☀️', s: '光合作用最重要的能量來源是什麼？',
+          opts: ['陽光', '電池', '月光'], ans: 0,
+          why: '光合作用需要陽光提供能量，所以植物大多喜歡照得到太陽的地方。' },
+        { t: 'choose', v: '💧', s: '除了陽光，光合作用還需要「水」和哪一種氣體？',
+          opts: ['二氧化碳', '純氧氣', '氦氣'], ans: 0,
+          why: '光合作用需要陽光、水和二氧化碳；植物吸收二氧化碳，做出養分。' },
+        { t: 'choose', v: '🫧', s: '植物行光合作用後，會放出哪一種氣體給我們呼吸？',
+          opts: ['氧氣', '二氧化碳', '煙'], ans: 0,
+          why: '光合作用會放出氧氣，這正是人和動物呼吸需要的氣體，所以植物很重要。' },
+        { t: 'choose', v: '🏭', s: '把光合作用連起來看，正確的是哪一個？',
+          opts: ['陽光＋水＋二氧化碳 → 養分＋氧氣', '只要陽光就能做出養分', '植物吃泥土當食物'], ans: 0,
+          why: '光合作用：陽光＋水＋二氧化碳 → 養分（醣）＋氧氣。植物不是吃土，而是自己製造養分。' },
+        { t: 'choose', v: '🌻', s: '因為植物能「自己製造養分」，在生態裡它扮演什麼角色？',
+          opts: ['生產者', '消費者', '分解者'], ans: 0,
+          why: '植物會自己製造養分，是食物鏈的起點，稱為生產者。' }
+      ]
+    },
+    {
+      id: 'L3', emoji: '🐾', title: '動物大家族', subtitle: '哺乳、鳥、魚、兩生、爬蟲、昆蟲',
+      steps: [
+        { t: 'fact', v: '🐾', s: '動物可以分成很多類，例如：哺乳類、鳥類、魚類、兩生類、爬蟲類、昆蟲。',
+          more: '小訣竅：哺乳類會哺乳、大多有毛（狗、貓、鯨、人）；鳥類有羽毛、有喙（麻雀、企鵝）；魚類用鰓在水裡呼吸（金魚）；兩生類小時候在水裡、長大能上岸（青蛙）；爬蟲類皮膚有鱗片、大多在陸地（蛇、烏龜）；昆蟲有六隻腳、身體分頭胸腹（螞蟻、蝴蝶）。' },
+        { t: 'choose', v: '🐕', s: '會餵寶寶喝奶（哺乳）、大多身上有毛的動物，屬於？',
+          opts: ['哺乳類', '鳥類', '魚類'], ans: 0,
+          why: '哺乳類會用奶哺育寶寶、身上大多有毛，例如狗、貓、人。' },
+        { t: 'choose', v: '🐦', s: '身上有羽毛、有喙、會下蛋的動物，屬於？',
+          opts: ['鳥類', '哺乳類', '爬蟲類'], ans: 0,
+          why: '鳥類有羽毛和喙、會下蛋，例如麻雀、鴿子；企鵝不會飛，但也是鳥類。' },
+        { t: 'choose', v: '🐟', s: '生活在水裡、用「鰓」呼吸、身上有鱗片的動物，屬於？',
+          opts: ['魚類', '兩生類', '昆蟲'], ans: 0,
+          why: '魚類住在水裡、用鰓呼吸、身上有鱗片，例如金魚、鯊魚。' },
+        { t: 'choose', v: '🐸', s: '小時候在水裡（像蝌蚪）、長大後能到陸地上的青蛙，屬於？',
+          opts: ['兩生類', '爬蟲類', '魚類'], ans: 0,
+          why: '青蛙小時候在水中用鰓、長大用肺和皮膚呼吸，是兩生類。' },
+        { t: 'choose', v: '🐢', s: '皮膚有乾乾的鱗片、像蛇和烏龜這類動物，屬於？',
+          opts: ['爬蟲類', '兩生類', '鳥類'], ans: 0,
+          why: '蛇、蜥蜴、烏龜、鱷魚皮膚上有鱗片、大多在陸地生活，是爬蟲類。' },
+        { t: 'choose', v: '🐜', s: '昆蟲的身體分成頭、胸、腹三部分，牠們有幾隻腳？',
+          opts: ['6 隻', '4 隻', '8 隻'], ans: 0,
+          why: '昆蟲有 6 隻腳（三對），身體分頭、胸、腹，例如螞蟻、蝴蝶、甲蟲。' },
+        { t: 'choose', v: '🕷️', s: '蜘蛛有 8 隻腳，身體構造和昆蟲不同。所以蜘蛛是昆蟲嗎？',
+          opts: ['不是，蜘蛛不是昆蟲', '是，蜘蛛是昆蟲', '蜘蛛是鳥類'], ans: 0,
+          why: '昆蟲有 6 隻腳，蜘蛛有 8 隻腳，所以蜘蛛不是昆蟲。' },
+        { t: 'choose', v: '🐋', s: '鯨魚住在海裡，但牠用肺呼吸、會哺乳。鯨魚其實是？',
+          opts: ['哺乳類', '魚類', '兩生類'], ans: 0,
+          why: '鯨魚用肺呼吸、會餵奶哺育寶寶，是哺乳類，不是魚類，只是住在海裡。' },
+        { t: 'choose', v: '🦇', s: '會飛的蝙蝠，身上有毛、會哺乳，牠屬於？',
+          opts: ['哺乳類', '鳥類', '昆蟲'], ans: 0,
+          why: '蝙蝠雖然會飛，但身上有毛、會哺乳，是哺乳類，不是鳥類。' }
+      ]
+    },
+    {
+      id: 'L4', emoji: '🍃', title: '食物鏈與食物網', subtitle: '誰吃誰？能量怎麼流動',
+      steps: [
+        { t: 'fact', v: '🔗', s: '生物之間「誰吃誰」的關係，串起來就是食物鏈。箭頭方向代表能量流動。',
+          more: '例如：草 → 兔子 → 老鷹。箭頭從被吃的指向吃的，表示能量傳給了吃的一方。食物鏈通常從植物（生產者）開始。很多條食物鏈交織在一起，就成了食物網。' },
+        { t: 'choose', v: '🔗', s: '生物之間「誰吃誰」串起來的關係，叫做？',
+          opts: ['食物鏈', '水循環', '顏色深淺'], ans: 0,
+          why: '把誰吃誰一個接一個串起來，就是食物鏈。' },
+        { t: 'choose', v: '🌱', s: '食物鏈的「開頭」通常是哪一種生物？',
+          opts: ['植物（生產者）', '老鷹', '獅子'], ans: 0,
+          why: '植物能自己製造養分，是食物鏈的起點，稱為生產者。' },
+        { t: 'choose', v: '➡️', s: '在「草 → 兔子 → 老鷹」裡，箭頭代表什麼？',
+          opts: ['能量從被吃的流向吃的一方', '誰跑得比較快', '顏色的深淺'], ans: 0,
+          why: '箭頭從被吃者指向吃牠的一方，表示能量（養分）傳給了吃的一方。' },
+        { t: 'choose', v: '🐰', s: '只吃植物的動物（例如兔子、牛、羊），叫做？',
+          opts: ['草食動物', '肉食動物', '分解者'], ans: 0,
+          why: '只吃植物的動物叫草食動物，例如兔子、牛、羊。' },
+        { t: 'choose', v: '🦁', s: '主要吃其他動物的動物（例如獅子、老鷹），叫做？',
+          opts: ['肉食動物', '草食動物', '生產者'], ans: 0,
+          why: '主要獵食其他動物的叫肉食動物，例如獅子、老鷹。' },
+        { t: 'choose', v: '🐻', s: '植物和動物都吃的動物（例如熊、人），叫做？',
+          opts: ['雜食動物', '草食動物', '肉食動物'], ans: 0,
+          why: '植物和動物都吃的叫雜食動物，例如熊、人、豬。' },
+        { t: 'choose', v: '🕸️', s: '很多條食物鏈交織在一起，會形成什麼？',
+          opts: ['食物網', '蜘蛛網', '電網'], ans: 0,
+          why: '一種生物常會吃好幾種、也被好幾種吃，許多食物鏈交織就成了食物網。' },
+        { t: 'choose', v: '⚖️', s: '如果食物鏈裡的兔子突然變得很少，會發生什麼？',
+          opts: ['吃兔子的動物會受到影響', '完全不會影響其他生物', '植物馬上全部消失'], ans: 0,
+          why: '食物鏈環環相扣，某一種生物變少，會影響吃牠或被牠吃的生物，這就是大自然的平衡。' },
+        { t: 'choose', v: '☀️', s: '食物鏈裡的能量，最初是從哪裡來的？',
+          opts: ['太陽（陽光）', '石頭', '冰箱'], ans: 0,
+          why: '植物靠陽光行光合作用製造養分，能量最初來自太陽，再沿著食物鏈傳下去。' }
+      ]
+    },
+    {
+      id: 'L5', emoji: '🌍', title: '生態系入門', subtitle: '生產者、消費者、分解者',
+      steps: [
+        { t: 'fact', v: '🌍', s: '在一個生態系裡，生物分成三種角色：生產者、消費者、分解者。',
+          more: '生產者（植物）自己製造養分；消費者（動物）靠吃別的生物獲得養分；分解者（細菌、黴菌、菇類）把死掉的生物和落葉分解，讓養分回到土裡，再被植物利用。這樣養分就能一直循環。' },
+        { t: 'choose', v: '🌳', s: '能「自己製造養分」的植物，在生態系裡是？',
+          opts: ['生產者', '消費者', '分解者'], ans: 0,
+          why: '植物靠光合作用自己製造養分，是生產者。' },
+        { t: 'choose', v: '🦌', s: '靠「吃其他生物」獲得養分的動物，是？',
+          opts: ['消費者', '生產者', '分解者'], ans: 0,
+          why: '動物自己不能製造養分，要靠吃別的生物，是消費者。' },
+        { t: 'choose', v: '🍄', s: '把死掉的生物、落葉分解掉的細菌、黴菌、菇類，是？',
+          opts: ['分解者', '生產者', '消費者'], ans: 0,
+          why: '細菌、黴菌、菇類會分解死掉的生物和落葉，是分解者。' },
+        { t: 'choose', v: '♻️', s: '分解者最重要的工作是什麼？',
+          opts: ['把養分分解、送回土裡讓植物再利用', '把陽光變亮', '把石頭變大'], ans: 0,
+          why: '分解者像大自然的清道夫，把養分送回土裡，讓植物能再利用，養分就能循環。' },
+        { t: 'choose', v: '🍂', s: '如果一座森林「完全沒有分解者」，可能會發生什麼？',
+          opts: ['落葉和屍體堆積、養分無法回到土裡', '森林會變得更乾淨', '植物長得更快'], ans: 0,
+          why: '沒有分解者，落葉和屍體會愈堆愈多，養分卡住回不到土裡，植物也難以得到養分。' },
+        { t: 'choose', v: '🌱', s: '生態系裡養分能一直循環，是靠哪三種角色合作？',
+          opts: ['生產者、消費者、分解者', '只有生產者', '只有消費者'], ans: 0,
+          why: '生產者製造、消費者取用、分解者送回，三者合作讓養分不斷循環。' },
+        { t: 'choose', v: '🏞️', s: '「生態系」除了生物，還包含哪些東西？',
+          opts: ['陽光、空氣、水、土壤等環境', '只有動物', '只有石頭'], ans: 0,
+          why: '生態系是生物和牠們生活的環境（陽光、空氣、水、土壤）一起組成的。' },
+        { t: 'choose', v: '🐛', s: '在生態系裡，兔子和獅子這類動物屬於哪一種角色？',
+          opts: ['消費者', '生產者', '分解者'], ans: 0,
+          why: '兔子、獅子都要靠吃別的生物過活，屬於消費者。' }
+      ]
+    },
+    {
+      id: 'L6', emoji: '❤️', title: '人體的系統', subtitle: '消化、循環、呼吸、神經',
+      steps: [
+        { t: 'fact', v: '❤️', s: '我們的身體有很多「系統」一起工作，例如消化、循環、呼吸、神經系統。',
+          more: '消化系統把食物變成養分（口、胃、小腸）；循環系統靠心臟把血液送到全身；呼吸系統用肺吸氧氣、呼出二氧化碳；神經系統以腦為指揮中心，控制身體、傳遞訊息。' },
+        { t: 'choose', v: '🍽️', s: '把食物分解成身體能吸收的養分，是哪個系統的工作？',
+          opts: ['消化系統', '呼吸系統', '神經系統'], ans: 0,
+          why: '消化系統（口、胃、小腸等）把食物分解成養分讓身體吸收。' },
+        { t: 'choose', v: '🫃', s: '消化系統中，吸收養分最主要的器官是？',
+          opts: ['小腸', '肺', '腦'], ans: 0,
+          why: '食物在胃裡被磨碎後，主要在小腸把養分吸收進身體。' },
+        { t: 'choose', v: '💓', s: '像幫浦一樣不停跳動、把血液推送到全身的器官是？',
+          opts: ['心臟', '胃', '肺'], ans: 0,
+          why: '心臟像幫浦，一下一下把血液推送到全身，屬於循環系統。' },
+        { t: 'choose', v: '🩸', s: '循環系統用血液把哪些東西送到全身各處？',
+          opts: ['養分和氧氣', '泥土', '石頭'], ans: 0,
+          why: '血液把養分和氧氣送到全身的細胞，也把廢物帶走。' },
+        { t: 'choose', v: '🫁', s: '我們吸氣時，把氧氣送進身體的器官是？',
+          opts: ['肺', '胃', '心臟'], ans: 0,
+          why: '肺是呼吸系統的主要器官，吸入氧氣、呼出二氧化碳。' },
+        { t: 'choose', v: '💨', s: '呼吸時，我們吸入氧氣，呼出的是哪一種氣體？',
+          opts: ['二氧化碳', '純氧氣', '氫氣'], ans: 0,
+          why: '身體用掉氧氣後，會把二氧化碳藉由呼氣排出。' },
+        { t: 'choose', v: '🧠', s: '身體的「指揮中心」，負責思考、控制動作的器官是？',
+          opts: ['腦', '胃', '肺'], ans: 0,
+          why: '腦是神經系統的指揮中心，負責思考、記憶，並控制身體的動作。' },
+        { t: 'choose', v: '⚡', s: '當你摸到燙的東西會馬上縮手，是哪個系統快速傳遞訊息？',
+          opts: ['神經系統', '消化系統', '循環系統'], ans: 0,
+          why: '神經系統（腦、脊髓、神經）能很快傳遞訊息，讓你迅速反應保護自己。' },
+        { t: 'choose', v: '🦴', s: '支撐我們的身體、保護裡面器官的是？',
+          opts: ['骨骼', '頭髮', '指甲'], ans: 0,
+          why: '骨骼組成骨架，支撐身體，也保護腦、心、肺等重要器官。' }
+      ]
+    },
+    {
+      id: 'L7', emoji: '🦠', title: '微生物與衛生', subtitle: '好菌、壞菌與洗手',
+      steps: [
+        { t: 'fact', v: '🦠', s: '微生物是非常小、要用顯微鏡才看得到的生物，例如細菌、黴菌。有的有益，有的有害。',
+          more: '好菌能幫忙：乳酸菌做優格、酵母菌做麵包，腸道裡的好菌幫助消化。壞菌（病菌）會讓食物腐敗、讓人生病。勤洗手、把食物煮熟，可以幫我們遠離壞菌。' },
+        { t: 'choose', v: '🔬', s: '微生物有一個共同點，那就是牠們？',
+          opts: ['非常小，要用顯微鏡才看得清楚', '都很巨大', '都對人有害'], ans: 0,
+          why: '微生物非常小，肉眼看不清，要用顯微鏡才看得到，例如細菌、黴菌。' },
+        { t: 'choose', v: '🥛', s: '優格是靠哪一種「好菌」發酵做出來的？',
+          opts: ['乳酸菌', '會讓人生病的病菌', '沒有用到任何微生物'], ans: 0,
+          why: '優格是牛奶被乳酸菌發酵做成的，乳酸菌是對我們有益的好菌。' },
+        { t: 'choose', v: '🍞', s: '麵包會膨脹變鬆軟，是因為加了哪一種微生物？',
+          opts: ['酵母菌', '病毒', '沒有微生物'], ans: 0,
+          why: '酵母菌發酵時產生氣體，讓麵團膨脹、麵包變鬆軟。' },
+        { t: 'choose', v: '🤢', s: '食物放太久會發臭、腐敗，主要是哪一類微生物造成的？',
+          opts: ['壞菌（讓食物腐敗的微生物）', '好菌', '根本沒有微生物'], ans: 0,
+          why: '壞菌會分解食物讓它腐敗、發臭，吃下去可能會肚子痛，所以食物要妥善保存。' },
+        { t: 'choose', v: '🧼', s: '要洗掉手上看不見的病菌，最好用什麼洗手？',
+          opts: ['肥皂和清水，仔細搓洗', '只用清水沖一下', '完全不用洗'], ans: 0,
+          why: '用肥皂和清水仔細搓洗，能有效洗掉手上的病菌，比只用清水沖更乾淨。' },
+        { t: 'choose', v: '🍚', s: '下面哪一個時機「最應該」洗手？',
+          opts: ['吃東西前和上廁所後', '只有睡覺前', '都不用洗'], ans: 0,
+          why: '吃東西前、上廁所後、玩耍後、擤鼻涕後都應該洗手，才不會把病菌吃進肚子。' },
+        { t: 'choose', v: '🤧', s: '打噴嚏或咳嗽時，最有禮貌又能防止傳染的做法是？',
+          opts: ['用手肘或衛生紙遮住口鼻', '對著別人大聲噴', '什麼都不做'], ans: 0,
+          why: '用手肘內側或衛生紙遮住口鼻，能擋住飛沫、減少把病菌傳給別人。' },
+        { t: 'choose', v: '🍳', s: '為了避免吃到壞菌，食物最好怎麼處理？',
+          opts: ['煮熟，並放冰箱妥善保存', '放在室溫愈久愈好', '掉到地上撿起來直接吃'], ans: 0,
+          why: '把食物煮熟能殺死很多壞菌，冰箱低溫能讓壞菌長得慢，都是保護健康的好方法。' },
+        { t: 'choose', v: '🙂', s: '關於微生物，下面哪一句話最正確？',
+          opts: ['微生物有好有壞，不是全部都有害', '所有微生物都會害人', '所有微生物都對人有益'], ans: 0,
+          why: '微生物有的有益（做優格、麵包、幫助消化）、有的有害（讓人生病），不能一概而論。' }
+      ]
+    },
+    // =====================================================================
+    // 加法式新增：進階等級 L8–L14（國中理化／高中階主題，不與既有國小關 L1–L7
+    //   重複、不改動 L1–L7）。難度以 subtitle 內的 ★ 呈現，不寫學制年段名。
+    //   沿用相同 step 結構（fact + choose）與同一套 render/計分/洗牌機制。
+    // =====================================================================
+    {
+      id: 'L8', emoji: '🏭', title: '細胞裡的小工廠', subtitle: '★★ 胞器的分工與功能',
+      steps: [
+        { t: 'fact', v: '🏭', s: '細胞裡有各種「胞器」分工合作，就像一座小工廠：有發電廠、有生產線、有倉庫。',
+          more: '粒線體＝發電廠（呼吸作用把養分變能量）；核糖體＝生產線（製造蛋白質）；液泡＝倉庫（儲存水分養分，植物的特別大）；細胞核＝控制中心（存放 DNA）；葉綠體＝太陽能廠（植物才有，行光合作用）。' },
+        { t: 'choose', v: '🔋', s: '細胞裡負責「產生能量」、進行呼吸作用、像發電廠的胞器是？',
+          opts: ['粒線體', '液泡', '細胞壁'], ans: 0,
+          why: '粒線體被稱為細胞的發電廠，透過呼吸作用把養分轉成細胞能用的能量。' },
+        { t: 'choose', v: '🧵', s: '細胞裡負責「製造蛋白質」的胞器是？',
+          opts: ['核糖體', '葉綠體', '液泡'], ans: 0,
+          why: '核糖體是製造蛋白質的地方，蛋白質是身體很重要的原料。' },
+        { t: 'choose', v: '🫙', s: '植物細胞裡通常有一個很大的、負責「儲存水分和養分」的胞器是？',
+          opts: ['液泡', '粒線體', '核糖體'], ans: 0,
+          why: '植物細胞常有一個大液泡，儲存水分和養分，也幫助撐起細胞。' },
+        { t: 'choose', v: '🧠', s: '帶有遺傳物質 DNA、像控制中心一樣指揮細胞的是？',
+          opts: ['細胞核', '粒線體', '核糖體'], ans: 0,
+          why: '細胞核裡存放 DNA，是細胞的控制中心，指揮各項活動。' },
+        { t: 'choose', v: '🟢', s: '含有葉綠素、負責行光合作用的胞器是？',
+          opts: ['葉綠體', '粒線體', '液泡'], ans: 0,
+          why: '葉綠體含葉綠素，是植物行光合作用、製造養分的地方。' },
+        { t: 'choose', v: '⚡', s: '呼吸作用是把養分（葡萄糖）和氧氣，轉換成什麼？',
+          opts: ['能量、二氧化碳和水', '只有陽光', '蛋白質和石頭'], ans: 0,
+          why: '呼吸作用：葡萄糖＋氧氣 → 能量＋二氧化碳＋水，能量供細胞使用。' },
+        { t: 'choose', v: '🚫', s: '動物細胞「沒有」下面哪一組胞器？',
+          opts: ['葉綠體和細胞壁', '細胞核', '粒線體'], ans: 0,
+          why: '葉綠體和細胞壁只有植物細胞才有；細胞核、粒線體則是兩種細胞都有。' },
+        { t: 'choose', v: '🌿', s: '植物細胞裡「有沒有」粒線體？',
+          opts: ['有，植物和動物細胞都有粒線體', '只有動物細胞才有', '兩種都沒有'], ans: 0,
+          why: '植物除了葉綠體，也有粒線體，同樣需要呼吸作用來取得能量。' },
+        { t: 'choose', v: '🔁', s: '關於光合作用和呼吸作用，哪一句最正確？',
+          opts: ['光合作用儲存能量、呼吸作用釋放能量', '兩者完全一樣', '兩者都只有植物會做'], ans: 0,
+          why: '光合作用把太陽能存進養分裡，呼吸作用再把養分裡的能量釋放出來給細胞用。' }
+      ]
+    },
+    {
+      id: 'L9', emoji: '🧫', title: '一個變兩個：細胞分裂', subtitle: '★★ 生物如何長大與修復',
+      steps: [
+        { t: 'fact', v: '🧫', s: '生物會長大、傷口會癒合，靠的是細胞「一個分裂成兩個」，數量越來越多。',
+          more: '細胞分裂前，會先「複製」自己的 DNA，並包裝成一條條染色體；接著平均分給兩個新細胞，所以兩個新細胞的遺傳訊息和原來的完全一樣，染色體數目也不變。' },
+        { t: 'choose', v: '📈', s: '生物的身體會長大，最主要是因為？',
+          opts: ['細胞不斷分裂、數量變多', '細胞變得無限大', '細胞一個個消失'], ans: 0,
+          why: '多細胞生物主要靠細胞分裂讓細胞數量增加而長大。' },
+        { t: 'choose', v: '🧬', s: '細胞分裂前，會先做一件重要的準備，那就是？',
+          opts: ['複製自己的 DNA（遺傳物質）', '把 DNA 全部丟掉', '把細胞染成綠色'], ans: 0,
+          why: '先複製 DNA，兩個新細胞才都能拿到完整的遺傳訊息。' },
+        { t: 'choose', v: '🪢', s: '細胞分裂時，DNA 會包裝成一條條看得見的構造，叫做？',
+          opts: ['染色體', '細胞壁', '液泡'], ans: 0,
+          why: '分裂時 DNA 會纏繞包裝成染色體，方便平均分給兩個新細胞。' },
+        { t: 'choose', v: '✌️', s: '一個細胞經過一次（體細胞）分裂，會變成幾個細胞？',
+          opts: ['2 個', '4 個', '還是 1 個'], ans: 0,
+          why: '一次分裂由 1 個變成 2 個細胞。' },
+        { t: 'choose', v: '👯', s: '這種分裂產生的兩個新細胞，它們的遺傳物質是？',
+          opts: ['和原來的細胞一樣', '完全不同', '只剩一半'], ans: 0,
+          why: '體細胞分裂（有絲分裂）產生的兩個細胞，遺傳物質和母細胞相同。' },
+        { t: 'choose', v: '🩹', s: '皮膚受傷後會慢慢長好，主要靠什麼？',
+          opts: ['細胞分裂補上新細胞', '細胞停止工作', '細胞縮小'], ans: 0,
+          why: '傷口周圍的細胞分裂，長出新細胞把傷口補起來。' },
+        { t: 'choose', v: '🔢', s: '體細胞分裂後，每個新細胞的染色體數目會？',
+          opts: ['和原來一樣多', '減少一半', '增加一倍'], ans: 0,
+          why: '有絲分裂會維持染色體數目不變，兩個新細胞和母細胞一樣多。' },
+        { t: 'choose', v: '❓', s: '為什麼細胞分裂前一定要先複製 DNA？',
+          opts: ['這樣兩個新細胞才都能拿到完整的遺傳訊息', '為了讓細胞變重', '沒有任何原因'], ans: 0,
+          why: '先複製再平分，兩個細胞才都有完整、正確的一套 DNA。' },
+        { t: 'choose', v: '🛠️', s: '下列哪一個是細胞分裂最重要的功能？',
+          opts: ['讓生物成長，並修復受傷的身體', '讓生物越變越小', '讓細胞全部消失'], ans: 0,
+          why: '細胞分裂讓生物長大、汰換老舊細胞、修復傷口。' }
+      ]
+    },
+    {
+      id: 'L10', emoji: '🧬', title: '遺傳的祕密：DNA 與基因', subtitle: '★★★ 顯性隱性與孟德爾比例',
+      steps: [
+        { t: 'fact', v: '🧬', s: '小孩長得像爸爸媽媽，是因為父母把「遺傳訊息」傳下來，這些訊息記錄在 DNA 上。',
+          more: '一段決定特徵的 DNA 叫「基因」；每個特徵通常有一對基因，一個來自媽媽、一個來自爸爸。基因有「顯性」和「隱性」：只要有一個顯性，就會表現顯性特徵；要兩個都是隱性，才會表現隱性。科學家孟德爾用豌豆發現了這些規律。' },
+        { t: 'choose', v: '🧬', s: '記錄生物遺傳訊息的物質是？',
+          opts: ['DNA', '水', '空氣'], ans: 0,
+          why: 'DNA 記錄了生物的遺傳訊息，決定生物長成什麼樣子。' },
+        { t: 'choose', v: '🏷️', s: '決定某個特徵（例如花的顏色）的一段 DNA，叫做？',
+          opts: ['基因', '細胞壁', '液泡'], ans: 0,
+          why: '基因是決定特徵的一段 DNA，例如決定花色、眼睛顏色的基因。' },
+        { t: 'choose', v: '👨‍👩‍👧', s: '一個人的每一對基因，通常是怎麼來的？',
+          opts: ['一個來自媽媽、一個來自爸爸', '全部只來自媽媽', '自己憑空長出來'], ans: 0,
+          why: '每個特徵通常有一對基因，分別從父母各得到一個。' },
+        { t: 'choose', v: '💪', s: '當「顯性基因」和「隱性基因」在一起時，表現出來的會是？',
+          opts: ['顯性的特徵', '隱性的特徵', '兩個都不表現'], ans: 0,
+          why: '顯性會遮蓋隱性，所以只要有一個顯性基因，就表現顯性特徵。' },
+        { t: 'choose', v: '🌱', s: '研究豌豆、發現遺傳規律的科學家是？',
+          opts: ['孟德爾', '牛頓', '達爾文'], ans: 0,
+          why: '孟德爾用豌豆做實驗，發現遺傳的規律，被稱為遺傳學之父。' },
+        { t: 'choose', v: '🅰️', s: '用大寫 A 代表顯性、小寫 a 代表隱性。基因組合「Aa」會表現哪一種特徵？',
+          opts: ['顯性（A 的特徵）', '隱性（a 的特徵）', '沒有特徵'], ans: 0,
+          why: 'Aa 裡有一個顯性 A，就會表現顯性特徵。' },
+        { t: 'choose', v: '🔡', s: '只有哪一種基因組合，才會表現出「隱性」特徵？',
+          opts: ['aa（兩個都是隱性）', 'Aa', 'AA'], ans: 0,
+          why: '要兩個都是隱性（aa）才會表現隱性特徵，只要有一個 A 就被遮蓋。' },
+        { t: 'choose', v: '➗', s: '兩個「Aa」的親代交配，後代「顯性 : 隱性」的比例大約是？',
+          opts: ['3 : 1', '1 : 1', '全部都是顯性'], ans: 0,
+          why: 'Aa×Aa 的後代，表現型顯性比隱性約為 3:1，這是孟德爾發現的比例。' },
+        { t: 'choose', v: '🔢', s: 'Aa × Aa 的後代，基因組合（AA : Aa : aa）的比例大約是？',
+          opts: ['1 : 2 : 1', '1 : 1 : 1', '全部一樣'], ans: 0,
+          why: '基因型比例為 AA : Aa : aa ＝ 1 : 2 : 1（其中 AA 和 Aa 都表現顯性，共 3 份）。' },
+        { t: 'choose', v: '🤔', s: '為什麼「AA」和「Aa」看起來特徵一樣？',
+          opts: ['因為只要有一個顯性 A，就會表現顯性特徵', '因為 a 比 A 強', '因為它們的 DNA 完全相同'], ans: 0,
+          why: '顯性會遮蓋隱性，AA 和 Aa 都含顯性 A，所以外表相同，但基因組合不同。' }
+      ]
+    },
+    {
+      id: 'L11', emoji: '🦖', title: '演化與天擇', subtitle: '★★★ 適者生存與長時間的改變',
+      steps: [
+        { t: 'fact', v: '🦖', s: '生物會隨著非常長的時間慢慢改變，這叫「演化」。達爾文用「天擇」來解釋它。',
+          more: '同一種生物的個體之間本來就有差異（變異）；比較適應環境的個體，比較容易活下來、生下後代，把特徵傳下去；經過許多世代累積，族群就慢慢改變了。化石讓我們知道以前有哪些生物。' },
+        { t: 'choose', v: '⏳', s: '生物經過很長時間慢慢改變的過程，叫做？',
+          opts: ['演化', '光合作用', '消化'], ans: 0,
+          why: '生物族群經過長時間、許多世代慢慢改變，這個過程叫演化。' },
+        { t: 'choose', v: '🧔', s: '提出「天擇」學說來解釋演化的科學家是？',
+          opts: ['達爾文', '孟德爾', '愛因斯坦'], ans: 0,
+          why: '達爾文提出天擇（自然選擇）學說來解釋生物如何演化。' },
+        { t: 'choose', v: '🏆', s: '「天擇」的意思最接近下面哪一個？',
+          opts: ['比較適應環境的生物，較容易存活並繁殖後代', '體型最大的一定獲勝', '完全靠運氣，和環境無關'], ans: 0,
+          why: '天擇是指較能適應環境的個體較容易存活、繁殖，把特徵傳下去。' },
+        { t: 'choose', v: '🎲', s: '同一種生物的個體之間會有一些不同，這種「差異」叫做？',
+          opts: ['變異', '分解', '循環'], ans: 0,
+          why: '同種生物個體間的差異叫變異，是天擇能發生的重要前提。' },
+        { t: 'choose', v: '🌈', s: '天擇要能發生，族群裡必須先有什麼？',
+          opts: ['各種不同的變異', '完全一模一樣的個體', '沒有任何食物'], ans: 0,
+          why: '有變異，環境才有不同的個體可以選擇；若全部一樣就無從選起。' },
+        { t: 'choose', v: '🦴', s: '我們能知道很久以前有哪些生物存在，主要靠研究？',
+          opts: ['化石', '今天的天氣', '夜空的星星'], ans: 0,
+          why: '化石是古代生物留下的遺跡，是演化的重要證據。' },
+        { t: 'choose', v: '💊', s: '有些細菌因為天擇，變得連藥都殺不死了，這種現象叫？',
+          opts: ['抗藥性', '光合作用', '免疫力天生無敵'], ans: 0,
+          why: '能抵抗藥物的細菌存活下來、繁殖，族群逐漸產生抗藥性，這正是天擇。' },
+        { t: 'choose', v: '🦋', s: '一群顏色深淺不同的蛾，停在被煤煙燻黑的樹幹上，哪一種比較容易活下來？',
+          opts: ['顏色深、不容易被鳥發現的', '顏色淺、非常顯眼的', '兩種存活機會一樣'], ans: 0,
+          why: '深色蛾在黑樹幹上有保護色，不易被天敵發現，較容易存活繁殖。' },
+        { t: 'choose', v: '🕰️', s: '演化通常需要多長的時間？',
+          opts: ['許多世代、非常長的時間', '一天之內', '一秒鐘'], ans: 0,
+          why: '演化是族群經過許多世代累積的改變，需要很長的時間。' },
+        { t: 'choose', v: '✅', s: '下列哪一句對演化的描述最正確？',
+          opts: ['演化是族群經過許多世代慢慢改變', '每隻動物一生中會突然變成另一種動物', '演化是一瞬間發生的'], ans: 0,
+          why: '演化作用在整個族群、需要許多世代，不是單一個體一生就變成別種。' }
+      ]
+    },
+    {
+      id: 'L12', emoji: '🗂️', title: '幫生物排排隊：分類階層', subtitle: '★★★ 界門綱目科屬種與學名',
+      steps: [
+        { t: 'fact', v: '🗂️', s: '科學家把生物由大到小分成不同層級：界、門、綱、目、科、屬、種。',
+          more: '「界」範圍最大最廣，「種」最小最精確；越靠近種，生物彼此越相似。每種生物還有全世界通用的「學名」，用屬名＋種小名表示（例如人是 Homo sapiens），這樣各國科學家都能確定在講同一種生物。' },
+        { t: 'choose', v: '🌐', s: '在「界、門、綱、目、科、屬、種」中，範圍最大、最廣的是？',
+          opts: ['界', '種', '屬'], ans: 0,
+          why: '界是分類階層中範圍最大、包含生物最多的層級。' },
+        { t: 'choose', v: '🎯', s: '在分類階層中，範圍最小、最精確的是？',
+          opts: ['種', '界', '門'], ans: 0,
+          why: '種是最小、最精確的層級，同種生物彼此最相似、能繁殖後代。' },
+        { t: 'choose', v: '🔽', s: '下列哪一個是由「大到小」正確的排序？',
+          opts: ['界 → 門 → 綱 → 目 → 科 → 屬 → 種', '種 → 界 → 門 → 綱 → 目', '界 → 種 → 門 → 屬 → 綱'], ans: 0,
+          why: '正確順序（由大到小）是：界、門、綱、目、科、屬、種。' },
+        { t: 'choose', v: '🤝', s: '分類越往「種」靠近，同一類裡的生物會？',
+          opts: ['彼此越相似、關係越近', '差異越來越大', '完全沒有關係'], ans: 0,
+          why: '階層越細（越靠近種），成員的共同點越多、親緣關係越近。' },
+        { t: 'choose', v: '📛', s: '每一種生物都有一個全世界通用的名字，叫做？',
+          opts: ['學名', '綽號', '代號'], ans: 0,
+          why: '學名是全球通用的正式名稱，避免各地俗名混淆。' },
+        { t: 'choose', v: '✍️', s: '生物的學名（二名法）是由哪兩個部分組成的？',
+          opts: ['屬名 ＋ 種小名', '界名 ＋ 門名', '顏色 ＋ 大小'], ans: 0,
+          why: '二名法學名由屬名和種小名組成，例如 Homo sapiens。' },
+        { t: 'choose', v: '🦴', s: '動物依「有沒有脊椎骨」可以先分成哪兩大類？',
+          opts: ['脊椎動物和無脊椎動物', '陸生和水生', '大的和小的'], ans: 0,
+          why: '有無脊椎骨是動物很基本的分法：脊椎動物與無脊椎動物。' },
+        { t: 'choose', v: '🦋', s: '下列哪一個是「無脊椎動物」？',
+          opts: ['蝴蝶（昆蟲）', '老鷹', '青蛙'], ans: 0,
+          why: '昆蟲（如蝴蝶）沒有脊椎骨，是無脊椎動物；老鷹、青蛙都有脊椎骨。' },
+        { t: 'choose', v: '🍄', s: '香菇、黴菌這類生物，被歸在哪一「界」？',
+          opts: ['真菌界', '動物界', '植物界'], ans: 0,
+          why: '菇類、黴菌屬於真菌界，不是植物；它們不會行光合作用。' },
+        { t: 'choose', v: '🌍', s: '為什麼科學家要用統一的學名？',
+          opts: ['這樣全世界的人都能確定在講同一種生物', '只是為了好看', '沒有任何原因'], ans: 0,
+          why: '俗名各地不同，統一學名能避免溝通誤會，確保指的是同一種生物。' }
+      ]
+    },
+    {
+      id: 'L13', emoji: '🫀', title: '身體裡的合作團隊', subtitle: '★★★ 循環・呼吸・消化・神經・免疫深入',
+      steps: [
+        { t: 'fact', v: '🫀', s: '人體各系統分工更細：血液裡有不同血球、肺裡有肺泡、小腸靠絨毛吸收、免疫系統會對抗病菌。',
+          more: '紅血球攜帶氧氣、白血球對抗病菌、血小板幫助止血；動脈把血送離心臟、微血管在細胞旁交換養分；肺泡負責氣體交換；小腸絨毛增加吸收面積，消化酵素把食物分解；神經元傳遞訊息；打疫苗能讓免疫系統先準備好抗體。' },
+        { t: 'choose', v: '🔴', s: '血液裡負責「攜帶氧氣」送到全身的是？',
+          opts: ['紅血球', '白血球', '血小板'], ans: 0,
+          why: '紅血球含血紅素，能攜帶氧氣送到全身細胞。' },
+        { t: 'choose', v: '⚪', s: '血液裡負責「對抗病菌、保護身體」的是？',
+          opts: ['白血球', '紅血球', '血小板'], ans: 0,
+          why: '白血球是身體的防衛部隊，能吞噬或對抗入侵的病菌。' },
+        { t: 'choose', v: '🩸', s: '當你受傷流血時，幫助血液凝固、止血的是？',
+          opts: ['血小板', '紅血球', '白血球'], ans: 0,
+          why: '血小板會聚集幫助血液凝固，讓傷口止血。' },
+        { t: 'choose', v: '➡️', s: '把血液「送離心臟」的血管叫做？',
+          opts: ['動脈', '靜脈', '神經'], ans: 0,
+          why: '動脈把血液從心臟送出去；靜脈則把血液送回心臟。' },
+        { t: 'choose', v: '🫧', s: '肺裡負責「氧氣和二氧化碳交換」的小囊泡叫？',
+          opts: ['肺泡', '心室', '絨毛'], ans: 0,
+          why: '肺泡壁很薄、數量很多，是氧氣和二氧化碳交換的地方。' },
+        { t: 'choose', v: '🌾', s: '小腸內壁有許多突起，能增加吸收養分的面積，叫做？',
+          opts: ['絨毛', '肺泡', '血小板'], ans: 0,
+          why: '小腸絨毛大大增加吸收表面積，讓養分吸收更有效率。' },
+        { t: 'choose', v: '🧪', s: '食物在消化道裡能被分解成小分子，靠身體分泌的？',
+          opts: ['消化酵素', '純水', '空氣'], ans: 0,
+          why: '消化酵素能把大分子食物分解成身體吸收得了的小分子。' },
+        { t: 'choose', v: '⚡', s: '神經系統傳遞訊息的基本細胞叫做？',
+          opts: ['神經元（神經細胞）', '紅血球', '肌肉細胞'], ans: 0,
+          why: '神經元是神經系統的基本單位，負責快速傳遞訊息。' },
+        { t: 'choose', v: '🛡️', s: '生過一次某種病後、之後比較不容易再得，是因為免疫系統產生了？',
+          opts: ['抗體', '消化酵素', '血小板'], ans: 0,
+          why: '免疫系統會產生對付特定病原的抗體，並記住它，下次能更快反應。' },
+        { t: 'choose', v: '💉', s: '打疫苗能預防生病，主要的原理是？',
+          opts: ['讓免疫系統先認識病原、準備好抗體', '直接把身體裡的病菌一輩子殺光', '補充身體的養分'], ans: 0,
+          why: '疫苗讓免疫系統先練習認識病原，真的遇到時能快速產生抗體對抗。' },
+        { t: 'choose', v: '🕸️', s: '血液最後靠哪一種最細的血管，把養分和氧氣送給細胞？',
+          opts: ['微血管', '動脈', '靜脈'], ans: 0,
+          why: '微血管管壁極薄、遍布全身，在細胞旁進行養分、氧氣和廢物的交換。' }
+      ]
+    },
+    {
+      id: 'L14', emoji: '🔄', title: '能量與碳的旅行', subtitle: '★★★ 能量流、生態金字塔與碳循環',
+      steps: [
+        { t: 'fact', v: '🔄', s: '能量從太陽進入生態系，沿食物鏈往上一層層傳遞，但每往上一層就大量流失；碳則能在生物和空氣間不斷循環。',
+          more: '能量傳到下一層大約只剩十分之一（約 10%），其餘大多變成熱散失、不會回收——這是「單向流動」。碳則不一樣：植物光合作用把空氣中的二氧化碳變成養分，生物呼吸、燃燒又把碳以二氧化碳放回空氣，可以重複利用——這是「循環」。' },
+        { t: 'choose', v: '☀️', s: '生態系裡能量最初的來源是？',
+          opts: ['太陽', '土壤', '石油'], ans: 0,
+          why: '太陽是能量的源頭，植物先把陽光的能量存進養分裡。' },
+        { t: 'choose', v: '📉', s: '能量沿著食物鏈往上傳遞時，會怎樣？',
+          opts: ['一層一層遞減、越來越少', '越往上越多', '完全不變'], ans: 0,
+          why: '每往上一層能量都大量流失，所以越高層可用的能量越少。' },
+        { t: 'choose', v: '🔥', s: '能量在食物鏈中流失時，大部分變成什麼散失掉？',
+          opts: ['熱', '光', '石頭'], ans: 0,
+          why: '生物活動與呼吸作用會把大部分能量以熱的形式散失到環境。' },
+        { t: 'choose', v: '🔟', s: '能量從一層傳到下一層，大約只剩下多少？',
+          opts: ['約十分之一（約 10%）', '全部（100%）', '變成兩倍'], ans: 0,
+          why: '能量傳遞效率很低，平均大約只有 10% 傳到下一營養階層。' },
+        { t: 'choose', v: '🦅', s: '因為能量會層層遞減，食物鏈中「數量通常最少」的是？',
+          opts: ['頂級消費者（例如老鷹、獅子）', '植物（生產者）', '草食動物'], ans: 0,
+          why: '能量層層遞減，越高層可用能量越少，能養活的個體也越少，所以頂級消費者數量通常最少。' },
+        { t: 'choose', v: '🔺', s: '把各層生物的能量畫成圖，通常會呈現什麼形狀？',
+          opts: ['底部大、頂端小的金字塔', '頂端大、底部小', '整齊的正方形'], ans: 0,
+          why: '生產者的能量最多在底部，越往上能量越少，形成底大頂小的生態金字塔。' },
+        { t: 'choose', v: '🔁', s: '和能量「單向流動、用掉就散失」不同，碳（物質）在生態系裡可以？',
+          opts: ['不斷循環、重複利用', '也是用掉就永遠消失', '完全不會移動'], ans: 0,
+          why: '能量單向流失，但碳等物質能在生物與環境間循環、重複利用。' },
+        { t: 'choose', v: '🌳', s: '植物行光合作用時，會從空氣中吸收哪一種氣體？',
+          opts: ['二氧化碳', '純氧氣', '氦氣'], ans: 0,
+          why: '光合作用吸收空氣中的二氧化碳，把碳變成養分儲存起來。' },
+        { t: 'choose', v: '💨', s: '生物呼吸、以及燃燒東西時，會把哪一種含碳氣體放回空氣？',
+          opts: ['二氧化碳', '氧氣', '氮氣'], ans: 0,
+          why: '呼吸作用和燃燒都會把碳以二氧化碳的形式放回空氣，讓碳循環繼續。' },
+        { t: 'choose', v: '🛢️', s: '大量燃燒煤、石油這類「化石燃料」，會使空氣中什麼氣體增加？',
+          opts: ['二氧化碳', '氧氣', '氦氣'], ans: 0,
+          why: '燃燒化石燃料會釋放大量二氧化碳，使空氣中二氧化碳濃度上升。' },
+        { t: 'choose', v: '🌡️', s: '空氣中二氧化碳等「溫室氣體」變多，可能造成什麼？',
+          opts: ['留住更多熱、使地球平均氣溫上升', '地球馬上結冰', '完全沒有任何影響'], ans: 0,
+          why: '二氧化碳等溫室氣體會留住熱量，過多會加劇溫室效應，使全球氣溫上升。' },
+        { t: 'choose', v: '✅', s: '關於生態系裡的能量和物質，哪一句最正確？',
+          opts: ['能量單向流動並遞減，物質（碳）則可以循環', '能量和物質都會循環', '能量和物質都用一次就消失'], ans: 0,
+          why: '能量單向流動、層層遞減，最後以熱散失；物質（如碳）則能循環再利用，這是重要差別。' }
+      ]
+    },
+    {"id":"L15","emoji":"🍳","title":"生活中的生物・廚房與飲食","subtitle":"從麵包膨脹到肚子吸收，廚房其實是最好玩的生物課！","steps":[{"t":"fact","v":"🥖","s":"你家廚房藏著看不見的微生物大軍，還有一整套消化與營養的科學。","more":"發酵靠酵母菌與乳酸菌，食物腐敗靠細菌與黴菌；吃進去的食物則要經過咀嚼、唾液、胃和小腸絨毛，才能變成身體用得到的養分。這一關就用做菜、吃飯的日常，帶你看懂背後的生物原理。"},{"t":"choose","v":"🍞","s":"媽媽做麵包時，把揉好的麵團放在溫暖的地方，過一陣子麵團就變得又大又蓬鬆。這主要是因為什麼？","opts":["酵母菌進行發酵，產生二氧化碳氣體撐大麵團","麵團吸收了空氣中的水蒸氣而膨脹","麵粉遇到溫度就會自己變多、體積變大"],"ans":0,"why":"酵母菌是一種真菌，它會分解麵團裡的糖，進行發酵並產生二氧化碳。這些氣體被麵筋包住，撐出一個個小孔，麵團就膨鬆變大了；烤熟後那些孔洞就是麵包鬆軟的原因。"},{"t":"choose","v":"🥛","s":"自製優格時，會在溫牛奶裡加入一點市售優格當「菌種」，放置幾小時後牛奶變得濃稠又帶酸味。這是誰的功勞？","opts":["加進去的糖遇熱變成了酸","乳酸菌把牛奶裡的乳糖發酵成乳酸","牛奶單純放久了自然壞掉發酸"],"ans":1,"why":"優格的酸味來自乳酸菌發酵：它們把牛奶中的乳糖轉變成乳酸，使牛奶變酸、蛋白質凝結而變濃稠。泡菜、味噌也都是靠這類有益微生物發酵做成的，和食物「壞掉」是不一樣的過程。"},{"t":"choose","v":"❄️","s":"吃不完的菜放進冰箱冷藏，就能保存比較久不容易壞。冰箱能保鮮，最主要的原理是什麼？","opts":["冰箱裡完全沒有細菌，是無菌的環境","低溫殺死了食物上所有的細菌","低溫會減緩微生物繁殖與生長，讓食物腐敗變慢"],"ans":2,"why":"低溫並不能殺死細菌，只是讓細菌等微生物的活動與繁殖速度變慢，所以食物壞得比較慢。冰箱裡還是有細菌，食物放久了一樣會壞，因此冷藏食物仍要盡早吃完。"},{"t":"choose","v":"🍫","s":"吐司放久了長出一塊塊綠色、白色的黴菌。有人說「把發霉的地方切掉，剩下的還能吃」，這樣做為什麼其實不安全？","opts":["黴菌的菌絲和看不見的毒素可能已蔓延到麵包內部","切掉後剩下的麵包會失去營養","黴菌只長在表面，切掉就完全沒問題"],"ans":0,"why":"我們看到的霉斑只是黴菌的一部分，它的菌絲會鑽進柔軟的麵包內部，有些黴菌還會產生看不見的毒素。所以麵包、吐司這類鬆軟食物一旦發霉，應整個丟棄，不能只切掉表面。"},{"t":"choose","v":"🍚","s":"運動前教練常建議先吃點飯、麵或麵包墊墊肚子。從營養素來看，這些主食主要提供身體什麼？","opts":["建造肌肉的主要材料","身體活動所需的主要能量","調節生理反應的維生素"],"ans":1,"why":"米飯、麵條、麵包富含醣類（碳水化合物），是人體最主要、最快速的能量來源。運動需要大量能量，先補充醣類能讓身體有力氣活動。"},{"t":"choose","v":"🍗","s":"正在長高的青少年，被提醒要多吃魚、肉、蛋、豆類。這類食物富含的蛋白質，在身體裡最主要的功能是什麼？","opts":["當作身體生長、修補組織的建造材料","專門幫助食物殘渣排出體外","儲存起來當作長期備用的能量"],"ans":0,"why":"蛋白質是構成肌肉、皮膚、器官等身體組織的主要材料，也負責生長與受傷後的修補。青春期身體快速發育，特別需要充足的蛋白質。"},{"t":"choose","v":"🍙","s":"把白飯含在嘴裡慢慢咀嚼，過一會兒會嚐到淡淡的甜味。這個現象背後的原理是什麼？","opts":["米飯放久了本來就會變甜","牙齒把米飯磨碎後就會產生糖","唾液中的澱粉酶把澱粉分解成有甜味的醣類"],"ans":2,"why":"唾液裡含有澱粉酶（消化酵素），會把沒有甜味的澱粉分解成較小的醣類（如麥芽糖），所以嚐起來變甜。這代表食物的化學性消化，其實從口腔就已經開始了。"},{"t":"choose","v":"🌱","s":"小腸內壁佈滿許多細小突起的「絨毛」，摸起來像絨布。這樣的構造對消化吸收有什麼好處？","opts":["能大幅增加吸收養分的表面積，吸收更有效率","可以把食物磨得更碎","能分泌胃酸來殺菌"],"ans":0,"why":"小腸是吸收養分的主要場所。密密麻麻的絨毛大大增加了小腸內壁與食物接觸的表面積，讓養分能被更快、更充分地吸收進血液中。"},{"t":"choose","v":"🥬","s":"營養師常說多吃蔬菜、全穀類可以「幫助排便、預防便秘」。蔬菜裡的膳食纖維是怎麼辦到的？","opts":["纖維能被身體完全消化，直接變成能量","纖維會殺死腸道裡的細菌","人體無法消化纖維，它能增加糞便體積、刺激腸道蠕動"],"ans":2,"why":"膳食纖維無法被人體消化吸收，但它能吸水膨脹、增加糞便的體積，並刺激大腸蠕動，幫助排便順暢。膳食纖維是一種身體無法消化、卻對腸道健康很重要的特殊成分，常被稱為『第七大營養素』。"},{"t":"choose","v":"🥑","s":"堅果、食用油、肥肉吃起來熱量很高。脂肪在我們身體裡扮演的重要角色之一是什麼？","opts":["是身體儲存能量的主要方式，也能保暖與保護器官","是唯一能立刻供應大腦活動的養分","主要負責把食物磨碎"],"ans":0,"why":"脂肪每公克含的能量比醣類、蛋白質都高，是身體長期儲存能量的主要形式；皮下脂肪還能幫助保暖，並保護內臟器官。不過攝取過量容易造成肥胖，仍要適量。"}]},
+    {"id":"L16","emoji":"🩺","title":"生活中的生物・健康與身體照顧","subtitle":"從洗手到睡覺，每個生活小動作背後都藏著身體的科學。","steps":[{"t":"fact","v":"💪","s":"身體每天都在默默運作、修復與防禦，好習慣就是在幫這套系統加分。","more":"洗手、睡眠、運動、均衡飲食、正確用眼、好好刷牙……這些看似普通的小事，其實都對應著免疫、內分泌、循環、神經等生物原理。懂了原理，就更知道為什麼要這樣照顧自己。"},{"t":"choose","v":"🧼","s":"用肥皂加清水搓洗雙手，被認為是阻斷病菌傳播最有效的方法之一。從原理來看，肥皂主要是靠什麼機制清除手上的病菌？","opts":["肥皂分子能破壞許多病菌（如包膜病毒）的油脂外膜，並把髒污與病菌包起來，讓流水沖走","肥皂會釋放大量氧氣，直接把手上所有細菌『燒死』","肥皂本身有甜味，會把病菌吸引到泡泡裡集中消滅"],"ans":0,"why":"肥皂的分子一端親油、一端親水，能瓦解病菌的油脂外膜並包覆髒污，再被流水帶走，所以『搓』和『沖』都很重要。肥皂並不會產生氧氣去『燒死』細菌，也沒有靠甜味吸引病菌這種事。"},{"t":"choose","v":"😴","s":"老師常說『長高要睡飽』。從生物原理看，充足且規律的睡眠為什麼對青春期成長特別重要？","opts":["因為睡覺時身體不動，骨頭就會自己慢慢被拉長","因為深層睡眠時腦下垂體會分泌較多生長激素，幫助骨骼與組織生長修復","因為睡覺時完全不用呼吸，能量全部拿去長高"],"ans":1,"why":"生長激素主要在深層睡眠時由腦下垂體大量分泌，幫助骨骼和身體組織生長與修復，所以睡眠不足會影響發育。骨頭不會因為不動就被拉長，人睡覺時也一直在呼吸，這兩個說法都不對。"},{"t":"choose","v":"🏃","s":"規律運動能讓人『體力變好、肌肉更結實』。從身體構造來看，運動帶來這些改變的主要原因是什麼？","opts":["運動時吸進去的空氣會直接變成新的肌肉","肌肉受到適度刺激後會修復並變強，心臟與肺也因訓練而更有效率地供應氧氣","運動會讓骨頭數量增加，所以力氣變大"],"ans":1,"why":"適度運動會刺激肌纖維，在休息修復後變得更強壯；同時心肺經過鍛鍊，能更有效率地輸送氧氣，耐力就提升。空氣不會直接變成肌肉，成年人的骨頭數量也不會因運動而增加。"},{"t":"choose","v":"🩹","s":"不小心割傷流血，過一陣子傷口會結成硬硬的痂。這層痂主要是靠血液中的哪個角色先幫忙止血形成的？","opts":["紅血球，負責把傷口染紅並塞住破洞","血小板，會聚集到傷口並促使血液凝固，形成血塊封住破口","白血球，會把傷口的皮膚黏起來"],"ans":1,"why":"血小板會迅速聚集到傷口並啟動凝血反應，形成血塊止血，乾掉後就成為結痂保護傷口。紅血球主要負責運送氧氣，白血球主要對抗病菌，止血結痂不是它們的主要工作。"},{"t":"choose","v":"🤧","s":"有人一接觸花粉或塵蟎就打噴嚏、流鼻水、皮膚癢，這就是『過敏』。從免疫學來看，過敏反應的本質是什麼？","opts":["是身體徹底沒有免疫力，任何東西都擋不住","是免疫系統對本來無害的物質（過敏原）反應過度，才引起不適","是體內完全沒有細菌，太乾淨造成的中毒"],"ans":1,"why":"過敏是免疫系統把原本無害的物質（如花粉、塵蟎）誤判為威脅而『反應過度』，才出現打噴嚏、癢等症狀。它不是沒有免疫力，也不是『太乾淨中毒』這種說法。"},{"t":"choose","v":"🍱","s":"營養師建議三餐要『均衡飲食』，蔬菜、水果、全穀、蛋白質都要有。從身體需求來看，為什麼不能只挑自己愛吃的一兩種？","opts":["因為不同食物提供不同的營養素（醣類、蛋白質、脂質、維生素、礦物質等），身體各種功能都需要","因為食物種類越多，胃就會被撐得越大越健康","因為只要份量夠多，吃什麼都一樣，重點只是吃飽"],"ans":0,"why":"身體的能量供應、生長修復、代謝調節各自需要不同營養素，單一食物無法全部提供，所以要多樣化才能均衡。把胃撐大並非健康目標，光吃飽卻營養不均也可能造成缺乏症或健康問題。"},{"t":"choose","v":"👀","s":"醫師提醒『看近的東西太久容易近視，要讓眼睛適時看遠、多到戶外』。從眼睛的運作來看，長時間近距離用眼為什麼比較傷眼？","opts":["因為看近時眼睛的睫狀肌要持續用力調節，長時間緊繃容易疲勞，也與近視加深有關","因為看近的字會發出強光，把眼睛裡的水分曬乾","因為看遠會讓眼睛長針眼，所以要一直看近才安全"],"ans":0,"why":"看近物時睫狀肌必須持續收縮來調節水晶體聚焦，長時間近距離用眼會使眼睛疲勞，也與近視發生和加深有關，因此要適時看遠、多到戶外。文字本身不會發強光曬乾眼睛，看遠也不會害人長針眼。"},{"t":"choose","v":"🦷","s":"牙醫說『吃完甜食沒刷牙，特別容易蛀牙』。從口腔裡的生物與化學反應來看，蛀牙是怎麼發生的？","opts":["糖本身有腐蝕性，會像酸一樣直接把牙齒溶掉","口腔裡的細菌會分解食物殘留的糖，產生酸性物質，長期腐蝕牙齒的琺瑯質","牙齒接觸到甜味神經會自己裂開"],"ans":1,"why":"蛀牙是口腔中的細菌利用糖分代謝、產生酸性物質，這些酸長期侵蝕琺瑯質而形成。糖本身並不是酸、不會直接溶解牙齒，牙齒也不會因『甜味』而裂開，所以吃完甜食要記得刷牙或漱口。"},{"t":"choose","v":"💉","s":"打疫苗常被說是『幫免疫系統先做練習』。從免疫記憶的角度來看，疫苗保護我們的原理最接近下列哪一項？","opts":["疫苗讓身體認識病原體的特徵並產生免疫記憶，將來遇到真的病原時能更快反應","疫苗會在血管裡放一層塑膠膜，把病菌全部擋在外面","疫苗能讓人一輩子完全不會生任何病"],"ans":0,"why":"疫苗把病原體的特徵（或減弱、無害的形式）呈現給免疫系統，讓身體產生抗體與免疫記憶，日後遇到真正病原時能更快、更強地反應。疫苗不是在血管裡放膜，也無法保證一輩子不生任何病，但能大幅降低重症風險。"},{"t":"choose","v":"💧","s":"運動流很多汗或天氣炎熱時，大人常提醒『要多喝水』。從身體運作來看，缺水（脫水）為什麼會讓人頭暈、沒力氣？","opts":["因為水分是血液和體液的重要成分，也幫助調節體溫，缺水會影響循環與散熱，讓身體運作變差","因為喝水才能把肚子裝滿，肚子空了就會頭暈","因為水裡有電，喝了才能替身體『充電』"],"ans":0,"why":"水是血液和體液的主要成分，也透過流汗幫助散熱調節體溫；脫水會使血液量與循環受影響、散熱變差，因而頭暈、疲倦。頭暈不是因為肚子空，水也不是靠『電』替身體充電這種說法。"}]}
+  ];
+
+  // =====================================================================
+  // DOM 參照
+  // =====================================================================
+  var $ = function (id) { return document.getElementById(id); };
+  var screenMenu = $('screen-menu');
+  var screenPlay = $('screen-play');
+  var levelList = $('level-list');
+  var stage = $('stage');
+  var stepDots = $('step-dots');
+  var playTitle = $('play-title');
+
+  // 目前遊玩狀態：{ level, idx, correctCount, total }
+  var cur = null;
+
+  // 計分步數（choose）——星等分母。
+  function scoringSteps(level) {
+    var n = 0;
+    for (var i = 0; i < level.steps.length; i++) if (level.steps[i].t === 'choose') n++;
+    return n;
+  }
+
+  function doneCount() {
+    var c = 0;
+    for (var i = 0; i < LEVELS.length; i++) if (progress[LEVELS[i].id] && progress[LEVELS[i].id].done) c++;
+    return c;
+  }
+  function earnedBadgeCount() {
+    var c = 0;
+    for (var i = 0; i < BADGE_DEFS.length; i++) if (badges[BADGE_DEFS[i].id]) c++;
+    return c;
+  }
+  function totalStars() {
+    var s = 0;
+    for (var id in progress) { if (progress[id] && progress[id].best) s += progress[id].best; }
+    return s;
+  }
+
+  // =====================================================================
+  // 選單渲染
+  // =====================================================================
+  function renderMenu() {
+    var dc = doneCount();
+    $('ov-done').textContent = dc + '/' + LEVELS.length;
+    $('ov-badges').textContent = earnedBadgeCount() + '/' + BADGE_DEFS.length;
+    $('ov-stars').textContent = totalStars();
+    $('bioBadgeFabCount').textContent = earnedBadgeCount() + '/' + BADGE_DEFS.length;
+
+    // 歡迎語（首次 / 回訪 / 全完成；讚美努力、不催促）
+    if (dc >= LEVELS.length) {
+      $('hello-text').textContent = '所有等級都完成了，你是生物小博士！🎓';
+      $('hello-sub').textContent = '想再逛哪一關都可以，慢慢玩、慢慢懂。';
+    } else if (dc > 0) {
+      $('hello-text').textContent = '歡迎回來！你已經完成 ' + dc + ' 個等級，好厲害！';
+      $('hello-sub').textContent = '選一個等級，慢慢玩、慢慢懂。';
+    }
+
+    // 等級卡（全開放、不擋關，孩子可自由選）
+    levelList.innerHTML = '';
+    for (var u = 0; u < LEVELS.length; u++) {
+      (function (level, num) {
+        var done = progress[level.id] && progress[level.id].done;
+        var stars = progress[level.id] ? (progress[level.id].best || 0) : 0;
+        var total = scoringSteps(level);
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'bio-level';
+        card.setAttribute('aria-label', '等級 ' + num + '：' + level.title);
+        var dots = '';
+        for (var d = 0; d < total; d++) dots += '<i class="' + (d < stars ? 'on' : '') + '"></i>';
+        card.innerHTML =
+          '<div class="bio-level-top">' +
+            '<span class="bio-level-emoji" aria-hidden="true">' + level.emoji + '</span>' +
+            '<div>' +
+              '<div class="bio-level-num">等級 ' + num + '</div>' +
+              '<div class="bio-level-name">' + level.title + '</div>' +
+              '<div class="bio-level-sub">' + level.subtitle + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="bio-level-foot">' +
+            '<span class="bio-level-status ' + (done ? 'done' : 'todo') + '">' +
+              (done ? '✅ 已完成' : '▶️ 開始挑戰（共 ' + total + ' 題）') + '</span>' +
+            '<span class="bio-level-dots" aria-hidden="true">' + dots + '</span>' +
+          '</div>';
+        card.addEventListener('click', function () { startLevel(level); });
+        levelList.appendChild(card);
+      })(LEVELS[u], u + 1);
+    }
+  }
+
+  // =====================================================================
+  // 遊玩流程
+  // =====================================================================
+  function show(screen) {
+    screenMenu.classList.remove('active');
+    screenPlay.classList.remove('active');
+    screen.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function startLevel(level) {
+    cur = { level: level, idx: 0, correctCount: 0, total: scoringSteps(level) };
+    playTitle.textContent = level.emoji + ' ' + level.title;
+    show(screenPlay);
+    renderStep();
+  }
+
+  function renderStepDots() {
+    stepDots.innerHTML = '';
+    for (var i = 0; i < cur.level.steps.length; i++) {
+      var b = document.createElement('i');
+      if (i < cur.idx) b.className = 'on';
+      else if (i === cur.idx) b.className = 'cur';
+      stepDots.appendChild(b);
+    }
+  }
+
+  function next() {
+    cur.idx++;
+    if (cur.idx >= cur.level.steps.length) finishLevel();
+    else renderStep();
+  }
+
+  function renderStep() {
+    renderStepDots();
+    var step = cur.level.steps[cur.idx];
+    if (step.t === 'fact') return renderFact(step);
+    if (step.t === 'choose') return renderChoose(step);
+  }
+
+  // ---- fact（worked example 先行；零聲音、無朗讀鈕） ----
+  function renderFact(step) {
+    stage.innerHTML =
+      '<div class="bio-stage">' +
+        '<div class="bio-visual" aria-hidden="true">' + step.v + '</div>' +
+        '<p class="bio-sentence">' + step.s + '</p>' +
+        '<div class="bio-toolrow">' +
+          '<button type="button" class="btn" id="btn-more">💡 看更多</button></div>' +
+        '<div class="bio-reveal" id="reveal">' + (step.more || '') + '</div>' +
+      '</div>' +
+      '<div class="bio-actions">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">開始挑戰 ➡️</button>' +
+      '</div>';
+    $('btn-more').addEventListener('click', function () {
+      $('reveal').classList.add('show');
+    });
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // ---- choose（選項洗牌；每題只計一次分） ----
+  function renderChoose(step) {
+    // 打亂選項顯示順序（正解不可固定在第一個，孩子才會真的閱讀）。
+    // data-i 記的是「原始索引」，因此對答判斷 i === step.ans 仍然正確。
+    var order = [];
+    for (var oi = 0; oi < step.opts.length; oi++) order.push(oi);
+    for (var m = order.length - 1; m > 0; m--) {
+      var r = Math.floor(Math.random() * (m + 1));
+      var tt = order[m]; order[m] = order[r]; order[r] = tt;
+    }
+    var optsHtml = '';
+    for (var k = 0; k < order.length; k++) {
+      var origIdx = order[k];
+      optsHtml += '<button type="button" class="bio-opt" data-i="' + origIdx + '">' +
+        '<span>' + step.opts[origIdx] + '</span><span class="bio-opt-mark" aria-hidden="true"></span></button>';
+    }
+    stage.innerHTML =
+      '<div class="bio-stage">' +
+        '<div class="bio-visual" aria-hidden="true">' + step.v + '</div>' +
+        '<p class="bio-sentence">' + step.s + '</p>' +
+        '<div class="bio-options">' + optsHtml + '</div>' +
+        '<div class="bio-reveal" id="reveal"></div>' +
+      '</div>' +
+      '<div class="bio-actions" id="afteract" style="display:none">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">繼續 ➡️</button>' +
+      '</div>';
+
+    // answered 旗標鎖定：僅第一次作答計入 cur.correctCount，之後重試只給視覺回饋。
+    var answered = false;
+    var btns = stage.querySelectorAll('.bio-opt');
+    for (var b = 0; b < btns.length; b++) {
+      btns[b].addEventListener('click', function () {
+        var i = parseInt(this.getAttribute('data-i'), 10);
+        var isCorrect = (i === step.ans);
+        if (answered) {
+          // 已答過：只給視覺提示，不再重複計分。
+          if (isCorrect) {
+            this.classList.add('correct');
+            this.querySelector('.bio-opt-mark').textContent = '✅';
+          } else {
+            this.classList.add('wrong');
+            this.querySelector('.bio-opt-mark').textContent = '❌';
+          }
+          return;
+        }
+        answered = true;
+        if (window.Game && window.Game.recordAnswer) Game.recordAnswer('science', isCorrect);
+        if (isCorrect) {
+          this.classList.add('correct');
+          this.querySelector('.bio-opt-mark').textContent = '✅';
+          cur.correctCount++;           // 本頁本地星等（記憶體），與主引擎無關
+          reveal(step, true);
+        } else {
+          this.classList.add('wrong');
+          this.querySelector('.bio-opt-mark').textContent = '❌';
+          // 標出正解、鼓勵再試（不懲罰）。用原始索引找到正解按鈕（選項已洗牌）。
+          var correctBtn = stage.querySelector('.bio-opt[data-i="' + step.ans + '"]');
+          if (correctBtn) {
+            correctBtn.classList.add('correct');
+            correctBtn.querySelector('.bio-opt-mark').textContent = '✅';
+          }
+          reveal(step, false);
+        }
+      });
+    }
+
+    function reveal(step, correct) {
+      var rev = $('reveal');
+      rev.textContent = (correct ? '答對了！' : '沒關係，再想想～正確答案是這個！') + ' ' + (step.why || '');
+      rev.classList.add('show');
+      $('afteract').style.display = 'flex';
+      var all = stage.querySelectorAll('.bio-opt');
+      for (var k = 0; k < all.length; k++) all[k].disabled = true;
+    }
+
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // =====================================================================
+  // 完成關卡：寫入獨立 key（保留最佳星等，只增不減）＋ 解鎖徽章（純本地）
+  // =====================================================================
+  function finishLevel() {
+    var level = cur.level;
+    var stars = cur.correctCount;
+    var total = cur.total;
+
+    // 進度：保留最佳星等（Math.max，只增不減）
+    var prev = progress[level.id] || {};
+    progress[level.id] = { done: true, best: Math.max(prev.best || 0, stars) };
+    saveJSON(PROG_KEY, progress);
+
+    // 解鎖徽章（只增不減；已解鎖不覆寫 earnedAt）
+    var newlyEarned = [];
+    var lb = BADGE_BY_LEVEL[level.id];
+    if (lb && !badges[lb.id]) {
+      badges[lb.id] = { earnedAt: new Date().toISOString() };
+      newlyEarned.push(lb);
+    }
+    // 全部等級完成 → 解鎖總成就
+    if (doneCount() >= LEVELS.length) {
+      var grand = BADGE_DEFS[BADGE_DEFS.length - 1]; // b_master
+      if (!badges[grand.id]) {
+        badges[grand.id] = { earnedAt: new Date().toISOString() };
+        newlyEarned.push(grand);
+      }
+    }
+    if (newlyEarned.length) saveJSON(BADGE_KEY, badges);
+
+    var starStr = '';
+    for (var i = 0; i < total; i++) starStr += (i < stars ? '⭐' : '☆');
+
+    stage.innerHTML =
+      '<div class="bio-stage bio-done">' +
+        '<div class="bio-done-emoji" aria-hidden="true">🎉</div>' +
+        '<div class="bio-done-title">完成「' + level.title + '」！</div>' +
+        '<div class="bio-done-stars" aria-label="得到 ' + stars + ' 顆星">' + starStr + '</div>' +
+        '<p class="bio-sentence" style="font-size:clamp(16px,3.6vw,19px)">你答對了 ' + stars + ' / ' + total + ' 題，好棒！</p>' +
+      '</div>' +
+      '<div class="bio-actions">' +
+        '<button type="button" class="btn" id="btn-menu">回到選單</button>' +
+        (nextLevelOf(level) ? '<button type="button" class="btn btn-primary" id="btn-nextlevel">下一個等級 ➡️</button>' : '<button type="button" class="btn btn-primary" id="btn-badges2">看我的徽章 🏅</button>') +
+      '</div>';
+
+    // 徽章慶祝（純 UI；Game.showToast 只彈提示、不計分）
+    for (var e = 0; e < newlyEarned.length; e++) {
+      toast('解鎖徽章：' + newlyEarned[e].emoji + ' ' + newlyEarned[e].name + '！', 'badge');
+    }
+
+    $('btn-menu').addEventListener('click', goMenu);
+    var nl = nextLevelOf(level);
+    if (nl) $('btn-nextlevel').addEventListener('click', function () { startLevel(nl); });
+    else { var b2 = $('btn-badges2'); if (b2) b2.addEventListener('click', function () { goMenu(); openBadges(); }); }
+  }
+
+  function nextLevelOf(level) {
+    for (var i = 0; i < LEVELS.length; i++) {
+      if (LEVELS[i].id === level.id) return LEVELS[i + 1] || null;
+    }
+    return null;
+  }
+
+  function goMenu() {
+    cur = null;
+    renderMenu();
+    show(screenMenu);
+  }
+
+  // =====================================================================
+  // 徽章櫃浮層（[hidden] 屬性切換；只切 hidden，不動 class）
+  // =====================================================================
+  var overlay = $('bioBadgeOverlay');
+
+  function renderBadges() {
+    var grid = $('bio-badge-grid');
+    grid.innerHTML = '';
+    for (var i = 0; i < BADGE_DEFS.length; i++) {
+      var def = BADGE_DEFS[i];
+      var earned = !!badges[def.id];
+      var el = document.createElement('div');
+      el.className = 'bio-badge ' + (earned ? 'earned' : 'locked');
+      var state = earned
+        ? '已解鎖'
+        : (def.level ? '玩完這個等級就會亮起來喔！' : '完成全部 ' + LEVELS.length + ' 個等級就會亮起來！');
+      var goBtn = (earned && def.level)
+        ? '<button type="button" class="bio-badge-go" data-go="' + def.level + '">再逛一次 →</button>'
+        : '';
+      el.innerHTML =
+        (earned ? '<span class="bio-badge-check" aria-hidden="true">✓</span>' : '') +
+        '<span class="bio-badge-glyph" aria-hidden="true">' + def.emoji + '</span>' +
+        '<span class="bio-badge-name">' + def.name + '</span>' +
+        '<span class="bio-badge-state">' + state + '</span>' +
+        goBtn;
+      grid.appendChild(el);
+    }
+    // 空狀態文案（溫和、不誘導）
+    var note = $('bio-badge-note');
+    if (earnedBadgeCount() === 0) {
+      note.textContent = '你的生物徽章櫃還空空的，先去玩一個等級吧！';
+    } else {
+      note.textContent = '每完成一個等級，就會解鎖一枚徽章。徽章只會亮起、不會消失——慢慢收集就好！';
+    }
+    // 「再逛一次」→ 回到該等級
+    var gos = grid.querySelectorAll('.bio-badge-go');
+    for (var g = 0; g < gos.length; g++) {
+      gos[g].addEventListener('click', function () {
+        var lid = this.getAttribute('data-go');
+        var lvl = null;
+        for (var j = 0; j < LEVELS.length; j++) if (LEVELS[j].id === lid) lvl = LEVELS[j];
+        if (lvl) { closeBadges(); startLevel(lvl); }
+      });
+    }
+  }
+
+  function openBadges() {
+    renderBadges();
+    overlay.hidden = false;
+    var closeBtn = $('bio-badge-close');
+    if (closeBtn) closeBtn.focus();
+  }
+  function closeBadges() { overlay.hidden = true; }
+
+  $('bioBadgeFab').addEventListener('click', openBadges);
+  $('bio-badge-close').addEventListener('click', closeBadges);
+  // 點浮層背景（非內容）也可關閉
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) closeBadges(); });
+  // Esc 關閉（鍵盤可操作）
+  document.addEventListener('keydown', function (e) {
+    if ((e.key === 'Escape' || e.key === 'Esc') && !overlay.hidden) closeBadges();
+  });
+
+  // =====================================================================
+  // 頂列按鈕（主題切換由共用 app-bar 的 [data-theme-toggle] 統一處理，
+  // 由 game_core 自動接線與圖示同步，本頁不再自行處理主題。）
+  // =====================================================================
+  $('btn-back').addEventListener('click', goMenu);
+
+  // =====================================================================
+  // 啟動
+  // =====================================================================
+  renderMenu();
+})();
+</script>
+</body>
+</html>

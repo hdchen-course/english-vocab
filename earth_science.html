@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>地球與太空探索 🌏</title>
+<!-- 統一遊戲化引擎：assets/app.css（設計 token）→ game_core.css（HUD/toast）→ game_core.js。
+     零重複計分：本頁定位「進階挑戰」，絕不呼叫 Game.recordAnswer / award / recordSession，
+     （唯一例外：答題時呼叫 Game.pingActive() 維持每日連續學習 streak，不計 XP、不重複計分）
+     也不宣告 data-game-wired，故不污染任何科目 XP。只用 Game.showToast（純提示）。
+     獨立 localStorage key：earth_progress_v1。 -->
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<style>
+/* computer_science.html — 強調色系採靛藍（indigo）。無專用 subject token，故：
+   --su 用實色（邊框/圓點），--su-tint 用半透明（亮暗雙主題自適應），
+   --su-ink 用 var(--ink)（自動隨主題翻轉，避免暗色模式對比不足）。 */
+:root {
+  --su: #0284c7;
+  --su-tint: rgba(2,132,199,0.14);
+  --su-ink: var(--ink);
+  --accent: #0284c7;
+  --accent-ink: var(--ink);
+  --accent-tint: rgba(2,132,199,0.14);
+}
+
+body { overflow-x: hidden; }
+
+.ma-topbar { display: flex; align-items: center; gap: var(--s2); margin-bottom: var(--s4); }
+.ma-topbar .ma-title { flex: 1; font-size: var(--fs-h2); font-weight: 800; color: var(--ink); min-width: 0; }
+
+.ma-screen { display: none; animation: ma-fade 0.3s ease; }
+.ma-screen.active { display: block; }
+@keyframes ma-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .ma-screen { animation: none; } }
+
+.ma-hello { display: flex; align-items: center; gap: var(--s3); padding: var(--s4); background: var(--su-tint); border: 1px solid var(--card-border); border-radius: var(--r-lg); margin-bottom: var(--s4); }
+.ma-hello .ma-mascot { font-size: 46px; flex: none; line-height: 1; }
+.ma-hello .ma-hello-text { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+.ma-hello .ma-hello-sub { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; }
+
+.ma-overview { display: flex; align-items: center; gap: var(--s3); margin-bottom: var(--s4); flex-wrap: wrap; }
+.ma-overview .stat-tile { flex: 1; min-width: 96px; }
+
+.ma-levels { display: grid; gap: var(--s4); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.ma-level {
+  display: flex; flex-direction: column; gap: var(--s2); padding: var(--s4);
+  text-align: left; cursor: pointer; border: 2px solid var(--card-border);
+  background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  font-family: var(--font); color: var(--ink);
+}
+.ma-level:hover { box-shadow: var(--shadow-lg); border-color: var(--su); }
+.ma-level:active { transform: scale(0.98); }
+.ma-level-top { display: flex; align-items: center; gap: var(--s3); }
+.ma-level-emoji { font-size: 34px; width: 56px; height: 56px; flex: none; display: flex; align-items: center; justify-content: center; border-radius: 16px; }
+.ma-level-num { font-size: var(--fs-small); font-weight: 700; color: var(--su-ink); }
+.ma-level-name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); line-height: 1.25; }
+.ma-level-concepts { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; line-height: 1.4; }
+.ma-level-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-top: 2px; }
+.ma-level-status { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-small); font-weight: 700; }
+.ma-level-status.done { color: var(--c-correct-ink); }
+.ma-level-status.todo { color: var(--ink-soft); }
+.ma-level-stars { font-size: 16px; letter-spacing: 1px; }
+
+.ma-stage { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); padding: var(--s5) var(--s4); text-align: center; }
+.ma-visual { font-size: clamp(56px, 18vw, 92px); line-height: 1.1; margin: var(--s2) 0 var(--s3); user-select: none; }
+.ma-question { font-size: clamp(19px, 4.5vw, 24px); font-weight: 800; color: var(--ink); line-height: 1.6; margin: 0 auto var(--s4); max-width: 42ch; text-align: left; }
+
+.ma-brief { text-align: left; }
+.ma-brief h2 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); margin: 0 0 var(--s3); text-align: center; }
+.ma-brief-sub { text-align: center; color: var(--ink-soft); font-weight: 700; font-size: var(--fs-small); margin: 0 0 var(--s3); }
+.ma-keyfacts { list-style: none; padding: 0; margin: 0 auto; max-width: 44ch; display: grid; gap: var(--s2); }
+.ma-keyfacts li { display: flex; align-items: flex-start; gap: var(--s2); padding: 10px 14px; background: var(--su-tint); border-radius: var(--r-md); font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.6; }
+.ma-keyfacts li .ma-kf-dot { flex: none; color: var(--su-ink); font-weight: 900; }
+.ma-brief-topics { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s2); margin: 0 auto var(--s4); max-width: 44ch; }
+.ma-brief-topics .ma-topic { font-size: var(--fs-small); font-weight: 700; color: var(--ink-soft); background: var(--su-tint); border-radius: 999px; padding: 4px 12px; line-height: 1.4; }
+
+.ma-steps { display: flex; align-items: center; justify-content: center; gap: 5px; margin-bottom: var(--s3); flex-wrap: wrap; }
+.ma-steps i { width: 20px; height: 6px; border-radius: 999px; background: var(--card-border); }
+.ma-steps i.on { background: var(--su); }
+.ma-steps i.cur { background: var(--su); box-shadow: 0 0 0 3px var(--su-tint); }
+
+.ma-options { display: grid; gap: var(--s3); margin-top: var(--s2); }
+.ma-opt {
+  display: flex; align-items: center; gap: var(--s2); min-height: 56px; width: 100%;
+  padding: 14px 18px; border: 2px solid var(--card-border); border-radius: 16px;
+  background: var(--card); color: var(--ink); font-family: var(--font);
+  font-size: clamp(16px, 3.4vw, 19px); font-weight: 700; text-align: left; cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.ma-opt:active { transform: scale(0.98); }
+.ma-opt:disabled { cursor: default; }
+/* 作答後高亮：文字用 var(--ink)（亮暗雙主題皆過 AA），對錯以邊框顏色 + ✅/❌ 雙碼標示 */
+.ma-opt.correct { border-color: var(--c-correct); background: var(--tint-english); color: var(--ink); }
+.ma-opt.wrong { border-color: var(--c-wrong); background: rgba(255,118,117,0.12); color: var(--ink); }
+.ma-opt.correct .ma-opt-mark { color: var(--c-correct-ink); }
+.ma-opt.wrong .ma-opt-mark { color: var(--c-streak-ink); }
+.ma-opt .ma-opt-mark { margin-left: auto; font-size: 22px; }
+
+.ma-reveal { margin-top: var(--s4); padding: var(--s3) var(--s4); background: var(--su-tint); border-radius: var(--r-md); font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.6; text-align: left; display: none; }
+.ma-reveal.show { display: block; animation: ma-fade 0.3s ease; }
+@media (prefers-reduced-motion: reduce) { .ma-reveal.show { animation: none; } }
+
+.ma-done { text-align: center; padding: var(--s5) var(--s4); }
+.ma-done-emoji { font-size: clamp(64px, 22vw, 100px); }
+.ma-done-stars { font-size: 34px; letter-spacing: 4px; margin: var(--s2) 0; }
+.ma-done-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); }
+
+.ma-actions { display: flex; gap: var(--s3); margin-top: var(--s4); flex-wrap: wrap; }
+.ma-actions .btn { flex: 1; min-width: 140px; }
+
+.ma-footnote { text-align: center; color: var(--ink-soft); font-size: var(--fs-small); margin-top: var(--s5); font-weight: 600; max-width: 34em; margin-inline: auto; }
+</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">地球與太空探索 🌏</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle
+          aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+
+  <section id="screen-menu" class="ma-screen active">
+    <div class="ma-topbar">
+      <span class="ma-title">地球與太空探索 🌏</span>
+    </div>
+
+    <div class="ma-hello">
+      <span class="ma-mascot" aria-hidden="true">🌏</span>
+      <div>
+        <div class="ma-hello-text" id="hello-text">歡迎來到地球與太空探索！從腳下的土地到遙遠的星空，一起去探險。</div>
+        <div class="ma-hello-sub" id="hello-sub">還沒開始也沒關係，挑一個等級試試看吧！</div>
+      </div>
+    </div>
+
+    <a href="earth_science_concepts.html" style="display:flex;align-items:center;gap:10px;margin:0 0 var(--s4);padding:12px 16px;background:var(--card);border:2px dashed var(--card-border);border-radius:14px;color:var(--ink);font-weight:700;text-decoration:none;line-height:1.4"><span style="font-size:22px" aria-hidden="true">🌍</span><span>還沒學過嗎？先到「地球科學觀念養成」用圖學會晝夜、四季、水循環、月相，再回來玩 →</span></a>
+
+    <div class="ma-overview">
+      <div class="stat-tile"><span class="stat-value" id="ov-done">0/7</span><span class="stat-label">完成等級</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-badges">0/8</span><span class="stat-label">收集徽章</span></div>
+    </div>
+
+    <div class="ma-levels" id="level-list"><!-- 由 JS 產生 --></div>
+
+    <p class="ma-footnote">這是「進階挑戰」小旅程，只留在你自己的裝置上，不影響學習基地的等級或經驗值。慢慢玩、盡量想，答錯也沒關係。🌱</p>
+  </section>
+
+  <section id="screen-play" class="ma-screen">
+    <div class="ma-topbar">
+      <button type="button" class="btn btn-icon" id="btn-back" aria-label="回到等級選單">←</button>
+      <span class="ma-title" id="play-title">等級</span>
+    </div>
+    <div class="ma-steps" id="step-dots" aria-hidden="true"></div>
+    <div class="play-column">
+      <div id="stage"><!-- 由 JS 產生每一題 --></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* 主程式（自足 IIFE）：6 個中性等級、每級 12 題、全部解鎖。選項每題 Fisher–Yates 洗牌；
+   answer = 未洗牌前 0-based 索引，以 data-i 判斷，判分不受洗牌影響。每題最多記一次分。
+   獨立 key：earth_progress_v1。不呼叫 Game.recordAnswer / award / recordSession。 */
+(function () {
+  'use strict';
+
+  function toast(msg, kind) {
+    try { if (window.Game && Game.showToast) Game.showToast(msg, kind || 'info'); } catch (e) {}
+  }
+
+  var PROG_KEY = 'earth_progress_v1';
+  function loadProg() {
+    var p = null;
+    try { p = JSON.parse(localStorage.getItem(PROG_KEY)); } catch (e) { p = null; }
+    if (!p || typeof p !== 'object') p = {};
+    if (typeof p.badges !== 'object' || !p.badges) p.badges = {};
+    return p;
+  }
+  function saveProg(p) { try { localStorage.setItem(PROG_KEY, JSON.stringify(p)); } catch (e) {} }
+  var progress = loadProg();
+
+  // 課程內容（全繁體中文；事實經 WebSearch 查核與雙重審查）。answer = 未洗牌前 0-based 索引。
+  var LEVELS = [
+  {
+    "id": "lv1",
+    "level": 1,
+    "name": "地球的構造與變動",
+    "emoji": "🌋",
+    "color": "#c1440e",
+    "hook": "地球的構造與地震、火山",
+    "concepts": [
+      "地球的分層構造（地殼、地函、地核）",
+      "板塊構造與板塊運動",
+      "地震的成因與地震波",
+      "火山與岩漿",
+      "震度與規模的差別"
+    ],
+    "keyFacts": [
+      "地球由外到內分為三層：地殼、地函、地核。",
+      "地核分外核（液態）與內核（固態），內核因壓力極大而不熔化。",
+      "地球表面由許多板塊組成，每年只緩慢移動數公分，和指甲生長速度差不多。",
+      "板塊互相擠壓使斷層錯動、釋放能量，就形成地震。",
+      "台灣位在歐亞板塊與菲律賓海板塊交界，地震與火山活動都很活躍。"
+    ],
+    "questions": [
+      {
+        "q": "地球由外到內主要分成哪三層？",
+        "options": [
+          "地皮、地肉、地骨",
+          "外殼、中殼、內殼",
+          "地殼、地函、地核",
+          "地殼、地心、地底"
+        ],
+        "answer": 2,
+        "why": "科學家依組成與深度，把地球分成地殼、地函、地核三大層。"
+      },
+      {
+        "q": "下列哪一層是地球最外面、也是最薄的一層？",
+        "options": [
+          "地函",
+          "地殼",
+          "外核",
+          "內核"
+        ],
+        "answer": 1,
+        "why": "地殼像蛋殼一樣包在最外面，是三層裡最薄的一層。"
+      },
+      {
+        "q": "地核可分成外核和內核，關於它們的敘述何者正確？",
+        "options": [
+          "外核是液態，內核是固態",
+          "外核是固態，內核是氣態",
+          "外核與內核都是氣態",
+          "外核與內核都是冰"
+        ],
+        "answer": 0,
+        "why": "外核是高溫熔融的液態金屬，內核因壓力極大反而呈固態。"
+      },
+      {
+        "q": "科學家認為地球表面是由許多會緩慢移動的大塊岩石組成，這些大塊叫什麼？",
+        "options": [
+          "磚塊",
+          "冰塊",
+          "石英",
+          "板塊"
+        ],
+        "answer": 3,
+        "why": "地球最外層破裂成許多會緩慢移動的板塊，這就是板塊構造。"
+      },
+      {
+        "q": "板塊移動的速度大約和下列何者相近？",
+        "options": [
+          "汽車在高速公路的速度",
+          "飛機飛行的速度",
+          "指甲生長的速度（一年幾公分）",
+          "光的速度"
+        ],
+        "answer": 2,
+        "why": "板塊每年只移動幾公分，和指甲生長差不多慢，我們平常完全感覺不到。"
+      },
+      {
+        "q": "大部分地震發生的主要原因是什麼？",
+        "options": [
+          "月亮撞到地球",
+          "板塊互相推擠，使岩層斷裂並錯動",
+          "海水太多壓垮地面",
+          "太陽把地面曬裂"
+        ],
+        "answer": 1,
+        "why": "板塊擠壓讓岩層累積能量，斷層一旦錯動釋放能量，就造成地震。"
+      },
+      {
+        "q": "岩層斷裂、兩側岩石發生錯動的地帶，我們稱為什麼？",
+        "options": [
+          "斷層",
+          "山脈",
+          "河流",
+          "平原"
+        ],
+        "answer": 0,
+        "why": "斷層是岩層破裂並錯動的地帶，地震常沿著斷層發生。"
+      },
+      {
+        "q": "地震會傳出地震波，關於 P 波和 S 波，下列何者正確？",
+        "options": [
+          "S 波比 P 波快",
+          "P 波和 S 波速度完全相同",
+          "地震不會產生任何波",
+          "P 波傳播速度比 S 波快，會最先被偵測到"
+        ],
+        "answer": 3,
+        "why": "P 波速度較快、最先到達，S 波較慢隨後到達，科學家可用來推算震央位置。"
+      },
+      {
+        "q": "火山噴發時流出來的高溫熔融物質，來自地底下的什麼？",
+        "options": [
+          "泉水",
+          "石油",
+          "岩漿",
+          "冰河"
+        ],
+        "answer": 2,
+        "why": "地底高溫使岩石熔化成岩漿，沿裂縫上升噴出地表就形成火山。"
+      },
+      {
+        "q": "岩漿噴出到地表之後，我們通常改稱它為什麼？",
+        "options": [
+          "冰塊",
+          "熔岩（岩流）",
+          "沙子",
+          "泥巴"
+        ],
+        "answer": 1,
+        "why": "還在地底時叫岩漿，噴出地表流動後就稱為熔岩。"
+      },
+      {
+        "q": "台灣為什麼地震特別多？",
+        "options": [
+          "台灣位於歐亞板塊與菲律賓海板塊的交界帶",
+          "台灣在海中央，遠離所有板塊",
+          "台灣完全沒有任何山",
+          "台灣的地面全部都是沙子"
+        ],
+        "answer": 0,
+        "why": "台灣正好位在兩大板塊交界，板塊擠壓活躍，所以地震很頻繁。"
+      },
+      {
+        "q": "關於「規模」和「震度」，下列敘述何者正確？",
+        "options": [
+          "規模會隨地點改變，震度全世界都一樣",
+          "規模和震度是完全相同的東西",
+          "震度愈大代表地震釋放的能量愈小",
+          "一次地震只有一個規模，但不同地方的震度可能不同"
+        ],
+        "answer": 3,
+        "why": "規模代表地震釋放的能量，一次地震只有一個；震度是各地搖晃的強弱，離震央近通常震度較大。"
+      }
+    ]
+  },
+  {
+    "id": "lv2",
+    "level": 2,
+    "name": "岩石、礦物與化石",
+    "emoji": "🪨",
+    "color": "#795548",
+    "hook": "三大岩類、礦物與化石",
+    "concepts": [
+      "三大岩類的形成",
+      "礦物與岩石的差別",
+      "常見造岩礦物",
+      "化石的形成與意義",
+      "地層層序與風化成土"
+    ],
+    "keyFacts": [
+      "岩石由一種或多種礦物組成；礦物是天然形成、有固定成分的固體。",
+      "三大岩類：火成岩（岩漿冷卻）、沉積岩（沉積物堆積壓實）、變質岩（高溫高壓改變）。",
+      "花崗岩和玄武岩是火成岩；砂岩和石灰岩是沉積岩；大理岩和板岩是變質岩。",
+      "化石是古代生物的遺體或痕跡被保存在岩石裡，多出現在沉積岩中。",
+      "岩石經風吹、日曬、雨水、結冰等風化慢慢碎裂，再混入腐爛的生物就形成土壤。"
+    ],
+    "questions": [
+      {
+        "q": "岩石和礦物有什麼不同呢？",
+        "options": [
+          "礦物是由許多岩石組合而成的",
+          "岩石通常由一種或多種礦物組成，礦物則是單一成分的天然固體",
+          "岩石一定是人造的，只有礦物才是天然的",
+          "兩者完全一樣，只是名字不同而已"
+        ],
+        "answer": 1,
+        "why": "岩石是礦物的集合體，礦物才是組成岩石的基本成分。"
+      },
+      {
+        "q": "科學家依照「形成方式」把岩石分成的三大岩類是哪三種？",
+        "options": [
+          "火成岩、沉積岩、變質岩",
+          "花崗岩、砂岩、大理岩",
+          "硬岩、軟岩、脆岩",
+          "火山岩、河岩、高山岩"
+        ],
+        "answer": 0,
+        "why": "依照形成方式，岩石分為火成、沉積、變質三大類。"
+      },
+      {
+        "q": "「火成岩」是怎麼形成的？",
+        "options": [
+          "沉積物一層層堆積並被壓緊",
+          "熾熱的岩漿或熔岩冷卻凝固",
+          "生物的遺體慢慢堆積",
+          "原本的岩石被高溫高壓改變"
+        ],
+        "answer": 1,
+        "why": "岩漿或熔岩冷卻凝固並結晶，就形成火成岩。"
+      },
+      {
+        "q": "「沉積岩」最常見的形成過程是什麼？",
+        "options": [
+          "岩漿在地底下慢慢冷卻",
+          "泥沙與碎屑等沉積物層層堆積，再被壓實與膠結",
+          "岩石在地函裡被熔化",
+          "礦物在高壓下重新排列"
+        ],
+        "answer": 1,
+        "why": "風化來的碎屑沉積、壓實、膠結之後，就形成沉積岩。"
+      },
+      {
+        "q": "「變質岩」是如何產生的？",
+        "options": [
+          "由岩漿直接噴出地表",
+          "原本的岩石在高溫與高壓下改變了性質",
+          "沙子被海水一直沖走",
+          "生物遺體被埋起來變成煤"
+        ],
+        "answer": 1,
+        "why": "高溫與高壓讓原本岩石的礦物和結構改變，例如石灰岩會變成大理岩。"
+      },
+      {
+        "q": "下列哪一組岩石「都是」火成岩？",
+        "options": [
+          "花崗岩、玄武岩",
+          "砂岩、石灰岩",
+          "大理岩、板岩",
+          "頁岩、礫岩"
+        ],
+        "answer": 0,
+        "why": "花崗岩（地底冷卻）和玄武岩（地表冷卻）都是由岩漿形成的火成岩。"
+      },
+      {
+        "q": "下列哪一個是常見的「造岩礦物」？",
+        "options": [
+          "塑膠",
+          "石英",
+          "玻璃",
+          "水泥"
+        ],
+        "answer": 1,
+        "why": "石英、長石、雲母都是常見的造岩礦物；塑膠、玻璃、水泥則是人造材料。"
+      },
+      {
+        "q": "化石最常在哪一類岩石中被發現？",
+        "options": [
+          "火成岩",
+          "沉積岩",
+          "變質岩",
+          "隕石"
+        ],
+        "answer": 1,
+        "why": "沉積岩一層層溫和堆積，能把生物遺體包覆保存；火成岩太熱、變質岩壓力太大，多會破壞遺體。"
+      },
+      {
+        "q": "化石是怎麼形成的？",
+        "options": [
+          "生物的遺體或痕跡被沉積物快速覆蓋，經過漫長時間保存在岩層裡",
+          "岩石被雨水沖出動物的形狀",
+          "岩漿把動物燒烤成石頭",
+          "古人用石頭雕刻出動物的樣子"
+        ],
+        "answer": 0,
+        "why": "生物死後迅速被泥沙掩埋，經過漫長歲月，礦物填入或留下印痕，就成了化石。"
+      },
+      {
+        "q": "研究化石，最主要能幫助我們了解什麼？",
+        "options": [
+          "明天會不會下雨",
+          "很久很久以前地球上曾經有哪些生物和什麼樣的環境",
+          "一塊岩石有多重",
+          "天上星星的名字"
+        ],
+        "answer": 1,
+        "why": "化石記錄了古代生物的樣貌與生活環境，是認識地球歷史的重要證據。"
+      },
+      {
+        "q": "在沒有被擾動、水平堆疊的地層中，通常哪一層岩石最古老？",
+        "options": [
+          "最上面那一層",
+          "最下面那一層",
+          "正中間那一層",
+          "每一層都一樣老"
+        ],
+        "answer": 1,
+        "why": "沉積物是由下往上堆積的，所以未被擾動時，最底層最先沉積、年代最老。"
+      },
+      {
+        "q": "堅硬的岩石是怎麼慢慢變成鬆軟的土壤的？",
+        "options": [
+          "岩石經風吹、日曬、雨水、結冰等風化作用慢慢碎裂，再混入腐爛的生物",
+          "岩石在一個晚上就融化成泥巴",
+          "農夫把大石頭磨成細粉",
+          "土壤全都是從天上掉下來的"
+        ],
+        "answer": 0,
+        "why": "風化作用長期把岩石分解成小顆粒，混合腐爛生物形成的腐植質後，就成了土壤。"
+      }
+    ]
+  },
+  {
+    "id": "lv3",
+    "level": 3,
+    "name": "大氣與天氣",
+    "emoji": "⛅",
+    "color": "#0891b2",
+    "hook": "大氣、雲雨與颱風",
+    "concepts": [
+      "大氣組成",
+      "天氣與氣候",
+      "水循環",
+      "雲雨的形成",
+      "風與氣壓",
+      "鋒面與颱風"
+    ],
+    "keyFacts": [
+      "地球大氣約有百分之七十八是氮氣、百分之二十一是氧氣，其餘還有氬氣與少量二氧化碳。",
+      "天氣是某地短時間內的晴雨冷熱狀況；氣候則是一個地方長年累積的平均天氣。",
+      "水循環有三個主要步驟：蒸發（水變成水蒸氣）、凝結（水蒸氣變小水滴形成雲）、降水（雨或雪落回地面）。",
+      "風是空氣的流動，空氣通常從氣壓高的地方流向氣壓低的地方。",
+      "颱風大多生成在溫暖的熱帶海洋上；濕度則代表空氣中水蒸氣的多寡。"
+    ],
+    "questions": [
+      {
+        "q": "地球大氣中含量最多的氣體是哪一種？",
+        "options": [
+          "氧氣",
+          "氮氣",
+          "二氧化碳",
+          "水蒸氣"
+        ],
+        "answer": 1,
+        "why": "氮氣約占大氣的百分之七十八，是含量最多的氣體。"
+      },
+      {
+        "q": "大氣中含量第二多、也是我們呼吸時需要的氣體是？",
+        "options": [
+          "氮氣",
+          "氦氣",
+          "氧氣",
+          "二氧化碳"
+        ],
+        "answer": 2,
+        "why": "氧氣約占大氣的百分之二十一，是含量第二多的氣體。"
+      },
+      {
+        "q": "「天氣」和「氣候」最主要的差別是什麼？",
+        "options": [
+          "天氣指某地短時間的狀況，氣候指長時間累積的平均狀況",
+          "天氣只在白天，氣候只在晚上",
+          "天氣一定是熱的，氣候一定是冷的",
+          "兩者完全一樣，沒有任何差別"
+        ],
+        "answer": 0,
+        "why": "天氣是短時間的變化，氣候是一地長年的平均表現。"
+      },
+      {
+        "q": "水受熱後從液態變成水蒸氣飛到空中，這個過程叫做什麼？",
+        "options": [
+          "凝結",
+          "蒸發",
+          "降水",
+          "結冰"
+        ],
+        "answer": 1,
+        "why": "液態水吸熱變成水蒸氣的過程稱為蒸發。"
+      },
+      {
+        "q": "天空中的雲是怎麼形成的？",
+        "options": [
+          "水蒸氣上升遇冷，凝結成許多小水滴或小冰晶",
+          "天空自己長出來的棉花",
+          "太陽把藍色染到空中形成的",
+          "風把地面的灰塵吹上去堆成的"
+        ],
+        "answer": 0,
+        "why": "水蒸氣上升遇冷凝結成小水滴或冰晶，聚在一起就成了雲。"
+      },
+      {
+        "q": "下雨屬於水循環中的哪一個階段？",
+        "options": [
+          "蒸發",
+          "凝結",
+          "降水",
+          "日照"
+        ],
+        "answer": 2,
+        "why": "雨、雪從雲中落回地面，這個階段叫做降水。"
+      },
+      {
+        "q": "風主要是怎麼產生的？",
+        "options": [
+          "空氣的流動，通常從氣壓高的地方流向氣壓低的地方",
+          "樹木搖動製造出來的",
+          "雲互相碰撞產生的",
+          "太陽的光線直接推動的"
+        ],
+        "answer": 0,
+        "why": "空氣受熱不均造成氣壓差異，流動的空氣就形成風。"
+      },
+      {
+        "q": "侵襲台灣的颱風大多在哪裡生成？",
+        "options": [
+          "溫暖的熱帶海洋上",
+          "高山的山頂",
+          "乾燥的沙漠中",
+          "寒冷的極地"
+        ],
+        "answer": 0,
+        "why": "溫暖海洋提供大量水氣與熱能，是颱風生成的地方。"
+      },
+      {
+        "q": "「濕度」是用來表示什麼？",
+        "options": [
+          "空氣中水蒸氣的多少",
+          "風吹得有多快",
+          "太陽有多明亮",
+          "天空有幾朵雲"
+        ],
+        "answer": 0,
+        "why": "濕度代表空氣裡含有水蒸氣的多寡。"
+      },
+      {
+        "q": "冷鋒過境時，天氣常會出現什麼變化？",
+        "options": [
+          "氣溫下降，常伴隨雲量增多或下雨",
+          "氣溫立刻升高變得很炎熱",
+          "天空整週完全無風無雲",
+          "地面開始噴出岩漿"
+        ],
+        "answer": 0,
+        "why": "冷鋒帶來較冷的空氣，過境時氣溫下降並常常下雨。"
+      },
+      {
+        "q": "我們常用來測量氣溫的工具與單位是什麼？",
+        "options": [
+          "溫度計，單位常用攝氏度",
+          "尺，單位是公分",
+          "磅秤，單位是公斤",
+          "時鐘，單位是分鐘"
+        ],
+        "answer": 0,
+        "why": "氣溫用溫度計測量，台灣常用的單位是攝氏度。"
+      },
+      {
+        "q": "為什麼水循環可以一直不停地進行？",
+        "options": [
+          "因為太陽持續提供熱能，讓水不斷蒸發、凝結、再降落",
+          "因為海水會自己憑空消失",
+          "因為雲永遠不會散掉",
+          "因為地球不需要任何能量就能運作"
+        ],
+        "answer": 0,
+        "why": "太陽的熱能不斷推動蒸發與凝結，水循環才能持續進行。"
+      }
+    ]
+  },
+  {
+    "id": "lv4",
+    "level": 4,
+    "name": "海洋與地球的水",
+    "emoji": "🌊",
+    "color": "#0288d1",
+    "hook": "海水、潮汐與洋流",
+    "concepts": [
+      "地球是水的行星",
+      "海水與淡水",
+      "潮汐與月亮",
+      "洋流",
+      "水循環",
+      "珍惜水資源"
+    ],
+    "keyFacts": [
+      "地球表面約有七成被水覆蓋，因此被稱為「水的行星」。",
+      "海水又鹹又苦，是因為裡面溶解了許多鹽分。",
+      "地球約有百分之九十七的水是海洋的鹹水，能直接使用的淡水非常少。",
+      "月亮的引力會拉動海水，造成一天中的漲潮與退潮。",
+      "水循環讓海洋、天空與陸地的水不停流動、彼此相連。"
+    ],
+    "questions": [
+      {
+        "q": "地球表面大約有多少被水覆蓋？",
+        "options": [
+          "約一成",
+          "約三成",
+          "約七成",
+          "幾乎完全沒有"
+        ],
+        "answer": 2,
+        "why": "地球表面約有百分之七十被海洋等水域覆蓋，所以被稱為水的行星。"
+      },
+      {
+        "q": "海水嘗起來是又鹹又苦的，主要是因為裡面含有什麼？",
+        "options": [
+          "糖分",
+          "鹽分",
+          "醋",
+          "汽水"
+        ],
+        "answer": 1,
+        "why": "海水中溶解了大量的鹽分，所以喝起來又鹹又苦。"
+      },
+      {
+        "q": "地球上絕大部分的水，屬於下列哪一種？",
+        "options": [
+          "可以直接喝的河水",
+          "海洋裡的鹹水",
+          "瓶裝礦泉水",
+          "雲裡的水"
+        ],
+        "answer": 1,
+        "why": "地球約有百分之九十七的水都是海洋的鹹水，只有一小部分是淡水。"
+      },
+      {
+        "q": "可以讓我們飲用的乾淨淡水，在地球所有水中大約占多少？",
+        "options": [
+          "超過一半",
+          "幾乎全部",
+          "只有很少的一部分",
+          "完全沒有"
+        ],
+        "answer": 2,
+        "why": "淡水只占地球全部水量約百分之三，能直接使用的更少，非常珍貴。"
+      },
+      {
+        "q": "地球上大部分的淡水，其實藏在哪裡？",
+        "options": [
+          "流動的河流裡",
+          "冰川與極地的冰層中",
+          "學校的游泳池裡",
+          "深深的海底"
+        ],
+        "answer": 1,
+        "why": "多數淡水以冰的形式凍結在南北極與高山冰川裡。"
+      },
+      {
+        "q": "海邊每天出現漲潮和退潮，主要是受到什麼的影響？",
+        "options": [
+          "太陽發出的光",
+          "月亮的引力（重力）",
+          "風的吹動",
+          "魚群的游動"
+        ],
+        "answer": 1,
+        "why": "月亮的引力會拉動海水，造成潮汐的漲落。"
+      },
+      {
+        "q": "海洋裡像大河一樣、長距離流動的水流，叫做什麼？",
+        "options": [
+          "洋流",
+          "瀑布",
+          "噴泉",
+          "水管"
+        ],
+        "answer": 0,
+        "why": "海洋中大規模流動的水流稱為洋流，會帶動海水與熱量在地球上移動。"
+      },
+      {
+        "q": "太陽照射海洋時，海水會發生什麼變化，讓水循環開始？",
+        "options": [
+          "結成冰塊",
+          "蒸發變成水蒸氣往上升",
+          "變成鹽粒",
+          "永遠消失不見"
+        ],
+        "answer": 1,
+        "why": "太陽把海水曬熱，海水蒸發成水蒸氣升上天空，開啟水循環。"
+      },
+      {
+        "q": "天空中的水蒸氣遇到冷空氣後，會發生什麼事？",
+        "options": [
+          "凝結成小水滴，聚成雲後下雨或下雪",
+          "變成鹽粒掉下來",
+          "燃燒起來",
+          "變成石頭"
+        ],
+        "answer": 0,
+        "why": "水蒸氣遇冷會凝結成小水滴形成雲，再以雨或雪的形式落回地面。"
+      },
+      {
+        "q": "「水循環」這個詞，最適合用來形容下面哪一件事？",
+        "options": [
+          "水在海洋、天空與陸地之間不停移動、循環",
+          "水永遠停在海裡不動",
+          "水只會往下流不會回來",
+          "水只出現在下雨天"
+        ],
+        "answer": 0,
+        "why": "水循環是指水在海洋、天空與陸地之間不斷蒸發、下雨、流動的過程。"
+      },
+      {
+        "q": "下雨後，落在陸地上的水，最後大多會流回哪裡？",
+        "options": [
+          "外太空",
+          "透過河流流回海洋",
+          "地球的中心",
+          "太陽上"
+        ],
+        "answer": 1,
+        "why": "陸地上的雨水多會匯入河流，最後流回海洋，讓水循環連起海洋與陸地。"
+      },
+      {
+        "q": "我們為什麼應該好好珍惜水資源？",
+        "options": [
+          "因為能直接使用的乾淨淡水其實很少",
+          "因為水永遠用不完",
+          "因為海水可以直接拿來喝",
+          "因為地球上根本沒有水"
+        ],
+        "answer": 0,
+        "why": "地球雖然水多，但能直接飲用的淡水非常少，所以要節約與愛惜。"
+      }
+    ]
+  },
+  {
+    "id": "lv5",
+    "level": 5,
+    "name": "太陽系與我們的家",
+    "emoji": "🪐",
+    "color": "#7c3aed",
+    "hook": "太陽、八大行星與月相",
+    "concepts": [
+      "太陽是恆星",
+      "八大行星與順序",
+      "地球的自轉與公轉",
+      "月球與月相",
+      "地球是我們的家"
+    ],
+    "keyFacts": [
+      "太陽是一顆恆星，會自己發光發熱，位在太陽系的中心。",
+      "太陽系有八大行星，由近到遠是水星、金星、地球、火星、木星、土星、天王星、海王星。",
+      "地球每天自轉一圈，形成白天和黑夜的交替。",
+      "地球繞太陽公轉一圈大約一年，再加上地軸傾斜，形成春夏秋冬四季。",
+      "月球是地球的衛星，本身不發光，靠反射太陽光才會看起來亮亮的。"
+    ],
+    "questions": [
+      {
+        "q": "太陽是哪一種天體呢？",
+        "options": [
+          "會自己發光發熱的恆星",
+          "繞著別人轉的行星",
+          "繞著地球轉的衛星",
+          "拖著長尾巴的彗星"
+        ],
+        "answer": 0,
+        "why": "太陽會自己發光發熱，是一顆恆星。"
+      },
+      {
+        "q": "從太陽由近到遠數過去，第三顆行星是哪一個？",
+        "options": [
+          "金星",
+          "地球",
+          "火星",
+          "水星"
+        ],
+        "answer": 1,
+        "why": "順序是水星、金星、地球，第三顆就是地球。"
+      },
+      {
+        "q": "八大行星裡，離太陽最近的是哪一顆？",
+        "options": [
+          "水星",
+          "地球",
+          "木星",
+          "海王星"
+        ],
+        "answer": 0,
+        "why": "最靠近太陽的行星是水星。"
+      },
+      {
+        "q": "太陽系中體積最大的行星是哪一顆？",
+        "options": [
+          "地球",
+          "火星",
+          "木星",
+          "土星"
+        ],
+        "answer": 2,
+        "why": "木星是八大行星中體積最大的一顆。"
+      },
+      {
+        "q": "白天和黑夜會交替出現，主要是因為地球做什麼運動？",
+        "options": [
+          "繞著太陽公轉",
+          "自己轉圈圈（自轉）",
+          "完全靜止不動",
+          "上下跳動"
+        ],
+        "answer": 1,
+        "why": "地球自轉時，朝向太陽的一面是白天，背對太陽的一面是黑夜。"
+      },
+      {
+        "q": "一年會有春、夏、秋、冬四季，主要和什麼有關？",
+        "options": [
+          "月亮忽大忽小",
+          "地球公轉再加上地軸傾斜",
+          "太陽忽然變大變小",
+          "天上星星的多少"
+        ],
+        "answer": 1,
+        "why": "地球繞太陽公轉，加上地軸是傾斜的，才形成四季變化。"
+      },
+      {
+        "q": "月球是地球的什麼？",
+        "options": [
+          "恆星",
+          "行星",
+          "衛星",
+          "彗星"
+        ],
+        "answer": 2,
+        "why": "月球繞著地球轉，是地球的衛星。"
+      },
+      {
+        "q": "晚上看到月亮亮亮的，是因為什麼原因？",
+        "options": [
+          "月亮自己會發光",
+          "月亮反射太陽的光",
+          "月亮正在燃燒",
+          "旁邊的星星照亮它"
+        ],
+        "answer": 1,
+        "why": "月球本身不發光，是反射太陽光才看起來明亮。"
+      },
+      {
+        "q": "月亮的形狀會出現滿月、半月、新月等變化，這叫做什麼？",
+        "options": [
+          "月食",
+          "月相變化",
+          "日食",
+          "流星雨"
+        ],
+        "answer": 1,
+        "why": "月亮被太陽照亮的部分每天不同，就形成了月相變化。"
+      },
+      {
+        "q": "包含地球在內的八大行星，都繞著誰運行？",
+        "options": [
+          "月亮",
+          "太陽",
+          "地球",
+          "北極星"
+        ],
+        "answer": 1,
+        "why": "八大行星全都繞著太陽公轉。"
+      },
+      {
+        "q": "下列哪一個排列，正確表示行星由近到遠的開頭順序？",
+        "options": [
+          "水星、金星、地球、火星",
+          "金星、水星、火星、地球",
+          "地球、水星、金星、火星",
+          "火星、地球、金星、水星"
+        ],
+        "answer": 0,
+        "why": "正確的順序開頭是水星、金星、地球、火星。"
+      },
+      {
+        "q": "我們居住的星球，也就是「我們的家」，是哪一顆行星？",
+        "options": [
+          "火星",
+          "地球",
+          "金星",
+          "木星"
+        ],
+        "answer": 1,
+        "why": "地球是人類居住的行星，就是我們的家。"
+      }
+    ]
+  },
+  {
+    "id": "lv6",
+    "level": 6,
+    "name": "星星、宇宙與太空探索",
+    "emoji": "🚀",
+    "color": "#1e3a8a",
+    "hook": "恆星、銀河與太空探索",
+    "concepts": [
+      "恆星與太陽（自己發光）",
+      "光年是距離單位",
+      "銀河系與星系",
+      "火箭與作用力反作用力",
+      "太空探索與登月"
+    ],
+    "keyFacts": [
+      "太陽是一顆恆星，恆星會自己發光發熱；月亮和行星本身不發光，只反射太陽的光。",
+      "光年是「距離」單位，代表光走一整年的距離，大約是九兆四千六百億公里。",
+      "銀河系是由數千億顆恆星組成的星系，太陽只是裡面很普通的一顆。",
+      "火箭向後噴出高速氣體，氣體同時把火箭往前推，這就是作用與反作用。",
+      "西元一九六九年阿波羅十一號讓人類首次登上月球；月球是至今唯一有太空人親自踏上的地外天體。"
+    ],
+    "questions": [
+      {
+        "q": "每天照亮我們的太陽，其實是一顆什麼樣的天體？",
+        "options": [
+          "一顆會自己發光發熱的恆星",
+          "一顆反射光的行星",
+          "一團會融化的冰",
+          "一顆很大的月亮"
+        ],
+        "answer": 0,
+        "why": "太陽是離我們最近的恆星，靠內部反應自己發光發熱。"
+      },
+      {
+        "q": "晚上的月亮看起來亮亮的，真正的原因是什麼？",
+        "options": [
+          "月亮自己會發光",
+          "月亮反射了太陽的光",
+          "月亮上正在燃燒火焰",
+          "月亮上裝了很多路燈"
+        ],
+        "answer": 1,
+        "why": "月亮本身不發光，我們看到的是它反射太陽的光。"
+      },
+      {
+        "q": "天文學裡常用的「光年」，是用來量什麼的單位？",
+        "options": [
+          "時間有多長",
+          "距離有多遠",
+          "溫度有多高",
+          "重量有多重"
+        ],
+        "answer": 1,
+        "why": "光年名字裡有年，但它量的是距離，不是時間。"
+      },
+      {
+        "q": "一光年指的到底是什麼？",
+        "options": [
+          "光在一整年裡走過的距離",
+          "太陽連續出來一整年",
+          "一顆星星活了一年",
+          "地球繞太陽轉一圈"
+        ],
+        "answer": 0,
+        "why": "一光年就是光以每秒約三十萬公里的速度走一整年的距離。"
+      },
+      {
+        "q": "太陽和地球，住在哪一個由數千億顆恆星組成的大家庭裡？",
+        "options": [
+          "銀河系",
+          "國際太空站",
+          "月球",
+          "一顆彗星"
+        ],
+        "answer": 0,
+        "why": "太陽與地球都在銀河系中，銀河系裡有數千億顆恆星。"
+      },
+      {
+        "q": "高高的火箭，是靠什麼力量往上飛的？",
+        "options": [
+          "靠翅膀用力拍動",
+          "靠向後方噴出高速氣體，把自己往前推",
+          "靠一陣大風把它吹上去",
+          "靠一塊大磁鐵吸上去"
+        ],
+        "answer": 1,
+        "why": "火箭向後噴氣，氣體反推火箭前進，這就是作用與反作用。"
+      },
+      {
+        "q": "繞著我們頭頂飛的人造衛星，主要在做什麼？",
+        "options": [
+          "停在天空中一動也不動",
+          "一直繞著地球轉圈圈",
+          "飛到太陽的表面上",
+          "悄悄埋在地底下"
+        ],
+        "answer": 1,
+        "why": "人造衛星靠速度繞著地球轉，不會掉下來，也不是靜止不動。"
+      },
+      {
+        "q": "到目前為止，人類太空人真正踏上過的地球以外天體是哪一個？",
+        "options": [
+          "火星",
+          "月球",
+          "金星",
+          "太陽"
+        ],
+        "answer": 1,
+        "why": "至今只有月球有太空人親自登陸過。"
+      },
+      {
+        "q": "人類第一次登上月球，是在哪一年？",
+        "options": [
+          "西元一九六九年",
+          "西元一九零一年",
+          "西元二零零零年",
+          "西元二零二零年"
+        ],
+        "answer": 0,
+        "why": "阿波羅十一號在一九六九年七月讓人類首次登月。"
+      },
+      {
+        "q": "我們說的「星座」，例如獵戶座、大熊座，指的是什麼？",
+        "options": [
+          "天空中一群星星連起來想像成的圖案",
+          "一顆特別巨大的星星",
+          "一種載人的太空船",
+          "月亮的另一個名字"
+        ],
+        "answer": 0,
+        "why": "星座是人們把天上一群星星連線後想像出的圖案。"
+      },
+      {
+        "q": "天文學家想看清楚很遠很遠的星星，最常用哪種工具？",
+        "options": [
+          "觀察螞蟻的放大鏡",
+          "可以看遠方天體的望遠鏡",
+          "看細菌的顯微鏡",
+          "量氣溫的溫度計"
+        ],
+        "answer": 1,
+        "why": "望遠鏡能把遠方微弱的光集中放大，讓我們看清遠處的天體。"
+      },
+      {
+        "q": "人類還沒辦法親自到火星，那我們是怎麼認識火星地表的？",
+        "options": [
+          "派無人的太空探測器過去拍照和研究",
+          "用肉眼就能直接看得一清二楚",
+          "打電話去問住在火星的人",
+          "完全沒有任何辦法可以知道"
+        ],
+        "answer": 0,
+        "why": "無人探測器可以飛到火星等行星，拍照、收集資料再傳回地球。"
+      }
+    ]
+  },
+{
+  "id": "lv7",
+  "level": 7,
+  "name": "生活中的地球科學",
+  "emoji": "🌏",
+  "color": "#0891b2",
+  "hook": "生活中的防災與地球運動",
+  "concepts": [
+    "看雲與天氣",
+    "颱風防災",
+    "地震正確避難",
+    "水循環與降雨",
+    "地球運動與潮汐"
+  ],
+  "keyFacts": [
+    "看到又高又厚、像鐵砧的積雨雲，代表可能有雷陣雨，別在空曠地或大樹下躲雨。",
+    "地震當下記住「趴下、掩護、穩住」，並遠離窗戶、切勿搭電梯、不要驚慌往外衝。",
+    "颱風來臨前先儲水、備妥手電筒與存糧、清理排水溝，千萬別跑去海邊觀浪。",
+    "白天黑夜來自地球自轉，四季冷熱來自地軸傾斜，都不是因為離太陽遠近。",
+    "潮汐漲退主要受月亮引力影響，去海邊玩要先查好漲退潮與安全時間。"
+  ],
+  "questions": [
+    {
+      "q": "傍晚天空出現又高又厚、頂端像鐵砧攤開的積雨雲，接下來最可能出現什麼天氣？",
+      "options": [
+        "整天晴朗無雲、氣溫穩定",
+        "短時間的強烈雷陣雨，甚至夾帶冰雹",
+        "連續好幾天的毛毛細雨",
+        "整片濃霧讓人看不清路"
+      ],
+      "answer": 1,
+      "why": "積雨雲是向上強烈發展的對流雲，內部空氣上下翻騰劇烈，常帶來閃電、打雷與短延時強降雨，有時還會下冰雹，這也是為什麼夏天午後常有「西北雨」。"
+    },
+    {
+      "q": "颱風最主要是在什麼樣的環境下形成的？",
+      "options": [
+        "溫暖的熱帶海面上，海溫高、水氣充足",
+        "寒冷的極地陸地上空",
+        "乾燥少雨的沙漠地區",
+        "高山山頂的積雪區"
+      ],
+      "answer": 0,
+      "why": "颱風的能量來自海水蒸發的大量水氣。溫暖熱帶海面(約26℃以上)持續供應水氣，水氣上升凝結放出熱能，才能讓颱風不斷發展加強。"
+    },
+    {
+      "q": "氣象局發布颱風警報後，下列哪一項防颱準備最正確？",
+      "options": [
+        "到海邊看大浪、拍照留念",
+        "事先儲水、備妥手電筒與存糧，並清理住家附近排水溝",
+        "把家裡窗戶全部打開讓風直接吹過去",
+        "趁颱風天到山區溪邊露營避暑"
+      ],
+      "answer": 1,
+      "why": "颱風常造成停水停電與淹水，事先儲水、備電筒存糧、清排水溝才能安心度過。海邊觀浪、溪邊露營都非常危險，強風豪雨與暴漲溪水可能奪命。"
+    },
+    {
+      "q": "上課時突然發生地震並劇烈搖晃，第一時間最正確的動作是？",
+      "options": [
+        "立刻衝出教室，往操場方向跑",
+        "趴下、躲到堅固桌子下掩護頭頸、抓緊桌腳穩住",
+        "站到窗邊看看外面發生什麼事",
+        "趕快搭電梯下樓離開"
+      ],
+      "answer": 1,
+      "why": "國際與台灣防災都推薦「趴下(Drop)、掩護(Cover)、穩住(Hold)」。強烈搖晃時亂跑容易被掉落物砸傷或跌倒，躲在桌下護住頭頸才最安全。"
+    },
+    {
+      "q": "地震發生時，為什麼不可以搭電梯逃生？",
+      "options": [
+        "電梯上下速度太慢",
+        "可能因停電或軌道變形而受困，甚至發生危險",
+        "電梯裡沒有空調很悶",
+        "電梯一次只能載很少人"
+      ],
+      "answer": 1,
+      "why": "地震可能造成停電或電梯軌道變形，讓人受困在裡面，救援也更困難。所以地震時要走樓梯，不要搭電梯。"
+    },
+    {
+      "q": "地震時要盡量遠離窗戶，主要是因為什麼？",
+      "options": [
+        "窗戶反光會刺眼睛",
+        "玻璃可能破裂，碎片會割傷人",
+        "窗戶邊的溫度比較低",
+        "窗戶會擋住逃生的視線"
+      ],
+      "answer": 1,
+      "why": "劇烈搖晃時窗戶玻璃容易破裂，飛散的碎片會割傷人。因此要遠離窗戶、玻璃櫃和容易倒塌的高櫃，躲到相對安全的地方。"
+    },
+    {
+      "q": "地震最主要的成因是下列哪一項？",
+      "options": [
+        "月亮的引力拉扯地面",
+        "地底板塊互相擠壓、錯動，釋放累積的能量",
+        "雷電打到地面震動",
+        "海水漲潮壓迫陸地"
+      ],
+      "answer": 1,
+      "why": "台灣位在板塊交界帶，板塊長期擠壓使岩層累積應力，一旦沿斷層突然錯動釋放能量，就會產生地震並向四周傳出地震波。"
+    },
+    {
+      "q": "水庫裡的水主要是靠什麼來補充的？",
+      "options": [
+        "集水區的降雨與上游河川匯流",
+        "海水自己倒流進水庫",
+        "工廠人工製造出來的水",
+        "地底岩漿冷卻後變成的水"
+      ],
+      "answer": 0,
+      "why": "水庫蓋在河川上游，靠集水區的降雨形成逕流匯集而成。所以久旱不雨時水庫會缺水，這也是為什麼要珍惜用水。"
+    },
+    {
+      "q": "天空中的雲是怎麼形成的？",
+      "options": [
+        "水蒸氣上升遇冷，凝結成許多小水滴或小冰晶",
+        "空氣中的灰塵慢慢聚在一起",
+        "太陽光在天空中折射產生",
+        "地面的煙往上飄聚積而成"
+      ],
+      "answer": 0,
+      "why": "水循環中，海洋、湖泊的水被太陽曬熱蒸發成水蒸氣，上升到高空遇冷凝結成小水滴或冰晶，聚在一起就是雲，累積夠多再降水回到地面。"
+    },
+    {
+      "q": "台灣夏天比冬天熱，最主要的原因是什麼？",
+      "options": [
+        "夏天地球離太陽比較近",
+        "地軸是傾斜的，夏天太陽較高、日照較長且陽光較直射",
+        "太陽在夏天變得比較大顆",
+        "地球在夏天自轉得比較快"
+      ],
+      "answer": 1,
+      "why": "四季來自地軸傾斜(約23.5度)。夏天太陽照射角度較直、白天較長，地面吸熱多所以熱。其實北半球夏天時地球離太陽反而較遠，冷熱與遠近無關。"
+    },
+    {
+      "q": "太陽為什麼每天看起來都從東邊升起、西邊落下？",
+      "options": [
+        "因為太陽繞著地球轉一圈",
+        "因為地球由西向東自轉，太陽看起來就東升西落",
+        "因為太陽自己在天空中移動",
+        "因為月亮把太陽推著走"
+      ],
+      "answer": 1,
+      "why": "地球由西向東自轉，站在地面上的我們感覺不到自己在轉，反而看到太陽、月亮、星星像在移動，於是太陽每天東升西落，形成白天與黑夜。"
+    },
+    {
+      "q": "海水規律地漲潮與退潮(潮汐)，主要是受什麼影響？",
+      "options": [
+        "月亮(和太陽)的引力",
+        "風把海水吹來又吹去",
+        "魚群游動攪動了海水",
+        "海底火山不斷噴發"
+      ],
+      "answer": 0,
+      "why": "潮汐主要由月球引力造成海水週期性漲退，太陽引力也有影響。因為月球離地球近，作用最明顯，所以去海邊活動前要先查好漲退潮時間才安全。"
+    }
+  ]
+}
+];
+
+  var BADGES = [
+  {
+    "id": "lv1",
+    "icon": "🌋",
+    "name": "地質探險家"
+  },
+  {
+    "id": "lv2",
+    "icon": "🪨",
+    "name": "岩石收藏家"
+  },
+  {
+    "id": "lv3",
+    "icon": "⛅",
+    "name": "氣象觀測員"
+  },
+  {
+    "id": "lv4",
+    "icon": "🌊",
+    "name": "海洋守護者"
+  },
+  {
+    "id": "lv5",
+    "icon": "🪐",
+    "name": "行星領航員"
+  },
+  {
+    "id": "lv6",
+    "icon": "🚀",
+    "name": "太空探險家"
+  },
+  {
+    "id": "lv7",
+    "icon": "🌤️",
+    "name": "生活地科通"
+  },
+  {
+    "id": "all",
+    "icon": "🏆",
+    "name": "地科天文通"
+  }
+];
+  var BADGE_BY_ID = {};
+  for (var bi = 0; bi < BADGES.length; bi++) BADGE_BY_ID[BADGES[bi].id] = BADGES[bi];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var screenMenu = $('screen-menu');
+  var screenPlay = $('screen-play');
+  var levelList = $('level-list');
+  var stage = $('stage');
+  var stepDots = $('step-dots');
+  var playTitle = $('play-title');
+
+  var cur = null;
+
+  function starsFor(correct, total) {
+    if (total <= 0) return 0;
+    var r = correct / total;
+    if (r >= 0.9) return 3;
+    if (r >= 0.6) return 2;
+    if (r > 0) return 1;
+    return 0;
+  }
+  function starStr(n) { var s = ''; for (var i = 0; i < 3; i++) s += (i < n ? '⭐' : '☆'); return s; }
+
+  function awardBadge(id) {
+    var def = BADGE_BY_ID[id];
+    if (!def) return;
+    if (progress.badges[id]) return;
+    progress.badges[id] = true;
+    saveProg(progress);
+    toast('獲得徽章：' + def.icon + ' ' + def.name, 'badge');
+    try { if (window.EarthAdvBadges) EarthAdvBadges.refresh(); } catch (e) {}
+  }
+  function badgeCount() { var n = 0; for (var i = 0; i < BADGES.length; i++) if (progress.badges[BADGES[i].id]) n++; return n; }
+
+  function renderMenu() {
+    var doneCount = 0;
+    for (var i = 0; i < LEVELS.length; i++) if (progress[LEVELS[i].id] && progress[LEVELS[i].id].done) doneCount++;
+    $('ov-done').textContent = doneCount + '/' + LEVELS.length;
+    $('ov-badges').textContent = badgeCount() + '/' + BADGES.length;
+
+    if (doneCount > 0) {
+      $('hello-text').textContent = '歡迎回來！你已完成 ' + doneCount + ' 個等級，很棒！';
+      $('hello-sub').textContent = (doneCount >= LEVELS.length)
+        ? (LEVELS.length + ' 個等級都完成了，你是地球科學小達人！🏆')
+        : '想挑戰哪一個等級都可以，答錯也沒關係。';
+    }
+
+    levelList.innerHTML = '';
+    for (var u = 0; u < LEVELS.length; u++) {
+      (function (lv) {
+        var rec = progress[lv.id] || {};
+        var done = !!rec.done;
+        var total = lv.questions.length;
+        var st = done ? starsFor(rec.best || 0, total) : 0;
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'ma-level';
+        card.setAttribute('aria-label', '等級 ' + lv.level + '：' + lv.name);
+        card.innerHTML =
+          '<div class="ma-level-top">' +
+            '<span class="ma-level-emoji" aria-hidden="true" style="background:' + lv.color + '22;color:' + lv.color + '">' + lv.emoji + '</span>' +
+            '<div>' +
+              '<div class="ma-level-num">等級 ' + lv.level + '</div>' +
+              '<div class="ma-level-name">' + lv.name + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="ma-level-concepts">' + (lv.hook || lv.concepts.join('・')) + '</div>' +
+          '<div class="ma-level-foot">' +
+            '<span class="ma-level-status ' + (done ? 'done' : 'todo') + '">' +
+              (done ? '✅ 已完成（最佳 ' + (rec.best || 0) + '/' + total + '）' : '▶️ 開始挑戰（共 ' + total + ' 題）') + '</span>' +
+            '<span class="ma-level-stars" aria-hidden="true">' + (done ? starStr(st) : '') + '</span>' +
+          '</div>';
+        card.addEventListener('click', function () { startLevel(lv); });
+        levelList.appendChild(card);
+      })(LEVELS[u]);
+    }
+  }
+
+  function show(screen) {
+    screenMenu.classList.remove('active');
+    screenPlay.classList.remove('active');
+    screen.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function startLevel(lv) {
+    cur = { level: lv, idx: 0, correctCount: 0, phase: 'brief' };
+    playTitle.textContent = lv.emoji + ' 等級 ' + lv.level + '・' + lv.name;
+    show(screenPlay);
+    renderBrief();
+  }
+
+  function renderStepDots() {
+    stepDots.innerHTML = '';
+    if (cur.phase !== 'quiz') return;
+    for (var i = 0; i < cur.level.questions.length; i++) {
+      var b = document.createElement('i');
+      if (i < cur.idx) b.className = 'on';
+      else if (i === cur.idx) b.className = 'cur';
+      stepDots.appendChild(b);
+    }
+  }
+
+  function renderBrief() {
+    renderStepDots();
+    var lv = cur.level;
+    var facts = '';
+    for (var i = 0; i < lv.keyFacts.length; i++) {
+      facts += '<li><span class="ma-kf-dot" aria-hidden="true">◆</span><span>' + lv.keyFacts[i] + '</span></li>';
+    }
+    var topics = '';
+    if (lv.concepts && lv.concepts.length) {
+      for (var t = 0; t < lv.concepts.length; t++) {
+        topics += '<span class="ma-topic">' + lv.concepts[t] + '</span>';
+      }
+      topics = '<div class="ma-brief-topics">' + topics + '</div>';
+    }
+    stage.innerHTML =
+      '<div class="ma-stage ma-brief">' +
+        '<div class="ma-visual" aria-hidden="true">' + lv.emoji + '</div>' +
+        '<h2>等級 ' + lv.level + '・' + lv.name + '</h2>' +
+        '<p class="ma-brief-sub">這一級會學到：</p>' +
+        topics +
+        '<p class="ma-brief-sub">先看看這一級的重點，再開始 ' + lv.questions.length + ' 題挑戰。</p>' +
+        '<ul class="ma-keyfacts">' + facts + '</ul>' +
+      '</div>' +
+      '<div class="ma-actions">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-start">開始挑戰 ➡️</button>' +
+      '</div>';
+    $('btn-start').addEventListener('click', function () { cur.phase = 'quiz'; cur.idx = 0; renderQuestion(); });
+  }
+
+  function next() {
+    cur.idx++;
+    if (cur.idx >= cur.level.questions.length) finishLevel();
+    else renderQuestion();
+  }
+
+  function renderQuestion() {
+    renderStepDots();
+    var lv = cur.level;
+    var step = lv.questions[cur.idx];
+
+    var order = [];
+    for (var oi = 0; oi < step.options.length; oi++) order.push(oi);
+    for (var m = order.length - 1; m > 0; m--) {
+      var r = Math.floor(Math.random() * (m + 1));
+      var tt = order[m]; order[m] = order[r]; order[r] = tt;
+    }
+    var optsHtml = '';
+    for (var k = 0; k < order.length; k++) {
+      var origIdx = order[k];
+      optsHtml += '<button type="button" class="ma-opt" data-i="' + origIdx + '">' +
+        '<span>' + step.options[origIdx] + '</span><span class="ma-opt-mark" aria-hidden="true"></span></button>';
+    }
+
+    stage.innerHTML =
+      '<div class="ma-stage">' +
+        '<div class="ma-visual" aria-hidden="true">' + lv.emoji + '</div>' +
+        '<p class="ma-question">第 ' + (cur.idx + 1) + ' / ' + lv.questions.length + ' 題　' + step.q + '</p>' +
+        '<div class="ma-options">' + optsHtml + '</div>' +
+        '<div class="ma-reveal" id="reveal"></div>' +
+      '</div>' +
+      '<div class="ma-actions" id="afteract" style="display:none">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">繼續 ➡️</button>' +
+      '</div>';
+
+    var answered = false;
+    var btns = stage.querySelectorAll('.ma-opt');
+
+    function revealAndLock(correct) {
+      var rev = $('reveal');
+      rev.textContent = (correct ? '答對了！' : '再想想～正確答案是這個！') + (step.why || '');
+      rev.classList.add('show');
+      $('afteract').style.display = 'flex';
+      var all = stage.querySelectorAll('.ma-opt');
+      for (var a = 0; a < all.length; a++) all[a].disabled = true;
+    }
+
+    for (var b = 0; b < btns.length; b++) {
+      btns[b].addEventListener('click', function () {
+        var i = parseInt(this.getAttribute('data-i'), 10);
+        var isCorrect = (i === step.answer);
+        if (answered) return;
+        answered = true;
+        /* 唯一例外：維持每日連續學習 streak（活動日界），不計 XP、不重複計分、同日 idempotent */
+        if (window.Game && typeof Game.pingActive === 'function') { try { Game.pingActive(); } catch (e) {} }
+        if (isCorrect) {
+          this.classList.add('correct');
+          this.querySelector('.ma-opt-mark').textContent = '✅';
+          cur.correctCount++;
+          revealAndLock(true);
+        } else {
+          this.classList.add('wrong');
+          this.querySelector('.ma-opt-mark').textContent = '❌';
+          var correctBtn = stage.querySelector('.ma-opt[data-i="' + step.answer + '"]');
+          if (correctBtn) {
+            correctBtn.classList.add('correct');
+            correctBtn.querySelector('.ma-opt-mark').textContent = '✅';
+          }
+          revealAndLock(false);
+        }
+      });
+    }
+
+    $('btn-next').addEventListener('click', next);
+  }
+
+  function finishLevel() {
+    var lv = cur.level;
+    var total = lv.questions.length;
+    var got = cur.correctCount;
+
+    var prev = progress[lv.id] || {};
+    progress[lv.id] = { done: true, best: Math.max(prev.best || 0, got) };
+    saveProg(progress);
+
+    awardBadge(lv.id);
+    var allDone = true;
+    for (var i = 0; i < LEVELS.length; i++) if (!(progress[LEVELS[i].id] && progress[LEVELS[i].id].done)) { allDone = false; break; }
+    if (allDone) awardBadge('all');
+
+    var st = starsFor(got, total);
+    stage.innerHTML =
+      '<div class="ma-stage ma-done">' +
+        '<div class="ma-done-emoji" aria-hidden="true">🎉</div>' +
+        '<div class="ma-done-title">完成「' + lv.name + '」！</div>' +
+        '<div class="ma-done-stars" aria-label="得到 ' + st + ' 顆星">' + starStr(st) + '</div>' +
+        '<p class="ma-question" style="font-size:clamp(16px,3.6vw,19px);text-align:center">你答對了 ' + got + ' / ' + total + ' 題，真棒！</p>' +
+      '</div>' +
+      '<div class="ma-actions">' +
+        '<button type="button" class="btn" id="btn-menu">回到選單</button>' +
+        (nextLevelOf(lv) ? '<button type="button" class="btn btn-primary" id="btn-nextlv">下一個等級 ➡️</button>' : '') +
+      '</div>';
+
+    toast('完成「' + lv.name + '」！你答對了 ' + got + ' / ' + total + ' 題，真棒！', 'daily');
+
+    $('btn-menu').addEventListener('click', goMenu);
+    var nl = nextLevelOf(lv);
+    if (nl) $('btn-nextlv').addEventListener('click', function () { startLevel(nl); });
+  }
+
+  function nextLevelOf(lv) {
+    for (var i = 0; i < LEVELS.length; i++) { if (LEVELS[i].id === lv.id) return LEVELS[i + 1] || null; }
+    return null;
+  }
+
+  function goMenu() { cur = null; stepDots.innerHTML = ''; renderMenu(); show(screenMenu); }
+
+  $('btn-back').addEventListener('click', goMenu);
+
+  window.__earthAdv = { LEVELS: LEVELS, BADGES: BADGES, getProgress: function () { return progress; } };
+
+  renderMenu();
+})();
+</script>
+
+<!-- ===== 進階地科徽章冊：樣式 ===== -->
+<style>
+#earthAdvBadgeFab {
+  position: fixed; right: 16px; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  z-index: 55; display: inline-flex; align-items: center; gap: 6px;
+  min-height: 48px; min-width: 48px; padding: 10px 16px;
+  background: #075985; color: #fff; border: none;  /* 深靛藍底白字，兩主題同值皆過 AA */
+  border-radius: 999px; font-family: var(--font); font-weight: 800;
+  font-size: clamp(14px, 3vw, 16px); cursor: pointer; box-shadow: var(--shadow-lg);
+}
+#earthAdvBadgeFab:active { transform: scale(0.96); }
+#earthAdvBadgeFabCount { display: inline-flex; align-items: center; gap: 3px; background: #fff; color: #075985; border-radius: 999px; padding: 1px 8px; font-size: 13px; font-weight: 800; }
+.ma-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 60; padding: 16px; }
+#earthAdvBadgeOverlay[hidden] { display: none !important; }
+.ma-card { position: relative; background: var(--card); border: 2px solid var(--card-border); border-radius: var(--r-lg); box-shadow: var(--shadow-lg); width: 100%; max-width: 560px; max-height: 88vh; overflow-y: auto; padding: 20px 18px 22px; color: var(--ink); }
+.ma-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.ma-card-head h1 { font-size: clamp(1.1rem, 4vw, 1.4rem); font-weight: 800; margin: 0; color: var(--ink); flex: 1; }
+.ma-card-back { background: var(--card); border: 2px solid var(--card-border); color: var(--accent-ink, var(--ink)); font-family: var(--font); font-weight: 800; font-size: 15px; cursor: pointer; min-height: 44px; padding: 8px 14px; border-radius: 14px; }
+.ma-card-back:active { transform: scale(0.96); }
+.ma-card-note { background: var(--accent-tint); color: var(--ink); border-radius: var(--r-md, 12px); font-size: var(--fs-small); font-weight: 600; line-height: 1.7; padding: 10px 12px; margin: 4px 0 12px; }
+.ma-card-summary { text-align: center; font-size: var(--fs-small); font-weight: 700; color: var(--ink-soft); margin: 4px 0 14px; line-height: 1.7; }
+.ma-badge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; }
+.ma-badge { position: relative; min-height: 96px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border-radius: 14px; background: var(--card); border: 2px solid var(--card-border); text-align: center; padding: 10px 6px; }
+.ma-badge .ma-badge-glyph { font-size: clamp(1.6rem, 7vw, 2rem); line-height: 1; }
+.ma-badge .ma-badge-name { font-size: clamp(0.6rem, 2.6vw, 0.74rem); font-weight: 800; color: var(--ink); line-height: 1.2; }
+.ma-badge .ma-badge-state { font-size: clamp(0.52rem, 2.2vw, 0.64rem); font-weight: 700; color: var(--ink-soft); }
+.ma-badge.locked { border-style: dashed; opacity: 0.5; filter: grayscale(1); }
+.ma-badge.unlocked { box-shadow: 0 0 0 2px #f5b301, 0 0 10px rgba(245,179,1,0.5); background: color-mix(in srgb, #f5b301 12%, var(--card)); }
+.ma-badge.unlocked .ma-badge-star { position: absolute; right: 5px; top: 4px; font-size: 14px; }
+</style>
+<script>
+(function () {
+  'use strict';
+  function api() { return window.__earthAdv || null; }
+  function unlockedCount() {
+    var a = api(); if (!a) return 0;
+    var prog = a.getProgress(); var n = 0;
+    for (var i = 0; i < a.BADGES.length; i++) if (prog.badges[a.BADGES[i].id]) n++;
+    return n;
+  }
+  function renderGrid() {
+    var a = api(); if (!a) return;
+    var prog = a.getProgress();
+    var host = document.getElementById('earthAdvBadgeGrid');
+    if (!host) return;
+    var html = '';
+    for (var i = 0; i < a.BADGES.length; i++) {
+      var def = a.BADGES[i];
+      var got = !!prog.badges[def.id];
+      var cls = 'ma-badge ' + (got ? 'unlocked' : 'locked');
+      var glyph = got ? def.icon : '🔒';
+      var state = got ? '已收集' : '尚未解鎖';
+      var star = got ? '<span class="ma-badge-star" aria-hidden="true">★</span>' : '';
+      var label = def.name + '（' + state + '）';
+      html += '<div class="' + cls + '" title="' + label + '" aria-label="' + label + '">' +
+        '<span class="ma-badge-glyph" aria-hidden="true">' + glyph + '</span>' +
+        '<span class="ma-badge-name">' + def.name + '</span>' +
+        '<span class="ma-badge-state">' + state + '</span>' + star + '</div>';
+    }
+    host.innerHTML = html;
+  }
+  function renderSummary() {
+    var a = api(); if (!a) return;
+    var el = document.getElementById('earthAdvBadgeSummary');
+    if (!el) return;
+    el.innerHTML = '已收集 <b>' + unlockedCount() + '</b> / ' + a.BADGES.length + ' 枚徽章（收藏只增不減，慢慢玩就好）';
+  }
+  function updateFabCount() {
+    var a = api(); if (!a) return;
+    var badge = document.getElementById('earthAdvBadgeFabCount');
+    if (badge) badge.textContent = unlockedCount() + '/' + a.BADGES.length;
+  }
+  function refresh() { updateFabCount(); if (isOpen()) { renderGrid(); renderSummary(); } }
+  function isOpen() { var el = document.getElementById('earthAdvBadgeOverlay'); return el && !el.hidden; }
+  function openBook() { renderGrid(); renderSummary(); var o = document.getElementById('earthAdvBadgeOverlay'); if (o) o.hidden = false; }
+  function closeBook() { var o = document.getElementById('earthAdvBadgeOverlay'); if (o) o.hidden = true; }
+  function buildDom() {
+    var host = document.createElement('div');
+    host.innerHTML =
+      '<button id="earthAdvBadgeFab" type="button" aria-label="打開進階地科徽章冊" onclick="EarthAdvBadges.openBook()">' +
+        '🏅 徽章冊 <span id="earthAdvBadgeFabCount">0/8</span></button>' +
+      '<div id="earthAdvBadgeOverlay" class="ma-overlay" hidden>' +
+        '<div class="ma-card" role="dialog" aria-modal="true" aria-label="進階地科徽章冊">' +
+          '<div class="ma-card-head"><h1>🏅 地球與太空徽章冊</h1>' +
+            '<button class="ma-card-back" onclick="EarthAdvBadges.closeBook()">← 返回</button></div>' +
+          '<div class="ma-card-note">這本徽章冊只存在你自己的裝置上，純粹紀念你完成過哪些進階等級。它不會計入學習基地的等級或經驗值——放輕鬆挑戰就好 🌱</div>' +
+          '<div id="earthAdvBadgeSummary" class="ma-card-summary"></div>' +
+          '<div id="earthAdvBadgeGrid" class="ma-badge-grid"></div>' +
+        '</div></div>';
+    while (host.firstChild) document.body.appendChild(host.firstChild);
+  }
+  window.EarthAdvBadges = { openBook: openBook, closeBook: closeBook, refresh: refresh };
+  function boot() { buildDom(); updateFabCount(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+</body>
+</html>

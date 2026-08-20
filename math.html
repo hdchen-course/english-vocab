@@ -1,0 +1,4290 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-game-wired="math">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>數學冒險王</title>
+<!-- 統一遊戲化引擎：主題 token、HUD/toast 樣式、共用引擎（同步載入於 <head>）。
+     app.css 先於本頁 <style> 載入，本頁樣式在後、逐屬性覆蓋，維持原本外觀（並取得夜間模式）。
+     data-game-wired 亦置於 <html>：引擎於 <head> 同步執行時 document.body 尚為 null，
+     須靠 <html> 讓 deltaSync 當下即抑制 math 來源的重複計分（見 game_core.js 說明）。 -->
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 各年級（level）名稱文字色：亮色 accent 直接當文字只有 2.0–4.0:1（不過 AA）。
+   改用「on-surface ink」的加深/提亮版，於亮色奶油卡與暗色卡皆 ≥4.5:1（見對比表）。
+   僅供「文字」使用；卡片邊框/圖示底仍沿用 LEVELS[].color 原色（大面積/裝飾）。 */
+:root {
+  --lvl-ink-1: #15803d;  /* 等級 1 綠 on cream 4.81:1 */
+  --lvl-ink-2: #1d4ed8;  /* 等級 2 藍 6.43:1 */
+  --lvl-ink-3: #b45309;  /* 等級 3 橘 4.82:1 */
+  --lvl-ink-4: #c81e1e;  /* 等級 4 紅 5.50:1 */
+  --lvl-ink-5: #6d28d9;  /* 等級 5 紫 6.82:1 */
+  --lvl-ink-6: #be185d;  /* 等級 6 桃 5.79:1 */
+  --lvl-ink-7: #0f766e;  /* 等級 7 青 5.25:1 */
+}
+:root[data-theme="dark"] {
+  --lvl-ink-1: #4ade80;  /* on dark card 8.34:1 */
+  --lvl-ink-2: #60a5fa;  /* 5.72:1 */
+  --lvl-ink-3: #fbbf24;  /* 8.70:1 */
+  --lvl-ink-4: #f87171;  /* 5.25:1 */
+  --lvl-ink-5: #a78bfa;  /* 5.34:1 */
+  --lvl-ink-6: #f472b6;  /* 5.49:1 */
+  --lvl-ink-7: #2dd4bf;  /* 7.81:1 */
+}
+
+/* 本頁強調色三件組（數學紫）：讓所有共用設計語彙的重點色一致換色，
+   與 index/social/finance「同一位設計師」的手感一致（僅外觀，不動功能）。 */
+:root {
+  --accent: var(--c-math);
+  --accent-tint: var(--tint-math);
+  --accent-ink: var(--c-math-ink);
+}
+
+body {
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* 鎖定字重/行高/字色，抵銷 app.css body 的 600/1.6/var(--ink) 洩漏，維持原本外觀 */
+  font-weight: 400;
+  line-height: normal;
+  color: var(--ink);
+  min-height: 100vh;
+  display: flex;
+  /* 直向堆疊：共用 app-bar 置頂滿版，#app 於其下置中，避免與置中並排 */
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: var(--bg);
+  overflow-x: hidden;
+}
+
+#app {
+  width: 100%;
+  /* canon：外層吃 --content-max（手機 720 / iPad 1200）並置中，
+     取代原本寫死的 500px 窄條，讓 iPad 攤成寬版；保留 SPA 全高與 overflow-x 防溢位 */
+  max-width: var(--content-max);
+  margin-inline: auto;
+  min-height: 100dvh;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Screens */
+.screen {
+  display: none;
+  width: 100%;
+  min-height: 100vh;
+  padding: var(--s4);
+  padding-bottom: 80px;
+  animation: fadeIn 0.3s ease;
+}
+
+.screen.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--s3) 0;
+  margin-bottom: var(--s4);
+}
+
+.header-title {
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.header-btn {
+  background: var(--card-border);
+  border: none;
+  color: var(--ink);
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.header-btn:active {
+  transform: scale(0.9);
+}
+
+/* Save notice */
+.save-notice {
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  margin-bottom: var(--s3);
+}
+
+/* Stats bar — 被動內容卡：1px 邊、--r-lg 圓角、--shadow-sm */
+.stats-bar {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  padding: var(--s3) var(--s4);
+  margin-bottom: var(--s4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-item {
+  text-align: center;
+  color: var(--ink);
+}
+
+.stat-value {
+  font-size: var(--fs-h2);
+  font-weight: 800;
+}
+
+.stat-label {
+  font-size: var(--fs-small);
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+/* EXP bar — 被動內容卡 */
+.exp-bar-container {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  padding: var(--s3) var(--s4);
+  margin-bottom: var(--s4);
+  box-shadow: var(--shadow-sm);
+}
+
+.exp-info {
+  display: flex;
+  justify-content: space-between;
+  color: var(--ink);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  margin-bottom: var(--s2);
+}
+
+.exp-bar {
+  height: 10px;
+  background: var(--card-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.exp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--c-math-soft), var(--c-math));
+  border-radius: 999px;
+  transition: width 0.5s ease;
+}
+
+/* Level Map — 選單改吃共用 .u-grid（見 HTML class）：手機單欄、iPad 自動多欄 dashboard。
+   本頁僅保留底部留白，欄數/間距由 app.css .u-grid 提供。 */
+.level-map {
+  padding-bottom: var(--s5);
+}
+
+/* 可點入口卡：2px 邊、--r-lg 圓角，hover 轉強調色 + --shadow-lg */
+.level-card {
+  background: var(--card);
+  border-radius: var(--r-lg);
+  padding: var(--s4);
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  border: 2px solid var(--card-border);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.level-card:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent);
+}
+
+.level-card:active {
+  transform: scale(0.98);
+}
+
+.level-card.locked {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.level-card.locked::after {
+  content: '🔒';
+  position: absolute;
+  top: 50%;
+  right: var(--s4);
+  transform: translateY(-50%);
+  font-size: 24px;
+}
+
+.level-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  margin-bottom: var(--s2);
+}
+
+/* 圖示內磚：--r-sm、強調淡底 */
+.level-icon {
+  font-size: 32px;
+  width: 56px;
+  height: 56px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-tint);
+  border-radius: var(--r-sm);
+}
+
+.level-name {
+  color: var(--ink);
+  font-size: var(--fs-body);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.level-grade {
+  color: var(--ink-soft);
+  font-size: var(--fs-small);
+  font-weight: 600;
+}
+
+/* 年級徽章：統一使用數學強調色淡底，僅作導覽定位用 */
+.level-grade-badge {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--accent-tint);
+  color: var(--accent-ink);
+  font-size: var(--fs-small);
+  font-weight: 700;
+}
+
+.level-stars {
+  color: var(--ink-soft);
+  font-size: var(--fs-small);
+  font-weight: 700;
+  margin-top: var(--s1);
+}
+
+/* Stage Select — 關卡選單同樣改吃共用 .u-grid（見 HTML class）：iPad 攤成多欄。 */
+.stage-list {
+  padding-bottom: var(--s5);
+}
+
+/* 可點入口卡：2px 邊、--r-lg 圓角，hover 轉強調色 + --shadow-lg */
+.stage-card {
+  background: var(--card);
+  border-radius: var(--r-lg);
+  padding: var(--s4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  border: 2px solid var(--card-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.stage-card:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent);
+}
+
+.stage-card:active {
+  transform: scale(0.98);
+}
+
+.stage-card.locked {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.stage-card.boss {
+  border-color: var(--c-star);
+  background: var(--card);
+}
+
+.stage-info {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+}
+
+.stage-num {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: white;
+  font-size: var(--fs-body);
+}
+
+.stage-name {
+  color: var(--ink);
+  font-size: var(--fs-body);
+  font-weight: 700;
+}
+
+.stage-sub {
+  color: var(--ink-soft);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.stage-stars-display {
+  color: var(--c-star);
+  font-size: var(--fs-body);
+  letter-spacing: 2px;
+}
+
+/* Gameplay */
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--s4);
+}
+
+.progress-dots {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: var(--s4);
+}
+
+.progress-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-small);
+  font-weight: 700;
+  color: var(--ink-soft);
+  transition: all 0.3s;
+}
+
+.progress-dot.correct {
+  background: var(--tint-english);
+  color: var(--ink);
+}
+
+.progress-dot.wrong {
+  background: rgba(255, 118, 117, 0.12);
+  color: var(--ink);
+}
+
+.progress-dot.current {
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 0 0 3px var(--accent-tint);
+}
+
+.combo-display {
+  text-align: center;
+  margin-bottom: var(--s3);
+  min-height: 36px;
+}
+
+.combo-text {
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  color: var(--ink);
+  animation: comboPulse 0.5s ease;
+}
+
+@keyframes comboPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+/* 一題一畫面的大舞台卡：被動內容卡 → 1px 邊、--r-lg 圓角、--s5/--s4 內距 */
+.question-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  padding: var(--s5) var(--s4);
+  text-align: center;
+  margin-bottom: var(--s4);
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+}
+
+/* 題幹：對齊共用 .q-prompt 的字級/字重/行高 */
+.question-text {
+  font-size: clamp(19px, 4.5vw, 24px);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.45;
+  max-width: 32ch;
+}
+
+.question-sub {
+  font-size: var(--fs-body);
+  font-weight: 700;
+  color: var(--ink-soft);
+  margin-top: var(--s2);
+  max-width: 34ch;
+}
+
+/* Fraction display */
+.frac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 4px;
+}
+
+.frac .num {
+  border-bottom: 2px solid var(--ink);
+  padding: 0 4px 2px;
+  font-size: 22px;
+}
+
+.frac .den {
+  padding: 2px 4px 0;
+  font-size: 22px;
+}
+
+/* Object counting display */
+.objects-display {
+  font-size: 32px;
+  line-height: 1.6;
+  letter-spacing: 4px;
+  word-break: break-all;
+  max-width: 300px;
+}
+
+/* Choices — 對齊共用 .q-opt：16px 圓角、56px 命中區、強調 hover、對錯 token 色 */
+.choices-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s3);
+  margin-bottom: var(--s4);
+}
+
+.choice-btn {
+  background: var(--card);
+  border: 2px solid var(--card-border);
+  border-radius: 16px;
+  padding: 14px 18px;
+  color: var(--ink);
+  font-size: clamp(16px, 3.4vw, 19px);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.2s ease, background 0.2s ease;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.choice-btn:hover {
+  border-color: var(--accent);
+}
+
+.choice-btn:active {
+  transform: scale(0.98);
+}
+
+.choice-btn.correct {
+  background: var(--tint-english);
+  border-color: var(--c-correct);
+  color: var(--ink);
+}
+
+.choice-btn.wrong {
+  background: rgba(255, 118, 117, 0.12);
+  border-color: var(--c-wrong);
+  color: var(--ink);
+}
+
+/* 除了顏色，也用符號標對錯（對色盲/低視力友善；與全書其他選擇題頁一致）*/
+.choice-btn.correct::after { content: " ✓"; font-weight: 900; }
+.choice-btn.wrong::after { content: " ✗"; font-weight: 900; }
+
+.choice-btn.reveal {
+  background: var(--tint-english);
+  border-color: var(--c-correct);
+  color: var(--ink);
+  opacity: 0.7;
+}
+
+/* Number Pad（功能保留；僅對齊圓角/字級/按壓與 token 色） */
+.numpad-input {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-md);
+  padding: var(--s3) var(--s4);
+  text-align: center;
+  font-size: clamp(22px, 5vw, 28px);
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: var(--s4);
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-break: break-all;
+}
+
+.numpad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--s2);
+}
+
+.numpad-btn {
+  background: var(--card);
+  border: 2px solid var(--card-border);
+  border-radius: var(--r-sm);
+  padding: 14px;
+  color: var(--ink);
+  font-size: 22px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.2s ease;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.numpad-btn:active {
+  transform: scale(0.96);
+  background: var(--card-border);
+}
+
+.numpad-btn.submit {
+  background: var(--c-correct-btn);
+  border-color: var(--c-correct-btn);
+  color: var(--on-accent);
+}
+
+.numpad-btn.submit:active {
+  filter: brightness(0.95);
+}
+
+.numpad-btn.backspace {
+  background: rgba(255, 118, 117, 0.12);
+  border-color: var(--c-wrong);
+  color: var(--ink);
+}
+
+.numpad-btn.negative {
+  background: var(--card-border);
+  border-color: var(--c-math-soft);
+  color: var(--c-math-ink);
+}
+
+/* Feedback overlay */
+.feedback-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.feedback-overlay.show {
+  display: flex;
+}
+
+.feedback-correct {
+  font-size: 80px;
+  animation: correctAnim 0.8s ease forwards;
+}
+
+@keyframes correctAnim {
+  0% { transform: scale(0); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+.feedback-wrong {
+  font-size: 80px;
+  animation: wrongAnim 0.8s ease forwards;
+}
+
+@keyframes wrongAnim {
+  0% { transform: scale(0) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.2) rotate(10deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 0; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.shake {
+  animation: shake 0.3s ease;
+}
+
+/* Result Screen — 被動結算卡：1px 邊、--r-lg 圓角、--s5/--s4 內距 */
+.result-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  padding: var(--s5) var(--s4);
+  text-align: center;
+  margin-top: var(--s5);
+  box-shadow: var(--shadow-sm);
+}
+
+.result-stars {
+  font-size: 34px;
+  margin-bottom: var(--s3);
+  letter-spacing: 4px;
+}
+
+.result-title {
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: var(--s2);
+}
+
+.result-stats {
+  color: var(--ink-soft);
+  font-size: var(--fs-body);
+  font-weight: 700;
+  margin-bottom: var(--s5);
+  line-height: 1.8;
+}
+
+.result-exp {
+  font-size: var(--fs-body);
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: var(--s5);
+}
+
+/* 底部行動列：對齊共用 .q-actions（等分、最小寬 140） */
+.result-buttons {
+  display: flex;
+  gap: var(--s3);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.result-buttons .btn {
+  flex: 1;
+  min-width: 140px;
+}
+
+/* #app 作用域提高特異度，勝過 app.css 的 .btn / .btn-primary，
+   並中和 app.css 才有的屬性（min-height / display / gap / box-shadow），維持原本外觀 */
+#app .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* 對齊共用 .btn：16px 圓角、48px 命中區（--tap-min），視覺與全站一致 */
+  min-height: var(--tap-min);
+  gap: var(--s2, 8px);
+  box-shadow: none;
+  border: none;
+  border-radius: 16px;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+#app .btn:active {
+  transform: scale(0.95);
+}
+
+#app .btn-primary {
+  background: var(--c-math);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+#app .btn-secondary {
+  background: var(--card-border);
+  color: var(--c-math-ink);
+  border: 2px solid var(--card-border);
+}
+
+#app .btn-success {
+  background: var(--c-correct-btn);
+  color: var(--on-accent);
+}
+
+#app .btn-danger {
+  background: var(--c-wrong-btn);
+  color: var(--on-accent);
+}
+
+/* Daily Challenge */
+.daily-timer {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: var(--s4);
+}
+
+.daily-timer.warning {
+  color: var(--ink);
+  animation: timerPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes timerPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.78; }
+}
+
+.daily-score {
+  text-align: center;
+  color: var(--ink);
+  font-size: var(--fs-body);
+  font-weight: 700;
+  margin-bottom: var(--s4);
+}
+
+/* Wrong Book */
+.wrong-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+
+/* 被動內容卡 → 1px 邊、--r-lg 圓角 */
+.wrong-item {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  padding: var(--s4);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+}
+
+.wrong-question {
+  font-size: var(--fs-body);
+  font-weight: 800;
+  margin-bottom: var(--s2);
+}
+
+.wrong-answers {
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.wrong-answers .wrong-ans {
+  color: var(--ink);
+  text-decoration: line-through;
+}
+
+.wrong-answers .correct-ans {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.wrong-hint {
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-top: var(--s2);
+  padding: 8px 12px;
+  background: var(--bg);
+  border-radius: var(--r-md);
+  line-height: 1.5;
+}
+
+/* Bottom nav — 全部 #app 作用域以勝過 app.css 的 .bottom-nav / .bottom-nav button
+   （含 @media ≥1024px 隱藏 nav 與較高特異度的 button 樣式），維持原本外觀 */
+#app .bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 500px;
+  background: var(--card);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 0;
+  padding-bottom: max(8px, env(safe-area-inset-bottom));
+  border-top: 2px solid var(--card-border);
+  box-shadow: none;
+  z-index: 50;
+}
+
+#app .nav-btn {
+  background: none;
+  border: none;
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 400;
+  cursor: pointer;
+  display: flex;
+  flex: 0 0 auto;
+  min-height: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 12px;
+  transition: color 0.2s;
+}
+
+#app .nav-btn.active {
+  color: var(--c-math);
+}
+:root[data-theme="dark"] #app .nav-btn.active {
+  color: var(--c-math-ink);
+}
+
+#app .nav-btn .nav-icon {
+  font-size: 22px;
+}
+
+/* Confetti */
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 200;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: -10px;
+  animation: confettiFall 3s linear forwards;
+}
+
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* Flying stars */
+@keyframes starFly {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-100px) scale(0); opacity: 0; }
+}
+
+.flying-star {
+  position: absolute;
+  font-size: 20px;
+  animation: starFly 0.8s ease-out forwards;
+  pointer-events: none;
+}
+
+/* Fire animation for combo */
+@keyframes fireGrow {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.fire-anim {
+  animation: fireGrow 0.5s ease infinite;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--card-border);
+  border-radius: 2px;
+}
+
+/* Tab content */
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
+
+/* Achievements in stats */
+.achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.achievement-item {
+  background: var(--card);
+  border-radius: var(--r-sm);
+  padding: var(--s3) var(--s2);
+  text-align: center;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.achievement-item.unlocked {
+  color: var(--ink);
+  background: var(--card);
+  border: 2px solid var(--c-star);
+}
+
+.achievement-item .ach-icon {
+  font-size: 24px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* Correct answer reveal — 對齊共用 .q-feedback.is-ok：淡底 + 左側粗邊語意 */
+.correct-reveal {
+  /* 答錯時揭示正解：用琥珀（提醒）而非綠色，綠色在全站代表「答對」，避免語意衝突。 */
+  background: var(--tint-chinese);
+  border-left: 4px solid var(--c-warn);
+  border-radius: var(--r-md);
+  padding: var(--s3) var(--s4);
+  margin-top: var(--s3);
+  text-align: center;
+  color: var(--ink);
+  font-size: var(--fs-body);
+  font-weight: 800;
+}
+.reveal-method {
+  /* 答錯時把該題方法提示再呈現一次（糾正式回饋）：比答案行更輕、左對齊、當提示讀。 */
+  margin-top: var(--s2);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  text-align: left;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+/* Sound toggle */
+.sound-toggle {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+}
+</style>
+</head>
+<body data-game-hud="native" data-game-wired="math">
+<!-- ===== 共用頂部應用列（全站一致；貼在 <body> 內第一個元素） ===== -->
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">數學冒險王 ➕</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle
+          aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<div id="app">
+  <!-- Home Screen -->
+  <div id="screen-home" class="screen active">
+    <div class="header">
+      <div class="header-title">🎮 數學冒險王</div>
+      <button class="header-btn" id="btn-sound" onclick="toggleSound()" aria-label="音效開關" aria-pressed="true">🔊</button>
+    </div>
+    <div class="save-notice">💾 進度存在本機瀏覽器</div>
+    <a href="math_concepts.html" style="display:flex;align-items:center;gap:10px;margin:0 0 var(--s4);padding:12px 16px;background:var(--card);border:2px dashed var(--card-border);border-radius:14px;color:var(--ink);font-weight:700;text-decoration:none;line-height:1.4"><span style="font-size:22px" aria-hidden="true">🧠</span><span>還沒學過嗎？先到「數學觀念養成」用圖學會，再回來練習 →</span></a>
+    <a href="math2_concepts.html" style="display:flex;align-items:center;gap:10px;margin:0 0 var(--s4);padding:12px 16px;background:var(--card);border:2px dashed var(--card-border);border-radius:14px;color:var(--ink);font-weight:700;text-decoration:none;line-height:1.4"><span style="font-size:22px" aria-hidden="true">📊</span><span>想學座標、比例、機率？先到「數學觀念養成 2」用圖學會 →</span></a>
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-value" id="home-rank">數學新手</div>
+        <div class="stat-label">稱號</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="home-exp">0</div>
+        <div class="stat-label">經驗值</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="home-streak">0</div>
+        <div class="stat-label">連續天數</div>
+      </div>
+    </div>
+    <div class="exp-bar-container">
+      <div class="exp-info">
+        <span id="exp-rank-label">數學新手</span>
+        <span id="exp-progress-label">0 / 100</span>
+      </div>
+      <div class="exp-bar">
+        <div class="exp-fill" id="exp-fill" style="width: 0%"></div>
+      </div>
+    </div>
+    <div class="level-map u-grid" id="level-map"></div>
+    <a href="math_advanced.html" style="display:flex;align-items:center;gap:10px;margin:var(--s4) 0 0;padding:12px 16px;background:var(--card);border:2px dashed var(--card-border);border-radius:14px;color:var(--ink);font-weight:700;text-decoration:none;line-height:1.4"><span style="font-size:22px" aria-hidden="true">🧮</span><span>已經很熟了？來挑戰更難的「進階數學挑戰」→</span></a>
+  </div>
+
+  <!-- Stage Select Screen -->
+  <div id="screen-stages" class="screen">
+    <div class="header">
+      <button class="header-btn" onclick="showScreen('home')" aria-label="返回關卡地圖" title="返回關卡地圖">←</button>
+      <div class="header-title" id="stage-screen-title">關卡選擇</div>
+      <div style="width:48px"></div>
+    </div>
+    <div class="stage-list u-grid" id="stage-list"></div>
+  </div>
+
+  <!-- Gameplay Screen -->
+  <div id="screen-game" class="screen">
+    <!-- 答題區包 .play-column：iPad 上限寬 680 置中，避免題目/數字鍵盤被拉到 1200px -->
+    <div class="play-column">
+      <div class="game-header">
+        <button class="header-btn" onclick="confirmQuit()" aria-label="離開挑戰" title="離開挑戰">←</button>
+        <div class="header-title" id="game-title">關卡</div>
+        <div style="width:48px"></div>
+      </div>
+      <div class="progress-dots" id="progress-dots"></div>
+      <div class="combo-display" id="combo-display"></div>
+      <div class="question-card" id="question-card">
+        <div class="question-text" id="question-text"></div>
+        <div class="question-sub" id="question-sub"></div>
+      </div>
+      <div id="answer-area"></div>
+    </div>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="screen-result" class="screen">
+    <div class="play-column">
+      <div class="header">
+        <button class="header-btn" onclick="showScreen('home')" aria-label="返回關卡地圖" title="返回關卡地圖">←</button>
+        <div class="header-title">結果</div>
+        <div style="width:48px"></div>
+      </div>
+      <div class="result-card" id="result-card"></div>
+    </div>
+  </div>
+
+  <!-- Daily Challenge Screen -->
+  <div id="screen-daily" class="screen">
+    <div class="play-column">
+      <div class="header">
+        <button class="header-btn" onclick="endDaily()" aria-label="結束每日挑戰" title="結束每日挑戰">←</button>
+        <div class="header-title">每日挑戰</div>
+        <div style="width:48px"></div>
+      </div>
+      <div class="daily-timer" id="daily-timer">60</div>
+      <div class="daily-score" id="daily-score">得分: 0</div>
+      <div style="text-align:center;font-size:var(--fs-small);color:var(--ink-soft);margin:4px 0 8px;line-height:1.5;">😊 純屬好玩，時間到就結束，不影響你的學習進度</div>
+      <div class="progress-dots" id="daily-progress"></div>
+      <div class="question-card" id="daily-question-card">
+        <div class="question-text" id="daily-question-text"></div>
+        <div class="question-sub" id="daily-question-sub"></div>
+      </div>
+      <div id="daily-answer-area"></div>
+    </div>
+  </div>
+
+  <!-- Wrong Book Screen -->
+  <div id="screen-wrong" class="screen">
+    <div class="header">
+      <button class="header-btn" onclick="showScreen('home')" aria-label="返回關卡地圖" title="返回關卡地圖">←</button>
+      <div class="header-title">📕 錯題本</div>
+      <div style="width:48px"></div>
+    </div>
+    <div id="wrong-book-content"></div>
+  </div>
+
+  <!-- Stats Screen -->
+  <div id="screen-stats" class="screen">
+    <div class="header">
+      <button class="header-btn" onclick="showScreen('home')" aria-label="返回關卡地圖" title="返回關卡地圖">←</button>
+      <div class="header-title">📊 統計</div>
+      <div style="width:48px"></div>
+    </div>
+    <div id="stats-content"></div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav" id="bottom-nav">
+    <button class="nav-btn active" onclick="showScreen('home')">
+      <span class="nav-icon">🗺️</span>
+      <span>冒險</span>
+    </button>
+    <button class="nav-btn" onclick="startDaily()">
+      <span class="nav-icon">⚡</span>
+      <span>每日</span>
+    </button>
+    <button class="nav-btn" onclick="showScreen('wrong')">
+      <span class="nav-icon">📕</span>
+      <span>錯題</span>
+    </button>
+    <button class="nav-btn" onclick="showScreen('stats')">
+      <span class="nav-icon">📊</span>
+      <span>統計</span>
+    </button>
+  </nav>
+
+  <!-- Feedback overlay -->
+  <div class="feedback-overlay" id="feedback-overlay"></div>
+  <!-- Confetti container -->
+  <div class="confetti-container" id="confetti-container"></div>
+</div>
+
+<script>
+// ==================== GAME STATE ====================
+const LEVELS = [
+  { name: '等級 1', grade: '基礎加減', color: '#22c55e', icon: '🌱', stages: ['10以內加法','10以內減法','比大小','數物品','BOSS混合'] },
+  { name: '等級 2', grade: '進位與乘法', color: '#3b82f6', icon: '🌊', stages: ['100以內加法','100以內減法','九九乘法','填空題','BOSS混合'] },
+  { name: '等級 3', grade: '乘除與換算', color: '#f59e0b', icon: '🌟', stages: ['三位數加減','兩位×一位','基本除法','單位換算','BOSS混合'] },
+  { name: '等級 4', grade: '多位乘除與分數', color: '#ef4444', icon: '🔥', stages: ['多位數乘法','長除法','分數比較與加減','長方形面積','BOSS混合'] },
+  { name: '等級 5', grade: '分數與小數', color: '#8b5cf6', icon: '💜', stages: ['異分母加減','分數乘除','小數運算','百分比','BOSS混合'] },
+  { name: '等級 6', grade: '比例與圓', color: '#ec4899', icon: '🌸', stages: ['分數小數混合','比與比例','圓周與面積','速率問題','BOSS混合'] },
+  { name: '等級 7', grade: '代數入門（★）', color: '#14b8a6', icon: '🧊', stages: ['正負數運算','一元方程式','座標象限','三角形','BOSS混合'] },
+  { name: '等級 8', grade: '一元一次方程式（★★）', color: '#0ea5e9', icon: '⚖️', stages: ['解一元一次','兩邊有未知數','應用題','雞兔同籠','BOSS混合'] },
+  { name: '等級 9', grade: '比與比例（★★）', color: '#f97316', icon: '🧮', stages: ['解比例式','正比','反比','比例分配','BOSS混合'] },
+  { name: '等級 10', grade: '一元二次方程式（★★★）', color: '#a855f7', icon: '🎯', stages: ['平方根±','括號式求根','因式分解求根','判別式','BOSS混合'] },
+  { name: '等級 11', grade: '平面幾何（★★★）', color: '#e11d48', icon: '📐', stages: ['角度計算','平行線截角','畢氏定理','面積','BOSS混合'] },
+  { name: '等級 12', grade: '統計與機率（★★★）', color: '#6366f1', icon: '📊', stages: ['平均數','中位數與眾數','球的機率','骰子機率','BOSS混合'] }
+];
+
+const RANKS = [
+  { min: 0, max: 100, name: '數學新手' },
+  { min: 100, max: 300, name: '計算小兵' },
+  { min: 300, max: 600, name: '算術戰士' },
+  { min: 600, max: 1000, name: '數學騎士' },
+  { min: 1000, max: 1500, name: '運算大師' },
+  { min: 1500, max: 2500, name: '數學王者' },
+  { min: 2500, max: Infinity, name: '數學神童' }
+];
+
+let state = {
+  progress: { stars: {}, exp: 0 },
+  stats: { totalCorrect: 0, totalAttempts: 0, bestCombo: 0, streak: 0, lastPlay: null },
+  wrong: [],
+  daily: {}
+};
+
+let gameState = {
+  level: 0,
+  stage: 0,
+  questions: [],
+  current: 0,
+  errors: 0,
+  combo: 0,
+  maxCombo: 0,
+  expEarned: 0,
+  answers: []
+};
+
+let dailyState = {
+  questions: [],
+  results: [],
+  current: 0,
+  score: 0,
+  timer: 60,
+  interval: null,
+  active: false
+};
+
+let soundEnabled = true;
+let audioCtx = null;
+
+// ==================== PERSISTENCE ====================
+function loadState() {
+  try {
+    const p = localStorage.getItem('math_progress');
+    const s = localStorage.getItem('math_stats');
+    const w = localStorage.getItem('math_wrong');
+    const d = localStorage.getItem('math_daily');
+    if (p) state.progress = JSON.parse(p);
+    if (s) state.stats = JSON.parse(s);
+    if (w) state.wrong = JSON.parse(w);
+    if (d) state.daily = JSON.parse(d);
+    if (!state.progress.stars) state.progress.stars = {};
+    if (!state.progress.exp) state.progress.exp = 0;
+  } catch(e) { console.error('Load error', e); }
+
+  // Check streak
+  const today = new Date().toISOString().split('T')[0];
+  if (state.stats.lastPlay) {
+    const last = new Date(state.stats.lastPlay);
+    const diff = Math.floor((new Date(today) - last) / 86400000);
+    if (diff > 1) state.stats.streak = 0;
+  }
+}
+
+function saveState() {
+  try {
+    localStorage.setItem('math_progress', JSON.stringify(state.progress));
+    localStorage.setItem('math_stats', JSON.stringify(state.stats));
+    localStorage.setItem('math_wrong', JSON.stringify(state.wrong));
+    localStorage.setItem('math_daily', JSON.stringify(state.daily));
+  } catch(e) {
+    console.error('Save error', e);
+    showSaveError();
+  }
+}
+
+function showSaveError() {
+  let el = document.getElementById('save-warning');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'save-warning';
+    el.style.cssText = 'position:fixed;top:0;left:0;right:0;padding:8px;background:#c92a2a;color:white;text-align:center;font-size:0.8rem;z-index:9999;';
+    el.textContent = '⚠️ 無法儲存進度！請直接從 GitHub Pages 網址開啟，不要使用嵌入模式。';
+    document.body.prepend(el);
+  }
+}
+
+// ==================== SOUND ====================
+function getAudioCtx() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  return audioCtx;
+}
+
+function playSound(type) {
+  if (!soundEnabled) return;
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    switch(type) {
+      case 'correct':
+        osc.frequency.setValueAtTime(523, ctx.currentTime);
+        osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.3);
+        break;
+      case 'wrong':
+        osc.type = 'sine';  /* 柔和音色，避免鋸齒波「失敗蜂鳴」的懲罰感（與全書去懲罰化一致） */
+        osc.frequency.setValueAtTime(200, ctx.currentTime);
+        osc.frequency.setValueAtTime(150, ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.3);
+        break;
+      case 'combo':
+        osc.frequency.setValueAtTime(600 + gameState.combo * 100, ctx.currentTime);
+        osc.frequency.setValueAtTime(800 + gameState.combo * 100, ctx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.2);
+        break;
+      case 'levelup':
+        osc.frequency.setValueAtTime(523, ctx.currentTime);
+        osc.frequency.setValueAtTime(659, ctx.currentTime + 0.15);
+        osc.frequency.setValueAtTime(784, ctx.currentTime + 0.3);
+        osc.frequency.setValueAtTime(1047, ctx.currentTime + 0.45);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.7);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.7);
+        break;
+      case 'click':
+        osc.frequency.setValueAtTime(800, ctx.currentTime);
+        gain.gain.setValueAtTime(0.1, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.05);
+        break;
+    }
+  } catch(e) {}
+}
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  document.getElementById('btn-sound').textContent = soundEnabled ? '🔊' : '🔇';
+}
+
+// ==================== UTILITY ====================
+function randInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function gcd(a, b) {
+  a = Math.abs(a); b = Math.abs(b);
+  while (b) { [a, b] = [b, a % b]; }
+  return a;
+}
+
+function lcm(a, b) {
+  return (a * b) / gcd(a, b);
+}
+
+function getRank(exp) {
+  for (const r of RANKS) {
+    if (exp < r.max) return r;
+  }
+  return RANKS[RANKS.length - 1];
+}
+
+function getRankName(exp) {
+  return getRank(exp).name;
+}
+
+// ==================== UNIFIED GAME ENGINE BRIDGE ====================
+// 每答一題就把結果記進統一 profile（math 科目）。此頁已在 <html>/<body>
+// 宣告 data-game-wired="math"，故 game_core 的 delta-sync 不會重複計分。
+function gameRecord(correct) {
+  try {
+    if (window.Game && typeof Game.recordAnswer === 'function') {
+      Game.recordAnswer('math', !!correct);
+    }
+  } catch (e) { /* 引擎缺席時不影響本頁邏輯 */ }
+}
+
+// 用統一 profile 驅動「既有的」原生 HUD（稱號 / 經驗條 / 連續天數），
+// 不注入浮動 HUD（body 已標記 data-game-hud="native"）。
+function syncHudFromGame() {
+  try {
+    if (!(window.Game && typeof Game.getProfile === 'function')) return;
+    const p = Game.getProfile();
+    if (!p) return;
+    const d = p.derived || {};
+    const setText = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    setText('home-rank', d.rankName || '數學新手');
+    setText('home-exp', p.totalXp);
+    setText('home-streak', (p.streak && p.streak.current) || 0);
+    setText('exp-rank-label', d.rankName || '數學新手');
+    if (d.isMaxLevel) {
+      setText('exp-progress-label', `Lv.${p.level}・${p.totalXp}`);
+    } else {
+      setText('exp-progress-label', `Lv.${p.level}・${d.xpIntoLevel} / ${d.xpForLevel}`);
+    }
+    const fill = document.getElementById('exp-fill');
+    if (fill) fill.style.width = `${Math.round((d.levelProgress || 0) * 100)}%`;
+  } catch (e) { /* 靜默 */ }
+}
+
+// 註冊事件：XP 變動 / 升級 / 連續天數更新時即時刷新原生 HUD。
+function wireGameEvents() {
+  if (!(window.Game && typeof Game.on === 'function')) return;
+  ['xp', 'levelup', 'streak', 'daily-complete'].forEach(evt => Game.on(evt, syncHudFromGame));
+}
+
+function isLevelUnlocked(level) {
+  // All levels are freely accessible at all times (no gating).
+  return true;
+}
+
+function isStageUnlocked(level, stage) {
+  // All stages are freely accessible at all times (no gating).
+  return true;
+}
+
+function getStageStars(level, stage) {
+  const key = `${level + 1}-${stage}`;
+  return state.progress.stars[key] || 0;
+}
+
+function getTotalStars() {
+  return Object.values(state.progress.stars).reduce((s, v) => s + v, 0);
+}
+
+// ==================== QUESTION GENERATORS ====================
+
+// Level 1, Stage 1: Addition within 10
+function genL1S1() {
+  const a = randInt(0, 10);
+  const b = randInt(0, 10 - a);
+  return { question: `${a} + ${b} = ?`, answer: a + b, type: 'input' };
+}
+
+// Level 1, Stage 2: Subtraction within 10
+function genL1S2() {
+  const a = randInt(1, 10);
+  const b = randInt(0, a);
+  return { question: `${a} - ${b} = ?`, answer: a - b, type: 'input' };
+}
+
+// Level 1, Stage 3: Compare numbers
+function genL1S3() {
+  const a = randInt(0, 20);
+  let b = randInt(0, 20);
+  // Sometimes make them equal
+  if (Math.random() < 0.2) b = a;
+  const correct = a > b ? '>' : (a < b ? '<' : '=');
+  return { question: `${a} ○ ${b}`, answer: correct, type: 'choice', choices: ['>', '<', '='], questionSub: '在 ○ 裡選 >、< 或 = 讓算式成立' };
+}
+
+// Level 1, Stage 4: Count objects
+function genL1S4() {
+  const emojis = ['🍎','🌟','🐱','🌈','🎈','🐶','🍕','🦋','🌺','🚗'];
+  const emoji = emojis[randInt(0, emojis.length - 1)];
+  const count = randInt(1, 10);
+  const display = emoji.repeat(count);
+  return { question: display, answer: count, type: 'input', isObjects: true, questionSub: '數一數，有幾個？' };
+}
+
+// Level 1, Stage 5: Boss mixed
+function genL1S5() {
+  const r = randInt(1, 4);
+  if (r === 1) return genL1S1();
+  if (r === 2) return genL1S2();
+  if (r === 3) return genL1S3();
+  return genL1S4();
+}
+
+// Level 2, Stage 1: Addition within 100 (with carrying)
+function genL2S1() {
+  const a = randInt(10, 99);
+  const b = randInt(1, 99 - Math.min(a, 50));
+  const sum = a + b;
+  if (sum > 100) {
+    const a2 = randInt(10, 50);
+    const b2 = randInt(10, 50);
+    return { question: `${a2} + ${b2} = ?`, answer: a2 + b2, type: 'input' };
+  }
+  return { question: `${a} + ${b} = ?`, answer: sum, type: 'input' };
+}
+
+// Level 2, Stage 2: Subtraction within 100 (with borrowing)
+function genL2S2() {
+  const a = randInt(20, 100);
+  const b = randInt(1, a - 1);
+  return { question: `${a} - ${b} = ?`, answer: a - b, type: 'input' };
+}
+
+// Level 2, Stage 3: Multiplication table
+function genL2S3() {
+  const a = randInt(1, 9);
+  const b = randInt(1, 9);
+  return { question: `${a} × ${b} = ?`, answer: a * b, type: 'input' };
+}
+
+// Level 2, Stage 4: Fill the blank
+function genL2S4() {
+  const type = randInt(1, 4);
+  if (type === 1) {
+    // ? + b = c
+    const ans = randInt(1, 50);
+    const b = randInt(1, 50);
+    const c = ans + b;
+    return { question: `? + ${b} = ${c}`, answer: ans, type: 'input', questionSub: '找出 ? 的值' };
+  } else if (type === 2) {
+    // a + ? = c
+    const a = randInt(1, 50);
+    const ans = randInt(1, 50);
+    const c = a + ans;
+    return { question: `${a} + ? = ${c}`, answer: ans, type: 'input', questionSub: '找出 ? 的值' };
+  } else if (type === 3) {
+    // ? - b = c
+    const b = randInt(1, 30);
+    const c = randInt(0, 30);
+    const ans = b + c;
+    return { question: `? - ${b} = ${c}`, answer: ans, type: 'input', questionSub: '找出 ? 的值' };
+  } else {
+    // a - ? = c
+    const a = randInt(10, 60);
+    const ans = randInt(1, a);
+    const c = a - ans;
+    return { question: `${a} - ? = ${c}`, answer: ans, type: 'input', questionSub: '找出 ? 的值' };
+  }
+}
+
+// Level 2, Stage 5: Boss mixed
+function genL2S5() {
+  const r = randInt(1, 4);
+  if (r === 1) return genL2S1();
+  if (r === 2) return genL2S2();
+  if (r === 3) return genL2S3();
+  return genL2S4();
+}
+
+// Level 3, Stage 1: Three-digit addition/subtraction
+function genL3S1() {
+  if (Math.random() < 0.5) {
+    const a = randInt(100, 500);
+    const b = randInt(100, 499);
+    return { question: `${a} + ${b} = ?`, answer: a + b, type: 'input' };
+  } else {
+    const a = randInt(200, 999);
+    const b = randInt(100, a - 1);
+    return { question: `${a} - ${b} = ?`, answer: a - b, type: 'input' };
+  }
+}
+
+// Level 3, Stage 2: Two-digit × one-digit
+function genL3S2() {
+  const a = randInt(10, 99);
+  const b = randInt(2, 9);
+  return { question: `${a} × ${b} = ?`, answer: a * b, type: 'input' };
+}
+
+// Level 3, Stage 3: Basic division (exact)
+function genL3S3() {
+  const b = randInt(2, 9);
+  const ans = randInt(2, 12);
+  const a = b * ans;
+  return { question: `${a} ÷ ${b} = ?`, answer: ans, type: 'input' };
+}
+
+// Level 3, Stage 4: Unit conversion
+function genL3S4() {
+  const type = randInt(1, 4);
+  if (type === 1) {
+    // cm to m
+    const m = randInt(1, 9);
+    const cm = m * 100;
+    return { question: `${cm} 公分 = ? 公尺`, answer: m, type: 'input', questionSub: '100公分 = 1公尺' };
+  } else if (type === 2) {
+    // m to cm
+    const m = randInt(1, 9);
+    const cm = m * 100;
+    return { question: `${m} 公尺 = ? 公分`, answer: cm, type: 'input', questionSub: '1公尺 = 100公分' };
+  } else if (type === 3) {
+    // g to kg
+    const kg = randInt(1, 9);
+    const g = kg * 1000;
+    return { question: `${g} 公克 = ? 公斤`, answer: kg, type: 'input', questionSub: '1000公克 = 1公斤' };
+  } else {
+    // kg to g
+    const kg = randInt(1, 9);
+    const g = kg * 1000;
+    return { question: `${kg} 公斤 = ? 公克`, answer: g, type: 'input', questionSub: '1公斤 = 1000公克' };
+  }
+}
+
+// Level 3, Stage 5: Boss mixed
+function genL3S5() {
+  const r = randInt(1, 4);
+  if (r === 1) return genL3S1();
+  if (r === 2) return genL3S2();
+  if (r === 3) return genL3S3();
+  return genL3S4();
+}
+
+// Level 4, Stage 1: Multi-digit multiplication (two-digit × two-digit)
+function genL4S1() {
+  const a = randInt(11, 50);
+  const b = randInt(11, 50);
+  return { question: `${a} × ${b} = ?`, answer: a * b, type: 'input' };
+}
+
+// Level 4, Stage 2: Long division (integer result)
+function genL4S2() {
+  const b = randInt(2, 20);
+  const ans = randInt(5, 50);
+  const a = b * ans;
+  return { question: `${a} ÷ ${b} = ?`, answer: ans, type: 'input' };
+}
+
+// Level 4, Stage 3: Fractions - compare and same-denominator add/subtract
+function genL4S3() {
+  const type = randInt(1, 3);
+  if (type === 1) {
+    // Compare fractions with same denominator
+    const den = randInt(2, 10);
+    const n1 = randInt(1, den - 1);
+    let n2 = randInt(1, den - 1);
+    if (Math.random() < 0.15) n2 = n1;
+    const correct = n1 > n2 ? '>' : (n1 < n2 ? '<' : '=');
+    return {
+      question: `${n1}/${den} ○ ${n2}/${den}`,
+      answer: correct,
+      type: 'choice',
+      choices: ['>', '<', '='],
+      questionSub: '在 ○ 裡選 >、< 或 = 讓算式成立'
+    };
+  } else if (type === 2) {
+    // Same denominator addition
+    const den = randInt(2, 10);
+    const n1 = randInt(1, den - 1);
+    const n2 = randInt(1, den - n1);
+    const ansNum = n1 + n2;
+    const g = gcd(ansNum, den);
+    return {
+      question: `${n1}/${den} + ${n2}/${den} = ?`,
+      answer: den/g === 1 ? `${ansNum/g}` : `${ansNum/g}/${den/g}`,
+      type: 'fraction',
+      answerNum: ansNum/g,
+      answerDen: den/g,
+      questionSub: '答案可以不用先約分，2/4 或 1/2 都算對'
+    };
+  } else {
+    // Same denominator subtraction（分母下限 3，確保 n1<den 為真分數，不會退化成 2/2 之類假分數）
+    const den = randInt(3, 10);
+    const n1 = randInt(2, den - 1);
+    const n2 = randInt(1, n1 - 1);
+    const ansNum = n1 - n2;
+    const g = gcd(ansNum, den);
+    return {
+      question: `${n1}/${den} - ${n2}/${den} = ?`,
+      answer: den/g === 1 ? `${ansNum/g}` : `${ansNum/g}/${den/g}`,
+      type: 'fraction',
+      answerNum: ansNum/g,
+      answerDen: den/g,
+      questionSub: '答案可以不用先約分，2/4 或 1/2 都算對'
+    };
+  }
+}
+
+// Level 4, Stage 4: Area of rectangles
+function genL4S4() {
+  let l = randInt(2, 20);
+  let w = randInt(2, 20);
+  if (w > l) { const t = l; l = w; w = t; }   // 台灣國小標示慣例：長 ≥ 寬（面積/周長答案不受影響）
+  const type = randInt(1, 3);
+  if (type === 1) {
+    return { question: `長方形：長 ${l} 公分，寬 ${w} 公分\n面積 = ? 平方公分`, answer: l * w, type: 'input', questionSub: '面積 = 長 × 寬' };
+  } else if (type === 2) {
+    const area = l * w;
+    return { question: `長方形面積 ${area} 平方公分，長 ${l} 公分\n寬 = ? 公分`, answer: w, type: 'input', questionSub: '寬 = 面積 ÷ 長' };
+  } else {
+    // Perimeter
+    const p = 2 * (l + w);
+    return { question: `長方形：長 ${l} 公分，寬 ${w} 公分\n周長 = ? 公分`, answer: p, type: 'input', questionSub: '周長 = 2 × (長 + 寬)' };
+  }
+}
+
+// Level 4, Stage 5: Boss mixed
+function genL4S5() {
+  const r = randInt(1, 4);
+  if (r === 1) return genL4S1();
+  if (r === 2) return genL4S2();
+  if (r === 3) return genL4S3();
+  return genL4S4();
+}
+
+// Level 5, Stage 1: Unlike fraction add/subtract
+function genL5S1() {
+  // 產生最簡真分數運算元、且分母不同（異分母練習），與全書其他分數產生器一致（不出現 4/8 這種可約分題面）
+  function pickFrac() { let d = randInt(2, 8); let n = randInt(1, d - 1); const g = gcd(n, d); return { n: n / g, d: d / g }; }
+  let f1 = pickFrac(), f2 = pickFrac(), guard = 0;
+  while (f1.d === f2.d && guard++ < 20) f2 = pickFrac();
+  const n1 = f1.n, d1 = f1.d, n2 = f2.n, d2 = f2.d;
+  const commonDen = lcm(d1, d2);
+  const newN1 = n1 * (commonDen / d1);
+  const newN2 = n2 * (commonDen / d2);
+
+  if (Math.random() < 0.5 || newN1 <= newN2) {
+    // Addition
+    const resNum = newN1 + newN2;
+    const g = gcd(resNum, commonDen);
+    return {
+      question: `${n1}/${d1} + ${n2}/${d2} = ?`,
+      answer: commonDen/g === 1 ? `${resNum/g}` : `${resNum/g}/${commonDen/g}`,
+      type: 'fraction',
+      answerNum: resNum/g,
+      answerDen: commonDen/g,
+      questionSub: '答案可以不用先約分，2/4 或 1/2 都算對'
+    };
+  } else {
+    // Subtraction
+    const resNum = newN1 - newN2;
+    if (resNum <= 0) {
+      const resNum2 = newN1 + newN2;
+      const g = gcd(resNum2, commonDen);
+      return {
+        question: `${n1}/${d1} + ${n2}/${d2} = ?`,
+        answer: commonDen/g === 1 ? `${resNum2/g}` : `${resNum2/g}/${commonDen/g}`,
+        type: 'fraction',
+        answerNum: resNum2/g,
+        answerDen: commonDen/g,
+        questionSub: '答案可以不用先約分，2/4 或 1/2 都算對'
+      };
+    }
+    const g = gcd(resNum, commonDen);
+    return {
+      question: `${n1}/${d1} - ${n2}/${d2} = ?`,
+      answer: commonDen/g === 1 ? `${resNum/g}` : `${resNum/g}/${commonDen/g}`,
+      type: 'fraction',
+      answerNum: resNum/g,
+      answerDen: commonDen/g,
+      questionSub: '答案可以不用先約分，2/4 或 1/2 都算對'
+    };
+  }
+}
+
+// Level 5, Stage 2: Fraction multiply/divide
+function genL5S2() {
+  // Build a proper, already-simplified fraction operand (numerator < denominator)
+  function properFrac() {
+    const d = randInt(2, 9);
+    const n = randInt(1, d - 1);
+    const g = gcd(n, d);
+    return { n: n / g, d: d / g };
+  }
+  const f1 = properFrac();
+  const f2 = properFrac();
+  if (Math.random() < 0.5) {
+    // Multiplication
+    const resNum = f1.n * f2.n;
+    const resDen = f1.d * f2.d;
+    const g = gcd(resNum, resDen);
+    return {
+      question: `${f1.n}/${f1.d} × ${f2.n}/${f2.d} = ?`,
+      answer: (resDen/g === 1) ? `${resNum/g}` : `${resNum/g}/${resDen/g}`,
+      type: 'fraction',
+      answerNum: resNum/g,
+      answerDen: resDen/g,
+      questionSub: '答案可以不用先約分，2/4 或 1/2 都算對'
+    };
+  } else {
+    // Division (multiply by reciprocal)
+    const resNum = f1.n * f2.d;
+    const resDen = f1.d * f2.n;
+    const g = gcd(resNum, resDen);
+    return {
+      question: `${f1.n}/${f1.d} ÷ ${f2.n}/${f2.d} = ?`,
+      answer: (resDen/g === 1) ? `${resNum/g}` : `${resNum/g}/${resDen/g}`,
+      type: 'fraction',
+      answerNum: resNum/g,
+      answerDen: resDen/g,
+      questionSub: '答案可以不用先約分，2/4 或 1/2 都算對'
+    };
+  }
+}
+
+// Level 5, Stage 3: Decimal arithmetic
+function genL5S3() {
+  const op = randInt(1, 4);
+  if (op === 1) {
+    const a = (randInt(1, 99) / 10).toFixed(1);
+    const b = (randInt(1, 99) / 10).toFixed(1);
+    const ans = (parseFloat(a) + parseFloat(b)).toFixed(1);
+    return { question: `${a} + ${b} = ?`, answer: ans, type: 'decimal', questionSub: '答案保留一位小數' };
+  } else if (op === 2) {
+    let a = (randInt(20, 99) / 10).toFixed(1);
+    let b = (randInt(1, 50) / 10).toFixed(1);
+    if (parseFloat(a) < parseFloat(b)) [a, b] = [b, a];
+    const ans = (parseFloat(a) - parseFloat(b)).toFixed(1);
+    return { question: `${a} - ${b} = ?`, answer: ans, type: 'decimal', questionSub: '答案保留一位小數' };
+  } else if (op === 3) {
+    const a = (randInt(1, 20) / 10).toFixed(1);
+    const b = randInt(2, 9);
+    const ans = (parseFloat(a) * b).toFixed(1);
+    return { question: `${a} × ${b} = ?`, answer: ans, type: 'decimal', questionSub: '答案保留一位小數' };
+  } else {
+    const b = randInt(2, 9);
+    const ans = (randInt(1, 30) / 10).toFixed(1);
+    const a = (parseFloat(ans) * b).toFixed(1);
+    return { question: `${a} ÷ ${b} = ?`, answer: ans, type: 'decimal', questionSub: '答案保留一位小數' };
+  }
+}
+
+// Level 5, Stage 4: Percentage
+function genL5S4() {
+  const type = randInt(1, 4);
+  if (type === 1) {
+    // Fraction to percent
+    const fracs = [[1,2],[1,4],[3,4],[1,5],[2,5],[3,5],[4,5],[1,10],[3,10],[7,10]];
+    const [n, d] = fracs[randInt(0, fracs.length - 1)];
+    const pct = Math.round((n / d) * 100);
+    return { question: `${n}/${d} = ?%`, answer: pct, type: 'input', questionSub: '將分數轉換為百分比' };
+  } else if (type === 2) {
+    // Decimal to percent
+    const dec = (randInt(1, 99) / 100);
+    const pct = Math.round(dec * 100);
+    return { question: `${dec} = ?%`, answer: pct, type: 'input', questionSub: '將小數轉換為百分比' };
+  } else if (type === 3) {
+    // Percent to decimal (choose from multiple choice)
+    const pct = randInt(1, 9) * 10;
+    const correct = (pct / 100).toFixed(1);
+    const choices = [correct];
+    while (choices.length < 4) {
+      const c = ((randInt(1, 9) * 10) / 100).toFixed(1);
+      if (!choices.includes(c)) choices.push(c);
+    }
+    return { question: `${pct}% = ?`, answer: correct, type: 'choice', choices: shuffle(choices), questionSub: '選擇對應的小數' };
+  } else {
+    // Calculate percentage
+    const whole = randInt(2, 10) * 10;
+    const pct = randInt(1, 9) * 10;
+    const ans = whole * pct / 100;
+    return { question: `${whole} 的 ${pct}% = ?`, answer: ans, type: 'input', questionSub: '計算百分比的值' };
+  }
+}
+
+// Level 5, Stage 5: Boss mixed
+function genL5S5() {
+  const r = randInt(1, 4);
+  if (r === 1) return genL5S1();
+  if (r === 2) return genL5S2();
+  if (r === 3) return genL5S3();
+  return genL5S4();
+}
+
+// Level 6, Stage 1: Mixed fraction/decimal operations
+function genL6S1() {
+  const type = randInt(1, 3);
+  if (type === 1) {
+    // Fraction + decimal — only use denominators that give exact (terminating) decimals
+    const denoms = [2, 4, 5, 10];
+    const d0 = denoms[randInt(0, denoms.length - 1)];
+    const n0 = randInt(1, d0 - 1);
+    const g = gcd(n0, d0); const n = n0 / g, d = d0 / g;   // 顯示最簡真分數（不出現 2/4、5/10），值不變、仍為有限小數
+    const dec = (randInt(1, 20) / 10).toFixed(1);
+    const fracVal = n / d;
+    // n/d is exact here, so the sum is an exact 2-decimal value
+    const correctVal = fracVal + parseFloat(dec);
+    const ans = correctVal.toFixed(2);
+    const choices = [ans];
+    while (choices.length < 4) {
+      const c = (correctVal + (randInt(-5, 5) * 0.1)).toFixed(2);
+      if (!choices.includes(c) && parseFloat(c) > 0) choices.push(c);
+    }
+    return { question: `${n}/${d} + ${dec} = ?`, answer: ans, type: 'choice', choices: shuffle(choices), questionSub: '先把分數轉成小數再相加' };
+  } else if (type === 2) {
+    // Integer × fraction — answer as an exact (simplified) fraction, no rounding
+    const whole = randInt(2, 9);
+    let d = randInt(2, 6);
+    let n = randInt(1, d - 1);
+    const gOp = gcd(n, d);            // 顯示為最簡真分數（如 2/4 → 1/2），與全書其他分數產生器一致
+    n = n / gOp; d = d / gOp;
+    const resNum = whole * n;
+    const resDen = d;
+    const g = gcd(resNum, resDen);
+    const sNum = resNum / g;
+    const sDen = resDen / g;
+    return {
+      question: `${whole} × ${n}/${d} = ?`,
+      answer: sDen === 1 ? `${sNum}` : `${sNum}/${sDen}`,
+      type: 'fraction',
+      answerNum: sNum,
+      answerDen: sDen,
+      questionSub: '答案可以是分數，2/4 或 1/2 都算對'
+    };
+  } else {
+    // Compare fraction and decimal — 顯示最簡真分數（<1），與全書其他分數產生器一致（不出現 4/8 或 7/2）
+    let d = randInt(2, 8);
+    let n = randInt(1, d - 1);
+    const g = gcd(n, d); n /= g; d /= g;
+    const fracVal = n / d;
+    // 保持正的一位小數（負數/0 在等級 7 才教，等級 6 不出現）
+    const tenths = Math.max(1, Math.round(fracVal * 10) + randInt(-3, 3));
+    const dec = (tenths / 10).toFixed(1);
+    const correct = fracVal > parseFloat(dec) ? '>' : (fracVal < parseFloat(dec) ? '<' : '=');
+    return { question: `${n}/${d} ○ ${dec}`, answer: correct, type: 'choice', choices: ['>', '<', '='], questionSub: '在 ○ 裡選 >、< 或 = 讓算式成立' };
+  }
+}
+
+// Level 6, Stage 2: Ratio and proportion
+function genL6S2() {
+  const type = randInt(1, 3);
+  if (type === 1) {
+    // Simplify ratio
+    const g = randInt(2, 5);
+    const a = randInt(1, 6) * g;
+    const b = randInt(1, 6) * g;
+    const ga = gcd(a, b);
+    const ans = `${a/ga}:${b/ga}`;
+    const choices = [ans];
+    while (choices.length < 4) {
+      const c = `${randInt(1, 8)}:${randInt(1, 8)}`;
+      if (!choices.includes(c)) choices.push(c);
+    }
+    return { question: `化簡比 ${a}:${b} = ?`, answer: ans, type: 'choice', choices: shuffle(choices), questionSub: '選擇最簡比' };
+  } else if (type === 2) {
+    // Proportion: a/b = c/?
+    const a = randInt(1, 6);
+    const b = randInt(2, 8);
+    const mult = randInt(2, 5);
+    const c = a * mult;
+    const ans = b * mult;
+    return { question: `${a}:${b} = ${c}:?`, answer: ans, type: 'input', questionSub: '求未知數' };
+  } else {
+    // Divide in ratio
+    const total = randInt(3, 10) * 10;
+    const a = randInt(1, 4);
+    let b = randInt(1, 4);
+    while (b === a) b = randInt(1, 4);  // a≠b：確保有「較大的一份」，a=b 相等時題意不通
+    const partA = total * a / (a + b);
+    if (partA !== Math.floor(partA)) {
+      // Ensure integer answer
+      const total2 = (a + b) * randInt(2, 8);
+      const partA2 = total2 * a / (a + b);
+      return { question: `${total2} 按 ${a}:${b} 分配\n較大的部分 = ?`, answer: Math.max(partA2, total2 - partA2), type: 'input', questionSub: '按比例分配' };
+    }
+    return { question: `${total} 按 ${a}:${b} 分配\n較大的部分 = ?`, answer: Math.max(partA, total - partA), type: 'input', questionSub: '按比例分配' };
+  }
+}
+
+// Level 6, Stage 3: Circle circumference and area
+function genL6S3() {
+  const type = randInt(1, 3);
+  if (type === 1) {
+    // Circumference
+    const r = randInt(1, 10);
+    const ans = (2 * 3.14 * r).toFixed(2);
+    const choices = [ans];
+    while (choices.length < 4) {
+      const c = (2 * 3.14 * randInt(1, 10)).toFixed(2);
+      if (!choices.includes(c)) choices.push(c);
+    }
+    return { question: `圓的半徑 = ${r}\n周長 = ? (π=3.14)`, answer: ans, type: 'choice', choices: shuffle(choices), questionSub: '周長 = 2πr' };
+  } else if (type === 2) {
+    // Area
+    const r = randInt(1, 8);
+    const ans = (3.14 * r * r).toFixed(2);
+    const choices = [ans];
+    while (choices.length < 4) {
+      const c = (3.14 * randInt(1, 8) * randInt(1, 8)).toFixed(2);
+      if (!choices.includes(c)) choices.push(c);
+    }
+    return { question: `圓的半徑 = ${r}\n面積 = ? (π=3.14)`, answer: ans, type: 'choice', choices: shuffle(choices), questionSub: '面積 = πr²' };
+  } else {
+    // Diameter to circumference
+    const d = randInt(2, 14);
+    const ans = (3.14 * d).toFixed(2);
+    const choices = [ans];
+    while (choices.length < 4) {
+      const c = (3.14 * randInt(2, 14)).toFixed(2);
+      if (!choices.includes(c)) choices.push(c);
+    }
+    return { question: `圓的直徑 = ${d}\n周長 = ? (π=3.14)`, answer: ans, type: 'choice', choices: shuffle(choices), questionSub: '周長 = πd' };
+  }
+}
+
+// Level 6, Stage 4: Speed/distance/time problems
+function genL6S4() {
+  const type = randInt(1, 3);
+  if (type === 1) {
+    // distance = speed × time
+    const speed = randInt(3, 12) * 10;
+    const time = randInt(1, 5);
+    const dist = speed * time;
+    return { question: `速率 ${speed} 公里/時，走 ${time} 小時\n距離 = ? 公里`, answer: dist, type: 'input', questionSub: '距離 = 速率 × 時間' };
+  } else if (type === 2) {
+    // speed = distance / time
+    const time = randInt(2, 6);
+    const speed = randInt(3, 15) * 10;
+    const dist = speed * time;
+    return { question: `距離 ${dist} 公里，時間 ${time} 小時\n速率 = ? 公里/時`, answer: speed, type: 'input', questionSub: '速率 = 距離 ÷ 時間' };
+  } else {
+    // time = distance / speed
+    const speed = randInt(3, 12) * 10;
+    const time = randInt(2, 6);
+    const dist = speed * time;
+    return { question: `距離 ${dist} 公里，速率 ${speed} 公里/時\n時間 = ? 小時`, answer: time, type: 'input', questionSub: '時間 = 距離 ÷ 速率' };
+  }
+}
+
+// Level 6, Stage 5: Boss mixed
+function genL6S5() {
+  const r = randInt(1, 4);
+  if (r === 1) return genL6S1();
+  if (r === 2) return genL6S2();
+  if (r === 3) return genL6S3();
+  return genL6S4();
+}
+
+// Level 7, Stage 1: Positive/negative number arithmetic
+function genL7S1() {
+  const op = randInt(1, 4);
+  if (op === 1) {
+    const a = randInt(-20, 20);
+    const b = randInt(-20, 20);
+    return { question: `(${a}) + (${b}) = ?`, answer: a + b, type: 'input', allowNegative: true };
+  } else if (op === 2) {
+    const a = randInt(-20, 20);
+    const b = randInt(-20, 20);
+    return { question: `(${a}) - (${b}) = ?`, answer: a - b, type: 'input', allowNegative: true };
+  } else if (op === 3) {
+    const a = randInt(-10, 10);
+    const b = randInt(-10, 10);
+    return { question: `(${a}) × (${b}) = ?`, answer: a * b, type: 'input', allowNegative: true };
+  } else {
+    const b = randInt(1, 10) * (Math.random() < 0.5 ? 1 : -1);
+    const ans = randInt(-10, 10);
+    const a = b * ans;
+    return { question: `(${a}) ÷ (${b}) = ?`, answer: ans, type: 'input', allowNegative: true };
+  }
+}
+
+// Level 7, Stage 2: Simple linear equations
+function genL7S2() {
+  const type = randInt(1, 4);
+  if (type === 1) {
+    // ax + b = c
+    const a = randInt(2, 8);
+    const x = randInt(-10, 10);
+    const b = randInt(-15, 15);
+    const c = a * x + b;
+    const bTerm = b === 0 ? '' : (b > 0 ? ` + ${b}` : ` - ${Math.abs(b)}`);   // 負常數印成「- 15」而非「+ (-15)」，與 genL8S1 一致、易讀
+    return { question: `${a}x${bTerm} = ${c}\nx = ?`, answer: x, type: 'input', allowNegative: true, questionSub: '解方程式' };
+  } else if (type === 2) {
+    // ax - b = c
+    const a = randInt(2, 6);
+    const x = randInt(1, 10);
+    const b = randInt(1, 15);
+    const c = a * x - b;
+    return { question: `${a}x - ${b} = ${c}\nx = ?`, answer: x, type: 'input', allowNegative: true, questionSub: '解方程式' };
+  } else if (type === 3) {
+    // x/a + b = c
+    const a = randInt(2, 6);
+    const x = a * randInt(1, 8);
+    const b = randInt(1, 10);
+    const c = x / a + b;
+    return { question: `x/${a} + ${b} = ${c}\nx = ?`, answer: x, type: 'input', allowNegative: true, questionSub: '解方程式' };
+  } else {
+    // a(x + b) = c
+    const a = randInt(2, 5);
+    const x = randInt(-5, 10);
+    const b = randInt(1, 8);
+    const c = a * (x + b);
+    return { question: `${a}(x + ${b}) = ${c}\nx = ?`, answer: x, type: 'input', allowNegative: true, questionSub: '解方程式' };
+  }
+}
+
+// Level 7, Stage 3: Coordinate plane (which quadrant)
+function genL7S3() {
+  const type = randInt(1, 3);
+  if (type === 1) {
+    // Which quadrant
+    const x = randInt(1, 10) * (Math.random() < 0.5 ? 1 : -1);
+    const y = randInt(1, 10) * (Math.random() < 0.5 ? 1 : -1);
+    let quadrant;
+    if (x > 0 && y > 0) quadrant = '第一象限';
+    else if (x < 0 && y > 0) quadrant = '第二象限';
+    else if (x < 0 && y < 0) quadrant = '第三象限';
+    else quadrant = '第四象限';
+    return {
+      question: `點 (${x}, ${y}) 在哪個象限？`,
+      answer: quadrant,
+      type: 'choice',
+      choices: ['第一象限', '第二象限', '第三象限', '第四象限'],
+      questionSub: '判斷座標點所在象限'
+    };
+  } else if (type === 2) {
+    // Distance from origin (choose)
+    const x = randInt(1, 5) * (Math.random() < 0.5 ? 1 : -1);
+    const y = randInt(1, 5) * (Math.random() < 0.5 ? 1 : -1);
+    // Use only Pythagorean triples for integer answers
+    const triples = [[3,4,5],[5,12,13],[6,8,10],[8,15,17]];
+    const t = triples[randInt(0, triples.length - 1)];
+    const px = t[0] * (Math.random() < 0.5 ? 1 : -1);
+    const py = t[1] * (Math.random() < 0.5 ? 1 : -1);
+    return { question: `點 (${px}, ${py}) 到原點的距離 = ?`, answer: t[2], type: 'input', questionSub: '距離 = √(x² + y²)' };
+  } else {
+    // 判斷點的位置。不產生 (0,0)：原點同時在 x 軸與 y 軸上，會造成「x軸/y軸」也成立的多解，
+    // 故原點只作為誘答選項出現、不當正解，確保每題唯一解。
+    const val = randInt(1, 10) * (Math.random() < 0.5 ? 1 : -1);
+    const val2 = randInt(1, 10) * (Math.random() < 0.5 ? 1 : -1);
+    const kase = randInt(0, 2);
+    let point, correct;
+    if (kase === 0) { point = `(${val}, 0)`; correct = 'x 軸'; }
+    else if (kase === 1) { point = `(0, ${val})`; correct = 'y 軸'; }
+    else { point = `(${val}, ${val2})`; correct = '不在軸上'; }
+    return { question: `點 ${point} 在哪裡？`, answer: correct, type: 'choice', choices: ['x 軸', 'y 軸', '原點', '不在軸上'], questionSub: '判斷點的位置' };
+  }
+}
+
+// Level 7, Stage 4: Triangle area and angle sum
+function genL7S4() {
+  const type = randInt(1, 3);
+  if (type === 1) {
+    // Triangle area
+    const base = randInt(3, 15);
+    const height = randInt(2, 12);
+    // Ensure even product for integer area
+    const b2 = base % 2 === 0 ? base : base + 1;
+    const area = b2 * height / 2;
+    return { question: `三角形：底 ${b2}，高 ${height}\n面積 = ?`, answer: area, type: 'input', questionSub: '面積 = 底 × 高 ÷ 2' };
+  } else if (type === 2) {
+    // Angle sum (find missing angle)
+    const a1 = randInt(20, 80);
+    const a2 = randInt(20, 80);
+    const a3 = 180 - a1 - a2;
+    if (a3 <= 0) {
+      return { question: `三角形兩角為 30° 和 60°\n第三角 = ?°`, answer: 90, type: 'input', questionSub: '三角形內角和 = 180°' };
+    }
+    return { question: `三角形兩角為 ${a1}° 和 ${a2}°\n第三角 = ?°`, answer: a3, type: 'input', questionSub: '三角形內角和 = 180°' };
+  } else {
+    // Triangle type —— 每題四個選項中「恰好一個」為真，避免「更廣義但也正確」的
+    // 選項被判錯（例：等邊亦為等腰、45-45-90 亦為直角/等腰）。作法：每種三角形自帶
+    // 一組專屬選項，正解以外三個對「這個」三角形皆為假（用等邊/直角/鈍角/不等邊等
+    // 互斥類別當誘答），故不會出現多重正確。
+    const types = [
+      // 60-60-60：等邊（正解）；直角✗、鈍角✗、不等邊✗
+      { angles: [60, 60, 60], name: '等邊三角形',
+        choices: ['等邊三角形', '直角三角形', '鈍角三角形', '不等邊三角形'] },
+      // 45-45-90：等腰直角（正解）；不提供「直角/等腰」以免多重正確 → 等邊✗、鈍角✗、不等邊✗
+      { angles: [90, 45, 45], name: '等腰直角三角形',
+        choices: ['等腰直角三角形', '等邊三角形', '鈍角三角形', '不等邊三角形'] },
+      // 30-60-90：直角（正解，且三邊不等，非等腰）；等邊✗、等腰✗、鈍角✗
+      { angles: [90, 30, 60], name: '直角三角形',
+        choices: ['直角三角形', '等邊三角形', '等腰三角形', '鈍角三角形'] },
+      // 50-50-80：等腰（正解，最大角 80° 為銳角）；等邊✗、直角✗、鈍角✗
+      { angles: [50, 50, 80], name: '等腰三角形',
+        choices: ['等腰三角形', '等邊三角形', '直角三角形', '鈍角三角形'] }
+    ];
+    const t = types[randInt(0, types.length - 1)];
+    const shuffledAngles = shuffle(t.angles);
+    return {
+      question: `三角形三角為 ${shuffledAngles[0]}°, ${shuffledAngles[1]}°, ${shuffledAngles[2]}°\n這是什麼三角形？`,
+      answer: t.name,
+      type: 'choice',
+      choices: shuffle(t.choices),
+      questionSub: '判斷三角形類型'
+    };
+  }
+}
+
+// Level 7, Stage 5: Boss mixed
+function genL7S5() {
+  const r = randInt(1, 4);
+  if (r === 1) return genL7S1();
+  if (r === 2) return genL7S2();
+  if (r === 3) return genL7S3();
+  return genL7S4();
+}
+
+// ==================== 國中延伸：等級 8～12 ====================
+
+// Level 8, Stage 1: 解一元一次方程式（ax + b = c，含負係數）
+function genL8S1() {
+  const a = randInt(2, 9) * (Math.random() < 0.3 ? -1 : 1);
+  const x = randInt(-9, 9);
+  const b = randInt(-15, 15);
+  const c = a * x + b;
+  const bStr = b === 0 ? '' : (b > 0 ? ` + ${b}` : ` - ${-b}`);
+  return { question: `${a}x${bStr} = ${c}\nx = ?`, answer: x, type: 'input', allowNegative: true, questionSub: '解一元一次方程式' };
+}
+
+// Level 8, Stage 2: 兩邊都有未知數（ax + b = cx + d）
+function genL8S2() {
+  let a = randInt(2, 9), c = randInt(2, 9);
+  while (a === c) c = randInt(2, 9);
+  const x = randInt(-8, 8);
+  const b = randInt(-12, 12);
+  const d = (a - c) * x + b; // 使 ax + b = cx + d 恆成立
+  const bStr = b === 0 ? '' : (b > 0 ? ` + ${b}` : ` - ${-b}`);
+  const dStr = d === 0 ? '' : (d > 0 ? ` + ${d}` : ` - ${-d}`);
+  return { question: `${a}x${bStr} = ${c}x${dStr}\nx = ?`, answer: x, type: 'input', allowNegative: true, questionSub: '兩邊都有未知數，先把 x 移到同一邊' };
+}
+
+// Level 8, Stage 3: 應用題（連續整數／和差問題）
+function genL8S3() {
+  if (randInt(1, 2) === 1) {
+    const mid = randInt(3, 30);
+    const sum = 3 * mid; // (mid-1)+mid+(mid+1)
+    return { question: `三個連續整數的和是 ${sum}，最小的整數是多少？`, answer: mid - 1, type: 'input', questionSub: '設中間的數為 x，三數為 x−1、x、x+1' };
+  } else {
+    const big = randInt(10, 40);
+    const small = randInt(1, big - 1);
+    return { question: `兩個數的和是 ${big + small}，差是 ${big - small}，較大的數是多少？`, answer: big, type: 'input', questionSub: '較大數 =（和 ＋ 差）÷ 2' };
+  }
+}
+
+// Level 8, Stage 4: 雞兔同籠
+function genL8S4() {
+  const rabbits = randInt(1, 12);
+  const chickens = randInt(1, 12);
+  const heads = rabbits + chickens;
+  const feet = 4 * rabbits + 2 * chickens;
+  const askRabbit = Math.random() < 0.5;
+  return {
+    question: `雞和兔共 ${heads} 隻，總共有 ${feet} 隻腳。\n請問${askRabbit ? '兔' : '雞'}有幾隻？`,
+    answer: askRabbit ? rabbits : chickens,
+    type: 'input',
+    questionSub: '雞有 2 隻腳、兔有 4 隻腳'
+  };
+}
+
+// Level 8, Stage 5: Boss mixed
+function genL8S5() {
+  const r = randInt(1, 4);
+  if (r === 1) return genL8S1();
+  if (r === 2) return genL8S2();
+  if (r === 3) return genL8S3();
+  return genL8S4();
+}
+
+// Level 9, Stage 1: 解比例式（a : b = c : ?）
+function genL9S1() {
+  const a = randInt(2, 9);
+  const b = randInt(2, 9);
+  const m = randInt(2, 8);
+  const c = a * m;
+  const x = b * m; // a:b = c:x  →  a·x = b·c  →  x = b·c/a = b·m
+  return { question: `${a} : ${b} = ${c} : ?`, answer: x, type: 'input', questionSub: '比例式：a : b = c : d 時 a × d = b × c' };
+}
+
+// Level 9, Stage 2: 正比（y = kx）
+function genL9S2() {
+  const k = randInt(2, 9);
+  const x1 = randInt(2, 9);
+  let x2 = randInt(2, 12);
+  while (x2 === x1) x2 = randInt(2, 12);
+  return { question: `y 與 x 成正比。當 x = ${x1} 時 y = ${k * x1}，則當 x = ${x2} 時 y = ?`, answer: k * x2, type: 'input', questionSub: '正比：y = k x，先求出比例常數 k' };
+}
+
+// Level 9, Stage 3: 反比（x × y = k）
+function genL9S3() {
+  const y1 = randInt(2, 12);
+  const x1 = randInt(2, 12);
+  const k = x1 * y1;
+  const divisors = [];
+  for (let d = 1; d <= k; d++) if (k % d === 0) divisors.push(d);
+  let x2 = divisors[randInt(0, divisors.length - 1)];
+  while (x2 === x1 && divisors.length > 1) x2 = divisors[randInt(0, divisors.length - 1)]; // 排除 x2=x1 的退化題（與 genL9S2 一致）
+  return { question: `y 與 x 成反比。當 x = ${x1} 時 y = ${y1}，則當 x = ${x2} 時 y = ?`, answer: k / x2, type: 'input', questionSub: '反比：x × y = 定值 k' };
+}
+
+// Level 9, Stage 4: 比例分配
+function genL9S4() {
+  const m = randInt(2, 6);
+  let n = randInt(2, 6);
+  while (n === m) n = randInt(2, 6);
+  const part = randInt(3, 15); // 一份的值
+  const total = (m + n) * part;
+  return {
+    question: `把 ${total} 元依照 ${m} : ${n} 分配給兩人，分得較多的人得到多少元？`,
+    answer: Math.max(m, n) * part,
+    type: 'input',
+    questionSub: '先求一份 = 總數 ÷（比的總和）'
+  };
+}
+
+// Level 9, Stage 5: Boss mixed
+function genL9S5() {
+  const r = randInt(1, 4);
+  if (r === 1) return genL9S1();
+  if (r === 2) return genL9S2();
+  if (r === 3) return genL9S3();
+  return genL9S4();
+}
+
+// Level 10, Stage 1: 平方根（x² = n → ±）
+function genL10S1() {
+  const m = randInt(2, 12);
+  const n = m * m;
+  return {
+    question: `x² = ${n}，x = ?`,
+    answer: `±${m}`,
+    type: 'choice',
+    choices: shuffle([`±${m}`, `${m}`, `-${m}`, `${n}`]),
+    questionSub: '別忘了：一個正數的平方根有正、負兩個'
+  };
+}
+
+// Level 10, Stage 2: 括號式求根（(x − p)(x − q) = 0）
+function genL10S2() {
+  let p = randInt(-8, 8), q = randInt(-8, 8);
+  while (q === p) q = randInt(-8, 8);
+  const fac = r => r === 0 ? 'x' : (r > 0 ? `(x - ${r})` : `(x + ${-r})`);
+  return { question: `${fac(p)}${fac(q)} = 0\n較大的根 x = ?`, answer: Math.max(p, q), type: 'input', allowNegative: true, questionSub: '每個括號各自等於 0（若因式是 x，代表有一個根是 0）' };
+}
+
+// Level 10, Stage 3: 因式分解求根（x² + bx + c = 0）
+function genL10S3() {
+  let r1 = randInt(-7, 7); while (r1 === 0) r1 = randInt(-7, 7);
+  let r2 = randInt(-7, 7); while (r2 === 0 || r2 === r1 || r1 + r2 === 0) r2 = randInt(-7, 7);
+  const b = -(r1 + r2);
+  const c = r1 * r2;
+  const bStr = (b === 1) ? '+ x' : (b === -1) ? '- x' : (b > 0 ? `+ ${b}x` : `- ${-b}x`);
+  const cStr = c >= 0 ? `+ ${c}` : `- ${-c}`;
+  return { question: `x² ${bStr} ${cStr} = 0\n較小的根 x = ?`, answer: Math.min(r1, r2), type: 'input', allowNegative: true, questionSub: '因式分解成兩個括號後求兩根' };
+}
+
+// Level 10, Stage 4: 判別式判斷實根個數（x² + bx + c = 0，a = 1）
+function genL10S4() {
+  const b = randInt(-6, 6);
+  let c = randInt(-6, 9); while (c === 0) c = randInt(-6, 9);
+  const D = b * b - 4 * c;
+  const count = D > 0 ? '2 個' : (D === 0 ? '1 個' : '0 個');
+  let bpart = '';
+  if (b === 1) bpart = ' + x';
+  else if (b === -1) bpart = ' - x';
+  else if (b > 0) bpart = ` + ${b}x`;
+  else if (b < 0) bpart = ` - ${-b}x`;
+  const cpart = c >= 0 ? ` + ${c}` : ` - ${-c}`;
+  return {
+    question: `方程式 x²${bpart}${cpart} = 0\n有幾個不同（相異）的實數根？`,
+    answer: count,
+    type: 'choice',
+    choices: shuffle(['2 個', '1 個', '0 個']),
+    questionSub: '判別式 D = b² − 4ac：D>0 有 2 個相異實數根、D=0 有 1 個（重根，相異的只有 1 個）、D<0 沒有實數根'
+  };
+}
+
+// Level 10, Stage 5: Boss mixed
+function genL10S5() {
+  const r = randInt(1, 4);
+  if (r === 1) return genL10S1();
+  if (r === 2) return genL10S2();
+  if (r === 3) return genL10S3();
+  return genL10S4();
+}
+
+// Level 11, Stage 1: 角度計算（內角和／外角／多邊形）
+function genL11S1() {
+  const t = randInt(1, 3);
+  if (t === 1) {
+    let a1 = randInt(30, 80), a2 = randInt(30, 80);
+    if (a1 + a2 >= 175) { a1 = 60; a2 = 70; }
+    return { question: `三角形有兩個角是 ${a1}° 和 ${a2}°，第三個角是幾度？`, answer: 180 - a1 - a2, type: 'input', questionSub: '三角形內角和 = 180°' };
+  } else if (t === 2) {
+    const a1 = randInt(40, 80), a2 = randInt(40, 80);
+    return { question: `三角形的一個外角等於「不相鄰的兩個內角」之和。若這兩個內角為 ${a1}° 和 ${a2}°，則這個外角是幾度？`, answer: a1 + a2, type: 'input', questionSub: '三角形的外角 = 兩個內對角之和' };
+  } else {
+    const n = randInt(3, 8);
+    return { question: `${n} 邊形的內角和是幾度？`, answer: (n - 2) * 180, type: 'input', questionSub: 'n 邊形內角和 =（n − 2）× 180°' };
+  }
+}
+
+// Level 11, Stage 2: 平行線截角
+function genL11S2() {
+  const theta = randInt(35, 145);
+  const rel = randInt(1, 3);
+  if (rel === 1) {
+    return { question: `兩條平行線被一直線所截，其中一個角為 ${theta}°，它的「同位角」是幾度？`, answer: theta, type: 'input', questionSub: '兩平行線的同位角相等' };
+  } else if (rel === 2) {
+    return { question: `兩條平行線被一直線所截，其中一個角為 ${theta}°，它的「內錯角」是幾度？`, answer: theta, type: 'input', questionSub: '兩平行線的內錯角相等' };
+  } else {
+    return { question: `兩條平行線被一直線所截，其中一個角為 ${theta}°，與它「同旁內角」的角是幾度？`, answer: 180 - theta, type: 'input', questionSub: '兩平行線的同旁內角互補（和為 180°）' };
+  }
+}
+
+// Level 11, Stage 3: 畢氏定理
+function genL11S3() {
+  const triples = [[3,4,5],[6,8,10],[5,12,13],[8,15,17],[9,12,15],[7,24,25],[20,21,29]];
+  const t = triples[randInt(0, triples.length - 1)];
+  if (Math.random() < 0.5) {
+    return { question: `直角三角形的兩股長為 ${t[0]} 和 ${t[1]}，斜邊長 = ?`, answer: t[2], type: 'input', questionSub: '畢氏定理：斜邊² = 股² ＋ 股²' };
+  } else {
+    return { question: `直角三角形的斜邊長 ${t[2]}，一股長 ${t[0]}，另一股長 = ?`, answer: t[1], type: 'input', questionSub: '畢氏定理：股² = 斜邊² − 另一股²' };
+  }
+}
+
+// Level 11, Stage 4: 面積（平行四邊形／梯形／三角形）
+function genL11S4() {
+  const t = randInt(1, 3);
+  if (t === 1) {
+    const base = randInt(4, 15), h = randInt(3, 12);
+    return { question: `平行四邊形：底 ${base}，高 ${h}\n面積 = ?`, answer: base * h, type: 'input', questionSub: '平行四邊形面積 = 底 × 高' };
+  } else if (t === 2) {
+    const top = randInt(3, 10);
+    const bot = randInt(top + 1, 16);
+    let h = randInt(2, 12);
+    if (((top + bot) * h) % 2 !== 0) h += 1;
+    return { question: `梯形：上底 ${top}，下底 ${bot}，高 ${h}\n面積 = ?`, answer: (top + bot) * h / 2, type: 'input', questionSub: '梯形面積 =（上底 ＋ 下底）× 高 ÷ 2' };
+  } else {
+    const base = randInt(3, 16);
+    let h = randInt(2, 12);
+    if ((base * h) % 2 !== 0) h += 1;
+    return { question: `三角形：底 ${base}，高 ${h}\n面積 = ?`, answer: base * h / 2, type: 'input', questionSub: '三角形面積 = 底 × 高 ÷ 2' };
+  }
+}
+
+// Level 11, Stage 5: Boss mixed
+function genL11S5() {
+  const r = randInt(1, 4);
+  if (r === 1) return genL11S1();
+  if (r === 2) return genL11S2();
+  if (r === 3) return genL11S3();
+  return genL11S4();
+}
+
+// Level 12, Stage 1: 平均數
+function genL12S1() {
+  const n = randInt(4, 5);
+  let nums, sum;
+  do {
+    nums = [];
+    for (let i = 0; i < n; i++) nums.push(randInt(2, 30));
+    sum = nums.reduce((s, v) => s + v, 0);
+  } while (sum % n !== 0);
+  return { question: `資料：${nums.join('、')}\n這組數的平均數 = ?`, answer: sum / n, type: 'input', questionSub: '平均數 = 總和 ÷ 個數' };
+}
+
+// Level 12, Stage 2: 中位數與眾數
+function genL12S2() {
+  if (Math.random() < 0.5) {
+    const nums = [];
+    for (let i = 0; i < 5; i++) nums.push(randInt(1, 30));
+    const sorted = [...nums].sort((a, b) => a - b);
+    return { question: `資料：${nums.join('、')}\n這組數的中位數 = ?`, answer: sorted[2], type: 'input', questionSub: '中位數：由小到大排序後，最中間的那個數' };
+  } else {
+    const modeVal = randInt(1, 9);
+    let o1 = randInt(1, 9); while (o1 === modeVal) o1 = randInt(1, 9);
+    let o2 = randInt(1, 9); while (o2 === modeVal || o2 === o1) o2 = randInt(1, 9);
+    const nums = shuffle([modeVal, modeVal, modeVal, o1, o2]);
+    return { question: `資料：${nums.join('、')}\n這組數的眾數 = ?`, answer: modeVal, type: 'input', questionSub: '眾數：出現次數最多的那個數' };
+  }
+}
+
+// Level 12, Stage 3: 球的機率
+function genL12S3() {
+  const red = randInt(1, 6), blue = randInt(1, 6), green = randInt(0, 4);
+  const total = red + blue + green;
+  const colors = [['紅', red], ['藍', blue]];
+  if (green > 0) colors.push(['綠', green]);
+  const pick = colors[randInt(0, colors.length - 1)];
+  const num = pick[1], den = total;
+  const g = gcd(num, den);
+  return {
+    question: `袋子裡有 ${red} 顆紅球、${blue} 顆藍球${green > 0 ? `、${green} 顆綠球` : ''}。\n隨機抽一顆，抽到${pick[0]}球的機率 = ?`,
+    answer: den / g === 1 ? `${num / g}` : `${num / g}/${den / g}`,
+    type: 'fraction',
+    answerNum: num / g,
+    answerDen: den / g,
+    questionSub: '機率 = 想要的結果數 ÷ 全部結果數（可不約分）'
+  };
+}
+
+// Level 12, Stage 4: 骰子機率
+function genL12S4() {
+  const events = [
+    { q: '出現偶數點', num: 3 },
+    { q: '出現奇數點', num: 3 },
+    { q: '點數大於 4', num: 2 },
+    { q: '點數小於 3', num: 2 },
+    { q: '出現 6 點', num: 1 },
+    { q: '點數是 3 的倍數', num: 2 }
+  ];
+  const e = events[randInt(0, events.length - 1)];
+  const den = 6;
+  const g = gcd(e.num, den);
+  return {
+    question: `擲一顆公正的骰子（1～6 點），${e.q}的機率 = ?`,
+    answer: den / g === 1 ? `${e.num / g}` : `${e.num / g}/${den / g}`,
+    type: 'fraction',
+    answerNum: e.num / g,
+    answerDen: den / g,
+    questionSub: '機率 = 符合的點數個數 ÷ 6（可不約分）'
+  };
+}
+
+// Level 12, Stage 5: Boss mixed
+function genL12S5() {
+  const r = randInt(1, 4);
+  if (r === 1) return genL12S1();
+  if (r === 2) return genL12S2();
+  if (r === 3) return genL12S3();
+  return genL12S4();
+}
+
+// Master generator
+const generators = [
+  [genL1S1, genL1S2, genL1S3, genL1S4, genL1S5],
+  [genL2S1, genL2S2, genL2S3, genL2S4, genL2S5],
+  [genL3S1, genL3S2, genL3S3, genL3S4, genL3S5],
+  [genL4S1, genL4S2, genL4S3, genL4S4, genL4S5],
+  [genL5S1, genL5S2, genL5S3, genL5S4, genL5S5],
+  [genL6S1, genL6S2, genL6S3, genL6S4, genL6S5],
+  [genL7S1, genL7S2, genL7S3, genL7S4, genL7S5],
+  [genL8S1, genL8S2, genL8S3, genL8S4, genL8S5],
+  [genL9S1, genL9S2, genL9S3, genL9S4, genL9S5],
+  [genL10S1, genL10S2, genL10S3, genL10S4, genL10S5],
+  [genL11S1, genL11S2, genL11S3, genL11S4, genL11S5],
+  [genL12S1, genL12S2, genL12S3, genL12S4, genL12S5]
+];
+
+function generateQuestion(level, stage) {
+  return generators[level][stage]();
+}
+
+function generateQuestions(level, stage, count) {
+  const questions = [];
+  for (let i = 0; i < count; i++) {
+    questions.push(generateQuestion(level, stage));
+  }
+  return questions;
+}
+
+// ==================== SCREEN MANAGEMENT ====================
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(`screen-${name}`).classList.add('active');
+
+  // Update nav
+  document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+    btn.classList.remove('active');
+  });
+  const navMap = { home: 0, daily: 1, wrong: 2, stats: 3 };
+  if (navMap[name] !== undefined) {
+    document.querySelectorAll('.nav-btn')[navMap[name]].classList.add('active');
+  }
+
+  // Show/hide nav during game
+  const hideNav = ['game', 'result', 'daily'].includes(name);
+  document.getElementById('bottom-nav').style.display = hideNav ? 'none' : 'flex';
+
+  // Refresh screen content
+  if (name === 'home') renderHome();
+  if (name === 'wrong') renderWrongBook();
+  if (name === 'stats') renderStats();
+
+  // BOSS 戰 hook：離開 game 畫面時收起 HUD/浮層，進王之殿堂時渲染
+  if (window.MathBoss) { try { MathBoss.onScreen(name); } catch (e) {} }
+}
+
+// ==================== HOME SCREEN ====================
+function renderHome() {
+  const rank = getRankName(state.progress.exp);
+  document.getElementById('home-rank').textContent = rank;
+  document.getElementById('home-exp').textContent = state.progress.exp;
+  document.getElementById('home-streak').textContent = state.stats.streak;
+
+  // EXP bar
+  const r = getRank(state.progress.exp);
+  document.getElementById('exp-rank-label').textContent = r.name;
+  const nextRankIdx = RANKS.indexOf(r);
+  const nextRank = RANKS[Math.min(nextRankIdx + 1, RANKS.length - 1)];
+  const expInRank = state.progress.exp - r.min;
+  const expNeeded = r.max === Infinity ? 1000 : (r.max - r.min);
+  document.getElementById('exp-progress-label').textContent = r.max === Infinity ? `${state.progress.exp}` : `${state.progress.exp} / ${r.max}`;
+  document.getElementById('exp-fill').style.width = `${Math.min(100, (expInRank / expNeeded) * 100)}%`;
+
+  // Level map
+  const map = document.getElementById('level-map');
+  map.innerHTML = '';
+
+  // Set background gradient
+  document.getElementById('screen-home').style.background = '';
+
+  LEVELS.forEach((level, i) => {
+    const unlocked = isLevelUnlocked(i);
+    const totalStars = [1,2,3,4,5].reduce((s, st) => s + getStageStars(i, st), 0);
+    const maxStars = 15;
+
+    const card = document.createElement('div');
+    card.className = `level-card${unlocked ? '' : ' locked'}`;
+    card.innerHTML = `
+      <div class="level-card-header">
+        <div class="level-icon">${level.icon}</div>
+        <div>
+          <div class="level-name">${level.name}</div>
+          <div class="level-grade"><span class="level-grade-badge">${level.grade}</span></div>
+        </div>
+      </div>
+      <div class="level-stars">⭐ ${totalStars} / ${maxStars}</div>
+    `;
+
+    if (unlocked) {
+      card.setAttribute('role', 'button');
+      card.tabIndex = 0;
+      card.onclick = () => showStages(i);
+      card.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); } };
+    }
+
+    map.appendChild(card);
+  });
+
+  // 用統一 profile 覆蓋 HUD 數值（稱號 / 經驗條 / 連續天數）。
+  syncHudFromGame();
+
+  // BOSS 戰 hook：注入「🏰 王之殿堂」入口鈕
+  if (window.MathBoss) { try { MathBoss.mountHomeEntry(); } catch (e) {} }
+}
+
+// ==================== STAGE SELECT ====================
+function showStages(level) {
+  gameState.level = level;
+  const levelInfo = LEVELS[level];
+
+  document.getElementById('stage-screen-title').textContent = `${levelInfo.icon} ${levelInfo.name}`;
+  document.getElementById('screen-stages').style.background = '';
+
+  const list = document.getElementById('stage-list');
+  list.innerHTML = '';
+
+  levelInfo.stages.forEach((name, i) => {
+    const stageNum = i + 1;
+    const unlocked = isStageUnlocked(level, stageNum);
+    const stars = getStageStars(level, stageNum);
+    const isBoss = stageNum === 5;
+
+    const card = document.createElement('div');
+    card.className = `stage-card${unlocked ? '' : ' locked'}${isBoss ? ' boss' : ''}`;
+
+    const starsDisplay = stars > 0 ? '⭐'.repeat(stars) + '☆'.repeat(3 - stars) : '☆☆☆';
+
+    card.innerHTML = `
+      <div class="stage-info">
+        <div class="stage-num" style="background:${levelInfo.color}">${isBoss ? '👑' : stageNum}</div>
+        <div>
+          <div class="stage-name">${name}</div>
+          <div class="stage-sub">${unlocked ? '▶️ 開始挑戰（共 10 題）' : '共 10 題'}</div>
+        </div>
+      </div>
+      <div class="stage-stars-display">${unlocked ? starsDisplay : '🔒'}</div>
+    `;
+
+    if (unlocked) {
+      card.setAttribute('role', 'button');
+      card.tabIndex = 0;
+      card.onclick = () => startStage(level, i);
+      card.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); } };
+    }
+
+    list.appendChild(card);
+  });
+
+  // BOSS 戰 hook：於 BOSS混合 卡片下追加「挑戰王」鈕
+  if (window.MathBoss) { try { MathBoss.decorateStages(level, list); } catch (e) {} }
+
+  showScreen('stages');
+}
+
+// ==================== GAMEPLAY ====================
+function startStage(level, stage) {
+  gameState = {
+    level,
+    stage,
+    questions: generateQuestions(level, stage, 10),
+    current: 0,
+    errors: 0,
+    combo: 0,
+    maxCombo: 0,
+    expEarned: 0,
+    answers: []
+  };
+
+  const levelInfo = LEVELS[level];
+  document.getElementById('game-title').textContent = `${levelInfo.icon} ${levelInfo.stages[stage]}`;
+  document.getElementById('screen-game').style.background = '';
+
+  showScreen('game');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = gameState.questions[gameState.current];
+  gameState.answered = false;  // 單題鎖：新題目重置，杜絕回饋期間連點重複計分
+
+  // Progress dots
+  const dots = document.getElementById('progress-dots');
+  dots.innerHTML = '';
+  for (let i = 0; i < 10; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'progress-dot';
+    if (i < gameState.current) {
+      dot.className += gameState.answers[i] ? ' correct' : ' wrong';
+      dot.textContent = gameState.answers[i] ? '✓' : '✗';
+    } else if (i === gameState.current) {
+      dot.className += ' current';
+      dot.textContent = i + 1;
+    } else {
+      dot.textContent = i + 1;
+    }
+    dots.appendChild(dot);
+  }
+
+  // Combo display
+  const comboEl = document.getElementById('combo-display');
+  if (gameState.combo >= 2) {
+    const fireLevel = Math.min(gameState.combo, 5);
+    const fires = '🔥'.repeat(Math.min(fireLevel, 3));
+    comboEl.innerHTML = `<span class="combo-text ${fireLevel >= 4 ? 'fire-anim' : ''}">${fires} ×${gameState.combo} 連擊！</span>`;
+  } else {
+    comboEl.innerHTML = '';
+  }
+
+  // Question
+  const questionText = document.getElementById('question-text');
+  const questionSub = document.getElementById('question-sub');
+
+  if (q.isObjects) {
+    questionText.innerHTML = `<div class="objects-display">${q.question}</div>`;
+  } else if (q.question.includes('\n')) {
+    questionText.innerHTML = q.question.split('\n').join('<br>');
+  } else {
+    questionText.textContent = q.question;
+  }
+  questionSub.textContent = q.questionSub || '';
+
+  // Answer area
+  const area = document.getElementById('answer-area');
+  area.innerHTML = '';
+
+  if (q.type === 'choice') {
+    renderChoices(area, q);
+  } else if (q.type === 'fraction') {
+    renderFractionInput(area, q);
+  } else if (q.type === 'decimal') {
+    renderDecimalInput(area, q);
+  } else {
+    renderNumpad(area, q);
+  }
+}
+
+function renderChoices(container, q) {
+  const grid = document.createElement('div');
+  grid.className = 'choices-grid';
+  if (q.choices.length === 3) {
+    grid.style.gridTemplateColumns = '1fr 1fr 1fr';
+  }
+
+  q.choices.forEach(choice => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = choice;
+    btn.onclick = () => handleChoiceAnswer(choice, q, grid);
+    grid.appendChild(btn);
+  });
+
+  container.appendChild(grid);
+}
+
+function handleChoiceAnswer(selected, q, grid) {
+  const correct = String(selected) === String(q.answer);
+  const buttons = grid.querySelectorAll('.choice-btn');
+
+  buttons.forEach(btn => {
+    btn.onclick = null;
+    if (btn.textContent === String(q.answer)) {
+      btn.classList.add('correct');
+    }
+    if (btn.textContent === selected && !correct) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  // 答錯時補上方法提示（與 numpad/分數路徑一致的糾正式回饋；正解按鈕已高亮故不重複數字）
+  if (!correct && q.questionSub) {
+    const area = document.getElementById('answer-area');
+    if (area && !area.querySelector('.reveal-method')) {
+      const reveal = document.createElement('div');
+      reveal.className = 'correct-reveal';
+      const methodLine = document.createElement('div');
+      methodLine.className = 'reveal-method';
+      methodLine.textContent = `解法：${q.questionSub}`;
+      reveal.appendChild(methodLine);
+      area.appendChild(reveal);
+    }
+  }
+
+  processAnswer(correct, selected, q);
+}
+
+function renderNumpad(container, q) {
+  const inputDisplay = document.createElement('div');
+  inputDisplay.className = 'numpad-input';
+  inputDisplay.id = 'numpad-display';
+  inputDisplay.textContent = '';
+  container.appendChild(inputDisplay);
+
+  const numpad = document.createElement('div');
+  numpad.className = 'numpad';
+
+  const buttons = ['7','8','9','⌫','4','5','6','C','1','2','3','',
+    q.allowNegative ? '(-)' : '0', q.allowNegative ? '0' : '', q.allowNegative ? '' : '', '✓'];
+
+  // Better layout
+  const layout = q.allowNegative ?
+    ['7','8','9','⌫','4','5','6','C','1','2','3','(-)','','0','','✓'] :
+    ['7','8','9','⌫','4','5','6','C','1','2','3','','','0','','✓'];
+
+  layout.forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'numpad-btn';
+    if (key === '✓') btn.className += ' submit';
+    if (key === '⌫') btn.className += ' backspace';
+    if (key === '(-)') btn.className += ' negative';
+    btn.textContent = key;
+    btn.style.visibility = key === '' ? 'hidden' : 'visible';
+
+    btn.onclick = () => {
+      playSound('click');
+      const display = document.getElementById('numpad-display');
+      if (!display) return;
+
+      if (key === '⌫') {
+        display.textContent = display.textContent.slice(0, -1);
+      } else if (key === 'C') {
+        display.textContent = '';
+      } else if (key === '(-)') {
+        if (display.textContent.startsWith('-')) {
+          display.textContent = display.textContent.slice(1);
+        } else {
+          display.textContent = '-' + display.textContent;
+        }
+      } else if (key === '✓') {
+        submitNumpadAnswer(q);
+      } else {
+        display.textContent += key;
+      }
+    };
+
+    numpad.appendChild(btn);
+  });
+
+  container.appendChild(numpad);
+}
+
+function renderDecimalInput(container, q) {
+  const inputDisplay = document.createElement('div');
+  inputDisplay.className = 'numpad-input';
+  inputDisplay.id = 'numpad-display';
+  inputDisplay.textContent = '';
+  container.appendChild(inputDisplay);
+
+  const numpad = document.createElement('div');
+  numpad.className = 'numpad';
+
+  const layout = ['7','8','9','⌫','4','5','6','C','1','2','3','.','','0','','✓'];
+
+  layout.forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'numpad-btn';
+    if (key === '✓') btn.className += ' submit';
+    if (key === '⌫') btn.className += ' backspace';
+    btn.textContent = key;
+    btn.style.visibility = key === '' ? 'hidden' : 'visible';
+
+    btn.onclick = () => {
+      playSound('click');
+      const display = document.getElementById('numpad-display');
+      if (!display) return;
+
+      if (key === '⌫') {
+        display.textContent = display.textContent.slice(0, -1);
+      } else if (key === 'C') {
+        display.textContent = '';
+      } else if (key === '✓') {
+        submitNumpadAnswer(q);
+      } else if (key === '.') {
+        if (!display.textContent.includes('.')) {
+          display.textContent += key;
+        }
+      } else {
+        display.textContent += key;
+      }
+    };
+
+    numpad.appendChild(btn);
+  });
+
+  container.appendChild(numpad);
+}
+
+function renderFractionInput(container, q) {
+  const inputDisplay = document.createElement('div');
+  inputDisplay.className = 'numpad-input';
+  inputDisplay.id = 'numpad-display';
+  inputDisplay.textContent = '';
+  container.appendChild(inputDisplay);
+
+  const hint = document.createElement('div');
+  hint.style.cssText = 'text-align:center;color:var(--ink);font-size:13px;margin-bottom:12px;';
+  hint.textContent = '輸入格式: 分子/分母 (例如 1/2)';
+  container.appendChild(hint);
+
+  const numpad = document.createElement('div');
+  numpad.className = 'numpad';
+
+  const layout = ['7','8','9','⌫','4','5','6','C','1','2','3','/','','0','','✓'];
+
+  layout.forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'numpad-btn';
+    if (key === '✓') btn.className += ' submit';
+    if (key === '⌫') btn.className += ' backspace';
+    btn.textContent = key;
+    btn.style.visibility = key === '' ? 'hidden' : 'visible';
+
+    btn.onclick = () => {
+      playSound('click');
+      const display = document.getElementById('numpad-display');
+      if (!display) return;
+
+      if (key === '⌫') {
+        display.textContent = display.textContent.slice(0, -1);
+      } else if (key === 'C') {
+        display.textContent = '';
+      } else if (key === '✓') {
+        submitFractionAnswer(q);
+      } else if (key === '/') {
+        if (!display.textContent.includes('/')) {
+          display.textContent += key;
+        }
+      } else {
+        display.textContent += key;
+      }
+    };
+
+    numpad.appendChild(btn);
+  });
+
+  container.appendChild(numpad);
+}
+
+function submitNumpadAnswer(q) {
+  const display = document.getElementById('numpad-display');
+  if (!display || !display.textContent) return;
+
+  const userAnswer = display.textContent.trim();
+  let correct = false;
+
+  if (q.type === 'decimal') {
+    correct = parseFloat(userAnswer) === parseFloat(q.answer);
+  } else {
+    correct = parseInt(userAnswer) === parseInt(q.answer);
+  }
+
+  // Show correct answer if wrong
+  if (!correct) {
+    const area = document.getElementById('answer-area');
+    const reveal = document.createElement('div');
+    reveal.className = 'correct-reveal';
+    const ansLine = document.createElement('div');
+    ansLine.textContent = `正確答案: ${q.answer}`;
+    reveal.appendChild(ansLine);
+    if (q.questionSub) {
+      const methodLine = document.createElement('div');
+      methodLine.className = 'reveal-method';
+      methodLine.textContent = `解法：${q.questionSub}`;
+      reveal.appendChild(methodLine);
+    }
+    area.appendChild(reveal);
+  }
+
+  processAnswer(correct, userAnswer, q);
+}
+
+function submitFractionAnswer(q) {
+  const display = document.getElementById('numpad-display');
+  if (!display || !display.textContent) return;
+
+  const userAnswer = display.textContent.trim();
+  let correct = false;
+
+  // Parse user fraction
+  if (userAnswer.includes('/')) {
+    const parts = userAnswer.split('/');
+    const userNum = parseInt(parts[0]);
+    const userDen = parseInt(parts[1]);
+    if (!isNaN(userNum) && !isNaN(userDen) && userDen !== 0) {
+      // Compare by simplifying both
+      const userG = gcd(Math.abs(userNum), Math.abs(userDen));
+      const simpNum = userNum / userG;
+      const simpDen = userDen / userG;
+      correct = (simpNum === q.answerNum && simpDen === q.answerDen);
+    }
+  } else {
+    // Maybe they entered a whole number
+    const num = parseInt(userAnswer);
+    if (!isNaN(num) && q.answerDen === 1) {
+      correct = (num === q.answerNum);
+    }
+  }
+
+  if (!correct) {
+    const area = document.getElementById('answer-area');
+    const reveal = document.createElement('div');
+    reveal.className = 'correct-reveal';
+    const ansLine = document.createElement('div');
+    ansLine.textContent = `正確答案: ${q.answer}`;
+    reveal.appendChild(ansLine);
+    if (q.questionSub) {
+      const methodLine = document.createElement('div');
+      methodLine.className = 'reveal-method';
+      methodLine.textContent = `解法：${q.questionSub}`;
+      reveal.appendChild(methodLine);
+    }
+    area.appendChild(reveal);
+  }
+
+  processAnswer(correct, userAnswer, q);
+}
+
+function processAnswer(correct, userAnswer, q) {
+  if (gameState.answered) return;  // 單題鎖：本題已作答，忽略回饋期間的重複送出（防 numpad/分數連點灌水 XP）
+  gameState.answered = true;
+  gameRecord(correct);
+  state.stats.totalAttempts++;
+
+  if (correct) {
+    state.stats.totalCorrect++;
+    gameState.combo++;
+    if (gameState.combo > gameState.maxCombo) gameState.maxCombo = gameState.combo;
+    if (gameState.combo > state.stats.bestCombo) state.stats.bestCombo = gameState.combo;
+
+    const comboBonus = Math.min(gameState.combo - 1, 4) * 5;
+    const exp = 10 + comboBonus;
+    gameState.expEarned += exp;
+    state.progress.exp += exp;
+
+    gameState.answers.push(true);
+
+    playSound(gameState.combo >= 3 ? 'combo' : 'correct');
+    showFeedback(true);
+  } else {
+    gameState.errors++;
+    gameState.combo = 0;
+    gameState.answers.push(false);
+
+    playSound('wrong');
+    showFeedback(false);
+
+    // Record wrong answer (skip during wrong book practice)
+    if (gameState.level >= 0 && gameState.stage >= 0) {
+      state.wrong.unshift({
+        question: q.question,
+        userAnswer: String(userAnswer),
+        correctAnswer: String(q.answer),
+        questionSub: q.questionSub || '',
+        level: gameState.level + 1,
+        stage: gameState.stage + 1,
+        timestamp: Date.now()
+      });
+      if (state.wrong.length > 50) state.wrong.pop();
+    }
+
+    // Shake question card
+    document.getElementById('question-card').classList.add('shake');
+    setTimeout(() => {
+      document.getElementById('question-card').classList.remove('shake');
+    }, 300);
+  }
+
+  // BOSS 戰 hook：combo 已結算；扣血/演出，擊敗時把 current 設 999 讓下方 setTimeout 觸發 finishStage
+  if (gameState.boss && window.MathBoss) { try { MathBoss.onAnswer(correct, gameState.combo, q); } catch (e) {} }
+
+  saveState();
+
+  // Move to next question after delay
+  setTimeout(() => {
+    gameState.current++;
+    if (gameState.current >= 10) {
+      finishStage();
+    } else {
+      renderQuestion();
+    }
+  }, correct ? 800 : 2800);
+}
+
+function showFeedback(correct) {
+  const overlay = document.getElementById('feedback-overlay');
+  overlay.innerHTML = correct ?
+    '<div class="feedback-correct">⭐</div>' :
+    '<div class="feedback-wrong">🤔</div>';
+  overlay.classList.add('show');
+  setTimeout(() => overlay.classList.remove('show'), 800);
+}
+
+function finishStage() {
+  // BOSS 戰 hook：提早返回，跳過星星/showResult，改走 BOSS 結算
+  if (gameState.boss && window.MathBoss) { try { return MathBoss.finishBattle(); } catch (e) {} }
+  const errors = gameState.errors;
+  let stars = 0;
+  if (errors === 0) stars = 3;
+  else if (errors <= 2) stars = 2;
+  else if (errors <= 4) stars = 1;
+  else stars = 0;
+
+  // Save stars (keep best) - skip for wrong book practice
+  if (gameState.level >= 0 && gameState.stage >= 0) {
+    const key = `${gameState.level + 1}-${gameState.stage + 1}`;
+    const prevStars = state.progress.stars[key] || 0;
+    if (stars > prevStars) {
+      state.progress.stars[key] = stars;
+    }
+  }
+
+  // Update streak
+  const today = new Date().toISOString().split('T')[0];
+  if (state.stats.lastPlay !== today) {
+    if (state.stats.lastPlay) {
+      const last = new Date(state.stats.lastPlay);
+      const diff = Math.floor((new Date(today) - last) / 86400000);
+      if (diff === 1) state.stats.streak++;
+      else if (diff > 1) state.stats.streak = 1;
+    } else {
+      state.stats.streak = 1;
+    }
+    state.stats.lastPlay = today;
+  }
+
+  saveState();
+
+  // Show result
+  showResult(stars, errors);
+}
+
+function showResult(stars, errors) {
+  const starsText = stars > 0 ? '⭐'.repeat(stars) + '☆'.repeat(3 - stars) : '🌱🌱🌱';
+  let title = '';
+  if (stars === 3) title = '完美通關！';
+  else if (stars === 2) title = '表現不錯！';
+  else if (stars === 1) title = '順利過關，繼續加油！';
+  else title = '差一點點，再挑戰一次！';
+
+  const correct = 10 - errors;
+  const isPractice = gameState.level < 0;
+  const replayAction = isPractice ? `practiceWrong()` : `startStage(${gameState.level}, ${gameState.stage})`;
+  const backLabel = isPractice ? '← 返回' : '➡️ 繼續';
+  const backAction = isPractice ? `showScreen('home')` : `showStages(${gameState.level})`;
+  const card = document.getElementById('result-card');
+  card.innerHTML = `
+    <div class="result-stars">${starsText}</div>
+    <div class="result-title">${title}</div>
+    <div class="result-stats">
+      正確: ${correct} / 10<br>
+      最高連擊: ×${gameState.maxCombo}
+    </div>
+    <div class="result-exp">+${gameState.expEarned} 經驗值 🎉</div>
+    <div class="result-buttons">
+      <button class="btn btn-secondary" onclick="${replayAction}">🔄 重玩</button>
+      <button class="btn btn-primary" onclick="${backAction}">${backLabel}</button>
+    </div>
+  `;
+
+  showScreen('result');
+
+  if (stars === 3) {
+    playSound('levelup');
+    launchConfetti();
+  } else if (stars > 0) {
+    playSound('correct');
+  }
+}
+
+function confirmQuit() {
+  const overlay = document.createElement('div');
+  overlay.id = 'quit-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:9999;';
+  overlay.innerHTML = `
+    <div style="background:var(--card);border-radius:16px;padding:24px;text-align:center;max-width:280px;box-shadow:0 8px 24px rgba(0,0,0,0.15);">
+      <div style="font-size:1.1rem;margin-bottom:16px;color:var(--ink);">確定要離開嗎？</div>
+      <div style="display:flex;gap:12px;justify-content:center;">
+        <button onclick="document.getElementById('quit-overlay').remove()" style="min-height:48px;padding:10px 20px;border:none;border-radius:8px;background:var(--c-math);color:white;font-size:1rem;cursor:pointer;">繼續</button>
+        <button onclick="document.getElementById('quit-overlay').remove();showScreen('home')" style="min-height:48px;padding:10px 20px;border:2px solid var(--card-border);border-radius:8px;background:var(--card-border);color:var(--c-math-ink);font-size:1rem;cursor:pointer;">離開</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+// ==================== DAILY CHALLENGE ====================
+// 每日挑戰的難度上限（0-based level index）。
+// 規則：只從「孩子目前已達到的關卡與其以下」出題，預設為等級 4（index 3）；
+// 且硬性封頂在等級 4 —— 每日模式「絕不」出現等級 5 以上內容
+// （不含負數、ax+b=c、座標象限等）。超前學習只在自由/練習模式開放。
+const DAILY_LEVEL_CAP = 3; // 等級 4
+function dailyMaxLevel() {
+  // 由星星進度推得「已達到的最高關卡」：某關至少拿到 1 顆星即視為已達到。
+  let reached = -1;
+  for (let i = 0; i < LEVELS.length; i++) {
+    for (let s = 1; s <= 5; s++) {
+      if (getStageStars(i, s) > 0) { reached = i; break; }
+    }
+  }
+  // 尚無任何進度 → 預設等級 4；否則取已達到關卡，但一律不超過等級 4 硬上限。
+  const cap = (reached < 0) ? DAILY_LEVEL_CAP : Math.min(reached, DAILY_LEVEL_CAP);
+  return Math.max(0, cap);
+}
+
+function startDaily() {
+  const today = new Date().toISOString().split('T')[0];
+
+  // 依「已達到關卡且封頂等級 4」的上限出題，確保每日題目都在可贏區間。
+  const maxLevel = dailyMaxLevel();
+  const questions = [];
+  for (let i = 0; i < 10; i++) {
+    const level = randInt(0, maxLevel);
+    const stage = randInt(0, 3); // 不含 BOSS 關
+    questions.push(generateQuestion(level, stage));
+  }
+
+  dailyState = {
+    questions,
+    results: [],
+    current: 0,
+    score: 0,
+    timer: 60,
+    interval: null,
+    active: true
+  };
+
+  showScreen('daily');
+  renderDailyQuestion();
+  startDailyTimer();
+}
+
+function startDailyTimer() {
+  document.getElementById('daily-timer').textContent = dailyState.timer;
+  dailyState.interval = setInterval(() => {
+    dailyState.timer--;
+    const timerEl = document.getElementById('daily-timer');
+    timerEl.textContent = dailyState.timer;
+    if (dailyState.timer <= 10) {
+      timerEl.classList.add('warning');
+    }
+    if (dailyState.timer <= 0) {
+      endDaily();
+    }
+  }, 1000);
+}
+
+function renderDailyQuestion() {
+  if (dailyState.current >= 10) {
+    endDaily();
+    return;
+  }
+
+  const q = dailyState.questions[dailyState.current];
+
+  // Progress
+  const prog = document.getElementById('daily-progress');
+  prog.innerHTML = '';
+  for (let i = 0; i < 10; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'progress-dot';
+    if (i < dailyState.current) {
+      var ok = dailyState.results[i] !== false;   // 依實際對錯標示（原本一律打勾，會誤導）
+      dot.className += ok ? ' correct' : ' wrong';
+      dot.textContent = ok ? '✓' : '✗';
+    } else if (i === dailyState.current) {
+      dot.className += ' current';
+      dot.textContent = i + 1;
+    } else {
+      dot.textContent = i + 1;
+    }
+    prog.appendChild(dot);
+  }
+
+  document.getElementById('daily-score').textContent = `得分: ${dailyState.score}`;
+
+  const questionText = document.getElementById('daily-question-text');
+  const questionSub = document.getElementById('daily-question-sub');
+
+  if (q.isObjects) {
+    questionText.innerHTML = `<div class="objects-display">${q.question}</div>`;
+  } else if (q.question.includes('\n')) {
+    questionText.innerHTML = q.question.split('\n').join('<br>');
+  } else {
+    questionText.textContent = q.question;
+  }
+  questionSub.textContent = q.questionSub || '';
+
+  const area = document.getElementById('daily-answer-area');
+  area.innerHTML = '';
+
+  if (q.type === 'choice') {
+    renderDailyChoices(area, q);
+  } else if (q.type === 'fraction') {
+    renderDailyFractionInput(area, q);
+  } else if (q.type === 'decimal') {
+    renderDailyDecimalInput(area, q);
+  } else {
+    renderDailyNumpad(area, q);
+  }
+}
+
+function renderDailyChoices(container, q) {
+  const grid = document.createElement('div');
+  grid.className = 'choices-grid';
+  if (q.choices.length === 3) {
+    grid.style.gridTemplateColumns = '1fr 1fr 1fr';
+  }
+
+  q.choices.forEach(choice => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = choice;
+    btn.onclick = () => {
+      const correct = String(choice) === String(q.answer);
+      gameRecord(correct);
+      if (correct) dailyState.score += 10; dailyState.results.push(!!correct);
+      grid.querySelectorAll('.choice-btn').forEach(b => { b.onclick = null; });
+      btn.classList.add(correct ? 'correct' : 'wrong');
+      playSound(correct ? 'correct' : 'wrong');
+      setTimeout(() => { dailyState.current++; renderDailyQuestion(); }, 600);
+    };
+    grid.appendChild(btn);
+  });
+
+  container.appendChild(grid);
+}
+
+function renderDailyNumpad(container, q) {
+  const inputDisplay = document.createElement('div');
+  inputDisplay.className = 'numpad-input';
+  inputDisplay.id = 'daily-numpad-display';
+  inputDisplay.textContent = '';
+  container.appendChild(inputDisplay);
+
+  const numpad = document.createElement('div');
+  numpad.className = 'numpad';
+
+  const layout = q.allowNegative ?
+    ['7','8','9','⌫','4','5','6','C','1','2','3','(-)','','0','','✓'] :
+    ['7','8','9','⌫','4','5','6','C','1','2','3','','','0','','✓'];
+
+  layout.forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'numpad-btn';
+    if (key === '✓') btn.className += ' submit';
+    if (key === '⌫') btn.className += ' backspace';
+    if (key === '(-)') btn.className += ' negative';
+    btn.textContent = key;
+    btn.style.visibility = key === '' ? 'hidden' : 'visible';
+
+    btn.onclick = () => {
+      playSound('click');
+      const display = document.getElementById('daily-numpad-display');
+      if (!display) return;
+
+      if (key === '⌫') {
+        display.textContent = display.textContent.slice(0, -1);
+      } else if (key === 'C') {
+        display.textContent = '';
+      } else if (key === '(-)') {
+        if (display.textContent.startsWith('-')) {
+          display.textContent = display.textContent.slice(1);
+        } else {
+          display.textContent = '-' + display.textContent;
+        }
+      } else if (key === '✓') {
+        const val = display.textContent.trim();
+        if (!val) return;
+        if (numpad.dataset.locked) return;  // 單題作答鎖：防 600ms 換題前 ✓ 連點重複計分/前進
+        numpad.dataset.locked = '1';
+        const correct = parseInt(val) === parseInt(q.answer);
+        gameRecord(correct);
+        if (correct) dailyState.score += 10; dailyState.results.push(!!correct);
+        playSound(correct ? 'correct' : 'wrong');
+        setTimeout(() => { dailyState.current++; renderDailyQuestion(); }, 600);
+      } else {
+        display.textContent += key;
+      }
+    };
+
+    numpad.appendChild(btn);
+  });
+
+  container.appendChild(numpad);
+}
+
+function renderDailyDecimalInput(container, q) {
+  const inputDisplay = document.createElement('div');
+  inputDisplay.className = 'numpad-input';
+  inputDisplay.id = 'daily-numpad-display';
+  inputDisplay.textContent = '';
+  container.appendChild(inputDisplay);
+
+  const numpad = document.createElement('div');
+  numpad.className = 'numpad';
+
+  const layout = ['7','8','9','⌫','4','5','6','C','1','2','3','.','','0','','✓'];
+
+  layout.forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'numpad-btn';
+    if (key === '✓') btn.className += ' submit';
+    if (key === '⌫') btn.className += ' backspace';
+    btn.textContent = key;
+    btn.style.visibility = key === '' ? 'hidden' : 'visible';
+
+    btn.onclick = () => {
+      playSound('click');
+      const display = document.getElementById('daily-numpad-display');
+      if (!display) return;
+
+      if (key === '⌫') {
+        display.textContent = display.textContent.slice(0, -1);
+      } else if (key === 'C') {
+        display.textContent = '';
+      } else if (key === '✓') {
+        const val = display.textContent.trim();
+        if (!val) return;
+        if (numpad.dataset.locked) return;  // 單題作答鎖：防 600ms 換題前 ✓ 連點重複計分/前進
+        numpad.dataset.locked = '1';
+        const correct = parseFloat(val) === parseFloat(q.answer);
+        gameRecord(correct);
+        if (correct) dailyState.score += 10; dailyState.results.push(!!correct);
+        playSound(correct ? 'correct' : 'wrong');
+        setTimeout(() => { dailyState.current++; renderDailyQuestion(); }, 600);
+      } else if (key === '.') {
+        const display2 = document.getElementById('daily-numpad-display');
+        if (!display2.textContent.includes('.')) display2.textContent += key;
+      } else {
+        display.textContent += key;
+      }
+    };
+
+    numpad.appendChild(btn);
+  });
+
+  container.appendChild(numpad);
+}
+
+function renderDailyFractionInput(container, q) {
+  const inputDisplay = document.createElement('div');
+  inputDisplay.className = 'numpad-input';
+  inputDisplay.id = 'daily-numpad-display';
+  inputDisplay.textContent = '';
+  container.appendChild(inputDisplay);
+
+  const hint = document.createElement('div');
+  hint.style.cssText = 'text-align:center;color:var(--ink);font-size:13px;margin-bottom:12px;';
+  hint.textContent = '輸入格式: 分子/分母';
+  container.appendChild(hint);
+
+  const numpad = document.createElement('div');
+  numpad.className = 'numpad';
+
+  const layout = ['7','8','9','⌫','4','5','6','C','1','2','3','/','','0','','✓'];
+
+  layout.forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'numpad-btn';
+    if (key === '✓') btn.className += ' submit';
+    if (key === '⌫') btn.className += ' backspace';
+    btn.textContent = key;
+    btn.style.visibility = key === '' ? 'hidden' : 'visible';
+
+    btn.onclick = () => {
+      playSound('click');
+      const display = document.getElementById('daily-numpad-display');
+      if (!display) return;
+
+      if (key === '⌫') {
+        display.textContent = display.textContent.slice(0, -1);
+      } else if (key === 'C') {
+        display.textContent = '';
+      } else if (key === '✓') {
+        const val = display.textContent.trim();
+        if (!val) return;
+        if (numpad.dataset.locked) return;  // 單題作答鎖：防 600ms 換題前 ✓ 連點重複計分/前進
+        numpad.dataset.locked = '1';
+        let correct = false;
+        if (val.includes('/')) {
+          const parts = val.split('/');
+          const userNum = parseInt(parts[0]);
+          const userDen = parseInt(parts[1]);
+          if (!isNaN(userNum) && !isNaN(userDen) && userDen !== 0) {
+            const userG = gcd(Math.abs(userNum), Math.abs(userDen));
+            correct = (userNum/userG === q.answerNum && userDen/userG === q.answerDen);
+          }
+        } else {
+          const num = parseInt(val);
+          if (!isNaN(num) && q.answerDen === 1) correct = (num === q.answerNum);
+        }
+        gameRecord(correct);
+        if (correct) dailyState.score += 10; dailyState.results.push(!!correct);
+        playSound(correct ? 'correct' : 'wrong');
+        setTimeout(() => { dailyState.current++; renderDailyQuestion(); }, 600);
+      } else if (key === '/') {
+        if (!display.textContent.includes('/')) display.textContent += key;
+      } else {
+        display.textContent += key;
+      }
+    };
+
+    numpad.appendChild(btn);
+  });
+
+  container.appendChild(numpad);
+}
+
+function endDaily() {
+  dailyState.active = false;
+  if (dailyState.interval) {
+    clearInterval(dailyState.interval);
+    dailyState.interval = null;
+  }
+
+  const today = new Date().toISOString().split('T')[0];
+  const prevBest = (state.daily[today] && state.daily[today].best) || 0;
+  const newBest = Math.max(dailyState.score, prevBest);
+  state.daily[today] = { score: dailyState.score, best: newBest };
+  saveState();
+
+  // Show result
+  const card = document.getElementById('result-card');
+  card.innerHTML = `
+    <div class="result-stars">⚡</div>
+    <div class="result-title">每日挑戰完成！</div>
+    <div class="result-stats">
+      本次得分: ${dailyState.score}<br>
+      今日最佳: ${newBest}<br>
+      回答: ${dailyState.current} / 10
+    </div>
+    <div style="font-size:var(--fs-small);color:var(--ink-soft);line-height:1.5;margin:4px 0 8px;">😊 純屬好玩，時間到就結束，不影響你的學習進度</div>
+    <div class="result-buttons">
+      <button class="btn btn-primary" onclick="showScreen('home')">← 返回</button>
+      <button class="btn btn-success" onclick="startDaily()">🔄 再挑戰</button>
+    </div>
+  `;
+
+  showScreen('result');
+  if (dailyState.score >= 80) {
+    playSound('levelup');
+    launchConfetti();
+  }
+}
+
+// ==================== WRONG BOOK ====================
+function renderWrongBook() {
+  const content = document.getElementById('wrong-book-content');
+
+  if (state.wrong.length === 0) {
+    content.innerHTML = `
+      <div style="text-align:center;color:var(--ink);padding:40px 20px;">
+        <div style="font-size:48px;margin-bottom:16px;">🎉</div>
+        <div style="font-size:16px;">太棒了！目前沒有錯題</div>
+        <div style="font-size:14px;margin-top:8px;">繼續練習，錯題會自動記錄在這裡</div>
+      </div>
+    `;
+    return;
+  }
+
+  let html = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <span style="color:var(--ink);font-size:14px;">共 ${state.wrong.length} 題</span>
+      <button class="btn btn-danger" style="padding:8px 16px;font-size:14px;" onclick="practiceWrong()">📝 練習錯題</button>
+    </div>
+    <div class="wrong-list">
+  `;
+
+  state.wrong.slice(0, 20).forEach((item, i) => {
+    html += `
+      <div class="wrong-item">
+        <div class="wrong-question">${item.question}</div>
+        <div class="wrong-answers">
+          你的答案: <span class="wrong-ans">${item.userAnswer}</span> &nbsp;
+          正確答案: <span class="correct-ans">${item.correctAnswer}</span>
+        </div>
+        ${item.questionSub ? `<div class="wrong-hint">💡 ${item.questionSub}</div>` : ''}
+        <div style="font-size:11px;opacity:0.5;margin-top:4px;">L${item.level}-S${item.stage}</div>
+      </div>
+    `;
+  });
+
+  html += '</div>';
+
+  if (state.wrong.length > 0) {
+    html += `<button class="btn btn-secondary" style="width:100%;margin-top:16px;" onclick="clearWrongBook()">🗑️ 清空錯題本</button>`;
+  }
+
+  content.innerHTML = html;
+}
+
+function practiceWrong() {
+  if (state.wrong.length === 0) return;
+
+  // Generate questions from wrong book
+  const wrongItems = shuffle(state.wrong).slice(0, 10);
+  const questions = wrongItems.map(item => {
+    // Try to regenerate a similar question
+    const level = item.level - 1;
+    const stage = item.stage - 1;
+    return generateQuestion(level, stage);
+  });
+
+  gameState = {
+    level: -1,
+    stage: -1,
+    questions: questions,
+    current: 0,
+    errors: 0,
+    combo: 0,
+    maxCombo: 0,
+    expEarned: 0,
+    answers: []
+  };
+
+  document.getElementById('game-title').textContent = '📕 錯題練習';
+  document.getElementById('screen-game').style.background = '';
+
+  showScreen('game');
+  renderQuestion();
+}
+
+function clearWrongBook() {
+  if (confirm('確定要清空錯題本嗎？')) {
+    state.wrong = [];
+    saveState();
+    renderWrongBook();
+  }
+}
+
+// ==================== STATS ====================
+function renderStats() {
+  const content = document.getElementById('stats-content');
+  const accuracy = state.stats.totalAttempts > 0 ? Math.round((state.stats.totalCorrect / state.stats.totalAttempts) * 100) : 0;
+  const totalStars = getTotalStars();
+  const maxPossibleStars = LEVELS.length * 5 * 3;
+
+  const rank = getRankName(state.progress.exp);
+
+  let html = `
+    <div style="background:var(--card-border);border-radius:16px;padding:24px;margin-bottom:16px;">
+      <div style="text-align:center;margin-bottom:16px;">
+        <div style="font-size:48px;margin-bottom:8px;">🏆</div>
+        <div style="font-size:24px;font-weight:bold;color:var(--ink);">${rank}</div>
+        <div style="font-size:14px;color:var(--ink);">經驗值 ${state.progress.exp}</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div style="text-align:center;background:var(--card);border-radius:8px;padding:12px;">
+          <div style="font-size:24px;font-weight:bold;color:var(--c-correct-ink);">${state.stats.totalCorrect}</div>
+          <div style="font-size:12px;color:var(--ink);">答對題數</div>
+        </div>
+        <div style="text-align:center;background:var(--card);border-radius:8px;padding:12px;">
+          <div style="font-size:24px;font-weight:bold;color:#3b82f6;">${accuracy}%</div>
+          <div style="font-size:12px;color:var(--ink);">正確率</div>
+        </div>
+        <div style="text-align:center;background:var(--card);border-radius:8px;padding:12px;">
+          <div style="font-size:24px;font-weight:bold;color:var(--c-coin-ink);">×${state.stats.bestCombo}</div>
+          <div style="font-size:12px;color:var(--ink);">最高連擊</div>
+        </div>
+        <div style="text-align:center;background:var(--card);border-radius:8px;padding:12px;">
+          <div style="font-size:24px;font-weight:bold;color:#ec4899;">⭐${totalStars}</div>
+          <div style="font-size:12px;color:var(--ink);">總星星 / ${maxPossibleStars}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--card-border);border-radius:16px;padding:24px;margin-bottom:16px;">
+      <div style="font-size:16px;font-weight:bold;color:var(--ink);margin-bottom:12px;">🎖️ 成就</div>
+      <div class="achievement-grid">
+        ${renderAchievement('🌱', '初心者', state.stats.totalCorrect >= 10, '答對10題')}
+        ${renderAchievement('🔥', '連擊王', state.stats.bestCombo >= 5, '5連擊')}
+        ${renderAchievement('⭐', '集星達人', totalStars >= 15, '收集15星')}
+        ${renderAchievement('💯', '百題達人', state.stats.totalCorrect >= 100, '答對100題')}
+        ${renderAchievement('🏆', '全能數學', totalStars >= 50, '收集50星')}
+        ${renderAchievement('👑', '數學之神', totalStars >= 100, '收集100星')}
+        ${renderAchievement('📅', '勤奮者', state.stats.streak >= 3, '連續3天')}
+        ${renderAchievement('🎯', '精準射手', accuracy >= 90 && state.stats.totalAttempts >= 20, '90%正確率')}
+        ${renderAchievement('🚀', '千里之行', state.progress.exp >= 1000, '1000 經驗值')}
+      </div>
+    </div>
+
+    <div style="background:var(--card-border);border-radius:16px;padding:24px;">
+      <div style="font-size:16px;font-weight:bold;color:var(--ink);margin-bottom:12px;">📊 各關卡進度</div>
+      ${LEVELS.map((level, i) => {
+        const stars = [1,2,3,4,5].reduce((s, st) => s + getStageStars(i, st), 0);
+        const pct = Math.round((stars / 15) * 100);
+        return `
+          <div style="margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;color:var(--ink);font-size:13px;margin-bottom:4px;">
+              <span>${level.icon} ${level.name}</span>
+              <span>⭐${stars}/15</span>
+            </div>
+            <div style="height:6px;background:var(--card-border);border-radius:3px;overflow:hidden;">
+              <div style="height:100%;width:${pct}%;background:${level.color};border-radius:3px;"></div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+
+  content.innerHTML = html;
+}
+
+function renderAchievement(icon, name, unlocked, desc) {
+  return `
+    <div class="achievement-item ${unlocked ? 'unlocked' : ''}">
+      <span class="ach-icon">${icon}</span>
+      <div>${name}</div>
+      <div style="font-size:12px;opacity:0.7;">${desc}</div>
+    </div>
+  `;
+}
+
+// ==================== CONFETTI ====================
+function launchConfetti() {
+  const container = document.getElementById('confetti-container');
+  container.innerHTML = '';
+
+  const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500', '#ff69b4'];
+
+  for (let i = 0; i < 50; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = `${Math.random() * 100}%`;
+    piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = `${Math.random() * 0.5}s`;
+    piece.style.animationDuration = `${2 + Math.random() * 2}s`;
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+    piece.style.width = `${6 + Math.random() * 8}px`;
+    piece.style.height = `${6 + Math.random() * 8}px`;
+    container.appendChild(piece);
+  }
+
+  setTimeout(() => { container.innerHTML = ''; }, 4000);
+}
+
+// ==================== INITIALIZATION ====================
+function init() {
+  // Check localStorage availability
+  try {
+    localStorage.setItem('_test', '1');
+    localStorage.removeItem('_test');
+  } catch(e) {
+    showSaveError();
+  }
+
+  loadState();
+  wireGameEvents();   // 註冊統一引擎事件 → 即時刷新原生 HUD
+  renderHome();       // renderHome 內含 syncHudFromGame()，以統一 profile 值呈現
+
+  // Check sound preference
+  const savedSound = localStorage.getItem('math_sound');
+  if (savedSound === 'off') {
+    soundEnabled = false;
+    var sb = document.getElementById('btn-sound');
+    sb.textContent = '🔇';
+    sb.setAttribute('aria-pressed', 'false');   // 載入時同步 aria 狀態，與 toggle 一致
+  }
+}
+
+// Override toggleSound to save preference
+const originalToggleSound = toggleSound;
+window.toggleSound = function() {
+  soundEnabled = !soundEnabled;
+  var b = document.getElementById('btn-sound');
+  b.textContent = soundEnabled ? '🔊' : '🔇';
+  b.setAttribute('aria-pressed', soundEnabled ? 'true' : 'false');
+  localStorage.setItem('math_sound', soundEnabled ? 'on' : 'off');
+};
+
+// Initialize
+init();
+</script>
+
+<!-- ============================================================
+     BOSS 戰模組（自足 style + script；獨立 localStorage key
+     'math_boss_v1'；每題 XP 走既有引擎，BOSS 只在「首次擊敗」單次
+     guarded Game.award('math')；不污染 player_profile_v1 / math_progress
+     / math_stats / state.progress；重用既有出題/答題/計分/音效流程）
+     ============================================================ -->
+<style>
+/* ---- BOSS 戰 HUD（注入於 #screen-game .play-column 內、progress-dots 之上）---- */
+#boss-hud {
+  display: flex;
+  align-items: center;
+  gap: var(--s3, 12px);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg, 16px);
+  padding: var(--s3, 12px);
+  margin-bottom: var(--s3, 12px);
+  box-shadow: var(--shadow-sm);
+}
+/* [hidden] 防護：author 的 display:flex 會蓋過 UA 的 [hidden]{display:none}，
+   故需更高特異度規則，否則浮層/HUD 會一直顯示、蓋住整頁。 */
+#boss-hud[hidden], #boss-victory[hidden] { display: none !important; }
+.boss-portrait {
+  position: relative;
+  flex: 0 0 auto;
+  width: 88px; height: 88px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+}
+.boss-portrait-emoji { font-size: 3rem; line-height: 1; }
+.boss-portrait.shake { animation: shake 0.4s ease; }
+.boss-hud-info { flex: 1 1 auto; min-width: 0; }
+.boss-hud-name { font-size: var(--fs-h3, 1.1rem); font-weight: 800; color: var(--ink); margin-bottom: 6px; }
+.boss-hp-bar {
+  position: relative;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--card-border);
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+}
+.boss-hp-fill {
+  height: 100%;
+  width: 100%;
+  border-radius: 999px;
+  transition: width 0.5s cubic-bezier(.2,.8,.2,1);
+}
+.boss-hp-num { font-size: var(--fs-small, 0.85rem); font-weight: 700; color: var(--ink-soft); margin-top: 4px; }
+.boss-dmg-float {
+  position: absolute;
+  top: -6px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.6rem; font-weight: 900;
+  color: #ef4444;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+  pointer-events: none;
+  animation: boss-dmg-rise 0.7s ease-out forwards;
+}
+@keyframes boss-dmg-rise {
+  0% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -42px) scale(1.25); }
+}
+
+/* ---- 勝利/戰敗浮層 ---- */
+#boss-victory {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9998;
+  padding: 20px;
+}
+.boss-victory-card {
+  max-width: 340px; width: 100%;
+  margin-top: 0 !important;
+}
+.boss-victory-emoji { font-size: 3.4rem; line-height: 1; }
+.boss-victory-title { font-size: var(--fs-h2, 1.4rem); font-weight: 800; color: var(--ink); margin: 6px 0 4px; }
+.boss-victory-sub { font-size: var(--fs-small, 0.9rem); color: var(--ink-soft); line-height: 1.7; margin-bottom: 8px; }
+.boss-victory-bounty { font-size: 1.05rem; font-weight: 800; color: var(--c-math); margin-bottom: 14px; }
+.boss-victory-btns { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+
+/* ---- 王之殿堂 ---- */
+.boss-map-grid { padding-bottom: 80px; }
+.boss-card {
+  background: var(--card);
+  border: 2px solid var(--card-border);
+  border-radius: var(--r-lg, 16px);
+  padding: var(--s4, 16px);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+.boss-card-portrait {
+  width: 96px; height: 96px;
+  border-radius: 50%;
+  margin: 0 auto var(--s3, 12px);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3.2rem; line-height: 1;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+}
+.boss-card-name { font-size: var(--fs-h3, 1.1rem); font-weight: 800; color: var(--ink); }
+.boss-card-level { font-size: var(--fs-small, 0.85rem); color: var(--ink-soft); margin: 4px 0 12px; }
+.boss-card-status { font-size: var(--fs-small, 0.85rem); font-weight: 700; color: var(--ink-soft); }
+.boss-card-status .crown { color: var(--c-coin-ink); display: block; margin-bottom: 8px; }  /* 有意義狀態文字『👑 已擊敗・最少 N 題』；原硬碼 #f59e0b 亮色 2.06:1 未達 AA→主題感知 --c-coin-ink(亮 5.15:1/暗 F2CD79) */
+.boss-card-status .btn { margin-top: 4px; }
+/* 關卡選單「挑戰王」鈕：跨滿整列 */
+.boss-challenge-btn { grid-column: 1 / -1; width: 100%; }
+/* 首頁「王之殿堂」入口鈕 */
+#boss-hall-entry { display: block; width: 100%; margin: var(--s3, 12px) 0 var(--s4, 16px); }
+
+/* reduce-motion 尊重 */
+.boss-reduce .boss-portrait, .boss-reduce .boss-hp-fill,
+.boss-reduce .boss-dmg-float { animation: none !important; transition: none !important; }
+</style>
+
+<script>
+(function () {
+  'use strict';
+  var KEY = 'math_boss_v1';
+
+  // 7 隻 BOSS，一級一隻（level 為 0-based，對映 LEVELS[i] 與 generateQuestions 的 level）
+  var BOSSES = [
+    // HP 上限刻意 ≤158（單場10題滿連擊上限傷害＝205）：確保每關 BOSS 皆可擊敗；
+    // 高階關卡的挑戰來自「題目更難答對」而非血量灌爆（原 l9–l12 血量 200–245 > 205 最大傷害＝數學上永遠打不死，已修）。
+    { id:'boss_l1', level:0, name:'小算術獸', emoji:'🐣', color:'#22c55e', hp:70 },
+    { id:'boss_l2', level:1, name:'進位小龍', emoji:'🐉', color:'#3b82f6', hp:85 },
+    { id:'boss_l3', level:2, name:'換算精靈', emoji:'🧚', color:'#f59e0b', hp:98 },
+    { id:'boss_l4', level:3, name:'披薩分數獸', emoji:'🍕', color:'#ef4444', hp:110 },
+    { id:'boss_l5', level:4, name:'小數泡泡怪', emoji:'🫧', color:'#8b5cf6', hp:120 },
+    { id:'boss_l6', level:5, name:'圓環守衛', emoji:'🛞', color:'#ec4899', hp:128 },
+    { id:'boss_l7', level:6, name:'代數石像', emoji:'🗿', color:'#14b8a6', hp:135 },
+    { id:'boss_l8', level:7, name:'方程魔導士', emoji:'⚖️', color:'#0ea5e9', hp:141 },
+    { id:'boss_l9', level:8, name:'比例雙子', emoji:'🧮', color:'#f97316', hp:146 },
+    { id:'boss_l10', level:9, name:'二次曲龍', emoji:'🎯', color:'#a855f7', hp:150 },
+    { id:'boss_l11', level:10, name:'幾何巨像', emoji:'📐', color:'#e11d48', hp:154 },
+    { id:'boss_l12', level:11, name:'機率之神', emoji:'📊', color:'#6366f1', hp:158 }
+  ];
+  // 首次擊敗獎勵（單次 guarded，遞增）
+  var BOUNTY = { boss_l1:40, boss_l2:50, boss_l3:60, boss_l4:70, boss_l5:80, boss_l6:90, boss_l7:120, boss_l8:140, boss_l9:160, boss_l10:180, boss_l11:200, boss_l12:220 };
+  // 傷害曲線：dmg(combo)=DMG_BASE + min(combo-1,COMBO_CAP)*DMG_STEP
+  var DMG_BASE = 10, DMG_STEP = 3, COMBO_CAP = 5;
+
+  var HIT_MSG = ['命中！', '漂亮的一擊！', '連擊越高、傷害越大 🔥'];
+  var MISS_MSG = ['沒關係，想清楚再出手！', 'BOSS 閃過了，下一題再來！', '慢慢算，你可以的 💪'];
+
+  var data = null;
+  var fight = null; // { boss, maxHp, hp, correctHits, startMs }
+
+  function nowISO() { return new Date().toISOString(); }
+  function byId(id) { for (var i = 0; i < BOSSES.length; i++) if (BOSSES[i].id === id) return BOSSES[i]; return null; }
+  function bossForLevel(level) { for (var i = 0; i < BOSSES.length; i++) if (BOSSES[i].level === level) return BOSSES[i]; return null; }
+  function dmg(combo) { return DMG_BASE + Math.min(Math.max(combo, 1) - 1, COMBO_CAP) * DMG_STEP; }
+  function grade(level) { try { if (typeof LEVELS !== 'undefined' && LEVELS[level]) return LEVELS[level].grade; } catch (e) {} return ''; }
+  function reduceMotion() {
+    try { return !!(window.Game && Game.getProfile && Game.getProfile().settings && Game.getProfile().settings.reduceMotion); } catch (e) { return false; }
+  }
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  function grad(color) { return 'radial-gradient(circle at 35% 30%, color-mix(in srgb, ' + color + ' 45%, #fff), ' + color + ')'; }
+
+  // ---------- 持久化（獨立 key；照 Stardex 範式）----------
+  function fresh() { return { version:1, createdAt: nowISO(), updatedAt: nowISO(), defeated:{}, best:{}, awarded:{} }; }
+  function normalize() {
+    if (!data.defeated) data.defeated = {};
+    if (!data.best) data.best = {};
+    if (!data.awarded) data.awarded = {};
+  }
+  function load() {
+    var raw = null;
+    try { raw = localStorage.getItem(KEY); } catch (e) {}
+    if (raw) {
+      try { var p = JSON.parse(raw); if (p && typeof p === 'object') { data = p; normalize(); return; } } catch (e) {}
+    }
+    data = fresh();
+    migrate();   // 一次性：把已 3 星的 BOSS混合 標記為 defeated + awarded guard（不補發 XP）
+    save();
+  }
+  function migrate() {
+    try {
+      if (typeof state === 'undefined' || !state || !state.progress || !state.progress.stars) return;
+      var stars = state.progress.stars;
+      for (var i = 0; i < BOSSES.length; i++) {
+        var b = BOSSES[i];
+        var key = (b.level + 1) + '-5'; // BOSS混合 = 第 5 子關
+        if ((stars[key] || 0) >= 3) {
+          data.defeated[b.id] = { firstDefeatedAt: nowISO(), times: 1 };
+          data.awarded[b.id] = true; // 只設 guard，不發 XP（避免老玩家一載入爆量領獎）
+        }
+      }
+    } catch (e) {}
+  }
+  function save() {
+    if (!data) return;
+    data.updatedAt = nowISO();
+    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {}
+  }
+  function updateBest(bid, qUsed, combo, acc, victory) {
+    if (!data.best) data.best = {};
+    var b = data.best[bid] || {};
+    if (victory) b.fewestQuestions = (b.fewestQuestions == null) ? qUsed : Math.min(b.fewestQuestions, qUsed);
+    b.maxCombo = Math.max(b.maxCombo || 0, combo || 0);
+    b.bestAccuracy = Math.max(b.bestAccuracy || 0, acc || 0);
+    data.best[bid] = b;
+  }
+
+  // ---------- HUD ----------
+  function el(id) { return document.getElementById(id); }
+  function showBossHud(boss) {
+    var hud = el('boss-hud'); if (!hud) return;
+    var pr = el('boss-portrait');
+    if (pr) pr.style.background = grad(boss.color);
+    var em = el('boss-portrait-emoji'); if (em) em.textContent = boss.emoji;
+    var nm = el('boss-hud-name'); if (nm) nm.textContent = boss.name + ' HP';
+    var fill = el('boss-hp-fill');
+    if (fill) { fill.style.background = boss.color; fill.style.width = '100%'; }
+    var bar = el('boss-hp-bar');
+    if (bar) { bar.setAttribute('aria-valuemax', String(boss.hp)); bar.setAttribute('aria-valuenow', String(boss.hp)); }
+    var num = el('boss-hp-num'); if (num) num.textContent = boss.hp + ' / ' + boss.hp;
+    hud.classList.toggle('boss-reduce', reduceMotion());
+    hud.hidden = false;
+  }
+  function hideBossHud() { var hud = el('boss-hud'); if (hud) hud.hidden = true; }
+  function updateHpBar() {
+    if (!fight) return;
+    var pct = Math.max(0, (fight.hp / fight.maxHp) * 100);
+    var fill = el('boss-hp-fill'); if (fill) fill.style.width = pct + '%';
+    var bar = el('boss-hp-bar'); if (bar) bar.setAttribute('aria-valuenow', String(fight.hp));
+    var num = el('boss-hp-num'); if (num) num.textContent = fight.hp + ' / ' + fight.maxHp;
+  }
+  function floatDamage(d) {
+    var pr = el('boss-portrait'); if (!pr) return;
+    var f = document.createElement('div');
+    f.className = 'boss-dmg-float';
+    f.textContent = '-' + d;
+    pr.appendChild(f);
+    setTimeout(function () { try { f.remove(); } catch (e) {} }, 750);
+  }
+  function faceAnim(face, boss) {
+    var pr = el('boss-portrait'), em = el('boss-portrait-emoji');
+    if (pr) { pr.classList.remove('shake'); void pr.offsetWidth; pr.classList.add('shake'); }
+    if (em) {
+      em.textContent = face;
+      setTimeout(function () { try { em.textContent = boss ? boss.emoji : em.textContent; } catch (e) {} }, 420);
+    }
+  }
+
+  // ---------- 進場 ----------
+  function start(bossId) {
+    var boss = byId(bossId); if (!boss) return;
+    if (!data) load();
+    closeVictory();
+    var L = boss.level;
+    var qs = [];
+    try { if (typeof generateQuestions === 'function') qs = generateQuestions(L, 4, 10); } catch (e) { qs = []; }
+    // 重建 gameState（新增 boss 欄位；既有正常關卡不設此欄，故互不干擾）
+    gameState = { level: L, stage: 4, questions: qs, current: 0, errors: 0, combo: 0, maxCombo: 0, expEarned: 0, answers: [], boss: bossId };
+    fight = { boss: bossId, maxHp: boss.hp, hp: boss.hp, correctHits: 0, startMs: Date.now() };
+    try { var t = el('game-title'); if (t) t.textContent = '⚔️ ' + boss.name; } catch (e) {}
+    showBossHud(boss);
+    try { if (typeof showScreen === 'function') showScreen('game'); } catch (e) {}
+    try { if (typeof renderQuestion === 'function') renderQuestion(); } catch (e) {}
+  }
+
+  // ---------- 每答一題（processAnswer 末端 hook；combo 已結算）----------
+  function onAnswer(correct, combo, q) {
+    if (!fight) return;
+    var boss = byId(fight.boss);
+    if (correct) {
+      var d = dmg(combo);
+      fight.hp = Math.max(0, fight.hp - d);
+      fight.correctHits++;
+      updateHpBar();
+      floatDamage(d);
+      faceAnim('😵', boss);           // 受擊表情（音效由既有 processAnswer 播放，避免重複）
+      if (fight.hp <= 0) {
+        // 提前擊敗：把 current 設 999，讓既有 setTimeout 內 current++>=10 觸發 finishStage
+        try { gameState.current = 999; } catch (e) {}
+      }
+    } else {
+      faceAnim('😤', boss);           // BOSS 反擊純視覺演出
+      try { if (window.Game && Game.showToast) Game.showToast(pick(MISS_MSG), 'info'); } catch (e) {}
+    }
+  }
+
+  // ---------- 結算（finishStage 頂端 hook：return MathBoss.finishBattle()）----------
+  function finishBattle() {
+    var bid = (fight && fight.boss) || (gameState && gameState.boss);
+    var boss = byId(bid);
+    var victory = !!(fight && fight.hp <= 0);
+    var qUsed = (gameState && gameState.answers && gameState.answers.length) || 0;
+    var correctCount = fight ? fight.correctHits : 0;
+    var acc = qUsed > 0 ? Math.round((correctCount / qUsed) * 100) : 0;
+    var combo = (gameState && gameState.maxCombo) || 0;
+    var first = false;
+
+    if (!data) load();
+    if (boss) {
+      if (victory) {
+        first = !(data.defeated && data.defeated[bid]);
+        if (!data.defeated) data.defeated = {};
+        if (data.defeated[bid]) data.defeated[bid].times = (data.defeated[bid].times || 0) + 1;
+        else data.defeated[bid] = { firstDefeatedAt: nowISO(), times: 1 };
+        updateBest(bid, qUsed, combo, acc, true);
+        save();
+        // 首勝：先落地 guard → save → 再單次 Game.award（程序中斷也不重領）
+        if (!data.awarded) data.awarded = {};
+        if (!data.awarded[bid]) {
+          data.awarded[bid] = true;
+          save();
+          var bounty = BOUNTY[bid] || 0;
+          try { if (window.Game && Game.award) Game.award('math', bounty, { silent: true, source: 'boss-defeat', boss: bid }); } catch (e) {}
+          try { if (window.Game && Game.showToast) Game.showToast('擊敗「' + boss.name + '」！獲得 ' + bounty + ' 經驗值 🏆', 'success'); } catch (e) {}
+        }
+        try { if (typeof launchConfetti === 'function') launchConfetti(); } catch (e) {}
+        try { if (typeof playSound === 'function') playSound('levelup'); } catch (e) {}
+      } else {
+        updateBest(bid, qUsed, combo, acc, false); // 敗場仍記 maxCombo / accuracy
+        save();
+      }
+    }
+    showVictory(boss, victory, qUsed, combo, first);
+    hideBossHud();
+    try { delete gameState.boss; } catch (e) {} // 還原，避免污染後續正常關卡
+    fight = null;
+  }
+
+  // ---------- 勝利 / 戰敗浮層 ----------
+  function showVictory(boss, victory, qUsed, combo, first) {
+    var card = el('boss-victory-card'); if (!card) return;
+    var bid = boss ? boss.id : '';
+    var name = boss ? boss.name : 'BOSS';
+    var bounty = BOUNTY[bid] || 0;
+    var html = '';
+    if (victory) {
+      html += '<div class="boss-victory-emoji">👑</div>';
+      html += '<div class="boss-victory-title">擊敗「' + name + '」！</div>';
+      if (first) html += '<div class="boss-victory-sub">你用了 ' + qUsed + ' 題就打倒牠，太強了！最高連擊 ×' + combo + '</div>';
+      else html += '<div class="boss-victory-sub">再次擊敗！你越來越熟練了 ✨<br>這次用了 ' + qUsed + ' 題・最高連擊 ×' + combo + '</div>';
+      if (first && bounty > 0) html += '<div class="boss-victory-bounty">擊敗獎勵 +' + bounty + ' 經驗值 🏆</div>';
+      html += '<div class="boss-victory-btns">' +
+        '<button class="btn btn-primary" onclick="MathBoss.start(\'' + bid + '\')">🔄 再戰一場</button>' +
+        '<button class="btn btn-secondary" onclick="MathBoss.closeVictory();showScreen(\'boss-map\')">🏰 回王之殿堂</button>' +
+        '<button class="btn btn-secondary" onclick="MathBoss.closeVictory();showScreen(\'home\')">← 回首頁</button>' +
+        '</div>';
+    } else {
+      html += '<div class="boss-victory-emoji">🌀</div>';
+      html += '<div class="boss-victory-title">這次 BOSS 溜走了</div>';
+      html += '<div class="boss-victory-sub">差一點點！剛剛答對的都算數，再挑戰一次一定行！</div>';
+      html += '<div class="boss-victory-btns">' +
+        '<button class="btn btn-primary" onclick="MathBoss.start(\'' + bid + '\')">💪 再挑戰</button>' +
+        '<button class="btn btn-secondary" onclick="MathBoss.closeVictory();showScreen(\'boss-map\')">← 返回</button>' +
+        '</div>';
+    }
+    card.innerHTML = html;
+    var ov = el('boss-victory'); if (ov) ov.hidden = false;
+  }
+  function closeVictory() { var ov = el('boss-victory'); if (ov) ov.hidden = true; }
+
+  // ---------- 王之殿堂（圖鑑/入口）----------
+  function renderBossMap() {
+    if (!data) load();
+    var g = el('boss-map-grid'); if (!g) return;
+    var html = '';
+    for (var i = 0; i < BOSSES.length; i++) {
+      var b = BOSSES[i];
+      var def = data.defeated && data.defeated[b.id];
+      var best = (data.best && data.best[b.id]) || {};
+      var status;
+      if (def) {
+        var fewest = (best.fewestQuestions != null) ? best.fewestQuestions : '?';
+        var mc = best.maxCombo || 0;
+        status = '<span class="crown">👑 已擊敗・最少 ' + fewest + ' 題</span>' +
+          '最高連擊 ×' + mc +
+          '<div><button class="btn btn-secondary" onclick="MathBoss.start(\'' + b.id + '\')">🔄 再戰</button></div>';
+      } else {
+        status = '<button class="btn btn-primary" onclick="MathBoss.start(\'' + b.id + '\')">⚔️ 挑戰</button>';
+      }
+      html += '<div class="boss-card" style="border-color:' + b.color + '">' +
+        '<div class="boss-card-portrait" style="background:' + grad(b.color) + '">' + b.emoji + '</div>' +
+        '<div class="boss-card-name">' + b.name + '</div>' +
+        '<div class="boss-card-level">等級 ' + (b.level + 1) + ' · ' + grade(b.level) + '</div>' +
+        '<div class="boss-card-status">' + status + '</div>' +
+        '</div>';
+    }
+    g.innerHTML = html;
+  }
+
+  // ---------- 入口鈕注入 ----------
+  function decorateStages(level, list) {
+    if (!list) return;
+    var boss = bossForLevel(level); if (!boss) return;
+    var btn = document.createElement('button');
+    btn.className = 'btn btn-primary boss-challenge-btn';
+    btn.textContent = '⚔️ 挑戰王：' + boss.name;
+    btn.onclick = function () { start(boss.id); };
+    list.appendChild(btn);
+  }
+  function mountHomeEntry() {
+    var home = el('screen-home'); if (!home) return;
+    if (el('boss-hall-entry')) return; // 只注入一次
+    var map = el('level-map');
+    var btn = document.createElement('button');
+    btn.id = 'boss-hall-entry';
+    btn.className = 'btn btn-primary';
+    btn.textContent = '🏰 王之殿堂';
+    btn.onclick = function () { try { showScreen('boss-map'); } catch (e) {} };
+    if (map && map.parentNode === home) home.insertBefore(btn, map.nextSibling);
+    else home.appendChild(btn);
+  }
+
+  // ---------- 畫面切換 hook ----------
+  function onScreen(name) {
+    if (name === 'boss-map') { renderBossMap(); return; }
+    if (name !== 'game') { hideBossHud(); closeVictory(); return; }
+    // 進入 game 畫面但非 BOSS 戰（例如剛從 BOSS 戰逃走後開一般關卡）→ 收起殘留 HUD
+    if (!gameState || !gameState.boss) { hideBossHud(); closeVictory(); }
+  }
+
+  // ---------- DOM 注入（script 在 body 末端，#app 已存在）----------
+  function injectDom() {
+    var dots = el('progress-dots');
+    if (dots && dots.parentNode && !el('boss-hud')) {
+      var hud = document.createElement('div');
+      hud.id = 'boss-hud';
+      hud.hidden = true;
+      hud.innerHTML =
+        '<div class="boss-portrait" id="boss-portrait"><span class="boss-portrait-emoji" id="boss-portrait-emoji">🐣</span></div>' +
+        '<div class="boss-hud-info">' +
+          '<div class="boss-hud-name" id="boss-hud-name">BOSS HP</div>' +
+          '<div class="boss-hp-bar" id="boss-hp-bar" role="progressbar" aria-label="BOSS 血量" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><div class="boss-hp-fill" id="boss-hp-fill"></div></div>' +
+          '<div class="boss-hp-num" id="boss-hp-num">0 / 0</div>' +
+        '</div>';
+      dots.parentNode.insertBefore(hud, dots);
+    }
+    var app = el('app');
+    if (app && !el('boss-victory')) {
+      var v = document.createElement('div');
+      v.id = 'boss-victory';
+      v.hidden = true;
+      v.innerHTML = '<div class="boss-victory-card result-card" id="boss-victory-card"></div>';
+      app.appendChild(v);
+    }
+    if (app && !el('screen-boss-map')) {
+      var m = document.createElement('div');
+      m.id = 'screen-boss-map';
+      m.className = 'screen';
+      m.innerHTML =
+        '<div class="header">' +
+          '<button class="header-btn" onclick="showScreen(\'home\')" aria-label="返回關卡地圖" title="返回關卡地圖">←</button>' +
+          '<div class="header-title">🏰 王之殿堂</div>' +
+          '<div style="width:48px"></div>' +
+        '</div>' +
+        '<div class="boss-map-grid u-grid" id="boss-map-grid"></div>';
+      app.appendChild(m);
+    }
+  }
+
+  // ---------- 對外 API ----------
+  window.MathBoss = {
+    start: start,
+    onAnswer: onAnswer,
+    finishBattle: finishBattle,
+    decorateStages: decorateStages,
+    mountHomeEntry: mountHomeEntry,
+    onScreen: onScreen,
+    closeVictory: closeVictory
+  };
+
+  // 初始化（主程式 init() 已於前一個 <script> 執行完，state 已載入；DOM 已就緒）
+  injectDom();
+  load();
+  try { mountHomeEntry(); } catch (e) {}
+})();
+</script>
+</body>
+</html>

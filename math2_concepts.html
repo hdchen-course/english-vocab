@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>數學觀念養成 2 📊</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<link rel="stylesheet" href="concept.css">
+<script src="game_core.js"></script>
+<style>:root{ --su:#0ea5e9; --su-tint:rgba(14,165,233,0.14); }</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">數學觀念養成 2 📊</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="cn-screen active cn-wrap">
+    <div class="cn-topbar"><span class="cn-title">數學觀念養成 2 📊</span></div>
+    <div class="cn-hello"><span class="cn-mascot" aria-hidden="true">📊</span>
+      <div><div class="cn-htext" id="hello">座標、比例、機率用圖一看就懂——先看圖，再動手算。</div>
+      <div class="cn-hsub">每個觀念都是「教一小段 → 馬上練習」，慢慢來。</div></div></div>
+    <div class="cn-lessons" id="lesson-list"></div>
+    <a class="cn-nextup" href="math.html" style="display:flex;align-items:center;gap:12px;margin-top:16px;padding:14px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:26px;flex:none" aria-hidden="true">🚀</span><span>學會了？接著到「數學冒險王」練習 →</span></a>
+    <p class="cn-note">這裡是「先學觀念」的教學小旅程，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
+  </section>
+  <section id="screen-play" class="cn-screen cn-wrap">
+    <div class="cn-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="cn-title" id="play-title">觀念</span></div>
+    <div class="cn-progress" id="prog" aria-hidden="true"></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+// ---- 數學2 專用 SVG 概念圖（文字 currentColor = --ink）----
+// 座標平面：原點左下，range 0..5，可標一個點 (px,py)
+function coordGrid(px, py, showLabel){
+  var ox=34, oy=150, u=22, n=5;
+  var s='<svg viewBox="0 0 210 178" role="img" aria-label="座標平面上的點 '+(showLabel?('('+px+', '+py+')'):'')+'">';
+  // 格線
+  for(var i=1;i<=n;i++){
+    s+='<line x1="'+(ox+i*u)+'" y1="'+(oy-n*u)+'" x2="'+(ox+i*u)+'" y2="'+oy+'" stroke="#c7d2da" stroke-width="1"/>';
+    s+='<line x1="'+ox+'" y1="'+(oy-i*u)+'" x2="'+(ox+n*u)+'" y2="'+(oy-i*u)+'" stroke="#c7d2da" stroke-width="1"/>';
+  }
+  // 軸
+  s+='<line x1="'+ox+'" y1="'+oy+'" x2="'+(ox+n*u+10)+'" y2="'+oy+'" stroke="currentColor" stroke-opacity="0.6" stroke-width="2.5"/>';
+  s+='<line x1="'+ox+'" y1="'+oy+'" x2="'+ox+'" y2="'+(oy-n*u-10)+'" stroke="currentColor" stroke-opacity="0.6" stroke-width="2.5"/>';
+  // 刻度數字
+  for(var t=1;t<=n;t++){
+    s+='<text x="'+(ox+t*u)+'" y="'+(oy+13)+'" text-anchor="middle" font-size="11" fill="currentColor">'+t+'</text>';
+    s+='<text x="'+(ox-8)+'" y="'+(oy-t*u+3)+'" text-anchor="middle" font-size="11" fill="currentColor">'+t+'</text>';
+  }
+  s+='<text x="'+(ox+n*u+8)+'" y="'+(oy+13)+'" font-size="11" font-weight="800" fill="currentColor">x</text>';
+  s+='<text x="'+(ox-9)+'" y="'+(oy-n*u-12)+'" font-size="11" font-weight="800" fill="currentColor">y</text>';
+  s+='<text x="'+(ox-8)+'" y="'+(oy+13)+'" text-anchor="middle" font-size="11" fill="currentColor">O</text>';
+  if(px!=null){
+    var cx=ox+px*u, cy=oy-py*u;
+    s+='<line x1="'+cx+'" y1="'+oy+'" x2="'+cx+'" y2="'+cy+'" stroke="#0ea5e9" stroke-width="1.5" stroke-dasharray="3 3"/>';
+    s+='<line x1="'+ox+'" y1="'+cy+'" x2="'+cx+'" y2="'+cy+'" stroke="#0ea5e9" stroke-width="1.5" stroke-dasharray="3 3"/>';
+    s+='<circle cx="'+cx+'" cy="'+cy+'" r="5" fill="#0ea5e9" stroke="#fff" stroke-width="1.5"/>';
+    if(showLabel) s+='<text x="'+(cx+8)+'" y="'+(cy-6)+'" font-size="11" font-weight="800" fill="currentColor">('+px+', '+py+')</text>';
+  }
+  return s+'</svg>';
+}
+// 比：a 個紅方塊 : b 個藍方塊
+function ratioBlocks(a, b){
+  var u=24, gap=6, pad=10, groupGap=22;
+  var w = pad*2 + a*(u+gap) + groupGap + b*(u+gap);
+  var s='<svg viewBox="0 0 '+Math.max(w,120)+' 84" role="img" aria-label="比 '+a+' 比 '+b+'">';
+  var x=pad;
+  for(var i=0;i<a;i++){ s+='<rect x="'+x+'" y="14" width="'+u+'" height="'+u+'" rx="4" fill="rgba(239,68,68,0.7)" stroke="#b91c1c" stroke-width="1.5"/>'; x+=u+gap; }
+  x+=groupGap-gap;
+  for(var j=0;j<b;j++){ s+='<rect x="'+x+'" y="14" width="'+u+'" height="'+u+'" rx="4" fill="rgba(59,130,246,0.7)" stroke="#1d4ed8" stroke-width="1.5"/>'; x+=u+gap; }
+  s+='<text x="'+(Math.max(w,120)/2)+'" y="66" text-anchor="middle" font-size="13" font-weight="800" fill="currentColor">紅 '+a+' ： 藍 '+b+'　＝　'+a+' : '+b+'</text>';
+  return s+'</svg>';
+}
+// 袋子裡 r 顆紅、bl 顆藍
+function bag(r, bl){
+  var s='<svg viewBox="0 0 200 130" role="img" aria-label="袋子裡 '+r+' 顆紅球 '+bl+' 顆藍球">';
+  s+='<path d="M46 34 L154 34 L166 108 Q166 118 156 118 L44 118 Q34 118 34 108 Z" fill="rgba(148,163,184,0.18)" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+='<rect x="60" y="22" width="80" height="14" rx="5" fill="rgba(148,163,184,0.30)" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  var total=r+bl, cols=Math.min(total,4), cx0=56, cy0=58, sx=30, sy=28;
+  for(var i=0;i<total;i++){
+    var col=i%cols, row=Math.floor(i/cols);
+    var fill = i<r ? 'rgba(239,68,68,0.85)' : 'rgba(59,130,246,0.85)';
+    var stk  = i<r ? '#b91c1c' : '#1d4ed8';
+    s+='<circle cx="'+(cx0+col*sx)+'" cy="'+(cy0+row*sy)+'" r="11" fill="'+fill+'" stroke="'+stk+'" stroke-width="1.5"/>';
+  }
+  return s+'</svg>';
+}
+// 骰子（六面，標出點數 face）
+function die(face){
+  var pips={1:[[2,2]],2:[[1,1],[3,3]],3:[[1,1],[2,2],[3,3]],4:[[1,1],[3,1],[1,3],[3,3]],5:[[1,1],[3,1],[2,2],[1,3],[3,3]],6:[[1,1],[3,1],[1,2],[3,2],[1,3],[3,3]]};
+  var s='<svg viewBox="0 0 110 110" role="img" aria-label="骰子 '+face+' 點"><rect x="15" y="15" width="80" height="80" rx="14" fill="rgba(14,165,233,0.12)" stroke="currentColor" stroke-opacity="0.6" stroke-width="2.5"/>';
+  (pips[face]||[]).forEach(function(p){ s+='<circle cx="'+(15+p[0]*20)+'" cy="'+(15+p[1]*20)+'" r="7" fill="currentColor"/>'; });
+  return s+'</svg>';
+}
+
+window.CONCEPT = {
+  progKey:'math2_concepts_v1', practiceHref:'math.html',
+  lessons:[
+   { id:'coord', name:'座標數對', emoji:'📍', color:'#0ea5e9', sub:'用 (x, y) 標出位置', done:'記得：座標 (x, y) 先看橫走幾格（x），再看直走幾格（y）；(0, 0) 是原點。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'座標平面：兩條數線交叉',svg:coordGrid(null,null,false),text:'橫著的數線叫 <b>x 軸</b>，直著的叫 <b>y 軸</b>，它們相交的點叫<b>原點</b>，座標是 <b>(0, 0)</b>。用這兩條線，就能標出平面上任何位置。'},
+      {type:'teach',kicker:'怎麼讀',title:'座標 (x, y)：先橫再直',svg:coordGrid(3,2,true),text:'座標寫成 <b>(x, y)</b>：<b>先</b>看從原點<b>向右走幾格</b>（x），<b>再</b>看<b>向上走幾格</b>（y）。圖中的點是 <b>(3, 2)</b> ＝ 右 3、上 2。<b>順序不能反</b>，(3, 2) 和 (2, 3) 不一樣。'},
+      {type:'teach',kicker:'再看一個',title:'換個點：(2, 4)',svg:coordGrid(2,4,true),text:'這個點向右 <b>2</b> 格、向上 <b>4</b> 格，所以是 <b>(2, 4)</b>。沿著虛線就能對回 x 軸和 y 軸的刻度。'},
+      {type:'quiz',kicker:'換你試試',title:'座標 (3, 2) 代表什麼？',options:['從原點向右 3、向上 2','從原點向右 2、向上 3','向右 3、向右 2','向上 3、向上 2'],answer:0,why:'座標 (x, y) 先看 x（向右 3），再看 y（向上 2）。'},
+      {type:'quiz',kicker:'看圖判斷',title:'圖中的點座標是多少？',svg:coordGrid(4,1,false),options:['(4, 1)','(1, 4)','(4, 4)','(1, 1)'],answer:0,why:'這個點向右 4 格、向上 1 格，先橫（4）再直（1），所以是 (4, 1)。'},
+      {type:'quiz',kicker:'想一想',title:'原點的座標是多少？',options:['(0, 0)','(1, 1)','(1, 0)','(0, 1)'],answer:0,why:'原點是 x 軸和 y 軸的交點，向右 0、向上 0，座標是 (0, 0)。'}
+     ]},
+   { id:'ratio', name:'比與比例', emoji:'⚖️', color:'#8b5cf6', sub:'a : b 與等值的比', done:'記得：比 a:b 是兩個量的關係；同乘（或同除）一個數，比不變 —— 2:3 = 4:6。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'比 a : b 是「幾比幾」',svg:ratioBlocks(2,3),text:'<b>比</b>用來說兩個量的關係。像紅色 2 個、藍色 3 個，就寫成 <b>紅 : 藍 = 2 : 3</b>，唸作「二比三」。比在意的是<b>倍數關係</b>，不是差多少。'},
+      {type:'teach',kicker:'關鍵',title:'同乘同一個數，比不變',svg:ratioBlocks(4,6),text:'把紅、藍<b>都變成 2 倍</b>：2:3 → <b>4:6</b>。數量變多了，但「紅比藍」的關係<b>沒變</b>。所以 <b>2:3 = 4:6 = 6:9</b>…這些叫<b>等值的比</b>。'},
+      {type:'teach',kicker:'反過來',title:'同除也一樣：化到最簡',svg:ratioBlocks(2,3),text:'反過來，把 6:9 <b>同除以 3</b> 就變回 <b>2:3</b>。除到不能再約的整數比，叫<b>最簡單整數比</b>。'},
+      {type:'quiz',kicker:'換你試試',title:'2 : 3 ＝ 4 : ？',options:['6','5','8','9'],answer:0,why:'2 和 4 是 2 倍關係，所以 3 也要乘 2 → 6。2:3 = 4:6。'},
+      {type:'quiz',kicker:'化簡',title:'把 6 : 9 化成最簡單整數比',options:['2 : 3','3 : 2','6 : 9','1 : 2'],answer:0,why:'6 和 9 都能除以 3：6÷3=2、9÷3=3，所以是 2:3。'},
+      {type:'quiz',kicker:'想一想',title:'調果汁，濃縮 : 水 = 1 : 3。用 4 杯濃縮，要幾杯水？',options:['12 杯','7 杯','4 杯','3 杯'],answer:0,why:'濃縮從 1 變 4（×4），水也要 ×4：3×4 = 12 杯。1:3 = 4:12。'}
+     ]},
+   { id:'prob', name:'機率', emoji:'🎲', color:'#f59e0b', sub:'某件事發生的可能性', done:'記得：機率 = 想要的結果數 ÷ 所有可能結果數；不可能是 0，一定發生是 1。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'機率 = 想要的 ÷ 全部',svg:bag(3,1),text:'<b>機率</b>是某件事發生的可能性，算法是<b>「想要的結果數 ÷ 所有可能的結果數」</b>。袋子裡 3 紅 1 藍共 4 顆，閉眼抽一顆是紅的機率 = <b>3/4</b>（想要 3 顆紅 ÷ 全部 4 顆）。'},
+      {type:'teach',kicker:'骰子',title:'公平的骰子：每面都是 1/6',svg:die(3),text:'骰子有 <b>6 個面</b>，每面機會一樣。擲出某一個特定點數（例如 3）的機率 = <b>1/6</b>（想要 1 面 ÷ 全部 6 面）。'},
+      {type:'teach',kicker:'兩個極端',title:'不可能 = 0，一定 = 1',svg:bag(4,0),text:'機率介於 <b>0 到 1</b>。袋子全是紅球時，抽到藍球<b>不可能</b>，機率 = <b>0</b>；抽到紅球<b>一定會發生</b>，機率 = <b>1</b>。'},
+      {type:'quiz',kicker:'換你試試',title:'擲一顆骰子，出現「3」的機率是多少？',options:['1/6','1/3','6','1/2'],answer:0,why:'骰子 6 面機會相同，想要 1 面（3）÷ 全部 6 面 = 1/6。（骰子有 6 面不代表機率是 6，機率一定介於 0 到 1。）'},
+      {type:'quiz',kicker:'看圖算算',title:'袋子裡 2 顆紅、3 顆藍。抽到藍球的機率？',svg:bag(2,3),options:['3/5','2/5','3/2','1/3'],answer:0,why:'藍球 3 顆 ÷ 全部（2+3=5）顆 = 3/5。'},
+      {type:'quiz',kicker:'想一想',title:'丟一枚硬幣，出現正面的機率是多少？',options:['1/2','1/4','1','1/6'],answer:0,why:'硬幣只有正、反 2 種結果且機會相同，正面 = 1 ÷ 2 = 1/2。'}
+     ]}
+  ]
+};
+</script>
+<script src="concept_engine.js"></script>
+</body>
+</html>

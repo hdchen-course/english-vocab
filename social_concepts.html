@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>社會觀念養成 🧭</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<link rel="stylesheet" href="concept.css">
+<script src="game_core.js"></script>
+<style>:root{ --su:#b45309; --su-tint:rgba(180,83,9,0.14); }</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">社會觀念養成 🧭</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="cn-screen active cn-wrap">
+    <div class="cn-topbar"><span class="cn-title">社會觀念養成 🧭</span></div>
+    <div class="cn-hello"><span class="cn-mascot" aria-hidden="true">🗺️</span>
+      <div><div class="cn-htext" id="hello">方位、地圖、時間軸、文化與自然——用圖建立社會科最基礎的觀念。</div>
+      <div class="cn-hsub">每個觀念都是「教一小段 → 馬上練習」，慢慢來就好。</div></div></div>
+    <div class="cn-lessons" id="lesson-list"></div>
+    <a class="cn-nextup" href="social_studies.html" style="display:flex;align-items:center;gap:12px;margin-top:16px;padding:14px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:26px;flex:none" aria-hidden="true">🚀</span><span>學會了嗎？接著到「社會大冒險：認識我們的台灣」練習實戰一下 →</span></a>
+    <p class="cn-note">這裡是「先學觀念」的教學小旅程，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
+  </section>
+  <section id="screen-play" class="cn-screen cn-wrap">
+    <div class="cn-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="cn-title" id="play-title">觀念</span></div>
+    <div class="cn-progress" id="prog" aria-hidden="true"></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+// ---- 社會專用 SVG 概念圖（資訊文字 fill=currentColor；結構線 currentColor + 透明度）----
+var AC = '#b45309', FILL = 'rgba(180,83,9,0.12)';
+function arrow(x1,y1,x2,y2,color,w){
+  var dx=x2-x1, dy=y2-y1, len=Math.sqrt(dx*dx+dy*dy)||1, ux=dx/len, uy=dy/len;
+  var s='<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+color+'" stroke-width="'+w+'" stroke-linecap="round"/>';
+  s+='<polygon points="'+x2+','+y2+' '+(x2-ux*11-uy*6).toFixed(1)+','+(y2-uy*11+ux*6).toFixed(1)+' '+(x2-ux*11+uy*6).toFixed(1)+','+(y2-uy*11-ux*6).toFixed(1)+'" fill="'+color+'"/>';
+  return s;
+}
+// 方位盤 + 太陽從東升、西落
+function compassRose(){
+  var cx=100, cy=96, s='<svg viewBox="0 0 200 180" role="img" aria-label="指北針：上北下南、左西右東；太陽從東邊升起、西邊落下">';
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="52" fill="'+FILL+'" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  // 四角菱形指針
+  s+='<polygon points="'+cx+','+(cy-46)+' '+(cx+10)+','+cy+' '+cx+','+(cy+46)+' '+(cx-10)+','+cy+'" fill="'+AC+'" opacity="0.85"/>';
+  s+='<polygon points="'+(cx-46)+','+cy+' '+cx+','+(cy-10)+' '+(cx+46)+','+cy+' '+cx+','+(cy+10)+'" fill="'+AC+'" opacity="0.4"/>';
+  s+='<text x="'+cx+'" y="34" text-anchor="middle" font-size="15" font-weight="800" fill="currentColor">北 N</text>';
+  s+='<text x="'+cx+'" y="168" text-anchor="middle" font-size="15" font-weight="800" fill="currentColor">南 S</text>';
+  s+='<text x="176" y="'+(cy+5)+'" text-anchor="middle" font-size="15" font-weight="800" fill="currentColor">東 E</text>';
+  s+='<text x="22" y="'+(cy+5)+'" text-anchor="middle" font-size="15" font-weight="800" fill="currentColor">西 W</text>';
+  // 太陽路徑：東（右）升 → 西（左）落
+  s+='<text x="156" y="70" font-size="18">☀️</text>';
+  s+=arrow(150,74,50,74,'currentColor',2.5);
+  s+='<text x="100" y="60" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">太陽：東升 → 西落</text>';
+  return s+'</svg>';
+}
+// 地圖基本：上北下南、圖例、比例尺
+function mapBasics(){
+  var s='<svg viewBox="0 0 250 176" role="img" aria-label="地圖：上北下南、有指北針、圖例和比例尺">';
+  s+='<rect x="8" y="8" width="150" height="160" rx="8" fill="'+FILL+'" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  // 指北針
+  s+=arrow(30,44,30,20,'currentColor',3);
+  s+='<text x="30" y="58" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">北</text>';
+  // 地圖上的符號
+  s+='<text x="72" y="66" text-anchor="middle" font-size="22">🏫</text>';
+  s+='<text x="118" y="92" text-anchor="middle" font-size="22">🏥</text>';
+  s+='<text x="66" y="120" text-anchor="middle" font-size="22">🌳</text>';
+  // 比例尺
+  s+='<line x1="26" y1="150" x2="86" y2="150" stroke="currentColor" stroke-opacity="0.6" stroke-width="3"/>';
+  s+='<line x1="26" y1="146" x2="26" y2="154" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+='<line x1="86" y1="146" x2="86" y2="154" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+='<text x="94" y="154" font-size="11" fill="currentColor">比例尺</text>';
+  // 圖例框
+  s+='<rect x="166" y="20" width="76" height="120" rx="8" fill="none" stroke="currentColor" stroke-opacity="0.6" stroke-width="1.6"/>';
+  s+='<text x="204" y="36" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">圖例</text>';
+  var leg=[['🏫','學校',58],['🏥','醫院',86],['🌳','公園',114]];
+  leg.forEach(function(l){
+    s+='<text x="180" y="'+(l[2])+'" text-anchor="middle" font-size="16">'+l[0]+'</text>';
+    s+='<text x="196" y="'+(l[2]-2)+'" font-size="11" fill="currentColor">'+l[1]+'</text>';
+  });
+  return s+'</svg>';
+}
+// 時間軸：由左到右越晚
+function timeline(){
+  var pts=[[36,'1900'],[110,'1945'],[186,'2000'],[248,'今天']];
+  var s='<svg viewBox="0 0 280 120" role="img" aria-label="時間軸：由左到右越晚，1945 二戰結束">';
+  s+=arrow(20,64,268,64,'currentColor',3);
+  s+='<text x="20" y="98" font-size="11" fill="currentColor">以前</text>';
+  s+='<text x="248" y="98" text-anchor="middle" font-size="11" fill="currentColor">越晚</text>';
+  pts.forEach(function(p,i){
+    s+='<circle cx="'+p[0]+'" cy="64" r="6" fill="'+AC+'"/>';
+    s+='<text x="'+p[0]+'" y="44" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">'+p[1]+'</text>';
+  });
+  s+='<text x="110" y="86" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">二戰結束</text>';
+  return s+'</svg>';
+}
+// 文化 vs 自然環境
+function cultureNature(){
+  var s='<svg viewBox="0 0 260 130" role="img" aria-label="自然環境（山河海）與文化（人做的橋廟房子節慶）比較">';
+  s+='<rect x="8" y="10" width="118" height="110" rx="14" fill="'+FILL+'" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+='<rect x="134" y="10" width="118" height="110" rx="14" fill="rgba(148,163,184,0.12)" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+='<text x="67" y="32" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">自然環境</text>';
+  s+='<text x="193" y="32" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">人文（人做的）</text>';
+  s+='<text x="67" y="66" text-anchor="middle" font-size="26">⛰️🌊</text>';
+  s+='<text x="67" y="96" text-anchor="middle" font-size="26">🏞️🌦️</text>';
+  s+='<text x="193" y="66" text-anchor="middle" font-size="26">🌉🏮</text>';
+  s+='<text x="193" y="96" text-anchor="middle" font-size="26">🏠🎊</text>';
+  s+='<text x="67" y="116" text-anchor="middle" font-size="11" fill="currentColor">本來就有的</text>';
+  s+='<text x="193" y="116" text-anchor="middle" font-size="11" fill="currentColor">人類創造的</text>';
+  return s+'</svg>';
+}
+
+window.CONCEPT = {
+  progKey:'social_concepts_v1', practiceHref:'social_studies.html',
+  lessons:[
+   { id:'direction', name:'方位：東西南北', emoji:'🧭', color:'#b45309', sub:'太陽東邊升、西邊落', done:'記得：東西南北四個方位；太陽從東邊升起、西邊落下；面向北方時，右手邊是東、左手邊是西。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'四個方位與太陽',svg:compassRose(),text:'方向有四個基本方位：<b>東、西、南、北</b>。每天<b>太陽從東邊升起</b>，傍晚<b>從西邊落下</b>。記住這一點，就能大概判斷方向。'},
+      {type:'teach',kicker:'用身體記方位',title:'面向北方時',svg:compassRose(),text:'當你<b>面向北方</b>時：<b>右手邊是東</b>、<b>左手邊是西</b>、<b>背後是南</b>。所以只要先找到一個方向，其他三個就能推出來。'},
+      {type:'quiz',kicker:'換你試試',title:'太陽從哪個方向升起？',options:['東邊','西邊','南邊','北邊'],answer:0,why:'太陽每天從東邊升起，這是判斷方向的好方法。'},
+      {type:'quiz',kicker:'想一想',title:'傍晚太陽會從哪個方向落下（下山）？',options:['西邊','東邊','南邊','北邊'],answer:0,why:'太陽從東邊升起、西邊落下。'},
+      {type:'quiz',kicker:'想一想',title:'當你面向北方時，右手邊是哪個方向？',options:['東邊','西邊','南邊','北邊'],answer:0,why:'面向北方時，右手邊是東、左手邊是西、背後是南。'}
+     ]},
+   { id:'map', name:'地圖上的方位與圖例', emoji:'🗺️', color:'#d97706', sub:'上北下南、圖例、比例尺', done:'記得：地圖沒特別標時，習慣上北、下南、左西、右東；圖例說明各種符號代表什麼；比例尺告訴你地圖距離和實際距離的關係。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'地圖的方向：上北下南',svg:mapBasics(),text:'看地圖時，如果沒有特別標示，習慣是<b>上面是北、下面是南、左邊是西、右邊是東</b>。地圖上的<b>指北針</b>（箭頭）會告訴你北方在哪裡。'},
+      {type:'teach',kicker:'看懂符號',title:'圖例：符號的說明書',svg:mapBasics(),text:'地圖用小符號代表地方，例如 🏫 學校、🏥 醫院、🌳 公園。旁邊的<b>圖例</b>就是這些符號的「說明書」，告訴你每個符號代表什麼。'},
+      {type:'teach',kicker:'距離的祕密',title:'比例尺：縮小的地圖',svg:mapBasics(),text:'真實的地方很大，地圖把它<b>縮小</b>畫出來。<b>比例尺</b>告訴你：地圖上的一小段，代表實際上很長的距離（不用精算，知道「地圖是縮小的」就好）。'},
+      {type:'quiz',kicker:'換你試試',title:'地圖上如果沒特別說明，「上面」通常代表哪個方向？',options:['北','南','東','西'],answer:0,why:'地圖習慣「上北下南、左西右東」，所以上面通常是北方。'},
+      {type:'quiz',kicker:'想一想',title:'地圖上的「圖例」是用來做什麼的？',options:['說明各種符號代表什麼','顯示今天幾號','寫出作者的名字','決定用什麼顏色印'],answer:0,why:'圖例是符號的說明，告訴你地圖上每個符號代表什麼地方。'},
+      {type:'quiz',kicker:'想一想',title:'地圖上的「比例尺」告訴我們什麼？',options:['地圖距離和實際距離的關係','地圖有多重','地圖用了幾種顏色','地圖是誰畫的'],answer:0,why:'比例尺說明地圖上的距離代表實際多長，也就是縮小了多少。'}
+     ]},
+   { id:'timeline', name:'時間軸與年代', emoji:'📅', color:'#ca8a04', sub:'一世紀=100年、越右邊越晚', done:'記得：一個世紀＝100 年；時間軸由左到右，越右邊越晚（越接近現在）；第二次世界大戰在 1945 年結束，台灣進入戰後時期。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'時間軸：由左到右',svg:timeline(),text:'<b>時間軸</b>把事情按照發生的先後排在一條線上。習慣<b>由左到右</b>，<b>越右邊代表越晚</b>、越接近現在。看時間軸就能一眼看出誰先誰後。'},
+      {type:'teach',kicker:'年代的單位',title:'一個世紀 = 100 年',svg:timeline(),text:'計算長時間時，常用<b>世紀</b>：<b>一個世紀等於 100 年</b>。西元（AD）從西元 1 年往後算；西元前（BC）是更早以前。例如<b>第二次世界大戰在 1945 年結束</b>，台灣進入戰後時期。'},
+      {type:'quiz',kicker:'換你試試',title:'一個「世紀」是多少年？',options:['100 年','10 年','1000 年','50 年'],answer:0,why:'一個世紀等於 100 年。'},
+      {type:'quiz',kicker:'想一想',title:'第二次世界大戰結束、日本結束在台統治是在西元哪一年？',options:['1945 年','1911 年','2000 年','1895 年'],answer:0,why:'第二次世界大戰在西元 1945 年結束，日本結束在台灣的統治。'},
+      {type:'quiz',kicker:'想一想',title:'在時間軸上，越靠右邊代表什麼？',options:['越晚、越接近現在','越早、越久以前','天氣越冷','距離越遠'],answer:0,why:'時間軸由左到右，越右邊代表時間越晚、越接近現在。'}
+     ]},
+   { id:'culnat', name:'文化 vs 自然環境', emoji:'🏞️', color:'#b45309', sub:'人做的 vs 大自然本來就有的', done:'記得：自然環境是大自然本來就有的（山、河、海、氣候）；文化是人類創造的（橋、廟、房子、節慶）。分辨時問「這是人做的嗎？」',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'自然環境 vs 文化',svg:cultureNature(),text:'<b>自然環境</b>是<b>大自然本來就有</b>、不是人做的，例如 ⛰️ 山、🌊 海、🏞️ 河、天氣氣候。<b>文化</b>是<b>人類創造</b>出來的，例如 🌉 橋、廟宇、🏠 房子、🎊 節慶。'},
+      {type:'teach',kicker:'分辨的方法',title:'問一句話就分清楚',svg:cultureNature(),text:'不確定時，問自己：「<b>這是人做的，還是大自然本來就有的？</b>」是人做的就屬於<b>文化</b>；本來就存在的就屬於<b>自然環境</b>。'},
+      {type:'quiz',kicker:'換你試試',title:'下列哪一個屬於「自然環境」？',options:['高山','廟宇','橋樑','節慶'],answer:0,why:'高山是大自然本來就有的，屬於自然環境；廟宇、橋樑、節慶都是人做的，屬於文化。'},
+      {type:'quiz',kicker:'想一想',title:'下列哪一個屬於「文化」（人做的）？',options:['廟宇','河流','高山','天氣'],answer:0,why:'廟宇是人類建造的，屬於文化；河流、高山、天氣都是自然環境。'},
+      {type:'quiz',kicker:'想一想',title:'要分辨是自然還是文化，可以問自己什麼問題？',options:['這是人做的，還是本來就有的？','這個東西貴不貴？','顏色好不好看？','離家遠不遠？'],answer:0,why:'問「這是人做的還是本來就有的」，就能分辨文化（人做的）和自然環境（本來就有的）。'}
+     ]}
+  ]
+};
+</script>
+<script src="concept_engine.js"></script>
+</body>
+</html>

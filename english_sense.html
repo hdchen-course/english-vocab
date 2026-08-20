@@ -1,0 +1,3181 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英文語感 🗣️</title>
+<!-- 統一遊戲化引擎：assets/app.css（設計 token）→ game_core.css（HUD/toast）→ game_core.js。
+     零重複計分：本頁定位「進階挑戰」，絕不呼叫 Game.recordAnswer / award / recordSession，
+     （唯一例外：答題時呼叫 Game.pingActive() 維持每日連續學習 streak，不計 XP、不重複計分）
+     也不宣告 data-game-wired，故不污染任何科目 XP。只用 Game.showToast（純提示）。
+     獨立 localStorage key：sense_progress_v1。 -->
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<style>
+/* english_sense.html — 強調色系採青綠（teal）。無專用 subject token，故：
+   --su 用實色（邊框/圓點），--su-tint 用半透明（亮暗雙主題自適應），
+   --su-ink 用 var(--ink)（自動隨主題翻轉，避免暗色模式對比不足）。 */
+:root {
+  --su: #0d9488;
+  --su-tint: rgba(13,148,136,0.14);
+  --su-ink: var(--ink);
+  --accent: #0d9488;
+  --accent-ink: var(--ink);
+  --accent-tint: rgba(13,148,136,0.14);
+}
+
+body { overflow-x: hidden; }
+
+.ma-topbar { display: flex; align-items: center; gap: var(--s2); margin-bottom: var(--s4); }
+.ma-topbar .ma-title { flex: 1; font-size: var(--fs-h2); font-weight: 800; color: var(--ink); min-width: 0; }
+
+.ma-screen { display: none; animation: ma-fade 0.3s ease; }
+.ma-screen.active { display: block; }
+@keyframes ma-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .ma-screen { animation: none; } }
+
+.ma-hello { display: flex; align-items: center; gap: var(--s3); padding: var(--s4); background: var(--su-tint); border: 1px solid var(--card-border); border-radius: var(--r-lg); margin-bottom: var(--s4); }
+.ma-hello .ma-mascot { font-size: 46px; flex: none; line-height: 1; }
+.ma-hello .ma-hello-text { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+.ma-hello .ma-hello-sub { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; }
+
+.ma-overview { display: flex; align-items: center; gap: var(--s3); margin-bottom: var(--s4); flex-wrap: wrap; }
+.ma-overview .stat-tile { flex: 1; min-width: 96px; }
+
+.ma-levels { display: grid; gap: var(--s4); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.ma-level {
+  display: flex; flex-direction: column; gap: var(--s2); padding: var(--s4);
+  text-align: left; cursor: pointer; border: 2px solid var(--card-border);
+  background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  font-family: var(--font); color: var(--ink);
+}
+.ma-level:hover { box-shadow: var(--shadow-lg); border-color: var(--su); }
+.ma-level:active { transform: scale(0.98); }
+.ma-level-top { display: flex; align-items: center; gap: var(--s3); }
+.ma-level-emoji { font-size: 34px; width: 56px; height: 56px; flex: none; display: flex; align-items: center; justify-content: center; border-radius: 16px; }
+.ma-level-num { font-size: var(--fs-small); font-weight: 700; color: var(--su-ink); }
+.ma-level-name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); line-height: 1.25; }
+.ma-level-concepts { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; line-height: 1.4; }
+.ma-level-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-top: 2px; }
+.ma-level-status { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-small); font-weight: 700; }
+.ma-level-status.done { color: var(--c-correct-ink); }
+.ma-level-status.todo { color: var(--ink-soft); }
+.ma-level-stars { font-size: 16px; letter-spacing: 1px; }
+
+.ma-stage { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); padding: var(--s5) var(--s4); text-align: center; }
+.ma-visual { font-size: clamp(56px, 18vw, 92px); line-height: 1.1; margin: var(--s2) 0 var(--s3); user-select: none; }
+.ma-question { font-size: clamp(19px, 4.5vw, 24px); font-weight: 800; color: var(--ink); line-height: 1.6; margin: 0 auto var(--s4); max-width: 42ch; text-align: left; }
+
+.ma-brief { text-align: left; }
+.ma-brief h2 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); margin: 0 0 var(--s3); text-align: center; }
+.ma-brief-sub { text-align: center; color: var(--ink-soft); font-weight: 700; font-size: var(--fs-small); margin: 0 0 var(--s3); }
+.ma-keyfacts { list-style: none; padding: 0; margin: 0 auto; max-width: 44ch; display: grid; gap: var(--s2); }
+.ma-keyfacts li { display: flex; align-items: flex-start; gap: var(--s2); padding: 10px 14px; background: var(--su-tint); border-radius: var(--r-md); font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.6; }
+.ma-keyfacts li .ma-kf-dot { flex: none; color: var(--su-ink); font-weight: 900; }
+
+.ma-steps { display: flex; align-items: center; justify-content: center; gap: 5px; margin-bottom: var(--s3); flex-wrap: wrap; }
+.ma-steps i { width: 20px; height: 6px; border-radius: 999px; background: var(--card-border); }
+.ma-steps i.on { background: var(--su); }
+.ma-steps i.cur { background: var(--su); box-shadow: 0 0 0 3px var(--su-tint); }
+
+.ma-options { display: grid; gap: var(--s3); margin-top: var(--s2); }
+.ma-opt {
+  display: flex; align-items: center; gap: var(--s2); min-height: 56px; width: 100%;
+  padding: 14px 18px; border: 2px solid var(--card-border); border-radius: 16px;
+  background: var(--card); color: var(--ink); font-family: var(--font);
+  font-size: clamp(16px, 3.4vw, 19px); font-weight: 700; text-align: left; cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.ma-opt:active { transform: scale(0.98); }
+.ma-opt:disabled { cursor: default; }
+/* 作答後高亮：文字用 var(--ink)（亮暗雙主題皆過 AA），對錯以邊框顏色 + ✅/❌ 雙碼標示 */
+.ma-opt.correct { border-color: var(--c-correct); background: var(--tint-english); color: var(--ink); }
+.ma-opt.wrong { border-color: var(--c-wrong); background: rgba(255,118,117,0.12); color: var(--ink); }
+.ma-opt.correct .ma-opt-mark { color: var(--c-correct-ink); }
+.ma-opt.wrong .ma-opt-mark { color: var(--c-streak-ink); }
+.ma-opt .ma-opt-mark { margin-left: auto; font-size: 22px; }
+
+.ma-reveal { margin-top: var(--s4); padding: var(--s3) var(--s4); background: var(--su-tint); border-radius: var(--r-md); font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.6; text-align: left; display: none; }
+.ma-reveal.show { display: block; animation: ma-fade 0.3s ease; }
+@media (prefers-reduced-motion: reduce) { .ma-reveal.show { animation: none; } }
+
+.ma-done { text-align: center; padding: var(--s5) var(--s4); }
+.ma-done-emoji { font-size: clamp(64px, 22vw, 100px); }
+.ma-done-stars { font-size: 34px; letter-spacing: 4px; margin: var(--s2) 0; }
+.ma-done-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); }
+
+.ma-actions { display: flex; gap: var(--s3); margin-top: var(--s4); flex-wrap: wrap; }
+.ma-actions .btn { flex: 1; min-width: 140px; }
+
+.ma-footnote { text-align: center; color: var(--ink-soft); font-size: var(--fs-small); margin-top: var(--s5); font-weight: 600; max-width: 34em; margin-inline: auto; }
+.sense-audio-btn { display:inline-flex; align-items:center; gap:8px; min-height:56px; padding:14px 26px; border:none; border-radius:16px; background:#0f766e; color:#fff; font-family:var(--font); font-weight:800; font-size:clamp(18px,4.5vw,22px); cursor:pointer; box-shadow:var(--shadow-sm); }
+.sense-audio-btn:active { transform:scale(0.97); }
+</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">英文語感 🗣️</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle
+          aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+
+  <section id="screen-menu" class="ma-screen active">
+    <div class="ma-topbar">
+      <span class="ma-title">英文語感 🗣️</span>
+    </div>
+
+    <div class="ma-hello">
+      <span class="ma-mascot" aria-hidden="true">🗣️</span>
+      <div>
+        <div class="ma-hello-text" id="hello-text">用「聽起來順不順」、看圖和聽力培養英文語感——用聽和感覺學，不用死背規則，多玩幾次耳朵就會了。</div>
+        <div class="ma-hello-sub" id="hello-sub">還沒開始也沒關係，挑一個等級試試看吧！</div>
+      </div>
+    </div>
+
+    <div class="ma-overview">
+      <div class="stat-tile"><span class="stat-value" id="ov-done">0/16</span><span class="stat-label">完成等級</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-badges">0/17</span><span class="stat-label">收集徽章</span></div>
+    </div>
+
+    <div class="ma-levels" id="level-list"><!-- 由 JS 產生 --></div>
+
+    <a class="ma-hello ma-next" href="english_advanced.html" style="text-decoration:none; margin-top:var(--s4); border-color:var(--su);">
+      <span class="ma-mascot" aria-hidden="true">🏆</span>
+      <div>
+        <div class="ma-hello-text">語感練熟了嗎？來挑戰「進階英文語感」 ➡️</div>
+        <div class="ma-hello-sub">給你一個句子，用感覺判斷現在／過去／已完成；同一個動作的三種說法怎麼分——更進一步的語感冒險。</div>
+      </div>
+    </a>
+
+    <a class="cn-nextup cn-nextup--back" href="english_concepts.html" style="display:flex;align-items:center;gap:12px;margin-top:12px;padding:12px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:24px;flex:none" aria-hidden="true">📘</span><span>← 想先打底？回「英文句型觀念養成」複習一下</span></a>
+
+    <p class="ma-footnote">這是「進階挑戰」小旅程，只留在你自己的裝置上，不影響學習基地的等級或經驗值。慢慢玩、盡量想，答錯也沒關係。🌱</p>
+  </section>
+
+  <section id="screen-play" class="ma-screen">
+    <div class="ma-topbar">
+      <button type="button" class="btn btn-icon" id="btn-back" aria-label="回到等級選單">←</button>
+      <span class="ma-title" id="play-title">等級</span>
+    </div>
+    <div class="ma-steps" id="step-dots" aria-hidden="true"></div>
+    <div class="play-column">
+      <div id="stage"><!-- 由 JS 產生每一題 --></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* 主程式（自足 IIFE）：4 個等級（12 / 10 / 10 / 10 題）、全部解鎖。選項每題 Fisher–Yates 洗牌；
+   answer = 未洗牌前 0-based 索引，以 data-i 判斷，判分不受洗牌影響。每題最多記一次分。
+   獨立 key：sense_progress_v1。不呼叫 Game.recordAnswer / award / recordSession。 */
+(function () {
+  'use strict';
+
+  function toast(msg, kind) {
+    try { if (window.Game && Game.showToast) Game.showToast(msg, kind || 'info'); } catch (e) {}
+  }
+
+  var PROG_KEY = 'sense_progress_v1';
+  function loadProg() {
+    var p = null;
+    try { p = JSON.parse(localStorage.getItem(PROG_KEY)); } catch (e) { p = null; }
+    if (!p || typeof p !== 'object') p = {};
+    if (typeof p.badges !== 'object' || !p.badges) p.badges = {};
+    return p;
+  }
+  function saveProg(p) { try { localStorage.setItem(PROG_KEY, JSON.stringify(p)); } catch (e) {} }
+  var progress = loadProg();
+
+  window.__sensePlay = function (f) { try { new Audio('audio/' + f + '.mp3').play(); } catch (e) {} };
+  function senseVisual(step, lv) {
+    if (step.pic) return '<div class="ma-visual" role="img" aria-label="看圖題">' + step.pic + '</div>';
+    if (step.audio) return '<div class="ma-visual"><button type="button" class="sense-audio-btn" onclick="__sensePlay(\''+step.audio+'\')">🔊 播放語音</button></div>';
+    return '<div class="ma-visual" aria-hidden="true">' + lv.emoji + '</div>';
+  }
+
+  // 課程內容（全繁體中文；事實經 WebSearch 查核與雙重審查）。answer = 未洗牌前 0-based 索引。
+  var LEVELS = [
+  {
+    "id": "lv1",
+    "level": 1,
+    "name": "哪個最自然",
+    "emoji": "🗣️",
+    "color": "#0d9488",
+    "concepts": [
+      "時態",
+      "介系詞",
+      "固定搭配",
+      "冠詞",
+      "可數/不可數"
+    ],
+    "keyFacts": [
+      "習慣、每天做的事用現在簡單式：I walk to school every day.",
+      "時間長度用 for、起點用 since：for five years / since 2019.",
+      "此刻正在發生用現在進行式：The baby is crying.",
+      "固定搭配靠習慣：good at、interested in、arrive at.",
+      "母音開頭用 an：an apple；可數複數用 many：many books。"
+    ],
+    "questions": [
+      {
+        "q": "「我每天走路上學。」哪個最自然？",
+        "options": [
+          "I walk to school every day.",
+          "I am walking to school every day.",
+          "I walking to school every day.",
+          "I walked to school every day."
+        ],
+        "answer": 0,
+        "why": "每天的習慣用現在簡單式 walk。"
+      },
+      {
+        "q": "「我住在這裡已經五年了。」",
+        "options": [
+          "I have lived here for five years.",
+          "I have lived here since five years.",
+          "I live here for five years.",
+          "I am living here for five years."
+        ],
+        "answer": 0,
+        "why": "時間長度用 for（for five years）。"
+      },
+      {
+        "q": "「我從 2019 年就住在這裡。」",
+        "options": [
+          "I have lived here since 2019.",
+          "I have lived here for 2019.",
+          "I live here since 2019.",
+          "I am living here since 2019."
+        ],
+        "answer": 0,
+        "why": "時間起點用 since（since 2019）。"
+      },
+      {
+        "q": "「聽！寶寶正在哭。」Listen! The baby ___.",
+        "options": [
+          "is crying",
+          "cries",
+          "cry",
+          "cried"
+        ],
+        "answer": 0,
+        "why": "此刻正在發生用現在進行式 is crying。"
+      },
+      {
+        "q": "「他很擅長數學。」He is good ___ math.",
+        "options": [
+          "at",
+          "in",
+          "on",
+          "for"
+        ],
+        "answer": 0,
+        "why": "固定搭配 be good at。"
+      },
+      {
+        "q": "「我對音樂有興趣。」I am interested ___ music.",
+        "options": [
+          "in",
+          "on",
+          "at",
+          "for"
+        ],
+        "answer": 0,
+        "why": "固定搭配 be interested in。"
+      },
+      {
+        "q": "「我們到機場了。」We arrived ___ the airport.",
+        "options": [
+          "at",
+          "to",
+          "in",
+          "for"
+        ],
+        "answer": 0,
+        "why": "arrive at + 地點；arrive 不接 to。"
+      },
+      {
+        "q": "「我們星期一見。」Let's meet ___ Monday.",
+        "options": [
+          "on",
+          "in",
+          "at",
+          "of"
+        ],
+        "answer": 0,
+        "why": "星期幾用 on（on Monday）。"
+      },
+      {
+        "q": "「會議在三點。」The meeting is ___ 3 o'clock.",
+        "options": [
+          "at",
+          "on",
+          "in",
+          "for"
+        ],
+        "answer": 0,
+        "why": "精確時刻用 at（at 3 o'clock）。"
+      },
+      {
+        "q": "「我有很多書。」",
+        "options": [
+          "I have many books.",
+          "I have much books.",
+          "I have a lot book.",
+          "I have many book."
+        ],
+        "answer": 0,
+        "why": "可數複數用 many + 複數 books。"
+      },
+      {
+        "q": "「這是一顆蘋果。」",
+        "options": [
+          "This is an apple.",
+          "This is a apple.",
+          "This is apple.",
+          "This is an apples."
+        ],
+        "answer": 0,
+        "why": "母音開頭用 an：an apple。"
+      },
+      {
+        "q": "「昨天我看了一部電影。」",
+        "options": [
+          "Yesterday I watched a movie.",
+          "Yesterday I watch a movie.",
+          "Yesterday I am watching a movie.",
+          "Yesterday I have watched a movie."
+        ],
+        "answer": 0,
+        "why": "昨天是過去，用過去式 watched。"
+      }
+    ]
+  },
+  {
+    "id": "lv2",
+    "level": 2,
+    "name": "情境對話",
+    "emoji": "💬",
+    "color": "#f59e0b",
+    "concepts": [
+      "打招呼與道別",
+      "禮貌請求",
+      "道謝回應",
+      "道歉",
+      "自然一問一答"
+    ],
+    "keyFacts": [
+      "有人說 Thank you，回 You're welcome。",
+      "請求用 Could you...please? 比命令有禮貌。",
+      "做錯事說 I'm sorry。",
+      "被稱讚就大方說 Thank you。",
+      "很多回應是固定講法，靠情境記最自然。"
+    ],
+    "questions": [
+      {
+        "q": "有人跟你說 Thank you，最自然的回答是？",
+        "options": [
+          "You're welcome.",
+          "Thank you too much.",
+          "No thank.",
+          "Welcome you."
+        ],
+        "answer": 0,
+        "why": "回應道謝說 You're welcome。"
+      },
+      {
+        "q": "早上遇到老師，怎麼打招呼最自然？",
+        "options": [
+          "Good morning!",
+          "Good night!",
+          "Good bye!",
+          "Good food!"
+        ],
+        "answer": 0,
+        "why": "早上打招呼說 Good morning。"
+      },
+      {
+        "q": "想請別人幫忙，禮貌的說法是？",
+        "options": [
+          "Could you help me, please?",
+          "Help me now!",
+          "You must help.",
+          "Give me help you."
+        ],
+        "answer": 0,
+        "why": "Could you...please? 是禮貌請求。"
+      },
+      {
+        "q": "別人問 How are you?，自然的回答是？",
+        "options": [
+          "I'm fine, thank you.",
+          "I am five years.",
+          "Yes, I do.",
+          "Here you are."
+        ],
+        "answer": 0,
+        "why": "固定回應 I'm fine, thank you。"
+      },
+      {
+        "q": "不小心踩到別人的腳，應該說？",
+        "options": [
+          "I'm sorry!",
+          "Thank you!",
+          "You're welcome!",
+          "Good job!"
+        ],
+        "answer": 0,
+        "why": "做錯事說 I'm sorry。"
+      },
+      {
+        "q": "店員問 Anything else?，你不要了，怎麼說？",
+        "options": [
+          "No, that's all, thanks.",
+          "Yes, nothing.",
+          "No, everything.",
+          "That all no."
+        ],
+        "answer": 0,
+        "why": "表示就這些用 That's all, thanks。"
+      },
+      {
+        "q": "想邀朋友一起玩，自然的說法是？",
+        "options": [
+          "Do you want to play with me?",
+          "You play me now.",
+          "Play you want?",
+          "I play you together."
+        ],
+        "answer": 0,
+        "why": "邀請用 Do you want to...？"
+      },
+      {
+        "q": "別人稱讚你 Great job!，自然的回應是？",
+        "options": [
+          "Thank you!",
+          "No, you.",
+          "Great job you too.",
+          "I am job."
+        ],
+        "answer": 0,
+        "why": "被稱讚大方說 Thank you。"
+      },
+      {
+        "q": "想問現在幾點，怎麼問最自然？",
+        "options": [
+          "What time is it?",
+          "How many time?",
+          "What is clock?",
+          "When time now?"
+        ],
+        "answer": 0,
+        "why": "問時間說 What time is it?"
+      },
+      {
+        "q": "跟朋友道別（明天見），自然的說法是？",
+        "options": [
+          "See you tomorrow!",
+          "See you yesterday!",
+          "Look you later!",
+          "Bye bye you go."
+        ],
+        "answer": 0,
+        "why": "道別說 See you tomorrow!"
+      }
+    ]
+  },
+  {
+    "id": "lv3",
+    "level": 3,
+    "name": "看圖說英文",
+    "emoji": "🖼️",
+    "color": "#7c3aed",
+    "concepts": [
+      "現在進行式",
+      "there is / there are",
+      "方位介系詞",
+      "描述畫面"
+    ],
+    "keyFacts": [
+      "動作用 is/are + V-ing：She is swimming.",
+      "天氣用 It is + 形容詞：It is raining.",
+      "一個用 There is；多個用 There are + 複數。",
+      "方位：under、on、in。",
+      "看圖先找誰、正在做什麼、在哪裡。"
+    ],
+    "questions": [
+      {
+        "pic": "🏊",
+        "q": "看這張圖，這個人正在做什麼？",
+        "options": [
+          "She is swimming.",
+          "She is running.",
+          "She is sleeping.",
+          "She is eating."
+        ],
+        "answer": 0,
+        "why": "在游泳用 is swimming。"
+      },
+      {
+        "pic": "🌧️",
+        "q": "看這張圖，現在天氣如何？",
+        "options": [
+          "It is raining.",
+          "It is sunny.",
+          "It is snowing.",
+          "It is windy."
+        ],
+        "answer": 0,
+        "why": "下雨說 It is raining。"
+      },
+      {
+        "pic": "☀️",
+        "q": "看這張圖，今天天氣如何？",
+        "options": [
+          "It is sunny.",
+          "It is rainy.",
+          "It is cloudy.",
+          "It is snowy."
+        ],
+        "answer": 0,
+        "why": "大太陽說 It is sunny。"
+      },
+      {
+        "pic": "😴",
+        "q": "看這張圖，這個人正在做什麼？",
+        "options": [
+          "He is sleeping.",
+          "He is running.",
+          "He is eating.",
+          "He is reading."
+        ],
+        "answer": 0,
+        "why": "在睡覺用 is sleeping。"
+      },
+      {
+        "pic": "🚴",
+        "q": "看這張圖，這個人正在做什麼？",
+        "options": [
+          "She is riding a bike.",
+          "She is swimming.",
+          "She is walking.",
+          "She is flying."
+        ],
+        "answer": 0,
+        "why": "在騎腳踏車用 is riding a bike。"
+      },
+      {
+        "pic": "🍎🍎🍎",
+        "q": "看這張圖，有幾顆蘋果？怎麼說？",
+        "options": [
+          "There are three apples.",
+          "There is three apples.",
+          "There are three apple.",
+          "There is a three apples."
+        ],
+        "answer": 0,
+        "why": "複數用 There are + apples。"
+      },
+      {
+        "pic": "🐶🐶",
+        "q": "看這張圖，有幾隻狗？怎麼說？",
+        "options": [
+          "There are two dogs.",
+          "There is two dogs.",
+          "There are two dog.",
+          "There is a two dogs."
+        ],
+        "answer": 0,
+        "why": "複數用 There are two dogs。"
+      },
+      {
+        "pic": "<svg width=\"120\" height=\"90\" viewBox=\"0 0 120 90\" role=\"img\"><g stroke=\"#8a8a8a\" stroke-width=\"4\" fill=\"none\" stroke-linecap=\"round\"><line x1=\"16\" y1=\"34\" x2=\"104\" y2=\"34\"/><line x1=\"28\" y1=\"34\" x2=\"28\" y2=\"82\"/><line x1=\"92\" y1=\"34\" x2=\"92\" y2=\"82\"/></g><text x=\"60\" y=\"74\" font-size=\"30\" text-anchor=\"middle\">🐱</text></svg>",
+        "q": "看這張圖，貓咪在桌子的哪裡？",
+        "options": [
+          "The cat is under the table.",
+          "The cat is on the table.",
+          "The cat is next to the table.",
+          "The cat is behind the table."
+        ],
+        "answer": 0,
+        "why": "在下面用 under。"
+      },
+      {
+        "pic": "<svg width=\"120\" height=\"90\" viewBox=\"0 0 120 90\" role=\"img\"><g stroke=\"#8a8a8a\" stroke-width=\"4\" fill=\"none\" stroke-linecap=\"round\"><line x1=\"16\" y1=\"52\" x2=\"104\" y2=\"52\"/><line x1=\"28\" y1=\"52\" x2=\"28\" y2=\"84\"/><line x1=\"92\" y1=\"52\" x2=\"92\" y2=\"84\"/></g><text x=\"60\" y=\"46\" font-size=\"30\" text-anchor=\"middle\">🐱</text></svg>",
+        "q": "看這張圖，貓咪在桌子的哪裡？",
+        "options": [
+          "The cat is on the table.",
+          "The cat is under the table.",
+          "The cat is in the table.",
+          "The cat is next to the table."
+        ],
+        "answer": 0,
+        "why": "在上面用 on。"
+      },
+      {
+        "pic": "<svg width=\"120\" height=\"90\" viewBox=\"0 0 120 90\" role=\"img\"><path d=\"M26 26 L26 78 L94 78 L94 26\" stroke=\"#8a8a8a\" stroke-width=\"4\" fill=\"none\" stroke-linecap=\"round\"/><text x=\"60\" y=\"66\" font-size=\"28\" text-anchor=\"middle\">🍎</text></svg>",
+        "q": "看這張圖，蘋果在盒子的哪裡？",
+        "options": [
+          "The apple is in the box.",
+          "The apple is on the box.",
+          "The apple is under the box.",
+          "The apple is behind the box."
+        ],
+        "answer": 0,
+        "why": "在裡面用 in。"
+      }
+    ]
+  },
+  {
+    "id": "lv4",
+    "level": 4,
+    "name": "聽力小偵探",
+    "emoji": "👂",
+    "color": "#e11d48",
+    "concepts": [
+      "聽重點",
+      "聽數字顏色",
+      "聽方位",
+      "聽一問一答",
+      "先聽再答"
+    ],
+    "keyFacts": [
+      "先按 🔊 播放，聽清楚再選，可以重複聽。",
+      "注意重點字：數字、顏色、地點、動作。",
+      "對話題聽「回答的人」說了什麼。",
+      "聽不清楚就再按一次 🔊。",
+      "多聽英文，耳朵越來越習慣。"
+    ],
+    "questions": [
+      {
+        "audio": "sense_e_01",
+        "q": "🔊 聽聽看：貓在哪裡？",
+        "options": [
+          "在桌子下面",
+          "在桌子上面",
+          "在盒子裡",
+          "在椅子旁邊"
+        ],
+        "answer": 0,
+        "why": "句子說 The cat is under the table。"
+      },
+      {
+        "audio": "sense_e_02",
+        "q": "🔊 聽聽看：他有幾顆蘋果？",
+        "options": [
+          "三顆",
+          "兩顆",
+          "五顆",
+          "一顆"
+        ],
+        "answer": 0,
+        "why": "句子說 three red apples。"
+      },
+      {
+        "audio": "sense_e_03",
+        "q": "🔊 聽聽看：她正在做什麼？",
+        "options": [
+          "在圖書館看書",
+          "在公園跑步",
+          "在睡覺",
+          "在吃飯"
+        ],
+        "answer": 0,
+        "why": "句子說 reading a book in the library。"
+      },
+      {
+        "audio": "sense_e_04",
+        "q": "🔊 聽聽看：B 想要果汁嗎？",
+        "options": [
+          "不想要，謝謝",
+          "很想要",
+          "想要兩杯",
+          "想要牛奶"
+        ],
+        "answer": 0,
+        "why": "B 說 No, thank you。"
+      },
+      {
+        "audio": "sense_e_05",
+        "q": "🔊 聽聽看：公車幾點開？",
+        "options": [
+          "八點",
+          "九點",
+          "七點",
+          "十點"
+        ],
+        "answer": 0,
+        "why": "句子說 at eight o'clock。"
+      },
+      {
+        "audio": "sense_e_06",
+        "q": "🔊 聽聽看：他最喜歡什麼顏色？",
+        "options": [
+          "藍色",
+          "紅色",
+          "綠色",
+          "黃色"
+        ],
+        "answer": 0,
+        "why": "句子說 favorite color is blue。"
+      },
+      {
+        "audio": "sense_e_07",
+        "q": "🔊 聽聽看：為什麼要帶雨傘？",
+        "options": [
+          "因為在下雨",
+          "因為出太陽",
+          "因為刮風",
+          "因為下雪"
+        ],
+        "answer": 0,
+        "why": "句子說 It is raining。"
+      },
+      {
+        "audio": "sense_e_08",
+        "q": "🔊 聽聽看：狗在哪裡？",
+        "options": [
+          "在花園裡",
+          "在屋子裡",
+          "在車上",
+          "在學校"
+        ],
+        "answer": 0,
+        "why": "回答說 in the garden。"
+      },
+      {
+        "audio": "sense_e_09",
+        "q": "🔊 聽聽看：他怎麼上學？",
+        "options": [
+          "騎腳踏車",
+          "走路",
+          "坐公車",
+          "坐船"
+        ],
+        "answer": 0,
+        "why": "句子說 by bike。"
+      },
+      {
+        "audio": "sense_e_10",
+        "q": "🔊 聽聽看：池塘裡有幾隻鴨子？",
+        "options": [
+          "五隻",
+          "三隻",
+          "六隻",
+          "兩隻"
+        ],
+        "answer": 0,
+        "why": "句子說 five ducks。"
+      }
+    ]
+  },
+  {
+    "id": "lv5",
+    "level": 5,
+    "name": "語調小耳朵",
+    "emoji": "🎵",
+    "color": "#7c3aed",
+    "concepts": [
+      "語調是什麼",
+      "上揚↗ 是真問",
+      "平降↘ 是陳述",
+      "同字不同調",
+      "wh- 問句"
+    ],
+    "keyFacts": [
+      "語調，就是說話時聲音的高低起伏——像唱歌一樣有高有低，但它不是真的在唱歌，是說話時自然的高低。",
+      "句尾聲音【往上揚↗】，常常代表「我是真的在問你」（是不是、要不要這一類問句）。",
+      "句尾聲音【平平往下↘】，常常代表「我在說一件事」或「我很確定」。",
+      "一模一樣的字，語調不同、意思就不同——所以要用耳朵聽語調，不能只看字。",
+      "what／where／who 這種 wh- 問句，句尾常往下降↘，但它【還是真的在問問題】喔。"
+    ],
+    "questions": [
+      {
+        "audio": "sense_t_03",
+        "q": "🔊 聽 Really? 這是什麼意思？",
+        "options": [
+          "「真的嗎？」——她很驚訝，在問你",
+          "「好無聊。」——她在抱怨",
+          "「快一點！」——她在催你"
+        ],
+        "answer": 0,
+        "why": "句尾往上揚的 Really?↗ 是驚訝地問「真的嗎？」（可以多按幾次🔊，聽尾音有沒有往上翹）。"
+      },
+      {
+        "audio": "sense_t_04",
+        "q": "🔊 聽 Really. 這是什麼意思？",
+        "options": [
+          "「是喔、我知道了」——不是真的在問",
+          "「真的嗎？」——很驚訝地在問你",
+          "「不可以！」——在生氣"
+        ],
+        "answer": 0,
+        "why": "句尾平平往下的 Really.↘ 只是回應「是喔」，不是真的在問問題。"
+      },
+      {
+        "audio": "sense_t_07",
+        "q": "🔊 聽 You like it? 句尾語調怎麼走？",
+        "options": [
+          "上揚↗——在問你「你喜歡嗎？」",
+          "下降↘——在說你一定會喜歡",
+          "在跟你道歉"
+        ],
+        "answer": 0,
+        "why": "這是一句 yes／no 問句（句尾有 ?），這一類問句尾音往上揚↗，在問你喜不喜歡。"
+      },
+      {
+        "audio": "sense_t_08",
+        "q": "🔊 聽 You like it. 句尾語調怎麼走？",
+        "options": [
+          "下降↘——在說「你喜歡它」（陳述）",
+          "上揚↗——在問你喜不喜歡",
+          "在數數字"
+        ],
+        "answer": 0,
+        "why": "句尾寫著「.」，是陳述句，尾音往下↘，在說一件事。"
+      },
+      {
+        "audio": "sense_t_01",
+        "q": "🔊 聽 You're coming? 這句是在問，還是在說？",
+        "options": [
+          "在「問」你要不要來（句尾寫著「?」，尾音往上揚↗）",
+          "在「告訴」你，你要來（陳述、很確定）",
+          "在唱歌"
+        ],
+        "answer": 0,
+        "why": "這是一句 yes／no 問句（句尾有 ?），這一類問句尾音往上揚↗，代表她真的在問你。"
+      },
+      {
+        "audio": "sense_t_02",
+        "q": "🔊 聽 You're coming. 這句是在問，還是在說？",
+        "options": [
+          "在「說」你要來、很確定（句尾寫著「.」，尾音往下↘）",
+          "在「問」你要不要來",
+          "一直往上升，像唱歌"
+        ],
+        "answer": 0,
+        "why": "句尾的「.」是句號，尾音往下↘，是在陳述、表示確定，不是在問。"
+      },
+      {
+        "audio": "sense_t_05",
+        "q": "🔊 聽 This is your bag? 這句是在問，還是在說？",
+        "options": [
+          "在跟你「確認」：這是你的包包嗎？（句尾「?」，尾音往上揚↗）",
+          "在命令你去拿包包",
+          "在念一串數字"
+        ],
+        "answer": 0,
+        "why": "這是一句 yes／no 問句（句尾有 ?），這一類問句尾音往上揚↗，是在跟你確認。"
+      },
+      {
+        "audio": "sense_t_06",
+        "q": "🔊 聽 This is your bag. 這句是在問，還是在說？",
+        "options": [
+          "在「告訴」你：這是你的包包（句尾「.」，尾音往下↘）",
+          "在問你這是不是你的",
+          "很生氣地大吼"
+        ],
+        "answer": 0,
+        "why": "句尾的「.」是句號，尾音往下↘，是在陳述一件事，不是在問。"
+      },
+      {
+        "q": "老師說 Where are you going? 句尾語調往下降↘。這是真的在問問題嗎？",
+        "options": [
+          "是！where 這種 wh- 問句雖然語調往下，還是真的在問",
+          "不是，語調往下就一定不是問句"
+        ],
+        "answer": 0,
+        "why": "where／what／who 這種 wh- 問句句尾常往下降↘，但它仍然是真的在問問題。"
+      },
+      {
+        "q": "同樣一句 You're sure，如果句尾【往上揚↗】，比較可能是哪個意思？",
+        "options": [
+          "在問你「你確定嗎？」",
+          "在命令你馬上去做",
+          "在唱生日快樂歌"
+        ],
+        "answer": 0,
+        "why": "上揚↗ 代表在問；同樣的字若句尾往下↘，就變成「你很確定」的陳述。"
+      }
+    ]
+  },
+  {
+    "id": "lv6",
+    "level": 6,
+    "name": "介系詞的感覺",
+    "emoji": "🧭",
+    "color": "#0d9488",
+    "concepts": [
+      "時間介系詞 at/on/in",
+      "地點介系詞 at/on/in",
+      "to vs for（方向 vs 用途）",
+      "by vs with（方式 vs 工具）",
+      "固定搭配 listen to / good at"
+    ],
+    "keyFacts": [
+      "時間由小到大：點鐘用 at、日期星期用 on、月份季節年份用 in（at 7 → on Monday → in May / in summer）。",
+      "地點也一樣：一個定點用 at、貼在表面或街道上用 on、大範圍城市國家「裡面」用 in（at the door → on the table → in Taipei）。",
+      "to 是「往那個方向去、交給誰」；for 是「為了誰、給誰用」——一個是動作方向，一個是用途對象。",
+      "by 是「方式」，後面接交通工具不加冠詞（by bus、by train）；with 是「手上拿的工具」（with a pen、with a fork）。",
+      "有些搭配不用背規則，唸順就對了：listen to、good at、interested in、arrive at——多唸幾次耳朵就記住了。"
+    ],
+    "questions": [
+      {
+        "q": "「我們七點見面。」We meet ___ seven o'clock.",
+        "options": [
+          "at",
+          "on",
+          "in",
+          "for"
+        ],
+        "answer": 0,
+        "why": "幾點鐘是時間上的一個「點」，用 at，感覺像釘在時鐘的某一刻（at 7）。on 是配日期、in 是配大範圍時間，對七點來說都太大了。"
+      },
+      {
+        "q": "「我星期一有英文課。」I have English class ___ Monday.",
+        "options": [
+          "on",
+          "at",
+          "in",
+          "of"
+        ],
+        "answer": 0,
+        "why": "星期幾、日期用 on，像貼在日曆的那一天上。at 太小（只指某一點），in 太大（指整個月或季），只有 on 剛剛好。"
+      },
+      {
+        "q": "「她的生日在五月。」Her birthday is ___ May.",
+        "options": [
+          "in",
+          "on",
+          "at",
+          "to"
+        ],
+        "answer": 0,
+        "why": "月份、年份、季節是一段「大範圍」的時間，用 in，感覺像被包在整段時間裡（in May、in summer）。on 只配到某一天，這裡沒指哪一天。"
+      },
+      {
+        "q": "「他住在台北。」He lives ___ Taipei.",
+        "options": [
+          "in",
+          "on",
+          "at",
+          "to"
+        ],
+        "answer": 0,
+        "why": "城市、國家範圍很大，人像被包在裡面，用 in（in Taipei、in Japan）。on 是貼表面、at 是一個小定點，對整座城市來說感覺不對。"
+      },
+      {
+        "q": "「杯子在桌上。」The cup is ___ the table.",
+        "options": [
+          "on",
+          "in",
+          "at",
+          "to"
+        ],
+        "answer": 0,
+        "why": "東西貼在一個「表面」上、有接觸、壓在上面，用 on（on the table）。in 是在裡面（抽屜裡才用 in），這裡是放在桌面上。"
+      },
+      {
+        "q": "「我在門口等你。」I'll wait for you ___ the door.",
+        "options": [
+          "at",
+          "on",
+          "in",
+          "to"
+        ],
+        "answer": 0,
+        "why": "把碰面的地方看成一個「點」用 at（at the door、at the bus stop）。on 會變成「貼在門上」很奇怪，in 是「在門裡」也不對。"
+      },
+      {
+        "q": "「我要去圖書館。」I'm going ___ the library.",
+        "options": [
+          "to",
+          "for",
+          "at",
+          "in"
+        ],
+        "answer": 0,
+        "why": "移動、往一個目的地去，方向感用 to（go to the library）。for 是「為了…用途」不是走過去的方向；at、in 少了「往那裡移動」的感覺。"
+      },
+      {
+        "q": "「這杯果汁是給你的。」This juice is ___ you.",
+        "options": [
+          "for",
+          "to",
+          "with",
+          "at"
+        ],
+        "answer": 0,
+        "why": "「為了你、給你享用」重點在對象和用途，用 for（This is for you）。to 是「交到…手上、往…方向」的動作感，這句只是說東西屬於誰用，所以 for 最順。"
+      },
+      {
+        "q": "「我搭公車上學。」I go to school ___ bus.",
+        "options": [
+          "by",
+          "with",
+          "in",
+          "for"
+        ],
+        "answer": 0,
+        "why": "交通「方式」用 by，而且後面直接接交通工具不加冠詞（by bus、by train、by MRT）。with 是拿在手上的工具，公車不是工具，所以不對。"
+      },
+      {
+        "q": "「她用叉子吃東西。」She eats ___ a fork.",
+        "options": [
+          "with",
+          "by",
+          "in",
+          "on"
+        ],
+        "answer": 0,
+        "why": "手上拿的、用來做事的工具用 with（with a fork、with a pen）。by 是抽象的「方式」（by bus、by email），不接這種手拿的小工具。"
+      },
+      {
+        "q": "「我喜歡聽音樂。」I like to listen ___ music.",
+        "options": [
+          "to",
+          "at",
+          "for",
+          "on"
+        ],
+        "answer": 0,
+        "why": "listen 後面固定接 to（listen to music），感覺是耳朵朝著聲音的方向。這是要整組記住的搭配，多唸幾次「listen to」就順口了。"
+      },
+      {
+        "q": "「他很會打籃球。」He is good ___ basketball.",
+        "options": [
+          "at",
+          "in",
+          "on",
+          "for"
+        ],
+        "answer": 0,
+        "why": "be good at 是固定搭配，「在某件事上很行」把焦點釘在那一點上，用 at（good at math、good at singing）。這組要靠語感記，唸順就記住了。"
+      }
+    ]
+  },
+  {
+    "id": "lv7",
+    "level": 7,
+    "name": "a、an、the 的感覺",
+    "emoji": "🔤",
+    "color": "#0891b2",
+    "concepts": [
+      "a／an：第一次提到、眾多之一",
+      "an 看『聲音』不看字母",
+      "the：特定、已知、獨一無二",
+      "泛指複數與不可數：不加冠詞",
+      "先 a 後 the 的敘事流"
+    ],
+    "keyFacts": [
+      "「隨便一個、剛登場」用 a／an；再提到同一個、大家心裡有數的那個就換成 the：a cat → the cat。",
+      "選 a 還是 an 看『發音』不看拼字：母音『音』用 an（an hour），子音『音』用 a（a university）。",
+      "全世界只有一個的東西前面放 the：the sun、the moon、the sky。",
+      "泛指『所有的』時，複數和不可數都不加冠詞：I like dogs.／Water is important.",
+      "後面被 that／which 或「我買的」限定住時，通常用 the：the book I bought."
+    ],
+    "questions": [
+      {
+        "q": "「我想吃一顆蘋果(隨便哪一顆)。」I want to eat ___ apple.",
+        "options": [
+          "an",
+          "a",
+          "the",
+          "(不填)"
+        ],
+        "answer": 0,
+        "why": "apple 開頭是母音『音』,唸起來卡卡的，所以要用 an 才順口。用 a 會撞在一起唸不出來；the 是「特定那一顆」,和「隨便一顆」的感覺相反；蘋果是可數的單數，前面一定要有冠詞，不能空著。"
+      },
+      {
+        "q": "「街上有一隻狗。」There is ___ dog on the street.",
+        "options": [
+          "a",
+          "an",
+          "the",
+          "(不填)"
+        ],
+        "answer": 0,
+        "why": "第一次提到、又是眾多狗裡的其中一隻，用 a 最自然；dog 開頭是子音音，配 a 不配 an。the dog 會讓人以為「你我都知道的那隻狗」,但這是剛登場的新角色；可數單數不能沒有冠詞。"
+      },
+      {
+        "q": "「我等了一個小時。」I waited for ___ hour.",
+        "options": [
+          "an",
+          "a",
+          "the",
+          "(不填)"
+        ],
+        "answer": 0,
+        "why": "hour 的 h 不發音，實際唸出來是母音『音』(像 our),所以用 an——這就是「聽聲音、不看字母」的關鍵。a hour 唸起來會頓住；the hour 變成特定的某小時，語感不合；可數單數要有冠詞。"
+      },
+      {
+        "q": "「他是一個誠實的男孩。」He is ___ honest boy.",
+        "options": [
+          "an",
+          "a",
+          "the",
+          "(不填)"
+        ],
+        "answer": 0,
+        "why": "honest 的 h 也不發音，開頭聽起來是母音音，所以要 an honest。別被字母 h 騙了——耳朵才算數。a honest 唸不順；第一次形容他、非特定，不用 the；可數單數要冠詞。"
+      },
+      {
+        "q": "「這是一所大學。」This is ___ university.",
+        "options": [
+          "a",
+          "an",
+          "the",
+          "(不填)"
+        ],
+        "answer": 0,
+        "why": "university 雖然拼字是 u 開頭，但唸起來是 /ju/(像 you),是子音『音』,所以用 a——同樣是「聽聲音」的道理，和 an hour 剛好相反。an university 會很拗口；第一次介紹、非特定，不用 the；可數單數要冠詞。"
+      },
+      {
+        "q": "「從前有一個國王。」Once upon a time, there was ___ king.",
+        "options": [
+          "a",
+          "an",
+          "the",
+          "(不填)"
+        ],
+        "answer": 0,
+        "why": "故事一開場，國王第一次登場、還沒被指定是哪一位，用 a 最自然；king 是子音音配 a。the king 會暗示「你早就知道的那位國王」,不符合剛開頭的感覺；an 用在母音音；可數單數要冠詞。"
+      },
+      {
+        "q": "「太陽從東邊升起。」___ sun rises in the east.",
+        "options": [
+          "The",
+          "A",
+          "An",
+          "(不填)"
+        ],
+        "answer": 0,
+        "why": "太陽全世界只有一個，是「獨一無二、大家都知道」的東西，這種就固定用 the。A sun／An sun 聽起來像宇宙裡有好多顆太陽、隨便挑一顆，很怪；獨一無二的可數名詞也不能空著不加冠詞。"
+      },
+      {
+        "q": "「我看到一隻貓。那隻貓是黑色的。」I saw a cat. ___ cat was black.",
+        "options": [
+          "The",
+          "A",
+          "An",
+          "(不填)"
+        ],
+        "answer": 0,
+        "why": "這就是「先 a 後 the」的敘事流：第一句用 a cat 讓貓登場，第二句講的是同一隻、你我都知道是哪隻了，所以換成 the cat。用 A／An cat 會像是又冒出一隻新的貓；可數單數不能沒有冠詞。"
+      },
+      {
+        "q": "「我喜歡狗(泛指所有的狗)。」I like ___.",
+        "options": [
+          "dogs",
+          "the dogs",
+          "a dog",
+          "an dog"
+        ],
+        "answer": 0,
+        "why": "要表達「泛指全部的狗」時，複數直接用 dogs、前面什麼都不加，這是最道地的講法。the dogs 會變成「特定的那幾隻狗」；a dog 只指「一隻」,範圍縮小了，不是泛指；an dog 發音和文法都錯。"
+      },
+      {
+        "q": "「水對健康很重要。」___ is important for health.",
+        "options": [
+          "Water",
+          "The water",
+          "A water",
+          "An water"
+        ],
+        "answer": 0,
+        "why": "water 是不可數名詞，泛指「水這種東西」時前面不加冠詞，直接用 Water 最自然。The water 會指「特定的那些水」(例如杯子裡那杯)；不可數名詞不能配 a／an,所以 A water、An water 都不行。"
+      },
+      {
+        "q": "「我昨天買的那本書很棒。」___ book I bought yesterday is great.",
+        "options": [
+          "The",
+          "A",
+          "An",
+          "(不填)"
+        ],
+        "answer": 0,
+        "why": "後面有「I bought yesterday(我昨天買的)」把這本書限定得死死的，是特定那一本，所以用 the。A book／An book 表示「隨便一本」,和已經指明的感覺矛盾；可數單數也不能空著不加冠詞。"
+      },
+      {
+        "q": "「(對著眼前這扇門)請把門關上。」Please close ___ door.",
+        "options": [
+          "the",
+          "a",
+          "an",
+          "(不填)"
+        ],
+        "answer": 0,
+        "why": "說話的當下，你和對方都清楚是「眼前這扇門」,是彼此心知肚明的特定那扇，所以用 the。a door 聽起來像「隨便一扇陌生的門」,很奇怪；an 用在母音音；可數單數要有冠詞。"
+      }
+    ]
+  },
+  {
+    "id": "lv8",
+    "level": 8,
+    "name": "說得更順的搭配",
+    "emoji": "🔗",
+    "color": "#0891b2",
+    "concepts": [
+      "make／do 的分工感",
+      "say／tell／speak／talk 四兄弟",
+      "much／many／some／any 的量感",
+      "borrow／lend 借的方向",
+      "this／these、that／those 的遠近單複數"
+    ],
+    "keyFacts": [
+      "make 偏「做出成品」或「使某人怎樣」（make a cake、make me happy）；do 偏「從事、例行公事」（do homework、do the dishes）。",
+      "接「人」用 tell（tell me）；「說出的話」用 say（say sorry）；「說某種語言」用 speak（speak English）；「聊天、談某事」用 talk（talk about）。",
+      "數量詞：不可數配 much、可數配 many，a lot of 兩者都行（I have a lot of money）；some 用於肯定句與邀請請求，any 用於否定句與疑問句。",
+      "borrow 是「向別人借進來」（Can I borrow…？），lend 是「把東西借出去給別人」（I'll lend you…），兩個方向剛好相反。",
+      "近的、這裡的用 this／these，遠的、那裡的用 that／those；後面名詞是複數就要用 these／those。"
+    ],
+    "questions": [
+      {
+        "q": "週末我媽要幫我 ___ a birthday cake（生日蛋糕）。哪個最自然？",
+        "options": [
+          "make",
+          "do",
+          "take",
+          "say"
+        ],
+        "answer": 0,
+        "why": "make 表示「做出、製造一個成品」，蛋糕是被做出來的東西，所以用 make a cake。do 是「從事某件事」，不拿來配蛋糕；take a cake、say a cake 都不通。"
+      },
+      {
+        "q": "The good news ___ me very happy.（那個好消息讓我很開心）",
+        "options": [
+          "took",
+          "made",
+          "did",
+          "said"
+        ],
+        "answer": 1,
+        "why": "這裡是「使某人變得怎樣」的用法：好消息「讓我」開心，英文用 make ＋ 人 ＋ 形容詞（make me happy）。句子在講過去發生的事，所以用過去式 made。took／did／said 都無法表達「使…開心」的感覺。"
+      },
+      {
+        "q": "睡覺前我要先 ___ my homework.（做功課）",
+        "options": [
+          "make",
+          "play",
+          "do",
+          "take"
+        ],
+        "answer": 2,
+        "why": "寫功課是「從事一件例行的事」，英文習慣說 do my homework。make homework 聽起來像「製造出作業」很奇怪；play／take homework 也都不搭。"
+      },
+      {
+        "q": "吃完飯，我爸總是 ___ the dishes（洗碗）。",
+        "options": [
+          "makes",
+          "says",
+          "plays",
+          "does"
+        ],
+        "answer": 3,
+        "why": "洗碗這種家事，英文有固定說法 do the dishes（把碗盤這件事做掉）。make the dishes 會被聽成「做出盤子」；家事整組動作就是用 do。"
+      },
+      {
+        "q": "做錯事的時候，你應該跟朋友 ___ sorry.",
+        "options": [
+          "say",
+          "tell",
+          "speak",
+          "talk"
+        ],
+        "answer": 0,
+        "why": "只講「說出來的話」用 say，say sorry 就是把「對不起」說出口。tell 後面得先接人，speak／talk 也不會配 sorry，聽起來都怪。"
+      },
+      {
+        "q": "Please ___ me your phone number.（請告訴我你的電話）",
+        "options": [
+          "say",
+          "tell",
+          "speak",
+          "talk"
+        ],
+        "answer": 1,
+        "why": "後面直接接「人」（me）時要用 tell（tell me…）。say me 是很常見的錯誤——say 後面接的是「話的內容」不是人；speak me／talk me 也都不通。"
+      },
+      {
+        "q": "My new classmate can ___ three languages.（會說三種語言）",
+        "options": [
+          "say",
+          "tell",
+          "speak",
+          "talk"
+        ],
+        "answer": 2,
+        "why": "「說某種語言」固定用 speak（speak English、speak three languages）。say／tell／talk 都不能拿來配語言，母語者只會用 speak。"
+      },
+      {
+        "q": "Let's ___ about the school trip at lunch.（午餐時聊聊校外教學）",
+        "options": [
+          "say",
+          "tell",
+          "listen",
+          "talk"
+        ],
+        "answer": 3,
+        "why": "「談論某件事」用 talk about。say about、tell about（tell 要先接人：tell me about）都不順；listen 是「聽」，意思不對。想到「聊、談」就用 talk。"
+      },
+      {
+        "q": "How ___ water do you drink every day?（每天喝多少水）",
+        "options": [
+          "much",
+          "many",
+          "few",
+          "any"
+        ],
+        "answer": 0,
+        "why": "water（水）是不可數名詞，問「多少」要用 much（How much water）。many 只配可以一個一個數的東西；few／any 放在這裡都不自然。"
+      },
+      {
+        "q": "There are too ___ students in this small classroom.（這間小教室學生太多）",
+        "options": [
+          "much",
+          "many",
+          "any",
+          "little"
+        ],
+        "answer": 1,
+        "why": "students（學生）可以一個一個數，是可數名詞，「太多」用 too many。too much 只配不可數的東西；any／little 在這裡都不通。"
+      },
+      {
+        "q": "Would you like ___ tea?（你要不要來點茶？）",
+        "options": [
+          "any",
+          "some",
+          "many",
+          "few"
+        ],
+        "answer": 1,
+        "why": "邀請、請對方拿東西時，就算是問句也用 some，聽起來更客氣自然（Would you like some tea?）。用 any 在這種好意邀請裡會怪怪的；tea 不可數，也不能配 many／few。"
+      },
+      {
+        "q": "I looked in the fridge, but there isn't ___ milk.（冰箱裡沒有牛奶）",
+        "options": [
+          "some",
+          "many",
+          "any",
+          "a"
+        ],
+        "answer": 2,
+        "why": "否定句「沒有…」要用 any（isn't any milk）。some 通常用在肯定句；milk 不可數不能配 many；a milk 也不通。"
+      },
+      {
+        "q": "我忘了帶橡皮擦。Can I ___ your eraser?",
+        "options": [
+          "borrow",
+          "lend",
+          "rent",
+          "keep"
+        ],
+        "answer": 0,
+        "why": "borrow 是「向別人借進來」，你要跟對方借橡皮擦，用 Can I borrow…？lend 方向剛好相反（是借出去給人），rent 是付錢租，keep 是留著不還，都不對。"
+      },
+      {
+        "q": "No problem, I can ___ you my umbrella.（我可以把傘借你）",
+        "options": [
+          "borrow",
+          "rent",
+          "lend",
+          "say"
+        ],
+        "answer": 2,
+        "why": "lend 是「把東西借出去給別人」，我把傘借給你，用 lend you my umbrella。borrow you 方向錯了（那是我跟你借）；rent 要收錢，say 不是「借」。"
+      },
+      {
+        "q": "Look at ___ beautiful flowers right here!（看這裡這些漂亮的花！）",
+        "options": [
+          "this",
+          "that",
+          "these",
+          "those"
+        ],
+        "answer": 2,
+        "why": "花是複數，又「就在這裡」很近，用 these（近＋複數）。this 是單數；that／those 指的是遠方的東西，跟 right here 不搭。"
+      },
+      {
+        "q": "___ mountains far away are covered with snow.（遠方那些山被雪覆蓋）",
+        "options": [
+          "These",
+          "This",
+          "That",
+          "Those"
+        ],
+        "answer": 3,
+        "why": "山在遠方（far away）又是複數，用 those（遠＋複數）。these 指近的；this／that 是單數，配 mountains 這種複數名詞不對。"
+      }
+    ]
+  },
+  {
+    "id": "lv9",
+    "level": 9,
+    "name": "學校生活英語",
+    "emoji": "🏫",
+    "color": "#16a34a",
+    "concepts": [
+      "課堂指令",
+      "請求與求助",
+      "校園場所與人",
+      "校園情境用語",
+      "禮貌與語域"
+    ],
+    "keyFacts": [
+      "課堂指令有固定說法：raise your hand（舉手）、hand in（繳交作業）、line up（排隊）、work in groups（分組）。",
+      "有禮貌又實用的說法：想上廁所說 May I go to the restroom?；聽不懂說 I don't get it／I don't understand（口語裡 get it 就是「聽懂了」）。",
+      "校園場所要記牢：cafeteria（餐廳）、gym（體育館）、library（圖書館）、the nurse's office（保健室）。",
+      "校園情境字：recess（下課）、a quiz（小考）、be absent（缺席）、be due（作業到期要交）。",
+      "principal 是「校長」，和 principle（原則）同音不同義；記法：the principAL is your pAL（校長是你的朋友）。"
+    ],
+    "questions": [
+      {
+        "q": "老師說：想回答問題要先做這個動作。哪個說法最自然？",
+        "options": [
+          "Raise your hand.",
+          "Rise your hand.",
+          "Stand your hand.",
+          "Open your hand."
+        ],
+        "answer": 0,
+        "why": "「舉手」固定說 raise your hand。raise 是及物動詞（把某物舉起來），後面要接受詞；rise 是不及物（自己升起，如太陽 The sun rises），不能說 rise your hand。這是每天上課都會聽到的課堂指令。"
+      },
+      {
+        "q": "老師要大家把作業交上來：「Please ___ your homework by Friday.」",
+        "options": [
+          "hand in",
+          "hand out",
+          "hand up",
+          "give in"
+        ],
+        "answer": 0,
+        "why": "hand in＝繳交（作業、報告）。注意別選 hand out，那是「發下去（講義）」，方向剛好相反；give in＝讓步、投降，意思完全不同。hand up 不是自然說法。"
+      },
+      {
+        "q": "上課開始，老師說：「___ your textbook and turn to page 20.」",
+        "options": [
+          "Take out",
+          "Take off",
+          "Take away",
+          "Take up"
+        ],
+        "answer": 0,
+        "why": "take out＝拿出來（把課本從書包拿出來）。take off＝脫掉衣服／飛機起飛；take away＝拿走、外帶；take up＝占用時間或開始從事某嗜好，都不合這個情境。"
+      },
+      {
+        "q": "要去上體育課了，老師說：「It's time for P.E. Everyone, ___!」（排隊）",
+        "options": [
+          "line up",
+          "line on",
+          "row up",
+          "stand line"
+        ],
+        "answer": 0,
+        "why": "「排隊」道地說法是 line up（排成一列）。其他三個都不是英語的固定說法。想更客氣可說 Please line up at the door.（在門口排隊）。"
+      },
+      {
+        "q": "老師要大家分組做活動：「For this project, let's ___.」",
+        "options": [
+          "work in groups",
+          "work in group",
+          "work on groups",
+          "make groups"
+        ],
+        "answer": 0,
+        "why": "「分組進行」固定搭配是 work in groups：介系詞用 in，而且 group 要用複數 groups（因為不只一組）。work on 是「處理某件事」，語意不對。"
+      },
+      {
+        "q": "上課中想去廁所，向老師開口最有禮貌的問法是？",
+        "options": [
+          "May I go to the restroom?",
+          "I go to the restroom now.",
+          "Can I going to the restroom?",
+          "Toilet now?"
+        ],
+        "answer": 0,
+        "why": "May I…? 是最有禮貌的請求說法，在學校向老師開口很合適。restroom／bathroom 比 toilet 委婉。要注意 Can I 後面要接原形 go，不能說 Can I going。"
+      },
+      {
+        "q": "沒聽清楚，想請老師再講一次，最自然的說法是？",
+        "options": [
+          "Could you say that again?",
+          "Please say again one more.",
+          "You say what again?",
+          "Repeat one time please."
+        ],
+        "answer": 0,
+        "why": "Could you say that again? 是母語者請人重述時最自然、也有禮貌的說法。其他三個都是逐字硬翻的中式英語，母語者不會這樣說。"
+      },
+      {
+        "q": "想問某個單字怎麼拼，正確的問句是？",
+        "options": [
+          "How do you spell it?",
+          "How to spell it?",
+          "How you spell it?",
+          "What is spell it?"
+        ],
+        "answer": 0,
+        "why": "完整問句要有助動詞 do：How do you spell it?。How to spell 只能放在句子中間（例如 Can you tell me how to spell it?），不能單獨當問句；漏掉 do 的 How you spell it? 也是錯的。"
+      },
+      {
+        "q": "同學小聲說：「I don't get it.」這句話的意思是？",
+        "options": [
+          "我不懂／我搞不清楚。",
+          "我拿不到那個東西。",
+          "我不去了。",
+          "我沒空。"
+        ],
+        "answer": 0,
+        "why": "字面上 get 是「拿到」，但口語裡 get it＝「聽懂、理解」，所以 I don't get it 就是「我不懂」。這是很隨性的口語（casual）；在正式場合可改說 I don't understand。"
+      },
+      {
+        "q": "在學校裡買午餐、坐下來吃飯的地方叫什麼？",
+        "options": [
+          "the cafeteria",
+          "the gym",
+          "the library",
+          "the lab"
+        ],
+        "answer": 0,
+        "why": "cafeteria＝（學校的）自助餐廳、午餐區。gym 是體育館、library 是圖書館、lab 是實驗室，都不是吃飯的地方。"
+      },
+      {
+        "q": "上課到一半覺得身體很不舒服，應該去哪裡？",
+        "options": [
+          "the nurse's office（保健室）",
+          "the principal's office（校長室）",
+          "the gym（體育館）",
+          "the cafeteria（餐廳）"
+        ],
+        "answer": 0,
+        "why": "the nurse's office 是「保健室／健康中心」，由校護（school nurse）照顧不舒服的學生。principal's office 是校長室，是找校長或被叫去談話的地方，別走錯了。"
+      },
+      {
+        "q": "學校裡職位最高、負責管理全校的人是？",
+        "options": [
+          "the principal",
+          "the principle",
+          "the president",
+          "the captain"
+        ],
+        "answer": 0,
+        "why": "校長是 principal（名詞，指人）。principle 是「原則、道理」，和 principal 同音但意思完全不同，很容易拼錯。記法：the principAL is your pAL（校長是你的朋友），字尾 -pal 幫你記人。"
+      },
+      {
+        "q": "老師說：「It's recess.」這是什麼意思？",
+        "options": [
+          "下課休息時間到了。",
+          "要考試了。",
+          "要開全校朝會了。",
+          "放學回家了。"
+        ],
+        "answer": 0,
+        "why": "在校園裡 recess＝「下課、課間休息時間」，可以出去走走、休息一下。別把它跟 rest（休息）或想成「休息室」混淆；這個字在美式校園很常見。"
+      },
+      {
+        "q": "老師公告：「The assignment is due on Monday.」意思是？",
+        "options": [
+          "作業星期一要交（截止）。",
+          "作業星期一才會發下來。",
+          "作業取消了。",
+          "作業星期一才開始寫。"
+        ],
+        "answer": 0,
+        "why": "be due＝「到期、該交的時間」，due 指的是截止日，所以是「星期一要交」，不是開始日。常見句型還有 The report is due tomorrow.（報告明天要交）。"
+      }
+    ]
+  },
+  {
+    "id": "lv10",
+    "level": 10,
+    "name": "打招呼與社交口語",
+    "emoji": "👋",
+    "color": "#FF7043",
+    "concepts": [
+      "打招呼與回應",
+      "道謝與道歉回應",
+      "禮貌用語與邀約",
+      "道別口語",
+      "casual vs 正式（語域）"
+    ],
+    "keyFacts": [
+      "「What's up?」「How's it going?」是輕鬆的『你好嗎／最近如何』，不是真的問你在做什麼，回 Not much. 或 Pretty good. 就很自然。",
+      "道謝的回應 You're welcome.（較完整）和 No problem.（更輕鬆）都可以；朋友之間常用 No problem.",
+      "道歉時 My bad. 是很口語的『我的錯、抱歉』，只用在和朋友、同學等輕鬆場合，正式時要說 I'm sorry.",
+      "hang out 是「一起出去玩、消磨時間」（不是把東西掛起來）；Same here. 是「我也是」，用來附和對方。",
+      "Hey / What's up? 等是 casual 口語，適合朋友同學；面對師長或寫正式書信要用 Hello / Good morning 等完整說法。"
+    ],
+    "questions": [
+      {
+        "q": "同學走過來對你說「What's up?」最自然的回應是？",
+        "options": [
+          "Not much. How about you?",
+          "You're welcome.",
+          "It's five dollars."
+        ],
+        "answer": 0,
+        "why": "「What's up?」字面像在問『上面有什麼』，但真正意思是很輕鬆的『最近如何／怎麼啦』，屬於朋友同學間的 casual 打招呼。最自然的回法是 Not much.（沒什麼特別的），再反問對方。You're welcome. 是回應道謝，用在這裡不對。"
+      },
+      {
+        "q": "「How's it going?」這句話的意思最接近下列哪一個？",
+        "options": [
+          "最近過得怎麼樣、還好嗎",
+          "這個要去哪裡",
+          "你在走路嗎"
+        ],
+        "answer": 0,
+        "why": "「How's it going?」是常見的招呼語，真正意思是『最近好嗎、事情進行得如何』，不是真的問某件事往哪裡去。回應可以說 Pretty good. 或 Not bad.，很適合和同學朋友互動時使用。"
+      },
+      {
+        "q": "朋友幫了你一個忙，你說「Thanks!」他最可能輕鬆地回你哪一句？",
+        "options": [
+          "No problem.",
+          "Excuse me.",
+          "Same here."
+        ],
+        "answer": 0,
+        "why": "回應道謝最完整的是 You're welcome.，而 No problem.（不客氣、小事一樁）是朋友之間更輕鬆常用的說法。Excuse me. 是『不好意思、借過』；Same here. 是『我也是』，都不是用來回應道謝。"
+      },
+      {
+        "q": "同學不小心踩到你的腳，馬上說「Sorry!」你想輕鬆地表示沒關係，最自然說？",
+        "options": [
+          "No worries.",
+          "You're welcome.",
+          "After you."
+        ],
+        "answer": 0,
+        "why": "No worries. 意思是『別擔心、沒關係』，是回應道歉很自然、友善的 casual 說法（It's OK. 也可以）。You're welcome. 是回應『謝謝』，After you. 是『你先請』，都用錯場合了。"
+      },
+      {
+        "q": "打球時朋友傳錯球，笑著說「My bad.」這句話是什麼意思？",
+        "options": [
+          "我的錯、抱歉啦",
+          "我很壞",
+          "我的東西壞了"
+        ],
+        "answer": 0,
+        "why": "My bad. 字面看起來像『我的壞』，但它是道地的口語慣用語，真正意思是『我的錯、抱歉』，語氣輕鬆，只用在朋友同學等 casual 場合。正式場合（例如跟老師道歉）要說 I'm sorry. 才得體。"
+      },
+      {
+        "q": "你想從一群人前面經過，或想禮貌地引起別人注意，應該說？",
+        "options": [
+          "Excuse me.",
+          "No problem.",
+          "Take care."
+        ],
+        "answer": 0,
+        "why": "Excuse me. 是『不好意思、借過一下』，用來禮貌地請人讓路或引起注意，非常實用。No problem. 是『沒問題、不客氣』，Take care. 是道別時的『保重』，都不符合這個情境。"
+      },
+      {
+        "q": "走到門口，你想禮貌地請對方先進去，最自然的說法是？",
+        "options": [
+          "After you.",
+          "Same here.",
+          "Catch you later."
+        ],
+        "answer": 0,
+        "why": "After you. 字面是『在你之後』，真正意思是『你先請』，是很有禮貌的日常說法。Same here.（我也是）和 Catch you later.（待會見）都用在別的情境。"
+      },
+      {
+        "q": "朋友問你「Do you want to hang out this weekend?」這裡的 hang out 是什麼意思？",
+        "options": [
+          "一起出去玩、打發時間",
+          "把衣服掛出去曬",
+          "掛掉電話"
+        ],
+        "answer": 0,
+        "why": "hang out 是常見的口語慣用語，字面像『掛在外面』，但真正意思是『(和朋友)一起出去玩、隨意相處消磨時間』，屬於輕鬆的 casual 用語，很適合約同學。它跟晾衣服或掛電話都沒有關係。"
+      },
+      {
+        "q": "同學約你出去，但你這次沒空，想婉拒又保持友好，最合適說？",
+        "options": [
+          "Maybe next time.",
+          "You're welcome.",
+          "What's up?"
+        ],
+        "answer": 0,
+        "why": "Maybe next time.（也許下次吧）能婉拒又不失禮貌與友善，是很得體的回答。答應時可以說 Sure!。You're welcome. 是回應道謝，What's up? 是打招呼，都不是用來回覆邀約。"
+      },
+      {
+        "q": "和朋友道別，想輕鬆地說「待會見、回頭見」，下列哪句最自然？",
+        "options": [
+          "Catch you later!",
+          "Excuse me!",
+          "My bad!"
+        ],
+        "answer": 0,
+        "why": "Catch you later! 字面像『晚點抓住你』，其實是很道地的 casual 道別語，意思是『待會見、回頭見』（See you! 也一樣好用）。Excuse me!（借過）和 My bad!（我的錯）都不是道別用語。"
+      },
+      {
+        "q": "同學要騎車回家，你關心地提醒他路上小心，道別時最適合說？",
+        "options": [
+          "Take care!",
+          "Not much.",
+          "After you."
+        ],
+        "answer": 0,
+        "why": "Take care! 意思是『保重、路上小心』，是道別時帶關心的溫暖說法。Not much. 是回應『What's up?』的『沒什麼』，After you. 是『你先請』，都不符合這個道別情境。"
+      },
+      {
+        "q": "你問朋友「How are you?」他回「Pretty good!」意思是？",
+        "options": [
+          "還不錯、挺好的",
+          "又漂亮又善良",
+          "相當貴"
+        ],
+        "answer": 0,
+        "why": "在這裡 pretty 不是『漂亮』，而是當『相當、蠻』的副詞，Pretty good. 就是『還不錯、蠻好的』。這是很自然的招呼回應。它跟『漂亮』或『貴』都無關，別被 pretty 的另一個意思騙了。"
+      },
+      {
+        "q": "朋友開心地說「I love this song!」你也超喜歡這首歌，想附和說「我也是」，最自然？",
+        "options": [
+          "Same here.",
+          "No problem.",
+          "Excuse me."
+        ],
+        "answer": 0,
+        "why": "Same here. 意思是『我也是、我這邊也一樣』，用來附和對方的感受，很自然（Me too. 也可以）。No problem. 是『不客氣』，Excuse me. 是『借過』，都不是用來表示『我也是』。"
+      },
+      {
+        "q": "「Hey!」這種招呼語最適合用在哪個場合？",
+        "options": [
+          "和朋友、同學輕鬆打招呼",
+          "寫一封正式英文書信的開頭",
+          "在朝會上正式向校長問好"
+        ],
+        "answer": 0,
+        "why": "Hey! 是很輕鬆的 casual 招呼，適合朋友、同學之間。但它太隨便，不適合正式場合：寫正式書信或向師長、校長問好時，要用完整、禮貌的 Hello 或 Good morning。分清楚 casual 與正式（語域）很重要。"
+      }
+    ]
+  },
+  {
+    "id": "lv11",
+    "level": 11,
+    "name": "一聽就懂的慣用語",
+    "emoji": "💬",
+    "color": "#14b8a6",
+    "concepts": [
+      "慣用語看整組意思",
+      "祝福與鼓勵",
+      "天氣與身體狀況",
+      "社交與溝通常用語",
+      "口語 casual"
+    ],
+    "keyFacts": [
+      "慣用語要一整組記，真正意思常和字面完全不同：a piece of cake 是「超簡單」，spill the beans、call it a day 也別被字面騙了，要想情境裡真正的意思。",
+      "break a leg 是反話式的祝福，只用在上台表演／比賽前，不是真的要你摔斷腿。",
+      "once in a blue moon 是「非常少見」而不是「從不」；on the same page 是「有共識」而不是真的翻到同一頁。",
+      "under the weather 是委婉說「身體不舒服」，raining cats and dogs 是誇張說「下大雨」，都很口語。",
+      "這些慣用語大多屬於口語 casual，和朋友、同學閒聊時用很自然；正式書面（如作文、報告）建議用直接說法，例如用 very easy 取代 a piece of cake。"
+    ],
+    "questions": [
+      {
+        "q": "「Don't worry about the math quiz. For Amy, it's a piece of cake!」這裡的 a piece of cake 是什麼意思？",
+        "options": [
+          "非常簡單、輕鬆就能做到",
+          "很難、需要很多準備",
+          "一種跟蛋糕有關的題目",
+          "Amy 不想考試"
+        ],
+        "answer": 0,
+        "why": "字面是「一塊蛋糕」，真正意思是「非常容易、輕而易舉」。這是很口語(casual)的說法，用來形容某件事對某人來說超簡單。寫正式作文時可直接說 very easy。"
+      },
+      {
+        "q": "演出前，Tom 的朋友對他說「Break a leg, Tom!」朋友的意思是？",
+        "options": [
+          "你等一下會跌倒受傷",
+          "祝你演出順利、加油",
+          "你的腿已經斷了",
+          "叫他快去休息"
+        ],
+        "answer": 1,
+        "why": "字面是「摔斷一條腿」，其實是一句反話式的祝福，意思是「祝你好運、演出成功」。這是劇場／表演的傳統說法，通常用在上台表演或比賽前，屬口語。"
+      },
+      {
+        "q": "「The exam is tomorrow, so I need to hit the books tonight.」說話者今晚要做什麼？",
+        "options": [
+          "用力打書出氣",
+          "把書丟掉",
+          "認真用功讀書、K書",
+          "去書店買新書"
+        ],
+        "answer": 2,
+        "why": "字面像是「打書」，真正意思是「用功讀書、K書」。考試前特別常用，屬口語。hit 在這裡不是真的打，而是「開始專心做某事」的感覺。"
+      },
+      {
+        "q": "「I won't go to the party. I'm feeling a little under the weather today.」說話者今天怎麼了？",
+        "options": [
+          "正在看天氣預報",
+          "身體不太舒服",
+          "心情特別好",
+          "被雨淋濕了"
+        ],
+        "answer": 1,
+        "why": "字面是「在天氣之下」，真正意思是「身體不太舒服、有點不適」。這是委婉又口語的說法，用來說自己生病或沒精神，不一定是大病。"
+      },
+      {
+        "q": "「My cousin lives abroad, so we only see him once in a blue moon.」意思是他們多久見一次？",
+        "options": [
+          "很少見面、難得一次",
+          "每個月見一次",
+          "只在滿月的時候見面",
+          "從來都不見面"
+        ],
+        "answer": 0,
+        "why": "字面像「藍月亮出現時才見一次」，真正意思是「非常少、難得才一次」，強調頻率很低。注意它是「很少」而不是「從不」，屬口語。"
+      },
+      {
+        "q": "「Take your umbrella! It's raining cats and dogs out there.」外面的天氣如何？",
+        "options": [
+          "天上掉下貓和狗",
+          "正下著傾盆大雨",
+          "只下一點點小雨",
+          "快要放晴了"
+        ],
+        "answer": 1,
+        "why": "字面是「下貓下狗」，真正意思是「下傾盆大雨、雨下得很大」。這是誇張又生動的口語說法，聽到千萬別照字面理解。"
+      },
+      {
+        "q": "「Don't tell her about the surprise party—don't spill the beans!」朋友要你別做什麼？",
+        "options": [
+          "別打翻一盤豆子",
+          "別去煮豆子",
+          "別把秘密說出去、爆料",
+          "別遲到"
+        ],
+        "answer": 2,
+        "why": "字面是「打翻豆子」，真正意思是「不小心說溜嘴、把秘密洩漏出去」。常用在提醒別人別爆料（例如驚喜派對），屬口語。"
+      },
+      {
+        "q": "「Before we start the project, let's make sure we're all on the same page.」這句是要確認大家？",
+        "options": [
+          "翻到課本的同一頁",
+          "有共識、想法理解一致",
+          "一起坐在同一個位置",
+          "讀同一本書"
+        ],
+        "answer": 1,
+        "why": "字面是「在同一頁」，真正意思是「有共識、彼此理解一致」。小組討論、分工前很常用，口語和比較正式的場合都能用。"
+      },
+      {
+        "q": "朋友考前壓力大想放棄，你對他說「Hang in there! You're almost done.」你是在鼓勵他？",
+        "options": [
+          "撐住、堅持下去、加油",
+          "掛在那裡不要動",
+          "放輕鬆先去玩",
+          "乾脆快點放棄"
+        ],
+        "answer": 0,
+        "why": "字面是「掛在那裡」，真正意思是「撐住、堅持下去」。這是鼓勵別人別放棄、再撐一下的常見口語，語氣親切溫暖。"
+      },
+      {
+        "q": "球隊練很久了，教練說「Good work, everyone. Let's call it a day.」教練的意思是？",
+        "options": [
+          "今天就到這裡、收工結束",
+          "再繼續練一整天",
+          "要大家去打電話",
+          "要決定比賽日期"
+        ],
+        "answer": 0,
+        "why": "字面像「叫它一天」，真正意思是「今天就到此為止、結束（工作或活動）」。工作、練習告一段落想收工時用，屬口語。"
+      },
+      {
+        "q": "「Skateboarding was hard at first, but now I've got the hang of it.」說話者現在的狀況是？",
+        "options": [
+          "把滑板掛起來收好",
+          "還是完全不會",
+          "抓到訣竅、已經上手了",
+          "把滑板弄丟了"
+        ],
+        "answer": 2,
+        "why": "字面跟「掛(hang)」有關，真正意思是「抓到竅門、熟練上手」。學新技能一開始不會、慢慢會了時很常用這句，屬口語。"
+      },
+      {
+        "q": "「My brother is such a couch potato—he watches TV all weekend.」哥哥是個怎樣的人？",
+        "options": [
+          "很愛運動的人",
+          "整天賴在沙發、很少活動的人",
+          "很會做菜的廚師",
+          "種馬鈴薯的農夫"
+        ],
+        "answer": 1,
+        "why": "字面是「沙發馬鈴薯」，真正意思是「整天窩在沙發看電視、不太活動的人」。是半開玩笑地形容很懶散的人，屬口語 casual，對熟人講才不失禮。"
+      },
+      {
+        "q": "新社團第一次聚會，社長講了個笑話 to break the ice。他這麼做是為了？",
+        "options": [
+          "真的去打破冰塊",
+          "讓氣氛變得更冷",
+          "化解尷尬、讓大家放鬆熟悉",
+          "趕快結束會議"
+        ],
+        "answer": 2,
+        "why": "字面是「打破冰」，真正意思是「打破僵局、化解初次見面的尷尬」，讓氣氛熱絡起來。認識新朋友、活動開場時很常用，屬口語。"
+      },
+      {
+        "q": "「Can you keep an eye on my bag while I buy a drink?」朋友是請你？",
+        "options": [
+          "把眼睛放在包包上面",
+          "幫忙看著、留意他的包包",
+          "把包包丟掉",
+          "打開包包檢查"
+        ],
+        "answer": 1,
+        "why": "字面像「把一隻眼睛放上去」，真正意思是「幫忙看著、留意（免得出事或被拿走）」。請人暫時幫忙照看東西時很常用，屬口語。"
+      }
+    ]
+  },
+  {
+    "id": "lv12",
+    "level": 12,
+    "name": "輕鬆口語與縮寫",
+    "emoji": "💬",
+    "color": "#0ea5e9",
+    "concepts": [
+      "口語省音（gonna/wanna）",
+      "訊息縮寫（LOL/BRB）",
+      "casual 用語",
+      "語域（場合）",
+      "看引申義不照字面"
+    ],
+    "keyFacts": [
+      "口語省音:gonna=going to、wanna=want to、gotta=(have) got to、kinda=kind of、dunno=don't know,聊天很自然，但正式書寫要拼完整。",
+      "訊息縮寫:LOL 大笑、BRB 馬上回來、TBH 老實說、BTW 順帶一提、IDK 不知道、thx=thanks、plz=please。",
+      "casual 用語:cool／awesome 很棒、chill 放輕鬆、hang out 一起玩、no big deal 沒什麼大不了、for real? 真的假的、my bad 我的錯。",
+      "場合判斷(語域):寫作文、寫正式 email、跟老師或校長講話時，不要用縮寫或省音，要用完整、有禮貌的說法。",
+      "這些說法乾淨、日常，和朋友、同學聊天用很道地；但用錯場合會顯得沒禮貌或不專業。"
+    ],
+    "questions": [
+      {
+        "q": "朋友傳訊息說「I'm gonna call you later.」這裡的 gonna 是什麼意思？",
+        "options": [
+          "going to(將要、打算)",
+          "got to(必須)",
+          "good night(晚安)",
+          "gone(離開了)"
+        ],
+        "answer": 0,
+        "why": "gonna 是 going to 的口語省音，意思是「將要、打算」,整句是「我等一下會打給你」。跟朋友聊天很常見；但正式作文或書面報告要寫完整的 going to。"
+      },
+      {
+        "q": "同學問你「Do you wanna come?」句中的 wanna 是？",
+        "options": [
+          "want to(想要)",
+          "went to(去過)",
+          "wonder(想知道)",
+          "winner(贏家)"
+        ],
+        "answer": 0,
+        "why": "wanna = want to「想要」,「你想來嗎？」屬輕鬆口語，跟同學講沒問題；但面試、作文等正式場合請用完整的 want to。"
+      },
+      {
+        "q": "「I gotta go now.」這裡的 gotta 意思最接近？",
+        "options": [
+          "got to(必須、得)",
+          "go to(去)",
+          "gotcha(懂了)",
+          "getting(正在拿)"
+        ],
+        "answer": 0,
+        "why": "gotta =(have)got to「必須、得」,「我得走了。」是很生活的 casual 說法；正式書寫要用 have to 或 must,例如 I have to leave now。"
+      },
+      {
+        "q": "「It's kinda cold today.」句中的 kinda 是什麼意思？",
+        "options": [
+          "kind to(對⋯友善)",
+          "kind of(有點、有一點)",
+          "kinder(更善良)",
+          "kind(種類)"
+        ],
+        "answer": 1,
+        "why": "kinda = kind of「有點、有一點」,「今天有點冷。」是聊天口語；正式寫作可改用 a little、somewhat 或 rather。"
+      },
+      {
+        "q": "朋友傳來「I dunno the answer.」這裡的 dunno 是？",
+        "options": [
+          "don't know(不知道)",
+          "do now(現在做)",
+          "done(完成)",
+          "dinner(晚餐)"
+        ],
+        "answer": 0,
+        "why": "dunno = don't know「不知道」,是很隨意的說法，只適合跟熟人聊天；上課回答老師或寫考卷時，要用完整的 I don't know。"
+      },
+      {
+        "q": "朋友傳了一張好笑的圖，並打上「LOL」。LOL 是什麼意思？",
+        "options": [
+          "大笑、笑死了",
+          "很多愛",
+          "很生氣",
+          "再見"
+        ],
+        "answer": 0,
+        "why": "LOL = laughing out loud「大笑、笑死了」,在訊息裡表示覺得好笑。這是網路縮寫，別用在正式 email 或作文裡。"
+      },
+      {
+        "q": "打遊戲時隊友在聊天欄打「brb」。他的意思是？",
+        "options": [
+          "馬上回來",
+          "帶朋友來",
+          "生日快樂",
+          "最好的朋友"
+        ],
+        "answer": 0,
+        "why": "BRB = be right back「馬上回來」,聊天或遊戲中暫時離開時會打。正式溝通(如寫信給老師)應寫完整:I'll be right back. 或 I need to step away for a moment."
+      },
+      {
+        "q": "朋友說「TBH, I didn't like the movie.」TBH 是什麼意思？",
+        "options": [
+          "老實說、坦白講",
+          "待會見",
+          "謝謝",
+          "太棒了"
+        ],
+        "answer": 0,
+        "why": "TBH = to be honest「老實說、坦白講」,用來坦白表達看法。這是聊天縮寫；正式寫作要寫出 To be honest 或用 Honestly。"
+      },
+      {
+        "q": "訊息裡看到「BTW, the test is tomorrow.」BTW 是什麼意思？",
+        "options": [
+          "順帶一提、對了",
+          "兩者之間",
+          "為什麼",
+          "待會見"
+        ],
+        "answer": 0,
+        "why": "BTW = by the way「順帶一提、對了」,突然想到要補充時用。這是網路縮寫；正式場合要寫出 By the way,或改用 Also、In addition。"
+      },
+      {
+        "q": "朋友傳「IDK what to eat.」IDK 是什麼意思？",
+        "options": [
+          "我不知道",
+          "我很好",
+          "我知道了",
+          "我很在乎"
+        ],
+        "answer": 0,
+        "why": "IDK = I don't know「我不知道」,訊息裡很常見。但跟師長講話或寫作業時，要用完整的 I don't know 或 I'm not sure。"
+      },
+      {
+        "q": "朋友的訊息寫「thx! plz send it again」。thx 和 plz 分別是什麼？",
+        "options": [
+          "thanks 謝謝、please 請(拜託)",
+          "this 這個、place 地方",
+          "抱歉、停止",
+          "是、不"
+        ],
+        "answer": 0,
+        "why": "thx = thanks「謝謝」,plz = please「請、拜託」,都是把單字簡寫。傳訊息時方便快速；但寫正式 email 或作文一定要拼完整:Thank you. Please..."
+      },
+      {
+        "q": "老師規定寫一篇「正式」英文作文。下面哪一句最適合寫進作文？",
+        "options": [
+          "I'm gonna talk about my hometown.",
+          "I am going to talk about my hometown.",
+          "Imma talk about my hometown.",
+          "I wanna talk about my hometown."
+        ],
+        "answer": 1,
+        "why": "正式作文要用完整、標準的寫法,going to 才正確。gonna、Imma、wanna 都是口語省音，適合聊天卻不該出現在作文裡。同樣的意思，場合不同就要換說法，這就是「語域」。"
+      },
+      {
+        "q": "你在走廊遇到校長，想表達「我不知道」。最得體有禮貌的說法是？",
+        "options": [
+          "IDK.",
+          "Dunno.",
+          "I'm not sure, sorry.",
+          "Whatever."
+        ],
+        "answer": 2,
+        "why": "對師長要用完整、有禮貌的說法。I'm not sure「我不太確定」既清楚又客氣;IDK、Dunno 太隨便,Whatever「隨便啦」更顯得不禮貌。縮寫和超口語留給跟朋友聊天用。"
+      },
+      {
+        "q": "打球時你不小心把球傳歪，對隊友說「My bad!」是什麼意思？",
+        "options": [
+          "我的錯(不好意思啦)",
+          "我很壞",
+          "我心情不好",
+          "這顆球很爛"
+        ],
+        "answer": 0,
+        "why": "my bad 是口語，真正的意思是「我的錯、抱歉啦」,用來輕鬆認錯，不是字面的「我很壞」。朋友、隊友間用很自然；但正式道歉要說 I'm sorry 或 It was my fault。"
+      },
+      {
+        "q": "朋友問你「Do you want to hang out this weekend?」hang out 是什麼意思？",
+        "options": [
+          "一起出去玩、消磨時間",
+          "把衣服掛起來",
+          "掛電話",
+          "硬撐下去"
+        ],
+        "answer": 0,
+        "why": "hang out 當片語動詞是「一起玩、閒晃、消磨時間」,不是字面的「掛在外面」。跟朋友約會很常用；寫正式邀請時可改用 spend time together 或 get together。"
+      },
+      {
+        "q": "你考壞了很難過，好朋友安慰你說「It's no big deal, chill.」他的意思最接近？",
+        "options": [
+          "沒什麼大不了的，放輕鬆",
+          "這不划算，快走吧",
+          "這很重要，再緊張一點",
+          "沒有交易，冷靜受審"
+        ],
+        "answer": 0,
+        "why": "no big deal =「沒什麼大不了」,chill(口語)=「放輕鬆、別緊張」,都是安慰、打氣的 casual 用語。字面上 deal 是「交易」、chill 是「變冷」,這裡都是引申的口語意思。正式一點可說 Don't worry, it's not a big problem."
+      }
+    ]
+  },
+  {
+    "id": "lv13",
+    "level": 13,
+    "name": "關係子句的感覺",
+    "emoji": "🔗",
+    "color": "#6366f1",
+    "concepts": [
+      "who 說明『人』",
+      "which／that 說明『東西、動物』",
+      "口語 that 人物通吃",
+      "where 說明『地方』",
+      "whose 表示『某人的』"
+    ],
+    "keyFacts": [
+      "感覺公式：先講一個名詞，再用 who／which／that… 把補充資訊接上去。",
+      "說明「人」用 who：The man who lives next door（住隔壁的那個人）。",
+      "說明「東西、動物」用 which 或 that（a book which／that is old）；口語裡 that 最好用，講人講物常常都能通吃。",
+      "說明「地方」用 where：the park where we play（我們玩的公園）。",
+      "表示「某人的、某物的」用 whose：the girl whose bag is red。"
+    ],
+    "questions": [
+      {
+        "q": "「住在隔壁的那個男人很友善。」The man ___ lives next door is friendly.",
+        "options": [
+          "who",
+          "which",
+          "where",
+          "whose"
+        ],
+        "answer": 0,
+        "why": "補充說明「人」用 who：the man who lives next door。"
+      },
+      {
+        "q": "「一本很舊的書」a book ___ is old",
+        "options": [
+          "which",
+          "who",
+          "where",
+          "whose"
+        ],
+        "answer": 0,
+        "why": "說明「東西」用 which（口語也常用 that）；這裡選 which 最自然。"
+      },
+      {
+        "q": "在口語裡，不管講人還是講東西，最常拿來通吃的關係詞是哪一個？",
+        "options": [
+          "that",
+          "who（只能講人）",
+          "which（只能講物）",
+          "whose"
+        ],
+        "answer": 0,
+        "why": "口語裡 that 很好用，人和物常常都能通吃。"
+      },
+      {
+        "q": "「我們玩的那個公園」the park ___ we play",
+        "options": [
+          "where",
+          "which",
+          "who",
+          "whose"
+        ],
+        "answer": 0,
+        "why": "說明「地方」用 where：the park where we play。"
+      },
+      {
+        "q": "「書包是紅色的那個女生」the girl ___ bag is red",
+        "options": [
+          "whose",
+          "who",
+          "which",
+          "where"
+        ],
+        "answer": 0,
+        "why": "表示「某人的」用 whose：the girl whose bag is red。"
+      },
+      {
+        "q": "「我認識那個唱歌的女孩。」哪個最自然？",
+        "options": [
+          "I know the girl who sings.",
+          "I know the girl which sings.",
+          "I know the girl where sings.",
+          "I know the girl whose sings."
+        ],
+        "answer": 0,
+        "why": "說明「人」用 who：the girl who sings。"
+      },
+      {
+        "q": "「我有一隻很可愛的狗。」I have a dog ___ is very cute.",
+        "options": [
+          "that",
+          "what",
+          "where",
+          "whose"
+        ],
+        "answer": 0,
+        "why": "動物用 which 或 that；這裡選 that 最自然。（what／where／whose 放在這裡都不通）"
+      },
+      {
+        "q": "「這就是我出生的城市。」哪個最自然？",
+        "options": [
+          "This is the city where I was born.",
+          "This is the city which I was born.",
+          "This is the city who I was born.",
+          "This is the city whose I was born."
+        ],
+        "answer": 0,
+        "why": "說明「地方」用 where：the city where I was born。"
+      },
+      {
+        "q": "「我有個朋友，他的爸爸是醫生。」哪個最自然？",
+        "options": [
+          "I have a friend whose father is a doctor.",
+          "I have a friend who father is a doctor.",
+          "I have a friend which father is a doctor.",
+          "I have a friend where father is a doctor."
+        ],
+        "answer": 0,
+        "why": "表示「某人的」用 whose：a friend whose father…。"
+      },
+      {
+        "q": "「那個幫助我的老師」the teacher ___ helped me",
+        "options": [
+          "who",
+          "which",
+          "where",
+          "whose"
+        ],
+        "answer": 0,
+        "why": "說明「人」用 who：the teacher who helped me。"
+      },
+      {
+        "q": "「會發出奇怪聲音的機器」the machine ___ makes a strange noise",
+        "options": [
+          "which",
+          "who",
+          "whose",
+          "where"
+        ],
+        "answer": 0,
+        "why": "說明「東西」用 which（口語也可用 that）；這裡選 which。"
+      },
+      {
+        "q": "「我喜歡那首你唱的歌。」最口語、最自然的是？",
+        "options": [
+          "I like the song that you sang.",
+          "I like the song who you sang.",
+          "I like the song where you sang.",
+          "I like the song whose you sang."
+        ],
+        "answer": 0,
+        "why": "口語裡 that 通吃；「歌」是東西，用 that 最順。"
+      },
+      {
+        "q": "「我想找一家可以安靜讀書的咖啡廳。」a café ___ I can study quietly",
+        "options": [
+          "where",
+          "which",
+          "who",
+          "whose"
+        ],
+        "answer": 0,
+        "why": "說明「地方」用 where：a café where I can study。"
+      },
+      {
+        "q": "「那隻尾巴很長的貓」the cat ___ tail is very long",
+        "options": [
+          "whose",
+          "which",
+          "who",
+          "where"
+        ],
+        "answer": 0,
+        "why": "表示「某物的」也用 whose：the cat whose tail…。"
+      }
+    ]
+  },
+  {
+    "id": "lv14",
+    "level": 14,
+    "name": "更多情境對話",
+    "emoji": "💬",
+    "color": "#0891b2",
+    "concepts": [
+      "餐廳點餐與結帳",
+      "購物：尺寸／試穿／價錢",
+      "看醫生說症狀",
+      "問路與指路",
+      "電話與邀約的禮貌說法"
+    ],
+    "keyFacts": [
+      "點餐用 I'd like…（比 I want 更有禮貌）；吃完要結帳說 Can I have the bill, please？",
+      "購物三寶：尺寸 Do you have this in a bigger size？／試穿 Can I try it on？／價錢 How much is it？",
+      "看醫生說症狀用 I have a…（a headache／a fever），或說 I don't feel well.",
+      "問路先說 Excuse me, how do I get to…？；指路用 Turn left／right、Go straight.",
+      "打電話說 May I speak to…?（請稍等 Hold on, please.）；邀約問 Are you free this weekend?，婉拒說 I'd love to, but…"
+    ],
+    "questions": [
+      {
+        "q": "在餐廳，服務生問你要點什麼，你想點義大利麵。哪一句最自然？",
+        "options": [
+          "I'd like the spaghetti, please.",
+          "I want eat spaghetti.",
+          "Give me a spaghetti.",
+          "I am spaghetti."
+        ],
+        "answer": 0,
+        "why": "點餐用 I'd like…（= I would like）最有禮貌自然；I want eat 文法錯，Give me 太直接。"
+      },
+      {
+        "q": "吃完飯，你想請服務生結帳。哪一句最自然？",
+        "options": [
+          "Can I have the bill, please?",
+          "How much you?",
+          "I want pay money now.",
+          "Give me the money, please."
+        ],
+        "answer": 0,
+        "why": "結帳說 Can I have the bill, please？（美式也常說 the check）。其他句子文法或用詞都不對。"
+      },
+      {
+        "q": "這件衣服太小了，你想要大一號。怎麼問店員最自然？",
+        "options": [
+          "Do you have this in a bigger size?",
+          "This is small, give me big.",
+          "Where is the big one?",
+          "I want big size clothes now."
+        ],
+        "answer": 0,
+        "why": "問尺寸的固定說法 Do you have this in a bigger size？；其他說法生硬或文法不完整。"
+      },
+      {
+        "q": "你想試穿這件外套，問店員可不可以。哪一句對？",
+        "options": [
+          "Can I try it on?",
+          "Can I try on?",
+          "Can I wear it home first?",
+          "Do I try it?"
+        ],
+        "answer": 0,
+        "why": "試穿的片語是 try it on，代名詞 it 要放中間；try on 少了受詞，其他句意不對。"
+      },
+      {
+        "q": "你想問這個東西多少錢。哪一句最自然？",
+        "options": [
+          "How much is it?",
+          "How many is it?",
+          "How much it is?",
+          "What is the money?"
+        ],
+        "answer": 0,
+        "why": "問價錢用 How much is it？；How many 問數量，How much it is 語序錯。"
+      },
+      {
+        "q": "看醫生時你要說自己頭痛。哪一句最自然？",
+        "options": [
+          "I have a headache.",
+          "My head is pain.",
+          "I am headache.",
+          "My head very sick."
+        ],
+        "answer": 0,
+        "why": "說症狀用 I have a + 症狀名詞：I have a headache／a fever。其他句子文法不對。"
+      },
+      {
+        "q": "你覺得不太舒服，想跟醫生說。哪一句最自然？",
+        "options": [
+          "I don't feel well.",
+          "I feel not well.",
+          "I am not feel good.",
+          "My body is not good today."
+        ],
+        "answer": 0,
+        "why": "「不舒服」的固定說法是 I don't feel well.；not 要放在助動詞 don't，不能放在動詞 feel 後面。"
+      },
+      {
+        "q": "在路上你想問陌生人怎麼去火車站。哪一句最自然？",
+        "options": [
+          "Excuse me, how do I get to the train station?",
+          "Where train station go?",
+          "How to go the train station?",
+          "Train station is where, you?"
+        ],
+        "answer": 0,
+        "why": "先用 Excuse me 引起注意，問路用 How do I get to…？；其他都是中式直譯、語序錯。"
+      },
+      {
+        "q": "對方要告訴你「在轉角左轉」。哪一句最自然？",
+        "options": [
+          "Turn left at the corner.",
+          "You go left the corner.",
+          "Left turn to corner.",
+          "Go to left in corner."
+        ],
+        "answer": 0,
+        "why": "指路用祈使句 Turn left／right + at the corner；其他語序或介系詞都錯。"
+      },
+      {
+        "q": "你打電話想找 May 接電話。哪一句最自然？",
+        "options": [
+          "Hello, may I speak to May, please?",
+          "Hello, I want May now.",
+          "Hello, are you give me May?",
+          "Hello, call May to me."
+        ],
+        "answer": 0,
+        "why": "電話找人用 May I speak to + 人名, please？；其他說法不禮貌或文法錯。"
+      },
+      {
+        "q": "電話中你要請對方稍等一下。哪一句最自然？",
+        "options": [
+          "Hold on, please.",
+          "Wait me, please.",
+          "Stop a moment, you.",
+          "Don't go, wait me long."
+        ],
+        "answer": 0,
+        "why": "請對方在電話上稍等的固定說法是 Hold on, please.（或 Just a moment, please）。wait 是不及物動詞，接受詞要加 for，所以說 wait for me，不能說 wait me。"
+      },
+      {
+        "q": "你想問朋友這個週末有沒有空。哪一句最自然？",
+        "options": [
+          "Are you free this weekend?",
+          "Do you free this weekend?",
+          "This weekend you have empty?",
+          "You are time this weekend?"
+        ],
+        "answer": 0,
+        "why": "「有空」用 be free：Are you free…？；free 是形容詞要用 be 動詞，不能用 do。"
+      },
+      {
+        "q": "朋友約你出去，但你要念書不能去，想客氣婉拒。哪一句最自然？",
+        "options": [
+          "I'd love to, but I have to study.",
+          "No, I can't. Bye.",
+          "I don't want to go with you.",
+          "Maybe no, I busy."
+        ],
+        "answer": 0,
+        "why": "婉拒最客氣的說法是 I'd love to, but…（先表達想去，再說原因）；其他語氣太衝或文法錯。"
+      },
+      {
+        "q": "你想請對方幫你搬這個箱子。哪一句最自然？",
+        "options": [
+          "Could you help me move this box?",
+          "You help me the box.",
+          "Help me you can move box?",
+          "I need you move box now."
+        ],
+        "answer": 0,
+        "why": "禮貌請求幫忙用 Could you help me + 原形動詞：help me move…；其他語序或用詞都不自然。"
+      }
+    ]
+  },
+  {
+    "id": "lv15",
+    "level": 15,
+    "name": "進階聽力偵探",
+    "emoji": "🎧",
+    "color": "#0f766e",
+    "concepts": [
+      "聽細節抓重點",
+      "聽數字與時間",
+      "聽原因與心情",
+      "聽指令動作",
+      "聽語調辨語氣"
+    ],
+    "keyFacts": [
+      "先按 🔊 聽清楚再選，不確定就再按一次，多聽幾次耳朵會越來越準。",
+      "特別注意關鍵字：數字、時間、地點、人物、動作。",
+      "有些句子會放「陷阱」：像 forty 和 fourteen、否定詞 not，要聽仔細。",
+      "問「原因」聽 because，問「心情」聽語氣和情緒字眼。",
+      "句尾語調也會傳達語氣：問號多半上揚，句號多半下降。"
+    ],
+    "questions": [
+      {
+        "audio": "sense_e_11",
+        "q": "🔊 電影幾點開始？",
+        "options": [
+          "七點四十分",
+          "七點十四分",
+          "六點四十分",
+          "七點四分"
+        ],
+        "answer": 0,
+        "why": "句子說 starts at seven forty，而且特別強調 not seven fourteen（不是七點十四分）。forty 和 fourteen 很像，重音在前的是 forty（四十）。"
+      },
+      {
+        "audio": "sense_e_12",
+        "q": "🔊 美術社總共有幾個學生？",
+        "options": [
+          "十二個",
+          "六個",
+          "二十個",
+          "二個"
+        ],
+        "answer": 0,
+        "why": "句子說 twelve students（十二個學生）。「六個」是女生人數（half of them），是陷阱選項。"
+      },
+      {
+        "audio": "sense_e_13",
+        "q": "🔊 雨傘要放在哪裡？",
+        "options": [
+          "前門旁邊",
+          "後門旁邊",
+          "房間裡",
+          "車上"
+        ],
+        "answer": 0,
+        "why": "句子說 by the front door（前門旁邊）。front 是「前面的」，聽到 front door 就對了。"
+      },
+      {
+        "audio": "sense_e_14",
+        "q": "🔊 他們為什麼取消野餐？",
+        "options": [
+          "因為整個早上下大雨",
+          "因為天氣太熱",
+          "因為沒有準備食物",
+          "因為有人生病"
+        ],
+        "answer": 0,
+        "why": "問原因就聽 because 後面：because it rained heavily all morning（因為整個早上下大雨）。"
+      },
+      {
+        "audio": "sense_e_15",
+        "q": "🔊 說話的人現在心情如何？",
+        "options": [
+          "非常期待",
+          "很害怕",
+          "覺得無聊",
+          "有點生氣"
+        ],
+        "answer": 0,
+        "why": "can't wait（等不及了）和 looking forward to（很期待）都表示很興奮、非常期待。"
+      },
+      {
+        "audio": "sense_e_16",
+        "q": "🔊 老師要大家做什麼？",
+        "options": [
+          "關掉手機並翻到第五十頁",
+          "打開手機查資料",
+          "把課本收起來",
+          "翻到第十五頁"
+        ],
+        "answer": 0,
+        "why": "指令有兩個動作：turn off your phone（關手機）和 open to page fifty（翻到第五十頁）。fifty 是五十，別和 fifteen（十五）搞混。"
+      },
+      {
+        "audio": "sense_e_17",
+        "q": "🔊 誰得到歌唱比賽第一名？",
+        "options": [
+          "姊姊 Emma",
+          "哥哥",
+          "說話者自己",
+          "老師"
+        ],
+        "answer": 0,
+        "why": "句子說 My sister Emma ... won first prize，並強調 not my brother（不是哥哥）。得獎的是姊姊 Emma。"
+      },
+      {
+        "audio": "sense_e_18",
+        "q": "🔊 他們決定哪一天去圖書館？",
+        "options": [
+          "星期二",
+          "星期一",
+          "星期三",
+          "星期日"
+        ],
+        "answer": 0,
+        "why": "星期一圖書館關門（closed on Mondays），所以改成 go on Tuesday instead（改星期二去）。"
+      },
+      {
+        "audio": "sense_e_19",
+        "q": "🔊 用折價券之後，T 恤要多少錢？",
+        "options": [
+          "十美元",
+          "十五美元",
+          "五美元",
+          "五十美元"
+        ],
+        "answer": 0,
+        "why": "原價 fifteen dollars（十五美元），但 with the coupon it's only ten（用折價券只要十美元）。問的是折扣後的價錢。"
+      },
+      {
+        "audio": "sense_e_20",
+        "q": "🔊 這句話最可能表達什麼語氣？",
+        "options": [
+          "驚訝地再確認",
+          "平靜地陳述事實",
+          "生氣地命令別人",
+          "難過地道歉"
+        ],
+        "answer": 0,
+        "why": "句尾是問號「?」，而且用直述句語序（You finished ...）配上揚語調，代表「這麼快就寫完了？」的驚訝與再確認，不是普通陳述。"
+      }
+    ]
+  },
+  {
+    "id": "lv16",
+    "level": 16,
+    "name": "語調再進階",
+    "emoji": "🎶",
+    "color": "#7c3aed",
+    "concepts": [
+      "同字不同調",
+      "「?」尾音上揚↗",
+      "「.」尾音下降↘",
+      "「?!」驚訝上揚",
+      "「…, right?」在確認"
+    ],
+    "keyFacts": [
+      "同一句話，只要句尾標點不一樣，語調和意思就跟著不一樣——先看標點，再用耳朵確認尾音往哪走。",
+      "句尾是「?」的 yes／no 問句，尾音往上揚↗，代表「我是真的在問你、在跟你確認」。",
+      "句尾是「.」的陳述句，尾音平平往下↘，代表「我在說一件事」或「我很確定」。",
+      "「Really?!」「No way?!」這種驚訝的短句，尾音又高又急地往上揚↗，意思是「真的假的？！」。",
+      "句子最後加「…, right?」時，right? 的尾音往上揚↗，是在跟你「確認」：對吧？"
+    ],
+    "questions": [
+      {
+        "audio": "sense_t_09",
+        "q": "🔊 聽 You finished your homework? 這句尾音怎麼走、是什麼意思？",
+        "options": [
+          "上揚↗——在確認「你寫完了嗎？」",
+          "下降↘——在命令你去寫",
+          "在唱歌，跟意思無關"
+        ],
+        "answer": 0,
+        "why": "句尾是「?」，這是一句 yes／no 問句，尾音往上揚↗，代表她真的在問、在跟你確認「你寫完了嗎？」。"
+      },
+      {
+        "audio": "sense_t_10",
+        "q": "🔊 聽 You finished your homework. 這句尾音怎麼走、是在問還是在說？",
+        "options": [
+          "上揚↗——在問你寫完了沒",
+          "下降↘——在「說」你寫完了（陳述、確定）",
+          "在念一串數字"
+        ],
+        "answer": 1,
+        "why": "句尾是「.」，這是陳述句，尾音平平往下↘，是在說一件事、表示確定，不是在問。"
+      },
+      {
+        "audio": "sense_t_11",
+        "q": "🔊 聽 Really?! 這是什麼語氣？",
+        "options": [
+          "上揚↗＋驚訝——「真的假的？！」很吃驚地在問",
+          "下降↘——冷冷地說「是喔」，沒在問",
+          "在跟你道歉"
+        ],
+        "answer": 0,
+        "why": "句尾是「?!」，尾音又高又急地往上揚↗，是驚訝地在問「真的假的？！」。（可多按幾次🔊，聽尾音有沒有往上翹）"
+      },
+      {
+        "audio": "sense_t_12",
+        "q": "🔊 聽 No way?! 這是什麼語氣？",
+        "options": [
+          "下降↘——在拒絕你、叫你走開",
+          "在數數字，跟情緒無關",
+          "上揚↗＋驚訝——「不會吧？！怎麼可能」"
+        ],
+        "answer": 2,
+        "why": "句尾是「?!」，尾音往上揚↗，配上驚訝，是「不會吧？！怎麼可能」，不是命令或拒絕。"
+      },
+      {
+        "audio": "sense_t_13",
+        "q": "🔊 聽 You're ready? 這句是在問，還是在說？",
+        "options": [
+          "在「問」你「你準備好了嗎？」（句尾「?」，尾音上揚↗）",
+          "在命令你快去準備",
+          "在念咒語"
+        ],
+        "answer": 0,
+        "why": "句尾是「?」，這是 yes／no 問句，尾音往上揚↗，代表她真的在問你準備好了沒。"
+      },
+      {
+        "audio": "sense_t_14",
+        "q": "🔊 聽 You're ready. 這句是在問，還是在說？",
+        "options": [
+          "在問你好了沒",
+          "在「說」你準備好了（句尾「.」，尾音往下↘、很確定）",
+          "在生氣大吼"
+        ],
+        "answer": 1,
+        "why": "句尾是「.」，這是陳述句，尾音往下↘，是在告訴你「你準備好了」，不是在問。"
+      },
+      {
+        "audio": "sense_t_15",
+        "q": "🔊 聽 This is the last one, right? 尾巴的 right? 尾音怎麼走、想做什麼？",
+        "options": [
+          "尾巴 right? 上揚↗——在跟你「確認」：這是最後一個，對吧？",
+          "下降↘——在命令你交出最後一個",
+          "在唱歌"
+        ],
+        "answer": 0,
+        "why": "句尾加了「…, right?」，right? 帶著「?」尾音往上揚↗，是在跟你確認「對吧？」。"
+      },
+      {
+        "audio": "sense_t_16",
+        "q": "🔊 聽 She's your sister, right? 尾巴的 right? 尾音怎麼走、想做什麼？",
+        "options": [
+          "下降↘——在命令她離開",
+          "尾巴 right? 上揚↗——在跟你「確認」：她是你姊妹，對吧？",
+          "在念數字，沒有意思"
+        ],
+        "answer": 1,
+        "why": "句尾的「…, right?」帶著「?」，right? 尾音往上揚↗，是在跟你確認「她是你姊妹，對吧？」。"
+      }
+    ]
+  }
+];
+
+  var BADGES = [
+  {
+    "id": "lv1",
+    "icon": "🗣️",
+    "name": "語感達人"
+  },
+  {
+    "id": "lv2",
+    "icon": "💬",
+    "name": "對話高手"
+  },
+  {
+    "id": "lv3",
+    "icon": "🖼️",
+    "name": "看圖高手"
+  },
+  {
+    "id": "lv4",
+    "icon": "👂",
+    "name": "聽力小偵探"
+  },
+  {
+    "id": "lv5",
+    "icon": "🎵",
+    "name": "語調小耳朵"
+  },
+  {
+    "id": "lv6",
+    "icon": "📍",
+    "name": "介系詞達人"
+  },
+  {
+    "id": "lv7",
+    "icon": "🔤",
+    "name": "冠詞語感"
+  },
+  {
+    "id": "lv8",
+    "icon": "🧲",
+    "name": "搭配高手"
+  },
+  {
+    "id": "lv9",
+    "icon": "🏫",
+    "name": "校園英語家"
+  },
+  {
+    "id": "lv10",
+    "icon": "👋",
+    "name": "社交口語家"
+  },
+  {
+    "id": "lv11",
+    "icon": "💬",
+    "name": "慣用語偵探"
+  },
+  {
+    "id": "lv12",
+    "icon": "😎",
+    "name": "口語達人"
+  },
+  {
+    "id": "lv13",
+    "icon": "🔗",
+    "name": "關係語感家"
+  },
+  {
+    "id": "lv14",
+    "icon": "💬",
+    "name": "對話達人"
+  },
+  {
+    "id": "lv15",
+    "icon": "🎧",
+    "name": "聽力偵探"
+  },
+  {
+    "id": "lv16",
+    "icon": "🎶",
+    "name": "語調進階家"
+  },
+  {
+    "id": "all",
+    "icon": "🏆",
+    "name": "語感通"
+  }
+];
+  var BADGE_BY_ID = {};
+  for (var bi = 0; bi < BADGES.length; bi++) BADGE_BY_ID[BADGES[bi].id] = BADGES[bi];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var screenMenu = $('screen-menu');
+  var screenPlay = $('screen-play');
+  var levelList = $('level-list');
+  var stage = $('stage');
+  var stepDots = $('step-dots');
+  var playTitle = $('play-title');
+
+  var cur = null;
+
+  function starsFor(correct, total) {
+    if (total <= 0) return 0;
+    var r = correct / total;
+    if (r >= 0.9) return 3;
+    if (r >= 0.6) return 2;
+    if (r > 0) return 1;
+    return 0;
+  }
+  function starStr(n) { var s = ''; for (var i = 0; i < 3; i++) s += (i < n ? '⭐' : '☆'); return s; }
+
+  function awardBadge(id) {
+    var def = BADGE_BY_ID[id];
+    if (!def) return;
+    if (progress.badges[id]) return;
+    progress.badges[id] = true;
+    saveProg(progress);
+    toast('獲得徽章：' + def.icon + ' ' + def.name, 'badge');
+    try { if (window.SenseAdvBadges) SenseAdvBadges.refresh(); } catch (e) {}
+  }
+  function badgeCount() { var n = 0; for (var i = 0; i < BADGES.length; i++) if (progress.badges[BADGES[i].id]) n++; return n; }
+
+  function renderMenu() {
+    var doneCount = 0;
+    for (var i = 0; i < LEVELS.length; i++) if (progress[LEVELS[i].id] && progress[LEVELS[i].id].done) doneCount++;
+    $('ov-done').textContent = doneCount + '/' + LEVELS.length;
+    $('ov-badges').textContent = badgeCount() + '/' + BADGES.length;
+
+    if (doneCount > 0) {
+      $('hello-text').textContent = '歡迎回來！你已完成 ' + doneCount + ' 個等級，很棒！';
+      $('hello-sub').textContent = (doneCount >= LEVELS.length)
+        ? '所有等級都完成了，你是英文語感小達人！🏆'
+        : '想挑戰哪一個等級都可以，答錯也沒關係。';
+    }
+
+    levelList.innerHTML = '';
+    for (var u = 0; u < LEVELS.length; u++) {
+      (function (lv) {
+        var rec = progress[lv.id] || {};
+        var done = !!rec.done;
+        var total = lv.questions.length;
+        var st = done ? starsFor(rec.best || 0, total) : 0;
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'ma-level';
+        card.setAttribute('aria-label', '等級 ' + lv.level + '：' + lv.name);
+        card.innerHTML =
+          '<div class="ma-level-top">' +
+            '<span class="ma-level-emoji" aria-hidden="true" style="background:' + lv.color + '22;color:' + lv.color + '">' + lv.emoji + '</span>' +
+            '<div>' +
+              '<div class="ma-level-num">等級 ' + lv.level + '</div>' +
+              '<div class="ma-level-name">' + lv.name + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="ma-level-concepts">' + lv.concepts.join('・') + '</div>' +
+          '<div class="ma-level-foot">' +
+            '<span class="ma-level-status ' + (done ? 'done' : 'todo') + '">' +
+              (done ? '✅ 已完成（最佳 ' + (rec.best || 0) + '/' + total + '）' : '▶️ 開始挑戰（共 ' + total + ' 題）') + '</span>' +
+            '<span class="ma-level-stars" aria-hidden="true">' + (done ? starStr(st) : '') + '</span>' +
+          '</div>';
+        card.addEventListener('click', function () { startLevel(lv); });
+        levelList.appendChild(card);
+      })(LEVELS[u]);
+    }
+  }
+
+  function show(screen) {
+    screenMenu.classList.remove('active');
+    screenPlay.classList.remove('active');
+    screen.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function startLevel(lv) {
+    cur = { level: lv, idx: 0, correctCount: 0, phase: 'brief' };
+    playTitle.textContent = lv.emoji + ' 等級 ' + lv.level + '・' + lv.name;
+    show(screenPlay);
+    renderBrief();
+  }
+
+  function renderStepDots() {
+    stepDots.innerHTML = '';
+    if (cur.phase !== 'quiz') return;
+    for (var i = 0; i < cur.level.questions.length; i++) {
+      var b = document.createElement('i');
+      if (i < cur.idx) b.className = 'on';
+      else if (i === cur.idx) b.className = 'cur';
+      stepDots.appendChild(b);
+    }
+  }
+
+  function renderBrief() {
+    renderStepDots();
+    var lv = cur.level;
+    var facts = '';
+    for (var i = 0; i < lv.keyFacts.length; i++) {
+      facts += '<li><span class="ma-kf-dot" aria-hidden="true">◆</span><span>' + lv.keyFacts[i] + '</span></li>';
+    }
+    stage.innerHTML =
+      '<div class="ma-stage ma-brief">' +
+        '<div class="ma-visual" aria-hidden="true">' + lv.emoji + '</div>' +
+        '<h2>等級 ' + lv.level + '・' + lv.name + '</h2>' +
+        '<p class="ma-brief-sub">先看看這一級的重點，再開始 ' + lv.questions.length + ' 題挑戰。</p>' +
+        '<ul class="ma-keyfacts">' + facts + '</ul>' +
+      '</div>' +
+      '<div class="ma-actions">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-start">開始挑戰 ➡️</button>' +
+      '</div>';
+    $('btn-start').addEventListener('click', function () { cur.phase = 'quiz'; cur.idx = 0; renderQuestion(); });
+  }
+
+  function next() {
+    cur.idx++;
+    if (cur.idx >= cur.level.questions.length) finishLevel();
+    else renderQuestion();
+  }
+
+  function renderQuestion() {
+    renderStepDots();
+    var lv = cur.level;
+    var step = lv.questions[cur.idx];
+
+    var order = [];
+    for (var oi = 0; oi < step.options.length; oi++) order.push(oi);
+    for (var m = order.length - 1; m > 0; m--) {
+      var r = Math.floor(Math.random() * (m + 1));
+      var tt = order[m]; order[m] = order[r]; order[r] = tt;
+    }
+    var optsHtml = '';
+    for (var k = 0; k < order.length; k++) {
+      var origIdx = order[k];
+      optsHtml += '<button type="button" class="ma-opt" data-i="' + origIdx + '">' +
+        '<span>' + step.options[origIdx] + '</span><span class="ma-opt-mark" aria-hidden="true"></span></button>';
+    }
+
+    stage.innerHTML =
+      '<div class="ma-stage">' +
+        senseVisual(step, lv) +
+        '<p class="ma-question">第 ' + (cur.idx + 1) + ' / ' + lv.questions.length + ' 題　' + step.q + '</p>' +
+        '<div class="ma-options">' + optsHtml + '</div>' +
+        '<div class="ma-reveal" id="reveal"></div>' +
+      '</div>' +
+      '<div class="ma-actions" id="afteract" style="display:none">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">繼續 ➡️</button>' +
+      '</div>';
+
+    var answered = false;
+    var btns = stage.querySelectorAll('.ma-opt');
+
+    function revealAndLock(correct) {
+      var rev = $('reveal');
+      rev.textContent = (correct ? '答對了！' : '再想想～正確答案是這個！') + (step.why || '');
+      rev.classList.add('show');
+      $('afteract').style.display = 'flex';
+      var all = stage.querySelectorAll('.ma-opt');
+      for (var a = 0; a < all.length; a++) all[a].disabled = true;
+    }
+
+    for (var b = 0; b < btns.length; b++) {
+      btns[b].addEventListener('click', function () {
+        var i = parseInt(this.getAttribute('data-i'), 10);
+        var isCorrect = (i === step.answer);
+        if (answered) return;
+        answered = true;
+        // 唯一例外：作答時維持每日連續學習 streak（不計 XP、不重複計分、同日 idempotent）。
+        if (window.Game && typeof Game.pingActive === 'function') { try { Game.pingActive(); } catch (e) {} }
+        if (isCorrect) {
+          this.classList.add('correct');
+          this.querySelector('.ma-opt-mark').textContent = '✅';
+          cur.correctCount++;
+          revealAndLock(true);
+        } else {
+          this.classList.add('wrong');
+          this.querySelector('.ma-opt-mark').textContent = '❌';
+          var correctBtn = stage.querySelector('.ma-opt[data-i="' + step.answer + '"]');
+          if (correctBtn) {
+            correctBtn.classList.add('correct');
+            correctBtn.querySelector('.ma-opt-mark').textContent = '✅';
+          }
+          revealAndLock(false);
+        }
+      });
+    }
+
+    $('btn-next').addEventListener('click', next);
+  }
+
+  function finishLevel() {
+    var lv = cur.level;
+    var total = lv.questions.length;
+    var got = cur.correctCount;
+
+    var prev = progress[lv.id] || {};
+    progress[lv.id] = { done: true, best: Math.max(prev.best || 0, got) };
+    saveProg(progress);
+
+    awardBadge(lv.id);
+    var allDone = true;
+    for (var i = 0; i < LEVELS.length; i++) if (!(progress[LEVELS[i].id] && progress[LEVELS[i].id].done)) { allDone = false; break; }
+    if (allDone) awardBadge('all');
+
+    var st = Math.max(1, starsFor(got, total)); // 顯示至少 1 顆星，避免 0 分時空星列打擊士氣
+    stage.innerHTML =
+      '<div class="ma-stage ma-done">' +
+        '<div class="ma-done-emoji" aria-hidden="true">🎉</div>' +
+        '<div class="ma-done-title">完成「' + lv.name + '」！</div>' +
+        '<div class="ma-done-stars" aria-label="得到 ' + st + ' 顆星">' + starStr(st) + '</div>' +
+        '<p class="ma-question" style="font-size:clamp(16px,3.6vw,19px);text-align:center">你答對了 ' + got + ' / ' + total + ' 題，真棒！</p>' +
+      '</div>' +
+      '<div class="ma-actions">' +
+        '<button type="button" class="btn" id="btn-menu">回到選單</button>' +
+        (nextLevelOf(lv) ? '<button type="button" class="btn btn-primary" id="btn-nextlv">下一個等級 ➡️</button>' : '') +
+      '</div>';
+
+    toast('完成「' + lv.name + '」！你答對了 ' + got + ' / ' + total + ' 題，真棒！', 'daily');
+
+    $('btn-menu').addEventListener('click', goMenu);
+    var nl = nextLevelOf(lv);
+    if (nl) $('btn-nextlv').addEventListener('click', function () { startLevel(nl); });
+  }
+
+  function nextLevelOf(lv) {
+    for (var i = 0; i < LEVELS.length; i++) { if (LEVELS[i].id === lv.id) return LEVELS[i + 1] || null; }
+    return null;
+  }
+
+  function goMenu() { cur = null; stepDots.innerHTML = ''; renderMenu(); show(screenMenu); }
+
+  $('btn-back').addEventListener('click', goMenu);
+
+  window.__senseAdv = { LEVELS: LEVELS, BADGES: BADGES, getProgress: function () { return progress; } };
+
+  renderMenu();
+})();
+</script>
+
+<!-- ===== 語感徽章冊：樣式 ===== -->
+<style>
+#senseAdvBadgeFab {
+  position: fixed; right: 16px; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  z-index: 55; display: inline-flex; align-items: center; gap: 6px;
+  min-height: 48px; min-width: 48px; padding: 10px 16px;
+  background: #0f766e; color: #fff; border: none;  /* 深青綠底白字，兩主題同值皆過 AA */
+  border-radius: 999px; font-family: var(--font); font-weight: 800;
+  font-size: clamp(14px, 3vw, 16px); cursor: pointer; box-shadow: var(--shadow-lg);
+}
+#senseAdvBadgeFab:active { transform: scale(0.96); }
+/* 遊玩畫面時隱藏徽章冊 FAB，避免在窄螢幕蓋住答題按鈕與 ✅❌ */
+body:has(#screen-play.active) #senseAdvBadgeFab { display: none; }
+#senseAdvBadgeFabCount { display: inline-flex; align-items: center; gap: 3px; background: #fff; color: #0f766e; border-radius: 999px; padding: 1px 8px; font-size: 13px; font-weight: 800; }
+.ma-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 60; padding: 16px; }
+#senseAdvBadgeOverlay[hidden] { display: none !important; }
+.ma-card { position: relative; background: var(--card); border: 2px solid var(--card-border); border-radius: var(--r-lg); box-shadow: var(--shadow-lg); width: 100%; max-width: 560px; max-height: 88vh; overflow-y: auto; padding: 20px 18px 22px; color: var(--ink); }
+.ma-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.ma-card-head h1 { font-size: clamp(1.1rem, 4vw, 1.4rem); font-weight: 800; margin: 0; color: var(--ink); flex: 1; }
+.ma-card-back { background: var(--card); border: 2px solid var(--card-border); color: var(--accent-ink, var(--ink)); font-family: var(--font); font-weight: 800; font-size: 15px; cursor: pointer; min-height: 44px; padding: 8px 14px; border-radius: 14px; }
+.ma-card-back:active { transform: scale(0.96); }
+.ma-card-note { background: var(--accent-tint); color: var(--ink); border-radius: var(--r-md, 12px); font-size: var(--fs-small); font-weight: 600; line-height: 1.7; padding: 10px 12px; margin: 4px 0 12px; }
+.ma-card-summary { text-align: center; font-size: var(--fs-small); font-weight: 700; color: var(--ink-soft); margin: 4px 0 14px; line-height: 1.7; }
+.ma-badge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; }
+.ma-badge { position: relative; min-height: 96px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border-radius: 14px; background: var(--card); border: 2px solid var(--card-border); text-align: center; padding: 10px 6px; }
+.ma-badge .ma-badge-glyph { font-size: clamp(1.6rem, 7vw, 2rem); line-height: 1; }
+.ma-badge .ma-badge-name { font-size: clamp(0.6rem, 2.6vw, 0.74rem); font-weight: 800; color: var(--ink); line-height: 1.2; }
+.ma-badge .ma-badge-state { font-size: clamp(0.52rem, 2.2vw, 0.64rem); font-weight: 700; color: var(--ink-soft); }
+.ma-badge.locked { border-style: dashed; opacity: 0.5; filter: grayscale(1); }
+.ma-badge.unlocked { box-shadow: 0 0 0 2px #f5b301, 0 0 10px rgba(245,179,1,0.5); background: color-mix(in srgb, #f5b301 12%, var(--card)); }
+.ma-badge.unlocked .ma-badge-star { position: absolute; right: 5px; top: 4px; font-size: 14px; }
+</style>
+<script>
+(function () {
+  'use strict';
+  function api() { return window.__senseAdv || null; }
+  function unlockedCount() {
+    var a = api(); if (!a) return 0;
+    var prog = a.getProgress(); var n = 0;
+    for (var i = 0; i < a.BADGES.length; i++) if (prog.badges[a.BADGES[i].id]) n++;
+    return n;
+  }
+  function renderGrid() {
+    var a = api(); if (!a) return;
+    var prog = a.getProgress();
+    var host = document.getElementById('senseAdvBadgeGrid');
+    if (!host) return;
+    var html = '';
+    for (var i = 0; i < a.BADGES.length; i++) {
+      var def = a.BADGES[i];
+      var got = !!prog.badges[def.id];
+      var cls = 'ma-badge ' + (got ? 'unlocked' : 'locked');
+      var glyph = got ? def.icon : '🔒';
+      var state = got ? '已收集' : '尚未解鎖';
+      var star = got ? '<span class="ma-badge-star" aria-hidden="true">★</span>' : '';
+      var label = def.name + '（' + state + '）';
+      html += '<div class="' + cls + '" title="' + label + '" aria-label="' + label + '">' +
+        '<span class="ma-badge-glyph" aria-hidden="true">' + glyph + '</span>' +
+        '<span class="ma-badge-name">' + def.name + '</span>' +
+        '<span class="ma-badge-state">' + state + '</span>' + star + '</div>';
+    }
+    host.innerHTML = html;
+  }
+  function renderSummary() {
+    var a = api(); if (!a) return;
+    var el = document.getElementById('senseAdvBadgeSummary');
+    if (!el) return;
+    el.innerHTML = '已收集 <b>' + unlockedCount() + '</b> / ' + a.BADGES.length + ' 枚徽章（收藏只增不減，慢慢玩就好）';
+  }
+  function updateFabCount() {
+    var a = api(); if (!a) return;
+    var badge = document.getElementById('senseAdvBadgeFabCount');
+    if (badge) badge.textContent = unlockedCount() + '/' + a.BADGES.length;
+  }
+  function refresh() { updateFabCount(); if (isOpen()) { renderGrid(); renderSummary(); } }
+  function isOpen() { var el = document.getElementById('senseAdvBadgeOverlay'); return el && !el.hidden; }
+  function openBook() { renderGrid(); renderSummary(); var o = document.getElementById('senseAdvBadgeOverlay'); if (o) o.hidden = false; }
+  function closeBook() { var o = document.getElementById('senseAdvBadgeOverlay'); if (o) o.hidden = true; }
+  function buildDom() {
+    var host = document.createElement('div');
+    host.innerHTML =
+      '<button id="senseAdvBadgeFab" type="button" aria-label="打開語感徽章冊" onclick="SenseAdvBadges.openBook()">' +
+        '🏅 徽章冊 <span id="senseAdvBadgeFabCount">0/5</span></button>' +
+      '<div id="senseAdvBadgeOverlay" class="ma-overlay" hidden>' +
+        '<div class="ma-card" role="dialog" aria-modal="true" aria-label="語感徽章冊">' +
+          '<div class="ma-card-head"><h1>🏅 英文語感徽章冊</h1>' +
+            '<button class="ma-card-back" onclick="SenseAdvBadges.closeBook()">← 返回</button></div>' +
+          '<div class="ma-card-note">這本徽章冊只存在你自己的裝置上，純粹紀念你完成過哪些進階等級。它不會計入學習基地的等級或經驗值——放輕鬆挑戰就好 🌱</div>' +
+          '<div id="senseAdvBadgeSummary" class="ma-card-summary"></div>' +
+          '<div id="senseAdvBadgeGrid" class="ma-badge-grid"></div>' +
+        '</div></div>';
+    while (host.firstChild) document.body.appendChild(host.firstChild);
+  }
+  window.SenseAdvBadges = { openBook: openBook, closeBook: closeBook, refresh: refresh };
+  function boot() { buildDom(); updateFabCount(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+</body>
+</html>

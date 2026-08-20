@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CEFR 閃卡</title>
+<!-- 引擎資產須在本頁 <style> 之前載入：app.css / game_core.css 先進，本頁樣式在後逐項覆蓋，維持原本外觀並取得夜間模式；game_core.js 於 <head> 同步載入以注入計分 HUD（現已防重疊）。 -->
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<!-- 共用「間隔重複」排程核心：須在 game_core.js 之後、本頁腳本之前載入（瀏覽器掛 window.SRS）。 -->
+<script src="assets/srs_engine.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* 本頁強調色三件組 —— 接到英語科目色，所有共用元件與局部樣式自動換色、
+ * 亮/暗雙主題化（見 assets/app.css 的設計語言層說明）。 */
+:root {
+  --accent: var(--c-english);
+  --accent-tint: var(--tint-english);
+  --accent-ink: var(--c-english-ink);
+}
+
+body {
+  font-family: var(--font);
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  overflow-x: hidden;
+}
+/* 外層改吃共用 .shell（--content-max：手機 720／iPad 1200），移除寫死的 560px 窄條；
+ * .app-bar 為 <body> 直屬子元素、body 無左右 padding，故頂列自然滿版（比照 finance/social canon）。 */
+
+/* Header（頁面主標題區；.app-bar 由 assets/app.css 自帶更高特異度樣式，不受影響） */
+header { text-align: center; margin-bottom: var(--s5); }
+header .emoji { font-size: 48px; display: block; margin-bottom: var(--s2); }
+header h1 { font-size: var(--fs-h1); font-weight: 800; color: var(--ink); }
+header p { color: var(--ink-soft); font-size: var(--fs-small); font-weight: 600; margin-top: var(--s1); }
+
+/* Level buttons —— 統一的可點卡片式選鈕：中性底＋2px 邊，選中/hover 才上強調色，
+ * 讓「強調色稀用且一致」，不再各級散用綠/藍/紫硬碼。（a1/a2/b1 class 仍供 JS 定位） */
+/* 等級選單改用共用 .u-grid：手機單/雙欄好讀，iPad 自動攤成寬版多欄（display/gap 由 .u-grid 提供） */
+.level-selector {
+  margin-bottom: var(--s4);
+  /* 只有 3 個等級鈕：用置中 flex 而非 auto-fit grid，避免在寬螢幕上被拉得過寬、
+     與 coca/toeic 姊妹頁不一致。 */
+  display: flex; flex-wrap: wrap; gap: var(--s3); justify-content: center;
+}
+.level-selector .level-btn { flex: 0 1 220px; max-width: 240px; }
+.level-btn {
+  min-height: 56px;
+  padding: 14px 8px;
+  border: 2px solid var(--card-border);
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: clamp(15px, 3vw, 17px);
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+.level-btn:hover { border-color: var(--accent); box-shadow: var(--shadow-lg); }
+.level-btn:active { transform: scale(0.96); }
+.level-btn.active { background: var(--c-english-btn); color: var(--on-accent); border-color: transparent; box-shadow: var(--shadow-sm); }
+
+/* Mode toggle */
+.mode-toggle {
+  display: flex;
+  justify-content: center;
+  gap: var(--s2);
+  margin-bottom: var(--s4);
+}
+.mode-btn {
+  min-height: 48px;
+  padding: 10px 20px;
+  border: 2px solid var(--card-border);
+  border-radius: 16px;
+  background: var(--card);
+  font-family: var(--font);
+  font-size: var(--fs-small);
+  font-weight: 700;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.mode-btn.active {
+  background: var(--c-english-btn);
+  color: var(--on-accent);
+  border-color: transparent;
+}
+.mode-btn:active { transform: scale(0.96); }
+
+/* Progress */
+.progress-bar {
+  text-align: center;
+  font-size: var(--fs-small);
+  font-weight: 700;
+  color: var(--ink-soft);
+  margin-bottom: var(--s4);
+}
+
+/* Card container（翻卡互動維持不變；卡面採共用 .q-stage 的圓角/邊/陰影語言）。
+ * 兩面用 CSS grid 疊在同一格（grid-area 1/1）：容器高度自動吃「較高的一面」，
+ * 短卡靠 min-height 撐出卡感，長例句也不會溢出、翻面鈕永遠不會被蓋住。 */
+.card-container {
+  perspective: 1200px;
+  margin-bottom: var(--s4);
+}
+.card-inner {
+  display: grid;
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+  width: 100%;
+}
+.card-inner.flipped { transform: rotateY(180deg); }
+.card-front, .card-back {
+  grid-area: 1 / 1;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  width: 100%;
+  min-height: 280px;
+  background: var(--card);
+  border-radius: var(--r-lg);
+  padding: var(--s6) var(--s4);
+  box-shadow: var(--shadow-sm);
+  border: 2px solid var(--card-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s3);
+  cursor: pointer;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.card-front:hover, .card-back:hover { box-shadow: var(--shadow-lg); border-color: var(--accent); }
+.card-back { transform: rotateY(180deg); }
+
+.card-front .hint-label {
+  font-size: var(--fs-small);
+  font-weight: 800;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.card-front .definition-text {
+  font-size: clamp(19px, 4.5vw, 24px);
+  font-weight: 800;
+  color: var(--ink);
+  text-align: center;
+  line-height: 1.45;
+  max-width: 30ch;
+  overflow-wrap: break-word;
+}
+.card-front .tap-hint {
+  margin-top: var(--s2);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+/* BACK：答案以「emoji＋單字＋中文」的 hero 組為視覺主體，例句／發音分組在下，
+ * 用細分隔線與間距切開兩組，不再是一長條擠在一起的直式堆疊。 */
+.card-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s1);
+  max-width: 100%;
+}
+.card-back .word-emoji {
+  font-size: clamp(52px, 16vw, 76px);
+  line-height: 1.05;
+}
+.word-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s2);
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+.card-back .word-text {
+  font-size: clamp(26px, 7vw, 36px);
+  font-weight: 800;
+  color: var(--c-english-ink);
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+.card-back .chinese-hint {
+  font-size: var(--fs-h2);
+  color: var(--ink);
+  font-weight: 800;
+}
+.card-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s2);
+  width: min(38ch, 100%);
+  max-width: 100%;
+  padding-top: var(--s3);
+  border-top: 1px solid var(--card-border);
+}
+.sentence-text {
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--ink-soft);
+  text-align: center;
+  line-height: 1.6;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+.sentence-text strong {
+  color: var(--c-english-ink);
+  font-weight: 800;
+}
+
+/* Action buttons */
+.action-buttons {
+  display: flex;
+  gap: var(--s3);
+  justify-content: center;
+  margin-bottom: var(--s4);
+}
+.action-btn {
+  flex: 1;
+  max-width: 180px;
+  min-height: 56px;
+  padding: 14px 12px;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  font-family: var(--font);
+  font-size: clamp(15px, 3vw, 17px);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.2s ease, color 0.2s ease;
+}
+.action-btn:active { transform: scale(0.96); }
+/* (已移除 .btn-know/.btn-again 死碼樣式：無任何 markup 使用，實際自評鈕走 .fc-rate__btn；
+   其 :hover 為白字疊實心綠/紅僅 2.54/2.59:1 未達 AA，移除以免誤導與被誤報) */
+.btn-flip {
+  display: block;
+  width: 100%;
+  max-width: 220px;
+  min-height: 50px;
+  margin: 0 auto var(--s4);
+  padding: 14px 20px;
+  border: 2px solid var(--accent);
+  border-radius: 16px;
+  background: var(--card);
+  font-family: var(--font);
+  font-size: clamp(15px, 3vw, 17px);
+  font-weight: 700;
+  color: var(--c-english-ink);
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.2s ease, color 0.2s ease;
+}
+.btn-flip:hover { background: var(--c-english-btn); color: var(--on-accent); border-color: transparent; }
+.btn-flip:active { transform: scale(0.96); }
+
+/* Quiz mode —— 舞台卡採共用 .q-stage 語言；選項對齊 .q-opt 尺寸與狀態色 */
+.quiz-container {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  padding: var(--s5) var(--s4);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--s4);
+}
+.quiz-definition {
+  font-size: clamp(19px, 4.5vw, 24px);
+  font-weight: 800;
+  color: var(--ink);
+  text-align: center;
+  margin: 0 auto var(--s3);
+  line-height: 1.45;
+  max-width: 32ch;
+}
+.quiz-cloze {
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--ink-soft);
+  text-align: center;
+  margin: 0 auto var(--s5);
+  line-height: 1.55;
+  font-style: italic;
+  max-width: 34ch;
+}
+.quiz-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s3);
+}
+.quiz-option {
+  min-height: 56px;
+  padding: 14px 12px;
+  border: 2px solid var(--card-border);
+  border-radius: 16px;
+  background: var(--card);
+  font-family: var(--font);
+  font-size: clamp(15px, 3.4vw, 18px);
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+.quiz-option:hover { border-color: var(--accent); background: var(--accent-tint); }
+.quiz-option:active { transform: scale(0.98); }
+.quiz-option.correct {
+  background: var(--tint-english);
+  border-color: var(--c-correct);
+  color: var(--c-english-ink);
+  animation: popIn 0.3s;
+}
+.quiz-option.wrong {
+  background: rgba(255,118,117,0.12);
+  border-color: var(--c-wrong);
+  color: var(--c-streak-ink);
+  animation: shake 0.4s;
+}
+.quiz-option.highlight {
+  background: var(--tint-english);
+  border-color: var(--c-correct);
+  color: var(--c-english-ink);
+}
+
+.quiz-feedback {
+  text-align: center;
+  margin-top: var(--s4);
+  font-size: var(--fs-body);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.55;
+  min-height: 30px;
+}
+.quiz-next-btn {
+  display: block;
+  margin: var(--s4) auto 0;
+  min-height: 48px;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 16px;
+  background: var(--c-english-btn);
+  color: var(--on-accent);
+  font-family: var(--font);
+  font-size: clamp(15px, 3vw, 17px);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.2s ease;
+}
+.quiz-next-btn:hover { box-shadow: var(--shadow-lg); }
+.quiz-next-btn:active { transform: scale(0.96); }
+
+/* Completion screen —— 採共用 .result-card 的結算卡語言 */
+.complete-screen {
+  text-align: center;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--s6) var(--s4);
+}
+.complete-screen .big-emoji { font-size: clamp(64px, 22vw, 100px); line-height: 1.1; margin-bottom: var(--s3); }
+.complete-screen h2 { font-size: var(--fs-h2); font-weight: 800; margin-bottom: var(--s3); }
+.complete-screen p { font-size: var(--fs-body); font-weight: 700; color: var(--ink-soft); margin: 0 auto var(--s5); max-width: 34ch; }
+.restart-btn {
+  min-height: 50px;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 16px;
+  background: var(--c-english-btn);
+  color: var(--on-accent);
+  font-family: var(--font);
+  font-size: clamp(15px, 3vw, 17px);
+  font-weight: 700;
+  cursor: pointer;
+  margin: var(--s1);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.2s ease;
+}
+.restart-btn:hover { box-shadow: var(--shadow-lg); }
+.restart-btn:active { transform: scale(0.96); }
+
+/* Confetti */
+.confetti-container {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: -10px;
+  border-radius: 2px;
+  animation: confettiFall 1.5s ease-out forwards;
+}
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+@keyframes popIn {
+  0% { transform: scale(0.9); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Hidden state */
+.hidden { display: none !important; }
+
+/* Welcome placeholder —— 置中卡片，維持同一設計語言的暖白卡面 */
+.welcome-msg {
+  text-align: center;
+  padding: var(--s6) var(--s4);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  color: var(--ink-soft);
+  font-size: var(--fs-body);
+  font-weight: 600;
+}
+.welcome-msg .big-emoji { font-size: 56px; display: block; margin-bottom: var(--s3); }
+
+@media (prefers-reduced-motion: reduce) {
+  .quiz-option.correct, .quiz-option.wrong { animation: none; }
+  .level-btn:active, .mode-btn:active, .action-btn:active, .btn-flip:active,
+  .quiz-option:active, .quiz-next-btn:active, .restart-btn:active { transform: none; }
+}
+
+@media (max-width: 480px) {
+  .level-btn { padding: 14px 6px; }
+}
+</style>
+</head>
+<body>
+<!-- ===== 共用頂部應用列（全站一致；貼在 <body> 內第一個元素） ===== -->
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">CEFR 閃卡 🃏</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle
+          aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+
+<header>
+  <span class="emoji">📇</span>
+  <h1>CEFR 閃卡</h1>
+  <p>看定義，猜單字！翻面看答案</p>
+  <p>不確定要選哪一級？就從 A1 入門開始吧！</p>
+</header>
+
+<!-- Level Selector（選單：寬版多欄 dashboard 感由 .u-grid 提供） -->
+<div class="level-selector u-grid">
+  <button class="level-btn a1" onclick="selectLevel('cefr_a1')">A1 入門</button>
+  <button class="level-btn a2" onclick="selectLevel('cefr_a2')">A2 基礎</button>
+  <button class="level-btn b1" onclick="selectLevel('cefr_b1')">B1 進階</button>
+</div>
+
+<!-- 單字圖鑑入口（全站級收藏，未選等級也可用） -->
+<div class="worddex-nav">
+  <button class="mode-btn" onclick="Worddex.openScreen()">🌈 單字圖鑑</button>
+  <button class="mode-btn" onclick="Worddex.startReview()" title="複習今天到期的字">🔭 今日複習</button>
+  <span class="worddex-due-desc" id="worddexDueDesc"></span>
+</div>
+
+<a href="coca_flashcard.html" style="display:flex;align-items:center;gap:10px;margin:0 auto var(--s4);max-width:720px;box-sizing:border-box;padding:12px 16px;background:var(--card);border:2px dashed var(--card-border);border-radius:14px;color:var(--ink);font-weight:700;text-decoration:none;line-height:1.4"><span style="font-size:22px" aria-hidden="true">📖</span><span>已經很熟了？來挑戰更難的「COCA 學術字彙」→</span></a>
+
+<!-- 答題／學習互動區：包進 .play-column（≤680px 置中），避免 iPad 寬版下閱讀行過長、拇指按不到 -->
+<div class="play-column">
+
+<!-- Mode Toggle -->
+<div class="mode-toggle hidden" id="modeToggle">
+  <button class="mode-btn active" id="btnFlashcard" onclick="switchMode('flashcard')">閃卡模式</button>
+  <button class="mode-btn" id="btnQuiz" onclick="switchMode('quiz')">測驗模式</button>
+  <button class="mode-btn" id="btnSpell" onclick="switchMode('spell')">拼字模式</button>
+</div>
+
+<!-- Progress -->
+<div class="progress-bar hidden" id="progressBar" aria-live="polite"></div>
+
+<!-- Welcome -->
+<div id="welcomeMsg" class="welcome-msg">
+  <span class="big-emoji">👆</span>
+  <p>選擇一個等級開始學習吧！</p>
+</div>
+
+<!-- Flashcard Mode（audio-first 正面：看字聽音回想義／看義回想字，雙向交錯） -->
+<div id="flashcardArea" class="hidden">
+  <div class="fc-card" id="fcCard" role="button" tabindex="0" aria-label="單字卡，點擊或按 Enter 翻面"
+       onclick="flipCard()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();flipCard();}">
+    <div class="fc-card__inner" id="cardInner">
+      <div class="fc-card__face fc-card__front" id="cardFront"></div>
+      <div class="fc-card__face fc-card__back" id="cardBack"></div>
+    </div>
+  </div>
+  <button class="btn-flip" id="flipBtn" onclick="flipCard()">翻面看答案</button>
+  <!-- 三級自評（對齊 SM-2）：答錯不呈現為降級、文案兒童友善 -->
+  <div class="fc-rate hidden" id="rateButtons">
+    <button class="fc-rate__btn again" onclick="rateCard('again')" aria-label="還不熟，再練一次">😅<span class="fc-rate__btn__label">還不熟</span></button>
+    <button class="fc-rate__btn good" onclick="rateCard('good')" aria-label="想起來了">🙂<span class="fc-rate__btn__label">想起來了</span></button>
+    <button class="fc-rate__btn easy" onclick="rateCard('easy')" aria-label="很輕鬆">😎<span class="fc-rate__btn__label">很輕鬆</span></button>
+  </div>
+</div>
+
+<!-- Quiz Mode（雙向：看義選字／看字選義；答錯揭示面板＋自控繼續） -->
+<div id="quizArea" class="hidden">
+  <div class="quiz-container">
+    <div class="quiz-definition" id="quizDefinition"></div>
+    <div class="quiz-cloze" id="quizCloze"></div>
+    <div class="quiz-options" id="quizOptions"></div>
+    <div class="fc-reveal" id="quizReveal" aria-live="polite"></div>
+  </div>
+</div>
+
+<!-- Spelling Mode（產出型回想：字母磚點選為預設，可切換鍵盤打字） -->
+<div id="spellArea" class="hidden">
+  <div class="quiz-container">
+    <button class="fc-spell__toggle" id="spellToggle" onclick="toggleSpellMode()">⌨️ 改用鍵盤</button>
+    <div class="fc-spell">
+      <div class="fc-spell__head">
+        <div class="fc-card__emoji" id="spellEmoji"></div>
+        <div class="fc-card__cn" id="spellCn"></div>
+        <div class="fc-card__hint" id="spellHint"></div>
+        <button class="fc-audio fc-audio--lg" id="spellAudio" onclick="playWordAudio()" aria-label="播放單字發音">🔊</button>
+      </div>
+      <div class="fc-spell__slots" id="spellSlots" aria-label="拼字答案格"></div>
+      <div class="fc-spell__bank" id="spellBank" aria-label="字母磚"></div>
+      <button class="quiz-next-btn" id="spellCheckBtn" onclick="checkSpelling()">檢查</button>
+    </div>
+    <div class="fc-reveal" id="spellReveal" aria-live="polite"></div>
+  </div>
+</div>
+
+<!-- Completion Screen -->
+<div id="completeScreen" class="hidden complete-screen">
+  <div class="big-emoji">🎉</div>
+  <h2>恭喜完成！</h2>
+  <p id="completeMsg"></p>
+  <button class="restart-btn" onclick="restartLevel()">再來一次</button>
+  <button class="restart-btn" onclick="resetAll()">換等級</button>
+</div>
+
+</div><!-- /.play-column -->
+
+<!-- ===== 單字圖鑑畫面（比照 flashcardArea 用 .hidden 開關，非 .screen 系統） ===== -->
+<div id="worddexArea" class="hidden">
+  <div class="worddex-top">
+    <h2 class="worddex-title">🌈 單字圖鑑</h2>
+    <button class="worddex-back" onclick="Worddex.closeScreen()">← 返回</button>
+  </div>
+  <div class="worddex-summary" id="worddexSummary" aria-live="polite"></div>
+  <div class="worddex-legend">
+    <span><span class="lg">☆</span> 未收集</span>
+    <span><span class="lg">⭐</span> 收集中</span>
+    <span><span class="lg">🌟</span> 精通</span>
+    <span><span class="lg">🔵</span> 今天待複習</span>
+  </div>
+  <div class="worddex-actions">
+    <button class="mode-btn" onclick="Worddex.startReview()">🔭 開始今日複習</button>
+  </div>
+  <div id="worddexSections"></div>
+</div>
+
+<!-- 單字聚焦面板 overlay（[hidden] 初始隱藏，含 CSS 保險） -->
+<div class="worddex-focus-overlay" id="worddexFocusOverlay" hidden>
+  <div class="worddex-focus-card">
+    <button class="worddex-focus-close" onclick="Worddex.closeFocus()" aria-label="關閉">✕</button>
+    <div class="worddex-focus-body" id="worddexFocusBody"></div>
+  </div>
+</div>
+
+</main>
+
+<!-- Confetti container -->
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>var WORD_DATA = {};</script>
+<script src="vocab_data_cefr_a1.js"></script>
+<script src="vocab_data_cefr_a2.js"></script>
+<script src="vocab_data_cefr_b1.js"></script>
+<!-- 共用排程 store：綁定本頁既有 key `cefr_worddex_v1`（巢狀格式）。
+     由「主作答漏斗」與「單字圖鑑」共用同一實例，寫入即時同步。
+     一次性 lazy 正規化：舊 Worddex 卡（有 box、已點亮但無 SM-2 status）補上
+     status='review'，讓排程能正確判定到期；純補欄位、絕不清空。 -->
+<script>
+window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStore('cefr_worddex_v1') : null;
+(function(){
+  var s = window.CEFR_SRS; if (!s) return;
+  try {
+    var cm = s.cards(), changed = false;
+    for (var id in cm) {
+      var c = window.SRS.ensureCard(cm[id]);
+      if (c.lit && (c.scheduleBox || 0) >= 1 && c.status === 'new') { c.status = 'review'; changed = true; }
+    }
+    if (changed) s.save();
+  } catch (e) {}
+})();
+</script>
+<script>
+(function() {
+  // State
+  let currentLevel = null;
+  let currentMode = 'flashcard';
+  let cards = [];
+  let currentIndex = 0;
+  let knownCount = 0;
+  let isFlipped = false;
+  let quizScore = 0;
+  let quizTotal = 0;
+  let quizAnswered = false;
+  let reviewMode = false;   // true 時佇列來自「今日複習」
+
+  // 共用排程 store（綁定本頁既有 key；讀時 lazy 補欄位、絕不清空）
+  const store = window.CEFR_SRS || null;
+
+  // DOM refs
+  const modeToggle = document.getElementById('modeToggle');
+  const progressBar = document.getElementById('progressBar');
+  const welcomeMsg = document.getElementById('welcomeMsg');
+  const flashcardArea = document.getElementById('flashcardArea');
+  const quizArea = document.getElementById('quizArea');
+  const spellArea = document.getElementById('spellArea');
+  const completeScreen = document.getElementById('completeScreen');
+  const cardInner = document.getElementById('cardInner');
+  const flipBtn = document.getElementById('flipBtn');
+  const rateButtons = document.getElementById('rateButtons');
+  const btnFlashcard = document.getElementById('btnFlashcard');
+  const btnQuiz = document.getElementById('btnQuiz');
+  const btnSpell = document.getElementById('btnSpell');
+
+  function reducedMotion() {
+    try { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+    catch (e) { return false; }
+  }
+
+  // Shuffle array (Fisher-Yates)
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // 由目前卡片還原穩定 id（等級 + 原始單字字串，不正規化）。
+  function wordIdOf(c){ return (c._lvl || currentLevel) + '::' + c.word; }
+  function currentWordId(){ return wordIdOf(cards[currentIndex]); }
+
+  // 占位 emoji：整個牌組的 emoji 若全等於單一占位值（📖），代表沒有語意插圖，
+  // 就不顯示大 emoji hero，避免所有字都配同一張「書」圖而誤導。
+  // 只要牌組內有任一張帶語意 emoji，就照常顯示（有語意的頁面不受影響）。
+  var PLACEHOLDER_EMOJI = '📖';
+  function deckHasMeaningfulEmoji(level){
+    var pack = WORD_DATA[level];
+    if (!pack || !pack.words || !pack.words.length) return false;
+    for (var i = 0; i < pack.words.length; i++){
+      var e = pack.words[i].emoji;
+      if (e && e !== PLACEHOLDER_EMOJI) return true;
+    }
+    return false;
+  }
+  function cardEmojiHtml(card){
+    if (!card || !deckHasMeaningfulEmoji(card._lvl || currentLevel)) return '';
+    return '<div class="fc-card__emoji">' + esc(card.emoji || PLACEHOLDER_EMOJI) + '</div>';
+  }
+
+  // 雙向：偶數位「看義→回想字」(toWord)，奇數位「看字/聽音→回想義」(toMeaning)，交錯出現。
+  function directionAt(i){ return (i % 2 === 0) ? 'toWord' : 'toMeaning'; }
+
+  // 記分＋排程＋收藏＋里程碑，統一走這裡（Worddex 內部再叫 Game.recordAnswer，避免重複計分）。
+  function recordRate(id, grade){ if (window.Worddex) window.Worddex.rate(id, grade); }
+  function recordBinary(id, correct){ if (window.Worddex) window.Worddex.gradeBinary(id, correct); }
+
+  // Select level：以共用排程建立佇列（到期優先＋每日新卡上限＋新舊交錯）。
+  window.selectLevel = function(level) {
+    if (!WORD_DATA[level]) return;
+    currentLevel = level;
+    reviewMode = false;
+    const words = WORD_DATA[level].words;
+    words.forEach(function(c){ c._lvl = level; });
+    if (store) {
+      cards = store.buildSession(words, {
+        dailyNew: 10, reviewCap: 20,
+        idOf: function(c){ return (c._lvl || level) + '::' + c.word; }
+      });
+    } else {
+      cards = shuffle(words);
+    }
+    // 佇列為空（今天沒有到期、也沒有新卡）→ 讓孩子仍可自由練整級。
+    if (!cards.length) cards = shuffle(words);
+    currentIndex = 0;
+    knownCount = 0;
+    quizScore = 0;
+    quizTotal = 0;
+
+    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+    const cls = level === 'cefr_a1' ? 'a1' : level === 'cefr_a2' ? 'a2' : 'b1';
+    const btn = document.querySelector('.level-btn.' + cls);
+    if (btn) btn.classList.add('active');
+
+    welcomeMsg.classList.add('hidden');
+    modeToggle.classList.remove('hidden');
+    progressBar.classList.remove('hidden');
+    completeScreen.classList.add('hidden');
+
+    showCurrentMode();
+  };
+
+  // Switch mode
+  window.switchMode = function(mode) {
+    currentMode = mode;
+    btnFlashcard.classList.toggle('active', mode === 'flashcard');
+    btnQuiz.classList.toggle('active', mode === 'quiz');
+    btnSpell.classList.toggle('active', mode === 'spell');
+    showCurrentMode();
+  };
+
+  function showCurrentMode() {
+    completeScreen.classList.add('hidden');
+    flashcardArea.classList.toggle('hidden', currentMode !== 'flashcard');
+    quizArea.classList.toggle('hidden', currentMode !== 'quiz');
+    spellArea.classList.toggle('hidden', currentMode !== 'spell');
+    if (currentMode === 'flashcard') showFlashcard();
+    else if (currentMode === 'quiz') showQuiz();
+    else showSpell();
+  }
+
+  function playAudioSafely(src) {
+    try {
+      const p = new Audio(src).play();
+      if (p && typeof p.catch === 'function') p.catch(function() {});
+    } catch (e) { /* ignore playback errors */ }
+  }
+  function audioName(word){ return word.replace(/ /g, '_').replace(/\//g, '_'); }
+  window.playWordAudio = function() {
+    const c = cards[currentIndex]; if (!c) return;
+    const lvl = c._lvl || currentLevel;
+    playAudioSafely('audio/word_' + lvl + '_' + audioName(c.word) + '.mp3');
+  };
+  window.playSentenceAudio = function() {
+    const c = cards[currentIndex]; if (!c) return;
+    const lvl = c._lvl || currentLevel;
+    playAudioSafely('audio/sent_' + lvl + '_' + audioName(c.word) + '.mp3');
+  };
+
+  // --- FLASHCARD MODE（audio-first 正面；雙向交錯）---
+  function showFlashcard() {
+    if (currentIndex >= cards.length) { showComplete(); return; }
+    const card = cards[currentIndex];
+    const dir = directionAt(currentIndex);
+    isFlipped = false;
+    cardInner.classList.remove('flipped');
+    flipBtn.classList.remove('hidden');
+    rateButtons.classList.add('hidden');
+
+    const front = document.getElementById('cardFront');
+    const back = document.getElementById('cardBack');
+    const audioBtn = '<button class="fc-audio fc-audio--lg" onclick="event.stopPropagation();playWordAudio()" aria-label="播放單字發音">🔊</button>';
+    const sentAudio = '<button class="fc-audio fc-audio--sm" onclick="event.stopPropagation();playSentenceAudio()" aria-label="播放例句發音">🔊</button>';
+
+    if (dir === 'toMeaning') {
+      // 看字/聽音 → 回想義（audio-first：正面顯示單字＋發音鈕，開卡自動播一次）
+      front.innerHTML =
+        '<div class="fc-card__hint">這個字是什麼意思？</div>' +
+        '<div class="fc-card__word">' + esc(card.word) + '</div>' +
+        audioBtn +
+        '<div class="fc-card__tap">點擊翻面看中文 👆</div>';
+      back.innerHTML =
+        cardEmojiHtml(card) +
+        '<div class="fc-card__cn">' + esc(card.chinese || '') + '</div>' +
+        '<div class="fc-card__hint">' + esc(card.definition) + '</div>' +
+        '<div style="display:flex;align-items:center;gap:var(--s2);flex-wrap:wrap;justify-content:center">' +
+          '<span class="sentence-text">' + card.sentence + '</span>' + sentAudio + '</div>';
+    } else {
+      // 看義 → 回想字
+      front.innerHTML =
+        '<div class="fc-card__hint">Definition</div>' +
+        '<div class="fc-card__hint" style="color:var(--ink);font-size:clamp(19px,4.5vw,24px)">' + esc(card.definition) + '</div>' +
+        (card.chinese ? '<div class="fc-card__cn">' + esc(card.chinese) + '</div>' : '') +
+        '<div class="fc-card__tap">點擊翻面看單字 👆</div>';
+      back.innerHTML =
+        cardEmojiHtml(card) +
+        '<div style="display:flex;align-items:center;gap:var(--s2);flex-wrap:wrap;justify-content:center">' +
+          '<span class="fc-card__word" style="color: var(--c-english-ink)">' + esc(card.word) + '</span>' + audioBtn + '</div>' +
+        '<div class="fc-card__cn">' + esc(card.chinese || '') + '</div>' +
+        '<div style="display:flex;align-items:center;gap:var(--s2);flex-wrap:wrap;justify-content:center">' +
+          '<span class="sentence-text">' + card.sentence + '</span>' + sentAudio + '</div>';
+    }
+
+    // audio-first：只在「單字已顯示於正面」的方向自動播放，避免洩漏「看義猜字」的答案。
+    if (dir === 'toMeaning') window.playWordAudio();
+
+    updateProgress();
+  }
+
+  window.flipCard = function() {
+    isFlipped = !isFlipped;
+    cardInner.classList.toggle('flipped', isFlipped);
+    flipBtn.classList.toggle('hidden', isFlipped);
+    rateButtons.classList.toggle('hidden', !isFlipped);
+  };
+
+  // 三級自評 → 排程（again 退盒＋本 session 內位移重現；good/easy 進盒推進）
+  window.rateCard = function(grade) {
+    if (currentIndex >= cards.length) return;
+    const id = currentWordId();
+    recordRate(id, grade);
+    if (grade === 'again') {
+      // session 內位移重插（不緊鄰重複），peakBox/lit 已由排程保護、不倒退
+      const card = cards[currentIndex];
+      cards.splice(currentIndex, 1);
+      const insertAt = currentIndex + Math.floor(Math.random() * Math.min(5, Math.max(1, cards.length - currentIndex))) + 1;
+      cards.splice(Math.min(insertAt, cards.length), 0, card);
+      showFlashcard();
+    } else {
+      knownCount++;
+      currentIndex++;
+      showFlashcard();
+    }
+  };
+
+  // --- QUIZ MODE（雙向：看義選字／看字選義）---
+  // 近義守衛（與 coca/toeic/practice/vocabulary_app 一致）：中文釋義去括號後以 / 、 ， ; ／ 切成分，
+  // 任一成分重疊即視為近義（如 evening 夜晚/晚上 vs 晚上、angry 生氣的/憤怒的 vs 生氣的），
+  // 「看字選義」方向的誘答不可與正解同義，否則第二個正解會被判錯。
+  function meaningParts(ch){ return String(ch || '').replace(/[（(][^）)]*[）)]/g, '').split(/[\/、，,;；／]/).map(function(s){ return s.trim(); }).filter(Boolean); }
+  function shareMeaning(a, b){ var B = meaningParts(b); return meaningParts(a).some(function(p){ return B.indexOf(p) >= 0; }); }
+  function meaningPool(exceptWord){
+    const pool = [];
+    const src = (currentLevel && WORD_DATA[currentLevel]) ? WORD_DATA[currentLevel].words : cards;
+    src.forEach(function(w){ if (w.word !== exceptWord && w.chinese) pool.push(w.chinese); });
+    return pool;
+  }
+  function showQuiz() {
+    if (currentIndex >= cards.length) { showComplete(); return; }
+    quizAnswered = false;
+    const card = cards[currentIndex];
+    const dir = directionAt(currentIndex);
+    const reveal = document.getElementById('quizReveal');
+    reveal.className = 'fc-reveal'; reveal.innerHTML = '';
+
+    const defEl = document.getElementById('quizDefinition');
+    const clozeEl = document.getElementById('quizCloze');
+    let answer, options;
+
+    if (dir === 'toMeaning') {
+      // 看字選義：顯示單字，選出正確中文
+      defEl.innerHTML = '<span style="color: var(--c-english-ink)">' + esc(card.word) + '</span>' +
+        '<button class="fc-audio fc-audio--sm" style="margin-left:8px;vertical-align:middle" onclick="playWordAudio()" aria-label="播放單字發音">🔊</button>';
+      clozeEl.textContent = '這個字是什麼意思？';
+      answer = card.chinese || card.word;
+      const wrong = shuffle([...new Set(meaningPool(card.word))].filter(m => m !== answer && !shareMeaning(m, answer))).slice(0, 3);
+      options = shuffle([answer, ...wrong]);
+    } else {
+      // 看義選字（原方向）：優先用策劃互斥誘答，否則回退 options
+      defEl.innerHTML = esc(card.definition) +
+        (card.chinese ? '<div style="font-size:0.72em;color:var(--ink-soft);margin-top:6px">' + esc(card.chinese) + '</div>' : '');
+      clozeEl.textContent = card.cloze || '';
+      answer = card.word;
+      let wrong;
+      if (Array.isArray(card.distractors) && card.distractors.length >= 3) {
+        wrong = shuffle(card.distractors.filter(o => o !== card.word)).slice(0, 3);
+      } else {
+        wrong = shuffle((card.options || []).filter(o => o !== card.word)).slice(0, 3);
+      }
+      options = shuffle([card.word, ...wrong]);
+    }
+
+    const optionsEl = document.getElementById('quizOptions');
+    optionsEl.innerHTML = '';
+    options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-option';
+      btn.textContent = opt;
+      btn.onclick = function() { quizAnswer(opt, answer, btn, card); };
+      optionsEl.appendChild(btn);
+    });
+    updateProgress();
+  }
+
+  function quizAnswer(selected, correct, btnEl, card) {
+    if (quizAnswered) return;
+    quizAnswered = true;
+    quizTotal++;
+    const id = currentWordId();
+    const reveal = document.getElementById('quizReveal');
+    const ok = (selected === correct);
+
+    if (ok) {
+      quizScore++;
+      recordBinary(id, true);
+      btnEl.classList.add('correct');
+      showConfetti();
+      reveal.className = 'fc-reveal is-ok show';
+      reveal.innerHTML =
+        '<span class="fc-reveal__msg">太棒了，答對了！ 🎉</span>' +
+        buildRevealBody(card) +
+        '<button class="fc-reveal__next" onclick="quizNext()">繼續 →</button>';
+    } else {
+      recordBinary(id, false);
+      btnEl.classList.add('wrong');
+      document.querySelectorAll('.quiz-option').forEach(b => {
+        if (b.textContent === correct) b.classList.add('highlight');
+      });
+      reveal.className = 'fc-reveal is-no show';
+      reveal.innerHTML =
+        '<span class="fc-reveal__msg">沒關係，再看一次就記起來了！正確答案是 ' + esc(correct) + '</span>' +
+        buildRevealBody(card) +
+        '<button class="fc-reveal__next" onclick="quizNext()">繼續 →</button>';
+    }
+    const nx = reveal.querySelector('.fc-reveal__next');
+    if (nx) nx.focus();
+  }
+
+  function buildRevealBody(card){
+    return '<div style="margin-top:var(--s2)">' +
+      '<span class="fc-reveal__word">' + esc(card.word) + '</span>' +
+      '<span class="fc-reveal__zh">' + esc(card.chinese || '') + '</span>' +
+      '<button class="fc-audio fc-audio--sm" style="margin-left:8px;vertical-align:middle" onclick="playWordAudio()" aria-label="播放單字發音">🔊</button>' +
+      '<span class="fc-reveal__sent">' + card.sentence + '</span>' +
+      '</div>';
+  }
+
+  window.quizNext = function() {
+    currentIndex++;
+    showQuiz();
+  };
+
+  // --- SPELLING MODE（字母磚點選為預設，可切換鍵盤打字）---
+  let spellState = null;
+  let spellPref = (function(){ try { return localStorage.getItem('cefr_spell_mode') || 'tiles'; } catch(e){ return 'tiles'; } })();
+
+  window.toggleSpellMode = function(){
+    spellPref = (spellPref === 'tiles') ? 'type' : 'tiles';
+    try { localStorage.setItem('cefr_spell_mode', spellPref); } catch(e){}
+    showSpell();
+  };
+
+  function isLetter(ch){ return /[a-zA-Z]/.test(ch); }
+
+  function showSpell() {
+    if (currentIndex >= cards.length) { showComplete(); return; }
+    const card = cards[currentIndex];
+    const word = card.word;
+    const peak = store ? (store.peek(currentWordId()).peakBox || 0) : 0;
+
+    var spellEmojiEl = document.getElementById('spellEmoji');
+    if (deckHasMeaningfulEmoji(card._lvl || currentLevel)) {
+      spellEmojiEl.textContent = card.emoji || PLACEHOLDER_EMOJI;
+      spellEmojiEl.style.display = '';
+    } else {
+      spellEmojiEl.textContent = '';
+      spellEmojiEl.style.display = 'none';
+    }
+    document.getElementById('spellCn').textContent = card.chinese || '';
+    document.getElementById('spellHint').textContent = card.definition || '';
+    document.getElementById('spellToggle').textContent = (spellPref === 'tiles') ? '⌨️ 改用鍵盤' : '🔤 改用字母磚';
+    const reveal = document.getElementById('spellReveal');
+    reveal.className = 'fc-reveal'; reveal.innerHTML = '';
+
+    // 依 Leitner 高水位分層：基礎（僅正解字母，首字母提示）／進階（混誘答字母）／挖空（高盒只挖 1-2 字）
+    const letterIdx = [];
+    for (let i = 0; i < word.length; i++) if (isLetter(word[i])) letterIdx.push(i);
+    const hintPositions = {};
+    if (peak >= 5 && letterIdx.length > 2) {
+      // 挖空：只留 1-2 個空槽，其餘字母預填為 readonly 提示
+      const blanks = Math.min(2, Math.max(1, Math.floor(letterIdx.length / 4)));
+      const blankSet = {};
+      const pick = shuffle(letterIdx.slice());
+      for (let k = 0; k < blanks; k++) blankSet[pick[k]] = true;
+      letterIdx.forEach(function(pi){ if (!blankSet[pi]) hintPositions[pi] = true; });
+    } else if (peak < 3 && letterIdx.length > 3) {
+      // 基礎：首字母提示
+      hintPositions[letterIdx[0]] = true;
+    }
+
+    // 建立 slot 模型
+    const slots = [];
+    for (let i = 0; i < word.length; i++) {
+      const ch = word[i];
+      if (ch === ' ') slots.push({ type: 'gap' });
+      else if (!isLetter(ch)) slots.push({ type: 'sep', ch: ch });
+      else if (hintPositions[i]) slots.push({ type: 'hint', ch: ch });
+      else slots.push({ type: 'slot', ch: ch, filled: null });
+    }
+
+    // 字母磚池：可編輯 slot 的正解字母；進階加 2-4 個誘答字母
+    let bankLetters = slots.filter(s => s.type === 'slot').map(s => s.ch.toLowerCase());
+    if (peak >= 3) {
+      const decoys = pickDecoys(word, Math.min(4, Math.max(2, Math.round(bankLetters.length / 3))));
+      bankLetters = bankLetters.concat(decoys);
+    }
+    const bank = shuffle(bankLetters).map(function(ch, i){ return { ch: ch, id: 'b' + i, used: false }; });
+
+    spellState = { word: word, slots: slots, bank: bank, mode: spellPref, graded: false };
+    renderSpell();
+  }
+
+  function pickDecoys(word, n){
+    const confuse = { a:'e', e:'a', b:'d', d:'b', i:'l', l:'i', m:'n', n:'m', o:'u', u:'o', p:'q', q:'p', s:'z', z:'s', c:'k', k:'c' };
+    const alpha = 'abcdefghijklmnopqrstuvwxyz'.split('');
+    const inWord = word.toLowerCase().split('');
+    const out = [];
+    inWord.forEach(function(ch){ if (confuse[ch] && out.length < n) out.push(confuse[ch]); });
+    while (out.length < n) {
+      const r = alpha[Math.floor(Math.random() * alpha.length)];
+      out.push(r);
+    }
+    return out.slice(0, n);
+  }
+
+  function renderSpell(){
+    const slotsEl = document.getElementById('spellSlots');
+    const bankEl = document.getElementById('spellBank');
+    slotsEl.innerHTML = '';
+    slotsEl.classList.toggle('is-wrong', false);
+
+    spellState.slots.forEach(function(s, si){
+      if (s.type === 'gap') {
+        const g = document.createElement('span'); g.className = 'fc-spell__gap'; slotsEl.appendChild(g); return;
+      }
+      const el = document.createElement(spellState.mode === 'type' && s.type === 'slot' ? 'div' : 'div');
+      el.className = 'fc-spell__tile fc-spell__slot';
+      if (s.type === 'sep') { el.classList.add('hint'); el.textContent = s.ch; }
+      else if (s.type === 'hint') { el.classList.add('hint'); el.textContent = s.ch; }
+      else {
+        // 可編輯 slot
+        if (spellState.mode === 'type') {
+          const inp = document.createElement('input');
+          inp.type = 'text'; inp.maxLength = 1; inp.setAttribute('aria-label', '第 ' + (si + 1) + ' 個字母');
+          inp.setAttribute('autocapitalize', 'none'); inp.setAttribute('autocomplete', 'off'); inp.setAttribute('spellcheck', 'false');
+          inp.value = s.filled || '';
+          inp.oninput = function(){ s.filled = inp.value.replace(/[^a-zA-Z]/g, ''); inp.value = s.filled; if (s.filled) focusNextInput(si); };
+          inp.onkeydown = function(ev){
+            if (ev.key === 'Backspace' && !inp.value) { focusPrevInput(si); }
+            else if (ev.key === 'Enter') { ev.preventDefault(); checkSpelling(); }
+          };
+          if (s.filled) el.classList.add('filled');
+          el.appendChild(inp);
+        } else {
+          if (s.filled) { el.textContent = s.filled; el.classList.add('filled'); }
+          else el.textContent = '';
+          el.onclick = function(){
+            if (spellState.graded) return;
+            if (s.filled) { // 退回該字母到磚池
+              const t = spellState.bank.find(function(b){ return b.used && b.slotIdx === si; });
+              if (t) { t.used = false; t.slotIdx = null; }
+              s.filled = null; renderSpell();
+            }
+          };
+          // 鍵盤可操作性：與 COCA/TOEIC/practice 拼字格一致（Tab 聚焦、Enter/空白鍵退回字母）
+          el.setAttribute('role', 'button');
+          el.tabIndex = 0;
+          el.setAttribute('aria-label', '第 ' + (si + 1) + ' 個字母格，按 Enter 或空白鍵退回字母');
+          el.onkeydown = function(ev){ if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); el.onclick(); } };
+        }
+      }
+      slotsEl.appendChild(el);
+    });
+
+    bankEl.innerHTML = '';
+    bankEl.style.display = (spellState.mode === 'type') ? 'none' : '';
+    if (spellState.mode !== 'type') {
+      spellState.bank.forEach(function(t){
+        const b = document.createElement('button');
+        b.className = 'fc-spell__tile' + (t.used ? ' used' : '');
+        b.textContent = t.ch;
+        b.setAttribute('aria-label', '字母 ' + t.ch);
+        b.onclick = function(){
+          if (spellState.graded || t.used) return;
+          const target = spellState.slots.find(function(s){ return s.type === 'slot' && s.filled == null; });
+          if (!target) return;
+          const ti = spellState.slots.indexOf(target);
+          target.filled = t.ch; t.used = true; t.slotIdx = ti;
+          renderSpell();
+        };
+        bankEl.appendChild(b);
+      });
+    }
+    updateProgress();
+  }
+
+  function focusNextInput(si){
+    const inputs = [...document.querySelectorAll('#spellSlots input')];
+    const cur = document.querySelector('#spellSlots .fc-spell__slot:nth-child(' + (si + 1) + ') input');
+    const idx = inputs.indexOf(cur);
+    if (idx >= 0 && idx + 1 < inputs.length) inputs[idx + 1].focus();
+  }
+  function focusPrevInput(si){
+    const inputs = [...document.querySelectorAll('#spellSlots input')];
+    const cur = document.querySelector('#spellSlots .fc-spell__slot:nth-child(' + (si + 1) + ') input');
+    const idx = inputs.indexOf(cur);
+    if (idx > 0) inputs[idx - 1].focus();
+  }
+
+  window.checkSpelling = function(){
+    if (!spellState || spellState.graded) return;
+    // 組出作答字串
+    let typed = '';
+    spellState.slots.forEach(function(s){
+      if (s.type === 'gap') typed += ' ';
+      else if (s.type === 'sep') typed += s.ch;
+      else if (s.type === 'hint') typed += s.ch;
+      else typed += (s.filled || '');
+    });
+    // 未填滿不判分（保持中性）
+    const unfilled = spellState.slots.some(function(s){ return s.type === 'slot' && !s.filled; });
+    if (unfilled) {
+      const reveal = document.getElementById('spellReveal');
+      reveal.className = 'fc-reveal show';
+      reveal.innerHTML = '<span class="fc-reveal__msg">先把每個空格都填上，再檢查看看 😊</span>';
+      return;
+    }
+    spellState.graded = true;
+    const card = cards[currentIndex];
+    const correct = typed.trim().toLowerCase() === spellState.word.trim().toLowerCase();
+    const id = currentWordId();
+    recordBinary(id, correct);
+
+    // 逐槽上色（綠對紅錯）
+    const slotEls = [...document.querySelectorAll('#spellSlots .fc-spell__slot')];
+    let ei = 0;
+    spellState.slots.forEach(function(s){
+      if (s.type === 'gap') return;
+      const el = slotEls[ei++]; if (!el) return;
+      if (s.type === 'slot') {
+        const good = (s.filled || '').toLowerCase() === s.ch.toLowerCase();
+        el.classList.add(good ? 'ok' : 'no');
+      }
+    });
+
+    const reveal = document.getElementById('spellReveal');
+    if (correct) {
+      showConfetti();
+      reveal.className = 'fc-reveal is-ok show';
+      reveal.innerHTML = '<span class="fc-reveal__msg">拼對了，太厲害了！ 🎉</span>' +
+        buildRevealBody(card) + '<button class="fc-reveal__next" onclick="spellNext()">繼續 →</button>';
+      quizScore++;
+    } else {
+      if (!reducedMotion()) {
+        const slotsEl = document.getElementById('spellSlots');
+        slotsEl.classList.add('is-wrong');
+        setTimeout(function(){ slotsEl.classList.remove('is-wrong'); }, 450);
+      }
+      reveal.className = 'fc-reveal is-no show';
+      reveal.innerHTML = '<span class="fc-reveal__msg">綠色的字母是對的！這個字是這樣拼的，再看一次 😊</span>' +
+        buildRevealBody(card) + '<button class="fc-reveal__next" onclick="spellNext()">繼續 →</button>';
+    }
+    quizTotal++;
+    const nx = reveal.querySelector('.fc-reveal__next');
+    if (nx) nx.focus();
+  };
+
+  window.spellNext = function(){
+    currentIndex++;
+    showSpell();
+  };
+
+  // --- PROGRESS ---
+  function updateProgress() {
+    const total = cards.length;
+    if (currentMode === 'flashcard') {
+      progressBar.textContent = '第 ' + Math.min(currentIndex + 1, total) + ' / ' + total + ' 張　（已練 ' + knownCount + '）';
+    } else {
+      progressBar.textContent = '第 ' + Math.min(currentIndex + 1, total) + ' / ' + total + '　（' + quizScore + ' / ' + quizTotal + ' 正確）';
+    }
+  }
+
+  // --- COMPLETE ---
+  function showComplete() {
+    flashcardArea.classList.add('hidden');
+    quizArea.classList.add('hidden');
+    spellArea.classList.add('hidden');
+    progressBar.classList.add('hidden');
+    completeScreen.classList.remove('hidden');
+    if (currentMode === 'flashcard') {
+      document.getElementById('completeMsg').textContent = '這一輪練了 ' + knownCount + ' 個字，做得很好！';
+    } else {
+      document.getElementById('completeMsg').textContent = '結果：' + quizScore + ' / ' + quizTotal + ' 正確';
+    }
+  }
+
+  window.restartLevel = function() {
+    if (reviewMode && window.Worddex) { window.Worddex.startReview(); return; }
+    if (currentLevel) window.selectLevel(currentLevel);
+  };
+
+  window.resetAll = function() {
+    currentLevel = null;
+    reviewMode = false;
+    modeToggle.classList.add('hidden');
+    progressBar.classList.add('hidden');
+    flashcardArea.classList.add('hidden');
+    quizArea.classList.add('hidden');
+    spellArea.classList.add('hidden');
+    completeScreen.classList.add('hidden');
+    welcomeMsg.classList.remove('hidden');
+    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+  };
+
+  // --- 單字圖鑑「今日複習」橋接 ---
+  window.startWorddexReview = function(queueCards){
+    cards = queueCards; currentIndex = 0; knownCount = 0; quizScore = 0; quizTotal = 0;
+    reviewMode = true;
+    welcomeMsg.classList.add('hidden'); modeToggle.classList.remove('hidden');
+    progressBar.classList.remove('hidden'); completeScreen.classList.add('hidden');
+    showCurrentMode();
+  };
+
+  // --- CONFETTI（尊重 reduced-motion）---
+  function showConfetti() {
+    if (reducedMotion()) return;
+    const container = document.getElementById('confettiContainer');
+    // 慶祝彩帶刻意用多彩硬碼（彩帶本就是多色紙屑）：純裝飾、不編碼任何狀態、reduced-motion 下不播放；不套「狀態色禁彩虹」規則。
+    const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd'];
+    for (let i = 0; i < 30; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.left = Math.random() * 100 + '%';
+      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.animationDelay = Math.random() * 0.5 + 's';
+      piece.style.width = (Math.random() * 8 + 6) + 'px';
+      piece.style.height = (Math.random() * 8 + 6) + 'px';
+      container.appendChild(piece);
+    }
+    setTimeout(() => { container.innerHTML = ''; }, 2000);
+  }
+
+  function esc(s){
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // headless 測試掛鉤（不影響正常使用）
+  window.__cefrDebug = {
+    cards: function(){ return cards; },
+    index: function(){ return currentIndex; },
+    mode: function(){ return currentMode; },
+    direction: function(){ return directionAt(currentIndex); }
+  };
+})();
+</script>
+
+<!-- ===== 單字圖鑑（Worddex）自足樣式：沿用本頁 app.css 變數與設計語言 ===== -->
+<style>
+/* 入口列（比照 .mode-toggle 置中 flex） */
+.worddex-nav {
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+  gap: var(--s2); margin-bottom: var(--s4);
+}
+.worddex-nav .worddex-due-desc {
+  flex-basis: 100%; text-align: center;
+  font-size: var(--fs-small); font-weight: 600; color: var(--ink-soft);
+}
+/* 圖鑑畫面頂列：標題 + 返回 */
+.worddex-top { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-bottom: var(--s3); }
+.worddex-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); }
+.worddex-back {
+  min-height: 44px; padding: 8px 16px;
+  border: 2px solid var(--card-border); border-radius: 16px;
+  background: var(--card); color: var(--ink);
+  font-family: var(--font); font-size: var(--fs-small); font-weight: 700;
+  cursor: pointer; transition: transform 0.12s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.worddex-back:hover { border-color: var(--accent); }
+.worddex-back:active { transform: scale(0.96); }
+.worddex-summary { text-align: center; font-size: var(--fs-small); font-weight: 700; color: var(--ink-soft); margin: var(--s1) 0 var(--s2); line-height: 1.6; }
+.worddex-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 16px; font-size: var(--fs-small); font-weight: 600; color: var(--ink-soft); margin-bottom: var(--s3); }
+.worddex-legend .lg { margin-right: 4px; }
+.worddex-actions { text-align: center; margin: var(--s2) 0 var(--s4); }
+/* 分級段落 */
+.worddex-section { margin-bottom: var(--s5); }
+.worddex-section-title { font-size: var(--fs-body); font-weight: 800; color: var(--ink); margin-bottom: var(--s2); }
+.worddex-grid { display: flex; flex-wrap: wrap; gap: var(--s2); }
+/* 單字卡 chip：雙碼（glyph 形狀 + 文字），不靠顏色單一維度 */
+.worddex-card {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  min-width: 96px; flex: 0 1 96px;
+  padding: 10px 8px;
+  border: 2px solid var(--card-border); border-radius: 14px;
+  background: var(--card); color: var(--ink);
+  font-family: var(--font); cursor: pointer;
+  transition: transform 0.12s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.worddex-card:hover { border-color: var(--accent); box-shadow: var(--shadow-sm); }
+.worddex-card:active { transform: scale(0.96); }
+.worddex-card .wd-emoji { font-size: 26px; line-height: 1.1; }
+.worddex-card .wd-word { font-size: var(--fs-small); font-weight: 800; overflow-wrap: anywhere; text-align: center; }
+.worddex-card .wd-glyph { font-size: 15px; line-height: 1; }
+.worddex-card .wd-state { font-size: 11px; font-weight: 700; color: var(--ink-soft); }
+.worddex-card.box0 { opacity: 0.6; }
+/* 盒級進度：以單一 --accent 的透明度階層呈現（可主題化、無彩虹硬碼）；
+   熟練度另有 glyph(☆/⭐/🌟)＋文字階名雙碼，顏色非唯一通道。 */
+.worddex-card.box1 { border-color: color-mix(in srgb, var(--accent) 25%, var(--card-border)); }
+.worddex-card.box2 { border-color: color-mix(in srgb, var(--accent) 45%, var(--card-border)); }
+.worddex-card.box3 { border-color: color-mix(in srgb, var(--accent) 65%, var(--card-border)); }
+.worddex-card.box4 { border-color: color-mix(in srgb, var(--accent) 85%, var(--card-border)); box-shadow: 0 0 6px color-mix(in srgb, var(--accent) 27%, transparent); }
+.worddex-card.box5 { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--card)); box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 33%, transparent); }
+.worddex-card.due { outline: 2px solid var(--c-english); outline-offset: 1px; }
+.worddex-card .wd-due { color: var(--c-english-ink); font-size: 12px; }
+/* 聚焦面板 overlay —— [hidden] 高特異度防護，任何情況都不誤顯示 */
+.worddex-focus-overlay {
+  position: fixed; inset: 0; z-index: 10000;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.45); padding: var(--s4);
+}
+.worddex-focus-overlay[hidden] { display: none !important; }
+.worddex-focus-card {
+  position: relative; width: min(360px, 92vw);
+  background: var(--card); color: var(--ink);
+  border: 2px solid var(--card-border); border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg); padding: var(--s6) var(--s4) var(--s5);
+  text-align: center;
+}
+.worddex-focus-close {
+  position: absolute; top: 8px; right: 8px;
+  min-width: 48px; min-height: 48px;
+  border: none; background: transparent; color: var(--ink-soft);
+  font-size: 20px; cursor: pointer; border-radius: 12px;
+}
+.worddex-focus-close:hover { background: var(--accent-tint); }
+.worddex-focus-emoji { font-size: 52px; line-height: 1.1; }
+.worddex-focus-word { font-size: var(--fs-h2); font-weight: 800; color: var(--c-english-ink); margin: 4px 0; overflow-wrap: anywhere; }
+.worddex-focus-cn { font-size: var(--fs-body); font-weight: 800; color: var(--ink); }
+.worddex-focus-meta { font-size: var(--fs-small); font-weight: 600; color: var(--ink-soft); line-height: 1.7; margin: 10px 0 14px; }
+.worddex-focus-practice {
+  min-height: 48px; padding: 12px 24px; border: none; border-radius: 16px;
+  background: var(--c-english-btn); color: var(--on-accent);
+  font-family: var(--font); font-size: var(--fs-small); font-weight: 700;
+  cursor: pointer; box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.2s ease;
+}
+.worddex-focus-practice:hover { box-shadow: var(--shadow-lg); }
+.worddex-focus-practice:active { transform: scale(0.96); }
+@media (prefers-reduced-motion: reduce) {
+  .worddex-card:active, .worddex-back:active, .worddex-focus-practice:active { transform: none; }
+}
+</style>
+
+<!-- ===== 單字圖鑑（Worddex）：獨立自足模組。獨立 localStorage key、里程碑單次 award + 單調 guard、
+     答錯不退階、收藏只增不減。不與 game_core.js / flashcard IIFE 共用可變狀態；
+     本圖鑑模組只寫自己的 key、不直接寫 vocab_srs / vocab_stats；單字測驗答對會經 Game.recordAnswer/award('english') API 計入英文主 XP（刻意設計，非污染）；本頁不宣告 data-game-wired。 ===== -->
+<script>
+(function () {
+  'use strict';
+  // 共用排程 store（與主作答漏斗同一實例；讀 peakBox/lit 作視覺收藏、只增不減）
+  var store = window.CEFR_SRS || null;
+  var LEVELS = ['cefr_a1', 'cefr_a2', 'cefr_b1'];
+  var LEVEL_LABEL = { cefr_a1: 'A1 入門', cefr_a2: 'A2 基礎', cefr_b1: 'B1 進階' };
+  var MILE_XP = {
+    first_word: 10, lit_25: 30, lit_50: 60, lit_100: 100,
+    level_a1_all: 80, level_a2_all: 80, level_b1_all: 80,
+    all_lit: 200, master_50: 80, master_all: 300
+  };
+
+  var wordIndex = null; // id -> { word物件, level }
+
+  function wordId(level, word) { return level + '::' + word; }
+  function today() { return window.SRS ? window.SRS.today() : new Date().toISOString().slice(0, 10); }
+
+  // 取得已遷移的卡片視圖（不存在回傳 null；存在則 ensure 補欄位，不落地新卡）
+  function card(id) {
+    if (!store) return null;
+    var cm = store.cards();
+    return cm[id] ? window.SRS.ensureCard(cm[id]) : null;
+  }
+  // 視覺收藏用 peakBox（單調不減）；到期判定用 scheduleBox/dueDate
+  function peakOf(c) { return c ? (c.peakBox || 0) : 0; }
+
+  // 掃 WORD_DATA 三級建立 id -> { word物件, level }
+  function buildIndex() {
+    wordIndex = {};
+    for (var li = 0; li < LEVELS.length; li++) {
+      var lv = LEVELS[li];
+      var pack = window.WORD_DATA && window.WORD_DATA[lv];
+      if (!pack || !pack.words) continue;
+      for (var wi = 0; wi < pack.words.length; wi++) {
+        var w = pack.words[wi];
+        wordIndex[wordId(lv, w.word)] = { word: w, level: lv };
+      }
+    }
+  }
+  function idx() { if (!wordIndex) buildIndex(); return wordIndex; }
+
+  // ---- 分母 / 統計（即時由 WORD_DATA 計算） ----
+  function levelWords(level) {
+    var pack = window.WORD_DATA && window.WORD_DATA[level];
+    return (pack && pack.words) ? pack.words : [];
+  }
+  function totalCount() {
+    var n = 0; for (var i = 0; i < LEVELS.length; i++) n += levelWords(LEVELS[i]).length; return n;
+  }
+  function isLit(level, word) {
+    var c = card(wordId(level, word)); return !!(c && c.lit);
+  }
+  function isMastered(level, word) {
+    var c = card(wordId(level, word)); return peakOf(c) >= 5;
+  }
+  function litCount() {
+    if (!store) return 0;
+    var cm = store.cards(), n = 0;
+    for (var id in cm) if (window.SRS.ensureCard(cm[id]).lit) n++;
+    return n;
+  }
+  function masteredCount() {
+    if (!store) return 0;
+    var cm = store.cards(), n = 0;
+    for (var id in cm) if (peakOf(window.SRS.ensureCard(cm[id])) >= 5) n++;
+    return n;
+  }
+  function levelAllLit(level) {
+    var ws = levelWords(level); if (!ws.length) return false;
+    for (var i = 0; i < ws.length; i++) if (!isLit(level, ws[i].word)) return false;
+    return true;
+  }
+  function levelAllMastered(level) {
+    var ws = levelWords(level); if (!ws.length) return false;
+    for (var i = 0; i < ws.length; i++) if (!isMastered(level, ws[i].word)) return false;
+    return true;
+  }
+
+  // ---- 里程碑（Game.award 單次發放 + 排程 store 的單調 guard；依 peakBox/lit 只增不減） ----
+  function satisfiedMilestones() {
+    var out = [];
+    var lit = litCount(), b5 = masteredCount();
+    if (lit >= 1) out.push('first_word');
+    if (lit >= 25) out.push('lit_25');
+    if (lit >= 50) out.push('lit_50');
+    if (lit >= 100) out.push('lit_100');
+    if (levelAllLit('cefr_a1')) out.push('level_a1_all');
+    if (levelAllLit('cefr_a2')) out.push('level_a2_all');
+    if (levelAllLit('cefr_b1')) out.push('level_b1_all');
+    var allLit = true;
+    for (var i = 0; i < LEVELS.length; i++) { if (!levelAllLit(LEVELS[i])) { allLit = false; break; } }
+    if (allLit && totalCount() > 0) out.push('all_lit');
+    if (b5 >= 50) out.push('master_50');
+    var allMaster = true;
+    for (var j = 0; j < LEVELS.length; j++) { if (!levelAllMastered(LEVELS[j])) { allMaster = false; break; } }
+    if (allMaster && totalCount() > 0) out.push('master_all');
+    return out;
+  }
+  function mileMsg(id) {
+    switch (id) {
+      case 'first_word': return '🌟 收集到第一個單字！';
+      case 'lit_25': return '✨ 已收集 25 個字！';
+      case 'lit_50': return '✨ 已收集 50 個字！';
+      case 'lit_100': return '✨ 已收集 100 個字！';
+      case 'level_a1_all':
+      case 'level_a2_all':
+      case 'level_b1_all': return '⭐ 完成一整級的單字收集！';
+      case 'all_lit': return '🌌 所有單字都收集齊了！';
+      case 'master_50': return '🏅 已精通 50 個字！';
+      case 'master_all': return '👑 全部單字都精通了！';
+      default: return '🎉 達成新成就！';
+    }
+  }
+  function checkMilestones() {
+    if (!store) return;
+    var s = satisfiedMilestones();
+    for (var i = 0; i < s.length; i++) {
+      var id = s[i];
+      // awardOnce：先設 guard → save → 回 true，呼叫方再發 XP/toast（永不重領）
+      if (!store.awardOnce(id)) continue;
+      try { if (window.Game && window.Game.award) window.Game.award('english', MILE_XP[id] || 0, { silent: true, source: 'worddex-milestone', milestone: id }); } catch (e) {}
+      try { if (window.Game && window.Game.showToast) window.Game.showToast(mileMsg(id), 'success'); } catch (e) {}
+    }
+  }
+
+  // ---- 核心：作答（統一計分＋排程＋收藏＋里程碑） ----
+  // 三級自評：grade in 'again'|'good'|'easy'
+  function rate(id, grade) {
+    if (!store) return;
+    store.rate(id, grade);
+    try { if (window.Game) window.Game.recordAnswer('english', grade !== 'again'); } catch (e) {}
+    if (grade !== 'again') checkMilestones();
+    refreshDisplays();
+  }
+  // 二元作答（測驗/拼字）
+  function gradeBinary(id, correct) {
+    if (!store) return;
+    store.gradeBinary(id, correct);
+    try { if (window.Game) window.Game.recordAnswer('english', !!correct); } catch (e) {}
+    if (correct) checkMilestones();
+    refreshDisplays();
+  }
+  function refreshDisplays() {
+    if (isScreenOpen()) { renderSections(); renderSummary(); }
+    updateDueDesc();
+  }
+
+  // ---- 今日到期佇列（跨等級單一收藏；依 scheduleBox/dueDate 判定） ----
+  function dueCardIds(t) {
+    if (!store) return [];
+    var cm = store.cards();
+    var out = [];
+    for (var id in cm) {
+      var s = window.SRS.ensureCard(cm[id]);
+      if (s.lit && s.status !== 'new' && s.dueDate && s.dueDate <= t) out.push(id);
+    }
+    out.sort(function (x, y) {
+      var sx = cm[x], sy = cm[y];
+      if (sx.dueDate !== sy.dueDate) return sx.dueDate < sy.dueDate ? -1 : 1;
+      if ((sx.scheduleBox || 0) !== (sy.scheduleBox || 0)) return (sx.scheduleBox || 0) - (sy.scheduleBox || 0);
+      return x < y ? -1 : 1;
+    });
+    return out;
+  }
+  function dueCount() { return dueCardIds(today()).length; }
+
+  // 產出「已標註 _lvl 的 word 物件陣列」給 flashcard 橋接函式（走共用 buildSession：到期優先＋新卡上限＋交錯）
+  function buildQueue() {
+    if (!store) return [];
+    var all = [];
+    for (var li = 0; li < LEVELS.length; li++) {
+      var lv = LEVELS[li];
+      var ws = levelWords(lv);
+      for (var wi = 0; wi < ws.length; wi++) { ws[wi]._lvl = lv; all.push(ws[wi]); }
+    }
+    return store.buildSession(all, {
+      dailyNew: 10, reviewCap: 20,
+      idOf: function (c) { return wordId(c._lvl, c.word); }
+    });
+  }
+
+  // ---- 畫面 ----
+  function isScreenOpen() {
+    var el = document.getElementById('worddexArea');
+    return el && !el.classList.contains('hidden');
+  }
+  function glyph(box) {
+    if (!box) return '☆';
+    if (box >= 5) return '🌟';
+    return '⭐';
+  }
+  function stateText(box) {
+    if (!box) return '未收集';
+    if (box >= 5) return '精通';
+    return '第 ' + box + ' 盒';
+  }
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function jsStrAttr(s) {
+    return "'" + String(s)
+      .replace(/\\/g, '\\\\').replace(/'/g, "\\'")
+      .replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+      .replace(/</g, '&lt;').replace(/>/g, '&gt;') + "'";
+  }
+  function renderSections() {
+    var host = document.getElementById('worddexSections');
+    if (!host) return;
+    var t = today();
+    var html = '';
+    for (var li = 0; li < LEVELS.length; li++) {
+      var lv = LEVELS[li];
+      var ws = levelWords(lv);
+      if (!ws.length) continue;
+      html += '<div class="worddex-section"><div class="worddex-section-title">' + escapeHtml(LEVEL_LABEL[lv]) + '</div><div class="worddex-grid">';
+      for (var wi = 0; wi < ws.length; wi++) {
+        var w = ws[wi];
+        var id = wordId(lv, w.word);
+        var c = card(id);
+        var box = peakOf(c);                                  // 視覺高水位（只增不減）
+        var boxClass = Math.min(box, 5);                      // CSS box0..box5
+        var due = !!(c && c.lit && c.status !== 'new' && c.dueDate && c.dueDate <= t);
+        html += '<div class="worddex-card box' + boxClass + (due ? ' due' : '') + '" role="button" tabindex="0"' +
+          ' onclick="Worddex.openFocus(\'' + lv + '\',' + jsStrAttr(w.word) + ')"' +
+          ' onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();Worddex.openFocus(\'' + lv + '\',' + jsStrAttr(w.word) + ');}">' +
+          '<span class="wd-emoji">' + escapeHtml(w.emoji || '📖') + '</span>' +
+          '<span class="wd-word">' + escapeHtml(w.word) + '</span>' +
+          '<span class="wd-glyph">' + glyph(box) + (due ? ' <span class="wd-due">🔵</span>' : '') + '</span>' +
+          '<span class="wd-state">' + stateText(box) + '</span>' +
+          '</div>';
+      }
+      html += '</div></div>';
+    }
+    host.innerHTML = html;
+  }
+  function renderSummary() {
+    var el = document.getElementById('worddexSummary');
+    if (!el) return;
+    var lit = litCount(), mastered = masteredCount(), due = dueCount(), total = totalCount();
+    el.innerHTML = '已收集 <b>' + lit + '</b> / ' + total + '　·　精通 <b>' + mastered + '</b> 個　·　' +
+      (due > 0 ? '今天有 <b>' + due + '</b> 個字想跟你打招呼 🔵' : '今天都複習完了');
+  }
+  function updateDueDesc() {
+    var el = document.getElementById('worddexDueDesc');
+    if (!el) return;
+    var due = dueCount();
+    el.textContent = due > 0 ? ('今天有 ' + due + ' 個字要複習') : '今天複習完了，明天見！';
+  }
+
+  function openScreen() {
+    var area = document.getElementById('worddexArea');
+    var pc = document.querySelector('.play-column');
+    if (pc) pc.classList.add('hidden');
+    if (area) area.classList.remove('hidden');
+    renderSections(); renderSummary(); updateDueDesc();
+  }
+  function closeScreen() {
+    var area = document.getElementById('worddexArea');
+    var pc = document.querySelector('.play-column');
+    if (area) area.classList.add('hidden');
+    if (pc) pc.classList.remove('hidden');
+  }
+
+  function openFocus(level, word) {
+    var id = wordId(level, word);
+    var rec = idx()[id];
+    var wObj = rec ? rec.word : null;
+    var c = card(id);
+    var box = peakOf(c);
+    var t = today();
+    var status;
+    if (!box) status = '還沒收集，練一次就會亮起來 ✨';
+    else if (box >= 5) status = '已經精通囉！ 🌟';
+    else status = '目前收在第 ' + box + ' 盒';
+    var when = '';
+    if (c && c.lit && c.status !== 'new' && c.dueDate) {
+      if (c.dueDate <= t) when = '今天適合複習 🔵';
+      else when = '下次複習日：' + c.dueDate;
+    }
+    var body = document.getElementById('worddexFocusBody');
+    if (body) {
+      body.innerHTML =
+        '<div class="worddex-focus-emoji">' + escapeHtml(wObj && wObj.emoji || '📖') + '</div>' +
+        '<div class="worddex-focus-word">' + escapeHtml(word) + '</div>' +
+        '<div class="worddex-focus-cn">' + escapeHtml(wObj && wObj.chinese || '') + '</div>' +
+        '<div class="worddex-focus-meta">' + status + (when ? ('<br>' + when) : '') +
+          '<br>答對 ' + (c ? (c.timesCorrect || 0) : 0) + ' 次</div>' +
+        '<button class="worddex-focus-practice" onclick="Worddex.startFocus(\'' + level + '\',' + jsStrAttr(word) + ')">✏️ 練這個字</button>';
+    }
+    var o = document.getElementById('worddexFocusOverlay');
+    if (o) o.hidden = false;
+  }
+  function closeFocus() {
+    var o = document.getElementById('worddexFocusOverlay');
+    if (o) o.hidden = true;
+  }
+
+  // ---- 複習 / 單字聚焦（重用既有 flashcard/quiz 流程） ----
+  function startReview() {
+    closeFocus();
+    var q = buildQueue();
+    if (!q.length) {
+      try { if (window.Game && window.Game.showToast) window.Game.showToast('今天都複習完了，明天見！', 'success'); } catch (e) {}
+      return;
+    }
+    closeScreen();
+    if (typeof window.startWorddexReview === 'function') window.startWorddexReview(q);
+  }
+  function startFocus(level, word) {
+    closeFocus();
+    var rec = idx()[wordId(level, word)];
+    if (!rec) return;
+    var w = rec.word; w._lvl = rec.level;
+    closeScreen();
+    if (typeof window.startWorddexReview === 'function') window.startWorddexReview([w]);
+  }
+
+  window.Worddex = {
+    rate: rate,
+    gradeBinary: gradeBinary,
+    onWord: gradeBinary,   // 向後相容別名（二元）
+    openScreen: openScreen,
+    closeScreen: closeScreen,
+    openFocus: openFocus,
+    closeFocus: closeFocus,
+    startReview: startReview,
+    startFocus: startFocus,
+    buildQueue: buildQueue,
+    dueCount: dueCount
+  };
+
+  updateDueDesc();
+})();
+</script>
+</body>
+</html>

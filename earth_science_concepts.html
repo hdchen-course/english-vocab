@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>地球科學觀念養成 🌍</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<link rel="stylesheet" href="concept.css">
+<script src="game_core.js"></script>
+<style>:root{ --su:#0369a1; --su-tint:rgba(3,105,161,0.14); }</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">地球科學觀念養成 🌍</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="cn-screen active cn-wrap">
+    <div class="cn-topbar"><span class="cn-title">地球科學觀念養成 🌍</span></div>
+    <div class="cn-hello"><span class="cn-mascot" aria-hidden="true">🌍</span>
+      <div><div class="cn-htext" id="hello">晝夜、四季、水循環、月相——用圖看懂地球和天空的規律。</div>
+      <div class="cn-hsub">每個觀念都是「教一小段 → 馬上練習」，慢慢來。</div></div></div>
+    <div class="cn-lessons" id="lesson-list"></div>
+    <a class="cn-nextup" href="earth_science.html" style="display:flex;align-items:center;gap:12px;margin-top:16px;padding:14px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:26px;flex:none" aria-hidden="true">🚀</span><span>想要更多、更有挑戰的內容嗎？到「地球與太空探索」繼續探索 →</span></a>
+    <p class="cn-note">這裡是「先學觀念」的教學小旅程，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
+  </section>
+  <section id="screen-play" class="cn-screen cn-wrap">
+    <div class="cn-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="cn-title" id="play-title">觀念</span></div>
+    <div class="cn-progress" id="prog" aria-hidden="true"></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+// ---- 地科專用 SVG 概念圖（文字 currentColor = --ink；結構線 currentColor 主題自適應）----
+// 晝夜：太陽在左，地球半亮半暗（面向太陽=白天）
+function dayNight(){
+  var s='<svg viewBox="0 0 270 150" role="img" aria-label="地球面向太陽的一側是白天，背對的一側是晚上">';
+  // 太陽
+  s+='<circle cx="34" cy="75" r="22" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/>';
+  for(var a=0;a<8;a++){ var r=a*Math.PI/4, x1=34+26*Math.cos(r), y1=75+26*Math.sin(r), x2=34+34*Math.cos(r), y2=75+34*Math.sin(r); s+='<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="#f59e0b" stroke-width="2"/>'; }
+  s+='<text x="34" y="120" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">太陽</text>';
+  // 地球：整顆先畫白天色，再用右半（背對太陽）覆蓋夜色
+  var ex=190, ey=75, er=42;
+  s+='<circle cx="'+ex+'" cy="'+ey+'" r="'+er+'" fill="#bae6fd" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+='<path d="M'+ex+' '+(ey-er)+' A'+er+' '+er+' 0 0 1 '+ex+' '+(ey+er)+' Z" fill="rgba(15,23,42,0.86)"/>';
+  s+='<text x="'+(ex-20)+'" y="'+(ey+4)+'" text-anchor="middle" font-size="12" font-weight="800" fill="#0f172a">白天</text>';
+  s+='<text x="'+(ex+21)+'" y="'+(ey+4)+'" text-anchor="middle" font-size="12" font-weight="800" fill="#e2e8f0">晚上</text>';
+  // 自轉箭頭
+  s+='<path d="M'+(ex-14)+' '+(ey-er-8)+' A 18 10 0 1 1 '+(ex+16)+' '+(ey-er-8)+'" fill="none" stroke="#0369a1" stroke-width="2.5"/><polygon points="'+(ex+16)+','+(ey-er-8)+' '+(ex+9)+','+(ey-er-13)+' '+(ex+11)+','+(ey-er-2)+'" fill="#0369a1"/>';
+  s+='<text x="'+ex+'" y="'+(ey+er+22)+'" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">地球自轉一圈 = 一天</text>';
+  return s+'</svg>';
+}
+// 公轉：地球沿虛線橢圓繞太陽一圈
+function revolution(){
+  var s='<svg viewBox="0 0 260 160" role="img" aria-label="地球沿軌道繞太陽公轉一圈約一年">';
+  s+='<ellipse cx="130" cy="80" rx="105" ry="58" fill="none" stroke="currentColor" stroke-opacity="0.45" stroke-width="2" stroke-dasharray="5 4"/>';
+  s+='<text x="130" y="84" text-anchor="middle" font-size="26">☀️</text>';
+  s+='<text x="130" y="104" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">太陽</text>';
+  s+='<text x="232" y="86" text-anchor="middle" font-size="24">🌍</text>';
+  // 公轉方向箭頭（逆時針示意）
+  s+='<polygon points="232,52 226,60 238,61" fill="#0369a1"/>';
+  s+='<text x="130" y="150" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">繞太陽一圈 = 一年（公轉）</text>';
+  return s+'</svg>';
+}
+// 四季：地軸恆斜向同一方向；同半球一邊朝太陽(夏)、另一邊背太陽(冬)，兩邊離太陽差不多遠
+function seasonTilt(){
+  var s='<svg viewBox="0 0 300 168" role="img" aria-label="地軸是斜的，繞太陽時同一半球有時朝太陽是夏天、陽光較直，有時背對是冬天、陽光較斜；兩邊離太陽差不多遠">';
+  s+='<ellipse cx="150" cy="80" rx="120" ry="60" fill="none" stroke="currentColor" stroke-opacity="0.4" stroke-width="1.5" stroke-dasharray="5 4"/>';
+  s+='<circle cx="150" cy="80" r="19" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/><text x="150" y="86" text-anchor="middle" font-size="16">☀️</text>';
+  s+='<line x1="131" y1="78" x2="62" y2="80" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3 3"/>';
+  s+='<line x1="169" y1="78" x2="238" y2="80" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3 3"/>';
+  [[42,'夏天','這半球朝太陽'],[258,'冬天','這半球背太陽']].forEach(function(e){
+    var ex=e[0], ey=80, r=17;
+    s+='<circle cx="'+ex+'" cy="'+ey+'" r="'+r+'" fill="rgba(56,189,248,0.5)" stroke="currentColor" stroke-opacity="0.6" stroke-width="1.5"/>';
+    s+='<line x1="'+(ex+8)+'" y1="'+(ey-r-7)+'" x2="'+(ex-8)+'" y2="'+(ey+r+7)+'" stroke="#dc2626" stroke-width="2.5"/>';
+    s+='<text x="'+ex+'" y="'+(ey+r+22)+'" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">'+e[1]+'</text>';
+    s+='<text x="'+ex+'" y="'+(ey+r+37)+'" text-anchor="middle" font-size="11" fill="currentColor">'+e[2]+'</text>';
+  });
+  s+='<text x="150" y="30" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">紅線 = 地軸（一直斜向同一邊）</text>';
+  return s+'</svg>';
+}
+// 水循環：太陽曬海→蒸發上升→凝結成雲→降水→回到海
+function waterCycle(){
+  var s='<svg viewBox="0 0 280 170" role="img" aria-label="水循環：海水蒸發上升、凝結成雲、下雨降回地面流回海">';
+  s+='<text x="30" y="34" text-anchor="middle" font-size="24">☀️</text>';
+  s+='<text x="212" y="40" text-anchor="middle" font-size="30">☁️</text>';
+  // 海
+  s+='<rect x="10" y="128" width="260" height="34" rx="6" fill="#0369a1" stroke="currentColor" stroke-opacity="0.5" stroke-width="1.5"/>';
+  s+='<text x="55" y="150" text-anchor="middle" font-size="12" font-weight="800" fill="#f0f9ff">海洋</text>';
+  // 蒸發（左，往上）
+  s+='<line x1="70" y1="126" x2="150" y2="52" stroke="#0891b2" stroke-width="2.5"/><polygon points="150,52 150,62 159,55" fill="#0891b2"/>';
+  s+='<text x="86" y="96" font-size="11" font-weight="800" fill="currentColor">蒸發 ↑</text>';
+  // 降水（右，往下）
+  s+='<line x1="212" y1="58" x2="212" y2="124" stroke="#2563eb" stroke-width="2.5"/><polygon points="212,124 206,114 218,114" fill="#2563eb"/>';
+  s+='<text x="238" y="96" font-size="11" font-weight="800" fill="currentColor">降水 ↓</text>';
+  s+='<text x="140" y="20" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">水一直循環，用不完</text>';
+  return s+'</svg>';
+}
+// 月相：新月→上弦→滿月→下弦
+function moonPhases(){
+  var data=[['新月',0],['上弦（右半亮）',1],['滿月',2],['下弦（左半亮）',3]];
+  var s='<svg viewBox="0 0 280 96" role="img" aria-label="月相變化：新月、上弦月、滿月、下弦月">';
+  data.forEach(function(d,i){
+    var cx=42+i*66, cy=40, r=24;
+    s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="rgba(30,41,59,0.72)" stroke="currentColor" stroke-opacity="0.5" stroke-width="1.5"/>';
+    if(d[1]===2){ s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="#fde68a"/>'; }
+    else if(d[1]===1){ s+='<path d="M'+cx+' '+(cy-r)+' A'+r+' '+r+' 0 0 1 '+cx+' '+(cy+r)+' Z" fill="#fde68a"/>'; }
+    else if(d[1]===3){ s+='<path d="M'+cx+' '+(cy-r)+' A'+r+' '+r+' 0 0 0 '+cx+' '+(cy+r)+' Z" fill="#fde68a"/>'; }
+    s+='<text x="'+cx+'" y="'+(cy+r+18)+'" text-anchor="middle" font-size="10.5" font-weight="800" fill="currentColor">'+d[0]+'</text>';
+  });
+  return s+'</svg>';
+}
+
+window.CONCEPT = {
+  progKey:'earth_science_concepts_v1', practiceHref:'earth_science.html',
+  lessons:[
+   { id:'daynight', name:'白天和晚上', emoji:'🌗', color:'#0369a1', sub:'地球自轉造成晝夜', done:'記得：地球自己轉（自轉）一圈是一天；面向太陽的那面是白天，背對的那面是晚上。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'地球自己在轉',svg:dayNight(),text:'地球像陀螺一樣<b>自己轉</b>，叫<b>自轉</b>。面向太陽的那一面照到光，是<b>白天</b>；背對太陽的那一面照不到，是<b>晚上</b>。'},
+      {type:'teach',kicker:'多久一圈',title:'自轉一圈 = 一天',svg:dayNight(),text:'地球自轉<b>一圈大約 24 小時</b>，也就是<b>一天</b>。所以白天和晚上會<b>輪流出現</b>。（不是太陽繞著地球跑，是地球自己在轉。）'},
+      {type:'quiz',kicker:'換你試試',title:'為什麼會有白天和晚上？',options:['地球自轉，面向太陽是白天、背對是晚上','太陽自己會開燈和關燈','月亮把太陽遮住','地球離太陽忽遠忽近'],answer:0,why:'地球自轉時，面向太陽的一面是白天、背對的一面是晚上，輪流交替。'},
+      {type:'quiz',kicker:'想一想',title:'地球自轉一圈大約是多久？',options:['一天（約 24 小時）','一年','一個月','一小時'],answer:0,why:'地球自轉一圈約 24 小時，就是一天。'}
+     ]},
+   { id:'year', name:'一年與四季', emoji:'🍂', color:'#16a34a', sub:'地球繞太陽公轉', done:'記得：地球繞太陽一圈（公轉）約一年；四季是因為地軸「斜斜的」，不是因為離太陽比較遠或近。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'地球繞著太陽走',svg:revolution(),text:'地球一邊自轉，還一邊<b>繞著太陽轉一大圈</b>，這叫<b>公轉</b>。繞完一圈大約是<b>一年</b>（365 天）。'},
+      {type:'teach',kicker:'為什麼有四季',title:'因為地球「斜斜的」轉',svg:seasonTilt(),text:'地球是<b>斜著</b>轉的（紅線是地軸，一直斜向同一邊）。同一個地方，有時<b>朝向</b>太陽、陽光照得比較<b>直</b>（熱，夏天）；半年後轉到另一邊，<b>背對</b>太陽、陽光比較<b>斜</b>（涼，冬天）。<b>兩邊離太陽差不多遠</b>——四季<b>不是</b>因為離太陽比較遠或比較近喔！'},
+      {type:'quiz',kicker:'換你試試',title:'地球繞太陽公轉一圈大約是多久？',options:['一年','一天','一個月','一星期'],answer:0,why:'地球繞太陽公轉一圈約 365 天，就是一年。'},
+      {type:'quiz',kicker:'想一想',title:'為什麼會有春夏秋冬四季？',svg:seasonTilt(),options:['因為地軸是斜的，陽光照射的角度不同','因為地球離太陽忽遠忽近','因為太陽會變大變小','因為月亮擋住太陽'],answer:0,why:'四季是地軸傾斜、陽光照射角度不同造成的，不是因為地球離太陽的遠近。'}
+     ]},
+   { id:'water', name:'水循環', emoji:'💧', color:'#0891b2', sub:'水在天地間繞圈圈', done:'記得：太陽曬海→水蒸發上升→高空變冷凝結成雲→下雨（降水）→流回海洋，一直循環。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'水會「跑上天」再回來',svg:waterCycle(),text:'太陽曬熱海水和地面的水，水就變成看不見的<b>水蒸氣往上升</b>（<b>蒸發</b>）。升到高空變冷，<b>凝結</b>成小水滴，聚成<b>雲</b>。'},
+      {type:'teach',kicker:'再回到地面',title:'變成雨再回到海',svg:waterCycle(),text:'雲裡的水滴越聚越大，就掉下來變成<b>雨或雪</b>（<b>降水</b>），流進河流、回到<b>海洋</b>。然後又被曬蒸發……<b>一直循環</b>，所以地球的水用不完。'},
+      {type:'quiz',kicker:'換你試試',title:'海水被太陽曬，變成水蒸氣往上升，這叫什麼？',options:['蒸發','降水','結冰','凝結成雲'],answer:0,why:'水受熱變成水蒸氣往上升，叫做蒸發。'},
+      {type:'quiz',kicker:'想一想',title:'水循環大致的順序是？',options:['蒸發 → 凝結成雲 → 降水 → 流回海洋','降水 → 蒸發 → 結冰 → 融化','下雨 → 太陽消失 → 海水變少','雲 → 太陽 → 星星 → 月亮'],answer:0,why:'水從海洋蒸發上升、凝結成雲、降水落下、再流回海洋，週而復始。'}
+     ]},
+   { id:'moon', name:'月亮的變化', emoji:'🌙', color:'#f59e0b', sub:'月相為什麼會變', done:'記得：月亮自己不發光，是反射太陽光；它繞地球一圈約一個月，我們看到被照亮的部分不同，就有了新月、滿月等變化。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'月亮自己不會發光',svg:moonPhases(),text:'月亮<b>自己不會發光</b>，我們看到的月光其實是它<b>反射太陽的光</b>。月亮繞地球轉，我們看到<b>被照亮的部分多少不同</b>，形狀就跟著變。'},
+      {type:'teach',kicker:'一個月一循環',title:'新月 → 滿月 → 又回新月',svg:moonPhases(),text:'月亮繞地球一圈大約<b>一個月</b>。形狀會規律變化：看不到的<b>新月</b> → 半邊亮的<b>上弦月</b> → 圓圓的<b>滿月</b> → 半邊亮的<b>下弦月</b>，再回到新月。（這是因為我們看到<b>被太陽照亮</b>的部分多少不同，<b>不是</b>地球的影子擋住月亮喔——那是「月食」，不一樣。）'},
+      {type:'quiz',kicker:'換你試試',title:'月亮的光是哪裡來的？',options:['反射太陽的光','月亮自己發光','星星照給它的','地球照給它的'],answer:0,why:'月亮自己不發光，我們看到的是它反射太陽的光。'},
+      {type:'quiz',kicker:'想一想',title:'月亮繞地球一圈、月相變化一輪大約是多久？',options:['大約一個月','大約一天','大約一年','大約一小時'],answer:0,why:'月亮繞地球一圈約一個月，所以月相大約一個月變化一輪。'}
+     ]}
+  ]
+};
+</script>
+<script src="concept_engine.js"></script>
+</body>
+</html>

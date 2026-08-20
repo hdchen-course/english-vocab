@@ -1,0 +1,1269 @@
+/* =====================================================================
+ * assets/app.css — 公館國小電子書 共用設計 token 層（BLUEPRINT.md §5.6）
+ * ---------------------------------------------------------------------
+ * 14 頁共用：所有寬度/間距/字級用 CSS 變數，不再各頁散寫 px。
+ * Mobile-first，min-width 斷點於 600 / 1024（§5.2）。
+ * 觸控目標為 9–10 歲手指放大（§5.5）；無障礙（§5.7）。
+ * 無框架、無外部網路依賴（字體 fallback 到系統字型）。
+ * ===================================================================== */
+
+/* 全站 [hidden] 防護：確保任何帶 hidden 屬性的元素都「真的」隱藏。部分浮層/卡片用
+ * class 的 display:flex，其特異度會蓋過 UA 的 [hidden]{display:none}，造成「隱形但仍可
+ * 鍵盤/讀屏聚焦的對話框」或「新使用者看到的空白死連結卡」。用 !important 統一還原。 */
+[hidden] { display: none !important; }
+
+/* ------------------------------------------------------------ TOKENS */
+:root {
+  /* 背景 / 卡片（沿用品牌）
+   * 眼科實證：大面積不用純白（減眩光），改暖奶油白（低色溫、不偏藍），
+   * 頁面較卡片再暗一階，讓內容自然浮起而非發亮刺眼。 */
+  --bg: #FAF6EE;          /* L≈0.924 暖奶油頁面（原冷藍漸層，去除螢幕藍光眩光） */
+  --card: #FDFAF3;        /* L≈0.957 柔和暖白卡片（ink 對比 12.4:1） */
+  --card-border: #e8f0fe;
+
+  /* 品牌 */
+  --c-primary: #0984e3;
+  --c-primary-soft: #74b9ff;
+  --c-focus: #0b6bb5;  /* 鍵盤焦點環專用：對 card/bg ≈4.9:1，達非文字對比 3:1（原 --c-primary-soft #74b9ff 僅 1.99:1 看不見） */
+
+  /* 科目色（§5.6） */
+  --c-math: #6c5ce7;
+  --c-math-soft: #a29bfe;
+  --c-english: #00b894;
+  --c-chinese: #fdcb6e;
+  --c-social: #e17055;   /* 台灣土色赭紅 */
+  --c-finance: #00cec9;  /* 理財與經濟（第 6 科，§6.5） */
+
+  /* 語意色 */
+  --c-correct: #00b894;
+  --c-wrong: #ff7675;
+  --c-warn: #fdcb6e;
+  --ink: #33312E;         /* 暖炭黑（非純黑，避免發光螢幕 halation）12.4:1 on card */
+  --ink-soft: #6B6459;    /* 次要文字 5.6:1 on card（≥16px 仍過 AA） */
+
+  /* 遊戲化 */
+  --c-xp: #0984e3;
+  --c-streak: #ff7675;
+  --c-coin: #fdcb6e;
+  --c-star: #fdcb6e;
+
+  /* ---- 「on-surface ink」文字變體（WCAG AA 用色，§5.7）----------------
+   * 亮色 accent 直接當「文字/chip 標籤/HUD 標籤」用時多半只到 3:1（小字不過
+   * AA）。以下為各 accent 的加深版，在亮色 --card(#FDFAF3) 上皆 ≥4.5:1，
+   * 供 chip 文字、HUD 標籤、連結、back-link 等「文字」情境使用；亮色原
+   * accent 僅保留給大面積填色/邊框/圖示。暗色主題另有覆寫（見下）。 */
+  --c-primary-ink: #0b6bb5;  /* on light card 5.32:1 */
+  --c-english-ink: #07775c;  /* on white 5.52:1；疊在 tint-english 淺綠底(如 .btn-know 靜置態)仍 4.67:1，越過 AA 4.5（原 #087a5f 疊淺綠底僅 4.49） */
+  --c-correct-ink: #07775c;  /* 「已完成/已精通」狀態文字用深綠，與 --c-english-ink 同一品牌綠；on white 5.52:1（原 --c-correct=#00b894 僅 2.35:1 未達 AA） */
+  --c-math-ink:    #5a4bd4;  /* 5.94:1 */
+  --c-chinese-ink: #8f6200;  /* 5.15:1 */
+  --c-social-ink:  #ad4527;  /* on card 5.51:1；on tint 4.98:1 */
+  --c-finance-ink: #00756c;  /* on card 5.36:1；on tint 4.96:1 */
+  --c-streak-ink:  #c62828;  /* on bg 5.22:1；on card 5.39:1（原 #cf3b3b 於 --bg 僅 4.49:1 未達 AA） */
+  --c-coin-ink:    #8f6200;  /* 5.15:1 */
+
+  /* ---- 實心按鈕填色 token（白字需 ≥4.5:1，§5.7）--------------------
+   * 亮色主題：加深藍當填色，配白字（5.2–5.5:1）。
+   * --on-accent 為實心 accent 鈕上的文字色（亮色用白、暗色改深墨）。 */
+  --c-primary-btn:  #0b6bb5;  /* white on fill 5.55:1 */
+  --c-primary-btn2: #0a6fbf;  /* 漸層尾色，white 5.20:1 */
+  --c-english-btn:  #087a5f;  /* 英文科實心鈕/選中態填色，white on fill 5.09:1 */
+  --c-correct-btn:  #087a5f;  /* 「作答正確」實心鈕填色，white on fill 5.09:1（原 --c-correct #00b894 白字僅 2.54:1）*/
+  --c-wrong-btn:    #c62828;  /* 「作答錯誤」實心鈕填色，white on fill 5.71:1（原 --c-wrong #ff7675 白字僅 2.59:1）*/
+  --on-accent: #ffffff;
+
+  /* 「恆亮填色」上的文字色（黃/金、亮綠等在亮暗兩主題都偏亮的填色，例如
+   * 徽章/每日 toast）。這類填色兩主題皆為淺色，文字必須「永遠」用深墨、
+   * 不可隨主題翻白，故此 token 刻意不在暗色主題覆寫。deep ink on 黃/金/亮綠
+   * 皆 ≥7:1。 */
+  --on-bright: #241E17;
+
+  /* accent 10% tint chip 底色 */
+  --tint-primary: rgba(9, 132, 227, 0.1);
+  --tint-math: rgba(108, 92, 231, 0.1);
+  --tint-english: rgba(0, 184, 148, 0.1);
+  --tint-chinese: rgba(253, 203, 110, 0.14);
+  --tint-social: rgba(225, 112, 85, 0.1);
+  --tint-finance: rgba(0, 206, 201, 0.1);
+  --tint-science: rgba(22, 163, 74, 0.1);   /* 自然科(物理/化學/生物/地科)專屬葉綠色票，與英文薄荷綠區隔 */
+
+  /* 字體 */
+  --font: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', 'Noto Sans TC', sans-serif;
+  --fs-h1: clamp(24px, 5vw, 40px);
+  --fs-h2: clamp(18px, 3.5vw, 24px);
+  --fs-body: clamp(16px, 2.6vw, 18px);   /* 實證建議 18px（近距離、發育中視力）；地板拉到 16px */
+  --fs-small: clamp(13px, 2vw, 14px);
+
+  /* 間距 / 圓角 / 陰影 */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --r-sm: 14px;
+  --r-md: 20px;
+  --r-lg: 24px;
+  --shadow-sm: 0 2px 8px rgba(45, 52, 54, 0.08);
+  --shadow-lg: 0 8px 24px rgba(45, 52, 54, 0.16);
+
+  /* 佈局 / 觸控 */
+  --content-max: 720px;   /* 手機。≥1024→1200；≥1280→隨視窗自動長大(近滿版) */
+  --tap-min: 48px;
+
+  /* 共用頂部應用列（.app-bar）— 全站唯一的「回首頁 + 主題切換」頂部 chrome。
+   * --app-bar-h 是內容列高（不含 iOS 瀏海安全區）；game_core 注入的 HUD 會
+   * 引用此值，停靠在 app-bar 正下方（見 game_core.css .game-hud--docked）。 */
+  --app-bar-h: 56px;
+  --app-bar-z: 90;        /* 高於頁面內容與 game HUD，低於 sheet/toast/bottom-nav 覆蓋層 */
+}
+
+/* ≥1024px：iPad 儀表板模式，內容更寬（§5.2） */
+@media (min-width: 1024px) {
+  :root { --content-max: 1200px; }
+}
+/* ≥1280px：桌機 / 大螢幕。容器寬度隨視窗「自動長大」（近滿版，兩側留邊界），
+   選單卡片 grid（auto-fit）會自動加欄填滿寬螢幕；閱讀/答題欄仍由 .play-column
+   與 ch 上限維持窄欄護眼——好的設計在任何裝置上都好看（使用者 2026-08-16）。 */
+@media (min-width: 1280px) {
+  :root { --content-max: min(95vw, 1800px); }
+}
+
+/* 固定亮色系（GitBook 風、視覺輕鬆、不加重眼睛負擔）。
+ * 刻意「不」跟隨系統深色模式：給小學生的學習 App，柔和亮底才是品牌；
+ * 自動變黑會讓整頁發暗、不討喜。color-scheme: light 也避免瀏覽器把
+ * 表單元件/捲軸自動染黑。 */
+:root { color-scheme: light; }
+
+/* --------------------------------------------------- DARK MODE（可切換）
+ * 預設仍是亮色；只有當使用者「明確」在 App 內開啟夜間模式、於 <html> 加上
+ * data-theme="dark" 時才套用（不跟隨系統 prefers-color-scheme，避免自動變黑）。
+ * 眼科實證取向：暖低色溫背景（非純黑）＋暖偏白文字（非純白），降低藍光與
+ * halation；對比落在舒適的 10–15:1 帶（非最大 21:1），減少發育中視力在暗房
+ * 近距離閱讀的疲勞。所有配對皆過 WCAG AA。 */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* 表面 / 文字 / 邊框 */
+  --bg: #241E17;          /* 暖炭底（hue≈34° 棕）非 #000；卡片浮於其上 */
+  --card: #2F2820;        /* 較底再亮一階、同暖色相 */
+  --card-border: #443A31; /* 暖色低對比髮絲線（去除冷藍邊） */
+  --ink: #EAE2D4;         /* 暖偏白（非 #fff）ink/bg≈12.8:1 */
+  --ink-soft: #B6AC98;    /* 暖灰褐次要文字 ≥4.5:1 AA */
+
+  /* 品牌 / 連結（提亮＋降飽和） */
+  --c-primary: #63B2EE;
+  --c-primary-soft: #8AC6F5;
+  --c-focus: #8AC6F5;  /* 暗色焦點環：對深底 ≈9:1 */
+
+  /* 語意色（提亮版） */
+  --c-correct: #42D3AA;
+  --c-wrong: #FF908D;
+  --c-warn: #F2CD79;
+
+  /* 科目色（提亮＋降飽和；英/國語沿用語意色的提亮值） */
+  --c-english: #42D3AA;
+  --c-math-soft: #A29BFE;
+  --c-chinese: #F2CD79;
+  --c-social: #F0967D;
+  --c-finance: #3FD8D3;
+
+  /* 遊戲化 */
+  --c-xp: #63B2EE;
+  --c-streak: #FF908D;
+  --c-coin: #F2CD79;
+  --c-star: #F2CD79;
+
+  /* on-surface ink（暗色）：提亮 token 在暗色 --card(#2F2820) 上已 ≥5.9:1，
+   * 直接沿用即可當文字/chip 標籤/HUD 標籤色。 */
+  --c-primary-ink: #63B2EE;  /* on dark card 6.32:1 */
+  --c-english-ink: #42D3AA;  /* 7.70:1 */
+  --c-correct-ink: #42D3AA;  /* 暗色沿用提亮綠，on dark card 7.70:1 */
+  --c-math-ink:    #A29BFE;  /* 5.99:1 */
+  --c-chinese-ink: #F2CD79;  /* 9.54:1 */
+  --c-social-ink:  #F0967D;  /* 6.48:1 */
+  --c-finance-ink: #3FD8D3;  /* 8.29:1 */
+  --c-streak-ink:  #FF908D;  /* 6.66:1 */
+  --c-coin-ink:    #F2CD79;  /* 9.54:1 */
+
+  /* 實心按鈕：暗色改用「亮填色 + 深墨字」，深墨字對亮藍 7.2–9.0:1。 */
+  --c-primary-btn:  #63B2EE;
+  --c-primary-btn2: #8AC6F5;
+  --c-english-btn:  #42D3AA;  /* 暗色英文科實心鈕：亮填色配深墨字 --on-accent ≥7:1 */
+  --c-correct-btn:  #42D3AA;  /* 暗色「作答正確」實心鈕：亮綠填色配深墨字 --on-accent 8.7:1 */
+  --c-wrong-btn:    #FF908D;  /* 暗色「作答錯誤」實心鈕：亮紅填色配深墨字 --on-accent 6.0:1 */
+  --on-accent: #241E17;      /* 深墨字（= 暗色頁面底）on bright fill 7.17–9.01:1 */
+
+  /* 大面積裝飾底：暗場用約 10–14% 提亮色 tint（非全飽和色塊，避免眩光），
+   * 文字則用上面的提亮 token。 */
+  --tint-primary: rgba(99, 178, 238, 0.12);
+  --tint-math: rgba(162, 155, 254, 0.14);
+  --tint-english: rgba(66, 211, 170, 0.12);
+  --tint-chinese: rgba(242, 205, 121, 0.15);
+  --tint-social: rgba(240, 160, 130, 0.14);
+  --tint-finance: rgba(80, 220, 215, 0.14);
+  --tint-science: rgba(74, 222, 128, 0.14);   /* 自然科暗色葉綠票 */
+}
+
+/* chip 文字/HUD 標籤/連結一律走 -ink 文字變體（見 :root 的 on-surface ink），
+ * 亮/暗兩主題皆已 ≥4.5:1，故不再需要各別硬碼 chip 覆寫。 */
+
+/* --------------------------------------------------------- BASE / RESET */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  line-height: 1.6;                    /* 寬鬆行距助回掃、CJK 密集字形（實證 1.6） */
+  color: var(--ink);
+  background: var(--bg);
+  background-attachment: fixed;
+  min-height: 100vh;
+  min-height: 100svh;                 /* iOS Safari 工具列（§5.2；含 vh fallback） */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { line-height: 1.3; margin: 0 0 var(--s3); }
+h1 { font-size: var(--fs-h1); font-weight: 800; }
+h2 { font-size: var(--fs-h2); font-weight: 800; }
+h3 { font-size: var(--fs-body); font-weight: 700; }
+
+a { color: var(--c-primary-ink); }
+
+/* 可見焦點環（§5.7） */
+:focus-visible {
+  outline: 3px solid var(--c-focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* -------------------------------------------------------------- SHELL */
+/* 內容置中容器；套 --content-max（§5.2） */
+.shell {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding: var(--s4);
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--s6));
+}
+
+/* 執行中的練習互動欄限寬，避免在 iPad 上追很長的行（§5.2） */
+.play-column { width: min(680px, 100%); margin-inline: auto; }
+
+/* iPad 儀表板：主欄 + 常駐 aside（§5.4） */
+@media (min-width: 1024px) {
+  .dashboard {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: var(--s5);
+    align-items: start;
+  }
+  .dashboard .aside { position: sticky; top: var(--s4); }
+}
+
+/* 自動生成 1/2/3–4 欄卡片 grid（§5.2） */
+.grid-auto {
+  display: grid;
+  gap: var(--s3);
+  /* 每列一張、整條填滿:橫向列式卡片(圖示+標題+說明+箭頭)最適合整寬顯示,
+     說明一行放得下、每張等寬、無右側空白,桌機與手機一致。 */
+  grid-template-columns: 1fr;
+}
+
+/* ---------------------------------------------------------- COMPONENTS */
+
+/* .card */
+.card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-md);
+  padding: var(--s4);
+  box-shadow: var(--shadow-sm);
+}
+
+/* .btn / .btn-primary（§5.5 觸控放大） */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s2);
+  min-height: var(--tap-min);
+  padding: 12px 20px;
+  border: 2px solid var(--card-border);
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: clamp(15px, 3vw, 17px);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.2s ease, background 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active { transform: scale(0.96); }
+
+.btn-primary {
+  min-height: 56px;
+  border-color: transparent;
+  /* 白字需 ≥4.5:1：亮色用加深藍填色配白字（5.2–5.5:1）；暗色改亮填色 +
+   * 深墨字（--on-accent，7.2–9.0:1）。填色與文字色皆由 token 依主題切換。 */
+  background: linear-gradient(135deg, var(--c-primary-btn), var(--c-primary-btn2));
+  color: var(--on-accent);
+  font-size: clamp(17px, 4.5vw, 20px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* 主要答題鈕：手機全寬（16px 側邊留白由 shell padding 提供） */
+.btn-block { width: 100%; }
+
+/* Icon-only 控制湊到 48px 命中區（§5.5） */
+.btn-icon {
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  padding: 12px;
+  border-radius: 14px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* .chip */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--tint-primary);
+  color: var(--c-primary-ink);   /* 文字走 -ink 變體，tint 底維持亮色 */
+  font-size: var(--fs-small);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.chip-math { background: var(--tint-math); color: var(--c-math-ink); }
+.chip-english { background: var(--tint-english); color: var(--c-english-ink); }
+.chip-chinese { background: var(--tint-chinese); color: var(--c-chinese-ink); }
+.chip-social { background: var(--tint-social); color: var(--c-social-ink); }
+.chip-finance { background: var(--tint-finance); color: var(--c-finance-ink); }
+
+/* .progress-ring（SVG-based；容器提供尺寸變數 --ring-size） */
+.progress-ring {
+  position: relative;
+  width: var(--ring-size, 64px);
+  height: var(--ring-size, 64px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.progress-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.progress-ring .ring-bg { fill: none; stroke: var(--card-border); stroke-width: 4; }
+.progress-ring .ring-fg {
+  fill: none;
+  stroke: var(--c-primary);
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.6s ease;
+}
+.progress-ring .ring-label {
+  position: absolute;
+  font-size: clamp(12px, 3vw, 15px);
+  font-weight: 800;
+  color: var(--ink);
+}
+@media (prefers-reduced-motion: reduce) {
+  .progress-ring .ring-fg { transition: none; }
+}
+
+/* .xp-bar */
+.xp-bar {
+  position: relative;
+  width: 100%;
+  height: 10px;
+  background: var(--card-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.xp-bar .xp-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0%;
+  background: linear-gradient(90deg, var(--c-primary-soft), var(--c-xp));
+  border-radius: 999px;
+  transition: width 0.5s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .xp-bar .xp-fill { transition: none; }
+}
+
+/* .stat-tile */
+.stat-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--s3);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-sm);
+  text-align: center;
+}
+.stat-tile .stat-value { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); }
+.stat-tile .stat-label { font-size: var(--fs-small); color: var(--ink-soft); }
+
+/* .badge */
+.badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 84px;
+  padding: var(--s3) var(--s2);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-sm);
+  text-align: center;
+}
+.badge .badge-icon { font-size: 32px; }
+.badge .badge-name { font-size: var(--fs-small); font-weight: 700; color: var(--ink); }
+.badge.badge-locked { opacity: 0.4; filter: grayscale(1); }
+
+/* .bottom-nav（手機固定底部 tab；§5.5） */
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 8000;
+  display: flex;
+  /* 第一級已收斂為 ≤6 個（首頁·安全·數學·英文·國語·更多），一屏塞得下不需橫捲；
+     保留 overflow-x:auto 作為極窄機的保險（正常不會觸發）。以 flex:1 撐滿整條、等分寬度。 */
+  justify-content: flex-start;
+  align-items: stretch;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;              /* Firefox：藏捲軸 */
+  background: var(--card);
+  border-top: 1px solid var(--card-border);
+  padding-bottom: env(safe-area-inset-bottom, 0px);   /* 讓開 iOS/Android home indicator */
+  box-shadow: 0 -2px 12px rgba(45, 52, 54, 0.08);
+}
+.bottom-nav::-webkit-scrollbar { display: none; }     /* WebKit：藏捲軸 */
+.bottom-nav a,
+.bottom-nav button {
+  flex: 1 1 auto;        /* 等分撐滿整條 */
+  min-width: 46px;       /* 6 個第一級在 360/390px 各 ≥60px（≥44 命中區），一屏完整可見不溢出 */
+  min-height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 6px 4px;
+  border: none;
+  background: none;
+  color: var(--ink-soft);
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.bottom-nav .nav-icon { font-size: 26px; line-height: 1; }
+.bottom-nav a.active,
+.bottom-nav button.active { color: var(--c-primary-ink); }
+/* 底部導覽因 overflow-x:auto 會連帶裁掉外擴的焦點環（outline-offset:2px）；
+   改成 inset（負 offset）讓焦點環落在元件內側、不被上下邊裁切，仍清楚可見。 */
+.bottom-nav a:focus-visible,
+.bottom-nav button:focus-visible { outline-offset: -3px; }
+
+/* ≥1024px：桌機/平板不顯示底部 tab（改用左 rail 導覽） */
+@media (min-width: 1024px) {
+  .bottom-nav { display: none; }
+}
+
+/* .sheet（bottom-sheet modal，取代小 X；§5.7） */
+.sheet-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 8500;
+  background: rgba(45, 52, 54, 0.4);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.sheet-overlay.open { opacity: 1; pointer-events: auto; }
+.sheet {
+  width: 100%;
+  max-width: 560px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: var(--card);
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+  padding: var(--s5) var(--s4);
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--s5));
+  box-shadow: var(--shadow-lg);
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+.sheet-overlay.open .sheet { transform: translateY(0); }
+.sheet .sheet-handle {
+  width: 40px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--card-border);
+  margin: 0 auto var(--s4);
+}
+/* ≥600px：置中卡片式 modal 而非貼底 */
+@media (min-width: 600px) {
+  .sheet-overlay { align-items: center; }
+  .sheet { border-radius: var(--r-lg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet-overlay, .sheet { transition: none; }
+}
+
+/* .profile-card（hub 的 Player Profile 卡；§5.3） */
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  padding: var(--s5) var(--s4);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+}
+.profile-card .profile-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+}
+.profile-card .profile-avatar {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  background: var(--tint-primary);
+  border-radius: 50%;
+  flex: none;
+}
+.profile-card .profile-name { font-size: var(--fs-h2); font-weight: 800; }
+.profile-card .profile-level { font-size: var(--fs-small); color: var(--ink-soft); }
+.profile-card .profile-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+}
+
+/* iPad 左 rail sticky 全高（§5.3） */
+@media (min-width: 1024px) {
+  .profile-rail {
+    position: sticky;
+    top: var(--s4);
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+/* 對錯狀態不只用顏色（§5.7）——搭配 shake / pop */
+.is-correct { animation: app-pop 0.35s ease; }
+.is-wrong { animation: app-shake 0.4s ease; }
+@keyframes app-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+@keyframes app-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .is-correct, .is-wrong { animation: none; }
+  .btn:active { transform: none; }
+}
+
+/* =====================================================================
+ * .app-bar — 全站唯一、每頁「一模一樣」的頂部應用列（單一 top chrome）
+ * ---------------------------------------------------------------------
+ * 目的：修正各頁「回首頁」與頂部 chrome 不一致的問題。所有頁在 <body> 內
+ * 第一個元素貼上同一段 markup（見交付說明），即可獲得：
+ *   LEFT  ── 一致的回首頁控制：<a href="index.html"> 🏠 學習基地（≥48px）
+ *            index.html 上換成非連結的品牌（.app-bar__brand）。
+ *   MIDDLE ── 可選的小頁面/科目標題（窄螢幕自動隱藏）。
+ *   RIGHT ── ☀️/🌙 主題切換鈕（data-theme-toggle，由 game_core 自動接線 +
+ *            同步圖示，免各頁寫 JS）。
+ * sticky 置頂、整寬、tokened、含 iOS 安全區、亮/暗雙主題皆宜。
+ * 與 game_core 注入的 HUD 併存：HUD 停靠在本列「下方」，不重疊（見 game_core.css）。
+ * ===================================================================== */
+.app-bar {
+  position: sticky;
+  top: 0;
+  z-index: var(--app-bar-z);
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  width: 100%;
+  height: calc(var(--app-bar-h) + env(safe-area-inset-top, 0px));
+  /* 水平內距與置中內容欄對齊：寬桌面時 app-bar 內容(回首頁/主題鈕)不再貼齊視窗邊、而是切齊下方 .shell 內容欄 */
+  padding: env(safe-area-inset-top, 0px) max(var(--s3), calc((100% - var(--content-max)) / 2)) 0;
+  background: var(--card);
+  border-bottom: 1px solid var(--card-border);
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font);
+}
+
+/* LEFT：回首頁控制（每頁一致）。連結版有 tint 底；≥48px 命中區。 */
+.app-bar__home {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  min-height: var(--tap-min);
+  padding: 6px 14px 6px 10px;
+  border-radius: var(--r-sm);
+  background: var(--tint-primary);
+  color: var(--c-primary-ink);
+  font-size: var(--fs-small);
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+  flex: none;
+  transition: background 0.2s;
+}
+a.app-bar__home:hover { background: var(--card-border); }
+.app-bar__home-icon { font-size: 22px; line-height: 1; }
+
+/* index.html 變體：回首頁控制變成「非連結」品牌（人已在首頁）。 */
+.app-bar__home.app-bar__brand {
+  background: transparent;
+  color: var(--ink);
+  cursor: default;
+}
+
+/* MIDDLE：可選的小標題。窄螢幕隱藏，優先保住兩側控制。 */
+.app-bar__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: center;
+  font-size: var(--fs-body);
+  font-weight: 800;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 400px) { .app-bar__title { display: none; } }
+
+/* RIGHT：主題切換鈕（每頁一致；margin-left:auto 使其永遠靠右，無論有無標題）。 */
+.app-bar__theme {
+  flex: none;
+  margin-left: auto;
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  border: none;
+  border-radius: 14px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.2s;
+}
+.app-bar__theme:hover { background: var(--tint-primary); }
+.app-bar__theme-icon { line-height: 1; }
+
+/* 統一的「回首頁」返回鈕（§ 一致性 + 48px 命中區） */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--tap-min);
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border-radius: var(--r-sm);
+  background: var(--tint-primary);
+  color: var(--c-primary-ink);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.back-link:hover { background: var(--card-border); }
+
+/* 螢幕閱讀器專用 */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* =====================================================================
+ * 共用「學習內容」元件層 —— 從 index / social_studies(su-*) / finance(fi-*)
+ * 這三頁抽出的「設計語言」，泛化成任何科目頁都能直接套用的 class。
+ * ---------------------------------------------------------------------
+ * 設計原則（設計師的手）：
+ *   • 卡片＝暖白底 var(--card) + 1px 或 2px var(--card-border) 邊 + var(--r-lg)
+ *     圓角 + var(--shadow-sm)；hover 抬 3px→--shadow-lg，邊框轉強調色；active
+ *     scale(0.98)。半徑只用 --r-sm/md/lg，不再散寫 8/10/12px。
+ *   • 字級只用 --fs-h1/h2/body/small；標題 800、內文 700、次要 600/ink-soft。
+ *   • 間距只用 --s1…--s6；卡內距 --s4、大卡 --s5 --s4、元件間距 --s3/--s4。
+ *   • 強調色「稀用且一致」：每頁把自己的科目色接到 --accent 三件組即可，所有
+ *     元件（圖示底、選中態、進度條、揭示區、num 標籤）自動換色，亮/暗雙主題化。
+ *
+ * 每頁只要在自己的 <style> 或 :root 設一次強調色三件組（沒設就退回品牌藍）：
+ *     :root { --accent: var(--c-math);
+ *             --accent-tint: var(--tint-math);
+ *             --accent-ink: var(--c-math-ink); }
+ * 之後直接用下面的 .u-* / .q-* / .result-card / .section-title 即可，
+ * 不必再各頁散寫顏色與尺寸。功能（互動）仍由各頁 JS 自理，這層只給外觀。
+ * ===================================================================== */
+:root {
+  --accent: var(--c-primary);
+  --accent-tint: var(--tint-primary);
+  --accent-ink: var(--c-primary-ink);
+}
+
+/* ---- 區塊標題（section header）---------------------------------------
+ * 兩種一致寫法：
+ *   .section-title  ── h2 級粗標題（su-title / fi-title 那種），左側可放 emoji。
+ *   .section-eyebrow ── 小型全大寫「眉標」（index 的 .section-label 那種）。 */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.3;
+  margin: 0 0 var(--s3);
+}
+.section-title .section-title__icon { font-size: 1.1em; line-height: 1; flex: none; }
+.section-eyebrow {
+  font-size: var(--fs-small);
+  font-weight: 800;
+  color: var(--ink-soft);
+  letter-spacing: 1px;
+  margin: var(--s2) 0 var(--s3);
+  padding-left: var(--s1);
+}
+
+/* ---- 吉祥物 / 歡迎卡（su-hello / fi-hello）--------------------------- */
+.u-hello {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s4);
+  background: var(--accent-tint);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  margin-bottom: var(--s4);
+}
+.u-hello .u-hello__mascot { font-size: 46px; flex: none; line-height: 1; }
+.u-hello .u-hello__text { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+.u-hello .u-hello__sub { font-size: var(--fs-small); font-weight: 600; color: var(--ink-soft); }
+
+/* ---- 進度總覽小列（su-overview / fi-overview；配既有 .stat-tile）------ */
+.u-overview {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  margin-bottom: var(--s4);
+  flex-wrap: wrap;
+}
+.u-overview .stat-tile { flex: 1; min-width: 96px; }
+
+/* ---- 選單 / 單元卡 grid（su-units / fi-units / grid-auto 的泛化）------ */
+.u-grid {
+  display: grid;
+  gap: var(--s4);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* ---- 選單卡片（su-unit / fi-unit）：可點的科目/單元/關卡入口 ---------- */
+.u-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  padding: var(--s4);
+  text-align: left;
+  cursor: pointer;
+  border: 2px solid var(--card-border);
+  background: var(--card);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  color: var(--ink);
+  font-family: var(--font);
+  text-decoration: none;
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.u-card:hover { box-shadow: var(--shadow-lg); border-color: var(--accent); }
+.u-card:active { transform: scale(0.98); }
+.u-card:disabled, .u-card[aria-disabled="true"] { opacity: 0.7; cursor: default; }
+/* 主打卡（fi-unit.flagship）：淡強調漸層 + 強調邊 */
+.u-card.is-flagship { border-color: var(--accent); background: linear-gradient(135deg, var(--accent-tint), var(--card)); }
+.u-card__top { display: flex; align-items: center; gap: var(--s3); }
+.u-card__icon {
+  width: 56px; height: 56px; flex: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 34px;
+  background: var(--accent-tint);
+  border-radius: var(--r-sm);
+}
+.u-card__num { font-size: var(--fs-small); font-weight: 700; color: var(--accent-ink); }
+.u-card__name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); line-height: 1.25; }
+.u-card__desc { font-size: var(--fs-small); font-weight: 600; color: var(--ink-soft); }
+.u-card__foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-top: 2px; }
+.u-card__status { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-small); font-weight: 700; }
+.u-card__status.done { color: var(--c-correct-ink); }
+.u-card__status.todo { color: var(--ink-soft); }
+/* 星點/進度點（su-unit-dots）：實心小圓，完成的染強調色 */
+.u-card__dots { display: inline-flex; gap: 3px; }
+.u-card__dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--card-border); display: inline-block; }
+.u-card__dots i.on { background: var(--accent); }
+
+/* ---- 進行中：一題一畫面的大舞台卡（su-stage / fi-stage）-------------- */
+.q-stage {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--s5) var(--s4);
+  text-align: center;
+}
+/* 大圖示 / 視覺（su-visual / fi-visual / objects-display / visual-box） */
+.q-visual { font-size: clamp(60px, 20vw, 104px); line-height: 1.1; margin: var(--s2) 0 var(--s3); user-select: none; }
+/* 題幹（su-sentence / fi-sentence / question-text） */
+.q-prompt {
+  font-size: clamp(19px, 4.5vw, 24px);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.45;
+  margin: 0 auto var(--s4);
+  max-width: 32ch;
+}
+/* 題幹副標（fi-sub / question-sub） */
+.q-sub { font-size: var(--fs-body); font-weight: 700; color: var(--ink-soft); margin: 0 auto var(--s3); max-width: 34ch; }
+/* 工具列（讀給我聽 / 看更多…）（su-toolrow / fi-toolrow） */
+.q-toolrow { display: flex; justify-content: center; gap: var(--s2); flex-wrap: wrap; margin-bottom: var(--s3); }
+
+/* ---- 進度指示（su-steps / fi-steps）：段狀膠囊，目前步有強調光環 ------ */
+.q-progress { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: var(--s3); }
+.q-progress i { width: 22px; height: 6px; border-radius: 999px; background: var(--card-border); }
+.q-progress i.on { background: var(--accent); }
+.q-progress i.cur { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint); }
+
+/* ---- 選項按鈕（su-options/opt · fi-options/opt · quiz-options/option）- */
+.q-options { display: grid; gap: var(--s3); margin-top: var(--s2); }
+.q-opt {
+  display: flex; align-items: center; gap: var(--s2);
+  min-height: 56px; width: 100%;
+  padding: 14px 18px;
+  border: 2px solid var(--card-border);
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: clamp(16px, 3.4vw, 19px);
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.q-opt:active { transform: scale(0.98); }
+.q-opt:disabled { cursor: default; }
+.q-opt.correct { border-color: var(--c-correct); background: var(--tint-english); color: var(--ink); }
+.q-opt.wrong { border-color: var(--c-wrong); background: rgba(255, 118, 117, 0.12); color: var(--ink); }
+.q-opt .q-opt__mark { margin-left: auto; font-size: 22px; }
+
+/* ---- 揭示 / 解說區（su-reveal / fi-reveal / feedback / explanation）--- */
+.q-feedback {
+  margin-top: var(--s4);
+  padding: var(--s3) var(--s4);
+  background: var(--accent-tint);
+  border-radius: var(--r-md);
+  font-size: var(--fs-body);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.55;
+  text-align: left;
+  display: none;
+}
+.q-feedback.show { display: block; animation: app-fade 0.3s ease; }
+/* 對錯語意變體（不只靠顏色：左側粗邊 + 既有 is-correct/is-wrong 動效） */
+.q-feedback.is-ok { background: var(--tint-english); border-left: 4px solid var(--c-correct); }
+.q-feedback.is-no { background: rgba(255, 118, 117, 0.12); border-left: 4px solid var(--c-wrong); }
+
+/* ---- 底部行動列（su-actions / fi-actions / result-buttons）----------- */
+.q-actions { display: flex; gap: var(--s3); margin-top: var(--s4); flex-wrap: wrap; }
+.q-actions .btn { flex: 1; min-width: 140px; }
+
+/* ---- 完成 / 結算卡（su-done / fi-done / result-container）------------- */
+.result-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--s5) var(--s4);
+  text-align: center;
+}
+.result-card__emoji { font-size: clamp(64px, 22vw, 100px); line-height: 1.1; }
+.result-card__stars { font-size: 34px; letter-spacing: 4px; margin: var(--s2) 0; }
+.result-card__title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); margin: 0 0 var(--s2); }
+.result-card__sub { font-size: var(--fs-body); font-weight: 700; color: var(--ink-soft); margin: 0 auto; max-width: 34ch; }
+
+/* 頁尾小字（su-footnote / fi-footnote） */
+.u-footnote { text-align: center; color: var(--ink-soft); font-size: var(--fs-small); font-weight: 600; margin-top: var(--s5); }
+
+/* 畫面切換淡入（su-fade / fi-fade 的共用版；reduced-motion 尊重） */
+@keyframes app-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.u-screen { display: none; }
+.u-screen.active { display: block; animation: app-fade 0.3s ease; }
+@media (prefers-reduced-motion: reduce) {
+  .u-screen.active, .q-feedback.show { animation: none; }
+  .q-opt:active, .u-card:active { transform: none; }
+}
+
+/* =====================================================================
+ * 第 4 層：共用「閃卡」元件（.fc-*）—— 五個閃卡頁（cefr / coca / toeic /
+ * vocabulary_app / practice）共用的來源選擇器、翻卡、三級自評、發音鈕、
+ * 揭示面板、單字圖鑑、字母磚拼字。全部只吃既有 token（--card / --card-border
+ * / --r-lg/md/sm / --s* / --fs-* / --accent 三件組 / --on-accent / --tap-min /
+ * --shadow-* / 語意色），不散寫 px / hex。
+ *
+ * 各頁只需設一次強調色三件組即可自動配色、亮/暗雙主題：
+ *     :root { --accent: var(--c-english);
+ *             --accent-tint: var(--tint-english);
+ *             --accent-ink: var(--c-english-ink); }
+ * 純加法：新增 class，未被任何現有 HTML 引用，開頁外觀零變化。
+ * ===================================================================== */
+
+/* ---- 1. 來源 / 等級選擇器 .fc-source --------------------------------- */
+.fc-source {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--s2);
+  margin-bottom: var(--s4);
+}
+/* 選項多（≥8，如 coca 10 級 / vocabulary 主題）改自動填欄 grid */
+.fc-source.fc-source--grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+.fc-source__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s2);
+  min-height: var(--tap-min);
+  padding: 10px 18px;
+  border: 2px solid var(--card-border);
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: clamp(15px, 3vw, 17px);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.fc-source__btn:hover { border-color: var(--accent); box-shadow: var(--shadow-lg); }
+.fc-source__btn:active { transform: scale(0.96); }
+/* 選中態：統一實心英文科色 + 白/深墨字（依主題 ≥4.5:1），不再各頁散寫 hex/彩虹 */
+.fc-source__btn.active,
+.fc-source__btn[aria-pressed="true"] {
+  background: var(--c-english-btn);
+  color: var(--on-accent);
+  border-color: transparent;
+}
+.fc-source__btn__sub { font-size: var(--fs-small); font-weight: 700; color: var(--ink-soft); }
+.fc-source__btn.active .fc-source__btn__sub,
+.fc-source__btn[aria-pressed="true"] .fc-source__btn__sub { color: var(--on-accent); opacity: 0.85; }
+
+/* ---- 2. 翻卡（audio-first 正面）.fc-card ------------------------------ */
+.fc-card {
+  display: block;
+  width: 100%;
+  max-width: 460px;
+  margin-inline: auto;
+  perspective: 1200px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.fc-card__inner {
+  position: relative;
+  display: grid;
+  transition: transform 0.5s cubic-bezier(0.34, 1.1, 0.64, 1);
+  transform-style: preserve-3d;
+}
+.fc-card__inner.flipped { transform: rotateY(180deg); }
+.fc-card__face {
+  grid-area: 1 / 1;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s3);
+  min-height: 280px;
+  padding: var(--s6) var(--s4);
+  background: var(--card);
+  border: 2px solid var(--card-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.fc-card:hover .fc-card__face { box-shadow: var(--shadow-lg); border-color: var(--accent); }
+.fc-card__back { transform: rotateY(180deg); }
+.fc-card__word { font-size: clamp(28px, 7vw, 44px); font-weight: 800; color: var(--ink); line-height: 1.2; }
+.fc-card__cn { font-size: var(--fs-h2); font-weight: 700; color: var(--ink); }
+.fc-card__hint { font-size: var(--fs-body); font-weight: 700; color: var(--ink-soft); max-width: 30ch; }
+.fc-card__emoji { font-size: clamp(52px, 16vw, 88px); line-height: 1.1; user-select: none; }
+/* 底部「點擊翻面」提示 */
+.fc-card__tap {
+  margin-top: var(--s2);
+  font-size: var(--fs-small);
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+/* ---- 3. 三級自評鈕 .fc-rate（對齊 SM-2：again/good/easy）-------------- */
+.fc-rate {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s2);
+  max-width: 460px;
+  margin: var(--s4) auto 0;
+}
+.fc-rate__btn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: var(--tap-min);
+  padding: 10px 8px;
+  border: none;
+  border-radius: 16px;
+  font-family: var(--font);
+  font-size: clamp(14px, 3vw, 16px);
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.fc-rate__btn:active { transform: scale(0.96); }
+/* 無障礙填色：白字皆 ≥4.5:1（沿用 vocabulary_app srs-btn 配色）。答錯不懲罰、
+   文案維持「還不熟／想起來了／很輕鬆」，退盒不呈現為降級。 */
+.fc-rate__btn.again { background: #c2185b; color: #fff; }
+.fc-rate__btn.good  { background: #0a7a5c; color: #fff; }
+.fc-rate__btn.easy  { background: #0b6bb5; color: #fff; }
+:root[data-theme="dark"] .fc-rate__btn.again { background: var(--c-streak); color: var(--on-accent); }
+:root[data-theme="dark"] .fc-rate__btn.good  { background: var(--c-english); color: var(--on-accent); }
+:root[data-theme="dark"] .fc-rate__btn.easy  { background: var(--c-primary); color: var(--on-accent); }
+.fc-rate__btn__label { font-size: 0.72em; font-weight: 700; opacity: 0.92; }
+
+/* ---- 4. 發音鈕 .fc-audio --------------------------------------------- */
+.fc-audio {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  padding: 10px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: var(--r-sm);
+  background: var(--accent-tint);
+  color: var(--accent-ink);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.fc-audio:hover { background: var(--card-border); }
+.fc-audio:active { transform: scale(0.96); }
+/* 正面主發音鈕可放大字級 */
+.fc-audio.fc-audio--lg { font-size: 30px; min-width: 60px; min-height: 60px; border-radius: var(--r-md); }
+/* 例句/次要發音鈕 */
+.fc-audio.fc-audio--sm { min-width: 44px; min-height: 44px; padding: 8px; font-size: 18px; }
+
+/* ---- 5. 揭示面板 .fc-reveal（答錯自控繼續）--------------------------- */
+.fc-reveal {
+  margin-top: var(--s4);
+  padding: var(--s3) var(--s4);
+  background: var(--accent-tint);
+  border-radius: var(--r-md);
+  border-left: 4px solid var(--accent);
+  text-align: left;
+  display: none;
+}
+.fc-reveal.show { display: block; animation: app-fade 0.3s ease; }
+.fc-reveal:empty { display: none; }
+.fc-reveal.is-ok { background: var(--tint-english); border-left-color: var(--c-correct); }
+.fc-reveal.is-no { background: rgba(255, 118, 117, 0.12); border-left-color: var(--c-wrong); }
+.fc-reveal__word { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); }
+.fc-reveal__zh { font-size: var(--fs-body); font-weight: 700; color: var(--ink); margin-left: var(--s2); }
+.fc-reveal__sent { display: block; font-size: var(--fs-body); font-weight: 600; color: var(--ink-soft); margin-top: var(--s2); line-height: 1.55; }
+.fc-reveal__msg { display: block; font-size: var(--fs-body); font-weight: 700; color: var(--ink); margin-top: var(--s2); }
+.fc-reveal__next {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap-min);
+  margin-top: var(--s3);
+  padding: 12px 24px;
+  border: none;
+  border-radius: 16px;
+  background: var(--c-english-btn);
+  color: var(--on-accent);
+  font-family: var(--font);
+  font-size: clamp(15px, 3vw, 17px);
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.fc-reveal__next:active { transform: scale(0.96); }
+
+/* ---- 6. 單字圖鑑 .fc-dex（收藏視覺，只增不減）------------------------ */
+.fc-dex__nav { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s2); margin-bottom: var(--s4); }
+.fc-dex__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: var(--s3); }
+.fc-dex__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 96px;
+  padding: var(--s3) var(--s2);
+  border: 2px solid var(--card-border);
+  border-radius: 14px;
+  background: var(--card);
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+}
+.fc-dex__glyph { font-size: 30px; line-height: 1; }        /* 雙碼：形狀（☆→⭐→🌟）＋文字階名 */
+.fc-dex__word { font-size: var(--fs-small); font-weight: 800; color: var(--ink); }
+.fc-dex__state { font-size: var(--fs-small); font-weight: 700; color: var(--ink-soft); }
+/* 到期提示（不靠顏色單維） */
+.fc-dex__card.is-due { border-color: var(--accent); }
+.fc-dex__due { font-size: var(--fs-small); }
+
+/* ---- 7. 字母磚拼字 .fc-spell（產出型回想，純觸控預設）---------------- */
+.fc-spell { display: flex; flex-direction: column; align-items: center; gap: var(--s3); }
+.fc-spell__head { display: flex; flex-direction: column; align-items: center; gap: var(--s2); }
+.fc-spell__slots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--s2);
+  min-height: 52px;
+}
+/* 片語空白佔位 */
+.fc-spell__gap { width: 20px; }
+.fc-spell__bank {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--s2);
+  max-width: 460px;
+}
+.fc-spell__tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: var(--tap-min);
+  padding: 6px 10px;
+  border: 2px solid var(--card-border);
+  border-radius: var(--r-sm);
+  background: var(--card);
+  color: var(--accent-ink);
+  font-family: var(--font);
+  font-size: 1.3rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.12s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.fc-spell__tile:active { transform: scale(0.96); }
+.fc-spell__tile.used { opacity: 0.3; pointer-events: none; }
+/* 答案槽：空槽底線、已填實心邊、readonly 提示磚淡底 */
+.fc-spell__slot {
+  border-style: dashed;
+  color: var(--ink);
+  background: transparent;
+  cursor: pointer;
+}
+.fc-spell__slot.filled { border-style: solid; border-color: var(--accent); }
+.fc-spell__slot.hint { background: var(--accent-tint); border-style: solid; cursor: default; }
+/* 檢查後：綠對紅錯（不只靠顏色，另有 is-correct/is-wrong 動效） */
+.fc-spell__slot.ok { border-color: var(--c-correct); background: var(--tint-english); }
+.fc-spell__slot.no { border-color: var(--c-wrong); background: rgba(255, 118, 117, 0.12); }
+/* 切換鈕：⌨️ 改用鍵盤 / 🔤 改用字母磚 */
+.fc-spell__toggle {
+  align-self: flex-end;
+  min-height: var(--tap-min);
+  padding: 8px 14px;
+  border: 2px solid var(--card-border);
+  border-radius: var(--r-sm);
+  background: var(--card);
+  color: var(--accent-ink);
+  font-family: var(--font);
+  font-size: var(--fs-small);
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.fc-spell__toggle:hover { border-color: var(--accent); }
+/* 鍵盤模式逐格輸入格 */
+.fc-spell__slot input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-family: var(--font);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+.fc-spell__slot input:focus-visible { outline: 3px solid var(--c-focus); outline-offset: 2px; }
+
+/* 翻卡/自評/字母磚動效併入既有 reduced-motion 尊重 */
+@media (prefers-reduced-motion: reduce) {
+  .fc-card__inner { transition: none; }
+  .fc-card:active, .fc-rate__btn:active, .fc-audio:active,
+  .fc-spell__tile:active, .fc-reveal__next:active, .fc-source__btn:active { transform: none; }
+  .fc-reveal.show { animation: none; }
+}

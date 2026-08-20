@@ -1,0 +1,3591 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>推理偵探 · 邏輯推理 🧠</title>
+<!-- 統一遊戲化引擎：assets/app.css（設計 token）→ game_core.css（HUD/toast）→ game_core.js。
+     零重複計分：本頁定位「思維訓練／進階挑戰」，絕不呼叫 Game.recordAnswer / award / recordSession
+     （唯一例外：答題時呼叫 Game.pingActive() 維持每日連續學習 streak，不計 XP、不重複計分），
+     也不宣告 data-game-wired，故不污染任何科目 XP。只用 Game.showToast（純提示）。
+     獨立 localStorage key：logic_reasoning_v1。
+     教學目標：訓練「剝掉故事、看穿背後數學模型」的抽象能力。提示為 opt-in、漸進式，
+     用提示也完全沒關係；完全不看提示就答對＝額外的「看穿🎯」彩蛋，不是唯一榮譽。
+     每關題目很多（~50），採「回合制」：一次玩約 10 題，進度會保存、可續玩、退出不丟。 -->
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<style>
+:root {
+  --su: #4f46e5;
+  --su-tint: rgba(79,70,229,0.13);
+  --su-ink: var(--ink);
+  --accent: #4f46e5;
+  --accent-ink: var(--ink);
+  --accent-tint: rgba(79,70,229,0.13);
+}
+/* 夜間：純紫色邊框/圓點在深色卡片上對比不足（WCAG 非文字 3:1），改用加亮版紫，維持可辨識度 */
+:root[data-theme="dark"] {
+  --su: #a5b4fc;
+  --su-tint: rgba(165,180,252,0.18);
+}
+body { overflow-x: hidden; }
+
+.ma-topbar { display: flex; align-items: center; gap: var(--s2); margin-bottom: var(--s4); }
+.ma-topbar .ma-title { flex: 1; font-size: var(--fs-h2); font-weight: 800; color: var(--ink); min-width: 0; }
+
+.ma-screen { display: none; animation: ma-fade 0.3s ease; }
+.ma-screen.active { display: block; }
+@keyframes ma-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .ma-screen { animation: none; } }
+
+.ma-hello { display: flex; align-items: center; gap: var(--s3); padding: var(--s4); background: var(--su-tint); border: 1px solid var(--card-border); border-radius: var(--r-lg); margin-bottom: var(--s4); }
+.ma-hello .ma-mascot { font-size: 46px; flex: none; line-height: 1; }
+.ma-hello .ma-hello-text { font-size: var(--fs-body); font-weight: 700; color: var(--ink); max-width: 56ch; }
+.ma-hello .ma-hello-sub { font-size: var(--fs-small); color: var(--ink); font-weight: 600; }
+
+.ma-overview { display: flex; align-items: center; gap: var(--s3); margin-bottom: var(--s4); flex-wrap: wrap; }
+.ma-overview .stat-tile { flex: 1; min-width: 96px; }
+
+.ma-levels { display: grid; gap: var(--s4); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.ma-level {
+  display: flex; flex-direction: column; gap: var(--s2); padding: var(--s4);
+  text-align: left; cursor: pointer; border: 2px solid var(--card-border);
+  background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  font-family: var(--font); color: var(--ink);
+}
+.ma-level:hover { box-shadow: var(--shadow-lg); border-color: var(--su); }
+.ma-level:active { transform: scale(0.98); }
+.ma-level-top { display: flex; align-items: center; gap: var(--s3); }
+.ma-level-emoji { font-size: 34px; width: 56px; height: 56px; flex: none; display: flex; align-items: center; justify-content: center; border-radius: 16px; }
+.ma-level-num { font-size: var(--fs-small); font-weight: 700; color: var(--su-ink); }
+.ma-level-name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); line-height: 1.25; }
+.ma-level-concepts { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; line-height: 1.4; }
+.ma-level-progress { height: 8px; border-radius: 999px; background: var(--su-tint); overflow: hidden; margin-top: 2px; }
+.ma-level-progress > i { display: block; height: 100%; background: var(--su); border-radius: 999px; }
+.ma-level-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-top: 2px; }
+.ma-level-status { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-small); font-weight: 700; }
+.ma-level-status.done { color: var(--c-correct-ink); }
+.ma-level-status.todo { color: var(--ink-soft); }
+.ma-level-stars { font-size: 16px; letter-spacing: 1px; }
+
+.ma-stage { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); padding: var(--s5) var(--s4); text-align: center; }
+
+.ma-brief { text-align: left; }
+.ma-brief h2 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); margin: 0 0 var(--s3); text-align: center; }
+.ma-brief-sub { text-align: center; color: var(--ink-soft); font-weight: 700; font-size: var(--fs-small); margin: 0 0 var(--s3); }
+.ma-visual { font-size: clamp(48px, 15vw, 78px); line-height: 1.1; margin: var(--s2) 0 var(--s3); user-select: none; }
+.ma-keyfacts { list-style: none; padding: 0; margin: 0 auto; max-width: 46ch; display: grid; gap: var(--s2); }
+.ma-keyfacts li { display: flex; align-items: flex-start; gap: var(--s2); padding: 10px 14px; background: var(--su-tint); border-radius: var(--r-md); font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.6; }
+.ma-keyfacts li .ma-kf-dot { flex: none; color: var(--su-ink); font-weight: 900; }
+
+.ma-steps { display: flex; align-items: center; justify-content: center; gap: 5px; margin-bottom: var(--s3); flex-wrap: wrap; }
+.ma-steps i { width: 20px; height: 6px; border-radius: 999px; background: var(--card-border); }
+.ma-steps i.on { background: var(--su); }
+.ma-steps i.cur { background: var(--su); box-shadow: 0 0 0 3px var(--su-tint); }
+
+/* 題目（故事）盒 */
+.mm-story { text-align: left; background: var(--su-tint); border: 1px solid var(--card-border); border-radius: var(--r-md); padding: var(--s4); font-size: clamp(16px, 3.6vw, 19px); font-weight: 600; color: var(--ink); line-height: 1.75; margin-bottom: var(--s3); white-space: pre-line; }
+.mm-story .mm-story-label { display: block; font-size: var(--fs-small); font-weight: 800; color: var(--su-ink); margin-bottom: 6px; letter-spacing: .5px; }
+
+/* 提示（opt-in、漸進式；用提示也很棒） */
+.mm-hint-area { text-align: left; margin-bottom: var(--s3); }
+.mm-hint-btn { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 10px 18px; border: 2px dashed var(--su); border-radius: 14px; background: var(--su-tint); color: var(--su-ink); font-family: var(--font); font-weight: 800; font-size: var(--fs-small); cursor: pointer; }
+.mm-hint-btn:active { transform: scale(0.98); }
+.mm-hint-btn:disabled { display: none; }
+.mm-hint-list { display: grid; gap: var(--s2); margin-top: var(--s2); }
+.mm-hint { display: flex; align-items: flex-start; gap: 8px; padding: 10px 14px; background: var(--card); border: 1px solid var(--su); border-left: 4px solid var(--su); border-radius: var(--r-md); font-size: var(--fs-small); font-weight: 700; color: var(--ink); line-height: 1.6; animation: ma-fade 0.25s ease; }
+.mm-hint .mm-hint-n { flex: none; font-weight: 900; color: var(--su-ink); }
+.mm-seer-note { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 700; margin-top: 6px; line-height: 1.6; }
+
+/* 每回合都能收合取用本關心法 */
+.ma-recap { text-align: left; margin-bottom: var(--s3); }
+.ma-recap-btn { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 16px; border: 2px solid var(--card-border); border-radius: 14px; background: var(--card); color: var(--su-ink); font-family: var(--font); font-weight: 800; font-size: var(--fs-small); cursor: pointer; }
+.ma-recap-btn:active { transform: scale(0.98); }
+.ma-recap-list { margin-top: var(--s2); animation: ma-fade 0.25s ease; }
+@media (prefers-reduced-motion: reduce) { .ma-recap-list { animation: none; } }
+
+.ma-question { font-size: clamp(18px, 4.2vw, 22px); font-weight: 800; color: var(--ink); line-height: 1.6; margin: 0 auto var(--s3); max-width: 44ch; text-align: left; }
+
+.ma-options { display: grid; gap: var(--s3); margin-top: var(--s2); }
+.ma-opt {
+  display: flex; align-items: center; gap: var(--s2); min-height: 56px; width: 100%;
+  padding: 14px 18px; border: 2px solid var(--card-border); border-radius: 16px;
+  background: var(--card); color: var(--ink); font-family: var(--font);
+  font-size: clamp(16px, 3.4vw, 19px); font-weight: 700; text-align: left; cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.ma-opt:active { transform: scale(0.98); }
+.ma-opt:disabled { cursor: default; }
+.ma-opt.correct { border-color: var(--c-correct); background: var(--tint-english); color: var(--ink); }
+.ma-opt.wrong { border-color: var(--c-wrong); background: rgba(255,118,117,0.12); color: var(--ink); }
+.ma-opt.correct .ma-opt-mark { color: var(--c-correct-ink); }
+.ma-opt.wrong .ma-opt-mark { color: var(--c-streak-ink); }
+.ma-opt .ma-opt-mark { margin-left: auto; font-size: 22px; }
+
+.ma-reveal { margin-top: var(--s4); padding: var(--s3) var(--s4); background: var(--su-tint); border-radius: var(--r-md); font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.7; text-align: left; display: none; }
+.ma-reveal.show { display: block; animation: ma-fade 0.3s ease; }
+.ma-reveal .mm-rev-seer { display: block; font-weight: 900; color: var(--su-ink); margin-bottom: 6px; }
+.ma-reveal .mm-rev-row { display: block; margin-top: 8px; }
+.ma-reveal .mm-rev-k { font-weight: 900; color: var(--su-ink); }
+@media (prefers-reduced-motion: reduce) { .ma-reveal.show { animation: none; } }
+
+.ma-done { text-align: center; padding: var(--s5) var(--s4); }
+.ma-done-emoji { font-size: clamp(56px, 18vw, 88px); }
+.ma-done-stars { font-size: 34px; letter-spacing: 4px; margin: var(--s2) 0; }
+.ma-done-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); }
+.ma-done-sub { font-size: clamp(15px,3.4vw,18px); color: var(--ink); font-weight: 700; line-height: 1.7; margin-top: var(--s2); }
+.ma-done-prog { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 700; margin-top: var(--s2); }
+
+.ma-actions { display: flex; gap: var(--s3); margin-top: var(--s4); flex-wrap: wrap; }
+.ma-actions .btn { flex: 1; min-width: 140px; }
+
+.ma-footnote { text-align: center; color: var(--ink-soft); font-size: var(--fs-small); margin-top: var(--s5); font-weight: 600; max-width: 40em; margin-inline: auto; line-height: 1.7; }
+</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">推理偵探 · 邏輯推理 🧠</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle
+          aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+
+  <section id="screen-menu" class="ma-screen active">
+    <div class="ma-topbar">
+      <span class="ma-title">推理偵探 · 邏輯推理 🧠</span>
+    </div>
+
+    <div class="ma-hello">
+      <span class="ma-mascot" aria-hidden="true">🧠</span>
+      <div>
+        <div class="ma-hello-text" id="hello-text">很多問題只要一步一步、按規則嚴謹地推理，就能從線索推出答案。這裡專門練「把話聽清楚、依邏輯推理、不被似是而非騙到」的功夫。</div>
+        <div class="ma-hello-sub" id="hello-sub" style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
+          <div style="display:flex;gap:6px;align-items:flex-start"><span aria-hidden="true">💡</span><span>卡住時按「🔍 看提示」一點也不丟臉——找線索幫自己想通，也是高手 😎；完全不看提示就答對，還會多拿一個「看穿 🎯」彩蛋。</span></div>
+          <div style="display:flex;gap:6px;align-items:flex-start"><span aria-hidden="true">🎮</span><span>每關題目很多，一次玩約 10 題；進度會自動保存，隨時都能再回來。</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ma-overview">
+      <div class="stat-tile"><span class="stat-value" id="ov-done">0/6</span><span class="stat-label">完成關卡</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-seer">0</span><span class="stat-label">看穿（沒看提示）</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-badges">0/8</span><span class="stat-label">收集徽章</span></div>
+    </div>
+
+    <div class="ma-levels" id="level-list"><!-- 由 JS 產生 --></div>
+
+    <p class="ma-footnote">這是「思維訓練」小旅程，只留在你自己的裝置上，不影響學習基地的等級或經驗值。看提示、答錯都完全沒關係——把題目想通、學會看穿問題，才是真正的收穫。🌱</p>
+
+    <nav class="cn-nextup" aria-label="打好基礎" style="display:flex;flex-direction:column;gap:10px;max-width:640px;margin:4px auto 8px">
+      <a href="math_concepts.html" style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--card);border:2px dashed var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.4"><span style="font-size:22px;flex:none" aria-hidden="true">🧠</span><span>← 覺得太快？先回「數學觀念養成」打底</span></a>
+    </nav>
+  </section>
+
+  <section id="screen-play" class="ma-screen">
+    <div class="ma-topbar">
+      <button type="button" class="btn btn-icon" id="btn-back" aria-label="回到關卡選單">←</button>
+      <span class="ma-title" id="play-title">關卡</span>
+    </div>
+    <div class="ma-steps" id="step-dots" aria-hidden="true"></div>
+    <div class="play-column">
+      <div id="stage"><!-- 由 JS 產生每一題 --></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* 主程式（自足 IIFE）。回合制：每關題目按固定順序，一次玩 ROUND_SIZE 題，進度(pos)持久化、可續玩。
+   選項每題 Fisher–Yates 洗牌；answer = 未洗牌前 0-based 索引，以 data-i 判斷。
+   提示 opt-in、漸進；不看提示答對＝看穿（額外彩蛋，非必要）。獨立 key：logic_reasoning_v1。不呼叫 Game.recordAnswer / award。 */
+(function () {
+  'use strict';
+
+  function toast(msg, kind) {
+    try { if (window.Game && Game.showToast) Game.showToast(msg, kind || 'info'); } catch (e) {}
+  }
+
+  var ROUND_SIZE = (window.__MM_ROUND && window.__MM_ROUND > 0) ? window.__MM_ROUND : 10;
+  var SEER_TARGET = 30; // 「看穿大師」彩蛋門檻（累積看穿題數）
+
+  var PROG_KEY = 'logic_reasoning_v1';
+  function loadProg() {
+    var p = null;
+    try { p = JSON.parse(localStorage.getItem(PROG_KEY)); } catch (e) { p = null; }
+    if (!p || typeof p !== 'object') p = {};
+    if (typeof p.badges !== 'object' || !p.badges) p.badges = {};
+    return p;
+  }
+  function saveProg(p) { try { localStorage.setItem(PROG_KEY, JSON.stringify(p)); } catch (e) {} }
+  var progress = loadProg();
+
+  function recOf(id) {
+    var r = progress[id];
+    if (!r || typeof r !== 'object') r = { pos: 0, correct: 0, seer: 0, done: false };
+    if (typeof r.pos !== 'number') r.pos = 0;
+    if (typeof r.correct !== 'number') r.correct = 0;
+    if (typeof r.seer !== 'number') r.seer = 0;
+    return r;
+  }
+
+  /* === 課程資料（正式內容經多-agent 撰寫＋對抗式數學查核後注入） === */
+  var LEVELS = [
+  {
+    "id": "lv1",
+    "level": 1,
+    "name": "讀懂條件句（若P則Q）",
+    "emoji": "🔗",
+    "color": "#0284c7",
+    "concepts": [
+      "條件句（若P則Q）",
+      "前件P與後件Q",
+      "條件詞（如果／只要／當／的話）",
+      "條件句 vs. 描述句",
+      "逆否等價與推理鐵則"
+    ],
+    "keyFacts": [
+      "「若P則Q」裡，P是前件（條件）、Q是後件（結果）。找P問「什麼情況下」，找Q問「就會怎樣」。例：「下雨就帶傘」→P＝下雨、Q＝帶傘。",
+      "語序會騙人：「我會帶傘，如果下雨」的前件仍是「下雨」。認P要看「如果／只要／當／假如／的話」跟著的那件事，不是看誰先講。",
+      "只是陳述事實、下定義，或用「而且／和／又」把兩件事並列的句子，沒有「條件→結果」關係，就不是條件句，別硬拆P、Q。例：「小美很認真而且會游泳」只是描述。",
+      "逆否才等價：「若P則Q」和「若非Q則非P」意思完全相同；但逆命題「若Q則P」和否命題「若非P則非Q」不一定成立，不能當同一句（想個反例就破了）。",
+      "有效推理只有兩種——肯定前件（P真→Q真）與否定後件（Q假→P假）；肯定後件（看到Q就說P真）和否定前件（P假就說Q假）都是謬誤。另外「只有A才B」是必要條件，等於「若B則A」，P、Q要反過來。"
+    ],
+    "questions": [
+      {
+        "story": "週末早上，阿嬤看著窗外灰灰的天空，對正要出門打籃球的阿哲說：「如果等一下下雨，你就要帶傘喔！」阿哲一邊綁鞋帶一邊點頭，把球鞋踩得啪啪響，心裡想著今天要投進幾顆三分球。",
+        "hints": [
+          "先找出這句話裡的「條件詞」在哪裡——像「如果」這種字。",
+          "「如果」後面接的是要先成立的條件；「就」後面接的是接著發生的結果。",
+          "把「條件」放進P、把「結果」放進Q，再檢查：如果把兩個對調，意思會不會變得很奇怪？"
+        ],
+        "q": "把阿嬤這句「如果下雨，你就要帶傘」寫成「若P則Q」，前件P和後件Q分別是什麼？",
+        "options": [
+          "P＝下雨、Q＝帶傘",
+          "P＝帶傘、Q＝下雨",
+          "P＝阿哲出門、Q＝打籃球"
+        ],
+        "answer": 0,
+        "model": "條件句的前件與後件辨識",
+        "insight": "「如果」後面接的是條件（前件P），「就」後面接的是結果（後件Q）。",
+        "solve": "「如果」領出的「下雨」是觸發條件，就是前件P；「就」領出的「帶傘」是規則要你做的結果，就是後件Q，故答案是「P＝下雨、Q＝帶傘」。把P、Q對調的那一項（P＝帶傘、Q＝下雨）會變成「若帶傘則下雨」，意思整個不同（帶傘又不會讓天下雨）。「P＝阿哲出門、Q＝打籃球」那一項的「出門、打籃球」只是故事背景，原句根本沒把它們當條件與結果。"
+      },
+      {
+        "story": "小雨在寫聯絡簿，寫下今天和同學的約定：「我會借你彩色筆，如果你明天有記得把課本帶來。」她覺得這樣講比較有禮貌，特地把「帶課本」這個重點放到句子後面，還畫了一個小笑臉。",
+        "hints": [
+          "別急著把先講的那件事當成前件，先圈出「如果」在哪裡。",
+          "前件P是由「如果」標記的，跟它排在句子的前面或後面無關。",
+          "試著把整句還原成標準的「若……，則……」，看「如果」後面那件事會落在哪一格。"
+        ],
+        "q": "這句「我會借你彩色筆，如果你明天記得帶課本來」，前件P是哪一件事？",
+        "options": [
+          "P＝借彩色筆",
+          "P＝記得帶課本來",
+          "P＝寫聯絡簿"
+        ],
+        "answer": 1,
+        "model": "語序不影響前件判斷",
+        "insight": "前件由「如果」標記，而不是由「先講」決定；把句子還原成「若……則……」再看。",
+        "solve": "條件詞「如果」後面接的是「記得帶課本」，所以它才是條件、前件P；「借彩色筆」是「則」後面的結果Q，即使它先被講出來。還原成標準式就是「若你帶課本來，則我借你彩色筆」。「P＝借彩色筆」那一項是被語序騙了，把結果誤當條件；「P＝寫聯絡簿」那一項的「寫聯絡簿」只是情境背景，不在這條規則裡。"
+      },
+      {
+        "story": "體育老師在朝會後宣布班際大隊接力的獎勵制度：「只要我們班進入前三名，全班就可以換一節自習課。」全班聽了眼睛都亮了起來，馬上圍成一圈，熱烈討論起棒次要怎麼排、誰跑最後一棒。",
+        "hints": [
+          "「只要……就……」也是條件句，先分清楚哪句接在「只要」後、哪句接在「就」後。",
+          "題目問的是「結果」，不是「條件」，別找錯格子。",
+          "找出「就」後面那件事，那才是達成條件之後會發生的結果。"
+        ],
+        "q": "老師這句「只要進前三名，全班就可換一節自習」，後件Q（結果）是什麼？",
+        "options": [
+          "Q＝進前三名",
+          "Q＝換一節自習課",
+          "Q＝討論棒次"
+        ],
+        "answer": 1,
+        "model": "條件句的後件辨識（只要…就…）",
+        "insight": "「只要」帶出條件P，「就」帶出結果Q；問結果就找「就」後面那件事。",
+        "solve": "「只要」領出的「進前三名」是條件P，「就」領出的「換一節自習課」是結果Q，所以答案是「Q＝換一節自習課」。「Q＝進前三名」那一項把條件P誤當成Q；「Q＝討論棒次」那一項的「討論棒次」只是同學聽完的反應，不是這條規則所講的結果。"
+      },
+      {
+        "story": "開學第一天，轉學生站到講台前自我介紹：「大家好，我叫林小樂，我養了一隻黃色的狗，牠很愛吃地瓜。」台下同學覺得他人很親切，紛紛鼓掌歡迎，還有人舉手問狗狗叫什麼名字。",
+        "hints": [
+          "先找找看這句裡有沒有「如果／只要／就」這類表示條件的字。",
+          "條件句要有「在什麼情況下，就會怎樣」的關係；只是說出一件事實不算。",
+          "想一想：「養狗」和「狗是黃色」之間，有沒有「一個成立、另一個才跟著成立」的關係？"
+        ],
+        "q": "有人想把「我養了一隻黃色的狗」硬寫成「若P則Q」，這樣做對不對？",
+        "options": [
+          "對，P＝養狗、Q＝黃色",
+          "對，P＝黃色、Q＝愛吃地瓜",
+          "不對，這只是描述一件事實，沒有「條件→結果」關係"
+        ],
+        "answer": 2,
+        "model": "條件句 vs. 描述句",
+        "insight": "沒有「如果／只要／就」這種條件→結果的連結、只是在陳述事實，就不能套P、Q。",
+        "solve": "「我養了一隻黃色的狗」只是描述現況，沒有「在什麼情況下，就會怎樣」的規則關係，所以不是條件句，硬拆P、Q沒有意義，答案就是「這只是描述一件事實、沒有條件→結果關係」那一項。另外兩個說「對、可以寫成P、Q」的選項，都是勉強把「同一件事的兩個特徵」拆成前件後件，但「養狗」和「黃色」之間並沒有「若……則……」的推理關係——狗是黃色並不是因為你養了牠。"
+      },
+      {
+        "story": "媽媽第一次教小傑用電鍋煮飯：「當外鍋的水燒乾、開關跳起來的時候，飯就煮好了，你就可以按掉插頭。」小傑很緊張，怕自己忘記，把每個步驟都認真寫在便利貼上，貼到冰箱門正中央。",
+        "hints": [
+          "「當……的時候」也是一種說出條件的方式，先找它標記了哪件事。",
+          "前件是「先發生、當作訊號」的那件事。",
+          "想想哪件事是「一發生，飯就算煮好」的觸發點。"
+        ],
+        "q": "把「當開關跳起來，飯就煮好了」寫成條件句，前件P是什麼？",
+        "options": [
+          "P＝開關跳起來",
+          "P＝飯煮好了",
+          "P＝按掉插頭"
+        ],
+        "answer": 0,
+        "model": "條件句前件辨識（當…就…）",
+        "insight": "「當……的時候」標記的是條件P，「就」後面才是結果Q。",
+        "solve": "「當……的時候」帶出的「開關跳起來」是觸發條件，即前件P；「飯就煮好了」是結果Q，故前件P＝開關跳起來。「P＝飯煮好了」那一項把結果誤當條件；「P＝按掉插頭」那一項的「按掉插頭」是看到飯好之後的另一個動作，不是這句「開關跳→飯好」的前件。"
+      },
+      {
+        "story": "哥哥跟弟弟認真地打勾勾約定：「你這次段考數學及格的話，我就把我的舊手機借你玩一整個週末。」弟弟為了那支手機，破天荒每天放學都乖乖坐在書桌前算數學，連電視都不看了。",
+        "hints": [
+          "「……的話」其實就等於「如果……」，先把它找出來。",
+          "「的話」前面那件事是條件，「就」後面那件事是結果。",
+          "檢查看看：把P、Q對調後，「借手機會讓數學及格」這種話合理嗎？"
+        ],
+        "q": "「你數學及格的話，我就借你手機」這句的P和Q，下列何者正確？",
+        "options": [
+          "P＝數學及格、Q＝借手機",
+          "P＝借手機、Q＝數學及格",
+          "P＝每天算數學、Q＝段考"
+        ],
+        "answer": 0,
+        "model": "條件句P/Q辨識（…的話）",
+        "insight": "「……的話」等於「如果……」，標記條件P；「就」後面是結果Q。",
+        "solve": "「數學及格的話」＝「如果數學及格」，是條件P；「借手機」是「就」後面的結果Q，故答案是「P＝數學及格、Q＝借手機」。把P、Q對調的那一項（P＝借手機、Q＝數學及格）並不對（借手機又不會讓數學及格）；「P＝每天算數學、Q＝段考」那一項把弟弟平常的行為和段考當成P、Q，但原句這條規則講的並不是這兩件事。"
+      },
+      {
+        "story": "圖書館門口貼著一張規則：「如果你是本校學生，就可以免費借書。」志明借完書走出來，忽然動腦筋想：那反過來想想，到底什麼情況一定跟著成立、什麼情況又不一定呢？他決定把三種說法都列出來比一比。",
+        "hints": [
+          "和原句「等價」的意思是：兩句永遠同時成立、同時不成立。",
+          "記住只有一種變形和原句必然相同——把P、Q都改成否定，而且順序要對調。",
+          "逐一檢查：哪一句是「非Q→非P」？另外兩句要各想一個反例（例如校外的老師、貴賓也可能免費借書）。"
+        ],
+        "q": "下列哪一句和「若是本校學生，則可免費借書」意思完全相同（等價）？",
+        "options": [
+          "若不能免費借書，則不是本校學生",
+          "若可以免費借書，則是本校學生",
+          "若不是本校學生，則不能免費借書"
+        ],
+        "answer": 0,
+        "model": "逆否命題等價",
+        "insight": "只有逆否命題「非Q→非P」和原句必然等價；逆命題、否命題都不一定成立。",
+        "solve": "原句P＝本校學生、Q＝可免費借書。逆否命題是「非Q→非P」＝「若不能免費借書，則不是本校學生」，與原句必然等價，這就是答案。「若可以免費借書，則是本校學生」那句是逆命題（Q→P），「若不是本校學生，則不能免費借書」那句是否命題（非P→非Q）——校外的老師或貴賓也可能因為別的身分而能免費借書，所以這兩句都不一定成立，不能當等價。"
+      },
+      {
+        "story": "班上訂了一條班規：「如果值日生沒把黑板擦乾淨，隔天就要多留五分鐘打掃。」星期二的值日生小安那天忙著跟同學聊漫畫，下課鐘一響就衝去福利社，黑板上還留著一大片沒擦掉的字，被風紀股長登記了下來。",
+        "hints": [
+          "先確認規則是「若P則Q」，其中P、Q各是什麼。",
+          "題目告訴你：前件P（沒擦乾淨）確實發生了。",
+          "當規則成立、而且P真的發生了，後件Q會怎樣？"
+        ],
+        "q": "依這條班規，「小安沒擦乾淨黑板」，可以正確推出什麼？",
+        "options": [
+          "小安隔天要多留五分鐘打掃",
+          "小安隔天不用多留",
+          "什麼都推不出來"
+        ],
+        "answer": 0,
+        "model": "肯定前件（Modus Ponens）",
+        "insight": "規則成立、且前件P確實發生，就能有效推出後件Q。",
+        "solve": "規則是「若P（沒擦乾淨）則Q（多留五分鐘）」，現在P確實發生，套用肯定前件即可有效推出Q，故可推出「小安隔天要多留五分鐘打掃」，這是正確的推理形式。「小安隔天不用多留」與「什麼都推不出來」兩項都忽略了「P真時Q必真」這條規則的力量。"
+      },
+      {
+        "story": "遊樂園的常客都知道一句話：「如果今天放颱風假，遊樂園就會人很少。」小美某個週三下午跑去玩，發現園區冷冷清清、排隊完全不用等，她得意地對朋友宣布：「哈，那今天一定是放颱風假啦！」朋友卻皺起眉頭覺得哪裡怪怪的。",
+        "hints": [
+          "先分清楚原句的P（颱風假）和Q（人少）誰是條件、誰是結果。",
+          "小美是看到「結果Q發生了」，就回頭斷定「條件P一定成立」。",
+          "想想：除了颱風假，還有沒有別的原因也會讓遊樂園人很少？"
+        ],
+        "q": "小美從「今天人很少」推出「今天一定放颱風假」，這樣推對嗎？",
+        "options": [
+          "對，因為人少就代表放颱風假",
+          "不對，這是「肯定後件」的謬誤，人少可能有別的原因",
+          "對，因為這和原句等價"
+        ],
+        "answer": 1,
+        "model": "肯定後件謬誤",
+        "insight": "由Q真回推P真是謬誤；能造成Q的原因可能不只P一種。",
+        "solve": "原句「若颱風假(P)則人少(Q)」，小美看到Q（人少）就斷定P（颱風假），這是肯定後件的謬誤。人少也可能是因為下大雨、剛好是平日、或被包場等別的原因，並不保證就是颱風假，所以答案是「這是肯定後件的謬誤、人少可能有別的原因」那一項。「人少就代表放颱風假」那一項正是掉進這個謬誤；「這和原句等價」那一項錯把「Q→P」（逆命題）當等價，真正和原句等價的是逆否命題。"
+      },
+      {
+        "story": "段考前，媽媽笑著對小宇說：「如果你數學考100分，我就帶你去吃你最愛的牛排。」成績單發下來，小宇考了98分，就差那麼一點點沒滿分。他一路垂頭喪氣走回家，心想：「完了，我沒考到100，一定沒牛排吃了。」其實媽媽看到98分早就樂開懷，覺得很棒。",
+        "hints": [
+          "原句只講了「考到100分」會發生什麼，先確認它有沒有講「沒考到」會怎樣。",
+          "小宇是用「前件P沒發生」去斷定「後件Q一定不發生」。",
+          "媽媽有沒有可能因為98分也很棒，照樣請牛排？這能看出那個推理站不站得住。"
+        ],
+        "q": "小宇從「沒考到100分」就斷定「一定沒牛排吃」，這個推理是？",
+        "options": [
+          "有效推理，因為沒滿足條件就沒有結果",
+          "謬誤，否定前件並不能保證後件一定不發生",
+          "和原句等價"
+        ],
+        "answer": 1,
+        "model": "否定前件謬誤",
+        "insight": "前件P沒發生，不代表Q一定不發生；原句只保證「P真時Q真」，沒說P假時如何。",
+        "solve": "原句只承諾「若考100(P)則有牛排(Q)」，並沒有說「不到100就沒牛排」。媽媽完全可以因為98分也很棒而照樣請牛排，所以由「非P」推「非Q」是否定前件的謬誤，答案就是「謬誤，否定前件並不能保證後件一定不發生」那一項。「有效推理，沒滿足條件就沒有結果」那一項把原句沒明講的情況當成必然；「和原句等價」那一項把否命題誤當等價。"
+      },
+      {
+        "story": "田徑隊教練規定得很清楚：「如果你有來晨練，出席表上就會有你的簽名。」某天教練檢查出席表，一格一格看下去，發現阿凱那天的欄位是空白的，連一撇簽名都沒有。教練摸著下巴開始推敲當天的狀況。",
+        "hints": [
+          "規則是「若來晨練則有簽名」，先想想它等價的「逆否」說法怎麼講。",
+          "「若非Q則非P」和原句意思相同——試著把這句翻成白話。",
+          "既然「沒簽名」＝非Q，順著逆否那句，能推出關於「來不來晨練」的什麼結論？"
+        ],
+        "q": "由「阿凱那天沒有簽名」，依這條規則可以有效推出什麼？",
+        "options": [
+          "阿凱那天沒來晨練",
+          "阿凱那天有來晨練",
+          "什麼都推不出來，這是謬誤"
+        ],
+        "answer": 0,
+        "model": "否定後件（Modus Tollens）",
+        "insight": "「若P則Q」等價於「若非Q則非P」，所以Q沒發生可有效推出P沒發生。",
+        "solve": "規則「若來晨練(P)則有簽名(Q)」，其逆否等價於「若沒簽名(非Q)則沒來晨練(非P)」。既然阿凱沒簽名，就能有效推出他那天沒來晨練，這就是答案。這是否定後件的有效推理，不是謬誤，所以「什麼都推不出來、這是謬誤」那一項錯；「阿凱那天有來晨練」那一項方向剛好相反。"
+      },
+      {
+        "story": "遊樂園入口的雲霄飛車前立著一塊告示牌：「只有身高滿120公分，才能玩雲霄飛車。」小胖排隊前先靠著量身高的立牌比了比，剛好125公分，開心地跳上去排隊；旁邊的小豆只有110公分，被工作人員溫柔地請下來，改玩旋轉木馬。",
+        "hints": [
+          "「只有……才……」要特別小心，它講的是「非得先具備的條件」。",
+          "「想玩雲霄飛車」的人，是不是一定得先滿足「身高滿120」這個條件？",
+          "把「一定得滿120才能玩」翻成「若……則……」，特別注意誰該放在前件。"
+        ],
+        "q": "把「只有身高滿120，才能玩雲霄飛車」正確寫成「若P則Q」，下列何者對？",
+        "options": [
+          "若能玩雲霄飛車，則身高滿120",
+          "若身高滿120，則能玩雲霄飛車",
+          "若身高不滿120，則能玩雲霄飛車"
+        ],
+        "answer": 0,
+        "model": "必要條件（只有A才B ＝ 若B則A）",
+        "insight": "「只有A才B」是說A是B的必要條件，等於「若B則A」，P、Q要反過來。",
+        "solve": "「只有身高滿120(A)，才能玩(B)」意思是「想玩，就一定得先滿120」，也就是「若能玩(B)則身高滿120(A)」，這就是答案。「若身高滿120，則能玩雲霄飛車」那一項把它讀成充分條件「滿120就能玩」，但滿120也可能因為身體不適等而被擋下，告示並沒有保證這點；「若身高不滿120，則能玩雲霄飛車」那一項則完全講反了，不滿120反而能玩是錯的。"
+      },
+      {
+        "story": "學期末，導師在小婷的成績單評語欄寫下：「小婷很認真，而且很會照顧同學。」小婷的同桌看到後歪著頭想：老師這句話，是不是在說「如果一個人認真，就一定會照顧同學」呢？她越想越覺得怪。",
+        "hints": [
+          "先找找有沒有「如果／只要／就」這種條件詞，「而且」算不算條件詞？",
+          "「而且」是把兩件事並排講出來，還是表示「一個成立、另一個才跟著成立」？",
+          "想想：小婷是「因為認真，所以才會照顧同學」嗎？還是這只是兩個各自獨立的優點？"
+        ],
+        "q": "「小婷很認真，而且很會照顧同學」這句，適合寫成「若P則Q」嗎？",
+        "options": [
+          "適合，P＝認真、Q＝照顧同學",
+          "適合，P＝照顧同學、Q＝認真",
+          "不適合，這是用「而且」並列描述兩個優點，不是條件關係"
+        ],
+        "answer": 2,
+        "model": "條件句 vs. 並列描述句",
+        "insight": "「而且／和／又」是把兩件事並列陳述，之間沒有「條件→結果」，不能套P、Q。",
+        "solve": "「認真」和「照顧同學」是導師並列稱讚小婷的兩個特質，用「而且」連接，彼此之間沒有「若……則……」的推理關係（並不是因為認真才會照顧同學），所以不適合寫成條件句，答案是「不適合，這是用而且並列描述兩個優點」那一項。另外兩個說「適合、可寫成P、Q」的選項都憑空製造出一個原句沒有的條件關係，把「並列」誤讀成了「因果／條件」。"
+      },
+      {
+        "story": "禮拜一早上，天空灰灰的，媽媽出門前特別走到玄關，拍拍弟弟的肩膀說：「這句話你給我記好——如果今天下雨，你放學回家的時候就一定要帶傘，不要淋成落湯雞。」弟弟嘴巴上答應，可是他常常聽話聽一半。到了下午放學，四種不同的天氣與帶傘情況都有可能發生。班上的糾察隊阿明想幫弟弟檢查：到底哪一種情況，才算是弟弟真的沒把媽媽這句話當一回事、違反了媽媽的交代？",
+        "hints": [
+          "先把媽媽的話拆成兩塊：前面那塊是「下雨」，後面那塊是「要帶傘」。",
+          "媽媽只在「下雨」的時候才要求帶傘；沒下雨那天，她根本沒規定要不要帶。",
+          "去找一個情況，它同時滿足『前面那塊成立』而『後面那塊卻沒做到』——只有這種才算打破約定。"
+        ],
+        "q": "剝掉故事，這其實在問：「若下雨則帶傘」這條規則，在哪一種情況下才算被違反？",
+        "options": [
+          "早上下雨了，弟弟卻空著手、沒帶傘就出門",
+          "早上沒下雨，弟弟也沒帶傘",
+          "早上沒下雨，弟弟還是帶了一把傘",
+          "早上下雨了，弟弟乖乖帶了傘"
+        ],
+        "answer": 0,
+        "model": "條件句的否證條件（唯有『前件成立、後件不成立』才算違反）",
+        "insight": "「若P則Q」只有一種情況會被打破：P真而Q假。其餘三種(P真Q真、P假Q真、P假Q假)通通不算違反，因為規則根本沒去管『沒下雨』時該怎麼做。",
+        "solve": "正確答案是「下雨了(P成立)卻空手沒帶傘(Q不成立)」那一項，完全命中『P真Q假』，這是唯一算違反的情況。『下雨了、弟弟乖乖帶傘』那一項(P真Q真)正好照做，沒違反。『沒下雨也沒帶傘』與『沒下雨卻還帶了一把傘』兩項都是『沒下雨』(P不成立)，媽媽的話對這天沒有任何要求，所以無論帶不帶傘都沒違反——這正是最常見的錯誤：以為『沒帶傘』就一定犯規，卻忘了要先『下雨』這個前提成立。反例：『沒下雨也沒帶傘』那一項，你總不能說他違反了『下雨要帶傘』吧？"
+      },
+      {
+        "story": "巷口新開了一家手搖飲料店，門口貼了一張大大的海報：「加入會員，結帳一律打九折！」小惠一家人都很愛喝，於是討論起來。表姊說：「那我不是會員，店家沒給我打折，是不是就違反公告了？」弟弟說：「隔壁路人也不是會員，店員心情好還是給他九折耶。」小惠自己是會員，結帳時店員卻按了原價。大家七嘴八舌，到底哪一個情況，才真的算店家『說話不算話、違反了自己貼出來的公告』？",
+        "hints": [
+          "把公告拆開：前件是『你是會員』，後件是『打九折』。",
+          "公告只承諾了『會員會打折』，它沒有承諾『非會員一定不打折』。",
+          "找出一個『明明是會員（前件成立），卻沒拿到九折（後件落空）』的人，那才叫違反承諾。"
+        ],
+        "q": "這其實在考：「若是會員則打九折」這條承諾，哪一種情況才算被店家違反？",
+        "options": [
+          "小惠是會員，結帳時店家卻按原價、沒給她打九折",
+          "表姊不是會員，店家沒給她打折",
+          "路人不是會員，店家好心也給他打了九折",
+          "弟弟是會員，店家給他打了九折"
+        ],
+        "answer": 0,
+        "model": "條件句的否證條件（前件真、後件假才違反）",
+        "insight": "承諾『會員→九折』只規範會員這一群人。非會員（前件不成立）的遭遇，無論有沒有打折，都不在這句話的管轄範圍，所以不可能違反它。",
+        "solve": "答案是『小惠是會員(P真)卻被按原價、沒打九折(Q假)』那一項，命中P真Q假，唯一算違反。『弟弟是會員且打了九折』那一項(P真Q真)照做了。表姊與路人那兩項都不是會員(P假)，公告對他們沒作任何承諾，所以『表姊沒被打折』或『路人被多打了折』都沒違反公告。常見誤區：以為『非會員沒打折』就是違反——但公告從沒說非會員一定要打折，這是把逆命題硬塞進原句。"
+      },
+      {
+        "story": "週末，弟弟坐在客廳沙發上打電動打得正嗨，姊姊經過看到，叉著腰說：「爸爸明明講過『如果你寫完作業，就可以打電動』，你今天作業一個字都沒寫，竟然還在打，你違反爸爸的規定了啦！」弟弟愣了一下，心裡有點慌，但又覺得哪裡怪怪的：爸爸那句話，真的有禁止『沒寫完作業就不准打』嗎？兩個人吵成一團，只好把爸爸原本那句話一個字一個字拿出來仔細看。",
+        "hints": [
+          "爸爸的話前件是『寫完作業』，後件是『可以打電動』。",
+          "規則說的是『寫完→可以打』，但它有沒有反過來說『沒寫完→不准打』？這兩句不一樣。",
+          "要判斷弟弟有沒有違反，得看『寫完作業』這個前件有沒有成立；前件根本沒成立時，這句話還沒開始管他。"
+        ],
+        "q": "弟弟沒寫作業卻打了電動，姊姊說他『違反爸爸的規定』。這樣講對不對？",
+        "options": [
+          "對，因為沒寫作業就不能打電動",
+          "不對，爸爸只規定『寫完→可以打』，並沒有規定『沒寫完就不准打』，弟弟沒違反這句話",
+          "對，因為要打電動就一定得先寫完作業",
+          "對，因為打電動本身就是不乖"
+        ],
+        "answer": 1,
+        "model": "否定前件謬誤(逆命題≠原命題)",
+        "insight": "『寫完作業→可以打電動』只給了『寫完』時的權利，沒有對『沒寫完』下任何禁令。把『沒寫完就不准打』當成原句，其實是偷偷用了逆命題(可以打→寫完 的反向)，兩者不等價。",
+        "solve": "答案是『不對，爸爸只規定寫完→可以打、並沒規定沒寫完就不准打』那一項。原句是條件句『P（寫完）→Q（可以打）』，它只保證前件成立時後件會發生；前件不成立（沒寫完）時，原句什麼都沒規定，所以弟弟並沒有違反這一句話。『沒寫作業就不能打電動』與『要打電動就一定得先寫完作業』兩項都把『沒寫完就不准打』當作原句的意思，那是逆命題或雙條件，原句並不包含。『打電動本身就是不乖』那一項把價值判斷混進來，和邏輯無關。反例：爸爸大可以說『沒寫完也能打一下下沒關係』，這跟他原本那句話完全不衝突，可見原句根本沒禁止沒寫完就打。(注意：這裡只討論有沒有『違反這句話』，不是說打電動這件事一定合理。)"
+      },
+      {
+        "story": "交通安全宣導週，老師在黑板上寫了一條最基本的規則：「若是紅燈，就要停下來。」放學路口，同學們回報了各種畫面：有人綠燈時停下來禮讓推著嬰兒車的阿姨、有人綠燈直接通過、有人紅燈時穩穩停住等待、還有人紅燈時居然直接騎過去。老師想用這條規則考考大家的邏輯：這麼多畫面裡，到底哪一個才真正違反了『紅燈要停』這條規則？",
+        "hints": [
+          "前件是『紅燈』，後件是『要停下來』。",
+          "綠燈時停不停，這條規則沒有規定，所以綠燈的畫面通通別急著判它違規。",
+          "鎖定『紅燈（前件成立）卻沒停（後件落空）』的那一幕。"
+        ],
+        "q": "這在考：哪一種情況違反了『若紅燈則要停』這條規則？",
+        "options": [
+          "綠燈時停了一下，禮讓行人先走",
+          "紅燈時沒停，直接騎了過去",
+          "綠燈時直接通過",
+          "紅燈時停下來等待"
+        ],
+        "answer": 1,
+        "model": "條件句的否證條件（前件真、後件假才違反）",
+        "insight": "規則只管『紅燈』這個前件。綠燈的情況（前件不成立）不論停或不停，都不在規則的管轄內，不可能違反它。",
+        "solve": "答案是『紅燈(P真)卻沒停、直接騎過去(Q假)』那一項，命中P真Q假，唯一違反。『紅燈時停下來等待』那一項(P真Q真)正是照做。『綠燈停下禮讓行人』與『綠燈直接通過』兩項都是綠燈(P假)，規則沒對綠燈作要求，所以停或不停都沒違反這條規則。常見錯誤：覺得『綠燈還停下來很奇怪、算違規』——但規則只說紅燈要停，綠燈停下讓行人並沒有打破這句話。"
+      },
+      {
+        "story": "小葳在網路購物，商品頁最上面用紅字寫著：「單筆消費滿100元，即享免運費！」她跟同學分享，大家立刻舉了一堆例子：有人只買了80元被收運費、有人只買80元但店家活動期間免運、有人買了150元卻莫名其妙還被收了一次運費、也有人買150元順利免運。小葳想確認，到底哪一種情況，才能說這家網站『沒有守住自己頁面上寫的規則』？",
+        "hints": [
+          "前件是『消費滿100元』，後件是『免運費』。",
+          "沒滿100元的訂單，頁面沒承諾免運，所以那些訂單收不收運費都不算違反這句話。",
+          "要找『滿了100（前件成立）卻還被收運費（後件落空）』的那一筆。"
+        ],
+        "q": "這在問：「若消費滿100則免運」這條規則，哪一種情況才算被網站違反？",
+        "options": [
+          "只買80元，被收了運費",
+          "買了150元，卻還是被收了運費",
+          "只買80元，店家活動期間佛心免運",
+          "買了150元，順利免運"
+        ],
+        "answer": 1,
+        "model": "條件句的否證條件（前件真、後件假才違反）",
+        "insight": "承諾只涵蓋『滿100』的訂單。未滿100（前件不成立）的訂單，不論收不收運費都在承諾範圍之外，不可能違反這句話。",
+        "solve": "答案是『買了150元、滿100(P真)卻還被收運費(Q假)』那一項，命中P真Q假。『買150元順利免運』那一項(P真Q真)是照做。『只買80元被收運費』與『只買80元卻佛心免運』兩項都只買80元(P假)，頁面沒對未滿100作承諾，所以被收運費或多送免運都沒違反這句話。誤區：以為『買80元被收運費』很虧就是店家違規——但規則的前件是『滿100』，80元根本沒觸發這個承諾。"
+      },
+      {
+        "story": "開學第一天，班導在班規裡加了一條：「若上課遲到，就要幫忙擦一次黑板。」小華聽了心裡發毛，因為他常常趕不上早自習。結果這一週他天天準時到校，一次也沒遲到，自然也沒去擦黑板。到了週五，愛管閒事的班長忽然指著他說：「你這禮拜都沒擦黑板，違反班規囉！」小華覺得超冤枉，但一時又講不清楚。到底班長的指控站不站得住腳？",
+        "hints": [
+          "班規的前件是『遲到』，後件是『要擦黑板』。",
+          "這條班規只在『遲到』發生時，才會叫人去擦黑板。",
+          "先問：小華這週的前件『遲到』有沒有成立？前件沒成立時，規則有沒有理由要求他擦黑板？"
+        ],
+        "q": "小華整週準時、也沒擦黑板，班長說他違反班規。這樣的指控對不對？",
+        "options": [
+          "對，因為他一整週都沒擦黑板",
+          "不對，班規只在『遲到』時才要人擦黑板，小華沒遲到，規則沒要求他，他沒違反",
+          "對，因為班上每個人本來就都要輪流擦黑板",
+          "對，因為他運氣好才沒被抓到"
+        ],
+        "answer": 1,
+        "model": "否定前件謬誤（前件不成立時規則不生效）",
+        "insight": "『遲到→擦黑板』只在前件『遲到』成立時才啟動義務。前件不成立（準時）時，後件（擦黑板）做不做都與這條規則無關，不可能違反它。",
+        "solve": "答案是『不對，班規只在遲到時才要人擦黑板，小華沒遲到、規則沒要求他』那一項。條件句『P（遲到）→Q（擦黑板）』只約束遲到的情況；小華沒遲到(P假)，這條規則對他這週沒有下任何命令，所以沒擦黑板也沒違反。『他一整週都沒擦黑板就算違反』那一項犯了否定前件的錯：把『沒擦黑板』直接當成犯規，卻忽略必須先『遲到』。『班上每個人本來就都要輪流擦黑板』那一項憑空多加了原本不存在的規則。『他運氣好才沒被抓到』那一項扯到運氣，與邏輯無關。反例：若真如班長所說，那全班準時的同學都得擦黑板，顯然不合班規原意。"
+      },
+      {
+        "story": "圖書館的還書櫃檯貼著一條規定：「書若逾期歸還，要繳10元罰款。」這學期借書的同學各有遭遇：小明準時還書、沒被罰；小美逾期了，乖乖繳了10元；阿強也逾期了，但館員一忙忘了跟他收錢；小華準時還書，館員當然也沒收他錢。老師想用這四個人考大家：到底誰的情況，構成了『違反這條圖書館規定』？",
+        "hints": [
+          "前件是『逾期歸還』，後件是『要繳10元』。",
+          "準時還書的人（前件不成立）不在這條規定的管轄內。",
+          "規定被違反，代表『該罰卻沒罰』——找那個逾期了卻沒繳到罰款的人。"
+        ],
+        "q": "這在問：「若逾期則罰10元」這條規定，哪一位同學的情況違反了它？",
+        "options": [
+          "小明準時還書，沒被罰款",
+          "小美逾期還書，乖乖繳了10元",
+          "阿強逾期還書，館員卻忘了跟他收罰款",
+          "小華準時還書，館員也沒收他錢"
+        ],
+        "answer": 2,
+        "model": "條件句的否證條件（前件真、後件假才違反）",
+        "insight": "規定只針對『逾期』這個前件。準時的兩人（前件不成立）沒被規定到，不算違反；逾期的人裡，有繳的照做、沒收到的才是漏掉的『該罰未罰』。",
+        "solve": "答案是『阿強逾期（P真）卻沒繳到罰款（Q假）、館員忘了收錢』那一項，命中P真Q假，是這條規定唯一被打破的情況。準時還書的小明與小華兩項，前件P假、不受這條規定管轄，沒被罰完全正常。『小美逾期且繳了款(P真Q真)』那一項正是照規定執行，不算違反。誤區：有人會覺得『小華準時卻沒被罰』也怪怪的，但規定根本沒說準時的人要不要被罰，自然談不上違反。"
+      },
+      {
+        "story": "月考前一週，哥哥為了激勵自己，對弟弟拍胸脯保證：「如果我這次月考考進全班前三名，我就請你喝一杯珍奶！」弟弟高興得不得了，天天幫哥哥加油。成績單發下來，哥哥考了第五名，雖然進步很多，但沒進前三，於是沒有請弟弟喝珍奶。弟弟氣呼呼地說：「你都沒請我，你說話不算話，違反約定！」哥哥則說自己根本沒違反。兩人把那句保證再念一次，想搞清楚誰有道理。",
+        "hints": [
+          "保證的前件是『考進前三名』，後件是『請你喝珍奶』。",
+          "這個承諾只在『考進前三名』時才啟動；沒考進前三，承諾根本沒被觸發。",
+          "先確認前件『考進前三名』有沒有成立，再判斷哥哥有沒有食言。"
+        ],
+        "q": "哥哥考第五名、沒請喝珍奶，弟弟說他『違反約定』。這樣說對不對？",
+        "options": [
+          "對，因為哥哥沒有請弟弟喝珍奶",
+          "不對，哥哥只承諾『考進前三→請客』，他沒考進前三，承諾沒被觸發，不算違反",
+          "對，因為答應過的事就一定要做到",
+          "對，因為哥哥考得不夠好"
+        ],
+        "answer": 1,
+        "model": "否定前件謬誤(前件不成立，承諾不生效)",
+        "insight": "『前三名→請客』的義務只在前件成立時出現。哥哥沒進前三（前件不成立），請客的義務根本沒發生，所以沒請客並不違反這句承諾。",
+        "solve": "答案是『不對，哥哥只承諾考進前三→請客，他沒考進前三、承諾沒被觸發』那一項。承諾是條件句『P（前三名）→Q（請客）』，只有在P成立時才需要兌現Q；哥哥P不成立（第五名），這句承諾對他沒有任何要求，沒請客不算食言。『哥哥沒請喝珍奶就算違反』與『答應過的事就一定要做到』兩項都犯了否定前件的錯，把『沒請客』直接當違反，卻略過必須先『考進前三』。『哥哥考得不夠好』那一項把成績好壞當成違不違反，兩者無關。反例：若哥哥反而『沒進前三卻還是請了珍奶』，那是多做，更不是違反。"
+      },
+      {
+        "story": "熱舞社訂了一條社規：「若當天有練習，社員就要穿運動服來。」這週的出席狀況五花八門：週一有練習，阿哲穿了運動服；週二沒排練習，小婷穿學校制服來社辦聊天；週三有練習，大雄卻穿著制服就跑來；週四沒練習，靜香穿了運動服來拿東西。社長要根據社規，揪出這週『唯一違反規定』的那個人。",
+        "hints": [
+          "前件是『當天有練習』，後件是『要穿運動服』。",
+          "沒練習的日子（前件不成立），穿什麼都沒被社規規定到。",
+          "找『有練習（前件成立）卻沒穿運動服（後件落空）』的那個人。"
+        ],
+        "q": "這在問：「若當天有練習則要穿運動服」，哪一位社員違反了社規？",
+        "options": [
+          "週一有練習，阿哲穿了運動服",
+          "週二沒練習，小婷穿制服來社辦",
+          "週三有練習，大雄卻穿制服來",
+          "週四沒練習，靜香穿了運動服來拿東西"
+        ],
+        "answer": 2,
+        "model": "條件句的否證條件（前件真、後件假才違反）",
+        "insight": "社規只約束『有練習』的日子。沒練習的日子（前件不成立），穿制服或運動服都在規定之外，不算違反。",
+        "solve": "答案是『週三有練習(P真)、大雄卻穿制服沒穿運動服(Q假)』那一項，命中P真Q假。『週一有練習、阿哲穿運動服』那一項(P真Q真)正是照做。『週二沒練習、小婷穿制服』與『週四沒練習、靜香穿運動服』兩項都是沒練習的日子(P假)，社規沒對這些日子的穿著作要求，所以穿制服或運動服都不違反。誤區：有人看到『靜香沒練習還穿運動服』覺得多此一舉——但社規沒說沒練習就不能穿運動服，這不算違反。"
+      },
+      {
+        "story": "小傑住的宿舍有一條門禁規定：「若晚上超過十點才回宿舍，就要在門口的本子上登記。」這週室友們回來的時間都不一樣：阿凱九點就回來、沒登記；小林十一點才回、卻沒登記；阿翔九點回來、還順手在本子上寫了名字；小葉十一點回來、乖乖登記了。舍監要根據這條規定，找出『違反門禁登記規定』的人。",
+        "hints": [
+          "前件是『超過十點回宿舍』，後件是『要登記』。",
+          "十點前回來的人（前件不成立），登不登記規定都沒管。",
+          "鎖定『超過十點回來（前件成立）卻沒登記（後件落空）』的那位。"
+        ],
+        "q": "這在考：「若超過十點回宿舍則要登記」，哪一位室友違反了規定？",
+        "options": [
+          "阿凱九點就回宿舍，沒有登記",
+          "小林十一點才回，卻沒有登記",
+          "阿翔九點回來，還是登記了",
+          "小葉十一點回來，乖乖登記了"
+        ],
+        "answer": 1,
+        "model": "條件句的否證條件（前件真、後件假才違反）",
+        "insight": "規定只約束『超過十點』的情況。十點前回來（前件不成立）的人，登不登記都不在規定範圍，不算違反。",
+        "solve": "答案是『小林十一點才回、超過十點(P真)卻沒登記(Q假)』那一項，命中P真Q假。『小葉十一點回來且登記』那一項(P真Q真)是照做。『阿凱九點回來沒登記』與『阿翔九點回來卻登記了』兩項都是九點回來(P假)，規定沒要求十點前的人登記，所以沒登記或多登記都不違反。誤區：『阿翔九點回來還登記』是自願多做，不是違反。"
+      },
+      {
+        "story": "小美家有個溫馨的默契，媽媽常說：「如果你身體不舒服，媽媽就會讓你在家好好休息、不用去上學。」有一天剛好放颱風假，全校都不用上課，小美身體其實好得很，只是開心地待在家看書。哥哥半開玩笑地說：「你今天又沒生病，還待在家，這樣不就違反媽媽的規則了嗎？」小美覺得哥哥在硬拗，但一時說不出反駁的理由。到底哥哥的邏輯有沒有問題？",
+        "hints": [
+          "媽媽的話前件是『身體不舒服』，後件是『可以在家休息』。",
+          "這句話說『不舒服→可休息』，但它有沒有說『只有不舒服才可以待在家』？",
+          "想想：小美這天在家是因為颱風假。原句有沒有規定『沒生病就不准待在家』？"
+        ],
+        "q": "小美沒生病卻待在家（颱風假），哥哥說她『違反媽媽的規則』。這樣說對不對？",
+        "options": [
+          "對，因為她沒生病還待在家",
+          "不對，規則只說『不舒服→可休息』，並沒有說『只有不舒服才能待在家』，不算違反",
+          "對，因為待在家就代表她身體不舒服",
+          "對，因為上學日本來就不該待在家"
+        ],
+        "answer": 1,
+        "model": "肯定後件謬誤與逆命題誤用",
+        "insight": "『不舒服→可休息』只保證不舒服時能休息，並沒有把『在家休息』變成只有生病才可以。把『在家=一定生病』反推，是肯定後件的謬誤；把『沒生病就不准在家』當原句，則是誤用逆命題。",
+        "solve": "答案是『不對，規則只說不舒服→可休息，並沒有說只有不舒服才能待在家』那一項。原句是『P（不舒服）→Q（可在家休息）』；小美是在颱風假在家，屬於P不成立、Q成立的情況，原句對這種情況沒下任何禁令，所以不算違反。『她沒生病還待在家就算違反』那一項把『沒生病就不能在家』塞進原句，那是逆否以外的錯誤推論（逆命題方向）。『待在家就代表她身體不舒服』那一項是典型的肯定後件謬誤——由Q反推P並不成立。『上學日本來就不該待在家』那一項憑空多加規則。反例：颱風假、週末在家都很正常，可見原句從沒要求『在家一定要生病』。"
+      },
+      {
+        "story": "小宇的手機壞了，拿去店裡修。當初買的時候，保固卡上寫著：「保固期內，維修免費。」他跟同學討論各種可能：有人手機早就過了保固期、維修被收費；有人手機還在保固期內、維修卻被要求付錢；有人手機過保了、但店家做活動佛心免費修；還有人保固期內、順利免費修好。小宇想弄清楚，到底哪一種情況，才算店家『違反了保固卡上的承諾』？",
+        "hints": [
+          "前件是『在保固期內』，後件是『維修免費』。",
+          "過了保固期的手機（前件不成立），店家沒承諾免費，收不收錢都不算違反。",
+          "找『還在保固期內（前件成立）、卻被收了維修費（後件落空）』的那一種。"
+        ],
+        "q": "這在問：「若在保固期內則維修免費」，哪一種情況違反了店家的承諾？",
+        "options": [
+          "手機過了保固期，維修被收費",
+          "手機還在保固期內，維修卻被要求付錢",
+          "手機過了保固期，店家做活動佛心免費修",
+          "手機在保固期內，順利免費修好"
+        ],
+        "answer": 1,
+        "model": "條件句的否證條件（前件真、後件假才違反）",
+        "insight": "承諾只涵蓋『保固期內』。過保（前件不成立）的手機不在承諾範圍，收費或免費都不算違反這句話。",
+        "solve": "答案是『手機還在保固期內(P真)、維修卻被要求付錢(Q假)』那一項，命中P真Q假。『保固期內順利免費修好』那一項(P真Q真)是照做承諾。『過保被收費』與『過保卻佛心免費修』兩項都已過保(P假)，保固卡沒對過保機承諾免費，所以被收費或多送免費都不違反。誤區：覺得『過保被收費很吐血』就是店家違規——但承諾的前件是『保固期內』，過保根本沒觸發免費的承諾。"
+      }
+    ]
+  },
+  {
+    "id": "lv2",
+    "level": 2,
+    "name": "逆命題·否命題·逆否命題",
+    "emoji": "🔄",
+    "color": "#7c3aed",
+    "concepts": [
+      "逆命題(對調P、Q)",
+      "否命題(P、Q都加否定)",
+      "逆否命題(對調又否定)",
+      "逆否等價",
+      "有效推理vs邏輯謬誤"
+    ],
+    "keyFacts": [
+      "先把句子拆成骨架「若P則Q」:P是前件(假設),Q是後件(結論)。例如「若是狗，則是動物」裡P=是狗、Q=是動物。三種變化都從這副骨架長出來。",
+      "逆命題=把箭頭反過來:「若Q則P」(P、Q對調，都不加「不」)。否命題=兩邊都加否定:「若非P則非Q」。逆否命題=先對調再各加否定:「若非Q則非P」。",
+      "鐵則一：只有『逆否命題』和原命題一定同真同假(等價)。「若是狗則是動物」為真，它的逆否「若不是動物則不是狗」也一定為真；但逆命題「若是動物則是狗」明明是錯的——所以逆命題、否命題都不保證跟原句一樣。",
+      "鐵則二：合法推理只有兩種。肯定前件——已知P→Q且P成立，可得Q;否定後件——已知P→Q且Q不成立，可得非P(這其實就是用逆否命題)。",
+      "鐵則三：兩個常見陷阱是謬誤。肯定後件——由『Q成立』倒推『P成立』(等於誤用逆命題);否定前件——由『P不成立』推『Q不成立』(等於誤用否命題)。看到這兩種，一定要找反例打掉它。"
+    ],
+    "questions": [
+      {
+        "story": "體育股長阿哲整理球隊名冊時，發現教練貼了一張規定：「只要是校隊正式隊員，就一定有一件印著背號的紅色球衣。」小美看了看隔壁班的學長，他身上正好穿著一件印背號的紅色球衣，阿哲想把這條規定『反過來講一次』，也就是把假設和結論對調，看看會變成什麼句子。他在筆記本上寫了好幾個版本，想找出哪一個才是真正『對調過來』的說法。",
+        "hints": [
+          "先把原句拆成骨架：P=「是校隊正式隊員」，Q=「有印背號的紅色球衣」，原句是「若P則Q」。",
+          "「反過來講、假設和結論對調」指的是逆命題，形狀是「若Q則P」，而且P、Q兩邊都不可以偷偷加上『不』。",
+          "找出那個把『有紅色球衣』放前面、『是校隊隊員』放後面，而且完全沒有出現否定字的選項。"
+        ],
+        "q": "把「若P則Q」的前件與後件對調、都不加否定，得到的句子（逆命題）是哪一個？",
+        "options": [
+          "若他有印背號的紅色球衣，則他是校隊正式隊員。",
+          "若他不是校隊正式隊員，則他沒有印背號的紅色球衣。",
+          "若他沒有印背號的紅色球衣，則他不是校隊正式隊員。",
+          "若他是校隊正式隊員，則他有印背號的紅色球衣。"
+        ],
+        "answer": 0,
+        "model": "逆命題(Converse)",
+        "insight": "逆命題只做一件事：把箭頭兩邊的P、Q互換位置，絕對不加任何否定詞。",
+        "solve": "原句P=是校隊隊員、Q=有紅色球衣。逆命題形狀是「若Q則P」=「若他有紅色球衣，則他是校隊隊員」，就是正解那一句。「若他不是校隊正式隊員，則他沒有紅色球衣」那一句是「若非P則非Q」，那是否命題；「若他沒有紅色球衣，則他不是校隊隊員」那一句是「若非Q則非P」，那是逆否命題；「若他是校隊隊員，則他有紅色球衣」那一句根本沒改，就是原命題本身。要注意：逆命題不一定為真——就算校隊都有紅球衣，別班學長自己買一件紅球衣穿也可能有，並不代表他是校隊，這正說明逆命題和原句不等價。"
+      },
+      {
+        "story": "圖書館志工琪琪負責管理借書規定，牆上寫著：「如果一本書是參考書，那麼它不能外借。」館長要她練習把這條規定改寫成『否命題』的形式，也就是把假設和結論『各自都加上否定』，但位置不對調。琪琪把「是參考書」當成假設、「不能外借」當成結論，然後開始一個一個字慢慢改，深怕改錯了讓同學誤會借書規則。",
+        "hints": [
+          "先定骨架：P=「是參考書」，Q=「不能外借」，原句「若P則Q」。這裡Q本身就已經帶有『不』，要小心。",
+          "否命題的形狀是「若非P則非Q」：前件變『不是參考書』，後件把『不能外借』再否定，變成『可以外借』，位置不對調。",
+          "找出開頭是『若這本書不是參考書』、而且結論變成『可以外借』的那一個。"
+        ],
+        "q": "把「若P則Q」的前件、後件各自加上否定但不對調（否命題），會得到哪一句？",
+        "options": [
+          "若一本書不是參考書，則它可以外借。",
+          "若一本書不能外借，則它是參考書。",
+          "若一本書可以外借，則它不是參考書。",
+          "若一本書是參考書，則它可以外借。"
+        ],
+        "answer": 0,
+        "model": "否命題(Inverse)",
+        "insight": "否命題=P、Q都戴上『非』的帽子，但位置不動；後件Q原本已含『不』時，再否定就會抵消回『可以』。",
+        "solve": "P=是參考書、Q=不能外借。否命題「若非P則非Q」=「若不是參考書，則並非不能外借」=「若不是參考書，則可以外借」，就是正解那一句。「若不能外借，則是參考書」那一句把『不能外借（Q）』放前面、『是參考書（P）』放後面，只對調位置卻沒有加否定，這其實是逆命題「若Q則P」，不是否命題；「若可以外借，則不是參考書」那一句其實是逆否命題「若非Q則非P」；「若是參考書，則可以外借」那一句只否定了後件卻沒動前件，是拼湊的錯句。提醒：否命題也不保證為真——不是參考書的書也可能因為破損被列為不外借，反例即打掉它。"
+      },
+      {
+        "story": "生物老師出了一句判斷題：「若一種動物是鯨魚，則牠是哺乳類。」小杰知道這句話是對的。老師接著要全班寫出這句話的『逆否命題』，並強調：逆否命題是唯一一種『保證和原句同時對、同時錯』的變化。小杰記得步驟是『先把前後對調，再兩邊都加否定』，他把牠們一步一步套上去，想找出那個既對調、又加了否定的正確版本。",
+        "hints": [
+          "骨架：P=「是鯨魚」，Q=「是哺乳類」，原句「若P則Q」為真。",
+          "逆否命題的形狀是「若非Q則非P」：先對調成Q→P，再兩邊都加否定，變『若不是哺乳類，則不是鯨魚』。",
+          "找出開頭是『若牠不是哺乳類』、結論是『則牠不是鯨魚』的那一個。"
+        ],
+        "q": "與「若是鯨魚則是哺乳類」保證同真同假的逆否命題，是下列哪一句？",
+        "options": [
+          "若牠不是哺乳類，則牠不是鯨魚。",
+          "若牠是哺乳類，則牠是鯨魚。",
+          "若牠不是鯨魚，則牠不是哺乳類。",
+          "若牠是鯨魚，則牠不是哺乳類。"
+        ],
+        "answer": 0,
+        "model": "逆否命題(Contrapositive)",
+        "insight": "逆否命題=對調又加否定，是唯一與原句等價的變形；可用『既然是哺乳類才可能是鯨魚，不是哺乳類就絕不是鯨魚』來驗證。",
+        "solve": "P=是鯨魚、Q=是哺乳類。逆否命題「若非Q則非P」=「若不是哺乳類，則不是鯨魚」，就是正解那一句，且它和原句一樣為真。「若是哺乳類則是鯨魚」那一句是逆命題，但牛也是哺乳類卻不是鯨魚，可見它是錯的、不等價；「若不是鯨魚則不是哺乳類」那一句是否命題，但狗不是鯨魚卻是哺乳類，也不等價；「若是鯨魚，則不是哺乳類」那一句是矛盾的亂改句。"
+      },
+      {
+        "story": "班長宣布一條班規：「若你當天遲到，則你要負責掃走廊。」風紀股長想確認：這條規定裡，哪一句話跟原句『說的其實是同一件事』——不管什麼情況，只要原句成立，那句也一定成立；原句被推翻，那句也一定被推翻。他排出四個候選句，想挑出這個『分身』。",
+        "hints": [
+          "定骨架：P=「當天遲到」，Q=「要負責掃走廊」。問的是『和原句一定同真同假』的那一句。",
+          "三種變化裡，只有逆否命題「若非Q則非P」和原句等價；逆命題、否命題都只是『可能對』而已。",
+          "把前後對調、再兩邊加否定：『若你沒負責掃走廊，則你當天沒遲到』——找這個形狀。"
+        ],
+        "q": "剝掉故事，哪一句和原命題『一定同時成立、同時被推翻』（等價）？",
+        "options": [
+          "若你沒有負責掃走廊，則你當天沒有遲到。",
+          "若你當天沒遲到，則你不用負責掃走廊。",
+          "若你要負責掃走廊，則你當天遲到了。",
+          "若你當天遲到，則你不用掃走廊。"
+        ],
+        "answer": 0,
+        "model": "逆否等價(Contrapositive equivalence)",
+        "insight": "『和原句一定同真同假』這幾個字就是在指逆否命題；逆命題、否命題頂多是巧合成立。",
+        "solve": "P=遲到、Q=掃走廊。等價的是逆否命題「若非Q則非P」=「若你沒掃走廊，則你當天沒遲到」，就是正解那一句。「若沒遲到則不用掃」那一句是否命題，但也許你沒遲到卻因別的原因被排掃走廊，不一定成立；「掃走廊者一定遲到」那一句是逆命題，同樣可能有別的理由掃走廊而非遲到，不等價；「若遲到則不用掃」那一句和原句直接矛盾。"
+      },
+      {
+        "story": "小媛的媽媽說：「若外面在下雨，則地上是濕的。」有一天小媛放學回家，看到地上濕濕的，就理直氣壯地說：『所以剛剛一定下過雨！』媽媽笑著搖頭，指了指隔壁鄰居——原來是鄰居剛才在門口洗車、灑了一地水。小媛愣住了，開始想：到底是自己哪一步推錯了？",
+        "hints": [
+          "原句骨架：P=「在下雨」，Q=「地上濕」，即「若P則Q」。小媛看到的是Q（地濕），想倒推回P（下雨）。",
+          "由『結論Q成立』倒推『假設P成立』，其實是把原句偷偷當成它的逆命題在用。",
+          "想想洗車這個反例：地濕的原因不只下雨一種，所以這種倒推靠不住。"
+        ],
+        "q": "小媛『地是濕的，所以一定下過雨』這種推理，問題出在哪裡？",
+        "options": [
+          "她把原句當成逆命題來用（肯定後件），這是謬誤。",
+          "她正確地使用了否定後件，推理沒問題。",
+          "她用了逆否命題，所以結論一定正確。",
+          "她使用了肯定前件，推理完全有效。"
+        ],
+        "answer": 0,
+        "model": "肯定後件的謬誤(Affirming the Consequent)",
+        "insight": "看到『由後件Q成立、去斷定前件P成立』就要警覺：這等於誤用逆命題，是謬誤，通常找得到反例。",
+        "solve": "原句P→Q，小媛觀察到Q（地濕）就斷定P（下雨），這叫肯定後件，是無效推理——因為它偷偷假設了逆命題『地濕就一定下雨』，而逆命題不一定為真。洗車灑水就是反例：地濕但沒下雨，故正解是『把原句當成逆命題來用（肯定後件），這是謬誤』這一項。說『她正確使用了否定後件』那一項不對——否定後件是『觀察到非Q』，但她觀察到的是Q，不符；把它說成『用了逆否命題』或『使用了肯定前件』而有效的兩項都錯，肯定前件是『已知P成立』才對，而她並不知道有沒有下雨。"
+      },
+      {
+        "story": "資訊老師規定：「若一位同學交出完整作業，則他可以拿到平時分。」阿俊這次沒有交出完整作業，他就唉聲嘆氣地跟同學說：『完了，我這次平時分一定是零分了。』隔壁的小婷卻說：『不一定喔，老師上次還因為我上課發言主動，額外給了我平時分。』阿俊聽了半信半疑，開始懷疑自己的推論是不是太急了。",
+        "hints": [
+          "骨架：P=「交出完整作業」，Q=「拿到平時分」。阿俊的情況是非P（沒交作業），他想推出非Q（沒平時分）。",
+          "由『假設P不成立』去推『結論Q也不成立』，其實是把原句當成它的否命題在用。",
+          "小婷靠發言拿到平時分，正是一個『非P但仍有Q』的反例，說明這種推法站不住腳。"
+        ],
+        "q": "阿俊『我沒交完整作業，所以平時分一定是零』這種推理屬於哪一種？",
+        "options": [
+          "否定前件的謬誤，結論不一定成立。",
+          "否定後件，推理有效，結論成立。",
+          "肯定前件，推理有效，結論成立。",
+          "逆否推理，和原句等價所以正確。"
+        ],
+        "answer": 0,
+        "model": "否定前件的謬誤(Denying the Antecedent)",
+        "insight": "看到『因為假設P不成立，就斷定結論Q也不成立』要立刻警覺：這是誤用否命題，是謬誤。",
+        "solve": "原句P→Q，阿俊由非P（沒交作業）推非Q（沒平時分），這叫否定前件，無效——因為它其實假設了否命題『沒交作業就一定沒平時分』，而否命題不保證為真。小婷靠發言拿到平時分，就是『非P卻有Q』的反例，故正解是『否定前件的謬誤，結論不一定成立』這一項。講『否定後件』那一項——否定後件是『已知非Q』才能推非P，情況不符；講『肯定前件』那一項需要『P成立』，但他P不成立；講『逆否推理』那一項是『由非Q推非P』，和他做的相反。"
+      },
+      {
+        "story": "登山社的守則寫著：「若能見度低於五十公尺，則當天取消登頂。」某個週末，社長查了氣象，確定當天『沒有取消登頂』，行程照常進行。副社長小凱想根據守則，反推出當天的能見度狀況，好向新社員解釋為什麼今天能上去。他知道這種『從結果反推條件』要很小心，於是把守則的邏輯攤開來仔細想。",
+        "hints": [
+          "骨架：P=「能見度低於五十公尺」，Q=「取消登頂」。已知的是『非Q』（沒有取消）。",
+          "已知『非Q』要推什麼？用否定後件：P→Q配上非Q，可以合法得到非P。",
+          "非P就是『能見度並沒有低於五十公尺』，也就是能見度五十公尺以上——找這個結論。"
+        ],
+        "q": "由守則『若能見度低於五十公尺則取消登頂』加上『當天沒有取消登頂』，可以有效推出什麼？",
+        "options": [
+          "當天能見度沒有低於五十公尺（在五十公尺以上）。",
+          "當天能見度一定低於五十公尺。",
+          "無法推出任何關於能見度的結論。",
+          "當天一定是好天氣、萬里無雲。"
+        ],
+        "answer": 0,
+        "model": "否定後件(Modus Tollens)",
+        "insight": "已知『後件Q沒發生』時，可以合法回推『前件P也沒發生』——這其實就是在用逆否命題，結論可靠。",
+        "solve": "原句P→Q，已知非Q（沒取消），否定後件保證可得非P，即『能見度沒有低於五十公尺』，就是正解那一項，這正是逆否命題「若沒取消則能見度不低於五十公尺」的應用。『能見度一定低於五十公尺』那一項方向相反，是錯的；『無法推出任何關於能見度的結論』那一項低估了否定後件的效力——這是有效推理，並非推不出；『一定是好天氣、萬里無雲』那一項過度延伸，守則只談能見度門檻，不能保證萬里無雲（可能起霧但仍有五十公尺以上能見度）。"
+      },
+      {
+        "story": "自然老師說：「若一個圖形是正方形，則它的四個角都是直角。」課堂上，小安手上拿到一張卡片，老師明確告訴她：『這張卡片上的圖形是正方形。』小安想根據老師這句話和規則，直接說出這個圖形的一個確定性質，好在小組報告時第一個舉手回答。她提醒自己：這次是『已知假設成立』，要用對的規則。",
+        "hints": [
+          "骨架：P=「是正方形」，Q=「四個角都是直角」。已知的是P成立（它是正方形）。",
+          "已知『前件P成立』要推Q，用肯定前件：P→Q配上P，合法得到Q。",
+          "所以可以直接斷定它的四個角都是直角——這是最直接、最可靠的一步。"
+        ],
+        "q": "已知規則『若是正方形則四角都是直角』且『這圖形是正方形』，能有效得到什麼？",
+        "options": [
+          "這個圖形的四個角都是直角。",
+          "四角都是直角的圖形一定是正方形。",
+          "不是正方形的圖形四角就不是直角。",
+          "無法確定這個圖形的角。"
+        ],
+        "answer": 0,
+        "model": "肯定前件(Modus Ponens)",
+        "insight": "『已知假設P成立』時，直接沿著箭頭得到結論Q，這是最基本也最可靠的合法推理。",
+        "solve": "原句P→Q且已知P，肯定前件直接得Q=『四角都是直角』，就是正解那一項。『四角都是直角的圖形一定是正方形』那一項是逆命題，但長方形四角也都是直角卻不是正方形，反例打掉它；『不是正方形就四角不是直角』那一項是否命題，長方形同樣反駁它；『無法確定這個圖形的角』那一項低估了肯定前件——這裡明明能確定得到Q。"
+      },
+      {
+        "story": "熱音社面試官宣布：「若你通過甄選，則你會收到一封錄取通知信。」阿哲的好朋友小林，昨天興奮地跟大家說他『收到了一封錄取通知信』，於是同學們就起鬨說：『那你一定通過甄選啦！』但社長在旁邊皺眉，說這樣講其實有漏洞——有可能系統把候補、旁聽名單也一起寄了通知信。同學們一時沒反應過來，到底哪裡有問題？",
+        "hints": [
+          "骨架：P=「通過甄選」，Q=「收到錄取通知信」。大家握有的是Q（收到信），想倒推P（通過甄選）。",
+          "由『後件Q成立』去斷定『前件P成立』，是把原句誤當逆命題使用。",
+          "社長說的候補、旁聽也收到信，就是『有Q卻未必有P』的反例。"
+        ],
+        "q": "同學們『小林收到通知信，所以一定通過甄選』這一步，是哪一種情況？",
+        "options": [
+          "肯定後件的謬誤，結論不一定成立。",
+          "否定後件，推理有效。",
+          "肯定前件，推理有效。",
+          "逆否命題，和原句等價。"
+        ],
+        "answer": 0,
+        "model": "肯定後件的謬誤(Affirming the Consequent)",
+        "insight": "『由收到信(Q)倒推通過甄選(P)』就是肯定後件——等於偷用逆命題，要靠反例（候補也收到信）拆穿。",
+        "solve": "原句P→Q，同學由Q（收到信）推P（通過），這是肯定後件，無效，因為它假設了逆命題『收到信就一定通過』，而候補、旁聽也可能收到信，即『有Q無P』的反例，故正解是『肯定後件的謬誤，結論不一定成立』這一項。講『否定後件』那一項要『已知非Q』，不符；講『肯定前件』那一項要『已知P』，但他們只知道Q；講『逆否命題』那一項不是這種倒推，說法錯誤。"
+      },
+      {
+        "story": "數學老師在黑板上寫了一句真命題：「若一個整數能被六整除，則它一定能被三整除。」接著老師說：『這句話有一個「等價的分身」和一個「聽起來很像但其實不一定對」的說法，你們要分清楚。』小蓉盯著黑板，決定親手把逆命題和逆否命題都寫出來，再各找一個數字來測試，看誰才是真正跟原句同生共死的那一句。",
+        "hints": [
+          "骨架：P=「能被六整除」，Q=「能被三整除」，原句為真。",
+          "逆命題「若能被三整除則能被六整除」——拿9試試：9能被3整除，卻不能被6整除，可見逆命題是假的。",
+          "逆否命題「若不能被三整除則不能被六整除」才和原句同真同假，找這一句。"
+        ],
+        "q": "下列哪一句和原命題等價（同真同假），而不是那個『看起來很像卻不一定對』的？",
+        "options": [
+          "若一個整數不能被三整除，則它不能被六整除。",
+          "若一個整數能被三整除，則它能被六整除。",
+          "若一個整數不能被六整除，則它不能被三整除。",
+          "若一個整數能被六整除，則它不能被三整除。"
+        ],
+        "answer": 0,
+        "model": "逆否等價(Contrapositive equivalence)",
+        "insight": "先分辨誰是逆命題（對調）誰是逆否（對調又加否定），再用一個數字反例把不等價的打掉。",
+        "solve": "P=被6整除、Q=被3整除。逆否命題「若非Q則非P」=「若不能被3整除，則不能被6整除」，和原句同真同假，就是正解那一句(不能被3整除的數當然不可能被6整除)。「若能被3整除則能被6整除」那一句是逆命題，9是反例(被3不被6)；「若不能被6整除則不能被3整除」那一句是否命題，9同樣反駁它(不被6卻被3)；「若能被6整除則不能被3整除」那一句與原句矛盾。"
+      },
+      {
+        "story": "校刊社要幫一句校園標語做『邏輯對照表』。原句是：「若一位同學是模範生，則他從不遲到。」主編阿哲已經寫好了它的『逆命題』：「若一位同學從不遲到，則他是模範生。」現在他想找出『和這個逆命題等價、同真同假』的那一句，好放在對照表的同一格。他隱約記得：逆命題的『分身』其實就是原句的否命題。",
+        "hints": [
+          "先看逆命題本身：P'=「從不遲到」，Q'=「是模範生」，逆命題是「若P'則Q'」。",
+          "要找和逆命題等價的，就是逆命題的『逆否命題』：對調又加否定，變「若非Q'則非P'」。",
+          "把它翻成白話：『若一位同學不是模範生，則他並非從不遲到（也就是他會遲到）』——找這一句。"
+        ],
+        "q": "與逆命題「若從不遲到則是模範生」等價（同真同假）的句子是哪一個？",
+        "options": [
+          "若一位同學不是模範生，則他會遲到。",
+          "若一位同學是模範生，則他從不遲到。",
+          "若一位同學會遲到，則他是模範生。",
+          "若一位同學從不遲到，則他不是模範生。"
+        ],
+        "answer": 0,
+        "model": "逆命題與其逆否等價(Converse↔Inverse)",
+        "insight": "任何命題只和自己的逆否命題等價；而『逆命題的逆否』正好就是原句的否命題，所以逆命題與否命題彼此等價。",
+        "solve": "把逆命題看成新命題：前件P'=從不遲到、後件Q'=是模範生。它的等價句是它的逆否「若非Q'則非P'」=「若不是模範生，則並非從不遲到」=「若不是模範生，則會遲到」，就是正解那一句(這其實正是原句的否命題，可見逆命題與否命題等價)。「若是模範生則從不遲到」那一句是原命題，和逆命題不等價；「若會遲到則是模範生」那一句是逆命題再對調回原句方向的亂配；「若從不遲到則不是模範生」那一句與逆命題直接矛盾。"
+      },
+      {
+        "story": "保健室護理師貼出提醒：「若你發燒超過三十八度，則你必須留在家中休息。」小華今天量體溫，確定自己『沒有留在家中休息』，因為他人就在教室裡上課。班上愛推理的阿測想根據這條提醒，合法地推出小華今天體溫的狀況，好提醒他別勉強。阿測知道這是『已知結論沒發生』的情境，要用對應的規則。",
+        "hints": [
+          "骨架：P=「發燒超過三十八度」，Q=「留在家休息」。已知的是非Q（沒留在家）。",
+          "已知『後件Q沒發生』，用否定後件：P→Q配非Q，可合法得到非P。",
+          "非P就是『沒有發燒超過三十八度』——找這個穩妥的結論，別過度說成完全沒生病。"
+        ],
+        "q": "由『若發燒超過三十八度則須留在家』加上『小華沒有留在家』，能有效推出什麼？",
+        "options": [
+          "小華今天沒有發燒超過三十八度。",
+          "小華今天一定發燒超過三十八度。",
+          "小華今天完全沒有生病、非常健康。",
+          "關於小華的體溫什麼都推不出來。"
+        ],
+        "answer": 0,
+        "model": "否定後件(Modus Tollens)",
+        "insight": "已知『Q沒發生』就能安全回推『P也沒發生』，這等於使用逆否命題，結論可靠但不要多說。",
+        "solve": "原句P→Q，已知非Q（沒留在家），否定後件得非P=『沒有發燒超過三十八度』，就是正解那一項（即逆否命題「若沒留在家則沒發燒超過三十八度」）。『一定發燒超過三十八度』那一項方向相反，錯誤；『完全沒有生病、非常健康』那一項過度延伸——沒發高燒不代表完全沒生病，他可能有輕微感冒卻不到三十八度；『什麼都推不出來』那一項低估否定後件，其實推得出明確結論。"
+      },
+      {
+        "story": "辯論社練習時，主席給了一個真前提：「若一個方案會增加同學的安全風險，則校方不會採用它。」小組討論到某個『校方最後採用了的方案』，阿哲立刻主張：『既然校方採用了它，那它一定不會增加安全風險。』有人覺得怪怪的，有人覺得好像對，場面吵成一團。裁判請大家先把邏輯攤開，判斷阿哲這一步到底站不站得住腳。",
+        "hints": [
+          "骨架：P=「會增加安全風險」，Q=「校方不採用」。已知『校方採用了它』就是非Q（並非不採用）。",
+          "已知非Q，想推什麼？否定後件：P→Q配非Q，合法得到非P=『不會增加安全風險』。",
+          "檢查阿哲是不是正好沿著這條有效路徑走——已知結論沒發生、回推前件沒發生。"
+        ],
+        "q": "阿哲『校方採用了它，所以它一定不會增加安全風險』這一步，判斷正確嗎？",
+        "options": [
+          "正確，這是否定後件（等於用逆否命題），推理有效。",
+          "錯誤，這是肯定後件的謬誤。",
+          "錯誤，這是否定前件的謬誤。",
+          "無法判斷，因為前提本身不一定為真。"
+        ],
+        "answer": 0,
+        "model": "否定後件(Modus Tollens)",
+        "insight": "先把『校方採用』翻成『非Q』，就會發現這是『已知非Q推非P』的合法否定後件，而不是謬誤。",
+        "solve": "原句P→Q，其中Q=『校方不採用』。『校方採用了它』=非Q。由P→Q與非Q，否定後件合法得非P=『不會增加安全風險』，所以阿哲這一步是有效的，正解是『這是否定後件（等於用逆否命題），推理有效』這一項。關鍵在於別被『採用』兩字迷惑而誤判成謬誤：說『肯定後件的謬誤』那一項——肯定後件是『由Q推P』，這裡是由非Q推非P，不符；說『否定前件的謬誤』那一項——否定前件是『由非P推非Q』，也不符；說『前提本身不一定為真』那一項——題目已把前提設為真，不成立。"
+      },
+      {
+        "story": "小明家養了一隻黃金獵犬，名字叫阿財，毛色金黃、尾巴搖個不停。自然老師上課時教過一句話：「只要是狗，就一定是動物。」小明覺得超有道理，回家還講給讀幼稚園的弟弟聽。弟弟聽完想了幾秒，得意地說：「哥，那反過來一定也對呀——只要是動物，就一定是狗！」這時，窩在沙發上的貓咪咪抬起頭，喵了一聲，好像在抗議些什麼。",
+        "hints": [
+          "老師教的原句是「若是狗，則是動物」。弟弟卻把它反過來說成「若是動物，則是狗」。",
+          "想想看：世界上的動物只有狗一種嗎？貓、魚、大象是不是也都是動物？",
+          "只要找到一個「是動物，但不是狗」的例子，弟弟反過來的說法就被推翻了——沙發上那隻在抗議的是誰？"
+        ],
+        "q": "弟弟把「是狗就是動物」反過來說成「是動物就是狗」，這樣推對嗎？",
+        "options": [
+          "不對，貓是動物卻不是狗，正好是反例；反過來的說法找得到例外",
+          "對，原句成立，反過來一定也成立",
+          "對，因為狗和動物根本是同一件事",
+          "不對，因為狗其實不是動物"
+        ],
+        "answer": 0,
+        "model": "逆命題不一定成立（換位謬誤）",
+        "insight": "原句是「狗 → 動物」，狗只是動物的一小部分。要推翻反過來的說法，只需舉一個「是動物卻不是狗」的反例（貓）。",
+        "solve": "原句「若是狗則是動物」為真。弟弟說的是它的逆命題「若是動物則是狗」。只要舉出貓(是動物，但不是狗)就是反例，可見逆命題不成立，故正解是『貓是動物卻不是狗，正好是反例；反過來的說法找得到例外』這一項。『原句成立，反過來一定也成立』那一項錯：原命題成立時，逆命題不一定跟著成立。『狗和動物根本是同一件事』那一項錯：狗只是動物的一部分，兩者不是同一件事。『狗其實不是動物』那一項錯：狗確實是動物，原句本來就對，問題出在「反過來」而不是原句。"
+      },
+      {
+        "story": "星期一早上，阿哲背著書包走出家門，發現騎樓前的地面濕濕的、還反著光。他心裡嘀咕：「地是濕的，那昨晚一定下過雨吧！」可是他抬頭一看，天空藍得不得了，一朵雲也沒有，曬得他直瞇眼。轉角早餐店的阿姨一邊煎蛋餅一邊笑說：「剛剛管理員伯伯才用水管把整條騎樓沖洗過一遍呢，小心滑喔。」",
+        "hints": [
+          "老師教過的原句是「若下雨，則地會濕」。阿哲卻是看到「地濕」，反過來去猜「下過雨」。",
+          "想一想：除了下雨，還有沒有別的事情也會把地弄濕？",
+          "只要找到一個「地濕，但沒下雨」的情況，阿哲的推論就站不住腳了——早餐店阿姨提到伯伯做了什麼？"
+        ],
+        "q": "阿哲從「地是濕的」推出「昨晚一定下過雨」，這種推理對不對？",
+        "options": [
+          "不對，他把「下雨→地濕」反過來用了，而沖洗騎樓、澆花也會讓地濕，找得到反例",
+          "對，地濕一定是下雨造成的，沒有例外",
+          "對，這是逆否命題，和原句等價，所以正確",
+          "不對，因為下雨其實不會讓地面變濕"
+        ],
+        "answer": 0,
+        "model": "逆命題不一定成立（肯定後件的謬誤）",
+        "insight": "原句是「因→果」；看到「果」（地濕）倒推「因」（下雨）時，要先問：這個果還有沒有別的原因？有，就是反例。",
+        "solve": "原句「若下雨則地濕」為真。阿哲看到「地濕」（後件）就斷定「下過雨」（前件），等於把原句反過來當成「若地濕則下雨」，這叫肯定後件。但沖洗騎樓、澆花、灑水車都會讓地濕，都是「地濕卻沒下雨」的反例，故推論不成立，正解是『他把「下雨→地濕」反過來用了，而沖洗騎樓、澆花也會讓地濕，找得到反例』這一項。『地濕一定是下雨造成的』那一項錯在忽略其他原因。『這是逆否命題，和原句等價』那一項把逆命題誤認成逆否命題：真正與原句等價的逆否是「若地不濕則沒下雨」。『下雨其實不會讓地面變濕』那一項與原句相反，原句本來就對。"
+      },
+      {
+        "story": "班上的秩序股長小婷發現，同桌的阿誠今天沒來上學，座位空空的。她記得老師常說：「同學如果生病了，就會向學校請假。」於是她很篤定地跟旁邊的人說：「阿誠今天請假，所以他一定是生病了，好可憐喔！」沒想到放學經過遊樂園門口，她竟然撞見活蹦亂跳、手上還拿著棉花糖的阿誠——原來他今天是跟全家出國前先去玩，一大早就請好假了。",
+        "hints": [
+          "原句是「若生病，則會請假」。小婷卻從「有請假」反推「一定生病」。",
+          "請假的理由只有生病一種嗎？出國、家裡有事、看牙醫……都可以請假。",
+          "只要有人「請了假卻沒生病」，小婷的推論就被推翻了——她在遊樂園看到的阿誠是什麼樣子？"
+        ],
+        "q": "小婷由「阿誠請假」推出「他一定生病」，犯了哪一種毛病？",
+        "options": [
+          "她把「生病→請假」反過來當成「請假→生病」，但請假不一定是因為生病，這樣推不對",
+          "沒毛病，會請假的人一定是生病了",
+          "她用的是逆否命題，和原句等價，所以正確",
+          "她推錯是因為「生病」根本不會導致「請假」"
+        ],
+        "answer": 0,
+        "model": "逆命題不一定成立（肯定後件的謬誤）",
+        "insight": "「請假」是果，「生病」只是造成這個果的其中一個原因；要反推原因，得先排除其他可能。",
+        "solve": "原句「若生病則請假」為真。小婷看到「請假」（後件）就斷定「生病」（前件），等於用了逆命題「若請假則生病」。但出國、家中有事都會請假，阿誠請假卻沒生病正是反例，故推論不成立，正解是『她把「生病→請假」反過來當成「請假→生病」，但請假不一定是因為生病』這一項。『會請假的人一定是生病了』那一項錯在把請假的唯一原因誤認為生病。『她用的是逆否命題，和原句等價』那一項把逆命題誤認成逆否命題：與原句等價的逆否是「若沒請假則沒生病」。『生病根本不會導致請假』那一項與原句相反，原句本來成立。"
+      },
+      {
+        "story": "阿宏的媽媽常說：「只要用功讀書，成績就會進步。」這次月考成績單發下來，隔壁的小豪大幅進步，從及格邊緣一口氣衝到全班前十名。阿宏看了很佩服，對媽媽說：「小豪進步這麼多，他這陣子一定超級用功的！」媽媽卻笑著說，她聽小豪媽媽講，這次考題特別簡單，全班分數都比上次高了一大截，連平常混的同學都及格了呢。",
+        "hints": [
+          "原句是「若用功，則成績進步」。阿宏是看到「成績進步」，反推「一定用功」。",
+          "成績會進步，除了用功，還有沒有別的可能？例如題目變簡單、剛好考到會的。",
+          "找一個「進步了卻不是因為用功」的情形，阿宏的話就不一定對——媽媽提到這次考題怎麼了？"
+        ],
+        "q": "阿宏從「小豪成績進步」推出「他一定很用功」，這樣的推論可靠嗎？",
+        "options": [
+          "不可靠，這是把「用功→進步」反過來用，而題目變簡單也會讓成績進步，是反例",
+          "可靠，成績會進步就代表一定有用功",
+          "可靠，因為這是與原句等價的逆否命題",
+          "不可靠，因為用功根本不會讓成績進步"
+        ],
+        "answer": 0,
+        "model": "逆命題不一定成立（肯定後件的謬誤）",
+        "insight": "「成績進步」是果，「用功」只是其中一個原因。看到果就斷定這個特定原因，忽略了題目變簡單等其他可能。",
+        "solve": "原句「若用功則進步」為真。阿宏看到「進步」（後件）就斷定「用功」（前件），用的是逆命題「若進步則用功」。但題目變簡單、剛好考到會的，都會讓成績進步而不需用功，正是「進步卻沒用功」的反例，故推論不可靠，正解是『把「用功→進步」反過來用，而題目變簡單也會讓成績進步，是反例』這一項。『成績會進步就代表一定有用功』那一項錯在忽略其他原因。『這是與原句等價的逆否命題』那一項把逆命題誤認成逆否命題：等價的逆否是「若沒進步則沒用功」。『用功根本不會讓成績進步』那一項與原句相反。"
+      },
+      {
+        "story": "表弟第一次從國外來台灣玩，聽姑姑介紹說：「凡是台北人，都是台灣人。」他點點頭認真記住了。過了幾天，一家人到夜市吃小吃，表弟聽到隔壁桌一位大哥自我介紹說自己是台灣人，他立刻興奮地湊過去說：「哇，那你一定是台北人囉！」那位大哥愣了一下，笑著說：「我是高雄人啦，高雄也在台灣呀，台灣可不是只有台北喔。」",
+        "hints": [
+          "原句是「若是台北人，則是台灣人」。表弟卻從「是台灣人」反推「是台北人」。",
+          "台灣人只住在台北嗎？台中、台南、高雄、花蓮的人也都是台灣人。",
+          "只要舉出一個「是台灣人但不是台北人」的人，反過來的說法就錯了——那位大哥說他是哪裡人？"
+        ],
+        "q": "表弟把「台北人都是台灣人」反過來說成「台灣人都是台北人」，對嗎？",
+        "options": [
+          "不對，高雄人是台灣人卻不是台北人，正好是反例；台北人只是台灣人的一部分",
+          "對，既然台北人是台灣人，台灣人當然就是台北人",
+          "對，這兩句是等價的逆否命題",
+          "不對，因為台北人其實不算台灣人"
+        ],
+        "answer": 0,
+        "model": "逆命題不一定成立(以偏概全 / 換位謬誤)",
+        "insight": "「台北人」是「台灣人」的一小部分（子集），部分不能反過來代表全部。找一個別縣市的台灣人就是反例。",
+        "solve": "原句「若是台北人則是台灣人」為真。表弟說的是逆命題「若是台灣人則是台北人」。高雄人是台灣人卻不是台北人，正是反例，可見逆命題不成立，正解是『高雄人是台灣人卻不是台北人，正好是反例；台北人只是台灣人的一部分』這一項。『既然台北人是台灣人，台灣人當然就是台北人』那一項錯：子集成立不代表可反推整體。『這兩句是等價的逆否命題』那一項把逆命題誤認成逆否命題：等價的逆否是「若不是台灣人，則不是台北人」。『台北人其實不算台灣人』那一項錯：台北人當然是台灣人，原句本來就對。"
+      },
+      {
+        "story": "數學課上，老師在黑板畫了一個端端正正的正方形，說：「正方形的四個邊一定一樣長。」小潔乖乖抄進筆記本。回家寫作業時，有一題給了一個「四邊都等長」的圖形，問這是不是正方形。小潔想都沒想就寫「是正方形」，結果隔天被老師打了個大叉。原來那個圖形是個被壓歪的菱形——四條邊雖然一樣長，但四個角都不是直角，看起來斜斜的。",
+        "hints": [
+          "原句是「若是正方形，則四邊等長」。小潔卻從「四邊等長」反推「是正方形」。",
+          "除了正方形，還有沒有別的圖形也是四邊等長？想想被壓歪的菱形。",
+          "菱形四邊等長卻不是正方形（角不是直角），這就是反例——反過來的說法漏掉了「角要是直角」這個條件。"
+        ],
+        "q": "把「正方形→四邊等長」反過來說成「四邊等長→正方形」，這樣對嗎？",
+        "options": [
+          "不對，菱形四邊等長卻不是正方形，是反例；四邊等長只是正方形的必要條件之一",
+          "對，四邊等長的圖形就是正方形",
+          "對，因為這是原句的逆否命題，一定成立",
+          "不對，因為正方形的四邊其實不等長"
+        ],
+        "answer": 0,
+        "model": "逆命題不一定成立（必要條件不等於充分條件）",
+        "insight": "「四邊等長」是「正方形」的必要不充分條件；還要「四角都是直角」。少了條件，就能找到反例（菱形）。",
+        "solve": "原句「若是正方形則四邊等長」為真。反過來的「若四邊等長則是正方形」是逆命題。菱形四邊等長卻不是正方形（角不是直角），正是反例，故逆命題不成立，正解是『菱形四邊等長卻不是正方形，是反例；四邊等長只是正方形的必要條件之一』這一項。『四邊等長的圖形就是正方形』那一項錯：四邊等長只是必要條件，還需四角為直角。『這是原句的逆否命題，一定成立』那一項把逆命題誤認成逆否命題：等價的逆否是「若四邊不等長，則不是正方形」。『正方形的四邊其實不等長』那一項錯：正方形四邊確實等長，原句本來就對。"
+      },
+      {
+        "story": "自然課在教鳥類。老師說：「會飛的鳥，身上都有翅膀。」小安覺得很有道理。假日全家去動物園，他看到企鵝拍著小小的、像鰭一樣的翅膀，搖搖擺擺走來走去，就轉頭跟妹妹說：「你看，企鵝有翅膀，所以牠一定會飛！」話才剛說完，那隻企鵝「撲通」一聲跳進水池裡游走了，壓根沒有要飛上天的意思，把兄妹倆都逗笑了。",
+        "hints": [
+          "原句是「若（鳥）會飛，則有翅膀」。小安卻從「有翅膀」反推「會飛」。",
+          "有翅膀的鳥就一定飛得起來嗎？想想企鵝、鴕鳥。",
+          "企鵝、鴕鳥有翅膀卻不會飛，這就是反例——反過來的說法不成立。"
+        ],
+        "q": "小安由「企鵝有翅膀」推出「企鵝會飛」，這樣推對不對？",
+        "options": [
+          "不對，企鵝、鴕鳥有翅膀卻不會飛，是反例；「有翅膀」不能保證「會飛」",
+          "對，有翅膀的鳥一定會飛",
+          "對，這與原句「會飛→有翅膀」等價",
+          "不對，因為會飛的鳥其實沒有翅膀"
+        ],
+        "answer": 0,
+        "model": "逆命題不一定成立（換位謬誤）",
+        "insight": "原句是「會飛→有翅膀」；反過來要成立，得每隻有翅膀的鳥都會飛。只要有一隻不會飛的（企鵝）就推翻了。",
+        "solve": "原句「若會飛則有翅膀」為真。小安說的是逆命題「若有翅膀則會飛」。企鵝、鴕鳥有翅膀卻不會飛，正是反例，故逆命題不成立，正解是『企鵝、鴕鳥有翅膀卻不會飛，是反例；有翅膀不能保證會飛』這一項。『有翅膀的鳥一定會飛』那一項錯：有翅膀不保證會飛。『這與原句「會飛→有翅膀」等價』那一項把逆命題誤認為與原句等價：真正等價的逆否是「若沒有翅膀，則不會飛」。『會飛的鳥其實沒有翅膀』那一項錯：會飛的鳥確實有翅膀，原句本來就對。"
+      },
+      {
+        "story": "情人節前夕，花店阿姨教小美認花，說：「玫瑰花的莖上都有刺，拿的時候要小心手喔。」小美認真記在心裡。過了幾天，她到阿嬤的陽台玩，不小心摸到一盆「有刺」的植物，被扎了一下，馬上大喊：「阿嬤你偷偷種玫瑰喔！」阿嬤放下水壺笑著說：「傻孩子，那是仙人掌啦，仙人掌身上也有刺呀，可不是只有玫瑰有刺。」",
+        "hints": [
+          "原句其實是「若是玫瑰，則有刺」。小美卻從「有刺」反推「是玫瑰」。",
+          "有刺的植物只有玫瑰嗎？仙人掌、薔薇……很多植物都有刺。",
+          "仙人掌有刺卻不是玫瑰，這正是反例——反過來的說法靠不住。"
+        ],
+        "q": "小美從「這盆植物有刺」推出「它是玫瑰」，這其實犯了什麼錯？",
+        "options": [
+          "把「玫瑰→有刺」反過來當「有刺→玫瑰」，但仙人掌有刺卻不是玫瑰，是反例",
+          "沒錯，有刺的植物就是玫瑰",
+          "沒錯，因為這是與原句等價的逆否命題",
+          "有錯，因為玫瑰其實沒有刺"
+        ],
+        "answer": 0,
+        "model": "逆命題不一定成立（以偏概全）",
+        "insight": "「有刺」是玫瑰的特徵之一，但不是玫瑰的專利。看到共同特徵就斷定是某一種，忽略了其他也有刺的植物。",
+        "solve": "原句「若是玫瑰則有刺」為真。小美說的是逆命題「若有刺則是玫瑰」。仙人掌有刺卻不是玫瑰，正是反例，故逆命題不成立，正解是『把「玫瑰→有刺」反過來當「有刺→玫瑰」，但仙人掌有刺卻不是玫瑰，是反例』這一項。『有刺的植物就是玫瑰』那一項錯：有刺的植物不只玫瑰。『這是與原句等價的逆否命題』那一項把逆命題誤認成逆否命題：等價的逆否是「若沒有刺，則不是玫瑰」。『玫瑰其實沒有刺』那一項錯：玫瑰確實有刺，原句本來就對。"
+      },
+      {
+        "story": "運動會結束後，學弟聽田徑隊教練說：「能拿金牌的選手，一定都參加過比賽。」他聽了猛點頭，覺得超有道理。後來他看到班上的阿凱在報名表上簽了名、報名了大隊接力，就到處跟人炫耀：「阿凱有參加比賽耶，他一定會拿金牌！」結果大隊接力那天，阿凱他們這一隊跑了第五名，連前三名都沒擠進去，更別說金牌了。",
+        "hints": [
+          "原句是「若拿金牌，則參加過比賽」。學弟卻從「參加過比賽」反推「一定拿金牌」。",
+          "參加比賽的人都會拿金牌嗎？其實大部分參賽者都沒得獎。",
+          "阿凱參加了卻沒拿牌，就是反例——反過來的說法不一定成立。"
+        ],
+        "q": "學弟由「阿凱參加比賽」推出「他一定拿金牌」，這樣的推理正確嗎？",
+        "options": [
+          "不正確，參加比賽卻沒得獎的人一大堆，就是反例；「參加過」不能保證「拿金牌」",
+          "正確，參加比賽的人一定會拿金牌",
+          "正確，因為這是原句的逆否命題",
+          "不正確，因為拿金牌的人其實沒參加比賽"
+        ],
+        "answer": 0,
+        "model": "逆命題不一定成立（肯定後件的謬誤）",
+        "insight": "「參加過比賽」是拿金牌的必要條件（拿金牌一定得先參賽），但不是充分條件；絕大多數參賽者並沒拿金牌。",
+        "solve": "原句「若拿金牌則參加過比賽」為真。學弟看到「參加過比賽」（後件）就斷定「拿金牌」（前件），用的是逆命題「若參加過則拿金牌」。但大多數參賽者沒得獎，阿凱參賽卻只拿第五名正是反例，故推理不正確，正解是『參加比賽卻沒得獎的人一大堆，就是反例；參加過不能保證拿金牌』這一項。『參加比賽的人一定會拿金牌』那一項錯在把必要條件當充分條件。『這是原句的逆否命題』那一項把逆命題誤認成逆否命題：等價的逆否是「若沒參加過比賽，則拿不到金牌」。『拿金牌的人其實沒參加比賽』那一項與原句相反。"
+      },
+      {
+        "story": "邏輯社的社課上，老師在白板寫下一句話：「若牠是狗，則牠是動物。」接著老師轉身問大家：下面哪一句，不管遇到什麼情況，都一定跟這句『同時成立、絕不會互相矛盾』？坐第一排的小杰立刻搶答：「若牠是動物，則牠是狗！」老師笑著搖搖頭，還特地在白板旁邊畫了一隻圓滾滾的貓，提醒大家別急著下結論。",
+        "hints": [
+          "一個命題「一定同時成立」的夥伴，是它的『逆否命題』：把前、後都否定，再對調過來——例如把「若P則Q」變成「若非Q則非P」。",
+          "小杰說的「若是動物則是狗」是『逆命題』，只是把前後對調卻沒有否定，並不保證成立（貓就是反例）。",
+          "找那句「把『是狗』『是動物』都改成否定的說法，而且順序對調」的選項。"
+        ],
+        "q": "剝掉故事，這題其實在問：哪一句和「若是狗則是動物」一定同時成立（等價）？",
+        "options": [
+          "若不是動物，則不是狗",
+          "若是動物，則是狗",
+          "若不是狗，則不是動物",
+          "若是狗，則不是動物"
+        ],
+        "answer": 0,
+        "model": "逆否命題等價律(原命題 ⇔ 逆否命題)",
+        "insight": "只有『逆否命題』(非Q→非P)和原命題永遠同真同假；逆命題(Q→P)與否命題(非P→非Q)都不一定成立。",
+        "solve": "設原句為 P→Q(P：是狗，Q：是動物)。逆否命題是「非Q→非P」=「若不是動物，則不是狗」，與原句永遠同真同假，故正解是「若不是動物，則不是狗」這一句。「若是動物則是狗」那一句是逆命題(Q→P)，貓是動物卻不是狗，是反例，不一定成立。「若不是狗則不是動物」那一句是否命題(非P→非Q)，貓不是狗卻是動物，也有反例。「若是狗則不是動物」那一句與原句直接矛盾，更不是等價句。"
+      },
+      {
+        "story": "讀幼稚園的表妹最近學會了一句話：「蘋果是水果。」她好得意，逢人就講。有一天午餐吃到香蕉，她忽然眼睛一亮，大聲宣布：「香蕉是水果，那香蕉就是蘋果啦！」全桌的大人都笑了出來。表妹一臉疑惑，歪著頭不懂大家在笑什麼，還很認真地舉起香蕉說：「明明就是嘛！」",
+        "hints": [
+          "表妹學的其實是「若是蘋果，則是水果」。她卻從「香蕉是水果」推出「香蕉是蘋果」。",
+          "水果只有蘋果一種嗎？香蕉、芭樂、西瓜都是水果。",
+          "香蕉是水果卻不是蘋果，就是反例——「是水果」不代表「是蘋果」。"
+        ],
+        "q": "表妹的推論「香蕉是水果，所以香蕉是蘋果」錯在哪裡？",
+        "options": [
+          "她把「蘋果→水果」反過來用了；蘋果只是水果的一種，香蕉是水果卻不是蘋果，是反例",
+          "沒錯，水果就是蘋果",
+          "沒錯，因為原句和「水果是蘋果」等價",
+          "錯在蘋果根本不是水果"
+        ],
+        "answer": 0,
+        "model": "逆命題不一定成立(以偏概全 / 子集不能反推)",
+        "insight": "「蘋果」是「水果」的一個子集。子集成立（蘋果都是水果）不代表可以反推整體（水果都是蘋果），舉別種水果就是反例。",
+        "solve": "原句「若是蘋果則是水果」為真。表妹用的是逆命題「若是水果則是蘋果」。香蕉是水果卻不是蘋果，正是反例，故逆命題不成立，正解是『她把「蘋果→水果」反過來用了；蘋果只是水果的一種，香蕉是水果卻不是蘋果，是反例』這一項。『水果就是蘋果』那一項錯：水果不只蘋果一種。『原句和「水果是蘋果」等價』那一項把逆命題誤認成與原句等價：真正等價的逆否是「若不是水果，則不是蘋果」。『蘋果根本不是水果』那一項錯：蘋果確實是水果，原句本來就對。"
+      },
+      {
+        "story": "老師在課堂上說：「只要是本校的生物老師，就一定是老師。」下課後，兩個同學在走廊上爭論了起來。阿川說：「王老師是本校的生物老師，那她一定是老師囉，這沒問題吧。」阿德不服氣地反駁：「那我也會推！李老師是老師，所以她一定是本校的生物老師啊！」兩個人各說各話，誰也不讓誰，最後決定去問班上邏輯最強的同學評評理。",
+        "hints": [
+          "原句是「若是本校生物老師，則是老師」。想想：阿川是順著箭頭推，還是阿德？誰是反著箭頭推？",
+          "順著「前件→後件」推（已知前件、得到後件）是可靠的；反著從「後件」推「前件」不一定成立。",
+          "李老師有可能是數學老師、國文老師啊——這對誰的說法構成反例？"
+        ],
+        "q": "阿川和阿德，誰的推論才站得住腳？",
+        "options": [
+          "只有阿川對：他從「是生物老師」順推「是老師」；阿德反推「是老師→是生物老師」，李老師可能教別科，是反例",
+          "只有阿德對",
+          "兩個都對",
+          "兩個都錯"
+        ],
+        "answer": 0,
+        "model": "肯定前件（有效）對照 逆命題謬誤（無效）",
+        "insight": "順著「前件→後件」推（肯定前件）一定有效；反過來從後件推前件，是逆命題，可能有反例（教別科的老師）。",
+        "solve": "設原句為 P→Q(P：是本校生物老師，Q：是老師)。阿川已知 P（生物老師），推出 Q（是老師），這是肯定前件，永遠有效。阿德已知 Q（是老師），推出 P（生物老師），用的是逆命題 Q→P；但老師可能教數學、國文，李老師就是「是老師卻非生物老師」的反例，故無效。因此只有阿川對，正解是『只有阿川對』這一項。說『只有阿德對』和『兩個都對』的兩項誤判阿德的反推有效；說『兩個都錯』那一項否定了阿川本來正確的肯定前件推理。"
+      }
+    ]
+  },
+  {
+    "id": "lv3",
+    "level": 3,
+    "name": "有效推論 vs 謬誤",
+    "emoji": "⚖️",
+    "color": "#d97706",
+    "concepts": [
+      "「若P則Q」的句子骨架",
+      "肯定前件(Modus Ponens)",
+      "否定後件(Modus Tollens)",
+      "逆否命題才等價",
+      "謬誤：肯定後件／否定前件"
+    ],
+    "keyFacts": [
+      "先認出骨架：把「如果……就……」拆成前件P(如果後面那句)和後件Q(就後面那句)。推理成不成立只看P、Q擺在哪個位置，跟內容聽起來合不合理無關。",
+      "肯定前件(有效):已知「P→Q」又確定「P成立」,就能鐵定推出「Q成立」。例如「下雨就帶傘；今天下雨→今天一定帶傘」。",
+      "否定後件(有效):已知「P→Q」又確定「Q沒發生」,就能鐵定推出「P也沒發生」。例如「哺乳類→用肺呼吸；這動物不用肺→牠一定不是哺乳類」。",
+      "只有逆否命題「非Q→非P」跟原句「P→Q」完全等價；逆命題「Q→P」和否命題「非P→非Q」都不保證為真，把它們當成理所當然就是謬誤。",
+      "兩大陷阱：看到後件Q就回頭斷定前件P(肯定後件)、前件P沒發生就斷定後件Q也不發生(否定前件)——都無效，一定要能舉出反例。"
+    ],
+    "questions": [
+      {
+        "story": "阿哲的媽媽從小就立了一條上學規矩：「只要那天下雨，你出門前就一定要帶雨傘。」阿哲雖然常常嫌麻煩，但也記得清清楚楚。這天早上他還在賴床，忽然聽見窗外嘩啦啦的聲音，拉開窗簾一看，外頭果然下起了傾盆大雨，馬路上都積起了小水窪。阿哲揉揉眼睛心想：照媽媽的規矩，那我今天出門一定得帶傘了，不然又要被念。",
+        "hints": [
+          "先把媽媽的規矩寫成骨架：如果（下雨），就（帶傘）。這就是「P→Q」。",
+          "阿哲今天知道的事實是哪一個？是「下雨」這件前件發生了，還是「帶傘」這件後件發生了？",
+          "題目給的正是「前件已經成立」，再照著箭頭往後走。這種走法穩不穩？想想它有沒有可能推錯。"
+        ],
+        "q": "把故事剝掉，阿哲的推理是「下雨→帶傘；今天下雨；所以今天要帶傘」。這樣推對不對？",
+        "options": [
+          "對，這是「肯定前件」，只要前件成立，結論必然成立",
+          "錯，下雨不一定非帶傘不可，可能穿雨衣就好",
+          "對，但要天氣預報也說會下雨才算數",
+          "錯，這其實是「肯定後件」的謬誤"
+        ],
+        "answer": 0,
+        "model": "肯定前件(Modus Ponens)",
+        "insight": "看清楚阿哲手上的事實是「前件P（下雨）成立」，規則又是「P→Q」，由前件順著箭頭推到後件，這正是最基本的有效推論。",
+        "solve": "規則是「下雨→帶傘」，事實是前件「下雨」成立，順箭頭推出後件「帶傘」，這是肯定前件，結論必然成立，「這是肯定前件、結論必然成立」那一項對。說「下雨不一定非帶傘不可」那一項把媽媽訂的規則（在她家就是鐵律）當成可以打折的常識，推理層次上規則一旦成立就得遵守，故錯。說「要天氣預報也說會下雨才算數」那一項多加了規則裡沒有的條件，屬於畫蛇添足。說「這其實是肯定後件的謬誤」那一項把名稱貼錯了：由後件回推前件才叫肯定後件，這裡是由前件推後件，不是那種謬誤。"
+      },
+      {
+        "story": "生物課上，老師在黑板寫下一條規則讓大家記牢：「如果某種動物是哺乳類，那牠一定是用肺呼吸的。」放學後小傑跑到公園池塘邊觀察，發現一種身體滑滑的小生物，他查了圖鑑，資料明明白白寫著：這種生物不是用肺呼吸，而是用鰓在水裡呼吸。小傑摸著下巴想：既然牠不用肺呼吸，那牠就不會是哺乳類囉。",
+        "hints": [
+          "把規則寫成骨架：如果（是哺乳類），就（用肺呼吸），也就是「P→Q」。",
+          "小傑查到的事實是「後件Q（用肺呼吸）沒有發生」——牠是用鰓的。",
+          "已知後件不成立，往回推前件。想想：一隻用肺的動物才可能是哺乳類，那不用肺的呢？這樣回推站不站得住腳。"
+        ],
+        "q": "把故事剝掉，小傑的推理是「哺乳類→用肺呼吸；這生物不用肺；所以牠不是哺乳類」。這種推法對嗎？",
+        "options": [
+          "對，這是「否定後件」，結論必然成立",
+          "錯，不用肺呼吸的動物也可能是哺乳類",
+          "對，不過要先證明牠是魚類才算",
+          "錯，這犯了「否定前件」的謬誤"
+        ],
+        "answer": 0,
+        "model": "否定後件(Modus Tollens)",
+        "insight": "事實是「後件（用肺）被否定」，規則是「P→Q」，由『非Q』推出『非P』，正是否定後件這個有效推論。",
+        "solve": "規則「哺乳類→用肺」等價於逆否命題「不用肺→不是哺乳類」，小傑手上正是「不用肺」，推出「不是哺乳類」完全正確，「這是否定後件、結論必然成立」那一項對。說「不用肺呼吸的動物也可能是哺乳類」那一項其實違反規則：規則保證所有哺乳類都用肺，所以不用肺的絕不可能是哺乳類，故錯。說「要先證明牠是魚類才算」那一項多要求一個規則沒說的條件。說「這犯了否定前件的謬誤」那一項名稱貼錯：否定前件是由「非P」推「非Q」，這裡是由「非Q」推「非P」，是有效的否定後件，不是謬誤。"
+      },
+      {
+        "story": "學校籃球社有個不成文的傳統，學長規定得很死：「只要你是正式的籃球隊隊員，你就一定會有一件印著號碼的隊服。」新生阿丁通過了選拔，正式成為籃球隊的一員，大家都替他開心。旁邊的同學看到這情形便說：那阿丁現在一定有一件印號碼的隊服了。",
+        "hints": [
+          "先寫骨架：如果（是籃球隊隊員），就（有隊服），即「P→Q」。",
+          "同學掌握的事實是「阿丁是隊員」——這是前件還是後件？",
+          "事實是前件成立，再順著箭頭推到後件。這種由前往後的走法，叫什麼名字？"
+        ],
+        "q": "這段推理「是隊員→有隊服；阿丁是隊員；所以阿丁有隊服」，用到的是哪一種推理規則？",
+        "options": [
+          "肯定前件——由「P成立」推出「Q成立」",
+          "肯定後件——由「Q成立」推出「P成立」",
+          "否定前件——由「非P」推出「非Q」",
+          "否定後件——由「非Q」推出「非P」"
+        ],
+        "answer": 0,
+        "model": "肯定前件(Modus Ponens)",
+        "insight": "辨認規則名稱時，只要盯住事實在骨架的哪個位置：這裡確定的是『前件P』，再推『後件Q』，就是肯定前件。",
+        "solve": "事實是前件「是隊員」成立，推出後件「有隊服」，正是肯定前件，「肯定前件——由P成立推出Q成立」那一項對。「肯定後件——由Q成立推出P成立」那一項方向相反，是由有隊服倒推是隊員，而校外的人也可能有隊服，故那是謬誤、不符本題。「否定前件（非P→非Q）」和「否定後件（非Q→非P）」那兩項講的都是『否定』的情況，本題根本沒有否定任何東西，不符。"
+      },
+      {
+        "story": "小美出門前有個怕忘東西的習慣。她心裡有條規則：「如果鑰匙放在外套口袋裡，那口袋一定會被鑰匙撐得鼓鼓的。」這天她站在門口，低頭看了看自己的外套口袋，平平順順的，一點都沒有鼓起來的樣子。小美於是判斷：那鑰匙一定不在這個口袋裡。",
+        "hints": [
+          "骨架：如果（鑰匙在口袋），就（口袋鼓起），即「P→Q」。",
+          "小美看到的事實是「後件（口袋鼓起）沒有發生」——口袋是平的。",
+          "由『後件沒發生』往回推『前件也沒發生』。想想這條回推路線和原規則是不是同一件事的反面說法。"
+        ],
+        "q": "這段推理「鑰匙在口袋→口袋鼓；口袋沒鼓；所以鑰匙不在口袋」，用到哪一種推理規則？",
+        "options": [
+          "否定後件——由「非Q」推出「非P」",
+          "否定前件——由「非P」推出「非Q」",
+          "肯定後件——由「Q」推出「P」",
+          "肯定前件——由「P」推出「Q」"
+        ],
+        "answer": 0,
+        "model": "否定後件(Modus Tollens)",
+        "insight": "事實是『後件被否定（口袋沒鼓）』，由此推『前件被否定（鑰匙不在）』，這正是否定後件，而它剛好就是原規則的逆否命題。",
+        "solve": "「鑰匙在口袋→口袋鼓」的逆否是「口袋沒鼓→鑰匙不在口袋」，兩者等價，所以推理成立，「否定後件——由非Q推出非P」那一項對。「否定前件（非P→非Q）」那一項方向反了，是由『鑰匙不在』去推別的，不符。「肯定後件（Q→P）」和「肯定前件（P→Q）」那兩項講的是『肯定』某件事，本題是在『否定後件』，都不符。"
+      },
+      {
+        "story": "阿寶在超市打工，店長交代一條上架規則：「只要商品過期了，店員就必須在它上面貼一張紅色警示標籤。」某天阿寶在整理貨架時，拿起一盒餅乾，翻來翻去，發現這盒餅乾上頭乾乾淨淨，完全沒有貼任何紅色標籤。",
+        "hints": [
+          "骨架：如果（商品過期），就（貼紅標籤），即「P→Q」。",
+          "阿寶看到的事實是「後件（有紅標籤）沒發生」。注意規則沒說『貼紅標的一定過期』喔。",
+          "由『沒貼紅標』往回推。既然所有過期品都會被貼紅標，那沒貼紅標的能不能是過期品？"
+        ],
+        "q": "依店長的規則，阿寶看到「這盒沒有紅色標籤」，可以確定什麼？",
+        "options": [
+          "這盒商品沒有過期",
+          "這盒商品一定已經過期",
+          "只有貼紅標籤的商品才會過期",
+          "沒貼標籤推不出任何結論"
+        ],
+        "answer": 0,
+        "model": "否定後件(Modus Tollens)",
+        "insight": "規則保證『過期一定被貼紅標』，所以『沒被貼紅標』就代表『沒過期』——這是逆否命題，不是逆命題。",
+        "solve": "「過期→紅標」等價於「沒紅標→沒過期」，由沒紅標推出沒過期，「這盒商品沒有過期」那一項對。「這盒商品一定已經過期」那一項把結論反過來說，違反規則。「只有貼紅標籤的商品才會過期」那一項其實是逆命題「紅標→過期」，規則並沒保證這一點（店員也可能誤貼），故錯。「沒貼標籤推不出任何結論」那一項是錯的：正因規則存在，沒紅標就足以斷定沒過期。"
+      },
+      {
+        "story": "小安最近迷上一款闖關遊戲。這款遊戲有個固定機制，遊戲說明寫得清清楚楚：「如果你成功破了這一關，系統就會發給你一筆金幣獎勵。」今天晚上，小安專心打了兩個小時，終於把卡了好久的那一關順利破掉了，螢幕上跳出「破關成功」四個大字。",
+        "hints": [
+          "骨架：如果（破關），就（得到金幣），即「P→Q」。",
+          "小安已經確定的事實是「前件（破關）成立」。",
+          "前件成立，順著箭頭往後推後件。這種走法穩不穩？其他選項是不是把箭頭反著走或亂加條件？"
+        ],
+        "q": "依遊戲機制，小安已經破關了，下面哪個結論一定成立？",
+        "options": [
+          "小安會得到金幣獎勵",
+          "只有得到金幣的人才算破了關",
+          "沒破關的人就一定沒有金幣",
+          "得到金幣的人一定破了這一關"
+        ],
+        "answer": 0,
+        "model": "肯定前件(Modus Ponens)",
+        "insight": "事實是前件『破關』成立，規則是『P→Q』，順推後件『得金幣』，這是肯定前件，結論鐵定成立。",
+        "solve": "由前件『破關』順推後件『得金幣』，正是肯定前件，「小安會得到金幣獎勵」那一項對。「只有得到金幣的人才算破了關」那一項把它變成『只有…才』（逆命題），但金幣也可能從每日登入等別的方式取得，故錯。「沒破關的人就一定沒有金幣」那一項是否定前件謬誤：沒破關不代表拿不到金幣。「得到金幣的人一定破了這一關」那一項是肯定後件謬誤：得到金幣不一定來自破關。"
+      },
+      {
+        "story": "某補習班辦了一場數學競試，櫃檯貼出一條公告：「如果某位同學這次考試拿到滿分，那他就能領到一張獎狀。」放榜後，四個好朋友聚在一起，你一言我一語地推敲彼此的成績，可是誰考幾分、誰有沒有拿獎狀，大家掌握的線索都不太一樣。",
+        "hints": [
+          "先把公告寫成骨架：如果（滿分），就（有獎狀），即「P→Q」。",
+          "逐一檢查四種推法：哪一個是『後件沒發生→前件沒發生』或『前件成立→後件成立』這種站得住腳的走法？",
+          "小心那些『拿到獎狀就回推滿分』『沒滿分就說沒獎狀』的說法——獎狀也可能來自別的比賽。找出唯一一個怎麼舉例都推不倒的。"
+        ],
+        "q": "依公告「滿分→有獎狀」，下面哪一個推論是「一定成立」的？",
+        "options": [
+          "小華沒拿到獎狀，所以他這次一定沒考滿分",
+          "小明拿到獎狀，所以他一定考了滿分",
+          "小美沒考滿分，所以她一定拿不到獎狀",
+          "阿強拿到獎狀，所以他一定沒有缺考"
+        ],
+        "answer": 0,
+        "model": "否定後件(Modus Tollens)",
+        "insight": "在四種變形裡，只有『否定後件(沒獎狀→沒滿分)』和肯定前件是有效的；本題唯一符合的是沒獎狀→沒滿分。",
+        "solve": "「滿分→獎狀」的逆否是「沒獎狀→沒滿分」，「沒拿到獎狀→這次一定沒考滿分」那一項成立。「拿到獎狀→一定考了滿分」那一項是肯定後件謬誤：獎狀可能來自其他競賽，拿獎狀不等於滿分。「沒考滿分→一定拿不到獎狀」那一項是否定前件謬誤：沒滿分的人仍可能因別的理由拿到獎狀。「拿到獎狀→一定沒有缺考」那一項扯到『缺考』，公告根本沒提，無從推起。"
+      },
+      {
+        "story": "學校圖書館入口貼著一條借閱規定，字體還特別加粗：「如果一本借出的書逾期沒還，借書的人就要繳一筆罰款。」管理員阿姨每天都照這條規定處理。某天午休，一群同學圍在還書櫃檯邊，對著手上幾本書七嘴八舌地討論起罰款的事。",
+        "hints": [
+          "骨架：如果（書逾期），就（要罰款），即「P→Q」。",
+          "本題要找『一定對』的推論。哪一個是『前件成立→後件成立』？",
+          "注意別選『被罰款就回推逾期』或『沒逾期就說免罰』——罰款也可能因為書弄髒或弄丟。"
+        ],
+        "q": "依規定「逾期→罰款」，下面哪一個推論一定成立？",
+        "options": [
+          "這本書逾期了，所以一定要繳罰款",
+          "這本書被罰款，所以它一定逾期了",
+          "這本書沒逾期，所以一定不用繳罰款",
+          "有人被罰款，所以圖書館一定管得很嚴"
+        ],
+        "answer": 0,
+        "model": "肯定前件(Modus Ponens)",
+        "insight": "由確定的前件『逾期』順推後件『罰款』就是肯定前件，穩當成立；其餘不是反著推就是離題。",
+        "solve": "由前件『逾期』順推後件『罰款』，肯定前件，「逾期→一定要繳罰款」那一項對。「被罰款→它一定逾期了」那一項是肯定後件謬誤：罰款也可能因書本破損、遺失，不必然逾期。「沒逾期→一定不用繳罰款」那一項是否定前件謬誤：沒逾期仍可能因其他原因被罰。「有人被罰款→圖書館一定管得很嚴」那一項從一件事實跳到主觀評價，不是邏輯推論。"
+      },
+      {
+        "story": "小凱在儲藏室裡翻出一支舊手電筒，握把上貼著一張說明卡，字體特別加粗：「如果電池沒電，手電筒就一定不會亮。」小凱好奇地按下開關，燈泡立刻亮了起來，光線還挺刺眼的，照得整個角落都亮堂堂的。",
+        "hints": [
+          "骨架：如果（電池沒電），就（手電筒不會亮），即「P→Q」。",
+          "小凱的事實是：手電筒『亮著』——這是後件『不會亮』沒有發生。",
+          "由『後件沒發生』往回推前件。既然電池沒電就一定不會亮，那燈亮著說明了什麼？"
+        ],
+        "q": "依說明卡的話，小凱按下開關手電筒亮了，可以推出什麼？",
+        "options": [
+          "手電筒的電池沒有沒電（還有電）",
+          "手電筒的電池其實一定沒電",
+          "只要手電筒不亮，就代表裡面沒裝電池",
+          "手電筒亮不亮和電池有沒有電沒關係，無法判斷"
+        ],
+        "answer": 0,
+        "model": "否定後件(Modus Tollens)",
+        "insight": "事實是後件『不會亮』被否定（燈亮著），由此否定前件『電池沒電』，正是否定後件。",
+        "solve": "「電池沒電→不會亮」的逆否是「亮著→電池沒有沒電」，小凱的手電筒正亮著，推出『電池還有電』，「電池沒有沒電（還有電）」那一項對。「電池其實一定沒電」那一項與結論相反。「手電筒不亮就代表裡面沒裝電池」那一項把重點換成『有沒有裝電池』，但推論方向也不對。「亮不亮和電池有沒有電沒關係」那一項否認兩者有關，但規則明明建立了關聯，故錯。"
+      },
+      {
+        "story": "星期三下午，阿彬要陪奶奶去銀行辦事。出門前奶奶唸叨：「如果今天是國定假日，銀行就不會營業喔。」阿彬心裡沒把握今天到底放不放假。他們走到銀行門口，卻看見大門敞開、櫃檯燈火通明，行員正忙著替客人辦業務，顯然銀行今天照常營業。",
+        "hints": [
+          "骨架：如果（國定假日），就（銀行不營業），即「P→Q」。",
+          "阿彬看到的事實是『銀行有營業』，也就是後件『不營業』沒有成立。",
+          "由『後件被否定』往回推前件。既然放假就一定不營業，那有營業說明今天是不是假日？"
+        ],
+        "q": "阿彬看到銀行今天照常營業，依奶奶的話可以確定什麼？",
+        "options": [
+          "今天不是國定假日",
+          "今天一定是國定假日",
+          "銀行有營業，表示今天是平日的星期一",
+          "不能確定，因為銀行可能自己弄錯"
+        ],
+        "answer": 0,
+        "model": "否定後件(Modus Tollens)",
+        "insight": "後件是『不營業』，現在『有營業』等於後件被否定，由此否定前件『國定假日』，就是否定後件。",
+        "solve": "「國定假日→不營業」的逆否是「有營業→不是國定假日」，「今天不是國定假日」那一項對。「今天一定是國定假日」那一項剛好推反了。「表示今天是平日的星期一」那一項硬指定是『星期一』，規則沒給這資訊，過度推論。「不能確定」那一項是錯的：在規則成立的前提下，有營業足以斷定非假日。"
+      },
+      {
+        "story": "推理小說社在辦活動，大偵探（其實是社長扮的）站在一間密室前，煞有介事地分析案情：「各位聽好，如果兇手是從那扇窗戶逃走的，那窗台的灰塵上一定會留下一排清楚的鞋印。」他戴上手套，拿放大鏡仔仔細細檢查了窗台一遍，結果窗台的灰塵平整完好，上面沒有任何鞋印。於是他下了結論：兇手不是從這扇窗戶逃走的。",
+        "hints": [
+          "骨架：如果（從窗戶逃），就（窗台有鞋印），即「P→Q」。",
+          "偵探查到的事實是『窗台沒有鞋印』——後件沒發生。",
+          "由『後件沒發生』往回推前件『沒發生』。這條路線的名稱是什麼？"
+        ],
+        "q": "偵探這段推理「從窗戶逃→有鞋印；沒有鞋印；所以不是從窗戶逃」，用了哪一種有效推論？",
+        "options": [
+          "否定後件：由「沒有Q」推出「沒有P」",
+          "肯定後件：由「有Q」推出「有P」",
+          "否定前件：由「沒有P」推出「沒有Q」",
+          "肯定前件：由「有P」推出「有Q」"
+        ],
+        "answer": 0,
+        "model": "否定後件(Modus Tollens)",
+        "insight": "事實是後件『鞋印』被否定，推出前件『從窗逃』被否定，正是否定後件，也就是原規則的逆否。",
+        "solve": "由『沒鞋印(非Q)』推出『不是從窗逃(非P)』，正是否定後件，「否定後件：由沒有Q推出沒有P」那一項對。「肯定後件（有Q→有P）」那一項要有鞋印才回推，方向相反且本身是謬誤。「否定前件（非P→非Q）」和「肯定前件（有P→有Q）」那兩項描述的方向都對不上本題的『否定後件』，不符。"
+      },
+      {
+        "story": "同一場密室推理裡，偵探接著轉向保險箱這條線索。他說：「如果嫌疑人動手碰過這個保險箱，那把手上一定會留下他的指紋。」這時助手調出走廊的監視錄影，畫面清清楚楚拍到嫌疑人阿德伸出手、緊緊抓住了保險箱的把手。偵探點點頭說：那把手上一定有阿德的指紋。",
+        "hints": [
+          "骨架：如果（碰過保險箱），就（把手有他指紋），即「P→Q」。",
+          "監視器確認的事實是『阿德碰過保險箱』——前件成立。",
+          "前件成立，順著箭頭推後件。這種由前往後、穩穩成立的走法叫什麼？"
+        ],
+        "q": "偵探這段推理「碰過保險箱→有指紋；阿德碰過；所以把手有阿德指紋」，用的是？",
+        "options": [
+          "肯定前件，結論必然成立",
+          "肯定後件，結論不一定成立",
+          "否定前件的謬誤",
+          "循環論證，不能算數"
+        ],
+        "answer": 0,
+        "model": "肯定前件(Modus Ponens)",
+        "insight": "事實是前件『碰過』成立，順推後件『有指紋』，這是肯定前件，結論鐵定成立。",
+        "solve": "由前件『碰過保險箱』順推後件『有指紋』，正是肯定前件，「肯定前件，結論必然成立」那一項對。「肯定後件」那一項名稱貼錯：肯定後件是由『有指紋』倒推『碰過』，本題不是。「否定前件的謬誤」那一項也不對，本題沒有任何否定。「循環論證」那一項是指用結論證明結論，這裡前提與結論不同，不是循環論證。"
+      },
+      {
+        "story": "媽媽在客廳找爸爸的手機，好幫他接一通電話。她心裡記得一件事：「這支舊手機只要一沒電，螢幕就一定會整個變黑。」她從沙發縫裡翻出手機，插上充電器一看電量，顯示已經完全沒電了。",
+        "hints": [
+          "骨架：如果（手機沒電），就（螢幕變黑），即「P→Q」。",
+          "媽媽確認的事實是『手機沒電』——前件成立。",
+          "前件成立就順推後件。其他選項有的把箭頭反著走(黑螢幕→沒電)，有的把沒電換成有電，小心別上當。"
+        ],
+        "q": "依這條規則，既然手機確定沒電了，下面哪個結論一定成立？",
+        "options": [
+          "這支手機的螢幕會是黑的",
+          "螢幕黑掉的手機，一定是沒電了",
+          "只要有電，螢幕就一定是亮著的",
+          "螢幕是黑的，就代表這支手機壞了"
+        ],
+        "answer": 0,
+        "model": "肯定前件(Modus Ponens)",
+        "insight": "事實是前件『沒電』成立，順推後件『螢幕黑』，是肯定前件；其他選項不是把箭頭反走就是把前件改成反面。",
+        "solve": "由前件『沒電』順推後件『螢幕黑』，肯定前件，「這支手機的螢幕會是黑的」那一項對。「螢幕黑掉的手機一定是沒電了」那一項是肯定後件謬誤：螢幕黑也可能是關機或當機，不一定沒電。「只要有電螢幕就一定是亮著的」那一項是否定前件謬誤：有電時螢幕也可能因當機而黑，不保證亮著。「螢幕是黑的就代表這支手機壞了」那一項從『螢幕黑』跳到『手機壞了』，規則沒建立這個關聯，是無中生有。"
+      },
+      {
+        "story": "禮拜六早上，小圓還賴在被窩裡，就聽到弟弟從陽台衝進來大喊：「姊姊姊姊！大事不好，昨天晚上一定下過雨！」小圓揉揉眼睛問他怎麼知道。弟弟得意地說：「因為媽媽平常都講嘛——『如果下雨，外面的地面就會濕』。我剛剛去陽台看，地面濕濕的一大片，所以昨晚鐵定下過雨啦！」小圓看了看窗外，太陽其實很大，她突然想起昨晚睡前，好像有聽到隔壁大樓的灑水車在澆花圃的聲音……",
+        "hints": [
+          "先把弟弟講的話拆成兩塊：他知道的規則是『下雨→地面濕』，他親眼看到的事實是『地面濕』。",
+          "他是從『後面那一塊（地面濕）』發生了，回頭去猜『前面那一塊（下雨）』一定發生。方向剛好跟規則相反。",
+          "想一想：地面會濕，除了下雨，還有沒有別的可能？如果有別的原因，這種『倒著推回去』的方式就靠不住。"
+        ],
+        "q": "把故事的情節剝掉，弟弟用『地面是濕的 → 昨晚一定下過雨』來推論，這在邏輯上屬於哪一種推理？",
+        "options": [
+          "肯定前件：由前件『下雨』成立，推出後件『地面濕』——這是有效推理",
+          "否定後件：由後件『地面濕』不成立，推出前件『下雨』不成立——這是有效推理",
+          "肯定後件：由後件（結果）『地面濕』成立，反過來斷定前件（原因）『下雨』也成立——這是常見謬誤，不一定對"
+        ],
+        "answer": 2,
+        "model": "肯定後件(Affirming the Consequent)——謬誤",
+        "insight": "看清楚箭頭方向：規則是『前件→後件』。弟弟握有的是『後件』發生，卻反推『前件』。凡是抓著結果去斷定原因，就要警覺——結果往往不只一個原因。",
+        "solve": "原句是『下雨(P)→地面濕(Q)』。弟弟觀察到 Q（地面濕）成立，就斷定 P（下雨）成立，這正是『肯定後件』，是常見謬誤。反例：灑水車澆花、有人洗車、水管漏水，都能讓地面濕而根本沒下雨——所以由『地面濕』不能保證『下過雨』。標成『肯定前件』和『否定後件』的那兩項確實都是有效推理，但它們描述的推法都跟弟弟的方向不同，弟弟用的並不是這兩種，故不選。",
+        "model_note": ""
+      },
+      {
+        "story": "期中考前，數學老師在黑板上寫下一句約定：「如果你把今天的評量卷全部寫完，就可以在自習課看一部電影。」放學後小明數學卡關，評量卷有兩大題空著沒寫完。他垂頭喪氣地跟同學說：「唉，我今天沒把評量卷寫完，那我自習課一定不能看電影了，回家吧。」同學卻歪著頭說：「等等，老師好像只說『寫完就能看』，可沒說『沒寫完就一定不能看』耶……說不定老師今天心情好，或有別的辦法。」",
+        "hints": [
+          "先拆句：規則是『寫完評量（前件）→能看電影（後件）』。小明手上的事實是『沒寫完評量』，也就是前件不成立。",
+          "他從『前件不成立』，直接跳到『後件也不成立（不能看電影）』。",
+          "『寫完』只是能看電影的其中一條路。想想：這條路走不通，是不是還可能有別條路能通到『看電影』？"
+        ],
+        "q": "撇開故事，小明用『我沒把評量寫完 → 我一定不能看電影』來推論，這屬於哪一種推理？",
+        "options": [
+          "否定後件：由後件『能看電影』不成立，推出前件『寫完』不成立——這是有效推理",
+          "否定前件：由前件『寫完評量』不成立，就推出後件『能看電影』也不成立——這是常見謬誤，不一定對",
+          "肯定前件：由前件『寫完評量』成立，推出後件『能看電影』——這是有效推理"
+        ],
+        "answer": 1,
+        "model": "否定前件(Denying the Antecedent)——謬誤",
+        "insight": "『前件』只是一個『充分條件』——做到它一定有結果，但沒做到它，並不代表結果就被鎖死。把前件否定掉就宣判後件死刑，是典型的否定前件謬誤。",
+        "solve": "原句『寫完評量(P)→能看電影(Q)』。小明否定了 P（沒寫完），就斷定 ¬Q（不能看），正是『否定前件』謬誤。反例：老師可能因為今天是特別日子而破例，或另外有『答對搶答題也能看』的規則——這些都讓『沒寫完』的小明仍可能看到電影。原句只保證『寫完→能看』，完全沒保證『沒寫完→不能看』。標成『否定後件』和『肯定前件』的那兩項都是有效推理，但都不是小明用的方向，故不選。"
+      },
+      {
+        "story": "感冒季來了，班上此起彼落都是咳嗽聲。健康課本上寫著：「如果一個人感冒了，他就會咳嗽。」下午自習課，小華一直『咳、咳、咳』停不下來，坐他隔壁的同學立刻下結論：「小華在咳嗽，他一定是感冒了，快離我遠一點！」小華一邊咳一邊拚命搖手，比手畫腳想解釋些什麼，臉都漲紅了。老師走過來問，才知道原來剛剛喝水嗆到了氣管，而且他本來就有一點氣管過敏。",
+        "hints": [
+          "同學握有的規則是『感冒→咳嗽』，看到的事實是『小華在咳嗽（後件成立）』，於是反推『感冒（前件成立）』。這是『肯定後件』。",
+          "要證明這種推法『不一定對』，我們需要找一個『反例』——一個能把它推翻的真實情況。",
+          "反例長什麼樣？要找到一種『在咳嗽、卻沒有感冒』的情形。故事裡其實已經藏了答案。"
+        ],
+        "q": "同學的『小華在咳嗽 → 一定是感冒』犯了肯定後件的毛病。下面哪個情況正好是能推翻它的『反例』？",
+        "options": [
+          "小華感冒了，而且正在咳嗽",
+          "小華沒有感冒，也沒有在咳嗽",
+          "小華根本沒感冒，只是喝水嗆到氣管、加上本來氣管過敏，才一直咳"
+        ],
+        "answer": 2,
+        "model": "肯定後件謬誤——用反例反駁",
+        "insight": "要駁倒『由 Q 推 P』，只要舉出一個『Q 成立（在咳）但 P 不成立（沒感冒）』的例子即可。反例的關鍵形狀就是『後件真、前件假』。",
+        "solve": "規則『感冒(P)→咳嗽(Q)』。『肯定後件』說『Q 成立就推 P 成立』。要反駁它，需一個『Q 真而 P 假』的情形：『根本沒感冒、只是喝水嗆到又氣管過敏才一直咳』那一項是『在咳嗽(Q真)但沒感冒(P假)』，正是這種反例，證明咳嗽不保證感冒。『感冒了而且正在咳嗽』那一項是 P、Q 都真，反而符合規則，推不翻它；『沒感冒也沒在咳嗽』那一項是 P、Q 都假，跟這個推論無關（規則沒被使用到），也當不了反例。故選『沒感冒只是嗆到』那一項。"
+      },
+      {
+        "story": "自然課在教『動物分類』。老師寫下一條規則讓大家熱身：「如果一隻動物是狗，那牠就有四隻腳。」小杰家新養了一隻小貓咪，他舉手發問：「老師，我家小貓不是狗，那照這樣講，我家小貓是不是就『沒有』四隻腳呀？」全班先是安靜了一秒，接著哄堂大笑，因為大家都看過小貓——牠明明四隻腳跑得飛快。",
+        "hints": [
+          "規則是『是狗（前件）→有四隻腳（後件）』。小杰握有『不是狗（前件不成立）』，就推『沒有四隻腳（後件不成立）』。這是否定前件。",
+          "要證明這種推法錯，就找一個反例：一個『不是狗、卻仍然有四隻腳』的例子。",
+          "想想生活中除了狗以外，有沒有其他四隻腳的動物？故事裡的主角其實就是。"
+        ],
+        "q": "小杰的『不是狗 → 一定沒有四隻腳』犯了否定前件。下面哪個情況正好是能推翻它的『反例』？",
+        "options": [
+          "狗不是貓，而且狗有四隻腳",
+          "貓明明不是狗，卻同樣有四隻腳",
+          "蛇不是狗，而且蛇也沒有四隻腳"
+        ],
+        "answer": 1,
+        "model": "否定前件謬誤——用反例反駁",
+        "insight": "要駁倒『由 ¬P 推 ¬Q』，只要舉出一個『前件假（不是狗）、後件卻真（有四隻腳）』的例子。反例的關鍵形狀是『前件假、後件真』。",
+        "solve": "規則『是狗(P)→有四隻腳(Q)』。『否定前件』說『¬P 就推 ¬Q』。要反駁需『P 假而 Q 真』：『貓不是狗卻同樣有四隻腳』那一項是『不是狗(P假)卻有四隻腳(Q真)』，正是這種反例，證明『不是狗』不代表『沒有四隻腳』。『蛇不是狗、也沒四隻腳』那一項雖然真，但它是 P假、Q也假，剛好『符合』否定前件的錯誤結論，無法推翻它。『狗不是貓、狗有四隻腳』那一項講的是狗本身(P真)，跟『不是狗』的情形無關。故選『貓不是狗卻有四隻腳』那一項。"
+      },
+      {
+        "story": "推理社在破解一樁『書房失竊案』。菜鳥偵探阿凱翻著筆記，唸出資深偵探立下的一條線索原則：「如果兇手是從窗戶爬進來的，那窗台上一定會留下泥腳印。」阿凱衝到窗邊一看，窗台上果然有一排泥巴腳印！他興奮地大喊：「破案了！兇手一定是從窗戶爬進來的！」資深偵探卻沒有跟著點頭，只是慢慢問：「今天早上，是不是有園丁來修剪窗外的花？還有，第一個到現場的警察，站在哪裡？」",
+        "hints": [
+          "線索原則是『從窗戶進來（前件）→窗台有泥腳印（後件）』。阿凱看到『窗台有泥腳印（後件成立）』，就反推『從窗戶進來（前件成立）』。",
+          "這是抓著『結果』去斷定『原因』——要小心，泥腳印這個結果，會不會有兇手以外的來源？",
+          "資深偵探故意提到園丁和警察，是在暗示什麼？想想這對『一定』兩個字有沒有殺傷力。"
+        ],
+        "q": "撇開案情，阿凱『窗台有泥腳印 → 兇手一定從窗戶進來』這個推理，到底站不站得住腳？",
+        "options": [
+          "一定成立：窗台既然有泥腳印，就百分之百證明兇手從窗戶進來",
+          "不一定成立：泥腳印也可能是別人造成的（園丁、先到的警察踩的），光憑這點無法斷定",
+          "一定不成立：泥腳印跟窗戶根本毫無關係"
+        ],
+        "answer": 1,
+        "model": "肯定後件謬誤——結論不可靠",
+        "insight": "『後件』（泥腳印）可能有很多來源。只要能想到『其他原因也會造成同樣結果』，由結果反推特定原因的推理就只是『可能』，而不是『一定』。",
+        "solve": "原則『從窗戶進來(P)→有泥腳印(Q)』。阿凱由 Q 成立推 P 成立，是肯定後件，結論不保證為真。反例：園丁修花踩上窗台、或第一個到場的警察踩過，都會留下泥腳印卻不是兇手爬窗——所以泥腳印無法『一定』證明兇手從窗戶進來，『不一定成立』那一項正確。『一定成立、百分之百證明』那一項把『可能』說成『一定』，正是掉進謬誤；『一定不成立、毫無關係』那一項又太過頭：泥腳印仍是重要線索、並非毫無關係，只是不足以下定論。故選『不一定成立』那一項。"
+      },
+      {
+        "story": "巷口的蛋糕店貼出公告：「如果您是本店會員，並在生日當月來店消費，就免費送一份小蛋糕！」王阿姨拿著集點卡走進店裡，店員一查資料說：「阿姨不好意思，您的生日在三月，現在是八月，不是您的生日月喔——所以您這次『一定』拿不到免費蛋糕啦。」旁邊的店長剛好聽到，趕緊補一句：「等一下，我們這個月不是還有『滿三百送蛋糕』的暑期活動嗎？」",
+        "hints": [
+          "公告規則是『生日月消費（前件）→送蛋糕（後件）』。店員握有『不是生日月（前件不成立）』，就斷定『拿不到蛋糕（後件不成立）』。",
+          "這是把『前件否定掉』就宣判後件死刑。想想：拿到蛋糕，是不是只有『生日月消費』這一條路？",
+          "店長提到的暑期活動，正好戳破了店員的『一定』。這對否定前件的推法說明了什麼？"
+        ],
+        "q": "把促銷情節拿掉，店員『不是生日月 → 一定拿不到蛋糕』這個推理，站不站得住腳？",
+        "options": [
+          "一定成立：既然不是生日月，就絕對拿不到蛋糕",
+          "一定不成立：不是生日月反而更容易拿到蛋糕",
+          "不一定成立：規則只說生日月消費『能』拿蛋糕，並沒說其他情況『一定』拿不到——可能還有別的活動送蛋糕"
+        ],
+        "answer": 2,
+        "model": "否定前件謬誤——結論不可靠",
+        "insight": "『前件』只是拿到蛋糕的一條充分路徑，不是唯一路徑。否定了這條路，不能保證所有的路都被封死；只要存在其它管道，結論就只是『可能』而非『一定』。",
+        "solve": "規則『生日月消費(P)→送蛋糕(Q)』。店員由 ¬P 推 ¬Q，是否定前件，結論不保證為真。反例：店長提到的『滿三百送蛋糕』暑期活動，就是另一條拿到蛋糕的路——王阿姨即使不是生日月，仍可能透過它拿到蛋糕。所以『不一定成立』那一項正確。『一定成立、絕對拿不到』那一項把『可能拿不到』誇大成『一定拿不到』，正是謬誤；『一定不成立、反而更容易拿到』那一項方向也不對，規則並沒有說非生日月『更容易』拿到。故選『不一定成立』那一項。"
+      },
+      {
+        "story": "地理小老師在台上出考題暖身：「大家記住這句話——『如果他是台北人，那他就是台灣人。』」接著他問：「現在我給你們四句換句話說，只有一句『百分之百也一定成立』，也就是跟原句意思鎖在一起、拆不開的。你們找找看是哪一句？」台下同學開始交頭接耳，有人說『反過來講也對吧』，有人搖頭，教室瞬間變成小小辯論場。",
+        "hints": [
+          "先確認原句方向：『台北人→台灣人』。台北是台灣的一部分，所以這句本身是對的。",
+          "跟原句『鎖死』的，是它的『逆否命題』：把前後件都否定、再把箭頭掉頭——『非台灣人→非台北人』。試著檢查它對不對。",
+          "另外兩句一句是『把箭頭直接掉頭（逆命題）』、一句是『前後件各加個「不」但不掉頭（否命題）』，它們跟原句『不一定』同時成立，要小心別被騙。"
+        ],
+        "q": "原句是『如果他是台北人，他就是台灣人』。下面哪一句『保證』和原句同時成立（邏輯上等價）？",
+        "options": [
+          "如果他是台灣人，他就是台北人",
+          "如果他不是台灣人，他就不是台北人",
+          "如果他不是台北人，他就不是台灣人"
+        ],
+        "answer": 1,
+        "model": "逆否命題等價(Contrapositive)；逆命題/否命題不等價",
+        "insight": "只有『逆否命題(非Q→非P)』和原命題永遠同真同假。『逆命題(Q→P)』其實就是肯定後件的形狀，『否命題(¬P→¬Q)』就是否定前件的形狀，兩者都不保證成立。",
+        "solve": "原句『台北人(P)→台灣人(Q)』。『如果他不是台灣人，他就不是台北人』那一項是逆否命題『非台灣人(¬Q)→非台北人(¬P)』——不是台灣人的人當然不會是台北人，與原句等價，恆真，正確。『如果他是台灣人，他就是台北人』那一項是逆命題『台灣人→台北人』：台灣人可能是高雄人、台南人，並不一定是台北人（這正是肯定後件的形狀），不成立。『如果他不是台北人，他就不是台灣人』那一項是否命題『非台北人→非台灣人』：不是台北人可能是台中人，仍是台灣人（這正是否定前件的形狀），也不成立。故選『非台灣人→非台北人』那一項。"
+      },
+      {
+        "story": "自然實驗課上，老師架好燒杯與溫度計，寫下標準大氣壓下的規則：「如果把水加熱到攝氏100度，水就會沸騰。」接著老師發下三張卡片，每張都寫了一種『看到某件事、於是下某個結論』的推理，要同學挑出哪一張是『抓著結果去反推原因』的那種毛病——也就是看到水在沸騰，就一口咬定水一定被加熱到剛好100度的那種推法。",
+        "hints": [
+          "先標好：前件P=『加熱到100度』，後件Q=『水沸騰』。規則是 P→Q。",
+          "『抓著結果反推原因』指的是：握有『Q（在沸騰）』，去斷定『P(加熱到100度)』。找出哪張卡片是這個方向。",
+          "另外兩張，一張是『由P推Q（順著推）』，一張是『由¬Q推¬P(結果沒發生→原因沒發生)』，這兩張其實都是有效推理，不是毛病。"
+        ],
+        "q": "哪一張卡片犯的正是『肯定後件』的毛病（由後件成立反推前件成立）？",
+        "options": [
+          "看到水正在沸騰，就斷定水一定被加熱到了攝氏100度",
+          "知道水被加熱到攝氏100度，於是推出水會沸騰",
+          "發現水沒有沸騰，於是推出水沒有被加熱到攝氏100度"
+        ],
+        "answer": 0,
+        "model": "肯定後件（謬誤） vs 肯定前件/否定後件（有效）",
+        "insight": "先把三種推法的『方向』標出來，肯定後件永遠是『由後件Q回推前件P』。找那個箭頭逆著規則走、又是從結果談起的選項。",
+        "solve": "規則『加熱到100度(P)→沸騰(Q)』。『看到水正在沸騰就斷定一定加熱到100度』那一項由 Q（在沸騰）反推 P(加熱到100度)，正是肯定後件謬誤——反例：在高山上氣壓低，水不到100度就會沸騰，所以『在沸騰』不保證被加熱到剛好100度。『加熱到100度→水會沸騰』那一項是『由P推Q』的肯定前件，有效；『沒沸騰→沒加熱到100度』那一項是『由¬Q推¬P』的否定後件，也有效。兩者都不是毛病。故選『看到沸騰就斷定100度』那一項。"
+      },
+      {
+        "story": "月考後老師公布一條加分規則：「如果這一題你答對了，就能替總分加5分。」小組討論時，四個同學各自講了一句推理，班長要大家找出哪一句是『否定前件』的錯誤——也就是『這題沒答對，就一口咬定一定沒加到那5分』的那種說法。大家你一言我一語，因為有人隱約記得，這次考卷除了這題，好像還有別的加分機會……",
+        "hints": [
+          "標好：前件P=『這題答對』，後件Q=『加5分』。規則 P→Q。",
+          "『否定前件』的形狀是：由『¬P（沒答對）』推出『¬Q(沒加到5分)』。找出這個方向的說法。",
+          "想想：加到那5分，會不會有『這題答對』以外的來源？如果有，『沒答對就一定沒加分』就靠不住了。"
+        ],
+        "q": "下面哪一句犯的正是『否定前件』的毛病（由前件不成立推出後件不成立）？",
+        "options": [
+          "這一題答對了，所以加了5分",
+          "總分沒有加到那5分，所以這一題一定沒答對",
+          "這一題沒有答對，就斷定一定沒加到那5分"
+        ],
+        "answer": 2,
+        "model": "否定前件（謬誤） vs 肯定前件/否定後件（有效）",
+        "insight": "否定前件的招牌動作是『前件先加個「不」，再推後件也「不」』。認得這個『¬P→¬Q』形狀就抓得到它。",
+        "solve": "規則『答對(P)→加5分(Q)』。『這一題沒答對就斷定一定沒加到5分』那一項由 ¬P（沒答對）推 ¬Q(沒加到5分)，正是否定前件謬誤——反例：考卷可能還有別的加分題，就算這題沒答對，仍可能靠別題加到那5分。『答對了所以加了5分』那一項是『由P推Q』的肯定前件，有效；『沒加到5分→這題沒答對』那一項是『由¬Q推¬P』的否定後件，也有效。兩者都不是毛病。故選『沒答對就斷定沒加分』那一項。"
+      },
+      {
+        "story": "運動會那天，哥哥去參加大隊接力。妹妹留在教室裡，遠遠看到哥哥比完賽回來，滿臉笑容、蹦蹦跳跳，開心得不得了。妹妹立刻在心裡下了結論：「哥哥這麼開心，他們這一隊一定贏了！」結果晚上回到家，哥哥說：「我們這次其實輸了耶，可是我今天段考成績單發下來，數學一百分，而且我暗戀的同學還跟我說了謝謝，超開心的啦！」妹妹愣住，原來『開心』不等於『比賽贏了』。",
+        "hints": [
+          "妹妹握有的規則是『贏比賽（前件）→很開心（後件）』，看到的事實是『哥哥很開心（後件成立）』，於是反推『贏了（前件成立）』。",
+          "這是從『結果（開心）』倒推『原因（贏比賽）』——要小心，開心這個結果，是不是只有贏比賽一個來源？",
+          "哥哥回家講的那兩件事（段考、同學道謝），正好解釋了他為什麼錯了。這說明推理錯在哪？"
+        ],
+        "q": "撇開故事，妹妹『哥哥很開心 → 這隊一定贏了』的推理，錯在哪裡？",
+        "options": [
+          "沒有錯：哥哥既然很開心，就代表他們一定贏了",
+          "『開心』的原因不只『贏比賽』一個（還可能考試考好、被同學道謝），所以由『開心』無法反推『贏了比賽』",
+          "錯在哥哥其實一點都不開心"
+        ],
+        "answer": 1,
+        "model": "肯定後件謬誤——多因一果",
+        "insight": "當一個『結果』可以由很多不同『原因』造成時，看到結果就鎖定某一個原因，一定是靠不住的。這正是肯定後件謬誤的破口。",
+        "solve": "規則『贏比賽(P)→開心(Q)』。妹妹由 Q（開心）反推 P（贏了），是肯定後件謬誤。反例正是故事本身：哥哥其實輸了，卻因為數學一百分、被同學道謝而開心——同一個『開心』有別的原因。所以『開心的原因不只贏比賽一個，無法由開心反推贏了』那一項正確。『沒有錯、開心就代表一定贏了』那一項把肯定後件當成有效推理，錯誤；『錯在哥哥其實一點都不開心』那一項與事實不符（哥哥確實很開心），而且就算改成『沒開心』也沒點出推理方向的問題。故選『開心原因不只一個』那一項。"
+      },
+      {
+        "story": "園藝社在整理花圃。社長拿著園藝手冊唸：「上面寫，如果一種植物是仙人掌，那它就很耐旱（很久不澆水也活得下去）。」新社員小樺指著角落一盆胖胖的多肉說：「這盆蘆薈又不是仙人掌，那牠一定不耐旱囉？那我要天天幫牠澆水才行！」社長趕緊攔住她：「先別急著澆——蘆薈雖然不是仙人掌，可是牠也超級耐旱的，你天天澆反而會把牠的根泡爛喔。」",
+        "hints": [
+          "手冊規則是『是仙人掌（前件）→耐旱（後件）』。小樺握有『不是仙人掌（前件不成立）』，就推『不耐旱（後件不成立）』。",
+          "這是把前件否定掉就斷定後件也不成立。想想：耐旱這件事，是不是只有『仙人掌』才做得到？",
+          "社長舉了蘆薈當例子。這個例子對小樺的『一定不耐旱』有什麼殺傷力？"
+        ],
+        "q": "撇開花圃情節，小樺『蘆薈不是仙人掌 → 牠一定不耐旱』的推理，判斷哪個說法對？",
+        "options": [
+          "錯：不是仙人掌並不代表不耐旱，像蘆薈不是仙人掌，卻一樣很耐旱（這就是反例）",
+          "沒錯：既然不是仙人掌，當然就不耐旱",
+          "錯在仙人掌其實並不耐旱"
+        ],
+        "answer": 0,
+        "model": "否定前件謬誤——用反例反駁",
+        "insight": "『耐旱』不是仙人掌的專利。只要找到一個『不是仙人掌、卻依然耐旱』的例子（前件假、後件真），否定前件的結論就被推翻。",
+        "solve": "規則『仙人掌(P)→耐旱(Q)』。小樺由 ¬P（不是仙人掌）推 ¬Q（不耐旱），是否定前件謬誤。反例：蘆薈不是仙人掌(P假)卻很耐旱(Q真)，正好推翻『不是仙人掌就一定不耐旱』，所以『不是仙人掌並不代表不耐旱、蘆薈就是反例』那一項正確。『沒錯、不是仙人掌當然就不耐旱』那一項把否定前件當成有效推理，錯誤；『錯在仙人掌其實並不耐旱』那一項竄改了原本正確的規則（仙人掌確實耐旱），也沒點出小樺推理方向的問題。故選『蘆薈反例』那一項。"
+      },
+      {
+        "story": "小翔家裝了一個電子門鈴。爸爸跟他約定一條規則：「如果有人按了門口的門鈴，屋子裡就會響起『叮咚』的鈴聲。」有天下午小翔一個人在房間寫功課，門鈴系統的說明書上列了四種『聽到或沒聽到鈴聲、於是下的結論』。老師剛好教到邏輯，就用這個當例子問：這四句裡，只有一句是『百分之百一定成立』的，其他三句都有漏洞。小翔盯著看，發現有的句子把『可能』講成了『一定』。",
+        "hints": [
+          "標好：前件P=『有人按門鈴』，後件Q=『屋裡響鈴聲』。規則 P→Q。要找『保證成立』的那句。",
+          "能跟原句鎖死的是它的『逆否』：由『沒有響鈴聲(¬Q)』推出『沒有人按門鈴(¬P)』。檢查看看哪句是這個。",
+          "其他句子小心：有的是『響了就一定有人按（其實鬧鐘也會響）』、有的是『沒人按就一定不會響（其實鬧鐘還是會響）』，這些都不保證。"
+        ],
+        "q": "原句『如果有人按門鈴，屋裡就會響鈴聲』。下面哪一句結論『保證一定成立』？",
+        "options": [
+          "屋裡響起了鈴聲，所以一定有人按了門鈴",
+          "沒有人按門鈴，所以屋裡一定不會響起鈴聲",
+          "屋裡響起了鈴聲，所以一定沒有人按門鈴",
+          "屋裡完全沒有響起鈴聲，所以一定沒有人按門鈴"
+        ],
+        "answer": 3,
+        "model": "否定後件有效；肯定後件/否定前件為謬誤",
+        "insight": "在一堆換句話說裡，永遠成立的是『逆否命題(¬Q→¬P)』。先鎖定『結果沒發生→原因沒發生』這個形狀，再把其它似是而非的方向逐一排除。",
+        "solve": "規則『有人按門鈴(P)→響鈴聲(Q)』。『屋裡完全沒有響起鈴聲，所以一定沒有人按門鈴』那一項是『沒響鈴聲(¬Q)→沒人按門鈴(¬P)』，即否定後件/逆否，恆成立，正確。『響了→一定有人按』那一項是肯定後件：屋裡的鬧鐘、電話鈴也可能發出鈴聲，不保證是有人按門鈴。『沒人按→一定不響』那一項是否定前件：就算沒人按，鬧鐘響了屋裡還是會有鈴聲，不保證。『響了→一定沒人按』那一項方向錯亂，更不成立。故選『沒響鈴聲→沒人按門鈴』那一項。"
+      }
+    ]
+  },
+  {
+    "id": "lv4",
+    "level": 4,
+    "name": "數獨式排除演繹",
+    "emoji": "🧩",
+    "color": "#059669",
+    "concepts": [
+      "唯一候選（剩一個就是它）",
+      "同列同行雙重排除",
+      "一定是 vs 一定不是",
+      "候選未唯一不下結論",
+      "否定與量詞（不一定≠一定不是）"
+    ],
+    "keyFacts": [
+      "當一組號碼「不重複、剛好用完」時，別人用過的你就不能用；把用掉的一個個劃掉，剩下唯一那個就是答案。",
+      "一格常同時被「同一橫列」和「同一直行」夾擊；兩邊出現過的號碼都要一起劃掉，再數還剩幾個。",
+      "排除到只剩「一個」候選，才能說「一定是」；還剩兩個以上時，只能說「可能是其中之一」，不可妄下結論。",
+      "「一定是 A」的否定是「不一定是 A（可能不是 A）」，而不是「一定不是 A」——這兩句意思完全不同，別搞混。",
+      "「每一格都不是空的」的否定是「至少有一格是空的」，而不是「每一格都是空的」（全稱的否定是存在）。"
+    ],
+    "questions": [
+      {
+        "story": "週末的桌遊社好熱鬧，四個同學小明、小華、小美、阿傑並排坐在長桌的同一側。老師發給他們每人一張桌牌，桌牌上分別印著 1、2、3、4 四個號碼，而且四張桌牌的號碼「彼此都不一樣」，剛好把 1 到 4 全部用完。\n• 小明先翻開自己的桌牌，是 3 號；\n• 坐在他旁邊的小華拿到的是 1 號；\n• 再過去的小美笑著亮出 4 號。\n只剩下阿傑還沒翻牌，他故意賣關子，把牌壓在手掌下，要大家猜猜看他手上到底是幾號。",
+        "hints": [
+          "四個人的號碼剛好是 1、2、3、4，而且沒有人重複。",
+          "把已經出現的號碼一個一個劃掉，看看還剩下哪個沒被用到。",
+          "1、3、4 都已經被別人拿走了，阿傑只能拿那個「還沒被用掉」的號碼。"
+        ],
+        "q": "阿傑手上的桌牌，一定是幾號？",
+        "options": [
+          "1 號",
+          "2 號",
+          "4 號",
+          "無法確定，可能是任何號碼"
+        ],
+        "answer": 1,
+        "model": "排除法（唯一候選）",
+        "insight": "當一組號碼「不重複、剛好用完」時，別人拿走的號碼你就不可能拿到；把用掉的劃掉，剩下唯一那個就是答案。",
+        "solve": "四張桌牌是 1、2、3、4 各一張且不重複。已知小明 3、小華 1、小美 4，這三個號碼都被拿走了。阿傑不能和別人重複，所以不可能是 1、3、4；1~4 中唯一沒被用到的只剩 2，因此阿傑一定是 2 號，答案唯一。選「無法確定」是忽略了「剛好用完且不重複」這個關鍵限制。"
+      },
+      {
+        "story": "開學第一天，走廊上有一排四個並列的置物櫃。學校規定這一排的四個櫃門要漆成紅、黃、綠、藍四種顏色，「每格一種顏色，四種顏色都要用到，而且不能重複」。工友先漆好了最左邊兩格：\n• 最左邊那格漆成紅色，\n• 第二格漆成綠色。\n剩下第三、第四格還沒漆，油漆桶裡還躺著黃色和藍色兩罐。放學時，小安經過走廊，盯著最右邊那一格（第四格），一直猜它最後會被漆成什麼顏色。",
+        "hints": [
+          "四格顏色不重複，紅和綠已經用在前面兩格了。",
+          "想想看：已經被用掉的顏色，還有可能出現在最右格嗎？",
+          "最右格只可能是「還沒用到」的顏色，被用掉的那些都要先排除。"
+        ],
+        "q": "關於最右邊那一格的顏色，下列哪一個「一定不可能」？",
+        "options": [
+          "紅色",
+          "黃色",
+          "藍色",
+          "三種顏色都有可能"
+        ],
+        "answer": 0,
+        "model": "排除法（一定不是）",
+        "insight": "「不重複」代表已用掉的顏色就被排除了；問「一定不可能」時，找那個「已經出現在同一排」的選項。",
+        "solve": "四格顏色不重複。紅色已用在第一格、綠色已用在第二格，所以第三、四格只會是剩下的黃色與藍色其中之一。最右格因此不可能是紅色（也不可能是綠色）。選項中黃色、藍色都仍有可能（要看第三格怎麼分配），只有「紅色」已被用掉、絕對不可能出現在最右格，故答案唯一為紅色。「三種都有可能」錯在把已用掉的紅色也算進去。"
+      },
+      {
+        "story": "集點活動的集點卡是一張 4×4 的方格表，共四橫列、四直行。活動規定：每一「橫列」都要蓋上 1、2、3、4 四種印章各一個、不重複；每一「直行」也一樣，1、2、3、4 各一個、不重複（就像玩數獨的小規則）。小柔正盯著第二橫列與第三直行交會的那一格，先叫它「目標格」。她發現：\n• 目標格所在的「那一橫列」上，別的格子已經蓋了 1 號和 4 號印章；\n• 而目標格所在的「那一直行」上，別的格子已經蓋了 3 號印章。",
+        "hints": [
+          "目標格同時受到「所在橫列」和「所在直行」的限制，兩邊出現過的號碼都不能再用。",
+          "橫列已經有 1 和 4，直行已經有 3，把這三個都劃掉。",
+          "1、3、4 都被排除後，1~4 裡只剩一個號碼還能填進去。"
+        ],
+        "q": "這個目標格一定要蓋幾號印章？",
+        "options": [
+          "1 號",
+          "2 號",
+          "3 號",
+          "資訊不足，無法決定"
+        ],
+        "answer": 1,
+        "model": "排除法（行列雙重排除）",
+        "insight": "一格會被「同列」和「同行」兩邊夾擊，把兩邊出現過的號碼全部劃掉，剩下唯一的號碼就是答案。",
+        "solve": "目標格的橫列已有 1、4，因此不能是 1 或 4；目標格的直行已有 3，因此不能是 3。1~4 中，1、3、4 都被排除，唯一沒被排除的只剩 2，所以目標格一定是 2 號，答案唯一。「資訊不足」錯在沒有把行、列的限制合起來一起看。"
+      },
+      {
+        "story": "音樂教室的譜架排成一列，共四個。架上要放編號 1、2、3、4 的樂譜各一份，不重複。上課前老師已經放好了：\n• 第二個譜架是 2 號、\n• 第四個譜架是 4 號；\n第一個和第三個譜架都還空著，還沒放。站在旁邊的阿哲看了一眼，很快地拍手說：「那第一個譜架一定是 1 號啦，這還用想嗎！」",
+        "hints": [
+          "剩下還沒放的號碼有哪些？扣掉 2 和 4，只剩 1 號和 3 號。",
+          "第一格和第三格都還空著，1 號和 3 號要放哪一格，題目有規定嗎？",
+          "如果 1 號、3 號放哪一格都合規，那第一格就不算「一定」是某個號碼。"
+        ],
+        "q": "阿哲說「第一個譜架一定是 1 號」，這個推論對不對？請選出最正確的說法。",
+        "options": [
+          "對，第一個譜架一定是 1 號",
+          "不對，第一個譜架一定是 3 號",
+          "不對，第一個譜架可能是 1 號也可能是 3 號，現在還不能確定",
+          "不對，第一個譜架一定不是 1 號，也一定不是 3 號"
+        ],
+        "answer": 2,
+        "model": "排除法（候選未唯一，不能妄下結論）",
+        "insight": "排除到「剩兩個候選」時，只能說「可能是其中之一」，不能直接說「一定是」某一個；要剩到唯一，才可下定論。",
+        "solve": "已放 2、4，剩下 1、3 要放進第一、三格。題目沒有任何線索限制 1 或 3 該放哪一格，兩種放法（第一格放 1、或第一格放 3）都合規。所以第一格「可能是 1 也可能是 3」，還不能確定，阿哲說「一定是 1」是太早下結論。而說『一定不是 1 也不是 3』的那一項更錯，因為第一格明明只能是 1 或 3。故正確答案是『可能是 1 號也可能是 3 號，現在還不能確定』那一項。"
+      },
+      {
+        "story": "學校書展把五本得獎繪本排在展示架的同一層，由左到右貼上 1、2、3、4、5 的編號貼紙，五個編號各用一次、不重複。管理員登記時記下：\n• 最左邊是 5 號，\n• 第二本是 2 號，\n• 第三本是 1 號，\n• 最右邊（第五本）是 4 號。\n偏偏第四本繪本的編號貼紙上，不小心被打翻的咖啡漬蓋住了，怎麼看都看不清楚。",
+        "hints": [
+          "五個編號 1~5 只用一次，先看看已經確定了哪四個。",
+          "已經出現的號碼是 5、2、1、4，把它們一個個劃掉。",
+          "1~5 裡被劃掉四個之後，只剩一個號碼沒地方去，那就是第四本。"
+        ],
+        "q": "被咖啡漬蓋住的第四本繪本，編號一定是幾號？",
+        "options": [
+          "2 號",
+          "3 號",
+          "4 號",
+          "看不清楚，就無法判斷"
+        ],
+        "answer": 1,
+        "model": "排除法（唯一候選，1~5）",
+        "insight": "就算格子多到 1~5，方法都一樣：把已用掉的全劃掉，最後剩的那個唯一號碼，就是看不見的那格。",
+        "solve": "1~5 每個編號各用一次。已確定的是 5、2、1、4 共四個，被咖啡漬蓋住的只剩下最後一個沒被用到的號碼。1~5 中扣掉 5、2、1、4，唯一剩下 3，所以第四本一定是 3 號，答案唯一。「無法判斷」忽略了「不重複且剛好用完」可以反推出唯一值。"
+      },
+      {
+        "story": "園遊會的闖關卡也是一張 4×4 的表格，規則跟集點卡一樣：每一橫列 1~4 各一次、不重複；每一直行也 1~4 各一次、不重複。阿宏拿著鉛筆，盯著表上某一格（先叫它「目標格」）想把它填出來。他數了數：\n• 目標格「同一橫列」的其他格子已經填了 1 號和 2 號；\n• 目標格「同一直行」的其他格子已經填了 4 號。",
+        "hints": [
+          "同列的 1、2 不能再用，同行的 4 也不能再用。",
+          "把 1、2、4 都從候選裡劃掉。",
+          "1~4 少了 1、2、4 之後，只剩一個號碼能填。"
+        ],
+        "q": "這個目標格一定是幾號？",
+        "options": [
+          "1 號",
+          "3 號",
+          "4 號",
+          "2 號或 3 號都可以"
+        ],
+        "answer": 1,
+        "model": "排除法（行列雙重排除）",
+        "insight": "同列同行出現過的號碼一律排除；被排除到只剩一個時，那格就被「逼」成唯一值。",
+        "solve": "目標格同列已有 1、2，故不能是 1、2；同行已有 4，故不能是 4。1~4 扣掉 1、2、4，唯一剩下 3，所以目標格一定是 3 號，答案唯一。「2 號或 3 號都可以」錯在漏看了同列的 2 已把 2 排除掉。"
+      },
+      {
+        "story": "數學課玩推理遊戲，桌上一排放著四張號碼牌，號碼是 1、2、3、4 各一張、不重複。老師先翻開最左邊（第一格），是 2 號。小咪立刻站起來說出她的推理：「因為第一格是 2，所以第三格一定不是 2；而且既然只剩下 1、3、4，那第三格一定就是 1 啦！」全班有人點頭，也有人皺眉。",
+        "hints": [
+          "先檢查第一句：第一格是 2，那第三格還能是 2 嗎？",
+          "再檢查第二句：扣掉 2 之後，第三格的候選還有 1、3、4 三個，這樣能「一定」是某一個嗎？",
+          "一個判斷對、一個判斷錯——對的是把 2 排除，錯的是把三個候選當成只剩一個。"
+        ],
+        "q": "小咪的推理，哪裡對、哪裡錯？請選出最正確的說法。",
+        "options": [
+          "兩句都對",
+          "第一句對（第三格不是 2），但第二句錯（第三格不一定是 1，還可能是 1、3、4 其中之一）",
+          "第一句錯，第二句對",
+          "兩句都錯"
+        ],
+        "answer": 1,
+        "model": "排除法（排除正確、下結論過早）",
+        "insight": "排除掉一個值是對的，但只要還剩多個候選，就不能直接跳到「一定是某一個」。",
+        "solve": "第一句：第一格是 2、且四格不重複，所以第三格確實不可能是 2，這句正確。第二句：排除 2 後，第三格的候選是 1、3、4 三個，題目沒有任何線索能把它縮到只剩一個，所以「一定是 1」是錯的（它可能是 1、3 或 4）。因此正確答案是「第一句對、第二句錯」。"
+      },
+      {
+        "story": "甜點吧一排有四個座位，四位客人各點一種口味的聖代：草莓、巧克力、抹茶、芒果，四種口味不重複。點單時，\n• 第一位客人點了巧克力，\n• 第二位客人點了芒果。\n第三位客人還在猶豫沒開口，站在一旁的實習服務生小語自言自語：「嗯……那第三位一定是草莓！」被學姊聽到後搖了搖頭，說她這樣講不對。",
+        "hints": [
+          "扣掉巧克力和芒果，第三、四位客人只會是草莓或抹茶。",
+          "第三位是草莓或抹茶還沒定，「一定是草莓」這句話能成立嗎？",
+          "要否定「一定是草莓」這句，想想它的相反是「不一定是草莓」，還是「一定不是草莓」？"
+        ],
+        "q": "學姊要指出小語「第三位一定是草莓」這句話不對，下列哪一個才是正確的說法？",
+        "options": [
+          "第三位一定是抹茶",
+          "第三位一定不是草莓",
+          "第三位不一定是草莓，也可能是抹茶",
+          "第三位既不是草莓也不是抹茶"
+        ],
+        "answer": 2,
+        "model": "否定與量詞（「一定是」的否定）",
+        "insight": "「一定是 A」的相反不是「一定不是 A」，而是「不一定是 A（有可能不是 A）」；別把兩者對調。",
+        "solve": "巧克力、芒果已被前兩位用掉，第三、四位只剩草莓與抹茶，所以第三位是草莓或抹茶，尚未確定。小語說「一定是草莓」不成立，正確的否定是「不一定是草莓，也可能是抹茶」。『一定是抹茶』與『一定不是草莓』那兩項都把話說死了（第三位仍可能是草莓）；『既不是草莓也不是抹茶』那一項則直接違反排除結果。故正確答案是『不一定是草莓，也可能是抹茶』那一項。"
+      },
+      {
+        "story": "密室逃脫的最後一關是一個一位數的密碼鎖，工作人員說密碼只可能是 1、2、3、4 其中一個數字。牆上貼著三張泛黃的紙條，隊長已經確認這三張紙條說的都是真話：\n• 紙條 A 寫著「密碼不是 4」，\n• 紙條 B 寫著「密碼不是 1」，\n• 紙條 C 寫著「密碼不是 3」。\n隊員們圍在鎖前，準備把唯一可能的數字轉出來。",
+        "hints": [
+          "密碼只在 1、2、3、4 裡，先把三張紙條排除掉的數字劃掉。",
+          "不是 4、不是 1、不是 3，這三個都不能是。",
+          "四個數字劃掉三個，剩下的那一個就是密碼。"
+        ],
+        "q": "這道鎖的密碼一定是幾？",
+        "options": [
+          "1",
+          "2",
+          "3",
+          "線索互相矛盾，無解"
+        ],
+        "answer": 1,
+        "model": "排除法（否定線索找唯一）",
+        "insight": "一串「不是……」的線索，就是在幫你劃掉候選；劃到只剩一個，那個就一定是答案。",
+        "solve": "候選是 1、2、3、4。紙條 A 排除 4，紙條 B 排除 1，紙條 C 排除 3，三個都是真話。四個數字中 1、3、4 都被排除，唯一沒被排除的只有 2，所以密碼一定是 2，答案唯一。三張紙條排除的是不同數字、彼此不衝突，因此並非「無解」。"
+      },
+      {
+        "story": "圖書館一排有四個格子的書架，用來放 1 類到 4 類的書各一種、不重複。整理完後，館員在架子上貼了一張公告，寫著：「本排書架的每一格，都不是空的。」小文讀完公告，忽然想到一個問題：假如有一天發現這張公告其實是「假的」，那到底代表發生了什麼事？",
+        "hints": [
+          "公告說的是「每一格」都不是空的——這是對全部格子的宣稱。",
+          "要讓「每一格都不是空的」變成假話，需要多少個空格才夠？",
+          "全稱句（每一格都……）要被推翻，只要找到「一個」反例就成立。"
+        ],
+        "q": "如果公告「本排每一格都不是空的」是假的，下列哪一個說法才正確？",
+        "options": [
+          "每一格都是空的",
+          "至少有一格是空的",
+          "剛好只有一格是空的",
+          "每一格都不是空的"
+        ],
+        "answer": 1,
+        "model": "全稱句的否定（∀ 的否定是 ∃）",
+        "insight": "「每一格都不是空的」的相反，只要「有一格是空的」就成立，不需要「全部都空」那麼強。",
+        "solve": "原句是全稱句「每一格都不是空的」。要它為假，只要存在一個反例——也就是「至少有一格是空的」即可。這不代表「每一格都是空的」（那要求太強），也不一定是「剛好一格」（可能不只一格）。而「每一格都不是空的」正是原句本身，並非它的否定。故正確答案是「至少有一格是空的」。"
+      },
+      {
+        "story": "園遊會的貼紙表又是一張 4×4 的表格，行列都要 1~4 各一次、不重複。小葳負責檢查某一格（目標格）還「可能」填進哪些號碼。她觀察後記下：\n• 目標格「同一橫列」的其他格子已經有 1 號和 3 號；\n• 目標格「同一直行」的其他格子已經有 2 號。\n她想在剩下的候選裡，圈出還站得住腳的那個號碼。",
+        "hints": [
+          "同列的 1、3 不能再用，同行的 2 也不能再用。",
+          "把 1、2、3 都劃掉，看看 1~4 裡還剩什麼。",
+          "被排除到最後只剩一個號碼時，那個就是「唯一還可能」的號碼。"
+        ],
+        "q": "這個目標格「還有可能」是幾號？",
+        "options": [
+          "1 號",
+          "2 號",
+          "3 號",
+          "4 號"
+        ],
+        "answer": 3,
+        "model": "排除法（找唯一存活的候選）",
+        "insight": "把同列同行用過的號碼全劃掉後，剩下能站住的只有一個，那就是唯一可能、也就是一定要填的號碼。",
+        "solve": "目標格同列已有 1、3，故不能是 1、3；同行已有 2，故不能是 2。1~4 中排除 1、2、3，唯一沒被排除、還可能填的只剩 4 號，所以答案是 4 號（其實它也就是這格一定要填的號碼）。選 1、2、3 的都是已被同列或同行排除掉的號碼。"
+      },
+      {
+        "story": "班上排值日生表，要把星期一到星期四這四天，分給 A、B、C、D 四個小組負責，每組剛好負責一天、不重複，一週四天剛好分完。導師已經先排定：\n• A 組負責星期三，\n• C 組負責星期一。\n剩下的 B 組和 D 組還沒填進表格，班長想先幫大家釐清「B 組不可能是星期幾」，好縮小討論範圍。",
+        "hints": [
+          "四天分給四組、不重複，先把 A、C 占走的日子劃掉。",
+          "星期三被 A 占了、星期一被 C 占了，B 組還能排到這兩天嗎？",
+          "B 組只會落在還沒被占走的那兩天裡，被占走的日子就是它「不可能」的。"
+        ],
+        "q": "在還沒排定之前，B 組「不可能」是星期幾？",
+        "options": [
+          "星期一",
+          "星期二",
+          "星期四",
+          "以上都有可能"
+        ],
+        "answer": 0,
+        "model": "排除法（一定不是）",
+        "insight": "每組負責的日子不重複，別組已經占走的日子，就是你「一定不是」的日子。",
+        "solve": "四天分給四組、不重複。A 占了星期三、C 占了星期一，所以 B 組只可能是剩下的星期二或星期四其中之一。也就是說 B 組不可能是星期三或星期一。選項中星期二、星期四都仍有可能，只有「星期一」已被 C 占走、絕對不可能是 B，故答案唯一為星期一。"
+      },
+      {
+        "story": "下課時同學玩「猜號碼」遊戲：答案是 1、2、3、4 之中的某一個整數。出題的那一組給了三條都是真話的線索，貼在黑板上讓大家推：\n• 第一條「這個數比 1 大」，\n• 第二條「這個數不是 4」，\n• 第三條「這個數不是 3」。\n台下的小傑拿起粉筆，準備把唯一符合的數字寫出來。",
+        "hints": [
+          "先用「比 1 大」把不合格的數劃掉，剩下哪幾個？",
+          "接著用「不是 4」「不是 3」再劃掉兩個。",
+          "三條線索都用完後，1~4 裡只會剩下一個數。"
+        ],
+        "q": "根據這三條線索，答案一定是幾？",
+        "options": [
+          "2",
+          "3",
+          "4",
+          "無法確定"
+        ],
+        "answer": 0,
+        "model": "排除法（大小＋否定線索找唯一）",
+        "insight": "把「比某數大」也當成一種排除條件，逐條劃掉不合格的候選，剩下唯一的就是答案。",
+        "solve": "候選是 1、2、3、4。第一條「比 1 大」排除 1，剩 2、3、4；第二條「不是 4」排除 4，剩 2、3；第三條「不是 3」排除 3，只剩 2。三條線索彼此不衝突，最後唯一存活的是 2，所以答案一定是 2，答案唯一。選「無法確定」是沒有把三條線索合起來一步步排除。"
+      },
+      {
+        "story": "星期六下午，阿明、阿華、阿美三個好朋友相約去手搖飲料店買珍珠奶茶。店裡人不多，他們一到就自動排成一直排，分成「最前面」、「中間」、「最後面」三個位置等著點餐。\n• 阿美說：「我最不會選，我站最後面慢慢想好了。」\n• 阿華則搶著說：「那我一定要站在阿明的前面，這樣我可以先點！」\n阿明笑著沒意見。店員探出頭來，想知道這三個人到底怎麼站的。",
+        "hints": [
+          "先把最確定的線索填進去：有一個人的位置是直接被講明的。",
+          "阿美站最後面，那麼剩下的最前面和中間，只能由阿明和阿華來坐。",
+          "「阿華在阿明前面」表示阿華的位置比阿明更靠前，把這條件套在剩下的兩個空位上想想看。"
+        ],
+        "q": "阿明一定排在第幾個位置？",
+        "options": [
+          "第一個（最前面）",
+          "第二個（中間）",
+          "第三個（最後面）",
+          "無法確定"
+        ],
+        "answer": 1,
+        "model": "三個位置像三個空格，先把被直接指定的填入，再用剩下的線索排剩下的格子。",
+        "insight": "看到「某人最後面」這種直接指定，先把它鎖死，問題就從三格縮成兩格。",
+        "solve": "阿美站最後面（第三個），確定。剩下第一、第二兩格給阿明與阿華。線索說阿華在阿明前面，所以阿華比阿明靠前，只能阿華在第一、阿明在第二。因此阿明一定是第二個，答案唯一。"
+      },
+      {
+        "story": "電影院裡，小圓、小方、小三角三個卡通造型娃娃被排在同一排的三張椅子上，分別是「最左邊」、「正中間」、「最右邊」。布置的人留下了三張便利貼：\n• 第一張寫著「小三角最喜歡坐正中間，把牠放中間」；\n• 第二張寫著「小圓怕走道吵，不要坐最左邊」；\n• 第三張寫著「小方要坐在小圓的左邊，方便照顧牠」。\n工作人員想照著便利貼把三個娃娃擺好。",
+        "hints": [
+          "先處理最直接的一張便利貼：誰的位置被明確指定了？",
+          "小三角坐正中間之後，最左和最右只剩小圓、小方兩個位置可以分。",
+          "小圓不能坐最左，又不能坐已被占走的中間，牠只剩一個位置；再用「小方在小圓左邊」檢查。"
+        ],
+        "q": "坐在最左邊的一定是誰？",
+        "options": [
+          "小圓",
+          "小方",
+          "小三角",
+          "無法確定"
+        ],
+        "answer": 1,
+        "model": "先鎖定被直接指派的中間格，再用『某人不在某處』的否定線索逼出唯一可能。",
+        "insight": "否定線索（不坐最左）配上『中間已被占』，常常只剩下一個位置可填。",
+        "solve": "小三角坐正中間，確定。小圓不坐最左，中間又被占，所以小圓只能坐最右邊。剩下最左邊給小方，且「小方在小圓左邊」也成立（最左在最右左邊）。因此最左邊一定是小方，答案唯一。"
+      },
+      {
+        "story": "曉婷、曉玲、曉芳三姊妹放學後一起到早餐店續攤，每個人各點了一杯不一樣的飲料：紅茶、綠茶、奶茶，剛好三種都有人點，沒有重複。\n• 曉玲一坐下就說：「我今天想喝清爽的，綠茶最適合我！」\n• 曉婷則皺著眉說：「我最近喝奶茶會胃痛，今天絕對不點奶茶。」\n曉芳只是安靜地喝著自己那杯。媽媽等一下要來付錢，想先搞清楚誰點了什麼。",
+        "hints": [
+          "先把講得最死的那杯填好：誰已經明講自己點什麼？",
+          "曉玲點綠茶後，紅茶和奶茶只剩曉婷、曉芳兩人分。",
+          "曉婷「不點奶茶」，在只剩紅茶、奶茶可選時，她只能選其中一種；剩下那杯就是曉芳的。"
+        ],
+        "q": "曉芳點的一定是什麼飲料？",
+        "options": [
+          "紅茶",
+          "綠茶",
+          "奶茶",
+          "無法確定"
+        ],
+        "answer": 2,
+        "model": "配對題：先把已知配對鎖死，再用否定條件排掉一項，剩下的自動歸屬最後一人。",
+        "insight": "當只剩兩個選項給兩個人，一句『某人不要某項』就能把兩人都定下來。",
+        "solve": "曉玲點綠茶，確定。紅茶、奶茶留給曉婷與曉芳。曉婷不點奶茶，所以曉婷點紅茶，剩下奶茶只能是曉芳的。因此曉芳一定點奶茶，答案唯一。"
+      },
+      {
+        "story": "月考成績單發下來了，阿宏、阿傑、阿凱、阿翔四個同學考同一科，名次剛好是第一到第四名，沒有並列。老師為了保護隱私，只在黑板上留了三條提示：\n• 「阿凱這次比較粗心，是這四人裡的最後一名」；\n• 「阿翔穩穩地拿下第二名」；\n• 「阿宏的名次比阿傑前面（名次數字比較小）」。\n同學們想從這三條提示推出完整的名次表。",
+        "hints": [
+          "兩條提示直接給了確切名次，先把這兩個人填進名次表。",
+          "阿凱第四、阿翔第二後，只剩第一和第三兩個名次給阿宏、阿傑。",
+          "「阿宏比阿傑前面」表示阿宏名次數字較小，套在剩下的第一、第三上就定了。"
+        ],
+        "q": "第一名一定是誰？",
+        "options": [
+          "阿宏",
+          "阿傑",
+          "阿凱",
+          "阿翔"
+        ],
+        "answer": 0,
+        "model": "把四個名次當四格，先填被明講的兩格，再用大小關係排剩下兩格。",
+        "insight": "『某人比某人前面』是大小關係，只要剩兩格就能立刻分出前後。",
+        "solve": "阿凱第四、阿翔第二，確定。剩第一、第三給阿宏與阿傑。阿宏名次比阿傑前（數字小），所以阿宏第一、阿傑第三。因此第一名一定是阿宏，答案唯一。"
+      },
+      {
+        "story": "園遊會上，小杰、小安、小明三個人各領到一頂顏色不同的帽子，分別是紅色、黃色、藍色，三種顏色都有人拿，沒有重複。發帽子的學長只記得兩件事：\n• 「小杰的帽子既不是紅色，也不是黃色」；\n• 「小安的帽子不是紅色」。\n三個人戴上帽子後跑去玩，老師想從學長的話推出每個人的帽子顏色。",
+        "hints": [
+          "「既不是紅色，也不是黃色」把兩種顏色一次排掉，小杰只剩一種可能。",
+          "小杰的顏色定了之後，紅色和黃色只剩小安、小明兩人分。",
+          "小安「不是紅色」，在剩下的紅、黃兩色中，他只能選黃；最後那頂紅色就有主人了。"
+        ],
+        "q": "小明一定戴什麼顏色的帽子？",
+        "options": [
+          "紅色",
+          "黃色",
+          "藍色",
+          "無法確定"
+        ],
+        "answer": 0,
+        "model": "『既不是A也不是B』等於一次排掉兩項，先把被排最多的人定下來。",
+        "insight": "連續否定（不是紅也不是黃）最有威力，常常直接鎖定一個人。",
+        "solve": "小杰不是紅也不是黃，只能是藍色。紅、黃留給小安與小明。小安不是紅色，又藍色已被小杰拿走，所以小安是黃色。剩下紅色只能是小明。因此小明一定戴紅色，答案唯一。"
+      },
+      {
+        "story": "圖書館的一個小書架上，由左到右擺著三本書：一本甲、一本乙、一本丙，占了「最左」、「中間」、「最右」三個位置。管理員的登記簿上只寫了兩條：\n• 「甲不是放在最左邊」；\n• 「乙放在甲的右邊（位置比甲更靠右）」。\n有位同學想找書，得先推出這三本書由左到右的順序。",
+        "hints": [
+          "「乙在甲右邊」代表甲的右邊還要放得下乙，想想甲最右能放到哪。",
+          "如果甲放最右，右邊就沒位置給乙了，所以甲不可能在最右；甲又不在最左。",
+          "甲被逼到唯一的位置後，乙自然接在牠右邊，剩下的位置留給丙。"
+        ],
+        "q": "放在最左邊的一定是哪一本書？",
+        "options": [
+          "甲",
+          "乙",
+          "丙",
+          "無法確定"
+        ],
+        "answer": 2,
+        "model": "『A在B右邊』會限制A不能在最右；再配合A不在最左，常把A夾到中間。",
+        "insight": "當某人右邊必須還有人，牠就不能站最後一個，兩頭一夾就定位。",
+        "solve": "乙要在甲右邊，所以甲右邊必須有空位，甲不能在最右。題目又說甲不在最左，三個位置中甲只能在中間。乙接在甲右邊，即最右。剩下最左給丙。因此最左邊一定是丙，答案唯一。"
+      },
+      {
+        "story": "阿正、阿德、阿慧三位鄰居各養了一種寵物：貓、狗、兔，三種都有人養，沒有重複。里長伯做家戶調查時記下兩件事：\n• 「阿德養的是狗」；\n• 「阿正養的不是貓」。\n隔壁的小朋友聽到後很快地說：「我知道了！阿正既然不養貓，那阿正一定養狗！」里長伯搖了搖頭，說這樣推是不對的。",
+        "hints": [
+          "先想想：狗這個寵物，已經被哪一位鄰居養走了？",
+          "阿正不養貓沒錯，但養狗的名額還空著嗎？狗已經有主人了。",
+          "排除貓、又排除已被占走的狗之後，阿正其實只剩下哪一種可以養？"
+        ],
+        "q": "小朋友說「阿正不養貓，所以阿正養狗」，這樣推對不對？",
+        "options": [
+          "對，阿正養狗",
+          "不對，阿正其實養兔",
+          "不對，阿正養貓",
+          "無法判斷"
+        ],
+        "answer": 1,
+        "model": "排除某一項時，別忘了其他項可能早已被別人占走，要一起算進去。",
+        "insight": "『不是A』不代表『就是B』，要先確認B還沒被別人拿走。",
+        "solve": "阿德養狗，狗的名額已被占。阿正不養貓，又不能養已被阿德占走的狗，所以阿正只剩兔可養，阿慧則養貓。小朋友忽略了狗已被阿德養走，才誤推成阿正養狗。正確答案是阿正養兔，所以那樣推是不對的。"
+      },
+      {
+        "story": "下課鐘一響，妮妮、東東、樂樂、恩恩四個小朋友衝去溜滑梯，排成一排等著溜，位置是「第一個」到「第四個」。導護老師記下三句話維持秩序：\n• 「恩恩今天禮讓大家，排在最後面（第四個）」；\n• 「妮妮排在東東的前面」；\n• 「樂樂又排在妮妮的前面」。\n老師想確認每個人排第幾個，以免有人插隊。",
+        "hints": [
+          "恩恩排第四是直接講明的，先鎖定；剩下三個位置給另外三人。",
+          "把「樂樂在妮妮前面」和「妮妮在東東前面」串起來，會得到一條由前到後的順序鏈。",
+          "樂樂、妮妮、東東三人要塞進前三個位置，又必須照那條順序鏈排，想想誰卡在中間。"
+        ],
+        "q": "排在第二個的一定是誰？",
+        "options": [
+          "樂樂",
+          "妮妮",
+          "東東",
+          "恩恩"
+        ],
+        "answer": 1,
+        "model": "把多條『A在B前面』串成一條前後鏈，再塞進剩下的連續位置。",
+        "insight": "兩條方向一致的先後關係可以接龍，接成一條鏈就能一次排好順序。",
+        "solve": "恩恩第四，確定，剩第一到第三給另三人。由「樂樂在妮妮前」「妮妮在東東前」串成：樂樂<妮妮<東東。把這條鏈填進第一、二、三，得到樂樂第一、妮妮第二、東東第三。因此第二個一定是妮妮，答案唯一。"
+      },
+      {
+        "story": "美術教室裡有紅、藍、綠三個籃子，各裝了一種不同的水果：蘋果、香蕉、橘子，三種都有，沒有重複。老師出了兩個提示讓大家猜：\n• 「紅籃子裝的既不是香蕉，也不是橘子」；\n• 「藍籃子裝的不是香蕉」。\n同學們想推出每個籃子裡到底是什麼水果。",
+        "hints": [
+          "「既不是香蕉也不是橘子」一次排掉兩種，紅籃子只剩一種可能。",
+          "紅籃子定了之後，香蕉和橘子只剩藍、綠兩個籃子分。",
+          "藍籃子「不是香蕉」，在剩下的香蕉、橘子中，藍只能裝橘子；最後香蕉就有去處了。"
+        ],
+        "q": "綠籃子裡裝的一定是什麼水果？",
+        "options": [
+          "蘋果",
+          "香蕉",
+          "橘子",
+          "無法確定"
+        ],
+        "answer": 1,
+        "model": "配對題先用『既非A也非B』鎖死一格，再用另一條否定排掉一項。",
+        "insight": "被否定最多次的那一格通常最先確定，是解題的突破口。",
+        "solve": "紅籃子不是香蕉也不是橘子，只能是蘋果。香蕉、橘子留給藍、綠籃子。藍籃子不是香蕉，又蘋果已被紅籃子用掉，所以藍籃子裝橘子。剩下香蕉只能在綠籃子。因此綠籃子一定裝香蕉，答案唯一。"
+      },
+      {
+        "story": "班上在票選幹部，同學小天很崇拜小華，興奮地說：「小華既是我們的班長，又是這學期的模範生！」可是後來公布名單，發現小天這句話講錯了，老師說：「小天剛剛那句話並不成立。」小天有點懵，不知道該怎麼把原本那句話「否定」成正確的說法。他想從四個選項裡挑出正確的否定。",
+        "hints": [
+          "原句是「小華是班長」「而且」「小華是模範生」兩件事同時成立。",
+          "要否定「A而且B」，不是把兩件事都變成不成立；想想只要有一件不成立，整句就垮了。",
+          "「A且B」的否定會變成「非A」加上一個連接詞，那個連接詞是『而且』還是『或者』？"
+        ],
+        "q": "「小華既是班長，又是模範生」這句話的正確否定是哪一個？",
+        "options": [
+          "小華不是班長，而且不是模範生",
+          "小華不是班長，或者不是模範生",
+          "小華是班長，但不是模範生",
+          "小華不是班長，但仍是模範生"
+        ],
+        "answer": 1,
+        "model": "德摩根定律：『A且B』的否定是『非A 或 非B』，『且』要變成『或』。",
+        "insight": "否定『兩件事都成立』，只要其中一件不成立就夠了，所以連接詞從『且』翻成『或』。",
+        "solve": "原句是『班長 且 模範生』。要它不成立，只需班長不成立、或模範生不成立(兩者只要有一個假，整個且就假)。依德摩根定律，否定為『不是班長 或者 不是模範生』。『不是班長，而且不是模範生』那一項誤把『且』留著變成兩者皆非，語意太強；『是班長，但不是模範生』和『不是班長，但仍是模範生』那兩項只否定了部分或方向錯。正確答案就是『不是班長，或者不是模範生』那一項，答案唯一。"
+      },
+      {
+        "story": "運動會前，大雄、靜香、胖虎、小夫四個人各報名了一項不同的比賽：籃球、足球、桌球、羽球，四種剛好各一人。老師的報名表上留著三條紀錄：\n• 「大雄報的是羽球」；\n• 「靜香既沒報籃球，也沒報足球」；\n• 「胖虎沒報足球」。\n體育股長想把每個人的項目對清楚。",
+        "hints": [
+          "先填被明講的那一格：誰的項目已經寫死了？",
+          "靜香「既非籃球也非足球」，又羽球已被大雄拿走，靜香只剩一種可能。",
+          "大雄、靜香定了之後，籃球和足球只剩胖虎、小夫；再用「胖虎沒報足球」定最後兩人。"
+        ],
+        "q": "小夫報名的一定是哪一項比賽？",
+        "options": [
+          "籃球",
+          "足球",
+          "桌球",
+          "羽球"
+        ],
+        "answer": 1,
+        "model": "四人四項配對：逐格排除，已被占走的項目要即時劃掉再繼續推。",
+        "insight": "每確定一人就立刻把該項目劃掉，後面的否定線索威力才會顯現。",
+        "solve": "大雄=羽球。靜香不是籃球、不是足球，羽球又被大雄占走，所以靜香=桌球。剩籃球、足球給胖虎與小夫。胖虎沒報足球，又桌球、羽球已被用掉，所以胖虎=籃球，小夫=足球。因此小夫一定報足球，答案唯一。"
+      },
+      {
+        "story": "推理社在破解一則謎題。社長宣布：「根據目擊者的說法，『所有的嫌疑犯都戴帽子』。」後來調閱監視器，發現社長引用的這句話其實是錯的，並不成立。社員小杰急著想把這句話正確地「否定」出來，好縮小偵辦範圍，但幾個社員各說各話，吵成一團。",
+        "hints": [
+          "原句是「所有嫌疑犯都戴帽子」，這是把『每一個』都包進去的說法。",
+          "要推翻『全部都戴』，並不需要證明『全部都沒戴』；想想最少要有幾個人不戴就夠了。",
+          "『所有…都是』的否定是『存在至少一個…不是』，只要抓到一個反例整句就倒。"
+        ],
+        "q": "「所有嫌疑犯都戴帽子」這句話被證明是錯的，那麼下列哪個說法一定正確？",
+        "options": [
+          "所有嫌疑犯都沒戴帽子",
+          "至少有一個嫌疑犯沒戴帽子",
+          "完全沒有嫌疑犯戴帽子",
+          "大部分嫌疑犯都沒戴帽子"
+        ],
+        "answer": 1,
+        "model": "量詞否定：『所有 X 都是 P』的否定是『存在至少一個 X 不是 P』。",
+        "insight": "推翻『全都是』只需一個反例，別過度翻成『全都不是』。",
+        "solve": "『所有嫌疑犯都戴帽子』為假，代表『每個人都戴』這件事不成立，也就是至少有一個人沒戴帽子（一個反例即可）。『所有嫌疑犯都沒戴帽子』與『完全沒有嫌疑犯戴帽子』那兩項把它誇大成『全都沒戴』，語意太強，不一定為真；『大部分嫌疑犯都沒戴帽子』那一項的『大部分』也是沒根據的加碼。只有『至少有一個嫌疑犯沒戴帽子』那一項必定正確，答案唯一。"
+      }
+    ]
+  },
+  {
+    "id": "lv5",
+    "level": 5,
+    "name": "連接詞·否定·量詞",
+    "emoji": "🔀",
+    "color": "#0891b2",
+    "concepts": [
+      "且（and）",
+      "或（or）",
+      "非（not）",
+      "德摩根定律",
+      "否定翻轉"
+    ],
+    "keyFacts": [
+      "「且」要兩件都成立整句才算真；只要缺一件，整句就變假。例如「又寫完功課又整理房間」，少做任何一項都不算做到。",
+      "「或」只要至少一件成立就算真；一定要兩件都沒有，整句才是假。例如「手寫或打字都可以」，光用手寫就已經符合。",
+      "否定「A 且 B」會翻成「非A 或 非B」——把『且』換成『或』，兩邊各自加上『非』。口訣：過否定這道門，且↔或要互換。",
+      "否定「A 或 B」會翻成「非A 且 非B」——把『或』換成『且』，兩邊各自加上『非』。所以「不是喜歡數學或英文」＝兩科都不喜歡。",
+      "最常見的陷阱：否定時只記得加『非』，卻忘了把且/或互換。看到「不是又…又…」先想『至少缺一個』；看到「不是…或…」先想『兩個都沒有』。"
+    ],
+    "questions": [
+      {
+        "story": "放學後小明衝進巷口便利商店，盯著櫃檯旁那隻限量小恐龍公仔已經三個星期了。牆上的活動海報寫得清清楚楚：「集點換公仔活動——必須『蓋滿10點』而且是『本店會員』，兩個條件都達成才能兌換。」小明摸摸口袋裡的集點卡，滿懷期待地遞上去，店員看了看卻搖搖頭，把公仔又放回架上：「不好意思，你沒辦法兌換喔。」小明垂頭喪氣地走出店門，一邊走一邊想：到底是哪裡出了問題呢？",
+        "hints": [
+          "兌換公仔的規則是「蓋滿10點」『且』「是會員」，兩件都要成立才行。",
+          "現在發生的是這整句被否定了（沒辦法兌換）。想想否定一個『且』會發生什麼事。",
+          "過了否定這道門，『且』要變成『或』，而且兩邊各自要加上『非』——別忘了把連接詞換掉。"
+        ],
+        "q": "「小明沒辦法兌換公仔」這句話，等於下面哪一個說法？",
+        "options": [
+          "沒蓋滿10點，『或』不是會員（至少缺一個條件）",
+          "沒蓋滿10點，『而且』不是會員（兩個條件都缺）",
+          "有蓋滿10點，但不是會員"
+        ],
+        "answer": 0,
+        "model": "非（A 且 B）＝非A 或 非B。這裡 A＝蓋滿10點、B＝是會員。",
+        "insight": "兌換成功需要兩件都成立，所以『兌換失敗』只要其中任何一件沒做到就會發生——不必兩件都缺。看穿它的關鍵：否定『且』一定變成『或』。",
+        "solve": "設 A＝蓋滿10點、B＝是會員，兌換成功＝A 且 B。沒辦法兌換＝非（A 且 B）。套德摩根定律：非（A 且 B）＝非A 或 非B＝沒蓋滿10點 或 不是會員，正是用『或』連接、表示『至少缺一個條件』的那一項。另一項把『且』留著沒換成『或』，變成『兩件都缺』，比實際嚴格太多——例如小明其實蓋滿了點但不是會員，也會兌換失敗，卻不符合『兩件都缺』的說法，所以錯。至於『有蓋滿10點但不是會員』那一項只描述其中一種特定情況，並沒有涵蓋『沒蓋滿點但是會員』這種也會失敗的情形，不等價。故唯一正解為『沒蓋滿10點或不是會員』這一項。"
+      },
+      {
+        "story": "週末小華跟表哥一起去遊樂園，最想玩的就是那座又高又刺激的大怒神。排隊區入口立著一塊牌子，工作人員也大聲重複著規則：「要玩這項設施，必須『身高滿120公分』或『有大人全程陪同』，符合其中一項就可以。」小華今年才小學四年級，個子不高，量身高柱只到115公分那格；而表哥雖然一起來，卻在旁邊的攤位買飲料，並沒有要陪他上去。輪到小華時，工作人員量了量身高，又看了看四周，很抱歉地說：「你這次不能玩喔。」",
+        "hints": [
+          "能玩的規則是「身高滿120」『或』「有大人陪同」，滿足一項即可。",
+          "現在是這整句『或』被否定了（不能玩）。否定一個『或』會變成什麼？",
+          "過否定門時，『或』要換成『且』，兩邊各加『非』——想想『兩個條件同時都落空』。"
+        ],
+        "q": "「小華這次不能玩」這句話，等於下面哪一個說法？",
+        "options": [
+          "身高不滿120公分，『而且』沒有大人陪同",
+          "身高不滿120公分，『或』沒有大人陪同",
+          "身高不滿120公分，但有大人陪同"
+        ],
+        "answer": 0,
+        "model": "非（A 或 B）＝非A 且 非B。這裡 A＝身高滿120、B＝有大人陪同。",
+        "insight": "只要滿足一項就能玩，所以『不能玩』代表兩項一起落空——一個都沒滿足。看穿它：否定『或』一定變成『且』。",
+        "solve": "設 A＝身高滿120、B＝有大人陪同，能玩＝A 或 B。不能玩＝非（A 或 B）＝非A 且 非B＝身高不滿120 且 沒有大人陪同，正是用『而且』連接、表示兩項一起落空的那一項。保留『或』的那一項等於說『至少一項落空』——但如果小華身高不滿120卻有大人陪，其實仍可以玩，卻符合那種說法，可見它太鬆、不等價。『身高不滿120但有大人陪同』那一項則自相矛盾：若真有大人陪同，依規則就能玩，不會是『不能玩』。故唯一正解為『身高不滿120且沒有大人陪同』這一項。"
+      },
+      {
+        "story": "傍晚下起了大雨，小美傳訊息給同組報告的同學：「跟你們說一件事，我剛剛跟里長確認過了——『今天不是又下雨又停電喔』。」群組裡三個同學看完各自解讀：阿宏說「那就是既沒下雨也沒停電囉」，小婷說「不對吧，至少有一件沒發生」，阿凱則說「反正一定有停電」。大家吵成一團，只好把這句話原封不動貼到白板上，一個字一個字慢慢拆解。",
+        "hints": [
+          "小美說的是否定「又下雨『且』又停電」這件事。",
+          "被否定的是一個『且』，想想它會翻成什麼樣的『或』。",
+          "非（下雨 且 停電）＝非下雨 或 非停電，方向是『至少缺一件』，別急著說兩件都沒。"
+        ],
+        "q": "剝掉情境，「今天不是又下雨又停電」這句話正確的意思是什麼？",
+        "options": [
+          "至少有一件沒發生：可能沒下雨、或沒停電、或兩者都沒",
+          "兩件都沒發生：既沒下雨，也沒停電",
+          "今天一定下雨，但沒有停電"
+        ],
+        "answer": 0,
+        "model": "非（A 且 B）＝非A 或 非B，得到的是『至少一件不成立』。",
+        "insight": "『又下雨又停電』是兩件同時發生才成立；否定它，只要其中一件沒發生就足夠。關鍵：非『且』得到『或』，不是『兩個都沒』。",
+        "solve": "設 A＝下雨、B＝停電，『又下雨又停電』＝A 且 B。否定＝非（A 且 B）＝非A 或 非B＝沒下雨 或 沒停電，也就是『至少一件沒發生』那一項（阿宏、阿凱都錯，小婷對）。『兩件都沒發生』那一項是把它誤讀成非（A 或 B）＝非A 且 非B，比原意嚴格；例如今天有下雨但沒停電，仍符合原句卻不符合『兩件都沒』的說法。『今天一定下雨但沒停電』那一項只是眾多可能之一，且武斷地說『一定下雨』，並不成立。故唯一正解為『至少一件沒發生』這一項。"
+      },
+      {
+        "story": "星期六早上，小傑想跟同學去打籃球，媽媽在廚房邊擦碗邊放話：「規矩你懂的——要『寫完功課』而且『整理好房間』，兩件都做到，才准你出去玩。」小傑心想小事一樁，火速把數學評量寫完，卻懶得動床上那堆漫畫和沒摺的衣服，就抓起球想溜出門。媽媽探頭看了一眼那間亂糟糟的房間，把他叫住了。小傑不服氣：「我功課明明寫完了耶！」",
+        "hints": [
+          "媽媽的規則用的是『且』：寫完功課『而且』整理房間。",
+          "『且』的判斷方式是——只要有一件沒做到，整句就是假。",
+          "他有寫功課但沒整理房間，缺了一件，想想『兩件都要』的『且』會怎麼判定。"
+        ],
+        "q": "依照媽媽的規則，小傑到底能不能出去玩？哪個判斷是對的？",
+        "options": [
+          "不能，因為『且』要兩件都做到，他缺了整理房間這一項",
+          "能，因為他至少做到了寫完功課這一項",
+          "不能，因為他兩件事其實都沒做到"
+        ],
+        "answer": 0,
+        "model": "『A 且 B』為真，需要 A 為真『而且』B 也為真；缺任何一個就為假。",
+        "insight": "『且』最嚴格：兩件都得成立。看穿它——只要抓到有一件沒做到，整句立刻是假，不用管另一件做了沒。",
+        "solve": "設 A＝寫完功課（真）、B＝整理房間（假）。准出去玩＝A 且 B。因為 B 為假，A 且 B 就為假，所以不能出去，『因為且要兩件都做到、他缺了整理房間』那一項正確。『能，因為至少做到寫完功課』那一項把『且』誤當成『或』（只要一件就好），這是典型錯誤。『兩件事其實都沒做到』那一項與事實不符——他其實寫完了功課，理由錯誤。故唯一正解為『因為且要兩件都做到、他缺了整理房間』這一項。"
+      },
+      {
+        "story": "資訊課要交一份心得報告，老師在黑板寫下繳交方式：「這份報告可以『用手寫』或『用電腦打字』繳交，兩種都接受。」小安不太會用文書軟體，就工工整整地手寫了三頁交上去。隔壁的小柔卻緊張兮兮地說：「你完蛋了啦，你又沒有打字，會不會不算數啊？」小安愣了一下，也開始擔心起來，兩人一起跑去問老師這樣到底合不合規定。",
+        "hints": [
+          "繳交方式用的是『或』：手寫『或』打字，符合一種即可。",
+          "『或』的判斷方式是——只要至少一件成立就算真。",
+          "小安手寫了，就已經滿足『或』裡的其中一項，想想這樣夠不夠。"
+        ],
+        "q": "依照老師的規則，小安手寫繳交合不合規定？哪個判斷是對的？",
+        "options": [
+          "合規定，『或』只要滿足一項就好，他手寫已經符合",
+          "不合規定，因為他沒有用電腦打字",
+          "不合規定，因為『或』要兩種方式都做到"
+        ],
+        "answer": 0,
+        "model": "『A 或 B』為真，只要 A 或 B 至少一個為真即可。",
+        "insight": "『或』最寬鬆：滿足任一項就成立。看穿它——別被『他沒做另一件』誤導，只要確認有一件成立就夠了。",
+        "solve": "設 A＝手寫（真）、B＝打字（假）。合規＝A 或 B。因為 A 為真，A 或 B 就為真，所以合規定，『或只要滿足一項、他手寫已符合』那一項正確。『不合規定，因為或要兩種方式都做到』那一項把『或』誤當成『且』（要兩個都做），這是常見錯誤。『不合規定，因為他沒用電腦打字』那一項雖然結論也是『不合規』，但推理錯在把『沒做B』當成不合格的理由——只要有做A就已經合格。故唯一正解為『或只要滿足一項、他手寫已符合』這一項。"
+      },
+      {
+        "story": "小晴幫社團申請一個線上帳號，系統跳出密碼規則：「合格的密碼必須『包含數字』而且『包含大寫英文字母』，兩者都要有。」她隨手打了一串全是小寫字母加符號的密碼按下送出，畫面立刻紅字警告：「密碼不合格，請重新設定。」她盯著螢幕想：系統說我不合格，那到底是哪個條件沒過？她把規則和這句警告抄在便條紙上，準備一項一項對照。",
+        "hints": [
+          "合格規則是「包含數字」『且』「包含大寫字母」。",
+          "現在是這個『且』被否定了（不合格）。否定『且』會變成哪種連接詞？",
+          "非（有數字 且 有大寫）＝非有數字 或 非有大寫——記得且要換成或。"
+        ],
+        "q": "「這個密碼不合格」這句話，等於下面哪一個說法？",
+        "options": [
+          "沒有數字，『或』沒有大寫字母（至少缺一樣）",
+          "沒有數字，『而且』沒有大寫字母（兩樣都缺）",
+          "有數字，但沒有大寫字母"
+        ],
+        "answer": 0,
+        "model": "非（A 且 B）＝非A 或 非B。A＝含數字、B＝含大寫字母。",
+        "insight": "合格要兩者都有，所以不合格只要缺其中一樣就成立。看穿它：否定『且』得到『或』，是『至少缺一樣』。",
+        "solve": "設 A＝含數字、B＝含大寫字母，合格＝A 且 B。不合格＝非（A 且 B）＝非A 或 非B＝沒有數字 或 沒有大寫字母，正是用『或』表示『至少缺一樣』的那一項。『沒有數字而且沒有大寫（兩樣都缺）』那一項誤把它讀成非『或』的結果，太嚴格：例如密碼有數字卻沒大寫，仍不合格卻不符合『兩樣都缺』的說法。『有數字但沒有大寫』那一項只是其中一種情況，不能涵蓋全部。故唯一正解為『沒有數字或沒有大寫』這一項。"
+      },
+      {
+        "story": "百貨公司週年慶，化妝品櫃檯貼出一張折價券使用須知：「本券使用資格——消費『滿500元』或『持VIP會員卡』，符合其中一項即可折抵。」小玲拿著券想結帳，她這次只買了一支380元的護唇膏，也沒有辦過VIP卡。店員刷了刷券，客氣地說：「不好意思，這張券您這次沒辦法使用喔。」小玲有點困惑，回家路上一直在想這句『不能用』背後到底代表她哪些條件沒達成。",
+        "hints": [
+          "能用券的規則是「滿500」『或』「是VIP」，符合一項即可。",
+          "現在是這個『或』被否定了（不能用）。否定『或』會變成哪種連接詞？",
+          "非（滿500 或 VIP）＝非滿500 且 非VIP——或要換成且，方向是『兩個一起落空』。"
+        ],
+        "q": "「小玲這張券不能使用」這句話，等於下面哪一個說法？",
+        "options": [
+          "沒有滿500元，『而且』不是VIP會員",
+          "沒有滿500元，『或』不是VIP會員",
+          "沒有滿500元，但是VIP會員"
+        ],
+        "answer": 0,
+        "model": "非（A 或 B）＝非A 且 非B。A＝滿500、B＝是VIP。",
+        "insight": "只要一項成立就能用券，所以『不能用』代表兩項一起沒達成。看穿它：否定『或』得到『且』。",
+        "solve": "設 A＝滿500、B＝是VIP，能用＝A 或 B。不能用＝非（A 或 B）＝非A 且 非B＝沒滿500 且 不是VIP，正是用『而且』表示兩項一起沒達成的那一項。保留『或』的那一項等於『至少一項沒達成』——但若沒滿500卻是VIP，其實仍能用券，卻符合那種說法，可見不等價。『沒滿500但是VIP』那一項自相矛盾：若真是VIP就能用券，不會是『不能用』。故唯一正解為『沒滿500且不是VIP』這一項。"
+      },
+      {
+        "story": "學校朝會後公布了一條秩序規定：「當天『遲到』或『沒穿制服』的同學，會被登記在秩序簿上。」放學時風紀股長對照名單，發現阿德的名字不在秩序簿裡，也就是說阿德『沒有被登記』。旁邊的同學阿倫立刻推論：「那阿德今天一定『沒遲到，而且有穿制服』！」阿德本人卻皺眉：「真的可以這樣講嗎？會不會其實我只要沒犯其中一項就好？」兩人爭論不休。",
+        "hints": [
+          "被登記的規則是「遲到」『或』「沒穿制服」。",
+          "『沒被登記』就是把這個『或』整句否定，想想會變成什麼。",
+          "非（遲到 或 沒穿制服）＝非遲到 且 非（沒穿制服）＝沒遲到 且 有穿制服，檢查阿倫說得對不對。"
+        ],
+        "q": "阿倫的推論「阿德沒遲到，而且有穿制服」對不對？",
+        "options": [
+          "對，非（A 或 B）＝非A 且 非B，所以兩項否定都要成立",
+          "錯，應該是『沒遲到，或有穿制服』就好",
+          "錯，只知道沒被登記，根本無法判斷阿德的狀況"
+        ],
+        "answer": 0,
+        "model": "非（A 或 B）＝非A 且 非B。A＝遲到、B＝沒穿制服。",
+        "insight": "被登記只要犯一項就會發生，所以『沒被登記』代表兩項一項都沒犯。看穿它：否定『或』得到『且』，兩個否定都要成立。",
+        "solve": "設 A＝遲到、B＝沒穿制服，被登記＝A 或 B。沒被登記＝非（A 或 B）＝非A 且 非B＝沒遲到 且 有穿制服。這正是阿倫說的，所以他對，『兩項否定都要成立』那一項正確。『應該是沒遲到或有穿制服就好』那一項錯把它換成『或』，那反而太鬆：若阿德遲到但有穿制服，依規則會被登記，可見不能只有一項成立。『只知道沒被登記、無法判斷』那一項也不對——德摩根定律能明確推出兩項都成立。故唯一正解為『兩項否定都要成立』這一項。"
+      },
+      {
+        "story": "園遊會廣播突然響起：「各位同學注意，本次闖關活動要『事先報名』而且『準時到場』，兩件都做到才算『完成挑戰』並領取獎品。」小云興沖沖跑去闖關，卻被告知她『沒有完成挑戰』。三個好朋友馬上七嘴八舌：欣欣說「所以你一定沒報名也沒到場」，佳佳說「不對，是你沒報名或沒到場，至少缺一項」，還有阿哲說「反正你有報名，只是遲到而已」。到底誰說對了？",
+        "hints": [
+          "完成挑戰的規則用『且』：報名『且』到場。",
+          "『沒完成』就是把這個『且』整句否定。",
+          "非（報名 且 到場）＝非報名 或 非到場，方向是『至少缺一項』。"
+        ],
+        "q": "「小云沒有完成挑戰」這句話，等於下面哪一個說法？",
+        "options": [
+          "她沒事先報名，『或』沒準時到場（至少一項沒做到）",
+          "她沒事先報名，『而且』沒準時到場（兩項都沒做）",
+          "她有報名，只是沒準時到場"
+        ],
+        "answer": 0,
+        "model": "非（A 且 B）＝非A 或 非B。A＝事先報名、B＝準時到場。",
+        "insight": "完成挑戰要兩件都做到，所以『沒完成』只要缺一件就成立。看穿它：否定『且』得到『或』（佳佳對）。",
+        "solve": "設 A＝報名、B＝到場，完成＝A 且 B。沒完成＝非（A 且 B）＝非A 或 非B＝沒報名 或 沒到場，正是用『或』表示『至少一項沒做到』的那一項（佳佳說法）。『沒報名而且沒到場（兩項都沒）』那一項（欣欣說法）太嚴格：若小云有報名卻遲到，仍是沒完成，卻不符合『兩項都沒』的說法。『有報名只是沒到場』那一項（阿哲說法）只是其中一種特定情況，不能代表全部可能。故唯一正解為『沒報名或沒到場』這一項。"
+      },
+      {
+        "story": "課後聊天，小婕問轉學生阿樂喜不喜歡主科。阿樂想了想，很認真地回答：「這樣說吧——我『不是喜歡數學或喜歡英文』喔。」小婕一時轉不過來，把這句話寫在紙上盯著看：到底是兩科都不喜歡？還是至少一科不喜歡、另一科可能還好？她決定用剛學的德摩根定律，一步一步把這句否定拆開來。",
+        "hints": [
+          "阿樂說的是否定「喜歡數學『或』喜歡英文」。",
+          "被否定的是一個『或』，想想它會翻成什麼樣的『且』。",
+          "非（喜歡數 或 喜歡英）＝不喜歡數 且 不喜歡英，方向是『兩科一起』。"
+        ],
+        "q": "「不是喜歡數學或喜歡英文」這句話正確的意思是什麼？",
+        "options": [
+          "數學和英文兩科都不喜歡",
+          "至少有一科不喜歡（另一科可能還喜歡）",
+          "不喜歡數學，但喜歡英文"
+        ],
+        "answer": 0,
+        "model": "非（A 或 B）＝非A 且 非B。A＝喜歡數學、B＝喜歡英文。",
+        "insight": "『喜歡數學或英文』只要喜歡其中一科就成立；要否定它，必須兩科都不喜歡。看穿它：否定『或』得到『且』。",
+        "solve": "設 A＝喜歡數學、B＝喜歡英文，『喜歡數學或英文』＝A 或 B。否定＝非（A 或 B）＝非A 且 非B＝不喜歡數學 且 不喜歡英文，即『兩科都不喜歡』那一項正確。『至少有一科不喜歡』那一項誤把否定『或』當成否定『且』，太鬆：若阿樂喜歡數學卻不喜歡英文，仍符合『至少一科不喜歡』，但這樣他其實喜歡數學，原句『不是喜歡數學或英文』就不成立，矛盾。『不喜歡數學但喜歡英文』那一項只是其中一種情況，不能代表全部。故唯一正解為『兩科都不喜歡』這一項。"
+      },
+      {
+        "story": "體育課選隊長，老師開玩笑地形容理想人選：「最好是『又高又壯』的同學。」下課後小杰跟同學討論，說到阿凱時搖搖頭：「阿凱『不是又高又壯』啦。」旁邊的小宇馬上接話：「那不就是又矮又瘦嗎？」小杰卻說：「欸，好像不能這樣講喔，說不定他很高只是不夠壯，或很壯只是不夠高？」兩人各執一詞，把這句「不是又高又壯」拿去問數學小老師。",
+        "hints": [
+          "「又高又壯」是「高」『且』「壯」，兩者都要成立。",
+          "「不是又高又壯」是把這個『且』整句否定。",
+          "非（高 且 壯）＝不高 或 不壯，方向是『至少缺一項』，別急著說又矮又瘦。"
+        ],
+        "q": "「阿凱不是又高又壯」這句話正確的意思是什麼？",
+        "options": [
+          "不夠高，『或』不夠壯（不一定兩樣都缺）",
+          "又矮又瘦：既不高也不壯",
+          "很高，但是不夠壯"
+        ],
+        "answer": 0,
+        "model": "非（A 且 B）＝非A 或 非B。A＝高、B＝壯。",
+        "insight": "『又高又壯』要兩者同時成立；否定它，只要缺其中一項就夠了。看穿它：否定『且』得到『或』（小杰對）。",
+        "solve": "設 A＝高、B＝壯，『又高又壯』＝A 且 B。否定＝非（A 且 B）＝非A 或 非B＝不夠高 或 不夠壯，正是用『或』表示『不一定兩樣都缺』的那一項。『又矮又瘦（既不高也不壯）』那一項（小宇說法）把它讀成非（A 或 B）＝非A 且 非B，太嚴格：若阿凱很高卻不壯，仍符合『不是又高又壯』，卻不符合『又矮又瘦』的說法。『很高但不夠壯』那一項只是其中一種可能，不能代表全部。故唯一正解為『不夠高或不夠壯』這一項。"
+      },
+      {
+        "story": "數學小考發下來，最後一題是選擇題，老師在檢討時特別提醒：「這題答案『不是A或B』喔，很多人在這裡選錯。」台下的小恩把這句話抄下來，開始糾結：老師的意思是答案『既不是A也不是B』？還是『不是A、或不是B，可能還是其中一個』？他想起前幾天才學過德摩根定律，決定用規則好好把這句話拆開，找出答案到底能不能是A或B。",
+        "hints": [
+          "老師說的是否定「答案是A『或』答案是B」。",
+          "被否定的是一個『或』，想想它會翻成什麼樣的『且』。",
+          "非（是A 或 是B）＝不是A 且 不是B，方向是『兩個一起排除』。"
+        ],
+        "q": "老師說「這題答案不是A或B」，正確的意思是什麼？",
+        "options": [
+          "答案既不是A，也不是B（A、B都排除）",
+          "答案不是A，『或』不是B（可能還是其中一個）",
+          "答案不是A，但有可能是B"
+        ],
+        "answer": 0,
+        "model": "非（A 或 B）＝非A 且 非B。A＝答案是A、B＝答案是B。",
+        "insight": "『答案是A或B』只要中一個就成立；要否定它，必須把A和B同時排除。看穿它：否定『或』得到『且』。",
+        "solve": "設命題『答案是A』、『答案是B』，『是A或B』＝A 或 B。否定＝非（A 或 B）＝非A 且 非B＝不是A 且 不是B，即『A、B都排除』那一項正確。『不是A或不是B（可能還是其中一個）』那一項保留了『或』，變成『至少一個不是』——但那仍允許答案是A或B其中之一，與『不是A或B』矛盾。『不是A但有可能是B』那一項只否定了A，卻放行B，同樣與原句衝突。故唯一正解為『A、B都排除』這一項。"
+      },
+      {
+        "story": "開學第一天，導師在黑板寫下上課守則的其中一條：「上課時『不能使用手機或吃東西』。」小庭跟同桌討論這句話：同桌說「那我只要不吃東西，偷偷滑一下手機應該沒關係吧？反正它說『或』，做到一個就好？」小庭覺得怪怪的——老師明明是在『禁止』，這個『或』藏在『不能』後面，意思好像整個反過來了。她把這句話工整地抄下來，想弄清楚到底怎樣才算真正遵守這條規定。",
+        "hints": [
+          "這句話是把「使用手機『或』吃東西」整個禁止（不能……）。",
+          "『不能A或B』等於把（A 或 B）否定，想想否定『或』會變成什麼。",
+          "非（用手機 或 吃東西）＝沒用手機 且 沒吃東西，兩件事都要避免。"
+        ],
+        "q": "怎樣才算真正遵守「上課不能使用手機或吃東西」這條規定？",
+        "options": [
+          "既沒有使用手機，也沒有吃東西（兩件都不做）",
+          "沒有使用手機，『或』沒有吃東西（做到一件就算遵守）",
+          "可以使用手機，只要不吃東西就好"
+        ],
+        "answer": 0,
+        "model": "『不能（A 或 B）』＝非（A 或 B）＝非A 且 非B。A＝用手機、B＝吃東西。",
+        "insight": "『或』被『不能』（否定）罩住時，會翻成『且』——兩件事都被禁止。看穿它：禁止『A或B』＝A、B兩件都不准。",
+        "solve": "設 A＝使用手機、B＝吃東西，規定是非（A 或 B）。由德摩根定律：非（A 或 B）＝非A 且 非B＝沒用手機 且 沒吃東西，所以要兩件都不做才算遵守，『兩件都不做』那一項正確。『沒用手機或沒吃東西（做到一件就算遵守）』和『可以使用手機、只要不吃東西就好』那兩項（同桌與『只要不吃東西』的想法）都誤以為『或』代表『做到一項就好』，但這個『或』在否定範圍內，早已翻成『且』，只避開一件仍然違規。故唯一正解為『兩件都不做』這一項。"
+      },
+      {
+        "story": "禮拜一早自習，班長阿哲站在講台上很有自信地跟老師報告：「老師，我們班所有人今天都交了數學作業，一本都沒少！」老師推了推眼鏡，慢條斯理地說：「這句話很大喔，『所有人』耶。我可不想全班一本一本翻，我只想用最省力的方式看看你有沒有說錯。」阿哲一聽有點緊張，因為他其實只有隨便問了前排幾個同學。老師心裡想的是：這種「所有人都怎樣」的話，要抓包它，其實不必費力證明全班都相反。",
+        "hints": [
+          "「所有人都交了」是一句『全部』的宣稱，它宣稱『沒有任何一個例外』。",
+          "要打倒『沒有任何例外』，你需要什麼？是找到滿足的例子，還是找到不滿足的例子？",
+          "想想：抓一個反例就夠，還是非得證明『全班都沒交』才行？後者其實要求太多了。"
+        ],
+        "q": "老師想用最省力的方式證明「我們班所有人都交了作業」這句話是錯的，他最少需要找到什麼？",
+        "options": [
+          "找到一位沒交作業的同學",
+          "證明全班每一個人都沒交作業",
+          "找到一位確實有交作業的同學",
+          "證明班上有些人交了作業"
+        ],
+        "answer": 0,
+        "model": "全稱命題的否定：找反例",
+        "insight": "「所有X都Y」的否定是「有些X不Y」。要推翻一句『全部都…』的話，只要抓到一個反例（一個不符合的）就成立，不必證明『全部都相反』。",
+        "solve": "原句是全稱命題「所有人都交了」，它等於說『沒有任何例外』。它的否定只需『存在一個例外』，也就是「有一個人沒交」。『找到一位沒交作業的同學』正是一個反例，最省力也最正確。『證明全班每一個人都沒交作業』那一項要求太強，那是另一個更極端的命題，不是原句的否定；就算全班有一半交一半沒交，原句也已經是錯的。『找到一位確實有交作業的同學』和『證明班上有些人交了作業』都在講『有人交了』，那反而支持不了否定，甚至和原句方向一致。故唯一正解為『找到一位沒交作業的同學』這一項。"
+      },
+      {
+        "story": "自然課講到「天鵝」，老師在黑板寫下一句古老的說法：「所有天鵝都是白色的。」接著老師說：「這句話在歐洲流傳了好幾百年，直到有人在澳洲看到黑天鵝。現在我不要你們去找黑天鵝，我只要你們把這句話『正確地否定』掉——也就是寫出一句話，讓它剛好跟原句相反、原句錯它就對。」台下有人搶答「所有天鵝都不是白色的」，老師搖搖頭說：「太超過了，你把話講得比需要的還滿。」",
+        "hints": [
+          "「所有天鵝都是白的」宣稱『每一隻都白』，沒有例外。",
+          "否定它，只要打破『沒有例外』，也就是承認『至少有一隻不是白的』。",
+          "「所有都不是白的」是說『整群顏色全反過來』，那比『打破沒有例外』要求更多，不是正確的否定。"
+        ],
+        "q": "「所有天鵝都是白色的」這句話，正確的否定是哪一句？",
+        "options": [
+          "有些天鵝不是白色的",
+          "所有天鵝都不是白色的",
+          "有些天鵝是白色的",
+          "沒有任何一隻天鵝是白色的"
+        ],
+        "answer": 0,
+        "model": "全稱肯定的否定",
+        "insight": "「所有X都是Y」的否定是「有些X不是Y」，只要存在一個反例即可，不必主張『全部都不是』。",
+        "solve": "全稱命題「所有天鵝都是白的」＝『沒有天鵝不是白的』。它的否定是『有天鵝不是白的』，即「有些天鵝不是白色的」這一項。『所有天鵝都不是白色的』和『沒有任何一隻天鵝是白色的』都主張『全部都不白』，那是更強的命題（原句錯不代表全部都不白，可能只有幾隻黑的）。「有些天鵝是白色的」和原句並不矛盾，甚至可以同時成立，不是否定。故唯一正解為「有些天鵝不是白色的」這一項。"
+      },
+      {
+        "story": "登山社出發前，社長小葳警告大家：「注意喔，路邊有些蘑菇是有毒的，千萬別亂採來吃！」隊裡有個天不怕地不怕的阿宏不服氣，大喊：「才怪，我要證明你這句話是錯的！」小葳笑著說：「好啊，你要反駁『有些蘑菇有毒』，你知道那需要證明到什麼程度嗎？可不是隨便找一朵沒毒的就算數喔。」阿宏愣住了，他本來打算採一朵沒毒的蘑菇給大家看。",
+        "hints": [
+          "「有些蘑菇有毒」的意思是『至少存在一朵有毒的』。",
+          "要讓『至少存在一朵有毒的』變成假的，等於要說『一朵有毒的都沒有』。",
+          "找到一朵沒毒的蘑菇，不能推翻原句——因為別的蘑菇仍可能有毒。你得排除掉『任何一朵有毒』。"
+        ],
+        "q": "阿宏想反駁「有些蘑菇是有毒的」，他必須證明哪一件事才算成功？",
+        "options": [
+          "所有蘑菇都沒有毒",
+          "有些蘑菇沒有毒",
+          "所有蘑菇都有毒",
+          "有一種蘑菇沒有毒"
+        ],
+        "answer": 0,
+        "model": "存在命題的否定",
+        "insight": "「有些X是Y」的否定是「所有X都不是Y」。要推翻『存在一個』，必須證明『一個都沒有』。",
+        "solve": "存在命題「有些蘑菇有毒」＝『至少有一朵有毒』。它的否定是『沒有任何一朵有毒』，也就是「所有蘑菇都沒有毒」這一項。『有些蘑菇沒有毒』和『有一種蘑菇沒有毒』只是找到『一朵沒毒的』，這完全不能推翻原句，因為原句只要求某一朵有毒，其他朵沒毒無所謂。「所有蘑菇都有毒」是更極端的另一句話，也不是否定。故唯一正解為「所有蘑菇都沒有毒」這一項。"
+      },
+      {
+        "story": "班會在討論遲到問題。風紀股長皺著眉說了一句拗口的話：「並非我們班所有同學都遲到。」旁邊的同學被繞暈了：「等等，這到底是說遲到還是沒遲到？是全部？還是部分？」老師趁機說：「這是個好機會練習。『並非所有…都…』這種句子，把外面那個『並非』推進去之後，會變成什麼樣子？把它翻成一句乾淨、白話、意思一樣的話。」",
+        "hints": [
+          "「並非（所有同學都遲到）」＝『所有同學都遲到』這句話是假的。",
+          "『所有都遲到』為假，代表『至少有一個沒遲到』。",
+          "別掉進陷阱說成『所有人都沒遲到』——那是把話講到另一個極端了。"
+        ],
+        "q": "「並非我們班所有同學都遲到」這句話，跟下面哪一句意思相同？",
+        "options": [
+          "有些同學沒有遲到",
+          "所有同學都沒有遲到",
+          "有些同學遲到了",
+          "班上一個遲到的都沒有"
+        ],
+        "answer": 0,
+        "model": "全稱命題的否定（並非…）",
+        "insight": "「並非（所有X都Y）」等於「有些X不Y」。『並非』作用在整句全稱上，否定後變成存在一個反例。",
+        "solve": "「並非所有同學都遲到」就是否定『所有同學都遲到』。全稱命題的否定是『有些同學不遲到』，即「有些同學沒有遲到」這一項。『所有同學都沒有遲到』和『班上一個遲到的都沒有』主張『全部都沒遲到』，那要求太強：原句只保證『不是全部遲到』，可能還是有很多人遲到。「有些同學遲到了」和原句可以同時為真，但它不是原句的等價翻譯（原句重點在『有人沒遲到』）。故唯一正解為「有些同學沒有遲到」這一項。"
+      },
+      {
+        "story": "偵探社在破一樁竊案，嫌疑人有五個。菜鳥助手信誓旦旦地說：「我懷疑有些嫌疑人在說謊。」老偵探慢悠悠地回：「假設案情最後翻盤，證明你這句『有些人說謊』其實是錯的——那真相會是怎樣一句話？把否定講清楚，別含糊。」助手抓抓頭：「呃…有些人沒說謊？」老偵探搖頭：「差遠了，那根本沒否定到我。」",
+        "hints": [
+          "「有些嫌疑人說謊」＝『至少有一個人說謊』。",
+          "要它為假，等於『沒有任何一個人說謊』。",
+          "『有些人沒說謊』是陷阱：它跟『有些人說謊』其實可以同時成立，根本不是否定。"
+        ],
+        "q": "「有些嫌疑人在說謊」這句話，正確的否定是哪一句？",
+        "options": [
+          "所有嫌疑人都沒有說謊",
+          "有些嫌疑人沒有說謊",
+          "所有嫌疑人都在說謊",
+          "至少有一個嫌疑人沒說謊"
+        ],
+        "answer": 0,
+        "model": "存在命題的否定",
+        "insight": "「有些X是Y」的否定是「所有X都不是Y」。否定『存在一個』，就是『全部都沒有』。",
+        "solve": "存在命題「有些人說謊」的否定是『沒有任何人說謊』＝「所有嫌疑人都沒有說謊」這一項。『有些嫌疑人沒有說謊』和『至少有一個嫌疑人沒說謊』都是『有人沒說謊』，這和『有人說謊』可以同時為真（例如三人說謊、兩人沒說謊），因此不是否定。「所有嫌疑人都在說謊」是更強的斷言，也不是否定。故唯一正解為「所有嫌疑人都沒有說謊」這一項。"
+      },
+      {
+        "story": "數學社在玩「一句話擂台」，規則是：主持人給一句『所有…都…』的宣稱，挑戰者要舉出一個例子把它打倒。這回的題目是：「所有質數都是奇數。」四個同學各舉了一個例子想搶分，可是主持人說只有一個人舉的例子真的能打倒這句話，其他人不是舉錯方向、就是舉了一個根本不相關的數字。",
+        "hints": [
+          "要打倒「所有質數都是奇數」，你需要一個『是質數，但不是奇數』的反例。",
+          "這個反例必須兩個條件同時滿足：它得是質數 ＆ 它不是奇數（也就是偶數）。",
+          "想想有沒有『偶數的質數』？只有一個很特別的數字符合。"
+        ],
+        "q": "下列哪一個例子，能夠真正推翻「所有質數都是奇數」這句話？",
+        "options": [
+          "2 是質數，但它是偶數（不是奇數）",
+          "9 是奇數，但它不是質數",
+          "3 既是質數又是奇數",
+          "4 既不是質數也不是奇數"
+        ],
+        "answer": 0,
+        "model": "全稱命題的反例",
+        "insight": "要推翻「所有X都是Y」，反例必須『是X但不是Y』兩條件同時成立，缺一不可。",
+        "solve": "原句宣稱『凡是質數，都是奇數』。反例必須同時滿足『是質數』且『不是奇數』。『2 是質數但它是偶數』那一項的 2 是質數又是偶數，正好違反，成功推翻。『9 是奇數但不是質數』那一項的 9 不是質數，不符合『是X』，無效。『3 既是質數又是奇數』那一項完全符合原句，反而支持它。『4 既不是質數也不是奇數』那一項的 4 不是質數，也不相關。故唯一能推翻的反例是『2 是質數但它是偶數』這一項。"
+      },
+      {
+        "story": "戶外教學遇到午後雷陣雨，老師擔心地說：「剛剛看，我們班好像有些同學沒帶傘。」隊長想確認狀況，就問：「老師，如果我要回報一個『好消息』，也就是說明您這句『有些同學沒帶傘』其實不成立、大家都不用淋雨——那我得確定什麼情況？」老師點頭：「對，這才是把我這句話真正否定掉。」",
+        "hints": [
+          "「有些同學沒帶傘」＝『至少有一個人沒帶傘』。",
+          "要它不成立，等於『沒有任何一個人沒帶傘』，也就是『每個人都帶了傘』。",
+          "『有些人帶了傘』不夠——因為仍然可能有別人沒帶。要涵蓋『全部』。"
+        ],
+        "q": "隊長想確認「有些同學沒帶傘」這句話不成立，他必須確定的是哪一種情況？",
+        "options": [
+          "所有同學都帶了傘",
+          "有些同學帶了傘",
+          "所有同學都沒帶傘",
+          "至少有一位同學帶了傘"
+        ],
+        "answer": 0,
+        "model": "存在命題的否定（有些…不…）",
+        "insight": "「有些X不Y」的否定是「所有X都Y」。要推翻『至少有一個不帶』，必須『全部都帶』。",
+        "solve": "「有些同學沒帶傘」是存在命題（存在一個沒帶傘的人）。它的否定是『不存在沒帶傘的人』＝「所有同學都帶了傘」這一項。『有些同學帶了傘』和『至少有一位同學帶了傘』只確認『有人帶了傘』，但仍可能有人沒帶，無法推翻原句。「所有同學都沒帶傘」反而讓原句更成立。故唯一正解為「所有同學都帶了傘」這一項。"
+      },
+      {
+        "story": "校門口新開一家手搖飲料店，門口立了各種廣告牌。廣告課的作業是：找出哪一句招牌用的是『全稱』的口氣——也就是把整群東西一網打盡、講『所有…都…』的那種，而不是只講『有些』或『至少一個』。同學們盯著三塊牌子看半天，其中兩塊講的都是『部分』，只有一塊把某類飲料『全部』框起來了。",
+        "hints": [
+          "『全稱命題』的關鍵字是『所有、每一、任何、全部』——把一整群都包進去。",
+          "『存在命題』的關鍵字是『有些、至少一個、某些』——只講部分。",
+          "一句一句判斷：哪一句是把某一整類東西『全部』都斷言了？"
+        ],
+        "q": "下列哪一句招牌，屬於「全稱命題（把某一整類全部斷言）」？",
+        "options": [
+          "本店所有飲料都會加冰塊",
+          "本店有些飲料加了糖",
+          "本店至少有一杯是熱的"
+        ],
+        "answer": 0,
+        "model": "辨識全稱 vs 存在",
+        "insight": "看關鍵字：『所有／每一／全部／任何』是全稱；『有些／至少一個／某些』是存在。",
+        "solve": "「本店所有飲料都會加冰塊」用『所有飲料都…』把整類飲料全部斷言，屬於全稱命題。『本店有些飲料加了糖』用「有些」、『本店至少有一杯是熱的』用「至少有一杯」，都只講部分，屬於存在命題。因此唯一的全稱命題是「本店所有飲料都會加冰塊」這一項。"
+      },
+      {
+        "story": "小美超愛貓，她篤定地說：「所有貓都怕水，這是常識！」隔天小華帶了影片來，畫面裡一隻叫『阿肥』的貓自己跳進浴缸玩水，一點都不怕。小美看傻了眼，嘴硬說：「這…這只是特例啦，我那句話還是對的！」老師剛好經過，插話：「先別急著護航，我們來想清楚：小華這隻不怕水的貓，到底對小美那句『所有貓都怕水』做了什麼？又該怎麼把小美的話修正成正確的？」",
+        "hints": [
+          "「所有貓都怕水」宣稱『沒有例外』。阿肥就是一個活生生的反例。",
+          "一個反例足以讓『所有…都…』整句垮掉，不能用『那只是特例』來救。",
+          "但『被推翻』不代表跳到另一極端『所有貓都不怕水』——正確修正只是承認『有些貓不怕水』。"
+        ],
+        "q": "小華找到一隻不怕水的貓「阿肥」，這對小美的話「所有貓都怕水」造成什麼結果？",
+        "options": [
+          "小美的話被推翻，正確的說法應改成「有些貓不怕水」",
+          "這證明了「所有貓都不怕水」",
+          "這只是特例，小美的話仍然成立",
+          "這證明「有些貓怕水」，所以小美沒錯"
+        ],
+        "answer": 0,
+        "model": "反例推翻全稱＋正確改寫",
+        "insight": "一個反例即可推翻全稱命題；推翻後的正確結論是存在否定「有些X不Y」，不是全稱否定「所有X都不Y」。",
+        "solve": "「所有貓都怕水」是全稱命題，只要一個反例（阿肥不怕水）就足以使它為假，所以『這只是特例、小美的話仍然成立』那一項錯（不能用『特例』搪塞）。被推翻後的正確說法是它的否定「有些貓不怕水」，即『小美的話被推翻，應改成有些貓不怕水』這一項。『這證明了所有貓都不怕水』那一項是跳到另一極端，證據不足；一隻不怕水不代表全部都不怕。『這證明有些貓怕水、所以小美沒錯』那一項雖然是真的，但那不是對原句的否定或修正。故唯一正解為『小美的話被推翻，應改成有些貓不怕水』這一項。"
+      },
+      {
+        "story": "放學前鑰匙不見了，老師急著找。他記得桌上有好幾個抽屜，就自言自語：「應該有些抽屜裡放了備用鑰匙吧。」工友大叔在旁邊說：「老師啊，如果你想確定『有些抽屜裡有鑰匙』這句話是假的、也就是這裡根本一支鑰匙都翻不到，那你可不能只拉開一格看看喔。」老師想了想，明白了要做的檢查其實很徹底。",
+        "hints": [
+          "「有些抽屜裡有鑰匙」＝『至少有一格藏著鑰匙』。",
+          "要證明它是假的，等於證明『沒有任何一格有鑰匙』。",
+          "只拉開一格發現沒鑰匙，救不了——別的格子還沒查。要把全部格子都排除。"
+        ],
+        "q": "老師想確定「有些抽屜裡有鑰匙」這句話是假的，他必須做到哪一件事？",
+        "options": [
+          "把每一個抽屜都打開檢查，確認全部都沒有鑰匙",
+          "打開其中一個抽屜，發現裡面沒有鑰匙",
+          "打開其中一個抽屜，發現裡面有鑰匙",
+          "檢查一半的抽屜，都沒有鑰匙"
+        ],
+        "answer": 0,
+        "model": "存在命題的否定（徹底排除）",
+        "insight": "「有些X是Y」為假 ⇔「所有X都不是Y」。要否定『存在一個』，必須逐一排除到『全部都沒有』。",
+        "solve": "「有些抽屜有鑰匙」是存在命題。它為假等於它的否定『所有抽屜都沒鑰匙』成立，這需要把每一格都檢查、確認全都沒有，即『把每一個抽屜都打開檢查、確認全部都沒有』這一項。『打開其中一個發現沒鑰匙』和『檢查一半的抽屜都沒有』只查了部分，剩下的抽屜仍可能有鑰匙，不足以否定。『打開其中一個發現有鑰匙』那一項找到鑰匙反而讓原句為真。故唯一正解為『把每一個抽屜都打開檢查、確認全部都沒有』這一項。"
+      },
+      {
+        "story": "家庭聚餐點菜，表哥丟出一句繞口的話：「不是所有人都喜歡吃辣啦，別全點麻辣的。」小表妹一頭霧水：「不是所有人喜歡吃辣…那是沒有人喜歡吃辣，還是有人不喜歡？」姑姑笑說：「來，這正好是邏輯課。『不是所有人都喜歡吃辣』這句，最少保證了什麼一定成立？別想太多，也別想太少。」",
+        "hints": [
+          "「不是（所有人都喜歡吃辣）」＝『所有人都喜歡吃辣』是假的。",
+          "『全部都喜歡』為假，代表『至少有一個人不喜歡』。",
+          "別過頭講成『沒有人喜歡吃辣』——原句沒那麼強，可能大部分人還是喜歡。"
+        ],
+        "q": "「不是所有人都喜歡吃辣」這句話，一定保證了下面哪一件事？",
+        "options": [
+          "至少有一個人不喜歡吃辣",
+          "沒有人喜歡吃辣",
+          "所有人都不喜歡吃辣",
+          "所有人都喜歡吃辣"
+        ],
+        "answer": 0,
+        "model": "全稱命題的否定",
+        "insight": "「不是（所有X都Y）」＝「有些X不Y」＝『至少存在一個反例』，不等於『全部都不Y』。",
+        "solve": "「不是所有人都喜歡吃辣」是否定全稱命題『所有人都喜歡吃辣』，其結果是『有些人不喜歡吃辣』，也就是『至少有一個人不喜歡』，即「至少有一個人不喜歡吃辣」這一項。『沒有人喜歡吃辣』和『所有人都不喜歡吃辣』主張『全部都不喜歡』，那要求太強：原句只否定『全都喜歡』，並不排除很多人喜歡。「所有人都喜歡吃辣」正是被否定掉的原句。故唯一正解為「至少有一個人不喜歡吃辣」這一項。"
+      },
+      {
+        "story": "宿舍管理員巡邏，登記本上寫著一句：「有些房門是鎖著的。」新來的助理想把這句話『否定』一下練習邏輯，脫口而出：「那否定就是『有些房門沒鎖』囉！」管理員搖搖頭：「小心，這是最多人踩的坑。『有些…』的否定，可不是把它改成『有些…不…』就了事，那兩句根本能同時是真的。」助理這才發現自己想錯了方向。",
+        "hints": [
+          "「有些房門鎖著」＝『至少有一扇門鎖著』。",
+          "注意陷阱：『有些門沒鎖』和『有些門鎖著』可以同時為真（有的鎖、有的沒鎖），所以前者不是後者的否定。",
+          "真正的否定要讓原句『完全不可能成立』——那必須是『沒有任何一扇門鎖著』。"
+        ],
+        "q": "「有些房門是鎖著的」這句話，正確的否定是哪一句？",
+        "options": [
+          "所有房門都沒有鎖",
+          "有些房門沒有鎖",
+          "所有房門都鎖著",
+          "至少有一扇門沒鎖"
+        ],
+        "answer": 0,
+        "model": "存在命題的否定（避開『有些…不…』陷阱）",
+        "insight": "「有些X是Y」的否定是「所有X都不是Y」，而不是「有些X不是Y」——後者與原句能同時為真，並非矛盾。",
+        "solve": "存在命題「有些門鎖著」的否定是『沒有任何門鎖著』＝「所有房門都沒有鎖」這一項。『有些房門沒有鎖』和『至少有一扇門沒鎖』是『有些門沒鎖』，它和原句可同時成立（例如三扇鎖、兩扇沒鎖），因此不是否定，這正是常見錯誤。「所有房門都鎖著」是更強的斷言，也非否定。故唯一正解為「所有房門都沒有鎖」這一項。"
+      }
+    ]
+  },
+  {
+    "id": "lv6",
+    "level": 6,
+    "name": "謎題推理（說謊者與線索）",
+    "emoji": "🔍",
+    "color": "#db2777",
+    "concepts": [
+      "假設法（先假設再檢驗）",
+      "矛盾檢驗",
+      "真話恆真・假話恆假",
+      "身分互推",
+      "唯一解驗證"
+    ],
+    "keyFacts": [
+      "老實人講的每一句話都為真，說謊者講的每一句話都為假，沒有時真時假的中間地帶。",
+      "假設法核心：先假設某人是老實人（或說謊者），順著他的話往下推，若推出矛盾就代表假設錯，反過來的身分才成立。",
+      "「至少有一位說謊者」這句話若由說謊者說出必自相矛盾，所以說出這句的人一定是老實人；同理「我們都是說謊者」的說話者必是說謊者。",
+      "兩人的話若正面相反（一個說「他說謊」、另一個說「他老實」），則兩人必定一真一假，可立刻縮小範圍。",
+      "題目若給「恰好幾位老實人／說謊者」的數量條件，先數出已經確定的身分，再用總數卡死剩下的人；最後務必把每個人的話代回全部檢查，並確認沒有第二組解。"
+    ],
+    "questions": [
+      {
+        "story": "班上要選環保股長，兩位候選人小真與小謊上台自我介紹。這個班有個怪規矩：有些同學是「老實人」，講的每一句話都是真的；有些同學是「說謊者」，講的每一句話都是假的，而且非黑即白，沒有人會時真時假。輪到小真時，他清了清喉嚨，只講了一句話就下台：「我跟小謊，兩個都是說謊者。」台下的小謊笑而不語，什麼也沒補充。導師在黑板上寫下這句話，要全班用推理判斷這兩人各自是哪一種人。",
+        "hints": [
+          "先假設小真是「老實人」，那他說的『兩個都是說謊者』就必須是真的，看看會不會跟他自己的身分打架。",
+          "如果假設小真是老實人卻推出他其實是說謊者，這個假設就爆了，只能翻到另一面：小真是說謊者。",
+          "既然小真是說謊者，那句『兩個都是說謊者』就是假話；『兩個都是』被否定後，代表至少有一個人不是說謊者，而那個人不可能是小真——所以會是誰？"
+        ],
+        "q": "根據這句話，小真與小謊各自是什麼身分？",
+        "options": [
+          "小真是說謊者，小謊是老實人",
+          "小真是老實人，小謊是說謊者",
+          "兩人都是說謊者",
+          "兩人都是老實人"
+        ],
+        "answer": 0,
+        "model": "自指語句的假設法：假設說話者身分→檢驗是否矛盾",
+        "insight": "『我們兩個都是說謊者』這種把自己也算進去的全稱句，只要說話者是老實人就必然矛盾，因此說話者鐵定是說謊者，接著再靠這句假話反推同伴。",
+        "solve": "先假設小真是老實人：那麼他說的『兩個都是說謊者』為真，於是小真自己也是說謊者——這與『他是老實人』直接矛盾，假設不成立。故小真必為說謊者。既然小真是說謊者，他這句話就是假話，也就是『兩個都是說謊者』不成立，代表至少有一人不是說謊者。這個人不可能是小真（他已確定是說謊者），只能是小謊，所以小謊是老實人。代回檢查：小謊是老實人，這句『兩個都是說謊者』確實是假的（因為小謊並非說謊者），與小真是說謊者完全吻合。整組身分唯一：小真說謊、小謊老實。"
+      },
+      {
+        "story": "科展工作室裡的兩台舊電腦昨晚沒關機。今早阿哲和小婕被叫來問話。這間工作室的成員只有兩型人：老實人（每句話都真）與說謊者（每句話都假）。\n• 阿哲先開口：「小婕昨天講的都是假話，她是說謊者。」\n• 小婕接著不甘示弱地回嘴：「哼，其實阿哲跟我，兩個人昨天講的全是假話，我們都在說謊！」\n老師把兩句話抄下來，要同學判斷這對搭檔誰誠實、誰說謊。",
+        "hints": [
+          "先盯住小婕那句話：她說『阿哲跟我，兩個人都在說謊』，把她自己也算進去了，先假設她是老實人試試。",
+          "若小婕是老實人，她說的『我們都在說謊』就得為真，於是她自己也在說謊——矛盾。所以小婕的身分已經定了。",
+          "小婕定案後，再看阿哲說『小婕是說謊者』這句話，跟你剛剛推出的結果對照，就能決定阿哲是真是假。"
+        ],
+        "q": "根據兩人的對話，阿哲與小婕各自是什麼身分？",
+        "options": [
+          "兩人都是說謊者",
+          "阿哲是說謊者，小婕是老實人",
+          "阿哲是老實人，小婕是說謊者"
+        ],
+        "answer": 2,
+        "model": "含自身的全稱假話＋單句對照法",
+        "insight": "小婕把自己包進『我們都在說謊』會自我矛盾（同 Q1），先鎖死她是說謊者；她一旦是說謊者，阿哲那句『小婕是說謊者』就變成真話，阿哲隨之定為老實人。",
+        "solve": "假設小婕是老實人：她說『阿哲跟我都在說謊』為真，於是小婕也在說謊，與『老實人』矛盾，假設不成立，故小婕是說謊者。既然小婕是說謊者，阿哲那句『小婕是說謊者』就是真話，所以阿哲是老實人。代回檢查：阿哲（老實人）說『小婕說謊』為真✓；小婕（說謊者）說『兩人都說謊』——事實上阿哲並沒說謊，這句是假話，正符合她說謊者的身分✓。唯一解：阿哲老實、小婕說謊。"
+      },
+      {
+        "story": "露營夜，第二天早上發現公用手電筒的電池被偷偷換成沒電的。輔導員把三個可疑的小隊長叫來：阿光、阿海、阿風。這座營區的傳統設定是——老實人每句話都真，說謊者每句話都假。三人排成一列各說一句。\n• 阿光指著阿海說：「他在說謊。」\n• 阿海轉頭指阿風：「他也在說謊。」\n• 最後阿風攤手，指著前面兩個人說：「他們兩個——阿光跟阿海——通通都在說謊！」\n輔導員笑了笑，說這三句話已經足夠判斷每個人的身分了。",
+        "hints": [
+          "三個人繞成一圈互指，別急著全部一起想。先單獨假設『阿光是老實人』，一路推到阿風，再回頭看阿光會變怎樣。",
+          "若假設阿光是老實人，推到最後常會逼出『阿光其實說謊』的矛盾；一旦矛盾，就翻面確定阿光是說謊者。",
+          "確定阿光是說謊者後，他那句『阿海說謊』是假的，於是阿海是老實人；再順著阿海的話定阿風，最後用阿風的話回頭檢查一致性。"
+        ],
+        "q": "根據三人的對話，阿光、阿海、阿風各自是什麼身分？",
+        "options": [
+          "阿光說謊、阿海老實、阿風說謊",
+          "阿光老實、阿海說謊、阿風老實",
+          "阿光說謊、阿海說謊、阿風老實",
+          "三人都是說謊者"
+        ],
+        "answer": 0,
+        "model": "環狀指控的假設—矛盾—翻面法",
+        "insight": "先試假設阿光老實會導出全鏈矛盾，逼出阿光必為說謊者；之後每一步都被前一步唯一決定，沒有分岔，故解唯一。",
+        "solve": "假設阿光是老實人：則『阿海說謊』為真→阿海說謊→阿海那句『阿風說謊』為假→阿風是老實人→阿風那句『阿光、阿海都說謊』為真→阿光說謊，與『阿光老實』矛盾，假設不成立。故阿光是說謊者。阿光說謊→『阿海說謊』為假→阿海是老實人→阿海『阿風說謊』為真→阿風說謊→阿風『阿光、阿海都說謊』為假；事實上阿光說謊、阿海老實，『兩人都說謊』確實不成立✓。每一步都被唯一決定，故解唯一：阿光說謊、阿海老實、阿風說謊。"
+      },
+      {
+        "story": "轉學生剛到，還分不清班上誰是老實人、誰是說謊者（一樣的規矩：老實人全真、說謊者全假）。他跟同桌的兩個人——大寶和小柚——聊起這個遊戲。\n• 大寶神秘兮兮地說：「告訴你一個線索：我跟小柚是同一種人喔，要嘛都是老實人，要嘛都是說謊者。」\n• 小柚在旁邊翻了個白眼，插嘴：「別聽他的，大寶根本就是個說謊者。」\n轉學生皺著眉，覺得這兩句話好像可以拼出答案。",
+        "hints": [
+          "先假設大寶是老實人，那他說的『我跟小柚同一種人』要成立，兩人就得同型；再看小柚說的話能不能配合。",
+          "若大寶老實，小柚就得也老實（同型），但小柚卻說『大寶是說謊者』——老實人怎會說出假話？這裡就出現矛盾了。",
+          "矛盾表示大寶不是老實人，那他就是說謊者，他那句『同一種人』因此是假的——代表兩人其實不同型，順勢決定小柚。"
+        ],
+        "q": "根據兩人的對話，大寶與小柚各自是什麼身分？",
+        "options": [
+          "大寶是老實人，小柚是說謊者",
+          "大寶是說謊者，小柚是老實人",
+          "兩人是同一種人（同時老實或同時說謊）"
+        ],
+        "answer": 1,
+        "model": "『同型／異型』宣稱的假設檢驗",
+        "insight": "『我跟他同一種人』若說話者老實則兩人同型，會逼小柚也老實卻說出矛盾的話；因此大寶必說謊，該句翻成『兩人異型』，唯一決定小柚為老實人。",
+        "solve": "假設大寶是老實人：他說『我跟小柚同型』為真→小柚也是老實人→但小柚說『大寶是說謊者』，老實人不能說假話，這與大寶是老實人矛盾，假設不成立。故大寶是說謊者。大寶說謊→『我跟小柚同型』為假→兩人異型→小柚與大寶不同型，所以小柚是老實人。代回檢查：小柚（老實人）說『大寶是說謊者』為真✓；大寶（說謊者）說『同型』為假，事實兩人確實異型✓。唯一解：大寶說謊、小柚老實。"
+      },
+      {
+        "story": "美術教室的顏料被打翻了一大灘，老師找來三位值日生：阿晴、阿嵐、阿澄。老規矩，老實人每句話都真、說謊者每句話都假。\n• 阿晴先開口：「我跟你們說，阿嵐跟阿澄這兩個人裡面，至少有一個是說謊者，不會兩個都老實。」\n• 阿嵐立刻替阿晴背書：「阿晴人很正直，她是老實人。」\n• 阿澄則冷冷地指著阿嵐：「阿嵐在說謊。」\n老師說，這三句話剛好能定出每個人的身分。",
+        "hints": [
+          "三句話裡，阿澄直接指控阿嵐說謊，所以阿嵐、阿澄這兩人必為一真一假，先想這代表什麼。",
+          "試著假設阿嵐是說謊者，看看阿澄、阿晴的話會不會全部卡不攏；再試阿嵐是老實人。",
+          "當你假設阿嵐老實，會發現阿晴、阿澄的話都能對上，且阿晴那句『至少一個說謊者』正好被阿澄實現——順著把三人身分補齊。"
+        ],
+        "q": "根據三人的對話，阿晴、阿嵐、阿澄各自是什麼身分？",
+        "options": [
+          "阿晴說謊、阿嵐老實、阿澄老實",
+          "阿晴老實、阿嵐說謊、阿澄說謊",
+          "阿晴老實、阿嵐老實、阿澄說謊",
+          "三人都是老實人"
+        ],
+        "answer": 2,
+        "model": "存在句（至少一個）＋相反指控的聯立檢驗",
+        "insight": "阿澄直接指控阿嵐說謊，所以阿嵐、阿澄必為一真一假；再用阿晴的『至少一位說謊者』與阿嵐說『阿晴老實』把唯一可行組合鎖死，逐一代回只剩一種一致解。",
+        "solve": "逐一檢驗較穩：關鍵是阿嵐『阿晴是老實人』與阿澄『阿嵐說謊』互相牽制。假設阿嵐老實→阿嵐說『阿晴老實』為真→阿晴老實→阿晴說『阿嵐、阿澄至少一人說謊』為真；阿嵐已是老實人，故該句要成立必須阿澄說謊→阿澄說『阿嵐說謊』為假，事實阿嵐老實，這句確實是假的✓，一切吻合，得阿晴老實、阿嵐老實、阿澄說謊。再驗其他情形：若阿嵐說謊，則『阿晴老實』為假→阿晴說謊→阿晴那句『至少一人說謊』為假，代表阿嵐、阿澄都老實，但阿嵐是說謊者，矛盾。若阿晴說謊而阿嵐老實，阿嵐的『阿晴老實』就成假話，與阿嵐老實矛盾。故唯一解：阿晴老實、阿嵐老實、阿澄說謊。"
+      },
+      {
+        "story": "社團招新，攤位前站著三個學姐：小霓、小珊、小葳。學弟只打聽到一個關鍵情報——這三人當中『恰好只有一位是老實人，另外兩位都是說謊者』（老實人全真、說謊者全假）。三人各說一句。\n• 小霓指著小珊：「她在說謊。」\n• 小珊指著小霓反擊：「才怪，是妳在說謊！」\n• 小葳站在旁邊，也指著小珊：「小珊確實在說謊。」\n學弟想利用『只有一位老實人』這條線索，鎖定唯一的那位老實人。",
+        "hints": [
+          "先善用數量條件：三人中恰有一位老實人。老實人講真話、另兩位講假話，逐一假設『唯一老實人是誰』來試。",
+          "假設小霓是唯一老實人：她說『小珊說謊』為真，可小珊被否定後說的『小霓說謊』是假話→小霓不說謊✓；但別忘了檢查小葳，看老實人人數會不會超過一位。",
+          "把三種假設（老實人是小霓／小珊／小葳）各推一遍，只有一種能同時滿足『恰好一位老實人』且每句話都自洽——那位就是答案。"
+        ],
+        "q": "在『恰好只有一位老實人』的條件下，唯一的老實人是誰？",
+        "options": [
+          "小霓是唯一的老實人",
+          "小珊是唯一的老實人",
+          "小葳是唯一的老實人"
+        ],
+        "answer": 1,
+        "model": "數量約束（恰好一位老實人）下的窮舉假設法",
+        "insight": "光看三句話會有兩種身分組合，必須靠『恰好一位老實人』這條數量線索才能把答案卡成唯一；先數已定身分再用總數收尾。",
+        "solve": "逐一假設唯一的老實人：(1)若是小霓→她說『小珊說謊』為真，小珊說謊；小葳說『小珊說謊』竟為真話→小葳也是老實人，出現兩位老實人，違反『恰好一位』，淘汰。(2)若是小珊→小珊說『小霓說謊』為真→小霓說謊；小霓說『小珊說謊』為假，事實小珊老實✓；小葳說『小珊說謊』為假→小葳說謊✓。恰好一位老實人（小珊），完全吻合。(3)若是小葳→小葳說『小珊說謊』為真→小珊說謊；但小珊說『小霓說謊』為假→小霓老實，又多一位老實人，違反條件，淘汰。三種假設只有(2)成立，故唯一的老實人是小珊，小霓與小葳都是說謊者。"
+      },
+      {
+        "story": "美勞課後，一只陶花瓶被打破了。老師知道一定是留下來的三個孩子之一：阿丁、阿茂、阿柯打破的，且掌握到一條規律——這三人中『恰好只有一個人在說謊，另外兩個說的都是真話』。\n• 阿丁指著阿茂說：「是阿茂打破的！」\n• 阿茂搖頭，指向阿柯：「不對，是阿柯打破的。」\n• 阿柯連忙澄清：「我沒有打破花瓶。」\n老師要大家利用『恰好一人說謊』，找出真正的肇事者。",
+        "hints": [
+          "『恰好只有一人說謊、另兩人說真話』是關鍵條件。先假設某人是肇事者，判斷三句話各真各假，再數說謊的人是不是剛好一個。",
+          "假設阿柯打破→阿丁『阿茂打破』為假、阿柯『我沒打破』也為假，變成兩個人說謊，違反『恰好一人說謊』——排除。",
+          "把肇事者分別假設成阿丁／阿茂／阿柯試一遍，只有一種能讓說謊的人剛好是一個；別忘了肇事者一定在三人之中。"
+        ],
+        "q": "根據『恰好一人說謊（另兩人說真話）』，是誰打破了花瓶？",
+        "options": [
+          "是阿丁打破的",
+          "是阿茂打破的",
+          "是阿柯打破的"
+        ],
+        "answer": 1,
+        "model": "數量約束（恰好一人說謊）下由真假話反推事實的窮舉法",
+        "insight": "把『恰好一人說謊』當硬條件，逐一假設肇事者：只有『阿茂打破』能讓說謊者剛好一人（阿茂自己），另兩句都為真，唯一自洽。",
+        "solve": "逐一假設肇事者：(1)阿丁打破→阿丁『阿茂打破』為假（說謊）、阿茂『阿柯打破』為假（說謊）、阿柯『我沒打破』為真；出現兩個說謊者，違反『恰好一人說謊』，排除。(2)阿茂打破→阿丁『阿茂打破』為真、阿茂『阿柯打破』為假（說謊）、阿柯『我沒打破』為真；恰好一人說謊（阿茂），另兩人說真話，完全自洽✓。(3)阿柯打破→阿丁『阿茂打破』為假（說謊）、阿茂『阿柯打破』為真、阿柯『我沒打破』為假（說謊）；兩個說謊者，違反條件，排除。唯一成立的是(2)：花瓶是阿茂打破的，說謊的只有阿茂，阿丁與阿柯都說真話。"
+      },
+      {
+        "story": "四人科學小隊——甲、乙、丙、丁——在挑戰一道邏輯關卡。規則照舊：老實人每句話都真，說謊者每句話都假。四人各發表一句評論。\n• 甲說：「我們四個人裡面，至少有一個說謊者。」\n• 乙說：「我們四個人裡面，最多只有一個說謊者。」\n• 丙指著甲說：「甲在說謊。」\n• 丁指著乙說：「乙在說謊。」\n關主說，這四句話已經足以把四個人的身分全部定死。",
+        "hints": [
+          "先單獨處理甲那句『至少有一個說謊者』：如果甲是說謊者，這句就得是假的，想想那會推出什麼荒謬結論。",
+          "確定甲的身分後，丙說『甲在說謊』的真假就跟著定了；接著把注意力轉到乙的『最多一個說謊者』。",
+          "已知丙的身分後，若乙老實會逼出說謊者只能有一個，但丁的話又會再製造一個說謊者——這個張力會把乙、丁一起定下來。"
+        ],
+        "q": "根據四人的對話，甲、乙、丙、丁各自是什麼身分？",
+        "options": [
+          "甲、丁是老實人，乙、丙是說謊者",
+          "甲、乙是老實人，丙、丁是說謊者",
+          "甲、丙是老實人，乙、丁是說謊者",
+          "四人都是說謊者"
+        ],
+        "answer": 0,
+        "model": "存在句／上界句自證＋連鎖假設法",
+        "insight": "『至少一個說謊者』由說謊者說出必矛盾，故甲鐵定老實；再由丙、乙、丁的話沿唯一路徑推下去，每步無分岔，得唯一解。",
+        "solve": "先看甲：若甲說謊，則『至少有一個說謊者』為假→四人都不是說謊者，但甲自己是說謊者，矛盾。故甲必為老實人，且『至少一個說謊者』為真。丙說『甲在說謊』，但甲老實→丙這句為假→丙是說謊者。此時已有一個說謊者（丙）。再看乙：若乙老實，『最多只有一個說謊者』為真→說謊者只有丙一人→丁應為老實人；但丁說『乙在說謊』，乙是老實人→丁這句為假→丁是說謊者，於是說謊者變成兩人（丙、丁），與『最多一個』矛盾。故乙必為說謊者，『最多一個說謊者』為假→說謊者至少兩人（已有乙、丙）。丁說『乙在說謊』，乙確實說謊→丁這句為真→丁是老實人。代回檢查：甲老實（至少一說謊者為真✓，丙乙皆說謊）；乙說謊（最多一個為假，實際兩個✓）；丙說謊（『甲說謊』為假✓）；丁老實（『乙說謊』為真✓）。全程無分岔，唯一解：甲、丁老實，乙、丙說謊。"
+      },
+      {
+        "story": "闖關遊戲的最終關卡，站著四個守門人：甲、乙、丙、丁。規則寫在牌子上：老實人每句話都真，說謊者每句話都假，而且他們接下來各自要宣布『我們四個之中總共有幾個說謊者』。\n• 甲說：「我們之中恰好有一個說謊者。」\n• 乙說：「我們之中恰好有兩個說謊者。」\n• 丙說：「我們之中恰好有三個說謊者。」\n• 丁說：「我們之中恰好有四個說謊者。」\n四句話的數字全都不一樣。破關條件是：指出那位唯一說真話（老實人）的守門人。",
+        "hints": [
+          "四人報的說謊者人數都不同，而真正的人數只有一個，先想：這四句話最多能有幾句同時為真？",
+          "先處理丁：他說『四個都是說謊者』，若這句為真，丁自己也是說謊者，卻說了真話——矛盾，所以不可能四個全說謊，至少有一位老實人。",
+          "既然最多一位老實人、又至少一位老實人，那就恰好一位老實人→說謊者剛好三個。誰報的數字正好等於三，誰就是那位老實人。"
+        ],
+        "q": "在四人各報不同說謊者人數的情況下，唯一說真話的老實人是誰？",
+        "options": [
+          "甲是唯一的老實人",
+          "乙是唯一的老實人",
+          "丙是唯一的老實人",
+          "丁是唯一的老實人"
+        ],
+        "answer": 2,
+        "model": "互斥數量宣稱的計數推理",
+        "insight": "四個不同數字最多一句為真（至多一位老實人），而『全是說謊者』會讓丁自我矛盾（至少一位老實人），夾出恰好一位老實人→說謊者三個，對應報『三』的丙。",
+        "solve": "四人報的說謊者人數（1、2、3、4）兩兩不同，真正的人數只有一個，故這四句話至多只有一句為真，也就是至多一位老實人。再看丁：若『四個都是說謊者』為真，則丁也是說謊者，說謊者卻說出真話，矛盾；故不可能四人全說謊→至少一位老實人。結合『至多一位』與『至少一位』，得恰好一位老實人，於是說謊者恰好三個。唯一報出『三個說謊者』的人是丙，因此丙說真話、是老實人；甲（報一）、乙（報二）、丁（報四）都與事實不符，皆為說謊者。代回檢查：實際說謊者為甲、乙、丁共三人，正符合丙的話✓，其餘三句皆假✓。唯一解：丙是唯一的老實人。"
+      },
+      {
+        "story": "週末社區辦了一場小小的寵物同樂會，小明、小華、小美三個好朋友各自帶了一隻寵物來，剛好是貓、狗、兔各一種，沒有重複。報到時工作人員想把名牌貼對，卻聽到三人你一言我一語地聊了起來。\n• 小明揉著鼻子說：『我一走近貓就打噴嚏，家裡絕對不可能養貓啦。』說完他還把手上牽的繩子遞給小華幫忙。\n• 小華笑著接過繩子，牽著那隻搖著尾巴、汪汪叫的動物去散步。\n• 小美則指著自家陽台的照片說：『我家陽台太小了，養兔子要跑跳的空間，實在不適合，所以我沒選那種。』\n工作人員邊聽邊在小本子上打勾打叉。",
+        "hints": [
+          "三條線索裡有一條其實直接說出了某個人養什麼——先把最確定的那格填進表格。",
+          "用刪去法：把每個人『不可能養』的種類先劃掉，能填的格子就會越來越少。",
+          "特別盯著『貓』這一欄——三個人裡有兩個都被線索排除了，剩下那一個是誰？"
+        ],
+        "q": "誰養貓？",
+        "options": [
+          "小明",
+          "小華",
+          "小美",
+          "無法確定"
+        ],
+        "answer": 2,
+        "model": "格子邏輯：把三人 × 三種寵物畫成 3×3 表格，先填『直接指定』的線索，再用『否定』線索劃掉不可能的格子。",
+        "insight": "關鍵是先鎖定被明說的『小華＝狗』，再對照『貓』這一欄同時排除小明（過敏）與小華（已是狗），貓只可能落在小美身上。",
+        "solve": "第一步，處理直接線索：小華牽的是『汪汪叫、搖尾巴』的動物，即狗，所以小華＝狗。第二步，看貓這一欄：小明說一近貓就打噴嚏、絕不養貓，排除小明；小華已確定是狗，也排除。三人中只剩小美沒被排除，故小美＝貓。第三步，剩下的兔子分給小明：小明不是貓（過敏）、不是狗（小華的），只能是兔，恰好也不與任何線索衝突。為何唯一：三個位置被線索一步步唯一地固定（狗→貓→兔），沒有任何一格還存在第二種可能，因此解唯一。誘答分析：選『小明』是誤把『過敏排除貓』看成『所以養貓』；選『小華』是忽略他其實是狗；選『無法確定』是沒發現小美同時被兩條路徑逼到只剩貓。"
+      },
+      {
+        "story": "運動會前一天，班上發氣球布置會場，阿福、阿樂、阿康三個人各領到一顆顏色不同的氣球，分別是紅色、藍色、綠色。發氣球的老師忙著登記，三人卻嘰嘰喳喳地表達喜好。\n• 阿福雙手一攤說：『紅色太刺眼、藍色又太冷，這兩種我都不想要，剩下那種正合我意。』於是他挑走了自己喜歡的那顆。\n• 阿樂看了看剩下的兩顆，皺眉道：『紅色我從小就沒什麼興趣。』便拿走了他能接受的顏色。\n最後一顆自然落到阿康手上。老師在名單旁把顏色一一記了下來。",
+        "hints": [
+          "阿福那句話雖然在講『不要什麼』，卻等於直接指定了他要的顏色。",
+          "阿福先拿走後，紅色和藍色就只剩阿樂、阿康兩人分——注意阿樂的偏好。",
+          "阿樂被排除了一種顏色，剩下能拿的只有一種；那麼最後一顆會是誰的？"
+        ],
+        "q": "誰拿到紅色氣球？",
+        "options": [
+          "阿福",
+          "阿樂",
+          "阿康",
+          "三人都有可能"
+        ],
+        "answer": 2,
+        "model": "格子邏輯：三人 × 三色表格，先把『雙重否定＝唯一指定』的線索填好，再逐步縮小其他人的選擇。",
+        "insight": "阿福同時排除紅、藍，等於被迫拿綠；接著阿樂排除紅，在只剩紅、藍時只能拿藍，紅色便唯一地留給阿康。",
+        "solve": "第一步，阿福不要紅也不要藍，三色中只剩綠，故阿福＝綠。第二步，綠被拿走後，紅、藍分給阿樂與阿康；阿樂明說對紅沒興趣，所以阿樂＝藍。第三步，唯一剩下的紅色給阿康，阿康＝紅。為何唯一：阿福的顏色被雙重否定鎖死為綠，阿樂在剩兩色中被否定紅而鎖死為藍，阿康只剩紅，每一步都沒有第二種選擇，故解唯一。誘答分析：選『阿福』是誤讀他排除紅藍卻反而以為他拿紅；選『阿樂』是忽略他明確排除紅；選『三人都有可能』是沒察覺線索其實層層鎖定。"
+      },
+      {
+        "story": "美術課要拍一張合照，老師把長椅擺成一排，從左到右共四個位子，1 號在最左邊、4 號在最右邊，讓甲、乙、丙、丁四位同學坐好。排隊時大家七嘴八舌。\n• 甲搶先跑到長椅最左邊那一格坐下，笑說：『我最喜歡坐邊邊。』\n• 丙拉著乙走過來，說：『我要緊挨著乙坐，而且就坐在乙的右手邊那一格。』兩人便找相鄰的位子坐下。\n• 丁在一旁猶豫：『最右邊那格會被太陽曬到，我才不要坐第 4 號。』\n最後大家都坐定，老師舉起相機喊三、二、一。",
+        "hints": [
+          "甲已經把最左邊（1 號）占走了，剩下的 2、3、4 號才是需要推理的部分。",
+          "『丙緊貼在乙的右邊』代表乙、丙必須是相鄰的兩格，先列出 2、3、4 裡所有相鄰的配對。",
+          "把每種相鄰配對代進去，檢查丁會不會被逼到他拒絕的 4 號——只有一種排法能同時滿足所有人。"
+        ],
+        "q": "從左到右，正確的座位順序是？",
+        "options": [
+          "甲丁乙丙",
+          "甲乙丙丁",
+          "甲丁丙乙",
+          "甲乙丁丙"
+        ],
+        "answer": 0,
+        "model": "順序型格子邏輯：把 4 個座位當成 4 個位置，先固定確定的人，再用『相鄰』線索窮舉可能配對並排除矛盾。",
+        "insight": "乙丙相鄰在 2~4 只有(2,3)與(3,4)兩種；(2,3)會逼丁坐 4 號違規，故只剩(3,4)，丁只能填 2 號。",
+        "solve": "第一步，甲坐最左，1 號＝甲。剩 2、3、4 號給乙、丙、丁。第二步，丙在乙右邊相鄰，代表『乙丙』是連續兩格；在 2、3、4 中連續的配對只有(2,3)與(3,4)。第三步，逐一檢驗：若乙＝2、丙＝3，則丁只剩 4 號，但丁拒坐 4 號，矛盾排除；若乙＝3、丙＝4，則丁只剩 2 號，符合丁不坐 4 號。故乙＝3、丙＝4、丁＝2。第四步，座位由左到右為 1甲、2丁、3乙、4丙＝『甲丁乙丙』。為何唯一：兩種相鄰配對中只有一種不違反『丁≠4』，其餘皆被排除，故解唯一。誘答分析：『甲乙丙丁』忽略了丁不能坐 4 號；『甲丁丙乙』把乙、丙左右顛倒（丙應在乙右邊）；『甲乙丁丙』沒讓乙丙相鄰。"
+      },
+      {
+        "story": "校慶園遊會的水果攤前，小雨、小雪、小風三人各買了一份不同的水果，剛好是蘋果、香蕉、葡萄各一份。攤主找錢時聽他們閒聊。\n• 小風提著袋子說：『蘋果我不愛，一顆顆的葡萄我也懶得剝皮吐籽，我挑的是那種可以直接剝開、一根一根吃的。』\n• 小雨在旁邊補充：『葡萄我今天不想買。』說完拿起了自己選的那份。\n• 小雪則沒多說什麼，把剩下的那份放進袋子。\n三人道別後往表演場走去。",
+        "hints": [
+          "小風那句『不愛蘋果、也不要葡萄』其實已經把他要的水果講死了。",
+          "小風確定後，蘋果和葡萄就只剩小雨、小雪分——注意小雨說了什麼。",
+          "小雨被排除了葡萄，剩下能買的只有一種；那葡萄最後會落在誰手上？"
+        ],
+        "q": "誰買了葡萄？",
+        "options": [
+          "小雨",
+          "小雪",
+          "小風",
+          "三人都沒有"
+        ],
+        "answer": 1,
+        "model": "格子邏輯：三人 × 三種水果表格，先用雙重否定鎖定小風，再逐步排除其餘兩人的選項。",
+        "insight": "小風排除蘋果與葡萄後只能是香蕉；小雨排除葡萄、香蕉又被拿走，只能是蘋果，葡萄便唯一地留給小雪。",
+        "solve": "第一步，小風說不愛蘋果、不要葡萄，且要『一根根剝開吃』的（香蕉），故小風＝香蕉。第二步，香蕉被拿走後，蘋果、葡萄分給小雨與小雪；小雨明說今天不買葡萄，所以小雨＝蘋果。第三步，唯一剩下的葡萄給小雪，小雪＝葡萄。為何唯一：小風被雙重否定鎖為香蕉，小雨在剩兩種中被否定葡萄而鎖為蘋果，小雪只剩葡萄，步步無第二解。誘答分析：『小雨』是忽略她明說不買葡萄；『小風』是誤讀他排除葡萄卻以為他買葡萄；『三人都沒有』是沒發現三份水果本就含葡萄。"
+      },
+      {
+        "story": "寵物才藝比賽報名處，四兄弟大寶、二寶、三寶、四寶各養了一隻不同的寵物，分別是貓、狗、魚、鳥。報名時工作人員請他們自我介紹。\n• 大寶苦笑：『我對貓毛過敏，看到鳥又會怕，這兩種我都養不了。』\n• 二寶得意地說：『我每天早晚都要出門遛我的寶貝。』說著比了個牽繩散步的動作。\n• 四寶舉起一個罩著布的鳥籠形狀提籃：『我的寶貝會飛喔！』\n• 三寶最後開口：『我養的這隻不會游泳，養在陸地上就好。』\n工作人員一邊聽一邊在報名表上把寵物欄填齊。",
+        "hints": [
+          "有兩個人的線索幾乎直接點名了寵物：一個『每天遛、要牽繩』，一個『會飛』。",
+          "先把那兩個確定的人填進表格，剩下貓和魚就只在大寶、三寶之間。",
+          "大寶連貓帶鳥都被排除、三寶說自己的不會游泳——兩條線索各自把人逼到只剩一種。"
+        ],
+        "q": "誰養貓？",
+        "options": [
+          "大寶",
+          "二寶",
+          "三寶",
+          "四寶"
+        ],
+        "answer": 2,
+        "model": "格子邏輯：四人 × 四種寵物 4×4 表格，先填兩個被強線索指定的人，再用兩條否定線索分配剩餘兩格。",
+        "insight": "二寶（遛＝狗）與四寶（會飛＝鳥）先鎖定後，大寶被排除貓鳥只剩魚，三寶不會游泳被排除魚只剩貓。",
+        "solve": "第一步，二寶每天牽繩遛，指狗，二寶＝狗；四寶的寵物會飛，指鳥，四寶＝鳥。第二步，剩下貓、魚分給大寶與三寶。大寶對貓過敏又怕鳥，鳥已是四寶的，貓被排除，故大寶只能＝魚。第三步，三寶說自己的寵物不會游泳（排除魚），且魚已給大寶，三寶只剩貓，三寶＝貓。為何唯一：狗、鳥先被兩條強線索唯一鎖定，剩下的貓、魚各被一條否定線索唯一分配，全程無第二種排法。誘答分析：『大寶』是把他排除貓誤看成養貓；『二寶』『四寶』是忽略他們早被遛狗與會飛的線索定死。"
+      },
+      {
+        "story": "期中考後，班導請阿明、阿華、阿芳、阿婷四位同學各認養一個學科的布告牆，四個學科是國文、英文、數學、自然，一人一科不重複。討論時大家各抒己見。\n• 阿明抱怨：『國文和英文都要背一大堆東西，這兩科我實在提不起勁。』他頓了頓又說：『而且自然課那些星象我也看不太懂，不想選它。』\n• 阿華眼睛一亮：『英文是我的最愛，就交給我吧！』\n• 阿芳搖搖頭：『自然的實驗步驟太繁瑣，我可不想負責那一科。』\n最後剩下的科目落到阿婷身上。班導把認養名單抄在黑板上。",
+        "hints": [
+          "阿明一口氣把國文、英文、自然三科都排除了，那他還剩什麼可選？",
+          "阿華直接說出了自己的科目，先把它填掉，格子會更好推。",
+          "阿芳排除自然，加上英文、數學都被別人拿走，她只剩一種；那自然最後歸誰？"
+        ],
+        "q": "誰負責自然科的布告牆？",
+        "options": [
+          "阿明",
+          "阿華",
+          "阿芳",
+          "阿婷"
+        ],
+        "answer": 3,
+        "model": "格子邏輯：四人 × 四科 4×4 表格，先填被明說的阿華，再靠阿明的多重否定鎖定他，最後分配阿芳與阿婷。",
+        "insight": "阿明排除國文、英文、自然三科後只能是數學；阿華＝英文；阿芳排除自然、又無英數可拿只剩國文，自然唯一落到阿婷。",
+        "solve": "第一步，阿華說英文是最愛，阿華＝英文。第二步，阿明排除國文、英文、自然三科，四科中只剩數學，阿明＝數學。第三步，剩下國文、自然分給阿芳與阿婷；阿芳明說不想負責自然，故阿芳＝國文。第四步，唯一剩下的自然給阿婷，阿婷＝自然。為何唯一：阿華被明說鎖定、阿明被三重否定逼到只剩數學，阿芳在剩兩科中被否定自然而定為國文，阿婷只剩自然，全程唯一。誘答分析：『阿明』是沒注意他也排除了自然；『阿華』被英文定死；『阿芳』明說不要自然卻被誤選。"
+      },
+      {
+        "story": "畢業紀念冊要拍一張四人並排的照片，攝影師把四張椅子排成一列，從左到右編為 1、2、3、4 號，1 號最左、4 號最右，讓丙、甲、乙、丁四人入座。就座時大家討論了一番。\n• 丙立刻走到最左邊那一格坐下：『我習慣坐在最左邊。』\n• 甲和乙互相勾著手臂說：『我們兩個要坐在一起，而且甲要坐在乙的左手邊那一格。』於是找了相鄰的兩格。\n• 丁看了看最右邊的位子搖頭：『陽光會直射最右邊，我不要坐第 4 號。』\n最後四人都坐定，攝影師按下快門。",
+        "hints": [
+          "丙先占了 1 號，剩下 2、3、4 號要分給甲、乙、丁三人。",
+          "『甲乙相鄰且甲在乙左邊』是一組連在一起、且有左右順序的線索；先找 2、3、4 中哪些格能放下這組。",
+          "把丁可能的位子（2 或 3）各試一次，只有一種能讓甲乙擠得下又不違反丁的要求。"
+        ],
+        "q": "從左到右，正確的座位順序是？",
+        "options": [
+          "丙丁甲乙",
+          "丙甲乙丁",
+          "丙丁乙甲",
+          "丁丙甲乙"
+        ],
+        "answer": 0,
+        "model": "順序型格子邏輯：先固定丙（最左），再把『甲乙相鄰＋左右順序』當成一個帶方向的積木塊，用丁的限制窮舉排除。",
+        "insight": "丁不能坐 4 號，只能是 2 或 3；若丁＝3，甲乙被拆到 2 與 4 無法相鄰，故丁＝2，甲乙唯一填入 3、4 且甲左乙右。",
+        "solve": "第一步，丙坐最左，1 號＝丙，剩 2、3、4 號給甲、乙、丁。第二步，丁不坐 4 號，丁∈{2,3}。第三步，分兩種情況檢驗：若丁＝3，則甲、乙只剩 2 號與 4 號，兩格不相鄰，違反『甲乙相鄰』，排除；若丁＝2，則甲、乙落在 3、4 號且相鄰，符合，再依『甲在乙左邊』得甲＝3、乙＝4。故座位由左到右為 1丙、2丁、3甲、4乙＝『丙丁甲乙』。為何唯一：丁的兩種可能中只有丁＝2 能同時滿足相鄰與方向，另一情況被相鄰條件排除，故解唯一。誘答分析：『丙甲乙丁』會讓丁坐 4 號違規；『丙丁乙甲』把甲乙左右顛倒；『丁丙甲乙』讓丁而非丙坐最左，違反丙的線索。"
+      },
+      {
+        "story": "社團聚會的飲料吧，威威、曉曉、雅雅、子子四人各點了一杯不同的飲料，分別是紅茶、綠茶、奶茶、果汁。店員做好後想對號送杯，四人便報上自己的偏好。\n• 威威擺手：『紅茶太澀、綠茶太苦我都不要，奶茶喝了會脹氣也不行。』於是他只能挑剩下那杯。\n• 雅雅舉手：『我要那杯不加料、透明帶點回甘的綠茶！』\n• 曉曉想了想：『奶茶熱量太高，果汁又太酸，這兩種都跳過。』\n最後一杯直接送到子子面前。店員把杯子一一擺到正確的人前面。",
+        "hints": [
+          "威威一口氣排除了紅茶、綠茶、奶茶三種，那他手上那杯只可能是什麼？",
+          "雅雅直接點名綠茶，先把它填掉；接著看曉曉排除了哪兩種。",
+          "曉曉排除奶茶和果汁，綠茶又被雅雅拿走，她只剩一種；那奶茶最後歸誰？"
+        ],
+        "q": "誰點了奶茶？",
+        "options": [
+          "威威",
+          "曉曉",
+          "雅雅",
+          "子子"
+        ],
+        "answer": 3,
+        "model": "格子邏輯：四人 × 四飲料 4×4 表格，先靠威威的三重否定與雅雅的明說鎖兩格，再分配曉曉與子子。",
+        "insight": "威威排除紅、綠、奶只能是果汁；雅雅＝綠茶；曉曉排除奶、果又無綠可拿只剩紅茶，奶茶唯一落到子子。",
+        "solve": "第一步，威威排除紅茶、綠茶、奶茶三種，四種中只剩果汁，威威＝果汁。第二步，雅雅明說要綠茶，雅雅＝綠茶。第三步，剩下紅茶、奶茶分給曉曉與子子；曉曉排除奶茶與果汁，果汁已是威威、綠茶已是雅雅，她只剩紅茶，曉曉＝紅茶。第四步，唯一剩下的奶茶給子子，子子＝奶茶。為何唯一：果汁、綠茶先被唯一鎖定，曉曉在剩餘中被否定奶茶而定為紅茶，子子只剩奶茶，全程無第二解。誘答分析：『威威』被三重否定逼成果汁，卻常被誤選奶茶；『曉曉』明說不要奶茶；『雅雅』已是綠茶。"
+      },
+      {
+        "story": "校內四百公尺接力預賽結束，阿一、阿二、阿三、阿四四位選手的名次剛好是第 1 到第 4 名，各不相同。廣播還沒念出成績，四人先在場邊回顧比賽。\n• 阿一擦著汗說：『我全程都跑在阿二前面，沒被他追過。』\n• 阿二喘著氣接話：『不過我倒是一直領先阿四，他始終追不上我。』\n• 阿三垂頭喪氣：『唉，我落在最後，是墊底的第 4 名。』\n• 阿四則不服氣：『我雖然沒拿第一，但也沒到最後啦。』\n裁判核對碼錶後，正準備公布正式名次。",
+        "hints": [
+          "阿三已經自己說了是最後一名（第 4 名），先把這格定下來，剩前三名給另外三人。",
+          "阿四說『沒拿第一』；再想想：阿一比阿二早，那阿二有可能是第 1 名嗎？",
+          "把『阿一比阿二早』『阿二比阿四早』串起來，就能排出阿一、阿二、阿四三人的先後。"
+        ],
+        "q": "從第 1 名到第 4 名，正確的名次順序是？",
+        "options": [
+          "阿一阿二阿四阿三",
+          "阿一阿四阿二阿三",
+          "阿二阿一阿四阿三",
+          "阿一阿二阿三阿四"
+        ],
+        "answer": 0,
+        "model": "順序型格子邏輯：把名次當成 4 個位置，先固定明說的墊底者，再用連鎖的『早於』關係與否定線索排出前三名。",
+        "insight": "阿三先鎖第 4；第 1 名不能是阿四（明說），也不能是阿二（否則阿一得更早卻無位可放），故第 1＝阿一，再由阿二早於阿四定出 2、3 名。",
+        "solve": "第一步，阿三自述墊底，阿三＝第 4 名。剩第 1、2、3 名給阿一、阿二、阿四。第二步，找第 1 名：阿四明說沒拿第一，排除；阿二若為第 1，則『阿一比阿二早』要求阿一名次更前，但沒有比第 1 更前的名次，矛盾，排除。故第 1 名只能是阿一。第三步，剩第 2、3 名給阿二、阿四；由『阿二比阿四早』得阿二＝第 2、阿四＝第 3，且此時『阿一比阿二早』（1<2）也成立。名次為阿一、阿二、阿四、阿三。為何唯一：第 4 名被明說固定，第 1 名經雙重排除只剩阿一，第 2、3 名由『阿二早於阿四』唯一決定，全程無第二種排法。誘答分析：『阿一阿四阿二阿三』把阿二、阿四前後顛倒（違反阿二早於阿四）；『阿二阿一阿四阿三』讓阿二拿第一（違反阿一早於阿二）；『阿一阿二阿三阿四』忘了阿三其實是最後一名。"
+      },
+      {
+        "story": "籃球社要拍一張隊呼合照，社長規定四位主力隊員阿明、小華、大雄、志豪要從左到右『由高排到矮』站好，這樣照片才好看。可是四個人一站上去就吵成一團，誰也不服誰。攝影同學只好一個一個去量，量完後在筆記本上寫下三句話：\n• 第一，阿明站在小華旁邊時，很明顯阿明比小華高出一個頭；\n• 第二，大雄一走過來，連阿明都得抬頭看他，因為大雄比阿明還要高；\n• 第三，志豪雖然很不甘心，但他站到小華旁邊比，還是比小華矮了一截。\n攝影同學看著這三句話，說：『其實答案已經確定了，你們排好我就能拍。』",
+        "hints": [
+          "把每一句話翻成箭頭：『甲比乙高』就寫成 甲→乙（箭頭指向比較矮的）。",
+          "三句話分別是 阿明→小華、大雄→阿明、志豪 在小華下面（小華→志豪）。試著把這些箭頭接成一整條線。",
+          "從『誰在最頂端、誰在最底端』開始想：有沒有人是誰都比不過的最高，誰又是誰都比得過的最矮？"
+        ],
+        "q": "已知：阿明比小華高；大雄比阿明高；志豪比小華矮。請問由高到矮的正確順序是？",
+        "options": [
+          "大雄、阿明、小華、志豪",
+          "大雄、阿明、志豪、小華",
+          "阿明、大雄、小華、志豪",
+          "大雄、小華、阿明、志豪"
+        ],
+        "answer": 0,
+        "model": "全序關係鏈（傳遞律）",
+        "insight": "每一條『A比B高』都是一個箭頭，只要能把所有人串成一條不分岔的鏈，順序就唯一確定。",
+        "solve": "把線索寫成箭頭：大雄>阿明（第二句）、阿明>小華（第一句）、小華>志豪（第三句）。三個箭頭剛好首尾相接，串成一條完整的鏈：大雄>阿明>小華>志豪。因為四個人被一條鏈全部連起來、沒有任何兩人的高矮沒被決定，所以由高到矮只有『大雄、阿明、小華、志豪』一種排法。有一個排法把志豪排在小華前面，違反『志豪比小華矮』；另一個排法讓阿明超過大雄，違反『大雄比阿明高』；還有一個排法讓小華超過阿明，違反『阿明比小華高』，三者各自破壞一條線索，皆錯。"
+      },
+      {
+        "story": "運動會一百公尺決賽跑完了，播報員手上有小丁、小賓、小安、小妍四位選手的成績單，可是名次條被風吹亂，只剩下裁判寫的四句備註：\n• 第一句，小妍衝過終點時，前面三個人早就到了，她是壓在最後才進來的；\n• 第二句，小安的名次很妙，她既不是第一個抵達、也不是最後一個抵達；\n• 第三句，小賓比小安更早通過終點線；\n• 第四句，而小丁又比小賓更早一步撞線。\n播報員看完備註，笑著說：『別急，這樣就能把四個人的名次全部排出來了。』",
+        "hints": [
+          "先處理最確定的：小妍是最後一名，先把她放到第四的位置。",
+          "把三、四句連起來看：小丁比小賓早、小賓比小安早，這三人形成一條先後鏈。",
+          "前三個名次要放小丁、小賓、小安這條鏈，而小安又不能是第一，想想這條鏈只能怎麼塞進第一到第三？"
+        ],
+        "q": "已知：小妍是最後一名；小安不是第一也不是最後；小賓比小安早到；小丁比小賓早到。請問四人由第一名到第四名的順序是？",
+        "options": [
+          "小賓、小丁、小安、小妍",
+          "小丁、小安、小賓、小妍",
+          "小丁、小賓、小安、小妍",
+          "小賓、小安、小丁、小妍"
+        ],
+        "answer": 2,
+        "model": "名次排序＋否定線索＋順序鏈",
+        "insight": "先用『最後一名』釘死端點，再把幾條先後關係接成一條鏈塞進剩下的名次，位置就唯一。",
+        "solve": "由第一句，小妍＝第四名（最後）。第三、四句給出先後鏈：小丁比小賓早、小賓比小安早，即 小丁<小賓<小安（數字越小名次越前）。這條鏈的三個人要填入剩下的第一、二、三名，而鏈本身已經規定了他們的先後，所以只能是 小丁＝第一、小賓＝第二、小安＝第三。此時小安是第三名，正好符合『不是第一也不是最後』。四人位置全被決定，答案唯一為『小丁、小賓、小安、小妍』。有一個排法讓小賓排在小丁前面，違反『小丁比小賓早』；另一個排法讓小安排在小賓前面，違反『小賓比小安早』；還有一個排法同時弄錯多條先後關係，皆錯。"
+      },
+      {
+        "story": "演唱會售票口大排長龍，工讀生要幫五位早鳥粉絲阿財、小玉、大同、美美、阿德確認排隊的前後位置好發號碼牌。她記得幾件事：\n• 大同是全場第一個到的，站在隊伍的最前面；\n• 小玉一到就緊緊跟在大同的正後方，兩人中間沒有插進任何人；\n• 後來美美和阿德一起來，美美站的位置比阿德還要前面；\n• 而阿財更是搶在美美前面就先卡好位子了。\n工讀生說：『這樣我不用問，就能把你們五個從前到後的順序全部寫下來。』",
+        "hints": [
+          "先鎖定隊伍最前面兩個位置：大同第一，小玉緊接在後，所以小玉一定是第二。",
+          "剩下第三、四、五個位置要放阿財、美美、阿德，他們之間也有先後關係。",
+          "把『阿財在美美前面』和『美美在阿德前面』接起來，這三人的先後順序就固定了，直接填進後三個位置。"
+        ],
+        "q": "已知：大同排最前面；小玉緊接在大同後面；美美在阿德前面；阿財在美美前面。請問由前到後的排隊順序是？",
+        "options": [
+          "大同、小玉、美美、阿財、阿德",
+          "大同、小玉、阿財、美美、阿德",
+          "小玉、大同、阿財、美美、阿德",
+          "大同、小玉、阿財、阿德、美美"
+        ],
+        "answer": 1,
+        "model": "線性排隊＋相鄰硬約束＋順序鏈",
+        "insight": "『緊接在後』是把兩人綁死的相鄰約束，固定隊頭後，剩下的人用一條先後鏈補齊即唯一。",
+        "solve": "大同＝第一（最前）；小玉緊接其後，故小玉＝第二，這是相鄰硬約束，不可更動。剩下第三、四、五位給阿財、美美、阿德，而線索給出 阿財<美美<阿德（阿財在美美前、美美在阿德前）這條先後鏈，鏈已規定三人順序，只能是阿財＝第三、美美＝第四、阿德＝第五。全部位置被決定，順序唯一為『大同、小玉、阿財、美美、阿德』。有一個排法把美美排在阿財前面，違反『阿財在美美前面』；另一個排法把小玉排到大同前，違反兩條線索；還有一個排法把阿德排在美美前，違反『美美在阿德前面』，皆錯。"
+      },
+      {
+        "story": "月考成績出來，老師只公布甲、乙、丙三位同學這次考了九十分、八十分、七十分（三人分數各不相同），但不直接說誰是誰，要大家自己推。老師給了三個提示當作腦筋急轉彎：\n• 第一，甲同學這次表現不錯，他絕對不是三人中考最低分的那一位；\n• 第二，乙同學的分數比丙同學高；\n• 第三，那位拿到最高分九十分的，並不是乙同學。\n同學們議論紛紛，有人說根本無法確定，老師搖搖頭：『資訊已經足夠，每個人對應哪個分數都是唯一的。』",
+        "hints": [
+          "把三個否定與比較條件列清楚：甲不是最低、乙>丙、九十分不是乙。",
+          "先想九十分是誰的：既然不是乙，那只可能是甲或丙。再用『乙比丙高』檢查丙能不能拿九十。",
+          "如果丙拿九十，乙要比丙更高就不可能了；順著這條矛盾，九十分的人就只剩一個人選。"
+        ],
+        "q": "已知三人分數為九十、八十、七十且互不相同：甲不是最低分；乙比丙高；拿九十分的不是乙。請問三人各對應幾分？",
+        "options": [
+          "甲八十、乙九十、丙七十",
+          "甲九十、乙七十、丙八十",
+          "丙九十、乙八十、甲七十",
+          "甲九十、乙八十、丙七十"
+        ],
+        "answer": 3,
+        "model": "排名對應（人↔數值配對）＋反證消去",
+        "insight": "用否定條件逐一刪去不可能的配對：只要某個假設會逼出矛盾，就把它劃掉，最後剩下唯一組合。",
+        "solve": "九十分不是乙，所以九十分是甲或丙。若丙拿九十分，則『乙比丙高』就無人可比它更高，矛盾，故丙不能拿九十分，九十分只能是甲。剩下八十與七十給乙、丙，由『乙比丙高』得乙＝八十、丙＝七十。此時甲＝九十不是最低分，符合第一條。三人配對全被決定，唯一解為『甲九十、乙八十、丙七十』。有一個配法讓乙拿九十，違反第三條；另一個配法讓丙（八十）高於乙（七十），違反『乙比丙高』；還有一個配法讓甲拿最低的七十，違反『甲不是最低』，皆錯。"
+      },
+      {
+        "story": "社區大樓一到五樓各開了一家店：書店、咖啡廳、花店、琴行、餐廳，剛好一層一家。新住戶想弄清楚哪一層是哪家店，管理員給了他一張便利貼，上面寫著四條線索：\n• 書店位在整棟樓的最高一層；\n• 咖啡廳就開在餐廳的正下方一層，兩家上下緊鄰；\n• 花店在一走進大樓的第一層；\n• 至於琴行，它的樓層比餐廳高，但又比書店低。\n管理員說：『照這四條，每一層是哪家店都是固定的，不會有第二種答案。』",
+        "hints": [
+          "先把最確定的兩家放好：書店在五樓，花店在一樓。剩下二、三、四樓要放咖啡廳、餐廳、琴行。",
+          "『咖啡廳在餐廳正下方』代表咖啡廳的樓層剛好比餐廳少一層，兩者緊鄰。",
+          "把餐廳放在二、三、四樓各試一次：注意咖啡廳不能跟花店搶一樓，琴行又必須比餐廳高，看看只有哪一種擺法都不衝突。"
+        ],
+        "q": "已知一到五樓各一家店：書店在最高樓；咖啡廳在餐廳的正下方一層；花店在一樓；琴行比餐廳高但比書店低。請問由一樓到五樓依序是哪些店？",
+        "options": [
+          "花店、咖啡廳、餐廳、琴行、書店",
+          "花店、餐廳、咖啡廳、琴行、書店",
+          "花店、咖啡廳、琴行、餐廳、書店",
+          "咖啡廳、花店、餐廳、琴行、書店"
+        ],
+        "answer": 0,
+        "model": "樓層排序＋上下相鄰約束＋端點固定",
+        "insight": "『正下方一層』是差一層的相鄰硬約束，先釘死最高與最低樓，再把相鄰的一對夾進中間試位子。",
+        "solve": "由線索：書店＝五樓、花店＝一樓，剩二、三、四樓給咖啡廳、餐廳、琴行。『咖啡廳在餐廳正下方』表示咖啡廳＝餐廳−1，且『琴行比餐廳高』。若餐廳＝二樓，則咖啡廳＝一樓與花店衝突，不行；若餐廳＝四樓，則琴行需高於四樓但只剩三樓可用，不行；故餐廳＝三樓，咖啡廳＝二樓，琴行需比餐廳高，只剩四樓，琴行＝四樓。各層被唯一決定：花店、咖啡廳、餐廳、琴行、書店。有一個排法把餐廳排在咖啡廳下方，違反『咖啡廳在餐廳正下方』；另一個排法讓琴行低於餐廳，違反『琴行比餐廳高』；還有一個排法把咖啡廳放一樓，違反『花店在一樓』，皆錯。"
+      },
+      {
+        "story": "家族聚餐時，五個表兄弟姊妹小龍、小虎、小豹、小鷹、小鹿被要求按年齡從大到小站成一排拍照（五人年齡都不同）。長輩不直接說歲數，只丟出四個線索考他們：\n• 小虎是這五個人裡年紀最大的老大哥；\n• 小鹿則是全場年紀最小的那一個；\n• 小豹的年紀比小龍大；\n• 還有一句最關鍵——小鷹的年齡剛好卡在小豹和小龍之間，比小豹小、卻又比小龍大。\n孩子們抓抓頭，最後發現只有一種站法能同時滿足全部線索。",
+        "hints": [
+          "先把兩個端點放好：小虎最年長排最前、小鹿最年幼排最後。中間三個位置留給小龍、小豹、小鷹。",
+          "『小鷹在小豹和小龍之間』搭配『小豹比小龍大』，可推出這三人由大到小的固定次序。",
+          "把小豹、小鷹、小龍依『大→小』排好，直接填進第二、三、四的位置即可。"
+        ],
+        "q": "已知五人年齡皆不同：小虎最年長；小鹿最年幼；小豹比小龍大；小鷹的年齡介於小豹與小龍之間。請問由最年長到最年幼的順序是？",
+        "options": [
+          "小虎、小龍、小鷹、小豹、小鹿",
+          "小豹、小虎、小鷹、小龍、小鹿",
+          "小虎、小豹、小鷹、小龍、小鹿",
+          "小虎、小豹、小龍、小鷹、小鹿"
+        ],
+        "answer": 2,
+        "model": "年齡全序＋『介於之間』一次鎖定",
+        "insight": "『A在B與C之間』一句就把三人的相對大小定死，再配上最大、最小兩個端點，整條順序就唯一。",
+        "solve": "端點先定：小虎最年長（第一）、小鹿最年幼（第五）。中間三位給小龍、小豹、小鷹。由『小豹比小龍大』與『小鷹介於小豹和小龍之間（比小豹小、比小龍大）』，三人由大到小唯一排成 小豹>小鷹>小龍。填入第二、三、四位得：小虎、小豹、小鷹、小龍、小鹿，全部被決定，答案唯一。有一個排法讓小龍大於小豹，違反『小豹比小龍大』；另一個排法把小豹排到小虎前，違反『小虎最年長』；還有一個排法讓小龍大於小鷹，違反『小鷹介於兩者之間需比小龍大』，皆錯。"
+      },
+      {
+        "story": "美術比賽有甲、乙、丙、丁四位參賽者，成績揭曉但主辦單位故意賣關子，把名次（第一到第四名）藏起來，只在公告欄貼出四條線索讓大家猜：\n• 第一條，甲雖然畫得不錯，但他並沒有拿到第一名；\n• 第二條，乙的名次也有個限制——她不是吊車尾的第四名；\n• 第三條，丙的名次排在丁的前面；\n• 第四條，甲的名次又排在乙的前面。\n有位觀眾嘀咕：『線索這麼少，說不定有好幾種可能吧？』評審微笑回答：『不，四個人的名次其實只有唯一一種排法。』",
+        "hints": [
+          "先掌握兩條順序：丙比丁前、甲比乙前；再記住兩個否定：甲不是第一、乙不是第四。",
+          "甲不能是第一，又要排在乙前面，所以甲不會是最後，也不會是第一——甲只可能落在第二或第三。",
+          "試著把甲放第二，看誰能當第一：能排在甲前面又不是甲、乙的人是誰？順著推下去檢查有沒有違反『乙不是第四』。"
+        ],
+        "q": "四人名次為第一到第四：甲不是第一；乙不是第四；丙排在丁前面；甲排在乙前面。請問由第一名到第四名的順序是？",
+        "options": [
+          "甲、丙、乙、丁",
+          "丙、甲、乙、丁",
+          "丙、甲、丁、乙",
+          "丙、丁、甲、乙"
+        ],
+        "answer": 1,
+        "model": "名次排序＋雙否定＋反證消去",
+        "insight": "否定條件不直接給位置，但和順序鏈交叉後，逐一試位子會撞到矛盾，最後只剩一種合法排法。",
+        "solve": "由『甲比乙前』且『甲不是第一』，甲只能是第二或第三。若甲＝第三，則乙必須排在甲之後，只能是第四，違反『乙不是第四』，排除；故甲＝第二。第一名不能是甲，也不能是乙（乙在甲之後），若第一是丁則丙須在丁前更矛盾，故第一名＝丙。剩第三、四給乙、丁，因『甲比乙前』已滿足，需再看『丙比丁前』（丙＝第一已成立）與『乙不是第四』：乙不能第四，故乙＝第三、丁＝第四。唯一解『丙、甲、乙、丁』。有一個排法讓甲當第一，違反第一條；另一個排法讓乙掉到第四，違反第二條；還有一個排法讓乙為第四且甲落第三，同樣違反，皆錯。"
+      }
+    ]
+  }
+];
+
+  var BADGES = [
+  {
+    "id": "lv1",
+    "icon": "🔗",
+    "name": "條件句達人"
+  },
+  {
+    "id": "lv2",
+    "icon": "🔄",
+    "name": "逆否高手"
+  },
+  {
+    "id": "lv3",
+    "icon": "⚖️",
+    "name": "推理判官"
+  },
+  {
+    "id": "lv4",
+    "icon": "🧩",
+    "name": "排除法偵探"
+  },
+  {
+    "id": "lv5",
+    "icon": "🔀",
+    "name": "邏輯連接家"
+  },
+  {
+    "id": "lv6",
+    "icon": "🔍",
+    "name": "解謎大師"
+  },
+  {
+    "id": "seer",
+    "icon": "🎯",
+    "name": "看穿大師"
+  },
+  {
+    "id": "all",
+    "icon": "🏆",
+    "name": "推理偵探"
+  }
+];
+
+  var BADGE_BY_ID = {};
+  for (var bi = 0; bi < BADGES.length; bi++) BADGE_BY_ID[BADGES[bi].id] = BADGES[bi];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var screenMenu = $('screen-menu');
+  var screenPlay = $('screen-play');
+  var levelList = $('level-list');
+  var stage = $('stage');
+  var stepDots = $('step-dots');
+  var playTitle = $('play-title');
+
+  var cur = null;
+
+  function starsFor(correct, total) {
+    if (total <= 0) return 0;
+    var r = correct / total;
+    if (r >= 0.9) return 3;
+    if (r >= 0.6) return 2;
+    if (r > 0) return 1;
+    return 0;
+  }
+  function starStr(n) { var s = ''; for (var i = 0; i < 3; i++) s += (i < n ? '⭐' : '☆'); return s; }
+
+  function totalSeer() {
+    var n = 0;
+    for (var i = 0; i < LEVELS.length; i++) { var r = progress[LEVELS[i].id]; if (r && typeof r.seer === 'number') n += r.seer; }
+    return n;
+  }
+
+  function awardBadge(id) {
+    var def = BADGE_BY_ID[id];
+    if (!def) return;
+    if (progress.badges[id]) return;
+    progress.badges[id] = true;
+    saveProg(progress);
+    toast('獲得徽章：' + def.icon + ' ' + def.name, 'badge');
+  }
+  function badgeCount() { var n = 0; for (var i = 0; i < BADGES.length; i++) if (progress.badges[BADGES[i].id]) n++; return n; }
+
+  function refreshBadges() {
+    if (totalSeer() >= SEER_TARGET) awardBadge('seer');
+    var allDone = true;
+    for (var i = 0; i < LEVELS.length; i++) { var r = progress[LEVELS[i].id]; if (!(r && r.done)) { allDone = false; break; } }
+    if (allDone) awardBadge('all');
+  }
+
+  function renderMenu() {
+    var doneCount = 0;
+    for (var i = 0; i < LEVELS.length; i++) { var rr = progress[LEVELS[i].id]; if (rr && rr.done) doneCount++; }
+    $('ov-done').textContent = doneCount + '/' + LEVELS.length;
+    $('ov-seer').textContent = totalSeer();
+    $('ov-badges').textContent = badgeCount() + '/' + BADGES.length;
+
+    if (doneCount > 0) {
+      $('hello-text').textContent = '歡迎回來！你已完成 ' + doneCount + ' 個關卡，很棒！';
+    }
+
+    levelList.innerHTML = '';
+    for (var u = 0; u < LEVELS.length; u++) {
+      (function (lv) {
+        var rec = recOf(lv.id);
+        var total = lv.questions.length;
+        var pos = Math.min(rec.pos, total);
+        var done = !!rec.done;
+        var pct = total ? Math.round(pos / total * 100) : 0;
+        var st = done ? Math.max(1, starsFor(rec.correct, total)) : 0;
+        var statusText = done
+          ? ('✅ 已完成（答對 ' + rec.correct + '/' + total + '）')
+          : (pos > 0 ? ('▶️ 繼續（已完成 ' + pos + '/' + total + '）') : ('▶️ 開始挑戰（共 ' + total + ' 題）'));
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'ma-level';
+        card.setAttribute('aria-label', '關卡 ' + lv.level + '：' + lv.name + '，' + statusText);
+        card.innerHTML =
+          '<div class="ma-level-top">' +
+            '<span class="ma-level-emoji" aria-hidden="true" style="background:' + lv.color + '22;color:' + lv.color + '">' + lv.emoji + '</span>' +
+            '<div>' +
+              '<div class="ma-level-num">關卡 ' + lv.level + '</div>' +
+              '<div class="ma-level-name">' + lv.name + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="ma-level-concepts">' + lv.concepts.join('・') + '</div>' +
+          '<div class="ma-level-progress" aria-hidden="true"><i style="width:' + pct + '%"></i></div>' +
+          '<div class="ma-level-foot">' +
+            '<span class="ma-level-status ' + (done ? 'done' : 'todo') + '">' + statusText + '</span>' +
+            '<span class="ma-level-stars" aria-hidden="true">' + (done ? starStr(st) : '') + '</span>' +
+          '</div>';
+        card.addEventListener('click', function () { startLevel(lv); });
+        levelList.appendChild(card);
+      })(LEVELS[u]);
+    }
+  }
+
+  function show(screen) {
+    screenMenu.classList.remove('active');
+    screenPlay.classList.remove('active');
+    screen.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function startLevel(lv) {
+    var rec = recOf(lv.id);
+    var total = lv.questions.length;
+    // 已全部完成 → 重新開始一輪（保留 done，重置本輪計數）
+    if (rec.pos >= total) { rec = { pos: 0, correct: 0, seer: 0, done: rec.done }; progress[lv.id] = rec; saveProg(progress); }
+    var startPos = rec.pos;
+    var roundEnd = Math.min(startPos + ROUND_SIZE, total);
+    cur = { level: lv, idx: startPos, startPos: startPos, roundEnd: roundEnd, roundCorrect: 0, roundSeer: 0 };
+    playTitle.textContent = lv.emoji + ' 關卡 ' + lv.level + '・' + lv.name;
+    show(screenPlay);
+    if (startPos === 0) renderBrief(); else renderQuestion();
+  }
+
+  function renderStepDots() {
+    stepDots.innerHTML = '';
+    var span = cur.roundEnd - cur.startPos;
+    if (span <= 0) return;
+    for (var i = 0; i < span; i++) {
+      var b = document.createElement('i');
+      var qi = cur.startPos + i;
+      if (qi < cur.idx) b.className = 'on';
+      else if (qi === cur.idx) b.className = 'cur';
+      stepDots.appendChild(b);
+    }
+  }
+
+  function renderBrief() {
+    stepDots.innerHTML = '';
+    var lv = cur.level;
+    var facts = '';
+    for (var i = 0; i < lv.keyFacts.length; i++) {
+      facts += '<li><span class="ma-kf-dot" aria-hidden="true">◆</span><span>' + lv.keyFacts[i] + '</span></li>';
+    }
+    stage.innerHTML =
+      '<div class="ma-stage ma-brief">' +
+        '<div class="ma-visual" aria-hidden="true">' + lv.emoji + '</div>' +
+        '<h2>關卡 ' + lv.level + '・' + lv.name + '</h2>' +
+        '<p class="ma-brief-sub">先看看這一關的「看穿心法」。這一關共 ' + lv.questions.length + ' 題，我們一次玩 ' + (cur.roundEnd - cur.startPos) + ' 題，之後隨時可以再回來。</p>' +
+        '<ul class="ma-keyfacts">' + facts + '</ul>' +
+      '</div>' +
+      '<div class="ma-actions">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-start">開始挑戰 ➡️</button>' +
+      '</div>';
+    $('btn-start').addEventListener('click', function () { renderQuestion(); });
+  }
+
+  function next() {
+    cur.idx++;
+    if (cur.idx >= cur.roundEnd) finishRound();
+    else renderQuestion();
+  }
+
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+  // 只動呈現：把較長的「怎麼解」依句末標點與步驟轉折標記分行，讓多步推理可逐行掃描。
+  // 先 esc() 再插入 <br>，故不會引入任何未跳脫的 HTML；短的維持原樣。
+  function fmtSolve(s) {
+    var e = esc(s);
+    if (e.length < 100) return e; // 短說明不分段，維持原樣
+    // 1) 句末標點（。！？）與分號（；）後換行——步驟的天然邊界
+    e = e.replace(/([。！？；])/g, '$1<br>');
+    // 2) 常見步驟轉折標記前補一個換行（多字詞，不會切到詞中間）
+    var marks = ['第一步', '第二步', '第三步', '第四步', '第五步', '先看', '再看', '接著', '然後', '代回', '為何唯一', '誘答分析'];
+    for (var i = 0; i < marks.length; i++) {
+      e = e.split(marks[i]).join('<br>' + marks[i]);
+    }
+    // 3) 收斂重複換行、去除頭尾多餘換行
+    e = e.replace(/(?:<br>)+/g, '<br>').replace(/^<br>/, '').replace(/<br>$/, '');
+    return e;
+  }
+
+  function renderQuestion() {
+    renderStepDots();
+    var lv = cur.level;
+    var step = lv.questions[cur.idx];
+    var total = lv.questions.length;
+    var hintsUsed = 0;
+    var hintShown = 0;
+
+    var order = [];
+    for (var oi = 0; oi < step.options.length; oi++) order.push(oi);
+    for (var m = order.length - 1; m > 0; m--) {
+      var r = Math.floor(Math.random() * (m + 1));
+      var tt = order[m]; order[m] = order[r]; order[r] = tt;
+    }
+    var optsHtml = '';
+    for (var k = 0; k < order.length; k++) {
+      var origIdx = order[k];
+      optsHtml += '<button type="button" class="ma-opt" data-i="' + origIdx + '">' +
+        '<span>' + esc(step.options[origIdx]) + '</span><span class="ma-opt-mark" aria-hidden="true"></span></button>';
+    }
+
+    var hintCount = (step.hints || []).length;
+    var recapFacts = '';
+    for (var rf = 0; rf < lv.keyFacts.length; rf++) {
+      recapFacts += '<li><span class="ma-kf-dot" aria-hidden="true">◆</span><span>' + lv.keyFacts[rf] + '</span></li>';
+    }
+    stage.innerHTML =
+      '<div class="ma-stage">' +
+        '<div class="mm-story"><span class="mm-story-label">🕵️ 第 ' + (cur.idx + 1) + ' / ' + total + ' 題　題目</span>' + fmtSolve(step.story) + '</div>' +
+        '<div class="ma-recap">' +
+          '<button type="button" class="ma-recap-btn" id="recap-btn" aria-expanded="false" aria-controls="recap-list">💡 看本關心法</button>' +
+          '<ul class="ma-keyfacts ma-recap-list" id="recap-list" hidden>' + recapFacts + '</ul>' +
+        '</div>' +
+        (hintCount ? ('<div class="mm-hint-area">' +
+          '<button type="button" class="mm-hint-btn" id="hint-btn">🔍 看提示（還有 ' + hintCount + ' 個）</button>' +
+          '<div class="mm-hint-list" id="hint-list"></div>' +
+          '<div class="mm-seer-note">想挑戰的話可以先自己看穿 🎯；卡住時按上面看提示也很棒 👍 一樣學得會。</div>' +
+        '</div>') : '') +
+        '<p class="ma-question">' + esc(step.q) + '</p>' +
+        '<div class="ma-options">' + optsHtml + '</div>' +
+        '<div class="ma-reveal" id="reveal"></div>' +
+      '</div>' +
+      '<div class="ma-actions" id="afteract" style="display:none">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">繼續 ➡️</button>' +
+      '</div>';
+
+    var recapBtn = $('recap-btn');
+    if (recapBtn) {
+      recapBtn.addEventListener('click', function () {
+        var list = $('recap-list');
+        var open = recapBtn.getAttribute('aria-expanded') === 'true';
+        recapBtn.setAttribute('aria-expanded', open ? 'false' : 'true');
+        list.hidden = open;
+        recapBtn.textContent = open ? '💡 看本關心法' : '💡 收合本關心法';
+      });
+    }
+
+    if (hintCount) {
+      var hintBtn = $('hint-btn');
+      hintBtn.addEventListener('click', function () {
+        if (hintShown >= hintCount) return;
+        var h = step.hints[hintShown];
+        hintShown++; hintsUsed++;
+        var el = document.createElement('div');
+        el.className = 'mm-hint';
+        el.innerHTML = '<span class="mm-hint-n" aria-hidden="true">提示 ' + hintShown + '</span><span>' + esc(h) + '</span>';
+        $('hint-list').appendChild(el);
+        var left = hintCount - hintShown;
+        if (left > 0) hintBtn.textContent = '🔍 再看一個提示（還有 ' + left + ' 個）';
+        else hintBtn.disabled = true;
+      });
+    }
+
+    var answered = false;
+    var btns = stage.querySelectorAll('.ma-opt');
+
+    function revealAndLock(correct) {
+      var rev = $('reveal');
+      var seer = correct && hintsUsed === 0;
+      var html = '';
+      if (correct) {
+        html += '<span class="mm-rev-seer">' + (seer ? '🎯 沒看提示就看穿，太厲害了！' : '答對了！👍') + '</span>';
+      } else {
+        html += '<span class="mm-rev-seer">沒關係～一起看穿它！正確答案是這個 👇</span>';
+      }
+      html += '<span class="mm-rev-row"><span class="mm-rev-k">背後模型：</span>' + esc(step.model) + '</span>';
+      if (step.insight) html += '<span class="mm-rev-row"><span class="mm-rev-k">怎麼看穿：</span>' + esc(step.insight) + '</span>';
+      if (step.solve) html += '<span class="mm-rev-row"><span class="mm-rev-k">怎麼解：</span>' + fmtSolve(step.solve) + '</span>';
+      rev.innerHTML = html;
+      rev.classList.add('show');
+      $('afteract').style.display = 'flex';
+      var hb = $('hint-btn'); if (hb) hb.disabled = true;
+      var all = stage.querySelectorAll('.ma-opt');
+      for (var a = 0; a < all.length; a++) all[a].disabled = true;
+    }
+
+    for (var b = 0; b < btns.length; b++) {
+      btns[b].addEventListener('click', function () {
+        if (answered) return;
+        var i = parseInt(this.getAttribute('data-i'), 10);
+        var isCorrect = (i === step.answer);
+        answered = true;
+        // 唯一例外：答題時 ping 每日連續學習 streak（不計 XP、不重複計分、同日 idempotent）
+        if (window.Game && typeof Game.pingActive === 'function') { try { Game.pingActive(); } catch (e) {} }
+        if (isCorrect) {
+          this.classList.add('correct');
+          this.querySelector('.ma-opt-mark').textContent = '✅';
+          cur.roundCorrect++;
+          if (hintsUsed === 0) cur.roundSeer++;
+          revealAndLock(true);
+        } else {
+          this.classList.add('wrong');
+          this.querySelector('.ma-opt-mark').textContent = '❌';
+          var correctBtn = stage.querySelector('.ma-opt[data-i="' + step.answer + '"]');
+          if (correctBtn) {
+            correctBtn.classList.add('correct');
+            correctBtn.querySelector('.ma-opt-mark').textContent = '✅';
+          }
+          revealAndLock(false);
+        }
+      });
+    }
+
+    $('btn-next').addEventListener('click', next);
+  }
+
+  function nextLevelOf(lv) {
+    for (var i = 0; i < LEVELS.length; i++) { if (LEVELS[i].id === lv.id) return LEVELS[i + 1] || null; }
+    return null;
+  }
+
+  function finishRound() {
+    var lv = cur.level;
+    var total = lv.questions.length;
+    var rec = recOf(lv.id);
+    rec.pos = cur.idx; // = roundEnd
+    rec.correct += cur.roundCorrect;
+    rec.seer += cur.roundSeer;
+    if (rec.pos >= total && !rec.done) rec.done = true;
+    progress[lv.id] = rec;
+    saveProg(progress);
+    if (rec.done) awardBadge(lv.id);
+    refreshBadges();
+
+    var roundN = cur.idx - cur.startPos;
+    var finished = rec.pos >= total;
+    stepDots.innerHTML = '';
+
+    var body;
+    if (finished) {
+      var st = Math.max(1, starsFor(rec.correct, total));
+      body =
+        '<div class="ma-done-emoji" aria-hidden="true">🎉</div>' +
+        '<div class="ma-done-title">完成「' + lv.name + '」全部 ' + total + ' 題！</div>' +
+        '<div class="ma-done-stars" aria-label="得到 ' + st + ' 顆星">' + starStr(st) + '</div>' +
+        '<div class="ma-done-sub">整關答對 ' + rec.correct + ' / ' + total + ' 題' +
+          (rec.seer > 0 ? ('，其中 ' + rec.seer + ' 題完全沒看提示就看穿 🎯！') : '，很棒！') + '</div>';
+    } else {
+      body =
+        '<div class="ma-done-emoji" aria-hidden="true">💪</div>' +
+        '<div class="ma-done-title">這回合完成！</div>' +
+        '<div class="ma-done-sub">本回合答對 ' + cur.roundCorrect + ' / ' + roundN + ' 題' +
+          (cur.roundSeer > 0 ? ('，看穿 ' + cur.roundSeer + ' 題 🎯') : '') + '。</div>' +
+        '<div class="ma-done-prog">整關進度：已完成 ' + rec.pos + ' / ' + total + ' 題（隨時可以再回來繼續）</div>';
+    }
+
+    stage.innerHTML =
+      '<div class="ma-stage ma-done">' + body + '</div>' +
+      '<div class="ma-actions">' +
+        '<button type="button" class="btn" id="btn-menu">回到選單</button>' +
+        (!finished ? '<button type="button" class="btn btn-primary" id="btn-cont">繼續下一回合 ➡️</button>'
+                   : (nextLevelOf(lv) ? '<button type="button" class="btn btn-primary" id="btn-nextlv">下一關 ➡️</button>' : '')) +
+      '</div>';
+
+    toast(finished ? ('完成「' + lv.name + '」！答對 ' + rec.correct + '/' + total) : ('這回合答對 ' + cur.roundCorrect + '/' + roundN + '，進度 ' + rec.pos + '/' + total), 'daily');
+
+    $('btn-menu').addEventListener('click', function () { show(screenMenu); renderMenu(); });
+    var bc = $('btn-cont'); if (bc) bc.addEventListener('click', function () { startLevel(lv); });
+    var bn = $('btn-nextlv'); if (bn) bn.addEventListener('click', function () { var nx = nextLevelOf(lv); if (nx) startLevel(nx); });
+  }
+
+  $('btn-back').addEventListener('click', function () { show(screenMenu); renderMenu(); });
+
+  renderMenu();
+})();
+</script>
+</body>
+</html>

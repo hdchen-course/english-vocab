@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>經濟與資本探索 💹</title>
+<!-- 統一遊戲化引擎：assets/app.css（設計 token）→ game_core.css（HUD/toast）→ game_core.js。
+     計分：本頁為「理財進階」，計入 finance 科目。宣告 data-game-wired="finance"，
+     每題作答只呼叫一次 Game.recordAnswer('finance', 對錯)（answered 鎖定、重試不記帳）；
+     「不」呼叫 Game.award / recordSession，故無 double-count。只另用 Game.showToast（純提示）。
+     獨立 localStorage key：econ_adv_progress_v1。 -->
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<style>
+/* economics_advanced.html — 強調色系採理財青綠（finance）。無專用 subject token，故：
+   --su 用實色（邊框/圓點），--su-tint 用半透明（亮暗雙主題自適應），
+   --su-ink 用 var(--ink)（自動隨主題翻轉，避免暗色模式對比不足）。 */
+:root {
+  --su: var(--c-finance);
+  --su-tint: var(--tint-finance);
+  --su-ink: var(--c-finance-ink);
+  --accent: var(--c-finance);
+  --accent-ink: var(--c-finance-ink);
+  --accent-tint: var(--tint-finance);
+}
+
+body { overflow-x: hidden; }
+
+.ma-topbar { display: flex; align-items: center; gap: var(--s2); margin-bottom: var(--s4); }
+.ma-topbar .ma-title { flex: 1; font-size: var(--fs-h2); font-weight: 800; color: var(--ink); min-width: 0; }
+
+.ma-screen { display: none; animation: ma-fade 0.3s ease; }
+.ma-screen.active { display: block; }
+@keyframes ma-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .ma-screen { animation: none; } }
+
+.ma-hello { display: flex; align-items: center; gap: var(--s3); padding: var(--s4); background: var(--su-tint); border: 1px solid var(--card-border); border-radius: var(--r-lg); margin-bottom: var(--s4); }
+.ma-hello .ma-mascot { font-size: 46px; flex: none; line-height: 1; }
+.ma-hello .ma-hello-text { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+.ma-hello .ma-hello-sub { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; }
+
+.ma-overview { display: flex; align-items: center; gap: var(--s3); margin-bottom: var(--s4); flex-wrap: wrap; }
+.ma-overview .stat-tile { flex: 1; min-width: 96px; }
+
+.ma-levels { display: grid; gap: var(--s4); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.ma-level {
+  display: flex; flex-direction: column; gap: var(--s2); padding: var(--s4);
+  text-align: left; cursor: pointer; border: 2px solid var(--card-border);
+  background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  font-family: var(--font); color: var(--ink);
+}
+.ma-level:hover { box-shadow: var(--shadow-lg); border-color: var(--su); }
+.ma-level:active { transform: scale(0.98); }
+.ma-level-top { display: flex; align-items: center; gap: var(--s3); }
+.ma-level-emoji { font-size: 34px; width: 56px; height: 56px; flex: none; display: flex; align-items: center; justify-content: center; border-radius: 16px; }
+.ma-level-num { font-size: var(--fs-small); font-weight: 700; color: var(--su-ink); }
+.ma-level-name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); line-height: 1.25; }
+.ma-level-concepts { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; line-height: 1.4; }
+.ma-level-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-top: 2px; }
+.ma-level-status { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-small); font-weight: 700; }
+.ma-level-status.done { color: var(--c-correct-ink); }
+.ma-level-status.todo { color: var(--ink-soft); }
+.ma-level-stars { font-size: 16px; letter-spacing: 1px; }
+
+.ma-stage { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); padding: var(--s5) var(--s4); text-align: center; }
+.ma-visual { font-size: clamp(56px, 18vw, 92px); line-height: 1.1; margin: var(--s2) 0 var(--s3); user-select: none; }
+.ma-question { font-size: clamp(19px, 4.5vw, 24px); font-weight: 800; color: var(--ink); line-height: 1.6; margin: 0 auto var(--s4); max-width: 42ch; text-align: left; }
+
+.ma-brief { text-align: left; }
+.ma-brief h2 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); margin: 0 0 var(--s3); text-align: center; }
+.ma-brief-sub { text-align: center; color: var(--ink-soft); font-weight: 700; font-size: var(--fs-small); margin: 0 0 var(--s3); }
+.ma-keyfacts { list-style: none; padding: 0; margin: 0 auto; max-width: 44ch; display: grid; gap: var(--s2); }
+.ma-keyfacts li { display: flex; align-items: flex-start; gap: var(--s2); padding: 10px 14px; background: var(--su-tint); border-radius: var(--r-md); font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.6; }
+.ma-keyfacts li .ma-kf-dot { flex: none; color: var(--su-ink); font-weight: 900; }
+
+.ma-steps { display: flex; align-items: center; justify-content: center; gap: 5px; margin-bottom: var(--s3); flex-wrap: wrap; }
+.ma-steps i { width: 20px; height: 6px; border-radius: 999px; background: var(--card-border); }
+.ma-steps i.on { background: var(--su); }
+.ma-steps i.cur { background: var(--su); box-shadow: 0 0 0 3px var(--su-tint); }
+
+.ma-options { display: grid; gap: var(--s3); margin-top: var(--s2); }
+.ma-opt {
+  display: flex; align-items: center; gap: var(--s2); min-height: 56px; width: 100%;
+  padding: 14px 18px; border: 2px solid var(--card-border); border-radius: 16px;
+  background: var(--card); color: var(--ink); font-family: var(--font);
+  font-size: clamp(16px, 3.4vw, 19px); font-weight: 700; text-align: left; cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.ma-opt:active { transform: scale(0.98); }
+.ma-opt:disabled { cursor: default; }
+/* 作答後高亮：文字用 var(--ink)（亮暗雙主題皆過 AA），對錯以邊框顏色 + ✅/❌ 雙碼標示 */
+.ma-opt.correct { border-color: var(--c-correct); background: var(--tint-english); color: var(--ink); }
+.ma-opt.wrong { border-color: var(--c-wrong); background: rgba(255,118,117,0.12); color: var(--ink); }
+.ma-opt.correct .ma-opt-mark { color: var(--c-correct-ink); }
+.ma-opt.wrong .ma-opt-mark { color: var(--c-streak-ink); }
+.ma-opt .ma-opt-mark { margin-left: auto; font-size: 22px; }
+
+.ma-reveal { margin-top: var(--s4); padding: var(--s3) var(--s4); background: var(--su-tint); border-radius: var(--r-md); font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.6; text-align: left; display: none; }
+.ma-reveal.show { display: block; animation: ma-fade 0.3s ease; }
+@media (prefers-reduced-motion: reduce) { .ma-reveal.show { animation: none; } }
+
+.ma-done { text-align: center; padding: var(--s5) var(--s4); }
+.ma-done-emoji { font-size: clamp(64px, 22vw, 100px); }
+.ma-done-stars { font-size: 34px; letter-spacing: 4px; margin: var(--s2) 0; }
+.ma-done-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); }
+
+.ma-actions { display: flex; gap: var(--s3); margin-top: var(--s4); flex-wrap: wrap; }
+.ma-actions .btn { flex: 1; min-width: 140px; }
+
+.ma-footnote { text-align: center; color: var(--ink-soft); font-size: var(--fs-small); margin-top: var(--s5); font-weight: 600; max-width: 34em; margin-inline: auto; }
+</style>
+</head>
+<body data-game-wired="finance" data-game-maturity="advanced">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">經濟與資本探索 💹</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle
+          aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+
+  <section id="screen-menu" class="ma-screen active">
+    <div class="ma-topbar">
+      <span class="ma-title">經濟與資本探索 💹</span>
+    </div>
+
+    <div class="ma-hello">
+      <span class="ma-mascot" aria-hidden="true">💹</span>
+      <div>
+        <div class="ma-hello-text" id="hello-text">歡迎來到經濟與資本探索！看懂錢和市場怎麼運作，世界會更有趣。</div>
+        <div class="ma-hello-sub" id="hello-sub">還沒開始也沒關係，挑一個等級試試看吧！</div>
+      </div>
+    </div>
+
+    <div class="ma-overview">
+      <div class="stat-tile"><span class="stat-value" id="ov-done">0/6</span><span class="stat-label">完成等級</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-badges">0/7</span><span class="stat-label">收集徽章</span></div>
+    </div>
+
+    <div class="ma-levels" id="level-list"><!-- 由 JS 產生 --></div>
+
+    <a class="cn-nextup cn-nextup--back" href="finance.html" style="display:flex;align-items:center;gap:12px;margin-top:16px;padding:14px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:26px;flex:none" aria-hidden="true">🎮</span><span>覺得太快？← 先回「理財小達人」邊玩邊練習</span></a>
+    <a class="cn-nextup cn-nextup--back" href="economics_concepts.html" style="display:flex;align-items:center;gap:12px;margin-top:12px;padding:14px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:26px;flex:none" aria-hidden="true">💰</span><span>想打好基礎？← 回「理財觀念養成」用圖複習</span></a>
+    <p class="ma-footnote">這是「進階挑戰」小旅程，慢慢玩、盡量想，答錯也沒關係。🌱</p>
+  </section>
+
+  <section id="screen-play" class="ma-screen">
+    <div class="ma-topbar">
+      <button type="button" class="btn btn-icon" id="btn-back" aria-label="回到等級選單">←</button>
+      <span class="ma-title" id="play-title">等級</span>
+    </div>
+    <div class="ma-steps" id="step-dots" aria-hidden="true"></div>
+    <div class="play-column">
+      <div id="stage"><!-- 由 JS 產生每一題 --></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* 主程式（自足 IIFE）：6 個中性等級、每級約 10–12 題、全部解鎖。選項每題 Fisher–Yates 洗牌；
+   answer = 未洗牌前 0-based 索引，以 data-i 判斷，判分不受洗牌影響。每題最多記一次分。
+   獨立 key：econ_adv_progress_v1。每題作答呼叫一次 Game.recordAnswer('finance', 對錯) 計入 finance 科目 XP（answered 鎖定、重試不重複記帳）；不使用 award / recordSession。 */
+(function () {
+  'use strict';
+
+  function toast(msg, kind) {
+    try { if (window.Game && Game.showToast) Game.showToast(msg, kind || 'info'); } catch (e) {}
+  }
+
+  var PROG_KEY = 'econ_adv_progress_v1';
+  function loadProg() {
+    var p = null;
+    try { p = JSON.parse(localStorage.getItem(PROG_KEY)); } catch (e) { p = null; }
+    if (!p || typeof p !== 'object') p = {};
+    if (typeof p.badges !== 'object' || !p.badges) p.badges = {};
+    return p;
+  }
+  function saveProg(p) { try { localStorage.setItem(PROG_KEY, JSON.stringify(p)); } catch (e) {} }
+  var progress = loadProg();
+
+  // 課程內容（全繁體中文；事實經 WebSearch 查核與雙重審查）。answer = 未洗牌前 0-based 索引。
+  var LEVELS = [
+  {
+    "id": "lv1",
+    "level": 1,
+    "name": "供給、需求與價格",
+    "emoji": "🏷️",
+    "color": "#d97706",
+    "concepts": [
+      "稀少性",
+      "需求",
+      "供給",
+      "價格由供需決定",
+      "機會成本",
+      "誘因"
+    ],
+    "keyFacts": [
+      "稀少性：資源有限、慾望無窮，所以每個人都得做選擇。",
+      "需求：想買又買得起、願意付錢，才是經濟學說的「需求」。",
+      "供給：賣家願意且能供應的量；價格越高，通常願意賣越多。",
+      "價格：由供給和需求一起決定，東西少又搶手就漲，太多又沒人要就跌。",
+      "誘因與機會成本：獎勵或漲價會改變人的選擇，而選了甲就得放棄乙。"
+    ],
+    "questions": [
+      {
+        "q": "「稀少性」在經濟學裡最主要的意思是什麼？",
+        "options": [
+          "資源有限，但人們想要的東西幾乎無窮，所以必須做選擇",
+          "世界上所有東西都很貴，窮人都買不起",
+          "商店把商品藏起來，故意不拿出來賣",
+          "某樣東西全世界只剩下最後一個"
+        ],
+        "answer": 0,
+        "why": "稀少性是指資源相對於無窮的慾望是有限的，因此必須取捨。"
+      },
+      {
+        "q": "下列哪一種情況，才算是經濟學說的「需求」？",
+        "options": [
+          "小明很想要最新的遊戲機，但他一毛錢也拿不出來",
+          "小華想買一杯五十元的珍奶，口袋裡有錢也願意付",
+          "有人夢想擁有一座金山，卻從沒打算花錢",
+          "大家都覺得月亮很漂亮，想抬頭看看它"
+        ],
+        "answer": 1,
+        "why": "需求要同時「想要」又「買得起且願意付錢」，只有小華符合。"
+      },
+      {
+        "q": "關於「供給」，下列哪一句最正確？",
+        "options": [
+          "供給就是消費者想買的數量",
+          "供給是賣家願意而且有能力拿出來賣的數量",
+          "價格越高，賣家一定越不想賣",
+          "供給和價格完全沒有任何關係"
+        ],
+        "answer": 1,
+        "why": "供給是賣方願意且能夠提供的量，通常價格越高、願意供給越多。"
+      },
+      {
+        "q": "颱風過後，市場上的青菜變得很少，但想買菜的人一樣多。青菜的價格最可能怎麼變？",
+        "options": [
+          "上漲，因為東西變少、想買的人相對變多",
+          "下跌，因為颱風天大家都不想吃菜",
+          "完全不變，價格和供需無關",
+          "先跌到零元再慢慢漲回來"
+        ],
+        "answer": 0,
+        "why": "供給減少而需求不變，供不應求會把價格往上推。"
+      },
+      {
+        "q": "一位很紅的歌手開演唱會，座位只有幾千個，想買票的粉絲卻有幾十萬人。這會讓票價出現什麼壓力？",
+        "options": [
+          "有上漲的壓力，因為想買的人遠多於票的數量",
+          "一定會改成免費送票",
+          "會因為人太多而下跌",
+          "和人數多寡沒有任何關係"
+        ],
+        "answer": 0,
+        "why": "需求遠大於供給（票很少），會推升價格或造成搶購。"
+      },
+      {
+        "q": "週末只有一個下午，小美選擇去打籃球，就不能去看電影。這裡的「機會成本」是指什麼？",
+        "options": [
+          "打籃球花掉的體力",
+          "她因此放棄的、原本可以去看的那場電影",
+          "籃球的顏色和大小",
+          "籃球場旁邊飲料的價錢"
+        ],
+        "answer": 1,
+        "why": "機會成本是為了選甲而放棄的次佳選項，也就是那場電影。"
+      },
+      {
+        "q": "小傑有一百元零用錢，他決定全部拿去買扭蛋，就沒辦法買原本也想要的漫畫。買扭蛋的機會成本是什麼？",
+        "options": [
+          "那本他因此買不成的漫畫",
+          "扭蛋機用掉的電費",
+          "那一百元紙鈔本身",
+          "沒有機會成本，因為錢是他自己的"
+        ],
+        "answer": 0,
+        "why": "機會成本是被放棄掉的最佳替代選擇，這裡就是那本漫畫。"
+      },
+      {
+        "q": "飲料店推出「集點滿十杯送一杯」的活動後，很多客人開始更常來買。這最能說明什麼？",
+        "options": [
+          "誘因（好處）會改變人們的行為",
+          "飲料從此都不用錢了",
+          "客人變多和這個活動完全無關",
+          "集點卡會讓飲料變得更好喝"
+        ],
+        "answer": 0,
+        "why": "獎勵是一種誘因，會讓人改變選擇、增加購買，這正是誘因影響行為。"
+      },
+      {
+        "q": "到了盛產季節，芒果大量上市，數量比平常多很多，想買的人卻差不多。芒果價格最可能怎麼變？",
+        "options": [
+          "下跌，因為供給大增、東西太多",
+          "大漲，因為芒果變多了",
+          "完全不變",
+          "芒果會因此從市場上消失"
+        ],
+        "answer": 0,
+        "why": "供給大增而需求不變，供過於求會使價格下跌。"
+      },
+      {
+        "q": "某款限量扭蛋突然在同學間爆紅，大家都搶著要，數量卻沒有增加。它在二手交換時的「價格」最可能怎樣？",
+        "options": [
+          "上漲，因為想要的人變多、東西卻沒變多",
+          "下跌，因為它變流行了",
+          "不受歡迎程度影響",
+          "一定會維持原本的價錢"
+        ],
+        "answer": 0,
+        "why": "需求增加而供給不變，會把價格往上推。"
+      },
+      {
+        "q": "為什麼就算是很有錢的人，也還是得做選擇、不能什麼都要？",
+        "options": [
+          "因為每個人的時間、金錢等資源都有限，用在一件事就少了做別件事的機會",
+          "因為有錢人其實都不喜歡花錢",
+          "因為商店規定每人只能買一樣",
+          "因為有錢人想要的東西其實很少"
+        ],
+        "answer": 0,
+        "why": "稀少性對每個人都成立，時間與資源有限，所以總得取捨。"
+      },
+      {
+        "q": "價格上漲通常會傳達一些訊息。下列哪一種說法最合理、也最中立？",
+        "options": [
+          "漲價可能反映東西變稀少或需求變高，會讓有些人買、有些人選擇不買或找替代品",
+          "漲價一定是壞事，代表有人在騙錢",
+          "漲價永遠是好事，價格越高越好",
+          "價格高低完全是隨機的，和供需無關"
+        ],
+        "answer": 0,
+        "why": "價格會傳遞稀少與需求的訊息並影響選擇，它有作用但也帶來取捨，這是中立描述。"
+      }
+    ]
+  },
+  {
+    "id": "lv2",
+    "level": 2,
+    "name": "交換、分工與市場",
+    "emoji": "🛒",
+    "color": "#0891b2",
+    "concepts": [
+      "自願交換為何互利",
+      "以物易物的不便與貨幣",
+      "分工與專業化",
+      "市場與價格如何形成",
+      "競爭與獨占的差別"
+    ],
+    "keyFacts": [
+      "自願交換時，雙方各拿出比較不需要的、換到更想要的，所以兩邊都變得更滿意。",
+      "以物易物需要「剛好互相想要」才換得成，很難湊成，於是人們發明了大家都接受的貨幣。",
+      "分工與專業化讓每個人專做熟練的一件事，整體更快更好，但也讓大家更互相依賴、更需要交換。",
+      "市場是買方與賣方相遇交易的地方或方式，價格由「願意買多少」和「願意賣多少」一起決定。",
+      "競爭常讓價格更低、品質更好、選擇更多；若只有一家（獨占），消費者能選的就變少。"
+    ],
+    "questions": [
+      {
+        "q": "小明有很多貼紙但想要漫畫，小華有很多漫畫但想要貼紙。兩人自己願意地交換之後，最可能發生什麼？",
+        "options": [
+          "只有小明開心，小華一定吃虧",
+          "兩個人都拿到自己更想要的東西，都變得更開心",
+          "兩個人都變得更不開心",
+          "交換一定會有一個人吃虧"
+        ],
+        "answer": 1,
+        "why": "自願交換時，雙方各拿出看得比較不重要的、換到自己更想要的，所以都受益。"
+      },
+      {
+        "q": "在還沒有錢的年代，想用「三顆蘋果換一本書」，最大的困難通常是什麼？",
+        "options": [
+          "蘋果太重不好拿",
+          "要剛好遇到「想賣書、又正好想要蘋果」的人，很難湊成",
+          "書一定很貴",
+          "蘋果放久會變色"
+        ],
+        "answer": 1,
+        "why": "以物易物需要雙方剛好互相想要對方的東西，很難湊成，這就是後來需要貨幣的原因。"
+      },
+      {
+        "q": "為什麼後來大家改用「錢」來買賣，而不是一直以物易物？",
+        "options": [
+          "因為錢比較漂亮",
+          "因為錢大家都接受、方便攜帶和計價，交易更容易",
+          "因為有了錢就不用工作",
+          "因為錢會自己長大變多"
+        ],
+        "answer": 1,
+        "why": "貨幣被大家共同接受、方便保存與標價，解決了以物易物「剛好互相需要」的難題。"
+      },
+      {
+        "q": "一家飲料店，一個人專門搖飲料、一個人專門收錢打包，比起一個人全部自己做，通常會怎樣？",
+        "options": [
+          "整體做得更慢",
+          "每個人專心做熟悉的一件事，整體做得更快更順",
+          "一定會做錯",
+          "客人會變少"
+        ],
+        "answer": 1,
+        "why": "分工讓每個人專做熟練的部分（專業化），減少手忙腳亂、越做越熟，效率就提高。"
+      },
+      {
+        "q": "分工雖然讓大家更有效率，但也有一個要注意的地方，是什麼？",
+        "options": [
+          "大家都會變笨",
+          "每個人只會做一部分，必須互相依賴、要靠交換才能拿到別的東西",
+          "分工一定會失敗",
+          "分工後就不用再學任何東西"
+        ],
+        "answer": 1,
+        "why": "專業化後每個人只生產一小部分，得透過交換與合作才能滿足各種需求，彼此更相互依賴。"
+      },
+      {
+        "q": "課本說的「市場」比較正確的意思是什麼？",
+        "options": [
+          "只有傳統菜市場才算市場",
+          "買東西的人和賣東西的人相遇、進行買賣的地方或方式",
+          "只有很大的百貨公司才算",
+          "只有在網路上才有市場"
+        ],
+        "answer": 1,
+        "why": "市場泛指買方與賣方相遇並交易的任何場所或管道，夜市、超商、網路買賣都算。"
+      },
+      {
+        "q": "同一條街上開了好幾家飲料店互相競爭，對客人通常有什麼影響？",
+        "options": [
+          "價格一定變得超級貴",
+          "店家為了吸引客人，常會在價格、口味或服務上更用心",
+          "客人一定買不到飲料",
+          "飲料一定變難喝"
+        ],
+        "answer": 1,
+        "why": "賣家為了爭取顧客，會努力降價或提升品質、服務，所以競爭常讓消費者受益。"
+      },
+      {
+        "q": "如果整個小鎮只剩「一家」飲料店，別人都不准開，最可能發生什麼？",
+        "options": [
+          "這家店一定會對客人特別好",
+          "因為客人沒有別家可選，這家店比較沒有壓力去降價或變好",
+          "飲料一定會變免費",
+          "客人一定會變超級多"
+        ],
+        "answer": 1,
+        "why": "只有一家（獨占）時，消費者缺乏其他選擇，賣家改善價格或品質的壓力就比較小。"
+      },
+      {
+        "q": "在市場裡，一樣東西大概會用多少錢成交，主要是看什麼？",
+        "options": [
+          "看老闆今天的心情",
+          "看想買的人願意付多少、想賣的人願意賣多少，雙方談得攏",
+          "看東西的顏色好不好看",
+          "看當天的天氣"
+        ],
+        "answer": 1,
+        "why": "價格由買賣雙方的意願（也就是需求與供給）共同決定，雙方都能接受才會成交。"
+      },
+      {
+        "q": "下面哪一種情況，交換才會真的讓「雙方都受益」？",
+        "options": [
+          "有人被逼著拿出自己的東西",
+          "雙方都是自己願意的，而且都覺得換到的比較好",
+          "一方偷偷騙了另一方",
+          "有人被搶走了東西"
+        ],
+        "answer": 1,
+        "why": "只有在資訊清楚又自願的交換裡，雙方才會都覺得自己換得更好，因此都受益。"
+      },
+      {
+        "q": "一位很會種稻的農夫，為什麼還是會去買別人做的衣服，而不是自己什麼都做？",
+        "options": [
+          "因為他很懶惰",
+          "他專心種稻、把多的米拿去換衣服，比自己樣樣都做更划算",
+          "因為衣服都不用錢",
+          "因為他不喜歡吃米"
+        ],
+        "answer": 1,
+        "why": "各自專做最擅長的、再互相交換（分工加交換），對每個人都比事事自己來更有效率。"
+      },
+      {
+        "q": "關於市場，下面哪一句話最正確？",
+        "options": [
+          "市場上競爭越多，對消費者一定越糟",
+          "有競爭時消費者選擇多、常更便宜；只有一家時選擇變少，兩者各有影響",
+          "獨占對消費者一定最好",
+          "有沒有競爭都一樣，完全沒差別"
+        ],
+        "answer": 1,
+        "why": "競爭通常增加選擇並壓低價格，獨占則減少選擇，看懂這個差別才算真正理解市場。"
+      }
+    ]
+  },
+  {
+    "id": "lv3",
+    "level": 3,
+    "name": "貨幣、銀行與通膨",
+    "emoji": "💰",
+    "color": "#16a34a",
+    "concepts": [
+      "貨幣的三大功能：交易媒介、計價單位、儲存價值",
+      "以物易物的不便，以及貨幣為什麼方便",
+      "銀行：收存款也放貸款",
+      "利率是「借錢的租金」",
+      "通貨膨脹與購買力的下降",
+      "儲蓄的意義"
+    ],
+    "keyFacts": [
+      "貨幣有三大功能：當交易媒介（大家都願意收）、當計價單位（用同一種單位比價格）、幫我們儲存價值（先留著以後再用）。",
+      "以物易物要「雙方剛好都想要對方的東西」才成交，貨幣讓交換方便很多。",
+      "銀行收下大家的存款，再把一部分借給需要用錢的人，這是它運作的基本方式。",
+      "利息就像「借錢的租金」：向別人借錢要付利息，把錢存進銀行則能收到利息。",
+      "通貨膨脹是東西「普遍」慢慢變貴，會讓同樣一筆錢買到的東西變少，也就是購買力下降。"
+    ],
+    "questions": [
+      {
+        "q": "貨幣的功能之一是「交易媒介」，這是什麼意思？",
+        "options": [
+          "大家都願意用它來換各種商品和服務，不必拿東西直接換東西",
+          "它肚子餓時可以拿來吃",
+          "把它放著就會自己變多",
+          "只有銀行的人才能使用它"
+        ],
+        "answer": 0,
+        "why": "交易媒介指貨幣被大家普遍接受，用來交換商品與服務。"
+      },
+      {
+        "q": "以物易物（用東西直接換東西）為什麼常常很麻煩？",
+        "options": [
+          "因為東西都太重，搬不動",
+          "因為你想換的人，不一定剛好想要你手上的東西",
+          "因為以物易物是違法的",
+          "因為東西換來換去一定會壞掉"
+        ],
+        "answer": 1,
+        "why": "以物易物需要雙方剛好都想要對方的東西，很難湊巧配對。"
+      },
+      {
+        "q": "貨幣的「計價」功能，指的是什麼？",
+        "options": [
+          "用同一種單位（例如「元」）標示每樣東西的價格，方便比較",
+          "讓所有東西都變成一樣的價格",
+          "讓價格永遠都不會改變",
+          "幫你把錢藏起來不被發現"
+        ],
+        "answer": 0,
+        "why": "計價單位讓不同商品能用同一把尺（元）來衡量與比較。"
+      },
+      {
+        "q": "貨幣的「儲存價值」功能，比較接近下面哪一個？",
+        "options": [
+          "今天賺到或收到的錢，可以先留著，以後再拿出來用",
+          "錢只要放著，隔天就會自動變成兩倍",
+          "錢一定要當天馬上花光",
+          "錢可以拿來當植物的肥料"
+        ],
+        "answer": 0,
+        "why": "儲存價值指貨幣能把購買力保留到未來使用（不過通膨會讓它慢慢縮水）。"
+      },
+      {
+        "q": "銀行主要是靠什麼方式運作的？",
+        "options": [
+          "收下大家存進來的錢，再把一部分借給需要用錢的人",
+          "自己想印多少鈔票就印多少",
+          "把所有存款全部鎖在地下室都不動",
+          "只負責替客戶保管實體物品"
+        ],
+        "answer": 0,
+        "why": "銀行像資金的橋樑：一邊吸收存款，一邊把錢放款給借款人。"
+      },
+      {
+        "q": "小明向銀行借錢買腳踏車，除了要還借來的錢，通常還要多付「利息」。利息比較像什麼？",
+        "options": [
+          "借錢要付的「租金」，因為用了別人的錢一段時間",
+          "銀行送給小明的獎品",
+          "一種罰款，代表小明做錯了事",
+          "政府向小明收的稅"
+        ],
+        "answer": 0,
+        "why": "利息是借用資金一段時間的代價，就像租借東西要付租金。"
+      },
+      {
+        "q": "如果把零用錢存進銀行，銀行通常會付給你一點利息。這是為什麼？",
+        "options": [
+          "因為你等於把錢借給銀行使用，利息是銀行付你的使用代價",
+          "因為銀行想送錢給存戶當禮物",
+          "因為存錢是一種比賽，贏的人有獎金",
+          "因為這樣錢才不會被偷走"
+        ],
+        "answer": 0,
+        "why": "存款等於把錢借給銀行，利息是銀行付給你的使用代價。"
+      },
+      {
+        "q": "「通貨膨脹」最貼切的意思是下面哪一個？",
+        "options": [
+          "整體來說，各種東西的價格普遍地、慢慢地變貴",
+          "只有某一家飲料店把珍奶調漲了",
+          "天氣變熱時氣球會膨脹起來",
+          "大家手上的錢通通突然不見了"
+        ],
+        "answer": 0,
+        "why": "通膨指的是物價整體、持續地上漲，而不是單一商品漲價。"
+      },
+      {
+        "q": "去年一杯珍奶50元，今年同樣一杯要60元，而且其他東西也大多變貴了。這時候同樣的100元？",
+        "options": [
+          "能買到的東西變少了，也就是購買力下降",
+          "能買到的東西反而變多了",
+          "對能買多少完全沒有影響",
+          "會自動變成120元"
+        ],
+        "answer": 0,
+        "why": "物價普遍上漲時，同樣金額能買到的東西變少，就是購買力下降。"
+      },
+      {
+        "q": "關於通貨膨脹，下面哪一句話最正確？",
+        "options": [
+          "溫和的通膨在現代經濟中很常見，但如果漲太快，會讓大家的錢變薄、生活變吃力",
+          "通膨一定是好事，數字越高越好",
+          "任何東西漲價都代表經濟壞掉了",
+          "通膨和一般人的生活完全沒有關係"
+        ],
+        "answer": 0,
+        "why": "通膨有程度之分：溫和常見、過快則傷害購買力，要平衡地看待。"
+      },
+      {
+        "q": "「儲蓄」最主要的意義是什麼？",
+        "options": [
+          "把現在暫時不花的錢留下來，以後想達成更大的目標或應付急用時就派得上用場",
+          "把錢丟掉，這樣就不會亂花",
+          "存錢可以讓自己馬上變成有錢人",
+          "儲蓄就是規定自己一毛錢都不能花"
+        ],
+        "answer": 0,
+        "why": "儲蓄是把現在的錢留到未來使用，能幫助達成比較大的目標。"
+      }
+    ]
+  },
+  {
+    "id": "lv4",
+    "level": 4,
+    "name": "儲蓄、投資與複利",
+    "emoji": "📈",
+    "color": "#7c3aed",
+    "concepts": [
+      "儲蓄與投資的差別",
+      "複利（利滾利）",
+      "風險與報酬成正比",
+      "分散風險（雞蛋不放同一籃）",
+      "長期投資與時間的力量",
+      "天下沒有穩賺不賠"
+    ],
+    "keyFacts": [
+      "儲蓄是把錢存起來備用，通常比較安全但成長慢；投資是用錢去買可能增值的東西，可能賺更多，也可能虧錢。",
+      "複利就是「利滾利」：本金100元、每年10％，第一年變110元，第二年再乘以1.1變成121元。",
+      "報酬和風險通常成正比：想賺得越多，往往要承擔越大的賠錢風險。",
+      "分散風險就像「不要把雞蛋放在同一個籃子裡」，錢分開放，才不會一次全部賠光。",
+      "天下沒有穩賺不賠；而時間拉得越長，複利的效果才會慢慢變明顯，但也需要耐心等待。"
+    ],
+    "questions": [
+      {
+        "q": "小明把每週的零用錢放進撲滿，留著以後想買東西時再用。這個做法比較像下列哪一個？",
+        "options": [
+          "儲蓄",
+          "投資",
+          "借錢",
+          "捐款"
+        ],
+        "answer": 0,
+        "why": "把錢存起來備用、追求安全就是儲蓄。"
+      },
+      {
+        "q": "本金100元，每年利息10％，用複利計算，兩年後大約會變成多少元？",
+        "options": [
+          "110元",
+          "120元",
+          "121元",
+          "200元"
+        ],
+        "answer": 2,
+        "why": "第一年100×1.1＝110，第二年110×1.1＝121。"
+      },
+      {
+        "q": "「複利」的意思，最接近下列哪一句話？",
+        "options": [
+          "只有本金會生利息",
+          "利息也會再生利息，也就是利滾利",
+          "每年的利息都會被拿走",
+          "錢會越放越少"
+        ],
+        "answer": 1,
+        "why": "複利是連利息也一起再生利息。"
+      },
+      {
+        "q": "有人介紹一個投資，說它「報酬非常高」。這通常同時代表什麼？",
+        "options": [
+          "風險也比較高",
+          "一定穩賺不賠",
+          "完全沒有風險",
+          "有政府替你保證"
+        ],
+        "answer": 0,
+        "why": "報酬與風險通常成正比，報酬高風險也高。"
+      },
+      {
+        "q": "「不要把雞蛋放在同一個籃子裡」這句話，在理財上是提醒我們什麼？",
+        "options": [
+          "只買一種東西最好",
+          "把錢分散在不同地方，降低一起賠光的風險",
+          "雞蛋很貴要省著吃",
+          "最好完全不要投資"
+        ],
+        "answer": 1,
+        "why": "分散擺放，才不會因為一次意外就全賠光。"
+      },
+      {
+        "q": "同樣是每年10％的複利，下列哪一種情況，累積起來的效果通常最明顯？",
+        "options": [
+          "只放一天就領出來",
+          "連續放很多年",
+          "馬上花掉",
+          "放進沒有利息的抽屜"
+        ],
+        "answer": 1,
+        "why": "時間越長，複利利滾利的效果越明顯。"
+      },
+      {
+        "q": "有人跟你保證「這個投資穩賺不賠，每個月都幫你賺很多錢」。最合理的反應是什麼？",
+        "options": [
+          "馬上把所有的錢都投進去",
+          "提高警覺，因為這很可能是騙局",
+          "去借更多錢一起投進去",
+          "叫全班同學一起投"
+        ],
+        "answer": 1,
+        "why": "天下沒有穩賺不賠，保證高報酬多半是騙局。"
+      },
+      {
+        "q": "關於儲蓄和投資，下列哪一個說法比較正確？",
+        "options": [
+          "儲蓄通常比較安全但成長較慢，投資可能成長較快但有虧損風險",
+          "儲蓄一定比投資賺得多",
+          "投資完全沒有任何風險",
+          "只要儲蓄就能讓錢馬上變成兩倍"
+        ],
+        "answer": 0,
+        "why": "這正確點出兩者在安全與報酬上的取捨。"
+      },
+      {
+        "q": "把200元存起來，一年利息是10％，一年後總共大約會有多少元？",
+        "options": [
+          "210元",
+          "220元",
+          "400元",
+          "240元"
+        ],
+        "answer": 1,
+        "why": "利息200×0.1＝20，加上本金共220元。"
+      },
+      {
+        "q": "把錢一直放在撲滿裡（沒有利息），這筆錢的金額會怎麼變化？",
+        "options": [
+          "會自己越變越多",
+          "金額不會自己增加",
+          "每天都會翻倍",
+          "會自動生出利息"
+        ],
+        "answer": 1,
+        "why": "撲滿沒有利息，金額不會自己長大。"
+      },
+      {
+        "q": "下列哪一種做法，比較符合「分散風險」的精神？",
+        "options": [
+          "把全部零用錢都拿去轉同一款扭蛋",
+          "把錢分成幾份，放在不同用途和不同地方",
+          "把所有錢押在同一件事情上",
+          "跟別人借錢全部投進同一種東西"
+        ],
+        "answer": 1,
+        "why": "把錢分開放才能降低一起賠光的風險。"
+      },
+      {
+        "q": "阿美看到兩個選擇：A的報酬普通、風險較低；B宣稱報酬超高而且「零風險」。哪一個說法比較不合常理？",
+        "options": [
+          "A",
+          "B",
+          "兩個都很合理",
+          "完全無法判斷"
+        ],
+        "answer": 1,
+        "why": "選 B。報酬與風險通常成正比，宣稱「超高報酬又零風險」並不合理，多半是話術或詐騙。"
+      }
+    ]
+  },
+  {
+    "id": "lv5",
+    "level": 5,
+    "name": "公司與資本的運作",
+    "emoji": "🏢",
+    "color": "#2563eb",
+    "concepts": [
+      "公司：集合眾人的錢和力量",
+      "股票與股東",
+      "資本循環（投資→生產→獲利→再投資）",
+      "利潤＝收入−成本",
+      "風險：可能賺也可能賠",
+      "創業家把點子變成產品"
+    ],
+    "keyFacts": [
+      "公司把許多人的錢和力量集合起來，去做一個人做不到的大事。",
+      "股票代表擁有公司的一小部分，持有股票的人叫做股東。",
+      "資本循環：投資買設備→生產東西→賣出獲利→把利潤再投資，不斷循環。",
+      "利潤＝收入−成本；但收入可能低於成本，做生意有賺有賠的風險。",
+      "創業家把新點子變成產品或服務，同時承擔可能失敗的風險。"
+    ],
+    "questions": [
+      {
+        "q": "為什麼很多人常常會「一起」開公司，而不是每個人各自單打獨鬥？",
+        "options": [
+          "因為一個人的錢和力氣有限，集合眾人的資金與人力，才能做更大的事",
+          "因為一個人做生意一定會失敗",
+          "因為法律規定不可以一個人做生意",
+          "因為公司裡人越多，就一定賺越多錢"
+        ],
+        "answer": 0,
+        "why": "公司能把許多人的資金與人力集合起來，完成單靠個人難以完成的事。"
+      },
+      {
+        "q": "小美買了一家飲料店公司的「股票」。這比較像是下面哪一種情況？",
+        "options": [
+          "她只是借錢給飲料店，之後要連本帶利拿回來",
+          "她擁有了這家公司的一小部分",
+          "她可以免費喝這家店所有的飲料",
+          "她自動變成了這家店的店長"
+        ],
+        "answer": 1,
+        "why": "股票代表對公司的一小部分所有權，買股票就是成為公司的部分擁有者。"
+      },
+      {
+        "q": "所謂的「股東」，指的是下面哪一種人？",
+        "options": [
+          "在公司上班、每月領薪水的員工",
+          "借錢給公司、之後要收利息的銀行",
+          "持有公司股票、擁有公司一部分的人",
+          "只是到公司買東西的客人"
+        ],
+        "answer": 2,
+        "why": "股東就是持有股票、因此擁有公司一部分的人。"
+      },
+      {
+        "q": "一家扭蛋公司的經營，下面哪一個「資本循環」的順序是對的？",
+        "options": [
+          "先賣出→再生產→最後才投資買機器",
+          "投資買機器和材料→生產扭蛋→賣出獲利→把賺到的再投資",
+          "先獲利→再買材料→都不用賣出",
+          "只要一直投資就好，不必生產也不必賣出"
+        ],
+        "answer": 1,
+        "why": "資本循環是投資→生產→賣出獲利→再投資，不斷循環讓事業成長。"
+      },
+      {
+        "q": "一家飲料店一個月收入10萬元，材料、租金、薪水等成本共7萬元。這個月的利潤是多少？",
+        "options": [
+          "10萬元",
+          "17萬元",
+          "3萬元",
+          "7萬元"
+        ],
+        "answer": 2,
+        "why": "利潤＝收入−成本，10萬−7萬＝3萬元。"
+      },
+      {
+        "q": "關於「開公司一定會賺錢嗎」，下面哪個說法最正確？",
+        "options": [
+          "開公司一定會賺錢，絕不可能虧錢",
+          "公司有可能賺錢，也有可能虧錢，做生意本來就有風險",
+          "只要夠努力，公司就絕對不會虧錢",
+          "會虧錢的公司都是故意賠錢的"
+        ],
+        "answer": 1,
+        "why": "做生意有風險，收入可能低於成本而虧錢，賺賠都有可能。"
+      },
+      {
+        "q": "「創業家」主要在做的事情是什麼？",
+        "options": [
+          "只負責把錢存進銀行等利息",
+          "把新點子變成產品或服務，並承擔可能失敗的風險",
+          "專門幫別的公司打掃辦公室",
+          "負責規定所有公司只能賣什麼東西"
+        ],
+        "answer": 1,
+        "why": "創業家把點子變成產品或服務，並承擔失敗的風險。"
+      },
+      {
+        "q": "公司為什麼常常要發行股票、找很多股東一起出錢？",
+        "options": [
+          "為了讓大家一起分擔賠錢的難過而已",
+          "為了募集更多資金來擴大事業，同時把風險和獲利分給眾多股東",
+          "因為股票不用花錢，發越多越好",
+          "為了故意讓公司不要賺錢"
+        ],
+        "answer": 1,
+        "why": "發股票能募集資金擴大事業，並把風險與獲利分散給眾多股東。"
+      },
+      {
+        "q": "一家飲料店的「成本」，主要是指下面哪一項？",
+        "options": [
+          "只有老闆當天的心情好壞",
+          "材料費、店租、員工薪水等為了做生意而花出去的錢",
+          "客人今天總共喝了幾杯",
+          "隔壁那家店在賣什麼飲料"
+        ],
+        "answer": 1,
+        "why": "成本是為了做生意而花出去的錢，例如材料、租金與薪水。"
+      },
+      {
+        "q": "公司賺到利潤後所謂的「再投資」，是什麼意思？",
+        "options": [
+          "把賺到的錢全部藏起來，永遠都不用",
+          "把賺到的錢再投入公司，例如買更多機器或開新分店，讓事業變更大",
+          "馬上把公司關掉不做了",
+          "把賺到的錢原價還給客人"
+        ],
+        "answer": 1,
+        "why": "再投資是把利潤重新投入事業，例如添購設備或展店，推動成長。"
+      },
+      {
+        "q": "關於股東能不能拿到錢，下面哪個說法最正確？",
+        "options": [
+          "只要當了股東，每年一定會拿到固定的利息",
+          "公司賺錢時股東可能分到利潤，公司虧錢時卻可能拿不到，股票甚至會變便宜",
+          "當股東永遠不會虧錢",
+          "股東可以隨時要求公司把買股票的錢原價退還"
+        ],
+        "answer": 1,
+        "why": "股東分享獲利也承擔風險，賺時可能分到利潤，虧時可能沒有甚至受損。"
+      },
+      {
+        "q": "有人說「公司越大就越好」。比較完整的看法應該是哪一個？",
+        "options": [
+          "公司一定要越大越好，完全沒有壞處",
+          "公司變大可能做更多事、賺更多，但也要承擔更大的成本和風險，不一定總是更好",
+          "公司只要夠大就一定不會倒閉",
+          "小公司都沒有存在的價值"
+        ],
+        "answer": 1,
+        "why": "規模變大帶來機會，也帶來更高的成本與風險，大小各有取捨。"
+      }
+    ]
+  },
+  {
+    "id": "lv6",
+    "level": 6,
+    "name": "經濟體與全球",
+    "emoji": "🌐",
+    "color": "#dc2626",
+    "concepts": [
+      "GDP與經濟規模",
+      "經濟成長的意義",
+      "稅收與公共財",
+      "政府在市場中的角色",
+      "貿易與分工",
+      "全球供應鏈與取捨"
+    ],
+    "keyFacts": [
+      "GDP（國內生產毛額）大約是「一個地方在一年內，生產出來的所有商品和服務的總價值」，用來衡量經濟規模的大小。",
+      "稅收是大家一起出的錢，政府用它來提供大家共用的「公共財」，像道路、路燈、公立學校和國防。",
+      "各國專心生產自己比較擅長、成本較低的東西，再互相買賣（貿易），雙方通常都能得到更多、更便宜的商品。",
+      "現在很多產品是「全球供應鏈」的成果：一支手機的零件可能來自好多個國家，台灣的半導體晶片就是其中重要的一環。",
+      "市場經濟能鼓勵大家努力生產，但也可能帶來問題，例如貧富差距，以及工廠汙染這類「外部成本」，需要制度一起調整。"
+    ],
+    "questions": [
+      {
+        "q": "大人常說的「GDP」，最接近下面哪一個意思？",
+        "options": [
+          "一個地方在一年內，生產出來的所有商品和服務加起來的總價值",
+          "一個人銀行帳戶裡有多少存款",
+          "一個國家裡有多少座山",
+          "一年之中總共下了幾場雨"
+        ],
+        "answer": 0,
+        "why": "GDP衡量一個地方一年生產的總價值，用來看經濟規模的大小。"
+      },
+      {
+        "q": "我們說一個地方「經濟成長」，通常是指什麼？",
+        "options": [
+          "今年的天氣比去年更熱一些",
+          "今年放的假比去年還要多",
+          "今年生產的商品和服務比去年更多、總價值更高",
+          "今年住在這裡的人全部搬走了"
+        ],
+        "answer": 2,
+        "why": "經濟成長指生產的商品與服務變多，經濟規模比之前變大。"
+      },
+      {
+        "q": "政府蓋馬路、辦公立學校、維持國防，這些錢主要從哪裡來？",
+        "options": [
+          "天上自己掉下來的",
+          "大家依規定繳的稅",
+          "校長個人掏腰包出的",
+          "便利商店免費贊助的"
+        ],
+        "answer": 1,
+        "why": "稅收是大家一起出的錢，用來提供道路、學校、國防等公共財。"
+      },
+      {
+        "q": "像路燈、道路這種「公共財」，為什麼常由政府用稅收來提供，而不是各自去買？",
+        "options": [
+          "因為大家會一起使用，很難只讓付錢的人用、卻不讓別人用",
+          "因為路燈其實根本沒有人需要",
+          "因為政府想靠路燈賺很多錢",
+          "因為道路只給大人走，小孩不可以走"
+        ],
+        "answer": 0,
+        "why": "公共財大家共用、很難排除沒付錢的人，所以常由政府統一提供。"
+      },
+      {
+        "q": "在市場買賣中，政府常扮演的一個角色是什麼？",
+        "options": [
+          "決定每一個人早餐要吃什麼",
+          "幫每一家飲料店決定要放幾顆珍珠",
+          "規定所有人幾點一定要睡覺",
+          "訂定規則並維持秩序，例如禁止販賣壞掉的黑心食品"
+        ],
+        "answer": 3,
+        "why": "政府訂規則、維持公平與安全，但通常不會決定每個人生活的小細節。"
+      },
+      {
+        "q": "甲國很會種鳳梨，乙國很會做手機。兩國互相買賣，最可能的結果是什麼？",
+        "options": [
+          "各自專心做擅長的東西再交換，兩國都能得到更多鳳梨和手機",
+          "兩國都因此變得更窮",
+          "鳳梨和手機都會憑空消失",
+          "兩國從此再也不能生產任何東西"
+        ],
+        "answer": 0,
+        "why": "各國專注生產自己擅長的東西再貿易（分工），通常雙方都受益。"
+      },
+      {
+        "q": "「全球供應鏈」這個詞，最接近下面哪一個情況？",
+        "options": [
+          "一種只有在深山裡才買得到的鎖鏈",
+          "一種綁在腳踏車後座上的鏈條",
+          "一個產品由好多個國家分工合作，才一起完成",
+          "一個產品只能在一個國家、由一個人從頭做到尾"
+        ],
+        "answer": 2,
+        "why": "現代許多產品是多國分工的成果，這一連串合作就叫全球供應鏈。"
+      },
+      {
+        "q": "在全球電子產品的供應鏈裡，台灣以生產下列哪一項聞名，是重要的一環？",
+        "options": [
+          "半導體晶片",
+          "竹子做的掃把",
+          "沙灘用的遮陽傘",
+          "木頭做的筷子"
+        ],
+        "answer": 0,
+        "why": "台灣的半導體晶片產量在全球很重要，是供應鏈中的關鍵一環（可查證的中性事實）。"
+      },
+      {
+        "q": "夜市某攤的限量扭蛋很多人搶著要，數量卻不多，價格最可能怎麼變化？",
+        "options": [
+          "因為東西少、想買的人卻多，一定會免費送出去",
+          "因為想買的人多、東西又少，價格容易被抬高",
+          "價格一定會直接變成零元",
+          "想要的人越多，價格反而一定越低"
+        ],
+        "answer": 1,
+        "why": "當需求大於供給（想買的多、東西少），價格通常會往上升。"
+      },
+      {
+        "q": "有一家工廠生產很多便宜的玩具，卻把髒水排進河裡。這最能說明市場可能出現什麼問題？",
+        "options": [
+          "「外部成本」：生產帶來的汙染，讓沒買玩具的人也一起受害",
+          "河裡的水會因此自己變得更乾淨",
+          "工廠排的髒水對任何人都完全沒有影響",
+          "玩具放久了會自動變乾淨"
+        ],
+        "answer": 0,
+        "why": "汙染是一種「外部成本」，由整個社會一起承擔，是市場需要留意的問題。"
+      },
+      {
+        "q": "市場經濟能鼓勵大家努力賺錢，但也常出現下列哪一種需要注意的情況？",
+        "options": [
+          "每個人賺到的錢一定完全一樣多",
+          "錢會自動平均分給所有的人",
+          "有些人賺得多、有些人賺得少，出現貧富差距",
+          "所有商店都會開始免費送東西"
+        ],
+        "answer": 2,
+        "why": "市場能帶來效率與動力，但也可能造成貧富差距，這是要面對的取捨。"
+      },
+      {
+        "q": "關於「市場經濟」，下列哪一種說法最中肯、最貼近事實？",
+        "options": [
+          "它有優點也有缺點：能帶動生產，但也可能造成貧富差距或汙染，需要制度來調整",
+          "它百分之百完美，永遠不會有任何問題",
+          "它完全沒有用處，應該整套全部丟掉",
+          "它只會帶來壞處，沒有任何一點好處"
+        ],
+        "answer": 0,
+        "why": "平衡地看，市場經濟有優點也有限制，重點是了解取捨並想辦法改善。"
+      }
+    ]
+  }
+];
+
+  var BADGES = [
+  {
+    "id": "lv1",
+    "icon": "🏷️",
+    "name": "供需觀察家"
+  },
+  {
+    "id": "lv2",
+    "icon": "🛒",
+    "name": "交換高手"
+  },
+  {
+    "id": "lv3",
+    "icon": "💰",
+    "name": "貨幣達人"
+  },
+  {
+    "id": "lv4",
+    "icon": "📈",
+    "name": "複利小資家"
+  },
+  {
+    "id": "lv5",
+    "icon": "🏢",
+    "name": "資本領航員"
+  },
+  {
+    "id": "lv6",
+    "icon": "🌐",
+    "name": "經濟視野家"
+  },
+  {
+    "id": "all",
+    "icon": "🏆",
+    "name": "經濟通"
+  }
+];
+  var BADGE_BY_ID = {};
+  for (var bi = 0; bi < BADGES.length; bi++) BADGE_BY_ID[BADGES[bi].id] = BADGES[bi];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var screenMenu = $('screen-menu');
+  var screenPlay = $('screen-play');
+  var levelList = $('level-list');
+  var stage = $('stage');
+  var stepDots = $('step-dots');
+  var playTitle = $('play-title');
+
+  var cur = null;
+
+  function starsFor(correct, total) {
+    if (total <= 0) return 0;
+    var r = correct / total;
+    if (r >= 0.9) return 3;
+    if (r >= 0.6) return 2;
+    if (r > 0) return 1;
+    return 0;
+  }
+  function starStr(n) { var s = ''; for (var i = 0; i < 3; i++) s += (i < n ? '⭐' : '☆'); return s; }
+
+  function awardBadge(id) {
+    var def = BADGE_BY_ID[id];
+    if (!def) return;
+    if (progress.badges[id]) return;
+    progress.badges[id] = true;
+    saveProg(progress);
+    toast('獲得徽章：' + def.icon + ' ' + def.name, 'badge');
+    try { if (window.EconAdvBadges) EconAdvBadges.refresh(); } catch (e) {}
+  }
+  function badgeCount() { var n = 0; for (var i = 0; i < BADGES.length; i++) if (progress.badges[BADGES[i].id]) n++; return n; }
+
+  function renderMenu() {
+    var doneCount = 0;
+    for (var i = 0; i < LEVELS.length; i++) if (progress[LEVELS[i].id] && progress[LEVELS[i].id].done) doneCount++;
+    $('ov-done').textContent = doneCount + '/' + LEVELS.length;
+    $('ov-badges').textContent = badgeCount() + '/' + BADGES.length;
+
+    if (doneCount > 0) {
+      $('hello-text').textContent = '歡迎回來！你已完成 ' + doneCount + ' 個等級，很棒！';
+      $('hello-sub').textContent = (doneCount >= LEVELS.length)
+        ? '六個等級都完成了，經濟高手！🏆'
+        : '想挑戰哪一個等級都可以，答錯也沒關係。';
+    }
+
+    levelList.innerHTML = '';
+    for (var u = 0; u < LEVELS.length; u++) {
+      (function (lv) {
+        var rec = progress[lv.id] || {};
+        var done = !!rec.done;
+        var total = lv.questions.length;
+        var st = done ? starsFor(rec.best || 0, total) : 0;
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'ma-level';
+        card.setAttribute('aria-label', '等級 ' + lv.level + '：' + lv.name);
+        card.innerHTML =
+          '<div class="ma-level-top">' +
+            '<span class="ma-level-emoji" aria-hidden="true" style="background:' + lv.color + '22;color:' + lv.color + '">' + lv.emoji + '</span>' +
+            '<div>' +
+              '<div class="ma-level-num">等級 ' + lv.level + '</div>' +
+              '<div class="ma-level-name">' + lv.name + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="ma-level-concepts">' + lv.concepts.join('・') + '</div>' +
+          '<div class="ma-level-foot">' +
+            '<span class="ma-level-status ' + (done ? 'done' : 'todo') + '">' +
+              (done ? '✅ 已完成（最佳 ' + (rec.best || 0) + '/' + total + '）' : '▶️ 開始挑戰（共 ' + total + ' 題）') + '</span>' +
+            '<span class="ma-level-stars" aria-hidden="true">' + (done ? starStr(st) : '') + '</span>' +
+          '</div>';
+        card.addEventListener('click', function () { startLevel(lv); });
+        levelList.appendChild(card);
+      })(LEVELS[u]);
+    }
+  }
+
+  function show(screen) {
+    screenMenu.classList.remove('active');
+    screenPlay.classList.remove('active');
+    screen.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function startLevel(lv) {
+    cur = { level: lv, idx: 0, correctCount: 0, phase: 'brief' };
+    playTitle.textContent = lv.emoji + ' 等級 ' + lv.level + '・' + lv.name;
+    show(screenPlay);
+    renderBrief();
+  }
+
+  function renderStepDots() {
+    stepDots.innerHTML = '';
+    if (cur.phase !== 'quiz') return;
+    for (var i = 0; i < cur.level.questions.length; i++) {
+      var b = document.createElement('i');
+      if (i < cur.idx) b.className = 'on';
+      else if (i === cur.idx) b.className = 'cur';
+      stepDots.appendChild(b);
+    }
+  }
+
+  function renderBrief() {
+    renderStepDots();
+    var lv = cur.level;
+    var facts = '';
+    for (var i = 0; i < lv.keyFacts.length; i++) {
+      facts += '<li><span class="ma-kf-dot" aria-hidden="true">◆</span><span>' + lv.keyFacts[i] + '</span></li>';
+    }
+    stage.innerHTML =
+      '<div class="ma-stage ma-brief">' +
+        '<div class="ma-visual" aria-hidden="true">' + lv.emoji + '</div>' +
+        '<h2>等級 ' + lv.level + '・' + lv.name + '</h2>' +
+        '<p class="ma-brief-sub">先看看這一級的重點，再開始 ' + lv.questions.length + ' 題挑戰。</p>' +
+        '<ul class="ma-keyfacts">' + facts + '</ul>' +
+      '</div>' +
+      '<div class="ma-actions">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-start">開始挑戰 ➡️</button>' +
+      '</div>';
+    $('btn-start').addEventListener('click', function () { cur.phase = 'quiz'; cur.idx = 0; renderQuestion(); });
+  }
+
+  function next() {
+    cur.idx++;
+    if (cur.idx >= cur.level.questions.length) finishLevel();
+    else renderQuestion();
+  }
+
+  function renderQuestion() {
+    renderStepDots();
+    var lv = cur.level;
+    var step = lv.questions[cur.idx];
+
+    var order = [];
+    for (var oi = 0; oi < step.options.length; oi++) order.push(oi);
+    for (var m = order.length - 1; m > 0; m--) {
+      var r = Math.floor(Math.random() * (m + 1));
+      var tt = order[m]; order[m] = order[r]; order[r] = tt;
+    }
+    var optsHtml = '';
+    for (var k = 0; k < order.length; k++) {
+      var origIdx = order[k];
+      optsHtml += '<button type="button" class="ma-opt" data-i="' + origIdx + '">' +
+        '<span>' + step.options[origIdx] + '</span><span class="ma-opt-mark" aria-hidden="true"></span></button>';
+    }
+
+    stage.innerHTML =
+      '<div class="ma-stage">' +
+        '<div class="ma-visual" aria-hidden="true">' + lv.emoji + '</div>' +
+        '<p class="ma-question">第 ' + (cur.idx + 1) + ' / ' + lv.questions.length + ' 題　' + step.q + '</p>' +
+        '<div class="ma-options">' + optsHtml + '</div>' +
+        '<div class="ma-reveal" id="reveal"></div>' +
+      '</div>' +
+      '<div class="ma-actions" id="afteract" style="display:none">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">繼續 ➡️</button>' +
+      '</div>';
+
+    var answered = false;
+    var btns = stage.querySelectorAll('.ma-opt');
+
+    function revealAndLock(correct) {
+      var rev = $('reveal');
+      rev.textContent = (correct ? '答對了！' : '再想想～正確答案是這個！') + (step.why || '');
+      rev.classList.add('show');
+      $('afteract').style.display = 'flex';
+      var all = stage.querySelectorAll('.ma-opt');
+      for (var a = 0; a < all.length; a++) all[a].disabled = true;
+    }
+
+    for (var b = 0; b < btns.length; b++) {
+      btns[b].addEventListener('click', function () {
+        var i = parseInt(this.getAttribute('data-i'), 10);
+        var isCorrect = (i === step.answer);
+        if (answered) return;
+        answered = true;
+        if (window.Game && window.Game.recordAnswer) Game.recordAnswer('finance', isCorrect);
+        if (isCorrect) {
+          this.classList.add('correct');
+          this.querySelector('.ma-opt-mark').textContent = '✅';
+          cur.correctCount++;
+          revealAndLock(true);
+        } else {
+          this.classList.add('wrong');
+          this.querySelector('.ma-opt-mark').textContent = '❌';
+          var correctBtn = stage.querySelector('.ma-opt[data-i="' + step.answer + '"]');
+          if (correctBtn) {
+            correctBtn.classList.add('correct');
+            correctBtn.querySelector('.ma-opt-mark').textContent = '✅';
+          }
+          revealAndLock(false);
+        }
+      });
+    }
+
+    $('btn-next').addEventListener('click', next);
+  }
+
+  function finishLevel() {
+    var lv = cur.level;
+    var total = lv.questions.length;
+    var got = cur.correctCount;
+
+    var prev = progress[lv.id] || {};
+    progress[lv.id] = { done: true, best: Math.max(prev.best || 0, got) };
+    saveProg(progress);
+
+    awardBadge(lv.id);
+    var allDone = true;
+    for (var i = 0; i < LEVELS.length; i++) if (!(progress[LEVELS[i].id] && progress[LEVELS[i].id].done)) { allDone = false; break; }
+    if (allDone) awardBadge('all');
+
+    var st = starsFor(got, total);
+    stage.innerHTML =
+      '<div class="ma-stage ma-done">' +
+        '<div class="ma-done-emoji" aria-hidden="true">🎉</div>' +
+        '<div class="ma-done-title">完成「' + lv.name + '」！</div>' +
+        '<div class="ma-done-stars" aria-label="得到 ' + st + ' 顆星">' + starStr(st) + '</div>' +
+        '<p class="ma-question" style="font-size:clamp(16px,3.6vw,19px);text-align:center">你答對了 ' + got + ' / ' + total + ' 題，真棒！</p>' +
+      '</div>' +
+      '<div class="ma-actions">' +
+        '<button type="button" class="btn" id="btn-menu">回到選單</button>' +
+        (nextLevelOf(lv) ? '<button type="button" class="btn btn-primary" id="btn-nextlv">下一個等級 ➡️</button>' : '') +
+      '</div>';
+
+    toast('完成「' + lv.name + '」！你答對了 ' + got + ' / ' + total + ' 題，真棒！', 'daily');
+
+    $('btn-menu').addEventListener('click', goMenu);
+    var nl = nextLevelOf(lv);
+    if (nl) $('btn-nextlv').addEventListener('click', function () { startLevel(nl); });
+  }
+
+  function nextLevelOf(lv) {
+    for (var i = 0; i < LEVELS.length; i++) { if (LEVELS[i].id === lv.id) return LEVELS[i + 1] || null; }
+    return null;
+  }
+
+  function goMenu() { cur = null; stepDots.innerHTML = ''; renderMenu(); show(screenMenu); }
+
+  $('btn-back').addEventListener('click', goMenu);
+
+  window.__econAdv = { LEVELS: LEVELS, BADGES: BADGES, getProgress: function () { return progress; } };
+
+  renderMenu();
+})();
+</script>
+
+<!-- ===== 進階經濟徽章冊：樣式 ===== -->
+<style>
+#econAdvBadgeFab {
+  position: fixed; right: 16px; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  z-index: 55; display: inline-flex; align-items: center; gap: 6px;
+  min-height: 48px; min-width: 48px; padding: 10px 16px;
+  background: #0f766e; color: #fff; border: none;  /* 深靛藍底白字，兩主題同值皆過 AA */
+  border-radius: 999px; font-family: var(--font); font-weight: 800;
+  font-size: clamp(14px, 3vw, 16px); cursor: pointer; box-shadow: var(--shadow-lg);
+}
+#econAdvBadgeFab:active { transform: scale(0.96); }
+#econAdvBadgeFabCount { display: inline-flex; align-items: center; gap: 3px; background: #fff; color: #0f766e; border-radius: 999px; padding: 1px 8px; font-size: 13px; font-weight: 800; }
+.ma-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 60; padding: 16px; }
+#econAdvBadgeOverlay[hidden] { display: none !important; }
+.ma-card { position: relative; background: var(--card); border: 2px solid var(--card-border); border-radius: var(--r-lg); box-shadow: var(--shadow-lg); width: 100%; max-width: 560px; max-height: 88vh; overflow-y: auto; padding: 20px 18px 22px; color: var(--ink); }
+.ma-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.ma-card-head h1 { font-size: clamp(1.1rem, 4vw, 1.4rem); font-weight: 800; margin: 0; color: var(--ink); flex: 1; }
+.ma-card-back { background: var(--card); border: 2px solid var(--card-border); color: var(--accent-ink, var(--ink)); font-family: var(--font); font-weight: 800; font-size: 15px; cursor: pointer; min-height: 44px; padding: 8px 14px; border-radius: 14px; }
+.ma-card-back:active { transform: scale(0.96); }
+.ma-card-note { background: var(--accent-tint); color: var(--ink); border-radius: var(--r-md, 12px); font-size: var(--fs-small); font-weight: 600; line-height: 1.7; padding: 10px 12px; margin: 4px 0 12px; }
+.ma-card-summary { text-align: center; font-size: var(--fs-small); font-weight: 700; color: var(--ink-soft); margin: 4px 0 14px; line-height: 1.7; }
+.ma-badge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; }
+.ma-badge { position: relative; min-height: 96px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border-radius: 14px; background: var(--card); border: 2px solid var(--card-border); text-align: center; padding: 10px 6px; }
+.ma-badge .ma-badge-glyph { font-size: clamp(1.6rem, 7vw, 2rem); line-height: 1; }
+.ma-badge .ma-badge-name { font-size: clamp(0.6rem, 2.6vw, 0.74rem); font-weight: 800; color: var(--ink); line-height: 1.2; }
+.ma-badge .ma-badge-state { font-size: clamp(0.52rem, 2.2vw, 0.64rem); font-weight: 700; color: var(--ink-soft); }
+.ma-badge.locked { border-style: dashed; opacity: 0.5; filter: grayscale(1); }
+.ma-badge.unlocked { box-shadow: 0 0 0 2px #f5b301, 0 0 10px rgba(245,179,1,0.5); background: color-mix(in srgb, #f5b301 12%, var(--card)); }
+.ma-badge.unlocked .ma-badge-star { position: absolute; right: 5px; top: 4px; font-size: 14px; }
+</style>
+<script>
+(function () {
+  'use strict';
+  function api() { return window.__econAdv || null; }
+  function unlockedCount() {
+    var a = api(); if (!a) return 0;
+    var prog = a.getProgress(); var n = 0;
+    for (var i = 0; i < a.BADGES.length; i++) if (prog.badges[a.BADGES[i].id]) n++;
+    return n;
+  }
+  function renderGrid() {
+    var a = api(); if (!a) return;
+    var prog = a.getProgress();
+    var host = document.getElementById('econAdvBadgeGrid');
+    if (!host) return;
+    var html = '';
+    for (var i = 0; i < a.BADGES.length; i++) {
+      var def = a.BADGES[i];
+      var got = !!prog.badges[def.id];
+      var cls = 'ma-badge ' + (got ? 'unlocked' : 'locked');
+      var glyph = got ? def.icon : '🔒';
+      var state = got ? '已收集' : '尚未解鎖';
+      var star = got ? '<span class="ma-badge-star" aria-hidden="true">★</span>' : '';
+      var label = def.name + '（' + state + '）';
+      html += '<div class="' + cls + '" title="' + label + '" aria-label="' + label + '">' +
+        '<span class="ma-badge-glyph" aria-hidden="true">' + glyph + '</span>' +
+        '<span class="ma-badge-name">' + def.name + '</span>' +
+        '<span class="ma-badge-state">' + state + '</span>' + star + '</div>';
+    }
+    host.innerHTML = html;
+  }
+  function renderSummary() {
+    var a = api(); if (!a) return;
+    var el = document.getElementById('econAdvBadgeSummary');
+    if (!el) return;
+    el.innerHTML = '已收集 <b>' + unlockedCount() + '</b> / ' + a.BADGES.length + ' 枚徽章（收藏只增不減，慢慢玩就好）';
+  }
+  function updateFabCount() {
+    var a = api(); if (!a) return;
+    var badge = document.getElementById('econAdvBadgeFabCount');
+    if (badge) badge.textContent = unlockedCount() + '/' + a.BADGES.length;
+  }
+  function refresh() { updateFabCount(); if (isOpen()) { renderGrid(); renderSummary(); } }
+  function isOpen() { var el = document.getElementById('econAdvBadgeOverlay'); return el && !el.hidden; }
+  function openBook() { renderGrid(); renderSummary(); var o = document.getElementById('econAdvBadgeOverlay'); if (o) o.hidden = false; }
+  function closeBook() { var o = document.getElementById('econAdvBadgeOverlay'); if (o) o.hidden = true; }
+  function buildDom() {
+    var host = document.createElement('div');
+    host.innerHTML =
+      '<button id="econAdvBadgeFab" type="button" aria-label="打開進階經濟徽章冊" onclick="EconAdvBadges.openBook()">' +
+        '🏅 徽章冊 <span id="econAdvBadgeFabCount">0/7</span></button>' +
+      '<div id="econAdvBadgeOverlay" class="ma-overlay" hidden>' +
+        '<div class="ma-card" role="dialog" aria-modal="true" aria-label="進階經濟徽章冊">' +
+          '<div class="ma-card-head"><h1>🏅 經濟與資本徽章冊</h1>' +
+            '<button class="ma-card-back" onclick="EconAdvBadges.closeBook()">← 返回</button></div>' +
+          '<div class="ma-card-note">這本徽章冊只存在你自己的裝置上，純粹紀念你完成過哪些進階等級。它不會計入學習基地的等級或經驗值——放輕鬆挑戰就好 🌱</div>' +
+          '<div id="econAdvBadgeSummary" class="ma-card-summary"></div>' +
+          '<div id="econAdvBadgeGrid" class="ma-badge-grid"></div>' +
+        '</div></div>';
+    while (host.firstChild) document.body.appendChild(host.firstChild);
+  }
+  window.EconAdvBadges = { openBook: openBook, closeBook: closeBook, refresh: refresh };
+  function boot() { buildDom(); updateFabCount(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>進階國文挑戰 📖</title>
+<!-- 統一遊戲化引擎：先載共用設計 token（assets/app.css），再載 HUD/toast 樣式
+     （game_core.css），最後同步載入引擎（game_core.js）。
+     ─────────────────────────────────────────────────────────────────
+     計分（本頁為「國文進階」，計入 chinese 科目，讓學生升上進階內容時獎勵不中斷）：
+       宣告 body[data-game-wired="chinese"]，每題作答只呼叫一次 Game.recordAnswer('chinese', 對錯)
+       （作答後 answered 旗標鎖定，重試不再記帳）。本頁「不」呼叫 Game.award / recordSession，
+       進階徽章冊為純本地（自有 key、無 XP），故無 double-count。
+       本頁只「唯讀 / 純提示」使用引擎：Game.showToast（純提示，不記帳）與
+       Game.getProfile（唯讀，僅顯示暱稱／可省略）。主題切換完全交給共用
+       app-bar 的 [data-theme-toggle]，由 game_core 自動接線，本頁不寫主題 JS。
+     獨立 localStorage key：chinese_adv_progress_v1（與 player_profile_v1 完全區隔）。
+     ───────────────────────────────────────────────────────────────── -->
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<style>
+/* =====================================================================
+ * chinese_advanced.html — 本頁樣式（全部建立在 assets/app.css 的設計 token 上，
+ * 因此自動亮/暗色主題化、與學習基地視覺一致）。強調色系採國語科琥珀色（chinese）。
+ * =================================================================== */
+
+/* 本頁強調色沿用國語科琥珀色 --c-chinese；供 FAB / 徽章冊等共用 --accent* 別名。 */
+:root {
+  --su: var(--c-chinese);
+  --su-tint: var(--tint-chinese);
+  --su-ink: var(--c-chinese-ink);
+  --accent: var(--c-chinese);
+  --accent-ink: var(--c-chinese-ink);
+  --accent-tint: var(--tint-chinese);
+}
+
+body { overflow-x: hidden; }
+
+/* 頁面頂列（返回、標題） */
+.ma-topbar {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  margin-bottom: var(--s4);
+}
+.ma-topbar .ma-title {
+  flex: 1;
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  color: var(--ink);
+  min-width: 0;
+}
+
+/* 螢幕切換（尊重 prefers-reduced-motion） */
+.ma-screen { display: none; animation: ma-fade 0.3s ease; }
+.ma-screen.active { display: block; }
+@keyframes ma-fade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ma-screen { animation: none; }
+}
+
+/* 歡迎卡 */
+.ma-hello {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s4);
+  background: var(--su-tint);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  margin-bottom: var(--s4);
+}
+.ma-hello .ma-mascot { font-size: 46px; flex: none; line-height: 1; }
+.ma-hello .ma-hello-text { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+.ma-hello .ma-hello-sub { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; }
+
+/* 進度總覽小列 */
+.ma-overview {
+  display: flex; align-items: center; gap: var(--s3);
+  margin-bottom: var(--s4); flex-wrap: wrap;
+}
+.ma-overview .stat-tile { flex: 1; min-width: 96px; }
+
+/* 等級選單 grid */
+.ma-levels {
+  display: grid;
+  gap: var(--s4);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.ma-level {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  padding: var(--s4);
+  text-align: left;
+  cursor: pointer;
+  border: 2px solid var(--card-border);
+  background: var(--card);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  font-family: var(--font);
+  color: var(--ink);
+}
+.ma-level:hover { box-shadow: var(--shadow-lg); border-color: var(--su); }
+.ma-level:active { transform: scale(0.98); }
+.ma-level-top { display: flex; align-items: center; gap: var(--s3); }
+.ma-level-emoji {
+  font-size: 34px;
+  width: 56px; height: 56px;
+  flex: none;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 16px;
+}
+.ma-level-num { font-size: var(--fs-small); font-weight: 700; color: var(--su-ink); }
+.ma-level-name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); line-height: 1.25; }
+.ma-level-concepts { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; line-height: 1.4; }
+.ma-level-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-top: 2px; }
+.ma-level-status {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: var(--fs-small); font-weight: 700;
+}
+.ma-level-status.done { color: var(--c-correct-ink); }
+.ma-level-status.todo { color: var(--ink-soft); }
+.ma-level-stars { font-size: 16px; letter-spacing: 1px; }
+
+/* 進行中：大卡 */
+.ma-stage {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--s5) var(--s4);
+  text-align: center;
+}
+.ma-visual {
+  font-size: clamp(56px, 18vw, 92px);
+  line-height: 1.1;
+  margin: var(--s2) 0 var(--s3);
+  user-select: none;
+}
+.ma-question {
+  font-size: clamp(19px, 4.5vw, 24px);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.6;
+  margin: 0 auto var(--s4);
+  max-width: 42ch;
+  text-align: left;
+}
+
+/* 本級起始重點卡（advance organizer / worked example 先於練習） */
+.ma-brief { text-align: left; }
+.ma-brief h2 {
+  font-size: var(--fs-h2); font-weight: 800; color: var(--ink);
+  margin: 0 0 var(--s3); text-align: center;
+}
+.ma-brief-sub { text-align: center; color: var(--ink-soft); font-weight: 700; font-size: var(--fs-small); margin: 0 0 var(--s3); }
+.ma-keyfacts { list-style: none; padding: 0; margin: 0 auto; max-width: 44ch; display: grid; gap: var(--s2); }
+.ma-keyfacts li {
+  display: flex; align-items: flex-start; gap: var(--s2);
+  padding: 10px 14px;
+  background: var(--su-tint);
+  border-radius: var(--r-md);
+  font-size: var(--fs-body);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.6;
+}
+.ma-keyfacts li .ma-kf-dot { flex: none; color: var(--su-ink); font-weight: 900; }
+
+/* 進度：本級第幾題 */
+.ma-steps {
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  margin-bottom: var(--s3); flex-wrap: wrap;
+}
+.ma-steps i { width: 20px; height: 6px; border-radius: 999px; background: var(--card-border); }
+.ma-steps i.on { background: var(--su); }
+.ma-steps i.cur { background: var(--su); box-shadow: 0 0 0 3px var(--su-tint); }
+
+/* 選項按鈕（tap 作答；命中區 ≥56px） */
+.ma-options { display: grid; gap: var(--s3); margin-top: var(--s2); }
+.ma-opt {
+  display: flex; align-items: center; gap: var(--s2);
+  min-height: 56px;
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid var(--card-border);
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: clamp(16px, 3.4vw, 19px);
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.ma-opt:active { transform: scale(0.98); }
+.ma-opt:disabled { cursor: default; }
+/* 作答後高亮：文字用 var(--ink)（亮暗雙主題皆過 AA），對錯以邊框顏色 + ✅/❌ 雙碼標示（不單靠顏色） */
+.ma-opt.correct { border-color: var(--c-correct); background: var(--tint-english); color: var(--ink); }
+.ma-opt.wrong { border-color: var(--c-wrong); background: rgba(255,118,117,0.12); color: var(--ink); }
+.ma-opt.correct .ma-opt-mark { color: var(--c-correct-ink); }
+.ma-opt.wrong .ma-opt-mark { color: var(--c-streak-ink); }
+.ma-opt .ma-opt-mark { margin-left: auto; font-size: 22px; }
+
+/* 揭示區（答案解說） */
+.ma-reveal {
+  margin-top: var(--s4);
+  padding: var(--s3) var(--s4);
+  background: var(--su-tint);
+  border-radius: var(--r-md);
+  font-size: var(--fs-body);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.6;
+  text-align: left;
+  display: none;
+}
+.ma-reveal.show { display: block; animation: ma-fade 0.3s ease; }
+@media (prefers-reduced-motion: reduce) { .ma-reveal.show { animation: none; } }
+
+/* 完成畫面 */
+.ma-done { text-align: center; padding: var(--s5) var(--s4); }
+.ma-done-emoji { font-size: clamp(64px, 22vw, 100px); }
+.ma-done-stars { font-size: 34px; letter-spacing: 4px; margin: var(--s2) 0; }
+.ma-done-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); }
+
+/* 底部行動列 */
+.ma-actions { display: flex; gap: var(--s3); margin-top: var(--s4); flex-wrap: wrap; }
+.ma-actions .btn { flex: 1; min-width: 140px; }
+
+.ma-footnote { text-align: center; color: var(--ink-soft); font-size: var(--fs-small); margin-top: var(--s5); font-weight: 600; max-width: 34em; margin-inline: auto; }
+
+/* 桌機（≥1280）近滿版：沿用 app.css 的 --content-max（min(95vw,1800)），不再自行封頂；答題欄由 .ma-question/.ma-keyfacts 自身 ch 上限維持窄欄護眼。 */
+</style>
+</head>
+<body data-game-wired="chinese" data-game-maturity="advanced">
+<!-- ===== 共用頂部應用列（全站一致；貼在 <body> 內第一個元素） ===== -->
+<!-- data-game-hud="off"：本頁透過 data-game-wired="chinese" + recordAnswer 直接記帳（會計入主角色 XP/等級），關閉浮動 HUD 僅為減少干擾；「純本地、不計 XP」的是下方進階徽章冊，不是整頁。 -->
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">進階國文挑戰 📖</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle
+          aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+
+  <!-- ============================= 等級選單 ============================= -->
+  <section id="screen-menu" class="ma-screen active">
+    <div class="ma-topbar">
+      <span class="ma-title">進階國文挑戰 📖</span>
+    </div>
+
+    <div class="ma-hello">
+      <span class="ma-mascot" aria-hidden="true">📖</span>
+      <div>
+        <div class="ma-hello-text" id="hello-text">歡迎來到進階國文！這裡是加分小旅程，玩得開心最重要。</div>
+        <div class="ma-hello-sub" id="hello-sub">還沒開始也沒關係，挑一個等級試試看吧！</div>
+      </div>
+    </div>
+
+    <div class="ma-overview">
+      <div class="stat-tile"><span class="stat-value" id="ov-done">0/6</span><span class="stat-label">完成等級</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-badges">0/7</span><span class="stat-label">收集徽章</span></div>
+    </div>
+
+    <div class="ma-levels" id="level-list"><!-- 由 JS 產生 --></div>
+
+    <a class="cn-nextup cn-nextup--back" href="chinese.html" style="display:flex;align-items:center;gap:12px;margin-top:16px;padding:14px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:26px;flex:none" aria-hidden="true">🎮</span><span>← 覺得太快？先回「國語大冒險」練習打底</span></a>
+    <a class="cn-nextup cn-nextup--back" href="chinese_concepts.html" style="display:flex;align-items:center;gap:12px;margin-top:10px;padding:14px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:26px;flex:none" aria-hidden="true">📖</span><span>← 想從頭打底？回「國語觀念養成」複習</span></a>
+    <p class="ma-footnote">這是「進階挑戰」小旅程，慢慢玩、盡量想，答錯也沒關係。🌱</p>
+  </section>
+
+  <!-- ============================= 進行中 ============================= -->
+  <section id="screen-play" class="ma-screen">
+    <div class="ma-topbar">
+      <button type="button" class="btn btn-icon" id="btn-back" aria-label="回到等級選單">←</button>
+      <span class="ma-title" id="play-title">等級</span>
+    </div>
+    <div class="ma-steps" id="step-dots" aria-hidden="true"></div>
+    <div class="play-column">
+      <div id="stage"><!-- 由 JS 產生每一題 --></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* =====================================================================
+ * 主程式（自足 IIFE）
+ *   - 6 個中性等級（等級1..6）、每級 12 題，全部一律解鎖、可自由進入。
+ *   - 選項每題 Fisher–Yates 洗牌；answer 為「未洗牌前的 0-based 索引」，
+ *     以 data-i 保留原始索引判斷 i===answer，判分不受洗牌影響。
+ *   - 每題最多記一次分（answered 旗標守衛）；答錯可再試但只給視覺提示、不加分。
+ *   - 完成一級 → 依 correctCount/總題數給星（3 階：★☆☆／★★☆／★★★）、寫入 best、
+ *     彈 Game.showToast 鼓勵語，並解鎖對應本地徽章。
+ *   - 獨立 localStorage key：chinese_adv_progress_v1。結構：
+ *       { lv1:{done,best}, ..., lv6:{done,best}, badges:{ badgeId:true } }
+ *   - 「只增不減」：best = Math.max(prev.best||0, thisRun)；徽章 awarded guard 永不取消。
+ *   - 零重複計分：本徽章模組不呼叫 Game.recordAnswer / award / recordSession，
+ *     只用 Game.showToast（純提示）與（可省略的）Game.getProfile（唯讀）。
+ *     （每題作答的 recordAnswer('chinese') 在頁面主程式，非本模組；兩者不重疊。）
+ * =================================================================== */
+(function () {
+  'use strict';
+
+  // ---- 純提示（不記帳）：優先用 game_core toast，失敗即靜默 ----
+  function toast(msg, kind) {
+    try { if (window.Game && Game.showToast) Game.showToast(msg, kind || 'info'); } catch (e) { /* 靜默 */ }
+  }
+
+  // ---- 本頁進度（獨立 key，全程 try/catch；配額滿即靜默放棄不崩潰） ----
+  var PROG_KEY = 'chinese_adv_progress_v1';
+  function loadProg() {
+    var p = null;
+    try { p = JSON.parse(localStorage.getItem(PROG_KEY)); } catch (e) { p = null; }
+    if (!p || typeof p !== 'object') p = {};
+    if (typeof p.badges !== 'object' || !p.badges) p.badges = {};
+    return p;
+  }
+  function saveProg(p) {
+    try { localStorage.setItem(PROG_KEY, JSON.stringify(p)); } catch (e) { /* 靜默降級 */ }
+  }
+  var progress = loadProg(); // { lvId:{done,best}, badges:{} }
+
+  // =====================================================================
+  // 課程內容（全繁體中文；每題定義／答案皆經 WebSearch 查核並雙重審查）。
+  //   answer = 未洗牌前 options 陣列的 0-based 索引。
+  // =====================================================================
+  var LEVELS = [
+    {
+      id: 'lv1', level: 1, name: '字詞辨析', emoji: '✍️', color: '#e11d48',
+      concepts: ['形近字', '同音字', '一字多義', '易混淆詞語', '正確用字'],
+      keyFacts: [
+        '形近字要看清楚：辨(辨別)、辯(辯論)、辮(辮子)、瓣(花瓣)，長得像但意思差很多。',
+        '「再」是又一次(再見、再來)；「在」是存在或正在(在家、在讀書)。',
+        '「得」接在動詞後補充程度(跑得快)；「地」放動詞前修飾動作(慢慢地走)；「的」多接名詞(我的書)。',
+        '「必需品」是不可缺少的東西(用需)；「必須」是一定要，當副詞用(用須)。',
+        '一字多義：同一個字在不同句子裡意思可能完全不同，要靠上下文判斷。'
+      ],
+      questions: [
+        { q: '「他能清楚地____別是非善惡。」空格應填入哪個字？', options: ['辯', '辨', '辮', '瓣'], answer: 1, why: '分清是非用「辨別」的「辨」；辯是辯論、辮是辮子、瓣是花瓣。' },
+        { q: '「律師在法庭上為當事人____護。」空格應填入哪個字？', options: ['辯', '辨', '辮', '瓣'], answer: 0, why: '為人講理申訴是「辯護」，用會說話的「辯」。' },
+        { q: '「一朵花有好幾片花____。」空格應填入哪個字？', options: ['瓣', '辦', '辮', '辨'], answer: 0, why: '花的組成部分是「花瓣」的「瓣」；辦是辦事、辮是辮子。' },
+        { q: '「我已經來過一次，明天不想____來了。」空格應填入哪個字？', options: ['在', '再', '載', '栽'], answer: 1, why: '表示「又一次」用「再」；「在」表示存在或正在。' },
+        { q: '下列哪一句用字完全正確？', options: ['他跑的很快。', '他跑得很快。', '他跑地很快。', '他跑很快得。'], answer: 1, why: '動詞後補充程度用「得」，故「跑得很快」正確。' },
+        { q: '「同學們安靜____聽老師講課。」空格應填入哪個字？', options: ['的', '得', '地', '底'], answer: 2, why: '「安靜」修飾動作「聽」，放在動詞前用「地」。' },
+        { q: '「牙膏、肥皂都是生活的必____品。」空格應填入哪個字？', options: ['須', '需', '徐', '虛'], answer: 1, why: '不可缺少的東西是「必需品」，用有需求意思的「需」。' },
+        { q: '「這本書講的道理很深。」句中的「深」意思最接近？', options: ['距離很長', '深奧、不容易理解', '顏色很濃', '天色很晚'], answer: 1, why: '形容道理的「深」指深奧難懂；深水、深色、夜深是「深」的其他意思。' },
+        { q: '「這是老問題了，大家早就知道。」句中的「老」意思最接近？', options: ['年紀大的', '存在很久的', '技術熟練的', '排行最小的'], answer: 1, why: '「老問題」指存在已久的問題；老人、老手、老幺則是「老」的其他意思。' },
+        { q: '下列哪個成語用字完全正確？', options: ['穿流不息', '川流不息', '川留不息', '穿留不息'], answer: 1, why: '「川」指河流，「川流不息」比喻行人車馬像流水般不停。' },
+        { q: '「天氣冷，出門要____上帽子和手套。」空格應填入哪個字？', options: ['載', '戴', '栽', '裁'], answer: 1, why: '把物品加在身上是「戴」；載是載運、栽是栽種、裁是裁剪。' },
+        { q: '「時間過得真快，一天____經結束了。」空格應填入哪個字？', options: ['以', '已', '己', '巳'], answer: 1, why: '表示「已經」用「已」；以是以為、己是自己、巳是地支。' }
+      ]
+    },
+    {
+      id: 'lv2', level: 2, name: '成語進階', emoji: '📜', color: '#b45309',
+      concepts: ['詞義辨析', '情境對應', '近義反義', '正確用法', '典故來源'],
+      keyFacts: [
+        '「差強人意」是「大致還算令人滿意」，不是「不滿意」。',
+        '「首當其衝」指最先遭受攻擊或災難，不是「最重要」或「帶頭」。',
+        '「退避三舍」的一舍是三十里，三舍即九十里，比喻主動退讓。',
+        '「不孚眾望」是令人失望；「不負眾望」才是沒辜負期望，兩者相反。',
+        '「明日黃花」比喻過了時的事物；寫成「昨日黃花」是錯的。'
+      ],
+      questions: [
+        { q: '「首鼠兩端」用來形容一個人怎麼樣？', options: ['遲疑不決，拿不定主意', '東奔西跑，非常忙碌', '學問淵博，見多識廣', '待人熱情，八面玲瓏'], answer: 0, why: '語出《史記》，形容猶豫不定、動搖於兩者之間，遲遲不能決斷。' },
+        { q: '「罄竹難書」最適合用來形容下列何者？', options: ['文章寫得非常精彩', '罪行極多，寫也寫不完', '學問高深，著作等身', '書法技巧十分高超'], answer: 1, why: '「罄」是用盡，指用盡所有竹簡也寫不完，專門用來形容罪惡極多。' },
+        { q: '兩人為了小事互不相讓、爭執不休，結果讓一旁的第三者占了便宜。這最適合用哪個成語？', options: ['同舟共濟', '唇亡齒寒', '鷸蚌相爭', '螳臂當車'], answer: 2, why: '「鷸蚌相爭，漁翁得利」正指雙方相爭不下，反被第三者得利。' },
+        { q: '將領在後方營帳中周密規劃，就能決定千里之外戰場的勝負。這種情形最適合用哪個成語形容？', options: ['運籌帷幄', '臨陣磨槍', '紙上談兵', '亡羊補牢'], answer: 0, why: '「運籌帷幄」出自《史記》，指在後方策劃謀略、掌握全局而致勝。' },
+        { q: '「這次表現差強人意」這句話的意思最接近下列何者？', options: ['表現完全不能令人滿意', '表現大致上還算令人滿意', '表現極為傑出出色', '強迫別人接受自己的看法'], answer: 1, why: '「差」是稍微、「強」是振奮，「差強人意」指大致還能使人滿意，並非不滿意。' },
+        { q: '「不刊之論」是指什麼樣的言論？', options: ['不能公開刊登的文章', '沒有價值的空話', '正確而不可更改的言論', '尚未經過證實的傳言'], answer: 2, why: '古代竹簡用刀削字，「刊」是削改，「不刊」指不可更動，故指精當而不可磨滅的言論。' },
+        { q: '春秋時晉文公答應：若兩國交戰，願先退兵「三舍」（一舍為三十里）。後來「退避三舍」用來比喻什麼？', options: ['逃得無影無蹤', '主動退讓、迴避衝突', '住在很偏遠的地方', '走了很遠的路而疲累'], answer: 1, why: '三舍即九十里，比喻主動讓步、不與人正面相爭。' },
+        { q: '荊軻獻地圖給秦王，地圖展到盡頭，藏在裡面的匕首露了出來。「圖窮匕見」後來比喻什麼？', options: ['事情到了最後，真相或本意終於顯露', '繪製地圖的技術十分高明', '收藏了非常多珍貴的地圖', '走投無路、無計可施'], answer: 0, why: '「見」通「現」，地圖展盡露出匕首，比喻事到最後真相或意圖終於敗露。' },
+        { q: '下列哪一句「首當其衝」用得正確？', options: ['颱風來襲，低窪的沿海村落首當其衝，受災最嚴重', '這是最重要的任務，班長應該首當其衝，第一個報名', '他的成績首當其衝，是全校第一名', '遇到困難，他總是首當其衝地推卸責任'], answer: 0, why: '「首當其衝」指最先受到攻擊或災難，只有沿海村落最先受災的用法正確。' },
+        { q: '下列哪一句「不孚眾望」用得正確？', options: ['他順利奪冠，不孚眾望，為校爭光', '大家都很信任他，他也不孚眾望地達成目標', '新隊長能力不足、連連失利，真是不孚眾望', '他不孚眾望，考上了理想的學校'], answer: 2, why: '「孚」是使人信服，「不孚眾望」指未能令人信服、讓大家失望；其餘句子應改用「不負眾望」。' },
+        { q: '下列哪個成語的意思和「錦上添花」相反？', options: ['精益求精', '雪中送炭', '火上加油', '畫龍點睛'], answer: 1, why: '「錦上添花」是好上加好；「雪中送炭」則是在人急需時給予幫助，兩者相對。' },
+        { q: '「明日黃花」用來比喻什麼？', options: ['未來充滿希望的美好事物', '珍貴稀有的名貴花卉', '過了時、失去價值的事物', '清晨剛綻放的花朵'], answer: 2, why: '典出蘇軾詩，重陽過後菊花將謝，比喻過時的事物；寫成「昨日黃花」是錯誤的。' }
+      ]
+    },
+    {
+      id: 'lv3', level: 3, name: '修辭探險', emoji: '🎨', color: '#8b5cf6',
+      concepts: ['譬喻與擬人', '排比與對偶', '誇飾、設問', '映襯、轉化、頂真'],
+      keyFacts: [
+        '譬喻就是打比方：用「像、如、彷彿」是明喻，用「是、成為」是暗喻。',
+        '擬人是把東西當人寫，讓它會做人的動作或有人的心情，如「花兒微笑」。',
+        '排比是三個以上結構相似的句子並排；只有上下兩句相對、字數相等的叫對偶。',
+        '誇飾是故意誇大，如「餓得能吞下一頭牛」；反問是明知故問，答案藏在反面。',
+        '頂真是把前句末尾的詞當作後句的開頭，像接龍一樣環環相扣。'
+      ],
+      questions: [
+        { q: '「彎彎的月亮像一艘小船。」這句用了哪種修辭？', options: ['譬喻', '擬人', '誇飾', '頂真'], answer: 0, why: '用「像」把月亮比作小船，是明喻，屬於譬喻。' },
+        { q: '「書本是我最好的朋友。」這句用了哪種修辭？', options: ['設問', '譬喻', '映襯', '對偶'], answer: 1, why: '用「是」直接把書本說成朋友，是暗喻，也屬於譬喻。' },
+        { q: '「風兒在窗外輕輕地敲門。」這句用了哪種修辭？', options: ['誇飾', '擬人', '譬喻', '排比'], answer: 1, why: '把風當作人，會像人一樣「敲門」，是擬人。' },
+        { q: '「他餓得可以吞下一頭牛。」這句用了哪種修辭？', options: ['擬人', '頂真', '誇飾', '設問'], answer: 2, why: '故意誇大飢餓的程度，並非事實，是誇飾。' },
+        { q: '「讀書可以增長知識，可以開闊眼界，可以陶冶性情。」這句用了哪種修辭？', options: ['對偶', '譬喻', '排比', '映襯'], answer: 2, why: '三個結構相同的句子並排出現，是排比（對偶只用兩句）。' },
+        { q: '「難道我們可以輕易放棄嗎？」這句用了哪種修辭？', options: ['設問（反問）', '擬人', '誇飾', '頂真'], answer: 0, why: '明知故問，答案就藏在相反的一面，是反問，屬於設問。' },
+        { q: '「他在眾人面前總是笑容滿面，回到家卻沉默不語。」這句用了哪種修辭？', options: ['排比', '擬人', '映襯', '譬喻'], answer: 2, why: '把兩種相反的情況並列對照，是映襯（對比）。' },
+        { q: '「他把心中的委屈，全都倒了出來。」這句用了哪種修辭？', options: ['譬喻', '設問', '轉化', '頂真'], answer: 2, why: '把抽象的「委屈」當作具體東西「倒出來」，是轉化（化虛為實）。' },
+        { q: '「歸來見天子，天子坐明堂。」（〈木蘭詩〉）這句用了哪種修辭？', options: ['排比', '頂真', '譬喻', '誇飾'], answer: 1, why: '前句末尾的「天子」正好是後句的開頭，像接龍一樣環環相扣，是頂真。' },
+        { q: '「海闊憑魚躍，天高任鳥飛。」這句用了哪種修辭？', options: ['排比', '對偶', '擬人', '映襯'], answer: 1, why: '上下兩句字數相等、詞性兩兩相對，是對偶。' },
+        { q: '下列哪一句使用了「擬人」？', options: ['小草從泥土裡探出頭來，好奇地張望著世界。', '他跑得像一陣風。', '教室裡靜得連一根針掉下來都聽得見。', '讀書破萬卷，下筆如有神。'], answer: 0, why: '「小草從泥土裡探出頭來，好奇地張望著世界」讓小草有了人的動作和神情（探頭、好奇張望），是擬人。' },
+        { q: '下列哪一句使用了「誇飾」？', options: ['月光如流水般灑在地上。', '花兒對著我微笑。', '他的力氣大得能把整座山搬走。', '白日依山盡，黃河入海流。'], answer: 2, why: '「能把整座山搬走」是誇大不實的形容，是誇飾。' }
+      ]
+    },
+    {
+      id: 'lv4', level: 4, name: '閱讀理解進階', emoji: '📖', color: '#10b981',
+      concepts: ['主旨中心', '語氣態度', '合理推論', '詞義判斷', '指代對象'],
+      keyFacts: [
+        '找主旨：問「整段話最想說什麼」，答案要涵蓋全段，不能只抓一小部分。',
+        '判斷語氣或態度：從人物的動作、表情和用詞去感受他的情緒。',
+        '合理推論：結論只能靠文中的線索推出來，不能自己憑空想像。',
+        '詞語在文中的意思：要看上下文來判斷，不一定等於字面意思。',
+        '指代對象：「它」「他」「這件事」指的是前文提過的某個人、事或物。'
+      ],
+      questions: [
+        { q: '閱讀短文，選出最能概括全段的主旨：「讀書不在於數量的多少，而在於是否真正讀懂。有人一年讀了上百本書，卻說不出書中的道理；有人只細讀幾本，卻能把書中的智慧化為自己的一部分。」', options: ['讀書貴在理解，不在數量多少', '一個人一年應該讀上百本書', '讀的書愈少愈好', '只有聰明的人才讀得懂書'], answer: 0, why: '全段對比「讀得多卻不懂」與「讀得少卻懂」，重點在理解而非數量。' },
+        { q: '「看著孩子第一次自己綁好鞋帶，母親沒有多說什麼，只是輕輕點了點頭，嘴角揚起一抹微笑。」母親此時的態度最接近：', options: ['欣慰而肯定', '生氣而不滿', '焦急而擔憂', '冷淡而不在乎'], answer: 0, why: '點頭與微笑是滿意、肯定的表現，看出母親替孩子感到欣慰。' },
+        { q: '「早晨出門時，小明看見鄰居阿姨手裡拿著雨傘，還穿上了雨鞋。天空雖然還沒下雨，但烏雲已經聚集。」由此最合理的推論是：', options: ['阿姨預期今天可能會下雨', '阿姨要去很遠的地方旅行', '今天一整天都是大晴天', '阿姨的雨傘壞掉了'], answer: 0, why: '帶傘、穿雨鞋加上烏雲聚集，可推知阿姨料到會下雨而預作準備。' },
+        { q: '「這座老橋歷經百年風雨，依然屹立在河上，見證著小鎮的變遷。」文中「屹立」的意思最接近：', options: ['穩固地聳立、不倒下', '快速地倒塌', '隨水漂流', '慢慢地傾斜'], answer: 0, why: '「屹立」指高聳穩固、不動搖，與「歷經百年依然」相呼應。' },
+        { q: '「農夫種下一棵小樹苗，每天替它澆水。幾年後，它長成了一棵大樹，為農夫遮蔽烈日。」文中的「它」指的是：', options: ['那棵樹苗（後來長成的樹）', '農夫', '烈日', '澆下去的水'], answer: 0, why: '兩個「它」都承接前文的「小樹苗」，後來長成大樹。' },
+        { q: '「與人相處，說話固然重要，但懂得聆聽更為可貴。願意靜靜聽別人把話說完的人，往往更能贏得他人的信任。」這段話的主旨是：', options: ['懂得聆聽比只顧說話更能贏得信任', '說話一點都不重要', '話說得愈多愈好', '沉默的人一定沒有朋友'], answer: 0, why: '段中先肯定說話重要，再強調聆聽「更為可貴」，重點落在聆聽。' },
+        { q: '「又是一次考試失利。他把考卷揉成一團，卻在下一秒攤平，仔細看著每一道錯題，並在筆記本上一筆一筆記下。」從中可看出他面對失敗的態度是：', options: ['不氣餒，願意檢討並改進', '完全放棄，不再努力', '把責任推給別人', '對成績毫不在意'], answer: 0, why: '他攤平考卷、逐題檢討並記錄，顯示願意改進而非放棄。' },
+        { q: '「圖書館的還書箱前排起長長的隊伍，許多同學抱著一疊書，臉上帶著鬆一口氣的表情。牆上公告寫著：本學期借閱將於今日截止。」最合理的推論是：', options: ['同學們趕在截止日前來還書', '圖書館今天才開始營業', '同學們都不喜歡看書', '今天是新書上架的日子'], answer: 0, why: '公告說今日截止，加上排隊還書、鬆一口氣，可推知在趕截止期限。' },
+        { q: '「面對眾人的質疑，她不慌不忙地把證據一一擺出，話語從容，條理分明。」文中「從容」的意思最接近：', options: ['鎮定而不慌張', '匆忙而慌亂', '憤怒而激動', '疲倦而無力'], answer: 0, why: '「從容」指鎮定不急，與前面「不慌不忙」互相呼應。' },
+        { q: '「他做事總是虎頭蛇尾，剛開始興致勃勃，到後來卻草草了事。」文中「虎頭蛇尾」形容的是：', options: ['開頭聲勢大，結尾卻草率、無法貫徹到底', '動作像老虎一樣勇猛', '從頭到尾都很認真', '做事又快又好'], answer: 0, why: '「虎頭蛇尾」比喻起頭盛大、收尾草率，與「剛開始…後來草草了事」相符。' },
+        { q: '「一分耕耘，一分收穫。田裡的稻穗之所以飽滿，是因為農夫每天辛勤地灌溉、除草，從不偷懶。」這段話想告訴我們：', options: ['付出多少努力，就會有多少成果', '種田是一件輕鬆的事', '稻子不需照顧也能長好', '農夫其實很懶惰'], answer: 0, why: '以農夫辛勤換得飽滿稻穗，說明努力與成果成正比。' },
+        { q: '「讀到這則新聞，他放下手中的筷子，久久說不出話，眉頭深鎖，眼神中滿是不忍。」他此時的心情最可能是：', options: ['難過而不忍', '開心而興奮', '輕鬆而愉快', '得意而驕傲'], answer: 0, why: '放下筷子、眉頭深鎖、眼神不忍，都是難過與同情的表現。' }
+      ]
+    },
+    {
+      id: 'lv5', level: 5, name: '文言文入門', emoji: '🏛️', color: '#0ea5e9',
+      concepts: ['虛詞用法', '古今異義', '文言短句今譯'],
+      keyFacts: [
+        '文言文是古人寫文章用的語言，字少意多，和我們平常講的白話不太一樣。',
+        '「之、乎、者、也」這些字常常沒有實在意思，是幫助語氣或連接詞句的「虛詞」。',
+        '常見對應：「之」常當「的」，「乎」常當「嗎」，「則」常當「就」，「而」有時當「卻」。',
+        '有些字古今意思不同：「走」是「跑」，「湯」是「熱水」，「妻子」是「妻子和兒女」。',
+        '讀文言文先認出虛詞和關鍵實詞，再把短句翻成白話，就能抓住大意。'
+      ],
+      questions: [
+        { q: '「水陸草木之花」中的「之」是什麼意思？', options: ['往（去）', '的', '他', '這件事'], answer: 1, why: '「之」在此連接「草木」與「花」，作結構助詞，相當於白話的「的」。' },
+        { q: '「仁者愛人」中的「者」是什麼意思？', options: ['嗎', '……的人', '這', '而且'], answer: 1, why: '「仁者」就是「有仁德的人」，「者」表示「……的人」。' },
+        { q: '「陳勝者，陽城人也」句末的「也」有什麼作用？', options: ['表示疑問', '表示「也是」', '表判斷、肯定的語氣', '當動詞「行走」'], answer: 2, why: '句末「也」不表實義，用來加強判斷、肯定的語氣。' },
+        { q: '「王侯將相寧有種乎」句末的「乎」相當於哪個字？', options: ['在', '……的樣子', '嗎', '的'], answer: 2, why: '這句是反問，「乎」是句末疑問語氣詞，相當於白話的「嗎」。' },
+        { q: '「以刀劈狼首」中的「以」是什麼意思？', options: ['因為', '來', '認為', '用'], answer: 3, why: '「以刀」就是「用刀」，「以」在此表示憑藉的工具，解作「用」。' },
+        { q: '「苛政猛於虎」中的「於」是什麼意思？', options: ['在', '比', '對', '向'], answer: 1, why: '「猛於虎」是比較，意思是「比老虎還兇猛」，「於」相當於「比」。' },
+        { q: '「人不知而不慍」中的「而」表示什麼關係？', options: ['並列（而且）', '轉折（卻）', '你', '來'], answer: 1, why: '別人不了解自己「卻」不生氣，「而」在此表轉折，相當於「卻」。' },
+        { q: '「學而不思則罔」中的「則」是什麼意思？', options: ['規則', '就', '卻', '是'], answer: 1, why: '「則罔」就是「就會迷惘」，「則」表承接，相當於白話的「就」。' },
+        { q: '「工欲善其事，必先利其器」中的「其」是什麼意思？', options: ['難道', '大概', '他的、自己的', '而且'], answer: 2, why: '「其事」「其器」指「自己的事、自己的工具」，「其」是代詞「他的、自己的」。' },
+        { q: '「雙兔傍地走」（〈木蘭詩〉）中的「走」是什麼意思？', options: ['散步', '跑', '站立', '慢慢走路'], answer: 1, why: '文言的「走」指「跑」，「傍地走」是貼著地面奔跑。' },
+        { q: '「率妻子邑人來此絕境」（〈桃花源記〉）中的「妻子」指的是？', options: ['只有太太', '妻子和兒女', '女兒', '鄰居'], answer: 1, why: '文言「妻子」是「妻」與「子（兒女）」的合稱，指妻子和兒女。' },
+        { q: '「三人行，必有我師焉」最接近的白話意思是？', options: ['三個人走路，一定會迷路', '幾個人同行，其中一定有能做我老師的人', '三人同行，必須聽老師的話', '三個人裡一定有一個老師的兒子'], answer: 1, why: '這句意思是同行的人當中，一定有值得我學習、可以當老師的人。' }
+      ]
+    },
+    {
+      id: 'lv6', level: 6, name: '對聯與格律入門', emoji: '🧧', color: '#dc2626',
+      concepts: ['對仗與對偶', '平仄', '押韻', '絕句與律詩句數'],
+      keyFacts: [
+        '「絕句」一共四句，「律詩」一共八句。',
+        '對仗與對偶：上下兩句字數要相等，而且「名詞對名詞、動詞對動詞」，叫做「詞性相對」。',
+        '平仄：國語的一聲、二聲算「平」；三聲、四聲算「仄」。（注意：有些古代的「入聲字」在國語變成一、二聲，分析古詩詞時要另外查字典，不能只看國語聲調。）',
+        '押韻：絕句和律詩多半在「偶數句」（第二、第四句…）押韻，句末的字韻母要相近。',
+        '對聯口訣「仄起平收」：上聯最後一字用仄聲，下聯最後一字用平聲。'
+      ],
+      questions: [
+        { q: '一首「絕句」一共有幾句？', options: ['兩句', '四句', '六句', '八句'], answer: 1, why: '絕句固定為四句，常見的有五言絕句和七言絕句。' },
+        { q: '一首「律詩」一共有幾句？', options: ['四句', '六句', '八句', '十二句'], answer: 2, why: '律詩固定為八句；超過八句的則稱為「排律」。' },
+        { q: '「床前明月光」句末是「光」。下一句若要押韻，句末最適合用哪個字？', options: ['霜', '月', '夜', '思'], answer: 0, why: '「光（ㄍㄨㄤ）」與「霜（ㄕㄨㄤ）」韻母相近能押韻，原詩正是「疑是地上霜」。' },
+        { q: '對仗要「詞性相對」。上聯用名詞「山」，下聯相對位置最適合用哪個字？', options: ['跑', '水', '綠', '慢'], answer: 1, why: '「水」和「山」都是名詞，符合名詞對名詞；跑是動詞、綠與慢是形容詞。' },
+        { q: '對仗示範：與「明月」相對，下列哪一個詞最恰當？', options: ['清風', '月亮', '看月', '風很大'], answer: 0, why: '「清風」與「明月」都是「形容詞＋名詞」且字數相同；其餘結構或字數不合。' },
+        { q: '國語一聲、二聲屬於「平聲」。下列哪個字是平聲？', options: ['花', '馬', '樹', '雪'], answer: 0, why: '「花」是一聲（平）；馬（三聲）、樹（四聲）、雪（三聲）都是仄聲。' },
+        { q: '傳統聲調中，「仄聲」包含哪些聲調？', options: ['上聲、去聲、入聲', '只有平聲', '陰平、陽平', '只有輕聲'], answer: 0, why: '四聲分平仄，上、去、入三種合稱仄聲，與平聲相對。' },
+        { q: '一首絕句中，通常需要「押韻」的是哪些句子？', options: ['第一、三句', '第二、四句', '全部四句', '第三、四句'], answer: 1, why: '近體詩多在偶數句押韻，絕句即第二、四句；首句可押可不押。' },
+        { q: '傳統對聯講究「仄起平收」。下聯的最後一個字通常用什麼聲調？', options: ['平聲', '仄聲', '上聲', '入聲'], answer: 0, why: '仄起平收：上聯末字用仄聲，下聯末字用平聲；上、入都屬仄聲。' },
+        { q: '對仗要「動詞對動詞」。上聯「鳥飛」的「飛」是動詞，下聯「魚__」空格最適合填？', options: ['游', '水', '紅', '大'], answer: 0, why: '「游」是動詞，和「飛」相對；水是名詞，紅、大是形容詞。' },
+        { q: '律詩共八句、分成四聯。規定「必須對仗」的是哪兩聯？', options: ['首聯與尾聯', '頷聯與頸聯', '首聯與頷聯', '頸聯與尾聯'], answer: 1, why: '頷聯（第三、四句）與頸聯（第五、六句）這中間兩聯必須對仗。' },
+        { q: '下列哪一組句子字數相等、詞性相對，屬於「對偶」？', options: ['兩個黃鸝鳴翠柳，一行白鷺上青天', '我今天很開心，因為放假了', '他跑得快，弟弟走得慢一點點', '天氣好，適合出去玩'], answer: 0, why: '這一組上下句都是七字且詞性一一相對，是標準的對偶；其餘字數或詞性都不對稱。' }
+      ]
+    }
+  ];
+
+  // 本地徽章定義（每級一枚 + 全等級達人）。存於同一 key 的 badges 子物件、awarded guard 防重複。
+  var BADGES = [
+    { id: 'lv1', icon: '✍️', name: '辨字高手' },
+    { id: 'lv2', icon: '📜', name: '成語行家' },
+    { id: 'lv3', icon: '🎨', name: '修辭魔法師' },
+    { id: 'lv4', icon: '📖', name: '閱讀偵探' },
+    { id: 'lv5', icon: '🏛️', name: '文言拓荒者' },
+    { id: 'lv6', icon: '🧧', name: '對句詩人' },
+    { id: 'all', icon: '🏆', name: '國文達人' }
+  ];
+  var BADGE_BY_ID = {};
+  for (var bi = 0; bi < BADGES.length; bi++) BADGE_BY_ID[BADGES[bi].id] = BADGES[bi];
+
+  // =====================================================================
+  // DOM 參照
+  // =====================================================================
+  var $ = function (id) { return document.getElementById(id); };
+  var screenMenu = $('screen-menu');
+  var screenPlay = $('screen-play');
+  var levelList = $('level-list');
+  var stage = $('stage');
+  var stepDots = $('step-dots');
+  var playTitle = $('play-title');
+
+  var cur = null; // { level, idx, correctCount, phase:'brief'|'quiz' }
+
+  // =====================================================================
+  // 星等（3 階，依 correctCount/總題數）
+  // =====================================================================
+  function starsFor(correct, total) {
+    if (total <= 0) return 0;
+    var r = correct / total;
+    if (r >= 0.9) return 3;
+    if (r >= 0.6) return 2;
+    if (r > 0) return 1;
+    return 0;
+  }
+  function starStr(n) {
+    var s = '';
+    for (var i = 0; i < 3; i++) s += (i < n ? '⭐' : '☆');
+    return s;
+  }
+
+  // =====================================================================
+  // 徽章解鎖（awarded guard；只增不減）
+  // =====================================================================
+  function awardBadge(id) {
+    var def = BADGE_BY_ID[id];
+    if (!def) return;
+    if (progress.badges[id]) return;      // guard：已解鎖則不重複
+    progress.badges[id] = true;
+    saveProg(progress);
+    toast('獲得徽章：' + def.icon + ' ' + def.name, 'badge');
+    try { if (window.ChineseAdvBadges) ChineseAdvBadges.refresh(); } catch (e) {}
+  }
+  function badgeCount() {
+    var n = 0;
+    for (var i = 0; i < BADGES.length; i++) if (progress.badges[BADGES[i].id]) n++;
+    return n;
+  }
+
+  // =====================================================================
+  // 選單渲染（全部一律解鎖、可自由進入）
+  // =====================================================================
+  function renderMenu() {
+    var doneCount = 0;
+    for (var i = 0; i < LEVELS.length; i++) if (progress[LEVELS[i].id] && progress[LEVELS[i].id].done) doneCount++;
+    $('ov-done').textContent = doneCount + '/' + LEVELS.length;
+    $('ov-badges').textContent = badgeCount() + '/' + BADGES.length;
+
+    if (doneCount > 0) {
+      $('hello-text').textContent = '歡迎回來！你已完成 ' + doneCount + ' 個等級，很棒！';
+      $('hello-sub').textContent = (doneCount >= LEVELS.length)
+        ? '六個等級都完成了，你是進階國文達人！🏆'
+        : '想挑戰哪一個等級都可以，答錯也沒關係。';
+    }
+
+    levelList.innerHTML = '';
+    for (var u = 0; u < LEVELS.length; u++) {
+      (function (lv) {
+        var rec = progress[lv.id] || {};
+        var done = !!rec.done;
+        var total = lv.questions.length;
+        var st = done ? starsFor(rec.best || 0, total) : 0;
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'ma-level';
+        card.setAttribute('aria-label', '等級 ' + lv.level + '：' + lv.name);
+        card.innerHTML =
+          '<div class="ma-level-top">' +
+            '<span class="ma-level-emoji" aria-hidden="true" style="background:' + lv.color + '22;color:' + lv.color + '">' + lv.emoji + '</span>' +
+            '<div>' +
+              '<div class="ma-level-num">等級 ' + lv.level + '</div>' +
+              '<div class="ma-level-name">' + lv.name + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="ma-level-concepts">' + lv.concepts.join('・') + '</div>' +
+          '<div class="ma-level-foot">' +
+            '<span class="ma-level-status ' + (done ? 'done' : 'todo') + '">' +
+              (done ? '✅ 已完成（最佳 ' + (rec.best || 0) + '/' + total + '）' : '▶️ 開始挑戰（共 ' + total + ' 題）') + '</span>' +
+            '<span class="ma-level-stars" aria-hidden="true">' + (done ? starStr(st) : '') + '</span>' +
+          '</div>';
+        card.addEventListener('click', function () { startLevel(lv); });
+        levelList.appendChild(card);
+      })(LEVELS[u]);
+    }
+  }
+
+  // =====================================================================
+  // 遊玩流程
+  // =====================================================================
+  function show(screen) {
+    screenMenu.classList.remove('active');
+    screenPlay.classList.remove('active');
+    screen.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function startLevel(lv) {
+    cur = { level: lv, idx: 0, correctCount: 0, phase: 'brief' };
+    playTitle.textContent = lv.emoji + ' 等級 ' + lv.level + '・' + lv.name;
+    show(screenPlay);
+    renderBrief();
+  }
+
+  function renderStepDots() {
+    stepDots.innerHTML = '';
+    if (cur.phase !== 'quiz') return; // 重點卡不畫題目進度點
+    for (var i = 0; i < cur.level.questions.length; i++) {
+      var b = document.createElement('i');
+      if (i < cur.idx) b.className = 'on';
+      else if (i === cur.idx) b.className = 'cur';
+      stepDots.appendChild(b);
+    }
+  }
+
+  // ---- 重點卡（worked example / advance organizer；不計分） ----
+  function renderBrief() {
+    renderStepDots();
+    var lv = cur.level;
+    var facts = '';
+    for (var i = 0; i < lv.keyFacts.length; i++) {
+      facts += '<li><span class="ma-kf-dot" aria-hidden="true">◆</span><span>' + lv.keyFacts[i] + '</span></li>';
+    }
+    stage.innerHTML =
+      '<div class="ma-stage ma-brief">' +
+        '<div class="ma-visual" aria-hidden="true">' + lv.emoji + '</div>' +
+        '<h2>等級 ' + lv.level + '・' + lv.name + '</h2>' +
+        '<p class="ma-brief-sub">先看看這一級的重點，再開始 ' + lv.questions.length + ' 題挑戰。</p>' +
+        '<ul class="ma-keyfacts">' + facts + '</ul>' +
+      '</div>' +
+      '<div class="ma-actions">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-start">開始挑戰 ➡️</button>' +
+      '</div>';
+    $('btn-start').addEventListener('click', function () {
+      cur.phase = 'quiz';
+      cur.idx = 0;
+      renderQuestion();
+    });
+  }
+
+  function next() {
+    cur.idx++;
+    if (cur.idx >= cur.level.questions.length) finishLevel();
+    else renderQuestion();
+  }
+
+  // ---- 單選題（選項 Fisher–Yates 洗牌；每題最多記一次分） ----
+  function renderQuestion() {
+    renderStepDots();
+    var lv = cur.level;
+    var step = lv.questions[cur.idx];
+
+    // 打亂選項顯示順序（正解絕不固定在第一個）。data-i 記「原始索引」，
+    // 因此對答判斷 i === step.answer 仍然正確、判分不受洗牌影響。
+    var order = [];
+    for (var oi = 0; oi < step.options.length; oi++) order.push(oi);
+    for (var m = order.length - 1; m > 0; m--) {
+      var r = Math.floor(Math.random() * (m + 1));
+      var tt = order[m]; order[m] = order[r]; order[r] = tt;
+    }
+    var optsHtml = '';
+    for (var k = 0; k < order.length; k++) {
+      var origIdx = order[k];
+      optsHtml += '<button type="button" class="ma-opt" data-i="' + origIdx + '">' +
+        '<span>' + step.options[origIdx] + '</span><span class="ma-opt-mark" aria-hidden="true"></span></button>';
+    }
+
+    stage.innerHTML =
+      '<div class="ma-stage">' +
+        '<div class="ma-visual" aria-hidden="true">' + lv.emoji + '</div>' +
+        '<p class="ma-question">第 ' + (cur.idx + 1) + ' / ' + lv.questions.length + ' 題　' + step.q + '</p>' +
+        '<div class="ma-options">' + optsHtml + '</div>' +
+        '<div class="ma-reveal" id="reveal"></div>' +
+      '</div>' +
+      '<div class="ma-actions" id="afteract" style="display:none">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">繼續 ➡️</button>' +
+      '</div>';
+
+    var answered = false;
+    var btns = stage.querySelectorAll('.ma-opt');
+
+    function revealAndLock(correct) {
+      var rev = $('reveal');
+      rev.textContent = (correct ? '答對了！' : '再想想～正確答案是這個！') + (step.why || '');
+      rev.classList.add('show');
+      $('afteract').style.display = 'flex';
+      var all = stage.querySelectorAll('.ma-opt');
+      for (var a = 0; a < all.length; a++) all[a].disabled = true;
+    }
+
+    for (var b = 0; b < btns.length; b++) {
+      btns[b].addEventListener('click', function () {
+        var i = parseInt(this.getAttribute('data-i'), 10);
+        var isCorrect = (i === step.answer);
+        if (answered) return; // 已作答：不再改動計分（守衛）
+        answered = true;      // 第一次作答才計分
+        if (window.Game && window.Game.recordAnswer) Game.recordAnswer('chinese', isCorrect);
+        if (isCorrect) {
+          this.classList.add('correct');
+          this.querySelector('.ma-opt-mark').textContent = '✅';
+          cur.correctCount++;              // 唯一計分點（純本地）
+          revealAndLock(true);
+        } else {
+          this.classList.add('wrong');
+          this.querySelector('.ma-opt-mark').textContent = '❌';
+          // 答錯零懲罰：標出正解、允許看解說（不加分、不扣分）。
+          var correctBtn = stage.querySelector('.ma-opt[data-i="' + step.answer + '"]');
+          if (correctBtn) {
+            correctBtn.classList.add('correct');
+            correctBtn.querySelector('.ma-opt-mark').textContent = '✅';
+          }
+          revealAndLock(false);
+        }
+      });
+    }
+
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // =====================================================================
+  // 完成一級
+  // =====================================================================
+  function finishLevel() {
+    var lv = cur.level;
+    var total = lv.questions.length;
+    var got = cur.correctCount;
+
+    // 收藏只增不減：best = max(prev, thisRun)。
+    var prev = progress[lv.id] || {};
+    progress[lv.id] = { done: true, best: Math.max(prev.best || 0, got) };
+    saveProg(progress);
+
+    // 解鎖對應等級徽章；若六級全完成 → 全等級達人。
+    awardBadge(lv.id);
+    var allDone = true;
+    for (var i = 0; i < LEVELS.length; i++) if (!(progress[LEVELS[i].id] && progress[LEVELS[i].id].done)) { allDone = false; break; }
+    if (allDone) awardBadge('all');
+
+    var st = starsFor(got, total);
+    stage.innerHTML =
+      '<div class="ma-stage ma-done">' +
+        '<div class="ma-done-emoji" aria-hidden="true">🎉</div>' +
+        '<div class="ma-done-title">完成「' + lv.name + '」！</div>' +
+        '<div class="ma-done-stars" aria-label="得到 ' + st + ' 顆星">' + starStr(st) + '</div>' +
+        '<p class="ma-question" style="font-size:clamp(16px,3.6vw,19px);text-align:center">你答對了 ' + got + ' / ' + total + ' 題，真棒！</p>' +
+      '</div>' +
+      '<div class="ma-actions">' +
+        '<button type="button" class="btn" id="btn-menu">回到選單</button>' +
+        (nextLevelOf(lv) ? '<button type="button" class="btn btn-primary" id="btn-nextlv">下一個等級 ➡️</button>' : '') +
+      '</div>';
+
+    toast('完成「' + lv.name + '」！你答對了 ' + got + ' / ' + total + ' 題，真棒！', 'daily');
+
+    $('btn-menu').addEventListener('click', goMenu);
+    var nl = nextLevelOf(lv);
+    if (nl) $('btn-nextlv').addEventListener('click', function () { startLevel(nl); });
+  }
+
+  function nextLevelOf(lv) {
+    for (var i = 0; i < LEVELS.length; i++) {
+      if (LEVELS[i].id === lv.id) return LEVELS[i + 1] || null;
+    }
+    return null;
+  }
+
+  function goMenu() {
+    cur = null;
+    stepDots.innerHTML = '';
+    renderMenu();
+    show(screenMenu);
+  }
+
+  // ---- 頁內返回（一律「←」，回選單，非回首頁）----
+  $('btn-back').addEventListener('click', goMenu);
+
+  // 暴露給徽章冊模組讀取（唯讀共享同一份進度與定義）。
+  window.__chineseAdv = {
+    LEVELS: LEVELS,
+    BADGES: BADGES,
+    getProgress: function () { return progress; }
+  };
+
+  renderMenu();
+})();
+</script>
+
+<!-- ===== 進階國文徽章冊：樣式（自足、canon 變數、亮暗雙主題、色盲雙碼、[hidden] 防護；純本地、無 XP、無 Game.award） ===== -->
+<style>
+/* 入口 FAB（右下固定，避開底部安全區；低於 app-bar 的層級，不遮頂列；≥48px 觸控）。
+   國語科琥珀色底較亮，故文字採深棕色（#4a3500）以確保亮暗兩主題皆過 AA 對比。 */
+#chineseAdvBadgeFab {
+  position: fixed; right: 16px; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  z-index: 55; display: inline-flex; align-items: center; gap: 6px;
+  min-height: 48px; min-width: 48px; padding: 10px 16px;
+  background: var(--accent, var(--c-chinese)); color: #4a3500; border: none;
+  border-radius: 999px; font-family: var(--font); font-weight: 800;
+  font-size: clamp(14px, 3vw, 16px); cursor: pointer; box-shadow: var(--shadow-lg);
+}
+#chineseAdvBadgeFab:active { transform: scale(0.96); }
+#chineseAdvBadgeFabCount {
+  display: inline-flex; align-items: center; gap: 3px;
+  background: rgba(0,0,0,0.14); color: #4a3500;
+  border-radius: 999px; padding: 1px 8px; font-size: 13px; font-weight: 800;
+}
+/* 浮層外殼 */
+.ma-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 60; padding: 16px;
+}
+/* [hidden] 防護：class 的 display:flex(author) 特異度會蓋過 UA 的 [hidden]{display:none}，
+   故需更高特異度規則，否則浮層會恆顯、蓋住整頁。 */
+#chineseAdvBadgeOverlay[hidden] { display: none !important; }
+.ma-card {
+  position: relative; background: var(--card); border: 2px solid var(--card-border);
+  border-radius: var(--r-lg); box-shadow: var(--shadow-lg);
+  width: 100%; max-width: 560px; max-height: 88vh; overflow-y: auto;
+  padding: 20px 18px 22px; color: var(--ink);
+}
+.ma-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.ma-card-head h1 { font-size: clamp(1.1rem, 4vw, 1.4rem); font-weight: 800; margin: 0; color: var(--ink); flex: 1; }
+.ma-card-back {
+  background: var(--card); border: 2px solid var(--card-border); color: var(--accent-ink, var(--c-chinese-ink));
+  font-family: var(--font); font-weight: 800; font-size: 15px; cursor: pointer;
+  min-height: 44px; padding: 8px 14px; border-radius: 14px;
+}
+.ma-card-back:active { transform: scale(0.96); }
+.ma-card-note {
+  background: var(--accent-tint); color: var(--ink); border-radius: var(--r-md, 12px);
+  font-size: var(--fs-small); font-weight: 600; line-height: 1.7; padding: 10px 12px; margin: 4px 0 12px;
+}
+.ma-card-summary { text-align: center; font-size: var(--fs-small); font-weight: 700; color: var(--ink-soft); margin: 4px 0 14px; line-height: 1.7; }
+.ma-badge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; }
+.ma-badge {
+  position: relative; min-height: 96px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  border-radius: 14px; background: var(--card); border: 2px solid var(--card-border);
+  text-align: center; padding: 10px 6px;
+}
+.ma-badge .ma-badge-glyph { font-size: clamp(1.6rem, 7vw, 2rem); line-height: 1; }
+.ma-badge .ma-badge-name { font-size: clamp(0.6rem, 2.6vw, 0.74rem); font-weight: 800; color: var(--ink); line-height: 1.2; }
+.ma-badge .ma-badge-state { font-size: clamp(0.52rem, 2.2vw, 0.64rem); font-weight: 700; color: var(--ink-soft); }
+/* 未解鎖：虛線邊 + 去彩 + 半透明（碼一＝形狀 🔒／碼二＝虛線+去彩） */
+.ma-badge.locked { border-style: dashed; opacity: 0.5; filter: grayscale(1); }
+/* 已解鎖：實線金框 + 右上 ★（碼一＝emoji 形狀／碼二＝金框+★） */
+.ma-badge.unlocked { box-shadow: 0 0 0 2px #f5b301, 0 0 10px rgba(245,179,1,0.5); background: color-mix(in srgb, #f5b301 12%, var(--card)); }
+.ma-badge.unlocked .ma-badge-star { position: absolute; right: 5px; top: 4px; font-size: 14px; }
+</style>
+<!-- ===== 進階國文徽章冊：模組（自足 IIFE；讀寫共享獨立 key chinese_adv_progress_v1；純本地、只增不減、無 XP、無 Game.award、無 streak） ===== -->
+<script>
+(function () {
+  'use strict';
+
+  function api() { return window.__chineseAdv || null; }
+
+  function unlockedCount() {
+    var a = api(); if (!a) return 0;
+    var prog = a.getProgress();
+    var n = 0;
+    for (var i = 0; i < a.BADGES.length; i++) if (prog.badges[a.BADGES[i].id]) n++;
+    return n;
+  }
+
+  function renderGrid() {
+    var a = api(); if (!a) return;
+    var prog = a.getProgress();
+    var host = document.getElementById('chineseAdvBadgeGrid');
+    if (!host) return;
+    var html = '';
+    for (var i = 0; i < a.BADGES.length; i++) {
+      var def = a.BADGES[i];
+      var got = !!prog.badges[def.id];
+      var cls = 'ma-badge ' + (got ? 'unlocked' : 'locked');
+      var glyph = got ? def.icon : '🔒';
+      var state = got ? '已收集' : '尚未解鎖';
+      var star = got ? '<span class="ma-badge-star" aria-hidden="true">★</span>' : '';
+      var label = def.name + '（' + state + '）';
+      html += '<div class="' + cls + '" title="' + label + '" aria-label="' + label + '">' +
+        '<span class="ma-badge-glyph" aria-hidden="true">' + glyph + '</span>' +
+        '<span class="ma-badge-name">' + def.name + '</span>' +
+        '<span class="ma-badge-state">' + state + '</span>' + star + '</div>';
+    }
+    host.innerHTML = html;
+  }
+
+  function renderSummary() {
+    var a = api(); if (!a) return;
+    var el = document.getElementById('chineseAdvBadgeSummary');
+    if (!el) return;
+    el.innerHTML = '已收集 <b>' + unlockedCount() + '</b> / ' + a.BADGES.length +
+      ' 枚徽章（收藏只增不減，慢慢玩就好）';
+  }
+
+  function updateFabCount() {
+    var a = api(); if (!a) return;
+    var badge = document.getElementById('chineseAdvBadgeFabCount');
+    if (badge) badge.textContent = unlockedCount() + '/' + a.BADGES.length;
+  }
+
+  function refresh() { updateFabCount(); if (isOpen()) { renderGrid(); renderSummary(); } }
+  function isOpen() { var el = document.getElementById('chineseAdvBadgeOverlay'); return el && !el.hidden; }
+  function openBook() { renderGrid(); renderSummary(); var o = document.getElementById('chineseAdvBadgeOverlay'); if (o) o.hidden = false; }
+  function closeBook() { var o = document.getElementById('chineseAdvBadgeOverlay'); if (o) o.hidden = true; }
+
+  // 附加 DOM（皆 append 於 <body> 尾端，不動既有 section；浮層帶 [hidden]）。
+  function buildDom() {
+    var host = document.createElement('div');
+    host.innerHTML =
+      '<button id="chineseAdvBadgeFab" type="button" aria-label="打開進階國文徽章冊" onclick="ChineseAdvBadges.openBook()">' +
+        '🏅 徽章冊 <span id="chineseAdvBadgeFabCount">0/7</span></button>' +
+      '<div id="chineseAdvBadgeOverlay" class="ma-overlay" hidden>' +
+        '<div class="ma-card" role="dialog" aria-modal="true" aria-label="進階國文徽章冊">' +
+          '<div class="ma-card-head"><h1>🏅 進階國文徽章冊</h1>' +
+            '<button class="ma-card-back" onclick="ChineseAdvBadges.closeBook()">← 返回</button></div>' +
+          '<div class="ma-card-note">這本徽章冊只存在你自己的裝置上，純粹紀念你完成過哪些進階等級。它不會計入學習基地的等級或經驗值——放輕鬆挑戰就好 🌱</div>' +
+          '<div id="chineseAdvBadgeSummary" class="ma-card-summary"></div>' +
+          '<div id="chineseAdvBadgeGrid" class="ma-badge-grid"></div>' +
+        '</div></div>';
+    while (host.firstChild) document.body.appendChild(host.firstChild);
+  }
+
+  window.ChineseAdvBadges = {
+    openBook: openBook,
+    closeBook: closeBook,
+    refresh: refresh
+  };
+
+  function boot() { buildDom(); updateFabCount(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+</body>
+</html>

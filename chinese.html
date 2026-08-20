@@ -1,0 +1,2871 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-game-wired="chinese">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>國語大冒險</title>
+<!-- 統一遊戲化引擎：主題 token、HUD/toast 樣式、共用引擎（同步載入於 <head>）。
+     app.css 先於本頁 <style> 載入，本頁樣式在後、逐屬性覆蓋，維持原本外觀（並取得夜間模式）。
+     data-game-wired 亦置於 <html>：引擎於 <head> 同步執行時 document.body 尚為 null，
+     須靠 <html> 讓 deltaSync 當下即抑制 chinese 來源（chinese_game_state.exp）的重複計分。 -->
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+/* 本頁強調色三件組（國語科；沿用共用設計語言）：強調色只用於卡片邊/圖示底/
+   進度/揭示區等「稀用且一致」處，主要行動鈕仍為全站品牌藍。 */
+:root {
+  --accent: var(--c-chinese);
+  --accent-tint: var(--tint-chinese);
+  --accent-ink: var(--c-chinese-ink);
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  /* 直向堆疊：共用 .app-bar 置頂滿版，#app 於其下水平置中（與 math 等頁一致，
+     避免舊的 row 版把 app-bar 與 #app 並排、令頂列不滿版且內容溢出）。 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: var(--bg);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* canon shell：外層改吃 --content-max（手機 720 / iPad 1200），置中；
+   保留 SPA 全高與 overflow-x:hidden。iPad 上 #app 變寬 → 選單攤成多欄儀表板，
+   答題區另用 .play-column 收窄（見下）。 */
+#app {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  min-height: 100dvh;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.screen {
+  display: none;
+  width: 100%;
+  min-height: 100dvh;
+  padding: 16px;
+  padding-bottom: 80px;
+  animation: fadeIn 0.3s ease;
+}
+
+.screen.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  margin-bottom: 16px;
+}
+
+.header-title {
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.header-btn {
+  background: var(--accent-tint);
+  border: none;
+  color: var(--ink);
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.12s ease;
+}
+
+.header-btn:active {
+  transform: scale(0.9);
+}
+
+.save-notice {
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  margin-bottom: var(--s3);
+}
+
+.stats-bar {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  padding: var(--s3) var(--s4);
+  margin-bottom: var(--s4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s3);
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-item {
+  flex: 1;
+  text-align: center;
+  color: var(--ink);
+}
+
+.stat-value {
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.stat-label {
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.exp-bar-container {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  padding: var(--s3) var(--s4);
+  margin-bottom: var(--s4);
+  box-shadow: var(--shadow-sm);
+}
+
+.exp-info {
+  display: flex;
+  justify-content: space-between;
+  color: var(--ink-soft);
+  font-size: var(--fs-small);
+  font-weight: 700;
+  margin-bottom: var(--s2);
+}
+
+.exp-bar {
+  height: 8px;
+  background: var(--card-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.exp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent));
+  border-radius: 999px;
+  transition: width 0.5s ease;
+}
+
+/* canon 選單 grid：repeat(auto-fit,minmax(260px,1fr)) —
+   手機單/雙欄好讀，iPad 自動攤成寬版多欄 dashboard。 */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--s4);
+  padding-bottom: var(--s5);
+}
+
+.category-card {
+  background: var(--card);
+  border-radius: var(--r-lg);
+  padding: var(--s4);
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  border: 2px solid var(--card-border);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.category-card:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent);
+}
+
+.category-card:active {
+  transform: scale(0.98);
+}
+
+.category-emoji {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto var(--s2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  background: var(--accent-tint);
+  border-radius: var(--r-sm);
+}
+
+.category-name {
+  color: var(--ink);
+  font-size: var(--fs-body);
+  font-weight: 800;
+  line-height: 1.25;
+  margin-bottom: var(--s1);
+}
+
+.category-progress {
+  color: var(--ink-soft);
+  font-size: var(--fs-small);
+  font-weight: 600;
+}
+
+/* 關卡選單同樣走 canon grid：手機單欄直列，iPad 多欄 dashboard。 */
+.level-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--s4);
+}
+
+.level-card {
+  background: var(--card);
+  border-radius: var(--r-lg);
+  padding: var(--s4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  border: 2px solid var(--card-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.level-card:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent);
+}
+
+.level-card:active {
+  transform: scale(0.98);
+}
+
+.level-card.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.level-card-left {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+}
+
+.level-badge {
+  width: 48px;
+  height: 48px;
+  flex: none;
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: var(--accent-ink);
+  background: var(--accent-tint);
+  font-size: var(--fs-body);
+}
+
+.level-card-info {
+  color: var(--ink);
+}
+
+.level-card-title {
+  font-size: var(--fs-body);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.level-card-sub {
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.level-stars {
+  font-size: 20px;
+}
+.level-card-right {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  flex: none;
+}
+.level-arrow {
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  color: var(--ink-soft);
+  line-height: 1;
+}
+
+/* Question screen */
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.progress-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.progress-dot {
+  width: 22px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--card-border);
+}
+
+.progress-dot.correct { background: var(--c-correct); }
+.progress-dot.wrong { background: var(--c-wrong); }
+.progress-dot.current { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint); }
+
+.combo-display {
+  color: var(--c-coin-ink);
+  font-size: var(--fs-small);
+  font-weight: 800;
+}
+
+.question-box {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  padding: var(--s5) var(--s4);
+  margin-bottom: var(--s4);
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+}
+
+.question-text {
+  color: var(--ink);
+  font-size: clamp(19px, 4.5vw, 24px);
+  font-weight: 800;
+  text-align: center;
+  line-height: 1.45;
+  max-width: 32ch;
+  margin: 0 auto;
+}
+
+.passage-text {
+  color: var(--ink);
+  font-size: var(--fs-body);
+  line-height: 1.8;
+  margin-bottom: var(--s4);
+  padding: var(--s4);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-md);
+  border-left: 4px solid var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s3);
+  margin-top: var(--s2);
+}
+
+.option-btn {
+  background: var(--card);
+  border: 2px solid var(--card-border);
+  border-radius: 16px;
+  padding: 14px 18px;
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: clamp(16px, 3.4vw, 19px);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.2s ease, background 0.2s ease;
+  text-align: center;
+  line-height: 1.4;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.option-btn:active {
+  transform: scale(0.98);
+}
+
+.option-btn.correct {
+  background: var(--tint-english);
+  border-color: var(--c-correct);
+  color: var(--ink);
+  animation: popIn 0.3s ease;
+}
+
+.option-btn.wrong {
+  background: rgba(255, 118, 117, 0.12);
+  border-color: var(--c-wrong);
+  color: var(--ink);
+  animation: shake 0.3s ease;
+}
+
+.option-btn.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.option-btn.correct.disabled,
+.option-btn.wrong.disabled,
+.option-btn.show-correct.disabled {
+  opacity: 1;
+}
+
+.option-btn.show-correct {
+  border-color: var(--c-correct);
+  background: var(--tint-english);
+  color: var(--ink);
+}
+
+/* 除了顏色，也用符號標對錯（對色盲/低視力友善；與全書其他選擇題頁一致）*/
+.option-btn.correct::after,
+.option-btn.show-correct::after { content: " ✓"; font-weight: 900; }
+.option-btn.wrong::after { content: " ✗"; font-weight: 900; }
+
+.explanation-box {
+  background: var(--accent-tint);
+  border-radius: var(--r-md);
+  border-left: 4px solid var(--accent);
+  padding: var(--s3) var(--s4);
+  margin-top: var(--s4);
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.explanation-box.show {
+  display: block;
+}
+
+.explanation-text {
+  color: var(--ink);
+  font-size: var(--fs-body);
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.next-btn {
+  display: none;
+  width: 100%;
+  min-height: 56px;
+  padding: 12px 20px;
+  margin-top: var(--s4);
+  background: linear-gradient(135deg, var(--c-primary-btn), var(--c-primary-btn2));
+  border: none;
+  border-radius: 16px;
+  color: var(--on-accent);
+  font-family: var(--font);
+  font-size: clamp(17px, 4.5vw, 20px);
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease;
+}
+
+.next-btn.show {
+  display: block;
+}
+
+.next-btn:active {
+  transform: scale(0.96);
+}
+
+/* Result screen */
+.result-container {
+  text-align: center;
+  margin-top: var(--s5);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--s5) var(--s4);
+}
+
+.result-stars {
+  font-size: clamp(40px, 12vw, 56px);
+  letter-spacing: 4px;
+  margin-bottom: var(--s3);
+  animation: popIn 0.5s ease;
+}
+
+.result-score {
+  color: var(--ink);
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  margin-bottom: var(--s2);
+}
+
+.result-detail {
+  color: var(--ink-soft);
+  font-size: var(--fs-body);
+  font-weight: 700;
+  max-width: 34ch;
+  margin: 0 auto var(--s5);
+}
+
+.result-exp {
+  background: var(--accent-tint);
+  border-radius: var(--r-md);
+  padding: var(--s3) var(--s4);
+  margin-bottom: var(--s5);
+  color: var(--ink);
+  font-size: var(--fs-body);
+  font-weight: 800;
+}
+
+.result-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+
+.result-btn {
+  min-height: 56px;
+  padding: 12px 20px;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  font-family: var(--font);
+  font-size: clamp(17px, 4.5vw, 20px);
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.result-btn:active {
+  transform: scale(0.96);
+}
+
+.result-btn.primary {
+  background: linear-gradient(135deg, var(--c-primary-btn), var(--c-primary-btn2));
+  color: var(--on-accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.result-btn.secondary {
+  background: var(--card);
+  border-color: var(--card-border);
+  color: var(--accent-ink);
+}
+
+.option-btn:focus-visible {
+  outline: 3px solid var(--c-focus);
+  outline-offset: 2px;
+}
+</style>
+</head>
+<!-- data-game-hud="native"：本頁已有自己的 EXP／稱號／連擊列與經驗條，不注入浮動 HUD（防重疊）。
+     data-game-wired="chinese"：同 <html>，讓引擎於 <body> 就緒後仍維持 legacy XP 抑制。 -->
+<body data-game-hud="native" data-game-wired="chinese">
+<!-- ===== 共用頂部應用列（全站一致；貼在 <body> 內第一個元素） ===== -->
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">國語大冒險 🀄</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle
+          aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<div id="app">
+  <!-- Home Screen -->
+  <div class="screen active" id="home-screen">
+    <div class="header">
+      <div class="header-title">國語大冒險</div>
+      <button class="header-btn" id="sound-toggle" aria-label="音效開關" aria-pressed="true">🔊</button>
+    </div>
+    <div class="save-notice">💾 進度存在本機瀏覽器</div>
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-value" id="stat-exp">0</div>
+        <div class="stat-label">經驗值</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="stat-rank">國語小新星</div>
+        <div class="stat-label">稱號</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="stat-combo">0</div>
+        <div class="stat-label">最高連擊</div>
+      </div>
+    </div>
+    <div class="exp-bar-container">
+      <div class="exp-info">
+        <span id="rank-current">國語小新星</span>
+        <span id="rank-next">→ 語文新手 (100)</span>
+      </div>
+      <div class="exp-bar">
+        <div class="exp-fill" id="exp-fill" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="category-grid" id="category-grid"></div>
+    <!-- 字詞收藏冊入口（非題型；獨立卡片，不併入 CATEGORIES，避免影響 5 分類星數統計） -->
+    <div class="wordex-entries" id="wordex-entries">
+      <div class="wordex-entry-card" role="button" tabindex="0" onclick="Wordex.openScreen()">
+        <div class="wordex-entry-emoji">📔</div>
+        <div class="wordex-entry-name">字詞收藏冊</div>
+        <div class="wordex-entry-sub" id="wordex-entry-collect-sub">已收藏 0 張</div>
+      </div>
+      <div class="wordex-entry-card" role="button" tabindex="0" onclick="Wordex.startReview()">
+        <div class="wordex-entry-emoji">🔁</div>
+        <div class="wordex-entry-name">今日複習</div>
+        <div class="wordex-entry-sub" id="wordex-entry-review-sub">今天複習完了，明天見！</div>
+      </div>
+    </div>
+    <a href="chinese_concepts.html" style="display:flex;align-items:center;gap:10px;margin:var(--s4) 0 0;padding:12px 16px;background:var(--card);border:2px dashed var(--card-border);border-radius:14px;color:var(--ink);font-weight:700;text-decoration:none;line-height:1.4"><span style="font-size:22px" aria-hidden="true">📖</span><span>還沒學過嗎？先到「國語觀念養成」用圖學會部首、筆順、標點，再回來練習 →</span></a>
+    <a href="chinese_advanced.html" style="display:flex;align-items:center;gap:10px;margin:var(--s3) 0 0;padding:12px 16px;background:var(--card);border:2px dashed var(--card-border);border-radius:14px;color:var(--ink);font-weight:700;text-decoration:none;line-height:1.4"><span style="font-size:22px" aria-hidden="true">📖</span><span>已經很熟了？來挑戰更難的「進階國文挑戰」→</span></a>
+  </div>
+
+  <!-- Level Select Screen -->
+  <div class="screen" id="level-screen">
+    <div class="header">
+      <button class="header-btn" id="back-to-home">←</button>
+      <div class="header-title" id="level-screen-title">選擇關卡</div>
+      <div style="width:40px"></div>
+    </div>
+    <div class="level-list" id="level-list"></div>
+  </div>
+
+  <!-- Question Screen -->
+  <!-- 答題區包 .play-column（min(680px,100%) 置中）：iPad 上不被拉到 1200px，
+       維持適當閱讀行長與拇指可及的選項寬度。 -->
+  <div class="screen" id="question-screen">
+    <div class="play-column">
+      <div class="question-header">
+        <button class="header-btn" id="quit-game" title="離開這一關">←</button>
+        <div class="progress-dots" id="progress-dots"></div>
+        <div class="combo-display" id="combo-display"></div>
+      </div>
+      <div id="passage-container"></div>
+      <div class="question-box">
+        <div class="question-text" id="question-text"></div>
+      </div>
+      <div class="options-grid" id="options-grid"></div>
+      <div class="explanation-box" id="explanation-box" aria-live="polite">
+        <div class="explanation-text" id="explanation-text"></div>
+      </div>
+      <button class="next-btn" id="next-btn">下一題 →</button>
+    </div>
+  </div>
+
+  <!-- Result Screen -->
+  <div class="screen" id="result-screen">
+    <div class="play-column">
+    <div class="result-container">
+      <div class="result-stars" id="result-stars"></div>
+      <div class="result-score" id="result-score"></div>
+      <div class="result-detail" id="result-detail"></div>
+      <div class="result-exp" id="result-exp"></div>
+      <div class="result-buttons">
+        <button class="result-btn primary" id="result-next">下一關 →</button>
+        <button class="result-btn secondary" id="result-retry">再試一次 🔄</button>
+        <button class="result-btn secondary" id="result-home" aria-label="返回主畫面">← 回主畫面</button>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- 字詞收藏冊畫面（additive；自足，不影響既有出題流程） -->
+  <div class="screen" id="wordex-screen">
+    <div class="play-column">
+      <div class="header">
+        <button class="header-btn" id="wordex-back" title="返回主畫面" onclick="renderHome()">←</button>
+        <div class="header-title">📔 字詞收藏冊</div>
+        <div style="width:40px"></div>
+      </div>
+      <div class="wordex-summary" id="wordex-summary"></div>
+      <div class="wordex-filter" id="wordex-filter"></div>
+      <div class="wordex-grid" id="wordex-grid"></div>
+    </div>
+  </div>
+
+  <!-- 焦點浮層（單張字詞卡） -->
+  <div class="wordex-focus-overlay" id="wordex-focus-overlay" hidden>
+    <div class="wordex-focus-card">
+      <button class="wordex-focus-close" onclick="Wordex.closeFocus()" aria-label="關閉">✕</button>
+      <div id="wordex-focus-body"></div>
+    </div>
+  </div>
+
+  <!-- 複習／單張練習完成的輕量結果浮層 -->
+  <div class="wordex-focus-overlay" id="wordex-result-overlay" hidden>
+    <div class="wordex-focus-card">
+      <div id="wordex-result-body"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== QUESTION DATA =====
+const QUESTIONS = {
+  idiom: [
+    // type: fill (100)
+    {type:"fill",question:"畫蛇添___",options:["足","手","腳","趾"],answer:0,explanation:"比喻做多餘的事反而弄巧成拙"},
+    {type:"fill",question:"守株待___",options:["兔","鬼","人","魚"],answer:0,explanation:"比喻不知變通，死守舊方法"},
+    {type:"fill",question:"揠苗助___",options:["長","高","大","壯"],answer:0,explanation:"揠苗助長：比喻急於求成反而壞事（揠＝拔起）"},
+    {type:"fill",question:"亡羊補___",options:["牢","圈","欄","柵"],answer:0,explanation:"出了問題後趕快補救"},
+    {type:"fill",question:"掩耳盜___",options:["鈴","傘","鼓","鑼"],answer:0,explanation:"自欺欺人"},
+    {type:"fill",question:"井底之___",options:["蛙","魚","蟲","蛇"],answer:0,explanation:"見識狹隘的人"},
+    {type:"fill",question:"狐假虎___",options:["威","勇","猛","力"],answer:0,explanation:"借別人的勢力嚇唬人"},
+    {type:"fill",question:"對牛彈___",options:["琴","箏","笛","鼓"],answer:0,explanation:"對不懂的人說深奧的道理"},
+    {type:"fill",question:"雪中送___",options:["炭","火","柴","暖"],answer:0,explanation:"在別人最需要幫助時伸出援手"},
+    {type:"fill",question:"火上加___",options:["油","柴","薪","炭"],answer:0,explanation:"使情況更嚴重"},
+    {type:"fill",question:"一箭雙___",options:["鵰","鳥","兔","鷹"],answer:0,explanation:"一次行動達成兩個目的"},
+    {type:"fill",question:"鶴立雞___",options:["群","中","旁","間"],answer:0,explanation:"才能出眾，跟周圍的人不同"},
+    {type:"fill",question:"望梅止___",options:["渴","飢","饑","餓"],answer:0,explanation:"用空想來安慰自己"},
+    {type:"fill",question:"畫龍點___",options:["睛","眼","目","珠"],answer:0,explanation:"在關鍵處加上精彩內容"},
+    {type:"fill",question:"錦上添___",options:["花","葉","色","彩"],answer:0,explanation:"好上加好"},
+    {type:"fill",question:"胸有成___",options:["竹","畫","計","略"],answer:0,explanation:"做事前已有完整計畫"},
+    {type:"fill",question:"水落石___",options:["出","現","見","露"],answer:0,explanation:"事情真相終於明白"},
+    {type:"fill",question:"刻舟求___",options:["劍","刀","針","矛"],answer:0,explanation:"不知變通"},
+    {type:"fill",question:"杯弓蛇___",options:["影","形","像","跡"],answer:0,explanation:"疑神疑鬼"},
+    {type:"fill",question:"班門弄___",options:["斧","刀","劍","錘"],answer:0,explanation:"在行家面前賣弄"},
+    {type:"fill",question:"一鳴驚___",options:["人","世","天","眾"],answer:0,explanation:"平時默默無聞，一下子做出驚人成績"},
+    {type:"fill",question:"萬___更新",options:["象","光","星","雲"],answer:0,explanation:"一切景象都呈現新面貌（萬象更新）"},
+    {type:"fill",question:"一目十___",options:["行","頁","篇","段"],answer:0,explanation:"形容看書速度非常快"},
+    {type:"fill",question:"百發百___",options:["中","準","勝","贏"],answer:0,explanation:"每次都能命中目標"},
+    {type:"fill",question:"九牛一___",options:["毛","角","尾","腿"],answer:0,explanation:"比喻極微小的數量"},
+    {type:"fill",question:"四面楚___",options:["歌","聲","曲","音"],answer:0,explanation:"形容四面受敵，孤立無援"},
+    {type:"fill",question:"五顏六___",options:["色","彩","花","光"],answer:0,explanation:"形容色彩繽紛"},
+    {type:"fill",question:"七上八___",options:["下","落","沉","降"],answer:0,explanation:"形容心情忐忑不安"},
+    {type:"fill",question:"三心二___",options:["意","念","想","思"],answer:0,explanation:"做事不專心，猶豫不決"},
+    {type:"fill",question:"十全十___",options:["美","好","善","佳"],answer:0,explanation:"非常完美，沒有缺點"},
+    {type:"fill",question:"千軍萬___",options:["馬","兵","人","將"],answer:0,explanation:"形容人數眾多，氣勢浩大"},
+    {type:"fill",question:"百___齊放",options:["花","鳥","樹","草"],answer:0,explanation:"各種花同時開放，比喻各方面發展"},
+    {type:"fill",question:"兩全其___",options:["美","好","善","利"],answer:0,explanation:"顧全雙方，皆大歡喜"},
+    {type:"fill",question:"無中生___",options:["有","事","非","端"],answer:0,explanation:"憑空捏造，說沒有的事"},
+    {type:"fill",question:"有口無___",options:["心","意","腦","言"],answer:0,explanation:"說話直率，沒有壞心眼"},
+    {type:"fill",question:"虎頭蛇___",options:["尾","身","腹","足"],answer:0,explanation:"做事有始無終"},
+    {type:"fill",question:"馬到成___",options:["功","就","果","效"],answer:0,explanation:"一做就成功"},
+    {type:"fill",question:"龍飛鳳___",options:["舞","翔","鳴","立"],answer:0,explanation:"形容書法筆勢生動"},
+    {type:"fill",question:"鳥語花___",options:["香","開","落","紅"],answer:0,explanation:"形容春天美好的景色"},
+    {type:"fill",question:"魚貫而___",options:["入","立","坐","過"],answer:0,explanation:"魚貫而入：像魚群一樣一個接一個地進入。"},
+    {type:"fill",question:"一字千___",options:["金","銀","兩","斤"],answer:0,explanation:"文辭精妙，價值極高"},
+    {type:"fill",question:"百折不___",options:["撓","停","倒","退"],answer:0,explanation:"「百折不撓」：不管遇到多少挫折都不退縮、不屈服（撓＝彎曲）"},
+    {type:"fill",question:"人山人___",options:["海","潮","群","多"],answer:0,explanation:"形容人非常多"},
+    {type:"fill",question:"日新月___",options:["異","變","換","改"],answer:0,explanation:"每天每月都有新變化"},
+    {type:"fill",question:"心花怒___",options:["放","開","綻","笑"],answer:0,explanation:"形容非常高興"},
+    {type:"fill",question:"手忙腳___",options:["亂","慌","快","急"],answer:0,explanation:"形容做事慌張忙碌"},
+    {type:"fill",question:"目不轉___",options:["睛","眼","視","望"],answer:0,explanation:"看得入迷，眼睛一直盯著"},
+    {type:"fill",question:"耳目一___",options:["新","亮","明","清"],answer:0,explanation:"看到新事物，感覺很新鮮"},
+    {type:"fill",question:"口是心___",options:["非","假","錯","違"],answer:0,explanation:"嘴巴說的跟心裡想的不一樣"},
+    {type:"fill",question:"風調雨___",options:["順","和","好","美"],answer:0,explanation:"形容天氣很好，適合農作"},
+    {type:"fill",question:"春暖花___",options:["開","紅","香","美"],answer:0,explanation:"春天溫暖，花朵盛開"},
+    {type:"fill",question:"秋高氣___",options:["爽","涼","清","冷"],answer:0,explanation:"秋天天高氣爽的好天氣"},
+    {type:"fill",question:"冰天雪___",options:["地","山","原","野"],answer:0,explanation:"形容天氣非常寒冷"},
+    {type:"fill",question:"風和日___",options:["麗","熱","好","晴"],answer:0,explanation:"風和日麗：微風和煦、陽光明媚。"},
+    {type:"fill",question:"雨過天___",options:["晴","黑","清","明"],answer:0,explanation:"雨後天氣放晴，比喻困難過去"},
+    {type:"fill",question:"精益求___",options:["精","好","美","善"],answer:0,explanation:"好了還要更好"},
+    {type:"fill",question:"自食其___",options:["果","報","苦","罰"],answer:0,explanation:"自己承受自己造成的後果"},
+    {type:"fill",question:"同心協___",options:["力","作","助","行"],answer:0,explanation:"大家一起合作努力"},
+    {type:"fill",question:"見義勇___",options:["為","行","做","動"],answer:0,explanation:"看到正義的事就勇敢去做"},
+    {type:"fill",question:"樂善好___",options:["施","助","善","人"],answer:0,explanation:"喜歡做善事幫助別人"},
+    {type:"fill",question:"一勞永___",options:["逸","安","閒","樂"],answer:0,explanation:"辛苦一次，以後永遠輕鬆"},
+    {type:"fill",question:"異口同___",options:["聲","言","語","說"],answer:0,explanation:"大家說的話都一樣"},
+    {type:"fill",question:"眉飛色___",options:["舞","動","跳","揚"],answer:0,explanation:"形容非常得意高興"},
+    {type:"fill",question:"心滿意___",options:["足","滿","好","歡"],answer:0,explanation:"非常滿足"},
+    {type:"fill",question:"大公無___",options:["私","我","心","偏"],answer:0,explanation:"做事公正，不偏袒任何人"},
+    {type:"fill",question:"一塵不___",options:["染","沾","著","落"],answer:0,explanation:"非常乾淨或品行端正"},
+    {type:"fill",question:"安居樂___",options:["業","活","生","事"],answer:0,explanation:"生活安定，工作快樂"},
+    {type:"fill",question:"津津有___",options:["味","趣","意","感"],answer:0,explanation:"形容很有興趣、很有滋味"},
+    {type:"fill",question:"栩栩如___",options:["生","真","活","實"],answer:0,explanation:"形容非常生動逼真"},
+    {type:"fill",question:"歷歷在___",options:["目","前","眼","心"],answer:0,explanation:"往事清楚地呈現在眼前"},
+    {type:"fill",question:"大材小___",options:["用","做","事","工"],answer:0,explanation:"把有大才能的人用在小事上"},
+    {type:"fill",question:"竹報平___",options:["安","順","靜","和"],answer:0,explanation:"報告平安的好消息"},
+    {type:"fill",question:"開門見___",options:["山","天","路","景"],answer:0,explanation:"說話直截了當，不繞圈子"},
+    {type:"fill",question:"得寸進___",options:["尺","丈","里","步"],answer:0,explanation:"得到一點就想要更多"},
+    {type:"fill",question:"青出於___",options:["藍","師","前","先"],answer:0,explanation:"學生超越老師"},
+    {type:"fill",question:"舉一反___",options:["三","二","四","五"],answer:0,explanation:"從一件事推知其他相關的事"},
+    {type:"fill",question:"入鄉隨___",options:["俗","人","眾","習"],answer:0,explanation:"到一個地方就遵循當地的風俗"},
+    {type:"fill",question:"愛不釋___",options:["手","目","心","懷"],answer:0,explanation:"非常喜愛，捨不得放下"},
+    {type:"fill",question:"目瞪口___",options:["呆","張","開","愣"],answer:0,explanation:"形容非常驚訝"},
+    {type:"fill",question:"九死一___",options:["生","活","命","存"],answer:0,explanation:"形容情況非常危險"},
+    {type:"fill",question:"一針見___",options:["血","效","真","準"],answer:0,explanation:"說話直接說到重點"},
+    {type:"fill",question:"不翼而___",options:["飛","去","走","逃"],answer:0,explanation:"沒有翅膀卻飛走了，比喻東西不見了"},
+    {type:"fill",question:"大顯身___",options:["手","藝","功","技"],answer:0,explanation:"充分展現自己的本領"},
+    {type:"fill",question:"粗茶淡___",options:["飯","菜","食","餐"],answer:0,explanation:"簡單樸素的飲食"},
+    {type:"fill",question:"捨己為___",options:["人","錢","眾","民"],answer:0,explanation:"犧牲自己幫助別人"},
+    {type:"fill",question:"天真無___",options:["邪","知","識","慮"],answer:0,explanation:"形容純潔善良沒有壞心思"},
+    {type:"fill",question:"千變萬___",options:["化","象","形","態"],answer:0,explanation:"形容變化非常多"},
+    {type:"fill",question:"有備無___",options:["患","憂","慮","險"],answer:0,explanation:"事先做好準備就不用擔心"},
+    {type:"fill",question:"聚精會___",options:["神","心","意","思"],answer:0,explanation:"非常專心"},
+    {type:"fill",question:"一帆風___",options:["順","平","快","穩"],answer:0,explanation:"事情進展順利"},
+    {type:"fill",question:"半信半___",options:["疑","假","虛","猜"],answer:0,explanation:"有點相信又有點懷疑"},
+    {type:"fill",question:"自力更___",options:["生","新","起","強"],answer:0,explanation:"靠自己的力量重新振作"},
+    {type:"fill",question:"四海為___",options:["家","鄰","友","親"],answer:0,explanation:"到處都可以當作家"},
+    {type:"fill",question:"名不虛___",options:["傳","說","聞","報"],answer:0,explanation:"名聲是真實的，不是假的"},
+    {type:"fill",question:"樂不思___",options:["蜀","歸","回","家"],answer:0,explanation:"快樂得忘記回去"},
+    {type:"fill",question:"功虧一___",options:["簣","步","事","點"],answer:0,explanation:"差最後一點就失敗了"},
+    {type:"fill",question:"言而有___",options:["信","理","據","實"],answer:0,explanation:"說話算話，守信用"},
+    {type:"fill",question:"不勞而___",options:["獲","得","成","有"],answer:0,explanation:"不付出努力就得到好處"},
+    {type:"fill",question:"一知半___",options:["解","懂","會","通"],answer:0,explanation:"只知道一點點，了解不深"},
+    // type: meaning (100)
+    {type:"meaning",question:"「一石二鳥」的意思是？",options:["做一件事同時達到兩個目的","用石頭打兩隻鳥","石頭很大可以打到兩隻鳥","一次只能做一件事"],answer:0,explanation:"一石二鳥：一個行動同時達到兩個目的"},
+    {type:"meaning",question:"「半途而廢」的意思是？",options:["事情做到一半就放棄","走到一半迷路了","把東西丟掉一半","只做了一半就完成"],answer:0,explanation:"半途而廢：做事沒有恆心，中途停止"},
+    {type:"meaning",question:"「自相矛盾」的意思是？",options:["自己的說法前後不一致","自己跟自己打架","用矛去刺盾","買了矛又買盾"],answer:0,explanation:"自相矛盾：說話或行為前後不一，互相抵觸"},
+    {type:"meaning",question:"「三顧茅廬」的意思是？",options:["多次誠心拜訪邀請","去茅草屋三次","看了三間房子","住在茅草屋三天"],answer:0,explanation:"三顧茅廬：劉備三次拜訪諸葛亮，比喻誠心邀請"},
+    {type:"meaning",question:"「愚公移山」的意思是？",options:["有恆心毅力終能成功","愚笨的人搬山","叫別人幫忙搬山","搬家到山的另一邊"],answer:0,explanation:"愚公移山：只要有決心和毅力，就能克服困難"},
+    {type:"meaning",question:"「塞翁失馬」的意思是？",options:["壞事有可能變好事","老人弄丟了馬","馬跑到很遠的地方","不要養馬"],answer:0,explanation:"塞翁失馬：禍福相依，壞事可能變好事"},
+    {type:"meaning",question:"「揠苗助長」的意思是？",options:["急於求成反而壞事","幫忙農夫種田","拔草讓苗長大","種出很高的植物"],answer:0,explanation:"揠苗助長：違反事物發展規律，反而壞事"},
+    {type:"meaning",question:"「破釜沉舟」的意思是？",options:["下定決心不留退路","把鍋子打破","船沉到水底","在船上煮飯"],answer:0,explanation:"破釜沉舟：下定決心，義無反顧"},
+    {type:"meaning",question:"「臥薪嘗膽」的意思是？",options:["刻苦自勵等待時機報仇","睡在柴火上","吃苦的東西","住在很差的地方"],answer:0,explanation:"臥薪嘗膽：忍辱負重，發憤圖強"},
+    {type:"meaning",question:"「東施效顰」的意思是？",options:["不顧條件盲目模仿反而弄巧成拙","東邊的人很美","學別人皺眉頭","模仿別人很成功"],answer:0,explanation:"東施效顰：盲目模仿別人反而適得其反"},
+    {type:"meaning",question:"「一鳴驚人」的意思是？",options:["平時默默無聞突然有驚人表現","鳥叫聲很大","嚇到別人","大聲說話"],answer:0,explanation:"一鳴驚人：比喻平時不顯眼的人突然有出色表現"},
+    {type:"meaning",question:"「風調雨順」的意思是？",options:["天氣適合農耕，國泰民安","風和雨一起來","每天都下雨","風很大雨很小"],answer:0,explanation:"風調雨順：風雨適時，比喻太平安樂"},
+    {type:"meaning",question:"「百折不撓」的意思是？",options:["不管遇到多少挫折都不退縮","折了一百次","紙折不斷","把東西折斷"],answer:0,explanation:"百折不撓：意志堅強，不屈服"},
+    {type:"meaning",question:"「九牛一毛」的意思是？",options:["極少的數量","九隻牛身上的一根毛","很多牛","牛毛很少"],answer:0,explanation:"九牛一毛：比喻極微小不重要的東西"},
+    {type:"meaning",question:"「一目十行」的意思是？",options:["看書速度非常快","只看一行","十個人看書","眼睛很大"],answer:0,explanation:"一目十行：形容閱讀速度極快"},
+    {type:"meaning",question:"「百發百中」的意思是？",options:["每次都能命中目標","射了一百箭","箭很多","目標很大"],answer:0,explanation:"百發百中：形容射擊或做事都很準確"},
+    {type:"meaning",question:"「日新月異」的意思是？",options:["進步很快，不斷有新變化","日月很新","每天看月亮","時間過很快"],answer:0,explanation:"日新月異：每天都有新的進步和變化"},
+    {type:"meaning",question:"「人山人海」的意思是？",options:["人非常多","人在山上和海邊","山和海很多人","爬山游泳"],answer:0,explanation:"人山人海：形容人群擁擠，人數眾多"},
+    {type:"meaning",question:"「心花怒放」的意思是？",options:["非常高興快樂","花很生氣","心裡有花","種花很開心"],answer:0,explanation:"心花怒放：形容內心非常喜悅"},
+    {type:"meaning",question:"「手忙腳亂」的意思是？",options:["做事慌張忙碌","手腳受傷","跑步很快","做體操"],answer:0,explanation:"手忙腳亂：形容做事慌亂沒有條理"},
+    {type:"meaning",question:"「目不轉睛」的意思是？",options:["看得非常專心","眼睛不動","眼睛受傷","不想看"],answer:0,explanation:"目不轉睛：形容注意力集中，看得入迷"},
+    {type:"meaning",question:"「口是心非」的意思是？",options:["嘴巴說的跟心裡想的不一樣","嘴巴是對的","心裡是錯的","說話大聲"],answer:0,explanation:"口是心非：表裡不一，言不由衷"},
+    {type:"meaning",question:"「虎頭蛇尾」的意思是？",options:["做事有始無終","老虎和蛇在一起","頭很大尾巴很小","很勇敢"],answer:0,explanation:"虎頭蛇尾：開始很起勁，後來就鬆懈了"},
+    {type:"meaning",question:"「大材小用」的意思是？",options:["有才能的人被安排做小事","材料太大","做小東西","大人做小事"],answer:0,explanation:"大材小用：把有才幹的人放在低職位，浪費人才"},
+    {type:"meaning",question:"「開門見山」的意思是？",options:["說話直截了當","打開門看到山","住在山上","去爬山"],answer:0,explanation:"開門見山：比喻說話寫文章直奔主題"},
+    {type:"meaning",question:"「得寸進尺」的意思是？",options:["得到一點就想要更多","量東西","走一步","寸和尺的比較"],answer:0,explanation:"得寸進尺：貪心不知足，得到一點就想要更多"},
+    {type:"meaning",question:"「四海為家」的意思是？",options:["到處都可以當作自己的家","四個海邊有家","家在海邊","搬了四次家"],answer:0,explanation:"四海為家：不固定住所，到處為家"},
+    {type:"meaning",question:"「異口同聲」的意思是？",options:["大家說的話都一樣","嘴巴不一樣","聲音很奇怪","一起唱歌"],answer:0,explanation:"異口同聲：不同的人說出同樣的話"},
+    {type:"meaning",question:"「一帆風順」的意思是？",options:["事情進展非常順利","船帆很順","只有一個帆","風很大"],answer:0,explanation:"一帆風順：比喻事情進行得很順利"},
+    {type:"meaning",question:"「精益求精」的意思是？",options:["好了還要追求更好","很精緻","已經很好了","不用再努力"],answer:0,explanation:"精益求精：在好的基礎上追求更好"},
+    {type:"meaning",question:"「名不虛傳」的意思是？",options:["名聲是真實的，確實很好","名字很好聽","假的名聲","很有名"],answer:0,explanation:"名不虛傳：名聲確實有道理，不是假的"},
+    {type:"meaning",question:"「有備無患」的意思是？",options:["做好準備就不怕出問題","沒有準備","不用擔心","沒有危險"],answer:0,explanation:"有備無患：事先做好準備就不會有禍患"},
+    {type:"meaning",question:"「千變萬化」的意思是？",options:["變化非常多","一千個變化","很多萬","數字很大"],answer:0,explanation:"千變萬化：形容變化無窮"},
+    {type:"meaning",question:"「一塵不染」的意思是？",options:["非常乾淨或品德高尚","沒有灰塵","打掃乾淨","不碰東西"],answer:0,explanation:"一塵不染：比喻非常潔淨或品行純潔"},
+    {type:"meaning",question:"「栩栩如生」的意思是？",options:["形容非常生動逼真","真的活著","像在動","很可怕"],answer:0,explanation:"栩栩如生：描繪得像活的一樣"},
+    {type:"meaning",question:"「津津有味」的意思是？",options:["非常有興趣","很好吃","津津的味道","在吃東西"],answer:0,explanation:"津津有味：形容很有滋味或很感興趣"},
+    {type:"meaning",question:"「大公無私」的意思是？",options:["做事公正不偏袒","很大方","沒有私心","公家的"],answer:0,explanation:"大公無私：完全為公，毫無私心"},
+    {type:"meaning",question:"「天真無邪」的意思是？",options:["純潔善良沒有壞心思","天上的東西","不懂事","什麼都不知道"],answer:0,explanation:"天真無邪：形容心地純潔，沒有壞念頭"},
+    {type:"meaning",question:"「自食其果」的意思是？",options:["自己承受自己造成的壞結果","自己吃水果","果實很好吃","種了果樹"],answer:0,explanation:"自食其果：做壞事的人自己承受後果"},
+    {type:"meaning",question:"「見義勇為」的意思是？",options:["看到正義的事勇敢去做","看到東西就拿","很勇敢","看義氣"],answer:0,explanation:"見義勇為：遇到合乎正義的事就勇敢去做"},
+    {type:"meaning",question:"「言而有信」的意思是？",options:["說話算話，守信用","說很多話","寫信","有人相信"],answer:0,explanation:"言而有信：說到做到，信守承諾"},
+    {type:"meaning",question:"「一知半解」的意思是？",options:["只知道一點點，了解不深","知道一半","解開一半","半個知識"],answer:0,explanation:"一知半解：所知不全面，理解不透徹"},
+    {type:"meaning",question:"「不翼而飛」的意思是？",options:["東西莫名其妙不見了","沒有翅膀會飛","鳥飛走了","飛機起飛"],answer:0,explanation:"不翼而飛：沒有翅膀卻飛走了，比喻東西突然不見"},
+    {type:"meaning",question:"「心滿意足」的意思是？",options:["非常滿意和滿足","心很滿","腳很滿意","還想要更多"],answer:0,explanation:"心滿意足：完全滿足，沒有其他要求"},
+    {type:"meaning",question:"「目瞪口呆」的意思是？",options:["非常驚訝，張大嘴巴","眼睛很大","嘴巴打開","看著別人"],answer:0,explanation:"目瞪口呆：形容受到驚嚇，說不出話"},
+    {type:"meaning",question:"「舉一反三」的意思是？",options:["從一件事能推知很多道理","舉手三次","反覆做三次","一加三"],answer:0,explanation:"舉一反三：從一個道理能推出許多相關的道理"},
+    // type: usage (100)
+    {type:"usage",question:"小明想把游泳學好，卻整天待在圖書館看書、從不下水練習，這叫做？",options:["緣木求魚","井底之蛙","對牛彈琴","畫蛇添足"],answer:0,explanation:"緣木求魚：方法或方向不對，再努力也達不到目的（爬到樹上想抓魚）"},
+    {type:"usage",question:"明明是對的答案，他卻硬說成是錯的，還要大家跟著附和，這種顛倒是非的行為叫做？",options:["指鹿為馬","掩耳盜鈴","狐假虎威","井底之蛙"],answer:0,explanation:"指鹿為馬：故意顛倒是非、混淆黑白（把明顯的事實硬說成相反）"},
+    {type:"usage",question:"姐姐文章已經寫得很好了，硬要多加一段結果反而不好，這叫做？",options:["畫蛇添足","錦上添花","雪中送炭","揠苗助長"],answer:0,explanation:"畫蛇添足：多此一舉反而弄巧成拙"},
+    {type:"usage",question:"同學忘了帶午餐餓著肚子，他主動把自己的便當分一半給他，這叫做？",options:["雪中送炭","火上加油","錦上添花","落井下石"],answer:0,explanation:"雪中送炭：在別人正需要時給予實質的幫助"},
+    {type:"usage",question:"他總是驕傲看不起人，有天比賽卻輸了，這叫做？",options:["驕兵必敗","班門弄斧","自相矛盾","一箭雙鵰"],answer:0,explanation:"驕兵必敗：驕傲自大必定失敗"},
+    {type:"usage",question:"小華只待在家裡，從不出去看看外面的世界，這叫做？",options:["井底之蛙","守株待兔","掩耳盜鈴","對牛彈琴"],answer:0,explanation:"井底之蛙：見識狹窄，不知天高地厚"},
+    {type:"usage",question:"爸爸明明說要少吃甜食，自己卻天天吃巧克力，這叫做？",options:["自相矛盾","指鹿為馬","掩耳盜鈴","狐假虎威"],answer:0,explanation:"自相矛盾：言行不一致"},
+    {type:"usage",question:"妹妹在書法大師面前炫耀自己的字寫得好，這叫做？",options:["班門弄斧","對牛彈琴","鶴立雞群","畫龍點睛"],answer:0,explanation:"班門弄斧：在行家面前炫耀本領"},
+    {type:"usage",question:"老師一邊教英文一邊帶大家認識外國文化，這叫做？",options:["一石二鳥","畫蛇添足","錦上添花","半途而廢"],answer:0,explanation:"一石二鳥：一舉兩得"},
+    {type:"usage",question:"哥哥練鋼琴練了三天就不想練了，這叫做？",options:["半途而廢","守株待兔","揠苗助長","緣木求魚"],answer:0,explanation:"半途而廢：事情做到中途就放棄"},
+    {type:"usage",question:"小美每天讀課文，日積月累成績變好了，這叫做？",options:["水滴石穿","守株待兔","揠苗助長","刻舟求劍"],answer:0,explanation:"水滴石穿：持之以恆必有成果"},
+    {type:"usage",question:"壞同學仗著他爸爸是校長就欺負人，這叫做？",options:["狐假虎威","指鹿為馬","班門弄斧","井底之蛙"],answer:0,explanation:"狐假虎威：借助別人的權勢來欺壓人"},
+    {type:"usage",question:"弟弟把耳朵摀住說『我沒聽到媽媽叫我』，這叫做？",options:["掩耳盜鈴","對牛彈琴","井底之蛙","守株待兔"],answer:0,explanation:"掩耳盜鈴：自欺欺人"},
+    {type:"usage",question:"比賽之前教練早就計畫好戰術了，這叫做？",options:["胸有成竹","水落石出","錦上添花","刻舟求劍"],answer:0,explanation:"胸有成竹：事前已有周全計畫"},
+    {type:"usage",question:"爺爺對小嬰兒講股票的事，小嬰兒當然聽不懂，這叫做？",options:["對牛彈琴","班門弄斧","井底之蛙","畫蛇添足"],answer:0,explanation:"對牛彈琴：對不懂的人說高深道理"},
+    {type:"usage",question:"作文最後加了一句精彩的結語，讓整篇文章更好，這叫做？",options:["畫龍點睛","錦上添花","雪中送炭","火上加油"],answer:0,explanation:"畫龍點睛：在關鍵處加上精彩的點綴"},
+    {type:"usage",question:"爸爸媽媽吵架，弟弟又在旁邊搗蛋，讓氣氛更糟，這叫做？",options:["火上加油","雪中送炭","落井下石","畫蛇添足"],answer:0,explanation:"火上加油：使不好的情況更加惡化"},
+    {type:"usage",question:"同學已經很厲害了還得到大獎，大家紛紛恭喜他，這叫做？",options:["錦上添花","雪中送炭","火上加油","畫蛇添足"],answer:0,explanation:"錦上添花：好上加好"},
+    {type:"usage",question:"小明用十年前的方法來解決現在的問題，當然行不通，這叫做？",options:["刻舟求劍","守株待兔","揠苗助長","緣木求魚"],answer:0,explanation:"刻舟求劍：不知變通，用舊方法應對新情況"},
+    {type:"usage",question:"小美數學考試表現傑出，在一群同學中特別突出，這叫做？",options:["鶴立雞群","井底之蛙","班門弄斧","一箭雙鵰"],answer:0,explanation:"鶴立雞群：才能特別突出"},
+    {type:"usage",question:"媽媽急著要小弟趕快學會走路，每天硬拉他練走，這叫做？",options:["揠苗助長","守株待兔","半途而廢","水滴石穿"],answer:0,explanation:"揠苗助長：太急於求成，反而有害"},
+    {type:"usage",question:"小明撿到一百元後就天天去同一個地方等撿錢，這叫做？",options:["守株待兔","緣木求魚","井底之蛙","對牛彈琴"],answer:0,explanation:"守株待兔：期待偶然好運再次發生"},
+    {type:"usage",question:"經過警察調查，終於找出誰偷了東西，這叫做？",options:["水落石出","胸有成竹","守株待兔","掩耳盜鈴"],answer:0,explanation:"水落石出：真相大白"},
+    {type:"usage",question:"弟弟打破花瓶後趕緊用膠水黏好，這叫做？",options:["亡羊補牢","掩耳盜鈴","守株待兔","刻舟求劍"],answer:0,explanation:"亡羊補牢：出了問題趕快補救"},
+    {type:"usage",question:"全班同學一起合作完成壁報，這叫做？",options:["同心協力","各自為政","一盤散沙","袖手旁觀"],answer:0,explanation:"同心協力：大家齊心合力做事"},
+    {type:"usage",question:"這位新同學平時安靜不說話，演講比賽卻拿第一名，這叫做？",options:["一鳴驚人","鶴立雞群","班門弄斧","對牛彈琴"],answer:0,explanation:"一鳴驚人：平時低調突然有驚人表現"},
+    {type:"usage",question:"爸爸答應帶我去遊樂園就真的去了，這叫做？",options:["言而有信","言行不一","半途而廢","自相矛盾"],answer:0,explanation:"言而有信：說到做到"},
+    {type:"usage",question:"小英沒有人教，第一次騎腳踏車就騎得很好，真是___",options:["無師自通","半途而廢","守株待兔","揠苗助長"],answer:0,explanation:"無師自通：沒有老師教導也能自己學會，形容學習能力強"},
+    {type:"usage",question:"這家餐廳的菜色和招牌上寫的一樣好吃，真是___",options:["名不虛傳","半信半疑","自相矛盾","得寸進尺"],answer:0,explanation:"名不虛傳：名聲確實名副其實"},
+    {type:"usage",question:"弟弟本來只要一個玩具，得到後又要兩個，這叫做？",options:["得寸進尺","知足常樂","一石二鳥","大材小用"],answer:0,explanation:"得寸進尺：貪心不滿足，得到一點就要更多"},
+    {type:"usage",question:"王老師講課的時候，大家都安靜專心聽，這叫做？",options:["聚精會神","一心二用","心不在焉","三心二意"],answer:0,explanation:"聚精會神：全神貫注，非常專心"},
+    {type:"usage",question:"小華功課很好卻被派去倒垃圾，這叫做？",options:["大材小用","人盡其才","各司其職","舉一反三"],answer:0,explanation:"大材小用：有才能的人做低等的工作"},
+    {type:"usage",question:"小明的玩具放在桌上，回來就不見了，這叫做？",options:["不翼而飛","栩栩如生","一塵不染","天真無邪"],answer:0,explanation:"不翼而飛：東西莫名其妙消失了"},
+    {type:"usage",question:"弟弟考了一百分，高興得又跳又叫，這叫做？",options:["心花怒放","愁眉苦臉","垂頭喪氣","心滿意足"],answer:0,explanation:"心花怒放：非常開心快樂"},
+    {type:"usage",question:"這部卡通裡的人物畫得像真人一樣，這叫做？",options:["栩栩如生","一塵不染","心花怒放","天真無邪"],answer:0,explanation:"栩栩如生：形容描繪得非常逼真"},
+    {type:"usage",question:"姐姐不管遇到什麼困難都不放棄，這叫做？",options:["百折不撓","半途而廢","三心二意","守株待兔"],answer:0,explanation:"百折不撓：遇到再多挫折也不退縮"},
+    {type:"usage",question:"老師教了一個公式，小明馬上能算出很多題目，這叫做？",options:["舉一反三","一知半解","一目十行","百發百中"],answer:0,explanation:"舉一反三：從一個道理推知其他相關的"},
+    {type:"usage",question:"哥哥看漫畫看得入迷，媽媽叫他都沒聽到，這叫做？",options:["目不轉睛","心不在焉","三心二意","走馬看花"],answer:0,explanation:"目不轉睛：非常專注地看"},
+    {type:"usage",question:"這次旅行一路上都很順利，這叫做？",options:["一帆風順","千變萬化","風和日麗","雨過天晴"],answer:0,explanation:"一帆風順：事情進展非常順利"},
+    {type:"usage",question:"下課時操場上都是人，這叫做？",options:["人山人海","一塵不染","鴉雀無聲","千變萬化"],answer:0,explanation:"人山人海：形容人非常多"},
+    {type:"usage",question:"小美的房間打掃得乾乾淨淨，一點灰塵都沒有，這叫做？",options:["一塵不染","栩栩如生","心花怒放","百折不撓"],answer:0,explanation:"一塵不染：非常乾淨"},
+    {type:"usage",question:"科技產品每天都有新東西出來，這叫做？",options:["日新月異","一成不變","風平浪靜","千篇一律"],answer:0,explanation:"日新月異：每天都在進步變化"},
+    {type:"usage",question:"小明每天寫的作文都一模一樣，沒有新意，這叫做？",options:["千篇一律","日新月異","千變萬化","百花齊放"],answer:0,explanation:"千篇一律：內容都一樣沒有變化"},
+    {type:"usage",question:"看到同學被欺負，小華勇敢站出來幫忙，這叫做？",options:["見義勇為","袖手旁觀","落井下石","隔岸觀火"],answer:0,explanation:"見義勇為：看到正義的事就勇敢去做"},
+    {type:"usage",question:"爺爺把所有零用錢都捐給孤兒院，這叫做？",options:["樂善好施","大公無私","捨己為人","見義勇為"],answer:0,explanation:"樂善好施：喜歡做善事幫助別人"},
+    {type:"usage",question:"小美只是看了書的前幾頁就說自己看完了，這叫做？",options:["一知半解","一目十行","百折不撓","精益求精"],answer:0,explanation:"一知半解：了解得不夠透徹"},
+    {type:"usage",question:"妹妹畫完一幅畫還要改得更漂亮，這叫做？",options:["精益求精","半途而廢","畫蛇添足","大材小用"],answer:0,explanation:"精益求精：好了還要追求更好"},
+    {type:"usage",question:"搬家前先把需要的東西準備好就不怕了，這叫做？",options:["有備無患","守株待兔","一勞永逸","自食其果"],answer:0,explanation:"有備無患：事先準備好就不怕問題"},
+    {type:"usage",question:"弟弟偷吃蛋糕結果肚子痛，這叫做？",options:["自食其果","一石二鳥","自相矛盾","得寸進尺"],answer:0,explanation:"自食其果：自己承受自己造成的後果"},
+    {type:"usage",question:"到了日本就要尊重日本的禮儀，這叫做？",options:["入鄉隨俗","四海為家","不翼而飛","大公無私"],answer:0,explanation:"入鄉隨俗：到一個地方就遵守當地的風俗"},
+    // ===== 成語解釋（新增） =====
+    {type:"meaning",question:"「守株待兔」的意思是？",options:["死守經驗、不知變通，妄想不勞而獲","在樹下抓兔子當晚餐","種一棵樹來養兔子","跑得比兔子還要快"],answer:0,explanation:"守株待兔：比喻死守狹隘經驗、不知變通，或妄想不勞而獲"},
+    {type:"meaning",question:"「亡羊補牢」的意思是？",options:["出了問題後及時補救，還來得及","把羊全部關進羊圈裡","丟了羊乾脆不再養羊","蓋一座非常牢固的羊圈"],answer:0,explanation:"亡羊補牢：發生損失後趕快補救，還來得及"},
+    {type:"meaning",question:"「畫龍點睛」的意思是？",options:["在關鍵處加上精彩內容，使整體更生動","畫一條會飛的龍","幫龍畫上彩色的眼睛","畫圖時要先畫眼睛"],answer:0,explanation:"畫龍點睛：在最關鍵的地方加上精彩的一筆"},
+    {type:"meaning",question:"「聚精會神」的意思是？",options:["集中精神，非常專注","把很多神明聚在一起","精神分散、東看西看","開會時精神特別好"],answer:0,explanation:"聚精會神：集中精神，全神貫注"},
+    {type:"meaning",question:"「井然有序」的意思是？",options:["整齊而有條理","井水裝得很滿","排隊時很混亂","地上有很多口井"],answer:0,explanation:"井然有序：形容整齊而有條理"},
+    {type:"meaning",question:"「愛不釋手」的意思是？",options:["非常喜愛，捨不得放下","因為太愛而放手","手上什麼都沒拿","把喜歡的東西送人"],answer:0,explanation:"愛不釋手：喜愛到捨不得放下"},
+    {type:"meaning",question:"「廢寢忘食」的意思是？",options:["非常專心努力，連睡覺吃飯都忘了","睡覺時忘記關燈","吃飯吃到睡著","不喜歡睡覺和吃飯"],answer:0,explanation:"廢寢忘食：形容非常專心努力，忘了睡覺與吃飯"},
+    {type:"meaning",question:"「東張西望」的意思是？",options:["向四處張望，形容好奇或心神不定","把東西從東邊搬到西邊","只看東邊不看西邊","張開嘴巴到處看"],answer:0,explanation:"東張西望：向四周張望，形容心神不定或好奇"},
+    // ===== 成語情境用法（新增） =====
+    {type:"usage",question:"妹妹一邊寫功課一邊看電視，結果兩件事都做不好，這叫做？",options:["一心二用","聚精會神","全神貫注","專心致志"],answer:0,explanation:"一心二用：同時做兩件事而不專心"},
+    {type:"usage",question:"這本故事書太好看了，我___，一直看到忘了時間。",options:["愛不釋手","心不在焉","興趣缺缺","無精打采"],answer:0,explanation:"愛不釋手：喜愛到捨不得放下"},
+    {type:"usage",question:"為了準備演講比賽，哥哥___，連晚餐都忘了吃。",options:["廢寢忘食","無所事事","三心二意","游手好閒"],answer:0,explanation:"廢寢忘食：非常專心努力，忘了吃飯睡覺"},
+    {type:"usage",question:"考試時教室裡___，只聽得見筆寫字的聲音。",options:["鴉雀無聲","人聲鼎沸","熱鬧非凡","吵吵鬧鬧"],answer:0,explanation:"鴉雀無聲：形容非常安靜"},
+    {type:"usage",question:"天氣很冷，同學忘了帶外套，小明把外套借給他，這叫做？",options:["雪中送炭","火上加油","落井下石","隔岸觀火"],answer:0,explanation:"雪中送炭：在別人最需要時給予幫助"},
+    {type:"usage",question:"弟弟做事總是有頭有尾，從不中途放棄，這叫做？",options:["有始有終","虎頭蛇尾","半途而廢","三心二意"],answer:0,explanation:"有始有終：做事從開始到結束都堅持完成"},
+    {type:"usage",question:"老師把書桌上的文具排得整整齊齊，一點也不亂，這叫做？",options:["井井有條","亂七八糟","雜亂無章","一團混亂"],answer:0,explanation:"井井有條：形容整齊而有條理"},
+    {type:"usage",question:"小華每天反覆練琴，經過一年終於有很大的進步，這叫做？",options:["持之以恆","半途而廢","三心二意","一暴十寒"],answer:0,explanation:"持之以恆：長久堅持不放棄"},
+    // ===== 成語接龍（頭尾相接，只有一個正解）=====
+    {type:"idiomchain",question:"「亡羊補牢」的最後一個字是「牢」，下一個成語要用「牢」開頭，選哪一個？",options:["牢不可破","守株待兔","一心一意","畫蛇添足"],answer:0,explanation:"成語接龍頭尾相接：牢→牢不可破（形容非常堅固）"},
+    {type:"idiomchain",question:"「一心一意」的最後一個字是「意」，下一個成語要用「意」開頭，選哪一個？",options:["意氣風發","三心二意","心花怒放","風平浪靜"],answer:0,explanation:"意→意氣風發（精神振奮、氣概昂揚）"},
+    {type:"idiomchain",question:"「水落石出」的最後一個字是「出」，下一個成語要用「出」開頭，選哪一個？",options:["出人頭地","落井下石","石破天驚","一鳴驚人"],answer:0,explanation:"出→出人頭地（勝過眾人、有成就）"},
+    {type:"idiomchain",question:"「人山人海」的最後一個字是「海」，下一個成語要用「海」開頭，選哪一個？",options:["海闊天空","山明水秀","天長地久","空前絕後"],answer:0,explanation:"海→海闊天空（形容境界開闊、無拘無束）"},
+    {type:"idiomchain",question:"「一帆風順」的最後一個字是「順」，下一個成語要用「順」開頭，選哪一個？",options:["順水推舟","風和日麗","一路平安","水到渠成"],answer:0,explanation:"順→順水推舟（順著情勢做事）"},
+    {type:"idiomchain",question:"「十全十美」的最後一個字是「美」，下一個成語要用「美」開頭，選哪一個？",options:["美中不足","十拿九穩","全力以赴","中流砥柱"],answer:0,explanation:"美→美中不足（大致很好，但仍有小缺點）"},
+    {type:"idiomchain",question:"「心花怒放」的最後一個字是「放」，下一個成語要用「放」開頭，選哪一個？",options:["放虎歸山","花好月圓","怒髮衝冠","虎頭蛇尾"],answer:0,explanation:"放→放虎歸山（放走敵人留下後患）"},
+    {type:"idiomchain",question:"「無中生有」的最後一個字是「有」，下一個成語要用「有」開頭，選哪一個？",options:["有備無患","中規中矩","生龍活虎","患得患失"],answer:0,explanation:"有→有備無患（事先準備好就不怕出問題）"},
+    {type:"idiomchain",question:"「一鳴驚人」的最後一個字是「人」，下一個成語要用「人」開頭，選哪一個？",options:["人來人往","驚天動地","一舉成名","動人心弦"],answer:0,explanation:"人→人來人往（形容來往的人很多）"},
+    {type:"idiomchain",question:"「光明正大」的最後一個字是「大」，下一個成語要用「大」開頭，選哪一個？",options:["大同小異","明察秋毫","正氣凜然","小題大作"],answer:0,explanation:"大→大同小異（大部分相同，只有小差別）"}
+  ],
+  phonetics: [
+    // 的得地 (100)
+    {type:"dededi",question:"他跑___很快",options:["得","的","地","德"],answer:0,explanation:"得：用在動詞後面表示程度補語"},
+    {type:"dededi",question:"小朋友們高高興興___唱著歌",options:["地","的","得","底"],answer:0,explanation:"地：疊詞副詞「高高興興」用在動詞前修飾動作方式（高高興興地唱），只能配「地」"},
+    {type:"dededi",question:"這是我___書包",options:["的","得","地","底"],answer:0,explanation:"的：表示所屬關係"},
+    {type:"dededi",question:"他說話說___很有道理",options:["得","的","地","德"],answer:0,explanation:"得：動詞後表程度補語（說話說得…）"},
+    {type:"dededi",question:"我們快樂___唱歌",options:["地","的","得","底"],answer:0,explanation:"地：副詞修飾動詞"},
+    {type:"dededi",question:"美麗___花朵開了",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他寫字寫___很漂亮",options:["得","的","地","德"],answer:0,explanation:"得：動詞後表程度"},
+    {type:"dededi",question:"小狗高興___搖尾巴",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞的方式"},
+    {type:"dededi",question:"圓圓___月亮掛在天上",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"姐姐唱歌唱___好聽",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"弟弟努力___寫功課",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「寫」的方式"},
+    {type:"dededi",question:"可愛___小貓在睡覺",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他跳___好高",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"同學們安靜___看書",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「看」的方式"},
+    {type:"dededi",question:"藍藍___天空真漂亮",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他畫畫畫___非常好",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示結果程度"},
+    {type:"dededi",question:"媽媽溫柔___說故事",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「說」的方式"},
+    {type:"dededi",question:"這是老師___教室",options:["的","得","地","底"],answer:0,explanation:"的：表示所屬關係"},
+    {type:"dededi",question:"他跑步跑___氣喘吁吁",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示結果狀態"},
+    {type:"dededi",question:"小鳥快樂___飛翔",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「飛翔」的方式"},
+    {type:"dededi",question:"高高___大樹真壯觀",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"她游泳游___很好",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"爸爸認真___工作",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「工作」的方式"},
+    {type:"dededi",question:"那是誰___鉛筆？",options:["的","得","地","底"],answer:0,explanation:"的：表示所屬關係"},
+    {type:"dededi",question:"他考試考___很差",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"妹妹慢慢___走路",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「走」的方式"},
+    {type:"dededi",question:"新買___裙子很好看",options:["的","得","地","底"],answer:0,explanation:"的：修飾名詞"},
+    {type:"dededi",question:"他笑___合不攏嘴",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度結果"},
+    {type:"dededi",question:"小朋友開心___拍手",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「拍」的方式"},
+    {type:"dededi",question:"這是我們___學校",options:["的","得","地","底"],answer:0,explanation:"的：表示所屬關係"},
+    {type:"dededi",question:"他吃飯吃___太快了",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"風輕輕___吹著",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「吹」的方式"},
+    {type:"dededi",question:"甜甜___蛋糕好好吃",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他做事做___很仔細",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"奶奶慈祥___看著我",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「看」的方式"},
+    {type:"dededi",question:"紅紅___蘋果真好看",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他說話說___太大聲",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"大家靜靜___聽音樂",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「聽」的方式"},
+    {type:"dededi",question:"暖暖___陽光照進來",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他哭___很傷心",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"小明專心___做實驗",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「做」的方式"},
+    {type:"dededi",question:"好吃___糖果分給大家",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"她跳舞跳___真美",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"同學們興奮___歡呼",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「歡呼」的方式"},
+    {type:"dededi",question:"嶄新___課本好漂亮",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他睡覺睡___很沉",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"哥哥勇敢___站出來",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「站」的方式"},
+    {type:"dededi",question:"清清___河水很乾淨",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他走路走___很慢",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"小貓輕輕___跳上桌",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「跳」的方式"},
+    {type:"dededi",question:"綠油油___草地真舒服",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他彈琴彈___很流暢",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"弟弟乖乖___坐好",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「坐」的方式"},
+    {type:"dededi",question:"香香___花朵好美麗",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他答題答___全對",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示結果"},
+    {type:"dededi",question:"老師耐心___教導學生",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「教導」的方式"},
+    {type:"dededi",question:"漂亮___衣服穿起來真好看",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他讀書讀___很認真",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"雨水嘩啦嘩啦___落下",options:["地","的","得","底"],answer:0,explanation:"地：用在動詞前修飾動作方式（嘩啦嘩啦地落下）"},
+    {type:"dededi",question:"胖胖___小豬好可愛",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他講故事講___很生動",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"小魚自由___游來游去",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「游」的方式"},
+    {type:"dededi",question:"溫暖___家充滿了愛",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"她鋼琴彈___出神入化",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"蝴蝶翩翩___飛舞",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「飛舞」的方式"},
+    {type:"dededi",question:"又大又圓___西瓜好甜",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他騎腳踏車騎___很穩",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"小兔子蹦蹦跳跳___跑過去",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「跑」的方式"},
+    {type:"dededi",question:"亮晶晶___星星好美",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他吃東西吃___津津有味",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示狀態程度"},
+    {type:"dededi",question:"花兒靜靜___開放",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「開放」的方式"},
+    {type:"dededi",question:"勤勞___蜜蜂在採蜜",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他唸課文唸___很流利",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"姐姐小心___過馬路",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「過」的方式"},
+    {type:"dededi",question:"長長___頭髮隨風飄動",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他打掃___很乾淨",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"爺爺悠閒___散步",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「散步」的方式"},
+    {type:"dededi",question:"冰冰涼涼___飲料好喝",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"她唱歌唱___很動聽",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"大家齊心協力___完成任務",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「完成」的方式"},
+    {type:"dededi",question:"毛茸茸___小狗真可愛",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他摺紙摺___很精緻",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"小朋友們快速___排好隊",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「排」的方式"},
+    {type:"dededi",question:"熱騰騰___包子真香",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他投籃投___很準",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"螞蟻辛勤___搬食物",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「搬」的方式"},
+    {type:"dededi",question:"整齊___書桌讓人心情好",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他背書背___滾瓜爛熟",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"雪花紛紛___飄落",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「飄落」的方式"},
+    {type:"dededi",question:"胖嘟嘟___臉蛋好可愛",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"她練舞練___滿身大汗",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示結果狀態"},
+    {type:"dededi",question:"我們開心___玩遊戲",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「玩」的方式"},
+    {type:"dededi",question:"這是爸爸買___禮物",options:["的","得","地","底"],answer:0,explanation:"的：表示「爸爸買的」修飾禮物"},
+    {type:"dededi",question:"他算數學算___又快又對",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"弟弟偷偷___拿了餅乾",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「拿」的方式"},
+    {type:"dededi",question:"軟綿綿___棉花糖好吃",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他跳繩跳___很厲害",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    {type:"dededi",question:"大家有禮貌___向老師問好",options:["地","的","得","底"],answer:0,explanation:"地：修飾動詞「問好」的方式"},
+    {type:"dededi",question:"閃亮亮___鑽石好漂亮",options:["的","得","地","底"],answer:0,explanation:"的：形容詞修飾名詞"},
+    {type:"dededi",question:"他唱歌唱___好大聲",options:["得","的","地","底"],answer:0,explanation:"得：動詞後表示程度"},
+    // 做/作 (100)
+    {type:"zuozuo",question:"媽媽在___飯",options:["做","作"],answer:0,explanation:"做：具體的動作行為"},
+    {type:"zuozuo",question:"這是他的___品",options:["作","做"],answer:0,explanation:"作：抽象的創作成果"},
+    {type:"zuozuo",question:"我在___功課",options:["做","作"],answer:0,explanation:"做功課：具體行為"},
+    {type:"zuozuo",question:"他___了一首詩",options:["作","做"],answer:0,explanation:"作詩：文學創作"},
+    {type:"zuozuo",question:"不要___壞事",options:["做","作"],answer:0,explanation:"做壞事：具體行為"},
+    {type:"zuozuo",question:"這是我的___文",options:["作","做"],answer:0,explanation:"作文：文學創作類"},
+    {type:"zuozuo",question:"媽媽___了很多菜",options:["做","作"],answer:0,explanation:"做菜：具體動作"},
+    {type:"zuozuo",question:"他每天早上___運動",options:["做","作"],answer:0,explanation:"做運動：具體行為"},
+    {type:"zuozuo",question:"我們___朋友吧",options:["做","作"],answer:0,explanation:"做朋友：具體行為"},
+    {type:"zuozuo",question:"老師出了一個___業",options:["作","做"],answer:0,explanation:"作業：固定名詞"},
+    {type:"zuozuo",question:"他___事很認真",options:["做","作"],answer:0,explanation:"做事：具體行為"},
+    {type:"zuozuo",question:"這首歌的___曲者是誰？",options:["作","做"],answer:0,explanation:"作曲：音樂創作"},
+    {type:"zuozuo",question:"爸爸___了一個書架",options:["做","作"],answer:0,explanation:"做書架：具體製作"},
+    {type:"zuozuo",question:"弟弟___了一個燈籠",options:["做","作"],answer:0,explanation:"做燈籠：具體製作物品，用「做」"},
+    {type:"zuozuo",question:"這本書的___者很有名",options:["作","做"],answer:0,explanation:"作者：創作者"},
+    {type:"zuozuo",question:"她___了一個蛋糕",options:["做","作"],answer:0,explanation:"做蛋糕：具體製作"},
+    {type:"zuozuo",question:"不要___弊",options:["作","做"],answer:0,explanation:"作弊：固定用法"},
+    {type:"zuozuo",question:"哥哥長大要___醫生",options:["做","作"],answer:0,explanation:"做醫生：擔任某職業"},
+    {type:"zuozuo",question:"這是合___的結果",options:["作","做"],answer:0,explanation:"合作：共同創作或工作"},
+    {type:"zuozuo",question:"她___了一條手鏈",options:["做","作"],answer:0,explanation:"做手鏈：具體製作"},
+    {type:"zuozuo",question:"他在___實驗",options:["做","作"],answer:0,explanation:"做實驗：具體行為"},
+    {type:"zuozuo",question:"請不要___聲",options:["作","做"],answer:0,explanation:"作聲：發出聲音，固定用法"},
+    {type:"zuozuo",question:"弟弟___了一架紙飛機",options:["做","作"],answer:0,explanation:"做紙飛機：具體製作"},
+    {type:"zuozuo",question:"這幅畫是他的傑___",options:["作","做"],answer:0,explanation:"傑作：創作成果"},
+    {type:"zuozuo",question:"我要___一個好學生",options:["做","作"],answer:0,explanation:"做好學生：擔任角色"},
+    {type:"zuozuo",question:"寫___文要多練習",options:["作","做"],answer:0,explanation:"作文：文學創作"},
+    {type:"zuozuo",question:"他___了一張桌子",options:["做","作"],answer:0,explanation:"做桌子：具體製作"},
+    {type:"zuozuo",question:"他跳舞的動___又快又優雅",options:["作","做"],answer:0,explanation:"動作：固定名詞，只用「作」"},
+    {type:"zuozuo",question:"她在___手工藝品",options:["做","作"],answer:0,explanation:"做手工藝品：具體製作"},
+    {type:"zuozuo",question:"工___坊裡有很多設備",options:["作","做"],answer:0,explanation:"工作坊：工作的場所"},
+    {type:"zuozuo",question:"我們一起___遊戲",options:["做","作"],answer:0,explanation:"做遊戲：具體活動"},
+    {type:"zuozuo",question:"他___了一個決定",options:["做","作"],answer:0,explanation:"做決定：具體行為"},
+    {type:"zuozuo",question:"這部電影的導演也是___家",options:["作","做"],answer:0,explanation:"作家：創作者的身分"},
+    {type:"zuozuo",question:"我幫媽媽___家事",options:["做","作"],answer:0,explanation:"做家事：具體行為"},
+    {type:"zuozuo",question:"請大家___好準備",options:["做","作"],answer:0,explanation:"做準備：具體行為"},
+    {type:"zuozuo",question:"___息時間到了",options:["作","做"],answer:0,explanation:"作息：生活規律"},
+    {type:"zuozuo",question:"他___了很多好事",options:["做","作"],answer:0,explanation:"做好事：具體行為"},
+    {type:"zuozuo",question:"這件___品很精美",options:["作","做"],answer:0,explanation:"作品：創作的成果"},
+    {type:"zuozuo",question:"___生意要誠實",options:["做","作"],answer:0,explanation:"做生意：具體行為"},
+    {type:"zuozuo",question:"他在___畫",options:["作","做"],answer:0,explanation:"作畫：藝術創作"},
+    {type:"zuozuo",question:"要___一個誠實的人",options:["做","作"],answer:0,explanation:"做人：為人處事"},
+    {type:"zuozuo",question:"他___操的動作很標準",options:["做","作"],answer:0,explanation:"做操：具體動作"},
+    {type:"zuozuo",question:"寫___業要用心",options:["作","做"],answer:0,explanation:"作業：固定名詞"},
+    {type:"zuozuo",question:"我___了一份禮物",options:["做","作"],answer:0,explanation:"做禮物：具體製作"},
+    {type:"zuozuo",question:"他___為班長很負責",options:["作","做"],answer:0,explanation:"作為：用作介詞表身分"},
+    {type:"zuozuo",question:"他每天的___息很規律",options:["作","做"],answer:0,explanation:"作息：固定用法（生活起居的規律），只用「作」"},
+    {type:"zuozuo",question:"她___了一碗湯",options:["做","作"],answer:0,explanation:"做湯：具體烹飪"},
+    {type:"zuozuo",question:"考試不可以___弊",options:["作","做"],answer:0,explanation:"作弊：固定用法，用「作」（「做弊」不是標準用法）"},
+    {type:"zuozuo",question:"他___了一個相框",options:["做","作"],answer:0,explanation:"做相框：具體製作"},
+    {type:"zuozuo",question:"姐姐的___業很多",options:["作","做"],answer:0,explanation:"作業：固定名詞"},
+    {type:"zuozuo",question:"我想學___陶器",options:["做","作"],answer:0,explanation:"做陶器：具體製作"},
+    {type:"zuozuo",question:"這場表演很___作",options:["做","作"],answer:0,explanation:"做作：不自然"},
+    {type:"zuozuo",question:"農___物需要陽光",options:["作","做"],answer:0,explanation:"作物：農業名詞"},
+    {type:"zuozuo",question:"他___了班長",options:["做","作"],answer:0,explanation:"做班長：擔任某職位"},
+    {type:"zuozuo",question:"副___用不大",options:["作","做"],answer:0,explanation:"副作用：固定名詞"},
+    {type:"zuozuo",question:"今天我___值日生",options:["做","作"],answer:0,explanation:"做值日生：擔任角色"},
+    {type:"zuozuo",question:"他___用很大",options:["作","做"],answer:0,explanation:"作用：功能效果"},
+    {type:"zuozuo",question:"___操的時間到了",options:["做","作"],answer:0,explanation:"做操：具體活動"},
+    {type:"zuozuo",question:"他的寫___風格很好",options:["作","做"],answer:0,explanation:"寫作：文學創作"},
+    {type:"zuozuo",question:"我___了一個風箏",options:["做","作"],answer:0,explanation:"做風箏：具體製作"},
+    {type:"zuozuo",question:"老師叫我們___筆記",options:["做","作"],answer:0,explanation:"做筆記：具體行為"},
+    {type:"zuozuo",question:"媽媽正在廚房___菜",options:["做","作"],answer:0,explanation:"做菜：具體烹飪，用「做」"},
+    {type:"zuozuo",question:"創___力很重要",options:["作","做"],answer:0,explanation:"創作力：抽象能力"},
+    {type:"zuozuo",question:"她___了一個布偶",options:["做","作"],answer:0,explanation:"做布偶：具體製作"},
+    {type:"zuozuo",question:"請___自我介紹",options:["做","作"],answer:0,explanation:"做自我介紹：具體行為"},
+    {type:"zuozuo",question:"他是音樂___曲家",options:["作","做"],answer:0,explanation:"作曲家：創作者身分"},
+    {type:"zuozuo",question:"我幫爸爸___事",options:["做","作"],answer:0,explanation:"做事：具體行為"},
+    {type:"zuozuo",question:"___戰計畫已經完成",options:["作","做"],answer:0,explanation:"作戰：固定名詞"},
+    {type:"zuozuo",question:"她___了很多點心",options:["做","作"],answer:0,explanation:"做點心：具體製作"},
+    {type:"zuozuo",question:"考試絕對不可以___弊",options:["作","做"],answer:0,explanation:"作弊：固定用法，用「作」"},
+    {type:"zuozuo",question:"大___家的書很好看",options:["作","做"],answer:0,explanation:"大作家：創作者"},
+    {type:"zuozuo",question:"___人要有良心",options:["做","作"],answer:0,explanation:"做人：為人處事"},
+    {type:"zuozuo",question:"他___了一個模型",options:["做","作"],answer:0,explanation:"做模型：具體製作"},
+    {type:"zuozuo",question:"小___文比賽得獎了",options:["作","做"],answer:0,explanation:"小作文：文學創作"},
+    {type:"zuozuo",question:"媽媽___了一頓大餐",options:["做","作"],answer:0,explanation:"做大餐：具體烹飪"},
+    {type:"zuozuo",question:"這首___品很感人",options:["作","做"],answer:0,explanation:"作品：創作成果"},
+    {type:"zuozuo",question:"我想___一件好事",options:["做","作"],answer:0,explanation:"做好事：具體行為"},
+    {type:"zuozuo",question:"他___為隊長要以身作則",options:["作","做"],answer:0,explanation:"作為：身分用法"},
+    {type:"zuozuo",question:"她___了一套衣服",options:["做","作"],answer:0,explanation:"做衣服：具體製作"},
+    {type:"zuozuo",question:"叫他不要胡___非為",options:["作","做"],answer:0,explanation:"作非為：固定用法"},
+    {type:"zuozuo",question:"我___了一個筆筒",options:["做","作"],answer:0,explanation:"做筆筒：具體製作"},
+    {type:"zuozuo",question:"這個___文寫得很好",options:["作","做"],answer:0,explanation:"作文：文學創作"},
+    {type:"zuozuo",question:"媽媽在廚房___晚飯",options:["做","作"],answer:0,explanation:"做飯／做晚飯：具體的烹煮動作，用「做」（「作飯」不是標準用法）"},
+    {type:"zuozuo",question:"名___很好看",options:["作","做"],answer:0,explanation:"名作：著名的作品"},
+    {type:"zuozuo",question:"她___了一頂帽子",options:["做","作"],answer:0,explanation:"做帽子：具體製作物品，用「做」"},
+    {type:"zuozuo",question:"他在___怪表情",options:["做","作"],answer:0,explanation:"做表情：具體動作"},
+    {type:"zuozuo",question:"裝模___樣，很不自然",options:["作","做"],answer:0,explanation:"裝模作樣：故意做出某種樣子"},
+    {type:"zuozuo",question:"她___了一串珠鏈",options:["做","作"],answer:0,explanation:"做珠鏈：具體製作"},
+    {type:"zuozuo",question:"小___家寫了一本書",options:["作","做"],answer:0,explanation:"作家：創作者身分"},
+    {type:"zuozuo",question:"我們___完功課再玩",options:["做","作"],answer:0,explanation:"做功課：具體行為"},
+    {type:"zuozuo",question:"他___了一番大事業",options:["做","作"],answer:0,explanation:"做事業：具體成就"},
+    {type:"zuozuo",question:"請___好自己的本分",options:["做","作"],answer:0,explanation:"做好本分：具體行為"},
+    {type:"zuozuo",question:"他___了一個模範生",options:["做","作"],answer:0,explanation:"做模範生：擔任角色"},
+    {type:"zuozuo",question:"這幅畫是用廢材料___的",options:["做","作"],answer:0,explanation:"做：具體製作"},
+    {type:"zuozuo",question:"工___很辛苦",options:["作","做"],answer:0,explanation:"工作：固定名詞"},
+    {type:"zuozuo",question:"老師出了很多___業",options:["作","做"],answer:0,explanation:"作業：固定用詞，用「作」"},
+    {type:"zuozuo",question:"這是團隊合___的成果",options:["作","做"],answer:0,explanation:"合作：共同工作"},
+    // 在/再 (100)
+    {type:"zaizai",question:"我___家裡",options:["在","再"],answer:0,explanation:"在：表示位置所在"},
+    {type:"zaizai",question:"請你___說一次",options:["再","在"],answer:0,explanation:"再：表示重複動作"},
+    {type:"zaizai",question:"他___學校上課",options:["在","再"],answer:0,explanation:"在：表示地點"},
+    {type:"zaizai",question:"___見！明天見",options:["再","在"],answer:0,explanation:"再見：表示下次再見面"},
+    {type:"zaizai",question:"我___也不遲到了",options:["再","在"],answer:0,explanation:"再也不：表示以後不再"},
+    {type:"zaizai",question:"哥哥___房間看書",options:["在","再"],answer:0,explanation:"在：表示地點"},
+    {type:"zaizai",question:"請___等一下",options:["再","在"],answer:0,explanation:"再：表示繼續做某事"},
+    {type:"zaizai",question:"他正___吃飯",options:["在","再"],answer:0,explanation:"在：表示正在進行"},
+    {type:"zaizai",question:"___接___厲",options:["再","在"],answer:0,explanation:"再接再厲：繼續努力"},
+    {type:"zaizai",question:"媽媽___廚房煮菜",options:["在","再"],answer:0,explanation:"在：表示地點"},
+    {type:"zaizai",question:"我___也不說謊了",options:["再","在"],answer:0,explanation:"再也不：表示以後不再"},
+    {type:"zaizai",question:"弟弟___操場跑步",options:["在","再"],answer:0,explanation:"在：表示地點"},
+    {type:"zaizai",question:"吃完飯___去玩",options:["再","在"],answer:0,explanation:"再：先後順序，之後才做"},
+    {type:"zaizai",question:"他___看電視",options:["在","再"],answer:0,explanation:"在：表示正在進行"},
+    {type:"zaizai",question:"___多的錢也買不到健康",options:["再","在"],answer:0,explanation:"再多：即使更多"},
+    {type:"zaizai",question:"同學們___教室裡",options:["在","再"],answer:0,explanation:"在：表示位置"},
+    {type:"zaizai",question:"寫完功課___看電視",options:["再","在"],answer:0,explanation:"再：先後順序"},
+    {type:"zaizai",question:"她___這裡等你",options:["在","再"],answer:0,explanation:"在：表示地點"},
+    {type:"zaizai",question:"___試一次吧！",options:["再","在"],answer:0,explanation:"再試：重複動作"},
+    {type:"zaizai",question:"小鳥___樹上唱歌",options:["在","再"],answer:0,explanation:"在：表示位置"},
+    {type:"zaizai",question:"洗完手___吃飯",options:["再","在"],answer:0,explanation:"再：先後順序"},
+    {type:"zaizai",question:"他___努力一點就好了",options:["再","在"],answer:0,explanation:"再努力：多努力一些"},
+    {type:"zaizai",question:"我___圖書館借書",options:["在","再"],answer:0,explanation:"在：表示地點"},
+    {type:"zaizai",question:"___三考慮之後才決定",options:["再","在"],answer:0,explanation:"再三：一次又一次"},
+    {type:"zaizai",question:"他___哪裡？",options:["在","再"],answer:0,explanation:"在：表示位置"},
+    {type:"zaizai",question:"請___來一碗湯",options:["再","在"],answer:0,explanation:"再來：多加一份"},
+    {type:"zaizai",question:"___現實生活中",options:["在","再"],answer:0,explanation:"在：表示處於某情境"},
+    {type:"zaizai",question:"___大一點聲音",options:["再","在"],answer:0,explanation:"再大：程度上更多"},
+    {type:"zaizai",question:"我___做作業呢",options:["在","再"],answer:0,explanation:"在：表示正在進行"},
+    {type:"zaizai",question:"先想清楚___回答",options:["再","在"],answer:0,explanation:"再回答：先後順序"},
+    {type:"zaizai",question:"魚___水裡游",options:["在","再"],answer:0,explanation:"在：表示位置"},
+    {type:"zaizai",question:"他說___也不哭了",options:["再","在"],answer:0,explanation:"再也不：以後不再"},
+    {type:"zaizai",question:"爸爸___公司上班",options:["在","再"],answer:0,explanation:"在：表示地點"},
+    {type:"zaizai",question:"下次___一起玩吧",options:["再","在"],answer:0,explanation:"再一起：下次重複"},
+    {type:"zaizai",question:"他___寫日記",options:["在","再"],answer:0,explanation:"在：表示正在進行"},
+    {type:"zaizai",question:"這個問題值得___想想",options:["再","在"],answer:0,explanation:"再想：重複思考"},
+    {type:"zaizai",question:"貓咪___沙發上睡覺",options:["在","再"],answer:0,explanation:"在：表示位置"},
+    {type:"zaizai",question:"他___也不敢了",options:["再","在"],answer:0,explanation:"再也不：以後不再"},
+    {type:"zaizai",question:"我___吃一塊可以嗎？",options:["再","在"],answer:0,explanation:"再吃：重複、多吃"},
+    {type:"zaizai",question:"老師___講台上講課",options:["在","再"],answer:0,explanation:"在：表示位置"},
+    {type:"zaizai",question:"聽不清楚，___說一遍",options:["再","在"],answer:0,explanation:"再說：重複動作"},
+    {type:"zaizai",question:"我___門口等你",options:["在","再"],answer:0,explanation:"在：表示位置"},
+    {type:"zaizai",question:"___過幾天就放假了",options:["再","在"],answer:0,explanation:"再過：時間推移"},
+    {type:"zaizai",question:"雨___下個不停",options:["在","再"],answer:0,explanation:"在：表示持續進行"},
+    {type:"zaizai",question:"___怎麼努力也沒用",options:["再","在"],answer:0,explanation:"再怎麼：即使更多努力"},
+    {type:"zaizai",question:"太陽___天上",options:["在","再"],answer:0,explanation:"在：表示位置"},
+    {type:"zaizai",question:"___好不過了",options:["再","在"],answer:0,explanation:"再好不過：最好了"},
+    {type:"zaizai",question:"我___想想辦法",options:["再","在"],answer:0,explanation:"再想：重新思考"},
+    {type:"zaizai",question:"他___大聲唱歌",options:["在","再"],answer:0,explanation:"在：表示正在做"},
+    {type:"zaizai",question:"___不走就來不及了",options:["再","在"],answer:0,explanation:"再不走：如果繼續不走"},
+    {type:"zaizai",question:"小狗___院子裡玩",options:["在","再"],answer:0,explanation:"在：表示位置"},
+    {type:"zaizai",question:"請___加一些鹽",options:["再","在"],answer:0,explanation:"再加：多加一些"},
+    {type:"zaizai",question:"時間___流逝",options:["在","再"],answer:0,explanation:"在：表示持續進行"},
+    {type:"zaizai",question:"___給他一次機會吧",options:["再","在"],answer:0,explanation:"再給：多給一次"},
+    {type:"zaizai",question:"我___認真想想",options:["再","在"],answer:0,explanation:"再認真：重新、更認真地"},
+    {type:"zaizai",question:"他___黑板上寫字",options:["在","再"],answer:0,explanation:"在：表示位置"},
+    {type:"zaizai",question:"___美的花也會凋謝",options:["再","在"],answer:0,explanation:"再美：即使更美"},
+    {type:"zaizai",question:"鑰匙___口袋裡",options:["在","再"],answer:0,explanation:"在：表示位置"},
+    {type:"zaizai",question:"___看一遍就記住了",options:["再","在"],answer:0,explanation:"再看：重複看"},
+    {type:"zaizai",question:"他___跑步，不要打擾他",options:["在","再"],answer:0,explanation:"在：表示正在進行"},
+    {type:"zaizai",question:"___快一點就好了",options:["再","在"],answer:0,explanation:"再快：再快一點"},
+    {type:"zaizai",question:"螞蟻___地上爬",options:["在","再"],answer:0,explanation:"在：表示位置"},
+    {type:"zaizai",question:"明天___來找你玩",options:["再","在"],answer:0,explanation:"再來：下次再來"},
+    {type:"zaizai",question:"你___說什麼？",options:["在","再"],answer:0,explanation:"在說：正在說"},
+    {type:"zaizai",question:"___多走幾步就到了",options:["再","在"],answer:0,explanation:"再多走：多走一些"},
+    {type:"zaizai",question:"我的書___桌上",options:["在","再"],answer:0,explanation:"在：表示位置"},
+    {type:"zaizai",question:"___仔細看看",options:["再","在"],answer:0,explanation:"再看：重新看"},
+    {type:"zaizai",question:"爺爺___公園散步",options:["在","再"],answer:0,explanation:"在：表示地點"},
+    {type:"zaizai",question:"___也沒有比這更好的了",options:["再","在"],answer:0,explanation:"再也沒有：程度最高"},
+    {type:"zaizai",question:"他___整理房間",options:["在","再"],answer:0,explanation:"在：表示正在進行"},
+    {type:"zaizai",question:"先休息___繼續",options:["再","在"],answer:0,explanation:"再繼續：先後順序"},
+    {type:"zaizai",question:"妹妹___畫畫",options:["在","再"],answer:0,explanation:"在：表示正在進行"},
+    {type:"zaizai",question:"___努力一下就成功了",options:["再","在"],answer:0,explanation:"再努力：多努力一些"},
+    {type:"zaizai",question:"我___上課不能出去",options:["在","再"],answer:0,explanation:"在上課：正在進行"},
+    {type:"zaizai",question:"___也找不到了",options:["再","在"],answer:0,explanation:"再也：以後也"},
+    {type:"zaizai",question:"他___窗邊看風景",options:["在","再"],answer:0,explanation:"在：表示位置"},
+    {type:"zaizai",question:"___想一想有沒有別的辦法",options:["再","在"],answer:0,explanation:"再想：重新考慮"},
+    {type:"zaizai",question:"我___吃早餐",options:["在","再"],answer:0,explanation:"在：表示正在進行"},
+    {type:"zaizai",question:"___見面時要記得說謝謝",options:["再","在"],answer:0,explanation:"再見面：下次見面"},
+    {type:"zaizai",question:"同學___打球",options:["在","再"],answer:0,explanation:"在：表示正在進行"},
+    {type:"zaizai",question:"他___也沒有回來過",options:["再","在"],answer:0,explanation:"再也沒有：以後都不再"},
+    {type:"zaizai",question:"我___這裡住了三年",options:["在","再"],answer:0,explanation:"在：表示地點"},
+    {type:"zaizai",question:"___聰明的人也需要努力",options:["再","在"],answer:0,explanation:"再聰明：即使更聰明"},
+    {type:"zaizai",question:"她___彈鋼琴",options:["在","再"],answer:0,explanation:"在：表示正在進行"},
+    {type:"zaizai",question:"___多等五分鐘",options:["再","在"],answer:0,explanation:"再多等：多等一些時間"},
+    {type:"zaizai",question:"他的心___砰砰跳",options:["在","再"],answer:0,explanation:"在：表示持續進行"},
+    {type:"zaizai",question:"___確認一次比較好",options:["再","在"],answer:0,explanation:"再確認：重複確認"},
+    {type:"zaizai",question:"花___花瓶裡",options:["在","再"],answer:0,explanation:"在：表示位置"},
+    {type:"zaizai",question:"___吵就要處罰了",options:["再","在"],answer:0,explanation:"再吵：如果繼續吵"},
+    {type:"zaizai",question:"他每天___練習寫字",options:["在","再"],answer:0,explanation:"在：表示持續進行"},
+    {type:"zaizai",question:"下課___去上廁所",options:["再","在"],answer:0,explanation:"再去：先後順序"},
+    {type:"zaizai",question:"幸福就___身邊",options:["在","再"],answer:0,explanation:"在：表示存在的位置"},
+    {type:"zaizai",question:"___多加一匙糖",options:["再","在"],answer:0,explanation:"再多加：多加一些"},
+    {type:"zaizai",question:"問題___於態度",options:["在","再"],answer:0,explanation:"在於：表示關鍵所在"},
+    {type:"zaizai",question:"他___也不想遲到了",options:["再","在"],answer:0,explanation:"再也不：以後不再"},
+    {type:"zaizai",question:"爸爸___客廳看電視",options:["在","再"],answer:0,explanation:"在：表示位置"},
+    {type:"zaizai",question:"___重新做一次",options:["再","在"],answer:0,explanation:"再重新：重複做"},
+    {type:"zaizai",question:"他___認真練習中",options:["在","再"],answer:0,explanation:"在：表示正在進行"},
+    // 錯字辨識 (100)
+    {type:"wrong",question:"哪個詞語有錯字？",options:["誠肯","誠懇","誠實","誠心"],answer:0,explanation:"正確寫法是「誠懇」，不是「誠肯」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["辛苦","幸苦","辛勤","辛酸"],answer:1,explanation:"正確寫法是「辛苦」，不是「幸苦」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["蜜蜂","密蜂","蜂蜜","蜂巢"],answer:1,explanation:"正確寫法是「蜜蜂」，不是「密蜂」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["豐收","風收","收穫","收成"],answer:1,explanation:"正確寫法是「豐收」，不是「風收」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["以經","已經","已然","以為"],answer:0,explanation:"正確寫法是「已經」，不是「以經」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["在見","再見","再來","再次"],answer:0,explanation:"正確寫法是「再見」，不是「在見」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["遊戲","游戲","遊玩","遊客"],answer:1,explanation:"正確寫法是「遊戲」，不是「游戲」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["必需品","必須品","日用品","消耗品"],answer:1,explanation:"正確是「必需品」（必需=必要的東西）；日用品、消耗品都是正確詞語，只有「必須品」用錯字（應為必需品）"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["坐位","座位","席位","座椅"],answer:0,explanation:"正確寫法是「座位」，不是「坐位」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["報怨","抱怨","報復","抱歉"],answer:0,explanation:"正確寫法是「抱怨」，不是「報怨」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["園滿","圓滿","圓形","團圓"],answer:0,explanation:"正確寫法是「圓滿」，不是「園滿」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["按時","準時","按照","安時"],answer:3,explanation:"正確寫法是「按時」，不是「安時」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["尊敬","遵敬","尊重","尊師"],answer:1,explanation:"正確寫法是「尊敬」，不是「遵敬」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["急躁","急燥","急忙","急切"],answer:1,explanation:"正確寫法是「急躁」，不是「急燥」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["悠閒","悠嫻","閒暇","清閒"],answer:1,explanation:"正確寫法是「悠閒」，不是「悠嫻」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["艱辛","堅辛","艱難","艱苦"],answer:1,explanation:"正確寫法是「艱辛」，不是「堅辛」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["祕密","密碼","密秘","機密"],answer:2,explanation:"正確寫法是「祕密」，「密秘」是把字序寫反的錯誤"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["堅決","間決","堅持","堅強"],answer:1,explanation:"正確寫法是「堅決」，不是「間決」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["鍛練","鍛鍊","訓練","練習"],answer:0,explanation:"正確寫法是「鍛鍊」，不是「鍛練」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["貫徹","慣徹","一貫","貫通"],answer:1,explanation:"正確寫法是「貫徹」，不是「慣徹」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["陪伴","賠伴","陪同","陪練"],answer:1,explanation:"正確寫法是「陪伴」，不是「賠伴」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["記憶","計憶","回憶","記得"],answer:1,explanation:"正確寫法是「記憶」，不是「計憶」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["觀查","觀察","察看","偵察"],answer:0,explanation:"正確寫法是「觀察」，不是「觀查」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["搏物館","博物館","博學","博覽"],answer:0,explanation:"正確寫法是「博物館」，不是「搏物館」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["驕傲","嬌傲","驕縱","驕兵"],answer:1,explanation:"正確寫法是「驕傲」，不是「嬌傲」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["尊守","遵守","遵從","遵循"],answer:0,explanation:"正確寫法是「遵守」，不是「尊守」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["迫不急待","迫不及待","急迫","緊迫"],answer:0,explanation:"正確寫法是「迫不及待」，不是「迫不急待」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["震撼","振撼","震動","震驚"],answer:1,explanation:"正確寫法是「震撼」，不是「振撼」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["反應","反映","反印","反省"],answer:2,explanation:"正確寫法是「反應」或「反映」，沒有「反印」這個詞語"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["歡呼","歡乎","歡笑","歡迎"],answer:1,explanation:"正確寫法是「歡呼」，不是「歡乎」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["辯論","辨論","辯護","辯解"],answer:1,explanation:"正確寫法是「辯論」，不是「辨論」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["防礙","妨礙","妨害","防止"],answer:0,explanation:"正確寫法是「妨礙」，不是「防礙」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["吶喊","納喊","吶叫","吶吼"],answer:1,explanation:"正確寫法是「吶喊」，不是「納喊」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["需要","需耍","必需","需求"],answer:1,explanation:"正確寫法是「需要」，不是「需耍」（沒有「需耍」這個詞）"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["凱旋","開旋","凱歌","錦旗"],answer:1,explanation:"正確寫法是「凱旋」，不是「開旋」；凱歌、錦旗都是正確的詞"},
+    {type:"wrong",question:"哪個是異體字（非標準寫法）？",options:["沉默","沈默","沉思","沉重"],answer:1,explanation:"「沉默」為標準寫法，「沈默」是異體寫法"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["恍然大悟","慌然大悟","恍惚","恍如隔世"],answer:1,explanation:"正確寫法是「恍然大悟」，不是「慌然大悟」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["膨脹","澎脹","膨大","膨風"],answer:1,explanation:"正確寫法是「膨脹」，不是「澎脹」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["勉強","免強","勉勵","勉力"],answer:1,explanation:"正確寫法是「勉強」，不是「免強」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["忽略","呼略","忽然","忽視"],answer:1,explanation:"正確寫法是「忽略」，不是「呼略」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["欣賞","心賞","賞識","欣慰"],answer:1,explanation:"正確寫法是「欣賞」，不是「心賞」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["啟發","起發","啟示","啟蒙"],answer:1,explanation:"正確寫法是「啟發」，不是「起發」"},
+    {type:"wrong",question:"哪個是異體字（非標準寫法）？",options:["仿傚","仿效","模仿","仿照"],answer:0,explanation:"「仿效」為標準寫法，「仿傚」是異體寫法"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["消滅","銷滅","消失","消除"],answer:1,explanation:"正確寫法是「消滅」，不是「銷滅」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["修復","修腹","修理","修補"],answer:1,explanation:"正確寫法是「修復」，不是「修腹」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["摸仿","模仿","仿造","仿真"],answer:0,explanation:"正確寫法是「模仿」，不是「摸仿」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["裝飾","裝識","裝扮","裝設"],answer:1,explanation:"正確寫法是「裝飾」，不是「裝識」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["協調","脅調","協助","協力"],answer:1,explanation:"正確寫法是「協調」，不是「脅調」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["附近","符近","附加","附帶"],answer:1,explanation:"正確寫法是「附近」，不是「符近」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["保障","保彰","保護","保衛"],answer:1,explanation:"正確寫法是「保障」，不是「保彰」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["距離","巨離","距今","相距"],answer:1,explanation:"正確寫法是「距離」，不是「巨離」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["堅固","間固","固定","穩固"],answer:1,explanation:"正確寫法是「堅固」，不是「間固」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["練習","聯習","練功","操練"],answer:1,explanation:"正確寫法是「練習」，不是「聯習」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["清潔","青潔","整潔","潔白"],answer:1,explanation:"正確寫法是「清潔」，不是「青潔」"},
+    {type:"wrong",question:"哪個是異體字（非標準寫法）？",options:["瞭望","了望","眺望","遙望"],answer:1,explanation:"「瞭望」是標準寫法，「了望」是非標準的異體寫法"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["景像","景象","景色","風景"],answer:0,explanation:"正確寫法是「景象」，不是「景像」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["幻像","幻象","幻想","夢幻"],answer:0,explanation:"正確寫法是「幻象」，不是「幻像」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["侯車室","候車室","候鳥","等候"],answer:0,explanation:"正確寫法是「候車室」，不是「侯車室」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["蒼海","滄海","滄桑","蒼翠"],answer:0,explanation:"正確寫法是「滄海」，不是「蒼海」"},
+    {type:"wrong",question:"哪個是異體字（非標準寫法）？",options:["部署","佈署","部隊","部門"],answer:1,explanation:"「部署」是標準寫法，「佈署」是非標準的異體寫法"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["名付其實","名副其實","副本","副手"],answer:0,explanation:"正確寫法是「名副其實」，不是「名付其實」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["雕像","雕象","雕刻","雕塑"],answer:1,explanation:"正確寫法是「雕像」，不是「雕象」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["蜿延","蜿蜒","綿延","曲折"],answer:0,explanation:"正確寫法是「蜿蜒」，不是「蜿延」；綿延、曲折都是正確的詞"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["按步就班","按部就班","循序漸進","按照"],answer:0,explanation:"正確寫法是「按部就班」，不是「按步就班」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["到處","道處","處處","四處"],answer:1,explanation:"正確寫法是「到處」，不是「道處」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["嘗試","常試","試試","嘗嘗"],answer:1,explanation:"正確寫法是「嘗試」，不是「常試」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["決定","決訂","決心","堅決"],answer:1,explanation:"正確寫法是「決定」，不是「決訂」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["享受","想受","享用","享樂"],answer:1,explanation:"正確寫法是「享受」，不是「想受」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["溝通","構通","疏通","暢通"],answer:1,explanation:"正確寫法是「溝通」，不是「構通」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["原來","原賴","原因","原始"],answer:1,explanation:"正確寫法是「原來」，不是「原賴」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["競爭","竟爭","競賽","競選"],answer:1,explanation:"正確寫法是「競爭」，不是「竟爭」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["成功","成工","成績","成就"],answer:1,explanation:"正確寫法是「成功」，不是「成工」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["豐富","峰富","豐盛","豐收"],answer:1,explanation:"正確寫法是「豐富」，不是「峰富」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["繁殖","繁值","繁華","繁忙"],answer:1,explanation:"正確寫法是「繁殖」，不是「繁值」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["嶄新","暫新","嶄露","閃亮"],answer:1,explanation:"正確寫法是「嶄新」，不是「暫新」；嶄露、閃亮都是正確的詞"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["優雅","憂雅","優美","優秀"],answer:1,explanation:"正確寫法是「優雅」，不是「憂雅」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["珍惜","真惜","珍貴","珍藏"],answer:1,explanation:"正確寫法是「珍惜」，不是「真惜」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["養份","養分","水分","成分"],answer:0,explanation:"正確寫法是「養分」，不是「養份」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["應該","因該","應當","答應"],answer:1,explanation:"正確寫法是「應該」，不是「因該」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["辜負","辜付","感恩","報答"],answer:1,explanation:"正確寫法是「辜負」，不是「辜付」；感恩、報答都是正確的詞。"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["形像","形象","象徵","印象"],answer:0,explanation:"正確寫法是「形象」，不是「形像」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["暴燥","暴躁","煩躁","急躁"],answer:0,explanation:"正確寫法是「暴躁」，不是「暴燥」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["安祥","安詳","慈祥","祥和"],answer:0,explanation:"正確寫法是「安詳」，不是「安祥」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["渡假","度假","假日","假期"],answer:0,explanation:"正確寫法是「度假」，不是「渡假」"},
+    {type:"wrong",question:"哪個是異體字（非標準寫法）？",options:["品嘗","品味","嚐試","回味"],answer:2,explanation:"「嘗試」為標準寫法，「嚐試」是異體寫法"},
+    {type:"wrong",question:"哪個是異體字（非標準寫法）？",options:["佈置","布置","安置","設置"],answer:0,explanation:"「布置」為標準寫法，「佈置」是異體寫法"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["蝴碟","蝴蝶","蝶戀花","飛蝶"],answer:0,explanation:"正確寫法是「蝴蝶」，不是「蝴碟」"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["狼狽","浪狽","窘困","倉皇"],answer:1,explanation:"正確寫法是「狼狽」，不是「浪狽」；窘困、倉皇都是正確的詞"},
+    {type:"wrong",question:"哪個詞語有錯字？",options:["憧景","憧憬","嚮往","期盼"],answer:0,explanation:"正確寫法是「憧憬」，不是「憧景」"},
+    // 破音字 (100)
+    {type:"bopomofo",question:"「行」在「銀行」中讀作？",options:["ㄏㄤˊ","ㄒㄧㄥˊ","ㄏㄤˋ","ㄒㄧㄥˋ"],answer:0,explanation:"銀行的「行」讀ㄏㄤˊ"},
+    {type:"bopomofo",question:"「長」在「長大」中讀作？",options:["ㄓㄤˇ","ㄔㄤˊ","ㄓㄤˋ","ㄔㄤˇ"],answer:0,explanation:"長大的「長」讀ㄓㄤˇ（成長）"},
+    {type:"bopomofo",question:"「好」在「好奇」中讀作？",options:["ㄏㄠˋ","ㄏㄠˇ","ㄏㄠ","ㄏㄠˊ"],answer:0,explanation:"好奇的「好」讀ㄏㄠˋ（喜好）"},
+    {type:"bopomofo",question:"「樂」在「音樂」中讀作？",options:["ㄩㄝˋ","ㄌㄜˋ","ㄧㄠˋ","ㄌㄠˋ"],answer:0,explanation:"音樂的「樂」讀ㄩㄝˋ"},
+    {type:"bopomofo",question:"「數」在「數學」中讀作？",options:["ㄕㄨˋ","ㄕㄨˇ","ㄙㄨˋ","ㄕㄨ"],answer:0,explanation:"數學的「數」讀ㄕㄨˋ（名詞）"},
+    {type:"bopomofo",question:"「還」在「還是」中讀作？",options:["ㄏㄞˊ","ㄏㄨㄢˊ","ㄏㄞˋ","ㄏㄨㄢˋ"],answer:0,explanation:"還是的「還」讀ㄏㄞˊ（仍然）"},
+    {type:"bopomofo",question:"「了」在「了解」中讀作？",options:["ㄌㄧㄠˇ","ㄌㄜ˙","ㄌㄧㄠˊ","ㄌㄜˋ"],answer:0,explanation:"了解的「了」讀ㄌㄧㄠˇ"},
+    {type:"bopomofo",question:"「種」在「種花」中讀作？",options:["ㄓㄨㄥˋ","ㄓㄨㄥˇ","ㄔㄨㄥˊ","ㄓㄨㄥ"],answer:0,explanation:"種花的「種」讀ㄓㄨㄥˋ（動詞）"},
+    {type:"bopomofo",question:"「假」在「放假」中讀作？",options:["ㄐㄧㄚˋ","ㄐㄧㄚˇ","ㄐㄧㄚ","ㄐㄧㄝˇ"],answer:0,explanation:"放假的「假」讀ㄐㄧㄚˋ（假期）"},
+    {type:"bopomofo",question:"「差」在「差別」中讀作？",options:["ㄔㄚ","ㄔㄚˋ","ㄔㄞ","ㄔㄞˋ"],answer:0,explanation:"差別的「差」讀ㄔㄚ（差異）"},
+    {type:"bopomofo",question:"「教」在「教室」中讀作？",options:["ㄐㄧㄠˋ","ㄐㄧㄠ","ㄐㄧㄠˇ","ㄐㄧㄠˊ"],answer:0,explanation:"教室的「教」讀ㄐㄧㄠˋ（名詞用法）"},
+    {type:"bopomofo",question:"「看」在「看守」中讀作？",options:["ㄎㄢ","ㄎㄢˋ","ㄎㄢˇ","ㄎㄢˊ"],answer:0,explanation:"看守的「看」讀ㄎㄢ（看守、看管）"},
+    {type:"bopomofo",question:"「空」在「空地」中讀作？",options:["ㄎㄨㄥˋ","ㄎㄨㄥ","ㄎㄨㄥˇ","ㄎㄨㄥˊ"],answer:0,explanation:"空地的「空」讀ㄎㄨㄥˋ（空出來的）"},
+    {type:"bopomofo",question:"「都」在「首都」中讀作？",options:["ㄉㄨ","ㄉㄡ","ㄉㄨˇ","ㄉㄡˇ"],answer:0,explanation:"首都的「都」讀ㄉㄨ（都市）"},
+    {type:"bopomofo",question:"「乾」在「乾淨」中讀作？",options:["ㄍㄢ","ㄑㄧㄢˊ","ㄍㄢˋ","ㄍㄢˇ"],answer:0,explanation:"乾淨的「乾」讀ㄍㄢ"},
+    {type:"bopomofo",question:"「傳」在「傳記」中讀作？",options:["ㄓㄨㄢˋ","ㄔㄨㄢˊ","ㄓㄨㄢˇ","ㄔㄨㄢˋ"],answer:0,explanation:"傳記的「傳」讀ㄓㄨㄢˋ（人物故事）"},
+    {type:"bopomofo",question:"「量」在「測量」中讀作？",options:["ㄌㄧㄤˊ","ㄌㄧㄤˋ","ㄌㄧㄤ","ㄌㄧㄤˇ"],answer:0,explanation:"測量的「量」讀ㄌㄧㄤˊ（動詞）"},
+    {type:"bopomofo",question:"「為」在「因為」中讀作？",options:["ㄨㄟˋ","ㄨㄟˊ","ㄨㄟ","ㄨㄟˇ"],answer:0,explanation:"因為的「為」讀ㄨㄟˋ"},
+    {type:"bopomofo",question:"「得」在「得到」中讀作？",options:["ㄉㄜˊ","ㄉㄜ˙","ㄉㄟˇ","ㄉㄜˇ"],answer:0,explanation:"得到的「得」讀ㄉㄜˊ（獲得）"},
+    {type:"bopomofo",question:"「累」在「勞累」中讀作？",options:["ㄌㄟˋ","ㄌㄟˊ","ㄌㄟˇ","ㄌㄩˇ"],answer:0,explanation:"勞累的「累」讀ㄌㄟˋ（疲累）"},
+    {type:"bopomofo",question:"「行」在「行走」中讀作？",options:["ㄒㄧㄥˊ","ㄏㄤˊ","ㄒㄧㄥˋ","ㄏㄤˋ"],answer:0,explanation:"行走的「行」讀ㄒㄧㄥˊ（走路）"},
+    {type:"bopomofo",question:"「長」在「校長」中讀作？",options:["ㄓㄤˇ","ㄔㄤˊ","ㄓㄤˋ","ㄔㄤˇ"],answer:0,explanation:"校長的「長」讀ㄓㄤˇ（首領）"},
+    {type:"bopomofo",question:"「好」在「好人」中讀作？",options:["ㄏㄠˇ","ㄏㄠˋ","ㄏㄠ","ㄏㄠˊ"],answer:0,explanation:"好人的「好」讀ㄏㄠˇ（善良的）"},
+    {type:"bopomofo",question:"「樂」在「快樂」中讀作？",options:["ㄌㄜˋ","ㄩㄝˋ","ㄧㄠˋ","ㄌㄠˋ"],answer:0,explanation:"快樂的「樂」讀ㄌㄜˋ（高興）"},
+    {type:"bopomofo",question:"「數」在「數一數」中讀作？",options:["ㄕㄨˇ","ㄕㄨˋ","ㄙㄨˋ","ㄕㄨ"],answer:0,explanation:"數一數的「數」讀ㄕㄨˇ（動詞，計算）"},
+    {type:"bopomofo",question:"「還」在「歸還」中讀作？",options:["ㄏㄨㄢˊ","ㄏㄞˊ","ㄏㄨㄢˋ","ㄏㄞˋ"],answer:0,explanation:"歸還的「還」讀ㄏㄨㄢˊ（歸還）"},
+    {type:"bopomofo",question:"「種」在「種子」中讀作？",options:["ㄓㄨㄥˇ","ㄓㄨㄥˋ","ㄔㄨㄥˊ","ㄓㄨㄥ"],answer:0,explanation:"種子的「種」讀ㄓㄨㄥˇ（名詞）"},
+    {type:"bopomofo",question:"「假」在「真假」中讀作？",options:["ㄐㄧㄚˇ","ㄐㄧㄚˋ","ㄐㄧㄚ","ㄐㄧㄝˇ"],answer:0,explanation:"真假的「假」讀ㄐㄧㄚˇ（不真實）"},
+    {type:"bopomofo",question:"「差」在「出差」中讀作？",options:["ㄔㄞ","ㄔㄚ","ㄔㄚˋ","ㄔㄞˋ"],answer:0,explanation:"出差的「差」讀ㄔㄞ（差事）"},
+    {type:"bopomofo",question:"「教」在「教書」中讀作？",options:["ㄐㄧㄠ","ㄐㄧㄠˋ","ㄐㄧㄠˇ","ㄐㄧㄠˊ"],answer:0,explanation:"教書的「教」讀ㄐㄧㄠ（動詞，教導）"},
+    {type:"bopomofo",question:"「看」在「看見」中讀作？",options:["ㄎㄢˋ","ㄎㄢ","ㄎㄢˇ","ㄎㄢˊ"],answer:0,explanation:"看見的「看」讀ㄎㄢˋ（用眼睛看）"},
+    {type:"bopomofo",question:"「空」在「天空」中讀作？",options:["ㄎㄨㄥ","ㄎㄨㄥˋ","ㄎㄨㄥˇ","ㄎㄨㄥˊ"],answer:0,explanation:"天空的「空」讀ㄎㄨㄥ（空間）"},
+    {type:"bopomofo",question:"「都」在「都是」中讀作？",options:["ㄉㄡ","ㄉㄨ","ㄉㄡˇ","ㄉㄨˇ"],answer:0,explanation:"都是的「都」讀ㄉㄡ（全部）"},
+    {type:"bopomofo",question:"「乾」在「乾坤」中讀作？",options:["ㄑㄧㄢˊ","ㄍㄢ","ㄍㄢˋ","ㄍㄢˇ"],answer:0,explanation:"乾坤的「乾」讀ㄑㄧㄢˊ（天）"},
+    {type:"bopomofo",question:"「傳」在「傳球」中讀作？",options:["ㄔㄨㄢˊ","ㄓㄨㄢˋ","ㄔㄨㄢˋ","ㄓㄨㄢˇ"],answer:0,explanation:"傳球的「傳」讀ㄔㄨㄢˊ（傳遞）"},
+    {type:"bopomofo",question:"「量」在「力量」中讀作？",options:["ㄌㄧㄤˋ","ㄌㄧㄤˊ","ㄌㄧㄤ","ㄌㄧㄤˇ"],answer:0,explanation:"力量的「量」讀ㄌㄧㄤˋ（名詞）"},
+    {type:"bopomofo",question:"「為」在「作為」中讀作？",options:["ㄨㄟˊ","ㄨㄟˋ","ㄨㄟ","ㄨㄟˇ"],answer:0,explanation:"作為的「為」讀ㄨㄟˊ（行為）"},
+    {type:"bopomofo",question:"「得」在「覺得」中讀作？",options:["ㄉㄜ˙","ㄉㄜˊ","ㄉㄟˇ","ㄉㄜˇ"],answer:0,explanation:"覺得的「得」讀輕聲ㄉㄜ˙"},
+    {type:"bopomofo",question:"「累」在「累積」中讀作？",options:["ㄌㄟˇ","ㄌㄟˋ","ㄌㄟˊ","ㄌㄩˇ"],answer:0,explanation:"累積的「累」讀ㄌㄟˇ（積累）"},
+    {type:"bopomofo",question:"「把」在「把手」中讀作？",options:["ㄅㄚˇ","ㄅㄚˋ","ㄅㄚ","ㄅㄚˊ"],answer:0,explanation:"把手的「把」讀ㄅㄚˇ"},
+    {type:"bopomofo",question:"「背」在「背書」中讀作？",options:["ㄅㄟˋ","ㄅㄟ","ㄅㄟˇ","ㄅㄟˊ"],answer:0,explanation:"背書的「背」讀ㄅㄟˋ（背誦）"},
+    {type:"bopomofo",question:"「背」在「背包」中讀作？",options:["ㄅㄟ","ㄅㄟˋ","ㄅㄟˇ","ㄅㄟˊ"],answer:0,explanation:"背包的「背」讀ㄅㄟ（揹）"},
+    {type:"bopomofo",question:"「彈」在「彈琴」中讀作？",options:["ㄊㄢˊ","ㄉㄢˋ","ㄊㄢˋ","ㄉㄢˊ"],answer:0,explanation:"彈琴的「彈」讀ㄊㄢˊ（動詞）"},
+    {type:"bopomofo",question:"「彈」在「子彈」中讀作？",options:["ㄉㄢˋ","ㄊㄢˊ","ㄊㄢˋ","ㄉㄢˊ"],answer:0,explanation:"子彈的「彈」讀ㄉㄢˋ（名詞）"},
+    {type:"bopomofo",question:"「當」在「當然」中讀作？",options:["ㄉㄤ","ㄉㄤˋ","ㄉㄤˇ","ㄉㄤˊ"],answer:0,explanation:"當然的「當」讀ㄉㄤ"},
+    {type:"bopomofo",question:"「當」在「當鋪」中讀作？",options:["ㄉㄤˋ","ㄉㄤ","ㄉㄤˇ","ㄉㄤˊ"],answer:0,explanation:"當鋪的「當」讀ㄉㄤˋ"},
+    {type:"bopomofo",question:"「倒」在「倒水」中讀作？",options:["ㄉㄠˋ","ㄉㄠˇ","ㄉㄠ","ㄉㄠˊ"],answer:0,explanation:"倒水的「倒」讀ㄉㄠˋ（動詞，傾倒）"},
+    {type:"bopomofo",question:"「倒」在「跌倒」中讀作？",options:["ㄉㄠˇ","ㄉㄠˋ","ㄉㄠ","ㄉㄠˊ"],answer:0,explanation:"跌倒的「倒」讀ㄉㄠˇ（倒下）"},
+    {type:"bopomofo",question:"「角」在「角色」中讀作？",options:["ㄐㄩㄝˊ","ㄐㄧㄠˇ","ㄐㄧㄠˊ","ㄍㄨˇ"],answer:0,explanation:"角色的「角」讀ㄐㄩㄝˊ"},
+    {type:"bopomofo",question:"「角」在「三角形」中讀作？",options:["ㄐㄧㄠˇ","ㄐㄩㄝˊ","ㄐㄧㄠˊ","ㄍㄨˇ"],answer:0,explanation:"三角形的「角」讀ㄐㄧㄠˇ"},
+    {type:"bopomofo",question:"「分」在「十分」中讀作？",options:["ㄈㄣ","ㄈㄣˋ","ㄈㄣˇ","ㄈㄣˊ"],answer:0,explanation:"十分的「分」讀ㄈㄣ（程度）"},
+    {type:"bopomofo",question:"「分」在「身分」中讀作？",options:["ㄈㄣˋ","ㄈㄣ","ㄈㄣˇ","ㄈㄣˊ"],answer:0,explanation:"身分的「分」讀ㄈㄣˋ"},
+    {type:"bopomofo",question:"「更」在「更加」中讀作？",options:["ㄍㄥˋ","ㄍㄥ","ㄍㄥˇ","ㄍㄥˊ"],answer:0,explanation:"更加的「更」讀ㄍㄥˋ（更加）"},
+    {type:"bopomofo",question:"「更」在「三更」中讀作？",options:["ㄍㄥ","ㄍㄥˋ","ㄍㄥˇ","ㄍㄥˊ"],answer:0,explanation:"三更的「更」讀ㄍㄥ（時辰）"},
+    {type:"bopomofo",question:"「和」在「和平」中讀作？",options:["ㄏㄜˊ","ㄏㄨㄛˋ","ㄏㄨˊ","ㄏㄜˋ"],answer:0,explanation:"和平的「和」讀ㄏㄜˊ"},
+    {type:"bopomofo",question:"「會」在「開會」中讀作？",options:["ㄏㄨㄟˋ","ㄎㄨㄞˋ","ㄏㄨㄟˊ","ㄏㄨㄟˇ"],answer:0,explanation:"開會的「會」讀ㄏㄨㄟˋ"},
+    {type:"bopomofo",question:"「降」在「投降」中讀作？",options:["ㄒㄧㄤˊ","ㄐㄧㄤˋ","ㄐㄧㄤ","ㄒㄧㄤˋ"],answer:0,explanation:"投降的「降」讀ㄒㄧㄤˊ"},
+    {type:"bopomofo",question:"「降」在「降落」中讀作？",options:["ㄐㄧㄤˋ","ㄒㄧㄤˊ","ㄐㄧㄤ","ㄒㄧㄤˋ"],answer:0,explanation:"降落的「降」讀ㄐㄧㄤˋ（下降）"},
+    {type:"bopomofo",question:"「樂」在「樂器」中讀作？",options:["ㄩㄝˋ","ㄌㄜˋ","ㄧㄠˋ","ㄌㄠˋ"],answer:0,explanation:"樂器的「樂」讀ㄩㄝˋ（音樂的）"},
+    {type:"bopomofo",question:"「難」在「困難」中讀作？",options:["ㄋㄢˊ","ㄋㄢˋ","ㄋㄢ","ㄋㄢˇ"],answer:0,explanation:"困難的「難」讀ㄋㄢˊ（不容易）"},
+    {type:"bopomofo",question:"「難」在「難民」中讀作？",options:["ㄋㄢˋ","ㄋㄢˊ","ㄋㄢ","ㄋㄢˇ"],answer:0,explanation:"難民的「難」讀ㄋㄢˋ（災難）"},
+    {type:"bopomofo",question:"「盛」在「盛飯」中讀作？",options:["ㄔㄥˊ","ㄕㄥˋ","ㄕㄥˊ","ㄔㄥˋ"],answer:0,explanation:"盛飯的「盛」讀ㄔㄥˊ（裝東西）"},
+    {type:"bopomofo",question:"「盛」在「盛開」中讀作？",options:["ㄕㄥˋ","ㄔㄥˊ","ㄕㄥˊ","ㄔㄥˋ"],answer:0,explanation:"盛開的「盛」讀ㄕㄥˋ（茂盛）"},
+    {type:"bopomofo",question:"「省」在「省錢」中讀作？",options:["ㄕㄥˇ","ㄒㄧㄥˇ","ㄕㄥˋ","ㄒㄧㄥˋ"],answer:0,explanation:"省錢的「省」讀ㄕㄥˇ（節省）"},
+    {type:"bopomofo",question:"「省」在「反省」中讀作？",options:["ㄒㄧㄥˇ","ㄕㄥˇ","ㄒㄧㄥˋ","ㄕㄥˋ"],answer:0,explanation:"反省的「省」讀ㄒㄧㄥˇ（反思）"},
+    {type:"bopomofo",question:"「調」在「調查」中讀作？",options:["ㄉㄧㄠˋ","ㄊㄧㄠˊ","ㄉㄧㄠˇ","ㄊㄧㄠˋ"],answer:0,explanation:"調查的「調」讀ㄉㄧㄠˋ"},
+    {type:"bopomofo",question:"「調」在「空調」中讀作？",options:["ㄊㄧㄠˊ","ㄉㄧㄠˋ","ㄊㄧㄠˋ","ㄉㄧㄠˇ"],answer:0,explanation:"空調的「調」讀ㄊㄧㄠˊ（調節）"},
+    {type:"bopomofo",question:"「相」在「相信」中讀作？",options:["ㄒㄧㄤ","ㄒㄧㄤˋ","ㄒㄧㄤˇ","ㄒㄧㄤˊ"],answer:0,explanation:"相信的「相」讀ㄒㄧㄤ"},
+    {type:"bopomofo",question:"「相」在「相片」中讀作？",options:["ㄒㄧㄤˋ","ㄒㄧㄤ","ㄒㄧㄤˇ","ㄒㄧㄤˊ"],answer:0,explanation:"相片的「相」讀ㄒㄧㄤˋ（照片）"},
+    {type:"bopomofo",question:"「便」在「方便」中讀作？",options:["ㄅㄧㄢˋ","ㄆㄧㄢˊ","ㄅㄧㄢˊ","ㄆㄧㄢˋ"],answer:0,explanation:"方便的「便」讀ㄅㄧㄢˋ"},
+    {type:"bopomofo",question:"「便」在「便宜」中讀作？",options:["ㄆㄧㄢˊ","ㄅㄧㄢˋ","ㄅㄧㄢˊ","ㄆㄧㄢˋ"],answer:0,explanation:"便宜的「便」讀ㄆㄧㄢˊ"},
+    {type:"bopomofo",question:"「薄」在「薄弱」中讀作？",options:["ㄅㄛˊ","ㄅㄠˊ","ㄅㄛˋ","ㄅㄠˋ"],answer:0,explanation:"薄弱的「薄」讀ㄅㄛˊ（文讀音，用於薄弱、淡薄、單薄）"},
+    {type:"bopomofo",question:"「臂」在「手臂」中讀作？",options:["ㄅㄧˋ","ㄅㄟˋ","ㄅㄧˇ","ㄅㄟˇ"],answer:0,explanation:"手臂的「臂」讀ㄅㄧˋ"},
+    {type:"bopomofo",question:"「藏」在「躲藏」中讀作？",options:["ㄘㄤˊ","ㄗㄤˋ","ㄘㄤˋ","ㄗㄤˊ"],answer:0,explanation:"躲藏的「藏」讀ㄘㄤˊ（隱藏）"},
+    {type:"bopomofo",question:"「藏」在「西藏」中讀作？",options:["ㄗㄤˋ","ㄘㄤˊ","ㄘㄤˋ","ㄗㄤˊ"],answer:0,explanation:"西藏的「藏」讀ㄗㄤˋ（地名）"},
+    {type:"bopomofo",question:"「場」在「操場」中讀作？",options:["ㄔㄤˇ","ㄔㄤˊ","ㄔㄤˋ","ㄔㄤ"],answer:0,explanation:"操場的「場」讀ㄔㄤˇ（場地）"},
+    {type:"bopomofo",question:"「朝」在「朝代」中讀作？",options:["ㄔㄠˊ","ㄓㄠ","ㄓㄠˇ","ㄔㄠˋ"],answer:0,explanation:"朝代的「朝」讀ㄔㄠˊ（王朝）"},
+    {type:"bopomofo",question:"「朝」在「朝陽」中讀作？",options:["ㄓㄠ","ㄔㄠˊ","ㄓㄠˇ","ㄔㄠˋ"],answer:0,explanation:"朝陽的「朝」讀ㄓㄠ（早晨）"},
+    {type:"bopomofo",question:"「重」在「重量」中讀作？",options:["ㄓㄨㄥˋ","ㄔㄨㄥˊ","ㄓㄨㄥˇ","ㄔㄨㄥˋ"],answer:0,explanation:"重量的「重」讀ㄓㄨㄥˋ（輕重）"},
+    {type:"bopomofo",question:"「重」在「重新」中讀作？",options:["ㄔㄨㄥˊ","ㄓㄨㄥˋ","ㄔㄨㄥˋ","ㄓㄨㄥˇ"],answer:0,explanation:"重新的「重」讀ㄔㄨㄥˊ（再次）"}
+  ],
+  sentence: [
+    // Conjunctions (100)
+    {type:"conjunction",question:"___下雨了，___我還是走路去學校",options:["雖然……但是","因為……所以","如果……就","不但……而且"],answer:0,explanation:"雖然……但是：表示轉折"},
+    {type:"conjunction",question:"___他很用功，___每次都考第一名",options:["因為……所以","雖然……但是","即使……也","不但……而且"],answer:0,explanation:"因為……所以：表示因果關係"},
+    {type:"conjunction",question:"他___會畫畫，___會彈鋼琴",options:["不但……而且","雖然……但是","因為……所以","如果……就"],answer:0,explanation:"不但……而且：表示遞進"},
+    {type:"conjunction",question:"___明天放假，我們___去公園玩",options:["如果……就","即使……也","雖然……但是","不但……而且"],answer:0,explanation:"如果……就：表示假設條件"},
+    {type:"conjunction",question:"___天氣很冷，他___堅持晨跑",options:["即使……也","因為……所以","如果……就","不但……而且"],answer:0,explanation:"即使……也：表示讓步"},
+    {type:"conjunction",question:"___你不努力，___不會進步",options:["如果……就","即使……也","雖然……但是","不但……而且"],answer:0,explanation:"如果……就：表示條件假設"},
+    {type:"conjunction",question:"他___功課好，___體育也棒",options:["不但……而且","雖然……但是","因為……所以","如果……就"],answer:0,explanation:"不但……而且：表示遞進加強"},
+    {type:"conjunction",question:"___她生病了，___還是來上學",options:["雖然……但是","因為……所以","如果……就","不但……而且"],answer:0,explanation:"雖然……但是：表示轉折"},
+    {type:"conjunction",question:"___我有錢，我___買一台腳踏車",options:["如果……就","即使……也","雖然……但是","不但……而且"],answer:0,explanation:"如果……就：假設條件"},
+    {type:"conjunction",question:"___下大雨，比賽___照常舉行",options:["即使……也","如果……就","因為……所以","雖然……但是"],answer:0,explanation:"即使……也：讓步關係"},
+    {type:"conjunction",question:"___太陽很大，___我們戴帽子出門",options:["因為……所以","雖然……但是","不但……而且","即使……也"],answer:0,explanation:"因為……所以：因果關係"},
+    {type:"conjunction",question:"妹妹___會唱歌___會跳舞",options:["不但……還","雖然……但是","因為……所以","如果……就"],answer:0,explanation:"不但……還：遞進關係"},
+    {type:"conjunction",question:"___你答應了別人，___要做到",options:["既然……就","不但……而且","即使……也","雖然……但是"],answer:0,explanation:"既然……就：既定事實的推論"},
+    {type:"conjunction",question:"___是誰做的，___要受到處罰",options:["不管……都","如果……就","因為……所以","即使……也"],answer:0,explanation:"不管……都：表示無條件"},
+    {type:"conjunction",question:"他___聰明，___很勤勞",options:["不僅……還","雖然……但是","因為……所以","如果……就"],answer:0,explanation:"不僅……還：遞進關係"},
+    {type:"conjunction",question:"___考試很難，___大家都考得不錯",options:["雖然……但是","因為……所以","如果……就","不但……而且"],answer:0,explanation:"雖然……但是：轉折關係"},
+    {type:"conjunction",question:"___我遲到了，___被老師罰站",options:["因為……所以","雖然……但是","不但……而且","即使……也"],answer:0,explanation:"因為……所以：因果關係"},
+    {type:"conjunction",question:"你___想去___不想去？",options:["是……還是","不但……而且","因為……所以","雖然……但是"],answer:0,explanation:"是……還是：選擇關係"},
+    {type:"conjunction",question:"___天氣好，我們___去野餐",options:["只要……就","即使……也","雖然……但是","不但……而且"],answer:0,explanation:"只要……就：條件關係"},
+    {type:"conjunction",question:"___你不說，我___不知道",options:["要是……就","不但……而且","雖然……但是","即使……也"],answer:0,explanation:"要是……就：假設條件"},
+    {type:"conjunction",question:"他___跑得快，___跳得高",options:["不但……而且","雖然……但是","因為……所以","如果……就"],answer:0,explanation:"不但……而且：遞進關係"},
+    {type:"conjunction",question:"___你喜歡___不喜歡，這道菜都要吃完",options:["不管……還是","如果……就","因為……所以","雖然……但是"],answer:0,explanation:"不管……還是：無條件"},
+    {type:"conjunction",question:"___有空，我___去圖書館",options:["只要……就","即使……也","雖然……但是","不但……而且"],answer:0,explanation:"只要……就：條件關係"},
+    {type:"conjunction",question:"他___個子小，___跑步很快",options:["雖然……但是","因為……所以","如果……就","不但……而且"],answer:0,explanation:"雖然……但是：轉折"},
+    {type:"conjunction",question:"___你做完功課，___可以看電視",options:["只要……就","不但……而且","雖然……但是","即使……也"],answer:0,explanation:"只要……就：條件關係"},
+    {type:"conjunction",question:"___沒有水，植物___會枯死",options:["如果……就","即使……也","雖然……但是","不但……而且"],answer:0,explanation:"如果……就：假設條件"},
+    {type:"conjunction",question:"___爸爸不在家，___我自己煮飯",options:["因為……所以","雖然……但是","即使……也","不但……而且"],answer:0,explanation:"因為……所以：因果關係"},
+    {type:"conjunction",question:"___遊戲很好玩，___我們要先寫完功課",options:["雖然……但是","因為……所以","如果……就","不但……而且"],answer:0,explanation:"雖然……但是：轉折"},
+    {type:"conjunction",question:"媽媽___會做菜___會做點心",options:["不但……還","雖然……但是","因為……所以","如果……就"],answer:0,explanation:"不但……還：遞進"},
+    {type:"conjunction",question:"___努力練習，___能學會游泳",options:["只要……就","即使……也","不但……而且","雖然……但是"],answer:0,explanation:"只要……就：條件關係"},
+    {type:"conjunction",question:"___是晴天___雨天，我們都會去",options:["不論……還是","如果……就","因為……所以","雖然……但是"],answer:0,explanation:"不論……還是：無條件"},
+    {type:"conjunction",question:"他___寫完功課，___出去玩",options:["先……再","一邊……一邊","雖然……但是","即使……也"],answer:0,explanation:"先……再：先後順序（先做完一件事，再做下一件）；「一邊…一邊」是同時做（與「寫完」矛盾）、「雖然…但是」轉折、「即使…也」讓步，皆不合"},
+    {type:"conjunction",question:"我___喜歡畫畫，___喜歡跳舞",options:["既……又","因為……所以","如果……就","雖然……但是"],answer:0,explanation:"既……又：並列關係"},
+    {type:"conjunction",question:"___你再不吃飯，飯___涼了",options:["如果……就","即使……也","雖然……但是","不但……而且"],answer:0,explanation:"如果……就：假設條件"},
+    {type:"conjunction",question:"___下雨___刮風，郵差都準時送信",options:["不管……還是","如果……就","因為……所以","雖然……但是"],answer:0,explanation:"不管……還是：無條件"},
+    {type:"conjunction",question:"___你已經知道了，___應該改正",options:["既然……就","不但……而且","即使……也","雖然……但是"],answer:0,explanation:"既然……就：既定事實推論"},
+    {type:"conjunction",question:"小花___長得漂亮，___心地善良",options:["不但……而且","雖然……但是","因為……所以","如果……就"],answer:0,explanation:"不但……而且：遞進"},
+    {type:"conjunction",question:"___肚子很餓，___我去買便當",options:["因為……所以","雖然……但是","即使……也","不但……而且"],answer:0,explanation:"因為……所以：因果關係"},
+    {type:"conjunction",question:"___不小心，___會跌倒",options:["如果……就","即使……也","雖然……但是","不但……而且"],answer:0,explanation:"如果……就：假設條件"},
+    {type:"conjunction",question:"___老師很嚴格，___同學們都很喜歡她",options:["雖然……但是","因為……所以","如果……就","不但……而且"],answer:0,explanation:"雖然……但是：轉折"},
+    {type:"conjunction",question:"___吃了早餐，___有力氣上課",options:["因為……所以","雖然……但是","即使……也","不但……而且"],answer:0,explanation:"因為……所以：因果"},
+    {type:"conjunction",question:"你___選紅色___可以選藍色",options:["可以……也","不但……而且","因為……所以","雖然……但是"],answer:0,explanation:"可以……也可以：選擇"},
+    {type:"conjunction",question:"___多大的困難，我們___不怕",options:["不管……都","如果……就","因為……所以","雖然……但是"],answer:0,explanation:"不管……都：無條件"},
+    {type:"conjunction",question:"___弟弟很吵，___大家沒辦法專心",options:["因為……所以","雖然……但是","即使……也","不但……而且"],answer:0,explanation:"因為……所以：因果"},
+    {type:"conjunction",question:"他___會說中文，___會說英文",options:["不但……還","雖然……但是","因為……所以","如果……就"],answer:0,explanation:"不但……還：遞進"},
+    {type:"conjunction",question:"___他年紀小，___表現得很勇敢",options:["雖然……但是","因為……所以","如果……就","不但……而且"],answer:0,explanation:"雖然……但是：轉折"},
+    {type:"conjunction",question:"___我們齊心合力，___一定能成功",options:["只要……就","即使……也","不但……而且","雖然……但是"],answer:0,explanation:"只要……就：條件"},
+    {type:"conjunction",question:"___路途遙遠，他___決定走過去",options:["即使……也","如果……就","因為……所以","不但……而且"],answer:0,explanation:"即使……也：讓步"},
+    {type:"conjunction",question:"我們___寫完功課___去打球",options:["先……再","不但……而且","因為……所以","雖然……但是"],answer:0,explanation:"先……再：先做前一件事，再做後一件事"},
+    {type:"conjunction",question:"___認真聽課，考試___不用擔心",options:["只要……就","即使……也","不但……而且","雖然……但是"],answer:0,explanation:"只要……就：條件關係"},
+    {type:"conjunction",question:"___是大人___小孩，都要遵守規則",options:["不管……還是","如果……就","因為……所以","雖然……但是"],answer:0,explanation:"不管……還是：無條件"},
+    {type:"conjunction",question:"___身體不舒服，___要早點休息",options:["如果……就","先……再","雖然……但是","不但……而且"],answer:0,explanation:"如果……就：假設條件"},
+    {type:"conjunction",question:"他___學習認真，___是大家的榜樣",options:["因為……所以","雖然……但是","即使……也","先……再"],answer:0,explanation:"因為……所以：因果"},
+    {type:"conjunction",question:"___家裡很遠，___他每天走路上學",options:["雖然……但是","因為……所以","如果……就","不但……而且"],answer:0,explanation:"雖然……但是：轉折"},
+    {type:"conjunction",question:"___你把玩具收好，___可以出去玩",options:["只要……就","不但……而且","雖然……但是","即使……也"],answer:0,explanation:"只要……就：條件"},
+    {type:"conjunction",question:"他___成績好___品行好",options:["不但……而且","雖然……但是","因為……所以","如果……就"],answer:0,explanation:"不但……而且：遞進"},
+    {type:"conjunction",question:"___我很累，___還是完成了作業",options:["雖然……但是","因為……所以","如果……就","不但……而且"],answer:0,explanation:"雖然……但是：轉折"},
+    {type:"conjunction",question:"___大家都同意了，___這麼辦吧",options:["既然……就","不但……而且","即使……也","雖然……但是"],answer:0,explanation:"既然……就：既定事實"},
+    {type:"conjunction",question:"___我遇到困難，爸爸___會幫我",options:["只要……就","即使……也","雖然……但是","不但……而且"],answer:0,explanation:"只要……就：條件"},
+    {type:"conjunction",question:"___風很大，___旗子飄起來了",options:["因為……所以","雖然……但是","即使……也","不但……而且"],answer:0,explanation:"因為……所以：因果"},
+    {type:"conjunction",question:"___要寫完功課___做完家事，才能看電視",options:["不但……還要","如果……就","因為……所以","雖然……但是"],answer:0,explanation:"不但……還要：遞進要求（不但要寫完功課，還要做完家事）"},
+    {type:"conjunction",question:"___他說了對不起，你___原諒他吧",options:["既然……就","不但……而且","即使……也","雖然……但是"],answer:0,explanation:"既然……就：基於已知事實"},
+    {type:"conjunction",question:"___快遲到了，___我跑步去學校",options:["因為……所以","雖然……但是","即使……也","不但……而且"],answer:0,explanation:"因為……所以：因果"},
+    {type:"conjunction",question:"___他全力以赴，___取得了好成績",options:["因為……所以","雖然……但是","不但……而且","即使……也"],answer:0,explanation:"因為……所以：因果"},
+    {type:"conjunction",question:"___你不去，我___自己去",options:["如果……就","因為……所以","雖然……但是","不但……而且"],answer:0,explanation:"如果……就：假設你不去這件未定的情況；因為……所以（因果）、雖然……但是（轉折）、不但……而且（遞進）都與此假設句不相容"},
+    {type:"conjunction",question:"這道題___難，___大家都答對了",options:["雖然……但是","因為……所以","如果……就","不但……而且"],answer:0,explanation:"雖然……但是：轉折"},
+    {type:"conjunction",question:"___玩遊戲___看電視，你選一個",options:["是……還是","不但……而且","因為……所以","雖然……但是"],answer:0,explanation:"是……還是：選擇"},
+    {type:"conjunction",question:"___外面在下雨，___帶傘出門吧",options:["因為……所以","雖然……但是","即使……也","不但……而且"],answer:0,explanation:"因為……所以：因果"},
+    {type:"conjunction",question:"這本書___有趣，___有教育意義",options:["不但……而且","雖然……但是","因為……所以","如果……就"],answer:0,explanation:"不但……而且：遞進"},
+    {type:"conjunction",question:"___你乖乖吃飯，媽媽___帶你去公園",options:["只要……就","不但……而且","雖然……但是","即使……也"],answer:0,explanation:"只要……就：條件"},
+    {type:"conjunction",question:"___再怎麼求他，他___不答應",options:["即使……也","如果……就","因為……所以","不但……而且"],answer:0,explanation:"即使……也：讓步"},
+    {type:"conjunction",question:"___我沒帶雨傘，___被淋濕了",options:["因為……所以","雖然……但是","即使……也","不但……而且"],answer:0,explanation:"因為……所以：因果"},
+    {type:"conjunction",question:"___多練習幾次，你___會學會",options:["只要……就","不但……而且","雖然……但是","即使……也"],answer:0,explanation:"只要……就：條件"},
+    {type:"conjunction",question:"___明天天氣好，我們___去爬山",options:["如果……就","因為……所以","雖然……但是","不但……而且"],answer:0,explanation:"如果……就：假設（明天天氣是還沒發生的假設）"},
+    {type:"conjunction",question:"___你已經道歉了，我___不生氣了",options:["既然……就","不但……而且","即使……也","雖然……但是"],answer:0,explanation:"既然……就：既定事實"},
+    {type:"conjunction",question:"___弟弟很調皮，___大家都喜歡他",options:["雖然……但是","因為……所以","如果……就","不但……而且"],answer:0,explanation:"雖然……但是：轉折"},
+    {type:"conjunction",question:"我___要做完功課___要練琴",options:["不但……還","雖然……但是","因為……所以","如果……就"],answer:0,explanation:"不但……還：遞進"},
+    {type:"conjunction",question:"___時間到了，我們___出發吧",options:["既然……就","不但……而且","即使……也","雖然……但是"],answer:0,explanation:"既然……就：基於事實"},
+    {type:"conjunction",question:"___你不聽話，___不帶你出去玩",options:["如果……就","即使……也","雖然……但是","不但……而且"],answer:0,explanation:"如果……就：條件"},
+    {type:"conjunction",question:"___她很矮，___打籃球很厲害",options:["雖然……但是","因為……所以","如果……就","不但……而且"],answer:0,explanation:"雖然……但是：轉折"},
+    {type:"conjunction",question:"___怎麼叫他，他___不起床",options:["不管……都","如果……就","因為……所以","雖然……但是"],answer:0,explanation:"不管……都：無條件"},
+    {type:"conjunction",question:"___我喜歡游泳，___每天都去練習",options:["因為……所以","雖然……但是","即使……也","不但……而且"],answer:0,explanation:"因為……所以：因果"},
+    {type:"conjunction",question:"___他答應了，___一定會做到",options:["既然……就","不但……而且","即使……也","雖然……但是"],answer:0,explanation:"既然……就：已確定的推論"},
+    {type:"conjunction",question:"___吃完午餐___午睡，下午才有精神",options:["先……再","不但……而且","因為……所以","雖然……但是"],answer:0,explanation:"先……再：順序"},
+    {type:"conjunction",question:"___你說到___要做到",options:["既然……就","不但……而且","即使……也","雖然……但是"],answer:0,explanation:"既然……就：已確定事實"},
+    {type:"conjunction",question:"___生病了，___要多休息",options:["如果……就","先……再","雖然……但是","不但……而且"],answer:0,explanation:"如果……就：條件"},
+    // Best word choice (100)
+    {type:"word",question:"花園裡的花___了",options:["盛開","融化","結冰","躺下"],answer:0,explanation:"盛開：形容花朵綻放最恰當；融化、結冰、躺下都不能形容開花"},
+    {type:"word",question:"天空下起了___大雨",options:["傾盆","毛毛","綿綿","濛濛"],answer:0,explanation:"傾盆大雨：形容雨下得又大又急；毛毛、綿綿、濛濛都是形容細小輕柔的雨，與句中「大雨」矛盾。"},
+    {type:"word",question:"小鳥找到了好吃的果子，在樹上___地唱歌",options:["快樂","難過","生氣","害怕"],answer:0,explanation:"小鳥找到好吃的果子，心情很開心，所以是「快樂」地唱歌。找到食物是件開心的事，不會難過、不會生氣、更不會害怕，這些心情都和「找到好吃的果子」的處境相反，語境不合。"},
+    {type:"word",question:"他___地檢查了三遍才交作業",options:["認真","隨便","勉強","匆忙"],answer:0,explanation:"認真：檢查三遍才交，是仔細、專心的態度；隨便、勉強、匆忙都與「檢查三遍」矛盾"},
+    {type:"word",question:"春天來了，大地一片___",options:["生機盎然","開開心心","漂漂亮亮","快快樂樂"],answer:0,explanation:"生機盎然：形容春天萬物充滿活力"},
+    {type:"word",question:"看到大家熱心幫助受災的居民，我感到很___",options:["感動","生氣","難過","害怕"],answer:0,explanation:"感動：表達被觸動心靈的感覺"},
+    {type:"word",question:"老師___地叮嚀我們要注意安全",options:["再三","冷漠","隨便","勉強"],answer:0,explanation:"再三叮嚀：反覆多次叮囑；冷漠、隨便、勉強都與關心提醒的語氣矛盾"},
+    {type:"word",question:"山上剛下過一場雨，清晨的空氣特別___",options:["清新","混濁","刺鼻","悶熱"],answer:0,explanation:"雨後山上的空氣被雨水洗過，乾淨又舒爽，所以特別「清新」。混濁、刺鼻是被灰塵或臭味汙染的空氣，悶熱是又濕又熱、令人不舒服的感覺，都和「剛下過雨的山上清晨空氣」相反，語境不合。"},
+    {type:"word",question:"他從很少發言，到這次比賽表現亮眼，讓大家___",options:["刮目相看","嗤之以鼻","無動於衷","大失所望"],answer:0,explanation:"刮目相看：對人改變看法、表示讚嘆；嗤之以鼻、無動於衷、大失所望都與『表現亮眼』矛盾"},
+    {type:"word",question:"夜空中的星星___",options:["閃爍","枯萎","生鏽","腐爛"],answer:0,explanation:"閃爍：形容星星一閃一閃的樣子；枯萎（草木）、生鏽（金屬）、腐爛（食物）都不能用來形容夜空中的星星。"},
+    {type:"word",question:"小河的水___地流著",options:["潺潺","轟隆","刺耳","沙啞"],answer:0,explanation:"潺潺：形容小河流水輕柔的聲音；轟隆、刺耳、沙啞都不用來形容小河流水"},
+    {type:"word",question:"怕吵到正在考試的同學，她___地走進教室",options:["悄悄","大聲","用力","飛快"],answer:0,explanation:"悄悄：怕吵到別人，要輕手輕腳；大聲、用力、飛快都會發出聲響，與「怕吵到」矛盾"},
+    {type:"word",question:"弟弟___地躲在門後面，想嚇大家一跳",options:["偷偷","大方","公開","大聲"],answer:0,explanation:"偷偷：躲起來不想被發現；大方、公開、大聲都與「躲」矛盾"},
+    {type:"word",question:"這棵大樹非常___",options:["高大","矮小","細小","短小"],answer:0,explanation:"高大：形容大樹又高又壯；矮小、細小、短小都與「大樹」相反"},
+    {type:"word",question:"教室裡___，一點聲音都沒有",options:["鴉雀無聲","吵吵鬧鬧","人聲鼎沸","熱鬧非凡"],answer:0,explanation:"鴉雀無聲：形容非常安靜；吵吵鬧鬧、人聲鼎沸、熱鬧非凡都表示喧鬧，與「一點聲音都沒有」矛盾"},
+    {type:"word",question:"這個消息讓大家___",options:["歡天喜地","五顏六色","琳瑯滿目","一望無際"],answer:0,explanation:"歡天喜地：形容大家非常高興的樣子；五顏六色、琳瑯滿目、一望無際都用來形容景物或東西，不能形容人聽到消息時的心情反應。"},
+    {type:"word",question:"他的成績___，令人羨慕",options:["名列前茅","一落千丈","慘不忍睹","每況愈下"],answer:0,explanation:"名列前茅：形容成績優秀；一落千丈、慘不忍睹、每況愈下都與『令人羨慕』矛盾"},
+    {type:"word",question:"這道菜聞起來___",options:["香噴噴","黏答答","圓滾滾","亮晶晶"],answer:0,explanation:"香噴噴：形容食物散發出的香氣，與「聞起來」相配；黏答答是觸感、圓滾滾是形狀、亮晶晶是外觀，都不能用來形容『聞起來』的氣味，語境不合。"},
+    {type:"word",question:"爺爺每天___地去公園散步",options:["悠閒","匆忙","慌張","急促"],answer:0,explanation:"悠閒：散步是輕鬆自在的；匆忙、慌張、急促都與「散步」的悠然步調矛盾"},
+    {type:"word",question:"微風___地吹著",options:["徐徐","猛烈","刺骨","狂暴"],answer:0,explanation:"徐徐：形容微風緩緩地吹；猛烈、刺骨、狂暴都與「微風」的輕柔矛盾"},
+    {type:"word",question:"妹妹的臉紅得像___一樣",options:["蘋果","石頭","白紙","黑板"],answer:0,explanation:"紅得像蘋果：又紅又圓，是最貼切的譬喻；石頭、白紙、黑板都不是紅的"},
+    {type:"word",question:"他跑得像___一樣快",options:["風","牛","烏龜","石頭"],answer:0,explanation:"跑得像風一樣快：最常用的譬喻；牛、烏龜、石頭都不快"},
+    {type:"word",question:"時間過得真___",options:["快","圓","亮","飛"],answer:0,explanation:"時間過得真快：常見說法（形容時間流逝得很迅速）"},
+    {type:"word",question:"下課鐘___了",options:["響","叫","唱","打"],answer:0,explanation:"鐘響了：最自然的搭配動詞"},
+    {type:"word",question:"窗外的細雨___地下著，幾乎聽不見聲音",options:["淅瀝淅瀝","滴滴答答","嘩啦嘩啦","叮叮咚咚"],answer:0,explanation:"淅瀝淅瀝：形容細雨的擬聲詞，聲音輕柔；滴滴答答、嘩啦嘩啦形容較大的雨聲，與『幾乎聽不見聲音』不合"},
+    {type:"word",question:"他的笑容像___一樣溫暖",options:["陽光","冰塊","寒風","霜雪"],answer:0,explanation:"陽光：陽光給人溫暖明亮的感受，符合『溫暖』的譬喻；冰塊、寒風、霜雪都是寒冷的，與『溫暖』矛盾"},
+    {type:"word",question:"小嬰兒的皮膚___的",options:["嫩嫩","粗粗","皺皺","硬硬"],answer:0,explanation:"嫩嫩：形容嬰兒皮膚柔嫩細緻；粗粗、皺皺、硬硬都與嬰兒皮膚柔嫩的常識相反"},
+    {type:"word",question:"他做事從不出錯，連最小的地方都檢查得清清楚楚，總是___",options:["一絲不苟","馬馬虎虎","敷衍了事","粗心大意"],answer:0,explanation:"語境『從不出錯、連最小的地方都檢查清楚』鎖定做事極認真的『一絲不苟』；馬馬虎虎、敷衍了事、粗心大意都是隨便不用心，與『從不出錯、仔細檢查』完全相反。"},
+    {type:"word",question:"這座山有飛瀑、有花海，遊客一路走一路讚嘆，風景真是___",options:["美不勝收","雜亂無章","荒涼冷清","平淡無奇"],answer:0,explanation:"語境『飛瀑、花海、遊客讚嘆』鎖定美景多得看不完的『美不勝收』；雜亂無章、荒涼冷清、平淡無奇都是貶義，與遊客讚嘆的美景矛盾。"},
+    {type:"word",question:"她從小學唱歌，一開口大家都聽得入迷，歌聲___",options:["悅耳動聽","刺耳難聽","沙啞乾澀","單調乏味"],answer:0,explanation:"語境『大家聽得入迷』鎖定聲音好聽的『悅耳動聽』；刺耳難聽、沙啞乾澀、單調乏味都表示不好聽，與『聽得入迷』矛盾。"},
+    {type:"word",question:"消防員___地衝進火場",options:["奮不顧身","慢吞吞","猶豫不決","膽小害怕"],answer:0,explanation:"奮不顧身：不顧自身安危勇敢向前，符合『衝進火場』的情境；慢吞吞、猶豫不決、膽小害怕都與『衝進』的果決迅速自相矛盾"},
+    {type:"word",question:"河邊的柳樹隨風___",options:["搖曳","枯萎","靜止","生長"],answer:0,explanation:"搖曳：形容柳枝隨風輕輕擺動的優美姿態；枯萎、靜止、生長都與『隨風』所要求的擺動情境不合"},
+    {type:"word",question:"他的眼淚___地流下來",options:["撲簌簌","叮叮噹噹","咕嚕咕嚕","嘰嘰喳喳"],answer:0,explanation:"撲簌簌：形容眼淚不斷落下的樣子；叮叮噹噹(鈴聲)、咕嚕咕嚕(水／腹聲)、嘰嘰喳喳(鳥聲)都不是眼淚流下的擬聲"},
+    {type:"word",question:"這首歌歌詞簡單、節奏輕快，聽過幾次就會唱，真讓人___",options:["朗朗上口","昏昏欲睡","心煩意亂","索然無味"],answer:0,explanation:"語境『歌詞簡單、節奏輕快、聽幾次就會唱』鎖定容易唸唱的『朗朗上口』；昏昏欲睡、心煩意亂、索然無味都是負面反應，與一首好聽好記的歌矛盾。"},
+    {type:"word",question:"弟弟生氣時會___",options:["嘟嘴","大笑","唱歌","拍手"],answer:0,explanation:"嘟嘴：生氣時嘴巴嘟起來的動作；大笑、唱歌、拍手都是開心的表現，與『生氣』矛盾"},
+    {type:"word",question:"外面的雷聲___",options:["轟隆轟隆","淅瀝淅瀝","嘰嘰喳喳","叮叮咚咚"],answer:0,explanation:"轟隆轟隆：形容雷聲低沉巨大的擬聲詞；淅瀝淅瀝(雨聲)、嘰嘰喳喳(鳥聲)、叮叮咚咚(清脆聲)都不是雷聲"},
+    {type:"word",question:"他的心臟___地跳",options:["撲通撲通","嘩啦嘩啦","叮咚叮咚","呼嚕呼嚕"],answer:0,explanation:"撲通撲通：形容心跳的聲音；嘩啦嘩啦(水聲)、叮咚叮咚(門鈴聲)、呼嚕呼嚕(打呼聲)都不是心跳的聲音"},
+    {type:"word",question:"夏天的太陽___",options:["火辣辣","冷冰冰","涼颼颼","濕答答"],answer:0,explanation:"火辣辣：形容夏天太陽強烈灼熱；冷冰冰、涼颼颼是寒冷、濕答答是潮濕，都與炎熱的夏日太陽相反或不合"},
+    {type:"word",question:"她是跳舞高手，走起路來腳步靈巧，彷彿要飄起來，___的",options:["輕盈","沉重","笨拙","蹣跚"],answer:0,explanation:"語境『跳舞高手、腳步靈巧、彷彿要飄起來』鎖定姿態輕巧的『輕盈』；沉重、笨拙、蹣跚都形容步伐笨重不穩，與輕巧靈活相反。"},
+    {type:"word",question:"剛端上桌的湯還冒著白煙，這碗湯___的",options:["熱騰騰","冷冰冰","涼颼颼","酸溜溜"],answer:0,explanation:"剛端上桌、冒著白煙，說明湯又燙又冒熱氣，只有『熱騰騰』相合；冷冰冰、涼颼颼是冰涼、酸溜溜是味道，都與熱湯冒煙的情境不合。"},
+    {type:"word",question:"秋天的楓葉___的",options:["火紅","碧綠","雪白","漆黑"],answer:0,explanation:"火紅：形容秋天楓葉紅豔的顏色；碧綠、雪白、漆黑都不是秋天楓葉的顏色"},
+    {type:"word",question:"清晨的露水___",options:["晶瑩剔透","黑漆漆","灰濛濛","髒兮兮"],answer:0,explanation:"晶瑩剔透：形容露珠清澈明亮；黑漆漆、灰濛濛、髒兮兮都與露珠清澈透亮的樣子矛盾"},
+    {type:"word",question:"冬天的風___",options:["刺骨","溫暖","和煦","暖呼呼"],answer:0,explanation:"刺骨：形容寒風非常寒冷；溫暖、和煦、暖呼呼都與冬天寒風的冰冷相反"},
+    {type:"word",question:"這位同學握筆姿勢正確，一筆一畫都很用心，字寫得___",options:["工工整整","歪歪扭扭","亂七八糟","潦草不堪"],answer:0,explanation:"一筆一畫都很用心，寫出的字必然端正整齊，只有『工工整整』相合；歪歪扭扭、亂七八糟、潦草不堪都是字跡雜亂，與『用心一筆一畫』矛盾。"},
+    {type:"word",question:"他緊張得手心___",options:["冒汗","長繭","變硬","脫皮"],answer:0,explanation:"冒汗：緊張時手心出汗是常見反應；長繭、變硬、脫皮都與「緊張」無關，不是緊張造成的反應"},
+    {type:"word",question:"樹上的知了___叫",options:["唧唧","嗡嗡","咯咯","汪汪"],answer:0,explanation:"唧唧：蟬（知了）的叫聲擬聲詞"},
+    {type:"word",question:"大海___無邊",options:["一望","一看","一片","到處"],answer:0,explanation:"一望無邊：放眼望去看不到邊際"},
+    {type:"word",question:"她高興得___",options:["手舞足蹈","垂頭喪氣","愁眉苦臉","忐忑不安"],answer:0,explanation:"手舞足蹈：非常高興的動作表現；垂頭喪氣、愁眉苦臉、忐忑不安都與「高興」矛盾"},
+    {type:"word",question:"下課鐘一響，操場上到處都是玩耍的人，同學___",options:["三五成群","寥寥無幾","形單影隻","空無一人"],answer:0,explanation:"到處都是玩耍的人，說明人很多、成群結伴，只有『三五成群』相合；寥寥無幾、形單影隻、空無一人都表示人少或沒人，與『到處都是人』矛盾。"},
+    {type:"word",question:"雨停了，天空出現一道___",options:["彩虹","雲朵","露水","微風"],answer:0,explanation:"雨後天空出現的是彩虹，量詞用「一道」；雲朵用「朵」、露水用「滴」、微風用「陣」，都不搭配「道」"},
+    {type:"word",question:"這件衣服布料柔軟又合身，穿起來很___",options:["舒適","緊繃","悶熱","刺癢"],answer:0,explanation:"布料柔軟又合身，穿起來自然舒服，只有『舒適』相合；緊繃、悶熱、刺癢都是穿著不舒服的感覺，與『柔軟合身』矛盾。"},
+    {type:"word",question:"月亮___掛在天上",options:["高高","慢慢","匆匆","偷偷"],answer:0,explanation:"「高高掛在天上」是固定說法，空格形容月亮怎麼『掛』（掛得很高）；慢慢、匆匆、偷偷都不能和『掛在天上』搭配"},
+    {type:"word",question:"他的聲音___有力",options:["鏗鏘","微弱","沙啞","細小"],answer:0,explanation:"鏗鏘有力：形容聲音響亮有氣勢；微弱、沙啞、細小都與「有力」的強勁矛盾"},
+    {type:"word",question:"小寶寶吃飽奶，躺在媽媽懷裡睡得很___",options:["香甜","痛苦","難受","不安"],answer:0,explanation:"吃飽又躺在媽媽懷裡，寶寶睡得安穩舒服，只有『香甜』相合；痛苦、難受、不安都表示睡不安穩，與『吃飽、被抱著』的安心情境矛盾。"},
+    {type:"word",question:"老鷹在天空___",options:["翱翔","飛飛","飄飄","走走"],answer:0,explanation:"翱翔：形容大鳥在空中飛翔"},
+    {type:"word",question:"他受到驚嚇___發抖",options:["渾身","開心地","興奮地","得意地"],answer:0,explanation:"渾身發抖：受到驚嚇時全身顫抖；開心地、興奮地、得意地都與「受到驚嚇」的害怕情緒矛盾"},
+    {type:"word",question:"泉水___地冒出來",options:["汩汩","汪汪","喵喵","咩咩"],answer:0,explanation:"汩汩：形容泉水流出的聲音；汪汪、喵喵、咩咩都是動物叫聲，不能形容泉水"},
+    {type:"word",question:"他事前準備充分，上台說話___，每個重點都講得很清楚",options:["頭頭是道","顛三倒四","語無倫次","含糊不清"],answer:0,explanation:"準備充分、重點講得清楚，說明說話很有條理，只有『頭頭是道』相合；顛三倒四、語無倫次、含糊不清都表示說話沒條理，與『重點很清楚』矛盾。"},
+    {type:"word",question:"放學鐘聲一響，大批學生湧出校門，路上___",options:["人來人往","空無一人","冷冷清清","杳無人跡"],answer:0,explanation:"大批學生湧出校門，路上自然人潮不斷，只有『人來人往』相合；空無一人、冷冷清清、杳無人跡都表示沒有人，與『大批學生湧出』矛盾。"},
+    {type:"word",question:"他總是笑臉迎人，從不對人擺架子，態度___",options:["和藹可親","盛氣凌人","面目可憎","冷若冰霜"],answer:0,explanation:"和藹可親：他『笑臉迎人、從不擺架子』，態度自然溫和可親；盛氣凌人（傲慢擺架子）被『從不擺架子』排除，面目可憎（令人厭惡）、冷若冰霜（冷淡無情）都被『笑臉迎人』排除，代入皆不合。"},
+    {type:"word",question:"考試時教室裡___",options:["安靜極了","吵鬧不休","亂哄哄","鬧翻天"],answer:0,explanation:"安靜極了：形容考試時非常安靜；吵鬧不休、亂哄哄、鬧翻天都與考試教室該有的『安靜』矛盾"},
+    {type:"word",question:"小狗搖著尾巴___",options:["撒嬌","發怒","發抖","逃走"],answer:0,explanation:"撒嬌：小狗搖尾巴是表示親暱討好；發怒、發抖、逃走都與搖尾巴親暱的行為矛盾"},
+    {type:"word",question:"這本書的插畫畫得非常精緻，圖畫___",options:["栩栩如生","模糊不清","殘缺不全","黯淡無光"],answer:0,explanation:"栩栩如生：既然插畫『非常精緻』，圖畫必然逼真生動像活的一樣；模糊不清、殘缺不全、黯淡無光都表示畫得不好，與『非常精緻』矛盾。"},
+    {type:"word",question:"大雨過後空氣___",options:["格外清新","混濁難聞","烏煙瘴氣","充滿灰塵"],answer:0,explanation:"格外清新：大雨過後空氣特別新鮮；混濁難聞、烏煙瘴氣、充滿灰塵都與雨後『清新』矛盾"},
+    {type:"word",question:"他嚇得臉色___",options:["蒼白","紅潤","油亮","發燙"],answer:0,explanation:"臉色蒼白：害怕時血色盡失的表情；紅潤、油亮、發燙都與受驚害怕的臉色矛盾"},
+    {type:"word",question:"小猴子在樹上敏捷地___，一下子就盪到另一棵樹",options:["跳躍","睡覺","哭泣","發呆"],answer:0,explanation:"跳躍：形容猴子敏捷的動作；睡覺、哭泣、發呆都與「敏捷地盪到另一棵樹」不合"},
+    {type:"word",question:"秋天到了，田野裡成熟的稻穗___",options:["金黃","青綠","枯黑","雪白"],answer:0,explanation:"金黃：秋天『成熟』的稻穗是飽滿的金黃色；青綠是還沒成熟的顏色，枯黑（枯死）、雪白都不是成熟稻穗該有的顏色，與『秋天成熟』不合。"},
+    {type:"word",question:"一___清風吹來",options:["陣","個","條","隻"],answer:0,explanation:"一陣清風：量詞搭配"},
+    {type:"word",question:"他這學期非常用功，成績___",options:["突飛猛進","一落千丈","每況愈下","退步許多"],answer:0,explanation:"突飛猛進：因為他『非常用功』，成績當然進步得很快；一落千丈、每況愈下、退步許多都表示成績變差，與『非常用功』的結果相反。"},
+    {type:"word",question:"這間圖書館收藏了各式各樣的書，書___",options:["琳瑯滿目","寥寥無幾","空空如也","破舊不堪"],answer:0,explanation:"琳瑯滿目：既然收藏了『各式各樣的書』，藏書必然豐富得看不完；寥寥無幾（很少）、空空如也（沒有）、破舊不堪（老舊）都與『各式各樣、收藏豐富』矛盾。"},
+    {type:"word",question:"她害羞得___",options:["滿臉通紅","面無血色","臉色發青","鎮定自如"],answer:0,explanation:"滿臉通紅：害羞時臉脹得通紅；面無血色、臉色發青、鎮定自如都與害羞臉紅的樣子矛盾"},
+    {type:"word",question:"天上的白雲像___",options:["棉花","白色","很軟","很白"],answer:0,explanation:"白雲像棉花：最常見恰當的比喻"},
+    {type:"word",question:"他興奮得___",options:["一蹦三尺高","垂頭喪氣","無精打采","悶悶不樂"],answer:0,explanation:"一蹦三尺高：誇張形容非常興奮；垂頭喪氣、無精打采、悶悶不樂都與「興奮」相反"},
+    {type:"word",question:"春雨___地下著",options:["綿綿","猛烈","狂暴","急促"],answer:0,explanation:"綿綿：形容春雨細細連綿不斷；猛烈、狂暴、急促都與春雨細柔連綿的樣子矛盾"},
+    {type:"word",question:"這本故事書太精彩了，他看得___",options:["津津有味","心不在焉","昏昏欲睡","坐立不安"],answer:0,explanation:"津津有味：因為故事書『太精彩』，他看得很有興趣、捨不得放下；心不在焉、昏昏欲睡、坐立不安都表示不專心或沒興趣，與『太精彩』的反應不合。"},
+    // ===== 詞語造句·句型比對（只有一句正確通順）=====
+    {type:"word",question:"下列哪一句正確使用「雖然……但是……」？",options:["雖然天氣很冷，但是他還是堅持去運動。","雖然天氣很冷，所以他還是去運動。","因為天氣很冷，但是天氣很冷。","雖然天氣很冷，天氣很冷。"],answer:0,explanation:"「雖然」要配「但是」表示轉折；配「所以」或前後重複都不通"},
+    {type:"word",question:"下列哪一句正確使用「一……就……」？",options:["他一回到家就開始寫功課。","他一回到家和開始寫功課。","他回到家就一寫功課。","他一就回到家寫功課。"],answer:0,explanation:"「一……就……」表示前一件事發生後馬上做下一件事"},
+    {type:"word",question:"下列哪一句正確使用「不但……而且……」？",options:["她不但功課好，而且很熱心助人。","她不但功課好，但是很熱心。","她不但功課好，功課好。","因為她功課好，而且很熱心。"],answer:0,explanation:"「不但……而且……」表示更進一層，兩個分句要有遞進關係"},
+    {type:"word",question:"下列哪一句正確使用「越……越……」？",options:["雨越下越大，路上的積水也越來越多。","雨越下大，路上積水多。","雨很大越下越。","雨越越下大。"],answer:0,explanation:"「越……越……」表示程度隨著情況加深"},
+    {type:"word",question:"下列哪一句正確使用「與其……不如……」？",options:["與其在家發呆，不如出去運動。","與其在家發呆，而且出去運動。","因為在家發呆，不如出去運動。","與其在家發呆，在家發呆。"],answer:0,explanation:"「與其……不如……」用來比較後選擇較好的做法"},
+    {type:"word",question:"下列哪一句正確使用「連……都……」？",options:["這道題太簡單了，連幼稚園的弟弟都會做。","這道題很難，連弟弟連都不會。","連這道題，弟弟很聰明。","這道題連簡單，弟弟會做。"],answer:0,explanation:"「連……都……」用來強調，連最不可能的都如此"},
+    {type:"word",question:"下列哪一句正確使用「一邊……一邊……」？",options:["妹妹一邊唱歌，一邊跳舞。","妹妹一邊唱歌，但是跳舞。","妹妹唱歌一邊跳舞一邊。","妹妹一邊一邊唱歌跳舞。"],answer:0,explanation:"「一邊……一邊……」表示兩個動作同時進行"},
+    {type:"word",question:"下列哪一句正確使用「如果……就……」？",options:["如果明天不下雨，我們就去爬山。","如果明天不下雨，但是去爬山。","因為明天不下雨，就去爬山。","如果明天不下雨去爬山如果。"],answer:0,explanation:"「如果……就……」表示假設某種情況會有的結果"},
+    // ===== 詞語搭配·量詞（只有一個量詞正確）=====
+    {type:"word",question:"一___鉛筆",options:["支","張","條","頭"],answer:0,explanation:"鉛筆用量詞「支」：一支鉛筆"},
+    {type:"word",question:"一___紙",options:["張","支","匹","隻"],answer:0,explanation:"紙用量詞「張」：一張紙"},
+    {type:"word",question:"一___牛",options:["頭","支","張","朵"],answer:0,explanation:"牛用量詞「頭」：一頭牛"},
+    {type:"word",question:"一___魚",options:["條","頭","張","支"],answer:0,explanation:"魚用量詞「條」：一條魚"},
+    {type:"word",question:"一___花",options:["朵","條","頭","匹"],answer:0,explanation:"花用量詞「朵」：一朵花"},
+    {type:"word",question:"一___馬",options:["匹","頭","朵","張"],answer:0,explanation:"馬用量詞「匹」：一匹馬"},
+    {type:"word",question:"一___書",options:["本","張","條","匹"],answer:0,explanation:"書用量詞「本」：一本書"},
+    {type:"word",question:"一___褲子",options:["條","本","朵","匹"],answer:0,explanation:"褲子用量詞「條」：一條褲子"},
+    // ===== 病句改錯（只有一句沒有語病）=====
+    {type:"word",question:"下列哪一句是正確的（沒有語病）？",options:["我把教室打掃得乾乾淨淨。","我把教室打掃得乾乾淨淨的很。","我被教室打掃得乾乾淨淨。","我把教室打掃乾淨得乾乾淨淨。"],answer:0,explanation:"其他句子有多餘字詞、用錯「被」或重複的毛病"},
+    {type:"word",question:"下列哪一句是正確的（沒有語病）？",options:["昨天我看了一場精彩的球賽。","昨天我將要看一場球賽。","昨天我看了一場精彩。","昨天我看了看了一場球賽。"],answer:0,explanation:"「昨天」不能配「將要」，句子也不可缺少賓語或重複"},
+    {type:"word",question:"下列哪一句是正確的（沒有語病）？",options:["這朵花非常美麗。","這朵花非常很美麗。","這隻花非常美麗。","這朵花美麗非常的很。"],answer:0,explanation:"「非常」和「很」不能連用，花的量詞是「朵」不是「隻」"},
+    {type:"word",question:"下列哪一句是正確的（沒有語病）？",options:["妹妹的歌聲很好聽。","妹妹的歌聲很好看。","妹妹的歌聲很好吃。","妹妹的歌聲很好聞。"],answer:0,explanation:"歌聲要用「好聽」搭配，不能用好看、好吃、好聞"},
+    {type:"word",question:"下列哪一句是正確的（沒有語病）？",options:["他幾乎每天都會運動。","他幾乎每天一定都會運動。","他每天幾乎都一定運動。","他幾乎每天都會運動運動每天。"],answer:0,explanation:"「幾乎」表示接近，不能和「一定」連用，也不可重複"},
+    {type:"word",question:"下列哪一句是正確的（沒有語病）？",options:["我們要避免浪費食物。","我們要避免不浪費食物。","我們要避免不要浪費食物。","我們浪費要避免食物。"],answer:0,explanation:"「避免」後面接要防止的事，不能再加「不」形成雙重否定"},
+    {type:"word",question:"下列哪一句是正確的（沒有語病）？",options:["教室裡大約有三十位同學。","教室裡大約有三十位左右的同學。","教室裡大約整整三十位同學。","教室裡有大約三十位同學同學。"],answer:0,explanation:"「大約」和「左右」意思重複，也不能配「整整」或重複詞語"},
+    {type:"word",question:"下列哪一句是正確的（沒有語病）？",options:["弟弟聽到好消息，開心得跳了起來。","弟弟聽到好消息，開心得跳了起來得。","弟弟聽到好消息，傷心得跳了起來。","弟弟聽到好消息，開心跳了起來開心。"],answer:0,explanation:"多一個「得」、情緒與動作矛盾（傷心卻跳起來）或重複都是語病"}
+  ],
+  reading: [
+    {passage:"小明每天早上六點起床，先刷牙洗臉，再吃早餐。他最喜歡吃媽媽做的三明治和一杯牛奶。吃完早餐後，他會背著書包走路去學校，路上會經過一個小公園，公園裡有很多小鳥在唱歌。",questions:[
+      {q:"小明最喜歡的早餐是什麼？",options:["三明治和牛奶","麵包和果汁","飯糰和豆漿","蛋餅和紅茶"],answer:0},
+      {q:"小明怎麼去學校？",options:["走路","騎腳踏車","搭公車","媽媽開車"],answer:0},
+      {q:"小明路上會經過什麼地方？",options:["小公園","便利商店","圖書館","游泳池"],answer:0}
+    ]},
+    {passage:"春天到了，校園裡的櫻花開得好漂亮。粉紅色的花瓣隨風飄落，就像下了一場花瓣雨。同學們都很開心，趁下課時間跑到櫻花樹下拍照。老師也帶著全班到戶外畫櫻花，大家畫得又認真又快樂。",questions:[
+      {q:"校園裡開了什麼花？",options:["櫻花","玫瑰","荷花","百合"],answer:0},
+      {q:"花瓣是什麼顏色？",options:["粉紅色","白色","紅色","紫色"],answer:0},
+      {q:"老師帶全班做什麼？",options:["到戶外畫櫻花","去操場跑步","到圖書館看書","去教室寫字"],answer:0}
+    ]},
+    {passage:"小美養了一隻小貓，名字叫「小橘」，因為牠全身是橘色的毛。小橘最喜歡趴在窗台上曬太陽，有時候還會伸出舌頭舔自己的毛。每天小美放學回家，小橘都會跑到門口迎接她，喵喵地叫著，好像在說「歡迎回來」。",questions:[
+      {q:"小美的貓叫什麼名字？",options:["小橘","小白","小花","小黑"],answer:0},
+      {q:"小橘最喜歡做什麼？",options:["趴在窗台曬太陽","在院子跑步","吃魚","睡覺"],answer:0},
+      {q:"小美放學回家時小橘會怎樣？",options:["跑到門口迎接她","繼續睡覺","躲起來","跑到外面"],answer:0}
+    ]},
+    {passage:"暑假時，爸爸帶全家去海邊玩。我們在沙灘上堆了一座大城堡，還在海裡游泳。弟弟第一次看到海，興奮得一直跳。媽媽在岸邊撐著陽傘看書。傍晚時，我們一起看夕陽，橘紅色的太陽慢慢沉入海中，美極了。",questions:[
+      {q:"他們去哪裡玩？",options:["海邊","山上","公園","遊樂園"],answer:0},
+      {q:"媽媽在做什麼？",options:["在岸邊看書","在游泳","在堆城堡","在煮飯"],answer:0},
+      {q:"傍晚他們看到什麼？",options:["夕陽沉入海中","月亮升起","星星出現","彩虹"],answer:0}
+    ]},
+    {passage:"圖書館是我最喜歡的地方。那裡有好多好多的書，從故事書到科學百科都有。每個星期六，我都會去圖書館借兩本書回家看。圖書館的阿姨人很好，常常推薦好看的新書給我。我最喜歡坐在窗邊的位子，安靜地看書。",questions:[
+      {q:"他最喜歡的地方是哪裡？",options:["圖書館","學校","公園","家裡"],answer:0},
+      {q:"他每週六借幾本書？",options:["兩本","一本","三本","五本"],answer:0},
+      {q:"他喜歡坐在哪裡看書？",options:["窗邊的位子","門口","樓梯旁","角落"],answer:0}
+    ]},
+    {passage:"今天是校慶運動會，每個班級都派出選手參加各種比賽。我參加了一百公尺賽跑，雖然沒有得到第一名，但我已經跑出自己最好的成績了。最令人興奮的是拔河比賽，全班同學一起喊「加油！」，最後我們班贏了冠軍！",questions:[
+      {q:"今天有什麼活動？",options:["校慶運動會","期末考試","戶外教學","校外旅行"],answer:0},
+      {q:"他參加了什麼比賽？",options:["一百公尺賽跑","跳遠","拔河","跳高"],answer:0},
+      {q:"他們班哪個比賽得了冠軍？",options:["拔河","賽跑","跳遠","接力賽"],answer:0}
+    ]},
+    {passage:"螞蟻是一種很勤勞的昆蟲。牠們住在地底下的蟻巢裡，分工合作，有的負責找食物，有的負責照顧幼蟲，有的負責保護蟻巢。螞蟻雖然很小，卻能搬動比自己重很多倍的東西。牠們告訴我們團結合作的力量有多大。",questions:[
+      {q:"螞蟻住在哪裡？",options:["地底下的蟻巢","樹上","水裡","石頭下"],answer:0},
+      {q:"螞蟻能搬多重的東西？",options:["比自己重很多倍","跟自己一樣重","很輕的東西","只能搬食物"],answer:0},
+      {q:"文章告訴我們什麼道理？",options:["團結合作的力量很大","螞蟻很厲害","要努力找食物","要住在地底下"],answer:0}
+    ]},
+    {passage:"下課了，小華和同學們在操場上打籃球。突然，球飛到校門外的馬路上。小華正要衝出去撿球，旁邊的警衛叔叔趕緊把他拉住，告訴他馬路上很危險，要先看左右有沒有車子。小華嚇了一跳，向警衛叔叔道謝。",questions:[
+      {q:"球飛到哪裡？",options:["校門外的馬路上","屋頂上","水溝裡","別班教室"],answer:0},
+      {q:"誰拉住了小華？",options:["警衛叔叔","老師","同學","媽媽"],answer:0},
+      {q:"這個故事告訴我們什麼？",options:["過馬路要注意安全","不要打籃球","不要下課","球不重要"],answer:0}
+    ]},
+    {passage:"台灣的水果種類很多，不同季節有不同的水果。夏天有西瓜、芒果和荔枝；秋天有柚子和柿子；冬天有橘子和草莓。台灣的水果又甜又好吃，很多外國人都喜歡。其中芒果和鳳梨更是外銷到很多國家。",questions:[
+      {q:"夏天有什麼水果？",options:["西瓜、芒果和荔枝","橘子和草莓","柚子和柿子","蘋果和葡萄"],answer:0},
+      {q:"哪些水果外銷到很多國家？",options:["芒果和鳳梨","西瓜和荔枝","柚子和柿子","橘子和草莓"],answer:0}
+    ]},
+    {passage:"姐姐的生日快到了，我想送她一份特別的禮物。我決定自己動手做一張卡片。我用彩色紙剪了很多愛心和星星貼上去，還畫了姐姐最喜歡的兔子。最後我在卡片裡寫了：「姐姐，生日快樂！我最喜歡妳了！」希望姐姐會喜歡。",questions:[
+      {q:"他要送姐姐什麼？",options:["自己做的卡片","買的玩具","一本書","一隻兔子"],answer:0},
+      {q:"卡片上畫了什麼？",options:["兔子","貓咪","小狗","小鳥"],answer:0}
+    ]},
+    {passage:"颱風天的時候，外面的風很大，雨也很大，我們全家都待在家裡。爸爸把窗戶關緊，媽媽準備了很多食物和水。停電的時候，我們點蠟燭玩撲克牌。雖然不能出去玩，但全家在一起也覺得很溫暖。",questions:[
+      {q:"颱風天他們在哪裡？",options:["家裡","學校","避難所","親戚家"],answer:0},
+      {q:"停電時他們做什麼？",options:["點蠟燭玩撲克牌","睡覺","看電視","玩手機"],answer:0},
+      {q:"媽媽準備了什麼？",options:["食物和水","玩具","書本","衣服"],answer:0}
+    ]},
+    {passage:"端午節是每年農曆五月五日，這天大家會吃粽子、划龍舟。傳說這是為了紀念愛國詩人屈原。屈原眼看國家危亡、都城被攻破，悲憤地投江自盡，人們為了不讓魚蝦吃掉他的身體，就包了粽子丟進江裡。這個習俗一直流傳到現在。",questions:[
+      {q:"端午節是農曆幾月幾日？",options:["五月五日","一月一日","八月十五","九月九日"],answer:0},
+      {q:"端午節紀念的是誰？",options:["屈原","孔子","李白","杜甫"],answer:0},
+      {q:"人們包粽子丟進江裡的原因是？",options:["不讓魚蝦吃屈原","餵魚","慶祝節日","比賽"],answer:0}
+    ]},
+    {passage:"校外教學那天，我們搭遊覽車去動物園。我最喜歡的動物是長頸鹿，因為牠的脖子好長好長，可以吃到最高的樹葉。我們還看到了猴子在樹上盪來盪去，大象用長鼻子噴水。午餐時間，大家坐在草地上吃便當，度過了快樂的一天。",questions:[
+      {q:"他們去哪裡校外教學？",options:["動物園","博物館","海邊","遊樂園"],answer:0},
+      {q:"他最喜歡什麼動物？",options:["長頸鹿","猴子","大象","獅子"],answer:0},
+      {q:"午餐他們在哪裡吃？",options:["草地上","餐廳","車上","涼亭"],answer:0}
+    ]},
+    {passage:"爺爺住在鄉下，他有一塊小小的菜園。每次我去爺爺家，他都會帶我去菜園澆水、拔草。爺爺種了番茄、黃瓜、茄子和空心菜。爺爺說：「自己種的菜，吃起來特別甜。」我覺得爺爺說得對，因為那是用心照顧的成果。",questions:[
+      {q:"爺爺住在哪裡？",options:["鄉下","城市","山上","海邊"],answer:0},
+      {q:"爺爺沒有種什麼？",options:["玉米","番茄","黃瓜","茄子"],answer:0},
+      {q:"爺爺說自己種的菜怎樣？",options:["吃起來特別甜","長得特別大","可以賣錢","很難種"],answer:0}
+    ]},
+    {passage:"小明的奶奶今年七十歲了，但她每天都很活潑。她早上會去公園跳舞，下午跟朋友一起唱歌。奶奶還學會了用手機拍照和傳訊息。她常說：「活到老學到老，每天都要快快樂樂。」小明覺得奶奶是全世界最年輕的老人家。",questions:[
+      {q:"奶奶今年幾歲？",options:["七十歲","六十歲","八十歲","六十五歲"],answer:0},
+      {q:"奶奶早上做什麼？",options:["去公園跳舞","去市場","看電視","睡覺"],answer:0},
+      {q:"奶奶學會用手機做什麼？",options:["拍照和傳訊息","玩遊戲","看影片","打電話"],answer:0}
+    ]}
+  ],
+  wordchain: [
+    {type:"chain",question:"學校 → ?",options:["校園","人民","向導","動作"],answer:0,explanation:"校園：學校裡供師生活動的園地"},
+    {type:"chain",question:"校園 → ?",options:["園丁","友善","景色","晚霞"],answer:0,explanation:"園丁：照顧花園的人"},
+    {type:"chain",question:"快樂 → ?",options:["樂園","校門","情人","思想"],answer:0,explanation:"樂園：快樂的地方"},
+    {type:"chain",question:"老師 → ?",options:["師父","晚餐","子女","樂團"],answer:0,explanation:"師父：傳授技藝的人"},
+    {type:"chain",question:"天空 → ?",options:["空氣","山路","家具","台階"],answer:0,explanation:"空氣：包圍地球的氣體"},
+    {type:"chain",question:"花園 → ?",options:["園遊會","發生","學歷","地震"],answer:0,explanation:"園遊會：學校常辦的活動"},
+    {type:"chain",question:"電話 → ?",options:["話題","腦筋","圖片","家長"],answer:0,explanation:"話題：談話的主題"},
+    {type:"chain",question:"書本 → ?",options:["本來","明星","流動","麗質"],answer:0,explanation:"本來：原來、原本的意思"},
+    {type:"chain",question:"明天 → ?",options:["天氣","歌詞","事物","雲端"],answer:0,explanation:"天氣：大氣的狀態"},
+    {type:"chain",question:"水果 → ?",options:["果汁","亮光","園藝","園丁"],answer:0,explanation:"果汁：水果榨出的汁"},
+    {type:"chain",question:"音樂 → ?",options:["樂隊","腦袋","蛙泳","情節"],answer:0,explanation:"樂隊：演奏音樂的團體"},
+    {type:"chain",question:"上課 → ?",options:["課本","家具","識破","子孫"],answer:0,explanation:"課本：上課用的書"},
+    {type:"chain",question:"公園 → ?",options:["園遊會","圖書","人類","麗日"],answer:0,explanation:"園遊會：在戶外舉辦的活動"},
+    {type:"chain",question:"春天 → ?",options:["天然","空地","紙巾","工人"],answer:0,explanation:"天然：自然形成的"},
+    {type:"chain",question:"大家 → ?",options:["家人","學校","天地","物品"],answer:0,explanation:"家人：一起生活的親人"},
+    {type:"chain",question:"開心 → ?",options:["心情","量度","腦力","原因"],answer:0,explanation:"心情：內心的感受"},
+    {type:"chain",question:"小朋友 → ?",options:["友誼","物價","雲霧","紀念"],answer:0,explanation:"友誼：朋友之間的情誼"},
+    {type:"chain",question:"生日 → ?",options:["日記","題庫","腦力","車廂"],answer:0,explanation:"日記：每天記錄的文章"},
+    {type:"chain",question:"動物 → ?",options:["物品","視覺","史記","理解"],answer:0,explanation:"物品：各種東西"},
+    {type:"chain",question:"風景 → ?",options:["景色","發展","戲劇","雨滴"],answer:0,explanation:"景色：美麗的風光"},
+    {type:"chain",question:"教室 → ?",options:["室內","視線","麗質","題目"],answer:0,explanation:"室內：房間裡面"},
+    {type:"chain",question:"美麗 → ?",options:["麗日","日光","師傅","陽台"],answer:0,explanation:"麗日：美好的天氣"},
+    {type:"chain",question:"海洋 → ?",options:["洋裝","工人","樂隊","量杯"],answer:0,explanation:"洋裝：西式的裙子"},
+    {type:"chain",question:"國語 → ?",options:["語文","園地","澡盆","果汁"],answer:0,explanation:"語文：語言和文字"},
+    {type:"chain",question:"早安 → ?",options:["安全","戲院","空曠","想到"],answer:0,explanation:"安全：沒有危險"},
+    {type:"chain",question:"故事 → ?",options:["事情","友誼","視野","校園"],answer:0,explanation:"事情：發生的事"},
+    {type:"chain",question:"太陽 → ?",options:["陽光","果園","文具","家長"],answer:0,explanation:"陽光：太陽發出的光"},
+    {type:"chain",question:"自然 → ?",options:["然後","景觀","頭髮","日光"],answer:0,explanation:"然後：接下來、之後"},
+    {type:"chain",question:"遊戲 → ?",options:["戲劇","床單","雨衣","山坡"],answer:0,explanation:"戲劇：表演的藝術形式"},
+    {type:"chain",question:"飛機 → ?",options:["機會","情緒","山腳","夫人"],answer:0,explanation:"機會：適當的時機"},
+    {type:"chain",question:"下雨 → ?",options:["雨傘","床墊","紙箱","雲端"],answer:0,explanation:"雨傘：擋雨的工具"},
+    {type:"chain",question:"白雲 → ?",options:["雲朵","題材","右邊","紙杯"],answer:0,explanation:"雲朵：一朵朵的雲"},
+    {type:"chain",question:"圖書 → ?",options:["書包","麗質","地板","動作"],answer:0,explanation:"書包：裝書的袋子"},
+    {type:"chain",question:"年紀 → ?",options:["紀錄","化妝","事情","字母"],answer:0,explanation:"紀錄：記載下來的資料"},
+    {type:"chain",question:"歷史 → ?",options:["史記","床頭","話術","家人"],answer:0,explanation:"史記：中國著名的歷史書"},
+    {type:"chain",question:"火車 → ?",options:["車站","氣味","活水","向上"],answer:0,explanation:"車站：上下車的地方"},
+    {type:"chain",question:"草地 → ?",options:["地球","歌曲","想到","友誼"],answer:0,explanation:"地球：我們居住的星球"},
+    {type:"chain",question:"問題 → ?",options:["題目","晚餐","本來","流動"],answer:0,explanation:"題目：需要回答的問題"},
+    {type:"chain",question:"月亮 → ?",options:["亮光","友好","歌曲","想法"],answer:0,explanation:"亮光：發出的光芒"},
+    {type:"chain",question:"力氣 → ?",options:["氣球","憶述","話語","發明"],answer:0,explanation:"氣球：充了氣的球"},
+    {type:"chain",question:"成功 → ?",options:["功課","憶起","車廂","想念"],answer:0,explanation:"功課：學校的作業"},
+    {type:"chain",question:"地理 → ?",options:["理由","雨滴","家鄉","景觀"],answer:0,explanation:"理由：原因、道理"},
+    {type:"chain",question:"青山 → ?",options:["山水","書桌","友善","文具"],answer:0,explanation:"山水：山和水的自然風景"},
+    {type:"chain",question:"高興 → ?",options:["興趣","步驟","蛙人","學費"],answer:0,explanation:"興趣：喜歡做某事的心情"},
+    {type:"chain",question:"回家 → ?",options:["家鄉","室內","年輕","功夫"],answer:0,explanation:"家鄉：出生長大的地方"},
+    {type:"chain",question:"說話 → ?",options:["話語","子弟","景觀","畫家"],answer:0,explanation:"話語：說出的話"},
+    {type:"chain",question:"手工 → ?",options:["工作","福氣","星座","日出"],answer:0,explanation:"工作：做事情"},
+    {type:"chain",question:"數學 → ?",options:["學生","雲霧","台灣","戲劇"],answer:0,explanation:"學生：在學校讀書的人"},
+    {type:"chain",question:"出發 → ?",options:["發現","明星","床單","陽台"],answer:0,explanation:"發現：找到或注意到"},
+    {type:"chain",question:"主人 → ?",options:["人生","頭髮","情況","福地"],answer:0,explanation:"人生：一個人的生命歷程"},
+    {type:"chain",question:"力量 → ?",options:["量杯","晚間","安心","視覺"],answer:0,explanation:"量杯：測量液體的杯子"},
+    {type:"chain",question:"光明 → ?",options:["明天","功課","台北","景色"],answer:0,explanation:"明天：今天的下一天"},
+    {type:"chain",question:"方向 → ?",options:["向日葵","果園","園地","日記"],answer:0,explanation:"向日葵：向著太陽的花"},
+    {type:"chain",question:"冬天 → ?",options:["天地","景點","思維","紀律"],answer:0,explanation:"天地：天和地，泛指世界"},
+    {type:"chain",question:"星星 → ?",options:["星期","室友","物品","語文"],answer:0,explanation:"星期：一週七天的計算單位"},
+    {type:"chain",question:"生活 → ?",options:["活動","子孫","頭腦","物產"],answer:0,explanation:"活動：身體的動作或舉辦的事"},
+    {type:"chain",question:"思想 → ?",options:["想像","事件","口渴","食品"],answer:0,explanation:"想像：在腦中描繪出畫面"},
+    {type:"chain",question:"文字 → ?",options:["字典","蛙鳴","明天","本來"],answer:0,explanation:"字典：查字詞意思的工具書"},
+    {type:"chain",question:"運動 → ?",options:["動物","工作","右轉","福星"],answer:0,explanation:"動物：有生命會動的生物"},
+    {type:"chain",question:"跑步 → ?",options:["步行","課堂","向導","書包"],answer:0,explanation:"步行：走路"},
+    {type:"chain",question:"禮物 → ?",options:["物品","空地","山谷","動作"],answer:0,explanation:"物品：各種東西"},
+    {type:"chain",question:"河流 → ?",options:["流水","學問","夫人","蛙泳"],answer:0,explanation:"流水：流動的水"},
+    {type:"chain",question:"石頭 → ?",options:["頭腦","活潑","理論","視力"],answer:0,explanation:"頭腦：人的腦袋"},
+    {type:"chain",question:"陽光 → ?",options:["光明","功勞","字句","晚安"],answer:0,explanation:"光明：明亮，沒有黑暗"},
+    {type:"chain",question:"唱歌 → ?",options:["歌手","食堂","蛙人","景觀"],answer:0,explanation:"歌手：唱歌的人"},
+    {type:"chain",question:"草原 → ?",options:["原來","食物","子女","晚間"],answer:0,explanation:"原來：本來、原本"},
+    {type:"chain",question:"種子 → ?",options:["子女","蛙鳴","明亮","光明"],answer:0,explanation:"子女：兒子和女兒"},
+    {type:"chain",question:"變化 → ?",options:["化學","蛙泳","園丁","山腳"],answer:0,explanation:"化學：研究物質變化的科學"},
+    {type:"chain",question:"過年 → ?",options:["年齡","果園","家事","話題"],answer:0,explanation:"年齡：歲數，活了幾年"},
+    {type:"chain",question:"意思 → ?",options:["思考","發燒","心得","師生"],answer:0,explanation:"思考：用腦袋想事情"},
+    {type:"chain",question:"電視 → ?",options:["視力","習慣","學習","床鋪"],answer:0,explanation:"視力：眼睛看東西的能力"},
+    {type:"chain",question:"陽台 → ?",options:["台灣","紀念","步驟","氣球"],answer:0,explanation:"台灣：我們住的島嶼"},
+    {type:"chain",question:"作文 → ?",options:["文章","紀實","活動","想像"],answer:0,explanation:"文章：寫出來的作品"},
+    {type:"chain",question:"美食 → ?",options:["食物","紀實","物品","路燈"],answer:0,explanation:"食物：可以吃的東西"},
+    {type:"chain",question:"幸福 → ?",options:["福氣","亮片","事情","動作"],answer:0,explanation:"福氣：好運、幸福的運氣"},
+    {type:"chain",question:"圖畫 → ?",options:["畫家","化妝","習性","頭目"],answer:0,explanation:"畫家：畫畫的藝術家"},
+    {type:"chain",question:"電腦 → ?",options:["腦袋","台風","步驟","圖書"],answer:0,explanation:"腦袋：頭、頭腦"},
+    {type:"chain",question:"起床 → ?",options:["床鋪","動畫","室友","天才"],answer:0,explanation:"床鋪：睡覺的地方"},
+    {type:"chain",question:"洗澡 → ?",options:["澡堂","歌曲","心得","園藝"],answer:0,explanation:"澡堂：洗澡的地方"},
+    {type:"chain",question:"高山 → ?",options:["山林","畫展","空氣","話題"],answer:0,explanation:"山林：山上的樹林"},
+    {type:"chain",question:"地圖 → ?",options:["圖書","天地","雲海","食物"],answer:0,explanation:"圖書：書籍"},
+    {type:"chain",question:"牛奶 → ?",options:["奶茶","蛙鳴","雲朵","紙箱"],answer:0,explanation:"奶茶：加了奶的茶飲"},
+    {type:"chain",question:"晚安 → ?",options:["安寧","向上","天文","戲劇"],answer:0,explanation:"安寧：平靜沒有紛擾"},
+    {type:"chain",question:"同學 → ?",options:["學期","友情","腦力","星球"],answer:0,explanation:"學期：一學期的時間"},
+    {type:"chain",question:"道路 → ?",options:["路口","向導","化解","奶瓶"],answer:0,explanation:"路口：道路交叉的地方"},
+    {type:"chain",question:"光陰 → ?",options:["陰天","習慣","日出","課桌"],answer:0,explanation:"陰天：沒有太陽的天氣"},
+    {type:"chain",question:"記憶 → ?",options:["憶往","食物","天地","步驟"],answer:0,explanation:"憶往：回想過去"},
+    {type:"chain",question:"報紙 → ?",options:["紙張","興奮","奶粉","夫人"],answer:0,explanation:"紙張：一張張的紙"},
+    {type:"chain",question:"左右 → ?",options:["右手","學期","紙箱","腦筋"],answer:0,explanation:"右手：右邊的手"},
+    {type:"chain",question:"功夫 → ?",options:["夫妻","情況","文學","山洞"],answer:0,explanation:"夫妻：丈夫和妻子"},
+    {type:"chain",question:"植物 → ?",options:["物種","家人","果實","友好"],answer:0,explanation:"物種：生物分類的基本單位"},
+    {type:"chain",question:"夜晚 → ?",options:["晚安","空地","化妝","題庫"],answer:0,explanation:"晚安：睡前的問候語"},
+    {type:"chain",question:"頭髮 → ?",options:["天然","髮型","歌聲","光線"],answer:1,explanation:"髮型：頭髮的樣式"},
+    {type:"chain",question:"練習 → ?",options:["習慣","明星","奶茶","樂團"],answer:0,explanation:"習慣：經常做而養成的行為"},
+    {type:"chain",question:"感動 → ?",options:["本分","興旺","動力","原來"],answer:2,explanation:"動力：推動前進的力量"},
+    {type:"chain",question:"花朵 → ?",options:["朵朵","書桌","戲台","蛙跳"],answer:0,explanation:"朵朵：一朵一朵的"},
+    {type:"chain",question:"門口 → ?",options:["口渴","然也","話本","物品"],answer:0,explanation:"口渴：想喝水的感覺"},
+    {type:"chain",question:"青蛙 → ?",options:["蛙泳","動力","光彩","陽台"],answer:0,explanation:"蛙泳：像青蛙一樣的游泳姿勢"},
+    {type:"chain",question:"熱情 → ?",options:["路線","情緒","樂團","圖片"],answer:1,explanation:"情緒：內心的感受狀態"},
+    {type:"chain",question:"知識 → ?",options:["識字","天使","師父","機場"],answer:0,explanation:"識字：認識文字"}
+  ]
+};
+
+// ===== CATEGORIES =====
+const CATEGORIES = [
+  {id:"idiom", name:"成語大挑戰", emoji:"📚", color:"#ef4444"},
+  {id:"phonetics", name:"字音字形", emoji:"✍️", color:"#3b82f6"},
+  {id:"sentence", name:"造句填空", emoji:"📝", color:"#10b981"},
+  {id:"reading", name:"閱讀理解", emoji:"📖", color:"#a855f7"},
+  {id:"wordchain", name:"語詞接龍", emoji:"🔗", color:"#ec4899"}
+];
+
+const RANKS = [
+  {name:"國語小新星", exp:0},
+  {name:"語文新手", exp:100},
+  {name:"造句達人", exp:300},
+  {name:"成語高手", exp:600},
+  {name:"閱讀王者", exp:1000},
+  {name:"國學大師", exp:2000}
+];
+
+const LEVEL_NAMES = ["第一關","第二關","第三關","第四關"];
+
+// ===== GAME STATE =====
+let state = {
+  exp: 0,
+  maxCombo: 0,
+  categoryStars: {},  // {idiom: {0:3, 1:2, ...}, ...}
+  soundOn: true
+};
+
+let currentGame = {
+  categoryId: null,
+  level: 0,
+  questions: [],
+  questionIndex: 0,
+  score: 0,
+  combo: 0,
+  answers: []
+};
+
+// ===== AUDIO =====
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playSound(type) {
+  if (!state.soundOn) return;
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    if (type === 'correct') {
+      osc.frequency.setValueAtTime(523, ctx.currentTime);
+      osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1);
+      osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.4);
+    } else if (type === 'wrong') {
+      osc.frequency.setValueAtTime(200, ctx.currentTime);
+      osc.frequency.setValueAtTime(150, ctx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.3);
+    } else if (type === 'star') {
+      osc.frequency.setValueAtTime(440, ctx.currentTime);
+      osc.frequency.setValueAtTime(554, ctx.currentTime + 0.1);
+      osc.frequency.setValueAtTime(659, ctx.currentTime + 0.2);
+      osc.frequency.setValueAtTime(880, ctx.currentTime + 0.3);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.5);
+    } else if (type === 'tap') {
+      osc.frequency.setValueAtTime(400, ctx.currentTime);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.1);
+    }
+  } catch(e) {}
+}
+
+// ===== SAVE/LOAD =====
+function saveState() {
+  localStorage.setItem('chinese_game_state', JSON.stringify(state));
+}
+
+function loadState() {
+  const saved = localStorage.getItem('chinese_game_state');
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    state = {...state, ...parsed};
+  }
+}
+
+// ===== RANK FUNCTIONS =====
+function getCurrentRank() {
+  let rank = RANKS[0];
+  for (let i = RANKS.length - 1; i >= 0; i--) {
+    if (state.exp >= RANKS[i].exp) {
+      rank = RANKS[i];
+      break;
+    }
+  }
+  return rank;
+}
+
+function getNextRank() {
+  for (let i = 0; i < RANKS.length; i++) {
+    if (state.exp < RANKS[i].exp) return RANKS[i];
+  }
+  return null;
+}
+
+// ===== SCREEN MANAGEMENT =====
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ===== HOME SCREEN =====
+function renderHome() {
+  // Stats
+  document.getElementById('stat-exp').textContent = state.exp;
+  document.getElementById('stat-rank').textContent = getCurrentRank().name;
+  document.getElementById('stat-combo').textContent = state.maxCombo;
+
+  // EXP bar
+  const current = getCurrentRank();
+  const next = getNextRank();
+  document.getElementById('rank-current').textContent = current.name;
+  if (next) {
+    document.getElementById('rank-next').textContent = `→ ${next.name} (${next.exp})`;
+    const progress = ((state.exp - current.exp) / (next.exp - current.exp)) * 100;
+    document.getElementById('exp-fill').style.width = Math.min(100, progress) + '%';
+  } else {
+    document.getElementById('rank-next').textContent = '已達最高！';
+    document.getElementById('exp-fill').style.width = '100%';
+  }
+
+  // Category grid
+  const grid = document.getElementById('category-grid');
+  grid.innerHTML = '';
+  CATEGORIES.forEach(cat => {
+    const stars = getCategoryTotalStars(cat.id);
+    const maxStars = 4 * 3; // 4 levels * 3 max stars
+    const card = document.createElement('div');
+    card.className = 'category-card';
+    card.setAttribute('role', 'button');
+    card.tabIndex = 0;
+    card.innerHTML = `
+      <div class="category-emoji">${cat.emoji}</div>
+      <div class="category-name">${cat.name}</div>
+      <div class="category-progress">⭐ ${stars}/${maxStars}</div>
+    `;
+    card.onclick = () => {
+      playSound('tap');
+      openCategory(cat.id);
+    };
+    grid.appendChild(card);
+  });
+
+  // 以統一 profile 覆蓋原生 HUD（EXP／稱號／經驗條），保持全站進度一致。
+  syncHudFromGame();
+
+  try { if (window.Wordex) Wordex.renderHomeEntries(); } catch(e){}
+  showScreen('home-screen');
+}
+
+// ==================== UNIFIED GAME ENGINE BRIDGE ====================
+// 每答一題就記進統一 profile（chinese 科目）。本頁已在 <html>/<body> 宣告
+// data-game-wired="chinese"，故 game_core 的 delta-sync 不會對 legacy
+// chinese_game_state.exp 重複補發 XP（避免雙重計分）。
+function gameRecord(correct) {
+  try {
+    if (window.Game && typeof Game.recordAnswer === 'function') {
+      Game.recordAnswer('chinese', !!correct);
+    }
+  } catch (e) { /* 引擎缺席時不影響本頁邏輯 */ }
+}
+
+// 用統一 profile 驅動「既有的」原生 HUD（EXP／稱號／經驗條）。stat-combo（最高連擊）
+// 為本頁特有指標、無統一對應，故維持由本頁 state.maxCombo 呈現（renderHome 已設）。
+function syncHudFromGame() {
+  try {
+    if (!(window.Game && typeof Game.getProfile === 'function')) return;
+    const p = Game.getProfile();
+    if (!p) return;
+    const d = p.derived || {};
+    const setText = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    setText('stat-exp', p.totalXp);
+    setText('stat-rank', d.rankName || '國語小新星');
+    setText('rank-current', d.rankName || '國語小新星');
+    if (d.isMaxLevel) {
+      setText('rank-next', `Lv.${p.level}・${p.totalXp}`);
+    } else {
+      setText('rank-next', `Lv.${p.level}・${d.xpIntoLevel} / ${d.xpForLevel}`);
+    }
+    const fill = document.getElementById('exp-fill');
+    if (fill) fill.style.width = `${Math.round((d.levelProgress || 0) * 100)}%`;
+  } catch (e) { /* 靜默 */ }
+}
+
+// 註冊事件：XP 變動／升級／連續天數／每日任務更新時即時刷新原生 HUD。
+function wireGameEvents() {
+  if (!(window.Game && typeof Game.on === 'function')) return;
+  ['xp', 'levelup', 'streak', 'daily-complete'].forEach(evt => Game.on(evt, syncHudFromGame));
+}
+
+function getCategoryTotalStars(catId) {
+  if (!state.categoryStars[catId]) return 0;
+  return Object.values(state.categoryStars[catId]).reduce((a, b) => a + b, 0);
+}
+
+// ===== LEVEL SELECT =====
+function openCategory(catId) {
+  currentGame.categoryId = catId;
+  const cat = CATEGORIES.find(c => c.id === catId);
+  document.getElementById('level-screen-title').textContent = cat.emoji + ' ' + cat.name;
+
+  const list = document.getElementById('level-list');
+  list.innerHTML = '';
+
+  for (let i = 0; i < 4; i++) {
+    const stars = (state.categoryStars[catId] && state.categoryStars[catId][i]) || 0;
+    const locked = false; // Access gating removed: all levels freely accessible at all times
+
+    // 閱讀理解各級由短文攤平，題數可能少於 10；動態顯示實際題數以免與內容不符
+    const qCount = (catId === 'reading') ? getReadingQuestions(i).length : 10;
+    const card = document.createElement('div');
+    card.className = 'level-card' + (locked ? ' locked' : '');
+    card.innerHTML = `
+      <div class="level-card-left">
+        <div class="level-badge">${i+1}</div>
+        <div class="level-card-info">
+          <div class="level-card-title">${LEVEL_NAMES[i]}</div>
+          <div class="level-card-sub">共 ${qCount} 題</div>
+        </div>
+      </div>
+      <div class="level-card-right">
+        <span class="level-stars">${stars > 0 ? '⭐'.repeat(stars) : (locked ? '🔒' : '')}</span>
+        <span class="level-arrow" aria-hidden="true">→</span>
+      </div>
+    `;
+
+    if (!locked) {
+      card.setAttribute('role', 'button');
+      card.tabIndex = 0;
+      card.onclick = () => {
+        playSound('tap');
+        startGame(catId, i);
+      };
+    }
+    list.appendChild(card);
+  }
+
+  showScreen('level-screen');
+}
+
+// ===== QUESTION GENERATION =====
+function getQuestionsForLevel(catId, level) {
+  if (catId === 'reading') {
+    return getReadingQuestions(level);
+  }
+
+  const allQ = QUESTIONS[catId];
+  const total = allQ.length;
+  const perLevel = Math.floor(total / 4);
+
+  // Divide questions into level ranges
+  const start = level * perLevel;
+  let end = (level + 1) * perLevel;
+  if (level === 3) end = total; // Last level gets remaining
+
+  const pool = allQ.slice(start, end);
+  // Fisher–Yates 均勻洗牌（sort(()=>rand-0.5) 非均勻、前段題被抽機率偏高、覆蓋不均）
+  for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = pool[i]; pool[i] = pool[j]; pool[j] = t; }
+  return pool.slice(0, 10);
+}
+
+function getReadingQuestions(level) {
+  const passages = QUESTIONS.reading;
+  const perLevel = Math.floor(passages.length / 4);
+  const start = level * perLevel;
+  let end = (level + 1) * perLevel;
+  if (level === 3) end = passages.length;
+
+  const pool = passages.slice(start, end);
+  // Fisher–Yates 均勻洗牌（同 getQuestionsForLevel；避免偏斜抽題、覆蓋不均）
+  for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = pool[i]; pool[i] = pool[j]; pool[j] = t; }
+
+  // Flatten passage questions, take up to 10
+  let questions = [];
+  for (const p of pool) {
+    for (const q of p.questions) {
+      questions.push({
+        ...q,
+        options: q.options.slice(),   // 深拷貝：洗牌會就地打亂陣列，若與原始題庫共享參照，重玩時 answer 會 stale、把錯選項標成正解
+        passage: p.passage,
+        question: q.q,
+        explanation: "答案就藏在上面的短文裡，再讀一次找找看吧！"
+      });
+      if (questions.length >= 10) break;
+    }
+    if (questions.length >= 10) break;
+  }
+  return questions.slice(0, 10);
+}
+
+// ===== GAME ENGINE =====
+function startGame(catId, level) {
+  currentGame = {
+    categoryId: catId,
+    level: level,
+    questions: getQuestionsForLevel(catId, level),
+    questionIndex: 0,
+    score: 0,
+    combo: 0,
+    bestCombo: 0,
+    answers: []
+  };
+
+  showScreen('question-screen');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = currentGame.questions[currentGame.questionIndex];
+
+  // Progress dots
+  const dotsEl = document.getElementById('progress-dots');
+  dotsEl.innerHTML = '';
+  for (let i = 0; i < currentGame.questions.length; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'progress-dot';
+    if (i < currentGame.questionIndex) {
+      dot.className += currentGame.answers[i] ? ' correct' : ' wrong';
+    } else if (i === currentGame.questionIndex) {
+      dot.className += ' current';
+    }
+    dotsEl.appendChild(dot);
+  }
+
+  // Combo
+  const comboEl = document.getElementById('combo-display');
+  comboEl.textContent = currentGame.combo > 1 ? `🔥 ${currentGame.combo} 連擊！` : '';
+
+  // Passage (for reading)
+  const passageContainer = document.getElementById('passage-container');
+  if (q.passage) {
+    passageContainer.innerHTML = `<div class="passage-text">${q.passage}</div>`;
+  } else {
+    passageContainer.innerHTML = '';
+  }
+
+  // Question text
+  let questionText = q.question;
+  // 語詞接龍：四個選項都能接龍，加上詞義提示讓答案唯一且可解釋
+  if (q.type === 'chain' && q.explanation && q.explanation.indexOf('：') !== -1) {
+    const def = q.explanation.split('：')[1];
+    if (def) questionText = q.question + '　選出意思是「' + def + '」的接龍詞';
+  }
+  document.getElementById('question-text').textContent = questionText;
+
+  // Options
+  const optGrid = document.getElementById('options-grid');
+  optGrid.innerHTML = '';
+  // 洗牌選項：避免正解幾乎永遠在第一個（原始資料 95% answer=0），孩子才會真的閱讀。
+  // 以「正解的值」為錨、洗牌後用 indexOf 重新定位正解索引；selectAnswer 讀 q.answer 不需改。
+  if (Array.isArray(q.options) && q.options.length > 1 && typeof q.answer === 'number') {
+    const correctVal = q.options[q.answer];
+    for (let i = q.options.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = q.options[i]; q.options[i] = q.options[j]; q.options[j] = t;
+    }
+    q.answer = q.options.indexOf(correctVal);
+  }
+  q.options.forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = opt;
+    btn.onclick = () => selectAnswer(idx);
+    optGrid.appendChild(btn);
+  });
+
+  // Hide explanation and next button
+  document.getElementById('explanation-box').classList.remove('show');
+  document.getElementById('next-btn').classList.remove('show');
+}
+
+function selectAnswer(idx) {
+  const q = currentGame.questions[currentGame.questionIndex];
+  const correct = idx === q.answer;
+  const buttons = document.querySelectorAll('.option-btn');
+
+  // Disable all buttons
+  buttons.forEach(btn => btn.classList.add('disabled'));
+
+  // Show correct/wrong
+  if (correct) {
+    buttons[idx].classList.add('correct');
+    currentGame.score++;
+    currentGame.combo++;
+    if (currentGame.combo > currentGame.bestCombo) {
+      currentGame.bestCombo = currentGame.combo;
+    }
+    if (currentGame.combo > state.maxCombo) {
+      state.maxCombo = currentGame.combo;
+    }
+    playSound('correct');
+  } else {
+    buttons[idx].classList.add('wrong');
+    buttons[q.answer].classList.add('show-correct');
+    currentGame.combo = 0;
+    playSound('wrong');
+  }
+
+  currentGame.answers.push(correct);
+
+  // 統一引擎記帳：每題（對／錯）各記一次到 chinese 科目。
+  gameRecord(correct);
+  try { if (window.Wordex) Wordex.onAnswer(currentGame.questions[currentGame.questionIndex], correct); } catch(e){}
+
+  // Update combo display
+  const comboEl = document.getElementById('combo-display');
+  comboEl.textContent = currentGame.combo > 1 ? `🔥 ${currentGame.combo} 連擊！` : '';
+
+  // Show explanation
+  if (q.explanation) {
+    document.getElementById('explanation-text').textContent = (correct ? '✅ 答對了！' : '💡 再看看喔～') + ' ' + q.explanation;
+    document.getElementById('explanation-box').classList.add('show');
+  } else {
+    document.getElementById('explanation-text').textContent = correct ? '✅ 答對了！' : '💡 沒關係，正確答案是「' + q.options[q.answer] + '」，記起來就學會囉！';
+    document.getElementById('explanation-box').classList.add('show');
+  }
+
+  // Show next button
+  document.getElementById('next-btn').classList.add('show');
+}
+
+function nextQuestion() {
+  currentGame.questionIndex++;
+  if (currentGame.questionIndex >= currentGame.questions.length) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+// ===== RESULT SCREEN =====
+function showResult() {
+  if (currentGame && currentGame.mode === 'wordexReview') { return Wordex.endReview(); }
+  const score = currentGame.score;
+  const total = currentGame.questions.length;
+  let stars = 0;
+  if (score >= total * 0.9) stars = 3;
+  else if (score >= total * 0.7) stars = 2;
+  else if (score >= total * 0.5) stars = 1;
+
+  // Calculate EXP
+  const baseExp = score * 5;
+  const comboBonus = Math.min(currentGame.bestCombo || currentGame.combo, 10) * 2;
+  const starBonus = stars * 10;
+  const totalExp = baseExp + comboBonus + starBonus;
+
+  // Update state
+  state.exp += totalExp;
+  if (!state.categoryStars[currentGame.categoryId]) {
+    state.categoryStars[currentGame.categoryId] = {};
+  }
+  const prevStars = state.categoryStars[currentGame.categoryId][currentGame.level] || 0;
+  if (stars > prevStars) {
+    state.categoryStars[currentGame.categoryId][currentGame.level] = stars;
+  }
+  saveState();
+
+  // Render result
+  document.getElementById('result-stars').textContent = stars > 0 ? '⭐'.repeat(stars) : '🌱';
+  document.getElementById('result-score').textContent = `${score} / ${total}`;
+  document.getElementById('result-detail').textContent = stars >= 3 ? '太厲害了！幾乎全對！' : stars >= 2 ? '很棒！繼續加油！' : stars >= 1 ? '通過囉！再練習會更好！' : '差一點點，再挑戰一次一定更好！💪';
+  document.getElementById('result-exp').textContent = `+${totalExp} 經驗值 (答對${baseExp} + 連擊${comboBonus} + 星星${starBonus})`;
+
+  // Button visibility
+  const nextBtn = document.getElementById('result-next');
+  if (stars >= 1 && currentGame.level < 3) {
+    nextBtn.style.display = 'block';
+    nextBtn.textContent = '下一關 →';
+  } else if (stars >= 1) {
+    nextBtn.style.display = 'block';
+    nextBtn.textContent = '回到關卡選擇';
+  } else {
+    // 未過關時不顯示「下一關」，但下方的「再試一次」「回主畫面」仍在，孩子不會被卡住
+    nextBtn.style.display = 'none';
+  }
+
+  showScreen('result-screen');
+  playSound('star');
+}
+
+// ===== EVENT LISTENERS =====
+document.getElementById('sound-toggle').onclick = function() {
+  state.soundOn = !state.soundOn;
+  this.textContent = state.soundOn ? '🔊' : '🔇';
+  this.setAttribute('aria-pressed', state.soundOn ? 'true' : 'false');
+  saveState();
+};
+
+document.getElementById('back-to-home').onclick = function() {
+  playSound('tap');
+  renderHome();
+};
+
+document.getElementById('next-btn').onclick = function() {
+  playSound('tap');
+  nextQuestion();
+};
+
+document.getElementById('quit-game').onclick = function() {
+  if (currentGame && currentGame.mode === 'wordexReview') { return Wordex.openScreen(); }
+  playSound('tap');
+  if (currentGame && currentGame.categoryId) {
+    openCategory(currentGame.categoryId);
+  } else {
+    renderHome();
+  }
+};
+
+document.getElementById('result-next').onclick = function() {
+  playSound('tap');
+  if (currentGame.level < 3) {
+    startGame(currentGame.categoryId, currentGame.level + 1);
+  } else {
+    openCategory(currentGame.categoryId);
+  }
+};
+
+document.getElementById('result-retry').onclick = function() {
+  playSound('tap');
+  startGame(currentGame.categoryId, currentGame.level);
+};
+
+document.getElementById('result-home').onclick = function() {
+  playSound('tap');
+  renderHome();
+};
+
+// ===== INIT =====
+loadState();
+(function(){ var sb = document.getElementById('sound-toggle'); if (sb) { sb.textContent = state.soundOn ? '🔊' : '🔇'; sb.setAttribute('aria-pressed', state.soundOn ? 'true' : 'false'); } })();
+wireGameEvents();   // 註冊統一引擎事件 → 即時刷新原生 HUD
+renderHome();       // renderHome 內含 syncHudFromGame()，以統一 profile 值呈現
+</script>
+
+<!-- ============================================================
+     字詞收藏冊（Wordex）：自足模組
+     · 獨立 localStorage key: chinese_wordex_v1（不碰 player_profile_v1 / chinese_game_state）
+     · Leitner 盒 1..5 間隔複習；收藏只增不減、答錯不退階不熄滅
+     · 里程碑單次 Game.award('chinese',…) + 單調 guard（source:'wordex-milestone'）
+     · 從既有 QUESTIONS 擷取詞面，不新增題庫、不改任何題目
+     ============================================================ -->
+<style>
+.wordex-entries {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 16px;
+}
+.wordex-entry-card {
+  background: var(--card); border: 2px solid var(--card-border); border-radius: 18px;
+  padding: 18px 14px; text-align: center; cursor: pointer; box-shadow: var(--shadow-sm);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.wordex-entry-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.wordex-entry-card:active { transform: scale(0.97); }
+.wordex-entry-emoji { font-size: 2rem; line-height: 1.1; margin-bottom: 6px; }
+.wordex-entry-name { font-size: 1.05rem; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
+.wordex-entry-sub { font-size: 0.85rem; font-weight: 600; color: var(--ink-soft); }
+
+.wordex-summary { text-align: center; font-size: 0.95rem; font-weight: 700; color: var(--ink-soft); line-height: 1.7; margin: 10px 0 14px; }
+.wordex-summary b { color: var(--accent-ink, var(--ink)); }
+.wordex-filter { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 16px; }
+.wordex-chip {
+  background: var(--card); border: 2px solid var(--card-border); border-radius: 999px;
+  padding: 6px 14px; font-size: 0.85rem; font-weight: 700; color: var(--ink-soft);
+  cursor: pointer; font-family: inherit;
+}
+/* 黃色 --accent 底無法承載白字(~1.5:1)。改用「加深科目色 --accent-ink + 主題感知
+   --on-accent」互補配對：亮色為深琥珀底配白字、暗色為亮黃底配深墨字，兩主題皆 ≥4.5:1。 */
+.wordex-chip.active { background: var(--accent-ink); border-color: var(--accent-ink); color: var(--on-accent); }
+
+.wordex-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+.wordex-empty { grid-column: 1 / -1; text-align: center; color: var(--ink-soft); font-weight: 600; padding: 40px 12px; line-height: 1.8; }
+.wordex-card {
+  position: relative; background: var(--card); border: 2px solid var(--card-border);
+  border-radius: 16px; padding: 16px 12px 12px; text-align: center; cursor: pointer;
+  box-shadow: var(--shadow-sm); transition: transform .15s ease, box-shadow .15s ease;
+}
+.wordex-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.wordex-card:active { transform: scale(0.97); }
+.wordex-card.mastered { border-color: #f5b301; box-shadow: 0 0 8px #f5b30155; }
+.wordex-card-cat { font-size: 1.1rem; line-height: 1; margin-bottom: 6px; }
+.wordex-card-face { font-size: 1.25rem; font-weight: 800; color: var(--ink); line-height: 1.3; word-break: break-word; }
+.wordex-card-read { font-size: 0.9rem; font-weight: 700; color: var(--ink-soft); margin-top: 4px; letter-spacing: 1px; }
+.wordex-card-box { font-size: 0.95rem; letter-spacing: 2px; margin-top: 8px; color: var(--accent-ink, var(--ink)); }
+.wordex-card-due { position: absolute; top: 8px; right: 10px; font-size: 0.8rem; }
+
+.wordex-focus-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+  display: flex; align-items: center; justify-content: center; z-index: 200; padding: 20px;
+}
+/* hidden 屬性防護：class 的 display:flex(author) 會蓋過 UA 的 [hidden]{display:none}，
+   否則兩個浮層(focus/result)會在載入時就顯示、蓋住整個「國語大冒險」頁且無法關閉。 */
+.wordex-focus-overlay[hidden] { display: none; }
+.wordex-focus-card {
+  position: relative; background: var(--card); border: 2px solid var(--card-border);
+  border-radius: 20px; padding: 28px 22px 22px; max-width: 340px; width: 100%;
+  box-shadow: var(--shadow-lg); text-align: center;
+}
+.wordex-focus-close {
+  position: absolute; top: 10px; right: 14px; background: none; border: none;
+  font-size: 1.2rem; color: var(--ink-soft); cursor: pointer; font-family: inherit;
+}
+.wordex-focus-kind {
+  display: inline-block; font-size: 0.8rem; font-weight: 700; color: var(--ink-soft);
+  background: var(--card-border); border-radius: 999px; padding: 3px 12px; margin-bottom: 10px;
+}
+.wordex-focus-face { font-size: 2rem; font-weight: 800; color: var(--ink); margin: 4px 0; word-break: break-word; }
+.wordex-focus-read { font-size: 1.1rem; font-weight: 700; color: var(--ink-soft); letter-spacing: 2px; margin-bottom: 8px; }
+.wordex-focus-meta { font-size: 0.9rem; font-weight: 600; color: var(--ink-soft); line-height: 1.8; margin-bottom: 16px; }
+.wordex-result-emoji { font-size: 2.6rem; margin-bottom: 8px; }
+.wordex-result-title { font-size: 1.2rem; font-weight: 800; color: var(--ink); margin-bottom: 6px; }
+.wordex-result-sub { font-size: 0.9rem; font-weight: 600; color: var(--ink-soft); margin-bottom: 16px; }
+.wordex-result-actions { display: flex; flex-direction: column; gap: 10px; }
+.wordex-btn {
+  /* 同上：黃底不配白字，改用 --accent-ink 底 + --on-accent 字（亮/暗兩主題皆 ≥4.5:1）。 */
+  background: var(--accent-ink); color: var(--on-accent); border: none; border-radius: 14px;
+  padding: 12px 16px; font-size: 1rem; font-weight: 800; cursor: pointer; font-family: inherit;
+}
+.wordex-btn.secondary { background: var(--card); color: var(--ink); border: 2px solid var(--card-border); }
+.wordex-reduce .wordex-card, .wordex-reduce .wordex-entry-card { transition: none; }
+</style>
+
+<script>
+(function () {
+  'use strict';
+  var KEY = 'chinese_wordex_v1';
+  var INTERVAL = { 1:1, 2:2, 3:4, 4:7, 5:15 };
+  var REVIEW_TARGET = 15, REVIEW_CAP = 20;
+  var MILE_XP = { first_card:10, collect_10:20, collect_25:40, collect_50:60, collect_100:100, collect_all:200, first_master:15, master_25:60, master_all:300 };
+  var CAT_XP = 40;
+
+  // 合格題型 → 分類（每個 type 只屬於一個分類，可由 type 反推 cat）
+  var TYPE_TO_CAT = { fill:'idiom', meaning:'idiom', usage:'idiom', idiomchain:'idiom', bopomofo:'phonetics', wrong:'phonetics', conjunction:'sentence', chain:'wordchain' };
+  var CAT_LIST = ['idiom', 'phonetics', 'sentence', 'wordchain'];
+  var CAT_EMOJI = { idiom:'📚', phonetics:'✍️', sentence:'📝', wordchain:'🔗' };
+  var CAT_NAME = { idiom:'成語', phonetics:'字音字形', sentence:'句型', wordchain:'語詞接龍' };
+
+  function kindOf(type) {
+    if (type === 'idiomchain') return '成語接龍';
+    if (type === 'fill' || type === 'meaning' || type === 'usage') return '成語';
+    if (type === 'bopomofo') return '破音字';
+    if (type === 'wrong') return '詞語';
+    if (type === 'conjunction') return '句型';
+    if (type === 'chain') return '詞語接龍';
+    return '';
+  }
+
+  // 由題目物件計算詞面（face）與注音（read）。不合格題型回傳空 face → 不建卡。
+  function computeFace(type, q) {
+    var opt = (q && q.options && q.answer != null) ? q.options[q.answer] : '';
+    var m;
+    if (type === 'fill')       return { face: String(q.question || '').replace(/[_＿]+/g, opt), read: '' };
+    if (type === 'meaning')    { m = String(q.question || '').match(/「(.+?)」/);    return { face: m ? m[1] : '', read: '' }; }
+    if (type === 'usage')      return { face: opt, read: '' };
+    if (type === 'idiomchain') return { face: opt, read: '' };
+    if (type === 'bopomofo')   { m = String(q.question || '').match(/「(.+?)」/);    return { face: m ? m[1] : '', read: opt }; }
+    // 找錯字：正解選項是「有錯字的詞」，故不可直接收；正確寫法在解說首組「」內（例「誠懇」）。
+    if (type === 'wrong')      { m = String(q.explanation || '').match(/「(.+?)」/); return { face: m ? m[1] : '', read: '' }; }
+    if (type === 'conjunction') return { face: opt, read: '' };
+    if (type === 'chain')       return { face: opt, read: '' };
+    return { face: '', read: '' };
+  }
+
+  // 由題目物件推出穩定 id（永不隨機、永不隨順序改變）。不合格 → null。
+  function infoForQ(q) {
+    if (!q || !q.type) return null;
+    var cat = TYPE_TO_CAT[q.type];
+    if (!cat) return null;
+    var f = computeFace(q.type, q);
+    if (!f.face) return null;
+    var read = f.read || '';
+    var id = cat + '|' + q.type + '|' + f.face + (read ? '|' + read : '');
+    return { id: id, cat: cat, type: q.type, face: f.face, read: read };
+  }
+
+  // 掃描 QUESTIONS 建記憶體索引（重複 id 保留首見 q）
+  var ITEM_INDEX = {};        // id -> {id,cat,type,face,read,q}
+  var CAT_IDS = { idiom:[], phonetics:[], sentence:[], wordchain:[] };
+  var TOTAL_ALL = 0;
+
+  function buildIndex() {
+    try {
+      if (typeof QUESTIONS === 'undefined') return;
+      for (var ci = 0; ci < CAT_LIST.length; ci++) {
+        var cat = CAT_LIST[ci];
+        var arr = QUESTIONS[cat];
+        if (!arr || !arr.length) continue;
+        for (var i = 0; i < arr.length; i++) {
+          var q = arr[i];
+          if (!TYPE_TO_CAT[q.type]) continue;       // 排除的題型：dededi/zaizai/zuozuo/word 等
+          var info = infoForQ(q);
+          if (!info) continue;
+          if (ITEM_INDEX[info.id]) continue;        // 去重：保留首見
+          info.q = q;                                // 指向原始題目物件，複習時原封重用
+          ITEM_INDEX[info.id] = info;
+          CAT_IDS[info.cat].push(info.id);
+        }
+      }
+    } catch (e) {}
+    TOTAL_ALL = Object.keys(ITEM_INDEX).length;
+  }
+
+  function today() {
+    try { if (window.Game && Game.localDate) return Game.localDate(); } catch (e) {}
+    return new Date().toISOString().slice(0, 10);
+  }
+  function addDays(dateStr, n) {
+    var d = new Date(dateStr + 'T00:00:00');
+    d.setDate(d.getDate() + n);
+    try { if (window.Game && Game.localDate) return Game.localDate(d); } catch (e) {}
+    return d.toISOString().slice(0, 10);
+  }
+  function reduceMotion() {
+    try { return !!(window.Game && Game.getProfile && Game.getProfile().settings && Game.getProfile().settings.reduceMotion); } catch (e) { return false; }
+  }
+
+  var data = null;
+  var currentFilter = 'all';
+
+  function load() {
+    var raw = null;
+    try { raw = localStorage.getItem(KEY); } catch (e) {}
+    if (raw) {
+      try {
+        var parsed = JSON.parse(raw);
+        if (parsed && parsed.cards) { data = parsed; if (!data.awarded) data.awarded = {}; return; }
+      } catch (e) {}
+    }
+    data = { version: 1, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), migratedFrom: null, cards: {}, awarded: {} };
+    save();
+  }
+  function save() {
+    if (!data) return;
+    data.updatedAt = new Date().toISOString();
+    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {}
+  }
+
+  // ---- 統計 ----
+  function cardCount() { return Object.keys(data.cards).length; }
+  function masteredCount() { var n = 0; for (var id in data.cards) if (data.cards[id].box >= 5) n++; return n; }
+  function catAllCollected(cat) {
+    var ids = CAT_IDS[cat] || [];
+    if (!ids.length) return false;
+    for (var i = 0; i < ids.length; i++) { if (!data.cards[ids[i]]) return false; }
+    return true;
+  }
+
+  // ---- 里程碑 ----
+  function satisfiedMilestones() {
+    var out = [];
+    var n = cardCount(), m = masteredCount();
+    if (n >= 1) out.push('first_card');
+    if (n >= 10) out.push('collect_10');
+    if (n >= 25) out.push('collect_25');
+    if (n >= 50) out.push('collect_50');
+    if (n >= 100) out.push('collect_100');
+    if (TOTAL_ALL > 0 && n >= TOTAL_ALL) out.push('collect_all');
+    for (var i = 0; i < CAT_LIST.length; i++) { if (catAllCollected(CAT_LIST[i])) out.push('cat_all_' + CAT_LIST[i]); }
+    if (m >= 1) out.push('first_master');
+    if (m >= 25) out.push('master_25');
+    if (TOTAL_ALL > 0 && m >= TOTAL_ALL) out.push('master_all');
+    return out;
+  }
+  function mileXp(id) { if (id.indexOf('cat_all_') === 0) return CAT_XP; return MILE_XP[id] || 0; }
+  function mileMsg(id) {
+    if (id === 'first_card') return '📔 收藏了第一張字詞卡！';
+    if (id === 'collect_10') return '✨ 已收藏 10 張！';
+    if (id === 'collect_25') return '✨ 已收藏 25 張！';
+    if (id === 'collect_50') return '✨ 已收藏 50 張！';
+    if (id === 'collect_100') return '📚 已收藏 100 張！';
+    if (id === 'collect_all') return '🏆 字詞收藏冊全部收齊！';
+    if (id === 'first_master') return '🌟 第一張字詞精通！';
+    if (id === 'master_25') return '🌟 25 張字詞精通！';
+    if (id === 'master_all') return '👑 所有字詞都精通了！';
+    if (id.indexOf('cat_all_') === 0) return '⭐ ' + (CAT_NAME[id.slice(8)] || '') + ' 全部收齊！';
+    return '🎉 達成新成就！';
+  }
+  function checkMilestones() {
+    var s = satisfiedMilestones();
+    for (var i = 0; i < s.length; i++) {
+      var id = s[i];
+      if (data.awarded[id]) continue;
+      // 先設 guard → save → 再單次發 XP（silent），即使當下關頁也不重領
+      data.awarded[id] = true;
+      save();
+      try { if (window.Game && Game.award) Game.award('chinese', mileXp(id), { silent: true, source: 'wordex-milestone', milestone: id }); } catch (e) {}
+      try { if (window.Game && Game.showToast) Game.showToast(mileMsg(id), 'success'); } catch (e) {}
+    }
+  }
+
+  // ---- 核心：一次作答（由 selectAnswer 的收錄 hook 呼叫） ----
+  function onAnswer(q, correct) {
+    if (!data) load();
+    var info = infoForQ(q);
+    if (!info) return;                     // 不合格題型：no-op
+    var id = info.id;
+    var t = today();
+    var card = data.cards[id];
+    if (!card) {
+      if (!correct) return;                // 答對過才收藏；答錯且未收藏 → 不建卡、不記錄
+      data.cards[id] = {
+        id: info.id, cat: info.cat, type: info.type, face: info.face, read: info.read,
+        box: 1, addedDate: t, lastReviewedDate: t, dueDate: addDays(t, INTERVAL[1]),
+        timesCorrect: 1, timesSeen: 1
+      };
+    } else {
+      card.timesSeen++;
+      if (correct) {
+        card.box = Math.min(card.box + 1, 5);   // 只升不降，封頂 5
+        card.timesCorrect++;
+        card.lastReviewedDate = t;
+        card.dueDate = addDays(t, INTERVAL[card.box]);
+      } else {
+        card.dueDate = t;                        // 答錯：不退階、不熄滅，只安排今天再見
+      }
+    }
+    save();
+    if (correct) checkMilestones();
+    if (isScreenOpen()) { renderSummary(); renderGrid(); }
+    renderHomeEntries();
+  }
+
+  // ---- 今日複習佇列 ----
+  function dueCards(t) {
+    var out = [];
+    for (var id in data.cards) { var c = data.cards[id]; if (c.dueDate && c.dueDate <= t) out.push(c); }
+    out.sort(function (x, y) {
+      if (x.dueDate !== y.dueDate) return x.dueDate < y.dueDate ? -1 : 1;
+      if (x.box !== y.box) return x.box - y.box;
+      return x.id < y.id ? -1 : 1;
+    });
+    return out;
+  }
+  function dueCount() { if (!data) load(); return dueCards(today()).length; }
+  function buildQueue() {
+    var due = dueCards(today());
+    return due.slice(0, REVIEW_CAP).map(function (c) { return c.id; });
+  }
+
+  // ---- 畫面 ----
+  function isScreenOpen() {
+    var el = document.getElementById('wordex-screen');
+    return el && el.classList.contains('active');
+  }
+  function renderHomeEntries() {
+    if (!data) load();
+    var cs = document.getElementById('wordex-entry-collect-sub');
+    if (cs) cs.textContent = '已收藏 ' + cardCount() + ' 張';
+    var rs = document.getElementById('wordex-entry-review-sub');
+    if (rs) {
+      var k = dueCount();
+      // 區分「從未收藏」與「今天複習完了」：前者鼓勵開始收藏，別讓新玩家看到「複習完了」而困惑。
+      rs.textContent = (cardCount() === 0)
+        ? '先去玩幾題、收藏喜歡的字詞，這裡就會出現要複習的卡片喔！'
+        : (k > 0 ? ('今天有 ' + k + ' 張想見你') : '今天複習完了，明天見！');
+    }
+  }
+  function renderSummary() {
+    var el = document.getElementById('wordex-summary');
+    if (!el) return;
+    var n = cardCount(), m = masteredCount(), k = dueCount();
+    el.innerHTML = '已收藏 <b>' + n + '</b> 張　·　精通 <b>' + m + '</b> 張　·　' +
+      (k > 0 ? '今天有 <b>' + k + '</b> 張想複習 🔵' : '今天都複習完了，明天見！');
+  }
+  function renderFilter() {
+    var el = document.getElementById('wordex-filter');
+    if (!el) return;
+    var html = '<button class="wordex-chip' + (currentFilter === 'all' ? ' active' : '') + '" onclick="Wordex.setFilter(\'all\')">全部</button>';
+    for (var i = 0; i < CAT_LIST.length; i++) {
+      var cat = CAT_LIST[i];
+      html += '<button class="wordex-chip' + (currentFilter === cat ? ' active' : '') + '" onclick="Wordex.setFilter(\'' + cat + '\')">' +
+        CAT_EMOJI[cat] + ' ' + CAT_NAME[cat] + '</button>';
+    }
+    el.innerHTML = html;
+  }
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function boxGlyph(box) {
+    if (box >= 5) return '🌟';
+    return '●'.repeat(box) + '○'.repeat(Math.max(0, 4 - box));
+  }
+  function renderGrid() {
+    if (!data) load();
+    var grid = document.getElementById('wordex-grid');
+    if (!grid) return;
+    var t = today();
+    var ids = Object.keys(data.cards).sort();
+    if (currentFilter !== 'all') ids = ids.filter(function (id) { return data.cards[id].cat === currentFilter; });
+    if (!ids.length) {
+      grid.innerHTML = '<div class="wordex-empty">還沒有收藏喔～答對題目就會把那個字詞收進來！</div>';
+    } else {
+      var html = '';
+      for (var i = 0; i < ids.length; i++) {
+        var c = data.cards[ids[i]];
+        var due = (c.dueDate && c.dueDate <= t);
+        html += '<div class="wordex-card' + (c.box >= 5 ? ' mastered' : '') + '" role="button" tabindex="0" onclick="Wordex.openFocus(\'' + encodeURIComponent(c.id) + '\')">' +
+          (due ? '<div class="wordex-card-due">🔵</div>' : '') +
+          '<div class="wordex-card-cat">' + (CAT_EMOJI[c.cat] || '') + '</div>' +
+          '<div class="wordex-card-face">' + escapeHtml(c.face) + '</div>' +
+          (c.read ? '<div class="wordex-card-read">' + escapeHtml(c.read) + '</div>' : '') +
+          '<div class="wordex-card-box">' + boxGlyph(c.box) + '</div>' +
+        '</div>';
+      }
+      grid.innerHTML = html;
+    }
+    grid.classList.toggle('wordex-reduce', reduceMotion());
+  }
+
+  function openScreen() {
+    if (!data) load();
+    closeFocus();
+    hideResult();
+    if (typeof showScreen === 'function') showScreen('wordex-screen');
+    renderSummary(); renderFilter(); renderGrid();
+  }
+  function setFilter(cat) { currentFilter = cat; renderFilter(); renderGrid(); }
+
+  function openFocus(encId) {
+    if (!data) load();
+    var id = decodeURIComponent(encId);
+    var c = data.cards[id];
+    if (!c) return;
+    var t = today();
+    var status = (c.box >= 5) ? '已經精通囉！🌟' : ('目前在第 ' + c.box + ' 盒');
+    var when;
+    if (c.dueDate && c.dueDate <= t) when = '今天適合複習 🔵';
+    else when = '下次複習日：' + c.dueDate;
+    var body = document.getElementById('wordex-focus-body');
+    if (body) {
+      body.innerHTML =
+        '<div class="wordex-focus-kind">' + (CAT_EMOJI[c.cat] || '') + ' ' + kindOf(c.type) + '</div>' +
+        '<div class="wordex-focus-face">' + escapeHtml(c.face) + '</div>' +
+        (c.read ? '<div class="wordex-focus-read">' + escapeHtml(c.read) + '</div>' : '') +
+        '<div class="wordex-focus-meta">' + status + '<br>' + when + '<br>答對 ' + c.timesCorrect + ' 次</div>' +
+        '<button class="wordex-btn" onclick="Wordex.startFocus(\'' + encodeURIComponent(c.id) + '\')">✏️ 練這張</button>';
+    }
+    var ov = document.getElementById('wordex-focus-overlay');
+    if (ov) ov.hidden = false;
+  }
+  function closeFocus() { var o = document.getElementById('wordex-focus-overlay'); if (o) o.hidden = true; }
+  function hideResult() { var o = document.getElementById('wordex-result-overlay'); if (o) o.hidden = true; }
+
+  // ---- 複習 / 單張練習（重用既有 question-screen 引擎，不改引擎） ----
+  function startReview() {
+    if (!data) load();
+    closeFocus();
+    var queue = buildQueue();
+    if (!queue.length) { showEmptyReview(); return; }
+    currentGame = {
+      categoryId: '__wordex__', level: 0, mode: 'wordexReview',
+      questions: queue.map(function (id) { return Object.assign({}, ITEM_INDEX[id].q); }),
+      questionIndex: 0, score: 0, combo: 0, bestCombo: 0, answers: []
+    };
+    if (typeof showScreen === 'function') showScreen('question-screen');
+    if (typeof renderQuestion === 'function') renderQuestion();
+  }
+  function startFocus(encId) {
+    if (!data) load();
+    closeFocus();
+    var id = decodeURIComponent(encId);
+    if (!ITEM_INDEX[id]) return;
+    currentGame = {
+      categoryId: '__wordex__', level: 0, mode: 'wordexReview',
+      questions: [Object.assign({}, ITEM_INDEX[id].q)],
+      questionIndex: 0, score: 0, combo: 0, bestCombo: 0, answers: []
+    };
+    if (typeof showScreen === 'function') showScreen('question-screen');
+    if (typeof renderQuestion === 'function') renderQuestion();
+  }
+
+  function showEmptyReview() {
+    var el = document.getElementById('wordex-result-body');
+    if (el) {
+      el.innerHTML =
+        '<div class="wordex-result-emoji">🌙</div>' +
+        '<div class="wordex-result-title">今天複習完了</div>' +
+        '<div class="wordex-result-sub">字詞們都好好休息中，明天再來收更多吧！</div>' +
+        '<div class="wordex-result-actions">' +
+          '<button class="wordex-btn" onclick="Wordex.backToScreen()">看看收藏冊</button>' +
+          '<button class="wordex-btn secondary" onclick="Wordex.backToHome()">返回</button></div>';
+    }
+    var ov = document.getElementById('wordex-result-overlay');
+    if (ov) ov.hidden = false;
+  }
+
+  // 由 showResult() 首行的分派守衛呼叫
+  function endReview() {
+    var total = (currentGame && currentGame.questions) ? currentGame.questions.length : 0;
+    var score = (currentGame && typeof currentGame.score === 'number') ? currentGame.score : 0;
+    var el = document.getElementById('wordex-result-body');
+    if (el) {
+      var html;
+      if (total === 1) {
+        var ok = score > 0;
+        html = '<div class="wordex-result-emoji">' + (ok ? '⭐' : '💪') + '</div>' +
+          '<div class="wordex-result-title">' + (ok ? '答對了！這張又更亮了！' : '再記一次') + '</div>' +
+          '<div class="wordex-result-sub">' + (ok ? '繼續保持，很快就精通囉 ✨' : '等一下再遇到就會更熟。') + '</div>';
+      } else {
+        html = '<div class="wordex-result-emoji">🎉</div>' +
+          '<div class="wordex-result-title">今日複習完成！' + score + '/' + total + '</div>' +
+          '<div class="wordex-result-sub">這些字詞又更熟了 ✨</div>';
+      }
+      html += '<div class="wordex-result-actions">' +
+        '<button class="wordex-btn" onclick="Wordex.backToScreen()">回收藏冊</button>' +
+        '<button class="wordex-btn secondary" onclick="Wordex.backToHome()">← 回主畫面</button></div>';
+      el.innerHTML = html;
+    }
+    var ov = document.getElementById('wordex-result-overlay');
+    if (ov) ov.hidden = false;
+    renderHomeEntries();
+  }
+  function backToScreen() { hideResult(); openScreen(); }
+  function backToHome() { hideResult(); if (typeof renderHome === 'function') renderHome(); }
+
+  window.Wordex = {
+    onAnswer: onAnswer,
+    openScreen: openScreen,
+    openFocus: openFocus,
+    closeFocus: closeFocus,
+    setFilter: setFilter,
+    startReview: startReview,
+    startFocus: startFocus,
+    endReview: endReview,
+    backToScreen: backToScreen,
+    backToHome: backToHome,
+    renderHomeEntries: renderHomeEntries
+  };
+
+  // 初始化（QUESTIONS 已於主程式解析；DOM 已就緒）
+  buildIndex();
+  load();
+  renderHomeEntries();
+})();
+</script>
+<script>/* kbd-activate-delegation: role=button 的 div 可用 Enter/空白鍵觸發 */
+document.addEventListener("keydown",function(e){if(e.key!=="Enter"&&e.key!==" ")return;var t=e.target;if(t&&t.getAttribute&&t.getAttribute("role")==="button"&&t.tagName!=="BUTTON"&&t.tagName!=="A"&&t.tagName!=="INPUT"&&t.tagName!=="TEXTAREA"&&!t.hasAttribute("onkeydown")){e.preventDefault();t.click();}});</script>
+</body>
+</html>

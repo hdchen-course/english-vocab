@@ -1,0 +1,237 @@
+/* =====================================================================
+ * game_core.css — 統一遊戲化引擎的 HUD / Toast / 升級 / 徽章 樣式
+ * ---------------------------------------------------------------------
+ * 依 BLUEPRINT.md §4.2 / §4.5：
+ *   - 浮動 HUD（level chip + XP bar + streak flame + coins + daily ring）
+ *   - toast / 升級 / 徽章 慶祝
+ *   - CSS 變數主題化（可被 assets/app.css 覆寫）
+ *   - 尊重 prefers-reduced-motion
+ *   - iOS safe-area：env(safe-area-inset-*)
+ *   - 手機 + iPad 皆宜；無外部依賴
+ * ===================================================================== */
+
+:root {
+  /* 這些變數會被 assets/app.css 的設計 token 覆寫；此處提供 fallback。 */
+  --game-xp: var(--c-xp, #0984e3);
+  --game-streak: var(--c-streak, #ff7675);
+  --game-coin: var(--c-coin, #fdcb6e);
+  --game-card: var(--card, #ffffff);
+  --game-ink: var(--ink, #2d3436);
+  --game-ink-soft: var(--ink-soft, #636e72);
+  --game-shadow: var(--shadow-lg, 0 8px 24px rgba(45, 52, 54, 0.16));
+  --game-radius: var(--r-lg, 20px);
+  /* HUD 停靠列刻意用「低」z-index（見 .game-hud 註解）：捲動交疊時要讓頁面
+     自身的頂部導覽（通常 z-index ≥ 100）蓋過本列，導覽按鈕才永遠可用。 */
+  --game-hud-z: 1;
+  --game-toast-z: 9500;
+}
+
+/* ---------------------------------------------------------------- HUD */
+/* 停靠列 HUD：只在「無原生 HUD」的頁被 game_core.js 注入為 <body> 的第一個子節點。
+ *
+ * 為何是 sticky 流內列而非浮動藥丸（修 QA 回報的重疊 bug）：
+ *   - 舊版是 position:fixed 置中藥丸，會浮在頁面自身的頂部導覽/標題「上面」，
+ *     蓋住中央的按鈕（例：number_theory 的 .top-nav）。
+ *   - 改為 position:sticky; top:0 的「流內」整寬列後，本列會佔用版面高度、把
+ *     所有頁面內容（含頁面自身 sticky 的頂部導覽）往下推 → 靜止時不再覆蓋內容。
+ *   - z-index 刻意設低（var(--game-hud-z)=1）：捲動時若頁面自身的 sticky/fixed
+ *     頂部導覽也黏到 top:0，交疊處由「較高 z-index 的頁面導覽」勝出 →
+ *     導覽按鈕永遠可用；而 z-index:1 仍高於一般未定位/自動堆疊的內容，
+ *     確保捲動時頁面內容不會透出本列。
+ *   - 尊重 env(safe-area-inset-top)；手機/iPad、淺色/深色皆宜。
+ */
+.game-hud {
+  position: sticky;
+  top: 0;
+  z-index: var(--game-hud-z);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+  padding: calc(env(safe-area-inset-top, 0px) + 8px) 12px 8px;
+  background: color-mix(in srgb, var(--game-card) 92%, transparent);
+  -webkit-backdrop-filter: saturate(1.2) blur(10px);
+  backdrop-filter: saturate(1.2) blur(10px);
+  border-bottom: 1px solid var(--card-border, #e8f0fe);
+  box-shadow: 0 2px 10px rgba(45, 52, 54, 0.06);
+  font-family: var(--font, 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+  color: var(--game-ink);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  overflow-x: auto;          /* 極窄裝置的保險：內容過寬可水平捲動而不外溢 */
+  scrollbar-width: none;
+}
+.game-hud::-webkit-scrollbar { display: none; }
+
+/* 與共用 .app-bar 併存（單一 top chrome 決策）：偵測到頁面有 .app-bar 時，
+ * game_core.js 會把本 HUD 插到 app-bar「之後」並加上此 class → HUD 停靠在
+ * app-bar 正下方（top = app-bar 高度），兩列垂直堆疊、捲動時都不互相遮蓋。
+ * app-bar 已涵蓋 iOS 瀏海安全區，故此處把上內距改回一般值（不再加 safe-area）。 */
+.game-hud.game-hud--docked {
+  top: calc(var(--app-bar-h, 56px) + env(safe-area-inset-top, 0px));
+  padding-top: 8px;
+  z-index: 80;   /* 低於 app-bar（--app-bar-z:90）：極少數 1px 交疊時 app-bar 勝出 */
+}
+
+.game-hud-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.game-hud-level {
+  /* 實心卡底 + 細框(而非半透明藍疊在頁面上):-ink 文字回到「on card」的 AA 對比(亮 5.32:1/暗 6.32:1);
+   * 細框讓等級膠囊在同為卡色的 HUD 上仍可辨。 */
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  padding: 3px 9px;
+  border-radius: 999px;
+  /* 13px 標籤文字：用 -ink 文字變體達 WCAG AA（亮/暗皆 ≥4.5:1）；
+   * 亮色 accent 僅保留給上面的 12% tint 底。 */
+  color: var(--c-primary-ink, #0b6bb5);
+}
+.game-hud-rank-icon { font-size: 15px; }
+
+.game-hud-xp {
+  position: relative;
+  width: clamp(56px, 22vw, 120px);
+  height: 8px;
+  background: var(--card-border, #e8f0fe);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.game-hud-xp-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0%;
+  background: linear-gradient(90deg, var(--c-primary-soft, #74b9ff), var(--game-xp));
+  border-radius: 999px;
+  transition: width 0.5s ease;
+}
+
+.game-hud-streak { color: var(--c-streak-ink, #c62828); }
+.game-hud-coins { color: var(--c-coin-ink, #8f6200); }
+
+.game-hud-ring {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  flex: none;
+}
+.game-hud-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.game-hud-ring-bg { fill: none; stroke: var(--card-border, #e8f0fe); stroke-width: 3.4; }
+.game-hud-ring-fg {
+  fill: none;
+  stroke: var(--c-correct, #00b894);
+  stroke-width: 3.4;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease;
+}
+.game-hud-ring-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;   /* 8px 對 9-10 歲孩童偏小；放大到 11px 提升可讀性（仍與環形弧、title 冗餘呈現）*/
+  font-weight: 800;
+  color: var(--game-ink-soft);
+}
+
+/* 極窄手機：隱藏金幣以節省空間（金幣仍在 profile 卡可見）。 */
+@media (max-width: 359px) {
+  .game-hud-coins { display: none; }
+}
+
+/* ------------------------------------------------------------- Toast */
+.game-toast-root {
+  position: fixed;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 76px);
+  transform: translateX(-50%);
+  z-index: var(--game-toast-z);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  max-width: min(92vw, 420px);
+  pointer-events: none;
+}
+
+.game-toast {
+  pointer-events: auto;
+  padding: 12px 18px;
+  border-radius: var(--game-radius);
+  /* base/info toast：中性 ink 面 + 主題感知對比字。--game-ink 亮色為深炭、暗色
+   * 翻為暖偏白；--on-accent 亮=白、暗=深墨，兩者天生互為對極 → 亮色深底白字、
+   * 暗色亮底深墨字，皆 ≥12:1（原本固定 #fff 在暗色亮底上僅約 1.1:1）。 */
+  background: var(--game-ink);
+  color: var(--on-accent);
+  font-family: var(--font, 'Nunito', -apple-system, sans-serif);
+  font-size: clamp(14px, 3.2vw, 16px);
+  font-weight: 700;
+  text-align: center;
+  box-shadow: var(--game-shadow);
+  opacity: 0;
+  transform: translateY(12px) scale(0.96);
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.game-toast-show { opacity: 1; transform: translateY(0) scale(1); }
+
+.game-toast-levelup {
+  /* 升級 toast：藍→紫漸層改用加深的 -ink 變體當填色，配 --on-accent 字。
+   * 亮色 #0b6bb5→#5a4bd4 + 白字（≥5.9:1，原 --c-primary #0984e3 白字僅 3.87:1）；
+   * 暗色 #63B2EE→#A29BFE + 深墨字（≥7:1，原白字在亮藍上不達標）。 */
+  background: linear-gradient(135deg, var(--c-primary-ink), var(--c-math-ink));
+  color: var(--on-accent);
+}
+.game-toast-badge {
+  /* 徽章 toast：黃/金填色兩主題皆為淺色，文字「永遠」用深墨（--on-bright，
+   * 不隨主題翻白），deep ink on 黃/金 ≥7:1（原 --game-ink 暗色翻白 → 淺字淺底失敗）。 */
+  background: linear-gradient(135deg, #f6a609, var(--game-coin));
+  color: var(--on-bright);
+}
+.game-toast-daily {
+  /* 每日 toast：亮綠填色同屬恆亮色，文字固定深墨（--on-bright），
+   * deep ink on 綠 ≥7:1（原 --game-ink 暗色翻白 → 失敗）。 */
+  background: linear-gradient(135deg, var(--c-correct, #00b894), #55efc4);
+  color: var(--on-bright);
+}
+
+/* -------------------------------------------- 升級 / 徽章 慶祝彈跳（可選） */
+.game-celebrate {
+  position: fixed;
+  inset: 0;
+  z-index: var(--game-toast-z);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.game-celebrate-badge {
+  font-size: clamp(48px, 18vw, 96px);
+  animation: game-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes game-pop {
+  0% { transform: scale(0.2); opacity: 0; }
+  60% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ---------------------------------------------- 無障礙：減少動態 */
+@media (prefers-reduced-motion: reduce) {
+  .game-hud-xp-fill,
+  .game-hud-ring-fg,
+  .game-toast {
+    transition: none;
+  }
+  .game-toast { transform: none; }
+  .game-toast-show { transform: none; }
+  .game-celebrate-badge { animation: none; }
+}

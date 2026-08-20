@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>國語觀念養成 📖</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<link rel="stylesheet" href="concept.css">
+<script src="game_core.js"></script>
+<style>:root{ --su:#b91c1c; --su-tint:rgba(185,28,28,0.14); }</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">國語觀念養成 📖</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="cn-screen active cn-wrap">
+    <div class="cn-topbar"><span class="cn-title">國語觀念養成 📖</span></div>
+    <div class="cn-hello"><span class="cn-mascot" aria-hidden="true">📖</span>
+      <div><div class="cn-htext" id="hello">部首、筆順、找重點、標點符號——用圖一步步看懂，識字和閱讀都變簡單。</div>
+      <div class="cn-hsub">每個觀念都是「教一小段 → 馬上練習」，慢慢來就好。</div></div></div>
+    <div class="cn-lessons" id="lesson-list"></div>
+    <a class="cn-nextup" href="chinese.html" style="display:flex;align-items:center;gap:12px;margin-top:16px;padding:14px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:26px;flex:none" aria-hidden="true">🚀</span><span>學會了？接著到「國語大冒險」練習 →</span></a>
+    <p class="cn-note">這裡是「先學觀念」的教學小旅程，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
+  </section>
+  <section id="screen-play" class="cn-screen cn-wrap">
+    <div class="cn-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="cn-title" id="play-title">觀念</span></div>
+    <div class="cn-progress" id="prog" aria-hidden="true"></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+// ---- 國語專用 SVG 概念圖（資訊文字 fill=currentColor 隨主題變色；結構線 currentColor + 透明度）----
+var AC = '#b91c1c', FILL = 'rgba(185,28,28,0.12)';
+function arrow(x1,y1,x2,y2,color,w){
+  var dx=x2-x1, dy=y2-y1, len=Math.sqrt(dx*dx+dy*dy)||1, ux=dx/len, uy=dy/len;
+  var s='<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+color+'" stroke-width="'+w+'" stroke-linecap="round"/>';
+  s+='<polygon points="'+x2+','+y2+' '+(x2-ux*11-uy*6).toFixed(1)+','+(y2-uy*11+ux*6).toFixed(1)+' '+(x2-ux*11+uy*6).toFixed(1)+','+(y2-uy*11-ux*6).toFixed(1)+'" fill="'+color+'"/>';
+  return s;
+}
+// 部首 → 例字：左邊部首方塊，箭頭指向右邊三個例字，下方寫共同的意思
+function radicalGroup(radical, radLabel, words, meaning){
+  var s='<svg viewBox="0 0 280 120" role="img" aria-label="部首'+radLabel+'和相關的字">';
+  s+='<rect x="8" y="20" width="58" height="58" rx="12" fill="'+FILL+'" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+='<text x="37" y="60" text-anchor="middle" font-size="30" fill="currentColor">'+radical+'</text>';
+  s+='<text x="37" y="94" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">'+radLabel+'</text>';
+  s+=arrow(70,49,92,49,'currentColor',3);
+  var x=98;
+  words.forEach(function(w){
+    s+='<rect x="'+x+'" y="20" width="50" height="58" rx="10" fill="'+FILL+'" stroke="currentColor" stroke-opacity="0.6" stroke-width="1.8"/>';
+    s+='<text x="'+(x+25)+'" y="60" text-anchor="middle" font-size="28" fill="currentColor">'+w+'</text>';
+    x+=56;
+  });
+  s+='<text x="140" y="112" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">'+meaning+'</text>';
+  return s+'</svg>';
+}
+// 筆順田字格：strokes=[{x1,y1,x2,y2,n}]（座標以左上 6 為原點的 100 格）
+function strokeGrid(strokes){
+  var s='<svg viewBox="0 0 112 128" role="img" aria-label="筆畫順序示範，數字代表先後">';
+  s+='<rect x="6" y="6" width="100" height="100" rx="8" fill="none" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+='<line x1="56" y1="6" x2="56" y2="106" stroke="currentColor" stroke-opacity="0.3" stroke-width="1" stroke-dasharray="4 4"/>';
+  s+='<line x1="6" y1="56" x2="106" y2="56" stroke="currentColor" stroke-opacity="0.3" stroke-width="1" stroke-dasharray="4 4"/>';
+  strokes.forEach(function(k){
+    s+=arrow(k.x1,k.y1,k.x2,k.y2,'currentColor',4.5);
+    s+='<circle cx="'+k.x1+'" cy="'+k.y1+'" r="9" fill="'+AC+'"/>';
+    s+='<text x="'+k.x1+'" y="'+(k.y1+4)+'" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">'+k.n+'</text>';
+  });
+  s+='<text x="56" y="122" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">數字＝下筆順序</text>';
+  return s+'</svg>';
+}
+// 兩個方向原則：由上到下、由左到右
+function dirArrows(){
+  var s='<svg viewBox="0 0 220 120" role="img" aria-label="寫字方向：由上到下、由左到右">';
+  s+='<rect x="8" y="10" width="96" height="100" rx="12" fill="'+FILL+'" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+=arrow(56,26,56,92,'currentColor',4);
+  s+='<text x="56" y="20" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">由上到下</text>';
+  s+='<rect x="116" y="10" width="96" height="100" rx="12" fill="'+FILL+'" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+=arrow(128,60,200,60,'currentColor',4);
+  s+='<text x="164" y="20" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">由左到右</text>';
+  return s+'</svg>';
+}
+// 從標題找重點：一頁文章，標題與第一句被強調
+function articleLayout(){
+  var s='<svg viewBox="0 0 252 170" role="img" aria-label="文章版面：標題和第一句是重點">';
+  s+='<rect x="16" y="6" width="220" height="158" rx="10" fill="none" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+='<rect x="32" y="18" width="150" height="24" rx="6" fill="'+FILL+'" stroke="'+AC+'" stroke-width="1.5"/>';
+  s+='<text x="107" y="35" text-anchor="middle" font-size="13" font-weight="800" fill="currentColor">校園的大樹</text>';
+  s+='<text x="192" y="35" font-size="11" font-weight="800" fill="currentColor">← 標題</text>';
+  s+='<rect x="32" y="56" width="186" height="16" rx="4" fill="'+FILL+'"/>';
+  s+='<text x="36" y="68" font-size="11" font-weight="800" fill="currentColor">第一句（主題句）</text>';
+  [90,108,126,144].forEach(function(y){
+    s+='<line x1="32" y1="'+y+'" x2="218" y2="'+y+'" stroke="currentColor" stroke-opacity="0.45" stroke-width="4" stroke-linecap="round"/>';
+  });
+  return s+'</svg>';
+}
+// 標點符號：同一句話、不同結尾 → 不同意思
+function punctDemo(){
+  var rows=[
+    ['你來了','。','句號：一句話說完了'],
+    ['你來了','？','問號：在問問題'],
+    ['你來了','，','逗號：中間停一下，後面還有話']
+  ];
+  var s='<svg viewBox="0 0 260 168" role="img" aria-label="同一句話用不同標點，意思不一樣">';
+  var y=22;
+  rows.forEach(function(r){
+    s+='<text x="14" y="'+y+'" font-size="17" font-weight="800" fill="currentColor">「'+r[0]+'<tspan fill="currentColor" font-size="22" text-decoration="underline">'+r[1]+'</tspan>」</text>';
+    s+='<text x="14" y="'+(y+18)+'" font-size="11" fill="currentColor">'+r[2]+'</text>';
+    y+=52;
+  });
+  return s+'</svg>';
+}
+
+window.CONCEPT = {
+  progKey:'chinese_concepts_v1', practiceHref:'chinese.html',
+  lessons:[
+   { id:'radical', name:'部首與字的意思', emoji:'🔤', color:'#b91c1c', sub:'部首常常暗示這個字的意思', done:'記得：很多字的「部首」會偷偷告訴你它的意思——木字旁多和植物有關、水字旁（氵）多和水有關、心部多和心情感覺有關。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'木字旁：多和「植物」有關',svg:radicalGroup('木','木字旁',['樹','林','森'],'都和樹木、植物有關'),text:'很多字左邊或旁邊有<b>木字旁</b>，意思常常和<b>樹木、植物</b>有關，像<b>樹、林、森</b>。看到部首，就能猜一猜這個字大概在講什麼。'},
+      {type:'teach',kicker:'再看一個',title:'水字旁（氵）：多和「水」有關',svg:radicalGroup('氵','水字旁',['河','海','湖'],'都和水有關'),text:'左邊三點的<b>水字旁（氵）</b>，通常和<b>水</b>有關，像<b>河、海、湖</b>。所以看到氵，可以先想到「這大概和水有關」。'},
+      {type:'teach',kicker:'第三個',title:'心部：多和「心情」有關',svg:radicalGroup('心','心部',['想','情','感'],'都和心情、感覺有關'),text:'有<b>心部（心／忄）</b>的字，常常和<b>心情、感覺</b>有關，像<b>想、情、感</b>。部首就像小提示，幫你猜字的意思。'},
+      {type:'quiz',kicker:'換你試試',title:'「河、海、湖」都有水字旁（氵），它們共同和什麼有關？',options:['水','火','木頭','天空'],answer:0,why:'水字旁（氵）通常表示這個字和水有關，所以河、海、湖都和水有關。'},
+      {type:'quiz',kicker:'想一想',title:'下面哪一個字有「木字旁」，可能和植物有關？',options:['樹','河','想','明'],answer:0,why:'「樹」有木字旁，和植物有關；河是水字旁、想是心部、明是日字旁。'},
+      {type:'quiz',kicker:'想一想',title:'「情、想、感」這些字，最可能和什麼有關？',options:['心情、感覺','金錢','顏色','數字'],answer:0,why:'它們都有心部，通常和心情、感覺有關。'}
+     ]},
+   { id:'stroke', name:'筆畫順序原則', emoji:'✍️', color:'#dc2626', sub:'由上到下、由左到右、先橫後豎', done:'記得筆順口訣：由上到下、由左到右、先橫後豎、先撇後捺。順序對了，字才會又快又好看。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'大方向：由上到下、由左到右',svg:dirArrows(),text:'寫字有<b>先後順序</b>。最基本的兩個方向：<b>由上到下</b>、<b>由左到右</b>。先照這個大方向，字就不會東倒西歪。'},
+      {type:'teach',kicker:'常見規則',title:'先橫後豎：寫「十」',svg:strokeGrid([{x1:26,y1:56,x2:86,y2:56,n:1},{x1:56,y1:26,x2:56,y2:86,n:2}]),text:'遇到有橫又有豎的字，通常<b>先寫橫（一），再寫豎（丨）</b>。像「<b>十</b>」：第 1 畫是橫，第 2 畫是豎。'},
+      {type:'teach',kicker:'再一個規則',title:'先撇後捺：寫「人」',svg:strokeGrid([{x1:56,y1:26,x2:30,y2:96,n:1},{x1:52,y1:44,x2:86,y2:96,n:2}]),text:'一撇（丿）一捺（乀）的時候，<b>先寫左邊那一撇，再寫右邊那一捺</b>。像「<b>人</b>」：第 1 畫是撇，第 2 畫是捺。'},
+      {type:'quiz',kicker:'換你試試',title:'寫「十」這個字，應該先寫哪一畫？',svg:strokeGrid([{x1:26,y1:56,x2:86,y2:56,n:1},{x1:56,y1:26,x2:56,y2:86,n:2}]),options:['先寫橫（一），再寫豎（丨）','先寫豎（丨），再寫橫（一）','兩畫一起寫','從中間往外寫'],answer:0,why:'筆順規則是「先橫後豎」，所以「十」要先寫橫，再寫豎。'},
+      {type:'quiz',kicker:'想一想',title:'一般寫字最基本的方向原則是？',options:['由上到下、由左到右','由下到上、由右到左','從中間開始寫','沒有固定順序'],answer:0,why:'最基本的筆順方向是由上到下、由左到右。'},
+      {type:'quiz',kicker:'想一想',title:'寫「人」的「先撇後捺」是什麼意思？',options:['先寫左邊的撇，再寫右邊的捺','先寫右邊的捺，再寫左邊的撇','先寫一個橫','兩畫可以顛倒'],answer:0,why:'「先撇後捺」是指先寫左邊那一撇（丿），再寫右邊那一捺（乀）。'}
+     ]},
+   { id:'mainidea', name:'從標題找重點', emoji:'📰', color:'#e11d48', sub:'看標題、看第一句，抓住主題', done:'記得：標題告訴你這篇大概在講什麼；每一段的第一句常常就是「主題句」，先讀它最省力。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'標題：這篇在講什麼',svg:articleLayout(),text:'讀文章前先看<b>標題</b>。標題常常一句話就告訴你「這篇大概在講什麼」。像標題是〈校園的大樹〉，你就知道內容和學校的一棵大樹有關。'},
+      {type:'teach',kicker:'找主題句',title:'第一句常常是重點',svg:articleLayout(),text:'每一段的<b>第一句</b>常常是<b>主題句</b>——把整段的重點先講出來。先讀標題，再讀每段第一句，就能快速抓到文章的重點。'},
+      {type:'quiz',kicker:'換你試試',title:'一篇文章的「標題」通常告訴你什麼？',options:['這篇文章大概在講什麼','作者今年幾歲','印在第幾頁','總共用了幾個字'],answer:0,why:'標題常常一句話點出全篇的主題，讓你知道大概在講什麼。'},
+      {type:'quiz',kicker:'想一想',title:'想快速抓到一段的重點，先讀哪一句常常最有幫助？',options:['這一段的第一句（主題句）','最後一個標點','最長的那個字','頁碼'],answer:0,why:'段落的第一句常常是主題句，會先把整段重點講出來。'},
+      {type:'quiz',kicker:'想一想',title:'看到標題〈校園的椰子樹〉，這篇最可能在講什麼？',options:['學校裡的一棵椰子樹','怎麼煮飯','火車時刻表','月亮的形狀'],answer:0,why:'標題點出主題是校園裡的椰子樹，所以內容最可能和它有關。'}
+     ]},
+   { id:'punct', name:'標點符號', emoji:'❔', color:'#be123c', sub:'句號、逗號、問號怎麼用', done:'記得：句號。＝一句話說完了；逗號，＝中間停一下、話還沒說完；問號？＝在發問。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'同一句話，標點不同意思就不同',svg:punctDemo(),text:'標點符號會改變句子的意思。「你來了<b>。</b>」是<b>說明</b>一件事；「你來了<b>？</b>」是在<b>問問題</b>；用<b>逗號</b>時表示中間停一下、話還沒講完。'},
+      {type:'teach',kicker:'三個常用標點',title:'句號、逗號、問號',svg:punctDemo(),text:'<b>句號（。）</b>：一句話完整說完、要結束。<b>逗號（，）</b>：句子中間停頓一下，還要繼續說。<b>問號（？）</b>：在發問、想知道答案時用。'},
+      {type:'quiz',kicker:'換你試試',title:'「你吃飽了嗎」這句是在發問，句尾應該用哪個標點？',options:['問號（？）','句號（。）','逗號（，）','不用標點'],answer:0,why:'這是在問問題，句尾要用問號（？）。'},
+      {type:'quiz',kicker:'想一想',title:'一句話完整說完、要結束時，用哪個標點？',options:['句號（。）','逗號（，）','問號（？）','頓號（、）'],answer:0,why:'句號（。）用在一句話說完、要結束的地方。'},
+      {type:'quiz',kicker:'想一想',title:'句子中間想稍微停一下、但話還沒說完，用哪個標點？',options:['逗號（，）','句號（。）','問號（？）','驚嘆號（！）'],answer:0,why:'逗號（，）用在句子中間的停頓，表示話還沒說完。'}
+     ]}
+  ]
+};
+</script>
+<script src="concept_engine.js"></script>
+</body>
+</html>

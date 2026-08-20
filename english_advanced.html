@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>進階英文語感 🎧</title>
+<!-- 統一遊戲化引擎：先載共用設計 token（assets/app.css），再載 HUD/toast 樣式
+     （game_core.css），最後同步載入引擎（game_core.js）。
+     ─────────────────────────────────────────────────────────────────
+     這是英文家族的「進階語感」層——english_sense.html 的加深版：用大量自然例句
+     培養「一看／一聽就知道意思」的語感，而不是背文法規則。涵蓋比 english_sense
+     更多情境（過去／未來的時間感、比較、語氣 can/should/must、完成式的「到現在」感、
+     被動、動詞後面的順口搭配、把想法連起來），全部以「哪個最自然／這句在講什麼時候
+     （用感覺）」呈現。
+     計分（本頁計入 english 科目，讓學生升上進階內容時獎勵不中斷）：
+       宣告 body[data-game-wired="english"]，每題作答只呼叫一次
+       Game.recordAnswer('english', 對錯)（作答後 answered 旗標鎖定，重試不再記帳）。
+       本頁「不」呼叫 Game.award / recordSession，進階徽章冊為純本地（自有 key、無 XP），
+       故無 double-count。本頁只「唯讀 / 純提示」使用引擎：Game.showToast。
+       主題切換交給共用 app-bar 的 [data-theme-toggle]，由 game_core 自動接線。
+     獨立 localStorage key：english_adv_progress_v1（與 player_profile_v1 完全區隔）。
+     零假音檔：本頁為讀＋感覺（不放假的語音按鈕）。
+     ───────────────────────────────────────────────────────────────── -->
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<style>
+/* =====================================================================
+ * english_advanced.html — 本頁樣式（全部建立在 assets/app.css 的設計 token 上，
+ * 因此自動亮/暗色主題化、與學習基地視覺一致）。強調色系採英文科的 teal。
+ * 所有「資訊文字」一律用 var(--ink)/var(--ink-soft)/var(--su-ink)（雙主題皆過 AA），
+ * 不在資訊文字上寫死淺色 hex。
+ * =================================================================== */
+
+/* 本頁強調色沿用英文科 teal --c-english；供 FAB / 徽章冊等共用 --accent* 別名。 */
+:root {
+  --su: var(--c-english);
+  --su-tint: var(--tint-english);
+  --su-ink: var(--c-english-ink);
+  --accent: var(--c-english);
+  --accent-ink: var(--c-english-ink);
+  --accent-tint: var(--tint-english);
+}
+
+body { overflow-x: hidden; }
+
+/* 頁面頂列（返回、標題） */
+.ea-topbar { display: flex; align-items: center; gap: var(--s2); margin-bottom: var(--s4); }
+.ea-topbar .ea-title { flex: 1; font-size: var(--fs-h2); font-weight: 800; color: var(--ink); min-width: 0; }
+
+/* 螢幕切換（尊重 prefers-reduced-motion） */
+.ea-screen { display: none; animation: ea-fade 0.3s ease; }
+.ea-screen.active { display: block; }
+@keyframes ea-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .ea-screen { animation: none; } }
+
+/* 歡迎卡 */
+.ea-hello { display: flex; align-items: center; gap: var(--s3); padding: var(--s4); background: var(--su-tint); border: 1px solid var(--card-border); border-radius: var(--r-lg); margin-bottom: var(--s4); }
+.ea-hello .ea-mascot { font-size: 46px; flex: none; line-height: 1; }
+.ea-hello .ea-hello-text { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+.ea-hello .ea-hello-sub { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; }
+
+/* 進度總覽小列 */
+.ea-overview { display: flex; align-items: center; gap: var(--s3); margin-bottom: var(--s4); flex-wrap: wrap; }
+.ea-overview .stat-tile { flex: 1; min-width: 96px; }
+
+/* 關卡選單 grid */
+.ea-levels { display: grid; gap: var(--s4); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.ea-level {
+  display: flex; flex-direction: column; gap: var(--s2); padding: var(--s4);
+  text-align: left; cursor: pointer; border: 2px solid var(--card-border);
+  background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  font-family: var(--font); color: var(--ink);
+}
+.ea-level:hover { box-shadow: var(--shadow-lg); border-color: var(--su); }
+.ea-level:active { transform: scale(0.98); }
+.ea-level-top { display: flex; align-items: center; gap: var(--s3); }
+.ea-level-emoji { font-size: 34px; width: 56px; height: 56px; flex: none; display: flex; align-items: center; justify-content: center; border-radius: 16px; }
+.ea-level-num { font-size: var(--fs-small); font-weight: 700; color: var(--su-ink); }
+.ea-level-name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); line-height: 1.25; }
+.ea-level-concepts { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; line-height: 1.4; }
+.ea-level-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-top: 2px; }
+.ea-level-status { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-small); font-weight: 700; }
+.ea-level-status.done { color: var(--c-correct-ink); }
+.ea-level-status.todo { color: var(--ink-soft); }
+.ea-level-stars { font-size: 16px; letter-spacing: 1px; }
+
+/* 進行中：大卡 */
+.ea-stage { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); padding: var(--s5) var(--s4); text-align: center; }
+.ea-visual { font-size: clamp(52px, 16vw, 84px); line-height: 1.1; margin: var(--s2) 0 var(--s3); user-select: none; }
+.ea-question { font-size: clamp(18px, 4.3vw, 23px); font-weight: 800; color: var(--ink); line-height: 1.6; margin: 0 auto var(--s4); max-width: 40ch; text-align: left; }
+
+/* 本關起始「語感卡」：先讀幾個自然例句、用感覺抓味道，再開始練習（不計分） */
+.ea-brief { text-align: left; }
+.ea-brief h2 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); margin: 0 0 var(--s2); text-align: center; }
+.ea-brief-sub { text-align: center; color: var(--ink-soft); font-weight: 700; font-size: var(--fs-small); margin: 0 auto var(--s3); max-width: 40ch; }
+/* 開場一句話（把情境「用感覺」帶出來，不講規則） */
+.ea-intro { max-width: 46ch; margin: 0 auto var(--s4); font-size: var(--fs-body); font-weight: 600; color: var(--ink); line-height: 1.7; }
+.ea-intro b { color: var(--su-ink); font-weight: 800; }
+/* 例句「感覺」清單：小提示標籤 + 自然英文 + 它給人的感覺（中文） */
+.ea-feel { list-style: none; padding: 0; margin: 0 auto var(--s4); max-width: 48ch; display: grid; gap: var(--s2); }
+.ea-feel li { padding: 12px 14px; background: var(--su-tint); border-radius: var(--r-md); }
+.ea-feel .ea-feel-cue { display: inline-block; font-size: var(--fs-small); font-weight: 800; color: var(--su-ink); margin-bottom: 4px; }
+.ea-feel .ea-feel-en { font-size: var(--fs-body); font-weight: 800; color: var(--ink); line-height: 1.45; }
+.ea-feel .ea-feel-zh { font-size: var(--fs-small); font-weight: 600; color: var(--ink-soft); line-height: 1.55; margin-top: 3px; }
+/* 極簡「小提醒」（語感建立後才補一句，且用「意思會被誤會」的口吻，不談規則） */
+.ea-tip {
+  max-width: 46ch; margin: 0 auto;
+  padding: 12px 14px; background: var(--card);
+  border: 1px dashed var(--su); border-radius: var(--r-md);
+  font-size: var(--fs-small); font-weight: 600; color: var(--ink); line-height: 1.6; text-align: left;
+}
+.ea-tip b { color: var(--su-ink); font-weight: 800; }
+
+/* 進度：本關第幾題 */
+.ea-steps { display: flex; align-items: center; justify-content: center; gap: 5px; margin-bottom: var(--s3); flex-wrap: wrap; }
+.ea-steps i { width: 20px; height: 6px; border-radius: 999px; background: var(--card-border); }
+.ea-steps i.on { background: var(--su); }
+.ea-steps i.cur { background: var(--su); box-shadow: 0 0 0 3px var(--su-tint); }
+
+/* 選項按鈕（tap 作答；命中區 ≥56px） */
+.ea-options { display: grid; gap: var(--s3); margin-top: var(--s2); }
+.ea-opt {
+  display: flex; align-items: center; gap: var(--s2); min-height: 56px; width: 100%;
+  padding: 14px 18px; border: 2px solid var(--card-border); border-radius: 16px;
+  background: var(--card); color: var(--ink); font-family: var(--font);
+  font-size: clamp(16px, 3.4vw, 19px); font-weight: 700; text-align: left; cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.ea-opt:active { transform: scale(0.98); }
+.ea-opt:disabled { cursor: default; }
+/* 作答後高亮：文字用 var(--ink)（亮暗雙主題皆過 AA），對錯以邊框顏色 + ✅/❌ 雙碼標示（不單靠顏色） */
+.ea-opt.correct { border-color: var(--c-correct); background: var(--tint-english); color: var(--ink); }
+.ea-opt.wrong { border-color: var(--c-wrong); background: rgba(255,118,117,0.12); color: var(--ink); }
+.ea-opt.correct .ea-opt-mark { color: var(--c-correct-ink); }
+.ea-opt.wrong .ea-opt-mark { color: var(--c-streak-ink); }
+.ea-opt .ea-opt-mark { margin-left: auto; font-size: 22px; }
+
+/* 揭示區（答案解說） */
+.ea-reveal { margin-top: var(--s4); padding: var(--s3) var(--s4); background: var(--su-tint); border-radius: var(--r-md); font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.6; text-align: left; display: none; }
+.ea-reveal.show { display: block; animation: ea-fade 0.3s ease; }
+@media (prefers-reduced-motion: reduce) { .ea-reveal.show { animation: none; } }
+
+/* 完成畫面 */
+.ea-done { text-align: center; padding: var(--s5) var(--s4); }
+.ea-done-emoji { font-size: clamp(64px, 22vw, 100px); }
+.ea-done-stars { font-size: 34px; letter-spacing: 4px; margin: var(--s2) 0; }
+.ea-done-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); }
+
+/* 底部行動列 */
+.ea-actions { display: flex; gap: var(--s3); margin-top: var(--s4); flex-wrap: wrap; }
+.ea-actions .btn { flex: 1; min-width: 140px; }
+
+.ea-footnote { text-align: center; color: var(--ink-soft); font-size: var(--fs-small); margin-top: var(--s5); font-weight: 600; max-width: 34em; margin-inline: auto; }
+
+/* 桌機沿用 app.css 的 --content-max，不自行封頂；答題欄由 ch 上限維持窄欄護眼。 */
+</style>
+</head>
+<body data-game-wired="english" data-game-maturity="advanced">
+<!-- ===== 共用頂部應用列（全站一致；貼在 <body> 內第一個元素） ===== -->
+<!-- data-game-hud="off"：本頁為進階層、純本地進度不餵主角色 XP 的浮動 HUD，故不注入。 -->
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">進階英文語感 🎧</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle
+          aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+
+  <!-- ============================= 關卡選單 ============================= -->
+  <section id="screen-menu" class="ea-screen active">
+    <div class="ea-topbar">
+      <span class="ea-title">進階英文語感 🎧</span>
+    </div>
+
+    <div class="ea-hello">
+      <span class="ea-mascot" aria-hidden="true">🎧</span>
+      <div>
+        <div class="ea-hello-text" id="hello-text">讀很多真正的句子，用「感覺」抓到意思——光看動詞長什麼樣子，就知道是現在、過去還是已經做完。</div>
+        <div class="ea-hello-sub" id="hello-sub">不背規則、靠語感，每關先讀幾句再玩，答錯也沒關係。</div>
+      </div>
+    </div>
+
+    <div class="ea-overview">
+      <div class="stat-tile"><span class="stat-value" id="ov-done">0/11</span><span class="stat-label">完成關卡</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-badges">0/12</span><span class="stat-label">收集徽章</span></div>
+    </div>
+
+    <div class="ea-levels" id="level-list"><!-- 由 JS 產生 --></div>
+
+    <a class="cn-nextup cn-nextup--back" href="english_sense.html" style="display:flex;align-items:center;gap:12px;margin-top:16px;padding:12px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:24px;flex:none" aria-hidden="true">🗣️</span><span>← 覺得太快？先回「英文語感」多練幾次</span></a>
+    <a class="cn-nextup cn-nextup--back" href="english_concepts.html" style="display:flex;align-items:center;gap:12px;margin-top:10px;padding:12px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:24px;flex:none" aria-hidden="true">📘</span><span>← 想從頭打底？回「英文句型觀念養成」複習</span></a>
+
+    <p class="ea-footnote">這是英文語感的「進階挑戰」小旅程。多讀多感覺，讓句子的「樣子」自己告訴你意思，答錯也沒關係。🌱</p>
+  </section>
+
+  <!-- ============================= 進行中 ============================= -->
+  <section id="screen-play" class="ea-screen">
+    <div class="ea-topbar">
+      <button type="button" class="btn btn-icon" id="btn-back" aria-label="回到關卡選單">←</button>
+      <span class="ea-title" id="play-title">關卡</span>
+    </div>
+    <div class="ea-steps" id="step-dots" aria-hidden="true"></div>
+    <div class="play-column">
+      <div id="stage"><!-- 由 JS 產生語感卡與每一題 --></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* =====================================================================
+ * 主程式（自足 IIFE）
+ *   - 8 關語感（時間感 → 連句），一律解鎖、可自由進入。
+ *   - 每關先呈現「語感卡」：一句情境開場 + 幾個自然例句（附「感覺」說明），
+ *     學生按「開始挑戰」後才進入 5~6 題「哪個最自然／這句在講什麼時候」。
+ *   - 教學走 native-acquisition 路線：不列規則、不背變化表；不規則動詞（went/gone、
+ *     saw/seen…）以真句子的「熟悉感」呈現，而非拼字規則。
+ *   - 核心技能：「動詞的樣子本身就帶著時間」——多題不給 yesterday/now 這類時間字，
+ *     要純憑動詞的樣子去「感覺」是現在／過去／已完成。
+ *   - 選項每題 Fisher–Yates 洗牌；answer 為「未洗牌前的 0-based 索引」，
+ *     以 data-i 保留原始索引判斷 i===answer，判分不受洗牌影響。
+ *   - 每題最多記一次分（answered 旗標守衛）；答錯可再看解說但只給視覺提示、不加分。
+ *   - 獨立 localStorage key：english_adv_progress_v1。
+ *   - 計分：對每一次「作答」呼叫一次 Game.recordAnswer('english', 對錯)；
+ *     不呼叫 Game.award / recordSession，故無 double-count。
+ * =================================================================== */
+(function () {
+  'use strict';
+
+  // ---- 純提示（不記帳）：優先用 game_core toast，失敗即靜默 ----
+  function toast(msg, kind) {
+    try { if (window.Game && Game.showToast) Game.showToast(msg, kind || 'info'); } catch (e) { /* 靜默 */ }
+  }
+
+  // ---- 本頁進度（獨立 key，全程 try/catch；配額滿即靜默放棄不崩潰） ----
+  var PROG_KEY = 'english_adv_progress_v1';
+  function loadProg() {
+    var p = null;
+    try { p = JSON.parse(localStorage.getItem(PROG_KEY)); } catch (e) { p = null; }
+    if (!p || typeof p !== 'object') p = {};
+    if (typeof p.badges !== 'object' || !p.badges) p.badges = {};
+    return p;
+  }
+  function saveProg(p) {
+    try { localStorage.setItem(PROG_KEY, JSON.stringify(p)); } catch (e) { /* 靜默降級 */ }
+  }
+  var progress = loadProg(); // { lvId:{done,best}, badges:{} }
+
+  // =====================================================================
+  // 課程內容（繁體中文說明；英文例句與選項皆為自然、正確的英文）
+  //   intro  = 一句情境開場（用感覺帶出，不講規則）
+  //   feels  = 幾個自然例句 [{cue: 小標籤, en: 英文句, zh: 它給人的感覺}]
+  //   tip    = 極簡「小提醒」（可省略；用「意思會被誤會」的口吻）
+  //   answer = 未洗牌前 options 陣列的 0-based 索引。
+  //   英文縮寫一律用彎引號 ’（I’ll / it’s / I’ve），避免破壞 JS 單引號字串。
+  // =====================================================================
+  var LEVELS = [
+    {
+      id: 'lv1', level: 1, name: '動作的時間感', emoji: '🕰️', color: '#0d9488',
+      concepts: ['用感覺判斷時間', '現在／過去／已完成', '同個動作三種樣子'],
+      intro: '英文有個很神奇的地方：<b>光看動詞長什麼樣子，你就能感覺到事情是什麼時候</b>——不一定要等句子裡出現「昨天」「現在」。多讀幾次，眼睛和耳朵會自己抓到那個味道。',
+      feels: [
+        { cue: '🔁 平常都會', en: 'I eat breakfast.', zh: '感覺像「平常、每天都會」做的事。' },
+        { cue: '✅ 已經發生', en: 'I ate breakfast.', zh: '感覺這件事「已經發生、結束了」。' },
+        { cue: '🎒 到現在為止', en: 'I have eaten breakfast.', zh: '感覺「到現在為止已經吃過了」（所以現在不餓）。' },
+        { cue: '🔁 / ✅ / 🎒 同一個動作', en: 'She goes / went / has gone to school.', zh: '同一件事三種樣子：平常去／已經去了／去了現在不在這。' }
+      ],
+      tip: '<b>went、ate</b> 這種「過去的樣子」不是套公式算出來的，是英文裡太常用、聽久了自然就記得。多讀多聽就好。',
+      questions: [
+        { q: '這句在講什麼時候？（用感覺）“I walked to the park.”', options: ['已經發生、結束的事', '每天都會做的習慣', '還沒發生、之後才要做', '此刻正在做'], answer: 0, why: 'walked 這個樣子讓人感覺「已經走過了」，是過去的事。' },
+        { q: '這句在講什麼時候？（用感覺）“She eats vegetables.”', options: ['平常、習慣會做的事', '已經做完的事', '明天才要做的事', '正在做到一半'], answer: 0, why: 'eats 這種樣子感覺是「平常都會」做的事。' },
+        { q: '這句的感覺最接近？“I have finished my homework.”', options: ['到現在已經做完了，現在輕鬆', '明天才要開始做', '每天都會做一次', '從來沒做過'], answer: 0, why: 'have finished 給人「到現在為止已經完成」的感覺。' },
+        { q: '哪一句感覺「這件事已經發生、過去了」？', options: ['I saw that movie.', 'I see that movie.', 'I will see that movie.', 'I want to see that movie.'], answer: 0, why: 'saw 是 see「已經發生」的樣子，感覺事情過去了。' },
+        { q: '要表達「我已經吃過午餐了（現在不餓）」，哪個最自然？', options: ['I have eaten lunch.', 'I eat lunch.', 'I will eat lunch.', 'I am eating lunch.'], answer: 0, why: '「到現在已經做完」的感覺，用 have eaten 最自然。' },
+        { q: '講「他去了海邊（已經發生）」，哪個聽起來最自然？', options: ['He went to the beach.', 'He goed to the beach.', 'He go to the beach.', 'He gone to the beach.'], answer: 0, why: 'go 講「已經發生」時自然的樣子是 went；goed 不存在，多聽就記得。' }
+      ]
+    },
+    {
+      id: 'lv2', level: 2, name: '還沒發生的事', emoji: '🔮', color: '#0891b2',
+      concepts: ['will 與 be going to', '還沒發生的味道', '計畫 vs 臨時決定'],
+      intro: '有些事「還沒發生」，英文用兩種很順口的說法把「未來感」帶出來。<b>be going to</b> 感覺像「早就打算好了」；<b>will</b>（常縮寫成 ’ll）感覺像「當下才決定、或猜猜看會怎樣」。',
+      feels: [
+        { cue: '📝 早就計畫', en: 'I’m going to visit my grandma this weekend.', zh: '早就打算好的事——感覺很篤定。' },
+        { cue: '💡 當下決定', en: 'It’s cold. I’ll close the window.', zh: '剛剛才決定要做。' },
+        { cue: '🔮 猜猜看', en: 'I think it will rain tonight.', zh: '對還沒發生的事做預測。' },
+        { cue: '☁️ 眼前有徵兆', en: 'Look at those clouds! It’s going to rain.', zh: '眼前有證據，感覺快發生了。' }
+      ],
+      tip: '兩種都在講「還沒發生」的事。用錯的話，別人可能誤會你是「臨時起意」還是「早就計畫好」——這兩種感覺差很多。',
+      questions: [
+        { q: '這句在講什麼時候？（用感覺）“I’ll help you.”', options: ['還沒發生、當下決定要做', '已經做完的事', '每天都會做', '昨天做過的事'], answer: 0, why: 'I’ll（will）帶出「還沒發生、當下決定」的感覺。' },
+        { q: '「這週末我打算去爬山（早就計畫好）。」哪個最自然？', options: ['I’m going to hike this weekend.', 'I hike this weekend.', 'I hiked this weekend.', 'I will hiking this weekend.'], answer: 0, why: '早就計畫好的事，be going to 最自然。' },
+        { q: '電話響了，你當下決定去接。哪個最自然？', options: ['I’ll get it!', 'I’m getting it yesterday.', 'I got it.', 'I get it every day.'], answer: 0, why: '當下才決定要做，用 I’ll 最順。' },
+        { q: '「我猜我們這隊會贏。」哪個最自然？', options: ['I think we’ll win.', 'I think we won.', 'I think we win.', 'I think we winning.'], answer: 0, why: '對還沒發生的事做預測，用 will（we’ll）最自然。' },
+        { q: '這句給人的感覺是？“Watch out! You’re going to fall!”', options: ['眼看就要發生的事', '已經跌倒了', '每天都會跌倒', '昨天跌倒了'], answer: 0, why: 'be going to 在這裡感覺「眼看就要發生」。' },
+        { q: '要表達「別擔心，我會幫你（現在答應你）」，哪個最自然？', options: ['Don’t worry, I’ll help you.', 'Don’t worry, I helped you.', 'Don’t worry, I help you.', 'Don’t worry, I helping you.'], answer: 0, why: '當下答應、還沒做的事，用 I’ll 最自然。' }
+      ]
+    },
+    {
+      id: 'lv3', level: 3, name: '比一比', emoji: '📊', color: '#0e7490',
+      concepts: ['比一比、最…', '哪個聽起來最自然', 'better／best 這種特別的字'],
+      intro: '想說「誰比較…」「誰最…」時，英文的形容詞會<b>變個樣子</b>。多讀幾句你會發現：<b>taller than…</b>、<b>the tallest…</b> 這種聽起來很順；比較長的字前面則常出現 <b>more</b>、<b>most</b>。沒有硬公式——讀幾句、聽幾次，哪個順口自然會有感覺。',
+      feels: [
+        { cue: '⚖️ 比兩個', en: 'My brother is taller than me.', zh: '比較兩個人——後面接 than。' },
+        { cue: '🏆 最…', en: 'This is the tallest tree in the park.', zh: '一群裡面最高的——前面有 the。' },
+        { cue: '⚖️ 較長的字', en: 'This book is more interesting than that one.', zh: '較長的形容詞前面用 more。' },
+        { cue: '🏆 特別的字', en: 'She is the best singer in class.', zh: 'good 的「最…」是 best，很常用、聽久就順。' }
+      ],
+      tip: '不要疊在一起講：<b>more taller、the most tallest</b> 聽起來很怪。short 的字加字尾就好；good／bad 的比較是 better／best、worse／worst。',
+      questions: [
+        { q: '「我哥哥比我高。」哪個最自然？', options: ['My brother is taller than me.', 'My brother is more tall than me.', 'My brother is tallest than me.', 'My brother is tall than me.'], answer: 0, why: '比兩個、short 形容詞加 -er → taller than，最順。' },
+        { q: '「他是全班最高的男生。」哪個最自然？', options: ['He is the tallest boy in the class.', 'He is the most tall boy in the class.', 'He is taller boy in the class.', 'He is the tall boy in the class.'], answer: 0, why: '「最…」用 the tallest 最自然。' },
+        { q: '「你的主意比我的好。」哪個最自然？', options: ['Your idea is better than mine.', 'Your idea is gooder than mine.', 'Your idea is more good than mine.', 'Your idea is best than mine.'], answer: 0, why: 'good 的「比較」是 better，這個很常用、聽久就順。' },
+        { q: '「這部電影比那部有趣。」哪個最自然？', options: ['This movie is more interesting than that one.', 'This movie is interestinger than that one.', 'This movie is most interesting than that one.', 'This movie is interesting than that one.'], answer: 0, why: '較長的形容詞用 more interesting。' },
+        { q: '哪一句聽起來怪怪的（母語者不會這樣說）？', options: ['She is more taller than him.', 'She is taller than him.', 'She is the tallest of all.', 'She runs faster than him.'], answer: 0, why: 'more 和 -er 疊在一起（more taller）聽起來很怪，母語者不會這樣講。' },
+        { q: '「今天天氣比昨天糟。」哪個最自然？', options: ['Today’s weather is worse than yesterday’s.', 'Today’s weather is badder than yesterday’s.', 'Today’s weather is more bad than yesterday’s.', 'Today’s weather is worst than yesterday’s.'], answer: 0, why: 'bad 的「比較」是 worse，很常用、記起來就順。' }
+      ]
+    },
+    {
+      id: 'lv4', level: 4, name: '語氣的感覺', emoji: '🗝️', color: '#0d9488',
+      concepts: ['can／should／must／may', '語氣的感覺', '建議 vs 一定要'],
+      intro: '同一件事，加上不同的小字，<b>語氣</b>就完全不一樣：<b>can</b>＝做得到、可以；<b>should</b>＝「最好…」的建議；<b>must</b>＝非做不可；<b>may</b>＝禮貌地問可不可以。感覺一下每個字帶出來的味道。',
+      feels: [
+        { cue: '💪 做得到', en: 'She can swim really well.', zh: '有能力、做得到。' },
+        { cue: '🙂 建議', en: 'You look tired. You should rest.', zh: '「最好…」的溫和建議。' },
+        { cue: '❗ 一定要', en: 'You must wear a seatbelt.', zh: '非做不可、是規定。' },
+        { cue: '🙏 禮貌問', en: 'May I ask a question?', zh: '禮貌地問「可不可以」。' }
+      ],
+      tip: '選錯字，意思差很多——<b>should</b> 只是「建議」，<b>must</b> 卻是「非做不可」。別人會照你的語氣去判斷事情有多嚴重。',
+      questions: [
+        { q: '這句的感覺是？“You should see a doctor.”', options: ['給你建議「最好去看」', '命令你一定要去', '問你可不可以去', '說你有能力去'], answer: 0, why: 'should 帶出「最好…」的建議語氣。' },
+        { q: '「他跑得很快（做得到）。」哪個最自然？', options: ['He can run very fast.', 'He can runs very fast.', 'He can to run very fast.', 'He cans run very fast.'], answer: 0, why: 'can 後面直接接 run，聽起來最順。' },
+        { q: '這句的感覺是？“Students must wear a uniform.”', options: ['一定要、這是規定', '可以自由選擇', '只是給個建議', '在問可不可以'], answer: 0, why: 'must 帶出「非做不可、規定」的感覺。' },
+        { q: '想禮貌地問「我可以借你的筆嗎？」哪個最自然？', options: ['May I borrow your pen?', 'Must I borrow your pen?', 'Should I borrow your pen?', 'May I borrowing your pen?'], answer: 0, why: '禮貌地問可不可以，用 May I…? 最自然。' },
+        { q: '朋友很累，你想「建議」他休息。哪個最自然？', options: ['You should take a rest.', 'You must take a rest.', 'May you take a rest?', 'You can took a rest.'], answer: 0, why: '給建議用 should 最貼切；must 太強、may 是問句、took 用錯樣子。' },
+        { q: '這句是在做什麼？“Can you help me?”', options: ['請對方幫忙、問能不能', '命令對方一定要做', '稱讚對方很棒', '向對方道歉'], answer: 0, why: 'Can you…? 感覺是「你能不能…」的請求。' }
+      ]
+    },
+    {
+      id: 'lv5', level: 5, name: '「到現在」的感覺', emoji: '✅', color: '#0891b2',
+      concepts: ['have／has + 動作', '到現在的感覺', '經驗與結果'],
+      intro: '有一種說法 <b>have／has + 動作</b>，感覺是「<b>從過去連到現在</b>」——可能是「<b>這輩子有沒有做過</b>」的經驗，或「<b>做完了，所以現在怎樣</b>」的結果。它不強調哪一天，而是「跟現在有關」。',
+      feels: [
+        { cue: '🌍 經驗', en: 'I have been to Japan.', zh: '講「這輩子去過」的經驗（不說哪一天）。' },
+        { cue: '🎉 剛做完', en: 'I’ve just finished my homework.', zh: '剛做完——所以現在輕鬆了。' },
+        { cue: '🔑 造成現在的結果', en: 'I’ve lost my key, so I can’t get in.', zh: '弄丟了——結果現在進不去。' },
+        { cue: '❓ 問經驗', en: 'Have you ever eaten sushi?', zh: '問對方「有沒有做過」。' }
+      ],
+      tip: '這種「到現在」的感覺，和單純講「過去某天發生」不一樣。心裡想的若是「跟現在有關、到目前為止」，用 have／has + 動作 最自然。',
+      questions: [
+        { q: '這句的感覺最接近？“She has cleaned her room.”', options: ['房間已經打掃好了，現在很乾淨', '她明天才要打掃', '她每天都打掃一次', '她從來不打掃'], answer: 0, why: 'has cleaned 給人「到現在已經做完、結果還留著」的感覺。' },
+        { q: '「你有吃過壽司嗎？（問經驗）」哪個最自然？', options: ['Have you ever eaten sushi?', 'Are you eaten sushi?', 'Do you ever ate sushi?', 'Did you ever eaten sushi?'], answer: 0, why: '問「這輩子有沒有做過」，用 Have you ever…? 最自然。' },
+        { q: '要表達「我把鑰匙弄丟了，所以現在進不去」，哪個最自然？', options: ['I’ve lost my key, so I can’t get in.', 'I lose my key, so I can’t get in.', 'I losing my key, so I can’t get in.', 'I will lose my key, so I can’t get in.'], answer: 0, why: '「弄丟了、造成現在的結果」用 I’ve lost 最自然。' },
+        { q: '這句的感覺是？“She has gone to the store.”', options: ['她去了商店，現在人不在這裡', '她從來沒去過商店', '她每天都去商店', '她明天要去商店'], answer: 0, why: 'has gone 感覺「她去了、現在不在這」。' },
+        { q: '「我剛剛才吃完飯。」哪個最自然？', options: ['I’ve just eaten.', 'I just eat.', 'I am just eaten.', 'I will just eat.'], answer: 0, why: '「剛做完」的感覺，用 have just + 動作最自然。' },
+        { q: '哪一句感覺「一直到現在」（不是只講過去某一天）？', options: ['I have lived here for five years.', 'I lived here in 2010.', 'I will live here next year.', 'I live here every summer.'], answer: 0, why: 'have lived…for five years 感覺「住到現在」，和只講過去某天不一樣。' }
+      ]
+    },
+    {
+      id: 'lv6', level: 6, name: '被動的感覺', emoji: '🔄', color: '#0e7490',
+      concepts: ['被…的說法', '焦點在「東西」', '誰做的不重要'],
+      intro: '有時候我們<b>不在乎「誰做的」</b>，只想講「這東西<b>被怎麼樣了</b>」。這時英文會把「被影響的東西」放到前面當主角，動詞變成 <b>be + 做過的樣子</b>（was broken、is made）。感覺一下：重點在「東西」，不在「誰」。',
+      feels: [
+        { cue: '🪟 誰弄的不重要', en: 'The window was broken.', zh: '重點是窗戶破了，誰弄的不重要。' },
+        { cue: '🌍 大家都在做', en: 'English is spoken all over the world.', zh: '很多人說——說話的人是誰不重要。' },
+        { cue: '🎂 焦點在蛋糕', en: 'This cake was made by my mom.', zh: '焦點在蛋糕；真要講誰做的，用 by 帶出來。' },
+        { cue: '📮 焦點在信', en: 'The letters were sent yesterday.', zh: '焦點在信被寄出去這件事。' }
+      ],
+      tip: '當「誰做的」不知道或不重要時，用這種「被…」的說法最自然。硬要每次都講出是誰，反而囉嗦。',
+      questions: [
+        { q: '這句的重點是？“The window was broken.”', options: ['窗戶被弄破了（誰弄的不重要）', '誰要去修窗戶', '窗戶每天都會破', '窗戶以後會破'], answer: 0, why: '這種「被…」的說法，重點在窗戶發生了什麼，不在誰。' },
+        { q: '「英文在全世界都有人說。」哪個最自然？', options: ['English is spoken all over the world.', 'English speaks all over the world.', 'English is speaking all over the world.', 'English speak all over the world.'], answer: 0, why: '焦點在「英文被很多人說」，用 is spoken 最自然。' },
+        { q: '這句裡的 by 是在告訴我們什麼？“This song was written by a famous singer.”', options: ['這首歌是「被誰」寫的', '這首歌有多長', '這首歌在哪裡聽', '這首歌什麼時候寫'], answer: 0, why: '需要講「被誰做」時，用 by 帶出那個人。' },
+        { q: '哪一句感覺「主角是被做的一方」（被…）？', options: ['The cat was chased by the dog.', 'The dog chased the cat.', 'The dog is running fast.', 'The dog likes the cat.'], answer: 0, why: 'was chased 感覺貓是「被追」的一方，是被動的說法。' },
+        { q: '要表達「這些書是很久以前印的（誰印的不重要）」，哪個最自然？', options: ['These books were printed long ago.', 'These books printed long ago.', 'These books are printing long ago.', 'These books print long ago.'], answer: 0, why: '「被印」且誰印的不重要，用 were printed 最自然。' },
+        { q: '什麼時候用這種「被…」的說法最順？', options: ['當「誰做的」不知道或不重要時', '當你想講未來的事時', '當主詞剛好是「我」時', '當句子很短時'], answer: 0, why: '焦點在「東西被怎樣」、做的人不重要時，用被動最自然。' }
+      ]
+    },
+    {
+      id: 'lv7', level: 7, name: '動詞後面的順口搭配', emoji: '🔗', color: '#0d9488',
+      concepts: ['to go vs going', '哪個順口', '固定搭配靠語感'],
+      intro: '有些動詞後面很習慣接 <b>to + 動作</b>（want to go、hope to see），有些習慣接 <b>動作 + ing</b>（enjoy swimming、finish eating）。這沒有硬道理，是「大家都這樣講、聽起來才順」。哪個順口，讀幾句就會感覺到。',
+      feels: [
+        { cue: '➡️ 想去做', en: 'I want to go home.', zh: 'want 後面很習慣接 to go。' },
+        { cue: '😄 享受做', en: 'She enjoys reading comics.', zh: 'enjoy 後面很習慣接 reading。' },
+        { cue: '✅ 做完', en: 'We finished cleaning the room.', zh: 'finish 後面接 cleaning 才順。' },
+        { cue: '🎯 擅長', en: 'He’s good at drawing.', zh: 'at 這種小字後面接 drawing。' }
+      ],
+      tip: '說 enjoy to swim、want going 母語者一聽就覺得怪。沒有公式，多讀多用，常見的搭配自然就記住了。',
+      questions: [
+        { q: '「我想回家。」哪個最自然？', options: ['I want to go home.', 'I want going home.', 'I want go home.', 'I want gone home.'], answer: 0, why: 'want 後面接 to go 最順。' },
+        { q: '「她喜歡看漫畫。」哪個最自然？', options: ['She enjoys reading comics.', 'She enjoys to read comics.', 'She enjoys read comics.', 'She enjoy reading comics.'], answer: 0, why: 'enjoy 後面接 reading 才順（不是 to read）。' },
+        { q: '「你寫完作業了嗎？」哪個最自然？', options: ['Have you finished doing your homework?', 'Have you finished to do your homework?', 'Have you finish doing your homework?', 'Have you finished do your homework?'], answer: 0, why: 'finish 後面接 doing 最順。' },
+        { q: '「他們決定早點回家。」哪個最自然？', options: ['They decided to go home early.', 'They decided going home early.', 'They decided go home early.', 'They decide to going home early.'], answer: 0, why: 'decide 後面接 to go 最順。' },
+        { q: '「他很擅長畫畫。」哪個最自然？', options: ['He is good at drawing.', 'He is good at draw.', 'He is good at to draw.', 'He is good at drew.'], answer: 0, why: 'at 這種小字後面接 drawing 才順。' },
+        { q: '哪一句聽起來怪怪的（母語者不會這樣說）？', options: ['I enjoy to swim.', 'I enjoy swimming.', 'I want to swim.', 'I like swimming.'], answer: 0, why: 'enjoy 後面不接 to swim，聽起來怪；enjoy swimming 才順。' }
+      ]
+    },
+    {
+      id: 'lv8', level: 8, name: '把想法連起來', emoji: '🧩', color: '#0891b2',
+      concepts: ['who／which 連句', 'if 條件的感覺', '把兩個想法接起來'],
+      intro: '想把兩句話連成一句、或講「如果…就…」時，英文有很順口的接法：講<b>人</b>用 <b>who</b>、講<b>東西</b>用 <b>which</b>（也可用 that）把資訊接上去；講條件用 <b>if</b>。讀幾句，感覺它們怎麼把想法接在一起。',
+      feels: [
+        { cue: '🧑 接「人」', en: 'The man who lives next door is a doctor.', zh: 'who 把「住隔壁」接到「那個人」身上。' },
+        { cue: '📗 接「東西」', en: 'I have a book which is really old.', zh: 'which 把「很舊」接到「那本書」。' },
+        { cue: '🌧️ 如果…就…', en: 'If it rains, we will stay home.', zh: 'if 那半句講條件，另一半講會怎樣。' },
+        { cue: '📚 如果…就…', en: 'If you study hard, you’ll pass.', zh: '先講條件（study hard），再講結果。' }
+      ],
+      tip: '接人用 <b>who</b>、接東西用 <b>which</b>，用反了會怪怪的。還有一個常見的感覺：<b>if 那半句通常講「現在的樣子」</b>（If it rains…），不會說 If it will rain。',
+      questions: [
+        { q: '「住隔壁的那個男生是醫生。」哪個最自然？', options: ['The man who lives next door is a doctor.', 'The man which lives next door is a doctor.', 'The man where lives next door is a doctor.', 'The man what lives next door is a doctor.'], answer: 0, why: '接「人」的資訊用 who 最自然。' },
+        { q: '「我有一本很舊的書。」哪個最自然（把兩個想法連起來）？', options: ['I have a book which is very old.', 'I have a book who is very old.', 'I have a book where is very old.', 'I have a book what is very old.'], answer: 0, why: '接「東西」的資訊用 which（或 that）最自然。' },
+        { q: '「如果明天下雨，我們就待在家。」哪個最自然？', options: ['If it rains tomorrow, we’ll stay home.', 'If it will rain tomorrow, we’ll stay home.', 'If it rained tomorrow, we’ll stay home.', 'If it raining tomorrow, we’ll stay home.'], answer: 0, why: 'if 那半句用「現在的樣子」rains 最自然，不說 will rain。' },
+        { q: '「如果你認真讀書，就會通過考試。」哪個最自然？', options: ['If you study hard, you’ll pass the exam.', 'If you will study hard, you’ll pass the exam.', 'If you studied hard, you’ll pass the exam.', 'If you study hard, you passing the exam.'], answer: 0, why: 'if 那半用現在 study，結果那半用 you’ll（will）最自然。' },
+        { q: '要接在「the girl（女生）」後面補充說明，用哪個字最自然？', options: ['who', 'which', 'where', 'when'], answer: 0, why: '補充說明「人」用 who。' },
+        { q: '把 “I bought a bag.” 和 “The bag was cheap.” 連起來，哪個最自然？', options: ['I bought a bag which was cheap.', 'I bought a bag who was cheap.', 'I bought a bag where was cheap.', 'I bought a bag what was cheap.'], answer: 0, why: '包包是「東西」，用 which 把「很便宜」接上去最自然。' }
+      ]
+    },
+    {"id":"lv9","level":9,"name":"假設與想像的感覺","emoji":"💭","color":"#0e7490","concepts":["真的會發生 vs 純想像","If I were／would 的不真實味道","I wish 但願（其實沒有）"],"intro":"英文很聰明：<b>光看動詞往回退了幾步，你就能感覺出這件事「真的可能發生」還是「只是想像」</b>。真的可能發生的，用現在式配 will（<b>If it rains, I will stay.</b>）；純想像、跟現在事實相反的，動詞會往回退一步，冒出 <b>were</b>、<b>would</b>、<b>could</b> 這種「不真實」的味道。多讀幾句，耳朵自己會分辨。","feels":[{"cue":"🌧️ 真的可能發生","en":"If it rains, I will stay home.","zh":"真實條件：下雨本來就有可能——「如果…就會…」，用現在式配 will，感覺很寫實。"},{"cue":"🦄 純想像（不是真的）","en":"If I were you, I would apologize.","zh":"我又不是你——純想像。were＋would 一出現，就在偷偷說「這只是假設」。"},{"cue":"💰 手頭其實沒錢","en":"If I had a million dollars, I would travel the world.","zh":"其實沒那麼多錢——had＋would，一聽就知道是白日夢。"},{"cue":"🌠 但願（可惜沒有）","en":"I wish I could fly.","zh":"I wish＋過去式：但願能飛，語氣裡藏著「其實做不到」的小遺憾。"}],"tip":"<b>were、would、could</b> 這些「往回退一步」的樣子，就是英文在偷偷告訴你：<b>這不是真的，是想像</b>。真的可能發生的事，才用現在式配 will。","questions":[{"q":"「如果明天下雪（真的可能），我們就堆雪人。」哪個最自然？“If it snows tomorrow, we ___ a snowman.”","options":["built","would build","will build","build"],"answer":2,"why":"下雪明天真的有可能發生，是真實條件——if 子句用現在式（snows）、主句配 will build，感覺很寫實。would build 帶「其實不會發生」的想像味，這裡不搭；built／build 少了「還沒發生、之後才做」的未來感。"},{"q":"這句是「真的可能」還是「純想像」？（用感覺）“If I were a bird, I would sing all day.”","options":["真的很可能發生","純想像、其實不是真的","已經發生過了","每天固定會做的事"],"answer":1,"why":"人不可能變成鳥，were＋would 這種「往回退一步」的樣子，正是在告訴你這只是想像、跟事實相反。若真要講會發生的事，會用 will 而不是 would。"},{"q":"填空最自然：“If I ___ you, I wouldn't worry so much.”","options":["am","were","was","will be"],"answer":1,"why":"「如果我是你」是純想像（我又不是你），英文有個固定又道地的說法 If I were you，配上 wouldn't 一聽就知道是給建議的假設。am／will be 太寫實、不搭想像的味道；was 在這個固定說法裡母語者仍偏好 were。"},{"q":"填空最自然：“I wish I ___ play the piano, but I never learned.”","options":["can","will","could","am able to"],"answer":2,"why":"I wish＋過去式（could）帶出「但願能、可惜其實不會」的遺憾味，跟後半句 but I never learned 完全對上。can／will 太寫實，聽起來像真的做得到，就沒有「但願」的感覺了。"},{"q":"「如果你認真讀（真的做得到），你就會通過考試。」哪個最自然？“If you study hard, you ___ the exam.”","options":["pass","will pass","would pass","passed"],"answer":1,"why":"認真讀書是你真的能做到的事，屬真實條件——if 用現在式、主句配 will pass，感覺踏實可行。would pass 會變成「其實不會發生」的想像；pass／passed 少了那個「之後就會」的未來感。"},{"q":"這句給人的感覺最接近？“If I had wings, I would fly to school.”","options":["他真的長了翅膀","這只是想像，其實沒有翅膀","他明天就要飛去學校","他每天都飛去學校"],"answer":1,"why":"had＋would 這組「不真實」的搭配，一看就知道是白日夢——他其實沒有翅膀，只是想像「要是有的話」。真的會做的事會用現在式配 will，不會用 would。"},{"q":"這句在表達什麼？（用感覺）“I wish it were the weekend.”","options":["但願是週末，可惜現在還不是","現在真的是週末","上個週末發生的事","下週末的計畫"],"answer":0,"why":"I wish＋were 是「跟現在事實相反」的但願——說這句時其實還是上班上課日，語氣裡就是那股「真希望已經放假了」的小小惋惜。"},{"q":"「如果我是你，我會早點睡。」哪個最自然？","options":["If I am you, I will go to bed earlier.","If I were you, I would go to bed earlier.","If I was you, I go to bed earlier.","If I be you, I would go to bed earlier."],"answer":1,"why":"給人建議的「如果我是你」是純想像，道地說法是 If I were you, I would…。If I am／will 太寫實、不像假設；If I be you 不合語法，母語者不會這樣講。"},{"q":"填空最自然：“If I ___ enough money, I would buy that house — but I don't.”","options":["have","will have","had","am having"],"answer":2,"why":"後面明說 but I don't（其實沒錢），這是跟現在相反的想像——用 had＋would 帶出「要是有的話」的假設味。have／will have 聽起來像真的有錢，跟 but I don't 互相矛盾。"},{"q":"「等一下可能會下雨；如果下了，我們就取消野餐。」哪個最自然？“It might rain. If it ___, we will cancel the picnic.”","options":["rains","will rain","would rain","rained"],"answer":0,"why":"下雨是真的有可能的事（真實條件）——if 子句用現在式 rains，主句才配 will cancel，感覺很自然。if 子句裡不會再放 will rain；would rain／rained 則帶想像味，跟後面的 will 對不上。"}]},
+    {"id":"lv10","level":10,"name":"片語動詞的感覺","emoji":"🔀","color":"#f59e0b","concepts":["整組一起感覺，不逐字翻","用情境挑最自然的片語","多聽多讀，記住畫面"],"intro":"片語動詞（phrasal verbs）是<b>動詞＋小字（介系詞或副詞）</b>組成的一組詞。<br>像 <b>give up</b>、<b>look after</b>、<b>run out of</b>，它們常常<b>不是把每個字拆開翻</b>——give up 不是「給＋上」，而是整組＝「放棄」。<br>學它的訣竅不是背文法，而是<b>抓住那個畫面與感覺</b>：turn off 是手指按下開關、look forward to 是心裡往前探頭期待；多聽多讀，語感自然長出來。<br>這一關就用生活情境，讓你選出<b>最自然</b>的那一組。","feels":[{"cue":"🔦 turn on / turn off","en":"Turn off the lights when you leave the room.","zh":"開關的動作感：turn on 打開、turn off 關掉。想像手指按下開關的畫面，不用去翻「turn（轉）」這個字。"},{"cue":"🏳️ give up","en":"It was hard, but she never gave up.","zh":"「鬆手、不再撐下去」的感覺＝放棄。不是「給上去」，是整組一起看。"},{"cue":"🎁 look forward to","en":"I'm really looking forward to the trip.","zh":"心裡往前探、滿心期待的畫面。注意 to 後面接名詞或 V-ing（the trip / seeing you），不是原形動詞。"},{"cue":"🧺 run out of","en":"We've run out of milk—can you buy some?","zh":"「用到見底、一滴不剩」的耗盡感。東西快沒了、剛好用完，就是這組。"}],"tip":"<b>片語動詞要整組一起感覺，別逐字翻！</b>同一個動詞配不同的小字（look for／look after／look forward to）意思差很多，多聽母語者怎麼用，抓住那個畫面就記得住了。","questions":[{"q":"離開房間前，媽媽提醒你省電：Before you leave, please ___ the lights.","options":["turn on","turn off","look after","give up"],"answer":1,"why":"情境是「省電、離開」，要「關掉」電燈，用 turn off（按下開關關掉的畫面）。turn on 是「打開」，意思剛好相反；look after 是「照顧」、give up 是「放棄」，都套不進電燈開關的情境。"},{"q":"數學題很難，但她一直努力沒放棄：The problem was hard, but she didn't ___.","options":["look after","give up","put off","turn off"],"answer":1,"why":"「一直努力、沒有放棄」的那個「放棄」就是 give up（鬆手不再撐）。look after 是照顧、put off 是拖延、turn off 是關掉，都跟「堅持下去 vs 放棄」無關。"},{"q":"你要出遠門，拜託朋友幫你顧狗、餵牠：Can you ___ my dog while I'm away?","options":["look for","look after","look at","look forward to"],"answer":1,"why":"「照顧、看顧」寵物用 look after（心裡有在關照、負責的感覺）。look for 是「尋找」（東西不見了才用）、look at 只是「看著」、look forward to 是「期待」，都不是「照料」的意思。"},{"q":"鑰匙不見了，你找了一整個早上：I've been ___ my keys all morning.","options":["looking at","looking after","looking for","picking up"],"answer":2,"why":"「東西不見、到處找」用 look for（眼睛在搜尋目標的感覺）。looking at 是「盯著看」、looking after 是「照顧」、picking up 是「撿起／接人」，都不是「翻箱倒櫃地找」。"},{"q":"暑假快到了，你超級期待：I'm really ___ the summer vacation!","options":["looking for","looking forward to","looking after","looking up"],"answer":1,"why":"「滿心期待、等不及」用 look forward to（心往前探的畫面），後面接名詞 the summer vacation 剛好。looking for 是找東西、looking after 是照顧、look up 是「查資料／抬頭看」，都不是「期待」。"},{"q":"功課別拖到最後一刻，現在就做：Don't ___ your homework until the last minute.","options":["put on","turn off","put off","give up"],"answer":2,"why":"「一直往後推、拖延」用 put off（把事情推到以後的感覺）。put on 是「穿上」、turn off 是「關掉」、give up 是「放棄」（乾脆不做了，跟「拖延」不同）。這裡是「別拖」，所以是 put off。"},{"q":"牛奶今天早上用完了，得再去買：We ___ milk this morning, so I need to buy more.","options":["ran into","ran out of","looked for","gave up"],"answer":1,"why":"「用到一滴不剩、耗盡」用 run out of，後面接用完的東西 milk。ran into 是「不期而遇、撞見」（碰到人）、looked for 是「找」、gave up 是「放棄」，都跟「東西用光」無關。"},{"q":"你想知道電影幾點開演，打算上網查：I need to ___ what time the movie starts.","options":["look for","find out","look after","give up"],"answer":1,"why":"「查明、弄清楚一項資訊」用 find out（把不知道的事情挖出來的感覺）。look for 是找「看得見的東西」（不是找資訊）、look after 是照顧、give up 是放棄，都不合這裡「查出資訊」的情境。"},{"q":"你和新同事處得很好，已經變朋友了：I really ___ my new coworkers.","options":["look after","put off","get along with","run out of"],"answer":2,"why":"「和某人相處融洽」用 get along with（人與人合得來的感覺），後面接對象 my new coworkers。look after 是照顧、put off 是拖延、run out of 是用完，都不是形容「人際關係好」。"},{"q":"媽媽三點會到學校接你。填入最自然的小字：My mom will pick me ___ from school at 3 p.m.","options":["off","up","on","in"],"answer":1,"why":"「開車去接人」是 pick ... up，人放在中間說 pick me up 最自然（想像把人「接上車」的畫面）。pick me off／on／in 都不是道地的搭配，母語者不會這樣講。"}]},
+    {"id":"lv11","level":11,"name":"天生一對的搭配詞","emoji":"🤝","color":"#e67e22","concepts":["搭配詞 collocations：哪個字天生配哪個字","自然道地 vs 文法正確：對不等於道地","多讀多聽，用耳朵記住固定組合"],"intro":"在英文裡，有些字天生就是<b>一對</b>——中文說「大雨」，英文母語者卻說 <b>heavy rain</b>，而不是 big rain。這種「哪個字配哪個字」的習慣，就叫<b>搭配詞（collocations）</b>。文法上其他組合也許沒錯，但聽起來就是「怪怪的、不像母語者」。這一關不要你背規則，只要你<b>多讀多聽</b>，用耳朵去記住哪些字是天生一對。","feels":[{"cue":"🌧️ 大雨","en":"We got caught in heavy rain on the way home.","zh":"中文的「大雨」英文不是 big rain，而是 heavy rain——想像雨「重重地」砸下來，用 heavy 才有那種份量感。同一個 heavy 也配 traffic（塞車）。"},{"cue":"☕ 濃咖啡","en":"I need a strong coffee to wake up.","zh":"咖啡「濃」不用 thick（那是「稠」），而是 strong（濃烈、有勁）。這個 strong 也天生配 wind（強風）、tea（濃茶）。"},{"cue":"📸 拍張照","en":"Let's take a photo before we leave.","zh":"「拍照」的動詞是 take，不是 make 或 do。take 很愛跟這些短暫動作配對：take a photo、take a break、take a taxi。"},{"cue":"🍔 速食 vs 快餐","en":"I grabbed some fast food, not a healthy quick meal.","zh":"fast food 是「速食」這一「類食物」的固定說法；但趕時間隨便吃一頓，母語者說 a quick meal，不會說 fast meal。同樣是「快」，配的字卻不同。"}],"tip":"<b>小訣竅：</b>看到「大、濃、重」先別急著用 big；想想母語者的口頭習慣——雨和塞車用 <b>heavy</b>、咖啡和風用 <b>strong</b>、拍照和休息用 <b>take</b>、研究和生意用 <b>do</b>。","questions":[{"q":"雨下得又大又急。We drove home in ___ rain.","options":["heavy","strong","big","thick"],"answer":0,"why":"「大雨」母語者說 heavy rain——把雨想成「重重地」落下，所以用 heavy。big rain、thick rain 文法看似通，但母語者不這樣講；strong 是留給 wind、coffee 的。"},{"q":"尖峰時間路上塞得很嚴重。There was ___ traffic during rush hour.","options":["heavy","strong","crowded","big"],"answer":0,"why":"車流量「大」用 heavy traffic，跟 heavy rain 是同一個感覺（份量重）。crowded 是拿來形容「地方／道路」擠（a crowded road），不直接配 traffic；big、strong 都不道地。"},{"q":"早上我喜歡喝濃咖啡。I like a cup of ___ coffee in the morning.","options":["strong","heavy","thick","hard"],"answer":0,"why":"咖啡「濃」用 strong（味道濃烈）。thick 是「濃稠、幾乎能咬」的口感，會讓人以為咖啡變糊了；heavy、hard 配咖啡都很奇怪。記住：strong coffee／strong tea 天生一對。"},{"q":"今天外面風很大。There's a ___ wind outside today.","options":["strong","heavy","big","hard"],"answer":0,"why":"風「大」用 strong wind——風是「有力」的，所以借 strong（強）。heavy 是給雨和車流的、big 太口語不搭、hard 是形容「硬」或「困難」。感覺一下：strong 配的都是「有力道」的東西。"},{"q":"我們得盡快做個決定。We need to ___ a decision soon.","options":["make","do","have","give"],"answer":0,"why":"「做決定」固定用 make a decision——make 帶有「創造出一個結果」的味道，決定是你「生」出來的。do a decision、have／give a decision 都不是母語者的說法。同一個 make 也配 a plan、a choice。"},{"q":"每個人偶爾都會犯錯。Everyone ___ mistakes sometimes.","options":["makes","does","takes","gets"],"answer":0,"why":"「犯錯」是 make a mistake，跟 make a decision 同一組——錯誤也是「無意間製造出來」的東西。do／take／get a mistake 都不道地。訣竅：抽象的「產出」（決定、錯誤、計畫）幾乎都用 make。"},{"q":"可以幫我們拍張照嗎？Can you ___ a photo of us?","options":["take","make","do","catch"],"answer":0,"why":"「拍照」動詞用 take a photo（也可 take a picture）。make a photo 會讓人以為你要「製作／沖洗」一張照片；do、catch 都不對。感覺：按快門那個「瞬間動作」屬於 take。"},{"q":"讀了好幾個小時，休息一下吧。We've studied for hours—let's ___ a break.","options":["take","make","do","give"],"answer":0,"why":"「休息一下」是 take a break——跟 take a photo 一樣，take 專門配這種「短暫的動作」。make／do a break 都不通；give a break 只在 give me a break（饒了我吧）這種固定句才出現，意思完全不同。"},{"q":"科學家針對氣候變遷做研究。Scientists ___ research on climate change.","options":["do","make","take","build"],"answer":0,"why":"「做研究」是 do research——do 配的是「進行一項活動／工作」（do research、do homework、do the dishes）。make research 是很典型的中式錯誤；take、build 都不搭。感覺：過程性的「做事」用 do。"},{"q":"他們跟日本的公司做生意。They ___ business with companies in Japan.","options":["do","make","run","take"],"answer":0,"why":"「和某人做生意」是 do business with——跟 do research 一樣，是「進行一項活動」。make business 不存在；run 要接冠詞 run a business（經營一家公司），語感是「經營」而非「與人往來做生意」；take 不搭。"},{"q":"沒什麼時間，我們就隨便吃了一頓。We didn't have much time, so we had a ___ meal.","options":["quick","fast","speedy","rapid"],"answer":0,"why":"趕時間吃的一頓飯是 a quick meal。fast 雖然也是「快」，但只固定用在 fast food（速食）這個詞，不說 fast meal；speedy、rapid 通常形容「速度／過程」（a speedy recovery、rapid growth），配 meal 很怪。"},{"q":"台北有很多高樓大廈。Taipei has many ___ buildings.","options":["tall","high","long","big"],"answer":0,"why":"建築物「高」用 tall——tall 專門形容「又細又高」的東西（tall building、tall person）。high 是指「離地面高／位置高」（a high shelf、a high mountain），配 building 不道地；long、big 意思不對。"},{"q":"獵豹跑得非常快。Cheetahs can run extremely ___.","options":["fast","fastly","quick","speedy"],"answer":0,"why":"fast 很特別——它「同時是形容詞也是副詞」，所以 run fast 直接用、後面不加 -ly，英文裡根本沒有 fastly 這個字。quick 當副詞是口語不正式的用法（母語者會用 quickly）；speedy 只是形容詞不能修飾 run。"}]}
+  ];
+
+  // 本地徽章定義（每關一枚 + 全關卡達人）。存於同一 key 的 badges 子物件、awarded guard 防重複。
+  var BADGES = [
+    { id: 'lv1', icon: '🕰️', name: '時間感達人' },
+    { id: 'lv2', icon: '🔮', name: '未來語感' },
+    { id: 'lv3', icon: '📊', name: '比較語感' },
+    { id: 'lv4', icon: '🗝️', name: '語氣達人' },
+    { id: 'lv5', icon: '✅', name: '完成感達人' },
+    { id: 'lv6', icon: '🔄', name: '被動語感' },
+    { id: 'lv7', icon: '🔗', name: '順口搭配王' },
+    { id: 'lv8', icon: '🧩', name: '連句高手' },
+    { id: 'lv9', icon: '💭', name: '假設語感' },
+    { id: 'lv10', icon: '🔀', name: '片語動詞王' },
+    { id: 'lv11', icon: '🤝', name: '搭配語感' },
+    { id: 'all', icon: '🏆', name: '英文語感通' }
+  ];
+  var BADGE_BY_ID = {};
+  for (var bi = 0; bi < BADGES.length; bi++) BADGE_BY_ID[BADGES[bi].id] = BADGES[bi];
+
+  // =====================================================================
+  // DOM 參照
+  // =====================================================================
+  var $ = function (id) { return document.getElementById(id); };
+  var screenMenu = $('screen-menu');
+  var screenPlay = $('screen-play');
+  var levelList = $('level-list');
+  var stage = $('stage');
+  var stepDots = $('step-dots');
+  var playTitle = $('play-title');
+
+  var cur = null; // { level, idx, correctCount, phase:'brief'|'quiz' }
+
+  // =====================================================================
+  // 星等（3 階，依 correctCount/總題數）
+  // =====================================================================
+  function starsFor(correct, total) {
+    if (total <= 0) return 0;
+    var r = correct / total;
+    if (r >= 0.9) return 3;
+    if (r >= 0.6) return 2;
+    if (r > 0) return 1;
+    return 0;
+  }
+  function starStr(n) {
+    var s = '';
+    for (var i = 0; i < 3; i++) s += (i < n ? '⭐' : '☆');
+    return s;
+  }
+
+  // =====================================================================
+  // 徽章解鎖（awarded guard；只增不減）
+  // =====================================================================
+  function awardBadge(id) {
+    var def = BADGE_BY_ID[id];
+    if (!def) return;
+    if (progress.badges[id]) return;      // guard：已解鎖則不重複
+    progress.badges[id] = true;
+    saveProg(progress);
+    toast('獲得徽章：' + def.icon + ' ' + def.name, 'badge');
+    try { if (window.EnglishAdvBadges) EnglishAdvBadges.refresh(); } catch (e) {}
+  }
+  function badgeCount() {
+    var n = 0;
+    for (var i = 0; i < BADGES.length; i++) if (progress.badges[BADGES[i].id]) n++;
+    return n;
+  }
+
+  // =====================================================================
+  // 選單渲染（全部一律解鎖、可自由進入）
+  // =====================================================================
+  function renderMenu() {
+    var doneCount = 0;
+    for (var i = 0; i < LEVELS.length; i++) if (progress[LEVELS[i].id] && progress[LEVELS[i].id].done) doneCount++;
+    $('ov-done').textContent = doneCount + '/' + LEVELS.length;
+    $('ov-badges').textContent = badgeCount() + '/' + BADGES.length;
+
+    if (doneCount > 0) {
+      $('hello-text').textContent = '歡迎回來！你已完成 ' + doneCount + ' 關語感練習，很棒！';
+      $('hello-sub').textContent = (doneCount >= LEVELS.length)
+        ? '所有關卡都完成了，你的英文語感越來越強了！🏆'
+        : '想挑戰哪一關都可以，先讀幾句感覺一下再作答，答錯也沒關係。';
+    }
+
+    levelList.innerHTML = '';
+    for (var u = 0; u < LEVELS.length; u++) {
+      (function (lv) {
+        var rec = progress[lv.id] || {};
+        var done = !!rec.done;
+        var total = lv.questions.length;
+        var st = done ? starsFor(rec.best || 0, total) : 0;
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'ea-level';
+        card.setAttribute('aria-label', '第 ' + lv.level + ' 關：' + lv.name);
+        card.innerHTML =
+          '<div class="ea-level-top">' +
+            '<span class="ea-level-emoji" aria-hidden="true" style="background:' + lv.color + '22;color:' + lv.color + '">' + lv.emoji + '</span>' +
+            '<div>' +
+              '<div class="ea-level-num">第 ' + lv.level + ' 關</div>' +
+              '<div class="ea-level-name">' + lv.name + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="ea-level-concepts">' + lv.concepts.join('・') + '</div>' +
+          '<div class="ea-level-foot">' +
+            '<span class="ea-level-status ' + (done ? 'done' : 'todo') + '">' +
+              (done ? '✅ 已完成（最佳 ' + (rec.best || 0) + '/' + total + '）' : '▶️ 開始挑戰（共 ' + total + ' 題）') + '</span>' +
+            '<span class="ea-level-stars" aria-hidden="true">' + (done ? starStr(st) : '') + '</span>' +
+          '</div>';
+        card.addEventListener('click', function () { startLevel(lv); });
+        levelList.appendChild(card);
+      })(LEVELS[u]);
+    }
+  }
+
+  // =====================================================================
+  // 遊玩流程
+  // =====================================================================
+  function show(screen) {
+    screenMenu.classList.remove('active');
+    screenPlay.classList.remove('active');
+    screen.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function startLevel(lv) {
+    cur = { level: lv, idx: 0, correctCount: 0, phase: 'brief' };
+    playTitle.textContent = lv.emoji + ' 第 ' + lv.level + ' 關・' + lv.name;
+    show(screenPlay);
+    renderBrief();
+  }
+
+  function renderStepDots() {
+    stepDots.innerHTML = '';
+    if (cur.phase !== 'quiz') return; // 語感卡不畫題目進度點
+    for (var i = 0; i < cur.level.questions.length; i++) {
+      var b = document.createElement('i');
+      if (i < cur.idx) b.className = 'on';
+      else if (i === cur.idx) b.className = 'cur';
+      stepDots.appendChild(b);
+    }
+  }
+
+  // ---- 語感卡（先讀自然例句、用感覺抓味道；不列規則、不計分） ----
+  function renderBrief() {
+    renderStepDots();
+    var lv = cur.level;
+    var feels = '';
+    for (var i = 0; i < lv.feels.length; i++) {
+      var f = lv.feels[i];
+      feels += '<li>' +
+        '<span class="ea-feel-cue">' + f.cue + '</span>' +
+        '<div class="ea-feel-en">' + f.en + '</div>' +
+        '<div class="ea-feel-zh">' + f.zh + '</div>' +
+      '</li>';
+    }
+    stage.innerHTML =
+      '<div class="ea-stage ea-brief">' +
+        '<div class="ea-visual" aria-hidden="true">' + lv.emoji + '</div>' +
+        '<h2>第 ' + lv.level + ' 關・' + lv.name + '</h2>' +
+        '<p class="ea-brief-sub">先讀幾句、用「感覺」抓到味道，再開始 ' + lv.questions.length + ' 題挑戰。</p>' +
+        '<p class="ea-intro">' + lv.intro + '</p>' +
+        '<ul class="ea-feel">' + feels + '</ul>' +
+        (lv.tip ? '<div class="ea-tip"><b>💡 小提醒</b><br>' + lv.tip + '</div>' : '') +
+      '</div>' +
+      '<div class="ea-actions">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-start">開始挑戰 ➡️</button>' +
+      '</div>';
+    $('btn-start').addEventListener('click', function () {
+      cur.phase = 'quiz';
+      cur.idx = 0;
+      renderQuestion();
+    });
+  }
+
+  function next() {
+    cur.idx++;
+    if (cur.idx >= cur.level.questions.length) finishLevel();
+    else renderQuestion();
+  }
+
+  // ---- 單選題（選項 Fisher–Yates 洗牌；每題最多記一次分） ----
+  function renderQuestion() {
+    renderStepDots();
+    var lv = cur.level;
+    var step = lv.questions[cur.idx];
+
+    // 打亂選項顯示順序（正解絕不固定在第一個）。data-i 記「原始索引」，
+    // 因此對答判斷 i === step.answer 仍然正確、判分不受洗牌影響。
+    var order = [];
+    for (var oi = 0; oi < step.options.length; oi++) order.push(oi);
+    for (var m = order.length - 1; m > 0; m--) {
+      var r = Math.floor(Math.random() * (m + 1));
+      var tt = order[m]; order[m] = order[r]; order[r] = tt;
+    }
+    var optsHtml = '';
+    for (var k = 0; k < order.length; k++) {
+      var origIdx = order[k];
+      optsHtml += '<button type="button" class="ea-opt" data-i="' + origIdx + '">' +
+        '<span>' + step.options[origIdx] + '</span><span class="ea-opt-mark" aria-hidden="true"></span></button>';
+    }
+
+    stage.innerHTML =
+      '<div class="ea-stage">' +
+        '<div class="ea-visual" aria-hidden="true">' + lv.emoji + '</div>' +
+        '<p class="ea-question">第 ' + (cur.idx + 1) + ' / ' + lv.questions.length + ' 題　' + step.q + '</p>' +
+        '<div class="ea-options">' + optsHtml + '</div>' +
+        '<div class="ea-reveal" id="reveal"></div>' +
+      '</div>' +
+      '<div class="ea-actions" id="afteract" style="display:none">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">繼續 ➡️</button>' +
+      '</div>';
+
+    var answered = false;
+    var btns = stage.querySelectorAll('.ea-opt');
+
+    function revealAndLock(correct) {
+      var rev = $('reveal');
+      rev.textContent = (correct ? '答對了！' : '沒關係～正確答案是這個喔！') + (step.why || '');
+      rev.classList.add('show');
+      $('afteract').style.display = 'flex';
+      var all = stage.querySelectorAll('.ea-opt');
+      for (var a = 0; a < all.length; a++) all[a].disabled = true;
+    }
+
+    for (var b = 0; b < btns.length; b++) {
+      btns[b].addEventListener('click', function () {
+        var i = parseInt(this.getAttribute('data-i'), 10);
+        var isCorrect = (i === step.answer);
+        if (answered) return; // 已作答：不再改動計分（守衛）
+        answered = true;      // 第一次作答才計分
+        if (window.Game && window.Game.recordAnswer) Game.recordAnswer('english', isCorrect);
+        if (isCorrect) {
+          this.classList.add('correct');
+          this.querySelector('.ea-opt-mark').textContent = '✅';
+          cur.correctCount++;              // 本關本地計分點
+          revealAndLock(true);
+        } else {
+          this.classList.add('wrong');
+          this.querySelector('.ea-opt-mark').textContent = '❌';
+          // 答錯零懲罰：標出正解、允許看解說（不加分、不扣分）。
+          var correctBtn = stage.querySelector('.ea-opt[data-i="' + step.answer + '"]');
+          if (correctBtn) {
+            correctBtn.classList.add('correct');
+            correctBtn.querySelector('.ea-opt-mark').textContent = '✅';
+          }
+          revealAndLock(false);
+        }
+      });
+    }
+
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // =====================================================================
+  // 完成一關
+  // =====================================================================
+  function finishLevel() {
+    var lv = cur.level;
+    var total = lv.questions.length;
+    var got = cur.correctCount;
+
+    // 收藏只增不減：best = max(prev, thisRun)。
+    var prev = progress[lv.id] || {};
+    progress[lv.id] = { done: true, best: Math.max(prev.best || 0, got) };
+    saveProg(progress);
+
+    // 解鎖對應關卡徽章；若八關全完成 → 英文語感通。
+    awardBadge(lv.id);
+    var allDone = true;
+    for (var i = 0; i < LEVELS.length; i++) if (!(progress[LEVELS[i].id] && progress[LEVELS[i].id].done)) { allDone = false; break; }
+    if (allDone) awardBadge('all');
+
+    var st = Math.max(1, starsFor(got, total)); // 顯示至少 1 顆星，避免 0 分時空星列打擊士氣
+    stage.innerHTML =
+      '<div class="ea-stage ea-done">' +
+        '<div class="ea-done-emoji" aria-hidden="true">🎉</div>' +
+        '<div class="ea-done-title">完成「' + lv.name + '」！</div>' +
+        '<div class="ea-done-stars" aria-label="得到 ' + st + ' 顆星">' + starStr(st) + '</div>' +
+        '<p class="ea-question" style="font-size:clamp(16px,3.6vw,19px);text-align:center">你答對了 ' + got + ' / ' + total + ' 題，真棒！</p>' +
+      '</div>' +
+      '<div class="ea-actions">' +
+        '<button type="button" class="btn" id="btn-menu">回到選單</button>' +
+        (nextLevelOf(lv) ? '<button type="button" class="btn btn-primary" id="btn-nextlv">下一關 ➡️</button>' : '') +
+      '</div>';
+
+    toast('完成「' + lv.name + '」！你答對了 ' + got + ' / ' + total + ' 題，真棒！', 'daily');
+
+    $('btn-menu').addEventListener('click', goMenu);
+    var nl = nextLevelOf(lv);
+    if (nl) $('btn-nextlv').addEventListener('click', function () { startLevel(nl); });
+  }
+
+  function nextLevelOf(lv) {
+    for (var i = 0; i < LEVELS.length; i++) {
+      if (LEVELS[i].id === lv.id) return LEVELS[i + 1] || null;
+    }
+    return null;
+  }
+
+  function goMenu() {
+    cur = null;
+    stepDots.innerHTML = '';
+    renderMenu();
+    show(screenMenu);
+  }
+
+  // ---- 頁內返回（一律「←」，回選單，非回首頁）----
+  $('btn-back').addEventListener('click', goMenu);
+
+  // 暴露給徽章冊模組讀取（唯讀共享同一份進度與定義）。
+  window.__englishAdv = {
+    LEVELS: LEVELS,
+    BADGES: BADGES,
+    getProgress: function () { return progress; }
+  };
+
+  renderMenu();
+})();
+</script>
+
+<!-- ===== 進階英文語感徽章冊：樣式（自足、canon 變數、亮暗雙主題、色盲雙碼、[hidden] 防護；純本地、無 XP、無 Game.award） ===== -->
+<style>
+/* 入口 FAB（右下固定，避開底部安全區；低於 app-bar 的層級，不遮頂列；≥48px 觸控） */
+#englishAdvBadgeFab {
+  position: fixed; right: 16px; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  z-index: 55; display: inline-flex; align-items: center; gap: 6px;
+  min-height: 48px; min-width: 48px; padding: 10px 16px;
+  background: #0f766e; color: #fff; border: none;  /* 深青綠底白字，兩主題同值皆過 AA */
+  border-radius: 999px; font-family: var(--font); font-weight: 800;
+  font-size: clamp(14px, 3vw, 16px); cursor: pointer; box-shadow: var(--shadow-lg);
+}
+#englishAdvBadgeFab:active { transform: scale(0.96); }
+/* 遊玩畫面時隱藏徽章冊 FAB，避免在窄螢幕蓋住答題按鈕與 ✅❌ */
+body:has(#screen-play.active) #englishAdvBadgeFab { display: none; }
+#englishAdvBadgeFabCount {
+  display: inline-flex; align-items: center; gap: 3px;
+  background: #fff; color: #0f766e;
+  border-radius: 999px; padding: 1px 8px; font-size: 13px; font-weight: 800;
+}
+/* 浮層外殼 */
+.ea-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 60; padding: 16px;
+}
+/* [hidden] 防護：class 的 display:flex(author) 特異度會蓋過 UA 的 [hidden]{display:none}，
+   故需更高特異度規則，否則浮層會恆顯、蓋住整頁。 */
+#englishAdvBadgeOverlay[hidden] { display: none !important; }
+.ea-card {
+  position: relative; background: var(--card); border: 2px solid var(--card-border);
+  border-radius: var(--r-lg); box-shadow: var(--shadow-lg);
+  width: 100%; max-width: 560px; max-height: 88vh; overflow-y: auto;
+  padding: 20px 18px 22px; color: var(--ink);
+}
+.ea-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.ea-card-head h1 { font-size: clamp(1.1rem, 4vw, 1.4rem); font-weight: 800; margin: 0; color: var(--ink); flex: 1; }
+.ea-card-back {
+  background: var(--card); border: 2px solid var(--card-border); color: var(--accent-ink, var(--c-english-ink));
+  font-family: var(--font); font-weight: 800; font-size: 15px; cursor: pointer;
+  min-height: 44px; padding: 8px 14px; border-radius: 14px;
+}
+.ea-card-back:active { transform: scale(0.96); }
+.ea-card-note {
+  background: var(--accent-tint); color: var(--ink); border-radius: var(--r-md, 12px);
+  font-size: var(--fs-small); font-weight: 600; line-height: 1.7; padding: 10px 12px; margin: 4px 0 12px;
+}
+.ea-card-summary { text-align: center; font-size: var(--fs-small); font-weight: 700; color: var(--ink-soft); margin: 4px 0 14px; line-height: 1.7; }
+.ea-badge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; }
+.ea-badge {
+  position: relative; min-height: 96px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  border-radius: 14px; background: var(--card); border: 2px solid var(--card-border);
+  text-align: center; padding: 10px 6px;
+}
+.ea-badge .ea-badge-glyph { font-size: clamp(1.6rem, 7vw, 2rem); line-height: 1; }
+.ea-badge .ea-badge-name { font-size: clamp(0.6rem, 2.6vw, 0.74rem); font-weight: 800; color: var(--ink); line-height: 1.2; }
+.ea-badge .ea-badge-state { font-size: clamp(0.52rem, 2.2vw, 0.64rem); font-weight: 700; color: var(--ink-soft); }
+/* 未解鎖：虛線邊 + 去彩 + 半透明（碼一＝形狀 🔒／碼二＝虛線+去彩） */
+.ea-badge.locked { border-style: dashed; opacity: 0.5; filter: grayscale(1); }
+/* 已解鎖：實線金框 + 右上 ★（碼一＝emoji 形狀／碼二＝金框+★） */
+.ea-badge.unlocked { box-shadow: 0 0 0 2px #f5b301, 0 0 10px rgba(245,179,1,0.5); background: color-mix(in srgb, #f5b301 12%, var(--card)); }
+.ea-badge.unlocked .ea-badge-star { position: absolute; right: 5px; top: 4px; font-size: 14px; }
+</style>
+<!-- ===== 進階英文語感徽章冊：模組（自足 IIFE；讀寫共享獨立 key english_adv_progress_v1；純本地、只增不減、無 XP、無 Game.award、無 streak） ===== -->
+<script>
+(function () {
+  'use strict';
+
+  function api() { return window.__englishAdv || null; }
+
+  function unlockedCount() {
+    var a = api(); if (!a) return 0;
+    var prog = a.getProgress();
+    var n = 0;
+    for (var i = 0; i < a.BADGES.length; i++) if (prog.badges[a.BADGES[i].id]) n++;
+    return n;
+  }
+
+  function renderGrid() {
+    var a = api(); if (!a) return;
+    var prog = a.getProgress();
+    var host = document.getElementById('englishAdvBadgeGrid');
+    if (!host) return;
+    var html = '';
+    for (var i = 0; i < a.BADGES.length; i++) {
+      var def = a.BADGES[i];
+      var got = !!prog.badges[def.id];
+      var cls = 'ea-badge ' + (got ? 'unlocked' : 'locked');
+      var glyph = got ? def.icon : '🔒';
+      var state = got ? '已收集' : '尚未解鎖';
+      var star = got ? '<span class="ea-badge-star" aria-hidden="true">★</span>' : '';
+      var label = def.name + '（' + state + '）';
+      html += '<div class="' + cls + '" title="' + label + '" aria-label="' + label + '">' +
+        '<span class="ea-badge-glyph" aria-hidden="true">' + glyph + '</span>' +
+        '<span class="ea-badge-name">' + def.name + '</span>' +
+        '<span class="ea-badge-state">' + state + '</span>' + star + '</div>';
+    }
+    host.innerHTML = html;
+  }
+
+  function renderSummary() {
+    var a = api(); if (!a) return;
+    var el = document.getElementById('englishAdvBadgeSummary');
+    if (!el) return;
+    el.innerHTML = '已收集 <b>' + unlockedCount() + '</b> / ' + a.BADGES.length +
+      ' 枚徽章（收藏只增不減，慢慢玩就好）';
+  }
+
+  function updateFabCount() {
+    var a = api(); if (!a) return;
+    var badge = document.getElementById('englishAdvBadgeFabCount');
+    if (badge) badge.textContent = unlockedCount() + '/' + a.BADGES.length;
+  }
+
+  function refresh() { updateFabCount(); if (isOpen()) { renderGrid(); renderSummary(); } }
+  function isOpen() { var el = document.getElementById('englishAdvBadgeOverlay'); return el && !el.hidden; }
+  function openBook() { renderGrid(); renderSummary(); var o = document.getElementById('englishAdvBadgeOverlay'); if (o) o.hidden = false; }
+  function closeBook() { var o = document.getElementById('englishAdvBadgeOverlay'); if (o) o.hidden = true; }
+
+  // 附加 DOM（皆 append 於 <body> 尾端，不動既有 section；浮層帶 [hidden]）。
+  function buildDom() {
+    var host = document.createElement('div');
+    host.innerHTML =
+      '<button id="englishAdvBadgeFab" type="button" aria-label="打開進階英文語感徽章冊" onclick="EnglishAdvBadges.openBook()">' +
+        '🏅 徽章冊 <span id="englishAdvBadgeFabCount">0/9</span></button>' +
+      '<div id="englishAdvBadgeOverlay" class="ea-overlay" hidden>' +
+        '<div class="ea-card" role="dialog" aria-modal="true" aria-label="進階英文語感徽章冊">' +
+          '<div class="ea-card-head"><h1>🏅 進階英文語感徽章冊</h1>' +
+            '<button class="ea-card-back" onclick="EnglishAdvBadges.closeBook()">← 返回</button></div>' +
+          '<div class="ea-card-note">這本徽章冊只存在你自己的裝置上，純粹紀念你完成過哪些語感關卡。它不會計入學習基地的等級或經驗值——放輕鬆挑戰就好 🌱</div>' +
+          '<div id="englishAdvBadgeSummary" class="ea-card-summary"></div>' +
+          '<div id="englishAdvBadgeGrid" class="ea-badge-grid"></div>' +
+        '</div></div>';
+    while (host.firstChild) document.body.appendChild(host.firstChild);
+  }
+
+  window.EnglishAdvBadges = {
+    openBook: openBook,
+    closeBook: closeBook,
+    refresh: refresh
+  };
+
+  function boot() { buildDom(); updateFabCount(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+</body>
+</html>

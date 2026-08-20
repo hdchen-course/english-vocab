@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>進階社會探索 🌏</title>
+<!-- 統一遊戲化引擎：先載共用設計 token（assets/app.css），再載 HUD/toast 樣式
+     （game_core.css），最後同步載入引擎（game_core.js）。
+     ─────────────────────────────────────────────────────────────────
+     零重複計分論證（本頁定位為「進階挑戰」，完全不餵主 XP）：
+       本頁為「社會進階」，計入 social 科目：宣告 body[data-game-wired="social"]，
+       每題作答只呼叫一次 Game.recordAnswer('social', 對錯)（answered 旗標鎖定、重試不記帳）。
+       「不」呼叫 Game.award / recordSession；進階徽章冊為純本地（自有 key、無 XP），
+       故無 double-count，讓學生升上進階內容時獎勵不中斷。
+       本頁只「唯讀 / 純提示」使用引擎：Game.showToast（純提示，不記帳）與
+       Game.getProfile（唯讀，僅顯示暱稱／可省略）。主題切換完全交給共用
+       app-bar 的 [data-theme-toggle]，由 game_core 自動接線，本頁不寫主題 JS。
+     獨立 localStorage key：social_adv_progress_v1（與 player_profile_v1 完全區隔）。
+     內容政策：全數為可查證之中性事實，不褒貶任何政黨或人物、不主張特定立場；
+       兩岸與他國僅以國際上不爭議的事實（年代、地理、條約、貿易、組織）呈現。
+     ───────────────────────────────────────────────────────────────── -->
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<style>
+/* =====================================================================
+ * social_advanced.html — 本頁樣式（全部建立在 assets/app.css 的設計 token 上，
+ * 因此自動亮/暗色主題化、與學習基地視覺一致）。強調色系採社會科珊瑚色（social）。
+ * =================================================================== */
+
+:root {
+  --su: var(--c-social);
+  --su-tint: var(--tint-social);
+  --su-ink: var(--c-social-ink);
+  --accent: var(--c-social);
+  --accent-ink: var(--c-social-ink);
+  --accent-tint: var(--tint-social);
+}
+
+body { overflow-x: hidden; }
+
+.ma-topbar { display: flex; align-items: center; gap: var(--s2); margin-bottom: var(--s4); }
+.ma-topbar .ma-title { flex: 1; font-size: var(--fs-h2); font-weight: 800; color: var(--ink); min-width: 0; }
+
+.ma-screen { display: none; animation: ma-fade 0.3s ease; }
+.ma-screen.active { display: block; }
+@keyframes ma-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .ma-screen { animation: none; } }
+
+.ma-hello { display: flex; align-items: center; gap: var(--s3); padding: var(--s4); background: var(--su-tint); border: 1px solid var(--card-border); border-radius: var(--r-lg); margin-bottom: var(--s4); }
+.ma-hello .ma-mascot { font-size: 46px; flex: none; line-height: 1; }
+.ma-hello .ma-hello-text { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+.ma-hello .ma-hello-sub { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; }
+
+.ma-overview { display: flex; align-items: center; gap: var(--s3); margin-bottom: var(--s4); flex-wrap: wrap; }
+.ma-overview .stat-tile { flex: 1; min-width: 96px; }
+
+.ma-levels { display: grid; gap: var(--s4); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.ma-level {
+  display: flex; flex-direction: column; gap: var(--s2); padding: var(--s4);
+  text-align: left; cursor: pointer; border: 2px solid var(--card-border);
+  background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  font-family: var(--font); color: var(--ink);
+}
+.ma-level:hover { box-shadow: var(--shadow-lg); border-color: var(--su); }
+.ma-level:active { transform: scale(0.98); }
+.ma-level-top { display: flex; align-items: center; gap: var(--s3); }
+.ma-level-emoji { font-size: 34px; width: 56px; height: 56px; flex: none; display: flex; align-items: center; justify-content: center; border-radius: 16px; }
+.ma-level-num { font-size: var(--fs-small); font-weight: 700; color: var(--su-ink); }
+.ma-level-name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); line-height: 1.25; }
+.ma-level-concepts { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; line-height: 1.4; }
+.ma-level-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-top: 2px; }
+.ma-level-status { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-small); font-weight: 700; }
+.ma-level-status.done { color: var(--c-correct-ink); }
+.ma-level-status.todo { color: var(--ink-soft); }
+.ma-level-stars { font-size: 16px; letter-spacing: 1px; }
+
+.ma-stage { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); padding: var(--s5) var(--s4); text-align: center; }
+.ma-visual { font-size: clamp(56px, 18vw, 92px); line-height: 1.1; margin: var(--s2) 0 var(--s3); user-select: none; }
+.ma-question { font-size: clamp(19px, 4.5vw, 24px); font-weight: 800; color: var(--ink); line-height: 1.6; margin: 0 auto var(--s4); max-width: 42ch; text-align: left; }
+
+.ma-brief { text-align: left; }
+.ma-brief h2 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); margin: 0 0 var(--s3); text-align: center; }
+.ma-brief-sub { text-align: center; color: var(--ink-soft); font-weight: 700; font-size: var(--fs-small); margin: 0 0 var(--s3); }
+.ma-keyfacts { list-style: none; padding: 0; margin: 0 auto; max-width: 44ch; display: grid; gap: var(--s2); }
+.ma-keyfacts li { display: flex; align-items: flex-start; gap: var(--s2); padding: 10px 14px; background: var(--su-tint); border-radius: var(--r-md); font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.6; }
+.ma-keyfacts li .ma-kf-dot { flex: none; color: var(--su-ink); font-weight: 900; }
+
+.ma-steps { display: flex; align-items: center; justify-content: center; gap: 5px; margin-bottom: var(--s3); flex-wrap: wrap; }
+.ma-steps i { width: 20px; height: 6px; border-radius: 999px; background: var(--card-border); }
+.ma-steps i.on { background: var(--su); }
+.ma-steps i.cur { background: var(--su); box-shadow: 0 0 0 3px var(--su-tint); }
+
+.ma-options { display: grid; gap: var(--s3); margin-top: var(--s2); }
+.ma-opt {
+  display: flex; align-items: center; gap: var(--s2); min-height: 56px; width: 100%;
+  padding: 14px 18px; border: 2px solid var(--card-border); border-radius: 16px;
+  background: var(--card); color: var(--ink); font-family: var(--font);
+  font-size: clamp(16px, 3.4vw, 19px); font-weight: 700; text-align: left; cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.ma-opt:active { transform: scale(0.98); }
+.ma-opt:disabled { cursor: default; }
+/* 作答後高亮：文字用 var(--ink)（亮暗雙主題皆過 AA），對錯以邊框顏色 + ✅/❌ 雙碼標示（不單靠顏色） */
+.ma-opt.correct { border-color: var(--c-correct); background: var(--tint-english); color: var(--ink); }
+.ma-opt.wrong { border-color: var(--c-wrong); background: rgba(255,118,117,0.12); color: var(--ink); }
+.ma-opt.correct .ma-opt-mark { color: var(--c-correct-ink); }
+.ma-opt.wrong .ma-opt-mark { color: var(--c-streak-ink); }
+.ma-opt .ma-opt-mark { margin-left: auto; font-size: 22px; }
+
+.ma-reveal { margin-top: var(--s4); padding: var(--s3) var(--s4); background: var(--su-tint); border-radius: var(--r-md); font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.6; text-align: left; display: none; }
+.ma-reveal.show { display: block; animation: ma-fade 0.3s ease; }
+@media (prefers-reduced-motion: reduce) { .ma-reveal.show { animation: none; } }
+
+.ma-done { text-align: center; padding: var(--s5) var(--s4); }
+.ma-done-emoji { font-size: clamp(64px, 22vw, 100px); }
+.ma-done-stars { font-size: 34px; letter-spacing: 4px; margin: var(--s2) 0; }
+.ma-done-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); }
+
+.ma-actions { display: flex; gap: var(--s3); margin-top: var(--s4); flex-wrap: wrap; }
+.ma-actions .btn { flex: 1; min-width: 140px; }
+
+.ma-footnote { text-align: center; color: var(--ink-soft); font-size: var(--fs-small); margin-top: var(--s5); font-weight: 600; max-width: 34em; margin-inline: auto; }
+</style>
+</head>
+<body data-game-wired="social" data-game-maturity="advanced">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">進階社會探索 🌏</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle
+          aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+
+  <section id="screen-menu" class="ma-screen active">
+    <div class="ma-topbar">
+      <span class="ma-title">進階社會探索 🌏</span>
+    </div>
+
+    <div class="ma-hello">
+      <span class="ma-mascot" aria-hidden="true">🌏</span>
+      <div>
+        <div class="ma-hello-text" id="hello-text">歡迎來到進階社會！從台灣看見世界，玩得開心最重要。</div>
+        <div class="ma-hello-sub" id="hello-sub">還沒開始也沒關係，挑一個等級試試看吧！</div>
+      </div>
+    </div>
+
+    <div class="ma-overview">
+      <div class="stat-tile"><span class="stat-value" id="ov-done">0/6</span><span class="stat-label">完成等級</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-badges">0/7</span><span class="stat-label">收集徽章</span></div>
+    </div>
+
+    <div class="ma-levels" id="level-list"><!-- 由 JS 產生 --></div>
+
+    <p class="ma-footnote">這是「進階挑戰」小旅程，這裡的內容都是可查證的中性事實，慢慢玩、盡量想，答錯也沒關係。🌱</p>
+    <a class="ma-nextup" href="social_studies.html" style="display:flex;align-items:center;gap:12px;margin-top:16px;padding:14px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:26px;flex:none" aria-hidden="true">📝</span><span>覺得太快嗎？先回「社會大冒險：認識我們的台灣」練習打底 ←</span></a>
+    <a class="ma-nextup" href="social_concepts.html" style="display:flex;align-items:center;gap:12px;margin-top:12px;padding:14px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:26px;flex:none" aria-hidden="true">🧭</span><span>基礎想再穩一點？回「社會觀念養成」用圖複習方位、地圖、時間軸 ←</span></a>
+  </section>
+
+  <section id="screen-play" class="ma-screen">
+    <div class="ma-topbar">
+      <button type="button" class="btn btn-icon" id="btn-back" aria-label="回到等級選單">←</button>
+      <span class="ma-title" id="play-title">等級</span>
+    </div>
+    <div class="ma-steps" id="step-dots" aria-hidden="true"></div>
+    <div class="play-column">
+      <div id="stage"><!-- 由 JS 產生每一題 --></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* =====================================================================
+ * 主程式（自足 IIFE）
+ *   - 6 個中性等級（等級1..6）、每級 12 題，全部一律解鎖、可自由進入。
+ *   - 選項每題 Fisher–Yates 洗牌；answer 為「未洗牌前的 0-based 索引」，
+ *     以 data-i 保留原始索引判斷 i===answer，判分不受洗牌影響。
+ *   - 每題最多記一次分（answered 旗標守衛）；答錯可再試但只給視覺提示、不加分。
+ *   - 獨立 localStorage key：social_adv_progress_v1。
+ *   - 計分：本頁定位為「社會進階挑戰」，每題作答呼叫一次 Game.recordAnswer('social', 對錯) 計入 social 科目 XP（answered 旗標鎖定、重試不重複記帳）；不使用 award / recordSession。
+ * =================================================================== */
+(function () {
+  'use strict';
+
+  function toast(msg, kind) {
+    try { if (window.Game && Game.showToast) Game.showToast(msg, kind || 'info'); } catch (e) { /* 靜默 */ }
+  }
+
+  var PROG_KEY = 'social_adv_progress_v1';
+  function loadProg() {
+    var p = null;
+    try { p = JSON.parse(localStorage.getItem(PROG_KEY)); } catch (e) { p = null; }
+    if (!p || typeof p !== 'object') p = {};
+    if (typeof p.badges !== 'object' || !p.badges) p.badges = {};
+    return p;
+  }
+  function saveProg(p) {
+    try { localStorage.setItem(PROG_KEY, JSON.stringify(p)); } catch (e) { /* 靜默降級 */ }
+  }
+  var progress = loadProg();
+
+  // =====================================================================
+  // 課程內容（全繁體中文；每題事實皆經 WebSearch 查核並雙重審查）。
+  //   內容為可查證之中性事實，不褒貶任何政黨或人物、不主張特定立場。
+  //   answer = 未洗牌前 options 陣列的 0-based 索引。
+  // =====================================================================
+  var LEVELS = [
+    {
+      id: 'lv1', level: 1, name: '台灣這片土地', emoji: '🏝️', color: '#00897b',
+      concepts: ['相對位置與海洋', '地形與山脈', '氣候與天氣', '河流與離島', '行政區域概念'],
+      keyFacts: [
+        '台灣位於西太平洋，北回歸線（約北緯 23.5 度）橫越中南部，把氣候分成北邊亞熱帶、南邊熱帶。',
+        '西邊隔著台灣海峽與亞洲大陸相望，東邊面向遼闊的太平洋。',
+        '中央山脈像脊椎一樣縱貫南北，有「台灣屋脊」之稱；較大的平原多集中在西部。',
+        '全台最高峰是玉山（約 3952 公尺），屬於玉山山脈。',
+        '夏秋常有颱風，約五、六月有梅雨；濁水溪是台灣最長的河流。',
+        '離島有澎湖、金門、馬祖、蘭嶼、綠島；直轄市目前有台北、新北、桃園、台中、台南、高雄六個。'
+      ],
+      questions: [
+        { q: '台灣島大致位於哪一個大洋的西側？', options: ['西太平洋', '印度洋', '大西洋', '北冰洋'], answer: 0, why: '台灣位在亞洲大陸東緣、太平洋的西側，屬西太平洋島嶼。' },
+        { q: '北回歸線橫越台灣，它大致把台灣的氣候分成哪兩種？', options: ['北邊亞熱帶、南邊熱帶', '東邊寒帶、西邊溫帶', '全島都是寒帶', '全島都是沙漠氣候'], answer: 0, why: '北回歸線（約北緯 23.5 度）以北偏亞熱帶、以南偏熱帶。' },
+        { q: '台灣島的西邊，隔著哪一片海域與亞洲大陸相望？', options: ['台灣海峽', '太平洋', '地中海', '紅海'], answer: 0, why: '台灣海峽位在台灣與亞洲大陸之間，是西側的海域。' },
+        { q: '站在台灣東岸向外望，面對的是哪一個大洋？', options: ['大西洋', '印度洋', '太平洋', '北冰洋'], answer: 2, why: '台灣東側直接面向太平洋，海岸外海水很深。' },
+        { q: '台灣最高的山峰是哪一座？', options: ['阿里山', '玉山', '合歡山', '陽明山'], answer: 1, why: '玉山主峰約 3952 公尺，是台灣第一高峰。' },
+        { q: '有「台灣屋脊」之稱、大致由北到南縱貫全島的山脈是哪一條？', options: ['海岸山脈', '雪山山脈', '中央山脈', '阿里山山脈'], answer: 2, why: '中央山脈南北縱走，像脊梁般貫穿全島。' },
+        { q: '台灣面積較大的平原（例如嘉南平原）主要分布在島的哪一側？', options: ['西部', '東部', '正中央的高山區', '北部外海'], answer: 0, why: '高山偏東，河流沖積出的大平原多集中在西部。' },
+        { q: '夏天到秋天，常從海上生成、為台灣帶來強風豪雨的天氣現象是？', options: ['颱風', '沙塵暴', '極光', '寒流'], answer: 0, why: '颱風多在夏秋形成於太平洋，常帶來強風與豪雨。' },
+        { q: '每年約五、六月，台灣常出現一段連續多雨的天氣，稱為什麼？', options: ['乾季', '梅雨', '焚風', '冰風暴'], answer: 1, why: '春末夏初鋒面滯留，帶來連續降雨，稱為梅雨。' },
+        { q: '台灣最長的河流是哪一條？', options: ['淡水河', '高屏溪', '濁水溪', '大甲溪'], answer: 2, why: '濁水溪約 186 公里，是台灣最長的河流。' },
+        { q: '位於台灣海峽、由許多島嶼組成、以玄武岩地形聞名的離島縣是？', options: ['蘭嶼', '綠島', '澎湖', '龜山島'], answer: 2, why: '澎湖群島散布在台灣海峽，以柱狀玄武岩地景著名。' },
+        { q: '下列哪一個是台灣的「直轄市」？', options: ['高雄市', '嘉義市', '新竹市', '基隆市'], answer: 0, why: '高雄市是六個直轄市之一；嘉義、新竹、基隆為一般市。' }
+      ]
+    },
+    {
+      id: 'lv2', level: 2, name: '走向世界地圖', emoji: '🌍', color: '#1e88e5',
+      concepts: ['七大洲與五大洋', '赤道與南北半球', '經緯度與時區', '熱帶、溫帶、寒帶', '世界地標與所在洲別'],
+      keyFacts: [
+        '地球陸地分成七大洲：亞洲、非洲、北美洲、南美洲、南極洲、歐洲、大洋洲。',
+        '五大洋中太平洋面積最大；世界最高峰是聖母峰（珠穆朗瑪峰），高約 8849 公尺。',
+        '赤道是 0 度緯線，把地球分成北半球和南半球，台灣位於北半球。',
+        '經線（經度）用來劃分時區，0 度經線（本初子午線）通過英國的格林威治。',
+        '從赤道往兩極，氣候大致分成熱帶、溫帶、寒帶三種。'
+      ],
+      questions: [
+        { q: '地球上的陸地分成七大洲，其中面積最大的是哪一洲？', options: ['亞洲', '非洲', '歐洲', '大洋洲'], answer: 0, why: '亞洲面積最大，約占全球陸地的三成。' },
+        { q: '世界五大洋中，面積最大的是哪一個？', options: ['大西洋', '太平洋', '印度洋', '北冰洋'], answer: 1, why: '太平洋是面積最大、也最深的海洋。' },
+        { q: '赤道把地球分成哪兩個半球？', options: ['東半球和西半球', '南半球和北半球', '上半球和下半球', '內半球和外半球'], answer: 1, why: '赤道是 0 度緯線，把地球分成南、北半球。' },
+        { q: '以赤道來區分，台灣位於哪一個半球？', options: ['北半球', '南半球', '剛好在赤道上', '南極洲'], answer: 0, why: '台灣在北回歸線附近，位於北半球。' },
+        { q: '目前公認世界上最高的山峰是哪一座？', options: ['聖母峰（珠穆朗瑪峰）', '玉山', '富士山', '阿爾卑斯山的白朗峰'], answer: 0, why: '聖母峰高約 8849 公尺，是世界最高峰。' },
+        { q: '一般教科書認為世界上最長的河流是哪一條？', options: ['尼羅河', '淡水河', '多瑙河', '密西西比河'], answer: 0, why: '尼羅河長約 6650 公里，常被列為世界最長的河。' },
+        { q: '著名的金字塔和人面獅身像位於埃及，埃及屬於哪一洲？', options: ['亞洲', '非洲', '歐洲', '南美洲'], answer: 1, why: '埃及位於非洲東北部。' },
+        { q: '著名地標艾菲爾鐵塔（巴黎鐵塔）位於哪一個國家？', options: ['義大利', '法國', '英國', '德國'], answer: 1, why: '艾菲爾鐵塔位於法國首都巴黎。' },
+        { q: '自由女神像位於美國，美國本土主要位於哪一洲？', options: ['南美洲', '北美洲', '歐洲', '大洋洲'], answer: 1, why: '美國本土位於北美洲。' },
+        { q: '萬里長城是哪一個國家著名的古老建築？', options: ['日本', '韓國', '中國', '印度'], answer: 2, why: '萬里長城是中國古代修築的防禦城牆。' },
+        { q: '地球上最靠近赤道、終年炎熱的氣候帶叫做什麼？', options: ['寒帶', '溫帶', '熱帶', '極地'], answer: 2, why: '赤道附近陽光近乎直射，屬於炎熱的熱帶。' },
+        { q: '我們把地球劃分成不同時區，主要是依據哪一種線？', options: ['緯線（緯度）', '經線（經度）', '海岸線', '航線'], answer: 1, why: '時區大致沿著經線（經度）由西向東劃分。' }
+      ]
+    },
+    {
+      id: 'lv3', level: 3, name: '台灣的故事', emoji: '🕰️', color: '#b45309',
+      concepts: ['南島語族與原住民族', '大航海時代：荷蘭與西班牙', '明鄭與清領時期', '日本統治時期', '戰後發展與民主化'],
+      keyFacts: [
+        '台灣最早的住民是南島語族（原住民族），已在這座島上生活數千年。',
+        '1624 年荷蘭人在南部（今台南）建熱蘭遮城，1626 年西班牙人在北部（今基隆）建立據點。',
+        '1662 年鄭成功與荷蘭人交戰，荷蘭人投降撤離，開啟明鄭時期；1683 年起台灣進入清領時期。',
+        '1895 年馬關條約後台灣由日本統治，直到 1945 年第二次世界大戰結束。',
+        '1987 年解除戒嚴，1996 年舉行首次總統直接民選。'
+      ],
+      questions: [
+        { q: '根據考古與語言學的研究，台灣最早的住民屬於哪一個族群？', options: ['南島語族（原住民族）', '後來渡海來台的漢人', '大航海時代的荷蘭人', '日本統治時期來的日本人'], answer: 0, why: '考古與語言學證據顯示原住民族（南島語族）是台灣最早的住民。' },
+        { q: '南島語族（原住民族）大約在台灣居住了多久？', options: ['數千年，比後來陸續來到台灣的其他族群都早很多', '大約只有 200 年', '大約只有 50 年', '大約只有 10 年'], answer: 0, why: '研究指出南島語族在台灣的居住已達數千年之久，比後來陸續來到的其他族群都早很多。' },
+        { q: '大航海時代，荷蘭人於西元哪一年來到台灣南部並建立熱蘭遮城？', options: ['1624 年', '1492 年', '1776 年', '1949 年'], answer: 0, why: '荷蘭東印度公司於 1624 年在今台南一帶建立熱蘭遮城。' },
+        { q: '與荷蘭人約略同時期，西班牙人主要在台灣哪個地區建立據點？', options: ['北部（今基隆、淡水一帶）', '中部平原', '澎湖群島', '東部海岸'], answer: 0, why: '西班牙人 1626 年起在台灣北部（今基隆）建立據點，與荷蘭人南部據點並存。' },
+        { q: '西元 1662 年，鄭成功在台灣完成了哪一件歷史事件？', options: ['讓原本控制南部的荷蘭人投降並撤離', '打敗前來的日本軍隊', '統一整個中國', '舉行第一次選舉'], answer: 0, why: '1662 年荷蘭人向鄭成功投降並撤離，開啟明鄭時期。' },
+        { q: '西元 1683 年之後，台灣進入哪一個時期？', options: ['清領時期', '荷蘭統治時期', '日本統治時期', '明鄭時期'], answer: 0, why: '清軍於 1683 年擊敗明鄭，台灣此後由清朝管轄。' },
+        { q: '清領時期，台灣大約受清朝管轄多久？', options: ['約兩百年（1683 至 1895 年）', '約五十年', '約一千年', '約十年'], answer: 0, why: '自 1683 年到 1895 年，清朝管轄台灣約兩百多年。' },
+        { q: '西元 1895 年，清朝在甲午戰爭戰敗後簽訂哪一個條約，將台灣割讓給日本？', options: ['馬關條約', '南京條約', '辛丑和約', '尼布楚條約'], answer: 0, why: '1895 年簽訂的馬關條約將台灣、澎湖割讓給日本。' },
+        { q: '日本統治台灣的時期，大約是哪一段時間？', options: ['1895 年至 1945 年（約 50 年）', '1624 年至 1662 年', '1683 年至 1895 年', '1945 年至 1987 年'], answer: 0, why: '日本統治台灣自 1895 年起，至 1945 年止，約半個世紀。' },
+        { q: '西元 1945 年發生了什麼事，使日本統治台灣的時期結束？', options: ['第二次世界大戰結束', '清朝滅亡', '荷蘭人離開台灣', '舉行首次總統直選'], answer: 0, why: '1945 年第二次世界大戰結束，日本在台灣的統治時期隨之結束。' },
+        { q: '台灣在西元 1987 年解除了長期實施的哪一項制度？', options: ['戒嚴（戒嚴令）', '義務教育制度', '貨幣制度', '鐵路系統'], answer: 0, why: '1987 年政府宣布解嚴，結束了長期的戒嚴。' },
+        { q: '西元 1996 年，台灣舉行了哪一項在歷史上第一次的選舉？', options: ['首次由人民直接投票選出總統', '首次舉辦地方縣市選舉', '首次舉辦立法委員選舉', '首次舉辦全國性公民投票'], answer: 0, why: '1996 年台灣首次由公民直接投票選出總統。' }
+      ]
+    },
+    {
+      id: 'lv4', level: 4, name: '世界的故事', emoji: '🏛️', color: '#7c3aed',
+      concepts: ['早期文明：大河的搖籃', '大航海時代與交流', '工業革命', '民主與人權思想', '兩次世界大戰與冷戰', '英語成為國際共通語言'],
+      keyFacts: [
+        '世界上最早的幾個文明，分別出現在兩河流域、埃及尼羅河、印度河與中國黃河等大河流域。',
+        '十五世紀起的大航海時代，讓歐洲、亞洲、非洲與美洲之間開始頻繁往來與交流。',
+        '工業革命約在十八世紀從英國開始，蒸汽機讓工廠大量生產，改變了人們的生活。',
+        '第一次世界大戰是 1914 到 1918 年，第二次世界大戰是 1939 到 1945 年。',
+        '二十世紀後，英語隨著貿易、科技與網際網路，逐漸成為國際間常用的共通語言。'
+      ],
+      questions: [
+        { q: '下列哪一條大河，是古埃及文明發展的重要搖籃？', options: ['亞馬遜河', '萊茵河', '尼羅河', '密西西比河'], answer: 2, why: '古埃及人依靠尼羅河定期氾濫帶來的肥沃土壤，發展出農業與文明。' },
+        { q: '古代「兩河流域」文明，指的是位於哪兩條河之間的地區？', options: ['長江與黃河', '底格里斯河與幼發拉底河', '尼羅河與剛果河', '恆河與印度河'], answer: 1, why: '兩河流域（美索不達米亞）位於底格里斯河與幼發拉底河之間，是最早的文明之一。' },
+        { q: '「民主（demokratia）」這個詞與早期公民參政的制度，最早出現在哪個古代城邦？', options: ['古埃及的孟菲斯', '兩河流域的巴比倫', '古印度的摩亨佐-達羅', '古希臘的雅典'], answer: 3, why: '古希臘的雅典發展出公民參與政治的制度，是「民主」一詞的來源。' },
+        { q: '西元 1492 年，哪一位航海家從歐洲橫渡大西洋，抵達了美洲附近的島嶼？', options: ['哥倫布', '牛頓', '瓦特', '愛因斯坦'], answer: 0, why: '哥倫布在 1492 年橫渡大西洋，開啟了歐洲與美洲之間大規模往來的時代。' },
+        { q: '大約在十八世紀，工業革命最早是從哪個國家開始的？', options: ['日本', '巴西', '英國', '埃及'], answer: 2, why: '工業革命約於十八世紀後半從英國開始，再逐漸擴散到其他國家。' },
+        { q: '工業革命時期，哪一項機械成為推動工廠大量生產的重要動力？', options: ['電腦', '蒸汽機', '智慧型手機', '飛機'], answer: 1, why: '蒸汽機提供穩定動力，讓工廠能以機器大量生產，改變了生產與生活方式。' },
+        { q: '「人人生而自由、應享有基本權利」這類民主與人權思想，在哪個時期的歐洲廣泛興起？', options: ['石器時代', '中世紀初期', '二十一世紀', '十七、十八世紀的啟蒙運動時期'], answer: 3, why: '啟蒙運動時期，許多思想家提出自由、平等與人權的觀念，影響了後來的民主發展。' },
+        { q: '第一次世界大戰發生在哪一段期間？', options: ['1914 年到 1918 年', '1939 年到 1945 年', '1789 年到 1799 年', '1950 年到 1953 年'], answer: 0, why: '第一次世界大戰從 1914 年打到 1918 年，是二十世紀初的大規模國際戰爭。' },
+        { q: '第二次世界大戰結束於哪一年？', options: ['1918 年', '1901 年', '1945 年', '1969 年'], answer: 2, why: '第二次世界大戰在 1939 年爆發，並於 1945 年結束。' },
+        { q: '第二次世界大戰之後的「冷戰」，主要是指哪兩個強權之間長期的緊張與對抗？', options: ['英國與法國', '美國與蘇聯', '日本與德國', '印度與埃及'], answer: 1, why: '冷戰指二戰後美國與蘇聯兩大陣營長期對抗，但雙方沒有直接爆發大規模戰爭。' },
+        { q: '二十世紀後，英語為什麼會逐漸成為許多國家之間常用的共通語言？', options: ['因為英語是世界上最古老的語言', '因為聯合國規定全世界只能使用英語', '因為英語是唯一有文字的語言', '因為國際貿易、科技與網際網路的發展，使用英語溝通的場合變多'], answer: 3, why: '隨著貿易、科技與網路的發展，越來越多國際交流使用英語，使它成為常用的共通語言。' },
+        { q: '二十世紀晚期出現的哪一項科技，大大加快了全球資訊流通，推動了「全球化」？', options: ['網際網路', '蒸汽機', '造紙術', '指南針'], answer: 0, why: '網際網路讓世界各地能快速交換資訊，加速了商品、資訊與文化的全球流動。' }
+      ]
+    },
+    {
+      id: 'lv5', level: 5, name: '公民與民主', emoji: '🗳️', color: '#2e5fa3',
+      concepts: ['主權在民', '公平與秘密投票', '法治與人人平等', '基本人權與自由', '權力分立與制衡', '多元尊重與國際合作'],
+      keyFacts: [
+        '民主的核心是「主權在民」：國家的重大決定由全體人民共同作主。',
+        '公平選舉講究「票票等值」，並用秘密（無記名）投票保護每個人的自由意志。',
+        '法治精神是「法律之前人人平等」，不論身分高低都要同樣守法。',
+        '政府權力常分成行政、立法、司法，彼此監督制衡，避免權力集中在少數人手中。',
+        '聯合國 1945 年成立、總部在美國紐約；世界衛生組織是它的專門機構，總部在瑞士日內瓦。'
+      ],
+      questions: [
+        { q: '在民主社會裡，「主權在民」這句話最主要的意思是什麼？', options: ['國家的重大決定，最終要由全體人民作主', '國家的事情只由年紀最大的人決定', '國家的事情由力氣最大的人決定', '國家的事情由住在首都的人決定'], answer: 0, why: '民主的核心是人民作主，公共事務由全體人民共同決定。' },
+        { q: '在公平的選舉中，關於每個人手中的選票，下列哪一項說法正確？', options: ['有錢的人可以多投好幾票', '每位有投票權的公民都是一人一票、票票等值', '當官的人一票可以算成兩票', '男生的票比女生的票更重要'], answer: 1, why: '公平選舉的基礎是票票等值，每位合格公民只有一票。' },
+        { q: '選舉時採用「秘密投票」（無記名投票），主要的好處是什麼？', options: ['可以讓開票速度變得更快', '可以讓選民不必到投票所投票', '讓選民能依自己的想法投票，不必擔心被別人知道或施壓', '可以讓每個人重複投很多次'], answer: 2, why: '秘密投票保護選民的自由意志，避免被威脅或收買。' },
+        { q: '「法律之前，人人平等」這句話的意思，最接近下列哪一項？', options: ['只有一般人民要守法，當大官的人可以不守法', '不論身分高低、有錢沒錢，都要同樣遵守法律', '法律只用來管小孩子', '有名的人犯了法可以不用負責任'], answer: 1, why: '法治精神是任何人都不能凌駕於法律之上。' },
+        { q: '在保障人權的社會中，「言論自由」通常指的是什麼？', options: ['可以說任何話去傷害或誣賴別人都不必負責', '人民可以表達自己的想法和意見，但仍要尊重他人與法律的界線', '只有政府官員才可以發表意見', '所有人講話前都要先得到別人同意'], answer: 1, why: '言論自由保障表達意見，但仍受尊重他人與法律的合理限制。' },
+        { q: '民主國家把政府的權力分給不同機關（例如分成行政、立法、司法），最主要的用意是什麼？', options: ['讓政府做事故意變慢一點好玩', '避免權力集中在少數人手中，讓機關彼此監督制衡、保障人民', '讓政府的官員人數越多越好', '方便大家背下政府機關的名字'], answer: 1, why: '權力分立的目的是防止權力過度集中，互相制衡以保障人民。' },
+        { q: '在行政、立法、司法的分工概念中，負責「制定法律」的是哪一種權力？', options: ['行政權', '立法權', '司法權', '軍事權'], answer: 1, why: '立法權的主要工作就是制定法律，這是分工的基本概念。' },
+        { q: '「制衡」這個概念，是指下列哪一種情形？', options: ['各個政府機關互相監督、彼此牽制，避免某一方濫用權力', '一個機關可以命令其他所有機關都要聽它的', '政府機關之間完全不往來、互不理會', '由人民親自處理政府每天的每一件小事'], answer: 0, why: '制衡是機關之間互相監督牽制，防止任何一方濫用權力。' },
+        { q: '關於「中央政府」和「地方政府」的分工，下列敘述何者較為正確？', options: ['中央處理全國性的事務，地方處理各縣市在地的事務，彼此分工合作', '地方政府主要負責去管理其他國家', '中央政府只管一個村子裡的小事', '地方政府可以自己決定和外國打仗'], answer: 0, why: '中央負責全國性事務、地方負責在地事務，兩者分工合作。' },
+        { q: '在一個多元的社會裡，面對和自己不同的宗教、語言或想法，比較合適的態度是什麼？', options: ['強迫別人一定要跟自己想的一樣', '在守法的前提下，彼此尊重與包容不同的想法和文化', '嘲笑並排擠跟自己不一樣的人', '規定大家都只能有一種想法'], answer: 1, why: '多元社會強調在法律範圍內互相尊重與包容差異。' },
+        { q: '聯合國（UN）成立於 1945 年，總部設在美國紐約。它最主要的角色是什麼？', options: ['是全世界唯一的政府，可以管每個國家的家務事', '提供各國討論與合作的平台，促進世界和平與國際合作', '是一家專門賣玩具的公司', '負責規定每個國家要說哪一種語言'], answer: 1, why: '聯合國是各國合作的平台，宗旨在維護和平、促進國際合作。' },
+        { q: '世界衛生組織（WHO）是聯合國體系下的專門機構，總部設在瑞士日內瓦。它最主要的工作是什麼？', options: ['負責處理全球的公共衛生與健康問題，例如協助各國防治疾病', '負責發行全世界的電影', '負責主辦各國的足球比賽', '負責決定各國的稅金要收多少'], answer: 0, why: 'WHO 是聯合國專門機構，負責協調全球衛生與防疫等健康事務。' }
+      ]
+    },
+    {
+      id: 'lv6', level: 6, name: '台灣與世界', emoji: '🌏', color: '#ea580c',
+      concepts: ['貿易與海運', '半導體晶片產業', '多元族群與文化', '國際參與的現況', '能源進口與防災'],
+      keyFacts: [
+        '台灣是海島，將近 98% 的能源（石油、天然氣等）需要從國外進口。',
+        '台積電（TSMC）是全球最大的晶圓代工廠，先進晶片的市占率很高，許多國家都仰賴台灣的晶片。',
+        '台灣社會由閩南、客家、外省、原住民與新住民等多個族群共同組成。',
+        '台灣的正式邦交國數目相對較少，常以「中華台北」等名義參與國際活動。',
+        '台灣位於板塊交界帶，地震較多；夏秋季常受颱風影響。'
+      ],
+      questions: [
+        { q: '台灣是海島型國家，它的經濟發展特別依賴下列哪一項？', options: ['對外貿易：把商品賣到國外，也從國外買東西', '完全自己生產，不和別的國家往來', '只靠國內觀光，不做買賣', '只靠農業就能自給自足'], answer: 0, why: '台灣市場小、天然資源少，靠進出口貿易帶動經濟。' },
+        { q: '台灣和外國之間大量的貨物，主要是用什麼方式運送？', options: ['海運：由貨船經過港口進出', '主要靠人力用背的', '主要靠腳踏車運送', '靠小溪裡的竹筏'], answer: 0, why: '台灣四面環海，港口與貨船是進出口貨物的主要通道。' },
+        { q: '下列哪一個產業，讓台灣在全世界扮演很關鍵的角色？', options: ['半導體（晶片）製造', '冰淇淋製造', '雨傘製造', '風箏製造'], answer: 0, why: '台灣的晶片產量在全球舉足輕重，許多國家都需要。' },
+        { q: '台灣製造的晶片，最主要用在下列哪一類東西裡面？', options: ['電腦、手機等電子產品', '木頭做的桌椅', '棉花做的衣服', '玻璃做的杯子'], answer: 0, why: '晶片是電腦、手機等電子產品運作的核心零件。' },
+        { q: '關於台灣的人口與文化，下列敘述何者正確？', options: ['由閩南、客家、原住民、新住民等多個族群共同組成', '全部都是同一個族群，文化完全一樣', '台灣沒有任何原住民', '台灣只有外國人居住'], answer: 0, why: '台灣是多元族群社會，各族群有不同的語言與文化。' },
+        { q: '關於台灣的原住民族，下列敘述何者正確？', options: ['是很早就住在台灣的居民，擁有多種語言和文化', '是最近幾年才從外國搬來的', '全部只有一族、只講一種話', '完全沒有自己的傳統文化'], answer: 0, why: '原住民族是台灣最早的住民之一，分成多族、各有獨特文化。' },
+        { q: '目前世界上和台灣維持「正式邦交」的國家數目，和多數大國相比是？', options: ['比較少', '全世界最多', '剛好是所有國家的一半', '一個都沒有'], answer: 0, why: '這是可查證的中性事實：台灣的正式邦交國數目相對較少。' },
+        { q: '台灣的運動員參加奧林匹克運動會時，常使用下列哪一個名義？', options: ['中華台北（Chinese Taipei）', '太平洋聯邦', '北極共和國', '地中海王國'], answer: 0, why: '因國際現況，台灣常以「中華台北」的名義參與奧運等國際活動。' },
+        { q: '台灣本身的石油、天然氣等能源很少，這些能源主要怎麼來？', options: ['大部分從國外進口', '全部由台灣自己開採，完全不用進口', '從月球運來', '台灣完全不需要能源'], answer: 0, why: '台灣天然資源有限，將近 98% 的能源仰賴進口。' },
+        { q: '台灣位於板塊交界的位置，因此比較容易發生下列哪一種天然災害？', options: ['地震', '終年不停的沙塵暴', '極地暴風雪', '火山灰終年覆蓋全島'], answer: 0, why: '台灣處在板塊交界帶，發生地震的機會較高。' },
+        { q: '每年從夏天到秋天，常帶著強風和豪雨侵襲台灣的天氣現象是？', options: ['颱風', '下大雪', '永遠不會天黑的永晝', '海水結冰'], answer: 0, why: '台灣夏秋季位於颱風路徑上，常受颱風影響。' },
+        { q: '地震發生、東西開始搖晃時，學校教的正確保命動作是？', options: ['趴下、掩護、穩住（躲到桌子下並抓緊）', '趕快去搭電梯下樓', '站到窗戶旁邊往外看', '在教室裡跑來跑去'], answer: 0, why: '「趴下、掩護、穩住」能保護頭頸，是地震時的標準防護動作。' }
+      ]
+    }
+  ];
+
+  var BADGES = [
+    { id: 'lv1', icon: '🏝️', name: '寶島領航員' },
+    { id: 'lv2', icon: '🌍', name: '世界探險家' },
+    { id: 'lv3', icon: '🕰️', name: '時光旅人' },
+    { id: 'lv4', icon: '🏛️', name: '文明說書人' },
+    { id: 'lv5', icon: '🗳️', name: '民主小公民' },
+    { id: 'lv6', icon: '🌏', name: '全球視野家' },
+    { id: 'all', icon: '🏆', name: '社會通達人' }
+  ];
+  var BADGE_BY_ID = {};
+  for (var bi = 0; bi < BADGES.length; bi++) BADGE_BY_ID[BADGES[bi].id] = BADGES[bi];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var screenMenu = $('screen-menu');
+  var screenPlay = $('screen-play');
+  var levelList = $('level-list');
+  var stage = $('stage');
+  var stepDots = $('step-dots');
+  var playTitle = $('play-title');
+
+  var cur = null;
+
+  function starsFor(correct, total) {
+    if (total <= 0) return 0;
+    var r = correct / total;
+    if (r >= 0.9) return 3;
+    if (r >= 0.6) return 2;
+    if (r > 0) return 1;
+    return 0;
+  }
+  function starStr(n) {
+    var s = '';
+    for (var i = 0; i < 3; i++) s += (i < n ? '⭐' : '☆');
+    return s;
+  }
+
+  function awardBadge(id) {
+    var def = BADGE_BY_ID[id];
+    if (!def) return;
+    if (progress.badges[id]) return;
+    progress.badges[id] = true;
+    saveProg(progress);
+    toast('獲得徽章：' + def.icon + ' ' + def.name, 'badge');
+    try { if (window.SocialAdvBadges) SocialAdvBadges.refresh(); } catch (e) {}
+  }
+  function badgeCount() {
+    var n = 0;
+    for (var i = 0; i < BADGES.length; i++) if (progress.badges[BADGES[i].id]) n++;
+    return n;
+  }
+
+  function renderMenu() {
+    var doneCount = 0;
+    for (var i = 0; i < LEVELS.length; i++) if (progress[LEVELS[i].id] && progress[LEVELS[i].id].done) doneCount++;
+    $('ov-done').textContent = doneCount + '/' + LEVELS.length;
+    $('ov-badges').textContent = badgeCount() + '/' + BADGES.length;
+
+    if (doneCount > 0) {
+      $('hello-text').textContent = '歡迎回來！你已完成 ' + doneCount + ' 個等級，很棒！';
+      $('hello-sub').textContent = (doneCount >= LEVELS.length)
+        ? '六個等級都完成了，你是進階社會達人！🏆'
+        : '想挑戰哪一個等級都可以，答錯也沒關係。';
+    }
+
+    levelList.innerHTML = '';
+    for (var u = 0; u < LEVELS.length; u++) {
+      (function (lv) {
+        var rec = progress[lv.id] || {};
+        var done = !!rec.done;
+        var total = lv.questions.length;
+        var st = done ? starsFor(rec.best || 0, total) : 0;
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'ma-level';
+        card.setAttribute('aria-label', '等級 ' + lv.level + '：' + lv.name);
+        card.innerHTML =
+          '<div class="ma-level-top">' +
+            '<span class="ma-level-emoji" aria-hidden="true" style="background:' + lv.color + '22;color:' + lv.color + '">' + lv.emoji + '</span>' +
+            '<div>' +
+              '<div class="ma-level-num">等級 ' + lv.level + '</div>' +
+              '<div class="ma-level-name">' + lv.name + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="ma-level-concepts">' + lv.concepts.join('・') + '</div>' +
+          '<div class="ma-level-foot">' +
+            '<span class="ma-level-status ' + (done ? 'done' : 'todo') + '">' +
+              (done ? '✅ 已完成（最佳 ' + (rec.best || 0) + '/' + total + '）' : '▶️ 開始挑戰（共 ' + total + ' 題）') + '</span>' +
+            '<span class="ma-level-stars" aria-hidden="true">' + (done ? starStr(st) : '') + '</span>' +
+          '</div>';
+        card.addEventListener('click', function () { startLevel(lv); });
+        levelList.appendChild(card);
+      })(LEVELS[u]);
+    }
+  }
+
+  function show(screen) {
+    screenMenu.classList.remove('active');
+    screenPlay.classList.remove('active');
+    screen.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function startLevel(lv) {
+    cur = { level: lv, idx: 0, correctCount: 0, phase: 'brief' };
+    playTitle.textContent = lv.emoji + ' 等級 ' + lv.level + '・' + lv.name;
+    show(screenPlay);
+    renderBrief();
+  }
+
+  function renderStepDots() {
+    stepDots.innerHTML = '';
+    if (cur.phase !== 'quiz') return;
+    for (var i = 0; i < cur.level.questions.length; i++) {
+      var b = document.createElement('i');
+      if (i < cur.idx) b.className = 'on';
+      else if (i === cur.idx) b.className = 'cur';
+      stepDots.appendChild(b);
+    }
+  }
+
+  function renderBrief() {
+    renderStepDots();
+    var lv = cur.level;
+    var facts = '';
+    for (var i = 0; i < lv.keyFacts.length; i++) {
+      facts += '<li><span class="ma-kf-dot" aria-hidden="true">◆</span><span>' + lv.keyFacts[i] + '</span></li>';
+    }
+    stage.innerHTML =
+      '<div class="ma-stage ma-brief">' +
+        '<div class="ma-visual" aria-hidden="true">' + lv.emoji + '</div>' +
+        '<h2>等級 ' + lv.level + '・' + lv.name + '</h2>' +
+        '<p class="ma-brief-sub">先看看這一級的重點，再開始 ' + lv.questions.length + ' 題挑戰。</p>' +
+        '<ul class="ma-keyfacts">' + facts + '</ul>' +
+      '</div>' +
+      '<div class="ma-actions">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-start">開始挑戰 ➡️</button>' +
+      '</div>';
+    $('btn-start').addEventListener('click', function () {
+      cur.phase = 'quiz';
+      cur.idx = 0;
+      renderQuestion();
+    });
+  }
+
+  function next() {
+    cur.idx++;
+    if (cur.idx >= cur.level.questions.length) finishLevel();
+    else renderQuestion();
+  }
+
+  function renderQuestion() {
+    renderStepDots();
+    var lv = cur.level;
+    var step = lv.questions[cur.idx];
+
+    var order = [];
+    for (var oi = 0; oi < step.options.length; oi++) order.push(oi);
+    for (var m = order.length - 1; m > 0; m--) {
+      var r = Math.floor(Math.random() * (m + 1));
+      var tt = order[m]; order[m] = order[r]; order[r] = tt;
+    }
+    var optsHtml = '';
+    for (var k = 0; k < order.length; k++) {
+      var origIdx = order[k];
+      optsHtml += '<button type="button" class="ma-opt" data-i="' + origIdx + '">' +
+        '<span>' + step.options[origIdx] + '</span><span class="ma-opt-mark" aria-hidden="true"></span></button>';
+    }
+
+    stage.innerHTML =
+      '<div class="ma-stage">' +
+        '<div class="ma-visual" aria-hidden="true">' + lv.emoji + '</div>' +
+        '<p class="ma-question">第 ' + (cur.idx + 1) + ' / ' + lv.questions.length + ' 題　' + step.q + '</p>' +
+        '<div class="ma-options">' + optsHtml + '</div>' +
+        '<div class="ma-reveal" id="reveal"></div>' +
+      '</div>' +
+      '<div class="ma-actions" id="afteract" style="display:none">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">繼續 ➡️</button>' +
+      '</div>';
+
+    var answered = false;
+    var btns = stage.querySelectorAll('.ma-opt');
+
+    function revealAndLock(correct) {
+      var rev = $('reveal');
+      rev.textContent = (correct ? '答對了！' : '再想想～正確答案是這個！') + (step.why || '');
+      rev.classList.add('show');
+      $('afteract').style.display = 'flex';
+      var all = stage.querySelectorAll('.ma-opt');
+      for (var a = 0; a < all.length; a++) all[a].disabled = true;
+    }
+
+    for (var b = 0; b < btns.length; b++) {
+      btns[b].addEventListener('click', function () {
+        var i = parseInt(this.getAttribute('data-i'), 10);
+        var isCorrect = (i === step.answer);
+        if (answered) return;
+        answered = true;
+        if (window.Game && window.Game.recordAnswer) Game.recordAnswer('social', isCorrect);
+        if (isCorrect) {
+          this.classList.add('correct');
+          this.querySelector('.ma-opt-mark').textContent = '✅';
+          cur.correctCount++;
+          revealAndLock(true);
+        } else {
+          this.classList.add('wrong');
+          this.querySelector('.ma-opt-mark').textContent = '❌';
+          var correctBtn = stage.querySelector('.ma-opt[data-i="' + step.answer + '"]');
+          if (correctBtn) {
+            correctBtn.classList.add('correct');
+            correctBtn.querySelector('.ma-opt-mark').textContent = '✅';
+          }
+          revealAndLock(false);
+        }
+      });
+    }
+
+    $('btn-next').addEventListener('click', next);
+  }
+
+  function finishLevel() {
+    var lv = cur.level;
+    var total = lv.questions.length;
+    var got = cur.correctCount;
+
+    var prev = progress[lv.id] || {};
+    progress[lv.id] = { done: true, best: Math.max(prev.best || 0, got) };
+    saveProg(progress);
+
+    awardBadge(lv.id);
+    var allDone = true;
+    for (var i = 0; i < LEVELS.length; i++) if (!(progress[LEVELS[i].id] && progress[LEVELS[i].id].done)) { allDone = false; break; }
+    if (allDone) awardBadge('all');
+
+    var st = starsFor(got, total);
+    stage.innerHTML =
+      '<div class="ma-stage ma-done">' +
+        '<div class="ma-done-emoji" aria-hidden="true">🎉</div>' +
+        '<div class="ma-done-title">完成「' + lv.name + '」！</div>' +
+        '<div class="ma-done-stars" aria-label="得到 ' + st + ' 顆星">' + starStr(st) + '</div>' +
+        '<p class="ma-question" style="font-size:clamp(16px,3.6vw,19px);text-align:center">你答對了 ' + got + ' / ' + total + ' 題，真棒！</p>' +
+      '</div>' +
+      '<div class="ma-actions">' +
+        '<button type="button" class="btn" id="btn-menu">回到選單</button>' +
+        (nextLevelOf(lv) ? '<button type="button" class="btn btn-primary" id="btn-nextlv">下一個等級 ➡️</button>' : '') +
+      '</div>';
+
+    toast('完成「' + lv.name + '」！你答對了 ' + got + ' / ' + total + ' 題，真棒！', 'daily');
+
+    $('btn-menu').addEventListener('click', goMenu);
+    var nl = nextLevelOf(lv);
+    if (nl) $('btn-nextlv').addEventListener('click', function () { startLevel(nl); });
+  }
+
+  function nextLevelOf(lv) {
+    for (var i = 0; i < LEVELS.length; i++) {
+      if (LEVELS[i].id === lv.id) return LEVELS[i + 1] || null;
+    }
+    return null;
+  }
+
+  function goMenu() {
+    cur = null;
+    stepDots.innerHTML = '';
+    renderMenu();
+    show(screenMenu);
+  }
+
+  $('btn-back').addEventListener('click', goMenu);
+
+  window.__socialAdv = {
+    LEVELS: LEVELS,
+    BADGES: BADGES,
+    getProgress: function () { return progress; }
+  };
+
+  renderMenu();
+})();
+</script>
+
+<!-- ===== 進階社會徽章冊：樣式（自足、canon 變數、亮暗雙主題、色盲雙碼、[hidden] 防護；純本地、無 XP、無 Game.award） ===== -->
+<style>
+/* 入口 FAB（右下固定，避開底部安全區）。社會科珊瑚色底較亮，故文字採深色（#4a1a0d）以確保亮暗兩主題皆過 AA 對比。 */
+#socialAdvBadgeFab {
+  position: fixed; right: 16px; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  z-index: 55; display: inline-flex; align-items: center; gap: 6px;
+  min-height: 48px; min-width: 48px; padding: 10px 16px;
+  background: var(--accent, var(--c-social)); color: #4a1a0d; border: none;
+  border-radius: 999px; font-family: var(--font); font-weight: 800;
+  font-size: clamp(14px, 3vw, 16px); cursor: pointer; box-shadow: var(--shadow-lg);
+}
+#socialAdvBadgeFab:active { transform: scale(0.96); }
+#socialAdvBadgeFabCount {
+  display: inline-flex; align-items: center; gap: 3px;
+  background: #fff; color: #8a2d10;
+  border-radius: 999px; padding: 1px 8px; font-size: 13px; font-weight: 800;
+}
+.ma-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 60; padding: 16px; }
+/* [hidden] 防護：class 的 display:flex(author) 特異度會蓋過 UA 的 [hidden]{display:none}，故需更高特異度規則。 */
+#socialAdvBadgeOverlay[hidden] { display: none !important; }
+.ma-card { position: relative; background: var(--card); border: 2px solid var(--card-border); border-radius: var(--r-lg); box-shadow: var(--shadow-lg); width: 100%; max-width: 560px; max-height: 88vh; overflow-y: auto; padding: 20px 18px 22px; color: var(--ink); }
+.ma-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.ma-card-head h1 { font-size: clamp(1.1rem, 4vw, 1.4rem); font-weight: 800; margin: 0; color: var(--ink); flex: 1; }
+.ma-card-back { background: var(--card); border: 2px solid var(--card-border); color: var(--accent-ink, var(--c-social-ink)); font-family: var(--font); font-weight: 800; font-size: 15px; cursor: pointer; min-height: 44px; padding: 8px 14px; border-radius: 14px; }
+.ma-card-back:active { transform: scale(0.96); }
+.ma-card-note { background: var(--accent-tint); color: var(--ink); border-radius: var(--r-md, 12px); font-size: var(--fs-small); font-weight: 600; line-height: 1.7; padding: 10px 12px; margin: 4px 0 12px; }
+.ma-card-summary { text-align: center; font-size: var(--fs-small); font-weight: 700; color: var(--ink-soft); margin: 4px 0 14px; line-height: 1.7; }
+.ma-badge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; }
+.ma-badge { position: relative; min-height: 96px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border-radius: 14px; background: var(--card); border: 2px solid var(--card-border); text-align: center; padding: 10px 6px; }
+.ma-badge .ma-badge-glyph { font-size: clamp(1.6rem, 7vw, 2rem); line-height: 1; }
+.ma-badge .ma-badge-name { font-size: clamp(0.6rem, 2.6vw, 0.74rem); font-weight: 800; color: var(--ink); line-height: 1.2; }
+.ma-badge .ma-badge-state { font-size: clamp(0.52rem, 2.2vw, 0.64rem); font-weight: 700; color: var(--ink-soft); }
+.ma-badge.locked { border-style: dashed; opacity: 0.5; filter: grayscale(1); }
+.ma-badge.unlocked { box-shadow: 0 0 0 2px #f5b301, 0 0 10px rgba(245,179,1,0.5); background: color-mix(in srgb, #f5b301 12%, var(--card)); }
+.ma-badge.unlocked .ma-badge-star { position: absolute; right: 5px; top: 4px; font-size: 14px; }
+</style>
+<!-- ===== 進階社會徽章冊：模組（自足 IIFE；讀寫共享獨立 key social_adv_progress_v1；純本地、只增不減、無 XP、無 Game.award、無 streak） ===== -->
+<script>
+(function () {
+  'use strict';
+
+  function api() { return window.__socialAdv || null; }
+
+  function unlockedCount() {
+    var a = api(); if (!a) return 0;
+    var prog = a.getProgress();
+    var n = 0;
+    for (var i = 0; i < a.BADGES.length; i++) if (prog.badges[a.BADGES[i].id]) n++;
+    return n;
+  }
+
+  function renderGrid() {
+    var a = api(); if (!a) return;
+    var prog = a.getProgress();
+    var host = document.getElementById('socialAdvBadgeGrid');
+    if (!host) return;
+    var html = '';
+    for (var i = 0; i < a.BADGES.length; i++) {
+      var def = a.BADGES[i];
+      var got = !!prog.badges[def.id];
+      var cls = 'ma-badge ' + (got ? 'unlocked' : 'locked');
+      var glyph = got ? def.icon : '🔒';
+      var state = got ? '已收集' : '尚未解鎖';
+      var star = got ? '<span class="ma-badge-star" aria-hidden="true">★</span>' : '';
+      var label = def.name + '（' + state + '）';
+      html += '<div class="' + cls + '" title="' + label + '" aria-label="' + label + '">' +
+        '<span class="ma-badge-glyph" aria-hidden="true">' + glyph + '</span>' +
+        '<span class="ma-badge-name">' + def.name + '</span>' +
+        '<span class="ma-badge-state">' + state + '</span>' + star + '</div>';
+    }
+    host.innerHTML = html;
+  }
+
+  function renderSummary() {
+    var a = api(); if (!a) return;
+    var el = document.getElementById('socialAdvBadgeSummary');
+    if (!el) return;
+    el.innerHTML = '已收集 <b>' + unlockedCount() + '</b> / ' + a.BADGES.length +
+      ' 枚徽章（收藏只增不減，慢慢玩就好）';
+  }
+
+  function updateFabCount() {
+    var a = api(); if (!a) return;
+    var badge = document.getElementById('socialAdvBadgeFabCount');
+    if (badge) badge.textContent = unlockedCount() + '/' + a.BADGES.length;
+  }
+
+  function refresh() { updateFabCount(); if (isOpen()) { renderGrid(); renderSummary(); } }
+  function isOpen() { var el = document.getElementById('socialAdvBadgeOverlay'); return el && !el.hidden; }
+  function openBook() { renderGrid(); renderSummary(); var o = document.getElementById('socialAdvBadgeOverlay'); if (o) o.hidden = false; }
+  function closeBook() { var o = document.getElementById('socialAdvBadgeOverlay'); if (o) o.hidden = true; }
+
+  function buildDom() {
+    var host = document.createElement('div');
+    host.innerHTML =
+      '<button id="socialAdvBadgeFab" type="button" aria-label="打開進階社會徽章冊" onclick="SocialAdvBadges.openBook()">' +
+        '🏅 徽章冊 <span id="socialAdvBadgeFabCount">0/7</span></button>' +
+      '<div id="socialAdvBadgeOverlay" class="ma-overlay" hidden>' +
+        '<div class="ma-card" role="dialog" aria-modal="true" aria-label="進階社會徽章冊">' +
+          '<div class="ma-card-head"><h1>🏅 進階社會徽章冊</h1>' +
+            '<button class="ma-card-back" onclick="SocialAdvBadges.closeBook()">← 返回</button></div>' +
+          '<div class="ma-card-note">這本徽章冊只存在你自己的裝置上，純粹紀念你完成過哪些進階等級。它不會計入學習基地的等級或經驗值——放輕鬆挑戰就好 🌱</div>' +
+          '<div id="socialAdvBadgeSummary" class="ma-card-summary"></div>' +
+          '<div id="socialAdvBadgeGrid" class="ma-badge-grid"></div>' +
+        '</div></div>';
+    while (host.firstChild) document.body.appendChild(host.firstChild);
+  }
+
+  window.SocialAdvBadges = { openBook: openBook, closeBook: closeBook, refresh: refresh };
+
+  function boot() { buildDom(); updateFabCount(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+</body>
+</html>

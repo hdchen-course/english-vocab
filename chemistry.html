@@ -1,0 +1,2086 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>化學實驗室 🧪 — 物質的祕密</title>
+<!-- 統一遊戲化引擎：先載共用設計 token（assets/app.css），再載 HUD/toast 樣式
+     （game_core.css），最後同步載入引擎（game_core.js）。
+     本頁為「化學」，計入 science 科目（理化／生物／地科共用；game_core.SUBJECTS 已含
+     'science'），讓學生升上國中理化、高中化學時獎勵不中斷：
+       1. 宣告 <body data-game-wired="science">，顯示共用 HUD。
+       2. 每題作答只呼叫一次 Game.recordAnswer('science', 對錯)（answered 旗標鎖定、
+          重試不再記帳）；「不」呼叫 Game.award / recordSession / awardBadge，
+          本地徽章冊為純本地（自有 key、無 XP），故無 double-count。
+       3. 其餘只用純 UI/唯讀 Game 介面：Game.showToast（只彈提示、不計分），
+          以及由 app-bar 的 [data-theme-toggle] 自動接線的主題切換
+          （game_core 於 DOMContentLoaded 自動 wireThemeToggles，本頁零 JS）。
+     所有 Game 呼叫皆包 try/catch，Game 不存在也不報錯。 -->
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<style>
+/* =====================================================================
+ * chemistry.html — 本頁樣式（全部建立在 assets/app.css 的設計 token 上，
+ * 因此自動亮/暗色主題化、與學習基地視覺一致）。
+ * 只做強調色映射（不新增全域變數）：本頁走青綠色系（green），映射到既有的
+ * 英語/正解青綠 token，貼合「科學／實驗」的清新意象。
+ * =================================================================== */
+:root {
+  --chem: var(--c-english);
+  --chem-tint: var(--tint-english);
+  --chem-ink: var(--c-english-ink);
+}
+
+body { overflow-x: hidden; }
+
+/* 頁面頂列（返回、標題） */
+.chem-topbar {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  margin-bottom: var(--s4);
+}
+.chem-topbar .chem-title {
+  flex: 1;
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  color: var(--ink);
+  min-width: 0;
+}
+
+/* 螢幕切換 */
+.chem-screen { display: none; animation: chem-fade 0.3s ease; }
+.chem-screen.active { display: block; }
+@keyframes chem-fade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chem-screen { animation: none; }
+}
+
+/* 吉祥物歡迎卡 */
+.chem-hello {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s4);
+  background: var(--chem-tint);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  margin: 0 auto var(--s4);
+  max-width: 720px;        /* 護眼：寬螢幕不讓開場語拉成超長單行 */
+}
+.chem-hello .chem-mascot { font-size: 46px; flex: none; line-height: 1; }
+.chem-hello .chem-hello-text { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+.chem-hello .chem-hello-sub { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; }
+
+/* 進度總覽小列 */
+.chem-overview {
+  display: flex; align-items: center; gap: var(--s3);
+  margin-bottom: var(--s4); flex-wrap: wrap;
+}
+.chem-overview .stat-tile { flex: 1; min-width: 96px; }
+
+/* 等級（關卡）選單 grid */
+.chem-levels {
+  display: grid;
+  gap: var(--s4);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.chem-level {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  padding: var(--s4);
+  text-align: left;
+  cursor: pointer;
+  border: 2px solid var(--card-border);
+  background: var(--card);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  font-family: var(--font);
+  color: var(--ink);
+}
+.chem-level:hover { box-shadow: var(--shadow-lg); border-color: var(--chem); }
+.chem-level:active { transform: scale(0.98); }
+.chem-level-top { display: flex; align-items: center; gap: var(--s3); }
+.chem-level-emoji {
+  font-size: 34px;
+  width: 56px; height: 56px;
+  flex: none;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--chem-tint);
+  border-radius: 16px;
+}
+.chem-level-num { font-size: var(--fs-small); font-weight: 700; color: var(--chem-ink); }
+.chem-level-name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); line-height: 1.25; }
+.chem-level-sub { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; }
+.chem-level-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-top: 2px; }
+.chem-level-status {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: var(--fs-small); font-weight: 700;
+}
+.chem-level-status.done { color: var(--c-correct-ink); }
+.chem-level-status.todo { color: var(--ink-soft); }
+.chem-level-dots { display: inline-flex; gap: 3px; flex-wrap: wrap; max-width: 120px; justify-content: flex-end; }
+.chem-level-dots i {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--card-border); display: inline-block;
+}
+.chem-level-dots i.on { background: var(--chem); }
+
+/* 進行中：一步一畫面的大卡 */
+.chem-stage {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--s5) var(--s4);
+  text-align: center;
+}
+.chem-visual {
+  font-size: clamp(64px, 22vw, 108px);
+  line-height: 1.1;
+  margin: var(--s2) 0 var(--s3);
+  user-select: none;
+}
+.chem-sentence {
+  font-size: clamp(19px, 4.5vw, 24px);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.45;
+  margin: 0 auto var(--s4);
+  max-width: 32ch;
+}
+.chem-toolrow { display: flex; justify-content: center; gap: var(--s2); flex-wrap: wrap; margin-bottom: var(--s3); }
+
+/* 進度：本關卡第幾步 */
+.chem-steps {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  margin-bottom: var(--s3); flex-wrap: wrap;
+}
+.chem-steps i { width: 22px; height: 6px; border-radius: 999px; background: var(--card-border); }
+.chem-steps i.on { background: var(--chem); }
+.chem-steps i.cur { background: var(--chem); box-shadow: 0 0 0 3px var(--chem-tint); }
+
+/* 選項按鈕（tap 作答；命中區 ≥56px） */
+.chem-options { display: grid; gap: var(--s3); margin-top: var(--s2); }
+.chem-opt {
+  display: flex; align-items: center; gap: var(--s2);
+  min-height: 56px;
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid var(--card-border);
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: clamp(16px, 3.4vw, 19px);
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.chem-opt:active { transform: scale(0.98); }
+.chem-opt:disabled { cursor: default; }
+/* 對/錯雙碼：邊框色 + 圖示（✅/❌），不只靠顏色 */
+.chem-opt.correct { border-color: var(--c-correct); background: var(--tint-english); color: var(--ink); }
+.chem-opt.wrong { border-color: var(--c-wrong); background: rgba(255,118,117,0.12); color: var(--ink); }
+.chem-opt.correct .chem-opt-mark { color: var(--c-correct-ink); }
+.chem-opt.wrong .chem-opt-mark { color: var(--c-streak-ink); }
+.chem-opt .chem-opt-mark { margin-left: auto; font-size: 22px; }
+
+/* 揭示區（看更多 / 答案解說） */
+.chem-reveal {
+  margin-top: var(--s4);
+  padding: var(--s3) var(--s4);
+  background: var(--chem-tint);
+  border-radius: var(--r-md);
+  font-size: var(--fs-body);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.55;
+  text-align: left;
+  display: none;
+}
+.chem-reveal.show { display: block; animation: chem-fade 0.3s ease; }
+@media (prefers-reduced-motion: reduce) { .chem-reveal.show { animation: none; } }
+
+/* 完成畫面 */
+.chem-done { text-align: center; padding: var(--s5) var(--s4); }
+.chem-done-emoji { font-size: clamp(64px, 22vw, 100px); }
+.chem-done-stars { font-size: 30px; letter-spacing: 3px; margin: var(--s2) 0; }
+.chem-done-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); }
+
+/* 底部行動列 */
+.chem-actions { display: flex; gap: var(--s3); margin-top: var(--s4); flex-wrap: wrap; }
+.chem-actions .btn { flex: 1; min-width: 140px; }
+
+.chem-footnote {
+  text-align: left; color: var(--ink-soft); font-size: var(--fs-small);
+  margin-top: var(--s5); font-weight: 600; line-height: 1.7;
+  max-width: 680px; margin-inline: auto;    /* 護眼：桌機寬版限行長 */
+  background: var(--chem-tint); border-radius: var(--r-md);
+  padding: var(--s3) var(--s4);
+}
+
+/* =====================================================================
+ * 徽章櫃（StampBook 式）：入口 FAB + [hidden] 浮層
+ * =================================================================== */
+#chemBadgeFab {
+  position: fixed; right: 16px; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  z-index: 55; display: inline-flex; align-items: center; gap: 6px;
+  min-height: 48px; min-width: 48px; padding: 10px 16px;
+  background: #0a7d63; color: #fff; border: none;  /* 深綠底白字 ≈5.1:1 過 WCAG AA（原 var(--chem) 淺綠白字僅 2.5:1）；兩主題同值 */
+  border-radius: 999px; font-family: var(--font); font-weight: 800;
+  font-size: clamp(14px, 3vw, 16px); cursor: pointer; box-shadow: var(--shadow-lg);
+}
+#chemBadgeFab:active { transform: scale(0.96); }
+#chemBadgeFabCount {
+  display: inline-flex; align-items: center;
+  background: #fff; color: #087a5f; /* 固定深綠：白底藥丸兩主題皆 ~5.1:1 過 AA（勿用會隨暗色翻淺綠的 --chem-ink，暗色僅 1.89:1） */
+  border-radius: 999px; padding: 1px 8px; font-size: 13px; font-weight: 800;
+}
+
+/* 浮層外殼（用 class 給了 display:flex，author 特異度會壓過 UA 的
+   [hidden]{display:none}，故必須加更高特異度 !important 防護，否則浮層恆顯） */
+.chem-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 60; padding: 16px;
+}
+#chemBadgeOverlay[hidden] { display: none !important; }
+#chemBadgeSheet[hidden] { display: none !important; }
+
+.chem-badge-sheet {
+  position: relative; background: var(--card); border: 2px solid var(--card-border);
+  border-radius: var(--r-lg); box-shadow: var(--shadow-lg);
+  width: 100%; max-width: 560px; max-height: 88vh; overflow-y: auto;
+  padding: 20px 18px 22px; color: var(--ink);
+}
+.chem-badge-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.chem-badge-head h2 { font-size: clamp(1.1rem, 4vw, 1.4rem); font-weight: 800; margin: 0; color: var(--ink); flex: 1; }
+.chem-badge-back {
+  background: var(--card); border: 2px solid var(--card-border); color: var(--chem-ink);
+  font-family: var(--font); font-weight: 800; font-size: 15px; cursor: pointer;
+  min-height: 44px; padding: 8px 14px; border-radius: 14px;
+}
+.chem-badge-back:active { transform: scale(0.96); }
+.chem-badge-note {
+  background: var(--chem-tint); color: var(--chem-ink); border-radius: var(--r-md);
+  font-size: var(--fs-small); font-weight: 600; line-height: 1.7; padding: 10px 12px; margin: 4px 0 14px;
+}
+.chem-badge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+.chem-badge {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  border-radius: 16px; background: var(--card); border: 2px solid var(--card-border);
+  padding: 14px 10px; text-align: center;
+}
+.chem-badge .chem-badge-glyph { font-size: clamp(1.8rem, 8vw, 2.4rem); line-height: 1; }
+.chem-badge .chem-badge-name { font-size: var(--fs-small); font-weight: 800; color: var(--ink); line-height: 1.2; }
+.chem-badge .chem-badge-state { font-size: clamp(0.62rem, 2.4vw, 0.72rem); font-weight: 700; color: var(--ink-soft); line-height: 1.4; }
+/* 未解鎖：虛線邊 + 去彩 + 半透明（雙碼：形狀虛線 + 去彩） */
+.chem-badge.locked { border-style: dashed; opacity: 0.55; filter: grayscale(1); }
+/* 已解鎖：實線主題色邊 + 右上 ✓ 角標（雙碼：✓ 角標 + 實線邊） */
+.chem-badge.earned { border-color: var(--chem); background: var(--chem-tint); }
+.chem-badge.earned .chem-badge-check { position: absolute; right: 6px; top: 5px; font-size: 14px; color: var(--c-correct-ink); font-weight: 900; }
+.chem-badge .chem-badge-go {
+  margin-top: 4px; background: #0a7d63; border: none; color: #fff;  /* 深綠底白字 ≈5.1:1 過 WCAG AA（原 var(--chem) 淺綠白字亮 2.54／暗 1.89 不足）；兩主題同值 */
+  min-height: 44px; padding: 6px 12px; border-radius: 12px; font-size: 13px;
+  cursor: pointer; font-weight: 800; font-family: var(--font);
+}
+.chem-badge .chem-badge-go:active { transform: scale(0.96); }
+.chem-badge-empty { text-align: center; color: var(--ink-soft); font-weight: 700; font-size: var(--fs-small); line-height: 1.7; margin: 8px 0 4px; }
+</style>
+</head>
+<body data-game-wired="science" data-game-maturity="advanced">
+<!-- ===== 共用頂部應用列（全站一致；貼在 <body> 內第一個元素） ===== -->
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">化學實驗室 🧪</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle
+          aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+
+  <!-- ============================= 選單 / 首頁 ============================= -->
+  <section id="screen-menu" class="chem-screen active">
+    <div class="chem-topbar">
+      <span class="chem-title">物質的祕密 🧪</span>
+    </div>
+
+    <a href="chemistry_concepts.html" style="display:flex;align-items:center;gap:10px;margin:0 0 var(--s4);padding:12px 16px;background:var(--card);border:2px dashed var(--card-border);border-radius:14px;color:var(--ink);font-weight:700;text-decoration:none;line-height:1.4"><span style="font-size:22px" aria-hidden="true">🧠</span><span>還沒學過嗎？先到「化學觀念養成」用圖學會，再回來練習 →</span></a>
+
+    <div class="chem-hello">
+      <span class="chem-mascot" aria-hidden="true">🧪</span>
+      <div>
+        <div class="chem-hello-text" id="hello-text">嗨！我是小實（🧪），一起用眼睛和好奇心，看看物質的祕密吧！</div>
+        <div class="chem-hello-sub" id="hello-sub">選一個等級，慢慢玩、慢慢懂。</div>
+      </div>
+    </div>
+
+    <div class="chem-overview">
+      <div class="stat-tile"><span class="stat-value" id="ov-done">0/22</span><span class="stat-label">完成等級</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-badges">0/23</span><span class="stat-label">解鎖徽章</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-stars">0</span><span class="stat-label">得到的星星</span></div>
+    </div>
+
+    <div class="chem-levels" id="level-list"><!-- 由 JS 產生 --></div>
+
+    <p class="chem-footnote">
+      🧑‍🔬 安全小提醒：這裡只用眼睛觀察、動腦想——不做危險實驗喔！
+      家裡的清潔劑、藥品絕對不能自己亂混、不能嚐、不能碰。有趣的化學現象，
+      要在大人陪同、安全的地方觀察。
+    </p>
+  </section>
+
+  <!-- ============================= 進行中 ============================= -->
+  <section id="screen-play" class="chem-screen">
+    <div class="chem-topbar">
+      <button type="button" class="btn btn-icon" id="btn-back" aria-label="回到等級選單">←</button>
+      <span class="chem-title" id="play-title">等級</span>
+    </div>
+    <div class="chem-steps" id="step-dots" aria-hidden="true"></div>
+    <div class="play-column">
+      <div id="stage"><!-- 由 JS 產生每一步 --></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== 徽章櫃：入口 FAB + [hidden] 浮層（純本地、只增不減） ===== -->
+<button id="chemBadgeFab" type="button" aria-label="打開化學徽章櫃" aria-haspopup="dialog" aria-controls="chemBadgeOverlay">
+  🏅 徽章櫃 <span id="chemBadgeFabCount">0/23</span>
+</button>
+<div id="chemBadgeOverlay" class="chem-overlay" hidden>
+  <div id="chemBadgeSheet" class="chem-badge-sheet" role="dialog" aria-modal="true" aria-label="化學徽章櫃">
+    <div class="chem-badge-head">
+      <h2>🏅 我的化學徽章櫃</h2>
+      <button type="button" class="chem-badge-back" id="chem-badge-close">← 返回</button>
+    </div>
+    <div class="chem-badge-note" id="chem-badge-note">每完成一個等級，就會解鎖一枚徽章。徽章只會亮起、不會消失——慢慢收集就好！</div>
+    <div class="chem-badge-grid" id="chem-badge-grid"><!-- 由 JS 產生 --></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---------------------------------------------------------------------
+  // 純 UI/唯讀 Game 介面（防禦式）：只用 showToast 做慶祝，絕不呼叫任何寫入 API。
+  //   零重複計分論證：game_core 的 SUBJECTS 不含 'chemistry'，且本頁完全不呼叫
+  //   recordAnswer/award/recordSession/awardBadge/pingActive → player_profile_v1
+  //   永遠不會被本頁寫入 → 不污染既有科目、不可能重複計分。
+  // ---------------------------------------------------------------------
+  function toast(msg, kind) {
+    try { if (window.Game && Game.showToast) Game.showToast(msg, kind); } catch (e) { /* 靜默 */ }
+  }
+
+  // ---- Web Speech TTS（繁中、可選、無網路依賴、失敗即靜默） ----
+  function speak(text) { /* 科學頁不朗讀：已移除 TTS（非英文發音頁，機器中文語音會難聽又重疊播放） */ }
+
+  // =====================================================================
+  // 獨立 localStorage keys（與 player_profile_v1 / social_studies_progress_v1 /
+  // nta_stamps_v1 完全不同名，互不干擾）。載入皆 try/catch，解析失敗回 {}。
+  // =====================================================================
+  var PROG_KEY = 'chemistry_progress_v1';   // { [levelId]: { done:true, best:<stars> } }
+  var BADGE_KEY = 'chemistry_badges_v1';    // { [badgeId]: { earnedAt:<ISO> } }
+  function loadJSON(key) {
+    try { return JSON.parse(localStorage.getItem(key)) || {}; } catch (e) { return {}; }
+  }
+  function saveJSON(key, obj) {
+    try { localStorage.setItem(key, JSON.stringify(obj)); } catch (e) { /* 配額滿也不崩潰 */ }
+  }
+  var progress = loadJSON(PROG_KEY);
+  var badges = loadJSON(BADGE_KEY);
+
+  // =====================================================================
+  // 徽章清單（levelId → badgeId）＋ 全通關總成就。純本地、只增不減。
+  // =====================================================================
+  var BADGE_DEFS = [
+    { id: 'b_states',    level: 'L1', emoji: '🧊', name: '三態觀察家' },
+    { id: 'b_phase',     level: 'L2', emoji: '💧', name: '相變魔法師' },
+    { id: 'b_separate',  level: 'L3', emoji: '⚗️', name: '分離達人' },
+    { id: 'b_change',    level: 'L4', emoji: '🔍', name: '變化偵探' },
+    { id: 'b_element',   level: 'L5', emoji: '🔤', name: '元素收藏家' },
+    { id: 'b_molecule',  level: 'L6', emoji: '🧱', name: '分子建築師' },
+    { id: 'b_acidbase',  level: 'L7', emoji: '⚖️', name: '酸鹼與計量探險家' },
+    { id: 'b_blocks',    level: 'L8', emoji: '🧩', name: '接點觀察家' },
+    { id: 'b_snap',      level: 'L9', emoji: '🔗', name: '卡榫工程師' },
+    { id: 'b_bondtype',  level: 'L10', emoji: '🧲', name: '鍵結辨識家' },
+    { id: 'b_formula',   level: 'L11', emoji: '✍️', name: '化學式書寫家' },
+    { id: 'b_periodic',  level: 'L12', emoji: '🗺️', name: '週期表領航員' },
+    { id: 'b_gas',       level: 'L13', emoji: '🎈', name: '氣體觀察家' },
+    { id: 'b_sep2',      level: 'L14', emoji: '🧰', name: '分離工具師' },
+    { id: 'b_ph',        level: 'L15', emoji: '🌈', name: '酸鹼 pH 探員' },
+    { id: 'b_redox',     level: 'L16', emoji: '🍎', name: '氧化還原偵探' },
+    { id: 'b_mole',      level: 'L17', emoji: '🔢', name: '莫耳計量師' },
+    { id: 'b_balance',   level: 'L18', emoji: '🟰', name: '配平大師' },
+    { id: 'b_kitchen', level: 'L19', emoji: '🍳', name: '廚房化學家' },
+    { id: 'b_clean', level: 'L20', emoji: '🧴', name: '清潔小達人' },
+    { id: 'b_food', level: 'L21', emoji: '🥗', name: '營養標示偵探' },
+    { id: 'b_safety', level: 'L22', emoji: '⚠️', name: '居家安全守護員' },
+    { id: 'b_doctor',    level: null, emoji: '🎓', name: '化學小博士' }  // 全部等級完成
+  ];
+  var BADGE_BY_LEVEL = {};
+  BADGE_DEFS.forEach(function (b) { if (b.level) BADGE_BY_LEVEL[b.level] = b; });
+
+  // =====================================================================
+  // 課程內容（全繁體中文；化學事實以標準教科書為準、年齡適當、可獨立查核）。
+  // 每個等級 = 一個「關卡」：第一步為 fact（worked example 先行），其後為
+  // 8~12 題 choose 單選題（每題只問一件事）。
+  // step 類型：
+  //   fact   一句話 + 大圖 + 「看更多」揭示 + 🔊 TTS
+  //   choose 單選題（tap 作答；選項洗牌；每題最多計一次分）
+  // =====================================================================
+  var LEVELS = [
+    {
+      id: 'L1', emoji: '🧊', title: '物質的樣子', subtitle: '看看固體、液體、氣體',
+      steps: [
+        { t: 'fact', v: '🧊', s: '水有三種樣子：冰是固態、水是液態、水蒸氣是氣態。',
+          more: '固態、液態、氣態合稱物質的「三態」。三態之間變來變去，還是同一種物質，不會變成新東西喔！' },
+        { t: 'choose', v: '🧊', s: '冰、水、水蒸氣，分別是水的哪三種狀態？',
+          opts: ['固態、液態、氣態', '氣態、固態、液態', '液態、氣態、固態'], ans: 0,
+          why: '冰是固態、水是液態、水蒸氣是氣態，這就是物質的三態。' },
+        { t: 'choose', v: '🧱', s: '固體（固態）的特徵是？',
+          opts: ['有固定的形狀，也有固定的體積', '沒有固定形狀，會到處流動', '會充滿整個容器'], ans: 0,
+          why: '固體形狀和體積都固定，例如一顆石頭放到哪裡形狀都一樣。' },
+        { t: 'choose', v: '🥤', s: '液體（液態）的特徵是？',
+          opts: ['沒有固定形狀（隨容器改變），但有固定體積', '形狀和體積都固定', '沒有形狀也沒有體積'], ans: 0,
+          why: '水倒進不同杯子形狀會變，但水的量（體積）不變。' },
+        { t: 'choose', v: '☁️', s: '氣體（氣態）的特徵是？',
+          opts: ['沒有固定形狀也沒有固定體積，會充滿整個容器', '有固定形狀', '只會沉在底部不會散開'], ans: 0,
+          why: '氣體會擴散並充滿整個空間，例如香味會飄滿整個房間。' },
+        { t: 'choose', v: '🔬', s: '三態之中，粒子排列最整齊、最緊密的是哪一態？',
+          opts: ['固態', '液態', '氣態'], ans: 0,
+          why: '固態的粒子排得最整齊、最緊密，所以形狀固定。' },
+        { t: 'choose', v: '💨', s: '三態之中，粒子跑得最快、彼此間隔最大的是哪一態？',
+          opts: ['氣態', '固態', '液態'], ans: 0,
+          why: '氣態粒子間隔大、運動快，所以會四處擴散。' },
+        { t: 'choose', v: '🎈', s: '為什麼氣體很容易被壓縮，固體卻很難？',
+          opts: ['因為氣體粒子之間的間隔很大', '因為氣體比較重', '因為固體會流動'], ans: 0,
+          why: '氣體粒子間有很大空隙，一壓就靠近；固體粒子已經很密，難再壓。' },
+        { t: 'choose', v: '🥛', s: '下列哪一個在室溫下是液體？',
+          opts: ['牛奶', '石頭', '氧氣'], ans: 0,
+          why: '牛奶是液體；石頭是固體，氧氣是氣體。' },
+        { t: 'choose', v: '⚖️', s: '同樣大小的一顆鐵球和一顆保麗龍球，鐵球比較重，是因為鐵的什麼比較大？',
+          opts: ['密度', '溫度', '形狀'], ans: 0,
+          why: '密度是「同樣體積裡有多少質量」，鐵的密度比保麗龍大，所以同樣大卻更重。' }
+      ]
+    },
+    {
+      id: 'L2', emoji: '💧', title: '變來變去', subtitle: '狀態之間的變化',
+      steps: [
+        { t: 'fact', v: '🔁', s: '水結冰、冰融化、水變水蒸氣，這些「狀態變化」都不會產生新物質。',
+          more: '狀態變化只是改變樣子，還是同一種物質，屬於物理變化。要吸熱的：熔化、蒸發、昇華；會放熱的：凝固、凝結。' },
+        { t: 'choose', v: '💧', s: '冰放在桌上慢慢變成水，這個變化叫做？',
+          opts: ['熔化（融化）', '凝固', '蒸發'], ans: 0,
+          why: '固態變液態叫熔化（融化），冰吸收熱量就變成水。' },
+        { t: 'choose', v: '🧊', s: '把水放進冷凍庫變成冰，這叫做？',
+          opts: ['凝固', '熔化', '蒸發'], ans: 0,
+          why: '液態變固態叫凝固，水放出熱量後結成冰。' },
+        { t: 'choose', v: '👕', s: '曬衣服時濕衣服變乾了，水到哪裡去了？',
+          opts: ['蒸發變成水蒸氣跑到空氣中', '消失不見了', '變成了新的物質'], ans: 0,
+          why: '水由液態蒸發成氣態（水蒸氣）進入空氣，衣服就乾了。' },
+        { t: 'choose', v: '🪟', s: '冬天窗戶內側出現一層小水珠，是因為水蒸氣遇到冷玻璃後？',
+          opts: ['凝結成小水滴', '結成冰', '蒸發掉了'], ans: 0,
+          why: '氣態的水蒸氣遇冷變回液態小水滴，叫凝結。' },
+        { t: 'choose', v: '🔄', s: '狀態變化（例如冰↔水）時，它還是同一種物質嗎？',
+          opts: ['是，還是同一種物質，只是狀態改變', '不是，變成了別的東西', '有時會變成新物質'], ans: 0,
+          why: '狀態變化只改變狀態、沒有產生新物質，屬於物理變化。' },
+        { t: 'choose', v: '🌡️', s: '在標準大氣壓下，純水沸騰（沸點）大約是幾度？',
+          opts: ['100°C', '50°C', '0°C'], ans: 0,
+          why: '標準大氣壓下純水的沸點約為 100°C。' },
+        { t: 'choose', v: '❄️', s: '在標準大氣壓下，純水結冰（凝固點）大約是幾度？',
+          opts: ['0°C', '100°C', '20°C'], ans: 0,
+          why: '純水在約 0°C 結冰，這是它的凝固點。' },
+        { t: 'choose', v: '🔥', s: '要讓冰變成水，需要？',
+          opts: ['吸收熱量（變暖）', '放出熱量（變冷）', '什麼都不用'], ans: 0,
+          why: '熔化需要吸熱，所以冰要變暖才會融化成水。' },
+        { t: 'choose', v: '🌫️', s: '乾冰（固態二氧化碳）不會先變成液體，而是直接變成氣體，這種變化叫？',
+          opts: ['昇華', '凝固', '凝結'], ans: 0,
+          why: '固態直接變氣態叫昇華，乾冰和樟腦都會昇華。' },
+        { t: 'choose', v: '☁️', s: '我們常說「看到白白的水蒸氣」，這句話其實不太對，為什麼？',
+          opts: ['水蒸氣是看不見的氣體；看到的白煙其實是凝結的小水滴', '因為水蒸氣是黑色的', '因為水蒸氣其實是固體'], ans: 0,
+          why: '真正的水蒸氣看不見；看得到的白霧是水蒸氣遇冷凝結成的小水滴。' }
+      ]
+    },
+    {
+      id: 'L3', emoji: '⚗️', title: '純的與混的', subtitle: '純物質、混合物與分離',
+      steps: [
+        { t: 'fact', v: '⚗️', s: '純物質只有一種東西；混合物是兩種以上物質混在一起。',
+          more: '混合物裡的各成分還保有自己的性質，所以可以用過濾、蒸發、蒸餾、磁鐵等方法把它們分開。' },
+        { t: 'choose', v: '💎', s: '只由「一種物質」組成的東西叫做？',
+          opts: ['純物質', '混合物', '溶劑'], ans: 0,
+          why: '純物質只含一種物質，例如純水、黃金。' },
+        { t: 'choose', v: '🥗', s: '由「兩種以上物質混在一起」組成的叫做？',
+          opts: ['混合物', '純物質', '元素'], ans: 0,
+          why: '混合物由多種物質混成，各自保有原本的性質。' },
+        { t: 'choose', v: '🧂', s: '下列哪一個是混合物？',
+          opts: ['鹽水', '純水', '氧氣'], ans: 0,
+          why: '鹽水由鹽和水混成，是混合物；純水和氧氣是純物質。' },
+        { t: 'choose', v: '💧', s: '下列哪一個是純物質？',
+          opts: ['純水', '汽水', '海水'], ans: 0,
+          why: '純水只含水一種物質；汽水和海水都是混合物。' },
+        { t: 'choose', v: '☕', s: '沙子和水混在一起，想把沙子分出來，最適合用哪種方法？',
+          opts: ['過濾', '磁鐵吸', '蒸餾'], ans: 0,
+          why: '沙不溶於水，用過濾就能把沙留在濾紙上、水流過去。' },
+        { t: 'choose', v: '🧂', s: '想從鹽水中取回食鹽，可以用哪種方法？',
+          opts: ['蒸發（把水蒸發掉，鹽留下）', '過濾', '用磁鐵吸'], ans: 0,
+          why: '鹽溶在水裡無法過濾，但把水蒸發後鹽就會留下來。' },
+        { t: 'choose', v: '🧲', s: '鐵粉和沙子混在一起，最快分開的方法是？',
+          opts: ['用磁鐵吸出鐵粉', '加水攪拌', '放到冰箱'], ans: 0,
+          why: '鐵會被磁鐵吸引，沙不會，所以用磁鐵最快。' },
+        { t: 'choose', v: '📄', s: '用濾紙過濾時，會留在濾紙上的是？',
+          opts: ['不能溶解的固體', '溶解在水裡的鹽', '乾淨的水'], ans: 0,
+          why: '過濾會把不溶的固體（如沙）攔在濾紙上，液體則流過去。' },
+        { t: 'choose', v: '🌊', s: '想把海水變成可以喝的純水，可以用哪種方法？',
+          opts: ['蒸餾（把水蒸發再冷凝收集起來）', '直接過濾', '加更多鹽'], ans: 0,
+          why: '蒸餾把水蒸成水蒸氣再冷凝成純水，鹽留在原處。' },
+        { t: 'choose', v: '🍬', s: '混合物裡的各種成分，還保有自己原本的性質嗎？',
+          opts: ['是，各成分仍保有原本的性質', '不會，會變成全新的物質', '會全部消失'], ans: 0,
+          why: '混合物只是混在一起，糖水裡的糖還是甜的、水還是水。' }
+      ]
+    },
+    {
+      id: 'L4', emoji: '🔍', title: '一樣還是變新', subtitle: '物理變化與化學變化',
+      steps: [
+        { t: 'fact', v: '🔍', s: '有沒有產生「新物質」，是分辨物理變化和化學變化的關鍵。',
+          more: '物理變化不產生新物質（撕紙、融冰、溶糖）；化學變化會產生新物質（燃燒、生鏽、腐敗）。冒泡、變色、產生沉澱、發光發熱，常是化學變化的跡象。' },
+        { t: 'choose', v: '📄', s: '沒有產生新物質、只是形狀或狀態改變的變化，叫做？',
+          opts: ['物理變化', '化學變化', '質量守恆'], ans: 0,
+          why: '物理變化不生成新物質，例如把紙撕開、冰融化。' },
+        { t: 'choose', v: '✨', s: '會產生「新物質」的變化，叫做？',
+          opts: ['化學變化', '物理變化', '狀態變化'], ans: 0,
+          why: '化學變化生成新物質，例如鐵生鏽、木材燃燒。' },
+        { t: 'choose', v: '📃', s: '把一張紙撕成很多小片，是哪種變化？',
+          opts: ['物理變化', '化學變化', '都不是'], ans: 0,
+          why: '撕碎後還是紙，沒有新物質，是物理變化。' },
+        { t: 'choose', v: '🔩', s: '鐵釘放久了表面生鏽，是哪種變化？',
+          opts: ['化學變化', '物理變化', '狀態變化'], ans: 0,
+          why: '鐵鏽是和原本的鐵不同的新物質，所以是化學變化。' },
+        { t: 'choose', v: '🧊', s: '冰融化成水，是哪種變化？',
+          opts: ['物理變化', '化學變化', '都不是'], ans: 0,
+          why: '融化只是狀態改變，還是水，屬於物理變化。' },
+        { t: 'choose', v: '🔥', s: '木材燃燒後變成灰燼和煙，是哪種變化？',
+          opts: ['化學變化', '物理變化', '狀態變化'], ans: 0,
+          why: '燃燒產生了灰、煙等新物質，是化學變化。（只在大人陪同、安全的地方觀察就好，不要自己玩火。）' },
+        { t: 'choose', v: '🍬', s: '把糖溶解在水裡，是哪種變化？',
+          opts: ['物理變化', '化學變化', '都不是'], ans: 0,
+          why: '糖只是溶進水裡，蒸發後還能取回原來的糖，是物理變化。' },
+        { t: 'choose', v: '🫧', s: '下列哪一個現象，通常代表發生了「化學變化」？',
+          opts: ['兩種東西混合後冒出新的氣泡', '只是把冰塊敲碎', '把水從一個杯子倒進另一個杯子'], ans: 0,
+          why: '產生新氣體（冒泡）是化學變化的常見跡象；敲碎、倒水只是物理變化。' },
+        { t: 'choose', v: '🍎', s: '水果放久了腐爛、發出臭味，是哪種變化？',
+          opts: ['化學變化', '物理變化', '狀態變化'], ans: 0,
+          why: '腐敗產生了新的物質和氣味，是化學變化。' },
+        { t: 'choose', v: '🕵️', s: '要判斷一個變化是不是「化學變化」，最關鍵的是看什麼？',
+          opts: ['有沒有產生新的物質', '形狀有沒有變大', '顏色深不深'], ans: 0,
+          why: '化學變化的核心就是「有沒有產生新的物質」。' }
+      ]
+    },
+    {
+      id: 'L5', emoji: '🔤', title: '原子與元素', subtitle: '組成物質的小積木',
+      steps: [
+        { t: 'fact', v: '⚛️', s: '原子是組成物質的基本小粒子；元素是由同一種原子組成的純物質。',
+          more: '目前已知的元素有一百多種。元素有自己的符號，寫法是「第一個字母大寫、第二個字母小寫」，例如 Na（鈉）、Fe（鐵）。' },
+        { t: 'choose', v: '⚛️', s: '組成物質的基本小粒子，叫做什麼？',
+          opts: ['原子', '影子', '泡泡'], ans: 0,
+          why: '原子非常非常小，是組成所有物質的基本粒子。' },
+        { t: 'choose', v: '🔤', s: '由「同一種原子」組成的純物質，叫做？',
+          opts: ['元素', '混合物', '溶液'], ans: 0,
+          why: '元素就是只由一種原子組成的純物質。' },
+        { t: 'choose', v: '💯', s: '目前人類已知的元素，大約有多少種？',
+          opts: ['一百多種', '只有 3 種', '一萬種'], ans: 0,
+          why: '目前已知的元素有一百多種。' },
+        { t: 'choose', v: '🔠', s: '元素符號的寫法，正確的是哪一種？',
+          opts: ['第一個字母大寫，第二個字母小寫', '兩個字母都大寫', '兩個字母都小寫'], ans: 0,
+          why: '例如 Na（鈉）、Fe（鐵）、Ni（鎳），第一個字母大寫、第二個小寫。' },
+        { t: 'choose', v: '🅾️', s: '「O」是哪一種元素的符號？',
+          opts: ['氧', '氫', '碳'], ans: 0,
+          why: 'O 代表氧，是我們呼吸需要的元素。' },
+        { t: 'choose', v: '🎈', s: '「H」是哪一種元素的符號？',
+          opts: ['氫', '金', '鐵'], ans: 0,
+          why: 'H 代表氫，是最輕的元素。' },
+        { t: 'choose', v: '🥇', s: '金的元素符號是哪一個？',
+          opts: ['Au', 'Go', 'Gd'], ans: 0,
+          why: '金的元素符號是 Au。' },
+        { t: 'choose', v: '🔩', s: '「Fe」代表哪一種金屬元素？',
+          opts: ['鐵', '銅', '銀'], ans: 0,
+          why: 'Fe 代表鐵。' },
+        { t: 'choose', v: '✏️', s: '「C」是哪一種元素的符號？',
+          opts: ['碳', '鈣', '氯'], ans: 0,
+          why: 'C 代表碳，鉛筆芯、木炭裡都有碳。' }
+      ]
+    },
+    {
+      id: 'L6', emoji: '🧱', title: '分子與化合物', subtitle: '把原子組合起來',
+      steps: [
+        { t: 'fact', v: '🧱', s: '分子由兩個以上原子結合而成；化合物是由不同元素的原子結合成的純物質。',
+          more: '像水（H₂O）、二氧化碳（CO₂）、食鹽（NaCl）都是化合物。H₂O 裡的小小的 2，表示一個水分子有 2 個氫原子和 1 個氧原子。' },
+        { t: 'choose', v: '🧱', s: '由兩個以上原子結合在一起，形成的是？',
+          opts: ['分子', '一顆單獨的原子', '混合物'], ans: 0,
+          why: '兩個以上的原子結合，就形成分子。' },
+        { t: 'choose', v: '🔗', s: '由「不同元素」的原子結合成的純物質，叫做？',
+          opts: ['化合物', '混合物', '元素'], ans: 0,
+          why: '化合物是由不同元素結合成的純物質，例如水、二氧化碳。' },
+        { t: 'choose', v: '💧', s: '一個水分子 H₂O 裡面，有幾個氫原子？',
+          opts: ['2 個', '1 個', '3 個'], ans: 0,
+          why: 'H₂O 裡的小小的 2，表示有 2 個氫原子。' },
+        { t: 'choose', v: '💦', s: '一個水分子 H₂O 裡面，有幾個氧原子？',
+          opts: ['1 個', '2 個', '0 個'], ans: 0,
+          why: 'H₂O 有 1 個氧原子和 2 個氫原子。' },
+        { t: 'choose', v: '🚰', s: '水的化學式是哪一個？',
+          opts: ['H₂O', 'CO₂', 'O₂'], ans: 0,
+          why: '水的化學式是 H₂O。' },
+        { t: 'choose', v: '🌬️', s: '「CO₂」是我們吐氣時排出的氣體，它的名字是？',
+          opts: ['二氧化碳', '氧氣', '水'], ans: 0,
+          why: 'CO₂ 是二氧化碳，由碳和氧組成。' },
+        { t: 'choose', v: '🧂', s: '食鹽的主要成分 NaCl，是由哪兩種元素組成的？',
+          opts: ['鈉和氯', '氫和氧', '碳和氧'], ans: 0,
+          why: 'NaCl 由鈉（Na）和氯（Cl）組成，是食鹽的主要成分。' },
+        { t: 'choose', v: '🥇', s: '下面哪一個是「化合物」？',
+          opts: ['水（H₂O）', '氧氣（O₂）', '黃金（Au）'], ans: 0,
+          why: '水由氫和氧「兩種」元素組成，是化合物；氧氣和黃金都只含一種元素。' },
+        { t: 'choose', v: '🧩', s: '化合物和混合物，最大的不同是什麼？',
+          opts: ['化合物是純物質，成分緊緊結合在一起；混合物只是混在一起', '化合物就是隨便混一混', '兩者完全一樣'], ans: 0,
+          why: '化合物是純物質，元素緊密結合；混合物只是混在一起，各成分還保有原性質。' }
+      ]
+    },
+    {
+      id: 'L7', emoji: '⚖️', title: '守恆、酸鹼與計量', subtitle: '進階挑戰',
+      steps: [
+        { t: 'fact', v: '⚖️', s: '化學反應前後，物質的總質量不會改變，這叫「質量守恆」。',
+          more: '因為原子沒有消失也沒有新增，只是重新組合。酸鹼可以用石蕊試紙判讀：藍色石蕊遇酸變紅、紅色石蕊遇鹼變藍。（未知的液體不能嚐、不能摸、不能聞，要由大人示範。）' },
+        { t: 'choose', v: '⚖️', s: '化學反應前後，物質的「總質量」會怎樣？',
+          opts: ['反應前後總質量不變', '會變多', '會變少'], ans: 0,
+          why: '這叫質量守恆：原子只是重新組合，不會消失或新增。' },
+        { t: 'choose', v: '🧩', s: '為什麼化學反應前後，總質量不變？',
+          opts: ['因為原子沒有消失或新增，只是重新組合', '因為原子會憑空消失', '因為會生出新的原子'], ans: 0,
+          why: '反應只是把原子重新排列組合，原子的數目沒有改變。' },
+        { t: 'choose', v: '🟰', s: '把化學反應式「配平」，是為了讓？',
+          opts: ['反應式兩邊每一種原子的數目相等', '左邊的字比右邊多', '看起來比較漂亮'], ans: 0,
+          why: '配平就是讓左右兩邊每一種原子的數目一樣多，例如 2H₂ + O₂ → 2H₂O。' },
+        { t: 'choose', v: '🟥', s: '藍色石蕊試紙遇到「酸」，會變成什麼顏色？',
+          opts: ['紅色', '綠色', '黑色'], ans: 0,
+          why: '藍色石蕊遇酸變紅。記得：實驗室或不知道的液體都不能嚐、不能摸、不能聞，要由大人示範。' },
+        { t: 'choose', v: '🟦', s: '紅色石蕊試紙遇到「鹼」，會變成什麼顏色？',
+          opts: ['藍色', '黃色', '透明'], ans: 0,
+          why: '紅色石蕊遇鹼變藍。未知的液體都不可以自己亂試喔。' },
+        { t: 'choose', v: '📉', s: 'pH 值小於 7（pH<7），代表這個溶液是？',
+          opts: ['酸性', '鹼性', '中性'], ans: 0,
+          why: 'pH<7 是酸性、pH=7 中性、pH>7 鹼性。' },
+        { t: 'choose', v: '💧', s: '純水的 pH 值大約是多少？（它是中性的）',
+          opts: ['7', '1', '14'], ans: 0,
+          why: '純水是中性的，pH 大約等於 7。' },
+        { t: 'choose', v: '🧂', s: '在鹽水裡，被溶解的「溶質」是什麼？',
+          opts: ['鹽', '水', '空氣'], ans: 0,
+          why: '鹽水中，鹽是溶質、水是溶劑。' },
+        { t: 'choose', v: '🔢', s: '「莫耳」是用來計數粒子的單位。1 莫耳大約是多少個粒子？',
+          opts: ['大約 6.02×10²³ 個', '剛好 100 個', '只有 1 個'], ans: 0,
+          why: '1 莫耳約有 6.02×10²³ 個粒子，這個數字叫亞佛加厥數。' }
+      ]
+    },
+    {
+      id: 'L8', emoji: '🧩', title: '元素積木與接點', subtitle: '★★ 每種元素身上固定的接點數',
+      steps: [
+        { t: 'fact', v: '🧩', s: '每種元素就像一塊積木，身上有固定數目的「接點」：氫 H 有 1 個、氧 O 有 2 個、氮 N 有 3 個、碳 C 有 4 個。',
+          more: '這個「接點數」在化學裡叫做原子價（化合價），它決定一種元素能牽住多少別的原子。提醒：真正的原子並沒有長出實體凸點，接點只是幫我們想像的好用比喻喔！' },
+        { t: 'choose', v: '🎈', s: '在積木化學裡，氫（H）身上有幾個接點？',
+          opts: ['1 個', '2 個', '4 個'], ans: 0,
+          why: '氫的接點數是 1，只能牽住 1 隻手，是最小的積木。' },
+        { t: 'choose', v: '💧', s: '氧（O）身上有幾個接點？',
+          opts: ['2 個', '1 個', '3 個'], ans: 0,
+          why: '氧的接點數是 2，可以同時牽兩塊小積木。' },
+        { t: 'choose', v: '✏️', s: '碳（C）身上有幾個接點？',
+          opts: ['4 個', '2 個', '1 個'], ans: 0,
+          why: '碳的接點數是 4，是很會牽手的積木，能接很多原子。' },
+        { t: 'choose', v: '🌱', s: '氮（N）身上有幾個接點？',
+          opts: ['3 個', '1 個', '2 個'], ans: 0,
+          why: '氮的接點數是 3。' },
+        { t: 'choose', v: '🔤', s: '化學裡把這個「接點數」叫做什麼？',
+          opts: ['原子價（化合價）', '密度', '沸點'], ans: 0,
+          why: '接點數的正式名稱就是原子價，也叫化合價。' },
+        { t: 'choose', v: '🧂', s: '氯（Cl）和氫一樣只有 1 個接點。下列哪個元素也是 1 個接點？',
+          opts: ['鈉（Na）', '氧（O）', '碳（C）'], ans: 0,
+          why: '鈉的接點數是 1，和氫、氯一樣；氧是 2、碳是 4。' },
+        { t: 'choose', v: '🔩', s: '「接點要兩兩接滿、不能剩下空接點」才會穩定。這個規則最像什麼？',
+          opts: ['像積木的凸點都要卡進一個凹點，喀一聲卡緊', '像把積木隨便疊高高', '像挑顏色一樣的積木'], ans: 0,
+          why: '接點兩兩接滿、卡緊，組合才會穩；有空接點就不穩。' },
+        { t: 'choose', v: '💧', s: '一塊有 2 個接點的積木（像氧），最多能牽幾塊「只有 1 個接點」的小積木？',
+          opts: ['2 塊', '1 塊', '4 塊'], ans: 0,
+          why: '2 個接點各牽 1 塊，剛好 2 塊。' },
+        { t: 'choose', v: '✏️', s: '一塊有 4 個接點的積木（像碳），要牽幾塊「1 個接點」的氫，才會剛好接滿？',
+          opts: ['4 塊', '2 塊', '1 塊'], ans: 0,
+          why: '碳有 4 個接點，接 4 個氫剛好接滿（這就是甲烷 CH₄）。' },
+        { t: 'choose', v: '🧱', s: '鎂（Mg）有 2 個接點。它最像下面哪一塊積木？',
+          opts: ['有 2 個接點的氧', '只有 1 個接點的氫', '有 4 個接點的碳'], ans: 0,
+          why: '鎂和氧都是 2 個接點，牽手的本領一樣多。' },
+        { t: 'choose', v: '🗂️', s: '下面哪一組接點數的配對是正確的？',
+          opts: ['H=1、O=2、N=3、C=4', 'H=4、O=3、N=2、C=1', '全部都是 1'], ans: 0,
+          why: '氫 1、氧 2、氮 3、碳 4，這是要記住的基本接點數。' }
+      ]
+    },
+    {
+      id: 'L9', emoji: '🔗', title: '接點接滿才穩定', subtitle: '★★ 為什麼 H₂O 成立、H₃O 不行',
+      steps: [
+        { t: 'fact', v: '🔗', s: '氧有 2 個接點，牽 2 個各 1 接點的氫，剛好接滿，這就是水 H₂O，穩穩卡住；硬接 3 個氫（H₃O）不行，氧只有 2 個接點，第 3 個氫沒地方接。',
+          more: '接點剛好接滿時最省力、最穩定；有空接點或硬塞多的原子就要額外出力、容易散開，所以那種組合通常不會存在。' },
+        { t: 'choose', v: '💧', s: '氧有 2 個接點，要接幾個氫（每個氫 1 接點）才剛好接滿、最穩？',
+          opts: ['2 個', '3 個', '1 個'], ans: 0,
+          why: '2 個氫剛好把氧的 2 個接點接滿，這就是水 H₂O。' },
+        { t: 'choose', v: '🚫', s: 'H₃O（3 個氫接 1 個氧）為什麼不是穩定的（中性）分子？',
+          opts: ['氧只有 2 個接點，第 3 個氫沒地方接', '因為氫太重', '因為氧會爆炸'], ans: 0,
+          why: '氧只有 2 個接點，接 2 個氫就滿了，第 3 個氫沒地方接，所以硬塞不穩。' },
+        { t: 'choose', v: '🔥', s: '碳有 4 個接點，要接幾個氫才剛好接滿？（這就是甲烷 CH₄，天然氣的主要成分）',
+          opts: ['4 個', '2 個', '3 個'], ans: 0,
+          why: '碳 4 個接點各接 1 個氫，剛好接滿，就是 CH₄。' },
+        { t: 'choose', v: '🌱', s: '氮有 3 個接點，接幾個氫剛好接滿？（這就是氨 NH₃）',
+          opts: ['3 個', '2 個', '4 個'], ans: 0,
+          why: '氮 3 個接點接 3 個氫剛好接滿，就是 NH₃。' },
+        { t: 'choose', v: '🌬️', s: '碳有 4 個接點、氧有 2 個接點。1 個碳要接幾個氧，才能把 4 個接點都用光？（這就是二氧化碳 CO₂）',
+          opts: ['2 個氧', '1 個氧', '4 個氧'], ans: 0,
+          why: '每個氧吃掉碳 2 個接點，2 個氧剛好用光碳的 4 個接點，就是 CO₂。' },
+        { t: 'choose', v: '✅', s: '一個組合會穩定（喀一聲卡好），是因為？',
+          opts: ['每個接點都兩兩接滿，沒有多也沒有少', '積木疊得很高', '顏色一樣'], ans: 0,
+          why: '接點剛好接滿、不多不少，組合才會穩定又省力。' },
+        { t: 'choose', v: '⚠️', s: '如果一個組合「還剩下沒接到的接點」或「硬塞多出來的原子」，結果會？',
+          opts: ['不穩定，通常不會這樣存在', '一樣很穩', '變成金子'], ans: 0,
+          why: '有空接點或硬塞，要額外出力又容易散開，所以那種組合通常不存在。' },
+        { t: 'choose', v: '🔎', s: '下列哪一個接點剛好接滿、是真實存在的穩定分子？',
+          opts: ['H₂O（水）', 'H₃O（中性）', 'H₄O'], ans: 0,
+          why: '只有 H₂O 把氧的 2 個接點剛好接滿；H₃O、H₄O 都塞太多，不成立。' },
+        { t: 'choose', v: '🤝', s: '水分子 H₂O 裡，氫和氧的接點是怎麼配對的？',
+          opts: ['氧的 2 個接點各接 1 個氫', '氧接 3 個氫', '1 個氫接 2 個氧'], ans: 0,
+          why: '氧的 2 個接點各牽 1 個氫，2 個氫剛好接滿。' },
+        { t: 'choose', v: '⚖️', s: '「氫（1 接點）配氧（2 接點）」最省力、最穩的個數比例是？',
+          opts: ['2 個氫配 1 個氧', '1 個氫配 1 個氧', '3 個氫配 1 個氧'], ans: 0,
+          why: '2 個氫配 1 個氧（2:1）剛好接滿，就是水的比例。' },
+        { t: 'choose', v: '💡', s: '為什麼說正確組合「省力又穩」、錯誤組合「要額外施力又不穩」？',
+          opts: ['接點剛好接滿時最穩最省力；硬塞不合的原子要額外出力又容易散開', '因為正確的比較重', '沒有原因'], ans: 0,
+          why: '接點接滿的組合最穩定省力；硬塞不合的積木要花力氣又容易鬆開。' }
+      ]
+    },
+    {
+      id: 'L10', emoji: '🧲', title: '兩種卡合方式', subtitle: '★★ 離子鍵和共價鍵，不同的卡合',
+      steps: [
+        { t: 'fact', v: '🧲', s: '卡合有兩種：共價鍵是兩塊積木「共用」電子（一起牽手），像 H₂O、CO₂；離子鍵是一塊把電子「送」出去，變成 + 和 − 的離子後正負相吸（像磁鐵），像食鹽 NaCl。',
+          more: '小訣竅：非金屬彼此結合多半是共價鍵；金屬和非金屬結合多半是離子鍵。這是適齡的簡化判斷法，能幫你快速分辨。' },
+        { t: 'choose', v: '🤝', s: '兩個原子「共用」電子、一起牽手而結合，這種鍵叫？',
+          opts: ['共價鍵', '離子鍵', '都不是'], ans: 0,
+          why: '共用電子、一起牽手結合的是共價鍵。' },
+        { t: 'choose', v: '➕', s: '一個原子把電子「送」給另一個，形成 +、− 離子再靠正負相吸結合，這叫？',
+          opts: ['離子鍵', '共價鍵', '都不是'], ans: 0,
+          why: '送出電子、變成正負離子後相吸結合的是離子鍵。' },
+        { t: 'choose', v: '🌬️', s: '共價鍵最常發生在哪一類元素之間？',
+          opts: ['非金屬和非金屬之間（例如 H₂O、CO₂）', '金屬和非金屬之間', '只有金屬之間'], ans: 0,
+          why: '非金屬彼此之間傾向共用電子，形成共價鍵。' },
+        { t: 'choose', v: '🧂', s: '離子鍵最常發生在哪一類元素之間？',
+          opts: ['金屬和非金屬之間（例如食鹽 NaCl）', '非金屬和非金屬之間', '只有氣體之間'], ans: 0,
+          why: '金屬容易送出電子、非金屬容易收，形成 +/− 離子，靠相吸結合。' },
+        { t: 'choose', v: '🟰', s: '食鹽 NaCl 裡，鈉變 Na⁺（+1）、氯變 Cl⁻（−1）。為什麼 1 個鈉配 1 個氯剛剛好？',
+          opts: ['一個 +1 配一個 −1，正負剛好抵消、最穩', '因為它們顏色一樣', '因為鈉比較大'], ans: 0,
+          why: '+1 和 −1 剛好抵消、電性平衡，所以 NaCl 是 1 比 1。' },
+        { t: 'choose', v: '🚫', s: '那為什麼 NaCl₂（1 個鈉配 2 個氯）不成立？',
+          opts: ['鈉只放得出 +1，配不起 2 個 −1 的氯，接點對不上', '因為氯太貴', '其實它成立'], ans: 0,
+          why: '鈉只有 +1，撐不起 2 個 −1 的氯，正負不平衡，所以 NaCl₂ 不成立。' },
+        { t: 'choose', v: '🧱', s: '鎂會變成 Mg²⁺（+2）。它配氯（Cl⁻，−1）時需要幾個氯才平衡？（這就是 MgCl₂）',
+          opts: ['2 個氯', '1 個氯', '3 個氯'], ans: 0,
+          why: '+2 要用兩個 −1 來抵消，所以 1 個鎂配 2 個氯，就是 MgCl₂。' },
+        { t: 'choose', v: '🧲', s: '離子鍵的「卡合」比較像下面哪個比喻？',
+          opts: ['像磁鐵，正極和負極相吸', '像兩個人各自走開', '像積木漆成一樣的顏色'], ans: 0,
+          why: '離子鍵靠 + 和 − 正負相吸，就像磁鐵的兩極互相吸住。' },
+        { t: 'choose', v: '🤝', s: '共價鍵的「卡合」比較像下面哪個比喻？',
+          opts: ['兩個人一起牽手、共用中間那雙手', '把電子丟掉不要', '各自跑得遠遠的'], ans: 0,
+          why: '共價鍵是兩個原子「共用」電子，就像一起牽手、共用中間那雙手。' },
+        { t: 'choose', v: '💧', s: '水（H₂O）是氫和氧（都是非金屬）結合成的，它比較可能是哪一種鍵？',
+          opts: ['共價鍵', '離子鍵', '沒有鍵'], ans: 0,
+          why: '非金屬彼此結合多半是共價鍵，所以 H₂O 是共價鍵。' },
+        { t: 'choose', v: '🧂', s: '食鹽（NaCl）是金屬鈉和非金屬氯結合成的，它比較可能是哪一種鍵？',
+          opts: ['離子鍵', '共價鍵', '沒有鍵'], ans: 0,
+          why: '金屬和非金屬結合多半是離子鍵，所以 NaCl 是離子鍵。' }
+      ]
+    },
+    {
+      id: 'L11', emoji: '✍️', title: '化學式怎麼寫', subtitle: '★★ 下標數字與原子個數',
+      steps: [
+        { t: 'fact', v: '✍️', s: '化學式裡，寫在元素符號「右下角」的小數字，代表那個元素有幾個原子；數字是 1 的時候就省略不寫。例如 H₂O 表示 2 個氫、1 個氧。',
+          more: 'H₂O 中 O 後面沒有數字，代表 1 個氧（1 省略不寫）。寫在式子「前面」的大數字（係數）意思不同：2H₂O 表示「2 個水分子」，係數和下標不要搞混喔！' },
+        { t: 'choose', v: '🔢', s: 'H₂O 裡的小小的「2」，代表什麼？',
+          opts: ['有 2 個氫原子', '有 2 個氧原子', '有 2 個水分子'], ans: 0,
+          why: '下標 2 寫在 H 的右下角，代表 2 個氫原子。' },
+        { t: 'choose', v: '💧', s: 'H₂O 裡的 O 後面沒有寫數字，代表有幾個氧原子？',
+          opts: ['1 個（是 1 就省略不寫）', '0 個', '2 個'], ans: 0,
+          why: '下標為 1 時省略不寫，所以 O 代表 1 個氧原子。' },
+        { t: 'choose', v: '🧮', s: '一個水分子 H₂O 裡，總共有幾個原子？',
+          opts: ['3 個（2 個氫 ＋ 1 個氧）', '2 個', '1 個'], ans: 0,
+          why: '2 個氫加 1 個氧，一共 3 個原子。' },
+        { t: 'choose', v: '🌬️', s: '一個二氧化碳 CO₂ 裡，總共有幾個原子？',
+          opts: ['3 個（1 個碳 ＋ 2 個氧）', '2 個', '4 個'], ans: 0,
+          why: '1 個碳加 2 個氧，一共 3 個原子。' },
+        { t: 'choose', v: '🔥', s: '一個甲烷 CH₄ 裡，總共有幾個原子？',
+          opts: ['5 個（1 個碳 ＋ 4 個氫）', '4 個', '2 個'], ans: 0,
+          why: '1 個碳加 4 個氫，一共 5 個原子。' },
+        { t: 'choose', v: '🌱', s: '一個氨 NH₃ 裡，總共有幾個原子？',
+          opts: ['4 個（1 個氮 ＋ 3 個氫）', '3 個', '5 個'], ans: 0,
+          why: '1 個氮加 3 個氫，一共 4 個原子。' },
+        { t: 'choose', v: '🫧', s: '氧氣 O₂ 是由幾個氧原子組成的？',
+          opts: ['2 個（雙原子分子）', '1 個', '3 個'], ans: 0,
+          why: 'O₂ 是雙原子分子，由 2 個氧原子組成。' },
+        { t: 'choose', v: '⬇️', s: '表示原子個數的小數字，要寫在元素符號的哪個位置？',
+          opts: ['右下角（下標）', '正上方', '左邊'], ans: 0,
+          why: '原子個數寫在符號右下角，叫做下標。' },
+        { t: 'choose', v: '🔠', s: '化學式裡，某個元素只有 1 個原子時，數字要怎麼寫？',
+          opts: ['省略不寫', '一定要寫 1', '寫成 0'], ans: 0,
+          why: '下標是 1 就省略不寫，例如 H₂O 的 O 就沒有寫 1。' },
+        { t: 'choose', v: '2️⃣', s: '「2H₂O」前面那個大大的「2」，代表什麼？',
+          opts: ['有 2 個水分子（這是係數）', '有 2 個氧原子', '有 2 個氫原子'], ans: 0,
+          why: '寫在式子前面的大數字叫係數，2H₂O 表示 2 個水分子；它和右下角的下標不一樣。' },
+        { t: 'choose', v: '⚖️', s: '過氧化氫 H₂O₂ 裡，有幾個氧、幾個氫？',
+          opts: ['2 個氧、2 個氫', '1 個氧、2 個氫', '2 個氧、1 個氫'], ans: 0,
+          why: 'H₂O₂ 的兩個下標都是 2，所以有 2 個氫和 2 個氧。' }
+      ]
+    },
+    {
+      id: 'L12', emoji: '🗺️', title: '週期表的地圖', subtitle: '★★ 橫是週期、直是族',
+      steps: [
+        { t: 'fact', v: '🗺️', s: '週期表把元素排成一張地圖：橫的一列叫「週期」，直的一行叫「族」。',
+          more: '元素是依「原子序（也就是質子數）」由小到大排列的；同一族（同一直行）的元素性質很相似，所以看位置就能猜到性質。' },
+        { t: 'choose', v: '➡️', s: '週期表裡「橫的一列」叫什麼？',
+          opts: ['週期', '族', '家族', '區塊'], ans: 0,
+          why: '橫列稱週期（period），直行才是族。' },
+        { t: 'choose', v: '🧬', s: '同一「族」（同一直行）的元素，化學性質有什麼特點？',
+          opts: ['很相似', '完全相反', '毫無關係', '隨機變化'], ans: 0,
+          why: '同族最外層電子數相同，性質相近。' },
+        { t: 'choose', v: '🔢', s: '週期表把元素由小到大排列，依據的是什麼？',
+          opts: ['原子序（質子數）', '顏色', '密度', '被發現的年份'], ans: 0,
+          why: '原子序＝原子核裡的質子數。' },
+        { t: 'choose', v: '⚛️', s: '原子序代表原子核裡哪一種粒子的數目？',
+          opts: ['質子', '中子', '分子', '灰塵'], ans: 0,
+          why: '原子序就是質子數，決定它是哪一種元素。' },
+        { t: 'choose', v: '🧱', s: '週期表「左半邊」大多是哪一類元素？',
+          opts: ['金屬', '非金屬', '鈍氣', '液體'], ans: 0,
+          why: '金屬多在左與中間，非金屬集中在右上。' },
+        { t: 'choose', v: '🎈', s: '最右邊第 18 族（如氦 He、氖 Ne、氬 Ar）幾乎不與別的元素反應，這類叫？',
+          opts: ['鈍氣（惰性氣體）', '鹼金屬', '鹵素', '金屬'], ans: 0,
+          why: '它們很穩定，霓虹燈、氦氣球都用到。' },
+        { t: 'choose', v: '⚡', s: '第 1 族的鹼金屬（如鈉 Na、鉀 K）有什麼特色？',
+          opts: ['很活潑，遇水會劇烈反應', '完全不反應', '是氣體', '不導電'], ans: 0,
+          why: '鈉、鉀極活潑，只能由大人示範、不可自己碰。' },
+        { t: 'choose', v: '📏', s: '同一族由「上往下」，原子的大小（原子半徑）會怎樣？',
+          opts: ['變大', '變小', '先變小再消失', '完全不變'], ans: 0,
+          why: '往下多了電子層，原子變大。' },
+        { t: 'choose', v: '🧪', s: '氟 F、氯 Cl、溴 Br 同屬第 17 族（鹵素），它們的性質？',
+          opts: ['彼此相似', '完全不同', '都是金屬', '都不反應'], ans: 0,
+          why: '同族性質相似，這正是週期表好用的地方。' },
+        { t: 'choose', v: '🔗', s: '為什麼同一族的元素性質會相似？',
+          opts: ['最外層電子數相同', '顏色相同', '質量相同', '名字相同'], ans: 0,
+          why: '最外層電子決定化學性質。' },
+        { t: 'choose', v: '🆚', s: '鈉 Na 在第 1 族、鎂 Mg 在第 2 族，關於它們正確的是？',
+          opts: ['不同族，性質不一定相似', '一定完全相同', '都是氣體', '都是鈍氣'], ans: 0,
+          why: '不同族最外層電子數不同，性質不同。' },
+        { t: 'choose', v: '🧭', s: '週期表最大的用處是什麼？',
+          opts: ['由位置就能預測元素的性質', '拿來畫畫', '記錄天氣', '計算金錢'], ans: 0,
+          why: '位置相近，性質相近，能幫我們預測與分類。' }
+      ]
+    },
+    {
+      id: 'L13', emoji: '🎈', title: '氣體的脾氣', subtitle: '★★ 壓力、擴散與壓縮',
+      steps: [
+        { t: 'fact', v: '🎈', s: '氣體粒子跑得快、間隔又大，會均勻充滿整個容器。',
+          more: '這些粒子不停撞擊容器壁，累積起來就成了「壓力」；溫度越高，粒子動得越快、撞得越用力。' },
+        { t: 'choose', v: '🌀', s: '氣體放進容器後會怎樣分布？',
+          opts: ['均勻充滿整個容器', '只沉在底部', '只浮在頂部', '堆在角落'], ans: 0,
+          why: '氣體會擴散並填滿所有空間。' },
+        { t: 'choose', v: '💥', s: '氣體的「壓力」是怎麼來的？',
+          opts: ['粒子不斷撞擊容器壁', '粒子靜止不動', '容器在發光', '溫度計在動'], ans: 0,
+          why: '無數次撞擊累積成壓力。' },
+        { t: 'choose', v: '🗜️', s: '溫度固定時，把氣體壓縮成一半體積，壓力會？',
+          opts: ['變大（約變兩倍）', '變小', '變成 0', '完全不變'], ans: 0,
+          why: '體積變小、撞壁更頻繁，壓力上升（波以耳關係）。' },
+        { t: 'choose', v: '☀️', s: '把充氣的氣球拿去曬太陽加熱，氣球會？',
+          opts: ['膨脹變大', '縮小', '結冰', '變重'], ans: 0,
+          why: '加熱使氣體粒子更快、體積變大（查理關係）。' },
+        { t: 'choose', v: '🌸', s: '一打開香水，整個房間都聞得到，這是氣體的什麼現象？',
+          opts: ['擴散', '凝固', '過濾', '結晶'], ans: 0,
+          why: '氣體粒子四處運動，均勻散開。' },
+        { t: 'choose', v: '💨', s: '三態之中，擴散最快的通常是哪一態？',
+          opts: ['氣態', '液態', '固態', '都一樣'], ans: 0,
+          why: '氣態粒子間隔大、跑得快，擴散最快。' },
+        { t: 'choose', v: '🌡️', s: '氣體粒子跑得快不快，主要和什麼有關？',
+          opts: ['溫度（越熱越快）', '顏色', '容器形狀', '重量單位'], ans: 0,
+          why: '溫度越高，粒子平均動得越快。' },
+        { t: 'choose', v: '🚲', s: '用打氣筒把更多空氣打進輪胎，胎內壓力會？',
+          opts: ['變大', '變小', '不變', '變成 0'], ans: 0,
+          why: '粒子變多、撞壁更頻繁，壓力上升。' },
+        { t: 'choose', v: '🫙', s: '下列哪一個在常溫常壓下是氣體？',
+          opts: ['氮氣 N₂', '鐵', '食鹽', '水（液態）'], ans: 0,
+          why: '氮氣是氣體；鐵、鹽是固體，常溫水是液體。' },
+        { t: 'choose', v: '🌍', s: '地球空氣中含量最多的氣體是？',
+          opts: ['氮氣（約 78%）', '氧氣', '二氧化碳', '氫氣'], ans: 0,
+          why: '氮約 78%、氧約 21%，其餘很少。' },
+        { t: 'choose', v: '🫧', s: '為什麼氣體最容易被壓縮？',
+          opts: ['粒子之間空隙很大', '粒子很重', '粒子會流動', '粒子會發光'], ans: 0,
+          why: '一壓就靠近；固體粒子已很密，難再壓。' },
+        { t: 'choose', v: '⛰️', s: '為什麼在高山上比較不容易呼吸？',
+          opts: ['空氣稀薄、氣壓較低，氧氣較少', '山上沒有氮氣', '山上只有二氧化碳', '氧氣變成固體'], ans: 0,
+          why: '高處氣壓低、單位體積內氧氣分子較少。' }
+      ]
+    },
+    {
+      id: 'L14', emoji: '🧰', title: '分離的工具箱', subtitle: '★★ 分液、結晶、層析、傾析',
+      steps: [
+        { t: 'fact', v: '🧰', s: '混合物可以依「成分性質的差異」（溶解度、沸點、大小、密度、磁性…）挑選合適的分離方法。',
+          more: '差異越明顯，就越容易挑到對的工具，例如不互溶、沸點不同、顆粒大小不同、會不會被磁鐵吸…' },
+        { t: 'choose', v: '🧴', s: '油和水不互溶、分成上下兩層，要分開最適合用？',
+          opts: ['分液漏斗', '磁鐵', '溫度計', '篩子'], ans: 0,
+          why: '分液漏斗能從下方放出下層液體、分開兩層。' },
+        { t: 'choose', v: '🛢️', s: '油和水靜置後，通常誰在上層？',
+          opts: ['油（密度較小，浮在上面）', '水', '兩者互溶看不出', '都沉底'], ans: 0,
+          why: '多數油密度比水小，會浮在上層。' },
+        { t: 'choose', v: '💎', s: '把溶了很多鹽的熱溶液慢慢冷卻，鹽形成固體顆粒析出，這叫？',
+          opts: ['結晶', '燃燒', '擴散', '熔化'], ans: 0,
+          why: '溶解度隨降溫下降，多出來的溶質結成晶體。' },
+        { t: 'choose', v: '🧺', s: '把大小不同的石頭和沙分開，最簡單用？',
+          opts: ['篩子（過篩）', '磁鐵', '蒸餾', '酚酞'], ans: 0,
+          why: '依顆粒大小分離，用篩網最快。' },
+        { t: 'choose', v: '🎨', s: '用色筆點在濾紙上、滴水後不同顏色分開跑，這種分離法叫？',
+          opts: ['層析（色層分析）', '過濾', '凝固', '中和'], ans: 0,
+          why: '不同色素在紙上移動快慢不同而分開。' },
+        { t: 'choose', v: '📊', s: '層析能分開混合色素，是利用各成分的什麼差異？',
+          opts: ['在紙上移動的快慢不同', '顏色深淺', '重量單位', '名字長短'], ans: 0,
+          why: '吸附與溶解能力不同，跑的距離不同。' },
+        { t: 'choose', v: '🫗', s: '沙沉底後，小心把上層清水倒出來，這種方法叫？',
+          opts: ['傾析（傾倒法）', '蒸餾', '磁選', '昇華'], ans: 0,
+          why: '利用固體已沉底，直接倒出上層液體。' },
+        { t: 'choose', v: '♨️', s: '想分開沸點不同的兩種互溶液體（如酒精和水），用？',
+          opts: ['蒸餾', '磁鐵', '篩子', '過濾'], ans: 0,
+          why: '加熱使沸點低者先變蒸氣、再冷凝收集。' },
+        { t: 'choose', v: '🌡️', s: '蒸餾時，先變成蒸氣跑出來的是沸點較？',
+          opts: ['低的液體', '高的液體', '重的液體', '有顏色的液體'], ans: 0,
+          why: '沸點低者較易汽化，先被蒸餾出來。' },
+        { t: 'choose', v: '🌊', s: '海水淡化（把海水變飲用水）常用蒸餾，是利用水和鹽的什麼差異？',
+          opts: ['水會蒸發、鹽不會（沸點差異大）', '顏色不同', '磁性不同', '大小不同'], ans: 0,
+          why: '加熱水變蒸氣冷凝成純水，鹽留在原處。' },
+        { t: 'choose', v: '📄', s: '不溶於水的固體（如泥沙）留在濾紙上，用的是？',
+          opts: ['過濾', '結晶', '分液', '層析'], ans: 0,
+          why: '不溶固體被濾紙攔住，液體流過。' },
+        { t: 'choose', v: '🔧', s: '要選對分離方法，最關鍵是看什麼？',
+          opts: ['各成分性質的差異（溶解度、沸點、大小、磁性…）', '瓶子的顏色', '當天氣溫', '實驗桌大小'], ans: 0,
+          why: '抓住差異點，就能挑對工具。' }
+      ]
+    },
+    {
+      id: 'L15', emoji: '🌈', title: '酸鹼與 pH 值', subtitle: '★★★ pH 尺、指示劑、中和',
+      steps: [
+        { t: 'fact', v: '🌈', s: '我們用 pH 值表示酸鹼強弱，範圍大約 0 到 14：pH 小於 7 是酸性、等於 7 是中性、大於 7 是鹼性。',
+          more: '不知道的液體都不能嚐、不能摸、不能聞，一定要由大人示範。pH 越小越酸、越大越鹼。' },
+        { t: 'choose', v: '📏', s: 'pH 值的範圍大約是從幾到幾？',
+          opts: ['0 到 14', '1 到 10', '0 到 100', '-7 到 7'], ans: 0,
+          why: '常用 pH 尺就是 0～14。' },
+        { t: 'choose', v: '📉', s: 'pH 值越小，代表溶液的酸性？',
+          opts: ['越強', '越弱', '和鹼一樣', '沒關係'], ans: 0,
+          why: 'pH 越小酸性越強，越大鹼性越強。' },
+        { t: 'choose', v: '🔟', s: 'pH 值等於 10 的溶液是？',
+          opts: ['鹼性', '酸性', '中性', '沒有酸鹼'], ans: 0,
+          why: 'pH 大於 7 為鹼性。' },
+        { t: 'choose', v: '🍋', s: '檸檬汁吃起來酸酸的，它比較可能是？',
+          opts: ['酸性', '鹼性', '中性', '無法判斷'], ans: 0,
+          why: '檸檬含檸檬酸，呈酸性。' },
+        { t: 'choose', v: '🧼', s: '肥皂水摸起來滑滑的，它比較可能是？',
+          opts: ['鹼性', '酸性', '中性', '固體'], ans: 0,
+          why: '鹼性溶液常有滑膩感（但不可去摸未知液體）。' },
+        { t: 'choose', v: '🌸', s: '酚酞指示劑遇到「鹼性」溶液會變成什麼顏色？',
+          opts: ['粉紅（紅）色', '黑色', '藍色', '透明無色'], ans: 0,
+          why: '酚酞遇鹼變粉紅，是常見指示劑。' },
+        { t: 'choose', v: '⚪', s: '酚酞遇到「酸性」或中性溶液時是什麼顏色？',
+          opts: ['無色', '綠色', '黑色', '金色'], ans: 0,
+          why: '酚酞在酸性、中性中無色，遇鹼才變色。' },
+        { t: 'choose', v: '🧪', s: '酸和鹼混合會互相抵消，生成鹽和水，這叫？',
+          opts: ['中和反應', '燃燒', '蒸發', '結晶'], ans: 0,
+          why: '酸 + 鹼 → 鹽 + 水。' },
+        { t: 'choose', v: '💊', s: '胃酸過多不舒服，吃含鹼性成分的「制酸劑」有幫助，是因為？',
+          opts: ['鹼中和了過多的酸', '鹼把酸變更酸', '產生了新的酸', '讓胃變冷'], ans: 0,
+          why: '中和讓酸性下降、比較舒服。' },
+        { t: 'choose', v: '🍶', s: '下列哪一個是常見的「酸」？',
+          opts: ['食醋（醋酸）', '小蘇打', '肥皂', '氨水'], ans: 0,
+          why: '醋、檸檬、汽水偏酸；小蘇打、肥皂、氨水偏鹼。' },
+        { t: 'choose', v: '🧁', s: '下列哪一個是常見的「鹼（鹼性物質）」？',
+          opts: ['小蘇打（碳酸氫鈉）', '檸檬汁', '食醋', '汽水'], ans: 0,
+          why: '小蘇打呈弱鹼；檸檬、醋、汽水偏酸。' },
+        { t: 'choose', v: '💧', s: '純水的 pH 大約是多少？它屬於？',
+          opts: ['約 7，中性', '約 1，強酸', '約 14，強鹼', '約 0，中性'], ans: 0,
+          why: '純水既不酸也不鹼，pH 約 7。' }
+      ]
+    },
+    {
+      id: 'L16', emoji: '🍎', title: '得氧失氧', subtitle: '★★★ 氧化還原入門',
+      steps: [
+        { t: 'fact', v: '🍎', s: '物質「得到氧」叫氧化，「失去氧」叫還原。',
+          more: '它們總是同時發生：一邊得氧、另一邊就失氧。生鏽、燃燒、切開的蘋果變褐，都是氧化的例子。' },
+        { t: 'choose', v: '🔩', s: '鐵和空氣中的氧結合生鏽，鐵發生了？',
+          opts: ['氧化（得到氧）', '還原（失去氧）', '熔化', '過濾'], ans: 0,
+          why: '鐵得到氧變鐵鏽，是氧化。' },
+        { t: 'choose', v: '🔄', s: '物質「失去氧」的反應叫？',
+          opts: ['還原', '氧化', '蒸發', '中和'], ans: 0,
+          why: '失氧＝還原，得氧＝氧化。' },
+        { t: 'choose', v: '🪵', s: '木炭（碳）和氧結合變成二氧化碳，碳被？',
+          opts: ['氧化', '還原', '過濾', '凝固'], ans: 0,
+          why: '碳得氧變 CO₂，屬氧化。' },
+        { t: 'choose', v: '🔥', s: '燃燒基本上是一種快速的什麼反應？',
+          opts: ['氧化反應', '還原反應', '結晶', '昇華'], ans: 0,
+          why: '燃燒是與氧快速結合、放出光和熱。' },
+        { t: 'choose', v: '♻️', s: '在氧化還原反應中，氧化和還原的關係是？',
+          opts: ['一定同時發生（一得氧、一失氧）', '只會單獨發生', '互不相干', '永遠不會發生'], ans: 0,
+          why: '有得氧就有失氧，成對出現。' },
+        { t: 'choose', v: '🍏', s: '蘋果切開後果肉變褐色，是因為接觸空氣被？',
+          opts: ['氧化', '還原', '過濾', '結晶'], ans: 0,
+          why: '果肉與氧反應變褐，可擠檸檬汁減緩。' },
+        { t: 'choose', v: '📦', s: '食物包裝裡放「脫氧劑」小包，目的是？',
+          opts: ['減少氧氣、防止食物被氧化變質', '增加氧氣', '讓食物變甜', '讓包裝變重'], ans: 0,
+          why: '吸掉氧氣，食物比較不易氧化壞掉。' },
+        { t: 'choose', v: '🛡️', s: '鐵器塗油漆或塗油可以防鏽，原理是？',
+          opts: ['隔絕空氣中的氧和水', '讓鐵變輕', '讓鐵變色', '增加鐵的溫度'], ans: 0,
+          why: '沒有氧和水，鐵就不易氧化生鏽。' },
+        { t: 'choose', v: '🟫', s: '用碳把「氧化銅 CuO」裡的氧奪走、變回銅，氧化銅被？',
+          opts: ['還原（失去氧）', '氧化（得到氧）', '蒸發', '熔化'], ans: 0,
+          why: 'CuO 失去氧變成 Cu，是被還原。' },
+        { t: 'choose', v: '⚫', s: '承上，在同一反應裡，碳（C）本身被？',
+          opts: ['氧化（得到氧變成 CO₂）', '還原', '過濾', '結晶'], ans: 0,
+          why: '碳搶到氧變 CO₂，被氧化；氧化與還原成對。' },
+        { t: 'choose', v: '🔍', s: '判斷「氧化」的傳統簡單方法是看什麼？',
+          opts: ['有沒有得到氧', '顏色深不深', '體積大不大', '重不重'], ans: 0,
+          why: '常用「得氧＝氧化、失氧＝還原」來判斷。' },
+        { t: 'choose', v: '🔋', s: '更進一步的現代定義：失去電子叫氧化，那「得到電子」叫？',
+          opts: ['還原', '氧化', '中和', '蒸發'], ans: 0,
+          why: '失電子＝氧化、得電子＝還原（口訣：得電子被還原）。' }
+      ]
+    },
+    {
+      id: 'L17', emoji: '🔢', title: '莫耳與計量入門', subtitle: '★★★ 像「一打」一樣數粒子',
+      steps: [
+        { t: 'fact', v: '🔢', s: '莫耳（mol）是化學家用來「數粒子」的單位，就像「一打＝12 個」一樣。',
+          more: '「1 莫耳」代表約 6.02×10²³ 個粒子，這個數叫亞佛加厥數。分子量就是把式子裡各原子的原子量全部加起來。' },
+        { t: 'choose', v: '📦', s: '「1 打」是 12 個，那化學裡「1 莫耳」大約是幾個粒子？',
+          opts: ['約 6.02×10²³ 個', '剛好 12 個', '剛好 100 個', '只有 1 個'], ans: 0,
+          why: '這是超巨大的計數單位。' },
+        { t: 'choose', v: '📛', s: '這個「1 莫耳的粒子數」有個名字，叫？',
+          opts: ['亞佛加厥數', '圓周率', '光速', '沸點'], ans: 0,
+          why: '約 6.02×10²³，用來連結粒子數與莫耳。' },
+        { t: 'choose', v: '⚖️', s: '「原子量」是用來比較原子的什麼？',
+          opts: ['相對質量（輕重）', '顏色', '體積大小', '速度'], ans: 0,
+          why: '原子量是原子相對輕重的數值（如 H=1、O=16）。' },
+        { t: 'choose', v: '💧', s: '水 H₂O 的分子量是多少？（H=1、O=16）',
+          opts: ['18', '17', '16', '32'], ans: 0,
+          why: '1×2 + 16 = 18。' },
+        { t: 'choose', v: '🌬️', s: '二氧化碳 CO₂ 的分子量是多少？（C=12、O=16）',
+          opts: ['44', '28', '32', '16'], ans: 0,
+          why: '12 + 16×2 = 44。' },
+        { t: 'choose', v: '🫧', s: '氧氣 O₂ 的分子量是多少？（O=16）',
+          opts: ['32', '16', '18', '8'], ans: 0,
+          why: '16×2 = 32。' },
+        { t: 'choose', v: '🔥', s: '甲烷 CH₄ 的分子量是多少？（C=12、H=1）',
+          opts: ['16', '12', '17', '20'], ans: 0,
+          why: '12 + 1×4 = 16。' },
+        { t: 'choose', v: '🌱', s: '氨 NH₃ 的分子量是多少？（N=14、H=1）',
+          opts: ['17', '14', '18', '16'], ans: 0,
+          why: '14 + 1×3 = 17。' },
+        { t: 'choose', v: '🧊', s: '1 莫耳的水分子，質量大約是幾克？（水分子量 18）',
+          opts: ['18 克', '1 克', '44 克', '6 克'], ans: 0,
+          why: '1 莫耳物質的克數＝它的分子量。' },
+        { t: 'choose', v: '✖️', s: '2 莫耳的水，大約有幾個水分子？',
+          opts: ['約 2×6.02×10²³ 個', '約 6.02×10²³ 個', '只有 2 個', '只有 12 個'], ans: 0,
+          why: '每莫耳約 6.02×10²³ 個，2 莫耳就是兩倍。' },
+        { t: 'choose', v: '🤔', s: '為什麼化學家要用「莫耳」這麼大的單位來數？',
+          opts: ['因為原子、分子太小太多，一顆顆數不完', '因為好看', '因為方便畫圖', '因為省電'], ans: 0,
+          why: '用莫耳把「粒子數」換成方便計算的量。' },
+        { t: 'choose', v: '➕', s: '算「分子量」的方法是？',
+          opts: ['把式子裡各原子的原子量全部加起來', '把原子量相乘', '看顏色', '量長度'], ans: 0,
+          why: '例如 CO₂＝12+16+16＝44。' }
+      ]
+    },
+    {
+      id: 'L18', emoji: '🟰', title: '反應式配平進階', subtitle: '★★★ 只能加係數、不能改下標',
+      steps: [
+        { t: 'fact', v: '🟰', s: '配平就是在化學式「前面」加上係數（大數字），讓反應式左右兩邊每種原子的數目都相等。',
+          more: '絕不能改動化學式右下角的下標（改了就變成別的物質）；配平的依據是質量守恆——原子不生不滅。' },
+        { t: 'choose', v: '🎚️', s: '配平反應式時，我們可以調整什麼？',
+          opts: ['化學式前面的係數（大數字）', '右下角的下標', '元素符號', '箭頭方向'], ans: 0,
+          why: '只加係數，不動下標。' },
+        { t: 'choose', v: '🚫', s: '配平時「絕對不能」改動什麼？',
+          opts: ['右下角的下標（會變成別的物質）', '前面的係數', '書寫順序', '箭頭長度'], ans: 0,
+          why: '改下標＝改物質本身，不可以。' },
+        { t: 'choose', v: '💧', s: 'H₂ + O₂ → H₂O 配平後正確的是？',
+          opts: ['2H₂ + O₂ → 2H₂O', 'H₂ + O₂ → H₂O', '2H₂ + 2O₂ → 2H₂O', 'H₂ + 2O₂ → H₂O'], ans: 0,
+          why: '左右各 4 個 H、2 個 O，平衡。' },
+        { t: 'choose', v: '🔢', s: '在 2H₂ + O₂ → 2H₂O 中，左邊一共有幾個氫原子？',
+          opts: ['4 個', '2 個', '6 個', '1 個'], ans: 0,
+          why: '2×2＝4 個氫。' },
+        { t: 'choose', v: '🫧', s: '同上式，右邊一共有幾個氧原子？',
+          opts: ['2 個', '1 個', '4 個', '3 個'], ans: 0,
+          why: '2 個水×每個 1 個氧＝2 個氧。' },
+        { t: 'choose', v: '⚗️', s: 'C + O₂ → CO₂ 這個式子配平了嗎？',
+          opts: ['已經配平（兩邊各 1 碳、2 氧）', '還沒，碳不平', '還沒，氧不平', '無法配平'], ans: 0,
+          why: 'C：1＝1，O：2＝2，兩邊都相等。' },
+        { t: 'choose', v: '🌱', s: '配平 N₂ + H₂ → NH₃，正確的是？',
+          opts: ['N₂ + 3H₂ → 2NH₃', 'N₂ + H₂ → NH₃', 'N₂ + 3H₂ → NH₃', '2N₂ + 3H₂ → 2NH₃'], ans: 0,
+          why: '兩邊各 2 個 N、6 個 H。' },
+        { t: 'choose', v: '🔥', s: '甲烷燃燒 CH₄ + 2O₂ → CO₂ + 2H₂O，左邊一共有幾個氧原子？',
+          opts: ['4 個', '2 個', '3 個', '6 個'], ans: 0,
+          why: '2O₂＝2×2＝4；右邊 CO₂ 的 2＋2H₂O 的 2 也是 4，平衡。' },
+        { t: 'choose', v: '🔩', s: '配平 Fe + O₂ → Fe₂O₃，正確的是？',
+          opts: ['4Fe + 3O₂ → 2Fe₂O₃', 'Fe + O₂ → Fe₂O₃', '2Fe + O₂ → Fe₂O₃', '4Fe + O₂ → 2Fe₂O₃'], ans: 0,
+          why: '兩邊各 4 個 Fe、6 個 O。' },
+        { t: 'choose', v: '⚖️', s: '配平的根本原理是哪一條守恆定律？',
+          opts: ['質量守恆（原子不生不滅）', '能量放大', '體積守恆', '顏色守恆'], ans: 0,
+          why: '原子數不變，總質量就不變。' },
+        { t: 'choose', v: '🧮', s: '為什麼配平後反應前後總質量會相等？',
+          opts: ['因為每種原子的數目都沒變', '因為加了新原子', '因為原子消失了', '因為換了容器'], ans: 0,
+          why: '只是重新組合，原子沒增減。' },
+        { t: 'choose', v: '✅', s: '檢查一個反應式配平好了沒，要做什麼？',
+          opts: ['逐一數左右兩邊每種原子的個數是否相等', '只看箭頭', '只看係數大小', '看誰寫在前面'], ans: 0,
+          why: '每種原子左右相等才算配平完成。' }
+      ]
+    },
+    {
+      "id": "L19",
+      "emoji": "🍳",
+      "title": "廚房裡的化學",
+      "subtitle": "餐桌上的科學小祕密",
+      "steps": [
+        {
+          "t": "fact",
+          "v": "🍳",
+          "s": "廚房其實是一間小小的化學實驗室：鹽溶進水、小蘇打遇到醋冒泡、蛋煮熟變白，都是化學在幫忙！",
+          "more": "我們每天吃的、喝的、煮的，背後都藏著化學變化。有些變化只是換個樣子（像糖溶進水），有些會產生全新的東西（像蛋煮熟後就變不回生的了）。動手做料理時，記得一定要有大人陪在旁邊；廚房裡的清潔劑、瓦斯和熱鍋都可能有危險，好奇沒問題，但千萬不要自己亂混、亂加熱喔！"
+        },
+        {
+          "t": "choose",
+          "v": "🧂",
+          "s": "把糖加進水裡攪一攪，糖好像「不見了」，這是為什麼？",
+          "opts": [
+            "糖真的消失不見了",
+            "糖溶解在水裡，均勻分散開來所以看不見",
+            "糖偷偷變成了水"
+          ],
+          "ans": 1,
+          "why": "糖溶解到水中變成糖水，糖的小分子分散在水裡，所以看不見，但它其實還在。"
+        },
+        {
+          "t": "choose",
+          "v": "🥤",
+          "s": "想讓一杯水裡的糖溶化得更快，下面哪個方法最有用？",
+          "opts": [
+            "用溫熱的水，再攪一攪",
+            "把整杯水放進冰箱冰起來",
+            "把杯子蓋好放著不要動它"
+          ],
+          "ans": 0,
+          "why": "溫度越高、又有攪拌，糖分子跑得越快，就溶解得越快。"
+        },
+        {
+          "t": "choose",
+          "v": "🫧",
+          "s": "把小蘇打粉加進醋裡，會看到一大堆泡泡冒出來，那些泡泡主要是什麼氣體？",
+          "opts": [
+            "氧氣",
+            "二氧化碳",
+            "水蒸氣"
+          ],
+          "ans": 1,
+          "why": "小蘇打（鹼性）和醋（酸性）反應會產生二氧化碳氣體，一顆顆冒出來就是泡泡。"
+        },
+        {
+          "t": "choose",
+          "v": "🍳",
+          "s": "生蛋的蛋白是透明的，一下鍋煮熟就變成白白的固體，這是因為？",
+          "opts": [
+            "加熱讓蛋白質「變性」凝固了",
+            "有人在蛋裡加了白色顏料",
+            "蛋白在鍋子裡結冰了"
+          ],
+          "ans": 0,
+          "why": "蛋白裡的蛋白質受熱會變性凝固，從透明的液體變成不透明的白色固體。"
+        },
+        {
+          "t": "choose",
+          "v": "🔁",
+          "s": "蛋煮熟變白之後，再把它放涼，會不會變回透明的生蛋白？",
+          "opts": [
+            "會，放涼就自己變回來了",
+            "不會，這是「回不去」的變化",
+            "只要放進冰箱就會變回來"
+          ],
+          "ans": 1,
+          "why": "蛋白質受熱凝固是不可逆的變化，煮熟的蛋沒辦法再變回生的樣子。"
+        },
+        {
+          "t": "choose",
+          "v": "🍞",
+          "s": "做麵包時，麵團會慢慢變大又變蓬鬆，最主要是因為？",
+          "opts": [
+            "有人偷偷把麵團拉大",
+            "麵團吸了很多水才脹大",
+            "酵母產生氣體，把麵團一點一點撐大"
+          ],
+          "ans": 2,
+          "why": "酵母吃掉麵團裡的糖後會產生二氧化碳氣體，氣泡把麵團撐得又大又鬆軟。"
+        },
+        {
+          "t": "choose",
+          "v": "🧊",
+          "s": "為什麼食物放進冰箱，比較不容易壞掉？",
+          "opts": [
+            "低溫讓細菌繁殖和食物變質的速度變慢",
+            "冰箱可以把細菌全部殺光光",
+            "低溫會幫食物長出新的養分"
+          ],
+          "ans": 0,
+          "why": "低溫只是「減慢」細菌繁殖和食物變質，並不是完全停止，所以食物還是要趁新鮮儘快吃完。"
+        },
+        {
+          "t": "choose",
+          "v": "🐟",
+          "s": "古時候的人常用很多鹽或糖來醃魚、做果醬幫助保存，這是靠什麼原理？",
+          "opts": [
+            "鹽和糖會發光把細菌照死",
+            "很鹹或很甜的環境讓細菌不容易生長",
+            "鹽和糖會讓食物結成冰"
+          ],
+          "ans": 1,
+          "why": "很鹹或很甜的環境會把細菌體內的水分逼出來，細菌難以生存，食物就比較不容易壞。"
+        },
+        {
+          "t": "choose",
+          "v": "🍋",
+          "s": "檸檬吃起來酸酸的，是因為它含有什麼？",
+          "opts": [
+            "很多鹽分",
+            "很多糖分",
+            "酸性物質（檸檬酸）"
+          ],
+          "ans": 2,
+          "why": "檸檬含有檸檬酸，屬於酸性物質，嚐起來就會酸酸的。"
+        },
+        {
+          "t": "choose",
+          "v": "🫗",
+          "s": "把食用油倒進一杯水裡，靜靜放一會兒後，會看到什麼情形？",
+          "opts": [
+            "油和水立刻完全混在一起",
+            "油沉到杯子的最底下",
+            "油和水分成兩層，油浮在水的上面"
+          ],
+          "ans": 2,
+          "why": "油不溶於水，而且比水輕，所以會浮在上面，和水分成清楚的兩層。"
+        }
+      ]
+    },
+    {
+      "id": "L20",
+      "emoji": "🧴",
+      "title": "清潔與材料",
+      "subtitle": "洗油污、防生鏽、回收再利用的生活化學",
+      "steps": [
+        {
+          "t": "fact",
+          "v": "🧼",
+          "s": "肥皂分子很特別，一端喜歡油（親油）、另一端喜歡水（親水），所以它能一邊抓住油污、一邊被水沖走，把髒東西一起帶離你的手。",
+          "more": "想像肥皂分子是一群小小的『雙面人』：一頭手拉著油，一頭手牽著水。當你搓洗時，這些分子把油污團團圍住，形成小油球，再被流動的水沖走。這就是為什麼光用清水常常洗不掉油，加了肥皂或洗碗精卻能洗得乾乾淨淨。同樣的道理，洗碗精能洗掉盤子上的油、洗衣精能洗掉衣服上的髒污，都是靠這個『一端親油、一端親水』的祕密喔！"
+        },
+        {
+          "t": "choose",
+          "v": "🧼",
+          "s": "為什麼肥皂能洗掉手上的油污呢？",
+          "opts": [
+            "肥皂會把油變成清水",
+            "肥皂分子一端親油、一端親水，能抓住油污再被水沖走",
+            "油看到肥皂的顏色就自己跑掉了"
+          ],
+          "ans": 1,
+          "why": "肥皂靠『一端親油、一端親水』的構造把油污帶走。"
+        },
+        {
+          "t": "choose",
+          "v": "💧",
+          "s": "只用清水沖，手上的油常常沖不太乾淨，這是為什麼？",
+          "opts": [
+            "因為水太乾淨了",
+            "因為油比水還輕",
+            "因為油和水不容易混合，需要肥皂當『橋樑』才能帶走油"
+          ],
+          "ans": 2,
+          "why": "油和水不相溶，要靠肥皂當橋樑才洗得掉。"
+        },
+        {
+          "t": "choose",
+          "v": "🔩",
+          "s": "鐵製的鐵釘在哪一種環境裡最容易生鏽？",
+          "opts": [
+            "又潮濕又有空氣（氧氣）的地方",
+            "放在完全乾燥的地方",
+            "放進冷凍庫裡冰起來"
+          ],
+          "ans": 0,
+          "why": "鐵要同時碰到水和氧氣才會生鏽。"
+        },
+        {
+          "t": "choose",
+          "v": "🟤",
+          "s": "鐵生鏽以後，表面那層紅棕色、會掉屑的東西叫什麼？",
+          "opts": [
+            "鐵糖",
+            "鐵鏽",
+            "鐵油"
+          ],
+          "ans": 1,
+          "why": "鐵與水和氧氣反應後生成的紅棕色物質就是鐵鏽。"
+        },
+        {
+          "t": "choose",
+          "v": "🎨",
+          "s": "下面哪一個是常見又有效的防止鐵生鏽的方法？",
+          "opts": [
+            "把鐵一直泡在水裡",
+            "放在潮濕的浴室裡",
+            "在表面塗油漆或鍍上一層別的金屬，並保持乾燥"
+          ],
+          "ans": 2,
+          "why": "隔絕水和空氣、保持乾燥就能防止生鏽。"
+        },
+        {
+          "t": "choose",
+          "v": "🚲",
+          "s": "腳踏車的鏈條常常要上一點油，主要是為了什麼？",
+          "opts": [
+            "潤滑並隔絕水和空氣，可以減少生鏽",
+            "讓鏈條變得更重",
+            "讓鏈條變成漂亮的金色"
+          ],
+          "ans": 0,
+          "why": "油能潤滑又隔絕水氣，幫鏈條防鏽。"
+        },
+        {
+          "t": "choose",
+          "v": "♻️",
+          "s": "塑膠容器底部回收標誌裡的那個數字，代表什麼意思？",
+          "opts": [
+            "容器可以裝幾公升",
+            "塑膠的種類，方便分類回收",
+            "容器製造的年份"
+          ],
+          "ans": 1,
+          "why": "三角形裡的數字代表塑膠材質種類，方便分類回收。"
+        },
+        {
+          "t": "choose",
+          "v": "🗑️",
+          "s": "下列哪一組東西，通常可以回收再利用？",
+          "opts": [
+            "用過的衛生紙",
+            "喝剩的湯",
+            "玻璃瓶、紙張和鋁罐"
+          ],
+          "ans": 2,
+          "why": "玻璃、紙張、鋁罐都是常見可回收再製的資源。"
+        },
+        {
+          "t": "choose",
+          "v": "🔋",
+          "s": "家裡用完的電池，應該怎麼處理才對？",
+          "opts": [
+            "拿到電池回收桶回收，不要當一般垃圾亂丟",
+            "直接丟進馬桶沖掉",
+            "埋進花盆的泥土裡"
+          ],
+          "ans": 0,
+          "why": "電池要投入專用回收桶，交給大人處理最安全。"
+        },
+        {
+          "t": "choose",
+          "v": "🌱",
+          "s": "為什麼電池不能隨便丟到大自然裡呢？",
+          "opts": [
+            "因為電池晚上會發光",
+            "電池裡有對環境和人體有害的物質，可能污染土壤和水",
+            "因為電池會慢慢長大變大顆"
+          ],
+          "ans": 1,
+          "why": "電池含有害物質，亂丟會污染土壤和水源。"
+        }
+      ]
+    },
+    {
+      "id": "L21",
+      "emoji": "🥗",
+      "title": "食物標示與營養",
+      "subtitle": "看懂包裝上的祕密，吃得聰明又健康",
+      "steps": [
+        {
+          "t": "fact",
+          "v": "🥗",
+          "s": "食品包裝上會標示成分、保存期限和營養標示，幫助我們吃得更安全、更健康。",
+          "more": "每次拿起一包食品，都可以翻到背面看看：成分表告訴你用了哪些材料、保存期限提醒你在哪一天前吃完最新鮮、營養標示則列出熱量和蛋白質、脂肪、碳水化合物、鈉等含量。學會看這些資訊，再加上均衡飲食，就能一邊吃一邊照顧自己的健康。"
+        },
+        {
+          "t": "choose",
+          "v": "🏷️",
+          "s": "食品包裝上通常會印哪些資訊呢？",
+          "opts": [
+            "成分、保存期限和營養標示",
+            "只有一張漂亮的圖片，完全沒有文字",
+            "這包食品是誰買回家的"
+          ],
+          "ans": 0,
+          "why": "包裝上會標示成分、保存期限、營養標示等，幫助我們了解並安全地選擇食品。"
+        },
+        {
+          "t": "choose",
+          "v": "📋",
+          "s": "食品的「營養標示」表通常會告訴我們什麼？",
+          "opts": [
+            "食物是哪一天送到店裡的",
+            "熱量，以及蛋白質、脂肪、碳水化合物、鈉等含量",
+            "這家公司老闆的名字"
+          ],
+          "ans": 1,
+          "why": "營養標示會列出熱量和主要營養素含量，方便我們比較與挑選。"
+        },
+        {
+          "t": "choose",
+          "v": "🍚",
+          "s": "米飯、麵包裡的「醣類（碳水化合物）」，對身體最主要的功用是什麼？",
+          "opts": [
+            "提供身體活動和大腦運作所需的能量",
+            "讓皮膚變得比較白",
+            "可以取代喝水，不用再喝水"
+          ],
+          "ans": 0,
+          "why": "醣類是身體最主要、最快的能量來源，就像給身體加「油」。"
+        },
+        {
+          "t": "choose",
+          "v": "🥚",
+          "s": "肉、蛋、豆腐、牛奶裡的「蛋白質」，對正在長大的小朋友特別重要，因為它能？",
+          "opts": [
+            "讓食物吃起來變得更甜",
+            "把牙齒自動染成白色",
+            "幫助身體長肌肉、修補組織、順利長大"
+          ],
+          "ans": 2,
+          "why": "蛋白質是身體的「建材」，用來建造和修補肌肉等身體組織。"
+        },
+        {
+          "t": "choose",
+          "v": "🥑",
+          "s": "關於「脂肪」，下面哪一句話最正確？",
+          "opts": [
+            "適量的脂肪能提供能量、幫身體保暖，但吃太多對健康不好",
+            "脂肪完全沒有用，一點都不能吃",
+            "脂肪吃得越多，身體就會越健康"
+          ],
+          "ans": 0,
+          "why": "脂肪能儲存能量、幫助保暖並協助吸收某些維他命，但過量會造成身體負擔。"
+        },
+        {
+          "t": "choose",
+          "v": "🍊",
+          "s": "多吃新鮮的蔬菜和水果（例如芭樂、柳丁），可以幫我們補充哪一種營養？",
+          "opts": [
+            "大量的鹽分",
+            "維他命C",
+            "防腐劑"
+          ],
+          "ans": 1,
+          "why": "蔬菜水果富含維他命C等維他命，有助身體維持健康。"
+        },
+        {
+          "t": "choose",
+          "v": "🦴",
+          "s": "牛奶、小魚乾裡含有很多「鈣」，鈣主要幫助身體的哪個部分？",
+          "opts": [
+            "骨骼和牙齒，讓它們更強壯",
+            "讓眼睛在黑暗中看得更清楚",
+            "讓頭髮長得更快"
+          ],
+          "ans": 0,
+          "why": "鈣是骨骼和牙齒的重要材料，多補充有助骨骼強壯、幫助長高。"
+        },
+        {
+          "t": "choose",
+          "v": "🩸",
+          "s": "「鐵」這種礦物質，主要對身體的哪一項有幫助？",
+          "opts": [
+            "讓頭髮自然變捲",
+            "讓皮膚曬太陽也不會黑",
+            "幫助製造血液，把氧氣送到全身"
+          ],
+          "ans": 2,
+          "why": "鐵是血液中紅血球的重要成分，能幫助把氧氣運送到全身。"
+        },
+        {
+          "t": "choose",
+          "v": "🧪",
+          "s": "有些食品會加「防腐劑」或「色素」等食品添加物。我們該用什麼態度看待它們？",
+          "opts": [
+            "合法又適量地使用是被允許的，我們可以看標示、盡量選添加物少一點的食品",
+            "只要含有添加物的食品都有毒，連一口都不能吃",
+            "添加物加得越多越好，吃再多也沒關係"
+          ],
+          "ans": 0,
+          "why": "合法且適量的添加物是安全的，但養成看標示、多選天然食物的習慣會更好。"
+        },
+        {
+          "t": "choose",
+          "v": "🍭",
+          "s": "常常喝含糖飲料、吃很多糖果，可能對健康造成什麼影響？",
+          "opts": [
+            "會讓牙齒變得更堅固",
+            "容易蛀牙，長期下來也可能造成肥胖",
+            "對身體完全不會有任何影響"
+          ],
+          "ans": 1,
+          "why": "口腔細菌會利用糖產生酸，腐蝕牙齒造成蛀牙，攝取過量也容易造成肥胖。"
+        },
+        {
+          "t": "choose",
+          "v": "🍽️",
+          "s": "想要吃得健康，「均衡飲食」指的是什麼？",
+          "opts": [
+            "各類食物都適量攝取，不偏食也不暴飲暴食",
+            "只吃自己最喜歡的那一種食物就好",
+            "為了健康，乾脆什麼都不要吃"
+          ],
+          "ans": 0,
+          "why": "均衡飲食是各類食物適量、多樣地攝取，讓身體得到各種需要的營養。"
+        }
+      ]
+    },
+    {
+      "id": "L22",
+      "emoji": "⚠️",
+      "title": "居家安全化學",
+      "subtitle": "認識家裡的清潔劑與藥品，學會保護自己的安全小撇步",
+      "steps": [
+        {
+          "t": "fact",
+          "v": "🧴",
+          "s": "家裡的清潔劑和藥品用對了很方便，用錯了卻會受傷——記得安全第一！",
+          "more": "廚房、浴室裡有很多化學小幫手，例如清潔劑、消毒水和藥品。它們其實是化學品，只要照著瓶身標示使用、放在小朋友拿不到的地方、遇到問題就找大人，就能又乾淨又安全。這一關不教任何危險的做法，只教你怎麼看懂警告、避開危險，並在需要時勇敢告訴大人。"
+        },
+        {
+          "t": "choose",
+          "v": "🏷️",
+          "s": "要用一瓶清潔劑之前，最先應該做的事情是什麼？",
+          "opts": [
+            "先看瓶身上的標示和警告圖示",
+            "不用看，直接倒出來用",
+            "先靠近用力聞一聞香不香"
+          ],
+          "ans": 0,
+          "why": "標示會告訴我們正確用法和要小心的地方，看懂了才安全。"
+        },
+        {
+          "t": "choose",
+          "v": "🚫",
+          "s": "漂白水和含氨的清潔劑（像某些玻璃清潔劑）如果混在一起可能產生有毒氣體。所以我們應該怎麼做？",
+          "opts": [
+            "絕對不要把不同清潔劑混在一起，交給大人處理",
+            "混在一起清潔力更強，應該多混一點",
+            "混一點點應該沒關係"
+          ],
+          "ans": 0,
+          "why": "有些清潔劑混合會冒出有毒氣體，千萬不要混，這種事要交給大人。"
+        },
+        {
+          "t": "choose",
+          "v": "💊",
+          "s": "桌上有看起來很像糖果的藥丸，你應該怎麼辦？",
+          "opts": [
+            "不可以吃，藥不是糖果，先問大人",
+            "看起來像糖果就吃吃看",
+            "分給朋友一起吃"
+          ],
+          "ans": 0,
+          "why": "藥要照大人或醫生的指示吃，亂吃很危險，不確定就先問大人。"
+        },
+        {
+          "t": "choose",
+          "v": "🔥",
+          "s": "在家裡突然聞到瓦斯的味道，最安全的做法是什麼？",
+          "opts": [
+            "不要開火也不要按電器開關，打開窗戶通風並告訴大人",
+            "趕快開電燈看清楚哪裡在漏",
+            "點火柴確認瓦斯有沒有漏出來"
+          ],
+          "ans": 0,
+          "why": "瓦斯碰到火花可能起火或爆炸，要保持通風並立刻找大人處理。"
+        },
+        {
+          "t": "choose",
+          "v": "🔒",
+          "s": "家裡的清潔劑和消毒水放在哪裡比較安全？",
+          "opts": [
+            "收在小朋友和寵物拿不到的高處或有鎖的櫃子",
+            "放在地上或茶几，隨手就能拿",
+            "和食物一起放進冰箱"
+          ],
+          "ans": 0,
+          "why": "放高處或鎖起來，可以避免小朋友或寵物不小心誤拿誤吃。"
+        },
+        {
+          "t": "choose",
+          "v": "❓",
+          "s": "在角落發現一瓶沒有標示、不知道是什麼的液體，你應該怎麼做？",
+          "opts": [
+            "不要亂碰、亂聞、亂嚐，離開並告訴大人",
+            "打開來聞一聞是什麼味道",
+            "嚐一小口猜猜看是什麼"
+          ],
+          "ans": 0,
+          "why": "來路不明的東西可能有危險，看不懂或不確定就別碰，交給大人判斷。"
+        },
+        {
+          "t": "choose",
+          "v": "🆘",
+          "s": "不小心把清潔劑濺到眼睛、皮膚，或是誤喝了，第一步應該怎麼做？",
+          "opts": [
+            "馬上告訴大人，並照瓶身指示處理或就醫",
+            "忍一忍不要說，怕被罵",
+            "自己上網亂試各種偏方"
+          ],
+          "ans": 0,
+          "why": "誤觸或誤喝化學品要盡快讓大人幫忙，越早處理越安全。"
+        },
+        {
+          "t": "choose",
+          "v": "🪟",
+          "s": "在浴室或廚房使用有刺鼻味道的清潔劑時，怎麼做比較安全？",
+          "opts": [
+            "打開窗戶或抽風機保持通風，不要待太久",
+            "把門窗全部關緊，味道才不會跑掉",
+            "把臉貼近用力多聞幾下"
+          ],
+          "ans": 0,
+          "why": "保持通風可以讓刺鼻的氣味散掉，呼吸起來更安全。"
+        },
+        {
+          "t": "choose",
+          "v": "🥤",
+          "s": "為什麼不可以把清潔劑或消毒水裝進喝完的飲料瓶裡？",
+          "opts": [
+            "因為可能被別人誤以為是飲料而喝下去，很危險",
+            "因為飲料瓶太小裝不下",
+            "因為這樣比較省錢，應該多裝一些"
+          ],
+          "ans": 0,
+          "why": "換裝到飲料瓶容易讓人誤喝，化學品要留在原本有標示的瓶子裡。"
+        },
+        {
+          "t": "choose",
+          "v": "☠️",
+          "s": "有些瓶子上印著骷髏頭的圖示，這代表什麼意思？",
+          "opts": [
+            "代表裡面有毒或很危險，要特別小心、不要亂碰",
+            "代表這是好玩的玩具",
+            "代表裡面的東西可以安心喝下去"
+          ],
+          "ans": 0,
+          "why": "骷髏頭是警告圖示，看到它就要提高警覺並遠離，需要時找大人。"
+        }
+      ]
+    }
+  ];
+
+  // =====================================================================
+  // DOM 參照
+  // =====================================================================
+  var $ = function (id) { return document.getElementById(id); };
+  var screenMenu = $('screen-menu');
+  var screenPlay = $('screen-play');
+  var levelList = $('level-list');
+  var stage = $('stage');
+  var stepDots = $('step-dots');
+  var playTitle = $('play-title');
+
+  // 目前遊玩狀態：{ level, idx, correctCount, total }
+  var cur = null;
+
+  // 計分步數（choose）——星等分母。
+  function scoringSteps(level) {
+    var n = 0;
+    for (var i = 0; i < level.steps.length; i++) if (level.steps[i].t === 'choose') n++;
+    return n;
+  }
+
+  function doneCount() {
+    var c = 0;
+    for (var i = 0; i < LEVELS.length; i++) if (progress[LEVELS[i].id] && progress[LEVELS[i].id].done) c++;
+    return c;
+  }
+  function earnedBadgeCount() {
+    var c = 0;
+    for (var i = 0; i < BADGE_DEFS.length; i++) if (badges[BADGE_DEFS[i].id]) c++;
+    return c;
+  }
+  function totalStars() {
+    var s = 0;
+    for (var id in progress) { if (progress[id] && progress[id].best) s += progress[id].best; }
+    return s;
+  }
+
+  // =====================================================================
+  // 選單渲染
+  // =====================================================================
+  function renderMenu() {
+    var dc = doneCount();
+    $('ov-done').textContent = dc + '/' + LEVELS.length;
+    $('ov-badges').textContent = earnedBadgeCount() + '/' + BADGE_DEFS.length;
+    $('ov-stars').textContent = totalStars();
+    $('chemBadgeFabCount').textContent = earnedBadgeCount() + '/' + BADGE_DEFS.length;
+
+    // 歡迎語（首次 / 回訪 / 全完成；讚美努力、不催促）
+    if (dc >= LEVELS.length) {
+      $('hello-text').textContent = '所有等級都完成了，你是化學小博士！🎓';
+      $('hello-sub').textContent = '想再逛哪一關都可以，慢慢玩、慢慢懂。';
+    } else if (dc > 0) {
+      $('hello-text').textContent = '歡迎回來！你已經完成 ' + dc + ' 個等級，好厲害！';
+      $('hello-sub').textContent = '選一個等級，慢慢玩、慢慢懂。';
+    }
+
+    // 等級卡（全開放、不擋關，孩子可自由選）
+    levelList.innerHTML = '';
+    for (var u = 0; u < LEVELS.length; u++) {
+      (function (level, num) {
+        var done = progress[level.id] && progress[level.id].done;
+        var stars = progress[level.id] ? (progress[level.id].best || 0) : 0;
+        var total = scoringSteps(level);
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'chem-level';
+        card.setAttribute('aria-label', '等級 ' + num + '：' + level.title);
+        var dots = '';
+        for (var d = 0; d < total; d++) dots += '<i class="' + (d < stars ? 'on' : '') + '"></i>';
+        card.innerHTML =
+          '<div class="chem-level-top">' +
+            '<span class="chem-level-emoji" aria-hidden="true">' + level.emoji + '</span>' +
+            '<div>' +
+              '<div class="chem-level-num">等級 ' + num + '</div>' +
+              '<div class="chem-level-name">' + level.title + '</div>' +
+              '<div class="chem-level-sub">' + level.subtitle + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="chem-level-foot">' +
+            '<span class="chem-level-status ' + (done ? 'done' : 'todo') + '">' +
+              (done ? '✅ 已完成' : '▶️ 開始挑戰（共 ' + total + ' 題）') + '</span>' +
+            '<span class="chem-level-dots" aria-hidden="true">' + dots + '</span>' +
+          '</div>';
+        card.addEventListener('click', function () { startLevel(level); });
+        levelList.appendChild(card);
+      })(LEVELS[u], u + 1);
+    }
+  }
+
+  // =====================================================================
+  // 遊玩流程
+  // =====================================================================
+  function show(screen) {
+    screenMenu.classList.remove('active');
+    screenPlay.classList.remove('active');
+    screen.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function startLevel(level) {
+    cur = { level: level, idx: 0, correctCount: 0, total: scoringSteps(level) };
+    playTitle.textContent = level.emoji + ' ' + level.title;
+    show(screenPlay);
+    renderStep();
+  }
+
+  function renderStepDots() {
+    stepDots.innerHTML = '';
+    for (var i = 0; i < cur.level.steps.length; i++) {
+      var b = document.createElement('i');
+      if (i < cur.idx) b.className = 'on';
+      else if (i === cur.idx) b.className = 'cur';
+      stepDots.appendChild(b);
+    }
+  }
+
+  function next() {
+    cur.idx++;
+    if (cur.idx >= cur.level.steps.length) finishLevel();
+    else renderStep();
+  }
+
+  function ttsButton(text) { return ''; }  /* 科學頁不需朗讀鈕（移除 🔊 TTS） */
+  function bindTts(root) {
+    var btns = root.querySelectorAll('.chem-tts');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].addEventListener('click', function () { speak(this.getAttribute('data-tts')); });
+    }
+  }
+
+  function renderStep() {
+    renderStepDots();
+    var step = cur.level.steps[cur.idx];
+    if (step.t === 'fact') return renderFact(step);
+    if (step.t === 'choose') return renderChoose(step);
+  }
+
+  // ---- fact（worked example 先行） ----
+  function renderFact(step) {
+    stage.innerHTML =
+      '<div class="chem-stage">' +
+        '<div class="chem-visual" aria-hidden="true">' + step.v + '</div>' +
+        '<p class="chem-sentence">' + step.s + '</p>' +
+        '<div class="chem-toolrow">' + ttsButton(step.s) +
+          '<button type="button" class="btn" id="btn-more">💡 看更多</button></div>' +
+        '<div class="chem-reveal" id="reveal">' + (step.more || '') + '</div>' +
+      '</div>' +
+      '<div class="chem-actions">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">開始挑戰 ➡️</button>' +
+      '</div>';
+    bindTts(stage);
+    $('btn-more').addEventListener('click', function () {
+      $('reveal').classList.add('show');
+    });
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // ---- choose（選項洗牌；每題只計一次分） ----
+  function renderChoose(step) {
+    // 打亂選項顯示順序（正解不可固定在第一個，孩子才會真的閱讀）。
+    // data-i 記的是「原始索引」，因此對答判斷 i === step.ans 仍然正確。
+    var order = [];
+    for (var oi = 0; oi < step.opts.length; oi++) order.push(oi);
+    for (var m = order.length - 1; m > 0; m--) {
+      var r = Math.floor(Math.random() * (m + 1));
+      var tt = order[m]; order[m] = order[r]; order[r] = tt;
+    }
+    var optsHtml = '';
+    for (var k = 0; k < order.length; k++) {
+      var origIdx = order[k];
+      optsHtml += '<button type="button" class="chem-opt" data-i="' + origIdx + '">' +
+        '<span>' + step.opts[origIdx] + '</span><span class="chem-opt-mark" aria-hidden="true"></span></button>';
+    }
+    stage.innerHTML =
+      '<div class="chem-stage">' +
+        '<div class="chem-visual" aria-hidden="true">' + step.v + '</div>' +
+        '<p class="chem-sentence">' + step.s + '</p>' +
+        '<div class="chem-toolrow">' + ttsButton(step.s) + '</div>' +
+        '<div class="chem-options">' + optsHtml + '</div>' +
+        '<div class="chem-reveal" id="reveal"></div>' +
+      '</div>' +
+      '<div class="chem-actions" id="afteract" style="display:none">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">繼續 ➡️</button>' +
+      '</div>';
+    bindTts(stage);
+
+    // answered 旗標鎖定：僅第一次作答計入 cur.correctCount，之後重試只給視覺回饋。
+    var answered = false;
+    var btns = stage.querySelectorAll('.chem-opt');
+    for (var b = 0; b < btns.length; b++) {
+      btns[b].addEventListener('click', function () {
+        var i = parseInt(this.getAttribute('data-i'), 10);
+        var isCorrect = (i === step.ans);
+        if (answered) {
+          // 已答過：只給視覺提示，不再重複計分。
+          if (isCorrect) {
+            this.classList.add('correct');
+            this.querySelector('.chem-opt-mark').textContent = '✅';
+          } else {
+            this.classList.add('wrong');
+            this.querySelector('.chem-opt-mark').textContent = '❌';
+          }
+          return;
+        }
+        answered = true;
+        if (window.Game && window.Game.recordAnswer) Game.recordAnswer('science', isCorrect);
+        if (isCorrect) {
+          this.classList.add('correct');
+          this.querySelector('.chem-opt-mark').textContent = '✅';
+          cur.correctCount++;           // 本頁本地星等（記憶體），與主引擎無關
+          reveal(step, true);
+        } else {
+          this.classList.add('wrong');
+          this.querySelector('.chem-opt-mark').textContent = '❌';
+          // 標出正解、鼓勵再試（不懲罰）。用原始索引找到正解按鈕（選項已洗牌）。
+          var correctBtn = stage.querySelector('.chem-opt[data-i="' + step.ans + '"]');
+          if (correctBtn) {
+            correctBtn.classList.add('correct');
+            correctBtn.querySelector('.chem-opt-mark').textContent = '✅';
+          }
+          reveal(step, false);
+        }
+      });
+    }
+
+    function reveal(step, correct) {
+      var rev = $('reveal');
+      rev.textContent = (correct ? '答對了！' : '沒關係，再想想～正確答案是這個！') + ' ' + (step.why || '');
+      rev.classList.add('show');
+      $('afteract').style.display = 'flex';
+      var all = stage.querySelectorAll('.chem-opt');
+      for (var k = 0; k < all.length; k++) all[k].disabled = true;
+    }
+
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // =====================================================================
+  // 完成關卡：寫入獨立 key（保留最佳星等，只增不減）＋ 解鎖徽章（純本地）
+  // =====================================================================
+  function finishLevel() {
+    var level = cur.level;
+    var stars = cur.correctCount;
+    var total = cur.total;
+
+    // 進度：保留最佳星等（Math.max，只增不減）
+    var prev = progress[level.id] || {};
+    progress[level.id] = { done: true, best: Math.max(prev.best || 0, stars) };
+    saveJSON(PROG_KEY, progress);
+
+    // 解鎖徽章（只增不減；已解鎖不覆寫 earnedAt）
+    var newlyEarned = [];
+    var lb = BADGE_BY_LEVEL[level.id];
+    if (lb && !badges[lb.id]) {
+      badges[lb.id] = { earnedAt: new Date().toISOString() };
+      newlyEarned.push(lb);
+    }
+    // 全部等級完成 → 解鎖總成就
+    if (doneCount() >= LEVELS.length) {
+      var grand = BADGE_DEFS[BADGE_DEFS.length - 1]; // b_doctor
+      if (!badges[grand.id]) {
+        badges[grand.id] = { earnedAt: new Date().toISOString() };
+        newlyEarned.push(grand);
+      }
+    }
+    if (newlyEarned.length) saveJSON(BADGE_KEY, badges);
+
+    var starStr = '';
+    for (var i = 0; i < total; i++) starStr += (i < stars ? '⭐' : '☆');
+
+    stage.innerHTML =
+      '<div class="chem-stage chem-done">' +
+        '<div class="chem-done-emoji" aria-hidden="true">🎉</div>' +
+        '<div class="chem-done-title">完成「' + level.title + '」！</div>' +
+        '<div class="chem-done-stars" aria-label="得到 ' + stars + ' 顆星">' + starStr + '</div>' +
+        '<p class="chem-sentence" style="font-size:clamp(16px,3.6vw,19px)">你答對了 ' + stars + ' / ' + total + ' 題，好棒！</p>' +
+      '</div>' +
+      '<div class="chem-actions">' +
+        '<button type="button" class="btn" id="btn-menu">回到選單</button>' +
+        (nextLevelOf(level) ? '<button type="button" class="btn btn-primary" id="btn-nextlevel">下一個等級 ➡️</button>' : '<button type="button" class="btn btn-primary" id="btn-badges2">看我的徽章 🏅</button>') +
+      '</div>';
+
+    // 徽章慶祝（純 UI；Game.showToast 只彈提示、不計分）
+    for (var e = 0; e < newlyEarned.length; e++) {
+      toast('解鎖徽章：' + newlyEarned[e].emoji + ' ' + newlyEarned[e].name + '！', 'badge');
+    }
+
+    $('btn-menu').addEventListener('click', goMenu);
+    var nl = nextLevelOf(level);
+    if (nl) $('btn-nextlevel').addEventListener('click', function () { startLevel(nl); });
+    else { var b2 = $('btn-badges2'); if (b2) b2.addEventListener('click', function () { goMenu(); openBadges(); }); }
+  }
+
+  function nextLevelOf(level) {
+    for (var i = 0; i < LEVELS.length; i++) {
+      if (LEVELS[i].id === level.id) return LEVELS[i + 1] || null;
+    }
+    return null;
+  }
+
+  function goMenu() {
+    cur = null;
+    renderMenu();
+    show(screenMenu);
+  }
+
+  // =====================================================================
+  // 徽章櫃浮層（[hidden] 屬性切換；只切 hidden，不動 class）
+  // =====================================================================
+  var overlay = $('chemBadgeOverlay');
+
+  function renderBadges() {
+    var grid = $('chem-badge-grid');
+    grid.innerHTML = '';
+    for (var i = 0; i < BADGE_DEFS.length; i++) {
+      var def = BADGE_DEFS[i];
+      var earned = !!badges[def.id];
+      var el = document.createElement('div');
+      el.className = 'chem-badge ' + (earned ? 'earned' : 'locked');
+      var state = earned
+        ? '已解鎖'
+        : (def.level ? '玩完這個等級就會亮起來喔！' : '完成全部 ' + LEVELS.length + ' 個等級就會亮起來！');
+      var goBtn = (earned && def.level)
+        ? '<button type="button" class="chem-badge-go" data-go="' + def.level + '">再逛一次 →</button>'
+        : '';
+      el.innerHTML =
+        (earned ? '<span class="chem-badge-check" aria-hidden="true">✓</span>' : '') +
+        '<span class="chem-badge-glyph" aria-hidden="true">' + def.emoji + '</span>' +
+        '<span class="chem-badge-name">' + def.name + '</span>' +
+        '<span class="chem-badge-state">' + state + '</span>' +
+        goBtn;
+      grid.appendChild(el);
+    }
+    // 空狀態文案（溫和、不誘導）
+    var note = $('chem-badge-note');
+    if (earnedBadgeCount() === 0) {
+      note.textContent = '你的化學徽章櫃還空空的，先去玩一個等級吧！';
+    } else {
+      note.textContent = '每完成一個等級，就會解鎖一枚徽章。徽章只會亮起、不會消失——慢慢收集就好！';
+    }
+    // 「再逛一次」→ 回到該等級
+    var gos = grid.querySelectorAll('.chem-badge-go');
+    for (var g = 0; g < gos.length; g++) {
+      gos[g].addEventListener('click', function () {
+        var lid = this.getAttribute('data-go');
+        var lvl = null;
+        for (var j = 0; j < LEVELS.length; j++) if (LEVELS[j].id === lid) lvl = LEVELS[j];
+        if (lvl) { closeBadges(); startLevel(lvl); }
+      });
+    }
+  }
+
+  function openBadges() {
+    renderBadges();
+    overlay.hidden = false;
+    var closeBtn = $('chem-badge-close');
+    if (closeBtn) closeBtn.focus();
+  }
+  function closeBadges() { overlay.hidden = true; }
+
+  $('chemBadgeFab').addEventListener('click', openBadges);
+  $('chem-badge-close').addEventListener('click', closeBadges);
+  // 點浮層背景（非內容）也可關閉
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) closeBadges(); });
+  // Esc 關閉（鍵盤可操作）
+  document.addEventListener('keydown', function (e) {
+    if ((e.key === 'Escape' || e.key === 'Esc') && !overlay.hidden) closeBadges();
+  });
+
+  // =====================================================================
+  // 頂列按鈕（主題切換由共用 app-bar 的 [data-theme-toggle] 統一處理，
+  // 由 game_core 自動接線與圖示同步，本頁不再自行處理主題。）
+  // =====================================================================
+  $('btn-back').addEventListener('click', goMenu);
+
+  // =====================================================================
+  // 啟動
+  // =====================================================================
+  renderMenu();
+})();
+</script>
+</body>
+</html>

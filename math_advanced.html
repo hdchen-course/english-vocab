@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>進階數學挑戰 🧮</title>
+<!-- 統一遊戲化引擎：先載共用設計 token（assets/app.css），再載 HUD/toast 樣式
+     （game_core.css），最後同步載入引擎（game_core.js）。
+     ─────────────────────────────────────────────────────────────────
+     計分（本頁為「數學進階」，計入 math 科目，讓學生升上進階內容時獎勵不中斷）：
+       宣告 body[data-game-wired="math"]，每題作答只呼叫一次 Game.recordAnswer('math', 對錯)
+       （作答後 answered 旗標鎖定，重試不再記帳）。本頁「不」呼叫 Game.award / recordSession，
+       進階徽章冊為純本地（自有 key、無 XP），故無 double-count。
+       本頁只「唯讀 / 純提示」使用引擎：Game.showToast（純提示，不記帳）與
+       Game.getProfile（唯讀，僅顯示暱稱／可省略）。主題切換完全交給共用
+       app-bar 的 [data-theme-toggle]，由 game_core 自動接線，本頁不寫主題 JS。
+     獨立 localStorage key：math_adv_progress_v1（與 player_profile_v1 完全區隔）。
+     ───────────────────────────────────────────────────────────────── -->
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<style>
+/* =====================================================================
+ * math_advanced.html — 本頁樣式（全部建立在 assets/app.css 的設計 token 上，
+ * 因此自動亮/暗色主題化、與學習基地視覺一致）。強調色系採紫色（purple）。
+ * =================================================================== */
+
+/* 本頁強調色沿用數學科紫色 --c-math；供 FAB / 徽章冊等共用 --accent* 別名。 */
+:root {
+  --su: var(--c-math);
+  --su-tint: var(--tint-math);
+  --su-ink: var(--c-math-ink);
+  --accent: var(--c-math);
+  --accent-ink: var(--c-math-ink);
+  --accent-tint: var(--tint-math);
+}
+
+body { overflow-x: hidden; }
+
+/* 頁面頂列（返回、標題） */
+.ma-topbar {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  margin-bottom: var(--s4);
+}
+.ma-topbar .ma-title {
+  flex: 1;
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  color: var(--ink);
+  min-width: 0;
+}
+
+/* 螢幕切換（尊重 prefers-reduced-motion） */
+.ma-screen { display: none; animation: ma-fade 0.3s ease; }
+.ma-screen.active { display: block; }
+@keyframes ma-fade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ma-screen { animation: none; }
+}
+
+/* 歡迎卡 */
+.ma-hello {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s4);
+  background: var(--su-tint);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  margin-bottom: var(--s4);
+}
+.ma-hello .ma-mascot { font-size: 46px; flex: none; line-height: 1; }
+.ma-hello .ma-hello-text { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+.ma-hello .ma-hello-sub { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; }
+
+/* 進度總覽小列 */
+.ma-overview {
+  display: flex; align-items: center; gap: var(--s3);
+  margin-bottom: var(--s4); flex-wrap: wrap;
+}
+.ma-overview .stat-tile { flex: 1; min-width: 96px; }
+
+/* 等級選單 grid */
+.ma-levels {
+  display: grid;
+  gap: var(--s4);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.ma-level {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  padding: var(--s4);
+  text-align: left;
+  cursor: pointer;
+  border: 2px solid var(--card-border);
+  background: var(--card);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  font-family: var(--font);
+  color: var(--ink);
+}
+.ma-level:hover { box-shadow: var(--shadow-lg); border-color: var(--su); }
+.ma-level:active { transform: scale(0.98); }
+.ma-level-top { display: flex; align-items: center; gap: var(--s3); }
+.ma-level-emoji {
+  font-size: 34px;
+  width: 56px; height: 56px;
+  flex: none;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 16px;
+}
+.ma-level-num { font-size: var(--fs-small); font-weight: 700; color: var(--su-ink); }
+.ma-level-name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); line-height: 1.25; }
+.ma-level-concepts { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; line-height: 1.4; }
+.ma-level-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-top: 2px; }
+.ma-level-status {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: var(--fs-small); font-weight: 700;
+}
+.ma-level-status.done { color: var(--c-correct-ink); }
+.ma-level-status.todo { color: var(--ink-soft); }
+.ma-level-stars { font-size: 16px; letter-spacing: 1px; }
+
+/* 進行中：大卡 */
+.ma-stage {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--s5) var(--s4);
+  text-align: center;
+}
+.ma-visual {
+  font-size: clamp(56px, 18vw, 92px);
+  line-height: 1.1;
+  margin: var(--s2) 0 var(--s3);
+  user-select: none;
+}
+.ma-question {
+  font-size: clamp(19px, 4.5vw, 24px);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.45;
+  margin: 0 auto var(--s4);
+  max-width: 32ch;
+}
+
+/* 本級起始重點卡（advance organizer / worked example 先於練習） */
+.ma-brief { text-align: left; }
+.ma-brief h2 {
+  font-size: var(--fs-h2); font-weight: 800; color: var(--ink);
+  margin: 0 0 var(--s3); text-align: center;
+}
+.ma-brief-sub { text-align: center; color: var(--ink-soft); font-weight: 700; font-size: var(--fs-small); margin: 0 0 var(--s3); }
+.ma-keyfacts { list-style: none; padding: 0; margin: 0 auto; max-width: 40ch; display: grid; gap: var(--s2); }
+.ma-keyfacts li {
+  display: flex; align-items: flex-start; gap: var(--s2);
+  padding: 10px 14px;
+  background: var(--su-tint);
+  border-radius: var(--r-md);
+  font-size: var(--fs-body);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.ma-keyfacts li .ma-kf-dot { flex: none; color: var(--su-ink); font-weight: 900; }
+
+/* 進度：本級第幾題 */
+.ma-steps {
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  margin-bottom: var(--s3); flex-wrap: wrap;
+}
+.ma-steps i { width: 20px; height: 6px; border-radius: 999px; background: var(--card-border); }
+.ma-steps i.on { background: var(--su); }
+.ma-steps i.cur { background: var(--su); box-shadow: 0 0 0 3px var(--su-tint); }
+
+/* 選項按鈕（tap 作答；命中區 ≥56px） */
+.ma-options { display: grid; gap: var(--s3); margin-top: var(--s2); }
+.ma-opt {
+  display: flex; align-items: center; gap: var(--s2);
+  min-height: 56px;
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid var(--card-border);
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: clamp(16px, 3.4vw, 19px);
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.ma-opt:active { transform: scale(0.98); }
+.ma-opt:disabled { cursor: default; }
+/* 作答後高亮：文字用 var(--ink)（亮暗雙主題皆過 AA），對錯以邊框顏色 + ✅/❌ 雙碼標示（不單靠顏色） */
+.ma-opt.correct { border-color: var(--c-correct); background: var(--tint-english); color: var(--ink); }
+.ma-opt.wrong { border-color: var(--c-wrong); background: rgba(255,118,117,0.12); color: var(--ink); }
+.ma-opt.correct .ma-opt-mark { color: var(--c-correct-ink); }
+.ma-opt.wrong .ma-opt-mark { color: var(--c-streak-ink); }
+.ma-opt .ma-opt-mark { margin-left: auto; font-size: 22px; }
+
+/* 揭示區（答案解說） */
+.ma-reveal {
+  margin-top: var(--s4);
+  padding: var(--s3) var(--s4);
+  background: var(--su-tint);
+  border-radius: var(--r-md);
+  font-size: var(--fs-body);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.55;
+  text-align: left;
+  display: none;
+}
+.ma-reveal.show { display: block; animation: ma-fade 0.3s ease; }
+@media (prefers-reduced-motion: reduce) { .ma-reveal.show { animation: none; } }
+
+/* 完成畫面 */
+.ma-done { text-align: center; padding: var(--s5) var(--s4); }
+.ma-done-emoji { font-size: clamp(64px, 22vw, 100px); }
+.ma-done-stars { font-size: 34px; letter-spacing: 4px; margin: var(--s2) 0; }
+.ma-done-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); }
+
+/* 底部行動列 */
+.ma-actions { display: flex; gap: var(--s3); margin-top: var(--s4); flex-wrap: wrap; }
+.ma-actions .btn { flex: 1; min-width: 140px; }
+
+.ma-footnote { text-align: center; color: var(--ink-soft); font-size: var(--fs-small); margin-top: var(--s5); font-weight: 600; max-width: 34em; margin-inline: auto; }
+
+/* 桌機（≥1280）近滿版：沿用 app.css 的 --content-max（min(95vw,1800)），不再自行封頂 1200，讓選單多欄鋪滿、與其他頁一致；答題欄由 .ma-question/.ma-keyfacts 自身 ch 上限維持窄欄護眼。 */
+</style>
+</head>
+<body data-game-wired="math" data-game-maturity="advanced">
+<!-- ===== 共用頂部應用列（全站一致；貼在 <body> 內第一個元素） ===== -->
+<!-- data-game-hud="off"：本頁透過 data-game-wired="math" + recordAnswer 直接記帳（會計入主角色 XP/等級），關閉浮動 HUD 僅為減少干擾；「純本地、不計 XP」的是下方進階徽章冊，不是整頁。 -->
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">進階數學挑戰 🧮</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle
+          aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+
+  <!-- ============================= 等級選單 ============================= -->
+  <section id="screen-menu" class="ma-screen active">
+    <div class="ma-topbar">
+      <span class="ma-title">進階數學挑戰 🧮</span>
+    </div>
+
+    <div class="ma-hello">
+      <span class="ma-mascot" aria-hidden="true">🧮</span>
+      <div>
+        <div class="ma-hello-text" id="hello-text">歡迎來到進階挑戰！這裡是加分小旅程，玩得開心最重要。</div>
+        <div class="ma-hello-sub" id="hello-sub">還沒開始也沒關係，挑一個等級試試看吧！</div>
+      </div>
+    </div>
+
+    <div class="ma-overview">
+      <div class="stat-tile"><span class="stat-value" id="ov-done">0/9</span><span class="stat-label">完成等級</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-badges">0/10</span><span class="stat-label">收集徽章</span></div>
+    </div>
+
+    <div class="ma-levels" id="level-list"><!-- 由 JS 產生 --></div>
+
+    <p class="ma-footnote">這是「進階挑戰」小旅程，慢慢玩、盡量想，答錯也沒關係。🌱</p>
+
+    <nav class="cn-nextup" aria-label="打好基礎" style="display:flex;flex-direction:column;gap:10px;max-width:640px;margin:4px auto 8px">
+      <a href="multiply.html" style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--card);border:2px dashed var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.4"><span style="font-size:22px;flex:none" aria-hidden="true">🧮</span><span>← 覺得太快？先回「乘法樂園」練習打底</span></a>
+      <a href="math_concepts.html" style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--card);border:2px dashed var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.4"><span style="font-size:22px;flex:none" aria-hidden="true">🧠</span><span>← 先回「數學觀念養成」複習觀念</span></a>
+    </nav>
+  </section>
+
+  <!-- ============================= 進行中 ============================= -->
+  <section id="screen-play" class="ma-screen">
+    <div class="ma-topbar">
+      <button type="button" class="btn btn-icon" id="btn-back" aria-label="回到等級選單">←</button>
+      <span class="ma-title" id="play-title">等級</span>
+    </div>
+    <div class="ma-steps" id="step-dots" aria-hidden="true"></div>
+    <div class="play-column">
+      <div id="stage"><!-- 由 JS 產生每一題 --></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* =====================================================================
+ * 主程式（自足 IIFE）
+ *   - 9 個中性等級（等級1..9）、每級 12 題，全部一律解鎖、可自由進入。
+ *   - 選項每題 Fisher–Yates 洗牌；answer 為「未洗牌前的 0-based 索引」，
+ *     以 data-i 保留原始索引判斷 i===answer，判分不受洗牌影響。
+ *   - 每題最多記一次分（answered 旗標守衛）；答錯可再試但只給視覺提示、不加分。
+ *   - 完成一級 → 依 correctCount/總題數給星（3 階：★☆☆／★★☆／★★★）、寫入 best、
+ *     彈 Game.showToast 鼓勵語，並解鎖對應本地徽章。
+ *   - 獨立 localStorage key：math_adv_progress_v1。結構：
+ *       { lv1:{done,best}, ..., lv9:{done,best}, badges:{ badgeId:true } }
+ *   - 「只增不減」：best = Math.max(prev.best||0, thisRun)；徽章 awarded guard 永不取消。
+ *   - 零重複計分：本徽章模組不呼叫 Game.recordAnswer / award / recordSession，
+ *     只用 Game.showToast（純提示）與（可省略的）Game.getProfile（唯讀）。
+ *     （每題作答的 recordAnswer('math') 在頁面主程式，非本模組；兩者不重疊。）
+ * =================================================================== */
+(function () {
+  'use strict';
+
+  // ---- 純提示（不記帳）：優先用 game_core toast，失敗即靜默 ----
+  function toast(msg, kind) {
+    try { if (window.Game && Game.showToast) Game.showToast(msg, kind || 'info'); } catch (e) { /* 靜默 */ }
+  }
+
+  // ---- 本頁進度（獨立 key，全程 try/catch；配額滿即靜默放棄不崩潰） ----
+  var PROG_KEY = 'math_adv_progress_v1';
+  function loadProg() {
+    var p = null;
+    try { p = JSON.parse(localStorage.getItem(PROG_KEY)); } catch (e) { p = null; }
+    if (!p || typeof p !== 'object') p = {};
+    if (typeof p.badges !== 'object' || !p.badges) p.badges = {};
+    return p;
+  }
+  function saveProg(p) {
+    try { localStorage.setItem(PROG_KEY, JSON.stringify(p)); } catch (e) { /* 靜默降級 */ }
+  }
+  var progress = loadProg(); // { lvId:{done,best}, badges:{} }
+
+  // =====================================================================
+  // 課程內容（全繁體中文；每一題定義／公式／答案皆已獨立數值查核）
+  //   answer = 未洗牌前 options 陣列的 0-based 索引。
+  // =====================================================================
+  var LEVELS = [
+    {
+      id: 'lv1', level: 1, name: '拆解與重組', emoji: '🧩', color: '#14b8a6',
+      concepts: ['因式分解（提公因式、十字交乘、差平方、完全平方）', '一元二次方程式與其解（因式分解法、判別式）'],
+      keyFacts: [
+        '(a+b)² = a²+2ab+b²',
+        'x²−a² = (x+a)(x−a)',
+        '(x−p)(x−q)=0 的解為 x=p 或 x=q',
+        '判別式 b²−4ac 決定實數解個數',
+        'x²+bx 補成完全平方要加 (b/2)²'
+      ],
+      questions: [
+        { q: '把 (x+3)(x+2) 乘開，會得到什麼？', options: ['x²+5x+6', 'x²+6x+5', 'x²+5x+5', 'x²+6x+6'], answer: 0, why: '外項內項相加 3+2=5，常數 3×2=6，所以是 x²+5x+6。' },
+        { q: '把 x²+7x+12 因式分解，等於？', options: ['(x+3)(x+4)', '(x+2)(x+6)', '(x+1)(x+12)', '(x+2)(x+10)'], answer: 0, why: '找兩數相乘=12、相加=7，就是 3 和 4，所以 (x+3)(x+4)。' },
+        { q: '把 x²−9 因式分解，等於？', options: ['(x+3)(x−3)', '(x−3)(x−3)', '(x+9)(x−1)', '(x+3)(x+3)'], answer: 0, why: '這是差平方：x²−a²=(x+a)(x−a)，9=3²，所以 (x+3)(x−3)。' },
+        { q: '把 x²−5x+6 因式分解，等於？', options: ['(x−2)(x−3)', '(x+2)(x+3)', '(x−1)(x−6)', '(x−5)(x−1)'], answer: 0, why: '兩數相乘=6、相加=−5，就是 −2 和 −3，所以 (x−2)(x−3)。' },
+        { q: '方程式 x²=16 的解是？', options: ['x=4 或 x=−4', '只有 x=4', 'x=8', 'x=±2'], answer: 0, why: '4²=16、(−4)²=16，正負都要算，所以 x=4 或 −4。' },
+        { q: '解方程式 (x−2)(x+5)=0', options: ['x=2 或 x=−5', 'x=−2 或 x=5', 'x=2 或 x=5', 'x=−2 或 x=−5'], answer: 0, why: '兩個東西相乘=0，代表其中一個是 0：x−2=0 或 x+5=0。' },
+        { q: '解方程式 x²−7x+10=0', options: ['x=2 或 x=5', 'x=−2 或 x=−5', 'x=2 或 x=−5', 'x=1 或 x=10'], answer: 0, why: '因式分解成 (x−2)(x−5)=0，所以 x=2 或 5。' },
+        { q: '一元二次方程式 ax²+bx+c=0 的「判別式」是？', options: ['b²−4ac', 'b²+4ac', '4ac−b²', '2a'], answer: 0, why: '判別式 b²−4ac 用來判斷有幾個實數解。' },
+        { q: '若判別式 b²−4ac 小於 0，這個方程式有幾個實數解？', options: ['沒有實數解', '剛好一個實數解', '兩個實數解', '無限多個解'], answer: 0, why: '判別式 <0 時開根號開不出實數，所以沒有實數解。' },
+        { q: '解方程式 x²−2x−3=0', options: ['x=3 或 x=−1', 'x=−3 或 x=1', 'x=3 或 x=1', 'x=2 或 x=3'], answer: 0, why: '因式分解成 (x−3)(x+1)=0，所以 x=3 或 −1。' },
+        { q: '要讓 x²+6x+□ 變成完全平方式，□ 要填？', options: ['9', '6', '3', '36'], answer: 0, why: '取一次項係數一半再平方：(6÷2)²=9，因為 (x+3)²=x²+6x+9。' },
+        { q: '(a+b)² 乘開等於？', options: ['a²+2ab+b²', 'a²+b²', 'a²−2ab+b²', '2a+2b'], answer: 0, why: '完全平方公式：(a+b)²=a²+2ab+b²，中間別忘了 2ab。' }
+      ]
+    },
+    {
+      id: 'lv2', level: 2, name: '座標與直線', emoji: '📐', color: '#3b82f6',
+      concepts: ['座標平面與象限', '兩點距離、中點、斜率', '直線方程式、平行與垂直'],
+      keyFacts: [
+        '象限：右上為第一，逆時針數到第四',
+        '距離 √((Δx)²+(Δy)²)、中點取平均',
+        '斜率 = 縱向變化 ÷ 橫向變化',
+        '平行斜率相等、垂直斜率相乘 =−1',
+        'y=mx+k 中 m 是斜率、k 是 y 截距'
+      ],
+      questions: [
+        { q: '點 (3, −2) 落在座標平面的哪一個象限？', options: ['第四象限', '第一象限', '第二象限', '第三象限'], answer: 0, why: 'x 是正、y 是負（右下方），就是第四象限。' },
+        { q: '點 (1, 2) 到點 (4, 6) 的距離是？', options: ['5', '7', '√7', '25'], answer: 0, why: '橫差 3、縱差 4，距離 √(3²+4²)=√25=5。' },
+        { q: '點 (0, 0) 和 (6, 8) 的中點是？', options: ['(3, 4)', '(6, 8)', '(3, 8)', '(2, 4)'], answer: 0, why: '中點就是把 x、y 各取平均：((0+6)/2,(0+8)/2)=(3,4)。' },
+        { q: '通過 (0, 0) 和 (2, 4) 的直線斜率是？', options: ['2', '1/2', '4', '−2'], answer: 0, why: '斜率 = 縱向變化 ÷ 橫向變化 = 4÷2 = 2。' },
+        { q: '直線 y=3x+1 的斜率是？', options: ['3', '1', '−3', '1/3'], answer: 0, why: '寫成 y=mx+k 時，x 前面的數 m 就是斜率，這裡是 3。' },
+        { q: '直線 y=2x−5 和 y 軸的交點是？', options: ['(0, −5)', '(−5, 0)', '(0, 5)', '(2, 0)'], answer: 0, why: '與 y 軸相交時 x=0，代入得 y=−5，交點 (0,−5)。' },
+        { q: '斜率為 0 的直線是哪一種？', options: ['水平線（橫的）', '鉛直線（直的）', '45 度斜線', '通過原點的線'], answer: 0, why: '斜率 0 代表不上不下，是一條水平線。' },
+        { q: '兩條互相平行的直線，它們的斜率？', options: ['相等', '互為倒數', '相乘等於 −1', '相加等於 0'], answer: 0, why: '平行代表傾斜程度一樣，所以斜率相等。' },
+        { q: '兩條互相垂直的直線，斜率相乘等於？', options: ['−1', '1', '0', '相等'], answer: 0, why: '互相垂直的兩線，斜率相乘剛好等於 −1。' },
+        { q: '通過 (0, 3)、斜率為 2 的直線方程式是？', options: ['y=2x+3', 'y=3x+2', 'y=2x−3', 'y=x+3'], answer: 0, why: '斜率 2 當 x 的係數、通過 (0,3) 表示 y 截距是 3，所以 y=2x+3。' },
+        { q: '點 (2, y) 在直線 y=x+1 上，y 等於？', options: ['3', '2', '1', '4'], answer: 0, why: '把 x=2 代入：y=2+1=3。' },
+        { q: '鉛直線 x=4 的斜率是？', options: ['沒有定義（不存在）', '0', '4', '1'], answer: 0, why: '鉛直線橫向完全沒變化，除以 0 沒有意義，所以斜率沒有定義。' }
+      ]
+    },
+    {
+      id: 'lv3', level: 3, name: '會變化的機器', emoji: '⚙️', color: '#f59e0b',
+      concepts: ['函數概念與函數值', '一次函數與二次函數的圖形', '拋物線的開口、頂點與平移'],
+      keyFacts: [
+        '函數：一個輸入對應剛好一個輸出',
+        '一次函數圖形是直線、二次函數是拋物線',
+        'y=ax²：a>0 開口向上、a<0 向下',
+        'y=x² 頂點在原點 (0,0)',
+        '圖形上下平移 = 整條式子加減常數'
+      ],
+      questions: [
+        { q: '函數 f(x)=2x+1，f(3) 等於？', options: ['7', '6', '5', '9'], answer: 0, why: '把 3 放進機器：2×3+1=7。' },
+        { q: '函數 f(x)=x²，f(−4) 等於？', options: ['16', '−16', '8', '−8'], answer: 0, why: '(−4)²=(−4)×(−4)=16，負負得正。' },
+        { q: '函數就像一台機器：一個輸入會對應到？', options: ['剛好一個輸出', '很多個輸出', '沒有輸出', '剛好兩個輸出'], answer: 0, why: '函數的規則是：每個輸入只給一個確定的輸出。' },
+        { q: '一次函數 y=ax+b（a≠0）的圖形是？', options: ['一條直線', '拋物線', '圓', '波浪線'], answer: 0, why: '一次函數畫出來永遠是一條直線。' },
+        { q: '二次函數 y=x² 的圖形叫做？', options: ['拋物線', '直線', '雙曲線', '圓'], answer: 0, why: '二次函數的圖形是像碗一樣的曲線，叫拋物線。' },
+        { q: 'y=x² 的圖形開口朝哪個方向？', options: ['向上', '向下', '向左', '向右'], answer: 0, why: 'x² 前面的係數是正的（+1），開口向上。' },
+        { q: 'y=−x²+4 的圖形開口朝哪個方向？', options: ['向下', '向上', '向左', '向右'], answer: 0, why: 'x² 前面是負的（−1），開口向下。' },
+        { q: 'y=x² 的最低點（頂點）在哪裡？', options: ['(0, 0)', '(1, 1)', '(0, 4)', '(2, 0)'], answer: 0, why: 'x=0 時 y 最小為 0，所以頂點在原點 (0,0)。' },
+        { q: '函數 y=x²−4 的圖形和 x 軸的交點是？', options: ['x=2 或 x=−2', 'x=4 或 x=−4', '只有 x=0', 'x=2 或 x=4'], answer: 0, why: '令 y=0：x²=4，所以 x=2 或 −2。' },
+        { q: '函數 y=|x|（絕對值），當 x=−3 時 y 等於？', options: ['3', '−3', '0', '9'], answer: 0, why: '絕對值表示到 0 的距離，永遠不是負的，|−3|=3。' },
+        { q: '把 y=x² 的圖形整個往上移 3 單位，新的式子是？', options: ['y=x²+3', 'y=x²−3', 'y=(x+3)²', 'y=3x²'], answer: 0, why: '往上平移就是每個 y 都加 3，變成 y=x²+3。' },
+        { q: '一次函數 y=−2x+6，當 x 越來越大時，y 會？', options: ['減少', '增加', '不變', '先增後減'], answer: 0, why: '斜率是負的（−2），所以 x 增加時 y 反而減少。' }
+      ]
+    },
+    {
+      id: 'lv4', level: 4, name: '翻倍與尺度', emoji: '📈', color: '#8b5cf6',
+      concepts: ['指數與指數律', '負指數與零指數', '對數的意義與計算'],
+      keyFacts: [
+        'aᵐ×aⁿ=aᵐ⁺ⁿ、(aᵐ)ⁿ=aᵐⁿ',
+        'a⁰=1（a≠0）、a⁻¹=1/a',
+        'logₐx 問：a 的幾次方等於 x',
+        'log₂8=3、log₁₀100=2、logₐ1=0',
+        '每次乘 2、乘 n 次 = 變 2ⁿ 倍'
+      ],
+      questions: [
+        { q: '2³ 等於多少？', options: ['8', '6', '9', '5'], answer: 0, why: '2³=2×2×2=8。' },
+        { q: '2⁴ × 2³ 等於 2 的幾次方？', options: ['2⁷', '2¹²', '4⁷', '2¹'], answer: 0, why: '同底相乘，指數相加：4+3=7，所以 2⁷。' },
+        { q: '(2³)² 等於 2 的幾次方？', options: ['2⁶', '2⁵', '2⁹', '4⁶'], answer: 0, why: '次方再取次方，指數相乘：3×2=6，所以 2⁶。' },
+        { q: '5⁰ 等於多少？', options: ['1', '0', '5', '沒有定義'], answer: 0, why: '任何不是 0 的數的 0 次方都等於 1。' },
+        { q: '2⁻¹ 等於多少？', options: ['1/2', '−2', '2', '−1/2'], answer: 0, why: '負指數代表倒數：2⁻¹=1/2。' },
+        { q: '10 的幾次方等於 1000?', options: ['3', '2', '4', '100'], answer: 0, why: '10³=10×10×10=1000，所以是 3 次方。' },
+        { q: 'log₂ 8 等於多少？（2 的幾次方等於 8）', options: ['3', '2', '4', '8'], answer: 0, why: '2³=8，所以 log₂8=3。' },
+        { q: 'log₁₀ 100 等於多少？', options: ['2', '10', '100', '1'], answer: 0, why: '10²=100，所以 log₁₀100=2。' },
+        { q: '對數 logₐ x 其實是在問什麼？', options: ['a 的幾次方等於 x', 'a 乘以幾等於 x', 'a 加上幾等於 x', 'x 的幾次方等於 a'], answer: 0, why: '對數就是指數的反問：a 的幾次方會等於 x。' },
+        { q: 'log₃ 1 等於多少？', options: ['0', '1', '3', '沒有定義'], answer: 0, why: '3⁰=1，任何底數的 1 的對數都是 0。' },
+        { q: '一個東西每次都變成 2 倍，變 3 次後是原來的幾倍？', options: ['8 倍', '6 倍', '2 倍', '3 倍'], answer: 0, why: '2×2×2=2³=8 倍，這就是指數成長。' },
+        { q: '2⁵ 等於多少？', options: ['32', '16', '10', '25'], answer: 0, why: '2⁵=2×2×2×2×2=32。' }
+      ]
+    },
+    {
+      id: 'lv5', level: 5, name: '轉角的比例', emoji: '🔺', color: '#ec4899',
+      concepts: ['直角三角形的三角比 sin、cos、tan', '特殊角的三角函數值', '畢氏定理與基本三角恆等式', '角度與弧度'],
+      keyFacts: [
+        'sin=對邊/斜邊、cos=鄰邊/斜邊、tan=對邊/鄰邊',
+        'sin30°=1/2、cos60°=1/2、sin90°=1、tan45°=1',
+        'cos0°=1、sin0°=0',
+        'sin²θ+cos²θ=1',
+        '3²+4²=5²（畢氏三元組）；360°=2π 弧度'
+      ],
+      questions: [
+        { q: '直角三角形中，sin（正弦）等於哪兩邊的比？', options: ['對邊 ÷ 斜邊', '鄰邊 ÷ 斜邊', '對邊 ÷ 鄰邊', '斜邊 ÷ 對邊'], answer: 0, why: 'sin＝對邊÷斜邊，可記口訣「Sin：對／斜」。' },
+        { q: '直角三角形中，cos（餘弦）等於哪兩邊的比？', options: ['鄰邊 ÷ 斜邊', '對邊 ÷ 斜邊', '對邊 ÷ 鄰邊', '斜邊 ÷ 鄰邊'], answer: 0, why: 'cos＝鄰邊÷斜邊，口訣「Cos：鄰／斜」。' },
+        { q: '直角三角形中，tan（正切）等於哪兩邊的比？', options: ['對邊 ÷ 鄰邊', '鄰邊 ÷ 對邊', '對邊 ÷ 斜邊', '鄰邊 ÷ 斜邊'], answer: 0, why: 'tan＝對邊÷鄰邊，口訣「Tan：對／鄰」。' },
+        { q: 'sin 30° 等於多少？', options: ['1/2', '√3/2', '1', '√2/2'], answer: 0, why: '這是特殊角：sin30°=1/2。' },
+        { q: 'cos 60° 等於多少？', options: ['1/2', '√3/2', '1', '0'], answer: 0, why: '特殊角：cos60°=1/2（和 sin30° 一樣）。' },
+        { q: 'sin 90° 等於多少？', options: ['1', '0', '1/2', '√3/2'], answer: 0, why: '角度到 90° 時 sin 達到最大值 1。' },
+        { q: 'tan 45° 等於多少？', options: ['1', '0', '√3', '1/2'], answer: 0, why: '45° 時對邊＝鄰邊，比值為 1，所以 tan45°=1。' },
+        { q: '直角三角形的兩股長分別是 3 和 4，斜邊長是？', options: ['5', '7', '6', '√7'], answer: 0, why: '畢氏定理：3²+4²=9+16=25，斜邊=√25=5。' },
+        { q: 'sin²θ + cos²θ 等於多少？', options: ['1', '0', '2', 'θ'], answer: 0, why: '這是最重要的三角恆等式：sin²θ+cos²θ=1。' },
+        { q: 'cos 0° 等於多少？', options: ['1', '0', '1/2', '−1'], answer: 0, why: '角度為 0° 時 cos 達到最大值 1。' },
+        { q: '一個圓轉一整圈，總共有幾度？', options: ['360°', '180°', '90°', '270°'], answer: 0, why: '一整圈是 360 度，換成弧度就是 2π。' },
+        { q: 'sin 0° 等於多少？', options: ['0', '1', '1/2', '√3/2'], answer: 0, why: '角度為 0° 時 sin=0。' }
+      ]
+    },
+    {
+      id: 'lv6', level: 6, name: '規律與機會', emoji: '🎲', color: '#0ea5e9',
+      concepts: ['等差數列與等比數列', '連續整數和公式', '機率的意義', '平均數、中位數與眾數'],
+      keyFacts: [
+        '等差數列相鄰差固定（公差）',
+        '等比數列相鄰比固定（公比）',
+        '1+2+…+n = n(n+1)/2，故 1+…+10=55',
+        '機率介於 0 與 1 之間；骰子某面 1/6、硬幣正面 1/2',
+        '平均數=總和÷個數、中位數=排序後中間值、眾數=最多次'
+      ],
+      questions: [
+        { q: '數列 2, 4, 6, 8, … 下一個數是？', options: ['10', '9', '12', '16'], answer: 0, why: '每次加 2（公差 2），8+2=10。' },
+        { q: '等差數列中，相鄰兩項固定的差叫做？', options: ['公差', '公比', '中位數', '眾數'], answer: 0, why: '等差數列相鄰兩項的差固定，這個差叫「公差」。' },
+        { q: '數列 3, 6, 12, 24, … 是等比數列，公比是？', options: ['2', '3', '6', '4'], answer: 0, why: '每一項都是前一項的 2 倍，所以公比是 2。' },
+        { q: '數列 5, 10, 15, 20, … 的公差是？', options: ['5', '10', '2', '15'], answer: 0, why: '相鄰兩項都相差 5，公差就是 5。' },
+        { q: '等比數列中，相鄰兩項固定的比叫做？', options: ['公比', '公差', '平均數', '總和'], answer: 0, why: '等比數列相鄰兩項的比固定，這個比叫「公比」。' },
+        { q: '1+2+3+…+10 等於多少？', options: ['55', '50', '45', '100'], answer: 0, why: '用公式 n(n+1)/2 = 10×11/2 = 55。' },
+        { q: '資料 4, 4, 4, 7, 9 中出現最多次的數（眾數）是？', options: ['4', '7', '9', '5'], answer: 0, why: '4 出現 3 次最多，所以眾數是 4。' },
+        { q: '任何一件事發生的機率，一定介於哪兩個數之間？', options: ['0 與 1', '1 與 10', '−1 與 1', '0 與 100'], answer: 0, why: '機率最小是 0（不會發生）、最大是 1（一定發生）。' },
+        { q: '丟一顆公正的骰子，出現「3」的機率是？', options: ['1/6', '1/2', '1/3', '1'], answer: 0, why: '骰子有 6 面、機會均等，出現某一面的機率是 1/6。' },
+        { q: '丟一枚公正的硬幣，出現正面的機率是？', options: ['1/2', '1/6', '1', '1/4'], answer: 0, why: '硬幣只有正、反兩面，機會均等，正面機率 1/2。' },
+        { q: '資料 2, 4, 6 的平均數是？', options: ['4', '6', '3', '12'], answer: 0, why: '平均數=總和÷個數=(2+4+6)÷3=12÷3=4。' },
+        { q: '資料 1, 3, 3, 7, 9 的中位數（排序後最中間的值）是？', options: ['3', '7', '5', '9'], answer: 0, why: '已排好序，中間第 3 個是 3，所以中位數是 3。' }
+      ]
+    },
+    {
+      id: 'lv7', level: 7, name: '方向與微變化', emoji: '🧭', color: '#06b6d4',
+      concepts: ['向量與純量的差別', '向量長度、分量相加與係數積', '極限的直覺', '導數是瞬間斜率'],
+      keyFacts: [
+        '向量同時有大小與方向；純量只有大小',
+        '速度是向量；溫度、質量、時間是純量',
+        '(3,4) 長度為 5；(1,2)+(3,1)=(4,3)、2·(3,−1)=(6,−2)',
+        '極限：x→∞ 時 1/x→0',
+        '導數是曲線某點的瞬間斜率；y=3x 各點導數皆 3、y=x² 在 x=0 斜率 0'
+      ],
+      questions: [
+        { q: '「向量」和「純量」不同，因為向量同時有？', options: ['大小和方向', '只有大小', '只有方向', '只有顏色'], answer: 0, why: '向量同時帶有大小與方向；純量只有大小。' },
+        { q: '下面哪一個是「向量」（有方向）?', options: ['速度', '溫度', '年齡', '時間'], answer: 0, why: '速度有方向（往哪個方向走）；溫度、年齡、時間只有大小，是純量。' },
+        { q: '向量 (3, 4) 的長度是？', options: ['5', '7', '12', '25'], answer: 0, why: '長度 √(3²+4²)=√(9+16)=√25=5。' },
+        { q: '向量相加 (1, 2) + (3, 1) 等於？', options: ['(4, 3)', '(3, 2)', '(4, 2)', '(2, 3)'], answer: 0, why: '分量各自相加：1+3=4、2+1=3，所以 (4,3)。' },
+        { q: '係數積 2 · (3, −1) 等於？', options: ['(6, −2)', '(6, −1)', '(5, 1)', '(3, −2)'], answer: 0, why: '每個分量都乘 2：2×3=6、2×(−1)=−2，所以 (6,−2)。' },
+        { q: '下面哪一個是「純量」（只有大小、沒有方向）?', options: ['質量', '位移', '速度', '力'], answer: 0, why: '質量只有大小；位移、速度、力都有方向，是向量。' },
+        { q: '當 x 越來越大（x→∞），1/x 會越來越接近哪個數？', options: ['0', '1', '無限大', '−1'], answer: 0, why: 'x 很大時 1/x 很小，越來越靠近 0。' },
+        { q: '「極限」大致是在描述什麼？', options: ['x 趨近某個值時，函數會趨近的數', '函數的最大值', '方程式的解', '圖形的面積'], answer: 0, why: '極限描述「x 趨近某值時，函數趨近的數」。' },
+        { q: '「導數」代表曲線在某一點的？', options: ['瞬間斜率', '面積', '長度', '高度'], answer: 0, why: '導數就是曲線在該點的瞬間斜率（切線的斜率）。' },
+        { q: '直線 y=3x 上，每一點的導數（斜率）都是？', options: ['3', '0', 'x', '3x'], answer: 0, why: '一次函數的斜率固定不變，這裡就是 3。' },
+        { q: '拋物線 y=x² 在頂點 x=0 的切線斜率是？', options: ['0', '1', '2', '−1'], answer: 0, why: '頂點是最低點，切線是水平的，所以斜率為 0。' },
+        { q: '向量 (0, 5) 的長度是？', options: ['5', '0', '25', '10'], answer: 0, why: '長度 √(0²+5²)=√25=5。' }
+      ]
+    },
+    {"id":"lv8","level":8,"name":"機率與統計・看懂生活數據","emoji":"🎲","color":"#f59e0b","concepts":["乘法原理與排列組合","古典機率與期望值","統計量的陷阱","統計圖判讀","相關不等於因果與抽樣代表性"],"keyFacts":["古典機率 ＝ 有利結果數 ÷ 所有等可能結果數，前提是每個結果機會均等。","期望值 ＝ Σ（數值 × 機率），代表「長期平均」，不是單次一定拿到的值。","平均數容易被少數極端值拉高或拉低；中位數較能代表「多數人」的情況。","長條圖若 y 軸不從 0 開始，會在視覺上誇大差距，判讀時要看實際數字。","相關不等於因果：兩件事一起變化，可能只是共同受第三個變因影響；抽樣也要隨機且具代表性，只問特定族群（如只問打球的人估運動量）會產生偏差。"],"questions":[{"q":"早餐店有 3 種主餐、2 種飲料，一份套餐要選 1 種主餐加 1 種飲料，共有幾種不同的搭配？","options":["5 種","6 種","8 種","9 種"],"answer":1,"why":"這是乘法原理：主餐 3 種、飲料 2 種各自獨立選擇，總數 ＝ 3 × 2 ＝ 6 種。把 3＋2 相加得 5 是常見錯誤，因為兩個步驟要相乘而非相加。"},{"q":"從 5 位同學中選出 2 位擔任班級幹部（兩人職務相同、不分先後），共有幾種選法？","options":["7 種","20 種","5 種","10 種"],"answer":3,"why":"不分順序是「組合」：C(5,2) ＝ (5×4)/(2×1) ＝ 10 種。選 20 是把它當成有順序的排列 P(5,2)＝5×4＝20，但「兩人職務相同」時 {甲，乙} 與 {乙，甲} 算同一種，要再除以 2。"},{"q":"擲一顆公正的六面骰子，出現點數大於 4（也就是 5 或 6）的機率是多少？","options":["1/6","1/3","1/2","2/3"],"answer":1,"why":"有利結果是 5、6 共 2 種，總共 6 種等可能結果，機率 ＝ 2/6 ＝ 1/3。「大於 4」不包含 4 本身，只有 2 個點數；若誤算成 4、5、6 三種會得到 1/2。"},{"q":"同時擲兩顆公正骰子，兩顆點數「相加等於 7」的機率是多少？","options":["1/6","1/12","1/9","7/36"],"answer":0,"why":"兩顆骰子共有 6×6 ＝ 36 種等可能結果。和為 7 的有 (1,6)(2,5)(3,4)(4,3)(5,2)(6,1) 共 6 種，機率 ＝ 6/36 ＝ 1/6。看到「7」就寫 7/36 是把點數當成分子的常見錯誤。"},{"q":"從一副標準 52 張撲克牌中隨機抽 1 張，抽到「紅心」的機率是多少？","options":["1/13","1/2","1/4","1/26"],"answer":2,"why":"一副牌分 4 種花色，紅心有 13 張，機率 ＝ 13/52 ＝ 1/4。1/13 是抽到「某個特定點數（如 A）」的機率；紅色只有紅心與方塊兩種花色，紅心占四分之一而非二分之一。"},{"q":"某抽獎活動每抽一次收 10 元，有 1/100 的機率中 500 元、其餘沒有獎。單就「獎金」而言，平均每抽一次可拿回的期望值是多少？","options":["50 元","0 元","5 元","10 元"],"answer":2,"why":"期望值 ＝ 500 × (1/100) ＋ 0 × (99/100) ＝ 5 元。也就是說平均每抽只能拿回 5 元，卻要付 10 元，長期下來是虧的。把 500 直接除以 10 得 50 是忽略了中獎機率極低。"},{"q":"一間 5 人小公司的月薪（千元）為 30、32、33、35、200（老闆）。想描述「一般員工」的薪資水準，用哪個統計量比較不會被老闆高薪誤導？","options":["平均數（66 千）","中位數（33 千）","全距（170 千）","四個都一樣好"],"answer":1,"why":"平均數 ＝ 330/5 ＝ 66 千，被老闆的 200 千大幅拉高，比 4 位員工實際薪資都高。中位數（排序後中間值）＝ 33 千，不受單一極端值影響，較能代表多數人的情況。"},{"q":"某鞋店一週賣出的鞋碼依序為 24、25、25、26、25、27、25。若想知道「最多人買的尺碼」，該看哪個統計量？答案是多少？","options":["平均數，約 25.3","眾數，25","中位數，26","全距，3"],"answer":1,"why":"「出現次數最多」的數值稱為眾數；25 出現 4 次最多，所以眾數是 25。對鞋店備貨而言，眾數比平均數更有意義，因為平均出來的 25.3 並不是真正存在的鞋碼。"},{"q":"關於「全距（最大值 － 最小值）」，下列哪個敘述才正確？","options":["全距大代表全班分數都很高","全距等於全班的平均分數","全距越大平均一定越大","全距只反映最高與最低分之差，可能被單一個極端分數拉大"],"answer":3,"why":"全距只用到最大與最小兩個值，完全不看中間資料的分布，因此只要有一個特別高或特別低的極端值，全距就會被拉大，並不能代表整體的高低或分散程度。"},{"q":"一張長條圖比較兩位候選人的支持率：A 為 96%、B 為 98%，但圖的 y 軸從 95% 才開始畫，使 B 的長條看起來是 A 的好幾倍高。正確的判讀是？","options":["B 真的比 A 受歡迎好幾倍","兩人差距其實只有 2 個百分點，圖形因 y 軸未從 0 開始而被誇大","A 其實比 B 高","資料不足，完全無法比較"],"answer":1,"why":"96% 與 98% 只差 2 個百分點。因為 y 軸從 95% 起跳（沒有從 0 開始），微小差距在視覺上被放大成好幾倍高的錯覺。判讀長條圖務必先看座標軸起點與實際數值。"},{"q":"統計發現：夏天冰淇淋銷量上升時，溺水人數也同時上升，兩者高度相關。最合理的結論是？","options":["吃冰淇淋會導致溺水","溺水的人特別想吃冰淇淋","兩者都受『高溫（夏天）』這個共同原因影響，屬相關而非因果","兩件事完全沒有任何關聯"],"answer":2,"why":"相關不等於因果。天氣熱時大家既愛吃冰、也更常戲水，因此氣溫這個「第三變因」同時推高了兩者，並非冰淇淋造成溺水。看到兩件事一起變化，要先想有沒有共同原因。"},{"q":"學校想估計「全校學生平均每天運動幾分鐘」，若只到籃球場訪問正在打球的同學，這種抽樣有什麼問題？","options":["只訪問打球的同學不具代表性，會高估全校的運動時間","樣本人數夠多就一定沒問題","應該改成只訪問完全不運動的同學","抽樣本來就不需要考慮代表性"],"answer":0,"why":"在籃球場的人本來就偏愛運動，屬於「自我選擇偏差」，樣本無法代表全校（包含不常運動的人），會系統性地高估運動時間。好的抽樣要隨機且涵蓋各類學生，代表性比人數多寡更關鍵。"}]},
+    {"id":"lv9","level":9,"name":"生活裡的進階數學","emoji":"🧮","color":"#8b5cf6","concepts":["複利與指數成長","對數尺度（pH／分貝／地震／星等）","三角測量與相似形","估算與最佳化直覺"],"keyFacts":["<b>複利：</b>「利滾利」，成長屬指數型；72 法則：約 72÷年利率(%) 年，本金就會翻倍。","<b>對數尺度：</b>「每差一級」代表固定倍數：pH 差 1 是 10 倍、分貝差 10 dB 是 10 倍、星等差 5 等是 100 倍。","<b>相似測量：</b>同一時刻，物體「高度÷影長」為定值（相似三角形）；也可用「高＝水平距離×tan(仰角)」估算高度。","<b>縮放：</b>周長固定時，正方形面積最大；圖形放大 k 倍，面積變 k² 倍、體積變 k³ 倍。","<b>比例尺：</b>1:n 表示圖上 1 單位＝實際 n 單位；單位換算記得 1 公里＝100000 公分。","<b>費米估算：</b>只看數量級（10 的幾次方），用合理假設連乘，答案對到「級」就算成功。"],"questions":[{"q":"把錢存入年利率 6%、每年複利計息的帳戶，本金大約要多少年才會翻倍？","options":["6 年","12 年","24 年","36 年"],"answer":1,"why":"複利翻倍可用「72 法則」估算：72÷年利率(%)。72÷6＝12，約 12 年翻倍。誤選 6（把 6% 直接當年數）忽略了複利成長的節奏。"},{"q":"存入 10000 元，年利率 5%、每年複利計息，2 年後本利和最接近多少？","options":["11000 元","11025 元","11050 元","10500 元"],"answer":1,"why":"複利要乘方：10000×1.05²＝10000×1.1025＝11025 元。誤選 11000 是用「單利」算（10000×(1+0.05×2)），少算了第二年利息再生的利息。"},{"q":"pH 值每差 1，氫離子濃度就差 10 倍。pH 4 的溶液，氫離子濃度是 pH 6 的幾倍？","options":["2 倍","20 倍","100 倍","1000 倍"],"answer":2,"why":"pH 是對數尺度，每差 1 差 10 倍。pH 4 與 pH 6 相差 2，故差 10²＝100 倍（pH 越小越酸）。誤選 2 倍是把「差 2 級」當成「差 2 倍」。"},{"q":"音量以分貝(dB)衡量，聲音強度每增加 10 dB 變為 10 倍。從 60 dB 提高到 90 dB，聲音強度變為幾倍？","options":["3 倍","30 倍","500 倍","1000 倍"],"answer":3,"why":"分貝是對數尺度：差 30 dB＝三個 10 dB，強度變 10×10×10＝10³＝1000 倍。誤選 3 倍是把「差 3 個級距」誤當成 3 倍。"},{"q":"芮氏規模每增加 1 級，地震釋放的能量大約變為 32 倍。規模 6 的地震釋放能量約是規模 5 的幾倍？","options":["10 倍","32 倍","100 倍","320 倍"],"answer":1,"why":"規模每差 1 級，地動振幅約 10 倍，但釋放「能量」約增為 32 倍（約 10^1.5）。差 1 級即約 32 倍。誤選 10 倍是把振幅倍數當成能量倍數。"},{"q":"星等數字越小越亮，且「每差 5 等，亮度剛好差 100 倍」為定義。1 等星的亮度約是 6 等星的幾倍？","options":["5 倍","6 倍","25 倍","100 倍"],"answer":3,"why":"1 等與 6 等相差 5 等，依定義亮度差 100 倍。誤選 5 倍是把「差 5 等」直接當 5 倍，忽略星等是對數尺度。"},{"q":"同一時刻，1 公尺長的竹竿影長 0.5 公尺；此時一棵樹的影長是 6 公尺。這棵樹大約多高？","options":["3 公尺","6 公尺","12 公尺","24 公尺"],"answer":2,"why":"同一時刻太陽角度相同，各物體「高度÷影長」為定值。竹竿 1÷0.5＝2，故樹高＝6×2＝12 公尺。誤選 6 是直接把影長當樹高。"},{"q":"站在離大樓底部 30 公尺處，抬頭看樓頂的仰角恰為 45°（眼睛高度忽略不計）。大樓高度約多少？","options":["15 公尺","30 公尺","45 公尺","60 公尺"],"answer":1,"why":"高度＝水平距離×tan(仰角)＝30×tan45°＝30×1＝30 公尺。仰角 45° 時高與距離相等。誤選 60 是把距離加倍，誤選 15 是把距離減半。"},{"q":"用 40 公尺長的籬笆圍出一塊矩形菜園，圍出的最大面積是多少？","options":["40 平方公尺","75 平方公尺","96 平方公尺","100 平方公尺"],"answer":3,"why":"周長固定時，正方形面積最大。周長 40→邊長 10→面積 10×10＝100 平方公尺。誤選 96 是 12×8（同周長但非正方形，面積較小），可見越接近正方形面積越大。"},{"q":"地圖比例尺為 1:50000，圖上量得兩地相距 4 公分。實際距離大約是多少？","options":["200 公尺","2 公里","20 公里","200 公里"],"answer":1,"why":"實際距離＝4×50000＝200000 公分。換算：200000÷100000＝2 公里（1 公里＝100000 公分）。誤選 20 公里是單位換算多算一位。"},{"q":"把一張照片的邊長放大為原來的 3 倍（形狀不變）。放大後的面積是原來的幾倍？","options":["3 倍","6 倍","9 倍","27 倍"],"answer":2,"why":"相似放大 k 倍時，面積變 k² 倍：3²＝9 倍。誤選 3 倍是只看邊長，誤選 27 倍是體積的 k³＝3³（照片是面積，不是體積）。"},{"q":"用費米估算：一個人活到 80 歲，一生心跳總次數的『數量級』最接近哪一個？（心跳約每分鐘 70 次）","options":["約 10⁶（百萬）次","約 10⁹（數十億）次","約 10¹²（兆）次","約 10¹⁵ 次"],"answer":1,"why":"70×60×24×365×80 ≈ 3×10⁹，數量級為 10⁹（數十億次）。費米估算重點在對到「數量級」而非精確值；誤選 10⁶ 是漏乘了年或天的因子。"}]}
+  ];
+
+  // 本地徽章定義（每級一枚 + 全等級達人）。存於同一 key 的 badges 子物件、awarded guard 防重複。
+  var BADGES = [
+    { id: 'lv1', icon: '🧩', name: '代數解鎖者' },
+    { id: 'lv2', icon: '📐', name: '座標領航員' },
+    { id: 'lv3', icon: '⚙️', name: '函數工程師' },
+    { id: 'lv4', icon: '📈', name: '尺度大師' },
+    { id: 'lv5', icon: '🔺', name: '三角行者' },
+    { id: 'lv6', icon: '🎲', name: '數列偵探' },
+    { id: 'lv7', icon: '🧭', name: '微積分入門者' },
+    { id: 'lv8', icon: '📊', name: '數據解讀家' },
+    { id: 'lv9', icon: '🧮', name: '數學應用師' },
+    { id: 'all', icon: '🏆', name: '全等級達人' }
+  ];
+  var BADGE_BY_ID = {};
+  for (var bi = 0; bi < BADGES.length; bi++) BADGE_BY_ID[BADGES[bi].id] = BADGES[bi];
+
+  // =====================================================================
+  // DOM 參照
+  // =====================================================================
+  var $ = function (id) { return document.getElementById(id); };
+  var screenMenu = $('screen-menu');
+  var screenPlay = $('screen-play');
+  var levelList = $('level-list');
+  var stage = $('stage');
+  var stepDots = $('step-dots');
+  var playTitle = $('play-title');
+
+  var cur = null; // { level, idx, correctCount, phase:'brief'|'quiz' }
+
+  // =====================================================================
+  // 星等（3 階，依 correctCount/總題數）
+  // =====================================================================
+  function starsFor(correct, total) {
+    if (total <= 0) return 0;
+    var r = correct / total;
+    if (r >= 0.9) return 3;
+    if (r >= 0.6) return 2;
+    if (r > 0) return 1;
+    return 0;
+  }
+  function starStr(n) {
+    var s = '';
+    for (var i = 0; i < 3; i++) s += (i < n ? '⭐' : '☆');
+    return s;
+  }
+
+  // =====================================================================
+  // 徽章解鎖（awarded guard；只增不減）
+  // =====================================================================
+  function awardBadge(id) {
+    var def = BADGE_BY_ID[id];
+    if (!def) return;
+    if (progress.badges[id]) return;      // guard：已解鎖則不重複
+    progress.badges[id] = true;
+    saveProg(progress);
+    toast('獲得徽章：' + def.icon + ' ' + def.name, 'badge');
+    try { if (window.MathAdvBadges) MathAdvBadges.refresh(); } catch (e) {}
+  }
+  function badgeCount() {
+    var n = 0;
+    for (var i = 0; i < BADGES.length; i++) if (progress.badges[BADGES[i].id]) n++;
+    return n;
+  }
+
+  // =====================================================================
+  // 選單渲染（全部一律解鎖、可自由進入）
+  // =====================================================================
+  function renderMenu() {
+    var doneCount = 0;
+    for (var i = 0; i < LEVELS.length; i++) if (progress[LEVELS[i].id] && progress[LEVELS[i].id].done) doneCount++;
+    $('ov-done').textContent = doneCount + '/' + LEVELS.length;
+    $('ov-badges').textContent = badgeCount() + '/' + BADGES.length;
+
+    if (doneCount > 0) {
+      $('hello-text').textContent = '歡迎回來！你已完成 ' + doneCount + ' 個等級，很棒！';
+      $('hello-sub').textContent = (doneCount >= LEVELS.length)
+        ? '九個等級都完成了，你是進階數學達人！🏆'
+        : '想挑戰哪一個等級都可以，答錯也沒關係。';
+    }
+
+    levelList.innerHTML = '';
+    for (var u = 0; u < LEVELS.length; u++) {
+      (function (lv) {
+        var rec = progress[lv.id] || {};
+        var done = !!rec.done;
+        var total = lv.questions.length;
+        var st = done ? starsFor(rec.best || 0, total) : 0;
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'ma-level';
+        card.setAttribute('aria-label', '等級 ' + lv.level + '：' + lv.name);
+        card.innerHTML =
+          '<div class="ma-level-top">' +
+            '<span class="ma-level-emoji" aria-hidden="true" style="background:' + lv.color + '22;color:' + lv.color + '">' + lv.emoji + '</span>' +
+            '<div>' +
+              '<div class="ma-level-num">等級 ' + lv.level + '</div>' +
+              '<div class="ma-level-name">' + lv.name + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="ma-level-concepts">' + lv.concepts.join('・') + '</div>' +
+          '<div class="ma-level-foot">' +
+            '<span class="ma-level-status ' + (done ? 'done' : 'todo') + '">' +
+              (done ? '✅ 已完成（最佳 ' + (rec.best || 0) + '/' + total + '）' : '▶️ 開始挑戰（共 ' + total + ' 題）') + '</span>' +
+            '<span class="ma-level-stars" aria-hidden="true">' + (done ? starStr(st) : '') + '</span>' +
+          '</div>';
+        card.addEventListener('click', function () { startLevel(lv); });
+        levelList.appendChild(card);
+      })(LEVELS[u]);
+    }
+  }
+
+  // =====================================================================
+  // 遊玩流程
+  // =====================================================================
+  function show(screen) {
+    screenMenu.classList.remove('active');
+    screenPlay.classList.remove('active');
+    screen.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function startLevel(lv) {
+    cur = { level: lv, idx: 0, correctCount: 0, phase: 'brief' };
+    playTitle.textContent = lv.emoji + ' 等級 ' + lv.level + '・' + lv.name;
+    show(screenPlay);
+    renderBrief();
+  }
+
+  function renderStepDots() {
+    stepDots.innerHTML = '';
+    if (cur.phase !== 'quiz') return; // 重點卡不畫題目進度點
+    for (var i = 0; i < cur.level.questions.length; i++) {
+      var b = document.createElement('i');
+      if (i < cur.idx) b.className = 'on';
+      else if (i === cur.idx) b.className = 'cur';
+      stepDots.appendChild(b);
+    }
+  }
+
+  // ---- 重點卡（worked example / advance organizer；不計分） ----
+  function renderBrief() {
+    renderStepDots();
+    var lv = cur.level;
+    var facts = '';
+    for (var i = 0; i < lv.keyFacts.length; i++) {
+      facts += '<li><span class="ma-kf-dot" aria-hidden="true">◆</span><span>' + lv.keyFacts[i] + '</span></li>';
+    }
+    stage.innerHTML =
+      '<div class="ma-stage ma-brief">' +
+        '<div class="ma-visual" aria-hidden="true">' + lv.emoji + '</div>' +
+        '<h2>等級 ' + lv.level + '・' + lv.name + '</h2>' +
+        '<p class="ma-brief-sub">先看看這一級的重點，再開始 ' + lv.questions.length + ' 題挑戰。</p>' +
+        '<ul class="ma-keyfacts">' + facts + '</ul>' +
+      '</div>' +
+      '<div class="ma-actions">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-start">開始挑戰 ➡️</button>' +
+      '</div>';
+    $('btn-start').addEventListener('click', function () {
+      cur.phase = 'quiz';
+      cur.idx = 0;
+      renderQuestion();
+    });
+  }
+
+  function next() {
+    cur.idx++;
+    if (cur.idx >= cur.level.questions.length) finishLevel();
+    else renderQuestion();
+  }
+
+  // ---- 單選題（選項 Fisher–Yates 洗牌；每題最多記一次分） ----
+  function renderQuestion() {
+    renderStepDots();
+    var lv = cur.level;
+    var step = lv.questions[cur.idx];
+
+    // 打亂選項顯示順序（正解絕不固定在第一個）。data-i 記「原始索引」，
+    // 因此對答判斷 i === step.answer 仍然正確、判分不受洗牌影響。
+    var order = [];
+    for (var oi = 0; oi < step.options.length; oi++) order.push(oi);
+    for (var m = order.length - 1; m > 0; m--) {
+      var r = Math.floor(Math.random() * (m + 1));
+      var tt = order[m]; order[m] = order[r]; order[r] = tt;
+    }
+    var optsHtml = '';
+    for (var k = 0; k < order.length; k++) {
+      var origIdx = order[k];
+      optsHtml += '<button type="button" class="ma-opt" data-i="' + origIdx + '">' +
+        '<span>' + step.options[origIdx] + '</span><span class="ma-opt-mark" aria-hidden="true"></span></button>';
+    }
+
+    stage.innerHTML =
+      '<div class="ma-stage">' +
+        '<div class="ma-visual" aria-hidden="true">' + lv.emoji + '</div>' +
+        '<p class="ma-question">第 ' + (cur.idx + 1) + ' / ' + lv.questions.length + ' 題　' + step.q + '</p>' +
+        '<div class="ma-options">' + optsHtml + '</div>' +
+        '<div class="ma-reveal" id="reveal"></div>' +
+      '</div>' +
+      '<div class="ma-actions" id="afteract" style="display:none">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">繼續 ➡️</button>' +
+      '</div>';
+
+    var answered = false;
+    var btns = stage.querySelectorAll('.ma-opt');
+
+    function revealAndLock(correct) {
+      var rev = $('reveal');
+      rev.textContent = (correct ? '答對了！' : '再想想～正確答案是這個！') + (step.why || '');
+      rev.classList.add('show');
+      $('afteract').style.display = 'flex';
+      var all = stage.querySelectorAll('.ma-opt');
+      for (var a = 0; a < all.length; a++) all[a].disabled = true;
+    }
+
+    for (var b = 0; b < btns.length; b++) {
+      btns[b].addEventListener('click', function () {
+        var i = parseInt(this.getAttribute('data-i'), 10);
+        var isCorrect = (i === step.answer);
+        if (answered) return; // 已作答：不再改動計分（守衛）
+        answered = true;      // 第一次作答才計分
+        if (window.Game && window.Game.recordAnswer) Game.recordAnswer('math', isCorrect);
+        if (isCorrect) {
+          this.classList.add('correct');
+          this.querySelector('.ma-opt-mark').textContent = '✅';
+          cur.correctCount++;              // 唯一計分點（純本地）
+          revealAndLock(true);
+        } else {
+          this.classList.add('wrong');
+          this.querySelector('.ma-opt-mark').textContent = '❌';
+          // 答錯零懲罰：標出正解、允許看解說（不加分、不扣分）。
+          var correctBtn = stage.querySelector('.ma-opt[data-i="' + step.answer + '"]');
+          if (correctBtn) {
+            correctBtn.classList.add('correct');
+            correctBtn.querySelector('.ma-opt-mark').textContent = '✅';
+          }
+          revealAndLock(false);
+        }
+      });
+    }
+
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // =====================================================================
+  // 完成一級
+  // =====================================================================
+  function finishLevel() {
+    var lv = cur.level;
+    var total = lv.questions.length;
+    var got = cur.correctCount;
+
+    // 收藏只增不減：best = max(prev, thisRun)。
+    var prev = progress[lv.id] || {};
+    progress[lv.id] = { done: true, best: Math.max(prev.best || 0, got) };
+    saveProg(progress);
+
+    // 解鎖對應等級徽章；若全部等級完成 → 全等級達人。
+    awardBadge(lv.id);
+    var allDone = true;
+    for (var i = 0; i < LEVELS.length; i++) if (!(progress[LEVELS[i].id] && progress[LEVELS[i].id].done)) { allDone = false; break; }
+    if (allDone) awardBadge('all');
+
+    var st = starsFor(got, total);
+    stage.innerHTML =
+      '<div class="ma-stage ma-done">' +
+        '<div class="ma-done-emoji" aria-hidden="true">🎉</div>' +
+        '<div class="ma-done-title">完成「' + lv.name + '」！</div>' +
+        '<div class="ma-done-stars" aria-label="得到 ' + st + ' 顆星">' + starStr(st) + '</div>' +
+        '<p class="ma-question" style="font-size:clamp(16px,3.6vw,19px)">你答對了 ' + got + ' / ' + total + ' 題，真棒！</p>' +
+      '</div>' +
+      '<div class="ma-actions">' +
+        '<button type="button" class="btn" id="btn-menu">回到選單</button>' +
+        (nextLevelOf(lv) ? '<button type="button" class="btn btn-primary" id="btn-nextlv">下一個等級 ➡️</button>' : '') +
+      '</div>';
+
+    toast('完成「' + lv.name + '」！你答對了 ' + got + ' / ' + total + ' 題，真棒！', 'daily');
+
+    $('btn-menu').addEventListener('click', goMenu);
+    var nl = nextLevelOf(lv);
+    if (nl) $('btn-nextlv').addEventListener('click', function () { startLevel(nl); });
+  }
+
+  function nextLevelOf(lv) {
+    for (var i = 0; i < LEVELS.length; i++) {
+      if (LEVELS[i].id === lv.id) return LEVELS[i + 1] || null;
+    }
+    return null;
+  }
+
+  function goMenu() {
+    cur = null;
+    stepDots.innerHTML = '';
+    renderMenu();
+    show(screenMenu);
+  }
+
+  // ---- 頁內返回（一律「←」，回選單，非回首頁）----
+  $('btn-back').addEventListener('click', goMenu);
+
+  // 暴露給徽章冊模組讀取（唯讀共享同一份進度與定義）。
+  window.__mathAdv = {
+    LEVELS: LEVELS,
+    BADGES: BADGES,
+    getProgress: function () { return progress; }
+  };
+
+  renderMenu();
+})();
+</script>
+
+<!-- ===== 進階數學徽章冊：樣式（自足、canon 變數、亮暗雙主題、色盲雙碼、[hidden] 防護；純本地、無 XP、無 Game.award） ===== -->
+<style>
+/* 入口 FAB（右下固定，避開底部安全區；低於 app-bar 的層級，不遮頂列；≥48px 觸控） */
+#mathAdvBadgeFab {
+  position: fixed; right: 16px; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  z-index: 55; display: inline-flex; align-items: center; gap: 6px;
+  min-height: 48px; min-width: 48px; padding: 10px 16px;
+  background: var(--accent, var(--c-math)); color: #fff; border: none;
+  border-radius: 999px; font-family: var(--font); font-weight: 800;
+  font-size: clamp(14px, 3vw, 16px); cursor: pointer; box-shadow: var(--shadow-lg);
+}
+#mathAdvBadgeFab:active { transform: scale(0.96); }
+#mathAdvBadgeFabCount {
+  display: inline-flex; align-items: center; gap: 3px;
+  background: #fff; color: var(--accent, var(--c-math));
+  border-radius: 999px; padding: 1px 8px; font-size: 13px; font-weight: 800;
+}
+/* 浮層外殼 */
+.ma-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 60; padding: 16px;
+}
+/* [hidden] 防護：class 的 display:flex(author) 特異度會蓋過 UA 的 [hidden]{display:none}，
+   故需更高特異度規則，否則浮層會恆顯、蓋住整頁。 */
+#mathAdvBadgeOverlay[hidden] { display: none !important; }
+.ma-card {
+  position: relative; background: var(--card); border: 2px solid var(--card-border);
+  border-radius: var(--r-lg); box-shadow: var(--shadow-lg);
+  width: 100%; max-width: 560px; max-height: 88vh; overflow-y: auto;
+  padding: 20px 18px 22px; color: var(--ink);
+}
+.ma-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.ma-card-head h1 { font-size: clamp(1.1rem, 4vw, 1.4rem); font-weight: 800; margin: 0; color: var(--ink); flex: 1; }
+.ma-card-back {
+  background: var(--card); border: 2px solid var(--card-border); color: var(--accent-ink, var(--c-math-ink));
+  font-family: var(--font); font-weight: 800; font-size: 15px; cursor: pointer;
+  min-height: 44px; padding: 8px 14px; border-radius: 14px;
+}
+.ma-card-back:active { transform: scale(0.96); }
+.ma-card-note {
+  background: var(--accent-tint); color: var(--accent-ink); border-radius: var(--r-md, 12px);
+  font-size: var(--fs-small); font-weight: 600; line-height: 1.7; padding: 10px 12px; margin: 4px 0 12px;
+}
+.ma-card-summary { text-align: center; font-size: var(--fs-small); font-weight: 700; color: var(--ink-soft); margin: 4px 0 14px; line-height: 1.7; }
+.ma-badge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; }
+.ma-badge {
+  position: relative; min-height: 96px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  border-radius: 14px; background: var(--card); border: 2px solid var(--card-border);
+  text-align: center; padding: 10px 6px;
+}
+.ma-badge .ma-badge-glyph { font-size: clamp(1.6rem, 7vw, 2rem); line-height: 1; }
+.ma-badge .ma-badge-name { font-size: clamp(0.6rem, 2.6vw, 0.74rem); font-weight: 800; color: var(--ink); line-height: 1.2; }
+.ma-badge .ma-badge-state { font-size: clamp(0.52rem, 2.2vw, 0.64rem); font-weight: 700; color: var(--ink-soft); }
+/* 未解鎖：虛線邊 + 去彩 + 半透明（碼一＝形狀 🔒／碼二＝虛線+去彩） */
+.ma-badge.locked { border-style: dashed; opacity: 0.5; filter: grayscale(1); }
+/* 已解鎖：實線金框 + 右上 ★（碼一＝emoji 形狀／碼二＝金框+★） */
+.ma-badge.unlocked { box-shadow: 0 0 0 2px #f5b301, 0 0 10px rgba(245,179,1,0.5); background: color-mix(in srgb, #f5b301 12%, var(--card)); }
+.ma-badge.unlocked .ma-badge-star { position: absolute; right: 5px; top: 4px; font-size: 14px; }
+</style>
+<!-- ===== 進階數學徽章冊：模組（自足 IIFE；讀寫共享獨立 key math_adv_progress_v1；純本地、只增不減、無 XP、無 Game.award、無 streak） ===== -->
+<script>
+(function () {
+  'use strict';
+
+  function api() { return window.__mathAdv || null; }
+
+  function unlockedCount() {
+    var a = api(); if (!a) return 0;
+    var prog = a.getProgress();
+    var n = 0;
+    for (var i = 0; i < a.BADGES.length; i++) if (prog.badges[a.BADGES[i].id]) n++;
+    return n;
+  }
+
+  function renderGrid() {
+    var a = api(); if (!a) return;
+    var prog = a.getProgress();
+    var host = document.getElementById('mathAdvBadgeGrid');
+    if (!host) return;
+    var html = '';
+    for (var i = 0; i < a.BADGES.length; i++) {
+      var def = a.BADGES[i];
+      var got = !!prog.badges[def.id];
+      var cls = 'ma-badge ' + (got ? 'unlocked' : 'locked');
+      var glyph = got ? def.icon : '🔒';
+      var state = got ? '已收集' : '尚未解鎖';
+      var star = got ? '<span class="ma-badge-star" aria-hidden="true">★</span>' : '';
+      var label = def.name + '（' + state + '）';
+      html += '<div class="' + cls + '" title="' + label + '" aria-label="' + label + '">' +
+        '<span class="ma-badge-glyph" aria-hidden="true">' + glyph + '</span>' +
+        '<span class="ma-badge-name">' + def.name + '</span>' +
+        '<span class="ma-badge-state">' + state + '</span>' + star + '</div>';
+    }
+    host.innerHTML = html;
+  }
+
+  function renderSummary() {
+    var a = api(); if (!a) return;
+    var el = document.getElementById('mathAdvBadgeSummary');
+    if (!el) return;
+    el.innerHTML = '已收集 <b>' + unlockedCount() + '</b> / ' + a.BADGES.length +
+      ' 枚徽章（收藏只增不減，慢慢玩就好）';
+  }
+
+  function updateFabCount() {
+    var a = api(); if (!a) return;
+    var badge = document.getElementById('mathAdvBadgeFabCount');
+    if (badge) badge.textContent = unlockedCount() + '/' + a.BADGES.length;
+  }
+
+  function refresh() { updateFabCount(); if (isOpen()) { renderGrid(); renderSummary(); } }
+  function isOpen() { var el = document.getElementById('mathAdvBadgeOverlay'); return el && !el.hidden; }
+  function openBook() { renderGrid(); renderSummary(); var o = document.getElementById('mathAdvBadgeOverlay'); if (o) o.hidden = false; }
+  function closeBook() { var o = document.getElementById('mathAdvBadgeOverlay'); if (o) o.hidden = true; }
+
+  // 附加 DOM（皆 append 於 <body> 尾端，不動既有 section；浮層帶 [hidden]）。
+  function buildDom() {
+    var host = document.createElement('div');
+    host.innerHTML =
+      '<button id="mathAdvBadgeFab" type="button" aria-label="打開進階數學徽章冊" onclick="MathAdvBadges.openBook()">' +
+        '🏅 徽章冊 <span id="mathAdvBadgeFabCount">0/10</span></button>' +
+      '<div id="mathAdvBadgeOverlay" class="ma-overlay" hidden>' +
+        '<div class="ma-card" role="dialog" aria-modal="true" aria-label="進階數學徽章冊">' +
+          '<div class="ma-card-head"><h1>🏅 進階數學徽章冊</h1>' +
+            '<button class="ma-card-back" onclick="MathAdvBadges.closeBook()">← 返回</button></div>' +
+          '<div class="ma-card-note">這本徽章冊只存在你自己的裝置上，純粹紀念你完成過哪些進階等級。它不會計入學習基地的等級或經驗值——放輕鬆挑戰就好 🌱</div>' +
+          '<div id="mathAdvBadgeSummary" class="ma-card-summary"></div>' +
+          '<div id="mathAdvBadgeGrid" class="ma-badge-grid"></div>' +
+        '</div></div>';
+    while (host.firstChild) document.body.appendChild(host.firstChild);
+  }
+
+  window.MathAdvBadges = {
+    openBook: openBook,
+    closeBook: closeBook,
+    refresh: refresh
+  };
+
+  function boot() { buildDom(); updateFabCount(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+</body>
+</html>

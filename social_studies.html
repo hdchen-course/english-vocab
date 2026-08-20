@@ -1,0 +1,2320 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>社會大冒險 · 我們的台灣 🗺️</title>
+<!-- 統一遊戲化引擎：先載共用設計 token（assets/app.css），再載 HUD/toast 樣式
+     （game_core.css），最後同步載入引擎（game_core.js）。
+     本頁為全新頁面（greenfield），沒有任何 legacy 資料來源，因此「不」宣告
+     data-game-wired；只透過 Game.recordAnswer('social', ...) 即時記帳。 -->
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<style>
+/* =====================================================================
+ * social_studies.html — 本頁樣式（全部建立在 assets/app.css 的設計 token 上，
+ * 因此自動亮/暗色主題化、與學習基地視覺一致）。
+ * =================================================================== */
+
+/* 本頁強調色沿用社會科土色赭紅 --c-social。 */
+:root { --su: var(--c-social); --su-tint: var(--tint-social); }
+
+body { overflow-x: hidden; }
+
+/* 頁面頂列（返回、標題、主題切換） */
+.su-topbar {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  margin-bottom: var(--s4);
+}
+.su-topbar .su-title {
+  flex: 1;
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  color: var(--ink);
+  min-width: 0;
+}
+
+/* 螢幕切換 */
+.su-screen { display: none; animation: su-fade 0.3s ease; }
+.su-screen.active { display: block; }
+@keyframes su-fade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .su-screen { animation: none; }
+}
+
+/* 吉祥物歡迎卡 */
+.su-hello {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s4);
+  background: var(--su-tint);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  margin-bottom: var(--s4);
+}
+.su-hello .su-mascot { font-size: 46px; flex: none; line-height: 1; }
+.su-hello .su-hello-text { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+.su-hello .su-hello-sub { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; }
+
+/* 單元選單 grid */
+.su-units {
+  display: grid;
+  gap: var(--s4);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.su-unit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  padding: var(--s4);
+  text-align: left;
+  cursor: pointer;
+  border: 2px solid var(--card-border);
+  background: var(--card);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  font-family: var(--font);
+  color: var(--ink);
+}
+.su-unit:hover { box-shadow: var(--shadow-lg); border-color: var(--su); }
+.su-unit:active { transform: scale(0.98); }
+.su-unit-top { display: flex; align-items: center; gap: var(--s3); }
+.su-unit-emoji {
+  font-size: 34px;
+  width: 56px; height: 56px;
+  flex: none;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--su-tint);
+  border-radius: 16px;
+}
+.su-unit-num { font-size: var(--fs-small); font-weight: 700; color: var(--c-social-ink); }
+.su-unit-name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); line-height: 1.25; }
+.su-unit-game { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; }
+.su-unit-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-top: 2px; }
+.su-unit-status {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: var(--fs-small); font-weight: 700;
+  flex: none; white-space: nowrap;
+}
+.su-unit-status.done { color: var(--c-correct-ink); }
+.su-unit-status.todo { color: var(--ink-soft); }
+.su-unit-dots {
+  display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 3px;
+  flex: 1 1 auto; min-width: 0;
+}
+.su-unit-dots i {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--card-border); display: inline-block;
+}
+.su-unit-dots i.on { background: var(--su); }
+
+/* 進行中：一句一畫面的大卡 */
+.su-stage {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--s5) var(--s4);
+  text-align: center;
+}
+.su-visual {
+  font-size: clamp(64px, 22vw, 108px);
+  line-height: 1.1;
+  margin: var(--s2) 0 var(--s3);
+  user-select: none;
+}
+.su-sentence {
+  font-size: clamp(19px, 4.5vw, 24px);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.45;
+  margin: 0 auto var(--s4);
+  max-width: 32ch;
+}
+.su-toolrow { display: flex; justify-content: center; gap: var(--s2); flex-wrap: wrap; margin-bottom: var(--s3); }
+
+/* 進度：本單元第幾步 */
+.su-steps {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  margin-bottom: var(--s3);
+}
+.su-steps i { width: 22px; height: 6px; border-radius: 999px; background: var(--card-border); }
+.su-steps i.on { background: var(--su); }
+.su-steps i.cur { background: var(--su); box-shadow: 0 0 0 3px var(--su-tint); }
+
+/* 選項按鈕（tap 作答；命中區 ≥56px） */
+.su-options { display: grid; gap: var(--s3); margin-top: var(--s2); }
+.su-opt {
+  display: flex; align-items: center; gap: var(--s2);
+  min-height: 56px;
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid var(--card-border);
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: clamp(16px, 3.4vw, 19px);
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.su-opt:active { transform: scale(0.98); }
+.su-opt:disabled { cursor: default; }
+.su-opt.correct { border-color: var(--c-correct); background: var(--tint-english); color: var(--ink); }
+.su-opt.wrong { border-color: var(--c-wrong); background: rgba(255,118,117,0.12); color: var(--ink); }
+.su-opt .su-opt-mark { margin-left: auto; font-size: 22px; }
+
+/* 揭示區（tap-to-reveal 事實 / 答案解說） */
+.su-reveal {
+  margin-top: var(--s4);
+  padding: var(--s3) var(--s4);
+  background: var(--su-tint);
+  border-radius: var(--r-md);
+  font-size: var(--fs-body);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.55;
+  text-align: left;
+  display: none;
+}
+.su-reveal.show { display: block; animation: su-fade 0.3s ease; }
+@media (prefers-reduced-motion: reduce) { .su-reveal.show { animation: none; } }
+
+/* 排序遊戲 */
+.su-order-slots, .su-order-pool { display: flex; flex-direction: column; gap: var(--s2); }
+.su-order-slots { margin: var(--s3) 0; min-height: 8px; }
+.su-slot {
+  min-height: 52px;
+  border: 2px dashed var(--card-border);
+  border-radius: 14px;
+  display: flex; align-items: center; gap: var(--s2);
+  padding: 10px 14px;
+  color: var(--ink-soft);
+  font-weight: 700;
+  font-size: var(--fs-small);
+}
+.su-slot .su-slot-idx {
+  flex: none; width: 26px; height: 26px; border-radius: 50%;
+  background: var(--su-tint); color: var(--c-social-ink);   /* 亮 4.98:1 on tint / 暗 6.48:1，取代原 --su(#e17055) 2.73:1 未達 AA */
+  display: flex; align-items: center; justify-content: center; font-weight: 800;
+}
+.su-chip-btn {
+  min-height: 52px;
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--card-border);
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: clamp(15px, 3.2vw, 18px);
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+.su-chip-btn:active { transform: scale(0.98); }
+.su-chip-btn.placed { border-color: var(--su); background: var(--su-tint); }
+.su-order-pool-label, .su-order-slots-label {
+  font-size: var(--fs-small); color: var(--ink-soft); font-weight: 700; text-align: left; margin-top: var(--s2);
+}
+
+/* 收集圖鑑（原住民族） */
+.su-collect { display: grid; gap: var(--s3); grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); margin: var(--s3) 0; }
+.su-collect-card {
+  padding: var(--s3);
+  border: 2px solid var(--card-border);
+  border-radius: var(--r-md);
+  background: var(--card);
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.2s ease;
+}
+.su-collect-card:active { transform: scale(0.97); }
+.su-collect-card.opened { border-color: var(--su); background: var(--su-tint); }
+.su-collect-emoji { font-size: 40px; }
+.su-collect-name { font-weight: 800; color: var(--ink); margin-top: 4px; }
+.su-collect-fact { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; margin-top: 4px; display: none; }
+.su-collect-card.opened .su-collect-fact { display: block; }
+
+/* 名片產生器 */
+.su-namecard {
+  margin: var(--s3) auto 0;
+  max-width: 360px;
+  padding: var(--s4);
+  border-radius: var(--r-lg);
+  background: linear-gradient(135deg, var(--su-tint), var(--card));
+  border: 2px solid var(--su);
+  text-align: center;
+}
+.su-namecard .nc-emoji { font-size: 46px; }
+.su-namecard .nc-line { font-weight: 800; color: var(--ink); margin-top: 6px; font-size: var(--fs-body); }
+.su-select {
+  min-height: 52px; width: 100%;
+  padding: 12px 14px; border-radius: 14px;
+  border: 2px solid var(--card-border);
+  background: var(--card); color: var(--ink);
+  font-family: var(--font); font-size: var(--fs-body); font-weight: 700;
+}
+
+/* 完成畫面 */
+.su-done { text-align: center; padding: var(--s5) var(--s4); }
+.su-done-emoji { font-size: clamp(64px, 22vw, 100px); }
+.su-done-stars { font-size: 34px; letter-spacing: 4px; margin: var(--s2) 0; }
+.su-done-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); }
+
+/* 底部行動列 */
+.su-actions { display: flex; gap: var(--s3); margin-top: var(--s4); flex-wrap: wrap; }
+.su-actions .btn { flex: 1; min-width: 140px; }
+
+/* 進度總覽小列 */
+.su-overview {
+  display: flex; align-items: center; gap: var(--s3);
+  margin-bottom: var(--s4); flex-wrap: wrap;
+}
+.su-overview .stat-tile { flex: 1; min-width: 96px; }
+
+.su-footnote { text-align: center; color: var(--ink-soft); font-size: var(--fs-small); margin-top: var(--s5); font-weight: 600; }
+</style>
+</head>
+<body>
+<!-- ===== 共用頂部應用列（全站一致；貼在 <body> 內第一個元素） ===== -->
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">社會大冒險 🗺️</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle
+          aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+
+  <!-- ============================= 選單 / 首頁 ============================= -->
+  <section id="screen-menu" class="su-screen active">
+    <div class="su-topbar">
+      <span class="su-title">認識我們的台灣 🗺️</span>
+    </div>
+
+    <div class="su-hello">
+      <span class="su-mascot" aria-hidden="true">🦉</span>
+      <div>
+        <div class="su-hello-text" id="hello-text">嗨！我是小社，一起去認識我們的島吧！</div>
+        <div class="su-hello-sub" id="hello-sub">選一個單元，玩一玩、學一學。</div>
+      </div>
+    </div>
+
+    <div class="su-overview">
+      <div class="stat-tile"><span class="stat-value" id="ov-done">0/21</span><span class="stat-label">完成單元</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-xp">0</span><span class="stat-label">社會經驗值</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-streak">0</span><span class="stat-label">連續天數</span></div>
+    </div>
+
+    <div class="su-units" id="unit-list"><!-- 由 JS 產生 --></div>
+
+    <p class="su-footnote">台灣是我們的家，這裡有山、有海、有很多不同的人，一起把它變得更好。🌱</p>
+    <a href="social_concepts.html" style="display:flex;align-items:center;gap:10px;margin:var(--s4) 0 0;padding:12px 16px;background:var(--card);border:2px dashed var(--card-border);border-radius:14px;color:var(--ink);font-weight:700;text-decoration:none;line-height:1.4"><span style="font-size:22px" aria-hidden="true">🧭</span><span>還沒學過嗎？先到「社會觀念養成」用圖學會方位、地圖、時間軸，再回來玩 →</span></a>
+    <a href="social_advanced.html" style="display:flex;align-items:center;gap:10px;margin:var(--s3) 0 0;padding:12px 16px;background:var(--card);border:2px dashed var(--card-border);border-radius:14px;color:var(--ink);font-weight:700;text-decoration:none;line-height:1.4"><span style="font-size:22px" aria-hidden="true">🌏</span><span>已經很熟了？來挑戰更難的「進階社會探索」→</span></a>
+  </section>
+
+  <!-- ============================= 進行中 ============================= -->
+  <section id="screen-play" class="su-screen">
+    <div class="su-topbar">
+      <button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button>
+      <span class="su-title" id="play-title">單元</span>
+    </div>
+    <div class="su-steps" id="step-dots" aria-hidden="true"></div>
+    <div class="play-column">
+      <div id="stage"><!-- 由 JS 產生每一步 --></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---- 安全呼叫引擎（引擎必定已於 <head> 同步載入，但仍防禦式檢查） ----
+  function record(correct) {
+    try { if (window.Game && Game.recordAnswer) Game.recordAnswer('social', !!correct); }
+    catch (e) { /* 靜默：不阻斷孩子的遊戲 */ }
+  }
+  function toast(msg, kind) {
+    try { if (window.Game && Game.showToast) Game.showToast(msg, kind); } catch (e) {}
+  }
+
+  function speak(text) {
+    /* 已移除 TTS：本頁非英文發音頁，不需朗讀 */
+  }
+
+  // ---- 本頁進度（獨立 key，不與引擎 profile 衝突） ----
+  var PROG_KEY = 'social_studies_progress_v1';
+  function loadProg() {
+    try { return JSON.parse(localStorage.getItem(PROG_KEY)) || {}; } catch (e) { return {}; }
+  }
+  function saveProg(p) {
+    try { localStorage.setItem(PROG_KEY, JSON.stringify(p)); } catch (e) {}
+  }
+  var progress = loadProg(); // { unitId: { done:true, best: stars } }
+
+  // =====================================================================
+  // 課程內容（全繁體中文；史地公民事實以 9–10 歲可懂、且正確為準）
+  // step 類型：
+  //   fact   一句話 + 大圖 + 可翻開的「看更多」+ TTS
+  //   choose 單選題（tap 作答，記一次分）
+  //   order  時間排序（tap 建立順序，檢查時記一次分）
+  //   collect 圖鑑收集（翻卡）後接一題 choose
+  //   namecard 家鄉名片產生器（趣味、不計分）
+  // =====================================================================
+  var UNITS = [
+    {
+      id: 'u1', emoji: '🗺️', name: '台灣在哪裡？認識我們的島', game: '地圖尋寶',
+      steps: [
+        { t: 'fact', v: '🏝️', s: '台灣是一座島，位在亞洲的東邊、太平洋上。',
+          more: '島的四周都是海。從空中看，台灣本島的形狀很像一片番薯（地瓜）！' },
+        { t: 'choose', v: '🏝️', s: '台灣是什麼呢？',
+          opts: ['一座島', '一條大河', '一座高山'], ans: 0,
+          why: '沒錯！台灣是一座四面環海的島。' },
+        { t: 'choose', v: '🍠', s: '台灣本島的形狀最像下面哪一個？',
+          opts: ['一片番薯（地瓜）', '一顆圓球', '一顆星星'], ans: 0,
+          why: '對！很多人說台灣像一片番薯，所以也叫「番薯囡仔」。' },
+        { t: 'choose', v: '🧭', s: '地圖上「最上面」通常代表哪個方向？',
+          opts: ['北方', '南方', '西方'], ans: 0,
+          why: '看地圖記住：上北、下南、左西、右東。' },
+        { t: 'choose', v: '🌊', s: '台灣的東邊，是一片非常廣大的？',
+          opts: ['太平洋', '沙漠', '大草原'], ans: 0,
+          why: '台灣東邊是太平洋，是世界上最大的海洋。' },
+        { t: 'choose', v: '⛴️', s: '台灣的西邊隔著台灣海峽，對面是哪裡？',
+          opts: ['中國', '日本', '美國'], ans: 0,
+          why: '台灣海峽對面是中國；兩邊由不同的政府各自治理，遇到不一樣的想法時，用和平的方式面對。' },
+        { t: 'choose', v: '🏖️', s: '下面哪一個也是屬於台灣的島嶼？',
+          opts: ['蘭嶼', '夏威夷', '峇里島'], ans: 0,
+          why: '台灣本島之外，還有澎湖、金門、馬祖、蘭嶼、綠島等許多小島。' }
+      ]
+    },
+    {
+      id: 'u2', emoji: '⛰️', name: '高山、河流與海岸：地形與天氣', game: '登山闖關',
+      steps: [
+        { t: 'fact', v: '🗻', s: '台灣有高山、丘陵、平原、盆地和海岸，地形很多樣。',
+          more: '中央山脈像台灣的「屋脊」，從北到南；河流大多從高山流向兩邊的大海。' },
+        { t: 'choose', v: '🏔️', s: '台灣最高的山是哪一座？',
+          opts: ['玉山', '雪山', '阿里山'], ans: 0,
+          why: '玉山高約 3952 公尺，是台灣最高的山；雪山第二高，但還是比玉山矮一些。' },
+        { t: 'choose', v: '⛰️', s: '哪一條山脈像台灣的屋脊，縱貫南北？',
+          opts: ['中央山脈', '大屯火山', '海岸沙丘'], ans: 0,
+          why: '中央山脈從北到南，把台灣分成東、西兩邊。' },
+        { t: 'choose', v: '🌾', s: '台灣西部大多是什麼地形？這裡人多、農田也多。',
+          opts: ['平原', '高山', '沙漠'], ans: 0,
+          why: '西部平原地勢平坦，是台灣人口和農田最多的地方。' },
+        { t: 'choose', v: '🏙️', s: '被群山圍住的低地，我們叫它？',
+          opts: ['盆地', '海岸', '高原'], ans: 0,
+          why: '例如台北盆地，就是被山圍住的一塊低地。' },
+        { t: 'choose', v: '🌀', s: '夏天和秋天常來、會帶來強風大雨的是？',
+          opts: ['颱風', '下雪', '沙塵暴'], ans: 0,
+          why: '颱風會帶來雨水（幫水庫存水），但也可能造成淹水、坍方等災害。' },
+        { t: 'choose', v: '🛟', s: '颱風來之前，最聰明、最安全的做法是？',
+          opts: ['注意氣象、先準備好儲水和食物', '跑去河邊看大水', '爬到山坡上玩'], ans: 0,
+          why: '防颱要點：注意氣象報告、準備儲水儲糧、遠離河邊和山坡，待在安全的地方。' }
+      ]
+    },
+    {
+      id: 'u3', emoji: '🏘️', name: '我的家鄉與社區', game: '家鄉名片',
+      steps: [
+        { t: 'fact', v: '🏙️', s: '台灣有「六都」，是六個最大的直轄市。',
+          more: '六都是：台北市、新北市、桃園市、台中市、台南市、高雄市。你的家鄉在哪裡呢？' },
+        { t: 'choose', v: '🏙️', s: '台灣的「六都」是指幾個直轄市？',
+          opts: ['6 個', '3 個', '10 個'], ans: 0,
+          why: '六都就是六個直轄市：台北、新北、桃園、台中、台南、高雄。' },
+        { t: 'choose', v: '🌆', s: '下面哪一個是「六都」之一？',
+          opts: ['高雄市', '花蓮縣', '宜蘭縣'], ans: 0,
+          why: '高雄市是六都之一，位在台灣南部。' },
+        { t: 'choose', v: '🏥', s: '身體不舒服、生病時，我們要去哪裡看醫生？',
+          opts: ['醫院', '郵局', '消防隊'], ans: 0,
+          why: '醫院有醫生和護理師，照顧生病的人。' },
+        { t: 'choose', v: '🚒', s: '發生火災時，是誰趕來幫我們滅火、救人？',
+          opts: ['消防隊', '郵差', '農夫'], ans: 0,
+          why: '消防隊員很勇敢，火災時保護大家的安全。' },
+        { t: 'choose', v: '💌', s: '要寄信、寄包裹的時候，可以去哪裡？',
+          opts: ['郵局', '圖書館', '公園'], ans: 0,
+          why: '郵局幫我們把信和包裹送到別人手上。' },
+        { t: 'choose', v: '🌳', s: '身為社區的一份子，我可以怎麼做？',
+          opts: ['愛護環境、遵守規則、幫助別人', '亂丟垃圾', '大聲吵鬧'], ans: 0,
+          why: '每個人都是社區的一份子，一起愛護它，社區就會更美好。' },
+        { t: 'namecard', v: '🪪', s: '做一張你的「家鄉名片」吧！選一個你想介紹的地方。' }
+      ]
+    },
+    {
+      id: 'u4', emoji: '🪶', name: '最早的主人：原住民族', game: '族群文化圖鑑',
+      steps: [
+        { t: 'fact', v: '🪶', s: '原住民族是最早住在台灣的人。',
+          more: '在其他族群來到台灣之前，原住民族就已經在這座島上生活了。' },
+        { t: 'choose', v: '🌏', s: '誰是最早住在台灣這座島上的人？',
+          opts: ['原住民族', '後來才搬來的人', '來玩的觀光客'], ans: 0,
+          why: '原住民族是台灣最早的主人，很久很久以前就住在這裡。' },
+        { t: 'choose', v: '🔢', s: '台灣政府官方認定的原住民族，大約有幾族？',
+          opts: ['十多族', '2 族', '100 族'], ans: 0,
+          why: '台灣官方認定的原住民族有十多族，例如阿美族、泰雅族、排灣族、布農族、達悟族等，族數還可能會再增加。' },
+        { t: 'collect', v: '🪶', s: '點一點卡片，認識不同的原住民族吧！',
+          cards: [
+            { e: '🌾', n: '阿美族', f: '住在東部，人口最多，有熱鬧的豐年祭。' },
+            { e: '🏔️', n: '泰雅族', f: '住在北部山區，過去有紋面的文化。' },
+            { e: '📿', n: '排灣族', f: '住在南部，有頭目制度和美麗的琉璃珠。' },
+            { e: '🎶', n: '布農族', f: '住在高山，以「八部合音」的歌聲聞名。' },
+            { e: '🛶', n: '達悟族', f: '住在蘭嶼，有拼板舟和飛魚文化。' }
+          ],
+          why: '每一族都有自己的語言、服裝、歌舞和故事。' },
+        { t: 'choose', v: '🛶', s: '住在蘭嶼、有拼板舟和飛魚文化的是哪一族？',
+          opts: ['達悟族（雅美族）', '泰雅族', '鄒族'], ans: 0,
+          why: '達悟族住在蘭嶼，划著拼板舟出海，飛魚是重要的文化。' },
+        { t: 'choose', v: '🤝', s: '不同的原住民族之間，關係是怎樣的呢？',
+          opts: ['每一族都一樣珍貴，沒有高低之分', '有的族比較厲害', '有的族不重要'], ans: 0,
+          why: '每一族都同樣珍貴。我們要尊重、欣賞每個族群不一樣的文化。' }
+      ]
+    },
+    {
+      id: 'u5', emoji: '⏳', name: '台灣的故事：時光走廊', game: '時光排序',
+      steps: [
+        { t: 'fact', v: '📜', s: '台灣的故事很長，是由許多不同的人一起寫成的。',
+          more: '從最早的原住民族，到後來一波一波來到台灣的人，一起組成今天多元的台灣。' },
+        { t: 'choose', v: '🪶', s: '在台灣的歷史裡，誰是最早的主人？',
+          opts: ['原住民族', '荷蘭人', '日本人'], ans: 0,
+          why: '原住民族最早住在台灣，之後才有其他人陸續來到。' },
+        { t: 'order', v: '⏳', s: '把台灣的歷史，依照「時間的先後」排好！',
+          items: ['原住民族時期', '荷蘭與西班牙來到台灣', '鄭成功與清朝時期', '日本統治時期', '中華民國，走向民主'],
+          why: '順序是：原住民族 → 荷蘭西班牙 → 鄭成功與清朝 → 日本統治 → 中華民國走向民主。' },
+        { t: 'choose', v: '🗳️', s: '在今天的台灣，人民可以做一件很重要的事，來選出領導人，那就是？',
+          opts: ['投票', '猜拳', '比誰的聲音大'], ans: 0,
+          why: '台灣後來一步步走向民主，人民可以自己投票選出領導人。' },
+        { t: 'choose', v: '🌈', s: '今天的台灣，是由什麼組成的？',
+          opts: ['許多不同的人和文化，一起組成', '只有一種人', '沒有人'], ans: 0,
+          why: '不同來源的人和文化，一起組成今天多元的台灣。我們尊重每個人的祖先和故事。' }
+      ]
+    },
+    {
+      id: 'u6', emoji: '🗳️', name: '自由的台灣：民主、投票與法治', game: '班級小小選舉',
+      steps: [
+        { t: 'fact', v: '🗳️', s: '在台灣，人民可以投票，選出為大家做事的代表和領導人。',
+          more: '這就是民主：大家一起決定，票多的當選。就像班上選幹部一樣！' },
+        { t: 'choose', v: '🙋', s: '班上要選一位班長，哪一種方法最公平？',
+          opts: ['每個人投一票，票最多的當選', '老師直接指定自己喜歡的', '誰最大聲就誰當'], ans: 0,
+          why: '大家一票、票多者當選，這就是公平的投票，也是民主的精神。' },
+        { t: 'choose', v: '📜', s: '政府要做很多事，其中負責「訂規則、制定法律」的是哪一個？',
+          opts: ['立法', '行政', '司法'], ans: 0,
+          why: '立法負責訂規則（法律）、行政負責執行做事、司法負責依法判斷對錯。台灣的政府其實還分成五個「院」（行政、立法、司法、考試、監察院）呢！' },
+        { t: 'choose', v: '⚖️', s: '「法治」是什麼意思呢？',
+          opts: ['規則對每個人都公平，大家都要遵守', '有錢人可以不守規則', '規則只管小孩子'], ans: 0,
+          why: '法治就是：不管你是誰，規則對每個人都一樣。公平的規則保護大家的自由和安全。' },
+        { t: 'choose', v: '🤔', s: '這樣公平嗎？「班規規定走廊不能奔跑，這條規則全班每個人都一樣。」',
+          opts: ['公平', '不公平'], ans: 0,
+          why: '規則對每個人都一樣，這就是公平，也是法治的意思。' },
+        { t: 'choose', v: '🤔', s: '這樣公平嗎？「只有某一個同學可以插隊，其他人都不行。」',
+          opts: ['公平', '不公平'], ans: 1,
+          why: '規則應該對每個人都一樣。只有少數人有特權，就不公平了。' },
+        { t: 'choose', v: '🕊️', s: '遇到和別人不一樣的想法時，最好的方式是？',
+          opts: ['和平溝通、互相尊重', '大聲吵架', '動手打人'], ans: 0,
+          why: '在自由的台灣，我們可以自由表達想法，也要尊重別人不一樣的意見，用和平的方式面對不同。' }
+      ]
+    },
+    {
+      id: 'u7', emoji: '🌈', name: '我是好公民：權利、責任與多元共好', game: '好公民任務卡',
+      steps: [
+        { t: 'fact', v: '🌟', s: '每個小朋友都有基本的權利，也有要盡的責任。',
+          more: '權利像是：可以上學受教育、被保護安全長大、說出自己的想法；責任像是：遵守規則、愛護環境、尊重別人。' },
+        { t: 'choose', v: '🎒', s: '下面哪一個是小朋友的「權利」？',
+          opts: ['可以上學、受教育', '可以欺負同學', '可以破壞公物'], ans: 0,
+          why: '受教育是每個小朋友的權利，也被保護、可以表達自己的想法。' },
+        { t: 'choose', v: '♻️', s: '要當一個好公民，我應該怎麼做？',
+          opts: ['愛護環境、遵守規則、尊重別人', '亂丟垃圾', '破壞公共設施'], ans: 0,
+          why: '好公民會盡自己的責任：愛護環境、守規則、尊重身邊的每一個人。' },
+        { t: 'choose', v: '🤝', s: '任務卡：你和同學吵架了，最好的做法是？',
+          opts: ['先冷靜，好好說；需要時請老師幫忙', '動手打人', '大聲罵回去'], ans: 0,
+          why: '遇到衝突，用和平的方法解決：好好說、聽對方說、必要時請大人幫忙。' },
+        { t: 'choose', v: '🌏', s: '從別的國家搬來台灣、和我們一起生活的人，我們叫他們？',
+          opts: ['新住民', '外星人', '壞人'], ans: 0,
+          why: '新住民也是台灣的一份子。台灣有本地人、原住民族，還有新住民，大家一起生活。' },
+        { t: 'choose', v: '🌈', s: '對和我們不一樣的人，我們應該？',
+          opts: ['尊重和欣賞不同', '排擠他們', '取笑他們'], ans: 0,
+          why: '尊重、欣賞每個人的不同，大家才能一起生活得更好——這就是「多元共好」。' }
+      ]
+    },
+    {
+      id: 'u8', emoji: '🌾', name: '常識百科 · 農業 （一）', game: '農田小達人',
+      steps: [
+        { t: 'fact', v: '🌾', s: '農業就是種植作物、養殖動物，供應我們每天吃的食物。',
+          more: '台灣氣候溫暖，稻米、水果、蔬菜、茶葉都很有名。一起來認識農田裡的知識吧！' },
+        { t: 'choose', v: '🌾', s: '農夫「休耕」的主要目的是什麼？',
+          opts: ['讓土地恢復養分', '因為懶得種', '等待下雨', '蓋房子'], ans: 0,
+          why: '休耕讓土壤恢復肥力，下期才能種出好作物' },
+        { t: 'choose', v: '🌾', s: '「水耕」是什麼意思？',
+          opts: ['不用土壤用水來種植物', '在水田種稻子', '用很多水澆花', '在河邊種菜'], ans: 0,
+          why: '水耕：利用營養液取代土壤來栽培植物' },
+        { t: 'choose', v: '🌾', s: '台灣一年可以種幾期稻米？',
+          opts: ['二期', '一期', '三期', '四期'], ans: 0,
+          why: '台灣因氣候溫暖，一年可種兩期稻' },
+        { t: 'choose', v: '🌾', s: '「插秧」是什麼？',
+          opts: ['把稻苗種到水田裡', '用筷子吃飯', '把花插到花瓶', '砍竹子'], ans: 0,
+          why: '插秧：將育好的稻苗移植到水田中' },
+        { t: 'choose', v: '🌾', s: '哪個季節是台灣第一期稻作的插秧期？',
+          opts: ['春天(2-3月)', '夏天(6-7月)', '秋天(9-10月)', '冬天(12-1月)'], ans: 0,
+          why: '台灣第一期稻作約在農曆年後的春天插秧' },
+        { t: 'choose', v: '🌾', s: '台灣外銷世界、被稱為「愛文」的有名水果是？',
+          opts: ['芒果', '蘋果', '櫻桃', '奇異果'], ans: 0,
+          why: '台灣愛文芒果外銷世界，品種優良甜度高' },
+        { t: 'choose', v: '🌾', s: '稻米收割後要經過什麼處理才能吃？',
+          opts: ['曬乾碾米', '直接煮', '泡水', '冷凍'], ans: 0,
+          why: '收割後要曬乾再碾去稻殼才能得到白米' },
+        { t: 'choose', v: '🌾', s: '蜜蜂對農業有什麼幫助？',
+          opts: ['幫花朵授粉', '吃害蟲', '鬆土', '施肥'], ans: 0,
+          why: '蜜蜂採蜜時順便傳遞花粉，幫助植物結果' },
+        { t: 'choose', v: '🌾', s: '下列哪個是台灣重要的經濟作物？',
+          opts: ['茶葉', '小麥', '玉米', '大豆'], ans: 0,
+          why: '台灣的茶葉品質優良，是重要經濟作物' },
+        { t: 'choose', v: '🌾', s: '什麼是「有機農業」？',
+          opts: ['不使用化學農藥和肥料', '用機器種田', '在室內種植', '只種有機物'], ans: 0,
+          why: '有機農業不用化學藥劑，使用天然方式耕種' },
+        { t: 'choose', v: '🌾', s: '台灣的香蕉主要產地在哪裡？',
+          opts: ['高雄旗山', '台北', '花蓮', '新竹'], ans: 0,
+          why: '高雄旗山是台灣最著名的香蕉產地' },
+        { t: 'choose', v: '🌾', s: '農民用什麼來防止蟲害？',
+          opts: ['農藥或天敵', '音樂', '燈光', '大聲喊叫'], ans: 0,
+          why: '可用農藥或引入天敵昆蟲來防治害蟲' },
+        { t: 'choose', v: '🌾', s: '下列哪個不是穀類？',
+          opts: ['高麗菜', '稻米', '小麥', '玉米'], ans: 0,
+          why: '高麗菜是蔬菜，不是穀類' },
+        { t: 'choose', v: '🌾', s: '「溫室」種植的好處是什麼？',
+          opts: ['可以控制溫度和濕度', '比較好看', '不用澆水', '免費的'], ans: 0,
+          why: '溫室可以控制環境，讓植物更好生長' },
+        { t: 'choose', v: '🍊', s: '台灣的柚子（文旦）主要在哪個季節盛產？',
+          opts: ['夏天', '冬天', '秋天', '春天'], ans: 2,
+          why: '柚子（文旦）在中秋節前後盛產，屬於秋天；中秋節吃柚子就是這個原因' },
+        { t: 'choose', v: '🌾', s: '什麼是「輪作」？',
+          opts: ['在同一塊田輪流種不同作物', '用輪子耕田', '一直種同一種', '旋轉澆水'], ans: 0,
+          why: '輪作可以避免土壤養分單一消耗，減少病蟲害' },
+        { t: 'choose', v: '🌾', s: '雞鴨鵝屬於什麼類的畜牧？',
+          opts: ['家禽', '家畜', '野生動物', '水產'], ans: 0,
+          why: '雞鴨鵝是家禽，豬牛羊是家畜' },
+        { t: 'choose', v: '🌾', s: '台灣的蓮霧主要產地在？',
+          opts: ['屏東', '台北', '基隆', '新竹'], ans: 0,
+          why: '屏東是台灣蓮霧最主要的產地' },
+        { t: 'choose', v: '🌾', s: '「堆肥」是用什麼做成的？',
+          opts: ['廚餘和落葉等有機物', '石頭', '塑膠', '金屬'], ans: 0,
+          why: '堆肥是利用有機廢棄物分解後製成的天然肥料' },
+        { t: 'choose', v: '🌾', s: '台灣的養殖漁業最有名的是？',
+          opts: ['虱目魚', '鯊魚', '鯨魚', '海豚'], ans: 0,
+          why: '虱目魚是台灣重要的養殖魚類' },
+        { t: 'choose', v: '🌾', s: '為什麼農田需要灌溉？',
+          opts: ['提供植物生長需要的水分', '好玩', '洗土', '讓田看起來漂亮'], ans: 0,
+          why: '灌溉提供農作物必要的水分' },
+        { t: 'choose', v: '🌾', s: '台灣哪裡的米最有名？',
+          opts: ['花蓮、台東', '台北', '高雄', '基隆'], ans: 0,
+          why: '花東地區水質好空氣好，產出的米品質佳' },
+        { t: 'choose', v: '🌾', s: '什麼是「嫁接」？',
+          opts: ['把一種植物接到另一種上', '植物結婚', '搬植物', '砍樹'], ans: 0,
+          why: '嫁接是把一種植物的枝條接到另一種植物上生長' },
+        { t: 'choose', v: '🌾', s: '下列何者「不是」台灣主要的茶葉產地？',
+          opts: ['屏東', '南投', '嘉義', '新北坪林'], ans: 0,
+          why: '南投、嘉義、坪林都是知名茶區；屏東雖有少量港口茶，但主要以水果聞名，不是主要茶葉產地' },
+        { t: 'choose', v: '🌾', s: '「播種」是什麼意思？',
+          opts: ['把種子撒到土裡', '收割作物', '拔草', '澆水'], ans: 0,
+          why: '播種就是將種子種到土壤裡' },
+        { t: 'choose', v: '🌾', s: '稻穀變成白米要經過什麼步驟？',
+          opts: ['碾米（去殼）', '用水洗', '曬太陽就好', '冷凍'], ans: 0,
+          why: '稻穀要經過碾米機去殼才能變成白米' },
+        { t: 'choose', v: '🌾', s: '牛在傳統農業中的用途是？',
+          opts: ['耕田', '看門', '比賽', '當寵物'], ans: 0,
+          why: '水牛在傳統農業中用來犁田耕地' },
+        { t: 'choose', v: '🌾', s: '下列哪個是根莖類蔬菜？',
+          opts: ['蘿蔔', '空心菜', '高麗菜', '菠菜'], ans: 0,
+          why: '蘿蔔是吃根部的根莖類蔬菜' },
+        { t: 'choose', v: '🌾', s: '台灣的柑橘主要在哪個季節產出？',
+          opts: ['冬天', '夏天', '春天', '秋天'], ans: 0,
+          why: '台灣柑橘（橘子、柳丁）在冬季盛產' },
+        { t: 'choose', v: '🌾', s: '什麼是「育苗」？',
+          opts: ['把種子培育成小苗', '殺蟲', '澆水', '收割'], ans: 0,
+          why: '育苗是在苗床上培育幼苗再移植' },
+        { t: 'choose', v: '🌾', s: '「施肥」的目的是什麼？',
+          opts: ['提供植物營養', '讓土變硬', '殺蟲', '擋風'], ans: 0,
+          why: '施肥是給土壤添加養分讓植物長得好' },
+        { t: 'choose', v: '🌾', s: '台灣哪個地方的文旦最有名？',
+          opts: ['台南麻豆', '台北', '花蓮', '新竹'], ans: 0,
+          why: '台南麻豆文旦是中秋節最受歡迎的柚子' },
+        { t: 'choose', v: '🌾', s: '「除草」對農作物有什麼幫助？',
+          opts: ['減少雜草搶養分', '好看', '運動', '增加雨水'], ans: 0,
+          why: '除草讓農作物不用跟雜草搶養分和陽光' },
+        { t: 'choose', v: '🌾', s: '稻米從播種到收割約需幾天？',
+          opts: ['約120天', '約30天', '約7天', '約365天'], ans: 0,
+          why: '稻米生長期約120天左右' },
+        { t: 'choose', v: '🌾', s: '下列哪個不是台灣的養殖水產？',
+          opts: ['鯊魚', '蝦子', '吳郭魚', '鯛魚'], ans: 0,
+          why: '鯊魚是海中的野生魚類，不適合養殖' },
+        { t: 'choose', v: '🌾', s: '什麼季節適合種草莓？',
+          opts: ['秋冬', '夏天', '全年', '不一定'], ans: 0,
+          why: '草莓喜歡涼爽天氣，台灣秋冬種植春天收成' },
+        { t: 'choose', v: '🌾', s: '農曆「穀雨」代表什麼？',
+          opts: ['適合種稻的雨季', '不下雨', '很冷', '要過年了'], ans: 0,
+          why: '穀雨節氣代表雨水增多，適合播種穀類' },
+        { t: 'choose', v: '🌾', s: '台灣的竹筍主要產在哪裡？',
+          opts: ['南投、嘉義', '台北', '基隆', '花蓮'], ans: 0,
+          why: '南投和嘉義山區是台灣竹筍重要產地' },
+        { t: 'choose', v: '🌾', s: '「稻草人」的作用是什麼？',
+          opts: ['嚇跑吃稻穀的鳥', '好看', '遮陽', '指路'], ans: 0,
+          why: '稻草人放在田裡嚇阻鳥類來吃稻穀' },
+        { t: 'choose', v: '🌾', s: '哪一種不是台灣常見的家畜？',
+          opts: ['馴鹿', '豬', '牛', '羊'], ans: 0,
+          why: '馴鹿生活在寒帶地區，台灣不飼養' },
+        { t: 'choose', v: '🌾', s: '台灣高山上種的蔬菜叫什麼？',
+          opts: ['高冷蔬菜', '冰蔬菜', '天空菜', '雲霧菜'], ans: 0,
+          why: '高冷蔬菜是在海拔較高的山上種植的蔬菜' },
+        { t: 'choose', v: '🌾', s: '「割稻」用的工具是什麼？',
+          opts: ['鐮刀或收割機', '鋤頭', '鏟子', '斧頭'], ans: 0,
+          why: '傳統用鐮刀割稻，現在多用收割機' },
+        { t: 'choose', v: '🌾', s: '蠶寶寶吃什麼長大？',
+          opts: ['桑葉', '米飯', '麵包', '牛奶'], ans: 0,
+          why: '蠶寶寶（蠶蛾幼蟲）以桑葉為食' },
+        { t: 'choose', v: '🌾', s: '台灣阿里山最有名的農產品是？',
+          opts: ['茶葉', '稻米', '芒果', '香蕉'], ans: 0,
+          why: '阿里山高山茶是台灣最有名的茶葉之一' },
+        { t: 'choose', v: '🌾', s: '農田中設置「水圳」的目的是？',
+          opts: ['引水灌溉農田', '養魚', '好看', '排水'], ans: 0,
+          why: '水圳是將水引到農田灌溉的水道' },
+        { t: 'choose', v: '🌾', s: '台灣的芋頭主要產地在哪裡？',
+          opts: ['台中大甲', '台北', '花蓮', '屏東'], ans: 0,
+          why: '台中大甲是台灣著名的芋頭產地' },
+        { t: 'choose', v: '🌾', s: '什麼是「有機蔬菜」的特色？',
+          opts: ['不用化學農藥', '長得比較大', '比較便宜', '顏色比較綠'], ans: 0,
+          why: '有機蔬菜用天然方式栽培，不使用化學農藥' },
+        { t: 'choose', v: '🌾', s: '台灣的乳牛主要養在哪裡？',
+          opts: ['彰化、雲林', '台北', '花蓮', '基隆'], ans: 0,
+          why: '彰化和雲林是台灣主要的酪農區' }
+      ]
+    },
+    {
+      id: 'u9', emoji: '🌾', name: '常識百科 · 農業 （二）', game: '農田小達人',
+      steps: [
+        { t: 'fact', v: '🌾', s: '繼續來挑戰更多「農業」的題目！',
+          more: '多練幾題，你會越來越熟！加油！' },
+        { t: 'choose', v: '🌾', s: '為什麼要「曬穀」？',
+          opts: ['讓稻穀乾燥不會發霉', '好看', '加熱', '殺蟲'], ans: 0,
+          why: '收割後的稻穀含水量高，需曬乾保存' },
+        { t: 'choose', v: '🌾', s: '「農藥殘留」為什麼不好？',
+          opts: ['吃了對身體有害', '讓蔬果變大', '太貴', '浪費水'], ans: 0,
+          why: '農藥殘留在蔬果上可能危害人體健康' },
+        { t: 'choose', v: '🌾', s: '台灣的龍眼主要在哪裡種植？',
+          opts: ['台南', '台北', '花蓮', '宜蘭'], ans: 0,
+          why: '台南是台灣龍眼的重要產地' },
+        { t: 'choose', v: '🌾', s: '「秧苗」是什麼？',
+          opts: ['稻米的幼苗', '一種蔬菜', '水果', '雜草'], ans: 0,
+          why: '秧苗是稻穀發芽長大的幼小植株' },
+        { t: 'choose', v: '🌾', s: '什麼昆蟲會吃害蟲幫助農業？',
+          opts: ['瓢蟲', '蝴蝶', '蚊子', '螢火蟲'], ans: 0,
+          why: '瓢蟲會吃蚜蟲，是農民的好幫手' },
+        { t: 'choose', v: '🌾', s: '台灣的洋蔥主要種在哪裡？',
+          opts: ['屏東恆春', '台北', '宜蘭', '新竹'], ans: 0,
+          why: '屏東恆春地區盛產洋蔥' },
+        { t: 'choose', v: '🌾', s: '「採收」是什麼意思？',
+          opts: ['把成熟的作物收下來', '播種', '施肥', '除草'], ans: 0,
+          why: '採收就是將成熟的農產品摘取收集' },
+        { t: 'choose', v: '🌾', s: '台灣的西瓜主要產季是？',
+          opts: ['夏天', '冬天', '春天', '秋天'], ans: 0,
+          why: '西瓜是夏季水果，夏天盛產' },
+        { t: 'choose', v: '🌾', s: '「噴灑農藥」通常在什麼時候？',
+          opts: ['清晨或傍晚', '正中午', '晚上', '下雨天'], ans: 0,
+          why: '清晨或傍晚溫度較低，農藥效果較好' },
+        { t: 'choose', v: '🌾', s: '為什麼果樹要「修剪」？',
+          opts: ['讓果實長得更好', '好看', '練習剪刀', '沒有原因'], ans: 0,
+          why: '修剪讓養分集中，果實品質更好' },
+        { t: 'choose', v: '🌾', s: '台灣的梅子主要產在？',
+          opts: ['南投信義', '台北', '基隆', '桃園'], ans: 0,
+          why: '南投信義鄉是台灣青梅的主要產地' },
+        { t: 'choose', v: '🌾', s: '什麼是「梯田」？',
+          opts: ['在山坡上像階梯一樣的農田', '平地的田', '水田', '旱田'], ans: 0,
+          why: '梯田是在山坡地開闢成階梯狀的農田' },
+        { t: 'choose', v: '🌾', s: '台灣養雞場提供的主要產品是？',
+          opts: ['雞蛋和雞肉', '牛奶', '羊毛', '蜂蜜'], ans: 0,
+          why: '養雞場主要生產雞蛋和雞肉' },
+        { t: 'choose', v: '🌾', s: '「二期稻作」大約在幾月收割？',
+          opts: ['11月左右', '3月', '6月', '1月'], ans: 0,
+          why: '台灣第二期稻作約在11月收割' },
+        { t: 'choose', v: '🌾', s: '下列哪種不是葉菜類？',
+          opts: ['番茄', '菠菜', '空心菜', '小白菜'], ans: 0,
+          why: '番茄是果菜類，其餘是葉菜類' },
+        { t: 'choose', v: '🌾', s: '為什麼要在果實上套袋？',
+          opts: ['防止蟲咬和鳥啄', '裝飾', '遮陽', '保暖'], ans: 0,
+          why: '套袋可以保護果實不被蟲鳥傷害' },
+        { t: 'choose', v: '🌾', s: '台灣哪裡的釋迦最有名？',
+          opts: ['台東', '台北', '高雄', '新竹'], ans: 0,
+          why: '台東是台灣釋迦的主要產地' },
+        { t: 'choose', v: '🌾', s: '「耕耘機」取代了傳統的什麼？',
+          opts: ['牛犁田', '人挑水', '手播種', '鐮刀'], ans: 0,
+          why: '耕耘機取代了傳統用牛犁田的方式' },
+        { t: 'choose', v: '🌾', s: '什麼蔬菜長在水裡？',
+          opts: ['蓮藕', '高麗菜', '番茄', '辣椒'], ans: 0,
+          why: '蓮藕生長在池塘水田中' },
+        { t: 'choose', v: '🌾', s: '台灣的蜂蜜主要來源花是？',
+          opts: ['龍眼花', '玫瑰花', '百合花', '向日葵'], ans: 0,
+          why: '台灣蜂蜜以龍眼蜜最為知名' },
+        { t: 'choose', v: '🌾', s: '「綠肥」是什麼？',
+          opts: ['種植物翻入土中當肥料', '綠色的藥', '綠色塑膠', '草地'], ans: 0,
+          why: '綠肥作物種好後翻入土中，增加土壤養分' },
+        { t: 'choose', v: '🌾', s: '哪種動物能幫忙吃田裡的福壽螺？',
+          opts: ['鴨子', '貓', '狗', '兔子'], ans: 0,
+          why: '鴨子會吃福壽螺，是天然的害蟲防治' },
+        { t: 'choose', v: '🌾', s: '台灣的柿子主要產在？',
+          opts: ['新竹新埔', '台南', '屏東', '宜蘭'], ans: 0,
+          why: '新竹新埔是台灣柿餅最著名的產地' },
+        { t: 'choose', v: '🌾', s: '什麼是「間作」？',
+          opts: ['在同一塊田裡同時種兩種作物', '隔一天種一次', '中間休息', '澆兩次水'], ans: 0,
+          why: '間作是在作物行間種植另一種作物' },
+        { t: 'choose', v: '🌾', s: '為什麼農民要「翻土」？',
+          opts: ['讓土壤鬆軟透氣', '找寶藏', '運動', '好玩'], ans: 0,
+          why: '翻土讓土壤鬆軟，空氣和水分更容易進入' },
+        { t: 'choose', v: '🌾', s: '台灣哪裡的荔枝最有名？',
+          opts: ['高雄大樹', '台北', '花蓮', '基隆'], ans: 0,
+          why: '高雄大樹區是台灣知名的荔枝產地' },
+        { t: 'choose', v: '🌾', s: '農作物最需要的三大養分是？',
+          opts: ['氮磷鉀', '鐵銅鋅', '金銀銅', '水火土'], ans: 0,
+          why: '植物需要氮(N)、磷(P)、鉀(K)三大營養素' },
+        { t: 'choose', v: '🌾', s: '「旱災」對農業有什麼影響？',
+          opts: ['缺水導致作物枯死', '太多水', '太冷', '太熱'], ans: 0,
+          why: '旱災就是長期不下雨，農作物缺水會枯萎' },
+        { t: 'choose', v: '🌾', s: '台灣的竹子有什麼用途？',
+          opts: ['建材、食材、工藝品', '只能觀賞', '沒有用', '當柴燒'], ans: 0,
+          why: '竹子可作建材、竹筍可食、還能做工藝品' },
+        { t: 'choose', v: '🌾', s: '什麼是「嫁接水果」？',
+          opts: ['把好吃的品種接在強壯的樹上', '兩種水果混在一起', '水果結婚', '買水果'], ans: 0,
+          why: '嫁接讓好吃品種接在強壯根砧上，結合兩者優點' },
+        { t: 'choose', v: '🌾', s: '為什麼農民常在清晨採摘蔬菜？',
+          opts: ['清晨蔬菜最新鮮水分多', '中午太熱', '下午要休息', '晚上看不到'], ans: 0,
+          why: '清晨氣溫低，蔬菜含水量高最新鮮' },
+        { t: 'choose', v: '🌾', s: '台灣的花卉外銷最多的是？',
+          opts: ['蝴蝶蘭', '玫瑰', '向日葵', '百合'], ans: 0,
+          why: '台灣蝴蝶蘭品質世界第一，大量外銷' },
+        { t: 'choose', v: '🌾', s: '「疏果」是什麼意思？',
+          opts: ['摘掉多餘的果實讓剩下的更大', '種更多', '施肥', '澆水'], ans: 0,
+          why: '疏果讓養分集中，留下的果實品質更好' },
+        { t: 'choose', v: '🌾', s: '台灣的養豬業主要在哪裡？',
+          opts: ['雲林、彰化', '台北', '花蓮', '基隆'], ans: 0,
+          why: '雲林彰化是台灣主要養豬地區' },
+        { t: 'choose', v: '🌾', s: '什麼是「露天栽培」？',
+          opts: ['在戶外自然環境下種植', '在屋頂種', '在水裡種', '在地下種'], ans: 0,
+          why: '露天栽培就是在開放的田地裡種植' },
+        { t: 'choose', v: '🌾', s: '台灣的鳳梨酥原料鳳梨主要來自？',
+          opts: ['屏東、台南', '台北', '宜蘭', '基隆'], ans: 0,
+          why: '屏東和台南是鳳梨主要產地' },
+        { t: 'choose', v: '🌾', s: '「農會」的功能是什麼？',
+          opts: ['協助農民銷售農產品和提供技術', '管理學校', '蓋房子', '做衣服'], ans: 0,
+          why: '農會幫助農民產銷、貸款和技術指導' },
+        { t: 'choose', v: '🌾', s: '台灣的稻米品種「台稉九號」有什麼特色？',
+          opts: ['口感Q彈好吃', '比較貴', '長得比較高', '不用水'], ans: 0,
+          why: '台稉九號米口感Q彈是台灣知名好米' },
+        { t: 'choose', v: '🌾', s: '什麼是「溫室效應」對農業的影響？',
+          opts: ['氣候變暖影響作物生長', '溫室裡種菜', '天氣很好', '沒有影響'], ans: 0,
+          why: '全球暖化讓氣候異常，影響農作物生產' },
+        { t: 'choose', v: '🌾', s: '台灣的黑鮪魚季在哪裡？',
+          opts: ['屏東東港', '基隆', '宜蘭', '台北'], ans: 0,
+          why: '屏東東港每年有黑鮪魚季，是著名的漁港' },
+        { t: 'choose', v: '🌾', s: '「秋收冬藏」是什麼意思？',
+          opts: ['秋天收割冬天儲存', '秋天藏東西', '冬天收割', '春天播種'], ans: 0,
+          why: '秋天收穫農作物，冬天把食物儲藏起來' },
+        { t: 'choose', v: '🌾', s: '種子發芽最需要什麼條件？',
+          opts: ['適當的水分和溫度', '光線', '風', '肥料'], ans: 0,
+          why: '種子發芽最基本需要水和適當的溫度' },
+        { t: 'choose', v: '🌾', s: '台灣的咖啡種在哪裡？',
+          opts: ['雲林古坑', '台北', '基隆', '新竹'], ans: 0,
+          why: '雲林古坑是台灣咖啡的知名產地' },
+        { t: 'choose', v: '🌾', s: '「落葉堆肥」是利用什麼原理？',
+          opts: ['微生物分解有機物', '太陽曬乾', '風吹走', '水沖掉'], ans: 0,
+          why: '微生物分解落葉等有機物，變成肥料' },
+        { t: 'choose', v: '🌾', s: '台灣的牡蠣（蚵仔）主要養在？',
+          opts: ['嘉義東石', '台北', '花蓮', '基隆'], ans: 0,
+          why: '嘉義東石是台灣最大的牡蠣養殖區' },
+        { t: 'choose', v: '🌾', s: '什麼時候水稻田需要「排水」？',
+          opts: ['收割前讓田乾燥', '剛插秧時', '施肥時', '除草時'], ans: 0,
+          why: '收割前要排水讓田乾燥，方便機器收割' },
+        { t: 'choose', v: '🌾', s: '台灣的金針花主要在哪裡？',
+          opts: ['花蓮六十石山', '台北', '高雄', '基隆'], ans: 0,
+          why: '花蓮六十石山的金針花海非常有名' },
+        { t: 'choose', v: '🌾', s: '「農忙期」通常是指什麼時候？',
+          opts: ['插秧和收割的時期', '冬天', '過年', '暑假'], ans: 0,
+          why: '插秧期和收割期是農民最忙碌的時候' }
+      ]
+    },
+    {
+      id: 'u10', emoji: '🗺️', name: '常識百科 · 地理常識 （一）', game: '地圖小旅行',
+      steps: [
+        { t: 'fact', v: '🗺️', s: '台灣有高山、河流、平原和許多離島，地理景觀非常豐富。',
+          more: '從最高的玉山到四周的大海，一起認識我們生活的這片土地。' },
+        { t: 'choose', v: '🗺️', s: '台灣最高的山是？',
+          opts: ['玉山', '阿里山', '合歡山', '雪山'], ans: 0,
+          why: '玉山海拔3952公尺，是台灣第一高峰' },
+        { t: 'choose', v: '🗺️', s: '台灣最長的河流是？',
+          opts: ['濁水溪', '淡水河', '高屏溪', '大甲溪'], ans: 0,
+          why: '濁水溪全長約186公里，是台灣最長的河流' },
+        { t: 'choose', v: '🗺️', s: '台北盆地是被什麼包圍的平地？',
+          opts: ['山', '海', '河', '湖'], ans: 0,
+          why: '台北盆地四面環山，是一個盆地地形' },
+        { t: 'choose', v: '🗺️', s: '台灣四面環什麼？',
+          opts: ['海', '山', '沙漠', '平原'], ans: 0,
+          why: '台灣是一個海島，四面環海' },
+        { t: 'choose', v: '🗺️', s: '台灣位於哪個洋和哪個海之間？',
+          opts: ['太平洋和台灣海峽', '大西洋和印度洋', '北冰洋和太平洋', '印度洋和大西洋'], ans: 0,
+          why: '台灣東臨太平洋，西臨台灣海峽' },
+        { t: 'choose', v: '🗺️', s: '日月潭位於台灣哪裡？',
+          opts: ['南投縣', '台北市', '花蓮縣', '屏東縣'], ans: 0,
+          why: '日月潭位於南投縣魚池鄉' },
+        { t: 'choose', v: '🗺️', s: '台灣最南端的地方是？',
+          opts: ['鵝鑾鼻', '墾丁', '高雄', '台東'], ans: 0,
+          why: '鵝鑾鼻位於屏東縣恆春半島最南端' },
+        { t: 'choose', v: '🗺️', s: '台灣有幾個直轄市？',
+          opts: ['六個', '五個', '四個', '三個'], ans: 0,
+          why: '台灣有六個直轄市：台北、新北、桃園、台中、台南、高雄' },
+        { t: 'choose', v: '🗺️', s: '台灣第二高峰是？',
+          opts: ['雪山', '阿里山', '合歡山', '大霸尖山'], ans: 0,
+          why: '雪山海拔3886公尺，是台灣第二高峰' },
+        { t: 'choose', v: '🗺️', s: '台灣哪個縣市面積最大？',
+          opts: ['花蓮縣', '台北市', '新竹市', '基隆市'], ans: 0,
+          why: '花蓮縣面積約4629平方公里，是台灣最大的縣' },
+        { t: 'choose', v: '🗺️', s: '台灣最北端的地方是？',
+          opts: ['富貴角', '基隆', '宜蘭', '淡水'], ans: 0,
+          why: '富貴角位於新北市石門區，是台灣最北端' },
+        { t: 'choose', v: '🗺️', s: '嘉南平原是台灣最大的什麼？',
+          opts: ['平原', '山脈', '湖泊', '盆地'], ans: 0,
+          why: '嘉南平原是台灣面積最大的平原' },
+        { t: 'choose', v: '🗺️', s: '下列湖泊中，海拔最高的是？',
+          opts: ['嘉明湖', '日月潭', '翠峰湖', '鯉魚潭'], ans: 0,
+          why: '嘉明湖海拔約3310公尺，是這四個湖泊中海拔最高的' },
+        { t: 'choose', v: '🗺️', s: '高雄港是什麼類型的港口？',
+          opts: ['國際商港', '漁港', '軍港', '遊艇港'], ans: 0,
+          why: '高雄港是台灣最大的國際商港' },
+        { t: 'choose', v: '🗺️', s: '台灣的中央山脈走向是？',
+          opts: ['南北走向', '東西走向', '斜的', '圓形'], ans: 0,
+          why: '中央山脈縱貫台灣南北' },
+        { t: 'choose', v: '🗺️', s: '澎湖群島位於台灣的哪個方向？',
+          opts: ['西方（台灣海峽中）', '東方', '南方', '北方'], ans: 0,
+          why: '澎湖群島位於台灣海峽中間' },
+        { t: 'choose', v: '🗺️', s: '太魯閣國家公園在哪個縣市？',
+          opts: ['花蓮縣', '台北市', '南投縣', '屏東縣'], ans: 0,
+          why: '太魯閣國家公園位於花蓮縣' },
+        { t: 'choose', v: '🗺️', s: '台灣的溫泉很多，下列哪裡有溫泉？',
+          opts: ['北投', '信義區', '內湖', '大安'], ans: 0,
+          why: '北投溫泉是台北最著名的溫泉區' },
+        { t: 'choose', v: '🗺️', s: '淡水河流經哪個城市？',
+          opts: ['台北', '台中', '台南', '高雄'], ans: 0,
+          why: '淡水河流經台北盆地' },
+        { t: 'choose', v: '🗺️', s: '台灣最東邊的地方是？',
+          opts: ['三貂角', '綠島', '蘭嶼', '花蓮'], ans: 0,
+          why: '三貂角位於新北市貢寮區，是台灣本島最東端' },
+        { t: 'choose', v: '🗺️', s: '阿里山位於哪個縣市？',
+          opts: ['嘉義縣', '台中市', '南投縣', '高雄市'], ans: 0,
+          why: '阿里山位於嘉義縣' },
+        { t: 'choose', v: '🗺️', s: '台灣的離島不包括哪個？',
+          opts: ['日本沖繩', '金門', '澎湖', '綠島'], ans: 0,
+          why: '沖繩是日本的，不是台灣的離島' },
+        { t: 'choose', v: '🗺️', s: '高屏溪流經哪些縣市？',
+          opts: ['高雄和屏東', '台北和新北', '台中和彰化', '台南和嘉義'], ans: 0,
+          why: '高屏溪流經高雄市和屏東縣' },
+        { t: 'choose', v: '🗺️', s: '台灣哪個城市有「港都」之稱？',
+          opts: ['高雄', '基隆', '台中', '花蓮'], ans: 0,
+          why: '高雄因為有大港口，被稱為港都' },
+        { t: 'choose', v: '🗺️', s: '合歡山冬天常常會有什麼？',
+          opts: ['下雪', '下雨', '沙塵暴', '颱風'], ans: 0,
+          why: '合歡山冬天溫度低，常可看到降雪' },
+        { t: 'choose', v: '🗺️', s: '台灣的蘭嶼以什麼聞名？',
+          opts: ['飛魚和達悟族文化', '溫泉', '茶葉', '螢火蟲'], ans: 0,
+          why: '蘭嶼有達悟族文化和飛魚季' },
+        { t: 'choose', v: '🗺️', s: '哪條鐵路環繞台灣一圈？',
+          opts: ['環島鐵路', '高鐵', '捷運', '纜車'], ans: 0,
+          why: '台鐵環島鐵路連接台灣各地' },
+        { t: 'choose', v: '🗺️', s: '台灣高鐵從台北到高雄約需多久？',
+          opts: ['約1.5小時', '約5小時', '約10小時', '約30分鐘'], ans: 0,
+          why: '高鐵從台北到高雄（左營）約需1.5小時' },
+        { t: 'choose', v: '🗺️', s: '墾丁國家公園在哪個縣市？',
+          opts: ['屏東縣', '高雄市', '台東縣', '花蓮縣'], ans: 0,
+          why: '墾丁國家公園位於屏東縣恆春半島' },
+        { t: 'choose', v: '🗺️', s: '台灣哪個城市有「文化古都」之稱？',
+          opts: ['台南', '台北', '高雄', '台中'], ans: 0,
+          why: '台南歷史悠久，是台灣最早開發的城市' },
+        { t: 'choose', v: '🗺️', s: '陽明山屬於哪種地形？',
+          opts: ['火山地形', '盆地', '平原', '峽谷'], ans: 0,
+          why: '陽明山是火山群，有火山地形特徵' }
+      ]
+    },
+    {
+      id: 'u11', emoji: '🗺️', name: '常識百科 · 地理常識 （二）', game: '地圖小旅行',
+      steps: [
+        { t: 'fact', v: '🗺️', s: '繼續來挑戰更多「地理常識」的題目！',
+          more: '多練幾題，你會越來越熟！加油！' },
+        { t: 'choose', v: '🗺️', s: '台灣的金門離哪裡很近？',
+          opts: ['中國', '日本', '菲律賓', '韓國'], ans: 0,
+          why: '金門離中國福建省很近' },
+        { t: 'choose', v: '🗺️', s: '台灣哪個地方降雨量最多？',
+          opts: ['基隆', '台南', '高雄', '台中'], ans: 0,
+          why: '基隆因地形關係，降雨天數和雨量都很多' },
+        { t: 'choose', v: '🗺️', s: '台灣最大的天然湖是？',
+          opts: ['日月潭', '嘉明湖', '翠峰湖', '鯉魚潭'], ans: 0,
+          why: '日月潭是台灣最大的天然湖泊；它原本就是天然湖，日治時期建壩發電後水位上升、水域更大（若把人工水庫也算進來，全台面積最大的是曾文水庫）' },
+        { t: 'choose', v: '🗺️', s: '「九份」以前是以什麼產業聞名？',
+          opts: ['金礦開採', '農業', '漁業', '紡織業'], ans: 0,
+          why: '九份過去因為金礦開採而繁榮' },
+        { t: 'choose', v: '🗺️', s: '台灣的東部海岸面對哪個大洋？',
+          opts: ['太平洋', '大西洋', '印度洋', '北冰洋'], ans: 0,
+          why: '台灣東海岸直接面對太平洋' },
+        { t: 'choose', v: '🗺️', s: '哪條河流經台中？',
+          opts: ['大甲溪', '淡水河', '濁水溪', '高屏溪'], ans: 0,
+          why: '大甲溪流經台中地區' },
+        { t: 'choose', v: '🗺️', s: '台灣的北回歸線通過哪裡？',
+          opts: ['嘉義', '台北', '台中', '高雄'], ans: 0,
+          why: '北回歸線通過嘉義縣' },
+        { t: 'choose', v: '🗺️', s: '野柳女王頭是什麼地形？',
+          opts: ['海蝕地形（蕈狀岩）', '火山', '沙漠', '冰河'], ans: 0,
+          why: '女王頭是海水和風化侵蝕形成的蕈狀岩' },
+        { t: 'choose', v: '🗺️', s: '下列哪一個離島的面積最大？',
+          opts: ['澎湖本島', '綠島', '蘭嶼', '小琉球'], ans: 0,
+          why: '在這四個島嶼中，澎湖本島面積最大' },
+        { t: 'choose', v: '🗺️', s: '台灣的五大山脈不包括？',
+          opts: ['喜馬拉雅山脈', '中央山脈', '雪山山脈', '阿里山山脈'], ans: 0,
+          why: '喜馬拉雅山在亞洲大陸，不在台灣' },
+        { t: 'choose', v: '🗺️', s: '台灣的冬天哪邊比較冷？',
+          opts: ['北部', '南部', '東部', '離島'], ans: 0,
+          why: '台灣北部冬天受東北季風影響較冷' },
+        { t: 'choose', v: '🗺️', s: '桃園機場是台灣最大的什麼？',
+          opts: ['國際機場', '火車站', '港口', '公園'], ans: 0,
+          why: '桃園國際機場是台灣最主要的對外航空門戶' },
+        { t: 'choose', v: '🗺️', s: '台灣面積大約是？',
+          opts: ['約36000平方公里', '約100萬平方公里', '約1000平方公里', '約500平方公里'], ans: 0,
+          why: '台灣本島面積約3.6萬平方公里' },
+        { t: 'choose', v: '🗺️', s: '台灣的溪流特性是？',
+          opts: ['短而急', '長而緩', '寬而淺', '深而靜'], ans: 0,
+          why: '台灣因山高坡陡，河流大多短而流速急' },
+        { t: 'choose', v: '🗺️', s: '哪個國家公園保護海洋生態？',
+          opts: ['墾丁國家公園', '玉山國家公園', '太魯閣國家公園', '雪霸國家公園'], ans: 0,
+          why: '墾丁國家公園包含海域，保護珊瑚礁生態' },
+        { t: 'choose', v: '🗺️', s: '台東的熱氣球嘉年華在哪裡？',
+          opts: ['鹿野高台', '台東市區', '蘭嶼', '綠島'], ans: 0,
+          why: '台東鹿野高台每年舉辦熱氣球嘉年華' },
+        { t: 'choose', v: '🗺️', s: '台灣的茂林以什麼蝴蝶聞名？',
+          opts: ['紫斑蝶', '鳳蝶', '粉蝶', '蛺蝶'], ans: 0,
+          why: '茂林是紫斑蝶冬天過冬的地方' },
+        { t: 'choose', v: '🗺️', s: '宜蘭的著名地景「龜山島」像什麼？',
+          opts: ['烏龜', '兔子', '魚', '鳥'], ans: 0,
+          why: '龜山島外形像一隻浮在海上的烏龜' },
+        { t: 'choose', v: '🗺️', s: '台灣西部的地形以什麼為主？',
+          opts: ['平原', '山地', '高原', '沙漠'], ans: 0,
+          why: '台灣西部是主要的平原地區' },
+        { t: 'choose', v: '🗺️', s: '新竹以什麼自然現象聞名？',
+          opts: ['風大', '雨多', '很熱', '常下雪'], ans: 0,
+          why: '新竹有「風城」之稱，風力特別強' },
+        { t: 'choose', v: '🗺️', s: '台灣人口最多的城市是？',
+          opts: ['新北市', '台北市', '台中市', '高雄市'], ans: 0,
+          why: '新北市是台灣人口最多的直轄市' },
+        { t: 'choose', v: '🗺️', s: '花東縱谷是怎麼形成的？',
+          opts: ['板塊擠壓形成的地溝', '河流沖刷', '火山噴發', '冰河'], ans: 0,
+          why: '花東縱谷是兩大板塊交界形成的縱谷地形' },
+        { t: 'choose', v: '🗺️', s: '台灣哪個地方以螢火蟲聞名？',
+          opts: ['新北平溪', '台北信義', '高雄左營', '台中西區'], ans: 0,
+          why: '平溪和許多山區每年4-5月有螢火蟲季' },
+        { t: 'choose', v: '🗺️', s: '台灣的梨山在哪個縣市？',
+          opts: ['台中市', '南投縣', '宜蘭縣', '花蓮縣'], ans: 0,
+          why: '梨山位於台中市和平區' },
+        { t: 'choose', v: '🗺️', s: '台灣東西最寬約幾公里？',
+          opts: ['約140公里', '約500公里', '約50公里', '約1000公里'], ans: 0,
+          why: '台灣東西最寬處約140公里' },
+        { t: 'choose', v: '🗺️', s: '台灣南北長約幾公里？',
+          opts: ['約394公里', '約1000公里', '約100公里', '約50公里'], ans: 0,
+          why: '台灣南北長約394公里' },
+        { t: 'choose', v: '🗺️', s: '台灣的人口約有多少？',
+          opts: ['約2300萬人', '約1億人', '約500萬人', '約5000萬人'], ans: 0,
+          why: '台灣人口約2300多萬人' },
+        { t: 'choose', v: '🗺️', s: '哪個縣市有「陽光之城」之稱？',
+          opts: ['台東', '基隆', '宜蘭', '台北'], ans: 0,
+          why: '台東日照時數長，有陽光之城的美稱' },
+        { t: 'choose', v: '🗺️', s: '台灣的「小琉球」屬於哪個縣市？',
+          opts: ['屏東縣', '高雄市', '台東縣', '澎湖縣'], ans: 0,
+          why: '小琉球位於屏東縣琉球鄉' },
+        { t: 'choose', v: '🗺️', s: '台灣最大的水庫是？',
+          opts: ['曾文水庫', '石門水庫', '翡翠水庫', '日月潭水庫'], ans: 0,
+          why: '曾文水庫位於嘉義和台南交界，是台灣容量最大的水庫' },
+        { t: 'choose', v: '🗺️', s: '台灣的「九族文化村」在哪裡？',
+          opts: ['南投縣', '台北市', '台中市', '嘉義縣'], ans: 0,
+          why: '九族文化村位於南投縣魚池鄉' }
+      ]
+    },
+    {
+      id: 'u12', emoji: '🏮', name: '常識百科 · 文化常識 （一）', game: '節慶文化通',
+      steps: [
+        { t: 'fact', v: '🏮', s: '台灣有許多傳統節日、民俗活動和文化藝術。',
+          more: '過年、端午、中秋……這些節慶背後都有有趣的故事和習俗。' },
+        { t: 'choose', v: '🏮', s: '「清明節」通常在幾月？',
+          opts: ['四月', '一月', '七月', '十月'], ans: 0,
+          why: '清明節在每年四月初，是掃墓祭祖的日子' },
+        { t: 'choose', v: '🏮', s: '端午節要吃什麼？',
+          opts: ['粽子', '月餅', '湯圓', '年糕'], ans: 0,
+          why: '端午節吃粽子、划龍舟紀念屈原' },
+        { t: 'choose', v: '🏮', s: '中秋節要做什麼？',
+          opts: ['賞月吃月餅', '放鞭炮', '掃墓', '包粽子'], ans: 0,
+          why: '中秋節一家團圓賞月、吃月餅、吃柚子' },
+        { t: 'choose', v: '🏮', s: '過年時晚輩會收到什麼？',
+          opts: ['紅包(壓歲錢)', '月餅', '粽子', '蛋糕'], ans: 0,
+          why: '過年長輩給晚輩紅包，象徵祝福' },
+        { t: 'choose', v: '🏮', s: '元宵節的傳統活動是什麼？',
+          opts: ['提燈籠猜燈謎', '划龍舟', '放風箏', '掃墓'], ans: 0,
+          why: '元宵節在農曆正月十五，有賞花燈、猜燈謎的傳統' },
+        { t: 'choose', v: '🏮', s: '農曆新年是幾月幾日？',
+          opts: ['農曆一月一日', '國曆一月一日', '農曆五月五日', '國曆十二月二十五日'], ans: 0,
+          why: '農曆新年是農曆正月初一' },
+        { t: 'choose', v: '🏮', s: '哪個節日要登高、插茱萸？',
+          opts: ['重陽節', '端午節', '中秋節', '清明節'], ans: 0,
+          why: '重陽節(九月九日)有登高望遠、插茱萸的習俗' },
+        { t: 'choose', v: '🏮', s: '冬至要吃什麼？',
+          opts: ['湯圓', '粽子', '月餅', '年糕'], ans: 0,
+          why: '冬至吃湯圓象徵團圓，也代表長了一歲' },
+        { t: 'choose', v: '🏮', s: '台灣的國慶日是幾月幾日？',
+          opts: ['十月十日', '一月一日', '七月四日', '三月八日'], ans: 0,
+          why: '台灣國慶日(雙十節)是每年十月十日' },
+        { t: 'choose', v: '🏮', s: '教師節是紀念哪位聖人？',
+          opts: ['孔子', '孟子', '老子', '莊子'], ans: 0,
+          why: '教師節(9月28日)是紀念至聖先師孔子' },
+        { t: 'choose', v: '🏮', s: '下列哪個不是台灣的傳統節日？',
+          opts: ['感恩節', '端午節', '中秋節', '元宵節'], ans: 0,
+          why: '感恩節是美國的節日，不是台灣傳統節日' },
+        { t: 'choose', v: '🏮', s: '台灣原住民共有幾族被政府認定？',
+          opts: ['16族', '9族', '12族', '20族'], ans: 0,
+          why: '目前政府認定的台灣原住民共有16族' },
+        { t: 'choose', v: '🏮', s: '過年時門口要貼什麼？',
+          opts: ['春聯', '海報', '廣告', '菜單'], ans: 0,
+          why: '過年貼春聯表示喜慶和祝福' },
+        { t: 'choose', v: '🏮', s: '「媽祖」是什麼神明？',
+          opts: ['海上守護神', '土地神', '財神', '灶神'], ans: 0,
+          why: '媽祖是保佑航海平安的海上守護神' },
+        { t: 'choose', v: '🏮', s: '台灣的布袋戲又叫什麼？',
+          opts: ['掌中戲', '皮影戲', '木偶戲', '歌仔戲'], ans: 0,
+          why: '布袋戲又稱掌中戲，用手套在布偶裡表演' },
+        { t: 'choose', v: '🏮', s: '歌仔戲是台灣哪裡發源的？',
+          opts: ['宜蘭', '台北', '台南', '高雄'], ans: 0,
+          why: '歌仔戲起源於宜蘭，是台灣本土戲曲' },
+        { t: 'choose', v: '🏮', s: '七夕是哪兩個人的故事？',
+          opts: ['牛郎和織女', '白蛇和許仙', '梁山伯和祝英台', '孟姜女和范喜良'], ans: 0,
+          why: '七夕是牛郎織女鵲橋相會的故事' },
+        { t: 'choose', v: '🏮', s: '農曆七月民間俗稱什麼？',
+          opts: ['鬼月', '花月', '雪月', '風月'], ans: 0,
+          why: '農曆七月民間俗稱「鬼月」，其中七月十五是中元節，有普渡的習俗' },
+        { t: 'choose', v: '🏮', s: '「大甲媽祖遶境」是什麼活動？',
+          opts: ['宗教遊行', '運動比賽', '音樂會', '畫展'], ans: 0,
+          why: '大甲媽祖遶境是台灣規模最大的宗教活動之一' },
+        { t: 'choose', v: '🏮', s: '過年會放什麼來驅邪？',
+          opts: ['鞭炮', '音樂', '風箏', '燈籠'], ans: 0,
+          why: '過年放鞭炮傳統上是為了驅趕年獸和邪氣' },
+        { t: 'choose', v: '🏮', s: '台灣的廟宇屋頂常有什麼裝飾？',
+          opts: ['龍和鳳', '花和草', '星星', '月亮'], ans: 0,
+          why: '台灣廟宇屋頂常見龍鳳等吉祥裝飾' },
+        { t: 'choose', v: '🏮', s: '「歲末年終」是指什麼時候？',
+          opts: ['一年的最後', '年初', '年中', '每個月底'], ans: 0,
+          why: '歲末年終指一年快要結束的時候' },
+        { t: 'choose', v: '🏮', s: '壓歲錢的「歲」和什麼同音？',
+          opts: ['祟（鬼祟）', '稅', '貴', '快'], ans: 0,
+          why: '「祟」和「歲」都讀ㄙㄨㄟˋ；壓歲諧音壓祟，有驅邪保平安的意思' },
+        { t: 'choose', v: '🏮', s: '台灣的「天燈」是哪裡的特色？',
+          opts: ['平溪', '九份', '淡水', '基隆'], ans: 0,
+          why: '新北市平溪的天燈節是著名傳統活動' },
+        { t: 'choose', v: '🏮', s: '除夕夜全家一起吃什麼？',
+          opts: ['年夜飯（團圓飯）', '早餐', '點心', '宵夜'], ans: 0,
+          why: '除夕夜全家團聚吃年夜飯' },
+        { t: 'choose', v: '🏮', s: '台灣的皮影戲發源地在？',
+          opts: ['高雄', '台北', '台南', '花蓮'], ans: 0,
+          why: '高雄是台灣皮影戲的發源地' },
+        { t: 'choose', v: '🏮', s: '「灶神」掌管什麼？',
+          opts: ['廚房和飲食', '學業', '財富', '健康'], ans: 0,
+          why: '灶神是掌管廚房和飲食的神明' },
+        { t: 'choose', v: '🏮', s: '農曆七月十五是什麼節日？',
+          opts: ['中元節', '端午節', '中秋節', '重陽節'], ans: 0,
+          why: '農曆七月十五是中元節，有普渡習俗' },
+        { t: 'choose', v: '🏮', s: '台灣原住民的豐年祭主要是哪族的？',
+          opts: ['阿美族', '泰雅族', '排灣族', '布農族'], ans: 0,
+          why: '豐年祭是阿美族最重要的傳統祭典' },
+        { t: 'choose', v: '🏮', s: '「客家人」最重要的節日是？',
+          opts: ['義民節', '端午節', '中秋節', '元宵節'], ans: 0,
+          why: '義民節是客家人紀念先人的重要節日' },
+        { t: 'choose', v: '🏮', s: '「孔廟」是做什麼用的？',
+          opts: ['祭祀孔子的地方', '住家', '市場', '學校'], ans: 0,
+          why: '孔廟是祭祀至聖先師孔子的場所' },
+        { t: 'choose', v: '🏮', s: '台灣的「鹽水蜂炮」在哪裡？',
+          opts: ['台南鹽水', '高雄鳳山', '台中沙鹿', '新竹竹北'], ans: 0,
+          why: '台南鹽水蜂炮是元宵節著名的民俗活動' },
+        { t: 'choose', v: '🏮', s: '過年貼的「福」字為什麼要倒著貼？',
+          opts: ['倒福諧音「到福」表示福到了', '比較好看', '看起來不同', '習慣'], ans: 0,
+          why: '福字倒貼諧音「福到了」，象徵好運到來' },
+        { t: 'choose', v: '🏮', s: '「二十四節氣」是依據什麼制定的？',
+          opts: ['太陽運行的位置', '月亮的形狀', '星星的數量', '風的方向'], ans: 0,
+          why: '二十四節氣是根據太陽在黃道上的位置劃分' },
+        { t: 'choose', v: '🏮', s: '「書法」用什麼工具寫字？',
+          opts: ['毛筆', '鉛筆', '原子筆', '粉筆'], ans: 0,
+          why: '書法是用毛筆蘸墨汁寫字的傳統藝術' },
+        { t: 'choose', v: '🏮', s: '「廟會」通常會有什麼表演？',
+          opts: ['舞龍舞獅', '交響樂', '芭蕾舞', '話劇'], ans: 0,
+          why: '廟會常見舞龍舞獅、陣頭等民俗表演' },
+        { t: 'choose', v: '🏮', s: '台灣的「陣頭」是什麼？',
+          opts: ['廟會的表演隊伍', '軍隊', '運動隊', '合唱團'], ans: 0,
+          why: '陣頭是廟會出巡時的各種表演隊伍' },
+        { t: 'choose', v: '🏮', s: '「包種茶」是台灣哪裡的名茶？',
+          opts: ['新北坪林', '台中', '高雄', '花蓮'], ans: 0,
+          why: '坪林包種茶是台灣著名的半發酵茶' },
+        { t: 'choose', v: '🏮', s: '台灣的「八家將」是做什麼的？',
+          opts: ['廟會中驅邪的陣頭', '八個人住在一起', '八個家庭', '八個將軍'], ans: 0,
+          why: '八家將是廟會中扮演神將驅邪的陣頭' },
+        { t: 'choose', v: '🏮', s: '台灣過年要吃什麼象徵年年有餘？',
+          opts: ['魚', '雞', '肉', '菜'], ans: 0,
+          why: '吃魚諧音「餘」，象徵年年有餘' },
+        { t: 'choose', v: '🏮', s: '「端午節」農曆幾月幾日？',
+          opts: ['五月五日', '一月一日', '八月十五', '九月九日'], ans: 0,
+          why: '端午節是農曆五月初五' }
+      ]
+    },
+    {
+      id: 'u13', emoji: '🏮', name: '常識百科 · 文化常識 （二）', game: '節慶文化通',
+      steps: [
+        { t: 'fact', v: '🏮', s: '繼續來挑戰更多「文化常識」的題目！',
+          more: '多練幾題，你會越來越熟！加油！' },
+        { t: 'choose', v: '🏮', s: '台灣哪個族群有「紋面」傳統？',
+          opts: ['泰雅族', '阿美族', '排灣族', '布農族'], ans: 0,
+          why: '泰雅族和太魯閣族有紋面的傳統文化' },
+        { t: 'choose', v: '🏮', s: '「走春」是什麼意思？',
+          opts: ['過年期間到處拜年', '跑步', '春天運動', '散步'], ans: 0,
+          why: '走春是過年期間拜訪親友、到處走走的習俗' },
+        { t: 'choose', v: '🏮', s: '台灣的「年獸」傳說中怕什麼？',
+          opts: ['紅色和巨大聲響', '水', '綠色', '冰'], ans: 0,
+          why: '傳說年獸怕紅色和鞭炮聲' },
+        { t: 'choose', v: '🏮', s: '「剪紙」是什麼藝術？',
+          opts: ['用剪刀在紙上剪出圖案', '剪頭髮', '剪衣服', '剪花'], ans: 0,
+          why: '剪紙是用剪刀在紅紙上剪出吉祥圖案的民間藝術' },
+        { t: 'choose', v: '🏮', s: '台灣的「搶孤」活動在哪裡？',
+          opts: ['宜蘭頭城', '台北', '台中', '高雄'], ans: 0,
+          why: '宜蘭頭城的搶孤是中元節著名的民俗活動' },
+        { t: 'choose', v: '🏮', s: '過年期間不能做什麼？',
+          opts: ['打破碗（不吉利）', '吃飯', '看電視', '睡覺'], ans: 0,
+          why: '過年忌諱打破東西，如果不小心打破要說「歲歲平安」' },
+        { t: 'choose', v: '🏮', s: '「拜天公」是哪一天？',
+          opts: ['正月初九', '正月初一', '正月十五', '除夕'], ans: 0,
+          why: '農曆正月初九是天公生日，要拜天公' },
+        { t: 'choose', v: '🏮', s: '台灣的「歌仔戲」使用什麼語言？',
+          opts: ['閩南語（台語）', '國語', '客語', '英語'], ans: 0,
+          why: '歌仔戲主要使用閩南語（台語）演出' },
+        { t: 'choose', v: '🏮', s: '「龍舟」比賽是為了紀念誰？',
+          opts: ['屈原', '孔子', '李白', '杜甫'], ans: 0,
+          why: '龍舟競賽是端午節紀念屈原的活動' },
+        { t: 'choose', v: '🏮', s: '台灣民間「土地公」保佑什麼？',
+          opts: ['土地和地方平安', '航海', '考試', '姻緣'], ans: 0,
+          why: '土地公是保佑地方平安和農業豐收的神明' },
+        { t: 'choose', v: '🏮', s: '「紅龜粿」是什麼？',
+          opts: ['紅色龜型的糕點', '紅色烏龜', '紅色蛋糕', '紅色麵包'], ans: 0,
+          why: '紅龜粿是台灣傳統的吉祥糕點，祭祀節慶常見' },
+        { t: 'choose', v: '🏮', s: '過年的「初二」有什麼習俗？',
+          opts: ['回娘家', '拜天公', '迎財神', '祭祖'], ans: 0,
+          why: '農曆初二是嫁出去的女兒回娘家的日子' },
+        { t: 'choose', v: '🏮', s: '「月老」是管什麼的神明？',
+          opts: ['姻緣（愛情）', '學業', '健康', '財富'], ans: 0,
+          why: '月老是掌管男女姻緣的神明' },
+        { t: 'choose', v: '🏮', s: '哪位歷史人物改良了造紙術？',
+          opts: ['蔡倫', '孔子', '李白', '諸葛亮'], ans: 0,
+          why: '東漢的蔡倫改良了造紙術' },
+        { t: 'choose', v: '🏮', s: '「對聯」的特色是什麼？',
+          opts: ['上下聯字數相同，意思相對', '隨便寫', '很長', '用英文'], ans: 0,
+          why: '對聯講究字數相同、平仄對仗、意思相對' },
+        { t: 'choose', v: '🏮', s: '台灣民間信仰的「關公」代表什麼？',
+          opts: ['忠義', '智慧', '美麗', '財富'], ans: 0,
+          why: '關公是忠義的象徵，也被商人視為武財神' },
+        { t: 'choose', v: '🏮', s: '「元宵」是用什麼做的？',
+          opts: ['糯米粉', '麵粉', '米飯', '麵條'], ans: 0,
+          why: '元宵（湯圓）是用糯米粉搓成圓形' },
+        { t: 'choose', v: '🏮', s: '傳統婚禮新娘要穿什麼顏色？',
+          opts: ['紅色', '白色', '黑色', '藍色'], ans: 0,
+          why: '傳統婚禮新娘穿紅色禮服象徵喜慶' },
+        { t: 'choose', v: '🏮', s: '「十二生肖」的第一個是什麼？',
+          opts: ['鼠', '牛', '虎', '龍'], ans: 0,
+          why: '十二生肖順序：鼠牛虎兔龍蛇馬羊猴雞狗豬' },
+        { t: 'choose', v: '🏮', s: '台灣的「客家花布」最常見什麼花？',
+          opts: ['牡丹花', '玫瑰花', '百合花', '向日葵'], ans: 0,
+          why: '客家花布最常見大朵牡丹花圖案' },
+        { t: 'choose', v: '🏮', s: '「滿月」時要送什麼慶祝？',
+          opts: ['油飯和紅蛋', '蛋糕', '花束', '玩具'], ans: 0,
+          why: '嬰兒滿月時送油飯和紅蛋分享喜悅' },
+        { t: 'choose', v: '🏮', s: '「二十四孝」是什麼故事？',
+          opts: ['孝順父母的故事集', '二十四個小時', '二十四個人', '二十四本書'], ans: 0,
+          why: '二十四孝是二十四個孝順的故事' },
+        { t: 'choose', v: '🏮', s: '哪個是台灣客家人的傳統美食？',
+          opts: ['擂茶', '臭豆腐', '蚵仔煎', '肉圓'], ans: 0,
+          why: '擂茶是客家人的傳統飲品' },
+        { t: 'choose', v: '🏮', s: '「文昌帝君」保佑什麼？',
+          opts: ['讀書考試', '航海', '生意', '健康'], ans: 0,
+          why: '文昌帝君是掌管學業考試的神明' },
+        { t: 'choose', v: '🏮', s: '台灣的「三太子」是誰？',
+          opts: ['哪吒', '孫悟空', '關公', '媽祖'], ans: 0,
+          why: '三太子就是哪吒，是台灣常見的廟會神將' },
+        { t: 'choose', v: '🏮', s: '清明節為什麼要掃墓？',
+          opts: ['慎終追遠紀念祖先', '清掃房間', '打掃學校', '整理花園'], ans: 0,
+          why: '清明掃墓是慎終追遠，表達對祖先的敬意' },
+        { t: 'choose', v: '🏮', s: '「春捲」是什麼節日的傳統食物？',
+          opts: ['清明節', '端午節', '中秋節', '元宵節'], ans: 0,
+          why: '清明節有吃春捲（潤餅）的習俗' },
+        { t: 'choose', v: '🏮', s: '台灣原住民「排灣族」以什麼聞名？',
+          opts: ['琉璃珠和石板屋', '紋面', '龍舟', '飛魚'], ans: 0,
+          why: '排灣族以琉璃珠工藝和石板屋建築聞名' },
+        { t: 'choose', v: '🏮', s: '「尾牙」是什麼意思？',
+          opts: ['農曆年前公司的感謝聚餐', '動物的尾巴', '牙齒掉了', '年尾'], ans: 0,
+          why: '尾牙是農曆十二月十六日，公司辦桌感謝員工' },
+        { t: 'choose', v: '🏮', s: '台灣過年會說什麼吉祥話？',
+          opts: ['恭喜發財', '早安', '晚安', '謝謝'], ans: 0,
+          why: '過年時互道「恭喜發財」表示祝福' },
+        { t: 'choose', v: '🏮', s: '「放天燈」時通常會在上面寫什麼？',
+          opts: ['心願和祈福的話', '功課', '日記', '故事'], ans: 0,
+          why: '天燈上寫下願望，隨天燈升空象徵心願上達天聽' },
+        { t: 'choose', v: '🏮', s: '台灣的「國劇」又叫什麼？',
+          opts: ['京劇', '歌仔戲', '布袋戲', '皮影戲'], ans: 0,
+          why: '京劇又稱國劇，是中國傳統戲曲' },
+        { t: 'choose', v: '🏮', s: '古代的「四書」不包括哪一本？',
+          opts: ['詩經', '論語', '孟子', '大學'], ans: 0,
+          why: '四書是論語、孟子、大學、中庸，詩經屬於五經' },
+        { t: 'choose', v: '🏮', s: '台灣的「迎神賽會」最熱鬧的地方通常是？',
+          opts: ['廟口', '學校', '公園', '百貨公司'], ans: 0,
+          why: '廟口是舉辦迎神賽會最熱鬧的地方' },
+        { t: 'choose', v: '🏮', s: '「年糕」象徵什麼意思？',
+          opts: ['年年高升', '年年好吃', '年年開心', '年年健康'], ans: 0,
+          why: '年糕諧音年高，象徵步步高升' },
+        { t: 'choose', v: '🏮', s: '台灣過年的「守歲」是什麼意思？',
+          opts: ['除夕夜不睡覺等待新年', '守衛房子', '看門', '睡得早'], ans: 0,
+          why: '守歲是除夕夜全家熬夜等待新年到來' },
+        { t: 'choose', v: '🏮', s: '哪個朝代發明了活字印刷？',
+          opts: ['宋朝', '唐朝', '明朝', '清朝'], ans: 0,
+          why: '北宋畢昇發明了活字印刷術' },
+        { t: 'choose', v: '🏮', s: '台灣最古老的城市是？',
+          opts: ['台南', '台北', '高雄', '台中'], ans: 0,
+          why: '台南是台灣最早開發的城市，歷史最悠久' },
+        { t: 'choose', v: '🏮', s: '「炮竹一聲除舊歲」是什麼意思？',
+          opts: ['放鞭炮迎接新年', '放炮竹玩', '除掉舊衣服', '一歲生日'], ans: 0,
+          why: '放鞭炮象徵辭舊迎新' },
+        { t: 'choose', v: '🏮', s: '台灣傳統建築的「三合院」是什麼形狀？',
+          opts: ['ㄇ字形', '圓形', '三角形', '正方形'], ans: 0,
+          why: '三合院是正身加左右護龍組成的ㄇ字形建築' }
+      ]
+    },
+    {
+      id: 'u14', emoji: '💡', name: '常識百科 · 生活常識 （一）', game: '生活小幫手',
+      steps: [
+        { t: 'fact', v: '💡', s: '生活中有許多安全和健康的知識，學會了可以保護自己也幫助別人。',
+          more: '紅綠燈、緊急電話、垃圾分類、健康習慣，都是很重要的生活常識。' },
+        { t: 'choose', v: '💡', s: '紅綠燈中，紅燈表示什麼？',
+          opts: ['停止', '前進', '注意', '快走'], ans: 0,
+          why: '紅燈停、綠燈行、黃燈注意' },
+        { t: 'choose', v: '💡', s: '火災時應該打哪個電話？',
+          opts: ['119', '110', '104', '112'], ans: 0,
+          why: '119是消防局電話，火災和救護都打119' },
+        { t: 'choose', v: '💡', s: '地震時在室內應該怎麼做？',
+          opts: ['躲在桌子下保護頭部', '跑出去', '站在窗邊', '搭電梯'], ans: 0,
+          why: '地震時應「趴下、掩護、穩住」，躲在堅固桌子下' },
+        { t: 'choose', v: '💡', s: '過馬路時要注意什麼？',
+          opts: ['先看左右有沒有車', '閉著眼睛跑過去', '只看紅綠燈', '跟著別人走'], ans: 0,
+          why: '過馬路要左看右看確認安全再通行' },
+        { t: 'choose', v: '💡', s: '台灣的急救電話是幾號？',
+          opts: ['119', '911', '999', '110'], ans: 0,
+          why: '台灣的急救(救護車)電話是119' },
+        { t: 'choose', v: '💡', s: '回收時，寶特瓶屬於哪一類？',
+          opts: ['塑膠類', '紙類', '金屬類', '玻璃類'], ans: 0,
+          why: '寶特瓶是塑膠材質，屬於塑膠類回收' },
+        { t: 'choose', v: '💡', s: '一天有幾個小時？',
+          opts: ['24小時', '12小時', '36小時', '48小時'], ans: 0,
+          why: '一天=24小時=1440分鐘' },
+        { t: 'choose', v: '💡', s: '一公斤等於幾公克？',
+          opts: ['1000公克', '100公克', '10000公克', '500公克'], ans: 0,
+          why: '1公斤=1000公克' },
+        { t: 'choose', v: '💡', s: '指南針的紅色指針指向哪個方向？',
+          opts: ['北方', '南方', '東方', '西方'], ans: 0,
+          why: '指南針的紅色(N)指針永遠指向北方' },
+        { t: 'choose', v: '💡', s: '下列哪個是良好的用眼習慣？',
+          opts: ['每30分鐘休息10分鐘', '在黑暗中看書', '把書靠很近看', '一直盯著螢幕'], ans: 0,
+          why: '用眼30分鐘要休息10分鐘，保護視力' },
+        { t: 'choose', v: '💡', s: '洗手的正確步驟口訣是什麼？',
+          opts: ['濕搓沖捧擦', '洗沖擦', '沖一下就好', '用水沖就乾淨'], ans: 0,
+          why: '正確洗手五步驟：濕、搓、沖、捧、擦' },
+        { t: 'choose', v: '💡', s: '一週有幾天？',
+          opts: ['七天', '五天', '六天', '十天'], ans: 0,
+          why: '一週=七天（星期一到星期日）' },
+        { t: 'choose', v: '💡', s: '垃圾分類中，廚餘屬於哪一類？',
+          opts: ['有機垃圾(廚餘桶)', '一般垃圾', '資源回收', '大型垃圾'], ans: 0,
+          why: '廚餘是有機廢棄物，要放在廚餘桶回收' },
+        { t: 'choose', v: '💡', s: '台灣哪個城市是首都？',
+          opts: ['台北', '台中', '高雄', '台南'], ans: 0,
+          why: '台北市是中華民國的首都' },
+        { t: 'choose', v: '💡', s: '一年有幾個月？',
+          opts: ['12個月', '10個月', '14個月', '6個月'], ans: 0,
+          why: '一年有12個月，365天（閏年366天）' },
+        { t: 'choose', v: '💡', s: '搭電梯遇到地震時應該怎麼做？',
+          opts: ['按每一層樓的按鈕盡快離開', '繼續搭', '不理它', '按警鈴大叫'], ans: 0,
+          why: '地震時電梯可能故障，應盡快在最近樓層離開' },
+        { t: 'choose', v: '💡', s: '下列哪個是正確的騎腳踏車方式？',
+          opts: ['戴安全帽靠右騎', '不戴帽子', '騎在人行道上', '邊騎邊看手機'], ans: 0,
+          why: '騎腳踏車要戴安全帽，靠右行駛' },
+        { t: 'choose', v: '💡', s: '打雷時不能做什麼？',
+          opts: ['站在大樹下', '待在室內', '關窗戶', '躲在車裡'], ans: 0,
+          why: '打雷時不要站在大樹下或空曠處，容易被雷擊' },
+        { t: 'choose', v: '💡', s: '食物放太久會怎樣？',
+          opts: ['變質腐敗', '變好吃', '變大', '變漂亮'], ans: 0,
+          why: '食物放太久會被細菌分解而腐敗變質' },
+        { t: 'choose', v: '💡', s: '報警電話是幾號？',
+          opts: ['110', '119', '104', '112'], ans: 0,
+          why: '110是警察局的報案電話' },
+        { t: 'choose', v: '💡', s: '為什麼不能玩火？',
+          opts: ['容易引起火災', '火很好玩', '火很漂亮', '爸媽說的'], ans: 0,
+          why: '火如果失控會造成火災，非常危險' },
+        { t: 'choose', v: '💡', s: '發現有人溺水時該怎麼做？',
+          opts: ['大聲呼救並找東西讓他抓', '跳下去救', '不理他', '自己游過去'], ans: 0,
+          why: '應大聲呼救，用繩子或竹竿讓落水者抓住' },
+        { t: 'choose', v: '💡', s: '食物過了有效期限還能吃嗎？',
+          opts: ['不建議吃，可能已變質', '可以', '一定沒問題', '聞聞就知道'], ans: 0,
+          why: '過期食物可能已經變質，吃了會拉肚子' },
+        { t: 'choose', v: '💡', s: '颱風天應該怎麼做？',
+          opts: ['待在家裡不要外出', '去海邊看浪', '出去散步', '去爬山'], ans: 0,
+          why: '颱風天風大雨大，應該待在安全的室內' },
+        { t: 'choose', v: '💡', s: '鼻血流不停時該怎麼處理？',
+          opts: ['低頭捏住鼻翼', '抬頭', '躺下來', '用力擤鼻涕'], ans: 0,
+          why: '流鼻血時頭微低，用手指捏住鼻翼止血' },
+        { t: 'choose', v: '💡', s: '坐車時為什麼要繫安全帶？',
+          opts: ['保護身體減少碰撞傷害', '法律規定', '好看', '舒服'], ans: 0,
+          why: '安全帶在車禍時能保護身體不被甩出去' },
+        { t: 'choose', v: '💡', s: '網路上陌生人要你的個人資料該怎麼辦？',
+          opts: ['不給，並告訴大人', '馬上給他', '加他好友', '不確定'], ans: 0,
+          why: '絕對不能給陌生人個人資料，要告訴父母或老師' },
+        { t: 'choose', v: '💡', s: '在游泳池游泳前要做什麼？',
+          opts: ['暖身運動', '直接跳下去', '吃東西', '睡覺'], ans: 0,
+          why: '游泳前要做暖身運動，避免抽筋' },
+        { t: 'choose', v: '💡', s: '每天應該喝多少水？',
+          opts: ['約1500-2000毫升', '越多越好', '不用喝', '100毫升'], ans: 0,
+          why: '小朋友每天應喝約1500-2000毫升的水' },
+        { t: 'choose', v: '💡', s: '被蚊子叮咬後該怎麼辦？',
+          opts: ['擦止癢藥膏', '抓破它', '不理它', '用火烤'], ans: 0,
+          why: '被蚊子叮後不要抓破，可以擦藥止癢' },
+        { t: 'choose', v: '💡', s: '上學遲到了應該怎麼做？',
+          opts: ['跟老師說對不起並找原因改善', '躲起來', '翹課', '不去了'], ans: 0,
+          why: '遲到要向老師道歉，並想辦法改善' },
+        { t: 'choose', v: '💡', s: '為什麼要定期看牙醫？',
+          opts: ['預防蛀牙及早期發現問題', '好玩', '牙醫要賺錢', '沒有原因'], ans: 0,
+          why: '定期檢查可以早期發現並治療牙齒問題' },
+        { t: 'choose', v: '💡', s: '地震後如果聞到瓦斯味怎麼辦？',
+          opts: ['開窗通風不要開電器', '點火看看', '不理它', '繼續睡'], ans: 0,
+          why: '聞到瓦斯要開窗通風，絕不能開燈或點火' },
+        { t: 'choose', v: '💡', s: '為什麼要早睡早起？',
+          opts: ['身體才能健康成長', '大人規定', '沒事做', '天黑了'], ans: 0,
+          why: '充足的睡眠對兒童的生長發育非常重要' },
+        { t: 'choose', v: '💡', s: '在公共場所咳嗽打噴嚏要怎麼做？',
+          opts: ['用手肘或衛生紙遮住', '對著別人', '不遮', '用手遮'], ans: 0,
+          why: '咳嗽打噴嚏要用手肘或紙巾遮住，避免傳染' },
+        { t: 'choose', v: '💡', s: '吃東西前為什麼要洗手？',
+          opts: ['洗掉手上的細菌', '手會變白', '好習慣', '手比較香'], ans: 0,
+          why: '手上有很多細菌，不洗手吃東西容易生病' },
+        { t: 'choose', v: '💡', s: '電器冒煙了該怎麼辦？',
+          opts: ['立刻拔掉插頭', '繼續用', '澆水', '不理它'], ans: 0,
+          why: '電器冒煙要馬上拔掉插頭避免起火' },
+        { t: 'choose', v: '💡', s: '看到路上有可疑包裹該怎麼做？',
+          opts: ['不要碰，告訴大人或報警', '打開看看', '踢踢看', '帶回家'], ans: 0,
+          why: '看到可疑物品不要碰觸，應該通知警察處理' },
+        { t: 'choose', v: '💡', s: '夏天在戶外要注意什麼？',
+          opts: ['防曬補水避免中暑', '穿很多', '不喝水', '一直跑'], ans: 0,
+          why: '夏天戶外活動要防曬、多喝水、避免中暑' },
+        { t: 'choose', v: '💡', s: '下列哪個是健康的早餐？',
+          opts: ['牛奶、麵包和水果', '只吃糖果', '不吃早餐', '喝汽水'], ans: 0,
+          why: '均衡營養的早餐對學習和成長很重要' },
+        { t: 'choose', v: '💡', s: '走在路上突然下大雨該怎麼辦？',
+          opts: ['找有遮蔽的地方躲雨', '站在大樹下', '跑到河邊', '不理它'], ans: 0,
+          why: '下大雨要找有遮蔽的建築物躲雨，不要躲樹下' }
+      ]
+    },
+    {
+      id: 'u15', emoji: '💡', name: '常識百科 · 生活常識 （二）', game: '生活小幫手',
+      steps: [
+        { t: 'fact', v: '💡', s: '繼續來挑戰更多「生活常識」的題目！',
+          more: '多練幾題，你會越來越熟！加油！' },
+        { t: 'choose', v: '💡', s: '撿到別人的東西該怎麼做？',
+          opts: ['交給老師或警察', '自己留著', '丟掉', '不理它'], ans: 0,
+          why: '撿到東西要交還失主或交給可信賴的大人' },
+        { t: 'choose', v: '💡', s: '正確的坐姿是什麼？',
+          opts: ['背部挺直，雙腳平放地面', '趴著', '彎腰駝背', '翹腳'], ans: 0,
+          why: '正確坐姿要挺直背部，對脊椎好' },
+        { t: 'choose', v: '💡', s: '一天要刷幾次牙？',
+          opts: ['至少兩次（早晚）', '一年一次', '不用刷', '一個月一次'], ans: 0,
+          why: '每天至少早晚各刷一次牙' },
+        { t: 'choose', v: '💡', s: '在百貨公司走失了該怎麼辦？',
+          opts: ['找服務台或不動等爸媽來找', '自己走出去', '哭', '跟陌生人走'], ans: 0,
+          why: '走失時待在原地或找服務台廣播' },
+        { t: 'choose', v: '💡', s: '為什麼不能邊走邊看手機？',
+          opts: ['看不到路況容易跌倒或被撞', '手機很重', '沒電了', '眼睛累'], ans: 0,
+          why: '走路看手機會忽略周圍環境，非常危險' },
+        { t: 'choose', v: '💡', s: '廚房失火時可以用水滅嗎？',
+          opts: ['油鍋起火不能用水', '什麼都可以', '一定可以', '直接倒水'], ans: 0,
+          why: '油鍋起火要用鍋蓋蓋住，用水會讓火更大' },
+        { t: 'choose', v: '💡', s: '搭公車時要做什麼？',
+          opts: ['排隊依序上車', '推擠', '跑著上', '跳上去'], ans: 0,
+          why: '搭公車要排隊、禮讓老弱婦孺' },
+        { t: 'choose', v: '💡', s: '下列哪個是正確的節約用水方式？',
+          opts: ['洗澡用淋浴不泡澡', '水一直開著', '用水管洗車', '不關水龍頭'], ans: 0,
+          why: '淋浴比泡澡省水，隨手關水龍頭也很重要' },
+        { t: 'choose', v: '💡', s: '為什麼要做垃圾分類？',
+          opts: ['保護環境和資源回收再利用', '好玩', '大人規定', '沒有原因'], ans: 0,
+          why: '垃圾分類可以減少污染，讓資源回收再利用' },
+        { t: 'choose', v: '💡', s: '陌生人給你糖果該怎麼做？',
+          opts: ['不拿，趕快離開告訴大人', '拿來吃', '跟他走', '說謝謝'], ans: 0,
+          why: '不要接受陌生人的食物，那可能有危險' },
+        { t: 'choose', v: '💡', s: '為什麼要繫鞋帶？',
+          opts: ['避免跑步時絆倒', '好看', '老師說的', '大家都繫'], ans: 0,
+          why: '鞋帶鬆了容易踩到絆倒受傷' },
+        { t: 'choose', v: '💡', s: '下列哪個行為會傷害耳朵？',
+          opts: ['長時間戴耳機聽很大聲的音樂', '安靜看書', '正常說話', '散步'], ans: 0,
+          why: '長時間聽太大聲的音樂會損害聽力' },
+        { t: 'choose', v: '💡', s: '為什麼不能隨便吃藥？',
+          opts: ['吃錯藥可能中毒', '藥很好吃', '沒關係', '爸爸說可以'], ans: 0,
+          why: '藥品要經過醫師指示才能服用，亂吃會中毒' },
+        { t: 'choose', v: '💡', s: '怎麼預防感冒？',
+          opts: ['勤洗手、戴口罩、多運動', '不洗手', '不睡覺', '吃很多糖'], ans: 0,
+          why: '勤洗手、充足睡眠和運動可以增強免疫力' },
+        { t: 'choose', v: '💡', s: '為什麼不能在馬路上玩耍？',
+          opts: ['容易被車撞到很危險', '路很髒', '太吵', '沒有玩具'], ans: 0,
+          why: '馬路上車多速度快，在路上玩非常危險' },
+        { t: 'choose', v: '💡', s: '被小狗咬傷了該怎麼辦？',
+          opts: ['用水沖洗傷口並去看醫生', '不理它', '自己包起來', '罵狗'], ans: 0,
+          why: '動物咬傷要清洗傷口並就醫，預防感染' },
+        { t: 'choose', v: '💡', s: '坐車時頭可以伸出窗外嗎？',
+          opts: ['不可以，很危險', '可以', '看情況', '開快一點可以'], ans: 0,
+          why: '頭伸出窗外可能被撞到或被東西打到' },
+        { t: 'choose', v: '💡', s: '為什麼不要闖紅燈？',
+          opts: ['可能被車撞到', '浪費時間', '沒有原因', '紅燈很醜'], ans: 0,
+          why: '闖紅燈非常危險，可能被車撞' },
+        { t: 'choose', v: '💡', s: '為什麼要多吃蔬果？',
+          opts: ['提供身體需要的維生素和纖維', '好看', '便宜', '大人說的'], ans: 0,
+          why: '蔬果含有豐富的維生素和纖維，幫助身體健康' },
+        { t: 'choose', v: '💡', s: '運動後應該做什麼？',
+          opts: ['做收操和補充水分', '馬上坐下', '立刻吃大餐', '洗冷水澡'], ans: 0,
+          why: '運動後要做收操讓身體慢慢恢復' },
+        { t: 'choose', v: '💡', s: '借了別人東西要怎麼做？',
+          opts: ['好好保管並準時歸還', '不還', '弄壞算了', '忘記也沒關係'], ans: 0,
+          why: '借東西要愛惜並按時歸還，是基本的禮貌' },
+        { t: 'choose', v: '💡', s: '下列哪個是省電的好方法？',
+          opts: ['離開房間隨手關燈', '燈一直開著', '多開幾盞燈', '白天也開燈'], ans: 0,
+          why: '隨手關燈是最基本的省電方式' },
+        { t: 'choose', v: '💡', s: '看電視時要保持多遠的距離？',
+          opts: ['螢幕對角線的6-8倍', '越近越好', '貼著看', '1公分'], ans: 0,
+          why: '看電視要保持適當距離才不會傷害眼睛' },
+        { t: 'choose', v: '💡', s: '如果同學被欺負了該怎麼做？',
+          opts: ['告訴老師或大人', '也去欺負他', '不管', '旁邊看'], ans: 0,
+          why: '看到霸凌要告訴老師，幫助被欺負的同學' },
+        { t: 'choose', v: '💡', s: '手被刀片割傷了該怎麼辦？',
+          opts: ['清洗傷口並貼OK繃', '舔一舔', '不理它', '用髒布包'], ans: 0,
+          why: '小傷口要用清水沖洗後貼上OK繃' },
+        { t: 'choose', v: '💡', s: '為什麼不能玩插座？',
+          opts: ['會觸電非常危險', '太無聊', '插座很醜', '沒什麼好玩'], ans: 0,
+          why: '觸電可能致命，絕對不能把東西插進插座' },
+        { t: 'choose', v: '💡', s: '遇到陌生人問路該怎麼辦？',
+          opts: ['保持距離指方向就好', '跟他走', '上他的車', '給他家裡地址'], ans: 0,
+          why: '可以指方向但不要跟著陌生人走' },
+        { t: 'choose', v: '💡', s: '為什麼小朋友不能喝酒？',
+          opts: ['會傷害發育中的身體和大腦', '不好喝', '太貴', '爸爸的'], ans: 0,
+          why: '酒精會傷害兒童正在發育的身體和腦部' },
+        { t: 'choose', v: '💡', s: '一分鐘有幾秒？',
+          opts: ['60秒', '100秒', '30秒', '10秒'], ans: 0,
+          why: '1分鐘=60秒' },
+        { t: 'choose', v: '💡', s: '一小時有幾分鐘？',
+          opts: ['60分鐘', '100分鐘', '30分鐘', '24分鐘'], ans: 0,
+          why: '1小時=60分鐘' },
+        { t: 'choose', v: '💡', s: '受傷流血時第一步要做什麼？',
+          opts: ['壓住傷口止血', '大哭', '跑走', '吃藥'], ans: 0,
+          why: '受傷流血要先用乾淨布壓住傷口止血' },
+        { t: 'choose', v: '💡', s: '為什麼上課要專心聽講？',
+          opts: ['才能學到知識', '老師會生氣', '同學在看', '沒事做'], ans: 0,
+          why: '專心聽講才能學到老師教的知識' },
+        { t: 'choose', v: '💡', s: '遇到不認識的電話該怎麼辦？',
+          opts: ['不接或告訴大人', '告訴對方住址', '跟他聊天', '約見面'], ans: 0,
+          why: '不認識的電話最好不接，或讓大人處理' },
+        { t: 'choose', v: '💡', s: '為什麼不能亂丟垃圾？',
+          opts: ['會污染環境', '好玩', '沒有垃圾桶', '太重'], ans: 0,
+          why: '亂丟垃圾會污染環境，影響大家的生活品質' },
+        { t: 'choose', v: '💡', s: '考試時可以偷看同學的答案嗎？',
+          opts: ['不可以，那是作弊', '看一下沒關係', '大家都這樣', '看不到就好'], ans: 0,
+          why: '考試作弊不誠實，應該靠自己的實力' },
+        { t: 'choose', v: '💡', s: '被蜜蜂螫了該怎麼處理？',
+          opts: ['拔出螫針並冰敷', '擠壓傷口', '不管它', '塗泥巴'], ans: 0,
+          why: '被蜜蜂螫要拔刺、冰敷，嚴重時就醫' },
+        { t: 'choose', v: '💡', s: '乘坐汽車時小朋友要坐哪裡？',
+          opts: ['後座並繫安全帶', '前座', '車頂', '不繫安全帶'], ans: 0,
+          why: '12歲以下兒童應坐後座並繫安全帶' },
+        { t: 'choose', v: '💡', s: '下列哪個是好的睡眠習慣？',
+          opts: ['每天固定時間睡覺和起床', '半夜才睡', '睡前玩手機', '不睡覺'], ans: 0,
+          why: '規律的作息對身體健康很重要' },
+        { t: 'choose', v: '💡', s: '為什麼不能把頭伸進塑膠袋裡？',
+          opts: ['會窒息無法呼吸', '好玩', '沒問題', '看起來有趣'], ans: 0,
+          why: '塑膠袋套頭會阻礙呼吸，造成窒息危險' },
+        { t: 'choose', v: '💡', s: '在學校看到水龍頭沒關該怎麼做？',
+          opts: ['幫忙關好', '不理它', '多開幾個', '玩水'], ans: 0,
+          why: '看到水龍頭沒關要幫忙關好，節約水資源' }
+      ]
+    },
+    {
+      id: 'u16', emoji: '🔬', name: '常識百科 · 自然常識 （一）', game: '自然探索家',
+      steps: [
+        { t: 'fact', v: '🔬', s: '大自然裡藏著許多奧祕：動物、植物、天氣和宇宙。',
+          more: '為什麼天空是藍的？種子怎麼發芽？一起當個小小科學家來探索吧！' },
+        { t: 'choose', v: '🔬', s: '植物行光合作用需要什麼？',
+          opts: ['陽光和水', '月光和土', '風和沙', '火和冰'], ans: 0,
+          why: '光合作用需要陽光、水和二氧化碳' },
+        { t: 'choose', v: '🔬', s: '水的三態是什麼？',
+          opts: ['固態液態氣態', '大中小', '冷溫熱', '紅藍綠'], ans: 0,
+          why: '水的三態：冰(固態)、水(液態)、水蒸氣(氣態)' },
+        { t: 'choose', v: '🔬', s: '蝌蚪長大會變成什麼？',
+          opts: ['青蛙', '蜻蜓', '蝴蝶', '金魚'], ans: 0,
+          why: '蝌蚪是青蛙的幼體，經變態發育長成青蛙' },
+        { t: 'choose', v: '🔬', s: '彩虹有幾種顏色？',
+          opts: ['七種', '五種', '三種', '十種'], ans: 0,
+          why: '彩虹七色：紅橙黃綠藍靛紫' },
+        { t: 'choose', v: '🔬', s: '下列哪個是哺乳類動物？',
+          opts: ['鯨魚', '鯊魚', '烏龜', '蜥蜴'], ans: 0,
+          why: '鯨魚雖然生活在水中，但是用肺呼吸、胎生哺乳' },
+        { t: 'choose', v: '🔬', s: '蝴蝶的一生經過哪些階段？',
+          opts: ['卵→幼蟲→蛹→成蟲', '卵→成蟲', '幼蟲→成蟲', '卵→蛹→成蟲'], ans: 0,
+          why: '蝴蝶經歷完全變態：卵、幼蟲、蛹、成蟲四個階段' },
+        { t: 'choose', v: '🔬', s: '地球繞太陽一圈需要多久？',
+          opts: ['一年', '一天', '一個月', '一小時'], ans: 0,
+          why: '地球公轉一圈約365天，就是一年' },
+        { t: 'choose', v: '🔬', s: '哪個不是人體的感覺器官？',
+          opts: ['心臟', '眼睛', '耳朵', '鼻子'], ans: 0,
+          why: '心臟是循環器官，不是感覺器官' },
+        { t: 'choose', v: '🔬', s: '植物的哪個部分吸收水分？',
+          opts: ['根', '葉子', '花', '果實'], ans: 0,
+          why: '植物的根負責從土壤中吸收水分和養分' },
+        { t: 'choose', v: '🔬', s: '月亮會發光嗎？',
+          opts: ['不會，是反射太陽光', '會，自己會發光', '有時候會', '只有滿月會'], ans: 0,
+          why: '月亮本身不發光，是反射太陽的光' },
+        { t: 'choose', v: '🔬', s: '太陽系有幾顆行星？',
+          opts: ['八顆', '九顆', '七顆', '十顆'], ans: 0,
+          why: '太陽系有八大行星：水金地火木土天海' },
+        { t: 'choose', v: '🔬', s: '恐龍是在什麼時候滅絕的？',
+          opts: ['約6500萬年前', '100年前', '1000年前', '昨天'], ans: 0,
+          why: '恐龍在約6500萬年前滅絕' },
+        { t: 'choose', v: '🔬', s: '人體最大的器官是什麼？',
+          opts: ['皮膚', '心臟', '肝臟', '大腦'], ans: 0,
+          why: '皮膚是人體面積最大的器官' },
+        { t: 'choose', v: '🔬', s: '聲音靠什麼傳播？',
+          opts: ['空氣振動', '光線', '電', '溫度'], ans: 0,
+          why: '聲音是靠空氣的振動來傳播的' },
+        { t: 'choose', v: '🔬', s: '下列哪個不是昆蟲？',
+          opts: ['蜘蛛', '蝴蝶', '蜜蜂', '螞蟻'], ans: 0,
+          why: '蜘蛛有8隻腳，屬於蛛形綱，不是昆蟲' },
+        { t: 'choose', v: '🔬', s: '植物靠什麼呼吸？',
+          opts: ['氣孔', '嘴巴', '鼻子', '耳朵'], ans: 0,
+          why: '植物葉子上有氣孔，進行氣體交換' },
+        { t: 'choose', v: '🔬', s: '血液在人體內靠什麼流動？',
+          opts: ['心臟的跳動', '自己會動', '肺', '胃'], ans: 0,
+          why: '心臟像幫浦一樣推動血液在全身流動' },
+        { t: 'choose', v: '🔬', s: '鐵放在潮濕環境會怎樣？',
+          opts: ['生鏽', '融化', '消失', '變大'], ans: 0,
+          why: '鐵接觸水和空氣會氧化生鏽' },
+        { t: 'choose', v: '🔬', s: '下列哪種動物是兩棲類？',
+          opts: ['蛙', '蛇', '魚', '鳥'], ans: 0,
+          why: '蛙是兩棲類，小時候在水中生活，長大後可以上岸' },
+        { t: 'choose', v: '🔬', s: '地球自轉一圈是多久？',
+          opts: ['一天(24小時)', '一年', '一個月', '一小時'], ans: 0,
+          why: '地球自轉一圈就是一天，約24小時' },
+        { t: 'choose', v: '🔬', s: '人體的骨頭大約有幾根？',
+          opts: ['206根', '100根', '300根', '50根'], ans: 0,
+          why: '成人全身約有206塊骨頭' },
+        { t: 'choose', v: '🔬', s: '白天和黑夜是怎麼形成的？',
+          opts: ['地球自轉', '月亮擋住', '雲層遮蔽', '太陽移動'], ans: 0,
+          why: '地球自轉讓不同地方輪流面對太陽' },
+        { t: 'choose', v: '🔬', s: '蜜蜂用什麼來釀蜜？',
+          opts: ['花蜜', '樹汁', '水', '土'], ans: 0,
+          why: '蜜蜂採集花蜜回蜂巢釀成蜂蜜' },
+        { t: 'choose', v: '🔬', s: '磁鐵有幾個極？',
+          opts: ['兩個(N極和S極)', '一個', '三個', '沒有'], ans: 0,
+          why: '磁鐵有南極(S)和北極(N)兩個極' },
+        { t: 'choose', v: '🔬', s: '水蒸氣遇冷會變成什麼？',
+          opts: ['水滴', '冰', '空氣', '煙'], ans: 0,
+          why: '水蒸氣遇冷凝結成水滴' },
+        { t: 'choose', v: '🔬', s: '植物的花有什麼作用？',
+          opts: ['繁殖後代', '好看', '遮陽', '擋風'], ans: 0,
+          why: '花是植物的繁殖器官，授粉後結果產生種子' },
+        { t: 'choose', v: '🔬', s: '哪種動物是夜行性的？',
+          opts: ['貓頭鷹', '公雞', '燕子', '蜜蜂'], ans: 0,
+          why: '貓頭鷹在夜間活動捕食' },
+        { t: 'choose', v: '🔬', s: '火山噴發時會噴出什麼？',
+          opts: ['熔岩和火山灰', '水', '冰', '石油'], ans: 0,
+          why: '火山噴發會噴出高溫熔岩和火山灰' },
+        { t: 'choose', v: '🔬', s: '什麼動物冬天會冬眠？',
+          opts: ['熊', '雞', '鯨魚', '猴子'], ans: 0,
+          why: '熊在寒冷冬天會冬眠減少能量消耗' },
+        { t: 'choose', v: '🔬', s: '光的三原色是什麼？',
+          opts: ['紅綠藍', '紅黃藍', '紅白黑', '紅橙黃'], ans: 0,
+          why: '光的三原色是紅、綠、藍(RGB)' },
+        { t: 'choose', v: '🔬', s: '人體需要氧氣用什麼器官呼吸？',
+          opts: ['肺', '胃', '肝', '腎'], ans: 0,
+          why: '肺負責吸入氧氣排出二氧化碳' },
+        { t: 'choose', v: '🔬', s: '下列哪個是可再生能源？',
+          opts: ['太陽能', '石油', '煤炭', '天然氣'], ans: 0,
+          why: '太陽能用不完，是可再生的乾淨能源' },
+        { t: 'choose', v: '🔬', s: '骨頭裡有什麼？',
+          opts: ['骨髓', '空氣', '水', '石頭'], ans: 0,
+          why: '骨頭裡有骨髓，負責製造血液細胞' },
+        { t: 'choose', v: '🔬', s: '為什麼天空是藍色的？',
+          opts: ['陽光被大氣散射', '被塗藍色', '海水反射', '雲是藍色'], ans: 0,
+          why: '陽光中的藍光被大氣層散射，所以天空看起來是藍色' },
+        { t: 'choose', v: '🔬', s: '電從哪裡來？',
+          opts: ['發電廠', '天空', '地下', '海裡'], ans: 0,
+          why: '電力由發電廠產生，透過電線送到各地' },
+        { t: 'choose', v: '🔬', s: '蛇是冷血動物還是溫血動物？',
+          opts: ['冷血動物', '溫血動物', '沒有血', '一半一半'], ans: 0,
+          why: '蛇是冷血(變溫)動物，體溫隨環境變化' },
+        { t: 'choose', v: '🔬', s: '種子發芽需要什麼？',
+          opts: ['水分和適當溫度', '陽光', '土壤', '肥料'], ans: 0,
+          why: '種子發芽最重要的是水分和溫度' },
+        { t: 'choose', v: '🔬', s: '食物鏈中，草被誰吃？',
+          opts: ['草食動物（如兔子）', '石頭', '太陽', '水'], ans: 0,
+          why: '食物鏈中草被草食動物吃，草食動物被肉食動物吃' },
+        { t: 'choose', v: '🔬', s: '地球上最多的氣體是什麼？',
+          opts: ['氮氣', '氧氣', '二氧化碳', '水蒸氣'], ans: 0,
+          why: '大氣中約78%是氮氣，21%是氧氣' },
+        { t: 'choose', v: '🔬', s: '颱風的中心叫什麼？',
+          opts: ['颱風眼', '颱風心', '颱風核', '颱風洞'], ans: 0,
+          why: '颱風中心風力最小的地方叫颱風眼' },
+        { t: 'choose', v: '🔬', s: '月亮繞地球一圈大約多久？',
+          opts: ['一個月', '一天', '一年', '一小時'], ans: 0,
+          why: '月亮公轉一圈約27天，約一個月' },
+        { t: 'choose', v: '🔬', s: '哪一種不是脊椎動物？',
+          opts: ['水母', '青蛙', '老鷹', '鯊魚'], ans: 0,
+          why: '水母沒有脊椎骨，是無脊椎動物' },
+        { t: 'choose', v: '🔬', s: '牙齒的功能是什麼？',
+          opts: ['咀嚼食物', '呼吸', '聽聲音', '看東西'], ans: 0,
+          why: '牙齒負責咬碎和咀嚼食物' }
+      ]
+    },
+    {
+      id: 'u17', emoji: '🔬', name: '常識百科 · 自然常識 （二）', game: '自然探索家',
+      steps: [
+        { t: 'fact', v: '🔬', s: '繼續來挑戰更多「自然常識」的題目！',
+          more: '多練幾題，你會越來越熟！加油！' },
+        { t: 'choose', v: '🔬', s: '為什麼夏天比冬天熱？',
+          opts: ['太陽照射角度比較直', '太陽比較大', '地球比較近太陽', '沒有風'], ans: 0,
+          why: '夏天太陽直射角度大，接收的熱能多' },
+        { t: 'choose', v: '🔬', s: '海水是什麼味道？',
+          opts: ['鹹的', '甜的', '酸的', '苦的'], ans: 0,
+          why: '海水含有鹽分，所以是鹹的' },
+        { t: 'choose', v: '🔬', s: '下列哪個動物會遷徙？',
+          opts: ['候鳥', '家貓', '金魚', '蝸牛'], ans: 0,
+          why: '候鳥會隨季節遷徙到不同地方' },
+        { t: 'choose', v: '🔬', s: '人體中水分約占體重的多少？',
+          opts: ['約60～70%', '約10%', '約30%', '約90%'], ans: 0,
+          why: '人體約有六到七成是水分（成人約60%、兒童比例更高），是身體最主要的成分' },
+        { t: 'choose', v: '🔬', s: '下列哪個星球有光環？',
+          opts: ['土星', '火星', '水星', '金星'], ans: 0,
+          why: '土星有著明顯美麗的光環' },
+        { t: 'choose', v: '🔬', s: '為什麼會有四季變化？',
+          opts: ['地球傾斜繞太陽公轉', '太陽大小改變', '地球距離太陽遠近', '月亮的影響'], ans: 0,
+          why: '地球自轉軸傾斜，繞太陽公轉造成四季' },
+        { t: 'choose', v: '🔬', s: '人的心臟一分鐘跳幾下？',
+          opts: ['約60-100下', '約10下', '約200下', '約500下'], ans: 0,
+          why: '正常成人心跳每分鐘約60-100次；小朋友通常更快一些（約70-110次）' },
+        { t: 'choose', v: '🔬', s: '蚯蚓對土壤有什麼幫助？',
+          opts: ['鬆土讓土壤透氣', '吃掉土壤', '沒有幫助', '讓土變硬'], ans: 0,
+          why: '蚯蚓鑽洞可以幫土壤鬆軟透氣' },
+        { t: 'choose', v: '🔬', s: '下列哪個不是水果？',
+          opts: ['馬鈴薯', '蘋果', '芒果', '葡萄'], ans: 0,
+          why: '馬鈴薯是根莖類蔬菜，不是水果' },
+        { t: 'choose', v: '🔬', s: '為什麼飛機能在天上飛？',
+          opts: ['機翼產生升力', '很輕', '有氣球', '用彈簧'], ans: 0,
+          why: '飛機機翼的形狀讓空氣流過時產生向上的升力' },
+        { t: 'choose', v: '🔬', s: '食物消化主要在身體哪裡？',
+          opts: ['胃和腸', '心臟', '大腦', '肺'], ans: 0,
+          why: '食物主要在胃和小腸中被消化吸收' },
+        { t: 'choose', v: '🔬', s: '下列哪個動物有甲殼？',
+          opts: ['烏龜', '兔子', '鴿子', '貓'], ans: 0,
+          why: '烏龜有堅硬的甲殼保護身體' },
+        { t: 'choose', v: '🔬', s: '露水是怎麼形成的？',
+          opts: ['夜晚水氣遇冷凝結', '下雨', '人工灑水', '地下冒出'], ans: 0,
+          why: '夜晚溫度降低，空氣中水氣凝結成露水' },
+        { t: 'choose', v: '🔬', s: '哪種動物用鰓呼吸？',
+          opts: ['魚', '鳥', '蛇', '青蛙'], ans: 0,
+          why: '魚用鰓從水中吸取氧氣' },
+        { t: 'choose', v: '🔬', s: '雲是由什麼組成的？',
+          opts: ['小水滴或冰晶', '棉花', '煙', '灰塵'], ans: 0,
+          why: '雲是由無數細小的水滴或冰晶組成' },
+        { t: 'choose', v: '🔬', s: '植物向陽光彎曲生長叫做？',
+          opts: ['向光性', '向水性', '向地性', '向風性'], ans: 0,
+          why: '植物會朝向有光的方向生長，稱為向光性' },
+        { t: 'choose', v: '🔬', s: '地球上最大的動物是？',
+          opts: ['藍鯨', '大象', '長頸鹿', '鯊魚'], ans: 0,
+          why: '藍鯨是地球上最大的動物' },
+        { t: 'choose', v: '🔬', s: '雷和閃電哪個先被人感知？',
+          opts: ['閃電（光比聲音快）', '雷聲', '同時', '不一定'], ans: 0,
+          why: '光速比音速快很多，所以先看到閃電再聽到雷聲' },
+        { t: 'choose', v: '🔬', s: '下列哪個是金屬？',
+          opts: ['鐵', '木頭', '塑膠', '玻璃'], ans: 0,
+          why: '鐵是金屬元素，會導電導熱' },
+        { t: 'choose', v: '🔬', s: '人體有幾顆恆齒（永久齒）？',
+          opts: ['32顆', '20顆', '50顆', '16顆'], ans: 0,
+          why: '人的恆齒(永久齒)共有32顆' },
+        { t: 'choose', v: '🔬', s: '下列哪種能源不會造成空氣污染？',
+          opts: ['風力', '煤炭', '石油', '天然氣'], ans: 0,
+          why: '風力發電是乾淨的再生能源' },
+        { t: 'choose', v: '🔬', s: '人用什麼器官思考？',
+          opts: ['大腦', '心臟', '肝臟', '胃'], ans: 0,
+          why: '大腦是人的思考中樞，控制身體各種功能' },
+        { t: 'choose', v: '🔬', s: '下列哪個動物產卵？',
+          opts: ['雞', '狗', '貓', '牛'], ans: 0,
+          why: '雞是卵生動物，其餘是胎生' },
+        { t: 'choose', v: '🔬', s: '地震是怎麼產生的？',
+          opts: ['地殼板塊移動碰撞', '風太大', '下雨太多', '太陽太熱'], ans: 0,
+          why: '地震是地球板塊運動造成的震動' },
+        { t: 'choose', v: '🔬', s: '蝙蝠是鳥類嗎？',
+          opts: ['不是，是哺乳類', '是鳥類', '是昆蟲', '是爬蟲類'], ans: 0,
+          why: '蝙蝠是唯一會飛的哺乳動物' },
+        { t: 'choose', v: '🔬', s: '下列哪種植物會吃蟲？',
+          opts: ['捕蠅草', '向日葵', '玫瑰', '仙人掌'], ans: 0,
+          why: '捕蠅草是食蟲植物，會捕捉昆蟲消化' },
+        { t: 'choose', v: '🔬', s: '人體溫度正常是幾度？',
+          opts: ['約37度', '約25度', '約42度', '約30度'], ans: 0,
+          why: '人的正常體溫約在36.5-37.5度之間' },
+        { t: 'choose', v: '🔬', s: '含羞草被碰到會怎樣？',
+          opts: ['葉子會合起來', '會叫', '會跑', '會變色'], ans: 0,
+          why: '含羞草被觸碰時葉片會閉合下垂' },
+        { t: 'choose', v: '🔬', s: '下列哪個是地球的衛星？',
+          opts: ['月球', '太陽', '火星', '金星'], ans: 0,
+          why: '月球是地球唯一的天然衛星' },
+        { t: 'choose', v: '🔬', s: '企鵝生活在哪裡？',
+          opts: ['南極', '北極', '熱帶', '沙漠'], ans: 0,
+          why: '企鵝主要生活在南極和南半球寒冷地區' },
+        { t: 'choose', v: '🔬', s: '為什麼要刷牙？',
+          opts: ['去除牙菌斑防蛀牙', '牙齒會變白', '好聞', '好玩'], ans: 0,
+          why: '刷牙去除食物殘渣和細菌，預防蛀牙' },
+        { t: 'choose', v: '🔬', s: '最靠近太陽的行星是？',
+          opts: ['水星', '金星', '地球', '火星'], ans: 0,
+          why: '水星是離太陽最近的行星' },
+        { t: 'choose', v: '🔬', s: '人體最硬的部分是？',
+          opts: ['牙齒的琺瑯質', '骨頭', '指甲', '頭髮'], ans: 0,
+          why: '牙齒外層的琺瑯質是人體最硬的物質' },
+        { t: 'choose', v: '🔬', s: '蜻蜓小時候住在哪裡？',
+          opts: ['水裡', '土裡', '樹上', '石頭下'], ans: 0,
+          why: '蜻蜓幼蟲(水蠆)生活在水中' },
+        { t: 'choose', v: '🔬', s: '下列哪種物質能導電？',
+          opts: ['銅', '塑膠', '木頭', '橡皮'], ans: 0,
+          why: '銅是良好的導電金屬' },
+        { t: 'choose', v: '🔬', s: '為什麼樹葉在秋天會變色？',
+          opts: ['葉綠素分解露出其他顏色', '被風吹的', '人工染色', '太冷凍壞'], ans: 0,
+          why: '秋天葉綠素分解，顯現出黃色和紅色的色素' },
+        { t: 'choose', v: '🔬', s: '人的血管有哪三種？',
+          opts: ['動脈、靜脈、微血管', '大中小', '紅藍綠', '粗細軟'], ans: 0,
+          why: '血管分為動脈、靜脈和微血管三種' },
+        { t: 'choose', v: '🔬', s: '下列哪種動物是草食性？',
+          opts: ['兔子', '老虎', '獅子', '老鷹'], ans: 0,
+          why: '兔子只吃草和蔬菜，是草食性動物' },
+        { t: 'choose', v: '🔬', s: '台灣是哪種地形為主？',
+          opts: ['山地', '平原', '沙漠', '草原'], ans: 0,
+          why: '台灣約三分之二是山地地形' },
+        { t: 'choose', v: '🔬', s: '水往哪裡流？',
+          opts: ['低處', '高處', '不會流動', '往上'], ans: 0,
+          why: '水往低處流是地心引力的作用' },
+        { t: 'choose', v: '🔬', s: '花粉傳播可以靠什麼？',
+          opts: ['風和昆蟲', '電', '網路', '音樂'], ans: 0,
+          why: '花粉靠風力或昆蟲傳播到其他花朵' },
+        { t: 'choose', v: '🔬', s: '下列哪個是太陽系最大的行星？',
+          opts: ['木星', '土星', '地球', '火星'], ans: 0,
+          why: '木星是太陽系中最大的行星' }
+      ]
+    },
+    {"id":"u18","emoji":"🏮","name":"台灣的節慶與民俗","game":"節慶巡禮","steps":[{"t":"fact","v":"🇹🇼","s":"台灣一年四季都有熱鬧的節慶，融合了漢人習俗與原住民族文化。","more":"從農曆新年的圍爐、元宵的燈火，到端午的龍舟、中秋的月餅，再到媽祖遶境與原住民族的豐年祭，每個節慶都藏著先人的智慧與對生活的祝福，也展現台灣多元共融的美。跟著我們一起去「節慶巡禮」吧！"},{"t":"choose","v":"🍲","s":"除夕（農曆年的最後一天）晚上，全家團聚在一起吃團圓飯的習俗，叫做什麼？","opts":["圍爐","踏青","掃墓"],"ans":0,"why":"除夕全家圍坐一起吃團圓飯稱為「圍爐」，象徵一家團圓、溫暖平安；過年時長輩也會發紅包（壓歲錢），並有舞龍舞獅增添喜氣。"},{"t":"choose","v":"🏮","s":"每年元宵節，新北市哪個地方會施放寫著願望的天燈，吸引許多民眾前往祈福？","opts":["平溪","墾丁","阿里山"],"ans":0,"why":"新北市平溪的天燈聞名全台，人們把心願寫在天燈上施放，祈求平安順利；元宵節也有提燈籠、猜燈謎等傳統活動。"},{"t":"choose","v":"🎆","s":"台南市鹽水區在元宵節時，有一項於廟會中施放大量鞭炮煙火的著名民俗，稱為什麼？","opts":["蜂炮","潑水節","賽龍舟"],"ans":0,"why":"台南鹽水的「蜂炮」是元宵節著名民俗，相傳早年為驅除瘟疫祈求平安而施放；參加時一定要聽從指揮、穿戴防護，注意安全。"},{"t":"choose","v":"🕯️","s":"清明節時，家家戶戶通常會做什麼事來表達對祖先的思念？","opts":["掃墓祭祖","賞月吃月餅","放天燈"],"ans":0,"why":"清明節是慎終追遠的日子，人們會前往祖先的墓地整理環境、祭拜，表達對先人的懷念與感恩之情。"},{"t":"choose","v":"🛶","s":"端午節划龍舟、包粽子的習俗，相傳是為了紀念哪一位古代人物？","opts":["屈原","李白","孔子"],"ans":0,"why":"相傳戰國時代的愛國詩人屈原投江後，人們划船打撈並投粽子入江，後來演變成划龍舟、包粽子的端午習俗；人們也會佩戴香包來驅蟲避邪。"},{"t":"choose","v":"🌕","s":"中秋節除了賞月、吃月餅，台灣家庭近年還很流行哪一種應景活動？當季也常吃柚子。","opts":["烤肉","賽龍舟","潑水"],"ans":0,"why":"中秋節在台灣除了賞月、吃月餅，全家一起烤肉已成為常見的過節方式，當季的柚子也是應景水果，大家團聚同樂、共享天倫。"},{"t":"choose","v":"🏮","s":"每年農曆三月，信眾徒步跟隨媽祖神轎出巡的宗教民俗盛事，稱為什麼？","opts":["媽祖遶境","元宵燈會","豐年祭"],"ans":0,"why":"媽祖遶境是台灣重要的民間信仰活動，信眾徒步隨神轎出巡，祈求平安順利；這是台灣珍貴的民俗文化，大家都可以用尊重與欣賞的心去認識它。"},{"t":"choose","v":"🌾","s":"台灣許多原住民族（例如阿美族）會在夏天舉行「豐年祭」，主要是為了什麼？","opts":["感謝祖靈並慶祝小米等作物豐收","紀念屈原","慶祝農曆新年"],"ans":0,"why":"豐年祭是原住民族重要的傳統祭典，族人以歌舞感謝祖靈庇佑、慶祝豐收並凝聚部落情感；參與或觀賞時，要尊重各族的文化與規矩。"}]},
+    {"id":"u19","emoji":"🗺️","name":"我的縣市與著名地標","game":"縣市探險","steps":[{"t":"fact","v":"🇹🇼","s":"台灣目前有六個直轄市（俗稱「六都」）：台北、新北、桃園、台中、台南、高雄，首都是台北。每個縣市都有自己的著名地標與在地特產，等你來探險！","more":"認識自己居住的縣市，也認識別人的家鄉，是尊重多元、了解台灣的第一步。地標像台北101、日月潭、阿里山，特產像台中太陽餅、屏東黑鮪魚，都是各地的驕傲。"},{"t":"choose","v":"🏙️","s":"台灣的首都（中央政府所在地）是下列哪一個城市？","opts":["台中市","台北市","高雄市"],"ans":1,"why":"台灣的首都是台北市，中央政府主要機關都設在這裡。"},{"t":"choose","v":"🏢","s":"著名的高樓地標「台北101」位在哪個縣市？","opts":["桃園市","台北市","新北市"],"ans":1,"why":"台北101坐落在台北市信義區，曾是世界最高樓之一，是台北很有代表性的地標。"},{"t":"choose","v":"🌊","s":"風景優美、可以搭船遊湖的「日月潭」位在哪個縣市？","opts":["花蓮縣","嘉義縣","南投縣"],"ans":2,"why":"日月潭在南投縣，是台灣最大的天然湖泊，也是熱門的旅遊景點。"},{"t":"choose","v":"⛰️","s":"以看日出和森林小火車聞名的「阿里山」，主要在哪個縣市？","opts":["嘉義縣","台南市","台東縣"],"ans":0,"why":"阿里山主要位在嘉義縣，日出、雲海和高山鐵路都很有名。"},{"t":"choose","v":"🏞️","s":"擁有壯麗峽谷風景的「太魯閣」國家公園，主要位在哪個縣市？","opts":["宜蘭縣","花蓮縣","台東縣"],"ans":1,"why":"太魯閣主要在花蓮縣，以大理石峽谷和溪流景觀聞名。"},{"t":"choose","v":"🏖️","s":"有陽光、沙灘與國家公園的「墾丁」，位在台灣最南邊的哪個縣市？","opts":["台東縣","高雄市","屏東縣"],"ans":2,"why":"墾丁在屏東縣，位於台灣最南端，是很受歡迎的海邊度假地。"},{"t":"choose","v":"🥮","s":"香甜好吃的「太陽餅」是哪個縣市最有名的傳統點心？","opts":["台中市","台南市","台北市"],"ans":0,"why":"太陽餅是台中市著名的伴手禮，外皮酥、內餡甜，很受歡迎。"},{"t":"choose","v":"🐟","s":"每到春夏就會舉辦季節活動、以「黑鮪魚」聞名的東港，屬於哪個縣市？","opts":["屏東縣","台東縣","澎湖縣"],"ans":0,"why":"屏東縣東港是黑鮪魚的著名產地，當地也會舉辦相關的季節活動；台南則以多樣小吃聞名，各地特產都很值得認識。"}]},
+    {"id":"u20","emoji":"🚄","name":"台灣的交通與生活","game":"交通小達人","steps":[{"t":"fact","v":"🚦","s":"交通工具讓我們上學、上班、探親都更方便，但安全永遠擺第一。","more":"台灣的交通網很綿密：想在西部南來北往、又要又快又準時，可以搭高鐵；想沿著海岸線環島、欣賞風景，可以搭台鐵；在都市裡短程移動，捷運和公車最方便，還能用悠遊卡或一卡通輕鬆刷卡付費。認識這些工具、看懂地址與地圖、遵守紅綠燈與交通規則，戴好安全帽、繫上安全帶，並禮讓需要幫助的人，你就是聰明又貼心的交通小達人！"},{"t":"choose","v":"🚄","s":"想從台北快速到高雄（南來北往走西部），下列哪一種交通工具最適合？","opts":["高鐵","渡輪","纜車"],"ans":0,"why":"台灣高鐵主要沿著西部平原行駛，時速可達每小時約三百公里，是西部長途、講求快速準時時最方便的選擇。"},{"t":"choose","v":"🚞","s":"想沿著海岸線『環島』旅行、慢慢欣賞台灣一圈的風景，最能做到的是哪一種？","opts":["捷運","台鐵（火車）","高鐵"],"ans":1,"why":"台鐵的鐵路網幾乎繞台灣一圈，可以環島；高鐵主要在西部，捷運只在都市範圍內行駛，都無法環島。"},{"t":"choose","v":"💳","s":"在台灣搭捷運、公車時，下列哪一種東西可以『嗶』一下就付車費？","opts":["悠遊卡或一卡通","圖書館借書證","健保卡"],"ans":0,"why":"悠遊卡、一卡通是交通電子票證，可在捷運、公車、台鐵等處感應付費；健保卡和借書證用途不同，不能拿來付車費。"},{"t":"choose","v":"🏠","s":"台灣的地址是由大到小排列的，下列哪一個順序才正確？","opts":["路（街）→縣市→號→鄉鎮區","縣市→鄉鎮區→路（街）→號","號→路（街）→鄉鎮區→縣市"],"ans":1,"why":"地址從最大範圍寫到最小：先縣市，再鄉鎮市區，接著路或街名，最後才是門牌號碼，這樣才能一層層找到正確位置。"},{"t":"choose","v":"🗺️","s":"拿著地圖要找到某個地址，下列哪個做法最能幫你確認找對地方？","opts":["只看路名，不用管門牌號","對照路名和門牌『號』，並注意單號、雙號通常分在馬路兩側","閉著眼睛隨便走走看"],"ans":1,"why":"找路時要同時對照路名和門牌號碼；台灣門牌常以單號、雙號分在馬路的兩側，注意這點就能更快找到目的地。"},{"t":"choose","v":"🚶","s":"走到路口要過馬路時，行人正確又安全的做法是？","opts":["紅燈時趕快衝過去比較快","看到綠燈亮，走行人穿越道（斑馬線），並留意左右來車","從沒有斑馬線的地方直接穿越車陣"],"ans":1,"why":"行人要等行人號誌變綠燈，走斑馬線通過，並先看左右確認車輛停下；紅燈搶快或亂穿馬路都非常危險。"},{"t":"choose","v":"🪖","s":"坐在機車上（不論騎士或後座），為了保護頭部安全，一定要做的是？","opts":["戴好並扣緊安全帽","戴帽子擋太陽就好","把安全帽掛在手把上"],"ans":0,"why":"騎乘機車時，騎士與乘客都必須戴好、扣緊安全帽，萬一發生意外才能保護頭部；這也是台灣的交通法規要求。"},{"t":"choose","v":"💺","s":"下列哪一組『搭車時保護自己與禮讓別人』的做法都正確？","opts":["搭汽車繫好安全帶；看到老人、孕婦、身障者主動禮讓博愛座","上車不繫安全帶，車開了才慢慢找位子","博愛座是專屬座位，其他人一定不能坐"],"ans":0,"why":"搭乘汽車應全程繫安全帶；博愛座是提醒大家優先禮讓給有需要的人（如長者、孕婦、行動不便者），做到這兩點就是既安全又貼心。"}]},
+    {"id":"u21","emoji":"🤝","name":"生活中的好公民","game":"公民行動","steps":[{"t":"fact","v":"🌱","s":"好公民，就從生活裡的每一個小動作開始。","more":"公民素養不是大道理，而是每天做得到的好習慣：把垃圾分類做好、排隊守秩序、愛護公物、尊重身邊每一個人。當我們願意多為別人和環境著想，整個社區就會更乾淨、更安全、更友善。"},{"t":"choose","v":"🍚","s":"吃剩的飯菜、水果皮、蛋殼，應該丟進哪一類？","opts":["廚餘","資源回收","一般垃圾"],"ans":0,"why":"剩菜、果皮、蛋殼屬於「廚餘」，回收後可做成堆肥或飼料，能減少垃圾又能再利用。"},{"t":"choose","v":"♻️","s":"喝完的寶特瓶（塑膠瓶），最好怎麼處理？","opts":["直接丟進一般垃圾","沖乾淨、壓扁後放進資源回收","留在座位上讓別人收"],"ans":1,"why":"寶特瓶是可回收資源，稍微沖乾淨、壓扁再放進資源回收桶，既衛生又省空間，還能再製成新的物品。"},{"t":"choose","v":"🛍️","s":"和家人去買東西，想要減少塑膠垃圾，最好的做法是？","opts":["每次都多拿幾個免費塑膠袋","自己帶環保袋或購物袋","把東西直接抱在手上"],"ans":1,"why":"自備環保袋、環保杯就能少用一次性塑膠，這就是「減塑」。減少塑膠垃圾能保護環境和海洋生物。"},{"t":"choose","v":"🚏","s":"在公車站或捷運月台等車時，最有禮貌又安全的做法是？","opts":["排隊等候，先讓下車的人下來再上車","擠到最前面搶先上車","站在車門正中央擋住通道"],"ans":0,"why":"排隊、先下後上是搭乘大眾運輸的基本秩序，能讓大家上下車更安全、更順暢，也是尊重別人的表現。"},{"t":"choose","v":"🏞️","s":"到公園玩的時候，怎麼做才是愛護公物與環境？","opts":["在牆上和座椅上塗鴉刻字","把垃圾帶走或丟進垃圾桶，不破壞設施","把花草摘下來帶回家"],"ans":1,"why":"公園的設施和花草是大家共用的。不亂塗鴉、不破壞、把垃圾收好，才能讓每個人都享受乾淨美麗的環境。"},{"t":"choose","v":"🪪","s":"下列關於健保卡和身分證的說法，哪一個是正確的？","opts":["生病看醫生時，要帶健保卡就醫","健保卡可以隨便借給不認識的人用","身分證可以拿來當玩具隨意亂丟"],"ans":0,"why":"健保卡是看病就醫時用的，身分證則用來證明身分。這些證件都很重要，要妥善保管，不隨便借給別人。"},{"t":"choose","v":"♿","s":"看到騎樓地上的導盲磚，或電梯旁的無障礙坡道，我們應該怎麼做？","opts":["把腳踏車或雜物停在上面","保持暢通，不占用，方便需要的人使用","站在坡道上聊天休息"],"ans":1,"why":"導盲磚、坡道、無障礙電梯是給視障者、坐輪椅或行動不便的人使用的。保持暢通、不占用，就是對他們最好的友善。"},{"t":"choose","v":"🌏","s":"班上或社區裡有來自不同國家、說不同語言或不同習俗的人，我們最好怎麼做？","opts":["嘲笑他們和我們不一樣","尊重差異、友善相處，並樂於參與社區活動","故意不理他們"],"ans":1,"why":"台灣是多元的社會，有原住民、新住民和不同族群的朋友。尊重每個人的不同、友善相處，並一起參與社區，大家的生活會更溫暖。"}]}
+  ];
+
+  // 家鄉名片可選地點（含六都與各縣市，孩子挑一個介紹）。
+  var PLACES = [
+    '台北市', '新北市', '桃園市', '台中市', '台南市', '高雄市',
+    '基隆市', '新竹市', '新竹縣', '苗栗縣', '彰化縣', '南投縣',
+    '雲林縣', '嘉義市', '嘉義縣', '屏東縣', '宜蘭縣', '花蓮縣',
+    '台東縣', '澎湖縣', '金門縣', '連江縣'
+  ];
+
+  // =====================================================================
+  // DOM 參照
+  // =====================================================================
+  var $ = function (id) { return document.getElementById(id); };
+  var screenMenu = $('screen-menu');
+  var screenPlay = $('screen-play');
+  var unitList = $('unit-list');
+  var stage = $('stage');
+  var stepDots = $('step-dots');
+  var playTitle = $('play-title');
+
+  // 目前遊玩狀態
+  var cur = null; // { unit, idx, correctCount, answeredThisUnit }
+
+  // =====================================================================
+  // 選單渲染
+  // =====================================================================
+  function scoringSteps(unit) {
+    // 計分步數（choose / order / collect）——用來算星等分母。
+    var n = 0;
+    for (var i = 0; i < unit.steps.length; i++) {
+      var t = unit.steps[i].t;
+      if (t === 'choose' || t === 'order' || t === 'collect') n++;
+    }
+    return n;
+  }
+
+  function renderMenu() {
+    // 進度總覽
+    var doneCount = 0;
+    for (var i = 0; i < UNITS.length; i++) if (progress[UNITS[i].id] && progress[UNITS[i].id].done) doneCount++;
+    $('ov-done').textContent = doneCount + '/' + UNITS.length;
+
+    var p = null;
+    try { p = window.Game && Game.getProfile ? Game.getProfile() : null; } catch (e) {}
+    if (p) {
+      $('ov-xp').textContent = (p.subjects && p.subjects.social ? p.subjects.social.xp : 0);
+      $('ov-streak').textContent = (p.streak ? p.streak.current : 0);
+    }
+
+    // 回訪歡迎語
+    if (doneCount > 0) {
+      $('hello-text').textContent = '歡迎回來！你已經完成 ' + doneCount + ' 個單元，好棒！';
+      $('hello-sub').textContent = doneCount >= UNITS.length ? '所有單元都完成了，你是台灣小達人！🏆' : '繼續探索沒玩過的單元吧！';
+    }
+
+    // 單元卡
+    unitList.innerHTML = '';
+    for (var u = 0; u < UNITS.length; u++) {
+      (function (unit, num) {
+        var done = progress[unit.id] && progress[unit.id].done;
+        var stars = progress[unit.id] ? (progress[unit.id].best || 0) : 0;
+        var total = scoringSteps(unit);
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'su-unit';
+        card.setAttribute('aria-label', '第 ' + num + ' 單元：' + unit.name);
+        var dots = '';
+        for (var d = 0; d < total; d++) dots += '<i class="' + (d < stars ? 'on' : '') + '"></i>';
+        card.innerHTML =
+          '<div class="su-unit-top">' +
+            '<span class="su-unit-emoji" aria-hidden="true">' + unit.emoji + '</span>' +
+            '<div>' +
+              '<div class="su-unit-num">第 ' + num + ' 單元・' + unit.game + '</div>' +
+              '<div class="su-unit-name">' + unit.name + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="su-unit-foot">' +
+            '<span class="su-unit-status ' + (done ? 'done' : 'todo') + '">' +
+              (done ? '✅ 已完成' : '▶️ 開始探險（共 ' + total + ' 題）') + '</span>' +
+            '<span class="su-unit-dots" aria-hidden="true">' + dots + '</span>' +
+          '</div>';
+        card.addEventListener('click', function () { startUnit(unit); });
+        unitList.appendChild(card);
+      })(UNITS[u], u + 1);
+    }
+  }
+
+  // =====================================================================
+  // 遊玩流程
+  // =====================================================================
+  function show(screen) {
+    screenMenu.classList.remove('active');
+    screenPlay.classList.remove('active');
+    screen.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function startUnit(unit) {
+    cur = { unit: unit, idx: 0, correctCount: 0, total: scoringSteps(unit) };
+    playTitle.textContent = unit.emoji + ' ' + unit.name;
+    show(screenPlay);
+    renderStep();
+  }
+
+  function renderStepDots() {
+    stepDots.innerHTML = '';
+    for (var i = 0; i < cur.unit.steps.length; i++) {
+      var b = document.createElement('i');
+      if (i < cur.idx) b.className = 'on';
+      else if (i === cur.idx) b.className = 'cur';
+      stepDots.appendChild(b);
+    }
+  }
+
+  function next() {
+    cur.idx++;
+    if (cur.idx >= cur.unit.steps.length) finishUnit();
+    else renderStep();
+  }
+
+  function ttsButton(text) {
+    /* 已移除 TTS：本頁非英文發音頁，不再顯示朗讀按鈕 */
+    return '';
+  }
+
+  function bindTts(root) {
+    /* 已移除 TTS：本頁非英文發音頁，無朗讀按鈕可綁定 */
+  }
+
+  function renderStep() {
+    renderStepDots();
+    var step = cur.unit.steps[cur.idx];
+    if (step.t === 'fact') return renderFact(step);
+    if (step.t === 'choose') return renderChoose(step);
+    if (step.t === 'order') return renderOrder(step);
+    if (step.t === 'collect') return renderCollect(step);
+    if (step.t === 'namecard') return renderNamecard(step);
+  }
+
+  // ---- fact ----
+  function renderFact(step) {
+    stage.innerHTML =
+      '<div class="su-stage">' +
+        '<div class="su-visual" aria-hidden="true">' + step.v + '</div>' +
+        '<p class="su-sentence">' + step.s + '</p>' +
+        '<div class="su-toolrow">' + ttsButton(step.s) +
+          '<button type="button" class="btn" id="btn-more">💡 看更多</button></div>' +
+        '<div class="su-reveal" id="reveal">' + (step.more || '') + '</div>' +
+      '</div>' +
+      '<div class="su-actions">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">繼續 ➡️</button>' +
+      '</div>';
+    bindTts(stage);
+    $('btn-more').addEventListener('click', function () {
+      $('reveal').classList.add('show');
+      speak(step.more || step.s);
+    });
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // ---- choose ----
+  function renderChoose(step) {
+    // 打亂選項顯示順序（避免正解永遠在第一個，孩子才會真的閱讀）。
+    // data-i 記的是「原始索引」，因此對答判斷 i === step.ans 仍然正確。
+    var order = [];
+    for (var oi = 0; oi < step.opts.length; oi++) order.push(oi);
+    for (var m = order.length - 1; m > 0; m--) {
+      var r = Math.floor(Math.random() * (m + 1));
+      var tt = order[m]; order[m] = order[r]; order[r] = tt;
+    }
+    var optsHtml = '';
+    for (var k = 0; k < order.length; k++) {
+      var origIdx = order[k];
+      optsHtml += '<button type="button" class="su-opt" data-i="' + origIdx + '">' +
+        '<span>' + step.opts[origIdx] + '</span><span class="su-opt-mark" aria-hidden="true"></span></button>';
+    }
+    stage.innerHTML =
+      '<div class="su-stage">' +
+        '<div class="su-visual" aria-hidden="true">' + step.v + '</div>' +
+        '<p class="su-sentence">' + step.s + '</p>' +
+        '<div class="su-toolrow">' + ttsButton(step.s) + '</div>' +
+        '<div class="su-options">' + optsHtml + '</div>' +
+        '<div class="su-reveal" id="reveal"></div>' +
+      '</div>' +
+      '<div class="su-actions" id="afteract" style="display:none">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">繼續 ➡️</button>' +
+      '</div>';
+    bindTts(stage);
+
+    var answered = false;
+    var btns = stage.querySelectorAll('.su-opt');
+    for (var b = 0; b < btns.length; b++) {
+      btns[b].addEventListener('click', function () {
+        var i = parseInt(this.getAttribute('data-i'), 10);
+        var isCorrect = (i === step.ans);
+        if (answered) {
+          // 已答過（第一次答錯後的重試）：只給視覺提示，不再重複計分。
+          if (isCorrect) {
+            this.classList.add('correct');
+            this.querySelector('.su-opt-mark').textContent = '✅';
+            revealAndAdvance(step, true, false);
+          } else {
+            this.classList.add('wrong');
+            this.querySelector('.su-opt-mark').textContent = '❌';
+            this.classList.add('is-wrong');
+          }
+          return;
+        }
+        answered = true;
+        record(isCorrect); // 每題只計一次分（第一次作答）
+        if (isCorrect) {
+          this.classList.add('correct', 'is-correct');
+          this.querySelector('.su-opt-mark').textContent = '✅';
+          cur.correctCount++;
+          revealAndAdvance(step, true, true);
+        } else {
+          this.classList.add('wrong', 'is-wrong');
+          this.querySelector('.su-opt-mark').textContent = '❌';
+          // 標出正解、鼓勵再試（不懲罰）。用原始索引找到正解按鈕（選項已洗牌）。
+          var correctBtn = stage.querySelector('.su-opt[data-i="' + step.ans + '"]');
+          if (correctBtn) {
+            correctBtn.classList.add('correct');
+            correctBtn.querySelector('.su-opt-mark').textContent = '✅';
+          }
+          revealAndAdvance(step, false, true);
+        }
+      });
+    }
+
+    function revealAndAdvance(step, correct, first) {
+      var rev = $('reveal');
+      rev.textContent = (correct ? '答對了！' : '再想想～答案是這個！') + (step.why || '');
+      rev.classList.add('show');
+      $('afteract').style.display = 'flex';
+      // 停用選項（避免再改動計分），但仍允許看正解顏色。
+      var all = stage.querySelectorAll('.su-opt');
+      for (var k = 0; k < all.length; k++) all[k].disabled = true;
+    }
+
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // ---- order（時間排序） ----
+  function renderOrder(step) {
+    // items 為「正確順序」；打亂成 pool 供孩子選。
+    var correct = step.items.slice();
+    var pool = correct.slice();
+    // Fisher–Yates 洗牌（確保與正解不同）
+    do {
+      for (var i = pool.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+      }
+    } while (pool.join('|') === correct.join('|') && correct.length > 1);
+
+    var slotsHtml = '';
+    for (var s = 0; s < correct.length; s++) {
+      slotsHtml += '<div class="su-slot" data-slot="' + s + '">' +
+        '<span class="su-slot-idx">' + (s + 1) + '</span><span class="su-slot-text">（點下面的卡片放進來）</span></div>';
+    }
+    var poolHtml = '';
+    for (var p = 0; p < pool.length; p++) {
+      poolHtml += '<button type="button" class="su-chip-btn" data-name="' + pool[p] + '">' + pool[p] + '</button>';
+    }
+
+    stage.innerHTML =
+      '<div class="su-stage">' +
+        '<div class="su-visual" aria-hidden="true">' + step.v + '</div>' +
+        '<p class="su-sentence">' + step.s + '</p>' +
+        '<div class="su-toolrow">' + ttsButton(step.s) + '</div>' +
+        '<div class="su-order-slots-label">時間先後（1 最早）：</div>' +
+        '<div class="su-order-slots" id="slots">' + slotsHtml + '</div>' +
+        '<div class="su-order-pool-label">卡片（點一下放入、再點一下取回）：</div>' +
+        '<div class="su-order-pool" id="pool">' + poolHtml + '</div>' +
+        '<div class="su-reveal" id="reveal"></div>' +
+      '</div>' +
+      '<div class="su-actions">' +
+        '<button type="button" class="btn" id="btn-check" disabled>檢查答案 ✓</button>' +
+        '<button type="button" class="btn btn-primary" id="btn-next" style="display:none">繼續 ➡️</button>' +
+      '</div>';
+    bindTts(stage);
+
+    var placed = []; // 依序放入的名稱
+    var answered = false;
+
+    function refreshCheck() {
+      $('btn-check').disabled = (placed.length !== correct.length);
+    }
+    function renderPlaced() {
+      var slots = stage.querySelectorAll('.su-slot');
+      for (var s = 0; s < slots.length; s++) {
+        var txt = slots[s].querySelector('.su-slot-text');
+        if (placed[s]) { txt.textContent = placed[s]; slots[s].style.borderStyle = 'solid'; }
+        else { txt.textContent = '（點下面的卡片放進來）'; slots[s].style.borderStyle = 'dashed'; }
+      }
+    }
+    function bindPool() {
+      var chips = stage.querySelectorAll('#pool .su-chip-btn');
+      for (var c = 0; c < chips.length; c++) {
+        chips[c].onclick = function () {
+          if (answered) return;
+          var name = this.getAttribute('data-name');
+          if (this.classList.contains('placed')) {
+            // 取回
+            this.classList.remove('placed'); this.disabled = false;
+            var idx = placed.indexOf(name);
+            if (idx !== -1) placed.splice(idx, 1);
+          } else {
+            this.classList.add('placed'); this.disabled = true;
+            placed.push(name);
+          }
+          renderPlaced(); refreshCheck();
+        };
+      }
+    }
+    bindPool();
+
+    $('btn-check').addEventListener('click', function () {
+      if (answered) return;
+      answered = true;
+      var ok = placed.join('|') === correct.join('|');
+      record(ok);
+      if (ok) cur.correctCount++;
+      var rev = $('reveal');
+      rev.textContent = (ok ? '排對了！太厲害了！' : '順序不太對喔～') + (step.why || '');
+      rev.classList.add('show');
+      // 標示正解顏色
+      var slots = stage.querySelectorAll('.su-slot');
+      for (var s = 0; s < slots.length; s++) {
+        slots[s].querySelector('.su-slot-text').textContent = (s + 1) + '. ' + correct[s];
+        slots[s].style.borderStyle = 'solid';
+        slots[s].style.borderColor = 'var(--c-correct)';
+      }
+      this.style.display = 'none';
+      $('btn-next').style.display = 'inline-flex';
+    });
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // ---- collect（圖鑑收集）+ 後接一題 ----
+  function renderCollect(step) {
+    var cardsHtml = '';
+    for (var i = 0; i < step.cards.length; i++) {
+      var c = step.cards[i];
+      cardsHtml += '<div class="su-collect-card" data-i="' + i + '" tabindex="0" role="button" aria-label="' + c.n + '">' +
+        '<div class="su-collect-emoji" aria-hidden="true">' + c.e + '</div>' +
+        '<div class="su-collect-name">' + c.n + '</div>' +
+        '<div class="su-collect-fact">' + c.f + '</div>' +
+      '</div>';
+    }
+    stage.innerHTML =
+      '<div class="su-stage">' +
+        '<div class="su-visual" aria-hidden="true">' + step.v + '</div>' +
+        '<p class="su-sentence">' + step.s + '</p>' +
+        '<div class="su-toolrow">' + ttsButton(step.s) + '</div>' +
+        '<div class="su-collect" id="collect">' + cardsHtml + '</div>' +
+        '<div class="su-reveal" id="reveal">' + (step.why || '') + '</div>' +
+      '</div>' +
+      '<div class="su-actions" id="afteract" style="display:none">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">全部認識了，繼續 ➡️</button>' +
+      '</div>';
+    bindTts(stage);
+
+    var opened = {};
+    var totalCards = step.cards.length;
+    var scored = false;
+    var cards = stage.querySelectorAll('.su-collect-card');
+    function openCard(el) {
+      var i = el.getAttribute('data-i');
+      el.classList.add('opened');
+      opened[i] = true;
+      speak(step.cards[i].n + '。' + step.cards[i].f);
+      if (Object.keys(opened).length === totalCards && !scored) {
+        scored = true;
+        record(true); // 全部翻開＝完成這個收集活動，計為一次正向互動
+        cur.correctCount++;
+        $('reveal').classList.add('show');
+        $('afteract').style.display = 'flex';
+      }
+    }
+    for (var k = 0; k < cards.length; k++) {
+      cards[k].addEventListener('click', function () { openCard(this); });
+      cards[k].addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCard(this); }
+      });
+    }
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // ---- namecard（家鄉名片產生器，趣味不計分） ----
+  function renderNamecard(step) {
+    var options = '';
+    for (var i = 0; i < PLACES.length; i++) options += '<option value="' + PLACES[i] + '">' + PLACES[i] + '</option>';
+    stage.innerHTML =
+      '<div class="su-stage">' +
+        '<div class="su-visual" aria-hidden="true">' + step.v + '</div>' +
+        '<p class="su-sentence">' + step.s + '</p>' +
+        '<select class="su-select" id="nc-place" aria-label="選擇你的家鄉">' + options + '</select>' +
+        '<div class="su-toolrow" style="margin-top:var(--s3)">' +
+          '<button type="button" class="btn btn-primary" id="nc-make">做名片 🪪</button></div>' +
+        '<div class="su-namecard" id="nc-card" style="display:none">' +
+          '<div class="nc-emoji" aria-hidden="true">🏡</div>' +
+          '<div class="nc-line" id="nc-line"></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="su-actions">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">完成單元 🎉</button>' +
+      '</div>';
+    $('nc-make').addEventListener('click', function () {
+      var place = $('nc-place').value;
+      var line = '我的家鄉是 ' + place + '，我是這裡的小主人！';
+      $('nc-line').textContent = line;
+      $('nc-card').style.display = 'block';
+      speak(line);
+    });
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // =====================================================================
+  // 完成單元
+  // =====================================================================
+  function finishUnit() {
+    var unit = cur.unit;
+    var stars = cur.correctCount; // 已含 order/collect 的正向互動
+    var total = cur.total;
+    // 記錄進度（保留最佳星等）
+    var prev = progress[unit.id] || {};
+    progress[unit.id] = { done: true, best: Math.max(prev.best || 0, stars) };
+    saveProg(progress);
+
+    var starStr = '';
+    for (var i = 0; i < total; i++) starStr += (i < stars ? '⭐' : '☆');
+
+    stage.innerHTML =
+      '<div class="su-stage su-done">' +
+        '<div class="su-done-emoji" aria-hidden="true">🎉</div>' +
+        '<div class="su-done-title">完成「' + unit.name + '」！</div>' +
+        '<div class="su-done-stars" aria-label="得到 ' + stars + ' 顆星">' + starStr + '</div>' +
+        '<p class="su-sentence" style="font-size:clamp(16px,3.6vw,19px)">你答對了 ' + stars + ' / ' + total + ' 題，好棒！</p>' +
+      '</div>' +
+      '<div class="su-actions">' +
+        '<button type="button" class="btn" id="btn-menu">回到選單</button>' +
+        (nextUnitOf(unit) ? '<button type="button" class="btn btn-primary" id="btn-nextunit">下一個單元 ➡️</button>' : '') +
+      '</div>';
+
+    toast('完成單元：' + unit.emoji + ' ' + unit.name + '！', 'daily');
+
+    $('btn-menu').addEventListener('click', goMenu);
+    var nu = nextUnitOf(unit);
+    if (nu) $('btn-nextunit').addEventListener('click', function () { startUnit(nu); });
+  }
+
+  function nextUnitOf(unit) {
+    for (var i = 0; i < UNITS.length; i++) {
+      if (UNITS[i].id === unit.id) return UNITS[i + 1] || null;
+    }
+    return null;
+  }
+
+  function goMenu() {
+    cur = null;
+    renderMenu();
+    show(screenMenu);
+  }
+
+  // =====================================================================
+  // 頂列按鈕（主題切換改由共用 app-bar 的 [data-theme-toggle] 統一處理，
+  // 由 game_core 自動接線與圖示同步，本頁不再自行處理主題。）
+  // =====================================================================
+  $('btn-back').addEventListener('click', goMenu);
+
+  // =====================================================================
+  // 啟動
+  // =====================================================================
+  renderMenu();
+})();
+</script>
+</body>
+</html>

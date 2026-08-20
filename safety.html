@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>安全小達人 🛡️</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<!--
+  安全小達人：個人安全 / 居家與衛生 / 緊急應變與求救 / 交通與戶外。
+  純本地教學模組（data-game-hud="off"、自有 key safety_progress_v1、不呼叫 Game.recordAnswer/award），
+  不計入主角色 XP／等級（避免重複計分，與觀念養成頁一致）。每單元「先教為什麼 → 不做會怎樣 → 怎麼做 → 練習」。
+  正確性第一（台灣情境：報警110／火災救護119／手機緊急112）；急救只教安全、孩子做得到的層級。全繁體中文。
+-->
+<style>
+  :root{ --su:#0f766e; --su-d:#0b5b54; --su-tint:rgba(15,118,110,0.12); }
+  :root[data-theme="dark"]{ --su:#5eead4; --su-d:#99f6e4; --su-tint:rgba(94,234,212,0.14); }
+  .sf-wrap{ max-width: 900px; margin-inline:auto; }
+  /* 選單（關卡卡片格）填滿寬版容器，與其他頁一致；教學/練習畫面維持易讀窄欄 */
+  #screen-menu.sf-wrap{ max-width: var(--content-max); }
+  .sf-screen{ display:none; } .sf-screen.active{ display:block; }
+  .sf-topbar{ display:flex; align-items:center; gap:var(--s3); margin-bottom:var(--s4); }
+  .sf-title{ font-size:var(--fs-h2); font-weight:800; color:var(--su-d); }
+  .sf-hello{ display:flex; align-items:center; gap:var(--s3); padding:var(--s4); background:var(--su-tint);
+    border:1px solid var(--card-border); border-radius:var(--r-lg); margin-bottom:var(--s5); }
+  .sf-hello .sf-mascot{ font-size:46px; flex:none; line-height:1; }
+  .sf-htext{ font-size:var(--fs-body); font-weight:700; color:var(--ink); }
+  .sf-hsub{ font-size:var(--fs-small); color:var(--ink-soft); font-weight:600; margin-top:2px; }
+  .sf-area{ margin-bottom:var(--s6); }
+  .sf-area-head{ display:flex; align-items:baseline; gap:var(--s2); margin-bottom:var(--s3); }
+  .sf-area-title{ font-size:17px; font-weight:800; color:var(--ink); }
+  .sf-area-count{ font-size:var(--fs-small); font-weight:700; color:var(--ink-soft); }
+  .sf-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:var(--s3); }
+  .sf-card{ display:flex; align-items:center; gap:var(--s3); text-align:left; width:100%;
+    padding:var(--s3) var(--s4); min-height:var(--tap-min); background:var(--card);
+    border:2px solid var(--card-border); border-radius:var(--r-lg); cursor:pointer;
+    font-family:var(--font); color:var(--ink); }
+  .sf-card:hover{ border-color:var(--su); }
+  .sf-card.done{ border-color:var(--su); background:var(--su-tint); }
+  .sf-card .sf-c-emoji{ font-size:30px; flex:none; }
+  .sf-card .sf-c-title{ font-size:var(--fs-body); font-weight:700; line-height:1.4; }
+  .sf-card .sf-c-state{ margin-left:auto; font-size:var(--fs-small); font-weight:800; color:var(--su-d); flex:none; }
+  .sf-note{ text-align:center; color:var(--ink-soft); font-size:var(--fs-small); margin-top:var(--s5); font-weight:600; max-width:34em; margin-inline:auto; }
+  /* 教學區 */
+  .sf-teach{ background:var(--card); border:1px solid var(--card-border); border-radius:var(--r-lg);
+    box-shadow:var(--shadow-sm); padding:var(--s5) var(--s4); }
+  .sf-teach .sf-t-emoji{ font-size:48px; text-align:center; }
+  .sf-teach h2{ font-size:var(--fs-h2); font-weight:800; color:var(--su-d); text-align:center; margin:var(--s2) 0 var(--s4); }
+  .sf-block{ margin-bottom:var(--s4); padding:var(--s3) var(--s4); border-radius:var(--r-md); border-left:4px solid var(--su); background:var(--su-tint); }
+  .sf-block.warn{ border-left-color:var(--c-warn); background:var(--tint-chinese); }
+  .sf-block-label{ font-size:var(--fs-small); font-weight:800; margin-bottom:4px; }
+  .sf-block .sf-block-label{ color:var(--su-d); }
+  .sf-block.warn .sf-block-label{ color:var(--c-chinese-ink); }
+  .sf-block-text{ font-size:var(--fs-body); font-weight:600; color:var(--ink); line-height:1.7; }
+  .sf-how{ margin:var(--s2) 0 0 0; padding:0; list-style:none; counter-reset:step; }
+  .sf-how li{ position:relative; padding:8px 8px 8px 40px; margin-bottom:6px; font-size:var(--fs-body);
+    font-weight:600; color:var(--ink); line-height:1.6; background:var(--bg); border-radius:var(--r-md); }
+  .sf-how li::before{ counter-increment:step; content:counter(step); position:absolute; left:8px; top:8px;
+    width:24px; height:24px; border-radius:50%; background:var(--c-english-btn); color:var(--on-accent); font-weight:800;
+    display:flex; align-items:center; justify-content:center; font-size:13px; }
+  /* quiz */
+  .sf-q{ font-size:var(--fs-body); font-weight:700; color:var(--ink); line-height:1.6; margin-bottom:var(--s3); }
+  .sf-opt{ display:block; width:100%; text-align:left; margin-bottom:var(--s2); padding:14px var(--s4);
+    min-height:var(--tap-min); border:2px solid var(--card-border); border-radius:var(--r-md);
+    background:var(--card); color:var(--ink); font-family:var(--font); font-size:var(--fs-body); font-weight:600; cursor:pointer; }
+  .sf-opt:hover{ border-color:var(--su); }
+  .sf-opt.correct{ border-color:var(--c-correct); background:var(--tint-english); }
+  .sf-opt.wrong{ border-color:var(--c-wrong); background:rgba(255,118,117,0.12); }
+  .sf-reveal{ margin-top:var(--s3); padding:var(--s3) var(--s4); background:var(--su-tint);
+    border-radius:var(--r-md); font-size:var(--fs-body); font-weight:700; color:var(--ink); line-height:1.6; display:none; }
+  .sf-reveal.show{ display:block; }
+  .sf-dots{ display:flex; gap:6px; justify-content:center; margin-bottom:var(--s4); }
+  .sf-dots i{ width:20px; height:6px; border-radius:999px; background:var(--card-border); }
+  .sf-dots i.on{ background:var(--su); }
+  .sf-actions{ margin-top:var(--s4); display:flex; gap:var(--s3); }
+  .sf-actions .btn{ flex:1; }
+</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">安全小達人 🛡️</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="sf-screen active sf-wrap">
+    <div class="sf-topbar"><span class="sf-title">安全小達人 🛡️</span></div>
+    <div class="sf-hello">
+      <span class="sf-mascot" aria-hidden="true">🛡️</span>
+      <div>
+        <div class="sf-htext">學會保護自己，就能玩得開心、走得安心。每個主題都是「先懂為什麼 → 知道怎麼做 → 練習看看」。</div>
+        <div class="sf-hsub">放輕鬆學就好，這些本領會一直保護你。</div>
+      </div>
+    </div>
+    <div id="area-list"></div>
+    <p class="sf-note">這是「安全教育」小旅程，只留在你的裝置上，不影響學習基地的等級或經驗值。真的遇到危險，記得找大人、打 110（警察）或 119（火災、救護車）。</p>
+  </section>
+
+  <section id="screen-play" class="sf-screen sf-wrap">
+    <div class="sf-topbar">
+      <button type="button" class="btn btn-icon" id="btn-back" aria-label="回到主題選單">←</button>
+      <span class="sf-title" id="play-title">安全主題</span>
+    </div>
+    <div class="sf-dots" id="dots" aria-hidden="true"></div>
+    <div class="play-column"><div id="stage"></div></div>
+  </section>
+</main>
+
+<script>
+/* eslint-disable */
+var SAFETY_DATA = {"personal":[{"id":"ps01money","title":"財不露白：不隨便讓別人知道家裡有什麼","emoji":"🤫","why":"錢和貴重的東西是自己家的事。如果到處跟人說家裡很有錢、有很多名牌，或把新手機、金項鍊亮給不熟的人看，有壞心的人可能會記住你、盯上你的家。低調一點，反而更安全，也更有禮貌。","consequence":"如果一直炫耀家裡多有錢、爸媽賺多少，或在外面把貴重東西拿出來給大家看，可能會被有壞念頭的人注意到，想騙你或偷你的東西；同學之間也容易因為比較而不開心。","how":["別人問『你家很有錢喔？』『你爸媽賺多少？』時，笑一笑說『我不太清楚耶』就好，不用回答。","貴重的東西（手機、平板、首飾、很多現金）放在包包裡收好，不要在路上或公車上拿出來炫耀。","不要在網路上、遊戲聊天室跟不認識的人說你家住哪、家裡有什麼值錢的東西。","家裡的鑰匙、密碼、爸媽的信用卡號碼是祕密，不告訴同學或陌生人。"],"quiz":[{"q":"同學一直問『你家是不是很有錢？你爸賺多少？』，你怎麼回答比較好？","options":["詳細說出爸媽的薪水和家裡有多少錢","笑一笑說『我不太清楚耶』，把話題帶開","把家裡的名牌包照片拿給大家看"],"answer":1,"explain":"錢的事情是家裡的私事，客氣地把話題帶開就好。"},{"q":"在網路遊戲裡，一個不認識的網友問你家住哪、家裡有什麼值錢東西，你該怎麼做？","options":["不告訴他，並跟爸媽說有人問這些","全部老實告訴他，這樣才有禮貌","把家裡地址傳給他看"],"answer":0,"explain":"家裡的資訊是祕密，不要告訴陌生網友，並且要把有人問這些的事告訴爸媽。"}]},{"id":"ps02stranger","title":"應對陌生人：不跟走、不收東西、會找對的人求助","emoji":"🙅","why":"大部分的人都是好人，但我們沒辦法一眼看出誰是好人。所以遇到不認識的大人要你跟他走、或給你糖果、玩具、要載你一程時，先保持距離、先問爸媽，才不會被有壞念頭的人騙走。","consequence":"如果因為對方看起來很親切、東西很吸引人就跟著走或上車，萬一對方是壞人，你可能會被帶到陌生的地方，離開爸媽找得到你的範圍，會很危險也很害怕。","how":["陌生人叫你跟他走、上他的車，就算他說『你媽媽叫我來接你』，也要說『我要先打電話問我爸媽』，並馬上離開往人多的地方。","陌生人給你糖果、飲料、玩具或錢，禮貌地說『謝謝，不用了』，不要收、不要吃。","保持一個手臂以上的距離，站在你可以隨時跑開的位置，不要靠近車子或角落。","需要幫忙時，找店員、櫃檯人員、警察，或有穿制服、帶著小孩的大人求助，比較安全。"],"quiz":[{"q":"放學時一個不認識的叔叔說『你媽媽很忙，叫我開車來載你回家』，你該怎麼做？","options":["因為他知道我媽媽，就上車","說『我要先打電話問我媽媽』，然後往人多的地方走、找老師或店家","收下他給的飲料再說"],"answer":1,"explain":"先打電話向爸媽確認、先離開到人多安全的地方，才不會被有壞念頭的人騙走。"},{"q":"陌生人拿出很漂亮的玩具說『送你，跟我來拿』，正確的做法是？","options":["禮貌說『謝謝，不用了』，不跟他走","玩具很棒，馬上跟著去拿","先收下玩具再決定"],"answer":0,"explain":"再吸引人的東西也不值得冒險，禮貌地拒絕、不跟陌生人走才安全。"},{"q":"在外面需要幫忙時，找誰比較安全？","options":["站在暗巷裡等有人經過","店員、櫃檯人員或警察","任何一個看起來很兇的人"],"answer":1,"explain":"找店員、櫃檯人員或警察這種固定在那裡、看得到的大人求助最可靠。"}]},{"id":"ps03route","title":"記住路線和地標：知道自己在哪裡","emoji":"🗺️","why":"平常上下學、去常去的地方時，如果記得走過的路和明顯的地標（像便利商店、公園、大招牌），萬一走錯路或迷路，就能靠這些記憶找回去，也能跟大人說清楚你在哪裡。","consequence":"如果從來不注意路怎麼走，一旦跟家人走散或走錯方向，就不知道自己在哪、也說不出位置，會更慌張、更難找到回家的路。","how":["走常走的路時，抬頭看看沿路有什麼好記的地標：便利商店、加油站、大樓、公園、學校招牌。","記住幾個關鍵的轉彎，例如『在7-11那個路口右轉』。","走路時不要一直低頭看手機，多留意周圍，才記得住路。","記住自己家的地址和附近的大地標，需要時可以告訴警察或店員你住哪一區。"],"quiz":[{"q":"為什麼平常要記住沿路的地標（像便利商店、公園）？","options":["這樣走錯路或迷路時，比較能找回去、也說得出自己在哪","為了考試","沒有用，記了也沒差"],"answer":0,"explain":"地標就像路上的記號，記住它們，迷路時就能幫你找到方向。"},{"q":"走路回家時，下面哪個習慣比較安全？","options":["一路低頭打電動，都不看路","偶爾抬頭看看路和地標，留意周圍","閉著眼睛憑感覺走"],"answer":1,"explain":"抬頭看路、留意四周，既能記住路線又能注意安全。"}]},{"id":"ps04alert","title":"在外提高警覺：走亮的路、不落單暗處","emoji":"💡","why":"人多、明亮的地方比較安全，因為有很多人看得到、能幫忙。走暗暗的小巷、空無一人的地下道，或自己一個人待在偏僻的角落，遇到狀況時比較沒有人能幫你。","consequence":"如果為了抄近路走沒有燈、沒有人的暗巷，或天黑了還獨自在偏僻的地方逗留，萬一遇到危險，附近可能沒有人能立刻幫忙。","how":["盡量走大馬路、有路燈、有店家、人比較多的路，不要為了近而走暗巷。","天黑後或去不熟的地方，盡量和同學、家人一起走，不要落單。","走路時注意四周，不要戴著耳機把音量開很大，才聽得到旁邊的動靜。","覺得某個地方怪怪的、讓你不舒服，就相信自己的感覺，離開那裡到明亮的地方。"],"quiz":[{"q":"放學要回家，有兩條路：一條是有店家、路燈的大馬路，一條是沒人又沒燈的暗巷但比較近。你該走哪條？","options":["走暗巷，因為比較快","走有店家和路燈、人比較多的大馬路","閉眼睛隨便選一條"],"answer":1,"explain":"安全比快幾分鐘重要，選明亮、有人的路走比較安全。"},{"q":"走在路上覺得某個角落『怪怪的、讓我不舒服』，最好怎麼做？","options":["相信自己的感覺，離開那裡到明亮有人的地方","硬著頭皮繼續往那裡走","站在原地發呆"],"answer":0,"explain":"那種怪怪的感覺常常在提醒你有危險，聽它的話趕快離開比較安全。"}]},{"id":"ps05followed","title":"覺得被跟蹤或走失時怎麼辦","emoji":"🏃","why":"萬一覺得有人一直跟著你，或和家人走散了，先別慌。只要知道該往哪裡走、找誰幫忙，並記得家人的電話，就能讓自己回到安全的地方。事先想好方法，真的遇到時就不會手足無措。","consequence":"如果被跟蹤時往更沒人的地方跑，或走失時自己亂走、還跟著陌生人離開，反而會離安全和家人越來越遠，更難被找到。","how":["覺得被跟蹤時，往人多、明亮的地方走，例如便利商店、店家、有警察的地方，不要往暗巷或家裡直接走。","走進商店跟店員說『我覺得有人跟著我，可以幫我嗎？』，並打電話給家人。","走失時，先待在原地或原本約好的地方等家人；如果在賣場、車站，就找櫃檯或穿制服的工作人員、警察。","記住至少一位家人的電話號碼和自己的名字、住哪一區，需要時可以請大人幫你打電話。","真的很危險、有人要抓你時，大聲喊『救命！我不認識他！』，引起旁邊的人注意。"],"quiz":[{"q":"走在路上覺得有人一直跟著你，最好往哪裡走？","options":["往沒有人的暗巷跑","往人多、明亮的便利商店或店家走，並找店員幫忙","直接走回家，讓對方知道你住哪"],"answer":1,"explain":"往人多的地方走、找店員幫忙最安全；直接回家反而會讓對方知道你家在哪。"},{"q":"在大賣場和爸媽走散了，你該怎麼做？","options":["自己跑出賣場到馬路上找","待在原地或找櫃檯、穿制服的工作人員幫忙","跟著一個好心的陌生人離開賣場去找爸媽"],"answer":1,"explain":"留在原地或找櫃檯人員，爸媽最容易找到你。"},{"q":"為什麼要背下至少一位家人的電話號碼？","options":["為了炫耀記憶力","走失或需要幫忙時，可以請大人幫你打電話聯絡家人","沒有必要，手機會記著"],"answer":1,"explain":"萬一沒有手機或手機沒電，記在腦子裡的電話號碼就能幫你聯絡到家人。"}]}],"home":[{"id":"wash1","title":"洗手與咳嗽禮節：對付看不見的病菌","emoji":"🧼","why":"我們的手和空氣裡有很多看不見的病菌。吃飯前、上完廁所、玩完回家、擤鼻涕或咳嗽後，手上的病菌最多。把它們洗掉，就比較不會生病。","consequence":"如果沒洗手就拿東西吃，病菌會跟著食物跑進肚子，可能讓你拉肚子、發燒；咳嗽打噴嚏不遮口鼻，也容易把感冒傳給家人和同學。","how":["在吃東西前、上廁所後、玩完回家、擤鼻涕或咳嗽後，記得先洗手","用肥皂搓手心、手背、指縫和指甲縫，大約唱兩次生日快樂歌（約20秒）","用清水把泡泡沖乾淨，再用乾淨的毛巾或紙巾把手擦乾","咳嗽或打噴嚏時，用手肘內側或衛生紙遮住口鼻，不要對著別人","生病時可以戴口罩、多休息，用過的衛生紙丟進垃圾桶"],"quiz":[{"q":"下面哪個時候最需要洗手？","options":["吃飯前和上廁所後","只有手看起來很髒才洗","睡覺前洗一次就整天不用了","從來都不用洗"],"answer":0,"explain":"吃飯前和上廁所後手上病菌最多，這時候洗手最重要。"},{"q":"咳嗽或打噴嚏時，怎麼做最有禮貌又不傳染別人？","options":["對著同學咳過去","用手肘內側或衛生紙遮住口鼻","用力憋住不咳","用手摀住後再去拿食物"],"answer":1,"explain":"咳嗽或打噴嚏時用手肘或衛生紙遮住，病菌就不會飛到別人身上。"},{"q":"用肥皂洗手大約要搓多久比較乾淨？","options":["碰一下水就好","大約20秒，可以唱兩次生日快樂歌","只沖水不用肥皂","越快越好，一秒就夠"],"answer":1,"explain":"洗手要搓20秒才能把病菌洗掉，可以一邊唱生日快樂歌一邊洗來計時。"}]},{"id":"elec1","title":"安全用電：電很有力量","emoji":"🔌","why":"電看不見，但力量很大，可以讓燈亮、讓電器動。水會讓電跑得更快，所以濕濕的手碰插座很危險；一個插座接太多電器，也會變得很燙。","consequence":"濕手碰插座、或把東西插進插座的洞，可能會被電到（觸電），又痛又危險；插座接太多電器過熱，還可能起火。","how":["手是濕的時候，先把手擦乾，再去碰插頭或開關","不要把手指、剪刀、鐵絲或任何東西插進插座的洞裡","要拔插頭時，捏住插頭本體往外拉，不要拉電線","不要在同一個插座接很多電器；如果插座或電線發燙、有燒焦味，馬上告訴大人","電器泡到水、或電線破皮露出來時不要碰，請大人來處理"],"quiz":[{"q":"手濕濕的想拔插頭，應該怎麼做？","options":["直接拔就好","先把手擦乾再拔","用嘴巴咬著拔","叫寵物幫忙拔"],"answer":1,"explain":"先把手擦乾再碰插頭，才不會被電到。"},{"q":"聞到插座有燒焦味、摸起來燙燙的，最好怎麼辦？","options":["自己拆開來看看","潑水讓它涼一點","告訴大人，不要自己處理","假裝沒聞到繼續玩"],"answer":2,"explain":"這是危險的信號，趕快告訴大人，讓大人來處理最安全。"},{"q":"下面哪一個用電做法是安全的？","options":["把鐵絲插進插座孔","一個插座插很多電器","拔插頭時用力拉電線","拔插頭時捏住插頭本體"],"answer":3,"explain":"拔插頭時要捏住插頭本體拔，電線才不會壞掉。"}]},{"id":"gas1","title":"瓦斯與一氧化碳：聞到怪味先開窗","emoji":"🔥","why":"廚房的瓦斯和熱水器如果漏出來，聞起來會臭臭的，像臭雞蛋的味道。還有一種叫一氧化碳的氣體沒有味道，卻很危險。這些氣體碰到火花或讓人吸太多，都會出事。","consequence":"聞到瓦斯味還去開電燈、開抽風機或點火，小火花可能引起爆炸或火災；一氧化碳吸太多，人會頭暈、想睡，甚至昏倒。","how":["聞到像臭雞蛋的瓦斯味時，不要開也不要關任何電燈或電器（開關會產生小火花）","趕快打開窗戶和門，讓空氣流通","大聲告訴大人，和大人一起離開到室外","洗澡或使用瓦斯時，讓窗戶保持通風，不要把窗戶全部關死","如果覺得頭暈、想睡又聞到怪味，先到室外呼吸新鮮空氣，並找大人幫忙"],"quiz":[{"q":"聞到像臭雞蛋的瓦斯味，下面哪件事「絕對不能做」？","options":["打開窗戶","去開電燈或開抽風機","告訴大人","走到室外"],"answer":1,"explain":"開關會產生看不見的小火花，聞到瓦斯味時千萬別碰電器，以免引起危險。"},{"q":"聞到瓦斯味的時候，應該怎麼做？","options":["趕快點火看看有沒有漏","打開窗戶通風，並告訴大人","躲進棉被裡","當作沒事繼續玩"],"answer":1,"explain":"聞到瓦斯味時，開窗通風並找大人幫忙，是最安全的做法。"},{"q":"關於一氧化碳，哪一句是對的？","options":["它很臭，一聞就知道","它沒有味道，吸多了會頭暈想睡，所以要保持通風","多吸一點也沒關係","只有夏天才會有"],"answer":1,"explain":"正因為它沒有味道，所以使用瓦斯、熱水器時保持通風特別重要。"}]},{"id":"med1","title":"藥品與清潔劑：不亂碰、不亂吃","emoji":"💊","why":"藥品、清潔劑（像漂白水、洗碗精）、殺蟲劑，有時候顏色鮮豔，看起來像糖果或飲料，但它們是給大人在正確時候用的，吃了或碰到皮膚會受傷。","consequence":"把藥當糖果吃、或喝下清潔劑，可能會中毒，讓嘴巴、肚子灼傷，是很危險的事。","how":["看到不認識的藥、瓶罐或噴劑，不要打開、不要聞、也不要嚐","生病需要吃藥時，一定要由大人拿給你，照著大人說的份量吃，不自己多吃","瓶子上如果有警告圖案（像骷髏頭、打叉），表示很危險，不要碰","清潔劑和藥品要放在原本的瓶子裡，不要倒進飲料瓶，才不會認錯","如果不小心碰到或吃到，趕快告訴大人，說清楚你碰到或吃了什麼"],"quiz":[{"q":"看到不認識的瓶瓶罐罐，最安全的做法是？","options":["打開聞聞看是什麼","嚐一小口試試味道","不要碰，先問大人","倒出來當玩具玩"],"answer":2,"explain":"不確定的東西不要碰、先問大人，才能保護自己。"},{"q":"生病需要吃藥時，怎麼做才對？","options":["自己多吃幾顆會好得快","由大人拿給你，照份量吃","把藥當糖果分給同學","偷偷藏起來自己吃"],"answer":1,"explain":"藥一定要照大人說的份量吃，不能自己亂加。"},{"q":"瓶子上有骷髏頭或打叉的圖案，代表什麼？","options":["很好吃","危險，不要碰","可以拿來喝","是玩具"],"answer":1,"explain":"那是危險的警告標示，看到就要離它遠一點。"}]},{"id":"home1","title":"獨自在家的安全","emoji":"🏠","why":"有時候爸媽有事出門，你要自己在家一下下。學會幾個小方法保護自己，就算一個人也可以很安心。","consequence":"隨便幫不認識的人開門，可能讓壞人進到家裡；在電話裡說出「只有我一個人在家」，也可能被有心人利用。","how":["有人按門鈴時，先從貓眼或窗戶看一看；不認識就不要開門，可以說「爸媽在忙，現在不方便開門」","接到陌生電話問大人在不在，不要說「只有我一個人」，可以說「爸媽現在不方便接，等一下回你」","把爸媽的電話和 110（報警）、119（火災救護）寫下來，貼在看得到的地方，需要時打電話","覺得害怕或看到可疑的人，打電話給爸媽，或找信任的鄰居、大人幫忙","自己在家時不要用瓦斯爐煮東西、不玩火，也不碰危險的電器"],"quiz":[{"q":"自己在家時，有不認識的人按門鈴，最好怎麼做？","options":["馬上開門讓他進來","不認識就不開門，說爸媽在忙","請他進來坐著等","大聲說我一個人在家"],"answer":1,"explain":"遇到不認識的人就不要開門，這樣最安全。"},{"q":"陌生電話問你「家裡大人在不在」，怎麼回答比較安全？","options":["說只有我一個人在家","說爸媽現在不方便接，等一下回你","把家裡地址告訴他","約他過來一起玩"],"answer":1,"explain":"不要透露自己一個人在家，也不要給地址，才不會讓陌生人有機可乘。"},{"q":"一個人在家覺得害怕或看到可疑的人，可以怎麼辦？","options":["自己衝出去追他","打電話給爸媽或信任的大人，需要時打 110","把門打開看清楚","不管它，自己去玩火"],"answer":1,"explain":"遇到狀況要找大人幫忙，需要時打110報警，這是求助的正確方法。"}]}],"emergency":[{"id":"fire01","title":"火災逃生：壓低身體，快速離開","emoji":"🔥","why":"火災時最危險的其實不是火，而是濃煙。濃煙又熱又毒，會讓人看不清路、喘不過氣。學會正確逃生，就能在濃煙變濃之前安全離開。","consequence":"如果站著跑或躲進房間，很可能會吸到濃煙而頭暈、走不動；搭電梯時萬一停電，電梯會卡住把人關在裡面。冷靜照步驟做，就能大大提高安全離開的機會。","how":["聞到燒焦味或看到煙、聽到警報，先大聲喊「失火了」提醒身邊的人。","把身體壓低，用手或衣袖、濕毛巾摀住口鼻，因為乾淨的空氣在靠近地板的地方。","沿著牆壁摸著走向樓梯出口，絕對不要搭電梯。","開門前先用手背碰門把，如果門把很燙就換另一條路，不要開那扇門。","到屋外安全的地方（如空地、集合點）後，馬上請大人或自己打 119，並且不要再跑回去拿東西。"],"quiz":[{"q":"火災逃生時，身體應該怎麼移動最安全？","options":["站直快跑","壓低身體摀住口鼻前進","躲進棉被裡不要動"],"answer":1,"explain":"乾淨空氣在低處，壓低身體並摀住口鼻能減少吸入濃煙。"},{"q":"發生火災時，可以搭電梯下樓嗎？","options":["可以，比較快","不可以，要走樓梯","看電梯有沒有人"],"answer":1,"explain":"火災時電梯可能停電卡住，一定要走樓梯逃生。"},{"q":"安全逃到屋外後，接下來該做什麼？","options":["跑回去拿心愛的玩具","在門口看熱鬧","請大人或自己打119並待在安全的地方"],"answer":2,"explain":"人平安最重要，逃出後打119找消防隊幫忙，千萬別再回到火場裡。"}]},{"id":"quake01","title":"地震來了：趴下、掩護、穩住","emoji":"🌍","why":"地震時地面會搖晃，最容易受傷的原因是被掉下來的東西砸到，或跌倒撞到。學會「趴下、掩護、穩住」，就能在搖晃時保護自己最重要的頭和脖子。","consequence":"如果地震時慌張亂跑，可能會被搖晃絆倒，或被掉落的燈、書架、玻璃砸傷。躲在穩固的桌子下保護頭部，受傷的機會就會小很多。","how":["感覺到搖晃，立刻「趴下」，讓身體變低不容易跌倒。","躲到堅固的桌子底下「掩護」頭和脖子，如果附近沒有桌子，就蹲低用雙手護住頭，遠離窗戶、玻璃和會倒的高櫃。","抓住桌腳「穩住」，跟著桌子一起移動，等搖晃完全停止。","搖晃停止後，聽老師或大人的指示，沿著樓梯有秩序地慢慢走到戶外空曠處，不推擠、不搭電梯。","到安全空地後待在原地，等大人清點人數，不要自己亂跑。"],"quiz":[{"q":"地震開始搖晃時，正確的口訣是什麼？","options":["趴下、掩護、穩住","站好、看窗外、大叫","馬上衝出教室"],"answer":0,"explain":"趴下、掩護、穩住能保護頭部又不容易跌倒。"},{"q":"地震時應該躲在哪裡比較安全？","options":["窗戶旁邊看外面","堅固的桌子底下並護住頭","高高的書櫃旁"],"answer":1,"explain":"躲在桌子下能擋住掉落物，並要遠離窗戶和高櫃才更安全。"},{"q":"搖晃停止後要怎麼離開？","options":["搶第一個衝下樓","推開同學快跑","聽大人指示，有秩序走樓梯到空地"],"answer":2,"explain":"有秩序地走才不會跌倒或推擠受傷。"}]},{"id":"hurt01","title":"受傷了怎麼辦：流血與燙傷的簡單處理","emoji":"🩹","why":"跌倒、割到、被熱水燙到，都是生活中會遇到的小意外。學會幾個簡單又安全的處理方法，就能先照顧好自己，也能幫助身邊的人，同時知道什麼時候一定要找大人。","consequence":"如果傷口不處理或亂擦來路不明的東西，可能會更痛、更容易發炎；燙傷沒有馬上沖冷水，皮膚會傷得更嚴重。用對方法，傷口會好得比較快、比較不痛。","how":["流血時，先用乾淨的布或紗布蓋在傷口上，用手輕輕壓住幫助止血，並把受傷的地方稍微抬高。","燙傷時，趕快用流動的自來水沖傷口，至少沖 15 到 20 分鐘（沖到比較不痛），不要塗牙膏、醬油或藥膏。","不要用手去摳傷口，也不要弄破燙傷起的水泡。","處理完後告訴大人，讓大人幫你看看需不需要進一步照顧。","如果血流很多止不住、傷口很大、燙傷面積大或很痛，馬上找大人並打 119 請救護車幫忙。"],"quiz":[{"q":"被熱水燙到，第一件事應該做什麼？","options":["塗牙膏","用流動的冷水慢慢沖","趕快擦乾裝作沒事"],"answer":1,"explain":"燙傷時沖冷水能讓皮膚降溫、減少傷害；塗牙膏反而會弄髒傷口。"},{"q":"傷口在流血，怎麼做比較好？","options":["用乾淨的布壓住幫助止血","用髒手一直摸","用力擠壓讓血流更多"],"answer":0,"explain":"用乾淨的布輕壓能幫助止血，也能保持傷口乾淨。"},{"q":"遇到流血止不住或很嚴重的傷，最該做的是？","options":["自己想辦法處理不告訴別人","找大人並打119","先睡一覺再說"],"answer":1,"explain":"嚴重的傷要交給大人和專業救護人員，打119找幫手最安全。"}]},{"id":"call01","title":"如何求救：打對電話、說清楚","emoji":"📞","why":"遇到火災、有人受傷、或看到危險的事，打電話求救就能請大人和專業人員來幫忙。學會打哪支電話、怎麼把事情說清楚，別人才能很快趕到正確的地方。","consequence":"如果打錯電話或說不清楚地點，救護車或消防隊就會找不到你，幫忙就會慢很多。把「在哪裡、發生什麼事、有幾個人」講清楚，救援就能又快又準。","how":["記住三個號碼：報警找警察打 110；火災或有人受傷叫消防隊、救護車打 119。","手機如果顯示沒有訊號、緊急狀況打不出去，可以試著撥 112 求救。","電話接通後保持冷靜，慢慢說清楚這幾件事：我在哪裡（地址或明顯地標）、發生什麼事、現場有幾個人、有沒有人受傷。","說完後不要急著掛電話，聽對方的問題回答，等對方說可以掛了再掛。","如果現場有危險，一邊求救一邊移動到安全的地方等救援。"],"quiz":[{"q":"家裡失火或有人受傷要叫救護車，應該打幾號？","options":["110","119","104"],"answer":1,"explain":"119是找消防隊和救護車，110是報警找警察，兩者用途不同。"},{"q":"打電話求救時，最重要、要講清楚的是什麼？","options":["自己叫什麼名字就好","在哪裡、發生什麼事、有幾個人","先講今天天氣"],"answer":1,"explain":"說清楚地點和狀況，救援人員才找得到你、帶對裝備。"},{"q":"手機顯示沒訊號又很緊急時，可以試著撥哪個號碼？","options":["112","123","000"],"answer":0,"explain":"112是手機的緊急求救號碼，記住它在緊急時能幫上忙。"}]},{"id":"info01","title":"記住家人電話和住家地址","emoji":"🏠","why":"萬一走失、遇到意外，或大人一時聯絡不到，會背家人的電話和自己家的地址，就能請別人幫你找到家人、或讓救援人員知道要去哪裡。這是每個小朋友都能學會的重要本領。","consequence":"如果不記得地址和電話，走丟時就很難很快找到家人，救護車也可能找不到你家。把這些記在腦袋裡，需要的時候隨時都用得上，比寫在紙上更保險。","how":["請爸爸媽媽寫下家裡地址和至少一位家人的手機號碼，跟著大人多念幾次把它背起來。","可以把電話號碼編成一首小歌或口訣，會更好記，每隔幾天複習一次。","練習完整說出住家地址：從縣市、區、路名到幾號幾樓，越清楚越好。","如果走失了，先待在原地不要亂走，找穿制服的人（警察、店員、車站服務員）或帶著小孩的大人幫忙。","把背好的電話和地址說給幫忙的大人聽，請他們幫你聯絡家人。"],"quiz":[{"q":"為什麼要把家人的電話和住家地址背起來？","options":["為了考試加分","走失或遇到意外時能請人幫忙聯絡家人","沒有什麼用"],"answer":1,"explain":"記住這些資訊，緊急時就能很快聯絡到家人。"},{"q":"如果在外面和家人走散了，最好先怎麼做？","options":["自己到處亂跑找","待在原地，找警察或店員等可信的大人幫忙","跟著陌生人走"],"answer":1,"explain":"留在原地並找穿制服的人幫忙最安全。"}]}],"outdoor":[{"id":"cross01","title":"安全過馬路","emoji":"🚦","why":"馬路上有很多車子，車子開起來又快又重，沒辦法馬上停下來。過馬路是我們每天都會遇到的事，學會正確方法，就能安全到學校、回到家。","consequence":"如果沒有走斑馬線、沒有看清楚就衝出去，車子可能來不及停下來，就會撞到我們，讓自己受傷、也讓開車的人和家人很難過。追著球或寵物突然衝到馬路上，更是很危險的事。","how":["走到路口，先站在人行道或路邊，不要站在馬路上等。","看紅綠燈：綠燈亮才走，紅燈和黃燈都要停下來等。","過馬路前先看左邊，再看右邊，再看一次左邊，確定沒有車再走。","走斑馬線或天橋、地下道，不要從車子中間穿越。","球、玩具或帽子掉到馬路上，先找大人幫忙，絕對不要自己追過去。"],"quiz":[{"q":"綠燈亮了，準備過馬路，這時候最應該先做什麼？","options":["直接快跑衝過去","先看左右有沒有車，確定安全再走","低頭看手機邊走邊看","閉上眼睛快步走"],"answer":1,"explain":"就算是綠燈，也要先看左右確認沒有車再走。"},{"q":"你的球滾到了馬路中間，應該怎麼辦？","options":["馬上衝過去撿","請旁邊的大人幫忙，不要自己追","站在馬路中間等球停下來","叫朋友一起衝過去撿"],"answer":1,"explain":"球再買就有，但安全最重要；東西掉到馬路上要找大人幫忙，不要自己衝出去撿。"},{"q":"在路口等紅綠燈時，站在哪裡比較安全？","options":["站在馬路上靠近車子的地方","站在人行道或路邊，離車道遠一點","蹲在停著的車子後面","站在斑馬線正中間"],"answer":1,"explain":"站在人行道或路邊、離車子遠一點，轉彎的車才看得到你，也不會不小心碰到你。"}]},{"id":"ride01","title":"乘車安全好習慣","emoji":"🚗","why":"坐車去很多地方都很方便，但車子在跑的時候，如果突然煞車或轉彎，坐在裡面的人會往前衝。安全帶就像抱住我們的手，把我們穩穩留在座位上。","consequence":"沒有繫安全帶，遇到緊急煞車時身體會撞到前面的椅子或玻璃而受傷。把頭或手伸出窗外，可能會被旁邊經過的車子或路邊的東西撞到，很危險。","how":["上車後先坐好，把安全帶拉過來扣好，聽到「喀」一聲才算扣好。","手和頭都放在車子裡面，不要伸出窗外或天窗外。","車子在跑的時候坐好，不要站起來、不要在車上跑跳打鬧。","下車前先看看車門旁邊和後面有沒有機車或腳踏車經過，確認安全再開門下車。","盡量從靠人行道那一側的門下車，比較安全。"],"quiz":[{"q":"一上車坐好，第一件要做的事是什麼？","options":["把窗戶打開把頭伸出去","扣好安全帶","在座位上跳來跳去","把腳翹到前面椅子上"],"answer":1,"explain":"扣好安全帶是坐車最重要的第一步，它會在緊急時保護你。"},{"q":"車子正在馬路上開的時候，下面哪個做法最安全？","options":["把手伸出窗外吹風","站起來看外面的風景","坐好並繫著安全帶","在後座跟弟弟妹妹追打"],"answer":2,"explain":"坐好、繫好安全帶，車子突然停下來時才不會受傷。"},{"q":"車子停好要下車了，開門前應該怎麼做？","options":["用力把門一次推開","先看後面有沒有機車或腳踏車，再慢慢開門","閉著眼睛開門","把門開一半就跳下去"],"answer":1,"explain":"下車開門前先看後方，才不會撞到經過的機車或腳踏車。"}]},{"id":"water01","title":"玩水的安全","emoji":"🌊","why":"水很好玩，但水裡面看不清楚深淺，也很容易滑倒。就算是很淺的水，站不穩跌倒也可能嗆到水。所以玩水一定要有大人在旁邊看著。","consequence":"自己一個人靠近水邊、或不會游泳卻下水，很容易滑倒或沉下去、嗆到水而發生溺水。看到別人溺水時，如果自己跳下去救，常常會連自己也被拉下水，反而更危險。","how":["去河邊、海邊、游泳池，一定要有大人陪，不可以自己一個人靠近水邊。","還不會游泳的時候不要下水；游泳時要穿好合身的救生衣或戴浮具。","如果不小心滑進水裡，記得放輕鬆、頭往後仰讓臉浮出水面（仰漂），身體盡量放鬆、不要亂揮手亂踢（會失去平衡沉下去），保持浮著、省力氣，大聲喊「救命」等大人來救。","看到別人溺水，不要自己跳下去救，要大聲喊大人來，並打119。","可以把身邊漂得起來的東西（像救生圈、寶特瓶、長棍子）遞給溺水的人，自己站穩在岸上不要被拉下水。"],"quiz":[{"q":"你和同學到河邊，發現旁邊沒有大人，這時候應該怎麼做？","options":["自己先下水玩一下","不要靠近水邊，等有大人陪同才可以","站在很滑的石頭上比賽","把腳伸進深水裡試試看"],"answer":1,"explain":"沒有大人在旁邊時，就不要靠近水邊。"},{"q":"看到有人在水裡大喊救命，你應該怎麼做？","options":["馬上跳下水去把他拉上來","大聲喊大人來幫忙，並打119","自己一個人想辦法游過去","假裝沒看到走開"],"answer":1,"explain":"自己跳下去救人很可能會被一起拉下水；喊大人、打119才是能救人又保護自己的方法。"},{"q":"如果你不小心滑進水裡，下面哪個做法比較好？","options":["用力拚命亂揮亂踢","放輕鬆、頭往後仰讓臉浮起來，大聲呼救","把頭往水裡鑽","什麼都不做等它自己好"],"answer":1,"explain":"放輕鬆、讓臉浮出水面呼吸，再大聲呼救，能撐到大人來救你。"}]},{"id":"outdoor01","title":"山林戶外不迷路","emoji":"⛰️","why":"去爬山、郊遊、公園玩很開心，可以看到很多動物和植物。但山上路很多、樹又很密，一不小心就會和大人走散、找不到路，所以要跟緊大人、先讓家人知道我們去哪裡。","consequence":"如果離開隊伍自己亂跑，可能會迷路、找不到人，天黑或下雨時會又冷又害怕。隨便採來吃的野果、野菇，有些是有毒的，吃了會肚子痛、生病。","how":["出門前告訴家人要去哪裡、大概什麼時候回來。","走在大人看得到的地方，不要自己跑到前面或落在後面太遠。","走有標示的步道，不要自己鑽進沒有路的樹叢或草叢。","路邊的野果、野花、野菇不亂採也不亂吃，好奇可以問大人。","萬一和大人走散了，就待在原地不要亂走，大聲呼喊，等大人來找你。"],"quiz":[{"q":"爬山的時候，走在哪裡最安全？","options":["自己跑到隊伍最前面探險","走在大人看得到、跟得上的地方","落在最後面慢慢晃","自己鑽進旁邊的樹叢找捷徑"],"answer":1,"explain":"跟緊大人、走在大人看得到的地方，就不容易走散。"},{"q":"在山上看到紅紅的野果，看起來很好吃，該怎麼辦？","options":["摘下來馬上吃吃看","不亂採也不亂吃，想知道就問大人","帶回家種","分給同學一起吃"],"answer":1,"explain":"有些野果、野菇有毒，光看外表看不出來；不亂吃、先問大人才安全。"},{"q":"如果不小心和大人走散了，最好怎麼做？","options":["自己一直往前走找路","待在原地大聲呼喊，等大人來找","躲起來不出聲","跑去更遠的地方找"],"answer":1,"explain":"走散時待在原地呼救，大人比較容易找到你。"}]},{"id":"weather01","title":"颱風打雷怎麼辦","emoji":"⛈️","why":"台灣夏天常常有颱風和雷陣雨。颱風來的時候風很大、雨很急，海邊和河邊的水會突然變大變快；打雷的時候，電會打到最高、最空曠的地方，這些都要小心避開。","consequence":"颱風天跑去海邊、河邊看大浪，可能被大浪或暴漲的溪水捲走。打雷時待在空曠的地方或躲在大樹下，可能會被雷電打到而受傷，非常危險。","how":["颱風來的時候待在家裡，絕對不要去海邊、河邊、山上看風浪或玩水。","把颱風假當成在家的安全時間，關好門窗，聽爸媽和氣象的提醒。","打雷時趕快進到室內或車子裡，不要待在空曠的操場、田野。","打雷時不要躲在大樹下，也遠離電線桿、金屬欄杆和高高的東西。","在室外聽到打雷，不要停下來，繼續往最近的室內或硬頂汽車移動；遠離大樹、電線桿、金屬欄杆和空曠的地方，盡快找到室內躲起來最安全。"],"quiz":[{"q":"颱風正在來，下面哪件事最不可以做？","options":["待在家裡關好門窗","跑去海邊看大浪","聽爸媽和氣象的提醒","在家裡看書、玩遊戲"],"answer":1,"explain":"颱風天的海邊和河邊最危險，大浪和溪水會突然暴漲，待在家裡才安全。"},{"q":"在外面玩的時候開始打雷了，最好躲到哪裡？","options":["躲到大樹下面","趕快進到室內或車子裡","站在空曠的操場中間","抓住旁邊的金屬欄杆"],"answer":1,"explain":"打雷時進到室內或車子裡最安全，大樹下和空曠的地方反而危險。"}]}]};
+(function(){
+  'use strict';
+  var AREAS = [
+    { key:'personal',  label:'個人安全（保護自己）', emoji:'🧍' },
+    { key:'home',      label:'居家與衛生',           emoji:'🏠' },
+    { key:'emergency', label:'緊急應變與求救',       emoji:'🚨' },
+    { key:'outdoor',   label:'交通與戶外安全',       emoji:'🚸' }
+  ];
+  // 深連結：把首頁四張卡的 hash 對應到實際 area key（traffic 是「交通與戶外」outdoor 的別名）。
+  var HASH_TO_AREA = {
+    personal:'personal', home:'home', emergency:'emergency',
+    outdoor:'outdoor', traffic:'outdoor'
+  };
+  var PROG_KEY = 'safety_progress_v1';
+  function $(id){ return document.getElementById(id); }
+  function loadProg(){ try{ return JSON.parse(localStorage.getItem(PROG_KEY)) || {lessons:{}}; }catch(e){ return {lessons:{}}; } }
+  function saveProg(p){ try{ localStorage.setItem(PROG_KEY, JSON.stringify(p)); }catch(e){} }
+  var prog = loadProg();
+  if(!prog.lessons) prog.lessons = {};
+
+  // 不依賴 Math.random 的確定性洗牌（以索引擾動；答案以原字串索引 data-orig 比對，不受洗牌影響）
+  function shuffleOptions(opts, seed){
+    var arr = opts.map(function(o,i){ return {o:o,i:i}; });
+    for(var k=arr.length-1;k>0;k--){ seed=(seed*9301+49297)%233280; var j=Math.floor(seed/233280*(k+1)); var t=arr[k];arr[k]=arr[j];arr[j]=t; }
+    return arr;
+  }
+
+  // ---------- 選單 ----------
+  // filterKey 為某個 area key 時只渲染該分組（深連結直達用）；不給則渲染全部四大主題。
+  function renderMenu(filterKey){
+    var host = $('area-list'); host.innerHTML='';
+    var areasToShow = AREAS;
+    if(filterKey){
+      areasToShow = AREAS.filter(function(a){ return a.key===filterKey; });
+      if(!areasToShow.length){ areasToShow = AREAS; filterKey = null; }
+    }
+    if(filterKey){
+      var toAll = document.createElement('button');
+      toAll.type='button'; toAll.className='btn'; toAll.id='btn-all-areas';
+      toAll.style.marginBottom='var(--s4)';
+      toAll.textContent='← 查看全部安全主題';
+      toAll.addEventListener('click', function(){ renderMenu(); });
+      host.appendChild(toAll);
+    }
+    areasToShow.forEach(function(area){
+      var lessons = SAFETY_DATA[area.key] || [];
+      var doneCount = lessons.filter(function(l){ return prog.lessons[l.id] && prog.lessons[l.id].done; }).length;
+      var sec = document.createElement('div'); sec.className='sf-area';
+      var head = document.createElement('div'); head.className='sf-area-head';
+      head.innerHTML = '<span class="sf-area-title">'+area.emoji+' '+area.label+'</span>'+
+                       '<span class="sf-area-count">'+doneCount+' / '+lessons.length+'</span>';
+      sec.appendChild(head);
+      var grid = document.createElement('div'); grid.className='sf-grid';
+      lessons.forEach(function(l){
+        var done = prog.lessons[l.id] && prog.lessons[l.id].done;
+        var btn = document.createElement('button'); btn.type='button';
+        btn.className='sf-card'+(done?' done':'');
+        btn.innerHTML = '<span class="sf-c-emoji" aria-hidden="true">'+l.emoji+'</span>'+
+          '<span class="sf-c-title">'+l.title+'</span>'+
+          '<span class="sf-c-state">'+(done?'✓ 學過了':'去學')+'</span>';
+        btn.setAttribute('aria-label', l.title + (done?'（已學過）':''));
+        btn.addEventListener('click', function(){ openLesson(area.key, l.id); });
+        grid.appendChild(btn);
+      });
+      sec.appendChild(grid);
+      host.appendChild(sec);
+    });
+  }
+
+  // ---------- 教學 + 練習流程 ----------
+  var cur = null; // {area, lesson, phase:'teach'|'quiz', qIndex, correctCount, answered}
+  function openLesson(areaKey, lessonId){
+    var lessons = SAFETY_DATA[areaKey] || [];
+    var lesson = null; for(var i=0;i<lessons.length;i++){ if(lessons[i].id===lessonId){ lesson=lessons[i]; break; } }
+    if(!lesson) return;
+    cur = { area:areaKey, lesson:lesson, phase:'teach', qIndex:0, correctCount:0, answered:false };
+    $('play-title').textContent = lesson.emoji + ' ' + lesson.title;
+    showScreen('play');
+    renderTeach();
+  }
+  function showScreen(name){
+    $('screen-menu').classList.toggle('active', name==='menu');
+    $('screen-play').classList.toggle('active', name==='play');
+    try{ window.scrollTo(0,0); }catch(e){}
+  }
+  function renderDots(){
+    var total = cur.lesson.quiz.length; var d=$('dots'); d.innerHTML='';
+    if(cur.phase!=='quiz'){ d.style.display='none'; return; }
+    d.style.display='flex';
+    for(var i=0;i<total;i++){ var el=document.createElement('i'); if(i<=cur.qIndex) el.className='on'; d.appendChild(el); }
+  }
+  function renderTeach(){
+    cur.phase='teach'; renderDots();
+    var l = cur.lesson;
+    var howHtml = '<ol class="sf-how">' + l.how.map(function(s){ return '<li>'+s+'</li>'; }).join('') + '</ol>';
+    // 漸進式揭示：一次先只出現一小段，點「繼續」再展開下一段，最後才出練習鈕，
+    // 避免一進來就是一大片字讓孩子跳過不讀（教學內容不變，只改節奏）。
+    var steps = [
+      '<div class="sf-block"><div class="sf-block-label">為什麼要注意？</div><div class="sf-block-text">'+l.why+'</div></div>',
+      '<div class="sf-block warn"><div class="sf-block-label">如果不這麼做，可能會…</div><div class="sf-block-text">'+l.consequence+'</div></div>',
+      '<div class="sf-block"><div class="sf-block-label">可以怎麼做？</div>'+howHtml+'</div>'
+    ];
+    var step = 0;
+    function paint(){
+      var last = step >= steps.length - 1;
+      var btn = last
+        ? '<button type="button" class="btn btn-primary" id="btn-startquiz">我懂了，來練習 ✏️</button>'
+        : '<button type="button" class="btn btn-primary" id="btn-next-teach">繼續 ➡️</button>';
+      $('stage').innerHTML =
+        '<div class="sf-teach">' +
+          '<div class="sf-t-emoji" aria-hidden="true">'+l.emoji+'</div>' +
+          '<h2>'+l.title+'</h2>' +
+          steps.slice(0, step + 1).join('') +
+          '<div class="sf-actions">'+btn+'</div>' +
+        '</div>';
+      if (last) {
+        $('btn-startquiz').addEventListener('click', function(){ cur.phase='quiz'; cur.qIndex=0; cur.correctCount=0; renderQuiz(); });
+      } else {
+        $('btn-next-teach').addEventListener('click', function(){ step++; paint(); });
+      }
+    }
+    paint();
+  }
+  function renderQuiz(){
+    cur.answered=false; renderDots();
+    var q = cur.lesson.quiz[cur.qIndex];
+    var shown = shuffleOptions(q.options, (cur.qIndex+1)*7 + q.q.length);
+    var optHtml = shown.map(function(x){
+      return '<button type="button" class="sf-opt" data-orig="'+x.i+'">'+x.o+'</button>';
+    }).join('');
+    $('stage').innerHTML =
+      '<div class="sf-teach">' +
+        '<div class="sf-q">第 '+(cur.qIndex+1)+' / '+cur.lesson.quiz.length+' 題<br>'+q.q+'</div>' +
+        optHtml +
+        '<div class="sf-reveal" id="reveal"></div>' +
+        '<div class="sf-actions" id="q-actions" style="display:none"><button type="button" class="btn btn-primary" id="btn-nextq"></button></div>' +
+      '</div>';
+    var opts = $('stage').querySelectorAll('.sf-opt');
+    Array.prototype.forEach.call(opts, function(btn){
+      btn.addEventListener('click', function(){ answer(btn, q, opts); });
+    });
+  }
+  function answer(btn, q, opts){
+    if(cur.answered) return; cur.answered=true;
+    var chosen = parseInt(btn.getAttribute('data-orig'),10);
+    var correct = (chosen === q.answer);
+    if(correct) cur.correctCount++;
+    try { if (window.Game && typeof Game.pingActive === 'function') Game.pingActive(); } catch(e){}  // 安全模組不發 XP，但作答＝當日有學習（且此為首訪 hero 推薦的第一個活動），維持每日連續 streak（只續火焰、不計分）
+    Array.prototype.forEach.call(opts, function(b){
+      var oi = parseInt(b.getAttribute('data-orig'),10);
+      if(oi===q.answer) b.classList.add('correct');
+      else if(b===btn) b.classList.add('wrong');
+      b.disabled = true;
+    });
+    var rev = $('reveal');
+    rev.textContent = (correct ? '答對了！👍 ' : '沒關係～正確答案是這個喔！') + q.explain;
+    rev.classList.add('show');
+    var act = $('q-actions'); act.style.display='flex';
+    var next = $('btn-nextq');
+    var last = (cur.qIndex >= cur.lesson.quiz.length-1);
+    next.textContent = last ? '完成這個主題 🎉' : '下一題 ➡️';
+    next.onclick = function(){
+      if(last){ finishLesson(); }
+      else { cur.qIndex++; renderQuiz(); }
+    };
+  }
+  function finishLesson(){
+    var l = cur.lesson;
+    prog.lessons[l.id] = { done:true, correct:cur.correctCount, total:l.quiz.length };
+    saveProg(prog);
+    $('dots').style.display='none';
+    $('stage').innerHTML =
+      '<div class="sf-teach" style="text-align:center">' +
+        '<div class="sf-t-emoji" aria-hidden="true">🎉</div>' +
+        '<h2>學會了！你更懂得保護自己了</h2>' +
+        '<div class="sf-block"><div class="sf-block-text">這個主題答對了 '+cur.correctCount+' / '+l.quiz.length+' 題。記得把學到的方法用在生活裡喔！</div></div>' +
+        '<div class="sf-actions"><button type="button" class="btn btn-primary" id="btn-tomenu">回主題選單</button></div>' +
+      '</div>';
+    $('btn-tomenu').addEventListener('click', function(){ showScreen('menu'); renderMenu(); });
+  }
+
+  $('btn-back').addEventListener('click', function(){ showScreen('menu'); renderMenu(); });
+
+  // 載入時的 hash 路由：#personal / #home / #emergency / #outdoor（#traffic 為 outdoor 別名）
+  // 直接渲染對應分組；無對應 hash 則維持原本的全部主題選單。
+  function areaFromHash(){
+    var raw = (window.location.hash || '').replace(/^#/, '').toLowerCase();
+    return HASH_TO_AREA[raw] || null;
+  }
+  var initialArea = areaFromHash();
+  showScreen('menu');
+  renderMenu(initialArea);
+})();
+</script>
+</body>
+</html>

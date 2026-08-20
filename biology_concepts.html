@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生物觀念養成 🌱</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<link rel="stylesheet" href="concept.css">
+<script src="game_core.js"></script>
+<style>:root{ --su:#16a34a; --su-tint:rgba(22,163,74,0.14); }</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">生物觀念養成 🌱</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="cn-screen active cn-wrap">
+    <div class="cn-topbar"><span class="cn-title">生物觀念養成 🌱</span></div>
+    <div class="cn-hello"><span class="cn-mascot" aria-hidden="true">🌱</span>
+      <div><div class="cn-htext" id="hello">食物鏈、光合作用、生命週期、動物分類——用箭頭圖一看就懂。</div>
+      <div class="cn-hsub">每個觀念都是「教一小段 → 馬上練習」，慢慢來。</div></div></div>
+    <div class="cn-lessons" id="lesson-list"></div>
+    <a class="cn-nextup" href="biology.html" style="display:flex;align-items:center;gap:12px;margin-top:16px;padding:14px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:26px;flex:none" aria-hidden="true">🚀</span><span>想要更多、更有挑戰的內容嗎？到「基礎生物」繼續探索 →</span></a>
+    <p class="cn-note">這裡是「先學觀念」的教學小旅程，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
+  </section>
+  <section id="screen-play" class="cn-screen cn-wrap">
+    <div class="cn-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="cn-title" id="play-title">觀念</span></div>
+    <div class="cn-progress" id="prog" aria-hidden="true"></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+// ---- 生物專用 SVG 概念圖（文字 currentColor = --ink；emoji 由 role=img aria-label 補說明）----
+// 水平流程圖：items = [{e:'🌱', l:'草', sub:'生產者'}, ...]，箭頭指向「吃它的下一位」= 能量流向
+function flowChain(items){
+  var bw=64, bh=64, gap=36, pad=8, y=14;
+  var w = pad*2 + items.length*bw + (items.length-1)*gap;
+  var s='<svg viewBox="0 0 '+w+' 122" role="img" aria-label="能量流向的流程圖">';
+  var x=pad;
+  items.forEach(function(it,i){
+    s+='<rect x="'+x+'" y="'+y+'" width="'+bw+'" height="'+bh+'" rx="12" fill="rgba(22,163,74,0.12)" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+    s+='<text x="'+(x+bw/2)+'" y="'+(y+42)+'" text-anchor="middle" font-size="30">'+it.e+'</text>';
+    s+='<text x="'+(x+bw/2)+'" y="'+(y+bh+18)+'" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">'+it.l+'</text>';
+    if(it.sub) s+='<text x="'+(x+bw/2)+'" y="'+(y+bh+33)+'" text-anchor="middle" font-size="11" fill="currentColor">'+it.sub+'</text>';
+    if(i<items.length-1){
+      var ax=x+bw+3, ay=y+bh/2, ax2=x+bw+gap-3;
+      s+='<line x1="'+ax+'" y1="'+ay+'" x2="'+(ax2-7)+'" y2="'+ay+'" stroke="#059669" stroke-width="3.5"/>';
+      s+='<polygon points="'+(ax2-7)+','+(ay-6)+' '+ax2+','+ay+' '+(ax2-7)+','+(ay+6)+'" fill="#059669"/>';
+    }
+    x+=bw+gap;
+  });
+  return s+'</svg>';
+}
+// 四階段循環圖（順時針）：items = [{e,l}] 上、右、下、左
+function cycleFlow(items){
+  var cx=112, cy=106, R=80, bw=58, bh=58;
+  var ang=[-90,0,90,180];
+  var pos=ang.map(function(a){var r=a*Math.PI/180;return {x:cx+R*Math.cos(r), y:cy+R*Math.sin(r)};});
+  var s='<svg viewBox="0 0 224 212" role="img" aria-label="生命週期循環圖（順時針）">';
+  for(var i=0;i<4;i++){
+    var A=pos[i], B=pos[(i+1)%4];
+    var dx=B.x-A.x, dy=B.y-A.y, len=Math.sqrt(dx*dx+dy*dy), ux=dx/len, uy=dy/len;
+    var sx=A.x+ux*44, sy=A.y+uy*44, ex=B.x-ux*44, ey=B.y-uy*44;
+    s+='<line x1="'+sx.toFixed(1)+'" y1="'+sy.toFixed(1)+'" x2="'+ex.toFixed(1)+'" y2="'+ey.toFixed(1)+'" stroke="#059669" stroke-width="3.5"/>';
+    s+='<polygon points="'+ex.toFixed(1)+','+ey.toFixed(1)+' '+(ex-ux*10-uy*6).toFixed(1)+','+(ey-uy*10+ux*6).toFixed(1)+' '+(ex-ux*10+uy*6).toFixed(1)+','+(ey-uy*10-ux*6).toFixed(1)+'" fill="#059669"/>';
+  }
+  items.forEach(function(it,i){
+    var p=pos[i];
+    s+='<rect x="'+(p.x-bw/2)+'" y="'+(p.y-bh/2)+'" width="'+bw+'" height="'+bh+'" rx="12" fill="rgba(22,163,74,0.12)" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+    s+='<text x="'+p.x+'" y="'+(p.y+1)+'" text-anchor="middle" font-size="24">'+it.e+'</text>';
+    s+='<text x="'+p.x+'" y="'+(p.y+21)+'" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">'+it.l+'</text>';
+  });
+  return s+'</svg>';
+}
+// 光合作用：左側原料進入葉子，右側產物離開（箭頭全水平）
+function photo(){
+  var s='<svg viewBox="0 0 264 156" role="img" aria-label="光合作用：陽光、二氧化碳、水進入葉子，產生養分和氧氣">';
+  s+='<ellipse cx="132" cy="78" rx="32" ry="50" fill="rgba(22,163,74,0.22)" stroke="#059669" stroke-width="2.5"/>';
+  s+='<text x="132" y="74" text-anchor="middle" font-size="26">🍃</text>';
+  s+='<text x="132" y="96" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">葉子</text>';
+  var ins=[['☀️ 陽光',42],['CO₂ 二氧化碳',82],['💧 水',122]];
+  ins.forEach(function(it){
+    s+='<text x="10" y="'+(it[1]-9)+'" font-size="11" font-weight="800" fill="currentColor">'+it[0]+'</text>';
+    s+='<line x1="18" y1="'+it[1]+'" x2="98" y2="'+it[1]+'" stroke="#0891b2" stroke-width="3"/>';
+    s+='<polygon points="98,'+it[1]+' 90,'+(it[1]-6)+' 90,'+(it[1]+6)+'" fill="#0891b2"/>';
+  });
+  var outs=[['養分（糖）',58],['O₂ 氧氣',104]];
+  outs.forEach(function(it){
+    s+='<text x="176" y="'+(it[1]-9)+'" font-size="11" font-weight="800" fill="currentColor">'+it[0]+'</text>';
+    s+='<line x1="166" y1="'+it[1]+'" x2="250" y2="'+it[1]+'" stroke="#ea580c" stroke-width="3"/>';
+    s+='<polygon points="250,'+it[1]+' 242,'+(it[1]-6)+' 242,'+(it[1]+6)+'" fill="#ea580c"/>';
+  });
+  return s+'</svg>';
+}
+// 兩大類：有脊椎 vs 無脊椎
+function vertVsInvert(){
+  var s='<svg viewBox="0 0 260 120" role="img" aria-label="有脊椎動物與無脊椎動物比較">';
+  s+='<rect x="8" y="12" width="118" height="96" rx="14" fill="rgba(22,163,74,0.10)" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+='<rect x="134" y="12" width="118" height="96" rx="14" fill="rgba(148,163,184,0.12)" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+  s+='<text x="67" y="34" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">有脊椎</text>';
+  s+='<text x="193" y="34" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">無脊椎</text>';
+  s+='<text x="67" y="66" text-anchor="middle" font-size="24">🐟🐸🦎</text>';
+  s+='<text x="67" y="92" text-anchor="middle" font-size="24">🐦🐰</text>';
+  s+='<text x="193" y="66" text-anchor="middle" font-size="24">🦋🐌</text>';
+  s+='<text x="193" y="92" text-anchor="middle" font-size="24">🦀🐙</text>';
+  return s+'</svg>';
+}
+// 有脊椎動物 5 大類（一排）
+function classRow(){
+  var data=[['🐟','魚類'],['🐸','兩生類'],['🦎','爬蟲類'],['🐦','鳥類'],['🐰','哺乳類']];
+  var bw=48, gap=6, pad=6, y=12;
+  var w=pad*2 + data.length*bw + (data.length-1)*gap;
+  var s='<svg viewBox="0 0 '+w+' 96" role="img" aria-label="有脊椎動物五大類：魚類、兩生類、爬蟲類、鳥類、哺乳類">';
+  var x=pad;
+  data.forEach(function(d){
+    s+='<rect x="'+x+'" y="'+y+'" width="'+bw+'" height="'+bw+'" rx="10" fill="rgba(22,163,74,0.12)" stroke="currentColor" stroke-opacity="0.6" stroke-width="1.8"/>';
+    s+='<text x="'+(x+bw/2)+'" y="'+(y+34)+'" text-anchor="middle" font-size="24">'+d[0]+'</text>';
+    s+='<text x="'+(x+bw/2)+'" y="'+(y+bw+16)+'" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">'+d[1]+'</text>';
+    x+=bw+gap;
+  });
+  return s+'</svg>';
+}
+
+window.CONCEPT = {
+  progKey:'biology_concepts_v1', practiceHref:'biology.html',
+  lessons:[
+   { id:'food', name:'食物鏈', emoji:'🌿', color:'#16a34a', sub:'能量怎麼一層層傳下去', done:'記得：食物鏈的箭頭指向「吃它的一方」，代表能量的流向；最底層是會自己製造養分的生產者（植物）。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'食物鏈：誰吃誰',svg:flowChain([{e:'🌱',l:'草',sub:'生產者'},{e:'🐰',l:'兔子',sub:'消費者'},{e:'🦅',l:'老鷹',sub:'消費者'}]),text:'<b>食物鏈</b>畫出「誰吃誰」。箭頭<b>從被吃的指向吃它的</b>（草 → 兔子 → 老鷹），代表<b>能量往這個方向傳</b>。'},
+      {type:'teach',kicker:'關鍵角色',title:'生產者：自己製造養分',svg:flowChain([{e:'🌱',l:'草',sub:'生產者'},{e:'🦗',l:'蚱蜢',sub:'草食'},{e:'🐍',l:'蛇',sub:'肉食'}]),text:'植物會行光合作用<b>自己製造養分</b>，叫<b>生產者</b>，是食物鏈的<b>起點</b>。吃別人的動物叫<b>消費者</b>——吃植物的是草食，吃動物的是肉食。'},
+      {type:'teach',kicker:'能量越來越少',title:'能量一層層變少',svg:flowChain([{e:'☀️',l:'太陽',sub:'能量來源'},{e:'🌱',l:'植物',sub:'生產者'},{e:'🐛',l:'昆蟲',sub:'消費者'}]),text:'能量最早來自<b>太陽</b>，植物把它存起來。每被吃一層，能量就<b>用掉一部分</b>，所以越上層的動物通常數量越少。'},
+      {type:'quiz',kicker:'換你試試',title:'食物鏈「草 → 兔子 → 老鷹」的箭頭代表什麼？',options:['能量的流向（被吃的 → 吃它的）','誰跑得比較快','誰的體型比較大','誰先出生'],answer:0,why:'箭頭從被吃的指向吃它的一方，代表能量往這個方向傳遞。'},
+      {type:'quiz',kicker:'想一想',title:'下面哪一個是「生產者」？',svg:flowChain([{e:'🌱',l:'草'},{e:'🐰',l:'兔子'},{e:'🦅',l:'老鷹'}]),options:['草（植物）','兔子','老鷹','蛇'],answer:0,why:'植物能行光合作用自己製造養分，是生產者；動物都要吃別人，是消費者。'},
+      {type:'quiz',kicker:'想一想',title:'食物鏈裡的能量，最原始是來自哪裡？',options:['太陽','土壤','石頭','月亮'],answer:0,why:'太陽的光能被植物（生產者）行光合作用儲存起來，再一層層傳給消費者。'}
+     ]},
+   { id:'photo', name:'光合作用', emoji:'🍃', color:'#22c55e', sub:'植物怎麼自己「做飯」', done:'記得：光合作用＝陽光＋二氧化碳＋水 →（在葉子裡）→ 養分（糖）＋氧氣。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'植物自己做養分',svg:photo(),text:'植物的<b>葉子</b>會用<b>陽光</b>當能量，把<b>二氧化碳</b>和<b>水</b>變成<b>養分（糖）</b>，這叫<b>光合作用</b>。過程還會放出<b>氧氣</b>，讓我們呼吸。'},
+      {type:'teach',kicker:'原料與產物',title:'進去的 vs 出來的',svg:photo(),text:'<b>原料（進去）</b>：陽光、二氧化碳、水。<b>產物（出來）</b>：養分（糖）和氧氣。所以植物既能<b>自己吃飽</b>，又幫地球<b>製造氧氣</b>。'},
+      {type:'quiz',kicker:'換你試試',title:'光合作用需要下列哪些「原料」？',options:['陽光、二氧化碳、水','氧氣、糖、鹽','牛奶、麵包、水','石頭、沙、風'],answer:0,why:'光合作用的原料是陽光（能量）、二氧化碳和水；氧氣和糖是產物，不是原料。'},
+      {type:'quiz',kicker:'想一想',title:'植物行光合作用時，會「放出」什麼氣體？',options:['氧氣','二氧化碳','氮氣','水蒸氣'],answer:0,why:'光合作用會放出氧氣（吸收的是二氧化碳）。'},
+      {type:'quiz',kicker:'想一想',title:'植物主要用哪個部位行光合作用？',options:['葉子','根','花','果實'],answer:0,why:'葉子裡有葉綠體，是行光合作用的主要地方。'}
+     ]},
+   { id:'life', name:'生命週期', emoji:'🦋', color:'#f59e0b', sub:'蝴蝶的完全變態', done:'記得：蝴蝶一生＝卵 → 幼蟲（毛毛蟲）→ 蛹 → 成蟲（蝴蝶），成蟲再產卵，週而復始。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'蝴蝶的一生會「變身」',svg:cycleFlow([{e:'🥚',l:'卵'},{e:'🐛',l:'幼蟲'},{e:'🟫',l:'蛹'},{e:'🦋',l:'成蟲'}]),text:'蝴蝶一生要經過 <b>4 個階段</b>：<b>卵 → 幼蟲（毛毛蟲）→ 蛹 → 成蟲（蝴蝶）</b>。長相差很多，這種變化叫<b>完全變態</b>。'},
+      {type:'teach',kicker:'循環',title:'成蟲再產卵，週而復始',svg:cycleFlow([{e:'🥚',l:'卵'},{e:'🐛',l:'幼蟲'},{e:'🟫',l:'蛹'},{e:'🦋',l:'成蟲'}]),text:'長成<b>成蟲</b>的蝴蝶會再<b>產下卵</b>，新的一輪又開始——所以叫<b>生命週期</b>（一個循環）。幼蟲負責大吃長大，蛹是在裡面改造身體的階段。'},
+      {type:'quiz',kicker:'換你試試',title:'蝴蝶生命週期的正確順序是？',options:['卵 → 幼蟲 → 蛹 → 成蟲','幼蟲 → 卵 → 成蟲 → 蛹','成蟲 → 蛹 → 幼蟲 → 卵','卵 → 蛹 → 幼蟲 → 成蟲'],answer:0,why:'正確順序是卵 → 幼蟲（毛毛蟲）→ 蛹 → 成蟲（蝴蝶）。'},
+      {type:'quiz',kicker:'想一想',title:'毛毛蟲是蝴蝶的哪個階段？',options:['幼蟲','卵','蛹','成蟲'],answer:0,why:'毛毛蟲是幼蟲階段，會一直吃葉子長大，之後才結蛹。'},
+      {type:'quiz',kicker:'想一想',title:'蝴蝶從蛹出來後，會變成什麼？',options:['成蟲（會飛的蝴蝶）','另一隻毛毛蟲','一顆卵','一隻蜜蜂'],answer:0,why:'蛹是改造身體的階段，羽化後就變成會飛、能產卵的成蟲蝴蝶。'}
+     ]},
+   { id:'animal', name:'動物分類', emoji:'🐾', color:'#0ea5e9', sub:'有沒有脊椎 · 五大類 · 哺乳類', done:'記得：先分「有脊椎 / 無脊椎」；有脊椎再分魚類、兩生類、爬蟲類、鳥類、哺乳類；哺乳類最大特徵是「喝母乳長大」。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'先看有沒有「脊椎」',svg:vertVsInvert(),text:'動物先分兩大類：身體裡有一根<b>脊椎骨（背骨）</b>的是<b>有脊椎動物</b>（魚、青蛙、狗…）；沒有的是<b>無脊椎動物</b>（蝴蝶、蝸牛、螃蟹…）。'},
+      {type:'teach',kicker:'五大類',title:'有脊椎動物分 5 類',svg:classRow(),text:'有脊椎動物再分成 <b>5 大類</b>：<b>魚類、兩生類、爬蟲類、鳥類、哺乳類</b>。青蛙是兩生類，蛇是爬蟲類，鴿子是鳥類。'},
+      {type:'teach',kicker:'認識哺乳類',title:'哺乳類：喝母乳長大',svg:classRow(),text:'<b>哺乳類</b>最大的特徵是<b>喝媽媽的母乳長大</b>，通常身上有毛、用肺呼吸、是恆溫動物（體溫固定，不太隨天氣變化）。狗、貓、人、<b>鯨魚</b>都是哺乳類（鯨魚住在水裡，但牠喝母乳、用肺呼吸）。'},
+      {type:'quiz',kicker:'換你試試',title:'蝴蝶屬於哪一類？',options:['無脊椎動物（昆蟲）','有脊椎動物','哺乳類','魚類'],answer:0,why:'蝴蝶是昆蟲，身體裡沒有脊椎骨，屬於無脊椎動物。'},
+      {type:'quiz',kicker:'想一想',title:'下列哪一種是「哺乳類」？',options:['鯨魚','青蛙','鴿子','蛇'],answer:0,why:'鯨魚雖然住在水裡，但牠喝母乳、用肺呼吸，是哺乳類；青蛙是兩生類、鴿子是鳥類、蛇是爬蟲類。'},
+      {type:'quiz',kicker:'想一想',title:'哺乳類寶寶最主要吃什麼長大？',options:['喝媽媽的母乳','吃樹葉','喝海水','曬太陽'],answer:0,why:'「哺乳」就是喝母乳——這是哺乳類最重要的共同特徵。'}
+     ]}
+  ]
+};
+</script>
+<script src="concept_engine.js"></script>
+</body>
+</html>

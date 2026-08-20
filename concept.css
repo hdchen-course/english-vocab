@@ -1,0 +1,55 @@
+/* =====================================================================
+ * concept.css — 共用「教學頁（教→練）」樣式。
+ *   由 concept_engine.js 驅動；每頁在 <style> 或行內設定強調色 --su / --su-tint。
+ *   建立在 assets/app.css 的設計 token 上（自動亮/暗主題、與全站一致）。
+ *   作答／回饋文字一律 var(--ink)（亮暗雙主題皆過 AA），對錯以邊框+✅/❌+文字傳達。
+ * =================================================================== */
+body { overflow-x: hidden; }
+.cn-screen { display: none; } .cn-screen.active { display: block; }
+/* 容器填滿寬版（選單卡片格會鋪滿）；教學卡片另用 .cn-card 收窄為易讀寬度 */
+.cn-wrap { max-width: var(--content-max); margin: 0 auto; }
+.cn-topbar { display: flex; align-items: center; gap: var(--s2); margin-bottom: var(--s4); }
+.cn-topbar .cn-title { flex: 1; font-size: var(--fs-h2); font-weight: 800; color: var(--ink); min-width: 0; }
+.cn-hello { display: flex; align-items: center; gap: var(--s3); padding: var(--s4); background: var(--su-tint); border: 1px solid var(--card-border); border-radius: var(--r-lg); margin-bottom: var(--s4); }
+.cn-hello .cn-mascot { font-size: 44px; line-height: 1; flex: none; }
+.cn-hello .cn-htext { font-weight: 700; color: var(--ink); }
+.cn-hello .cn-hsub { font-size: var(--fs-small); color: var(--ink); font-weight: 600; }
+.cn-lessons { display: grid; gap: var(--s4); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.cn-lesson { display: flex; flex-direction: column; gap: var(--s2); padding: var(--s4); text-align: left; cursor: pointer; border: 2px solid var(--card-border); background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); font-family: var(--font); color: var(--ink); transition: transform .12s ease, box-shadow .2s ease, border-color .2s ease; }
+.cn-lesson:hover { box-shadow: var(--shadow-lg); border-color: var(--su); }
+.cn-lesson:active { transform: scale(0.98); }
+.cn-lesson-top { display: flex; align-items: center; gap: var(--s3); }
+.cn-lesson-emoji { font-size: 32px; width: 52px; height: 52px; flex: none; display: flex; align-items: center; justify-content: center; border-radius: 14px; }
+.cn-lesson-name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); line-height: 1.25; }
+.cn-lesson-sub { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; }
+.cn-lesson-foot { font-size: var(--fs-small); font-weight: 700; margin-top: 2px; }
+.cn-lesson-foot.done { color: var(--c-correct-ink); }
+.cn-lesson-foot.todo { color: var(--ink-soft); }
+.cn-progress { display: flex; gap: 6px; justify-content: center; margin-bottom: var(--s4); flex-wrap: wrap; }
+.cn-progress i { width: 22px; height: 6px; border-radius: 999px; background: var(--card-border); }
+.cn-progress i.done { background: var(--su); }
+.cn-progress i.cur { background: var(--su); box-shadow: 0 0 0 3px var(--su-tint); }
+.cn-card { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); padding: var(--s5) var(--s4); text-align: center; max-width: 680px; margin-inline: auto; }
+.cn-kicker { display: inline-block; font-size: var(--fs-small); font-weight: 800; padding: 4px 12px; border-radius: 999px; margin-bottom: var(--s3); }
+.cn-kicker.teach { background: var(--su-tint); color: var(--ink); }
+.cn-kicker.quiz { background: var(--tint-english); color: var(--ink); }
+.cn-h { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); margin: 0 0 var(--s3); line-height: 1.3; }
+.cn-svg { margin: var(--s2) auto var(--s3); color: var(--ink); max-width: 340px; }
+.cn-svg svg { width: 100%; height: auto; }
+.cn-text { font-size: var(--fs-body); font-weight: 600; color: var(--ink); line-height: 1.7; max-width: 34ch; margin: 0 auto var(--s3); text-align: left; }
+.cn-text b { font-weight: 800; }
+.cn-eq { font-size: clamp(22px, 6vw, 30px); font-weight: 800; color: var(--ink); letter-spacing: 1px; margin: var(--s2) 0; }
+.cn-options { display: grid; gap: var(--s3); margin-top: var(--s3); }
+.cn-opt { min-height: 56px; padding: 14px 18px; border: 2px solid var(--card-border); border-radius: 16px; background: var(--card); color: var(--ink); font-family: var(--font); font-size: clamp(17px, 4vw, 20px); font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform .1s ease, border-color .2s ease, background .2s ease; }
+.cn-opt:active { transform: scale(0.98); }
+.cn-opt:disabled { cursor: default; }
+.cn-opt.correct { border-color: var(--c-correct); background: var(--tint-english); color: var(--ink); }
+.cn-opt.wrong { border-color: var(--c-wrong); background: rgba(255,118,117,0.12); color: var(--ink); }
+.cn-reveal { margin-top: var(--s4); padding: var(--s3) var(--s4); background: var(--su-tint); border-radius: var(--r-md); font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.6; text-align: left; display: none; }
+.cn-reveal.show { display: block; }
+.cn-actions { display: flex; gap: var(--s3); margin-top: var(--s4); max-width: 680px; margin-inline: auto; }
+.cn-actions .btn { flex: 1; }
+.cn-note { text-align: center; color: var(--ink-soft); font-size: var(--fs-small); margin-top: var(--s5); font-weight: 600; max-width: 34em; margin-inline: auto; }
+/* 動畫元件（尊重 reduce-motion）：天平橫桿 */
+.beam { transition: transform .5s ease; transform-origin: 150px 45px; }
+@media (prefers-reduced-motion: reduce) { .beam { transition: none; } }

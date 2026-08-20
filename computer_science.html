@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>電腦與網路探索 💻</title>
+<!-- 統一遊戲化引擎：assets/app.css（設計 token）→ game_core.css（HUD/toast）→ game_core.js。
+     零重複計分：本頁定位「進階挑戰」，絕不呼叫 Game.recordAnswer / award / recordSession，
+     （唯一例外：答題時呼叫 Game.pingActive() 維持每日連續學習 streak，不計 XP、不重複計分）
+     也不宣告 data-game-wired，故不污染任何科目 XP。只用 Game.showToast（純提示）。
+     獨立 localStorage key：cs_progress_v1。 -->
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<style>
+/* computer_science.html — 強調色系採靛藍（indigo）。無專用 subject token，故：
+   --su 用實色（邊框/圓點），--su-tint 用半透明（亮暗雙主題自適應），
+   --su-ink 用 var(--ink)（自動隨主題翻轉，避免暗色模式對比不足）。 */
+:root {
+  --su: #4f46e5;
+  --su-tint: rgba(79,70,229,0.14);
+  --su-ink: var(--ink);
+  --accent: #4f46e5;
+  --accent-ink: var(--ink);
+  --accent-tint: rgba(79,70,229,0.14);
+}
+
+body { overflow-x: hidden; }
+
+.ma-topbar { display: flex; align-items: center; gap: var(--s2); margin-bottom: var(--s4); }
+.ma-topbar .ma-title { flex: 1; font-size: var(--fs-h2); font-weight: 800; color: var(--ink); min-width: 0; }
+
+.ma-screen { display: none; animation: ma-fade 0.3s ease; }
+.ma-screen.active { display: block; }
+@keyframes ma-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .ma-screen { animation: none; } }
+
+.ma-hello { display: flex; align-items: center; gap: var(--s3); padding: var(--s4); background: var(--su-tint); border: 1px solid var(--card-border); border-radius: var(--r-lg); margin-bottom: var(--s4); }
+.ma-hello .ma-mascot { font-size: 46px; flex: none; line-height: 1; }
+.ma-hello .ma-hello-text { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+.ma-hello .ma-hello-sub { font-size: var(--fs-small); color: var(--ink); font-weight: 600; }
+
+.ma-overview { display: flex; align-items: center; gap: var(--s3); margin-bottom: var(--s4); flex-wrap: wrap; }
+.ma-overview .stat-tile { flex: 1; min-width: 96px; }
+
+.ma-levels { display: grid; gap: var(--s4); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.ma-level {
+  display: flex; flex-direction: column; gap: var(--s2); padding: var(--s4);
+  text-align: left; cursor: pointer; border: 2px solid var(--card-border);
+  background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  font-family: var(--font); color: var(--ink);
+}
+.ma-level:hover { box-shadow: var(--shadow-lg); border-color: var(--su); }
+.ma-level:active { transform: scale(0.98); }
+.ma-level-top { display: flex; align-items: center; gap: var(--s3); }
+.ma-level-emoji { font-size: 34px; width: 56px; height: 56px; flex: none; display: flex; align-items: center; justify-content: center; border-radius: 16px; }
+.ma-level-num { font-size: var(--fs-small); font-weight: 700; color: var(--su-ink); }
+.ma-level-name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); line-height: 1.25; }
+.ma-level-concepts { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; line-height: 1.4; }
+.ma-level-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-top: 2px; }
+.ma-level-status { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-small); font-weight: 700; }
+.ma-level-status.done { color: var(--c-correct-ink); }
+.ma-level-status.todo { color: var(--ink-soft); }
+.ma-level-stars { font-size: 16px; letter-spacing: 1px; }
+
+.ma-stage { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); padding: var(--s5) var(--s4); text-align: center; }
+.ma-visual { font-size: clamp(56px, 18vw, 92px); line-height: 1.1; margin: var(--s2) 0 var(--s3); user-select: none; }
+.ma-question { font-size: clamp(19px, 4.5vw, 24px); font-weight: 800; color: var(--ink); line-height: 1.6; margin: 0 auto var(--s4); max-width: 42ch; text-align: left; }
+
+.ma-brief { text-align: left; }
+.ma-brief h2 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); margin: 0 0 var(--s3); text-align: center; }
+.ma-brief-sub { text-align: center; color: var(--ink-soft); font-weight: 700; font-size: var(--fs-small); margin: 0 0 var(--s3); }
+.ma-keyfacts { list-style: none; padding: 0; margin: 0 auto; max-width: 44ch; display: grid; gap: var(--s2); }
+.ma-keyfacts li { display: flex; align-items: flex-start; gap: var(--s2); padding: 10px 14px; background: var(--su-tint); border-radius: var(--r-md); font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.6; }
+.ma-keyfacts li .ma-kf-dot { flex: none; color: var(--su-ink); font-weight: 900; }
+.ma-concepts { max-width: 44ch; margin: var(--s3) auto 0; border: 1px solid var(--card-border); border-radius: var(--r-md); background: var(--card); overflow: hidden; }
+.ma-concepts > summary { cursor: pointer; list-style: none; padding: 12px 14px; font-size: var(--fs-small); font-weight: 800; color: var(--ink-soft); display: flex; align-items: center; gap: 8px; }
+.ma-concepts > summary::-webkit-details-marker { display: none; }
+.ma-concepts > summary::before { content: '▸'; color: var(--su-ink); font-weight: 900; transition: transform 0.15s; }
+.ma-concepts[open] > summary::before { transform: rotate(90deg); }
+.ma-concepts ul { list-style: none; padding: 0 14px 12px; margin: 0; display: grid; gap: var(--s2); }
+.ma-concepts li { display: flex; align-items: flex-start; gap: var(--s2); font-size: var(--fs-small); font-weight: 700; color: var(--ink); line-height: 1.6; }
+.ma-concepts li .ma-kf-dot { flex: none; color: var(--su-ink); font-weight: 900; }
+
+.ma-steps { display: flex; align-items: center; justify-content: center; gap: 5px; margin-bottom: var(--s3); flex-wrap: wrap; }
+.ma-steps i { width: 20px; height: 6px; border-radius: 999px; background: var(--card-border); }
+.ma-steps i.on { background: var(--su); }
+.ma-steps i.cur { background: var(--su); box-shadow: 0 0 0 3px var(--su-tint); }
+
+.ma-options { display: grid; gap: var(--s3); margin-top: var(--s2); }
+.ma-opt {
+  display: flex; align-items: center; gap: var(--s2); min-height: 56px; width: 100%;
+  padding: 14px 18px; border: 2px solid var(--card-border); border-radius: 16px;
+  background: var(--card); color: var(--ink); font-family: var(--font);
+  font-size: clamp(16px, 3.4vw, 19px); font-weight: 700; text-align: left; cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.ma-opt:active { transform: scale(0.98); }
+.ma-opt:disabled { cursor: default; }
+/* 作答後高亮：文字用 var(--ink)（亮暗雙主題皆過 AA），對錯以邊框顏色 + ✅/❌ 雙碼標示 */
+.ma-opt.correct { border-color: var(--c-correct); background: var(--tint-english); color: var(--ink); }
+.ma-opt.wrong { border-color: var(--c-wrong); background: rgba(255,118,117,0.12); color: var(--ink); }
+.ma-opt.correct .ma-opt-mark { color: var(--c-correct-ink); }
+.ma-opt.wrong .ma-opt-mark { color: var(--c-streak-ink); }
+.ma-opt .ma-opt-mark { margin-left: auto; font-size: 22px; }
+
+.ma-reveal { margin-top: var(--s4); padding: var(--s3) var(--s4); background: var(--su-tint); border-radius: var(--r-md); font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.6; text-align: left; display: none; }
+.ma-reveal.show { display: block; animation: ma-fade 0.3s ease; }
+@media (prefers-reduced-motion: reduce) { .ma-reveal.show { animation: none; } }
+
+.ma-done { text-align: center; padding: var(--s5) var(--s4); }
+.ma-done-emoji { font-size: clamp(64px, 22vw, 100px); }
+.ma-done-stars { font-size: 34px; letter-spacing: 4px; margin: var(--s2) 0; }
+.ma-done-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); }
+
+.ma-actions { display: flex; gap: var(--s3); margin-top: var(--s4); flex-wrap: wrap; }
+.ma-actions .btn { flex: 1; min-width: 140px; }
+
+.ma-footnote { text-align: center; color: var(--ink-soft); font-size: var(--fs-small); margin-top: var(--s5); font-weight: 600; max-width: 34em; margin-inline: auto; }
+</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">電腦與網路探索 💻</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle
+          aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+
+  <section id="screen-menu" class="ma-screen active">
+    <div class="ma-topbar">
+      <span class="ma-title">電腦與網路探索 💻</span>
+    </div>
+
+    <div class="ma-hello">
+      <span class="ma-mascot" aria-hidden="true">💻</span>
+      <div>
+        <div class="ma-hello-text" id="hello-text">歡迎來到電腦與網路探索！了解機器怎麼運作，你也能當小小工程師。</div>
+        <div class="ma-hello-sub" id="hello-sub">還沒開始也沒關係，挑一個等級試試看吧！</div>
+      </div>
+    </div>
+
+    <div class="ma-overview">
+      <div class="stat-tile"><span class="stat-value" id="ov-done">0/6</span><span class="stat-label">完成等級</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-badges">0/7</span><span class="stat-label">收集徽章</span></div>
+    </div>
+
+    <div class="ma-levels" id="level-list"><!-- 由 JS 產生 --></div>
+
+    <!-- 跨頁串接導覽（Tier B）：跨科延伸 + 回上一層。純導覽，不影響答題或計分。 -->
+    <nav class="cn-nextup-group" aria-label="接續探索更多主題" style="display:flex;flex-direction:column;gap:10px;margin-top:20px">
+      <a class="cn-nextup" href="innovators.html" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:26px;flex:none" aria-hidden="true">💡</span><span>想認識打造這些科技的人嗎？到「改變世界的人」看看 →</span></a>
+      <a class="cn-nextup" href="logic_reasoning.html" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:26px;flex:none" aria-hidden="true">🧠</span><span>想鍛鍊程式背後的思考力？到「推理偵探 · 邏輯推理」動動腦 →</span></a>
+      <a class="cn-nextup cn-nextup--back" href="index.html" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--card);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink-soft);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:22px;flex:none" aria-hidden="true">↩️</span><span>← 回上一層：學習基地首頁</span></a>
+    </nav>
+
+    <p class="ma-footnote">這是「進階挑戰」小旅程，只留在你自己的裝置上，不影響學習基地的等級或經驗值。慢慢玩、盡量想，答錯也沒關係。🌱</p>
+  </section>
+
+  <section id="screen-play" class="ma-screen">
+    <div class="ma-topbar">
+      <button type="button" class="btn btn-icon" id="btn-back" aria-label="回到等級選單">←</button>
+      <span class="ma-title" id="play-title">等級</span>
+    </div>
+    <div class="ma-steps" id="step-dots" aria-hidden="true"></div>
+    <div class="play-column">
+      <div id="stage"><!-- 由 JS 產生每一題 --></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* 主程式（自足 IIFE）：6 個中性等級、每級 12 題、全部解鎖。選項每題 Fisher–Yates 洗牌；
+   answer = 未洗牌前 0-based 索引，以 data-i 判斷，判分不受洗牌影響。每題最多記一次分。
+   獨立 key：cs_progress_v1。不呼叫 Game.recordAnswer / award / recordSession
+   （唯一例外：答題時呼叫 Game.pingActive() 維持每日連續學習 streak，不計 XP、不重複計分）。 */
+(function () {
+  'use strict';
+
+  function toast(msg, kind) {
+    try { if (window.Game && Game.showToast) Game.showToast(msg, kind || 'info'); } catch (e) {}
+  }
+
+  var PROG_KEY = 'cs_progress_v1';
+  function loadProg() {
+    var p = null;
+    try { p = JSON.parse(localStorage.getItem(PROG_KEY)); } catch (e) { p = null; }
+    if (!p || typeof p !== 'object') p = {};
+    if (typeof p.badges !== 'object' || !p.badges) p.badges = {};
+    return p;
+  }
+  function saveProg(p) { try { localStorage.setItem(PROG_KEY, JSON.stringify(p)); } catch (e) {} }
+  var progress = loadProg();
+
+  // 課程內容（全繁體中文；事實經 WebSearch 查核與雙重審查）。answer = 未洗牌前 0-based 索引。
+  var LEVELS = [
+  {
+    "id": "lv1",
+    "level": 1,
+    "name": "電腦的組成",
+    "hook": "認識電腦的核心組成",
+    "emoji": "💻",
+    "color": "#2563eb",
+    "concepts": [
+      "中央處理器（CPU）：電腦的大腦，負責運算與下指令",
+      "記憶體（RAM）：暫時存放正在使用的資料，關機就消失",
+      "儲存裝置（硬碟／SSD）：長期保存檔案，關機仍在",
+      "輸入裝置與輸出裝置的分別",
+      "硬體與軟體的差別"
+    ],
+    "keyFacts": [
+      "CPU 是電腦的「大腦」，負責計算和指揮其他零件工作。",
+      "RAM 記憶體是暫時的，一關機裡面的資料通常就不見了。",
+      "硬碟和 SSD 是長期儲存，關機後你的照片、作業檔案還在。",
+      "儲存空間的大小用「位元組（byte）」計算，往上還有 KB、MB、GB，一個大約是前一個的 1024 倍（常說約 1000 倍）。",
+      "鍵盤、滑鼠、麥克風是輸入裝置；螢幕、喇叭、印表機是輸出裝置。",
+      "硬體是摸得到的實體零件，軟體是看不到的程式和 App。"
+    ],
+    "questions": [
+      {
+        "q": "CPU（中央處理器）常被人稱為電腦的什麼？",
+        "options": [
+          "大腦",
+          "眼睛",
+          "嘴巴",
+          "手臂"
+        ],
+        "answer": 0,
+        "why": "CPU 負責計算和指揮其他零件，就像人的大腦。"
+      },
+      {
+        "q": "關於「記憶體 RAM」，下面哪一句是對的？",
+        "options": [
+          "電腦一關機，RAM 裡的資料通常就會不見",
+          "RAM 能永久保存資料，關機也不會消失",
+          "RAM 是用來顯示畫面的螢幕",
+          "RAM 是一種輸入裝置"
+        ],
+        "answer": 0,
+        "why": "RAM 是暫時的工作記憶，斷電後內容就會消失。"
+      },
+      {
+        "q": "你想把照片長期存起來，關機後還找得到，應該存到哪裡？",
+        "options": [
+          "硬碟或 SSD",
+          "RAM 記憶體",
+          "CPU",
+          "螢幕"
+        ],
+        "answer": 0,
+        "why": "硬碟和 SSD 是長期儲存，關機後資料仍然保留。"
+      },
+      {
+        "q": "下列哪一個是「輸入裝置」（把資料送進電腦）？",
+        "options": [
+          "鍵盤",
+          "螢幕",
+          "喇叭",
+          "印表機"
+        ],
+        "answer": 0,
+        "why": "鍵盤把我們打的字送進電腦，是輸入裝置。"
+      },
+      {
+        "q": "下列哪一個是「輸出裝置」（把電腦的結果給我們看或聽）？",
+        "options": [
+          "螢幕",
+          "滑鼠",
+          "鍵盤",
+          "麥克風"
+        ],
+        "answer": 0,
+        "why": "螢幕把電腦處理好的結果顯示出來，是輸出裝置。"
+      },
+      {
+        "q": "主機板（motherboard）在電腦裡最主要的功能是什麼？",
+        "options": [
+          "像一塊大底板，把 CPU、記憶體等零件連接在一起",
+          "負責把遊戲畫面顯示出來",
+          "專門用來連上網路",
+          "是電腦插電源的插頭"
+        ],
+        "answer": 0,
+        "why": "主機板把各個零件接在一起，讓它們能互相溝通合作。"
+      },
+      {
+        "q": "下列哪一個是「軟體」，不是硬體？",
+        "options": [
+          "手機上的遊戲 App",
+          "鍵盤",
+          "螢幕",
+          "硬碟"
+        ],
+        "answer": 0,
+        "why": "App 是程式（軟體）；鍵盤、螢幕、硬碟都是摸得到的硬體。"
+      },
+      {
+        "q": "「硬體」指的是什麼？",
+        "options": [
+          "電腦裡摸得到的實體零件",
+          "寫在紙上的密碼",
+          "電腦裡的程式和 App",
+          "看不見的網路訊號"
+        ],
+        "answer": 0,
+        "why": "硬體是實體零件，像 CPU、螢幕；程式才叫軟體。"
+      },
+      {
+        "q": "麥克風把我們的聲音收進電腦，它屬於哪一類裝置？",
+        "options": [
+          "輸入裝置",
+          "輸出裝置",
+          "儲存裝置",
+          "運算裝置"
+        ],
+        "answer": 0,
+        "why": "麥克風把聲音送進電腦，所以是輸入裝置。"
+      },
+      {
+        "q": "CPU 工作時，會先把正在用的資料放在哪裡，方便很快拿取？",
+        "options": [
+          "記憶體 RAM",
+          "印表機",
+          "螢幕",
+          "鍵盤"
+        ],
+        "answer": 0,
+        "why": "RAM 像 CPU 的工作桌面，速度快，放正在使用的資料。"
+      },
+      {
+        "q": "下列哪一個儲存容量最大？",
+        "options": [
+          "1 GB",
+          "1 MB",
+          "1 KB",
+          "1 個位元組（byte）"
+        ],
+        "answer": 0,
+        "why": "容量由大到小是 GB ＞ MB ＞ KB ＞ byte，所以 1 GB 最大。"
+      },
+      {
+        "q": "印表機把電腦裡的文件印在紙上，它屬於哪一類裝置？",
+        "options": [
+          "輸出裝置",
+          "輸入裝置",
+          "儲存裝置",
+          "中央處理器"
+        ],
+        "answer": 0,
+        "why": "印表機把電腦的結果印出來給我們，是輸出裝置。"
+      }
+    ]
+  },
+  {
+    "id": "lv2",
+    "level": 2,
+    "name": "位元與二進位",
+    "hook": "電腦為什麼只用 0 和 1",
+    "emoji": "🔢",
+    "color": "#0891b2",
+    "concepts": [
+      "位元 bit",
+      "位元組 byte",
+      "二進位",
+      "二進位換十進位",
+      "為什麼電腦用 0 和 1"
+    ],
+    "keyFacts": [
+      "電腦裡所有東西（文字、照片、音樂）最後都變成一長串的 0 和 1，每一個 0 或 1 叫做一個「位元（bit）」。",
+      "一個位元只有兩種可能：0 或 1，就像電燈的「關」和「開」。",
+      "8 個位元合起來，叫做 1 個「位元組（byte）」。",
+      "電腦用二進位（只有 0 和 1），是因為電路只要分辨「有電／沒電」兩種狀態，最簡單也最不容易出錯。",
+      "二進位換平常的數字：從右邊算起，每一格代表 1、2、4、8…，例如 101 = 4＋0＋1 = 5。"
+    ],
+    "questions": [
+      {
+        "q": "電腦內部其實只用哪兩個數字來記錄所有東西？",
+        "options": [
+          "0 和 1",
+          "1 和 2",
+          "0 到 9 全部",
+          "A 和 B"
+        ],
+        "answer": 0,
+        "why": "電腦只用 0 和 1 兩個數字，這叫做二進位。"
+      },
+      {
+        "q": "一個「位元（bit）」可以表示幾種狀態？",
+        "options": [
+          "2 種（0 或 1）",
+          "8 種",
+          "10 種",
+          "只有 1 種"
+        ],
+        "answer": 0,
+        "why": "一個位元不是 0 就是 1，剛好兩種狀態。"
+      },
+      {
+        "q": "幾個位元（bit）合起來，才是 1 個「位元組（byte）」？",
+        "options": [
+          "8 個",
+          "4 個",
+          "10 個",
+          "100 個"
+        ],
+        "answer": 0,
+        "why": "8 個位元合起來就是 1 個位元組（byte）。"
+      },
+      {
+        "q": "二進位的 101，換成我們平常用的數字是多少？",
+        "options": [
+          "5",
+          "101",
+          "3",
+          "7"
+        ],
+        "answer": 0,
+        "why": "從右算起 1×1＋0×2＋1×4 = 1＋0＋4 = 5。"
+      },
+      {
+        "q": "二進位的 1010，是我們平常的哪個數字？",
+        "options": [
+          "10",
+          "8",
+          "12",
+          "20"
+        ],
+        "answer": 0,
+        "why": "0×1＋1×2＋0×4＋1×8 = 2＋8 = 10。"
+      },
+      {
+        "q": "二進位的 1111，是多少？",
+        "options": [
+          "15",
+          "11",
+          "16",
+          "8"
+        ],
+        "answer": 0,
+        "why": "1＋2＋4＋8 = 15，這是四個位元能表示的最大數。"
+      },
+      {
+        "q": "為什麼電腦喜歡用二進位（只有 0 和 1）？",
+        "options": [
+          "電路只要分辨「有電／沒電」兩種狀態，最簡單又不容易出錯",
+          "因為 0 和 1 最好看",
+          "因為電腦不會數到 2 以上",
+          "因為老師規定一定要用"
+        ],
+        "answer": 0,
+        "why": "電子零件分辨「開／關」兩種狀態最可靠，所以用二進位。"
+      },
+      {
+        "q": "如果用 1 代表「開」、0 代表「關」，一個位元最適合用來記錄下面哪件事？",
+        "options": [
+          "電燈現在是開還是關",
+          "今天氣溫幾度",
+          "一整篇故事的內容",
+          "全班同學的名字"
+        ],
+        "answer": 0,
+        "why": "開／關只有兩種答案，正好用一個位元（1 或 0）表示。"
+      },
+      {
+        "q": "我們平常的數字 8，寫成二進位是哪一個？",
+        "options": [
+          "1000",
+          "100",
+          "111",
+          "110"
+        ],
+        "answer": 0,
+        "why": "數字 8 剛好落在代表 8 的那一格，所以第四格是 1，其餘是 0，寫成 1000。"
+      },
+      {
+        "q": "二進位的 100，是我們平常的哪個數字？",
+        "options": [
+          "4",
+          "100",
+          "2",
+          "8"
+        ],
+        "answer": 0,
+        "why": "0×1＋0×2＋1×4 = 4。"
+      },
+      {
+        "q": "電腦裡的照片、音樂和文字，最後都是用什麼方式儲存的？",
+        "options": [
+          "一長串的 0 和 1",
+          "一張張的小圖畫",
+          "注音符號",
+          "各種顏色的名字"
+        ],
+        "answer": 0,
+        "why": "所有資料在電腦裡最後都變成由 0 和 1 組成的位元。"
+      },
+      {
+        "q": "二進位的 110，是我們平常的哪個數字？",
+        "options": [
+          "6",
+          "110",
+          "3",
+          "4"
+        ],
+        "answer": 0,
+        "why": "0×1＋1×2＋1×4 = 2＋4 = 6。"
+      }
+    ]
+  },
+  {
+    "id": "lv3",
+    "level": 3,
+    "name": "資料的世界",
+    "hook": "檔案大小、儲存單位與像素",
+    "emoji": "💾",
+    "color": "#7c3aed",
+    "concepts": [
+      "二進位：所有資料都是 0 和 1",
+      "儲存單位：bit、byte、KB、MB、GB、TB",
+      "檔案大小的相對概念（照片、歌、影片）",
+      "像素是組成圖片的小方格",
+      "副檔名告訴你檔案是哪一種"
+    ],
+    "keyFacts": [
+      "電腦裡所有東西——文字、圖片、聲音、影片——最後都變成一長串的 0 和 1。",
+      "資料單位由小到大：bit（位元）＜ byte（位元組）＜ KB ＜ MB ＜ GB ＜ TB。bit 是最小單位，8 個 bit ＝ 1 個 byte。從 byte 起，每往上一級（byte→KB→MB→GB→TB）大約是前一級的 1024 倍，常被簡單說成約 1000 倍。",
+      "1 個 byte（位元組）等於 8 個 bit；byte 是最常用來數檔案大小的單位。",
+      "大約大小：一張照片幾 MB、一首歌約 4 MB、一部電影常常好幾 GB——影片通常最大。",
+      "像素（pixel）是組成圖片的小方格；副檔名（.jpg 圖片、.mp3 聲音、.mp4 影片、.txt 文字）告訴你這是哪一種檔案。"
+    ],
+    "questions": [
+      {
+        "q": "把儲存資料的單位「由小到大」排好，下列哪一個是對的？",
+        "options": [
+          "TB ＜ GB ＜ MB ＜ KB ＜ byte ＜ bit",
+          "bit ＜ byte ＜ KB ＜ MB ＜ GB ＜ TB",
+          "byte ＜ bit ＜ MB ＜ KB ＜ GB ＜ TB",
+          "KB ＜ MB ＜ GB ＜ bit ＜ byte ＜ TB"
+        ],
+        "answer": 1,
+        "why": "位元（bit）最小，一路變大到 TB；順序是 bit ＜ byte ＜ KB ＜ MB ＜ GB ＜ TB。"
+      },
+      {
+        "q": "電腦裡「最小」的資料單位是哪一個？",
+        "options": [
+          "KB",
+          "位元組（byte）",
+          "位元（bit）",
+          "像素（pixel）"
+        ],
+        "answer": 2,
+        "why": "bit（位元）只放一個 0 或 1，是最小的資料單位。"
+      },
+      {
+        "q": "1 個 byte（位元組）等於幾個 bit（位元）？",
+        "options": [
+          "8 個",
+          "2 個",
+          "1024 個",
+          "100 個"
+        ],
+        "answer": 0,
+        "why": "規定 1 byte = 8 bit，這是電腦裡固定的換算。"
+      },
+      {
+        "q": "從 KB 變成 MB，或 MB 變成 GB，大約會變大幾倍？",
+        "options": [
+          "約 2 倍",
+          "約 10 倍",
+          "約 1024 倍（常說約 1000 倍）",
+          "約 100 倍"
+        ],
+        "answer": 2,
+        "why": "每往上一級大約是 1024 倍，平常為了好記常說成約 1000 倍。"
+      },
+      {
+        "q": "下列這些檔案，通常哪一個「最大」？",
+        "options": [
+          "一句話的文字",
+          "一張照片",
+          "一首歌",
+          "一部完整的電影"
+        ],
+        "answer": 3,
+        "why": "電影是很多張畫面加聲音，常常好幾 GB，通常比照片和歌都大很多。"
+      },
+      {
+        "q": "手機裡的「一首歌」大約有多大？",
+        "options": [
+          "約 4 KB",
+          "約 4 MB",
+          "約 4 GB",
+          "約 4 TB"
+        ],
+        "answer": 1,
+        "why": "一首歌大約幾 MB；4 KB 太小、4 GB 像一部電影、4 TB 大得像一整顆硬碟。"
+      },
+      {
+        "q": "電腦裡的文字、圖片、聲音、影片，最後都是用「什麼」來記錄的？",
+        "options": [
+          "只用 0 和 1",
+          "只用中文字",
+          "只用各種顏色",
+          "只用 1 到 9 的數字"
+        ],
+        "answer": 0,
+        "why": "電腦只認得 0 和 1（二進位），所有資料都變成一長串的 0 和 1。"
+      },
+      {
+        "q": "把一張數位照片放到超級大來看，會看到什麼？",
+        "options": [
+          "一堆文字",
+          "一格一格的小方格",
+          "什麼都沒有",
+          "一首歌"
+        ],
+        "answer": 1,
+        "why": "照片是由許多小方格組成的，放很大就會看到一格一格的像素。"
+      },
+      {
+        "q": "「像素（pixel）」指的是什麼？",
+        "options": [
+          "網路的速度",
+          "電腦的重量",
+          "組成圖片的小方格",
+          "一種聲音檔"
+        ],
+        "answer": 2,
+        "why": "像素就是組成一張圖片的最小小方格，方格越多、圖片通常越細緻。"
+      },
+      {
+        "q": "檔案名字「photo.jpg」後面的「.jpg」，代表這通常是哪一種檔案？",
+        "options": [
+          "影片",
+          "聲音",
+          "純文字",
+          "圖片"
+        ],
+        "answer": 3,
+        "why": ".jpg 是常見的圖片副檔名，用來存照片這類圖片。"
+      },
+      {
+        "q": "下列哪一個副檔名，通常代表「影片」檔？",
+        "options": [
+          ".mp4",
+          ".txt",
+          ".jpg",
+          ".mp3"
+        ],
+        "answer": 0,
+        "why": ".mp4 常用來存影片；.txt 是文字、.jpg 是圖片、.mp3 是聲音。"
+      },
+      {
+        "q": "看到檔案「song.mp3」，它最可能是什麼？",
+        "options": [
+          "一部影片",
+          "一首歌（聲音）",
+          "一張照片",
+          "一份文字文件"
+        ],
+        "answer": 1,
+        "why": ".mp3 是常見的聲音副檔名，所以這最可能是一首歌或一段聲音。"
+      }
+    ]
+  },
+  {
+    "id": "lv4",
+    "level": 4,
+    "name": "網際網路如何運作",
+    "hook": "網頁是怎麼送到你面前的",
+    "emoji": "🌐",
+    "color": "#0d9488",
+    "concepts": [
+      "網際網路與全球資訊網（WWW）",
+      "伺服器與用戶端（要求—回應）",
+      "封包與資料傳送",
+      "IP 位址與網域",
+      "瀏覽器與搜尋引擎",
+      "Wi-Fi 無線連網"
+    ],
+    "keyFacts": [
+      "網際網路是全世界許多電腦互相連線而成的大網路。",
+      "全球資訊網（WWW）是網際網路上的一項服務，我們平常看的網頁就屬於它。",
+      "用戶端（client）送出要求，伺服器（server）回傳網頁，這叫「要求—回應」。",
+      "資料會被切成一小塊一小塊的「封包」分別傳送；IP 位址像門牌，讓資料找到正確的電腦。",
+      "瀏覽器負責把網頁顯示出來，搜尋引擎幫你找到網站，Wi-Fi 讓我們用無線電波上網。"
+    ],
+    "questions": [
+      {
+        "q": "「網際網路（Internet）」最簡單的說法是什麼？",
+        "options": [
+          "一台特別大的電腦",
+          "全世界許多電腦互相連線形成的大網路",
+          "一種只能玩的遊戲",
+          "一個電視頻道"
+        ],
+        "answer": 1,
+        "why": "網際網路就是把許多電腦連在一起互相溝通的巨大網路。"
+      },
+      {
+        "q": "我們每天看的「網頁」屬於全球資訊網（WWW）。它和網際網路（Internet）是什麼關係？",
+        "options": [
+          "兩者完全一樣，只是名字不同",
+          "WWW 是網際網路上的一項服務，網際網路是連線的基礎",
+          "網際網路是網頁的一種",
+          "WWW 比網際網路更早出現"
+        ],
+        "answer": 1,
+        "why": "網際網路是底層連線，WWW（網頁）是跑在它上面的一項服務。"
+      },
+      {
+        "q": "當你打開一個網站，你的電腦（用戶端 client）會怎麼做？",
+        "options": [
+          "送出「要求」，由伺服器（server）回傳網頁",
+          "自己畫出網頁，不需要別人",
+          "把整個網站刪掉",
+          "自動變成一台伺服器"
+        ],
+        "answer": 0,
+        "why": "用戶端提出要求，伺服器回應並送回網頁，這就是要求—回應。"
+      },
+      {
+        "q": "資料在網路上傳送時，通常會怎麼處理？",
+        "options": [
+          "整包不拆，一次全部送出",
+          "切成一小塊一小塊的「封包」分別傳送",
+          "先變成聲音用喇叭播出去",
+          "印成紙張用郵差寄出"
+        ],
+        "answer": 1,
+        "why": "資料會被切成許多小封包，分別在網路上傳送。"
+      },
+      {
+        "q": "「IP 位址」的作用最像下面哪一個？",
+        "options": [
+          "電腦的門牌地址，讓資料能找到正確的電腦",
+          "電腦外殼的顏色",
+          "電腦有多重",
+          "只是好聽的名字，沒有用途"
+        ],
+        "answer": 0,
+        "why": "IP 位址像門牌，讓封包知道要送到哪一台電腦。"
+      },
+      {
+        "q": "網址結尾是 .tw，通常代表什麼？",
+        "options": [
+          "這是遊戲網站",
+          "和台灣有關的網域",
+          "這個網站一定很慢",
+          "這個網站免費"
+        ],
+        "answer": 1,
+        "why": ".tw 是國家／地區代碼，代表和台灣有關。"
+      },
+      {
+        "q": "網址結尾是 .edu，通常代表哪一類網站？",
+        "options": [
+          "買東西的商店",
+          "教育機構，例如學校",
+          "政府的警察局",
+          "看影片的平台"
+        ],
+        "answer": 1,
+        "why": ".edu 代表教育機構，例如學校或大學（台灣的學校網址通常寫成 .edu.tw）。"
+      },
+      {
+        "q": "「瀏覽器」（像 Chrome、Safari）主要是做什麼用的？",
+        "options": [
+          "用來打電話",
+          "用來把網頁顯示出來給我們看的軟體",
+          "用來幫手機充電",
+          "一種印表機"
+        ],
+        "answer": 1,
+        "why": "瀏覽器負責讀取並顯示網頁內容。"
+      },
+      {
+        "q": "「Wi-Fi」主要讓我們可以怎樣上網？",
+        "options": [
+          "一定要接一條網路線",
+          "不用線，用無線電波連上網路",
+          "讓遊戲畫面自動變漂亮",
+          "幫電腦充電"
+        ],
+        "answer": 1,
+        "why": "Wi-Fi 是無線連網，用電波取代網路線。"
+      },
+      {
+        "q": "想找資料卻不知道網址，最適合用什麼？",
+        "options": [
+          "搜尋引擎（像 Google），幫你找到相關的網站",
+          "小算盤",
+          "小畫家",
+          "計時器"
+        ],
+        "answer": 0,
+        "why": "搜尋引擎會依你輸入的關鍵字，列出相關網站。"
+      },
+      {
+        "q": "為什麼要把資料切成一個個「封包」再傳送？",
+        "options": [
+          "這樣看起來比較整齊好看",
+          "小塊資料更容易快速可靠地傳送，壞掉時只要重傳那一小塊",
+          "因為電腦特別喜歡數字",
+          "為了讓網路變得更慢"
+        ],
+        "answer": 1,
+        "why": "封包小、好傳，遺失時只需重傳出錯的那一小塊。"
+      },
+      {
+        "q": "下面關於「伺服器（server）」的說法，哪一個正確？",
+        "options": [
+          "伺服器是專門提供服務（例如網頁）給別人的電腦",
+          "伺服器只能拿來玩遊戲",
+          "伺服器一定要做得很小",
+          "伺服器不能連上網路"
+        ],
+        "answer": 0,
+        "why": "伺服器是負責回應要求、提供網頁等服務的電腦。"
+      }
+    ]
+  },
+  {
+    "id": "lv5",
+    "level": 5,
+    "name": "演算法與程式思維",
+    "hook": "用明確步驟解決問題",
+    "emoji": "🧩",
+    "color": "#d97706",
+    "concepts": [
+      "演算法就是解決問題的明確步驟，像照食譜做菜",
+      "三種基本積木：順序、迴圈（重複）、條件（如果…就…）",
+      "把大問題拆成小步驟（分解），並找出規律（pattern）",
+      "電腦只會照指令做，所以指令要講得很精確",
+      "bug是程式裡的錯誤，除錯就是找出並改正它"
+    ],
+    "keyFacts": [
+      "演算法就像食譜：把解決問題的步驟一步一步寫清楚。",
+      "順序很重要：步驟的先後不一樣，結果可能完全不同。",
+      "迴圈（重複）能把同樣的動作交給電腦一直做，不用寫很多遍。",
+      "條件（如果…就…否則…）讓程式依照不同情況做不同的事。",
+      "電腦不會自己猜，只會完全照著指令做，講不清楚就會出錯。"
+    ],
+    "questions": [
+      {
+        "q": "「演算法」是什麼意思？",
+        "options": [
+          "一種很貴的電腦",
+          "解決問題的明確步驟，就像食譜一樣",
+          "一種好玩的電動遊戲",
+          "電腦上的一個大螢幕"
+        ],
+        "answer": 1,
+        "why": "演算法就是把解決問題的步驟一步步寫清楚，像照著食譜做菜。"
+      },
+      {
+        "q": "早上出門前，下列哪一組步驟的「順序」才正確？",
+        "options": [
+          "先穿鞋子，再穿襪子",
+          "先穿襪子，再穿鞋子",
+          "先睡覺，再起床出門",
+          "先吃飯，再拿出碗筷"
+        ],
+        "answer": 1,
+        "why": "步驟的先後會影響結果，襪子要先穿才穿得進鞋子裡。"
+      },
+      {
+        "q": "刷牙時要「上下重複刷20次」，用程式思維來說，最省事的做法是？",
+        "options": [
+          "用迴圈，把同一個動作重複做20次",
+          "把刷牙動作一句一句寫20遍",
+          "只刷一次就好",
+          "完全不刷"
+        ],
+        "answer": 0,
+        "why": "迴圈可以把重複的動作交給電腦一直做，不用一句一句寫20遍。"
+      },
+      {
+        "q": "過馬路時「如果紅燈就停下來，否則綠燈才走」，這種判斷叫做什麼？",
+        "options": [
+          "迴圈（重複）",
+          "條件判斷（如果…就…否則…）",
+          "順序",
+          "bug"
+        ],
+        "answer": 1,
+        "why": "依照不同情況做不同的事，就是條件判斷。"
+      },
+      {
+        "q": "覺得「打掃整個房間」很難，最好的辦法是？",
+        "options": [
+          "把大工作拆成收玩具、擦桌子、掃地等小步驟",
+          "一直發呆等別人來做",
+          "假裝房間已經很乾淨",
+          "把房間門關起來不看它"
+        ],
+        "answer": 0,
+        "why": "把大問題拆成一個個小步驟就會變簡單，這叫分解。"
+      },
+      {
+        "q": "數列 2， 4， 6， 8， __，依照規律，下一個數字最可能是？",
+        "options": [
+          "9",
+          "10",
+          "7",
+          "13"
+        ],
+        "answer": 1,
+        "why": "每個數字都比前一個多2，找出這個規律就知道下一個是10。"
+      },
+      {
+        "q": "在程式思維裡，「bug」指的是什麼？",
+        "options": [
+          "一隻真的蟲爬進電腦裡",
+          "程式裡的錯誤，讓結果跟預期不一樣",
+          "電腦的名字",
+          "一種很快的網路"
+        ],
+        "answer": 1,
+        "why": "bug就是程式裡的錯誤，會讓電腦做出不對的結果。"
+      },
+      {
+        "q": "為什麼給電腦的指令要講得非常清楚、精確？",
+        "options": [
+          "因為電腦會自己猜我們的意思",
+          "因為電腦只會完全照著指令做，不會自己猜",
+          "因為電腦很懶惰",
+          "因為電腦聽不懂任何語言"
+        ],
+        "answer": 1,
+        "why": "電腦不會自己想，你怎麼說它就怎麼做，所以指令要很精確。"
+      },
+      {
+        "q": "照食譜做蛋糕卻失敗了，你想「找出哪一步做錯並改正」。這最像程式設計裡的？",
+        "options": [
+          "除錯（debug）",
+          "迴圈",
+          "存檔",
+          "開機"
+        ],
+        "answer": 0,
+        "why": "一步步檢查、找出錯在哪並改正，就是除錯（debug）。"
+      },
+      {
+        "q": "做鬆餅時，如果把「倒進鍋子煎」放在「攪拌麵糊」之前，會怎樣？",
+        "options": [
+          "完全沒有差別",
+          "步驟順序錯了，會做不出正常的鬆餅",
+          "鬆餅會變得更好吃",
+          "鍋子會突然不見"
+        ],
+        "answer": 1,
+        "why": "演算法的步驟順序很重要，順序錯了結果就會出錯。"
+      },
+      {
+        "q": "下面哪一件事最適合用「迴圈（重複）」來描述？",
+        "options": [
+          "上樓梯時，每一階都做同樣的抬腳、踏上去，直到樓頂",
+          "只按一次電燈開關",
+          "寫下自己的名字一次",
+          "打開一次冰箱門"
+        ],
+        "answer": 0,
+        "why": "重複做同樣的動作直到完成，正是迴圈的意思。"
+      },
+      {
+        "q": "媽媽說「如果下雨就帶雨傘，不然就不用帶」。這句話裡「下雨」扮演的角色是？",
+        "options": [
+          "判斷要不要帶傘的條件",
+          "一個迴圈",
+          "一個bug",
+          "一台電腦"
+        ],
+        "answer": 0,
+        "why": "「下雨」是用來判斷要不要帶傘的條件。"
+      }
+    ]
+  },
+  {
+    "id": "lv6",
+    "level": 6,
+    "name": "網路安全與數位公民",
+    "hook": "安全上網、保護自己",
+    "emoji": "🛡️",
+    "color": "#dc2626",
+    "concepts": [
+      "密碼安全與保密",
+      "保護個人資料",
+      "辨識詐騙與可疑連結",
+      "網路禮儀與反霸凌",
+      "數位足跡與求助大人"
+    ],
+    "keyFacts": [
+      "強密碼要夠長，混合大小寫字母、數字和符號，別用生日或名字。",
+      "密碼是秘密，不要告訴任何人，也不要寫在別人看得到的地方。",
+      "真實姓名、住址、學校、電話不要隨便給網路上的陌生人。",
+      "來路不明的連結和檔案不要點，可能是詐騙或藏有病毒。",
+      "網路公開的貼文會留下紀錄，可能被截圖或長久保存，發文前要三思。"
+    ],
+    "questions": [
+      {
+        "q": "下面哪一個是最安全的密碼？",
+        "options": [
+          "123456",
+          "自己的生日",
+          "大小寫字母、數字和符號混合的長密碼",
+          "自己的姓名"
+        ],
+        "answer": 2,
+        "why": "密碼越長、字元種類越多，別人越難猜到或破解。"
+      },
+      {
+        "q": "好朋友問你遊戲帳號的密碼，你應該怎麼做？",
+        "options": [
+          "告訴他，反正是好朋友",
+          "禮貌拒絕，密碼要自己保密",
+          "寫在紙條上給他",
+          "用訊息把密碼傳給他"
+        ],
+        "answer": 1,
+        "why": "密碼只屬於自己，就算是好朋友也不該分享。"
+      },
+      {
+        "q": "網路上剛認識的陌生人問你讀哪間學校、家住哪裡，你該怎麼辦？",
+        "options": [
+          "馬上把地址和學校告訴他",
+          "不提供，並告訴爸媽或老師",
+          "只告訴他學校名稱",
+          "把家裡電話給他"
+        ],
+        "answer": 1,
+        "why": "真實個人資料給陌生人可能帶來危險，要先求助信任的大人。"
+      },
+      {
+        "q": "收到一封信說「你中大獎，點連結領獎金」，最安全的做法是？",
+        "options": [
+          "立刻點連結領獎",
+          "把連結轉傳給同學",
+          "不要點，這很可能是詐騙",
+          "在連結裡輸入自己的密碼"
+        ],
+        "answer": 2,
+        "why": "天上掉下來的獎品常是騙人的誘餌，點了可能被騙錢或中毒。"
+      },
+      {
+        "q": "在不認識的網站看到「免費下載」的檔案，你應該怎麼做？",
+        "options": [
+          "全部下載來玩",
+          "不隨便下載，來路不明的檔案可能含病毒",
+          "先關掉防毒軟體再下載",
+          "下載後馬上打開"
+        ],
+        "answer": 1,
+        "why": "來路不明的檔案可能藏有病毒或惡意程式，會傷害電腦或偷資料。"
+      },
+      {
+        "q": "在網路上聊得來的網友約你單獨見面，你該怎麼做？",
+        "options": [
+          "自己偷偷赴約",
+          "先告訴爸媽或老師，不要單獨前往",
+          "半夜自己去比較刺激",
+          "把家裡地址給他請他來"
+        ],
+        "answer": 1,
+        "why": "網路上的人可能不是他說的那樣，見面前一定要讓大人知道並陪同。"
+      },
+      {
+        "q": "看到一則「快轉傳，不轉會倒楣」的驚人消息，你應該？",
+        "options": [
+          "馬上轉傳給所有人",
+          "先查證消息是不是真的，不確定就不轉傳",
+          "相信它並照著做",
+          "加上更嚇人的內容再轉出去"
+        ],
+        "answer": 1,
+        "why": "假訊息常用嚇人或急迫的話術，查證後再決定才不會散播謠言。"
+      },
+      {
+        "q": "看到同學在群組裡被大家嘲笑、辱罵，你可以怎麼做？",
+        "options": [
+          "跟著一起罵比較合群",
+          "把截圖分享出去",
+          "不參與，安慰對方並告訴大人",
+          "覺得很好笑就繼續看"
+        ],
+        "answer": 2,
+        "why": "網路霸凌會傷害別人，挺身相助並求助大人才是負責任的做法。"
+      },
+      {
+        "q": "長時間盯著螢幕之後，對眼睛最好的做法是？",
+        "options": [
+          "繼續看不要停下來",
+          "每隔一段時間休息，看看遠方讓眼睛放鬆",
+          "把螢幕調到最亮",
+          "關燈在黑暗中繼續看"
+        ],
+        "answer": 1,
+        "why": "眼睛也需要休息，定時看遠方能減少疲勞和近視的風險。"
+      },
+      {
+        "q": "關於在網路上公開發文，下面哪一句話是對的？",
+        "options": [
+          "發出去之後馬上就會完全消失",
+          "貼文可能被截圖或長久留存，發文前要想清楚",
+          "只要刪掉，就一定沒人看得到了",
+          "反正過一下子就沒人記得了"
+        ],
+        "answer": 1,
+        "why": "網路有記憶，一旦公開就可能被保存或轉傳，不容易真正收回。"
+      },
+      {
+        "q": "網路上有人傳給你讓你覺得不舒服或害怕的訊息，最好的做法是？",
+        "options": [
+          "自己默默承受，不告訴任何人",
+          "保留證據並告訴信任的大人",
+          "回傳更兇的話罵回去",
+          "照著對方說的去做"
+        ],
+        "answer": 1,
+        "why": "遇到危險或不舒服的狀況，求助大人才能得到保護和幫助。"
+      },
+      {
+        "q": "「網路釣魚（phishing）」指的是什麼？",
+        "options": [
+          "一種在河邊釣魚的活動",
+          "假冒成可信任的網站或訊息，騙你交出帳號和密碼",
+          "一款熱門的手機遊戲",
+          "一種下載音樂的軟體"
+        ],
+        "answer": 1,
+        "why": "釣魚詐騙會偽裝成銀行或熟悉的服務，誘騙你上鉤洩漏個資。"
+      }
+    ]
+  }
+];
+
+  var BADGES = [
+    { id: 'lv1', icon: '💻', name: '硬體達人' },
+    { id: 'lv2', icon: '🔢', name: '位元魔法師' },
+    { id: 'lv3', icon: '💾', name: '資料收藏家' },
+    { id: 'lv4', icon: '🌐', name: '網路領航員' },
+    { id: 'lv5', icon: '🧩', name: '演算法思考家' },
+    { id: 'lv6', icon: '🛡️', name: '網安小衛士' },
+    { id: 'all', icon: '🏆', name: '電腦科學通' }
+  ];
+  var BADGE_BY_ID = {};
+  for (var bi = 0; bi < BADGES.length; bi++) BADGE_BY_ID[BADGES[bi].id] = BADGES[bi];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var screenMenu = $('screen-menu');
+  var screenPlay = $('screen-play');
+  var levelList = $('level-list');
+  var stage = $('stage');
+  var stepDots = $('step-dots');
+  var playTitle = $('play-title');
+
+  var cur = null;
+
+  function starsFor(correct, total) {
+    if (total <= 0) return 0;
+    var r = correct / total;
+    if (r >= 0.9) return 3;
+    if (r >= 0.6) return 2;
+    if (r > 0) return 1;
+    return 0;
+  }
+  function starStr(n) { var s = ''; for (var i = 0; i < 3; i++) s += (i < n ? '⭐' : '☆'); return s; }
+
+  function awardBadge(id) {
+    var def = BADGE_BY_ID[id];
+    if (!def) return;
+    if (progress.badges[id]) return;
+    progress.badges[id] = true;
+    saveProg(progress);
+    toast('獲得徽章：' + def.icon + ' ' + def.name, 'badge');
+    try { if (window.CsAdvBadges) CsAdvBadges.refresh(); } catch (e) {}
+  }
+  function badgeCount() { var n = 0; for (var i = 0; i < BADGES.length; i++) if (progress.badges[BADGES[i].id]) n++; return n; }
+
+  function renderMenu() {
+    var doneCount = 0;
+    for (var i = 0; i < LEVELS.length; i++) if (progress[LEVELS[i].id] && progress[LEVELS[i].id].done) doneCount++;
+    $('ov-done').textContent = doneCount + '/' + LEVELS.length;
+    $('ov-badges').textContent = badgeCount() + '/' + BADGES.length;
+
+    if (doneCount > 0) {
+      $('hello-text').textContent = '歡迎回來！你已完成 ' + doneCount + ' 個等級，很棒！';
+      $('hello-sub').textContent = (doneCount >= LEVELS.length)
+        ? '六個等級都完成了，你是電腦科學小達人！🏆'
+        : '想挑戰哪一個等級都可以，答錯也沒關係。';
+    }
+
+    levelList.innerHTML = '';
+    for (var u = 0; u < LEVELS.length; u++) {
+      (function (lv) {
+        var rec = progress[lv.id] || {};
+        var done = !!rec.done;
+        var total = lv.questions.length;
+        var st = done ? starsFor(rec.best || 0, total) : 0;
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'ma-level';
+        card.setAttribute('aria-label', '等級 ' + lv.level + '：' + lv.name);
+        card.innerHTML =
+          '<div class="ma-level-top">' +
+            '<span class="ma-level-emoji" aria-hidden="true" style="background:' + lv.color + '22;color:' + lv.color + '">' + lv.emoji + '</span>' +
+            '<div>' +
+              '<div class="ma-level-num">等級 ' + lv.level + '</div>' +
+              '<div class="ma-level-name">' + lv.name + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="ma-level-concepts">' + (lv.hook || lv.name) + '</div>' +
+          '<div class="ma-level-foot">' +
+            '<span class="ma-level-status ' + (done ? 'done' : 'todo') + '">' +
+              (done ? '✅ 已完成（最佳 ' + (rec.best || 0) + '/' + total + '）' : '▶️ 開始挑戰（共 ' + total + ' 題）') + '</span>' +
+            '<span class="ma-level-stars" aria-hidden="true">' + (done ? starStr(st) : '') + '</span>' +
+          '</div>';
+        card.addEventListener('click', function () { startLevel(lv); });
+        levelList.appendChild(card);
+      })(LEVELS[u]);
+    }
+  }
+
+  function show(screen) {
+    screenMenu.classList.remove('active');
+    screenPlay.classList.remove('active');
+    screen.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function startLevel(lv) {
+    cur = { level: lv, idx: 0, correctCount: 0, phase: 'brief' };
+    playTitle.textContent = lv.emoji + ' 等級 ' + lv.level + '・' + lv.name;
+    show(screenPlay);
+    renderBrief();
+  }
+
+  function renderStepDots() {
+    stepDots.innerHTML = '';
+    if (cur.phase !== 'quiz') return;
+    for (var i = 0; i < cur.level.questions.length; i++) {
+      var b = document.createElement('i');
+      if (i < cur.idx) b.className = 'on';
+      else if (i === cur.idx) b.className = 'cur';
+      stepDots.appendChild(b);
+    }
+  }
+
+  function renderBrief() {
+    renderStepDots();
+    var lv = cur.level;
+    var facts = '';
+    for (var i = 0; i < lv.keyFacts.length; i++) {
+      facts += '<li><span class="ma-kf-dot" aria-hidden="true">◆</span><span>' + lv.keyFacts[i] + '</span></li>';
+    }
+    var concepts = '';
+    for (var c = 0; c < lv.concepts.length; c++) {
+      concepts += '<li><span class="ma-kf-dot" aria-hidden="true">◆</span><span>' + lv.concepts[c] + '</span></li>';
+    }
+    stage.innerHTML =
+      '<div class="ma-stage ma-brief">' +
+        '<div class="ma-visual" aria-hidden="true">' + lv.emoji + '</div>' +
+        '<h2>等級 ' + lv.level + '・' + lv.name + '</h2>' +
+        '<p class="ma-brief-sub">先看看這一級的重點，再開始 ' + lv.questions.length + ' 題挑戰。</p>' +
+        '<ul class="ma-keyfacts">' + facts + '</ul>' +
+        '<details class="ma-concepts"><summary>看更多：本關概念清單</summary><ul>' + concepts + '</ul></details>' +
+      '</div>' +
+      '<div class="ma-actions">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-start">開始挑戰 ➡️</button>' +
+      '</div>';
+    $('btn-start').addEventListener('click', function () { cur.phase = 'quiz'; cur.idx = 0; renderQuestion(); });
+  }
+
+  function next() {
+    cur.idx++;
+    if (cur.idx >= cur.level.questions.length) finishLevel();
+    else renderQuestion();
+  }
+
+  function renderQuestion() {
+    renderStepDots();
+    var lv = cur.level;
+    var step = lv.questions[cur.idx];
+
+    var order = [];
+    for (var oi = 0; oi < step.options.length; oi++) order.push(oi);
+    for (var m = order.length - 1; m > 0; m--) {
+      var r = Math.floor(Math.random() * (m + 1));
+      var tt = order[m]; order[m] = order[r]; order[r] = tt;
+    }
+    var optsHtml = '';
+    for (var k = 0; k < order.length; k++) {
+      var origIdx = order[k];
+      optsHtml += '<button type="button" class="ma-opt" data-i="' + origIdx + '">' +
+        '<span>' + step.options[origIdx] + '</span><span class="ma-opt-mark" aria-hidden="true"></span></button>';
+    }
+
+    stage.innerHTML =
+      '<div class="ma-stage">' +
+        '<div class="ma-visual" aria-hidden="true">' + lv.emoji + '</div>' +
+        '<p class="ma-question">第 ' + (cur.idx + 1) + ' / ' + lv.questions.length + ' 題　' + step.q + '</p>' +
+        '<div class="ma-options">' + optsHtml + '</div>' +
+        '<div class="ma-reveal" id="reveal"></div>' +
+      '</div>' +
+      '<div class="ma-actions" id="afteract" style="display:none">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">繼續 ➡️</button>' +
+      '</div>';
+
+    var answered = false;
+    var btns = stage.querySelectorAll('.ma-opt');
+
+    function revealAndLock(correct) {
+      var rev = $('reveal');
+      rev.textContent = (correct ? '答對了！' : '再想想～正確答案是這個！') + (step.why || '');
+      rev.classList.add('show');
+      $('afteract').style.display = 'flex';
+      var all = stage.querySelectorAll('.ma-opt');
+      for (var a = 0; a < all.length; a++) all[a].disabled = true;
+    }
+
+    for (var b = 0; b < btns.length; b++) {
+      btns[b].addEventListener('click', function () {
+        var i = parseInt(this.getAttribute('data-i'), 10);
+        var isCorrect = (i === step.answer);
+        if (answered) return;
+        answered = true;
+        /* 唯一例外：維持每日連續學習 streak（同日 idempotent），不計 XP、不重複計分 */
+        if (window.Game && typeof Game.pingActive === 'function') { try { Game.pingActive(); } catch (e) {} }
+        if (isCorrect) {
+          this.classList.add('correct');
+          this.querySelector('.ma-opt-mark').textContent = '✅';
+          cur.correctCount++;
+          revealAndLock(true);
+        } else {
+          this.classList.add('wrong');
+          this.querySelector('.ma-opt-mark').textContent = '❌';
+          var correctBtn = stage.querySelector('.ma-opt[data-i="' + step.answer + '"]');
+          if (correctBtn) {
+            correctBtn.classList.add('correct');
+            correctBtn.querySelector('.ma-opt-mark').textContent = '✅';
+          }
+          revealAndLock(false);
+        }
+      });
+    }
+
+    $('btn-next').addEventListener('click', next);
+  }
+
+  function finishLevel() {
+    var lv = cur.level;
+    var total = lv.questions.length;
+    var got = cur.correctCount;
+
+    var prev = progress[lv.id] || {};
+    progress[lv.id] = { done: true, best: Math.max(prev.best || 0, got) };
+    saveProg(progress);
+
+    awardBadge(lv.id);
+    var allDone = true;
+    for (var i = 0; i < LEVELS.length; i++) if (!(progress[LEVELS[i].id] && progress[LEVELS[i].id].done)) { allDone = false; break; }
+    if (allDone) awardBadge('all');
+
+    var st = starsFor(got, total);
+    stage.innerHTML =
+      '<div class="ma-stage ma-done">' +
+        '<div class="ma-done-emoji" aria-hidden="true">🎉</div>' +
+        '<div class="ma-done-title">完成「' + lv.name + '」！</div>' +
+        '<div class="ma-done-stars" aria-label="得到 ' + st + ' 顆星">' + starStr(st) + '</div>' +
+        '<p class="ma-question" style="font-size:clamp(16px,3.6vw,19px);text-align:center">你答對了 ' + got + ' / ' + total + ' 題，真棒！</p>' +
+      '</div>' +
+      '<div class="ma-actions">' +
+        '<button type="button" class="btn" id="btn-menu">回到選單</button>' +
+        (nextLevelOf(lv) ? '<button type="button" class="btn btn-primary" id="btn-nextlv">下一個等級 ➡️</button>' : '') +
+      '</div>';
+
+    toast('完成「' + lv.name + '」！你答對了 ' + got + ' / ' + total + ' 題，真棒！', 'daily');
+
+    $('btn-menu').addEventListener('click', goMenu);
+    var nl = nextLevelOf(lv);
+    if (nl) $('btn-nextlv').addEventListener('click', function () { startLevel(nl); });
+  }
+
+  function nextLevelOf(lv) {
+    for (var i = 0; i < LEVELS.length; i++) { if (LEVELS[i].id === lv.id) return LEVELS[i + 1] || null; }
+    return null;
+  }
+
+  function goMenu() { cur = null; stepDots.innerHTML = ''; renderMenu(); show(screenMenu); }
+
+  $('btn-back').addEventListener('click', goMenu);
+
+  window.__csAdv = { LEVELS: LEVELS, BADGES: BADGES, getProgress: function () { return progress; } };
+
+  renderMenu();
+})();
+</script>
+
+<!-- ===== 進階電腦徽章冊：樣式 ===== -->
+<style>
+#csAdvBadgeFab {
+  position: fixed; right: 16px; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  z-index: 55; display: inline-flex; align-items: center; gap: 6px;
+  min-height: 48px; min-width: 48px; padding: 10px 16px;
+  background: #4338ca; color: #fff; border: none;  /* 深靛藍底白字，兩主題同值皆過 AA */
+  border-radius: 999px; font-family: var(--font); font-weight: 800;
+  font-size: clamp(14px, 3vw, 16px); cursor: pointer; box-shadow: var(--shadow-lg);
+}
+#csAdvBadgeFab:active { transform: scale(0.96); }
+#csAdvBadgeFabCount { display: inline-flex; align-items: center; gap: 3px; background: #fff; color: #4338ca; border-radius: 999px; padding: 1px 8px; font-size: 13px; font-weight: 800; }
+.ma-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 60; padding: 16px; }
+#csAdvBadgeOverlay[hidden] { display: none !important; }
+.ma-card { position: relative; background: var(--card); border: 2px solid var(--card-border); border-radius: var(--r-lg); box-shadow: var(--shadow-lg); width: 100%; max-width: 560px; max-height: 88vh; overflow-y: auto; padding: 20px 18px 22px; color: var(--ink); }
+.ma-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.ma-card-head h1 { font-size: clamp(1.1rem, 4vw, 1.4rem); font-weight: 800; margin: 0; color: var(--ink); flex: 1; }
+.ma-card-back { background: var(--card); border: 2px solid var(--card-border); color: var(--accent-ink, var(--ink)); font-family: var(--font); font-weight: 800; font-size: 15px; cursor: pointer; min-height: 44px; padding: 8px 14px; border-radius: 14px; }
+.ma-card-back:active { transform: scale(0.96); }
+.ma-card-note { background: var(--accent-tint); color: var(--ink); border-radius: var(--r-md, 12px); font-size: var(--fs-small); font-weight: 600; line-height: 1.7; padding: 10px 12px; margin: 4px 0 12px; }
+.ma-card-summary { text-align: center; font-size: var(--fs-small); font-weight: 700; color: var(--ink-soft); margin: 4px 0 14px; line-height: 1.7; }
+.ma-badge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; }
+.ma-badge { position: relative; min-height: 96px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border-radius: 14px; background: var(--card); border: 2px solid var(--card-border); text-align: center; padding: 10px 6px; }
+.ma-badge .ma-badge-glyph { font-size: clamp(1.6rem, 7vw, 2rem); line-height: 1; }
+.ma-badge .ma-badge-name { font-size: clamp(0.6rem, 2.6vw, 0.74rem); font-weight: 800; color: var(--ink); line-height: 1.2; }
+.ma-badge .ma-badge-state { font-size: clamp(0.52rem, 2.2vw, 0.64rem); font-weight: 700; color: var(--ink-soft); }
+.ma-badge.locked { border-style: dashed; opacity: 0.5; filter: grayscale(1); }
+.ma-badge.unlocked { box-shadow: 0 0 0 2px #f5b301, 0 0 10px rgba(245,179,1,0.5); background: color-mix(in srgb, #f5b301 12%, var(--card)); }
+.ma-badge.unlocked .ma-badge-star { position: absolute; right: 5px; top: 4px; font-size: 14px; }
+</style>
+<script>
+(function () {
+  'use strict';
+  function api() { return window.__csAdv || null; }
+  function unlockedCount() {
+    var a = api(); if (!a) return 0;
+    var prog = a.getProgress(); var n = 0;
+    for (var i = 0; i < a.BADGES.length; i++) if (prog.badges[a.BADGES[i].id]) n++;
+    return n;
+  }
+  function renderGrid() {
+    var a = api(); if (!a) return;
+    var prog = a.getProgress();
+    var host = document.getElementById('csAdvBadgeGrid');
+    if (!host) return;
+    var html = '';
+    for (var i = 0; i < a.BADGES.length; i++) {
+      var def = a.BADGES[i];
+      var got = !!prog.badges[def.id];
+      var cls = 'ma-badge ' + (got ? 'unlocked' : 'locked');
+      var glyph = got ? def.icon : '🔒';
+      var state = got ? '已收集' : '尚未解鎖';
+      var star = got ? '<span class="ma-badge-star" aria-hidden="true">★</span>' : '';
+      var label = def.name + '（' + state + '）';
+      html += '<div class="' + cls + '" title="' + label + '" aria-label="' + label + '">' +
+        '<span class="ma-badge-glyph" aria-hidden="true">' + glyph + '</span>' +
+        '<span class="ma-badge-name">' + def.name + '</span>' +
+        '<span class="ma-badge-state">' + state + '</span>' + star + '</div>';
+    }
+    host.innerHTML = html;
+  }
+  function renderSummary() {
+    var a = api(); if (!a) return;
+    var el = document.getElementById('csAdvBadgeSummary');
+    if (!el) return;
+    el.innerHTML = '已收集 <b>' + unlockedCount() + '</b> / ' + a.BADGES.length + ' 枚徽章（收藏只增不減，慢慢玩就好）';
+  }
+  function updateFabCount() {
+    var a = api(); if (!a) return;
+    var badge = document.getElementById('csAdvBadgeFabCount');
+    if (badge) badge.textContent = unlockedCount() + '/' + a.BADGES.length;
+  }
+  function refresh() { updateFabCount(); if (isOpen()) { renderGrid(); renderSummary(); } }
+  function isOpen() { var el = document.getElementById('csAdvBadgeOverlay'); return el && !el.hidden; }
+  function openBook() { renderGrid(); renderSummary(); var o = document.getElementById('csAdvBadgeOverlay'); if (o) o.hidden = false; }
+  function closeBook() { var o = document.getElementById('csAdvBadgeOverlay'); if (o) o.hidden = true; }
+  function buildDom() {
+    var host = document.createElement('div');
+    host.innerHTML =
+      '<button id="csAdvBadgeFab" type="button" aria-label="打開電腦與網路徽章冊" onclick="CsAdvBadges.openBook()">' +
+        '🏅 徽章冊 <span id="csAdvBadgeFabCount">0/7</span></button>' +
+      '<div id="csAdvBadgeOverlay" class="ma-overlay" hidden>' +
+        '<div class="ma-card" role="dialog" aria-modal="true" aria-label="電腦與網路徽章冊">' +
+          '<div class="ma-card-head"><h1>🏅 電腦與網路徽章冊</h1>' +
+            '<button class="ma-card-back" onclick="CsAdvBadges.closeBook()">← 返回</button></div>' +
+          '<div class="ma-card-note">這本徽章冊只存在你自己的裝置上，純粹紀念你完成過哪些進階等級。它不會計入學習基地的等級或經驗值——放輕鬆挑戰就好 🌱</div>' +
+          '<div id="csAdvBadgeSummary" class="ma-card-summary"></div>' +
+          '<div id="csAdvBadgeGrid" class="ma-badge-grid"></div>' +
+        '</div></div>';
+    while (host.firstChild) document.body.appendChild(host.firstChild);
+  }
+  window.CsAdvBadges = { openBook: openBook, closeBook: closeBook, refresh: refresh };
+  function boot() { buildDom(); updateFabCount(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+</body>
+</html>
