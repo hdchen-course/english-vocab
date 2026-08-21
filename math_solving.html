@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>多步驟解題 🪜</title>
+<!-- 本頁純本地學習（獨立 key math_solving_v1，不計主角色 XP）；只用 Game.pingActive 續每日連續學習火焰、Game.showToast 提示。 -->
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<link rel="stylesheet" href="concept.css">
+<script src="game_core.js"></script>
+<style>
+:root{ --su:#0f766e; --su-tint:rgba(15,118,110,0.13); --su-ink:#0b5e57; }
+:root[data-theme="dark"]{ --su:#2dd4bf; --su-tint:rgba(45,212,191,0.16); --su-ink:#5eead4; }
+.ms-story{ text-align:left; background:var(--su-tint); border:1px solid var(--card-border); border-radius:var(--r-md); padding:var(--s4); font-size:clamp(15px,3.5vw,18px); font-weight:600; color:var(--ink); line-height:1.75; margin-bottom:var(--s3); }
+.ms-story .ms-story-label{ display:block; font-size:var(--fs-small); font-weight:800; color:var(--su-ink); margin-bottom:6px; letter-spacing:.5px; }
+.ms-stepno{ font-size:var(--fs-small); font-weight:800; color:var(--su-ink); margin-bottom:6px; }
+.ms-worked{ background:var(--card); border:1px solid var(--card-border); border-left:4px solid var(--su); border-radius:var(--r-md); padding:var(--s3) var(--s4); font-size:clamp(15px,3.4vw,18px); font-weight:700; color:var(--ink); line-height:1.7; }
+.ms-worked .ms-tag{ display:inline-block; font-size:12px; font-weight:800; color:var(--su-ink); background:var(--su-tint); border-radius:999px; padding:2px 10px; margin-bottom:8px; }
+.ms-ask{ font-size:clamp(17px,4vw,21px); font-weight:800; color:var(--ink); line-height:1.5; margin:0 0 var(--s3); }
+.ms-input-row{ display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:var(--s3); }
+.ms-display{ min-width:110px; min-height:52px; padding:8px 16px; font-size:26px; font-weight:900; text-align:center; color:var(--ink); background:var(--card); border:2px solid var(--su); border-radius:12px; letter-spacing:1px; }
+.ms-unit{ font-size:18px; font-weight:800; color:var(--ink-soft); }
+.ms-pad{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; max-width:280px; margin:0 auto var(--s3); }
+.ms-key{ min-height:56px; font-size:22px; font-weight:800; font-family:var(--font); color:var(--ink); background:var(--card); border:2px solid var(--card-border); border-radius:14px; cursor:pointer; transition:transform .08s ease, border-color .15s ease; }
+.ms-key:hover{ border-color:var(--su); }
+.ms-key:active{ transform:scale(0.95); }
+.ms-key.ms-wide{ grid-column:span 1; }
+.ms-key.ms-act{ background:var(--su); color:#fff; border-color:var(--su); }
+.ms-feedback{ margin-top:var(--s2); padding:var(--s3) var(--s4); border-radius:var(--r-md); font-size:var(--fs-body); font-weight:700; line-height:1.7; text-align:left; display:none; }
+.ms-feedback.show{ display:block; animation:ms-fade .25s ease; }
+.ms-feedback.ok{ background:var(--su-tint); color:var(--ink); border:1px solid var(--su); }
+.ms-feedback.no{ background:rgba(255,118,117,0.12); color:var(--ink); border:1px solid var(--c-wrong); }
+@keyframes ms-fade{ from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+@media (prefers-reduced-motion: reduce){ .ms-feedback.show{ animation:none } }
+.ms-final{ text-align:center; }
+.ms-final .ms-final-emoji{ font-size:56px; }
+.ms-linkbtn{ background:none; border:none; color:var(--su-ink); font-weight:800; text-decoration:underline; cursor:pointer; font-size:var(--fs-small); font-family:var(--font); padding:6px; }
+</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">多步驟解題 🪜</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="cn-screen active cn-wrap">
+    <div class="cn-topbar"><span class="cn-title">多步驟解題 🪜</span></div>
+    <div class="cn-hello"><span class="cn-mascot" aria-hidden="true">🪜</span>
+      <div><div class="cn-htext" id="hello">難題不用一次算完——先拆成幾個小步驟，一步一步解。</div>
+      <div class="cn-hsub">前面幾題我帶你走一遍（看範例），後面換你自己動手算，慢慢放手。</div></div></div>
+    <div class="cn-lessons" id="prob-list"></div>
+    <p class="cn-note">這裡是「動手解題」的練習，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
+  </section>
+  <section id="screen-play" class="cn-screen cn-wrap">
+    <div class="cn-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到題目清單">←</button><span class="cn-title" id="play-title">解題</span></div>
+    <div class="cn-progress" id="prog" aria-hidden="true"></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+(function(){
+  'use strict';
+  var PROBLEMS = [{"id":"ps1","title":"色鉛筆大平分","story":"美術老師到文具行買了 5 盒色鉛筆，每一盒裡面都裝著 24 支。老師想把這些色鉛筆全部平分給美術班的 8 位同學，每個人分到的支數都要一樣多。請問每位同學可以分到幾支色鉛筆？","steps":[{"text":"先算總支數：5 盒 × 每盒 24 支 = 120 支。","computable":true,"answer":120,"unit":"支","ask":"先算：5 盒色鉛筆一共有幾支？","explain":"題目給的是「幾盒」和「每盒幾支」，要先把它們相乘，才能知道全部色鉛筆的總數。"},{"text":"再把總數平分給 8 人：120 支 ÷ 8 人 = 15 支。","computable":true,"answer":15,"unit":"支","ask":"再算：120 支平分給 8 位同學，每人分到幾支？","explain":"算出總數後，「平分給幾個人」就是用總數去除以人數，才能求出每個人分到的量。"}],"finalAnswerText":"每位同學可以分到 15 支色鉛筆。"},{"id":"ps2","title":"文具店的找錢問題","story":"小庭到文具店買文具，準備開學用品。她買了 3 本筆記本，每本 25 元；又買了 2 塊橡皮擦，每塊 8 元。結帳時，小庭拿出 1 張 100 元紙鈔付錢。請問店員應該找回小庭多少錢？","steps":[{"text":"先算筆記本的總價：3 本 × 25 元 = 75 元。","computable":true,"answer":75,"unit":"元","ask":"先算：3 本筆記本共多少元？","explain":"買同一種東西時，用「數量 × 單價」就能一次算出這一項的總價。"},{"text":"再算橡皮擦的總價：2 塊 × 8 元 = 16 元。","computable":true,"answer":16,"unit":"元","ask":"再算：2 塊橡皮擦共多少元？","explain":"另一種商品也要分開算，一樣用「數量 × 單價」求出這一項花的錢。"},{"text":"把兩項加起來，算出全部要付的錢：75 元 + 16 元 = 91 元。","computable":true,"answer":91,"unit":"元","ask":"兩項合起來一共要付多少元？","explain":"要知道該找多少錢，得先把所有買的東西加總成一個總價。"},{"text":"最後用付的錢減去總價，算出找回多少：100 元 − 91 元 = 9 元。","computable":true,"answer":9,"unit":"元","ask":"付 100 元後，應找回多少元？","explain":"找的錢就是「拿出去的錢 − 應付的總價」，所以用減法求出差額。"}],"finalAnswerText":"店員應該找回小庭 9 元。"},{"id":"ps3","title":"週年慶買筆記本要找多少錢","story":"文具店的筆記本原價每本 80 元。週年慶期間全店打 75 折（也就是用原價的 75% 計算）。小明想買 5 本一樣的筆記本，結帳時拿了一張 500 元給店員。請問店員應該找回小明多少錢？","steps":[{"text":"先算折後單價：打 75 折就是原價的 75%，所以每本 80 × 0.75 = 60 元。","computable":true,"answer":60,"unit":"元","ask":"先算：打 75 折後，每本筆記本是多少元？","explain":"要先知道打折後的單價，後面算總價才有正確的基準。"},{"text":"再算 5 本的總價：折後每本 60 元，買 5 本，60 × 5 = 300 元。","computable":true,"answer":300,"unit":"元","ask":"再算：用折後價買 5 本，一共要付多少元？","explain":"因為要買多本，用折後單價乘以數量才是實際要付的金額。"},{"text":"最後算找回的錢：付了 500 元，扣掉總價，500 − 300 = 200 元。","computable":true,"answer":200,"unit":"元","ask":"最後算：付 500 元後，店員應找回多少元？","explain":"付出的錢減去要付的總價，剩下的就是應該找回的零錢。"}],"finalAnswerText":"店員應該找回小明 200 元。"},{"id":"ps4","title":"鬆餅食譜放大：先求倍數，再算各材料","story":"小美的鬆餅原配方是 4 人份，需要麵粉 200 克、牛奶 150 毫升、糖 60 克。這次家庭聚會要做 12 人份，各種材料都要按照同樣的比例放大。請問放大後，麵粉、牛奶、糖各需要多少？","steps":[{"text":"先算放大的倍數：12 人份 ÷ 4 人份 = 3（倍）。","computable":true,"answer":3,"unit":"倍","ask":"先算：12 人份是 4 人份的幾倍？","explain":"材料按比例放大，要先知道新份量是原配方的幾倍，後面每樣材料都乘這個倍數。"},{"text":"再算麵粉：200 克 × 3 = 600 克。","computable":true,"answer":600,"unit":"克","ask":"麵粉放大 3 倍是幾克？","explain":"用原配方的麵粉量乘上倍數，就是放大後需要的麵粉量。"},{"text":"接著算牛奶：150 毫升 × 3 = 450 毫升。","computable":true,"answer":450,"unit":"毫升","ask":"牛奶放大 3 倍是幾毫升？","explain":"牛奶同樣乘上相同的倍數，比例才會和原配方一致。"},{"text":"最後算糖：60 克 × 3 = 180 克。","computable":true,"answer":180,"unit":"克","ask":"糖放大 3 倍是幾克？","explain":"糖也乘上同一個倍數，三樣材料維持原本的比例，鬆餅味道才不會變。"}],"finalAnswerText":"放大成 3 倍後，需要麵粉 600 克、牛奶 450 毫升、糖 180 克。"},{"id":"ps5","title":"菜圃圍籬與鋪土：先求寬，再求面積","story":"小明想在後院做一個長方形菜圃，四周用籬笆圍起來。他量了一下，籬笆繞一圈的總長度是 30 公尺（也就是菜圃的周長），而菜圃其中一邊的長是 9 公尺。現在他打算在整個菜圃裡鋪上培養土，需要先知道菜圃的面積。請問這個長方形菜圃的面積是多少平方公尺？","steps":[{"text":"先算「長加寬」（也就是半周長）：長方形繞一圈是 2 個長加 2 個寬，所以「長加寬」＝周長 ÷ 2 ＝ 30 ÷ 2 ＝ 15（公尺）。","computable":true,"answer":15,"unit":"公尺","ask":"先算：這個長方形的「長加寬」是多少公尺？（提示：周長的一半）","explain":"周長是兩個長加兩個寬，先除以 2 就能得到一個長加一個寬，方便接著求出未知的寬。"},{"text":"再算「寬」：已經知道長加寬是 15 公尺，長是 9 公尺，所以寬 ＝ 15 − 9 ＝ 6（公尺）。","computable":true,"answer":6,"unit":"公尺","ask":"再算：菜圃的寬是多少公尺？","explain":"用「長加寬」減掉已知的長，就能單獨算出另一邊寬的長度。"},{"text":"最後算「面積」：長方形面積 ＝ 長 × 寬 ＝ 9 × 6 ＝ 54（平方公尺）。","computable":true,"answer":54,"unit":"平方公尺","ask":"最後算：菜圃的面積是多少平方公尺？","explain":"知道長和寬後，把兩邊相乘就是長方形的面積，這才是題目要的答案。"}],"finalAnswerText":"這個長方形菜圃的面積是 54 平方公尺。"},{"id":"ps6","title":"平均數應用：由總和求新平均","story":"小美這學期數學已經考了 4 次小考，平均每次 85 分。今天第 5 次小考成績公布，她考了 95 分。老師要她算出「加入這次成績後，5 次小考的新平均分數」。請你幫小美一步一步算出這 5 次的平均分數是多少？","steps":[{"text":"先算前 4 次的總分。平均分數 × 次數 = 總分，所以前 4 次總分：85 分 × 4 = 340 分。","computable":true,"answer":340,"unit":"分","ask":"先算：前 4 次小考一共考了幾分？","explain":"已知平均和次數，把平均還原成總和，才能再把新成績加進來。"},{"text":"把第 5 次成績加進總分。5 次的總分：340 分 + 95 分 = 435 分。","computable":true,"answer":435,"unit":"分","ask":"再算：加上第 5 次的 95 分後，5 次總共幾分？","explain":"新平均要用「所有次數的總和」來算，所以先把第 5 次成績併入總分。"},{"text":"用新總分除以新次數求平均。新平均：435 分 ÷ 5 = 87 分。","computable":true,"answer":87,"unit":"分","ask":"最後：5 次總分 435 分平分給 5 次，平均幾分？","explain":"平均數＝總和 ÷ 個數，把 5 次總分平均分配到 5 次，就得到新的平均分數。"}],"finalAnswerText":"加入第 5 次的 95 分後，小美 5 次小考的新平均分數是 87 分。"},{"id":"ps7","title":"蘋果賣掉又送人後還剩多少","story":"果農今天採收了 360 顆蘋果。他先把全部蘋果的 2/5 賣給水果店，接著又把賣剩下來的蘋果，拿出其中的 1/3 送給鄰居。請問最後果農手上還剩幾顆蘋果？","steps":[{"text":"先算賣掉的蘋果：全部的 2/5，也就是 360 × 2/5 = 144（顆）。","computable":true,"answer":144,"unit":"顆","ask":"先算：賣給水果店幾顆蘋果？","explain":"「全部的 2/5」就是用蘋果總數 360 去乘 2/5，先把要賣掉的部分算出來。"},{"text":"再算賣完後剩下的蘋果：360 − 144 = 216（顆）。","computable":true,"answer":216,"unit":"顆","ask":"賣完後還剩幾顆蘋果？","explain":"用蘋果總數減去賣掉的數量，才知道手上還有多少顆可以繼續處理。"},{"text":"接著算送給鄰居的蘋果：是「剩下」的 1/3，也就是 216 × 1/3 = 72（顆）。","computable":true,"answer":72,"unit":"顆","ask":"送出：剩下的 1/3 是幾顆？","explain":"題目說送的是「賣剩下來」的 1/3，所以要用剩下的 216 去乘 1/3，而不是用一開始的 360。這是最容易算錯的地方。"},{"text":"最後算果農還剩的蘋果：216 − 72 = 144（顆）。","computable":true,"answer":144,"unit":"顆","ask":"最後果農手上還剩幾顆蘋果？","explain":"用送出前剩下的 216 顆，減去送給鄰居的 72 顆，就是果農最後手上剩下的蘋果。"}],"finalAnswerText":"果農最後手上還剩 144 顆蘋果。"},{"id":"ps8","title":"圖書館的新書","story":"學校圖書館買進一批新書，共 500 本。開學第一週，這批新書就被借出了其中的 60%，其餘的還留在書架上。請問這批新書還有多少本留在書架上？","steps":[{"text":"先算被借出的本數：這批新書一共 500 本，被借出的是其中的 60%，所以借出 500 × 60% = 300 本。","computable":true,"ask":"先算：500 本的 60% 是幾本被借出？","answer":300,"unit":"本","explain":"要知道剩下多少，得先算出被拿走（借出）的量，這是第一步。"},{"text":"再算留在書架上的本數：全部 500 本減掉借出的 300 本，500 − 300 = 200 本。","computable":true,"ask":"再算：500 本扣掉借出的 300 本，還剩幾本？","answer":200,"unit":"本","explain":"剩下的＝總數−已借出，用減法把沒被借走的部分算出來。"}],"finalAnswerText":"還有 200 本新書留在書架上。"},{"id":"ps9","title":"媽媽和小明的年齡","story":"小明的媽媽今年的年齡是小明的 4 倍。再過 5 年，媽媽的年齡就會變成小明的 3 倍。請問小明今年幾歲？","steps":[{"text":"設小明今年的年齡為 x 歲。因為媽媽今年的年齡是小明的 4 倍，所以媽媽今年是 4x 歲。","computable":false,"explain":"先用一個未知數 x 代表要求的量，再把媽媽的年齡也用 x 表示出來，這樣後面才能列式。"},{"text":"再過 5 年，小明是 (x + 5) 歲，媽媽是 (4x + 5) 歲。依題意「5 年後媽媽是小明的 3 倍」，列出方程式：4x + 5 = 3(x + 5)。","computable":false,"explain":"把「5 年後」的兩人年齡各加上 5，再依照題目給的倍數關係，把它們列成一個等式。"},{"text":"解方程式：4x + 5 = 3(x + 5)，展開得 4x + 5 = 3x + 15，移項得 4x − 3x = 15 − 5，所以 x = 10。小明今年 10 歲。","computable":true,"answer":10,"unit":"歲","ask":"解 4x + 5 = 3(x + 5)，小明今年幾歲？","explain":"先把右邊的括號展開，再把含 x 的項移到一邊、常數移到另一邊，就能解出 x。"},{"text":"驗算：小明今年 10 歲，媽媽今年 40 歲，40 ÷ 10 = 4，正好是 4 倍。5 年後小明 15 歲、媽媽 45 歲，45 ÷ 15 = 3，正好是 3 倍，兩個條件都符合。","computable":false,"explain":"把答案代回原題目的兩個條件逐一檢查，都成立才能確定沒算錯。"}],"finalAnswerText":"小明今年 10 歲。"},{"id":"ps10","title":"小志的兩段腳踏車路程","story":"小志放學後騎腳踏車回家，全程分成兩段。第一段是平路，他用每分鐘 250 公尺的速度騎了 8 分鐘；接著轉入上坡路，他放慢到每分鐘 180 公尺的速度，又騎了 5 分鐘才到家。請問小志從學校到家，一共騎了多少公尺？","steps":[{"text":"先算第一段（平路）的距離：速度 × 時間 = 250 公尺/分 × 8 分 = 2000 公尺。","computable":true,"answer":2000,"unit":"公尺","ask":"先算：平路這一段騎了幾公尺？（每分鐘 250 公尺，騎 8 分鐘）","explain":"距離 = 速度 × 時間，所以把平路的速度乘上騎的時間，就能得到第一段的長度。"},{"text":"再算第二段（上坡）的距離：速度 × 時間 = 180 公尺/分 × 5 分 = 900 公尺。","computable":true,"answer":900,"unit":"公尺","ask":"接著算：上坡這一段騎了幾公尺？（每分鐘 180 公尺，騎 5 分鐘）","explain":"上坡速度和時間都不一樣，要用它自己的速度乘自己的時間，不能沿用平路的數字。"},{"text":"最後把兩段加起來，得到總距離：2000 公尺 + 900 公尺 = 2900 公尺。","computable":true,"answer":2900,"unit":"公尺","ask":"最後算：兩段加起來，一共騎了幾公尺？","explain":"全程是由兩段路接起來的，所以把兩段距離相加就是從學校到家的總距離。"}],"finalAnswerText":"小志從學校到家一共騎了 2900 公尺。"},{"id":"ps11","title":"姊妹存錢：知道總數和差，分兩步求各自的錢","story":"姊姊和妹妹一起把零用錢存進同一個撲滿。到了月底，她們把撲滿打開，兩人存的錢合起來共 90 元。已知姊姊比妹妹多存了 12 元。請問姊姊存了多少元？","steps":[{"text":"先把「多出來的差」從總數扣掉：90 - 12 = 78（元）。這樣一來，剩下的 78 元就相當於「兩個妹妹」一樣多的錢（等於先假設姊姊也只存得和妹妹一樣多）。","computable":true,"answer":78,"unit":"元","ask":"先算：把姊姊多存的 12 元從 90 元裡扣掉後，還剩多少元？","explain":"先扣掉差，讓兩人變成一樣多，才能用平分的方式算出較少的一份。"},{"text":"把這 78 元平分成兩等份，就得到妹妹存的錢：78 ÷ 2 = 39（元）。","computable":true,"answer":39,"unit":"元","ask":"再算：把 78 元平分給兩人，妹妹存了多少元？","explain":"扣掉差之後兩份相等，除以 2 就是較少的妹妹那一份。"},{"text":"妹妹的錢再加回一開始多出來的差，就是姊姊存的錢：39 + 12 = 51（元）。","computable":true,"answer":51,"unit":"元","ask":"最後：妹妹存 39 元，姊姊比她多 12 元，姊姊存了多少元？","explain":"姊姊比妹妹多 12 元，所以在妹妹的錢上加回這個差就得到姊姊的錢。"}],"finalAnswerText":"姊姊存了 51 元（妹妹存了 39 元，兩人合計 90 元、相差 12 元，驗算相符）。"},{"id":"ps12","title":"水果總重量：先換算單位，再相加","story":"週末，媽媽到市場買水果。她買了 3 公斤的蘋果，還有 1500 公克的香蕉。媽媽想把這些水果一起裝進袋子裡，所以想知道蘋果和香蕉加起來一共有多少公克。請你幫媽媽算出這兩種水果的總重量是多少公克。","steps":[{"text":"先把蘋果的重量換算成公克：因為 1 公斤 = 1000 公克，所以 3 公斤 = 3 × 1000 = 3000 公克。","computable":true,"answer":3000,"unit":"公克","ask":"先把蘋果換算成公克：3 公斤是多少公克？","explain":"蘋果用「公斤」、香蕉用「公克」，單位不同不能直接相加，要先把它們換成同一種單位。"},{"text":"再把兩種水果的重量相加：蘋果 3000 公克 + 香蕉 1500 公克 = 4500 公克。","computable":true,"answer":4500,"unit":"公克","ask":"蘋果 3000 公克加上香蕉 1500 公克，一共是多少公克？","explain":"兩者的單位都變成公克之後，直接相加就是水果的總重量。"}],"finalAnswerText":"蘋果和香蕉加起來一共重 4500 公克。"}];
+  var KEY = 'math_solving_v1';
+  function toast(m,t){ try{ if(window.Game&&Game.showToast) Game.showToast(m,t||'info'); }catch(e){} }
+  function ping(){ try{ if(window.Game&&typeof Game.pingActive==='function') Game.pingActive(); }catch(e){} }
+  function load(){ var p=null; try{ p=JSON.parse(localStorage.getItem(KEY)); }catch(e){} return (p&&typeof p==='object')?p:{}; }
+  function save(p){ try{ localStorage.setItem(KEY,JSON.stringify(p)); }catch(e){} }
+  var prog = load();
+  var $ = function(id){ return document.getElementById(id); };
+  var screenMenu=$('screen-menu'), screenPlay=$('screen-play'), stage=$('stage'), progEl=$('prog'), playTitle=$('play-title'), list=$('prob-list');
+  var cur=null, curIdx=-1, stepPos=0, tries=0;
+
+  // 漸退鷹架：第 idx 題，末尾要學生填的「可計算步驟」數（其餘顯示完整範例）
+  function fillCountFor(idx, nComputable){
+    if(idx<=1) return 0;           // 前 2 題：全部看範例
+    if(idx<=4) return 1;           // 接著 3 題：最後一步換你算
+    if(idx<=7) return 2;           // 再 3 題：最後兩步換你算
+    return nComputable;            // 之後：整題自己算
+  }
+  // 回傳每個 step 是否為「要學生填」(fill)。非 computable 一律範例顯示。
+  function fillFlags(prob, idx){
+    var compIdx=[]; prob.steps.forEach(function(s,i){ if(s.computable && typeof s.answer==='number') compIdx.push(i); });
+    var fc=fillCountFor(idx, compIdx.length);
+    var fillFrom = compIdx.length - fc; // 從第 fillFrom 個可計算步驟起要填
+    var flags = prob.steps.map(function(){ return false; });
+    compIdx.forEach(function(origI, k){ if(k>=fillFrom) flags[origI]=true; });
+    return flags;
+  }
+
+  function renderMenu(){
+    var done=0; PROBLEMS.forEach(function(p){ if(prog[p.id]) done++; });
+    var helloEl=$('hello');
+    if(helloEl && done>0) helloEl.textContent = (done>=PROBLEMS.length) ? '全部解完了！隨時可以回來再練一遍 🎉' : ('你已經完成 '+done+' 題了，繼續加油！');
+    list.innerHTML='';
+    PROBLEMS.forEach(function(p, idx){
+      var d=prog[p.id];
+      var nComp=p.steps.filter(function(s){return s.computable && typeof s.answer==='number';}).length;
+      var fc=fillCountFor(idx, nComp);
+      var mode = fc===0 ? '看範例' : (fc>=nComp ? '自己解' : '換你算最後'+fc+'步');
+      var b=document.createElement('button');
+      b.type='button'; b.className='cn-lesson'; b.setAttribute('aria-label','第 '+(idx+1)+' 題：'+p.title);
+      b.innerHTML =
+        '<div class="cn-lesson-top"><span class="cn-lesson-emoji" aria-hidden="true" style="background:var(--su-tint);color:var(--su-ink)">'+(idx+1)+'</span>'+
+        '<div><div class="cn-lesson-name">'+p.title+'</div><div class="cn-lesson-sub">'+mode+'</div></div></div>'+
+        '<div class="cn-lesson-foot '+(d?'done':'todo')+'">'+(d?'✅ 解過了（可再練）':'▶️ 開始解')+'</div>';
+      b.addEventListener('click', function(){ startProblem(idx); });
+      list.appendChild(b);
+    });
+  }
+  function show(sc){ screenMenu.classList.remove('active'); screenPlay.classList.remove('active'); sc.classList.add('active'); window.scrollTo(0,0); }
+  function startProblem(idx){ cur=PROBLEMS[idx]; curIdx=idx; cur._fill=fillFlags(cur, idx); stepPos=0; playTitle.textContent='🪜 '+cur.title; show(screenPlay); renderStep(); }
+  function renderProg(){ var h=''; for(var i=0;i<cur.steps.length;i++) h+='<i class="'+(i<stepPos?'done':(i===stepPos?'cur':''))+'"></i>'; progEl.innerHTML=h; }
+
+  function storyHtml(){ return '<div class="ms-story"><span class="ms-story-label">📖 題目</span>'+cur.story+'</div>'; }
+
+  function renderStep(){
+    renderProg(); tries=0;
+    if(stepPos>=cur.steps.length){ renderFinal(); return; }
+    var s=cur.steps[stepPos];
+    var isFill = cur._fill[stepPos];
+    var head = storyHtml() + '<div class="ms-stepno">步驟 '+(stepPos+1)+' / '+cur.steps.length+'</div>';
+    if(!isFill){
+      // 範例顯示（worked example）或非計算步驟
+      stage.innerHTML = '<div class="cn-card">'+head+
+        '<div class="ms-worked"><span class="ms-tag">'+(s.computable?'跟著算':'先想清楚')+'</span>'+s.text+'</div></div>'+
+        '<div class="cn-actions"><button type="button" class="btn btn-primary btn-block" id="ms-cont">繼續 ➡️</button></div>';
+      $('ms-cont').addEventListener('click', function(){ ping(); stepPos++; renderStep(); });
+    } else {
+      // 換你算：ask + 數字鍵盤
+      stage.innerHTML = '<div class="cn-card">'+head+
+        '<p class="ms-ask">✏️ '+(s.ask||'算算看這一步的答案：')+'</p>'+
+        '<div class="ms-input-row"><div class="ms-display" id="ms-disp" aria-live="polite">?</div>'+(s.unit?'<span class="ms-unit">'+s.unit+'</span>':'')+'</div>'+
+        '<div class="ms-pad" id="ms-pad"></div>'+
+        '<div class="ms-feedback" id="ms-fb"></div>'+
+        '<div class="cn-actions" id="ms-after" style="display:none"><button type="button" class="btn btn-primary btn-block" id="ms-cont">繼續 ➡️</button></div></div>';
+      buildPad(s);
+    }
+    window.scrollTo(0,0);
+  }
+
+  function buildPad(s){
+    var pad=$('ms-pad'), disp=$('ms-disp'); var val='';
+    var keys=['1','2','3','4','5','6','7','8','9','⌫','0','送出'];
+    keys.forEach(function(k){
+      var b=document.createElement('button'); b.type='button'; b.className='ms-key'+(k==='送出'?' ms-act':''); b.textContent=k;
+      b.setAttribute('aria-label', k==='⌫'?'刪除':(k==='送出'?'送出答案':k));
+      b.addEventListener('click', function(){
+        if($('ms-after').style.display==='flex') return; // 已答對鎖定
+        if(k==='⌫'){ val=val.slice(0,-1); }
+        else if(k==='送出'){ submit(); return; }
+        else { if(val.length<7) val+=k; }
+        disp.textContent = val===''?'?':val;
+      });
+      pad.appendChild(b);
+    });
+    function submit(){
+      if(val===''){ toast('先用鍵盤輸入答案喔','info'); return; }
+      ping();
+      var num=parseInt(val,10);
+      var fb=$('ms-fb');
+      if(num===s.answer){
+        fb.className='ms-feedback ok show';
+        fb.innerHTML='✅ 答對了！'+s.explain+'<br><b>'+s.text+'</b>';
+        $('ms-after').style.display='flex';
+        $('ms-cont').addEventListener('click', function(){ stepPos++; renderStep(); });
+        toast('這一步算對了！','success');
+      } else {
+        tries++;
+        fb.className='ms-feedback no show';
+        if(tries>=2){
+          fb.innerHTML='沒關係，再看一次做法：<br><b>'+s.text+'</b><br>把上面的算式算一遍，就能得到答案囉。';
+          $('ms-after').style.display='flex';
+          $('ms-cont').addEventListener('click', function(){ stepPos++; renderStep(); });
+        } else {
+          fb.innerHTML='再想一想 💪 提示：'+s.explain+'<br>算好再按「送出」。';
+          toast('再試一次，你可以的','info');
+        }
+      }
+    }
+  }
+
+  function renderFinal(){
+    prog[cur.id]=true; save(prog); renderProg();
+    var nextIdx = curIdx+1;
+    var nextBtn = (nextIdx<PROBLEMS.length) ? '<button type="button" class="btn btn-primary" id="ms-next">下一題 ➡️</button>' : '';
+    stage.innerHTML = '<div class="cn-card ms-final"><div class="ms-final-emoji">🎉</div>'+
+      '<h2 class="cn-h">解出來了！</h2>'+
+      '<p class="cn-text" style="text-align:center"><b>'+cur.finalAnswerText+'</b></p>'+
+      '<p class="cn-text" style="text-align:center">把大問題拆成小步驟，一步一步就解開了——這就是解題的訣竅。</p></div>'+
+      '<div class="cn-actions"><button type="button" class="btn" id="ms-menu">回題目清單</button>'+nextBtn+'</div>';
+    $('ms-menu').addEventListener('click', goMenu);
+    if(nextIdx<PROBLEMS.length) $('ms-next').addEventListener('click', function(){ startProblem(nextIdx); });
+    toast('完成這一題，太棒了！','success');
+  }
+  function goMenu(){ cur=null; progEl.innerHTML=''; renderMenu(); show(screenMenu); }
+  $('btn-back').addEventListener('click', goMenu);
+  renderMenu();
+})();
+</script>
+</body>
+</html>
