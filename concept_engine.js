@@ -75,7 +75,9 @@
           this.insertAdjacentText('beforeend', ok ? '  ✅' : '  ❌');
           if (!ok) { var cb = stage.querySelector('.cn-opt[data-i="' + s.answer + '"]'); if (cb) { cb.classList.add('correct'); cb.insertAdjacentText('beforeend', '  ✅'); } }
           stage.querySelectorAll('.cn-opt').forEach(function (x) { x.disabled = true; });
-          var rev = $('rev'); rev.textContent = (ok ? '答對了！' : (s.svg ? '沒關係，再看一次上面的圖～' : '沒關係，再想一想～')) + s.why; rev.classList.add('show');
+          // 答錯針對性回饋：若該選項有 whyWrong[i] 就先給對症說明，再接上一般 why（向下相容：沒有就維持原行為）
+          var _wrongMsg = (!ok && s.whyWrong && s.whyWrong[i]) ? (s.whyWrong[i] + ' ') : '';
+          var rev = $('rev'); rev.textContent = (ok ? '答對了！' : (s.svg ? '沒關係，再看一次上面的圖～' : '沒關係，再想一想～')) + _wrongMsg + s.why; rev.classList.add('show');
           $('after').style.display = 'flex';
           toast(ok ? '很好，抓到訣竅了！' : (s.svg ? '再想想剛剛的圖 💪' : '再想一想，你可以的 💪'));
         });
