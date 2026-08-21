@@ -2792,6 +2792,272 @@ function renderChoices(container, q) {
   container.appendChild(grid);
 }
 
+
+// ── 診斷式迷思回饋（答錯時給對症提示；由 math 團隊撰寫+對抗式驗證，永不對正解誤診）──
+function mathDiag(question, correctAnswer, userAnswer) {
+  // ---------- helpers ----------
+  // Convert full-width digits/operators to half-width and unify operator glyphs.
+  function normalize(str) {
+    if (str === null || str === undefined) return '';
+    var s = String(str);
+    // full-width digits FF10-FF19 -> 0-9
+    s = s.replace(/[０-９]/g, function (c) {
+      return String.fromCharCode(c.charCodeAt(0) - 0xFEE0);
+    });
+    s = s.replace(/．/g, '.');            // full-width period
+    s = s.replace(/[＋]/g, '+');          // full-width plus
+    s = s.replace(/[−－–—―﹣ｰ]/g, '-');  // minus variants
+    s = s.replace(/[×✕✖╳＊\*ｘ]/g, '×'); // multiply variants -> ×
+    s = s.replace(/[÷]/g, '÷');           // divide
+    s = s.replace(/[／]/g, '/');          // full-width slash -> fraction slash
+    s = s.replace(/[＞]/g, '>').replace(/[＜]/g, '<').replace(/[＝]/g, '=');
+    return s;
+  }
+  function num(x) {
+    return parseFloat(normalize(x).replace(/\s+/g, ''));
+  }
+  function approx(a, b) { return Math.abs(a - b) < 1e-9; }
+
+  var q = normalize(question).trim();
+  var uaRaw = normalize(userAnswer).trim();
+
+  // ============================================================
+  // 1) COMPARISON  "a ○ b"  (answer is > < =)
+  //    Operands may be fractions/decimals, so we intentionally trust
+  //    correctAnswer (the caller-computed symbol) for the factual claim
+  //    instead of re-parsing the operands numerically.
+  // ============================================================
+  if (q.indexOf('○') !== -1) {
+    var parts = q.split('○');
+    if (parts.length === 2) {
+      var left = parts[0].trim();
+      var right = parts[1].trim();
+      var correct = normalize(correctAnswer).trim();
+      var user = uaRaw;
+      if (user && user !== correct && (user === '>' || user === '<' || user === '=')) {
+        if (correct === '=') {
+          return '兩邊其實一樣大！' + left + ' 和 ' + right +
+            ' 相等，要用「=」。先把兩邊都算出來再比一比。';
+        }
+        if (correct === '>') {
+          return '符號的開口要對著比較大的數！' + left + ' 比 ' + right +
+            ' 大，所以要用「>」。';
+        } else if (correct === '<') {
+          return '符號的開口要對著比較大的數！' + right + ' 比 ' + left +
+            ' 大，所以要用「<」。';
+        }
+      }
+    }
+    return null;
+  }
+
+  // ============================================================
+  // 2) UNIT CONVERSION  "X 公分 = ? 公尺" etc.
+  // ============================================================
+  var unitRe = /^(\d+(?:\.\d+)?)\s*(公分|公尺|公克|公斤)\s*=\s*\?\s*(公分|公尺|公克|公斤)/;
+  var um = q.match(unitRe);
+  if (um) {
+    var val = parseFloat(um[1]);
+    var uFrom = um[2], uTo = um[3];
+    var uv = num(userAnswer);
+    if (isNaN(uv)) return null;
+    var lengthUnits = { '公分': 'small', '公尺': 'big' };
+    var weightUnits = { '公克': 'small', '公斤': 'big' };
+    var F, otherF, sizeFrom, sizeTo, pairName;
+    if (lengthUnits[uFrom] && lengthUnits[uTo]) {
+      F = 100; otherF = 1000; sizeFrom = lengthUnits[uFrom]; sizeTo = lengthUnits[uTo];
+      pairName = '公分和公尺之間是 100 倍（100 公分 = 1 公尺），不是 1000 倍！';
+    } else if (weightUnits[uFrom] && weightUnits[uTo]) {
+      F = 1000; otherF = 100; sizeFrom = weightUnits[uFrom]; sizeTo = weightUnits[uTo];
+      pairName = '公克和公斤之間是 1000 倍（1000 公克 = 1 公斤），不是 100 倍！';
+    } else {
+      return null; // mixed length/weight — nonsensical, skip
+    }
+    var bigToSmall = (sizeFrom === 'big' && sizeTo === 'small'); // multiply
+    var smallToBig = (sizeFrom === 'small' && sizeTo === 'big'); // divide
+    if (!bigToSmall && !smallToBig) return null;
+    var correctVal = bigToSmall ? (val * F) : (val / F);
+    if (approx(uv, correctVal)) return null; // actually correct
+
+    // (a) reversed operation, correct factor
+    var reversedVal = bigToSmall ? (val / F) : (val * F);
+    if (approx(uv, reversedVal)) {
+      var dir = bigToSmall
+        ? ('大單位換小單位要「乘」' + F + '倍')
+        : ('小單位換大單位要「除以」' + F);
+      return '單位換算的乘除要看方向！' + val + ' ' + uFrom + ' 換成 ' + uTo +
+        '：' + dir + '。答案是 ' + correctVal + ' ' + uTo + '。';
+    }
+    // (b) right direction, wrong factor
+    var wrongFactorVal = bigToSmall ? (val * otherF) : (val / otherF);
+    if (approx(uv, wrongFactorVal)) {
+      return pairName + '答案是 ' + correctVal + ' ' + uTo + '。';
+    }
+    return null;
+  }
+
+  // ============================================================
+  // 3) SAME-DENOMINATOR FRACTION add / subtract  "n1/d ± n2/d = ?"
+  // ============================================================
+  var fracRe = /^(\d+)\s*\/\s*(\d+)\s*([+\-])\s*(\d+)\s*\/\s*(\d+)\s*=/;
+  var fm = q.match(fracRe);
+  if (fm) {
+    var n1 = parseInt(fm[1], 10), d1 = parseInt(fm[2], 10);
+    var op = fm[3];
+    var n2 = parseInt(fm[4], 10), d2 = parseInt(fm[5], 10);
+    if (d1 === d2 && d1 !== 0) {
+      var d = d1;
+      var uf = uaRaw.match(/^(\d+)\s*\/\s*(\d+)$/);
+      var un, ud;
+      if (uf) { un = parseInt(uf[1], 10); ud = parseInt(uf[2], 10); }
+      else if (/^\d+$/.test(uaRaw)) { un = parseInt(uaRaw, 10); ud = 1; }
+      else return null;
+
+      function sameFrac(a, b, c, e) { // a/b == c/e ?  (b,e must be > 0)
+        if (b === 0 || e === 0) return false;
+        return a * e === c * b;
+      }
+
+      // (a) denominator wrongly combined too:  (n1+n2)/(d+d)  e.g. 2/5+1/5 = 3/10
+      if (op === '+') {
+        if (ud !== 0 && sameFrac(un, ud, n1 + n2, d + d)) {
+          return '分母不用相加喔！同分母相加時，分母保持不變，只把分子相加：' +
+            n1 + '/' + d + ' + ' + n2 + '/' + d + ' = ' + (n1 + n2) + '/' + d + '。';
+        }
+      }
+      // (b) wrong operation on numerators
+      if (op === '+' && sameFrac(un, ud, n1 - n2, d)) {
+        return '這題是「＋」相加，分子要相加（分母不變）：' +
+          n1 + '/' + d + ' + ' + n2 + '/' + d + ' = ' + (n1 + n2) + '/' + d + '。';
+      }
+      if (op === '-' && sameFrac(un, ud, n1 + n2, d)) {
+        return '這題是「−」相減，分子要相減（分母不變）：' +
+          n1 + '/' + d + ' − ' + n2 + '/' + d + ' = ' + (n1 - n2) + '/' + d + '。';
+      }
+      return null;
+    }
+    return null;
+  }
+
+  // ============================================================
+  // 4) INTEGER ARITHMETIC  a + b / a - b / a × b / a ÷ b = ?
+  // ============================================================
+  var uv2 = num(userAnswer);
+
+  // digit-wise no-carry addition (classic "forgot to carry")
+  function noCarryAdd(a, b) {
+    var res = 0, place = 1, hadCarry = false;
+    while (a > 0 || b > 0) {
+      var da = a % 10, db = b % 10;
+      if (da + db >= 10) hadCarry = true;
+      res += ((da + db) % 10) * place;
+      place *= 10;
+      a = Math.floor(a / 10); b = Math.floor(b / 10);
+    }
+    return { value: res, hadCarry: hadCarry };
+  }
+  // digit-wise "always big minus small" (classic borrow error)
+  function colAbsDiff(a, b) {
+    var res = 0, place = 1, neededBorrow = false;
+    while (a > 0 || b > 0) {
+      var da = a % 10, db = b % 10;
+      if (da < db) neededBorrow = true;
+      res += Math.abs(da - db) * place;
+      place *= 10;
+      a = Math.floor(a / 10); b = Math.floor(b / 10);
+    }
+    return { value: res, neededBorrow: neededBorrow };
+  }
+
+  var mAdd = q.match(/^(\d+)\s*\+\s*(\d+)\s*=/);
+  if (mAdd) {
+    var a = parseInt(mAdd[1], 10), b = parseInt(mAdd[2], 10);
+    if (isNaN(uv2)) return null;
+    var sum = a + b;
+    if (approx(uv2, sum)) return null;
+    var nc = noCarryAdd(a, b);
+    if (nc.hadCarry && nc.value !== sum && approx(uv2, nc.value)) {
+      var au = a % 10, bu = b % 10;
+      var eg = (au + bu >= 10) ? ('像個位 ' + au + '+' + bu + '=' + (au + bu) + '，就要進位。') : '';
+      return '再檢查一次進位喔！只要某一位相加滿 10，就要往左邊那一位進 1。' +
+        eg + '正確答案是 ' + sum + '。';
+    }
+    return null;
+  }
+
+  var mSub = q.match(/^(\d+)\s*-\s*(\d+)\s*=/);
+  if (mSub) {
+    var a2 = parseInt(mSub[1], 10), b2 = parseInt(mSub[2], 10);
+    if (isNaN(uv2)) return null;
+    var diff = a2 - b2;
+    if (approx(uv2, diff)) return null;
+    var cd = colAbsDiff(a2, b2);
+    if (cd.neededBorrow && cd.value !== diff && approx(uv2, cd.value)) {
+      var au2 = a2 % 10, bu2 = b2 % 10;
+      var eg2 = (au2 < bu2) ? ('像個位 ' + au2 + ' 比 ' + bu2 + ' 小，就要向左邊借位。') : '';
+      return '減法不能「大減小」喔！上面的數字比下面小時，要向左邊「借 1 當 10」。' +
+        eg2 + '再算一次，答案是 ' + diff + '。';
+    }
+    return null;
+  }
+
+  var mMul = q.match(/^(\d+)\s*×\s*(\d+)\s*=/);
+  if (mMul) {
+    var a3 = parseInt(mMul[1], 10), b3 = parseInt(mMul[2], 10);
+    if (isNaN(uv2)) return null;
+    var prod = a3 * b3;
+    if (approx(uv2, prod)) return null;
+    // (a) added instead of multiplied
+    if (a3 + b3 !== prod && approx(uv2, a3 + b3)) {
+      return '× 是「乘」不是「加」喔！' + a3 + ' × ' + b3 +
+        ' 的意思是 ' + b3 + ' 個 ' + a3 + ' 相加（不是 ' + a3 + '+' + b3 +
+        '）。答案是 ' + prod + '。';
+    }
+    // (b) off by one group
+    if (approx(uv2, a3 * (b3 - 1)) || approx(uv2, a3 * (b3 + 1)) ||
+        approx(uv2, (a3 - 1) * b3) || approx(uv2, (a3 + 1) * b3)) {
+      return '差一組而已！' + a3 + ' × ' + b3 + ' 要算「' + b3 + ' 個 ' + a3 +
+        '」。再數一次有沒有多算或少算一組，答案是 ' + prod + '。';
+    }
+    return null;
+  }
+
+  var mDiv = q.match(/^(\d+)\s*÷\s*(\d+)\s*=/);
+  if (mDiv) {
+    var a4 = parseInt(mDiv[1], 10), b4 = parseInt(mDiv[2], 10);
+    if (isNaN(uv2) || b4 === 0) return null;
+    var quo = a4 / b4;
+    if (approx(uv2, quo)) return null;
+    // (a) multiplied instead of divided
+    if (a4 * b4 !== quo && approx(uv2, a4 * b4)) {
+      return '÷ 是「平分」不是相乘喔！' + a4 + ' ÷ ' + b4 +
+        ' 是把 ' + a4 + ' 平分成 ' + b4 + ' 份，看每份多少。答案是 ' + quo + '。';
+    }
+    // (b) divisor/dividend reversed (only if that gives a clean integer)
+    if (a4 !== 0) {
+      var rev = b4 / a4;
+      if (Number.isInteger(rev) && !approx(rev, quo) && approx(uv2, rev)) {
+        return '除數和被除數放反了！是 ' + a4 + ' ÷ ' + b4 +
+          '（把 ' + a4 + ' 平分成 ' + b4 + ' 份），不是 ' + b4 + ' ÷ ' + a4 +
+          '。答案是 ' + quo + '。';
+      }
+    }
+    // (c) off-by-one quotient
+    if (Number.isInteger(quo) && (approx(uv2, quo - 1) || approx(uv2, quo + 1))) {
+      return '很接近了！' + a4 + ' ÷ ' + b4 + ' 要想「' + b4 +
+        ' 乘以幾會等於 ' + a4 + '」。因為 ' + b4 + ' × ' + quo + ' = ' + a4 +
+        '，答案是 ' + quo + '。';
+    }
+    return null;
+  }
+
+  return null;
+}
+function revealMethodText(q, userAnswer){
+  try { if (typeof mathDiag === "function") { var d = mathDiag(q.question, q.answer, userAnswer); if (d) return d; } } catch(e){}
+  return q.questionSub ? ("解法：" + q.questionSub) : "";
+}
+
 function handleChoiceAnswer(selected, q, grid) {
   const correct = String(selected) === String(q.answer);
   const buttons = grid.querySelectorAll('.choice-btn');
@@ -2806,15 +3072,16 @@ function handleChoiceAnswer(selected, q, grid) {
     }
   });
 
-  // 答錯時補上方法提示（與 numpad/分數路徑一致的糾正式回饋；正解按鈕已高亮故不重複數字）
-  if (!correct && q.questionSub) {
+  // 答錯時補上回饋：優先對症診斷（mathDiag），否則退回一般解法提示
+  if (!correct) {
+    const _mt = revealMethodText(q, selected);
     const area = document.getElementById('answer-area');
-    if (area && !area.querySelector('.reveal-method')) {
+    if (_mt && area && !area.querySelector('.reveal-method')) {
       const reveal = document.createElement('div');
       reveal.className = 'correct-reveal';
       const methodLine = document.createElement('div');
       methodLine.className = 'reveal-method';
-      methodLine.textContent = `解法：${q.questionSub}`;
+      methodLine.textContent = _mt;
       reveal.appendChild(methodLine);
       area.appendChild(reveal);
     }
@@ -2996,12 +3263,13 @@ function submitNumpadAnswer(q) {
     const ansLine = document.createElement('div');
     ansLine.textContent = `正確答案: ${q.answer}`;
     reveal.appendChild(ansLine);
-    if (q.questionSub) {
-      const methodLine = document.createElement('div');
-      methodLine.className = 'reveal-method';
-      methodLine.textContent = `解法：${q.questionSub}`;
-      reveal.appendChild(methodLine);
-    }
+    { const _mt = revealMethodText(q, userAnswer);
+      if (_mt) {
+        const methodLine = document.createElement('div');
+        methodLine.className = 'reveal-method';
+        methodLine.textContent = _mt;
+        reveal.appendChild(methodLine);
+      } }
     area.appendChild(reveal);
   }
 
@@ -3042,12 +3310,13 @@ function submitFractionAnswer(q) {
     const ansLine = document.createElement('div');
     ansLine.textContent = `正確答案: ${q.answer}`;
     reveal.appendChild(ansLine);
-    if (q.questionSub) {
-      const methodLine = document.createElement('div');
-      methodLine.className = 'reveal-method';
-      methodLine.textContent = `解法：${q.questionSub}`;
-      reveal.appendChild(methodLine);
-    }
+    { const _mt = revealMethodText(q, userAnswer);
+      if (_mt) {
+        const methodLine = document.createElement('div');
+        methodLine.className = 'reveal-method';
+        methodLine.textContent = _mt;
+        reveal.appendChild(methodLine);
+      } }
     area.appendChild(reveal);
   }
 
