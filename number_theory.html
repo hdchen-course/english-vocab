@@ -1817,6 +1817,20 @@ function nextDivQuestion() {
   clearNextBtn(document.getElementById('divFeedback'));
 }
 
+// 整除判別口訣（標準規則；答錯時補上，幫下次判斷）
+function divRule(d) {
+  var R = {
+    2: '看個位數：是 0、2、4、6、8（偶數）就能被 2 整除。',
+    3: '把各位數字全部加起來，總和能被 3 整除，原數就能被 3 整除。',
+    4: '只看最後兩位數，能被 4 整除，整個數就能被 4 整除。',
+    5: '看個位數：是 0 或 5 就能被 5 整除。',
+    6: '同時能被 2 和 3 整除（也就是偶數、而且各位數字和能被 3）。',
+    8: '只看最後三位數，能被 8 整除，整個數就能被 8 整除。',
+    9: '把各位數字全部加起來，總和能被 9 整除，原數就能被 9 整除。',
+    10: '看個位數：是 0 就能被 10 整除。'
+  };
+  return R[d] || '';
+}
 function answerDiv(answer) {
   if (divState.answered || divState.round >= 10) return;
   divState.answered = true;
@@ -1834,6 +1848,8 @@ function answerDiv(answer) {
     } else {
       fb.textContent = `差一點！${q.num} 不能被 ${q.divisor} 整除（餘 ${q.num % q.divisor}）`;
     }
+    var _rule = divRule(q.divisor);
+    if (_rule) fb.textContent += `　🔑 口訣：${_rule}`;
     fb.className = 'feedback wrong';
   }
   recordMath(answer === correct);

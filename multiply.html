@@ -1136,13 +1136,28 @@ function advanceQuestion() {
   }
 }
 
+// 乘法策略口訣：依題目的數字給「怎麼想」的方法，引導但不直接報答案
+function multStrategy(a, b) {
+  var has = function (n) { return a === n || b === n; };
+  var other = function (n) { return a === n ? b : a; };  // 另一個因數
+  if (a === b) return '這是「' + a + ' 的平方」（同一個數乘自己），可以特別記起來。';
+  if (has(1)) return '任何數 ×1 就等於它本身。';
+  if (has(10)) return '×10 的訣竅：在 ' + other(10) + ' 的後面加一個 0。';
+  if (has(9)) return '遇到 ×9：先算 ' + other(9) + '×10，再減掉一個 ' + other(9) + '。';
+  if (has(5)) return '遇到 ×5：先算 ' + other(5) + '×10，再除以 2（一半）。';
+  if (has(2)) return '×2 就是「加倍」：把 ' + other(2) + ' 加自己一次。';
+  if (has(4)) return '遇到 ×4：把 ' + other(4) + ' 加倍，再加倍一次。';
+  if (has(6)) return '遇到 ×6：先算 ×3，再加倍（或先加倍再 ×3）。';
+  if (has(3)) return '×3 就是把它加三次，或先加倍再多加一個它。';
+  if (has(8)) return '遇到 ×8：把 ' + other(8) + ' 連續加倍三次（×2、再×2、再×2）。';
+  if (has(7)) return '遇到 ×7：可拆成 ×5 加 ×2（' + other(7) + '×5 再加 ' + other(7) + '×2）。';
+  return '可以用交換律：先算比較好背的那一個；也可以把大的拆開來算。';
+}
 function showHint() {
   if (!currentGame || currentGame.answered || currentGame.hintUsed) return;
   currentGame.hintUsed = true;
   const pair = currentGame.currentPair;
-  const ans = pair[0] * pair[1];
-  const s = String(ans);
-  document.getElementById('feedbackText').textContent = '💡 提示：答案是 ' + s.length + ' 個數字，開頭是 ' + s[0];
+  document.getElementById('feedbackText').textContent = '💡 ' + multStrategy(pair[0], pair[1]);
   document.getElementById('feedbackText').style.color = 'var(--ink)';
 }
 
