@@ -1267,3 +1267,15 @@ a.app-bar__home:hover { background: var(--card-border); }
   .fc-spell__tile:active, .fc-reveal__next:active, .fc-source__btn:active { transform: none; }
   .fc-reveal.show { animation: none; }
 }
+
+/* ── 跨頁「簡單→進階」銜接橫幅（全站共用元件；取代各頁複製的 inline style，見設計規格）──
+   前進用亮底(頁面 --su-tint，未設時 fallback --accent-tint)；回頭/打底用 --back 低調樣式。 */
+.cn-nextup{ display:flex; align-items:center; gap:12px; margin-top:16px;
+  padding:14px 16px; min-height:var(--tap-min); line-height:1.5;
+  background:var(--su-tint,var(--accent-tint)); border:1px solid var(--card-border);
+  border-radius:14px; text-decoration:none; color:var(--ink); font-weight:700; }
+.cn-nextup:hover{ border-color:var(--su,var(--accent)); }
+.cn-nextup .cn-nextup-ic{ font-size:26px; flex:none; }
+.cn-nextup--back{ background:var(--card); color:var(--ink-soft); }
+.cn-nextup-group{ display:flex; flex-direction:column; gap:10px; margin-top:16px; }
+.cn-nextup-group .cn-nextup{ margin-top:0; }
