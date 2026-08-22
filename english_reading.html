@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英語閱讀技巧 📖</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<link rel="stylesheet" href="concept.css">
+<script src="game_core.js"></script>
+<style>:root{ --su:#e67e22; --su-tint:rgba(230,126,34,0.14); }
+  :root[data-theme="dark"]{ --su:#f6c186; --su-tint:rgba(246,193,134,0.16); }</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">英語閱讀技巧 📖</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="cn-screen active cn-wrap">
+    <div class="cn-topbar"><span class="cn-title">英語閱讀技巧 📖</span></div>
+    <div class="cn-hello"><span class="cn-mascot" aria-hidden="true">📖</span>
+      <div><div class="cn-htext" id="hello">讀很多英文書很棒；再學會幾招「閱讀技巧」，就能讀得更快、更懂。用短短的英文小段落，一招一招練。</div>
+      <div class="cn-hsub">每個技巧都是「先懂這招 → 看短文 → 換你試試」。看不懂的字先別急著查，試試用學到的方法猜猜看。</div></div></div>
+    <div class="cn-lessons" id="lesson-list"></div>
+    <a class="cn-nextup" href="english_sense.html" style="display:flex;align-items:center;gap:12px;margin-top:16px;padding:14px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:26px;flex:none" aria-hidden="true">🚀</span><span>想練英文語感嗎？到「英文語感」繼續 →</span></a>
+    <p class="cn-note">這裡是「先學技巧」的教學小旅程，只留在你的裝置上，不影響學習基地的等級或經驗值。閱讀量可以靠你平常看的英文書（例如 myOn），這裡專門練「怎麼讀」。</p>
+  </section>
+  <section id="screen-play" class="cn-screen cn-wrap">
+    <div class="cn-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="cn-title" id="play-title">閱讀技巧</span></div>
+    <div class="cn-progress" id="prog" aria-hidden="true"></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+window.CONCEPT = { progKey:'english_reading_v1', practiceHref:'english_sense.html', lessons:[
+  {
+    "id": "er_main",
+    "name": "抓主旨",
+    "emoji": "🎯",
+    "color": "#e67e22",
+    "sub": "先問自己：這一整段主要在講什麼？",
+    "done": "記住這句：主旨就是整段最主要在講的那一件事；讀完問自己「這段最想告訴我什麼」，用一句話說出來。",
+    "steps": [
+      {
+        "type": "teach",
+        "kicker": "這個技巧",
+        "title": "找出整段最主要在講什麼",
+        "svg": "",
+        "text": "<b>主旨（main idea）</b>是一整段文字最主要在說的那一件事，其他句子都是在支持它。找主旨時，別被小細節綁住，先問自己：「如果只能用一句話告訴別人這段在講什麼，我會怎麼說？」通常主旨會出現在<b>第一句或最後一句</b>，其他句子則是舉例或說明。"
+      },
+      {
+        "type": "teach",
+        "kicker": "看短文",
+        "title": "讀一段，抓出它的主旨",
+        "svg": "",
+        "text": "先讀下面這段，一邊想「這段一直在講誰、講什麼」：<br><br>\"My dog Max loves the park. Every morning we walk there together. He runs after the ball and plays with other dogs. When we go home, he is tired and happy.\"<br><br>每一句都圍繞著 <b>Max</b> 和<b>公園</b>：走路去、追球、跟別的狗玩、回家很開心。把這些合起來，主旨就是「Max 很喜歡去公園」，而不是某一個小動作。"
+      },
+      {
+        "type": "quiz",
+        "kicker": "換你試試",
+        "title": "上面這段的主旨是什麼？",
+        "options": [
+          "Max 討厭出門散步",
+          "Max 很喜歡去公園",
+          "這段在教怎麼訓練狗狗",
+          "Max 每天早上都在睡覺"
+        ],
+        "answer": 1,
+        "why": "整段每一句都在講 Max 去公園時做的事，最後還說他回家「tired and happy」，可見他很喜歡公園。其他選項不是與文章相反，就是文章沒提到。"
+      }
+    ]
+  },
+  {
+    "id": "er_detail",
+    "name": "找關鍵細節",
+    "emoji": "🔍",
+    "color": "#e67e22",
+    "sub": "為了找特定資訊，快速掃描不必逐字讀。",
+    "done": "記住這句：找關鍵細節（scanning）就是先想好要找什麼（時間、地點、數字、名字），眼睛快速掃過去只鎖定那個資訊。",
+    "steps": [
+      {
+        "type": "teach",
+        "kicker": "這個技巧",
+        "title": "眼睛快速掃，只找你要的那一個資訊",
+        "svg": "",
+        "text": "有時候你不用讀懂整段，只想知道一個特定資訊，例如<b>幾點、在哪裡、多少錢、誰</b>。這時候用<b>掃描（scanning）</b>：先在心裡定好目標（例如「我要找價錢」），眼睛就像找數字一樣快速滑過每一行，看到相關的字（數字、地名、時間詞）再停下來看清楚。不必從頭一字一字讀。"
+      },
+      {
+        "type": "teach",
+        "kicker": "看短文",
+        "title": "掃描找出關鍵數字",
+        "svg": "",
+        "text": "假設你只想知道「門票多少錢」，帶著這個問題去掃下面這段：<br><br>\"Our school fair starts on Saturday at nine o'clock. There are 20 food stalls and a big stage for music. Tickets cost 50 dollars. The fair ends at five in the afternoon.\"<br><br>段落裡有好幾個數字（9、20、50、5）。因為你只找「價錢」，就鎖定和 <b>Tickets</b>、<b>dollars</b> 有關的那一句，很快看到「Tickets cost 50 dollars」。"
+      },
+      {
+        "type": "quiz",
+        "kicker": "換你試試",
+        "title": "根據上面短文，門票要多少錢？",
+        "options": [
+          "9 元",
+          "20 元",
+          "50 元",
+          "5 元"
+        ],
+        "answer": 2,
+        "why": "文中「Tickets cost 50 dollars」直接說門票 50 元。9 是開始時間、20 是攤位數量、5 是結束時間，都不是價錢。"
+      }
+    ]
+  },
+  {
+    "id": "er_context",
+    "name": "上下文猜生字",
+    "emoji": "🧩",
+    "color": "#e67e22",
+    "sub": "不查字典，用前後文猜出生字的意思。",
+    "done": "記住這句：上下文猜字（context clues）就是遇到不會的字先不查字典，看它前後的句子在講什麼，推出它大概的意思。",
+    "steps": [
+      {
+        "type": "teach",
+        "kicker": "這個技巧",
+        "title": "用前後文當線索，猜出生字意思",
+        "svg": "",
+        "text": "讀英文一定會遇到不認識的字。別馬上停下來查字典，先試著用<b>上下文（context clues）</b>猜猜看：這個字前後的句子在描述什麼？有沒有<b>舉例、對比、或結果</b>可以幫你猜？例如句子說「加了鹽之後變好吃了」，那前面那個形容味道的生字，大概就是「本來沒味道」的意思。先猜，讀完再查證。"
+      },
+      {
+        "type": "teach",
+        "kicker": "看短文",
+        "title": "從線索猜出 bland 的意思",
+        "svg": "",
+        "text": "先讀短文，注意 <b>bland</b> 前後在講什麼：<br><br>\"The soup was too bland, so I added some salt and pepper. After that, it tasted much better.\"<br><br>線索是：因為湯 bland，所以「加了鹽和胡椒」，加完之後「變好吃很多」。既然要靠加鹽加胡椒來救，代表原本的湯應該是<b>沒什麼味道、太淡</b>——這就是 bland 的意思，不用查字典也能猜到。"
+      },
+      {
+        "type": "quiz",
+        "kicker": "換你試試",
+        "title": "在這段裡，bland 最可能是什麼意思？",
+        "options": [
+          "沒有味道、太淡",
+          "太辣了",
+          "太燙了",
+          "很香很好聞"
+        ],
+        "answer": 0,
+        "why": "因為湯 bland 才要「加鹽和胡椒」，加完「變好吃」，可推出原本是味道太淡。若是太辣或太燙，加更多鹽和胡椒並不會讓它變好吃。"
+      }
+    ]
+  },
+  {
+    "id": "er_infer",
+    "name": "推論",
+    "emoji": "💡",
+    "color": "#e67e22",
+    "sub": "文章沒明說，但可以合理推出來的事。",
+    "done": "記住這句：推論（inference）就是把文章給的線索加上常識，推出作者沒有直接寫、但一定成立的事。",
+    "steps": [
+      {
+        "type": "teach",
+        "kicker": "這個技巧",
+        "title": "把線索加上常識，推出沒寫出來的事",
+        "svg": "",
+        "text": "好的讀者會<b>讀出字裡行間</b>。<b>推論（inference）</b>就是文章沒有直接寫出來，但根據它給的<b>線索加上你的常識</b>，可以合理推出來的事。重點是：你的答案要有文章的線索支持，不能憑空亂猜。問自己：「作者這樣寫，最可能是想讓我知道什麼？」"
+      },
+      {
+        "type": "teach",
+        "kicker": "看短文",
+        "title": "從動作推出沒說出口的天氣",
+        "svg": "",
+        "text": "讀讀看，注意主角做了什麼：<br><br>\"Lily opened the door and saw the sky was grey. She went back inside and took her umbrella before leaving for school.\"<br><br>文章沒有一句話說「要下雨」，但線索很清楚：天空<b>灰灰的（grey）</b>，而且 Lily 特地<b>回去拿雨傘</b>。把這兩個線索加上常識，就能推出：她覺得<b>可能會下雨</b>。"
+      },
+      {
+        "type": "quiz",
+        "kicker": "換你試試",
+        "title": "從這段最可以推論出什麼？",
+        "options": [
+          "Lily 要去公園玩",
+          "外面天氣非常晴朗",
+          "Lily 忘記帶書包",
+          "天氣可能會下雨"
+        ],
+        "answer": 3,
+        "why": "天空是灰的、又特地回去拿雨傘，合起來指向可能會下雨。文章說她是去上學（不是公園），天空是灰的（不是晴朗），也完全沒提到書包。"
+      }
+    ]
+  },
+  {
+    "id": "er_skim",
+    "name": "略讀抓大意",
+    "emoji": "🏃",
+    "color": "#e67e22",
+    "sub": "快速看過抓大概，不逐字讀。",
+    "done": "記住這句：略讀（skimming）就是先看標題、開頭和每段第一句，快速抓到「這篇大概在講什麼」，之後再決定要不要細看。",
+    "steps": [
+      {
+        "type": "teach",
+        "kicker": "這個技巧",
+        "title": "快速看過，先抓一篇的大概方向",
+        "svg": "",
+        "text": "<b>略讀（skimming）</b>和逐字讀不一樣：目的是<b>快速掌握大意</b>，而不是讀懂每一個字。方法是先看<b>標題、第一段、每段的第一句和最後一句</b>，眼睛滑過中間的細節。這樣幾秒鐘就能知道「這篇大概在講什麼、值不值得細讀」，很適合在時間不多時先做。"
+      },
+      {
+        "type": "teach",
+        "kicker": "看短文",
+        "title": "略讀一段，先抓主題方向",
+        "svg": "",
+        "text": "用略讀的方式快速掃過這段，注意反覆出現的字：<br><br>\"This short guide has three parts. First, it explains what plants need to grow. Then it shows how to plant seeds. Finally, it gives tips for watering.\"<br><br>就算不細看每個字，你也會一直看到 <b>plants</b>、<b>seeds</b>、<b>grow</b>、<b>watering</b> 這些字。快速一掃就能抓到：這篇大概是在教<b>怎麼種植物</b>。"
+      },
+      {
+        "type": "quiz",
+        "kicker": "換你試試",
+        "title": "略讀之後，這段大概在講什麼？",
+        "options": [
+          "怎麼照顧寵物",
+          "怎麼種植物",
+          "怎麼煮一頓飯",
+          "怎麼畫一幅畫"
+        ],
+        "answer": 1,
+        "why": "段落反覆出現 plants、seeds、grow、watering，方向指向種植物。寵物、煮飯、畫畫都不是文中反覆出現的主題。"
+      }
+    ]
+  },
+  {
+    "id": "er_structure",
+    "name": "文章結構",
+    "emoji": "🏗️",
+    "color": "#e67e22",
+    "sub": "看出是時間順序、比較、因果，還是問題-解決。",
+    "done": "記住這句：看文章結構（text structure）就是找出作者用哪種方式安排內容——時間順序、比較、因果、或問題-解決——看懂結構就更好理解。",
+    "steps": [
+      {
+        "type": "teach",
+        "kicker": "這個技巧",
+        "title": "看出作者是用哪一種方式安排內容",
+        "svg": "",
+        "text": "文章不是隨便排的，作者常用固定的<b>結構（text structure）</b>：<b>時間順序</b>（先…再…最後）、<b>比較</b>（A 和 B 有什麼相同或不同）、<b>因果</b>（因為…所以…）、<b>問題-解決</b>（遇到什麼問題、怎麼解決）。看到 <i>first、next、then、finally</i> 常是時間順序；看到 <i>because、so</i> 常是因果。認出結構，就更容易抓住重點。"
+      },
+      {
+        "type": "teach",
+        "kicker": "看短文",
+        "title": "從連接詞認出文章結構",
+        "svg": "",
+        "text": "讀這段，特別注意開頭的連接詞：<br><br>\"First, we mixed the flour and sugar. Next, we added two eggs. Then we put the bowl in the oven. Finally, we ate the warm cake.\"<br><br>每一句都用 <b>First、Next、Then、Finally</b> 開頭，一步接著一步。這種「照發生先後排列」的寫法，就是<b>時間順序（先後順序）</b>結構。"
+      },
+      {
+        "type": "quiz",
+        "kicker": "換你試試",
+        "title": "上面這段用的是哪一種文章結構？",
+        "options": [
+          "比較兩樣東西的異同",
+          "先講問題再講解決辦法",
+          "照時間先後順序",
+          "說明原因和結果"
+        ],
+        "answer": 2,
+        "why": "段落用 First、Next、Then、Finally 把步驟一步步排下去，屬於時間先後順序。文中沒有做比較、沒有提出問題，也沒有說明因果。"
+      }
+    ]
+  },
+  {
+    "id": "er_pronoun",
+    "name": "代名詞指涉",
+    "emoji": "🔗",
+    "color": "#e67e22",
+    "sub": "搞清楚 it / they / this 指的是前面哪個東西。",
+    "done": "記住這句：代名詞指涉（reference）就是遇到 it、they、he、this 時，往前找它代替的是哪個名詞，句子就讀通了。",
+    "steps": [
+      {
+        "type": "teach",
+        "kicker": "這個技巧",
+        "title": "遇到 it、they、he，往前找它代替誰",
+        "svg": "",
+        "text": "英文為了不重複，常用<b>代名詞</b>：<b>it</b>（它）、<b>they</b>（他們）、<b>he/she</b>（他／她）、<b>this/that</b>（這個／那個）。讀到這些字時，要往前找它<b>代替的是哪一個名詞</b>，這叫<b>指涉（reference）</b>。方法是把你猜的名詞代回原句，看意思通不通。搞清楚指涉，長句子就不會讀得一團亂。"
+      },
+      {
+        "type": "teach",
+        "kicker": "看短文",
+        "title": "找出 it 代替的是哪個東西",
+        "svg": "",
+        "text": "讀這段，注意最後一句的 <b>it</b>：<br><br>\"Tom and Ben went to the library. Tom borrowed a comic book. He read it on the bus home.\"<br><br>最後一句「He read <b>it</b> on the bus」，這個 it 指的是可以「read（讀）」的東西。往前找，能讀的是 <b>the comic book</b>（漫畫書），不是圖書館，也不是公車。把「the comic book」代回去唸，句子就通了。"
+      },
+      {
+        "type": "quiz",
+        "kicker": "換你試試",
+        "title": "最後一句裡的 \"it\" 指的是什麼？",
+        "options": [
+          "the comic book（漫畫書）",
+          "the library（圖書館）",
+          "the bus（公車）",
+          "Ben"
+        ],
+        "answer": 0,
+        "why": "it 是被「read（讀）」的東西，往前找只有 the comic book 說得通。圖書館和公車不是拿來讀的，Ben 是人會用 he 而不是 it。"
+      }
+    ]
+  },
+  {
+    "id": "er_summary",
+    "name": "抓重點做摘要",
+    "emoji": "📝",
+    "color": "#e67e22",
+    "sub": "用一兩句話講出整段的重點。",
+    "done": "記住這句：做摘要（summarizing）就是把整段濃縮成一兩句話，只留最重要的人事物，去掉小細節。",
+    "steps": [
+      {
+        "type": "teach",
+        "kicker": "這個技巧",
+        "title": "把整段濃縮成一兩句最重要的話",
+        "svg": "",
+        "text": "<b>摘要（summarizing）</b>是用<b>自己的話</b>把整段最重要的內容濃縮成一兩句。做法：先找出<b>主要的人事物</b>和<b>最重要的事件</b>，把重複和小細節去掉，再連成一句話。好的摘要不會漏掉重點，也不會硬塞文章沒說的事。摘要做得好，代表你真的讀懂了。"
+      },
+      {
+        "type": "teach",
+        "kicker": "看短文",
+        "title": "把一段故事濃縮成一句",
+        "svg": "",
+        "text": "讀完這段，想想「最重要的是哪幾件事」：<br><br>\"Ben planted a small tree in his garden. He watered it every day and made sure it got enough sunlight. After a few years, the tree grew tall and produced sweet fruit.\"<br><br>重點人物是 <b>Ben</b>，重點事件是：他<b>種了樹、每天細心照顧</b>，最後<b>樹長高、結出果實</b>。把這些連起來就是一句好摘要，中間「每天澆水、給陽光」這些細節可以合併成「細心照顧」。"
+      },
+      {
+        "type": "quiz",
+        "kicker": "換你試試",
+        "title": "下列哪一句最適合當這段的摘要？",
+        "options": [
+          "Ben 在市場買了很多水果",
+          "Ben 很討厭做園藝",
+          "這棵樹一直長不大",
+          "Ben 細心照顧一棵樹，幾年後樹長高並結出果實"
+        ],
+        "answer": 3,
+        "why": "這句涵蓋了主要人物 Ben、細心照顧、以及樹長高結果的結果，正好是全段重點。其他選項不是文章沒提到，就是和文章內容相反。"
+      }
+    ]
+  }
+] };
+</script>
+<script src="concept_engine.js"></script>
+</body>
+</html>
