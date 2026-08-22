@@ -6,6 +6,7 @@
 <title>數理腦・綜合特訓 🧠</title>
 <link rel="stylesheet" href="assets/app.css">
 <link rel="stylesheet" href="game_core.css">
+<link rel="stylesheet" href="concept.css">
 <script src="game_core.js"></script>
 <!--
   數理腦・綜合特訓：把「數論 / 演算法思維 / 向量與變換(線代直覺)」的題目打散、交錯出題，可反覆重來。
@@ -19,7 +20,7 @@
   .md-wrap{ max-width: var(--content-max); margin-inline:auto; }
   .md-screen{ display:none; } .md-screen.active{ display:block; }
   .md-topbar{ display:flex; align-items:center; gap:var(--s3); margin-bottom:var(--s4); }
-  .md-title{ font-size:var(--fs-h2); font-weight:800; color:var(--su-d); }
+  .md-title{ font-size:var(--fs-h2); font-weight:800; color:var(--ink); }
   .md-hello{ display:flex; align-items:center; gap:var(--s3); padding:var(--s4); background:var(--su-tint);
     border:1px solid var(--card-border); border-radius:var(--r-lg); margin-bottom:var(--s5); }
   .md-hello .md-mascot{ font-size:44px; flex:none; line-height:1; }
@@ -31,7 +32,7 @@
   .md-block{ margin-bottom:var(--s4); padding:var(--s3) var(--s4); border-radius:var(--r-md); border-left:4px solid var(--su); background:var(--su-tint); }
   .md-block-text{ font-size:var(--fs-body); font-weight:600; color:var(--ink); line-height:1.7; }
   .md-len-grid{ display:flex; flex-direction:column; gap:var(--s3); margin-top:var(--s4); }
-  .md-len{ display:flex; align-items:center; gap:var(--s3); width:100%; text-align:left; padding:var(--s4);
+  .md-len-unused{ display:flex; align-items:center; gap:var(--s3); width:100%; text-align:left; padding:var(--s4);
     min-height:var(--tap-min); border:2px solid var(--card-border); border-radius:var(--r-md);
     background:var(--card); color:var(--ink); font-family:var(--font); cursor:pointer; }
   .md-len:hover{ border-color:var(--su); }
@@ -140,9 +141,9 @@ var DRILL = {"number":[{"q":"下列哪一個數是質數？","options":["61","51
       {n:30, emoji:'🏆', title:'挑戰特訓・30 題', sub:'想多練一點就選這個'}
     ];
     var cards=lens.map(function(o){
-      return '<button type="button" class="md-len" data-n="'+o.n+'">'+
-        '<span class="md-len-emoji" aria-hidden="true">'+o.emoji+'</span>'+
-        '<span><span class="md-len-title">'+o.title+'</span><br><span class="md-len-sub">'+o.sub+'</span></span>'+
+      return '<button type="button" class="cn-optionrow" data-n="'+o.n+'">'+
+        '<span class="cn-optionrow-emoji" aria-hidden="true">'+o.emoji+'</span>'+
+        '<span><span class="cn-optionrow-title">'+o.title+'</span><br><span class="cn-optionrow-sub">'+o.sub+'</span></span>'+
       '</button>';
     }).join('');
     $('md-stage-menu').innerHTML =
@@ -152,7 +153,7 @@ var DRILL = {"number":[{"q":"下列哪一個數是質數？","options":["61","51
         '<div class="md-block"><div class="md-block-text">這裡會把<b>數論、演算法思維、向量與變換</b>三大類的題目<b>打散、交錯</b>出給你，每一輪都不一樣。交錯練習比一次只練一種更能讓大腦學得牢。目前題庫共有 <b>'+total+'</b> 題。</div></div>'+
         '<div class="md-len-grid">'+cards+'</div>'+
       '</div>';
-    Array.prototype.forEach.call($('md-stage-menu').querySelectorAll('.md-len'), function(b){
+    Array.prototype.forEach.call($('md-stage-menu').querySelectorAll('.cn-optionrow'), function(b){
       b.addEventListener('click', function(){ startRound(parseInt(b.getAttribute('data-n'),10)); });
     });
   }

@@ -6,6 +6,7 @@
 <title>心算特訓 🧮</title>
 <link rel="stylesheet" href="assets/app.css">
 <link rel="stylesheet" href="game_core.css">
+<link rel="stylesheet" href="concept.css">
 <script src="game_core.js"></script>
 <!--
   心算特訓：先教「數感心算策略」(湊整/分配律拆解/加倍減半/×9/×11)，再用題目生成器反覆練不同題目、難度隨連對提升。
@@ -18,19 +19,12 @@
   .mm-wrap{ width:100%; }
   .mm-screen{ display:none; } .mm-screen.active{ display:block; }
   .mm-topbar{ display:flex; align-items:center; gap:var(--s3); margin-bottom:var(--s4); }
-  .mm-title{ font-size:var(--fs-h2); font-weight:800; color:var(--su-d); }
+  .mm-title{ font-size:var(--fs-h2); font-weight:800; color:var(--ink); }
   .mm-hello{ display:flex; align-items:center; gap:var(--s3); padding:var(--s4); background:var(--su-tint);
     border:1px solid var(--card-border); border-radius:var(--r-lg); margin-bottom:var(--s5); }
   .mm-hello .mm-mascot{ font-size:44px; flex:none; }
   .mm-htext{ font-size:var(--fs-body); font-weight:700; color:var(--ink); }
   .mm-hsub{ font-size:var(--fs-small); color:var(--ink-soft); font-weight:600; margin-top:2px; }
-  .mm-cat{ display:flex; align-items:center; gap:var(--s3); width:100%; text-align:left; padding:var(--s4);
-    min-height:var(--tap-min); border:2px solid var(--card-border); border-radius:var(--r-md);
-    background:var(--card); color:var(--ink); font-family:var(--font); cursor:pointer; margin-bottom:var(--s3); }
-  .mm-cat:hover{ border-color:var(--su); }
-  .mm-cat .mm-cat-emoji{ font-size:26px; flex:none; }
-  .mm-cat .mm-cat-title{ font-size:var(--fs-body); font-weight:800; }
-  .mm-cat .mm-cat-sub{ font-size:var(--fs-small); font-weight:600; color:var(--ink-soft); }
   .mm-card{ background:var(--card); border:1px solid var(--card-border); border-radius:var(--r-lg); box-shadow:var(--shadow-sm); padding:var(--s5) var(--s4); max-width:600px; margin-inline:auto; }
   .mm-teach{ font-size:var(--fs-body); font-weight:600; color:var(--ink); line-height:1.8; }
   .mm-teach h2{ font-size:var(--fs-h2); font-weight:800; color:var(--su-d); margin:0 0 var(--s3); }
@@ -70,7 +64,7 @@
     <div class="mm-hello"><span class="mm-mascot" aria-hidden="true">🧮</span>
       <div><div class="mm-htext">心算不是背，是「聰明地拆」。先學會一招拆數字的方法，再開始練習——每一題都不一樣，越練越順、難度也會慢慢變高。</div>
       <div class="mm-hsub">建議先一種一種學過再玩「綜合練習」。答完會告訴你「這題怎麼拆最好算」。</div></div></div>
-    <div id="mm-menu"></div>
+    <div id="mm-menu" class="cn-lessons"></div>
     <a class="cn-nextup" href="math_drill.html"><span class="cn-nextup-ic" aria-hidden="true">🚀</span><span>想挑戰更多題型嗎？到「數理腦・綜合特訓」繼續 →</span></a>
     <p class="mm-note">這是心算練習場，題目由程式隨機生成、可無限練習；答對幾題難度會慢慢升高，連續卡關時也會自動降回來，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
   </section>
@@ -158,13 +152,15 @@
   function renderMenu(){
     var html='';
     CATS.forEach(function(c){
-      html+='<button type="button" class="mm-cat" data-cat="'+c.key+'"><span class="mm-cat-emoji" aria-hidden="true">'+c.emoji+'</span>'+
-        '<span><span class="mm-cat-title">'+c.label+'</span><br><span class="mm-cat-sub">'+c.sub+'</span></span></button>';
+      html+='<button type="button" class="cn-lesson" data-cat="'+c.key+'">'+
+        '<span class="cn-lesson-top"><span class="cn-lesson-emoji" style="background:var(--su-tint)" aria-hidden="true">'+c.emoji+'</span><span class="cn-lesson-name">'+c.label+'</span></span>'+
+        '<span class="cn-lesson-sub">'+c.sub+'</span></button>';
     });
-    html+='<button type="button" class="mm-cat" data-cat="mix"><span class="mm-cat-emoji" aria-hidden="true">🎲</span>'+
-      '<span><span class="mm-cat-title">綜合練習（各種混合）</span><br><span class="mm-cat-sub">上面幾招都學過之後再來這裡混合練，最能練到「看到題目就知道用哪一招」</span></span></button>';
+    html+='<button type="button" class="cn-lesson" data-cat="mix">'+
+      '<span class="cn-lesson-top"><span class="cn-lesson-emoji" style="background:var(--su-tint)" aria-hidden="true">🎲</span><span class="cn-lesson-name">綜合練習（各種混合）</span></span>'+
+      '<span class="cn-lesson-sub">上面幾招都學過之後再來這裡混合練，最能練到「看到題目就知道用哪一招」</span></button>';
     $('mm-menu').innerHTML=html;
-    Array.prototype.forEach.call($('mm-menu').querySelectorAll('.mm-cat'), function(b){
+    Array.prototype.forEach.call($('mm-menu').querySelectorAll('.cn-lesson'), function(b){
       b.addEventListener('click', function(){ startMode(b.getAttribute('data-cat')); });
     });
   }
