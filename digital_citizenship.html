@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>數位公民・網路世界求生課 🌐</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<link rel="stylesheet" href="concept.css">
+<script src="game_core.js"></script>
+<style>:root{ --su:#0369a1; --su-tint:rgba(3,105,161,0.14); }
+  :root[data-theme="dark"]{ --su:#7dd3fc; --su-tint:rgba(125,211,252,0.16); }</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">數位公民・網路世界求生課 🌐</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="cn-screen active cn-wrap">
+    <div class="cn-topbar"><span class="cn-title">數位公民・網路世界求生課 🌐</span></div>
+    <div class="cn-hello"><span class="cn-mascot" aria-hidden="true">🌐</span>
+      <div><div class="cn-htext" id="hello">網路是很棒的工具——可以學東西、找資料、跟朋友聊天。這裡教你怎麼用得<b>聰明又善良</b>：管好螢幕時間、保護個資、留意數位足跡、看穿網路上的陷阱與假消息。</div>
+      <div class="cn-hsub">每一課都是「先懂這個本領 → 學會怎麼做 → 換你試試」。這些是當個好數位公民、保護自己的本領。</div></div></div>
+    <div class="cn-lessons" id="lesson-list"></div>
+    <a class="cn-nextup" href="self_protection.html" style="display:flex;align-items:center;gap:12px;margin-top:16px;padding:14px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:26px;flex:none" aria-hidden="true">🔎</span><span>想更會保護自己嗎？到「留心眼・觀察與自我保護」繼續 →</span></a>
+    <p class="cn-note">這裡是「先學觀念」的教學小旅程，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
+  </section>
+  <section id="screen-play" class="cn-screen cn-wrap">
+    <div class="cn-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="cn-title" id="play-title">數位公民</span></div>
+    <div class="cn-progress" id="prog" aria-hidden="true"></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+window.CONCEPT = { progKey:'digital_citizen_concepts_v1', practiceHref:'self_protection.html', lessons:[{"id":"dc_screentime","name":"螢幕時間與平衡","emoji":"⏰","sub":"自己決定用多久、什麼時候停","done":"記住這句：先做該做的，再放心地玩。","steps":[{"type":"teach","kicker":"這個本領","title":"螢幕很好玩，身體也需要休息","text":"手機、平板、電腦都是很棒的工具，但<b>眼睛盯著螢幕太久會又乾又痠</b>，睡前一直看還會讓人比較難入睡。學會安排「用多久、什麼時候停」，玩得開心，也睡得好、看得清楚。","svg":""},{"type":"teach","kicker":"怎麼做","title":"用鬧鐘和番茄鐘幫自己踩煞車","text":"先把<b>該做的事（功課、練習、睡覺時間）</b>安排好，再開始玩。可以用<b>鬧鐘或番茄鐘</b>設定一段時間，時間到就站起來走走、看看遠方讓眼睛休息。睡前一小段時間讓螢幕先休息，人也比較好睡。","svg":""},{"type":"quiz","kicker":"換你試試","title":"週末下午你想打電動，但功課還沒寫，眼睛也有點痠","options":["先把功課寫完，再設鬧鐘玩固定時間，時間到就讓眼睛休息一下","先玩到過癮，功課留到想睡覺前再趕","一直玩下去，眼睛痠就揉一揉繼續"],"answer":0,"why":"先完成該做的事再玩，能避免事情堆到最後；設定時間並讓眼睛定時休息，可以減少眼睛乾痠和影響睡眠。"}],"color":"#0369a1"},{"id":"dc_privacy","name":"個資與隱私","emoji":"🔐","sub":"有些資料不隨便公開在網路上","done":"記住這句：個資像家裡鑰匙，不隨便交給陌生人。","steps":[{"type":"teach","kicker":"這個本領","title":"什麼是「個資」","text":"個資就是能認出「你是誰、在哪裡」的資料，像<b>真實姓名、家裡地址、就讀學校、電話、清楚的臉部照片、目前所在位置</b>。這些一旦公開在網路上，不認識的人也可能看到，所以不隨便貼出來。","svg":""},{"type":"teach","kicker":"怎麼做","title":"帳號密碼要保密、要難猜","text":"密碼是帳號的鑰匙，要<b>難猜、不同帳號用不同密碼、不告訴同學也不共用</b>。網路上有人問你的學校、住址或電話時，可以<b>先不提供，需要時問爸媽</b>。分享照片前也想想有沒有露出住家或學校的線索。","svg":""},{"type":"quiz","kicker":"換你試試","title":"遊戲裡有人問你「讀哪間學校、住哪裡、電話幾號」","options":["全部告訴他，這樣才交得到朋友","不提供這些個資，需要時先問爸媽","只給電話就好，其他都不說"],"answer":1,"why":"學校、住址、電話都屬於個資，公開後可能被不認識的人利用；連電話也不算安全，遇到這類要求先和大人確認比較妥當。"}],"color":"#0369a1"},{"id":"dc_footprint","name":"數位足跡","emoji":"👣","sub":"網路是有記憶的","done":"記住這句：發出去之前先想，收回來很難。","steps":[{"type":"teach","kicker":"這個本領","title":"貼出去的東西會留很久","text":"在網路上<b>發的貼文、留言、照片</b>，別人可以<b>截圖、轉傳、存下來</b>。就算你後來刪掉，也可能早就被人保存了。這些留下來的痕跡，就叫做「數位足跡」。","svg":""},{"type":"teach","kicker":"怎麼做","title":"發之前先做「三個人測試」","text":"按下送出前，先想一想：<b>「這如果被老師、爸媽，或以後長大的我看到，我還OK嗎？」</b>如果會不安或後悔，就先別發。生氣或想惡作劇時，更要先停一下、深呼吸再決定。","svg":""},{"type":"quiz","kicker":"換你試試","title":"你很生氣，想在群組貼一張同學的糗照配上嘲笑的話","options":["反正之後可以刪，先發了再說","先想「這被老師、家人或以後的我看到會不會後悔」，決定先別發","趕快轉傳，大家會覺得很好笑"],"answer":1,"why":"貼文和照片可能被截圖、轉傳並保存很久，刪掉不代表消失；發出前用「會不會後悔」自問，能避免造成傷害或日後困擾。"}],"color":"#0369a1"},{"id":"dc_stranger","name":"網路交友的界線","emoji":"🕵️","sub":"螢幕另一頭不一定是他說的那個人","done":"記住這句：網友要照片或見面，先告訴大人。","steps":[{"type":"teach","kicker":"這個本領","title":"線上朋友，不等於可信任的人","text":"在網路上，一個人<b>說自己是誰、幾歲、長什麼樣子，都可能不是真的</b>。可以在線上一起玩、聊得來，但那和「真正認識、可以信任的人」不一樣。分清楚這兩種，才不會被騙。","svg":""},{"type":"teach","kicker":"怎麼做","title":"守住三條界線","text":"對只在網路上認識的人：<b>不透露個資、不單獨去見面、不傳自己的私密照片</b>。如果對方要你保密、要私密照，或約你單獨見面，這是要小心的訊號，<b>要馬上告訴信任的大人</b>，讓大人陪你一起處理。","svg":""},{"type":"quiz","kicker":"換你試試","title":"只在網路聊過的「朋友」想跟你單獨見面，還要你先傳自己的照片","options":["先把照片傳給他，見面就約在他家","不傳私密照、不單獨赴約，把這件事告訴信任的大人","自己一個人先去看看，見了面再決定"],"answer":1,"why":"網路上的身分不一定真實；不傳私密照、不單獨見面，並讓信任的大人一起知道，是保護自己安全的做法。"}],"color":"#0369a1"},{"id":"dc_bully","name":"網路言語與霸凌","emoji":"🛟","sub":"旁觀者其實也有力量","done":"記住這句：不跟風、私下關心、告訴大人。","steps":[{"type":"teach","kicker":"這個本領","title":"文字看不到表情，容易誤會","text":"在網路上只有文字，<b>看不到對方的表情和語氣</b>，一句玩笑可能被當成攻擊，很多人一起說更會讓人很受傷。開口前想想：這句話當面對他說，我說得出口嗎？","svg":""},{"type":"teach","kicker":"怎麼做","title":"當旁觀者，也能幫上忙；被欺負時這樣做","text":"看到有人被圍剿，你可以<b>不按讚、不轉傳，私下關心他，並告訴大人</b>。如果被霸凌的是你：先<b>截圖存證</b>，再<b>和大人一起把對方封鎖</b>，然後<b>告訴信任的大人</b>。別人罵你的話<b>不等於事實</b>，你不用一個人扛。","svg":""},{"type":"quiz","kicker":"換你試試","title":"班上群組很多人正圍著一個同學罵，還轉傳他的糗照。旁觀的你可以怎麼做","options":["跟著按讚、轉傳，人多才不會輪到自己被針對","不按讚、不轉傳，私下關心那位同學，並告訴大人","假裝沒看到，滑掉就好"],"answer":1,"why":"跟著按讚轉傳會擴大傷害，裝作沒看到則讓被欺負的人孤立無援；不參與、私下關心並告訴大人，能實際減少傷害。"}],"color":"#0369a1"},{"id":"dc_money","name":"遊戲課金與購物陷阱","emoji":"💳","sub":"免費不一定真免費","done":"記住這句：花錢之前，先問大人。","steps":[{"type":"teach","kicker":"這個本領","title":"看穿「花錢」的小把戲","text":"很多遊戲和賣場會用<b>「限時免費」「稀有抽卡」「超低價」</b>吸引人，但抽到好東西的<b>機率常常很低</b>，有些便宜賣場甚至是假的。免費開始，往往會一步步誘導你付更多錢。","svg":""},{"type":"teach","kicker":"怎麼做","title":"付款前先停下來、問大人","text":"想課金或網路購物時，<b>不要自己輸入爸媽的付款資料</b>。花錢前先<b>問大人</b>，一起看清楚：實際要付多少、抽中機率高不高、賣家可不可信。想清楚再決定，不被「限時」催著急下手。","svg":""},{"type":"quiz","kicker":"換你試試","title":"遊戲說「限時免費抽稀有角色」，但要先綁定付款，而且抽中機率很低","options":["偷用爸媽的付款資料，先抽再說","花錢前先問大人，弄清楚抽中機率和實際要付多少","反正寫著免費，就一直抽下去"],"answer":1,"why":"「免費」常伴隨綁定付款和低機率的誘導付費；未經同意使用大人的付款資料並不妥當，花錢前先問清楚才不會受騙或超支。"}],"color":"#0369a1"},{"id":"dc_verify","name":"網路資訊別全信","emoji":"🔎","sub":"先查證，再相信","done":"記住這句：誰說的、有證據嗎、別處查得到嗎。","steps":[{"type":"teach","kicker":"這個本領","title":"網路上的話，不一定是真的","text":"網路上有<b>假消息、業配（收錢的推薦）、農場文（為了吸引點閱的誇大文章）</b>。而且<b>圖片和影片也可能被修改或造假</b>，看起來很真，不代表就是事實。","svg":""},{"type":"teach","kicker":"怎麼做","title":"用三個問題幫自己判斷","text":"看到一則消息，先問三件事：<b>「這是誰說的？」「有沒有證據？」「其他可靠的地方也查得到嗎？」</b>。很多人轉傳不代表是真的。不確定的時候，<b>問大人或多方查證</b>，別急著相信或轉發。","svg":""},{"type":"quiz","kicker":"換你試試","title":"你看到一則貼文說「某食物吃了會馬上變聰明」，轉傳的人很多","options":["很多人轉傳，一定是真的，馬上分享出去","先想是誰說的、有沒有證據，再到其他可靠的地方查證","圖片看起來很真，就直接相信"],"answer":1,"why":"轉傳人數多和圖片逼真都無法證明內容為真；用「誰說的、有無證據、他處是否查得到」來查證，才是判斷資訊的可靠方法。"}],"color":"#0369a1"}] };
+</script>
+<script src="concept_engine.js"></script>
+</body>
+</html>
