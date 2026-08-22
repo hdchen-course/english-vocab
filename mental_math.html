@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>心算特訓 🧮</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<!--
+  心算特訓：先教「數感心算策略」(湊整/分配律拆解/加倍減半/×9/×11)，再用題目生成器反覆練不同題目、難度隨連對提升。
+  答案由程式即時算出(correct-by-construction，無人工出題錯誤)；每題附「心算怎麼拆」口訣(數字也由程式算，維持自洽)。
+  純本地練習(data-game-hud=off、key mental_math_v1、不計 XP，只 pingActive 續 streak)。全繁體中文。
+-->
+<style>
+  :root{ --su:#2563eb; --su-d:#1d4ed8; --su-tint:rgba(37,99,235,0.12); }
+  :root[data-theme="dark"]{ --su:#93c5fd; --su-d:#bfdbfe; --su-tint:rgba(147,197,253,0.16); }
+  .mm-wrap{ max-width: 720px; margin-inline:auto; }
+  .mm-screen{ display:none; } .mm-screen.active{ display:block; }
+  .mm-topbar{ display:flex; align-items:center; gap:var(--s3); margin-bottom:var(--s4); }
+  .mm-title{ font-size:var(--fs-h2); font-weight:800; color:var(--su-d); }
+  .mm-hello{ display:flex; align-items:center; gap:var(--s3); padding:var(--s4); background:var(--su-tint);
+    border:1px solid var(--card-border); border-radius:var(--r-lg); margin-bottom:var(--s5); }
+  .mm-hello .mm-mascot{ font-size:44px; flex:none; }
+  .mm-htext{ font-size:var(--fs-body); font-weight:700; color:var(--ink); }
+  .mm-hsub{ font-size:var(--fs-small); color:var(--ink-soft); font-weight:600; margin-top:2px; }
+  .mm-cat{ display:flex; align-items:center; gap:var(--s3); width:100%; text-align:left; padding:var(--s4);
+    min-height:var(--tap-min); border:2px solid var(--card-border); border-radius:var(--r-md);
+    background:var(--card); color:var(--ink); font-family:var(--font); cursor:pointer; margin-bottom:var(--s3); }
+  .mm-cat:hover{ border-color:var(--su); }
+  .mm-cat .mm-cat-emoji{ font-size:26px; flex:none; }
+  .mm-cat .mm-cat-title{ font-size:var(--fs-body); font-weight:800; }
+  .mm-cat .mm-cat-sub{ font-size:var(--fs-small); font-weight:600; color:var(--ink-soft); }
+  .mm-card{ background:var(--card); border:1px solid var(--card-border); border-radius:var(--r-lg); box-shadow:var(--shadow-sm); padding:var(--s5) var(--s4); }
+  .mm-teach{ font-size:var(--fs-body); font-weight:600; color:var(--ink); line-height:1.8; }
+  .mm-teach h2{ font-size:var(--fs-h2); font-weight:800; color:var(--su-d); margin:0 0 var(--s3); }
+  .mm-scorebar{ display:flex; justify-content:space-between; align-items:center; font-size:var(--fs-small); font-weight:800; color:var(--su-d); margin-bottom:var(--s3); }
+  .mm-lv{ background:var(--su-tint); border-radius:999px; padding:2px 10px; }
+  .mm-tag{ display:inline-block; font-size:var(--fs-small); font-weight:800; color:var(--su-d); background:var(--su-tint); border-radius:999px; padding:3px 12px; margin-bottom:var(--s2); }
+  .mm-problem{ font-size:34px; font-weight:800; color:var(--ink); text-align:center; margin:var(--s3) 0; letter-spacing:1px; }
+  .mm-answer{ font-size:30px; font-weight:800; text-align:center; min-height:44px; padding:8px; border:2px dashed var(--card-border); border-radius:var(--r-md); color:var(--su-d); margin-bottom:var(--s3); }
+  .mm-pad{ display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s2); }
+  .mm-key{ min-height:52px; font-size:22px; font-weight:800; border:2px solid var(--card-border); border-radius:var(--r-md);
+    background:var(--card); color:var(--ink); font-family:var(--font); cursor:pointer; }
+  .mm-key:hover{ border-color:var(--su); }
+  .mm-key.enter{ background:var(--su); color:var(--on-accent,#fff); border-color:var(--su); }
+  .mm-reveal{ margin-top:var(--s3); padding:var(--s3) var(--s4); border-radius:var(--r-md); font-size:var(--fs-body); font-weight:700; color:var(--ink); line-height:1.7; display:none; }
+  .mm-reveal.show{ display:block; }
+  .mm-reveal.ok{ background:var(--tint-english); }
+  .mm-reveal.no{ background:var(--su-tint); }
+  .mm-actions{ margin-top:var(--s4); display:flex; gap:var(--s3); }
+  .mm-actions .btn{ flex:1; }
+  .mm-note{ text-align:center; color:var(--ink-soft); font-size:var(--fs-small); margin-top:var(--s5); font-weight:600; max-width:34em; margin-inline:auto; }
+</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">心算特訓 🧮</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="mm-screen active mm-wrap">
+    <div class="mm-topbar"><span class="mm-title">心算特訓 🧮</span></div>
+    <div class="mm-hello"><span class="mm-mascot" aria-hidden="true">🧮</span>
+      <div><div class="mm-htext">心算不是背，是「聰明地拆」。先學會一招拆數字的方法，再開始練習——每一題都不一樣，越練越順、難度也會慢慢變高。</div>
+      <div class="mm-hsub">建議先一種一種學過再玩「綜合練習」。答完會告訴你「這題怎麼拆最好算」。</div></div></div>
+    <div id="mm-menu"></div>
+    <p class="mm-note">這是心算練習場，題目由程式隨機生成、可無限練習；答對幾題難度會慢慢升高，連續卡關時也會自動降回來，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
+  </section>
+  <section id="screen-play" class="mm-screen mm-wrap">
+    <div class="mm-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="mm-title" id="play-title">心算特訓</span></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+/* eslint-disable */
+(function(){
+  'use strict';
+  function $(id){ return document.getElementById(id); }
+  function ri(lo,hi){ return lo + Math.floor(Math.random()*(hi-lo+1)); } // 含端點
+  function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+
+  // 難度：lv 1..5，數字範圍隨等級變大。每連對 6 題升一級（上限 5），答錯不降級。
+  // 生成器 gen(lv) 回傳 {text, answer(整數), tip}；tip 內的數字都由程式算出，維持自洽。
+  var CATS = [
+    { key:'round', label:'湊整加減', emoji:'🎯', sub:'把接近整十整百的數先湊整，再補回差的部分',
+      teach:'遇到接近整十、整百的數（像 99、48、201），先把它<b>湊成整十、整百的數</b>比較好算，算完再<b>補回差的部分</b>。<br><br><b>加法例：</b>47 + 99 → 把 99 看成 100，47 + 100 = 147；因為 99 比 100 <b>少 1</b>，所以再<b>減掉 1</b> = 146。<br><b>減法例：</b>83 − 48 → 83 − 50 = 33；因為 48 比 50 <b>少 2</b>，所以再<b>加回 2</b> = 35。<br><br>💡 <b>減法小心機：</b>把 48 當成 50 來減，等於<b>多減了 2</b>，所以要<b>補回 2</b>；反過來，如果湊整時<b>多加了</b>，就要記得<b>減回來</b>。「多減了補回、多加了扣掉」，方向想通就不會錯。',
+      gen:function(lv){
+        var bases = lv<=1?[10,20,30] : lv===2?[20,30,50] : lv===3?[30,50,100] : lv===4?[50,100,200] : [100,200,300];
+        var base=pick(bases);
+        var delta=pick([-2,-1,1,2,3]);
+        var b=base+delta;
+        var add=pick([true,false]);
+        var aMax = lv<=1?90 : lv===2?150 : lv===3?300 : lv===4?500 : 700; // Lv5 收斂到 ~1000 內，避免唯一的四位數陡跳、維持心算範圍
+        var a = add ? ri(21, aMax) : b+ri(15, aMax); // 減法時被減數較大，結果為正
+        var ans = add ? a+b : a-b;
+        var step1 = add ? a+base : a-base;
+        var adj = add ? delta : -delta; // 用 base 算完後，還要「再加上 adj」（adj 為負代表要減）
+        var relDesc = delta>0 ? ('比 '+base+' 多 '+delta) : ('比 '+base+' 少 '+(-delta));
+        var adjDesc = adj>0 ? ('要再加上 '+adj) : ('要再減掉 '+(-adj));
+        var roundWord = base%100===0 ? '整百數' : '整十數';
+        var tip='把 '+b+' 看成接近的'+roundWord+' '+base+'：先算 '+a+' '+(add?'+':'−')+' '+base+' = '+step1+'；因為 '+b+' '+relDesc+'，所以'+adjDesc+'，得到 '+ans+'。';
+        return { text:a+(add?' + ':' − ')+b+' = ?', answer:ans, tip:tip };
+      } },
+    { key:'five', label:'×5：先×10再除以2', emoji:'✋', sub:'乘 5 等於乘 10 再除以 2',
+      teach:'乘 5，可以先<b>乘 10（後面加個 0）再除以 2</b>，因為 5 剛好是 10 的一半。<br><br><b>例：</b>18 × 5 → 18 × 10 = 180，再 ÷ 2 = 90。<br><b>例：</b>24 × 5 → 240 ÷ 2 = 120。這樣比一位一位乘快多了。',
+      gen:function(lv){
+        var hi = lv<=1?25 : lv===2?50 : lv===3?99 : lv===4?150 : 200;
+        var n=ri(12, hi);
+        var ans=n*5;
+        var tip=n+' × 5 = '+n+' × 10 ÷ 2 = '+(n*10)+' ÷ 2 = '+ans+'。（乘 5 就是乘 10 再除以 2，因為 5 是 10 的一半。）';
+        return { text:n+' × 5 = ?', answer:ans, tip:tip };
+      } },
+    { key:'nine', label:'×9：先×10再減一份', emoji:'9️⃣', sub:'乘 9 等於乘 10 再減掉原本的數',
+      teach:'乘 9，可以先<b>乘 10 再減掉一個原本的數</b>，因為 9 = 10 − 1。<br><br><b>例：</b>7 × 9 → 7 × 10 = 70，再 − 7 = 63。<br><b>例：</b>15 × 9 → 150 − 15 = 135。',
+      gen:function(lv){
+        var hi = lv<=1?12 : lv===2?20 : lv===3?40 : lv===4?70 : 99;
+        var n=ri(4, hi);
+        var ans=n*9;
+        var tip=n+' × 9 = '+n+' × 10 − '+n+' = '+(n*10)+' − '+n+' = '+ans+'。（乘 9 就是乘 10 再減掉一個原本的數，因為 9 = 10 − 1。）';
+        return { text:n+' × 9 = ?', answer:ans, tip:tip };
+      } },
+    { key:'eleven', label:'×11：×10再加自己', emoji:'⏫', sub:'乘 11 等於乘 10 再加上原本的數',
+      teach:'乘 11，可以先<b>乘 10 再加上一個原本的數</b>，因為 11 = 10 + 1。<br><br><b>例：</b>14 × 11 → 14 × 10 = 140，再 + 14 = 154。<br><b>例：</b>23 × 11 → 230 + 23 = 253。',
+      gen:function(lv){
+        var hi = lv<=1?25 : lv===2?45 : lv===3?75 : lv===4?120 : 160;
+        var n=ri(12, hi);
+        var ans=n*11;
+        var tip=n+' × 11 = '+n+' × 10 + '+n+' = '+(n*10)+' + '+n+' = '+ans+'。（乘 11 就是乘 10 再加一個原本的數，因為 11 = 10 + 1。）';
+        return { text:n+' × 11 = ?', answer:ans, tip:tip };
+      } },
+    { key:'distrib', label:'乘法拆十（分配律）', emoji:'✖️', sub:'把兩位數拆成幾十加幾，分開乘再相加',
+      teach:'一位數乘兩位數，把<b>兩位數拆成「幾十 + 幾」</b>，分開乘再相加。<br><br><b>例：</b>7 × 13 → 把 13 拆成 10 + 3 → 7×10 + 7×3 = 70 + 21 = 91。<br><b>例：</b>6 × 24 → 6×20 + 6×4 = 120 + 24 = 144。',
+      gen:function(lv){
+        var m=ri(3,9);
+        var nHi = lv<=1?19 : lv===2?29 : lv===3?49 : lv===4?69 : 99;
+        var n; do{ n=ri(12, nHi); }while(n%10===0); // 整十沒得拆(會變「拆成 90 + 0」)，排除
+        var tens=Math.floor(n/10)*10, ones=n%10;
+        var ans=m*n;
+        var tip='把 '+n+' 拆成 '+tens+' + '+ones+'：'+m+'×'+n+' = '+m+'×'+tens+' + '+m+'×'+ones+' = '+(m*tens)+' + '+(m*ones)+' = '+ans+'。';
+        return { text:m+' × '+n+' = ?', answer:ans, tip:tip };
+      } }
+  ];
+  var CAT_BY = {}; CATS.forEach(function(c){ CAT_BY[c.key]=c; });
+
+  function showScreen(name){
+    $('screen-menu').classList.toggle('active', name==='menu');
+    $('screen-play').classList.toggle('active', name==='play');
+    try{ window.scrollTo(0,0); }catch(e){}
+  }
+  function renderMenu(){
+    var html='';
+    CATS.forEach(function(c){
+      html+='<button type="button" class="mm-cat" data-cat="'+c.key+'"><span class="mm-cat-emoji" aria-hidden="true">'+c.emoji+'</span>'+
+        '<span><span class="mm-cat-title">'+c.label+'</span><br><span class="mm-cat-sub">'+c.sub+'</span></span></button>';
+    });
+    html+='<button type="button" class="mm-cat" data-cat="mix"><span class="mm-cat-emoji" aria-hidden="true">🎲</span>'+
+      '<span><span class="mm-cat-title">綜合練習（各種混合）</span><br><span class="mm-cat-sub">上面幾招都學過之後再來這裡混合練，最能練到「看到題目就知道用哪一招」</span></span></button>';
+    $('mm-menu').innerHTML=html;
+    Array.prototype.forEach.call($('mm-menu').querySelectorAll('.mm-cat'), function(b){
+      b.addEventListener('click', function(){ startMode(b.getAttribute('data-cat')); });
+    });
+  }
+
+  var mode=null, cur=null, entry='', answered=false, correct=0, total=0, streak=0, bestStreak=0, lv=1;
+  var lvCorrect=0, missStreak=0, lvChange=0; // lvCorrect：本級累計答對(升級用)；missStreak：連錯(降級用)；lvChange：本題後難度變化 +1/-1/0
+  var LVL_UP=5, LVL_DOWN=3;                   // 累計答對 5 題升一級；連錯 3 題降一級(降級後 streak 不動、給喘息)
+  function startMode(m){
+    mode=m; correct=0; total=0; streak=0; bestStreak=0; lv=1; lvCorrect=0; missStreak=0; lvChange=0;
+    showScreen('play');
+    $('play-title').textContent = (m==='mix'?'綜合練習':CAT_BY[m].label)+' 🧮';
+    if(m==='mix'){ renderMixPrimer(); } else { renderTeach(m); }
+  }
+  function renderMixPrimer(){
+    $('stage').innerHTML =
+      '<div class="mm-card">'+
+        '<h2 class="mm-title" style="margin-bottom:var(--s3)">🎲 綜合練習</h2>'+
+        '<div class="mm-teach">這裡會把<b>五種心算招式混在一起</b>出題。看到題目時，先<b>想想它適合用哪一招</b>：<br><br>'+
+        '・看到 <b>×5</b> → 先乘 10 再除以 2<br>・看到 <b>×9</b> → 乘 10 再減一份<br>・看到 <b>×11</b> → 乘 10 再加自己<br>・看到接近整十整百的<b>加減</b> → 先湊整再補差<br>・看到<b>一位數×兩位數</b> → 拆成幾十加幾分開乘<br><br>'+
+        '想不起來也沒關係，答完每題都會再提示怎麼拆。<b>建議先把上面五招各自練過再來這裡</b>。</div>'+
+        '<div class="mm-actions"><button type="button" class="btn btn-primary" id="btn-begin">開始混合練習 🎲</button></div>'+
+      '</div>';
+    $('btn-begin').addEventListener('click', function(){ beginPractice(); });
+    try{ $('btn-begin').focus(); }catch(e){}
+  }
+  function renderTeach(m){
+    var c=CAT_BY[m];
+    $('stage').innerHTML =
+      '<div class="mm-card">'+
+        '<h2 class="mm-title" style="margin-bottom:var(--s3)">'+c.emoji+' '+c.label+'</h2>'+
+        '<div class="mm-teach">'+c.teach+'</div>'+
+        '<div class="mm-actions"><button type="button" class="btn btn-primary" id="btn-begin">我學會了，開始練習 ✏️</button></div>'+
+      '</div>';
+    $('btn-begin').addEventListener('click', function(){ beginPractice(); });
+    try{ $('btn-begin').focus(); }catch(e){}
+  }
+  function beginPractice(){ nextProblem(); }
+  function genOne(){ var c = mode==='mix' ? pick(CATS) : CAT_BY[mode]; var p=c.gen(lv); p.cat=c; return p; }
+  function spoken(t){ // 把「47 + 99 = ?」轉成螢幕報讀器唸得順的中文
+    return t.replace(' = ?','，等於多少').replace(/ \+ /g,' 加 ').replace(/ − /g,' 減 ').replace(/ × /g,' 乘以 ').replace(/ ÷ /g,' 除以 ');
+  }
+  function nextProblem(){
+    cur=genOne(); entry=''; answered=false;
+    var bestTxt = bestStreak>streak ? ('（最佳 '+bestStreak+'）') : '';
+    $('stage').innerHTML =
+      '<div class="mm-card">'+
+        '<div class="mm-scorebar"><span>答對 '+correct+' / '+total+'　連對 '+streak+' '+bestTxt+'🔥</span><span class="mm-lv">難度 Lv.'+lv+'</span></div>'+
+        '<span class="mm-tag">'+cur.cat.emoji+' '+cur.cat.label+'</span>'+
+        '<div class="mm-problem" id="mm-prob" tabindex="-1" role="img" aria-label="題目：'+spoken(cur.text)+'？">'+cur.text+'</div>'+
+        '<div class="mm-answer" id="mm-answer" aria-live="polite" aria-label="你的答案">＿</div>'+
+        '<div class="mm-pad" id="mm-pad"></div>'+
+        '<div class="mm-reveal" id="mm-reveal" aria-live="assertive"></div>'+
+        '<div class="mm-actions" id="mm-actions" style="display:none"><button type="button" class="btn btn-primary" id="btn-next">下一題 ➡️</button></div>'+
+      '</div>';
+    try{ $('mm-prob').focus(); }catch(e){} // 移焦到新題目→報讀器會唸出題目(修正「只唸答案欄重設」)
+    var keys=['1','2','3','4','5','6','7','8','9','⌫','0','✓'];
+    var pad=$('mm-pad'); pad.innerHTML='';
+    keys.forEach(function(k){
+      var btn=document.createElement('button'); btn.type='button';
+      btn.className='mm-key'+(k==='✓'?' enter':'');
+      btn.textContent=k;
+      btn.setAttribute('aria-label', k==='⌫'?'刪除':(k==='✓'?'送出答案':k));
+      btn.addEventListener('click', function(){ press(k); });
+      pad.appendChild(btn);
+    });
+    $('btn-next').onclick=function(){ nextProblem(); };
+  }
+  function press(k){
+    if(answered) return;
+    if(k==='⌫'){ entry=entry.slice(0,-1); }
+    else if(k==='✓'){ if(entry.length) submit(); return; }
+    else { if(entry.length<7) entry+=k; }
+    $('mm-answer').textContent = entry.length? entry : '＿';
+  }
+  function submit(){
+    answered=true; total++;
+    var ok=(parseInt(entry,10)===cur.answer);
+    lvChange=0;
+    if(ok){
+      correct++; streak++; if(streak>bestStreak) bestStreak=streak;
+      missStreak=0; lvCorrect++;                         // 累計答對(不因單次答錯歸零)
+      if(lvCorrect>=LVL_UP && lv<5){ lv++; lvCorrect=0; lvChange=1; }
+    } else {
+      streak=0; missStreak++;                            // 連對重置(只是趣味統計，不再卡升級)
+      if(missStreak>=LVL_DOWN && lv>1){ lv--; lvCorrect=0; missStreak=0; lvChange=-1; } // 連錯才降級，給喘息
+    }
+    try{ if(window.Game && typeof Game.pingActive==='function') Game.pingActive(); }catch(e){}
+    $('mm-answer').textContent=entry;
+    var lvMsg = lvChange>0 ? ('　🎉 難度升到 Lv.'+lv+'！') : (lvChange<0 ? ('　難度降到 Lv.'+lv+'，先把手感找回來 🙂') : '');
+    var rev=$('mm-reveal');
+    rev.className='mm-reveal show '+(ok?'ok':'no');
+    rev.textContent=(ok?'答對了！👍 ':('沒關係～答案是 '+cur.answer+'。'))+cur.tip+lvMsg;
+    $('mm-actions').style.display='flex';
+    try{ $('btn-next').focus(); }catch(e){}
+  }
+  document.addEventListener('keydown', function(e){
+    if(!$('screen-play').classList.contains('active')) return;
+    // 焦點在動作鈕(回選單/開始/下一題)時，讓 Enter/Space 原生觸發該鈕；只有數字磚(mm-key)才走下方送出邏輯
+    var onActionBtn = e.target && e.target.tagName==='BUTTON' && !e.target.classList.contains('mm-key');
+    if(e.key>='0'&&e.key<='9'){ if(!answered) press(e.key); }
+    else if(e.key==='Backspace'){ e.preventDefault(); if(!answered) press('⌫'); }
+    else if(e.key==='Enter'){
+      if(onActionBtn) return; // 讓按鈕原生行為處理，避免吞掉或重複前進
+      e.preventDefault();
+      if(answered){ if($('btn-next')) nextProblem(); } else if(entry.length) submit();
+    }
+  });
+  $('btn-back').addEventListener('click', function(){ showScreen('menu'); });
+  showScreen('menu');
+  renderMenu();
+})();
+</script>
+</body>
+</html>
