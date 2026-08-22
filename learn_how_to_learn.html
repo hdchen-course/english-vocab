@@ -1,0 +1,2319 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>學會如何學習 🧭</title>
+<!-- 統一遊戲化引擎：assets/app.css（設計 token）→ game_core.css（HUD/toast）→ game_core.js。
+     零重複計分：本頁定位「思維訓練／進階挑戰」，絕不呼叫 Game.recordAnswer / award / recordSession
+     （唯一例外：答題時呼叫 Game.pingActive() 維持每日連續學習 streak，不計 XP、不重複計分），
+     也不宣告 data-game-wired，故不污染任何科目 XP。只用 Game.showToast（純提示）。
+     獨立 localStorage key：learn_how_to_learn_v1。
+     教學目標：用生活情境練會科學驗證的高效學習法（主動回想、間隔複習、交錯、費曼、成長型思維、後設認知），把「會學習」變成習慣。提示為 opt-in、漸進式，
+     用提示也完全沒關係；完全不看提示就答對＝額外的「獨立想通💡」彩蛋，不是唯一榮譽。
+     每關題目很多（~50），採「回合制」：一次玩約 10 題，進度會保存、可續玩、退出不丟。 -->
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<style>
+:root {
+  --su: #4f46e5;
+  --su-tint: rgba(79,70,229,0.13);
+  --su-ink: var(--ink);
+  --accent: #4f46e5;
+  --accent-ink: var(--ink);
+  --accent-tint: rgba(79,70,229,0.13);
+}
+/* 夜間：純紫色邊框/圓點在深色卡片上對比不足（WCAG 非文字 3:1），改用加亮版紫，維持可辨識度 */
+:root[data-theme="dark"] {
+  --su: #a5b4fc;
+  --su-tint: rgba(165,180,252,0.18);
+}
+body { overflow-x: hidden; }
+
+.ma-topbar { display: flex; align-items: center; gap: var(--s2); margin-bottom: var(--s4); }
+.ma-topbar .ma-title { flex: 1; font-size: var(--fs-h2); font-weight: 800; color: var(--ink); min-width: 0; }
+
+.ma-screen { display: none; animation: ma-fade 0.3s ease; }
+.ma-screen.active { display: block; }
+@keyframes ma-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .ma-screen { animation: none; } }
+
+.ma-hello { display: flex; align-items: center; gap: var(--s3); padding: var(--s4); background: var(--su-tint); border: 1px solid var(--card-border); border-radius: var(--r-lg); margin-bottom: var(--s4); }
+.ma-hello .ma-mascot { font-size: 46px; flex: none; line-height: 1; }
+.ma-hello .ma-hello-text { font-size: var(--fs-body); font-weight: 700; color: var(--ink); max-width: 56ch; }
+.ma-hello .ma-hello-sub { font-size: var(--fs-small); color: var(--ink); font-weight: 600; }
+
+.ma-overview { display: flex; align-items: center; gap: var(--s3); margin-bottom: var(--s4); flex-wrap: wrap; }
+.ma-overview .stat-tile { flex: 1; min-width: 96px; }
+
+.ma-levels { display: grid; gap: var(--s4); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.ma-level {
+  display: flex; flex-direction: column; gap: var(--s2); padding: var(--s4);
+  text-align: left; cursor: pointer; border: 2px solid var(--card-border);
+  background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  font-family: var(--font); color: var(--ink);
+}
+.ma-level:hover { box-shadow: var(--shadow-lg); border-color: var(--su); }
+.ma-level:active { transform: scale(0.98); }
+.ma-level-top { display: flex; align-items: center; gap: var(--s3); }
+.ma-level-emoji { font-size: 34px; width: 56px; height: 56px; flex: none; display: flex; align-items: center; justify-content: center; border-radius: 16px; }
+.ma-level-num { font-size: var(--fs-small); font-weight: 700; color: var(--su-ink); }
+.ma-level-name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); line-height: 1.25; }
+.ma-level-concepts { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; line-height: 1.4; }
+.ma-level-progress { height: 8px; border-radius: 999px; background: var(--su-tint); overflow: hidden; margin-top: 2px; }
+.ma-level-progress > i { display: block; height: 100%; background: var(--su); border-radius: 999px; }
+.ma-level-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-top: 2px; }
+.ma-level-status { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-small); font-weight: 700; }
+.ma-level-status.done { color: var(--c-correct-ink); }
+.ma-level-status.todo { color: var(--ink-soft); }
+.ma-level-stars { font-size: 16px; letter-spacing: 1px; }
+
+.ma-stage { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); padding: var(--s5) var(--s4); text-align: center; }
+
+.ma-brief { text-align: left; }
+.ma-brief h2 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); margin: 0 0 var(--s3); text-align: center; }
+.ma-brief-sub { text-align: center; color: var(--ink-soft); font-weight: 700; font-size: var(--fs-small); margin: 0 0 var(--s3); }
+.ma-visual { font-size: clamp(48px, 15vw, 78px); line-height: 1.1; margin: var(--s2) 0 var(--s3); user-select: none; }
+.ma-keyfacts { list-style: none; padding: 0; margin: 0 auto; max-width: 46ch; display: grid; gap: var(--s2); }
+.ma-keyfacts li { display: flex; align-items: flex-start; gap: var(--s2); padding: 10px 14px; background: var(--su-tint); border-radius: var(--r-md); font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.6; }
+.ma-keyfacts li .ma-kf-dot { flex: none; color: var(--su-ink); font-weight: 900; }
+
+.ma-steps { display: flex; align-items: center; justify-content: center; gap: 5px; margin-bottom: var(--s3); flex-wrap: wrap; }
+.ma-steps i { width: 20px; height: 6px; border-radius: 999px; background: var(--card-border); }
+.ma-steps i.on { background: var(--su); }
+.ma-steps i.cur { background: var(--su); box-shadow: 0 0 0 3px var(--su-tint); }
+
+/* 題目（故事）盒 */
+.mm-story { text-align: left; background: var(--su-tint); border: 1px solid var(--card-border); border-radius: var(--r-md); padding: var(--s4); font-size: clamp(16px, 3.6vw, 19px); font-weight: 600; color: var(--ink); line-height: 1.75; margin-bottom: var(--s3); white-space: pre-line; }
+.mm-story .mm-story-label { display: block; font-size: var(--fs-small); font-weight: 800; color: var(--su-ink); margin-bottom: 6px; letter-spacing: .5px; }
+
+/* 提示（opt-in、漸進式；用提示也很棒） */
+.mm-hint-area { text-align: left; margin-bottom: var(--s3); }
+.mm-hint-btn { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 10px 18px; border: 2px dashed var(--su); border-radius: 14px; background: var(--su-tint); color: var(--su-ink); font-family: var(--font); font-weight: 800; font-size: var(--fs-small); cursor: pointer; }
+.mm-hint-btn:active { transform: scale(0.98); }
+.mm-hint-btn:disabled { display: none; }
+.mm-hint-list { display: grid; gap: var(--s2); margin-top: var(--s2); }
+.mm-hint { display: flex; align-items: flex-start; gap: 8px; padding: 10px 14px; background: var(--card); border: 1px solid var(--su); border-left: 4px solid var(--su); border-radius: var(--r-md); font-size: var(--fs-small); font-weight: 700; color: var(--ink); line-height: 1.6; animation: ma-fade 0.25s ease; }
+.mm-hint .mm-hint-n { flex: none; font-weight: 900; color: var(--su-ink); }
+.mm-seer-note { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 700; margin-top: 6px; line-height: 1.6; }
+
+/* 每回合都能收合取用本關心法 */
+.ma-recap { text-align: left; margin-bottom: var(--s3); }
+.ma-recap-btn { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 16px; border: 2px solid var(--card-border); border-radius: 14px; background: var(--card); color: var(--su-ink); font-family: var(--font); font-weight: 800; font-size: var(--fs-small); cursor: pointer; }
+.ma-recap-btn:active { transform: scale(0.98); }
+.ma-recap-list { margin-top: var(--s2); animation: ma-fade 0.25s ease; }
+@media (prefers-reduced-motion: reduce) { .ma-recap-list { animation: none; } }
+
+.ma-question { font-size: clamp(18px, 4.2vw, 22px); font-weight: 800; color: var(--ink); line-height: 1.6; margin: 0 auto var(--s3); max-width: 44ch; text-align: left; }
+
+.ma-options { display: grid; gap: var(--s3); margin-top: var(--s2); }
+.ma-opt {
+  display: flex; align-items: center; gap: var(--s2); min-height: 56px; width: 100%;
+  padding: 14px 18px; border: 2px solid var(--card-border); border-radius: 16px;
+  background: var(--card); color: var(--ink); font-family: var(--font);
+  font-size: clamp(16px, 3.4vw, 19px); font-weight: 700; text-align: left; cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.ma-opt:active { transform: scale(0.98); }
+.ma-opt:disabled { cursor: default; }
+.ma-opt.correct { border-color: var(--c-correct); background: var(--tint-english); color: var(--ink); }
+.ma-opt.wrong { border-color: var(--c-wrong); background: rgba(255,118,117,0.12); color: var(--ink); }
+.ma-opt.correct .ma-opt-mark { color: var(--c-correct-ink); }
+.ma-opt.wrong .ma-opt-mark { color: var(--c-streak-ink); }
+.ma-opt .ma-opt-mark { margin-left: auto; font-size: 22px; }
+
+.ma-reveal { margin-top: var(--s4); padding: var(--s3) var(--s4); background: var(--su-tint); border-radius: var(--r-md); font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.7; text-align: left; display: none; }
+.ma-reveal.show { display: block; animation: ma-fade 0.3s ease; }
+.ma-reveal .mm-rev-seer { display: block; font-weight: 900; color: var(--su-ink); margin-bottom: 6px; }
+.ma-reveal .mm-rev-row { display: block; margin-top: 8px; }
+.ma-reveal .mm-rev-k { font-weight: 900; color: var(--su-ink); }
+@media (prefers-reduced-motion: reduce) { .ma-reveal.show { animation: none; } }
+
+.ma-done { text-align: center; padding: var(--s5) var(--s4); }
+.ma-done-emoji { font-size: clamp(56px, 18vw, 88px); }
+.ma-done-stars { font-size: 34px; letter-spacing: 4px; margin: var(--s2) 0; }
+.ma-done-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); }
+.ma-done-sub { font-size: clamp(15px,3.4vw,18px); color: var(--ink); font-weight: 700; line-height: 1.7; margin-top: var(--s2); }
+.ma-done-prog { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 700; margin-top: var(--s2); }
+
+.ma-actions { display: flex; gap: var(--s3); margin-top: var(--s4); flex-wrap: wrap; }
+.ma-actions .btn { flex: 1; min-width: 140px; }
+
+.ma-footnote { text-align: center; color: var(--ink-soft); font-size: var(--fs-small); margin-top: var(--s5); font-weight: 600; max-width: 40em; margin-inline: auto; line-height: 1.7; }
+</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">學會如何學習 🧭</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle
+          aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+
+  <section id="screen-menu" class="ma-screen active">
+    <div class="ma-topbar">
+      <span class="ma-title">學會如何學習 🧭</span>
+    </div>
+
+    <div class="ma-hello">
+      <span class="ma-mascot" aria-hidden="true">🧭</span>
+      <div>
+        <div class="ma-hello-text" id="hello-text">學會「怎麼學」，比多讀好幾個小時還值得。這裡用生活小情境，帶你練會科學家驗證過、最有效的學習方法——先把這些變成習慣，其他每一科都會變簡單。⭐ 建議最先玩這一關！</div>
+        <div class="ma-hello-sub" id="hello-sub" style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
+          <div style="display:flex;gap:6px;align-items:flex-start"><span aria-hidden="true">💡</span><span>卡住時按「🔍 看提示」一點也不丟臉——想通最重要 😎；完全不看提示就自己想通，還會多拿一個「獨立想通 💡」彩蛋。</span></div>
+          <div style="display:flex;gap:6px;align-items:flex-start"><span aria-hidden="true">🎮</span><span>每關題目很多，一次玩約 10 題；進度會自動保存，隨時都能再回來。</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ma-overview">
+      <div class="stat-tile"><span class="stat-value" id="ov-done">0/6</span><span class="stat-label">完成關卡</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-seer">0</span><span class="stat-label">自己想通（沒看提示）</span></div>
+      <div class="stat-tile"><span class="stat-value" id="ov-badges">0/8</span><span class="stat-label">收集徽章</span></div>
+    </div>
+
+    <div class="ma-levels" id="level-list"><!-- 由 JS 產生 --></div>
+
+    <p class="ma-footnote">這是「學會學習」小旅程，只留在你自己的裝置上，不影響學習基地的等級或經驗值。這裡沒有要死背的東西——把「怎麼學最有效」變成自己的習慣，就是最大的收穫。🌱</p>
+
+    
+  </section>
+
+  <section id="screen-play" class="ma-screen">
+    <div class="ma-topbar">
+      <button type="button" class="btn btn-icon" id="btn-back" aria-label="回到關卡選單">←</button>
+      <span class="ma-title" id="play-title">關卡</span>
+    </div>
+    <div class="ma-steps" id="step-dots" aria-hidden="true"></div>
+    <div class="play-column">
+      <div id="stage"><!-- 由 JS 產生每一題 --></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* 主程式（自足 IIFE）。回合制：每關題目按固定順序，一次玩 ROUND_SIZE 題，進度(pos)持久化、可續玩。
+   選項每題 Fisher–Yates 洗牌；answer = 未洗牌前 0-based 索引，以 data-i 判斷。
+   提示 opt-in、漸進；不看提示答對＝自己想通（額外彩蛋，非必要）。獨立 key：learn_how_to_learn_v1。不呼叫 Game.recordAnswer / award。 */
+(function () {
+  'use strict';
+
+  function toast(msg, kind) {
+    try { if (window.Game && Game.showToast) Game.showToast(msg, kind || 'info'); } catch (e) {}
+  }
+
+  var ROUND_SIZE = (window.__MM_ROUND && window.__MM_ROUND > 0) ? window.__MM_ROUND : 10;
+  var SEER_TARGET = 30; // 「獨立想通」彩蛋門檻（累積自己想通題數）
+
+  var PROG_KEY = 'learn_how_to_learn_v1';
+  function loadProg() {
+    var p = null;
+    try { p = JSON.parse(localStorage.getItem(PROG_KEY)); } catch (e) { p = null; }
+    if (!p || typeof p !== 'object') p = {};
+    if (typeof p.badges !== 'object' || !p.badges) p.badges = {};
+    return p;
+  }
+  function saveProg(p) { try { localStorage.setItem(PROG_KEY, JSON.stringify(p)); } catch (e) {} }
+  var progress = loadProg();
+
+  function recOf(id) {
+    var r = progress[id];
+    if (!r || typeof r !== 'object') r = { pos: 0, correct: 0, seer: 0, done: false };
+    if (typeof r.pos !== 'number') r.pos = 0;
+    if (typeof r.correct !== 'number') r.correct = 0;
+    if (typeof r.seer !== 'number') r.seer = 0;
+    return r;
+  }
+
+  /* === 課程資料（正式內容經多-agent 撰寫＋對抗式數學查核後注入） === */
+  var LEVELS = [
+    {
+      "id": "lv1",
+      "level": 1,
+      "name": "大腦會長大・成長型思維",
+      "emoji": "🌱",
+      "color": "#22c55e",
+      "concepts": [
+        "大腦像肌肉，越練越強（神經可塑性）",
+        "「我還不會」比「我就是不會」更真實",
+        "犯錯和訂正時，大腦正在長新連線",
+        "努力和方法比「天生聰明」更能靠自己掌握",
+        "挑戰有點難的東西，大腦長最快"
+      ],
+      "keyFacts": [
+        "大腦裡的神經連線會因為練習而變多變強，就像肌肉越用越有力——人人都能靠練習變厲害。",
+        "遇到不會的，加一個「還」字說「我還不會」，比「我就是不會」更接近事實，因為大腦一直在長。",
+        "答錯、訂正的時候，大腦正在長出新的連線；犯錯不是笨，是還在學的路上。",
+        "被稱讚「你很努力、方法用得好」比「你好聰明」更能幫人進步——努力和方法是自己能控制的。",
+        "願意挑戰有一點點難（不太難也不太簡單）的東西，大腦長得最快。"
+      ],
+      "questions": [
+        {
+          "story": "小宇這次數學小考又考不好，他嘆氣說：「算了，我天生就是數學不好，練也沒用。」他很想直接放棄數學。",
+          "hints": [
+            "想想看：大腦比較像一出生就定型、不會變的東西，還是像肌肉，越練越有力？",
+            "科學發現：大腦裡負責數學的神經連線，會因為一次次練習而變多、變強。",
+            "哪個想法把『進步』的鑰匙交回到小宇自己手上？"
+          ],
+          "q": "哪個想法最貼近大腦科學，也最能幫小宇進步？",
+          "options": [
+            "「數學就像練球，多練習、大腦的連線就會變強，我也能慢慢進步。」",
+            "「數學好的人天生就有數學頭腦，我沒有那種頭腦。」",
+            "「反正我不是讀數學的料，別浪費時間了。」",
+            "「等我長大自然就會了，現在不用管它。」"
+          ],
+          "answer": 0,
+          "model": "大腦像肌肉，越練越強",
+          "insight": "沒有人天生就『是』或『不是』某科的料——大腦的連線會因為練習而長出來。",
+          "solve": "正解「多練習大腦連線就會變強」符合神經可塑性：大腦不是出生就定型，反覆練習會讓神經連線變多變強，人人都能靠練習進步。認為『天生沒有數學頭腦』『不是讀數學的料』其實把能力當成不會改變的天生設定，這正是被科學推翻的固定型想法，會讓人太早放棄；『長大自然就會』則把責任推給時間，但能力是練出來的、不是等出來的。"
+        },
+        {
+          "story": "小美練一首鋼琴曲，同一小段一直彈錯，她越彈越煩，用力闔上琴蓋說：「我就是彈不好，別練了！」老師在旁邊聽到了。",
+          "hints": [
+            "她說『我就是彈不好』，這句話把現在的卡關，說成了永遠的結論。",
+            "如果在句子裡加一個小小的字，讓它變成『暫時』的狀態，會怎麼說？",
+            "『還』這個字，是不是幫這件事留了一條會進步的路？"
+          ],
+          "q": "老師建議小美換個說法對自己說，哪一句最好？",
+          "options": [
+            "「我『還』沒練熟這一小段，多練幾次就會越來越順。」",
+            "「我天生手指就不靈活，這種曲子學不來。」",
+            "「這首太難了，我大概永遠彈不好。」",
+            "「別人比較有音樂天分，我認了吧。」"
+          ],
+          "answer": 0,
+          "model": "「我還不會」比「我就是不會」更真實",
+          "insight": "在『不會』前面加一個『還』字，就把死結變成一條正在往前的路。",
+          "solve": "正解在『沒練熟』前面加了『還』字，把現在的卡關看成暫時、會改變的狀態——這才符合大腦一直在長的事實，也最能鼓勵人繼續練。說『天生手指不靈活』『永遠彈不好』『別人比較有天分』都把暫時的困難講成永遠改不了的結論，等於還沒真正練夠就先關上了進步的門。"
+        },
+        {
+          "story": "阿哲的數學考卷發回來了，紅筆圈了五個錯。他覺得很丟臉，很想把考卷塞進書包最底層，再也不看。",
+          "hints": [
+            "答錯又去弄懂的那一刻，大腦其實正在做一件很棒的事。",
+            "把錯的地方看清楚、想通，和把考卷藏起來，哪一個能讓下次不再錯？",
+            "犯錯不代表笨，它比較像大腦『正在學』留下的腳印。"
+          ],
+          "q": "面對這五個錯，哪個做法最能幫阿哲的大腦成長？",
+          "options": [
+            "「把錯的題目一題題弄懂、訂正一遍——訂正時大腦正在長新連線。」",
+            "「趕快把考卷收起來，不要再去想那些錯題。」",
+            "「只看考幾分就好，錯在哪裡不重要。」",
+            "「把整張考卷重新抄一份漂亮的，錯的地方不用理。」"
+          ],
+          "answer": 0,
+          "model": "犯錯和訂正時，大腦正在長新連線",
+          "insight": "訂正錯題不是在懲罰自己，是大腦長出新連線、變聰明的黃金時刻。",
+          "solve": "正解「弄懂並訂正錯題」抓住了關鍵：答錯、找出原因、想通的過程，正是大腦長出新神經連線的時候，最能讓下次不再犯。把考卷藏起來、只看分數、或只抄一份漂亮的，都跳過了『弄懂錯在哪』這一步，錯誤帶來的成長機會就白白浪費了——犯錯本身不是笨，不去訂正才可惜。"
+        },
+        {
+          "story": "妹妹最近很認真畫圖，每天多畫好幾張，還學會先打鉛筆草稿再上色，進步看得出來。你想好好稱讚她。",
+          "hints": [
+            "想一想：你想誇的是她『天生的樣子』，還是她『做了什麼』？",
+            "天分和運氣她自己控制不了，但努力和方法可以。",
+            "誇哪一種，會讓她更想繼續用功、繼續找好方法？"
+          ],
+          "q": "哪句稱讚最能幫妹妹繼續進步？",
+          "options": [
+            "「你這次多練了好幾張、還會先打草稿，方法用得真好！」",
+            "「你好有天分，真是天生的小畫家！」",
+            "「你好聰明，一下子就會了！」",
+            "「你運氣真好，剛好畫得不錯。」"
+          ],
+          "answer": 0,
+          "model": "稱讚努力和方法，而不是天分",
+          "insight": "誇『你很努力、方法很好』，比誇『你好聰明』更能讓人願意繼續挑戰。",
+          "solve": "正解稱讚的是『多練習』和『先打草稿』這些努力與方法——這些是妹妹自己能控制、能一再重複的，會讓她更願意繼續用功。誇『有天分』『好聰明』『運氣好』雖然聽起來很棒，但把成功歸給天生或運氣，反而會讓人怕失敗、遇到難題就不敢再試，因為那些都不是自己能掌握的。"
+        },
+        {
+          "story": "數學老師讓大家自己選今天的練習難度。小杰的基礎題早就滾瓜爛熟，閉著眼睛都會寫。他在想該選哪一種。",
+          "hints": [
+            "全部都會的題目，大腦幾乎不用動，能學到新東西嗎？",
+            "完全看不懂的超難題，會不會只帶來挫折、學不到什麼？",
+            "有沒有一種『有點難、又搆得到』的甜蜜點，大腦長最快？"
+          ],
+          "q": "哪個選擇最能讓小杰的大腦成長最多？",
+          "options": [
+            "「選有一點點挑戰、需要動腦、但不是完全不會的題目。」",
+            "「選全部都會、閉著眼就能寫完的簡單題，比較安心。」",
+            "「選超級難、看了完全看不懂的競賽題來硬撐。」",
+            "「懶得選，直接抄同學的答案交差就好。」"
+          ],
+          "answer": 0,
+          "model": "挑戰有點難的東西，大腦長最快",
+          "insight": "大腦在『有點難、又搆得到』的甜蜜點上長最快——太簡單學不到，太難只剩挫折。",
+          "solve": "正解選『有點挑戰又不是完全不會』的題目，正好落在大腦成長最快的甜蜜點：需要動腦但搆得到，才會長出新連線。全都會的簡單題大腦幾乎不用工作、學不到新東西；完全看不懂的競賽題只會帶來挫折，也難有收穫；抄答案更是連想都沒想，大腦完全沒運動到。"
+        },
+        {
+          "story": "下課時同學阿凱大聲說：「聰明是天生的啦，努力也改不了什麼，認命比較快。」旁邊幾個人被他說得也想放棄了。",
+          "hints": [
+            "如果聰明真的完全天生、改不了，那全世界的練習和學校都白費了嗎？",
+            "大腦科學發現：神經連線會因為練習而怎麼變化？",
+            "哪個回應是有科學根據、又能給大家希望的？"
+          ],
+          "q": "根據大腦科學，最正確的回應是哪一個？",
+          "options": [
+            "「大腦的神經連線會因為練習變多變強，每個人都能靠練習變厲害。」",
+            "「對啊，天生不聰明就沒救了，別掙扎了。」",
+            "「努力只是安慰自己而已，其實一點差別都沒有。」",
+            "「只有本來就聰明的人才需要努力，我們不用。」"
+          ],
+          "answer": 0,
+          "model": "神經可塑性：人人都能靠練習變厲害",
+          "insight": "聰明不是天生鎖死的——大腦一輩子都能因為練習而改變、變強。",
+          "solve": "正解說『神經連線會因為練習變多變強』是有科學根據的（神經可塑性），也點出人人都能靠練習進步，給大家真實的希望。說『天生沒救』『努力沒差別』都是被科學推翻的固定型迷思，會讓人白白放棄；『只有聰明人才需要努力』更把因果弄反了——正是靠努力，大腦才會越來越強。"
+        },
+        {
+          "story": "小婷背英文單字，背了又忘、忘了又背，她很挫折地說：「我英文就是爛，沒救了。」把單字本一丟就不想碰了。",
+          "hints": [
+            "『就是爛、沒救了』把英文說成永遠不會變——這是真的嗎？",
+            "也許問題不在她這個人，而在她『用的方法』還沒對？",
+            "加一個『還』字，或換個記單字的方法，會不會不一樣？"
+          ],
+          "q": "哪個想法比較貼近事實、也比較能幫小婷？",
+          "options": [
+            "「我『還』沒找到記單字的好方法，換個方法多練就會進步。」",
+            "「我天生沒有語言細胞，英文學不起來。」",
+            "「英文太難了，我這輩子大概都學不好。」",
+            "「反正以後用不到，記不住也無所謂。」"
+          ],
+          "answer": 0,
+          "model": "把「不會」看成「方法還沒對」",
+          "insight": "背不起來常常不是你笨，而是方法還沒對——換個方法，大腦就接得住。",
+          "solve": "正解把焦點放在『還沒找到好方法、可以換方法再練』，既符合大腦會進步的事實，也指向自己能改變的地方（方法與練習）。說『天生沒有語言細胞』『這輩子學不好』是把暫時的困難當成永遠的宣判；『用不到就算了』則是用放棄來逃避，都幫不到真正想學好的小婷。"
+        },
+        {
+          "story": "打籃球練投籃，教練丟給大家一個很難的後仰跳投，笑著說：「這球很難，敢挑戰、就算投不進也很棒！」阿豪不懂為什麼投不進也算棒。",
+          "hints": [
+            "挑戰難動作的時候，身體和大腦是在『學新東西』還是『原地踏步』？",
+            "一直只做已經會的簡單動作，會進步嗎？",
+            "犯錯、修正的過程，對大腦的連線有什麼好處？"
+          ],
+          "q": "為什麼『敢挑戰、就算失敗也很棒』？",
+          "options": [
+            "「因為挑戰難動作、犯錯再修正時，大腦正在長新連線，會越來越強。」",
+            "「因為失敗了就有藉口不用再練，比較輕鬆。」",
+            "「因為只做已經會的動作，比較不會在同學面前丟臉。」",
+            "「因為輸贏本來就不重要，努不努力結果都一樣。」"
+          ],
+          "answer": 0,
+          "model": "挑戰與犯錯，是大腦變強的過程",
+          "insight": "願意挑戰難的、願意在犯錯中修正，正是大腦連線長最快的時候。",
+          "solve": "正解點出關鍵：挑戰有難度的動作、加上犯錯後的修正，正是大腦長新連線、能力變強的過程，所以就算沒成功也很有價值。用失敗當『不用再練的藉口』、只做會的來『避免丟臉』，都會停在原地不成長；『努不努力都一樣』更否定了練習的作用，跟大腦越練越強的事實相反。"
+        },
+        {
+          "story": "月考考差了，小安盯著別人的高分，心裡想：「同學就是比我聰明，我再怎麼讀也追不上。」越想越沒力氣讀書。",
+          "hints": [
+            "把原因全推給『別人天生聰明』，小安還剩下什麼可以改變？",
+            "比起天分，讀書的『方法』和『時間安排』是不是自己能調整的？",
+            "哪個做法是真的去找出問題、對症下藥，而不只是拼時間硬撐？"
+          ],
+          "q": "哪個想法最能幫小安下次真正進步？",
+          "options": [
+            "「我來檢查自己的讀書方法和時間怎麼安排，找出問題再調整、努力看看。」",
+            "「聰明是天生的，我比不過同學，就算了吧。」",
+            "「就多讀幾遍課本、考前一天熬夜抱佛腳衝一波。」",
+            "「乾脆把答案背下來就好，不用管為什麼。」"
+          ],
+          "answer": 0,
+          "model": "努力和方法，是自己能掌握的",
+          "insight": "與其比天分，不如檢查方法——方法和努力才是你真正握在手上的鑰匙。",
+          "solve": "正解把注意力轉到『檢查並調整讀書方法與時間』，這些都是小安自己能控制、能改進的，最可能帶來真正的進步。認定『同學天生聰明、追不上』把命運交給了改不了的天分；『多讀幾遍、考前抱佛腳』和『死背答案不求理解』雖然常見，但重複讀和臨時抱佛腳其實記得淺又忘得快，不如弄懂原理、用對方法有效。"
+        },
+        {
+          "story": "數學老師開始教一種新的分數題，班上一片哀號：「好難喔！」小廷也覺得頭很痛，正在猶豫要認真聽還是放棄。",
+          "hints": [
+            "『難』有時候不是壞消息，反而代表你正在碰新的東西。",
+            "大腦在什麼時候長最快——做熟到不行的舊題，還是啃有點難的新題？",
+            "把『我不會』改成『我還不會』，心情和動力會不會不一樣？"
+          ],
+          "q": "用成長型思維，面對這道難題最好的心態是哪個？",
+          "options": [
+            "「難表示我在學新東西，這正是大腦長最快的時候，我還不會、但可以學會。」",
+            "「太難了，這代表我不是讀書的料，早點放棄比較省事。」",
+            "「先把公式死背起來就好，反正考完就忘也沒關係。」",
+            "「難的部分直接跳過，只挑最簡單的來做就好。」"
+          ],
+          "answer": 0,
+          "model": "覺得難，正是大腦在長的訊號",
+          "insight": "『難』常常是大腦正在長的訊號——把『我不會』改成『我還不會』，路就打開了。",
+          "solve": "正解把『難』重新解讀成『正在學新東西、大腦長最快』的訊號，還用『我還不會、但可以學會』保留了進步的空間，是最完整的成長型思維。認為『難就代表不是讀書的料』是被推翻的固定型想法；『死背公式、考完就忘』和『跳過難的只做簡單的』都繞開了真正能讓大腦成長的挑戰，短期看似輕鬆，其實學不到新本事。"
+        }
+      ]
+    },
+    {
+      "id": "lv2",
+      "level": 2,
+      "name": "記憶怎麼運作・遺忘是正常的",
+      "emoji": "🧠",
+      "color": "#6366f1",
+      "concepts": [
+        "會忘記是正常的（遺忘曲線）",
+        "記憶像走過的路，多走幾次才變清楚",
+        "「看得懂」和「記得住」是兩件事",
+        "睡覺時大腦會整理、存記憶",
+        "快忘記時複習，效果最好",
+        "把一長串零散資訊分成有意義的小組（組塊）更好記"
+      ],
+      "keyFacts": [
+        "學過的東西會慢慢忘記，這對每個人都一樣，不是你記性差——這叫遺忘曲線。",
+        "記憶像走過的路：走一次的小路很快被草蓋住，多走幾次才變成清楚的大路，複習就是多走幾次。",
+        "「上課聽懂了」不等於「明天還記得」；看得懂和記得住是兩件事，要靠練習變牢。",
+        "睡覺時大腦會把白天學的整理、存進長期記憶——熬夜反而讓學過的更容易忘。",
+        "在「快忘記、但還想得起來」的時候複習，記憶變得最牢。",
+        "記一長串東西時，先把它拆成幾個有意義的小組（像電話號碼分段、生字按主題分類），大腦一次只記幾塊，比一個一個死記好記——這叫組塊。"
+      ],
+      "questions": [
+        {
+          "story": "小樺花了一個晚上把台灣主要河川的名字背起來，睡前默念都答得出來。隔天上社會課老師隨口一問，她卻只想得起兩三條，愣在座位上想：『別人好像都記得，是不是只有我特別笨？』",
+          "hints": [
+            "學過的東西過一段時間會忘掉一部分，這是每個人的大腦都會發生的事，有個名字叫『遺忘曲線』。",
+            "忘記不是在說你笨，它比較像大腦在提醒你：『這裡該再複習一次囉。』"
+          ],
+          "q": "小樺這時候最健康、也最有幫助的想法和做法是什麼？",
+          "options": [
+            "接受『會忘記本來就正常』，趁自己還記得幾條時，馬上把整份河川再複習一遍",
+            "認定自己天生記性就是比別人差，乾脆放棄背這些地理名詞",
+            "把每一條河川的名字各抄二十遍，當作忘記的懲罰",
+            "反正記了還是會忘，不如什麼都先不管，等段考前一晚再一口氣背完"
+          ],
+          "answer": 0,
+          "model": "遺忘是正常的",
+          "insight": "忘記不是你笨，而是大腦的正常設定；趁還記得時再複習一次，就能把快溜走的記憶留住。",
+          "solve": "學過的內容會隨時間慢慢淡掉，這叫『遺忘曲線』，對每個人都一樣，不是小樺記性差。最好的回應是接受它很正常，並趁還記得幾條時馬上把整份再複習一遍，把記憶補牢。『認定自己天生記性差就放棄』是誤會了遺忘的原理，白白放掉救得回來的記憶；『各抄二十遍當懲罰』只是被動重複，還把學習跟難過綁在一起，效果差；『拖到段考前一晚才一口氣背完』會遇到早就忘光、又來不及的窘境。"
+        },
+        {
+          "story": "數學課學了『先乘除、後加減』的計算順序，阿哲跟著老師算對一題就懂了，回家後想：『我已經會了，不用再看了吧。』老師卻提醒他：『這條記憶的路，你才走過一次而已喔。』",
+          "hints": [
+            "把剛學會的東西想成走過一次的草地小路——只走一次，草很快又長回來，路會變得模糊。",
+            "想讓這條路清楚好走，方法很單純：多回頭走幾次，也就是多複習幾次。"
+          ],
+          "q": "要讓這個計算順序在腦中『這條路』越來越清楚、不容易忘，阿哲最該做的是什麼？",
+          "options": [
+            "有空就多回頭複習幾次，像把同一條路多走幾遍，讓記憶越走越清楚",
+            "反正今天已經走過一次、也看懂了，之後就完全不用再碰它",
+            "覺得只要當下算對一題，這條路就永遠清楚，不會再模糊",
+            "把課本闔起來收好，相信會的東西自然不會忘"
+          ],
+          "answer": 0,
+          "model": "記憶像走過的路",
+          "insight": "一段記憶就像草地上的小路：只走過一次，草很快蓋回來，路又淺又模糊；多回頭複習幾次，等於把這條路多走幾遍，它會被踩得越來越清楚。",
+          "solve": "剛學會只是把這條記憶小路走過一次，草很快長回來，過一陣子就模糊了。讓它變清楚的辦法很單純——多回頭複習幾次，等於把同一條路多走幾遍，路自然越走越清楚。『看懂一次就不再碰』『覺得算對一題就永遠清楚』『收起來相信自己不會忘』都犯了同一個毛病：以為走一次就夠了。它們不是壞念頭，只是都少了『多走幾次』這個讓記憶變牢的關鍵動作。"
+        },
+        {
+          "story": "英語課老師講解『現在進行式』的用法，小恩邊聽邊點頭，每個例句都看得懂，心裡想：『這麼簡單，我當然記得住！』就把課本收進書包，一整週都沒再翻開。",
+          "hints": [
+            "『上課當下看得懂、聽得懂』，和『過幾天自己還想得起來』，常常是兩件不同的事。",
+            "看懂時那種『我會了』的感覺，有時只是熟悉感，不代表真的記進腦袋了。"
+          ],
+          "q": "小恩最需要先意識到的一件事、以及接下來比較好的做法是什麼？",
+          "options": [
+            "提醒自己『看得懂不等於記得住』，過幾天再找時間把這個用法複習、確認一次",
+            "既然上課全都聽懂了，就相信自己一定記得，一整週都不用再看",
+            "覺得每個例句都看得懂，就等於已經牢牢記住，不必再管它",
+            "把課本收好就好，反正看懂的東西，時間到了自然還會記得"
+          ],
+          "answer": 0,
+          "model": "看得懂不等於記得住",
+          "insight": "『看得懂』常給人一種『我會了』的錯覺，那多半只是熟悉感；真正記住了沒有，要過幾天再確認才知道。",
+          "solve": "重點在先看穿一個錯覺：上課當下『看得懂』不等於過幾天『記得住』，那種『我會了』的感覺常常只是熟悉感。意識到這點，就會知道不能只聽懂一次就整週放著，而該過幾天再找時間把這個用法複習、確認一下。另外三個想法——『聽懂就相信一定記得』『看得懂就當作牢牢記住』『收起來相信自然會記得』——都把『懂』誤當成『記住』，結果過幾天多半想不起來。"
+        },
+        {
+          "story": "品妍在練一首直笛新曲子，有一段指法怎麼吹都卡卡的。練到晚上她眼皮很重、很想睡，卻還在猶豫：『要不要硬撐著一直練到吹順為止？』",
+          "hints": [
+            "睡覺的時候，大腦會偷偷把白天練過的動作和內容整理好、存得更牢。",
+            "很多人有這種經驗：一個卡住的技巧，睡一覺隔天再試，反而突然變順了。"
+          ],
+          "q": "為了讓這段指法真的練得更順，品妍今晚怎麼安排比較好？",
+          "options": [
+            "認真把這段練到一個段落，就上床好好睡覺，讓大腦在睡眠中幫忙鞏固",
+            "硬撐著不睡，一直重複吹到半夜，非得當晚吹順才肯停",
+            "喝提神飲料撐著，覺得練得越晚、指法就會記得越牢",
+            "乾脆整晚都不睡，通宵一直練，想說明天就一定會了"
+          ],
+          "answer": 0,
+          "model": "睡覺會鞏固記憶",
+          "insight": "睡覺不是浪費練習時間——大腦會趁你睡著，把白天練過的動作整理、鞏固，常常隔天就變得更順。",
+          "solve": "睡覺時，大腦會把白天練過的動作和內容整理、鞏固，所以把卡住的段落練到一個段落就好好睡，隔天指法反而更順、更穩。『硬撐吹到半夜』『喝提神飲料撐著不睡』『通宵一直練』都犧牲了睡眠這道整理手續——少了它，練過的動作不但不容易定下來，人還會因為太累而更容易吹錯、更難進步。"
+        },
+        {
+          "story": "自然課學了八大行星的順序，子恆想找時間複習，卻不太確定時機：『是學完馬上一直重看？還是等到全部忘光再看？到底哪種時候記得最牢？』",
+          "hints": [
+            "剛學完就馬上一直重看，這時你其實還記得很清楚，再看幫助不大。",
+            "等到完全忘光才看，幾乎等於從頭學一次，很費力。"
+          ],
+          "q": "在下面幾種時機裡，子恆哪一種時候複習，記憶會變得最牢？",
+          "options": [
+            "剛學完就立刻一直重看很多遍，之後就再也不看它",
+            "等到完全忘光、怎麼想都想不起來時，再從頭重新學一次",
+            "一直放著都不複習，拖到期末考前才第一次翻開來看",
+            "在『快要忘記、但用力想一下還想得起來』的時候，回頭複習一次"
+          ],
+          "answer": 3,
+          "model": "快忘時複習最有效",
+          "insight": "在記憶快模糊、卻還能勉強想起來時回頭複習一次，記憶會被大大加深——這就是複習的黃金時機。",
+          "solve": "複習的黃金時機，是『快忘記、但用力想一下還想得起來』的時候——這時回頭複習一次，記憶會被明顯加深，最省力也最牢。『剛學完就立刻一直重看』時你其實還很清楚，大腦覺得太簡單，幫助有限；『等到完全忘光才看』幾乎等於重學一遍，很浪費力氣；『拖到期末考前才第一次看』則把難度全堆到最後，又忘又急。抓在記憶快模糊的那一刻回頭複習，效果最好。"
+        },
+        {
+          "story": "上週社會段考前，小潔把台灣各縣市的名產和位置背得滾瓜爛熟。這禮拜老師隨口抽問，她卻只答得出一半，懊惱地想：「才過一個禮拜就忘這麼多，我的頭腦是不是特別不管用？」",
+          "hints": [
+            "學過的東西過幾天忘掉一部分，是每個人的大腦都會發生的事，這有個名字叫『遺忘曲線』。",
+            "忘記不是在說你不聰明，比較像大腦在提醒你：這些內容『該再複習一次了』。"
+          ],
+          "q": "小潔這時候，怎麼想、怎麼做最好？",
+          "options": [
+            "明白過幾天忘一些對誰都一樣、不是頭腦不好，趁還記得一半時再把縣市名產複習一遍補起來",
+            "認定自己天生就是記不住東西，社會這種要背的科目乾脆別花心思了",
+            "把整張縣市名產表重新抄二十遍，當作忘記的懲罰",
+            "反正背了都會忘，這次先不管，等下次段考前一晚再一口氣全部背起來"
+          ],
+          "answer": 0,
+          "model": "遺忘是正常的",
+          "insight": "過幾天忘掉一部分是大腦的正常設定，不是你笨；趁還記得一部分時補一次，就能把它救回來。",
+          "solve": "學過的東西過幾天忘掉一部分，叫『遺忘曲線』，對每個人都一樣，不是頭腦不好。最好的做法是承認忘記很正常，趁還記得一半時再把縣市名產複習一遍補回來。『認定自己天生記不住、乾脆別花心思』誤會了遺忘的原理，白白放掉能救回來的記憶；『重抄二十遍當懲罰』只是被動重複，還把學習和難受綁在一起，效果差；『這次不管、等段考前一晚一次全背』會遇到已經忘光又來不及的窘境。"
+        },
+        {
+          "story": "國語課教了『畫蛇添足』『守株待兔』等五個新成語，小睿讀過一遍就都看懂了意思，心想「懂了！」便把課本闔上。老師提醒他：這條記憶的路現在還很淺，只走過一次喔。",
+          "hints": [
+            "把剛學的成語想成走過一次的草地小路——只走一遍，草很快又長回來，路就變模糊了。",
+            "想讓這條路變清楚、好認，關鍵是之後多回頭看它、多走幾次。"
+          ],
+          "q": "要讓這幾個成語在腦中的『這條路』變清楚、不容易忘，小睿最該做的是？",
+          "options": [
+            "只要今天專心把課文讀過一遍，就當這條路走完了，之後都不用再看它",
+            "之後多回頭複習這些成語幾次，一次次把這條記憶的路走得越來越清楚",
+            "覺得讀的當下都看懂了，就代表這條路已經夠清楚，不會再變模糊",
+            "把五個成語用漂亮的字重新抄一次，抄得整齊就等於記住了"
+          ],
+          "answer": 1,
+          "model": "記憶像走過的路",
+          "insight": "一條只走過一次的記憶小路，很快又被草蓋住；多回頭複習幾次，等於把路多踩幾遍，越走越清楚、越好認。",
+          "solve": "剛學的成語就像走過一次的草地小路，只走一遍很快又被草蓋住。想讓這條路變清楚，關鍵是之後多回頭複習幾次，一次次把路踩深。『讀過一遍就當走完、以後不看』只走了一次，路很快又模糊；『覺得當下看懂就等於路夠清楚』是把看懂當成記牢；『用漂亮的字抄一次』看起來認真，其實只是裝飾，沒有讓內容多在腦中走幾趟。"
+        },
+        {
+          "story": "英語課本裡有一篇短文，小凡從頭讀到尾，每個單字都認得、每句話都看得懂，滿意地想：「這篇我完全懂了，等於記住啦！」就把書闔上，不再管它。",
+          "hints": [
+            "『讀的時候每個字都看得懂』是一種很順的感覺，但那常常只是『眼熟』，不代表明天自己還想得起來。",
+            "看懂和記住是兩件事——先發現這一點，就不會被『好像很熟』給騙了。"
+          ],
+          "q": "關於『看得懂就等於記住了』這個想法，小凡最該有的認識是？",
+          "options": [
+            "既然每個字都認得、每句都看得懂，就代表已經牢牢記住，之後完全不用再看",
+            "只要對這篇短文有『看過、有印象』的熟悉感，就算已經學會了",
+            "看懂只表示現在看得懂，明天不一定記得；所以別讀一遍就丟著，之後再找時間複習、確認自己是不是真的還記得",
+            "把每個單字用不同顏色的筆畫得漂漂亮亮，看起來清楚就表示記進腦袋了"
+          ],
+          "answer": 2,
+          "model": "看得懂不等於記得住",
+          "insight": "『看得懂』的順暢感很會騙人——它只證明現在看得懂，不保證明天想得起來；發現這一點，就會願意再複習確認，而不是讀一遍就放著。",
+          "solve": "讀的時候每個字都認得、每句都看得懂，那份順暢感常常只是『眼熟』，不代表明天自己還想得起來——看得懂和記得住是兩件事。最該有的認識是：看懂只證明現在看得懂，所以別讀一遍就丟著，之後再找時間複習、確認自己是不是真的還記得。『認得每個字就代表牢牢記住、不用再看』和『有看過的熟悉感就算學會』都是被眼熟騙了；『把單字畫得漂亮』只是做記號，沒有把內容真的存進腦袋。"
+        },
+        {
+          "story": "阿宏今天練籃球罰球的新出手姿勢，練了好多球還是覺得有點僵、投不太準，有點灰心。他心想：乾脆晚上熬夜留在球場，再多投個幾百球吧。",
+          "hints": [
+            "像投籃、騎車這種『身體記得的動作』，也會在睡覺時被大腦悄悄整理、存起來。",
+            "剛學新姿勢當天卡卡、不太準很正常，別急著熬夜硬練，也別急著下『我沒天分』的結論。"
+          ],
+          "q": "對於這個還不太順的新投籃姿勢，阿宏怎麼想、怎麼做最好？",
+          "options": [
+            "熬夜留在球場一直投到半夜，覺得練得越久、隔天就一定投得越準",
+            "今天投不準就代表自己沒有打球的天分，還是別練了",
+            "光在旁邊看高手示範怎麼投就夠了，自己不用反覆下場練",
+            "今天認真練到一個段落就好好睡覺，讓大腦在睡眠中把新動作整理存起來，隔天往往會變順一些"
+          ],
+          "answer": 3,
+          "model": "睡覺會存記憶",
+          "insight": "連投籃這種身體動作，都靠睡眠來『存檔』——今天好好練、晚上睡飽，隔天常會莫名變順。",
+          "solve": "連投籃這種身體動作，大腦也會在睡覺時幫忙整理、鞏固，所以今天認真練到一個段落、晚上好好睡，隔天常會突然變順，這是睡眠在幫忙。『熬夜投到半夜、覺得越久越準』犧牲了最關鍵的睡眠，反而更難進步、隔天更累；『投不準就說沒天分放棄』忽略了新姿勢本來就要多練幾次才會熟；『只在旁邊看示範、自己不下場練』是把看得懂當成做得到，身體其實沒真的學會這個動作。"
+        },
+        {
+          "story": "小宇要背一長串數字（像是一組十二個數字的密碼），他盯著看了好久還是記不起來，覺得又多又亂、腦袋一片空白。有沒有什麼方法，能讓這麼長一串東西變得比較好記？",
+          "hints": [
+            "把一長串拆成幾個有意義的小組（像電話號碼那樣分段），大腦一次只要抓幾小塊，就輕鬆多了。",
+            "想想你平常怎麼記電話號碼——很少人一個數字一個數字背，通常會分成幾段一起記。"
+          ],
+          "q": "面對這麼長一串數字，怎麼記最省力、又記得牢？",
+          "options": [
+            "先把長長一串拆成幾個有意義的小段，像電話號碼那樣分段，一段一段記",
+            "從頭到尾一個數字接著一個數字，照著原順序用力硬背，反覆唸很多遍",
+            "拿紙把整串數字從頭抄到尾，一次又一次不停地抄，抄到背起來為止",
+            "把整串數字寫在便利貼上，貼滿整張書桌和牆壁，每天盯著它拚命死背"
+          ],
+          "answer": 0,
+          "model": "組塊：分組更好記",
+          "insight": "把一長串零散資訊拆成幾個有意義的小組，大腦一次只記幾塊，就變得好記多了。",
+          "solve": "記一長串東西時，最有效的是「組塊」——先把它拆成幾個有意義的小組再記，像把電話號碼分成幾段、把生字按主題或部首分類、把歷史事件按年代群組。大腦短時間能同時抓住的東西有限，分組後一次只要記幾塊，負擔小很多，也記得比較牢。一個數字接一個數字照順序硬背，等於要同時記超多獨立小點，很快就亂掉；把整串一直抄、或貼滿便利貼盯著死記，都只是重複接觸，並沒有幫大腦把資訊整理成好記的結構。先分組、找規律，再開始記，最省力也最牢。"
+        }
+      ]
+    },
+    {
+      "id": "lv3",
+      "level": 3,
+      "name": "主動回想・考自己最有效",
+      "emoji": "🎯",
+      "color": "#ef4444",
+      "concepts": [
+        "把書蓋起來、回想或考自己",
+        "努力「想出來」才把記憶變牢",
+        "閃卡/默寫/講出來 > 重讀/畫線",
+        "自測能發現「哪裡其實還不會」",
+        "重讀覺得很熟，其實是錯覺"
+      ],
+      "keyFacts": [
+        "把書蓋起來、試著自己回想或考自己，比一直重看課本更能記牢——這叫「主動回想」。",
+        "每次努力把答案「想出來」，就是把記憶的路走得更深；只是眼睛滑過去，記憶不會變牢。",
+        "用閃卡、默寫、把重點講出來，都是在考自己，比畫螢光筆、重讀有效得多。",
+        "自我測驗還能立刻發現「哪裡其實還不會」，把時間花在真正的漏洞上。",
+        "重讀時覺得「好熟、我都會」常是錯覺，因為答案就在眼前；蓋起來想得出來才算真的記住。"
+      ],
+      "questions": [
+        {
+          "story": "小明明天有社會小考，他坐在書桌前，想著要怎麼複習這一課才好。",
+          "hints": [
+            "想想看：眼睛一直看著課本，和把課本蓋起來自己想，哪一種比較費力？",
+            "比較費力、要動腦「想出來」的方法，通常記得比較久喔。"
+          ],
+          "q": "下面哪種複習方式，最能幫小明把這一課記牢？",
+          "options": [
+            "把課本蓋起來，試著自己把重點回想一遍，想不出來的地方再翻開來看",
+            "把整課從頭到尾再讀一遍，覺得都看過了應該就會了",
+            "拿螢光筆把課本裡的重點再畫得更漂亮一點",
+            "把課本攤開放在旁邊，一邊看電視一邊翻"
+          ],
+          "answer": 0,
+          "model": "蓋起來考自己",
+          "insight": "記得住的秘訣不是「多看幾次」，而是「蓋起來想得出來」。",
+          "solve": "「把課本蓋起來、自己回想、想不出來再翻書」就是主動回想：每次努力把答案想出來，都在把記憶的路走得更深，所以記得最牢。「再讀一遍覺得都會了」很常見，但答案就在眼前，那份「好熟」多半是錯覺；「重畫螢光筆」只是把重點看過去，手在動腦卻沒在想；「邊看電視邊翻」是一心多用，注意力被電視搶走，兩件事都做不好。"
+        },
+        {
+          "story": "小美在背英文單字，她已經看過單字表三次了，覺得好像每個都認得。",
+          "hints": [
+            "「認得」和「自己拼得出來」不一樣喔，哪一個比較難？",
+            "把單字表蓋住，考考自己能不能寫出來，馬上就知道真的會了沒。"
+          ],
+          "q": "接下來小美怎麼做，才知道自己是「真的會」還是「只是眼熟」？",
+          "options": [
+            "把單字表蓋起來，拿張白紙自己默寫，看看哪些寫不出來",
+            "再把單字表從頭看第四遍、第五遍，加深印象",
+            "把每個單字用不同顏色的筆抄得整整齊齊",
+            "把單字表念出聲音來，一邊念一邊看著它"
+          ],
+          "answer": 0,
+          "model": "默寫抓漏洞",
+          "insight": "看得懂不等於寫得出來；蓋起來考自己，才知道真本事。",
+          "solve": "「蓋起來默寫、看哪些寫不出來」是在考自己，能立刻抓出「其實還不會」的單字，把時間花在真正的漏洞上。「再看第四、五遍」和「一邊念一邊看著單字」，答案都在眼前，容易產生「我都會了」的錯覺；「用不同顏色抄得整齊」看起來很認真，但只是照著抄，腦袋沒有努力去「想出來」，記憶不會變牢。"
+        },
+        {
+          "story": "阿豪在準備自然的「植物構造」考試，班上幾個同學各自用了不同的方法複習。",
+          "hints": [
+            "想想看：哪一種方法會逼自己先「把答案想出來」？",
+            "做得漂亮、抄得整齊不等於記得牢；能抽考自己的方法最好。"
+          ],
+          "q": "哪個同學用的方法，最能幫自己把內容記牢？",
+          "options": [
+            "阿豪做了閃卡，正面寫名稱、背面寫功能，反覆抽出來考自己",
+            "小凱把課本重點用螢光筆整段整段畫起來",
+            "婷婷把課文一字不漏地再抄一遍到筆記本",
+            "大雄把課本讀了好幾遍，愈讀愈覺得熟悉"
+          ],
+          "answer": 0,
+          "model": "閃卡抽考",
+          "insight": "閃卡的重點不是「做得漂亮」，是「抽出來考自己」。",
+          "solve": "閃卡「正面問、背面答、反覆抽考自己」逼你先把答案想出來再對照，是很有效的主動回想。「整段畫螢光筆」「一字不漏抄一遍」看起來認真，其實多半是被動地讓眼睛或手滑過去，沒有真的在「回想」；「讀好幾遍愈讀愈熟」的那份熟悉感，常是因為答案一直在眼前造成的錯覺，蓋起來不一定想得出來。"
+        },
+        {
+          "story": "考前一晚，小婷只剩一小時複習數學，她想把時間用在刀口上。",
+          "hints": [
+            "與其每一題都重看，不如先找出「哪些其實還不會」。",
+            "先考自己一遍，錯的地方就是該多花時間的地方。"
+          ],
+          "q": "這一小時，小婷怎麼做最聰明？",
+          "options": [
+            "先蓋住解答自己做幾題考自己，把不會的那幾題挑出來重點加強",
+            "把課本例題從第一題到最後一題，再仔細看過一遍",
+            "把老師上課抄的筆記重新謄寫一份乾淨的",
+            "把公式表反覆讀，讀到覺得每條都很眼熟為止"
+          ],
+          "answer": 0,
+          "model": "先自測再補洞",
+          "insight": "時間有限時，先考自己，把力氣花在真正不會的地方。",
+          "solve": "「蓋住解答、自己做題考自己，再挑出不會的加強」能立刻看出哪裡是漏洞，把有限的時間花在真正不會的題目上，效率最高。「例題再看一遍」「筆記重新謄寫」「公式讀到眼熟」都沒有測出自己「哪裡不會」，而且答案就在眼前，那份「眼熟、好像都會」常是錯覺，考出來才發現漏洞就來不及了。"
+        },
+        {
+          "story": "小傑複習國語課文，他讀了五遍，愈讀愈順，心想：「這課我完全沒問題了！」",
+          "hints": [
+            "讀得很順，是因為字都在眼前；把書蓋起來，你還寫得出來嗎？",
+            "想知道是不是真的會了，就蓋起來考自己一次最準。"
+          ],
+          "q": "小傑要怎麼確認自己是「真的記住」，而不是「只是讀得很順」？",
+          "options": [
+            "把課本蓋起來，在紙上默寫這一課的重點，想不出來再翻書",
+            "把整課課文再從頭讀兩遍，讓自己讀得更順，就更有把握了",
+            "把課文一字一句照著抄到筆記本上，抄完一遍應該就記住了",
+            "拿螢光筆把課文裡最漂亮的句子畫起來，看起來就更清楚了"
+          ],
+          "answer": 0,
+          "model": "蓋起來考自己",
+          "insight": "會不會，要蓋起來默寫才知道；翻著書讀得順，只是眼睛認得字。",
+          "solve": "「蓋起來默寫重點、想不出來再翻書」是純粹的主動提取：逼大腦自己把內容撈出來，撈不出來當場就知道還沒記牢，這才驗證了真本事。「再從頭讀兩遍讀得更順」正是製造「我都會了」錯覺的來源——答案一直在眼前，順不等於記得住。「一字一句照抄」和「畫螢光筆」都只是讓眼睛跟著課本滑過去，手在動、腦沒有被要求「想出來」，所以練不到記憶。訣竅很簡單：先闔上書考自己，卡住了再打開書補，比重讀十遍都有用。"
+        },
+        {
+          "story": "明天要小考，阿哲把這一課讀完了，覺得「看起來都懂」。他有一小時可以複習，想找出最能讓自己「考試當下真的想得起來」的方法。",
+          "hints": [
+            "問問自己：哪一種方法會逼你的大腦『自己把答案撈出來』，而不是眼睛滑過去而已？",
+            "『看得懂』和『想得起來』是兩回事——考試時課本不在旁邊。",
+            "做起來有點吃力、要動腦去回想的那個，通常才是真的在練記憶。"
+          ],
+          "q": "哪一種複習方式，最能檢驗並強化阿哲「自己想得起來」的能力？",
+          "options": [
+            "闔上課本，憑記憶默寫這課重點，再自己出題考自己，答不出來的地方最後翻書補齊",
+            "把課本攤開放旁邊，照著課文一句一句抄寫一遍，抄完就當作複習完成",
+            "從頭到尾把這一課再多讀幾遍，讀到覺得每個字都很眼熟，就相信自己記住了",
+            "拿螢光筆把課本裡看起來重要的句子全部畫上顏色，畫滿一整頁就安心了"
+          ],
+          "answer": 0,
+          "model": "蓋起來考自己（默寫／自問）",
+          "insight": "逼自己把答案從腦袋裡『撈』出來的提取練習，比重讀、照抄、畫線更能讓你考試當下真的想得起來。",
+          "solve": "正解是闔上課本、憑記憶把重點默寫下來並自問自答，答不出來的再翻書補齊——這是把「認得出來」升級成「主動想得起來」的關鍵，也剛好模擬考試時沒有課本的狀態。記憶像一條走過會愈走愈明顯的小路：每次你闔上書、逼自己把答案從腦袋裡『撈』出來，就等於在這條路上多走一趟，路就更清楚、下次更快找到，這叫提取練習。照著課本抄、一直重讀、把重點畫滿螢光筆，資訊只是從眼睛前面滑過去，你的大腦沒有真正去走那條路，會讓人『覺得』自己懂了（因為內容很眼熟），但其實沒練到自己提取，這種熟悉感常是錯覺。這些習慣不是壞事、比完全不複習好，但把大部分時間拿去『考自己』，效果會明顯更高。（提醒：本題只練自己對自己的提取；把整課用自己的話講給別人聽來檢驗理解，那是另一種方法。）"
+        },
+        {
+          "story": "阿凱要參加英文朗讀比賽，得把一段稿子背起來。他背了幾次，拿著稿子念都很順。",
+          "hints": [
+            "拿著稿念很順，是因為字都在；把稿子收起來還背得出來嗎？",
+            "把稿子蓋住、自己背一遍，背不出來的段落就重點練。"
+          ],
+          "q": "阿凱要怎麼練，上台才不會忘詞？",
+          "options": [
+            "把稿子收起來，試著憑記憶背出來，背卡住的地方標記起來再加強練",
+            "拿著稿子一次又一次地順著念，念到很流利為止",
+            "把整份稿子用漂亮的字重新抄寫一遍",
+            "把稿子貼在牆上，每次經過就看一眼"
+          ],
+          "answer": 0,
+          "model": "收起稿子自己背",
+          "insight": "上台不能看稿，練習時就先把稿子收起來考自己。",
+          "solve": "「把稿子收起來、憑記憶背、標記卡住處再練」正是模擬上台情境的主動回想，能精準找出會忘詞的段落。「拿著稿順念到流利」很危險：念得順是因為字在眼前，一旦收起稿子可能就卡住，這正是熟悉的錯覺。「重新抄一遍」「經過看一眼」都只是被動接觸，沒有逼自己把內容從腦袋裡「拉出來」。"
+        },
+        {
+          "story": "月考發回來了，小芬有幾題錯了。她想利用訂正，把這些觀念真正學起來。",
+          "hints": [
+            "訂正不是抄答案就好，而是弄懂後蓋起來自己再做一次。",
+            "過幾天再把同一類題蓋著答案考自己，才知道是真的會了。"
+          ],
+          "q": "怎麼訂正，才能把錯的觀念真正變成自己的？",
+          "options": [
+            "先弄懂為什麼錯，再把答案蓋起來自己重做一次；過兩天又考自己同類型的題目",
+            "把正確答案工整地抄在訂正欄裡就完成了",
+            "把老師講解的過程照著再看一遍，覺得懂了就好",
+            "把錯的題目用紅筆圈起來，提醒自己這題錯過"
+          ],
+          "answer": 0,
+          "model": "訂正也要考自己",
+          "insight": "訂正的重點不是抄對答案，而是蓋起來自己再做得出來。",
+          "solve": "「弄懂後蓋起來自己重做，過兩天再自測同類題」把訂正變成主動回想，能確認觀念真的內化。「工整抄答案」「照著講解再看一遍」「紅筆圈起來」都只是被動接觸正確答案，當下覺得懂了往往是錯覺，下次遇到同類題還是可能錯，因為從來沒逼自己獨立「想出來」。"
+        },
+        {
+          "story": "班上幾個同學組讀書會準備自然考試，大家在想怎麼進行最有用。",
+          "hints": [
+            "哪種安排會讓每個人都得自己「把答案講出來」？",
+            "互相出題、先不看書回答，還能當場發現誰哪裡不會。"
+          ],
+          "q": "讀書會怎麼安排，大家會學得最扎實？",
+          "options": [
+            "輪流出題互相考，答的人先不看課本把答案說出來，不會的一起翻書討論",
+            "每個人各自安靜地把課本再讀一遍",
+            "大家一起把課本重點抄成一份漂亮的共同筆記",
+            "由一個同學把整課念出來，其他人聽著看課本"
+          ],
+          "answer": 0,
+          "model": "互相出題考",
+          "insight": "讀書會最強的用法：互相出題，逼彼此把答案想出來。",
+          "solve": "「輪流出題互相考、答題者先不看課本說出答案」讓每個人都在做主動回想，還能當場發現誰哪裡不會、一起補起來。「各自再讀一遍」「一起抄漂亮筆記」「一人念大家看課本」都是被動接觸內容，眼睛滑過去、手在抄，腦袋卻沒有努力把答案「想出來」，記得不牢也抓不出漏洞。"
+        },
+        {
+          "story": "小宇剛讀完一段科學課文，他在想：接下來是要馬上再讀一次，還是做別的？",
+          "hints": [
+            "讀完立刻蓋起來問自己「剛剛講了什麼」，效果很好。",
+            "想不起來的部分，就是需要回頭再看的部分。"
+          ],
+          "q": "剛讀完一段，小宇馬上做什麼最能幫助記憶？",
+          "options": [
+            "把課本闔上，問自己「剛剛這段在講什麼」，試著回想重點，想不齊再翻回去看",
+            "立刻把同一段再從頭讀一遍，趁印象還在多讀幾次",
+            "把這段裡的好句子用螢光筆畫起來",
+            "先滑一下手機休息，等等再說"
+          ],
+          "answer": 0,
+          "model": "讀完立刻回想",
+          "insight": "讀完先別急著再讀，闔上書問自己「剛剛講了什麼」。",
+          "solve": "「闔上書、問自己剛剛這段在講什麼、想不齊再翻看」是讀完立刻做的主動回想，能把剛看到的內容從腦中「拉」一次，記得更牢也知道哪裡沒吸收。「立刻再讀一遍」感覺很勤勞，但答案還在眼前，容易誤以為都懂了（熟悉的錯覺）；「畫螢光筆」只是被動標記；「先滑手機」則打斷了學習，注意力切換還有切換成本，回來要重新進入狀態。"
+        }
+      ]
+    },
+    {
+      "id": "lv4",
+      "level": 4,
+      "name": "分次複習・別臨時抱佛腳",
+      "emoji": "📅",
+      "color": "#f59e0b",
+      "concepts": [
+        "同樣時間，分幾天複習 > 一次讀完",
+        "臨時抱佛腳，考完很快忘光",
+        "每次快忘時複習，記憶被「續期」",
+        "把複習拆成小段，提早開始",
+        "間隔一下再複習，忘得越來越慢"
+      ],
+      "keyFacts": [
+        "同樣的時間，分成好幾天複習（例如每天 20 分鐘）比一次讀 2 小時記得更牢、更久——這叫間隔複習。",
+        "臨時抱佛腳可能考完隔天就忘光；分次複習能把知識留到很久以後。",
+        "每次在快要忘記時再複習一下，記憶就會被「續期」，越忘越慢。",
+        "與其考前一晚硬塞，不如把複習拆成幾個小段、提早幾天開始。",
+        "間隔一段時間再回來複習（不是連著讀），雖然當下覺得比較難，卻記得更久。"
+      ],
+      "questions": [
+        {
+          "story": "小美的社會考試在一週後。她有五個晚上可以準備，每晚大約有 20 分鐘。她在想：到底要怎麼分配這些時間，考試才記得最牢？",
+          "hints": [
+            "想一想：同樣的總時間，是集中在一天用完，還是分散到好幾天，對記憶比較好？",
+            "記憶有點像走過的小路：走一次不夠清楚，隔幾天再走一次，路才會越踩越明顯。"
+          ],
+          "q": "你會建議小美怎麼安排這一週的複習？",
+          "options": [
+            "每天晚上花 20 分鐘複習，連續五個晚上",
+            "前四晚都去玩，考試前一晚一口氣讀完所有內容",
+            "第一晚把課本從頭到尾重讀三遍，之後就不看了",
+            "每晚都拿螢光筆把整頁課本畫得滿滿的"
+          ],
+          "answer": 0,
+          "model": "間隔複習：同樣時間分幾天 > 一次讀完",
+          "insight": "同樣的時間，分成好幾天複習，比集中在一次讀完記得更牢、更久。",
+          "solve": "「每天 20 分鐘、連續五晚」是最有效的做法——這叫間隔複習。同樣的總時間，分散到好幾天，大腦每天都要重新把記憶「叫」出來一次，這條記憶的路就被踩得越來越深，記得又牢又久。「考前一晚一口氣讀完」雖然當下好像塞進去了，但這種抱佛腳很快就會忘。「第一晚重讀三遍之後不看」少了後面幾天的回顧，記憶沒被「續期」，隔幾天就淡掉。「拿螢光筆把整頁畫滿」看起來很認真，其實只是被動地看過去，畫滿反而分不出重點，記憶效果很弱。"
+        },
+        {
+          "story": "阿豪和同學都要考同一份英文單字。阿豪考前一晚熬夜猛背，考試當天果然全對，超得意。可是一個星期後老師突然抽考同樣的單字，阿豪卻只記得零星幾個。",
+          "hints": [
+            "考完隔天就忘光，代表這些字有沒有真的「住」進長期記憶？",
+            "想一想：如果阿豪早幾天就開始、分次背，一週後的結果會不會不一樣？"
+          ],
+          "q": "從阿豪的經驗，最正確的結論是什麼？",
+          "options": [
+            "臨時抱佛腳只能撐一下子，過幾天就會忘光，要早點分次複習才留得住",
+            "阿豪記憶力天生差，再怎麼準備都沒用",
+            "既然考試當天全對，抱佛腳就是最好的方法",
+            "一週後會忘是正常的，任何方法都留不住單字"
+          ],
+          "answer": 0,
+          "model": "抱佛腳撐不久：考完很快忘光",
+          "insight": "臨時抱佛腳可能考完隔天就忘光；分次複習才能把知識留到很久以後。",
+          "solve": "正確的結論是：臨時抱佛腳只能撐一下子，要早點分次複習才留得住。抱佛腳把單字硬塞進短期記憶，考試當下拿得出來，但沒有隔幾天再回顧，記憶很快就淡掉。「阿豪記憶力天生差」是不對的，這跟天分無關，是方法問題——換成分次複習他也能記牢。「抱佛腳就是最好的方法」被當天的高分騙了，忽略了一週後的慘況。「任何方法都留不住」也不對，間隔複習正是能把單字留很久的方法。"
+        },
+        {
+          "story": "老師教了一個記憶小訣竅：每次在你「快要忘記」某個東西的時候，回頭再複習一下，這個記憶就會像圖書館的書一樣被『續借』，可以留得更久。小庭想把這招用在背數學公式上。",
+          "hints": [
+            "想一想：什麼時候複習最划算——還記得很清楚時，還是快要忘掉時？",
+            "在快忘時再喚回一次，下一次能撐更久才忘，忘的速度會越來越慢。"
+          ],
+          "q": "小庭要怎麼安排複習，才最符合這個『記憶續期』的原理？",
+          "options": [
+            "在自己感覺快要忘掉公式時，就回頭複習一次，之後間隔拉得更長再複習",
+            "剛背完馬上又一直重複看同一條，看到滾瓜爛熟為止",
+            "完全忘光、整條想不起來了，才重頭再背一次",
+            "把公式抄在紙上貼牆壁，每次經過瞄一眼但不主動回想"
+          ],
+          "answer": 0,
+          "model": "記憶續期：快忘時複習，越忘越慢",
+          "insight": "每次在快要忘記時再複習一下，記憶就會被「續期」，忘得越來越慢。",
+          "solve": "「在快忘時複習、之後間隔拉更長」最符合記憶續期原理：正因為有點快忘了，大腦要用力把它撈回來，這一撈就把記憶大大加固，下次能撐更久，忘的速度越來越慢。「剛背完又一直重複看到爛熟」是還很清楚時猛看，大腦不費力，效果差又浪費時間。「完全忘光才重背」等於從零開始，等於沒省到力，太晚了。「貼牆瞄一眼但不主動回想」只是被動看過，沒有『把它想出來』的動作，記憶不會被續期。"
+        },
+        {
+          "story": "距離期末考還有兩個星期，內容很多。小杰打算「等到考前三天再開始，反正到時候會很緊張，效率一定特別高」。他姊姊聽了搖搖頭，說她以前也這樣，結果每次都來不及。",
+          "hints": [
+            "兩週的內容擠進三天，時間夠不夠？會不會來不及、也記不牢？",
+            "與其考前硬塞，不如把複習拆成小段、提早開始。"
+          ],
+          "q": "你會怎麼建議小杰調整計畫？",
+          "options": [
+            "現在就開始，把兩週內容拆成一小段一小段，每天複習一點",
+            "維持原計畫，考前三天再一次讀完，緊張時記得最清楚",
+            "考前三天不睡覺連讀 72 小時，用時間長度補回來",
+            "先把課本每一頁都重抄一遍，抄完自然就會了"
+          ],
+          "answer": 0,
+          "model": "提早拆小段：別把複習堆到最後",
+          "insight": "與其考前一晚硬塞，不如把複習拆成幾個小段、提早幾天開始。",
+          "solve": "「現在就開始、拆成小段、每天複習一點」最好：提早開始又分次，正是間隔複習，記得牢又不會臨時來不及。「考前三天一次讀完」把兩週內容擠進三天，既讀不完、也只是抱佛腳，考完就忘。「不睡覺連讀 72 小時」更糟，睡眠不足時大腦根本記不進去，還會累垮身體——記憶其實是在睡覺時被整理鞏固的。「把每一頁重抄一遍」看起來很拚，但抄寫多半是手在動、腦沒在主動回想，效率很低。"
+        },
+        {
+          "story": "小安在練直笛新曲子。老師說有兩種練法：一種是「今天把這首連續吹 30 遍」，另一種是「今天吹 10 遍，明天、後天各再吹 10 遍」。小安覺得連續吹 30 遍當天比較順、比較有成就感。",
+          "hints": [
+            "當下比較順，不代表過幾天還記得——這兩件事常常相反。",
+            "才藝和背書一樣：分幾天練，隔一段時間再回來，肌肉和大腦記得更久。"
+          ],
+          "q": "如果小安想在下週的成果發表會上吹得穩，哪種練法比較好？",
+          "options": [
+            "今天 10 遍、明天 10 遍、後天 10 遍，分三天練",
+            "今天心情好就連續吹 30 遍，之後靠當天的手感",
+            "只在發表會前一晚瘋狂吹到半夜",
+            "把樂譜反覆盯著看，但先不要真的動手吹"
+          ],
+          "answer": 0,
+          "model": "才藝也適用間隔：分三天 > 連續一次",
+          "insight": "當下覺得順不等於記得久；分幾天練，才藝也記得更牢。",
+          "solve": "「分三天各吹 10 遍」最好：同樣是 30 遍，分散到三天，每天都要重新把曲子從記憶裡叫回來、手指重新熟悉一次，到發表會時最穩。「今天連吹 30 遍」當天很順是因為手感還熱著，但這種順會很快消退，隔幾天就生疏。「前一晚瘋狂吹到半夜」是抱佛腳，又累又不牢，還影響隔天精神。「只盯著樂譜不動手」少了實際演奏的提取練習，光看不練，上台一定卡。"
+        },
+        {
+          "story": "老師出了一個特別的作業：「這個生字，我要你今天寫五個、明天再寫五個、後天再寫五個。」小凱不解地問：「為什麼不今天一次寫完十五個就好？這樣明天後天不就輕鬆了？」",
+          "hints": [
+            "一次寫完 vs. 分三天寫，哪一種能讓生字記到考試那天還在？",
+            "老師是故意把它拆開、隔開的——想想這樣做對記憶的好處。"
+          ],
+          "q": "老師這樣安排作業，背後的道理是什麼？",
+          "options": [
+            "分三天寫，每天都重新提取一次，這個字會記得更牢更久",
+            "老師只是想讓作業看起來比較多、比較累",
+            "分開寫沒有特別意義，一次寫完效果完全一樣",
+            "這樣小凱才不會太快寫完去玩"
+          ],
+          "answer": 0,
+          "model": "間隔練習的原理：分開寫記更久",
+          "insight": "把同樣的練習量隔開幾天，比一次做完記得更牢。",
+          "solve": "老師的用意是「分三天寫，每天重新提取一次，記得更牢更久」——這正是間隔複習的巧思，隔開的空檔逼大腦重新想起這個字，記憶被反覆加固。「只是想讓作業看起來比較多」不對，總量一樣是十五個，並沒有變多。「一次寫完效果完全一樣」是錯的，一次寫完當天手到擒來，但少了隔天的回顧，忘得快。「怕他寫完去玩」把老師的教學用意誤解成管理手段，忽略了記憶科學的道理。"
+        },
+        {
+          "story": "數學小老師整理出一個發現：他觀察到，如果背完英文課文後「馬上」再默背一次，覺得超簡單、幾乎不用想；但如果「隔一天」再默背，會覺得有點吃力、要想一下才想得起來。他有點困惑，覺得隔天複習好像「比較笨」。",
+          "hints": [
+            "覺得吃力，往往代表大腦正在用力——用力的學習常常更有效。",
+            "當下容易，不一定學得牢；當下有點難，反而可能記更久。"
+          ],
+          "q": "關於「隔一天複習覺得比較吃力」這件事，正確的理解是什麼？",
+          "options": [
+            "隔一天複習雖然當下比較費力，但正因為要用力想起來，反而記得更久",
+            "隔天複習比較吃力，代表這方法沒效，應該改成馬上重背",
+            "覺得吃力就是自己變笨了，要多睡覺補腦",
+            "哪種都無所謂，反正背過就是背過了"
+          ],
+          "answer": 0,
+          "model": "有益的困難：當下難，記更久",
+          "insight": "間隔一下再複習，雖然當下覺得比較難，卻記得更久。",
+          "solve": "正確理解是：「隔天複習雖然費力，但正因為要用力想起來，反而記得更久。」這叫『有益的困難』——大腦費力提取的過程，正是把記憶加深的關鍵。「覺得吃力就改成馬上重背」剛好搞反了，馬上重背太輕鬆、大腦不費力，看似順卻學不牢。「覺得吃力=變笨」是誤會，吃力是正常且有用的訊號，不是能力問題。「哪種都無所謂」忽略了間隔與否對長期記憶差很多。"
+        },
+        {
+          "story": "小婷準備下下週的自然單元考。她把複習排成兩種方案：方案 A 是「這個週末一次讀完整整四小時」；方案 B 是「接下來八天，每天讀 30 分鐘」。兩種都是總共四小時。她想選當下最有成就感的方案 A。",
+          "hints": [
+            "兩個方案時間一樣多，差別只在『集中』還是『分散』。",
+            "一次讀四小時，後段容易累、恍神；分成八天則天天都新鮮地提取一次。"
+          ],
+          "q": "若目標是考試時記得最牢，哪個方案比較好？為什麼？",
+          "options": [
+            "方案 B，分成八天每天 30 分鐘，靠間隔讓記憶一次次被加固",
+            "方案 A，一次讀四小時比較有氣勢，讀完就整組記住了",
+            "兩個一樣好，因為總時數相同，效果就相同",
+            "方案 A，因為連續讀不會忘記前面讀的內容"
+          ],
+          "answer": 0,
+          "model": "分散 > 集中：同樣時數，間隔勝出",
+          "insight": "總時數相同時，分散到多天比集中在一天記得更牢。",
+          "solve": "選方案 B：分成八天、每天 30 分鐘，靠一次次的間隔讓記憶反覆被喚回、加固，考試時最牢。「方案 A 一次讀四小時」後半段容易疲勞恍神，而且缺少隔天回顧，讀完的東西會快速淡掉。「兩個一樣好、總時數相同效果相同」是常見誤解——時間怎麼『分配』比總量更關鍵，分散明顯勝出。「連續讀不會忘記前面內容」只在當天成立，過幾天照樣忘，反而是間隔複習能對抗遺忘。"
+        },
+        {
+          "story": "月考結束了，小宇考得不錯。他想：「這些內容我已經會了，可以丟一邊，全部忘掉也沒關係，反正考完了。」但他的目標其實是期末的總複習和之後的會考，這些內容以後還會用到。",
+          "hints": [
+            "如果以後還要用到，現在完全不再看，到時候是不是又要從零開始？",
+            "偶爾回頭複習一下已經考過的東西，能讓它留在記憶裡不流失。"
+          ],
+          "q": "對於「以後還會用到」的內容，小宇比較聰明的做法是？",
+          "options": [
+            "之後偶爾（例如每隔一兩週）回頭複習一下，讓記憶持續被續期",
+            "考完就徹底不再看，反正短期內用不到",
+            "等期末前一晚再把整學期內容重新從頭背一次",
+            "把考卷收進抽屜深處，眼不見為淨最省事"
+          ],
+          "answer": 0,
+          "model": "長線間隔：偶爾回顧，對抗遺忘",
+          "insight": "對以後還會用到的內容，隔一段時間回顧一次，就能長久留住。",
+          "solve": "聰明的做法是「之後每隔一兩週回頭複習一下」：拉長間隔的定期回顧，讓記憶一次次被續期，到期末和會考時幾乎不用重學。「考完就徹底不再看」會讓辛苦學來的東西慢慢流失，以後等於從零開始。「期末前一晚整學期從頭背」又是抱佛腳，量大又不牢。「收進抽屜眼不見為淨」等於放棄回顧，最省事卻最容易忘光。"
+        },
+        {
+          "story": "班上要一起準備兩週後的英語話劇，每個人都要背台詞。同學們討論排練計畫，有人主張「排練很累，乾脆前一天集中排一整天就好」，有人主張「從今天開始，每天短短排一次到演出前」。",
+          "hints": [
+            "台詞要在正式演出當天最順、最不會忘，哪種排法比較保險？",
+            "把排練分散到每天，等於每天都提取一次台詞——正是間隔複習。"
+          ],
+          "q": "為了正式演出時台詞最熟、最不容易忘詞，班上該採哪個計畫？",
+          "options": [
+            "從今天起每天短短排練一次，一直到演出前",
+            "前一天集中排一整天，把大家操到記起來為止",
+            "只在演出當天早上快速把整齣過一遍就上場",
+            "大家各自把劇本讀很多遍就好，不用真的開口對戲"
+          ],
+          "answer": 0,
+          "model": "團隊也適用：每天分次排 > 前一天狂操",
+          "insight": "把練習分散到每天、每天提取一次，正式上場才最穩。",
+          "solve": "選「從今天起每天短短排練一次」：分散到每天，等於天天把台詞提取、對戲一次，記憶不斷被加固，演出當天最順。「前一天集中排一整天」是團隊版的抱佛腳，又累又只靠短期記憶，容易忘詞。「當天早上快速過一遍」準備嚴重不足，臨場風險最高。「各自讀劇本不開口對戲」缺了真正的提取與互動練習，光讀不演，上台一定接不上詞。"
+        }
+      ]
+    },
+    {
+      "id": "lv5",
+      "level": 5,
+      "name": "混著練、串起來",
+      "emoji": "🔀",
+      "color": "#06b6d4",
+      "concepts": [
+        "不同題型「混著做」（交錯）",
+        "狂做同一種會有「我都會」的錯覺",
+        "把新知識連到已經知道的事",
+        "學到新東西問「這讓我想到什麼」",
+        "比較異同，幫大腦搭橋"
+      ],
+      "keyFacts": [
+        "練習時把不同類型題目「混著做」，比同一種狂做一整頁更能學會分辨該用哪招——這叫交錯練習。",
+        "同一種題目連做很多會有「我都會了」的錯覺，換題型就卡住；混著練逼你每次都想「這題該用哪招」。",
+        "把新學的東西連到你已經知道的事（舉生活例子、跟舊知識比較），會記得更牢、更懂。",
+        "學到新概念時，問自己「這讓我想到什麼？跟什麼很像？」就是在幫大腦搭橋。",
+        "混著練當下會覺得比較難、比較慢，但正是這個「有點難」讓你學得更紮實。"
+      ],
+      "questions": [
+        {
+          "story": "小安的數學作業今天有三種題目：加法、減法、乘法，各一整頁。她想找一個最能真正學會、之後考試不會卡住的寫法。",
+          "hints": [
+            "想想：一直寫同一種題目，會不會做到後來根本不用想就會了？",
+            "考試時題目是混在一起出的，不會告訴你這題該用加還是乘。",
+            "有一種寫法逼你每一題都先判斷『這題該用哪一招』。"
+          ],
+          "q": "哪一種寫作業的方式，最能幫小安真正學會分辨題型？",
+          "options": [
+            "只挑最拿手的乘法一直寫，其他兩種先跳過",
+            "先把整頁加法寫完，再整頁減法，最後整頁乘法",
+            "把三種題目打散混著寫，一題加、一題減、一題乘輪流來",
+            "三種題目都只看範例解答，不自己動手算"
+          ],
+          "answer": 2,
+          "model": "交錯練習",
+          "insight": "把不同題型混著練，等於每一題都先問自己『該用哪一招』。",
+          "solve": "把三種題目打散混著寫最有效，這叫交錯練習：因為每一題你都得先判斷該用加、減還是乘，這正是考試時真正需要的能力。『先整頁加法再整頁減法』雖然感覺順，但同一種連做久了會自動化，換題型就容易愣住。『只挑拿手的乘法一直寫』練不到弱項。『只看範例不動手』沒有提取練習，看得懂不等於做得出來。"
+        },
+        {
+          "story": "小傑把同一種類型的題目連做了二十題，越做越快、越順，心裡想『這種我完全會了！』。可是段考換了個問法，他卻整個卡住。",
+          "hints": [
+            "連做同一種題目做到很順，那份『順』有時只是手熟，不代表真的懂。",
+            "想檢查自己是不是真的會，最好用『不一樣』的題目來考自己。",
+            "做得快、做得爽，跟真的學會，是兩回事。"
+          ],
+          "q": "小傑想確認自己是不是真的學會了，該怎麼做比較準？",
+          "options": [
+            "把不同類型的題目混進來考自己，看還能不能判斷該用哪招",
+            "再多做幾題一模一樣的，做到又快又順就放心",
+            "因為剛剛做得又快又順，就相信自己已經全部都會了",
+            "把正確答案直接背下來，考試照抄"
+          ],
+          "answer": 0,
+          "model": "避開『我都會了』的錯覺",
+          "insight": "連做同一種題目的『順』，常是熟練的錯覺，不是真懂。",
+          "solve": "把不同類型題目混進來考自己最準，因為換了題型還能判斷用哪招，才代表真的懂。『再多做幾題一樣的做到很順』只會加深錯覺——同一種連做很順是手熟，不是理解。『因為做得順就相信全會了』正是最容易害人考試翻車的錯覺。『背答案』遇到變化題就沒用了。"
+        },
+        {
+          "story": "自然課教到『熱脹冷縮』：東西受熱會膨脹、變冷會收縮。小圓想把這個新觀念記得又牢又懂。",
+          "hints": [
+            "新知識如果能勾到你生活中看過、摸過的東西，會記得特別牢。",
+            "想想日常裡有沒有『遇熱變大、遇冷變小』的例子？",
+            "把課本文字連到真實經驗，比重複抄寫更有用。"
+          ],
+          "q": "哪一種方法最能幫小圓把『熱脹冷縮』學得牢又懂？",
+          "options": [
+            "連到生活經驗：夏天鐵軌會留縫、瓶蓋泡熱水比較好轉開",
+            "把『熱脹冷縮』這四個字重複抄五遍",
+            "用螢光筆把整段課文都畫滿",
+            "把定義一直讀，讀到能背出來為止"
+          ],
+          "answer": 0,
+          "model": "連到已知（精緻化）",
+          "insight": "新知識勾住你已經知道的事，就有了記得住的『掛鉤』。",
+          "solve": "連到生活經驗最有效，這叫精緻化：把新觀念和你已經熟悉的鐵軌留縫、瓶蓋泡熱水連起來，大腦就有了掛鉤，記得牢也真的懂。『重複抄五遍』和『讀到能背』都只是被動重複，抄得出來、背得出來不代表懂。『整段畫滿螢光筆』看起來認真，但畫線是被動動作，沒有真正動腦連結，效果其實很有限。"
+        },
+        {
+          "story": "國語課學到新成語『畫蛇添足』。小宇想用一個能記很久的方法，而不是背過就忘。",
+          "hints": [
+            "學到新東西時，可以主動問自己一句話，幫大腦搭橋。",
+            "想想這個成語讓你想到什麼、跟你經歷過的哪件事很像。",
+            "自己舉一個例子，比單純重讀更能記牢。"
+          ],
+          "q": "哪一種做法最能幫小宇把這個成語學得牢、用得出來？",
+          "options": [
+            "把成語連同解釋反覆讀十遍",
+            "只把四個字抄在筆記本最上面",
+            "考前一晚再一次把整課成語全部硬背",
+            "問自己『這讓我想到什麼？』並舉一個自己多做反而搞砸的例子"
+          ],
+          "answer": 3,
+          "model": "問『這讓我想到什麼』",
+          "insight": "一句『這讓我想到什麼？』，就是主動幫大腦搭橋。",
+          "solve": "問自己『這讓我想到什麼』並舉自己的例子最有效：主動連結和舉例會逼大腦把新成語接到你的真實經驗上，記得牢又會用。『反覆讀十遍』『抄在最上面』都是被動重複，沒有動腦連結。『考前一晚硬背』是抱佛腳，短期塞進去很快就忘，也不會靈活運用。"
+        },
+        {
+          "story": "社會課同一週教到『颱風』和『龍捲風』，兩個都是很強的風。小晴發現自己常常把兩者搞混。",
+          "hints": [
+            "兩個很像的概念，最怕各記各的、不去想它們的關係。",
+            "把兩者放在一起比一比『哪裡一樣、哪裡不一樣』，反而更清楚。",
+            "找出差異點，就像幫大腦立了兩塊不會混淆的路牌。"
+          ],
+          "q": "哪一種做法最能幫小晴把這兩個概念記清楚、不搞混？",
+          "options": [
+            "只認真記颱風，龍捲風先跳過",
+            "把颱風和龍捲風的段落都用螢光筆畫線",
+            "主動比較兩者的異同：都是強風，但成因、範圍大小不一樣",
+            "颱風、龍捲風分開各背各的，不去想彼此的關係"
+          ],
+          "answer": 2,
+          "model": "比較異同、搭橋",
+          "insight": "把兩個像的東西擺一起找差異，混淆自然變清楚。",
+          "solve": "主動比較異同最有效：找出『都是強風，但成因和範圍不同』，等於幫大腦立了清楚的路牌，最不容易混淆。『分開各背各的』正是搞混的主因——不去想關係，兩個相像的東西就容易黏在一起。『只記颱風跳過龍捲風』會漏掉一半。『兩段都畫螢光筆』是被動標記，沒有真正動腦比較。"
+        },
+        {
+          "story": "小華聽老師說『把不同題型混著練比較好』，就試著混著做。可是他覺得混著練變得又慢又難，好想改回一次只做一種、做起來比較順。",
+          "hints": [
+            "感覺『順、爽』不一定代表學得好；感覺『有點難』有時反而是好事。",
+            "混著練當下比較卡，是因為大腦每題都在用力思考。",
+            "考試才是驗收，不是練習當下順不順。"
+          ],
+          "q": "小華該怎麼看待這種『混著練比較難』的感覺？",
+          "options": [
+            "知道這種『有點難、有點慢』正是學得更紮實的訊號，繼續混著練",
+            "改回一次狂做同一種，因為做起來比較順、比較有成就感",
+            "因為覺得難，就先把練習放著不做了",
+            "只挑已經會的題目做，難的都跳過"
+          ],
+          "answer": 0,
+          "model": "『有點難』才長得紮實",
+          "insight": "練習當下的『有點難』，常是真正學進去的訊號。",
+          "solve": "繼續混著練最好：交錯練習當下會比較慢、比較難，正是因為大腦每題都在用力判斷與思考，這種『有益的困難』才讓學習長得紮實。『改回狂做同一種因為比較順』掉進了『順=學會』的錯覺。『因為難就不做』和『只挑會的做』都在逃避真正需要練的部分，短期輕鬆、長期沒進步。"
+        },
+        {
+          "story": "小睿參加籃球隊，要練投籃。教練說可以自己安排：有近距離、中距離、罰球線三種位置要練。",
+          "hints": [
+            "站同一點一直投，很快就抓到那一點的手感——但比賽不會只在那一點投。",
+            "比賽時你會在各種距離出手，練習能不能貼近比賽？",
+            "把不同距離換著投，逼你每球重新抓距離和力道。"
+          ],
+          "q": "哪一種練投籃的安排，最能幫小睿在比賽各種距離都投得進？",
+          "options": [
+            "只練最有把握的近距離，把它練到百發百中",
+            "三種距離換著投，每球都重新調整力道和角度",
+            "站在同一個定點連投一百顆，再換下一個點",
+            "站著看學長投，自己先不上場練"
+          ],
+          "answer": 1,
+          "model": "交錯練習（才藝版）",
+          "insight": "換著距離練，每一球都在練『重新抓準』——正是比賽要的。",
+          "solve": "三種距離換著投最有效：這是交錯練習，每球都得重新調整力道與角度，正好對應比賽中不固定的出手情境。『同一定點連投一百顆再換』手感來得快卻是假象，換位置就跑掉。『只練最拿手的近距離』練不到弱項。『只看學長投不自己練』缺少實際動手的提取練習，看懂不等於投得進。"
+        },
+        {
+          "story": "英文課學到新單字 transport（運輸）。小玲想找一個能記很久、之後看到還認得的方法。",
+          "hints": [
+            "新單字如果能勾到你已經認得的字或熟悉的東西，會好記很多。",
+            "想想你搭過的捷運、公車，跟這個字有沒有關係？",
+            "自己造一個跟生活有關的句子，比抄二十遍更有用。"
+          ],
+          "q": "哪一種方法最能幫小玲把 transport 記得牢又會用？",
+          "options": [
+            "把 transport 抄二十遍",
+            "只看中文意思『運輸』，記起來就好，不造句",
+            "睡前狂背這個單字一小時",
+            "連到已知的捷運、公車經驗，再自己造一個生活裡的句子"
+          ],
+          "answer": 3,
+          "model": "連結＋造句（精緻化）",
+          "insight": "把新字勾到熟悉的經驗並造句，就從『背過』變成『記住』。",
+          "solve": "連到捷運、公車經驗並自己造句最有效：精緻化讓新單字接上你已經熟悉的東西，還透過造句主動運用，記得牢也用得出來。『抄二十遍』是被動重複，手動了腦沒動。『只看中文意思不造句』少了運用，很快忘。『睡前狂背一小時』是集中抱佛腳，不如分散並連結來得持久。"
+        },
+        {
+          "story": "小澄這週要複習數學的面積、周長、體積。這三種題目長得很像，數字一擺出來，他常常會拿錯公式。距離考試還有五天，他想找個方法練到「一看題目就知道該用哪個公式」。",
+          "hints": [
+            "這三種題型很像、又容易搞混——真正難的是『判斷這題到底在問哪一種』",
+            "把相似的題型混在一起做，大腦每一題都得先想清楚：這題該用哪條公式？",
+            "當下覺得比較卡、比較慢的練法，往往才是記得最牢的練法"
+          ],
+          "q": "面積、周長、體積這三種容易搞混的題型，小澄該怎麼練，才最能練出「一看就知道用哪個公式」的功力？",
+          "options": [
+            "面積、周長、體積混著排做，每題先判斷該用哪條公式再下手",
+            "先把一整頁面積題連著做完，覺得『都會了』再換下一種題型",
+            "只挑自己已經有把握的那種題型多做幾題，把不熟的先放一邊",
+            "對著課本例題一步步照抄，抄熟了就當作複習過了"
+          ],
+          "answer": 0,
+          "model": "交錯：混著練，逼自己判斷該用哪招",
+          "insight": "考卷不會標明這題該用哪招，把易混的題型混著練，練的正是那份「認出該用哪條公式」的判斷力。",
+          "solve": "正解是把面積、周長、體積混在一起排著做，因為每換一題你都得先問自己「這題到底在問哪一種、該用哪條公式」，這份判斷力才是考試真正考的東西。連做一整頁同一種題型，會讓你產生「都會了」的錯覺——那只是手熟，一旦題目混起來就又拿錯公式。只挑會的做，等於避開了最該練的判斷；照著例題抄，手在動、腦沒在想，也記不牢。混著練當下會覺得比較難、比較慢，但正是這種「有點吃力」讓大腦更用力處理，反而學得更紮實、記得更久。"
+        },
+        {
+          "story": "數學課第一次學到『分數』，像 1/2、1/4。小恩覺得符號好抽象，想找個真的懂、不只是背規則的方法。",
+          "hints": [
+            "抽象的東西，連到你摸得到、看得到的生活經驗會好懂很多。",
+            "想想切披薩、分巧克力的時候，是不是就在分『幾分之幾』？",
+            "把新概念接到熟悉的生活畫面，比死記運算規則更能真懂。"
+          ],
+          "q": "哪一種方法最能幫小恩真正理解分數，而不只是背規則？",
+          "options": [
+            "把分數的運算規則一條一條背下來就好",
+            "把課本例題的答案先記起來，考試照套",
+            "把分數連到切披薩、分巧克力這些生活裡分東西的經驗",
+            "把分數符號反覆抄很多遍，抄到手熟"
+          ],
+          "answer": 2,
+          "model": "抽象連到具體（精緻化）",
+          "insight": "把抽象符號接上切披薩、分巧克力，分數就從難懂變好懂。",
+          "solve": "連到切披薩、分巧克力最有效：把抽象的分數接到摸得到、看得到的生活經驗，大腦才真的懂『幾分之幾』是什麼意思，不只是背符號。『背運算規則』和『記例題答案』遇到變化題就垮，因為沒真懂。『反覆抄符號』是被動重複，手熟了腦子還是空的。"
+        }
+      ]
+    },
+    {
+      "id": "lv6",
+      "level": 6,
+      "name": "能教別人才是真懂・費曼技巧",
+      "emoji": "🗣️",
+      "color": "#ec4899",
+      "concepts": [
+        "用自己的話簡單講給別人聽",
+        "講到卡住的地方＝還沒真懂",
+        "能講到小小孩也懂＝真的懂",
+        "「以為懂」和「能講清楚」不一樣",
+        "講出來會現出原形"
+      ],
+      "keyFacts": [
+        "學完後試著用自己的話、簡單講給別人聽（講給玩偶、對空氣講也行），能檢查你是不是真的懂——這叫費曼技巧。",
+        "講的時候如果卡住、講不清楚，那個地方就是你還沒真的懂，正好回去補。",
+        "能把一件事講到讓比你小的人也聽懂，代表你是真的懂，不只是背起來。",
+        "「我以為我懂」和「我能講清楚」常常不一樣；用嘴巴講出來會現出原形。",
+        "照課本原句念一遍不算懂；要能換成自己的話、舉自己的例子，才是真的懂。"
+      ],
+      "questions": [
+        {
+          "story": "自然課教完「水循環」，小昀覺得好像懂了，想確認自己是不是真的懂。老師說：真懂的人可以講給別人聽。",
+          "hints": [
+            "想想：怎麼做才能『檢查』自己是不是真懂，而不只是覺得懂？",
+            "把知識從腦袋『倒出來』給別人，比一直往腦袋『塞』更能看出漏洞。"
+          ],
+          "q": "小昀最能檢查自己懂不懂的做法是？",
+          "options": [
+            "闔上課本，用自己的話把水循環講給桌上的玩偶聽一遍",
+            "再把課本那一頁從頭讀三遍，讀熟就代表懂了",
+            "拿螢光筆把整段重點都畫滿，看起來很認真",
+            "把課本的定義一字不漏背下來，能背出來就是懂"
+          ],
+          "answer": 0,
+          "model": "費曼技巧：講出來才知道懂不懂",
+          "insight": "『以為懂』和『能講清楚』常常不一樣——講出來會現出原形。",
+          "solve": "闔上課本、用自己的話講給玩偶聽，是費曼技巧的核心：一開口就會發現哪裡卡住、哪裡講不清楚，那正是還沒懂的地方。反覆重讀課本會製造『我很熟』的錯覺，但那是認得字、不是真懂；把重點都畫滿是被動動作，畫線本身不會讓理解變深；一字不漏背定義只是背起來，換個問法或要你舉例就答不出。只有『講出來』能把『以為懂』篩掉。"
+        },
+        {
+          "story": "阿哲在教妹妹算『通分』，講到一半，講到某個步驟時他自己突然卡住、講不下去，妹妹一臉疑惑。",
+          "hints": [
+            "卡住的那個地方，是壞消息還是好消息？",
+            "講不清楚的地方，通常就是自己還沒真的弄懂的地方。"
+          ],
+          "q": "阿哲遇到卡住，最該怎麼處理？",
+          "options": [
+            "把卡住那一步先跳過，講後面比較會的部分",
+            "把卡住的地方記下來，回去把它弄懂，再重新講一次",
+            "照課本把那一步原句念給妹妹聽就好",
+            "跟妹妹說這步不重要，考試不會考"
+          ],
+          "answer": 1,
+          "model": "卡住的地方＝還沒真懂的地方",
+          "insight": "講到卡住，不是失敗，是找到了要補的洞。",
+          "solve": "講到卡住，代表那一步正是自己還沒真懂之處——把它標記、回去弄懂再重講，理解就補起來了，這是費曼技巧最有價值的一刻。跳過卡住的部分只是繞開漏洞，漏洞還在；照課本原句念給妹妹聽，等於把自己不懂的話再搬一次，妹妹和自己都沒真懂；用『考試不考』打發，是逃避而不是理解。卡住是好事，別放過它。"
+        },
+        {
+          "story": "地科課學了『為什麼會有白天和黑夜』。小蓉想確認自己是不是真的懂，家裡剛好有讀幼稚園的表弟。",
+          "hints": [
+            "能不能把難的事講到很小的小孩也聽懂？",
+            "要講到小小孩懂，你得先把它想得很清楚、很簡單。"
+          ],
+          "q": "哪種做法最能證明小蓉是真的懂？",
+          "options": [
+            "用一大堆專有名詞講得很厲害，聽起來很專業",
+            "把地科老師講的原話一字不改地複述出來",
+            "試著用最簡單的話，講到幼稚園的表弟也聽懂",
+            "把課本內容多讀幾遍，讀到滾瓜爛熟"
+          ],
+          "answer": 2,
+          "model": "能講到小小孩也懂＝真懂",
+          "insight": "真正懂一件事，你能把它講得簡單。",
+          "solve": "能把『地球自轉』講到幼稚園表弟都聽懂，代表小蓉已經把知識想清楚、消化成自己的話，這才是真懂。堆一堆專有名詞常常是在掩飾自己也沒真懂——聽起來厲害不等於懂；複述老師原話是背，不是理解；反覆讀到滾瓜爛熟只是變熟悉，換人問、換個說法就露餡。講得越簡單，代表懂得越深。"
+        },
+        {
+          "story": "小傑讀完一課歷史，心裡想：『這課我全都懂了！』正準備闔書換下一課。",
+          "hints": [
+            "『覺得懂』要怎麼驗證是不是真懂？",
+            "最快的檢查：不看書，能不能自己講一遍。"
+          ],
+          "q": "在換下一課之前，小傑最該做的是？",
+          "options": [
+            "因為覺得都懂了，直接翻到下一課",
+            "再讀一次，讀到覺得更熟就代表真的懂",
+            "把整段課文抄寫一遍，抄完就安心了",
+            "闔上書，用自己的話把這課的來龍去脈講一遍，看講不講得順"
+          ],
+          "answer": 3,
+          "model": "『以為懂』要用嘴巴驗證",
+          "insight": "覺得懂最容易騙自己；講一遍馬上見真章。",
+          "solve": "『覺得都懂了』常常是熟悉感造成的錯覺。闔上書、用自己的話講一遍，是最快的檢查：講得順代表真懂，講不順就找到了破口。憑感覺直接換下一課，等於把沒發現的漏洞留到考試；再讀一次只會讓熟悉感更強、錯覺更深；抄一遍是手在動、腦沒在整理，抄完仍可能講不出來。要驗證懂不懂，靠講、不靠感覺。"
+        },
+        {
+          "story": "英文課文老師要大家『理解』課文。阿萱把整篇課文順順地念了好幾遍，覺得自己讀得很流利。",
+          "hints": [
+            "念得很順，等於懂意思嗎？",
+            "真懂的人能換句話說，還能舉自己的例子。"
+          ],
+          "q": "阿萱要真的『懂』這篇課文，最有效的做法是？",
+          "options": [
+            "把課文原句一句句背起來，背得出來就懂了",
+            "用自己的話把課文在說什麼講出來，並舉一個自己生活裡的例子",
+            "再朗讀課文十遍，念得更順就代表懂",
+            "把不會的生字用螢光筆通通畫起來"
+          ],
+          "answer": 1,
+          "model": "換成自己的話＋舉自己的例子",
+          "insight": "照原句念一遍不算懂；能換句話、舉自己的例子才算。",
+          "solve": "把課文換成自己的話、再舉一個自己生活裡的例子，代表阿萱真的抓到意思、還能用出來，這才是理解。背原句只是把句子搬進腦袋，換個問法就卡住；朗讀十遍念得順，是嘴巴熟、不是意思懂；把生字畫起來只是標記，並沒有解釋意思。能翻譯成自己的話並連到自己的經驗，才是真懂的證據。"
+        },
+        {
+          "story": "圍棋社學了一個新定式。小翔記住了每一步棋子放哪裡，卻不知道為什麼要這樣下。棋友問他原因。",
+          "hints": [
+            "會擺出來，和知道『為什麼』這樣擺，一樣嗎？",
+            "試著把『為什麼』講給棋友聽，卡住就代表還沒真懂。"
+          ],
+          "q": "小翔想真正學會這個定式，最好的做法是？",
+          "options": [
+            "把每一步落點死記下來，能照擺出來就好",
+            "把棋譜多看幾遍，看熟了自然就會",
+            "試著向棋友解釋『每一步為什麼要這樣下』，講不清楚的地方回去弄懂",
+            "反正比賽照擺就贏，不用管原因"
+          ],
+          "answer": 2,
+          "model": "講出『為什麼』才是真懂",
+          "insight": "會照做，不等於懂；講得出理由，才是真的會。",
+          "solve": "向棋友解釋每一步的理由，就是費曼技巧——講得清楚代表真懂，講不清的地方正好回去補。死記落點只是背招式，對手一變化就不會應對；多看棋譜看熟，仍停在『眼熟』而非理解；『照擺就贏、不管原因』更是把理解整個略過。能講出『為什麼』，才代表真正學會，能靈活運用。"
+        },
+        {
+          "story": "睡前，小柔想確認自己下週要報告的『植物怎麼喝水』有沒有準備好。房間裡只有她一個人。",
+          "hints": [
+            "身邊沒有人，就不能練習講了嗎？",
+            "對玩偶講、對空氣講、甚至錄下來自己聽，都可以。"
+          ],
+          "q": "一個人時，小柔檢查自己懂不懂的最好方法是？",
+          "options": [
+            "把報告稿默念在心裡跑一遍就好，不必出聲",
+            "反正只有自己，明天上台再說",
+            "對著布娃娃出聲講一遍，卡住的地方標起來明天弄懂",
+            "把稿子再讀兩遍，讀熟就安心睡覺"
+          ],
+          "answer": 2,
+          "model": "對玩偶/空氣講也算費曼",
+          "insight": "沒有觀眾也能練——重點是『出聲講出來』。",
+          "solve": "對布娃娃出聲講一遍，就是費曼技巧：一出聲就會發現哪裡卡住、哪裡含糊，明天就知道要補哪裡。默念在心裡容易跳過卡住的地方、產生『我會了』的錯覺，出聲才會現出原形；『上台再說』把檢查省掉，風險留到最後；再讀兩遍稿子只是變熟悉，並沒有測試自己講不講得出來。有沒有觀眾不重要，講出來才重要。"
+        },
+        {
+          "story": "數學小組讀書會，大家各自默默寫題目。小安覺得這樣好像沒學到什麼，想讓讀書會更有用。",
+          "hints": [
+            "一群人在一起，最能拿來做什麼練習？",
+            "把會的題目講解給組員聽，是在幫別人，也在檢查自己。"
+          ],
+          "q": "要讓讀書會真正幫助理解，小安可以提議？",
+          "options": [
+            "大家輪流把自己會的題目，用自己的話講解給組員聽",
+            "繼續各寫各的，安靜比較不會被打擾",
+            "一起把公式大聲念很多遍背起來",
+            "把課本重點一起用螢光筆畫成同一種顏色"
+          ],
+          "answer": 0,
+          "model": "教別人＝最強的自我檢查",
+          "insight": "當你要教會別人，才會逼自己真正想清楚。",
+          "solve": "輪流把會的題目講解給組員聽，既幫了別人，也逼自己把想法整理清楚——教別人時卡住的地方，就是自己還沒真懂之處，這是讀書會最大的價值。各寫各的浪費了『有人可以教』的機會；一起大聲念公式只是集體背誦；一起畫螢光筆是被動動作，畫完理解沒變深。能把題目教會別人，才代表自己真的懂。"
+        },
+        {
+          "story": "明天段考，阿彥複習完最後一章，時間還夠。他想找一個方法，真正確認自己「是不是真的懂了」，而不只是「看過了、有印象」。",
+          "hints": [
+            "「真的懂」不是自己覺得懂，而是能讓別人也聽懂。",
+            "講給別人聽，對方聽不懂、或你講到卡住的地方，就是你還沒真懂、該回去補的洞。"
+          ],
+          "q": "想確認自己「是不是真的懂」，最有效的做法是？",
+          "options": [
+            "用自己的話講給家人或同學聽，對方聽不懂或卡住的地方就回去補",
+            "對著課本把原文一句一句地默背，背到能一字不差地複誦出來為止",
+            "把整章從頭到尾重讀好幾遍，覺得每個字都看得懂就放心地闔上書",
+            "把筆記重新抄一份，用漂亮的排版和顏色讓它看起來更完整好看"
+          ],
+          "answer": 0,
+          "model": "費曼：講到別人懂才算真懂",
+          "insight": "你能把它講到別人懂，才代表你真的懂。",
+          "solve": "把重點用自己的話講給家人、同學，甚至更小的孩子聽——對方聽不懂、或你講到一半卡住、接不下去的地方，正是你還沒真懂的漏洞，回去補起來就對了。這種「對外輸出」逼你把知識重新組織成別人能懂的語言，腦中原本模糊、只是「有印象」的地帶會立刻現形。相對地，一字不差地默背原文，只是把句子複製一遍，換個問法就卡住；把整章重讀好幾遍，看得懂不等於講得出來，漏洞照樣藏著；把筆記抄得漂亮，是在整理外表而不是整理理解。檢驗真懂的標準，是「講到別人也聽懂」，不是自己感覺會了。"
+        },
+        {
+          "story": "阿元跟同學都讀了同一段科學文章。同學問阿元：『這在講什麼？』阿元一開口，卻幾乎照著文章的句子一字一字念出來。",
+          "hints": [
+            "照原文念出來，和真的懂意思，一樣嗎？",
+            "真懂的話，你會用不一樣的、自己的說法講。"
+          ],
+          "q": "阿元這個情況，代表什麼、又該怎麼辦？",
+          "options": [
+            "他已經懂了，因為他記得住原文句子",
+            "念得出原文就是懂，不用再管",
+            "他其實還沒真懂——該練習用自己的話重講一次，不照原文",
+            "文章太難，乾脆放棄這一段"
+          ],
+          "answer": 2,
+          "model": "照原文念≠懂：換句話說才算",
+          "insight": "只能照原文複述，往往代表還停在背、還沒真懂。",
+          "solve": "只能照原文一字一字念，通常代表阿元記住了句子、卻沒把意思消化成自己的東西——這正是『以為懂』。該做的是闔上文章，用自己的話重講一次，講得出來才算真懂。認為『記得住原文就是懂』『念得出就不用管』，都把背誦誤當理解；直接放棄則連補救的機會都沒了。真懂的標誌是能換句話說，而不是複製貼上原文。"
+        }
+      ]
+    },
+    {
+      "id": "lv7",
+      "level": 7,
+      "name": "一次做一件事・專注力",
+      "emoji": "🎧",
+      "color": "#8b5cf6",
+      "concepts": [
+        "一心多用其實更慢更累（切換成本）",
+        "一次專心做一件事，更快更好",
+        "把手機通知關掉、放遠一點",
+        "忍住不看訊息很耗力氣",
+        "專注一陣子後短暫休息"
+      ],
+      "keyFacts": [
+        "一邊寫作業一邊看影片、回訊息，看起來省時間，其實大腦每次「切換」都要重新暖機，反而更慢更累——這叫切換成本。",
+        "專心一次只做一件事，同樣的作業會做得更快、更好、錯更少。",
+        "把手機通知關掉、放到看不到的地方，是幫自己專心最有效的一招——因為一直忍住不看很耗力氣。",
+        "桌上只留下正在用的東西，把會分心的收走，大腦就不用一直抵抗誘惑。",
+        "專注一段時間後短暫休息（起來走動、看遠方），接下來會更專心；連續硬撐效率會掉。"
+      ],
+      "questions": [
+        {
+          "story": "小宇要寫數學評量，他一邊寫、一邊開著手機看搞笑影片，想說「這樣寫起來比較不無聊」。結果一個小時過去，才寫完兩題，還算錯了一題，覺得又累又煩。",
+          "hints": [
+            "想想看：大腦真的能「同時」又看影片又算數學嗎，還是它一直在兩件事之間跳來跳去？",
+            "每次從影片轉回數學，都要重新想起「我剛剛算到哪」，這很花力氣。",
+            "影片先關掉、寫完當獎勵，會不會反而更快？"
+          ],
+          "q": "如果小宇想把數學寫得又快又對，最好怎麼做？",
+          "options": [
+            "繼續一邊看影片一邊寫，習慣了就會順",
+            "把影片音量轉小聲一點，還是邊看邊寫",
+            "把影片先關掉，專心把數學寫完，寫完再看影片當作獎勵",
+            "寫一題、看一段影片，這樣交替輪流著做"
+          ],
+          "answer": 2,
+          "model": "一次專心做一件事",
+          "insight": "同時做兩件事，常常是兩件都做不好。",
+          "solve": "大腦沒辦法真的「同時」專心兩件事，它只是在兩件事之間快速切換，而每切換一次都要重新暖機、重新想起剛剛做到哪——這叫切換成本，所以邊看影片邊寫作業會更慢、更容易錯。先把影片關掉、專心寫完數學，再把影片當獎勵，同一份作業會做得更快更好。轉小聲或一題一段影片輪流，大腦一樣得不停切換，省不了力氣。"
+        },
+        {
+          "story": "小晴在寫國語習作，班級群組一直跳出新訊息，她每次都停下來回一句、再回頭繼續寫。半個小時過去只寫了一點點，還覺得好累。",
+          "hints": [
+            "想想：每次回完訊息，要花多少時間才能重新想起「我剛剛寫到哪」？",
+            "訊息通常不急，晚一點回會怎麼樣嗎？",
+            "有沒有辦法讓訊息「乾脆先不要來打擾她」？"
+          ],
+          "q": "小晴想順順地把習作寫完，最好怎麼做？",
+          "options": [
+            "先把群組通知關掉，等習作寫完再一次回覆大家",
+            "訊息一來就馬上回，回完再繼續，才不會漏掉",
+            "把手機放在習作旁邊，隨時瞄一下有沒有新訊息",
+            "一邊寫一邊開著群組，想到什麼就打幾句"
+          ],
+          "answer": 0,
+          "model": "先關掉通知",
+          "insight": "關掉通知，是送給自己專心的一份禮物。",
+          "solve": "訊息一直跳、每次停下來回一句，大腦就得離開作業、再重新想起剛剛寫到哪，這種一再「重新暖機」很耗力氣，所以會又慢又累。最有效的做法是先把通知關掉、寫完再一次回覆——訊息通常不急，晚幾十分鐘回完全沒問題。馬上回、隨時瞄、開著群組，都會讓大腦不停切換注意力。"
+        },
+        {
+          "story": "阿哲讀社會課本時，把手機面朝下放在桌角，告訴自己「我忍住不看就好」。可是他每隔幾分鐘就忍不住想：會不會有人傳訊息給我？結果一直讀不進去。",
+          "hints": [
+            "手機還在看得到的地方時，大腦是不是得一直花力氣「忍住不看」？",
+            "一直忍耐本身，是不是也很累？",
+            "如果手機根本不在眼前，還需要忍嗎？"
+          ],
+          "q": "怎麼做，能讓阿哲最省力地專心讀書？",
+          "options": [
+            "手機留在桌角，靠意志力硬忍著不去看",
+            "把手機關靜音，拿到別的房間或收進看不到的抽屜",
+            "手機拿在手上，告訴自己「只有重要的才點開」",
+            "每讀十分鐘就檢查一次手機，確認沒事再繼續讀"
+          ],
+          "answer": 1,
+          "model": "眼不見為淨",
+          "insight": "與其一直忍住誘惑，不如讓誘惑不出現。",
+          "solve": "手機只要在看得到、拿得到的地方，大腦就得一直花力氣「忍住不看」，這種忍耐本身很累，反而讓你更難專心。最有效的一招是把手機關靜音、放到看不到的地方——誘惑不在眼前，你根本不用忍，力氣就能全放在課本上。放桌角靠意志力、拿在手上、每十分鐘檢查，都還是讓手機不斷拉走你的注意力。"
+        },
+        {
+          "story": "小美準備考試，打算一口氣連續讀三個小時、中間都不休息，覺得「休息就是浪費時間」。可是讀到後面，她發現同一段一直看不進去，眼睛也很酸。",
+          "hints": [
+            "專注力有點像手機電量，連續用會怎麼樣？",
+            "想想：短短休息幾分鐘，回來後會不會反而讀得更快？",
+            "哪一種休息是真的讓大腦放鬆，哪一種只是又被別的東西吸走？"
+          ],
+          "q": "怎麼安排，小美最能把書讀得進去？",
+          "options": [
+            "咬牙硬撐，不管多累都不休息，這樣才讀得多",
+            "讀累了就直接躺著滑手機半小時，再回來讀",
+            "專心讀一段時間後，起來走動、看看遠方休息幾分鐘，再繼續",
+            "一邊讀一邊吃東西、一邊跟家人聊天，這樣就不會累"
+          ],
+          "answer": 2,
+          "model": "專注要搭配休息",
+          "insight": "短暫的休息不是浪費，是幫大腦充電。",
+          "solve": "專注力像電量，連續硬撐會越用越低，讀到後面根本讀不進去。專心讀一段時間（例如二、三十分鐘）後，起來走動、看看遠方，讓大腦短暫休息幾分鐘，回來會更專心、效率更高。硬撐會讓效率一路下滑；躺著滑手機半小時會讓大腦又被吸走、很難回到狀況；邊吃邊聊則是一心多用，根本沒真正休息到。"
+        },
+        {
+          "story": "阿凱寫作業時，桌上放著漫畫、玩具小車，還有一包餅乾。他常常寫兩下就摸一下玩具、翻一下漫畫，一份作業拖了好久還沒寫完。",
+          "hints": [
+            "桌上有這些東西時，大腦是不是要一直忍住「去玩一下」的念頭？",
+            "如果誘惑根本不在眼前，是不是就不用一直跟自己拔河？",
+            "桌上只留下真正需要用的東西，會怎麼樣？"
+          ],
+          "q": "想讓自己更容易專心，阿凱該怎麼整理桌面？",
+          "options": [
+            "只留下正在寫的作業和文具，把漫畫、玩具、餅乾都收到看不到的地方",
+            "桌面維持原樣，靠自己提醒「不要碰」",
+            "把玩具排整齊放在旁邊，想玩的時候再玩",
+            "把餅乾放在手邊，分心想吃就吃一口再繼續寫"
+          ],
+          "answer": 0,
+          "model": "清空桌面",
+          "insight": "桌上的東西越少，大腦越不用花力氣抵抗誘惑。",
+          "solve": "桌上只要有玩具、漫畫、零食，大腦就得一直花力氣抵抗「去摸一下」的念頭，很難真正專心。最有效的做法是把會分心的東西全收到看不到的地方，桌上只留正在用的作業和文具——誘惑不在眼前，你就不用一直和自己拔河。維持原樣靠提醒、排整齊放旁邊、把餅乾放手邊，都還是讓誘惑留在你的視線裡。"
+        },
+        {
+          "story": "婷婷練鋼琴時，想順便把英文單字卡放在譜架旁邊，彈一段就背幾個單字，覺得「兩件事一起做好有效率」。結果琴彈得卡卡的，單字也一個都沒記住。",
+          "hints": [
+            "彈琴要看譜、動手指，背單字要動腦記——兩件事是不是都在搶大腦？",
+            "想想：分開來各自專心，會不會兩件都做得更好？",
+            "貼在琴鍵上瞄、一句琴一個單字輪流，還是同時在切換嗎？"
+          ],
+          "q": "婷婷怎麼做，兩件事才都能做好？",
+          "options": [
+            "先專心把鋼琴練完，再另外找一段時間專心背單字",
+            "繼續一邊彈琴一邊背單字，多練幾次就會順",
+            "把單字卡貼在琴鍵上方，彈琴時隨時瞄一眼",
+            "彈一句琴、背一個單字，這樣快速輪流著做"
+          ],
+          "answer": 0,
+          "model": "分開做才做得好",
+          "insight": "兩件事各自專心，比硬湊在一起更快更好。",
+          "solve": "練琴需要看譜、手指協調，背單字需要動腦記憶，兩件事搶著用大腦，結果是琴彈不好、單字也記不牢。把它們分開、各自專心一段時間，反而兩件都做得更快更好。一起做、貼在琴鍵上瞄、快速輪流，大腦都得不停切換，既慢又累，這就是一心多用的代價。"
+        },
+        {
+          "story": "小傑讀書讀了一陣子，想休息一下喘口氣。他心裡在猶豫：是要躺著滑短影片，還是起來喝個水、看看窗外的遠方。",
+          "hints": [
+            "休息的目的，是讓大腦和眼睛放鬆，還是讓它們更興奮？",
+            "短影片、遊戲常常「一開始就停不下來」，這對等一下回去讀書好嗎？",
+            "哪一種休息，結束後最容易乖乖回到書桌前？"
+          ],
+          "q": "哪一種休息，能讓小傑等一下最容易回到專心狀態？",
+          "options": [
+            "躺著滑短影片，看到欲罷不能為止",
+            "打開手機遊戲，玩個一兩局再回來",
+            "起來走動、喝口水、看看窗外遠方，讓眼睛和大腦真正放鬆",
+            "開始回一堆訊息，順便滑一下社群"
+          ],
+          "answer": 2,
+          "model": "休息要讓腦放鬆",
+          "insight": "好的休息讓你更專心，壞的休息把你越拉越遠。",
+          "solve": "休息的目的是讓大腦和眼睛放鬆，等一下更好回到專心。起來走動、喝水、看看遠方，是真正的休息。滑短影片、玩遊戲、回訊息看起來像休息，其實會讓大腦更興奮、更難停下來，常常一滑就欲罷不能、時間越拖越長，回到書桌反而更難進入狀況。"
+        },
+        {
+          "story": "姐姐得意地跟弟弟說：「我可以一邊寫作業、一邊回訊息、一邊聽歌，一次做三件事，超級省時間！」弟弟聽了覺得怪怪的，不太確定這樣真的比較快。",
+          "hints": [
+            "大腦能不能真的「同時」專心三件事，還是它其實在快速切換？",
+            "每切換一次，是不是都要重新想起「我剛剛做到哪」？",
+            "看起來省時間，實際上會更快，還是更慢又更容易錯？"
+          ],
+          "q": "根據學習科學，姐姐這樣做通常會發生什麼事？",
+          "options": [
+            "大腦其實是在三件事之間不停切換，每次切換都要重新暖機，反而更慢、更容易出錯",
+            "真的比較省時間，三件事會同時漂亮完成",
+            "完全沒差，做幾件事都一樣快",
+            "只要多練幾次習慣了，大腦就能真的同時專心三件事"
+          ],
+          "answer": 0,
+          "model": "一心多用其實更慢",
+          "insight": "「同時做很多事」是錯覺，大腦只是在快速切換。",
+          "solve": "大腦沒辦法真的同時專心好幾件事，它只是在幾件事之間快速切換；每切換一次就要重新想起「我剛剛做到哪」，這叫切換成本，所以看起來省時間，其實更慢、更累、更容易出錯。以為三件事會同時完成、以為沒差、以為習慣就能真同時，都是常見的誤會——最快的方法還是一次專心做一件事。"
+        },
+        {
+          "story": "媽媽叫小安去寫作業，小安寫五分鐘就跑去看一下電視，回來寫五分鐘又跑去冰箱找東西吃。她覺得「反正我有回來寫就好」，可是作業一直寫不完。",
+          "hints": [
+            "每次跑開再回來，是不是都要重新想起剛剛寫到哪？",
+            "這段「重新開始」的時間，一次次加起來會有多少？",
+            "如果先連續專心寫完一段，再一次好好休息，會不會更順？"
+          ],
+          "q": "小安這樣一直中斷再回來，會有什麼問題？最好怎麼改？",
+          "options": [
+            "沒問題，只要最後有寫完就好，中斷幾次都無所謂",
+            "每次中斷回來都要重新進入狀況、很花時間，不如先連續專心寫完一段，再起來休息",
+            "應該多中斷幾次，這樣才不會太累",
+            "乾脆邊看電視邊寫，就不用一直來回跑了"
+          ],
+          "answer": 1,
+          "model": "別一直中斷自己",
+          "insight": "一直中斷再回來，時間都花在「重新開始」上。",
+          "solve": "每次跑去看電視、找東西吃，回來都要重新想起剛剛寫到哪、重新進入專心狀態，這段「暖機」時間一次次加起來，反而拖得更久。比較好的做法是先連續專心寫完一段，再一次好好休息。以為「有寫完就好」「多中斷才不累」，其實都讓你不停付出切換成本；邊看電視邊寫更是一心多用，兩邊都做不好。"
+        },
+        {
+          "story": "阿文想把回家後的一小時讀書時間變得更有效率。他坐在書桌前，開始思考今天這一小時該怎麼安排最好。",
+          "hints": [
+            "想想：哪種安排同時做到了「收走干擾」「一次一件」和「適度休息」？",
+            "手機開著、音樂訊息不斷，大腦會不會一直被拉走？",
+            "一口氣硬讀一小時不休息，後半段還讀得進去嗎？"
+          ],
+          "q": "下列哪一種安排，最符合「專心讀書」的科學方法？",
+          "options": [
+            "手機收到別的房間、桌上只留課本，專心讀約二十五分鐘再休息五分鐘，之後再繼續",
+            "手機放桌上、開著音樂和訊息，想到就看一下，讀到累了才停",
+            "一口氣連讀滿一小時都不休息，中間絕不起來",
+            "一邊讀一邊跟同學視訊聊天，邊聊邊讀比較不無聊"
+          ],
+          "answer": 0,
+          "model": "打造專心的一小時",
+          "insight": "收走干擾＋一次一件＋適度休息，就是專心的黃金組合。",
+          "solve": "最有效的安排結合了三個科學方法：把手機收到看不到的地方（不用一直忍）、桌上只留課本（不用抵抗誘惑）、專心一段時間後短暫休息（讓大腦充電）。開著音樂訊息隨時看、和同學視訊邊聊邊讀，都是一心多用，大腦一直切換又慢又錯；一口氣硬撐一小時不休息，後半段會越讀越讀不進去。"
+        }
+      ]
+    },
+    {
+      "id": "lv8",
+      "level": 8,
+      "name": "學前想一想、學後檢查・學習策略",
+      "emoji": "🧭",
+      "color": "#0ea5e9",
+      "concepts": [
+        "學前問「我已知什麼、想學會什麼」",
+        "學後檢查「我真的懂了嗎、哪裡卡」",
+        "大目標拆成幾個小步驟",
+        "卡太久就去問、去查（不是偷懶）",
+        "多試幾種方法，找最適合自己的"
+      ],
+      "keyFacts": [
+        "開始學之前先問自己「這個我已經知道什麼？我想學會什麼？」，大腦會更知道要抓哪些重點。",
+        "學完後檢查「我真的懂了嗎？哪裡還卡卡的？」，比讀完就闔上書更能發現漏洞——這叫後設認知（想一想自己的學習）。",
+        "把大目標拆成幾個小步驟、一個一個完成，比只想著「我要考好」更做得到、也更有成就感。",
+        "卡住太久、自己想不通時，去問老師、同學或查資料，是聰明的策略，不是偷懶。",
+        "每個人適合的方法不完全一樣，多試幾種（自測、講出來、畫圖），找出對自己最有效的。"
+      ],
+      "questions": [
+        {
+          "story": "老師說下週要開始上「分數」這個新單元。放學前，小宇看著課本上的新章節，想著要怎麼開始比較好。他有一整個週末可以先做準備。",
+          "hints": [
+            "開始學新東西之前，先讓大腦知道『要抓什麼重點』會更有效。",
+            "可以先問自己兩個問題：這個我已經會什麼？我這次想學會什麼？",
+            "把整章從頭讀一次，其實不太知道哪裡才是重點。"
+          ],
+          "q": "小宇開始學新單元前，最有效的第一步是什麼？",
+          "options": [
+            "先翻開新章節，問自己「分數我已經會什麼？這次想學會什麼？」，再開始讀",
+            "把整個章節從頭到尾讀一遍，能記多少算多少",
+            "先用螢光筆把課本每一頁的重點都畫起來",
+            "先不用管，等老師整課上完再說"
+          ],
+          "answer": 0,
+          "model": "學前預想（啟動已知）",
+          "insight": "開始之前先問「我已知什麼、想學會什麼」，大腦就知道該把注意力放哪裡。",
+          "solve": "最有效的是「先問自己已經會什麼、想學會什麼」：這叫學前預想，會先喚醒你腦中已有的知識，讓新內容有地方『掛』上去，讀的時候也更清楚哪裡是重點。「從頭讀一遍能記多少算多少」是被動閱讀，沒有目標，容易讀過就忘。「把每頁重點都畫螢光筆」看起來認真，但畫線是被動的，畫完常以為懂了其實沒有。「等老師上完再說」則完全放棄了先熱身的機會，開始時會更吃力。"
+        },
+        {
+          "story": "小婷剛讀完歷史課本的一課，裡面有好幾個年代和人物。她把書闔上，心想：「終於讀完了！」正準備去休息，忽然不太確定自己是不是真的把這一課弄懂了。",
+          "hints": [
+            "讀完一課不等於學會，關鍵是找出自己哪裡其實還沒弄懂。",
+            "試著一段一段問自己，看看哪裡一問就卡、答不上來。",
+            "把卡住的地方標記下來、回頭補，比重讀或抄整齊更有用。"
+          ],
+          "q": "小婷讀完這一課後，怎麼做最能確認自己真的學會了？",
+          "options": [
+            "覺得這一課都讀完了，就把課本收好，安心先去休息放鬆一下",
+            "只在意這一課大概能考幾分，覺得考得過去，其他就先不用管",
+            "逐段問自己哪裡還說不清楚、一問就卡住，把卡住的地方回頭補",
+            "把這一課的筆記用不同顏色的筆重新抄一次，抄得整齊就安心"
+          ],
+          "answer": 2,
+          "model": "學後檢查：找出還沒懂的、回頭補",
+          "insight": "讀完別急著收書，先找出自己哪裡一問就卡，那就是還沒真懂、該回頭補的地方。",
+          "solve": "最有效的是讀完後主動監控自己：一段一段問自己哪裡還說不清楚、一問就卡，把這些卡住的地方標記下來，再回頭補起來。這正是後設認知的「學後檢查」——不是問「讀完了沒」，而是問「哪裡其實還沒懂」，先發現漏洞才補得到。「把課本收好去休息」完全沒有檢查，漏洞會一直留到考試才冒出來。「只在意能考幾分」只盯著分數，並沒有去確認自己到底哪裡不懂。「用不同顏色的筆重新抄一次」是被動的抄寫，換顏色、抄整齊都不會讓你發現自己的漏洞。真正讓學習變牢的，是找出還沒懂的地方，然後回頭補。"
+        },
+        {
+          "story": "距離期末考還有兩個星期，小杰要準備國語、數學、自然、社會、英語五科，內容好多。他坐在書桌前，心裡一直想著「這次我一定要考好」，但看著那疊課本，反而不知道從哪裡下手。",
+          "hints": [
+            "「考好」是很大的目標，大腦不知道今天該做什麼。",
+            "試著把大目標拆成『每天完成哪一科的哪幾頁』。",
+            "抱佛腳（考前一晚全部讀完）通常記不牢也很累。"
+          ],
+          "q": "小杰要怎麼安排，最容易真的做到、也讀得比較踏實？",
+          "options": [
+            "把「考好」拆成每天完成哪一科、哪幾頁的小目標，一個一個達成",
+            "只在心裡不停告訴自己「我一定要考高分」",
+            "等到考前一天晚上，再一口氣把五科全部讀完",
+            "先挑最有把握的一科，一直讀到滾瓜爛熟為止"
+          ],
+          "answer": 0,
+          "model": "大目標拆小步驟",
+          "insight": "把「考好」拆成一個個小步驟，做得到，也更有成就感。",
+          "solve": "最有效的是「把大目標拆成每天的小步驟」：大目標太模糊，大腦不知道現在該做什麼；拆成小步驟後每天都清楚要做什麼，完成一項就有成就感，會更想繼續。「一直告訴自己要考高分」只是喊口號，沒有具體行動。「考前一晚全部讀完」是抱佛腳，一次塞太多記不牢、隔天就忘（沒有間隔複習）。「只讀最有把握那科到滾瓜爛熟」會讓其他四科沒時間讀，時間分配失衡。"
+        },
+        {
+          "story": "寫數學作業時，阿明遇到一題應用題，想了很久、換了好幾種算法，還是算不出答案。時鐘的分針已經走了快二十分鐘，他越想越煩躁，橡皮擦都快擦破本子了。",
+          "hints": [
+            "卡太久、自己想不通時，去問、去查是聰明的策略。",
+            "求助不是偷懶——你已經先自己認真想過了。",
+            "一直盯著同一題硬想，時間常常白白流掉。"
+          ],
+          "q": "阿明想了快二十分鐘還是不會，這時最好的做法是？",
+          "options": [
+            "繼續盯著題目死想，不會就一直想，絕不問任何人",
+            "把課本後面的答案抄下來，背起來就好",
+            "直接跳過，反正這種題目應該不會考",
+            "已經認真想過還是卡住，就去問老師或同學、查解題步驟"
+          ],
+          "answer": 3,
+          "model": "卡住就求助／查資料",
+          "insight": "認真想過還是卡住，去問、去查是聰明，不是偷懶。",
+          "solve": "最有效的是「認真想過後就去問或查解題步驟」：你已經自己嘗試過，這時求助能讓你學到新方法，並不是偷懶，反而是聰明的策略。「一直死想不問」會浪費大量時間，還越想越挫折。「抄答案背起來」只記住這一題的答案，換個數字就又不會了，沒有真的學會。「直接跳過說不會考」是逃避，遇到不懂就放棄，漏洞會越來越大。"
+        },
+        {
+          "story": "下週英語小考要考二十個新單字，小芳很認真想背好。她想起同學們各有各的背單字方法，有人一直抄、有人一直讀，她不確定哪一種對自己最有用。",
+          "hints": [
+            "每個人適合的方法不完全一樣。",
+            "可以多試幾種方法，比比看哪種記得最牢。",
+            "一直抄、一直讀很花時間，效果卻不一定最好。"
+          ],
+          "q": "小芳想找出對自己最有效的背單字方法，該怎麼做？",
+          "options": [
+            "就一直重複抄寫單字，抄的次數越多越好",
+            "反覆讀那張單字表，讀到每個字都眼熟為止",
+            "晚上睡覺時放單字錄音，靠睡著時聽就能記住",
+            "試自測、把單字造句、講給自己聽等幾種方法，看哪種記得最牢"
+          ],
+          "answer": 3,
+          "model": "多試幾種方法找最適合的",
+          "insight": "多試幾種方法、比較效果，才能找到最適合自己的學法。",
+          "solve": "最有效的是「試幾種方法再比較哪種記得最牢」：透過自測、造句這類主動回想，記憶會更牢；而且每個人適合的方法不同，實際比較過才知道自己最有效的是哪種。「一直重複抄寫」是機械動作，手在動腦沒在想，效率低。「反覆讀到眼熟」只會製造『我好像會了』的錯覺。「睡覺放錄音就能記住」是常見迷思——睡著時大腦並不會學新單字，靠它背單字是沒用的。"
+        },
+        {
+          "story": "鋼琴老師發下一首新曲子，要小樂回家練。曲子有四頁，有些小節看起來很簡單，中間有一段音符擠成一團、看起來好難。小樂把譜攤開在琴上，深呼吸準備開始。",
+          "hints": [
+            "練之前先看譜，分辨哪裡已經會、哪裡最難。",
+            "可以先鎖定最難的那一段來攻克。",
+            "從頭彈到尾一直重複，難的地方還是難。"
+          ],
+          "q": "小樂開始練這首新曲子，怎麼練最有效率？",
+          "options": [
+            "先看譜，分出哪些小節已經會、哪一段最難，決定先攻下最難那段",
+            "從頭到尾一直反覆彈，彈到手痠為止",
+            "只挑自己已經很熟的段落彈，彈得很開心",
+            "先把整首曲子聽很多遍，覺得耳朵熟了就當作會了"
+          ],
+          "answer": 0,
+          "model": "學前診斷＋攻克難點",
+          "insight": "先分出哪裡會、哪裡最難，把力氣花在最難的地方最划算。",
+          "solve": "最有效的是「先分辨會與不會，優先攻克最難那段」：這是把後設認知用在才藝上——先診斷自己的弱點，再把練習集中在最需要的地方。「從頭彈到尾反覆彈」會一直重練已經會的部分，難的地方練得少，進步慢。「只挑熟的段落彈」很開心卻在逃避難點，曲子永遠彈不完整。「聽很多遍就當會了」只是耳朵熟，手指並沒有練到，真正要彈時還是彈不出來。"
+        },
+        {
+          "story": "自然作業有一份選擇題，小豪很快就全部寫完了，正想收進書包。他每一題都有勾答案，看起來滿滿的，但其中有兩三題其實是用『感覺』猜的，他自己也說不太上來為什麼選那個。",
+          "hints": [
+            "寫完不等於懂，重點是講不講得出理由。",
+            "回頭問自己每題『為什麼選這個』。",
+            "和同學對答案一樣就放心，可能兩個人都答對了卻都不懂為什麼。"
+          ],
+          "q": "小豪寫完自然作業後，最能幫助自己真正學會的做法是？",
+          "options": [
+            "寫完就收書包，對不對交給老師改就好",
+            "回頭逐題問自己「我為什麼選這個答案？講得出理由嗎？」，講不出來的再弄懂",
+            "把課本相關段落再從頭讀一次就好",
+            "和同學對答案，只要答案一樣就放心"
+          ],
+          "answer": 1,
+          "model": "檢查『為什麼』而非只看答案",
+          "insight": "能講出『為什麼選這個』，才代表你真的懂，而不只是猜對。",
+          "solve": "最有效的是「逐題問自己為什麼選這個答案」：能說出理由，才代表真的理解；靠感覺猜對的題目，正是最需要補起來的漏洞。「寫完就交給老師改」把檢查責任丟出去，自己錯過了發現漏洞的機會。「再讀一次課本」是被動重讀，不一定對到你猜錯的那幾題。「對答案一樣就放心」很危險——你們可能都猜對卻都不懂為什麼，換個問法就又錯了。"
+        },
+        {
+          "story": "體育課要考跳繩，小恩的目標是連續跳一百下。可是她現在每次跳到大概十下就會絆到，繩子卡住腳。看著會跳一百下的同學，她有點灰心，覺得一百下好遙遠。",
+          "hints": [
+            "一百下太遠，大腦會覺得做不到而放棄。",
+            "可以先設一個『再往前一點點』的小目標。",
+            "一直硬挑戰一百下、一直失敗，只會越練越氣餒。"
+          ],
+          "q": "小恩想達成連續跳一百下，怎麼練最容易一步步做到？",
+          "options": [
+            "設小目標：先穩定跳到二十下，再挑三十下，一階一階往上加",
+            "每次都硬要一口氣挑戰一百下，絆到就重來",
+            "先不要練，等長大力氣變大，自然就會跳了",
+            "一直看別人跳一百下的影片，看久了應該就會"
+          ],
+          "answer": 0,
+          "model": "階梯式小目標",
+          "insight": "把遙遠的大目標切成一階一階，踩得到、也走得到。",
+          "solve": "最有效的是「設階梯式小目標，一階一階往上加」：從二十下、三十下慢慢加，每個目標都踩得到，成功經驗會推著你前進，最後自然接近一百下。「每次硬挑一百下」目標太遠，一直失敗只會累積挫折。「等長大自然會」是把責任丟給時間，不練習就不會進步。「一直看別人的影片」是被動觀看，看再多次，自己的手腳沒有真正練到也不會變強。"
+        },
+        {
+          "story": "老師出了一份自然報告，主題是「為什麼天空是藍色的」。小庭打開空白的稿紙，腦中一片空白，完全不知道從哪裡開始寫，手裡的筆遲遲落不下去。",
+          "hints": [
+            "先自己想一小段時間，把已經知道的列出來。",
+            "真的卡住了，再去查資料、問老師，這是聰明的策略。",
+            "一開始就整篇複製貼上，等於沒有自己學到東西。"
+          ],
+          "q": "小庭面對這份報告，怎麼開始最好？",
+          "options": [
+            "先自己想幾分鐘，列出已經知道的，真的卡住再查資料、問老師",
+            "完全不查、不問，一定要自己硬想到底，才算厲害",
+            "一開始就上網把整篇文章複製貼上，交出去就好",
+            "一直拖著不動，等有靈感自己冒出來再說"
+          ],
+          "answer": 0,
+          "model": "先自試、卡住再求助",
+          "insight": "先自己想一段、卡住再查，是最聰明的『用力再借力』。",
+          "solve": "最有效的是「先自己想幾分鐘、卡住再查再問」：先動腦列出已知，能讓後面查到的資料更有地方連結；真的卡住才求助，是『先用力、再借力』的聰明順序。「不查不問硬想到底」會浪費時間，卡住太久反而學不到新東西。「整篇複製貼上」看似交差，其實你什麼都沒學到。「拖著等靈感」則是逃避，靈感不會自己出現，行動才會帶來想法。"
+        },
+        {
+          "story": "阿嵐每天晚上都乖乖打開課本，一段一段順順地讀過去，讀的當下覺得「都懂了、很順」。可是隔天上課老師一問，他腦袋卻一片空白，想不太起來。他心裡冒出一個訊號：「奇怪，我明明每天都讀，為什麼隔天就忘光？」",
+          "hints": [
+            "先別急著怪自己，先問：『我一直在用的這個方法，真的有讓我記住嗎？』",
+            "『讀起來很順』和『隔天真的記得』是兩回事——用什麼方式可以先幫自己驗一下到底記住沒？",
+            "覺得方法沒效時，聰明的做法是換個方式再定期檢查，而不是把同一招做更多次。"
+          ],
+          "q": "面對「每天讀很順、隔天卻想不起來」這個訊號，阿嵐最該怎麼做，才是真正在監控並調整自己的學習策略？",
+          "options": [
+            "發現一直重讀沒用，改成讀完蓋起來考自己、做小測驗，隔幾天再檢查記得多少",
+            "維持原本的重讀法不變，只是把同一段課本多讀好幾遍，相信讀夠多次自然就會記住",
+            "認定自己天生記性差、腦袋不適合唸書，乾脆放棄這科不再花力氣去弄懂它",
+            "把筆記重新抄一遍、抄得更工整漂亮，讓課本和筆記看起來更順眼更舒服"
+          ],
+          "answer": 0,
+          "model": "察覺方法沒用→換方法並定期檢查（後設認知：發現訊號、診斷、調整策略）",
+          "insight": "『讀起來很順』常是假訊號，真正的學習高手會回頭檢查方法有沒有效、沒效就換招再驗證。",
+          "solve": "正解是察覺舊方法無效後主動換方法、並定期檢查是否真的記住——這正是「監控自己的學習+調整策略」的後設認知核心，先發現訊號、診斷原因、再改變做法。其餘三個選項都是常見卻較沒效的反應：把重讀法做更多遍，只是加大一個已被自己觀察到沒效的方法，沒有換策略也沒有檢查；認定記性差而放棄，是把可改變的方法問題誤當成不可改變的天賦，直接關掉了調整的機會；把筆記抄得更工整，是在整理外表而非檢驗自己記住沒，漂亮不等於學會。真正有用的關鍵動作，是回頭驗證方法的效果並據此調整，而不是更努力地做同一件沒效的事。"
+        }
+      ]
+    }
+  ];
+
+  var BADGES = [
+    {
+      "id": "lv1",
+      "icon": "🌱",
+      "name": "成長腦"
+    },
+    {
+      "id": "lv2",
+      "icon": "🧠",
+      "name": "記憶通"
+    },
+    {
+      "id": "lv3",
+      "icon": "🎯",
+      "name": "回想王"
+    },
+    {
+      "id": "lv4",
+      "icon": "📅",
+      "name": "間隔高手"
+    },
+    {
+      "id": "lv5",
+      "icon": "🔀",
+      "name": "交錯達人"
+    },
+    {
+      "id": "lv6",
+      "icon": "🗣️",
+      "name": "小老師"
+    },
+    {
+      "id": "lv7",
+      "icon": "🎧",
+      "name": "專注力"
+    },
+    {
+      "id": "lv8",
+      "icon": "🧭",
+      "name": "學習策略師"
+    },
+    {
+      "id": "seer",
+      "icon": "💡",
+      "name": "獨立想通"
+    },
+    {
+      "id": "all",
+      "icon": "🏆",
+      "name": "學習高手"
+    }
+  ];
+
+  var BADGE_BY_ID = {};
+  for (var bi = 0; bi < BADGES.length; bi++) BADGE_BY_ID[BADGES[bi].id] = BADGES[bi];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var screenMenu = $('screen-menu');
+  var screenPlay = $('screen-play');
+  var levelList = $('level-list');
+  var stage = $('stage');
+  var stepDots = $('step-dots');
+  var playTitle = $('play-title');
+
+  var cur = null;
+
+  function starsFor(correct, total) {
+    if (total <= 0) return 0;
+    var r = correct / total;
+    if (r >= 0.9) return 3;
+    if (r >= 0.6) return 2;
+    if (r > 0) return 1;
+    return 0;
+  }
+  function starStr(n) { var s = ''; for (var i = 0; i < 3; i++) s += (i < n ? '⭐' : '☆'); return s; }
+
+  function totalSeer() {
+    var n = 0;
+    for (var i = 0; i < LEVELS.length; i++) { var r = progress[LEVELS[i].id]; if (r && typeof r.seer === 'number') n += r.seer; }
+    return n;
+  }
+
+  function awardBadge(id) {
+    var def = BADGE_BY_ID[id];
+    if (!def) return;
+    if (progress.badges[id]) return;
+    progress.badges[id] = true;
+    saveProg(progress);
+    toast('獲得徽章：' + def.icon + ' ' + def.name, 'badge');
+  }
+  function badgeCount() { var n = 0; for (var i = 0; i < BADGES.length; i++) if (progress.badges[BADGES[i].id]) n++; return n; }
+
+  function refreshBadges() {
+    if (totalSeer() >= SEER_TARGET) awardBadge('seer');
+    var allDone = true;
+    for (var i = 0; i < LEVELS.length; i++) { var r = progress[LEVELS[i].id]; if (!(r && r.done)) { allDone = false; break; } }
+    if (allDone) awardBadge('all');
+  }
+
+  function renderMenu() {
+    var doneCount = 0;
+    for (var i = 0; i < LEVELS.length; i++) { var rr = progress[LEVELS[i].id]; if (rr && rr.done) doneCount++; }
+    $('ov-done').textContent = doneCount + '/' + LEVELS.length;
+    $('ov-seer').textContent = totalSeer();
+    $('ov-badges').textContent = badgeCount() + '/' + BADGES.length;
+
+    if (doneCount > 0) {
+      $('hello-text').textContent = '歡迎回來！你已完成 ' + doneCount + ' 個關卡，很棒！';
+    }
+
+    levelList.innerHTML = '';
+    for (var u = 0; u < LEVELS.length; u++) {
+      (function (lv) {
+        var rec = recOf(lv.id);
+        var total = lv.questions.length;
+        var pos = Math.min(rec.pos, total);
+        var done = !!rec.done;
+        var pct = total ? Math.round(pos / total * 100) : 0;
+        var st = done ? Math.max(1, starsFor(rec.correct, total)) : 0;
+        var statusText = done
+          ? ('✅ 已完成（答對 ' + rec.correct + '/' + total + '）')
+          : (pos > 0 ? ('▶️ 繼續（已完成 ' + pos + '/' + total + '）') : ('▶️ 開始挑戰（共 ' + total + ' 題）'));
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'ma-level';
+        card.setAttribute('aria-label', '關卡 ' + lv.level + '：' + lv.name + '，' + statusText);
+        card.innerHTML =
+          '<div class="ma-level-top">' +
+            '<span class="ma-level-emoji" aria-hidden="true" style="background:' + lv.color + '22;color:' + lv.color + '">' + lv.emoji + '</span>' +
+            '<div>' +
+              '<div class="ma-level-num">關卡 ' + lv.level + '</div>' +
+              '<div class="ma-level-name">' + lv.name + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="ma-level-concepts">' + lv.concepts.join('・') + '</div>' +
+          '<div class="ma-level-progress" aria-hidden="true"><i style="width:' + pct + '%"></i></div>' +
+          '<div class="ma-level-foot">' +
+            '<span class="ma-level-status ' + (done ? 'done' : 'todo') + '">' + statusText + '</span>' +
+            '<span class="ma-level-stars" aria-hidden="true">' + (done ? starStr(st) : '') + '</span>' +
+          '</div>';
+        card.addEventListener('click', function () { startLevel(lv); });
+        levelList.appendChild(card);
+      })(LEVELS[u]);
+    }
+  }
+
+  function show(screen) {
+    screenMenu.classList.remove('active');
+    screenPlay.classList.remove('active');
+    screen.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function startLevel(lv) {
+    var rec = recOf(lv.id);
+    var total = lv.questions.length;
+    // 已全部完成 → 重新開始一輪（保留 done，重置本輪計數）
+    if (rec.pos >= total) { rec = { pos: 0, correct: 0, seer: 0, done: rec.done }; progress[lv.id] = rec; saveProg(progress); }
+    var startPos = rec.pos;
+    var roundEnd = Math.min(startPos + ROUND_SIZE, total);
+    cur = { level: lv, idx: startPos, startPos: startPos, roundEnd: roundEnd, roundCorrect: 0, roundSeer: 0 };
+    playTitle.textContent = lv.emoji + ' 關卡 ' + lv.level + '・' + lv.name;
+    show(screenPlay);
+    if (startPos === 0) renderBrief(); else renderQuestion();
+  }
+
+  function renderStepDots() {
+    stepDots.innerHTML = '';
+    var span = cur.roundEnd - cur.startPos;
+    if (span <= 0) return;
+    for (var i = 0; i < span; i++) {
+      var b = document.createElement('i');
+      var qi = cur.startPos + i;
+      if (qi < cur.idx) b.className = 'on';
+      else if (qi === cur.idx) b.className = 'cur';
+      stepDots.appendChild(b);
+    }
+  }
+
+  function renderBrief() {
+    stepDots.innerHTML = '';
+    var lv = cur.level;
+    var facts = '';
+    for (var i = 0; i < lv.keyFacts.length; i++) {
+      facts += '<li><span class="ma-kf-dot" aria-hidden="true">◆</span><span>' + lv.keyFacts[i] + '</span></li>';
+    }
+    stage.innerHTML =
+      '<div class="ma-stage ma-brief">' +
+        '<div class="ma-visual" aria-hidden="true">' + lv.emoji + '</div>' +
+        '<h2>關卡 ' + lv.level + '・' + lv.name + '</h2>' +
+        '<p class="ma-brief-sub">先看看這一關的「學習心法」。這一關共 ' + lv.questions.length + ' 題，我們一次玩 ' + (cur.roundEnd - cur.startPos) + ' 題，之後隨時可以再回來。</p>' +
+        '<ul class="ma-keyfacts">' + facts + '</ul>' +
+      '</div>' +
+      '<div class="ma-actions">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-start">開始挑戰 ➡️</button>' +
+      '</div>';
+    $('btn-start').addEventListener('click', function () { renderQuestion(); });
+  }
+
+  function next() {
+    cur.idx++;
+    if (cur.idx >= cur.roundEnd) finishRound();
+    else renderQuestion();
+  }
+
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+  // 只動呈現：把較長的「怎麼解」依句末標點與步驟轉折標記分行，讓多步推理可逐行掃描。
+  // 先 esc() 再插入 <br>，故不會引入任何未跳脫的 HTML；短的維持原樣。
+  function fmtSolve(s) {
+    var e = esc(s);
+    if (e.length < 100) return e; // 短說明不分段，維持原樣
+    // 1) 句末標點（。！？）與分號（；）後換行——步驟的天然邊界
+    e = e.replace(/([。！？；])/g, '$1<br>');
+    // 2) 常見步驟轉折標記前補一個換行（多字詞，不會切到詞中間）
+    var marks = ['第一步', '第二步', '第三步', '第四步', '第五步', '先看', '再看', '接著', '然後', '代回', '為何唯一', '誘答分析'];
+    for (var i = 0; i < marks.length; i++) {
+      e = e.split(marks[i]).join('<br>' + marks[i]);
+    }
+    // 3) 收斂重複換行、去除頭尾多餘換行
+    e = e.replace(/(?:<br>)+/g, '<br>').replace(/^<br>/, '').replace(/<br>$/, '');
+    return e;
+  }
+
+  function renderQuestion() {
+    renderStepDots();
+    var lv = cur.level;
+    var step = lv.questions[cur.idx];
+    var total = lv.questions.length;
+    var hintsUsed = 0;
+    var hintShown = 0;
+
+    var order = [];
+    for (var oi = 0; oi < step.options.length; oi++) order.push(oi);
+    for (var m = order.length - 1; m > 0; m--) {
+      var r = Math.floor(Math.random() * (m + 1));
+      var tt = order[m]; order[m] = order[r]; order[r] = tt;
+    }
+    var optsHtml = '';
+    for (var k = 0; k < order.length; k++) {
+      var origIdx = order[k];
+      optsHtml += '<button type="button" class="ma-opt" data-i="' + origIdx + '">' +
+        '<span>' + esc(step.options[origIdx]) + '</span><span class="ma-opt-mark" aria-hidden="true"></span></button>';
+    }
+
+    var hintCount = (step.hints || []).length;
+    var recapFacts = '';
+    for (var rf = 0; rf < lv.keyFacts.length; rf++) {
+      recapFacts += '<li><span class="ma-kf-dot" aria-hidden="true">◆</span><span>' + lv.keyFacts[rf] + '</span></li>';
+    }
+    stage.innerHTML =
+      '<div class="ma-stage">' +
+        '<div class="mm-story"><span class="mm-story-label">📖 第 ' + (cur.idx + 1) + ' / ' + total + ' 題　情境</span>' + fmtSolve(step.story) + '</div>' +
+        '<div class="ma-recap">' +
+          '<button type="button" class="ma-recap-btn" id="recap-btn" aria-expanded="false" aria-controls="recap-list">💡 看本關心法</button>' +
+          '<ul class="ma-keyfacts ma-recap-list" id="recap-list" hidden>' + recapFacts + '</ul>' +
+        '</div>' +
+        (hintCount ? ('<div class="mm-hint-area">' +
+          '<button type="button" class="mm-hint-btn" id="hint-btn">🔍 看提示（還有 ' + hintCount + ' 個）</button>' +
+          '<div class="mm-hint-list" id="hint-list"></div>' +
+          '<div class="mm-seer-note">想挑戰的話可以先自己想通 💡；卡住時按上面看提示也很棒 👍 一樣學得會。</div>' +
+        '</div>') : '') +
+        '<p class="ma-question">' + esc(step.q) + '</p>' +
+        '<div class="ma-options">' + optsHtml + '</div>' +
+        '<div class="ma-reveal" id="reveal"></div>' +
+      '</div>' +
+      '<div class="ma-actions" id="afteract" style="display:none">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">繼續 ➡️</button>' +
+      '</div>';
+
+    var recapBtn = $('recap-btn');
+    if (recapBtn) {
+      recapBtn.addEventListener('click', function () {
+        var list = $('recap-list');
+        var open = recapBtn.getAttribute('aria-expanded') === 'true';
+        recapBtn.setAttribute('aria-expanded', open ? 'false' : 'true');
+        list.hidden = open;
+        recapBtn.textContent = open ? '💡 看本關心法' : '💡 收合本關心法';
+      });
+    }
+
+    if (hintCount) {
+      var hintBtn = $('hint-btn');
+      hintBtn.addEventListener('click', function () {
+        if (hintShown >= hintCount) return;
+        var h = step.hints[hintShown];
+        hintShown++; hintsUsed++;
+        var el = document.createElement('div');
+        el.className = 'mm-hint';
+        el.innerHTML = '<span class="mm-hint-n" aria-hidden="true">提示 ' + hintShown + '</span><span>' + esc(h) + '</span>';
+        $('hint-list').appendChild(el);
+        var left = hintCount - hintShown;
+        if (left > 0) hintBtn.textContent = '🔍 再看一個提示（還有 ' + left + ' 個）';
+        else hintBtn.disabled = true;
+      });
+    }
+
+    var answered = false;
+    var btns = stage.querySelectorAll('.ma-opt');
+
+    function revealAndLock(correct) {
+      var rev = $('reveal');
+      var seer = correct && hintsUsed === 0;
+      var html = '';
+      if (correct) {
+        html += '<span class="mm-rev-seer">' + (seer ? '💡 沒看提示就自己想通，太厲害了！' : '答對了！👍') + '</span>';
+      } else {
+        html += '<span class="mm-rev-seer">沒關係～一起看答案！最好的做法是這個 👇</span>';
+      }
+      html += '<span class="mm-rev-row"><span class="mm-rev-k">學習心法：</span>' + esc(step.model) + '</span>';
+      if (step.insight) html += '<span class="mm-rev-row"><span class="mm-rev-k">一句話記住：</span>' + esc(step.insight) + '</span>';
+      if (step.solve) html += '<span class="mm-rev-row"><span class="mm-rev-k">為什麼這樣最有效：</span>' + fmtSolve(step.solve) + '</span>';
+      rev.innerHTML = html;
+      rev.classList.add('show');
+      $('afteract').style.display = 'flex';
+      var hb = $('hint-btn'); if (hb) hb.disabled = true;
+      var all = stage.querySelectorAll('.ma-opt');
+      for (var a = 0; a < all.length; a++) all[a].disabled = true;
+    }
+
+    for (var b = 0; b < btns.length; b++) {
+      btns[b].addEventListener('click', function () {
+        if (answered) return;
+        var i = parseInt(this.getAttribute('data-i'), 10);
+        var isCorrect = (i === step.answer);
+        answered = true;
+        // 唯一例外：答題時 ping 每日連續學習 streak（不計 XP、不重複計分、同日 idempotent）
+        if (window.Game && typeof Game.pingActive === 'function') { try { Game.pingActive(); } catch (e) {} }
+        if (isCorrect) {
+          this.classList.add('correct');
+          this.querySelector('.ma-opt-mark').textContent = '✅';
+          cur.roundCorrect++;
+          if (hintsUsed === 0) cur.roundSeer++;
+          revealAndLock(true);
+        } else {
+          this.classList.add('wrong');
+          this.querySelector('.ma-opt-mark').textContent = '❌';
+          var correctBtn = stage.querySelector('.ma-opt[data-i="' + step.answer + '"]');
+          if (correctBtn) {
+            correctBtn.classList.add('correct');
+            correctBtn.querySelector('.ma-opt-mark').textContent = '✅';
+          }
+          revealAndLock(false);
+        }
+      });
+    }
+
+    $('btn-next').addEventListener('click', next);
+  }
+
+  function nextLevelOf(lv) {
+    for (var i = 0; i < LEVELS.length; i++) { if (LEVELS[i].id === lv.id) return LEVELS[i + 1] || null; }
+    return null;
+  }
+
+  function finishRound() {
+    var lv = cur.level;
+    var total = lv.questions.length;
+    var rec = recOf(lv.id);
+    rec.pos = cur.idx; // = roundEnd
+    rec.correct += cur.roundCorrect;
+    rec.seer += cur.roundSeer;
+    if (rec.pos >= total && !rec.done) rec.done = true;
+    progress[lv.id] = rec;
+    saveProg(progress);
+    if (rec.done) awardBadge(lv.id);
+    refreshBadges();
+
+    var roundN = cur.idx - cur.startPos;
+    var finished = rec.pos >= total;
+    stepDots.innerHTML = '';
+
+    var body;
+    if (finished) {
+      var st = Math.max(1, starsFor(rec.correct, total));
+      body =
+        '<div class="ma-done-emoji" aria-hidden="true">🎉</div>' +
+        '<div class="ma-done-title">完成「' + lv.name + '」全部 ' + total + ' 題！</div>' +
+        '<div class="ma-done-stars" aria-label="得到 ' + st + ' 顆星">' + starStr(st) + '</div>' +
+        '<div class="ma-done-sub">整關答對 ' + rec.correct + ' / ' + total + ' 題' +
+          (rec.seer > 0 ? ('，其中 ' + rec.seer + ' 題完全沒看提示就自己想通 💡！') : '，很棒！') + '</div>';
+    } else {
+      body =
+        '<div class="ma-done-emoji" aria-hidden="true">💪</div>' +
+        '<div class="ma-done-title">這回合完成！</div>' +
+        '<div class="ma-done-sub">本回合答對 ' + cur.roundCorrect + ' / ' + roundN + ' 題' +
+          (cur.roundSeer > 0 ? ('，自己想通 ' + cur.roundSeer + ' 題 💡') : '') + '。</div>' +
+        '<div class="ma-done-prog">整關進度：已完成 ' + rec.pos + ' / ' + total + ' 題（隨時可以再回來繼續）</div>';
+    }
+
+    stage.innerHTML =
+      '<div class="ma-stage ma-done">' + body + '</div>' +
+      '<div class="ma-actions">' +
+        '<button type="button" class="btn" id="btn-menu">回到選單</button>' +
+        (!finished ? '<button type="button" class="btn btn-primary" id="btn-cont">繼續下一回合 ➡️</button>'
+                   : (nextLevelOf(lv) ? '<button type="button" class="btn btn-primary" id="btn-nextlv">下一關 ➡️</button>' : '')) +
+      '</div>';
+
+    toast(finished ? ('完成「' + lv.name + '」！答對 ' + rec.correct + '/' + total) : ('這回合答對 ' + cur.roundCorrect + '/' + roundN + '，進度 ' + rec.pos + '/' + total), 'daily');
+
+    $('btn-menu').addEventListener('click', function () { show(screenMenu); renderMenu(); });
+    var bc = $('btn-cont'); if (bc) bc.addEventListener('click', function () { startLevel(lv); });
+    var bn = $('btn-nextlv'); if (bn) bn.addEventListener('click', function () { var nx = nextLevelOf(lv); if (nx) startLevel(nx); });
+  }
+
+  $('btn-back').addEventListener('click', function () { show(screenMenu); renderMenu(); });
+
+  renderMenu();
+})();
+</script>
+</body>
+</html>
