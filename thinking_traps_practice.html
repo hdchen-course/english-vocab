@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>情境偵探・這是哪一種思考陷阱？ 🕵️</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<!--
+  情境偵探：讀一個生活情境，判斷它落入「哪一種思考陷阱」。混合出題、可反覆練、答完解說「為什麼是這個、為什麼不是最容易混淆的那個」。
+  這是 thinking_traps_concepts.html(先教觀念)的配套練習頁——先學十種陷阱，再來這裡把「認出它」練成本能。
+  純本地練習(data-game-hud=off、key thinking_traps_practice_v1、不計 XP、只 pingActive 續每日 streak)。全繁體中文。
+-->
+<style>
+  :root{ --su:#7c3aed; --su-d:#6d28d9; --su-tint:rgba(124,58,237,0.12); }
+  :root[data-theme="dark"]{ --su:#c4b5fd; --su-d:#ddd6fe; --su-tint:rgba(196,181,253,0.16); }
+  .tp-wrap{ max-width:720px; margin-inline:auto; }
+  .tp-screen{ display:none; } .tp-screen.active{ display:block; }
+  .tp-topbar{ display:flex; align-items:center; gap:var(--s3); margin-bottom:var(--s4); }
+  .tp-title{ font-size:var(--fs-h2); font-weight:800; color:var(--su-d); }
+  .tp-hello{ display:flex; align-items:center; gap:var(--s3); padding:var(--s4); background:var(--su-tint);
+    border:1px solid var(--card-border); border-radius:var(--r-lg); margin-bottom:var(--s4); }
+  .tp-hello .tp-mascot{ font-size:44px; flex:none; }
+  .tp-htext{ font-size:var(--fs-body); font-weight:700; color:var(--ink); }
+  .tp-hsub{ font-size:var(--fs-small); color:var(--ink-soft); font-weight:600; margin-top:2px; }
+  .tp-legend{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:var(--s4); }
+  .tp-chip{ font-size:var(--fs-small); font-weight:700; color:var(--su-d); background:var(--su-tint);
+    border-radius:999px; padding:4px 10px; }
+  .tp-len{ display:flex; align-items:center; gap:var(--s3); width:100%; text-align:left; padding:var(--s4);
+    min-height:var(--tap-min); border:2px solid var(--card-border); border-radius:var(--r-md);
+    background:var(--card); color:var(--ink); font-family:var(--font); cursor:pointer; margin-bottom:var(--s3); }
+  .tp-len:hover{ border-color:var(--su); }
+  .tp-len-emoji{ font-size:26px; flex:none; }
+  .tp-len-title{ font-size:var(--fs-body); font-weight:800; }
+  .tp-len-sub{ font-size:var(--fs-small); font-weight:600; color:var(--ink-soft); }
+  .tp-card{ background:var(--card); border:1px solid var(--card-border); border-radius:var(--r-lg); box-shadow:var(--shadow-sm); padding:var(--s5) var(--s4); }
+  .tp-bar{ display:flex; justify-content:space-between; align-items:center; font-size:var(--fs-small); font-weight:800; color:var(--su-d); margin-bottom:var(--s3); }
+  .tp-scn{ font-size:var(--fs-body); font-weight:700; color:var(--ink); line-height:1.85; background:var(--su-tint);
+    border-radius:var(--r-md); padding:var(--s4); margin-bottom:var(--s4); }
+  .tp-opt{ display:block; width:100%; text-align:left; padding:14px var(--s4); min-height:var(--tap-min);
+    border:2px solid var(--card-border); border-radius:var(--r-md); background:var(--card); color:var(--ink);
+    font-family:var(--font); font-size:var(--fs-body); font-weight:700; cursor:pointer; margin-bottom:var(--s3); }
+  .tp-opt:hover{ border-color:var(--su); }
+  .tp-opt:disabled{ cursor:default; }
+  .tp-opt.correct{ border-color:var(--c-correct,#2e7d32); background:var(--tint-english,rgba(46,125,50,.12)); }
+  .tp-opt.correct::after{ content:' ✓'; font-weight:800; }
+  .tp-opt.wrong{ border-color:var(--c-wrong,#c62828); }
+  .tp-opt.wrong::after{ content:' ✗'; font-weight:800; }
+  .tp-reveal{ margin-top:var(--s2); padding:var(--s4); border-radius:var(--r-md); background:var(--su-tint);
+    font-size:var(--fs-body); font-weight:600; color:var(--ink); line-height:1.8; display:none; }
+  .tp-reveal.show{ display:block; }
+  .tp-reveal b{ color:var(--su-d); }
+  .tp-actions{ margin-top:var(--s4); display:flex; gap:var(--s3); }
+  .tp-actions .btn{ flex:1; }
+  .tp-note{ text-align:center; color:var(--ink-soft); font-size:var(--fs-small); margin-top:var(--s5); font-weight:600; max-width:34em; margin-inline:auto; }
+  .tp-next{ display:flex; align-items:center; gap:12px; margin-top:16px; padding:14px 16px; background:var(--su-tint);
+    border:1px solid var(--card-border); border-radius:14px; text-decoration:none; color:var(--ink); font-weight:700; min-height:48px; line-height:1.5; }
+</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">情境偵探 🕵️</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="tp-screen active tp-wrap">
+    <div class="tp-topbar"><span class="tp-title">情境偵探・這是哪一種思考陷阱？ 🕵️</span></div>
+    <div class="tp-hello"><span class="tp-mascot" aria-hidden="true">🕵️</span>
+      <div><div class="tp-htext">學過十種思考陷阱了嗎？來當偵探！讀一個生活小情境，判斷它掉進了「哪一種」陷阱——真正的本領，是在真實情況裡認出它。</div>
+      <div class="tp-hsub">答完每一題都會告訴你「為什麼是這個、為什麼不是最像的那個」。還沒學過的話，建議先到「思考陷阱・清晰思考」看過一輪再來。</div></div></div>
+    <div class="tp-legend" id="legend"></div>
+    <div id="len-list"></div>
+    <a class="tp-next" href="thinking_traps_concepts.html"><span style="font-size:26px;flex:none" aria-hidden="true">📖</span><span>還沒學過十種陷阱？先到「思考陷阱・清晰思考」學一輪 →</span></a>
+    <p class="tp-note">這是思考練習場，情境每輪打散、可無限重練，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
+  </section>
+  <section id="screen-play" class="tp-screen tp-wrap">
+    <div class="tp-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="tp-title" id="play-title">情境偵探</span></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+/* eslint-disable */
+(function(){
+  'use strict';
+  function $(id){ return document.getElementById(id); }
+  var SCEN = [{"sc":"小明認定「愛喝汽水的同學功課都比較差」，於是他特別注意班上功課差又愛喝汽水的人，卻沒去看那些功課好也常喝汽水的同學。","t":"confirm","why":"他先有了一個想法，再專挑符合這個想法的例子來看，忽略反例。","nt":"這不是可得性偏誤，因為他是先有信念才挑證據，不是因為某個鮮明畫面浮現才覺得很常見。","d":["avail","herd","halo"]},{"sc":"姊姊相信「這位算命老師很準」，只記得他說中的那幾次，說錯的就自動忘掉了。","t":"confirm","why":"她只選擇性記住支持自己信念的例子，把不符合的證據過濾掉。","nt":"這不是倖存者偏誤，因為失敗的例子是她自己刻意忽略，不是那些例子本身消失不見。","d":["survivor","avail","halo"]},{"sc":"哥哥認定某支電競隊伍一定會贏，看比賽時只盯著對他有利的數據，對手很強的紀錄他都說「那不算」。","t":"confirm","why":"他抱著既有結論，只採納支持它的資料、排斥不利資料。","nt":"這不是後見之明，因為他在結果還沒揭曉前就開始挑證據，不是事後才說「我早知道」。","d":["hindsight","avail","herd"]},{"sc":"小華覺得「女生比較不會打籃球」，於是球場上他只注意投不進的女生，投得很準的女生他都沒看見。","t":"confirm","why":"他帶著成見去看，只把符合成見的表現記下來。","nt":"這不是光環效應，因為他不是用一個亮點推論其他優點，而是拿既有想法去篩選證據。","d":["halo","avail","herd"]},{"sc":"表哥說「我認識三個人沒讀大學也賺大錢，所以讀不讀書不重要」，卻沒想到更多沒讀書又過得辛苦的人根本不會出現在他眼前。","t":"survivor","why":"他只看到成功的少數人，失敗的多數人因為沒發聲而被忽略。","nt":"這不是可得性偏誤，因為關鍵是失敗者「看不見、沒被算進來」，不是某則新聞太鮮明。","d":["avail","confirm","halo"]},{"sc":"有人說「你看那些創業成功的老闆很多都是大學就休學的」，卻忘了更多休學創業卻失敗的人早已不見蹤影。","t":"survivor","why":"只統計到留下來的成功者，失敗者因退場而不在樣本裡。","nt":"這不是確認偏誤，因為他不是刻意挑證據，而是失敗案例本來就已消失、無法被看到。","d":["confirm","avail","herd"]},{"sc":"小美看到店裡「用了十年還很好用」的老書包，就覺得這牌子超耐用，卻沒發現壞掉的早被丟掉、不會留在架上。","t":"survivor","why":"她只看到撐下來的產品，壞掉的樣本已經被淘汰、看不見。","nt":"這不是可得性偏誤，因為問題出在壞掉的樣本消失，而非某個畫面特別容易想起。","d":["avail","confirm","anchor"]},{"sc":"阿嬤說「以前的人騎車不戴安全帽也都沒事」，但那些出事的人已經沒辦法出來說話了。","t":"survivor","why":"她只聽得到平安者的說法，出事的人無法發聲而被漏算。","nt":"這不是後見之明，因為重點是失敗者沉默不見，不是事後才說「早就知道」。","d":["hindsight","avail","confirm"]},{"sc":"小傑花了五百元抽轉蛋還沒抽到想要的角色，他說「都花這麼多了，不繼續抽就虧大了」，於是又繼續抽。","t":"sunk","why":"他因為捨不得已經花掉、拿不回來的錢，才硬要繼續。","nt":"這不是損失規避，因為他是放不下過去的付出，不是害怕未來冒險而不敢嘗試。","d":["loss","gambler","herd"]},{"sc":"電影很難看，但姊姊說「票都買了，看完才不算浪費」，硬是坐到結束。","t":"sunk","why":"她用「已經付出的票錢」當理由繼續，而不是判斷接下來值不值得。","nt":"這不是損失規避，因為她考量的是過去付出的錢，不是怕失去一個未來的機會。","d":["loss","confirm","herd"]},{"sc":"小雲練了三年鋼琴其實很討厭，媽媽說「已經學這麼久了，現在放棄太可惜」，所以要她繼續學。","t":"sunk","why":"理由是「已經投入的三年」，而非未來學下去有沒有好處。","nt":"這不是從眾效應，因為決定的依據是過去的投入，不是因為很多人都這樣做。","d":["loss","herd","halo"]},{"sc":"遊戲裡課金買了一堆道具，小豪早就不想玩了，卻想「花了那麼多錢，不玩就白花了」而勉強繼續上線。","t":"sunk","why":"他被已經花掉、收不回的錢綁住，才勉強繼續。","nt":"這不是賭徒謬誤，因為他不是誤判機率，而是捨不得過去的花費。","d":["loss","herd","gambler"]},{"sc":"全班同學都買了某款吊飾，小安其實沒有很喜歡，但想「大家都有，我也要有」就跟著買。","t":"herd","why":"他行動的理由是「很多人都這麼做」，把人數當成該做的依據。","nt":"這不是光環效應，因為不是靠某個人的亮點推論，而是靠「人多」跟著做。","d":["halo","avail","anchor"]},{"sc":"網路上一支影片按讚的人超多，弟弟就覺得「這麼多人喜歡，一定是好東西」。","t":"herd","why":"他用「按讚人數多」直接當作品質好的證明。","nt":"這不是可得性偏誤，因為他依據的是人數，不是某個鮮明畫面容易想起。","d":["avail","halo","confirm"]},{"sc":"路過看到一家餐廳排隊排好長，媽媽想「這麼多人排，一定很好吃」就跟著排下去。","t":"herd","why":"她把排隊的人數當成好吃的證據，跟著人群走。","nt":"這不是錨定效應，因為讓她決定的是人數多寡，不是某個先出現的數字。","d":["halo","anchor","avail"]},{"sc":"大家都說某個轉學生很兇，其實沒人真的跟他說過話，小玲也就跟著覺得他很兇。","t":"herd","why":"她相信的理由只是「大家都這麼說」，並非自己的觀察。","nt":"這不是確認偏誤，因為她原本沒有既定想法去挑證據，而是被眾人意見帶著走。","d":["confirm","halo","avail"]},{"sc":"玩具原價標「1200元」被劃掉，改成「799元」，小宇覺得超便宜就買了，其實他本來根本不需要。","t":"anchor","why":"被劃掉的原價成了比較基準，讓他覺得現價很划算。","nt":"這不是損失規避，因為讓他心動的是第一個數字當標準，不是怕失去某個機會。","d":["loss","herd","confirm"]},{"sc":"老闆先開價一支筆五百元，媽媽殺到三百元覺得賺到，其實那支筆本來只值一百元。","t":"anchor","why":"最先聽到的五百元成了心裡的基準，三百元就顯得便宜。","nt":"這不是沉沒成本謬誤，因為她沒有已投入的成本，只是被開價數字影響判斷。","d":["loss","herd","sunk"]},{"sc":"手搖飲菜單第一項寫「特大杯150元」，後面的「中杯80元」就顯得好便宜，小婷因此點了中杯。","t":"anchor","why":"最先看到的高價成了參考點，讓後面的價格顯得划算。","nt":"這不是從眾效應，因為影響她的是先出現的數字，不是別人怎麼點。","d":["herd","loss","avail"]},{"sc":"同學說他數學考了98分，小剛聽完覺得自己的85分好爛，其實85分已經很不錯了。","t":"anchor","why":"先聽到的98分變成比較標準，讓他低估自己的分數。","nt":"這不是可得性偏誤，因為讓他誤判的是先聽到的數字，不是某畫面容易想起。","d":["avail","herd","loss"]},{"sc":"電視一直播飛機失事的新聞，小傑就覺得坐飛機超危險，其實坐飛機比坐車安全很多。","t":"avail","why":"他用鮮明新聞在腦中的印象深淺，來判斷事情有多常發生。","nt":"這不是確認偏誤，因為他原本沒有既定立場去挑證據，而是被生動畫面帶著走。","d":["confirm","survivor","herd"]},{"sc":"最近班上有人被狗咬，小美就覺得「路上的狗大部分都會咬人」，其實大多數狗都很乖。","t":"avail","why":"一件最近又鮮明的事件，讓她高估了這種事的普遍程度。","nt":"這不是確認偏誤，因為她不是先有想法再找證據，而是被最近的例子牽著估計。","d":["confirm","herd","survivor"]},{"sc":"看了鯊魚攻擊的影片後，妹妹去海邊一直怕被鯊魚咬，雖然這種事其實極少發生。","t":"avail","why":"生動可怕的影片太容易浮現，讓她以為危險很常見。","nt":"這不是損失規避，因為問題是她高估了發生機率，不是害怕失去而不敢冒險。","d":["confirm","survivor","loss"]},{"sc":"最近同學一直在討論某個恐怖故事，小新就覺得學校鬧鬼的事很常發生。","t":"avail","why":"那些故事最近一直出現、在腦中很鮮明，讓他高估了發生頻率。","nt":"這不是從眾效應，因為讓他誤判的是印象鮮明，不是因為很多人相信才跟著信。","d":["herd","confirm","survivor"]},{"sc":"猜拳連輸五次，小明說「我已經輸這麼多次了，下一次一定會贏」。","t":"gambler","why":"他以為過去的獨立結果會改變下一次的機率。","nt":"這不是沉沒成本謬誤，因為他不是捨不得已花的東西，而是誤判機率。","d":["sunk","avail","confirm"]},{"sc":"擲硬幣連續出現四次正面，弟弟堅持「下一次一定會是反面了」。","t":"gambler","why":"每次擲硬幣都是獨立的，前面幾次不會影響下一次的機率。","nt":"這不是確認偏誤，因為他不是挑證據支持想法，而是誤以為過去結果會左右下一次。","d":["confirm","sunk","herd"]},{"sc":"抽鬼牌連續三次都抽到鬼，小玲說「機率上這次絕對不會再中了」，其實每次抽都一樣。","t":"gambler","why":"她誤以為前面連中會降低這次再中的機率，但事件彼此獨立。","nt":"這不是後見之明，因為她是在事前預測機率，不是事後說「早知道」。","d":["sunk","hindsight","avail"]},{"sc":"轉蛋連續九抽都沒出稀有角色，哥哥說「都槓龜這麼多次了，下一抽一定會中」，其實每抽機率都相同。","t":"gambler","why":"他以為前面沒中會提高下一抽中獎的機率，這是獨立事件的錯誤。","nt":"這不是沉沒成本謬誤，因為他的理由是機率會變，不是捨不得已花的錢。","d":["sunk","loss","avail"]},{"sc":"班上最帥的男生，小美就覺得他人品一定很好、也很誠實。","t":"halo","why":"她用「長得帥」這一個亮點，去推論不相關的品德。","nt":"這不是從眾效應，因為她不是因為很多人這樣想，而是被單一優點影響。","d":["herd","confirm","avail"]},{"sc":"那位同學成績很好，老師就自然覺得他打掃、當幹部也一定很負責。","t":"halo","why":"用「成績好」這個亮點，推論到與成績無關的做事態度。","nt":"這不是確認偏誤，因為老師不是挑證據，而是靠一個優點延伸到別的方面。","d":["confirm","herd","anchor"]},{"sc":"廣告請了很有名的運動明星代言果汁，妹妹就覺得這果汁一定很健康。","t":"halo","why":"明星的名氣這個亮點，被誤當成產品健康的保證。","nt":"這不是從眾效應，因為打動她的是明星光環，不是買的人多。","d":["herd","avail","anchor"]},{"sc":"很有錢的親戚說的話，全家人都覺得一定對，連跟錢無關的事也照聽。","t":"halo","why":"用「有錢」這個亮點，推論他在所有事情上都正確。","nt":"這不是從眾效應，因為信服的原因是他的財富光環，不是因為很多人跟從。","d":["herd","confirm","anchor"]},{"sc":"球賽結束、看到甲隊贏了，小傑說「我早就知道甲隊會贏」，但比賽前他其實根本猜不出來。","t":"hindsight","why":"這種「早就知道」只有在結果揭曉後才冒出來。","nt":"這不是確認偏誤，因為他不是事前挑證據，而是事後才覺得自己早料到。","d":["confirm","avail","gambler"]},{"sc":"考卷發回來、看到那題正確答案後，小美說「我就知道是這個」，其實考試時她猶豫了很久。","t":"hindsight","why":"知道答案之後，她才產生「我本來就知道」的錯覺。","nt":"這不是確認偏誤，因為關鍵是結果揭曉後才有的感覺，不是事前選擇證據。","d":["confirm","gambler","avail"]},{"sc":"兩個同學分手後，大家都說「我早就看出他們不適合」，可是之前根本沒人講過。","t":"hindsight","why":"知道結果後，大家才回頭覺得自己早就看出來了。","nt":"這不是從眾效應，因為重點是結果出現後的「早知道」錯覺，不是跟著人群做選擇。","d":["herd","confirm","avail"]},{"sc":"股票大跌之後，爸爸說「我早就覺得會跌」，但真的下跌前他一句提醒也沒說。","t":"hindsight","why":"下跌成真後，他才覺得自己一直都預料到了。","nt":"這不是確認偏誤，因為那是事後產生的錯覺，不是事前刻意收集支持證據。","d":["confirm","avail","gambler"]},{"sc":"學校才藝表演開放報名，小安其實很想試，但一想到「萬一表演失敗被笑」就放棄了這個機會。","t":"loss","why":"怕失敗、怕丟臉的感覺太強，讓他不敢把握一個值得的機會。","nt":"這不是沉沒成本謬誤，因為他是害怕未來的損失，不是捨不得已付出的東西。","d":["sunk","confirm","herd"]},{"sc":"老師說可以用手上的滿分獎勵券換一次抽獎，抽中能得大獎，小明怕「萬一沒抽到就虧了」而不敢換。","t":"loss","why":"怕失去手上的券的感覺，讓他放棄一個期望上划算的機會。","nt":"這不是賭徒謬誤，因為他不是誤判機率，而是失去的痛感讓他不敢冒合理的險。","d":["gambler","sunk","anchor"]},{"sc":"有機會轉到更好的球隊，小美明知那裡更適合自己，卻因為太怕離開熟悉的隊友、捨不得現在擁有的一切，遲遲不敢把握這個機會。","t":"loss","why":"害怕失去現有的一切，讓他不敢爭取更好的未來機會。","nt":"這不是沉沒成本謬誤，因為他怕的是未來的損失，不是捨不得過去付出的成本。","d":["sunk","confirm","herd"]},{"sc":"手上有兩顆糖，弟弟寧可留著也不肯玩「猜對變四顆、猜錯剩一顆」的遊戲，因為他太怕變少。","t":"loss","why":"「怕變少」的感覺遠大於「可能變多」的吸引力，讓他放棄合理的機會。","nt":"這不是賭徒謬誤，因為他不是誤判機率，而是損失的痛讓他不敢冒險。","d":["gambler","sunk","herd"]},{"sc":"小美相信「早上練琴一定練得比較順」，所以她只記得早上彈得好的那幾天，早上彈壞的日子她都當作沒發生。","t":"confirm","why":"她先有「早上最好」的信念，再只挑支持這個信念的日子來記。","nt":"不是憑腦中浮現的鮮明例子去估計頻率，而是先有定見再選擇性採證。","d":["avail","hindsight","survivor"]},{"sc":"阿哲認定隔壁班某同學很自私，之後只注意他不分享的舉動，那位同學主動幫忙時他卻視而不見。","t":"confirm","why":"帶著「他很自私」的既有看法，只留意符合的行為、忽略反例。","nt":"不是被腦中鮮明例子影響去高估頻率，而是為既有信念挑證據。","d":["avail","halo","hindsight"]},{"sc":"姊姊覺得「吃辣就會長痘痘」，每次長痘就怪前一天吃辣，沒長痘的日子她照樣吃辣卻自動忘記。","t":"confirm","why":"先認定辣和痘痘有關，只記得符合的情況、忽略不符合的。","nt":"不是靠剛看到的例子估算機率，而是選擇性記憶支持自己想法的事。","d":["avail","gambler","hindsight"]},{"sc":"小宇認為某隻遊戲角色最強，於是只記得用它打贏的場次，輸掉的就當作沒發生、不算數。","t":"confirm","why":"為了維護「這角色最強」的看法，只保留支持的資料、丟掉反例。","nt":"不是因為某個鮮明畫面浮現而估錯頻率，而是刻意篩選有利證據。","d":["avail","survivor","halo"]},{"sc":"弟弟深信「越貴的橡皮擦越好用」，買了貴的之後只留意它擦得乾淨的時候，擦不乾淨就說是紙不好。","t":"confirm","why":"抱著「貴的比較好」的信念，把成功歸功於它、失敗都怪別的原因。","nt":"不是憑印象深刻的例子推估，而是先有結論再解釋所有證據。","d":["avail","anchor","halo"]},{"sc":"表哥說「加入籃球隊的人後來都長很高」，但他只看到還留在隊上的高個子，早早退隊的矮個子都不在他眼前了。","t":"survivor","why":"只看得到留下來的成功者，退場的失敗者從視野中消失了。","nt":"不是憑腦中鮮明例子高估頻率，而是失敗樣本根本沒被算進來。","d":["avail","confirm","herd"]},{"sc":"網路上曬「靠賣二手玩具賺大錢」的人很多，妹妹以為很好賺，卻沒看到更多賣不掉、虧本收攤的人早就不發文了。","t":"survivor","why":"只看見成功曬單的人，虧本的人默默退出、看不見。","nt":"不是被剛看到的例子嚇到而估錯，而是失敗者根本不在可見的樣本裡。","d":["avail","herd","confirm"]},{"sc":"阿嬤說「以前沒補習的孩子照樣考很好」——但那些沒補習又考差的孩子，很多早就默默轉學、離開了，根本不會出現在她眼前。","t":"survivor","why":"只留下考好的例子當代表，考差退場的孩子被忽略。","nt":"不是憑鮮明例子估頻率，而是失敗案例已經從觀察名單中消失。","d":["avail","confirm","halo"]},{"sc":"頻道上「休學創業成功」的故事很紅，小傑覺得休學也能成功，但失敗收場的人早就不再發影片了。","t":"survivor","why":"只看到成功者持續發聲，失敗者安靜退場、看不到。","nt":"不是先有信念再找證據，而是可見樣本天生只剩下成功者。","d":["avail","confirm","herd"]},{"sc":"阿公說「我抽菸抽到八十歲還很硬朗」，他忘了同輩許多抽菸的人早就生病離開，沒機會再說話。","t":"survivor","why":"只有活下來的人能發言，早逝的抽菸者被排除在樣本外。","nt":"不是憑印象深刻的個案推估風險，而是失敗者已經無法被看見。","d":["avail","confirm","hindsight"]},{"sc":"小安為了抽某隻角色已經花光零用錢，明知機率超低，他還是說「都花這麼多了，不抽到不甘心」。","t":"sunk","why":"他繼續抽是因為已經花掉、拿不回的錢，而不是看之後值不值得。","nt":"不是因為怕未來失去而放棄機會，而是為過去投入而硬撐。","d":["loss","gambler","anchor"]},{"sc":"婷婷已經學了三年小提琴卻越來越討厭，媽媽問要不要停，她說「都學這麼久了，現在放棄太浪費」。","t":"sunk","why":"她堅持的理由是已投入的三年，而不是未來還喜不喜歡。","nt":"不是怕未來損失才不敢改變，而是被過去付出的時間綁住。","d":["loss","confirm","herd"]},{"sc":"阿凱在夾娃娃機投了兩百塊還沒夾到，明明想走了，卻想「已經投這麼多，現在走掉太可惜」，於是又繼續投。","t":"sunk","why":"他繼續投是因為前面已投進去、拿不回的兩百塊。","nt":"不是誤以為前面沒中就快輪到，而是捨不得已花掉的錢。","d":["gambler","loss","anchor"]},{"sc":"小華花了整晚做報告，才發現題目理解錯了方向，卻不想重寫，因為「已經打這麼多字了」。","t":"sunk","why":"他不肯重做是為了已付出、拿不回的時間，而不是哪個做法更好。","nt":"不是怕重做會有未來損失，而是放不下過去已投入的努力。","d":["loss","confirm","hindsight"]},{"sc":"全家買了電影套票，片子其實很無聊，爸爸卻堅持看完，理由是「票都買了，中途走掉太可惜」。","t":"sunk","why":"堅持看完是為了已付、退不了的票錢，而不是接下來好不好看。","nt":"不是害怕未來損失才留下，而是心疼已經花掉的成本。","d":["loss","anchor","herd"]},{"sc":"班上很多同學都買同一款筆袋，小玲也跟著買，理由只是「大家都有」。","t":"herd","why":"她買的唯一理由是「很多人都有」，把人數當成該買的依據。","nt":"不是因為某個人某項突出優點而跟，而是單純因為人多。","d":["halo","anchor","confirm"]},{"sc":"一款手遊因為「全校都在玩」，阿翔也下載了，其實他自己並沒有特別想玩。","t":"herd","why":"下載的動機純粹是大家都玩，以多數行為當作自己的選擇。","nt":"不是被某位高手的厲害光環吸引，而是被人數帶著走。","d":["halo","avail","confirm"]},{"sc":"一則貼文有很多人按讚，妹妹沒看清楚內容就跟著按讚，覺得這麼多人讚應該不會錯。","t":"herd","why":"她按讚是因為讚數多，把「很多人」當成正確的證明。","nt":"不是因為發文者某項亮眼特質而信任，而是被人數說服。","d":["halo","confirm","anchor"]},{"sc":"報名夏令營時，小傑直接選了報名人數最多的那一班，想說人多的一定比較好。","t":"herd","why":"選擇依據是報名人數多寡，把人多等同於品質好。","nt":"不是因為某位名師的光環，而是純粹跟著多數人走。","d":["halo","anchor","avail"]},{"sc":"群組裡大家都跟團買某款零食，媽媽本來不需要，看大家都買也跟著訂了一份。","t":"herd","why":"下單原因只是「大家都買」，以群體行為推動自己行動。","nt":"不是被商品某個突出賣點吸引，而是被團購人數帶動。","d":["halo","anchor","confirm"]},{"sc":"標價寫「原價500、特價299」，妹妹覺得299超划算就買了，其實外面同款只賣250。","t":"anchor","why":"她把先看到的「500」當比較基準，才覺得299便宜。","nt":"不是怕錯過而搶買的損失心理，而是被第一個數字帶著判斷價值。","d":["loss","herd","confirm"]},{"sc":"二手攤老闆先開價300，阿明殺到200就覺得賺到，雖然那玩具其實只值100。","t":"anchor","why":"老闆先報的「300」成了心中基準，讓200顯得划算。","nt":"不是為已花的錢硬撐，而是被最先聽到的數字定錨。","d":["sunk","loss","herd"]},{"sc":"轉蛋店員先說「這隻限量娃娃有人出800元收」，小安就覺得花500買很便宜。","t":"anchor","why":"先聽到的「800」變成參考點，使500顯得超值。","nt":"不是被人數帶動的跟風，而是第一個數字扭曲了他對價值的判斷。","d":["herd","loss","confirm"]},{"sc":"老師說「上次全班平均才40分」，這次考55分同學就覺得自己很高分，忘了滿分是100。","t":"anchor","why":"先聽到的「平均40」成了基準，讓55分感覺很高。","nt":"不是憑腦中鮮明例子估算，而是被先給的數字帶著評價。","d":["avail","confirm","herd"]},{"sc":"才藝班招生說「別家一期要一萬」，家長就覺得這家八千很便宜，沒去查其實行情才五千。","t":"anchor","why":"先聽到的「一萬」成了比較基準，讓八千顯得划算。","nt":"不是跟著多數人報名的從眾，而是第一個數字定了錨。","d":["herd","loss","confirm"]},{"sc":"最近新聞一直播鯊魚咬人，弟弟就覺得去海邊很容易被鯊魚攻擊，嚇得不敢下水。","t":"avail","why":"他被剛看到的鮮明畫面影響，高估了其實極罕見的事。","nt":"不是先有定見再挑證據，而是憑腦中浮現的例子估錯機率。","d":["confirm","survivor","herd"]},{"sc":"這週班上有兩個同學食物中毒上了新聞，小玲就認定學校午餐很危險，其實一整年幾乎沒事。","t":"avail","why":"少數近期又鮮明的事件讓她把危險程度想得比實際高很多。","nt":"不是先相信午餐危險再找證據，而是被剛發生的例子放大了印象。","d":["confirm","survivor","herd"]},{"sc":"阿哲剛看到直播主抽到超稀有寶物，就覺得這遊戲很容易抽到好東西，想砸錢跟著抽。","t":"avail","why":"一個印象鮮明的畫面讓他高估了其實很低的中獎機率。","nt":"不是誤以為機率會因前面結果改變，而是被鮮明例子誤導對頻率的判斷。","d":["gambler","confirm","survivor"]},{"sc":"因為最近聽說隔壁社區有人腳踏車被偷，媽媽就覺得到處都在偷車，其實統計上很少見。","t":"avail","why":"一件容易想起的近事讓她高估了整體發生的頻率。","nt":"不是先認定治安差再找證據，而是靠好想起的例子估錯機率。","d":["confirm","herd","survivor"]},{"sc":"妹妹連續滑到好幾則「網友被詐騙」的短影片，就以為身邊每個人都會遇到詐騙，把發生率想得遠比實際高。","t":"avail","why":"接連看到的鮮明影片讓她把詐騙頻率高估了。","nt":"不是先有成見再挑資料，而是被剛看到的例子撐大了對頻率的估計。","d":["confirm","herd","survivor"]},{"sc":"小安連抽十次轉蛋都沒中最高級，就想「都這麼多次沒中了，下一抽一定會中」。","t":"gambler","why":"他誤以為過去沒中會改變下一抽的獨立機率。","nt":"不是被第一個數字定錨，而是誤解獨立事件的機率不會被前面結果影響。","d":["anchor","sunk","avail"]},{"sc":"用猜拳決定誰先發球，阿翔連輸三次，就說「照機率算，我下一次一定會贏」。","t":"gambler","why":"他以為前面連輸會提高下一局獲勝機率，但每局其實各自獨立。","nt":"不是事後才說早知道，而是事前錯估獨立事件的機率。","d":["hindsight","anchor","avail"]},{"sc":"玩大富翁時，弟弟連續丟出小點數，他堅信「接下來一定會丟到大的」。","t":"gambler","why":"他把過去的骰子結果當成能改變下一次點數的依據。","nt":"不是被某個數字帶著判斷價值，而是誤解每次擲骰互相獨立。","d":["anchor","avail","confirm"]},{"sc":"便利商店刮刮卡，姊姊看到前面很多人都沒刮中，就覺得「該輪到我中了」，多買了好幾張。","t":"gambler","why":"她以為前面沒中會讓自己中獎的機率變高，其實每張獨立。","nt":"不是因為人多才跟著買，而是誤判前面結果會影響下一張機率。","d":["herd","anchor","avail"]},{"sc":"選擇題前五題答案都是B，小華覺得「不可能連六題都B」，就把明明算出來是B的第六題改掉。","t":"gambler","why":"他認為前面出現多次B會降低這題也是B的機率，但各題答案互相獨立。","nt":"不是先有定見再挑證據，而是誤以為前面的結果會改變這題答案的機率。","d":["confirm","anchor","avail"]},{"sc":"因為那位同學鋼琴彈得超好，大家就理所當然覺得他數學一定也很強。","t":"halo","why":"用一項突出才能(鋼琴)去推論不相關的能力(數學)。","nt":"不是因為很多人這樣說才跟，而是被單一亮眼特質牽動判斷。","d":["herd","confirm","anchor"]},{"sc":"某網紅長得很漂亮，妹妹就相信她推薦的文具一定都很好用。","t":"halo","why":"把「漂亮」這個特質延伸到不相關的「選文具眼光」。","nt":"不是因為很多人跟風購買，而是被一個亮點推論其他能力。","d":["herd","avail","confirm"]},{"sc":"選幹部時，大家因為小傑跑最快、長得帥，就推他當管秩序的風紀股長，認定他一定很會管。","t":"halo","why":"用外型與運動這類突出特質去推論不相關的管理能力。","nt":"不是因為報名或投票人數多而跟，而是被單一亮點影響對其他能力的評價。","d":["herd","anchor","confirm"]},{"sc":"這款後背包是有名球星代言的，阿明就覺得它一定很耐用又好看，因為球星那麼厲害。","t":"halo","why":"把球星在球場上的厲害，延伸到與運動無關的包包品質。","nt":"不是因為大家都買才跟，而是被名人一項光環影響對商品的判斷。","d":["herd","anchor","confirm"]},{"sc":"姊姊成績很好，所以爸媽認定她整理房間、照顧寵物也一定做得好，把這些事全交給她。","t":"halo","why":"用「成績好」這個亮點推論她在完全不相關的事上也一定行。","nt":"不是因為多數人這麼做，而是被單一優點延伸到其他能力。","d":["herd","confirm","anchor"]},{"sc":"比賽結束我方輸了，小宇馬上說「我早就知道會輸啦」，但賽前他其實還很有信心。","t":"hindsight","why":"結果揭曉後才覺得「我早就知道」，忘了事前根本沒這樣想。","nt":"不是事前先有信念再挑證據，而是知道結果後才回頭改記憶。","d":["confirm","avail","gambler"]},{"sc":"老師公布答案後，阿哲說「這題我一看就覺得是陷阱」，可是考試時他其實也選錯了。","t":"hindsight","why":"答案公布後，他才產生「我本來就看得出」的錯覺。","nt":"不是先有想法再蒐集支持證據，而是結果已知後才回頭美化判斷。","d":["confirm","avail","halo"]},{"sc":"隊伍被翻盤輸掉後，妹妹說「我剛剛就覺得會輸」，但幾分鐘前她還說穩贏。","t":"hindsight","why":"知道輸的結果後，她才覺得自己早有預感。","nt":"不是誤判機率會被前面結果影響，而是事後才產生早知道的錯覺。","d":["gambler","confirm","avail"]},{"sc":"颱風轉彎沒登陸後，爸爸說「我就說不會來嘛」，但前一天他還忙著搶買泡麵。","t":"hindsight","why":"結果確定後，他才聲稱自己早就料到，忽略先前的行為。","nt":"不是先有成見再找證據，而是知道結果後回頭重寫自己的預測。","d":["confirm","avail","gambler"]},{"sc":"兩個同學吵架絕交後，小玲說「他們早晚會這樣，我早就看出來了」，但之前她都覺得他們是好朋友。","t":"hindsight","why":"事情發生後她才覺得自己早有預見，和先前的看法相反。","nt":"不是先認定他們會吵架再找證據，而是結果出來後才產生早知道的感覺。","d":["confirm","avail","halo"]},{"sc":"老師辦搶答，答對加10分、答錯只扣2分，阿明明明很有把握卻不敢舉手，因為怕被扣分。","t":"loss","why":"扣分的痛感被放得太大，讓他放棄一個明顯划算的機會。","nt":"不是為已投入的成本硬撐，而是因為害怕未來的損失而退縮。","d":["sunk","confirm","gambler"]},{"sc":"小玲很想邀新同學一起玩，卻怕被拒絕的難受，寧可一直不開口。","t":"loss","why":"對被拒絕(失去)的恐懼壓過了交到朋友的好處，於是逃避。","nt":"不是捨不得已付出的努力，而是怕未來受傷而不敢嘗試。","d":["sunk","avail","confirm"]},{"sc":"妹妹有機會報名一個得獎機會不小的比賽，卻因為「萬一沒得獎會很丟臉」而放棄報名。","t":"loss","why":"怕丟臉(損失)的感覺蓋過了得獎的期待，讓她避開值得的機會。","nt":"不是為過去投入而堅持，而是為了避開可能的未來損失而退縮。","d":["sunk","hindsight","confirm"]},{"sc":"阿哲手上的舊卡片現在有人願意用好價錢收，長期看會跌價，他卻因為「怕賣掉後它又漲、我會很嘔」而遲遲不賣。","t":"loss","why":"對「賣掉後可能少賺」的損失感過度放大，讓他錯過划算的出手時機。","nt":"不是為已花的錢硬撐，而是怕未來後悔的損失而不敢行動。","d":["sunk","gambler","anchor"]},{"sc":"媽媽讓弟弟選：直接拿一顆糖，或猜硬幣猜中拿三顆、猜錯沒有；弟弟怕「本來能拿的都沒了」，永遠只選確定那顆，再划算的賭也不敢。","t":"loss","why":"對「失去確定那顆」的恐懼被放大，使他拒絕期望值更高的選擇。","nt":"不是為過去投入而繼續，而是因害怕未來失去而回避合理的冒險。","d":["sunk","gambler","anchor"]}];
+  var TRAPS = {
+    confirm:{name:'確認偏誤',emoji:'🔍'}, survivor:{name:'倖存者偏誤',emoji:'🏆'},
+    sunk:{name:'沉沒成本謬誤',emoji:'⏳'}, herd:{name:'從眾效應',emoji:'🐑'},
+    anchor:{name:'錨定效應',emoji:'⚓'}, avail:{name:'可得性偏誤',emoji:'📰'},
+    gambler:{name:'賭徒謬誤',emoji:'🎰'}, halo:{name:'光環效應',emoji:'😇'},
+    hindsight:{name:'後見之明',emoji:'🔮'}, loss:{name:'損失規避',emoji:'😰'}
+  };
+  var ORDER=['confirm','survivor','sunk','herd','anchor','avail','gambler','halo','hindsight','loss'];
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; } return a; }
+  // 交錯：盡量讓相鄰題不同陷阱
+  function interleave(items){
+    var buckets={}; items.forEach(function(it){ (buckets[it.t]=buckets[it.t]||[]).push(it); });
+    var out=[], last=null, left=items.length;
+    while(left>0){
+      var keys=Object.keys(buckets).filter(function(k){ return buckets[k].length; });
+      keys.sort(function(x,y){ return buckets[y].length-buckets[x].length; });
+      var pick=null; for(var i=0;i<keys.length;i++){ if(keys[i]!==last){ pick=keys[i]; break; } }
+      if(pick===null) pick=keys[0];
+      out.push(buckets[pick].shift()); last=pick; left--;
+    }
+    return out;
+  }
+
+  function showScreen(n){
+    $('screen-menu').classList.toggle('active', n==='menu');
+    $('screen-play').classList.toggle('active', n==='play');
+    try{ window.scrollTo(0,0); }catch(e){}
+  }
+  function renderMenu(){
+    $('legend').innerHTML = ORDER.map(function(k){ return '<span class="tp-chip">'+TRAPS[k].emoji+' '+TRAPS[k].name+'</span>'; }).join('');
+    var total=SCEN.length;
+    var lens=[
+      {n:10,emoji:'⚡',title:'快速偵查・10 題',sub:'花幾分鐘暖身認一認'},
+      {n:20,emoji:'🎯',title:'標準偵查・20 題',sub:'跨陷阱交錯，紮實練習'},
+      {n:total,emoji:'🏆',title:'全部・'+total+' 題',sub:'一次把所有情境都認過一遍'}
+    ];
+    $('len-list').innerHTML = lens.map(function(o){
+      return '<button type="button" class="tp-len" data-n="'+o.n+'"><span class="tp-len-emoji" aria-hidden="true">'+o.emoji+'</span>'+
+        '<span><span class="tp-len-title">'+o.title+'</span><br><span class="tp-len-sub">'+o.sub+'</span></span></button>';
+    }).join('');
+    Array.prototype.forEach.call($('len-list').querySelectorAll('.tp-len'), function(b){
+      b.addEventListener('click', function(){ startRound(parseInt(b.getAttribute('data-n'),10)); });
+    });
+  }
+
+  var q=null, queue=[], idx=0, correct=0, answered=false;
+  function startRound(n){
+    n=Math.min(n, SCEN.length);
+    var picked=shuffle(SCEN).slice(0,n);
+    queue=interleave(picked); idx=0; correct=0;
+    showScreen('play');
+    $('play-title').textContent='情境偵探 🕵️';
+    renderQ();
+  }
+  function renderQ(){
+    answered=false; q=queue[idx];
+    var optKeys=shuffle([q.t].concat(q.d));   // 正解 + 3 個最易混淆的干擾陷阱，打散
+    var optHtml=optKeys.map(function(k){
+      return '<button type="button" class="tp-opt" data-k="'+k+'">'+TRAPS[k].emoji+' '+TRAPS[k].name+'</button>';
+    }).join('');
+    $('stage').innerHTML =
+      '<div class="tp-card">'+
+        '<div class="tp-bar"><span>第 '+(idx+1)+' / '+queue.length+' 題</span><span>答對 '+correct+' 🕵️</span></div>'+
+        '<div class="tp-scn" id="scn" tabindex="-1">'+q.sc+'</div>'+
+        '<div style="font-weight:800;color:var(--su-d);margin-bottom:var(--s2)">這是掉進了哪一種思考陷阱？</div>'+
+        optHtml+
+        '<div class="tp-reveal" id="reveal" aria-live="polite"></div>'+
+        '<div class="tp-actions" id="acts" style="display:none"><button type="button" class="btn btn-primary" id="btn-next"></button></div>'+
+      '</div>';
+    var opts=$('stage').querySelectorAll('.tp-opt');
+    Array.prototype.forEach.call(opts, function(b){ b.addEventListener('click', function(){ answer(b, opts); }); });
+    try{ $('scn').focus(); }catch(e){}
+  }
+  function answer(btn, opts){
+    if(answered) return; answered=true;
+    var chosen=btn.getAttribute('data-k');
+    var ok=(chosen===q.t);
+    if(ok) correct++;
+    try{ if(window.Game && typeof Game.pingActive==='function') Game.pingActive(); }catch(e){}
+    Array.prototype.forEach.call(opts, function(b){
+      var k=b.getAttribute('data-k');
+      if(k===q.t) b.classList.add('correct');
+      else if(b===btn) b.classList.add('wrong');
+      b.disabled=true;
+    });
+    var rev=$('reveal');
+    var lead = ok ? '答對了！👍 ' : ('沒關係～這是【'+TRAPS[q.t].name+'】。');
+    rev.innerHTML = lead + '<br><b>為什麼：</b>'+q.why + '<br><b>容易混淆：</b>'+q.nt;
+    rev.classList.add('show');
+    var acts=$('acts'); acts.style.display='flex';
+    var next=$('btn-next');
+    var last=(idx>=queue.length-1);
+    next.textContent = last ? '看成績 🎉' : '下一題 ➡️';
+    next.onclick=function(){ if(last){ finish(); } else { idx++; renderQ(); } };
+    try{ next.focus(); }catch(e){}
+  }
+  function finish(){
+    var total=queue.length, pct=Math.round(correct/total*100);
+    var emoji,msg;
+    if(pct>=90){ emoji='🏆'; msg='神偵探！這些思考陷阱幾乎都逃不過你的眼睛。'; }
+    else if(pct>=70){ emoji='🌟'; msg='很厲害！大部分都認出來了，把認錯的再看一次會更強。'; }
+    else if(pct>=50){ emoji='💪'; msg='不錯的開始！多練幾輪，你會越來越快認出陷阱。'; }
+    else { emoji='🌱'; msg='沒關係，這需要練習。回「思考陷阱」複習觀念，再來挑戰一次！'; }
+    $('stage').innerHTML =
+      '<div class="tp-card" style="text-align:center">'+
+        '<div style="font-size:44px" aria-hidden="true">'+emoji+'</div>'+
+        '<h2 class="tp-title" style="margin:var(--s2) 0">這一輪答對 '+correct+' / '+total+' 題</h2>'+
+        '<div class="tp-scn" style="text-align:left">'+msg+'</div>'+
+        '<div class="tp-actions"><button type="button" class="btn btn-primary" id="btn-again">再來一輪 🔄</button>'+
+          '<button type="button" class="btn" id="btn-menu">回選單</button></div>'+
+      '</div>';
+    $('btn-again').addEventListener('click', function(){ startRound(total); });
+    $('btn-menu').addEventListener('click', function(){ showScreen('menu'); });
+  }
+  document.addEventListener('keydown', function(e){
+    if(!$('screen-play').classList.contains('active')) return;
+    if(e.key==='Enter'){ if(e.target && e.target.tagName==='BUTTON') return; if(answered && $('btn-next')){ e.preventDefault(); $('btn-next').click(); } }
+  });
+  $('btn-back').addEventListener('click', function(){ showScreen('menu'); });
+  showScreen('menu'); renderMenu();
+})();
+</script>
+</body>
+</html>
