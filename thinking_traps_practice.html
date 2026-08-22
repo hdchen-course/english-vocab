@@ -6,6 +6,7 @@
 <title>情境偵探・這是哪一種思考陷阱？ 🕵️</title>
 <link rel="stylesheet" href="assets/app.css">
 <link rel="stylesheet" href="game_core.css">
+<link rel="stylesheet" href="concept.css">
 <script src="game_core.js"></script>
 <!--
   情境偵探：讀一個生活情境，判斷它落入「哪一種思考陷阱」。混合出題、可反覆練、答完解說「為什麼是這個、為什麼不是最容易混淆的那個」。
@@ -18,22 +19,15 @@
   .tp-wrap{ width:100%; }
   .tp-screen{ display:none; } .tp-screen.active{ display:block; }
   .tp-topbar{ display:flex; align-items:center; gap:var(--s3); margin-bottom:var(--s4); }
-  .tp-title{ font-size:var(--fs-h2); font-weight:800; color:var(--su-d); }
+  .tp-title{ font-size:var(--fs-h2); font-weight:800; color:var(--ink); }
   .tp-hello{ display:flex; align-items:center; gap:var(--s3); padding:var(--s4); background:var(--su-tint);
     border:1px solid var(--card-border); border-radius:var(--r-lg); margin-bottom:var(--s4); }
   .tp-hello .tp-mascot{ font-size:44px; flex:none; }
   .tp-htext{ font-size:var(--fs-body); font-weight:700; color:var(--ink); }
   .tp-hsub{ font-size:var(--fs-small); color:var(--ink-soft); font-weight:600; margin-top:2px; }
   .tp-legend{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:var(--s4); }
-  .tp-chip{ font-size:var(--fs-small); font-weight:700; color:var(--su-d); background:var(--su-tint);
+  .tp-chip{ font-size:var(--fs-small); font-weight:700; color:var(--ink); background:var(--su-tint);
     border-radius:999px; padding:4px 10px; }
-  .tp-len{ display:flex; align-items:center; gap:var(--s3); width:100%; text-align:left; padding:var(--s4);
-    min-height:var(--tap-min); border:2px solid var(--card-border); border-radius:var(--r-md);
-    background:var(--card); color:var(--ink); font-family:var(--font); cursor:pointer; margin-bottom:var(--s3); }
-  .tp-len:hover{ border-color:var(--su); }
-  .tp-len-emoji{ font-size:26px; flex:none; }
-  .tp-len-title{ font-size:var(--fs-body); font-weight:800; }
-  .tp-len-sub{ font-size:var(--fs-small); font-weight:600; color:var(--ink-soft); }
   .tp-card{ background:var(--card); border:1px solid var(--card-border); border-radius:var(--r-lg); box-shadow:var(--shadow-sm); padding:var(--s5) var(--s4); max-width:680px; margin-inline:auto; }
   .tp-bar{ display:flex; justify-content:space-between; align-items:center; font-size:var(--fs-small); font-weight:800; color:var(--su-d); margin-bottom:var(--s3); }
   .tp-scn{ font-size:var(--fs-body); font-weight:700; color:var(--ink); line-height:1.85; background:var(--su-tint);
@@ -126,10 +120,10 @@
       {n:total,emoji:'🏆',title:'全部・'+total+' 題',sub:'一次把所有情境都認過一遍'}
     ];
     $('len-list').innerHTML = lens.map(function(o){
-      return '<button type="button" class="tp-len" data-n="'+o.n+'"><span class="tp-len-emoji" aria-hidden="true">'+o.emoji+'</span>'+
-        '<span><span class="tp-len-title">'+o.title+'</span><br><span class="tp-len-sub">'+o.sub+'</span></span></button>';
+      return '<button type="button" class="cn-optionrow" data-n="'+o.n+'"><span class="cn-optionrow-emoji" aria-hidden="true">'+o.emoji+'</span>'+
+        '<span><span class="cn-optionrow-title">'+o.title+'</span><br><span class="cn-optionrow-sub">'+o.sub+'</span></span></button>';
     }).join('');
-    Array.prototype.forEach.call($('len-list').querySelectorAll('.tp-len'), function(b){
+    Array.prototype.forEach.call($('len-list').querySelectorAll('.cn-optionrow'), function(b){
       b.addEventListener('click', function(){ startRound(parseInt(b.getAttribute('data-n'),10)); });
     });
   }
