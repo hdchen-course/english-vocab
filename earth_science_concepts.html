@@ -71,12 +71,12 @@ function revolution(){
 }
 // 四季：地軸恆斜向同一方向；同半球一邊朝太陽(夏)、另一邊背太陽(冬)，兩邊離太陽差不多遠
 function seasonTilt(){
-  var s='<svg viewBox="0 0 300 168" role="img" aria-label="地軸是斜的，繞太陽時同一半球有時朝太陽是夏天、陽光較直，有時背對是冬天、陽光較斜；兩邊離太陽差不多遠">';
+  var s='<svg viewBox="0 0 300 168" role="img" aria-label="地軸是斜的，繞太陽時同一半球有時朝太陽是夏天、陽光較直，有時斜離太陽是冬天、陽光較斜；兩邊離太陽差不多遠">';
   s+='<ellipse cx="150" cy="80" rx="120" ry="60" fill="none" stroke="currentColor" stroke-opacity="0.4" stroke-width="1.5" stroke-dasharray="5 4"/>';
   s+='<circle cx="150" cy="80" r="19" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/><text x="150" y="86" text-anchor="middle" font-size="16">☀️</text>';
   s+='<line x1="131" y1="78" x2="62" y2="80" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3 3"/>';
   s+='<line x1="169" y1="78" x2="238" y2="80" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3 3"/>';
-  [[42,'夏天','這半球朝太陽'],[258,'冬天','這半球背太陽']].forEach(function(e){
+  [[42,'夏天','這半球朝太陽'],[258,'冬天','這半球斜離太陽']].forEach(function(e){
     var ex=e[0], ey=80, r=17;
     s+='<circle cx="'+ex+'" cy="'+ey+'" r="'+r+'" fill="rgba(56,189,248,0.5)" stroke="currentColor" stroke-opacity="0.6" stroke-width="1.5"/>';
     s+='<line x1="'+(ex+8)+'" y1="'+(ey-r-7)+'" x2="'+(ex-8)+'" y2="'+(ey+r+7)+'" stroke="#dc2626" stroke-width="2.5"/>';
@@ -131,7 +131,7 @@ window.CONCEPT = {
    { id:'year', name:'一年與四季', emoji:'🍂', color:'#16a34a', sub:'地球繞太陽公轉', done:'記得：地球繞太陽一圈（公轉）約一年；四季是因為地軸「斜斜的」，不是因為離太陽比較遠或近。',
      steps:[
       {type:'teach',kicker:'先想一想',title:'地球繞著太陽走',svg:revolution(),text:'地球一邊自轉，還一邊<b>繞著太陽轉一大圈</b>，這叫<b>公轉</b>。繞完一圈大約是<b>一年</b>（365 天）。'},
-      {type:'teach',kicker:'為什麼有四季',title:'因為地球「斜斜的」轉',svg:seasonTilt(),text:'地球是<b>斜著</b>轉的（紅線是地軸，一直斜向同一邊）。同一個地方，有時<b>朝向</b>太陽、陽光照得比較<b>直</b>（熱，夏天）；半年後轉到另一邊，<b>背對</b>太陽、陽光比較<b>斜</b>（涼，冬天）。<b>兩邊離太陽差不多遠</b>——四季<b>不是</b>因為離太陽比較遠或比較近喔！'},
+      {type:'teach',kicker:'為什麼有四季',title:'因為地球「斜斜的」轉',svg:seasonTilt(),text:'地球是<b>斜著</b>轉的（紅線是地軸，一直斜向同一邊）。同一個地方，有時<b>朝向</b>太陽、陽光照得比較<b>直</b>（熱，夏天）；半年後轉到另一邊，這個地方所在的半球<b>斜離</b>太陽（不再朝向太陽），陽光比較<b>斜</b>（涼，冬天）。<b>兩邊離太陽差不多遠</b>——四季<b>不是</b>因為離太陽比較遠或比較近喔！'},
       {type:'quiz',kicker:'換你試試',title:'地球繞太陽公轉一圈大約是多久？',options:['一年','一天','一個月','一星期'],answer:0,why:'地球繞太陽公轉一圈約 365 天，就是一年。'},
       {type:'quiz',kicker:'想一想',title:'為什麼會有春夏秋冬四季？',svg:seasonTilt(),options:['因為地軸是斜的，陽光照射的角度不同','因為地球離太陽忽遠忽近','因為太陽會變大變小','因為月亮擋住太陽'],answer:0,why:'四季是地軸傾斜、陽光照射角度不同造成的，不是因為地球離太陽的遠近。'}
      ]},
