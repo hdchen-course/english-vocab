@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英文慣用語・看圖秒懂 🖼️</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<!--
+  英文慣用語(idioms)：先看『字面畫面』(emoji+一句字面描述)，再翻出『真正的意思』——用字面與引申的反差，看一次就記住(不用死背)。
+  兩種玩法：📖 看圖學（逐張翻卡：字面→意思→例句） / 🎯 猜意思（看 idiom 猜真正意思、三選一）。教真正常用的英文 idiom，不是把中文成語硬翻。
+  純本地(key english_idioms_v1、data-game-hud=off、不計 XP、只 pingActive 續 streak)。全繁體中文說明。
+-->
+<style>
+  :root{ --su:#0e7490; --su-d:#155e75; --su-tint:rgba(14,116,144,0.12); }
+  :root[data-theme="dark"]{ --su:#67e8f9; --su-d:#a5f3fc; --su-tint:rgba(103,232,249,0.16); }
+  .id-wrap{ max-width:720px; margin-inline:auto; }
+  .id-screen{ display:none; } .id-screen.active{ display:block; }
+  .id-topbar{ display:flex; align-items:center; gap:var(--s3); margin-bottom:var(--s4); }
+  .id-title{ font-size:var(--fs-h2); font-weight:800; color:var(--su-d); }
+  .id-hello{ display:flex; align-items:center; gap:var(--s3); padding:var(--s4); background:var(--su-tint);
+    border:1px solid var(--card-border); border-radius:var(--r-lg); margin-bottom:var(--s4); }
+  .id-hello .id-mascot{ font-size:44px; flex:none; }
+  .id-htext{ font-size:var(--fs-body); font-weight:700; color:var(--ink); }
+  .id-hsub{ font-size:var(--fs-small); color:var(--ink-soft); font-weight:600; margin-top:2px; }
+  .id-mode{ display:flex; align-items:center; gap:var(--s3); width:100%; text-align:left; padding:var(--s4);
+    min-height:var(--tap-min); border:2px solid var(--card-border); border-radius:var(--r-md);
+    background:var(--card); color:var(--ink); font-family:var(--font); cursor:pointer; margin-bottom:var(--s3); }
+  .id-mode:hover{ border-color:var(--su); }
+  .id-mode-emoji{ font-size:26px; flex:none; }
+  .id-mode-title{ font-size:var(--fs-body); font-weight:800; }
+  .id-mode-sub{ font-size:var(--fs-small); font-weight:600; color:var(--ink-soft); }
+  .id-card{ background:var(--card); border:1px solid var(--card-border); border-radius:var(--r-lg); box-shadow:var(--shadow-sm); padding:var(--s5) var(--s4); }
+  .id-bar{ display:flex; justify-content:space-between; align-items:center; font-size:var(--fs-small); font-weight:800; color:var(--su-d); margin-bottom:var(--s3); }
+  .id-emoji{ font-size:64px; text-align:center; margin:var(--s2) 0; line-height:1.2; }
+  .id-idiom{ font-size:26px; font-weight:800; color:var(--ink); text-align:center; letter-spacing:.5px; }
+  .id-literal{ font-size:var(--fs-body); font-weight:700; color:var(--su-d); text-align:center; margin:var(--s2) 0 var(--s3); }
+  .id-literal .lab{ display:inline-block; font-size:var(--fs-small); background:var(--su-tint); border-radius:999px; padding:2px 10px; margin-right:6px; }
+  .id-opt{ display:block; width:100%; text-align:left; padding:14px var(--s4); min-height:var(--tap-min);
+    border:2px solid var(--card-border); border-radius:var(--r-md); background:var(--card); color:var(--ink);
+    font-family:var(--font); font-size:var(--fs-body); font-weight:700; cursor:pointer; margin-bottom:var(--s3); }
+  .id-opt:hover{ border-color:var(--su); } .id-opt:disabled{ cursor:default; }
+  .id-opt.correct{ border-color:var(--c-correct,#2e7d32); background:var(--tint-english,rgba(46,125,50,.12)); }
+  .id-opt.correct::after{ content:' ✓'; font-weight:800; }
+  .id-opt.wrong{ border-color:var(--c-wrong,#c62828); } .id-opt.wrong::after{ content:' ✗'; font-weight:800; }
+  .id-reveal{ margin-top:var(--s3); padding:var(--s4); border-radius:var(--r-md); background:var(--su-tint);
+    font-size:var(--fs-body); font-weight:600; color:var(--ink); line-height:1.85; display:none; }
+  .id-reveal.show{ display:block; }
+  .id-reveal .lab{ font-weight:800; color:var(--su-d); }
+  .id-reveal .ex{ font-style:normal; background:var(--card); border-radius:8px; padding:8px 12px; margin-top:8px; display:block; }
+  .id-reveal .zhsay{ margin-top:8px; font-size:var(--fs-small); color:var(--ink-soft); }
+  .id-actions{ margin-top:var(--s4); display:flex; gap:var(--s3); }
+  .id-actions .btn{ flex:1; }
+  .id-note{ text-align:center; color:var(--ink-soft); font-size:var(--fs-small); margin-top:var(--s5); font-weight:600; max-width:34em; margin-inline:auto; }
+</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">英文慣用語 🖼️</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="id-screen active id-wrap">
+    <div class="id-topbar"><span class="id-title">英文慣用語・看圖秒懂 🖼️</span></div>
+    <div class="id-hello"><span class="id-mascot" aria-hidden="true">🖼️</span>
+      <div><div class="id-htext">英文有很多「慣用語（idiom）」，光看字面猜不到意思——但只要看懂它「字面的畫面」，再對上真正的意思，就會有「原來如此！」的驚喜，看一次就記住，不用背。</div>
+      <div class="id-hsub">例如 paint yourself into a corner：字面是「把自己漆到牆角」→ 想像油漆一路漆到角落、困住自己 → 意思就是「把自己逼到沒退路」。</div></div></div>
+    <div id="mode-list"></div>
+    <p class="id-note">這裡教的是真正常用的英文慣用語（不是把中文成語硬翻）。純學習、不計分，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
+  </section>
+  <section id="screen-play" class="id-screen id-wrap">
+    <div class="id-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="id-title" id="play-title">英文慣用語</span></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+/* eslint-disable */
+(function(){
+  'use strict';
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  var IDIOMS = [{"idiom":"paint yourself into a corner","emoji":"🎨🖌️🧍","literalZh":"一個人從房間往後刷油漆，刷到最後把自己困在角落，四周都是沒乾的漆走不出去。","meaningZh":"因為自己先前的決定或做法，讓自己陷入進退兩難、沒有退路的處境。","whenZh":"當你答應太多事或把話說死，結果把自己逼到無路可走時。","exampleEn":"By promising everyone a raise, the manager painted himself into a corner when the budget got cut.","exampleZh":"經理答應每個人加薪，等預算被砍時，就把自己逼到無路可走了。","zhSaying":"作繭自縛","distractorsZh":["把一件事情做得非常仔細、面面俱到","在小地方鑽牛角尖、想不開"]},{"idiom":"the ball is in your court","emoji":"🎾🫵","literalZh":"打網球時，球剛好落在你這邊的場地，現在輪到你把它打回去。","meaningZh":"現在該由你做決定或採取下一步行動，主動權在你手上。","whenZh":"當你已經提出條件或做完你的部分，等對方回應時。","exampleEn":"I've made my offer, so now the ball is in your court.","exampleZh":"我已經開出條件了，接下來就看你怎麼回應。","zhSaying":null,"distractorsZh":["你正處於眾人矚目的焦點，壓力很大","事情已成定局，你無法再改變"]},{"idiom":"bite the bullet","emoji":"🦷🔩😬","literalZh":"以前沒有麻醉藥，傷兵動手術時咬住一顆子彈來忍痛。","meaningZh":"硬著頭皮去做一件痛苦或不想做、但不得不做的事。","whenZh":"當你一直逃避某件討厭的事，最後決定咬牙面對時。","exampleEn":"I hate going to the dentist, but I'll just have to bite the bullet.","exampleZh":"我很討厭看牙醫，但也只能硬著頭皮去了。","zhSaying":"咬牙硬撐","distractorsZh":["因為太緊張而說錯話、講話咬到舌頭","衝動行事、沒想清楚就亂做決定"]},{"idiom":"cut corners","emoji":"✂️📐","literalZh":"走路時不照著轉角好好走，而是抄近路把角切掉直接穿過去。","meaningZh":"為了省時間或省錢而偷工減料、草率行事，犧牲了品質。","whenZh":"當有人趕進度或想省錢，把該做的步驟省略時。","exampleEn":"The builders cut corners, and now the roof is leaking.","exampleZh":"工人偷工減料，現在屋頂漏水了。","zhSaying":"偷工減料","distractorsZh":["把多餘、不需要的部分果斷刪掉，讓事情更精簡","在競爭中搶先一步、超越別人"]},{"idiom":"break the ice","emoji":"🧊🔨","literalZh":"把結凍的冰面敲破，好讓船能通過。","meaningZh":"在陌生或尷尬的場合中，說些話或做些事來打破僵局、讓氣氛輕鬆起來。","whenZh":"當一群不熟的人在一起、氣氛冷場，有人先開口帶動時。","exampleEn":"He told a joke to break the ice at the start of the meeting.","exampleZh":"他在會議一開始講了個笑話來破冰。","zhSaying":"打破僵局／破冰","distractorsZh":["突然發脾氣，把和諧的氣氛破壞掉","把一件大事拆成很多小步驟來處理"]},{"idiom":"hit the nail on the head","emoji":"🔨🪵🎯","literalZh":"用鎚子不偏不倚地正中釘子的頭，一鎚就打準。","meaningZh":"說中要點、一針見血，正好說出事情的關鍵或真相。","whenZh":"當有人把問題的核心講得非常準確時。","exampleEn":"You hit the nail on the head — that's exactly why the project failed.","exampleZh":"你說得一針見血，那正是專案失敗的原因。","zhSaying":"一針見血／一語中的","distractorsZh":["非常努力、拚命地工作","運氣很好，剛好矇對了答案"]},{"idiom":"under the weather","emoji":"🌧️🤒","literalZh":"一個人像是站在壞天氣的烏雲底下，被風吹雨淋。","meaningZh":"身體不太舒服、有點生病或沒精神。","whenZh":"當你覺得快感冒、身體懶懶的不太對勁時。","exampleEn":"I'm feeling a bit under the weather, so I'll stay home today.","exampleZh":"我今天身體有點不舒服，所以待在家裡。","zhSaying":null,"distractorsZh":["淋了雨、全身濕答答的","遇到很大的壓力、快撐不住了"]},{"idiom":"spill the beans","emoji":"🫘🫗","literalZh":"不小心把裝在罐子裡的豆子全打翻、灑了一地。","meaningZh":"把祕密洩漏出去、不小心說溜嘴把該保密的事講出來。","whenZh":"當有人不小心透露了原本要保密的消息時。","exampleEn":"Don't spill the beans about the surprise party!","exampleZh":"別把驚喜派對的祕密說出去！","zhSaying":"洩漏祕密／說溜嘴","distractorsZh":["把事情搞砸、把場面弄得一團亂","浪費了大好的機會或資源"]},{"idiom":"let the cat out of the bag","emoji":"🐱👜","literalZh":"把原本藏在袋子裡的貓放了出來，一下子被大家看見。","meaningZh":"不小心洩漏了原本要保密的祕密。","whenZh":"當有人一時大意，把本來要保密的事講漏了時。","exampleEn":"He let the cat out of the bag and told everyone I was moving away.","exampleZh":"他說溜了嘴，跟大家講我要搬走的事。","zhSaying":"洩漏祕密","distractorsZh":["終於擺脫束縛、獲得自由","揭穿某人的謊言或詭計"]},{"idiom":"barking up the wrong tree","emoji":"🐕🌳❌","literalZh":"獵犬對著一棵樹狂吠，以為獵物在上面，其實獵物早就跑到別棵樹去了。","meaningZh":"找錯了對象或方向，把力氣用在錯誤的地方。","whenZh":"當有人怪錯人、或用錯方法在解決問題時。","exampleEn":"If you think I broke the window, you're barking up the wrong tree.","exampleZh":"如果你以為是我打破窗戶，那你可就找錯人了。","zhSaying":null,"distractorsZh":["為了小事大吵大鬧、小題大作","堅持不懈、鍥而不捨地追求目標"]},{"idiom":"cost an arm and a leg","emoji":"💰💪🦵","literalZh":"某樣東西貴到好像要拿一隻手臂和一條腿去換才買得起。","meaningZh":"價格非常昂貴、貴得離譜。","whenZh":"當你看到某樣東西的價錢高得嚇人時。","exampleEn":"A new phone these days can cost an arm and a leg.","exampleZh":"現在一支新手機貴得要命。","zhSaying":"貴得要命／所費不貲","distractorsZh":["花了非常大的力氣才完成","冒了很大的風險去做某件事"]},{"idiom":"once in a blue moon","emoji":"🌙🔵","literalZh":"天上出現藍色的月亮，那是極少見的景象。","meaningZh":"非常難得、很少發生，久久才一次。","whenZh":"當你要形容某件事幾乎不太會發生時。","exampleEn":"My brother lives abroad, so we only see him once in a blue moon.","exampleZh":"我哥住在國外，所以我們難得才見他一次。","zhSaying":"千載難逢／難得一見","distractorsZh":["在夜深人靜時才會做的事","心情低落、憂鬱的時候"]},{"idiom":"a piece of cake","emoji":"🍰😎","literalZh":"只是一塊蛋糕，輕輕鬆鬆就吃掉了。","meaningZh":"形容事情非常容易、輕而易舉。","whenZh":"當某件工作或考試對你來說毫不費力時。","exampleEn":"The exam was a piece of cake; I finished it in ten minutes.","exampleZh":"那場考試簡單得很，我十分鐘就寫完了。","zhSaying":"易如反掌／小菜一碟","distractorsZh":["一件令人開心、值得慶祝的好事","一份給人的小獎勵或甜頭"]},{"idiom":"raining cats and dogs","emoji":"🌧️🐱🐶","literalZh":"天空好像掉下一堆貓和狗，雨勢大到誇張。","meaningZh":"雨下得非常大、傾盆大雨。","whenZh":"當外面雨勢又急又大的時候。","exampleEn":"We can't go out now — it's raining cats and dogs.","exampleZh":"我們現在不能出門，外面下著傾盆大雨。","zhSaying":"傾盆大雨／滂沱大雨","distractorsZh":["場面非常混亂、吵吵鬧鬧","天氣忽晴忽雨、變化不定"]},{"idiom":"butterflies in my stomach","emoji":"🦋😰","literalZh":"肚子裡好像有一群蝴蝶在飛來飛去、搔得癢癢的。","meaningZh":"因為緊張或期待而感到心裡七上八下、坐立不安。","whenZh":"當你上台前或考試前緊張得肚子怪怪的時候。","exampleEn":"I had butterflies in my stomach before my speech.","exampleZh":"上台演講前我緊張得心裡七上八下。","zhSaying":"七上八下／忐忑不安","distractorsZh":["因為太興奮而吃不下東西","肚子餓得咕嚕咕嚕叫"]},{"idiom":"the tip of the iceberg","emoji":"🧊🌊","literalZh":"海面上只看得到冰山的一小角，龐大的部分其實都藏在水面下。","meaningZh":"眼前看到的只是一小部分，真正龐大或嚴重的問題還藏在後面。","whenZh":"當你發現一個問題，但知道背後還有更多沒被發現時。","exampleEn":"These complaints are just the tip of the iceberg; the real problem is much bigger.","exampleZh":"這些抱怨只是冰山一角，真正的問題大得多。","zhSaying":"冰山一角","distractorsZh":["一件事情最頂尖、最出色的部分","一段旅程或計畫的起點"]},{"idiom":"on the same page","emoji":"📖🤝","literalZh":"兩個人翻開同一本書，剛好都停在同一頁上。","meaningZh":"彼此的想法或理解一致、有共識。","whenZh":"當一群人要確認大家對某件事的理解是否相同時。","exampleEn":"Before we start, let's make sure we're all on the same page.","exampleZh":"開始之前，我們先確認一下大家的想法是一致的。","zhSaying":"有共識／看法一致","distractorsZh":["進度落後，還沒趕上別人","站在同一邊、結成盟友對抗別人"]},{"idiom":"throw in the towel","emoji":"🥊🏳️","literalZh":"拳擊賽中，教練把毛巾丟進場內，表示認輸不打了。","meaningZh":"放棄、承認失敗，不再繼續嘗試。","whenZh":"當有人努力了很久、撐不下去而決定放棄時。","exampleEn":"After failing three times, he finally threw in the towel.","exampleZh":"失敗三次後，他終於認輸放棄了。","zhSaying":"認輸／舉白旗投降","distractorsZh":["主動提出和解、想化解衝突","把責任推給別人、撇清關係"]},{"idiom":"back to the drawing board","emoji":"📋✏️🔙","literalZh":"計畫失敗了，只好回到那塊畫設計圖的板子前，從頭重畫。","meaningZh":"原本的計畫行不通，只好從頭開始、重新規劃。","whenZh":"當一個方案失敗，必須推翻重來時。","exampleEn":"The design didn't work, so it's back to the drawing board.","exampleZh":"這個設計行不通，只好從頭來過。","zhSaying":"從頭來過／打掉重練","distractorsZh":["回到最初、找回自己的初衷","把工作交給更專業的人來做"]},{"idiom":"get cold feet","emoji":"🦶🥶","literalZh":"要上場的關頭，雙腳卻冷冰冰的、動不了。","meaningZh":"在關鍵時刻突然變得緊張害怕，臨陣退縮、想打退堂鼓。","whenZh":"當有人本來要做某件大事，臨到頭卻膽怯猶豫時。","exampleEn":"She got cold feet the day before the wedding.","exampleZh":"婚禮前一天她臨陣退縮、害怕了起來。","zhSaying":"臨陣退縮／打退堂鼓","distractorsZh":["對某人或某事態度變得冷淡、不再熱衷","因為生病而全身發冷"]},{"idiom":"in hot water","emoji":"🔥💧😟","literalZh":"一個人泡在滾燙的熱水裡，燙得受不了。","meaningZh":"惹上麻煩、陷入困境，可能會被責罵或處罰。","whenZh":"當有人做錯事、快要被追究責任時。","exampleEn":"He got into hot water for skipping school.","exampleZh":"他因為翹課而惹上了麻煩。","zhSaying":"惹上麻煩／惹禍上身","distractorsZh":["情緒激動、氣得火冒三丈","忙得焦頭爛額、分身乏術"]},{"idiom":"a blessing in disguise","emoji":"🎁🎭😌","literalZh":"一份好禮物躲在偽裝底下，一開始看起來不像好事。","meaningZh":"表面上看起來是壞事，最後卻帶來好結果。","whenZh":"當一件當初以為的倒楣事，回頭看反而是好事時。","exampleEn":"Losing that job was a blessing in disguise — I found a better one.","exampleZh":"丟了那份工作反而是因禍得福，我找到了更好的。","zhSaying":"因禍得福／塞翁失馬","distractorsZh":["一份意想不到、從天而降的好運","一個藏著陷阱、看似美好的圈套"]},{"idiom":"burn the midnight oil","emoji":"🕯️🌙📚","literalZh":"半夜還點著油燈，把燈油都燒掉了，一直工作到深夜。","meaningZh":"熬夜到很晚努力工作或讀書。","whenZh":"當你為了趕作業或準備考試而熬夜苦讀時。","exampleEn":"I had to burn the midnight oil to finish the report.","exampleZh":"為了寫完報告，我只好熬夜趕工。","zhSaying":"挑燈夜戰／開夜車","distractorsZh":["白白浪費時間和精力在沒用的事上","把錢財揮霍一空"]},{"idiom":"the last straw","emoji":"🐫🌾💥","literalZh":"駱駝背上已經堆滿稻草，再放上最後一根，牠的背就被壓垮了。","meaningZh":"一連串忍受之後，讓人終於受不了、爆發的最後一件小事。","whenZh":"當累積的不滿到達極限，某件小事成了引爆點時。","exampleEn":"He was always late, but missing my birthday was the last straw.","exampleZh":"他總是遲到，但錯過我的生日成了壓垮我的最後一根稻草。","zhSaying":"壓垮駱駝的最後一根稻草／忍無可忍","distractorsZh":["最後一次機會、最終的希望","整件事情最微不足道、最不重要的部分"]},{"idiom":"hit the sack","emoji":"🛏️😴","literalZh":"以前的床墊是裝滿稻草的麻布袋，「撲向那個袋子」就是躺上去睡。","meaningZh":"去睡覺、上床就寢。","whenZh":"當你累了一整天、準備去睡覺時。","exampleEn":"I'm exhausted; I'm going to hit the sack.","exampleZh":"我累壞了，要去睡覺了。","zhSaying":null,"distractorsZh":["生氣地把東西摔在地上","開始拚命地大吃一頓"]},{"idiom":"when pigs fly","emoji":"🐷🪽","literalZh":"等到豬長出翅膀在天上飛的那一天。","meaningZh":"指某件事根本不可能發生、絕不會發生。","whenZh":"當你想表達某件事永遠不會成真時。","exampleEn":"He'll clean his room when pigs fly.","exampleZh":"要他整理房間？太陽打西邊出來吧。","zhSaying":"太陽打西邊出來／除非太陽從西邊升起","distractorsZh":["等到時機成熟、水到渠成的時候","在最出乎意料、最驚喜的時刻"]},{"idiom":"break a leg","emoji":"🎭🍀","literalZh":"字面上是「祝你摔斷一條腿」，聽起來像壞話。","meaningZh":"祝別人好運、演出或表現順利成功（劇場界的祝福語）。","whenZh":"當朋友要上台表演、面試或比賽前，你想幫他打氣時。","exampleEn":"You're on stage next — break a leg!","exampleZh":"下一個就換你上台了，祝你演出成功！","zhSaying":"馬到成功／旗開得勝","distractorsZh":["叫別人小心點、別受傷","警告對方會有大麻煩了"]},{"idiom":"jump on the bandwagon","emoji":"🎪🚃🏃","literalZh":"遊行時大家看到熱鬧的花車經過，就一窩蜂跳上去跟著走。","meaningZh":"跟風、趕流行，加入正當紅或大家都在做的事。","whenZh":"當某件事變得很流行，很多人便一窩蜂跟著做時。","exampleEn":"Once the show got popular, everyone jumped on the bandwagon.","exampleZh":"那部劇一紅，大家就都一窩蜂跟著追了。","zhSaying":"跟風／隨波逐流","distractorsZh":["搶先一步、成為第一個開創者","半途放棄、中途退出"]},{"idiom":"cross that bridge when you get to it","emoji":"🌉🚶","literalZh":"還沒走到那座橋邊，就先別煩惱要怎麼過橋。","meaningZh":"等問題真的發生時再去處理，現在不必為還沒發生的事煩惱。","whenZh":"當有人擔心一個還很遙遠、也許不會發生的問題時。","exampleEn":"We don't know if it'll rain, so let's cross that bridge when we get to it.","exampleZh":"還不知道會不會下雨，等真的下了再說吧。","zhSaying":"船到橋頭自然直／到時候再說","distractorsZh":["勇敢地面對眼前的困難、不逃避","凡事都要事先做好萬全準備"]},{"idiom":"pull someone's leg","emoji":"🦵😜","literalZh":"字面上像是伸手去拉別人的腿、跟他鬧著玩。","meaningZh":"開某人的玩笑、逗弄他，說一些不是真的的話唬他。","whenZh":"當你半開玩笑地騙朋友、看他上不上當時。","exampleEn":"Relax, I'm just pulling your leg — you didn't really fail.","exampleZh":"別緊張，我只是跟你開玩笑，你才沒有真的不及格。","zhSaying":"開玩笑／逗人玩","distractorsZh":["扯別人後腿、阻礙他人成功","催促、拖著某人趕快行動"]}];
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; } return a; }
+
+  function showScreen(n){
+    $('screen-menu').classList.toggle('active', n==='menu');
+    $('screen-play').classList.toggle('active', n==='play');
+    try{ window.scrollTo(0,0); }catch(e){}
+  }
+  function renderMenu(){
+    $('mode-list').innerHTML =
+      '<button type="button" class="id-mode" data-m="learn"><span class="id-mode-emoji" aria-hidden="true">📖</span>'+
+        '<span><span class="id-mode-title">看圖學（逐張翻卡）</span><br><span class="id-mode-sub">先看字面畫面，再翻出真正的意思、例句——'+IDIOMS.length+' 個慣用語</span></span></button>'+
+      '<button type="button" class="id-mode" data-m="quiz"><span class="id-mode-emoji" aria-hidden="true">🎯</span>'+
+        '<span><span class="id-mode-title">猜意思（三選一）</span><br><span class="id-mode-sub">看慣用語和字面畫面，猜猜它真正的意思</span></span></button>';
+    Array.prototype.forEach.call($('mode-list').querySelectorAll('.id-mode'), function(b){
+      b.addEventListener('click', function(){ startMode(b.getAttribute('data-m')); });
+    });
+  }
+
+  var mode=null, queue=[], idx=0, correct=0, answered=false, revealed=false;
+  function startMode(m){
+    mode=m; queue=shuffle(IDIOMS); idx=0; correct=0;
+    showScreen('play');
+    $('play-title').textContent = (m==='learn'?'看圖學 📖':'猜意思 🎯');
+    (m==='learn'?renderLearn:renderQuiz)();
+  }
+  function head(o){
+    return '<div class="id-emoji" aria-hidden="true">'+o.emoji+'</div>'+
+      '<div class="id-idiom">'+esc(o.idiom)+'</div>'+
+      '<div class="id-literal"><span class="lab">字面</span>'+esc(o.literalZh)+'</div>';
+  }
+  function revealBody(o){
+    var zh = o.zhSaying ? '<div class="zhsay">🔗 中文也有類似說法：'+esc(o.zhSaying)+'</div>' : '';
+    return '<div><span class="lab">真正的意思：</span>'+esc(o.meaningZh)+'</div>'+
+      '<div style="margin-top:6px"><span class="lab">什麼時候用：</span>'+esc(o.whenZh)+'</div>'+
+      '<span class="ex">"'+esc(o.exampleEn)+'"<br>'+esc(o.exampleZh)+'</span>'+zh;
+  }
+  // 📖 看圖學
+  function renderLearn(){
+    revealed=false; var o=queue[idx];
+    $('stage').innerHTML =
+      '<div class="id-card">'+
+        '<div class="id-bar"><span>第 '+(idx+1)+' / '+queue.length+' 個</span><span>📖 看圖學</span></div>'+
+        head(o)+
+        '<div class="id-reveal" id="reveal" aria-live="polite">'+revealBody(o)+'</div>'+
+        '<div class="id-actions">'+
+          '<button type="button" class="btn btn-primary" id="btn-flip">這是什麼意思？ 👀</button>'+
+          '<button type="button" class="btn" id="btn-next" style="display:none"></button>'+
+        '</div>'+
+      '</div>';
+    $('btn-flip').onclick=function(){
+      $('reveal').classList.add('show'); revealed=true;
+      $('btn-flip').style.display='none';
+      var nb=$('btn-next'); nb.style.display='block';
+      nb.textContent = (idx>=queue.length-1)?'學完了 🎉':'下一個 ➡️';
+      nb.onclick=function(){ if(idx>=queue.length-1){ finishLearn(); } else { idx++; renderLearn(); } };
+      try{ window.Game && Game.pingActive && Game.pingActive(); }catch(e){}
+      try{ nb.focus(); }catch(e){}
+    };
+    try{ $('btn-flip').focus(); }catch(e){}
+  }
+  function finishLearn(){
+    $('stage').innerHTML='<div class="id-card" style="text-align:center">'+
+      '<div style="font-size:44px" aria-hidden="true">🎉</div>'+
+      '<h2 class="id-title" style="margin:var(--s2) 0">看完 '+queue.length+' 個慣用語了！</h2>'+
+      '<div class="id-reveal show" style="text-align:left">下次聽到、看到這些慣用語，先想想它的「字面畫面」，意思就會浮出來。試試「猜意思」模式，把它們記得更牢！</div>'+
+      '<div class="id-actions"><button type="button" class="btn btn-primary" id="btn-quiz">去玩「猜意思」🎯</button>'+
+        '<button type="button" class="btn" id="btn-menu">回選單</button></div></div>';
+    $('btn-quiz').onclick=function(){ startMode('quiz'); };
+    $('btn-menu').onclick=function(){ showScreen('menu'); };
+  }
+  // 🎯 猜意思
+  function renderQuiz(){
+    answered=false; var o=queue[idx];
+    var opts=shuffle([{t:o.meaningZh,ok:true}].concat(o.distractorsZh.map(function(d){return {t:d,ok:false};})));
+    var optHtml=opts.map(function(x){ return '<button type="button" class="id-opt" data-ok="'+(x.ok?1:0)+'">'+esc(x.t)+'</button>'; }).join('');
+    $('stage').innerHTML=
+      '<div class="id-card">'+
+        '<div class="id-bar"><span>第 '+(idx+1)+' / '+queue.length+' 題</span><span>答對 '+correct+' 🎯</span></div>'+
+        head(o)+
+        '<div style="font-weight:800;color:var(--su-d);margin:var(--s2) 0" id="q">它真正的意思是？</div>'+
+        optHtml+
+        '<div class="id-reveal" id="reveal" aria-live="polite"></div>'+
+        '<div class="id-actions" id="acts" style="display:none"><button type="button" class="btn btn-primary" id="btn-next"></button></div>'+
+      '</div>';
+    var os=$('stage').querySelectorAll('.id-opt');
+    Array.prototype.forEach.call(os, function(b){ b.addEventListener('click', function(){ answerQuiz(b, os, o); }); });
+    try{ $('q').setAttribute('tabindex','-1'); $('q').focus(); }catch(e){}
+  }
+  function answerQuiz(btn, os, o){
+    if(answered) return; answered=true;
+    var ok=(btn.getAttribute('data-ok')==='1');
+    if(ok) correct++;
+    try{ window.Game && Game.pingActive && Game.pingActive(); }catch(e){}
+    Array.prototype.forEach.call(os, function(b){
+      if(b.getAttribute('data-ok')==='1') b.classList.add('correct');
+      else if(b===btn) b.classList.add('wrong');
+      b.disabled=true;
+    });
+    var rev=$('reveal'); rev.innerHTML=(ok?'答對了！👍 ':'沒關係～')+revealBody(o); rev.classList.add('show');
+    var acts=$('acts'); acts.style.display='flex';
+    var next=$('btn-next'); var last=(idx>=queue.length-1);
+    next.textContent=last?'看成績 🎉':'下一題 ➡️';
+    next.onclick=function(){ if(last){ finishQuiz(); } else { idx++; renderQuiz(); } };
+    try{ next.focus(); }catch(e){}
+  }
+  function finishQuiz(){
+    var total=queue.length, pct=Math.round(correct/total*100), emoji,msg;
+    if(pct>=90){ emoji='🏆'; msg='太強了！這些慣用語你幾乎都懂了。'; }
+    else if(pct>=70){ emoji='🌟'; msg='很棒！大部分都猜對了，把猜錯的再看一次會更牢。'; }
+    else if(pct>=50){ emoji='💪'; msg='不錯的開始！回「看圖學」再看一輪，很快就記住了。'; }
+    else { emoji='🌱'; msg='沒關係，先到「看圖學」把字面畫面記起來，再來挑戰一次！'; }
+    $('stage').innerHTML='<div class="id-card" style="text-align:center">'+
+      '<div style="font-size:44px" aria-hidden="true">'+emoji+'</div>'+
+      '<h2 class="id-title" style="margin:var(--s2) 0">這一輪答對 '+correct+' / '+total+' 題</h2>'+
+      '<div class="id-reveal show" style="text-align:left">'+msg+'</div>'+
+      '<div class="id-actions"><button type="button" class="btn btn-primary" id="btn-again">再來一輪 🔄</button>'+
+        '<button type="button" class="btn" id="btn-menu">回選單</button></div></div>';
+    $('btn-again').onclick=function(){ startMode('quiz'); };
+    $('btn-menu').onclick=function(){ showScreen('menu'); };
+  }
+  document.addEventListener('keydown', function(e){
+    if(!$('screen-play').classList.contains('active')) return;
+    if(e.key==='Enter'){ if(e.target && e.target.tagName==='BUTTON') return;
+      var nb=$('btn-next'); if(nb && nb.style.display!=='none'){ e.preventDefault(); nb.click(); } }
+  });
+  $('btn-back').addEventListener('click', function(){ showScreen('menu'); });
+  showScreen('menu'); renderMenu();
+})();
+</script>
+</body>
+</html>
