@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>向量與變換・數學的力量 ➡️</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<link rel="stylesheet" href="concept.css">
+<script src="game_core.js"></script>
+<style>:root{ --su:#6d28d9; --su-tint:rgba(109,40,217,0.14); }
+  :root[data-theme="dark"]{ --su:#c4b5fd; --su-tint:rgba(196,181,253,0.16); }</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">向量與變換・數學的力量 ➡️</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="cn-screen active cn-wrap">
+    <div class="cn-topbar"><span class="cn-title">向量與變換・數學的力量 ➡️</span></div>
+    <div class="cn-hello"><span class="cn-mascot" aria-hidden="true">➡️</span>
+      <div><div class="cn-htext" id="hello">很多科技（遊戲、導航、修圖、電腦）背後，都是同一套數學。用格子和箭頭，先看懂向量與變換。</div>
+      <div class="cn-hsub">每個觀念都是「教一小段 → 馬上練習」，慢慢來。這裡不背公式，重點是「看懂它在做什麼、用在哪」。</div></div></div>
+    <div class="cn-lessons" id="lesson-list"></div>
+    <a class="cn-nextup" href="math_advanced.html" style="display:flex;align-items:center;gap:12px;margin-top:16px;padding:14px 16px;background:var(--su-tint);border:1px solid var(--card-border);border-radius:14px;text-decoration:none;color:var(--ink);font-weight:700;min-height:48px;line-height:1.5"><span style="font-size:26px;flex:none" aria-hidden="true">🚀</span><span>想要更多數學挑戰嗎？到「進階數學實驗室」繼續探索 →</span></a>
+    <p class="cn-note">這裡是「先學觀念」的教學小旅程，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
+  </section>
+  <section id="screen-play" class="cn-screen cn-wrap">
+    <div class="cn-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="cn-title" id="play-title">觀念</span></div>
+    <div class="cn-progress" id="prog" aria-hidden="true"></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+// ---- 向量／線性代數直覺專用 SVG（文字 currentColor＝--ink；結構線 currentColor 主題自適應）----
+// 座標系：格子 0..6，左下為原點；grid point (x,y) → 螢幕 (OX+x*C, OY-y*C)
+var OX=26, OY=182, C=25;
+function gx(x){ return OX + x*C; }
+function gy(y){ return OY - y*C; }
+function gridBase(max){
+  max = max || 6;
+  var s='';
+  for(var i=0;i<=max;i++){
+    // 直線與橫線（淡）
+    s+='<line x1="'+gx(i)+'" y1="'+gy(0)+'" x2="'+gx(i)+'" y2="'+gy(max)+'" stroke="currentColor" stroke-opacity="0.18" stroke-width="1"/>';
+    s+='<line x1="'+gx(0)+'" y1="'+gy(i)+'" x2="'+gx(max)+'" y2="'+gy(i)+'" stroke="currentColor" stroke-opacity="0.18" stroke-width="1"/>';
+  }
+  // 軸（深一點）
+  s+='<line x1="'+gx(0)+'" y1="'+gy(0)+'" x2="'+gx(max)+'" y2="'+gy(0)+'" stroke="currentColor" stroke-opacity="0.55" stroke-width="2"/>';
+  s+='<line x1="'+gx(0)+'" y1="'+gy(0)+'" x2="'+gx(0)+'" y2="'+gy(max)+'" stroke="currentColor" stroke-opacity="0.55" stroke-width="2"/>';
+  return s;
+}
+function arrow(x1,y1,x2,y2,color,label){
+  var X1=gx(x1),Y1=gy(y1),X2=gx(x2),Y2=gy(y2);
+  var ang=Math.atan2(Y2-Y1, X2-X1);
+  var a1x=X2-10*Math.cos(ang-0.5), a1y=Y2-10*Math.sin(ang-0.5);
+  var a2x=X2-10*Math.cos(ang+0.5), a2y=Y2-10*Math.sin(ang+0.5);
+  var s='<line x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" stroke="'+color+'" stroke-width="3.5"/>';
+  s+='<polygon points="'+X2+','+Y2+' '+a1x.toFixed(1)+','+a1y.toFixed(1)+' '+a2x.toFixed(1)+','+a2y.toFixed(1)+'" fill="'+color+'"/>';
+  if(label){ s+='<text x="'+((X1+X2)/2+8)+'" y="'+((Y1+Y2)/2-6)+'" font-size="12" font-weight="800" fill="'+color+'">'+label+'</text>'; }
+  return s;
+}
+function svgWrap(inner,label,max){ return '<svg viewBox="0 0 210 200" role="img" aria-label="'+label+'">'+gridBase(max)+inner+'</svg>'; }
+// 單一向量 (3,2)
+function vecSingle(){ return svgWrap(arrow(0,0,3,2,'#6d28d9','(3, 2)'),'格子上從原點指向右3上2的向量箭頭 (3,2)'); }
+// 兩個不同向量 (3,2) 與 (2,3)
+function vecTwo(){ return svgWrap(arrow(0,0,3,2,'#6d28d9','(3,2)')+arrow(0,0,2,3,'#0891b2','(2,3)'),'比較兩個不同向量 (3,2) 與 (2,3)'); }
+// 向量相加 接力：(2,1) 再 (1,3)，虛線合成 (3,4)
+function vecAdd(){
+  var s=arrow(0,0,2,1,'#6d28d9','(2,1)');
+  s+=arrow(2,1,3,4,'#0891b2','(1,3)');
+  s+='<line x1="'+gx(0)+'" y1="'+gy(0)+'" x2="'+gx(3)+'" y2="'+gy(4)+'" stroke="#e11d48" stroke-width="2.5" stroke-dasharray="5 4"/>';
+  s+='<text x="'+(gx(3)-2)+'" y="'+(gy(4)-6)+'" font-size="12" font-weight="800" fill="#e11d48">到 (3,4)</text>';
+  return svgWrap(s,'先走(2,1)再走(1,3)，合起來到(3,4)');
+}
+// 交換律：兩條路徑（平行四邊形）都到 (3,4)
+function vecComm(){
+  var s=arrow(0,0,2,1,'#6d28d9'); s+=arrow(2,1,3,4,'#0891b2');
+  s+=arrow(0,0,1,3,'#0891b2'); s+=arrow(1,3,3,4,'#6d28d9');
+  s+='<circle cx="'+gx(3)+'" cy="'+gy(4)+'" r="4" fill="#e11d48"/><text x="'+(gx(3)-2)+'" y="'+(gy(4)-8)+'" font-size="11" font-weight="800" fill="#e11d48">都到 (3,4)</text>';
+  return svgWrap(s,'先走哪一段都到同一點，向量相加可交換');
+}
+// 平移一個三角形（虛線=原、實線=平移後，整個往右3上1）
+function triAt(pts,color,dash){
+  var d='M'+gx(pts[0][0])+' '+gy(pts[0][1])+' L'+gx(pts[1][0])+' '+gy(pts[1][1])+' L'+gx(pts[2][0])+' '+gy(pts[2][1])+' Z';
+  return '<path d="'+d+'" fill="none" stroke="'+color+'" stroke-width="2.5"'+(dash?' stroke-dasharray="5 4"':'')+'/>';
+}
+function transTranslate(){
+  var base=[[0,0],[2,0],[0,2]];
+  var moved=base.map(function(p){return [p[0]+3,p[1]+1];});
+  var s=triAt(base,'currentColor',true)+triAt(moved,'#6d28d9',false);
+  s+=arrow(0,0,3,1,'#e11d48');
+  s+='<text x="'+gx(1)+'" y="'+(gy(0)+16)+'" font-size="10.5" font-weight="700" fill="currentColor">原本</text>';
+  s+='<text x="'+gx(4)+'" y="'+(gy(1)+16)+'" font-size="10.5" font-weight="700" fill="#6d28d9">平移後</text>';
+  return svgWrap(s,'把整個三角形每個點都往右3上1移動，形狀大小不變');
+}
+function polySVG(pts,color,dash){ var d='M'+gx(pts[0][0])+' '+gy(pts[0][1]); for(var i=1;i<pts.length;i++)d+=' L'+gx(pts[i][0])+' '+gy(pts[i][1]); d+=' Z'; return '<path d="'+d+'" fill="none" stroke="'+color+'" stroke-width="2.5"'+(dash?' stroke-dasharray="5 4"':'')+'/>'; }
+// 旋轉：三角形繞固定點 (2,2) 逆時針轉 90 度（虛線=原、實線=轉後）
+function transRotate(){
+  var base=[[2,2],[4,2],[2,3]];
+  var rot=[[2,2],[2,4],[1,2]]; // 繞 (2,2) 逆時針 90°：相對(dx,dy)→(-dy,dx)
+  var s=polySVG(base,'currentColor',true)+polySVG(rot,'#6d28d9',false);
+  s+='<circle cx="'+gx(2)+'" cy="'+gy(2)+'" r="3.5" fill="#e11d48"/><text x="'+(gx(2)+6)+'" y="'+(gy(2)+14)+'" font-size="10" font-weight="700" fill="#e11d48">固定點</text>';
+  // 旋轉方向弧線
+  s+='<path d="M'+gx(4)+' '+gy(2)+' A '+(2*C)+' '+(2*C)+' 0 0 0 '+gx(2)+' '+gy(4)+'" fill="none" stroke="#0891b2" stroke-width="2" stroke-dasharray="3 3"/>';
+  s+='<text x="'+gx(3.3)+'" y="'+gy(3.6)+'" font-size="10.5" font-weight="800" fill="#6d28d9">轉90°</text>';
+  return svgWrap(s,'三角形繞固定點逆時針轉90度，形狀大小不變、方向改變');
+}
+// 縮放：小正方形→以「中心 (1.5,1.5)」放大2倍（中心不動，各邊長乘2）
+function transScale(){
+  var small=[[1,1],[2,1],[2,2],[1,2]];        // 中心 (1.5,1.5)，邊長1
+  var big=[[0.5,0.5],[2.5,0.5],[2.5,2.5],[0.5,2.5]]; // 同中心 (1.5,1.5)，邊長2
+  var s=polySVG(small,'currentColor',true)+polySVG(big,'#6d28d9',false);
+  s+='<circle cx="'+gx(1.5)+'" cy="'+gy(1.5)+'" r="3" fill="#e11d48"/>';
+  s+='<text x="'+gx(1.5)+'" y="'+(gy(1.5)+16)+'" text-anchor="middle" font-size="9.5" font-weight="700" fill="#e11d48">中心</text>';
+  s+='<text x="'+gx(2.7)+'" y="'+gy(2.9)+'" font-size="10.5" font-weight="800" fill="#6d28d9">放大2倍</text>';
+  return svgWrap(s,'正方形以中心放大兩倍：中心不動，每個點離中心的距離變兩倍，形狀比例不變');
+}
+// 矩陣＝數字表格
+function matrixNums(){
+  var s='<svg viewBox="0 0 210 150" role="img" aria-label="數字排成整齊的表格就是矩陣">';
+  var vals=[[3,1,4],[1,5,9]];
+  var x0=45,y0=30,cw=40,ch=40;
+  s+='<rect x="'+(x0-8)+'" y="'+(y0-8)+'" width="'+(3*cw+16)+'" height="'+(2*ch+16)+'" rx="8" fill="none" stroke="currentColor" stroke-opacity="0.6" stroke-width="2.5"/>';
+  for(var r=0;r<2;r++)for(var c=0;c<3;c++){
+    s+='<text x="'+(x0+c*cw+cw/2)+'" y="'+(y0+r*ch+ch/2+6)+'" text-anchor="middle" font-size="20" font-weight="800" fill="currentColor">'+vals[r][c]+'</text>';
+  }
+  s+='<text x="105" y="140" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">2 列 × 3 行 的表格＝矩陣</text>';
+  return s+'</svg>';
+}
+// 像素圖＝顏色矩陣（用格子排成一顆愛心）
+function matrixPixels(){
+  var grid=[
+    [0,1,0,1,0],
+    [1,1,1,1,1],
+    [1,1,1,1,1],
+    [0,1,1,1,0],
+    [0,0,1,0,0]
+  ];
+  var s='<svg viewBox="0 0 210 175" role="img" aria-label="一格格像素（顏色矩陣）排成一顆愛心">';
+  var x0=55,y0=12,cs=22;
+  for(var r=0;r<grid.length;r++)for(var c=0;c<grid[0].length;c++){
+    var on=grid[r][c]===1;
+    s+='<rect x="'+(x0+c*cs)+'" y="'+(y0+r*cs)+'" width="'+(cs-2)+'" height="'+(cs-2)+'" rx="2" fill="'+(on?'#e11d48':'none')+'" stroke="currentColor" stroke-opacity="0.35" stroke-width="1"/>';
+  }
+  s+='<text x="105" y="168" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">每一格存一個顏色，一大片格子就組成一張圖</text>';
+  return s+'</svg>';
+}
+// 用在哪：小圖示帶文字
+function usesScene(){
+  var s='<svg viewBox="0 0 300 120" role="img" aria-label="向量與變換用在遊戲、導航、修圖、試算表">';
+  var items=[['🎮','遊戲移動'],['🧭','地圖導航'],['🖼️','修圖旋轉'],['📊','試算表']];
+  items.forEach(function(it,i){ var x=40+i*72;
+    s+='<text x="'+x+'" y="52" text-anchor="middle" font-size="30">'+it[0]+'</text>';
+    s+='<text x="'+x+'" y="82" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">'+it[1]+'</text>';
+  });
+  s+='<text x="150" y="108" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">背後都用到向量、變換或矩陣</text>';
+  return s+'</svg>';
+}
+
+window.CONCEPT = {
+  progKey:'linear_algebra_concepts_v1', practiceHref:'math_advanced.html',
+  lessons:[
+   { id:'vector', name:'向量：帶方向的移動', emoji:'➡️', color:'#6d28d9', sub:'用「往右幾格、往上幾格」記住移動', done:'記得：向量＝方向＋走多遠；在格子上用（右, 上）兩個數字表示，例如 (3, 2)＝往右3、往上2；負數是反方向。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'向量就是「怎麼走過去」',svg:vecSingle(),text:'<b>向量</b>就是「怎麼從一個地方走到另一個地方」——它同時記住<b>方向</b>和<b>走多遠</b>。在格子上，我們用<b>（往右幾格, 往上幾格）</b>來寫。圖中的箭頭是 <b>(3, 2)</b>：往右 3 格、往上 2 格。'},
+      {type:'teach',kicker:'方向與長度',title:'方向不同，就是不同的向量',svg:vecTwo(),text:'箭頭<b>指的方向</b>＝移動方向，箭頭<b>越長</b>＝走得越遠。<b>(3, 2)</b> 和 <b>(2, 3)</b> 走的路不一樣，是<b>不同</b>的向量。數字是<b>負的</b>代表<b>反方向</b>：(−2, 0) 就是往<b>左</b> 2 格。'},
+      {type:'quiz',kicker:'換你試試',title:'「往右 4 格、往上 1 格」怎麼寫？',options:['(4, 1)','(1, 4)','(4, −1)','(5, 0)'],answer:0,why:'向量先寫左右（右為正），再寫上下（上為正）：往右4、往上1 → (4, 1)。'},
+      {type:'quiz',kicker:'想一想',title:'向量 (0, −3) 代表怎麼移動？',options:['往下 3 格','往上 3 格','往右 3 格','原地不動'],answer:0,why:'第一個數是左右（0＝不左右移），第二個數是上下，負的代表往下，所以是往下 3 格。'}
+     ]},
+   { id:'vecadd', name:'向量相加：接力走', emoji:'➕', color:'#0891b2', sub:'先走一段再走一段，數字分開加', done:'記得：向量相加＝先走第一段再走第二段；把左右加左右、上下加上下；先走哪一段結果都一樣。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'相加就像接力走',svg:vecAdd(),text:'兩個向量<b>相加</b>，就像<b>先走第一段，接著走第二段</b>。算法很簡單：<b>左右加左右、上下加上下</b>。(2, 1) + (1, 3)＝(2+1, 1+3)＝<b>(3, 4)</b>。紅色虛線就是你從起點到終點的合成向量。'},
+      {type:'teach',kicker:'順序沒關係',title:'先走哪一段都到同一點',svg:vecComm(),text:'不管你<b>先走 (2,1) 還是先走 (1,3)</b>，最後都會到<b>同一個地方 (3,4)</b>。兩條路剛好圍成一個平行四邊形。所以向量相加可以<b>交換順序</b>。'},
+      {type:'quiz',kicker:'換你試試',title:'(3, 1) + (1, 2) ＝ ？',options:['(4, 3)','(3, 2)','(4, 2)','(2, 3)'],answer:0,why:'左右：3+1＝4；上下：1+2＝3。所以是 (4, 3)。'},
+      {type:'quiz',kicker:'想一想',title:'先往右走 (5, 0)，再往上走 (0, 2)，離出發點的向量是？',options:['(5, 2)','(0, 2)','(5, 0)','(7, 0)'],answer:0,why:'(5, 0) + (0, 2)＝(5+0, 0+2)＝(5, 2)：往右 5、往上 2。'}
+     ]},
+   { id:'transform', name:'圖形變換：平移·旋轉·縮放', emoji:'🔄', color:'#0ea5e9', sub:'讓整個圖形照同一個規則變', done:'記得：平移＝整個圖形照同一向量移動（形狀大小不變）；旋轉＝繞一點轉角度；縮放＝每點離中心的距離乘同一倍數（比例不變）。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'平移：整個圖形一起搬家',svg:transTranslate(),text:'<b>平移</b>就是把圖形的<b>每一個點都照同一個向量移動</b>。圖中的三角形整個往<b>右 3、上 1</b>（紅色箭頭），<b>形狀和大小都沒變</b>，只是換了位置。'},
+      {type:'teach',kicker:'轉一轉',title:'旋轉：繞一個點轉',svg:transRotate(),text:'<b>旋轉</b>＝讓圖形<b>繞著一個固定點轉一個角度</b>。圖中的三角形繞紅點<b>逆時針轉了 90°</b>：<b>形狀和大小都不變</b>，只是<b>方向</b>轉了。'},
+      {type:'teach',kicker:'變大變小',title:'縮放：等比例變大或變小',svg:transScale(),text:'<b>縮放</b>＝選一個<b>固定的中心點</b>，讓每個點<b>離中心的距離都乘同一個倍數</b>。乘 2 就變兩倍大、乘一半就變小；因為每個方向都一樣，<b>比例不變</b>（正方形還是正方形）。'},
+      {type:'quiz',kicker:'換你試試',title:'把一個三角形「平移」時，下面哪一項會改變？',svg:transTranslate(),options:['它的位置','它的形狀','它的大小','邊的長度'],answer:0,why:'平移只改變位置；形狀、大小、邊長都保持不變。'},
+      {type:'quiz',kicker:'想一想',title:'把一個正方形以中心「放大 2 倍」，會怎樣？',options:['每個點離中心的距離變 2 倍，還是正方形，只是變大','變成長方形','位置改變但大小不變','變成三角形'],answer:0,why:'縮放讓每個點離中心的距離乘 2，比例不變，所以仍是正方形、只是變大。'}
+     ]},
+   { id:'matrix', name:'表格就是矩陣', emoji:'🔢', color:'#e11d48', sub:'把數字或顏色排成整齊的列與行', done:'記得：矩陣＝把數字排成整齊的「幾列幾行」表格；數位圖片就是一大片像素（顏色）排成的矩陣。',
+     steps:[
+      {type:'teach',kicker:'先想一想',title:'把數字排整齊，就是矩陣',svg:matrixNums(),text:'把數字排成整齊的<b>格子表格</b>（幾<b>列</b>、幾<b>行</b>），就叫做<b>矩陣</b>。生活裡的<b>成績表、課表、座位表</b>其實都是矩陣——把資料排好，一眼就看得懂。'},
+      {type:'teach',kicker:'圖片也是矩陣',title:'一格一格的像素',svg:matrixPixels(),text:'電腦裡的<b>圖片</b>也是矩陣：每個小格子（<b>像素</b>）存一個<b>顏色</b>，一大片格子就<b>組成一張圖</b>。把圖片放到很大，就會看到一格一格的像素。'},
+      {type:'quiz',kicker:'換你試試',title:'數位照片放到很大時看到的一格一格小方塊叫？',svg:matrixPixels(),options:['像素（pixel）','向量','分數','角度'],answer:0,why:'圖片由一格格「像素」排成，每個像素存一個顏色，就是顏色矩陣裡的一格。'},
+      {type:'quiz',kicker:'想一想',title:'「矩陣」最接近下面哪一個？',options:['把數字或資料排成整齊的表格（列與行）','一條會彎的線','一個角度','一種味道'],answer:0,why:'矩陣就是把數字／資料排成整齊的列與行，像表格一樣。'}
+     ]},
+   { id:'uses', name:'這些數學用在哪？', emoji:'✨', color:'#16a34a', sub:'遊戲、導航、修圖、電腦背後的共同語言', done:'記得：向量用在移動與導航、變換用在旋轉縮放、矩陣是圖片與試算表；加上你學過的輾轉相除、二進位、餘數，都是「看穿問題背後數學」的好工具。',
+     steps:[
+      {type:'teach',kicker:'向量在哪裡',title:'移動、導航、動畫',svg:usesScene(),text:'電動遊戲裡角色「<b>往哪走、走多快</b>」用的是向量；地圖<b>導航</b>算「怎麼從這裡到那裡」也是向量；<b>動畫</b>讓角色平順地移動，一樣靠向量。'},
+      {type:'teach',kicker:'變換與矩陣在哪裡',title:'修圖、螢幕、試算表',svg:matrixPixels(),text:'手機<b>修圖</b>的「旋轉、放大」就是<b>圖形變換</b>；你看到的<b>照片和螢幕畫面</b>都是<b>像素矩陣</b>；<b>試算表</b>（像 Excel）就是一張大表格，也是矩陣。'},
+      {type:'teach',kicker:'串起來',title:'你已經有一整套工具了',svg:'',text:'你先前學過的也都很有用：<b>輾轉相除法</b>幫我們<b>約分</b>；<b>二進位</b>是<b>電腦存資料</b>的方式；<b>餘數（模運算）</b>用在<b>時鐘</b>和<b>檢查碼</b>（像條碼、身分證的最後一碼）。這些「<b>看穿問題背後的數學</b>」的本領，不管你將來走哪一行，都用得到。'},
+      {type:'quiz',kicker:'換你試試',title:'手機把照片「旋轉 90 度、再放大」，用到的是哪種數學概念？',options:['圖形變換','質數分解','押韻','時態'],answer:0,why:'旋轉和放大都是「圖形變換」——讓圖片的每個點照同一個規則改變。'},
+      {type:'quiz',kicker:'想一想',title:'為什麼學這些數學直覺很有用？',options:['因為它們是遊戲、導航、修圖、電腦存資料背後的共同語言','因為考試一定會考這幾題','因為可以背最多公式','因為數字越大就越厲害'],answer:0,why:'向量、變換、矩陣、數論是很多科技共同的基礎；看懂它們，就能理解並運用身邊的科技。'}
+     ]}
+  ]
+};
+</script>
+<script src="concept_engine.js"></script>
+</body>
+</html>
