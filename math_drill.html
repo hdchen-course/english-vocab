@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>數理腦・綜合特訓 🧠</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<!--
+  數理腦・綜合特訓：把「數論 / 演算法思維 / 向量與變換(線代直覺)」的題目打散、交錯出題，可反覆重來。
+  純本地練習模組（data-game-hud="off"、自有 key math_drill_v1、不呼叫 Game.recordAnswer/award），
+  不計入主角色 XP／等級（與思考挑戰頁一致），只呼叫 pingActive 續接每日學習連續紀錄。全繁體中文。
+  正確性第一；先在觀念頁學過再來特訓（數論觀念/數字魔法師、電腦與網路的演算法、向量與變換）。
+-->
+<style>
+  :root{ --su:#4338ca; --su-d:#3730a3; --su-tint:rgba(67,56,202,0.12); }
+  :root[data-theme="dark"]{ --su:#a5b4fc; --su-d:#c7d2fe; --su-tint:rgba(165,180,252,0.16); }
+  .md-wrap{ max-width: var(--content-max); margin-inline:auto; }
+  .md-screen{ display:none; } .md-screen.active{ display:block; }
+  .md-topbar{ display:flex; align-items:center; gap:var(--s3); margin-bottom:var(--s4); }
+  .md-title{ font-size:var(--fs-h2); font-weight:800; color:var(--su-d); }
+  .md-hello{ display:flex; align-items:center; gap:var(--s3); padding:var(--s4); background:var(--su-tint);
+    border:1px solid var(--card-border); border-radius:var(--r-lg); margin-bottom:var(--s5); }
+  .md-hello .md-mascot{ font-size:44px; flex:none; line-height:1; }
+  .md-htext{ font-size:var(--fs-body); font-weight:700; color:var(--ink); }
+  .md-hsub{ font-size:var(--fs-small); color:var(--ink-soft); font-weight:600; margin-top:2px; }
+  .md-teach{ background:var(--card); border:1px solid var(--card-border); border-radius:var(--r-lg); box-shadow:var(--shadow-sm); padding:var(--s5) var(--s4); }
+  .md-teach h2{ font-size:var(--fs-h2); font-weight:800; color:var(--su-d); text-align:center; margin:var(--s2) 0 var(--s4); }
+  .md-t-emoji{ font-size:46px; text-align:center; }
+  .md-block{ margin-bottom:var(--s4); padding:var(--s3) var(--s4); border-radius:var(--r-md); border-left:4px solid var(--su); background:var(--su-tint); }
+  .md-block-text{ font-size:var(--fs-body); font-weight:600; color:var(--ink); line-height:1.7; }
+  .md-len-grid{ display:flex; flex-direction:column; gap:var(--s3); margin-top:var(--s4); }
+  .md-len{ display:flex; align-items:center; gap:var(--s3); width:100%; text-align:left; padding:var(--s4);
+    min-height:var(--tap-min); border:2px solid var(--card-border); border-radius:var(--r-md);
+    background:var(--card); color:var(--ink); font-family:var(--font); cursor:pointer; }
+  .md-len:hover{ border-color:var(--su); }
+  .md-len .md-len-emoji{ font-size:26px; flex:none; }
+  .md-len .md-len-title{ font-size:var(--fs-body); font-weight:800; }
+  .md-len .md-len-sub{ font-size:var(--fs-small); font-weight:600; color:var(--ink-soft); }
+  .md-rv-bar{ display:flex; align-items:center; gap:var(--s3); margin-bottom:var(--s3); }
+  .md-rv-track{ flex:1; height:8px; border-radius:999px; background:var(--card-border); overflow:hidden; }
+  .md-rv-fill{ height:100%; background:var(--su); border-radius:999px; transition:width .25s ease; }
+  .md-rv-score{ font-size:var(--fs-small); font-weight:800; color:var(--su-d); flex:none; white-space:nowrap; }
+  .md-tag{ display:inline-block; font-size:var(--fs-small); font-weight:800; color:var(--su-d);
+    background:var(--su-tint); border-radius:999px; padding:3px 12px; margin-bottom:var(--s2); }
+  .md-q{ font-size:var(--fs-body); font-weight:700; color:var(--ink); line-height:1.6; margin-bottom:var(--s3); }
+  .md-opt{ display:block; width:100%; text-align:left; margin-bottom:var(--s2); padding:14px var(--s4);
+    min-height:var(--tap-min); border:2px solid var(--card-border); border-radius:var(--r-md);
+    background:var(--card); color:var(--ink); font-family:var(--font); font-size:var(--fs-body); font-weight:600; cursor:pointer; }
+  .md-opt:hover{ border-color:var(--su); }
+  .md-opt.correct{ border-color:var(--c-correct); background:var(--tint-english); }
+  .md-opt.wrong{ border-color:var(--c-wrong); background:rgba(255,118,117,0.12); }
+  .md-opt.correct::after{ content:' ✓'; font-weight:800; }
+  .md-opt.wrong::after{ content:' ✗'; font-weight:800; }
+  .md-reveal{ margin-top:var(--s3); padding:var(--s3) var(--s4); background:var(--su-tint); border-radius:var(--r-md);
+    font-size:var(--fs-body); font-weight:700; color:var(--ink); line-height:1.6; display:none; }
+  .md-reveal.show{ display:block; }
+  .md-actions{ margin-top:var(--s4); display:flex; gap:var(--s3); }
+  .md-actions .btn{ flex:1; }
+  .md-note{ text-align:center; color:var(--ink-soft); font-size:var(--fs-small); margin-top:var(--s5); font-weight:600; max-width:34em; margin-inline:auto; }
+</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">數理腦・綜合特訓 🧠</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="md-screen active md-wrap">
+    <div class="md-topbar"><span class="md-title">數理腦・綜合特訓 🧠</span></div>
+    <div class="md-hello"><span class="md-mascot" aria-hidden="true">🧠</span>
+      <div><div class="md-htext">把「數論 · 演算法思維 · 向量與變換」的題目打散、交錯出題，一次練到不同腦袋肌肉。</div>
+      <div class="md-hsub">每一輪的題目和順序都不一樣，隨時可以重來。答錯不要緊，看完說明再想一次就好。</div></div></div>
+    <div id="md-stage-menu"></div>
+    <p class="md-note">這是「綜合特訓」練習場，只留在你的裝置上，不影響學習基地的等級或經驗值。還沒學過的觀念，可以先到「數論觀念養成 / 電腦與網路探索 / 向量與變換」學一遍再來特訓。</p>
+  </section>
+  <section id="screen-play" class="md-screen md-wrap">
+    <div class="md-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到特訓選單">←</button><span class="md-title" id="play-title">綜合特訓 🧠</span></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+/* eslint-disable */
+// 題庫（三大類）：先學觀念、這裡強化。整合時由 /tmp/chapter/integrate_drill.js 注入。
+var DRILL = {"number":[{"q":"下列哪一個數是質數？","options":["61","51","57","91"],"answer":0,"explain":"61 只有 1 和它自己兩個因數，所以是質數；51＝3×17、57＝3×19、91＝7×13 都能被分解，是合數。"},{"q":"下列哪一個數是合數？","options":["2","3","29","49"],"answer":3,"explain":"49＝7×7，除了 1 和 49 之外還有因數 7，所以是合數；2、3、29 都只有兩個因數，是質數。"},{"q":"24 一共有幾個因數？","options":["8","6","7","9"],"answer":0,"explain":"24 的因數是 1、2、3、4、6、8、12、24，共 8 個。"},{"q":"下列哪一個數是 7 的倍數？","options":["45","52","56","60"],"answer":2,"explain":"56＝7×8，是 7 的倍數；45、52、60 都不能被 7 整除。"},{"q":"18 與 24 的最大公因數是多少？","options":["6","3","12","2"],"answer":0,"explain":"18＝2×3×3、24＝2×2×2×3，共同的質因數取最少次方是 2×3＝6。"},{"q":"6 與 8 的最小公倍數是多少？","options":["12","16","24","48"],"answer":2,"explain":"6 的倍數 6、12、18、24…與 8 的倍數 8、16、24…最早共同出現的是 24。"},{"q":"60 的質因數分解是下列哪一個？","options":["2×3×5","2²×3×5","2×3²×5","2²×3²×5"],"answer":1,"explain":"60÷2＝30、30÷2＝15、15÷3＝5，所以 60＝2²×3×5。"},{"q":"下列哪一個數能被 3 整除？","options":["124","235","342","517"],"answer":2,"explain":"342 的各位數字和 3＋4＋2＝9 是 3 的倍數，所以能被 3 整除；其餘各數的數字和都不是 3 的倍數。"},{"q":"下列哪一個數能被 9 整除？","options":["451","234","562","673"],"answer":1,"explain":"234 的各位數字和 2＋3＋4＝9 是 9 的倍數，所以能被 9 整除；其餘各數的數字和都不是 9 的倍數。"},{"q":"下列哪一個數能被 5 整除？","options":["122","135","148","156"],"answer":1,"explain":"個位數是 0 或 5 的數才能被 5 整除，135 的個位是 5，所以能被 5 整除。"},{"q":"某燈每 4 秒閃一次，另一盞燈每 10 秒閃一次。兩盞燈同時閃過後，最少再過幾秒會再次同時閃？","options":["14","30","40","20"],"answer":3,"explain":"再次同時閃的時間是 4 與 10 的最小公倍數，4＝2×2、10＝2×5，最小公倍數為 2×2×5＝20 秒。"},{"q":"有 48 顆糖果和 36 塊餅乾，要平分給若干人且都不剩下，最多可以分給幾人？","options":["6","12","4","24"],"answer":1,"explain":"能同時整除 48 與 36 的最大數是它們的最大公因數，48＝2⁴×3、36＝2²×3²，最大公因數為 2²×3＝12。"},{"q":"1 到 20（含 20）之間一共有幾個質數？","options":["8","7","9","10"],"answer":0,"explain":"這個範圍內的質數是 2、3、5、7、11、13、17、19，共 8 個。"},{"q":"下列哪一個數「不是」36 的因數？","options":["4","6","8","9"],"answer":2,"explain":"36÷8＝4.5 不是整數，所以 8 不是 36 的因數；4、6、9 都能整除 36。"},{"q":"72 的質因數分解是下列哪一個？","options":["2²×3³","2³×3","2³×3²","2×3²"],"answer":2,"explain":"72÷2＝36、36÷2＝18、18÷2＝9、9＝3×3，所以 72＝2³×3²。"},{"q":"下列哪一組數互質（最大公因數為 1）？","options":["8 與 12","9 與 16","6 與 15","10 與 25"],"answer":1,"explain":"9＝3² 與 16＝2⁴ 沒有共同的質因數，最大公因數是 1，所以互質；其餘各組的最大公因數分別是 4、3、5。"}],"algo":[{"q":"用輾轉相除法求 18 和 12 的最大公因數,第一步「18 除以 12」的餘數是多少?","options":["6","4","5","7"],"answer":0,"explain":"18 除以 12,商是 1,餘數是 18−12=6,所以第一步的餘數是 6。"},{"q":"用輾轉相除法時,得到一個餘數之後,下一步該怎麼做?","options":["用原本的除數去除這個餘數,再看新的餘數","把兩個數相加後除以 2","立刻停止,把這個餘數當成答案","把餘數乘以 2 再繼續"],"answer":0,"explain":"輾轉相除法的步驟是:每次用「上一步的除數」去除「上一步的餘數」,不斷交換並重複,直到餘數為 0,最後的除數就是最大公因數。"},{"q":"用輾轉相除法求 48 和 36 的最大公因數,結果是多少?","options":["6","12","18","24"],"answer":1,"explain":"48 除以 36 餘 12;再用 36 除以 12,商 3 餘 0。餘數為 0 時,最後的除數 12 就是最大公因數。"},{"q":"用 12 小時制的時鐘算術,現在是 7 點,再過 8 小時是幾點?","options":["2 點","3 點","4 點","5 點"],"answer":1,"explain":"7+8=15,超過 12 就減掉 12:15−12=3,所以是 3 點。這相當於 15 除以 12 的餘數是 3。"},{"q":"用 24 小時制的時鐘算術,現在是 13 點,再過 15 小時是幾點?","options":["2 點","3 點","4 點","5 點"],"answer":2,"explain":"13+15=28,超過 24 就減掉 24:28−24=4,所以是 4 點。這相當於 28 除以 24 的餘數是 4。"},{"q":"下列哪一個數是奇數?","options":["24","30","41","56"],"answer":2,"explain":"奇數除以 2 會餘 1。41 除以 2 商 20 餘 1,所以是奇數;24、30、56 除以 2 都餘 0,都是偶數。"},{"q":"23 除以 5 的餘數是多少?","options":["0","1","2","3"],"answer":3,"explain":"23=5×4+3,商是 4,餘數是 3。"},{"q":"二進位的 1010 換成十進位是多少?","options":["7","8","9","10"],"answer":3,"explain":"從右到左的位值是 1、2、4、8。1010 為 1×8+0×4+1×2+0×1=8+2=10。"},{"q":"二進位的 111 換成十進位是多少?","options":["7","6","5","8"],"answer":0,"explain":"從右到左的位值是 1、2、4。111 為 1×4+1×2+1×1=4+2+1=7。"},{"q":"十進位的 6 換成二進位是多少?","options":["101","110","111","100"],"answer":1,"explain":"6=4+2=1×4+1×2+0×1,對應的二進位是 110。"},{"q":"二進位的 1000,最左邊那個 1 代表十進位的多少?","options":["2","4","8","16"],"answer":2,"explain":"從右到左的位值依序是 1、2、4、8。1000 最左邊的 1 位在第四位,位值是 8。"},{"q":"數列 2, 4, 6, 8, __,下一項應該是多少?","options":["7","8","9","10"],"answer":3,"explain":"這個數列每次加 2,8+2=10,所以下一項是 10。"},{"q":"數列 1, 2, 4, 8, __,下一項應該是多少?","options":["16","12","14","10"],"answer":0,"explain":"這個數列每次乘以 2,8×2=16,所以下一項是 16。"},{"q":"數列 1, 4, 9, 16, __,下一項應該是多少?","options":["20","25","24","36"],"answer":1,"explain":"這些是 1×1、2×2、3×3、4×4,也就是平方數;下一項是 5×5=25。"},{"q":"數列 3, 6, 9, 12,……,最能描述它規律的是哪一個?","options":["每次加 2","每次加 4","每次加 3","每次乘 2"],"answer":2,"explain":"6−3=3、9−6=3、12−9=3,每一項都比前一項多 3,所以規律是每次加 3。"},{"q":"照這個規則一步步做:遇到偶數就除以 2,遇到奇數就加 1。從 5 開始執行「一步」後,會得到哪個數?","options":["3","4","10","6"],"answer":3,"explain":"5 是奇數,依規則要加 1,5+1=6,所以一步後得到 6。"}],"vector":[{"q":"向量 (2, 1) + (3, 4) = ?（把往右的數和往上的數分開相加）","options":["(5, 5)","(6, 4)","(5, 4)","(2, 12)"],"answer":0,"explain":"向量相加就是分量各自相加：往右 2＋3＝5，往上 1＋4＝5，所以是 (5, 5)。"},{"q":"向量 (1, 0) + (0, 1) 表示先往右走 1 步、再往上走 1 步，最後的總移動是？","options":["(0, 0)","(2, 0)","(1, 1)","(0, 2)"],"answer":2,"explain":"往右 1＋0＝1，往上 0＋1＝1，兩段合起來就是往右 1、往上 1，也就是 (1, 1)。"},{"q":"向量 (-3, 0) 代表哪一種移動？（第一個數是往右的量，負號代表反方向）","options":["往右走 3 步","往左走 3 步","往上走 3 步","往下走 3 步"],"answer":1,"explain":"第一個數是水平方向，正代表往右、負代表往左；第二個數是 0 表示不上下移動，所以是往左走 3 步。"},{"q":"把一個圖形「平移」（每個點都照同一個向量移動）後，下面哪一項會改變？","options":["圖形的形狀","圖形的大小","圖形所在的位置","各邊的長度"],"answer":2,"explain":"平移是整個圖形一起移動，形狀、大小、邊長都不變，改變的只有它所在的位置。"},{"q":"把一個圖形「旋轉」（繞著某一點轉）之後，下面哪一項會改變？","options":["圖形的大小","圖形的形狀","圖形的朝向（方向）","各邊的長度"],"answer":2,"explain":"旋轉會讓圖形的朝向改變，但形狀、大小和各邊長度都保持不變。"},{"q":"以一個中心點把圖形「縮放」（每個點離中心的距離都乘上同一個倍數）時，下面哪一項一定不變？","options":["圖形各邊的長度","圖形的形狀比例","圖形佔的面積","每個點離中心的距離"],"answer":1,"explain":"縮放時所有距離都乘同一倍數，邊長、面積、離中心的距離都會改變，但長寬的比例（形狀）維持不變。"},{"q":"向量 (5, 2) + (-2, 3) = ?","options":["(7, 5)","(3, 5)","(3, -1)","(7, -1)"],"answer":1,"explain":"往右 5＋(-2)＝3，往上 2＋3＝5，所以答案是 (3, 5)。"},{"q":"在數學裡，「矩陣」指的是什麼？","options":["一條有方向的線","把數字排成列與行的表格","一個單獨的數字","圖形旋轉的角度"],"answer":1,"explain":"矩陣就是把一堆數字整齊地排成一列一列、一行一行的表格。"},{"q":"一張數位圖片放大來看，其實是由什麼組成的？","options":["許多有顏色的小方格（像素）排成的矩陣","一條連續不斷的曲線","很多個獨立的圓點隨機散布","一個很大的單一數字"],"answer":0,"explain":"數位圖片是由許多小方格（像素）排成列與行，每格記錄一個顏色，整體就是一個顏色矩陣。"},{"q":"向量 (0, -4) 代表哪一種移動？","options":["往上走 4 步","往右走 4 步","往下走 4 步","往左走 4 步"],"answer":2,"explain":"第一個數 0 表示不左右移動；第二個數是往上的量，負號代表反方向，所以是往下走 4 步。"},{"q":"向量 (2, 3) + (2, -3) = ?","options":["(4, 0)","(0, 6)","(4, 6)","(0, 0)"],"answer":0,"explain":"往右 2＋2＝4，往上 3＋(-3)＝0，所以合起來是 (4, 0)。"},{"q":"哪一種圖形變換會讓圖形的朝向改變，但形狀和大小都保持不變？","options":["平移","縮放（放大）","旋轉","縮放（縮小）"],"answer":2,"explain":"旋轉是繞一點轉，圖形轉了方向卻不改變形狀與大小；平移連方向都不變，縮放則會改變大小。"},{"q":"以某中心點把圖形放大 3 倍。原本有一個點離中心 2 單位，放大後它離中心多遠？","options":["2 單位","5 單位","6 單位","8 單位"],"answer":2,"explain":"放大 3 倍表示每個點離中心的距離都乘以 3，所以 2×3＝6 單位。"},{"q":"關於「平移」的描述，下面哪一句是正確的？","options":["只把圖形的一個角移動，其他點不動","每個點都照同一個向量移動相同的距離和方向","把每個點離中心的距離乘上倍數","讓圖形繞著一點轉一個角度"],"answer":1,"explain":"平移的意思是整個圖形上的每一個點都照同一個向量移動，移動的方向和距離都一樣。"},{"q":"從原點出發，先走向量 (4, 4)，再走向量 (-4, -4)，最後會停在哪裡？","options":["(8, 8)","(0, 0)","(4, 4)","(-4, -4)"],"answer":1,"explain":"兩段相加：往右 4＋(-4)＝0，往上 4＋(-4)＝0，總移動是 (0, 0)，等於回到原點。"},{"q":"向量 (3, 1) + (1, 2) = ?","options":["(3, 2)","(2, 3)","(4, 3)","(4, 2)"],"answer":2,"explain":"往右 3＋1＝4，往上 1＋2＝3，所以答案是 (4, 3)。"}]};
+(function(){
+  'use strict';
+  var CATS = [
+    { key:'number', label:'數論',       emoji:'🔢' },
+    { key:'algo',   label:'演算法思維', emoji:'⚙️' },
+    { key:'vector', label:'向量與變換', emoji:'➡️' }
+  ];
+  var CAT_LABEL = {}; CATS.forEach(function(c){ CAT_LABEL[c.key]={label:c.label,emoji:c.emoji}; });
+  var PROG_KEY = 'math_drill_v1';
+  function $(id){ return document.getElementById(id); }
+  // 不依賴 Math.random 的確定性洗牌（以種子擾動；答案以 data-orig 原索引比對，不受洗牌影響）
+  function shuffleOptions(opts, seed){
+    var arr = opts.map(function(o,i){ return {o:o,i:i}; });
+    for(var k=arr.length-1;k>0;k--){ seed=(seed*9301+49297)%233280; var j=Math.floor(seed/233280*(k+1)); var t=arr[k];arr[k]=arr[j];arr[j]=t; }
+    return arr;
+  }
+  function seededShuffle(a, seed){ a=a.slice(); for(var k=a.length-1;k>0;k--){ seed=(seed*9301+49297)%233280; var j=Math.floor(seed/233280*(k+1)); var t=a[k];a[k]=a[j];a[j]=t; } return a; }
+  function harvestPool(){
+    var pool=[];
+    CATS.forEach(function(c){ (DRILL[c.key]||[]).forEach(function(q){ pool.push({q:q.q,options:q.options,answer:q.answer,explain:q.explain,cat:c.key}); }); });
+    return pool;
+  }
+  // 交錯：相鄰盡量不同類
+  function interleave(items){
+    var buckets={}; items.forEach(function(it){ (buckets[it.cat]=buckets[it.cat]||[]).push(it); });
+    var out=[], last=null, remaining=items.length;
+    while(remaining>0){
+      var keys=Object.keys(buckets).filter(function(k){return buckets[k].length;});
+      keys.sort(function(x,y){return buckets[y].length-buckets[x].length;});
+      var pick=null; for(var i=0;i<keys.length;i++){ if(keys[i]!==last){ pick=keys[i]; break; } }
+      if(pick===null) pick=keys[0];
+      out.push(buckets[pick].shift()); last=pick; remaining--;
+    }
+    return out;
+  }
+  var rv=null, rvSeed=20250822;
+  function showScreen(name){
+    $('screen-menu').classList.toggle('active', name==='menu');
+    $('screen-play').classList.toggle('active', name==='play');
+    try{ window.scrollTo(0,0); }catch(e){}
+  }
+  function renderMenu(){
+    var total=harvestPool().length;
+    var lens=[
+      {n:10, emoji:'⚡', title:'快速特訓・10 題', sub:'花幾分鐘，暖身檢查一下'},
+      {n:20, emoji:'🎯', title:'標準特訓・20 題', sub:'三大類交錯，紮實練習'},
+      {n:30, emoji:'🏆', title:'挑戰特訓・30 題', sub:'想多練一點就選這個'}
+    ];
+    var cards=lens.map(function(o){
+      return '<button type="button" class="md-len" data-n="'+o.n+'">'+
+        '<span class="md-len-emoji" aria-hidden="true">'+o.emoji+'</span>'+
+        '<span><span class="md-len-title">'+o.title+'</span><br><span class="md-len-sub">'+o.sub+'</span></span>'+
+      '</button>';
+    }).join('');
+    $('md-stage-menu').innerHTML =
+      '<div class="md-teach">'+
+        '<div class="md-t-emoji" aria-hidden="true">🧠</div>'+
+        '<h2>綜合特訓・交錯練習</h2>'+
+        '<div class="md-block"><div class="md-block-text">這裡會把<b>數論、演算法思維、向量與變換</b>三大類的題目<b>打散、交錯</b>出給你，每一輪都不一樣。交錯練習比一次只練一種更能讓大腦學得牢。目前題庫共有 <b>'+total+'</b> 題。</div></div>'+
+        '<div class="md-len-grid">'+cards+'</div>'+
+      '</div>';
+    Array.prototype.forEach.call($('md-stage-menu').querySelectorAll('.md-len'), function(b){
+      b.addEventListener('click', function(){ startRound(parseInt(b.getAttribute('data-n'),10)); });
+    });
+  }
+  function startRound(n){
+    var pool=harvestPool();
+    if(!pool.length){ renderMenu(); return; }
+    rvSeed=(rvSeed*9301+49297)%233280;
+    n=Math.min(n, pool.length);
+    var byCat={}; pool.forEach(function(q){ (byCat[q.cat]=byCat[q.cat]||[]).push(q); });
+    var keys=Object.keys(byCat);
+    keys.forEach(function(k,i){ byCat[k]=seededShuffle(byCat[k], rvSeed+i*131+17); });
+    keys=seededShuffle(keys, rvSeed+7);
+    var picked=[], di=0;
+    while(picked.length<n && picked.length<pool.length){ var k=keys[di%keys.length]; if(byCat[k]&&byCat[k].length) picked.push(byCat[k].shift()); di++; }
+    var queue=interleave(picked);
+    if(!queue.length){ renderMenu(); return; }
+    rv={queue:queue, idx:0, correct:0, answered:false};
+    showScreen('play');
+    renderQ();
+  }
+  function renderQ(){
+    rv.answered=false;
+    var item=rv.queue[rv.idx], total=rv.queue.length, pct=Math.round(rv.idx/total*100);
+    var meta=CAT_LABEL[item.cat]||{label:'題目',emoji:'🧠'};
+    var shown=shuffleOptions(item.options, (rv.idx+1)*13 + item.q.length + rvSeed%97);
+    var optHtml=shown.map(function(x){ return '<button type="button" class="md-opt" data-orig="'+x.i+'">'+x.o+'</button>'; }).join('');
+    $('stage').innerHTML =
+      '<div class="md-teach">'+
+        '<div class="md-rv-bar"><div class="md-rv-track"><div class="md-rv-fill" style="width:'+pct+'%"></div></div>'+
+          '<span class="md-rv-score">第 '+(rv.idx+1)+'/'+total+' 題 · 答對 '+rv.correct+'</span></div>'+
+        '<span class="md-tag"><span aria-hidden="true">'+meta.emoji+'</span> '+meta.label+'</span>'+
+        '<div class="md-q">'+item.q+'</div>'+ optHtml+
+        '<div class="md-reveal" id="md-reveal" aria-live="polite"></div>'+
+        '<div class="md-actions" id="md-actions" style="display:none"><button type="button" class="btn btn-primary" id="btn-next"></button></div>'+
+      '</div>';
+    var opts=$('stage').querySelectorAll('.md-opt');
+    Array.prototype.forEach.call(opts, function(btn){ btn.addEventListener('click', function(){ answer(btn, item, opts); }); });
+  }
+  function answer(btn, item, opts){
+    if(rv.answered) return; rv.answered=true;
+    var chosen=parseInt(btn.getAttribute('data-orig'),10), correct=(chosen===item.answer);
+    if(correct) rv.correct++;
+    try{ if(window.Game && typeof Game.pingActive==='function') Game.pingActive(); }catch(e){}
+    Array.prototype.forEach.call(opts, function(b){ var oi=parseInt(b.getAttribute('data-orig'),10);
+      if(oi===item.answer) b.classList.add('correct'); else if(b===btn) b.classList.add('wrong'); b.disabled=true; });
+    var rev=$('md-reveal');
+    rev.textContent=(correct?'答對了！👍 ':'沒關係～正確答案是這個喔！ ')+item.explain;
+    rev.classList.add('show');
+    var fill=$('stage').querySelector('.md-rv-fill'); if(fill) fill.style.width=Math.round((rv.idx+1)/rv.queue.length*100)+'%';
+    var act=$('md-actions'); act.style.display='flex';
+    var next=$('btn-next'), last=(rv.idx>=rv.queue.length-1);
+    next.textContent=last?'看成績 🎉':'下一題 ➡️';
+    next.onclick=function(){ if(last){ finish(); } else { rv.idx++; renderQ(); } };
+    try{ next.focus(); }catch(e){}
+  }
+  function finish(){
+    var total=rv.queue.length, got=rv.correct, pct=Math.round(got/total*100), msg, emoji;
+    if(pct>=90){ emoji='🏆'; msg='太厲害了！這些數理思維，你幾乎都掌握了。'; }
+    else if(pct>=70){ emoji='🌟'; msg='很不錯！大部分都答對了，把答錯的再看一次就更完整囉。'; }
+    else if(pct>=50){ emoji='💪'; msg='不錯的開始！多練幾輪，會越來越熟練。'; }
+    else { emoji='🌱'; msg='沒關係，特訓就是用來練習的。可以先回觀念頁看一看，再來挑戰一次！'; }
+    $('stage').innerHTML =
+      '<div class="md-teach" style="text-align:center">'+
+        '<div class="md-t-emoji" aria-hidden="true">'+emoji+'</div>'+
+        '<h2>這一輪答對 '+got+' / '+total+' 題</h2>'+
+        '<div class="md-block"><div class="md-block-text">'+msg+'</div></div>'+
+        '<div class="md-actions">'+
+          '<button type="button" class="btn btn-primary" id="btn-again">再來一輪 🔄</button>'+
+          '<button type="button" class="btn" id="btn-menu">回特訓選單</button>'+
+        '</div>'+
+      '</div>';
+    $('btn-again').addEventListener('click', function(){ startRound(total); });
+    $('btn-menu').addEventListener('click', function(){ showScreen('menu'); renderMenu(); });
+  }
+  $('btn-back').addEventListener('click', function(){ showScreen('menu'); renderMenu(); });
+  showScreen('menu');
+  renderMenu();
+})();
+</script>
+</body>
+</html>
