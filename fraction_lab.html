@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>分數特訓 🍕</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<link rel="stylesheet" href="concept.css">
+<script src="game_core.js"></script>
+<!--
+  分數特訓：先教「分數的想法與算法」(約分/同分母加減/異分母通分/乘法/除法)，再用題目生成器反覆練不同題目、難度隨連對提升。
+  答案由程式即時算出並化到最簡(correct-by-construction，無人工出題錯誤)；每題附「怎麼算」步驟(數字也由程式算，維持自洽)。
+  作答用「分子/分母」兩格輸入，判定接受任何與正解等值的分數（交叉相乘），再顯示最簡形式。
+  純本地練習(data-game-hud=off、key fraction_lab_v1、不計 XP,只 pingActive 續 streak)。全繁體中文。
+-->
+<style>
+  :root{ --su:#db2777; --su-d:#be185d; --su-tint:rgba(219,39,119,0.12); }
+  :root[data-theme="dark"]{ --su:#f9a8d4; --su-d:#fbcfe8; --su-tint:rgba(249,168,212,0.16); }
+  .fl-wrap{ width:100%; }
+  .fl-screen{ display:none; } .fl-screen.active{ display:block; }
+  .fl-topbar{ display:flex; align-items:center; gap:var(--s3); margin-bottom:var(--s4); }
+  .fl-title{ font-size:var(--fs-h2); font-weight:800; color:var(--ink); }
+  .fl-hello{ display:flex; align-items:center; gap:var(--s3); padding:var(--s4); background:var(--su-tint);
+    border:1px solid var(--card-border); border-radius:var(--r-lg); margin-bottom:var(--s5); }
+  .fl-hello .fl-mascot{ font-size:44px; flex:none; }
+  .fl-htext{ font-size:var(--fs-body); font-weight:700; color:var(--ink); }
+  .fl-hsub{ font-size:var(--fs-small); color:var(--ink); font-weight:600; margin-top:2px; }
+  .fl-card{ background:var(--card); border:1px solid var(--card-border); border-radius:var(--r-lg); box-shadow:var(--shadow-sm); padding:var(--s5) var(--s4); max-width:600px; margin-inline:auto; }
+  .fl-teach{ font-size:var(--fs-body); font-weight:600; color:var(--ink); line-height:1.8; }
+  .fl-teach h2{ font-size:var(--fs-h2); font-weight:800; color:var(--su-d); margin:0 0 var(--s3); }
+  .fl-scorebar{ display:flex; justify-content:space-between; align-items:center; font-size:var(--fs-small); font-weight:800; color:var(--su-d); margin-bottom:var(--s3); }
+  .fl-lv{ background:var(--su-tint); border-radius:999px; padding:2px 10px; }
+  .fl-tag{ display:inline-block; font-size:var(--fs-small); font-weight:800; color:var(--su-d); background:var(--su-tint); border-radius:999px; padding:3px 12px; margin-bottom:var(--s2); }
+  .fl-problem{ font-size:32px; font-weight:800; color:var(--ink); text-align:center; margin:var(--s3) 0; letter-spacing:1px; display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; }
+  /* 分數直式顯示 */
+  .fl-frac{ display:inline-flex; flex-direction:column; align-items:center; vertical-align:middle; }
+  .fl-frac .fl-num{ display:block; padding:0 6px; border-bottom:2px solid var(--ink); line-height:1.2; }
+  .fl-frac .fl-den{ display:block; padding:0 6px; line-height:1.2; }
+  .fl-op{ font-weight:800; }
+  /* 作答分數輸入 */
+  .fl-answer{ display:flex; align-items:center; justify-content:center; gap:12px; margin:var(--s3) 0; }
+  .fl-inpfrac{ display:inline-flex; flex-direction:column; align-items:center; gap:4px; }
+  .fl-inpfrac input{ width:88px; height:48px; font-size:24px; font-weight:800; text-align:center; font-family:var(--font);
+    border:2px solid var(--card-border); border-radius:var(--r-md); background:var(--card); color:var(--ink); }
+  .fl-inpfrac input:focus{ border-color:var(--su); outline:none; }
+  .fl-inpbar{ width:96px; height:3px; background:var(--ink); }
+  .fl-whole-hint{ font-size:var(--fs-small); color:var(--ink-soft); font-weight:600; text-align:center; margin-top:2px; }
+  .fl-reveal{ margin-top:var(--s3); padding:var(--s3) var(--s4); border-radius:var(--r-md); font-size:var(--fs-body); font-weight:700; color:var(--ink); line-height:1.7; display:none; }
+  .fl-reveal.show{ display:block; }
+  .fl-reveal.ok{ background:var(--tint-english); }
+  .fl-reveal.no{ background:var(--su-tint); }
+  .fl-actions{ margin-top:var(--s4); display:flex; gap:var(--s3); }
+  .fl-actions .btn{ flex:1; }
+  .fl-note{ text-align:center; color:var(--ink-soft); font-size:var(--fs-small); margin-top:var(--s5); font-weight:600; max-width:34em; margin-inline:auto; }
+</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">分數特訓 🍕</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="fl-screen active fl-wrap">
+    <div class="fl-topbar"><span class="fl-title">分數特訓 🍕</span></div>
+    <div class="fl-hello"><span class="fl-mascot" aria-hidden="true">🍕</span>
+      <div><div class="fl-htext">分數就是「一個東西被平分成幾份、你拿了幾份」。先學會一種算法的想法，再開始練習——每一題都不一樣，越練越順、難度也會慢慢變高。</div>
+      <div class="fl-hsub">建議先一種一種學過再玩「綜合練習」。答完會告訴你「這題一步步怎麼算」。加減乘除題只要和正解一樣大就算對（我們會幫你化成最簡）；約分題要自己真的化到最簡才算對喔。</div></div></div>
+    <div id="fl-menu" class="cn-lessons"></div>
+    <a class="cn-nextup" href="math_drill.html"><span class="cn-nextup-ic" aria-hidden="true">🚀</span><span>想挑戰更多題型嗎？到「數理腦・綜合特訓」繼續 →</span></a>
+    <p class="fl-note">這是分數練習場，題目由程式隨機生成、可無限練習；答對幾題難度會慢慢升高，連續卡關時也會自動降回來，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
+  </section>
+  <section id="screen-play" class="fl-screen fl-wrap">
+    <div class="fl-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="fl-title" id="play-title">分數特訓</span></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+/* eslint-disable */
+(function(){
+  'use strict';
+  function $(id){ return document.getElementById(id); }
+  function ri(lo,hi){ return lo + Math.floor(Math.random()*(hi-lo+1)); }
+  function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+  function gcd(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){ var t=b; b=a%b; a=t; } return a||1; }
+  // 化簡分數 → {n,d} 最簡(d>0)
+  function reduce(n,d){ if(d<0){ n=-n; d=-d; } var g=gcd(n,d); return { n:n/g, d:d/g }; }
+  // 分數轉可讀文字
+  function ftxt(n,d){ if(d===1) return ''+n; return n+'/'+d; }
+  // 分數 HTML(直式)
+  function fhtml(n,d){ if(d===1) return '<span class="fl-whole">'+n+'</span>';
+    return '<span class="fl-frac"><span class="fl-num">'+n+'</span><span class="fl-den">'+d+'</span></span>'; }
+
+  // 生成器：每個回傳 { html, aN, aD(最簡正解), tip, spoken }
+  var CATS = [
+    { key:'reduce', label:'約分（化到最簡）', emoji:'✂️', sub:'分子分母同時除以最大公因數，把分數變最簡',
+      teach:'<b>約分</b>就是把分數變成「最簡」的樣子：分子和分母<b>同時除以它們的最大公因數</b>，大小不變、數字變小。<br><br><b>例：</b>8/12 → 8 和 12 的最大公因數是 4 → 8÷4=2、12÷4=3 → 得 <b>2/3</b>。<br><br>💡 找不到最大的沒關係，可以一次除一點：8/12 先同除以 2 = 4/6，再同除以 2 = 2/3，一樣會到最簡。',
+      gen:function(lv){
+        var base = reduce(ri(1,lv+1), ri(2,lv+2)); // 先造一個最簡分數
+        if(base.n===0) base.n=1;
+        var k = ri(2, lv<=2?4:(lv<=4?6:9)); // 乘一個公因數把它「放大」成可約分的題目
+        var n=base.n*k, d=base.d*k;
+        var tip='把 '+n+'/'+d+' 約分：'+n+' 和 '+d+' 的最大公因數是 '+gcd(n,d)+'，同時除以它 → '+(base.d===1?('整數 '+base.n):(base.n+'/'+base.d))+'。';
+        return { html:'把 '+fhtml(n,d)+' <span class="fl-op">化成最簡</span>', aN:base.n, aD:base.d, tip:tip, spoken:n+'分之'+d+' 化成最簡分數' };
+      } },
+    { key:'addsame', label:'同分母加減', emoji:'➕', sub:'分母不變，分子直接相加減，再約分',
+      teach:'分母<b>一樣</b>的分數相加減，最簡單：<b>分母不變，分子直接加或減</b>，最後記得約分。<br><br><b>例：</b>2/7 + 3/7 → 分母都是 7，分子 2+3=5 → <b>5/7</b>。<br><b>例：</b>5/6 − 1/6 → 分母不變（還是 6），分子 5−1=4 → 4/6 → 約分成 <b>2/3</b>。',
+      gen:function(lv){
+        var d = pick(lv<=1?[3,4,5]:lv<=2?[4,5,6,8]:lv<=3?[6,8,9,10]:lv<=4?[8,9,10,12]:[10,12,15,16]);
+        var add = pick([true,false]);
+        var a,b;
+        if(add){ a=ri(1,d-1); b=ri(1,d-a); } // 和的分子 < d，結果為真分數(< 1)
+        else { a=ri(2,d-1); b=ri(1,a-1); }   // 差為正
+        var rn = add ? a+b : a-b;
+        var ans = reduce(rn, d);
+        var tip='分母都是 '+d+'，分子 '+a+(add?' + ':' − ')+b+' = '+rn+' → '+rn+'/'+d+(gcd(rn,d)>1 && ans.d!==1?'，約分成 '+ans.n+'/'+ans.d:'')+(ans.d===1?'（等於整數 '+ans.n+'）':'')+'。';
+        return { html:fhtml(a,d)+' <span class="fl-op">'+(add?'+':'−')+'</span> '+fhtml(b,d), aN:ans.n, aD:ans.d, tip:tip, spoken:d+'分之'+a+(add?' 加 ':' 減 ')+d+'分之'+b };
+      } },
+    { key:'adddiff', label:'異分母加減（通分）', emoji:'🔗', sub:'先通分成同分母，再加減，最後約分',
+      teach:'分母<b>不一樣</b>時，要先<b>通分</b>：把兩個分數換成分母相同的樣子，再照同分母加減。<br><br><b>例：</b>1/2 + 1/3 → 公分母用 6：1/2=3/6、1/3=2/6 → 3+2=5 → <b>5/6</b>。<br><br>💡 公分母可以直接用「兩分母相乘」，算完再約分就好；分子要跟著一起乘。',
+      gen:function(lv){
+        var pool = lv<=1?[2,3,4]:lv<=2?[2,3,4,5,6]:lv<=3?[3,4,5,6,8]:lv<=4?[4,5,6,8,9,10]:[6,8,9,10,12];
+        var b=pick(pool), d=pick(pool); var guard=0; while(d===b && guard++<20){ d=pick(pool); } if(d===b) d=b+1;
+        var add=pick([true,false]);
+        var a=ri(1,b-1), c=ri(1,d-1);
+        // 通分到 b*d
+        var n1=a*d, n2=c*b, D=b*d;
+        var rn = add ? n1+n2 : n1-n2;
+        if(!add && rn<=0){ // 保證差為正，交換
+          var tmpN=n1; n1=n2; n2=tmpN; var tb=b; b=d; d=tb; var ta=a; a=c; c=ta; rn=n1-n2;
+        }
+        var ans = reduce(rn, D);
+        var tip='通分：公分母用 '+b+'×'+d+' = '+D+'。'+a+'/'+b+' = '+n1+'/'+D+'，'+c+'/'+d+' = '+n2+'/'+D+'；分子 '+n1+(add?' + ':' − ')+n2+' = '+rn+' → '+rn+'/'+D+(gcd(rn,D)>1 && ans.d!==1?'，約分成 '+ans.n+'/'+ans.d:'')+(ans.d===1?'（等於整數 '+ans.n+'）':'')+'。';
+        return { html:fhtml(a,b)+' <span class="fl-op">'+(add?'+':'−')+'</span> '+fhtml(c,d), aN:ans.n, aD:ans.d, tip:tip, spoken:b+'分之'+a+(add?' 加 ':' 減 ')+d+'分之'+c };
+      } },
+    { key:'mul', label:'分數乘法', emoji:'✖️', sub:'分子乘分子、分母乘分母，再約分',
+      teach:'分數相乘最直接：<b>分子乘分子、分母乘分母</b>，最後約分。<br><br><b>例：</b>2/3 × 4/5 → 分子 2×4=8、分母 3×5=15 → <b>8/15</b>。<br><b>例：</b>2/3 × 3/4 → 6/12 → 約分成 <b>1/2</b>。<br><br>💡 也可以「先約分再乘」更快，但先乘完再約分一定不會錯。',
+      gen:function(lv){
+        var hi = lv<=1?4:lv<=2?5:lv<=3?6:lv<=4?8:9;
+        var a=ri(1,hi), b=ri(2,hi+1), c=ri(1,hi), d=ri(2,hi+1);
+        var rn=a*c, D=b*d; var ans=reduce(rn,D);
+        var tip='分子相乘 '+a+'×'+c+' = '+rn+'，分母相乘 '+b+'×'+d+' = '+D+' → '+rn+'/'+D+(gcd(rn,D)>1 && ans.d!==1?'，約分成 '+ans.n+'/'+ans.d:'')+(ans.d===1?'（等於整數 '+ans.n+'）':'')+'。';
+        return { html:fhtml(a,b)+' <span class="fl-op">×</span> '+fhtml(c,d), aN:ans.n, aD:ans.d, tip:tip, spoken:b+'分之'+a+' 乘以 '+d+'分之'+c };
+      } },
+    { key:'div', label:'分數除法', emoji:'➗', sub:'除以一個分數＝乘以它的倒數',
+      teach:'除以一個分數，就是<b>乘以它的「倒數」</b>（把那個分數的分子分母上下顛倒），然後照乘法算。<br><br><b>例：</b>2/3 ÷ 4/5 → 把 4/5 顛倒成 5/4 → 2/3 × 5/4 = 10/12 → 約分成 <b>5/6</b>。<br><br>💡 口訣：「除以分數，顛倒相乘」。',
+      gen:function(lv){
+        var hi = lv<=1?4:lv<=2?5:lv<=3?6:lv<=4?8:9;
+        var a=ri(1,hi), b=ri(2,hi+1), c=ri(1,hi), d=ri(2,hi+1);
+        // 2nd 分數 c/d 顛倒成 d/c
+        var rn=a*d, D=b*c; var ans=reduce(rn,D);
+        var tip='把 '+c+'/'+d+' 顛倒成 '+d+'/'+c+'：'+a+'/'+b+' × '+d+'/'+c+' = ('+a+'×'+d+')/('+b+'×'+c+') = '+rn+'/'+D+(gcd(rn,D)>1 && ans.d!==1?'，約分成 '+ans.n+'/'+ans.d:'')+(ans.d===1?'（等於整數 '+ans.n+'）':'')+'。';
+        return { html:fhtml(a,b)+' <span class="fl-op">÷</span> '+fhtml(c,d), aN:ans.n, aD:ans.d, tip:tip, spoken:b+'分之'+a+' 除以 '+d+'分之'+c };
+      } }
+  ];
+  var CAT_BY = {}; CATS.forEach(function(c){ CAT_BY[c.key]=c; });
+
+  function showScreen(name){
+    $('screen-menu').classList.toggle('active', name==='menu');
+    $('screen-play').classList.toggle('active', name==='play');
+    try{ window.scrollTo(0,0); }catch(e){}
+  }
+  function renderMenu(){
+    var html='';
+    CATS.forEach(function(c){
+      html+='<button type="button" class="cn-lesson" data-cat="'+c.key+'">'+
+        '<span class="cn-lesson-top"><span class="cn-lesson-emoji" style="background:var(--su-tint)" aria-hidden="true">'+c.emoji+'</span><span class="cn-lesson-name">'+c.label+'</span></span>'+
+        '<span class="cn-lesson-sub">'+c.sub+'</span></button>';
+    });
+    html+='<button type="button" class="cn-lesson" data-cat="mix">'+
+      '<span class="cn-lesson-top"><span class="cn-lesson-emoji" style="background:var(--su-tint)" aria-hidden="true">🎲</span><span class="cn-lesson-name">綜合練習（各種混合）</span></span>'+
+      '<span class="cn-lesson-sub">上面幾種都學過之後再來這裡混合練，最能練到「看到題目就知道用哪一招」</span></button>';
+    $('fl-menu').innerHTML=html;
+    Array.prototype.forEach.call($('fl-menu').querySelectorAll('.cn-lesson'), function(b){
+      b.addEventListener('click', function(){ startMode(b.getAttribute('data-cat')); });
+    });
+  }
+
+  var mode=null, cur=null, answered=false, correct=0, total=0, streak=0, bestStreak=0, lv=1;
+  var lvCorrect=0, missStreak=0, lvChange=0;
+  var LVL_UP=5, LVL_DOWN=3;
+  function startMode(m){
+    mode=m; correct=0; total=0; streak=0; bestStreak=0; lv=1; lvCorrect=0; missStreak=0; lvChange=0;
+    showScreen('play');
+    $('play-title').textContent = (m==='mix'?'綜合練習':CAT_BY[m].label)+' 🍕';
+    if(m==='mix'){ renderMixPrimer(); } else { renderTeach(m); }
+  }
+  function renderMixPrimer(){
+    $('stage').innerHTML =
+      '<div class="fl-card">'+
+        '<h2 class="fl-title" style="margin-bottom:var(--s3)">🎲 綜合練習</h2>'+
+        '<div class="fl-teach">這裡會把<b>五種分數算法混在一起</b>出題。看到題目時，先<b>想想它是哪一種</b>：<br><br>'+
+        '・看到 <b>單一分數要化簡</b> → 約分（同除最大公因數）<br>・<b>同分母加減</b> → 分母不變、分子加減<br>・<b>異分母加減</b> → 先通分再加減<br>・<b>×</b> → 分子乘分子、分母乘分母<br>・<b>÷</b> → 顛倒相乘<br><br>'+
+        '想不起來也沒關係，答完每題都會再示範一步步怎麼算。<b>建議先把上面五種各自練過再來這裡</b>。</div>'+
+        '<div class="fl-actions"><button type="button" class="btn btn-primary" id="btn-begin">開始混合練習 🎲</button></div>'+
+      '</div>';
+    $('btn-begin').addEventListener('click', function(){ beginPractice(); });
+    try{ $('btn-begin').focus(); }catch(e){}
+  }
+  function renderTeach(m){
+    var c=CAT_BY[m];
+    $('stage').innerHTML =
+      '<div class="fl-card">'+
+        '<h2 class="fl-title" style="margin-bottom:var(--s3)">'+c.emoji+' '+c.label+'</h2>'+
+        '<div class="fl-teach">'+c.teach+'</div>'+
+        '<div class="fl-actions"><button type="button" class="btn btn-primary" id="btn-begin">我學會了，開始練習 ✏️</button></div>'+
+      '</div>';
+    $('btn-begin').addEventListener('click', function(){ beginPractice(); });
+    try{ $('btn-begin').focus(); }catch(e){}
+  }
+  function beginPractice(){ nextProblem(); }
+  function genOne(){ var c = mode==='mix' ? pick(CATS) : CAT_BY[mode]; var p=c.gen(lv); p.cat=c; return p; }
+
+  function nextProblem(){
+    cur=genOne(); answered=false;
+    var bestTxt = bestStreak>streak ? ('（最佳 '+bestStreak+'）') : '';
+    var isReduce = cur.cat.key==='reduce';
+    $('stage').innerHTML =
+      '<div class="fl-card">'+
+        '<div class="fl-scorebar"><span>答對 '+correct+' / '+total+'　連對 '+streak+' '+bestTxt+'🔥</span><span class="fl-lv">難度 Lv.'+lv+'</span></div>'+
+        '<span class="fl-tag">'+cur.cat.emoji+' '+cur.cat.label+'</span>'+
+        '<div class="fl-problem" id="fl-prob" tabindex="-1" role="img" aria-label="題目：'+cur.spoken+'，'+(isReduce?'化成最簡分數':'等於多少')+'？">'+cur.html+' <span class="fl-op">=</span> <span style="color:var(--su-d)">?</span></div>'+
+        '<div class="fl-answer">'+
+          '<div class="fl-inpfrac">'+
+            '<input type="text" inputmode="numeric" id="fl-n" aria-label="答案的分子" autocomplete="off">'+
+            '<div class="fl-inpbar" aria-hidden="true"></div>'+
+            '<input type="text" inputmode="numeric" id="fl-d" aria-label="答案的分母" autocomplete="off">'+
+          '</div>'+
+        '</div>'+
+        '<div class="fl-whole-hint">答案是整數的話，分母填 1 就好；填好按「送出」。</div>'+
+        '<div class="fl-actions"><button type="button" class="btn btn-primary" id="btn-submit">送出答案 ✓</button></div>'+
+        '<div class="fl-reveal" id="fl-reveal" aria-live="assertive"></div>'+
+        '<div class="fl-actions" id="fl-next-actions" style="display:none"><button type="button" class="btn btn-primary" id="btn-next">下一題 ➡️</button></div>'+
+      '</div>';
+    try{ $('fl-prob').focus(); }catch(e){}
+    $('btn-submit').addEventListener('click', submit);
+    // Enter 於輸入框送出
+    ['fl-n','fl-d'].forEach(function(id){ $(id).addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); if(!answered) submit(); } }); });
+    $('btn-next').onclick=function(){ nextProblem(); };
+  }
+  function parseIntStrict(s){ s=(s||'').trim(); if(!/^-?\d+$/.test(s)) return null; return parseInt(s,10); }
+  function submit(){
+    if(answered) return;
+    var pn=parseIntStrict($('fl-n').value), pd=parseIntStrict($('fl-d').value);
+    if(pn===null || pd===null || pd===0){
+      var rev0=$('fl-reveal'); rev0.className='fl-reveal show no';
+      rev0.textContent='請在兩個格子都填入整數，分母不可以是 0 喔（答案是整數的話分母填 1）。';
+      return;
+    }
+    // 等值判定（交叉相乘）：允許任何與正解等值的分數，含未約分或整數形式
+    var equal = (pn*cur.aD === cur.aN*pd);
+    // 約分題必須化到最簡才算對（否則填原式也會等值，失去約分的意義）
+    var reducedEnough = (cur.cat.key!=='reduce') || (gcd(Math.abs(pn), pd)===1);
+    if(cur.cat.key==='reduce' && equal && !reducedEnough){
+      // 值對但還沒最簡，給明確提示、不計為答對、讓他再試（不鎖定）
+      var revH=$('fl-reveal'); revH.className='fl-reveal show no';
+      revH.textContent='大小對了，但還沒「化到最簡」喔——把分子和分母再同時除以它們的公因數（'+gcd(Math.abs(pn),pd)+'）試試看。';
+      return;
+    }
+    answered=true; total++;
+    var ok = equal && reducedEnough;
+    lvChange=0;
+    if(ok){
+      correct++; streak++; if(streak>bestStreak) bestStreak=streak;
+      missStreak=0; lvCorrect++;
+      if(lvCorrect>=LVL_UP && lv<5){ lv++; lvCorrect=0; lvChange=1; }
+    } else {
+      streak=0; missStreak++;
+      if(missStreak>=LVL_DOWN && lv>1){ lv--; lvCorrect=0; missStreak=0; lvChange=-1; }
+    }
+    try{ if(window.Game && typeof Game.pingActive==='function') Game.pingActive(); }catch(e){}
+    var lvMsg = lvChange>0 ? ('　🎉 難度升到 Lv.'+lv+'！') : (lvChange<0 ? ('　難度降到 Lv.'+lv+'，先把手感找回來 🙂') : '');
+    var ansTxt = ftxt(cur.aN, cur.aD);
+    var rev=$('fl-reveal');
+    rev.className='fl-reveal show '+(ok?'ok':'no');
+    rev.textContent=(ok?'答對了！👍 最簡答案是 '+ansTxt+'。':('沒關係～最簡答案是 '+ansTxt+'。'))+cur.tip+lvMsg;
+    $('btn-submit').disabled=true; $('fl-n').disabled=true; $('fl-d').disabled=true;
+    $('fl-next-actions').style.display='flex';
+    try{ $('btn-next').focus(); }catch(e){}
+  }
+  document.addEventListener('keydown', function(e){
+    if(!$('screen-play').classList.contains('active')) return;
+    if(e.key==='Enter'){
+      var onActionBtn = e.target && e.target.tagName==='BUTTON';
+      if(onActionBtn) return;
+      if(answered && $('btn-next')){ e.preventDefault(); nextProblem(); }
+    }
+  });
+  $('btn-back').addEventListener('click', function(){ showScreen('menu'); });
+  showScreen('menu');
+  renderMenu();
+})();
+</script>
+</body>
+</html>
