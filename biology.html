@@ -375,10 +375,10 @@ body { overflow-x: hidden; }
   'use strict';
 
   // ---------------------------------------------------------------------
-  // 純 UI/唯讀 Game 介面（防禦式）：只用 showToast 做慶祝，絕不呼叫任何寫入 API。
-  //   零重複計分論證：game_core 的 SUBJECTS 不含 'biology'，且本頁完全不呼叫
-  //   recordAnswer/award/recordSession/awardBadge/pingActive → player_profile_v1
-  //   永遠不會被本頁寫入 → 不污染既有科目、不可能重複計分。
+  // 計分策略：本頁以 <body data-game-wired="science"> 掛在既有 'science' 科目下（生物屬自然科學）。
+  //   每題只呼叫一次 Game.recordAnswer('science', 對錯)（answered 旗標鎖定、重試不重記）；
+  //   「不」呼叫 award/recordSession/awardBadge/pingActive，本地徽章冊為純本地（自有 key、無 XP）。
+  //   計入 'science' 是刻意設計，且因單次記帳、不重複計分。
   // ---------------------------------------------------------------------
   function toast(msg, kind) {
     try { if (window.Game && Game.showToast) Game.showToast(msg, kind); } catch (e) { /* 靜默 */ }
