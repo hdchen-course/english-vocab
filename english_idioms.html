@@ -20,6 +20,8 @@
   .id-bar{ display:flex; justify-content:space-between; align-items:center; font-size:var(--fs-small); font-weight:800; color:var(--ink); margin-bottom:var(--s3); }
   .id-emoji{ font-size:64px; text-align:center; margin:var(--s2) 0; line-height:1.2; }
   .id-idiom{ font-size:26px; font-weight:800; color:var(--ink); text-align:center; letter-spacing:.5px; }
+.id-audio{ background:var(--su-tint,rgba(2,132,199,.12)); border:none; border-radius:999px; cursor:pointer; font-size:18px; line-height:1; padding:6px 10px; vertical-align:middle; margin-left:4px; }
+.id-audio:hover{ filter:brightness(0.96); }
   .id-literal{ font-size:var(--fs-body); font-weight:700; color:var(--ink); text-align:center; margin:var(--s2) 0 var(--s3); }
   .id-literal .lab{ display:inline-block; font-size:var(--fs-small); background:var(--su-tint); border-radius:999px; padding:2px 10px; margin-right:6px; }
   .id-opt{ display:block; width:100%; text-align:left; padding:14px var(--s4); min-height:var(--tap-min);
@@ -103,9 +105,13 @@
     $('play-title').textContent = TMETA[k].emoji+' '+TMETA[k].name;
     renderLearn();
   }
+  // 語音：檔名以片語 slug 命名（audio/idiom_<slug>.mp3），slug 規則須與產生腳本一致
+  function idiomSlug(s){ return String(s).toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,''); }
+  window.__idiomPlay = function(sg){ try{ var p=new Audio('audio/idiom_'+sg+'.mp3').play(); if(p&&p.catch)p.catch(function(){}); }catch(e){} };
   function head(o){
     return '<div class="id-emoji" aria-hidden="true">'+o.emoji+'</div>'+
-      '<div class="id-idiom">'+esc(o.idiom)+'</div>'+
+      '<div class="id-idiom">'+esc(o.idiom)+
+        ' <button type="button" class="id-audio" onclick="__idiomPlay(\''+idiomSlug(o.idiom)+'\')" aria-label="播放「'+esc(o.idiom)+'」的英文發音">🔊</button></div>'+
       '<div class="id-literal"><span class="lab">字面</span>'+esc(o.literalZh)+'</div>';
   }
   function revealBody(o){
