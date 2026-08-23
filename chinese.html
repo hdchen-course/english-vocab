@@ -651,13 +651,17 @@ body {
     <div class="wordex-entries" id="wordex-entries">
       <div class="wordex-entry-card" role="button" tabindex="0" onclick="Wordex.openScreen()">
         <div class="wordex-entry-emoji">📔</div>
-        <div class="wordex-entry-name">字詞收藏冊</div>
-        <div class="wordex-entry-sub" id="wordex-entry-collect-sub">已收藏 0 張</div>
+        <div class="wordex-entry-body">
+          <div class="wordex-entry-name">字詞收藏冊</div>
+          <div class="wordex-entry-sub" id="wordex-entry-collect-sub">已收藏 0 張</div>
+        </div>
       </div>
       <div class="wordex-entry-card" role="button" tabindex="0" onclick="Wordex.startReview()">
         <div class="wordex-entry-emoji">🔁</div>
-        <div class="wordex-entry-name">今日複習</div>
-        <div class="wordex-entry-sub" id="wordex-entry-review-sub">今天複習完了，明天見！</div>
+        <div class="wordex-entry-body">
+          <div class="wordex-entry-name">今日複習</div>
+          <div class="wordex-entry-sub" id="wordex-entry-review-sub">今天複習完了，明天見！</div>
+        </div>
       </div>
     </div>
     <a href="chinese_concepts.html" style="display:flex;align-items:center;gap:10px;margin:var(--s4) 0 0;padding:12px 16px;background:var(--card);border:2px dashed var(--card-border);border-radius:14px;color:var(--ink);font-weight:700;text-decoration:none;line-height:1.4"><span style="font-size:22px" aria-hidden="true">📖</span><span>還沒學過嗎？先到「國語觀念養成」用圖學會部首、筆順、標點，再回來練習 →</span></a>
@@ -2393,12 +2397,14 @@ renderHome();       // renderHome 內含 syncHudFromGame()，以統一 profile �
 }
 .wordex-entry-card {
   background: var(--card); border: 2px solid var(--card-border); border-radius: var(--r-lg);
-  padding: 18px 14px; text-align: center; cursor: pointer; box-shadow: var(--shadow-sm);
+  padding: var(--s4); text-align: left; cursor: pointer; box-shadow: var(--shadow-sm);
   transition: transform .15s ease, box-shadow .15s ease;
+  display: flex; align-items: center; gap: var(--s3);
 }
+.wordex-entry-body { flex: 1 1 auto; min-width: 0; }
 .wordex-entry-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
 .wordex-entry-card:active { transform: scale(0.97); }
-.wordex-entry-emoji { font-size: 2rem; line-height: 1.1; margin-bottom: 6px; }
+.wordex-entry-emoji { font-size: 2rem; line-height: 1.1; flex: none; }
 .wordex-entry-name { font-size: 1.05rem; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
 .wordex-entry-sub { font-size: 0.85rem; font-weight: 600; color: var(--ink-soft); }
 
