@@ -51,9 +51,9 @@
     renderProg(); answered = false; var s = cur.steps[idx];
     if (s.type === 'teach') {
       stage.innerHTML =
-        '<div class="cn-card"><span class="cn-kicker teach">📘 ' + s.kicker + '</span><h2 class="cn-h">' + s.title + '</h2>' +
+        '<div class="cn-card"><div class="cn-teach-emoji" aria-hidden="true">' + (cur.emoji || '📘') + '</div><h2 class="cn-h">' + s.title + '</h2>' +
         (s.svg ? '<div class="cn-svg">' + s.svg + '</div>' : '') +
-        '<p class="cn-text">' + s.text + '</p></div>' +
+        '<div class="cn-block"><div class="cn-block-label">' + s.kicker + '</div><p class="cn-text">' + s.text + '</p></div></div>' +
         '<div class="cn-actions"><button type="button" class="btn btn-primary btn-block" id="next">繼續 ➡️</button></div>';
       $('next').addEventListener('click', advance);
     } else {
