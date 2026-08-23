@@ -125,6 +125,12 @@ body {
   margin-bottom: var(--s3);
 }
 
+/* 吉祥物開場橫幅：與 concept/subject 頁的 hello banner 同一設計語言 */
+.ch-hello { display:flex; align-items:center; gap:var(--s3); padding:var(--s4); background:var(--accent-tint); border:1px solid var(--card-border); border-radius:var(--r-lg); margin-bottom:var(--s4); }
+.ch-hello .ch-mascot { font-size:44px; flex:none; line-height:1; }
+.ch-htext { font-size:var(--fs-body); font-weight:700; color:var(--ink); }
+.ch-hsub { font-size:var(--fs-small); color:var(--ink); font-weight:600; margin-top:2px; }
+.category-sub { font-size:var(--fs-small); color:var(--ink-soft); font-weight:600; line-height:1.4; margin-top:1px; }
 /* 與 physics 等頁一致：3 個獨立 stat-tile 卡（非單一長條），全書統一設計語言 */
 .stats-bar {
   margin-bottom: var(--s4);
@@ -623,6 +629,9 @@ body {
       <button class="header-btn" id="sound-toggle" aria-label="音效開關" aria-pressed="true">🔊</button>
     </div>
     <div class="save-notice">💾 進度存在本機瀏覽器</div>
+    <div class="ch-hello"><span class="ch-mascot" aria-hidden="true">🀄</span>
+      <div><div class="ch-htext">用玩的方式，把成語、字音字形、造句、閱讀和語詞一次練起來。</div>
+      <div class="ch-hsub">先挑一個主題，一關一關往下闖，把喜歡的字詞收進字詞收藏冊。</div></div></div>
     <div class="stats-bar">
       <div class="stat-item">
         <div class="stat-value" id="stat-exp">0</div>
@@ -1825,11 +1834,11 @@ const QUESTIONS = {
 
 // ===== CATEGORIES =====
 const CATEGORIES = [
-  {id:"idiom", name:"成語大挑戰", emoji:"📚", color:"#ef4444"},
-  {id:"phonetics", name:"字音字形", emoji:"✍️", color:"#3b82f6"},
-  {id:"sentence", name:"造句填空", emoji:"📝", color:"#10b981"},
-  {id:"reading", name:"閱讀理解", emoji:"📖", color:"#a855f7"},
-  {id:"wordchain", name:"語詞接龍", emoji:"🔗", color:"#ec4899"}
+  {id:"idiom", name:"成語大挑戰", emoji:"📚", color:"#ef4444", sub:"看圖猜成語、填出正確的字"},
+  {id:"phonetics", name:"字音字形", emoji:"✍️", color:"#3b82f6", sub:"分辨相近的讀音與寫法"},
+  {id:"sentence", name:"造句填空", emoji:"📝", color:"#10b981", sub:"選出最合適的詞語填入句子"},
+  {id:"reading", name:"閱讀理解", emoji:"📖", color:"#a855f7", sub:"讀短文、找出文章裡的答案"},
+  {id:"wordchain", name:"語詞接龍", emoji:"🔗", color:"#ec4899", sub:"用詞義提示接出下一個語詞"}
 ];
 
 const RANKS = [
@@ -1983,6 +1992,7 @@ function renderHome() {
       <div class="category-emoji">${cat.emoji}</div>
       <div class="category-body">
         <div class="category-name">${cat.name}</div>
+        <div class="category-sub">${cat.sub||''}</div>
         <div class="category-progress">⭐ ${stars}/${maxStars}</div>
       </div>
     `;
