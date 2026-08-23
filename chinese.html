@@ -254,6 +254,19 @@ body {
   font-size: var(--fs-small);
   font-weight: 600;
 }
+/* 主選單卡底部 foot＝全書共用「▶️ 開始／✅ 完成」affordance（比照 .cn-lesson-foot） */
+.category-foot {
+  font-size: var(--fs-small);
+  font-weight: 700;
+  margin-top: var(--s1);
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  flex-wrap: wrap;
+}
+.category-foot.done { color: var(--c-correct-ink); }
+.category-foot .category-stars { color: var(--ink-soft); font-weight: 600; }
 
 /* 關卡選單同樣走 canon grid：手機單欄直列，iPad 多欄 dashboard。 */
 .level-list {
@@ -262,14 +275,16 @@ body {
   gap: var(--s4);
 }
 
+/* 關卡卡片＝全書共用選單卡結構（比照 .cn-lesson）：直式，磚塊 emoji-tile 上排＋
+   標題＋副標，底部 ▶️ 開始／✅ 完成 foot（不再是橫向 + 右側 → 箭頭）。 */
 .level-card {
   background: var(--card);
   border-radius: var(--r-lg);
   padding: var(--s4);
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--s3);
+  flex-direction: column;
+  gap: var(--s2);
+  text-align: left;
   cursor: pointer;
   transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   border: 2px solid var(--card-border);
@@ -290,24 +305,24 @@ body {
   cursor: not-allowed;
 }
 
-.level-card-left {
+.level-card-top {
   display: flex;
   align-items: center;
   gap: var(--s3);
 }
 
 .level-badge {
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   flex: none;
-  border-radius: var(--r-sm);
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
   color: var(--accent-ink);
   background: var(--accent-tint);
-  font-size: var(--fs-body);
+  font-size: 22px;
 }
 
 .level-card-info {
@@ -326,21 +341,13 @@ body {
   color: var(--ink-soft);
 }
 
-.level-stars {
-  font-size: 20px;
-}
-.level-card-right {
-  display: flex;
-  align-items: center;
-  gap: var(--s2);
-  flex: none;
-}
-.level-arrow {
-  font-size: var(--fs-h2);
-  font-weight: 800;
+.level-card-foot {
+  font-size: var(--fs-small);
+  font-weight: 700;
+  margin-top: 2px;
   color: var(--ink-soft);
-  line-height: 1;
 }
+.level-card-foot.done { color: var(--c-correct-ink); }
 
 /* Question screen */
 .question-header {
@@ -1993,7 +2000,7 @@ function renderHome() {
       <div class="category-body">
         <div class="category-name">${cat.name}</div>
         <div class="category-sub">${cat.sub||''}</div>
-        <div class="category-progress">⭐ ${stars}/${maxStars}</div>
+        <div class="category-foot${stars > 0 ? ' done' : ''}">${stars > 0 ? '✅ 已闖 ' : '▶️ 開始闖關'}<span class="category-stars">⭐ ${stars}/${maxStars}</span></div>
       </div>
     `;
     card.onclick = () => {
@@ -2073,17 +2080,14 @@ function openCategory(catId) {
     const card = document.createElement('div');
     card.className = 'level-card' + (locked ? ' locked' : '');
     card.innerHTML = `
-      <div class="level-card-left">
+      <div class="level-card-top">
         <div class="level-badge">${i+1}</div>
         <div class="level-card-info">
           <div class="level-card-title">${LEVEL_NAMES[i]}</div>
           <div class="level-card-sub">共 ${qCount} 題</div>
         </div>
       </div>
-      <div class="level-card-right">
-        <span class="level-stars">${stars > 0 ? '⭐'.repeat(stars) : (locked ? '🔒' : '')}</span>
-        <span class="level-arrow" aria-hidden="true">→</span>
-      </div>
+      <div class="level-card-foot${stars > 0 ? ' done' : ''}">${stars > 0 ? '✅ 已完成 ' + '⭐'.repeat(stars) : '▶️ 開始挑戰'}</div>
     `;
 
     if (!locked) {
