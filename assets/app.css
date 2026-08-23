@@ -265,6 +265,12 @@ a { color: var(--c-primary-ink); }
 
 /* 關卡簡介卡的大圖示置中：.ma-brief 為 text-align:left(讓重點列靠左)，但頂部的 emoji 圖示應與
    標題／副標一樣置中(否則孤零零卡在左上角)。用 .ma-brief .ma-visual 提高 specificity 蓋過各頁 inline。 */
+/* 統一題目卡外觀：部分科目引擎的題目容器(.XX-stage)未套卡片樣式，導致題目卡版面與眾不同。
+   補上與 .ma-stage/.ea-stage 一致的共用卡面（背景/邊框/圓角/陰影/內距），全書題目卡一致。 */
+.ph-stage, .chem-stage, .bio-stage, .fi-stage, .q-stage, .su-stage {
+  background: var(--card); border: 1px solid var(--card-border); border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm); padding: var(--s5) var(--s4);
+}
 .ma-brief .ma-visual { text-align: center; }
 /* 統一教學卡設計語言：關卡簡介標題也用主題色置中（重點列本就是淺色列，圖示已置中）。 */
 .ma-brief h2 { color: var(--su-d, var(--su)); text-align: center; }
