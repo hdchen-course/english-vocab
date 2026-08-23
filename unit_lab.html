@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>單位換算特訓 📏</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<link rel="stylesheet" href="concept.css">
+<script src="game_core.js"></script>
+<!--
+  單位換算特訓：先教「大單位換小單位要乘、小單位換大單位要除」的想法(附換算關係)，再用生成器反覆練不同題目、難度隨連對提升。
+  答案由程式即時算出(correct-by-construction，無人工出題錯誤)：以整數比率相乘/相除，保證答案乾淨(整數或終止小數)。
+  作答用單一數字格，判定用數值比較(容忍浮點誤差)。純本地(data-game-hud=off、key unit_lab_v1、不計 XP，只 pingActive 續 streak)。全繁體中文。
+-->
+<style>
+  :root{ --su:#0891b2; --su-d:#0e7490; --su-tint:rgba(8,145,178,0.12); }
+  :root[data-theme="dark"]{ --su:#67e8f9; --su-d:#a5f3fc; --su-tint:rgba(103,232,249,0.16); }
+  .ul-wrap{ width:100%; }
+  .ul-screen{ display:none; } .ul-screen.active{ display:block; }
+  .ul-topbar{ display:flex; align-items:center; gap:var(--s3); margin-bottom:var(--s4); }
+  .ul-title{ font-size:var(--fs-h2); font-weight:800; color:var(--ink); }
+  .ul-hello{ display:flex; align-items:center; gap:var(--s3); padding:var(--s4); background:var(--su-tint);
+    border:1px solid var(--card-border); border-radius:var(--r-lg); margin-bottom:var(--s5); }
+  .ul-hello .ul-mascot{ font-size:44px; flex:none; }
+  .ul-htext{ font-size:var(--fs-body); font-weight:700; color:var(--ink); }
+  .ul-hsub{ font-size:var(--fs-small); color:var(--ink); font-weight:600; margin-top:2px; }
+  .ul-card{ background:var(--card); border:1px solid var(--card-border); border-radius:var(--r-lg); box-shadow:var(--shadow-sm); padding:var(--s5) var(--s4); max-width:600px; margin-inline:auto; }
+  .ul-teach{ font-size:var(--fs-body); font-weight:600; color:var(--ink); line-height:1.8; }
+  .ul-teach h2{ font-size:var(--fs-h2); font-weight:800; color:var(--su-d); margin:0 0 var(--s3); }
+  .ul-scorebar{ display:flex; justify-content:space-between; align-items:center; font-size:var(--fs-small); font-weight:800; color:var(--su-d); margin-bottom:var(--s3); }
+  .ul-lv{ background:var(--su-tint); border-radius:999px; padding:2px 10px; }
+  .ul-tag{ display:inline-block; font-size:var(--fs-small); font-weight:800; color:var(--su-d); background:var(--su-tint); border-radius:999px; padding:3px 12px; margin-bottom:var(--s2); }
+  .ul-problem{ font-size:30px; font-weight:800; color:var(--ink); text-align:center; margin:var(--s3) 0; letter-spacing:1px; line-height:1.5; }
+  .ul-problem .ul-q{ color:var(--su-d); }
+  .ul-answer{ display:flex; align-items:center; justify-content:center; gap:10px; margin:var(--s3) 0; }
+  .ul-answer input{ width:150px; height:52px; font-size:26px; font-weight:800; text-align:center; font-family:var(--font);
+    border:2px solid var(--card-border); border-radius:var(--r-md); background:var(--card); color:var(--ink); }
+  .ul-answer input:focus{ border-color:var(--su); outline:none; }
+  .ul-answer .ul-unit{ font-size:24px; font-weight:800; color:var(--ink); }
+  .ul-reveal{ margin-top:var(--s3); padding:var(--s3) var(--s4); border-radius:var(--r-md); font-size:var(--fs-body); font-weight:700; color:var(--ink); line-height:1.7; display:none; }
+  .ul-reveal.show{ display:block; }
+  .ul-reveal.ok{ background:var(--tint-english); }
+  .ul-reveal.no{ background:var(--su-tint); }
+  .ul-actions{ margin-top:var(--s4); display:flex; gap:var(--s3); }
+  .ul-actions .btn{ flex:1; }
+  .ul-note{ text-align:center; color:var(--ink-soft); font-size:var(--fs-small); margin-top:var(--s5); font-weight:600; max-width:34em; margin-inline:auto; }
+</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">單位換算特訓 📏</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="ul-screen active ul-wrap">
+    <div class="ul-topbar"><span class="ul-title">單位換算特訓 📏</span></div>
+    <div class="ul-hello"><span class="ul-mascot" aria-hidden="true">📏</span>
+      <div><div class="ul-htext">換單位有一個大原則：<b>大單位換成小單位要「乘」，小單位換成大單位要「除」</b>。先記住每種單位之間差幾倍，再開始練習——每一題都不一樣，越練越順、難度也會慢慢變高。</div>
+      <div class="ul-hsub">建議先一種一種學過再玩「綜合練習」。答完會告訴你「這題怎麼換」。</div></div></div>
+    <div id="ul-menu" class="cn-lessons"></div>
+    <a class="cn-nextup" href="fraction_lab.html"><span class="cn-nextup-ic" aria-hidden="true">🍕</span><span>想再練分數嗎？到「分數特訓」繼續 →</span></a>
+    <p class="ul-note">這是單位換算練習場，題目由程式隨機生成、可無限練習；答對幾題難度會慢慢升高，連續卡關時也會自動降回來，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
+  </section>
+  <section id="screen-play" class="ul-screen ul-wrap">
+    <div class="ul-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="ul-title" id="play-title">單位換算特訓</span></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+/* eslint-disable */
+(function(){
+  'use strict';
+  function $(id){ return document.getElementById(id); }
+  function ri(lo,hi){ return lo + Math.floor(Math.random()*(hi-lo+1)); }
+  function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+  // 乾淨數字——整數為主，高等級偶爾出現 .5（所有比率皆為偶數，乘回去仍是整數）
+  function niceVal(lv, allowHalf){
+    var hi = lv<=1?9 : lv===2?20 : lv===3?100 : lv===4?300 : 900;
+    var v = ri(1,hi);
+    if(allowHalf && Math.random()<0.4) v += 0.5;
+    return v;
+  }
+  function fmt(x){ return (Math.round(x*1000)/1000).toString(); } // 去除浮點雜訊
+
+  var CATS = [
+    { key:'length', label:'長度換算', emoji:'📏', sub:'公里・公尺・公分・公釐（1公尺=100公分…）',
+      teach:'長度單位由大到小：<b>公里(km) → 公尺(m) → 公分(cm) → 公釐(mm)</b>。<br><br>換算關係：<b>1 公里 = 1000 公尺</b>、<b>1 公尺 = 100 公分</b>、<b>1 公分 = 10 公釐</b>。<br><br>大單位換小單位<b>乘</b>：3 公尺 = 3 × 100 = 300 公分。<br>小單位換大單位<b>除</b>：250 公分 = 250 ÷ 100 = 2.5 公尺。',
+      pairs:[['公尺','公分',100],['公分','公釐',10],['公里','公尺',1000]] },
+    { key:'mass', label:'重量換算', emoji:'⚖️', sub:'公噸・公斤・公克（1公斤=1000公克）',
+      teach:'重量單位由大到小：<b>公噸 → 公斤(kg) → 公克(g)</b>。<br><br>換算關係：<b>1 公噸 = 1000 公斤</b>、<b>1 公斤 = 1000 公克</b>。<br><br>大單位換小單位<b>乘</b>：2 公斤 = 2 × 1000 = 2000 公克。<br>小單位換大單位<b>除</b>：3500 公克 = 3500 ÷ 1000 = 3.5 公斤。',
+      pairs:[['公斤','公克',1000],['公噸','公斤',1000]] },
+    { key:'capacity', label:'容量換算', emoji:'🥤', sub:'公升・毫升（1公升=1000毫升）',
+      teach:'容量常用兩種單位：<b>公升(L) 和 毫升(mL)</b>。<br><br>換算關係：<b>1 公升 = 1000 毫升</b>。<br><br>大單位換小單位<b>乘</b>：2 公升 = 2 × 1000 = 2000 毫升。<br>小單位換大單位<b>除</b>：500 毫升 = 500 ÷ 1000 = 0.5 公升。',
+      pairs:[['公升','毫升',1000]] },
+    { key:'time', label:'時間換算', emoji:'⏰', sub:'日・時・分・秒（1分=60秒、1日=24時）',
+      teach:'時間單位：<b>日 → 時 → 分 → 秒</b>，但它們不是「差 10 倍」喔！<br><br>換算關係：<b>1 日 = 24 時</b>、<b>1 時 = 60 分</b>、<b>1 分 = 60 秒</b>。<br><br>大單位換小單位<b>乘</b>：3 分 = 3 × 60 = 180 秒。<br>小單位換大單位<b>除</b>：120 分 = 120 ÷ 60 = 2 時。',
+      pairs:[['分','秒',60],['時','分',60],['日','時',24]] }
+  ];
+  var CAT_BY = {}; CATS.forEach(function(c){ CAT_BY[c.key]=c; });
+
+  function genFor(cat, lv){
+    var pr = pick(cat.pairs); var big=pr[0], small=pr[1], ratio=pr[2];
+    var b2s = pick([true,false]);
+    var allowHalf = lv>=4;
+    var v, ans, fromU, toU, tip;
+    if(b2s){
+      // 大換小要乘
+      v = niceVal(lv, allowHalf); ans = v*ratio; fromU=big; toU=small;
+      tip='1 '+big+' = '+ratio+' '+small+'，大單位換小單位要「乘」：'+fmt(v)+' × '+ratio+' = '+fmt(ans)+' '+small+'。';
+    } else {
+      // 小換大要除。用「答案先決」保證乾淨——先定大單位的乾淨值 ans，再乘回率得小單位值 v。
+      ans = niceVal(lv, allowHalf); v = ans*ratio; fromU=small; toU=big;
+      tip='1 '+big+' = '+ratio+' '+small+'，小單位換大單位要「除」：'+fmt(v)+' ÷ '+ratio+' = '+fmt(ans)+' '+big+'。';
+    }
+    return { vTxt:fmt(v), fromU:fromU, toU:toU, answer:ans, tip:tip,
+      spoken:fmt(v)+' '+fromU+'，等於多少 '+toU };
+  }
+
+  function showScreen(name){
+    $('screen-menu').classList.toggle('active', name==='menu');
+    $('screen-play').classList.toggle('active', name==='play');
+    try{ window.scrollTo(0,0); }catch(e){}
+  }
+  function renderMenu(){
+    var html='';
+    CATS.forEach(function(c){
+      html+='<button type="button" class="cn-lesson" data-cat="'+c.key+'">'+
+        '<span class="cn-lesson-top"><span class="cn-lesson-emoji" style="background:var(--su-tint)" aria-hidden="true">'+c.emoji+'</span><span class="cn-lesson-name">'+c.label+'</span></span>'+
+        '<span class="cn-lesson-sub">'+c.sub+'</span></button>';
+    });
+    html+='<button type="button" class="cn-lesson" data-cat="mix">'+
+      '<span class="cn-lesson-top"><span class="cn-lesson-emoji" style="background:var(--su-tint)" aria-hidden="true">🎲</span><span class="cn-lesson-name">綜合練習（各種混合）</span></span>'+
+      '<span class="cn-lesson-sub">上面幾種都學過之後再來這裡混合練，最能練到「看到題目就知道怎麼換」</span></button>';
+    $('ul-menu').innerHTML=html;
+    Array.prototype.forEach.call($('ul-menu').querySelectorAll('.cn-lesson'), function(b){
+      b.addEventListener('click', function(){ startMode(b.getAttribute('data-cat')); });
+    });
+  }
+
+  var mode=null, cur=null, answered=false, correct=0, total=0, streak=0, bestStreak=0, lv=1;
+  var lvCorrect=0, missStreak=0, lvChange=0;
+  var LVL_UP=5, LVL_DOWN=3;
+  function startMode(m){
+    mode=m; correct=0; total=0; streak=0; bestStreak=0; lv=1; lvCorrect=0; missStreak=0; lvChange=0;
+    showScreen('play');
+    $('play-title').textContent = (m==='mix'?'綜合練習':CAT_BY[m].label)+' 📏';
+    if(m==='mix'){ renderMixPrimer(); } else { renderTeach(m); }
+  }
+  function renderMixPrimer(){
+    $('stage').innerHTML =
+      '<div class="ul-card">'+
+        '<h2 class="ul-title" style="margin-bottom:var(--s3)">🎲 綜合練習</h2>'+
+        '<div class="ul-teach">這裡會把<b>長度、重量、容量、時間</b>的換算混在一起出題。看到題目時，先想：<br><br>'+
+        '・<b>大單位 → 小單位</b>：乘（× 幾倍）<br>・<b>小單位 → 大單位</b>：除（÷ 幾倍）<br><br>'+
+        '再想想這兩個單位之間差幾倍（例如 1 公尺 = 100 公分、1 分 = 60 秒）。想不起來也沒關係，答完每題都會再示範怎麼換。<b>建議先把上面四種各自練過再來這裡</b>。</div>'+
+        '<div class="ul-actions"><button type="button" class="btn btn-primary" id="btn-begin">開始混合練習 🎲</button></div>'+
+      '</div>';
+    $('btn-begin').addEventListener('click', function(){ beginPractice(); });
+    try{ $('btn-begin').focus(); }catch(e){}
+  }
+  function renderTeach(m){
+    var c=CAT_BY[m];
+    $('stage').innerHTML =
+      '<div class="ul-card">'+
+        '<h2 class="ul-title" style="margin-bottom:var(--s3)">'+c.emoji+' '+c.label+'</h2>'+
+        '<div class="ul-teach">'+c.teach+'</div>'+
+        '<div class="ul-actions"><button type="button" class="btn btn-primary" id="btn-begin">我學會了，開始練習 ✏️</button></div>'+
+      '</div>';
+    $('btn-begin').addEventListener('click', function(){ beginPractice(); });
+    try{ $('btn-begin').focus(); }catch(e){}
+  }
+  function beginPractice(){ nextProblem(); }
+  function genOne(){ var c = mode==='mix' ? pick(CATS) : CAT_BY[mode]; var p=genFor(c, lv); p.cat=c; return p; }
+
+  function nextProblem(){
+    cur=genOne(); answered=false;
+    var bestTxt = bestStreak>streak ? ('（最佳 '+bestStreak+'）') : '';
+    $('stage').innerHTML =
+      '<div class="ul-card">'+
+        '<div class="ul-scorebar"><span>答對 '+correct+' / '+total+'　連對 '+streak+' '+bestTxt+'🔥</span><span class="ul-lv">難度 Lv.'+lv+'</span></div>'+
+        '<span class="ul-tag">'+cur.cat.emoji+' '+cur.cat.label+'</span>'+
+        '<div class="ul-problem" id="ul-prob" tabindex="-1" role="img" aria-label="題目：'+cur.spoken+'？">'+cur.vTxt+' '+cur.fromU+' <span class="ul-q">= ？ '+cur.toU+'</span></div>'+
+        '<div class="ul-answer"><input type="text" inputmode="decimal" id="ul-in" aria-label="答案（'+cur.toU+'）" autocomplete="off"><span class="ul-unit">'+cur.toU+'</span></div>'+
+        '<div class="ul-actions"><button type="button" class="btn btn-primary" id="btn-submit">送出答案 ✓</button></div>'+
+        '<div class="ul-reveal" id="ul-reveal" aria-live="assertive"></div>'+
+        '<div class="ul-actions" id="ul-next-actions" style="display:none"><button type="button" class="btn btn-primary" id="btn-next">下一題 ➡️</button></div>'+
+      '</div>';
+    try{ $('ul-prob').focus(); }catch(e){}
+    $('btn-submit').addEventListener('click', submit);
+    $('ul-in').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); if(!answered) submit(); } });
+    $('btn-next').onclick=function(){ nextProblem(); };
+  }
+  function parseNum(s){ s=(s||'').trim().replace(/^\+/,''); if(!/^-?\d+(\.\d+)?$/.test(s)) return null; return parseFloat(s); }
+  function submit(){
+    if(answered) return;
+    var x=parseNum($('ul-in').value);
+    if(x===null){
+      var rev0=$('ul-reveal'); rev0.className='ul-reveal show no';
+      rev0.textContent='請填入一個數字（可以是小數，例如 2.5），再按送出。';
+      return;
+    }
+    answered=true; total++;
+    var ok = Math.abs(x - cur.answer) < 1e-9;
+    lvChange=0;
+    if(ok){
+      correct++; streak++; if(streak>bestStreak) bestStreak=streak;
+      missStreak=0; lvCorrect++;
+      if(lvCorrect>=LVL_UP && lv<5){ lv++; lvCorrect=0; lvChange=1; }
+    } else {
+      streak=0; missStreak++;
+      if(missStreak>=LVL_DOWN && lv>1){ lv--; lvCorrect=0; missStreak=0; lvChange=-1; }
+    }
+    try{ if(window.Game && typeof Game.pingActive==='function') Game.pingActive(); }catch(e){}
+    var lvMsg = lvChange>0 ? ('　🎉 難度升到 Lv.'+lv+'！') : (lvChange<0 ? ('　難度降到 Lv.'+lv+'，先把手感找回來 🙂') : '');
+    var rev=$('ul-reveal');
+    rev.className='ul-reveal show '+(ok?'ok':'no');
+    rev.textContent=(ok?'答對了！👍 ':('沒關係～答案是 '+fmt(cur.answer)+' '+cur.toU+'。'))+cur.tip+lvMsg;
+    $('btn-submit').disabled=true; $('ul-in').disabled=true;
+    $('ul-next-actions').style.display='flex';
+    try{ $('btn-next').focus(); }catch(e){}
+  }
+  document.addEventListener('keydown', function(e){
+    if(!$('screen-play').classList.contains('active')) return;
+    if(e.key==='Enter'){
+      var onActionBtn = e.target && e.target.tagName==='BUTTON';
+      if(onActionBtn) return;
+      if(answered && $('btn-next')){ e.preventDefault(); nextProblem(); }
+    }
+  });
+  $('btn-back').addEventListener('click', function(){ showScreen('menu'); });
+  showScreen('menu');
+  renderMenu();
+})();
+</script>
+</body>
+</html>
