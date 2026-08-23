@@ -15,9 +15,11 @@
 <style>
   :root{ --su:#9a3412; --su-d:#7c2d12; --su-tint:rgba(154,52,18,0.10); }
   :root[data-theme="dark"]{ --su:#fdba74; --su-d:#fed7aa; --su-tint:rgba(253,186,116,0.14); }
-  .id-wrap{ max-width: 900px; margin-inline:auto; }
-  /* 選單（成語卡片格）填滿寬版容器，與其他頁一致；閱讀/練習畫面維持易讀窄欄 */
+  /* 全部畫面（選單＋故事）都填滿寬版容器，與其他頁「進入後也滿版」一致；
+     故事內文本身收斂到舒適閱讀寬度，避免寬螢幕行過長。 */
+  .id-wrap{ max-width: var(--content-max); margin-inline:auto; }
   #screen-menu.id-wrap{ max-width: var(--content-max); }
+  .id-block-text{ max-width: 48em; }
   .id-screen{ display:none; } .id-screen.active{ display:block; }
   .id-topbar{ display:flex; align-items:center; gap:var(--s3); margin-bottom:var(--s4); }
   .id-title{ font-size:var(--fs-h2); font-weight:800; color:var(--su-d); }
@@ -135,7 +137,7 @@ var IDIOM_DATA = [{"idiom":"守株待兔","story":"宋國有個農夫在田裡�
       var btn = document.createElement('button'); btn.type='button';
       btn.className='id-card ' + (done?'done':'is-todo');
       btn.innerHTML = '<span class="id-c-word">'+rubyIdiom(it)+'</span>'+
-        '<span class="id-c-state">'+(done?'✓ 讀過了':'看故事')+'</span>';
+        '<span class="id-c-state">'+(done?'✅ 讀過了':'▶️ 看故事')+'</span>';
       btn.setAttribute('aria-label', it.idiom + (done?'（已讀過）':''));
       btn.addEventListener('click', function(){ openIdiom(idx); });
       grid.appendChild(btn);
