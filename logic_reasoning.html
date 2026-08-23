@@ -62,8 +62,7 @@ body { overflow-x: hidden; }
 .ma-level-num { font-size: var(--fs-small); font-weight: 700; color: var(--su-ink); }
 .ma-level-name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); line-height: 1.25; }
 .ma-level-concepts { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; line-height: 1.4; }
-.ma-level-progress { height: 8px; border-radius: 999px; background: var(--su-tint); overflow: hidden; margin-top: 2px; }
-.ma-level-progress > i { display: block; height: 100%; background: var(--su); border-radius: 999px; }
+.ma-level-pips { margin-top: 6px; flex-wrap: wrap; }
 .ma-level-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-top: 2px; }
 .ma-level-status { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-small); font-weight: 700; }
 .ma-level-status.done { color: var(--c-correct-ink); }
@@ -3295,6 +3294,8 @@ body { overflow-x: hidden; }
         var pos = Math.min(rec.pos, total);
         var done = !!rec.done;
         var pct = total ? Math.round(pos / total * 100) : 0;
+        var maDots = '';
+        for (var _d = 0; _d < total; _d++) maDots += '<i class="' + (_d < pos ? 'on' : '') + '"></i>';
         var st = done ? Math.max(1, starsFor(rec.correct, total)) : 0;
         var statusText = done
           ? ('✅ 已完成（答對 ' + rec.correct + '/' + total + '）')
@@ -3312,7 +3313,7 @@ body { overflow-x: hidden; }
             '</div>' +
           '</div>' +
           '<div class="ma-level-concepts">' + lv.concepts.join('・') + '</div>' +
-          '<div class="ma-level-progress" aria-hidden="true"><i style="width:' + pct + '%"></i></div>' +
+          '<span class="u-card__dots ma-level-pips" aria-hidden="true">' + maDots + '</span>' +
           '<div class="ma-level-foot">' +
             '<span class="ma-level-status ' + (done ? 'done' : 'todo') + '">' + statusText + '</span>' +
             '<span class="ma-level-stars" aria-hidden="true">' + (done ? starStr(st) : '') + '</span>' +
