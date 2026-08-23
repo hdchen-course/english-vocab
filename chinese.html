@@ -357,10 +357,23 @@ body {
   margin-bottom: 16px;
 }
 
+/* 關卡標題（比照 concept/subject 題目頁「← 關卡名」）：放在返回鍵右側。 */
+.q-level-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--fs-body);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
 .progress-dots {
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 6px;
+  margin-bottom: var(--s4);
 }
 
 .progress-dot {
@@ -417,11 +430,18 @@ body {
   box-shadow: var(--shadow-sm);
 }
 
+/* 選項排版比照全書 canon（.q-options）：手機／平板單欄，寬螢幕才置中兩欄並收斂到
+   易讀寬度——避免桌機上選項被拉成整條、單字選項中間空空。 */
 .options-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: var(--s3);
   margin-top: var(--s2);
+  max-width: 640px;
+  margin-inline: auto;
+}
+@media (min-width: 1024px) {
+  .options-grid { grid-template-columns: 1fr 1fr; max-width: 760px; }
 }
 
 .option-btn {
@@ -701,9 +721,10 @@ body {
     <div class="play-column">
       <div class="question-header">
         <button class="header-btn" id="quit-game" title="離開這一關">←</button>
-        <div class="progress-dots" id="progress-dots"></div>
+        <span class="q-level-title" id="q-level-title"></span>
         <div class="combo-display" id="combo-display"></div>
       </div>
+      <div class="progress-dots" id="progress-dots"></div>
       <div class="ch-qcard">
         <div id="passage-container"></div>
         <div class="question-box">
@@ -2173,6 +2194,11 @@ function startGame(catId, level) {
 
 function renderQuestion() {
   const q = currentGame.questions[currentGame.questionIndex];
+
+  // 關卡標題（比照 concept/subject 題目頁「← 關卡名」）
+  var _cat = CATEGORIES.find(c => c.id === currentGame.categoryId);
+  var _lt = document.getElementById('q-level-title');
+  if (_lt) _lt.textContent = _cat ? (_cat.emoji + ' ' + _cat.name + '·' + (LEVEL_NAMES[currentGame.level] || '')) : '';
 
   // Progress dots
   const dotsEl = document.getElementById('progress-dots');
