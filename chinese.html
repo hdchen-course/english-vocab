@@ -2794,7 +2794,9 @@ renderHome();       // renderHome 內含 syncHudFromGame()，以統一 profile �
     if (!queue.length) { showEmptyReview(); return; }
     currentGame = {
       categoryId: '__wordex__', level: 0, mode: 'wordexReview',
-      questions: queue.map(function (id) { return Object.assign({}, ITEM_INDEX[id].q); }),
+      // 深拷貝 options：renderQuestion 會就地洗牌 options 並只把新 answer 寫回本拷貝；
+      // 若與題庫共享 options 陣列參照，會打亂原題卻讓原題 answer stale，日後一般關卡重玩把錯選項標成正解。
+      questions: queue.map(function (id) { var s = ITEM_INDEX[id].q; return Object.assign({}, s, Array.isArray(s.options) ? { options: s.options.slice() } : {}); }),
       questionIndex: 0, score: 0, combo: 0, bestCombo: 0, answers: []
     };
     if (typeof showScreen === 'function') showScreen('question-screen');
@@ -2807,7 +2809,7 @@ renderHome();       // renderHome 內含 syncHudFromGame()，以統一 profile �
     if (!ITEM_INDEX[id]) return;
     currentGame = {
       categoryId: '__wordex__', level: 0, mode: 'wordexReview',
-      questions: [Object.assign({}, ITEM_INDEX[id].q)],
+      questions: [Object.assign({}, ITEM_INDEX[id].q, Array.isArray(ITEM_INDEX[id].q.options) ? { options: ITEM_INDEX[id].q.options.slice() } : {})],
       questionIndex: 0, score: 0, combo: 0, bestCombo: 0, answers: []
     };
     if (typeof showScreen === 'function') showScreen('question-screen');
