@@ -301,14 +301,14 @@ body { overflow-x: hidden; }
 <script>
 /* =====================================================================
  * 主程式（自足 IIFE）
- *   - 9 個中性等級（等級1..9）、每級 12 題，全部一律解鎖、可自由進入。
+ *   - 18 個中性等級（等級1..18）、每級 20 題，全部一律解鎖、可自由進入。
  *   - 選項每題 Fisher–Yates 洗牌；answer 為「未洗牌前的 0-based 索引」，
  *     以 data-i 保留原始索引判斷 i===answer，判分不受洗牌影響。
  *   - 每題最多記一次分（answered 旗標守衛）；答錯可再試但只給視覺提示、不加分。
  *   - 完成一級 → 依 correctCount/總題數給星（3 階：★☆☆／★★☆／★★★）、寫入 best、
  *     彈 Game.showToast 鼓勵語，並解鎖對應本地徽章。
  *   - 獨立 localStorage key：math_adv_progress_v1。結構：
- *       { lv1:{done,best}, ..., lv9:{done,best}, badges:{ badgeId:true } }
+ *       { lv1:{done,best}, ..., lv18:{done,best}, badges:{ badgeId:true } }
  *   - 「只增不減」：best = Math.max(prev.best||0, thisRun)；徽章 awarded guard 永不取消。
  *   - 零重複計分：本徽章模組不呼叫 Game.recordAnswer / award / recordSession，
  *     只用 Game.showToast（純提示）與（可省略的）Game.getProfile（唯讀）。
