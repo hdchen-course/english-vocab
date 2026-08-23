@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>面積與週長特訓 📐</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<link rel="stylesheet" href="concept.css">
+<script src="game_core.js"></script>
+<!--
+  面積與週長特訓：先教長方形/正方形/三角形的週長與面積公式，再用生成器反覆練不同題目、難度隨連對提升。
+  答案由程式即時算出（correct-by-construction）：週長為整數；面積為整數或三角形的終止小數（× 0.5）。作答用單一數字格，以數值比較。
+  純本地(data-game-hud=off、key area_lab_v1、不計 XP，只 pingActive 續 streak)。全繁體中文。單位：長度=公分、面積=平方公分。
+-->
+<style>
+  :root{ --su:#7c3aed; --su-d:#6d28d9; --su-tint:rgba(124,58,237,0.12); }
+  :root[data-theme="dark"]{ --su:#c4b5fd; --su-d:#ddd6fe; --su-tint:rgba(196,181,253,0.16); }
+  .al-wrap{ width:100%; }
+  .al-screen{ display:none; } .al-screen.active{ display:block; }
+  .al-topbar{ display:flex; align-items:center; gap:var(--s3); margin-bottom:var(--s4); }
+  .al-title{ font-size:var(--fs-h2); font-weight:800; color:var(--ink); }
+  .al-hello{ display:flex; align-items:center; gap:var(--s3); padding:var(--s4); background:var(--su-tint);
+    border:1px solid var(--card-border); border-radius:var(--r-lg); margin-bottom:var(--s5); }
+  .al-hello .al-mascot{ font-size:44px; flex:none; }
+  .al-htext{ font-size:var(--fs-body); font-weight:700; color:var(--ink); }
+  .al-hsub{ font-size:var(--fs-small); color:var(--ink); font-weight:600; margin-top:2px; }
+  .al-card{ background:var(--card); border:1px solid var(--card-border); border-radius:var(--r-lg); box-shadow:var(--shadow-sm); padding:var(--s5) var(--s4); max-width:600px; margin-inline:auto; }
+  .al-teach{ font-size:var(--fs-body); font-weight:600; color:var(--ink); line-height:1.8; }
+  .al-teach h2{ font-size:var(--fs-h2); font-weight:800; color:var(--su-d); margin:0 0 var(--s3); }
+  .al-scorebar{ display:flex; justify-content:space-between; align-items:center; font-size:var(--fs-small); font-weight:800; color:var(--su-d); margin-bottom:var(--s3); }
+  .al-lv{ background:var(--su-tint); border-radius:999px; padding:2px 10px; }
+  .al-tag{ display:inline-block; font-size:var(--fs-small); font-weight:800; color:var(--su-d); background:var(--su-tint); border-radius:999px; padding:3px 12px; margin-bottom:var(--s2); }
+  .al-problem{ font-size:22px; font-weight:800; color:var(--ink); text-align:center; margin:var(--s3) 0; line-height:1.7; }
+  .al-problem .al-q{ color:var(--su-d); }
+  .al-fig{ font-size:52px; text-align:center; margin:var(--s2) 0; line-height:1; }
+  .al-answer{ display:flex; align-items:center; justify-content:center; gap:10px; margin:var(--s3) 0; }
+  .al-answer input{ width:150px; height:52px; font-size:26px; font-weight:800; text-align:center; font-family:var(--font);
+    border:2px solid var(--card-border); border-radius:var(--r-md); background:var(--card); color:var(--ink); }
+  .al-answer input:focus{ border-color:var(--su); outline:none; }
+  .al-answer .al-unit{ font-size:22px; font-weight:800; color:var(--ink); }
+  .al-reveal{ margin-top:var(--s3); padding:var(--s3) var(--s4); border-radius:var(--r-md); font-size:var(--fs-body); font-weight:700; color:var(--ink); line-height:1.7; display:none; }
+  .al-reveal.show{ display:block; }
+  .al-reveal.ok{ background:var(--tint-english); }
+  .al-reveal.no{ background:var(--su-tint); }
+  .al-actions{ margin-top:var(--s4); display:flex; gap:var(--s3); }
+  .al-actions .btn{ flex:1; }
+  .al-note{ text-align:center; color:var(--ink-soft); font-size:var(--fs-small); margin-top:var(--s5); font-weight:600; max-width:34em; margin-inline:auto; }
+</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">面積與週長特訓 📐</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="al-screen active al-wrap">
+    <div class="al-topbar"><span class="al-title">面積與週長特訓 📐</span></div>
+    <div class="al-hello"><span class="al-mascot" aria-hidden="true">📐</span>
+      <div><div class="al-htext">週長是「繞一圈的長度」，面積是「鋪滿裡面要幾個方格」。先記住每種形狀的公式，再開始練習——每一題都不一樣，越練越順、難度也會慢慢變高。</div>
+      <div class="al-hsub">長度用「公分」，面積用「平方公分」。建議先一種一種學過再玩「綜合練習」。答完會告訴你「這題怎麼算」。</div></div></div>
+    <div id="al-menu" class="cn-lessons"></div>
+    <a class="cn-nextup" href="unit_lab.html"><span class="cn-nextup-ic" aria-hidden="true">📏</span><span>想練單位換算嗎？到「單位換算特訓」繼續 →</span></a>
+    <p class="al-note">這是面積與週長練習場，題目由程式隨機生成、可無限練習；答對幾題難度會慢慢升高，連續卡關時也會自動降回來，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
+  </section>
+  <section id="screen-play" class="al-screen al-wrap">
+    <div class="al-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="al-title" id="play-title">面積與週長特訓</span></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+/* eslint-disable */
+(function(){
+  'use strict';
+  function $(id){ return document.getElementById(id); }
+  function ri(lo,hi){ return lo + Math.floor(Math.random()*(hi-lo+1)); }
+  function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+  function fmt(x){ return (Math.round(x*100)/100).toString(); }
+  function dimHi(lv){ return lv<=1?9 : lv===2?15 : lv===3?30 : lv===4?50 : 99; }
+
+  var CATS = [
+    { key:'rect_p', label:'長方形・週長', emoji:'▭', sub:'週長 = （長 ＋ 寬）× 2',
+      teach:'<b>長方形的週長</b>是沿著四個邊繞一圈的總長度。因為對邊一樣長（兩條長、兩條寬），所以：<br><br><b>週長 =（長 ＋ 寬）× 2</b>。<br><br><b>例：</b>長 5 公分、寬 3 公分 → 週長 =（5 ＋ 3）× 2 = 8 × 2 = 16 公分。',
+      gen:function(lv){ var hi=dimHi(lv); var L=ri(2,hi), W=ri(2,hi); var ans=2*(L+W);
+        return { fig:'▭', text:'一個長方形，長 <b>'+L+'</b> 公分、寬 <b>'+W+'</b> 公分。<br><span class="al-q">它的週長是多少？</span>', answer:ans, unit:'公分',
+          tip:'週長 =（長 ＋ 寬）× 2 =（'+L+' ＋ '+W+'）× 2 = '+(L+W)+' × 2 = '+ans+' 公分。', spoken:'長方形，長 '+L+' 公分、寬 '+W+' 公分，週長是多少' }; } },
+    { key:'rect_a', label:'長方形・面積', emoji:'🟦', sub:'面積 = 長 × 寬',
+      teach:'<b>長方形的面積</b>是裡面能鋪滿幾個「1 公分 × 1 公分」的小方格。一排放「長」個、共有「寬」排，所以：<br><br><b>面積 = 長 × 寬</b>。<br><br><b>例：</b>長 5 公分、寬 3 公分 → 面積 = 5 × 3 = 15 平方公分。',
+      gen:function(lv){ var hi=dimHi(lv); var L=ri(2,hi), W=ri(2,hi); var ans=L*W;
+        return { fig:'🟦', text:'一個長方形，長 <b>'+L+'</b> 公分、寬 <b>'+W+'</b> 公分。<br><span class="al-q">它的面積是多少？</span>', answer:ans, unit:'平方公分',
+          tip:'面積 = 長 × 寬 = '+L+' × '+W+' = '+ans+' 平方公分。', spoken:'長方形，長 '+L+' 公分、寬 '+W+' 公分，面積是多少' }; } },
+    { key:'square', label:'正方形・週長與面積', emoji:'⬜', sub:'四邊一樣長：週長 = 邊長 × 4、面積 = 邊長 × 邊長',
+      teach:'<b>正方形</b>四個邊一樣長，所以公式更簡單：<br><br><b>週長 = 邊長 × 4</b>（四條邊加起來）。<br><b>面積 = 邊長 × 邊長</b>（邊長自己乘自己）。<br><br><b>例：</b>邊長 6 公分 → 週長 = 6 × 4 = 24 公分；面積 = 6 × 6 = 36 平方公分。',
+      gen:function(lv){ var hi=dimHi(lv); var a=ri(2,hi); var wantArea=pick([true,false]);
+        if(wantArea){ var ans=a*a; return { fig:'⬜', text:'一個正方形，邊長 <b>'+a+'</b> 公分。<br><span class="al-q">它的面積是多少？</span>', answer:ans, unit:'平方公分',
+          tip:'正方形面積 = 邊長 × 邊長 = '+a+' × '+a+' = '+ans+' 平方公分。', spoken:'正方形，邊長 '+a+' 公分，面積是多少' }; }
+        else { var ansp=4*a; return { fig:'⬜', text:'一個正方形，邊長 <b>'+a+'</b> 公分。<br><span class="al-q">它的週長是多少？</span>', answer:ansp, unit:'公分',
+          tip:'正方形週長 = 邊長 × 4 = '+a+' × 4 = '+ansp+' 公分。', spoken:'正方形，邊長 '+a+' 公分，週長是多少' }; } } },
+    { key:'tri_a', label:'三角形・面積', emoji:'🔺', sub:'面積 = 底 × 高 ÷ 2',
+      teach:'<b>三角形的面積</b>剛好是「同樣底和高的長方形」的一半，所以：<br><br><b>面積 = 底 × 高 ÷ 2</b>。<br><br><b>例：</b>底 6 公分、高 4 公分 → 面積 = 6 × 4 ÷ 2 = 24 ÷ 2 = 12 平方公分。<br><br>💡 底和高一定要「互相垂直」（成直角）才能這樣算。',
+      gen:function(lv){ var hi=dimHi(lv); var base=ri(2,hi), h=ri(2,hi);
+        // lv<=2 保證整數答案(底或高至少一個偶數)；高等級允許 .5
+        if(lv<=2 && (base*h)%2!==0){ if(base%2!==0) base+=1; else h+=1; }
+        var ans=base*h/2;
+        return { fig:'🔺', text:'一個三角形，底 <b>'+base+'</b> 公分、高 <b>'+h+'</b> 公分（底和高互相垂直）。<br><span class="al-q">它的面積是多少？</span>', answer:ans, unit:'平方公分',
+          tip:'三角形面積 = 底 × 高 ÷ 2 = '+base+' × '+h+' ÷ 2 = '+(base*h)+' ÷ 2 = '+fmt(ans)+' 平方公分。', spoken:'三角形，底 '+base+' 公分、高 '+h+' 公分，面積是多少' }; } }
+  ];
+  var CAT_BY = {}; CATS.forEach(function(c){ CAT_BY[c.key]=c; });
+
+  function showScreen(name){
+    $('screen-menu').classList.toggle('active', name==='menu');
+    $('screen-play').classList.toggle('active', name==='play');
+    try{ window.scrollTo(0,0); }catch(e){}
+  }
+  function renderMenu(){
+    var html='';
+    CATS.forEach(function(c){
+      html+='<button type="button" class="cn-lesson" data-cat="'+c.key+'">'+
+        '<span class="cn-lesson-top"><span class="cn-lesson-emoji" style="background:var(--su-tint)" aria-hidden="true">'+c.emoji+'</span><span class="cn-lesson-name">'+c.label+'</span></span>'+
+        '<span class="cn-lesson-sub">'+c.sub+'</span></button>';
+    });
+    html+='<button type="button" class="cn-lesson" data-cat="mix">'+
+      '<span class="cn-lesson-top"><span class="cn-lesson-emoji" style="background:var(--su-tint)" aria-hidden="true">🎲</span><span class="cn-lesson-name">綜合練習（各種混合）</span></span>'+
+      '<span class="cn-lesson-sub">上面幾種都學過之後再來這裡混合練，最能練到「看到形狀就知道用哪個公式」</span></button>';
+    $('al-menu').innerHTML=html;
+    Array.prototype.forEach.call($('al-menu').querySelectorAll('.cn-lesson'), function(b){
+      b.addEventListener('click', function(){ startMode(b.getAttribute('data-cat')); });
+    });
+  }
+
+  var mode=null, cur=null, answered=false, correct=0, total=0, streak=0, bestStreak=0, lv=1;
+  var lvCorrect=0, missStreak=0, lvChange=0;
+  var LVL_UP=5, LVL_DOWN=3;
+  function startMode(m){
+    mode=m; correct=0; total=0; streak=0; bestStreak=0; lv=1; lvCorrect=0; missStreak=0; lvChange=0;
+    showScreen('play');
+    $('play-title').textContent = (m==='mix'?'綜合練習':CAT_BY[m].label)+' 📐';
+    if(m==='mix'){ renderMixPrimer(); } else { renderTeach(m); }
+  }
+  function renderMixPrimer(){
+    $('stage').innerHTML =
+      '<div class="al-card">'+
+        '<h2 class="al-title" style="margin-bottom:var(--s3)">🎲 綜合練習</h2>'+
+        '<div class="al-teach">這裡會把<b>長方形、正方形、三角形</b>的週長與面積混在一起出題。看到題目時，先<b>看清楚問的是「週長」還是「面積」</b>，再想公式：<br><br>'+
+        '・<b>長方形週長</b> =（長＋寬）× 2<br>・<b>長方形面積</b> = 長 × 寬<br>・<b>正方形週長</b> = 邊長 × 4；<b>面積</b> = 邊長 × 邊長<br>・<b>三角形面積</b> = 底 × 高 ÷ 2<br><br>'+
+        '週長的答案單位是<b>公分</b>，面積是<b>平方公分</b>。想不起來也沒關係，答完每題都會再示範怎麼算。</div>'+
+        '<div class="al-actions"><button type="button" class="btn btn-primary" id="btn-begin">開始混合練習 🎲</button></div>'+
+      '</div>';
+    $('btn-begin').addEventListener('click', function(){ beginPractice(); });
+    try{ $('btn-begin').focus(); }catch(e){}
+  }
+  function renderTeach(m){
+    var c=CAT_BY[m];
+    $('stage').innerHTML =
+      '<div class="al-card">'+
+        '<h2 class="al-title" style="margin-bottom:var(--s3)">'+c.emoji+' '+c.label+'</h2>'+
+        '<div class="al-teach">'+c.teach+'</div>'+
+        '<div class="al-actions"><button type="button" class="btn btn-primary" id="btn-begin">我學會了，開始練習 ✏️</button></div>'+
+      '</div>';
+    $('btn-begin').addEventListener('click', function(){ beginPractice(); });
+    try{ $('btn-begin').focus(); }catch(e){}
+  }
+  function beginPractice(){ nextProblem(); }
+  function genOne(){ var c = mode==='mix' ? pick(CATS) : CAT_BY[mode]; var p=c.gen(lv); p.cat=c; return p; }
+
+  function nextProblem(){
+    cur=genOne(); answered=false;
+    var bestTxt = bestStreak>streak ? ('（最佳 '+bestStreak+'）') : '';
+    $('stage').innerHTML =
+      '<div class="al-card">'+
+        '<div class="al-scorebar"><span>答對 '+correct+' / '+total+'　連對 '+streak+' '+bestTxt+'🔥</span><span class="al-lv">難度 Lv.'+lv+'</span></div>'+
+        '<span class="al-tag">'+cur.cat.emoji+' '+cur.cat.label+'</span>'+
+        '<div class="al-fig" aria-hidden="true">'+cur.fig+'</div>'+
+        '<div class="al-problem" id="al-prob" tabindex="-1" role="img" aria-label="題目：'+cur.spoken+'？">'+cur.text+'</div>'+
+        '<div class="al-answer"><input type="text" inputmode="decimal" id="al-in" aria-label="答案（'+cur.unit+'）" autocomplete="off"><span class="al-unit">'+cur.unit+'</span></div>'+
+        '<div class="al-actions"><button type="button" class="btn btn-primary" id="btn-submit">送出答案 ✓</button></div>'+
+        '<div class="al-reveal" id="al-reveal" aria-live="assertive"></div>'+
+        '<div class="al-actions" id="al-next-actions" style="display:none"><button type="button" class="btn btn-primary" id="btn-next">下一題 ➡️</button></div>'+
+      '</div>';
+    try{ $('al-prob').focus(); }catch(e){}
+    $('btn-submit').addEventListener('click', submit);
+    $('al-in').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); if(!answered) submit(); } });
+    $('btn-next').onclick=function(){ nextProblem(); };
+  }
+  function parseNum(s){ s=(s||'').trim().replace(/^\+/,''); if(!/^-?\d+(\.\d+)?$/.test(s)) return null; return parseFloat(s); }
+  function submit(){
+    if(answered) return;
+    var x=parseNum($('al-in').value);
+    if(x===null){
+      var rev0=$('al-reveal'); rev0.className='al-reveal show no';
+      rev0.textContent='請填入一個數字（可以是小數，例如 7.5），再按送出。';
+      return;
+    }
+    answered=true; total++;
+    var ok = Math.abs(x - cur.answer) < 1e-9;
+    lvChange=0;
+    if(ok){
+      correct++; streak++; if(streak>bestStreak) bestStreak=streak;
+      missStreak=0; lvCorrect++;
+      if(lvCorrect>=LVL_UP && lv<5){ lv++; lvCorrect=0; lvChange=1; }
+    } else {
+      streak=0; missStreak++;
+      if(missStreak>=LVL_DOWN && lv>1){ lv--; lvCorrect=0; missStreak=0; lvChange=-1; }
+    }
+    try{ if(window.Game && typeof Game.pingActive==='function') Game.pingActive(); }catch(e){}
+    var lvMsg = lvChange>0 ? ('　🎉 難度升到 Lv.'+lv+'！') : (lvChange<0 ? ('　難度降到 Lv.'+lv+'，先把手感找回來 🙂') : '');
+    var rev=$('al-reveal');
+    rev.className='al-reveal show '+(ok?'ok':'no');
+    rev.textContent=(ok?'答對了！👍 ':('沒關係～答案是 '+fmt(cur.answer)+' '+cur.unit+'。'))+cur.tip+lvMsg;
+    $('btn-submit').disabled=true; $('al-in').disabled=true;
+    $('al-next-actions').style.display='flex';
+    try{ $('btn-next').focus(); }catch(e){}
+  }
+  document.addEventListener('keydown', function(e){
+    if(!$('screen-play').classList.contains('active')) return;
+    if(e.key==='Enter'){
+      var onActionBtn = e.target && e.target.tagName==='BUTTON';
+      if(onActionBtn) return;
+      if(answered && $('btn-next')){ e.preventDefault(); nextProblem(); }
+    }
+  });
+  $('btn-back').addEventListener('click', function(){ showScreen('menu'); });
+  showScreen('menu');
+  renderMenu();
+})();
+</script>
+</body>
+</html>
