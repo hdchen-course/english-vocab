@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>百分比特訓 💯</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<link rel="stylesheet" href="concept.css">
+<script src="game_core.js"></script>
+<!--
+  百分比特訓：先教「百分比＝每 100 份裡佔幾份」、求某數的百分比、打折、求佔幾%，再用生成器反覆練、難度隨連對提升。
+  答案由程式即時算出（correct-by-construction）：用 gcd 決定基數倍率，保證每題答案都是乾淨整數。作答單一數字格，以數值比較。
+  純本地(data-game-hud=off、key percent_lab_v1、不計 XP,只 pingActive 續 streak)。全繁體中文。
+-->
+<style>
+  :root{ --su:#0d9488; --su-d:#0f766e; --su-tint:rgba(13,148,136,0.12); }
+  :root[data-theme="dark"]{ --su:#5eead4; --su-d:#99f6e4; --su-tint:rgba(94,234,212,0.16); }
+  .pc-wrap{ width:100%; }
+  .pc-screen{ display:none; } .pc-screen.active{ display:block; }
+  .pc-topbar{ display:flex; align-items:center; gap:var(--s3); margin-bottom:var(--s4); }
+  .pc-title{ font-size:var(--fs-h2); font-weight:800; color:var(--ink); }
+  .pc-hello{ display:flex; align-items:center; gap:var(--s3); padding:var(--s4); background:var(--su-tint);
+    border:1px solid var(--card-border); border-radius:var(--r-lg); margin-bottom:var(--s5); }
+  .pc-hello .pc-mascot{ font-size:44px; flex:none; }
+  .pc-htext{ font-size:var(--fs-body); font-weight:700; color:var(--ink); }
+  .pc-hsub{ font-size:var(--fs-small); color:var(--ink); font-weight:600; margin-top:2px; }
+  .pc-card{ background:var(--card); border:1px solid var(--card-border); border-radius:var(--r-lg); box-shadow:var(--shadow-sm); padding:var(--s5) var(--s4); max-width:600px; margin-inline:auto; }
+  .pc-teach{ font-size:var(--fs-body); font-weight:600; color:var(--ink); line-height:1.8; }
+  .pc-teach h2{ font-size:var(--fs-h2); font-weight:800; color:var(--su-d); margin:0 0 var(--s3); }
+  .pc-scorebar{ display:flex; justify-content:space-between; align-items:center; font-size:var(--fs-small); font-weight:800; color:var(--su-d); margin-bottom:var(--s3); }
+  .pc-lv{ background:var(--su-tint); border-radius:999px; padding:2px 10px; }
+  .pc-tag{ display:inline-block; font-size:var(--fs-small); font-weight:800; color:var(--su-d); background:var(--su-tint); border-radius:999px; padding:3px 12px; margin-bottom:var(--s2); }
+  .pc-problem{ font-size:24px; font-weight:800; color:var(--ink); text-align:center; margin:var(--s3) 0; line-height:1.6; }
+  .pc-problem .pc-q{ color:var(--su-d); }
+  .pc-answer{ display:flex; align-items:center; justify-content:center; gap:10px; margin:var(--s3) 0; }
+  .pc-answer input{ width:150px; height:52px; font-size:26px; font-weight:800; text-align:center; font-family:var(--font);
+    border:2px solid var(--card-border); border-radius:var(--r-md); background:var(--card); color:var(--ink); }
+  .pc-answer input:focus{ border-color:var(--su); outline:none; }
+  .pc-answer .pc-unit{ font-size:22px; font-weight:800; color:var(--ink); }
+  .pc-reveal{ margin-top:var(--s3); padding:var(--s3) var(--s4); border-radius:var(--r-md); font-size:var(--fs-body); font-weight:700; color:var(--ink); line-height:1.7; display:none; }
+  .pc-reveal.show{ display:block; }
+  .pc-reveal.ok{ background:var(--tint-english); }
+  .pc-reveal.no{ background:var(--su-tint); }
+  .pc-actions{ margin-top:var(--s4); display:flex; gap:var(--s3); }
+  .pc-actions .btn{ flex:1; }
+  .pc-note{ text-align:center; color:var(--ink-soft); font-size:var(--fs-small); margin-top:var(--s5); font-weight:600; max-width:34em; margin-inline:auto; }
+</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">百分比特訓 💯</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="pc-screen active pc-wrap">
+    <div class="pc-topbar"><span class="pc-title">百分比特訓 💯</span></div>
+    <div class="pc-hello"><span class="pc-mascot" aria-hidden="true">💯</span>
+      <div><div class="pc-htext">百分比就是「把整體看成 100 份，佔了其中幾份」。<b>X% = X ÷ 100</b>。先學會怎麼算，再開始練習——每一題都不一樣，越練越順、難度也會慢慢變高。</div>
+      <div class="pc-hsub">生活裡到處都是百分比：打折、電量、考試分數…。建議先一種一種學過再玩「綜合練習」。答完會告訴你「這題怎麼算」。</div></div></div>
+    <div id="pc-menu" class="cn-lessons"></div>
+    <a class="cn-nextup" href="finance.html"><span class="cn-nextup-ic" aria-hidden="true">🪙</span><span>想把百分比用在錢上嗎？到「理財冒險」繼續 →</span></a>
+    <p class="pc-note">這是百分比練習場，題目由程式隨機生成、可無限練習；答對幾題難度會慢慢升高，連續卡關時也會自動降回來，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
+  </section>
+  <section id="screen-play" class="pc-screen pc-wrap">
+    <div class="pc-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="pc-title" id="play-title">百分比特訓</span></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+/* eslint-disable */
+(function(){
+  'use strict';
+  function $(id){ return document.getElementById(id); }
+  function ri(lo,hi){ return lo + Math.floor(Math.random()*(hi-lo+1)); }
+  function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+  function gcd(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){ var t=b; b=a%b; a=t; } return a||1; }
+  // 選一個百分比，並回傳能讓「該百分比 × 基數 ÷ 100」整除的基數步長
+  function pctPool(lv){ return lv<=1?[10,20,50] : lv===2?[10,20,25,50,75] : lv===3?[10,20,25,30,40,50,60,75,80] : [5,10,15,20,25,30,40,50,60,70,75,80,90]; }
+  function stepFor(X){ return 100/gcd(X,100); }
+  function baseMax(lv){ return lv<=1?9 : lv===2?15 : lv===3?30 : lv===4?60 : 100; }
+
+  var CATS = [
+    { key:'of', label:'求某數的百分之幾', emoji:'🔢', sub:'X% = X ÷ 100，再乘上那個數',
+      teach:'求「一個數的百分之幾」，先把百分比變成除以 100，再乘上那個數。<br><br><b>公式：Y 的 X% = Y × X ÷ 100</b>。<br><br><b>例：</b>200 的 25% = 200 × 25 ÷ 100 = 5000 ÷ 100 = 50。<br><br>💡 小訣竅：10% 就是「除以 10」；50% 就是「一半」；25% 就是「四分之一」。',
+      gen:function(lv){ var X=pick(pctPool(lv)); var step=stepFor(X); var Y=step*ri(1, Math.max(1,Math.floor(baseMax(lv)/step)+2)); var ans=X*Y/100;
+        return { text:'<b>'+Y+'</b> 的 <b>'+X+'%</b> <span class="pc-q">是多少？</span>', answer:ans, unit:'',
+          tip:Y+' 的 '+X+'% = '+Y+' × '+X+' ÷ 100 = '+(X*Y)+' ÷ 100 = '+ans+'。', spoken:Y+' 的百分之 '+X+' 是多少' }; } },
+    { key:'discount', label:'打折要付多少', emoji:'🏷️', sub:'打 X 折＝付原價的 X0%',
+      teach:'「打折」是購物最常見的百分比。<b>打 X 折，就是付原價的 X0%</b>（也就是原價 × X ÷ 10）。<br><br><b>例：</b>原價 500 元打 8 折 = 500 × 8 ÷ 10 = 400 元（省了 100 元）。<br><br>💡 打對折就是打 5 折＝付一半；折數越小、越便宜。',
+      gen:function(lv){ var d=pick(lv<=1?[5,8]:lv<=2?[5,7,8,9]:[5,6,7,8,9]); var Y=10*ri(2, Math.max(3,baseMax(lv))); var pay=Y*d/10; var save=Y-pay;
+        return { text:'原價 <b>'+Y+'</b> 元，打 <b>'+d+'</b> 折。<br><span class="pc-q">要付多少元？</span>', answer:pay, unit:'元',
+          tip:'打 '+d+' 折 = 付原價的 '+(d*10)+'%：'+Y+' × '+d+' ÷ 10 = '+pay+' 元（省了 '+save+' 元）。', spoken:'原價 '+Y+' 元，打 '+d+' 折，要付多少元' }; } },
+    { key:'whatpct', label:'佔百分之幾', emoji:'📊', sub:'部分 ÷ 全部 × 100',
+      teach:'要知道「一部分佔全部的百分之幾」，用<b>部分 ÷ 全部 × 100</b>。<br><br><b>例：</b>一班 40 人，其中 10 人戴眼鏡 → 10 ÷ 40 × 100 = 25，也就是 25%。<br><br>💡 答案是一個百分比數字（例如 25 代表 25%），這一題只要填數字就好。',
+      gen:function(lv){ var p=pick(pctPool(lv)); var step=stepFor(p); var B=step*ri(2, Math.max(3,Math.floor(baseMax(lv)/step)+2)); var A=B*p/100;
+        return { text:'<b>'+A+'</b> 是 <b>'+B+'</b> 的 <span class="pc-q">百分之幾？</span>', answer:p, unit:'%',
+          tip:A+' 是 '+B+' 的：'+A+' ÷ '+B+' × 100 = '+p+'，也就是 '+p+'%。', spoken:A+' 是 '+B+' 的百分之幾' }; } }
+  ];
+  var CAT_BY = {}; CATS.forEach(function(c){ CAT_BY[c.key]=c; });
+
+  function showScreen(name){
+    $('screen-menu').classList.toggle('active', name==='menu');
+    $('screen-play').classList.toggle('active', name==='play');
+    try{ window.scrollTo(0,0); }catch(e){}
+  }
+  function renderMenu(){
+    var html='';
+    CATS.forEach(function(c){
+      html+='<button type="button" class="cn-lesson" data-cat="'+c.key+'">'+
+        '<span class="cn-lesson-top"><span class="cn-lesson-emoji" style="background:var(--su-tint)" aria-hidden="true">'+c.emoji+'</span><span class="cn-lesson-name">'+c.label+'</span></span>'+
+        '<span class="cn-lesson-sub">'+c.sub+'</span></button>';
+    });
+    html+='<button type="button" class="cn-lesson" data-cat="mix">'+
+      '<span class="cn-lesson-top"><span class="cn-lesson-emoji" style="background:var(--su-tint)" aria-hidden="true">🎲</span><span class="cn-lesson-name">綜合練習（各種混合）</span></span>'+
+      '<span class="cn-lesson-sub">上面幾種都學過之後再來這裡混合練，最能練到「看到題目就知道怎麼算」</span></button>';
+    $('pc-menu').innerHTML=html;
+    Array.prototype.forEach.call($('pc-menu').querySelectorAll('.cn-lesson'), function(b){
+      b.addEventListener('click', function(){ startMode(b.getAttribute('data-cat')); });
+    });
+  }
+
+  var mode=null, cur=null, answered=false, correct=0, total=0, streak=0, bestStreak=0, lv=1;
+  var lvCorrect=0, missStreak=0, lvChange=0;
+  var LVL_UP=5, LVL_DOWN=3;
+  function startMode(m){
+    mode=m; correct=0; total=0; streak=0; bestStreak=0; lv=1; lvCorrect=0; missStreak=0; lvChange=0;
+    showScreen('play');
+    $('play-title').textContent = (m==='mix'?'綜合練習':CAT_BY[m].label)+' 💯';
+    if(m==='mix'){ renderMixPrimer(); } else { renderTeach(m); }
+  }
+  function renderMixPrimer(){
+    $('stage').innerHTML =
+      '<div class="pc-card">'+
+        '<h2 class="pc-title" style="margin-bottom:var(--s3)">🎲 綜合練習</h2>'+
+        '<div class="pc-teach">這裡會把<b>三種百分比題型混在一起</b>出題。看到題目先想：<br><br>'+
+        '・<b>求某數的百分之幾</b> → Y × X ÷ 100<br>・<b>打折要付多少</b> → 原價 × 折數 ÷ 10<br>・<b>佔百分之幾</b> → 部分 ÷ 全部 × 100<br><br>'+
+        '想不起來也沒關係，答完每題都會再示範怎麼算。<b>建議先把上面三種各自練過再來這裡</b>。</div>'+
+        '<div class="pc-actions"><button type="button" class="btn btn-primary" id="btn-begin">開始混合練習 🎲</button></div>'+
+      '</div>';
+    $('btn-begin').addEventListener('click', function(){ beginPractice(); });
+    try{ $('btn-begin').focus(); }catch(e){}
+  }
+  function renderTeach(m){
+    var c=CAT_BY[m];
+    $('stage').innerHTML =
+      '<div class="pc-card">'+
+        '<h2 class="pc-title" style="margin-bottom:var(--s3)">'+c.emoji+' '+c.label+'</h2>'+
+        '<div class="pc-teach">'+c.teach+'</div>'+
+        '<div class="pc-actions"><button type="button" class="btn btn-primary" id="btn-begin">我學會了，開始練習 ✏️</button></div>'+
+      '</div>';
+    $('btn-begin').addEventListener('click', function(){ beginPractice(); });
+    try{ $('btn-begin').focus(); }catch(e){}
+  }
+  function beginPractice(){ nextProblem(); }
+  function genOne(){ var c = mode==='mix' ? pick(CATS) : CAT_BY[mode]; var p=c.gen(lv); p.cat=c; return p; }
+
+  function nextProblem(){
+    cur=genOne(); answered=false;
+    var bestTxt = bestStreak>streak ? ('（最佳 '+bestStreak+'）') : '';
+    var unitHtml = cur.unit ? '<span class="pc-unit">'+cur.unit+'</span>' : '';
+    $('stage').innerHTML =
+      '<div class="pc-card">'+
+        '<div class="pc-scorebar"><span>答對 '+correct+' / '+total+'　連對 '+streak+' '+bestTxt+'🔥</span><span class="pc-lv">難度 Lv.'+lv+'</span></div>'+
+        '<span class="pc-tag">'+cur.cat.emoji+' '+cur.cat.label+'</span>'+
+        '<div class="pc-problem" id="pc-prob" tabindex="-1" role="img" aria-label="題目：'+cur.spoken+'？">'+cur.text+'</div>'+
+        '<div class="pc-answer"><input type="text" inputmode="decimal" id="pc-in" aria-label="答案'+(cur.unit?('（'+cur.unit+'）'):'')+'" autocomplete="off">'+unitHtml+'</div>'+
+        '<div class="pc-actions"><button type="button" class="btn btn-primary" id="btn-submit">送出答案 ✓</button></div>'+
+        '<div class="pc-reveal" id="pc-reveal" aria-live="assertive"></div>'+
+        '<div class="pc-actions" id="pc-next-actions" style="display:none"><button type="button" class="btn btn-primary" id="btn-next">下一題 ➡️</button></div>'+
+      '</div>';
+    try{ $('pc-prob').focus(); }catch(e){}
+    $('btn-submit').addEventListener('click', submit);
+    $('pc-in').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); if(!answered) submit(); } });
+    $('btn-next').onclick=function(){ nextProblem(); };
+  }
+  function parseNum(s){ s=(s||'').trim().replace(/^\+/,'').replace(/[%元]/g,''); if(!/^-?\d+(\.\d+)?$/.test(s)) return null; return parseFloat(s); }
+  function submit(){
+    if(answered) return;
+    var x=parseNum($('pc-in').value);
+    if(x===null){
+      var rev0=$('pc-reveal'); rev0.className='pc-reveal show no';
+      rev0.textContent='請填入一個數字再按送出（不用寫 % 或「元」，只填數字就好）。';
+      return;
+    }
+    answered=true; total++;
+    var ok = Math.abs(x - cur.answer) < 1e-9;
+    lvChange=0;
+    if(ok){
+      correct++; streak++; if(streak>bestStreak) bestStreak=streak;
+      missStreak=0; lvCorrect++;
+      if(lvCorrect>=LVL_UP && lv<5){ lv++; lvCorrect=0; lvChange=1; }
+    } else {
+      streak=0; missStreak++;
+      if(missStreak>=LVL_DOWN && lv>1){ lv--; lvCorrect=0; missStreak=0; lvChange=-1; }
+    }
+    try{ if(window.Game && typeof Game.pingActive==='function') Game.pingActive(); }catch(e){}
+    var lvMsg = lvChange>0 ? ('　🎉 難度升到 Lv.'+lv+'！') : (lvChange<0 ? ('　難度降到 Lv.'+lv+'，先把手感找回來 🙂') : '');
+    var ansTxt = cur.answer + (cur.unit||'');
+    var rev=$('pc-reveal');
+    rev.className='pc-reveal show '+(ok?'ok':'no');
+    rev.textContent=(ok?'答對了！👍 ':('沒關係～答案是 '+ansTxt+'。'))+cur.tip+lvMsg;
+    $('btn-submit').disabled=true; $('pc-in').disabled=true;
+    $('pc-next-actions').style.display='flex';
+    try{ $('btn-next').focus(); }catch(e){}
+  }
+  document.addEventListener('keydown', function(e){
+    if(!$('screen-play').classList.contains('active')) return;
+    if(e.key==='Enter'){
+      var onActionBtn = e.target && e.target.tagName==='BUTTON';
+      if(onActionBtn) return;
+      if(answered && $('btn-next')){ e.preventDefault(); nextProblem(); }
+    }
+  });
+  $('btn-back').addEventListener('click', function(){ showScreen('menu'); });
+  showScreen('menu');
+  renderMenu();
+})();
+</script>
+</body>
+</html>
