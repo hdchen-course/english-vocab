@@ -501,11 +501,17 @@ body {
 }
 
 /* Choices — 對齊共用 .q-opt：16px 圓角、56px 命中區、強調 hover、對錯 token 色 */
+/* 選項排版比照全書 canon（.q-options）：手機單欄、寬螢幕置中兩欄並收斂易讀寬度，
+   避免桌機上選項被拉成整條、中間空空。 */
 .choices-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: var(--s3);
-  margin-bottom: var(--s4);
+  margin: 0 auto var(--s4);
+  max-width: 640px;
+}
+@media (min-width: 1024px) {
+  .choices-grid { grid-template-columns: 1fr 1fr; max-width: 760px; }
 }
 
 .choice-btn {

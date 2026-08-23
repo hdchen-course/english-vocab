@@ -792,11 +792,16 @@ body {
 }
 
 /* Multiple choice —— 選項按鈕（對齊共用 .q-options / .q-opt 設計語言） */
+/* 選項排版比照全書 canon（.q-options）：手機單欄、寬螢幕置中兩欄並收斂易讀寬度。 */
 .choice-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: var(--s3);
-  margin: var(--s4) 0;
+  margin: var(--s4) auto;
+  max-width: 640px;
+}
+@media (min-width: 1024px) {
+  .choice-grid { grid-template-columns: 1fr 1fr; max-width: 760px; }
 }
 
 .choice-btn {
