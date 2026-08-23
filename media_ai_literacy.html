@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>媒體與 AI 識讀・看懂訊息不被騙 📰</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<link rel="stylesheet" href="concept.css">
+<script src="game_core.js"></script>
+<style>:root{ --su:#9333ea; --su-tint:rgba(147,51,234,0.14); }
+  :root[data-theme="dark"]{ --su:#d8b4fe; --su-tint:rgba(216,180,254,0.16); }</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">媒體與 AI 識讀 📰</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="cn-screen active cn-wrap">
+    <div class="cn-topbar"><span class="cn-title">媒體與 AI 識讀・看懂訊息不被騙 📰</span></div>
+    <div class="cn-hello"><span class="cn-mascot" aria-hidden="true">📰</span>
+      <div><div class="cn-htext" id="hello">每天有好多訊息、影片、廣告和 AI 生成的內容湧向你。媒體和 AI 都是很好用的工具，這裡教你怎麼<b>看懂、查證、不被騙</b>：看穿廣告與標題殺人、找真正的來源、知道 AI 也會說錯、看穿假圖假影片、跳出同溫層、分享前先想一想。</div>
+      <div class="cn-hsub">每一課都是「先懂這個本領 → 學會怎麼做 → 換你試試」。學會了，你就是聰明的閱聽人。</div></div></div>
+    <div class="cn-lessons" id="lesson-list"></div>
+    <a class="cn-nextup" href="digital_citizenship.html"><span class="cn-nextup-ic" aria-hidden="true">🌐</span><span>想更會用網路嗎？到「數位公民・網路世界求生課」繼續 →</span></a>
+    <p class="cn-note">這裡是「先學觀念」的教學小旅程，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
+  </section>
+  <section id="screen-play" class="cn-screen cn-wrap">
+    <div class="cn-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="cn-title" id="play-title">媒體與 AI 識讀</span></div>
+    <div class="cn-progress" id="prog" aria-hidden="true"></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+window.CONCEPT = {"progKey":"media_ai_concepts_v1","practiceHref":"digital_citizenship.html","lessons":[{"id":"ml_ads","name":"廣告與業配","emoji":"📣","sub":"看穿「想賣你東西」的訊息","done":"記住這句：有人想賣你東西時，話要打點折扣聽。","steps":[{"type":"teach","kicker":"這個本領","title":"有些訊息其實是想賣東西","text":"我們每天看到的內容，不是每一則都在單純告訴你事實。<b>廣告、置入、業配（有人收錢幫忙推薦）</b>的目的是<b>希望你去買、去下載、去點</b>。它們常把「我覺得很好」的<b>意見</b>，說得像「它真的最好」的<b>事實</b>。學會分辨，你才不會被牽著走。","svg":""},{"type":"teach","kicker":"怎麼做","title":"先問「誰付錢、想要我做什麼」","text":"看到超好康的推薦，先想兩件事：<b>「這是不是有人收錢在推薦？」「它希望我掏錢或點擊嗎？」</b>影片或貼文出現<b>「合作」「贊助」「業配」「廣告」</b>這類標示，就是提醒你這是商業訊息。你可以照樣參考，但要<b>把它當一種說法，再多找幾個沒收錢的意見比較</b>。","svg":""},{"type":"quiz","kicker":"換你試試","title":"一支影片一直說某款筆記本「全世界最好用、學生都該買」，畫面角落標著「贊助」","options":["標著贊助，代表有人付錢推薦，先當一種說法，再找沒收錢的評價比較","很多人拍它，一定最好用，馬上叫爸媽買","它說學生都該買，那我不買就落伍了"],"answer":0,"why":"標示「贊助」代表這是收錢的商業推薦，內容會偏向促成購買；把「最好用」當成意見而非事實，再參考沒收錢的評價，判斷才會比較準。"}],"color":"#9333ea"},{"id":"ml_clickbait","name":"標題殺人","emoji":"🎣","sub":"聳動標題常誇大或斷章取義","done":"記住這句：看完內容再決定信不信、要不要分享。","steps":[{"type":"teach","kicker":"這個本領","title":"聳動的標題是「魚餌」","text":"有些標題會<b>故意誇大、賣關子、嚇你一跳</b>，像「太可怕了！」「看到最後我哭了」「99%的人都不知道」。這叫<b>標題殺人（clickbait）</b>，目的是騙你點進去。點進去後常會發現<b>內容和標題差很多，甚至只是把一句話斷章取義</b>。","svg":""},{"type":"teach","kicker":"怎麼做","title":"先看完內容，再回頭對照標題","text":"別只看標題就相信或轉發。<b>先把內容看完</b>，再問自己：<b>「內容真的有支持這個標題嗎？」「是不是只挑了一句話來放大？」</b>如果標題很嚇人、內容卻很空，或找不到清楚的出處，這則消息就要<b>先打個問號</b>，不急著相信。","svg":""},{"type":"quiz","kicker":"換你試試","title":"一則標題寫「震驚！這種水果千萬別吃」，你有點被嚇到","options":["標題太可怕了，先轉給家人叫大家別吃","先看完內容，看它有沒有可靠證據支持標題，再決定信不信","光看標題就夠嚇人，直接相信不用點進去"],"answer":1,"why":"聳動標題常為了吸引點擊而誇大，內容不一定支持它；看完內容並檢查有沒有可靠證據，才能判斷這則消息是否可信。"}],"color":"#9333ea"},{"id":"ml_source","name":"一手消息與二手消息","emoji":"🧭","sub":"找出最先說這件事的人","done":"記住這句：「朋友傳的」不是來源，找到最先說的人才算。","steps":[{"type":"teach","kicker":"這個本領","title":"消息也分「第一手」和「轉來轉去」","text":"<b>一手消息</b>是<b>最先、直接知道這件事的來源</b>，例如當事人、官方網站、原始的研究或新聞。<b>二手消息</b>是<b>別人轉述、再轉傳的版本</b>。消息每被轉一次，就可能<b>被改一點、漏一點或誤會一點</b>。「朋友傳的」「群組說的」「網路上看到的」都<b>不算來源</b>。","svg":""},{"type":"teach","kicker":"怎麼做","title":"往回找源頭，再多方對照","text":"看到一則消息，試著<b>往回找：是誰最先說的？在哪裡發布的？是什麼時候的事？</b>再<b>換別的可靠地方查查看，是不是也這樣說</b>。找得到清楚的原始來源、日期又對得上、多個地方說法一致，這則消息才比較可信。","svg":""},{"type":"quiz","kicker":"換你試試","title":"群組轉來一張圖說「明天全國停課」，沒有寫是誰發布、也沒有日期","options":["群組都在傳，先跟著轉出去提醒大家","去官方或可靠新聞查原始來源和日期，確認後再說","反正是朋友傳的，朋友不會騙我，直接相信"],"answer":1,"why":"「群組傳的、朋友傳的」都是轉述，不算來源；停課這類重要消息應回到官方等原始來源，並核對日期，確認後再相信或轉發。"}],"color":"#9333ea"},{"id":"ml_ai_wrong","name":"AI 也會一本正經說錯","emoji":"🤖","sub":"AI 是幫手，不是真理","done":"記住這句：AI 說得很有把握，也要自己再查證。","steps":[{"type":"teach","kicker":"這個本領","title":"AI 很厲害，但不是每次都對","text":"AI 聊天機器人可以幫你想點子、解釋東西、練習寫作，是很好用的幫手。但它有一個特點：<b>它可能講得很有自信，內容卻是錯的，甚至會「編造」出看起來很真的答案</b>（大人叫它 hallucination，胡亂生成）。<b>說得很肯定，不代表就是對的。</b>","svg":""},{"type":"teach","kicker":"怎麼做","title":"把 AI 當幫手，重要的事自己再確認","text":"用 AI 查資料時，記得：<b>把它的回答當成「參考」，不是「標準答案」</b>。遇到<b>重要或會影響決定的事</b>（功課要交的事實、健康、安全、數字），要<b>自己再查可靠來源，或問大人、問老師</b>。發現它說錯也很正常，你可以<b>請它舉出來源，再自己核對</b>。","svg":""},{"type":"quiz","kicker":"換你試試","title":"你問 AI 一個歷史日期，它答得很肯定，但你要拿去交報告","options":["AI 講得很有把握，直接抄進報告就好","再查可靠來源或問老師核對，確認正確再寫進報告","AI 一定比課本新，課本就不用看了"],"answer":1,"why":"AI 可能自信地給出編造或錯誤的答案，語氣肯定不代表正確；重要的事再用可靠來源或老師核對，才能避免把錯誤資訊當成事實。"}],"color":"#9333ea"},{"id":"ml_deepfake","name":"AI 生成的圖片與影片","emoji":"🎭","sub":"看起來很真，不等於是真的","done":"記住這句：一張圖、一段影片，別急著全信或轉發。","steps":[{"type":"teach","kicker":"這個本領","title":"AI 能做出很逼真的假畫面","text":"現在用 AI 可以做出<b>很像真的假圖片、假影片，甚至模仿某個人的聲音</b>，這種假東西常被叫做<b>deepfake（深偽）</b>。它可能讓某個人「說了他根本沒說的話」，或做出沒發生過的事。以前我們覺得「有圖有真相」，<b>現在光憑一張圖或一段影片，已經不能證明事情是真的</b>。","svg":""},{"type":"teach","kicker":"怎麼做","title":"多看幾個可靠來源再判斷","text":"看到很誇張、很爆炸性的圖片或影片，先<b>別因為「看起來很真」就完全相信、也先別急著轉</b>。可以<b>查查看可靠的新聞或官方，有沒有同一件事的報導</b>；留意畫面有沒有<b>怪怪的地方（手指、文字、光影怪異）</b>。真的重要就<b>問大人一起判斷</b>。這不是要你什麼都不信，而是<b>多看幾個來源再下結論</b>。","svg":""},{"type":"quiz","kicker":"換你試試","title":"你看到一段影片，某位名人說了很誇張的話，畫面看起來很真","options":["畫面很清楚，一定是真的，趕快轉給朋友看","AI 可能做出逼真的假影片，先查可靠新聞求證再說","反正很好笑，是真是假不重要，先轉再說"],"answer":1,"why":"AI 能生成看起來很真的假影片與假聲音，「畫面逼真」無法證明內容為真；先到可靠新聞或官方求證，才不會被深偽影片誤導或幫忙散播。"}],"color":"#9333ea"},{"id":"ml_algorithm","name":"演算法與同溫層","emoji":"🫧","sub":"你看到的只是被挑過的一小部分","done":"記住這句：主動去看不同說法，才看得到全貌。","steps":[{"type":"teach","kicker":"這個本領","title":"App 會一直餵你「愛看的」","text":"影音和社群平台背後有<b>演算法</b>，它會記住你點過、看久的東西，然後<b>一直推更多類似的給你</b>。這樣很方便，但也會讓你<b>一直待在只有相同想法的圈子裡</b>，這叫<b>同溫層</b>。看久了容易以為<b>「大家都這樣想」</b>，其實那只是<b>被挑給你看的一小部分</b>。","svg":""},{"type":"teach","kicker":"怎麼做","title":"主動去看看不一樣的說法","text":"提醒自己：<b>你看到的內容是被挑過的，不是世界的全部</b>。遇到一件事，可以<b>主動找找不同立場、不同來源怎麼說</b>，也可以想想<b>「有沒有人會有別的看法？」</b>。這樣不是要你放棄自己的想法，而是<b>多聽幾種聲音，判斷才會更完整、更公平</b>。","svg":""},{"type":"quiz","kicker":"換你試試","title":"你的影音首頁全是「同一種觀點」的影片，讓你覺得大家都這麼想","options":["首頁都這樣演，代表全世界都同意，不用再想","知道這是演算法挑給我的，主動找找不同說法再判斷","別人的看法不重要，我只看我喜歡的就好"],"answer":1,"why":"演算法會不斷推播你愛看的內容，形成同溫層，讓人誤以為那是所有人的想法；主動接觸不同來源與立場，才能看到較完整的全貌。"}],"color":"#9333ea"},{"id":"ml_share","name":"分享前先想一想","emoji":"🔁","sub":"假消息靠轉發擴散","done":"記住這句：不確定就先不轉，查證後再說。","steps":[{"type":"teach","kicker":"這個本領","title":"轉發一下，也可能幫了假消息","text":"假消息會傳開，很多時候是因為<b>大家好心「順手轉一下」</b>。你按下分享的那一刻，等於<b>幫它多送到很多人面前</b>。就算你是出於好意想提醒別人，<b>轉到錯的消息，還是可能害別人白擔心、被騙，或做出錯誤決定</b>。","svg":""},{"type":"teach","kicker":"怎麼做","title":"養成「先停一下」的習慣","text":"看到想轉的消息，先做三步：<b>一、停一下，別馬上轉；二、想想「這是誰說的、查得到原始來源嗎」；三、不確定就先不轉，去查證或問信任的大人</b>。<b>寧可慢一點、少轉一則，也不要幫忙散播假消息。</b>真的想提醒別人，也可以先幫忙查清楚再說。","svg":""},{"type":"quiz","kicker":"換你試試","title":"你收到一則「很緊急」的警告消息，想趕快轉發提醒大家，但來源不清楚","options":["很緊急，先轉了再說，晚了就來不及","先停下來查證來源，不確定就先不轉、問信任的大人","反正是提醒大家，就算假的也沒差"],"answer":1,"why":"假消息常靠「緊急」催人快轉來擴散，來源不清就轉發可能害別人白擔心或受騙；先停下來查證、不確定不轉，才是負責任的做法。"}],"color":"#9333ea"}]};
+</script>
+<script src="concept_engine.js"></script>
+</body>
+</html>
