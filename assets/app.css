@@ -252,8 +252,32 @@ a { color: var(--c-primary-ink); }
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--s6));
 }
 
-/* 執行中的練習互動欄限寬，避免在 iPad 上追很長的行（§5.2） */
-.play-column { width: min(680px, 100%); margin-inline: auto; }
+/* 執行中的練習互動欄：與選單同寬（填滿 .shell），避免「進入後縮成中間窄欄」的手機孤島感。
+   為手機＋平板設計：卡片滿版，但內部文字維持易讀行長、選項在寬螢幕自動排成置中兩欄（見下方 §5.2b）。 */
+.play-column { width: 100%; margin-inline: auto; }
+
+/* §5.2b 寬螢幕（平板橫向／桌機）：選項不要被拉成一整條過寬的按鈕。
+   自動排成置中的兩欄，按鈕維持舒適寬度；手機（<1024px）仍是滿版單欄。 */
+@media (min-width: 1024px) {
+  /* grid 型選項容器（選項較短）：寬螢幕排成置中兩欄，按鈕維持舒適寬度、不被拉整寬 */
+  .options, .choices, .ma-options, .q-options, .cn-options, .quiz-options,
+  .su-options, .ph-options, .fi-options, .ea-options, .chem-options, .bio-options {
+    grid-template-columns: 1fr 1fr;
+    max-width: 900px;
+    margin-inline: auto;
+  }
+  /* 整條 block 型選項按鈕（題目／選項文字較長）：維持單欄，但置中收斂到易讀寬度 */
+  .id-opt, .md-opt, .sf-opt, .tp-opt {
+    max-width: 720px;
+    margin-inline: auto;
+  }
+  /* 主要操作按鈕列（開始挑戰／送出／下一題／再來一輪…）在寬螢幕不要被拉成整條，置中收斂 */
+  .ma-actions, .pc-actions, .tl-actions, .fl-actions, .ul-actions, .al-actions,
+  .mm-actions, .id-actions, .tp-actions, .sf-actions, .cn-actions, .q-actions, .md-actions {
+    max-width: 540px;
+    margin-inline: auto;
+  }
+}
 
 /* iPad 儀表板：主欄 + 常駐 aside（§5.4） */
 @media (min-width: 1024px) {
