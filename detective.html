@@ -224,6 +224,8 @@ body { overflow-x: hidden; }
     if (typeof r.pos !== 'number') r.pos = 0;
     if (typeof r.correct !== 'number') r.correct = 0;
     if (typeof r.seer !== 'number') r.seer = 0;
+    if (typeof r.best !== 'number') r.best = r.done ? r.correct : 0;
+    if (typeof r.bestSeer !== 'number') r.bestSeer = r.done ? r.seer : 0;
     return r;
   }
 
@@ -298,7 +300,7 @@ body { overflow-x: hidden; }
 
   function totalSeer() {
     var n = 0;
-    for (var i = 0; i < LEVELS.length; i++) { var r = progress[LEVELS[i].id]; if (r && typeof r.seer === 'number') n += r.seer; }
+    for (var i = 0; i < LEVELS.length; i++) { var r = progress[LEVELS[i].id]; if (r) n += (typeof r.bestSeer === 'number' ? r.bestSeer : (typeof r.seer === 'number' ? r.seer : 0)); }
     return n;
   }
 
@@ -340,9 +342,9 @@ body { overflow-x: hidden; }
         var pct = total ? Math.round(pos / total * 100) : 0;
         var maDots = '';
         for (var _d = 0; _d < total; _d++) maDots += '<i class="' + (_d < pos ? 'on' : '') + '"></i>';
-        var st = done ? Math.max(1, starsFor(rec.correct, total)) : 0;
+        var st = done ? Math.max(1, starsFor(rec.best, total)) : 0;
         var statusText = done
-          ? ('✅ 已完成（答對 ' + rec.correct + '/' + total + '）')
+          ? ('✅ 已完成（答對 ' + rec.best + '/' + total + '）')
           : (pos > 0 ? ('▶️ 繼續（已完成 ' + pos + '/' + total + '）') : ('▶️ 開始挑戰（共 ' + total + ' 題）'));
         var card = document.createElement('button');
         card.type = 'button';
@@ -379,7 +381,7 @@ body { overflow-x: hidden; }
     var rec = recOf(lv.id);
     var total = lv.questions.length;
     // 已全部完成 → 重新開始一輪（保留 done，重置本輪計數）
-    if (rec.pos >= total) { rec = { pos: 0, correct: 0, seer: 0, done: rec.done }; progress[lv.id] = rec; saveProg(progress); }
+    if (rec.pos >= total) { rec = { pos: 0, correct: 0, seer: 0, done: rec.done, best: rec.best||0, bestSeer: rec.bestSeer||0 }; progress[lv.id] = rec; saveProg(progress); }
     var startPos = rec.pos;
     var roundEnd = Math.min(startPos + ROUND_SIZE, total);
     cur = { level: lv, idx: startPos, startPos: startPos, roundEnd: roundEnd, roundCorrect: 0, roundSeer: 0 };
@@ -585,6 +587,7 @@ body { overflow-x: hidden; }
     rec.correct += cur.roundCorrect;
     rec.seer += cur.roundSeer;
     if (rec.pos >= total && !rec.done) rec.done = true;
+    if (rec.pos >= total) { rec.best = Math.max(rec.best||0, rec.correct); rec.bestSeer = Math.max(rec.bestSeer||0, rec.seer); }
     progress[lv.id] = rec;
     saveProg(progress);
     if (rec.done) awardBadge(lv.id);
