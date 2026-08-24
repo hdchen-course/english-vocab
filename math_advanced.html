@@ -208,7 +208,7 @@ body { overflow-x: hidden; }
 </head>
 <body data-game-wired="math" data-game-maturity="advanced">
 <!-- ===== 共用頂部應用列（全站一致；貼在 <body> 內第一個元素） ===== -->
-<!-- data-game-hud="off"：本頁透過 data-game-wired="math" + recordAnswer 直接記帳（會計入主角色 XP/等級），關閉浮動 HUD 僅為減少干擾；「純本地、不計 XP」的是下方進階徽章冊，不是整頁。 -->
+<!-- 本頁透過 data-game-wired="math" + recordAnswer 直接記帳（會計入主角色 XP/等級），並顯示浮動 HUD（未設 data-game-hud="off"）；「純本地、不計 XP」的是下方進階徽章冊，不是整頁。 -->
 <header class="app-bar">
   <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
     <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
@@ -5042,6 +5042,7 @@ body { overflow-x: hidden; }
   font-size: clamp(14px, 3vw, 16px); cursor: pointer; box-shadow: var(--shadow-lg);
 }
 #mathAdvBadgeFab:active { transform: scale(0.96); }
+body:has(#screen-play.active) #mathAdvBadgeFab { display: none; }
 #mathAdvBadgeFabCount {
   display: inline-flex; align-items: center; gap: 3px;
   background: #fff; color: var(--accent, var(--c-math));
