@@ -105,8 +105,13 @@
     <a class="cn-nextup" href="english_sense.html"><span class="cn-nextup-ic" aria-hidden="true">🚀</span><span>想更懂英文的語氣和語調嗎？到「英文語感」繼續 →</span></a>
     <p class="sp-menu-note">這是口說練習場，沒有對錯、不計分，重點是<b>敢開口、多練幾次</b>。聽不清楚可以按「🐢 慢慢唸」放慢，或多聽幾遍再跟著說。</p>
   </section>
+  <section id="screen-levels" class="sp-screen sp-wrap">
+    <div class="sp-topbar"><button type="button" class="btn btn-icon" id="btn-back-levels" aria-label="回到主選單">←</button><span class="sp-title" id="levels-title">選一個等級</span></div>
+    <div id="sp-levels" class="cn-lessons"></div>
+    <p class="sp-menu-note">從你適合的等級開始（越後面越接近美國高中程度）。每一級都是「聽 → 說 →（想的話）錄起來比較 → 給自己打個氣」。</p>
+  </section>
   <section id="screen-play" class="sp-screen sp-wrap">
-    <div class="sp-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="sp-title" id="play-title">英文口說</span></div>
+    <div class="sp-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到等級選單">←</button><span class="sp-title" id="play-title">英文口說</span></div>
     <div id="stage"></div>
   </section>
 </main>
@@ -238,33 +243,62 @@
   function loadProg(){ try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }catch(e){ return {}; } }
   function saveProg(p){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(p)); }catch(e){} }
 
-  /* ---------- 選單 ---------- */
+  /* ---------- 進度模型：prog[unitKey]['L'+levelIdx] = {done, ratings} ---------- */
+  function unitTotal(u){ var n=0; (u.levels||[]).forEach(function(l){ n+=l.items.length; }); return n; }
+  function unitDone(prog,u){ var p=prog[u.key]||{}, n=0; (u.levels||[]).forEach(function(l,i){ var e=p['L'+i]; n += (e&&e.done)||0; }); return n; }
+  function levelDone(prog,uKey,i){ var e=(prog[uKey]||{})['L'+i]; return (e&&e.done)||0; }
+
+  /* ---------- 主選單（4 單元）---------- */
   function renderMenu(){
     var prog = loadProg();
     var menu = $('sp-menu'); menu.innerHTML='';
     if(!UNITS.length){ menu.appendChild(el('p','sp-menu-note','（教材資料載入失敗，請重新整理頁面。）')); return; }
     UNITS.forEach(function(u){
-      var done = (prog[u.key] && prog[u.key].done) || 0;
-      var total = u.items.length;
+      var done = unitDone(prog,u), total = unitTotal(u), nlv=(u.levels||[]).length;
       var a = el('button','cn-lesson'); a.type='button';
-      a.setAttribute('aria-label', u.label + '，共 ' + total + ' 題，已練 ' + done + ' 題');
+      a.setAttribute('aria-label', u.label + '，' + nlv + ' 個等級，共 ' + total + ' 題，已練 ' + done + ' 題');
       a.innerHTML = '<span class="cn-lesson-top"><span class="cn-lesson-emoji" style="background:var(--su-tint)" aria-hidden="true">'+u.emoji+'</span>'
         + '<span class="cn-lesson-name">'+esc(u.label)+'</span></span>'
         + '<span class="cn-lesson-sub">'+esc(u.sub)+'</span>'
-        + '<span class="cn-lesson-foot '+(done>0?'done':'todo')+'">已練 '+done+' / '+total+' 題</span>';
-      a.addEventListener('click', function(){ startUnit(u.key); });
+        + '<span class="cn-lesson-foot '+(done>0?'done':'todo')+'">'+nlv+' 個等級・共 '+total+' 題（已練 '+done+'）</span>';
+      a.addEventListener('click', function(){ openUnit(u.key); });
       menu.appendChild(a);
     });
   }
 
-  /* ---------- 練習流程 ---------- */
-  var curUnit=null, curIdx=0;
-  function startUnit(key){
+  /* ---------- 等級選單（單元 → 5 級）---------- */
+  function openUnit(key){
     curUnit = UNITS.filter(function(u){ return u.key===key; })[0];
     if(!curUnit) return;
+    if(window.Game && Game.pingActive) try{ Game.pingActive(); }catch(e){}
+    renderLevels();
+    show('screen-levels');
+  }
+  function renderLevels(){
+    var prog = loadProg(), u = curUnit;
+    $('levels-title').textContent = u.emoji + ' ' + u.label;
+    var wrap = $('sp-levels'); wrap.innerHTML='';
+    (u.levels||[]).forEach(function(lv, i){
+      var done = levelDone(prog,u.key,i), total = lv.items.length;
+      var a = el('button','cn-lesson'); a.type='button';
+      a.setAttribute('aria-label', lv.name + '，共 ' + total + ' 題，已練 ' + done + ' 題');
+      a.innerHTML = '<span class="cn-lesson-top"><span class="cn-lesson-emoji" style="background:var(--su-tint)" aria-hidden="true">'+(i+1)+'</span>'
+        + '<span class="cn-lesson-name">'+esc(lv.name)+'</span></span>'
+        + '<span class="cn-lesson-sub">'+esc(lv.sub||'')+'</span>'
+        + '<span class="cn-lesson-foot '+(done>0?'done':'todo')+'">已練 '+done+' / '+total+' 題</span>';
+      a.addEventListener('click', function(){ startLevel(i); });
+      wrap.appendChild(a);
+    });
+  }
+
+  /* ---------- 練習流程 ---------- */
+  var curUnit=null, curLevelIdx=0, curItems=[], curIdx=0;
+  function startLevel(i){
+    curLevelIdx = i;
+    curItems = (curUnit.levels[i] && curUnit.levels[i].items) || [];
     curIdx = 0;
     if(window.Game && Game.pingActive) try{ Game.pingActive(); }catch(e){}
-    $('play-title').textContent = curUnit.label;
+    $('play-title').textContent = curUnit.label + '・' + curUnit.levels[i].name;
     show('screen-play');
     renderItem();
   }
@@ -278,12 +312,12 @@
   function renderItem(){
     stopAudio(); stopRec(); revokeMine(); stopStream();
     listened = false;
-    var u = curUnit, it = u.items[curIdx];
+    var u = curUnit, it = curItems[curIdx];
     var stage = $('stage'); stage.innerHTML='';
     var card = el('div','sp-card');
 
     card.appendChild(el('div','sp-scorebar',
-      '<span class="sp-lv">'+esc(u.label)+'</span><span>第 '+(curIdx+1)+' / '+u.items.length+' 題</span>'));
+      '<span class="sp-lv">'+esc(curUnit.levels[curLevelIdx].name)+'</span><span>第 '+(curIdx+1)+' / '+curItems.length+' 題</span>'));
 
     if(u.type==='pair'){
       card.appendChild(el('div','sp-tag',null)).textContent='👂 點字聽發音，兩個都唸清楚';
@@ -370,7 +404,7 @@
 
     var actions = el('div','sp-actions');
     var bSkip = el('button','btn btn-secondary'); bSkip.type='button';
-    bSkip.textContent = (curIdx < u.items.length-1) ? '下一題 ➡️' : '完成這個主題 🎉';
+    bSkip.textContent = (curIdx < curItems.length-1) ? '下一題 ➡️' : '完成這個等級 🎉';
     bSkip.addEventListener('click', function(){ rateAndNext(null); });
     actions.appendChild(bSkip);
     card.appendChild(actions);
@@ -394,38 +428,51 @@
     stopAudio(); stopRec(); revokeMine(); stopStream();
     if(rating || listened){  // 聽過就算練過（不綁定錄音），跟讀路徑也記進度
       var prog = loadProg();
-      var u = prog[curUnit.key] || { done:0, ratings:{again:0,ok:0,great:0} };
-      u.done = Math.max(u.done||0, curIdx+1);
-      u.ratings = u.ratings || {again:0,ok:0,great:0};
-      if(rating && u.ratings[rating]!=null) u.ratings[rating]++;
-      prog[curUnit.key]=u; saveProg(prog);
+      var pu = prog[curUnit.key] || {};
+      var lk = 'L'+curLevelIdx;
+      var e = pu[lk] || { done:0, ratings:{again:0,ok:0,great:0} };
+      e.done = Math.max(e.done||0, curIdx+1);
+      e.ratings = e.ratings || {again:0,ok:0,great:0};
+      if(rating && e.ratings[rating]!=null) e.ratings[rating]++;
+      pu[lk]=e; prog[curUnit.key]=pu; saveProg(prog);
     }
-    if(curIdx < curUnit.items.length-1){ curIdx++; renderItem(); }
-    else { finishUnit(); }
+    if(curIdx < curItems.length-1){ curIdx++; renderItem(); }
+    else { finishLevel(); }
   }
 
-  function finishUnit(){
+  function finishLevel(){
     if(window.Game && Game.pingActive) try{ Game.pingActive(); }catch(e){}
     var stage=$('stage'); stage.innerHTML='';
     var card=el('div','sp-card');
-    card.appendChild(el('div','sp-say','🎉 這個主題練完了！'));
-    card.appendChild(el('div','sp-zh','開口說的次數越多，會越來越自然。回選單換個主題，或再練一次都很好。'));
+    var hasNext = curLevelIdx < (curUnit.levels.length-1);
+    card.appendChild(el('div','sp-say','🎉 這個等級練完了！'));
+    card.appendChild(el('div','sp-zh', hasNext ? '開口說的次數越多，會越來越自然。可以挑戰下一個等級，或再練一次。' : '太厲害了，這個單元最高的等級也練完了！再練一次或換個單元都很好。'));
     var actions=el('div','sp-actions');
-    var again=el('button','btn btn-primary'); again.type='button'; again.textContent='再練一次 🔄';
+    var again=el('button','btn btn-secondary'); again.type='button'; again.textContent='再練一次 🔄';
     again.addEventListener('click', function(){ curIdx=0; renderItem(); });
-    var menu=el('button','btn btn-secondary'); menu.type='button'; menu.textContent='回選單';
-    menu.addEventListener('click', backToMenu);
-    actions.appendChild(again); actions.appendChild(menu);
+    if(hasNext){
+      var nxt=el('button','btn btn-primary'); nxt.type='button'; nxt.textContent='下一個等級 ➡️';
+      nxt.addEventListener('click', function(){ startLevel(curLevelIdx+1); });
+      actions.appendChild(nxt);
+    }
+    var lvbtn=el('button','btn btn-secondary'); lvbtn.type='button'; lvbtn.textContent='回等級選單';
+    lvbtn.addEventListener('click', backToLevels);
+    actions.appendChild(again); actions.appendChild(lvbtn);
     card.appendChild(actions);
     stage.appendChild(card);
   }
 
+  function backToLevels(){
+    stopAudio(); stopRec(); revokeMine(); stopStream();
+    renderLevels(); show('screen-levels');
+  }
   function backToMenu(){
     stopAudio(); stopRec(); revokeMine(); stopStream();
     renderMenu(); show('screen-menu');
   }
 
-  $('btn-back').addEventListener('click', backToMenu);
+  $('btn-back').addEventListener('click', backToLevels);
+  $('btn-back-levels').addEventListener('click', backToMenu);
   window.addEventListener('pagehide', function(){ stopAudio(); stopRec(); revokeMine(); stopStream(); });
   window.addEventListener('beforeunload', function(){ stopAudio(); revokeMine(); stopStream(); });
 
