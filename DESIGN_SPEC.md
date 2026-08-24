@@ -1,4 +1,37 @@
 <!-- 統一版面設計規格 v1 — 由 66 頁實碼分析綜合(workflow we1puqwm7)；audit 標準 + 新教材範本 -->
+<!-- v2 校正 2026-08-24 — 由「實際 render + reader 走查」團隊(profile→verify→synth→reconcile)重建；
+     修正 v1「讀 source 而非看 render」造成的落差。以下 v2 契約凌駕 v1 §3通則(f) 與任何與渲染相反的敘述。 -->
+
+# ⭐ v2 校正：Canonical Width + Callout Contract（render-grounded，凌駕 v1 §3通則(f)）
+
+> v1 是「讀原始碼」寫的，抓不到 source≠render 的落差（例：v1 稱 idiom_stories play 用 `.id-card≤760`，實作卻是**未設上限的 `.id-teach`**；concept.css 註解稱 `.cn-card 收窄`，實際卡片填滿 content-max）。v2 由 render+走查團隊重建並經對抗式 reconcile。
+
+**RULE OF TWO BOXES（每個盒子二選一）：**
+- **(a) 全寬 chrome/banner**：`.*-hello`/`.*-mascot` 介紹條、`.cn-nextup(-group/--back)`、`.section-box`、`stat-tile` 列、關卡/模式 pill 選單 —— 填滿內容欄、文字可撐滿，**不受閱讀量測約束**（正常，非缺陷）。
+- **(b) 閱讀/回饋/故事/題幹/場景/選項 盒**：**必須同時有 `max-width`（em/ch 閱讀量測或該型 px 上限）＋ `margin-inline:auto`**，使文字落在舒適行長、左右留白對稱。**(b) 類永遠不可是「寬盒左貼字」，也不可「大 emoji 孤立左上、內容卻置中」。**
+
+**PLAY-CARD 寬度模型（依型）：**
+- **A hub**：無 play 卡；`.hub` 封頂 content-max；row-card/hero/section-box 填滿主欄（內容填滿框＝OK）。
+- **B concept**：`.cn-card` **填滿** content-max（**不收窄**）；卡內全部置中收斂：`.cn-svg`≤340、`.cn-text` 40em、`.cn-block` 42em、`.cn-reveal` 42em〔v2 已補上限〕、`.cn-options` 2 欄≤900、`.cn-actions`≤540。
+- **C subject-quiz**：stage 填滿 content-max；題幹 `.ma-question`40em/`.q-prompt`32ch/`.sf-q`42em、`.ma-keyfacts`≤56em、選項 2 欄≤900（長選項 `.sf-opt`≤720）、actions≤540；**回饋 `.bio-reveal/.chem-reveal/.fi-reveal/.su-reveal/.ph-reveal`≤44em 置中**〔v2 已補〕；hello/mascot 條為 accepted 全寬。
+- **D thinking-engine**：同 C，另 `.mm-story`/`.mm-hint-area` 44em 置中〔v2 已補〕、`.ma-reveal/.ea-reveal` 44em 置中〔v2 已補：app.css〕、`.ea-visual` 大 emoji `text-align:center`〔v2 已補〕。技術債：english_advanced 是唯一計分的 D 頁（姊妹皆 hud=off）。
+- **E numpad-lab**：`.xx-card` 封頂 content-max+置中（故各頁 `*-wrap` 是否 width:100% 皆無妨——v1「mm-wrap 不合法」寫反了）；`.xx-reveal`≤44em 置中〔v2 已補：fl/pc/tl/ul/al/md/mm〕；numpad 置中。
+- **F rpg**（math/multiply）：`.play-column` 填滿（app.css 預設無 cap，刻意）；題卡置中、選項 grid 有上限。
+- **G flashcard（刻意非統一寬度，非缺陷）**：翻卡 `.fc-card`≤460 置中；測驗/vocab≤760 置中；practice 滿版（內部 word-scene 560/options 720 置中）；`english_idioms .id-card`=760 置中、`idiom_stories .id-teach`=min(100%,760) 置中〔v2 已補〕。
+- **H long-scroll**（number_theory*）：`.page-container` 封頂；一頁到底。
+- **I bespoke**：`chinese .play-column`=min(100%,860) 置中〔v2 已補：原註解承諾 680 從未定義〕、composition/geometry 走共用題卡。
+
+**技術債（記錄，非阻擋）：** `.id-card` 在 english_idioms=翻卡、在 idiom_stories=選單磚（跨頁同名異義）；english_advanced 為唯一計分 D 頁。
+
+**新增稽核檢查（每輪版面 audit 必跑，補 v1 D-checklist）：**
+1. **Reading-box cap 稽核**：對每個 (b) 類盒（.cn-block/.cn-text/.cn-reveal/.ma-question/.ma-keyfacts/.mm-story/.mm-hint-area/.q-prompt/.q-feedback/.bio-reveal/.chem-reveal/.sf-q/.sf-block/.pr-scene/.ea-feel/.id-block/.xx-note/.*-reveal…）grep 其 CSS，斷言**同時有 max-width ＋ margin-inline:auto**，否則 FAIL。
+2. **Render 對稱檢查（1440＋390）**：每個 play stage 截圖，量每個 (b) 盒的左右 gutter；左右差 >~24px（左貼/左孤兒）或行寬 >~48em ＝ FAIL。
+3. **Brief-emoji 置中檢查**：每個 *-brief/teach 的大 visual（.ma-visual/.ea-visual/.q-visual/.cn-teach-emoji）須 text-align:center/mx-auto，不得左孤兒。
+4. **Play-stage 填滿 vs 收斂斷言**：確認每 stage 填滿 content-max，白名單上限除外（翻卡460/測驗760/practice滿版/id-card760/id-teach760/chinese860）。
+> 這些檢查用 render+走查團隊執行（見 /tmp/ds/ flow_capture + layout_vision_gate + phase1_profile/verify/synth）；**不可只讀 source 判定**。
+
+---
+
 
 # 公館國小遊戲化電子書 — 統一版面設計規格（Unified Layout Spec v1）
 
