@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>面積與週長特訓 📐</title>
+<title>面積與周長特訓 📐</title>
 <link rel="stylesheet" href="assets/app.css">
 <link rel="stylesheet" href="game_core.css">
 <link rel="stylesheet" href="concept.css">
 <script src="game_core.js"></script>
 <!--
-  面積與週長特訓：先教長方形/正方形/三角形的週長與面積公式，再用生成器反覆練不同題目、難度隨連對提升。
-  答案由程式即時算出（correct-by-construction）：週長為整數；面積為整數或三角形的終止小數（× 0.5）。作答用單一數字格，以數值比較。
+  面積與周長特訓：先教長方形/正方形/三角形的周長與面積公式，再用生成器反覆練不同題目、難度隨連對提升。
+  答案由程式即時算出（correct-by-construction）：周長為整數；面積為整數或三角形的終止小數（× 0.5）。作答用單一數字格，以數值比較。
   純本地(data-game-hud=off、key area_lab_v1、不計 XP，只 pingActive 續 streak)。全繁體中文。單位：長度=公分、面積=平方公分。
 -->
 <style>
@@ -54,23 +54,23 @@
     <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
     <span class="app-bar__home-label">學習基地</span>
   </a>
-  <span class="app-bar__title">面積與週長特訓 📐</span>
+  <span class="app-bar__title">面積與周長特訓 📐</span>
   <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
     <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
   </button>
 </header>
 <main class="shell">
   <section id="screen-menu" class="al-screen active al-wrap">
-    <div class="al-topbar"><span class="al-title">面積與週長特訓 📐</span></div>
+    <div class="al-topbar"><span class="al-title">面積與周長特訓 📐</span></div>
     <div class="al-hello"><span class="al-mascot" aria-hidden="true">📐</span>
-      <div><div class="al-htext">週長是「繞一圈的長度」，面積是「鋪滿裡面要幾個方格」。先記住每種形狀的公式，再開始練習——每一題都不一樣，越練越順、難度也會慢慢變高。</div>
+      <div><div class="al-htext">周長是「繞一圈的長度」，面積是「鋪滿裡面要幾個方格」。先記住每種形狀的公式，再開始練習——每一題都不一樣，越練越順、難度也會慢慢變高。</div>
       <div class="al-hsub">長度用「公分」，面積用「平方公分」。建議先一種一種學過再玩「綜合練習」。答完會告訴你「這題怎麼算」。</div></div></div>
     <div id="al-menu" class="cn-lessons"></div>
     <a class="cn-nextup" href="unit_lab.html"><span class="cn-nextup-ic" aria-hidden="true">📏</span><span>想練單位換算嗎？到「單位換算特訓」繼續 →</span></a>
-    <p class="al-note">這是面積與週長練習場，題目由程式隨機生成、可無限練習；答對幾題難度會慢慢升高，連續卡關時也會自動降回來，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
+    <p class="al-note">這是面積與周長練習場，題目由程式隨機生成、可無限練習；答對幾題難度會慢慢升高，連續卡關時也會自動降回來，只留在你的裝置上，不影響學習基地的等級或經驗值。</p>
   </section>
   <section id="screen-play" class="al-screen al-wrap">
-    <div class="al-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="al-title" id="play-title">面積與週長特訓</span></div>
+    <div class="al-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="al-title" id="play-title">面積與周長特訓</span></div>
     <div id="stage"></div>
   </section>
 </main>
@@ -85,23 +85,23 @@
   function dimHi(lv){ return lv<=1?9 : lv===2?15 : lv===3?30 : lv===4?50 : 99; }
 
   var CATS = [
-    { key:'rect_p', label:'長方形・週長', emoji:'▭', sub:'週長 = （長 ＋ 寬）× 2',
-      teach:'<b>長方形的週長</b>是沿著四個邊繞一圈的總長度。因為對邊一樣長（兩條長、兩條寬），所以：<br><br><b>週長 =（長 ＋ 寬）× 2</b>。<br><br><b>例：</b>長 5 公分、寬 3 公分 → 週長 =（5 ＋ 3）× 2 = 8 × 2 = 16 公分。',
+    { key:'rect_p', label:'長方形・周長', emoji:'▭', sub:'周長 = （長 ＋ 寬）× 2',
+      teach:'<b>長方形的周長</b>是沿著四個邊繞一圈的總長度。因為對邊一樣長（兩條長、兩條寬），所以：<br><br><b>周長 =（長 ＋ 寬）× 2</b>。<br><br><b>例：</b>長 5 公分、寬 3 公分 → 周長 =（5 ＋ 3）× 2 = 8 × 2 = 16 公分。',
       gen:function(lv){ var hi=dimHi(lv); var L=ri(2,hi), W=ri(2,hi); var ans=2*(L+W);
-        return { fig:'▭', text:'一個長方形，長 <b>'+L+'</b> 公分、寬 <b>'+W+'</b> 公分。<br><span class="al-q">它的週長是多少？</span>', answer:ans, unit:'公分',
-          tip:'週長 =（長 ＋ 寬）× 2 =（'+L+' ＋ '+W+'）× 2 = '+(L+W)+' × 2 = '+ans+' 公分。', spoken:'長方形，長 '+L+' 公分、寬 '+W+' 公分，週長是多少' }; } },
+        return { fig:'▭', text:'一個長方形，長 <b>'+L+'</b> 公分、寬 <b>'+W+'</b> 公分。<br><span class="al-q">它的周長是多少？</span>', answer:ans, unit:'公分',
+          tip:'周長 =（長 ＋ 寬）× 2 =（'+L+' ＋ '+W+'）× 2 = '+(L+W)+' × 2 = '+ans+' 公分。', spoken:'長方形，長 '+L+' 公分、寬 '+W+' 公分，周長是多少' }; } },
     { key:'rect_a', label:'長方形・面積', emoji:'🟦', sub:'面積 = 長 × 寬',
       teach:'<b>長方形的面積</b>是裡面能鋪滿幾個「1 公分 × 1 公分」的小方格。一排放「長」個、共有「寬」排，所以：<br><br><b>面積 = 長 × 寬</b>。<br><br><b>例：</b>長 5 公分、寬 3 公分 → 面積 = 5 × 3 = 15 平方公分。',
       gen:function(lv){ var hi=dimHi(lv); var L=ri(2,hi), W=ri(2,hi); var ans=L*W;
         return { fig:'🟦', text:'一個長方形，長 <b>'+L+'</b> 公分、寬 <b>'+W+'</b> 公分。<br><span class="al-q">它的面積是多少？</span>', answer:ans, unit:'平方公分',
           tip:'面積 = 長 × 寬 = '+L+' × '+W+' = '+ans+' 平方公分。', spoken:'長方形，長 '+L+' 公分、寬 '+W+' 公分，面積是多少' }; } },
-    { key:'square', label:'正方形・週長與面積', emoji:'⬜', sub:'四邊一樣長：週長 = 邊長 × 4、面積 = 邊長 × 邊長',
-      teach:'<b>正方形</b>四個邊一樣長，所以公式更簡單：<br><br><b>週長 = 邊長 × 4</b>（四條邊加起來）。<br><b>面積 = 邊長 × 邊長</b>（邊長自己乘自己）。<br><br><b>例：</b>邊長 6 公分 → 週長 = 6 × 4 = 24 公分；面積 = 6 × 6 = 36 平方公分。',
+    { key:'square', label:'正方形・周長與面積', emoji:'⬜', sub:'四邊一樣長：周長 = 邊長 × 4、面積 = 邊長 × 邊長',
+      teach:'<b>正方形</b>四個邊一樣長，所以公式更簡單：<br><br><b>周長 = 邊長 × 4</b>（四條邊加起來）。<br><b>面積 = 邊長 × 邊長</b>（邊長自己乘自己）。<br><br><b>例：</b>邊長 6 公分 → 周長 = 6 × 4 = 24 公分；面積 = 6 × 6 = 36 平方公分。',
       gen:function(lv){ var hi=dimHi(lv); var a=ri(2,hi); var wantArea=pick([true,false]);
         if(wantArea){ var ans=a*a; return { fig:'⬜', text:'一個正方形，邊長 <b>'+a+'</b> 公分。<br><span class="al-q">它的面積是多少？</span>', answer:ans, unit:'平方公分',
           tip:'正方形面積 = 邊長 × 邊長 = '+a+' × '+a+' = '+ans+' 平方公分。', spoken:'正方形，邊長 '+a+' 公分，面積是多少' }; }
-        else { var ansp=4*a; return { fig:'⬜', text:'一個正方形，邊長 <b>'+a+'</b> 公分。<br><span class="al-q">它的週長是多少？</span>', answer:ansp, unit:'公分',
-          tip:'正方形週長 = 邊長 × 4 = '+a+' × 4 = '+ansp+' 公分。', spoken:'正方形，邊長 '+a+' 公分，週長是多少' }; } } },
+        else { var ansp=4*a; return { fig:'⬜', text:'一個正方形，邊長 <b>'+a+'</b> 公分。<br><span class="al-q">它的周長是多少？</span>', answer:ansp, unit:'公分',
+          tip:'正方形周長 = 邊長 × 4 = '+a+' × 4 = '+ansp+' 公分。', spoken:'正方形，邊長 '+a+' 公分，周長是多少' }; } } },
     { key:'tri_a', label:'三角形・面積', emoji:'🔺', sub:'面積 = 底 × 高 ÷ 2',
       teach:'<b>三角形的面積</b>剛好是「同樣底和高的長方形」的一半，所以：<br><br><b>面積 = 底 × 高 ÷ 2</b>。<br><br><b>例：</b>底 6 公分、高 4 公分 → 面積 = 6 × 4 ÷ 2 = 24 ÷ 2 = 12 平方公分。<br><br>💡 底和高一定要「互相垂直」（成直角）才能這樣算。',
       gen:function(lv){ var hi=dimHi(lv); var base=ri(2,hi), h=ri(2,hi);
@@ -147,9 +147,9 @@
     $('stage').innerHTML =
       '<div class="al-card">'+
         '<div class="cn-teach-emoji" aria-hidden="true">🎲</div><h2 class="cn-h">綜合練習</h2>'+
-        '<div class="al-teach">這裡會把<b>長方形、正方形、三角形</b>的週長與面積混在一起出題。看到題目時，先<b>看清楚問的是「週長」還是「面積」</b>，再想公式：<br><br>'+
-        '・<b>長方形週長</b> =（長＋寬）× 2<br>・<b>長方形面積</b> = 長 × 寬<br>・<b>正方形週長</b> = 邊長 × 4；<b>面積</b> = 邊長 × 邊長<br>・<b>三角形面積</b> = 底 × 高 ÷ 2<br><br>'+
-        '週長的答案單位是<b>公分</b>，面積是<b>平方公分</b>。想不起來也沒關係，答完每題都會再示範怎麼算。</div>'+
+        '<div class="al-teach">這裡會把<b>長方形、正方形、三角形</b>的周長與面積混在一起出題。看到題目時，先<b>看清楚問的是「周長」還是「面積」</b>，再想公式：<br><br>'+
+        '・<b>長方形周長</b> =（長＋寬）× 2<br>・<b>長方形面積</b> = 長 × 寬<br>・<b>正方形周長</b> = 邊長 × 4；<b>面積</b> = 邊長 × 邊長<br>・<b>三角形面積</b> = 底 × 高 ÷ 2<br><br>'+
+        '周長的答案單位是<b>公分</b>，面積是<b>平方公分</b>。想不起來也沒關係，答完每題都會再示範怎麼算。</div>'+
         '<div class="al-actions"><button type="button" class="btn btn-primary" id="btn-begin">開始混合練習 🎲</button></div>'+
       '</div>';
     $('btn-begin').addEventListener('click', function(){ beginPractice(); });
