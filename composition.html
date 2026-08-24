@@ -955,7 +955,13 @@ body { overflow-x: hidden; }
       this.style.display = 'none'; $('btn-next').style.display = 'inline-flex';
       toast('完成小作文！你真棒 🌟', 'badge'); botPop();
     });
-    $('btn-next').addEventListener('click', goMenu);
+    // U10（小作文）完成即標記 done（寫法同 finishUnit），再回選單——原本直接 goMenu 未標記，
+    // 導致 done 永遠設不起來：ov-done 卡在 9/10、U10 卡片永遠「開始學」、10/10 慶祝成死碼。
+    $('btn-next').addEventListener('click', function () {
+      var u = cur.unit;
+      if (u && !u.review) { var prev = progress.units[u.id] || {}; progress.units[u.id] = { done: true, best: Math.max(prev.best || 0, 0) }; saveProg(); }
+      goMenu();
+    });
   }
 
   // =====================================================================
