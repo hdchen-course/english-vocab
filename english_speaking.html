@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英文口說・跟著唸 🎙️</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<link rel="stylesheet" href="concept.css">
+<script src="game_core.js"></script>
+<script src="speaking_data.js"></script>
+<!--
+  英文口說・跟著唸（shadowing）：純靜態網頁能做的口說訓練＝「聽高品質範本音 → 跟著唸 → （可選）錄自己並排比較 → 自評」。
+  模型音＝edge-tts en-US-AnaNeural 童音（與全書 15k 英文閃卡同一把嗓子，清晰、不誤導；資料＋檔名見 speaking_data.js）。
+  慢速＝前端 playbackRate 0.72 + preservesPitch（不另存檔）。錄音用 MediaRecorder，只在記憶體，播完/下一題/離開就 revokeObjectURL 丟掉——不上傳、不寫任何儲存、練完消失。
+  不支援錄音的裝置優雅退回「仍可反覆聽＋跟著唸」。純本地練習（data-game-hud=off、只 pingActive 續 streak、不計 XP、不自動打分）。全繁體中文。進度只記練過幾題＋自評，絕不存語音。
+-->
+<style>
+  :root{ --su:#0ea5a5; --su-d:#0f766e; --su-tint:rgba(14,165,165,0.12); }
+  :root[data-theme="dark"]{ --su:#5eead4; --su-d:#99f6e4; --su-tint:rgba(94,234,212,0.16); }
+  .sp-wrap{ width:100%; max-width:var(--content-max); margin-inline:auto; }
+  .sp-screen{ display:none; } .sp-screen.active{ display:block; animation: app-fade 0.3s ease; }
+  .sp-topbar{ display:flex; align-items:center; gap:var(--s3); margin-bottom:var(--s4); }
+  .sp-title{ font-size:var(--fs-h2); font-weight:800; color:var(--ink); }
+  .sp-hello{ display:flex; align-items:center; gap:var(--s3); padding:var(--s4); background:var(--su-tint);
+    border:1px solid var(--card-border); border-radius:var(--r-lg); margin-bottom:var(--s5); }
+  .sp-hello .sp-mascot{ font-size:44px; flex:none; }
+  .sp-htext{ font-size:var(--fs-body); font-weight:700; color:var(--ink); }
+  .sp-hsub{ font-size:var(--fs-small); color:var(--ink); font-weight:600; margin-top:2px; }
+  .sp-privacy{ display:flex; align-items:flex-start; gap:8px; max-width:var(--content-max); margin:0 auto var(--s5);
+    padding:var(--s3) var(--s4); background:var(--su-tint); border:1px dashed var(--su); border-radius:var(--r-md);
+    font-size:var(--fs-small); font-weight:700; color:var(--ink); line-height:1.7; }
+  .sp-privacy .ic{ font-size:20px; flex:none; }
+  .sp-card{ background:var(--card); border:1px solid var(--card-border); border-radius:var(--r-lg);
+    box-shadow:var(--shadow-sm); padding:var(--s5) var(--s4); max-width:var(--content-max); margin-inline:auto; }
+  .sp-scorebar{ display:flex; justify-content:space-between; align-items:center; font-size:var(--fs-small);
+    font-weight:800; color:var(--su-d); margin-bottom:var(--s3); }
+  .sp-lv{ background:var(--su-tint); border-radius:999px; padding:2px 10px; }
+  .sp-tag{ display:block; width:fit-content; font-size:var(--fs-small); font-weight:800; color:var(--su-d);
+    background:var(--su-tint); border-radius:999px; padding:3px 12px; margin:0 auto var(--s3); }
+  .sp-say{ font-size:26px; font-weight:800; color:var(--ink); text-align:center; line-height:1.6; margin:var(--s3) auto var(--s2); max-width:min(100%,22em); }
+  .sp-pair{ display:flex; justify-content:center; gap:var(--s4); flex-wrap:wrap; margin:var(--s3) 0 var(--s2); }
+  .sp-word{ font-size:28px; font-weight:800; color:var(--su-d); background:var(--su-tint); border:1px solid var(--card-border);
+    border-radius:var(--r-md); padding:8px 18px; cursor:pointer; font-family:var(--font); }
+  .sp-word:hover{ border-color:var(--su); }
+  .sp-word .sp-word-ic{ font-size:16px; margin-left:6px; opacity:.8; }
+  .sp-zh{ font-size:var(--fs-small); font-weight:700; color:var(--ink-soft); text-align:center; margin-bottom:var(--s2); }
+  .sp-dialog{ max-width:min(100%,24em); margin:var(--s3) auto var(--s2); }
+  .sp-line{ display:flex; gap:8px; align-items:baseline; margin:6px 0; font-size:var(--fs-body); font-weight:700; color:var(--ink); line-height:1.6; }
+  .sp-line .en{ cursor:pointer; border-bottom:1px dotted var(--su); display:inline-block; padding:6px 8px; border-radius:8px; }
+  .sp-who{ flex:none; width:1.8em; height:1.8em; border-radius:999px; background:var(--su-tint); color:var(--su-d);
+    font-size:var(--fs-small); font-weight:800; display:flex; align-items:center; justify-content:center; }
+  .sp-note{ max-width:min(100%,30em); margin:var(--s3) auto 0; padding:var(--s3) var(--s4); background:var(--su-tint);
+    border-left:4px solid var(--su); border-radius:var(--r-md); font-size:var(--fs-small); font-weight:700; color:var(--ink); line-height:1.7; }
+  .sp-scaffold{ list-style:none; padding:0; margin:6px 0 0; }
+  .sp-scaffold li{ padding:3px 0; }
+  .sp-example{ font-style:normal; color:var(--su-d); font-weight:800; }
+  .sp-controls{ display:flex; flex-wrap:wrap; gap:var(--s2); justify-content:center; margin-top:var(--s4); }
+  .sp-controls .btn{ min-width:120px; }
+  .sp-btn-rec{ background:var(--c-wrong-btn); color:var(--on-accent); border-color:var(--c-wrong-btn); }
+  .sp-btn-rec[aria-pressed="true"]{ animation: sp-pulse 1s ease-in-out infinite; }
+  @keyframes sp-pulse{ 0%,100%{ opacity:1 } 50%{ opacity:.55 } }
+  .sp-meter{ height:10px; border-radius:999px; background:var(--su-tint); overflow:hidden; max-width:min(100%,24em); margin:var(--s3) auto 0; }
+  .sp-meter > i{ display:block; height:100%; width:0%; background:var(--su); transition:width .08s linear; }
+  .sp-status{ text-align:center; font-size:var(--fs-small); font-weight:800; color:var(--su-d); margin-top:var(--s3); min-height:1.4em; }
+  .sp-compare{ display:none; gap:var(--s3); justify-content:center; flex-wrap:wrap; margin-top:var(--s3); }
+  .sp-compare.show{ display:flex; }
+  .sp-rate{ display:none; margin-top:var(--s4); }
+  .sp-rate.show{ display:block; }
+  .sp-rate-q{ text-align:center; font-size:var(--fs-small); font-weight:800; color:var(--ink); margin-bottom:var(--s3); }
+  .sp-rate-row{ display:flex; gap:var(--s2); }
+  .sp-rate-row .btn{ flex:1; min-width:0; }
+  .sp-actions{ margin-top:var(--s4); display:flex; gap:var(--s3); }
+  .sp-actions .btn{ flex:1; }
+  .sp-fallback{ display:none; max-width:min(100%,30em); margin:var(--s3) auto 0; text-align:center; color:var(--ink-soft);
+    font-size:var(--fs-small); font-weight:700; line-height:1.7; }
+  .sp-menu-note{ text-align:center; color:var(--ink-soft); font-size:var(--fs-small); margin-top:var(--s5);
+    font-weight:600; max-width:34em; margin-inline:auto; line-height:1.7; }
+  @media (prefers-reduced-motion: reduce){
+    .sp-btn-rec[aria-pressed="true"]{ animation:none; outline:3px solid var(--su); }
+    .sp-meter > i{ transition:none; }
+  }
+</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">英文口說・跟著唸 🎙️</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell">
+  <section id="screen-menu" class="sp-screen active sp-wrap">
+    <div class="sp-topbar"><span class="sp-title">英文口說・跟著唸 🎙️</span></div>
+    <div class="sp-hello"><span class="sp-mascot" aria-hidden="true">🎙️</span>
+      <div><div class="sp-htext">開口說英文，最有效的方法是「跟讀」（shadowing）：先聽一次<b>標準的發音</b>，馬上跟著唸；想的話還可以錄下自己的聲音，跟標準音比一比，聽出哪裡不一樣。</div>
+      <div class="sp-hsub">選一個主題開始。聽 → 說 →（可選）錄起來比較 → 給自己打個氣，一題一題來。</div></div></div>
+    <div class="sp-privacy"><span class="ic" aria-hidden="true">🔒</span>
+      <span>如果你按「錄我說」，錄音<b>只留在這台裝置</b>、播完或換下一題就<b>自動消失</b>，不會上傳、不會被存起來。可以放心開口練習！</span></div>
+    <div id="sp-menu" class="cn-lessons"></div>
+    <a class="cn-nextup" href="english_sense.html"><span class="cn-nextup-ic" aria-hidden="true">🚀</span><span>想更懂英文的語氣和語調嗎？到「英文語感」繼續 →</span></a>
+    <p class="sp-menu-note">這是口說練習場，沒有對錯、不計分，重點是<b>敢開口、多練幾次</b>。聽不清楚可以按「🐢 慢慢唸」放慢，或多聽幾遍再跟著說。</p>
+  </section>
+  <section id="screen-play" class="sp-screen sp-wrap">
+    <div class="sp-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到選單">←</button><span class="sp-title" id="play-title">英文口說</span></div>
+    <div id="stage"></div>
+  </section>
+</main>
+<script>
+/* eslint-disable */
+(function(){
+  'use strict';
+  function $(id){ return document.getElementById(id); }
+  function el(tag, cls, html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  var DATA = window.SPEAKING_DATA || { units: [] };
+  var UNITS = DATA.units || [];
+  var listened = false;  // 本題是否已聽過標準音（決定自評與進度是否解鎖，不綁定錄音）
+  var REDUCE = false; try{ REDUCE = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }catch(e){}
+  function revealRate(){ var r=$('sp-rate'); if(r) r.classList.add('show'); }
+  function markListened(){ listened = true; revealRate(); }
+
+  /* ---------- 播放高品質範本音（audio/*.mp3；慢速用 playbackRate）---------- */
+  var curAudio = null;
+  function stopAudio(){ if(curAudio){ try{ curAudio.pause(); }catch(e){} curAudio=null; } if(myAudio){ try{ myAudio.pause(); }catch(e){} } }
+  function playFile(fname, slow, onend){
+    stopAudio();
+    var a = new Audio('audio/' + fname);
+    try{ a.preservesPitch = true; a.mozPreservesPitch = true; a.webkitPreservesPitch = true; }catch(e){}
+    a.playbackRate = slow ? 0.72 : 1.0;
+    if(onend) a.addEventListener('ended', onend);
+    a.addEventListener('error', function(){ setStatus('（這個音檔載入失敗，看著字自己唸唸看也很棒！）'); });
+    curAudio = a;
+    var p = a.play(); if(p && p.catch) p.catch(function(){});
+    return a;
+  }
+  function playSeq(files, slow){
+    stopAudio();
+    var i = 0;
+    (function step(){
+      if(i >= files.length) return;
+      var f = files[i++];
+      playFile(f, slow, function(){ setTimeout(step, 280); });
+    })();
+  }
+  function modelFiles(u, it){
+    if(u.type==='pair') return [it.af, it.bf];
+    if(u.type==='line') return [it.f];
+    if(u.type==='dialog') return it.lines.map(function(l){ return l.f; });
+    if(u.type==='prompt') return [it.ef];
+    return [];
+  }
+
+  /* ---------- 錄音（本機、用完即丟；可選）---------- */
+  var recOK = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+  var mediaStream=null, recorder=null, chunks=[], myURL=null, myAudio=null;
+  var audioCtx=null, analyser=null, meterRAF=0, recording=false;
+
+  function revokeMine(){
+    if(myURL){ try{ URL.revokeObjectURL(myURL); }catch(e){} myURL=null; }
+    if(myAudio){ try{ myAudio.pause(); }catch(e){} myAudio=null; }
+  }
+  function stopMeter(){ if(meterRAF){ cancelAnimationFrame(meterRAF); meterRAF=0; } var m=$('sp-meter-bar'); if(m) m.style.width='0%'; }
+  function stopStream(){
+    if(mediaStream){ mediaStream.getTracks().forEach(function(t){ try{ t.stop(); }catch(e){} }); mediaStream=null; }
+    if(audioCtx){ try{ audioCtx.close(); }catch(e){} audioCtx=null; analyser=null; }
+    stopMeter();
+  }
+  function startMeter(){
+    if(!analyser) return;
+    var data = new Uint8Array(analyser.frequencyBinCount);
+    var bar = $('sp-meter-bar');
+    (function tick(){
+      analyser.getByteFrequencyData(data);
+      var sum=0; for(var i=0;i<data.length;i++) sum+=data[i];
+      var avg = sum/data.length;
+      if(bar) bar.style.width = Math.min(100, Math.round(avg/128*100)) + '%';
+      meterRAF = requestAnimationFrame(tick);
+    })();
+  }
+  function startRec(){
+    if(!recOK || recording) return;
+    stopAudio(); revokeMine();
+    var cmp=$('sp-compare'); if(cmp) cmp.classList.remove('show');
+    var rate=$('sp-rate'); if(rate) rate.classList.remove('show');
+    navigator.mediaDevices.getUserMedia({ audio:true }).then(function(stream){
+      mediaStream = stream; chunks = [];
+      var mime = (window.MediaRecorder.isTypeSupported && window.MediaRecorder.isTypeSupported('audio/webm')) ? 'audio/webm'
+               : (window.MediaRecorder.isTypeSupported && window.MediaRecorder.isTypeSupported('audio/mp4')) ? 'audio/mp4' : '';
+      try{ recorder = mime ? new MediaRecorder(stream,{mimeType:mime}) : new MediaRecorder(stream); }
+      catch(e){ recorder = new MediaRecorder(stream); }
+      recorder.ondataavailable = function(e){ if(e.data && e.data.size) chunks.push(e.data); };
+      recorder.onstop = function(){
+        var blob = new Blob(chunks, { type: (recorder && recorder.mimeType) || 'audio/webm' });
+        myURL = URL.createObjectURL(blob);
+        stopStream();
+        var cmp=$('sp-compare'); if(cmp) cmp.classList.add('show');
+        var rate=$('sp-rate'); if(rate) rate.classList.add('show');
+        setStatus('錄好了！聽聽看自己 vs 標準音，哪裡不一樣？');
+      };
+      if(!REDUCE){ try{
+        audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+        var src = audioCtx.createMediaStreamSource(stream);
+        analyser = audioCtx.createAnalyser(); analyser.fftSize = 256;
+        src.connect(analyser); startMeter();
+      }catch(e){} }
+      recorder.start(); recording = true;
+      var rb=$('sp-rec'); if(rb){ rb.setAttribute('aria-pressed','true'); rb.textContent = '⏹️ 停止錄音'; }
+      setStatus('錄音中… 對著麥克風把剛剛聽到的唸出來。');
+    }).catch(function(){
+      recOK = false;
+      setStatus('（沒辦法開啟麥克風：可能是沒有允許權限。仍然可以反覆聽、跟著唸喔！）');
+      var rb=$('sp-rec'); if(rb) rb.style.display='none';
+      revealRate();
+    });
+  }
+  function stopRec(){
+    if(!recording) return;
+    recording = false;
+    try{ if(recorder && recorder.state !== 'inactive') recorder.stop(); }catch(e){ stopStream(); }
+    stopMeter();
+    var rb=$('sp-rec'); if(rb){ rb.setAttribute('aria-pressed','false'); rb.textContent = '🎙️ 錄我說'; }
+  }
+  function playMine(){
+    if(!myURL) return;
+    stopAudio();
+    try{ if(myAudio){ myAudio.pause(); } myAudio = new Audio(myURL); myAudio.play(); }catch(e){}
+  }
+  function setStatus(msg){ var s=$('sp-status'); if(s) s.textContent = msg || ''; }
+
+  /* ---------- 進度（只記練過幾題＋自評，絕不存語音）---------- */
+  var STORE_KEY = 'english_speaking_v1';
+  function loadProg(){ try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }catch(e){ return {}; } }
+  function saveProg(p){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(p)); }catch(e){} }
+
+  /* ---------- 選單 ---------- */
+  function renderMenu(){
+    var prog = loadProg();
+    var menu = $('sp-menu'); menu.innerHTML='';
+    if(!UNITS.length){ menu.appendChild(el('p','sp-menu-note','（教材資料載入失敗，請重新整理頁面。）')); return; }
+    UNITS.forEach(function(u){
+      var done = (prog[u.key] && prog[u.key].done) || 0;
+      var total = u.items.length;
+      var a = el('button','cn-lesson'); a.type='button';
+      a.setAttribute('aria-label', u.label + '，共 ' + total + ' 題，已練 ' + done + ' 題');
+      a.innerHTML = '<span class="cn-lesson-top"><span class="cn-lesson-emoji" style="background:var(--su-tint)" aria-hidden="true">'+u.emoji+'</span>'
+        + '<span class="cn-lesson-name">'+esc(u.label)+'</span></span>'
+        + '<span class="cn-lesson-sub">'+esc(u.sub)+'</span>'
+        + '<span class="cn-lesson-foot '+(done>0?'done':'todo')+'">已練 '+done+' / '+total+' 題</span>';
+      a.addEventListener('click', function(){ startUnit(u.key); });
+      menu.appendChild(a);
+    });
+  }
+
+  /* ---------- 練習流程 ---------- */
+  var curUnit=null, curIdx=0;
+  function startUnit(key){
+    curUnit = UNITS.filter(function(u){ return u.key===key; })[0];
+    if(!curUnit) return;
+    curIdx = 0;
+    if(window.Game && Game.pingActive) try{ Game.pingActive(); }catch(e){}
+    $('play-title').textContent = curUnit.label;
+    show('screen-play');
+    renderItem();
+  }
+  function show(id){
+    var ss = document.querySelectorAll('.sp-screen');
+    for(var i=0;i<ss.length;i++) ss[i].classList.remove('active');
+    $(id).classList.add('active');
+    window.scrollTo(0,0);
+  }
+
+  function renderItem(){
+    stopAudio(); stopRec(); revokeMine(); stopStream();
+    listened = false;
+    var u = curUnit, it = u.items[curIdx];
+    var stage = $('stage'); stage.innerHTML='';
+    var card = el('div','sp-card');
+
+    card.appendChild(el('div','sp-scorebar',
+      '<span class="sp-lv">'+esc(u.label)+'</span><span>第 '+(curIdx+1)+' / '+u.items.length+' 題</span>'));
+
+    if(u.type==='pair'){
+      card.appendChild(el('div','sp-tag',null)).textContent='👂 點字聽發音，兩個都唸清楚';
+      var pair = el('div','sp-pair');
+      [['a','af'],['b','bf']].forEach(function(kk){
+        var w = el('button','sp-word'); w.type='button';
+        w.innerHTML = esc(it[kk[0]]) + '<span class="sp-word-ic" aria-hidden="true">🔊</span>';
+        w.setAttribute('aria-label','聽發音：'+it[kk[0]]);
+        w.addEventListener('click', function(){ playFile(it[kk[1]], false); setStatus('播放：'+it[kk[0]]); markListened(); });
+        pair.appendChild(w);
+      });
+      card.appendChild(pair);
+      card.appendChild(el('div','sp-zh', esc(it.zh)));
+      if(it.note) card.appendChild(el('div','sp-note', esc(it.note)));
+    } else if(u.type==='line'){
+      card.appendChild(el('div','sp-tag',null)).textContent='📖 聽一次，跟著唸';
+      card.appendChild(el('div','sp-say', esc(it.say)));
+      card.appendChild(el('div','sp-zh', esc(it.zh)));
+      if(it.note) card.appendChild(el('div','sp-note', esc(it.note)));
+    } else if(u.type==='dialog'){
+      card.appendChild(el('div','sp-tag',null)).textContent='💬 兩邊都唸唸看（點句子可單獨聽）';
+      card.appendChild(el('div','sp-zh', esc(it.zh)));
+      var dlg = el('div','sp-dialog');
+      it.lines.forEach(function(l){
+        var ln = el('div','sp-line');
+        ln.appendChild(el('span','sp-who', esc(l.who)));
+        var en = el('span','en', esc(l.en)); en.setAttribute('role','button'); en.setAttribute('tabindex','0');
+        en.addEventListener('click', function(){ playFile(l.f, false); markListened(); });
+        en.addEventListener('keydown', function(ev){ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); playFile(l.f, false); markListened(); } });
+        ln.appendChild(en);
+        dlg.appendChild(ln);
+      });
+      card.appendChild(dlg);
+    } else if(u.type==='prompt'){
+      card.appendChild(el('div','sp-tag',null)).textContent='🗣️ 先聽示範，再說自己的';
+      card.appendChild(el('div','sp-say', (it.emoji?it.emoji+' ':'')+esc(it.prompt)));
+      var note = el('div','sp-note', '開頭句可以這樣接：');
+      var ul = el('ul','sp-scaffold');
+      it.scaffold.forEach(function(s){ ul.appendChild(el('li',null,'• '+esc(s))); });
+      note.appendChild(ul);
+      note.appendChild(el('div',null,'<br>💡 示範：<span class="sp-example">'+esc(it.example)+'</span>'));
+      note.appendChild(el('div',null,'<br>'+esc(it.zh)+' 先按「🔊 聽示範」聽一遍，再換成自己的內容說。'));
+      card.appendChild(note);
+    }
+
+    // 控制列
+    var controls = el('div','sp-controls');
+    var listenLabel = (u.type==='pair') ? '🔊 聽兩個字' : (u.type==='prompt' ? '🔊 聽示範' : (u.type==='dialog' ? '🔊 聽整段' : '🔊 聽標準音'));
+    var bListen = el('button','btn btn-secondary'); bListen.type='button'; bListen.textContent = listenLabel;
+    var bSlow = el('button','btn btn-secondary'); bSlow.type='button'; bSlow.textContent = '🐢 慢慢唸';
+    controls.appendChild(bListen); controls.appendChild(bSlow);
+    var bRec = null;
+    if(recOK){
+      bRec = el('button','btn sp-btn-rec'); bRec.type='button'; bRec.id='sp-rec'; bRec.textContent='🎙️ 錄我說';
+      bRec.setAttribute('aria-pressed','false');
+      controls.appendChild(bRec);
+    }
+    card.appendChild(controls);
+    card.appendChild(el('div','sp-fallback', '（若沒有聲音，看著上面的字自己唸唸看也很棒！）'));
+
+    var meter = el('div','sp-meter'); meter.setAttribute('aria-hidden','true');
+    var bar = el('i',null,null); bar.id='sp-meter-bar'; meter.appendChild(bar);
+    card.appendChild(meter);
+
+    var status = el('div','sp-status'); status.id='sp-status'; status.setAttribute('aria-live','polite'); status.setAttribute('role','status');
+    card.appendChild(status);
+
+    var cmp = el('div','sp-compare'); cmp.id='sp-compare';
+    var bStd = el('button','btn btn-secondary'); bStd.type='button'; bStd.textContent='🔊 再聽標準音';
+    var bMine = el('button','btn btn-secondary'); bMine.type='button'; bMine.textContent='▶️ 聽我的錄音';
+    cmp.appendChild(bStd); cmp.appendChild(bMine);
+    card.appendChild(cmp);
+
+    var rate = el('div','sp-rate'); rate.id='sp-rate';
+    rate.appendChild(el('div','sp-rate-q','唸完覺得怎麼樣？（沒有對錯，給自己打個氣）'));
+    var row = el('div','sp-rate-row');
+    [['再練練','again'],['不錯','ok'],['很棒！','great']].forEach(function(pr){
+      var b = el('button','btn btn-secondary'); b.type='button'; b.textContent=pr[0];
+      b.addEventListener('click', function(){ rateAndNext(pr[1]); });
+      row.appendChild(b);
+    });
+    rate.appendChild(row);
+    card.appendChild(rate);
+
+    var actions = el('div','sp-actions');
+    var bSkip = el('button','btn btn-secondary'); bSkip.type='button';
+    bSkip.textContent = (curIdx < u.items.length-1) ? '下一題 ➡️' : '完成這個主題 🎉';
+    bSkip.addEventListener('click', function(){ rateAndNext(null); });
+    actions.appendChild(bSkip);
+    card.appendChild(actions);
+
+    stage.appendChild(card);
+
+    var files = modelFiles(u, it);
+    bListen.addEventListener('click', function(){ playSeq(files, false); setStatus('播放標準音… 仔細聽，等一下跟著唸。'); markListened(); });
+    bSlow.addEventListener('click', function(){ playSeq(files, true); setStatus('慢速播放… 一個字一個字聽清楚。'); markListened(); });
+    bStd.addEventListener('click', function(){ playSeq(files, false); markListened(); });
+    bMine.addEventListener('click', playMine);
+    if(bRec){
+      bRec.addEventListener('click', function(){ if(recording) stopRec(); else startRec(); });
+    } else {
+      rate.classList.add('show');
+      setStatus('這台裝置不能錄音，聽完跟著唸幾次，再給自己打個氣、進下一題。');
+    }
+  }
+
+  function rateAndNext(rating){
+    stopAudio(); stopRec(); revokeMine(); stopStream();
+    if(rating || listened){  // 聽過就算練過（不綁定錄音），跟讀路徑也記進度
+      var prog = loadProg();
+      var u = prog[curUnit.key] || { done:0, ratings:{again:0,ok:0,great:0} };
+      u.done = Math.max(u.done||0, curIdx+1);
+      u.ratings = u.ratings || {again:0,ok:0,great:0};
+      if(rating && u.ratings[rating]!=null) u.ratings[rating]++;
+      prog[curUnit.key]=u; saveProg(prog);
+    }
+    if(curIdx < curUnit.items.length-1){ curIdx++; renderItem(); }
+    else { finishUnit(); }
+  }
+
+  function finishUnit(){
+    if(window.Game && Game.pingActive) try{ Game.pingActive(); }catch(e){}
+    var stage=$('stage'); stage.innerHTML='';
+    var card=el('div','sp-card');
+    card.appendChild(el('div','sp-say','🎉 這個主題練完了！'));
+    card.appendChild(el('div','sp-zh','開口說的次數越多，會越來越自然。回選單換個主題，或再練一次都很好。'));
+    var actions=el('div','sp-actions');
+    var again=el('button','btn btn-primary'); again.type='button'; again.textContent='再練一次 🔄';
+    again.addEventListener('click', function(){ curIdx=0; renderItem(); });
+    var menu=el('button','btn btn-secondary'); menu.type='button'; menu.textContent='回選單';
+    menu.addEventListener('click', backToMenu);
+    actions.appendChild(again); actions.appendChild(menu);
+    card.appendChild(actions);
+    stage.appendChild(card);
+  }
+
+  function backToMenu(){
+    stopAudio(); stopRec(); revokeMine(); stopStream();
+    renderMenu(); show('screen-menu');
+  }
+
+  $('btn-back').addEventListener('click', backToMenu);
+  window.addEventListener('pagehide', function(){ stopAudio(); stopRec(); revokeMine(); stopStream(); });
+  window.addEventListener('beforeunload', function(){ stopAudio(); revokeMine(); stopStream(); });
+
+  renderMenu();
+})();
+</script>
+</body>
+</html>
