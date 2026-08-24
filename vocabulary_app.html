@@ -1921,16 +1921,21 @@ function checkSpelling(e) {
   const target = word.word.toLowerCase();
   const letters = target.split('');
 
-  const complete = input.length === target.length;
+  // 空白字元不必由使用者輸入（多字詞如 ice cream 的空格位置是 .fc-spell__gap，沒有方格）；
+  // 比對與完成判定一律先去掉空白，並把「非空白字母」依序對應到各方格。
+  const targetNS = target.replace(/\s+/g, '');
+  const inputNS = input.replace(/\s+/g, '');
+  const complete = inputNS.length === targetNS.length;
+  let j = 0; // 已填的非空白字母數 = inputNS 的索引（空白位置略過、不佔方格）
   letters.forEach((letter, i) => {
     const box = document.getElementById('lb' + i);
     if (!box) return; // 空白字元位置為 .fc-spell__gap，沒有對應方格
-    if (i < input.length) {
-      box.textContent = input[i];
+    if (j < inputNS.length) {
+      box.textContent = inputNS[j];
       box.classList.add('filled');
       // 打字途中維持中性色，避免半途一片紅色造成挫折；打完才判對錯上色
       if (complete) {
-        if (input[i] === letter) {
+        if (inputNS[j] === letter) {
           box.classList.remove('wrong');
           box.classList.add('correct');
         } else {
@@ -1944,15 +1949,16 @@ function checkSpelling(e) {
       box.textContent = '';
       box.classList.remove('filled', 'correct', 'wrong');
     }
+    j++;
   });
 
-  if (input === target) {
+  if (inputNS === targetNS) {
     showConfetti();
     srs.review(word.word, 2);
     recordStudy();
     updateStats();
     setTimeout(nextWord, 900);
-  } else if (e && e.key === 'Enter' && input.length === target.length) {
+  } else if (e && e.key === 'Enter' && inputNS.length === targetNS.length) {
     srs.review(word.word, 0);
     recordStudy();
     updateStats();
