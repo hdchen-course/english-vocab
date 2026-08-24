@@ -1278,6 +1278,12 @@
         const cat = currentCategory;
         const wrd = word.word.toLowerCase();
 
+        // 修正：「Adjectives & Others」類混入的具體名詞不該套用「表情臉」場景（看圖記單字會誤導）→ 各自導向正確場景
+        if (cat.includes('Adjective')) {
+            const OBJ_OVERRIDE = { hat: drawClothingScene, fan: drawGenericScene, key: drawGenericScene, kite: drawGenericScene, name: drawGenericScene, old: drawGenericScene };
+            if (OBJ_OVERRIDE[wrd]) { OBJ_OVERRIDE[wrd](ctx, w, h, wrd); return; }
+        }
+
         if (cat.includes('Animal')) drawAnimalScene(ctx, w, h, wrd);
         else if (cat.includes('Food') || cat.includes('Meal')) drawFoodScene(ctx, w, h, wrd);
         else if (cat.includes('Color')) drawColorScene(ctx, w, h, wrd);
