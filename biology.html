@@ -174,6 +174,7 @@ body { overflow-x: hidden; }
   margin-top: var(--s4);
   padding: var(--s3) var(--s4);
   background: var(--bio-tint);
+  border-left: 4px solid var(--bio);
   border-radius: var(--r-md);
   font-size: var(--fs-body);
   font-weight: 700;
@@ -183,6 +184,7 @@ body { overflow-x: hidden; }
   display: none;
 }
 .bio-reveal.show { display: block; animation: bio-fade 0.3s ease; }
+.bio-reveal.no { background: rgba(255,118,117,0.12); border-left-color: var(--c-wrong); }
 @media (prefers-reduced-motion: reduce) { .bio-reveal.show { animation: none; } }
 
 /* 完成畫面 */
@@ -1140,6 +1142,7 @@ body { overflow-x: hidden; }
       var rev = $('reveal');
       rev.textContent = (correct ? '答對了！' : '沒關係，再想想～正確答案是這個！') + ' ' + (step.why || '');
       rev.classList.add('show');
+      rev.classList.toggle('no', !correct);
       $('afteract').style.display = 'flex';
       var all = stage.querySelectorAll('.bio-opt');
       for (var k = 0; k < all.length; k++) all[k].disabled = true;
