@@ -15,11 +15,12 @@
 <style>
   :root{ --su:#9a3412; --su-d:#7c2d12; --su-tint:rgba(154,52,18,0.10); }
   :root[data-theme="dark"]{ --su:#fdba74; --su-d:#fed7aa; --su-tint:rgba(253,186,116,0.14); }
-  /* 全部畫面（選單＋故事）都填滿寬版容器，與其他頁「進入後也滿版」一致；
-     故事內文本身收斂到舒適閱讀寬度，避免寬螢幕行過長。 */
+  /* 選單（成語格）填滿寬版容器；故事／小測驗 play 卡片依 spec §3g 收斂為 ≤760px 置中閱讀卡，
+     由卡片本身持有寬度（單一寬度來源）——內部彩條框與文字自然填滿卡片，不再另設窄於卡片的文字上限
+     （原本只收斂文字、卻沒收斂卡片，導致寬螢幕上文字靠左、右側留白如同無形框）。 */
   .id-wrap{ max-width: var(--content-max); margin-inline:auto; }
   #screen-menu.id-wrap{ max-width: var(--content-max); }
-  .id-block-text{ max-width: 48em; }
+  .id-teach{ max-width: min(100%, 760px); margin-inline:auto; }
   .id-screen{ display:none; } .id-screen.active{ display:block; animation: app-fade 0.3s ease; }
   .id-topbar{ display:flex; align-items:center; gap:var(--s3); margin-bottom:var(--s4); }
   .id-title{ font-size:var(--fs-h2); font-weight:800; color:var(--su-d); }
