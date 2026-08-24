@@ -32,7 +32,7 @@
   .mm-lv{ background:var(--su-tint); border-radius:999px; padding:2px 10px; }
   .mm-tag{ display:inline-block; font-size:var(--fs-small); font-weight:800; color:var(--su-d); background:var(--su-tint); border-radius:999px; padding:3px 12px; margin-bottom:var(--s2); }
   .mm-problem{ font-size:34px; font-weight:800; color:var(--ink); text-align:center; margin:var(--s3) 0; letter-spacing:1px; }
-  .mm-answer{ font-size:30px; font-weight:800; text-align:center; min-height:44px; padding:8px; border:2px dashed var(--card-border); border-radius:var(--r-md); color:var(--su-d); margin-bottom:var(--s3); }
+  .mm-answer{ font-size:30px; font-weight:800; text-align:center; min-height:44px; padding:8px; border:2px solid var(--su); border-radius:var(--r-md); color:var(--su-d); margin-bottom:var(--s3); }
   .mm-pad{ display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s2); }
   .mm-key{ min-height:52px; font-size:22px; font-weight:800; border:2px solid var(--card-border); border-radius:var(--r-md);
     background:var(--card); color:var(--ink); font-family:var(--font); cursor:pointer; }
@@ -81,7 +81,7 @@
   function ri(lo,hi){ return lo + Math.floor(Math.random()*(hi-lo+1)); } // 含端點
   function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
 
-  // 難度：lv 1..5，數字範圍隨等級變大。每連對 6 題升一級（上限 5），答錯不降級。
+  // 難度：lv 1..5，數字範圍隨等級變大。累計答對 5 題升一級（上限 5）；連錯 3 題降一級。
   // 生成器 gen(lv) 回傳 {text, answer(整數), tip}；tip 內的數字都由程式算出，維持自洽。
   var CATS = [
     { key:'round', label:'湊整加減', emoji:'🎯', sub:'把接近整十整百的數先湊整，再補回差的部分',
