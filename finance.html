@@ -1041,7 +1041,7 @@ input[type="range"].fi-slider::-moz-range-thumb { width: 44px; height: 44px; bor
   }
 
   // 需求模型（供 pricing 與 stall 共用）：價格越高、想買的人越少。
-  // demand = customers * (1 - (price-min)/(max-min))，四捨五入、下限 0。
+  // demand = customers * (1 - 0.9*(price-min)/(max-min))，四捨五入、下限 0（最貴時仍保留約一成買氣）。
   function demandAt(price, customers, min, max) {
     var frac = (price - min) / (max - min);
     if (frac < 0) frac = 0; if (frac > 1) frac = 1;
