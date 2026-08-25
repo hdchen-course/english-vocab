@@ -9,7 +9,7 @@
      -------------------------------------------------------------------
      本頁為「物理」，計入 science 科目（理化／生物／地科共用），讓學生升上國中理化、
      高中物理時獎勵不中斷：宣告 data-game-wired="science"，每題只呼叫一次
-     Game.recordAnswer('science', 對錯)（answered 鎖定、重試不記帳）；「不」呼叫
+     Game.recordAnswer('science', 對錯)（answered 鎖定、每題只計一次分）；「不」呼叫
      Game.award / recordSession，本地徽章冊（StampBook）為純本地無 XP，故無 double-count。
      其餘只使用引擎的『唯讀 / UI』API：Game.showToast、Game.localDate、
      Game.getProfile().settings.reduceMotion，以及共用 app-bar 的 [data-theme-toggle]
@@ -1075,7 +1075,7 @@ body { overflow-x: hidden; }
         var i = parseInt(this.getAttribute('data-i'), 10);
         var isCorrect = (i === step.ans);
         if (answered) {
-          // 已答過（第一次答錯後的重試）：只給視覺提示，不再改動任何計數。
+          // 重複點擊的防護（選項作答後已停用，正常不會再觸發）：只給視覺提示，不改動任何計數。
           if (isCorrect) {
             this.classList.add('correct');
             this.querySelector('.ph-opt-mark').textContent = '✅';

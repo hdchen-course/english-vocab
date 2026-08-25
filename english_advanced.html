@@ -14,7 +14,7 @@
      （用感覺）」呈現。
      計分（本頁計入 english 科目，讓學生升上進階內容時獎勵不中斷）：
        宣告 body[data-game-wired="english"]，每題作答只呼叫一次
-       Game.recordAnswer('english', 對錯)（作答後 answered 旗標鎖定，重試不再記帳）。
+       Game.recordAnswer('english', 對錯)（作答後 answered 旗標鎖定，每題只計一次分）。
        本頁「不」呼叫 Game.award / recordSession，進階徽章冊為純本地（自有 key、無 XP），
        故無 double-count。本頁只「唯讀 / 純提示」使用引擎：Game.showToast。
        主題切換交給共用 app-bar 的 [data-theme-toggle]，由 game_core 自動接線。
@@ -220,7 +220,7 @@ body { overflow-x: hidden; }
  *     要純憑動詞的樣子去「感覺」是現在／過去／已完成。
  *   - 選項每題 Fisher–Yates 洗牌；answer 為「未洗牌前的 0-based 索引」，
  *     以 data-i 保留原始索引判斷 i===answer，判分不受洗牌影響。
- *   - 每題最多記一次分（answered 旗標守衛）；答錯可再看解說但只給視覺提示、不加分。
+ *   - 每題最多記一次分（answered 旗標守衛）；答錯後即揭示正解與解說並鎖定選項，不可重試、不加分。
  *   - 獨立 localStorage key：english_adv_progress_v1。
  *   - 計分：對每一次「作答」呼叫一次 Game.recordAnswer('english', 對錯)；
  *     不呼叫 Game.award / recordSession，故無 double-count。

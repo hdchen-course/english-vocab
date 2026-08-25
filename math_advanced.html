@@ -9,7 +9,7 @@
      ─────────────────────────────────────────────────────────────────
      計分（本頁為「數學進階」，計入 math 科目，讓學生升上進階內容時獎勵不中斷）：
        宣告 body[data-game-wired="math"]，每題作答只呼叫一次 Game.recordAnswer('math', 對錯)
-       （作答後 answered 旗標鎖定，重試不再記帳）。本頁「不」呼叫 Game.award / recordSession，
+       （作答後 answered 旗標鎖定，每題只計一次分）。本頁「不」呼叫 Game.award / recordSession，
        進階徽章冊為純本地（自有 key、無 XP），故無 double-count。
        本頁只「唯讀 / 純提示」使用引擎：Game.showToast（純提示，不記帳）與
        Game.getProfile（唯讀，僅顯示暱稱／可省略）。主題切換完全交給共用
@@ -271,7 +271,7 @@ body { overflow-x: hidden; }
  *   - 18 個中性等級（等級1..18）、每級 20 題（第 10 關 21 題），全部一律解鎖、可自由進入。
  *   - 選項每題 Fisher–Yates 洗牌；answer 為「未洗牌前的 0-based 索引」，
  *     以 data-i 保留原始索引判斷 i===answer，判分不受洗牌影響。
- *   - 每題最多記一次分（answered 旗標守衛）；答錯可再試但只給視覺提示、不加分。
+ *   - 每題最多記一次分（answered 旗標守衛）；答錯後即揭示正解並鎖定全部選項、不可重試、不加分。
  *   - 完成一級 → 依 correctCount/總題數給星（3 階：★☆☆／★★☆／★★★）、寫入 best、
  *     彈 Game.showToast 鼓勵語，並解鎖對應本地徽章。
  *   - 獨立 localStorage key：math_adv_progress_v1。結構：

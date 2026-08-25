@@ -9,10 +9,10 @@
      ─────────────────────────────────────────────────────────────────
      零重複計分論證（本頁定位為「進階挑戰」，計入 social 科目，但每題只記一次、不重複計分）：
        本頁為「社會進階」，計入 social 科目：宣告 body[data-game-wired="social"]，
-       每題作答只呼叫一次 Game.recordAnswer('social', 對錯)（answered 旗標鎖定、重試不記帳）。
+       每題作答只呼叫一次 Game.recordAnswer('social', 對錯)（answered 旗標鎖定、每題只計一次分）。
        「不」呼叫 Game.award / recordSession；進階徽章冊為純本地（自有 key、無 XP），
        故無 double-count，讓學生升上進階內容時獎勵不中斷。
-       本頁對引擎的呼叫：Game.recordAnswer（每題一次，計入 social 科目 XP；answered 旗標鎖定、重試不記帳）、
+       本頁對引擎的呼叫：Game.recordAnswer（每題一次，計入 social 科目 XP；answered 旗標鎖定、每題只計一次分）、
        Game.showToast（純提示，不記帳）與 Game.getProfile（唯讀，僅顯示暱稱／可省略）。主題切換完全交給共用
        app-bar 的 [data-theme-toggle]，由 game_core 自動接線，本頁不寫主題 JS。
      獨立 localStorage key：social_adv_progress_v1（與 player_profile_v1 完全區隔）。
@@ -176,9 +176,9 @@ body { overflow-x: hidden; }
  *   - 6 個中性等級（等級1..6）、每級 12 題，全部一律解鎖、可自由進入。
  *   - 選項每題 Fisher–Yates 洗牌；answer 為「未洗牌前的 0-based 索引」，
  *     以 data-i 保留原始索引判斷 i===answer，判分不受洗牌影響。
- *   - 每題最多記一次分（answered 旗標守衛）；答錯可再試但只給視覺提示、不加分。
+ *   - 每題最多記一次分（answered 旗標守衛）；答錯後即揭示正解並鎖定全部選項、不可重試、不加分。
  *   - 獨立 localStorage key：social_adv_progress_v1。
- *   - 計分：本頁定位為「社會進階挑戰」，每題作答呼叫一次 Game.recordAnswer('social', 對錯) 計入 social 科目 XP（answered 旗標鎖定、重試不重複記帳）；不使用 award / recordSession。
+ *   - 計分：本頁定位為「社會進階挑戰」，每題作答呼叫一次 Game.recordAnswer('social', 對錯) 計入 social 科目 XP（answered 旗標鎖定、每題只計一次分）；不使用 award / recordSession。
  * =================================================================== */
 (function () {
   'use strict';

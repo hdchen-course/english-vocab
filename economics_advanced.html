@@ -6,7 +6,7 @@
 <title>經濟與資本探索 💹</title>
 <!-- 統一遊戲化引擎：assets/app.css（設計 token）→ game_core.css（HUD/toast）→ game_core.js。
      計分：本頁為「理財進階」，計入 finance 科目。宣告 data-game-wired="finance"，
-     每題作答只呼叫一次 Game.recordAnswer('finance', 對錯)（answered 鎖定、重試不記帳）；
+     每題作答只呼叫一次 Game.recordAnswer('finance', 對錯)（answered 鎖定、每題只計一次分）；
      「不」呼叫 Game.award / recordSession，故無 double-count。只另用 Game.showToast（純提示）。
      獨立 localStorage key：econ_adv_progress_v1。 -->
 <link rel="stylesheet" href="assets/app.css">
@@ -161,7 +161,7 @@ body { overflow-x: hidden; }
 <script>
 /* 主程式（自足 IIFE）：6 個中性等級、每級約 10–12 題、全部解鎖。選項每題 Fisher–Yates 洗牌；
    answer = 未洗牌前 0-based 索引，以 data-i 判斷，判分不受洗牌影響。每題最多記一次分。
-   獨立 key：econ_adv_progress_v1。每題作答呼叫一次 Game.recordAnswer('finance', 對錯) 計入 finance 科目 XP（answered 鎖定、重試不重複記帳）；不使用 award / recordSession。 */
+   獨立 key：econ_adv_progress_v1。每題作答呼叫一次 Game.recordAnswer('finance', 對錯) 計入 finance 科目 XP（answered 鎖定、每題只計一次分）；不使用 award / recordSession。 */
 (function () {
   'use strict';
 

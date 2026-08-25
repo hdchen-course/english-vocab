@@ -10,7 +10,7 @@
      'science'），讓學生升上國中理化、高中化學時獎勵不中斷：
        1. 宣告 <body data-game-wired="science">，顯示共用 HUD。
        2. 每題作答只呼叫一次 Game.recordAnswer('science', 對錯)（answered 旗標鎖定、
-          重試不再記帳）；「不」呼叫 Game.award / recordSession / awardBadge，
+          每題只計一次分）；「不」呼叫 Game.award / recordSession / awardBadge，
           本地徽章冊為純本地（自有 key、無 XP），故無 double-count。
        3. 其餘只用純 UI/唯讀 Game 介面：Game.showToast（只彈提示、不計分），
           以及由 app-bar 的 [data-theme-toggle] 自動接線的主題切換
@@ -357,7 +357,7 @@ body:has(#screen-play.active) #chemBadgeFab { display: none; }
 
   // ---------------------------------------------------------------------
   // 計分策略：本頁以 <body data-game-wired="science"> 掛在既有 'science' 科目下（化學屬自然科學）。
-  //   每題只呼叫一次 Game.recordAnswer('science', 對錯)（answered 旗標鎖定、重試不重記）；
+  //   每題只呼叫一次 Game.recordAnswer('science', 對錯)（answered 旗標鎖定、每題只計一次分）；
   //   「不」呼叫 award/recordSession/awardBadge/pingActive，本地徽章冊為純本地（自有 key、無 XP）。
   //   計入 'science' 是刻意設計，且因單次記帳、不重複計分。
   // ---------------------------------------------------------------------
