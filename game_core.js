@@ -1221,11 +1221,24 @@
     if (backfilled.length) save();
     recordRoute();
 
+    // (4c) 全站頁尾版權聲明：以共用 JS 注入，避免逐頁手改。每頁只注入一次。
+    var ensureCopyright = function () {
+      if (!document.body) return;
+      if (document.querySelector('[data-site-copyright]')) return;
+      var f = document.createElement('footer');
+      f.setAttribute('data-site-copyright', '1');
+      f.style.cssText = 'text-align:center;font-size:12px;line-height:1.6;padding:20px 16px 28px;' +
+        'margin-top:24px;color:var(--ink-soft,#94a3b8);border-top:1px solid var(--line,rgba(148,163,184,.25));';
+      f.textContent = '© 2026 HD Chen · 保留所有權利 All Rights Reserved · 請勿轉載';
+      document.body.appendChild(f);
+    };
+
     var domInit = function () {
       domReady = true;
       buildHud();           // (4) HUD 策略
       wireThemeToggles();   // (4b) 接線共用 app-bar 的主題切換鈕 + 同步圖示
       ensureToastRoot();
+      ensureCopyright();    // (4c) 全站頁尾版權聲明（每頁只注入一次）
       updateHud();
       flushToasts();        // (5) flush 佇列
     };
