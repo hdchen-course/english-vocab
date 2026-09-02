@@ -1231,6 +1231,16 @@
         'margin-top:24px;color:var(--ink-soft,#94a3b8);border-top:1px solid var(--line,rgba(148,163,184,.25));';
       f.textContent = '© 2026 HD Chen · 保留所有權利 All Rights Reserved · 請勿轉載';
       document.body.appendChild(f);
+      if (!document.getElementById('hb-kofi-fab')) {
+        var fab = document.createElement('a');
+        fab.id = 'hb-kofi-fab';
+        fab.href = 'https://ko-fi.com/A5O7268MXT';
+        fab.target = '_blank'; fab.rel = 'noopener';
+        fab.setAttribute('aria-label', 'Buy me a coffee at ko-fi.com');
+        fab.style.cssText = 'position:fixed;right:16px;bottom:16px;z-index:2147483000;line-height:0;border-radius:10px;box-shadow:0 3px 14px rgba(0,0,0,.22);';
+        fab.innerHTML = '<img src="https://storage.ko-fi.com/cdn/kofi6.png?v=6" alt="Buy Me a Coffee at ko-fi.com" height="40" loading="lazy" style="display:block;height:40px;border-radius:10px;">';
+        document.body.appendChild(fab);
+      }
     };
 
     var domInit = function () {
