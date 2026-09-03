@@ -1237,9 +1237,19 @@
         fab.href = 'https://ko-fi.com/A5O7268MXT';
         fab.target = '_blank'; fab.rel = 'noopener';
         fab.setAttribute('aria-label', 'Buy me a coffee at ko-fi.com');
-        fab.style.cssText = 'position:fixed;right:16px;bottom:16px;z-index:2147483000;line-height:0;border-radius:10px;box-shadow:0 3px 14px rgba(0,0,0,.22);';
+        fab.style.cssText = 'position:fixed;right:16px;bottom:16px;z-index:2147483000;line-height:0;border-radius:10px;box-shadow:0 3px 14px rgba(0,0,0,.22);transition:bottom .15s ease;';
         fab.innerHTML = '<img src="https://storage.ko-fi.com/cdn/kofi6.png?v=6" alt="Buy Me a Coffee at ko-fi.com" height="40" loading="lazy" style="display:block !important;height:40px !important;width:auto !important;max-width:none !important;border-radius:10px;">';
         document.body.appendChild(fab);
+        /* 首頁/數學等頁面有釘在視窗底的 .bottom-nav 分頁列,bottom:16 會壓在上面 →
+           偵測到釘底(position:fixed 且有高度)的分頁列時把咖啡鈕升到它上方 12px;
+           沒有(或被隱藏、改用側欄)就維持 16px。resize 重算。 */
+        var positionKofiFab = function () {
+          var bar = document.querySelector('.bottom-nav');
+          var pinned = bar && getComputedStyle(bar).position === 'fixed' && bar.offsetHeight;
+          fab.style.bottom = (pinned ? bar.offsetHeight + 12 : 16) + 'px';
+        };
+        positionKofiFab();
+        window.addEventListener('resize', positionKofiFab);
       }
     };
 
