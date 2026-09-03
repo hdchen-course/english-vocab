@@ -1231,6 +1231,29 @@
         'margin-top:24px;color:var(--ink-soft,#94a3b8);border-top:1px solid var(--line,rgba(148,163,184,.25));';
       f.textContent = '© 2026 HD Chen · 保留所有權利 All Rights Reserved · 請勿轉載';
       document.body.appendChild(f);
+      /* (B) 列印 / 存 PDF 才出現的浮水印:螢幕閱讀零影響 */
+      if (!document.getElementById('hb-wm-print')) {
+        var ws = document.createElement('style');
+        ws.id = 'hb-wm-print';
+        ws.textContent = '@media print{#hb-kofi-fab{display:none;}' +
+          'html::before{content:"\\00A9 HD Chen \\2014 Not for redistribution";position:fixed;top:44%;left:0;right:0;' +
+            'text-align:center;transform:rotate(-22deg);font:800 40pt -apple-system,BlinkMacSystemFont,sans-serif;' +
+            'color:rgba(0,0,0,.07);letter-spacing:2px;pointer-events:none;z-index:2147483646;}' +
+          'body::after{content:"\\00A9 2026 HD Chen \\00B7 hdchen-course \\00B7 \\672A\\7D93\\6388\\6B0A\\4E0D\\5F97\\91CD\\88FD\\6216\\6563\\5E03 \\00B7 All Rights Reserved";' +
+            'position:fixed;left:0;right:0;bottom:6mm;text-align:center;font:600 9pt -apple-system,sans-serif;color:#8a8f98;}' +
+        '}';
+        (document.head || document.documentElement).appendChild(ws);
+      }
+      /* (C) 隱形數位指紋 canary:畫面看不到、存在於原始碼,供出處證明。 */
+      if (!document.getElementById('hb-canary')) {
+        var cn = document.createElement('div');
+        cn.id = 'hb-canary';
+        cn.setAttribute('aria-hidden', 'true');
+        cn.style.cssText = 'position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;' +
+          'clip:rect(0 0 0 0);white-space:nowrap;border:0;opacity:0;pointer-events:none;';
+        cn.textContent = 'Original work © 2026 HD Chen (hdchen-course). Unauthorized commercial use or redistribution is prohibited. Source fingerprint: HDC-VOC-2B9R4.';
+        document.body.appendChild(cn);
+      }
       if (!document.getElementById('hb-kofi-fab')) {
         var fab = document.createElement('a');
         fab.id = 'hb-kofi-fab';
