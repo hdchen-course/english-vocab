@@ -1229,7 +1229,7 @@
       f.setAttribute('data-site-copyright', '1');
       f.style.cssText = 'text-align:center;font-size:12px;line-height:1.6;padding:20px 16px 28px;' +
         'margin-top:24px;color:var(--ink-soft,#94a3b8);border-top:1px solid var(--line,rgba(148,163,184,.25));';
-      f.textContent = '© 2026 HD Chen · 保留所有權利 All Rights Reserved · 請勿轉載';
+      f.innerHTML = '© 2026 <a href="https://www.linkedin.com/in/hongdianchen" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-underline-offset:2px;">HD Chen</a> · 保留所有權利 All Rights Reserved · 請勿轉載';
       document.body.appendChild(f);
       /* (B) 列印 / 存 PDF 才出現的浮水印:螢幕閱讀零影響 */
       if (!document.getElementById('hb-wm-print')) {
