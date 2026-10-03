@@ -48,8 +48,17 @@ body { overflow-x: hidden; }
 .cn-block { margin: var(--s2) auto 0; padding: var(--s3) var(--s4); border-radius: var(--r-md); border-left: 4px solid var(--su); background: var(--su-tint); text-align: left; max-width: min(100%, 42em); }
 .cn-block-label { font-size: var(--fs-small); font-weight: 800; color: var(--su-d, var(--su)); margin-bottom: 4px; }
 .cn-block .cn-text { margin: 0; max-width: none; }
-.cn-svg { margin: var(--s2) auto var(--s3); color: var(--ink); max-width: 340px; }
+.cn-svg { position: relative; margin: var(--s2) auto var(--s3); color: var(--ink); max-width: 340px; }
 .cn-svg svg { width: 100%; height: auto; }
+/* 程式碼生成動畫（anim_core.js）：canvas 浮在卡片上（和靜態 SVG 一樣透明背景、無外框），同一視覺語言。 */
+.cn-anim-canvas { display: block; margin: 0 auto; width: 100%; height: auto; }
+/* 重播鈕：絕對定位於 canvas 右下角 → 出現/消失都不改變整塊高度（手機不把「繼續」擠出畫面）。 */
+.cn-anim-replay { position: absolute; right: 4px; bottom: 4px; z-index: 2;
+  padding: 4px 10px; min-height: 32px;
+  border: 1px solid var(--su); border-radius: 999px; background: var(--card); color: var(--su-d, var(--su));
+  font-family: var(--font); font-size: var(--fs-small); font-weight: 800; cursor: pointer;
+  box-shadow: var(--shadow-sm); }
+.cn-anim-replay:active { transform: scale(0.97); }
 .cn-text { font-size: var(--fs-body); font-weight: 600; color: var(--ink); line-height: 1.7; max-width: min(100%, 40em); margin: 0 auto var(--s3); text-align: left; }
 .cn-text b { font-weight: 800; }
 .cn-eq { font-size: clamp(22px, 6vw, 30px); font-weight: 800; color: var(--ink); letter-spacing: 1px; margin: var(--s2) 0; }

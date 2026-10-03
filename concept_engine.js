@@ -21,7 +21,10 @@
   var $ = function (id) { return document.getElementById(id); };
   var screenMenu = $('screen-menu'), screenPlay = $('screen-play'), stage = $('stage'),
       progEl = $('prog'), playTitle = $('play-title'), list = $('lesson-list');
-  var cur = null, idx = 0, answered = false;
+  var cur = null, idx = 0, answered = false, curCleanup = null;
+  // 動畫 teach 步驟（step.mount）回傳的清理函式；換頁/離場前務必呼叫，
+  // 以取消 requestAnimationFrame、移除事件監聽與重播鈕（向下相容：沒有 mount 的既有 lesson 完全不受影響）。
+  function runCleanup() { if (typeof curCleanup === 'function') { try { curCleanup(); } catch (e) {} } curCleanup = null; }
 
   function renderMenu() {
     var done = 0;
@@ -48,6 +51,7 @@
   function renderProg() { var h = ''; for (var i = 0; i < cur.steps.length; i++) h += '<i class="' + (i < idx ? 'done' : (i === idx ? 'cur' : '')) + '"></i>'; progEl.innerHTML = h; }
 
   function render() {
+    runCleanup();
     renderProg(); answered = false; var s = cur.steps[idx];
     if (s.type === 'teach') {
       stage.innerHTML =
@@ -55,6 +59,11 @@
         (s.svg ? '<div class="cn-svg">' + s.svg + '</div>' : '') +
         '<div class="cn-block"><div class="cn-block-label">' + s.kicker + '</div><p class="cn-text">' + s.text + '</p></div></div>' +
         '<div class="cn-actions"><button type="button" class="btn btn-primary btn-block" id="next">繼續 ➡️</button></div>';
+      // 選用：動畫 teach 步驟。step.mount(host) 收 .cn-svg 容器、回傳清理函式。
+      if (typeof s.mount === 'function') {
+        var host = stage.querySelector('.cn-svg');
+        if (host) { try { curCleanup = s.mount(host); } catch (e) { curCleanup = null; } }
+      }
       $('next').addEventListener('click', advance);
     } else {
       var order = s.options.map(function (_, i) { return i; });
@@ -88,6 +97,7 @@
   }
   function advance() { idx++; if (idx >= cur.steps.length) finish(); else render(); }
   function finish() {
+    runCleanup();
     prog[cur.id] = true; save(prog); renderProg();
     var practiceCta = C.practiceHref
       ? '<a class="btn btn-primary" href="' + C.practiceHref + '">去多練幾題 ➡️</a>'
@@ -100,7 +110,7 @@
     $('menu').addEventListener('click', goMenu);
     toast('學會「' + cur.name + '」了，太棒了！');
   }
-  function goMenu() { cur = null; progEl.innerHTML = ''; renderMenu(); show(screenMenu); }
+  function goMenu() { runCleanup(); cur = null; progEl.innerHTML = ''; renderMenu(); show(screenMenu); }
   $('btn-back').addEventListener('click', goMenu);
   renderMenu();
 })();
