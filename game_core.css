@@ -235,3 +235,97 @@
   .game-toast-show { transform: none; }
   .game-celebrate-badge { animation: none; }
 }
+
+/* =====================================================================
+ * 心願小舖（Track B）— 純外觀造型商店
+ * ---------------------------------------------------------------------
+ * 一律沿用 assets/app.css 既有的 .sheet / .sheet-overlay / .sheet-handle /
+ * .btn / .chip / .edit-label / .edit-actions / .section-note 共用元件與
+ * 設計 token（--card / --ink / --card-border / --accent / --su / --r-* / --s*）。
+ * 這裡只補「商店內容」專屬的少量規則（品項格線 / 品項卡 / 頭像貼紙疊加），
+ * 不新造任何 sheet 骨架元件。
+ * ===================================================================== */
+
+/* hub 的「心願小舖」入口鈕：沿用 .btn，收斂為一列、貼齊 Profile 卡寬度 */
+.shop-open-btn {
+  width: 100%;
+  margin-top: var(--s2, 8px);
+  font-size: clamp(15px, 3vw, 16px);
+}
+
+/* 金幣結餘行 */
+.shop-coins-line {
+  font-size: var(--fs-body, 18px);
+  font-weight: 800;
+  color: var(--ink);
+  margin: 0 0 2px;
+}
+.shop-coins-line strong { color: var(--c-chinese-ink, var(--accent-ink, var(--ink))); }
+
+/* 品項格線（兩類品項共用） */
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--s2, 8px);
+  margin-top: var(--s2, 8px);
+}
+
+/* 單一品項卡：沿用卡片 token，狀態用邊框/底色區分（非顏色單獨承載語意） */
+.shop-item {
+  display: flex;
+  align-items: center;
+  gap: var(--s2, 8px);
+  min-height: var(--tap-min, 48px);
+  padding: 10px var(--s3, 12px);
+  text-align: left;
+  border: 2px solid var(--card-border, #e8f0fe);
+  border-radius: var(--r-sm, 14px);
+  background: var(--card, #fff);
+  color: var(--ink);
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform .12s ease, border-color .2s ease, background .2s ease;
+}
+.shop-item:active { transform: scale(0.97); }
+.shop-item:hover { border-color: var(--accent, var(--c-primary, #0984e3)); }
+.shop-item:focus-visible { outline: 3px solid var(--c-focus, var(--accent, #0b6bb5)); outline-offset: 2px; }
+
+/* 已擁有：淡化邊框、顯示「使用」提示 */
+.shop-item.is-owned { border-color: var(--c-primary-soft, #74b9ff); }
+/* 使用中：實心強調邊框 + tint 底（勾勾另外以文字標示，不單靠顏色） */
+.shop-item.is-equipped {
+  border-color: var(--accent, var(--c-primary, #0984e3));
+  background: var(--accent-tint, var(--tint-primary, rgba(9,132,227,0.1)));
+}
+
+/* 品項左側樣本（主題色色點 / 貼紙 emoji） */
+.shop-item__swatch {
+  flex: none;
+  width: 30px; height: 30px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 999px;
+  font-size: 20px; line-height: 1;
+}
+/* 主題色色點：以行內 background 著色（JS 設定），加細邊讓淺色也看得見 */
+.shop-item__swatch.is-dot { border: 1px solid rgba(0,0,0,0.12); }
+
+.shop-item__body { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.shop-item__name { font-size: var(--fs-small, 14px); font-weight: 800; color: var(--ink); line-height: 1.2; }
+.shop-item__tag { font-size: 12px; font-weight: 700; color: var(--ink-soft, #636e72); }
+.shop-item.is-equipped .shop-item__tag { color: var(--accent-ink, var(--c-primary-ink, #0b6bb5)); }
+
+/* 頭像小貼紙疊加（疊在 #avatar-btn 右下角；不吃點擊，仍可點頭像編輯） */
+.profile-avatar { position: relative; }
+.shop-ava-badge {
+  position: absolute;
+  right: -2px; bottom: -2px;
+  font-size: 20px; line-height: 1;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.25));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-item { transition: none; }
+}

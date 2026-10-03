@@ -320,6 +320,8 @@
       badges: {},
       ownedItems: [],
       equippedMascot: null,
+      equippedSkin: null,     // 心願小舖：使用中的主題色皮膚 id（null＝預設藍，純外觀）
+      equippedBorder: null,   // 心願小舖：使用中的頭像小貼紙 id（null＝無，純外觀）
       lastRoute: null,
       settings: { sound: true, reduceMotion: false, theme: 'light' },
       legacyShadow: {
@@ -1260,7 +1262,9 @@
         fab.href = 'https://ko-fi.com/A5O7268MXT';
         fab.target = '_blank'; fab.rel = 'noopener';
         fab.setAttribute('aria-label', 'Buy me a coffee at ko-fi.com');
-        fab.style.cssText = 'position:fixed;right:16px;bottom:16px;z-index:2147483000;line-height:0;border-radius:10px;box-shadow:0 3px 14px rgba(0,0,0,.22);transition:bottom .15s ease;';
+        // z-index 8000：浮在一般內容之上，但【低於】bottom-sheet 遮罩(8500)、toast(9500)、
+        // skip-link(9000)——這些 modal/通知出現時咖啡鈕要讓位、不可壓住小舖品項或提示。
+        fab.style.cssText = 'position:fixed;right:16px;bottom:16px;z-index:8000;line-height:0;border-radius:10px;box-shadow:0 3px 14px rgba(0,0,0,.22);transition:bottom .15s ease;';
         fab.innerHTML = '<img src="https://storage.ko-fi.com/cdn/kofi6.png?v=6" alt="Buy Me a Coffee at ko-fi.com" height="40" loading="lazy" style="display:block !important;height:40px !important;width:auto !important;max-width:none !important;border-radius:10px;">';
         document.body.appendChild(fab);
         /* 首頁/數學等頁面有釘在視窗底的 .bottom-nav 分頁列,bottom:16 會壓在上面 →
@@ -1326,6 +1330,10 @@
       if (key === 'displayName') profile.displayName = String(value).slice(0, 24);
       else if (key === 'avatar') profile.avatar = String(value).slice(0, 8);
       else if (key === 'equippedMascot') profile.equippedMascot = value;
+      // 心願小舖：純外觀的「使用中皮膚／貼紙」。只存短字串 id（無 PII），null 代表還原預設；
+      // 不綁任何「會因清資料而失去的解鎖物」，與金幣政策一致。
+      else if (key === 'equippedSkin') profile.equippedSkin = (value == null ? null : String(value).slice(0, 32));
+      else if (key === 'equippedBorder') profile.equippedBorder = (value == null ? null : String(value).slice(0, 32));
       else return;
       save(); updateHud();
     },

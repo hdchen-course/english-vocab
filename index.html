@@ -268,6 +268,26 @@ a.row-card:active { transform: scale(0.98); }
 .hero-status { display: block; font-size: var(--fs-small); color: var(--ink-soft); font-weight: 700; margin-top: var(--s1); padding-left: var(--s1); }
 .hero-status:empty { display: none; }
 
+/* ── 具體化今日任務 chip 列：掛在 hero 下方，重用全站 .chip / .chip-{科} 設計語言（非私有元件，
+ *    屬既有 .hero-* 家族）。未完成＝各科主題色、可點，連到該科 hub 區段(#path-*)；
+ *    今天玩過＝變灰 + ✓ 但保留在畫面上。純粹多一層具體文案＋可打勾，不新增 gating。 ── */
+.hero-tasks { margin-top: var(--s2); padding-left: var(--s1); }
+.hero-tasks[hidden] { display: none; }
+.hero-tasks-label { display: block; font-size: 12px; font-weight: 800; color: var(--ink-soft); margin-bottom: 6px; }
+.hero-tasks-list { display: flex; flex-wrap: wrap; gap: var(--s2); list-style: none; margin: 0; padding: 0; }
+.hero-tasks-list .chip { text-decoration: none; min-height: 32px; }
+.hero-tasks-list a.chip:hover,
+.hero-tasks-list a.chip:focus-visible { outline: 2px solid var(--c-primary-soft); outline-offset: 1px; }
+/* 自然科 chip：app.css 無 .chip-science，補一條與其他 .chip-{科} 一致的規則（走自然科葉綠票 + 品牌綠墨字） */
+.hero-tasks-list .chip-science { background: var(--tint-science); color: var(--c-correct-ink); }
+/* 完成（今天玩過）：灰化 + ✓ 保留——不移除、不製造失落 */
+.hero-tasks-list .chip.is-done {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
 /* ── 進階挑戰次層：原生 <details> 漸進揭示（桌面預設展開、手機收合），套 challenge-shelf 虛線視覺 ── */
 details.adv-details > summary {
   list-style: none; cursor: pointer;
@@ -355,8 +375,13 @@ body.first-visit .profile-chips { display: none; }
 
       <div class="profile-chips">
         <span class="chip" id="pf-streak" title="連續學習天數">🔥 <span id="pf-streak-num">0</span> 天</span>
-        <span class="chip chip-chinese" id="pf-coins" title="金幣：累積的學習點數（記錄努力，不能兌換物品）">🪙 <span id="pf-coins-num">0</span></span>
+        <span class="chip chip-chinese" id="pf-coins" title="金幣：玩學習關卡賺到的點數，可以在心願小舖換造型">🪙 <span id="pf-coins-num">0</span></span>
       </div>
+
+      <!-- 心願小舖入口（緊鄰金幣；開啟底部 sheet，用金幣換純外觀造型） -->
+      <button class="btn shop-open-btn" id="shop-btn" type="button" aria-haspopup="dialog" aria-expanded="false">
+        🎁 心願小舖
+      </button>
     </section>
 
     <!-- 垂直區段導覽（僅 iPad 顯示）：點一下平滑捲到對應區段（全展開，只需捲動） -->
@@ -398,6 +423,12 @@ body.first-visit .profile-chips { display: none; }
     <p class="hero-parent-note" id="hero-parent-note" hidden></p>
     <!-- 今日進度即時回饋：獨立 role=status，不再讓整個 hero 連結被反覆朗讀 -->
     <span class="hero-status" id="hero-status" role="status"></span>
+    <!-- 具體化今日任務：讀各科 lastPlayed，挑 1–2 個最少碰的科目成「今天：{科目}玩 1 關」可打勾小任務；
+         今天玩過該科→打勾變灰但保留在畫面上。非 gating——孩子仍可自由點任何科目/區段。首訪隱藏（render 控制）。 -->
+    <div class="hero-tasks" id="hero-tasks" hidden>
+      <span class="hero-tasks-label" id="hero-tasks-label">今天的小任務</span>
+      <ul class="hero-tasks-list" id="hero-tasks-list"></ul>
+    </div>
 
     <!-- ============ 全部學習區段（安全 → 6 科 → 科技）：常態全展開、風格一致 ============ -->
     <div class="paths">
@@ -1033,6 +1064,26 @@ body.first-visit .profile-chips { display: none; }
   </div>
 </div>
 
+<!-- ============ 心願小舖 bottom-sheet（沿用 .sheet 樣式與開合動線；純外觀造型） ============ -->
+<div class="sheet-overlay" id="shop-overlay" role="dialog" aria-modal="true" aria-labelledby="shop-title" hidden>
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <h2 id="shop-title">🎁 心願小舖</h2>
+    <p class="shop-coins-line">你有 🪙 <strong id="shop-coins-num">0</strong> 枚金幣</p>
+    <p class="section-note">金幣是玩學習關卡賺來的，只能換造型，不影響闖關。換過的造型隨時可以換回來。</p>
+
+    <p class="edit-label">主題色（只換顏色，版面不會變）</p>
+    <div class="shop-grid" id="shop-skins" aria-label="主題色造型"></div>
+
+    <p class="edit-label">頭像小貼紙</p>
+    <div class="shop-grid" id="shop-borders" aria-label="頭像小貼紙造型"></div>
+
+    <div class="edit-actions">
+      <button class="btn" id="shop-close" type="button">關閉</button>
+    </div>
+  </div>
+</div>
+
 <!-- ============ 頭像 / 暱稱編輯 bottom-sheet ============ -->
 <div class="sheet-overlay" id="edit-overlay" role="dialog" aria-modal="true" aria-labelledby="edit-title" hidden>
   <div class="sheet">
@@ -1101,6 +1152,18 @@ body.first-visit .profile-chips { display: none; }
   // 回訪無 lastRoute 時的「挑一個科目繼續玩」目標：同樣導向頁內安全區，不再寫死英文。
   var RETURN_START = { href: '#path-safety' };
 
+  // 今日任務用：6 個計分科目 key → 短名 + hub 區段錨點（沿用 rail-nav 的 #path-* 路徑，不另造路徑）+ 既有 .chip-{科} class。
+  // 順序與 rail-nav 一致（數學→英文→國語→自然→社會→理財）。
+  var SUBJECT_TASKS = [
+    { key: 'math',    name: '數學', href: '#path-math',    chip: 'chip-math' },
+    { key: 'english', name: '英文', href: '#path-english', chip: 'chip-english' },
+    { key: 'chinese', name: '國語', href: '#path-chinese', chip: 'chip-chinese' },
+    { key: 'science', name: '自然', href: '#path-science', chip: 'chip-science' },
+    { key: 'social',  name: '社會', href: '#path-social',  chip: 'chip-social' },
+    { key: 'finance', name: '理財', href: '#path-finance', chip: 'chip-finance' }
+  ];
+  var MAX_TASK_CHIPS = 3;   // 畫面保持冷靜：最多 3 個 chip（最多 2 個待辦 + 補 1 個已完成）
+
   function $(id) { return document.getElementById(id); }
 
   // 有效的頁內錨點（區段 / 主要內容 / 最上）。
@@ -1156,6 +1219,66 @@ body.first-visit .profile-chips { display: none; }
     if (cnt) cnt.textContent = '已收集 ' + earned + ' / ' + wall.length;
   }
 
+  // ---- 今日任務 chips：讀各科 lastPlayed，挑最少碰的 1–2 科當「{科} 玩 1 關」待辦，今天玩過→打勾變灰保留 ----
+  // 回傳最優先的待辦 entry（供 hero-status 文案點名「接下來」），無則 null。首訪/無任務時隱藏整列。
+  function playedMs(sub) {
+    if (!sub || !sub.lastPlayed) return 0;
+    var t = Date.parse(sub.lastPlayed);
+    return isNaN(t) ? 0 : t;
+  }
+  function renderHeroTasks(p, returning) {
+    var wrap = $('hero-tasks'), list = $('hero-tasks-list'), label = $('hero-tasks-label');
+    if (!wrap || !list) return null;
+    list.innerHTML = '';
+    // 首訪：不顯示任何任務 noise（與 hero/Profile 卡的首訪壓縮一致）
+    if (!returning) { wrap.hidden = true; return null; }
+
+    var today = (G.localDate ? G.localDate() : (p.daily && p.daily.date)) || '';
+    var subs = p.subjects || {};
+    var pending = [], doneToday = [];
+    SUBJECT_TASKS.forEach(function (t) {
+      var ms = playedMs(subs[t.key]);
+      var day = ms && G.localDate ? G.localDate(new Date(ms)) : '';
+      var isToday = !!ms && day === today;
+      var entry = { meta: t, ms: ms };
+      if (isToday) doneToday.push(entry); else pending.push(entry);
+    });
+    pending.sort(function (a, b) { return a.ms - b.ms; });     // 最久沒碰的（含從未玩=0）排前面
+    doneToday.sort(function (a, b) { return b.ms - a.ms; });   // 今天最近玩的排前面
+
+    var chips = [], topPending = null;
+    if (p.daily && p.daily.done) {
+      // 今日達標：慶祝——只秀今天玩過的科目（打勾灰），不再催未完成
+      doneToday.slice(0, MAX_TASK_CHIPS).forEach(function (e) { chips.push({ e: e, done: true }); });
+      label.textContent = '今天都完成了 🎉';
+    } else {
+      pending.slice(0, 2).forEach(function (e) { chips.push({ e: e, done: false }); });
+      topPending = pending.length ? pending[0] : null;
+      doneToday.slice(0, Math.max(0, MAX_TASK_CHIPS - chips.length)).forEach(function (e) { chips.push({ e: e, done: true }); });
+      label.textContent = '今天的小任務';
+    }
+    if (!chips.length) { wrap.hidden = true; return null; }
+
+    chips.forEach(function (c) {
+      var m = c.e.meta;
+      var li = document.createElement('li');
+      var a = document.createElement('a');
+      a.className = 'chip ' + m.chip + (c.done ? ' is-done' : '');
+      a.setAttribute('href', m.href);
+      if (c.done) {
+        a.textContent = '✓ ' + m.name;
+        a.setAttribute('aria-label', m.name + '：今天玩過了，很棒！');
+      } else {
+        a.textContent = m.name + ' 玩 1 關';
+        a.setAttribute('aria-label', '今天的小任務：' + m.name + ' 玩 1 關');
+      }
+      li.appendChild(a);
+      list.appendChild(li);
+    });
+    wrap.hidden = false;
+    return topPending;
+  }
+
   // ---- 依 profile 更新所有動態內容 ----
   function render() {
     if (!G || !G.getProfile) return;
@@ -1205,7 +1328,7 @@ body.first-visit .profile-chips { display: none; }
     var dprog = done ? 1 : (d.dailyProgress || 0);
     var dailyLine = done
       ? '今天做完囉！繼續玩還是有經驗值喔 🎉'
-      : '今日任務 ' + Math.round(dprog * 100) + '%，再玩幾題就完成（大約 5–8 分鐘）';
+      : '今天的任務 ' + Math.round(dprog * 100) + '%，再玩幾題就完成（大約 5–8 分鐘）';
     if (returning) {
       // 回訪：優先「繼續上次」；若無 lastRoute 則導向友善起點。今日進度改由獨立 role=status 承載。
       if (p.lastRoute && ROUTE_NAMES[p.lastRoute]) {
@@ -1219,6 +1342,8 @@ body.first-visit .profile-chips { display: none; }
       }
       $('hero-icon').textContent = '▶️';
       $('hero-sub').textContent = '';
+      // 具體化今日任務 chip 列（下方 chip 已點名科目）；hero-status 只講進度，不重複科目名，避免與 chip 字面重複。
+      renderHeroTasks(p, true);
       if (heroStatus) heroStatus.textContent = dailyLine;
       if (parentNote) { parentNote.hidden = true; parentNote.textContent = ''; }
     } else {
@@ -1228,6 +1353,7 @@ body.first-visit .profile-chips { display: none; }
       $('hero-sub').textContent = '放輕鬆看，一次幾分鐘就好，這些本領會一直保護你。';
       hero.setAttribute('href', FRIENDLY_START.href);
       $('hero-icon').textContent = '🛡️';
+      renderHeroTasks(p, false);   // 首訪：隱藏任務列，保持乾淨無 noise
       if (heroStatus) heroStatus.textContent = '';
       if (parentNote) {
         parentNote.textContent = '給家長：這是國小到高中的分科練習，孩子想練哪一科都行；免註冊、進度存在本機裝置，陪他放輕鬆練就好。';
@@ -1469,5 +1595,6 @@ body.first-visit .profile-chips { display: none; }
   else setActive('top');
 })();
 </script>
+<script src="wish_shop.js"></script>
 </body>
 </html>
