@@ -1095,6 +1095,389 @@
   }
 
 
+
+  // ===== sci scenes (merged) =====
+  // ====================================================================
+  // 場景 6：物質三態（粒子運動）——同一批粒子，加熱後動得越快、排列越鬆。
+  //   固態＝整齊又緊密、只在原地振動；液態＝鬆散、互相滑動（會流動、隨容器變形）；
+  //   氣態＝彼此分很開、到處快飛、充滿整個容器。在 固→液→氣 三個具名狀態各停留。
+  //   三態粒子總數都一樣（16 顆）＝「粒子本身沒變，變的是排列和運動」。
+  //   粒子運動由連續時間（nowMs）驅動，所以在每個狀態停留時仍持續動。
+  //   reduced-motion：三格並排 固/液/氣，呈現各自的排列。
+  // ====================================================================
+  function statesOfMatter(host: HTMLElement) {
+    var N = 16;                                   // 4×4 顆同樣的粒子（三態都一樣多）
+    var NAMES = ['固態', '液態', '氣態'];
+    var VERB = ['排列整齊又緊密，只在原地振動', '互相靠近但能滑動，會流動、隨容器變形', '彼此分很開、到處快飛，充滿整個容器'];
+    var AMP = [0.014, 0.05, 0.12];                // 運動幅度（容器比例）：固小、液中、氣大
+    var SPD = [7.5, 2.4, 4.4];                    // 運動速度：固原地快抖、液慢滑、氣快飛
+    var PH: number[] = [], PH2: number[] = [], ii;
+    for (ii = 0; ii < N; ii++) {
+      PH.push((ii * 2.3999) % (Math.PI * 2));     // 固定相位偏移＝各顆獨立、不同步擺動
+      PH2.push((ii * 1.618 * Math.PI) % (Math.PI * 2));
+    }
+    // 三態中每顆粒子的「家」位置（容器內正規化 0..1；y 下為大）。
+    function home(state: number, i: number): [number, number] {
+      var gi = i % 4, gj = Math.floor(i / 4);
+      if (state === 0) return [0.29 + gi * 0.14, 0.52 + gj * 0.14];   // 固：緊密方陣沉在底部
+      if (state === 1) return [0.13 + gi * 0.25, 0.50 + gj * 0.135];  // 液：鬆散填下半（有自由液面）
+      return [0.14 + gi * 0.24, 0.12 + gj * 0.24];                    // 氣：散佈整個容器
+    }
+    function drawBox(g: CanvasRenderingContext2D, x: number, y: number, s: number, ink: string) {
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.45; g.lineWidth = 2;
+      var r = 7;
+      g.beginPath();
+      g.moveTo(x + r, y);
+      g.arcTo(x + s, y, x + s, y + s, r);
+      g.arcTo(x + s, y + s, x, y + s, r);
+      g.arcTo(x, y + s, x, y, r);
+      g.arcTo(x, y, x + s, y, r);
+      g.closePath(); g.stroke(); g.restore();
+    }
+    return runScene(host, {
+      durationMs: 10000, loops: 2, staticPhase: 0,
+      keyStates: [0, 1 / 3, 2 / 3], segMs: 1150, dwellMs: 1500,
+      label: '物質三態動畫：同一批粒子在容器裡，固態排列整齊只在原地振動、液態鬆散會互相滑動、氣態分很開到處快飛充滿整個容器。加熱後粒子動得越快、排列越鬆（固→液→氣）；粒子本身沒變，變的是排列和運動。',
+      drawStatic: function (g, w, h) {
+        var ink = inkColor(), theme = themeColor();
+        label(g, '同樣的粒子，排列和運動不同（固 / 液 / 氣）', w / 2, 13, theme, 11.5, 'center');
+        var pw = w / 3, i, s;
+        for (s = 0; s < 3; s++) {
+          var cx = pw * s + pw / 2;
+          var pb = Math.min(pw * 0.66, h * 0.52);
+          var pbx = cx - pb / 2, pby = h * 0.30;
+          drawBox(g, pbx, pby, pb, ink);
+          for (i = 0; i < N; i++) {
+            var hh = home(s, i);
+            disc(g, pbx + hh[0] * pb, pby + hh[1] * pb, pb * 0.05, theme);
+          }
+          label(g, NAMES[s], cx, pby + pb + 15, ink, 12, 'center');
+        }
+      },
+      draw: function (g, phase, w, h) {
+        var theme = themeColor(), ink = inkColor();
+        var boxS = Math.min(w * 0.5, h * 0.6);
+        var bx = w / 2 - boxS / 2, by = h * 0.24;
+        var b = (((phase % 1) + 1) % 1) * 3;
+        var seg = Math.floor(b) % 3, frac = b - Math.floor(b);
+        var sA = seg, sB = (seg + 1) % 3, e = easeInOut(frac);
+        var amp = AMP[sA] + (AMP[sB] - AMP[sA]) * e;
+        var spd = SPD[sA] + (SPD[sB] - SPD[sA]) * e;
+        var near = Math.round(b) % 3;
+        label(g, NAMES[near], w / 2, 15, theme, 15, 'center');
+        label(g, VERB[near], w / 2, 33, ink, 11, 'center');
+        drawBox(g, bx, by, boxS, ink);
+        var t = nowMs() / 1000, r = boxS * 0.045, i;
+        g.save(); g.beginPath(); g.rect(bx, by, boxS, boxS); g.clip();
+        for (i = 0; i < N; i++) {
+          var hA = home(sA, i), hB = home(sB, i);
+          var hx = hA[0] + (hB[0] - hA[0]) * e, hy = hA[1] + (hB[1] - hA[1]) * e;
+          var px = bx + (hx + amp * Math.sin(t * spd + PH[i])) * boxS;
+          var py = by + (hy + amp * Math.sin(t * spd * 1.27 + PH2[i])) * boxS;
+          disc(g, px, py, r, theme);
+        }
+        g.restore();
+        label(g, '同樣的粒子，加熱後動得越快、排列越鬆', 8, by + boxS + 18, ink, 10.5, 'left');
+      }
+    });
+  }
+
+  // ====================================================================
+  // 場景 7：水循環——太陽曬海→水蒸氣上升（蒸發）→高空變冷凝結成雲（凝結）→
+  //   降水（雨）→雨水流進河、流回海洋→不斷重複。在 蒸發 / 凝結成雲 / 降水 /
+  //   流回海洋 四個具名狀態各停留，當前過程變亮、其餘變淡（但一直在動＝水不停循環）。
+  //   教學點：水一直在天地間循環、用不完。
+  //   reduced-motion：一張清楚的循環圖，箭頭繞一圈標出四個過程。
+  // ====================================================================
+  function waterCycle(host: HTMLElement) {
+    var SEA = '#0369a1', SEA_T = 'rgba(3,105,161,0.16)';
+    var VAPOR = '#38bdf8', CLOUD = '#cbd5e1', CLOUD_HI = '#eef2f7';
+    var RAIN = '#2563eb', RIVER = '#0891b2';
+    var NAMES = ['蒸發：海水曬熱變水蒸氣上升', '凝結成雲：高空變冷，水氣聚成雲', '降水：水滴變大，落下成雨', '流回海洋：雨水流進河、回到海'];
+
+    function geom(w: number, h: number) {
+      return {
+        seaY: h * 0.70, sunX: w * 0.86, sunY: h * 0.16,
+        cx: w * 0.42, cy: h * 0.22, cs: Math.min(w, h) * 0.12,
+        peakX: w * 0.17, peakY: h * 0.34, baseR: w * 0.42
+      };
+    }
+    function cloud(g: CanvasRenderingContext2D, cx: number, cy: number, s: number, alpha: number) {
+      g.save(); g.globalAlpha = alpha;
+      disc(g, cx - s * 0.95, cy + s * 0.18, s * 0.6, CLOUD);
+      disc(g, cx - s * 0.3, cy - s * 0.12, s * 0.82, CLOUD);
+      disc(g, cx + s * 0.45, cy - s * 0.02, s * 0.72, CLOUD);
+      disc(g, cx + s * 1.0, cy + s * 0.2, s * 0.52, CLOUD);
+      g.fillStyle = CLOUD; g.fillRect(cx - s * 0.95, cy + s * 0.02, s * 1.95, s * 0.52);
+      disc(g, cx - s * 0.25, cy - s * 0.2, s * 0.4, CLOUD_HI);   // 柔和高光
+      g.restore();
+    }
+    function mountain(g: CanvasRenderingContext2D, G: ReturnType<typeof geom>) {
+      g.save(); g.fillStyle = EARTH_LAND; g.globalAlpha = 0.85;
+      g.beginPath(); g.moveTo(0, G.seaY); g.lineTo(G.peakX, G.peakY); g.lineTo(G.baseR, G.seaY); g.closePath(); g.fill();
+      g.restore();
+    }
+    function sea(g: CanvasRenderingContext2D, w: number, h: number, G: ReturnType<typeof geom>) {
+      g.save();
+      g.fillStyle = SEA_T; g.fillRect(0, G.seaY, w, h - G.seaY);
+      g.strokeStyle = SEA; g.globalAlpha = 0.6; g.lineWidth = 2;
+      g.beginPath(); g.moveTo(0, G.seaY); g.lineTo(w, G.seaY); g.stroke();
+      g.restore();
+    }
+    function arrow(g: CanvasRenderingContext2D, x1: number, y1: number, x2: number, y2: number, color: string, alpha: number) {
+      g.save(); g.globalAlpha = alpha; g.strokeStyle = color; g.fillStyle = color; g.lineWidth = 2.6; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke();
+      var a = Math.atan2(y2 - y1, x2 - x1);
+      g.beginPath(); g.moveTo(x2, y2);
+      g.lineTo(x2 - 9 * Math.cos(a - 0.42), y2 - 9 * Math.sin(a - 0.42));
+      g.lineTo(x2 - 9 * Math.cos(a + 0.42), y2 - 9 * Math.sin(a + 0.42));
+      g.closePath(); g.fill(); g.restore();
+    }
+
+    return runScene(host, {
+      durationMs: 12000, loops: 2, staticPhase: 0,
+      keyStates: [0, 0.25, 0.5, 0.75], segMs: 1150, dwellMs: 1400,
+      label: '水循環動畫：太陽曬熱海水，水變成水蒸氣往上升（蒸發）；升到高空變冷，凝結成小水滴聚成雲（凝結成雲）；水滴變大掉下來成雨（降水）；雨水流進河川、流回海洋，然後又被曬蒸發……一直循環，所以地球的水用不完。',
+      drawStatic: function (g, w, h) {
+        var ink = inkColor(), theme = themeColor();
+        var G = geom(w, h);
+        G.cy = h * 0.33;   // 靜態圖把雲降低一點，讓標題與「凝結成雲」標籤不重疊
+        sea(g, w, h, G); mountain(g, G);
+        sunDisc(g, G.sunX, G.sunY, 9);
+        cloud(g, G.cx, G.cy, G.cs, 1);
+        label(g, '水一直在天地間循環、用不完', w / 2, 12, theme, 12, 'center');
+        arrow(g, w * 0.72, G.seaY - 6, G.cx + G.cs * 0.7, G.cy + G.cs * 0.5, VAPOR, 1);   // 蒸發 ↑
+        arrow(g, G.cx - G.cs * 0.2, G.cy + G.cs * 0.6, w * 0.26, G.seaY - 6, RAIN, 1);    // 降水 ↓
+        arrow(g, w * 0.24, G.seaY + 12, w * 0.44, G.seaY + 12, RIVER, 1);                 // 流回海洋 →
+        label(g, '蒸發', w * 0.64, (G.seaY + G.cy) / 2, VAPOR, 11, 'center');
+        label(g, '凝結成雲', G.cx, G.cy - G.cs - 5, ink, 11, 'center');
+        label(g, '降水', w * 0.19, (G.seaY + G.cy) / 2 + 8, RAIN, 11, 'center');
+        label(g, '流回海洋', w * 0.34, G.seaY + 24, RIVER, 11, 'center');
+        label(g, '海洋', w * 0.72, G.seaY + 20, SEA, 10.5, 'center');
+      },
+      draw: function (g, phase, w, h) {
+        var ink = inkColor(), theme = themeColor();
+        var G = geom(w, h);
+        var t = nowMs() / 1000;
+        var stg = Math.round((((phase % 1) + 1) % 1) * 4) % 4;
+        function em(k: number): number { return stg === k ? 1 : 0.4; }
+        var aEvap = em(0), aCloud = em(1), aRain = em(2), aFlow = em(3);
+        sea(g, w, h, G); mountain(g, G);
+        sunDisc(g, G.sunX, G.sunY, 9);
+        // 蒸發：水蒸氣從海面（右、太陽下）升起、飄向雲。
+        var nv = 7, v;
+        for (v = 0; v < nv; v++) {
+          var u = ((t * 0.22 + v / nv) % 1);
+          var sx = w * (0.55 + 0.33 * (v / (nv - 1)));
+          var vx = sx + (G.cx + G.cs * 0.4 - sx) * easeInOut(u);
+          var vy = G.seaY - (G.seaY - (G.cy + G.cs * 0.4)) * u;
+          g.save(); g.globalAlpha = aEvap * Math.sin(Math.PI * u) * 0.9;
+          disc(g, vx, vy, 2.8 * (1 - 0.4 * u), VAPOR); g.restore();
+        }
+        // 雲（凝結時變亮、略大，含柔和脈動）。
+        var grow = 1 + 0.06 * Math.sin(t * 1.6) + (stg === 1 ? 0.08 : 0);
+        cloud(g, G.cx, G.cy, G.cs * grow, 0.55 + 0.45 * aCloud);
+        // 降水：雨滴從雲底落向地面／海面。
+        var nr = 8, d, cloudBot = G.cy + G.cs * 0.55, targetY = G.seaY - 2;
+        g.save(); g.globalAlpha = aRain; g.strokeStyle = RAIN; g.lineWidth = 1.8; g.lineCap = 'round';
+        for (d = 0; d < nr; d++) {
+          var rr = ((t * 0.7 + d / nr) % 1);
+          var rx = G.cx - G.cs * 0.9 + (G.cs * 1.8) * (d / (nr - 1));
+          var ry = cloudBot + rr * (targetY - cloudBot);
+          g.beginPath(); g.moveTo(rx, ry); g.lineTo(rx, ry + 6); g.stroke();
+        }
+        g.restore();
+        // 流回海洋：河水沿山的右坡往下流進海。
+        var r0x = G.peakX + w * 0.02, r0y = G.peakY + h * 0.05, r1x = w * 0.36, r1y = G.seaY;
+        g.save(); g.globalAlpha = 0.35 * aFlow + 0.12; g.strokeStyle = RIVER; g.lineWidth = 3.2; g.lineCap = 'round';
+        g.beginPath(); g.moveTo(r0x, r0y); g.lineTo(r1x, r1y); g.stroke(); g.restore();
+        var nf = 6, f;
+        for (f = 0; f < nf; f++) {
+          var fsg = ((t * 0.55 + f / nf) % 1);
+          var fx = r0x + (r1x - r0x) * fsg, fy = r0y + (r1y - r0y) * fsg;
+          g.save(); g.globalAlpha = aFlow; disc(g, fx, fy, 2.4, RIVER); g.restore();
+        }
+        // 標題（當前過程）、海洋標籤、教學句（靠左，避開右下角重播鈕）。
+        label(g, NAMES[stg], w / 2, 14, theme, 12.5, 'center');
+        label(g, '海洋', w * 0.72, G.seaY + 18, SEA, 10, 'center');
+        label(g, '水一直在天地間循環、用不完', 8, h - 8, ink, 10.5, 'left');
+      }
+    });
+  }
+
+  // ===== bio scenes (merged) =====
+  // ===== biology scene (merged from domain builder) =====
+  // 光合作用自然色：葉綠、養分（葡萄糖）琥珀棕；二氧化碳灰、水藍、氧氣青——各流一色＝圖例。
+  var LEAF_FILL = 'rgba(76,175,114,0.92)', LEAF_EDGE = '#2f8f5b', LEAF_VEIN = 'rgba(47,143,91,0.75)';
+  var CO2_COL = '#8b94a6', WATER_COL = '#2b74e0', O2_COL = '#14a3b8', SUGAR_COL = '#d98324';
+
+  // ====================================================================
+  // 場景 6：光合作用——葉子在中間。原料流進來：陽光（上）、二氧化碳（空氣）、水（根→上）；
+  //   葉子做出養分（葡萄糖，儲存在葉內）並放出氧氣。分三個停留階段：
+  //   ① 吸收陽光 → ② 吸入 CO₂＋吸水 → ③ 做出養分、放出氧氣。
+  //   每條流用不同顏色＋就近標字（＝色彩圖例）；底部一句總結（靠左，避開右下角重播鈕）。
+  //   科學正確：原料是光＋CO₂＋水，產物是養分（葡萄糖）＋氧氣，植物不是「吃土」。
+  // ====================================================================
+  function photosynthesis(host: HTMLElement) {
+    function clamp01(x: number): number { return x < 0 ? 0 : (x > 1 ? 1 : x); }
+    // 透明度版文字（label 本身不吃 alpha；分階段淡入時用這個）。
+    function tlabel(g: CanvasRenderingContext2D, text: string, x: number, y: number, color: string, size: number, align: CanvasTextAlign, alpha: number) {
+      if (alpha <= 0.02) return;
+      g.save(); g.globalAlpha = alpha; label(g, text, x, y, color, size, align); g.restore();
+    }
+    // 一片葉子（lens 形）：心 (cx,cy)、半寬 rx、半長 ry、傾角 rot；glow>0 時加暖色光暈（做養分時發亮）。
+    function leaf(g: CanvasRenderingContext2D, cx: number, cy: number, rx: number, ry: number, rot: number, s: number, glow: number) {
+      if (glow > 0) { g.save(); g.globalAlpha = 0.3 * glow; disc(g, cx, cy, Math.max(rx, ry) * 1.5, SUN_GLOW); g.restore(); }
+      g.save(); g.translate(cx, cy); g.rotate(rot);
+      g.beginPath();
+      g.moveTo(0, -ry);
+      g.quadraticCurveTo(rx, -ry * 0.1, 0, ry);
+      g.quadraticCurveTo(-rx, -ry * 0.1, 0, -ry);
+      g.closePath();
+      g.fillStyle = LEAF_FILL; g.fill();
+      g.strokeStyle = LEAF_EDGE; g.lineWidth = 2 * s; g.lineJoin = 'round'; g.stroke();
+      g.strokeStyle = LEAF_VEIN; g.lineWidth = 1.4 * s; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(0, -ry * 0.86); g.lineTo(0, ry * 0.86); g.stroke();   // 主脈
+      var vi;
+      for (vi = -2; vi <= 2; vi++) {
+        if (vi === 0) continue;
+        var vy = ry * 0.3 * vi;
+        g.beginPath(); g.moveTo(0, vy); g.lineTo((vi < 0 ? -1 : 1) * rx * 0.6, vy + ry * 0.16); g.stroke();
+      }
+      g.restore();
+    }
+    // 一條「流動的點」：沿 (ax,ay)→(bx,by)，phase 連續時間推進；端點淡出；終點畫箭頭。act＝活化程度。
+    function flow(g: CanvasRenderingContext2D, ax: number, ay: number, bx: number, by: number, color: string, phase: number, n: number, r: number, act: number) {
+      if (act <= 0.02) return;
+      var i;
+      g.save();
+      for (i = 0; i < n; i++) {
+        var f = (i / n + phase) % 1;
+        var x = ax + (bx - ax) * f, y = ay + (by - ay) * f;
+        g.globalAlpha = act * (0.35 + 0.6 * Math.sin(f * Math.PI));
+        disc(g, x, y, r, color);
+      }
+      var ang = Math.atan2(by - ay, bx - ax);
+      g.globalAlpha = act; g.fillStyle = color;
+      g.beginPath();
+      g.moveTo(bx, by);
+      g.lineTo(bx - r * 3 * Math.cos(ang - 0.5), by - r * 3 * Math.sin(ang - 0.5));
+      g.lineTo(bx - r * 3 * Math.cos(ang + 0.5), by - r * 3 * Math.sin(ang + 0.5));
+      g.closePath(); g.fill();
+      g.restore();
+    }
+    // 葡萄糖顆粒（六邊形）＝養分，儲存在葉子裡；sc 控制出現比例。
+    function sugar(g: CanvasRenderingContext2D, cx: number, cy: number, r: number, sc: number) {
+      if (sc <= 0.02) return;
+      var rr = r * sc, k;
+      g.save(); g.globalAlpha = sc; g.fillStyle = SUGAR_COL; g.strokeStyle = '#9a5b12'; g.lineWidth = 1.2;
+      g.beginPath();
+      for (k = 0; k < 6; k++) {
+        var a = -Math.PI / 2 + k * Math.PI / 3;
+        var x = cx + rr * Math.cos(a), y = cy + rr * Math.sin(a);
+        if (k === 0) g.moveTo(x, y); else g.lineTo(x, y);
+      }
+      g.closePath(); g.fill(); g.stroke();
+      g.restore();
+    }
+    // 靜態圖箭頭（reduced-motion）。
+    function sarrow(g: CanvasRenderingContext2D, x0: number, y0: number, x1: number, y1: number, color: string, s: number) {
+      g.save(); g.strokeStyle = color; g.fillStyle = color; g.lineWidth = 2.5 * s; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke();
+      var ang = Math.atan2(y1 - y0, x1 - x0);
+      g.beginPath(); g.moveTo(x1, y1);
+      g.lineTo(x1 - 8 * s * Math.cos(ang - 0.4), y1 - 8 * s * Math.sin(ang - 0.4));
+      g.lineTo(x1 - 8 * s * Math.cos(ang + 0.4), y1 - 8 * s * Math.sin(ang + 0.4));
+      g.closePath(); g.fill(); g.restore();
+    }
+
+    // 動態主圖：植株（土壤/莖/根）＋太陽＋葉＋四條流（陽光/CO₂/水/氧氣）＋養分顆粒。
+    function scene(g: CanvasRenderingContext2D, w: number, h: number, p: number) {
+      var s = w / 330;
+      var lx = w * 0.46, ly = h * 0.52, rx = w * 0.1, ry = h * 0.27, rot = -0.28;
+      var sx = w * 0.15, sy = h * 0.15, soilY = h * 0.87;
+      var tm = nowMs() / 1000;
+      var actSun = clamp01((p - 0.02) / 0.12);
+      var actIn = clamp01((p - 0.30) / 0.12);
+      var actOut = clamp01((p - 0.63) / 0.12);
+
+      // 土壤（虛線）＋莖＋根。
+      g.save(); g.strokeStyle = 'rgba(140,94,55,0.35)'; g.lineWidth = 2.5 * s; g.setLineDash([3 * s, 4 * s]);
+      g.beginPath(); g.moveTo(w * 0.16, soilY); g.lineTo(w * 0.72, soilY); g.stroke(); g.restore();
+      g.save(); g.strokeStyle = '#9c6b3f'; g.lineWidth = 3 * s; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(lx, ly + ry * 0.55); g.lineTo(lx, soilY); g.stroke();   // 莖
+      g.lineWidth = 2 * s; g.strokeStyle = 'rgba(140,94,55,0.9)';
+      g.beginPath();
+      g.moveTo(lx, soilY); g.lineTo(lx - 10 * s, soilY + 10 * s);
+      g.moveTo(lx, soilY); g.lineTo(lx + 10 * s, soilY + 10 * s);
+      g.moveTo(lx, soilY); g.lineTo(lx, soilY + 12 * s);
+      g.stroke(); g.restore();
+
+      sunDisc(g, sx, sy, 10 * s);
+      label(g, '陽光', sx, sy + 20 * s, SUN, 11 * s, 'center');
+
+      leaf(g, lx, ly, rx, ry, rot, s, actOut);
+
+      // 原料：陽光（3 條平行、太陽→葉）。
+      var tx = lx - rx * 0.4, ty = ly - ry * 0.45, ki;
+      for (ki = -1; ki <= 1; ki++) {
+        flow(g, sx + ki * 9 * s, sy + 10 * s + ki * 2 * s, tx + ki * 11 * s, ty, SUN, (tm * 0.5 + ki * 0.12) % 1, 3, 2.4 * s, actSun);
+      }
+      // 原料：二氧化碳（空氣→葉，右下方經氣孔進入）。
+      flow(g, w * 0.92, h * 0.60, lx + rx * 0.9, ly + ry * 0.12, CO2_COL, (tm * 0.33) % 1, 5, 2.6 * s, actIn);
+      tlabel(g, '二氧化碳 CO₂', w * 0.97, h * 0.52, CO2_COL, 10.5 * s, 'right', actIn);
+      // 原料：水（根→葉，由下往上）。
+      flow(g, lx, soilY - 2 * s, lx, ly + ry * 0.35, WATER_COL, (tm * 0.4) % 1, 5, 2.6 * s, actIn);
+      tlabel(g, '水 H₂O', lx + 12 * s, h * 0.78, WATER_COL, 10.5 * s, 'left', actIn);
+
+      // 產物：氧氣（葉→空氣，往右上冒出；標籤壓在上方標題之下，不互相重疊）。
+      flow(g, lx + rx * 0.3, ly - ry * 0.35, w * 0.74, h * 0.16, O2_COL, (tm * 0.4) % 1, 5, 2.6 * s, actOut);
+      tlabel(g, '氧氣 O₂', w * 0.80, h * 0.23, O2_COL, 10.5 * s, 'center', actOut);
+      // 產物：養分（葡萄糖，儲存在葉內）＋引線到左側標籤。
+      var gx = lx - rx * 0.15, gy = ly + ry * 0.18;
+      sugar(g, gx, gy, 7 * s, actOut);
+      var la = clamp01((actOut - 0.3) / 0.4);
+      if (la > 0.02) {
+        g.save(); g.globalAlpha = la; g.strokeStyle = SUGAR_COL; g.lineWidth = 1 * s;
+        g.beginPath(); g.moveTo(gx - 8 * s, gy); g.lineTo(lx - rx - 6 * s, ly + ry * 0.35); g.stroke(); g.restore();
+        tlabel(g, '養分（葡萄糖）', lx - rx - 8 * s, ly + ry * 0.35, SUGAR_COL, 10.5 * s, 'right', la);
+      }
+    }
+
+    return runScene(host, {
+      durationMs: 9000, loops: 2, staticPhase: 1,
+      label: '光合作用動畫：葉子吸收陽光的能量，吸入空氣中的二氧化碳、根部吸水，然後做出養分（葡萄糖）儲存起來，同時放出氧氣。陽光是能量，二氧化碳和水是原料，養分和氧氣是產物。',
+      drawStatic: function (g, w, h) {
+        // reduced-motion：清楚的「原料 → 葉子 → 產物」標字圖（箭頭、色彩圖例）。
+        var s = w / 330, ink = inkColor(), theme = themeColor();
+        label(g, '光合作用：陽光＋二氧化碳＋水 → 養分＋氧氣', w / 2, 14 * s, theme, 11.5 * s, 'center');
+        var lx = w * 0.5, ly = h * 0.54, rx = w * 0.08, ry = h * 0.2;
+        leaf(g, lx, ly, rx, ry, 0, s, 1);
+        sugar(g, lx, ly + ry * 0.15, 7 * s, 1);
+        label(g, '葉子', lx, ly + ry + 14 * s, ink, 10.5 * s, 'center');
+        var ins: [string, string, number][] = [['陽光', SUN, h * 0.34], ['二氧化碳 CO₂', CO2_COL, h * 0.54], ['水 H₂O', WATER_COL, h * 0.74]];
+        ins.forEach(function (it) {
+          label(g, it[0], 6 * s, it[2] - 10 * s, it[1], 10.5 * s, 'left');
+          sarrow(g, w * 0.2, it[2], lx - rx - 2 * s, it[2], it[1], s);
+        });
+        var outs: [string, string, number][] = [['養分（葡萄糖）', SUGAR_COL, h * 0.44], ['氧氣 O₂', O2_COL, h * 0.66]];
+        outs.forEach(function (it) {
+          label(g, it[0], w - 6 * s, it[2] - 10 * s, it[1], 10.5 * s, 'right');
+          sarrow(g, lx + rx + 2 * s, it[2], w * 0.82, it[2], it[1], s);
+        });
+        label(g, '陽光是能量，二氧化碳和水是原料，養分和氧氣是產物', 8 * s, h - 7 * s, theme, 9.5 * s, 'left');
+      },
+      draw: function (g, phase, w, h) {
+        var theme = themeColor(), s = w / 330;
+        scene(g, w, h, phase);
+        var cap = phase < 0.30 ? '① 葉子吸收陽光的能量'
+          : (phase < 0.63 ? '② 吸入二氧化碳，根部吸水' : '③ 做出養分（葡萄糖），放出氧氣');
+        label(g, cap, w / 2, 15 * s, theme, 12.5 * s, 'center');
+        label(g, '陽光＋二氧化碳＋水 → 養分（葡萄糖）＋氧氣', 8 * s, h - 7 * s, theme, 9.5 * s, 'left');
+      }
+    });
+  }
+
   // ---- 導出 -----------------------------------------------------------
   var Anim = {
     reducedMotion: reducedMotion,
@@ -1106,6 +1489,9 @@
     reactionRebond: reactionRebond,
     vectorAdd: vectorAdd,
     fractionEquiv: fractionEquiv,
+    statesOfMatter: statesOfMatter,
+    waterCycle: waterCycle,
+    photosynthesis: photosynthesis,
   };
   (window as any).Anim = Anim;
 })();

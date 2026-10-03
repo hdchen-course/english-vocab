@@ -80,6 +80,13 @@ function cycleFlow(items){
   });
   return s+'</svg>';
 }
+// 動畫 teach 步驟用：產生一個 <canvas> 佔位（實際繪製由 anim_core.js 的 window.Anim 接手）。
+// 尊重既有 .cn-svg 版面；canvas 給固定邏輯尺寸（含 CSS 尺寸，供 DPR 縮放讀 clientWidth）。
+function animCanvas(w,h,label){
+  return '<canvas class="cn-anim-canvas" width="'+w+'" height="'+h+'" '+
+    'style="max-width:'+w+'px" '+
+    'role="img" aria-label="'+label+'"></canvas>';
+}
 // 光合作用：左側原料進入葉子，右側產物離開（箭頭全水平）
 function photo(){
   var s='<svg viewBox="0 0 264 156" role="img" aria-label="光合作用：陽光、二氧化碳、水進入葉子，產生養分和氧氣">';
@@ -143,7 +150,7 @@ window.CONCEPT = {
      ]},
    { id:'photo', name:'光合作用', emoji:'🍃', color:'#22c55e', sub:'植物怎麼自己「做飯」', done:'記得：光合作用＝陽光＋二氧化碳＋水 →（在葉子裡）→ 養分（糖）＋氧氣。',
      steps:[
-      {type:'teach',kicker:'先想一想',title:'植物自己做養分',svg:photo(),text:'植物的<b>葉子</b>會用<b>陽光</b>當能量，把<b>二氧化碳</b>和<b>水</b>變成<b>養分（糖）</b>，這叫<b>光合作用</b>。過程還會放出<b>氧氣</b>，讓我們呼吸。'},
+      {type:'teach',kicker:'先想一想',title:'植物自己做養分',svg:animCanvas(330,206,'光合作用：葉子吸收陽光的能量，吸入二氧化碳、根部吸水，做出養分（葡萄糖）並放出氧氣'),mount:function(host){return window.Anim&&window.Anim.photosynthesis(host);},text:'植物的<b>葉子</b>會用<b>陽光</b>當能量，把<b>二氧化碳</b>和<b>水</b>變成<b>養分（糖）</b>，這叫<b>光合作用</b>。過程還會放出<b>氧氣</b>，讓我們呼吸。看看原料怎麼流進葉子，養分和氧氣又怎麼做出來。'},
       {type:'teach',kicker:'原料與產物',title:'進去的 vs 出來的',svg:photo(),text:'<b>能量來源</b>：陽光（提供能量，不會被當成材料用掉）。<b>原料（進去）</b>：二氧化碳和水。<b>產物（出來）</b>：養分（糖）和氧氣。所以植物既能<b>自己吃飽</b>，又幫地球<b>製造氧氣</b>。'},
       {type:'quiz',kicker:'換你試試',title:'光合作用需要下列哪些東西？',options:['陽光、二氧化碳、水','氧氣、糖、鹽','牛奶、麵包、水','石頭、沙、風'],answer:0,why:'光合作用需要陽光（提供能量）、二氧化碳和水（原料）；氧氣和糖是產物。'},
       {type:'quiz',kicker:'想一想',title:'植物行光合作用時，會「放出」什麼氣體？',options:['氧氣','二氧化碳','氮氣','水蒸氣'],answer:0,why:'光合作用會放出氧氣（吸收的是二氧化碳）。'},
@@ -169,6 +176,7 @@ window.CONCEPT = {
   ]
 };
 </script>
+<script src="anim_core.js"></script>
 <script src="concept_engine.js"></script>
 </body>
 </html>

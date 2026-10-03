@@ -47,6 +47,9 @@ interface AnimApi {
   reactionRebond: (host: HTMLElement) => { stop: () => void };
   vectorAdd: (host: HTMLElement) => { stop: () => void };
   fractionEquiv: (host: HTMLElement) => { stop: () => void };
+  statesOfMatter: (host: HTMLElement) => { stop: () => void };
+  waterCycle: (host: HTMLElement) => { stop: () => void };
+  photosynthesis: (host: HTMLElement) => { stop: () => void };
 }
 
 /** game_core.js 導出的遊戲核心 API（window.Game）。遷移 game_core 時逐步精確化。 */
