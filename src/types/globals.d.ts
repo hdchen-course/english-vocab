@@ -42,6 +42,11 @@ interface AnimApi {
   earthRevolution: (host: HTMLElement) => { stop: () => void };
   earthSeasons: (host: HTMLElement) => { stop: () => void };
   moonPhases: (host: HTMLElement) => { stop: () => void };
+  circuitFlow: (host: HTMLElement) => { stop: () => void };
+  buoyancyFloat: (host: HTMLElement) => { stop: () => void };
+  reactionRebond: (host: HTMLElement) => { stop: () => void };
+  vectorAdd: (host: HTMLElement) => { stop: () => void };
+  fractionEquiv: (host: HTMLElement) => { stop: () => void };
 }
 
 /** game_core.js 導出的遊戲核心 API（window.Game）。遷移 game_core 時逐步精確化。 */

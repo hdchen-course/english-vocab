@@ -76,6 +76,13 @@ function buoyancy(up, down, verdict){
   if(verdict) s+='<text x="60" y="30" text-anchor="middle" font-size="15" font-weight="800" fill="currentColor">'+verdict+'</text>';
   return s+'</svg>';
 }
+// 動畫 teach 步驟用：產生一個 <canvas> 佔位（實際繪製由 anim_core.js 的 window.Anim 接手）。
+// 尊重既有 .cn-svg 版面；canvas 給固定邏輯尺寸（含 CSS 尺寸，供 DPR 縮放讀 clientWidth）。
+function animCanvas(w,h,label){
+  return '<canvas class="cn-anim-canvas" width="'+w+'" height="'+h+'" '+
+    'style="max-width:'+w+'px" '+
+    'role="img" aria-label="'+label+'"></canvas>';
+}
 
 window.CONCEPT = {
   progKey:'physics_concepts_v1', practiceHref:'physics.html',
@@ -91,8 +98,8 @@ window.CONCEPT = {
      ]},
    { id:'circuit', name:'簡單電路', emoji:'🔌', color:'#0284c7', sub:'通路、斷路、導體與絕緣體', done:'記得：電要繞完整一圈（通路）燈才會亮；金屬是導體、塑膠是絕緣體。',
      steps:[
-      {type:'teach',kicker:'先想一想',title:'電要繞完整一圈，燈才會亮',svg:circuit(true),text:'電從<b>電池</b>出發，沿著<b>電線</b>繞一圈回到電池。這條路<b>接成完整的一圈（通路）</b>，燈泡才會<b>亮</b>。'},
-      {type:'teach',kicker:'斷掉會怎樣',title:'有缺口（斷路）→ 燈不亮',svg:circuit(false),text:'如果電線中間<b>斷了一個缺口</b>（斷路），電流<b>過不去</b>，燈泡就<b>不亮</b>。<b>開關</b>就是用來接通或切斷這條路。'},
+      {type:'teach',kicker:'先想一想',title:'電要繞完整一圈，燈才會亮',svg:animCanvas(320,180,'電路動畫：通路時電流繞一圈流動、燈泡亮；開關打開變成斷路時有缺口、電流不流、燈泡不亮'),mount:function(host){return window.Anim&&window.Anim.circuitFlow(host);},text:'電從<b>電池</b>出發，沿著<b>電線</b>繞一圈回到電池。這條路<b>接成完整的一圈（通路）</b>，燈泡才會<b>亮</b>。看動畫裡的小點：<b>電流繞著一圈流動</b>，燈就亮。'},
+      {type:'teach',kicker:'斷掉會怎樣',title:'有缺口（斷路）→ 燈不亮',svg:animCanvas(320,180,'電路動畫：通路時電流繞一圈流動、燈泡亮；開關打開變成斷路時有缺口、電流不流、燈泡不亮'),mount:function(host){return window.Anim&&window.Anim.circuitFlow(host);},text:'打開<b>開關</b>，電線就<b>斷了一個缺口</b>（斷路），電流<b>繞不過去、停下來</b>，燈泡就<b>不亮</b>。開關就是用來接通或切斷這條路——注意動畫裡缺口一出現，小點就不動了。'},
       {type:'quiz',kicker:'換你試試',title:'燈泡要亮，電路必須怎樣？',options:['接成完整的一圈（通路）','中間留一個缺口','只要有電池、不用電線','把燈泡拿掉'],answer:0,why:'電流要能繞完整一圈回到電池，燈泡才會亮。'},
       {type:'teach',kicker:'再學一招',title:'導體 vs 絕緣體',svg:'<svg viewBox="0 0 300 96" role="img" aria-label="導體與絕緣體"><text x="80" y="30" text-anchor="middle" font-size="13" font-weight="800" fill="currentColor">導體（電通過）</text><line x1="30" y1="52" x2="130" y2="52" stroke="#c9873a" stroke-width="6"/><text x="80" y="78" text-anchor="middle" font-size="20">🥉⚡</text><text x="220" y="30" text-anchor="middle" font-size="13" font-weight="800" fill="currentColor">絕緣體（擋住）</text><line x1="170" y1="52" x2="270" y2="52" stroke="#9aa1ab" stroke-width="6" stroke-dasharray="6 6"/><text x="220" y="78" text-anchor="middle" font-size="20">🧱🚫</text></svg>',text:'電流<b>能</b>通過的東西叫<b>導體</b>（金屬、銅線）；電流<b>不能</b>通過的叫<b>絕緣體</b>（塑膠、橡皮、木頭）。所以電線外面包一層塑膠才安全。'},
       {type:'quiz',kicker:'換你試試',title:'下面哪一個是「導體」（電能通過）？',options:['銅線','塑膠尺','木筷子','橡皮擦'],answer:0,why:'金屬（銅線）是導體；塑膠、木頭、橡皮都是絕緣體。'},
@@ -102,7 +109,7 @@ window.CONCEPT = {
      steps:[
       {type:'teach',kicker:'先想一想',title:'水會給東西一個「往上」的力',svg:buoyancy(30,30,''),text:'把東西放進水裡，水會給它一個<b>往上</b>的力，叫做<b>浮力</b>（綠色箭頭）。這就是為什麼在水裡會覺得東西變輕。'},
       {type:'teach',kicker:'兩個力比賽',title:'浮力往上、重力往下',svg:buoyancy(30,30,'比誰大'),text:'同時，<b>重力</b>把東西<b>往下</b>拉（紅色箭頭）。東西會浮還是沉，就看<b>浮力和重力誰比較大</b>。'},
-      {type:'teach',kicker:'關鍵祕訣',title:'浮力大 → 浮起；重力大 → 下沉',svg:buoyancy(46,18,'浮起來'),text:'<b>浮力 > 重力</b> → 東西<b>浮起來</b>（木頭、球）；<b>浮力 < 重力</b> → 東西<b>沉下去</b>（石頭、鐵塊）。（小提醒：東西浮起來、停在水面不動時，浮力剛好<b>等於</b>重力；浮力大於重力是它還在往上浮的時候。）'},
+      {type:'teach',kicker:'關鍵祕訣',title:'浮力大 → 浮起；重力大 → 下沉',svg:animCanvas(330,200,'浮力動畫：一樣大、不同重的木塊和鐵塊放入水中；木塊浮力大於重力會浮起停在水面，鐵塊重力大於浮力會沉到底；浮或沉看兩個力誰大'),mount:function(host){return window.Anim&&window.Anim.buoyancyFloat(host);},text:'一樣大的<b>木塊</b>和<b>鐵塊</b>一起放進水裡：<b>浮力 > 重力</b> → <b>浮起來</b>（木塊）；<b>浮力 < 重力</b> → <b>沉下去</b>（鐵塊）。看兩支箭頭比大小就知道。（小提醒：浮在水面不動時，浮力剛好<b>等於</b>重力；浮力大於重力是它還在往上浮的時候。）'},
       {type:'quiz',kicker:'換你試試',title:'木頭放進水裡會浮起來，因為？',options:['浮力比重力大','重力比浮力大','木頭沒有重量','水沒有力'],answer:0,why:'浮力 > 重力時東西會浮起來，所以木頭浮在水面。'},
       {type:'quiz',kicker:'換你試試',title:'石頭放進水裡會沉到底，因為？',options:['重力比浮力大','浮力比重力大','石頭會游泳','水太少了'],answer:0,why:'重力 > 浮力時東西會下沉，所以石頭沉到水底。'},
       {type:'quiz',kicker:'想一想',title:'在游泳池裡覺得身體變輕，是因為？',options:['水給我們往上的浮力','重力消失了','水把我們變小','我們變成氣體'],answer:0,why:'水的浮力往上托著我們，抵消了一部分重力，所以覺得變輕。'}
@@ -110,6 +117,7 @@ window.CONCEPT = {
   ]
 };
 </script>
+<script src="anim_core.js"></script>
 <script src="concept_engine.js"></script>
 </body>
 </html>

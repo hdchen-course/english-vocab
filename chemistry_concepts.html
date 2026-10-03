@@ -49,6 +49,12 @@ function stateBox(x,label,emoji,pattern){
   return s;
 }
 function threeStates(){ return '<svg viewBox="0 0 300 104" role="img" aria-label="物質三態的粒子">'+stateBox(8,'固態','🧊','solid')+stateBox(114,'液態','💧','liquid')+stateBox(220,'氣態','💨','gas')+'</svg>'; }
+// 動畫 teach 步驟用：產生一個 <canvas> 佔位（實際繪製由 anim_core.js 的 window.Anim 接手）。
+function animCanvas(w,h,label){
+  return '<canvas class="cn-anim-canvas" width="'+w+'" height="'+h+'" '+
+    'style="max-width:'+w+'px" '+
+    'role="img" aria-label="'+label+'"></canvas>';
+}
 function atom(cx,cy,el,fill,tcol,r){ r=r||16; return '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+fill+'" stroke="#555" stroke-width="1.5"/><text x="'+cx+'" y="'+(cy+5)+'" text-anchor="middle" font-size="14" font-weight="800" fill="'+tcol+'">'+el+'</text>'; }
 var OX='#e11d48', HY='#e5e7eb', CB='#374151'; // 氧紅、氫白、碳深
 function bond(x1,y1,x2,y2){ return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="#8a8a8a" stroke-width="4"/>'; }
@@ -112,7 +118,7 @@ window.CONCEPT = {
      steps:[
       {type:'teach',kicker:'先想一想',title:'反應 = 把積木拆開重拼',svg:consBalance(),text:'化學反應就像<b>把積木拆開、重新拼</b>。原子<b>沒有消失、也沒有多出來</b>，只是<b>重新組合</b>。所以反應<b>前</b>和<b>後</b>，原子總數一樣。'},
       {type:'teach',kicker:'所以呢',title:'總重不變 = 質量守恆',svg:consBalance(),text:'既然原子沒增也沒減，<b>反應前的總重 = 反應後的總重</b>，天平<b>平衡</b>。這就叫<b>質量守恆</b>。'},
-      {type:'teach',kicker:'看例子',title:'數一數，一個都沒少',svg:'<svg viewBox="0 0 300 70" role="img" aria-label="2H2+O2->2H2O"><text x="150" y="44" text-anchor="middle" font-size="20" font-weight="800" fill="currentColor">2H₂ + O₂ → 2H₂O</text></svg>',text:'例如 <b>2H₂ + O₂ → 2H₂O</b>：左邊 4 個 H + 2 個 O，右邊也是 4 個 H + 2 個 O，一個都沒少。'},
+      {type:'teach',kicker:'看例子',title:'數一數，一個都沒少',svg:animCanvas(340,210,'化學反應 2H₂ + O₂ → 2H₂O：兩個氫分子和一個氧分子斷鍵後，原子重新組合成兩個水分子；頂端顯示原子總數 氫 H：4、氧 O：2，反應前後都一樣'),mount:function(host){return window.Anim&&window.Anim.reactionRebond(host);},text:'例如 <b>2H₂ + O₂ → 2H₂O</b>：看動畫——氫分子（H–H）和氧分子（O=O）<b>斷鍵</b>，原子<b>重新組合</b>成水分子。頂端的原子數一直是 <b>氫 4、氧 2</b>：左邊 4 個 H + 2 個 O，右邊也是 4 個 H + 2 個 O，<b>一個都沒少</b>。'},
       {type:'quiz',kicker:'換你試試',title:'化學反應中，原子會怎樣？',options:['重新組合，總數不變','憑空消失','無中生有變多'],answer:0,why:'原子只是重新組合，總數不變，這是質量守恆的核心。'},
       {type:'quiz',kicker:'換你試試',title:'反應前總重 10 克，反應後總重是多少？',options:['10 克','比 10 克少','比 10 克多'],answer:0,why:'質量守恆：反應前後總重相同，還是 10 克。'},
       {type:'quiz',kicker:'想一想',title:'為什麼反應前後質量不變？',options:['原子沒增也沒減，只是重新組合','因為加了水','因為變冷了'],answer:0,why:'原子總數不變，所以總質量也不變。'}
@@ -128,6 +134,7 @@ window.CONCEPT = {
   ]
 };
 </script>
+<script src="anim_core.js"></script>
 <script src="concept_engine.js"></script>
 </body>
 </html>

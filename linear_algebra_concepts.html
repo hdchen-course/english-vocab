@@ -68,6 +68,12 @@ function arrow(x1,y1,x2,y2,color,label){
   return s;
 }
 function svgWrap(inner,label,max){ return '<svg viewBox="0 0 210 200" role="img" aria-label="'+label+'">'+gridBase(max)+inner+'</svg>'; }
+// 動畫 teach 步驟用：產生一個 <canvas> 佔位（實際繪製由 anim_core.js 的 window.Anim 接手）。
+function animCanvas(w,h,label){
+  return '<canvas class="cn-anim-canvas" width="'+w+'" height="'+h+'" '+
+    'style="max-width:'+w+'px" '+
+    'role="img" aria-label="'+label+'"></canvas>';
+}
 // 單一向量 (3,2)
 function vecSingle(){ return svgWrap(arrow(0,0,3,2,'#6d28d9','(3, 2)'),'格子上從原點指向右3上2的向量箭頭 (3,2)'); }
 // 兩個不同向量 (3,2) 與 (2,3)
@@ -177,7 +183,7 @@ window.CONCEPT = {
      ]},
    { id:'vecadd', name:'向量相加：接力走', emoji:'➕', color:'#0891b2', sub:'先走一段再走一段，數字分開加', done:'記得：向量相加＝先走第一段再走第二段；把左右加左右、上下加上下；先走哪一段結果都一樣。',
      steps:[
-      {type:'teach',kicker:'先想一想',title:'相加就像接力走',svg:vecAdd(),text:'兩個向量<b>相加</b>，就像<b>先走第一段，接著走第二段</b>。算法很簡單：<b>左右加左右、上下加上下</b>。(2, 1) + (1, 3)＝(2+1, 1+3)＝<b>(3, 4)</b>。紅色虛線就是你從起點到終點的合成向量。'},
+      {type:'teach',kicker:'先想一想',title:'相加就像接力走',svg:animCanvas(300,210,'在格子上從原點畫出向量a=(2,1)，把向量b=(1,3)平移到a的箭頭尖端(頭接尾)，再從起點連到終點就是合向量a+b=(3,4)'),mount:function(host){return window.Anim&&window.Anim.vectorAdd(host);},text:'兩個向量<b>相加</b>，就像<b>先走第一段 a，接著走第二段 b</b>——把 b 的尾巴接到 a 的箭頭（<b>頭接尾</b>）。算法很簡單：<b>左右加左右、上下加上下</b>。(2, 1) + (1, 3)＝(2+1, 1+3)＝<b>(3, 4)</b>。<b>紅色</b>箭頭就是從起點直接連到終點的<b>合成向量</b>（淡淡的虛線顯示先走 b 再走 a 也到同一點）。'},
       {type:'teach',kicker:'順序沒關係',title:'先走哪一段都到同一點',svg:vecComm(),text:'不管你<b>先走 (2,1) 還是先走 (1,3)</b>，最後都會到<b>同一個地方 (3,4)</b>。兩條路剛好圍成一個平行四邊形。所以向量相加可以<b>交換順序</b>。'},
       {type:'quiz',kicker:'換你試試',title:'(3, 1) + (1, 2) ＝ ？',options:['(4, 3)','(3, 2)','(4, 2)','(2, 3)'],answer:0,why:'左右：3+1＝4；上下：1+2＝3。所以是 (4, 3)。'},
       {type:'quiz',kicker:'想一想',title:'先往右走 (5, 0)，再往上走 (0, 2)，離出發點的向量是？',options:['(5, 2)','(0, 2)','(5, 0)','(7, 0)'],answer:0,why:'(5, 0) + (0, 2)＝(5+0, 0+2)＝(5, 2)：往右 5、往上 2。'}
@@ -208,6 +214,7 @@ window.CONCEPT = {
   ]
 };
 </script>
+<script src="anim_core.js"></script>
 <script src="concept_engine.js"></script>
 </body>
 </html>
