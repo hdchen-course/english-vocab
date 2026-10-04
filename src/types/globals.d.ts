@@ -82,6 +82,9 @@ interface AnimApi {
   /** 散布圖與相關趨勢（math-stats + core data-literacy 共用）。
    *  cfg = {points[],r:'pos'|'neg'|'none',showLine,confound:{label,on},xLabel,yLabel,label}。 */
   scatterTrend: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 論證聚光燈：把論證拆成兩框，中間標紅「斷裂處」（非形式謬誤／論證結構共用）。
+   *  cfg = {type:'strawman'|'adhominem'|'appeal'|'generic',left:{label,text},right:{label,text},breakLabel,panels[],title,label}。 */
+  fallacySpotlight: (host: HTMLElement, cfg?: any) => { stop: () => void };
 }
 
 /** game_core.js 導出的遊戲核心 API（window.Game）。遷移 game_core 時逐步精確化。 */

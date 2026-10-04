@@ -2025,6 +2025,198 @@
     });
   }
 
+  // ====================================================================
+  // 場景：fallacySpotlight — 參數化「論證聚光燈」。把一段論證拆成兩個框，
+  //   在中間標出紅色的「斷裂處」（論證毛病）。本頁（非形式謬誤）主用；
+  //   core-argument-structure／core-fact-vs-opinion 之後可複用同場景顯示論證結構。
+  //   cfg = {
+  //     type:'strawman'|'adhominem'|'appeal'|'generic',
+  //     left:{label,text},          // 左框（原本的主張／論點）
+  //     right:{label,text},         // 右框（被扭曲的版本／被攻擊的對象）
+  //     breakLabel,                 // 中間標紅的「斷裂處」說明
+  //     panels:[{label,text}],      // 僅 appeal 用：三格並呈（名人／群眾／情緒）
+  //     title, label                // 標題與無障礙描述
+  //   }
+  //   動畫：左框淡入 → 紅箭頭延伸 → 右框淡入＋紅色斷裂標記閃現（appeal 則三格依序淡入）。
+  //   reduced-motion：staticPhase=1 → 一次畫完整單幀（框＋標紅斷裂處），不跑動畫。
+  // ====================================================================
+  function fallacySpotlight(host: HTMLElement, cfg: any) {
+    cfg = cfg || {};
+    var WARN = '#e11d48';
+    var type: string = cfg.type || 'generic';
+    var leftC = cfg.left || { label: '原本的主張', text: '' };
+    var rightC = cfg.right || { label: '被換掉的版本', text: '' };
+    var breakLabel: string = cfg.breakLabel || '斷裂處：這裡偷換了';
+
+    function clamp01(x: number): number { return Math.max(0, Math.min(1, x)); }
+
+    // 圓角矩形路徑。
+    function roundRect(g: CanvasRenderingContext2D, x: number, y: number, bw: number, bh: number, r: number) {
+      g.beginPath();
+      g.moveTo(x + r, y);
+      g.arcTo(x + bw, y, x + bw, y + bh, r);
+      g.arcTo(x + bw, y + bh, x, y + bh, r);
+      g.arcTo(x, y + bh, x, y, r);
+      g.arcTo(x, y, x + bw, y, r);
+      g.closePath();
+    }
+
+    // CJK 以字數斷行（框內文字很短，1–2 行）。
+    function wrapCJK(text: string, maxChars: number): string[] {
+      var lines: string[] = [], curln = '';
+      for (var i = 0; i < text.length; i++) {
+        curln += text.charAt(i);
+        if (curln.length >= maxChars) { lines.push(curln); curln = ''; }
+      }
+      if (curln) lines.push(curln);
+      return lines;
+    }
+
+    // 畫一個具名框（上緣標籤 chip ＋ 內文），alpha 控制淡入。
+    function drawBox(g: CanvasRenderingContext2D, x: number, y: number, bw: number, bh: number,
+      col: string, lbl: string, txt: string, alpha: number) {
+      var ink = inkColor();
+      g.save();
+      g.globalAlpha = alpha * 0.12; g.fillStyle = col; roundRect(g, x, y, bw, bh, 11); g.fill();
+      g.globalAlpha = alpha; g.lineWidth = 1.7; g.strokeStyle = col; roundRect(g, x, y, bw, bh, 11); g.stroke();
+      g.restore();
+      g.save(); g.globalAlpha = alpha;
+      label(g, lbl, x + bw / 2, y + 15, col, 11, 'center');
+      var lines = wrapCJK(txt, 7);
+      var startY = y + bh / 2 - (lines.length - 1) * 8 + 7;
+      for (var k = 0; k < lines.length; k++) label(g, lines[k], x + bw / 2, startY + k * 16, ink, 11.5, 'center');
+      g.restore();
+    }
+
+    // 簡易「人」字形（訴諸人身：箭頭射向這個人而非論點）。
+    function drawPerson(g: CanvasRenderingContext2D, cx: number, cy: number, s: number, col: string, alpha: number) {
+      g.save(); g.globalAlpha = alpha; g.strokeStyle = col; g.fillStyle = col; g.lineWidth = 2;
+      disc(g, cx, cy - s * 0.7, s * 0.42, col);
+      g.beginPath(); g.moveTo(cx, cy - s * 0.3); g.lineTo(cx, cy + s * 0.4); g.stroke();
+      g.beginPath(); g.moveTo(cx - s * 0.5, cy + s * 0.9); g.lineTo(cx, cy + s * 0.4); g.lineTo(cx + s * 0.5, cy + s * 0.9); g.stroke();
+      g.beginPath(); g.moveTo(cx - s * 0.5, cy - s * 0.05); g.lineTo(cx + s * 0.5, cy - s * 0.05); g.stroke();
+      g.restore();
+    }
+
+    // 紅色箭頭（代表「出毛病的那一步」），len 0..1 控制延伸長度。
+    function drawRedArrow(g: CanvasRenderingContext2D, x0: number, y0: number, x1: number, y1: number, len: number, alpha: number) {
+      var ex = x0 + (x1 - x0) * len, ey = y0 + (y1 - y0) * len;
+      g.save(); g.globalAlpha = alpha; g.strokeStyle = WARN; g.fillStyle = WARN; g.lineWidth = 2.6; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(x0, y0); g.lineTo(ex, ey); g.stroke();
+      if (len > 0.92) {
+        var ang = Math.atan2(y1 - y0, x1 - x0);
+        g.beginPath();
+        g.moveTo(x1, y1);
+        g.lineTo(x1 - 9 * Math.cos(ang - 0.4), y1 - 9 * Math.sin(ang - 0.4));
+        g.lineTo(x1 - 9 * Math.cos(ang + 0.4), y1 - 9 * Math.sin(ang + 0.4));
+        g.closePath(); g.fill();
+      }
+      g.restore();
+    }
+
+    // 紅色斷裂 chip（置底，標出論證毛病）。
+    function drawBreakChip(g: CanvasRenderingContext2D, cx: number, cy: number, text: string, alpha: number) {
+      var lines = wrapCJK(text, 15);
+      var chW = 0; g.font = '700 10.5px system-ui, sans-serif';
+      for (var i = 0; i < lines.length; i++) chW = Math.max(chW, g.measureText(lines[i]).width);
+      chW += 26; var chH = lines.length * 15 + 10;
+      g.save();
+      g.globalAlpha = alpha * 0.14; g.fillStyle = WARN; roundRect(g, cx - chW / 2, cy - chH / 2, chW, chH, 8); g.fill();
+      g.globalAlpha = alpha; g.lineWidth = 1.5; g.strokeStyle = WARN; roundRect(g, cx - chW / 2, cy - chH / 2, chW, chH, 8); g.stroke();
+      var ty = cy - (lines.length - 1) * 7.5;
+      for (var j = 0; j < lines.length; j++) label(g, lines[j], cx, ty + j * 15, WARN, 10.5, 'center');
+      g.restore();
+    }
+
+    // --- 兩框流（strawman / adhominem / generic）---
+    function drawTwoBox(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var theme = themeColor();
+      var leftA = easeInOut(clamp01(p / 0.33));
+      var arrowA = clamp01((p - 0.33) / 0.33);
+      var rightA = easeInOut(clamp01((p - 0.66) / 0.34));
+      var breakA = easeInOut(clamp01((p - 0.72) / 0.28));
+      var bw = w * 0.33, bh = h * 0.40;
+      var boxY = h * 0.20;
+      var leftX = w * 0.045, rightX = w - bw - w * 0.045;
+      var rowY = boxY + bh / 2;
+      // 左框：原本的主張／論點（主題色＝合理的那一邊）。
+      drawBox(g, leftX, boxY, bw, bh, theme, leftC.label, leftC.text || '', leftA);
+      // 紅箭頭：左框右緣 → 右框左緣。
+      if (arrowA > 0.01) drawRedArrow(g, leftX + bw + 3, rowY, rightX - 5, rowY, arrowA, Math.min(1, arrowA + 0.2));
+      // 右框：被扭曲的版本／被攻擊的人（紅色＝出毛病的落點）。
+      if (type === 'adhominem') {
+        if (rightA > 0.01) {
+          g.save();
+          g.globalAlpha = rightA * 0.1; g.fillStyle = WARN; roundRect(g, rightX, boxY, bw, bh, 11); g.fill();
+          g.globalAlpha = rightA; g.lineWidth = 1.7; g.strokeStyle = WARN; roundRect(g, rightX, boxY, bw, bh, 11); g.stroke();
+          g.restore();
+          label(g, rightC.label || '這個人', rightX + bw / 2, boxY + 15, WARN, 11, 'center');
+          drawPerson(g, rightX + bw / 2, rowY + 8, bh * 0.32, WARN, rightA);
+        }
+      } else {
+        drawBox(g, rightX, boxY, bw, bh, WARN, rightC.label, rightC.text || '', rightA);
+      }
+      // 斷裂 chip（置底）。
+      if (breakA > 0.01) drawBreakChip(g, w / 2, h - 20, breakLabel, breakA);
+    }
+
+    // --- 三格並呈（appeal：名人／群眾／情緒）---
+    var panels: any[] = cfg.panels || [
+      { label: '🌟 名人掛保證', text: '但他不是這領域的專家' },
+      { label: '👥 大家都這樣', text: '人多就一定對？' },
+      { label: '😱 恐嚇或感動', text: '用情緒代替理由' }
+    ];
+    function drawAppeal(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var ink = inkColor();
+      var n = panels.length, gap = w * 0.025;
+      var pw = (w - gap * (n + 1)) / n;
+      var py = h * 0.17, ph = h * 0.52;
+      for (var i = 0; i < n; i++) {
+        var a = easeInOut(clamp01((p - i * 0.30) / 0.3));
+        if (a <= 0.01) continue;
+        var px = gap + i * (pw + gap);
+        g.save();
+        g.globalAlpha = a * 0.1; g.fillStyle = WARN; roundRect(g, px, py, pw, ph, 10); g.fill();
+        g.globalAlpha = a; g.lineWidth = 1.6; g.strokeStyle = WARN; roundRect(g, px, py, pw, ph, 10); g.stroke();
+        g.restore();
+        g.save(); g.globalAlpha = a;
+        var lblLines = wrapCJK(panels[i].label, 6);
+        for (var li = 0; li < lblLines.length; li++) label(g, lblLines[li], px + pw / 2, py + 15 + li * 15, ink, 10.5, 'center');
+        var txtLines = wrapCJK(panels[i].text, 6);
+        var ty0 = py + ph / 2 - (txtLines.length - 1) * 7 + 10;
+        for (var ti = 0; ti < txtLines.length; ti++) label(g, txtLines[ti], px + pw / 2, ty0 + ti * 15, ink, 10, 'center');
+        // 紅色 ✗ 徽章（右上角）。
+        g.fillStyle = WARN; disc(g, px + pw - 11, py + 11, 9, WARN);
+        g.globalAlpha = a; label(g, '✗', px + pw - 11, py + 11, '#ffffff', 11, 'center');
+        g.restore();
+      }
+      var capA = easeInOut(clamp01((p - 0.72) / 0.28));
+      if (capA > 0.01) drawBreakChip(g, w / 2, h - 18, breakLabel || '都用人氣／情緒／不相關名氣，代替理由與證據', capA);
+    }
+
+    function draw(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var theme = themeColor();
+      var title: string = cfg.title || (type === 'strawman' ? '稻草人：扭曲後再攻擊'
+        : type === 'adhominem' ? '訴諸人身：攻擊人，不談論點'
+          : type === 'appeal' ? '訴諸權威／群眾／情緒' : '找出論證的斷裂處');
+      label(g, title, w / 2, 14, theme, 12.5, 'center');
+      if (type === 'appeal') drawAppeal(g, p, w, h);
+      else drawTwoBox(g, p, w, h);
+    }
+
+    return runScene(host, {
+      durationMs: 5200, loops: 2, staticPhase: 1,
+      label: cfg.label || (type === 'strawman'
+        ? '稻草人謬誤聚光燈：左框是原本溫和的主張，紅箭頭把它偷換成右框誇張、好反駁的版本，中間標紅斷裂處。'
+        : type === 'adhominem'
+          ? '訴諸人身聚光燈：左框是對方的論點，紅箭頭卻射向右邊「這個人」而非論點，中間標紅「攻擊人，不談理由」。'
+          : type === 'appeal'
+            ? '訴諸權威／群眾／情緒聚光燈：三格並呈名人掛保證、大家都這樣、用情緒代替理由，各標紅✗，底部點出都用人氣與情緒代替理由證據。'
+            : '論證聚光燈：左框前提、紅箭頭延伸到右框結論，中間標紅斷裂處指出論證的毛病。'),
+      draw: draw
+    });
+  }
+
   // ---- 導出 -----------------------------------------------------------
   var Anim = {
     reducedMotion: reducedMotion,
@@ -2044,6 +2236,7 @@
     barGrow: barGrow,
     boxplotBuild: boxplotBuild,
     scatterTrend: scatterTrend,
+    fallacySpotlight: fallacySpotlight,
   };
   (window as any).Anim = Anim;
 })();
