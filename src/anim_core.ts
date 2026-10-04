@@ -2217,6 +2217,191 @@
     });
   }
 
+  // ====================================================================
+  // 場景：argFlow — 參數化「論證流」。把一段論證畫成「前提卡 → 結論卡」的流動：
+  //   演繹(deduction)：前提用「實線鎖鏈箭頭」流入結論（鎖鏈＝鎖住＝必然，
+  //                   前提若為真，結論就一定為真）；
+  //   歸納(induction)：觀察卡用「虛線箭頭」流入通則卡（很可能、不保證），
+  //                   counter.on 時浮現反例（黑天鵝）／隱藏假設卡，用紅✗把結論打叉。
+  //   highlightIndicators:true 時在前提卡標「因為」、結論卡標「所以」指示詞
+  //                   （供 core-argument-structure L4「找前提與結論」直接複用，不必改場景）。
+  //   本 spec（演繹 vs 歸納）建立；core-argument-structure／core-fact-vs-opinion
+  //   只餵 DATA 複用，不得另建場景。
+  //   cfg = {
+  //     premises:[{text}],          // 前提／觀察卡（左欄，由上而下）
+  //     conclusion:{text},          // 結論／通則卡（右側）
+  //     mode:'deduction'|'induction',
+  //     counter:{text,on},          // induction 專用：反例／隱藏假設卡（on 時打叉結論）
+  //     highlightIndicators:false,  // true＝標出「因為／所以」指示詞（argument-structure 用）
+  //     label                       // 無障礙描述
+  //   }
+  //   reduced-motion：staticPhase=1 → 一次畫完整單幀（前提卡＋箭頭＋結論卡，
+  //                   induction+counter 另含反例卡與紅✗），不跑動畫。
+  // ====================================================================
+  function argFlow(host: HTMLElement, cfg: any) {
+    cfg = cfg || {};
+    var WARN = '#e11d48';
+    var AMBER = '#d97706';                       // 歸納「很可能」的暖色（相對演繹的必然）
+    var mode: string = cfg.mode === 'induction' ? 'induction' : 'deduction';
+    var isDed: boolean = mode === 'deduction';
+    var premises: any[] = cfg.premises || [];
+    var conclusion: any = cfg.conclusion || { text: '' };
+    var counter: any = cfg.counter || null;
+    var counterOn: boolean = !!(counter && counter.on) && !isDed;
+    var hiInd: boolean = !!cfg.highlightIndicators;
+
+    function clamp01(x: number): number { return Math.max(0, Math.min(1, x)); }
+
+    function roundRect(g: CanvasRenderingContext2D, x: number, y: number, bw: number, bh: number, r: number) {
+      g.beginPath();
+      g.moveTo(x + r, y);
+      g.arcTo(x + bw, y, x + bw, y + bh, r);
+      g.arcTo(x + bw, y + bh, x, y + bh, r);
+      g.arcTo(x, y + bh, x, y, r);
+      g.arcTo(x, y, x + bw, y, r);
+      g.closePath();
+    }
+
+    function wrapCJK(text: string, maxChars: number): string[] {
+      var lines: string[] = [], curln = '';
+      for (var i = 0; i < text.length; i++) {
+        curln += text.charAt(i);
+        if (curln.length >= maxChars) { lines.push(curln); curln = ''; }
+      }
+      if (curln) lines.push(curln);
+      return lines;
+    }
+
+    // 指示詞 chip（「因為」「所以」）；只有 highlightIndicators 開啟才畫。
+    function indChip(g: CanvasRenderingContext2D, x: number, y: number, txt: string, col: string, alpha: number) {
+      g.save();
+      g.font = '700 9.5px system-ui, sans-serif';
+      var cw = g.measureText(txt).width + 10;
+      g.globalAlpha = alpha; g.fillStyle = col; roundRect(g, x, y, cw, 15, 7); g.fill();
+      label(g, txt, x + cw / 2, y + 7.5, '#ffffff', 9.5, 'center');
+      g.restore();
+    }
+
+    function drawCard(g: CanvasRenderingContext2D, x: number, y: number, bw: number, bh: number,
+      col: string, txt: string, alpha: number, dashed: boolean, indicator: string) {
+      var ink = inkColor();
+      g.save();
+      g.globalAlpha = alpha * 0.12; g.fillStyle = col; roundRect(g, x, y, bw, bh, 10); g.fill();
+      g.globalAlpha = alpha; g.lineWidth = 1.7; g.strokeStyle = col;
+      if (dashed) g.setLineDash([5, 4]); else g.setLineDash([]);
+      roundRect(g, x, y, bw, bh, 10); g.stroke(); g.setLineDash([]);
+      g.restore();
+      g.save(); g.globalAlpha = alpha;
+      var lines = wrapCJK(txt, 7);
+      var startY = y + bh / 2 - (lines.length - 1) * 8 + 0.5;
+      for (var k = 0; k < lines.length; k++) label(g, lines[k], x + bw / 2, startY + k * 16, ink, 11.5, 'center');
+      g.restore();
+      if (hiInd && indicator) indChip(g, x + 5, y + 5, indicator, col, alpha);
+    }
+
+    // 流動箭頭：演繹＝實線＋沿線小鏈環（鎖鏈＝必然）；歸納＝虛線（很可能）。
+    function drawFlowArrow(g: CanvasRenderingContext2D, x0: number, y0: number, x1: number, y1: number,
+      len: number, alpha: number, col: string) {
+      var ex = x0 + (x1 - x0) * len, ey = y0 + (y1 - y0) * len;
+      g.save(); g.globalAlpha = alpha; g.strokeStyle = col; g.fillStyle = col; g.lineWidth = 2.3; g.lineCap = 'round';
+      if (!isDed) g.setLineDash([5, 4]);
+      g.beginPath(); g.moveTo(x0, y0); g.lineTo(ex, ey); g.stroke();
+      g.setLineDash([]);
+      if (isDed) {
+        var ang = Math.atan2(y1 - y0, x1 - x0);
+        for (var i = 1; i <= 3; i++) {
+          var t = i / 4; var lx = x0 + (ex - x0) * t, ly = y0 + (ey - y0) * t;
+          g.beginPath(); g.lineWidth = 1.5;
+          g.ellipse(lx, ly, 4.4, 2.6, ang, 0, Math.PI * 2); g.stroke();
+        }
+      }
+      if (len > 0.88) {
+        var a2 = Math.atan2(y1 - y0, x1 - x0);
+        g.beginPath();
+        g.moveTo(x1, y1);
+        g.lineTo(x1 - 8 * Math.cos(a2 - 0.42), y1 - 8 * Math.sin(a2 - 0.42));
+        g.lineTo(x1 - 8 * Math.cos(a2 + 0.42), y1 - 8 * Math.sin(a2 + 0.42));
+        g.closePath(); g.fill();
+      }
+      g.restore();
+    }
+
+    // 線型圖例：實線＝一定（演繹）／虛線＝很可能（歸納）。
+    function drawLegend(g: CanvasRenderingContext2D, w: number, col: string) {
+      var lx = w / 2 - 54, ly = 29;
+      g.save(); g.strokeStyle = col; g.lineWidth = 2.3; g.lineCap = 'round';
+      if (!isDed) g.setLineDash([5, 4]);
+      g.beginPath(); g.moveTo(lx, ly); g.lineTo(lx + 24, ly); g.stroke();
+      g.restore();
+      label(g, isDed ? '實線＝一定（演繹）' : '虛線＝很可能（歸納）', lx + 30, ly, col, 10, 'left');
+    }
+
+    function draw(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var theme = themeColor();
+      var cCol = isDed ? theme : AMBER;              // 結論／箭頭／圖例色（每幀讀，支援深色）
+      label(g, isDed ? '演繹：前提保證結論' : '歸納：從例子推通則', w / 2, 14, theme, 12.5, 'center');
+      drawLegend(g, w, cCol);
+      var N = Math.max(1, premises.length);
+      var bandTop = h * 0.21, bandBot = h * 0.72;
+      var pbw = w * 0.40, pbx = w * 0.03;
+      var gap = 9;
+      var pbh = Math.min(46, (bandBot - bandTop - gap * (N - 1)) / N);
+      var cbw = w * 0.40, cbx = w - cbw - w * 0.03;
+      var cbh = h * 0.26, cby = (bandTop + bandBot) / 2 - cbh / 2;
+      var ccy = cby + cbh / 2;
+      var i: number, py: number;
+      // 前提／觀察卡（staggered 淡入）
+      for (i = 0; i < N; i++) {
+        var pa = easeInOut(clamp01((p - i * 0.08) / 0.28));
+        py = bandTop + i * (pbh + gap);
+        drawCard(g, pbx, py, pbw, pbh, theme, (premises[i] && premises[i].text) || '', pa, false, '因為');
+      }
+      // 箭頭延伸（每個前提 → 結論左緣中心）
+      var arrowA = clamp01((p - 0.30) / 0.26);
+      if (arrowA > 0.01) {
+        for (i = 0; i < N; i++) {
+          py = bandTop + i * (pbh + gap);
+          drawFlowArrow(g, pbx + pbw + 2, py + pbh / 2, cbx - 3, ccy, arrowA, Math.min(1, arrowA + 0.15), cCol);
+        }
+      }
+      // 結論／通則卡
+      var concA = easeInOut(clamp01((p - 0.56) / 0.24));
+      if (concA > 0.01) drawCard(g, cbx, cby, cbw, cbh, cCol, conclusion.text || '', concA, !isDed, '所以');
+      // 反例（黑天鵝）打叉（僅 induction + counter.on）
+      if (counterOn) {
+        var cp = easeInOut(clamp01((p - 0.80) / 0.2));
+        if (cp > 0.01) {
+          var tag = '🦢 ' + (counter.text || '出現一隻黑天鵝');
+          g.save(); g.font = '700 10px system-ui, sans-serif';
+          var tw = g.measureText(tag).width + 12;
+          var tx = cbx + cbw / 2 - tw / 2;
+          g.globalAlpha = cp * 0.14; g.fillStyle = WARN; roundRect(g, tx, cby - 20, tw, 16, 7); g.fill();
+          g.globalAlpha = cp; g.strokeStyle = WARN; g.lineWidth = 1.3; roundRect(g, tx, cby - 20, tw, 16, 7); g.stroke();
+          label(g, tag, cbx + cbw / 2, cby - 12, WARN, 10, 'center');
+          g.strokeStyle = WARN; g.lineWidth = 3; g.lineCap = 'round';
+          g.beginPath(); g.moveTo(cbx + 8, cby + 8); g.lineTo(cbx + cbw - 8, cby + cbh - 8); g.stroke();
+          g.beginPath(); g.moveTo(cbx + cbw - 8, cby + 8); g.lineTo(cbx + 8, cby + cbh - 8); g.stroke();
+          g.restore();
+        }
+      }
+      // 底部訊息
+      var msg = isDed ? '前提若為真，結論就一定為真'
+        : (counterOn && p >= 0.85) ? '很可能，但不保證：一個反例就推翻'
+          : '很可能，但不保證';
+      var msgCol = isDed ? theme : ((counterOn && p >= 0.85) ? WARN : AMBER);
+      label(g, msg, w / 2, h - 12, msgCol, 11, 'center');
+    }
+
+    return runScene(host, {
+      durationMs: counterOn ? 6200 : 5200, loops: 2, staticPhase: 1,
+      label: cfg.label || (isDed
+        ? '演繹論證流：左欄前提卡用實線鎖鏈箭頭流入右側結論卡，標示「前提若為真，結論就一定為真」。'
+        : ('歸納論證流：左欄觀察卡用虛線箭頭流入右側通則卡，標示「很可能但不保證」'
+          + (counterOn ? '，最後浮現一隻黑天鵝反例把結論用紅✗打叉。' : '。'))),
+      draw: draw
+    });
+  }
+
   // ---- 導出 -----------------------------------------------------------
   var Anim = {
     reducedMotion: reducedMotion,
@@ -2237,6 +2422,7 @@
     boxplotBuild: boxplotBuild,
     scatterTrend: scatterTrend,
     fallacySpotlight: fallacySpotlight,
+    argFlow: argFlow,
   };
   (window as any).Anim = Anim;
 })();

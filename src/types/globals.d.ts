@@ -85,6 +85,12 @@ interface AnimApi {
   /** 論證聚光燈：把論證拆成兩框，中間標紅「斷裂處」（非形式謬誤／論證結構共用）。
    *  cfg = {type:'strawman'|'adhominem'|'appeal'|'generic',left:{label,text},right:{label,text},breakLabel,panels[],title,label}。 */
   fallacySpotlight: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 論證流：前提卡 → 結論卡。演繹用實線鎖鏈箭頭（必然）、歸納用虛線箭頭（很可能）
+   *  並可 counter.on 浮現反例（黑天鵝）把結論打叉；highlightIndicators 標「因為/所以」
+   *  指示詞（演繹 vs 歸納／論證結構／事實 vs 意見三 spec 共用；author-once）。
+   *  cfg = {premises:[{text}],conclusion:{text},mode:'deduction'|'induction',
+   *         counter:{text,on},highlightIndicators,label}。 */
+  argFlow: (host: HTMLElement, cfg?: any) => { stop: () => void };
 }
 
 /** game_core.js 導出的遊戲核心 API（window.Game）。遷移 game_core 時逐步精確化。 */
