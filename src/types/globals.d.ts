@@ -38,8 +38,9 @@ interface ConceptLessonStep {
   svg?: string;
   text?: string;
   eq?: string;
-  /** 動畫 teach 步驟：收 .cn-svg 容器、回傳清理函式（anim_core）。 */
-  mount?: (host: HTMLElement) => { stop: () => void } | void | null;
+  /** 動畫 teach 步驟：收 .cn-svg 容器，回傳清理「函式」或 window.Anim 場景的 { stop } 物件
+   *  （concept_engine.runCleanup 兩種都接受；turnkey 寫法回傳 function(){h.stop();}）。 */
+  mount?: (host: HTMLElement) => (() => void) | { stop: () => void } | void | null;
   options?: string[];
   answer?: number;
   why?: string;
@@ -69,6 +70,10 @@ interface AnimApi {
   statesOfMatter: (host: HTMLElement) => { stop: () => void };
   waterCycle: (host: HTMLElement) => { stop: () => void };
   photosynthesis: (host: HTMLElement) => { stop: () => void };
+  /** 函數描點／連線（線性＋二次共用一座標引擎）。cfg = {kind,m,b|a,b,c,highlight,label}。 */
+  funcPlot: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 直角三角形三角比（SOH-CAH-TOA）。cfg = {angleDeg,show,label}。 */
+  trigTriangle: (host: HTMLElement, cfg?: any) => { stop: () => void };
 }
 
 /** game_core.js 導出的遊戲核心 API（window.Game）。遷移 game_core 時逐步精確化。 */

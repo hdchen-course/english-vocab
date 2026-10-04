@@ -1478,6 +1478,257 @@
     });
   }
 
+  // ====================================================================
+  // 場景：funcPlot — 直角坐標系上「動畫描點→連線」畫出函數（線性＋二次共用一座標引擎）。
+  //   cfg = { kind:'linear'|'quadratic', m,b | a,b,c, highlight:'slope'|'intercept'|'vertex', label? }
+  //   線性 'slope'：描點→連線→畫「右1上m」直角三角形（斜率＝上升÷水平）。
+  //   線性 'intercept'：動畫把 b 從 0→2（線上移）、再把 m 從 1→2（線變陡），標 y 截距 (0, b)。
+  //   二次 'vertex'：描出拋物線→落下對稱軸 x=−b/(2a)→標頂點。
+  //   reduced-motion：畫最終曲線＋全部標註（staticPhase=1）。本場景參數化，兩課共用、不重造輪子。
+  // ====================================================================
+  function funcPlot(host: HTMLElement, cfg: any) {
+    cfg = cfg || { kind: 'linear' };
+    var kind = cfg.kind || 'linear';
+    var hl = cfg.highlight || (kind === 'quadratic' ? 'vertex' : 'slope');
+    var m = (typeof cfg.m === 'number') ? cfg.m : 2;
+    var b = (typeof cfg.b === 'number') ? cfg.b : 1;
+    var qa = (typeof cfg.a === 'number') ? cfg.a : 1;
+    var qb = (typeof cfg.b === 'number') ? cfg.b : -4;
+    var qc = (typeof cfg.c === 'number') ? cfg.c : 3;
+    // 世界座標視窗（quadratic 對稱於頂點 x）。
+    var wx0: number, wx1: number, wy0: number, wy1: number;
+    if (kind === 'quadratic') { wx0 = -1; wx1 = 5; wy0 = -3; wy1 = 9; }
+    else { wx0 = -5; wx1 = 5; wy0 = -5; wy1 = 5; }
+    var padL = 24, padR = 16, padT = 30, padB = 22;
+    var HLC = '#e11d48', HLC2 = '#0891b2';
+
+    function mapX(x: number, w: number) { return padL + (x - wx0) / (wx1 - wx0) * (w - padL - padR); }
+    function mapY(y: number, h: number) { return padT + (wy1 - y) / (wy1 - wy0) * (h - padT - padB); }
+
+    function axes(g: CanvasRenderingContext2D, w: number, h: number, ink: string) {
+      g.save();
+      g.strokeStyle = ink;
+      var ix: number, iy: number;
+      g.lineWidth = 1; g.globalAlpha = 0.12;
+      for (ix = Math.ceil(wx0); ix <= Math.floor(wx1); ix++) {
+        g.beginPath(); g.moveTo(mapX(ix, w), mapY(wy1, h)); g.lineTo(mapX(ix, w), mapY(wy0, h)); g.stroke();
+      }
+      for (iy = Math.ceil(wy0); iy <= Math.floor(wy1); iy++) {
+        g.beginPath(); g.moveTo(mapX(wx0, w), mapY(iy, h)); g.lineTo(mapX(wx1, w), mapY(iy, h)); g.stroke();
+      }
+      // 兩軸（深一點）。
+      g.globalAlpha = 0.5; g.lineWidth = 1.6;
+      var y0 = mapY(0, h), x0 = mapX(0, w);
+      g.beginPath(); g.moveTo(mapX(wx0, w), y0); g.lineTo(mapX(wx1, w), y0); g.stroke();
+      g.beginPath(); g.moveTo(x0, mapY(wy0, h)); g.lineTo(x0, mapY(wy1, h)); g.stroke();
+      // 軸箭頭。
+      g.fillStyle = ink; g.globalAlpha = 0.5;
+      var ax = mapX(wx1, w), ay = mapY(wy1, h);
+      g.beginPath(); g.moveTo(ax, y0); g.lineTo(ax - 7, y0 - 4); g.lineTo(ax - 7, y0 + 4); g.closePath(); g.fill();
+      g.beginPath(); g.moveTo(x0, ay); g.lineTo(x0 - 4, ay + 7); g.lineTo(x0 + 4, ay + 7); g.closePath(); g.fill();
+      g.restore();
+      label(g, 'x', ax - 4, y0 + 11, ink, 11, 'center');
+      label(g, 'y', x0 - 10, ay + 4, ink, 11, 'center');
+      label(g, 'O', x0 - 9, y0 + 10, ink, 10, 'center');
+    }
+
+    function lineAt(g: CanvasRenderingContext2D, w: number, h: number, mm: number, bb: number, color: string, prog: number) {
+      // 由左向右畫線到 prog（0..1）。clip 到繪圖區避免溢出壓到軸標。
+      g.save();
+      g.beginPath(); g.rect(padL, padT, w - padL - padR, h - padT - padB); g.clip();
+      var xr = wx0 + (wx1 - wx0) * Math.max(0, Math.min(1, prog));
+      g.strokeStyle = color; g.lineWidth = 3; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(mapX(wx0, w), mapY(mm * wx0 + bb, h)); g.lineTo(mapX(xr, w), mapY(mm * xr + bb, h));
+      g.stroke();
+      g.restore();
+    }
+
+    function parabolaAt(g: CanvasRenderingContext2D, w: number, h: number, prog: number, color: string) {
+      g.save();
+      g.beginPath(); g.rect(padL, padT, w - padL - padR, h - padT - padB); g.clip();
+      g.strokeStyle = color; g.lineWidth = 3; g.lineCap = 'round'; g.lineJoin = 'round';
+      var xr = wx0 + (wx1 - wx0) * Math.max(0, Math.min(1, prog));
+      g.beginPath();
+      var started = false;
+      for (var x = wx0; x <= xr + 1e-6; x += (wx1 - wx0) / 120) {
+        var y = qa * x * x + qb * x + qc;
+        var px = mapX(x, w), py = mapY(y, h);
+        if (!started) { g.moveTo(px, py); started = true; } else { g.lineTo(px, py); }
+      }
+      g.stroke();
+      g.restore();
+    }
+
+    function dot(g: CanvasRenderingContext2D, w: number, h: number, x: number, y: number, color: string) {
+      disc(g, mapX(x, w), mapY(y, h), 4.5, color);
+    }
+
+    // ---- 線性：斜率 -------------------------------------------------
+    function drawSlope(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var ink = inkColor(), theme = themeColor();
+      axes(g, w, h, ink);
+      // 圖例。
+      label(g, '直線 y = ' + m + 'x + ' + b, w / 2, 12, theme, 12.5, 'center');
+      // 階段：描點(0..0.4) → 連線(0.4..0.7) → 直角三角形(0.7..1)。
+      var nDots = 0;
+      var xsInRange: number[] = [];
+      for (var xi = Math.ceil(wx0); xi <= Math.floor(wx1); xi++) {
+        var yi = m * xi + b;
+        if (yi >= wy0 && yi <= wy1) xsInRange.push(xi);
+      }
+      if (p < 0.4) {
+        nDots = Math.round(xsInRange.length * (p / 0.4));
+        for (var k = 0; k < nDots; k++) dot(g, w, h, xsInRange[k], m * xsInRange[k] + b, theme);
+        label(g, '① 先在格子上描出一個個點', w / 2, h - 7, ink, 11, 'center');
+      } else {
+        for (var k2 = 0; k2 < xsInRange.length; k2++) dot(g, w, h, xsInRange[k2], m * xsInRange[k2] + b, theme);
+        var lp = p < 0.7 ? easeInOut((p - 0.4) / 0.3) : 1;
+        lineAt(g, w, h, m, b, theme, lp);
+        if (p < 0.7) {
+          label(g, '② 把點連成一條直線', w / 2, h - 7, ink, 11, 'center');
+        } else {
+          // 直角三角形：從 (0,b) 右 1 到 (1,b)，再上 m 到 (1,b+m)。
+          var x1 = 0, y1 = b, x2 = 1, y2 = b + m;
+          g.save(); g.strokeStyle = HLC; g.lineWidth = 2.5; g.lineCap = 'round';
+          g.beginPath(); g.moveTo(mapX(x1, w), mapY(y1, h)); g.lineTo(mapX(x2, w), mapY(y1, h)); g.stroke();
+          g.beginPath(); g.moveTo(mapX(x2, w), mapY(y1, h)); g.lineTo(mapX(x2, w), mapY(y2, h)); g.stroke();
+          g.restore();
+          dot(g, w, h, x1, y1, HLC);
+          label(g, '右 1', (mapX(x1, w) + mapX(x2, w)) / 2, mapY(y1, h) + 12, HLC, 11, 'center');
+          label(g, '上 ' + m, mapX(x2, w) + 16, (mapY(y1, h) + mapY(y2, h)) / 2, HLC, 11, 'left');
+          label(g, '斜率 = 上升 ÷ 水平 = ' + m + ' ÷ 1 = ' + m, w / 2, h - 7, HLC, 11.5, 'center');
+        }
+      }
+    }
+
+    // ---- 線性：截距（b 0→2，再 m 1→2）-----------------------------
+    function drawIntercept(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var ink = inkColor(), theme = themeColor();
+      axes(g, w, h, ink);
+      var mm: number, bb: number, cap: string;
+      if (p < 0.5) {
+        bb = 0 + 2 * easeInOut(p / 0.5); mm = 1;
+        cap = 'b 從 0 升到 ' + bb.toFixed(1) + '：整條線往上平移';
+      } else {
+        bb = 2; mm = 1 + 1 * easeInOut((p - 0.5) / 0.5);
+        cap = 'm 從 1 變 ' + mm.toFixed(1) + '：線繞截距變陡';
+      }
+      label(g, '直線 y = ' + mm.toFixed(1) + 'x + ' + bb.toFixed(1), w / 2, 12, theme, 12.5, 'center');
+      lineAt(g, w, h, mm, bb, theme, 1);
+      // y 截距點。
+      dot(g, w, h, 0, bb, HLC);
+      label(g, '截距 (0, ' + bb.toFixed(1) + ')', mapX(0, w) + 8, mapY(bb, h) - 10, HLC, 11, 'left');
+      label(g, cap, w / 2, h - 7, ink, 11, 'center');
+    }
+
+    // ---- 二次：頂點 -------------------------------------------------
+    function drawVertex(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var ink = inkColor(), theme = themeColor();
+      axes(g, w, h, ink);
+      var vx = -qb / (2 * qa), vy = qa * vx * vx + qb * vx + qc;
+      label(g, '拋物線 y = x² − 4x + 3', w / 2, 12, theme, 12.5, 'center');
+      var pprog = p < 0.55 ? (p / 0.55) : 1;
+      parabolaAt(g, w, h, pprog, theme);
+      if (p >= 0.55) {
+        // 對稱軸由上往下落。
+        var axP = p < 0.78 ? easeInOut((p - 0.55) / 0.23) : 1;
+        g.save(); g.strokeStyle = HLC2; g.lineWidth = 2; g.setLineDash([5, 4]);
+        var topY = mapY(wy1, h), botY = mapY(wy1 - (wy1 - wy0) * axP, h);
+        g.beginPath(); g.moveTo(mapX(vx, w), topY); g.lineTo(mapX(vx, w), botY); g.stroke();
+        g.restore();
+      }
+      if (p >= 0.78) {
+        label(g, '對稱軸 x = 2', mapX(vx, w) + 6, mapY(wy1 - 0.6, h), HLC2, 10.5, 'left');
+        dot(g, w, h, vx, vy, HLC);
+        label(g, '頂點 (' + vx + ', ' + vy + ')', mapX(vx, w) + 8, mapY(vy, h) + 13, HLC, 11.5, 'left');
+        label(g, '頂點 x = −b ÷ (2a) = 4 ÷ 2 = 2', w / 2, h - 7, HLC, 11, 'center');
+      } else {
+        label(g, '描出開口向上的拋物線', w / 2, h - 7, ink, 11, 'center');
+      }
+    }
+
+    function draw(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      if (kind === 'quadratic') drawVertex(g, p, w, h);
+      else if (hl === 'intercept') drawIntercept(g, p, w, h);
+      else drawSlope(g, p, w, h);
+    }
+
+    return runScene(host, {
+      durationMs: kind === 'quadratic' ? 7000 : 6500, loops: 2, staticPhase: 1,
+      label: cfg.label || (kind === 'quadratic'
+        ? '二次函數動畫：描出拋物線 y=x²−4x+3，落下對稱軸 x=2，標出頂點 (2, −1)（最低點）。'
+        : (hl === 'intercept'
+          ? '線性函數動畫：先把截距 b 從 0 升到 2 讓直線往上平移，再把斜率 m 從 1 變 2 讓線變陡。'
+          : '斜率動畫：先在格子上描點、連成直線 y=2x+1，再用「右 1、上 2」的直角三角形示意斜率＝上升÷水平＝2。')),
+      draw: draw
+    });
+  }
+
+  // ====================================================================
+  // 場景：trigTriangle — 直角三角形，動畫讓角 θ 從小長到目標角，標對/鄰/斜與 sin/cos/tan。
+  //   cfg = { angleDeg:37, show:'all'|'sin'|'cos'|'tan', label? }
+  //   以 3-4-5 直角三角形示意（鄰邊 4、對邊 3、斜邊 5、θ≈37°）；對邊由 0 長到 3。
+  //   reduced-motion：直接畫目標角＋全部標註（staticPhase=1）。未來高中弧度/單位圓可延伸同一場景。
+  // ====================================================================
+  function trigTriangle(host: HTMLElement, cfg: any) {
+    cfg = cfg || {};
+    var show = cfg.show || 'all';
+    var ADJ = 4, OPP = 3;                    // 3-4-5（斜邊 5）；θ=atan(3/4)≈36.87°≈37°
+    var OPPC = '#e11d48', ADJC = '#0891b2';  // 對邊＝紅、鄰邊＝青、斜邊＝主題色
+
+    function draw(g: CanvasRenderingContext2D, p: number, _w: number, h: number) {
+      var ink = inkColor(), theme = themeColor();
+      var u = 30;                             // 每單位像素（三角形留在左半，右半放比值面板）
+      var ax = 14, ay = h - 30;               // 左下角頂點 A（θ 在這裡）
+      var bx = ax + ADJ * u, by = ay;         // 右下角 B（直角）；bx=134
+      // 對邊依動畫進度長高。
+      var grow = Math.max(0, Math.min(1, p / 0.6));
+      var opp = OPP * grow;
+      var cy = by - opp * u;                  // 頂點 C 高度
+      // 三角形三邊。
+      g.save(); g.lineCap = 'round'; g.lineJoin = 'round'; g.lineWidth = 3;
+      g.strokeStyle = ADJC;                    // 鄰邊（底）
+      g.beginPath(); g.moveTo(ax, ay); g.lineTo(bx, by); g.stroke();
+      g.strokeStyle = OPPC;                    // 對邊（右）
+      g.beginPath(); g.moveTo(bx, by); g.lineTo(bx, cy); g.stroke();
+      g.strokeStyle = theme;                   // 斜邊
+      g.beginPath(); g.moveTo(ax, ay); g.lineTo(bx, cy); g.stroke();
+      g.restore();
+      // 直角標記（在 B）。
+      if (opp > 0.2) {
+        g.save(); g.strokeStyle = ink; g.globalAlpha = 0.6; g.lineWidth = 1.4;
+        g.strokeRect(bx - 9, by - 9, 9, 9); g.restore();
+      }
+      // θ 角弧（在 A）。
+      var ang = Math.atan2(opp * u, ADJ * u);
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.75; g.lineWidth = 1.6;
+      g.beginPath(); g.arc(ax, ay, 22, -ang, 0); g.stroke(); g.restore();
+      label(g, 'θ', ax + 30, ay - 8, ink, 12, 'left');
+      // 邊標。
+      label(g, '鄰邊 4', (ax + bx) / 2, by + 14, ADJC, 11.5, 'center');
+      if (opp > 1) label(g, '對邊 3', bx + 6, (by + cy) / 2, OPPC, 11.5, 'left');
+      if (grow >= 1) label(g, '斜邊 5', (ax + bx) / 2 - 20, (ay + cy) / 2 - 6, theme, 11.5, 'center');
+      // 比值面板（右側，整塊在 x≥170，留在 300 寬畫布內）。show 控制顯示哪幾個。
+      var rx = 170;
+      if (grow >= 1) {
+        label(g, 'SOH-CAH-TOA', rx, 26, ink, 12, 'left');
+        var lines: [string, string][] = [];
+        if (show === 'all' || show === 'sin') lines.push(['sin θ = 對/斜 = 3/5', OPPC]);
+        if (show === 'all' || show === 'cos') lines.push(['cos θ = 鄰/斜 = 4/5', ADJC]);
+        if (show === 'all' || show === 'tan') lines.push(['tan θ = 對/鄰 = 3/4', theme]);
+        for (var i = 0; i < lines.length; i++) label(g, lines[i][0], rx, 50 + i * 22, lines[i][1], 11.5, 'left');
+      } else {
+        label(g, '角 θ 慢慢長大…', rx, 26, ink, 11.5, 'left');
+      }
+    }
+
+    return runScene(host, {
+      durationMs: 5200, loops: 2, staticPhase: 1,
+      label: cfg.label || '三角比動畫：直角三角形的角 θ 從小長大到約 37°（3-4-5 直角三角形），同步標出對邊 3、鄰邊 4、斜邊 5 與 sin=對/斜=3/5、cos=鄰/斜=4/5、tan=對/鄰=3/4。',
+      draw: draw
+    });
+  }
+
   // ---- 導出 -----------------------------------------------------------
   var Anim = {
     reducedMotion: reducedMotion,
@@ -1492,6 +1743,8 @@
     statesOfMatter: statesOfMatter,
     waterCycle: waterCycle,
     photosynthesis: photosynthesis,
+    funcPlot: funcPlot,
+    trigTriangle: trigTriangle,
   };
   (window as any).Anim = Anim;
 })();
