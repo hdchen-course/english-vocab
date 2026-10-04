@@ -1,0 +1,245 @@
+/* =====================================================================
+ * area_lab.ts  →  (tsc, tsconfig.legacy.json) →  area_lab.js
+ * 原為 area_lab.html 的 inline <script>；逐檔 TS 遷移抽出成 sibling .js。
+ * 行為與原 inline 版等價（verbatim；載入位置不變＝執行時機/順序不變）。
+ * 原碼本身即單一頂層 IIFE，已自我隔離（tsc 全域型別檢查無名稱外洩）；verbatim 保留。
+ * ===================================================================== */
+/* eslint-disable */
+(function () {
+    'use strict';
+    function $(id) { return document.getElementById(id); }
+    function ri(lo, hi) { return lo + Math.floor(Math.random() * (hi - lo + 1)); }
+    function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+    function fmt(x) { return (Math.round(x * 100) / 100).toString(); }
+    function dimHi(lv) { return lv <= 1 ? 9 : lv === 2 ? 15 : lv === 3 ? 30 : lv === 4 ? 50 : 99; }
+    var CATS = [
+        { key: 'rect_p', label: '長方形・周長', emoji: '▭', sub: '周長 = （長 ＋ 寬）× 2',
+            teach: '<b>長方形的周長</b>是沿著四個邊繞一圈的總長度。因為對邊一樣長（兩條長、兩條寬），所以：<br><br><b>周長 =（長 ＋ 寬）× 2</b>。<br><br><b>例：</b>長 5 公分、寬 3 公分 → 周長 =（5 ＋ 3）× 2 = 8 × 2 = 16 公分。',
+            gen: function (lv) {
+                var hi = dimHi(lv);
+                var L = ri(2, hi), W = ri(2, hi);
+                var ans = 2 * (L + W);
+                return { fig: '▭', text: '一個長方形，長 <b>' + L + '</b> 公分、寬 <b>' + W + '</b> 公分。<br><span class="al-q">它的周長是多少？</span>', answer: ans, unit: '公分',
+                    tip: '周長 =（長 ＋ 寬）× 2 =（' + L + ' ＋ ' + W + '）× 2 = ' + (L + W) + ' × 2 = ' + ans + ' 公分。', spoken: '長方形，長 ' + L + ' 公分、寬 ' + W + ' 公分，周長是多少' };
+            } },
+        { key: 'rect_a', label: '長方形・面積', emoji: '🟦', sub: '面積 = 長 × 寬',
+            teach: '<b>長方形的面積</b>是裡面能鋪滿幾個「1 公分 × 1 公分」的小方格。一排放「長」個、共有「寬」排，所以：<br><br><b>面積 = 長 × 寬</b>。<br><br><b>例：</b>長 5 公分、寬 3 公分 → 面積 = 5 × 3 = 15 平方公分。',
+            gen: function (lv) {
+                var hi = dimHi(lv);
+                var L = ri(2, hi), W = ri(2, hi);
+                var ans = L * W;
+                return { fig: '🟦', text: '一個長方形，長 <b>' + L + '</b> 公分、寬 <b>' + W + '</b> 公分。<br><span class="al-q">它的面積是多少？</span>', answer: ans, unit: '平方公分',
+                    tip: '面積 = 長 × 寬 = ' + L + ' × ' + W + ' = ' + ans + ' 平方公分。', spoken: '長方形，長 ' + L + ' 公分、寬 ' + W + ' 公分，面積是多少' };
+            } },
+        { key: 'square', label: '正方形・周長與面積', emoji: '⬜', sub: '四邊一樣長：周長 = 邊長 × 4、面積 = 邊長 × 邊長',
+            teach: '<b>正方形</b>四個邊一樣長，所以公式更簡單：<br><br><b>周長 = 邊長 × 4</b>（四條邊加起來）。<br><b>面積 = 邊長 × 邊長</b>（邊長自己乘自己）。<br><br><b>例：</b>邊長 6 公分 → 周長 = 6 × 4 = 24 公分；面積 = 6 × 6 = 36 平方公分。',
+            gen: function (lv) {
+                var hi = dimHi(lv);
+                var a = ri(2, hi);
+                var wantArea = pick([true, false]);
+                if (wantArea) {
+                    var ans = a * a;
+                    return { fig: '⬜', text: '一個正方形，邊長 <b>' + a + '</b> 公分。<br><span class="al-q">它的面積是多少？</span>', answer: ans, unit: '平方公分',
+                        tip: '正方形面積 = 邊長 × 邊長 = ' + a + ' × ' + a + ' = ' + ans + ' 平方公分。', spoken: '正方形，邊長 ' + a + ' 公分，面積是多少' };
+                }
+                else {
+                    var ansp = 4 * a;
+                    return { fig: '⬜', text: '一個正方形，邊長 <b>' + a + '</b> 公分。<br><span class="al-q">它的周長是多少？</span>', answer: ansp, unit: '公分',
+                        tip: '正方形周長 = 邊長 × 4 = ' + a + ' × 4 = ' + ansp + ' 公分。', spoken: '正方形，邊長 ' + a + ' 公分，周長是多少' };
+                }
+            } },
+        { key: 'tri_a', label: '三角形・面積', emoji: '🔺', sub: '面積 = 底 × 高 ÷ 2',
+            teach: '<b>三角形的面積</b>剛好是「同樣底和高的長方形」的一半，所以：<br><br><b>面積 = 底 × 高 ÷ 2</b>。<br><br><b>例：</b>底 6 公分、高 4 公分 → 面積 = 6 × 4 ÷ 2 = 24 ÷ 2 = 12 平方公分。<br><br>💡 底和高一定要「互相垂直」（成直角）才能這樣算。',
+            gen: function (lv) {
+                var hi = dimHi(lv);
+                var base = ri(2, hi), h = ri(2, hi);
+                // lv<=2 保證整數答案(底或高至少一個偶數)；高等級允許 .5
+                if (lv <= 2 && (base * h) % 2 !== 0) {
+                    if (base % 2 !== 0)
+                        base += 1;
+                    else
+                        h += 1;
+                }
+                var ans = base * h / 2;
+                return { fig: '🔺', text: '一個三角形，底 <b>' + base + '</b> 公分、高 <b>' + h + '</b> 公分（底和高互相垂直）。<br><span class="al-q">它的面積是多少？</span>', answer: ans, unit: '平方公分',
+                    tip: '三角形面積 = 底 × 高 ÷ 2 = ' + base + ' × ' + h + ' ÷ 2 = ' + (base * h) + ' ÷ 2 = ' + fmt(ans) + ' 平方公分。', spoken: '三角形，底 ' + base + ' 公分、高 ' + h + ' 公分，面積是多少' };
+            } }
+    ];
+    var CAT_BY = {};
+    CATS.forEach(function (c) { CAT_BY[c.key] = c; });
+    function showScreen(name) {
+        $('screen-menu').classList.toggle('active', name === 'menu');
+        $('screen-play').classList.toggle('active', name === 'play');
+        try {
+            window.scrollTo(0, 0);
+        }
+        catch (e) { }
+    }
+    function renderMenu() {
+        var html = '';
+        CATS.forEach(function (c) {
+            html += '<button type="button" class="cn-lesson" data-cat="' + c.key + '">' +
+                '<span class="cn-lesson-top"><span class="cn-lesson-emoji" style="background:var(--su-tint)" aria-hidden="true">' + c.emoji + '</span><span class="cn-lesson-name">' + c.label + '</span></span>' +
+                '<span class="cn-lesson-sub">' + c.sub + '</span><span class="cn-lesson-foot todo">▶️ 開始練習</span></button>';
+        });
+        html += '<button type="button" class="cn-lesson" data-cat="mix">' +
+            '<span class="cn-lesson-top"><span class="cn-lesson-emoji" style="background:var(--su-tint)" aria-hidden="true">🎲</span><span class="cn-lesson-name">綜合練習（各種混合）</span></span>' +
+            '<span class="cn-lesson-sub">上面幾種都學過之後再來這裡混合練，最能練到「看到形狀就知道用哪個公式」</span><span class="cn-lesson-foot todo">▶️ 開始練習</span></button>';
+        $('al-menu').innerHTML = html;
+        Array.prototype.forEach.call($('al-menu').querySelectorAll('.cn-lesson'), function (b) {
+            b.addEventListener('click', function () { startMode(b.getAttribute('data-cat')); });
+        });
+    }
+    var mode = null, cur = null, answered = false, correct = 0, total = 0, streak = 0, bestStreak = 0, lv = 1;
+    var lvCorrect = 0, missStreak = 0, lvChange = 0;
+    var LVL_UP = 5, LVL_DOWN = 3;
+    function startMode(m) {
+        mode = m;
+        correct = 0;
+        total = 0;
+        streak = 0;
+        bestStreak = 0;
+        lv = 1;
+        lvCorrect = 0;
+        missStreak = 0;
+        lvChange = 0;
+        showScreen('play');
+        $('play-title').textContent = (m === 'mix' ? '綜合練習' : CAT_BY[m].label) + ' 📐';
+        if (m === 'mix') {
+            renderMixPrimer();
+        }
+        else {
+            renderTeach(m);
+        }
+    }
+    function renderMixPrimer() {
+        $('stage').innerHTML =
+            '<div class="al-card">' +
+                '<div class="cn-teach-emoji" aria-hidden="true">🎲</div><h2 class="cn-h">綜合練習</h2>' +
+                '<div class="al-teach">這裡會把<b>長方形、正方形、三角形</b>的周長與面積混在一起出題。看到題目時，先<b>看清楚問的是「周長」還是「面積」</b>，再想公式：<br><br>' +
+                '・<b>長方形周長</b> =（長＋寬）× 2<br>・<b>長方形面積</b> = 長 × 寬<br>・<b>正方形周長</b> = 邊長 × 4；<b>面積</b> = 邊長 × 邊長<br>・<b>三角形面積</b> = 底 × 高 ÷ 2<br><br>' +
+                '周長的答案單位是<b>公分</b>，面積是<b>平方公分</b>。想不起來也沒關係，答完每題都會再示範怎麼算。</div>' +
+                '<div class="al-actions"><button type="button" class="btn btn-primary" id="btn-begin">開始混合練習 🎲</button></div>' +
+                '</div>';
+        $('btn-begin').addEventListener('click', function () { beginPractice(); });
+        try {
+            $('btn-begin').focus();
+        }
+        catch (e) { }
+    }
+    function renderTeach(m) {
+        var c = CAT_BY[m];
+        $('stage').innerHTML =
+            '<div class="al-card">' +
+                '<div class="cn-teach-emoji" aria-hidden="true">' + c.emoji + '</div><h2 class="cn-h">' + c.label + '</h2>' +
+                '<div class="cn-block"><div class="al-teach">' + c.teach + '</div></div>' +
+                '<div class="al-actions"><button type="button" class="btn btn-primary" id="btn-begin">我學會了，開始練習 ✏️</button></div>' +
+                '</div>';
+        $('btn-begin').addEventListener('click', function () { beginPractice(); });
+        try {
+            $('btn-begin').focus();
+        }
+        catch (e) { }
+    }
+    function beginPractice() { nextProblem(); }
+    function genOne() { var c = mode === 'mix' ? pick(CATS) : CAT_BY[mode]; var p = c.gen(lv); p.cat = c; return p; }
+    function nextProblem() {
+        cur = genOne();
+        answered = false;
+        var bestTxt = bestStreak > streak ? ('（最佳 ' + bestStreak + '）') : '';
+        $('stage').innerHTML =
+            '<div class="al-card">' +
+                '<div class="al-scorebar"><span>答對 ' + correct + ' / ' + total + '　連對 ' + streak + ' ' + bestTxt + '🔥</span><span class="al-lv">難度 Lv.' + lv + '</span></div>' +
+                '<span class="al-tag">' + cur.cat.emoji + ' ' + cur.cat.label + '</span>' +
+                '<div class="al-fig" aria-hidden="true">' + cur.fig + '</div>' +
+                '<div class="al-problem" id="al-prob" tabindex="-1" role="img" aria-label="題目：' + cur.spoken + '？">' + cur.text + '</div>' +
+                '<div class="al-answer"><input type="text" inputmode="decimal" id="al-in" aria-label="答案（' + cur.unit + '）" autocomplete="off"><span class="al-unit">' + cur.unit + '</span></div>' +
+                '<div class="al-actions"><button type="button" class="btn btn-primary" id="btn-submit">送出答案 ✓</button></div>' +
+                '<div class="al-reveal" id="al-reveal" aria-live="assertive"></div>' +
+                '<div class="al-actions" id="al-next-actions" style="display:none"><button type="button" class="btn btn-primary" id="btn-next">下一題 ➡️</button></div>' +
+                '</div>';
+        try {
+            $('al-prob').focus();
+        }
+        catch (e) { }
+        $('btn-submit').addEventListener('click', submit);
+        $('al-in').addEventListener('keydown', function (e) { if (e.key === 'Enter') {
+            e.preventDefault();
+            if (!answered)
+                submit();
+        } });
+        $('btn-next').onclick = function () { nextProblem(); };
+    }
+    function parseNum(s) { s = (s || '').trim().replace(/^\+/, ''); if (!/^-?\d+(\.\d+)?$/.test(s))
+        return null; return parseFloat(s); }
+    function submit() {
+        if (answered)
+            return;
+        var x = parseNum($('al-in').value);
+        if (x === null) {
+            var rev0 = $('al-reveal');
+            rev0.className = 'al-reveal show no';
+            rev0.textContent = '請填入一個數字（可以是小數，例如 7.5），再按送出。';
+            return;
+        }
+        answered = true;
+        total++;
+        var ok = Math.abs(x - cur.answer) < 1e-9;
+        lvChange = 0;
+        if (ok) {
+            correct++;
+            streak++;
+            if (streak > bestStreak)
+                bestStreak = streak;
+            missStreak = 0;
+            lvCorrect++;
+            if (lvCorrect >= LVL_UP && lv < 5) {
+                lv++;
+                lvCorrect = 0;
+                lvChange = 1;
+            }
+        }
+        else {
+            streak = 0;
+            missStreak++;
+            if (missStreak >= LVL_DOWN && lv > 1) {
+                lv--;
+                lvCorrect = 0;
+                missStreak = 0;
+                lvChange = -1;
+            }
+        }
+        try {
+            if (window.Game && typeof window.Game.pingActive === 'function')
+                window.Game.pingActive();
+        }
+        catch (e) { }
+        var lvMsg = lvChange > 0 ? ('　🎉 難度升到 Lv.' + lv + '！') : (lvChange < 0 ? ('　難度降到 Lv.' + lv + '，先把手感找回來 🙂') : '');
+        var rev = $('al-reveal');
+        rev.className = 'al-reveal show ' + (ok ? 'ok' : 'no');
+        rev.textContent = (ok ? '答對了！👍 ' : ('沒關係～答案是 ' + fmt(cur.answer) + ' ' + cur.unit + '。')) + cur.tip + lvMsg;
+        $('btn-submit').disabled = true;
+        $('al-in').disabled = true;
+        $('al-next-actions').style.display = 'flex';
+        try {
+            $('btn-next').focus();
+        }
+        catch (e) { }
+    }
+    document.addEventListener('keydown', function (e) {
+        if (!$('screen-play').classList.contains('active'))
+            return;
+        if (e.key === 'Enter') {
+            var onActionBtn = e.target && e.target.tagName === 'BUTTON';
+            if (onActionBtn)
+                return;
+            if (answered && $('btn-next')) {
+                e.preventDefault();
+                nextProblem();
+            }
+        }
+    });
+    $('btn-back').addEventListener('click', function () { showScreen('menu'); });
+    showScreen('menu');
+    renderMenu();
+})();
