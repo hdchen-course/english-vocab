@@ -32,14 +32,21 @@
     var $ = function (id) { return document.getElementById(id); };
     var screenMenu = $('screen-menu'), screenPlay = $('screen-play'), stage = $('stage'), progEl = $('prog'), playTitle = $('play-title'), list = $('lesson-list');
     var cur = null, idx = 0, answered = false, curCleanup = null;
-    // 動畫 teach 步驟（step.mount）回傳的清理函式；換頁/離場前務必呼叫，
+    // 動畫 teach 步驟（step.mount）回傳的清理控制；換頁/離場前務必呼叫，
     // 以取消 requestAnimationFrame、移除事件監聽與重播鈕（向下相容：沒有 mount 的既有 lesson 完全不受影響）。
-    function runCleanup() { if (typeof curCleanup === 'function') {
+    // 接受兩種回傳：清理「函式」，或 window.Anim 場景的 { stop } 物件（既有頁 mount 多半 `return window.Anim.x(host)`，
+    // 回傳的是 {stop} 物件而非函式——先前只呼叫函式型，導致場景的 rAF 永遠沒被 stop()；此處一併支援）。
+    function runCleanup() {
+        var c = curCleanup;
+        curCleanup = null;
         try {
-            curCleanup();
+            if (typeof c === 'function')
+                c();
+            else if (c && typeof c.stop === 'function')
+                c.stop();
         }
         catch (e) { }
-    } curCleanup = null; }
+    }
     function renderMenu() {
         var done = 0;
         C.lessons.forEach(function (ls) { if (prog[ls.id])
