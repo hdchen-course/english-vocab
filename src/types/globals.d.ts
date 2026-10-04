@@ -96,7 +96,7 @@ interface GameApi {
   levelForXp: (xp: number) => number;
   levelInfo: (xp: number) => any;
   rankForLevel: (lv: number) => any;
-  localDate: () => string;
+  localDate: (d?: any) => string;
 }
 
 /** speaking_data.js（自動產生的分級口說跟讀資料；source-of-truth 是其產生器，不經 tsc 轉檔）。 */
