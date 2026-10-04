@@ -1,0 +1,120 @@
+/* =====================================================================
+ * chemistry_concepts.ts  →  (tsc, tsconfig.legacy.json) →  chemistry_concepts.js
+ * 原為 chemistry_concepts.html 的 inline <script>（教學資料 window.CONCEPT ＋ SVG 概念圖 helper）。
+ * 逐檔 TS 遷移抽出成 sibling .js；以 IIFE 包住讓 helper 為檔案區域（避免與其他已遷移頁
+ *   的同名頂層 helper 如 animCanvas 在 tsconfig.legacy 共用全域型別檢查時 TS2393 衝突）。
+ * helper 只在建 window.CONCEPT 時同步呼叫；若有動畫 mount 於執行期才用 window.Anim。
+ * 行為與原 inline 版等價。載入順序與原頁一致（本檔取代原 inline 位置）。
+ * ===================================================================== */
+(function () {
+    // ---- 化學專用 SVG 概念圖（文字用 currentColor = --ink）----
+    function stateBox(x, label, emoji, pattern) {
+        var s = '<rect x="' + x + '" y="18" width="72" height="58" rx="6" fill="none" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>', dots;
+        if (pattern === 'solid') {
+            dots = [];
+            for (var r = 0; r < 3; r++)
+                for (var c = 0; c < 3; c++)
+                    dots.push([x + 18 + c * 18, 28 + r * 17]);
+        }
+        else if (pattern === 'liquid') {
+            dots = [[x + 18, 30], [x + 40, 26], [x + 58, 36], [x + 24, 50], [x + 46, 54], [x + 60, 64], [x + 18, 66]];
+        }
+        else {
+            dots = [[x + 22, 28], [x + 56, 24], [x + 38, 46], [x + 60, 60], [x + 22, 64]];
+        }
+        dots.forEach(function (d) { s += '<circle cx="' + d[0] + '" cy="' + d[1] + '" r="5" fill="#059669"/>'; });
+        s += '<text x="' + (x + 36) + '" y="92" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">' + emoji + ' ' + label + '</text>';
+        return s;
+    }
+    function threeStates() { return '<svg viewBox="0 0 300 104" role="img" aria-label="物質三態的粒子">' + stateBox(8, '固態', '🧊', 'solid') + stateBox(114, '液態', '💧', 'liquid') + stateBox(220, '氣態', '💨', 'gas') + '</svg>'; }
+    // 動畫 teach 步驟用：產生一個 <canvas> 佔位（實際繪製由 anim_core.js 的 window.Anim 接手）。
+    function animCanvas(w, h, label) {
+        return '<canvas class="cn-anim-canvas" width="' + w + '" height="' + h + '" ' +
+            'style="max-width:' + w + 'px" ' +
+            'role="img" aria-label="' + label + '"></canvas>';
+    }
+    function atom(cx, cy, el, fill, tcol, r) { r = r || 16; return '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="' + fill + '" stroke="#555" stroke-width="1.5"/><text x="' + cx + '" y="' + (cy + 5) + '" text-anchor="middle" font-size="14" font-weight="800" fill="' + tcol + '">' + el + '</text>'; }
+    var OX = '#e11d48', HY = '#e5e7eb', CB = '#374151'; // 氧紅、氫白、碳深
+    function bond(x1, y1, x2, y2) { return '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="#8a8a8a" stroke-width="4"/>'; }
+    function svgWrap(inner, label) { return '<svg viewBox="0 0 300 100" role="img" aria-label="' + label + '">' + inner + '</svg>'; }
+    function atomsIntro() { return svgWrap(atom(70, 50, 'O', OX, '#fff') + '<text x="70" y="82" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">氧 O</text>' + atom(150, 50, 'H', HY, '#333') + '<text x="150" y="82" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">氫 H</text>' + atom(230, 50, 'C', CB, '#fff') + '<text x="230" y="82" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">碳 C</text>', '原子：氧氫碳'); }
+    function waterMol() { return svgWrap(bond(150, 48, 118, 64) + bond(150, 48, 182, 64) + atom(150, 48, 'O', OX, '#fff') + atom(118, 64, 'H', HY, '#333', 13) + atom(182, 64, 'H', HY, '#333', 13) + '<text x="150" y="92" text-anchor="middle" font-size="15" font-weight="800" fill="currentColor">水 H₂O</text>', '水分子 H2O'); }
+    function o2co2() { return svgWrap(bond(70, 44, 110, 44) + atom(70, 44, 'O', OX, '#fff', 15) + atom(110, 44, 'O', OX, '#fff', 15) + '<text x="90" y="78" text-anchor="middle" font-size="14" font-weight="800" fill="currentColor">氧氣 O₂</text>' + bond(190, 44, 215, 44) + bond(215, 44, 240, 44) + atom(190, 44, 'O', OX, '#fff', 14) + atom(215, 44, 'C', CB, '#fff', 15) + atom(240, 44, 'O', OX, '#fff', 14) + '<text x="215" y="78" text-anchor="middle" font-size="14" font-weight="800" fill="currentColor">二氧化碳 CO₂</text>', '氧氣與二氧化碳'); }
+    function formulaAnno() { return '<svg viewBox="0 0 300 96" role="img" aria-label="化學式 H2O 讀法"><text x="150" y="50" text-anchor="middle" font-size="40" font-weight="800" fill="currentColor">H₂O</text><text x="150" y="82" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">右下的 2 = 兩個 H；O 沒數字 = 1 個 O</text></svg>'; }
+    // 質量守恆天平：兩端各放同數原子（2H+2H+... 概念），平衡
+    function consBalance() {
+        var s = '<svg viewBox="0 0 300 150" role="img" aria-label="質量守恆天平">';
+        s += '<polygon points="150,51 124,140 176,140" fill="#8a8a8a"/>';
+        s += '<line x1="40" y1="48" x2="260" y2="48" stroke="currentColor" stroke-opacity="0.6" stroke-width="6" stroke-linecap="round"/>';
+        // 左盤（反應前）
+        s += '<line x1="80" y1="48" x2="80" y2="74" stroke="#9a9a9a" stroke-width="3"/><path d="M50 74 Q80 104 110 74" fill="none" stroke="currentColor" stroke-opacity="0.6" stroke-width="3"/>';
+        s += atom(66, 70, 'H', HY, '#333', 9) + atom(80, 70, 'H', HY, '#333', 9) + atom(94, 70, 'O', OX, '#fff', 9);
+        s += '<text x="80" y="98" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">反應前</text>';
+        // 右盤（反應後）
+        s += '<line x1="220" y1="48" x2="220" y2="74" stroke="#9a9a9a" stroke-width="3"/><path d="M190 74 Q220 104 250 74" fill="none" stroke="currentColor" stroke-opacity="0.6" stroke-width="3"/>';
+        s += atom(206, 70, 'H', HY, '#333', 9) + atom(220, 70, 'H', HY, '#333', 9) + atom(234, 70, 'O', OX, '#fff', 9);
+        s += '<text x="220" y="98" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">反應後</text>';
+        s += '<text x="150" y="20" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">原子一樣多 → 平衡</text>';
+        return s + '</svg>';
+    }
+    function pHstrip() {
+        var s = '<svg viewBox="0 0 300 92" role="img" aria-label="pH 色條 0 到 14">';
+        var cols = ['#dc2626', '#ea580c', '#f59e0b', '#eab308', '#a3e635', '#22c55e', '#10b981', '#14b8a6', '#06b6d4', '#3b82f6', '#6366f1', '#7c3aed'];
+        var n = cols.length, bw = 260 / n, x0 = 20;
+        for (var i = 0; i < n; i++) {
+            s += '<rect x="' + (x0 + i * bw) + '" y="30" width="' + (bw + 0.5) + '" height="24" fill="' + cols[i] + '"/>';
+        }
+        s += '<text x="20" y="22" font-size="11" font-weight="800" fill="currentColor">0 酸</text><text x="150" y="22" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">7 中性</text><text x="280" y="22" text-anchor="end" font-size="11" font-weight="800" fill="currentColor">14 鹼</text>';
+        s += '<text x="45" y="72" text-anchor="middle" font-size="17">🍋</text><text x="150" y="72" text-anchor="middle" font-size="17">💧</text><text x="205" y="72" text-anchor="middle" font-size="17">🧼</text>';
+        return s + '</svg>';
+    }
+    window.CONCEPT = {
+        progKey: 'chemistry_concepts_v1', practiceHref: 'chemistry.html',
+        lessons: [
+            { id: 'states', name: '物質的三態', emoji: '🧊', color: '#0284c7', sub: '固態、液態、氣態的粒子', done: '記得：固態粒子排整齊、液態可流動、氣態到處飛；加熱讓粒子動更快。',
+                steps: [
+                    { type: 'teach', kicker: '先想一想', title: '同一種東西，三種樣子', svg: threeStates(), text: '同樣的東西可以有三種樣子：<b>固態</b>（冰 🧊）、<b>液態</b>（水 💧）、<b>氣態</b>（水蒸氣，看不見）。差別在<b>裡面的小粒子</b>排得多緊、動得多快。' },
+                    { type: 'teach', kicker: '看粒子', title: '粒子怎麼排、怎麼動', svg: animCanvas(340, 210, '物質三態的粒子：固態排列整齊只在原地振動、液態鬆散會互相滑動、氣態分很開到處快飛充滿整個容器；三態粒子數目都一樣，加熱後動得越快、排列越鬆'), mount: function (host) { return window.Anim && window.Anim.statesOfMatter(host); }, text: '<b>固態</b>：粒子排得整齊又緊，只能原地抖動 → 形狀固定。<b>液態</b>：粒子靠近但能滑動 → 會流動、形狀隨容器變。<b>氣態</b>：粒子分很開又到處飛 → 充滿整個空間。看動畫——<b>同樣這些粒子</b>，加熱後動得越快、排列越鬆（固→液→氣）。' },
+                    { type: 'teach', kicker: '加熱變化', title: '加熱讓粒子動更快', svg: '', text: '<b>加熱</b>會讓粒子動得更快：固態 → 液態（融化）→ 氣態（蒸發）；<b>變冷</b>則相反。粒子本身沒有變，只是排列和快慢改變了。' },
+                    { type: 'quiz', kicker: '換你試試', title: '固態的粒子是怎麼排的？', options: ['排得整齊又緊密，只能原地抖動', '分得很開、到處亂飛', '完全靜止、一點都不動'], answer: 0, why: '固態粒子排列緊密整齊、只能原地振動，所以形狀固定。' },
+                    { type: 'quiz', kicker: '換你試試', title: '為什麼氣體會充滿整個房間？', options: ['氣態粒子分很開又到處飛', '氣體比較重', '氣體會黏在牆上'], answer: 0, why: '氣態粒子間隔大、四處運動，所以會擴散充滿整個空間。' },
+                    { type: 'quiz', kicker: '想一想', title: '冰融化成水，裡面的粒子怎麼了？', options: ['得到熱、動得更快、從整齊變成可以自由滑動', '粒子消失不見了', '粒子變成別種東西'], answer: 0, why: '融化是吸熱，粒子得到熱、動得更快，從整齊的排列變成可以互相滑動，但還是同樣的水粒子。' }
+                ] },
+            { id: 'atom', name: '原子與分子', emoji: '🧱', color: '#16a34a', sub: '用積木認識物質的組成', done: '記得：原子像積木，拼起來成分子；同樣的原子拼法不同就是不同的東西。',
+                steps: [
+                    { type: 'teach', kicker: '先想一想', title: '原子：組成一切的小積木', svg: atomsIntro(), text: '所有東西都是由超小的<b>原子</b>組成，就像<b>樂高積木</b>。不同原子用不同顏色代表：氧 O（紅）、氫 H（白）、碳 C（深色）。' },
+                    { type: 'teach', kicker: '拼起來', title: '原子拼成「分子」', svg: waterMol(), text: '原子拼在一起就成<b>分子</b>。<b>水分子</b>是 1 個氧 + 2 個氫拼成的，寫作 <b>H₂O</b>。' },
+                    { type: 'teach', kicker: '不同拼法', title: '拼法不同 = 不同的東西', svg: o2co2(), text: '同樣是原子，<b>拼法不同</b>就變成不同的東西：<b>O₂</b> 是兩個氧（氧氣）、<b>CO₂</b> 是 1 個碳 + 2 個氧（二氧化碳）。' },
+                    { type: 'quiz', kicker: '換你試試', title: '水分子 H₂O 是由哪些原子組成？', options: ['1 個氧 + 2 個氫', '2 個氧 + 1 個氫', '只有氫', '只有氧'], answer: 0, why: 'H₂O 是 1 個氧原子和 2 個氫原子拼成的。' },
+                    { type: 'quiz', kicker: '換你試試', title: '「原子」最像下面哪一個？', options: ['組成東西的小積木', '一種顏色', '一種味道'], answer: 0, why: '原子是組成所有物質的基本小單位，就像積木。' },
+                    { type: 'quiz', kicker: '想一想', title: '二氧化碳 CO₂ 裡有幾個氧原子？', options: ['2 個', '1 個', '3 個', '0 個'], answer: 0, why: 'CO₂ 是 1 個碳 + 2 個氧，所以有 2 個氧原子。' }
+                ] },
+            { id: 'formula', name: '化學式怎麼讀', emoji: '✍️', color: '#7c3aed', sub: '下標數字 = 原子個數', done: '記得：右下小數字是原子個數，沒寫數字就是 1 個。學會就能數原子。',
+                steps: [
+                    { type: 'teach', kicker: '先想一想', title: '小小的下標數字', svg: formulaAnno(), text: '化學式裡<b>右下角小小的數字</b>告訴你每種原子有<b>幾個</b>。<b>H₂O</b>：H 右下的 <b>2</b> = <b>兩個</b>氫；O 沒寫數字 = <b>1 個</b>氧。' },
+                    { type: 'teach', kicker: '記住', title: '沒寫數字 = 1 個', svg: o2co2(), text: '<b>CO₂</b>：C 沒寫數字 = <b>1 個</b>碳，O 右下 2 = <b>2 個</b>氧。<b>沒寫數字就代表 1 個</b>。' },
+                    { type: 'teach', kicker: '數數看', title: '數出一個分子裡的原子', svg: '<svg viewBox="0 0 300 80" role="img" aria-label="CH4"><text x="150" y="52" text-anchor="middle" font-size="40" font-weight="800" fill="currentColor">CH₄</text></svg>', text: '<b>CH₄</b>（甲烷）：C 沒數字 = 1 個碳，H 右下 4 = 4 個氫。學會看下標，就能數出一個分子裡有幾個原子。' },
+                    { type: 'quiz', kicker: '換你試試', title: 'H₂O 裡有幾個氫原子？', options: ['2 個', '1 個', '3 個', '0 個'], answer: 0, why: 'H 右下的下標是 2，所以有 2 個氫原子。' },
+                    { type: 'quiz', kicker: '換你試試', title: 'CO₂ 裡有幾個碳原子？', options: ['1 個', '2 個', '3 個', '沒有'], answer: 0, why: 'C 沒有寫下標，代表 1 個碳原子。' },
+                    { type: 'quiz', kicker: '想一想', title: 'CH₄ 一共有幾個原子（碳 + 氫）？', options: ['5 個', '4 個', '1 個', '3 個'], answer: 0, why: '1 個碳 + 4 個氫 = 5 個原子。' }
+                ] },
+            { id: 'mass', name: '質量守恆', emoji: '⚖️', color: '#0ea5e9', sub: '反應前後，原子不增不減', done: '記得：化學反應只是原子重新組合，總數與總重都不變。',
+                steps: [
+                    { type: 'teach', kicker: '先想一想', title: '反應 = 把積木拆開重拼', svg: consBalance(), text: '化學反應就像<b>把積木拆開、重新拼</b>。原子<b>沒有消失、也沒有多出來</b>，只是<b>重新組合</b>。所以反應<b>前</b>和<b>後</b>，原子總數一樣。' },
+                    { type: 'teach', kicker: '所以呢', title: '總重不變 = 質量守恆', svg: consBalance(), text: '既然原子沒增也沒減，<b>反應前的總重 = 反應後的總重</b>，天平<b>平衡</b>。這就叫<b>質量守恆</b>。' },
+                    { type: 'teach', kicker: '看例子', title: '數一數，一個都沒少', svg: animCanvas(340, 210, '化學反應 2H₂ + O₂ → 2H₂O：兩個氫分子和一個氧分子斷鍵後，原子重新組合成兩個水分子；頂端顯示原子總數 氫 H：4、氧 O：2，反應前後都一樣'), mount: function (host) { return window.Anim && window.Anim.reactionRebond(host); }, text: '例如 <b>2H₂ + O₂ → 2H₂O</b>：看動畫——氫分子（H–H）和氧分子（O=O）<b>斷鍵</b>，原子<b>重新組合</b>成水分子。頂端的原子數一直是 <b>氫 4、氧 2</b>：左邊 4 個 H + 2 個 O，右邊也是 4 個 H + 2 個 O，<b>一個都沒少</b>。' },
+                    { type: 'quiz', kicker: '換你試試', title: '化學反應中，原子會怎樣？', options: ['重新組合，總數不變', '憑空消失', '無中生有變多'], answer: 0, why: '原子只是重新組合，總數不變，這是質量守恆的核心。' },
+                    { type: 'quiz', kicker: '換你試試', title: '反應前總重 10 克，反應後總重是多少？', options: ['10 克', '比 10 克少', '比 10 克多'], answer: 0, why: '質量守恆：反應前後總重相同，還是 10 克。' },
+                    { type: 'quiz', kicker: '想一想', title: '為什麼反應前後質量不變？', options: ['原子沒增也沒減，只是重新組合', '因為加了水', '因為變冷了'], answer: 0, why: '原子總數不變，所以總質量也不變。' }
+                ] },
+            { id: 'ph', name: '酸鹼與 pH', emoji: '🌈', color: '#e11d48', sub: '用色條看酸和鹼', done: '記得：pH 越小越酸、7 中性、越大越鹼。',
+                steps: [
+                    { type: 'teach', kicker: '先想一想', title: 'pH 尺：0 到 14', svg: pHstrip(), text: '<b>pH 值</b>用 0 到 14 表示酸鹼：<b>越小越酸</b>（🍋 檸檬）、<b>7 是中性</b>（💧 純水）、<b>越大越鹼</b>（🧼 肥皂水）。' },
+                    { type: 'teach', kicker: '看例子', title: '生活裡的酸和鹼', svg: pHstrip(), text: '可樂、檸檬的 pH 小（酸性）；純水 pH＝7（中性）；小蘇打水、肥皂的 pH 大（鹼性）。用<b>廣用試紙</b>的顏色就能看出酸鹼。' },
+                    { type: 'quiz', kicker: '換你試試', title: 'pH = 7 代表什麼？', options: ['中性', '很酸', '很鹼'], answer: 0, why: 'pH 7 是中間，代表中性（例如純水）。' },
+                    { type: 'quiz', kicker: '換你試試', title: '檸檬汁 pH 大約是 2，它是？', options: ['酸性', '中性', '鹼性'], answer: 0, why: 'pH 小於 7 是酸性，檸檬 pH≈2 很酸。' },
+                    { type: 'quiz', kicker: '想一想', title: 'pH 值越大，代表？', options: ['越鹼', '越酸', '越中性'], answer: 0, why: 'pH 越大越偏鹼（>7 為鹼性）。' }
+                ] }
+        ]
+    };
+})();
