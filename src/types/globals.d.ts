@@ -95,6 +95,14 @@ interface AnimApi {
    *  mode:'fair'（只改一個→可歸因）vs 'unfair'（同時改多個→分不清）。科學方法頁與未來各科實驗課共用。
    *  cfg = {mode:'fair'|'unfair',changed:['名稱:A|B'],controlled:['名稱:值'],measure,values:[a,b],groups,title,label}。 */
   fairTest: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 溫室效應：短波陽光穿過大氣→地面升溫→放出長波紅外線→部分被溫室氣體攔截放回地面；
+   *  溫室氣體越多留住越多熱（溫度計上升）。cfg = {gas:'low'|'high',caption?,label?}。
+   *  科學鐵則：吸收地面放出的紅外線，不是擋住進來的陽光；與臭氧洞無關。永續＋氣候課共用。 */
+  greenhouseEffect: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 碳循環：光合吸碳 ↔ 呼吸/分解放碳 ↔ 海洋吸收/釋放（自然大致平衡）；
+   *  emphasis:'human' 另加燃燒化石燃料把地底碳放回大氣、CO₂ 累積打破平衡。
+   *  cfg = {emphasis:'natural'|'human',caption?,label?}。永續頁＋tier0 生物碳循環共用。 */
+  carbonCycle: (host: HTMLElement, cfg?: any) => { stop: () => void };
 }
 
 /** game_core.js 導出的遊戲核心 API（window.Game）。遷移 game_core 時逐步精確化。 */

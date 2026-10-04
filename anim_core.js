@@ -3230,6 +3230,288 @@
             drawStatic: function (g, w, h) { render(g, 1, w, h); }
         });
     }
+    // ====================================================================
+    // 場景：greenhouseEffect — 溫室效應（永續頁第1課；author-once，未來任何氣候課可引用）。
+    //   科學鐵則：溫室氣體吸收的是「地面放出的長波紅外線」，不是「擋住進來的陽光」；
+    //   與臭氧層破洞無關。流程：太陽短波穿過大氣照到地面（不被擋）→ 地面升溫 →
+    //   放出長波紅外線 → 部分被溫室氣體吸收後再放回地面（熱被留住）；溫室氣體越多 →
+    //   留住越多熱 → 溫度計越高（全球暖化）。
+    //   cfg = { gas:'low'|'high', caption?, label? }
+    //   reduced-motion：drawStatic 畫「少氣體（宜居）vs 多氣體（較暖）」並排對比幀。
+    // ====================================================================
+    function greenhouseEffect(host, cfg) {
+        cfg = cfg || {};
+        var gasHigh = cfg.gas === 'high';
+        var IR = '#e8663c'; // 長波紅外線（暖橘紅）
+        var GHG = CO2_COL; // 溫室氣體分子（中性灰）
+        function clamp01(x) { return x < 0 ? 0 : (x > 1 ? 1 : x); }
+        // 溫度計：垂直管＋底部球，fill 0..1。
+        function thermo(g, x, top, len, frac, ink) {
+            var bulbR = 6, tubeW = 6;
+            var tubeBot = top + len;
+            g.save();
+            g.strokeStyle = ink;
+            g.globalAlpha = 0.5;
+            g.lineWidth = 1.2;
+            g.strokeRect(x - tubeW / 2, top, tubeW, len);
+            g.globalAlpha = 1;
+            disc(g, x, tubeBot + bulbR, bulbR, IR);
+            var fillH = len * clamp01(frac);
+            g.fillStyle = IR;
+            g.fillRect(x - tubeW / 2 + 1.5, tubeBot - fillH, tubeW - 3, fillH);
+            g.restore();
+        }
+        // 一格完整的溫室場景（draw 用整張畫布一格；drawStatic 用左右兩格做對比）。
+        function ghScene(g, x0, y0, pw, ph, high, phase, theme, ink, compact) {
+            var sx = x0 + pw * 0.16, sy = y0 + ph * 0.16;
+            var groundY = y0 + ph * 0.80;
+            var bandTop = y0 + ph * 0.34, bandBot = y0 + ph * 0.52;
+            var tm = nowMs() / 1000;
+            var actSun = clamp01(phase / 0.22);
+            var actWarm = clamp01((phase - 0.25) / 0.15);
+            var actIR = clamp01((phase - 0.5) / 0.2);
+            // 地面。
+            g.save();
+            g.fillStyle = EARTH_LAND;
+            g.globalAlpha = 0.85;
+            g.fillRect(x0, groundY, pw, (y0 + ph) - groundY);
+            g.restore();
+            // 地面升溫暖光。
+            if (actWarm > 0.02) {
+                g.save();
+                g.globalAlpha = 0.26 * actWarm;
+                disc(g, x0 + pw * 0.5, groundY, pw * 0.4, 'rgba(232,102,60,0.9)');
+                g.restore();
+            }
+            // 溫室氣體層（分子點，多/少）。
+            var nG = high ? 12 : 4;
+            g.save();
+            for (var i = 0; i < nG; i++) {
+                var gx = x0 + pw * (0.12 + 0.76 * ((i * 0.618) % 1));
+                var gy = bandTop + (bandBot - bandTop) * ((i * 0.37) % 1);
+                g.globalAlpha = 0.8;
+                disc(g, gx, gy, 3.2, GHG);
+            }
+            g.restore();
+            // 太陽。
+            sunDisc(g, sx, sy, compact ? 6 : 8);
+            // 短波陽光：太陽→地面（穿過大氣，不被擋）。
+            var tgx = x0 + pw * 0.5, tgy = groundY - 2, nS = 3;
+            g.save();
+            for (var s = 0; s < nS; s++) {
+                var u = ((tm * 0.6 + s / nS) % 1);
+                var ox = (s - 1) * (compact ? 6 : 10);
+                var ax = sx + ox, ay = sy + (compact ? 10 : 14);
+                var bx = tgx + ox, by = tgy;
+                var pxp = ax + (bx - ax) * u, pyp = ay + (by - ay) * u;
+                g.globalAlpha = actSun * (0.4 + 0.5 * Math.sin(Math.PI * u));
+                disc(g, pxp, pyp, 2.6, SUN);
+            }
+            g.restore();
+            // 長波紅外線：地面→上；部分被溫室氣體攔截後放回地面（high 攔截較多）。
+            if (actIR > 0.02) {
+                var nIR = 6, trapN = Math.round(nIR * (high ? 0.7 : 0.25));
+                g.save();
+                for (var k = 0; k < nIR; k++) {
+                    var trapped = k < trapN;
+                    var gxk = x0 + pw * (0.3 + 0.5 * (k / (nIR - 1)));
+                    var u2 = ((tm * 0.5 + k / nIR) % 1);
+                    var yy;
+                    if (trapped) {
+                        if (u2 < 0.5) {
+                            yy = groundY + (bandBot - groundY) * (u2 / 0.5);
+                        }
+                        else {
+                            yy = bandBot + (groundY - bandBot) * ((u2 - 0.5) / 0.5);
+                        }
+                    }
+                    else {
+                        yy = groundY + (y0 - groundY) * u2; // 一路升到頂端逸出太空
+                    }
+                    g.globalAlpha = actIR * 0.85;
+                    disc(g, gxk, yy, 2.6, IR);
+                }
+                g.restore();
+            }
+            // 溫度計（右側）。
+            var tx = x0 + pw * 0.9;
+            thermo(g, tx, y0 + ph * 0.30, ph * 0.3, actIR * (high ? 0.82 : 0.42), ink);
+            // 標籤。
+            label(g, high ? '多溫室氣體' : '少溫室氣體', x0 + pw * 0.42, bandTop - 6, high ? IR : theme, compact ? 9.5 : 11, 'center');
+            if (compact) {
+                label(g, high ? '較暖' : '宜居', tx, y0 + ph * 0.74, high ? IR : theme, 8.5, 'center');
+            }
+            else {
+                label(g, '地面', x0 + pw * 0.5, groundY + 14, ink, 10, 'center');
+                label(g, high ? '留住較多熱' : '留住剛好的熱', tx, y0 + ph * 0.76, high ? IR : theme, 9, 'center');
+            }
+        }
+        return runScene(host, {
+            durationMs: 10000, loops: 2, staticPhase: 0.85,
+            label: cfg.label || ('溫室效應動畫：太陽的短波陽光穿過大氣照到地面（不會被擋住），地面升溫後放出長波紅外線；'
+                + (gasHigh ? '當溫室氣體很多時，較多紅外線被吸收後放回地面，熱被留住得多，溫度計升高，代表全球暖化。' : '當溫室氣體較少時，較多紅外線直接逸出太空，留住的熱剛剛好，地球宜居。')
+                + '重點：溫室氣體攔截的是地面放出的紅外線，不是擋住進來的陽光。'),
+            drawStatic: function (g, w, h) {
+                var ink = inkColor(), theme = themeColor();
+                label(g, '溫室氣體像被子：越厚，留住的熱越多', w / 2, 11, theme, 11, 'center');
+                ghScene(g, 0, 20, w / 2, h - 24, false, 0.85, theme, ink, true);
+                ghScene(g, w / 2, 20, w / 2, h - 24, true, 0.85, theme, ink, true);
+                g.save();
+                g.globalAlpha = 0.25;
+                g.strokeStyle = ink;
+                g.beginPath();
+                g.moveTo(w / 2, 22);
+                g.lineTo(w / 2, h - 6);
+                g.stroke();
+                g.restore();
+            },
+            draw: function (g, phase, w, h) {
+                var ink = inkColor(), theme = themeColor();
+                var cap = phase < 0.25 ? '① 陽光短波穿過大氣，照到地面'
+                    : (phase < 0.5 ? '② 地面升溫，放出長波紅外線'
+                        : (phase < 0.78 ? '③ 紅外線往上，部分被溫室氣體攔截' : '④ 熱被放回地面而留住'));
+                label(g, cap, w / 2, 13, theme, 12, 'center');
+                ghScene(g, 0, 22, w, h - 30, gasHigh, phase, theme, ink, false);
+                label(g, gasHigh ? '氣體越多 → 留住越多熱 → 升溫' : '適量溫室氣體 → 留住剛好的熱 → 宜居', 8, h - 8, ink, 10, 'left');
+            }
+        });
+    }
+    // ====================================================================
+    // 場景：carbonCycle — 碳循環（永續頁第2課；author-once，tier0 生物「呼吸與碳循環」
+    //   日後改用＝change-one-place）。光合吸碳 ↔ 呼吸/分解放碳 ↔ 海洋吸收/釋放，自然
+    //   收支大致平衡；emphasis:'human' 另加「燃燒化石燃料」把地底封存的碳大量放回大氣，
+    //   CO₂ 在大氣累積、打破平衡（人類額外的那一股以紅色高亮）。
+    //   cfg = { emphasis:'natural'|'human', caption?, label? }
+    //   reduced-motion：drawStatic 畫完整最後一幀（所有碳流標字；human 另標 CO₂ 累積）。
+    // ====================================================================
+    function carbonCycle(host, cfg) {
+        cfg = cfg || {};
+        var human = cfg.emphasis === 'human';
+        var CO2 = CO2_COL, PLANT = EARTH_LAND, OCEAN = '#0369a1', HUMAN = '#e11d48';
+        function clamp01(x) { return x < 0 ? 0 : (x > 1 ? 1 : x); }
+        // 一條流動的碳（點沿 a→b 推進，終點畫箭頭）；act 控制濃淡。
+        function stream(g, ax, ay, bx, by, color, n, r, phaseOff, act) {
+            if (act <= 0.02)
+                return;
+            var tm = nowMs() / 1000;
+            g.save();
+            for (var i = 0; i < n; i++) {
+                var f = (((tm * 0.4 + i / n + phaseOff) % 1) + 1) % 1;
+                var x = ax + (bx - ax) * f, y = ay + (by - ay) * f;
+                g.globalAlpha = act * (0.3 + 0.6 * Math.sin(f * Math.PI));
+                disc(g, x, y, r, color);
+            }
+            var ang = Math.atan2(by - ay, bx - ax);
+            g.globalAlpha = act;
+            g.fillStyle = color;
+            g.beginPath();
+            g.moveTo(bx, by);
+            g.lineTo(bx - r * 3 * Math.cos(ang - 0.5), by - r * 3 * Math.sin(ang - 0.5));
+            g.lineTo(bx - r * 3 * Math.cos(ang + 0.5), by - r * 3 * Math.sin(ang + 0.5));
+            g.closePath();
+            g.fill();
+            g.restore();
+        }
+        function ccScene(g, w, h, phase) {
+            var ink = inkColor();
+            var atmY0 = 28, atmY1 = 60;
+            // 大氣帶。
+            g.save();
+            g.globalAlpha = 0.1;
+            g.fillStyle = CO2;
+            g.fillRect(10, atmY0, w - 20, atmY1 - atmY0);
+            g.restore();
+            g.save();
+            g.globalAlpha = 0.5;
+            g.strokeStyle = CO2;
+            g.lineWidth = 1;
+            g.strokeRect(10, atmY0, w - 20, atmY1 - atmY0);
+            g.restore();
+            var nd = human ? 10 : 6;
+            for (var d = 0; d < nd; d++) {
+                disc(g, 20 + (w - 40) * ((d * 0.618) % 1), atmY0 + 9 + 13 * ((d * 0.37) % 1), 2.6, CO2);
+            }
+            label(g, '大氣中的二氧化碳 CO₂', w / 2, atmY0 - 1, ink, 10, 'center');
+            var groundY = h - 20;
+            // 植物／森林（左）。
+            var px = w * 0.2, pcy = h * 0.62;
+            g.save();
+            g.strokeStyle = '#9c6b3f';
+            g.lineWidth = 3;
+            g.lineCap = 'round';
+            g.beginPath();
+            g.moveTo(px, pcy);
+            g.lineTo(px, groundY);
+            g.stroke();
+            g.restore();
+            disc(g, px, pcy - 10, 15, PLANT);
+            label(g, '植物／森林', px, groundY + 10, PLANT, 9.5, 'center');
+            // 海洋（右下）。
+            g.save();
+            g.globalAlpha = 0.2;
+            g.fillStyle = OCEAN;
+            g.fillRect(w * 0.6, groundY - 18, w * 0.38, 22);
+            g.restore();
+            label(g, '海洋', w * 0.79, groundY + 10, OCEAN, 9.5, 'center');
+            var actCycle = clamp01(phase / 0.3);
+            // 光合：大氣→植物（吸碳）。
+            stream(g, px - 8, atmY1 + 4, px - 2, pcy - 18, PLANT, 4, 2.6, 0, actCycle);
+            label(g, '光合吸碳', px - 34, (atmY1 + pcy) / 2 + 4, PLANT, 8.5, 'center');
+            // 呼吸／分解：植物／土→大氣（放碳）。
+            stream(g, px + 12, pcy - 16, px + 20, atmY1 + 4, CO2, 4, 2.6, 0.5, actCycle);
+            label(g, '呼吸・分解放碳', px + 46, (atmY1 + pcy) / 2 + 4, CO2, 8.5, 'center');
+            // 海洋 ↔ 大氣（雙向）。
+            stream(g, w * 0.76, groundY - 20, w * 0.76, atmY1 + 4, OCEAN, 3, 2.4, 0, actCycle);
+            stream(g, w * 0.84, atmY1 + 4, w * 0.84, groundY - 20, OCEAN, 3, 2.4, 0.5, actCycle);
+            label(g, '海洋吸收／釋放', w * 0.8, (atmY1 + groundY) / 2 + 6, OCEAN, 8.5, 'center');
+            if (human) {
+                // 工廠／交通（中），地底化石→大氣 高亮。
+                var fx = w * 0.47;
+                g.save();
+                g.fillStyle = '#64748b';
+                g.fillRect(fx - 12, groundY - 24, 24, 24);
+                g.fillRect(fx + 2, groundY - 34, 7, 12);
+                g.restore();
+                label(g, '工廠／交通', fx, groundY + 10, HUMAN, 9, 'center');
+                var actHuman = clamp01((phase - 0.3) / 0.3);
+                stream(g, fx + 6, groundY - 32, fx + 9, atmY1 + 4, HUMAN, 6, 3, 0, actHuman);
+                label(g, '燃燒化石燃料（人類額外排放）', fx + 4, atmY1 + 20, HUMAN, 8.5, 'center');
+                // CO₂ 累積 bar（右上）。
+                var accP = clamp01((phase - 0.3) / 0.6);
+                var barX = w - 24, barTop = atmY0 - 4, barMax = 36;
+                g.save();
+                g.strokeStyle = HUMAN;
+                g.lineWidth = 1;
+                g.globalAlpha = 0.6;
+                g.strokeRect(barX, barTop, 9, barMax);
+                g.restore();
+                g.save();
+                g.fillStyle = HUMAN;
+                g.globalAlpha = 0.8;
+                g.fillRect(barX, barTop + barMax * (1 - accP), 9, barMax * accP);
+                g.restore();
+                label(g, 'CO₂ 累積↑', barX + 4, barTop + barMax + 8, HUMAN, 8, 'center');
+            }
+        }
+        return runScene(host, {
+            durationMs: 11000, loops: 2, staticPhase: 1,
+            label: cfg.label || ('碳循環動畫：碳在大氣、植物、海洋間流動——植物行光合作用吸收二氧化碳，動物呼吸與分解又放出，海洋也會吸收與釋放，自然收支大致平衡。'
+                + (human ? '但人類大量燃燒化石燃料，把地底封存很久的碳快速放回大氣，二氧化碳在大氣中累積、打破平衡。' : '')),
+            drawStatic: function (g, w, h) { ccScene(g, w, h, 1); },
+            draw: function (g, phase, w, h) {
+                var theme = themeColor();
+                var cap;
+                if (!human) {
+                    cap = '大自然的碳循環：吸碳 ↔ 放碳，進出大致平衡';
+                }
+                else {
+                    cap = phase < 0.3 ? '① 大自然本來的碳循環' : (phase < 0.62 ? '② 人類燃燒化石燃料' : '③ CO₂ 在大氣累積、打破平衡');
+                }
+                label(g, cap, w / 2, 13, human ? HUMAN : theme, 11.5, 'center');
+                ccScene(g, w, h, phase);
+            }
+        });
+    }
     // ---- 導出 -----------------------------------------------------------
     var Anim = {
         reducedMotion: reducedMotion,
@@ -3252,6 +3534,8 @@
         fallacySpotlight: fallacySpotlight,
         argFlow: argFlow,
         fairTest: fairTest,
+        greenhouseEffect: greenhouseEffect,
+        carbonCycle: carbonCycle,
     };
     window.Anim = Anim;
 })();
