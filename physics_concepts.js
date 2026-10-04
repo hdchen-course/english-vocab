@@ -1,0 +1,101 @@
+/* =====================================================================
+ * physics_concepts.ts  →  (tsc, tsconfig.legacy.json) →  physics_concepts.js
+ * 原為 physics_concepts.html 的 inline <script>（教學資料 window.CONCEPT ＋ SVG 概念圖 helper）。
+ * 逐檔 TS 遷移抽出成 sibling .js；以 IIFE 包住讓 helper 為檔案區域（避免與其他已遷移頁
+ *   的同名頂層 helper 如 animCanvas 在 tsconfig.legacy 共用全域型別檢查時 TS2393 衝突）。
+ * helper 只在建 window.CONCEPT 時同步呼叫；若有動畫 mount 於執行期才用 window.Anim。
+ * 行為與原 inline 版等價。載入順序與原頁一致（本檔取代原 inline 位置）。
+ * ===================================================================== */
+(function () {
+    // ---- 物理專用 SVG 概念圖（文字用 currentColor = --ink）----
+    // 力的箭頭：arrows = [{dir:'right'|'left', len, label, color, y}]
+    function forceScene(arrows) {
+        var s = '<svg viewBox="0 0 300 120" role="img" aria-label="力的箭頭圖">';
+        s += '<rect x="122" y="44" width="56" height="40" rx="8" fill="rgba(120,120,120,0.15)" stroke="currentColor" stroke-opacity="0.6" stroke-width="3"/><text x="150" y="70" text-anchor="middle" font-size="15" font-weight="800" fill="currentColor">箱</text>';
+        arrows.forEach(function (a) {
+            var col = a.color || '#ea580c', y = a.y || 64;
+            if (a.dir === 'right') {
+                var x1 = 178, x2 = 178 + a.len;
+                s += '<line x1="' + x1 + '" y1="' + y + '" x2="' + x2 + '" y2="' + y + '" stroke="' + col + '" stroke-width="5"/><polygon points="' + x2 + ',' + y + ' ' + (x2 - 9) + ',' + (y - 6) + ' ' + (x2 - 9) + ',' + (y + 6) + '" fill="' + col + '"/>' + (a.label ? '<text x="' + ((x1 + x2) / 2) + '" y="' + (y - 9) + '" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">' + a.label + '</text>' : '');
+            }
+            else {
+                var xa = 122, xb = 122 - a.len;
+                s += '<line x1="' + xa + '" y1="' + y + '" x2="' + xb + '" y2="' + y + '" stroke="' + col + '" stroke-width="5"/><polygon points="' + xb + ',' + y + ' ' + (xb + 9) + ',' + (y - 6) + ' ' + (xb + 9) + ',' + (y + 6) + '" fill="' + col + '"/>' + (a.label ? '<text x="' + ((xa + xb) / 2) + '" y="' + (y - 9) + '" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">' + a.label + '</text>' : '');
+            }
+        });
+        return s + '</svg>';
+    }
+    // 電路：closed=true 通路(燈亮)；false 斷路(有缺口，燈不亮)
+    function circuit(closed) {
+        var s = '<svg viewBox="0 0 300 140" role="img" aria-label="電路圖">';
+        // 三段固定電線 + 右側電線（斷路時留缺口）
+        s += '<line x1="60" y1="34" x2="240" y2="34" stroke="currentColor" stroke-opacity="0.6" stroke-width="4"/>'; // 上
+        s += '<line x1="60" y1="34" x2="60" y2="104" stroke="currentColor" stroke-opacity="0.6" stroke-width="4"/>'; // 左
+        s += '<line x1="60" y1="104" x2="240" y2="104" stroke="currentColor" stroke-opacity="0.6" stroke-width="4"/>'; // 下
+        if (closed) {
+            s += '<line x1="240" y1="104" x2="240" y2="34" stroke="currentColor" stroke-opacity="0.6" stroke-width="4"/>';
+        }
+        else {
+            s += '<line x1="240" y1="104" x2="240" y2="80" stroke="currentColor" stroke-opacity="0.6" stroke-width="4"/><line x1="240" y1="58" x2="240" y2="34" stroke="currentColor" stroke-opacity="0.6" stroke-width="4"/><text x="256" y="73" font-size="11" font-weight="800" fill="currentColor">缺口</text>';
+        }
+        // 燈泡（上方中央）
+        s += '<circle cx="150" cy="34" r="15" fill="' + (closed ? '#fde047' : 'none') + '" stroke="currentColor" stroke-opacity="0.6" stroke-width="3"/>';
+        s += '<text x="150" y="16" text-anchor="middle" font-size="15">' + (closed ? '💡' : '⚫') + '</text>';
+        // 電池（下方中央）
+        s += '<text x="150" y="120" text-anchor="middle" font-size="18">🔋</text>';
+        s += '<text x="150" y="136" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">' + (closed ? '通路：燈亮' : '斷路：燈不亮') + '</text>';
+        return s + '</svg>';
+    }
+    // 浮力：up=浮力箭頭長度、down=重力箭頭長度、verdict 文字
+    function buoyancy(up, down, verdict) {
+        var s = '<svg viewBox="0 0 300 150" role="img" aria-label="浮力與重力">';
+        s += '<rect x="20" y="66" width="260" height="76" fill="rgba(14,165,233,0.18)" stroke="#0ea5e9" stroke-width="2"/><text x="270" y="82" text-anchor="end" font-size="12" font-weight="700" fill="currentColor">水</text>';
+        s += '<rect x="128" y="72" width="44" height="36" rx="6" fill="rgba(120,120,120,0.22)" stroke="currentColor" stroke-opacity="0.6" stroke-width="3"/><text x="150" y="96" text-anchor="middle" font-size="14" font-weight="800" fill="currentColor">物</text>';
+        var uy1 = 72 - up;
+        s += '<line x1="150" y1="72" x2="150" y2="' + uy1 + '" stroke="#16a34a" stroke-width="5"/><polygon points="150,' + uy1 + ' 144,' + (uy1 + 9) + ' 156,' + (uy1 + 9) + '" fill="#16a34a"/><text x="150" y="' + (uy1 - 6) + '" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">浮力</text>';
+        var dy1 = 108 + down;
+        s += '<line x1="150" y1="108" x2="150" y2="' + dy1 + '" stroke="#e11d48" stroke-width="5"/><polygon points="150,' + dy1 + ' 144,' + (dy1 - 9) + ' 156,' + (dy1 - 9) + '" fill="#e11d48"/><text x="188" y="' + (108 + down / 2) + '" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">重力</text>';
+        if (verdict)
+            s += '<text x="60" y="30" text-anchor="middle" font-size="15" font-weight="800" fill="currentColor">' + verdict + '</text>';
+        return s + '</svg>';
+    }
+    // 動畫 teach 步驟用：產生一個 <canvas> 佔位（實際繪製由 anim_core.js 的 window.Anim 接手）。
+    // 尊重既有 .cn-svg 版面；canvas 給固定邏輯尺寸（含 CSS 尺寸，供 DPR 縮放讀 clientWidth）。
+    function animCanvas(w, h, label) {
+        return '<canvas class="cn-anim-canvas" width="' + w + '" height="' + h + '" ' +
+            'style="max-width:' + w + 'px" ' +
+            'role="img" aria-label="' + label + '"></canvas>';
+    }
+    window.CONCEPT = {
+        progKey: 'physics_concepts_v1', practiceHref: 'physics.html',
+        lessons: [
+            { id: 'force', name: '力與合力', emoji: '💪', color: '#ea580c', sub: '用箭頭看力的方向與大小', done: '記得：力用箭頭表示（指向=方向、越長=越大）；同方向相加、反方向相減。',
+                steps: [
+                    { type: 'teach', kicker: '先想一想', title: '力有方向，也有大小', svg: forceScene([{ dir: 'right', len: 60, label: '推力' }]), text: '力會讓東西動或停。力有<b>方向</b>（往哪邊推）和<b>大小</b>（多用力）。我們用<b>箭頭</b>表示：箭頭<b>指的方向</b>就是力的方向，箭頭<b>越長</b>代表力<b>越大</b>。' },
+                    { type: 'teach', kicker: '同方向', title: '同方向的力會「相加」', svg: forceScene([{ dir: 'right', len: 50, label: '5', y: 52 }, { dir: 'right', len: 34, label: '3', y: 78 }]), text: '兩個力<b>同方向</b>時，合起來的力（合力）是<b>相加</b>：5 + 3 = <b>8</b>。像兩個人一起往同一邊推車，車更快。' },
+                    { type: 'teach', kicker: '反方向', title: '反方向、一樣大 → 平衡不動', svg: forceScene([{ dir: 'left', len: 50, label: '5', color: '#7c3aed' }, { dir: 'right', len: 50, label: '5' }]), text: '兩個力<b>方向相反又一樣大</b>時，互相抵消，合力 = <b>0</b>，東西<b>不動</b>（平衡）。像拔河兩邊力氣一樣大，繩子不動。' },
+                    { type: 'quiz', kicker: '換你試試', title: '兩人同方向推箱子，用 5 和 3 的力，合力多大？', options: ['8', '2', '15', '5'], answer: 0, why: '同方向的力相加：5 + 3 = 8。' },
+                    { type: 'quiz', kicker: '換你試試', title: '拔河，左邊用 10、右邊也用 10，繩子會怎樣？', options: ['不動（平衡）', '往左移', '往右移', '轉圈圈'], answer: 0, why: '反方向又一樣大，互相抵消，合力為 0，所以不動。' },
+                    { type: 'quiz', kicker: '想深一點', title: '一個往左推 6、一個往右推 4，箱子往哪邊動？', options: ['往左邊（左邊力較大）', '往右邊', '不動', '往上飛'], answer: 0, why: '反方向相減：6 − 4 = 2，往力較大的左邊動。' }
+                ] },
+            { id: 'circuit', name: '簡單電路', emoji: '🔌', color: '#0284c7', sub: '通路、斷路、導體與絕緣體', done: '記得：電要繞完整一圈（通路）燈才會亮；金屬是導體、塑膠是絕緣體。',
+                steps: [
+                    { type: 'teach', kicker: '先想一想', title: '電要繞完整一圈，燈才會亮', svg: animCanvas(320, 180, '電路動畫：通路時電流繞一圈流動、燈泡亮；開關打開變成斷路時有缺口、電流不流、燈泡不亮'), mount: function (host) { return window.Anim && window.Anim.circuitFlow(host); }, text: '電從<b>電池</b>出發，沿著<b>電線</b>繞一圈回到電池。這條路<b>接成完整的一圈（通路）</b>，燈泡才會<b>亮</b>。看動畫裡的小點：<b>電流繞著一圈流動</b>，燈就亮。' },
+                    { type: 'teach', kicker: '斷掉會怎樣', title: '有缺口（斷路）→ 燈不亮', svg: animCanvas(320, 180, '電路動畫：通路時電流繞一圈流動、燈泡亮；開關打開變成斷路時有缺口、電流不流、燈泡不亮'), mount: function (host) { return window.Anim && window.Anim.circuitFlow(host); }, text: '打開<b>開關</b>，電線就<b>斷了一個缺口</b>（斷路），電流<b>繞不過去、停下來</b>，燈泡就<b>不亮</b>。開關就是用來接通或切斷這條路——注意動畫裡缺口一出現，小點就不動了。' },
+                    { type: 'quiz', kicker: '換你試試', title: '燈泡要亮，電路必須怎樣？', options: ['接成完整的一圈（通路）', '中間留一個缺口', '只要有電池、不用電線', '把燈泡拿掉'], answer: 0, why: '電流要能繞完整一圈回到電池，燈泡才會亮。' },
+                    { type: 'teach', kicker: '再學一招', title: '導體 vs 絕緣體', svg: '<svg viewBox="0 0 300 96" role="img" aria-label="導體與絕緣體"><text x="80" y="30" text-anchor="middle" font-size="13" font-weight="800" fill="currentColor">導體（電通過）</text><line x1="30" y1="52" x2="130" y2="52" stroke="#c9873a" stroke-width="6"/><text x="80" y="78" text-anchor="middle" font-size="20">🥉⚡</text><text x="220" y="30" text-anchor="middle" font-size="13" font-weight="800" fill="currentColor">絕緣體（擋住）</text><line x1="170" y1="52" x2="270" y2="52" stroke="#9aa1ab" stroke-width="6" stroke-dasharray="6 6"/><text x="220" y="78" text-anchor="middle" font-size="20">🧱🚫</text></svg>', text: '電流<b>能</b>通過的東西叫<b>導體</b>（金屬、銅線）；電流<b>不能</b>通過的叫<b>絕緣體</b>（塑膠、橡皮、木頭）。所以電線外面包一層塑膠才安全。' },
+                    { type: 'quiz', kicker: '換你試試', title: '下面哪一個是「導體」（電能通過）？', options: ['銅線', '塑膠尺', '木筷子', '橡皮擦'], answer: 0, why: '金屬（銅線）是導體；塑膠、木頭、橡皮都是絕緣體。' },
+                    { type: 'quiz', kicker: '想一想', title: '電線外面為什麼要包一層塑膠？', options: ['塑膠是絕緣體，保護我們不會觸電', '讓電線變好看', '讓電變多', '讓電線變重'], answer: 0, why: '塑膠是絕緣體，包在外面可以避免我們直接碰到電流而觸電。' }
+                ] },
+            { id: 'buoy', name: '浮力', emoji: '🛟', color: '#0891b2', sub: '為什麼有的東西浮、有的沉', done: '記得：浮力往上、重力往下；浮力大就浮起、重力大就下沉。',
+                steps: [
+                    { type: 'teach', kicker: '先想一想', title: '水會給東西一個「往上」的力', svg: buoyancy(30, 30, ''), text: '把東西放進水裡，水會給它一個<b>往上</b>的力，叫做<b>浮力</b>（綠色箭頭）。這就是為什麼在水裡會覺得東西變輕。' },
+                    { type: 'teach', kicker: '兩個力比賽', title: '浮力往上、重力往下', svg: buoyancy(30, 30, '比誰大'), text: '同時，<b>重力</b>把東西<b>往下</b>拉（紅色箭頭）。東西會浮還是沉，就看<b>浮力和重力誰比較大</b>。' },
+                    { type: 'teach', kicker: '關鍵祕訣', title: '浮力大 → 浮起；重力大 → 下沉', svg: animCanvas(330, 200, '浮力動畫：一樣大、不同重的木塊和鐵塊放入水中；木塊浮力大於重力會浮起停在水面，鐵塊重力大於浮力會沉到底；浮或沉看兩個力誰大'), mount: function (host) { return window.Anim && window.Anim.buoyancyFloat(host); }, text: '一樣大的<b>木塊</b>和<b>鐵塊</b>一起放進水裡：<b>浮力 > 重力</b> → <b>浮起來</b>（木塊）；<b>浮力 < 重力</b> → <b>沉下去</b>（鐵塊）。看兩支箭頭比大小就知道。（小提醒：浮在水面不動時，浮力剛好<b>等於</b>重力；浮力大於重力是它還在往上浮的時候。）' },
+                    { type: 'quiz', kicker: '換你試試', title: '木頭放進水裡會浮起來，因為？', options: ['浮力比重力大', '重力比浮力大', '木頭沒有重量', '水沒有力'], answer: 0, why: '浮力 > 重力時東西會浮起來，所以木頭浮在水面。' },
+                    { type: 'quiz', kicker: '換你試試', title: '石頭放進水裡會沉到底，因為？', options: ['重力比浮力大', '浮力比重力大', '石頭會游泳', '水太少了'], answer: 0, why: '重力 > 浮力時東西會下沉，所以石頭沉到水底。' },
+                    { type: 'quiz', kicker: '想一想', title: '在游泳池裡覺得身體變輕，是因為？', options: ['水給我們往上的浮力', '重力消失了', '水把我們變小', '我們變成氣體'], answer: 0, why: '水的浮力往上托著我們，抵消了一部分重力，所以覺得變輕。' }
+                ] }
+        ]
+    };
+})();
