@@ -80,8 +80,18 @@ interface GameApi {
   localDate: () => string;
 }
 
+/** speaking_data.js（自動產生的分級口說跟讀資料；source-of-truth 是其產生器，不經 tsc 轉檔）。 */
+interface SpeakingData {
+  voice: string;
+  units: Array<{
+    key: string; label: string; emoji?: string; type?: string; sub?: string;
+    levels: Array<{ name: string; sub?: string; items: any[] }>;
+  }>;
+}
+
 interface Window {
   Game?: GameApi;
   CONCEPT?: ConceptConfig;
   Anim?: AnimApi;
+  SPEAKING_DATA?: SpeakingData;
 }
