@@ -74,6 +74,14 @@ interface AnimApi {
   funcPlot: (host: HTMLElement, cfg?: any) => { stop: () => void };
   /** 直角三角形三角比（SOH-CAH-TOA）。cfg = {angleDeg,show,label}。 */
   trigTriangle: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 長條／直方圖動畫長高（math-stats + core data-literacy 共用）。
+   *  cfg = {values[],labels[],mode:'histogram'|'bar',misleadAxis,yStart,toggle,callouts[],unit,label}。 */
+  barGrow: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 盒鬚圖：排序→框五數→畫盒鬚（本頁專用）。cfg = {data:number[]|number[][],showIQR,label}。 */
+  boxplotBuild: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 散布圖與相關趨勢（math-stats + core data-literacy 共用）。
+   *  cfg = {points[],r:'pos'|'neg'|'none',showLine,confound:{label,on},xLabel,yLabel,label}。 */
+  scatterTrend: (host: HTMLElement, cfg?: any) => { stop: () => void };
 }
 
 /** game_core.js 導出的遊戲核心 API（window.Game）。遷移 game_core 時逐步精確化。 */

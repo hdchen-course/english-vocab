@@ -1729,6 +1729,302 @@
     });
   }
 
+  // ====================================================================
+  // 場景：barGrow — 一組長條／直方圖動畫長高（參數化，多課＋ data-literacy 共用）。
+  //   cfg = { values:number[], labels:string[], mode:'histogram'|'bar',
+  //           misleadAxis:boolean, yStart:number, toggle:boolean,
+  //           callouts:string[], unit:string, label?:string }
+  //   mode 'histogram'：長條相鄰相連（連續資料分組）；'bar'：長條分開（不同類別）。
+  //   misleadAxis：y 軸先從 yStart 起跳（放大假差距），再動畫把軸拉回 0 還原真相。
+  //   toggle：供 data-literacy 做零基準↔截斷切換（沿用同一套還原動畫、重複播放）。
+  //   畫框尺寸固定、只有長條高度與軸刻度在變（截斷軸示範全程不改畫布大小）。
+  //   reduced-motion：staticPhase=1 → 畫軸從 0 的最終長條＋刻度（真相版）。
+  // ====================================================================
+  function barGrow(host: HTMLElement, cfg: any) {
+    cfg = cfg || {};
+    var values: number[] = cfg.values || [3, 5, 9, 7, 4];
+    var labels: string[] = cfg.labels || [];
+    var mode: string = cfg.mode || 'histogram';
+    var animateAxis: boolean = !!cfg.misleadAxis || !!cfg.toggle;
+    var yStart0: number = (typeof cfg.yStart === 'number') ? cfg.yStart : 0;
+    var callouts: string[] = cfg.callouts || [];
+    var unit: string = cfg.unit || '';
+    var n = values.length;
+    var maxV = values.reduce(function (a, b) { return Math.max(a, b); }, -Infinity);
+    var yTop = animateAxis ? maxV + (maxV - yStart0) * 0.18 : Math.ceil(maxV * 1.14);
+    if (!isFinite(yTop) || yTop <= yStart0) yTop = yStart0 + 1;
+    var WARN = '#e11d48';
+
+    function fmt(x: number): string { return (Math.round(x) === x) ? ('' + x) : x.toFixed(1); }
+
+    function axisStartAt(p: number): number {
+      if (!animateAxis) return 0;
+      var hold = 0.4;
+      if (p < hold) return yStart0;
+      return yStart0 * (1 - easeInOut((p - hold) / (1 - hold)));
+    }
+
+    function drawBars(g: CanvasRenderingContext2D, rx0: number, ry0: number, rx1: number, ry1: number,
+      axisStart: number, growFn: ((i: number) => number) | null) {
+      var ink = inkColor(), theme = themeColor();
+      var plotH = ry1 - ry0, slotW = (rx1 - rx0) / n;
+      var warnOn = animateAxis && axisStart > yStart0 * 0.5 + 0.0001 && axisStart > 0.0001;
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.55; g.lineWidth = 1.4;
+      g.beginPath(); g.moveTo(rx0, ry0); g.lineTo(rx0, ry1); g.lineTo(rx1, ry1); g.stroke(); g.restore();
+      label(g, fmt(axisStart), rx0 - 4, ry1, warnOn ? WARN : ink, 10, 'right');
+      label(g, fmt(yTop), rx0 - 4, ry0 + 4, ink, 10, 'right');
+      for (var i = 0; i < n; i++) {
+        var frac = (values[i] - axisStart) / (yTop - axisStart);
+        frac = Math.max(0, Math.min(1, frac));
+        var gf = growFn ? growFn(i) : 1;
+        var barH = plotH * frac * gf;
+        var bw = (mode === 'bar') ? slotW * 0.56 : slotW * 0.98;
+        var bx = rx0 + i * slotW + (slotW - bw) / 2;
+        var by = ry1 - barH;
+        var col = warnOn ? WARN : theme;
+        g.save();
+        g.fillStyle = col; g.globalAlpha = 0.82; g.fillRect(bx, by, bw, barH);
+        g.globalAlpha = 1; g.strokeStyle = col; g.lineWidth = 1; g.strokeRect(bx, by, bw, barH);
+        g.restore();
+        if (gf > 0.98 && barH > 6) label(g, fmt(values[i]) + unit, bx + bw / 2, by - 7, ink, 10, 'center');
+        if (labels[i]) label(g, labels[i], bx + bw / 2, ry1 + 12, ink, 9.5, 'center');
+        if (callouts[i]) label(g, callouts[i], bx + bw / 2, ry0 - 2, theme, 9.5, 'center');
+      }
+    }
+
+    function draw(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var ink = inkColor(), theme = themeColor();
+      var px0 = 36, py0 = 26, px1 = w - 14, py1 = h - 30;
+      var title = animateAxis ? '看圖先看 y 軸的起點！'
+        : (mode === 'histogram' ? '直方圖：連續資料分組' : '長條圖：不同類別比較');
+      label(g, title, w / 2, 13, theme, 12.5, 'center');
+      var ax0 = axisStartAt(p);
+      var growFn: ((i: number) => number) | null = null;
+      if (!animateAxis) {
+        growFn = function (i) {
+          var stagger = 0.5 / Math.max(1, n);
+          return easeInOut(Math.max(0, Math.min(1, (p - i * stagger) / 0.45)));
+        };
+      }
+      drawBars(g, px0, py0, px1, py1, ax0, growFn);
+      var cap: string, capCol: string;
+      if (animateAxis) {
+        if (ax0 > yStart0 * 0.5 + 0.0001) { cap = 'y 軸從 ' + fmt(ax0) + ' 起跳——差距看起來超大！'; capCol = WARN; }
+        else if (ax0 > 0.5) { cap = '正在把軸拉回 0……'; capCol = theme; }
+        else { cap = '軸從 0 看：其實差不多高！'; capCol = theme; }
+      } else {
+        cap = (mode === 'histogram') ? '長條相鄰相連＝連續資料分組看形狀' : '長條分開＝各自獨立的類別';
+        capCol = ink;
+      }
+      label(g, cap, w / 2, h - 8, capCol, 11, 'center');
+    }
+
+    return runScene(host, {
+      durationMs: animateAxis ? 5200 : 4200, loops: 2, staticPhase: 1,
+      label: cfg.label || (animateAxis
+        ? '誤導圖表動畫：y 軸先從 ' + fmt(yStart0) + ' 起跳，長條差距看起來很大；再把軸拉回 0，長條其實差不多高——截斷 y 軸會放大差異。'
+        : (mode === 'histogram'
+          ? '直方圖動畫：各組長條依次長高、長條相鄰相連，呈現連續資料分組後的分布形狀。'
+          : '長條圖動畫：各類別的長條分開、依次長高，用來比較不同類別的數量。')),
+      draw: draw
+    });
+  }
+
+  // ====================================================================
+  // 場景：boxplotBuild — 數線上資料點排序→框出五數→畫盒鬚圖（本 spec 專用）。
+  //   cfg = { data:number[] | number[][], showIQR:boolean, label?:string }
+  //   單組：動畫描點→排序→框五數（最小・Q1・中位數・Q3・最大）→畫盒鬚。
+  //   showIQR + 兩組資料（data 傳巢狀陣列）：並列兩個盒鬚，對比 IQR（Q3−Q1）與全距（max−min）長度。
+  //   五數法＝中位數分兩半、下半中位數為 Q1、上半中位數為 Q3（奇數排除正中；Tukey 法）。
+  //   reduced-motion：staticPhase=1 → 畫完整五數盒鬚。
+  // ====================================================================
+  function boxplotBuild(host: HTMLElement, cfg: any) {
+    cfg = cfg || {};
+    var raw: any = cfg.data || [2, 4, 5, 6, 8, 9, 11];
+    var datasets: number[][] = (raw.length && Array.isArray(raw[0])) ? raw : [raw];
+    var IQRC = '#0891b2', RANGEC = '#d97706', MEDC = '#e11d48';
+
+    function fmt(x: number): string { return (Math.round(x) === x) ? ('' + x) : x.toFixed(1); }
+    function med(a: number[]): number { var m = Math.floor(a.length / 2); return (a.length % 2) ? a[m] : (a[m - 1] + a[m]) / 2; }
+    function five(a: number[]) {
+      var s = a.slice().sort(function (x, y) { return x - y; });
+      var nn = s.length, m = Math.floor(nn / 2);
+      var lo = s.slice(0, m), hi = (nn % 2) ? s.slice(m + 1) : s.slice(m);
+      return { min: s[0], q1: med(lo), med: med(s), q3: med(hi), max: s[nn - 1], sorted: s };
+    }
+
+    var allMin = Infinity, allMax = -Infinity;
+    for (var d = 0; d < datasets.length; d++) {
+      for (var k = 0; k < datasets[d].length; k++) { allMin = Math.min(allMin, datasets[d][k]); allMax = Math.max(allMax, datasets[d][k]); }
+    }
+    var sp = (allMax - allMin) || 1;
+    var xMin = allMin - sp * 0.12, xMax = allMax + sp * 0.12;
+    function mapX(v: number, px0: number, px1: number): number { return px0 + (v - xMin) / (xMax - xMin) * (px1 - px0); }
+
+    function drawAxis(g: CanvasRenderingContext2D, px0: number, px1: number, ay: number, ink: string) {
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.5; g.lineWidth = 1.3;
+      g.beginPath(); g.moveTo(px0, ay); g.lineTo(px1, ay); g.stroke(); g.restore();
+    }
+
+    function drawBox(g: CanvasRenderingContext2D, f: any, cy: number, px0: number, px1: number, prog: number, labelFive: boolean, tag: string) {
+      var ink = inkColor(), theme = themeColor();
+      var bh = 20;
+      var xMinP = mapX(f.min, px0, px1), xMaxP = mapX(f.max, px0, px1);
+      var xq1 = mapX(f.q1, px0, px1), xq3 = mapX(f.q3, px0, px1), xmed = mapX(f.med, px0, px1);
+      var drawW = Math.max(0, Math.min(1, prog / 0.6));
+      var curMax = xMinP + (xMaxP - xMinP) * drawW;
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.8; g.lineWidth = 1.6; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(xMinP, cy); g.lineTo(curMax, cy); g.stroke();
+      if (drawW > 0.02) { g.beginPath(); g.moveTo(xMinP, cy - 7); g.lineTo(xMinP, cy + 7); g.stroke(); }
+      if (drawW >= 1) { g.beginPath(); g.moveTo(xMaxP, cy - 7); g.lineTo(xMaxP, cy + 7); g.stroke(); }
+      g.restore();
+      if (prog >= 0.4) {
+        var ba = Math.max(0, Math.min(1, (prog - 0.4) / 0.3));
+        g.save();
+        g.fillStyle = theme; g.globalAlpha = 0.18 * ba; g.fillRect(xq1, cy - bh / 2, xq3 - xq1, bh);
+        g.globalAlpha = 0.9; g.strokeStyle = theme; g.lineWidth = 1.8; g.strokeRect(xq1, cy - bh / 2, xq3 - xq1, bh);
+        g.strokeStyle = MEDC; g.lineWidth = 2.2; g.beginPath(); g.moveTo(xmed, cy - bh / 2); g.lineTo(xmed, cy + bh / 2); g.stroke();
+        g.restore();
+      }
+      if (tag) label(g, tag, px0 - 18, cy, ink, 11, 'center');
+      if (labelFive && prog >= 0.6) {
+        label(g, '最小 ' + fmt(f.min), xMinP, cy + bh / 2 + 14, ink, 9.5, 'center');
+        label(g, 'Q1 ' + fmt(f.q1), xq1, cy - bh / 2 - 8, theme, 9.5, 'center');
+        label(g, '中位數 ' + fmt(f.med), xmed, cy + bh / 2 + 14, MEDC, 9.5, 'center');
+        label(g, 'Q3 ' + fmt(f.q3), xq3, cy - bh / 2 - 8, theme, 9.5, 'center');
+        label(g, '最大 ' + fmt(f.max), xMaxP, cy + bh / 2 + 14, ink, 9.5, 'center');
+      }
+    }
+
+    function drawBrackets(g: CanvasRenderingContext2D, f: any, cy: number, px0: number, px1: number, prog: number) {
+      var xq1 = mapX(f.q1, px0, px1), xq3 = mapX(f.q3, px0, px1);
+      var xmn = mapX(f.min, px0, px1), xmx = mapX(f.max, px0, px1);
+      var ba = Math.max(0, Math.min(1, (prog - 0.5) / 0.5));
+      if (ba <= 0) return;
+      g.save(); g.globalAlpha = ba;
+      var yI = cy - 18;
+      g.strokeStyle = IQRC; g.lineWidth = 1.6;
+      g.beginPath(); g.moveTo(xq1, yI + 4); g.lineTo(xq1, yI); g.lineTo(xq3, yI); g.lineTo(xq3, yI + 4); g.stroke();
+      label(g, 'IQR=' + fmt(f.q3 - f.q1), (xq1 + xq3) / 2, yI - 7, IQRC, 9.5, 'center');
+      var yR = cy + 20;
+      g.strokeStyle = RANGEC; g.lineWidth = 1.6;
+      g.beginPath(); g.moveTo(xmn, yR - 4); g.lineTo(xmn, yR); g.lineTo(xmx, yR); g.lineTo(xmx, yR - 4); g.stroke();
+      label(g, '全距=' + fmt(f.max - f.min), (xmn + xmx) / 2, yR + 9, RANGEC, 9.5, 'center');
+      g.restore();
+    }
+
+    function draw(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var ink = inkColor(), theme = themeColor();
+      var px0 = 46, px1 = w - 20;
+      if (datasets.length === 1) {
+        label(g, '盒狀圖：最小・Q1・中位數・Q3・最大', w / 2, 13, theme, 12, 'center');
+        var f = five(datasets[0]);
+        var cy = h * 0.5;
+        drawAxis(g, px0, px1, cy, ink);
+        var ptA = Math.max(0, Math.min(1, p / 0.3));
+        var s = f.sorted;
+        for (var i = 0; i < s.length; i++) {
+          if (p < 0.3 && i / s.length > ptA) continue;
+          disc(g, mapX(s[i], px0, px1), cy - 44, 3.2, (p < 0.4 ? theme : 'rgba(99,102,241,0.4)'));
+        }
+        label(g, (p < 0.4) ? '① 資料由小到大排好' : '② 框出五個數，盒子裝中間一半的資料', w / 2, h - 8, ink, 11, 'center');
+        drawBox(g, f, cy, px0, px1, p, true, '');
+      } else {
+        label(g, '同樣多筆資料，比較「分散程度」', w / 2, 13, theme, 12, 'center');
+        var tags = ['A', 'B', 'C', 'D'];
+        var rows = datasets.length;
+        for (var d2 = 0; d2 < rows; d2++) {
+          var fy = five(datasets[d2]);
+          var cy2 = 46 + d2 * ((h - 70) / rows) + ((h - 70) / rows) / 2;
+          drawAxis(g, px0, px1, cy2, ink);
+          drawBox(g, fy, cy2, px0, px1, Math.min(1, p * 1.1), false, tags[d2]);
+          drawBrackets(g, fy, cy2, px0, px1, p);
+        }
+        label(g, 'IQR＝Q3−Q1（中間一半）｜全距＝最大−最小', w / 2, h - 8, ink, 10.5, 'center');
+      }
+    }
+
+    return runScene(host, {
+      durationMs: datasets.length > 1 ? 5200 : 6000, loops: 2, staticPhase: 1,
+      label: cfg.label || (datasets.length > 1
+        ? '盒狀圖比較動畫：並排兩組資料的盒鬚圖，對比四分位距 IQR（Q3−Q1，盒子寬度）與全距（最大−最小，兩鬚全長）的長度。'
+        : '盒狀圖動畫：資料點由小到大排好，再框出最小、Q1、中位數、Q3、最大五個數，畫成盒鬚圖；盒子裝中間一半的資料。'),
+      draw: draw
+    });
+  }
+
+  // ====================================================================
+  // 場景：scatterTrend — 散布圖的點逐一出現，再浮現趨勢（相關）方向（math-stats + data-literacy 共用）。
+  //   cfg = { points:[[x,y]...](0..1 常態座標), r:'pos'|'neg'|'none'（或 mode 同義）,
+  //           showLine:boolean, confound:{label,on}, xLabel, yLabel, label? }
+  //   r 'pos' 右上正相關、'neg' 右下負相關、'none' 散成一團幾乎無相關。
+  //   confound.on：浮現「共同原因」方框＋箭頭（相關≠因果；data-literacy 共用）。
+  //   reduced-motion：staticPhase=1 → 畫全部點＋趨勢線（＋confound）。
+  // ====================================================================
+  function scatterTrend(host: HTMLElement, cfg: any) {
+    cfg = cfg || {};
+    var r: string = cfg.r || cfg.mode || 'pos';
+    var showLine: boolean = (cfg.showLine !== false);
+    var confound: any = cfg.confound || null;
+    var xLabel: string = cfg.xLabel || 'x';
+    var yLabel: string = cfg.yLabel || 'y';
+    var DOT = '#0891b2', WARN = '#e11d48';
+    var defaults: { [k: string]: number[][] } = {
+      pos: [[0.12, 0.18], [0.22, 0.3], [0.33, 0.27], [0.42, 0.46], [0.52, 0.5], [0.6, 0.62], [0.7, 0.58], [0.8, 0.78], [0.9, 0.83]],
+      neg: [[0.12, 0.82], [0.22, 0.66], [0.33, 0.72], [0.42, 0.54], [0.52, 0.5], [0.6, 0.4], [0.7, 0.44], [0.8, 0.26], [0.9, 0.2]],
+      none: [[0.15, 0.4], [0.25, 0.76], [0.35, 0.3], [0.46, 0.6], [0.5, 0.46], [0.6, 0.82], [0.68, 0.24], [0.78, 0.56], [0.88, 0.42]]
+    };
+    var pts: number[][] = cfg.points || defaults[r] || defaults.pos;
+    var N = pts.length;
+
+    function draw(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var ink = inkColor(), theme = themeColor();
+      var px0 = 40, py0 = 24, px1 = w - 14, py1 = h - 40;
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.5; g.lineWidth = 1.4;
+      g.beginPath(); g.moveTo(px0, py0); g.lineTo(px0, py1); g.lineTo(px1, py1); g.stroke(); g.restore();
+      label(g, xLabel + ' →', (px0 + px1) / 2, py1 + 14, ink, 10.5, 'center');
+      label(g, '↑ ' + yLabel, px0 + 2, py0 - 12, ink, 10.5, 'left');
+      function mx(nx: number) { return px0 + nx * (px1 - px0); }
+      function my(ny: number) { return py1 - ny * (py1 - py0); }
+      var shown = Math.round(N * Math.max(0, Math.min(1, p / 0.55)));
+      for (var i = 0; i < shown; i++) disc(g, mx(pts[i][0]), my(pts[i][1]), 4, DOT);
+      var lineP = Math.max(0, Math.min(1, (p - 0.55) / 0.25));
+      if (p >= 0.55 && showLine && r !== 'none') {
+        var x1 = 0.1, y1 = (r === 'neg') ? 0.82 : 0.16, x2 = 0.9, y2 = (r === 'neg') ? 0.18 : 0.84;
+        var ex = x1 + (x2 - x1) * lineP, ey = y1 + (y2 - y1) * lineP;
+        g.save(); g.strokeStyle = theme; g.lineWidth = 2.4; g.setLineDash([6, 4]); g.lineCap = 'round';
+        g.beginPath(); g.moveTo(mx(x1), my(y1)); g.lineTo(mx(ex), my(ey)); g.stroke(); g.restore();
+      }
+      var dir = (r === 'neg') ? '點大致往右下 → 負相關'
+        : (r === 'none') ? '點散成一團 → 幾乎沒有相關' : '點大致往右上 → 正相關';
+      var dcol = (r === 'none') ? ink : theme;
+      var confP = Math.max(0, Math.min(1, (p - 0.8) / 0.2));
+      if (confound && confound.on && p >= 0.8) {
+        var bx = (px0 + px1) / 2, byv = py0 + 8;
+        g.save();
+        g.fillStyle = WARN; g.globalAlpha = 0.14 * confP; g.fillRect(bx - 72, byv - 11, 144, 22);
+        g.globalAlpha = confP; g.strokeStyle = WARN; g.lineWidth = 1.4; g.strokeRect(bx - 72, byv - 11, 144, 22);
+        label(g, '共同原因：' + (confound.label || '第三因素'), bx, byv, WARN, 10, 'center');
+        g.strokeStyle = WARN; g.lineWidth = 1.3; g.setLineDash([3, 3]);
+        g.beginPath(); g.moveTo(bx - 44, byv + 11); g.lineTo(px0 + 20, py1 - 6); g.stroke();
+        g.beginPath(); g.moveTo(bx + 44, byv + 11); g.lineTo(px1 - 12, py0 + 34); g.stroke();
+        g.restore();
+      }
+      var showCause = !!(confound && confound.on && p >= 0.9);
+      label(g, showCause ? '相關 ≠ 因果：背後是第三因素' : dir, w / 2, h - 8, showCause ? WARN : dcol, 11, 'center');
+    }
+
+    return runScene(host, {
+      durationMs: (confound && confound.on) ? 6400 : 5200, loops: 2, staticPhase: 1,
+      label: cfg.label || ('散布圖動畫：'
+        + (r === 'neg' ? ('點大致往右下，' + xLabel + '越大、' + yLabel + '越小，是負相關。')
+          : r === 'none' ? ('點散成一團看不出方向，' + xLabel + '和' + yLabel + '幾乎沒有相關。')
+            : ('點大致往右上，' + xLabel + '越大、' + yLabel + '也越大，是正相關。'))
+        + ((confound && confound.on) ? ('但這只是相關：共同原因是「' + (confound.label || '第三因素') + '」，相關不等於因果。') : '')),
+      draw: draw
+    });
+  }
+
   // ---- 導出 -----------------------------------------------------------
   var Anim = {
     reducedMotion: reducedMotion,
@@ -1745,6 +2041,9 @@
     photosynthesis: photosynthesis,
     funcPlot: funcPlot,
     trigTriangle: trigTriangle,
+    barGrow: barGrow,
+    boxplotBuild: boxplotBuild,
+    scatterTrend: scatterTrend,
   };
   (window as any).Anim = Anim;
 })();
