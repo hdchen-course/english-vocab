@@ -33,7 +33,7 @@
         var s = '<line x1="' + X1 + '" y1="' + Y1 + '" x2="' + X2 + '" y2="' + Y2 + '" stroke="' + color + '" stroke-width="3.5"/>';
         s += '<polygon points="' + X2 + ',' + Y2 + ' ' + a1x.toFixed(1) + ',' + a1y.toFixed(1) + ' ' + a2x.toFixed(1) + ',' + a2y.toFixed(1) + '" fill="' + color + '"/>';
         if (label) {
-            s += '<text x="' + ((X1 + X2) / 2 + 8) + '" y="' + ((Y1 + Y2) / 2 - 6) + '" font-size="12" font-weight="800" fill="' + color + '">' + label + '</text>';
+            s += '<text x="' + ((X1 + X2) / 2 - 4) + '" y="' + ((Y1 + Y2) / 2 - 18) + '" font-size="12" font-weight="800" fill="' + color + '" stroke="var(--card, #fdf8ef)" stroke-width="4" paint-order="stroke" stroke-linejoin="round">' + label + '</text>';
         }
         return s;
     }

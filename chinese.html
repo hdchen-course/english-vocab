@@ -249,6 +249,24 @@ body {
   margin-bottom: var(--s1);
 }
 
+/* 字詞收藏冊 / 今日複習 入口卡（與 category-card 同一套視覺，橫向並排；補上原本缺的樣式） */
+.wordex-entries { display:flex; flex-wrap:wrap; gap:var(--s3); margin:var(--s4) 0 var(--s5); }
+.wordex-entry-card {
+  flex:1 1 300px; min-width:0; display:flex; align-items:center; gap:var(--s3);
+  background:var(--card); border:2px solid var(--card-border); border-radius:var(--r-lg);
+  padding:var(--s3) var(--s4); cursor:pointer; box-shadow:var(--shadow-sm);
+  transition:transform .12s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.wordex-entry-card:hover { box-shadow:var(--shadow-lg); border-color:var(--accent); }
+.wordex-entry-card:active { transform:scale(0.98); }
+.wordex-entry-emoji {
+  width:48px; height:48px; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
+  font-size:28px; background:var(--accent-tint); border-radius:var(--r-sm);
+}
+.wordex-entry-body { flex:1 1 auto; min-width:0; }
+.wordex-entry-name { color:var(--ink); font-size:var(--fs-body); font-weight:800; line-height:1.25; }
+.wordex-entry-sub { color:var(--ink-soft); font-size:var(--fs-small); font-weight:600; margin-top:2px; }
+
 .category-progress {
   color: var(--ink-soft);
   font-size: var(--fs-small);
@@ -647,6 +665,9 @@ body {
     <span class="app-bar__home-label">學習基地</span>
   </a>
   <span class="app-bar__title">國語大冒險 🀄</span>
+  <button type="button" class="app-bar__theme" id="sound-toggle" aria-label="音效開關" aria-pressed="true" title="音效開關">
+    <span class="app-bar__theme-icon" aria-hidden="true">🔊</span>
+  </button>
   <button type="button" class="app-bar__theme" data-theme-toggle
           aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
     <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
@@ -655,9 +676,6 @@ body {
 <div id="app">
   <!-- Home Screen -->
   <div class="screen active" id="home-screen">
-    <div class="header">
-      <button class="header-btn" id="sound-toggle" aria-label="音效開關" aria-pressed="true">🔊</button>
-    </div>
     <div class="ch-hello"><span class="ch-mascot" aria-hidden="true">🀄</span>
       <div><div class="ch-htext">用玩的方式，把成語、字音字形、造句、閱讀和語詞一次練起來。</div>
       <div class="ch-hsub">先挑一個主題，一關一關往下闖，把喜歡的字詞收進字詞收藏冊。</div></div></div>

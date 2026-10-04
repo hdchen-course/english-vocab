@@ -32,7 +32,7 @@ function arrow(x1,y1,x2,y2,color,label?){
   var a2x=X2-10*Math.cos(ang+0.5), a2y=Y2-10*Math.sin(ang+0.5);
   var s='<line x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" stroke="'+color+'" stroke-width="3.5"/>';
   s+='<polygon points="'+X2+','+Y2+' '+a1x.toFixed(1)+','+a1y.toFixed(1)+' '+a2x.toFixed(1)+','+a2y.toFixed(1)+'" fill="'+color+'"/>';
-  if(label){ s+='<text x="'+((X1+X2)/2+8)+'" y="'+((Y1+Y2)/2-6)+'" font-size="12" font-weight="800" fill="'+color+'">'+label+'</text>'; }
+  if(label){ s+='<text x="'+((X1+X2)/2-4)+'" y="'+((Y1+Y2)/2-18)+'" font-size="12" font-weight="800" fill="'+color+'" stroke="var(--card, #fdf8ef)" stroke-width="4" paint-order="stroke" stroke-linejoin="round">'+label+'</text>'; }
   return s;
 }
 function svgWrap(inner,label,max?){ return '<svg viewBox="0 0 210 200" role="img" aria-label="'+label+'">'+gridBase(max)+inner+'</svg>'; }
