@@ -1,0 +1,957 @@
+// @ts-nocheck — 機械式 legacy JS→TS 遷移：verbatim 轉檔、行為等價；型別檢查延後（見 memory stickiness-animation-live Phase 3B）
+/* =====================================================================
+ * geometry.ts  →  (tsc, tsconfig.legacy.json) →  geometry.js
+ * 原為 geometry.html 的 inline <script>；逐檔 TS 遷移抽出成 sibling .js。
+ * 行為與原 inline 版等價（verbatim；載入位置不變＝執行時機/順序不變）。
+ * 原碼本身即單一頂層 IIFE，已自我隔離（tsc 全域型別檢查無名稱外洩）；verbatim 保留。
+ * ===================================================================== */
+(function () {
+  'use strict';
+
+  // ---- 安全呼叫引擎（引擎已於 <head> 同步載入，仍防禦式檢查） ----
+  function record(correct) {
+    try { if (window.Game && window.Game.recordAnswer) window.Game.recordAnswer('math', !!correct); }
+    catch (e) { /* 靜默：不阻斷孩子的遊戲 */ }
+  }
+  function toast(msg, kind) { try { if (window.Game && window.Game.showToast) window.Game.showToast(msg, kind); } catch (e) {} }
+  function speak(text) {
+    /* 已移除 TTS：本頁非英文發音頁，不需朗讀 */
+  }
+  function botCheer() { var b = document.getElementById('hello-bot'); /* 阿方在選單慶祝旋轉 */ if (b) { b.classList.remove('spin'); void b.offsetWidth; b.classList.add('spin'); } }
+
+  // ---- 本頁進度 + 輕量 Leitner（獨立 key，不碰 player_profile_v1 / vocab_srs） ----
+  var PROG_KEY = 'geometry_progress_v1';
+  function loadProg() { try { return JSON.parse(localStorage.getItem(PROG_KEY)) || {}; } catch (e) { return {}; } }
+  function saveProg() { try { localStorage.setItem(PROG_KEY, JSON.stringify(progress)); } catch (e) {} }
+  var progress = loadProg(); // { units:{id:{done,best}}, leitner:{itemId:{box}} }
+  if (!progress.units) progress.units = {};
+  if (!progress.leitner) progress.leitner = {};
+
+  // Leitner：答對晉級（上限 box3），答錯回 box1；box<3 視為「待複習」。
+  function leitnerUpdate(id, correct) {
+    if (!id) return;
+    var rec = progress.leitner[id] || { box: 2 };
+    if (correct) rec.box = Math.min(3, (rec.box || 2) + 1);
+    else rec.box = 1;
+    progress.leitner[id] = rec;
+    saveProg();
+  }
+  function dueItems() {
+    var out = [];
+    for (var id in progress.leitner) {
+      if (progress.leitner.hasOwnProperty(id) && progress.leitner[id].box < 3 && ITEM_REGISTRY[id]) out.push(id);
+    }
+    return out;
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  // 小工具：Fisher–Yates 洗牌（就地）
+  function shuffle(arr) {
+    for (var i = arr.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = arr[i]; arr[i] = arr[j]; arr[j] = t; }
+    return arr;
+  }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+  // =====================================================================
+  // 立體圖（等角／示意 SVG）——僅為辨識用途；正確的面／邊／頂點數值由資料層掌握
+  // =====================================================================
+  function svgWrap(inner, w, h, cls) {
+    return '<svg class="' + (cls || 'geo-svg-md') + '" viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-hidden="true" ' +
+      'stroke="var(--geo-stroke)" stroke-width="2" stroke-linejoin="round">' + inner + '</svg>';
+  }
+  function solidSVG(type, cls) {
+    var T = 'var(--geo-top)', L = 'var(--geo-left)', R = 'var(--geo-right)';
+    var s = '';
+    switch (type) {
+      case 'cube':
+        s = poly('60,15 100,38 60,61 20,38', T) + poly('20,38 60,61 60,105 20,82', L) + poly('100,38 60,61 60,105 100,82', R);
+        break;
+      case 'cuboid':
+        s = poly('55,12 108,30 55,48 2,30', T) + poly('2,30 55,48 55,110 2,92', L) + poly('108,30 55,48 55,110 108,92', R);
+        break;
+      case 'cylinder':
+        s = '<ellipse cx="60" cy="24" rx="34" ry="13" fill="' + T + '"/>' +
+            '<path d="M26,24 L26,92 A34,13 0 0 0 94,92 L94,24" fill="' + R + '"/>' +
+            '<ellipse cx="60" cy="24" rx="34" ry="13" fill="' + T + '"/>';
+        break;
+      case 'cone':
+        s = '<path d="M60,14 L26,92 A34,12 0 0 0 94,92 Z" fill="' + R + '"/>' +
+            '<ellipse cx="60" cy="92" rx="34" ry="12" fill="' + T + '"/>' +
+            '<path d="M60,14 L26,92" fill="none"/>';
+        break;
+      case 'sphere':
+        s = '<circle cx="60" cy="60" r="44" fill="' + R + '"/>' +
+            '<ellipse cx="46" cy="44" rx="15" ry="10" fill="' + T + '" stroke="none" opacity="0.7"/>';
+        break;
+      case 'triprism':
+        s = poly('30,98 60,44 78,30 48,84', L) + poly('60,44 90,98 108,84 78,30', R) +
+            poly('30,98 90,98 60,44', T) + '<path d="M48,84 L108,84" fill="none"/>';
+        break;
+      case 'sqpyramid':
+        s = poly('30,86 90,86 68,24', R) + poly('90,86 108,70 68,24', L) +
+            '<path d="M30,86 L46,70 L68,24 M46,70 L108,70" fill="none" stroke-dasharray="4 3"/>';
+        break;
+      case 'tetra':
+        s = poly('28,92 96,92 58,26', T) + poly('28,92 58,26 63,70', L) + poly('96,92 58,26 63,70', R) +
+            '<path d="M28,92 L63,70 L96,92" fill="none"/>';
+        break;
+    }
+    return svgWrap(s, 120, 120, cls);
+  }
+  function poly(points, fill) { return '<polygon points="' + points + '" fill="' + fill + '"/>'; }
+
+  // ---- 等角積木堆（heightmap；back-to-front 畫，隱藏方塊自然被擋住） ----
+  // hmap: 二維陣列 hmap[row][col] = 該柱高度（>=0）。col 往右下、row 往左下。
+  function isoStack(hmap, cls) {
+    var HW = 15, HH = 8, CH = 17;
+    var cubes = [];
+    for (var r = 0; r < hmap.length; r++) {
+      for (var c = 0; c < hmap[r].length; c++) {
+        var h = hmap[r][c] | 0;
+        for (var lv = 0; lv < h; lv++) cubes.push({ c: c, r: r, lv: lv });
+      }
+    }
+    if (!cubes.length) {
+      // 空堆疊（build 起始全 0）：回傳固定尺寸的空畫布，避免 viewBox 變負。
+      return '<svg class="' + (cls || 'geo-svg-md') + '" viewBox="0 0 80 60" role="img" aria-hidden="true"></svg>';
+    }
+    // 由遠而近：先畫 (c+r) 小者，再畫低樓層者。
+    cubes.sort(function (a, b) { return (a.c + a.r) - (b.c + b.r) || a.lv - b.lv; });
+    var parts = [], minX = 1e9, maxX = -1e9, minY = 1e9, maxY = -1e9;
+    var T = 'var(--geo-top)', L = 'var(--geo-left)', R = 'var(--geo-right)';
+    for (var i = 0; i < cubes.length; i++) {
+      var cu = cubes[i];
+      var sx = (cu.c - cu.r) * HW;
+      var sy = (cu.c + cu.r) * HH - cu.lv * CH;
+      var top = [sx, sy, sx + HW, sy + HH, sx, sy + 2 * HH, sx - HW, sy + HH];
+      var lf = [sx - HW, sy + HH, sx, sy + 2 * HH, sx, sy + 2 * HH + CH, sx - HW, sy + HH + CH];
+      var rt = [sx + HW, sy + HH, sx, sy + 2 * HH, sx, sy + 2 * HH + CH, sx + HW, sy + HH + CH];
+      parts.push(poly(pts(top), T) + poly(pts(lf), L) + poly(pts(rt), R));
+      var allx = [sx - HW, sx + HW], ally = [sy, sy + 2 * HH + CH];
+      minX = Math.min(minX, allx[0]); maxX = Math.max(maxX, allx[1]);
+      minY = Math.min(minY, ally[0]); maxY = Math.max(maxY, ally[1]);
+    }
+    var pad = 8, w = (maxX - minX) + pad * 2, hgt = (maxY - minY) + pad * 2;
+    var g = '<g transform="translate(' + (pad - minX) + ',' + (pad - minY) + ')">' + parts.join('') + '</g>';
+    return '<svg class="' + (cls || 'geo-svg-md') + '" viewBox="0 0 ' + w + ' ' + hgt + '" role="img" aria-hidden="true" ' +
+      'stroke="var(--geo-stroke)" stroke-width="1.6" stroke-linejoin="round">' + g + '</svg>';
+  }
+  function pts(a) { var o = []; for (var i = 0; i < a.length; i += 2) o.push(a[i] + ',' + a[i + 1]); return o.join(' '); }
+  function sumHeights(hmap) { var t = 0; for (var r = 0; r < hmap.length; r++) for (var c = 0; c < hmap[r].length; c++) t += hmap[r][c] | 0; return t; }
+
+  // ---- 展開圖（正方體 net）：cells = [[col,row],...] ----
+  function netSVG(cells, labels) {
+    var CS = 26, maxC = 0, maxR = 0;
+    for (var i = 0; i < cells.length; i++) { maxC = Math.max(maxC, cells[i][0]); maxR = Math.max(maxR, cells[i][1]); }
+    var w = (maxC + 1) * CS + 4, h = (maxR + 1) * CS + 4, r = '';
+    for (var k = 0; k < cells.length; k++) {
+      var x = cells[k][0] * CS + 2, y = cells[k][1] * CS + 2;
+      r += '<rect x="' + x + '" y="' + y + '" width="' + CS + '" height="' + CS + '" rx="3" fill="var(--geo-top)"/>';
+      if (labels && labels[k] != null) r += '<text x="' + (x + CS / 2) + '" y="' + (y + CS / 2 + 5) + '" text-anchor="middle" ' +
+        'font-size="15" font-weight="800" fill="var(--geo-stroke)" stroke="none">' + labels[k] + '</text>';
+    }
+    return '<svg class="geo-svg-md" viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-hidden="true" ' +
+      'stroke="var(--geo-stroke)" stroke-width="2">' + r + '</svg>';
+  }
+
+  // ---- 平面圖形格（旋轉／對稱題）：cells=[[c,r]], 可加對稱軸/斜線 ----
+  function gridShape(cells, opt) {
+    opt = opt || {};
+    var CS = 22, maxC = 0, maxR = 0;
+    for (var i = 0; i < cells.length; i++) { maxC = Math.max(maxC, cells[i][0]); maxR = Math.max(maxR, cells[i][1]); }
+    var w = (maxC + 1) * CS + 4, h = (maxR + 1) * CS + 4, r = '';
+    for (var k = 0; k < cells.length; k++) {
+      r += '<rect x="' + (cells[k][0] * CS + 2) + '" y="' + (cells[k][1] * CS + 2) + '" width="' + CS + '" height="' + CS +
+        '" rx="3" fill="' + (opt.fill || 'var(--c-math)') + '"/>';
+    }
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-hidden="true" stroke="var(--geo-stroke)" stroke-width="2">' + r + '</svg>';
+  }
+  // 幾何圖形（多邊形）+ 候選對稱線
+  function polyShapeSVG(kind, line) {
+    var body = '', W = 120, H = 120;
+    var fill = 'var(--c-math)';
+    if (kind === 'rect') body = '<rect x="20" y="38" width="80" height="44" fill="' + fill + '"/>';
+    else if (kind === 'square') body = '<rect x="30" y="30" width="60" height="60" fill="' + fill + '"/>';
+    else if (kind === 'isotri') body = '<polygon points="60,20 95,95 25,95" fill="' + fill + '"/>';
+    else if (kind === 'equitri') body = '<polygon points="60,22 96,92 24,92" fill="' + fill + '"/>';
+    var ln = '';
+    if (line === 'vmid') ln = '<line x1="60" y1="10" x2="60" y2="110" stroke="var(--c-wrong)" stroke-width="3" stroke-dasharray="6 4"/>';
+    else if (line === 'hmid') ln = '<line x1="10" y1="60" x2="110" y2="60" stroke="var(--c-wrong)" stroke-width="3" stroke-dasharray="6 4"/>';
+    else if (line === 'diag') ln = '<line x1="16" y1="16" x2="104" y2="104" stroke="var(--c-wrong)" stroke-width="3" stroke-dasharray="6 4"/>';
+    else if (line === 'voff') ln = '<line x1="84" y1="10" x2="84" y2="110" stroke="var(--c-wrong)" stroke-width="3" stroke-dasharray="6 4"/>';
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-hidden="true" stroke="var(--geo-stroke)" stroke-width="2" stroke-linejoin="round">' + body + ln + '</svg>';
+  }
+
+  // 旋轉題用：L 型與其鏡像 J 型的四個方向（人工核對、確定正確）
+  var L_SHAPES = {
+    L0:  [[0,0],[0,1],[0,2],[1,2]],
+    L90: [[0,0],[1,0],[2,0],[0,1]],
+    L180:[[0,0],[1,0],[1,1],[1,2]],
+    L270:[[2,0],[0,1],[1,1],[2,1]]
+  };
+  var J_SHAPES = {
+    J0:  [[1,0],[1,1],[0,2],[1,2]],
+    J90: [[0,0],[0,1],[1,1],[2,1]],
+    J270:[[0,0],[1,0],[2,0],[2,1]]
+  };
+  var T_SHAPE = [[0,0],[1,0],[2,0],[1,1]];
+
+  // =====================================================================
+  // 立體資料（面／邊／頂點：逐筆核對；曲面 solids 定性、此年段不數邊／頂點）
+  // 正方體 6·12·8｜長方體 6·12·8｜三角柱 5·9·6｜四角錐 5·8·5｜三角錐(四面體) 4·6·4
+  // =====================================================================
+  var SOLIDS = {
+    cube:      { name: '正方體', F: 6, E: 12, V: 8, real: '骰子' },
+    cuboid:    { name: '長方體', F: 6, E: 12, V: 8, real: '牙膏盒' },
+    triprism:  { name: '三角柱', F: 5, E: 9,  V: 6, real: '帳篷' },
+    sqpyramid: { name: '四角錐', F: 5, E: 8,  V: 5, real: '金字塔' },
+    tetra:     { name: '三角錐', F: 4, E: 6,  V: 4, real: '四面骰子' },
+    sphere:    { name: '球',     curved: '有 1 個曲面，沒有平平的面、也沒有邊和頂點', real: '皮球' },
+    cylinder:  { name: '圓柱',   curved: '有 2 個圓形的平面和 1 個曲面（旁邊圓圓的）', real: '鋁罐' },
+    cone:      { name: '圓錐',   curved: '有 1 個圓形的平面和 1 個曲面，還有一個尖尖的頂端', real: '冰淇淋甜筒' }
+  };
+
+  // =====================================================================
+  // 課程內容（全繁體中文）。計分步型別：choose / count / match / build / mirror
+  // 每個計分步只呼叫一次 record('math', ...)。非計分：fact。
+  // =====================================================================
+  var SCORED = { choose: 1, count: 1, match: 1, build: 1, mirror: 1 };
+
+  var UNITS = [
+    // ---------------- U1：立體形狀辨識 ----------------
+    {
+      id: 'u1', emoji: '🧊', name: '立體形狀辨識', blueprint: '藍圖 1',
+      steps: [
+        { t: 'fact', bot: '認識立體', s: '生活裡到處都是「立體」：積木、罐子、球……先來認得它們的名字！',
+          visualHtml: solidSVG('cube') + solidSVG('cylinder') + solidSVG('sphere'),
+          more: '平平的叫「面」，圓圓的叫「曲面」。正方體、長方體有平平的面；球、圓柱、圓錐有圓圓的曲面。' },
+        { t: 'choose', s: '這是什麼立體？', visualHtml: solidSVG('cube'),
+          opts: ['正方體', '球', '圓柱'], ans: 0,
+          why: '六個面一樣大、都是正方形，就是「正方體」（像骰子）。' },
+        { t: 'choose', s: '這是什麼立體？', visualHtml: solidSVG('cylinder'),
+          opts: ['圓錐', '圓柱', '正方體'], ans: 1,
+          why: '上下兩個圓形平面、旁邊一圈曲面，就是「圓柱」（像鋁罐）。' },
+        { t: 'choose', s: '這是什麼立體？', visualHtml: solidSVG('cone'),
+          opts: ['圓錐', '球', '三角柱'], ans: 0,
+          why: '一個圓形底、尖尖的頂端，就是「圓錐」（像冰淇淋甜筒）。' },
+        { t: 'choose', s: '這是什麼立體？', visualHtml: solidSVG('triprism'),
+          opts: ['四角錐', '三角柱', '圓柱'], ans: 1,
+          why: '兩端是三角形、中間三個長方形面，像帳篷，就是「三角柱」。' },
+        { t: 'match', s: '把立體連到生活中長得像它的東西！',
+          labels: { left: '立體', right: '生活物品' },
+          pairs: [
+            { a: '正方體', ai: 'cube', b: '🎲 骰子' },
+            { a: '圓柱', ai: 'cylinder', b: '🥫 鋁罐' },
+            { a: '圓錐', ai: 'cone', b: '🍦 甜筒' },
+            { a: '球', ai: 'sphere', b: '⚽ 皮球' }
+          ],
+          why: '把立體和生活物品配起來，記名字就更容易了！' },
+        { t: 'choose', s: '下面哪一個是「曲面」立體（旁邊圓圓的，不是平的面）？',
+          visualHtml: solidSVG('sphere') + solidSVG('cube'),
+          opts: ['球', '正方體'], ans: 0,
+          why: '球是圓圓的曲面；正方體是平平的面。球、圓柱、圓錐都有曲面。' }
+      ]
+    },
+
+    // ---------------- U2：面·邊·頂點（限多面體） ----------------
+    {
+      id: 'u2', emoji: '📐', name: '面·邊·頂點', blueprint: '藍圖 2',
+      steps: [
+        { t: 'fact', bot: '三個新名詞', s: '面＝平平的一片；邊＝兩個面相接的一條線；頂點＝尖尖的角。',
+          visualHtml: solidSVG('cube'),
+          more: '這一關只數「多面體」（每一面都是平的，像正方體、長方體、三角柱）。球、圓柱、圓錐有曲面，這個年段我們不數它們的邊和頂點喔。' },
+        { t: 'count', s: '正方體有幾個「面」？', visualHtml: solidSVG('cube'), answer: 6,
+          hint: '上、下、前、後、左、右，一共 6 個正方形的面。',
+          why: '正方體有 6 個面（上下、前後、左右各一個）。' },
+        { t: 'count', s: '正方體有幾條「邊」？', visualHtml: solidSVG('cube'), answer: 12,
+          hint: '上面一圈 4 條、下面一圈 4 條、直直的 4 條，4＋4＋4＝12。',
+          why: '正方體有 12 條邊。' },
+        { t: 'count', s: '正方體有幾個「頂點」？', visualHtml: solidSVG('cube'), answer: 8,
+          hint: '上面 4 個角、下面 4 個角，4＋4＝8。',
+          why: '正方體有 8 個頂點。' },
+        { t: 'count', s: '三角柱有幾個「面」？', visualHtml: solidSVG('triprism'), answer: 5,
+          hint: '兩端 2 個三角形，中間 3 個長方形，2＋3＝5。',
+          why: '三角柱有 5 個面（2 個三角形＋3 個長方形）。' },
+        { t: 'count', s: '三角柱有幾個「頂點」？', visualHtml: solidSVG('triprism'), answer: 6,
+          hint: '一端三角形 3 個角、另一端 3 個角，3＋3＝6。',
+          why: '三角柱有 6 個頂點。' },
+        { t: 'count', s: '四角錐（金字塔）有幾個「頂點」？', visualHtml: solidSVG('sqpyramid'), answer: 5,
+          hint: '底部正方形 4 個角，加上最上面尖尖的 1 個，4＋1＝5。',
+          why: '四角錐有 5 個頂點（底 4 個＋頂端 1 個）。' },
+        { t: 'choose', s: '關於「圓柱」的面，哪一句是對的？', visualHtml: solidSVG('cylinder'),
+          opts: ['有 2 個圓形的平面和 1 個曲面', '有 6 個平平的面', '有 8 個頂點'], ans: 0,
+          why: '圓柱有 2 個圓形平面和 1 個曲面。因為有曲面，這個年段我們不數它的邊和頂點。' }
+      ]
+    },
+
+    // ---------------- U3：展開圖 ----------------
+    {
+      id: 'u3', emoji: '📦', name: '展開圖（能不能摺成正方體）', blueprint: '藍圖 3',
+      steps: [
+        { t: 'fact', bot: '攤平的正方體', s: '把正方體「攤平」得到的平面圖，叫做「展開圖」。',
+          visualHtml: netSVG([[1,0],[0,1],[1,1],[2,1],[1,2],[1,3]]),
+          more: '正方體的展開圖剛剛好有 11 種（很多種，不用背也不用一個一個找）。這一關我們只練習「看得出來能不能摺成正方體」。小提醒：如果圖裡有 4 個方格排成 2×2 的一塊，就摺不起來（會疊在一起）。' },
+        { t: 'choose', s: '這張展開圖能摺成正方體嗎？', visualHtml: netSVG([[1,0],[0,1],[1,1],[2,1],[1,2],[1,3]]),
+          opts: ['能摺成正方體', '不能'], ans: 0,
+          why: '這是十字形展開圖，正好 6 個面：中間直排當四面牆，上下兩個當蓋子和底，摺起來剛好圍成正方體。' },
+        { t: 'choose', s: '這張展開圖能摺成正方體嗎？', visualHtml: netSVG([[0,0],[1,0],[2,0],[0,1],[1,1],[2,1]]),
+          opts: ['能摺成正方體', '不能'], ans: 1,
+          why: '它是 2×3 的一整塊，裡面有 2×2 的方格，摺的時候會疊在一起，不能摺成正方體。' },
+        { t: 'choose', s: '這張展開圖能摺成正方體嗎？', visualHtml: netSVG([[0,0],[0,1],[1,1],[1,2],[2,2],[2,3]]),
+          opts: ['能摺成正方體', '不能'], ans: 0,
+          why: '這是階梯形（2-2-2）展開圖，六個面錯開排成三階，摺起來每個面剛好各就各位，能圍成正方體。' },
+        { t: 'choose', s: '這張展開圖能摺成正方體嗎？', visualHtml: netSVG([[0,0],[1,0],[2,0],[3,0],[4,0],[5,0]]),
+          opts: ['能摺成正方體', '不能'], ans: 1,
+          why: '6 個面排成一直排，摺起來會繞一圈疊在一起，不能摺成正方體。' },
+        { t: 'choose', s: '這張展開圖能摺成正方體嗎？', visualHtml: netSVG([[1,0],[0,1],[1,1],[2,1],[3,1],[3,2]]),
+          opts: ['能摺成正方體', '不能'], ans: 0,
+          why: '中間一排 4 個當四面牆，上下各接 1 個當蓋子和底，摺起來剛好圍成正方體。' },
+        { t: 'choose', s: '標準骰子相對的兩面點數加起來是 7。那麼 5 點的對面是幾點？',
+          opts: ['2 點', '6 點', '3 點'], ans: 0,
+          why: '標準骰子相對面和為 7，所以 5 的對面是 7－5＝2 點。（只有標準骰子才這樣喔。）' },
+        { t: 'choose', s: '把這張展開圖摺成盒子，正中間標示「3」的面，對面會是哪一個？',
+          visualHtml: netSVG([[1,0],[0,1],[1,1],[2,1],[1,2],[1,3]], ['1', '2', '3', '5', '4', '6']),
+          opts: ['6 號面', '2 號面', '5 號面'], ans: 0,
+          why: '直排的 1、3、4、6 摺起來繞成四面牆，隔一格的兩面相對：3 的對面是 6。（左右的 2 和 5 才是另一對。）' }
+      ]
+    },
+
+    // ---------------- U4：積木堆疊·數數量（含隱藏積木） ----------------
+    {
+      id: 'u4', emoji: '🧱', name: '積木堆疊·數數量', blueprint: '藍圖 4',
+      steps: [
+        { t: 'fact', bot: '藏起來的積木', s: '數積木有個規則：上面有積木，下面一定有積木撐著（不會浮在空中）。',
+          visualHtml: isoStack([[1, 2]]),
+          more: '所以有些積木被前面或上面的擋住、看不到，但它們一定存在，要一起算進去！' },
+        { t: 'count', s: '這裡一共有幾個積木？', visualHtml: isoStack([[2, 1, 3]]), answer: 6,
+          hint: '三柱由左到右是 2 個、1 個、3 個：2＋1＋3＝6。',
+          why: '把每一柱的積木加起來：2＋1＋3＝6 個。' },
+        { t: 'count', s: '這裡一共有幾個積木？（小心藏在角落的！）', visualHtml: isoStack([[2, 2], [2, 2]]), answer: 8,
+          hint: '底部 2×2 有 4 個，疊 2 層：4＋4＝8。看起來像 7 個，但最裡面角落還藏了 1 個！',
+          why: '底部 4 個位置、每個疊 2 層，4＋4＝8 個。最裡面下層那個被擋住了，也要算。' },
+        { t: 'count', s: '這裡一共有幾個積木？', visualHtml: isoStack([[1, 2], [2, 3]]), answer: 8,
+          hint: '四柱高度是 1、2、2、3：1＋2＋2＋3＝8。',
+          why: '把每一柱加起來：1＋2＋2＋3＝8 個（後面被擋住的也要算）。' },
+        { t: 'build', s: '照著阿方的目標，把三柱蓋成一樣高！', target: [1, 3, 2], maxH: 4,
+          why: '三柱分別要 1、3、2 個。用「＋」加積木、用「－」拿掉，蓋成和目標一樣就完成！' }
+      ]
+    },
+
+    // ---------------- U5：體積入門（數單位立方） ----------------
+    {
+      id: 'u5', emoji: '🧮', name: '體積入門：數滿滿的積木', blueprint: '藍圖 5',
+      steps: [
+        { t: 'fact', bot: '一層一層數', s: '把盒子裝滿一樣大的小積木，數一數有幾個，就知道它的「體積」有多大。',
+          visualHtml: isoStack([[2, 2], [2, 2]]),
+          more: '我們用「一層一層數、再加起來」的方法（重複加法）。這個年段不用公式，數得出來就很棒！' },
+        { t: 'count', s: '這一層鋪滿了幾個小積木？', visualHtml: isoStack([[1, 1, 1], [1, 1, 1]]), answer: 6,
+          hint: '一排 3 個、有 2 排：3＋3＝6，或數 2×3＝6。',
+          why: '這一層是 2 排、每排 3 個：3＋3＝6 個。' },
+        { t: 'count', s: '一層有 4 個，疊成 2 層，一共幾個小積木？', visualHtml: isoStack([[2, 2], [2, 2]]), answer: 8,
+          hint: '一層 4 個，2 層就是 4＋4＝8。',
+          why: '一層 4 個，兩層：4＋4＝8 個。' },
+        { t: 'count', s: '一層有 6 個，疊成 2 層，這個盒子裝了幾個小積木？', visualHtml: isoStack([[2, 2, 2], [2, 2, 2]]), answer: 12,
+          hint: '一層 6 個，2 層：6＋6＝12。',
+          why: '一層 6 個，兩層：6＋6＝12 個。一層一層加起來就對了！' },
+        { t: 'choose', s: '要知道盒子裡裝了幾個小積木，最好的方法是？',
+          opts: ['一層一層數，再把每層加起來', '用尺量外面就好', '隨便猜一個數字'], ans: 0,
+          why: '先數一層有幾個，再看有幾層，一層一層加起來（重複加法），就能算出來。' }
+      ]
+    },
+
+    // ---------------- U6：心像旋轉與對稱 ----------------
+    {
+      id: 'u6', emoji: '🔄', name: '心像旋轉與對稱', blueprint: '藍圖 6',
+      steps: [
+        { t: 'fact', bot: '轉一轉、照鏡子', s: '「旋轉」是把圖形轉個方向，形狀不變；「鏡射」像照鏡子，會左右相反。',
+          visualHtml: gridShape(L_SHAPES.L0) + gridShape(J_SHAPES.J0),
+          more: '轉一轉還是同一塊；照鏡子就變成相反的另一塊（像左手和右手）。這一關我們也要找「對稱軸」——沿著它對摺，兩邊會完全疊在一起。' },
+        { t: 'choose', s: '上面這塊積木「轉一轉」之後，會變成下面哪一個？（不可以照鏡子！）',
+          visualHtml: gridShape(L_SHAPES.L0),
+          optShapes: [gridShape(L_SHAPES.L270), gridShape(J_SHAPES.J90), gridShape(T_SHAPE)], ans: 0,
+          why: '答案是「同一塊積木轉過來」的那個——方向不同，但形狀完全一樣。其他兩個：一個是照鏡子的相反塊（左右顛倒），一個根本是不同形狀。' },
+        { t: 'choose', s: '再看一次！這塊積木「轉一轉」會變成下面哪一個？',
+          visualHtml: gridShape(J_SHAPES.J0),
+          optShapes: [gridShape(L_SHAPES.L90), gridShape(J_SHAPES.J270), gridShape(T_SHAPE)], ans: 1,
+          why: '答案是「同一塊只是轉了方向、形狀不變」的那個。另外有一塊是它照鏡子的相反塊（左右顛倒），很容易看錯，要小心！還有一塊是不同形狀。' },
+        { t: 'choose', s: '正方形有幾條對稱軸？', visualHtml: polyShapeSVG('square'),
+          opts: ['4 條', '2 條', '1 條'], ans: 0,
+          why: '正方形有 4 條對稱軸：上下、左右各一條，還有兩條對角線。' },
+        { t: 'choose', s: '長方形（不是正方形）有幾條對稱軸？', visualHtml: polyShapeSVG('rect'),
+          opts: ['2 條', '4 條', '1 條'], ans: 0,
+          why: '長方形有 2 條對稱軸（上下對摺、左右對摺）。它的對角線不是對稱軸喔。' },
+        { t: 'choose', s: '哪一條紅色虛線，是這個長方形的「對稱軸」（沿著它對摺兩邊會完全疊合）？',
+          optShapes: [polyShapeSVG('rect', 'vmid'), polyShapeSVG('rect', 'diag'), polyShapeSVG('rect', 'voff')], ans: 0,
+          why: '從正中間直直切下的那條，對摺後兩邊完全一樣，是對稱軸。斜的對角線、或偏一邊的線都不行。' },
+        { t: 'mirror', s: '左邊已經畫好了，請點右邊的格子，讓圖形「左右對稱」！',
+          cols: 6, rows: 4, left: [[0, 1], [1, 1], [2, 0], [2, 1], [2, 2], [1, 3]],
+          why: '對稱軸在正中間，右邊要和左邊「照鏡子」一樣：每個左邊的格子，在右邊對應的位置也要有一個。' }
+      ]
+    },
+
+    // ---------------- U7：空間感進階（在腦中蓋、轉、切） ----------------
+    {
+      id: 'u7', emoji: '🧭', name: '空間感進階：在腦中數、切、攤開', blueprint: '藍圖 7',
+      steps: [
+        { t: 'fact', bot: '腦中的照相機', s: '想像立體的時候，記住幾個小訣竅，腦中的畫面就會清楚很多。',
+          visualHtml: isoStack([[2, 2], [2, 3]]),
+          more: '① 數積木時，被前面或上面擋住、看不到的，也一定要一起數進去。② 想「切面」時，想像一把刀直直切過去，切口就是那個形狀。③ 想「從某個方向看」時，就把自己的眼睛移到那個方向，看它的輪廓。④ 看展開圖時，先找「挨在一起的相鄰面」，剩下沒挨著的那一面，就是它的對面。' },
+        { t: 'count', s: '這堆積木一共有幾個？（後排被擋住的也要數進去！）', visualHtml: isoStack([[2, 2], [2, 3]]), answer: 9,
+          hint: '前排（看得到）2＋3＝5，後排（被擋住）2＋2＝4，合起來 5＋4＝9。', why: '把每一柱加起來：前排 2＋3、後排 2＋2，一共 9 個，後排被擋住的也算進去。' },
+        { t: 'count', s: '這堆積木高高低低的，一共有幾個？（後排被前排擋住的也要推出來數！）', visualHtml: isoStack([[3, 2], [3, 2]]), answer: 10,
+          hint: '四根柱子的高度是 3、2、3、2：3＋2＋3＋2＝10。後排被前排擋住，也要一起數。', why: '四柱高度 3、2、3、2，加起來 3＋2＋3＋2＝10 個；後排下面被擋住的也要算進去。' },
+        { t: 'choose', s: '拿一把刀，和桌面平行、直直切過一個正方體（骰子）。切開後的切面是什麼形狀？',
+          visualHtml: solidSVG('cube'), opts: ['正方形', '三角形', '圓形'], ans: 0,
+          why: '平行於一個面直直切下去，切出來的切面就和那個面一模一樣，是正方形。' },
+        { t: 'choose', s: '圓柱像一個鋁罐。和底面平行切一刀，切面會是什麼形狀？',
+          visualHtml: solidSVG('cylinder'), opts: ['圓形', '正方形', '三角形'], ans: 0,
+          why: '圓柱平行底面切，切面就和圓圓的底面一樣，是圓形。' },
+        { t: 'choose', s: '一個牙膏盒（長方體）平放在桌上，從正上方往下看，看到的形狀是？',
+          visualHtml: solidSVG('cuboid'), opts: ['長方形', '三角形', '圓形'], ans: 0,
+          why: '從正上方往下看長方體，看到的是它上面那一面——一個長方形。' },
+        { t: 'choose', s: '這是一個骰子的展開圖。摺起來之後，和 E 面正對面（相對）的是哪一面？',
+          visualHtml: netSVG([[1, 0], [1, 1], [1, 2], [1, 3], [0, 1], [2, 1]], ['A', 'B', 'C', 'D', 'E', 'F']),
+          opts: ['F', 'A', 'C'], ans: 0,
+          why: 'E 和 F 分別黏在 B 的左邊和右邊，摺成骰子後正好朝相反方向，所以 E 的對面是 F。（中間直排 A、B、C、D 摺成一圈：A 對 C、B 對 D。）' },
+        { t: 'choose', s: '一個鋁罐（圓柱）直直立在桌上，從正前方平平地看過去，看到的輪廓比較像哪個形狀？',
+          visualHtml: solidSVG('cylinder'), opts: ['長方形', '圓形', '三角形'], ans: 0,
+          why: '從正前方看直立的圓柱，看到的是它側面攤平的輪廓——一個長方形（高是罐子的高、寬是罐子的粗細）。從正上方看才是圓形。' }
+      ]
+    },
+
+    // ---------------- REVIEW：工地驗收（交錯 + Leitner） ----------------
+    { id: 'review', emoji: '🏗️', name: '工地驗收（綜合複習）', blueprint: '複習藍圖', review: true, steps: [] }
+  ];
+
+  // ---- 建立題目登錄簿（供 Leitner 複習調用）：id = unitId#index（僅計分步） ----
+  var ITEM_REGISTRY = {};
+  (function buildRegistry() {
+    for (var u = 0; u < UNITS.length; u++) {
+      var unit = UNITS[u];
+      if (unit.review) continue;
+      for (var i = 0; i < unit.steps.length; i++) {
+        var st = unit.steps[i];
+        if (SCORED[st.t]) { st.id = unit.id + '#' + i; ITEM_REGISTRY[st.id] = st; }
+      }
+    }
+  })();
+
+  // 動態組出複習藍圖的步驟：先放待複習（box<3）題，交錯打散；不足再補新鮮題。
+  function buildReviewSteps() {
+    var ids = shuffle(dueItems().slice());
+    var steps = [];
+    for (var i = 0; i < ids.length && steps.length < 8; i++) steps.push(ITEM_REGISTRY[ids[i]]);
+    if (steps.length < 5) {
+      var pool = [];
+      for (var id in ITEM_REGISTRY) if (ITEM_REGISTRY.hasOwnProperty(id) && steps.indexOf(ITEM_REGISTRY[id]) === -1) pool.push(ITEM_REGISTRY[id]);
+      shuffle(pool);
+      for (var k = 0; k < pool.length && steps.length < 6; k++) steps.push(pool[k]);
+    }
+    // 交錯：避免同單元連續出現
+    shuffle(steps);
+    return steps.length ? steps : [];
+  }
+
+  // =====================================================================
+  // DOM 參照
+  // =====================================================================
+  var screenMenu = $('screen-menu'), screenPlay = $('screen-play');
+  var unitList = $('unit-list'), stage = $('stage'), stepDots = $('step-dots'), playTitle = $('play-title');
+  var cur = null; // { unit, idx, correctCount, total, steps }
+
+  function scoringSteps(steps) { var n = 0; for (var i = 0; i < steps.length; i++) if (SCORED[steps[i].t]) n++; return n; }
+
+  // =====================================================================
+  // 選單渲染
+  // =====================================================================
+  function renderMenu() {
+    var doneCount = 0, playable = 0;
+    for (var i = 0; i < UNITS.length; i++) {
+      if (UNITS[i].review) continue;
+      playable++;
+      if (progress.units[UNITS[i].id] && progress.units[UNITS[i].id].done) doneCount++;
+    }
+    $('ov-done').textContent = doneCount + '/' + playable;
+
+    var p = null;
+    try { p = window.Game && window.Game.getProfile ? window.Game.getProfile() : null; } catch (e) {}
+    $('ov-xp').textContent = (p && p.subjects && p.subjects.math ? p.subjects.math.xp : 0);
+    var due = dueItems().length;
+    $('ov-due').textContent = due;
+
+    if (doneCount > 0) {
+      $('hello-text').textContent = '歡迎回來，小小建築師！你已經完成 ' + doneCount + ' 張藍圖！';
+      $('hello-sub').textContent = doneCount >= playable ? '每一張藍圖都蓋好了，太厲害了！可以去「工地驗收」複習喔。🏆' : '接著挑戰還沒蓋過的藍圖吧！';
+    }
+
+    unitList.innerHTML = '';
+    for (var u = 0; u < UNITS.length; u++) {
+      (function (unit, num) {
+        var st = progress.units[unit.id] || {};
+        var done = !!st.done;
+        var stars = st.best || 0;
+        var total = unit.review ? 0 : scoringSteps(unit.steps);
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'card u-card' + (unit.review ? ' is-flagship' : '');
+        card.setAttribute('aria-label', unit.blueprint + '：' + unit.name);
+        var dots = '';
+        for (var d = 0; d < total; d++) dots += '<i class="' + (d < stars ? 'on' : '') + '"></i>';
+        var footRight = unit.review
+          ? '<span class="geo-due">🔁 待複習 ' + due + ' 題</span>'
+          : '<span class="u-card__dots" aria-hidden="true">' + dots + '</span>';
+        card.innerHTML =
+          '<div class="u-card__top">' +
+            '<span class="u-card__icon" aria-hidden="true">' + unit.emoji + '</span>' +
+            '<div>' +
+              '<div class="u-card__blueprint">' + unit.blueprint + '</div>' +
+              '<div class="u-card__name">' + unit.name + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="u-card__foot">' +
+            '<span class="u-card__status ' + (done ? 'done' : 'todo') + '">' + (done ? '✅ 蓋好了' : ('▶️ 開始蓋' + (unit.review ? '' : '（共 ' + total + ' 題）'))) + '</span>' +
+            footRight +
+          '</div>';
+        card.addEventListener('click', function () { startUnit(unit); });
+        unitList.appendChild(card);
+      })(UNITS[u], u + 1);
+    }
+  }
+
+  // =====================================================================
+  // 遊玩流程
+  // =====================================================================
+  function show(screen) {
+    screenMenu.classList.remove('active'); screenPlay.classList.remove('active');
+    screen.classList.add('active'); window.scrollTo(0, 0);
+  }
+
+  function startUnit(unit) {
+    var steps = unit.review ? buildReviewSteps() : unit.steps;
+    if (unit.review && !steps.length) {
+      // 沒有待複習題也沒有題庫時的保底（理論上題庫恆存在）。
+      toast('目前沒有需要複習的題目，先去蓋新藍圖吧！', 'info');
+      return;
+    }
+    cur = { unit: unit, idx: 0, correctCount: 0, total: scoringSteps(steps), steps: steps };
+    playTitle.textContent = unit.emoji + ' ' + unit.name;
+    show(screenPlay);
+    renderStep();
+  }
+
+  function renderStepDots() {
+    stepDots.innerHTML = '';
+    for (var i = 0; i < cur.steps.length; i++) {
+      var b = document.createElement('i');
+      if (i < cur.idx) b.className = 'on';
+      else if (i === cur.idx) b.className = 'cur';
+      stepDots.appendChild(b);
+    }
+  }
+
+  function next() { cur.idx++; if (cur.idx >= cur.steps.length) finishUnit(); else renderStep(); }
+
+  function ttsButton(text) {
+    /* 已移除 TTS：本頁非英文發音頁，不再顯示朗讀按鈕 */
+    return '';
+  }
+  function bindTts(root) {
+    /* 已移除 TTS：本頁非英文發音頁，無朗讀按鈕可綁定 */
+  }
+
+  function scoreOnce(step, correct) {
+    record(correct);            // 每個計分步只計一次分
+    leitnerUpdate(step.id, correct);
+    if (correct) cur.correctCount++;
+  }
+
+  function renderStep() {
+    renderStepDots();
+    var step = cur.steps[cur.idx];
+    var fn = { fact: renderFact, choose: renderChoose, count: renderCount, match: renderMatch, build: renderBuild, mirror: renderMirror }[step.t];
+    if (fn) fn(step); else next();
+  }
+
+  // ---- fact（非計分：示範／範例先行） ----
+  function renderFact(step) {
+    stage.innerHTML =
+      '<div class="q-stage">' +
+        (step.visualHtml ? '<div class="geo-figure">' + step.visualHtml + '</div>' : '') +
+        '<p class="q-prompt">' + step.s + '</p>' +
+        '<div class="q-toolrow">' + ttsButton(step.s) +
+          (step.more ? '<button type="button" class="btn" id="btn-more">💡 看阿方說更多</button>' : '') + '</div>' +
+        (step.more ? '<div class="geo-hintbox" id="reveal" style="text-align:center">' + step.more + '</div>' : '') +
+      '</div>' +
+      '<div class="q-actions"><button type="button" class="btn btn-primary btn-block" id="btn-next">開始挑戰 ➡️</button></div>';
+    bindTts(stage);
+    if (step.more) $('btn-more').addEventListener('click', function () { $('reveal').classList.add('show'); speak(step.more); });
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // ---- choose（tap-pick；可帶題目圖與選項圖） ----
+  function renderChoose(step) {
+    var order = [];
+    var optCount = (step.optShapes || step.opts).length;   // optShapes 題沒有 opts，改用實際存在的選項陣列長度
+    for (var oi = 0; oi < optCount; oi++) order.push(oi);
+    shuffle(order);
+    var hasShapes = !!step.optShapes;
+    var optsHtml = '';
+    for (var k = 0; k < order.length; k++) {
+      var oi2 = order[k];
+      var inner = hasShapes
+        ? step.optShapes[oi2]
+        : '<span>' + step.opts[oi2] + '</span><span class="q-opt__mark" aria-hidden="true"></span>';
+      optsHtml += '<button type="button" class="q-opt' + (hasShapes ? ' geo-opt-fig' : '') + '"' + (hasShapes ? ' aria-label="圖形選項 ' + (k + 1) + '"' : '') + ' data-i="' + oi2 + '">' + inner + '</button>';
+    }
+    stage.innerHTML =
+      '<div class="q-stage">' +
+        (step.visualHtml ? '<div class="geo-figure">' + step.visualHtml + '</div>' : '') +
+        '<p class="q-prompt">' + step.s + '</p>' +
+        '<div class="q-toolrow">' + ttsButton(step.s) + '</div>' +
+        '<div class="q-options">' + optsHtml + '</div>' +
+        '<div class="q-feedback" id="reveal"></div>' +
+      '</div>' +
+      '<div class="q-actions" id="afteract" style="display:none">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">繼續 ➡️</button></div>';
+    bindTts(stage);
+
+    var answered = false;
+    var btns = stage.querySelectorAll('.q-opt');
+    for (var b = 0; b < btns.length; b++) {
+      btns[b].addEventListener('click', function () {
+        var i = parseInt(this.getAttribute('data-i'), 10);
+        var isCorrect = (i === step.ans);
+        var markEl = this.querySelector('.q-opt__mark');
+        if (answered) {
+          this.classList.add(isCorrect ? 'correct' : 'wrong');
+          if (markEl) markEl.textContent = isCorrect ? '✅' : '❌';
+          return;
+        }
+        answered = true;
+        scoreOnce(step, isCorrect);
+        if (isCorrect) {
+          this.classList.add('correct'); if (markEl) markEl.textContent = '✅';
+        } else {
+          this.classList.add('wrong'); if (markEl) markEl.textContent = '❌';
+          var correctBtn = stage.querySelector('.q-opt[data-i="' + step.ans + '"]');
+          if (correctBtn) { correctBtn.classList.add('correct'); var m2 = correctBtn.querySelector('.q-opt__mark'); if (m2) m2.textContent = '✅'; }
+        }
+        var rev = $('reveal');
+        rev.innerHTML = (isCorrect ? '答對了！' : '沒關係，再看看喔～答案是這個！') + (step.why || '');
+        rev.classList.add('show', isCorrect ? 'is-ok' : 'is-no');
+        $('afteract').style.display = 'flex';
+        var all = stage.querySelectorAll('.q-opt'); for (var q = 0; q < all.length; q++) all[q].disabled = true;
+      });
+    }
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // ---- count（面／邊／頂點／積木數：計數器 + 確認，比對精確值） ----
+  function renderCount(step) {
+    var val = 0;
+    stage.innerHTML =
+      '<div class="q-stage">' +
+        '<div class="geo-figure">' + step.visualHtml + '</div>' +
+        '<p class="q-prompt">' + step.s + '</p>' +
+        '<div class="q-toolrow">' + ttsButton(step.s) +
+          (step.hint ? '<button type="button" class="btn" id="btn-hint">💡 給我提示</button>' : '') + '</div>' +
+        (step.hint ? '<div class="geo-hintbox" id="hintbox">' + step.hint + '</div>' : '') +
+        '<div class="geo-counter">' +
+          '<button type="button" id="c-minus" aria-label="少一個">－</button>' +
+          '<span class="geo-count-val" id="c-val">0</span>' +
+          '<button type="button" id="c-plus" aria-label="多一個">＋</button>' +
+        '</div>' +
+        '<div class="q-feedback" id="reveal"></div>' +
+      '</div>' +
+      '<div class="q-actions">' +
+        '<button type="button" class="btn btn-primary" id="btn-confirm">就是這麼多 ✓</button>' +
+        '<button type="button" class="btn btn-primary" id="btn-next" style="display:none">繼續 ➡️</button></div>';
+    bindTts(stage);
+    if (step.hint) $('btn-hint').addEventListener('click', function () { $('hintbox').classList.add('show'); });
+
+    function paint() { $('c-val').textContent = val; }
+    $('c-plus').addEventListener('click', function () { if (val < 99) { val++; paint(); } });
+    $('c-minus').addEventListener('click', function () { if (val > 0) { val--; paint(); } });
+
+    var answered = false;
+    $('btn-confirm').addEventListener('click', function () {
+      if (answered) return;
+      answered = true;
+      var ok = (val === step.answer);
+      scoreOnce(step, ok);
+      var rev = $('reveal');
+      rev.innerHTML = (ok ? '答對了！' : '沒關係～正確答案是 ' + step.answer + ' 個。') + (step.why || '');
+      rev.classList.add('show', ok ? 'is-ok' : 'is-no');
+      $('c-val').textContent = step.answer; // 演示正確答案，讓孩子帶著「看懂了」離開
+      if (step.hint) $('hintbox').classList.add('show');
+      $('c-plus').disabled = true; $('c-minus').disabled = true;
+      this.style.display = 'none';
+      $('btn-next').style.display = 'inline-flex';
+      if (ok) toast('數得好準！🧮', 'badge');
+    });
+    $('btn-next').addEventListener('click', next);
+    paint();
+  }
+
+  // ---- match（立體↔實物 / net↔立體；全對才過） ----
+  function renderMatch(step) {
+    var lefts = step.pairs.map(function (p, i) { return { i: i, svg: p.ai ? solidSVG(p.ai, 'geo-svg-sm') : '', txt: p.a }; });
+    var rights = step.pairs.map(function (p, i) { return { i: i, txt: p.b }; });
+    shuffle(lefts); shuffle(rights);
+    var lh = '', rh = '';
+    for (var a = 0; a < lefts.length; a++)
+      lh += '<button type="button" class="geo-tile geo-left" data-i="' + lefts[a].i + '">' + (lefts[a].svg || '') + '<span>' + lefts[a].txt + '</span></button>';
+    for (var b = 0; b < rights.length; b++)
+      rh += '<button type="button" class="geo-tile geo-right" data-i="' + rights[b].i + '">' + rights[b].txt + '</button>';
+
+    stage.innerHTML =
+      '<div class="q-stage">' +
+        '<p class="q-prompt">' + step.s + '</p>' +
+        '<div class="q-toolrow">' + ttsButton(step.s) + '</div>' +
+        '<div class="geo-match">' +
+          '<div><div class="geo-match-lbl">' + step.labels.left + '</div>' + lh + '</div>' +
+          '<div><div class="geo-match-lbl">' + step.labels.right + '</div>' + rh + '</div>' +
+        '</div>' +
+        '<div class="q-feedback" id="reveal">' + (step.why || '') + '</div>' +
+      '</div>' +
+      '<div class="q-actions" id="afteract" style="display:none">' +
+        '<button type="button" class="btn btn-primary btn-block" id="btn-next">全部配對好了，繼續 ➡️</button></div>';
+    bindTts(stage);
+
+    var selLeft = null, matched = 0, scored = false, total = step.pairs.length;
+    function clearSel() { var s = stage.querySelector('.geo-left.sel'); if (s) s.classList.remove('sel'); selLeft = null; }
+    function onRight(rEl) {
+      if (!selLeft) { rEl.classList.add('shake'); setTimeout(function () { rEl.classList.remove('shake'); }, 320); return; }
+      if (selLeft.getAttribute('data-i') === rEl.getAttribute('data-i')) {
+        selLeft.classList.remove('sel'); selLeft.classList.add('matched'); selLeft.disabled = true;
+        rEl.classList.add('matched'); rEl.disabled = true; selLeft = null; matched++;
+        if (matched === total && !scored) {
+          scored = true; scoreOnce(step, true);
+          $('reveal').classList.add('show', 'is-ok'); $('afteract').style.display = 'flex';
+          toast('全部配對成功！🎉', 'badge');
+        }
+      } else {
+        rEl.classList.add('shake'); var jb = selLeft;
+        setTimeout(function () { rEl.classList.remove('shake'); if (jb) jb.classList.remove('sel'); }, 320);
+        selLeft = null;
+      }
+    }
+    var ls = stage.querySelectorAll('.geo-left');
+    for (var j = 0; j < ls.length; j++) ls[j].addEventListener('click', function () {
+      if (this.classList.contains('matched')) return; clearSel(); this.classList.add('sel'); selLeft = this;
+    });
+    var rs = stage.querySelectorAll('.geo-right');
+    for (var k = 0; k < rs.length; k++) rs[k].addEventListener('click', function () { if (!this.classList.contains('matched')) onRight(this); });
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // ---- build（等角拖建的簡化版：每柱 ＋／－，比對高度陣列） ----
+  function renderBuild(step) {
+    var target = step.target.slice();
+    var maxH = step.maxH || 4;
+    var heights = target.map(function () { return 0; });
+
+    function isoRow(hs) { return isoStack([hs]); }
+    function colCtrls() {
+      var h = '';
+      for (var i = 0; i < heights.length; i++) {
+        h += '<div class="geo-col-ctrl">' +
+          '<button type="button" class="b-plus" data-i="' + i + '" aria-label="第' + (i + 1) + '柱加一個">＋</button>' +
+          '<span class="geo-col-h" id="colh-' + i + '">' + heights[i] + '</span>' +
+          '<button type="button" class="b-minus" data-i="' + i + '" aria-label="第' + (i + 1) + '柱少一個">－</button>' +
+          '<span class="geo-col-lbl">第 ' + (i + 1) + ' 柱</span>' +
+        '</div>';
+      }
+      return h;
+    }
+    stage.innerHTML =
+      '<div class="q-stage">' +
+        '<p class="q-prompt">' + step.s + '</p>' +
+        '<div class="q-toolrow">' + ttsButton(step.s) + '</div>' +
+        '<div class="geo-build-wrap">' +
+          '<div class="geo-build-pane"><h4>🎯 阿方的目標</h4><div class="geo-figure">' + isoRow(target) + '</div></div>' +
+          '<div class="geo-build-pane"><h4>🧱 你蓋的</h4><div class="geo-figure" id="b-me">' + isoRow(heights) + '</div>' +
+            '<div class="geo-cols">' + colCtrls() + '</div></div>' +
+        '</div>' +
+        '<div class="q-feedback" id="reveal"></div>' +
+      '</div>' +
+      '<div class="q-actions">' +
+        '<button type="button" class="btn btn-primary" id="btn-check">蓋好了，檢查 ✓</button>' +
+        '<button type="button" class="btn" id="btn-demo" style="display:none">🤖 看阿方蓋一次</button>' +
+        '<button type="button" class="btn btn-primary" id="btn-next" style="display:none">繼續 ➡️</button></div>';
+    bindTts(stage);
+
+    function redraw() {
+      $('b-me').innerHTML = isoRow(heights);
+      for (var i = 0; i < heights.length; i++) $('colh-' + i).textContent = heights[i];
+    }
+    var plus = stage.querySelectorAll('.b-plus'), minus = stage.querySelectorAll('.b-minus');
+    for (var p = 0; p < plus.length; p++) plus[p].addEventListener('click', function () {
+      if (answered) return; var i = +this.getAttribute('data-i'); if (heights[i] < maxH) { heights[i]++; redraw(); }
+    });
+    for (var m = 0; m < minus.length; m++) minus[m].addEventListener('click', function () {
+      if (answered) return; var i = +this.getAttribute('data-i'); if (heights[i] > 0) { heights[i]--; redraw(); }
+    });
+
+    var answered = false, tries = 0;
+    // 安全閥：連續 2 次還沒對，就露出「看阿方蓋一次」，演示答案讓卡住的孩子也能帶著看懂離開。
+    function revealDemo() {
+      if (answered) return; answered = true;
+      for (var i = 0; i < heights.length; i++) heights[i] = target[i];
+      redraw();
+      scoreOnce(step, false); // 用了演示＝這題 0 分（不懲罰、不扣分），與 count／mirror 的揭示一致
+      var rev = $('reveal');
+      rev.innerHTML = '沒關係～看阿方蓋好了，這就是目標的樣子！' + (step.why || '');
+      rev.classList.remove('is-ok'); rev.classList.add('show', 'is-no');
+      $('btn-check').style.display = 'none'; $('btn-demo').style.display = 'none';
+      $('btn-next').style.display = 'inline-flex';
+    }
+    $('btn-demo').addEventListener('click', revealDemo);
+    $('btn-check').addEventListener('click', function () {
+      if (answered) return;
+      var ok = true;
+      for (var i = 0; i < target.length; i++) if (heights[i] !== target[i]) { ok = false; break; }
+      var rev = $('reveal');
+      if (ok) {
+        answered = true;
+        scoreOnce(step, true);
+        rev.innerHTML = '完成！你蓋得和目標一模一樣！' + (step.why || '');
+        rev.classList.add('show', 'is-ok');
+        this.style.display = 'none'; $('btn-demo').style.display = 'none'; $('btn-next').style.display = 'inline-flex';
+        toast('藍圖完成！🧱', 'badge'); botCheer();
+      } else {
+        tries++;
+        // 不計分、不懲罰，只提示，讓孩子再調整。第 2 次起提供「看阿方蓋一次」的出口。
+        rev.innerHTML = '還沒一樣喔～對照「目標」，把每一柱調成一樣高，再檢查一次！' +
+          (tries >= 2 ? '（如果卡住了，也可以請阿方蓋一次給你看喔）' : '');
+        rev.classList.remove('is-ok'); rev.classList.add('show', 'is-no');
+        if (tries >= 2) $('btn-demo').style.display = 'inline-flex';
+      }
+    });
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // ---- mirror（鏡射上色：左半已填，點右半完成左右對稱，比對精確反射） ----
+  function renderMirror(step) {
+    var W = step.cols, H = step.rows, half = W / 2;
+    var leftSet = {}, expectRight = {};
+    for (var i = 0; i < step.left.length; i++) {
+      var c = step.left[i][0], r = step.left[i][1];
+      leftSet[c + ',' + r] = true;
+      expectRight[(W - 1 - c) + ',' + r] = true; // 鏡射對應格
+    }
+    var picked = {};
+    var cells = '';
+    for (var rr = 0; rr < H; rr++) {
+      for (var cc = 0; cc < W; cc++) {
+        var key = cc + ',' + rr;
+        var isLeft = cc < half;
+        var cls = 'geo-mcell';
+        if (isLeft && leftSet[key]) cls += ' locked';
+        if (cc === half - 1) cls += ' axis-left';
+        cells += '<button type="button" class="' + cls + '" data-key="' + key + '" data-left="' + (isLeft ? 1 : 0) + '"' +
+          (isLeft ? ' disabled aria-hidden="true"' : ' aria-label="右邊格子"') + '></button>';
+      }
+    }
+    stage.innerHTML =
+      '<div class="q-stage">' +
+        '<p class="q-prompt">' + step.s + '</p>' +
+        '<div class="q-toolrow">' + ttsButton(step.s) + '</div>' +
+        '<div class="geo-mirror"><div class="geo-mgrid" id="mgrid" style="grid-template-columns:repeat(' + W + ',34px)">' + cells + '</div>' +
+          '<div class="geo-mirror-axis">↑ 紅線是對稱軸（正中間）↑</div></div>' +
+        '<div class="q-feedback" id="reveal"></div>' +
+      '</div>' +
+      '<div class="q-actions">' +
+        '<button type="button" class="btn btn-primary" id="btn-check">畫好了，檢查 ✓</button>' +
+        '<button type="button" class="btn btn-primary" id="btn-next" style="display:none">繼續 ➡️</button></div>';
+    bindTts(stage);
+
+    var answered = false;
+    var cellBtns = stage.querySelectorAll('.geo-mcell');
+    for (var b = 0; b < cellBtns.length; b++) {
+      if (cellBtns[b].getAttribute('data-left') === '1') continue;
+      cellBtns[b].addEventListener('click', function () {
+        if (answered) return;
+        var key = this.getAttribute('data-key');
+        picked[key] = !picked[key];
+        this.classList.toggle('on', picked[key]);
+      });
+    }
+    $('btn-check').addEventListener('click', function () {
+      if (answered) return;
+      // 精確比對：右半被點亮的集合，要正好等於鏡射對應格集合。
+      var ok = true, kk;
+      for (kk in expectRight) if (expectRight.hasOwnProperty(kk) && !picked[kk]) { ok = false; break; }
+      if (ok) for (kk in picked) if (picked.hasOwnProperty(kk) && picked[kk] && !expectRight[kk]) { ok = false; break; }
+      answered = true;
+      scoreOnce(step, ok);
+      var rev = $('reveal');
+      if (!ok) {
+        // 演示正確答案：把應該亮的右半格子亮起來，讓孩子看懂。
+        for (var b2 = 0; b2 < cellBtns.length; b2++) {
+          var k2 = cellBtns[b2].getAttribute('data-key');
+          if (expectRight[k2]) cellBtns[b2].classList.add('on'); else if (cellBtns[b2].getAttribute('data-left') === '0') cellBtns[b2].classList.remove('on');
+        }
+        rev.innerHTML = '沒關係～看，這才是左右對稱的樣子！' + (step.why || '');
+        rev.classList.add('show', 'is-no');
+      } else {
+        rev.innerHTML = '完成！左右完全對稱，好棒！' + (step.why || '');
+        rev.classList.add('show', 'is-ok');
+        toast('對稱畫得真好！🪞', 'badge');
+      }
+      for (var d = 0; d < cellBtns.length; d++) cellBtns[d].disabled = true;
+      this.style.display = 'none'; $('btn-next').style.display = 'inline-flex';
+    });
+    $('btn-next').addEventListener('click', next);
+  }
+
+  // =====================================================================
+  // 完成單元
+  // =====================================================================
+  function finishUnit() {
+    var unit = cur.unit, stars = cur.correctCount, total = cur.total;
+    if (!unit.review) {
+      var prev = progress.units[unit.id] || {};
+      progress.units[unit.id] = { done: true, best: Math.max(prev.best || 0, stars) };
+      saveProg();
+    }
+    var starStr = '';
+    for (var i = 0; i < total; i++) starStr += (i < stars ? '⭐' : '☆');
+
+    stage.innerHTML =
+      '<div class="result-card">' +
+        '<div class="result-card__emoji" aria-hidden="true">' + (unit.review ? '🏗️' : '🎉') + '</div>' +
+        '<div class="result-card__title">' + (unit.review ? '工地驗收完成！' : '蓋好「' + unit.name + '」！') + '</div>' +
+        (total > 0 ? '<div class="result-card__stars" aria-label="得到 ' + stars + ' 顆星">' + starStr + '</div>' +
+          '<p class="result-card__sub">你答對了 ' + stars + ' / ' + total + ' 題，好棒！</p>'
+          : '<p class="result-card__sub">你完成了這一關，好棒！</p>') +
+      '</div>' +
+      '<div class="q-actions">' +
+        '<button type="button" class="btn" id="btn-menu">回到選單</button>' +
+        (nextUnitOf(unit) ? '<button type="button" class="btn btn-primary" id="btn-nextunit">下一張藍圖 ➡️</button>' : '') +
+      '</div>';
+
+    toast('完成：' + unit.emoji + ' ' + unit.name + '！', 'badge');
+    botCheer();
+    $('btn-menu').addEventListener('click', goMenu);
+    var nu = nextUnitOf(unit);
+    if (nu) $('btn-nextunit').addEventListener('click', function () { startUnit(nu); });
+  }
+
+  function nextUnitOf(unit) {
+    for (var i = 0; i < UNITS.length; i++) if (UNITS[i].id === unit.id) return UNITS[i + 1] || null;
+    return null;
+  }
+  function goMenu() {
+    cur = null; renderMenu(); show(screenMenu);
+  }
+
+  // =====================================================================
+  // 頂列 / 啟動
+  // =====================================================================
+  $('btn-back').addEventListener('click', goMenu);
+  // 主題切換交給共用 .app-bar 的 [data-theme-toggle]（game_core 自動接線）。
+
+  renderMenu();
+})();
