@@ -11,6 +11,25 @@ interface Word {
   [k: string]: unknown;
 }
 
+/** 一個單字牌組（vocab_data_*.js 內 `WORD_DATA["key"] = {...}` 的值）。 */
+interface WordDeck {
+  name: string;
+  color: string;
+  /** 填空（cloze）型牌組：題目把句子的目標字挖空。 */
+  isCloze?: boolean;
+  words: Word[];
+  [k: string]: unknown;
+}
+
+/**
+ * 全部 vocab_data_*.js（cefr a1/a2/b1、coca L1–L10、yle movers/flyers、toeic、
+ * gept_elementary、competition mid/upper）共用的頁面全域字典，鍵＝牌組 id。
+ * 由各 flashcard 頁的 inline `<script>var WORD_DATA = {}</script>` 宣告，資料檔只做
+ * `WORD_DATA["key"] = {...}` 填值。屬「自動產生的純資料檔」——source-of-truth 是其
+ * 產生器、會送到使用者（效能），依資料檔政策不經 tsc 轉檔，只在此宣告型別。
+ */
+declare var WORD_DATA: Record<string, WordDeck>;
+
 /** concept_engine.js 讀的頁面教學資料（各 *_concepts.html 定義 window.CONCEPT）。 */
 interface ConceptLessonStep {
   type: 'teach' | 'quiz';
