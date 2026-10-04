@@ -1,0 +1,58 @@
+/* =====================================================================
+ * geometry_concepts.ts  →  (tsc, tsconfig.legacy.json) →  geometry_concepts.js
+ * 幾何觀念養成頁的教學資料（window.CONCEPT）＋專用 SVG 概念圖。
+ * 原為 geometry_concepts.html 的 inline <script>；逐檔 TS 遷移抽出成 sibling .js。
+ * 載入順序：本檔必須在 concept_engine.js 之前（提供 window.CONCEPT）。
+ * 行為與原 inline 版等價（型別剝離、頂層函式仍為全域、window.CONCEPT 不變）。
+ * ===================================================================== */
+// ---- 幾何專用 SVG 概念圖（文字 currentColor = --ink）----
+function cube() { return '<svg viewBox="0 0 170 155" role="img" aria-label="正方體"><rect x="34" y="62" width="72" height="72" fill="rgba(20,184,166,0.18)" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/><polygon points="34,62 64,36 136,36 106,62" fill="rgba(20,184,166,0.10)" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/><polygon points="106,62 136,36 136,108 106,134" fill="rgba(20,184,166,0.13)" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/><text x="85" y="150" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">正方體：6 個正方形的面</text></svg>'; }
+function net(valid) {
+    var u = 30, ox = 40, oy = 14, cells = valid ? [[2, 0], [1, 1], [2, 1], [3, 1], [2, 2], [2, 3]] : [[1, 0], [2, 0], [1, 1], [2, 1], [1, 2], [2, 2]];
+    var s = '<svg viewBox="0 0 220 160" role="img" aria-label="展開圖">';
+    cells.forEach(function (c) { s += '<rect x="' + (ox + c[0] * u) + '" y="' + (oy + c[1] * u) + '" width="' + u + '" height="' + u + '" fill="rgba(20,184,166,0.16)" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>'; });
+    return s + '</svg>';
+}
+function isoBox() { return '<svg viewBox="0 0 220 175" role="img" aria-label="長方體 長3寬2高2"><rect x="40" y="72" width="90" height="60" fill="rgba(20,184,166,0.18)" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/><polygon points="40,72 78,42 168,42 130,72" fill="rgba(20,184,166,0.10)" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/><polygon points="130,72 168,42 168,102 130,132" fill="rgba(20,184,166,0.13)" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/><text x="85" y="150" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">長 3</text><text x="152" y="122" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">高 2</text><text x="120" y="60" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">寬 2</text><text x="110" y="170" text-anchor="middle" font-size="13" font-weight="800" fill="currentColor">3 × 2 × 2 = 12 個</text></svg>'; }
+function angle(deg, label) {
+    var cx = 64, cy = 112, r = 74, rad = deg * Math.PI / 180, x2 = cx + r * Math.cos(-rad), y2 = cy + r * Math.sin(-rad);
+    var s = '<svg viewBox="0 0 230 140" role="img" aria-label="' + deg + '度角">';
+    s += '<line x1="' + cx + '" y1="' + cy + '" x2="' + (cx + r) + '" y2="' + cy + '" stroke="currentColor" stroke-opacity="0.6" stroke-width="3"/>';
+    s += '<line x1="' + cx + '" y1="' + cy + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '" stroke="currentColor" stroke-opacity="0.6" stroke-width="3"/>';
+    if (deg === 90) {
+        s += '<rect x="' + cx + '" y="' + (cy - 16) + '" width="16" height="16" fill="none" stroke="#14b8a6" stroke-width="2"/>';
+    }
+    s += '<text x="' + (cx + 90) + '" y="' + (cy - 6) + '" text-anchor="middle" font-size="14" font-weight="800" fill="currentColor">' + deg + '°' + (label ? '（' + label + '）' : '') + '</text>';
+    return s + '</svg>';
+}
+window.CONCEPT = {
+    progKey: 'geometry_concepts_v1', practiceHref: 'geometry.html',
+    lessons: [
+        { id: 'net', name: '立體與展開圖', emoji: '📦', color: '#6366f1', sub: '正方體的面與展開圖', done: '記得：正方體有 6 個面；展開圖是把它剪開攤平，但不是每種排法都摺得回去。',
+            steps: [
+                { type: 'teach', kicker: '先想一想', title: '正方體有 6 個面', svg: cube(), text: '<b>正方體</b>是由 <b>6 個一樣的正方形</b>圍成的立體，像骰子、魔術方塊。它有 6 個面、8 個頂點、12 個邊。' },
+                { type: 'teach', kicker: '攤平看看', title: '展開圖 = 剪開攤平', svg: net(true), text: '把正方體沿著邊<b>剪開、攤平</b>，就是<b>展開圖</b>，會有 <b>6 個正方形</b>連在一起。這個十字形摺起來剛好變回正方體。' },
+                { type: 'teach', kicker: '注意', title: '不是每種排法都摺得成', svg: net(false), text: '同樣 6 個正方形，<b>排法不對</b>就摺不回正方體。像這個 2×3 的方塊，摺起來會有<b>面重疊、又缺面</b>，所以<b>不是</b>正方體的展開圖。' },
+                { type: 'quiz', kicker: '換你試試', title: '正方體有幾個面？', options: ['6 個', '4 個', '8 個', '12 個'], answer: 0, why: '正方體由 6 個正方形圍成，有 6 個面（8 個頂點、12 個邊）。', whyWrong: ['', '你可能只數了看得到的側面，別忘了上面和下面兩個面也要一起算進去喔。', '8 其實是正方體「頂點（角）」的數量，你可能把角的數量當成面的數量了。', '12 是正方體「邊（稜）」的數量，你可能把邊的數量誤當成面來數了。'] },
+                { type: 'quiz', kicker: '看圖判斷', title: '這個展開圖能摺成正方體嗎？（十字形）', svg: net(true), options: ['能，6 個面排列正確', '不能，會缺面'], answer: 0, why: '這種十字形排列，摺起來剛好每個面對應一個位置，可以摺成正方體。', whyWrong: ['', '十字形其實剛好有 6 個正方形，你可以把每個方塊對應到上下和四周，再想一遍就不缺面了。'] },
+                { type: 'quiz', kicker: '再看一個', title: '這個展開圖能摺成正方體嗎？（2×3 排列）', svg: net(false), options: ['不能，摺起來會有面重疊', '能，剛好 6 個面'], answer: 0, why: '2×3 的方塊雖然也有 6 個正方形，但摺起來會重疊又缺面，摺不成正方體。', whyWrong: ['', '你可能只數到 6 個正方形就覺得可以，但實際摺摺看，排成一整塊會有面疊在一起喔。'] }
+            ] },
+        { id: 'vol', name: '體積：數積木', emoji: '🧊', color: '#14b8a6', sub: '裡面裝得下幾個小方塊', done: '記得：體積 = 長 × 寬 × 高，就是裡面能裝多少個單位立方體。',
+            steps: [
+                { type: 'teach', kicker: '先想一想', title: '體積 = 裡面裝幾個小方塊', svg: isoBox(), text: '<b>體積</b>是一個立體<b>裡面</b>裝得下多少個<b>單位小方塊</b>。這個箱子每排 3 個、每層 2 排、疊 2 層，數一數共 <b>12</b> 個。' },
+                { type: 'teach', kicker: '公式', title: '長 × 寬 × 高', svg: isoBox(), text: '不用一個一個數，直接算：<b>體積 = 長 × 寬 × 高</b>。這個箱子 = 3 × 2 × 2 = <b>12</b>。（面積是「平面鋪滿」，體積是「立體裝滿」。）' },
+                { type: 'quiz', kicker: '換你試試', title: '長 3、寬 2、高 2 的箱子，體積是幾個小方塊？', options: ['12', '7', '24', '6'], answer: 0, why: '體積 = 長 × 寬 × 高 = 3 × 2 × 2 = 12。', whyWrong: ['', '3＋2＋2＝7，你可能把三個邊相加了，但求體積要用相乘，不是相加喔。', '你可能多乘了一次，或把某個邊長看成兩倍，回去確認一下長、寬、高各是多少。', '3×2＝6，你可能只算了底面一層，別忘了高是 2，要把好幾層疊起來。'] },
+                { type: 'quiz', kicker: '換你試試', title: '長方體的體積公式是哪一個？', options: ['長 × 寬 × 高', '長 ＋ 寬 ＋ 高', '長 × 寬', '四邊相加'], answer: 0, why: '長方體體積 = 長 × 寬 × 高（長×寬只是底面積，四邊相加是平面周長）。', whyWrong: ['', '把三邊相加算出來的是長度，不是體積；體積要看裡面能裝進多少個小方塊。', '長×寬只算了底面一層的面積，還要再乘上高，才知道總共疊了幾層。', '四邊相加是平面圖形求周長的做法，立體的體積不能這樣算喔。'] },
+                { type: 'quiz', kicker: '想一想', title: '邊長都是 2 的正方體，體積是多少？', options: ['8', '6', '4', '12'], answer: 0, why: '2 × 2 × 2 = 8 個單位立方體。', whyWrong: ['', '6 是正方體的「面」的數量，你可能把面的個數當成體積了。', '2×2＝4，你可能只乘了兩次；正方體有長、寬、高三個邊都要相乘。', '12 是正方體「邊」的數量，你可能把邊的個數誤當成體積了。'] }
+            ] },
+        { id: 'angle', name: '認識角度', emoji: '📐', color: '#f59e0b', sub: '直角、銳角、鈍角', done: '記得：直角 90°；比 90° 小是銳角、比 90° 大是鈍角。',
+            steps: [
+                { type: 'teach', kicker: '先想一想', title: '直角 = 90°', svg: angle(90, '直角'), text: '兩條線<b>垂直</b>夾出的角是 <b>90°</b>，叫<b>直角</b>。牆角、書本的角、正方形的角都是直角（常畫一個小方框標示）。' },
+                { type: 'teach', kicker: '比一比', title: '銳角比 90° 小、鈍角比 90° 大', svg: angle(45, '銳角'), text: '比直角<b>小</b>（不到 90°）的角叫<b>銳角</b>，尖尖的；比直角<b>大</b>（超過 90°）的叫<b>鈍角</b>，鈍鈍的；剛好 180°（拉成一直線）叫<b>平角</b>。' },
+                { type: 'teach', kicker: '看鈍角', title: '鈍角長這樣', svg: angle(120, '鈍角'), text: '這個角超過 90°（例如 120°），開得比較開，就是<b>鈍角</b>。' },
+                { type: 'quiz', kicker: '看圖判斷', title: '圖中的角是什麼角？', svg: angle(90, ''), options: ['直角', '銳角', '鈍角'], answer: 0, why: '兩線垂直、夾角剛好 90°（有小方框），是直角。', whyWrong: ['', '銳角要比 90° 更小，注意圖上有小方框代表兩線剛好垂直，別把它看成張得比較小的角。', '鈍角要比 90° 更大，但這裡有小方框表示兩線剛好垂直，並沒有張開超過喔。'] },
+                { type: 'quiz', kicker: '換你試試', title: '60° 是什麼角？', options: ['銳角', '直角', '鈍角'], answer: 0, why: '60° 比 90° 小，是銳角。', whyWrong: ['', '直角必須剛好是 90°，而 60° 還沒張到那麼大，再比比看哪一個更接近方正的角。', '鈍角要張開超過 90°，可是 60° 其實比直角還小，方向想反了喔。'] },
+                { type: 'quiz', kicker: '想一想', title: '120° 是什麼角？', options: ['鈍角', '銳角', '直角'], answer: 0, why: '120° 比 90° 大（但不到 180°），是鈍角。', whyWrong: ['', '銳角要比 90° 更小，而 120° 已經張得比方正的角還開了，方向想反囉。', '直角剛好是 90°，但 120° 已經超過了，再想想它有沒有比方正的角更開。'] }
+            ] }
+    ]
+};
