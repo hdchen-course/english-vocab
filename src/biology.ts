@@ -659,7 +659,7 @@
           '</div>' +
           '<div class="bio-level-foot">' +
             '<span class="bio-level-status ' + (done ? 'done' : 'todo') + '">' +
-              (done ? '✅ 已完成' : '▶️ 開始挑戰（共 ' + total + ' 題）') + '</span>' +
+              (done ? '✅ 已完成' : '▶️ 開始挑戰<span style="white-space:nowrap">（共 ' + total + ' 題）</span>') + '</span>' +
             '<span class="bio-level-dots" aria-hidden="true">' + dots + '</span>' +
           '</div>';
         card.addEventListener('click', function () { startLevel(level); });

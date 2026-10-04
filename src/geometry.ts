@@ -510,7 +510,7 @@
             '</div>' +
           '</div>' +
           '<div class="u-card__foot">' +
-            '<span class="u-card__status ' + (done ? 'done' : 'todo') + '">' + (done ? '✅ 蓋好了' : ('▶️ 開始蓋' + (unit.review ? '' : '（共 ' + total + ' 題）'))) + '</span>' +
+            '<span class="u-card__status ' + (done ? 'done' : 'todo') + '">' + (done ? '✅ 蓋好了' : ('▶️ 開始蓋' + (unit.review ? '' : '<span style="white-space:nowrap">（共 ' + total + ' 題）</span>'))) + '</span>' +
             footRight +
           '</div>';
         card.addEventListener('click', function () { startUnit(unit); });

@@ -311,7 +311,7 @@
                         '</div>' +
                         '<div class="fi-unit-foot">' +
                         '<span class="fi-unit-status ' + (done ? 'done' : 'todo') + '">' +
-                        (done ? '✅ 已完成' : '▶️ 開始玩（共 ' + total + ' 題）') + '</span>' +
+                        (done ? '✅ 已完成' : '▶️ 開始玩<span style="white-space:nowrap">（共 ' + total + ' 題）</span>') + '</span>' +
                         '<span class="fi-unit-dots" aria-hidden="true">' + dots + '</span>' +
                         '</div>';
                 card.addEventListener('click', function () { startUnit(unit); });

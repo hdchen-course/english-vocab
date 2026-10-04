@@ -403,7 +403,7 @@
                         '</div>' +
                         '</div>' +
                         '<div class="u-card__foot">' +
-                        '<span class="u-card__status ' + (done ? 'done' : 'todo') + '">' + (done ? '✅ 學會了' : ((unit.review || !total) ? '▶️ 開始學' : '▶️ 開始學（共 ' + total + ' 題）')) + '</span>' +
+                        '<span class="u-card__status ' + (done ? 'done' : 'todo') + '">' + (done ? '✅ 學會了' : ((unit.review || !total) ? '▶️ 開始學' : '▶️ 開始學<span style="white-space:nowrap">（共 ' + total + ' 題）</span>')) + '</span>' +
                         footRight +
                         '</div>';
                 card.addEventListener('click', function () { startUnit(unit); });

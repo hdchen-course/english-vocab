@@ -7830,7 +7830,7 @@
         var st = done ? Math.max(1, starsFor(rec.best, total)) : 0;
         var statusText = done
           ? ('✅ 已完成（答對 ' + rec.best + '/' + total + '）')
-          : (pos > 0 ? ('▶️ 繼續（已完成 ' + pos + '/' + total + '）') : ('▶️ 開始挑戰（共 ' + total + ' 題）'));
+          : (pos > 0 ? ('▶️ 繼續（已完成 ' + pos + '/' + total + '）') : ('▶️ 開始挑戰<span style="white-space:nowrap">（共 ' + total + ' 題）</span>'));
         var card = document.createElement('button');
         card.type = 'button';
         card.className = 'ma-level';

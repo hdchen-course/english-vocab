@@ -1200,6 +1200,35 @@ a.app-bar__home:hover { background: var(--card-border); }
 }
 .fc-reveal__next:active { transform: scale(0.96); }
 
+/* ---- 短高視窗壓縮（iPad 橫向 1024 高 / 手機）：壓縮閃卡頁前置 chrome 與卡片，
+ *      讓「卡片 + 三級自評鈕」不必捲動即可一屏達成（直向 iPad 1366 高不受影響）。 */
+@media (max-height: 1050px) {
+  .shell > header h1 { font-size: var(--fs-h2); margin-bottom: 2px; }
+  .shell > header p  { font-size: var(--fs-small); }
+  .shell > header    { margin-bottom: var(--s3); }
+  .fc-source { gap: var(--s2); margin-bottom: var(--s3); }
+  .fc-source__btn { padding: var(--s2) var(--s3); }
+  .fc-dex__nav { margin: var(--s2) 0; }
+  .cn-nextup { margin-top: var(--s2); padding-block: var(--s2); }
+  .fc-card__face { min-height: 168px; padding: var(--s4); gap: var(--s2); }
+  .fc-card__emoji { font-size: clamp(40px, 9vh, 60px); }
+  .fc-card__word { font-size: clamp(24px, 5vh, 36px); }
+  .fc-card__tap { margin-top: 0; }
+  .fc-rate { margin-top: var(--s3); }
+  .fc-rate__btn { padding-block: var(--s2); }
+}
+
+/* 單字圖鑑 / 單字相簿 子畫面的「← 返回」鈕：補上 house 樣式（原本是瀏覽器預設鈕，off-brand） */
+.worddex-back, .album-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: var(--s2) var(--s4); border-radius: var(--r-md);
+  background: var(--card); border: 2px solid var(--card-border);
+  color: var(--ink); font-weight: 700; font-size: var(--fs-small);
+  cursor: pointer; transition: border-color .2s ease, transform .12s ease;
+}
+.worddex-back:hover, .album-back:hover { border-color: var(--accent); }
+.worddex-back:active, .album-back:active { transform: scale(0.96); }
+
 /* ---- 6. 單字圖鑑 .fc-dex（收藏視覺，只增不減）------------------------ */
 .fc-dex__nav { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s2); margin-bottom: var(--s4); }
 .fc-dex__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: var(--s3); }

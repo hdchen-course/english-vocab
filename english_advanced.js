@@ -340,7 +340,7 @@
                         '<div class="ea-level-concepts">' + lv.concepts.join('・') + '</div>' +
                         '<div class="ea-level-foot">' +
                         '<span class="ea-level-status ' + (done ? 'done' : 'todo') + '">' +
-                        (done ? '✅ 已完成（最佳 ' + (rec.best || 0) + '/' + total + '）' : '▶️ 開始挑戰（共 ' + total + ' 題）') + '</span>' +
+                        (done ? '✅ 已完成（最佳 ' + (rec.best || 0) + '/' + total + '）' : '▶️ 開始挑戰<span style="white-space:nowrap">（共 ' + total + ' 題）</span>') + '</span>' +
                         '<span class="ea-level-stars" aria-hidden="true">' + (done ? starStr(st) : '') + '</span>' +
                         '</div>';
                 card.addEventListener('click', function () { startLevel(lv); });

@@ -1235,7 +1235,7 @@
           '<div class="ma-level-concepts">' + (lv.hook || lv.concepts.join('・')) + '</div>' +
           '<div class="ma-level-foot">' +
             '<span class="ma-level-status ' + (done ? 'done' : 'todo') + '">' +
-              (done ? '✅ 已完成（最佳 ' + (rec.best || 0) + '/' + total + '）' : '▶️ 開始挑戰（共 ' + total + ' 題）') + '</span>' +
+              (done ? '✅ 已完成（最佳 ' + (rec.best || 0) + '/' + total + '）' : '▶️ 開始挑戰<span style="white-space:nowrap">（共 ' + total + ' 題）</span>') + '</span>' +
             '<span class="ma-level-stars" aria-hidden="true">' + (done ? starStr(st) : '') + '</span>' +
           '</div>';
         card.addEventListener('click', function () { startLevel(lv); });

@@ -1589,7 +1589,7 @@
                         '</div>' +
                         '<div class="su-unit-foot">' +
                         '<span class="su-unit-status ' + (done ? 'done' : 'todo') + '">' +
-                        (done ? '✅ 已完成' : '▶️ 開始探險（共 ' + total + ' 題）') + '</span>' +
+                        (done ? '✅ 已完成' : '▶️ 開始探險<span style="white-space:nowrap">（共 ' + total + ' 題）</span>') + '</span>' +
                         '<span class="su-unit-dots" aria-hidden="true">' + dots + '</span>' +
                         '</div>';
                 card.addEventListener('click', function () { startUnit(unit); });
