@@ -91,6 +91,10 @@ interface AnimApi {
    *  cfg = {premises:[{text}],conclusion:{text},mode:'deduction'|'induction',
    *         counter:{text,on},highlightIndicators,label}。 */
   argFlow: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 公平測試・變因控制對照實驗：左右兩組並排，高亮操縱變因、灰標控制變因、底部長條顯示應變變因；
+   *  mode:'fair'（只改一個→可歸因）vs 'unfair'（同時改多個→分不清）。科學方法頁與未來各科實驗課共用。
+   *  cfg = {mode:'fair'|'unfair',changed:['名稱:A|B'],controlled:['名稱:值'],measure,values:[a,b],groups,title,label}。 */
+  fairTest: (host: HTMLElement, cfg?: any) => { stop: () => void };
 }
 
 /** game_core.js 導出的遊戲核心 API（window.Game）。遷移 game_core 時逐步精確化。 */

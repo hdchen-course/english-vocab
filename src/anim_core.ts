@@ -2402,6 +2402,157 @@
     });
   }
 
+  // ====================================================================
+  // 場景：fairTest — 參數化「公平測試・變因控制」對照實驗。
+  //   左右兩組實驗並排：高亮「唯一（或多個）被改變的操縱變因」、灰標「保持相同的
+  //   控制變因」、底部長條顯示「應變變因」的量測結果。
+  //   mode:'fair'   → 只有一列（操縱變因）兩組不同 → 綠色 ✓「能確定是它造成的」。
+  //   mode:'unfair' → 兩列同時不同 → 紅色 ✗「分不清是誰造成的」。
+  //   author-once：本頁兩課（變因三種、公平測試）共用；未來各科實驗課皆可引用。
+  //   cfg = {
+  //     mode:'fair'|'unfair',
+  //     changed:[  '光照:強光|弱光' ],   // 被改變（操縱變因）；"名稱:A設定|B設定"，無「:」則標「不同」
+  //     controlled:[ '水:相同','土','品種' ], // 保持相同（控制變因）；"名稱:值" 或 "名稱"（預設「相同」）
+  //     measure:'長高(cm)',              // 應變變因標籤
+  //     values:[12,6],                   // 兩組的應變量測（底部長條）
+  //     groups:['A 組','B 組'], title, label
+  //   }
+  //   reduced-motion：drawStatic 直接畫完整最後一幀（左右兩組並排＋量測＋判定），保留對比。
+  // ====================================================================
+  function fairTest(host: HTMLElement, cfg: any) {
+    cfg = cfg || {};
+    var WARN = '#e11d48', OK = '#16a34a';
+    var mode: string = cfg.mode === 'unfair' ? 'unfair' : 'fair';
+    var groups: string[] = cfg.groups || ['A 組', 'B 組'];
+
+    function clamp01(x: number): number { return Math.max(0, Math.min(1, x)); }
+
+    // 解析一列變因字串："名稱:A|B"（操縱）或 "名稱:值" / "名稱"（控制）。
+    function parseChanged(s: string): { name: string; a: string; b: string } {
+      var i = s.indexOf(':');
+      if (i < 0) return { name: s, a: '不同', b: '不同' };
+      var name = s.slice(0, i), rest = s.slice(i + 1), j = rest.indexOf('|');
+      if (j < 0) return { name: name, a: rest, b: rest };
+      return { name: name, a: rest.slice(0, j), b: rest.slice(j + 1) };
+    }
+    function parseCtrl(s: string): { name: string; val: string } {
+      var i = s.indexOf(':');
+      if (i < 0) return { name: s, val: '相同' };
+      return { name: s.slice(0, i), val: s.slice(i + 1) };
+    }
+    var changed = (cfg.changed || ['光照:強光|弱光']).map(parseChanged);
+    var controlled = (cfg.controlled || ['水:相同', '土:相同', '品種:相同']).map(parseCtrl);
+    var measure: string = cfg.measure || '結果';
+    var values: number[] = cfg.values || (mode === 'unfair' ? [15, 8] : [12, 6]);
+    var nRows = changed.length + controlled.length;
+
+    // 欄位幾何：左＝變因名稱欄，中/右＝A/B 兩組的值欄。
+    function cols(w: number) {
+      var nameX0 = 6, nameX1 = 94;
+      var aC = nameX1 + (w - nameX1) * 0.27;   // A 組值欄中心
+      var bC = nameX1 + (w - nameX1) * 0.73;   // B 組值欄中心
+      return { nameX0: nameX0, nameX1: nameX1, aC: aC, bC: bC };
+    }
+
+    function render(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var ink = inkColor(), theme = themeColor();
+      var mut = ink;
+      var c = cols(w);
+      // 標題。
+      label(g, cfg.title || (mode === 'fair' ? '公平測試：只改一個變因' : '不公平：改了不只一個變因'),
+        w / 2, 13, mode === 'fair' ? theme : WARN, 12, 'center');
+      // 兩組表頭 chip。
+      var hy = 30;
+      [[c.aC, groups[0]], [c.bC, groups[1]]].forEach(function (gh: any) {
+        g.save(); g.globalAlpha = 0.14; g.fillStyle = ink;
+        g.fillRect(gh[0] - 34, hy - 11, 68, 20); g.restore();
+        label(g, gh[1], gh[0], hy, ink, 11, 'center');
+      });
+
+      // 列區域。
+      var top = 46;
+      var measTop = h - 60;                       // 底部保留量測＋判定
+      var rowH = Math.min(28, (measTop - top) / nRows);
+      var revP = clamp01(p / 0.5);
+      var shown = nRows * revP;
+
+      function drawRow(idx: number, name: string, aTxt: string, bTxt: string, isChanged: boolean) {
+        var appear = clamp01(shown - idx);
+        if (appear <= 0) return;
+        var ry = top + idx * rowH;
+        var cy = ry + rowH / 2;
+        g.save();
+        g.globalAlpha = appear;
+        if (isChanged) {
+          // 高亮整列。
+          g.globalAlpha = appear * 0.14; g.fillStyle = theme;
+          g.fillRect(2, ry + 1, w - 4, rowH - 2);
+          g.globalAlpha = appear; g.strokeStyle = theme; g.lineWidth = 1.4;
+          g.strokeRect(2, ry + 1, w - 4, rowH - 2);
+        } else if (idx % 2 === 1) {
+          g.globalAlpha = appear * 0.05; g.fillStyle = ink;
+          g.fillRect(2, ry + 1, w - 4, rowH - 2);
+        }
+        g.restore();
+        g.save(); g.globalAlpha = appear;
+        // 變因名稱。
+        label(g, name, c.nameX0 + 2, cy, isChanged ? theme : mut, 10.5, 'left');
+        // 兩組的值。
+        var valCol = isChanged ? theme : mut;
+        label(g, aTxt, c.aC, cy, valCol, 10.5, 'center');
+        label(g, bTxt, c.bC, cy, valCol, 10.5, 'center');
+        // 標記：操縱變因＝「不一樣」，控制變因＝「一樣」。
+        if (isChanged) {
+          label(g, '← 不一樣（故意改）', (c.aC + c.bC) / 2, ry + rowH - 7, theme, 8.5, 'center');
+        } else {
+          label(g, '＝一樣', (c.aC + c.bC) / 2, ry + rowH - 7, mut, 8, 'center');
+        }
+        g.restore();
+      }
+
+      var ri = 0;
+      changed.forEach(function (cv: any) { drawRow(ri++, cv.name, cv.a, cv.b, true); });
+      controlled.forEach(function (cv: any) { drawRow(ri++, cv.name, cv.val, cv.val, false); });
+
+      // 底部：應變變因量測（兩根長條）。長條頂端的數值永遠落在量測標籤下方，不重疊。
+      var barP = clamp01((p - 0.5) / 0.3);
+      var baseY = h - 24, maxBarH = 22;
+      var maxV = Math.max(values[0], values[1], 1);
+      label(g, '量到的結果（應變變因）：' + measure, w / 2, measTop - 2, ink, 9.5, 'center');
+      [[c.aC, values[0]], [c.bC, values[1]]].forEach(function (bv: any) {
+        var bh = maxBarH * (bv[1] / maxV) * barP;
+        g.save();
+        g.fillStyle = theme; g.globalAlpha = 0.85;
+        g.fillRect(bv[0] - 16, baseY - bh, 32, bh);
+        g.restore();
+        if (barP > 0.6) label(g, String(bv[1]), bv[0], baseY - bh - 7, ink, 10, 'center');
+      });
+
+      // 判定（最後浮現）。
+      var verdP = clamp01((p - 0.82) / 0.18);
+      if (verdP > 0) {
+        g.save(); g.globalAlpha = verdP;
+        var names = changed.map(function (cv: any) { return cv.name; }).join('、');
+        if (mode === 'fair') {
+          label(g, '✓ 只改了「' + names + '」→ 能確定差異來自它', w / 2, h - 7, OK, 10, 'center');
+        } else {
+          label(g, '✗ 同時改了「' + names + '」→ 分不清是誰造成的', w / 2, h - 7, WARN, 10, 'center');
+        }
+        g.restore();
+      }
+    }
+
+    return runScene(host, {
+      durationMs: 5600, loops: 2, staticPhase: 1,
+      label: cfg.label || ('公平測試對照實驗動畫：左右兩組「' + groups[0] + '／' + groups[1] + '」並排；'
+        + (mode === 'fair'
+          ? ('只有操縱變因「' + changed.map(function (cv: any) { return cv.name; }).join('、') + '」兩組不同，其他控制變因都保持相同，底部長條顯示應變變因「' + measure + '」的差異，可以確定差異來自那個操縱變因。')
+          : ('同時改了「' + changed.map(function (cv: any) { return cv.name; }).join('、') + '」兩個變因，底部長條雖有差異，卻分不清是哪一個造成的，不是公平測試。'))),
+      draw: render,
+      drawStatic: function (g, w, h) { render(g, 1, w, h); }
+    });
+  }
+
   // ---- 導出 -----------------------------------------------------------
   var Anim = {
     reducedMotion: reducedMotion,
@@ -2423,6 +2574,7 @@
     scatterTrend: scatterTrend,
     fallacySpotlight: fallacySpotlight,
     argFlow: argFlow,
+    fairTest: fairTest,
   };
   (window as any).Anim = Anim;
 })();
