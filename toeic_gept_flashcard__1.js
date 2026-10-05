@@ -893,7 +893,7 @@ function renderSpell() {
         }
         else {
             // 空格：spellClear 對空格 no-op，故不設 role=button/tabindex（避免螢幕報讀器報成「無作用的按鈕」），僅標示位置
-            slotsHTML += '<div class="fc-spell__tile fc-spell__slot' + stateCls + '" aria-label="第 ' + letterNo + ' 個字母，空格"></div>';
+            slotsHTML += '<div class="fc-spell__tile fc-spell__slot' + stateCls + '" aria-label="第 ' + letterNo + ' 個字母，待填入"></div>';
         }
     });
     // 字母磚池
