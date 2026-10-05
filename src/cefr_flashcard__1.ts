@@ -128,6 +128,7 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
   // Switch mode
   window.switchMode = function(mode) {
     currentMode = mode;
+    quizScore = 0; quizTotal = 0;   // quiz 與 spell 共用計分，切換模式要歸零，否則進度列與「結果 X/Y 正確」會把兩個活動的答對數混在一起
     btnFlashcard.classList.toggle('active', mode === 'flashcard');
     btnQuiz.classList.toggle('active', mode === 'quiz');
     btnSpell.classList.toggle('active', mode === 'spell');
