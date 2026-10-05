@@ -2606,8 +2606,7 @@ function renderSpelling() {
         else {
             slotsHtml += '<span class="fc-spell__tile fc-spell__slot' + (isHint ? ' hint filled' : '') + '" data-target="' + target + '" data-char="' + ch + '"'
                 + (isHint ? (' data-filled="' + target + '"') : '')
-                + ' role="button" tabindex="0"'
-                + (isHint ? '' : ' onclick="spellClearSlot(this)" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();spellClearSlot(this);}"')
+                + (isHint ? '' : ' role="button" tabindex="0" onclick="spellClearSlot(this)" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();spellClearSlot(this);}"') // 提示格無 handler,不設 role=button/tabindex(否則是從一開始就報讀成可按卻無作用的死按鈕);非提示格才可點按退回字母
                 + '>' + (isHint ? ch : '') + '</span>';
         }
     });
@@ -2705,6 +2704,12 @@ function lockSpellInputs() {
         rv.disabled = true;
         rv.setAttribute('aria-disabled', 'true');
     }
+    const ck = document.querySelector('.nav-btn[onclick*="checkSpelling"]'); // 一併停用「檢查」鈕:checkSpelling 已於 spellDone early-return,否則答對/看答案後它仍是可按卻 no-op 的死按鈕(與看答案鈕一致)
+    if (ck) {
+        ck.disabled = true;
+        ck.setAttribute('aria-disabled', 'true');
+    }
+    document.querySelectorAll('#spell-slots .fc-spell__slot').forEach(s => { s.removeAttribute('role'); s.removeAttribute('tabindex'); s.removeAttribute('onclick'); s.removeAttribute('onkeydown'); s.setAttribute('aria-disabled', 'true'); }); // 評分後字母磚格(span)也移除可操作性:spellClearSlot 已於 spellDone no-op,留著 role=button/tabindex 是鍵盤可達的死按鈕(與配對磚/quiz 選項一致)
 }
 function handleSpellInput(input) {
     if (input.value.length === 1) {
