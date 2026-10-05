@@ -49,6 +49,7 @@ function selectLevel(key) {
   currentLevel = key;
   currentIndex = 0;
   isFlipped = false;
+  awaitingContinue = false;   // 換等級＝新一題，解除「等待繼續」鎖，否則新題的 checkAnswer/onTileClick/checkSpell 會全部 early-return 卡死（與 switchMode 一致）
   knownCount = 0;
   againCount = 0;
   updateScore();
