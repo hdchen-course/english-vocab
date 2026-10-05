@@ -80,6 +80,7 @@ let currentMode = 'flashcard';
 let currentWordIndex = 0;
 let studyQueue = [];
 let isFlipped = false;
+let flashAudioTimer = null;   // 閃卡 audio-first 的待觸發 timer；換卡/換模式/換主題時於 renderMode 取消，避免播到上一張卡的字
 let matchState = { selected: null, matched: [] };
 let srs = new SRSEngine();
 
@@ -254,6 +255,7 @@ function nextWord() {
 // ==================== MODE RENDERERS ====================
 function renderMode() {
   answered = false; hintUsed = false; isFlipped = false;   // 新的一題/一種模式開始，解除作答鎖與提示旗標，並回到卡片正面（flipCard 只切 CSS class、不經此；凡 renderMode 都是全新卡片視圖，須從正面開始，才不會翻面殘留＋略過 audio-first）
+  if (flashAudioTimer) { clearTimeout(flashAudioTimer); flashAudioTimer = null; }   // 取消上一張閃卡尚未觸發的自動發音：換模式/主題也會重設 isFlipped，單靠 !isFlipped 擋不住跨卡誤播
   const area = document.getElementById('learningArea');
   document.getElementById('dashboard').classList.remove('show');
 
@@ -325,7 +327,7 @@ function renderFlashcard(area) {
   // 300ms 後的回呼會「再確認一次」isFlipped：若使用者在這段空檔先翻到背面就不播（flipCard 只切 CSS
   // class、不重新渲染，無法靠 render 取消此 timer，故須在回呼內再判斷），避免在背面亂播。
   // speak() 內含 try/catch 與 play().catch(fallback)，autoplay 被瀏覽器擋不會丟錯。
-  if (!isFlipped) setTimeout(() => { if (!isFlipped) speak(word.word); }, 300);
+  if (!isFlipped) flashAudioTimer = setTimeout(() => { flashAudioTimer = null; if (!isFlipped) speak(word.word); }, 300);
 }
 
 function flipCard() {
@@ -1449,6 +1451,8 @@ init();
       if (typeof updateStats === 'function') updateStats();
       studyQueue = [wObj];            // 只練這個字
       currentWordIndex = 0;
+      currentMode = 'flashcard';      // 強制回到以單字為主的模式：matching 會忽略 studyQueue、改抽整個主題的字，就練不到這個字了
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === 'flashcard'));
     } catch (e) {}
     closeScreen();
     if (typeof renderMode === 'function') renderMode();
