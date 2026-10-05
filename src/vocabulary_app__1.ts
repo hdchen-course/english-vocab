@@ -696,9 +696,11 @@ function renderListening(area) {
 
   const allWords = WORD_DATA[currentTab].words;
   const options = [word.word];
-  while (options.length < 4) {
+  let attempts = 0;
+  while (options.length < 4 && attempts < 100) {   // 誘答取樣上限，主題不足 4 個相異字時降級為較少選項，不卡死
     const rand = allWords[Math.floor(Math.random() * allWords.length)];
     if (!options.includes(rand.word)) options.push(rand.word);
+    attempts++;
   }
   options.sort(() => Math.random() - 0.5);
 

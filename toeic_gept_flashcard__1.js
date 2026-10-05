@@ -417,7 +417,7 @@ let studyQueue = [];
 let answered = false; // quiz / spell 作答鎖（自控繼續前不重複計分）
 let quizState = null;
 let spell = null;
-let spellAudioId = null; // 記住已播過發音的 spell.id，避免每次點磚/清除/切換模式都重播整字發音
+let spellAudioId = null; // 記住已播過發音的 spell.id，避免點磚/清除/切換字母磚↔鍵盤時重播整字發音；換卡（switchMode/nextWord/startWorddexReview）會重設為 null，讓同一個字之後再出現時仍會播一次
 // ==================== HELPERS ====================
 function esc(s) {
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -530,6 +530,7 @@ function switchMode(mode) {
     isFlipped = false;
     answered = false;
     spell = null;
+    spellAudioId = null;
     document.querySelectorAll('.mode-toggle .fc-source__btn').forEach(b => {
         const on = b.getAttribute('data-mode') === mode;
         b.classList.toggle('active', on);
@@ -549,6 +550,7 @@ window.startWorddexReview = function (q) {
     isFlipped = false;
     answered = false;
     spell = null;
+    spellAudioId = null;
     render();
 };
 function updateScore() {
@@ -564,6 +566,7 @@ function nextWord() {
     isFlipped = false;
     answered = false;
     spell = null;
+    spellAudioId = null;
     render();
 }
 // ==================== RENDER ====================

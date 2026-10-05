@@ -335,7 +335,7 @@ let studyQueue = [];
 let answered = false;            // quiz / spell 作答鎖（自控繼續前不重複計分）
 let quizState = null;
 let spell = null;
-let spellAudioId = null; // 記住已播過發音的 spell.id，避免每次點磚/清除/切換模式都重播整字發音
+let spellAudioId = null; // 記住已播過發音的 spell.id，避免點磚/清除/切換字母磚↔鍵盤時重播整字發音；換卡（switchMode/nextWord/startWorddexReview）會重設為 null，讓同一個字之後再出現時仍會播一次
 
 // ==================== HELPERS ====================
 function esc(s) {
@@ -422,7 +422,7 @@ function selectLevel(key) {
 }
 function switchMode(mode) {
   currentMode = mode;
-  currentIndex = 0; isFlipped = false; answered = false; spell = null;
+  currentIndex = 0; isFlipped = false; answered = false; spell = null; spellAudioId = null;
   document.querySelectorAll('.mode-toggle .fc-source__btn').forEach(b => {
     const on = b.getAttribute('data-mode') === mode;
     b.classList.toggle('active', on);
@@ -437,7 +437,7 @@ function resetQueue() {
 }
 // 今日複習橋接：跨等級佇列灌入主流程；不重置分數，維持累加。
 window.startWorddexReview = function (q) {
-  studyQueue = q; currentIndex = 0; isFlipped = false; answered = false; spell = null; render();
+  studyQueue = q; currentIndex = 0; isFlipped = false; answered = false; spell = null; spellAudioId = null; render();
 };
 function updateScore() {
   document.getElementById('knownCount').textContent = knownCount;
@@ -446,7 +446,7 @@ function updateScore() {
 function nextWord() {
   currentIndex++;
   if (currentIndex >= studyQueue.length) { currentIndex = 0; resetQueue(); }
-  isFlipped = false; answered = false; spell = null;
+  isFlipped = false; answered = false; spell = null; spellAudioId = null;
   render();
 }
 
