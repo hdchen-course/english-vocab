@@ -388,7 +388,7 @@ function carbonChains() {
 function organicExamples() {
   var inner = '';
   inner += tx(150, 15, '生活中常見的有機物（大多含碳）', 11);
-  var cards: Array<[number, string, string]> = [[16, '甲烷 CH₄', '瓦斯、天然氣'], [106, '乙醇（酒精）', '消毒、飲料'], [196, '乙酸（醋酸）', '醋的酸味']];
+  var cards: Array<[number, string, string]> = [[16, '甲烷 CH₄', '天然氣（管線瓦斯）'], [106, '乙醇（酒精）', '消毒、飲料'], [196, '乙酸（醋酸）', '醋的酸味']];
   cards.forEach(function (c) {
     inner += '<rect x="' + c[0] + '" y="30" width="88" height="46" rx="7" fill="' + C_ORG + '" fill-opacity="0.14" stroke="' + C_ORG + '" stroke-width="1.6"/>';
     inner += tx(c[0] + 44, 50, c[1], 10.5, 'currentColor') + tx(c[0] + 44, 68, c[2], 9, C_MLD);

@@ -3,7 +3,7 @@
  * 「物理觀念養成・進階（國中）」teach-first 動畫觀念頁。補齊 physics.html（等級 5–14：
  *   運動定律、功能量、電路歐姆、壓力浮力、慣性）的「先學觀念」中學鷹架缺口。
  *   資料 = window.CONCEPT，餵給共用 concept_engine.js（teach/quiz 引擎）＋ anim_core.js（window.Anim）。
- *   動畫課重用既有場景 window.Anim.circuitFlow / buoyancyFloat（不新增場景、不改 anim_core）；
+ *   動畫課重用 anim_core 場景 window.Anim.circuitFlow / buoyancyFloat / lensImaging / motionGraph；
  *   其餘 teach 步驟一律 stepped / static SVG（第 2、3 級 VIZ），零 text-only。
  *   以 IIFE 包住讓 SVG helper 為檔案區域（避免與其他已遷移頁同名頂層 helper 在 tsconfig.legacy
  *   共用全域型別檢查時 TS2393 衝突）。純本地進度（progKey），不餵主 XP。practiceHref＝physics.html。
@@ -396,7 +396,7 @@ window.CONCEPT = {
    { id:'optics', name:'光學成像：透鏡與生活中的像', emoji:'🔍', color:'#06b6d4', sub:'凸透鏡會聚、凹透鏡發散；放大鏡＝正立放大虛像、相機／眼睛＝倒立縮小實像',
      done:'記得：凸透鏡會聚光；放大鏡（物在焦距內）＝正立、放大的虛像；相機／眼睛（物在焦距外）＝倒立、縮小的實像。',
      steps:[
-      {type:'teach',kicker:'先看動畫',title:'透鏡有兩種：凸透鏡會聚、凹透鏡發散',svg:animCanvas(330,200,'凹透鏡光線作圖動畫：平行光線通過凹透鏡後向外發散，往回延伸的虛線交在同一側，得到一個正立、縮小的虛像'),mount:function(host){var h=window.Anim.lensImaging(host,{lens:'concave'});return function(){h.stop();};},text:'<b>透鏡</b>是會讓光<b>轉彎（折射）</b>的鏡片，分兩種：<b>凸透鏡</b>中間厚，會把光<b>會聚</b>（往中間靠），是放大鏡、相機、眼睛成像的主角；<b>凹透鏡</b>中間薄，會把光<b>發散</b>（往外散開），不管物體放在哪裡，看到的永遠是<b>正立、縮小的虛像</b>（如動畫），近視眼鏡就是用凹透鏡。接下來三步都看<b>凸透鏡</b>。'},
+      {type:'teach',kicker:'先看動畫',title:'透鏡有兩種：凸透鏡會聚、凹透鏡發散',svg:animCanvas(330,200,'凹透鏡光線作圖動畫：平行光線通過凹透鏡後向外發散，往回延伸的虛線交在同一側，得到一個正立、縮小的虛像'),mount:function(host){var h=window.Anim.lensImaging(host,{lens:'concave'});return function(){h.stop();};},text:'<b>透鏡</b>是會讓光<b>轉彎（折射）</b>的鏡片，分兩種：<b>凸透鏡</b>中間厚，會把光<b>會聚</b>（往中間靠），是放大鏡、相機、眼睛成像的主角；<b>凹透鏡</b>中間薄，會把光<b>發散</b>（往外散開），不管物體放在哪裡，看到的永遠是<b>正立、縮小的虛像</b>（如動畫），近視眼鏡就是用凹透鏡。凸透鏡會把平行光<b>會聚</b>到一個點，這個點叫<b>焦點</b>，鏡片到焦點的距離叫<b>焦距</b>；物體放在焦距<b>以內</b>還是<b>以外</b>，成的像會完全不同。接下來三步都看<b>凸透鏡</b>。'},
       {type:'teach',kicker:'物在焦距內',title:'放大鏡：正立、放大的虛像',svg:animCanvas(330,200,'凸透鏡光線作圖動畫：物體放在焦距以內，平行光線折射後過遠焦點、過中心光線直走，兩條折射光線往右發散，往回延伸的虛線交在同側，形成正立、放大的虛像，就是放大鏡'),mount:function(host){var h=window.Anim.lensImaging(host,{lens:'convex',object:'inside-focus'});return function(){h.stop();};},text:'把物體（例如小字）放在凸透鏡的<b>焦距以內</b>（靠近鏡片），兩條光線折射後<b>往外發散</b>、不會真的交會；但往回延伸的虛線交在<b>同一側</b>，形成一個<b>正立、放大的虛像</b>——這就是<b>放大鏡</b>把字變大的原理。虛像沒辦法投影在屏幕上，只能用眼睛透過鏡片看到。'},
       {type:'teach',kicker:'物在焦距外',title:'相機／手機鏡頭：倒立、縮小的實像',svg:animCanvas(330,200,'凸透鏡光線作圖動畫：物體放在焦距以外較遠處，平行光線折射後過遠焦點、過中心光線直走，兩條光線在透鏡另一側交會，形成倒立、縮小的實像，落在底片或感光元件上'),mount:function(host){var h=window.Anim.lensImaging(host,{lens:'convex',object:'outside-focus'});return function(){h.stop();};},text:'把物體放在凸透鏡的<b>焦距以外</b>（比較遠），兩條光線折射後會真的在<b>另一側交會</b>，形成一個<b>倒立、縮小的實像</b>。<b>相機、手機鏡頭</b>就是這樣，把遠方的景物成在<b>底片或感光元件</b>上。實像可以真的投影出來，所以能被底片記錄下來。'},
       {type:'teach',kicker:'你的眼睛也是',title:'眼睛：視網膜上的倒立實像，大腦再翻正',svg:animCanvas(330,200,'凸透鏡光線作圖動畫：物體在焦距外，水晶體像凸透鏡把光會聚在視網膜上成一個倒立縮小的實像，大腦再把它翻正'),mount:function(host){var h=window.Anim.lensImaging(host,{lens:'convex',object:'outside-focus'});return function(){h.stop();};},text:'你的<b>眼睛</b>就像一台相機：<b>水晶體</b>相當於凸透鏡，把光<b>會聚</b>在<b>視網膜</b>上，成的其實是一個<b>倒立、縮小的實像</b>（和相機一樣，物體在焦距外）。那為什麼我們看到的世界是正的？因為<b>大腦</b>會自動把這個倒立的像<b>翻正</b>，我們才覺得一切都是正立的。'},

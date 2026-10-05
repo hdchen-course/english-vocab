@@ -198,7 +198,7 @@ window.CONCEPT = {
      done:'記得：y=mx+b 裡 m 管斜度、b 管和 y 軸相交的高度。',
      steps:[
       {type:'teach',kicker:'先看動畫',title:'改 b 線上下移、改 m 線變陡',svg:animCanvas(300,230,'先把截距 b 從0升到2讓直線往上平移，再把斜率 m 從1變2讓直線變陡'),mount:function(host){var h=window.Anim.funcPlot(host,{kind:'linear',highlight:'intercept'});return function(){h.stop();};},text:'一條直線可以寫成 <b>y = mx + b</b>：<b>m</b> 是<b>斜率</b>（陡不陡）、<b>b</b> 是<b>截距</b>（線和 <b>y 軸相交的高度</b>）。動畫先把 <b>b 從 0 升到 2</b>，整條線<b>往上平移</b>；再把 <b>m 從 1 變 2</b>，線<b>繞著截距變陡</b>。'},
-      {type:'quiz',kicker:'換你試試',title:'y = 2x + 3 這條線和 y 軸相交在哪裡？',eq:'y = 2x + 3',options:['(0, 3)','(3, 0)','(0, 2)','(2, 3)'],answer:0,why:'線交 y 軸時 x＝0，代入得 y＝2×0+3＝3，所以是 (0, 3)。截距 b 就是那個 3。',whyWrong:{1:'(3, 0) 是交 x 軸的點。交 y 軸要讓 x＝0。',2:'2 是斜率 m，不是截距；截距是 b＝3。',3:'(2, 3) 不在這條線的交點上；交 y 軸時 x 一定是 0，不是 2。'}},
+      {type:'quiz',kicker:'換你試試',title:'y = 2x + 3 這條線和 y 軸相交在哪裡？',eq:'y = 2x + 3',options:['(0, 3)','(3, 0)','(0, 2)','(2, 3)'],answer:0,why:'線交 y 軸時 x＝0，代入得 y＝2×0+3＝3，所以是 (0, 3)。截距 b 就是那個 3。',whyWrong:{1:'這是把 (0, 3) 的座標對調了；交 y 軸時 x 一定要是 0，代入得 (0, 3)。',2:'2 是斜率 m，不是截距；截距是 b＝3。',3:'(2, 3) 不在這條線的交點上；交 y 軸時 x 一定是 0，不是 2。'}},
       {type:'quiz',kicker:'想一想',title:'y = −x + 1 的斜率是多少？',eq:'y = −x + 1',options:['−1','1','0','−x'],answer:0,why:'y=mx+b 裡 x 前面的係數就是斜率 m。−x 等於 −1·x，所以斜率是 −1。',whyWrong:{1:'少看了負號：−x 的係數是 −1，不是 1。',2:'0 是沒有斜度（水平線），但這條線有 −1 的斜率。',3:'斜率是一個數字，不是 −x 本身；−x 的係數 −1 才是斜率。'}}
      ]},
    { id:'vertex', name:'二次函數的頂點', emoji:'🎢', color:'#2563eb', sub:'拋物線的最高／最低點：x＝−b/(2a)',
