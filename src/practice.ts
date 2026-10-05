@@ -1667,9 +1667,11 @@
         renderSpelling();
     }
 
-    let spellDone = false;   // 本題拼字是否已計分/已看答案：擋重複計分與「看答案後按檢查」的洩分
+    let spellDone = false;   // 本題拼字是否已計分(答對)/已看答案：擋重複計分與「看答案後按檢查」的洩分
+    let spellWrongRecorded = false;   // 本題是否已記過一次答錯：答錯分支的 Game/Album/SRS 只扣一次，否則重複按「檢查」/Enter(鍵盤模式零改動)會一直累加錯誤與 SRS 衰退(與 quiz 的 re-grade 守衛一致)
     function renderSpelling() {
         spellDone = false;
+        spellWrongRecorded = false;
         const word = allWords[currentWordIndex];
         const mode = getSpellMode();
         const chars = word.word.split('');
@@ -1828,8 +1830,11 @@
             scheduleAdvance(1200);
         } else {
             updateProgress();
-            if (window.Game) Game.recordAnswer('english', false);
-            if (window.Album) Album.onWord(word, false);
+            if (!spellWrongRecorded) {   // 答錯只記一次：之後重複按「檢查」/Enter 仍會重新上色提示，但不再重複扣分/衰退 SRS
+                spellWrongRecorded = true;
+                if (window.Game) Game.recordAnswer('english', false);
+                if (window.Album) Album.onWord(word, false);
+            }
             if (feedback) { feedback.textContent = '綠色的字母是對的！修正紅色的再檢查一次，你很接近了！'; feedback.className = 'feedback-msg wrong'; }
             // 自控修正：不自動跳題；游標/焦點移到第一個錯處（鍵盤模式）。
             const inp = firstWrong && firstWrong.querySelector('input');
