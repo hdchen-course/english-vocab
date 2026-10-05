@@ -347,7 +347,7 @@ function checkAnswer(el, selected, correct, word) {
   const options = document.querySelectorAll('.quiz-option');
   options.forEach(opt => {
     opt.style.pointerEvents = 'none';
-    // 評分後解除選項的可操作性：pointerEvents:none 只擋滑鼠，鍵盤仍能 focus 並觸發委派的 keydown→checkAnswer（已被 awaitingContinue 擋成 no-op），對鍵盤/報讀使用者是「宣稱可按卻沒反應」的死按鈕；與拼字格 L537 一致移除 role/tabindex 並標 aria-disabled
+    // 評分後解除選項的可操作性：pointerEvents:none 只擋滑鼠，鍵盤仍能 focus 並觸發委派的 keydown→checkAnswer（已被 awaitingContinue 擋成 no-op），對鍵盤/報讀使用者是「宣稱可按卻沒反應」的死按鈕；比照拼字格評分鎖定的做法移除 role/tabindex 並標 aria-disabled
     if (opt.getAttribute('role') === 'button') { opt.removeAttribute('role'); opt.removeAttribute('tabindex'); opt.setAttribute('aria-disabled', 'true'); }
     if (opt.textContent === correct) opt.classList.add('correct');
   });
