@@ -53,7 +53,7 @@ function factOpinion(fact: string, opinion: string): string {
   lessons: [
    { id: 'expository', name: '說明文：把事情說清楚', emoji: '📋', color: '#b91c1c',
      sub: '總說→分項→總結；順著「首先/接著/最後」抓結構',
-     done: '記得：說明文＝把一件事「說清楚」（是什麼、怎麼做、為什麼），常用「總說→分項→總結」，順著「首先/接著/最後」就抓到結構。',
+     done: '記得：說明文＝把一件事「說清楚」（是什麼、怎麼做、為什麼），常用「<b>總說→分項→總結</b>」，順著「<b>首先/接著/最後</b>」就抓到結構。',
      steps: [
       { type: 'teach', kicker: '先想一想', title: '說明文的骨架：總說 → 分項 → 總結',
         svg: animCanvas(360, 240, '一段介紹蜜蜂的說明文，依序點亮三個語塊並掛上標籤：總說、分項、總結'),
