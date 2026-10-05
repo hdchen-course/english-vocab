@@ -260,12 +260,12 @@
         cur = genOne();
         answered = false;
         var bestTxt = bestStreak > streak ? ('（最佳 ' + bestStreak + '）') : '';
-        var isReduce = cur.cat.key === 'reduce';
+        var selfAsked = (cur.cat.key === 'reduce' || cur.cat.key === 'mixed'); // 這兩類的 spoken 已自帶問句（化成最簡／寫成假分數…），不可再補「等於多少」
         $('stage').innerHTML =
             '<div class="fl-card">' +
                 '<div class="fl-scorebar"><span>答對 ' + correct + ' / ' + total + '　連對 ' + streak + ' ' + bestTxt + '🔥</span><span class="fl-lv">難度 Lv.' + lv + '</span></div>' +
                 '<span class="fl-tag">' + cur.cat.emoji + ' ' + cur.cat.label + '</span>' +
-                '<div class="fl-problem" id="fl-prob" tabindex="-1" role="img" aria-label="題目：' + cur.spoken + '，' + (isReduce ? '化成最簡分數' : '等於多少') + '？">' + cur.html + ' <span class="fl-op">=</span> <span style="color:var(--su-d)">?</span></div>' +
+                '<div class="fl-problem" id="fl-prob" tabindex="-1" role="img" aria-label="題目：' + cur.spoken + (selfAsked ? '' : '，等於多少') + '？">' + cur.html + ' <span class="fl-op">=</span> <span style="color:var(--su-d)">?</span></div>' +
                 '<div class="fl-answer">' +
                 '<div class="fl-inpfrac">' +
                 '<input type="text" inputmode="numeric" id="fl-n" aria-label="答案的分子" autocomplete="off">' +

@@ -21,7 +21,7 @@
                 var delta = pick([-2, -1, 1, 2, 3]);
                 var b = base + delta;
                 var add = pick([true, false]);
-                var aMax = lv <= 1 ? 90 : lv === 2 ? 150 : lv === 3 ? 300 : lv === 4 ? 500 : 700; // Lv5 收斂在約 1000 上下（偶爾略過千位、如 1003），維持心算範圍、不做更大的四位數陡跳
+                var aMax = lv <= 1 ? 90 : lv === 2 ? 150 : lv === 3 ? 300 : lv === 4 ? 500 : 700; // Lv5 加法答案最大約 1000（700+303=1003），減法結果約 15..700；偶爾略為破千，維持心算範圍、不做更大的四位數陡跳
                 var a = add ? ri(21, aMax) : b + ri(15, aMax); // 減法時被減數較大，結果為正
                 var ans = add ? a + b : a - b;
                 var step1 = add ? a + base : a - base;
