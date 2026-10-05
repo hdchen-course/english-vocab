@@ -517,6 +517,8 @@ function selectLevel(key) {
     currentIndex = 0;
     isFlipped = false;
     answered = false;
+    spell = null;
+    spellAudioId = null; // 與 switchMode/nextWord/startWorddexReview 一致：清掉 render 快取的 spell 盤面，否則重選同一等級、佇列首字仍是剛評分的到期字時，renderSpell 的 id 相符守衛會沿用舊的已評分盤面（answered 已歸零 → 可清空重填再評分，二次 gradeBinary/XP，且抑制 audio-first 重播）
     knownCount = 0;
     againCount = 0;
     updateScore();
