@@ -123,7 +123,7 @@ function flowDecide(action: string, q: string, yesLabel: string, noLabel: string
   s += '<text x="118" y="164" font-size="11" font-weight="800" fill="' + CT_OK + '">是</text>';
   s += node(yesLabel, 110, 186, 108, 32, 'act');
   // 否 → 右
-  s += arrow(169, 122, 236, 122);
+  s += arrow(169, 122, 181, 122);
   s += '<text x="190" y="114" font-size="11" font-weight="800" fill="' + CT_BAD + '">否</text>';
   s += node(noLabel, 236, 122, 110, 32, 'act');
   s += arrow(236, 138, 236, 212);
