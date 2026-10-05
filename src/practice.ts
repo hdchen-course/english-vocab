@@ -1658,6 +1658,7 @@
         catch (e) { return 'tiles'; }
     }
     function toggleSpellMode() {
+        if (advanceTimer) { clearTimeout(advanceTimer); advanceTimer = null; }   // 直接呼叫 renderSpelling（未經 render()），須自行取消待觸發的自動前進，否則切換後殘留 timer 會跳掉剛重繪的卡
         var m = getSpellMode() === 'tiles' ? 'keyboard' : 'tiles';
         try { localStorage.setItem('practice_spell_mode', m); } catch (e) {}
         renderSpelling();
@@ -1821,6 +1822,7 @@
 
     function revealSpelling() {
         spellDone = true;   // 看過答案就不給分（否則填滿正解再按檢查＝不勞而獲的洩分）；孩子看完按「跳過」進下一題
+        const fb = document.getElementById('spell-feedback'); if (fb) { fb.textContent = '答案如上，看一次、記起來，下次就會囉！'; fb.className = 'feedback-msg'; }   // 清掉先前答錯留下的「修正紅色的再檢查」訊息（現在已全部揭示並鎖定，沒有紅字、檢查也無效）
         document.querySelectorAll('#spell-slots .fc-spell__slot').forEach(s => {
             const t = s.dataset.target || '';
             const input = s.querySelector('input');
