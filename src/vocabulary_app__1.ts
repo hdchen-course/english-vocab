@@ -235,6 +235,11 @@ function getCurrentWord() {
   return studyQueue[currentWordIndex % studyQueue.length];
 }
 
+// 作答鎖：每張卡/每種模式只計分一次。answered 於 renderMode()（換卡、換模式、換主題都會經過）重設；
+// hintUsed 記錄本題是否用過提示，用過就不給「記住了」的正向 SRS 學分（避免靠提示洗分、破壞間隔排程）。
+let answered = false;
+let hintUsed = false;
+
 function nextWord() {
   currentWordIndex++;
   if (currentWordIndex >= studyQueue.length) {
@@ -247,6 +252,7 @@ function nextWord() {
 
 // ==================== MODE RENDERERS ====================
 function renderMode() {
+  answered = false; hintUsed = false;   // 新的一題/一種模式開始，解除作答鎖與提示旗標
   const area = document.getElementById('learningArea');
   document.getElementById('dashboard').classList.remove('show');
 
@@ -332,8 +338,10 @@ function flipCard() {
 }
 
 function reviewWord(quality) {
+  if (answered) return;   // 防連點/雙擊在 setTimeout(nextWord) 空窗內重複計分、跳字
   const word = getCurrentWord();
   if (word) {
+    answered = true;
     const card = srs.review(word.word, quality);
     recordStudy();
     if (quality >= 2) showConfetti();
@@ -468,6 +476,8 @@ function renderQuiz(area) {
 }
 
 function checkQuizAnswer(el, selected, correct) {
+  if (answered) return;   // pointer-events:none 擋不住全域 Enter 委派觸發的 .click()，用作答鎖才穩
+  answered = true;
   const options = document.querySelectorAll('.quiz-option');
   options.forEach(opt => {
     opt.style.pointerEvents = 'none';
@@ -617,6 +627,7 @@ function spellCheckTiles() {
 }
 
 function checkSpelling(e) {
+  if (answered) return;   // 已計分就別再因重複 keyup/Enter 重跑計分與跳字
   const word = getCurrentWord();
   const input = document.getElementById('spellingInput').value.toLowerCase();
   const target = word.word.toLowerCase();
@@ -654,12 +665,20 @@ function checkSpelling(e) {
   });
 
   if (inputNS === targetNS) {
-    showConfetti();
-    srs.review(word.word, 2);
+    answered = true;
+    // 靠提示把整個字補滿不算真的記住：不給「記住了」(quality 2) 的正向學分，避免洗分破壞間隔排程。
+    if (hintUsed) {
+      srs.review(word.word, 0);
+      showToast('靠提示完成～下次自己拼拼看也可以 💪');
+    } else {
+      showConfetti();
+      srs.review(word.word, 2);
+    }
     recordStudy();
     updateStats();
     setTimeout(nextWord, 900);
   } else if (e && e.key === 'Enter' && inputNS.length === targetNS.length) {
+    answered = true;
     srs.review(word.word, 0);
     recordStudy();
     updateStats();
@@ -683,6 +702,7 @@ function showSpellingHint() {
 
   // Reveal next letter（跳過空格，確保每次提示都真的多露出一個字母；多字詞如 ice cream 的空格位沒有方格）
   if (current.length < target.length) {
+    hintUsed = true;   // 用過提示：completion 時只給 0 分，不給「記住了」
     var k = current.length + 1;
     while (k < target.length && target.charAt(k - 1) === ' ') k++;
     input.value = target.substring(0, k);
@@ -721,6 +741,8 @@ function renderListening(area) {
 }
 
 function checkListeningAnswer(el, selected, correct) {
+  if (answered) return;
+  answered = true;
   const options = document.querySelectorAll('.quiz-option');
   options.forEach(opt => {
     opt.style.pointerEvents = 'none';
@@ -803,6 +825,8 @@ function renderClozeQuiz(area) {
 }
 
 function checkClozeAnswer(el, selected, correct) {
+  if (answered) return;
+  answered = true;
   const options = document.querySelectorAll('.quiz-option');
   options.forEach(opt => {
     opt.style.pointerEvents = 'none';
