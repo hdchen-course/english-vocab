@@ -125,6 +125,22 @@ interface AnimApi {
   /** 參數化立體：mode:'fill' 底面疊層＝底面積×高（錐倒水示意＝柱的 1/3）；mode:'unfold' 攤平成展開圖＝各面面積和（柱側面長＝底周長；球攤成 4 大圓）。
    *  cfg = {shape:'prism'|'cylinder'|'cone'|'sphere', mode:'fill'|'unfold', label}。幾何體積/表面積頁用。 */
   solid3D: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 注音拼讀：聲母方塊滑向韻母（可選介音）合成字音，再輪流套上四聲調號、顯示對應的字（每字停留）。
+   *  台灣鐵則：一聲 mark==='' 不標調號（絕不畫 ˉ）。reduced-motion 四欄並排四聲對比。國語注音頁用。
+   *  cfg = {initial:'ㄇ', medial:'', final:'ㄚ', tones:[{char:'媽',mark:''},{char:'麻',mark:'ˊ'},{char:'馬',mark:'ˇ'},{char:'罵',mark:'ˋ'}], label?}。 */
+  zhuyinBlend: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 聲調曲線：點沿四聲＋輕聲的音高折線移動（Chao 五度制）。台灣鐵則：一聲高平且不標調號（畫「（不標）」而非 ˉ）；
+   *  二聲 ˊ 中升、三聲 ˇ 先降後升、四聲 ˋ 高降、輕聲 ˙ 短而輕。reduced-motion 畫完整五曲線。cfg = {label?}。 */
+  toneContour: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 語塊高亮：句子拆成語塊，hl 語塊依序亮起並掛小標籤旗、其餘變淡（標點／說明文／文言／審題共用，author-once）。
+   *  cfg = {tokens:[{t:'片段', hl?:true, label?:'說明', color?:'--su'}], loops?, dwellMs?, title?, caption?, label?}。 */
+  textHighlight: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 區塊組裝：具名方塊由上而下滑入組成文件／句子骨架；可選 fix 把放錯／寫錯的方塊換成正確的（綠✓）。
+   *  書信結構／主謂賓／病句修正／大綱共用。cfg = {blocks:[{label,color?}], order?:number[], fix?:{atIndex,wrong,right}, title?, caption?, label?}。 */
+  blockAssemble: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 長條重點圖：長條依序長高、再依序拉出重點說明旗指向對應長條；misleadFlag 時畫斷軸鋸齒＋紅字「Y 軸沒從 0 開始→看起來差很多」。
+   *  跨科共用（數學統計／核心素養／社會讀圖）。cfg = {bars:[{label,value}], unit?, callouts:[{barIndex,note}], misleadFlag?, title?, label?}。 */
+  barChartCallout: (host: HTMLElement, cfg?: any) => { stop: () => void };
 }
 
 /** game_core.js 導出的遊戲核心 API（window.Game）。遷移 game_core 時逐步精確化。 */

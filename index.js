@@ -31,6 +31,7 @@
         'earth_science_concepts.html': '地球科學觀念養成', 'everyday_science_concepts.html': '生活理化・小百科',
         'economics_concepts.html': '理財觀念養成', 'finance_mindset_concepts.html': '理財心態・財務自由',
         'chinese_concepts.html': '國語觀念養成',
+        'chinese_phonics_concepts.html': '注音拼讀啟蒙', 'chinese_punctuation_concepts.html': '標點符號全攻略', 'chinese_nonfiction_concepts.html': '非記敘文閱讀', 'chinese_practical_writing_concepts.html': '應用文觀念養成', 'chinese_grammar_concepts.html': '詞類・句子・病句',
         'english_concepts.html': '英文句型觀念養成', 'english_reading.html': '英語閱讀技巧', 'english_idioms.html': '英文慣用語・看圖秒懂', 'english_speaking.html': '英文口說・跟著唸',
         'social_concepts.html': '社會觀念養成',
         'composition.html': '小小作家 · 寫作工廠',

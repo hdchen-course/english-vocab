@@ -271,6 +271,38 @@
     g.restore();
   }
 
+  // ---- 國語（Chinese）cluster 共用小工具 --------------------------------
+  /** 圓角矩形路徑（只建路徑；呼叫端自行 fill/stroke）。 */
+  function rrectPath(g: CanvasRenderingContext2D, x: number, y: number, bw: number, bh: number, r: number) {
+    var rr = Math.max(0, Math.min(r, bw / 2, bh / 2));
+    g.beginPath();
+    g.moveTo(x + rr, y);
+    g.arcTo(x + bw, y, x + bw, y + bh, rr);
+    g.arcTo(x + bw, y + bh, x, y + bh, rr);
+    g.arcTo(x, y + bh, x, y, rr);
+    g.arcTo(x, y, x + bw, y, rr);
+    g.closePath();
+  }
+  /** 設 label() 同款字體字串以便 measureText 量寬（量完由 label 自己重設）。 */
+  function labelFont(g: CanvasRenderingContext2D, size: number) {
+    g.font = '600 ' + size + 'px system-ui, -apple-system, "Segoe UI", sans-serif';
+  }
+  /** 圓角 chip：底＝col 半透明 tint（卡底仍透出→亮暗雙主題都安全，defect #28）、框＝col、內文＝textCol。 */
+  function chipBox(g: CanvasRenderingContext2D, x: number, y: number, bw: number, bh: number,
+    col: string, txt: string, textCol: string, fontSize: number, alpha: number) {
+    g.save();
+    g.globalAlpha = alpha * 0.14; g.fillStyle = col; rrectPath(g, x, y, bw, bh, 8); g.fill();
+    g.globalAlpha = alpha; g.lineWidth = 1.6; g.strokeStyle = col; rrectPath(g, x, y, bw, bh, 8); g.stroke();
+    g.restore();
+    if (txt) { g.save(); g.globalAlpha = alpha; label(g, txt, x + bw / 2, y + bh / 2, textCol, fontSize, 'center'); g.restore(); }
+  }
+  /** 解析顏色：'--xxx' 當 CSS 變數讀（支援主題色），否則原樣回傳；空則用 fallback。 */
+  function resolveCol(c: string | undefined, fallback: string): string {
+    if (!c) return fallback;
+    if (c.charAt(0) === '-' && c.charAt(1) === '-') return cssVar(c, fallback);
+    return c;
+  }
+
   // ====================================================================
   // 場景 1：公轉——地球沿近圓軌道繞太陽，顯示「第 N 天 / 第 N 月」讀數。
   // ====================================================================
@@ -3935,6 +3967,485 @@
     });
   }
 
+  // ====================================================================
+  // 場景：zhuyinBlend — 注音拼讀。聲母方塊滑向韻母方塊、合成一個字音，
+  //   再輪流套上四聲調號、顯示對應的字（每個字停留）。支援可選介音（ㄧ/ㄨ/ㄩ）。
+  //   台灣注音鐵則：一聲（調號為空字串）不標調號——mark==='' 時完全不畫符號。
+  //   reduced-motion：四欄並排四聲靜態，保留「同音不同調＝不同字」的對比。
+  //   cfg = {initial:'ㄇ', medial:'', final:'ㄚ',
+  //          tones:[{char:'媽',mark:''},{char:'麻',mark:'ˊ'},{char:'馬',mark:'ˇ'},{char:'罵',mark:'ˋ'}]}
+  // ====================================================================
+  function zhuyinBlend(host: HTMLElement, cfg: any) {
+    cfg = cfg || {};
+    var initial: string = (cfg.initial != null) ? String(cfg.initial) : 'ㄇ';
+    var medial: string = (cfg.medial != null) ? String(cfg.medial) : '';
+    var fin: string = (cfg.final != null) ? String(cfg.final) : 'ㄚ';
+    var tones: any[] = (cfg.tones && cfg.tones.length)
+      ? cfg.tones
+      : [{ char: '媽', mark: '' }, { char: '麻', mark: 'ˊ' }, { char: '馬', mark: 'ˇ' }, { char: '罵', mark: 'ˋ' }];
+    var nT = tones.length;
+    // 組字順序：聲母 → （介音）→ 韻母。
+    var glyphs: string[] = [initial]; if (medial) glyphs.push(medial); glyphs.push(fin);
+    var AS = 0.22;                                   // 前段「滑入合成」佔比
+
+    /** 量出合成後各注音符號的 x（置中排一列），回傳 {xs, gsz, startX, totalW}。 */
+    function layout(g: CanvasRenderingContext2D, w: number, h: number) {
+      var gsz = Math.min(42, Math.max(26, w * 0.12));
+      labelFont(g, gsz);
+      var gap = gsz * 0.14;
+      var widths: number[] = [], total = 0;
+      for (var i = 0; i < glyphs.length; i++) { var ww = g.measureText(glyphs[i]).width; widths.push(ww); total += ww; }
+      total += gap * (glyphs.length - 1);
+      var startX = w / 2 - total / 2;
+      var xs: number[] = [], cur = startX;
+      for (var j = 0; j < glyphs.length; j++) { xs.push(cur + widths[j] / 2); cur += widths[j] + gap; }
+      return { xs: xs, widths: widths, gsz: gsz, cy: h * 0.42, rightEdge: cur - gap };
+    }
+
+    /** 畫調號在字音右上角（一聲 mark==='' → 不畫；輕聲 ˙ 畫在左上）。 */
+    function drawToneMark(g: CanvasRenderingContext2D, mark: string, lo: any, theme: string, alpha: number) {
+      if (!mark) return;
+      g.save(); g.globalAlpha = alpha;
+      var msz = lo.gsz * 0.72;
+      if (mark === '˙') label(g, '˙', lo.xs[0], lo.cy - lo.gsz * 0.62, theme, msz, 'center');
+      else label(g, mark, lo.rightEdge + msz * 0.42, lo.cy - lo.gsz * 0.30, theme, msz, 'center');
+      g.restore();
+    }
+
+    function draw(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var theme = themeColor(), ink = inkColor();
+      label(g, '聲母 ＋ 韻母 → 拼成一個字音', w / 2, 14, theme, 12, 'center');
+      var lo = layout(g, w, h);
+      var assembling = p < AS;
+      var prog = assembling ? easeInOut(Math.min(1, p / AS)) : 1;
+      // 聲母（第 0 個）滑入：合成前從左方較遠處滑到定位；韻母（含介音）固定不動。
+      var slide = lo.gsz * 2.2;
+      for (var i = 0; i < glyphs.length; i++) {
+        var gx = lo.xs[i];
+        if (i === 0 && assembling) gx = lo.xs[i] - (1 - prog) * slide;
+        var ga = (i === 0 && assembling) ? (0.35 + 0.65 * prog) : 1;
+        g.save(); g.globalAlpha = ga; label(g, glyphs[i], gx, lo.cy, ink, lo.gsz, 'center'); g.restore();
+      }
+      // 聲母/韻母 分組小標（只在合成階段提示）。
+      if (assembling) {
+        g.save(); g.globalAlpha = 0.75;
+        label(g, '聲母', lo.xs[0] - (1 - prog) * slide, lo.cy + lo.gsz * 0.78, theme, 10.5, 'center');
+        label(g, medial ? '介音＋韻母' : '韻母', (lo.xs[glyphs.length - 1] + lo.xs[medial ? 1 : glyphs.length - 1]) / 2, lo.cy + lo.gsz * 0.78, theme, 10.5, 'center');
+        g.restore();
+      }
+      if (!assembling) {
+        // 四聲循環：等分窗格，套上調號 + 顯示對應的字（停留）。
+        var tt = (p - AS) / (1 - AS);
+        var idx = Math.min(nT - 1, Math.floor(tt * nT));
+        var local = tt * nT - idx;                      // 本格進度 0..1
+        var pop = easeInOut(Math.min(1, local / 0.3));
+        var tone = tones[idx] || { char: '', mark: '' };
+        drawToneMark(g, tone.mark, lo, theme, pop);
+        // 對應的字（大、ink）。
+        var cz = lo.gsz * 1.25;
+        g.save(); g.globalAlpha = 0.4 + 0.6 * pop;
+        label(g, '讀作', w / 2, lo.cy + lo.gsz * 1.0, ink, 11, 'center');
+        label(g, tone.char || '', w / 2, lo.cy + lo.gsz * 1.0 + cz * 0.75, ink, cz, 'center');
+        g.restore();
+        // 聲調點名（含「一聲不標」提示）。
+        var TN = ['一聲', '二聲', '三聲', '四聲', '輕聲'];
+        var markName = tone.mark === '' ? (TN[0] + '（不標調號）') : ('第 ' + (idx + 1) + ' 聲 ' + tone.mark);
+        label(g, markName, w / 2, 30, tone.mark === '' ? inkColor() : theme, 11, 'center');
+      }
+      bottomCap(g, w, h, assembling ? '聲母滑向韻母，合成一個字音' : '同一個字音，配不同聲調就是不同的字', ink);
+    }
+
+    return runScene(host, {
+      durationMs: 9000, loops: 2, staticPhase: 0.6,
+      label: cfg.label || ('注音拼讀動畫：聲母「' + initial + '」滑向韻母「' + (medial + fin) + '」合成字音，再輪流套上二、三、四聲調號並顯示對應的字；一聲不標調號。'),
+      drawStatic: function (g, w, h) {
+        var ink = inkColor(), theme = themeColor();
+        label(g, '同音不同調 → 不同的字', w / 2, 13, theme, 11.5, 'center');
+        var colW = w / nT;
+        labelFont(g, 1);
+        for (var i = 0; i < nT; i++) {
+          var cx = colW * i + colW / 2;
+          var tone = tones[i] || { char: '', mark: '' };
+          var gsz = Math.min(26, colW * 0.5);
+          // 字音（含介音）直接整串顯示。
+          label(g, glyphs.join(''), cx, h * 0.34, ink, gsz, 'center');
+          if (tone.mark) label(g, tone.mark, cx + gsz * 0.9, h * 0.34 - gsz * 0.35, theme, gsz * 0.7, 'center');
+          label(g, tone.char || '', cx, h * 0.58, ink, gsz * 1.2, 'center');
+          var TN = ['一聲', '二聲', '三聲', '四聲', '輕聲'];
+          label(g, tone.mark === '' ? (TN[0] + '·不標') : TN[Math.min(i, 4)], cx, h * 0.82, tone.mark === '' ? ink : theme, 10.5, 'center');
+        }
+      },
+      draw: draw
+    });
+  }
+
+  // ====================================================================
+  // 場景：toneContour — 四聲＋輕聲的音高曲線（點沿每條曲線移動）。
+  //   台灣注音鐵則（正確性第一）：一聲（陰平）＝高平，且【不標調號】——
+  //   絕不畫 ˉ（那是漢語拼音／中國的標法）；二聲 ˊ 中升、三聲 ˇ 先降後升、
+  //   四聲 ˋ 高降、輕聲 ˙ 短而輕。每條曲線標上台灣調號（一聲不標）。
+  //   reduced-motion：staticPhase=1 → 畫完整五條曲線（點停在終點）。
+  // ====================================================================
+  function toneContour(host: HTMLElement, cfg: any) {
+    cfg = cfg || {};
+    // Chao 五度制高低（1 低…5 高）折線；一聲 55、二聲 35、三聲 214、四聲 51。
+    var CONTOURS: Array<{ name: string; mark: string; pts: number[][]; light?: boolean }> = [
+      { name: '一聲', mark: '', pts: [[0, 5], [1, 5]] },           // 高平・不標
+      { name: '二聲', mark: 'ˊ', pts: [[0, 3], [1, 5]] },           // 中升
+      { name: '三聲', mark: 'ˇ', pts: [[0, 2], [0.42, 1], [1, 4]] }, // 降後升
+      { name: '四聲', mark: 'ˋ', pts: [[0, 5], [1, 1]] },           // 高降
+      { name: '輕聲', mark: '˙', pts: [[0, 2], [0.5, 1.6]], light: true } // 短而輕
+    ];
+    var n = CONTOURS.length;
+
+    /** 折線在 t(0..1) 的 (fx,level)；level 1..5。 */
+    function at(pts: number[][], t: number): number {
+      if (t <= pts[0][0]) return pts[0][1];
+      var last = pts[pts.length - 1];
+      if (t >= last[0]) return last[1];
+      for (var i = 1; i < pts.length; i++) {
+        if (t <= pts[i][0]) {
+          var a = pts[i - 1], b = pts[i];
+          var r = (t - a[0]) / (b[0] - a[0]);
+          return a[1] + (b[1] - a[1]) * r;
+        }
+      }
+      return last[1];
+    }
+
+    function draw(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var theme = themeColor(), ink = inkColor();
+      label(g, '聲調：聲音高低怎麼變化', w / 2, 14, theme, 12, 'center');
+      var padX = 10, top = 48, bot = h - 40;
+      var colW = (w - 2 * padX) / n;
+      var boxH = bot - top;
+      function levelY(L: number): number { return bot - (L - 1) / 4 * boxH; }
+      // 左側「高/低」提示（只標一次）。
+      g.save(); g.globalAlpha = 0.7;
+      label(g, '高', padX + 6, top + 2, ink, 9, 'left');
+      label(g, '低', padX + 6, bot - 2, ink, 9, 'left');
+      g.restore();
+      for (var i = 0; i < n; i++) {
+        var c = CONTOURS[i];
+        var x0 = padX + colW * i + colW * 0.16;
+        var x1 = padX + colW * i + colW * (c.light ? 0.56 : 0.84);
+        // 面板基準格線（上下兩條淡線）。
+        g.save(); g.strokeStyle = ink; g.globalAlpha = 0.12; g.lineWidth = 1;
+        g.beginPath(); g.moveTo(x0, top); g.lineTo(x0, bot); g.stroke();
+        g.restore();
+        // 曲線。
+        g.save();
+        g.strokeStyle = theme; g.lineWidth = c.light ? 2 : 2.6; g.lineCap = 'round'; g.lineJoin = 'round';
+        if (c.light) g.globalAlpha = 0.72;
+        g.beginPath();
+        var steps = 40;
+        for (var s = 0; s <= steps; s++) {
+          var t = s / steps;
+          var lv = at(c.pts, t);
+          var xx = x0 + (x1 - x0) * t, yy = levelY(lv);
+          if (s === 0) g.moveTo(xx, yy); else g.lineTo(xx, yy);
+        }
+        g.stroke();
+        g.restore();
+        // 移動的點（沿本曲線）。
+        var dotT = c.light ? Math.min(1, p * 1.0) : p;
+        var dlv = at(c.pts, dotT);
+        var dx = x0 + (x1 - x0) * dotT, dy = levelY(dlv);
+        disc(g, dx, dy, c.light ? 3 : 3.6, theme);
+        // 調號（一聲：不畫符號，改標「不標」）。畫在標題與面板之間的獨立帶狀，避免壓到標題。
+        var cx = (x0 + x1) / 2;
+        if (c.mark) label(g, c.mark, cx, 32, theme, 15, 'center');
+        else label(g, '（不標）', cx, 32, ink, 9, 'center');
+        // 聲調名。
+        label(g, c.name, cx, bot + 13, ink, 11, 'center');
+      }
+      bottomCap(g, w, h, '一聲平、二聲揚、三聲轉彎、四聲降、輕聲短（台灣一聲不標調號）', ink);
+    }
+
+    return runScene(host, {
+      durationMs: 4800, loops: 3, staticPhase: 1,
+      label: cfg.label || '聲調曲線動畫：一聲高平（台灣不標調號）、二聲中升、三聲先降後升、四聲高降、輕聲短而輕；小點沿每條曲線移動呈現音高變化。',
+      draw: draw
+    });
+  }
+
+  // ====================================================================
+  // 場景：textHighlight — 把句子拆成語塊，hl 的語塊「依序」亮起並掛小標籤旗，
+  //   其餘變淡。標點／說明文／文言／審題共用。
+  //   cfg = {tokens:[{t:'片段', hl?:true, label?:'冒號：引出說的話', color?:'--su'}],
+  //          loops?, dwellMs?, title?, caption?}
+  //   reduced-motion：全部 hl 亮起 + 底部條列各標籤。
+  // ====================================================================
+  function textHighlight(host: HTMLElement, cfg: any) {
+    cfg = cfg || {};
+    var tokens: any[] = cfg.tokens || [{ t: '文字' }];
+    var hlIdx: number[] = [];
+    for (var ti = 0; ti < tokens.length; ti++) if (tokens[ti] && tokens[ti].hl) hlIdx.push(ti);
+    var k = Math.max(1, hlIdx.length);
+    var FS = 15;
+    var FLAGH = 16, FLAG_GAP = 6;                      // 標籤旗高度／旗底到 token 的間距
+    // 行距含「上方標籤帶」：確保某行 token 的旗子落在它自己這行上方的空白帶，絕不壓到上一行文字。
+    // 需 LINEH ≥ FS*0.75 + FLAG_GAP + FLAGH + 上一行文字下緣(FS/2) ≈ 40.75。
+    var LINEH = FS + 28;
+
+    /** 流式排版：回傳每個 token 的 {x,y,w}（y=中線）與總行數。 */
+    function layout(g: CanvasRenderingContext2D, w: number, topY: number) {
+      labelFont(g, FS);
+      var padX = 14, maxW = w - 2 * padX, chipPadX = 5;
+      var boxes: Array<{ x: number; y: number; w: number }> = [];
+      var cx = padX, cy = topY, lines = 1, i;
+      for (i = 0; i < tokens.length; i++) {
+        var tw = g.measureText(tokens[i].t || '').width + chipPadX * 2;
+        if (cx + tw > padX + maxW && cx > padX) { cx = padX; cy += LINEH; lines++; }
+        boxes.push({ x: cx, y: cy, w: tw });
+        cx += tw + 2;
+      }
+      return { boxes: boxes, lines: lines };
+    }
+
+    function draw(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var theme = themeColor(), ink = inkColor();
+      label(g, cfg.title || '找出關鍵語塊', w / 2, 14, theme, 12, 'center');
+      // 先量行數，據此把整塊句子（含每行上方的標籤帶）垂直置中，標籤帶即使多行也不互疊。
+      var top = 26, bot = h - 20;
+      var above1 = FS * 0.75 + FLAG_GAP + FLAGH + 3;   // 第一行基線上方要留給它的旗子
+      var nLines = layout(g, w, 0).lines;
+      var blockH = above1 + (nLines - 1) * LINEH + FS / 2;
+      var topY = top + Math.max(0, (bot - top - blockH) / 2) + above1;
+      var lay = layout(g, w, topY);
+      var activeHl = Math.min(k - 1, Math.floor(p * k + 1e-6));   // 第幾個 hl 正在亮
+      for (var i = 0; i < tokens.length; i++) {
+        var tk = tokens[i], b = lay.boxes[i];
+        var hlRank = hlIdx.indexOf(i);
+        var isHl = hlRank >= 0;
+        var lit = isHl && hlRank <= activeHl;
+        var col = resolveCol(tk.color, theme);
+        if (lit) {
+          chipBox(g, b.x, b.y - FS * 0.75, b.w, FS * 1.5, col, tk.t || '', ink, FS, 1);
+        } else {
+          g.save(); g.globalAlpha = isHl ? 0.5 : 0.42;
+          label(g, tk.t || '', b.x + b.w / 2, b.y, ink, FS, 'center');
+          g.restore();
+        }
+        // 正在亮的 hl：旗子一律掛在該 token 所屬行的「上方預留帶」內 → 多行時永不壓到上一行文字。
+        if (lit && hlRank === activeHl && tk.label) {
+          labelFont(g, 10);
+          var fw = g.measureText(tk.label).width + 12;
+          var fy = b.y - FS * 0.75 - FLAG_GAP - FLAGH;
+          var fx = Math.max(4, Math.min(w - fw - 4, b.x + b.w / 2 - fw / 2));
+          g.save(); g.strokeStyle = col; g.lineWidth = 1.3; g.globalAlpha = 0.8;
+          g.beginPath(); g.moveTo(b.x + b.w / 2, b.y - FS * 0.75); g.lineTo(b.x + b.w / 2, fy + FLAGH); g.stroke(); g.restore();
+          chipBox(g, fx, fy, fw, FLAGH, col, tk.label, ink, 10, 1);
+        }
+      }
+      bottomCap(g, w, h, cfg.caption || '關鍵語塊會依序亮起，看它們怎麼幫句子表達意思', ink);
+    }
+
+    return runScene(host, {
+      durationMs: 1,
+      loops: cfg.loops || 2,
+      staticPhase: 1,
+      keyStates: (function () { var a: number[] = []; for (var i = 0; i < k; i++) a.push(i / k); return a; })(),
+      segMs: 450, dwellMs: cfg.dwellMs || 1200,
+      label: cfg.label || '語塊高亮動畫：句子拆成語塊，關鍵語塊依序亮起並標上說明，其餘變淡，呈現它們在句子裡的作用。',
+      drawStatic: function (g, w, h) {
+        var theme = themeColor(), ink = inkColor();
+        label(g, cfg.title || '找出關鍵語塊', w / 2, 14, theme, 12, 'center');
+        var lay = layout(g, w, h * 0.24);
+        var lastY = h * 0.24;
+        for (var i = 0; i < tokens.length; i++) {
+          var tk = tokens[i], b = lay.boxes[i];
+          if (b.y > lastY) lastY = b.y;
+          var col = resolveCol(tk.color, theme);
+          if (tk.hl) chipBox(g, b.x, b.y - FS * 0.75, b.w, FS * 1.5, col, tk.t || '', ink, FS, 1);
+          else { g.save(); g.globalAlpha = 0.45; label(g, tk.t || '', b.x + b.w / 2, b.y, ink, FS, 'center'); g.restore(); }
+        }
+        var ly = lastY + FS + 12;                        // 條列說明放在句子最後一行之下，避免重疊
+        for (var j = 0; j < hlIdx.length; j++) {
+          var t2 = tokens[hlIdx[j]];
+          if (t2.label) { label(g, '• ' + t2.label, 14, ly, resolveCol(t2.color, theme), 10.5, 'left'); ly += 15; }
+        }
+      },
+      draw: draw
+    });
+  }
+
+  // ====================================================================
+  // 場景：blockAssemble — 具名方塊由上而下滑入、組成一份文件／句子骨架；
+  //   可選 fix 示範把放錯／寫錯的方塊換成正確的。
+  //   書信結構／主謂賓／病句修正／大綱共用。
+  //   cfg = {blocks:[{label:'稱呼', color?}], order?:[...], fix?:{atIndex, wrong, right}, title?, caption?}
+  //   reduced-motion：staticPhase=1 → 畫最終（含已修正）骨架。
+  // ====================================================================
+  function blockAssemble(host: HTMLElement, cfg: any) {
+    cfg = cfg || {};
+    var blocks: any[] = cfg.blocks || [{ label: '區塊' }];
+    var nB = blocks.length;
+    var order: number[] = (cfg.order && cfg.order.length === nB) ? cfg.order : (function () { var a: number[] = []; for (var i = 0; i < nB; i++) a.push(i); return a; })();
+    var fix: any = cfg.fix || null;
+    var GOOD = '#16a34a', WARN = '#e11d48';
+    var A = fix ? 0.62 : 0.92;                       // 組裝階段佔比
+
+    function slotRect(w: number, h: number) {
+      var top = 34, bot = h - 28, padX = Math.max(18, w * 0.12);
+      var slotH = (bot - top) / nB;
+      var bh = Math.min(slotH - 7, 46);
+      return { top: top, padX: padX, slotH: slotH, bh: bh, bw: w - 2 * padX };
+    }
+
+    function draw(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var theme = themeColor(), ink = inkColor();
+      label(g, cfg.title || '把區塊組起來', w / 2, 14, theme, 12, 'center');
+      var r = slotRect(w, h);
+      // 每個 slot i（由上而下）對應 blocks[i]；進場時間依 order 排名。
+      var rankOf: number[] = []; for (var oi = 0; oi < nB; oi++) rankOf[order[oi]] = oi;
+      for (var i = 0; i < nB; i++) {
+        var rank = rankOf[i];
+        var tIn = rank * (A / nB);
+        var prog = easeInOut(Math.max(0, Math.min(1, (p - tIn) / Math.max(0.001, (A / nB) * 1.25))));
+        if (prog <= 0.01) continue;
+        var by = r.top + i * r.slotH + (r.slotH - r.bh) / 2;
+        var fromLeft = (i % 2 === 0);
+        var bx = r.padX + (1 - prog) * (fromLeft ? -r.bw * 0.7 : r.bw * 0.7);
+        var col = resolveCol(blocks[i].color, theme);
+        var lblTxt = blocks[i].label || '';
+        var isFixSlot = fix && fix.atIndex === i;
+        var fixP = fix ? easeInOut(Math.max(0, Math.min(1, (p - A) / Math.max(0.001, 1 - A)))) : 0;
+        if (isFixSlot) {
+          // 修正格：組裝階段先放「錯的」（紅）；修正階段 前半刪除線＋✗、後半換成「對的」（綠✓）。
+          if (fixP < 0.5) {
+            var strike = fixP > 0.01;                   // 進入修正才畫刪除線
+            chipBox(g, bx, by, r.bw, r.bh, WARN, '', ink, 13, prog);
+            g.save(); g.globalAlpha = prog;
+            label(g, (fix.wrong || lblTxt), bx + r.bw / 2, by + r.bh / 2, WARN, 13, 'center');
+            if (strike) {
+              g.strokeStyle = WARN; g.lineWidth = 2; labelFont(g, 13);
+              var ww = g.measureText(fix.wrong || lblTxt).width;
+              g.beginPath(); g.moveTo(bx + r.bw / 2 - ww / 2, by + r.bh / 2); g.lineTo(bx + r.bw / 2 + ww / 2, by + r.bh / 2); g.stroke();
+              label(g, '✗', bx + r.bw - 16, by + r.bh / 2, WARN, 14, 'center');
+            }
+            g.restore();
+          } else {
+            var pr2 = (fixP - 0.5) / 0.5;
+            chipBox(g, bx, by, r.bw, r.bh, GOOD, (fix.right || lblTxt), ink, 13, 1);
+            g.save(); g.globalAlpha = pr2; label(g, '✓', bx + r.bw - 16, by + r.bh / 2, GOOD, 14, 'center'); g.restore();
+          }
+        } else {
+          chipBox(g, bx, by, r.bw, r.bh, col, lblTxt, ink, 13, prog);
+        }
+      }
+      bottomCap(g, w, h, cfg.caption || (fix ? '放錯的區塊換成正確的，骨架就完整了' : '一塊一塊組起來，就是完整的骨架'), ink);
+    }
+
+    return runScene(host, {
+      durationMs: fix ? 7200 : 5200, loops: 2, staticPhase: 1,
+      label: cfg.label || ('區塊組裝動畫：' + nB + ' 個具名區塊由上而下滑入、組成完整骨架' + (fix ? '，最後把放錯的區塊換成正確的。' : '。')),
+      draw: draw
+    });
+  }
+
+  // ====================================================================
+  // 場景：barChartCallout — 長條依序長高，再依序拉出重點說明旗；
+  //   misleadFlag 時明確點出「Y 軸沒從 0 開始→看起來差很多」（畫斷軸鋸齒＋紅字）。
+  //   跨科共用（數學統計／核心素養／社會讀圖都會重用）——cfg 保持通用。
+  //   cfg = {bars:[{label,value}], unit?, callouts:[{barIndex, note}], misleadFlag?, title?}
+  //   reduced-motion：staticPhase=1 → 長條滿格＋全部說明旗。
+  // ====================================================================
+  function barChartCallout(host: HTMLElement, cfg: any) {
+    cfg = cfg || {};
+    var bars: any[] = cfg.bars || [{ label: 'A', value: 3 }];
+    var unit: string = cfg.unit || '';
+    var callouts: any[] = cfg.callouts || [];
+    var mislead: boolean = !!cfg.misleadFlag;
+    var nB = bars.length;
+    var WARN = '#e11d48';
+    var vals: number[] = bars.map(function (b) { return +b.value || 0; });
+    var maxV = vals.reduce(function (a, b) { return Math.max(a, b); }, -Infinity);
+    var minV = vals.reduce(function (a, b) { return Math.min(a, b); }, Infinity);
+    if (!isFinite(maxV)) maxV = 1;
+    if (!isFinite(minV)) minV = 0;
+    // 誤導：Y 軸從接近最小值處起跳（放大差異）；否則從 0。
+    var base = mislead ? Math.max(0, minV - (maxV - minV) * 0.25) : 0;
+    if (mislead && base >= maxV) base = 0;
+    var yTop = maxV + (maxV - base) * 0.16;
+    if (yTop <= base) yTop = base + 1;
+
+    function fmt(x: number): string { return (Math.round(x) === x) ? ('' + x) : x.toFixed(1); }
+
+    function draw(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var theme = themeColor(), ink = inkColor();
+      label(g, cfg.title || '看圖找重點', w / 2, 14, mislead ? WARN : theme, 12, 'center');
+      // 底部預留兩列空間：類別標籤列（py1+12）＋最下方的說明／警語列（h-10），兩者不互疊。
+      var px0 = 34, py0 = 30, px1 = w - 14, py1 = h - 44;
+      var plotH = py1 - py0, slotW = (px1 - px0) / nB;
+      // 軸。
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.55; g.lineWidth = 1.4;
+      g.beginPath(); g.moveTo(px0, py0); g.lineTo(px0, py1); g.lineTo(px1, py1); g.stroke(); g.restore();
+      label(g, fmt(base), px0 - 4, py1, mislead ? WARN : ink, 10, 'right');
+      label(g, fmt(Math.round(yTop)), px0 - 4, py0 + 4, ink, 10, 'right');
+      // 斷軸鋸齒（誤導時：標示 Y 軸沒從 0 起）。
+      if (mislead && base > 0) {
+        g.save(); g.strokeStyle = WARN; g.lineWidth = 1.8; g.lineCap = 'round';
+        var zy = py1 - 6;
+        g.beginPath(); g.moveTo(px0 - 5, zy); g.lineTo(px0 - 1, zy - 4); g.lineTo(px0 + 3, zy); g.lineTo(px0 + 7, zy - 4); g.stroke();
+        g.restore();
+      }
+      // 哪些長條有說明旗（那條就不畫頂端數值，改由旗子說明，避免重疊）。
+      var hasCallout: boolean[] = [];
+      for (var ci = 0; ci < callouts.length; ci++) { var b2 = Math.max(0, Math.min(nB - 1, callouts[ci].barIndex | 0)); hasCallout[b2] = true; }
+      // 長條（依序長高，p 0..0.5）。
+      var growEnd = 0.5;
+      for (var i = 0; i < nB; i++) {
+        var stagger = growEnd / Math.max(1, nB);
+        var gf = easeInOut(Math.max(0, Math.min(1, (p - i * stagger) / Math.max(0.001, growEnd - stagger + 0.0001))));
+        var frac = (vals[i] - base) / (yTop - base);
+        frac = Math.max(0, Math.min(1, frac));
+        var barH = plotH * frac * gf;
+        var bw = slotW * 0.58;
+        var bx = px0 + i * slotW + (slotW - bw) / 2;
+        var by = py1 - barH;
+        var col = mislead ? WARN : theme;
+        g.save(); g.fillStyle = col; g.globalAlpha = 0.82; g.fillRect(bx, by, bw, barH);
+        g.globalAlpha = 1; g.strokeStyle = col; g.lineWidth = 1; g.strokeRect(bx, by, bw, barH); g.restore();
+        if (gf > 0.96 && barH > 4 && !hasCallout[i]) label(g, fmt(vals[i]) + unit, bx + bw / 2, by - 7, ink, 10, 'center');
+        if (bars[i].label) label(g, bars[i].label, bx + bw / 2, py1 + 12, ink, 9.5, 'center');
+      }
+      // 說明旗（依序拉出，p 0.5..1），指向對應長條頂端。
+      var co = callouts.length;
+      for (var c = 0; c < co; c++) {
+        var ca = callouts[c];
+        var bi = Math.max(0, Math.min(nB - 1, ca.barIndex | 0));
+        var ap = easeInOut(Math.max(0, Math.min(1, (p - (0.52 + c * (0.46 / Math.max(1, co)))) / 0.22)));
+        if (ap <= 0.01) continue;
+        var fracC = (vals[bi] - base) / (yTop - base); fracC = Math.max(0, Math.min(1, fracC));
+        var tipX = px0 + bi * slotW + slotW / 2, tipY = py1 - plotH * fracC;
+        labelFont(g, 9.5);
+        var note = ca.note || '';
+        var fw = Math.min(w * 0.5, g.measureText(note).width + 12), fh = 16;
+        var fx = Math.max(4, Math.min(w - fw - 4, tipX - fw / 2));
+        var fy = Math.max(py0 + 1, tipY - 6 - fh);           // 旗子緊貼長條頂端上方（數值已不畫→不重疊）
+        g.save(); g.globalAlpha = ap; g.strokeStyle = theme; g.lineWidth = 1.2;
+        g.beginPath(); g.moveTo(tipX, tipY); g.lineTo(tipX, fy + fh); g.stroke(); g.restore();
+        chipBox(g, fx, fy, fw, fh, theme, note, ink, 9.5, ap);
+      }
+      // 誤導警語。
+      if (mislead) {
+        var mp = easeInOut(Math.max(0, Math.min(1, (p - 0.55) / 0.25)));
+        if (mp > 0.01) { g.save(); g.globalAlpha = mp; label(g, 'Y 軸沒從 0 開始 → 看起來差很多！', w / 2, h - 10, WARN, 11, 'center'); g.restore(); }
+      } else {
+        bottomCap(g, w, h, '長條長高、再拉出重點：先看軸、再比長短', ink);
+      }
+    }
+
+    return runScene(host, {
+      durationMs: mislead ? 6000 : 5200, loops: 2, staticPhase: 1,
+      label: cfg.label || (mislead
+        ? '誤導長條圖動畫：Y 軸沒從 0 開始，長條差距看起來很大；畫面點出「Y 軸沒從 0 開始→看起來差很多」。'
+        : '長條圖重點動畫：長條依序長高，再依序拉出重點說明旗指向對應長條。'),
+      draw: draw
+    });
+  }
+
   // ---- 導出 -----------------------------------------------------------
   var Anim = {
     reducedMotion: reducedMotion,
@@ -3965,6 +4476,11 @@
     numberLine: numberLine,
     partWhole100: partWhole100,
     solid3D: solid3D,
+    zhuyinBlend: zhuyinBlend,
+    toneContour: toneContour,
+    textHighlight: textHighlight,
+    blockAssemble: blockAssemble,
+    barChartCallout: barChartCallout,
   };
   (window as any).Anim = Anim;
 })();
