@@ -922,7 +922,7 @@ function renderSpell() {
         '<div class="word-counter">第 ' + (currentIndex + 1) + ' / ' + total + ' 題</div>' +
             '<div class="spell-stage">' +
             '<div class="fc-spell">' +
-            '<button type="button" class="fc-spell__toggle" onclick="toggleSpellMode()"' + (answered ? ' disabled' : '') + '>' + toggleLabel + '</button>' + // 評分後停用輸入法切換鈕：toggleSpellMode 已 early-return(L752)，不停用就是死按鈕（與 cefr w104 一致）；下一張卡 renderSpell 重繪時 answered=false 自動恢復
+            '<button type="button" class="fc-spell__toggle" onclick="toggleSpellMode()"' + (answered ? ' disabled' : '') + '>' + toggleLabel + '</button>' + // 評分後停用輸入法切換鈕：toggleSpellMode 已在開頭 if(answered) return 擋掉，不停用就是死按鈕（與 cefr w104 一致）；下一張卡 renderSpell 重繪時 answered=false 自動恢復
             '<div class="fc-spell__head">' +
             '<div class="fc-card__emoji">' + esc(word.emoji || '📖') + '</div>' +
             (word.chinese ? '<div class="fc-card__cn">' + esc(word.chinese) + '</div>' : '') +
