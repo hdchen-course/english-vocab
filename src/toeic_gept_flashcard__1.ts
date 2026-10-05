@@ -720,8 +720,8 @@ function renderSpell() {
   let bankHTML = '';
   if (spell.mode === 'tiles') {
     bankHTML = '<div class="fc-spell__bank">' + spell.bank.map((b, bi) =>
-      answered
-        // 已評分：字母磚靜態化（spellPick 此時 no-op），不設 role=button/tabindex/handler，aria-disabled 標示不可操作，避免螢幕報讀器報成可按的死按鈕（與已填格子的靜態分支、quiz 選項一致）
+      (answered || b.used)
+        // 已評分、或這張磚已用掉：靜態化（spellPick 對已用磚/評分後都 no-op），不設 role=button/tabindex/handler，aria-disabled 標示不可操作，避免螢幕報讀器把灰掉的磚報成可按的死按鈕（退回字母時會重繪成可按）
         ? '<div class="fc-spell__tile' + (b.used ? ' used' : '') + '" aria-disabled="true">' + esc(b.ch) + '</div>'
         : '<div class="fc-spell__tile' + (b.used ? ' used' : '') + '" role="button" tabindex="0"' +
           ' onclick="spellPick(' + bi + ')"' +
