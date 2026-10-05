@@ -554,7 +554,7 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
                     } };
                 }
                 else {
-                    // 空格：spellClear 對空格 no-op，故不設 role=button/tabindex（避免報讀成無作用按鈕），僅標示位置
+                    // 空格：未綁定退回 handler（只有已填格子於上方設 el.onclick 退回字母），故不設 role=button/tabindex（避免報讀成無作用按鈕），僅標示位置
                     el.textContent = '';
                     el.setAttribute('aria-label', '第 ' + letterNo + ' 個字母格，尚未填入');
                 }
