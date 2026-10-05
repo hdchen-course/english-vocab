@@ -2,15 +2,15 @@
  * world_affairs_concepts.ts  →  (tsc, tsconfig.legacy.json) → world_affairs_concepts.js
  *
  * 「世界時事認知・跟世界接軌」觀念養成（社會世界時事軸）。國小高年級→國中／高中。
- *   單一正式頁 world_affairs.html；本檔貢獻 WORLD-NEWS 的 5 課（id 前綴 news_）。
+ *   單一正式頁 world_affairs.html；本檔貢獻 8 課：WORLD-NEWS 5 課（id 前綴 news_）＋全球議題 3 課（id 前綴 glob_：難民／貧富差距／NGO）。
  *   資料 = window.CONCEPT，餵給共用 concept_engine.js（teach/quiz 引擎）。
  *     1. 一則新聞怎麼讀：5W1H 與標題不等於全部 (news_read)   — stepped/static SVG
  *     2. 消息從哪來：分辨來源與查證            (news_source) — static SVG（來源鏈／可信度階梯／可信度錶）
  *     3. 事實、意見與宣傳                      (news_fact)   — static SVG（判斷閘／帶風向天平／套用範例）
- *     4. 看世界地圖，懂時事發生在哪            (news_map)    — playable Anim.worldLocator（★本頁唯一 mount）
+ *     4. 看世界地圖，懂時事發生在哪            (news_map)    — playable Anim.worldLocator（news_map 與 glob_refugee 共兩處 mount）
  *     5. 跟世界接軌：尊重多元、破除刻板印象    (news_respect)— static SVG
  *   動畫課重用 anim_core.js 的 window.Anim.worldLocator（NEW 共用場景，author-once，
- *   世界地理 world_geography／全球議題 global_issues 日後共用）；其餘 teach step 用
+ *   世界地理 world_geography 日後共用；全球議題已於本檔 glob_ 課使用）；其餘 teach step 用
  *   stepped/static SVG。每個 teach step 都有視覺、零純文字。純本地進度
  *   （progKey world_affairs_concepts_v1），不餵主 XP、無對應練習關卡（practiceHref 空）。
  *
