@@ -34,6 +34,7 @@
     'economics_concepts.html': '理財觀念養成', 'finance_mindset_concepts.html': '理財心態・財務自由',
     'chinese_concepts.html': '國語觀念養成',
     'chinese_phonics_concepts.html': '注音拼讀啟蒙', 'chinese_punctuation_concepts.html': '標點符號全攻略', 'chinese_nonfiction_concepts.html': '非記敘文閱讀', 'chinese_practical_writing_concepts.html': '應用文觀念養成', 'chinese_grammar_concepts.html': '詞類・句子・病句',
+    'chinese_classical_poetry_concepts.html': '古典詩詞鑑賞入門', 'chinese_classical_prose_concepts.html': '短文言鑑賞', 'chinese_literature_map_concepts.html': '文學常識地圖', 'chinese_essay_planning_concepts.html': '審題・立意・列大綱',
     'math_advanced_concepts.html': '進階數學觀念養成', 'statistics_concepts.html': '統計與資料素養', 'data_literacy_concepts.html': '資料偵探・看穿數字與圖表的把戲', 'informal_fallacy_concepts.html': '拆穿話術・五種常見謬誤', 'reasoning_concepts.html': '兩種推理・演繹 vs 歸納', 'science_method_concepts.html': '科學方法・公平測試',
     'physics_concepts_advanced.html': '物理觀念養成・進階', 'chemistry_concepts_advanced.html': '化學觀念養成・進階', 'biology_concepts_advanced.html': '生物觀念養成・進階', 'earth_science_concepts_advanced.html': '地球科學觀念養成・進階',
     'sustainability.html': '永續與氣候變遷', 'finance_realworld.html': '理財・真實世界', 'world_affairs.html': '世界時事・跟世界接軌',
