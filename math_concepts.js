@@ -17,7 +17,8 @@ function blocks(label, n) { var s = '<svg viewBox="0 0 300 90" role="img" aria-l
 } return s + '</svg>'; }
 function numline(mark, arrow) {
     var W = 300, pad = 20, span = W - 2 * pad, y = 55, x = function (v) { return pad + ((v + 5) / 10) * span; };
-    var s = '<svg viewBox="0 0 300 90" role="img" aria-label="數線"><line x1="' + pad + '" y1="' + y + '" x2="' + (W - pad) + '" y2="' + y + '" stroke="#8a8a8a" stroke-width="3"/>';
+    var lab = '數線' + (mark != null ? '，標記 ' + [].concat(mark).join('、') : '') + (arrow ? '，箭頭從 ' + arrow.from + ' 到 ' + arrow.to : '');
+    var s = '<svg viewBox="0 0 300 90" role="img" aria-label="' + lab + '"><line x1="' + pad + '" y1="' + y + '" x2="' + (W - pad) + '" y2="' + y + '" stroke="#8a8a8a" stroke-width="3"/>';
     for (var v = -5; v <= 5; v++) {
         var xx = x(v);
         s += '<line x1="' + xx + '" y1="' + (y - 5) + '" x2="' + xx + '" y2="' + (y + 5) + '" stroke="#8a8a8a" stroke-width="2"/><text x="' + xx + '" y="' + (y + 20) + '" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor">' + v + '</text>';
