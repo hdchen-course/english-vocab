@@ -47,7 +47,9 @@
     { key:'reduce', label:'約分（化到最簡）', emoji:'✂️', sub:'分子分母同時除以最大公因數，把分數變最簡',
       teach:'<b>約分</b>就是把分數變成「最簡」的樣子：分子和分母<b>同時除以它們的最大公因數</b>，大小不變、數字變小。<br><br><b>例：</b>8/12 → 8 和 12 的最大公因數是 4 → 8÷4=2、12÷4=3 → 得 <b>2/3</b>。<br><br>💡 找不到最大的沒關係，可以一次除一點：8/12 先同除以 2 = 4/6，再同除以 2 = 2/3，一樣會到最簡。',
       gen:function(lv){
-        var base = reduce(ri(1,lv+1), ri(2,lv+2)); // 先造一個最簡分數
+        var base, g2=0;
+        do { base = reduce(ri(1,lv+1), ri(2,lv+2)); } while((base.d===1 || base.n>=base.d) && g2++<40); // 造一個真分數(分母>1、分子<分母)，與 teach 的 proper→proper 一致，避免 k/k→整數的退化題
+        if(base.d<2 || base.n>=base.d) base={n:1,d:2};
         if(base.n===0) base.n=1;
         var k = ri(2, lv<=2?4:(lv<=4?6:9)); // 乘一個公因數把它「放大」成可約分的題目
         var n=base.n*k, d=base.d*k;
@@ -166,16 +168,16 @@
   function startMode(m){
     mode=m; correct=0; total=0; streak=0; bestStreak=0; lv=1; lvCorrect=0; missStreak=0; lvChange=0;
     showScreen('play');
-    $('play-title').textContent = (m==='mix'?'綜合練習':CAT_BY[m].label)+' 🍕';
+    $('play-title').textContent = (m==='mix'?'綜合練習 🎲':CAT_BY[m].label+' '+CAT_BY[m].emoji);
     if(m==='mix'){ renderMixPrimer(); } else { renderTeach(m); }
   }
   function renderMixPrimer(){
     $('stage').innerHTML =
       '<div class="fl-card">'+
         '<div class="cn-teach-emoji" aria-hidden="true">🎲</div><h2 class="cn-h">綜合練習</h2>'+
-        '<div class="fl-teach">這裡會把<b>五種分數算法混在一起</b>出題。看到題目時，先<b>想想它是哪一種</b>：<br><br>'+
-        '・看到 <b>單一分數要化簡</b> → 約分（同除最大公因數）<br>・<b>同分母加減</b> → 分母不變、分子加減<br>・<b>異分母加減</b> → 先通分再加減<br>・<b>×</b> → 分子乘分子、分母乘分母<br>・<b>÷</b> → 顛倒相乘<br><br>'+
-        '想不起來也沒關係，答完每題都會再示範一步步怎麼算。<b>建議先把上面五種各自練過再來這裡</b>。</div>'+
+        '<div class="fl-teach">這裡會把<b>六種分數算法混在一起</b>出題。看到題目時，先<b>想想它是哪一種</b>：<br><br>'+
+        '・看到 <b>單一分數要化簡</b> → 約分（同除最大公因數）<br>・<b>帶分數↔假分數</b> → 假分數：分子÷分母，商當整數、餘數當分子；帶分數：整數×分母＋分子<br>・<b>同分母加減</b> → 分母不變、分子加減<br>・<b>異分母加減</b> → 先通分再加減<br>・<b>×</b> → 分子乘分子、分母乘分母<br>・<b>÷</b> → 顛倒相乘<br><br>'+
+        '想不起來也沒關係，答完每題都會再示範一步步怎麼算。<b>建議先把上面六種各自練過再來這裡</b>。</div>'+
         '<div class="fl-actions"><button type="button" class="btn btn-primary" id="btn-begin">開始混合練習 🎲</button></div>'+
       '</div>';
     $('btn-begin').addEventListener('click', function(){ beginPractice(); });
@@ -203,7 +205,7 @@
       '<div class="fl-card">'+
         '<div class="fl-scorebar"><span>答對 '+correct+' / '+total+'　連對 '+streak+' '+bestTxt+'🔥</span><span class="fl-lv">難度 Lv.'+lv+'</span></div>'+
         '<span class="fl-tag">'+cur.cat.emoji+' '+cur.cat.label+'</span>'+
-        '<div class="fl-problem" id="fl-prob" tabindex="-1" role="img" aria-label="題目：'+cur.spoken+(selfAsked?'':'，等於多少')+'？">'+cur.html+' <span class="fl-op">=</span> <span style="color:var(--su-d)">?</span></div>'+
+        '<div class="fl-problem" id="fl-prob" tabindex="-1" role="img" aria-label="題目：'+cur.spoken+(selfAsked?'':'，等於多少')+'？">'+cur.html+(selfAsked?'':' <span class="fl-op">=</span> <span style="color:var(--su-d)">?</span>')+'</div>'+
         '<div class="fl-answer">'+
           '<div class="fl-inpfrac">'+
             '<input type="text" inputmode="numeric" id="fl-n" aria-label="答案的分子" autocomplete="off">'+

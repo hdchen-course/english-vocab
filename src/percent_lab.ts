@@ -63,7 +63,7 @@
   function startMode(m){
     mode=m; correct=0; total=0; streak=0; bestStreak=0; lv=1; lvCorrect=0; missStreak=0; lvChange=0;
     showScreen('play');
-    $('play-title').textContent = (m==='mix'?'綜合練習':CAT_BY[m].label)+' 💯';
+    $('play-title').textContent = (m==='mix'?'綜合練習 🎲':CAT_BY[m].label+' '+CAT_BY[m].emoji);
     if(m==='mix'){ renderMixPrimer(); } else { renderTeach(m); }
   }
   function renderMixPrimer(){

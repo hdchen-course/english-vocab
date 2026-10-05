@@ -147,7 +147,7 @@
         missStreak = 0;
         lvChange = 0;
         showScreen('play');
-        $('play-title').textContent = (m === 'mix' ? '綜合練習' : CAT_BY[m].label) + ' ⏰';
+        $('play-title').textContent = (m === 'mix' ? '綜合練習 🎲' : CAT_BY[m].label + ' ' + CAT_BY[m].emoji);
         if (m === 'mix') {
             renderMixPrimer();
         }
