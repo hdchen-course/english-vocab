@@ -247,7 +247,8 @@ gcdGameReset();
     }
 })();
 function animateClock(hour) {
-    var h = ((hour % 12) || 12);
+    var r = hour % 12; // 標準餘數 0..11
+    var h = (r || 12); // 時鐘上顯示的鐘面數字 1..12（12 代表餘數 0）
     var angle = (h * 30) - 90;
     var rad = angle * Math.PI / 180;
     var x2 = 100 + 55 * Math.cos(rad);
@@ -255,7 +256,7 @@ function animateClock(hour) {
     var hand = document.getElementById('clock-hand');
     hand.setAttribute('x2', x2);
     hand.setAttribute('y2', y2);
-    document.getElementById('clock-label').textContent = hour + ' 點 → ' + h + ' 點 (mod 12)';
+    document.getElementById('clock-label').textContent = hour + ' 點 → 時鐘 ' + h + ' 點（' + hour + ' mod 12 = ' + r + '）';
     try {
         if (window.StampBook)
             StampBook.onExplore('mod');
@@ -279,26 +280,38 @@ function generateModProblems() {
             var b = 20 + Math.floor(Math.random() * 50);
             var m = 3 + Math.floor(Math.random() * 7);
             var ans = (a + b) % m;
-            return { q: '(' + a + ' + ' + b + ') mod ' + m + ' = ?', ans: ans, choices: null, format: function (v) { return '' + v; } };
+            var ch = [];
+            for (var j = 0; j < m; j++)
+                ch.push(j); // 選項限定在 0..m-1 的合法餘數
+            return { q: '(' + a + ' + ' + b + ') mod ' + m + ' = ?', ans: ans, choices: ch, format: function (v) { return '' + v; } };
         },
         function () {
             var a = 5 + Math.floor(Math.random() * 20);
             var b = 5 + Math.floor(Math.random() * 20);
             var m = 3 + Math.floor(Math.random() * 6);
             var ans = (a * b) % m;
-            return { q: '(' + a + ' × ' + b + ') mod ' + m + ' = ?', ans: ans, choices: null, format: function (v) { return '' + v; } };
+            var ch = [];
+            for (var j = 0; j < m; j++)
+                ch.push(j);
+            return { q: '(' + a + ' × ' + b + ') mod ' + m + ' = ?', ans: ans, choices: ch, format: function (v) { return '' + v; } };
         },
         function () {
             var h = 13 + Math.floor(Math.random() * 12); // 13..24：真實 24 小時制會顯示的時刻，不產生 36 點／47 點這種不存在的時間
             var ans = ((h % 12) || 12);
-            return { q: h + ' 點在時鐘上顯示幾點？', ans: ans, choices: null, format: function (v) { return v + ' 點'; } };
+            var ch = [];
+            for (var j = 1; j <= 12; j++)
+                ch.push(j); // 時鐘只會顯示 1..12 點
+            return { q: h + ' 點在時鐘上顯示幾點？', ans: ans, choices: ch, format: function (v) { return v + ' 點'; } };
         },
         function () {
             var a = 10 + Math.floor(Math.random() * 30);
             var m = 4 + Math.floor(Math.random() * 6);
             var exp = 2;
             var ans = (a * a) % m;
-            return { q: a + '² mod ' + m + ' = ?', ans: ans, choices: null, format: function (v) { return '' + v; } };
+            var ch = [];
+            for (var j = 0; j < m; j++)
+                ch.push(j);
+            return { q: a + '² mod ' + m + ' = ?', ans: ans, choices: ch, format: function (v) { return '' + v; } };
         }
     ];
     for (var i = 0; i < 8; i++) {
