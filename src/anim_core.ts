@@ -421,7 +421,7 @@
         var R = 13;
         disc(g, ex, ey, R, EARTH_SEA);
         g.save(); g.beginPath(); g.arc(ex, ey, R, Math.PI * 0.15, Math.PI * 1.05); g.fillStyle = EARTH_LAND; g.fill(); g.restore();
-        // 地軸：方向【固定】＝永遠指向螢幕右上同一方向（四季成因的關鍵）。
+        // 地軸：方向【固定】＝永遠指向螢幕左上同一方向（四季成因的關鍵）。
         var tilt = -23.5 * Math.PI / 180;
         var ax = Math.sin(tilt), ay = -Math.cos(tilt);   // 單位向量（固定，不隨 a 改變）。
         g.save(); g.strokeStyle = AXIS; g.lineWidth = 2.5; g.beginPath();
@@ -1756,6 +1756,8 @@
 
     function draw(g: CanvasRenderingContext2D, p: number, _w: number, h: number) {
       var ink = inkColor(), theme = themeColor();
+      var s = Math.min(1, _w / 300);          // 窄於 300 的手機畫布：整體等比縮小、靠左下角對齊，避免右側 SOH-CAH-TOA 比值面板被切掉
+      g.save(); g.translate(0, h); g.scale(s, s); g.translate(0, -h);
       var u = 30;                             // 每單位像素（三角形留在左半，右半放比值面板）
       var ax = 14, ay = h - 30;               // 左下角頂點 A（θ 在這裡）
       var bx = ax + ADJ * u, by = ay;         // 右下角 B（直角）；bx=134
@@ -1798,6 +1800,7 @@
       } else {
         label(g, '角 θ 慢慢長大…', rx, 26, ink, 11.5, 'left');
       }
+      g.restore();
     }
 
     return runScene(host, {
