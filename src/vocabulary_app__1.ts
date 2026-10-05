@@ -489,6 +489,7 @@ function checkQuizAnswer(el, selected, correct) {
   const options = document.querySelectorAll('.quiz-option');
   options.forEach(opt => {
     opt.style.pointerEvents = 'none';
+    opt.removeAttribute('role'); opt.removeAttribute('tabindex'); opt.setAttribute('aria-disabled', 'true');   // 連鍵盤也解除：pointerEvents 不擋全域 Enter 委派的 t.click()，留著 role/tabindex 會是鍵盤可達卻 no-op 的死按鈕（答錯後揭示面板停留期間尤其明顯；與 toeic w107/coca w106 一致）
     if (opt.textContent === correct) opt.classList.add('correct');
   });
   const word = getCurrentWord();
@@ -515,6 +516,7 @@ let spellState = null;
 function getSpellMode() { try { return localStorage.getItem('vocab_spell_mode') || 'tiles'; } catch (e) { return 'tiles'; } }
 function setSpellMode(m) { try { localStorage.setItem('vocab_spell_mode', m); } catch (e) {} }
 function toggleSpellMode() { if (answered || (spellState && spellState.locked)) return; setSpellMode(getSpellMode() === 'tiles' ? 'keyboard' : 'tiles'); renderMode(); }   // 已作答的字不可切輸入法重建（renderMode 會解鎖重開計分）
+function lockSpellToggle() { const b = document.querySelector('.fc-spell__toggle'); if (b) { b.disabled = true; b.setAttribute('aria-disabled', 'true'); } }   // 評分後就地停用輸入法切換鈕（答錯無自動前進，不停用就是可按卻 no-op 的死按鈕）；renderSpelling 於下一張卡重建成啟用
 
 function renderSpelling(area) {
   const word = getCurrentWord();
@@ -523,7 +525,7 @@ function renderSpelling(area) {
   const mode = getSpellMode();
   const hint = word.chinese || word.definition || '';
   const audioBtn = '<button class="fc-audio fc-audio--lg" aria-label="播放單字發音" onclick="speak(\'' + jsAttr(word.word) + '\')">🔊</button>';
-  const toggleBtn = '<button class="fc-spell__toggle" onclick="toggleSpellMode()">' +
+  const toggleBtn = '<button class="fc-spell__toggle" onclick="toggleSpellMode()"' + ((answered || (spellState && spellState.locked)) ? ' disabled aria-disabled="true"' : '') + '>' +
     (mode === 'tiles' ? '⌨️ 改用鍵盤' : '🔤 改用字母磚') + '</button>';
   const head = '<div class="fc-spell__head"><div class="flashcard-emoji">' + escAttr(word.emoji || '') +
     '</div><div class="spelling-hint">' + escAttr(hint) + '</div>' + audioBtn + '</div>';
@@ -612,6 +614,7 @@ function spellCheckTiles() {
   st.chars.forEach((ch, i) => { attempt += (ch === ' ') ? ' ' : (st.slots[i].ch || ''); });
   const correct = attempt.toLowerCase() === word.word.toLowerCase();
   st.locked = true; answered = true;   // 鎖住本題（含 answered，讓 toggleSpellMode 的守衛涵蓋 tiles→keyboard 方向）
+  lockSpellToggle();
   // 綠對紅錯（不只靠顏色：.ok/.no class 之外，正解也在揭示面板呈現）
   st.chars.forEach((ch, i) => {
     if (ch === ' ') return;
@@ -674,6 +677,7 @@ function checkSpelling(e) {
 
   if (inputNS === targetNS) {
     answered = true;
+    lockSpellToggle();
     // 靠提示把整個字補滿不算真的記住：不給「記住了」(quality 2) 的正向學分，避免洗分破壞間隔排程。
     if (hintUsed) {
       srs.review(word.word, 0);
@@ -687,6 +691,7 @@ function checkSpelling(e) {
     advanceTimer = setTimeout(nextWord, 900);
   } else if (e && e.key === 'Enter' && inputNS.length === targetNS.length) {
     answered = true;
+    lockSpellToggle();
     srs.review(word.word, 0);
     recordStudy();
     updateStats();
@@ -703,6 +708,7 @@ function checkSpelling(e) {
 }
 
 function showSpellingHint() {
+  if (answered) return;   // 已計分/已揭示就別再動：否則 💡 提示仍改 input.value 並揭字母，但 checkSpelling(null) 被 answered 擋住不重判，造成輸入字與方格不一致的無意義變動
   const word = getCurrentWord();
   const target = word.word.toLowerCase();
   const input = document.getElementById('spellingInput');
@@ -754,6 +760,7 @@ function checkListeningAnswer(el, selected, correct) {
   const options = document.querySelectorAll('.quiz-option');
   options.forEach(opt => {
     opt.style.pointerEvents = 'none';
+    opt.removeAttribute('role'); opt.removeAttribute('tabindex'); opt.setAttribute('aria-disabled', 'true');   // 連鍵盤也解除：pointerEvents 不擋全域 Enter 委派的 t.click()，留著 role/tabindex 會是鍵盤可達卻 no-op 的死按鈕（答錯後揭示面板停留期間尤其明顯；與 toeic w107/coca w106 一致）
     if (opt.textContent === correct) opt.classList.add('correct');
   });
   const word = getCurrentWord();
@@ -838,6 +845,7 @@ function checkClozeAnswer(el, selected, correct) {
   const options = document.querySelectorAll('.quiz-option');
   options.forEach(opt => {
     opt.style.pointerEvents = 'none';
+    opt.removeAttribute('role'); opt.removeAttribute('tabindex'); opt.setAttribute('aria-disabled', 'true');   // 連鍵盤也解除：pointerEvents 不擋全域 Enter 委派的 t.click()，留著 role/tabindex 會是鍵盤可達卻 no-op 的死按鈕（答錯後揭示面板停留期間尤其明顯；與 toeic w107/coca w106 一致）
     if (opt.textContent === correct) opt.classList.add('correct');
   });
 
