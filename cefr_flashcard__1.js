@@ -632,6 +632,18 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
                 el.classList.add(good ? 'ok' : 'no');
             }
         });
+        // 評分後就地鎖定所有格子（checkSpelling 不會重新渲染，故 readOnly/role 必須在此時套用，否則打字格可退格重打、
+        // 字母磚格仍自稱可按 Enter 退回，造成「字母與對錯顏色不符」或假的可操作提示）。
+        slotEls.forEach(function (el) {
+            const inp = el.querySelector('input');
+            if (inp)
+                inp.readOnly = true;
+            if (el.getAttribute('role') === 'button') {
+                el.removeAttribute('role');
+                el.removeAttribute('tabindex');
+                el.setAttribute('aria-disabled', 'true');
+            }
+        });
         const reveal = document.getElementById('spellReveal');
         if (correct) {
             showConfetti();
@@ -647,7 +659,7 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
                 setTimeout(function () { slotsEl.classList.remove('is-wrong'); }, 450);
             }
             reveal.className = 'fc-reveal is-no show';
-            reveal.innerHTML = '<span class="fc-reveal__msg">綠色的字母是對的！這個字是這樣拼的，再看一次 😊</span>' +
+            reveal.innerHTML = '<span class="fc-reveal__msg">拼對的字母會變綠色；這個字是這樣拼的，再看一次 😊</span>' +
                 buildRevealBody(card) + '<button class="fc-reveal__next" onclick="spellNext()">繼續 →</button>';
         }
         quizTotal++;
