@@ -3512,6 +3512,173 @@
             }
         });
     }
+    // ====================================================================
+    // 場景：compoundGrowth — 複利/定期定額成長（grow）與卡債滾大（debt）共用。
+    //   理財真實世界頁（信用卡循環利息、保險與投資工具、匯率數位支付）共用的
+    //   author-once 場景。以 principal 為起點，逐「月」(period) 依年利率複利；
+    //   另可每月定額投入（contribute，供「定期定額」）。長條由左到右依序升起，
+    //   播 2 輪後停在最後一幀（完整成長）。
+    //   cfg = {
+    //     principal:Number,     // 起始金額（本金 / 起始欠款），預設 100
+    //     ratePct:Number,       // 年利率（%），預設 15；內部換成月利率 ratePct/100/12 逐月複利
+    //     periods:Number,       // 顯示幾個月（長條數＝periods+1，含第 0 月），預設 12
+    //     contribute:Number,    // 每月定額投入（定期定額用），預設 0
+    //     mode:'grow'|'debt',   // grow＝用該頁 --su 色向上成長；debt＝用 --c-wrong 紅色表欠款滾大
+    //     unitLabel:String?,    // 金額單位，預設 '元'
+    //     title:String?,        // 圖頂標題
+    //     caption:String?,      // 圖底固定說明（未設時顯示「第 N 個月 ≈ XXX 元」動態說明）
+    //     label:String?         // 無障礙 aria-label
+    //   }
+    //   數學：vals[0]=principal；vals[i]=vals[i-1]×(1+月利率)+contribute。
+    //   reduced-motion：畫 4 個具名月份並排靜態（起點→1/3→2/3→終點），保留跨期對比。
+    //   契約：收 host、回傳 { stop }。
+    // ====================================================================
+    function compoundGrowth(host, cfg) {
+        cfg = cfg || {};
+        var principal = (typeof cfg.principal === 'number') ? cfg.principal : 100;
+        var ratePct = (typeof cfg.ratePct === 'number') ? cfg.ratePct : 15;
+        var periods = (typeof cfg.periods === 'number' && cfg.periods > 0) ? Math.round(cfg.periods) : 12;
+        var contribute = (typeof cfg.contribute === 'number') ? cfg.contribute : 0;
+        var mode = (cfg.mode === 'debt') ? 'debt' : 'grow';
+        var unit = (typeof cfg.unitLabel === 'string') ? cfg.unitLabel : '元';
+        var mRate = ratePct / 100 / 12;
+        // 逐月複利序列（含每月定額投入）。
+        var vals = [principal];
+        for (var k = 1; k <= periods; k++) {
+            vals[k] = vals[k - 1] * (1 + mRate) + contribute;
+        }
+        var maxV = vals[periods];
+        var yTop = maxV * 1.14;
+        if (!isFinite(yTop) || yTop <= 0)
+            yTop = 1;
+        var nBars = periods + 1;
+        function fmt(x) {
+            var r = Math.round(x);
+            return '' + r;
+        }
+        function barColor() {
+            return (mode === 'debt') ? cssVar('--c-wrong', '#e11d48') : themeColor();
+        }
+        // 畫一根長條（含選用的數值標籤）。
+        function oneBar(g, bx, by, bw, bh, col) {
+            g.save();
+            g.fillStyle = col;
+            g.globalAlpha = 0.82;
+            g.fillRect(bx, by, bw, bh);
+            g.globalAlpha = 1;
+            g.strokeStyle = col;
+            g.lineWidth = 1;
+            g.strokeRect(bx, by, bw, bh);
+            g.restore();
+        }
+        function draw(g, p, w, h) {
+            var ink = inkColor(), col = barColor();
+            var px0 = 40, py0 = 30, px1 = w - 14, py1 = h - 34;
+            var plotH = py1 - py0, slotW = (px1 - px0) / nBars;
+            var title = cfg.title || (mode === 'debt' ? '欠款逐月滾大（年利率 ' + fmt(ratePct) + '%）' : '複利逐月成長（年利率 ' + fmt(ratePct) + '%）');
+            label(g, title, w / 2, 14, col, 12, 'center');
+            // 座標軸
+            g.save();
+            g.strokeStyle = ink;
+            g.globalAlpha = 0.5;
+            g.lineWidth = 1.3;
+            g.beginPath();
+            g.moveTo(px0, py0);
+            g.lineTo(px0, py1);
+            g.lineTo(px1, py1);
+            g.stroke();
+            g.restore();
+            label(g, '0', px0 - 5, py1, ink, 9.5, 'right');
+            var frontier = p * periods; // 0..periods：已顯示到第幾個月
+            var floorF = Math.floor(frontier + 1e-6);
+            var curIdx = Math.min(periods, floorF); // 目前動態顯示到的月份
+            for (var i = 0; i <= periods; i++) {
+                var reveal;
+                if (i <= floorF)
+                    reveal = 1;
+                else if (i === floorF + 1)
+                    reveal = Math.max(0, Math.min(1, frontier - floorF));
+                else
+                    reveal = 0;
+                if (reveal <= 0.001)
+                    continue;
+                var bw = slotW * 0.74;
+                var bx = px0 + i * slotW + (slotW - bw) / 2;
+                var fullH = plotH * (vals[i] / yTop);
+                var bh = fullH * reveal;
+                var by = py1 - bh;
+                oneBar(g, bx, by, bw, bh, col);
+                // x 軸月份：每隔幾根標一次（含頭尾）
+                var tickEvery = periods > 14 ? 3 : 2;
+                if (i === 0 || i === periods || i % tickEvery === 0)
+                    label(g, '' + i, bx + bw / 2, py1 + 11, ink, 8.5, 'center');
+            }
+            // 本金基準參考線（起始金額）
+            var baseY = py1 - plotH * (vals[0] / yTop);
+            g.save();
+            g.strokeStyle = ink;
+            g.globalAlpha = 0.28;
+            g.setLineDash([4, 4]);
+            g.lineWidth = 1;
+            g.beginPath();
+            g.moveTo(px0, baseY);
+            g.lineTo(px1, baseY);
+            g.stroke();
+            g.restore();
+            // 動態說明：目前月份與金額
+            var cap;
+            if (cfg.caption) {
+                cap = cfg.caption;
+            }
+            else {
+                var monthWord = (curIdx === 0) ? '一開始' : ('第 ' + curIdx + ' 個月');
+                var what = (mode === 'debt') ? '欠款' : '本利和';
+                cap = monthWord + '：' + what + ' ≈ ' + fmt(vals[curIdx]) + ' ' + unit;
+            }
+            label(g, cap, w / 2, h - 9, col, 11, 'center');
+        }
+        // reduced-motion：4 個具名月份並排靜態（保留跨期對比）。
+        function drawStatic(g, w, h) {
+            var ink = inkColor(), col = barColor();
+            var px0 = 40, py0 = 30, px1 = w - 14, py1 = h - 34;
+            var plotH = py1 - py0;
+            var title = cfg.title || (mode === 'debt' ? '欠款逐月滾大（年利率 ' + fmt(ratePct) + '%）' : '複利逐月成長（年利率 ' + fmt(ratePct) + '%）');
+            label(g, title, w / 2, 14, col, 12, 'center');
+            g.save();
+            g.strokeStyle = ink;
+            g.globalAlpha = 0.5;
+            g.lineWidth = 1.3;
+            g.beginPath();
+            g.moveTo(px0, py0);
+            g.lineTo(px0, py1);
+            g.lineTo(px1, py1);
+            g.stroke();
+            g.restore();
+            label(g, '0', px0 - 5, py1, ink, 9.5, 'right');
+            var idxs = [0, Math.round(periods / 3), Math.round(periods * 2 / 3), periods];
+            var slotW = (px1 - px0) / 4;
+            for (var j = 0; j < 4; j++) {
+                var idx = idxs[j];
+                var bw = slotW * 0.5;
+                var bx = px0 + j * slotW + (slotW - bw) / 2;
+                var bh = plotH * (vals[idx] / yTop);
+                var by = py1 - bh;
+                oneBar(g, bx, by, bw, bh, col);
+                label(g, fmt(vals[idx]), bx + bw / 2, by - 7, ink, 9.5, 'center');
+                label(g, (idx === 0 ? '一開始' : ('第' + idx + '月')), bx + bw / 2, py1 + 12, ink, 9, 'center');
+            }
+            var what2 = (mode === 'debt') ? '欠款' : '本利和';
+            label(g, cfg.caption || ('每個月' + what2 + '都比上個月多一點'), w / 2, h - 9, col, 11, 'center');
+        }
+        return runScene(host, {
+            durationMs: 4600, loops: 2, staticPhase: 1,
+            label: cfg.label || (mode === 'debt'
+                ? '卡債滾大動畫：欠款從 ' + fmt(principal) + unit + ' 起，依年利率 ' + fmt(ratePct) + '% 逐月複利，長條一個月比一個月高，欠越久滾越大。'
+                : '複利成長動畫：從 ' + fmt(principal) + unit + ' 起' + (contribute > 0 ? '、每月再投入 ' + fmt(contribute) + unit : '') + '，依年利率 ' + fmt(ratePct) + '% 逐月複利，長條逐月升高，時間越長成長越明顯（會上下波動、不保證）。'),
+            drawStatic: drawStatic,
+            draw: draw
+        });
+    }
     // ---- 導出 -----------------------------------------------------------
     var Anim = {
         reducedMotion: reducedMotion,
@@ -3536,6 +3703,7 @@
         fairTest: fairTest,
         greenhouseEffect: greenhouseEffect,
         carbonCycle: carbonCycle,
+        compoundGrowth: compoundGrowth,
     };
     window.Anim = Anim;
 })();

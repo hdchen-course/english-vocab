@@ -103,6 +103,11 @@ interface AnimApi {
    *  emphasis:'human' 另加燃燒化石燃料把地底碳放回大氣、CO₂ 累積打破平衡。
    *  cfg = {emphasis:'natural'|'human',caption?,label?}。永續頁＋tier0 生物碳循環共用。 */
   carbonCycle: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 複利/定期定額成長（grow）與卡債滾大（debt）共用場景（理財真實世界頁 author-once）。
+   *  以 principal 起、依年利率 ratePct 逐月複利（可每月 contribute 定額投入），長條逐月升高；
+   *  mode:'grow' 用 --su 色、mode:'debt' 用 --c-wrong 紅色。reduced-motion 畫 4 具名月份靜態。
+   *  cfg = {principal,ratePct,periods,contribute,mode:'grow'|'debt',unitLabel,title,caption,label}。 */
+  compoundGrowth: (host: HTMLElement, cfg?: any) => { stop: () => void };
 }
 
 /** game_core.js 導出的遊戲核心 API（window.Game）。遷移 game_core 時逐步精確化。 */
