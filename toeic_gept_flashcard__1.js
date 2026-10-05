@@ -640,7 +640,10 @@ function rateCard(grade) {
     // 「還不熟」在本 session 稍後再現（位移重插，不緊鄰重複）。
     if (grade === 'again' && studyQueue.length > 3) {
         const insertAt = Math.min(currentIndex + 3 + Math.floor(Math.random() * 5), studyQueue.length);
-        studyQueue.splice(insertAt, 0, word);
+        // 只有在插入點確實落在下一張之後才重插，避免最後一張被 clamp 成「附加到隊尾」後，
+        // nextWord 的 currentIndex++ 剛好停在它上面而緊鄰重複；此情況改由 SRS 下一輪自然再現。
+        if (insertAt > currentIndex + 1)
+            studyQueue.splice(insertAt, 0, word);
     }
     nextWord();
 }
