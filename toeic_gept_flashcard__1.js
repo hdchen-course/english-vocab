@@ -531,6 +531,9 @@ function switchMode(mode) {
     answered = false;
     spell = null;
     spellAudioId = null;
+    knownCount = 0;
+    againCount = 0;
+    updateScore(); // 切換活動＝重開一輪：歸零共用的 答對/還不熟 計分，否則會把前一個活動的分數混進來（與 selectLevel 一致）
     document.querySelectorAll('.mode-toggle .fc-source__btn').forEach(b => {
         const on = b.getAttribute('data-mode') === mode;
         b.classList.toggle('active', on);
