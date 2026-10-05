@@ -1435,7 +1435,7 @@ function renderQuestion() {
     }
     // Question text
     let questionText = q.question;
-    // 語詞接龍：四個選項都能接龍，加上詞義提示讓答案唯一且可解釋
+    // 語詞接龍：只有正解的詞開頭字能接上題目的尾字（其餘選項不接龍）；詞義提示幫孩子理解接出來的詞
     if (q.type === 'chain' && q.explanation && q.explanation.indexOf('：') !== -1) {
         const def = q.explanation.split('：')[1];
         if (def)
