@@ -71,8 +71,7 @@ function pomodoroTimeline(): string {
     s += '<text x="' + (x + fw / 2) + '" y="' + (y + h / 2 + 4) + '" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff">25</text>';
     s += '<text x="' + (x + fw / 2) + '" y="' + (y + h + 15) + '" text-anchor="middle" font-size="9.5" font-weight="700" fill="currentColor">第' + (i + 1) + '輪</text>';
     x += fw;
-    s += '<rect x="' + x + '" y="' + y + '" width="' + bw + '" height="' + h + '" fill="#14b8a6"/>';
-    x += bw;
+    if (i < 3) { s += '<rect x="' + x + '" y="' + y + '" width="' + bw + '" height="' + h + '" fill="#14b8a6"/>'; x += bw; }
   }
   s += '<rect x="' + x + '" y="' + y + '" width="' + lw + '" height="' + h + '" fill="#0d9488"/>';
   s += '<text x="' + (x + lw / 2) + '" y="' + (y + h / 2 + 4) + '" text-anchor="middle" font-size="9" font-weight="800" fill="#ffffff">長休</text>';

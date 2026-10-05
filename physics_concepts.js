@@ -48,7 +48,7 @@
     }
     // 浮力：up=浮力箭頭長度、down=重力箭頭長度、verdict 文字
     function buoyancy(up, down, verdict, hideGrav) {
-        var s = '<svg viewBox="0 0 300 150" role="img" aria-label="浮力與重力">';
+        var s = '<svg viewBox="0 0 300 150" role="img" aria-label="' + (hideGrav ? '浮力' : '浮力與重力') + '">';
         s += '<rect x="20" y="66" width="260" height="76" fill="rgba(14,165,233,0.18)" stroke="#0ea5e9" stroke-width="2"/><text x="270" y="82" text-anchor="end" font-size="12" font-weight="700" fill="currentColor">水</text>';
         s += '<rect x="128" y="72" width="44" height="36" rx="6" fill="rgba(120,120,120,0.22)" stroke="currentColor" stroke-opacity="0.6" stroke-width="3"/><text x="150" y="96" text-anchor="middle" font-size="14" font-weight="800" fill="currentColor">物</text>';
         var uy1 = 72 - up;
