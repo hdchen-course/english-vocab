@@ -759,7 +759,9 @@
         }
         if (st.current > num(st.longest))
             st.longest = st.current;
-        st.lastActiveDate = today;
+        // 只「往前」移動錨點日期；時鐘回退(diff<0)不倒退，否則時鐘校正回來後同一天會再以 diff===1 重複累加 streak。
+        if (st.lastActiveDate === null || diff === null || diff > 0)
+            st.lastActiveDate = today;
         if (changed) {
             emit('streak', { current: st.current, longest: st.longest, freezes: st.freezes });
             // 面向孩子的安撫語（§3.4）：只鼓勵、不威脅/催促。
