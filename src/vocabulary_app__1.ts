@@ -201,6 +201,7 @@ function initTabs() {
     el.addEventListener('click', () => {
       currentTab = el.dataset.tab;
       currentWordIndex = 0;
+      isFlipped = false;   // 換主題要回到卡片正面（否則新主題第一張直接顯示背面答案，且略過 audio-first 自動發音）
       initTabs();
       updateStats();
       refreshQueue();
@@ -308,7 +309,7 @@ function renderFlashcard(area) {
           </div>
           <div class="sound-row">
             <button class="fc-audio fc-audio--lg" aria-label="播放單字發音" onclick="event.stopPropagation(); speak('${word.word.replace(/'/g, "\\'")}')">🔊</button>
-            <button class="fc-audio fc-audio--sm" aria-label="播放例句發音" onclick="event.stopPropagation(); speak('${word.sentence.replace(/<[^>]*>/g, '').replace(/'/g, "\\'") }', false, '${word.word.replace(/'/g, "\\'")}')">📢</button>
+            <button class="fc-audio fc-audio--sm" aria-label="播放例句發音" onclick="event.stopPropagation(); speak('${jsAttr(word.sentence.replace(/<[^>]*>/g, ''))}', false, '${jsAttr(word.word)}')">📢</button>
           </div>
         </div>
       </div>
@@ -787,7 +788,7 @@ function renderClozeFront(area) {
           </div>
           <div class="sound-row">
             <button class="fc-audio fc-audio--lg" aria-label="播放單字發音" onclick="event.stopPropagation(); speak('${word.word.replace(/'/g, "\\'")}')">🔊</button>
-            <button class="fc-audio fc-audio--sm" aria-label="播放例句發音" onclick="event.stopPropagation(); speak('${word.sentence.replace(/<[^>]*>/g, '').replace(/'/g, "\\'") }', false, '${word.word.replace(/'/g, "\\'")}')">📢</button>
+            <button class="fc-audio fc-audio--sm" aria-label="播放例句發音" onclick="event.stopPropagation(); speak('${jsAttr(word.sentence.replace(/<[^>]*>/g, ''))}', false, '${jsAttr(word.word)}')">📢</button>
           </div>
         </div>
       </div>
