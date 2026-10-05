@@ -20,9 +20,16 @@
 
   /* ---------- 播放高品質範本音（audio/*.mp3；慢速用 playbackRate）---------- */
   var curAudio = null;
-  function stopAudio(){ if(curAudio){ try{ curAudio.pause(); }catch(e){} curAudio=null; } if(myAudio){ try{ myAudio.pause(); }catch(e){} } }
+  var seqGen = 0;          // bumped on every stopAudio() so a stale playSeq step aborts
+  var seqTimer = null;     // handle for the inter-file gap timer, so stopAudio() can cancel it
+  // pauseCur: silence the current clip only (used between files of a sequence) — does NOT
+  // bump the generation, so an in-flight playSeq keeps going.
+  function pauseCur(){ if(curAudio){ try{ curAudio.pause(); }catch(e){} curAudio=null; } if(myAudio){ try{ myAudio.pause(); }catch(e){} } }
+  // stopAudio: full teardown (navigation / other controls) — also cancels any pending
+  // inter-file timer and bumps the generation so a stale playSeq step aborts.
+  function stopAudio(){ seqGen++; if(seqTimer){ clearTimeout(seqTimer); seqTimer=null; } pauseCur(); }
   function playFile(fname, slow, onend?){
-    stopAudio();
+    pauseCur();
     var a = new Audio('audio/' + fname);
     try{ (a as any).preservesPitch = true; (a as any).mozPreservesPitch = true; (a as any).webkitPreservesPitch = true; }catch(e){}
     a.playbackRate = slow ? 0.72 : 1.0;
@@ -34,11 +41,16 @@
   }
   function playSeq(files, slow){
     stopAudio();
+    var gen = seqGen;   // capture after stopAudio bumped it; a later stopAudio aborts this run
     var i = 0;
     (function step(){
+      if(gen !== seqGen) return;              // superseded/stopped → abort before playing
       if(i >= files.length) return;
       var f = files[i++];
-      playFile(f, slow, function(){ setTimeout(step, 280); });
+      playFile(f, slow, function(){
+        if(gen !== seqGen) return;            // navigated away during playback
+        seqTimer = setTimeout(function(){ seqTimer=null; step(); }, 280);
+      });
     })();
   }
   function modelFiles(u, it){
