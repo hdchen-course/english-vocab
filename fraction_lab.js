@@ -29,6 +29,31 @@
             return '<span class="fl-whole">' + n + '</span>';
         return '<span class="fl-frac"><span class="fl-num">' + n + '</span><span class="fl-den">' + d + '</span></span>';
     }
+    // 帶分數 HTML：整數 ＋「又」＋ 真分數（重用 .fl-whole / fhtml，零新 class）
+    function mixedHtml(w, n, d) { return '<span class="fl-whole">' + w + '</span> 又 ' + fhtml(n, d); }
+    // 帶分數長條圖(靜態 SVG，主題感知)：whole 條「整條」(d/d 全塗) ＋ 1 條切成 d 份、塗 r 份，
+    // 讓孩子看見「假分數 = 幾整條 ＋ 剩下幾分之幾」。塗色用 var(--su)(淺/深色皆可見)，文字用 currentColor，
+    // 條內不放字→無「淺底深字」問題。回傳 SVG 字串。
+    function barMixed(whole, r, d) {
+        var segW = 20, segH = 26, gap = 14, pad = 10, x = pad, g = '';
+        function oneBar(fill) {
+            for (var i = 0; i < d; i++) {
+                var fx = x + i * segW, on = i < fill;
+                g += '<rect x="' + fx + '" y="' + pad + '" width="' + segW + '" height="' + segH + '" rx="3" ' +
+                    'fill="' + (on ? 'var(--su)' : 'none') + '" stroke="currentColor" stroke-opacity="0.4" stroke-width="1.5"/>';
+            }
+            x += d * segW + gap;
+        }
+        for (var k = 0; k < whole; k++) {
+            oneBar(d);
+        } // 整條：d 份全塗
+        oneBar(r); // 剩下一條：塗 r 份
+        var W = x - gap + pad, H = pad + segH + 28, cx = W / 2, cy = pad + segH + 20, imp = whole * d + r;
+        var cap = imp + '/' + d + ' ＝ ' + whole + ' 又 ' + r + '/' + d;
+        return '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" style="max-width:' + W + 'px;height:auto;display:block;margin:0 auto" ' +
+            'role="img" aria-label="長條圖：' + whole + ' 條整條，再加上一條切成 ' + d + ' 份塗 ' + r + ' 份，等於帶分數 ' + whole + ' 又 ' + d + '分之' + r + '">' +
+            g + '<text x="' + cx + '" y="' + cy + '" text-anchor="middle" font-size="13" fill="currentColor">' + cap + '</text></svg>';
+    }
     // 生成器：每個回傳 { html, aN, aD(最簡正解), tip, spoken }
     var CATS = [
         { key: 'reduce', label: '約分（化到最簡）', emoji: '✂️', sub: '分子分母同時除以最大公因數，把分數變最簡',
@@ -41,6 +66,44 @@
                 var n = base.n * k, d = base.d * k;
                 var tip = '把 ' + n + '/' + d + ' 約分：' + n + ' 和 ' + d + ' 的最大公因數是 ' + gcd(n, d) + '，同時除以它 → ' + (base.d === 1 ? ('整數 ' + base.n) : (base.n + '/' + base.d)) + '。';
                 return { html: '把 ' + fhtml(n, d) + ' <span class="fl-op">化成最簡</span>', aN: base.n, aD: base.d, tip: tip, spoken: d + '分之' + n + ' 化成最簡分數' };
+            } },
+        { key: 'mixed', label: '帶分數 ↔ 假分數', emoji: '🍰', sub: '整數部分和分數部分互換，大小不變',
+            teach: '<b>帶分數</b>是「整數 ＋ 真分數」，和<b>假分數</b>（分子比分母大）大小一樣，只是把整數的部分「拆出來」寫。<br><br>' +
+                '<b>假分數 → 帶分數：</b>分子 ÷ 分母，<b>商</b>當整數部分、<b>餘數</b>當新分子、分母不變。<br>例：7/3 → 7÷3 商 2 餘 1 → <b>2 又 1/3</b>。' +
+                '<div style="margin:10px 0">' + barMixed(2, 1, 3) + '</div>' +
+                '<b>帶分數 → 假分數：</b>整數 × 分母 ＋ 分子，當新分子、分母不變。<br>例：3 又 2/5 → 3×5＋2 ＝ 17 → <b>17/5</b>。' +
+                '<div style="margin:10px 0">' + barMixed(3, 2, 5) + '</div>' +
+                '💡 帶分數只是把假分數「拆出整數」，大小完全一樣，只是換個樣子寫。',
+            gen: function (lv) {
+                var dLo = lv <= 2 ? 2 : 5, dHi = lv <= 2 ? 4 : 9;
+                var b = ri(dLo, dHi);
+                var W = ri(1, lv <= 2 ? 3 : 4);
+                var a = ri(1, b - 1), guard = 0;
+                while (gcd(a, b) !== 1 && guard++ < 30) {
+                    a = ri(1, b - 1);
+                }
+                if (gcd(a, b) !== 1)
+                    a = 1; // b≥2 → 1 必與 b 互質（保底，分數部分永遠最簡）
+                var n = W * b + a; // 假分數分子；因 a<b，商必為 W、餘數必為 a（絕無餘數≥分母）
+                var kind = pick([0, 1, 2]); // 0 帶→假；1 假→帶(整數部分)；2 假→帶(分數部分)
+                if (kind === 0) {
+                    return { html: '把 ' + mixedHtml(W, a, b) + ' <span class="fl-op">寫成假分數</span>',
+                        aN: n, aD: b,
+                        tip: '整數 ' + W + ' × 分母 ' + b + ' ＋ 分子 ' + a + ' ＝ ' + n + '，分母不變 → ' + n + '/' + b + '。',
+                        spoken: W + '又' + b + '分之' + a + ' 寫成假分數' };
+                }
+                else if (kind === 1) {
+                    return { html: '把 ' + fhtml(n, b) + ' 寫成帶分數：' + n + ' ÷ ' + b + ' 的 <span class="fl-op">商</span> 是多少？（答案是整數，分母欄請填 1）',
+                        aN: W, aD: 1,
+                        tip: n + ' ÷ ' + b + ' ＝ 商 ' + W + ' 餘 ' + a + '；商 ' + W + ' 就是帶分數的整數部分 → ' + W + ' 又 ' + a + '/' + b + '。',
+                        spoken: n + ' 除以 ' + b + ' 的商是多少' };
+                }
+                else {
+                    return { html: '把 ' + fhtml(n, b) + ' 寫成帶分數，<span class="fl-op">分數部分是多少</span>？',
+                        aN: a, aD: b,
+                        tip: n + ' ÷ ' + b + ' ＝ 商 ' + W + ' 餘 ' + a + ' → ' + W + ' 又 ' + a + '/' + b + '；分數部分是 ' + a + '/' + b + '。',
+                        spoken: b + '分之' + n + ' 寫成帶分數，分數部分是幾分之幾' };
+                }
             } },
         { key: 'addsame', label: '同分母加減', emoji: '➕', sub: '分母不變，分子直接相加減，再約分',
             teach: '分母<b>一樣</b>的分數相加減，最簡單：<b>分母不變，分子直接加或減</b>，最後記得約分。<br><br><b>例：</b>2/7 + 3/7 → 分母都是 7，分子 2+3=5 → <b>5/7</b>。<br><b>例：</b>5/6 − 1/6 → 分母不變（還是 6），分子 5−1=4 → 4/6 → 約分成 <b>2/3</b>。',

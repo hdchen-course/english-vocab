@@ -212,6 +212,18 @@
     disc(g, x, y, r * 1.6, SUN_GLOW); disc(g, x, y, r, SUN);
   }
 
+  /** 底部說明：短字置中；過長則自動縮字並靠左，永遠為右下角「重播」鈕保留空位，避免被蓋住。 */
+  function bottomCap(g: CanvasRenderingContext2D, w: number, h: number, text: string, col: string, size?: number) {
+    var s = size || 11.5;
+    var fam = 'px system-ui, -apple-system, "Segoe UI", sans-serif';
+    g.font = '600 ' + s + fam;
+    var tw = g.measureText(text).width;
+    if (tw <= w - 150) { label(g, text, w / 2, h - 11, col, s, 'center'); return; }
+    var maxL = w - 94;
+    while (tw > maxL && s > 8.5) { s -= 0.5; g.font = '600 ' + s + fam; tw = g.measureText(text).width; }
+    label(g, text, 10, h - 11, col, s, 'left');
+  }
+
   /** 入射角示意面板：固定寬度的平行陽光打在水平地面，太陽越高→光越集中（亮、熱）；
    *  越低→同樣的光攤在越大的地面（分散、涼）。這就是四季冷熱的「角度」成因。 */
   function incidencePanel(g: CanvasRenderingContext2D, cx: number, top: number, w: number, h: number, altDeg: number, ink: string, capOverride?: string) {
@@ -3257,6 +3269,672 @@
     });
   }
 
+  // ====================================================================
+  // 場景：placeValue — 位值與「四位一節」（個級／萬級／億級）＋國字讀法。
+  //   cfg = { number:(Number|String), label? }
+  //   把一個大整數的每個數字對齊到位值欄（個/十/百/千/萬/十萬/百萬/千萬/億…），
+  //   動畫從右每 4 位落下一道「節」分隔，標出 個級／萬級／億級／兆級，並寫出讀法。
+  //   台灣以「四位一節」分級（萬／億／兆）；教學點＝四位一節的中文分級與讀法
+  //   （西式逗號每 3 位是另一回事，這裡刻意用 4 位一節）。
+  //   reduced-motion：直接畫最終幀（含分節、級標籤與讀法）。
+  // ====================================================================
+  function placeValue(host: HTMLElement, cfg: any) {
+    cfg = cfg || {};
+    var raw = (cfg.number === undefined || cfg.number === null) ? '12345678' : ('' + cfg.number);
+    var digits = raw.replace(/[^0-9]/g, '').replace(/^0+(?=\d)/, '');
+    if (digits === '') digits = '0';
+    if (digits.length > 16) digits = digits.substring(digits.length - 16);  // 上限兆級（16 位）
+    var n = digits.length;
+
+    var NUM = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+    var SMALL = ['', '十', '百', '千'];
+    var BIG = ['', '萬', '億', '兆'];
+    var SEPC = '#e11d48';   // 節分隔＝固定紅（亮暗雙主題皆可讀，與頁主題色區隔）
+
+    function placeName(pr: number): string {
+      if (pr === 0) return '個';
+      return SMALL[pr % 4] + BIG[Math.floor(pr / 4)];
+    }
+    function groupLabel(gi: number): string { return (gi === 0 ? '個' : BIG[gi]) + '級'; }
+
+    // 讀法：四位一節，節內標準讀法＋節間補零。
+    function readGroup4(g4: string): string {
+      var out = '', zeroPending = false;
+      for (var i = 0; i < 4; i++) {
+        var d = g4.charCodeAt(i) - 48;
+        var unit = SMALL[3 - i];
+        if (d === 0) { zeroPending = (out !== ''); }
+        else { if (zeroPending) { out += '零'; zeroPending = false; } out += NUM[d] + unit; }
+      }
+      return out;
+    }
+    function readChinese(s: string): string {
+      if (s === '0') return '零';
+      var groups: string[] = [];
+      for (var i = s.length; i > 0; i -= 4) groups.unshift(('0000' + s.substring(Math.max(0, i - 4), i)).slice(-4));
+      var gc = groups.length, res = '';
+      for (var gi = 0; gi < gc; gi++) {
+        var gr = readGroup4(groups[gi]);
+        var bigUnit = BIG[gc - 1 - gi] || '';
+        if (gr === '') {
+          var later = false;
+          for (var k = gi + 1; k < gc; k++) if (parseInt(groups[k], 10) !== 0) later = true;
+          if (res !== '' && later && res.charAt(res.length - 1) !== '零') res += '零';
+          continue;
+        }
+        if (res !== '' && groups[gi].charAt(0) === '0' && res.charAt(res.length - 1) !== '零') res += '零';
+        res += gr + bigUnit;
+      }
+      if (res.indexOf('一十') === 0) res = res.substring(1);
+      return res;
+    }
+    var reading = readChinese(digits);
+    var numGroups = Math.ceil(n / 4);
+    var sep = numGroups - 1;
+
+    function frame(g: CanvasRenderingContext2D, w: number, h: number, gapT: number, grpA: number, readLen: number) {
+      var ink = inkColor(), theme = themeColor();
+      var padX = 16;
+      var gapMax = 16;
+      var cellW = Math.min(40, (w - 2 * padX - sep * gapMax) / n);
+      if (cellW < 15) cellW = 15;
+      var gap = gapMax * gapT;
+      var totalW = n * cellW + sep * gap;
+      var xLeft = (w - totalW) / 2;
+      var digitTop = h * 0.30, digitH = Math.min(32, h * 0.17);
+      var digitMid = digitTop + digitH / 2;
+
+      label(g, '位值・四位一節（每 4 位一節：個級・萬級・億級）', w / 2, 14, theme, 11.5, 'center');
+
+      function cx(i: number): number {
+        var pr = n - 1 - i;
+        var sepLeft = sep - Math.floor(pr / 4);
+        return xLeft + i * cellW + sepLeft * gap + cellW / 2;
+      }
+
+      // 數字格 + 位值名（直向堆疊，最多 2 字）
+      for (var i = 0; i < n; i++) {
+        var x = cx(i), pr = n - 1 - i;
+        g.save(); g.strokeStyle = ink; g.globalAlpha = 0.3; g.lineWidth = 1.2;
+        g.strokeRect(x - cellW * 0.42, digitTop, cellW * 0.84, digitH); g.restore();
+        label(g, digits.charAt(i), x, digitMid, theme, Math.min(22, cellW * 0.7), 'center');
+        var pn = placeName(pr);
+        for (var c = 0; c < pn.length; c++) label(g, pn.charAt(c), x, digitTop + digitH + 10 + c * 11, ink, 9.5, 'center');
+      }
+
+      // 級的括弧與標籤
+      g.save(); g.globalAlpha = grpA;
+      for (var gidx = 0; gidx < numGroups; gidx++) {
+        var prLo = gidx * 4, prHi = gidx * 4 + 3;
+        var iHi = n - 1 - prLo, iLo = Math.max(0, n - 1 - prHi);
+        var xa = cx(iLo), xb = cx(iHi);
+        var bx0 = xa - cellW * 0.42, bx1 = xb + cellW * 0.42, by = h * 0.22;
+        g.strokeStyle = theme; g.lineWidth = 1.4;
+        g.beginPath(); g.moveTo(bx0, by + 5); g.lineTo(bx0, by); g.lineTo(bx1, by); g.lineTo(bx1, by + 5); g.stroke();
+        label(g, groupLabel(gidx), (bx0 + bx1) / 2, by - 7, theme, 10.5, 'center');
+      }
+      g.restore();
+
+      // 節分隔虛線（紅）在每個 gap 中
+      if (gap > 1) {
+        g.save(); g.strokeStyle = SEPC; g.globalAlpha = 0.85 * gapT; g.lineWidth = 1.5; g.setLineDash([4, 3]);
+        for (var s = 1; s <= sep; s++) {
+          var iR = n - 1 - (4 * s - 1);
+          var xg = cx(iR) - cellW * 0.42 - gap / 2;
+          g.beginPath(); g.moveTo(xg, digitTop - 4); g.lineTo(xg, digitTop + digitH + 4); g.stroke();
+        }
+        g.restore();
+      }
+
+      // 讀法（底部），逐字顯示
+      if (readLen > 0) {
+        var shown = '讀作：' + reading.substring(0, Math.min(reading.length, readLen));
+        bottomCap(g, w, h, shown, ink, 14);
+      }
+    }
+
+    function draw(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var gapT = Math.max(0, Math.min(1, (p - 0.28) / 0.3));
+      var grpA = Math.max(0, Math.min(1, (p - 0.34) / 0.3));
+      var readLen = p > 0.62 ? Math.ceil((p - 0.62) / 0.38 * reading.length) : 0;
+      frame(g, w, h, gapT, grpA, readLen);
+    }
+
+    return runScene(host, {
+      durationMs: 7200, loops: 2, staticPhase: 1,
+      label: cfg.label || ('位值動畫：把 ' + digits + ' 的每個數字對齊到位值欄（個・十・百・千・萬…），每 4 位一節落下分隔，分成個級・萬級・億級，讀作「' + reading + '」。'),
+      drawStatic: function (g, w, h) { frame(g, w, h, 1, 1, reading.length); },
+      draw: draw
+    });
+  }
+
+  // ====================================================================
+  // 場景：numberLine — 參數化數線（plain／round／negative）。
+  //   cfg = { min, max, ticks, marks, highlight, mode, label, value, roundTo, flip }
+  //     ticks＝刻度間距（每隔多少標一格；預設 (max-min)/10）
+  //     marks＝[Number | {value, label?, color?}]，plain 模式逐一標點
+  //     highlight＝要脈動強調的值
+  //     mode:'plain'  — 一般標刻度＋標點。
+  //     mode:'round'  — 一個值滾向較近的整十／整百（四捨五入）；標中點、顯示落在哪一邊。
+  //                     extra: value（要四捨五入的值）、roundTo（10 或 100，預設 10）。
+  //     mode:'negative' — 以 0 為界顯示正負方向；給 flip:{from,to,label?} 時演示
+  //                     「乘以負數→方向相反」（箭頭反向）。此模式供他頁重用，cfg 保持乾淨通用。
+  //   reduced-motion：畫最終幀（staticPhase=1）。
+  // ====================================================================
+  function numberLine(host: HTMLElement, cfg: any) {
+    cfg = cfg || {};
+    var mode = cfg.mode || 'plain';
+    var HL = '#e11d48';   // 固定紅（目標／反向），與頁主題色區隔；雙主題皆可讀
+
+    // round 模式先求區間，供 min/max 預設使用。
+    var rValue = (typeof cfg.value === 'number') ? cfg.value : 27;
+    var roundTo = (typeof cfg.roundTo === 'number' && cfg.roundTo > 0) ? cfg.roundTo : 10;
+    var rLower = Math.floor(rValue / roundTo) * roundTo, rUpper = rLower + roundTo, rMid = rLower + roundTo / 2;
+    var rTarget = (rValue >= rMid) ? rUpper : rLower;
+
+    var min = (typeof cfg.min === 'number') ? cfg.min : (mode === 'negative' ? -5 : (mode === 'round' ? rLower : 0));
+    var max = (typeof cfg.max === 'number') ? cfg.max : (mode === 'negative' ? 5 : (mode === 'round' ? rUpper : 10));
+    if (max <= min) max = min + 1;
+    var step = (typeof cfg.ticks === 'number' && cfg.ticks > 0) ? cfg.ticks : (max - min) / 10;
+    var marks = Array.isArray(cfg.marks) ? cfg.marks : [];
+    var highlight = (typeof cfg.highlight === 'number') ? cfg.highlight : null;
+
+    function fmt(v: number): string { return '' + (Math.round(v * 100) / 100); }
+    function geo(h: number) { return { padL: 28, padR: 22, axY: Math.round(h * 0.56) }; }
+    function X(v: number, w: number, h: number): number { var L = geo(h); return L.padL + (v - min) / (max - min) * (w - L.padL - L.padR); }
+
+    function arrow(g: CanvasRenderingContext2D, x1: number, y1: number, x2: number, y2: number, col: string) {
+      g.save(); g.strokeStyle = col; g.fillStyle = col; g.lineWidth = 2.6; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke();
+      var a = Math.atan2(y2 - y1, x2 - x1);
+      g.beginPath(); g.moveTo(x2, y2);
+      g.lineTo(x2 - 10 * Math.cos(a - 0.42), y2 - 10 * Math.sin(a - 0.42));
+      g.lineTo(x2 - 10 * Math.cos(a + 0.42), y2 - 10 * Math.sin(a + 0.42));
+      g.closePath(); g.fill(); g.restore();
+    }
+
+    function axis(g: CanvasRenderingContext2D, w: number, h: number, ink: string) {
+      var L = geo(h), y = L.axY, x0 = L.padL, x1 = w - L.padR;
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.6; g.lineWidth = 2; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(x0 - 6, y); g.lineTo(x1 + 6, y); g.stroke();
+      g.fillStyle = ink;
+      g.beginPath(); g.moveTo(x1 + 10, y); g.lineTo(x1 + 2, y - 4); g.lineTo(x1 + 2, y + 4); g.closePath(); g.fill();
+      g.beginPath(); g.moveTo(x0 - 10, y); g.lineTo(x0 - 2, y - 4); g.lineTo(x0 - 2, y + 4); g.closePath(); g.fill();
+      g.restore();
+      var nT = Math.round((max - min) / step);
+      for (var i = 0; i <= nT; i++) {
+        var v = min + i * step, x = X(v, w, h);
+        var isZero = Math.abs(v) < 1e-9;
+        g.save(); g.strokeStyle = ink; g.globalAlpha = isZero ? 0.9 : 0.5; g.lineWidth = isZero ? 2.2 : 1.4;
+        g.beginPath(); g.moveTo(x, y - (isZero ? 8 : 5)); g.lineTo(x, y + (isZero ? 8 : 5)); g.stroke(); g.restore();
+        label(g, fmt(v), x, y + 17, ink, isZero ? 11 : 10, 'center');
+      }
+    }
+
+    function drawPlain(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var ink = inkColor(), theme = themeColor(), L = geo(h), y = L.axY;
+      axis(g, w, h, ink);
+      label(g, cfg.title || '數線：每一點都有自己的位置', w / 2, 14, theme, 12, 'center');
+      var showN = Math.ceil(marks.length * Math.max(0, Math.min(1, p / 0.85)));
+      for (var i = 0; i < showN && i < marks.length; i++) {
+        var m = marks[i];
+        var v = (typeof m === 'number') ? m : m.value;
+        var col = (m && m.color) ? m.color : theme;
+        var x = X(v, w, h);
+        disc(g, x, y, 4.5, col);
+        var lab = (m && m.label) ? m.label : fmt(v);
+        label(g, lab, x, y - 12, col, 11, 'center');
+      }
+      if (highlight !== null) {
+        var hx = X(highlight, w, h);
+        var r = 6 + 2 * Math.sin(nowMs() / 300);
+        g.save(); g.strokeStyle = theme; g.lineWidth = 2.4; g.beginPath(); g.arc(hx, y, r, 0, Math.PI * 2); g.stroke(); g.restore();
+        label(g, fmt(highlight), hx, y - 14, theme, 11.5, 'center');
+      }
+    }
+
+    function drawRound(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var ink = inkColor(), theme = themeColor(), L = geo(h), y = L.axY;
+      label(g, '四捨五入到最近的 ' + roundTo, w / 2, 14, theme, 12, 'center');
+      // 兩半底色：靠近 lower 的一半＝捨、靠近 upper 的一半＝入
+      var xL = X(rLower, w, h), xM = X(rMid, w, h), xU = X(rUpper, w, h);
+      g.save(); g.globalAlpha = 0.1;
+      g.fillStyle = ink; g.fillRect(xL, y - 10, xM - xL, 20);
+      g.fillStyle = HL; g.fillRect(xM, y - 10, xU - xM, 20);
+      g.restore();
+      axis(g, w, h, ink);
+      // 中點虛線
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.6; g.lineWidth = 1.4; g.setLineDash([5, 4]);
+      g.beginPath(); g.moveTo(xM, y - 26); g.lineTo(xM, y + 10); g.stroke(); g.restore();
+      label(g, '中點 ' + fmt(rMid), xM, y - 32, ink, 10.5, 'center');
+      // 目標刻度（紅）
+      var xt = X(rTarget, w, h);
+      g.save(); g.strokeStyle = HL; g.lineWidth = 2.4; g.beginPath(); g.moveTo(xt, y - 9); g.lineTo(xt, y + 9); g.stroke(); g.restore();
+      // 滾動的球：從 value 滑到 target
+      var bx = X(rValue, w, h) + (xt - X(rValue, w, h)) * easeInOut(Math.max(0, Math.min(1, p)));
+      disc(g, bx, y - 15, 6.5, theme);
+      label(g, fmt(rValue), X(rValue, w, h), y + 30, theme, 11, 'center');
+      var side = (rValue >= rMid) ? (fmt(rValue) + ' ≥ 中點 → 進位到 ' + fmt(rTarget)) : (fmt(rValue) + ' ＜ 中點 → 捨去到 ' + fmt(rTarget));
+      bottomCap(g, w, h, side, (rValue >= rMid) ? HL : ink, 11.5);
+    }
+
+    function drawNegative(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var ink = inkColor(), theme = themeColor(), L = geo(h), y = L.axY;
+      axis(g, w, h, ink);
+      var x0 = X(0, w, h);
+      label(g, cfg.title || '正負數：0 的兩邊是相反方向', w / 2, 14, theme, 12, 'center');
+      label(g, '− 負向', (X(min, w, h) + x0) / 2, y + 32, ink, 10.5, 'center');
+      label(g, '＋ 正向', (x0 + X(max, w, h)) / 2, y + 32, ink, 10.5, 'center');
+      var flip = cfg.flip;
+      if (flip && typeof flip.from === 'number' && typeof flip.to === 'number') {
+        var ay = y - 22;
+        var xf = X(flip.from, w, h), xt2 = X(flip.to, w, h);
+        if (p < 0.5) {
+          var g1 = easeInOut(p / 0.5);
+          arrow(g, x0, ay, x0 + (xf - x0) * g1, ay, theme);
+          if (p > 0.35) label(g, fmt(flip.from), xf, ay - 10, theme, 11, 'center');
+        } else {
+          g.save(); g.globalAlpha = 0.35; arrow(g, x0, ay, xf, ay, theme); g.restore();
+          var g2 = easeInOut((p - 0.5) / 0.5);
+          arrow(g, x0, ay, x0 + (xt2 - x0) * g2, ay, HL);
+          if (p > 0.7) label(g, fmt(flip.to), xt2, ay - 10, HL, 11, 'center');
+        }
+        bottomCap(g, w, h, flip.label || ('× 負數：方向相反（' + fmt(flip.from) + ' → ' + fmt(flip.to) + '）'), (p >= 0.5 ? HL : ink), 11.5);
+      } else if (highlight !== null) {
+        var hx2 = X(highlight, w, h);
+        arrow(g, x0, y - 22, hx2, y - 22, highlight >= 0 ? theme : HL);
+        label(g, fmt(highlight), hx2, y - 32, highlight >= 0 ? theme : HL, 11.5, 'center');
+      }
+    }
+
+    function draw(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      if (mode === 'round') drawRound(g, p, w, h);
+      else if (mode === 'negative') drawNegative(g, p, w, h);
+      else drawPlain(g, p, w, h);
+    }
+
+    return runScene(host, {
+      durationMs: mode === 'plain' ? 5200 : 5600, loops: 2, staticPhase: 1,
+      label: cfg.label || (mode === 'round'
+        ? ('四捨五入動畫：' + fmt(rValue) + ' 在 ' + fmt(rLower) + ' 和 ' + fmt(rUpper) + ' 之間，中點是 ' + fmt(rMid) + '；' + fmt(rValue) + (rValue >= rMid ? ' 到中點以上，進位到 ' : ' 到中點以下，捨去到 ') + fmt(rTarget) + '。')
+        : (mode === 'negative'
+          ? '正負數線動畫：以 0 為界，右邊是正向、左邊是負向；乘以負數時，箭頭會指向相反方向。'
+          : '數線動畫：在數線上依序標出各點的位置。')),
+      draw: draw
+    });
+  }
+
+  // ====================================================================
+  // 場景：partWhole100 — 同一個量的四種面貌（分數／小數／百分比／比）。
+  //   cfg = { num, den, label }
+  //   一個 10×10 百格，填滿 num/den；同時在四個讀出框顯示 分數 n/d、小數、百分比 %、比 a:b。
+  //   例：num:3, den:4 → 填 75 格 → 3/4 ＝ 0.75 ＝ 75% ＝ 3:4。
+  //   reduced-motion：畫最終幀（填滿＋四框）。
+  // ====================================================================
+  function partWhole100(host: HTMLElement, cfg: any) {
+    cfg = cfg || {};
+    var num = (typeof cfg.num === 'number') ? cfg.num : 3;
+    var den = (typeof cfg.den === 'number' && cfg.den > 0) ? cfg.den : 4;
+    var value = num / den;
+    var targetCells = Math.max(0, Math.min(100, value * 100));
+
+    function gcd(a: number, b: number): number { a = Math.abs(a); b = Math.abs(b); while (b) { var t = b; b = a % b; a = t; } return a || 1; }
+    var gg = gcd(Math.round(num), Math.round(den));
+    var rn = Math.round(num) / gg, rd = Math.round(den) / gg;
+    function dec(x: number): string { return '' + (Math.round(x * 1000) / 1000); }
+    function pct(x: number): string { return '' + (Math.round(x * 1000) / 10) + '%'; }
+
+    function box(g: CanvasRenderingContext2D, x: number, y: number, bw: number, bh: number, head: string, val: string, ink: string, theme: string, hot: boolean) {
+      g.save();
+      g.strokeStyle = hot ? theme : ink; g.globalAlpha = hot ? 0.9 : 0.4; g.lineWidth = hot ? 2 : 1.3;
+      g.beginPath(); g.rect(x, y, bw, bh); g.stroke(); g.restore();
+      label(g, head, x + bw / 2, y + 13, theme, 10.5, 'center');
+      label(g, val, x + bw / 2, y + bh - 13, ink, Math.min(16, bw * 0.28), 'center');
+    }
+
+    function draw(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var ink = inkColor(), theme = themeColor();
+      label(g, '同一個量的四種說法', w / 2, 14, theme, 12, 'center');
+      var S = Math.min(w * 0.5, h * 0.5);
+      var gx = (w - S) / 2, gy = h * 0.11;
+      var cur = targetCells * easeInOut(Math.max(0, Math.min(1, p)));
+      var full = Math.floor(cur + 1e-6), frac = cur - full;
+      // 填色（左到右、上到下）
+      for (var k = 0; k < 100; k++) {
+        var col = k % 10, row = Math.floor(k / 10);
+        var cxp = gx + col * (S / 10), cyp = gy + row * (S / 10), cs = S / 10;
+        var fillW = (k < full) ? cs : (k === full ? cs * frac : 0);
+        if (fillW > 0.3) { g.save(); g.fillStyle = theme; g.globalAlpha = 0.8; g.fillRect(cxp, cyp, fillW, cs); g.restore(); }
+      }
+      // 格線
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.3; g.lineWidth = 1;
+      for (var i = 0; i <= 10; i++) {
+        g.beginPath(); g.moveTo(gx + i * (S / 10), gy); g.lineTo(gx + i * (S / 10), gy + S); g.stroke();
+        g.beginPath(); g.moveTo(gx, gy + i * (S / 10)); g.lineTo(gx + S, gy + i * (S / 10)); g.stroke();
+      }
+      g.restore();
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.6; g.lineWidth = 1.6; g.strokeRect(gx, gy, S, S); g.restore();
+
+      // 四個讀出框
+      var by = gy + S + 12, bh = Math.min(44, h - by - 24);
+      var pad = 10, gapb = 7;
+      var bw = (w - 2 * pad - 3 * gapb) / 4;
+      var fin = p >= 0.985;
+      box(g, pad + 0 * (bw + gapb), by, bw, bh, '分數', rn + '/' + rd, ink, theme, fin);
+      box(g, pad + 1 * (bw + gapb), by, bw, bh, '小數', dec(cur / 100), ink, theme, true);
+      box(g, pad + 2 * (bw + gapb), by, bw, bh, '百分比', pct(cur / 100), ink, theme, true);
+      box(g, pad + 3 * (bw + gapb), by, bw, bh, '比（填:總）', rn + ':' + rd, ink, theme, fin);
+
+      var chain = rn + '/' + rd + ' ＝ ' + dec(value) + ' ＝ ' + pct(value) + ' ＝ ' + rn + ':' + rd;
+      bottomCap(g, w, h, fin ? ('都是同一個量：' + chain) : ('已填 ' + (Math.round(cur * 10) / 10) + ' 格 ／ 100 格'), fin ? theme : ink, 11);
+    }
+
+    return runScene(host, {
+      durationMs: 4200, loops: 2, staticPhase: 1,
+      label: cfg.label || ('百格動畫：在 10×10 的百格裡填滿 ' + rn + '/' + rd + '，同時看到它的四種說法：分數 ' + rn + '/' + rd + '、小數 ' + dec(value) + '、百分比 ' + pct(value) + '、比 ' + rn + ':' + rd + '，其實都是同一個量。'),
+      draw: draw
+    });
+  }
+
+  // ====================================================================
+  // 場景：solid3D — 立體圖形的體積與表面積（參數化）。
+  //   cfg = { shape:'prism'|'cylinder'|'cone'|'sphere', mode:'fill'|'unfold', label }
+  //   mode:'fill'   — 底面一層層疊上去 → 柱體體積＝底面積×高；錐體用「倒水 3 次才裝滿柱」
+  //                   示意 錐＝柱的 1/3；球用疊圓盤堆出體積（V＝4/3·π·r³）。
+  //   mode:'unfold' — 攤平成展開圖 → 表面積＝各面面積和；柱／角柱：兩個底＋一片側面長方形
+  //                   （長＝底周長）；錐：底圓＋側面扇形；球：攤成 4 個大圓（4·π·r²）。
+  //   reduced-motion：畫最終幀（staticPhase=1）。
+  // ====================================================================
+  function solid3D(host: HTMLElement, cfg: any) {
+    cfg = cfg || {};
+    var shape = cfg.shape || 'prism';
+    var mode = cfg.mode || 'fill';
+    var WATER = '#38bdf8', WATER_F = 'rgba(56,189,248,0.32)';
+    var PI = Math.PI;
+
+    function ell(g: CanvasRenderingContext2D, cx: number, cy: number, rx: number, ry: number) {
+      g.beginPath(); g.ellipse(cx, cy, rx, ry, 0, 0, PI * 2);
+    }
+    function cap(g: CanvasRenderingContext2D, w: number, h: number, text: string, col: string) {
+      bottomCap(g, w, h, text, col, 11.5);
+    }
+
+    // ---- 長方體（柱）---------------------------------------------------
+    function prismFill(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var ink = inkColor(), theme = themeColor();
+      var bw = Math.min(w * 0.30, 108), ht = Math.min(h * 0.42, 128);
+      var dxp = bw * 0.42, dyp = -bw * 0.24;
+      var x0 = w * 0.32 - bw / 2, yB = h * 0.74;
+      // 隱藏（後）邊：淡
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.22; g.lineWidth = 1; g.setLineDash([3, 3]);
+      g.beginPath(); g.moveTo(x0 + dxp, yB + dyp); g.lineTo(x0 + bw + dxp, yB + dyp); g.lineTo(x0 + bw + dxp, yB - ht + dyp); g.stroke();
+      g.beginPath(); g.moveTo(x0 + dxp, yB + dyp); g.lineTo(x0, yB); g.stroke();
+      g.restore();
+      // 填到目前高度
+      var fh = ht * easeInOut(Math.max(0, Math.min(1, p / 0.88)));
+      g.save(); g.fillStyle = theme; g.globalAlpha = 0.75; g.fillRect(x0, yB - fh, bw, fh); g.restore();
+      g.save(); g.fillStyle = theme; g.globalAlpha = 0.5;
+      g.beginPath(); g.moveTo(x0, yB - fh); g.lineTo(x0 + bw, yB - fh); g.lineTo(x0 + bw + dxp, yB - fh + dyp); g.lineTo(x0 + dxp, yB - fh + dyp); g.closePath(); g.fill(); g.restore();
+      // 層線
+      var nL = 5;
+      g.save(); g.strokeStyle = '#ffffff'; g.globalAlpha = 0.5; g.lineWidth = 1;
+      for (var kk = 1; kk < nL; kk++) { var ly = yB - ht * kk / nL; if (ly > yB - fh) { g.beginPath(); g.moveTo(x0, ly); g.lineTo(x0 + bw, ly); g.stroke(); } }
+      g.restore();
+      // 線框（前面、頂面、右面）
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.8; g.lineWidth = 1.8;
+      g.strokeRect(x0, yB - ht, bw, ht);
+      g.beginPath(); g.moveTo(x0, yB - ht); g.lineTo(x0 + dxp, yB - ht + dyp); g.lineTo(x0 + bw + dxp, yB - ht + dyp); g.lineTo(x0 + bw, yB - ht); g.stroke();
+      g.beginPath(); g.moveTo(x0 + bw, yB - ht); g.lineTo(x0 + bw + dxp, yB - ht + dyp); g.lineTo(x0 + bw + dxp, yB + dyp); g.lineTo(x0 + bw, yB); g.stroke();
+      g.restore();
+      // 標註
+      label(g, '底面積', x0 + bw / 2, yB - 11, ink, 10.5, 'center');
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.7; g.lineWidth = 1.4;
+      g.beginPath(); g.moveTo(x0 - 10, yB); g.lineTo(x0 - 10, yB - ht); g.stroke(); g.restore();
+      label(g, '高', x0 - 20, yB - ht / 2, ink, 10.5, 'center');
+      label(g, '一層層疊上去', w * 0.78, h * 0.4, theme, 11, 'center');
+      label(g, '每層都是一個底面', w * 0.78, h * 0.4 + 16, ink, 10, 'center');
+      cap(g, w, h, '柱體體積 ＝ 底面積 × 高', theme);
+    }
+
+    function prismUnfold(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var ink = inkColor(), theme = themeColor();
+      // 底面寬 a、深 b、高 c。周長＝2(a+b)。側面攤平成長＝周長、高＝c 的長方形。
+      var a = Math.min(w * 0.14, 46), b = a * 0.6, c = Math.min(h * 0.26, 64);
+      var perim = 2 * (a + b);
+      var midY = h * 0.5;
+      var sx = (w - perim) / 2; if (sx < 10) { var sc = (w - 20) / perim; perim *= sc; a *= sc; b *= sc; sx = 10; }
+      var sy = midY - c / 2;
+      var grow = easeInOut(Math.max(0, Math.min(1, (p - 0.15) / 0.55)));
+      label(g, '把立體攤平成展開圖', w / 2, 14, theme, 12, 'center');
+      // 側面長方形（長＝周長，動畫展開）
+      var curW = perim * grow;
+      g.save(); g.fillStyle = theme; g.globalAlpha = 0.16; g.fillRect(sx, sy, curW, c); g.restore();
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.75; g.lineWidth = 1.6; g.strokeRect(sx, sy, curW, c); g.restore();
+      // 面摺線（a,b,a,b）
+      var segs = [a, b, a, b], acc = 0;
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.4; g.lineWidth = 1; g.setLineDash([4, 3]);
+      for (var i = 0; i < 3; i++) { acc += segs[i]; if (acc < curW) { g.beginPath(); g.moveTo(sx + acc, sy); g.lineTo(sx + acc, sy + c); g.stroke(); } }
+      g.restore();
+      if (grow > 0.98) label(g, '長 ＝ 底周長', sx + perim / 2, sy + c + 14, ink, 10.5, 'center');
+      // 兩個底（上、下方），後段出現
+      var baseA = Math.max(0, Math.min(1, (p - 0.72) / 0.28));
+      if (baseA > 0.02) {
+        g.save(); g.globalAlpha = baseA;
+        g.fillStyle = theme; g.globalAlpha = baseA * 0.16; g.fillRect(sx, sy - b - 6, a, b); g.fillRect(sx, sy + c + 6, a, b);
+        g.globalAlpha = baseA; g.strokeStyle = ink; g.lineWidth = 1.4;
+        g.strokeRect(sx, sy - b - 6, a, b); g.strokeRect(sx, sy + c + 6, a, b);
+        label(g, '底', sx + a / 2, sy - b - 6 + b / 2, ink, 10, 'center');
+        label(g, '底', sx + a / 2, sy + c + 6 + b / 2, ink, 10, 'center');
+        g.restore();
+      }
+      cap(g, w, h, '表面積 ＝ 2 × 底面積 ＋ 周長 × 高', theme);
+    }
+
+    // ---- 圓柱 ----------------------------------------------------------
+    function cylFill(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var ink = inkColor(), theme = themeColor();
+      var r = Math.min(w * 0.16, 60), ry = r * 0.32, ht = Math.min(h * 0.42, 124);
+      var cx = w * 0.32, topY = h * 0.26, botY = topY + ht;
+      var fh = ht * easeInOut(Math.max(0, Math.min(1, p / 0.88)));
+      var wy = botY - fh;
+      // 側壁（後方虛線）
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.22; g.lineWidth = 1; g.setLineDash([3, 3]);
+      ell(g, cx, botY, r, ry); g.stroke(); g.restore();
+      // 水
+      g.save(); g.beginPath(); g.rect(cx - r, wy, 2 * r, fh); g.clip();
+      g.fillStyle = theme; g.globalAlpha = 0.72; g.fillRect(cx - r, wy, 2 * r, fh);
+      g.restore();
+      g.save(); g.fillStyle = theme; g.globalAlpha = 0.72; ell(g, cx, botY, r, ry); g.fill(); g.restore();
+      if (fh > 2) { g.save(); g.fillStyle = theme; g.globalAlpha = 0.5; ell(g, cx, wy, r, ry); g.fill(); g.restore(); }
+      // 疊盤線
+      g.save(); g.strokeStyle = '#ffffff'; g.globalAlpha = 0.45; g.lineWidth = 1;
+      for (var kk = 1; kk < 5; kk++) { var ly = botY - ht * kk / 5; if (ly > wy) { g.beginPath(); g.moveTo(cx - r, ly); g.lineTo(cx + r, ly); g.stroke(); } }
+      g.restore();
+      // 線框
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.8; g.lineWidth = 1.8;
+      g.beginPath(); g.moveTo(cx - r, topY); g.lineTo(cx - r, botY); g.stroke();
+      g.beginPath(); g.moveTo(cx + r, topY); g.lineTo(cx + r, botY); g.stroke();
+      ell(g, cx, topY, r, ry); g.stroke();
+      g.save(); g.globalAlpha = 0.4; g.beginPath(); g.ellipse(cx, botY, r, ry, 0, 0, PI); g.stroke(); g.restore();
+      g.restore();
+      label(g, '底面積 ＝ π × 半徑²', cx, botY + ry + 14, ink, 10, 'center');
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.7; g.lineWidth = 1.4; g.beginPath(); g.moveTo(cx + r + 12, topY); g.lineTo(cx + r + 12, botY); g.stroke(); g.restore();
+      label(g, '高', cx + r + 22, (topY + botY) / 2, ink, 10.5, 'center');
+      cap(g, w, h, '圓柱體積 ＝ 底面積 × 高', theme);
+    }
+
+    function cylUnfold(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var ink = inkColor(), theme = themeColor();
+      var r = Math.min(w * 0.1, 30), ht = Math.min(h * 0.26, 60);
+      var circ = 2 * PI * r;
+      var rectW = Math.min(circ, w - 40);
+      var scale = rectW / circ;
+      var midY = h * 0.52, sx = (w - rectW) / 2, sy = midY - ht / 2;
+      var grow = easeInOut(Math.max(0, Math.min(1, (p - 0.15) / 0.55)));
+      label(g, '把圓柱側面攤平', w / 2, 14, theme, 12, 'center');
+      var curW = rectW * grow;
+      g.save(); g.fillStyle = theme; g.globalAlpha = 0.16; g.fillRect(sx, sy, curW, ht); g.restore();
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.75; g.lineWidth = 1.6; g.strokeRect(sx, sy, curW, ht); g.restore();
+      if (grow > 0.98) label(g, '長 ＝ 圓周長 ＝ 2 × π × 半徑', sx + rectW / 2, sy + ht + 14, ink, 10.5, 'center');
+      // 兩個底圓
+      var baseA = Math.max(0, Math.min(1, (p - 0.72) / 0.28));
+      if (baseA > 0.02) {
+        g.save(); g.globalAlpha = baseA;
+        var rr = r * scale;
+        var topcx = sx + rr, topcy = sy - rr - 8, botcx = sx + rr, botcy = sy + ht + rr + 8;
+        g.fillStyle = theme; g.globalAlpha = baseA * 0.16; ell(g, topcx, topcy, rr, rr); g.fill(); ell(g, botcx, botcy, rr, rr); g.fill();
+        g.globalAlpha = baseA; g.strokeStyle = ink; g.lineWidth = 1.4; ell(g, topcx, topcy, rr, rr); g.stroke(); ell(g, botcx, botcy, rr, rr); g.stroke();
+        label(g, '底圓', topcx, topcy, ink, 9.5, 'center'); label(g, '底圓', botcx, botcy, ink, 9.5, 'center');
+        g.restore();
+      }
+      cap(g, w, h, '表面積 ＝ 2 × 底圓(π·半徑²) ＋ 側面(周長 × 高)', theme);
+    }
+
+    // ---- 圓錐 ----------------------------------------------------------
+    function coneFill(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var ink = inkColor(), theme = themeColor();
+      var r = Math.min(w * 0.12, 44), ry = r * 0.3, ht = Math.min(h * 0.4, 118);
+      var topY = h * 0.26, botY = topY + ht;
+      var cCx = w * 0.3;    // 左：錐
+      var yCx = w * 0.68;   // 右：柱
+      // 右：柱（含 3 等分帶）
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.8; g.lineWidth = 1.6;
+      g.beginPath(); g.moveTo(yCx - r, topY); g.lineTo(yCx - r, botY); g.stroke();
+      g.beginPath(); g.moveTo(yCx + r, topY); g.lineTo(yCx + r, botY); g.stroke();
+      ell(g, yCx, topY, r, ry); g.stroke(); ell(g, yCx, botY, r, ry); g.stroke(); g.restore();
+      var fill = easeInOut(Math.max(0, Math.min(1, p)));
+      var wy = botY - ht * fill;
+      g.save(); g.beginPath(); g.rect(yCx - r, wy, 2 * r, botY - wy); g.clip();
+      g.fillStyle = WATER_F; g.fillRect(yCx - r, wy, 2 * r, botY - wy); g.restore();
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.35; g.lineWidth = 1; g.setLineDash([4, 3]);
+      for (var t = 1; t < 3; t++) { var ly = botY - ht * t / 3; g.beginPath(); g.moveTo(yCx - r, ly); g.lineTo(yCx + r, ly); g.stroke(); }
+      g.restore();
+      // 左：錐（倒水循環）
+      var cyc = p * 3, idx = Math.floor(cyc), fr = cyc - idx;
+      var coneLvl = (fr < 0.6) ? fr / 0.6 : 1 - (fr - 0.6) / 0.4;
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.8; g.lineWidth = 1.6;
+      g.beginPath(); g.moveTo(cCx, topY); g.lineTo(cCx - r, botY); g.stroke();
+      g.beginPath(); g.moveTo(cCx, topY); g.lineTo(cCx + r, botY); g.stroke();
+      ell(g, cCx, botY, r, ry); g.stroke(); g.restore();
+      // 錐內水（下方三角）
+      var wTop = botY - (botY - topY) * coneLvl * 0.86;
+      var halfAtW = r * (botY - wTop) / ht;
+      g.save(); g.beginPath();
+      g.moveTo(cCx - halfAtW, wTop); g.lineTo(cCx + halfAtW, wTop); g.lineTo(cCx + r, botY); g.lineTo(cCx - r, botY); g.closePath();
+      g.fillStyle = WATER_F; g.fill(); g.restore();
+      // 倒水箭頭
+      if (fr >= 0.6 && idx < 3) {
+        g.save(); g.strokeStyle = WATER; g.fillStyle = WATER; g.lineWidth = 2; g.lineCap = 'round';
+        var ax1 = cCx + r, ay1 = topY + 6, ax2 = yCx - r - 4, ay2 = topY + 2;
+        g.beginPath(); g.moveTo(ax1, ay1); g.quadraticCurveTo((ax1 + ax2) / 2, topY - 12, ax2, ay2); g.stroke();
+        var aa = Math.atan2(ay2 - (topY - 12), ax2 - (ax1 + ax2) / 2);
+        g.beginPath(); g.moveTo(ax2, ay2); g.lineTo(ax2 - 9 * Math.cos(aa - 0.5), ay2 - 9 * Math.sin(aa - 0.5)); g.lineTo(ax2 - 9 * Math.cos(aa + 0.5), ay2 - 9 * Math.sin(aa + 0.5)); g.closePath(); g.fill();
+        g.restore();
+      }
+      label(g, '錐', cCx, botY + ry + 12, ink, 10.5, 'center');
+      label(g, '柱', yCx, botY + ry + 12, ink, 10.5, 'center');
+      var pourNo = Math.min(3, idx + 1);
+      cap(g, w, h, p >= 0.985 ? '3 錐剛好裝滿 1 柱 → 錐體積 ＝ 柱的 1/3' : ('倒第 ' + pourNo + ' 杯（1 錐 ＝ 1/3 柱）'), theme);
+    }
+
+    function coneUnfold(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var ink = inkColor(), theme = themeColor();
+      var r = Math.min(w * 0.1, 30);
+      var slant = Math.min(h * 0.3, 80);
+      var arc = 2 * PI * r;                 // 側面扇形弧長 ＝ 底周長
+      var theta = arc / slant;              // 扇形角（弧度）
+      var apex = { x: w * 0.42, y: h * 0.26 };
+      var grow = easeInOut(Math.max(0, Math.min(1, (p - 0.15) / 0.6)));
+      label(g, '把圓錐攤平', w / 2, 14, theme, 12, 'center');
+      // 扇形（側面），由 0 掃到 theta
+      var a0 = PI / 2 - theta / 2, a1 = a0 + theta * grow;
+      g.save();
+      g.beginPath(); g.moveTo(apex.x, apex.y); g.arc(apex.x, apex.y, slant, a0, a1); g.closePath();
+      g.fillStyle = theme; g.globalAlpha = 0.16; g.fill();
+      g.globalAlpha = 0.8; g.strokeStyle = ink; g.lineWidth = 1.6; g.stroke();
+      g.restore();
+      if (grow > 0.97) {
+        var midA = (a0 + a1) / 2;
+        label(g, '弧長 ＝ 底周長', apex.x + Math.cos(midA) * (slant + 16), apex.y + Math.sin(midA) * (slant + 16), ink, 10, 'center');
+        label(g, '側面扇形', apex.x + Math.cos(midA) * slant * 0.55, apex.y + Math.sin(midA) * slant * 0.55, theme, 10, 'center');
+      }
+      // 底圓
+      var baseA = Math.max(0, Math.min(1, (p - 0.76) / 0.24));
+      if (baseA > 0.02) {
+        var bcx = apex.x, bcy = apex.y + slant + r + 10;
+        g.save(); g.globalAlpha = baseA; g.fillStyle = theme; g.globalAlpha = baseA * 0.16; ell(g, bcx, bcy, r, r); g.fill();
+        g.globalAlpha = baseA; g.strokeStyle = ink; g.lineWidth = 1.4; ell(g, bcx, bcy, r, r); g.stroke();
+        label(g, '底圓', bcx, bcy, ink, 10, 'center'); g.restore();
+      }
+      cap(g, w, h, '表面積 ＝ 底圓(π·半徑²) ＋ 側面扇形', theme);
+    }
+
+    // ---- 球 ------------------------------------------------------------
+    function sphereFill(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var ink = inkColor(), theme = themeColor();
+      var R = Math.min(w * 0.18, h * 0.26, 86);
+      var cx = w * 0.36, cy = h * 0.44;
+      var lvl = easeInOut(Math.max(0, Math.min(1, p)));
+      // 疊圓盤（由下往上到 lvl）
+      var steps = 11;
+      g.save();
+      for (var i = 0; i < steps; i++) {
+        var yy = cy + R - (i + 0.5) * (2 * R / steps);
+        if (yy < cy + R - 2 * R * lvl) continue;
+        var dy = yy - cy; var rr = Math.sqrt(Math.max(0, R * R - dy * dy));
+        g.fillStyle = theme; g.globalAlpha = 0.5; ell(g, cx, yy, rr, rr * 0.3); g.fill();
+      }
+      g.restore();
+      // 球外框 + 赤道
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.8; g.lineWidth = 1.8; ell(g, cx, cy, R, R); g.stroke();
+      g.globalAlpha = 0.3; g.setLineDash([4, 3]); ell(g, cx, cy, R, R * 0.3); g.stroke(); g.restore();
+      // 半徑
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.7; g.lineWidth = 1.4; g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx + R, cy); g.stroke(); g.restore();
+      label(g, '半徑', cx + R * 0.5, cy - 9, ink, 10, 'center');
+      label(g, '一片片圓盤', w * 0.8, h * 0.4, theme, 10.5, 'center');
+      label(g, '疊出體積', w * 0.8, h * 0.4 + 15, ink, 10, 'center');
+      cap(g, w, h, '球體積 ＝ 4/3 × π × 半徑³', theme);
+    }
+
+    function sphereUnfold(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var ink = inkColor(), theme = themeColor();
+      var R = Math.min(w * 0.11, 34);
+      var cx = w * 0.26, cy = h * 0.32;
+      label(g, '球面攤成 4 個大圓', w / 2, 14, theme, 12, 'center');
+      // 球
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.8; g.lineWidth = 1.8; ell(g, cx, cy, R, R); g.stroke();
+      g.globalAlpha = 0.3; g.setLineDash([4, 3]); ell(g, cx, cy, R, R * 0.3); g.stroke(); g.restore();
+      // 4 個大圓（2×2），逐一出現
+      var gx = w * 0.56, gy = h * 0.3, gap = R * 2.3;
+      var pos = [[gx, gy], [gx + gap, gy], [gx, gy + gap], [gx + gap, gy + gap]];
+      var shown = Math.max(0, Math.min(4, Math.floor(p * 4 + 0.001) + (p >= 1 ? 0 : 1)));
+      if (p >= 0.999) shown = 4;
+      for (var i = 0; i < shown && i < 4; i++) {
+        var cxx = pos[i][0], cyy = pos[i][1];
+        g.save(); g.fillStyle = theme; g.globalAlpha = 0.16; ell(g, cxx, cyy, R, R); g.fill();
+        g.globalAlpha = 0.8; g.strokeStyle = ink; g.lineWidth = 1.4; ell(g, cxx, cyy, R, R); g.stroke();
+        label(g, 'π·半徑²', cxx, cyy, ink, 9, 'center'); g.restore();
+      }
+      cap(g, w, h, '球表面積 ＝ 4 × 大圓 ＝ 4 × π × 半徑²', theme);
+    }
+
+    function draw(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      if (shape === 'cylinder') { if (mode === 'unfold') cylUnfold(g, p, w, h); else cylFill(g, p, w, h); }
+      else if (shape === 'cone') { if (mode === 'unfold') coneUnfold(g, p, w, h); else coneFill(g, p, w, h); }
+      else if (shape === 'sphere') { if (mode === 'unfold') sphereUnfold(g, p, w, h); else sphereFill(g, p, w, h); }
+      else { if (mode === 'unfold') prismUnfold(g, p, w, h); else prismFill(g, p, w, h); }
+    }
+
+    var SHN: any = { prism: '長方體', cylinder: '圓柱', cone: '圓錐', sphere: '球' };
+    return runScene(host, {
+      durationMs: (shape === 'cone' && mode === 'fill') ? 7800 : 6200, loops: 2, staticPhase: 1,
+      label: cfg.label || (SHN[shape] + (mode === 'unfold'
+        ? '展開圖動畫：把立體攤平成展開圖，看出表面積就是各個面的面積加起來。'
+        : '體積動畫：' + (shape === 'cone' ? '用錐倒水 3 次剛好裝滿同底同高的柱，所以錐體積是柱的三分之一。' : (shape === 'sphere' ? '用一片片圓盤疊出球的體積。' : '底面一層層往上疊，體積就是底面積乘以高。')))),
+      draw: draw
+    });
+  }
+
   // ---- 導出 -----------------------------------------------------------
   var Anim = {
     reducedMotion: reducedMotion,
@@ -3283,6 +3961,10 @@
     carbonCycle: carbonCycle,
     compoundGrowth: compoundGrowth,
     worldLocator: worldLocator,
+    placeValue: placeValue,
+    numberLine: numberLine,
+    partWhole100: partWhole100,
+    solid3D: solid3D,
   };
   (window as any).Anim = Anim;
 })();

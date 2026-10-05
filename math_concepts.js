@@ -54,6 +54,29 @@ function gridRect(cols, rows, mode) {
     s += '<rect x="' + pad + '" y="' + pad + '" width="' + W + '" height="' + H + '" fill="none" stroke="' + (mode === 'perim' ? '#e11d48' : 'currentColor') + '" stroke-opacity="' + (mode === 'perim' ? 1 : 0.6) + '" stroke-width="' + (mode === 'perim' ? 5 : 2) + '"/>';
     return s + '</svg>';
 }
+// 科學記號 stepped SVG（檔案區域 helper，非 anim_core 場景）：a×10ⁿ → 展開數。
+//   畫出科學記號形式、再用「小數點搬 n 位」的 n 個編號跳格弧（右移變大／左移變小）示意次方。
+//   math_advanced_concepts L7 的簡短複習可共用本函式，不複製。文字用 currentColor（亮暗皆清楚）。
+function sciSteps(a, exp, expanded) {
+    var sup = function (n) { var m = '⁰¹²³⁴⁵⁶⁷⁸⁹', s = (n < 0 ? '⁻' : ''), t = '' + Math.abs(n); for (var i = 0; i < t.length; i++)
+        s += m.charAt(+t.charAt(i)); return s; };
+    var hops = Math.abs(exp), right = exp >= 0, W = 300, H = 170;
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="科學記號 ' + a + ' 乘以 10 的 ' + exp + ' 次方 等於 ' + expanded + '">';
+    s += '<text x="150" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="#0ea5e9">科學記號：小數點搬 ' + hops + ' 位（' + (right ? '右移、數變大' : '左移、數變小') + '）</text>';
+    s += '<text x="150" y="54" text-anchor="middle" font-size="23" font-weight="800" fill="currentColor">' + a + ' × 10' + sup(exp) + '</text>';
+    var x0 = 52, x1 = 248, y = 112, step = (x1 - x0) / hops, circ = '①②③④⑤⑥⑦⑧⑨';
+    s += '<line x1="' + x0 + '" y1="' + y + '" x2="' + x1 + '" y2="' + y + '" stroke="#9aa1ab" stroke-width="2"/>';
+    for (var i = 0; i < hops; i++) {
+        var from = right ? (x0 + i * step) : (x1 - i * step), to = right ? (x0 + (i + 1) * step) : (x1 - (i + 1) * step), mx = (from + to) / 2;
+        s += '<path d="M' + from.toFixed(1) + ',' + y + ' Q' + mx.toFixed(1) + ',' + (y - 22) + ' ' + to.toFixed(1) + ',' + y + '" fill="none" stroke="#e11d48" stroke-width="2"/>';
+        var baseX = to + (from < to ? -6 : 6);
+        s += '<polygon points="' + to.toFixed(1) + ',' + y + ' ' + baseX.toFixed(1) + ',' + (y - 4) + ' ' + baseX.toFixed(1) + ',' + (y + 4) + '" fill="#e11d48"/>';
+        s += '<text x="' + mx.toFixed(1) + '" y="' + (y - 25) + '" text-anchor="middle" font-size="11" font-weight="800" fill="#e11d48">' + circ.charAt(i) + '</text>';
+    }
+    s += '<circle cx="' + (right ? x0 : x1) + '" cy="' + y + '" r="4" fill="#e11d48"/>';
+    s += '<text x="150" y="152" text-anchor="middle" font-size="21" font-weight="800" fill="currentColor">= ' + expanded + '</text>';
+    return s + '</svg>';
+}
 // 動畫 teach 步驟用：產生一個 <canvas> 佔位（實際繪製由 anim_core.js 的 window.Anim 接手）。
 function animCanvas(w, h, label) {
     return '<canvas class="cn-anim-canvas" width="' + w + '" height="' + h + '" ' +
@@ -63,6 +86,24 @@ function animCanvas(w, h, label) {
 window.CONCEPT = {
     progKey: 'math_concepts_v1', practiceHref: 'math.html',
     lessons: [
+        { id: 'place', name: '位值與大數', emoji: '🔢', color: '#0ea5e9', sub: '每一位代表多少、大數怎麼讀', done: '記得：數字看「站哪一位」決定大小；大數每四位分一節（個級・萬級・億級）來讀。',
+            steps: [
+                { type: 'teach', kicker: '先想一想', title: '同一個數字，站的位置不同就不一樣大', svg: animCanvas(360, 220, '數字 333 的每個 3 對齊到位值欄：個位的 3 代表 3、十位的 3 代表 30、百位的 3 代表 300；同一個 3 站的位置不同，代表的大小就不同。'), mount: function (host) { if (!window.Anim)
+                        return; var h = window.Anim.placeValue(host, { number: 333 }); return function () { h.stop(); }; }, text: '看這三個都是 <b>3</b>：站在<b>個位</b>只代表 3、站在<b>十位</b>代表 30、站在<b>百位</b>代表 300。同一個數字，<b>站的位置</b>決定它有多大——這就是「位值」。' },
+                { type: 'teach', kicker: '讀大數', title: '每「四位」分一節：個級・萬級・億級', svg: animCanvas(360, 220, '數字 50830 對齊到位值欄，從右邊每四位落下一道分節，分成萬級與個級，讀作五萬零八百三十。'), mount: function (host) { if (!window.Anim)
+                        return; var h = window.Anim.placeValue(host, { number: 50830 }); return function () { h.stop(); }; }, text: '大數從右邊起<b>每四位分一節</b>：個級（個十百千）、<b>萬級</b>、億級。從<b>高位往低位</b>逐節讀、補上位名。例：<b>50830</b> 讀作「<b>五萬零八百三十</b>」（中間空的位要讀一個「零」）。' },
+                { type: 'quiz', kicker: '換你試試', title: '數字 4700 裡的「7」代表多少？', options: ['700', '7', '70', '7000'], answer: 0, why: '4700 由左到右是 千・百・十・個；7 站在百位，代表 7 個百，就是 700。', whyWrong: ['', '你只看了數字 7，忘了看它站的位置；7 站在百位，代表 7 個百＝700。', '你可能把 7 當成在十位了；4700 裡 7 其實站在百位，是 700。', '你可能把 7 當成在千位了；千位是最左邊的 4，7 在百位，是 700。'] },
+                { type: 'quiz', kicker: '換你試試', title: '「三萬零五十」寫成數字是？', options: ['30050', '3050', '300050', '35000'], answer: 0, why: '三萬＝30000，中間沒有千位、百位（讀作「零」），再加五十（50），合起來是 30050。', whyWrong: ['', '你可能把三萬寫成了三千（少一個位階）；三萬是 30000，加五十是 30050。', '你可能把三萬寫成了三十萬（300000）；三萬只有 30000，加五十是 30050。', '你可能把「五十」聽成了「五千」；五十是 50，三萬加五十是 30050。'] }
+            ] },
+        { id: 'round', name: '概數（四捨五入）', emoji: '📏', color: '#14b8a6', sub: '取大約的數：四捨五入到整十、整百', done: '記得：四捨五入看「要捨去那一位」——0~4 捨、5~9 進；數線上滾向比較近的整十／整百。',
+            steps: [
+                { type: 'teach', kicker: '先想一想', title: '概數：取「大約的數」好估算', svg: animCanvas(360, 180, '數線上 60 到 70，68 比較靠近 70，動畫把 68 滾向 70，示意四捨五入到整十是 70。'), mount: function (host) { if (!window.Anim)
+                        return; var h = window.Anim.numberLine(host, { mode: 'round', value: 68, roundTo: 10 }); return function () { h.stop(); }; }, text: '<b>概數</b>就是取「<b>大約</b>的數」，方便估算和比較。把 <b>68</b> 放上數線：它離 <b>70</b> 比離 60 近，所以四捨五入到整十會<b>滾向 70</b>。' },
+                { type: 'teach', kicker: '記規則', title: '0~4 捨去、5~9 進位', svg: animCanvas(360, 180, '數線上 60 到 70，63 比較靠近 60，動畫把 63 滾向 60，示意個位 3 要捨去。'), mount: function (host) { if (!window.Anim)
+                        return; var h = window.Anim.numberLine(host, { mode: 'round', value: 63, roundTo: 10 }); return function () { h.stop(); }; }, text: '看<b>要捨去的那一位</b>：<b>0~4 捨去</b>（往下）、<b>5~9 進位</b>（往上）。<b>63</b> 的個位是 3（屬於 0~4），所以捨去變成 <b>60</b>；若是 68（個位 8）就進位到 70。' },
+                { type: 'quiz', kicker: '換你試試', title: '248 四捨五入到整百是多少？', options: ['200', '300', '250', '240'], answer: 0, why: '四捨五入到整百看十位：248 的十位是 4，0~4 要捨去，所以 248 ≈ 200。', whyWrong: ['', '你可能以為要進位；看十位 4 比 5 小，要捨去，所以是 200。', '你可能四捨五入到整十了；題目要到整百，看十位 4 捨去，是 200。', '你可能只把個位去掉；四捨五入到整百要看十位（4）決定，捨去後是 200。'] },
+                { type: 'quiz', kicker: '換你試試', title: '四捨五入到整十，65 會變成？', options: ['70', '60', '65', '100'], answer: 0, why: '四捨五入到整十看個位：65 的個位是 5，5~9 要進位，所以 65 ≈ 70。', whyWrong: ['', '你可能把 5 當成要捨去；規則是 5~9 要進位，個位 5 進位到 70。', '你可能忘了概數的個位要變成 0；到整十的概數個位是 0，65 進位成 70。', '你可能進位進太多了；65 到最近的整十是 70，不是整百 100。'] }
+            ] },
         { id: 'frac', name: '分數是什麼', emoji: '🍕', color: '#f59e0b', sub: '分割、比大小、等值分數', done: '記得：分母是分成幾份、分子是拿幾份；分越少份每份越大。',
             steps: [
                 { type: 'teach', kicker: '先想一想', title: '把一個東西平分', svg: fraccircle(4, 1, '#f59e0b'), text: '一個披薩<b>平分成 4 份</b>，拿走其中 <b>1 份</b>，就是 <b>1/4</b>。下面那個數（分母）是「分成幾份」，上面那個數（分子）是「拿了幾份」。' },
@@ -90,6 +131,22 @@ window.CONCEPT = {
                 { type: 'teach', kicker: '學加減', title: '加 = 往右走，減 = 往左走', svg: numline(null, { from: -2, to: 1 }), text: '算 <b>−2 + 3</b>：從 <b>−2</b> 出發，<b>往右走 3 格</b>，走到 <b>1</b>。所以 −2 + 3 = <b>1</b>。加就往右、減就往左。' },
                 { type: 'quiz', kicker: '換你試試', title: '−2 + 3 = ？', options: ['1', '−5', '5', '−1'], answer: 0, why: '從 −2 往右走 3 格 → −1 → 0 → 1，答案是 1。', whyWrong: ['', '你可能把2和3相加又保留了負號，這裡是要往右走，不是往左喔。', '你可能直接把2和3相加，忘了−2的負號要先從0的左邊起算。', '你可能往右少走了幾格就停了，記得要從−2一步一步往右走滿3格。'] },
                 { type: 'quiz', kicker: '再試一題', title: '1 − 4 = ？', options: ['−3', '3', '5', '−5'], answer: 0, why: '從 1 往左走 4 格 → 0 → −1 → −2 → −3，答案是 −3。', whyWrong: ['', '你可能把4−1算成3、順序相反了，這裡是要從1往左走4格喔。', '你可能把1和4相加了，可是減法要往左走、數字會越走越小。', '你可能把1和4加起來再加負號，其實是從1往左走4格，不是相加。'] }
+            ] },
+        { id: 'negrule', name: '負數的乘除', emoji: '➗', color: '#db2777', sub: '符號法則：負負得正（國中）', done: '記得：乘除看符號——同號得正、異號得負；負負相乘＝方向翻兩次＝轉回正。',
+            steps: [
+                { type: 'teach', kicker: '先想一想', title: '乘 −1 ＝ 把方向翻到另一邊', svg: animCanvas(360, 180, '數線上以 0 為界，一個指向 +3 的箭頭乘以 −1 後翻向左邊的 −3，示意乘負數方向相反。'), mount: function (host) { if (!window.Anim)
+                        return; var h = window.Anim.numberLine(host, { mode: 'negative', min: -5, max: 5, flip: { from: 3, to: -3, label: '× (−1)：+3 翻到 −3，方向相反' } }); return function () { h.stop(); }; }, text: '在數線上，<b>乘 −1</b> 就是把箭頭<b>翻到 0 的另一邊</b>：<b>+3</b> 乘 −1 變成 <b>−3</b>，方向整個相反。所以「異號相乘」（一正一負）結果是<b>負</b>。' },
+                { type: 'teach', kicker: '再翻一次', title: '翻兩次（負負）就轉回正', svg: animCanvas(360, 180, '數線上一個指向 −3 的箭頭再乘以 −1，翻回右邊的 +3，示意負負得正。'), mount: function (host) { if (!window.Anim)
+                        return; var h = window.Anim.numberLine(host, { mode: 'negative', min: -5, max: 5, flip: { from: -3, to: 3, label: '再 × (−1)：−3 翻回 +3，負負得正' } }); return function () { h.stop(); }; }, text: '從 <b>−3</b> <b>再乘一次 −1</b>，箭頭<b>又翻回右邊</b>變成 <b>+3</b>。翻兩次就回到正向——這就是「<b>負 × 負 ＝ 正</b>」。整理成口訣：<b>同號得正、異號得負</b>，除法也一樣。' },
+                { type: 'quiz', kicker: '換你試試', title: '(−4) × (−3) ＝ ？', options: ['12', '−12', '−7', '7'], answer: 0, why: '同號相乘得正：負×負＝正，4×3＝12，所以 (−4)×(−3)＝12。', whyWrong: ['', '你算對了 4×3＝12，但以為負×負還是負；其實負負得正，是正的 12。', '你可能把 −4 和 −3 相加成 −7 了；這題是相乘，4×3＝12 且負負得正。', '你可能把 4 和 3 相加成 7 了；要用乘法 4×3＝12，負負得正是正 12。'] },
+                { type: 'quiz', kicker: '換你試試', title: '(−12) ÷ 4 ＝ ？', options: ['−3', '3', '−48', '48'], answer: 0, why: '異號相除得負：一負一正，12÷4＝3，加上負號是 −3。', whyWrong: ['', '你算對了 12÷4＝3，但忘了異號相除要得負；一負一正，答案是 −3。', '你可能把 12 和 4 相乘了；這題是除法，12÷4＝3，異號得負是 −3。', '你可能用了乘法又忽略負號；除法 12÷4＝3，一負一正得負，是 −3。'] }
+            ] },
+        { id: 'sci', name: '科學記號入門', emoji: '🔬', color: '#2563eb', sub: '很大很小的數怎麼寫（國中）', done: '記得：科學記號＝(1~10 的數)×10 的次方；次方正右移變大、負左移變小。',
+            steps: [
+                { type: 'teach', kicker: '先想一想', title: '科學記號 ＝ (1~10 的數) × 10 的次方', svg: sciSteps('3', 5, '300000'), text: '很大的數可以寫成 <b>a × 10ⁿ</b>，其中 <b>a 是 1 以上、10 以下的數</b>（1≤|a|<10）。例如 <b>300000 ＝ 3 × 10⁵</b>：把小數點從 3 的後面<b>往右移 5 位</b>，就補出 5 個 0。' },
+                { type: 'teach', kicker: '次方＝搬幾位', title: '正次方右移變大、負次方左移變小', svg: sciSteps('2.5', -3, '0.0025'), text: '次方就是<b>小數點要搬幾位</b>：<b>×10³</b> 向<b>右</b>移 3 位（數變大）、<b>×10⁻³</b> 向<b>左</b>移 3 位（數變小）。例：<b>2.5 × 10⁻³</b> 把小數點左移 3 位 ＝ <b>0.0025</b>。' },
+                { type: 'quiz', kicker: '換你試試', title: '300000 寫成科學記號是？', options: ['3 × 10⁵', '3 × 10⁶', '30 × 10⁴', '3 × 10⁻⁵'], answer: 0, why: '小數點從 3 的後面往右移 5 位會補上 5 個 0 得到 300000，且前面的數 3 在 1~10 之間，所以 300000＝3 × 10⁵。', whyWrong: ['', '你可能把 0 的個數數成了 6；300000 的小數點只右移 5 位，是 10⁵。', '這個值雖然也等於 300000，但科學記號規定前面的數要在 1~10 之間；30 太大，要改寫成 3 × 10⁵。', '負次方代表很小的數（左移、變小）；300000 很大，次方要用正的 10⁵。'] },
+                { type: 'quiz', kicker: '換你試試', title: '2.5 × 10⁻³ 等於多少？', options: ['0.0025', '0.025', '0.00025', '2500'], answer: 0, why: '10⁻³ 代表小數點往左移 3 位：2.5 → 0.25 → 0.025 → 0.0025，所以 2.5 × 10⁻³＝0.0025。', whyWrong: ['', '你可能只把小數點左移了 2 位；−3 次方要左移 3 位，是 0.0025。', '你可能把小數點左移了 4 位；−3 次方只左移 3 位，是 0.0025。', '負次方是「變小」要往左移；你往右移（變大）了，正確是左移 3 位的 0.0025。'] }
             ] },
         { id: 'eq', name: '用天平學方程式', emoji: '⚖️', color: '#0ea5e9', sub: '一元一次方程式（進階挑戰）', done: '記得訣竅：兩邊做一樣的事，天平就平衡。',
             steps: [

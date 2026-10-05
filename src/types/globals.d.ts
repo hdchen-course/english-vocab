@@ -113,6 +113,18 @@ interface AnimApi {
    *  reduced-motion 一次畫全部定位針靜態幀。世界時事／世界地理／全球議題三頁共用（author-once）。
    *  cfg = {pins:[{region?,xFrac,yFrac,label}],caption?,cycle?,label?}（xFrac/yFrac＝地圖繪製區 0–1）。 */
   worldLocator: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 位值與大數讀寫：每位數字對齊位值欄（個/十/百/千/萬…），四位一節點逗號分 個級/萬級/億級 並示範國字讀法。
+   *  cfg = {number:(number|string, 最多 16 位), label?}。數學觀念頁（位值/大數）用。 */
+  placeValue: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 參數化數線：mode:'plain' 一般標刻；'round' 一個數滾向較近整十/整百示意四捨五入；'negative' 正負方向＋乘負數翻向。
+   *  cfg = {min,max,ticks(刻度間距),marks,highlight,mode,label,value,roundTo,flip:{from,to,label?}}。位值/概數＋負負得正共用。 */
+  numberLine: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 一個數的四種臉：10×10 百格塗滿 num/den，同步在四個讀數框顯示 分數 n/d＝小數＝百分比＝比 a:b（比/分數顯簡化式）。
+   *  cfg = {num,den,label}。數學國小觀念頁（百分比/比）用。 */
+  partWhole100: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 參數化立體：mode:'fill' 底面疊層＝底面積×高（錐倒水示意＝柱的 1/3）；mode:'unfold' 攤平成展開圖＝各面面積和（柱側面長＝底周長；球攤成 4 大圓）。
+   *  cfg = {shape:'prism'|'cylinder'|'cone'|'sphere', mode:'fill'|'unfold', label}。幾何體積/表面積頁用。 */
+  solid3D: (host: HTMLElement, cfg?: any) => { stop: () => void };
 }
 
 /** game_core.js 導出的遊戲核心 API（window.Game）。遷移 game_core 時逐步精確化。 */
