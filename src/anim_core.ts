@@ -1744,7 +1744,7 @@
 
   // ====================================================================
   // 場景：trigTriangle — 直角三角形，動畫讓角 θ 從小長到目標角，標對/鄰/斜與 sin/cos/tan。
-  //   cfg = { angleDeg:37, show:'all'|'sin'|'cos'|'tan', label? }
+  //   cfg = { show:'all'|'sin'|'cos'|'tan', label? }（三角形固定為 3-4-5，θ≈37°；不吃 angleDeg）
   //   以 3-4-5 直角三角形示意（鄰邊 4、對邊 3、斜邊 5、θ≈37°）；對邊由 0 長到 3。
   //   reduced-motion：直接畫目標角＋全部標註（staticPhase=1）。未來高中弧度/單位圓可延伸同一場景。
   // ====================================================================
@@ -3468,7 +3468,7 @@
 
     return runScene(host, {
       durationMs: 7200, loops: 2, staticPhase: 1,
-      label: cfg.label || ('位值動畫：把 ' + digits + ' 的每個數字對齊到位值欄（個・十・百・千・萬…），每 4 位一節落下分隔，分成個級・萬級・億級，讀作「' + reading + '」。'),
+      label: cfg.label || ('位值動畫：把 ' + digits + ' 的每個數字對齊到位值欄（個・十・百・千・萬…），每 4 位一節落下分隔（個級、萬級、億級…依數字長度而定），讀作「' + reading + '」。'),
       drawStatic: function (g, w, h) { frame(g, w, h, 1, 1, reading.length); },
       draw: draw
     });
