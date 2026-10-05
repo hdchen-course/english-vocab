@@ -700,6 +700,7 @@ function checkSpelling(e) {
     const input = document.getElementById('spellingInput').value.toLowerCase();
     const target = word.word.toLowerCase();
     const letters = target.split('');
+    const origLetters = word.word.split(''); // 原始大小寫，顯示／揭示正解時用（比對仍走小寫 target）；否則大寫字 Monday/English/Japan 會被顯示並判「正確」成全小寫，教錯拼法（同 practice w113）
     // 空白字元不必由使用者輸入（多字詞如 ice cream 的空格位置是 .fc-spell__gap，沒有方格）；
     // 比對與完成判定一律先去掉空白，並把「非空白字母」依序對應到各方格。
     const targetNS = target.replace(/\s+/g, '');
@@ -711,7 +712,7 @@ function checkSpelling(e) {
         if (!box)
             return; // 空白字元位置為 .fc-spell__gap，沒有對應方格
         if (j < inputNS.length) {
-            box.textContent = inputNS[j];
+            box.textContent = (inputNS[j] === letter) ? origLetters[i] : inputNS[j]; // 拼對的字母以原始大小寫顯示（含打字途中、提示補字、全對完成），拼錯才顯示孩子輸入的字；避免教成全小寫
             box.classList.add('filled');
             // 打字途中維持中性色，避免半途一片紅色造成挫折；打完才判對錯上色
             if (complete) {
@@ -761,7 +762,7 @@ function checkSpelling(e) {
             const box = document.getElementById('lb' + i);
             if (!box)
                 return;
-            box.textContent = letter;
+            box.textContent = origLetters[i]; // 揭示正解用原始大小寫，不用小寫 target（否則 Monday→monday 教錯拼法）
             box.classList.add('correct');
         });
         // 答錯不自動跳題：揭示正解＋鼓勵，由孩子自己按「繼續」
@@ -1577,6 +1578,7 @@ init();
             area.classList.add('hidden');
         if (layout)
             layout.classList.remove('hidden');
+        renderMode(); // 與 hideDashboard 一致：回到學習區要重繪出一張新鮮可互動的卡；否則開圖鑑已取消答對的 advanceTimer，返回會卡在已評分、無繼續鈕的死卡上
     }
     // ---------- 單字聚焦 overlay ----------
     function openFocus(tab, word) {
