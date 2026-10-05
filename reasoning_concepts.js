@@ -12,7 +12,7 @@
  *
  *   ★ lesson-id 命名規則（本頁三 spec 共用、同一 window.CONCEPT.lessons）：
  *     L1–L3（本 spec，演繹 vs 歸納）＝ rc_deduction / rc_induction / rc_compare。
- *     之後 core-argument-structure 追加 L4–L5 用 rc_argstruct_* / rc_premise* 前綴；
+ *     之後 core-argument-structure 追加 L4–L5 用 rc_argstruct_* 前綴（rc_argstruct_premise / rc_argstruct_hidden）；
  *     core-fact-vs-opinion 追加 L6–L7 用 rc_factopinion_* 前綴。
  *     後續 spec 只 APPEND 到同一 lessons 陣列尾端、沿用 rc_ 前綴，不改既有課。
  *
@@ -118,7 +118,7 @@
             ['方向', '通則 → 個例', '個例 → 通則'],
             ['結論', '一定（必然）', '很可能（不保證）'],
             ['看什麼', '前提真 ＋ 形式有效', '樣本數 ＋ 代表性'],
-            ['會不會錯', '前提全真就不會', '可能有例外，可被反例推翻']
+            ['會不會錯', '形式有效＋前提全真就不會', '可能有例外，可被反例推翻']
         ];
         var y0 = 58, rh = 32;
         for (var i = 0; i < rows.length; i++) {
