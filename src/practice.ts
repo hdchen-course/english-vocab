@@ -1658,6 +1658,7 @@
         catch (e) { return 'tiles'; }
     }
     function toggleSpellMode() {
+        if (spellDone) return;   // 已計分/已看答案不可切換輸入法：renderSpelling 會重設 spellDone=false 並重建空盤面(同一字)，造成再拼再 checkSpelling 重複 +15/streak/Game.recordAnswer/Album.onWord/SRS 計分(看答案後無自動前進＝無限次)；與 cefr/coca/toeic 一致
         if (advanceTimer) { clearTimeout(advanceTimer); advanceTimer = null; }   // 直接呼叫 renderSpelling（未經 render()），須自行取消待觸發的自動前進，否則切換後殘留 timer 會跳掉剛重繪的卡
         var m = getSpellMode() === 'tiles' ? 'keyboard' : 'tiles';
         try { localStorage.setItem('practice_spell_mode', m); } catch (e) {}
@@ -1770,6 +1771,8 @@
 
     function lockSpellInputs() {   // 計分正確或看答案後鎖住鍵盤模式輸入格，避免孩子蓋掉已上綠色的字母卻無法重新計分（spellDone 擋了 checkSpelling）造成字母與顏色不符
         document.querySelectorAll('#spell-slots input').forEach(inp => { inp.readOnly = true; });
+        const tg = document.querySelector('.fc-spell__toggle');   // 評分/看答案後停用輸入法切換鈕(toggleSpellMode 已 spellDone early-return,不停用就是死按鈕);renderSpelling 於下一字重建成啟用
+        if (tg) { tg.disabled = true; tg.setAttribute('aria-disabled', 'true'); }
     }
 
     function handleSpellInput(input) {
