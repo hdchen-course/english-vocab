@@ -771,6 +771,8 @@ function checkAnswer(i) {
     const isCorrect = selected === correct;
     buttons.forEach(b => {
         b.style.pointerEvents = 'none';
+        b.disabled = true;
+        b.setAttribute('aria-disabled', 'true'); // 評分後連鍵盤也不可再觸發：pointerEvents:none 只擋滑鼠，<button> 仍可 focus 並以 Enter/空白鍵重觸 checkAnswer（被 answered 擋成 no-op）＝死按鈕（與 coca w106 一致）
         if (b.getAttribute('data-label') === correct)
             b.classList.add('correct');
     });
@@ -908,16 +910,19 @@ function renderSpell() {
     // 字母磚池
     let bankHTML = '';
     if (spell.mode === 'tiles') {
-        bankHTML = '<div class="fc-spell__bank">' + spell.bank.map((b, bi) => '<div class="fc-spell__tile' + (b.used ? ' used' : '') + '" role="button" tabindex="0"' +
-            ' onclick="spellPick(' + bi + ')"' +
-            ' onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();spellPick(' + bi + ');}">' +
-            esc(b.ch) + '</div>').join('') + '</div>';
+        bankHTML = '<div class="fc-spell__bank">' + spell.bank.map((b, bi) => answered
+            // 已評分：字母磚靜態化（spellPick 此時 no-op），不設 role=button/tabindex/handler，aria-disabled 標示不可操作，避免螢幕報讀器報成可按的死按鈕（與格子 L709-711、quiz 選項一致）
+            ? '<div class="fc-spell__tile' + (b.used ? ' used' : '') + '" aria-disabled="true">' + esc(b.ch) + '</div>'
+            : '<div class="fc-spell__tile' + (b.used ? ' used' : '') + '" role="button" tabindex="0"' +
+                ' onclick="spellPick(' + bi + ')"' +
+                ' onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();spellPick(' + bi + ');}">' +
+                esc(b.ch) + '</div>').join('') + '</div>';
     }
     area.innerHTML =
         '<div class="word-counter">第 ' + (currentIndex + 1) + ' / ' + total + ' 題</div>' +
             '<div class="spell-stage">' +
             '<div class="fc-spell">' +
-            '<button type="button" class="fc-spell__toggle" onclick="toggleSpellMode()">' + toggleLabel + '</button>' +
+            '<button type="button" class="fc-spell__toggle" onclick="toggleSpellMode()"' + (answered ? ' disabled' : '') + '>' + toggleLabel + '</button>' + // 評分後停用輸入法切換鈕：toggleSpellMode 已 early-return(L752)，不停用就是死按鈕（與 cefr w104 一致）；下一張卡 renderSpell 重繪時 answered=false 自動恢復
             '<div class="fc-spell__head">' +
             '<div class="fc-card__emoji">' + esc(word.emoji || '📖') + '</div>' +
             (word.chinese ? '<div class="fc-card__cn">' + esc(word.chinese) + '</div>' : '') +
