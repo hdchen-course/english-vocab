@@ -13,7 +13,7 @@
     function pad2(n) { n = String(n); return n.length < 2 ? ('0' + n) : n; }
     // 距離午夜的總分鐘數 → 24 小時制時刻字串（例：875 → 14:35）
     function clock(mins) { var h = Math.floor(mins / 60), m = mins % 60; return pad2(h) + ':' + pad2(m); }
-    // 中文口語時刻（給朗讀用），例：14:35 → 十四點三十五分
+    // 中文口語時刻（給朗讀用），例：14:35 → 14 點 35 分；15:00 → 15 點整
     function spokenClock(mins) { var h = Math.floor(mins / 60), m = mins % 60; return h + ' 點' + (m ? (' ' + m + ' 分') : '整'); }
     // 難度：經過時間的分鐘上限、以及生成步長
     function durMax(lv) { return lv <= 1 ? 55 : lv === 2 ? 95 : lv === 3 ? 175 : lv === 4 ? 255 : 355; }
