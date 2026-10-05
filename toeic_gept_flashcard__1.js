@@ -887,12 +887,16 @@ function renderSpell() {
                 '<input type="text" inputmode="text" maxlength="1" data-ci="' + i + '" value="' + (c.val ? esc(c.val) : '') + '"' + (answered ? ' disabled' : '') +
                 ' aria-label="第 ' + letterNo + ' 個字母" oninput="spellInput(this)" onkeydown="spellKey(event,this)"></div>'; // 已評分就鎖住輸入（與字母磚/quiz 一致），避免改動已上色方格造成字母與對錯顏色不符
         }
-        else if (c.val) {
-            // 已填：可點按退回字母到磚池（含 aria 標示位置與已填字母）
+        else if (c.val && !answered) {
+            // 未評分、已填：可點按退回字母到磚池（含 aria 標示位置與已填字母）
             slotsHTML += '<div class="fc-spell__tile fc-spell__slot filled' + stateCls + '"' +
                 ' role="button" tabindex="0" aria-label="第 ' + letterNo + ' 個字母，已填 ' + esc(c.val) + '，按 Enter 或空白鍵退回字母" onclick="spellClear(' + i + ')"' +
                 ' onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();spellClear(' + i + ');}">' +
                 esc(c.val) + '</div>';
+        }
+        else if (c.val) {
+            // 已評分、已填：靜態格（spellClear 此時 no-op），不設 role=button/tabindex，aria 只報位置與字母，不再宣稱可退回
+            slotsHTML += '<div class="fc-spell__tile fc-spell__slot filled' + stateCls + '" aria-label="第 ' + letterNo + ' 個字母，已填 ' + esc(c.val) + '">' + esc(c.val) + '</div>';
         }
         else {
             // 空格：spellClear 對空格 no-op，故不設 role=button/tabindex（避免螢幕報讀器報成「無作用的按鈕」），僅標示位置
