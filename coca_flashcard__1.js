@@ -449,7 +449,10 @@ function buildSpellModel(word, box) {
         });
     }
     else if (box >= 3) {
-        bankChars = bankChars.concat(pickDistractorLetters(bankChars, 2 + Math.floor(Math.random() * 3)));
+        let decoys = pickDistractorLetters(bankChars, 2 + Math.floor(Math.random() * 3));
+        if (word === word.toUpperCase() && word !== word.toLowerCase())
+            decoys = decoys.map(c => c.toUpperCase()); // 全大寫字(COCA 的 "I")誘答磚也轉大寫,否則唯一的大寫答案磚會在小寫誘答中被格式洩漏、誘答也失去難度(與 cefr w124 一致)
+        bankChars = bankChars.concat(decoys);
     }
     const bank = shuffleArr(bankChars).map((ch, i) => ({ ch: ch, used: false, i: i }));
     return { word: word, cells: cells, letters: letters, bank: bank };
