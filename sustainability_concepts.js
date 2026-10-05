@@ -64,26 +64,40 @@
         s += '<defs><marker id="ghr" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="' + GREY + '"/></marker></defs>';
         return s + '</svg>';
     }
-    // L1 teach4：暖化的後果（中性陳述）＋「我們做得到」的希望橋接（非恐嚇）。
+    // L1 teach4：暖化的因果鏈（CO₂變多 → 困住更多熱 → 各種影響）＋「我們做得到」的希望橋接（非恐嚇）。
     function climateConsequences() {
-        var s = '<svg viewBox="0 0 300 196" role="img" aria-label="全球暖化可能帶來的現象，用冷靜中性的語氣陳述：極端天氣變多、海平面上升、生態受到影響。但這不是世界末日，我們每個人、社區和國家都能行動，減少排放、好好調適，一起把影響降到最低">';
-        s += '<text x="150" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + SU + '">暖化的影響（冷靜看，不恐慌）</text>';
+        var s = '<svg viewBox="0 0 300 192" role="img" aria-label="順著箭頭看暖化的因果鏈：人類燃燒化石燃料讓大氣二氧化碳變多，接著溫室氣體困住更多熱使地球升溫，升溫再帶來三種影響：極端天氣變多、海平面上升、生態受影響。這些用冷靜中性的語氣了解就好。好消息是我們做得到，減少排放加上好好調適，就能把影響變小">';
+        s += '<text x="150" y="15" text-anchor="middle" font-size="12" font-weight="800" fill="' + SU + '">順著箭頭看：CO₂ 變多會怎樣？</text>';
+        // 因 1：CO₂ 變多
+        s += '<rect x="16" y="24" width="118" height="34" rx="9" fill="' + GREY + '" opacity="0.16"/>';
+        s += '<rect x="16" y="24" width="118" height="34" rx="9" fill="none" stroke="' + GREY + '" stroke-width="1.5"/>';
+        s += '<text x="75" y="40" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">大氣 CO₂ 變多</text>';
+        s += '<text x="75" y="53" text-anchor="middle" font-size="9" fill="' + MUT + '">燃燒化石燃料</text>';
+        s += '<path d="M136 41 L160 41" stroke="' + IR + '" stroke-width="2.4" marker-end="url(#ccr1)"/>';
+        // 果 1：困住更多熱 → 升溫
+        s += '<rect x="164" y="24" width="120" height="34" rx="9" fill="' + IR + '" opacity="0.14"/>';
+        s += '<rect x="164" y="24" width="120" height="34" rx="9" fill="none" stroke="' + IR + '" stroke-width="1.6"/>';
+        s += '<text x="224" y="40" text-anchor="middle" font-size="11" font-weight="800" fill="' + IR + '">困住更多熱</text>';
+        s += '<text x="224" y="53" text-anchor="middle" font-size="9.5" fill="currentColor">地球升溫</text>';
+        // 果 2：升溫扇出三種影響
         var items = [['🌀', '極端天氣變多'], ['🌊', '海平面上升'], ['🐢', '生態受影響']];
+        var cxs = [56, 150, 244];
         for (var i = 0; i < 3; i++) {
-            var x = 14 + i * 95;
-            s += '<rect x="' + x + '" y="26" width="86" height="56" rx="11" fill="' + AMBER + '" opacity="0.1"/>';
-            s += '<rect x="' + x + '" y="26" width="86" height="56" rx="11" fill="none" stroke="' + AMBER + '" stroke-width="1.4"/>';
-            s += '<text x="' + (x + 43) + '" y="52" text-anchor="middle" font-size="20">' + items[i][0] + '</text>';
-            s += '<text x="' + (x + 43) + '" y="73" text-anchor="middle" font-size="10" fill="currentColor">' + items[i][1] + '</text>';
+            s += '<path d="M224 58 L' + cxs[i] + ' 84" stroke="' + AMBER + '" stroke-width="1.6" marker-end="url(#ccr2)"/>';
+            s += '<rect x="' + (cxs[i] - 42) + '" y="86" width="84" height="46" rx="11" fill="' + AMBER + '" opacity="0.1"/>';
+            s += '<rect x="' + (cxs[i] - 42) + '" y="86" width="84" height="46" rx="11" fill="none" stroke="' + AMBER + '" stroke-width="1.4"/>';
+            s += '<text x="' + cxs[i] + '" y="110" text-anchor="middle" font-size="18">' + items[i][0] + '</text>';
+            s += '<text x="' + cxs[i] + '" y="126" text-anchor="middle" font-size="9.5" fill="currentColor">' + items[i][1] + '</text>';
         }
-        s += '<path d="M150 86 L150 104" stroke="' + GREEN + '" stroke-width="2" marker-end="url(#ccr)"/>';
-        s += '<rect x="30" y="108" width="240" height="46" rx="12" fill="' + GREEN + '" opacity="0.1"/>';
-        s += '<rect x="30" y="108" width="240" height="46" rx="12" fill="none" stroke="' + GREEN + '" stroke-width="1.6"/>';
-        s += '<text x="150" y="128" text-anchor="middle" font-size="11.5" font-weight="800" fill="' + GREEN + '">好消息：我們做得到！</text>';
-        s += '<text x="150" y="146" text-anchor="middle" font-size="10" fill="currentColor">減少排放 ＋ 好好調適，就能把影響降低。</text>';
-        s += '<text x="150" y="174" text-anchor="middle" font-size="10" fill="currentColor">這不是世界末日，而是一件「現在就能一起動手做」的事。</text>';
-        s += '<text x="150" y="190" text-anchor="middle" font-size="9.5" fill="' + MUT + '">每個人、社區、國家都能出一份力。</text>';
-        s += '<defs><marker id="ccr" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="' + GREEN + '"/></marker></defs>';
+        // 希望橋接（非末日）
+        s += '<rect x="26" y="142" width="248" height="42" rx="12" fill="' + GREEN + '" opacity="0.1"/>';
+        s += '<rect x="26" y="142" width="248" height="42" rx="12" fill="none" stroke="' + GREEN + '" stroke-width="1.6"/>';
+        s += '<text x="150" y="160" text-anchor="middle" font-size="11" font-weight="800" fill="' + GREEN + '">好消息：我們做得到！</text>';
+        s += '<text x="150" y="177" text-anchor="middle" font-size="9.5" fill="currentColor">減少排放 ＋ 好好調適，就能把影響變小。</text>';
+        s += '<defs>' +
+            '<marker id="ccr1" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="' + IR + '"/></marker>' +
+            '<marker id="ccr2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="' + AMBER + '"/></marker>' +
+            '</defs>';
         return s + '</svg>';
     }
     // L2 teach3：森林砍伐→碳匯減少（對比：有森林持續吸碳 vs 砍伐後吸碳變少，失衡加劇）。
@@ -251,50 +265,76 @@
         s += '<text x="150" y="192" text-anchor="middle" font-size="9.5" fill="' + MUT + '">再加「設計耐用」，東西能用更久，更不容易變垃圾。</text>';
         return s + '</svg>';
     }
-    // L4 teach3：生活實例（自備餐具水壺／修理延用／正確分類）。
+    // L4 teach3：把三個生活行動「放上循環圈」——資源繞回來(綠圈) vs 用完就丟(紅→垃圾)。
     function circularExamples() {
-        var s = '<svg viewBox="0 0 300 180" role="img" aria-label="循環經濟在生活中的例子：自備環保餐具和水壺，減少一次性垃圾，這是減量；東西壞了先修理、延長使用，這是重複使用；把回收物正確分類，才能真的被回收再製，這是回收">';
-        s += '<text x="150" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + SU + '">生活中就能做的循環行動</text>';
-        var ex = [
-            ['🥤', '自備水壺餐具', '減少一次性垃圾', GREEN],
-            ['🔧', '壞了先修理', '延長使用壽命', AMBER],
-            ['♻️', '正確分類回收', '才能被回收再製', SKY]
+        var s = '<svg viewBox="0 0 300 200" role="img" aria-label="三個生活行動都讓資源留在循環圈裡轉：自備水壺是減量、東西壞了先修理是重複使用、正確分類是回收，資源繞一圈回到製造、不變成垃圾。相對地，用完就丟會讓資源掉出圈子、被當成垃圾掩埋。所以每個小動作都在幫資源留在圈子裡轉">';
+        s += '<text x="150" y="15" text-anchor="middle" font-size="12" font-weight="800" fill="' + SU + '">這些行動，讓資源留在圈子裡轉</text>';
+        var cx = 150, cy = 110, r = 54;
+        // 綠色循環圈 + 順時針箭頭
+        s += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + GREEN + '" stroke-width="2.6" stroke-dasharray="5 4"/>';
+        s += '<path d="M' + (cx + r) + ' ' + cy + ' A' + r + ' ' + r + ' 0 0 1 ' + cx + ' ' + (cy + r) + '" fill="none" stroke="' + GREEN + '" stroke-width="2.8" marker-end="url(#cexg)"/>';
+        s += '<text x="' + cx + '" y="' + (cy - 2) + '" text-anchor="middle" font-size="10.5" font-weight="800" fill="' + GREEN + '">資源繞回來</text>';
+        s += '<text x="' + cx + '" y="' + (cy + 13) + '" text-anchor="middle" font-size="9" fill="' + MUT + '">不變垃圾</text>';
+        // 三個行動節點放在圈上（上、右下、左下，各差 120°）
+        var nodes = [
+            [cx, cy - r, '🥤', GREEN], // 上
+            [cx + 47, cy + 27, '🔧', AMBER], // 右下
+            [cx - 47, cy + 27, '♻️', SKY] // 左下
         ];
         for (var i = 0; i < 3; i++) {
-            var x = 14 + i * 95;
-            s += '<rect x="' + x + '" y="30" width="86" height="104" rx="12" fill="' + ex[i][3] + '" opacity="0.1"/>';
-            s += '<rect x="' + x + '" y="30" width="86" height="104" rx="12" fill="none" stroke="' + ex[i][3] + '" stroke-width="1.5"/>';
-            s += '<text x="' + (x + 43) + '" y="62" text-anchor="middle" font-size="26">' + ex[i][0] + '</text>';
-            s += '<text x="' + (x + 43) + '" y="92" text-anchor="middle" font-size="10.5" font-weight="800" fill="' + ex[i][3] + '">' + ex[i][1] + '</text>';
-            s += '<text x="' + (x + 43) + '" y="112" text-anchor="middle" font-size="9" fill="currentColor">' + ex[i][2] + '</text>';
+            s += '<circle cx="' + nodes[i][0] + '" cy="' + nodes[i][1] + '" r="15" fill="' + nodes[i][3] + '" opacity="0.16"/>';
+            s += '<circle cx="' + nodes[i][0] + '" cy="' + nodes[i][1] + '" r="15" fill="none" stroke="' + nodes[i][3] + '" stroke-width="1.8"/>';
+            s += '<text x="' + nodes[i][0] + '" y="' + (nodes[i][1] + 6) + '" text-anchor="middle" font-size="16">' + nodes[i][2] + '</text>';
         }
-        s += '<text x="150" y="156" text-anchor="middle" font-size="10.5" fill="currentColor">每一個小動作，都是讓資源「轉圈圈」的一環。</text>';
-        s += '<text x="150" y="172" text-anchor="middle" font-size="9.5" fill="' + MUT + '">不必一次做到滿分，從一兩件開始、慢慢養成就好。</text>';
+        // 對比：用完就丟 → 掉出圈子變垃圾（紅、虛線）
+        s += '<path d="M191 73 L229 50" stroke="' + WARN + '" stroke-width="1.8" stroke-dasharray="4 3" marker-end="url(#cexr)"/>';
+        s += '<text x="252" y="42" text-anchor="middle" font-size="18">🗑️</text>';
+        s += '<text x="256" y="64" text-anchor="middle" font-size="8.5" fill="' + WARN + '">用完就丟</text>';
+        s += '<text x="256" y="75" text-anchor="middle" font-size="8.5" fill="' + WARN + '">＝變垃圾</text>';
+        // 底部圖例（emoji → 行動 → R）
+        var leg = [['🥤 自備水壺', '減量'], ['🔧 修理延用', '重複使用'], ['♻️ 分類回收', '回收']];
+        var lcol = [GREEN, AMBER, SKY];
+        for (var j = 0; j < 3; j++) {
+            var lx = 16 + j * 95;
+            s += '<text x="' + (lx + 42) + '" y="182" text-anchor="middle" font-size="9" font-weight="800" fill="currentColor">' + leg[j][0] + '</text>';
+            s += '<text x="' + (lx + 42) + '" y="194" text-anchor="middle" font-size="8.5" fill="' + lcol[j] + '">' + leg[j][1] + '</text>';
+        }
+        s += '<defs>' +
+            '<marker id="cexg" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="' + GREEN + '"/></marker>' +
+            '<marker id="cexr" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="' + WARN + '"/></marker>' +
+            '</defs>';
         return s + '</svg>';
     }
-    // L5 teach1：SDGs——聯合國 17 項永續發展目標（2030），挑 4–5 個貼近生活放大。
+    // L5 teach1：SDGs——把幾個貼近生活的目標對應到永續三大面向（環境／社會／經濟），看出每個目標在撐哪根柱子。
     function sdgsGrid() {
-        var s = '<svg viewBox="0 0 300 196" role="img" aria-label="聯合國提出 17 項永續發展目標，簡稱 SDGs，是全世界到 2030 年想一起達成的目標。這裡用 17 個彩色方塊示意，不用一個個背；挑幾個貼近生活的放大說明：消除貧窮、乾淨飲水、優質教育、氣候行動、負責任的消費與生產">';
-        s += '<text x="150" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + SU + '">SDGs：全世界的 17 個永續目標</text>';
-        // 17 格色塊示意（不逐一背）
-        var cols = ['#e5243b', '#dda63a', '#4c9f38', '#c5192d', '#ff3a21', '#26bde2', '#fcc30b', '#a21942', '#fd6925', '#dd1367', '#fd9d24', '#bf8b2e', '#3f7e44', '#0a97d9', '#56c02b', '#00689d', '#19486a'];
-        for (var i = 0; i < 17; i++) {
-            var cx = 20 + (i % 9) * 30;
-            var cy = 28 + Math.floor(i / 9) * 26;
-            s += '<rect x="' + cx + '" y="' + cy + '" width="24" height="22" rx="4" fill="' + cols[i] + '" opacity="0.85"/>';
-            s += '<text x="' + (cx + 12) + '" y="' + (cy + 15) + '" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">' + (i + 1) + '</text>';
+        var s = '<svg viewBox="0 0 300 192" role="img" aria-label="聯合國 17 項永續發展目標 SDGs 不只環保。把幾個貼近生活的目標對應到永續的三大面向：乾淨飲水和氣候行動主要撐起環境面向，消除貧窮和優質教育主要撐起社會面向，負責任的消費與生產主要撐起經濟面向。每個目標都在支撐環境、社會、經濟這三根柱子，三者一起顧好才是永續">';
+        s += '<text x="150" y="15" text-anchor="middle" font-size="12" font-weight="800" fill="' + SU + '">17 個目標，怎麼對應永續三大面向？</text>';
+        var pillars = [[60, '環境', GREEN], [150, '社會', SKY], [240, '經濟', AMBER]];
+        // 目標對應到各面向
+        var goals = [
+            [['💧', '乾淨飲水'], ['🌍', '氣候行動']], // 環境
+            [['🍚', '消除貧窮'], ['📚', '優質教育']], // 社會
+            [['♻️', '負責任消費']] // 經濟
+        ];
+        for (var p = 0; p < 3; p++) {
+            var cx = pillars[p][0], col = pillars[p][2];
+            // 面向柱頭
+            s += '<rect x="' + (cx - 44) + '" y="26" width="88" height="30" rx="9" fill="' + col + '" opacity="0.16"/>';
+            s += '<rect x="' + (cx - 44) + '" y="26" width="88" height="30" rx="9" fill="none" stroke="' + col + '" stroke-width="1.8"/>';
+            s += '<text x="' + cx + '" y="46" text-anchor="middle" font-size="12.5" font-weight="800" fill="' + col + '">' + pillars[p][1] + '</text>';
+            // 柱頭往下連到目標
+            s += '<line x1="' + cx + '" y1="56" x2="' + cx + '" y2="66" stroke="' + col + '" stroke-width="1.6"/>';
+            var gs = goals[p];
+            for (var g = 0; g < gs.length; g++) {
+                var gy = 66 + g * 34;
+                s += '<rect x="' + (cx - 42) + '" y="' + gy + '" width="84" height="28" rx="8" fill="' + col + '" opacity="0.08"/>';
+                s += '<rect x="' + (cx - 42) + '" y="' + gy + '" width="84" height="28" rx="8" fill="none" stroke="' + col + '" stroke-width="1.2"/>';
+                s += '<text x="' + (cx - 28) + '" y="' + (gy + 19) + '" text-anchor="middle" font-size="15">' + gs[g][0] + '</text>';
+                s += '<text x="' + (cx + 12) + '" y="' + (gy + 18) + '" text-anchor="middle" font-size="9" font-weight="700" fill="currentColor">' + gs[g][1] + '</text>';
+            }
         }
-        s += '<text x="150" y="94" text-anchor="middle" font-size="9.5" fill="' + MUT + '">17 項目標（不用背）；挑幾個貼近生活的看看：</text>';
-        var pick = [['🍚', '消除貧窮'], ['💧', '乾淨飲水'], ['📚', '優質教育'], ['🌍', '氣候行動'], ['♻️', '負責任消費']];
-        for (var j = 0; j < 5; j++) {
-            var px = 20 + j * 54;
-            s += '<rect x="' + px + '" y="104" width="48" height="52" rx="10" fill="' + SU + '" opacity="0.1"/>';
-            s += '<rect x="' + px + '" y="104" width="48" height="52" rx="10" fill="none" stroke="' + SU + '" stroke-width="1.3"/>';
-            s += '<text x="' + (px + 24) + '" y="128" text-anchor="middle" font-size="18">' + pick[j][0] + '</text>';
-            s += '<text x="' + (px + 24) + '" y="148" text-anchor="middle" font-size="8.5" fill="currentColor">' + pick[j][1] + '</text>';
-        }
-        s += '<text x="150" y="176" text-anchor="middle" font-size="10" fill="currentColor">SDGs 不只環保，還涵蓋貧窮、教育、健康、公平等面向。</text>';
-        s += '<text x="150" y="191" text-anchor="middle" font-size="9.5" fill="' + MUT + '">目標：到 2030 年，讓世界更永續、更公平。</text>';
+        s += '<text x="150" y="162" text-anchor="middle" font-size="10" fill="currentColor">每個目標都在撐起 環境・社會・經濟 這三根柱子。</text>';
+        s += '<text x="150" y="180" text-anchor="middle" font-size="9.5" fill="' + MUT + '">三者一起顧好，才顧得到現在、也顧得到未來。</text>';
         return s + '</svg>';
     }
     // L5 teach2：永續＝環境／社會／經濟三圓交集（兼顧現在與未來的人）。
@@ -336,24 +376,40 @@
         s += '<text x="150" y="179" text-anchor="middle" font-size="9.5" fill="' + MUT + '">冷靜看、動手做，我們做得到。</text>';
         return s + '</svg>';
     }
-    // L5 teach4：行動清單三層（個人／社區／政策）＋個人可做的事，強調能動感。
+    // L5 teach4：同心圓三層（個人 ⊂ 社區 ⊂ 國家），你的小行動從最裡圈一圈圈擴散出去，強調能動感。
     function actionLayers() {
-        var s = '<svg viewBox="0 0 300 196" role="img" aria-label="減碳行動分三層一起來。個人可以隨手關燈、自備水壺、惜食不浪費、多走路或搭大眾運輸。社區可以一起做資源回收、種樹、節能。國家與政策可以發展再生能源、訂定減碳目標。每一層都重要，而小學生從個人的小行動就能開始，很有力量">';
-        s += '<text x="150" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + SU + '">一起行動：個人 · 社區 · 政策</text>';
-        var layers = [
-            ['🙋', '個人（你就能做）', '關燈節電、自備水壺、惜食、走路或搭公車', GREEN],
-            ['🏘️', '社區', '一起回收、種樹、節能', SKY],
-            ['🏛️', '國家 · 政策', '發展再生能源、訂減碳目標', AMBER]
+        var s = '<svg viewBox="0 0 300 204" role="img" aria-label="減碳行動像一圈圈的同心圓：最裡面是個人，外面是社區，再外面是國家與政策，個人包在社區裡、社區包在國家裡。你在最裡圈的小行動，像關燈節電、自備水壺、惜食、走路搭公車，會一圈圈往外擴散、帶動社區一起回收種樹節能，也支持國家發展再生能源、訂減碳目標。最裡面那一圈的你，就是改變的起點">';
+        s += '<text x="150" y="15" text-anchor="middle" font-size="12" font-weight="800" fill="' + SU + '">你的小行動，一圈圈擴散出去</text>';
+        var cx = 94, cy = 108;
+        // 外→內畫三層同心圓（含包含關係）
+        s += '<circle cx="' + cx + '" cy="' + cy + '" r="78" fill="' + AMBER + '" opacity="0.09"/>';
+        s += '<circle cx="' + cx + '" cy="' + cy + '" r="78" fill="none" stroke="' + AMBER + '" stroke-width="1.8"/>';
+        s += '<circle cx="' + cx + '" cy="' + cy + '" r="52" fill="' + SKY + '" opacity="0.12"/>';
+        s += '<circle cx="' + cx + '" cy="' + cy + '" r="52" fill="none" stroke="' + SKY + '" stroke-width="1.8"/>';
+        s += '<circle cx="' + cx + '" cy="' + cy + '" r="28" fill="' + GREEN + '" opacity="0.2"/>';
+        s += '<circle cx="' + cx + '" cy="' + cy + '" r="28" fill="none" stroke="' + GREEN + '" stroke-width="2"/>';
+        // 各層標籤
+        s += '<text x="' + cx + '" y="' + (cy - 2) + '" text-anchor="middle" font-size="15">🙋</text>';
+        s += '<text x="' + cx + '" y="' + (cy + 14) + '" text-anchor="middle" font-size="9" font-weight="800" fill="' + GREEN + '">個人</text>';
+        s += '<text x="' + cx + '" y="' + (cy - 38) + '" text-anchor="middle" font-size="9.5" font-weight="800" fill="' + SKY + '">🏘️ 社區</text>';
+        s += '<text x="' + cx + '" y="' + (cy - 66) + '" text-anchor="middle" font-size="9.5" font-weight="800" fill="' + AMBER + '">🏛️ 國家・政策</text>';
+        // 擴散漣漪箭頭（從個人往外）
+        s += '<line x1="' + (cx + 20) + '" y1="' + (cy - 20) + '" x2="' + (cx + 40) + '" y2="' + (cy - 40) + '" stroke="' + GREEN + '" stroke-width="2" marker-end="url(#alr)"/>';
+        s += '<line x1="' + (cx - 20) + '" y1="' + (cy + 20) + '" x2="' + (cx - 40) + '" y2="' + (cy + 40) + '" stroke="' + GREEN + '" stroke-width="2" marker-end="url(#alr)"/>';
+        // 右側對照：每層做什麼
+        var leg = [
+            [GREEN, '個人', '關燈、自備水壺、惜食'],
+            [SKY, '社區', '一起回收、種樹、節能'],
+            [AMBER, '國家', '再生能源、減碳目標']
         ];
         for (var i = 0; i < 3; i++) {
-            var y = 28 + i * 46;
-            s += '<rect x="16" y="' + y + '" width="268" height="40" rx="10" fill="' + layers[i][3] + '" opacity="0.1"/>';
-            s += '<rect x="16" y="' + y + '" width="268" height="40" rx="10" fill="none" stroke="' + layers[i][3] + '" stroke-width="1.5"/>';
-            s += '<text x="38" y="' + (y + 26) + '" text-anchor="middle" font-size="20">' + layers[i][0] + '</text>';
-            s += '<text x="62" y="' + (y + 17) + '" font-size="11" font-weight="800" fill="' + layers[i][3] + '">' + layers[i][1] + '</text>';
-            s += '<text x="62" y="' + (y + 32) + '" font-size="9.5" fill="currentColor">' + layers[i][2] + '</text>';
+            var ly = 56 + i * 42;
+            s += '<circle cx="' + 196 + '" cy="' + (ly - 3) + '" r="5" fill="' + leg[i][0] + '"/>';
+            s += '<text x="206" y="' + ly + '" font-size="10" font-weight="800" fill="' + leg[i][0] + '">' + leg[i][1] + '</text>';
+            s += '<text x="206" y="' + (ly + 14) + '" font-size="8.5" fill="currentColor">' + leg[i][2] + '</text>';
         }
-        s += '<text x="150" y="182" text-anchor="middle" font-size="10.5" font-weight="700" fill="' + GREEN + '">別小看自己——小公民的小行動，也是改變的一部分。</text>';
+        s += '<text x="150" y="196" text-anchor="middle" font-size="10" font-weight="700" fill="' + GREEN + '">最裡面那一圈（你），就是改變的起點。</text>';
+        s += '<defs><marker id="alr" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="' + GREEN + '"/></marker></defs>';
         return s + '</svg>';
     }
     window.CONCEPT = {

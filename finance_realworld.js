@@ -17,19 +17,21 @@
             'style="max-width:' + w + 'px" role="img" aria-label="' + label + '"></canvas>';
     }
     var GOLD = '#ca8a04', RED = '#dc2626', GREEN = '#16a34a', INK = 'currentColor', MUT = '#94a3b8';
+    // INKL：固定深色墨水，給「畫在硬寫死的淺色塊上」的文字用（currentColor 在暗色主題會變淺 → 淺字壓淺底看不見）。
+    var INKL = '#1f2937';
     // ---------- Group 1：信用卡/卡債/借貸 專用 SVG ----------
     // 借 100 → 還 110，多出來的 10 元就是利息（借錢的租金）。
     function coinInterest() {
         var s = '<svg viewBox="0 0 280 140" role="img" aria-label="借出 100 元，到期要還 110 元，多出來的 10 元就是利息">';
         s += '<circle cx="52" cy="56" r="30" fill="#fef3c7" stroke="' + GOLD + '" stroke-width="2.5"/>';
         s += '<text x="52" y="52" text-anchor="middle" font-size="18" font-weight="800" fill="' + GOLD + '">100</text>';
-        s += '<text x="52" y="70" text-anchor="middle" font-size="10" fill="' + INK + '">借來的錢</text>';
+        s += '<text x="52" y="70" text-anchor="middle" font-size="10" fill="' + INKL + '">借來的錢</text>';
         s += '<text x="52" y="112" text-anchor="middle" font-size="11" font-weight="800" fill="' + INK + '">借 100 元</text>';
         s += '<line x1="92" y1="56" x2="150" y2="56" stroke="' + INK + '" stroke-width="2.5"/><polygon points="150,56 140,51 140,61" fill="' + INK + '"/>';
         s += '<text x="121" y="44" text-anchor="middle" font-size="10" fill="' + INK + '">到期要還</text>';
         s += '<circle cx="192" cy="56" r="30" fill="#fef3c7" stroke="' + GOLD + '" stroke-width="2.5"/>';
         s += '<text x="192" y="52" text-anchor="middle" font-size="18" font-weight="800" fill="' + GOLD + '">110</text>';
-        s += '<text x="192" y="70" text-anchor="middle" font-size="10" fill="' + INK + '">要還的錢</text>';
+        s += '<text x="192" y="70" text-anchor="middle" font-size="10" fill="' + INKL + '">要還的錢</text>';
         s += '<text x="192" y="112" text-anchor="middle" font-size="11" font-weight="800" fill="' + INK + '">還 110 元</text>';
         s += '<rect x="236" y="40" width="40" height="32" rx="6" fill="#fee2e2" stroke="' + RED + '" stroke-width="2"/>';
         s += '<text x="256" y="54" text-anchor="middle" font-size="13" font-weight="800" fill="' + RED + '">+10</text>';
@@ -53,9 +55,9 @@
         var full = (mode === 'full');
         var s = '<svg viewBox="0 0 280 150" role="img" aria-label="' + (full ? '帳單在期限前全額繳清，利息是零' : '帳單只繳最低應繳金額，剩下的錢開始被收循環利息') + '">';
         s += '<rect x="40" y="16" width="200" height="118" rx="10" fill="#ffffff" stroke="' + INK + '" stroke-opacity="0.5" stroke-width="2"/>';
-        s += '<text x="140" y="40" text-anchor="middle" font-size="13" font-weight="800" fill="' + INK + '">信用卡帳單</text>';
+        s += '<text x="140" y="40" text-anchor="middle" font-size="13" font-weight="800" fill="' + INKL + '">信用卡帳單</text>';
         s += '<line x1="56" y1="50" x2="224" y2="50" stroke="' + INK + '" stroke-opacity="0.3" stroke-width="1.5"/>';
-        s += '<text x="56" y="72" text-anchor="start" font-size="11" fill="' + INK + '">本期消費　3000 元</text>';
+        s += '<text x="56" y="72" text-anchor="start" font-size="11" fill="' + INKL + '">本期消費　3000 元</text>';
         if (full) {
             s += '<text x="56" y="96" text-anchor="start" font-size="12" font-weight="800" fill="' + GREEN + '">✅ 全額繳清 3000</text>';
             s += '<rect x="52" y="106" width="176" height="22" rx="6" fill="#dcfce7" stroke="' + GREEN + '" stroke-width="1.5"/>';
@@ -79,22 +81,44 @@
             s += '<rect x="20" y="' + y + '" width="240" height="30" rx="8" fill="#fef3c7" stroke="' + GOLD + '" stroke-width="1.6"/>';
             s += '<text x="36" y="' + (y + 20) + '" text-anchor="middle" font-size="13" font-weight="800" fill="' + GOLD + '">' + items[i][0] + '</text>';
             s += '<text x="60" y="' + (y + 21) + '" text-anchor="middle" font-size="16">' + items[i][1] + '</text>';
-            s += '<text x="80" y="' + (y + 20) + '" text-anchor="start" font-size="12" font-weight="700" fill="' + INK + '">' + items[i][2] + '</text>';
+            s += '<text x="80" y="' + (y + 20) + '" text-anchor="start" font-size="12" font-weight="700" fill="' + INKL + '">' + items[i][2] + '</text>';
         }
         return s + '</svg>';
     }
-    // 借貸前三問檢查清單。
+    // 借貸決策關卡：三個問題像三道關，任一題「否」就亮紅燈別借；三題都「是」才亮綠燈可借。
     function borrowThree() {
-        var s = '<svg viewBox="0 0 280 150" role="img" aria-label="真的要借錢前的三個問題：我還得起嗎、利率多少、非借不可嗎">';
-        s += '<text x="140" y="20" text-anchor="middle" font-size="12" font-weight="800" fill="' + GOLD + '">真的要借錢，先問三句話</text>';
-        var q = ['我「還得起」嗎？', '利率（年利率 APR）多少？', '非借不可嗎？'];
+        var s = '<svg viewBox="0 0 280 196" role="img" aria-label="要不要借錢，像闖三道關：第一關非借不可嗎、第二關我還得起嗎、第三關是正規管道、利率清楚嗎。只要任何一關答否，就亮紅燈先別借；三關都答是，才亮綠燈可以謹慎地借。這讓你一步步想清楚該不該借">';
+        s += '<text x="140" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + GOLD + '">要不要借？過三關才點綠燈</text>';
+        var q = ['① 非借不可嗎？', '② 我「還得起」嗎？', '③ 正規管道、利率清楚嗎？'];
+        var gy = [28, 76, 124];
         for (var i = 0; i < 3; i++) {
-            var y = 36 + i * 36;
-            s += '<rect x="22" y="' + y + '" width="22" height="22" rx="5" fill="none" stroke="' + GOLD + '" stroke-width="2"/>';
-            s += '<text x="33" y="' + (y + 17) + '" text-anchor="middle" font-size="14" font-weight="800" fill="' + GOLD + '">?</text>';
-            s += '<text x="54" y="' + (y + 17) + '" text-anchor="start" font-size="12.5" font-weight="700" fill="' + INK + '">' + q[i] + '</text>';
+            var y = gy[i];
+            // 關卡
+            s += '<rect x="16" y="' + y + '" width="150" height="30" rx="8" fill="#fef3c7" stroke="' + GOLD + '" stroke-width="1.8"/>';
+            s += '<text x="91" y="' + (y + 20) + '" text-anchor="middle" font-size="11.5" font-weight="800" fill="' + INKL + '">' + q[i] + '</text>';
+            // 否 → 紅燈
+            s += '<path d="M166 ' + (y + 15) + ' L196 ' + (y + 15) + '" stroke="' + RED + '" stroke-width="1.8" marker-end="url(#btr)"/>';
+            s += '<text x="181" y="' + (y + 9) + '" text-anchor="middle" font-size="8.5" font-weight="800" fill="' + RED + '">否</text>';
+            // 是 → 往下一關
+            if (i < 2) {
+                s += '<path d="M91 ' + (y + 30) + ' L91 ' + gy[i + 1] + '" stroke="' + GREEN + '" stroke-width="1.8" marker-end="url(#btg)"/>';
+                s += '<text x="99" y="' + (y + 42) + '" text-anchor="middle" font-size="8.5" font-weight="800" fill="' + GREEN + '">是</text>';
+            }
         }
-        s += '<text x="140" y="146" text-anchor="middle" font-size="10.5" fill="' + RED + '">遠離「馬上、不審核、免證件」的借貸</text>';
+        // 紅燈面板（右側，三道否都通到這）
+        s += '<rect x="200" y="34" width="68" height="100" rx="10" fill="#fee2e2" stroke="' + RED + '" stroke-width="2"/>';
+        s += '<text x="234" y="74" text-anchor="middle" font-size="22">🔴</text>';
+        s += '<text x="234" y="98" text-anchor="middle" font-size="10.5" font-weight="800" fill="' + RED + '">任一題「否」</text>';
+        s += '<text x="234" y="113" text-anchor="middle" font-size="10.5" font-weight="800" fill="' + RED + '">＝先別借</text>';
+        // 綠燈（三關都是）
+        s += '<path d="M91 154 L91 164" stroke="' + GREEN + '" stroke-width="1.8" marker-end="url(#btg)"/>';
+        s += '<text x="99" y="162" text-anchor="middle" font-size="8.5" font-weight="800" fill="' + GREEN + '">是</text>';
+        s += '<rect x="20" y="166" width="240" height="26" rx="8" fill="#dcfce7" stroke="' + GREEN + '" stroke-width="2"/>';
+        s += '<text x="140" y="183" text-anchor="middle" font-size="11" font-weight="800" fill="' + GREEN + '">🟢 三關都「是」→ 可以謹慎地借</text>';
+        s += '<defs>' +
+            '<marker id="btr" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="' + RED + '"/></marker>' +
+            '<marker id="btg" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="' + GREEN + '"/></marker>' +
+            '</defs>';
         return s + '</svg>';
     }
     // ---------- Group 2：詐騙辨識 專用 SVG（stepped / static）----------
@@ -102,11 +126,11 @@
     function scamFlags(n) {
         var s = '<svg viewBox="0 0 280 160" role="img" aria-label="一則可疑訊息，逐步標出' + n + '面紅旗">';
         s += '<rect x="18" y="18" width="200" height="30" rx="12" fill="#e0f2fe" stroke="' + INK + '" stroke-opacity="0.3" stroke-width="1.3"/>';
-        s += '<text x="30" y="37" text-anchor="start" font-size="11" fill="' + INK + '">「保證穩賺不賠，名額只剩今天！」</text>';
+        s += '<text x="30" y="37" text-anchor="start" font-size="11" fill="' + INKL + '">「保證穩賺不賠，名額只剩今天！」</text>';
         s += '<rect x="18" y="54" width="210" height="30" rx="12" fill="#e0f2fe" stroke="' + INK + '" stroke-opacity="0.3" stroke-width="1.3"/>';
-        s += '<text x="30" y="73" text-anchor="start" font-size="11" fill="' + INK + '">「現在不決定就沒了，要馬上處理」</text>';
+        s += '<text x="30" y="73" text-anchor="start" font-size="11" fill="' + INKL + '">「現在不決定就沒了，要馬上處理」</text>';
         s += '<rect x="18" y="90" width="222" height="30" rx="12" fill="#e0f2fe" stroke="' + INK + '" stroke-opacity="0.3" stroke-width="1.3"/>';
-        s += '<text x="30" y="109" text-anchor="start" font-size="11" fill="' + INK + '">「私下付款就好，別跟家人說」</text>';
+        s += '<text x="30" y="109" text-anchor="start" font-size="11" fill="' + INKL + '">「私下付款就好，別跟家人說」</text>';
         var flags = ['🚩 太美好', '🚩 很急', '🚩 要你保密付款'];
         var fy = [33, 69, 105];
         for (var i = 0; i < 3; i++) {
@@ -118,18 +142,33 @@
         s += '<text x="140" y="146" text-anchor="middle" font-size="11.5" font-weight="800" fill="' + RED + '">' + (flags[Math.max(0, n - 1)] || '') + (n >= 3 ? '　＝紅燈！' : '') + '</text>';
         return s + '</svg>';
     }
-    // 常見手法 4 卡圖鑑。
-    function scamGallery() {
-        var cards = [['📈', '假投資', '老師帶單、穩賺'], ['📞', '假客服', '訂單錯誤要你操作 ATM'], ['💌', '假交友', '博感情再借錢'], ['🎁', '假中獎', '先繳費才能領獎']];
-        var s = '<svg viewBox="0 0 280 160" role="img" aria-label="常見詐騙手法圖鑑：假投資、假客服、假交友、假中獎">';
-        s += '<text x="140" y="18" text-anchor="middle" font-size="12" font-weight="800" fill="' + GOLD + '">手法會變，但都在要你的錢或驗證碼</text>';
+    // 常見手法 4 卡：highlight 的卡亮紅旗，所有手法最後都「收束」到同一個目的（要你的錢／驗證碼）。
+    function scamGallery(hl) {
+        var cards = [['📈', '假投資', '老師帶單、穩賺'], ['📞', '假客服', '要你去 ATM 操作'], ['💌', '假交友', '博感情再借錢'], ['🎁', '假中獎', '先繳費才能領獎']];
+        hl = hl && hl.length ? hl : [0, 1, 2, 3];
+        var on = function (i) { return hl.indexOf(i) >= 0; };
+        var s = '<svg viewBox="0 0 280 192" role="img" aria-label="常見詐騙手法像假投資、假客服、假交友、假中獎，手法雖然不同，但每一種的紅旗最後都收束到同一個目的：要你的錢，或要你的驗證碼和個資">';
+        s += '<text x="140" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + GOLD + '">手法會變，但最後都通到同一個目的</text>';
+        // 一排四卡（highlight 的亮紅旗、其餘淡化）
         for (var i = 0; i < 4; i++) {
-            var cx = (i % 2) * 136 + 14, cy = Math.floor(i / 2) * 60 + 28;
-            s += '<rect x="' + cx + '" y="' + cy + '" width="122" height="52" rx="9" fill="#fef3c7" stroke="' + GOLD + '" stroke-width="1.6"/>';
-            s += '<text x="' + (cx + 20) + '" y="' + (cy + 32) + '" text-anchor="middle" font-size="22">' + cards[i][0] + '</text>';
-            s += '<text x="' + (cx + 40) + '" y="' + (cy + 22) + '" text-anchor="start" font-size="12" font-weight="800" fill="' + INK + '">' + cards[i][1] + '</text>';
-            s += '<text x="' + (cx + 40) + '" y="' + (cy + 40) + '" text-anchor="start" font-size="9" fill="' + INK + '">' + cards[i][2] + '</text>';
+            var cx = 8 + i * 68, lit = on(i);
+            s += '<rect x="' + cx + '" y="26" width="60" height="50" rx="9" fill="' + (lit ? '#fef3c7' : '#f1f5f9') + '" stroke="' + (lit ? RED : MUT) + '" stroke-width="' + (lit ? 2.2 : 1.2) + '" opacity="' + (lit ? 1 : 0.5) + '"/>';
+            s += '<text x="' + (cx + 30) + '" y="46" text-anchor="middle" font-size="18" opacity="' + (lit ? 1 : 0.5) + '">' + cards[i][0] + '</text>';
+            s += '<text x="' + (cx + 30) + '" y="60" text-anchor="middle" font-size="10" font-weight="800" fill="' + (lit ? INKL : MUT) + '">' + cards[i][1] + '</text>';
+            s += '<text x="' + (cx + 30) + '" y="71" text-anchor="middle" font-size="6.8" fill="' + (lit ? INKL : MUT) + '">' + cards[i][2] + '</text>';
+            if (lit) {
+                s += '<text x="' + (cx + 52) + '" y="34" text-anchor="middle" font-size="13">🚩</text>';
+                s += '<path d="M' + (cx + 30) + ' 78 L140 128" stroke="' + RED + '" stroke-width="1.6" marker-end="url(#sgr)"/>';
+            }
+            else {
+                s += '<path d="M' + (cx + 30) + ' 78 L140 128" stroke="' + MUT + '" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>';
+            }
         }
+        // 收束節點
+        s += '<rect x="34" y="130" width="212" height="44" rx="11" fill="#fee2e2" stroke="' + RED + '" stroke-width="2"/>';
+        s += '<text x="140" y="150" text-anchor="middle" font-size="11.5" font-weight="800" fill="' + RED + '">不管哪一種，最後都要你的……</text>';
+        s += '<text x="140" y="167" text-anchor="middle" font-size="11.5" font-weight="800" fill="' + RED + '">「錢」或「驗證碼／個資」</text>';
+        s += '<defs><marker id="sgr" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="' + RED + '"/></marker></defs>';
         return s + '</svg>';
     }
     // 四步防護盾：n 格依序亮起（停→看→查→165）。
@@ -143,7 +182,7 @@
             s += '<rect x="' + cx + '" y="' + cy + '" width="78" height="40" rx="8" fill="' + (on ? '#fef3c7' : '#eef2f6') + '" stroke="' + (on ? GOLD : MUT) + '" stroke-width="' + (on ? 2 : 1.3) + '"/>';
             s += '<text x="' + (cx + 16) + '" y="' + (cy + 26) + '" text-anchor="middle" font-size="18" opacity="' + (on ? 1 : 0.4) + '">' + cells[i][0] + '</text>';
             s += '<text x="' + (cx + 50) + '" y="' + (cy + 19) + '" text-anchor="middle" font-size="12" font-weight="800" fill="' + (on ? GOLD : MUT) + '">' + cells[i][1] + '</text>';
-            s += '<text x="' + (cx + 50) + '" y="' + (cy + 33) + '" text-anchor="middle" font-size="7.5" fill="' + (on ? INK : MUT) + '">' + cells[i][2] + '</text>';
+            s += '<text x="' + (cx + 50) + '" y="' + (cy + 33) + '" text-anchor="middle" font-size="7.5" fill="' + (on ? INKL : MUT) + '">' + cells[i][2] + '</text>';
         }
         return s + '</svg>';
     }
@@ -312,11 +351,11 @@
             { id: 'scam_types', name: '常見手法圖鑑', emoji: '🗂️', color: '#be123c', sub: '假投資／客服／交友／中獎',
                 done: '手法百百種，但都在要你的「錢」或「驗證碼／個資」。',
                 steps: [
-                    { type: 'teach', kicker: '認識一下', title: '假投資 ・ 假飆股群組', svg: scamGallery(),
+                    { type: 'teach', kicker: '認識一下', title: '假投資 ・ 假飆股群組', svg: scamGallery([0]),
                         text: '<b>假投資／假飆股群組</b>：有「老師帶單」「跟著買就穩賺」。記得——<b>穩賺＝紅旗</b>，群組裡的「獲利截圖」都可以造假。' },
-                    { type: 'teach', kicker: '再認識', title: '假客服 ・ 假網拍', svg: scamGallery(),
+                    { type: 'teach', kicker: '再認識', title: '假客服 ・ 假網拍', svg: scamGallery([1]),
                         text: '<b>假客服／假網拍</b>：謊稱「你的訂單錯誤要退款」，騙你去 ATM 操作，或要你給<b>驗證碼</b>。真正的退款不需要你操作 ATM，也不會跟你要驗證碼。' },
-                    { type: 'teach', kicker: '還有這些', title: '假交友 ・ 假中獎 ・ 猜猜我是誰', svg: scamGallery(),
+                    { type: 'teach', kicker: '還有這些', title: '假交友 ・ 假中獎 ・ 猜猜我是誰', svg: scamGallery([2, 3]),
                         text: '<b>假交友／假中獎／猜猜我是誰</b>：先博感情或裝成親友，再開口<b>借錢或要你一起投資</b>。手法會變，但都在「<b>要錢或要你的個資／驗證碼</b>」。' },
                     { type: 'quiz', kicker: '換你試試', title: '收到簡訊「您的包裹地址有誤，點連結重新付運費」，最安全的做法是？',
                         options: ['不點連結，自己到官方 App 或網站查訂單', '馬上點連結照它說的做', '回傳自己的信用卡號', '把驗證碼給對方'], answer: 0,

@@ -163,18 +163,43 @@ function mitosisSteps() {
   inner += tx(238, 130, '2 個相同細胞', 9.5, C_GRN);
   return svg('300 140', inner, '一個細胞先把兩條染色體複製成四條，再平均分成兩個，得到兩個染色體完全相同的子細胞');
 }
-// 細胞分裂在生活裡：傷口癒合、長高。
+// 細胞分裂在生活裡：傷口癒合三格微序列（缺口 → 細胞分裂 → 補滿）。
 function divisionLife() {
   var inner = '';
-  inner += tx(150, 14, '傷口癒合、長高，都靠細胞分裂', 11);
-  var items: Array<[number, string, string]> = [[62, '🩹', '傷口癒合'], [150, '📏', '長高'], [238, '💅', '指甲變長']];
-  items.forEach(function (it) {
-    inner += '<circle cx="' + it[0] + '" cy="58" r="26" fill="' + C_GRN + '" fill-opacity="0.1" stroke="' + C_GRN + '" stroke-width="1.6"/>';
-    inner += '<text x="' + it[0] + '" y="66" text-anchor="middle" font-size="26">' + it[1] + '</text>';
-    inner += tx(it[0], 98, it[2], 10.5);
-  });
-  inner += tx(150, 118, '身體隨時都在用細胞分裂補充、修復', 10);
-  return svg('300 128', inner, '傷口癒合、長高、指甲變長，都是靠細胞分裂產生新細胞');
+  inner += tx(150, 14, '傷口怎麼好起來？細胞分裂把缺口補滿', 10.5);
+  // 一顆細胞小工具（膜＋核點）
+  function cell(cx: number, cy: number, r: number, col: string) {
+    return '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="' + C_CELL + '" fill-opacity="0.25" stroke="' + col + '" stroke-width="1.4"/>' +
+      '<circle cx="' + cx + '" cy="' + cy + '" r="' + (r * 0.35) + '" fill="' + C_NUC + '"/>';
+  }
+  var ys = 70;                      // 皮膚細胞列的中心 y
+  var xs: number[] = [];            // 五個細胞欄位 x（每格間隔 13）
+  // 第 1 格：剛受傷，中間缺兩顆（缺口）
+  inner += tx(54, 34, '① 剛受傷', 10, C_RESP);
+  for (var i = 0; i < 5; i++) xs[i] = 28 + i * 13;
+  inner += cell(xs[0], ys, 6, C_CELL) + cell(xs[1], ys, 6, C_CELL) + cell(xs[3], ys, 6, C_CELL) + cell(xs[4], ys, 6, C_CELL);
+  // 缺口（紅虛線）
+  inner += '<path d="M' + (xs[2] - 8) + ' ' + (ys - 8) + ' Q' + xs[2] + ' ' + (ys + 10) + ' ' + (xs[2] + 8) + ' ' + (ys - 8) + '" fill="none" stroke="' + C_RESP + '" stroke-width="1.6" stroke-dasharray="3 2"/>';
+  inner += tx(xs[2], ys + 24, '缺口', 8.5, C_RESP);
+  inner += aR(98, ys, 14, C_MLD, 3);
+  // 第 2 格：細胞分裂，一顆分成兩顆往缺口長
+  inner += tx(150, 34, '② 細胞分裂', 10, C_GRN);
+  var bx = 124;
+  for (var j = 0; j < 2; j++) inner += cell(bx + j * 13, ys, 6, C_CELL);
+  // 分裂中的細胞（兩顆相黏的新細胞，綠框）
+  inner += cell(bx + 26, ys - 4, 5.5, C_GRN) + cell(bx + 26, ys + 6, 5.5, C_GRN);
+  inner += '<text x="' + (bx + 26) + '" y="' + (ys - 14) + '" text-anchor="middle" font-size="9" font-weight="800" fill="' + C_GRN + '">1→2</text>';
+  for (var k = 3; k < 5; k++) inner += cell(bx + k * 13, ys, 6, C_CELL);
+  inner += tx(150, ys + 24, '長出新細胞填進去', 8.5, C_GRN);
+  inner += aR(198, ys, 14, C_MLD, 3);
+  // 第 3 格：補滿、癒合
+  inner += tx(246, 34, '③ 癒合完成', 10, C_GRN);
+  for (var m = 0; m < 5; m++) inner += cell(220 + m * 13, ys, 6, C_GRN);
+  inner += '<text x="246" y="' + (ys - 16) + '" text-anchor="middle" font-size="14">✅</text>';
+  inner += tx(246, ys + 24, '缺口補滿', 8.5, C_GRN);
+  inner += tx(150, 115, '細胞不斷分裂、長出新細胞，把缺口一點一點補滿', 9);
+  inner += tx(150, 130, '長高、指甲變長，也是靠同樣的細胞分裂', 9, C_MLD);
+  return svg('300 142', inner, '傷口癒合的三格過程：剛受傷時皮膚細胞中間有缺口，接著細胞分裂長出新細胞填進缺口，最後缺口補滿、傷口癒合；長高和指甲變長也是靠同樣的細胞分裂');
 }
 
 /* =================== 課3：遺傳 =================== */

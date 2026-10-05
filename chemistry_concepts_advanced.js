@@ -99,19 +99,25 @@
         }
         return svg('300 144', inner, mode === 'order' ? '迷你週期表，前20個元素依原子序由小到大排列，每格左上角是原子序' : (mode === 'family' ? '迷你週期表，高亮最左直行的鹼金屬鋰鈉鉀都活潑、最右直行的惰性氣體氦氖氬都安定，同族性質相似' : '迷你週期表，金屬在左邊塗藍、非金屬在右上塗橘、交界的硼矽是類金屬塗灰'));
     }
-    // 常見元素符號卡（static）。
+    // 常見元素符號：放回週期表座位（看出位置／金屬非金屬），再看它們組成什麼常見物質。
     function elementCards() {
         var inner = '';
-        var cards = [['H', '氫', C_HY, '#333'], ['O', '氧', C_OX, '#fff'], ['C', '碳', C_CB, '#fff'], ['Na', '鈉', C_NA, '#333'], ['Cl', '氯', C_CL, '#fff']];
-        var x0 = 18, w = 50, gap = 7;
-        cards.forEach(function (c, i) {
-            var x = x0 + i * (w + gap);
-            inner += '<rect x="' + x + '" y="24" width="' + w + '" height="60" rx="8" fill="' + c[2] + '" fill-opacity="0.18" stroke="' + c[2] + '" stroke-width="2"/>';
-            inner += '<text x="' + (x + w / 2) + '" y="56" text-anchor="middle" font-size="22" font-weight="800" fill="currentColor">' + c[0] + '</text>';
-            inner += tx(x + w / 2, 76, c[3] ? c[1] : c[1], 12, 'currentColor');
+        inner += tx(150, 14, '這幾個元素住在表上哪、會組成什麼？', 11);
+        // 迷你週期表，高亮 5 個常見元素（各給可辨識的高亮色）
+        var hlmap = { H: '#0891b2', C: C_NOB, O: C_OX, Na: C_NA, Cl: C_CL };
+        ELS.forEach(function (e) {
+            inner += ptCell(e[0], e[1], e[2], e[3], hlmap[e[3]] || null);
         });
-        inner += tx(150, 16, '認得這幾個常見元素符號', 11.5);
-        return svg('300 92', inner, '五張元素符號卡：H氫、O氧、C碳、Na鈉、Cl氯');
+        // 位置／角色提示
+        inner += tx(150, 140, '這 5 個裡只有 Na（鈉）是金屬，H O C Cl 都是非金屬', 9.5, C_MLD);
+        inner += tx(150, 160, '認得它們，就能看懂常見物質的化學式：', 10);
+        // 組合 1：2H ＋ O → 水（兩個非金屬共用電子）
+        inner += atom(30, 180, 'H', C_HY, '#333', 10) + tx(50, 184, '＋', 12) + atom(68, 180, 'H', C_HY, '#333', 10) +
+            tx(88, 184, '＋', 12) + atom(106, 180, 'O', C_OX, '#fff', 13) + aR(124, 180, 20, C_GRN, 3) + box(150, 168, 58, 24, C_GRN, '水 H₂O');
+        // 組合 2：Na ＋ Cl → 食鹽（金屬給、非金屬收）
+        inner += atom(30, 206, 'Na', C_NA, '#333', 11) + tx(54, 210, '＋', 12) + atom(74, 206, 'Cl', C_CL, '#fff', 11) +
+            aR(94, 206, 20, C_GRN, 3) + box(120, 194, 72, 24, C_GRN, '食鹽 NaCl');
+        return svg('300 224', inner, '把 H、C、O、Na、Cl 放回迷你週期表的座位：其中只有 Na 是金屬，其餘是非金屬；再把它們組合起來，兩個氫加一個氧共用電子組成水 H2O，鈉和氯一給一收組成食鹽 NaCl');
     }
     /* =================== 課2：原子結構與離子鍵／共價鍵 =================== */
     // 原子結構：原子核（質子＋中子）＋電子殼層。highlightOuter=true 時高亮最外層。
@@ -244,18 +250,28 @@
         inner += tx(150, 142, '氧化和還原一定同時發生，少不了對方', 11, C_GRN);
         return svg('300 150', inner, '甲把電子交給乙，甲失去電子是氧化、乙得到電子是還原，兩者同時成對發生');
     }
-    // 生活裡的氧化還原。
+    // 生活裡的氧化還原：把「得到氧／失電子」套到生鏽與燃燒（看出誰得到氧）。
     function redoxLife() {
         var inner = '';
-        inner += tx(150, 16, '生活裡的氧化還原', 11.5);
-        var items = [[60, '🔩', '生鏽'], [150, '🔥', '燃燒'], [240, '🔋', '電池']];
-        items.forEach(function (it) {
-            inner += '<circle cx="' + it[0] + '" cy="58" r="26" fill="' + C_OX + '" fill-opacity="0.1" stroke="' + C_OX + '" stroke-width="1.6"/>';
-            inner += '<text x="' + it[0] + '" y="66" text-anchor="middle" font-size="26">' + it[1] + '</text>';
-            inner += tx(it[0], 98, it[2], 11.5);
-        });
-        inner += tx(150, 120, '生鏽、燃燒都是氧化；電池靠氧化還原放出電', 10.5);
-        return svg('300 130', inner, '三個生活例子：鐵生鏽、火焰燃燒、電池，都和氧化還原有關');
+        inner += tx(150, 15, '生活裡的氧化：東西「得到氧」', 11.5);
+        // 第 1 列：生鏽（鐵 ＋ 氧 → 鏽）
+        inner += tx(26, 51, '生鏽', 10, C_RUST);
+        inner += box(50, 36, 44, 28, C_FE) + tx(72, 55, '鐵', 12);
+        inner += tx(104, 55, '＋', 13);
+        inner += '<circle cx="126" cy="50" r="11" fill="' + C_OX + '" fill-opacity="0.25" stroke="' + C_OX + '" stroke-width="1.6"/><text x="126" y="54" text-anchor="middle" font-size="9" font-weight="800" fill="currentColor">O₂</text>';
+        inner += aR(142, 50, 30, C_GRN, 4) + tx(157, 42, '得到氧', 8, C_GRN);
+        inner += box(180, 36, 74, 28, C_RUST) + tx(217, 55, '鏽 Fe₂O₃', 10);
+        // 第 2 列：燃燒（木柴（碳）＋ 氧 → CO₂ ＋ 熱光）
+        inner += tx(26, 103, '燃燒', 10, C_NON);
+        inner += box(50, 88, 44, 28, C_CB) + tx(72, 107, '木柴', 11);
+        inner += tx(104, 107, '＋', 13);
+        inner += '<circle cx="126" cy="102" r="11" fill="' + C_OX + '" fill-opacity="0.25" stroke="' + C_OX + '" stroke-width="1.6"/><text x="126" y="106" text-anchor="middle" font-size="9" font-weight="800" fill="currentColor">O₂</text>';
+        inner += aR(142, 102, 30, C_GRN, 4) + tx(157, 94, '得到氧', 8, C_GRN);
+        inner += box(180, 88, 74, 28, C_NON) + tx(217, 107, 'CO₂＋熱光', 9.5);
+        // 結論：得到氧＝氧化，同時氧得電子＝還原
+        inner += tx(150, 138, '都是「得到氧」＝被氧化（同時氧得到電子＝還原）', 9.5);
+        inner += tx(150, 152, '電池也靠這種氧化還原反應放出電', 9.5, C_MLD);
+        return svg('300 160', inner, '生鏽是鐵加氧氣變成鏽、燃燒是木柴（碳）加氧氣變成二氧化碳和熱光，兩個都是得到氧也就是被氧化，同時氧得到電子就是還原；電池也靠氧化還原放電');
     }
     /* =================== 課5：莫耳與基本計量 =================== */
     // 一打＝12 的類比。
