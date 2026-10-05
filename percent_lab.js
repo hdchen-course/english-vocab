@@ -152,9 +152,10 @@
         $('btn-submit').addEventListener('click', submit);
         $('pc-in').addEventListener('keydown', function (e) { if (e.key === 'Enter') {
             e.preventDefault();
+            e.stopPropagation();
             if (!answered)
                 submit();
-        } });
+        } }); // stopPropagation：同一次 Enter 不要再冒泡到 document handler 觸發 nextProblem()（否則送出後立刻跳題、看不到回饋）
         $('btn-next').onclick = function () { nextProblem(); };
     }
     function parseNum(s) { s = (s || '').trim().replace(/^\+/, '').replace(/[%元]/g, ''); if (!/^-?\d+(\.\d+)?$/.test(s))

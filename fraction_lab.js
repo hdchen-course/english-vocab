@@ -286,9 +286,10 @@
         // Enter 於輸入框送出
         ['fl-n', 'fl-d'].forEach(function (id) { $(id).addEventListener('keydown', function (e) { if (e.key === 'Enter') {
             e.preventDefault();
+            e.stopPropagation();
             if (!answered)
                 submit();
-        } }); });
+        } }); }); // stopPropagation：同一次 Enter 不要再冒泡到 document handler 觸發 nextProblem()（否則送出後立刻跳題、看不到回饋）
         $('btn-next').onclick = function () { nextProblem(); };
     }
     function parseIntStrict(s) { s = (s || '').trim(); if (!/^-?\d+$/.test(s))

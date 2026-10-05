@@ -217,9 +217,10 @@
             var el = $('tl-in-' + f.key);
             el.addEventListener('keydown', function (e) { if (e.key === 'Enter') {
                 e.preventDefault();
+                e.stopPropagation();
                 if (!answered)
                     submit();
-            } });
+            } }); // stopPropagation：同一次 Enter 不要再冒泡到 document handler 觸發 nextProblem()（否則送出後立刻跳題、看不到回饋）
         });
         try {
             $('tl-in-' + cur.fields[0].key).focus();
