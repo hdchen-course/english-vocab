@@ -353,6 +353,7 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
                     buildRevealBody(card) +
                     '<button class="fc-reveal__next" onclick="quizNext()">繼續 →</button>';
         }
+        document.querySelectorAll('.quiz-option').forEach(b => { b.disabled = true; b.setAttribute('aria-disabled', 'true'); }); // 評分後停用所有選項：原生 button 若不 disable 仍可 Tab 回去按 Enter 觸發 quizAnswer(被 quizAnswered 守衛擋成 no-op)=鍵盤可達的死按鈕(與拼字磚、practice/vocabulary_app 一致)
         const nx = reveal.querySelector('.fc-reveal__next');
         if (nx)
             nx.focus();
@@ -651,7 +652,7 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
                 el.removeAttribute('role');
                 el.removeAttribute('tabindex');
                 el.setAttribute('aria-disabled', 'true');
-                el.setAttribute('aria-label', '已填入 ' + (el.textContent || '') + '，已鎖定'); // 清掉 L481「按 Enter 或空白鍵退回字母」的過時提示：評分後 onclick/onkeydown 已 no-op，報讀器不該再宣稱可退回
+                el.setAttribute('aria-label', '已填入 ' + (el.textContent || '') + '，已鎖定'); // 清掉填入時設定的「按 Enter 或空白鍵退回字母」過時提示：評分後 onclick/onkeydown 已 no-op，報讀器不該再宣稱可退回
             }
         });
         var spellToggleEl2 = document.getElementById('spellToggle'); // 評分後停用輸入法切換鈕，避免 toggleSpellMode 的 early-return 變成「按了沒反應」的死按鈕（showSpell 於下一張卡重新啟用）
@@ -659,6 +660,8 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
             spellToggleEl2.disabled = true;
             spellToggleEl2.setAttribute('aria-disabled', 'true');
         }
+        // 停用整個字母磚庫殘留的誘答磚（peak>=3 會混入）：renderSpell 的 graded 守衛評分後不會再跑（checkSpelling 就地改 DOM、不重繪），不在此停用就留下可 focus、報讀成可按但 onclick no-op 的死按鈕
+        [].forEach.call(document.querySelectorAll('#spellBank .fc-spell__tile'), function (b) { b.disabled = true; b.setAttribute('aria-disabled', 'true'); });
         const reveal = document.getElementById('spellReveal');
         if (correct) {
             showConfetti();
