@@ -33,8 +33,11 @@
     var a = new Audio('audio/' + fname);
     try{ (a as any).preservesPitch = true; (a as any).mozPreservesPitch = true; (a as any).webkitPreservesPitch = true; }catch(e){}
     a.playbackRate = slow ? 0.72 : 1.0;
-    if(onend) a.addEventListener('ended', onend);
-    a.addEventListener('error', function(){ setStatus('（這個音檔載入失敗，看著字自己唸唸看也很棒！）'); });
+    var finished = false;                           // fire onend at most once (ended OR error)
+    function finish(){ if(finished) return; finished = true; if(onend) onend(); }
+    a.addEventListener('ended', finish);
+    // On load/decode error, still advance the sequence so one bad file doesn't strand the rest.
+    a.addEventListener('error', function(){ setStatus('（這個音檔載入失敗，看著字自己唸唸看也很棒！）'); finish(); });
     curAudio = a;
     var p = a.play(); if(p && p.catch) p.catch(function(){});
     return a;
