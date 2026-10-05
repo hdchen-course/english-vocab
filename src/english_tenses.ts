@@ -160,7 +160,7 @@ window.CONCEPT = {
        text:'挑時態的小訣竅：<b>yesterday → 過去</b>、<b>now／當下正在 → 現在／進行</b>、<b>tomorrow → 未來</b>、<b>already／yet／ever → 現在完成</b>。先找時間詞，再看「做完沒、連不連到現在」。'},
       {type:'quiz',kicker:'換你試試',title:'選出正確的',eq:'___ you ever ___ to Japan?',options:['Have…been','Did…went','Are…being'],answer:0,
        whyWrong:['','Did 後面要用原形（go），而且 ever 問經驗用現在完成式。','be 動詞沒有這種用法；問經驗要用 Have you been。'],
-       why:'ever 問「到現在為止的經驗」→ 現在完成式 Have you ever been to Japan?（go 的過去分詞是 been。）'},
+       why:'ever 問「到現在為止的經驗」→ 現在完成式 Have you ever been to Japan?（「去過某地」用 have been to；been 是 be 的過去分詞，不是 go 的——go 的過去分詞是 gone。）'},
       {type:'quiz',kicker:'想一想',title:'選出正確的',eq:'While I ___, it started to snow.',options:['was walking','walk','have walked'],answer:0,
        whyWrong:['','walk 少了時態；這裡要講過去正在做的背景。','have walked 是「到現在為止」，配不上「正走著時突然下雪」的背景。'],
        why:'「正走著的時候」突然下雪 → 過去進行式當背景 → was walking。'},
