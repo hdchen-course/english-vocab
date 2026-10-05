@@ -160,6 +160,20 @@ interface AnimApi {
   /** 語氣／強度量表（情態助動詞）：水平漸強軌+各停點，指針落在 pointer 停點，下方顯示 example 例句。
    *  cfg = {axisLabel?,stops:string[],pointer:string,example?,label?}。 */
   enMeter: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 反應速率碰撞模型（自然科學 cluster）：temp/conc 左右兩盒粒子相撞累加碰撞次數（右更頻繁＝更快）；
+   *  surface 整塊 vs 切小塊比露出的可反應表面段數；catalyst 畫活化能位能圖（紅高山 vs 綠矮山，催化劑不被消耗）。
+   *  cfg = {factor:'temp'|'conc'|'surface'|'catalyst', label?}。author-once，各化學／反應速率課共用。 */
+  reactionRate: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 透鏡成像光線作圖：光軸＋透鏡＋兩側焦點 F＋物體箭頭＋兩條主要光線（平行→過焦點、過中心直走），
+   *  像的位置由幾何追跡算交點（保證正確）。凸・焦外＝倒立實像；凸・焦內＝正立放大虛像（虛線延伸）；凹＝正立縮小虛像。
+   *  cfg = {lens:'convex'|'concave', object:'inside-focus'|'outside-focus', label?}。 */
+  lensImaging: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 運動圖形：上方車跟著動、下方同步描出時間圖形（描點＋now 線）。xt：斜率＝速度（陡快/平停/下返）；
+   *  vt：線高＝速度（上加速/平等速/下減速），車速＝當下 v。cfg = {type:'vt'|'xt', scenario?, label?}。 */
+  motionGraph: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 因果鏈／流程：方塊由上而下逐一出現、向下箭頭相連（導致／接著）；兼用歷史因果鏈與流程圖。
+   *  4–7 節點、每格多字自動折行、note 小字補充。cfg = {nodes:[{label,note?,color?}], mode?:'cause'|'flow', title?, label?}。 */
+  causalChain: (host: HTMLElement, cfg?: any) => { stop: () => void };
 }
 
 /** game_core.js 導出的遊戲核心 API（window.Game）。遷移 game_core 時逐步精確化。 */

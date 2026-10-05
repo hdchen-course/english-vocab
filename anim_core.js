@@ -6754,6 +6754,922 @@
             draw: draw
         });
     }
+    // ===== 自然科學 + 社會（science + social）cluster scenes =============
+    // 設計鐵則（defect #28）：所有彩色方塊一律用 chipBox 的半透明 tint 卡底（卡底透出→亮暗雙主題皆安全），
+    //   文字一律 inkColor()／飽和主題色，絕不壓在硬寫死的淺色填滿上；也不在深色卡底上放固定深墨。
+    //   每格框尺寸固定（跨步驟不改畫布大小）；箭頭都貼住端點並指對方向；每個著色元素都有圖例或標籤。
+    // ====================================================================
+    // 場景 S1：reactionRate — 用「碰撞模型」把反應速率為什麼變快畫出來。
+    //   cfg = { factor:'temp'|'conc'|'surface'|'catalyst', label? }
+    //   temp／conc：左(基準) vs 右(改變後) 兩盒等大，粒子在盒中運動、相撞瞬間閃一下並累加
+    //     「碰撞次數」；右盒撞得更頻繁＝反應更快（把「為什麼快」畫出來，不是只貼標籤）。
+    //       temp：右盒粒子更快(速度箭頭更長)、撞得更頻繁又更用力；conc：右盒等體積塞更多粒子→更常相撞。
+    //   surface：整塊(9 格) vs 切成 9 小塊——體積一樣，但露出的「可反應表面」從 12 段變 36 段→碰撞點更多。
+    //   catalyst：活化能位能圖——紅色高山(無催化劑) vs 綠色矮山(催化劑開的另一條路)；山越矮→越多粒子
+    //     翻得過去(成功碰撞變多)→反應更快，而催化劑自己反應前後數量一樣(不被消耗)。
+    //   reduced-motion：粒子盒預跑數十步畫代表性靜態幀＋代表數字；catalyst 直接畫完整位能圖。
+    // ====================================================================
+    function reactionRate(host, cfg) {
+        cfg = cfg || {};
+        var factor = (['temp', 'conc', 'surface', 'catalyst'].indexOf(cfg.factor) >= 0) ? cfg.factor : 'temp';
+        var WARN = '#e11d48', OK = '#16a34a', HOT = '#e8603c', COLD = '#2b8ad6';
+        var R = 0.058; // 粒子半徑（unit 盒座標）
+        function lcg(seed) {
+            var s = seed >>> 0;
+            return function () { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
+        }
+        function makeBox(n, speed, seed) {
+            var rnd = lcg(seed);
+            var ps = [];
+            for (var i = 0; i < n; i++) {
+                var a = rnd() * Math.PI * 2;
+                ps.push({ x: R + rnd() * (1 - 2 * R), y: R + rnd() * (1 - 2 * R), vx: Math.cos(a) * speed, vy: Math.sin(a) * speed, flash: 0 });
+            }
+            return { ps: ps, count: 0, touch: {} };
+        }
+        function stepBox(box) {
+            var ps = box.ps, n = ps.length, i;
+            for (i = 0; i < n; i++) {
+                var p = ps[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < R) {
+                    p.x = R;
+                    p.vx = -p.vx;
+                }
+                else if (p.x > 1 - R) {
+                    p.x = 1 - R;
+                    p.vx = -p.vx;
+                }
+                if (p.y < R) {
+                    p.y = R;
+                    p.vy = -p.vy;
+                }
+                else if (p.y > 1 - R) {
+                    p.y = 1 - R;
+                    p.vy = -p.vy;
+                }
+                if (p.flash > 0)
+                    p.flash -= 1;
+            }
+            for (var a = 0; a < n; a++)
+                for (var b = a + 1; b < n; b++) {
+                    var key = a + '_' + b;
+                    var dx = ps[a].x - ps[b].x, dy = ps[a].y - ps[b].y;
+                    var touching = (dx * dx + dy * dy) < (2 * R) * (2 * R);
+                    if (touching && !box.touch[key]) {
+                        box.count++;
+                        ps[a].flash = 7;
+                        ps[b].flash = 7;
+                    }
+                    box.touch[key] = touching;
+                }
+        }
+        // 持久的兩盒（conc/temp 用）；replay 時重置。
+        var left = null, right = null;
+        function ensureSims() {
+            if (left && right)
+                return;
+            if (factor === 'temp') {
+                left = makeBox(5, 0.0065, 7);
+                right = makeBox(5, 0.0145, 23);
+            }
+            else {
+                left = makeBox(4, 0.0105, 11);
+                right = makeBox(9, 0.0105, 29);
+            } // conc
+        }
+        function panelRects(w, h) {
+            var pad = 10, gap = 12, topY = 44, botY = h - 46;
+            var bw = (w - 2 * pad - gap) / 2, bh = botY - topY;
+            return { lx: pad, rx: pad + bw + gap, top: topY, bw: bw, bh: bh, bot: botY };
+        }
+        // 兩個數據置中成一行（左 ink／右 rCol），總寬置中於 w/2 → 永遠在右下角重播鈕左側，不相撞。
+        function twoStat(g, w, y, lt, rt, rCol) {
+            var ink = inkColor(), sep = '　｜　';
+            labelFont(g, 10);
+            var lw = g.measureText(lt).width, sw = g.measureText(sep).width, rw = g.measureText(rt).width;
+            var x0 = w / 2 - (lw + sw + rw) / 2;
+            label(g, lt, x0, y, ink, 10, 'left');
+            g.save();
+            g.globalAlpha = 0.5;
+            label(g, sep, x0 + lw, y, ink, 10, 'left');
+            g.restore();
+            label(g, rt, x0 + lw + sw, y, rCol, 10, 'left');
+        }
+        // 畫一盒（含框、粒子、碰撞閃光、速度箭頭）。
+        function drawSimBox(g, x, y, bw, bh, box, col, showVel) {
+            var ink = inkColor();
+            g.save();
+            g.globalAlpha = 0.07;
+            g.fillStyle = col;
+            rrectPath(g, x, y, bw, bh, 8);
+            g.fill();
+            g.globalAlpha = 0.55;
+            g.lineWidth = 1.4;
+            g.strokeStyle = ink;
+            rrectPath(g, x, y, bw, bh, 8);
+            g.stroke();
+            g.restore();
+            var pr = Math.min(bw, bh) * R; // 粒子像素半徑
+            for (var i = 0; i < box.ps.length; i++) {
+                var p = box.ps[i];
+                var px = x + p.x * bw, py = y + p.y * bh;
+                if (showVel) {
+                    g.save();
+                    g.strokeStyle = col;
+                    g.globalAlpha = 0.7;
+                    g.lineWidth = 1.6;
+                    g.lineCap = 'round';
+                    var sp = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+                    var ux = p.vx / (sp || 1), uy = p.vy / (sp || 1), al = sp * Math.min(bw, bh) * 3.1;
+                    g.beginPath();
+                    g.moveTo(px, py);
+                    g.lineTo(px + ux * al, py + uy * al);
+                    g.stroke();
+                    g.restore();
+                }
+                disc(g, px, py, pr, col);
+                if (p.flash > 0) {
+                    g.save();
+                    g.globalAlpha = p.flash / 7;
+                    g.strokeStyle = WARN;
+                    g.lineWidth = 2;
+                    g.beginPath();
+                    g.arc(px, py, pr + 4 + (7 - p.flash), 0, Math.PI * 2);
+                    g.stroke();
+                    g.restore();
+                }
+            }
+        }
+        // ---- surface：整塊 vs 切成小塊（露出表面比較）------------------------
+        // 3×3 格；左＝相連成一塊(外圍 12 段可反應)，右＝散開成 9 小塊(每塊 4 段＝36 段)。
+        function drawSurfacePanel(g, x, y, bw, bh, split, col) {
+            var ink = inkColor();
+            g.save();
+            g.globalAlpha = 0.55;
+            g.lineWidth = 1.4;
+            g.strokeStyle = ink;
+            rrectPath(g, x, y, bw, bh, 8);
+            g.stroke();
+            g.restore();
+            var cell = Math.min(bw, bh) * 0.2;
+            var gapS = split ? cell * 0.42 : 0;
+            var gridW = 3 * cell + 2 * gapS, gridH = gridW;
+            var ox = x + (bw - gridW) / 2, oy = y + (bh - gridH) / 2 + 2;
+            var exposed = 0;
+            for (var r = 0; r < 3; r++)
+                for (var c = 0; c < 3; c++) {
+                    var cx = ox + c * (cell + gapS), cy = oy + r * (cell + gapS);
+                    g.save();
+                    g.globalAlpha = 0.2;
+                    g.fillStyle = col;
+                    g.fillRect(cx, cy, cell, cell);
+                    g.globalAlpha = 0.9;
+                    g.lineWidth = 1;
+                    g.strokeStyle = col;
+                    g.strokeRect(cx, cy, cell, cell);
+                    g.restore();
+                    // 露出的外緣（可反應表面）畫粗脈動線。
+                    if (split) {
+                        exposed += 4;
+                        var pulse = 0.5 + 0.5 * Math.sin(nowMs() / 500 + (r * 3 + c));
+                        g.save();
+                        g.strokeStyle = WARN;
+                        g.globalAlpha = 0.4 + 0.5 * pulse;
+                        g.lineWidth = 2.2;
+                        g.lineCap = 'round';
+                        g.strokeRect(cx + 0.5, cy + 0.5, cell - 1, cell - 1);
+                        g.restore();
+                    }
+                    else {
+                        // 相連：只有最外圍邊露出。
+                        var seg = [];
+                        if (r === 0)
+                            seg.push([0, 0, 1, 0]);
+                        if (r === 2)
+                            seg.push([0, 1, 1, 1]);
+                        if (c === 0)
+                            seg.push([0, 0, 0, 1]);
+                        if (c === 2)
+                            seg.push([1, 0, 1, 1]);
+                        exposed += seg.length;
+                        var pulse2 = 0.5 + 0.5 * Math.sin(nowMs() / 500);
+                        g.save();
+                        g.strokeStyle = WARN;
+                        g.globalAlpha = 0.4 + 0.5 * pulse2;
+                        g.lineWidth = 2.4;
+                        g.lineCap = 'round';
+                        for (var s = 0; s < seg.length; s++) {
+                            g.beginPath();
+                            g.moveTo(cx + seg[s][0] * cell, cy + seg[s][1] * cell);
+                            g.lineTo(cx + seg[s][2] * cell, cy + seg[s][3] * cell);
+                            g.stroke();
+                        }
+                        g.restore();
+                    }
+                }
+            return exposed;
+        }
+        // ---- catalyst：活化能位能圖 ------------------------------------------
+        function energyAt(t, peak, ER, EP) {
+            if (t < 0.18)
+                return ER;
+            if (t > 0.82)
+                return EP;
+            if (t < 0.5) {
+                var u = easeInOut((t - 0.18) / 0.32);
+                return ER + (peak - ER) * u;
+            }
+            var v = easeInOut((t - 0.5) / 0.32);
+            return peak + (EP - peak) * v;
+        }
+        function drawEnergyCurve(g, px0, px1, py0, py1, peak, ER, EP, col, dashed, prog) {
+            g.save();
+            g.strokeStyle = col;
+            g.lineWidth = 2.6;
+            g.lineCap = 'round';
+            g.lineJoin = 'round';
+            if (dashed)
+                g.setLineDash([6, 4]);
+            g.beginPath();
+            var tEnd = Math.max(0, Math.min(1, prog)), started = false;
+            for (var t = 0; t <= tEnd + 1e-6; t += 0.01) {
+                var e = energyAt(t, peak, ER, EP);
+                var xx = px0 + (px1 - px0) * t, yy = py1 - e * (py1 - py0);
+                if (!started) {
+                    g.moveTo(xx, yy);
+                    started = true;
+                }
+                else {
+                    g.lineTo(xx, yy);
+                }
+            }
+            g.stroke();
+            g.setLineDash([]);
+            g.restore();
+        }
+        function drawCatalyst(g, p, w, h) {
+            var ink = inkColor(), theme = themeColor();
+            label(g, '活化能：要翻過的「山」有多高', w / 2, 14, theme, 12, 'center');
+            var px0 = 20, px1 = w - 16, py0 = 34, py1 = h - 44;
+            var ER = 0.42, EP = 0.26, PEAK_R = 0.92, PEAK_G = 0.64;
+            // 軸。
+            g.save();
+            g.strokeStyle = ink;
+            g.globalAlpha = 0.5;
+            g.lineWidth = 1.3;
+            g.beginPath();
+            g.moveTo(px0, py0);
+            g.lineTo(px0, py1);
+            g.lineTo(px1, py1);
+            g.stroke();
+            g.restore();
+            label(g, '能量', px0, py0 - 2, ink, 9.5, 'left');
+            label(g, '反應進程 →', px1, py1 + 13, ink, 9.5, 'right');
+            // 紅山（無催化劑，先畫）。
+            var pr1 = Math.min(1, p / 0.42);
+            drawEnergyCurve(g, px0, px1, py0, py1, PEAK_R, ER, EP, WARN, false, pr1);
+            // 綠山（催化劑的另一條路，後畫，虛線）。
+            var pr2 = Math.max(0, Math.min(1, (p - 0.42) / 0.42));
+            if (pr2 > 0.01)
+                drawEnergyCurve(g, px0, px1, py0, py1, PEAK_G, ER, EP, OK, true, pr2);
+            // 反應物／生成物平台標籤。
+            label(g, '反應物', px0 + (px1 - px0) * 0.08, py1 - ER * (py1 - py0) - 11, ink, 9.5, 'left');
+            label(g, '生成物', px0 + (px1 - px0) * 0.92, py1 - EP * (py1 - py0) - 11, ink, 9.5, 'right');
+            // 活化能雙箭頭（紅、綠），畫在山的左側上坡 x≈0.4。
+            if (p >= 0.3) {
+                var xa = px0 + (px1 - px0) * 0.40;
+                var yER = py1 - ER * (py1 - py0);
+                var yPR = py1 - PEAK_R * (py1 - py0);
+                drawEaArrow(g, xa, yER, yPR, WARN, '活化能 大');
+            }
+            if (pr2 > 0.9) {
+                var xg = px0 + (px1 - px0) * 0.47;
+                var yER2 = py1 - ER * (py1 - py0);
+                var yPG = py1 - PEAK_G * (py1 - py0);
+                drawEaArrow(g, xg, yER2, yPG, OK, '活化能 小');
+                label(g, '催化劑：開一條矮山的路，自己不被用掉', w / 2, h - 25, OK, 10, 'center');
+            }
+            bottomCap(g, w, h, '山越矮 → 更多粒子翻得過去（成功碰撞變多）→ 反應更快', ink);
+        }
+        function drawEaArrow(g, x, yLow, yHigh, col, txt) {
+            g.save();
+            g.strokeStyle = col;
+            g.fillStyle = col;
+            g.lineWidth = 1.6;
+            g.setLineDash([4, 3]);
+            g.beginPath();
+            g.moveTo(x, yLow);
+            g.lineTo(x, yHigh);
+            g.stroke();
+            g.setLineDash([]);
+            // 兩端箭頭。
+            g.beginPath();
+            g.moveTo(x, yHigh);
+            g.lineTo(x - 3.5, yHigh + 6);
+            g.lineTo(x + 3.5, yHigh + 6);
+            g.closePath();
+            g.fill();
+            g.beginPath();
+            g.moveTo(x, yLow);
+            g.lineTo(x - 3.5, yLow - 6);
+            g.lineTo(x + 3.5, yLow - 6);
+            g.closePath();
+            g.fill();
+            g.restore();
+            label(g, txt, x + 6, (yLow + yHigh) / 2, col, 9.5, 'left');
+        }
+        // ---- 粒子盒型（temp/conc）主繪 --------------------------------------
+        function drawParticles(g, w, h, prestep) {
+            var ink = inkColor();
+            ensureSims();
+            if (prestep) {
+                left = null;
+                right = null;
+                ensureSims();
+                for (var k = 0; k < 140; k++) {
+                    stepBox(left);
+                    stepBox(right);
+                }
+            }
+            else {
+                stepBox(left);
+                stepBox(right);
+            }
+            var isTemp = factor === 'temp';
+            label(g, isTemp ? '溫度：粒子跑多快？' : '濃度：粒子有多擠？', w / 2, 14, themeColor(), 12, 'center');
+            var r = panelRects(w, h);
+            var lCol = isTemp ? COLD : themeColor(), rCol = isTemp ? HOT : themeColor();
+            // 盒上小標。
+            label(g, isTemp ? '低溫（慢）' : '低濃度（少）', r.lx + r.bw / 2, r.top - 8, lCol, 10.5, 'center');
+            label(g, isTemp ? '高溫（快）' : '高濃度（多）', r.rx + r.bw / 2, r.top - 8, rCol, 10.5, 'center');
+            drawSimBox(g, r.lx, r.top, r.bw, r.bh, left, lCol, isTemp);
+            drawSimBox(g, r.rx, r.top, r.bw, r.bh, right, rCol, isTemp);
+            // 碰撞次數（左低→右高）；置中一行避開右下角重播鈕。
+            twoStat(g, w, r.bot + 13, '碰撞次數　' + left.count, '' + right.count, rCol);
+            bottomCap(g, w, h, isTemp
+                ? '溫度高→粒子更快→撞得更頻繁又更用力→反應更快'
+                : '濃度高→同樣空間粒子更多→更常相撞→反應更快', ink);
+        }
+        // ---- surface 主繪 ---------------------------------------------------
+        function drawSurface(g, w, h) {
+            var ink = inkColor(), theme = themeColor();
+            label(g, '表面積：露出多少「可反應的面」？', w / 2, 14, theme, 12, 'center');
+            var r = panelRects(w, h);
+            label(g, '整塊', r.lx + r.bw / 2, r.top - 8, theme, 10.5, 'center');
+            label(g, '切成小塊', r.rx + r.bw / 2, r.top - 8, theme, 10.5, 'center');
+            var e1 = drawSurfacePanel(g, r.lx, r.top, r.bw, r.bh, false, theme);
+            var e2 = drawSurfacePanel(g, r.rx, r.top, r.bw, r.bh, true, theme);
+            twoStat(g, w, r.bot + 13, '可反應表面　' + e1 + ' 段', e2 + ' 段', WARN);
+            bottomCap(g, w, h, '體積一樣，切小塊露出更多表面→碰撞點更多→反應更快', ink);
+        }
+        function draw(g, p, w, h) {
+            if (factor === 'catalyst') {
+                drawCatalyst(g, p, w, h);
+                return;
+            }
+            if (factor === 'surface') {
+                drawSurface(g, w, h);
+                return;
+            }
+            drawParticles(g, w, h, false);
+        }
+        var labelMap = {
+            temp: '反應速率碰撞模型（溫度）：左盒低溫粒子跑得慢、右盒高溫粒子跑得快；兩盒粒子相撞時閃光並累加碰撞次數，右盒撞得更頻繁，說明溫度越高反應越快。',
+            conc: '反應速率碰撞模型（濃度）：左盒粒子少、右盒同樣大小塞進更多粒子；相撞時閃光並累加碰撞次數，右盒更常相撞，說明濃度越高反應越快。',
+            surface: '反應速率表面積比較：左邊是一整塊、右邊把同樣體積切成小塊；小塊露出更多可反應的表面段，碰撞點更多，說明表面積越大反應越快。',
+            catalyst: '反應速率活化能位能圖：紅色高山是沒有催化劑時要翻過的活化能，綠色矮山是催化劑開的另一條路；山越矮越多粒子翻得過去、成功碰撞變多，反應更快，而催化劑自己不被消耗。'
+        };
+        return runScene(host, {
+            durationMs: factor === 'catalyst' ? 5600 : 6000, loops: 2, staticPhase: 1,
+            label: cfg.label || labelMap[factor],
+            drawStatic: function (g, w, h) {
+                if (factor === 'catalyst') {
+                    drawCatalyst(g, 1, w, h);
+                    return;
+                }
+                if (factor === 'surface') {
+                    drawSurface(g, w, h);
+                    return;
+                }
+                drawParticles(g, w, h, true);
+            },
+            onReplay: function () { left = null; right = null; },
+            draw: draw
+        });
+    }
+    // ====================================================================
+    // 場景 S2：lensImaging — 透鏡成像的「正確光線作圖」。
+    //   cfg = { lens:'convex'|'concave', object:'inside-focus'|'outside-focus', label? }
+    //   光軸 + 透鏡 + 兩側焦點 F + 直立物體箭頭 + 兩條主要光線定出像：
+    //     ① 平行光線 → 折射後過(凸)/看似來自(凹)焦點；② 過透鏡中心的光線直走不偏。
+    //   凸透鏡・物在焦點外 → 倒立實像(在另一側，照相機/眼睛)；
+    //   凸透鏡・物在焦點內 → 正立放大虛像(同側，放大鏡；虛線延伸)；
+    //   凹透鏡 → 正立縮小虛像(同側)。像的位置＝兩條折射光線(或其延伸線)的交點，由幾何追跡算出→保證正確。
+    //   reduced-motion：staticPhase=1 直接畫完整光線圖。
+    // ====================================================================
+    function lensImaging(host, cfg) {
+        cfg = cfg || {};
+        var lens = (cfg.lens === 'concave') ? 'concave' : 'convex';
+        var inside = (cfg.object === 'inside-focus');
+        var RAYA = '#0891b2', RAYB = '#d97706', IMG = '#16a34a';
+        var fAbs = 1, ho = 0.62;
+        var dow = (lens === 'convex') ? (inside ? 0.6 : 2.5) : 1.5; // 物距(>0，在左側)
+        // 兩條光線（世界座標，透鏡中心在 x=0，光軸 y=0）。
+        var mB = -ho / dow; // 過中心光線 y = mB·x
+        var mA, cA = ho; // 折射光線 y = mA·x + cA（過 (0,ho)）
+        if (lens === 'convex')
+            mA = -ho / fAbs; // 平行光 → 過遠焦點 (f,0)
+        else
+            mA = ho / fAbs; // 凹：折射後看似來自前焦點 (−f,0)
+        var xi = cA / (mB - mA), yi = mB * xi; // 像尖＝兩線交點
+        var real = xi > 0; // 凸・焦點外＝實像(x>0)；其餘＝虛像(x<0)
+        // 世界範圍 → 螢幕映射。
+        var feats = [-dow, 0, fAbs, -fAbs, xi];
+        var minX = Math.min.apply(null, feats) - 0.5, maxX = Math.max.apply(null, feats) + 0.5;
+        var yMax = Math.max(ho, Math.abs(yi)) * 1.35;
+        function draw(g, p, w, h) {
+            var ink = inkColor(), theme = themeColor();
+            var px0 = 14, px1 = w - 14, py0 = 30, py1 = h - 40;
+            var sx = (px1 - px0) / (maxX - minX);
+            var axisY = (py0 + py1) / 2;
+            var sy = Math.min(sx, ((py1 - py0) / 2) / yMax); // 等比上限，避免高度溢出
+            function X(wx) { return px0 + (wx - minX) * sx; }
+            function Y(wy) { return axisY - wy * sy; }
+            label(g, lens === 'convex' ? '凸透鏡成像' : '凹透鏡成像', w / 2, 13, theme, 12, 'center');
+            // 光軸。
+            g.save();
+            g.strokeStyle = ink;
+            g.globalAlpha = 0.4;
+            g.lineWidth = 1;
+            g.setLineDash([3, 3]);
+            g.beginPath();
+            g.moveTo(px0, axisY);
+            g.lineTo(px1, axisY);
+            g.stroke();
+            g.setLineDash([]);
+            g.restore();
+            // 透鏡（凸＝向外鼓的雙弧；凹＝向內凹）。
+            var lx = X(0), lensTop = Y(yMax * 0.92), lensBot = Y(-yMax * 0.92);
+            g.save();
+            g.strokeStyle = theme;
+            g.lineWidth = 2.4;
+            g.lineCap = 'round';
+            g.globalAlpha = 0.85;
+            var bulge = (lens === 'convex') ? (px1 - px0) * 0.03 : -(px1 - px0) * 0.03;
+            g.beginPath();
+            g.moveTo(lx, lensTop);
+            g.quadraticCurveTo(lx + bulge, axisY, lx, lensBot);
+            g.stroke();
+            g.beginPath();
+            g.moveTo(lx, lensTop);
+            g.quadraticCurveTo(lx - bulge, axisY, lx, lensBot);
+            g.stroke();
+            g.restore();
+            // 焦點 F。
+            g.save();
+            disc(g, X(fAbs), axisY, 2.8, ink);
+            disc(g, X(-fAbs), axisY, 2.8, ink);
+            label(g, 'F', X(fAbs), axisY + 12, ink, 10, 'center');
+            label(g, 'F', X(-fAbs), axisY + 12, ink, 10, 'center');
+            g.restore();
+            // 物體箭頭（直立，向上）。
+            var objA = Math.min(1, p / 0.22);
+            if (objA > 0.01)
+                drawArrow(g, X(-dow), axisY, X(-dow), Y(ho * objA), theme, false, '物體', 'up');
+            // 光線階段：A(0.24..0.54)、B(0.54..0.8)、像(0.8..1)。
+            var aP = Math.max(0, Math.min(1, (p - 0.24) / 0.3));
+            var bP = Math.max(0, Math.min(1, (p - 0.54) / 0.26));
+            var iP = Math.max(0, Math.min(1, (p - 0.8) / 0.2));
+            // Ray A：平行段 (物尖→透鏡)，再折射段。
+            if (aP > 0.01) {
+                var ax0 = X(-dow), ay0 = Y(ho), axL = lx, ayL = Y(ho);
+                // 平行入射（前半）。
+                var segA = Math.min(1, aP / 0.4);
+                g.save();
+                g.strokeStyle = RAYA;
+                g.lineWidth = 1.8;
+                g.lineCap = 'round';
+                g.beginPath();
+                g.moveTo(ax0, ay0);
+                g.lineTo(ax0 + (axL - ax0) * segA, ayL);
+                g.stroke();
+                g.restore();
+                if (aP > 0.4) {
+                    var fp = (aP - 0.4) / 0.6;
+                    // 折射後：沿 y=mA x+cA。實像畫到交點外；虛像前段實線(往右發散)、延伸虛線到像。
+                    var xEndW = real ? Math.max(xi + 0.5, 1.2) : maxX; // 世界 x 終點
+                    var xDrawW = 0 + (xEndW - 0) * fp;
+                    g.save();
+                    g.strokeStyle = RAYA;
+                    g.lineWidth = 1.8;
+                    g.lineCap = 'round';
+                    g.beginPath();
+                    g.moveTo(lx, Y(mA * 0 + cA));
+                    g.lineTo(X(xDrawW), Y(mA * xDrawW + cA));
+                    g.stroke();
+                    g.restore();
+                    if (!real && fp > 0.9) { // 虛像延伸線（往左、虛線到像）
+                        g.save();
+                        g.strokeStyle = RAYA;
+                        g.globalAlpha = 0.75;
+                        g.lineWidth = 1.4;
+                        g.setLineDash([5, 4]);
+                        g.beginPath();
+                        g.moveTo(lx, Y(cA));
+                        g.lineTo(X(xi), Y(yi));
+                        g.stroke();
+                        g.setLineDash([]);
+                        g.restore();
+                    }
+                }
+            }
+            // Ray B：過中心直走（物尖→中心→另一側）。
+            if (bP > 0.01) {
+                var xEndB = real ? Math.max(xi + 0.5, 1.2) : maxX;
+                var xStart = -dow, xNow = xStart + (xEndB - xStart) * bP;
+                g.save();
+                g.strokeStyle = RAYB;
+                g.lineWidth = 1.8;
+                g.lineCap = 'round';
+                g.beginPath();
+                g.moveTo(X(xStart), Y(mB * xStart));
+                g.lineTo(X(xNow), Y(mB * xNow));
+                g.stroke();
+                g.restore();
+                if (!real && bP > 0.9) { // 虛像：往左延伸虛線到像
+                    g.save();
+                    g.strokeStyle = RAYB;
+                    g.globalAlpha = 0.75;
+                    g.lineWidth = 1.4;
+                    g.setLineDash([5, 4]);
+                    g.beginPath();
+                    g.moveTo(X(xStart), Y(mB * xStart));
+                    g.lineTo(X(xi), Y(yi));
+                    g.stroke();
+                    g.setLineDash([]);
+                    g.restore();
+                }
+            }
+            // 像箭頭。
+            if (iP > 0.01) {
+                drawArrow(g, X(xi), axisY, X(xi), Y(yi * iP), IMG, !real, '像', yi >= 0 ? 'up' : 'down');
+            }
+            // 圖例（兩條光線）。
+            g.save();
+            g.strokeStyle = RAYA;
+            g.lineWidth = 2;
+            g.beginPath();
+            g.moveTo(px0, py0 - 3);
+            g.lineTo(px0 + 16, py0 - 3);
+            g.stroke();
+            label(g, '平行光線', px0 + 20, py0 - 3, RAYA, 9, 'left');
+            g.strokeStyle = RAYB;
+            g.lineWidth = 2;
+            g.beginPath();
+            g.moveTo(w / 2, py0 - 3);
+            g.lineTo(w / 2 + 16, py0 - 3);
+            g.stroke();
+            label(g, '過中心', w / 2 + 20, py0 - 3, RAYB, 9, 'left');
+            g.restore();
+            // 結論。
+            var cap = (lens === 'convex')
+                ? (inside ? '焦點內：正立、放大的虛像（放大鏡）' : '焦點外：倒立、縮小的實像（照相機／眼睛）')
+                : '凹透鏡：永遠是正立、縮小的虛像';
+            bottomCap(g, w, h, cap, ink);
+        }
+        // 直立/倒立箭頭（dashed＝虛像）。
+        function drawArrow(g, x0, y0, x1, y1, col, dashed, txt, dir) {
+            g.save();
+            g.strokeStyle = col;
+            g.fillStyle = col;
+            g.lineWidth = 2.2;
+            g.lineCap = 'round';
+            if (dashed)
+                g.setLineDash([5, 4]);
+            g.beginPath();
+            g.moveTo(x0, y0);
+            g.lineTo(x1, y1);
+            g.stroke();
+            g.setLineDash([]);
+            var hy = (dir === 'up') ? 7 : -7;
+            g.beginPath();
+            g.moveTo(x1, y1);
+            g.lineTo(x1 - 4, y1 + hy);
+            g.lineTo(x1 + 4, y1 + hy);
+            g.closePath();
+            g.fill();
+            g.restore();
+            label(g, txt, x1 + (dir === 'up' ? -2 : -2), y1 + (dir === 'up' ? -8 : 10), col, 9.5, 'center');
+        }
+        return runScene(host, {
+            durationMs: 6400, loops: 2, staticPhase: 1,
+            label: cfg.label || (lens === 'convex'
+                ? (inside
+                    ? '凸透鏡光線作圖：物體放在焦點內，平行光線折射後過遠焦點、過中心光線直走，兩條折射光線往右發散，往回延伸的虛線交在同側，得到正立放大的虛像（放大鏡）。'
+                    : '凸透鏡光線作圖：物體放在焦點外，平行光線折射後過遠焦點、過中心光線直走，兩條光線交在透鏡另一側，得到倒立縮小的實像（照相機／眼睛）。')
+                : '凹透鏡光線作圖：平行光線折射後看似來自前焦點、過中心光線直走，往回延伸的虛線交在同側，得到正立縮小的虛像。'),
+            draw: draw
+        });
+    }
+    // ====================================================================
+    // 場景 S3：motionGraph — 運動中的物體與它的「時間圖形」同步畫出來。
+    //   cfg = { type:'vt'|'xt', scenario?, label? }
+    //   上方軌道一台車跟著動；下方同步描出圖形（橫軸＝時間）、描點沿曲線移動：
+    //     xt：縱軸＝位置。斜率＝速度（越陡越快、平＝停、往下＝返回）。
+    //     vt：縱軸＝速度。線高＝速度、平線＝等速、往上＝加速、往下＝減速；車速＝當下的 v。
+    //   說明會隨當前路段切換（往前／停住／返回；加速／等速／減速）。
+    //   reduced-motion：staticPhase=1 畫完整曲線＋車停在終點。
+    // ====================================================================
+    function motionGraph(host, cfg) {
+        cfg = cfg || {};
+        var type = (cfg.type === 'vt') ? 'vt' : 'xt';
+        var scenario = cfg.scenario || (type === 'vt' ? 'accel' : 'trip');
+        // 控制點：ts 時間(0..1)、qs 量值(0..1)。
+        var ts, qs;
+        if (type === 'xt') {
+            if (scenario === 'outback') {
+                ts = [0, 0.5, 1];
+                qs = [0.12, 0.92, 0.12];
+            }
+            else {
+                ts = [0, 0.34, 0.6, 1];
+                qs = [0.12, 0.92, 0.92, 0.24];
+            } // trip：往前→停→返回
+        }
+        else {
+            if (scenario === 'stopgo') {
+                ts = [0, 0.3, 0.5, 0.8, 1];
+                qs = [0.2, 0.2, 0.85, 0.85, 0.2];
+            }
+            else {
+                ts = [0, 0.38, 0.72, 1];
+                qs = [0.05, 0.9, 0.9, 0.3];
+            } // accel：加速→等速→減速
+        }
+        var QC = '#0891b2'; // 圖形曲線色（資料色，亮暗皆讀得清）
+        function qAt(t) {
+            t = Math.max(0, Math.min(1, t));
+            for (var i = 1; i < ts.length; i++) {
+                if (t <= ts[i]) {
+                    var u = (t - ts[i - 1]) / (ts[i] - ts[i - 1] || 1);
+                    return qs[i - 1] + (qs[i] - qs[i - 1]) * u;
+                }
+            }
+            return qs[qs.length - 1];
+        }
+        // vt：車位置＝速度積分（梯形），正規化到 0..1。
+        var N = 60, cumul = [0];
+        for (var ii = 1; ii <= N; ii++) {
+            var a = qAt((ii - 1) / N), b = qAt(ii / N);
+            cumul.push(cumul[ii - 1] + (a + b) / 2 / N);
+        }
+        var cumMax = cumul[N] || 1;
+        function posAt(t) {
+            if (type === 'xt')
+                return qAt(t);
+            var f = Math.max(0, Math.min(1, t)) * N, lo = Math.floor(f), hi = Math.min(N, lo + 1);
+            var c = cumul[lo] + (cumul[hi] - cumul[lo]) * (f - lo);
+            return 0.08 + 0.84 * (c / cumMax);
+        }
+        function segInfo(t) {
+            // 回傳 [說明, 色]；依當前斜率(xt)或量值變化(vt)。
+            var dt = 0.02, q0 = qAt(t - dt), q1 = qAt(t + dt), slope = q1 - q0;
+            if (type === 'xt') {
+                if (Math.abs(slope) < 0.004)
+                    return ['平：停住（位置不變）', MUT_C];
+                if (slope > 0)
+                    return ['往上：往前（位置增加）', QC];
+                return ['往下：返回（位置減少）', '#d97706'];
+            }
+            else {
+                if (Math.abs(slope) < 0.004)
+                    return ['平線：等速（速度不變）', QC];
+                if (slope > 0)
+                    return ['往上：加速（越來越快）', '#16a34a'];
+                return ['往下：減速（越來越慢）', '#d97706'];
+            }
+        }
+        var MUT_C = '#64748b';
+        function drawCar(g, cx, cy, s, col) {
+            g.save();
+            g.globalAlpha = 0.2;
+            g.fillStyle = col;
+            rrectPath(g, cx - s, cy - s * 0.5, 2 * s, s, s * 0.3);
+            g.fill();
+            g.globalAlpha = 1;
+            g.strokeStyle = col;
+            g.lineWidth = 1.6;
+            rrectPath(g, cx - s, cy - s * 0.5, 2 * s, s, s * 0.3);
+            g.stroke();
+            // 車頂。
+            rrectPath(g, cx - s * 0.45, cy - s * 0.9, s * 0.9, s * 0.45, s * 0.2);
+            g.stroke();
+            g.restore();
+            disc(g, cx - s * 0.5, cy + s * 0.5, s * 0.26, col);
+            disc(g, cx + s * 0.5, cy + s * 0.5, s * 0.26, col);
+        }
+        function draw(g, p, w, h) {
+            var ink = inkColor(), theme = themeColor();
+            label(g, type === 'xt' ? '位置－時間圖（x–t）：斜率＝速度' : '速度－時間圖（v–t）：線高＝速度', w / 2, 13, theme, 11.5, 'center');
+            // 軌道（上方）。
+            var trkY = h * 0.2, tx0 = w * 0.1, tx1 = w * 0.9;
+            g.save();
+            g.strokeStyle = ink;
+            g.globalAlpha = 0.3;
+            g.lineWidth = 2;
+            g.lineCap = 'round';
+            g.beginPath();
+            g.moveTo(tx0, trkY + 10);
+            g.lineTo(tx1, trkY + 10);
+            g.stroke();
+            g.restore();
+            var carX = tx0 + (tx1 - tx0) * posAt(p);
+            drawCar(g, carX, trkY, Math.min(w, h) * 0.05, theme);
+            label(g, type === 'xt' ? '起點' : '起步', tx0, trkY - 11, ink, 9, 'center');
+            // 圖形區。
+            var gx0 = 30, gx1 = w - 14, gy0 = h * 0.4, gy1 = h - 42;
+            // 軸。
+            g.save();
+            g.strokeStyle = ink;
+            g.globalAlpha = 0.5;
+            g.lineWidth = 1.3;
+            g.beginPath();
+            g.moveTo(gx0, gy0);
+            g.lineTo(gx0, gy1);
+            g.lineTo(gx1, gy1);
+            g.stroke();
+            g.restore();
+            label(g, type === 'xt' ? '位置' : '速度', gx0 - 2, gy0 - 2, ink, 9, 'left');
+            label(g, '時間 →', gx1, gy1 + 12, ink, 9, 'right');
+            function GX(t) { return gx0 + (gx1 - gx0) * t; }
+            function GY(q) { return gy1 - (gy1 - gy0) * q; }
+            // 淡的完整曲線（預告）。
+            g.save();
+            g.strokeStyle = QC;
+            g.globalAlpha = 0.2;
+            g.lineWidth = 2;
+            g.lineCap = 'round';
+            g.lineJoin = 'round';
+            g.beginPath();
+            for (var t2 = 0; t2 <= 1.0001; t2 += 0.02) {
+                var xx = GX(t2), yy = GY(qAt(t2));
+                if (t2 === 0)
+                    g.moveTo(xx, yy);
+                else
+                    g.lineTo(xx, yy);
+            }
+            g.stroke();
+            g.restore();
+            // 已描出的曲線（粗，到 p）。
+            g.save();
+            g.strokeStyle = QC;
+            g.lineWidth = 2.8;
+            g.lineCap = 'round';
+            g.lineJoin = 'round';
+            g.beginPath();
+            var started = false;
+            for (var t3 = 0; t3 <= p + 1e-6; t3 += 0.01) {
+                var x3 = GX(t3), y3 = GY(qAt(t3));
+                if (!started) {
+                    g.moveTo(x3, y3);
+                    started = true;
+                }
+                else
+                    g.lineTo(x3, y3);
+            }
+            g.stroke();
+            g.restore();
+            // now 垂直線 + 描點。
+            var nowX = GX(p), nowY = GY(qAt(p));
+            g.save();
+            g.strokeStyle = ink;
+            g.globalAlpha = 0.25;
+            g.lineWidth = 1;
+            g.setLineDash([3, 3]);
+            g.beginPath();
+            g.moveTo(nowX, gy0);
+            g.lineTo(nowX, gy1);
+            g.stroke();
+            g.setLineDash([]);
+            g.restore();
+            disc(g, nowX, nowY, 4.5, '#e11d48');
+            // 當前路段說明。
+            var si = segInfo(p);
+            label(g, si[0], w / 2, gy0 - 2, si[1], 10.5, 'center');
+            bottomCap(g, w, h, type === 'xt' ? '車怎麼走，線就怎麼畫：陡＝快、平＝停、下＝回' : '車怎麼走，線就怎麼畫：高＝快、平＝等速、上＝加速', ink);
+        }
+        return runScene(host, {
+            durationMs: 7000, loops: 2, staticPhase: 1,
+            label: cfg.label || (type === 'xt'
+                ? '位置－時間圖動畫：上方一台車跟著移動，下方同步描出位置對時間的圖形；線往上代表往前、水平代表停住、往下代表返回，斜率就是速度。'
+                : '速度－時間圖動畫：上方一台車跟著移動，下方同步描出速度對時間的圖形；線往上代表加速、水平代表等速、往下代表減速，線的高度就是速度。'),
+            draw: draw
+        });
+    }
+    // ====================================================================
+    // 場景 S4：causalChain — 一條「因果鏈／流程」逐格揭示（PLAYABLE，可重播）。
+    //   cfg = { nodes:[{label, note?}], mode?:'cause'|'flow', title?, label? }
+    //   方塊由上而下逐一出現、以向下箭頭相連（箭頭意思＝「導致／接著」）；每格可讀、箭頭貼住兩端。
+    //   同一場景兼用：歷史因果鏈（如 1945→遷台→二二八→戒嚴→解嚴→直選）與流程（法案如何通過）。
+    //   4–7 個節點、每格可多字(自動折 2 行)、note 當小字補充。reduced-motion：一次畫出全部節點與箭頭。
+    // ====================================================================
+    function causalChain(host, cfg) {
+        cfg = cfg || {};
+        var nodes = (cfg.nodes && cfg.nodes.length) ? cfg.nodes : [{ label: '節點' }];
+        var mode = (cfg.mode === 'flow') ? 'flow' : 'cause';
+        var nN = nodes.length;
+        function wrapCJK(text, maxChars) {
+            var lines = [], cur = '';
+            for (var i = 0; i < text.length; i++) {
+                cur += text.charAt(i);
+                if (cur.length >= maxChars) {
+                    lines.push(cur);
+                    cur = '';
+                }
+            }
+            if (cur)
+                lines.push(cur);
+            return lines;
+        }
+        function draw(g, p, w, h) {
+            var ink = inkColor(), theme = themeColor();
+            label(g, cfg.title || (mode === 'flow' ? '流程：一關一關走' : '因果鏈：一步一步看為什麼'), w / 2, 14, theme, 12, 'center');
+            var pad = 14, top = 32, bot = h - 12;
+            var slotH = (bot - top) / nN;
+            var boxH = Math.min(slotH - 12, 48), boxW = w - 2 * pad;
+            var arrowGap = slotH - boxH;
+            for (var i = 0; i < nN; i++) {
+                var tIn = (nN > 1) ? (i * (0.82 / nN)) : 0;
+                var prog = easeInOut(Math.max(0, Math.min(1, (p - tIn) / Math.max(0.001, (0.82 / nN) * 1.3))));
+                if (prog <= 0.01)
+                    continue;
+                var by = top + i * slotH + (slotH - boxH) / 2;
+                var bx = pad + (1 - prog) * (-boxW * 0.5); // 由左滑入
+                var col = resolveCol(nodes[i].color, theme);
+                var nd = nodes[i];
+                var lbl = nd.label || '';
+                var note = nd.note || '';
+                chipBox(g, bx, by, boxW, boxH, col, '', ink, 12, prog);
+                g.save();
+                g.globalAlpha = prog;
+                // 序號圓點。
+                disc(g, bx + 14, by + boxH / 2, 9, col);
+                g.globalAlpha = prog;
+                label(g, '' + (i + 1), bx + 14, by + boxH / 2, '#ffffff', 10, 'center');
+                // 標籤（＋note 小字）。
+                var lblLines = wrapCJK(lbl, 11);
+                var hasNote = !!note && boxH >= 38;
+                var cx = bx + 30 + (boxW - 40) / 2;
+                if (hasNote) {
+                    for (var k = 0; k < lblLines.length; k++)
+                        label(g, lblLines[k], cx, by + boxH / 2 - 9 + k * 15, ink, 12, 'center');
+                    label(g, note, cx, by + boxH - 11, MUT_S, 9, 'center');
+                }
+                else {
+                    var startY = by + boxH / 2 - (lblLines.length - 1) * 8;
+                    for (var k2 = 0; k2 < lblLines.length; k2++)
+                        label(g, lblLines[k2], cx, startY + k2 * 16, ink, 12, 'center');
+                }
+                g.restore();
+                // 進入下一格的向下箭頭。
+                if (i < nN - 1) {
+                    var arrA = easeInOut(Math.max(0, Math.min(1, (p - (tIn + (0.82 / nN) * 0.7)) / Math.max(0.001, (0.82 / nN) * 0.8))));
+                    if (arrA > 0.01) {
+                        var ax = bx + boxW / 2, ay0 = by + boxH + 1, ay1 = by + boxH + arrowGap - 1;
+                        var ayNow = ay0 + (ay1 - ay0) * arrA;
+                        g.save();
+                        g.strokeStyle = theme;
+                        g.lineWidth = 2;
+                        g.lineCap = 'round';
+                        g.globalAlpha = 0.9;
+                        g.beginPath();
+                        g.moveTo(ax, ay0);
+                        g.lineTo(ax, ayNow);
+                        g.stroke();
+                        if (arrA > 0.85) {
+                            g.fillStyle = theme;
+                            g.beginPath();
+                            g.moveTo(ax, ay1 + 2);
+                            g.lineTo(ax - 4.5, ay1 - 4);
+                            g.lineTo(ax + 4.5, ay1 - 4);
+                            g.closePath();
+                            g.fill();
+                        }
+                        g.restore();
+                    }
+                }
+            }
+        }
+        var MUT_S = '#64748b';
+        return runScene(host, {
+            durationMs: Math.max(4200, nN * 1100), loops: 2, staticPhase: 1,
+            label: cfg.label || ((mode === 'flow' ? '流程圖動畫：' : '因果鏈動畫：') + nN + ' 個步驟由上而下逐一出現、用向下箭頭相連，' +
+                '依序呈現「' + nodes.map(function (n) { return n.label; }).join('→') + '」。'),
+            draw: draw
+        });
+    }
     // ---- 導出 -----------------------------------------------------------
     var Anim = {
         reducedMotion: reducedMotion,
@@ -6794,6 +7710,10 @@
         enTimeline: enTimeline,
         enSentenceBuild: enSentenceBuild,
         enMeter: enMeter,
+        reactionRate: reactionRate,
+        lensImaging: lensImaging,
+        motionGraph: motionGraph,
+        causalChain: causalChain,
     };
     window.Anim = Anim;
 })();

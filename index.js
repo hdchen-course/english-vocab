@@ -17,6 +17,7 @@
         'practice.html': '單字探險家', 'chinese.html': '國語大冒險',
         'chinese_advanced.html': '進階國文挑戰',
         'social_advanced.html': '進階社會探索',
+        'computational_thinking_concepts.html': '運算思維・動手跑一遍程式', 'study_skills_concepts.html': '學習執行力', 'social_advanced_concepts.html': '進階社會・觀念養成',
         'computer_science.html': '電腦與網路探索',
         'economics_advanced.html': '經濟與資本探索',
         'earth_science.html': '地球與太空探索',
