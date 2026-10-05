@@ -86,6 +86,75 @@
         });
         return s + '</svg>';
     }
+    // 六書．象形：圖畫 → 現在的字（逐格靜態演變；日/木/山）
+    function pictographEvolve() {
+        var rows = [
+            { cy: 40, modern: '日', draw: '<circle cx="42" cy="40" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="42" cy="40" r="2.6" fill="currentColor"/>' },
+            { cy: 82, modern: '木', draw: '<line x1="28" y1="74" x2="56" y2="74" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="42" y1="67" x2="42" y2="97" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="42" y1="80" x2="30" y2="95" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="42" y1="80" x2="54" y2="95" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>' },
+            { cy: 124, modern: '山', draw: '<line x1="42" y1="110" x2="42" y2="134" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="118" x2="32" y2="134" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="52" y1="118" x2="52" y2="134" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="30" y1="134" x2="54" y2="134" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>' }
+        ];
+        var s = '<svg viewBox="0 0 196 150" role="img" aria-label="象形字從圖畫慢慢變成文字">';
+        s += '<text x="42" y="14" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">本來的圖</text>';
+        s += '<text x="162" y="14" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">現在的字</text>';
+        rows.forEach(function (r) {
+            s += '<rect x="14" y="' + (r.cy - 18) + '" width="56" height="36" rx="8" fill="' + FILL + '" stroke="currentColor" stroke-opacity="0.5" stroke-width="1.6"/>';
+            s += r.draw;
+            s += arrow(76, r.cy, 116, r.cy, 'currentColor', 2.6);
+            s += '<rect x="140" y="' + (r.cy - 18) + '" width="44" height="36" rx="8" fill="' + FILL + '" stroke="currentColor" stroke-opacity="0.5" stroke-width="1.6"/>';
+            s += '<text x="162" y="' + (r.cy + 8) + '" text-anchor="middle" font-size="24" fill="currentColor">' + r.modern + '</text>';
+        });
+        return s + '</svg>';
+    }
+    // 六書．指事：在「木」下加一橫指出樹根 → 本
+    function zhishiDemo() {
+        var s = '<svg viewBox="0 0 236 148" role="img" aria-label="指事：在木下加一橫指出樹根，就是本">';
+        s += '<text x="52" y="70" text-anchor="middle" font-size="46" fill="currentColor">木</text>';
+        s += '<text x="52" y="104" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">木＝樹</text>';
+        s += arrow(96, 56, 142, 56, 'currentColor', 3);
+        s += '<text x="188" y="70" text-anchor="middle" font-size="46" fill="currentColor">本</text>';
+        s += '<circle cx="188" cy="60" r="11" fill="none" stroke="' + AC + '" stroke-width="2.5"/>';
+        s += '<text x="188" y="104" text-anchor="middle" font-size="12" font-weight="800" fill="' + AC + '">多一橫＝樹根</text>';
+        s += '<text x="118" y="134" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">「上」「下」也是指事：用符號指出方位</text>';
+        return s + '</svg>';
+    }
+    // 六書．會意：兩個有意思的字合起來生出新意思
+    function huiyiDemo() {
+        var rows = [
+            { cy: 44, a: '日', b: '月', r: '明', note: '日＋月都亮→明' },
+            { cy: 116, a: '人', b: '木', r: '休', note: '人靠著樹→休息' }
+        ];
+        var s = '<svg viewBox="0 0 248 164" role="img" aria-label="會意：兩個字合起來生出新意思">';
+        rows.forEach(function (k) {
+            s += '<text x="26" y="' + (k.cy + 10) + '" text-anchor="middle" font-size="30" fill="currentColor">' + k.a + '</text>';
+            s += '<text x="54" y="' + (k.cy + 8) + '" text-anchor="middle" font-size="22" fill="currentColor">＋</text>';
+            s += '<text x="82" y="' + (k.cy + 10) + '" text-anchor="middle" font-size="30" fill="currentColor">' + k.b + '</text>';
+            s += arrow(104, k.cy, 140, k.cy, 'currentColor', 3);
+            s += '<text x="166" y="' + (k.cy + 12) + '" text-anchor="middle" font-size="34" font-weight="800" fill="' + AC + '">' + k.r + '</text>';
+            s += '<text x="96" y="' + (k.cy + 34) + '" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">' + k.note + '</text>';
+        });
+        return s + '</svg>';
+    }
+    // 六書．形聲：形旁（表意）＋聲旁（表音）＝形聲字
+    function xingshengDemo() {
+        var rows = [
+            { cy: 62, form: '氵', snd: '可', res: '河', sndNote: '讀音像「可」' },
+            { cy: 120, form: '氵', snd: '青', res: '清', sndNote: '讀音像「青」' }
+        ];
+        var s = '<svg viewBox="0 0 250 158" role="img" aria-label="形聲：一半表意的形旁加一半表音的聲旁">';
+        s += '<text x="125" y="16" text-anchor="middle" font-size="11" font-weight="800" fill="currentColor">形旁（表意）＋聲旁（表音）＝形聲字</text>';
+        rows.forEach(function (k) {
+            s += '<rect x="16" y="' + (k.cy - 20) + '" width="44" height="40" rx="9" fill="' + FILL + '" stroke="currentColor" stroke-opacity="0.6" stroke-width="2"/>';
+            s += '<text x="38" y="' + (k.cy + 6) + '" text-anchor="middle" font-size="24" fill="currentColor">' + k.form + '</text>';
+            s += '<text x="38" y="' + (k.cy + 32) + '" text-anchor="middle" font-size="9" font-weight="800" fill="currentColor">形旁·和水有關</text>';
+            s += '<text x="70" y="' + (k.cy + 4) + '" text-anchor="middle" font-size="18" fill="currentColor">＋</text>';
+            s += '<rect x="84" y="' + (k.cy - 20) + '" width="44" height="40" rx="9" fill="' + FILL + '" stroke="' + AC + '" stroke-width="2"/>';
+            s += '<text x="106" y="' + (k.cy + 6) + '" text-anchor="middle" font-size="24" fill="currentColor">' + k.snd + '</text>';
+            s += '<text x="106" y="' + (k.cy + 32) + '" text-anchor="middle" font-size="9" font-weight="800" fill="' + AC + '">聲旁·' + k.sndNote + '</text>';
+            s += arrow(134, k.cy, 168, k.cy, 'currentColor', 3);
+            s += '<text x="206" y="' + (k.cy + 10) + '" text-anchor="middle" font-size="34" fill="currentColor">' + k.res + '</text>';
+        });
+        return s + '</svg>';
+    }
     window.CONCEPT = {
         progKey: 'chinese_concepts_v1', practiceHref: 'chinese.html',
         lessons: [
@@ -97,6 +166,15 @@
                     { type: 'quiz', kicker: '換你試試', title: '「河、海、湖」都有水字旁（氵），它們共同和什麼有關？', options: ['水', '火', '木頭', '天空'], answer: 0, why: '水字旁（氵）通常表示這個字和水有關，所以河、海、湖都和水有關。' },
                     { type: 'quiz', kicker: '想一想', title: '下面哪一個字有「木字旁」，可能和植物有關？', options: ['樹', '河', '想', '明'], answer: 0, why: '「樹」有木字旁，和植物有關；河是水字旁、想是心部、明是日字旁。' },
                     { type: 'quiz', kicker: '想一想', title: '「情、想、感」這些字，最可能和什麼有關？', options: ['心情、感覺', '金錢', '顏色', '數字'], answer: 0, why: '它們都有心部，通常和心情、感覺有關。' }
+                ] },
+            { id: 'liushu', name: '字是怎麼造出來的（六書）', emoji: '🖌️', color: '#cf1322', sub: '象形、指事、會意、形聲', done: '記得：象形（照樣子畫）、指事（用符號指抽象）、會意（合起來生新意）、形聲（一半表意、一半表音）。另外「轉注、假借」是用字的方法，不是造字。',
+                steps: [
+                    { type: 'teach', kicker: '先想一想', title: '象形：照著東西的樣子畫', svg: pictographEvolve(), text: '最早的字，是<b>照著東西的樣子畫</b>出來的，叫<b>象形</b>。像<b>日</b>（太陽）、<b>木</b>（樹）、<b>山</b>，本來是一張小圖畫，慢慢簡化，變成今天方方正正的字。' },
+                    { type: 'teach', kicker: '再看一個', title: '指事：用符號指出抽象的事', svg: zhishiDemo(), text: '有些東西<b>畫不出來</b>，就用<b>符號</b>把它「指」出來，叫<b>指事</b>。在「木」的下面<b>加一橫</b>指出<b>樹根</b>，就成了「<b>本</b>」；「上」「下」也是用符號指出方位。' },
+                    { type: 'teach', kicker: '第三個', title: '會意：兩個字合起來生出新意思', svg: huiyiDemo(), text: '把<b>兩個有意思的字合起來</b>，生出新的意思，叫<b>會意</b>。<b>日＋月＝明</b>（都會發亮，所以是明亮）；<b>人＋木＝休</b>（人靠著樹，就是休息）。' },
+                    { type: 'teach', kicker: '第四個', title: '形聲：一半表意、一半表音', svg: xingshengDemo(), text: '一半表示<b>意思（形旁）</b>、一半表示<b>讀音（聲旁）</b>，叫<b>形聲</b>。「河」「清」左邊的<b>氵</b>表示和水有關，右邊的<b>可／青</b>則表示讀音（河讀音像可、清讀音像青）。形聲字是漢字裡<b>最多</b>的一類。' },
+                    { type: 'quiz', kicker: '換你試試', title: '「明」由「日」和「月」合起來、表示明亮，屬於六書的哪一類？', svg: huiyiDemo(), options: ['象形', '指事', '會意', '形聲'], answer: 2, why: '把兩個有意思的字（日、月）合起來，產生新的意思，這是會意。' },
+                    { type: 'quiz', kicker: '想一想', title: '「河」左邊是氵（表示和水有關）、右邊「可」表示讀音，它屬於哪一類？', svg: xingshengDemo(), options: ['象形', '指事', '會意', '形聲'], answer: 3, why: '一半表意（形旁氵）、一半表音（聲旁可），這是形聲——漢字裡最多的一類。' }
                 ] },
             { id: 'stroke', name: '筆畫順序原則', emoji: '✍️', color: '#dc2626', sub: '由上到下、由左到右、先橫後豎', done: '記得筆順口訣：由上到下、由左到右、先橫後豎、先撇後捺。順序對了，字才會又快又好看。',
                 steps: [
