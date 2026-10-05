@@ -628,7 +628,7 @@ function checkSpell() {
             inp.disabled = true;
     });
     recordBinary(allRight);
-    showReveal(document.getElementById('spellReveal'), allRight, word, allRight ? '' : '綠色的字母是對的！修正紅色的再試一次，你很接近了。');
+    showReveal(document.getElementById('spellReveal'), allRight, word, allRight ? '' : '綠色的字母拼對了！紅色的字母看一下上面的正確拼法，下次就記住了。');
 }
 // ---------- 揭示面板（答對/答錯都用；自控「繼續」，不自動跳題） ----------
 function showReveal(host, isRight, word, extraMsg) {
