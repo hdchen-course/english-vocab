@@ -77,7 +77,8 @@ let currentWordIndex = 0;
 let studyQueue = [];
 let isFlipped = false;
 let flashAudioTimer = null; // 閃卡 audio-first 的待觸發 timer；換卡/換模式/換主題時於 renderMode 取消，避免播到上一張卡的字
-let advanceTimer = null; // 答對後自動進下一字的待觸發 timer；換卡/換模式/換主題/開圖鑑/開儀表板時取消，避免跳過下一張未看到的字
+let advanceTimer = null; // 答對後自動進下一字的待觸發 timer；換卡/換模式/換主題/開圖鑑/開儀表板/開設定時取消，避免跳過下一張未看到的字
+let matchTimer = null; // 配對完成後 1.5s 重繪配對盤的待觸發 timer；僅 currentMode 守衛擋不住開儀表板/圖鑑/設定/切 tab（都不改 currentMode），須於離開學習視圖時一併取消，否則舊盤面會蓋到新畫面上
 let matchState = { selected: null, matched: [] };
 let srs = new SRSEngine();
 // ==================== SETTINGS ====================
@@ -249,6 +250,10 @@ function renderMode() {
         clearTimeout(advanceTimer);
         advanceTimer = null;
     } // 取消上一張尚未觸發的自動進字：換模式/主題時直接 renderMode，否則舊 timer 會跳過新畫面的第一張字
+    if (matchTimer) {
+        clearTimeout(matchTimer);
+        matchTimer = null;
+    } // 取消尚未觸發的配對盤重繪，否則切到別的模式後舊配對盤會蓋回來
     const area = document.getElementById('learningArea');
     document.getElementById('dashboard').classList.remove('show');
     const isCloze = WORD_DATA[currentTab].isCloze;
@@ -1045,8 +1050,8 @@ function selectMatch(el) {
             if (matchState.matched.length >= matchState.pairs.length) { // 以實際配對數為準（去重後可能 <5），否則配完整盤仍不觸發完成、孩子卡住
                 showConfetti();
                 updateStats();
-                setTimeout(() => { if (currentMode === 'matching')
-                    renderMatching(document.getElementById('learningArea')); }, 1500); // 慶祝視窗內若已切換模式就別把畫面蓋回配對盤
+                matchTimer = setTimeout(() => { matchTimer = null; if (currentMode === 'matching')
+                    renderMatching(document.getElementById('learningArea')); }, 1500); // 慶祝視窗內若已切換模式就別把畫面蓋回配對盤；走可取消的 matchTimer，開儀表板/圖鑑/設定/切 tab 時取消（currentMode 守衛擋不住那些路徑）
             }
         }
         else {
@@ -1070,6 +1075,10 @@ function showDashboard() {
         clearTimeout(flashAudioTimer);
         flashAudioTimer = null;
     }
+    if (matchTimer) {
+        clearTimeout(matchTimer);
+        matchTimer = null;
+    } // 配對完成 1.5s 內開儀表板，取消重繪否則配對盤會蓋在儀表板上（#learningArea 與 #dashboard 為同層）
     document.getElementById('learningArea').innerHTML = '';
     const dash = document.getElementById('dashboard');
     dash.classList.add('show');
@@ -1117,6 +1126,18 @@ function hideDashboard() {
 }
 // ==================== SETTINGS ====================
 function showSettings() {
+    if (advanceTimer) {
+        clearTimeout(advanceTimer);
+        advanceTimer = null;
+    } // 開設定不走 renderMode，一併取消待觸發的自動進字/自動發音/配對盤重繪，否則會在設定視窗後面偷偷跳字、播音、蓋回配對盤（與 showDashboard/openScreen 一致）
+    if (flashAudioTimer) {
+        clearTimeout(flashAudioTimer);
+        flashAudioTimer = null;
+    }
+    if (matchTimer) {
+        clearTimeout(matchTimer);
+        matchTimer = null;
+    }
     const settings = getSettings();
     document.getElementById('dailyNewInput').value = settings.dailyNew;
     document.getElementById('speedSelect').value = String(settings.speed);
@@ -1515,6 +1536,10 @@ init();
             clearTimeout(flashAudioTimer);
             flashAudioTimer = null;
         }
+        if (matchTimer) {
+            clearTimeout(matchTimer);
+            matchTimer = null;
+        } // 同理取消配對盤重繪，否則舊配對盤會蓋到圖鑑畫面
         if (!data)
             load();
         var area = document.getElementById('worddexArea');
