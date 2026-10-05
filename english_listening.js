@@ -215,6 +215,11 @@
         var t = ev.target;
         if (!t || !t.closest)
             return;
+        // Stop any playing passage when the reader navigates within the engine (advance / back /
+        // return to menu / switch lesson). Don't return — let the engine's own handler also run.
+        if (t.closest('#next, #menu, #btn-back')) {
+            stopAudio();
+        }
         var pb = t.closest('[data-lis-play]');
         if (pb) {
             playLis(pb.getAttribute('data-lis-play'));

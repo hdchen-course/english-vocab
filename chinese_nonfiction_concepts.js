@@ -32,7 +32,7 @@
         s += '<rect x="8" y="12" width="134" height="156" rx="12" fill="rgba(22,163,74,0.10)" stroke="' + GRN + '" stroke-width="2"/>';
         s += '<text x="75" y="36" text-anchor="middle" font-size="14" font-weight="800" fill="' + GRN + '">事實 ✔</text>';
         s += '<text x="75" y="54" text-anchor="middle" font-size="10.5" fill="currentColor">可以查證</text>';
-        wrap(fact, 7).forEach(function (ln, i) {
+        wrap(fact, 10).forEach(function (ln, i) {
             s += '<text x="75" y="' + (84 + i * 20) + '" text-anchor="middle" font-size="12" fill="currentColor">' + ln + '</text>';
         });
         // 右欄：意見

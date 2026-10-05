@@ -216,6 +216,9 @@
   document.addEventListener('click', function (ev) {
     var t = ev.target as any;
     if (!t || !t.closest) return;
+    // Stop any playing passage when the reader navigates within the engine (advance / back /
+    // return to menu / switch lesson). Don't return — let the engine's own handler also run.
+    if (t.closest('#next, #menu, #btn-back')) { stopAudio(); }
     var pb = t.closest('[data-lis-play]');
     if (pb) { playLis(pb.getAttribute('data-lis-play')); return; }
     var cb = t.closest('[data-lis-caption]');
