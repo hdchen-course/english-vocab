@@ -57,8 +57,8 @@
     { id: 'b_taxonomy',  level: 'L12', emoji: '🗂️', name: '分類大師' },
     { id: 'b_body2',     level: 'L13', emoji: '🫀', name: '人體工程師' },
     { id: 'b_cycle',     level: 'L14', emoji: '🔄', name: '能量與碳循環嚮導' },
-    { id: 'b_life_food',   level: 'L15', emoji: '🍞', name: '廚房生物家' },
-    { id: 'b_life_health', level: 'L16', emoji: '🧼', name: '健康生活家' },
+    { id: 'b_life_food',   level: 'L15', emoji: '🍳', name: '廚房生物家' },
+    { id: 'b_life_health', level: 'L16', emoji: '🩺', name: '健康生活家' },
     { id: 'b_master',    level: null, emoji: '🎓', name: '生物小博士' }  // 全部等級完成
   ];
   var BADGE_BY_LEVEL = {};
