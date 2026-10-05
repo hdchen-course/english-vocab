@@ -16,9 +16,9 @@
  *   - 獨立 localStorage key：math_adv_progress_v1。結構：
  *       { lv1:{done,best}, ..., lv18:{done,best}, badges:{ badgeId:true } }
  *   - 「只增不減」：best = Math.max(prev.best||0, thisRun)；徽章 awarded guard 永不取消。
- *   - 零重複計分：本徽章模組不呼叫 Game.recordAnswer / award / recordSession，
- *     只用 Game.showToast（純提示）與（可省略的）Game.getProfile（唯讀）。
- *     （每題作答的 recordAnswer('math') 在頁面主程式，非本模組；兩者不重疊。）
+ *   - 零重複計分：每題作答只在本程式呼叫一次 Game.recordAnswer('math')（受 answered 旗標守衛），
+ *     徽章判定只讀進度（Game.getProfile 唯讀）並用 Game.showToast 提示，
+ *     不另外呼叫 recordAnswer / award / recordSession，所以同一題不會被重複計分。
  * =================================================================== */
 (function () {
     'use strict';
