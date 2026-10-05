@@ -540,6 +540,9 @@ function checkSpell() {
   });
   // 進階模式（box 3–4）字母磚庫會混入誘答字母，評分後 checkSpell 不重繪 #spellBank，殘留的未使用磚仍是 enabled 的 <button onclick=onTileClick>，點了只會被 awaitingContinue 擋成 no-op＝死按鈕；一併停用整個字母磚庫
   document.querySelectorAll('#spellBank button').forEach(b => { b.disabled = true; b.removeAttribute('onclick'); b.removeAttribute('tabindex'); b.setAttribute('aria-disabled', 'true'); });
+  // 評分後停用輸入法切換鈕：toggleSpellMode 已於 awaitingContinue early-return(L507),不停用就是可 focus 卻無作用的死按鈕;renderSpell 於下一張卡重建成啟用(與 cefr/toeic 一致)
+  const spellToggleBtn = document.querySelector('.fc-spell__toggle');
+  if (spellToggleBtn) { spellToggleBtn.disabled = true; spellToggleBtn.setAttribute('aria-disabled', 'true'); }
   recordBinary(allRight);
   showReveal(document.getElementById('spellReveal'), allRight, word, allRight ? '' : '拼對的字母會變綠色；看一下上面的正確拼法，下次就記住了。');
 }
