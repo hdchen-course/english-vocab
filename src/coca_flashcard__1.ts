@@ -226,7 +226,13 @@ function flipCard() {
   if (inner) inner.classList.toggle('flipped');
 }
 
+let lastRateAt = 0;
 function rateFlash(grade) {
+  const now = Date.now();
+  // 去抖：評分後 nextWord 立刻把下一張卡的評分鈕 render 到同位置；350ms 內的第二次點擊會打在
+  // 那張還沒看過的新卡上、誤評並跳過。render 是同步的，單純旗標擋不住，故用時間冷卻。
+  if (now - lastRateAt < 350) return;
+  lastRateAt = now;
   const correct = recordRate(grade);
   if (!correct) requeueAgain();       // again：本 session 稍後再現（位移重插、不緊鄰）
   nextWord();
@@ -429,7 +435,11 @@ function renderSpellSlots() {
     if (spellInputMode === 'keyboard') {
       return `<span class="fc-spell__tile fc-spell__slot ${cell.val ? 'filled' : ''}"><input type="text" inputmode="text" maxlength="1" data-si="${idx}" value="${cell.val ? escapeAttr(cell.val) : ''}" aria-label="第 ${idx + 1} 個字母" oninput="onSpellInput(this)" onkeydown="onSpellKey(event,this)"></span>`;
     }
-    return `<span class="fc-spell__tile fc-spell__slot ${cell.val ? 'filled' : ''}" data-si="${idx}" role="button" tabindex="0" onclick="onSlotClick(${idx})" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();onSlotClick(${idx});}">${cell.val ? escapeHtml(cell.val) : ''}</span>`;
+    // 已填才可點按退回；空格不設 role=button/tabindex（onSlotClick 對空格 no-op，避免報讀成無作用按鈕），僅標示位置
+    if (cell.val) {
+      return `<span class="fc-spell__tile fc-spell__slot filled" data-si="${idx}" role="button" tabindex="0" aria-label="第 ${idx + 1} 個字母，已填入 ${escapeAttr(cell.val)}，按 Enter 或空白鍵退回字母" onclick="onSlotClick(${idx})" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();onSlotClick(${idx});}">${escapeHtml(cell.val)}</span>`;
+    }
+    return `<span class="fc-spell__tile fc-spell__slot" data-si="${idx}" aria-label="第 ${idx + 1} 個字母，待填入"></span>`;
   }).join('');
 }
 
