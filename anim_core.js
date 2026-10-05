@@ -3900,6 +3900,210 @@
             draw: draw
         });
     }
+    // ====================================================================
+    // 場景：worldLocator — 看世界地圖、定位時事發生在哪（世界時事頁第4課；author-once，
+    //   世界地理 world_geography／全球議題 global_issues 日後共用＝change-one-place）。
+    //   畫一張「風格化扁平世界」：七大洲以 --su tint 色塊、海洋淺底；依序在 pins 指定
+    //   位置「掉下定位針」並脈動光環，建立相對位置感（例：台灣在亞洲東緣、面向太平洋）。
+    //   ★ 地圖中立性（HARD）：只畫七大洲色塊＋海洋，不畫國界、不標任何有主權爭議的疆界
+    //     或名稱；定位針只落在洲別／假想區域層級；台灣以一個定位點呈現，不涉任何疆界主張。
+    //   cfg = {
+    //     pins:[{region?:String, xFrac:Number, yFrac:Number, label:String}],
+    //        // xFrac/yFrac＝相對「地圖繪製區」的 0–1 座標（簡單投影、不需真實投影）
+    //     caption?:String,   // 圖底固定說明（未給則顯示目前定位點的 label）
+    //     cycle?:Boolean,    // true＝多播幾輪、輪流重新定位（建立相對位置感）
+    //     label?:String      // 無障礙 aria-label
+    //   }
+    //   行為：pins 依序出現（掉針→脈動→留在原地），目前針脈動光環；phase=1 停在「全部定位」。
+    //   reduced-motion：drawStatic 一次畫出全部定位針＋標籤（靜態定位幀）。
+    //   契約：收 host、回傳 { stop }。
+    // ====================================================================
+    function worldLocator(host, cfg) {
+        cfg = cfg || {};
+        var pins = (cfg.pins && cfg.pins.length) ? cfg.pins : [{ xFrac: 0.80, yFrac: 0.44, label: '台灣' }];
+        var N = pins.length;
+        var PIN = '#e11d48'; // 定位針（地圖標記色，中性）
+        function clamp01(x) { return x < 0 ? 0 : (x > 1 ? 1 : x); }
+        // 七大洲（風格化色塊；僅「洲別」層級，無國界、無爭議疆界/名稱）。
+        // 每個洲用數個橢圓 [cxFrac, cyFrac, rxFrac, ryFrac] 疊出大致輪廓；座標為地圖繪製區 0–1。
+        var CONTINENTS = [
+            { name: '北美洲', lx: 0.16, ly: 0.24, blobs: [[0.17, 0.27, 0.12, 0.10], [0.12, 0.40, 0.06, 0.07], [0.23, 0.41, 0.05, 0.055]] },
+            { name: '南美洲', lx: 0.28, ly: 0.64, blobs: [[0.29, 0.66, 0.065, 0.095], [0.255, 0.80, 0.035, 0.065]] },
+            { name: '歐洲', lx: 0.50, ly: 0.19, blobs: [[0.50, 0.25, 0.065, 0.065]] },
+            { name: '非洲', lx: 0.55, ly: 0.52, blobs: [[0.545, 0.57, 0.085, 0.12]] },
+            { name: '亞洲', lx: 0.69, ly: 0.20, blobs: [[0.70, 0.30, 0.145, 0.115], [0.805, 0.45, 0.055, 0.055]] },
+            { name: '大洋洲', lx: 0.86, ly: 0.70, blobs: [[0.85, 0.75, 0.07, 0.06]] },
+            { name: '南極洲', lx: 0.50, ly: 0.9, blobs: [[0.5, 0.985, 0.44, 0.055]] }
+        ];
+        var OCEANS = [['太平洋', 0.92, 0.52], ['大西洋', 0.40, 0.50], ['印度洋', 0.68, 0.70]];
+        // 洲別名稱集合：若定位針的 label 已是某洲名（地圖上已標過），就不再重複畫針的文字標籤，
+        // 只留針＋脈動＋動態 caption（例「定位：亞洲」），避免與洲別標籤疊字；台灣等非洲別點照常標。
+        var CONT_NAMES = CONTINENTS.map(function (c) { return c.name; });
+        function pinNeedsLabel(p) { return CONT_NAMES.indexOf(p.label) === -1; }
+        function ellipse(g, cx, cy, rx, ry) {
+            g.beginPath();
+            g.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+            g.fill();
+        }
+        function roundRectPath(g, x, y, bw, bh, r) {
+            g.beginPath();
+            g.moveTo(x + r, y);
+            g.arcTo(x + bw, y, x + bw, y + bh, r);
+            g.arcTo(x + bw, y + bh, x, y + bh, r);
+            g.arcTo(x, y + bh, x, y, r);
+            g.arcTo(x, y, x + bw, y, r);
+            g.closePath();
+        }
+        // 畫一支定位針（倒水滴＋圓孔），尖端落在 (x,y)。
+        function drawPin(g, x, y, size, alpha) {
+            g.save();
+            g.globalAlpha = alpha;
+            g.fillStyle = PIN;
+            g.beginPath();
+            g.moveTo(x, y);
+            g.bezierCurveTo(x - size * 0.62, y - size * 0.9, x - size * 0.52, y - size * 1.9, x, y - size * 1.9);
+            g.bezierCurveTo(x + size * 0.52, y - size * 1.9, x + size * 0.62, y - size * 0.9, x, y);
+            g.fill();
+            g.fillStyle = '#fff';
+            disc(g, x, y - size * 1.35, size * 0.3, '#fff');
+            g.restore();
+        }
+        function drawMap(g, w, h) {
+            var ink = inkColor(), su = themeColor();
+            var mx0 = 10, my0 = 26, mx1 = w - 10, my1 = h - 24;
+            var MW = mx1 - mx0, MH = my1 - my0;
+            // 海洋淺底（圓角框）。
+            g.save();
+            g.fillStyle = 'rgba(90,160,210,0.12)';
+            roundRectPath(g, mx0, my0, MW, MH, 12);
+            g.fill();
+            g.strokeStyle = ink;
+            g.globalAlpha = 0.18;
+            g.lineWidth = 1;
+            g.stroke();
+            g.restore();
+            // 海洋名稱（淡）。
+            for (var o = 0; o < OCEANS.length; o++) {
+                var ox = mx0 + OCEANS[o][1] * MW, oy = my0 + OCEANS[o][2] * MH;
+                g.save();
+                g.globalAlpha = 0.5;
+                label(g, OCEANS[o][0], ox, oy, '#3a7bd5', 8.5, 'center');
+                g.restore();
+            }
+            // 七大洲色塊（--su tint）。
+            g.save();
+            g.beginPath();
+            roundRectPath(g, mx0, my0, MW, MH, 12);
+            g.clip();
+            for (var c = 0; c < CONTINENTS.length; c++) {
+                var ct = CONTINENTS[c];
+                g.save();
+                g.fillStyle = su;
+                g.globalAlpha = 0.3;
+                for (var bI = 0; bI < ct.blobs.length; bI++) {
+                    var bl = ct.blobs[bI];
+                    ellipse(g, mx0 + bl[0] * MW, my0 + bl[1] * MH, bl[2] * MW, bl[3] * MH);
+                }
+                g.restore();
+            }
+            g.restore();
+            // 洲別標籤。
+            for (var c2 = 0; c2 < CONTINENTS.length; c2++) {
+                var ct2 = CONTINENTS[c2];
+                label(g, ct2.name, mx0 + ct2.lx * MW, my0 + ct2.ly * MH, su, 9, 'center');
+            }
+            return { mx0: mx0, my0: my0, MW: MW, MH: MH };
+        }
+        function pinXY(rect, p) {
+            return { x: rect.mx0 + p.xFrac * rect.MW, y: rect.my0 + p.yFrac * rect.MH };
+        }
+        function draw(g, phase, w, h) {
+            var su = themeColor();
+            label(g, '新聞說到哪裡，先在地圖上找到它', w / 2, 13, su, 11.5, 'center');
+            var rect = drawMap(g, w, h);
+            // 目前定位到第幾針。
+            var cur = 0;
+            for (var k = 0; k < N; k++) {
+                if (phase >= k / N - 1e-6)
+                    cur = k;
+            }
+            var seg = 1 / N;
+            for (var i = 0; i <= cur; i++) {
+                var pos = pinXY(rect, pins[i]);
+                var ws = i * seg;
+                var drop = clamp01((phase - ws) / (seg * 0.4));
+                var isCur = (i === cur);
+                if (isCur && drop < 1) {
+                    // 掉針動畫：由上方落下。
+                    var fallY = pos.y - (1 - easeInOut(drop)) * 26;
+                    drawPin(g, pos.x, fallY, 7, 1);
+                }
+                else {
+                    // 已定位：脈動光環（目前針）＋固定針＋標籤。
+                    if (isCur) {
+                        var t = (nowMs() / 700) % 1;
+                        g.save();
+                        g.strokeStyle = PIN;
+                        g.globalAlpha = 0.5 * (1 - t);
+                        g.lineWidth = 2;
+                        g.beginPath();
+                        g.arc(pos.x, pos.y, 4 + t * 14, 0, Math.PI * 2);
+                        g.stroke();
+                        g.restore();
+                    }
+                    drawPin(g, pos.x, pos.y, 7, 1);
+                    disc(g, pos.x, pos.y, 1.6, PIN);
+                    // 標籤（非洲別點才畫，例台灣）：靠近邊緣時改對齊方向，避免出框。
+                    if (pinNeedsLabel(pins[i])) {
+                        var al = pos.x > rect.mx0 + rect.MW * 0.7 ? 'right' : (pos.x < rect.mx0 + rect.MW * 0.3 ? 'left' : 'center');
+                        var lx = al === 'right' ? pos.x + 6 : (al === 'left' ? pos.x - 6 : pos.x);
+                        var ly = pos.y + 11 > rect.my0 + rect.MH - 6 ? pos.y - 18 : pos.y + 11;
+                        g.save();
+                        g.fillStyle = inkColor();
+                        g.font = '700 9px system-ui, -apple-system, "Segoe UI", sans-serif';
+                        g.textAlign = al;
+                        g.textBaseline = 'middle';
+                        g.fillText(pins[i].label, lx, ly);
+                        g.restore();
+                    }
+                }
+            }
+            // 圖底說明。
+            var cap = cfg.caption || ('定位：' + pins[cur].label);
+            label(g, cap, w / 2, h - 9, su, 10, 'center');
+        }
+        // reduced-motion：一次畫出全部定位針＋標籤（靜態定位幀）。
+        function drawStatic(g, w, h) {
+            var su = themeColor();
+            label(g, '世界地圖：找出新聞發生在哪一洲', w / 2, 13, su, 11.5, 'center');
+            var rect = drawMap(g, w, h);
+            for (var i = 0; i < N; i++) {
+                var pos = pinXY(rect, pins[i]);
+                drawPin(g, pos.x, pos.y, 7, 1);
+                disc(g, pos.x, pos.y, 1.6, PIN);
+                if (pinNeedsLabel(pins[i])) {
+                    var al = pos.x > rect.mx0 + rect.MW * 0.7 ? 'right' : (pos.x < rect.mx0 + rect.MW * 0.3 ? 'left' : 'center');
+                    var lx = al === 'right' ? pos.x + 6 : (al === 'left' ? pos.x - 6 : pos.x);
+                    var ly = pos.y + 11 > rect.my0 + rect.MH - 6 ? pos.y - 18 : pos.y + 11;
+                    g.save();
+                    g.fillStyle = inkColor();
+                    g.font = '700 9px system-ui, -apple-system, "Segoe UI", sans-serif';
+                    g.textAlign = al;
+                    g.textBaseline = 'middle';
+                    g.fillText(pins[i].label, lx, ly);
+                    g.restore();
+                }
+            }
+            label(g, cfg.caption || '先在地圖上定位，時事就有了方向感', w / 2, h - 9, su, 10, 'center');
+        }
+        var pinNames = pins.map(function (p) { return p.label; }).join('、');
+        return runScene(host, {
+            durationMs: N * 2200, loops: cfg.cycle ? 3 : 1, staticPhase: 1,
+            label: cfg.label || ('世界地圖定位動畫：一張只畫七大洲色塊與海洋、不含國界的風格化世界地圖，依序在地圖上掉下定位針並脈動光環，標出 ' + pinNames + ' 的大致位置，幫你建立相對位置感。'),
+            drawStatic: drawStatic,
+            draw: draw
+        });
+    }
     // ---- 導出 -----------------------------------------------------------
     var Anim = {
         reducedMotion: reducedMotion,
@@ -3925,6 +4129,7 @@
         greenhouseEffect: greenhouseEffect,
         carbonCycle: carbonCycle,
         compoundGrowth: compoundGrowth,
+        worldLocator: worldLocator,
     };
     window.Anim = Anim;
 })();

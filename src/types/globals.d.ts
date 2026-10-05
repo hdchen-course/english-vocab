@@ -108,6 +108,11 @@ interface AnimApi {
    *  mode:'grow' 用 --su 色、mode:'debt' 用 --c-wrong 紅色。reduced-motion 畫 4 具名月份靜態。
    *  cfg = {principal,ratePct,periods,contribute,mode:'grow'|'debt',unitLabel,title,caption,label}。 */
   compoundGrowth: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 世界地圖定位：風格化扁平世界（七大洲 --su tint 色塊＋海洋淺底，★無國界/無爭議疆界名稱），
+   *  依序在 pins 位置掉下定位針並脈動光環，建立相對位置感；cycle 時輪流重新定位；
+   *  reduced-motion 一次畫全部定位針靜態幀。世界時事／世界地理／全球議題三頁共用（author-once）。
+   *  cfg = {pins:[{region?,xFrac,yFrac,label}],caption?,cycle?,label?}（xFrac/yFrac＝地圖繪製區 0–1）。 */
+  worldLocator: (host: HTMLElement, cfg?: any) => { stop: () => void };
 }
 
 /** game_core.js 導出的遊戲核心 API（window.Game）。遷移 game_core 時逐步精確化。 */
