@@ -129,7 +129,7 @@ window.CONCEPT = {
       {type:'teach',kicker:'特別的字尾',title:'字尾 s / x / ch / sh 加 -es',svg:esDemo(),text:'如果字尾是 <b>s、x、ch、sh</b>，複數要加 <b>-es</b> 才好唸：bus → <b>buses</b>、box → <b>boxes</b>、watch → <b>watches</b>。'},
       {type:'teach',kicker:'要背的特例',title:'特殊變化：整個換掉',svg:irregular(),text:'有些字的複數不加 s，而是<b>整個換</b>：child → <b>children</b>、man → <b>men</b>、foot → <b>feet</b>。這些要特別記起來。'},
       {type:'quiz',kicker:'換你試試',title:'兩個蘋果，英文怎麼寫？',eq:'two ___',options:['apples','apple','applees',"apple's"],answer:0,why:'apple 的複數是字尾加 -s → apples。（apple’s 是「蘋果的」，不是複數。）'},
-      {type:'quiz',kicker:'想一想',title:'一個以上的 child（小孩）要怎麼說？',options:['children','childs','childrens','child'],answer:0,why:'child 是特殊變化，複數是 children（不是 childs）。'},
+      {type:'quiz',kicker:'想一想',title:'不只一個 child（小孩）要怎麼說？',options:['children','childs','childrens','child'],answer:0,why:'child 是特殊變化，複數是 children（不是 childs）。'},
       {type:'quiz',kicker:'想一想',title:'三個箱子（box）要怎麼寫？',eq:'three ___',options:['boxes','boxs','box','boxess'],answer:0,why:'box 字尾是 x，複數要加 -es → boxes。'}
      ]},
    { id:'tense', name:'現在簡單式 vs 現在進行式', emoji:'⏱️', color:'#0e7490', sub:'常常做 vs 此刻正在做', done:'記得：常常、每天做的事用現在簡單式（I walk）；此刻正在做的事用現在進行式＝be 動詞 + Ving（I am walking）。',
