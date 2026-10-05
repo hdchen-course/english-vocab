@@ -265,7 +265,7 @@ function generateModProblems() {
       return { q: '(' + a + ' × ' + b + ') mod ' + m + ' = ?', ans: ans, choices: null, format: function(v) { return '' + v; } };
     },
     function() {
-      var h = 13 + Math.floor(Math.random() * 35);
+      var h = 13 + Math.floor(Math.random() * 12);   // 13..24：真實 24 小時制會顯示的時刻，不產生 36 點／47 點這種不存在的時間
       var ans = ((h % 12) || 12);
       return { q: h + ' 點在時鐘上顯示幾點？', ans: ans, choices: null, format: function(v) { return v + ' 點'; } };
     },
