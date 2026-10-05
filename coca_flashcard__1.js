@@ -580,6 +580,8 @@ function focusFirstInput() {
         inp.focus();
 }
 function toggleSpellMode() {
+    if (awaitingContinue || !spellState)
+        return; // 已評分（揭示中）不可切換輸入法：會清空並重繪未上色的空格，與仍顯示「綠/紅字母」的揭示訊息自相矛盾（與 onTileClick/onSlotClick/checkSpell 的守衛一致）
     spellInputMode = spellInputMode === 'tiles' ? 'keyboard' : 'tiles';
     try {
         localStorage.setItem('coca_spell_mode', spellInputMode);
