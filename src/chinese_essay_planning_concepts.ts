@@ -55,7 +55,7 @@ function aimTarget(withMaterials:boolean):string{
   s+='<text x="'+cx+'" y="'+(cy-3)+'" text-anchor="middle" font-size="13" font-weight="800" fill="currentColor">中心</text>';
   s+='<text x="'+cx+'" y="'+(cy+12)+'" text-anchor="middle" font-size="13" font-weight="800" fill="currentColor">思想</text>';
   if(withMaterials){
-    var mats=['材料','例子','感受','道理'];
+    var mats=['發生的事','例子','感受','道理'];
     var ys=[28,74,120,166];
     for(var i=0;i<mats.length;i++){
       var by=ys[i], bx=10, bw=66, bh=28;
