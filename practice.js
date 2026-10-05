@@ -2496,7 +2496,7 @@ function checkQuiz(el, correct) {
         return;
     const feedback = document.getElementById('quiz-feedback');
     const word = allWords[currentWordIndex];
-    // 評分後解除所有選項的可操作性(含鍵盤):答錯無自動前進,選項仍帶 role=button/tabindex/onkeydown→Enter/空白鍵會再呼叫 checkQuiz(被 L1614 擋成 no-op)=鍵盤可達的死按鈕(與 coca w106/toeic w107 一致)
+    // 評分後解除所有選項的可操作性(含鍵盤):答錯無自動前進,選項仍帶 role=button/tabindex/onkeydown→Enter/空白鍵會再呼叫 checkQuiz(被開頭的已作答守衛擋成 no-op)=鍵盤可達的死按鈕(與 coca w106/toeic w107 一致)
     document.querySelectorAll('.quiz-option').forEach(o => { o.style.pointerEvents = 'none'; o.removeAttribute('role'); o.removeAttribute('tabindex'); o.removeAttribute('onkeydown'); o.setAttribute('aria-disabled', 'true'); });
     if (correct) {
         el.classList.add('correct');
