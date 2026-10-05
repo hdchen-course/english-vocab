@@ -97,7 +97,7 @@
         missStreak = 0;
         lvChange = 0;
         showScreen('play');
-        $('play-title').textContent = (m === 'mix' ? '綜合練習' : CAT_BY[m].label) + ' 📏';
+        $('play-title').textContent = (m === 'mix' ? '綜合練習 🎲' : CAT_BY[m].label + ' ' + CAT_BY[m].emoji);
         if (m === 'mix') {
             renderMixPrimer();
         }
@@ -157,9 +157,10 @@
         $('btn-submit').addEventListener('click', submit);
         $('ul-in').addEventListener('keydown', function (e) { if (e.key === 'Enter') {
             e.preventDefault();
+            e.stopPropagation();
             if (!answered)
                 submit();
-        } });
+        } }); // stopPropagation：避免同一次 Enter 冒泡到 document handler 又觸發 nextProblem()，否則送出後立刻跳題、看不到回饋
         $('btn-next').onclick = function () { nextProblem(); };
     }
     function parseNum(s) { s = (s || '').trim().replace(/^\+/, ''); if (!/^-?\d+(\.\d+)?$/.test(s))

@@ -11,8 +11,9 @@
   function ri(lo,hi){ return lo + Math.floor(Math.random()*(hi-lo+1)); }
   function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
   function gcd(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){ var t=b; b=a%b; a=t; } return a||1; }
-  // 選一個百分比，並回傳能讓「該百分比 × 基數 ÷ 100」整除的基數步長
+  // 回傳本關可選用的百分比清單
   function pctPool(lv){ return lv<=1?[10,20,50] : lv===2?[10,20,25,50,75] : lv===3?[10,20,25,30,40,50,60,75,80] : [5,10,15,20,25,30,40,50,60,70,75,80,90]; }
+  // 回傳能讓「百分比 × 基數 ÷ 100」整除的基數步長（確保答案為整數）
   function stepFor(X){ return 100/gcd(X,100); }
   function baseMax(lv){ return lv<=1?9 : lv===2?15 : lv===3?30 : lv===4?60 : 100; }
 
@@ -22,7 +23,7 @@
       gen:function(lv){ var X=pick(pctPool(lv)); var step=stepFor(X); var Y=step*ri(1, Math.max(1,Math.floor(baseMax(lv)/step)+2)); var ans=X*Y/100;
         return { text:'<b>'+Y+'</b> 的 <b>'+X+'%</b> <span class="pc-q">是多少？</span>', answer:ans, unit:'',
           tip:Y+' 的 '+X+'% = '+Y+' × '+X+' ÷ 100 = '+(X*Y)+' ÷ 100 = '+ans+'。', spoken:Y+' 的百分之 '+X+' 是多少' }; } },
-    { key:'discount', label:'打折要付多少', emoji:'🏷️', sub:'打 X 折＝付原價的 X0%',
+    { key:'discount', label:'打折要付多少', emoji:'🏷️', sub:'打 8 折＝付原價的 80%（折數×10）',
       teach:'「打折」是購物最常見的百分比。<b>打 X 折，就是付原價的 X0%</b>（也就是原價 × X ÷ 10）。<br><br><b>例：</b>原價 500 元打 8 折 = 500 × 8 ÷ 10 = 400 元（省了 100 元）。<br><br>💡 打對折就是打 5 折＝付一半；折數越小、越便宜。',
       gen:function(lv){ var d=pick(lv<=1?[5,8]:lv<=2?[5,7,8,9]:[5,6,7,8,9]); var Y=10*ri(2, Math.max(3,baseMax(lv))); var pay=Y*d/10; var save=Y-pay;
         return { text:'原價 <b>'+Y+'</b> 元，打 <b>'+d+'</b> 折。<br><span class="pc-q">要付多少元？</span>', answer:pay, unit:'元',
