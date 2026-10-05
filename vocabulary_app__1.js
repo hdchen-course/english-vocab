@@ -77,6 +77,7 @@ let currentWordIndex = 0;
 let studyQueue = [];
 let isFlipped = false;
 let flashAudioTimer = null; // 閃卡 audio-first 的待觸發 timer；換卡/換模式/換主題時於 renderMode 取消，避免播到上一張卡的字
+let advanceTimer = null; // 答對後自動進下一字的待觸發 timer；換卡/換模式/換主題/開圖鑑/開儀表板時取消，避免跳過下一張未看到的字
 let matchState = { selected: null, matched: [] };
 let srs = new SRSEngine();
 // ==================== SETTINGS ====================
@@ -244,6 +245,10 @@ function renderMode() {
         clearTimeout(flashAudioTimer);
         flashAudioTimer = null;
     } // 取消上一張閃卡尚未觸發的自動發音：換模式/主題也會重設 isFlipped，單靠 !isFlipped 擋不住跨卡誤播
+    if (advanceTimer) {
+        clearTimeout(advanceTimer);
+        advanceTimer = null;
+    } // 取消上一張尚未觸發的自動進字：換模式/主題時直接 renderMode，否則舊 timer 會跳過新畫面的第一張字
     const area = document.getElementById('learningArea');
     document.getElementById('dashboard').classList.remove('show');
     const isCloze = WORD_DATA[currentTab].isCloze;
@@ -350,7 +355,7 @@ function reviewWord(quality) {
         const msgs = { 0: '沒關係，待會再一起看一次 👋', 2: '記住了！過幾天再複習 ✅', 3: '太厲害了，下次更久才會再見 🚀' };
         showToast(msgs[quality] || '繼續加油！');
         updateStats();
-        setTimeout(nextWord, 600);
+        advanceTimer = setTimeout(nextWord, 600);
     }
 }
 function showToast(msg) {
@@ -496,7 +501,7 @@ function checkQuizAnswer(el, selected, correct) {
         srs.review(word.word, 2);
         recordStudy();
         updateStats();
-        setTimeout(nextWord, 900);
+        advanceTimer = setTimeout(nextWord, 900);
     }
     else {
         el.classList.add('wrong');
@@ -666,7 +671,7 @@ function spellCheckTiles() {
         srs.review(word.word, 2);
         recordStudy();
         updateStats();
-        setTimeout(nextWord, 900);
+        advanceTimer = setTimeout(nextWord, 900);
     }
     else {
         srs.review(word.word, 0);
@@ -729,7 +734,7 @@ function checkSpelling(e) {
         }
         recordStudy();
         updateStats();
-        setTimeout(nextWord, 900);
+        advanceTimer = setTimeout(nextWord, 900);
     }
     else if (e && e.key === 'Enter' && inputNS.length === targetNS.length) {
         answered = true;
@@ -791,7 +796,7 @@ function renderListening(area) {
     </div>
   `;
     // Auto play
-    setTimeout(() => speak(word.word), 300);
+    flashAudioTimer = setTimeout(() => { flashAudioTimer = null; speak(word.word); }, 300);
 }
 function checkListeningAnswer(el, selected, correct) {
     if (answered)
@@ -810,7 +815,7 @@ function checkListeningAnswer(el, selected, correct) {
         srs.review(word.word, 2);
         recordStudy();
         updateStats();
-        setTimeout(nextWord, 900);
+        advanceTimer = setTimeout(nextWord, 900);
     }
     else {
         el.classList.add('wrong');
@@ -896,7 +901,7 @@ function checkClozeAnswer(el, selected, correct) {
         srs.review(word.word, 2);
         recordStudy();
         updateStats();
-        setTimeout(nextWord, 900);
+        advanceTimer = setTimeout(nextWord, 900);
     }
     else {
         el.classList.add('wrong');
@@ -955,7 +960,7 @@ function renderClozeListening(area) {
       <div class="fc-reveal" id="revealPanel"></div>
     </div>
   `;
-    setTimeout(() => speak(word.word), 300);
+    flashAudioTimer = setTimeout(() => { flashAudioTimer = null; speak(word.word); }, 300);
 }
 function renderMatching(area) {
     const allWords = WORD_DATA[currentTab].words;
@@ -1057,6 +1062,14 @@ function selectMatch(el) {
 }
 // ==================== DASHBOARD ====================
 function showDashboard() {
+    if (advanceTimer) {
+        clearTimeout(advanceTimer);
+        advanceTimer = null;
+    } // 開儀表板不走 renderMode，手動取消待觸發的自動進字，否則會回跳學習區並略過一張字
+    if (flashAudioTimer) {
+        clearTimeout(flashAudioTimer);
+        flashAudioTimer = null;
+    }
     document.getElementById('learningArea').innerHTML = '';
     const dash = document.getElementById('dashboard');
     dash.classList.add('show');
@@ -1494,6 +1507,14 @@ init();
     }
     // ---------- 開關畫面（與 .vocab-layout 互斥，比照 cefr 切換法） ----------
     function openScreen() {
+        if (advanceTimer) {
+            clearTimeout(advanceTimer);
+            advanceTimer = null;
+        } // 開圖鑑不走 renderMode，手動取消待觸發的自動進字/自動發音，否則切走後舊 timer 仍會動作
+        if (flashAudioTimer) {
+            clearTimeout(flashAudioTimer);
+            flashAudioTimer = null;
+        }
         if (!data)
             load();
         var area = document.getElementById('worddexArea');
