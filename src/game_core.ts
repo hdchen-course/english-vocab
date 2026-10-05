@@ -558,8 +558,9 @@
       justCompletedDaily = true;
     }
 
-    // 觸及任一科 → 更新 streak（同日 idempotent）。deferBadges=true：讓徽章檢查交給下方 award() 的 checkBadges() 統一處理（才會發慶祝 toast、計入回傳的 newBadges），避免 pingActive 搶先靜默發放。
-    pingActive(true);
+    // 觸及任一科 → 更新 streak（同日 idempotent）。deferBadges=true：徽章交給下方 checkBadges() 統一處理（發慶祝 toast、計入 newBadges）。
+    // 靜默 award（如 init 的 delta-sync 回填）不在這裡吃掉「當日第一次」streak 遞增，否則跨里程碑的慶祝會被 silent 吞掉；留給 init() 明確的 pingActive() 遞增並慶祝。
+    if (!meta.silent) pingActive(true);
 
     // 徽章檢查。
     var newBadges = checkBadges();
@@ -701,7 +702,7 @@
       } else if (didReset) {
         queueToast('休息一下很好，今天重新開始就好，之前學過的都還在 🌱', 'streak');
       }
-      if (!deferBadges) { // standalone/init：streak 剛跨過里程碑（本區塊在 changed 內）要慶祝 toast，其餘徽章只 emit（init 的靜默回溯補授交給 L1226 的 checkBadges）
+      if (!deferBadges) { // standalone/init：streak 剛跨過里程碑（本區塊在 changed 內）要慶祝 toast，其餘徽章只 emit（init 的靜默回溯補授留給 init() 後段的 backfill checkBadges()）
         var nb = checkBadges();
         var mat = pageMaturity() === 'advanced';
         for (var i = 0; i < nb.length; i++) {
