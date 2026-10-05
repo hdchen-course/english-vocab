@@ -848,7 +848,7 @@ function renderClozeSpelling(area) {
       <div class="fc-reveal" id="revealPanel"></div>
     </div>
   `;
-  setTimeout(() => { document.getElementById('spellingInput').focus(); }, 100);
+  setTimeout(() => { const el = document.getElementById('spellingInput'); if (el) el.focus(); }, 100);
 }
 
 function renderClozeListening(area) {
@@ -878,6 +878,7 @@ function renderClozeListening(area) {
 
 function renderMatching(area) {
   const allWords = WORD_DATA[currentTab].words;
+  if (!allWords || !allWords.length) { area.innerHTML = '<div class="empty-state"><div class="empty-state-emoji">🎉</div><p>太棒了，這個主題今天都複習完囉！要不要換一個主題，或明天再來呢？😊</p></div>'; return; }
   const getMeaning = (w) => w.chinese || w.definition || w.word;
   // 以「釋義」去重再取最多 5 個字，避免出現兩張中文字面相同的 tile，
   // 造成同一中文對應兩個英文卻只認一個而配對判錯。

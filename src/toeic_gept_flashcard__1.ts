@@ -733,6 +733,7 @@ function renderSpell() {
   }
 }
 function toggleSpellMode() {
+  if (answered) return;   // 已作答的卡片不可再切換輸入法重建（否則會重設 answered 並重複計分/SRS/XP）
   const next = (spell && spell.mode === 'tiles') ? 'keyboard' : 'tiles';
   setSpellMode(next);
   buildSpell(getWord());   // 切換時重來（清空重填）
