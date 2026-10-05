@@ -157,7 +157,7 @@
                     { type: 'teach', kicker: '再練一個', title: '子音＋母音＋子音（CVC）',
                         svg: animCanvas(W, H, '字母磚 b、i、g 從分開滑到一起，融成 big，點喇叭連讀整個字'),
                         mount: mountBlend({ parts: ['b', 'i', 'g'], mode: 'phoneme', onPlay: playPh }),
-                        text: '<b>子音＋母音＋子音（CVC）</b>是最好練的三音節奏：<b>b /b/ + i /ɪ/ + g /g/</b> → <b>big</b>。中間一定有一個母音當心臟。點 🔊 聽聽看。' },
+                        text: '<b>子音＋母音＋子音（CVC）</b>是最好練的「三個音」組合：<b>b /b/ + i /ɪ/ + g /g/</b> → <b>big</b>。中間一定有一個母音當心臟。點 🔊 聽聽看。' },
                     { type: 'quiz', kicker: '換你試試', title: '黏起來是哪個字？',
                         eq: 'c /k/ + a /æ/ + t /t/ 黏起來是哪個字？',
                         options: ['cat', 'cut', 'kit'], answer: 0,
