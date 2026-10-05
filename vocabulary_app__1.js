@@ -537,7 +537,7 @@ function renderSpelling(area) {
             slotsHtml += '<span class="fc-spell__gap"></span>';
         }
         else {
-            slotsHtml += '<button class="fc-spell__tile fc-spell__slot" id="ss' + i + '" onclick="spellTapSlot(' + i + ')" aria-label="第 ' + (i + 1) + ' 格，點一下可退回字母"></button>';
+            slotsHtml += '<button class="fc-spell__tile fc-spell__slot" id="ss' + i + '" onclick="spellTapSlot(' + i + ')" aria-label="第 ' + (i + 1) + ' 格，尚未填入"></button>';
         }
     });
     const bankChars = chars.filter(c => c !== ' ').sort(() => Math.random() - 0.5);
@@ -586,6 +586,7 @@ function spellTapTile(k) {
     if (slotEl) {
         slotEl.textContent = tile.ch;
         slotEl.classList.add('filled');
+        slotEl.setAttribute('aria-label', '第 ' + (target + 1) + ' 格，已填入 ' + tile.ch + '，點一下可退回字母');
     }
     const tileEl = document.getElementById('sb' + k);
     if (tileEl)
@@ -613,6 +614,7 @@ function spellTapSlot(i) {
     if (se) {
         se.textContent = '';
         se.classList.remove('filled', 'ok', 'no');
+        se.setAttribute('aria-label', '第 ' + (i + 1) + ' 格，尚未填入');
     }
 }
 function spellCheckTiles() {

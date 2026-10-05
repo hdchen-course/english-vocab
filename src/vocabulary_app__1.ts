@@ -532,7 +532,7 @@ function renderSpelling(area) {
   let slotsHtml = '';
   chars.forEach((ch, i) => {
     if (ch === ' ') { slotsHtml += '<span class="fc-spell__gap"></span>'; }
-    else { slotsHtml += '<button class="fc-spell__tile fc-spell__slot" id="ss' + i + '" onclick="spellTapSlot(' + i + ')" aria-label="第 ' + (i + 1) + ' 格，點一下可退回字母"></button>'; }
+    else { slotsHtml += '<button class="fc-spell__tile fc-spell__slot" id="ss' + i + '" onclick="spellTapSlot(' + i + ')" aria-label="第 ' + (i + 1) + ' 格，尚未填入"></button>'; }
   });
   const bankChars = chars.filter(c => c !== ' ').sort(() => Math.random() - 0.5);
   let bankHtml = '';
@@ -567,7 +567,7 @@ function spellTapTile(k) {
   if (target < 0) return;
   st.slots[target].ch = tile.ch; st.slots[target].bankIdx = k; tile.used = true;
   const slotEl = document.getElementById('ss' + target);
-  if (slotEl) { slotEl.textContent = tile.ch; slotEl.classList.add('filled'); }
+  if (slotEl) { slotEl.textContent = tile.ch; slotEl.classList.add('filled'); slotEl.setAttribute('aria-label', '第 ' + (target + 1) + ' 格，已填入 ' + tile.ch + '，點一下可退回字母'); }
   const tileEl = document.getElementById('sb' + k);
   if (tileEl) tileEl.classList.add('used');
   if (spellAllFilled()) spellCheckTiles();
@@ -584,7 +584,7 @@ function spellTapSlot(i) {
   }
   slot.ch = null; slot.bankIdx = null;
   const se = document.getElementById('ss' + i);
-  if (se) { se.textContent = ''; se.classList.remove('filled', 'ok', 'no'); }
+  if (se) { se.textContent = ''; se.classList.remove('filled', 'ok', 'no'); se.setAttribute('aria-label', '第 ' + (i + 1) + ' 格，尚未填入'); }
 }
 
 function spellCheckTiles() {

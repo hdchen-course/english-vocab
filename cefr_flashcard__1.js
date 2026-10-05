@@ -531,7 +531,7 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
                     // 鍵盤可操作性：與 COCA/TOEIC/practice 拼字格一致（Tab 聚焦、Enter/空白鍵退回字母）
                     el.setAttribute('role', 'button');
                     el.tabIndex = 0;
-                    el.setAttribute('aria-label', '第 ' + letterNo + ' 個字母格，按 Enter 或空白鍵退回字母');
+                    el.setAttribute('aria-label', s.filled ? ('第 ' + letterNo + ' 個字母格，已填入 ' + s.filled + '，按 Enter 或空白鍵退回字母') : ('第 ' + letterNo + ' 個字母格，尚未填入'));
                     el.onkeydown = function (ev) { if (ev.key === 'Enter' || ev.key === ' ') {
                         ev.preventDefault();
                         el.onclick();
