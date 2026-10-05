@@ -97,8 +97,8 @@ window.CONCEPT = {
      done:'一定要＝must／have to；禁止＝mustn’t；不必＝don’t have to。',
      steps:[
       {type:'teach',kicker:'先想一想',title:'must / have to＝一定要、必須',
-       svg:animCanvas(360,240,'強制度量尺：should 到 have to 到 must，指針落在最強端的 must，表示規定一定要做，例句 You must wear a helmet.'),
-       mount:meter({axisLabel:'強制度', stops:['should','have to','must'], pointer:'must', example:'You must wear a helmet.'}),
+       svg:animCanvas(360,240,'強制度量尺：should 到 must／have to，指針落在最強端的 must／have to，表示規定一定要做，例句 You must wear a helmet.'),
+       mount:meter({axisLabel:'強制度', stops:['should','must／have to'], pointer:'must／have to', example:'You must wear a helmet.'}),
        text:'規定「<b>一定要、必須</b>」做用 <b>must</b> 或 <b>have to</b>：<b>You must wear a helmet.</b>（一定要戴安全帽）。小心兩個長得像、意思卻差很多的否定：<b>mustn’t</b>＝<b>絕對不可以（禁止）</b>；<b>don’t have to</b>＝<b>不必（沒必要，做不做都行）</b>。後面都接<b>原形動詞</b>。'},
       {type:'quiz',kicker:'換你試試',title:'選出正確的（騎車規定一定要戴安全帽）',eq:'On a bike, you ___ wear a helmet.',
        options:['must','may','could'],answer:0,
