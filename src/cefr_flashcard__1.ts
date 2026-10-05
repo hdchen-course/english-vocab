@@ -434,19 +434,21 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
     slotsEl.innerHTML = '';
     slotsEl.classList.toggle('is-wrong', false);
 
+    var letterNo = 0; // 只數「字母格」(slot/hint)，略過 gap(空格)與 sep(連字號)，aria 才會報對「第 N 個字母」
     spellState.slots.forEach(function(s, si){
       if (s.type === 'gap') {
         const g = document.createElement('span'); g.className = 'fc-spell__gap'; slotsEl.appendChild(g); return;
       }
-      const el = document.createElement(spellState.mode === 'type' && s.type === 'slot' ? 'div' : 'div');
+      const el = document.createElement('div');
       el.className = 'fc-spell__tile fc-spell__slot';
       if (s.type === 'sep') { el.classList.add('hint'); el.textContent = s.ch; }
-      else if (s.type === 'hint') { el.classList.add('hint'); el.textContent = s.ch; }
+      else if (s.type === 'hint') { letterNo++; el.classList.add('hint'); el.textContent = s.ch; }
       else {
         // 可編輯 slot
+        letterNo++;
         if (spellState.mode === 'type') {
           const inp = document.createElement('input');
-          inp.type = 'text'; inp.maxLength = 1; inp.setAttribute('aria-label', '第 ' + (si + 1) + ' 個字母');
+          inp.type = 'text'; inp.maxLength = 1; inp.setAttribute('aria-label', '第 ' + letterNo + ' 個字母');
           inp.setAttribute('autocapitalize', 'none'); inp.setAttribute('autocomplete', 'off'); inp.setAttribute('spellcheck', 'false');
           inp.value = s.filled || '';
           inp.oninput = function(){ s.filled = inp.value.replace(/[^a-zA-Z]/g, ''); inp.value = s.filled; if (s.filled) focusNextInput(si); };
@@ -470,7 +472,7 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
           // 鍵盤可操作性：與 COCA/TOEIC/practice 拼字格一致（Tab 聚焦、Enter/空白鍵退回字母）
           el.setAttribute('role', 'button');
           el.tabIndex = 0;
-          el.setAttribute('aria-label', '第 ' + (si + 1) + ' 個字母格，按 Enter 或空白鍵退回字母');
+          el.setAttribute('aria-label', '第 ' + letterNo + ' 個字母格，按 Enter 或空白鍵退回字母');
           el.onkeydown = function(ev){ if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); el.onclick(); } };
         }
       }

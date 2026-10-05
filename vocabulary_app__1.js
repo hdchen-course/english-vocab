@@ -865,7 +865,9 @@ function renderClozeSpelling(area) {
         return;
     }
     const letters = word.word.split('');
-    const boxes = letters.map((_, i) => `<div class="letter-box" id="lb${i}"></div>`).join('');
+    // 空白位置（多字詞如 ice cream）輸出 .fc-spell__gap（無方格），與 renderSpelling 一致；
+    // 否則 checkSpelling 以 lb<i> 對位時，字母會被擠進空格方格、後面全部錯位。
+    const boxes = letters.map((ch, i) => ch === ' ' ? '<span class="fc-spell__gap"></span>' : `<div class="letter-box" id="lb${i}"></div>`).join('');
     area.innerHTML = `
     <div class="word-counter">${currentWordIndex + 1} / ${studyQueue.length}</div>
     <div class="spelling-container">
@@ -982,7 +984,7 @@ function selectMatch(el) {
             srs.startLearning(enWord);
             srs.review(enWord, 2);
             recordStudy();
-            if (matchState.matched.length >= 5) {
+            if (matchState.matched.length >= matchState.pairs.length) { // 以實際配對數為準（去重後可能 <5），否則配完整盤仍不觸發完成、孩子卡住
                 showConfetti();
                 updateStats();
                 setTimeout(() => renderMatching(document.getElementById('learningArea')), 1500);

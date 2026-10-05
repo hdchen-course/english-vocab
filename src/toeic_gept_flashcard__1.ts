@@ -656,7 +656,7 @@ function buildSpell(word) {
     if (ch === ' ') { cells.push({ type: 'gap' }); return; }
     let isFill;
     if (diff === 'blank') isFill = !!blanks[i];
-    else isFill = (i !== alphaIdx[0]);   // 基礎/進階：首字母預填為提示
+    else isFill = (alphaIdx.length <= 1) ? true : (i !== alphaIdx[0]);   // 基礎/進階：首字母預填為提示；單字母詞強制至少一個可填格，避免沒有可填格而卡住
     if (isFill) { cells.push({ type: 'fill', ch: ch, val: null, state: '' }); fillLetters.push(ch); }
     else cells.push({ type: 'hint', ch: ch });
   });
@@ -679,15 +679,17 @@ function renderSpell() {
 
   // 答案槽
   let slotsHTML = '';
+  var letterNo = 0; // 只數字母格（hint/fill），跳過 gap(空格)，aria 才報對「第 N 個字母」
   spell.cells.forEach((c, i) => {
     if (c.type === 'gap') { slotsHTML += '<span class="fc-spell__gap" aria-hidden="true"></span>'; return; }
+    letterNo++;
     if (c.type === 'hint') { slotsHTML += '<div class="fc-spell__tile fc-spell__slot hint">' + esc(c.ch) + '</div>'; return; }
     // fill
     const stateCls = c.state ? (' ' + c.state) : '';
     if (spell.mode === 'keyboard') {
       slotsHTML += '<div class="fc-spell__tile fc-spell__slot' + (c.val ? ' filled' : '') + stateCls + '">' +
-        '<input type="text" inputmode="latin" maxlength="1" data-ci="' + i + '" value="' + (c.val ? esc(c.val) : '') + '"' +
-        ' aria-label="第 ' + (i + 1) + ' 個字母" oninput="spellInput(this)" onkeydown="spellKey(event,this)"></div>';
+        '<input type="text" inputmode="text" maxlength="1" data-ci="' + i + '" value="' + (c.val ? esc(c.val) : '') + '"' +
+        ' aria-label="第 ' + letterNo + ' 個字母" oninput="spellInput(this)" onkeydown="spellKey(event,this)"></div>';
     } else {
       slotsHTML += '<div class="fc-spell__tile fc-spell__slot' + (c.val ? ' filled' : '') + stateCls + '"' +
         ' role="button" tabindex="0" onclick="spellClear(' + i + ')"' +
