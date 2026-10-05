@@ -1,5 +1,5 @@
 /* =====================================================================
- * game_core.js — 公館國小電子書 統一遊戲化引擎（唯一全域 window.Game）
+ * game_core.ts — 公館國小電子書 統一遊戲化引擎（唯一全域 window.Game）
  * ---------------------------------------------------------------------
  * 依 BLUEPRINT.md §4（並參 §3、§5.6）實作：
  *   - 資料模型 player_profile_v1（§4.3）
@@ -606,6 +606,23 @@
     return result;
   }
 
+  // 檢查里程碑徽章並發慶祝（emit + toast，遵守 meta.silent）；回傳本次新解鎖清單。
+  // 供「只增 attempts、不走 award」的路徑（答錯／xp==0 的 recordSession）補跑，否則 all_subjects 等 attempts 類里程碑會被 init 回溯靜默補授、少了慶祝。
+  function flushBadges(meta) {
+    meta = meta || {};
+    var nb = checkBadges();
+    if (nb.length) {
+      var mature = pageMaturity() === 'advanced';
+      for (var i = 0; i < nb.length; i++) {
+        emit('badge', nb[i]);
+        if (!meta.silent) {
+          queueToast((mature ? '達成成就：' : '獲得徽章：') + nb[i].icon + ' ' + nb[i].name, 'badge');
+        }
+      }
+    }
+    return nb;
+  }
+
   // recordAnswer（§4.4）
   function recordAnswer(subject, correct, meta) {
     meta = meta || {};
@@ -627,9 +644,10 @@
     } else {
       sessionCombo[subject] = 0;
       s.lastPlayed = nowISO();
+      var nbWrong = flushBadges(meta); // 答錯只增 attempts，但 all_subjects 等 attempts 類里程碑可能此刻達標 → 補跑+慶祝
       save();
       updateHud();
-      return { xpDelta: 0, totalXp: profile.totalXp, level: profile.level, leveledUp: false, newBadges: [], combo: 0 };
+      return { xpDelta: 0, totalXp: profile.totalXp, level: profile.level, leveledUp: false, newBadges: nbWrong, combo: 0 };
     }
   }
 
@@ -646,9 +664,10 @@
     s.correct = num(s.correct) + correct;
     var xp = correct * CONFIG.baseXp;
     if (xp > 0) return award(subject, xp, data.meta || {});
+    var nbSess = flushBadges(data.meta || {}); // xp==0 的 session 只增 attempts → 補跑 attempts 類里程碑+慶祝
     save();
     updateHud();
-    return { xpDelta: 0, totalXp: profile.totalXp, level: profile.level, leveledUp: false, newBadges: [] };
+    return { xpDelta: 0, totalXp: profile.totalXp, level: profile.level, leveledUp: false, newBadges: nbSess };
   }
 
   // pingActive（§4.4）— streak 引擎，本地日界。
