@@ -498,7 +498,13 @@ function flipCard() {
   const inner = document.getElementById('fcInner');
   if (inner) inner.classList.toggle('flipped');
 }
+let lastRateAt = 0;
 function rateCard(grade) {
+  const now = Date.now();
+  // 去抖：評完一張卡會立刻 nextWord 並把下一張的評分鈕 render 到同一位置；350ms 內的第二次點擊
+  // 會打在那張還沒看過的新卡上、把它誤評並跳過。用時間冷卻擋掉（render 是同步的，單純旗標擋不住）。
+  if (now - lastRateAt < 350) return;
+  lastRateAt = now;
   const word = getWord();
   if (!word) return;
   const correct = grade !== 'again';
@@ -693,11 +699,15 @@ function renderSpell() {
       slotsHTML += '<div class="fc-spell__tile fc-spell__slot' + (c.val ? ' filled' : '') + stateCls + '">' +
         '<input type="text" inputmode="text" maxlength="1" data-ci="' + i + '" value="' + (c.val ? esc(c.val) : '') + '"' +
         ' aria-label="第 ' + letterNo + ' 個字母" oninput="spellInput(this)" onkeydown="spellKey(event,this)"></div>';
-    } else {
-      slotsHTML += '<div class="fc-spell__tile fc-spell__slot' + (c.val ? ' filled' : '') + stateCls + '"' +
-        ' role="button" tabindex="0" onclick="spellClear(' + i + ')"' +
+    } else if (c.val) {
+      // 已填：可點按退回字母到磚池（含 aria 標示位置與已填字母）
+      slotsHTML += '<div class="fc-spell__tile fc-spell__slot filled' + stateCls + '"' +
+        ' role="button" tabindex="0" aria-label="第 ' + letterNo + ' 個字母，已填 ' + esc(c.val) + '，按 Enter 或空白鍵退回字母" onclick="spellClear(' + i + ')"' +
         ' onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();spellClear(' + i + ');}">' +
-        (c.val ? esc(c.val) : '') + '</div>';
+        esc(c.val) + '</div>';
+    } else {
+      // 空格：spellClear 對空格 no-op，故不設 role=button/tabindex（避免螢幕報讀器報成「無作用的按鈕」），僅標示位置
+      slotsHTML += '<div class="fc-spell__tile fc-spell__slot' + stateCls + '" aria-label="第 ' + letterNo + ' 個字母，空格"></div>';
     }
   });
 
