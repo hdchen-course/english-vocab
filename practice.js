@@ -404,10 +404,13 @@ function render() {
     }
 }
 function updateProgress() {
-    const total = Object.values(wordDatabase[currentGrade]).flat().length;
-    const pct = (learnedWords.size / total) * 100;
+    const gradeWords = Object.values(wordDatabase[currentGrade]).flat();
+    const total = gradeWords.length;
+    // 只數屬於目前年級的已學會字：跨年級圖鑑複習時 learnedWords 可能含別級的字，若直接用 size 會讓 X>total、進度條破 100%
+    const learnedInGrade = gradeWords.reduce((n, w) => n + (learnedWords.has(w.word) ? 1 : 0), 0);
+    const pct = total ? (learnedInGrade / total) * 100 : 0;
     document.getElementById('progress-fill').style.width = pct + '%';
-    document.getElementById('stat-learned').textContent = `學會: ${learnedWords.size}/${total}`;
+    document.getElementById('stat-learned').textContent = `學會: ${learnedInGrade}/${total}`;
     document.getElementById('stat-streak').textContent = `答對題數: ${streak}`;
     document.getElementById('stat-score').textContent = `分數: ${score}`;
 }
@@ -2503,7 +2506,7 @@ function checkQuiz(el, correct) {
         }
         updateProgress();
         celebrate();
-        setTimeout(nextWord, 1200);
+        scheduleAdvance(1200);
     }
     else {
         el.classList.add('wrong');
@@ -2737,7 +2740,7 @@ function checkSpelling() {
         }
         updateProgress();
         celebrate();
-        setTimeout(nextWord, 1200);
+        scheduleAdvance(1200);
     }
     else {
         updateProgress();
@@ -2888,7 +2891,14 @@ function ttsSpeakWord(word) {
         speechSynthesis.speak(u);
     }
 }
-function nextWord() { currentWordIndex = (currentWordIndex + 1) % allWords.length; render(); }
+let advanceTimer = null;
+// 自動進下一題用可取消的排程：手動按「跳過/下一個」會先清掉待觸發的 timer，確保一次只前進一題
+// （否則 timer 與手動點擊會各前進一次，默默跳過一張沒看過也沒計分的卡）。
+function scheduleAdvance(ms) { clearTimeout(advanceTimer); advanceTimer = setTimeout(function () { advanceTimer = null; nextWord(); }, ms); }
+function nextWord() { if (advanceTimer) {
+    clearTimeout(advanceTimer);
+    advanceTimer = null;
+} currentWordIndex = (currentWordIndex + 1) % allWords.length; render(); }
 function prevWord() { currentWordIndex = (currentWordIndex - 1 + allWords.length) % allWords.length; render(); }
 let lastLearnAt = 0;
 function markLearned() {
@@ -2904,7 +2914,7 @@ function markLearned() {
     score += 5;
     updateProgress();
     celebrate();
-    setTimeout(nextWord, 600);
+    scheduleAdvance(600);
 }
 function shuffleArray(arr) {
     const a = [...arr];
@@ -2946,8 +2956,9 @@ window.startAlbumReview = function (queue) {
     });
     render();
 };
-// Start
-init();
+// Start — 延到下一個 tick 才 init，確保後面那個定義 window.Album 的 IIFE 已執行完，
+// loadCategory 第一次就能用 Album.orderCategory 做到期優先排序（否則首個分類會退回未排序）。
+setTimeout(init, 0);
 /* ---- (下一個原 inline <script> 區塊) ---- */
 (function () {
     'use strict';
