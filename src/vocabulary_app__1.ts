@@ -253,7 +253,7 @@ function nextWord() {
 
 // ==================== MODE RENDERERS ====================
 function renderMode() {
-  answered = false; hintUsed = false;   // 新的一題/一種模式開始，解除作答鎖與提示旗標
+  answered = false; hintUsed = false; isFlipped = false;   // 新的一題/一種模式開始，解除作答鎖與提示旗標，並回到卡片正面（flipCard 只切 CSS class、不經此；凡 renderMode 都是全新卡片視圖，須從正面開始，才不會翻面殘留＋略過 audio-first）
   const area = document.getElementById('learningArea');
   document.getElementById('dashboard').classList.remove('show');
 
@@ -322,9 +322,10 @@ function renderFlashcard(area) {
   `;
 
   // Audio-first：正面(單字面)渲染後自動播放一次單字發音，與 cefr/coca/toeic 閃卡一致。
-  // 僅在單字面朝上時播放；翻到背面或切下一張皆由重新渲染控制，不會重複亂播。
+  // 300ms 後的回呼會「再確認一次」isFlipped：若使用者在這段空檔先翻到背面就不播（flipCard 只切 CSS
+  // class、不重新渲染，無法靠 render 取消此 timer，故須在回呼內再判斷），避免在背面亂播。
   // speak() 內含 try/catch 與 play().catch(fallback)，autoplay 被瀏覽器擋不會丟錯。
-  if (!isFlipped) setTimeout(() => speak(word.word), 300);
+  if (!isFlipped) setTimeout(() => { if (!isFlipped) speak(word.word); }, 300);
 }
 
 function flipCard() {
