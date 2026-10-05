@@ -387,6 +387,12 @@ function checkAnswer(el, selected, correct, word) {
     const options = document.querySelectorAll('.quiz-option');
     options.forEach(opt => {
         opt.style.pointerEvents = 'none';
+        // 評分後解除選項的可操作性：pointerEvents:none 只擋滑鼠，鍵盤仍能 focus 並觸發委派的 keydown→checkAnswer（已被 awaitingContinue 擋成 no-op），對鍵盤/報讀使用者是「宣稱可按卻沒反應」的死按鈕；與拼字格 L537 一致移除 role/tabindex 並標 aria-disabled
+        if (opt.getAttribute('role') === 'button') {
+            opt.removeAttribute('role');
+            opt.removeAttribute('tabindex');
+            opt.setAttribute('aria-disabled', 'true');
+        }
         if (opt.textContent === correct)
             opt.classList.add('correct');
     });
@@ -637,6 +643,8 @@ function checkSpell() {
             s.setAttribute('aria-disabled', 'true');
         }
     });
+    // 進階模式（box 3–4）字母磚庫會混入誘答字母，評分後 checkSpell 不重繪 #spellBank，殘留的未使用磚仍是 enabled 的 <button onclick=onTileClick>，點了只會被 awaitingContinue 擋成 no-op＝死按鈕；一併停用整個字母磚庫
+    document.querySelectorAll('#spellBank button').forEach(b => { b.disabled = true; b.removeAttribute('onclick'); b.removeAttribute('tabindex'); b.setAttribute('aria-disabled', 'true'); });
     recordBinary(allRight);
     showReveal(document.getElementById('spellReveal'), allRight, word, allRight ? '' : '拼對的字母會變綠色；看一下上面的正確拼法，下次就記住了。');
 }
