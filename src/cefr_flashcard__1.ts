@@ -1,5 +1,5 @@
 // @ts-nocheck — 機械式 legacy JS→TS 遷移：verbatim 轉檔、行為等價；型別檢查延後
-/* cefr_flashcard__1.ts ← cefr_flashcard.html 的第 1 段連續 inline（flashcard：WORD_DATA/SRS/主程式分段，順序關鍵）。verbatim 轉檔；部分區塊以 IIFE 封裝（如 SRS store/主程式），其餘為全域 scope。 */
+/* cefr_flashcard__1.ts ← cefr_flashcard.html 的第 1 段連續 inline（flashcard：WORD_DATA/SRS/主程式分段，順序關鍵）。verbatim 轉檔；主程式段落以 IIFE 封裝（另有一次性 SRS 遷移小 IIFE）；SRS store 掛載 window.CEFR_SRS 為全域 scope。 */
 window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStore('cefr_worddex_v1') : null;
 (function(){
   var s = window.CEFR_SRS; if (!s) return;

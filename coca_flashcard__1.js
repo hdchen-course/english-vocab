@@ -1,5 +1,5 @@
 // @ts-nocheck — 機械式 legacy JS→TS 遷移：verbatim 轉檔、行為等價；型別檢查延後
-/* coca_flashcard__1.ts ← coca_flashcard.html 的第 1 段連續 inline（flashcard：WORD_DATA/SRS/主程式分段，順序關鍵）。verbatim 轉檔；部分區塊以 IIFE 封裝（如 SRS store/Worddex），其餘為全域 scope。 */
+/* coca_flashcard__1.ts ← coca_flashcard.html 的第 1 段連續 inline（flashcard：WORD_DATA/SRS/主程式分段，順序關鍵）。verbatim 轉檔；主程式段落以 IIFE 封裝（另有 spellInputMode 初始化小 IIFE），SRS store 與資料宣告為全域 scope。 */
 // ==================== SHARED SRS STORE ====================
 // 排程（scheduleBox，可退盒）與收藏（peakBox/lit，只增不減）同存一 key、脫鉤。
 // 主作答（閃卡/測驗/拼字）與「單字圖鑑／今日複習」共用同一 store 實例。

@@ -1,5 +1,5 @@
 // @ts-nocheck — 機械式 legacy JS→TS 遷移：verbatim 轉檔、行為等價；型別檢查延後
-/* vocabulary_app__1.ts ← vocabulary_app.html 的第 1 段連續 inline（flashcard：WORD_DATA/SRS/主程式分段，順序關鍵）。verbatim 轉檔；部分區塊以 IIFE 封裝（如 SRS/Worddex），其餘為全域 scope。 */
+/* vocabulary_app__1.ts ← vocabulary_app.html 的第 1 段連續 inline（flashcard：WORD_DATA/SRS/主程式分段，順序關鍵）。verbatim 轉檔；部分區塊以 IIFE 封裝（wireEnglishXp／Worddex 模組），SRS 引擎與主程式為全域 scope。 */
 // ==================== SRS ENGINE（改接共用 window.SRS 排程核心） ====================
 // 本頁已是 SR 主路徑：改用共用 assets/srs_engine.js（混合 Leitner 盒 × SM-2 ease），
 // 儲存仍綁定本頁自持的扁平 key 'vocab_srs'（word→card map），演算法共用、絕不跨頁污染。

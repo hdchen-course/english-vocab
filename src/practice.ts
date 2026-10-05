@@ -2,7 +2,7 @@
 /* =====================================================================
  * practice.ts  →  (tsc) →  practice.js
  * 原為 practice.html 的多個 inline <script> 區塊（連續、同一全域 scope）；
- * 依原順序合併成單一 sibling .js（主體以 IIFE 封裝，保留原 onclick 參照所需的 window.* 掛載）。
+ * 依原順序合併成單一 sibling .js（verbatim 轉檔，保留原 inline 的執行順序與 onclick 參照）。
  * 行為與原 inline 版等價。
  * ===================================================================== */
     // ===== WORD DATABASE =====
