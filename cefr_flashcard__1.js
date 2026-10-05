@@ -269,7 +269,9 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
         }
         quizAnswered = false;
         const card = cards[currentIndex];
-        const dir = directionAt(currentIndex);
+        let dir = directionAt(currentIndex);
+        if (dir === 'toMeaning' && !card.chinese)
+            dir = 'toWord'; // 無中文釋義的卡片不走「看字選義」，否則正解會退回英文字本身，變成自問自答
         const reveal = document.getElementById('quizReveal');
         reveal.className = 'fc-reveal';
         reveal.innerHTML = '';

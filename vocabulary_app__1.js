@@ -717,9 +717,12 @@ function showSpellingHint() {
     const target = word.word.toLowerCase();
     const input = document.getElementById('spellingInput');
     const current = input.value.toLowerCase();
-    // Reveal next letter
+    // Reveal next letter（跳過空格，確保每次提示都真的多露出一個字母；多字詞如 ice cream 的空格位沒有方格）
     if (current.length < target.length) {
-        input.value = target.substring(0, current.length + 1);
+        var k = current.length + 1;
+        while (k < target.length && target.charAt(k - 1) === ' ')
+            k++;
+        input.value = target.substring(0, k);
         checkSpelling(null);
     }
 }
@@ -874,7 +877,7 @@ function renderClozeSpelling(area) {
       <div style="font-size:1rem;text-align:center;line-height:1.8;margin-bottom:12px;color:var(--text-secondary);">${word.cloze || word.sentence}</div>
       <div style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:10px;font-style:italic;">${word.chinese || word.definition || ''}</div>
       <div class="spelling-boxes">${boxes}</div>
-      <input type="text" class="spelling-input" id="spellingInput" placeholder="輸入單字..." autocomplete="off" autocapitalize="off" onkeyup="checkSpelling(event)">
+      <input type="text" class="spelling-input" id="spellingInput" placeholder="輸入單字..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" onkeyup="checkSpelling(event)">
       <br>
       <button class="hint-btn" onclick="showSpellingHint()">💡 提示</button>
       <button class="fc-audio fc-audio--lg" aria-label="播放單字發音" onclick="speak('${word.word.replace(/'/g, "\\'")}')">🔊</button>
@@ -987,7 +990,8 @@ function selectMatch(el) {
             if (matchState.matched.length >= matchState.pairs.length) { // 以實際配對數為準（去重後可能 <5），否則配完整盤仍不觸發完成、孩子卡住
                 showConfetti();
                 updateStats();
-                setTimeout(() => renderMatching(document.getElementById('learningArea')), 1500);
+                setTimeout(() => { if (currentMode === 'matching')
+                    renderMatching(document.getElementById('learningArea')); }, 1500); // 慶祝視窗內若已切換模式就別把畫面蓋回配對盤
             }
         }
         else {
