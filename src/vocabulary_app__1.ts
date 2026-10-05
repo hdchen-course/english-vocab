@@ -468,7 +468,7 @@ function renderQuiz(area) {
         ${questionHtml}
       </div>
       <div class="quiz-options">
-        ${options.map(opt => `<div class="quiz-option" role="button" tabindex="0" onclick="checkQuizAnswer(this, '${jsAttr(opt)}', '${jsAttr(correctAnswer)}')">${esc(opt)}</div>`).join('')}
+        ${options.map(opt => `<div class="quiz-option" role="button" tabindex="0" onclick="checkQuizAnswer(this, '${jsAttr(opt)}', '${jsAttr(correctAnswer)}')">${escAttr(opt)}</div>`).join('')}
       </div>
       <div class="fc-reveal" id="revealPanel"></div>
     </div>
@@ -730,7 +730,7 @@ function renderListening(area) {
       <p style="font-size:1.1rem; margin-bottom:8px; color:var(--text-secondary)">聽一聽，選出正確的單字</p>
       <button class="fc-audio fc-audio--lg" aria-label="播放單字發音，再聽一次" onclick="speak('${word.word.replace(/'/g, "\\'")}')">🔊</button>
       <div class="quiz-options" style="margin-top:20px;">
-        ${options.map(opt => `<div class="quiz-option" role="button" tabindex="0" onclick="checkListeningAnswer(this, '${jsAttr(opt)}', '${jsAttr(word.word)}')">${esc(opt)}</div>`).join('')}
+        ${options.map(opt => `<div class="quiz-option" role="button" tabindex="0" onclick="checkListeningAnswer(this, '${jsAttr(opt)}', '${jsAttr(word.word)}')">${escAttr(opt)}</div>`).join('')}
       </div>
       <div class="fc-reveal" id="revealPanel"></div>
     </div>
@@ -817,7 +817,7 @@ function renderClozeQuiz(area) {
         <div style="font-size:1.05rem;text-align:center;line-height:1.8;margin-bottom:12px;">${word.cloze || word.sentence}</div>
       </div>
       <div class="quiz-options" style="grid-template-columns:1fr 1fr;">
-        ${choices.map(opt => `<div class="quiz-option" role="button" tabindex="0" onclick="checkClozeAnswer(this, '${jsAttr(opt)}', '${jsAttr(word.word)}')">${esc(opt)}</div>`).join('')}
+        ${choices.map(opt => `<div class="quiz-option" role="button" tabindex="0" onclick="checkClozeAnswer(this, '${jsAttr(opt)}', '${jsAttr(word.word)}')">${escAttr(opt)}</div>`).join('')}
       </div>
       <div class="fc-reveal" id="revealPanel"></div>
     </div>
@@ -892,7 +892,7 @@ function renderClozeListening(area) {
       <p style="font-size:0.9rem; margin-bottom:8px; color:var(--text-secondary)">聽一聽，選出正確的單字填入空格</p>
       <button class="fc-audio fc-audio--lg" aria-label="播放單字發音，再聽一次" onclick="speak('${word.word.replace(/'/g, "\\'")}')">🔊</button>
       <div class="quiz-options" style="margin-top:16px;grid-template-columns:1fr 1fr;">
-        ${choices.map(opt => `<div class="quiz-option" role="button" tabindex="0" onclick="checkClozeAnswer(this, '${jsAttr(opt)}', '${jsAttr(word.word)}')">${esc(opt)}</div>`).join('')}
+        ${choices.map(opt => `<div class="quiz-option" role="button" tabindex="0" onclick="checkClozeAnswer(this, '${jsAttr(opt)}', '${jsAttr(word.word)}')">${escAttr(opt)}</div>`).join('')}
       </div>
       <div class="fc-reveal" id="revealPanel"></div>
     </div>
