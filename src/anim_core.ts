@@ -70,6 +70,12 @@
     dwellMs?: number;
     /** reduced-motion 覆寫：畫「四格並排靜態」以保留跨狀態對比（比較型場景用）。 */
     drawStatic?: (g: CanvasRenderingContext2D, w: number, h: number) => void;
+    /** 可互動場景：游標顯示為 pointer、canvas 收 click（點擊即停住自動播放，交給場景狀態）。 */
+    interactive?: boolean;
+    /** 點擊 canvas 的回呼：收邏輯座標 (x,y) 與 redraw()（重畫目前靜止幀，供場景改狀態後刷新）。 */
+    onClick?: (x: number, y: number, redraw: () => void) => void;
+    /** 每次播放（含重播）開始前重置場景狀態的回呼。 */
+    onReplay?: () => void;
   }
 
   function runScene(host: HTMLElement, cfg: SceneCfg): { stop: () => void } {
@@ -145,6 +151,7 @@
     function play() {
       finished = false;
       start = 0;
+      if (cfg.onReplay) cfg.onReplay();
       hideReplay();
       if (reducedMotion()) {
         // 不跑迴圈：比較型場景畫四格並排靜態，其餘畫一張代表性靜態幀。
@@ -182,6 +189,32 @@
     function showReplay() { ensureReplay(); if (replayBtn) replayBtn.style.display = ''; }
     function hideReplay() { if (replayBtn) replayBtn.style.display = 'none'; }
 
+    // 互動：點擊停住自動播放（凍結在最後一幀 / reduced-motion 靜態幀），交由場景狀態繪製；
+    // redraw() 讓場景改完狀態後重畫目前幀（短效果如喇叭聲波可自跑一小段 requestAnimationFrame 呼叫它）。
+    function redraw() {
+      if (stopped) return;
+      var ph = reducedMotion() ? cfg.staticPhase : finalPhase;
+      g.clearRect(0, 0, cssW, cssH);
+      if (reducedMotion() && cfg.drawStatic) cfg.drawStatic(g, cssW, cssH);
+      else cfg.draw(g, ph, cssW, cssH);
+    }
+    var onClickH: ((e: MouseEvent) => void) | null = null;
+    if (cfg.onClick) {
+      onClickH = function (e: MouseEvent) {
+        if (stopped) return;
+        if (!finished && !reducedMotion()) {          // 第一次點擊：凍結自動播放，交給場景狀態
+          if (raf) cancelAnimationFrame(raf);
+          raf = 0; finished = true; showReplay();
+        }
+        var rect = canvas!.getBoundingClientRect();
+        var sx = cssW / (rect.width || cssW), sy = cssH / (rect.height || cssH);
+        var cx = (e.clientX - rect.left) * sx, cy = (e.clientY - rect.top) * sy;
+        cfg.onClick!(cx, cy, redraw);
+      };
+      canvas.addEventListener('click', onClickH);
+      if (cfg.interactive) canvas.style.cursor = 'pointer';
+    }
+
     play();
 
     return {
@@ -190,6 +223,7 @@
         if (raf) cancelAnimationFrame(raf);
         raf = 0;
         document.removeEventListener('visibilitychange', onVisibility);
+        if (onClickH) { canvas!.removeEventListener('click', onClickH); canvas!.style.cursor = ''; }
         if (replayBtn && replayBtn.parentNode) replayBtn.parentNode.removeChild(replayBtn);
         replayBtn = null;
       }
@@ -4446,6 +4480,676 @@
     });
   }
 
+
+  // ===== English (英文) cluster scenes =================================
+  // 共用：乾淨無襯線英文字（label 用 system-ui，不會出現豆腐框）；角色色（主詞藍／動詞綠／
+  // 受詞橘／疑問詞紫／否定紅）都是「卡底上可讀的飽和墨色」＝亮暗雙主題都安全（defect #28：
+  // 文字一律用 inkColor() 主題墨色或這些飽和色，絕不壓在硬寫死的淺色方塊上）。
+  // 喇叭 🔊 不自己播音——點擊時呼叫 cfg.onPlay(text)（有才呼叫，沒有也不報錯），由頁面接真實音訊。
+  var EN_SUBJ = '#2563eb', EN_VERB = '#16a34a', EN_OBJ = '#ea7317';
+  var EN_WH = '#7c3aed', EN_NEG = '#e11d48', EN_PEN = '#e11d48', EN_OK = '#16a34a';
+
+  interface Box { x: number; y: number; w: number; h: number; }
+  function inBox(b: Box | null, x: number, y: number): boolean {
+    return !!b && x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h;
+  }
+  /** 畫一顆可點的「🔊 喇叭」晶片（半透明 tint 卡底 → 亮暗皆安全），waveActive 時由 nowMs 連續放送聲波弧；回傳可點框。 */
+  function speakerChip(g: CanvasRenderingContext2D, cx: number, cy: number, s: number, col: string, waveActive: boolean): Box {
+    var box: Box = { x: cx - 1.75 * s, y: cy - 1.35 * s, w: 3.5 * s, h: 2.7 * s };
+    chipBox(g, box.x, box.y, box.w, box.h, col, '', col, 10, 1);
+    g.save(); g.fillStyle = col;
+    g.beginPath();
+    g.moveTo(cx - 1.05 * s, cy - 0.42 * s);
+    g.lineTo(cx - 0.5 * s, cy - 0.42 * s);
+    g.lineTo(cx + 0.05 * s, cy - 0.9 * s);
+    g.lineTo(cx + 0.05 * s, cy + 0.9 * s);
+    g.lineTo(cx - 0.5 * s, cy + 0.42 * s);
+    g.lineTo(cx - 1.05 * s, cy + 0.42 * s);
+    g.closePath(); g.fill();
+    g.restore();
+    if (waveActive) {
+      var ph = (nowMs() / 650) % 1;
+      g.save(); g.strokeStyle = col; g.lineCap = 'round';
+      for (var i = 0; i < 3; i++) {
+        var fp = ph - i * 0.28; if (fp < 0) fp += 1;
+        var rr = s * (0.45 + fp * 1.1);
+        g.globalAlpha = Math.max(0, 1 - fp) * 0.9; g.lineWidth = 1.8;
+        g.beginPath(); g.arc(cx + 0.1 * s, cy, rr, -0.62, 0.62); g.stroke();
+      }
+      g.restore();
+    }
+    return box;
+  }
+  /** 大號英文字（粗體無襯線）；回傳量到的寬度，方便置中排版。 */
+  function enText(g: CanvasRenderingContext2D, text: string, x: number, y: number, col: string, size: number, align: CanvasTextAlign): number {
+    g.save();
+    g.font = '700 ' + size + 'px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+    g.textAlign = align || 'center'; g.textBaseline = 'middle';
+    g.fillStyle = col; g.fillText(text, x, y);
+    var ww = g.measureText(text).width;
+    g.restore();
+    return ww;
+  }
+  function enMeasure(g: CanvasRenderingContext2D, text: string, size: number): number {
+    g.save(); g.font = '700 ' + size + 'px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+    var ww = g.measureText(text).width; g.restore(); return ww;
+  }
+
+  // ====================================================================
+  // 場景 E1：enLetter — 字母／字形入門（trace 描字順｜sound 字母音｜flash 常見字閃卡）。
+  //   cfg = {letter?, grapheme?, word?, mode:'trace'|'sound'|'flash', onPlay?, label?}
+  //   trace：大寫＋小寫並排，筆尖由上往下把字「描」出來（近似筆順，重清楚不重書法）。
+  //   sound：大字形＋會張合的嘴＋🔊，點 🔊 放送聲波並呼叫 onPlay（字母音）。
+  //   flash：常見字卡翻入，🔊 讀整個字。reduced-motion：直接畫靜態終態（仍可點 🔊）。
+  // ====================================================================
+  function enLetter(host: HTMLElement, cfg: any) {
+    cfg = cfg || {};
+    var mode: string = (cfg.mode === 'sound' || cfg.mode === 'flash') ? cfg.mode : 'trace';
+    var grapheme: string = (cfg.grapheme != null) ? String(cfg.grapheme) : (cfg.letter != null ? String(cfg.letter) : 'a');
+    var letter: string = (cfg.letter != null) ? String(cfg.letter) : grapheme.charAt(0);
+    var word: string = (cfg.word != null) ? String(cfg.word) : 'the';
+    var UP = letter.toUpperCase(), LO = letter.toLowerCase();
+
+    var spkBox: Box | null = null;
+    var speakingUntil = 0;
+    function speak(text: string, redraw: () => void) {
+      if (typeof cfg.onPlay === 'function') { try { cfg.onPlay(text); } catch (e) {} }
+      if (reducedMotion()) { redraw(); return; }
+      speakingUntil = nowMs() + 1100;
+      (function loop() { if (nowMs() < speakingUntil) { redraw(); requestAnimationFrame(loop); } else { redraw(); } })();
+    }
+
+    // 描一格字：淡導引字 + 由上往下的揭示（clip 長高）+ 筆尖小點（左右微晃＝正在寫）。
+    function traceCell(g: CanvasRenderingContext2D, cx: number, cy: number, ch: string, size: number, prog: number, showPen: boolean, ink: string, theme: string) {
+      g.save();
+      g.font = '700 ' + size + 'px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+      g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.save(); g.globalAlpha = 0.16; g.fillStyle = ink; g.fillText(ch, cx, cy); g.restore();
+      var gh = size * 1.08, top = cy - gh / 2;
+      g.save();
+      g.beginPath(); g.rect(cx - size, top, size * 2, gh * Math.max(0, Math.min(1, prog))); g.clip();
+      g.fillStyle = theme; g.fillText(ch, cx, cy);
+      g.restore();
+      g.restore();
+      if (showPen && prog > 0.02 && prog < 0.99) {
+        var py = top + gh * prog;
+        var px = cx + Math.sin(prog * 9) * size * 0.26;
+        disc(g, px, py, 4.5, EN_PEN);
+        g.save(); g.strokeStyle = EN_PEN; g.lineWidth = 1.4; g.globalAlpha = 0.6;
+        g.beginPath(); g.moveTo(px, py); g.lineTo(px + 7, py - 11); g.stroke(); g.restore();
+      }
+    }
+
+    function draw(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var theme = themeColor(), ink = inkColor();
+      if (mode === 'trace') {
+        label(g, '照著描：大寫和小寫', w / 2, 15, theme, 12, 'center');
+        var sz = Math.min(w * 0.3, h * 0.52);
+        var lp = Math.min(1, p / 0.5), rp = Math.max(0, Math.min(1, (p - 0.5) / 0.5));
+        traceCell(g, w * 0.3, h * 0.52, UP, sz, lp, p < 0.5, ink, theme);
+        traceCell(g, w * 0.7, h * 0.52, LO, sz, rp, p >= 0.5, ink, theme);
+        label(g, '大寫 ' + UP, w * 0.3, h * 0.52 + sz * 0.62, ink, 11, 'center');
+        label(g, '小寫 ' + LO, w * 0.7, h * 0.52 + sz * 0.62, ink, 11, 'center');
+        bottomCap(g, w, h, '筆尖從上往下，把字一筆一筆描出來', ink);
+      } else if (mode === 'sound') {
+        label(g, '這個字母的聲音', w / 2, 15, theme, 12, 'center');
+        var speaking = nowMs() < speakingUntil;
+        // 大字形（左）。
+        enText(g, grapheme, w * 0.30, h * 0.5, ink, Math.min(w * 0.26, h * 0.5), 'center');
+        // 嘴（右上）：說話時張開。
+        var mx = w * 0.62, my = h * 0.4, mw = Math.min(w, h) * 0.11;
+        var open = speaking ? (0.5 + 0.5 * Math.abs(Math.sin(nowMs() / 160))) : 0.28;
+        g.save(); g.strokeStyle = ink; g.lineWidth = 2.4; g.fillStyle = EN_NEG;
+        g.globalAlpha = 0.18; g.beginPath(); g.ellipse(mx, my, mw, mw * open, 0, 0, Math.PI * 2); g.fill();
+        g.globalAlpha = 1; g.beginPath(); g.ellipse(mx, my, mw, mw * open, 0, 0, Math.PI * 2); g.stroke();
+        g.restore();
+        label(g, '嘴型', mx, my + mw + 10, ink, 10, 'center');
+        // 喇叭（右下）＋聲波。
+        spkBox = speakerChip(g, w * 0.82, h * 0.5, Math.min(w, h) * 0.058, theme, speaking);
+        bottomCap(g, w, h, '點 🔊 聽這個字母的聲音', ink);
+      } else {
+        // flash：常見字卡翻入（scaleX 0→1）。
+        label(g, '常見字閃卡', w / 2, 15, theme, 12, 'center');
+        var flip = Math.min(1, p / 0.45);
+        var cw = Math.min(w * 0.6, 220), ch2 = Math.min(h * 0.42, 96);
+        var cx = w / 2, cy = h * 0.46;
+        g.save();
+        g.translate(cx, cy); g.scale(Math.max(0.02, flip), 1); g.translate(-cx, -cy);
+        chipBox(g, cx - cw / 2, cy - ch2 / 2, cw, ch2, theme, '', theme, 10, 1);
+        g.restore();
+        if (flip > 0.9) enText(g, word, cx, cy, ink, Math.min(cw * 0.42, ch2 * 0.6), 'center');
+        var speaking2 = nowMs() < speakingUntil;
+        spkBox = speakerChip(g, cx, cy + ch2 / 2 + Math.min(w, h) * 0.1, Math.min(w, h) * 0.055, theme, speaking2);
+        bottomCap(g, w, h, '一眼認出整個字，再點 🔊 聽怎麼唸', ink);
+      }
+    }
+
+    return runScene(host, {
+      durationMs: mode === 'trace' ? 4200 : 2600, loops: mode === 'trace' ? 3 : 1, staticPhase: 1,
+      interactive: mode !== 'trace',
+      label: cfg.label || (mode === 'trace'
+        ? ('字母描寫動畫：把字母「' + letter + '」的大寫 ' + UP + ' 和小寫 ' + LO + ' 由上往下一筆一筆描出來。')
+        : (mode === 'sound'
+          ? ('字母發音動畫：顯示字形「' + grapheme + '」，點喇叭會放送聲波，由頁面讀出它的聲音。')
+          : ('常見字閃卡動畫：卡片翻入後顯示「' + word + '」，點喇叭由頁面讀出整個字。'))),
+      onClick: (mode === 'trace') ? undefined : function (x, y, redraw) {
+        if (inBox(spkBox, x, y)) speak(mode === 'sound' ? grapheme : word, redraw);
+      },
+      onReplay: function () { speakingUntil = 0; },
+      draw: draw
+    });
+  }
+
+  // ====================================================================
+  // 場景 E2：enBlend — 字母拼讀。字母磚分開 → 滑在一起 → 融成一個字；下方聲波合流，
+  //   整個字彈出並附 🔊 讀出拼好的字。digraph（如 'sh'）當作「一塊磚」。
+  //   cfg = {parts:['c','a','t'], mode:'phoneme', onPlay?, label?}
+  //   reduced-motion：融好的字 + 下方把每塊當 phoneme chip 排一列。
+  // ====================================================================
+  function enBlend(host: HTMLElement, cfg: any) {
+    cfg = cfg || {};
+    var parts: string[] = (cfg.parts && cfg.parts.length) ? cfg.parts.map(function (x: any) { return String(x); }) : ['c', 'a', 't'];
+    var word = parts.join('');
+    var spkBox: Box | null = null;
+    var speakingUntil = 0;
+    function speak(redraw: () => void) {
+      if (typeof cfg.onPlay === 'function') { try { cfg.onPlay(word); } catch (e) {} }
+      if (reducedMotion()) { redraw(); return; }
+      speakingUntil = nowMs() + 1100;
+      (function loop() { if (nowMs() < speakingUntil) { redraw(); requestAnimationFrame(loop); } else { redraw(); } })();
+    }
+
+    /** 量每塊磚寬（digraph 較寬），回傳 {ws,total,tile}。 */
+    function measure(g: CanvasRenderingContext2D, tile: number): { ws: number[]; total: number } {
+      var ws: number[] = [], total = 0;
+      for (var i = 0; i < parts.length; i++) {
+        var tw = Math.max(tile, enMeasure(g, parts[i], tile * 0.62) + tile * 0.5);
+        ws.push(tw); total += tw;
+      }
+      return { ws: ws, total: total };
+    }
+
+    function draw(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var theme = themeColor(), ink = inkColor();
+      label(g, '把字母的音拼在一起', w / 2, 15, theme, 12, 'center');
+      var tile = Math.min(w * 0.17, h * 0.3, 58);
+      var m = measure(g, tile);
+      var cy = h * 0.46;
+      var apart = p < 0.55;                       // 前段：分開 → 靠攏
+      var join = apart ? easeInOut(p / 0.55) : 1;  // 0 全分開、1 全靠攏
+      var gapExtra = (1 - join) * tile * 0.9;      // 分開時每塊之間多出的空隙
+      var totalW = m.total + gapExtra * (parts.length - 1);
+      var x = w / 2 - totalW / 2;
+      var fuse = p >= 0.7 ? Math.min(1, (p - 0.7) / 0.2) : 0;   // 融成整字
+      var pa = 1 - fuse;                                        // 磚與其字母一起淡出，交棒給融好的整字
+      for (var i = 0; i < parts.length; i++) {
+        var bw = m.ws[i];
+        chipBox(g, x, cy - tile / 2, bw, tile, theme, '', theme, 10, pa);
+        g.save(); g.globalAlpha = pa;
+        enText(g, parts[i], x + bw / 2, cy, ink, tile * 0.56, 'center');
+        if (apart && parts[i].length > 1) label(g, '一個音', x + bw / 2, cy + tile * 0.62, theme, 9, 'center');
+        g.restore();
+        x += bw + gapExtra;
+      }
+      // 聲波合流線（下方）：隨靠攏從多段併成一條。
+      var lineY = cy + tile * 0.95;
+      g.save(); g.strokeStyle = theme; g.lineWidth = 2; g.lineCap = 'round'; g.globalAlpha = 0.5 + 0.5 * join;
+      g.beginPath();
+      var lx0 = w / 2 - totalW / 2, lx1 = w / 2 + totalW / 2, steps = 48;
+      for (var s2 = 0; s2 <= steps; s2++) {
+        var t = s2 / steps, xx = lx0 + (lx1 - lx0) * t;
+        var amp = tile * 0.12 * (1 - join * 0.6);
+        var yy = lineY + Math.sin(t * Math.PI * parts.length * 2) * amp;
+        if (s2 === 0) g.moveTo(xx, yy); else g.lineTo(xx, yy);
+      }
+      g.stroke(); g.restore();
+      // 融好的整字（淡入＋彈出）＋喇叭。
+      if (fuse > 0) {
+        var pop = 0.9 + 0.1 * fuse;
+        g.save(); g.globalAlpha = fuse; enText(g, word, w / 2, cy, ink, tile * 0.62 * pop, 'center'); g.restore();
+      }
+      var speaking = nowMs() < speakingUntil;
+      spkBox = speakerChip(g, w / 2 + totalW / 2 + tile * 0.9, cy, tile * 0.42, theme, speaking);
+      bottomCap(g, w, h, parts.join(' - ') + ' → ' + word + '（點 🔊 聽拼好的字）', ink);
+    }
+
+    return runScene(host, {
+      durationMs: 5200, loops: 2, staticPhase: 1, interactive: true,
+      label: cfg.label || ('字母拼讀動畫：把 ' + parts.join('、') + ' 的音一塊一塊滑在一起，拼成「' + word + '」；點喇叭由頁面讀出整個字。'),
+      drawStatic: function (g, w, h) {
+        var theme = themeColor(), ink = inkColor();
+        label(g, parts.join(' - ') + ' → ' + word, w / 2, 15, theme, 12, 'center');
+        var tile = Math.min(w * 0.17, h * 0.3, 58);
+        enText(g, word, w / 2, h * 0.4, ink, Math.min(w * 0.2, h * 0.42), 'center');
+        var m = measure(g, tile * 0.72), x = w / 2 - m.total / 2, cy = h * 0.74;
+        for (var i = 0; i < parts.length; i++) {
+          var bw = m.ws[i];
+          chipBox(g, x, cy - tile * 0.3, bw, tile * 0.6, theme, parts[i], ink, tile * 0.4, 1);
+          x += bw;
+        }
+        label(g, '每一塊是一個音', w / 2, h - 12, ink, 10.5, 'center');
+      },
+      onClick: function (x, y, redraw) { if (inBox(spkBox, x, y)) speak(redraw); },
+      onReplay: function () { speakingUntil = 0; },
+      draw: draw
+    });
+  }
+
+  // ====================================================================
+  // 場景 E3：enTimeline — 動詞時態的時間軸。軸標 過去 past｜現在 now｜未來 future。
+  //   simple＝某時點一個點（過去＝已完成打勾）；progressive＝該時點一條「進行中」色帶；
+  //   perfect＝從過去「連到現在」的箭頭、現在端打勾（對比 simple past 的單一點）。
+  //   cfg = {when:'past'|'now'|'future', aspect:'simple'|'progressive'|'perfect', marker:'played',
+  //          span?, label?, markers?:[{when,aspect,marker,highlight?}]}
+  //   markers 多筆時各佔一條 lane 同時呈現、highlight 一筆為主色其餘變淡。
+  // ====================================================================
+  function enTimeline(host: HTMLElement, cfg: any) {
+    cfg = cfg || {};
+    function norm(m: any) {
+      return {
+        when: (m && (m.when === 'now' || m.when === 'future')) ? m.when : 'past',
+        aspect: (m && (m.aspect === 'progressive' || m.aspect === 'perfect')) ? m.aspect : 'simple',
+        marker: (m && m.marker != null) ? String(m.marker) : 'played',
+        span: (m && typeof m.span === 'number') ? m.span : 0.14,
+        hi: !!(m && m.highlight)
+      };
+    }
+    var markers = (cfg.markers && cfg.markers.length) ? cfg.markers.map(norm) : [norm(cfg)];
+    if (cfg.markers && cfg.markers.length && !markers.some(function (m: any) { return m.hi; })) markers[0].hi = true;
+    var single = markers.length === 1;
+    var ASP_C: { [k: string]: string } = { simple: EN_SUBJ, progressive: EN_OBJ, perfect: EN_VERB };
+
+    function whenX(when: string, w: number): number {
+      return when === 'past' ? w * 0.24 : (when === 'now' ? w * 0.5 : w * 0.76);
+    }
+
+    function drawMarker(g: CanvasRenderingContext2D, m: any, w: number, axisY: number, laneY: number, prog: number, ink: string) {
+      var col = m.hi ? ASP_C[m.aspect] : '#9aa3af';
+      var alpha = m.hi ? 1 : 0.55;
+      var x = whenX(m.when, w);
+      g.save(); g.globalAlpha = alpha;
+      // leader：lane → 軸。
+      g.strokeStyle = col; g.lineWidth = 1.2; g.globalAlpha = alpha * 0.6;
+      g.beginPath(); g.moveTo(x, laneY + 10); g.lineTo(x, axisY - 3); g.stroke();
+      g.globalAlpha = alpha;
+      if (m.aspect === 'simple') {
+        var done = m.when === 'past';
+        disc(g, x, axisY, 6, col);
+        if (done) { g.strokeStyle = '#fff'; g.lineWidth = 2; g.lineCap = 'round'; g.beginPath(); g.moveTo(x - 3, axisY); g.lineTo(x - 0.5, axisY + 2.5); g.lineTo(x + 3.5, axisY - 3); g.stroke(); }
+        chipBox(g, x - enMeasure(g, m.marker, 12) / 2 - 7, laneY - 11, enMeasure(g, m.marker, 12) + 14, 22, col, '', col, 10, prog);
+        enText(g, m.marker, x, laneY, ink, 12, 'center');
+        if (m.hi) label(g, done ? '一個時點・已完成 ✓' : '一個時點', x, laneY - 18, col, 9.5, 'center');
+      } else if (m.aspect === 'progressive') {
+        var bw = w * m.span * prog;
+        g.save(); g.globalAlpha = alpha * 0.3; g.fillStyle = col; g.fillRect(x - bw / 2, axisY - 7, bw, 14); g.restore();
+        g.strokeStyle = col; g.lineWidth = 1.6; g.strokeRect(x - w * m.span / 2, axisY - 7, w * m.span, 14);
+        chipBox(g, x - enMeasure(g, m.marker, 12) / 2 - 7, laneY - 11, enMeasure(g, m.marker, 12) + 14, 22, col, '', col, 10, prog);
+        enText(g, m.marker, x, laneY, ink, 12, 'center');
+        if (m.hi) label(g, '進行中・一段時間', x, laneY - 18, col, 9.5, 'center');
+      } else {
+        // perfect：從 past 連到 now 的箭頭（lane 上），now 端打勾。
+        var x0 = whenX('past', w), x1 = whenX('now', w);
+        var xe = x0 + (x1 - x0) * prog;
+        g.strokeStyle = col; g.lineWidth = 2.4; g.lineCap = 'round';
+        g.beginPath(); g.moveTo(x0, laneY); g.lineTo(xe, laneY); g.stroke();
+        g.fillStyle = col; g.beginPath(); g.moveTo(xe, laneY); g.lineTo(xe - 8, laneY - 5); g.lineTo(xe - 8, laneY + 5); g.closePath(); g.fill();
+        if (prog > 0.98) { disc(g, x1, axisY, 6, col); g.strokeStyle = '#fff'; g.lineWidth = 2; g.lineCap = 'round'; g.beginPath(); g.moveTo(x1 - 3, axisY); g.lineTo(x1 - 0.5, axisY + 2.5); g.lineTo(x1 + 3.5, axisY - 3); g.stroke(); }
+        chipBox(g, x1 - enMeasure(g, m.marker, 12) / 2 - 7, laneY - 24, enMeasure(g, m.marker, 12) + 14, 22, col, '', col, 10, prog);
+        enText(g, m.marker, x1, laneY - 13, ink, 12, 'center');
+        // 說明靠左貼在箭頭尾端（past 側），遠離 now 端的 pill → 不被遮住；過寬時縮字塞進尾端到 pill 之間的空檔。
+        if (m.hi) {
+          var hint = '從過去連到現在';
+          var pillLeft = x1 - (enMeasure(g, m.marker, 12) / 2 + 7);
+          var avail = pillLeft - x0 - 8;
+          var hf = 9.5; while (hf > 7 && enMeasure(g, hint, hf) > avail) hf -= 0.5;
+          if (enMeasure(g, hint, hf) > avail) hint = '過去→現在';   // 真的太窄：用更短、仍正確的說法
+          label(g, hint, x0, laneY - 11, col, hf, 'left');
+        }
+      }
+      g.restore();
+    }
+
+    function draw(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var theme = themeColor(), ink = inkColor();
+      label(g, '時態＝事情發生在時間軸的哪裡', w / 2, 15, theme, 12, 'center');
+      var axisY = h * 0.72;
+      // 軸線＋三區。
+      g.save(); g.strokeStyle = ink; g.globalAlpha = 0.5; g.lineWidth = 2; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(w * 0.08, axisY); g.lineTo(w * 0.92, axisY); g.stroke();
+      g.fillStyle = ink; g.beginPath(); g.moveTo(w * 0.92, axisY); g.lineTo(w * 0.92 - 9, axisY - 5); g.lineTo(w * 0.92 - 9, axisY + 5); g.closePath(); g.fill();
+      g.globalAlpha = 0.3; g.setLineDash([3, 4]);
+      g.beginPath(); g.moveTo(w * 0.5, axisY - 14); g.lineTo(w * 0.5, axisY + 8); g.stroke();
+      g.restore();
+      label(g, '過去 past', w * 0.24, axisY + 16, ink, 10.5, 'center');
+      label(g, '現在 now', w * 0.5, axisY + 16, theme, 10.5, 'center');
+      label(g, '未來 future', w * 0.76, axisY + 16, ink, 10.5, 'center');
+      // lanes（由上往下）。
+      var topLane = 42, laneGap = Math.min(34, (axisY - 34 - topLane) / Math.max(1, markers.length));
+      var prog = easeInOut(Math.min(1, p / 0.75));
+      for (var i = 0; i < markers.length; i++) {
+        var laneY = single ? (axisY - 46) : (topLane + i * laneGap + laneGap / 2);
+        drawMarker(g, markers[i], w, axisY, laneY, prog, ink);
+      }
+      bottomCap(g, w, h, single
+        ? (markers[0].aspect === 'perfect' ? '完成式：從過去一直連到現在' : (markers[0].aspect === 'progressive' ? '進行式：某個時間「正在」發生' : '簡單式：某個時間點發生'))
+        : '同一個時間軸，看每種時態標在哪裡', ink);
+    }
+
+    return runScene(host, {
+      durationMs: 4200, loops: 2, staticPhase: 1,
+      label: cfg.label || '時態時間軸動畫：在過去／現在／未來的時間軸上標出動詞時態——簡單式是一個時點、進行式是一段進行中的時間、完成式是從過去連到現在。',
+      draw: draw
+    });
+  }
+
+  // ====================================================================
+  // 場景 E4（最重要）：enSentenceBuild — 把句子像積木一樣組起來。保持通用：
+  //   statement＝彩色詞性欄（主詞藍／動詞綠／受詞橘…），詞磚依序飛入、句末彈出句點、
+  //     句首大寫提示；可點（點詞盤的磚放進欄位）＋自動播放備援。
+  //   question＝把 from 直述句改成問句（be 動詞移到句首／插入 helper 並去動詞 -s／加 whWord），句末彈出問號。
+  //   negative＝在主詞和動詞之間插入 helper（don't/doesn't/didn't）並去動詞 -s。
+  //   paragraph＝句子橫條由上往下堆（主題句 highlight、細節句、可選結尾句）；checklist 時右側逐項打勾。
+  //   cfg = {slots,tiles,mode,highlight?,helper?,whWord?,from?,checklist?,closing?,label?}
+  // ====================================================================
+  function enSentenceBuild(host: HTMLElement, cfg: any) {
+    cfg = cfg || {};
+    var mode: string = ['question', 'negative', 'paragraph'].indexOf(cfg.mode) >= 0 ? cfg.mode : 'statement';
+    var slots: string[] = (cfg.slots && cfg.slots.length) ? cfg.slots.map(String) : ['Subject', 'Verb', 'Object'];
+    var tiles: string[] = (cfg.tiles && cfg.tiles.length) ? cfg.tiles.map(String) : ['The dog', 'runs', 'fast'];
+
+    function slotColor(name: string): string {
+      var n = (name || '').toLowerCase();
+      if (/subject|主/.test(n)) return EN_SUBJ;
+      if (/verb|動/.test(n)) return EN_VERB;
+      if (/object|受/.test(n)) return EN_OBJ;
+      if (/wh|疑問|問/.test(n)) return EN_WH;
+      return EN_OBJ;
+    }
+    function dropS(v: string): string { return v.replace(/ies$/, 'y').replace(/([^s])s$/, '$1'); }
+
+    // ---- statement 狀態（可點放置）----
+    var placed: boolean[] = []; for (var pi = 0; pi < tiles.length; pi++) placed.push(false);
+    var manual = false;
+    var trayBoxes: Box[] = [];
+
+    function drawStatement(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var theme = themeColor(), ink = inkColor();
+      label(g, '照順序把句子組起來', w / 2, 15, theme, 12, 'center');
+      var nS = slots.length;
+      var colW = (w - 24) / nS, colY = h * 0.28, colH = Math.min(h * 0.26, 60);
+      trayBoxes = [];
+      // 詞性欄（空槽）。
+      for (var s = 0; s < nS; s++) {
+        var cxs = 12 + s * colW + colW / 2;
+        var col = slotColor(slots[s]);
+        g.save(); g.setLineDash([5, 4]); g.strokeStyle = col; g.globalAlpha = 0.7; g.lineWidth = 1.6;
+        rrectPath(g, 12 + s * colW + 6, colY, colW - 12, colH, 8); g.stroke(); g.restore();
+        label(g, slots[s], cxs, colY - 10, col, 10, 'center');
+      }
+      // 每塊詞磚：auto 模式用 phase 飛入；manual 用 placed[]。
+      var seg = 0.8 / Math.max(1, tiles.length);
+      var trayY = h * 0.74;
+      var trayX = 14;
+      for (var i = 0; i < tiles.length; i++) {
+        var slotIdx = Math.min(i, nS - 1);
+        var dstX = 12 + slotIdx * colW + colW / 2, dstY = colY + colH / 2;
+        var tcol = slotColor(slots[slotIdx]);
+        var bw = Math.max(colW - 16, enMeasure(g, tiles[i], 13) + 18);
+        var isPlaced: boolean, fly = 0;
+        if (manual) { isPlaced = placed[i]; }
+        else { var local = (p - i * seg) / seg; isPlaced = local >= 1; fly = Math.max(0, Math.min(1, local)); }
+        if (isPlaced || (!manual && fly > 0)) {
+          var fromX = trayX + bw / 2, fromY = trayY;
+          var e = isPlaced ? 1 : easeInOut(fly);
+          var cx = fromX + (dstX - fromX) * e, cy = fromY + (dstY - fromY) * e;
+          chipBox(g, cx - bw / 2, cy - 17, bw, 34, tcol, '', tcol, 10, 1);
+          enText(g, tiles[i], cx, cy, ink, 13, 'center');
+          if (i === 0) { // 句首大寫提示
+            var fx = cx - bw / 2 + 3;
+            g.save(); g.strokeStyle = EN_NEG; g.lineWidth = 1.6; g.globalAlpha = 0.9;
+            g.beginPath(); g.moveTo(fx, cy + 10); g.lineTo(fx + enMeasure(g, tiles[i].charAt(0), 13), cy + 10); g.stroke(); g.restore();
+          }
+        } else {
+          // 在詞盤待命（可點）。
+          var tb: Box = { x: trayX, y: trayY - 17, w: bw, h: 34 };
+          trayBoxes[i] = tb;
+          chipBox(g, tb.x, tb.y, tb.w, tb.h, tcol, '', tcol, 10, 1);
+          enText(g, tiles[i], tb.x + bw / 2, trayY, ink, 13, 'center');
+          trayX += bw + 8;
+        }
+        if (!(isPlaced || (!manual && fly > 0))) continue;
+      }
+      // 句點（全放好才彈出）。
+      var allPlaced = manual ? placed.every(function (b) { return b; }) : (p >= 0.86);
+      if (allPlaced) {
+        var lastSlot = Math.min(tiles.length - 1, nS - 1);
+        var endX = 12 + lastSlot * colW + colW - 6;
+        enText(g, '.', endX, colY + colH / 2 + 6, EN_NEG, 22, 'center');
+        label(g, '句首大寫、句末句點', w / 2, colY + colH + 20, EN_OK, 10, 'center');
+      }
+      bottomCap(g, w, h, manual || !reducedMotion() ? '點詞盤的詞，放進對應的欄位（或等它自己飛入）' : '主詞 → 動詞 → 受詞，照順序組成一句', ink);
+    }
+
+    // ---- 一列詞磚流式排版（question / negative 共用）----
+    function flowRow(g: CanvasRenderingContext2D, items: Array<{ t: string; col: string; strike?: boolean; alpha?: number }>, w: number, cy: number, fontSz: number): { left: number; right: number } {
+      var pad = 6, gap = 7, total = 0, ws: number[] = [];
+      for (var i = 0; i < items.length; i++) { var tw = enMeasure(g, items[i].t, fontSz) + pad * 2; ws.push(tw); total += tw; }
+      total += gap * (items.length - 1);
+      var startX = Math.max(10, w / 2 - total / 2);
+      var x = startX;
+      var ink = inkColor();
+      for (var j = 0; j < items.length; j++) {
+        var it = items[j], bw = ws[j], a = it.alpha == null ? 1 : it.alpha;
+        g.save(); g.globalAlpha = a;
+        chipBox(g, x, cy - 17, bw, 34, it.col, '', it.col, 10, 1);
+        enText(g, it.t, x + bw / 2, cy, it.strike ? EN_NEG : ink, fontSz, 'center');
+        if (it.strike) { g.strokeStyle = EN_NEG; g.lineWidth = 2; g.beginPath(); g.moveTo(x + bw / 2 - enMeasure(g, it.t, fontSz) / 2, cy); g.lineTo(x + bw / 2 + enMeasure(g, it.t, fontSz) / 2, cy); g.stroke(); }
+        g.restore();
+        x += bw + gap;
+      }
+      return { left: startX, right: items.length ? x - gap : startX };   // right＝最後一塊磚的右緣
+    }
+
+    function baseWords(): string[] {
+      if (cfg.from) return String(cfg.from).split(/\s+/).filter(function (x: string) { return !!x; });
+      return tiles.slice();
+    }
+
+    function drawQuestion(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var theme = themeColor(), ink = inkColor();
+      var isWh = !!cfg.whWord;   // Wh- 步驟的 from 是「原問句」(yes/no 問句身)，不是直述句——標題與上排改標避免概念矛盾
+      label(g, isWh ? '加上疑問詞（Wh-）' : '把直述句改成問句', w / 2, 15, theme, 12, 'center');
+      var words = baseWords();
+      var beIdx = -1; for (var i = 0; i < words.length; i++) if (/^(is|are|am|was|were)$/i.test(words[i])) { beIdx = i; break; }
+      var step = easeInOut(Math.min(1, p / 0.7));
+      // 原直述句（上排，淡）。
+      var topItems = words.map(function (wd: string) { return { t: wd, col: EN_SUBJ, alpha: 1 - step * 0.75 }; });
+      flowRow(g, topItems, w, h * 0.36, 13);
+      label(g, isWh ? '原問句' : '直述句', w / 2, h * 0.36 - 26, ink, 9.5, 'center');
+      // 結果問句（下排）。
+      var out: Array<{ t: string; col: string; strike?: boolean }> = [];
+      var kind = '';
+      if (cfg.whWord) {
+        out.push({ t: cfg.whWord, col: EN_WH });
+        words.forEach(function (wd: string) { out.push({ t: wd, col: EN_SUBJ }); });
+        kind = '加上疑問詞 ' + cfg.whWord + '，再加問號';
+      } else if (cfg.helper) {
+        out.push({ t: cfg.helper, col: EN_WH });
+        for (var k = 0; k < words.length; k++) {
+          var isVerb = k === 1;
+          out.push({ t: (isVerb && /s$/i.test(words[k]) && !/^is|was$/i.test(words[k])) ? dropS(words[k]) : (k === 0 ? words[k].charAt(0).toLowerCase() + words[k].slice(1) : words[k]), col: isVerb ? EN_VERB : EN_SUBJ, strike: false });
+        }
+        kind = '句首加 ' + cfg.helper + '，動詞去掉 -s';
+      } else if (beIdx >= 0) {
+        var be = words[beIdx];
+        out.push({ t: be.charAt(0).toUpperCase() + be.slice(1), col: EN_VERB });
+        for (var m2 = 0; m2 < words.length; m2++) { if (m2 === beIdx) continue; out.push({ t: m2 === 0 ? words[m2].charAt(0).toLowerCase() + words[m2].slice(1) : words[m2], col: EN_SUBJ }); }
+        kind = 'be 動詞「' + be + '」移到句首';
+      } else {
+        words.forEach(function (wd: string) { out.push({ t: wd, col: EN_SUBJ }); });
+        kind = '加問號';
+      }
+      if (step > 0.5) {
+        var qrow = flowRow(g, out, w, h * 0.62, 13);
+        if (step > 0.9) enText(g, '?', Math.min(w - 12, qrow.right + 14), h * 0.62, EN_NEG, 22, 'left');
+        label(g, '問句', w / 2, h * 0.62 - 26, EN_WH, 9.5, 'center');
+      }
+      bottomCap(g, w, h, kind + '，句末用問號 ?', ink);
+    }
+
+    function drawNegative(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var theme = themeColor(), ink = inkColor();
+      label(g, '把句子改成否定句', w / 2, 15, theme, 12, 'center');
+      var words = baseWords();
+      var helper = cfg.helper || "doesn't";
+      var step = easeInOut(Math.min(1, p / 0.7));
+      var topItems = words.map(function (wd: string, idx: number) { return { t: wd, col: idx === 1 ? EN_VERB : EN_SUBJ, alpha: 1 - step * 0.7 }; });
+      flowRow(g, topItems, w, h * 0.36, 13);
+      label(g, '原句', w / 2, h * 0.36 - 26, ink, 9.5, 'center');
+      var out: Array<{ t: string; col: string; strike?: boolean }> = [];
+      for (var k = 0; k < words.length; k++) {
+        if (k === 1) out.push({ t: helper, col: EN_NEG });
+        var isVerb = k === 1;
+        out.push({ t: (isVerb && /s$/i.test(words[k]) && !/^is|was$/i.test(words[k])) ? dropS(words[k]) : words[k], col: isVerb ? EN_VERB : EN_SUBJ, strike: isVerb && /s$/i.test(words[k]) && step < 0.6 });
+      }
+      if (step > 0.4) {
+        flowRow(g, out, w, h * 0.62, 13);
+        label(g, '否定句', w / 2, h * 0.62 - 26, EN_NEG, 9.5, 'center');
+      }
+      bottomCap(g, w, h, '主詞和動詞之間插入 ' + helper + '，動詞去掉 -s', ink);
+    }
+
+    function drawParagraph(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var theme = themeColor(), ink = inkColor();
+      label(g, '段落＝主題句＋細節句', w / 2, 15, theme, 12, 'center');
+      var lines = tiles.slice();
+      var hasClosing = !!cfg.closing && lines.length >= 2;
+      var checklist = !!cfg.checklist;
+      var areaR = checklist ? w * 0.62 : w - 24;
+      var barX = 14, barW = areaR - 14, top = 36, barH = Math.min(34, (h * 0.52) / Math.max(1, lines.length));
+      var gapY = barH + 8;
+      for (var i = 0; i < lines.length; i++) {
+        var prog = easeInOut(Math.max(0, Math.min(1, (p - i * (0.7 / lines.length)) / Math.max(0.001, (0.7 / lines.length) * 1.3))));
+        if (prog <= 0.01) continue;
+        var role = i === 0 ? 'Topic' : (hasClosing && i === lines.length - 1 ? 'Closing' : 'Detail');
+        var col = role === 'Topic' ? EN_SUBJ : (role === 'Closing' ? EN_WH : EN_VERB);
+        var by = top + i * gapY;
+        var bx = barX + (1 - prog) * (i % 2 === 0 ? -barW * 0.6 : barW * 0.6);
+        chipBox(g, bx, by, barW, barH, col, '', col, 10, prog);
+        var rtxt = role === 'Topic' ? '主題句' : (role === 'Closing' ? '結尾句' : '細節句');
+        g.save(); g.globalAlpha = prog;
+        label(g, rtxt, bx + 8, by + barH / 2, col, 9.5, 'left');
+        var tx = bx + 66, avail = barW - 66 - 10;
+        var fs = 11.5; while (fs > 8 && enMeasure(g, lines[i], fs) > avail) fs -= 0.5;
+        enText(g, lines[i], tx, by + barH / 2, ink, fs, 'left');
+        g.restore();
+      }
+      if (checklist) {
+        var cx = areaR + 6, cw = w - areaR - 12;
+        var items = ['每句有主詞＋動詞', '時態一致', '大寫開頭、標點結尾'];
+        label(g, '檢查表', cx + cw / 2, top - 2, theme, 10, 'center');
+        for (var c = 0; c < items.length; c++) {
+          var cyy = top + 16 + c * 30;
+          var on = p > (0.3 + c * 0.22);
+          g.save(); g.strokeStyle = on ? EN_OK : ink; g.globalAlpha = on ? 1 : 0.5; g.lineWidth = 1.8;
+          rrectPath(g, cx, cyy - 8, 16, 16, 4); g.stroke();
+          if (on) { g.strokeStyle = EN_OK; g.lineCap = 'round'; g.beginPath(); g.moveTo(cx + 3, cyy); g.lineTo(cx + 6.5, cyy + 4); g.lineTo(cx + 13, cyy - 4); g.stroke(); }
+          g.restore();
+          label(g, items[c], cx + 22, cyy, on ? ink : '#9aa3af', 9.5, 'left');
+        }
+      }
+      bottomCap(g, w, h, '主題句放最前面，細節句支持它' + (hasClosing ? '，最後用結尾句收' : ''), ink);
+    }
+
+    function draw(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      if (mode === 'question') drawQuestion(g, p, w, h);
+      else if (mode === 'negative') drawNegative(g, p, w, h);
+      else if (mode === 'paragraph') drawParagraph(g, p, w, h);
+      else drawStatement(g, p, w, h);
+    }
+
+    return runScene(host, {
+      durationMs: mode === 'paragraph' ? 6000 : 5200, loops: 2, staticPhase: 1,
+      interactive: mode === 'statement',
+      label: cfg.label || (mode === 'question' ? '問句生成動畫：把直述句改寫成問句（be 動詞移到句首、或加助動詞並去掉動詞 -s、或加疑問詞），句末加問號。'
+        : mode === 'negative' ? '否定句生成動畫：在主詞和動詞之間插入否定助動詞並去掉動詞 -s。'
+        : mode === 'paragraph' ? '段落結構動畫：主題句、細節句、結尾句的句子橫條由上往下堆成一段。'
+        : '造句動畫：主詞、動詞、受詞的詞磚依序飛進對應欄位，句首大寫、句末加句點。'),
+      onClick: (mode === 'statement') ? function (x, y, redraw) {
+        for (var i = 0; i < trayBoxes.length; i++) {
+          if (trayBoxes[i] && inBox(trayBoxes[i], x, y)) { manual = true; placed[i] = true; redraw(); return; }
+        }
+        // 點空白：補放下一塊。
+        manual = true;
+        for (var j = 0; j < placed.length; j++) { if (!placed[j]) { placed[j] = true; break; } }
+        redraw();
+      } : undefined,
+      onReplay: function () { manual = false; for (var i = 0; i < placed.length; i++) placed[i] = false; },
+      draw: draw
+    });
+  }
+
+  // ====================================================================
+  // 場景 E5：enMeter — 語氣／強度量表（情態助動詞）。水平量表、標上各停點，
+  //   指針落在 pointer 停點；下方顯示 example 例句。
+  //   cfg = {axisLabel:'建議強度', stops:['could','should','must'], pointer:'should', example?, label?}
+  //   用於：能力 can/could、許可 may、建議 should、義務 must、可能 might/may/must 等強弱。
+  // ====================================================================
+  function enMeter(host: HTMLElement, cfg: any) {
+    cfg = cfg || {};
+    var axisLabel: string = cfg.axisLabel || '強度';
+    var stops: string[] = (cfg.stops && cfg.stops.length) ? cfg.stops.map(String) : ['could', 'should', 'must'];
+    var pointer: string = cfg.pointer != null ? String(cfg.pointer) : stops[stops.length - 1];
+    var example: string = cfg.example || '';
+    var tgt = stops.indexOf(pointer); if (tgt < 0) tgt = stops.length - 1;
+
+    function stopX(i: number, w: number): number {
+      var x0 = w * 0.14, x1 = w * 0.86;
+      return stops.length === 1 ? (x0 + x1) / 2 : x0 + (x1 - x0) * (i / (stops.length - 1));
+    }
+
+    function draw(g: CanvasRenderingContext2D, p: number, w: number, h: number) {
+      var theme = themeColor(), ink = inkColor();
+      label(g, axisLabel + '：越往右越強', w / 2, 15, theme, 12, 'center');
+      var trackY = h * 0.56, x0 = w * 0.12, x1 = w * 0.88;
+      // 漸強軌（左淡右濃）。
+      var grad = g.createLinearGradient(x0, 0, x1, 0);
+      grad.addColorStop(0, 'rgba(37,99,235,0.25)'); grad.addColorStop(1, 'rgba(225,29,72,0.8)');
+      g.save(); g.strokeStyle = grad as any; g.lineWidth = 9; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(x0, trackY); g.lineTo(x1, trackY); g.stroke(); g.restore();
+      label(g, '弱', x0 - 2, trackY + 20, ink, 10, 'center');
+      label(g, '強', x1 + 2, trackY + 20, ink, 10, 'center');
+      // 停點。
+      for (var i = 0; i < stops.length; i++) {
+        var sx = stopX(i, w);
+        var on = i === tgt;
+        g.save(); g.globalAlpha = on ? 1 : 0.55;
+        disc(g, sx, trackY, on ? 5.5 : 4, on ? EN_NEG : ink);
+        g.restore();
+        enText(g, stops[i], sx, trackY - 20, on ? EN_NEG : ink, on ? 13.5 : 12, 'center');
+      }
+      // 指針：從最左滑到目標停點。
+      var prog = easeInOut(Math.min(1, p / 0.75));
+      var curX = stopX(0, w) + (stopX(tgt, w) - stopX(0, w)) * prog;
+      g.save(); g.fillStyle = EN_NEG; g.strokeStyle = EN_NEG;
+      g.beginPath(); g.moveTo(curX, trackY + 12); g.lineTo(curX - 7, trackY + 26); g.lineTo(curX + 7, trackY + 26); g.closePath(); g.fill();
+      g.restore();
+      // 例句。
+      if (example) {
+        label(g, '例句', w / 2, h * 0.74, theme, 9.5, 'center');
+        var efs = 14; while (efs > 9 && enMeasure(g, example, efs) > w - 28) efs -= 0.5;
+        enText(g, example, w / 2, h * 0.84, ink, efs, 'center');
+      }
+      bottomCap(g, w, h, '同樣是「可以／應該／必須」，語氣強弱不一樣', ink);
+    }
+
+    return runScene(host, {
+      durationMs: 3800, loops: 2, staticPhase: 1,
+      label: cfg.label || ('語氣強度量表動畫：在 ' + stops.join('、') + ' 的強弱量表上，指針落在「' + pointer + '」，呈現情態助動詞的語氣強弱。'),
+      draw: draw
+    });
+  }
+
   // ---- 導出 -----------------------------------------------------------
   var Anim = {
     reducedMotion: reducedMotion,
@@ -4481,6 +5185,11 @@
     textHighlight: textHighlight,
     blockAssemble: blockAssemble,
     barChartCallout: barChartCallout,
+    enLetter: enLetter,
+    enBlend: enBlend,
+    enTimeline: enTimeline,
+    enSentenceBuild: enSentenceBuild,
+    enMeter: enMeter,
   };
   (window as any).Anim = Anim;
 })();

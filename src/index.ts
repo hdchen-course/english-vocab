@@ -37,6 +37,7 @@
     'physics_concepts_advanced.html': '物理觀念養成・進階', 'chemistry_concepts_advanced.html': '化學觀念養成・進階', 'biology_concepts_advanced.html': '生物觀念養成・進階', 'earth_science_concepts_advanced.html': '地球科學觀念養成・進階',
     'sustainability.html': '永續與氣候變遷', 'finance_realworld.html': '理財・真實世界', 'world_affairs.html': '世界時事・跟世界接軌',
     'english_concepts.html': '英文句型觀念養成', 'english_reading.html': '英語閱讀技巧', 'english_idioms.html': '英文慣用語・看圖秒懂', 'english_speaking.html': '英文口說・跟著唸',
+    'english_phonics.html': '英文字母與自然發音', 'english_tenses.html': '英文時態全套', 'english_questions.html': '問問題與說「不」', 'english_modals.html': '情態助動詞', 'english_writing.html': '英文寫作入門',
     'social_concepts.html': '社會觀念養成',
     'composition.html': '小小作家 · 寫作工廠',
     'finance.html': '理財小達人',

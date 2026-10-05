@@ -141,6 +141,25 @@ interface AnimApi {
   /** 長條重點圖：長條依序長高、再依序拉出重點說明旗指向對應長條；misleadFlag 時畫斷軸鋸齒＋紅字「Y 軸沒從 0 開始→看起來差很多」。
    *  跨科共用（數學統計／核心素養／社會讀圖）。cfg = {bars:[{label,value}], unit?, callouts:[{barIndex,note}], misleadFlag?, title?, label?}。 */
   barChartCallout: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 字母／字形入門：trace 大寫+小寫由上往下描字；sound 大字形+會張合的嘴+🔊；flash 常見字卡翻入+🔊。
+   *  🔊 不自己播音，點擊時呼叫 cfg.onPlay(text)（有才呼叫、沒有也不報錯）。英文 cluster author-once。
+   *  cfg = {letter?, grapheme?, word?, mode:'trace'|'sound'|'flash', onPlay?:(text:string)=>void, label?}。 */
+  enLetter: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 字母拼讀：字母磚分開→滑在一起→融成一個字，下方聲波合流，整字彈出附 🔊 讀出拼好的字；
+   *  digraph（如 'sh'）當作一塊磚。cfg = {parts:string[], mode?:'phoneme', onPlay?:(w:string)=>void, label?}。 */
+  enBlend: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 動詞時態時間軸（過去/現在/未來）：simple 一個時點（過去打勾）、progressive 一段進行色帶、
+   *  perfect 從過去連到現在的箭頭；markers 多筆各佔一 lane、highlight 一筆為主色。
+   *  cfg = {when,aspect,marker,span?,markers?:[{when,aspect,marker,highlight?}],label?}。 */
+  enTimeline: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 造句積木（最重要・通用）：statement 彩色詞性欄+詞磚依序飛入+句首大寫/句末句點（可點放置+自動播放）；
+   *  question 直述句→問句（be 前移／加 helper 去 -s／加 whWord）；negative 插入 helper 去 -s；
+   *  paragraph 主題句/細節句/結尾句橫條堆疊（checklist 右側逐項打勾）。
+   *  cfg = {slots,tiles,mode:'statement'|'question'|'negative'|'paragraph',helper?,whWord?,from?,closing?,checklist?,label?}。 */
+  enSentenceBuild: (host: HTMLElement, cfg?: any) => { stop: () => void };
+  /** 語氣／強度量表（情態助動詞）：水平漸強軌+各停點，指針落在 pointer 停點，下方顯示 example 例句。
+   *  cfg = {axisLabel?,stops:string[],pointer:string,example?,label?}。 */
+  enMeter: (host: HTMLElement, cfg?: any) => { stop: () => void };
 }
 
 /** game_core.js 導出的遊戲核心 API（window.Game）。遷移 game_core 時逐步精確化。 */
