@@ -1776,6 +1776,8 @@
         const tg = document.querySelector('.fc-spell__toggle');   // 評分/看答案後停用輸入法切換鈕(toggleSpellMode 已 spellDone early-return,不停用就是死按鈕);renderSpelling 於下一字重建成啟用
         if (tg) { tg.disabled = true; tg.setAttribute('aria-disabled', 'true'); }
         document.querySelectorAll('#spell-bank .fc-spell__tile').forEach(t => { t.disabled = true; t.setAttribute('aria-disabled', 'true'); });   // 看答案/答對後停用字母磚庫殘留的未用磚(spellPlaceTile 已於 spellDone no-op),否則是可按卻沒反應的死按鈕(與 coca/toeic 一致)
+        const rv = document.querySelector('.nav-btn[onclick*="revealSpelling"]');   // 停用「看答案」鈕:revealSpelling 已於 spellDone early-return,答對自動前進視窗內不停用就是可按卻 no-op 的死按鈕;renderSpelling 下一字重建成啟用
+        if (rv) { rv.disabled = true; rv.setAttribute('aria-disabled', 'true'); }
     }
 
     function handleSpellInput(input) {
@@ -1834,6 +1836,7 @@
     }
 
     function revealSpelling() {
+        if (spellDone) return;   // 已計分/已看答案就不再動：答對後 1200ms 自動前進視窗內點「看答案」會把「✓ 全部拼對了」覆蓋成「答案如上…」的查看訊息，誤導拼對的孩子（與 checkSpelling/toggleSpellMode 的 spellDone 守衛一致）
         spellDone = true;   // 看過答案就不給分（否則填滿正解再按檢查＝不勞而獲的洩分）；孩子看完按「跳過」進下一題
         const fb = document.getElementById('spell-feedback'); if (fb) { fb.textContent = '答案如上，看一次、記起來，下次就會囉！'; fb.className = 'feedback-msg'; }   // 清掉先前答錯留下的「修正紅色的再檢查」訊息（現在已全部揭示並鎖定，沒有紅字、檢查也無效）
         document.querySelectorAll('#spell-slots .fc-spell__slot').forEach(s => {
@@ -1905,6 +1908,8 @@
                     el.classList.add('matched');
                     matchState.selected.el.classList.add('matched');
                     matchState.selected.el.classList.remove('selected');
+                    // 配對成功後把兩張磚解除可操作性:handleMatch 對 .matched 會 early-return,留著 role/tabindex/onkeydown 會是鍵盤可達卻 no-op 的死按鈕(與 checkQuiz r7 一致)
+                    [el, matchState.selected.el].forEach(m => { m.removeAttribute('role'); m.removeAttribute('tabindex'); m.removeAttribute('onkeydown'); m.setAttribute('aria-disabled', 'true'); });
                     matchState.matched.push(index);
                     score += 5; streak++;
                     learnedWords.add(matchState.words[index].word);   // 與 quiz/spell/markLearned 一致：配對正確也計入「學會」進度，否則圖鑑亮了但學會數不動
