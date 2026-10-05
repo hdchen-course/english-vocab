@@ -1987,7 +1987,7 @@
             "concepts": [
                 "who 說明『人』",
                 "which／that 說明『東西、動物』",
-                "口語 that 人物通吃",
+                "口語 that：人、物通吃",
                 "where 說明『地方』",
                 "whose 表示『某人的』"
             ],
@@ -2744,7 +2744,7 @@
                 var rec = progress[lv.id] || {};
                 var done = !!rec.done;
                 var total = lv.questions.length;
-                var st = done ? starsFor(rec.best || 0, total) : 0;
+                var st = done ? Math.max(1, starsFor(rec.best || 0, total)) : 0; // 已完成至少顯示 1 星（與結算畫面一致，避免 0 分空星列打擊士氣）
                 var card = document.createElement('button');
                 card.type = 'button';
                 card.className = 'ma-level';
