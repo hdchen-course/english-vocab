@@ -564,7 +564,10 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
     slotEls.forEach(function(el){
       const inp = el.querySelector('input');
       if (inp) inp.readOnly = true;
-      if (el.getAttribute('role') === 'button') { el.removeAttribute('role'); el.removeAttribute('tabindex'); el.setAttribute('aria-disabled', 'true'); }
+      if (el.getAttribute('role') === 'button') {
+        el.removeAttribute('role'); el.removeAttribute('tabindex'); el.setAttribute('aria-disabled', 'true');
+        el.setAttribute('aria-label', '已填入 ' + (el.textContent || '') + '，已鎖定');   // 清掉 L481「按 Enter 或空白鍵退回字母」的過時提示：評分後 onclick/onkeydown 已 no-op，報讀器不該再宣稱可退回
+      }
     });
     var spellToggleEl2 = document.getElementById('spellToggle');   // 評分後停用輸入法切換鈕，避免 toggleSpellMode 的 early-return 變成「按了沒反應」的死按鈕（showSpell 於下一張卡重新啟用）
     if (spellToggleEl2) { spellToggleEl2.disabled = true; spellToggleEl2.setAttribute('aria-disabled', 'true'); }
