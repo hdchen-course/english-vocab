@@ -468,7 +468,7 @@ function renderQuiz(area) {
         ${questionHtml}
       </div>
       <div class="quiz-options">
-        ${options.map(opt => `<div class="quiz-option" role="button" tabindex="0" onclick="checkQuizAnswer(this, '${opt.replace(/'/g, "\\'")}', '${correctAnswer.replace(/'/g, "\\'")}')">${opt}</div>`).join('')}
+        ${options.map(opt => `<div class="quiz-option" role="button" tabindex="0" onclick="checkQuizAnswer(this, '${jsAttr(opt)}', '${jsAttr(correctAnswer)}')">${esc(opt)}</div>`).join('')}
       </div>
       <div class="fc-reveal" id="revealPanel"></div>
     </div>
@@ -506,7 +506,7 @@ function checkQuizAnswer(el, selected, correct) {
 let spellState = null;
 function getSpellMode() { try { return localStorage.getItem('vocab_spell_mode') || 'tiles'; } catch (e) { return 'tiles'; } }
 function setSpellMode(m) { try { localStorage.setItem('vocab_spell_mode', m); } catch (e) {} }
-function toggleSpellMode() { setSpellMode(getSpellMode() === 'tiles' ? 'keyboard' : 'tiles'); renderMode(); }
+function toggleSpellMode() { if (answered || (spellState && spellState.locked)) return; setSpellMode(getSpellMode() === 'tiles' ? 'keyboard' : 'tiles'); renderMode(); }   // 已作答的字不可切輸入法重建（renderMode 會解鎖重開計分）
 
 function renderSpelling(area) {
   const word = getCurrentWord();
@@ -603,7 +603,7 @@ function spellCheckTiles() {
   let attempt = '';
   st.chars.forEach((ch, i) => { attempt += (ch === ' ') ? ' ' : (st.slots[i].ch || ''); });
   const correct = attempt.toLowerCase() === word.word.toLowerCase();
-  st.locked = true;
+  st.locked = true; answered = true;   // 鎖住本題（含 answered，讓 toggleSpellMode 的守衛涵蓋 tiles→keyboard 方向）
   // 綠對紅錯（不只靠顏色：.ok/.no class 之外，正解也在揭示面板呈現）
   st.chars.forEach((ch, i) => {
     if (ch === ' ') return;
@@ -730,7 +730,7 @@ function renderListening(area) {
       <p style="font-size:1.1rem; margin-bottom:8px; color:var(--text-secondary)">聽一聽，選出正確的單字</p>
       <button class="fc-audio fc-audio--lg" aria-label="播放單字發音，再聽一次" onclick="speak('${word.word.replace(/'/g, "\\'")}')">🔊</button>
       <div class="quiz-options" style="margin-top:20px;">
-        ${options.map(opt => `<div class="quiz-option" role="button" tabindex="0" onclick="checkListeningAnswer(this, '${opt.replace(/'/g, "\\'")}', '${word.word.replace(/'/g, "\\'")}')">${opt}</div>`).join('')}
+        ${options.map(opt => `<div class="quiz-option" role="button" tabindex="0" onclick="checkListeningAnswer(this, '${jsAttr(opt)}', '${jsAttr(word.word)}')">${esc(opt)}</div>`).join('')}
       </div>
       <div class="fc-reveal" id="revealPanel"></div>
     </div>
@@ -817,7 +817,7 @@ function renderClozeQuiz(area) {
         <div style="font-size:1.05rem;text-align:center;line-height:1.8;margin-bottom:12px;">${word.cloze || word.sentence}</div>
       </div>
       <div class="quiz-options" style="grid-template-columns:1fr 1fr;">
-        ${choices.map(opt => `<div class="quiz-option" role="button" tabindex="0" onclick="checkClozeAnswer(this, '${opt.replace(/'/g, "\\'")}', '${word.word.replace(/'/g, "\\'")}')">${opt}</div>`).join('')}
+        ${choices.map(opt => `<div class="quiz-option" role="button" tabindex="0" onclick="checkClozeAnswer(this, '${jsAttr(opt)}', '${jsAttr(word.word)}')">${esc(opt)}</div>`).join('')}
       </div>
       <div class="fc-reveal" id="revealPanel"></div>
     </div>
@@ -892,7 +892,7 @@ function renderClozeListening(area) {
       <p style="font-size:0.9rem; margin-bottom:8px; color:var(--text-secondary)">聽一聽，選出正確的單字填入空格</p>
       <button class="fc-audio fc-audio--lg" aria-label="播放單字發音，再聽一次" onclick="speak('${word.word.replace(/'/g, "\\'")}')">🔊</button>
       <div class="quiz-options" style="margin-top:16px;grid-template-columns:1fr 1fr;">
-        ${choices.map(opt => `<div class="quiz-option" role="button" tabindex="0" onclick="checkClozeAnswer(this, '${opt.replace(/'/g, "\\'")}', '${word.word.replace(/'/g, "\\'")}')">${opt}</div>`).join('')}
+        ${choices.map(opt => `<div class="quiz-option" role="button" tabindex="0" onclick="checkClozeAnswer(this, '${jsAttr(opt)}', '${jsAttr(word.word)}')">${esc(opt)}</div>`).join('')}
       </div>
       <div class="fc-reveal" id="revealPanel"></div>
     </div>
@@ -1160,9 +1160,10 @@ init();
     var card = null;
     try { card = srs.store.peek(word); } catch (e) { card = null; } // 唯讀窺看：進化階推導不落地建卡
     if (!card || card.status === 'new') return 0;
-    if (card.status !== 'review' || card.interval < THRESH.hatch) return 1;
-    if (card.interval < THRESH.grow) return 2;
-    if (card.interval < THRESH.master) return 3;
+    var iv = (card.interval || 0);   // 與 isLearned/getStats 一致：interval 缺值視為 0，避免 undefined<THRESH 全 false 落到「精通」(return 4) 誤判、灌水 masteredCount/徽章
+    if (card.status !== 'review' || iv < THRESH.hatch) return 1;
+    if (iv < THRESH.grow) return 2;
+    if (iv < THRESH.master) return 3;
     return 4;
   }
   function peakOf(word) { return (data && data.peak && data.peak[word]) || 0; }
