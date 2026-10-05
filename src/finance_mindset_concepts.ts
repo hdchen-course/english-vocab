@@ -1,9 +1,9 @@
 /* =====================================================================
  * finance_mindset_concepts.ts  →  (tsc, tsconfig.legacy.json) →  finance_mindset_concepts.js
- * 原為 finance_mindset_concepts.html 的 inline <script>（教學資料 window.CONCEPT ＋ SVG 概念圖 helper）。
- * 逐檔 TS 遷移抽出成 sibling .js；以 IIFE 包住讓 helper 為檔案區域（避免與其他已遷移頁
- *   的同名頂層 helper 如 animCanvas 在 tsconfig.legacy 共用全域型別檢查時 TS2393 衝突）。
- * helper 只在建 window.CONCEPT 時同步呼叫；若有動畫 mount 於執行期才用 window.Anim。
+ * 原為 finance_mindset_concepts.html 的 inline <script>（教學資料 window.CONCEPT）。
+ * 逐檔 TS 遷移抽出成 sibling .js；以 IIFE 包住讓頂層名稱為檔案區域（避免與其他已遷移頁
+ *   的同名頂層名稱在 tsconfig.legacy 共用全域型別檢查時 TS2393 衝突）。
+ * 本檔無 SVG 概念圖 helper（所有 step 的 svg 皆為空字串），IIFE 只負責指派 window.CONCEPT。
  * 行為與原 inline 版等價。載入順序與原頁一致（本檔取代原 inline 位置）。
  * ===================================================================== */
 (function () {
