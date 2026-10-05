@@ -65,13 +65,13 @@
 
     { key:'endtime', label:'幾點結束', emoji:'🏁', sub:'開始時刻＋經過時間＝結束時刻',
       teach:'知道<b>開始時刻</b>和<b>經過多久</b>，要算<b>結束時刻</b>，就是<b>開始 ＋ 經過</b>。<br><br>好用的方法是<b>先補到整點，再加剩下的</b>。<br><br><b>例：</b>9:50 開始，經過 1 時 25 分 → 先從 9:50 補到整點 10:00（走了 10 分），還剩 1 時 15 分，10:00 ＋ 1 時 15 分 ＝ <b>11:15</b>。<br><br>💡 也可以把時刻換成分相加後再換回來；分加起來超過 60 時，記得進位成 1 時。',
-      gen:function(lv){ var span=genSpan(lv); var s=genStart(span); var e=s+span; var o=hm(span);
+      gen:function(lv){ var span=genSpan(lv); var s=genStart(span); var e=s+span;
         return { text:'<b class="tl-clock">'+clock(s)+'</b> 開始，經過 <b>'+hmText(span)+'</b>，<span class="tl-q">幾點結束？</span>', fields:HM_FIELDS, answer:{h:Math.floor(e/60),m:e%60},
           tip:bridgeAdd(s,span)+'（也可以都換成分：'+s+' ＋ '+span+' ＝ '+e+' 分 ＝ '+clock(e)+'。）', spoken:spokenClock(s)+' 開始，經過 '+hmText(span)+'，幾點結束' }; } },
 
     { key:'starttime', label:'幾點開始', emoji:'🔙', sub:'結束時刻－經過時間＝開始時刻',
       teach:'反過來，知道<b>結束時刻</b>和<b>經過多久</b>，要算<b>開始時刻</b>，就是<b>結束 − 經過</b>（往回推）。<br><br>好用的方法是<b>先退到整點，再往前減剩下的</b>。<br><br><b>例：</b>15:10 結束，經過了 1 時 40 分 → 先從 15:10 退到整點 15:00（退了 10 分），還要再往前 1 時 30 分，15:00 − 1 時 30 分 ＝ <b>13:30</b>。<br><br>💡 也可以把時刻換成分相減後再換回來；分不夠減時，先跟前面借 1 時（＝60 分）再減。',
-      gen:function(lv){ var span=genSpan(lv); var e=genEnd(span); var s=e-span; var o=hm(span);
+      gen:function(lv){ var span=genSpan(lv); var e=genEnd(span); var s=e-span;
         return { text:'<b class="tl-clock">'+clock(e)+'</b> 結束，往前算，剛剛經過了 <b>'+hmText(span)+'</b>，<span class="tl-q">幾點開始？</span>', fields:HM_FIELDS, answer:{h:Math.floor(s/60),m:s%60},
           tip:bridgeSub(e,span)+'（也可以都換成分：'+e+' − '+span+' ＝ '+s+' 分 ＝ '+clock(s)+'。）', spoken:spokenClock(e)+' 結束，往前經過 '+hmText(span)+'，幾點開始' }; } }
   ];

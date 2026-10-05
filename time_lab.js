@@ -93,7 +93,6 @@
                 var span = genSpan(lv);
                 var s = genStart(span);
                 var e = s + span;
-                var o = hm(span);
                 return { text: '<b class="tl-clock">' + clock(s) + '</b> 開始，經過 <b>' + hmText(span) + '</b>，<span class="tl-q">幾點結束？</span>', fields: HM_FIELDS, answer: { h: Math.floor(e / 60), m: e % 60 },
                     tip: bridgeAdd(s, span) + '（也可以都換成分：' + s + ' ＋ ' + span + ' ＝ ' + e + ' 分 ＝ ' + clock(e) + '。）', spoken: spokenClock(s) + ' 開始，經過 ' + hmText(span) + '，幾點結束' };
             } },
@@ -103,7 +102,6 @@
                 var span = genSpan(lv);
                 var e = genEnd(span);
                 var s = e - span;
-                var o = hm(span);
                 return { text: '<b class="tl-clock">' + clock(e) + '</b> 結束，往前算，剛剛經過了 <b>' + hmText(span) + '</b>，<span class="tl-q">幾點開始？</span>', fields: HM_FIELDS, answer: { h: Math.floor(s / 60), m: s % 60 },
                     tip: bridgeSub(e, span) + '（也可以都換成分：' + e + ' − ' + span + ' ＝ ' + s + ' 分 ＝ ' + clock(s) + '。）', spoken: spokenClock(e) + ' 結束，往前經過 ' + hmText(span) + '，幾點開始' };
             } }
