@@ -36,12 +36,12 @@ function circuit(closed){
   return s+'</svg>';
 }
 // 浮力：up=浮力箭頭長度、down=重力箭頭長度、verdict 文字
-function buoyancy(up, down, verdict){
+function buoyancy(up, down, verdict, hideGrav?: boolean){
   var s='<svg viewBox="0 0 300 150" role="img" aria-label="浮力與重力">';
   s+='<rect x="20" y="66" width="260" height="76" fill="rgba(14,165,233,0.18)" stroke="#0ea5e9" stroke-width="2"/><text x="270" y="82" text-anchor="end" font-size="12" font-weight="700" fill="currentColor">水</text>';
   s+='<rect x="128" y="72" width="44" height="36" rx="6" fill="rgba(120,120,120,0.22)" stroke="currentColor" stroke-opacity="0.6" stroke-width="3"/><text x="150" y="96" text-anchor="middle" font-size="14" font-weight="800" fill="currentColor">物</text>';
   var uy1=72-up; s+='<line x1="150" y1="72" x2="150" y2="'+uy1+'" stroke="#16a34a" stroke-width="5"/><polygon points="150,'+uy1+' 144,'+(uy1+9)+' 156,'+(uy1+9)+'" fill="#16a34a"/><text x="150" y="'+(uy1-6)+'" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">浮力</text>';
-  var dy1=108+down; s+='<line x1="150" y1="108" x2="150" y2="'+dy1+'" stroke="#e11d48" stroke-width="5"/><polygon points="150,'+dy1+' 144,'+(dy1-9)+' 156,'+(dy1-9)+'" fill="#e11d48"/><text x="188" y="'+(108+down/2)+'" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">重力</text>';
+  if(!hideGrav){ var dy1=108+down; s+='<line x1="150" y1="108" x2="150" y2="'+dy1+'" stroke="#e11d48" stroke-width="5"/><polygon points="150,'+dy1+' 144,'+(dy1-9)+' 156,'+(dy1-9)+'" fill="#e11d48"/><text x="188" y="'+(108+down/2)+'" text-anchor="middle" font-size="12" font-weight="800" fill="currentColor">重力</text>'; }
   if(verdict) s+='<text x="60" y="30" text-anchor="middle" font-size="15" font-weight="800" fill="currentColor">'+verdict+'</text>';
   return s+'</svg>';
 }
@@ -68,7 +68,7 @@ window.CONCEPT = {
    { id:'circuit', name:'簡單電路', emoji:'🔌', color:'#0284c7', sub:'通路、斷路、導體與絕緣體', done:'記得：電要繞完整一圈（通路）燈才會亮；金屬是導體、塑膠是絕緣體。',
      steps:[
       {type:'teach',kicker:'先想一想',title:'電要繞完整一圈，燈才會亮',svg:animCanvas(320,180,'電路動畫：通路時電流繞一圈流動、燈泡亮；開關打開變成斷路時有缺口、電流不流、燈泡不亮'),mount:function(host){return window.Anim&&window.Anim.circuitFlow(host);},text:'電從<b>電池</b>出發，沿著<b>電線</b>繞一圈回到電池。這條路<b>接成完整的一圈（通路）</b>，燈泡才會<b>亮</b>。看動畫裡的小點：<b>電流繞著一圈流動</b>，燈就亮。'},
-      {type:'teach',kicker:'斷掉會怎樣',title:'有缺口（斷路）→ 燈不亮',svg:animCanvas(320,180,'電路動畫：通路時電流繞一圈流動、燈泡亮；開關打開變成斷路時有缺口、電流不流、燈泡不亮'),mount:function(host){return window.Anim&&window.Anim.circuitFlow(host);},text:'打開<b>開關</b>，電線就<b>斷了一個缺口</b>（斷路），電流<b>繞不過去、停下來</b>，燈泡就<b>不亮</b>。開關就是用來接通或切斷這條路——注意動畫裡缺口一出現，小點就不動了。'},
+      {type:'teach',kicker:'斷掉會怎樣',title:'有缺口（斷路）→ 燈不亮',svg:animCanvas(320,180,'電路動畫：通路時電流繞一圈流動、燈泡亮；開關打開變成斷路時有缺口、電流不流、燈泡不亮'),mount:function(host){return window.Anim&&window.Anim.circuitFlow(host);},text:'把<b>開關</b>撥開（斷開），電線就<b>斷了一個缺口</b>（斷路），電流<b>繞不過去、停下來</b>，燈泡就<b>不亮</b>。開關就是用來接通或切斷這條路——注意動畫裡缺口一出現，小點就不動了。'},
       {type:'quiz',kicker:'換你試試',title:'燈泡要亮，電路必須怎樣？',options:['接成完整的一圈（通路）','中間留一個缺口','只要有電池、不用電線','把燈泡拿掉'],answer:0,why:'電流要能繞完整一圈回到電池，燈泡才會亮。'},
       {type:'teach',kicker:'再學一招',title:'導體 vs 絕緣體',svg:'<svg viewBox="0 0 300 96" role="img" aria-label="導體與絕緣體"><text x="80" y="30" text-anchor="middle" font-size="13" font-weight="800" fill="currentColor">導體（電通過）</text><line x1="30" y1="52" x2="130" y2="52" stroke="#c9873a" stroke-width="6"/><text x="80" y="78" text-anchor="middle" font-size="20">🥉⚡</text><text x="220" y="30" text-anchor="middle" font-size="13" font-weight="800" fill="currentColor">絕緣體（擋住）</text><line x1="170" y1="52" x2="270" y2="52" stroke="#9aa1ab" stroke-width="6" stroke-dasharray="6 6"/><text x="220" y="78" text-anchor="middle" font-size="20">🧱🚫</text></svg>',text:'電流<b>能</b>通過的東西叫<b>導體</b>（金屬、銅線）；電流<b>不能</b>通過的叫<b>絕緣體</b>（塑膠、橡皮、木頭）。所以電線外面包一層塑膠才安全。'},
       {type:'quiz',kicker:'換你試試',title:'下面哪一個是「導體」（電能通過）？',options:['銅線','塑膠尺','木筷子','橡皮擦'],answer:0,why:'金屬（銅線）是導體；塑膠、木頭、橡皮都是絕緣體。'},
@@ -76,7 +76,7 @@ window.CONCEPT = {
      ]},
    { id:'buoy', name:'浮力', emoji:'🛟', color:'#0891b2', sub:'為什麼有的東西浮、有的沉', done:'記得：浮力往上、重力往下；浮力大就浮起、重力大就下沉。',
      steps:[
-      {type:'teach',kicker:'先想一想',title:'水會給東西一個「往上」的力',svg:buoyancy(30,30,''),text:'把東西放進水裡，水會給它一個<b>往上</b>的力，叫做<b>浮力</b>（綠色箭頭）。這就是為什麼在水裡會覺得東西變輕。'},
+      {type:'teach',kicker:'先想一想',title:'水會給東西一個「往上」的力',svg:buoyancy(30,30,'',true),text:'把東西放進水裡，水會給它一個<b>往上</b>的力，叫做<b>浮力</b>（綠色箭頭）。這就是為什麼在水裡會覺得東西變輕。'},
       {type:'teach',kicker:'兩個力比賽',title:'浮力往上、重力往下',svg:buoyancy(30,30,'比誰大'),text:'同時，<b>重力</b>把東西<b>往下</b>拉（紅色箭頭）。東西會浮還是沉，就看<b>浮力和重力誰比較大</b>。'},
       {type:'teach',kicker:'關鍵祕訣',title:'浮力大 → 浮起；重力大 → 下沉',svg:animCanvas(330,200,'浮力動畫：一樣大、不同重的木塊和鐵塊放入水中；木塊浮力大於重力會浮起停在水面，鐵塊重力大於浮力會沉到底；浮或沉看兩個力誰大'),mount:function(host){return window.Anim&&window.Anim.buoyancyFloat(host);},text:'一樣大的<b>木塊</b>和<b>鐵塊</b>一起放進水裡：<b>浮力 > 重力</b> → <b>浮起來</b>（木塊）；<b>浮力 < 重力</b> → <b>沉下去</b>（鐵塊）。看兩支箭頭比大小就知道。（小提醒：浮在水面不動時，浮力剛好<b>等於</b>重力；浮力大於重力是它還在往上浮的時候。）'},
       {type:'quiz',kicker:'換你試試',title:'木頭放進水裡會浮起來，因為？',options:['浮力比重力大','重力比浮力大','木頭沒有重量','水沒有力'],answer:0,why:'浮力 > 重力時東西會浮起來，所以木頭浮在水面。'},
