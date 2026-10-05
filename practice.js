@@ -387,6 +387,11 @@ function switchMode(mode) {
     render();
 }
 function render() {
+    if (advanceTimer) {
+        clearTimeout(advanceTimer);
+        advanceTimer = null;
+    } // 任何重新渲染（含 prevWord/switchMode/loadCategory/switchGrade/手動導航）都取消尚未觸發的自動前進，避免殘留 timer 事後再跳一張
+    markLearnedDone = false; // 新卡片視圖：解除「已學會」單次鎖
     updateProgress();
     switch (currentMode) {
         case 'visual':
@@ -2840,10 +2845,12 @@ function handleMatch(el) {
                 matchState.matched.push(index);
                 score += 5;
                 streak++;
+                learnedWords.add(matchState.words[index].word); // 與 quiz/spell/markLearned 一致：配對正確也計入「學會」進度，否則圖鑑亮了但學會數不動
                 if (window.Game)
                     Game.recordAnswer('english', true);
                 if (window.Album)
                     Album.onWord(matchState.words[index], true);
+                updateProgress();
                 if (matchState.matched.length === matchState.words.length)
                     celebrate();
             }
@@ -2900,14 +2907,13 @@ function nextWord() { if (advanceTimer) {
     advanceTimer = null;
 } currentWordIndex = (currentWordIndex + 1) % allWords.length; render(); }
 function prevWord() { currentWordIndex = (currentWordIndex - 1 + allWords.length) % allWords.length; render(); }
-let lastLearnAt = 0;
+let markLearnedDone = false;
 function markLearned() {
-    const now = Date.now();
-    // 去抖：按鈕在 setTimeout(nextWord) 的 600ms 內仍可按；第二次點擊會對同一個字再 Album.onWord(true)
-    // 一次，重複推進 SRS 盒＋重複加分。用時間冷卻擋掉。
-    if (now - lastLearnAt < 350)
+    // 單次鎖：此卡只計一次。render()（下一張卡）會把旗標重設；比時間去抖更穩，
+    // 不會因第二次點擊落在自動前進(600ms)視窗內而重複 Album.onWord(true)＋重複加分。
+    if (markLearnedDone)
         return;
-    lastLearnAt = now;
+    markLearnedDone = true;
     learnedWords.add(allWords[currentWordIndex].word);
     if (window.Album)
         Album.onWord(allWords[currentWordIndex], true);
