@@ -628,6 +628,14 @@ function checkSpell() {
         const inp = s.querySelector('input');
         if (inp)
             inp.disabled = true;
+        // 評分後就地鎖定字母磚格（checkSpell 不重新渲染）：移除可操作性，否則格子仍自稱可按 Enter 退回、但 onSlotClick 已被 awaitingContinue 擋住 = 無作用的假提示
+        if (s.getAttribute('role') === 'button') {
+            s.removeAttribute('role');
+            s.removeAttribute('tabindex');
+            s.removeAttribute('onclick');
+            s.removeAttribute('onkeydown');
+            s.setAttribute('aria-disabled', 'true');
+        }
     });
     recordBinary(allRight);
     showReveal(document.getElementById('spellReveal'), allRight, word, allRight ? '' : '拼對的字母會變綠色；看一下上面的正確拼法，下次就記住了。');
