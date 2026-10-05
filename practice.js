@@ -2558,7 +2558,9 @@ function toggleSpellMode() {
     catch (e) { }
     renderSpelling();
 }
+let spellDone = false; // 本題拼字是否已計分/已看答案：擋重複計分與「看答案後按檢查」的洩分
 function renderSpelling() {
+    spellDone = false;
     const word = allWords[currentWordIndex];
     const mode = getSpellMode();
     const chars = word.word.split('');
@@ -2581,7 +2583,7 @@ function renderSpelling() {
         const target = ch.toLowerCase();
         if (mode === 'keyboard') {
             slotsHtml += '<span class="fc-spell__tile fc-spell__slot' + (isHint ? ' hint filled' : '') + '" data-target="' + target + '">'
-                + '<input type="text" maxlength="1" inputmode="latin" autocapitalize="none" autocomplete="off" spellcheck="false"'
+                + '<input type="text" maxlength="1" inputmode="text" autocapitalize="none" autocomplete="off" spellcheck="false"'
                 + ' value="' + (isHint ? ch : '') + '" ' + (isHint ? 'readonly' : '')
                 + ' oninput="handleSpellInput(this)" onkeydown="handleSpellKey(event, this)"></span>';
         }
@@ -2697,6 +2699,8 @@ function handleSpellKey(e, input) {
         checkSpelling();
 }
 function checkSpelling() {
+    if (spellDone)
+        return; // 已計分或已看答案的本題，不因重複按「檢查」/Enter 再計一次
     const slots = document.querySelectorAll('#spell-slots .fc-spell__slot');
     const feedback = document.getElementById('spell-feedback');
     const word = allWords[currentWordIndex];
@@ -2719,6 +2723,7 @@ function checkSpelling() {
         }
     });
     if (allCorrect) {
+        spellDone = true;
         score += 15;
         streak++;
         learnedWords.add(word.word);
@@ -2753,6 +2758,7 @@ function checkSpelling() {
     }
 }
 function revealSpelling() {
+    spellDone = true; // 看過答案就不給分（否則填滿正解再按檢查＝不勞而獲的洩分）；孩子看完按「跳過」進下一題
     document.querySelectorAll('#spell-slots .fc-spell__slot').forEach(s => {
         const t = s.dataset.target || '';
         const input = s.querySelector('input');
@@ -2884,7 +2890,14 @@ function ttsSpeakWord(word) {
 }
 function nextWord() { currentWordIndex = (currentWordIndex + 1) % allWords.length; render(); }
 function prevWord() { currentWordIndex = (currentWordIndex - 1 + allWords.length) % allWords.length; render(); }
+let lastLearnAt = 0;
 function markLearned() {
+    const now = Date.now();
+    // 去抖：按鈕在 setTimeout(nextWord) 的 600ms 內仍可按；第二次點擊會對同一個字再 Album.onWord(true)
+    // 一次，重複推進 SRS 盒＋重複加分。用時間冷卻擋掉。
+    if (now - lastLearnAt < 350)
+        return;
+    lastLearnAt = now;
     learnedWords.add(allWords[currentWordIndex].word);
     if (window.Album)
         Album.onWord(allWords[currentWordIndex], true);
