@@ -667,6 +667,7 @@ function spellCheckTiles() {
     st.locked = true;
     answered = true; // 鎖住本題（含 answered，讓 toggleSpellMode 的守衛涵蓋 tiles→keyboard 方向）
     lockSpellToggle();
+    document.querySelectorAll('.fc-spell__tile').forEach(b => { b.disabled = true; b.setAttribute('aria-disabled', 'true'); }); // 評分後停用格子(#ss*)與字母磚(#sb*)原生 button：spellTapSlot/spellTapTile 已於 st.locked no-op，答錯揭示面板停留期間不停用就是鍵盤可聚焦卻無作用的死按鈕（與 quiz 選項一致）
     // 綠對紅錯（不只靠顏色：.ok/.no class 之外，正解也在揭示面板呈現）
     st.chars.forEach((ch, i) => {
         if (ch === ' ')
@@ -1060,6 +1061,8 @@ function selectMatch(el) {
             first.classList.remove('selected');
             first.classList.add('matched');
             second.classList.add('matched');
+            // 配對成功後把兩張磚移出鍵盤可操作集：selectMatch 對已配對會 early-return，留著 role/tabindex 會被全域 Enter 委派觸發 t.click()=鍵盤可達卻 no-op 的死按鈕（與 quiz/listening/cloze 選項、practice w123 一致）
+            [first, second].forEach(m => { m.removeAttribute('role'); m.removeAttribute('tabindex'); m.setAttribute('aria-disabled', 'true'); });
             matchState.matched.push(first.dataset.word);
             // Find the english word to record SRS
             const enWord = first.dataset.type === 'en' ? first.dataset.word : second.dataset.word;
