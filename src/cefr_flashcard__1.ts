@@ -138,6 +138,7 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
 
   function showCurrentMode() {
     completeScreen.classList.add('hidden');
+    progressBar.classList.remove('hidden');   // 每次進入活動都還原進度條：showComplete 完成牌卡會隱藏它,但完成後切換模式(switchMode 重設 currentIndex 開新一輪)只走這裡,不還原的話整輪都沒有進度/分數指示
     flashcardArea.classList.toggle('hidden', currentMode !== 'flashcard');
     quizArea.classList.toggle('hidden', currentMode !== 'quiz');
     spellArea.classList.toggle('hidden', currentMode !== 'spell');
