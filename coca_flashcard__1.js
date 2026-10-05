@@ -641,6 +641,7 @@ function checkSpell() {
             s.removeAttribute('onclick');
             s.removeAttribute('onkeydown');
             s.setAttribute('aria-disabled', 'true');
+            s.setAttribute('aria-label', '已填入 ' + (s.textContent || '') + '，已鎖定'); // 清掉 L443「按 Enter 或空白鍵退回字母」的過時提示：評分後 onSlotClick 已 no-op，報讀器不該再宣稱可退回（與 cefr 一致）
         }
     });
     // 進階模式（box 3–4）字母磚庫會混入誘答字母，評分後 checkSpell 不重繪 #spellBank，殘留的未使用磚仍是 enabled 的 <button onclick=onTileClick>，點了只會被 awaitingContinue 擋成 no-op＝死按鈕；一併停用整個字母磚庫
