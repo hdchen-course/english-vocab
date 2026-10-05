@@ -564,6 +564,10 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
                 b.className = 'fc-spell__tile' + (t.used ? ' used' : '');
                 b.textContent = t.ch;
                 b.setAttribute('aria-label', '字母 ' + t.ch);
+                if (t.used || spellState.graded) {
+                    b.disabled = true;
+                    b.setAttribute('aria-disabled', 'true');
+                } // 已用掉／已評分的磚設 disabled：否則仍是可 focus、報讀成可按的原生 button，但 onclick 已 no-op＝死按鈕（CSS pointer-events:none 只擋滑鼠）；字母可改由已填格子退回
                 b.onclick = function () {
                     if (spellState.graded || t.used)
                         return;
