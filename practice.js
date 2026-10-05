@@ -2496,6 +2496,8 @@ function checkQuiz(el, correct) {
         return;
     const feedback = document.getElementById('quiz-feedback');
     const word = allWords[currentWordIndex];
+    // 評分後解除所有選項的可操作性(含鍵盤):答錯無自動前進,選項仍帶 role=button/tabindex/onkeydown→Enter/空白鍵會再呼叫 checkQuiz(被 L1614 擋成 no-op)=鍵盤可達的死按鈕(與 coca w106/toeic w107 一致)
+    document.querySelectorAll('.quiz-option').forEach(o => { o.style.pointerEvents = 'none'; o.removeAttribute('role'); o.removeAttribute('tabindex'); o.removeAttribute('onkeydown'); o.setAttribute('aria-disabled', 'true'); });
     if (correct) {
         el.classList.add('correct');
         score += 10;
@@ -2596,13 +2598,13 @@ function renderSpelling() {
         const isHint = !!hintPos[i];
         const target = ch.toLowerCase();
         if (mode === 'keyboard') {
-            slotsHtml += '<span class="fc-spell__tile fc-spell__slot' + (isHint ? ' hint filled' : '') + '" data-target="' + target + '">'
+            slotsHtml += '<span class="fc-spell__tile fc-spell__slot' + (isHint ? ' hint filled' : '') + '" data-target="' + target + '" data-char="' + ch + '">'
                 + '<input type="text" maxlength="1" inputmode="text" autocapitalize="none" autocomplete="off" spellcheck="false"'
                 + ' value="' + (isHint ? ch : '') + '" ' + (isHint ? 'readonly' : '')
                 + ' oninput="handleSpellInput(this)" onkeydown="handleSpellKey(event, this)"></span>';
         }
         else {
-            slotsHtml += '<span class="fc-spell__tile fc-spell__slot' + (isHint ? ' hint filled' : '') + '" data-target="' + target + '"'
+            slotsHtml += '<span class="fc-spell__tile fc-spell__slot' + (isHint ? ' hint filled' : '') + '" data-target="' + target + '" data-char="' + ch + '"'
                 + (isHint ? (' data-filled="' + target + '"') : '')
                 + ' role="button" tabindex="0"'
                 + (isHint ? '' : ' onclick="spellClearSlot(this)" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();spellClearSlot(this);}"')
@@ -2697,6 +2699,7 @@ function lockSpellInputs() {
         tg.disabled = true;
         tg.setAttribute('aria-disabled', 'true');
     }
+    document.querySelectorAll('#spell-bank .fc-spell__tile').forEach(t => { t.disabled = true; t.setAttribute('aria-disabled', 'true'); }); // 看答案/答對後停用字母磚庫殘留的未用磚(spellPlaceTile 已於 spellDone no-op),否則是可按卻沒反應的死按鈕(與 coca/toeic 一致)
 }
 function handleSpellInput(input) {
     if (input.value.length === 1) {
@@ -2792,7 +2795,7 @@ function revealSpelling() {
         fb.className = 'feedback-msg';
     } // 清掉先前答錯留下的「修正紅色的再檢查」訊息（現在已全部揭示並鎖定，沒有紅字、檢查也無效）
     document.querySelectorAll('#spell-slots .fc-spell__slot').forEach(s => {
-        const t = s.dataset.target || '';
+        const t = s.dataset.char || s.dataset.target || ''; // 用原始大小寫的 data-char 揭示正解，data-target 是比對用的小寫，直接拿來顯示會教錯拼法(Japan→japan、USA→usa、Sunday→sunday,且蓋掉大寫提示字母)
         const input = s.querySelector('input');
         if (input) {
             input.value = t;
