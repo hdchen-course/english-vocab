@@ -558,8 +558,8 @@
       justCompletedDaily = true;
     }
 
-    // 觸及任一科 → 更新 streak（同日 idempotent）。
-    pingActive();
+    // 觸及任一科 → 更新 streak（同日 idempotent）。deferBadges=true：讓徽章檢查交給下方 award() 的 checkBadges() 統一處理（才會發慶祝 toast、計入回傳的 newBadges），避免 pingActive 搶先靜默發放。
+    pingActive(true);
 
     // 徽章檢查。
     var newBadges = checkBadges();
@@ -651,7 +651,7 @@
   }
 
   // pingActive（§4.4）— streak 引擎，本地日界。
-  function pingActive() {
+  function pingActive(deferBadges?) {
     if (!profile) return { current: 0, longest: 0 };
     var today = localDate();
     var st = profile.streak;
@@ -701,8 +701,10 @@
       } else if (didReset) {
         queueToast('休息一下很好，今天重新開始就好，之前學過的都還在 🌱', 'streak');
       }
-      var nb = checkBadges();
-      for (var i = 0; i < nb.length; i++) emit('badge', nb[i]);
+      if (!deferBadges) { // deferBadges（由 award 傳入）時延後徽章處理，交給 award() 的 checkBadges 發 toast + 計入 newBadges；standalone/init 呼叫維持原本 emit 行為
+        var nb = checkBadges();
+        for (var i = 0; i < nb.length; i++) emit('badge', nb[i]);
+      }
     }
     save();
     return { current: st.current, longest: st.longest, changed: changed };
@@ -724,6 +726,7 @@
   // getProfile（§4.4）— 回傳深拷貝 + 衍生欄位，外部不可直接改動內部狀態。
   function getProfile() {
     if (!profile) return null;
+    ensureDaily(); // 讀取前先把每日任務對齊今天，避免跨午夜（頁面未重整）回報昨天的 earnedXp/done
     var clone;
     try { clone = JSON.parse(JSON.stringify(profile)); }
     catch (e) { clone = profile; }
@@ -1108,6 +1111,7 @@
 
   function updateHud() {
     if (!profile) return;
+    ensureDaily(); // 繪製前先對齊今天的每日任務，避免跨午夜顯示昨天的進度環
     var root = document.getElementById('game-hud-root');
     if (!root) return;
     var info = levelInfo(profile.totalXp);

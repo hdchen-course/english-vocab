@@ -130,7 +130,7 @@
   }
 
   // ---- 今日任務 chips：讀各科 lastPlayed，挑最少碰的 1–2 科當「{科} 玩 1 關」待辦，今天玩過→打勾變灰保留 ----
-  // 回傳最優先的待辦 entry（供 hero-status 文案點名「接下來」），無則 null。首訪/無任務時隱藏整列。
+  // 回傳最優先的待辦 entry（目前呼叫端未使用此回傳值；hero-status 只顯示進度、刻意不點名科目，見下方 render()）。首訪/無任務時隱藏整列。
   function playedMs(sub) {
     if (!sub || !sub.lastPlayed) return 0;
     var t = Date.parse(sub.lastPlayed);

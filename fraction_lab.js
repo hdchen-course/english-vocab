@@ -157,6 +157,10 @@
                     c = ta;
                     rn = n1 - n2;
                 }
+                if (!add && rn === 0) {
+                    add = true;
+                    rn = n1 + n2;
+                } // 兩分數剛好相等（差為 0）→ 改用加法，避免退化的「0」減法題
                 var ans = reduce(rn, D);
                 var tip = '通分：公分母用 ' + b + '×' + d + ' = ' + D + '。' + a + '/' + b + ' = ' + n1 + '/' + D + '，' + c + '/' + d + ' = ' + n2 + '/' + D + '；分子 ' + n1 + (add ? ' + ' : ' − ') + n2 + ' = ' + rn + ' → ' + rn + '/' + D + (gcd(rn, D) > 1 && ans.d !== 1 ? '，約分成 ' + ans.n + '/' + ans.d : '') + (ans.d === 1 ? '（等於整數 ' + ans.n + '）' : '') + '。';
                 return { html: fhtml(a, b) + ' <span class="fl-op">' + (add ? '+' : '−') + '</span> ' + fhtml(c, d), aN: ans.n, aD: ans.d, tip: tip, spoken: b + '分之' + a + (add ? ' 加 ' : ' 減 ') + d + '分之' + c };
