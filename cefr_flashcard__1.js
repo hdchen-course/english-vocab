@@ -378,6 +378,8 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
         return 'tiles';
     } })();
     window.toggleSpellMode = function () {
+        if (spellState && spellState.graded)
+            return; // 已評分的卡不可切換輸入法：showSpell 會重建成 graded:false 的空盤面（同一 currentIndex），讓已評分的字能再填再 checkSpelling，造成 recordBinary/quizTotal/quizScore 二次計分
         spellPref = (spellPref === 'tiles') ? 'type' : 'tiles';
         try {
             localStorage.setItem('cefr_spell_mode', spellPref);
@@ -405,7 +407,10 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
         }
         document.getElementById('spellCn').textContent = card.chinese || '';
         document.getElementById('spellHint').textContent = card.definition || '';
-        document.getElementById('spellToggle').textContent = (spellPref === 'tiles') ? '⌨️ 改用鍵盤' : '🔤 改用字母磚';
+        var spellToggleEl = document.getElementById('spellToggle');
+        spellToggleEl.textContent = (spellPref === 'tiles') ? '⌨️ 改用鍵盤' : '🔤 改用字母磚';
+        spellToggleEl.disabled = false;
+        spellToggleEl.removeAttribute('aria-disabled'); // 新卡盤面可自由切換輸入法（評分後會在 checkSpelling 停用）
         const reveal = document.getElementById('spellReveal');
         reveal.className = 'fc-reveal';
         reveal.innerHTML = '';
@@ -644,6 +649,11 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
                 el.setAttribute('aria-disabled', 'true');
             }
         });
+        var spellToggleEl2 = document.getElementById('spellToggle'); // 評分後停用輸入法切換鈕，避免 toggleSpellMode 的 early-return 變成「按了沒反應」的死按鈕（showSpell 於下一張卡重新啟用）
+        if (spellToggleEl2) {
+            spellToggleEl2.disabled = true;
+            spellToggleEl2.setAttribute('aria-disabled', 'true');
+        }
         const reveal = document.getElementById('spellReveal');
         if (correct) {
             showConfetti();
