@@ -516,7 +516,11 @@ let spellState = null;
 function getSpellMode() { try { return localStorage.getItem('vocab_spell_mode') || 'tiles'; } catch (e) { return 'tiles'; } }
 function setSpellMode(m) { try { localStorage.setItem('vocab_spell_mode', m); } catch (e) {} }
 function toggleSpellMode() { if (answered || (spellState && spellState.locked)) return; setSpellMode(getSpellMode() === 'tiles' ? 'keyboard' : 'tiles'); renderMode(); }   // 已作答的字不可切輸入法重建（renderMode 會解鎖重開計分）
-function lockSpellToggle() { const b = document.querySelector('.fc-spell__toggle'); if (b) { b.disabled = true; b.setAttribute('aria-disabled', 'true'); } }   // 評分後就地停用輸入法切換鈕（答錯無自動前進，不停用就是可按卻 no-op 的死按鈕）；renderSpelling 於下一張卡重建成啟用
+function lockSpellToggle() {   // 評分後就地停用拼字相關可操作控制（答錯無自動前進，不停用就是可按/可打卻 no-op 的死控制）；renderSpelling/renderClozeSpelling 於下一題重建成啟用
+  const b = document.querySelector('.fc-spell__toggle'); if (b) { b.disabled = true; b.setAttribute('aria-disabled', 'true'); }
+  document.querySelectorAll('.hint-btn').forEach(h => { h.disabled = true; h.setAttribute('aria-disabled', 'true'); });   // 💡 提示鈕：showSpellingHint 已於 answered early-return，不停用就是鍵盤/滑鼠可達卻無作用的死按鈕（鍵盤拼字 + cloze 拼字皆走此鎖定路徑）
+  const si = document.getElementById('spellingInput'); if (si) { si.disabled = true; }   // 輸入框：checkSpelling 已於 answered early-return，鎖住避免打字與已鎖定的綠格不一致
+}
 
 function renderSpelling(area) {
   const word = getCurrentWord();
