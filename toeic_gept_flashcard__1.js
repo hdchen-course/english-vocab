@@ -911,7 +911,7 @@ function renderSpell() {
     let bankHTML = '';
     if (spell.mode === 'tiles') {
         bankHTML = '<div class="fc-spell__bank">' + spell.bank.map((b, bi) => answered
-            // 已評分：字母磚靜態化（spellPick 此時 no-op），不設 role=button/tabindex/handler，aria-disabled 標示不可操作，避免螢幕報讀器報成可按的死按鈕（與格子 L709-711、quiz 選項一致）
+            // 已評分：字母磚靜態化（spellPick 此時 no-op），不設 role=button/tabindex/handler，aria-disabled 標示不可操作，避免螢幕報讀器報成可按的死按鈕（與已填格子的靜態分支、quiz 選項一致）
             ? '<div class="fc-spell__tile' + (b.used ? ' used' : '') + '" aria-disabled="true">' + esc(b.ch) + '</div>'
             : '<div class="fc-spell__tile' + (b.used ? ' used' : '') + '" role="button" tabindex="0"' +
                 ' onclick="spellPick(' + bi + ')"' +
