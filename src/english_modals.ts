@@ -39,7 +39,7 @@ window.CONCEPT = {
       {type:'teach',kicker:'先想一想',title:'can＝會、做得到',
        svg:animCanvas(360,240,'能力量尺：左端是 can’t（不會），右端是 can（會、做得到），指針落在 can，例句 I can swim.'),
        mount:meter({axisLabel:'能力', stops:['can’t','can'], pointer:'can', example:'I can swim.'}),
-       text:'<b>can</b> 表示「<b>會、做得到</b>」：<b>I can swim.</b>（我會游泳）。反過來<b>做不到／不會</b>就用 <b>can’t</b>（＝can not）。重要的一點：<b>can 後面的動詞一律用原形</b>——說 <b>can swim</b>，不是 can to swim，也不是 cans。'},
+       text:'<b>can</b> 表示「<b>會、做得到</b>」：<b>I can swim.</b>（我會游泳）。反過來<b>做不到／不會</b>就用 <b>can’t</b>（＝cannot）。重要的一點：<b>can 後面的動詞一律用原形</b>——說 <b>can swim</b>，不是 can to swim，也不是 cans。'},
       {type:'quiz',kicker:'換你試試',title:'選出正確的（我會騎腳踏車）',eq:'I ___ ride a bike.',
        options:['can','can to','cans'],answer:0,
        whyWrong:{1:'can 後面直接接原形，不加 to。',2:'情態助動詞 can 不隨主詞加 s。'},
@@ -50,8 +50,8 @@ window.CONCEPT = {
        why:'can 是情態助動詞，後面一律接原形動詞，例如 can swim、can run。'},
       {type:'quiz',kicker:'想一想',title:'選出正確的（魚不會走路）',eq:'A fish ___ walk.',
        options:['can’t','can','don’t can'],answer:0,
-       whyWrong:{1:'can 是「會」，但魚不會走路，要用否定。',2:'can 的否定是 can’t（can not），不借助 don’t。'},
-       why:'「不會、做不到」用 can’t（＝can not）→ A fish can’t walk.'}
+       whyWrong:{1:'can 是「會」，但魚不會走路，要用否定。',2:'can 的否定是 can’t（cannot），不借助 don’t。'},
+       why:'「不會、做不到」用 can’t（＝cannot）→ A fish can’t walk.'}
      ]},
    { id:'permission', name:'may / can：許可（可不可以）', emoji:'🙋', color:'#0891b2', sub:'問可不可以：Can/May I…?；may 較正式有禮',
      done:'問可不可以：Can/May I…?',
