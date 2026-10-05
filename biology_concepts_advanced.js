@@ -151,15 +151,20 @@
         inner += tx(150, 14, '先複製 DNA，再平均分成兩個相同的細胞', 10.5);
         // 染色體小工具（兩種顏色，代表兩條）
         function chr(cx, cy, col) { return '<rect x="' + (cx - 2.5) + '" y="' + (cy - 9) + '" width="5" height="18" rx="2.5" fill="' + col + '"/>'; }
+        // 複製後的染色體：兩股姊妹染色分體在中節相連，畫成 X 形（仍是「一條」染色體）
+        function dchr(cx, cy, col) {
+            return '<g transform="rotate(26 ' + cx + ' ' + cy + ')">' + chr(cx, cy, col) + '</g>' +
+                '<g transform="rotate(-26 ' + cx + ' ' + cy + ')">' + chr(cx, cy, col) + '</g>';
+        }
         // Stage 1：1 個細胞，2 條染色體
         inner += '<circle cx="48" cy="74" r="26" fill="' + C_CELL + '" fill-opacity="0.1" stroke="' + C_CELL + '" stroke-width="2"/>';
         inner += chr(42, 74, C_DNA1) + chr(54, 74, C_DNA2);
         inner += tx(48, 116, '1 個細胞', 10) + tx(48, 130, '(2 條染色體)', 8.5, C_MLD);
         inner += aR(80, 74, 24, C_MLD, 3) + tx(92, 62, '複製', 9, C_MLD);
-        // Stage 2：複製後 4 條
+        // Stage 2：複製後仍是 2 條，每條含 2 股姊妹染色分體（X 形）
         inner += '<circle cx="150" cy="74" r="28" fill="' + C_CELL + '" fill-opacity="0.1" stroke="' + C_CELL + '" stroke-width="2"/>';
-        inner += chr(138, 74, C_DNA1) + chr(146, 74, C_DNA1) + chr(154, 74, C_DNA2) + chr(162, 74, C_DNA2);
-        inner += tx(150, 116, '複製 DNA', 10) + tx(150, 130, '(變 4 條)', 8.5, C_MLD);
+        inner += dchr(142, 74, C_DNA1) + dchr(158, 74, C_DNA2);
+        inner += tx(150, 116, '複製 DNA', 10) + tx(150, 130, '(每條變兩股，仍是 2 條)', 8, C_MLD);
         inner += aR(184, 74, 24, C_MLD, 3) + tx(196, 62, '平分', 9, C_MLD);
         // Stage 3：分成兩個相同
         inner += '<circle cx="238" cy="54" r="20" fill="' + C_CELL + '" fill-opacity="0.1" stroke="' + C_GRN + '" stroke-width="2"/>';
@@ -167,7 +172,7 @@
         inner += '<circle cx="238" cy="98" r="20" fill="' + C_CELL + '" fill-opacity="0.1" stroke="' + C_GRN + '" stroke-width="2"/>';
         inner += chr(233, 98, C_DNA1) + chr(243, 98, C_DNA2);
         inner += tx(238, 130, '2 個相同細胞', 9.5, C_GRN);
-        return svg('300 140', inner, '一個細胞先把兩條染色體複製成四條，再平均分成兩個，得到兩個染色體完全相同的子細胞');
+        return svg('300 140', inner, '一個細胞先把兩條染色體各複製成兩股姊妹染色分體（畫成 X 形，仍是兩條），再平均分給兩個子細胞，每個子細胞都拿到完整的兩條染色體');
     }
     // 細胞分裂在生活裡：傷口癒合三格微序列（缺口 → 細胞分裂 → 補滿）。
     function divisionLife() {
