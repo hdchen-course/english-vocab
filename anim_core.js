@@ -3074,161 +3074,382 @@
         });
     }
     // ====================================================================
-    // 場景：fairTest — 參數化「公平測試・變因控制」對照實驗。
-    //   左右兩組實驗並排：高亮「唯一（或多個）被改變的操縱變因」、灰標「保持相同的
-    //   控制變因」、底部長條顯示「應變變因」的量測結果。
-    //   mode:'fair'   → 只有一列（操縱變因）兩組不同 → 綠色 ✓「能確定是它造成的」。
-    //   mode:'unfair' → 兩列同時不同 → 紅色 ✗「分不清是誰造成的」。
-    //   author-once：本頁兩課（變因三種、公平測試）共用；未來各科實驗課皆可引用。
+    // 場景：fairTest — 「找兇手・排除嫌疑」公平測試推理（PLAYABLE 可點擊）。
+    //   把每個實驗條件當成一個「嫌疑犯」：兩盆植物 A/B 長得不一樣（結果），
+    //   要找出是哪個條件造成的。
+    //     - 條件在兩盆「一樣」→ 有不在場證明（alibi）→ 劃掉、排除（灰）。
+    //     - 條件在兩盆「不一樣」→ 還在嫌疑中（主題色高亮）。
+    //   判決隨「還在嫌疑中的條件數」即時更新：
+    //     剩 1 個 → 破案！就是它（綠，箭頭指向結果）＝這就是操縱變因。
+    //     剩 2+ 個 → 兩個以上嫌疑犯、無法定罪（紅 ❓）→ 要把其他條件控制成一樣。
+    //     剩 0 個 → 沒有不同的條件，兩盆本來就該一樣（邊界情形）。
+    //   這把「操縱變因＝我們改的嫌疑犯／控制變因＝其他保持相同（排除嫌疑）／
+    //   應變變因＝量到的結果」與「一次只改一個才公平」的推理，變成一條可見的辦案線。
+    //   PLAYABLE：自動把有不在場證明的嫌疑犯逐一排除、出判決後，進入可點擊狀態——
+    //   點任一列可切換該條件「一樣／不一樣」，判決會即時改變（孩子自己做推理）。
+    //   角落「🔁 重播」會重置回初始狀態再播一次。
+    //   契約：收 host（.cn-svg 容器）、回傳 { stop }（concept_engine 換頁前呼叫）。
+    //   reduced-motion：直接畫最終狀態（排除線＋判決），保留跨狀態對比、不跑迴圈、不顯示重播鈕。
+    //   mode:'fair'→初始剩 1 個嫌疑；'unfair'→初始剩 2 個嫌疑。author-once，各科實驗課共用。
     //   cfg = {
     //     mode:'fair'|'unfair',
-    //     changed:[  '光照:強光|弱光' ],   // 被改變（操縱變因）；"名稱:A設定|B設定"，無「:」則標「不同」
-    //     controlled:[ '水:相同','土','品種' ], // 保持相同（控制變因）；"名稱:值" 或 "名稱"（預設「相同」）
-    //     measure:'長高(cm)',              // 應變變因標籤
-    //     values:[12,6],                   // 兩組的應變量測（底部長條）
-    //     groups:['A 組','B 組'], title, label
+    //     suspects:[ {name:'光照', a:'強光', b:'弱光', diff:true},   // diff 省略時以 a!==b 判定
+    //                {name:'水量', a:'一樣', b:'一樣'}, ... ],
+    //     measure:'長高', values:[12,6], groups:['A 盆','B 盆'], title?, label?
     //   }
-    //   reduced-motion：drawStatic 直接畫完整最後一幀（左右兩組並排＋量測＋判定），保留對比。
+    //   （向下相容舊 cfg：changed:['光照:強光|弱光']、controlled:['水:相同',...] 會轉成 suspects。）
     // ====================================================================
     function fairTest(host, cfg) {
         cfg = cfg || {};
-        var WARN = '#e11d48', OK = '#16a34a';
+        var WARN = '#e11d48', OK = '#16a34a', MUT = '#6b7280';
         var mode = cfg.mode === 'unfair' ? 'unfair' : 'fair';
-        var groups = cfg.groups || ['A 組', 'B 組'];
-        function clamp01(x) { return Math.max(0, Math.min(1, x)); }
-        // 解析一列變因字串："名稱:A|B"（操縱）或 "名稱:值" / "名稱"（控制）。
-        function parseChanged(s) {
-            var i = s.indexOf(':');
-            if (i < 0)
-                return { name: s, a: '不同', b: '不同' };
-            var name = s.slice(0, i), rest = s.slice(i + 1), j = rest.indexOf('|');
-            if (j < 0)
-                return { name: name, a: rest, b: rest };
-            return { name: name, a: rest.slice(0, j), b: rest.slice(j + 1) };
-        }
-        function parseCtrl(s) {
-            var i = s.indexOf(':');
-            if (i < 0)
-                return { name: s, val: '相同' };
-            return { name: s.slice(0, i), val: s.slice(i + 1) };
-        }
-        var changed = (cfg.changed || ['光照:強光|弱光']).map(parseChanged);
-        var controlled = (cfg.controlled || ['水:相同', '土:相同', '品種:相同']).map(parseCtrl);
-        var measure = cfg.measure || '結果';
-        var values = cfg.values || (mode === 'unfair' ? [15, 8] : [12, 6]);
-        var nRows = changed.length + controlled.length;
-        // 欄位幾何：左＝變因名稱欄，中/右＝A/B 兩組的值欄。
-        function cols(w) {
-            var nameX0 = 6, nameX1 = 94;
-            var aC = nameX1 + (w - nameX1) * 0.27; // A 組值欄中心
-            var bC = nameX1 + (w - nameX1) * 0.73; // B 組值欄中心
-            return { nameX0: nameX0, nameX1: nameX1, aC: aC, bC: bC };
-        }
-        function render(g, p, w, h) {
-            var ink = inkColor(), theme = themeColor();
-            var mut = ink;
-            var c = cols(w);
-            // 標題。
-            label(g, cfg.title || (mode === 'fair' ? '公平測試：只改一個變因' : '不公平：改了不只一個變因'), w / 2, 13, mode === 'fair' ? theme : WARN, 12, 'center');
-            // 兩組表頭 chip。
-            var hy = 30;
-            [[c.aC, groups[0]], [c.bC, groups[1]]].forEach(function (gh) {
-                g.save();
-                g.globalAlpha = 0.14;
-                g.fillStyle = ink;
-                g.fillRect(gh[0] - 34, hy - 11, 68, 20);
-                g.restore();
-                label(g, gh[1], gh[0], hy, ink, 11, 'center');
+        var groups = cfg.groups || ['A 盆', 'B 盆'];
+        var measure = cfg.measure || '長高';
+        function clamp01(x) { return x < 0 ? 0 : (x > 1 ? 1 : x); }
+        // 建立嫌疑犯（條件）清單。優先用 cfg.suspects；否則由舊的 changed/controlled 轉。
+        var suspects = [];
+        if (cfg.suspects && cfg.suspects.length) {
+            cfg.suspects.forEach(function (s) {
+                var a = (s.a != null) ? String(s.a) : '一樣';
+                var b = (s.b != null) ? String(s.b) : a;
+                var diff = (typeof s.diff === 'boolean') ? s.diff : (a !== b);
+                suspects.push({ name: String(s.name), a: a, b: b, diff: diff });
             });
-            // 列區域。
-            var top = 46;
-            var measTop = h - 60; // 底部保留量測＋判定
-            var rowH = Math.min(28, (measTop - top) / nRows);
-            var revP = clamp01(p / 0.5);
-            var shown = nRows * revP;
-            function drawRow(idx, name, aTxt, bTxt, isChanged) {
-                var appear = clamp01(shown - idx);
-                if (appear <= 0)
-                    return;
-                var ry = top + idx * rowH;
-                var cy = ry + rowH / 2;
-                g.save();
-                g.globalAlpha = appear;
-                if (isChanged) {
-                    // 高亮整列。
-                    g.globalAlpha = appear * 0.14;
-                    g.fillStyle = theme;
-                    g.fillRect(2, ry + 1, w - 4, rowH - 2);
-                    g.globalAlpha = appear;
-                    g.strokeStyle = theme;
-                    g.lineWidth = 1.4;
-                    g.strokeRect(2, ry + 1, w - 4, rowH - 2);
-                }
-                else if (idx % 2 === 1) {
-                    g.globalAlpha = appear * 0.05;
-                    g.fillStyle = ink;
-                    g.fillRect(2, ry + 1, w - 4, rowH - 2);
-                }
-                g.restore();
-                g.save();
-                g.globalAlpha = appear;
-                // 變因名稱。
-                label(g, name, c.nameX0 + 2, cy, isChanged ? theme : mut, 10.5, 'left');
-                // 兩組的值。
-                var valCol = isChanged ? theme : mut;
-                label(g, aTxt, c.aC, cy, valCol, 10.5, 'center');
-                label(g, bTxt, c.bC, cy, valCol, 10.5, 'center');
-                // 標記：操縱變因＝「不一樣」，控制變因＝「一樣」。
-                if (isChanged) {
-                    label(g, '← 不一樣（故意改）', (c.aC + c.bC) / 2, ry + rowH - 7, theme, 8.5, 'center');
-                }
-                else {
-                    label(g, '＝一樣', (c.aC + c.bC) / 2, ry + rowH - 7, mut, 8, 'center');
-                }
-                g.restore();
+        }
+        else {
+            (cfg.changed || ['光照:強光|弱光']).forEach(function (str) {
+                var i = str.indexOf(':'), name = i < 0 ? str : str.slice(0, i), rest = i < 0 ? '' : str.slice(i + 1), j = rest.indexOf('|');
+                var a = j < 0 ? (rest || '不一樣') : rest.slice(0, j), b = j < 0 ? (rest || '不一樣') : rest.slice(j + 1);
+                suspects.push({ name: name, a: a, b: b, diff: true });
+            });
+            (cfg.controlled || ['水:一樣', '土:一樣', '品種:一樣']).forEach(function (str) {
+                var i = str.indexOf(':'), name = i < 0 ? str : str.slice(0, i), val = i < 0 ? '一樣' : str.slice(i + 1);
+                suspects.push({ name: name, a: val, b: val, diff: false });
+            });
+        }
+        var initDiff = suspects.map(function (s) { return s.diff; });
+        var firstDiffName = '';
+        for (var fi = 0; fi < suspects.length; fi++) {
+            if (initDiff[fi]) {
+                firstDiffName = suspects[fi].name;
+                break;
             }
-            var ri = 0;
-            changed.forEach(function (cv) { drawRow(ri++, cv.name, cv.a, cv.b, true); });
-            controlled.forEach(function (cv) { drawRow(ri++, cv.name, cv.val, cv.val, false); });
-            // 底部：應變變因量測（兩根長條）。長條頂端的數值永遠落在量測標籤下方，不重疊。
-            var barP = clamp01((p - 0.5) / 0.3);
-            var baseY = h - 24, maxBarH = 22;
+        }
+        // 結果（應變變因）：兩盆量到的高度 A/B。
+        var values = cfg.values || (mode === 'unfair' ? [13, 7] : [12, 6]);
+        var canvas = host.querySelector('canvas');
+        if (!canvas)
+            return { stop: function () { } };
+        var ctx = canvas.getContext('2d');
+        if (!ctx)
+            return { stop: function () { } };
+        var g = ctx;
+        var cssW = canvas.clientWidth || canvas.width || 300;
+        var cssH = canvas.clientHeight || canvas.height || 240;
+        var dpr = Math.min(window.devicePixelRatio || 1, 3);
+        canvas.width = Math.round(cssW * dpr);
+        canvas.height = Math.round(cssH * dpr);
+        g.setTransform(dpr, 0, 0, dpr, 0, 0);
+        var W = cssW, H = cssH;
+        var reduced = reducedMotion();
+        var aria = cfg.label || ('找兇手推理動畫：把每個實驗條件當成嫌疑犯——兩盆植物 ' + groups[0] + '、' + groups[1]
+            + ' 長得不一樣。條件在兩盆一樣的，有不在場證明、被劃掉排除；不一樣的還在嫌疑中。'
+            + (mode === 'fair'
+                ? ('這裡只有「' + firstDiffName + '」一個條件不一樣，所以可以破案，確定差異是它造成的，這就是操縱變因。')
+                : ('這裡同時有兩個條件不一樣，有兩個嫌疑犯、無法定罪；要把其他條件都控制成一樣，剩下一個嫌疑犯才能破案。'))
+            + '可以點任一列切換一樣或不一樣，看判決怎麼改變。');
+        canvas.setAttribute('aria-label', aria);
+        function diffCount() { var n = 0; for (var i = 0; i < suspects.length; i++) {
+            if (suspects[i].diff)
+                n++;
+        } return n; }
+        function roundRect(x, y, bw, bh, r) {
+            g.beginPath();
+            g.moveTo(x + r, y);
+            g.lineTo(x + bw - r, y);
+            g.arcTo(x + bw, y, x + bw, y + r, r);
+            g.lineTo(x + bw, y + bh - r);
+            g.arcTo(x + bw, y + bh, x + bw - r, y + bh, r);
+            g.lineTo(x + r, y + bh);
+            g.arcTo(x, y + bh, x, y + bh - r, r);
+            g.lineTo(x, y + r);
+            g.arcTo(x, y, x + r, y, r);
+            g.closePath();
+        }
+        // ---- 版面 ----（以 300×240 為基準，隨 canvas 等比放大）。
+        var bandTop = 18, bandH = 72; // 結果（兩盆）帶
+        var headY = bandTop + bandH + 6; // 嫌疑犯清單標頭/操作提示
+        var listTop = headY + 8;
+        var verdH = 38, verdTop = H - verdH - 2; // 判決框
+        var listBottom = verdTop - 4;
+        var nR = suspects.length;
+        var rowH = Math.min(26, (listBottom - listTop) / Math.max(nR, 1));
+        var potAx = W * 0.42, potBx = W * 0.58;
+        var potBaseY = bandTop + bandH - 20;
+        var rowRects = [];
+        // 畫兩盆植物（結果＝應變變因）。revealP 控制生長高度浮現。
+        function drawPots(revealP) {
+            var theme = themeColor(), ink = inkColor();
             var maxV = Math.max(values[0], values[1], 1);
-            label(g, '量到的結果（應變變因）：' + measure, w / 2, measTop - 2, ink, 9.5, 'center');
-            [[c.aC, values[0]], [c.bC, values[1]]].forEach(function (bv) {
-                var bh = maxBarH * (bv[1] / maxV) * barP;
+            var plantMax = potBaseY - (bandTop + 18);
+            label(g, '結果：兩盆的「' + measure + '」不一樣 → 是誰造成的？', W / 2, bandTop + 6, theme, 10.5, 'center');
+            var pots = [[potAx, values[0], groups[0]], [potBx, values[1], groups[1]]];
+            for (var i = 0; i < pots.length; i++) {
+                var px = pots[i][0], v = pots[i][1], nm = pots[i][2];
+                var stemH = plantMax * (v / maxV) * clamp01(revealP);
+                var stemTop = potBaseY - stemH;
+                // 莖＋葉。
                 g.save();
-                g.fillStyle = theme;
-                g.globalAlpha = 0.85;
-                g.fillRect(bv[0] - 16, baseY - bh, 32, bh);
+                g.strokeStyle = OK;
+                g.lineWidth = 3;
+                g.lineCap = 'round';
+                g.beginPath();
+                g.moveTo(px, potBaseY);
+                g.lineTo(px, stemTop);
+                g.stroke();
                 g.restore();
-                if (barP > 0.6)
-                    label(g, String(bv[1]), bv[0], baseY - bh - 7, ink, 10, 'center');
-            });
-            // 判定（最後浮現）。
-            var verdP = clamp01((p - 0.82) / 0.18);
-            if (verdP > 0) {
+                disc(g, px, stemTop, 6, OK);
+                // 盆（梯形）。
                 g.save();
-                g.globalAlpha = verdP;
-                var names = changed.map(function (cv) { return cv.name; }).join('、');
-                if (mode === 'fair') {
-                    label(g, '✓ 只改了「' + names + '」→ 能確定差異來自它', w / 2, h - 7, OK, 10, 'center');
-                }
-                else {
-                    label(g, '✗ 同時改了「' + names + '」→ 分不清是誰造成的', w / 2, h - 7, WARN, 10, 'center');
-                }
+                g.fillStyle = MUT;
+                g.globalAlpha = 0.5;
+                g.beginPath();
+                g.moveTo(px - 12, potBaseY);
+                g.lineTo(px + 12, potBaseY);
+                g.lineTo(px + 8, potBaseY + 9);
+                g.lineTo(px - 8, potBaseY + 9);
+                g.closePath();
+                g.fill();
                 g.restore();
+                // 盆名＋量到的高度（放在盆下方，不壓到植物與標題）。
+                if (revealP > 0.4)
+                    label(g, nm + '·' + v, px, potBaseY + 18, ink, 9.5, 'center');
             }
         }
-        return runScene(host, {
-            durationMs: 5600, loops: 2, staticPhase: 1,
-            label: cfg.label || ('公平測試對照實驗動畫：左右兩組「' + groups[0] + '／' + groups[1] + '」並排；'
-                + (mode === 'fair'
-                    ? ('只有操縱變因「' + changed.map(function (cv) { return cv.name; }).join('、') + '」兩組不同，其他控制變因都保持相同，底部長條顯示應變變因「' + measure + '」的差異，可以確定差異來自那個操縱變因。')
-                    : ('同時改了「' + changed.map(function (cv) { return cv.name; }).join('、') + '」兩個變因，底部長條雖有差異，卻分不清是哪一個造成的，不是公平測試。'))),
-            draw: render,
-            drawStatic: function (g, w, h) { render(g, 1, w, h); }
-        });
+        // 畫一列嫌疑犯。appear 0..1 控制逐一浮現。
+        function drawRow(idx, appear) {
+            var theme = themeColor(), ink = inkColor();
+            var s = suspects[idx];
+            var ry = listTop + idx * rowH;
+            rowRects[idx] = { x: 3, y: ry + 1, w: W - 6, h: rowH - 2, idx: idx };
+            if (appear <= 0)
+                return;
+            var isDiff = s.diff;
+            g.save();
+            if (isDiff) {
+                g.globalAlpha = appear * 0.15;
+                g.fillStyle = theme;
+                roundRect(3, ry + 1, W - 6, rowH - 2, 6);
+                g.fill();
+                g.globalAlpha = appear;
+                g.strokeStyle = theme;
+                g.lineWidth = 1.5;
+                roundRect(3, ry + 1, W - 6, rowH - 2, 6);
+                g.stroke();
+            }
+            else {
+                g.globalAlpha = appear * 0.06;
+                g.fillStyle = ink;
+                roundRect(3, ry + 1, W - 6, rowH - 2, 6);
+                g.fill();
+            }
+            g.restore();
+            var cy = ry + rowH / 2;
+            // 排除者整體變淡（＝劃掉）。
+            g.save();
+            g.globalAlpha = appear * (isDiff ? 1 : 0.6);
+            var nameCol = isDiff ? theme : MUT;
+            var mark = isDiff ? '🔍 ' : '✗ ';
+            label(g, mark + s.name, 9, cy, nameCol, 11, 'left');
+            // 值欄依「是否不一樣」顯示：不一樣且有具體設定→顯示設定；否則顯示「不一樣／一樣」。
+            var valTxt = isDiff ? ((s.a !== s.b) ? (s.a + '｜' + s.b) : '不一樣') : '一樣';
+            label(g, valTxt, W * 0.52, cy, isDiff ? ink : MUT, 9.5, 'center');
+            label(g, isDiff ? '嫌疑中' : '排除', W - 8, cy, isDiff ? theme : MUT, 9, 'right');
+            g.restore();
+        }
+        // 畫判決框（＋破案時的箭頭）。vAppear 0..1 控制浮現。
+        function drawVerdict(vAppear) {
+            var ink = inkColor();
+            var dc = diffCount();
+            var col = dc === 1 ? OK : (dc >= 2 ? WARN : MUT);
+            // 動畫/互動時右下角有「重播」鈕 → 判決框留一個缺口給它，文字也靠此置中、不被蓋住。
+            var boxRight = reduced ? (W - 4) : (W - 74);
+            var cxV = (4 + boxRight) / 2;
+            var boxW = boxRight - 4;
+            g.save();
+            g.globalAlpha = vAppear * 0.12;
+            g.fillStyle = col;
+            roundRect(4, verdTop, boxW, verdH, 8);
+            g.fill();
+            g.globalAlpha = vAppear;
+            g.strokeStyle = col;
+            g.lineWidth = 1.5;
+            roundRect(4, verdTop, boxW, verdH, 8);
+            g.stroke();
+            g.restore();
+            g.save();
+            g.globalAlpha = vAppear;
+            if (dc === 1) {
+                var cname = '', ci = -1;
+                for (var i = 0; i < suspects.length; i++) {
+                    if (suspects[i].diff) {
+                        cname = suspects[i].name;
+                        ci = i;
+                        break;
+                    }
+                }
+                label(g, '🔍 破案！兇手就是「' + cname + '」', cxV, verdTop + 13, OK, 11, 'center');
+                label(g, '只有它不一樣 → 它就是操縱變因', cxV, verdTop + 29, ink, 9, 'center');
+                // 箭頭：被定罪的那列 → 結果（沿左緣往上指向兩盆之間）。
+                if (ci >= 0) {
+                    var cRy = listTop + ci * rowH + rowH / 2;
+                    g.strokeStyle = OK;
+                    g.lineWidth = 2;
+                    g.lineCap = 'round';
+                    g.globalAlpha = vAppear * 0.9;
+                    g.beginPath();
+                    g.moveTo(7, cRy);
+                    g.lineTo(7, potBaseY + 4);
+                    g.lineTo(W * 0.5 - 2, potBaseY + 4);
+                    g.stroke();
+                    var hx = W * 0.5 - 2, hy = potBaseY + 4;
+                    g.fillStyle = OK;
+                    g.beginPath();
+                    g.moveTo(hx, hy);
+                    g.lineTo(hx - 6, hy - 3.5);
+                    g.lineTo(hx - 6, hy + 3.5);
+                    g.closePath();
+                    g.fill();
+                }
+            }
+            else if (dc >= 2) {
+                label(g, '❓ ' + dc + ' 個嫌疑犯 → 無法定罪！', cxV, verdTop + 13, WARN, 10.5, 'center');
+                label(g, '把其他條件控制成一樣，剩一個才破得了案', cxV, verdTop + 29, ink, 9, 'center');
+            }
+            else {
+                label(g, '沒有不一樣的條件', cxV, verdTop + 13, MUT, 10.5, 'center');
+                label(g, '兩盆本來就該一樣，沒有兇手可抓', cxV, verdTop + 29, MUT, 9, 'center');
+            }
+            g.restore();
+        }
+        // 整體繪製。revealP 0..1 控制動畫浮現；final 時 revealP=1。
+        function renderAll(revealP) {
+            g.clearRect(0, 0, W, H);
+            var theme = themeColor();
+            label(g, cfg.title || '🕵️ 把每個實驗條件當成「嫌疑犯」', W / 2, 12, theme, 11, 'center');
+            drawPots(revealP);
+            // 標頭＋操作提示（reduced-motion 不提示點擊）。
+            label(g, reduced ? '嫌疑犯（實驗條件）' : '嫌疑犯（實驗條件）· 👆 點一列切換 一樣／不一樣', W / 2, headY, MUT, 9, 'center');
+            // 嫌疑犯逐一浮現（0..0.72），接著判決（0.78..1）。
+            var shown = nR * clamp01(revealP / 0.72);
+            for (var i = 0; i < nR; i++) {
+                drawRow(i, clamp01(shown - i));
+            }
+            var vAppear = clamp01((revealP - 0.78) / 0.22);
+            drawVerdict(vAppear);
+        }
+        // ---- 生命週期 ----
+        var raf = 0, startT = 0, stopped = false, done = false;
+        var REVEAL_MS = 2200;
+        function frame(now) {
+            if (stopped)
+                return;
+            if (!startT)
+                startT = now;
+            var p = (now - startT) / REVEAL_MS;
+            if (p >= 1) {
+                renderAll(1);
+                done = true;
+                showReplay();
+                return;
+            }
+            renderAll(p);
+            raf = requestAnimationFrame(frame);
+        }
+        function play() {
+            done = false;
+            startT = 0;
+            for (var i = 0; i < suspects.length; i++)
+                suspects[i].diff = initDiff[i];
+            hideReplay();
+            if (reduced) {
+                renderAll(1);
+                done = true;
+                return;
+            }
+            raf = requestAnimationFrame(frame);
+        }
+        // 分頁切背景暫停；回前景續播（除非已播完）。
+        function onVisibility() {
+            if (document.hidden) {
+                if (raf)
+                    cancelAnimationFrame(raf);
+                raf = 0;
+            }
+            else if (!stopped && !done && !reduced) {
+                startT = 0;
+                raf = requestAnimationFrame(frame);
+            }
+        }
+        document.addEventListener('visibilitychange', onVisibility);
+        // 點擊切換某列的「一樣／不一樣」，判決即時更新。
+        function onClick(e) {
+            if (stopped)
+                return;
+            if (!done) {
+                done = true;
+                if (raf)
+                    cancelAnimationFrame(raf);
+                raf = 0;
+            }
+            var rect = canvas.getBoundingClientRect();
+            var sx = W / (rect.width || W), sy = H / (rect.height || H);
+            var x = (e.clientX - rect.left) * sx, y = (e.clientY - rect.top) * sy;
+            for (var i = 0; i < rowRects.length; i++) {
+                var r = rowRects[i];
+                if (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) {
+                    suspects[r.idx].diff = !suspects[r.idx].diff;
+                    break;
+                }
+            }
+            renderAll(1);
+            showReplay();
+        }
+        canvas.addEventListener('click', onClick);
+        canvas.style.cursor = reduced ? '' : 'pointer';
+        // 重播鈕（沿用 .cn-anim-replay，絕對定位、不改版面高度）。reduced-motion 不顯示。
+        var replayBtn = null;
+        function ensureReplay() {
+            if (replayBtn || reduced)
+                return;
+            replayBtn = document.createElement('button');
+            replayBtn.type = 'button';
+            replayBtn.className = 'cn-anim-replay';
+            replayBtn.textContent = '🔁 重播';
+            replayBtn.addEventListener('click', function () { play(); });
+            host.appendChild(replayBtn);
+        }
+        function showReplay() { ensureReplay(); if (replayBtn)
+            replayBtn.style.display = ''; }
+        function hideReplay() { if (replayBtn)
+            replayBtn.style.display = 'none'; }
+        play();
+        return {
+            stop: function () {
+                stopped = true;
+                if (raf)
+                    cancelAnimationFrame(raf);
+                raf = 0;
+                document.removeEventListener('visibilitychange', onVisibility);
+                if (canvas) {
+                    canvas.removeEventListener('click', onClick);
+                    canvas.style.cursor = '';
+                }
+                if (replayBtn && replayBtn.parentNode)
+                    replayBtn.parentNode.removeChild(replayBtn);
+                replayBtn = null;
+            }
+        };
     }
     // ====================================================================
     // 場景：greenhouseEffect — 溫室效應（永續頁第1課；author-once，未來任何氣候課可引用）。
