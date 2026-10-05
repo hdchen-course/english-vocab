@@ -335,6 +335,7 @@ let studyQueue = [];
 let answered = false;            // quiz / spell 作答鎖（自控繼續前不重複計分）
 let quizState = null;
 let spell = null;
+let spellAudioId = null; // 記住已播過發音的 spell.id，避免每次點磚/清除/切換模式都重播整字發音
 
 // ==================== HELPERS ====================
 function esc(s) {
@@ -476,7 +477,7 @@ function renderFlashcard() {
         '</div>' +
         '<div class="fc-card__face fc-card__back">' +
           (word.chinese ? '<div class="fc-card__cn">' + esc(word.chinese) + '</div>' : '') +
-          '<div class="fc-card__hint">' + esc(getDefinitionText(word)) + '</div>' +
+          (getDefinitionText(word) === word.chinese ? '' : '<div class="fc-card__hint">' + esc(getDefinitionText(word)) + '</div>') +
           (word.sentence ? '<div class="flashcard-audio-row">' +
             '<button type="button" class="fc-audio fc-audio--sm" aria-label="播放例句發音" onclick="event.stopPropagation();playCurrentSentence()">🔊</button>' +
             '<span class="fc-card__sent">' + word.sentence + '</span></div>' : '') +
@@ -716,7 +717,7 @@ function renderSpell() {
         '<div class="fc-spell__head">' +
           '<div class="fc-card__emoji">' + esc(word.emoji || '📖') + '</div>' +
           (word.chinese ? '<div class="fc-card__cn">' + esc(word.chinese) + '</div>' : '') +
-          '<div class="fc-card__hint">' + esc(getDefinitionText(word)) + '</div>' +
+          (getDefinitionText(word) === word.chinese ? '' : '<div class="fc-card__hint">' + esc(getDefinitionText(word)) + '</div>') +
           '<button type="button" class="fc-audio fc-audio--lg" aria-label="播放單字發音" onclick="playCurrentWord()">🔊</button>' +
         '</div>' +
         '<div class="fc-spell__slots">' + slotsHTML + '</div>' +
@@ -725,7 +726,7 @@ function renderSpell() {
       '<div class="fc-reveal" id="reveal"></div>' +
     '</div>';
 
-  playCurrentWord(); // audio-first（聽寫）
+  if (spellAudioId !== spell.id) { spellAudioId = spell.id; playCurrentWord(); } // audio-first（聽寫）：僅卡片首次出現播一次，別在點磚/清除/切換時重播
   if (spell.mode === 'keyboard' && !answered) {
     const first = document.querySelector('#learningArea input[data-ci]');
     if (first) setTimeout(() => { try { first.focus(); } catch (e) {} }, 0);
