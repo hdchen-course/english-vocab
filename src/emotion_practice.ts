@@ -69,7 +69,13 @@
       if(bi===it.best){ btn.classList.add('best'); btn.insertAdjacentText('beforeend','  🌟'); }
       if(bi===i && i!==it.best){ btn.classList.add('picked'); }
     });
-    var head = (i===it.best) ? '🌟 這個做法最能幫到你！' : '🌟 最能幫到你的做法，是亮起來標星星的那個～你選的也想過了，很好。';
+    // 安全主題的非最佳選項是真的有風險的行為，不能用「很好」肯定孩子的選擇，
+    // 改成不帶讚美、保護取向的導正；其餘低風險情緒／校園題才用溫柔肯定。
+    var safetyTheme = (it.theme==='拒絕的勇氣' || it.theme==='青春期的難題');
+    var head;
+    if (i===it.best) { head = '🌟 這個做法最能幫到你！'; }
+    else if (safetyTheme) { head = '🌟 最能保護你的做法，是亮起來標星星的那個～我們一起看看為什麼比較安全。'; }
+    else { head = '🌟 最能幫到你的做法，是亮起來標星星的那個～你選的也想過了，我們一起看看哪個更好。'; }
     var rev=$('rev'); rev.textContent = head+' '+it.why; rev.classList.add('show');
     $('after').style.display='flex';
     $('next').onclick=function(){ pos++; renderItem(); };
