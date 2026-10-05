@@ -44,7 +44,7 @@
     }
     // 被動：主動句 → 被動句，主詞與受詞「對調位置」（兩條交叉箭頭呈現 swap），動詞變 be + 過去分詞。
     function svgPassiveSwap() {
-        var s = '<svg viewBox="0 0 300 220" role="img" aria-label="主動句 The cat chased the mouse 的主詞與受詞對調，變成被動句 The mouse was chased，動詞變成 be 加過去分詞；by the cat 是做動作的人，可省略">';
+        var s = '<svg viewBox="0 0 300 220" role="img" aria-label="主動句 The cat chased the mouse 的主詞與受詞對調，變成被動句 The mouse was chased，動詞變成 be 加過去分詞；by the cat 是做動作的那個（動作者），可省略">';
         s += cap(150, 14, '主動句：誰做了什麼');
         s += brick(8, 22, 76, 'The cat') + brick(90, 22, 68, 'chased') + brick(166, 22, 126, 'the mouse', true);
         // 交叉箭頭：受詞 → 前面當主詞；主詞 → 後面（原主詞退到後面的 by 位置，此處留白）。
@@ -53,7 +53,7 @@
         s += cap(150, 132, '被動句：被做的那個放到前面');
         s += brick(8, 140, 126, 'The mouse', true) + brick(140, 140, 94, 'was chased');
         s += cap(150, 192, 'was chased ＝ be ＋ 過去分詞');
-        s += cap(150, 210, '（by the cat）＝做動作的人，可省略');
+        s += cap(150, 210, '（by the cat）＝做動作的那個（動作者），可省略');
         return s + '</svg>';
     }
     // 被動：什麼時候用——不知道／不重要誰做的。
