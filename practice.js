@@ -2645,6 +2645,8 @@ function renderSpelling() {
 }
 // 字母磚：點磚→填入下一個空槽並淡出；點已填的槽→退回該磚（等同退格，無需鍵盤）。
 function spellPlaceTile(tile) {
+    if (spellDone)
+        return; // 已計分/已看答案就鎖住：不可再往已上色的格子放磚（否則綠格字母與對錯顏色不符，且無法重新計分）
     if (tile.classList.contains('used'))
         return;
     const slots = document.querySelectorAll('#spell-slots .fc-spell__slot');
@@ -2673,6 +2675,8 @@ function spellPlaceTile(tile) {
         checkSpelling();
 }
 function spellClearSlot(slot) {
+    if (spellDone)
+        return; // 已計分/已看答案就鎖住：不可退回已上色的字母磚（否則綠格會被清掉或改填，造成字母與對錯顏色不符且無法重新計分）
     if (slot.classList.contains('hint') || !slot.dataset.filled)
         return;
     const tid = slot.dataset.tid;
@@ -2683,6 +2687,9 @@ function spellClearSlot(slot) {
     delete slot.dataset.tid;
     slot.textContent = '';
     slot.classList.remove('filled', 'ok', 'no');
+}
+function lockSpellInputs() {
+    document.querySelectorAll('#spell-slots input').forEach(inp => { inp.readOnly = true; });
 }
 function handleSpellInput(input) {
     if (input.value.length === 1) {
@@ -2747,6 +2754,7 @@ function checkSpelling() {
             feedback.textContent = '✓ 全部拼對了，太厲害了！';
             feedback.className = 'feedback-msg correct';
         }
+        lockSpellInputs(); // 鍵盤格鎖成唯讀，避免蓋掉綠色正解字母
         updateProgress();
         celebrate();
         scheduleAdvance(1200);
@@ -2790,6 +2798,7 @@ function revealSpelling() {
         s.classList.add('ok');
         s.classList.remove('no');
     });
+    lockSpellInputs(); // 看答案後鍵盤格鎖成唯讀，避免蓋掉已揭示的字母（spellDone 已擋 checkSpelling 重判）
 }
 // ===== MATCHING MODE =====
 let matchState = { selected: null, matched: [], words: [] };
