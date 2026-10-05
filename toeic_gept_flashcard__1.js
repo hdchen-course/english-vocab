@@ -884,8 +884,8 @@ function renderSpell() {
         const stateCls = c.state ? (' ' + c.state) : '';
         if (spell.mode === 'keyboard') {
             slotsHTML += '<div class="fc-spell__tile fc-spell__slot' + (c.val ? ' filled' : '') + stateCls + '">' +
-                '<input type="text" inputmode="text" maxlength="1" data-ci="' + i + '" value="' + (c.val ? esc(c.val) : '') + '"' +
-                ' aria-label="第 ' + letterNo + ' 個字母" oninput="spellInput(this)" onkeydown="spellKey(event,this)"></div>';
+                '<input type="text" inputmode="text" maxlength="1" data-ci="' + i + '" value="' + (c.val ? esc(c.val) : '') + '"' + (answered ? ' disabled' : '') +
+                ' aria-label="第 ' + letterNo + ' 個字母" oninput="spellInput(this)" onkeydown="spellKey(event,this)"></div>'; // 已評分就鎖住輸入（與字母磚/quiz 一致），避免改動已上色方格造成字母與對錯顏色不符
         }
         else if (c.val) {
             // 已填：可點按退回字母到磚池（含 aria 標示位置與已填字母）
