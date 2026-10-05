@@ -187,8 +187,7 @@ function getDefinitionText(word) {
         return word.cloze;
     if (word.sentence)
         return word.sentence.replace(/<strong>.*?<\/strong>/g, '______');
-    if (word.definition)
-        return word.definition;
+    // 不再退回「不可用」的 definition（可能含答案單字而在看義選字方向洩題）；改走提示或占位
     return word.tip || '（暫無提示）';
 }
 function audioNameOf(word) { return word.word.replace(/ /g, '_').replace(/\//g, '_'); }
@@ -969,7 +968,7 @@ init();
         if (!peak)
             status = '還沒收集，練一次就會亮起來 ✨';
         else if (peak >= 5)
-            status = '已經精通囉！（第 5 盒 🌟）';
+            status = '已經精通囉！（第 ' + peak + ' 盒 🌟）';
         else
             status = '目前收藏到第 ' + peak + ' 盒';
         var when = '';
