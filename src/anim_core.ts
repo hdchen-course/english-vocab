@@ -3410,7 +3410,7 @@
       var digitTop = h * 0.30, digitH = Math.min(32, h * 0.17);
       var digitMid = digitTop + digitH / 2;
 
-      label(g, '位值・四位一節（每 4 位一節：個級・萬級・億級）', w / 2, 14, theme, 11.5, 'center');
+      label(g, '位值・四位一節（每 4 位一節算一級）', w / 2, 14, theme, 11.5, 'center');
 
       function cx(i: number): number {
         var pr = n - 1 - i;
