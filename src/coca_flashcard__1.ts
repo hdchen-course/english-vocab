@@ -538,12 +538,12 @@ function checkSpell() {
     // 評分後就地鎖定字母磚格（checkSpell 不重新渲染）：移除可操作性，否則格子仍自稱可按 Enter 退回、但 onSlotClick 已被 awaitingContinue 擋住 = 無作用的假提示
     if (s.getAttribute('role') === 'button') {
       s.removeAttribute('role'); s.removeAttribute('tabindex'); s.removeAttribute('onclick'); s.removeAttribute('onkeydown'); s.setAttribute('aria-disabled', 'true');
-      s.setAttribute('aria-label', '已填入 ' + (s.textContent || '') + '，已鎖定');   // 清掉 L443「按 Enter 或空白鍵退回字母」的過時提示：評分後 onSlotClick 已 no-op，報讀器不該再宣稱可退回（與 cefr 一致）
+      s.setAttribute('aria-label', '已填入 ' + (s.textContent || '') + '，已鎖定');   // 清掉填入時設定的「按 Enter 或空白鍵退回字母」過時提示：評分後 onSlotClick 已 no-op，報讀器不該再宣稱可退回（與 cefr 一致）
     }
   });
   // 進階模式（box 3–4）字母磚庫會混入誘答字母，評分後 checkSpell 不重繪 #spellBank，殘留的未使用磚仍是 enabled 的 <button onclick=onTileClick>，點了只會被 awaitingContinue 擋成 no-op＝死按鈕；一併停用整個字母磚庫
   document.querySelectorAll('#spellBank button').forEach(b => { b.disabled = true; b.removeAttribute('onclick'); b.removeAttribute('tabindex'); b.setAttribute('aria-disabled', 'true'); });
-  // 評分後停用輸入法切換鈕：toggleSpellMode 已於 awaitingContinue early-return(L507),不停用就是可 focus 卻無作用的死按鈕;renderSpell 於下一張卡重建成啟用(與 cefr/toeic 一致)
+  // 評分後停用輸入法切換鈕：toggleSpellMode 已於 awaitingContinue 時 early-return,不停用就是可 focus 卻無作用的死按鈕;renderSpell 於下一張卡重建成啟用(與 cefr/toeic 一致)
   const spellToggleBtn = document.querySelector('.fc-spell__toggle');
   if (spellToggleBtn) { spellToggleBtn.disabled = true; spellToggleBtn.setAttribute('aria-disabled', 'true'); }
   recordBinary(allRight);
