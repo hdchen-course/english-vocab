@@ -221,6 +221,7 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
 
   // 三級自評 → 排程（again 退盒＋本 session 內位移重現；good/easy 進盒推進）
   window.rateCard = function(grade) {
+    if (!isFlipped) return;   // 去抖：評分鈕只在翻面後出現；評分後 showFlashcard 立刻把 isFlipped 設回 false，佇列中的第二次點擊會被擋掉，不會誤評並跳過下一張沒看過的卡
     if (currentIndex >= cards.length) return;
     const id = currentWordId();
     recordRate(id, grade);
@@ -459,22 +460,24 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
           };
           if (s.filled) el.classList.add('filled');
           el.appendChild(inp);
-        } else {
-          if (s.filled) { el.textContent = s.filled; el.classList.add('filled'); }
-          else el.textContent = '';
+        } else if (s.filled) {
+          el.textContent = s.filled; el.classList.add('filled');
           el.onclick = function(){
             if (spellState.graded) return;
-            if (s.filled) { // 退回該字母到磚池
-              const t = spellState.bank.find(function(b){ return b.used && b.slotIdx === si; });
-              if (t) { t.used = false; t.slotIdx = null; }
-              s.filled = null; renderSpell();
-            }
+            // 退回該字母到磚池
+            const t = spellState.bank.find(function(b){ return b.used && b.slotIdx === si; });
+            if (t) { t.used = false; t.slotIdx = null; }
+            s.filled = null; renderSpell();
           };
-          // 鍵盤可操作性：與 COCA/TOEIC/practice 拼字格一致（Tab 聚焦、Enter/空白鍵退回字母）
+          // 已填才可點按退回（Tab 聚焦、Enter/空白鍵退回字母），與 COCA/TOEIC/practice 拼字格一致
           el.setAttribute('role', 'button');
           el.tabIndex = 0;
-          el.setAttribute('aria-label', s.filled ? ('第 ' + letterNo + ' 個字母格，已填入 ' + s.filled + '，按 Enter 或空白鍵退回字母') : ('第 ' + letterNo + ' 個字母格，尚未填入'));
+          el.setAttribute('aria-label', '第 ' + letterNo + ' 個字母格，已填入 ' + s.filled + '，按 Enter 或空白鍵退回字母');
           el.onkeydown = function(ev){ if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); el.onclick(); } };
+        } else {
+          // 空格：spellClear 對空格 no-op，故不設 role=button/tabindex（避免報讀成無作用按鈕），僅標示位置
+          el.textContent = '';
+          el.setAttribute('aria-label', '第 ' + letterNo + ' 個字母格，尚未填入');
         }
       }
       slotsEl.appendChild(el);
