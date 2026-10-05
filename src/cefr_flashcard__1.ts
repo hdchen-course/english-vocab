@@ -128,6 +128,7 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
   // Switch mode
   window.switchMode = function(mode) {
     currentMode = mode;
+    if (currentIndex >= cards.length) { currentIndex = 0; knownCount = 0; }   // 牌組已練完時切模式：重設位置，否則新模式一進去就撞到「已完成」守衛、顯示假的「結果 0/0 正確」死結，無法在同一牌組換模式練
     quizScore = 0; quizTotal = 0;   // quiz 與 spell 共用計分，切換模式要歸零，否則進度列與「結果 X/Y 正確」會把兩個活動的答對數混在一起
     btnFlashcard.classList.toggle('active', mode === 'flashcard');
     btnQuiz.classList.toggle('active', mode === 'quiz');
@@ -454,7 +455,8 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
           inp.type = 'text'; inp.maxLength = 1; inp.setAttribute('aria-label', '第 ' + letterNo + ' 個字母');
           inp.setAttribute('autocapitalize', 'none'); inp.setAttribute('autocomplete', 'off'); inp.setAttribute('spellcheck', 'false');
           inp.value = s.filled || '';
-          inp.oninput = function(){ s.filled = inp.value.replace(/[^a-zA-Z]/g, ''); inp.value = s.filled; if (s.filled) focusNextInput(si); };
+          if (spellState.graded) inp.readOnly = true;   // 已評分就鎖住輸入（與字母磚模式一致），避免改動已上色方格造成「字母與對錯顏色不符」
+          inp.oninput = function(){ if (spellState.graded) return; s.filled = inp.value.replace(/[^a-zA-Z]/g, ''); inp.value = s.filled; if (s.filled) focusNextInput(si); };
           inp.onkeydown = function(ev){
             if (ev.key === 'Backspace' && !inp.value) { focusPrevInput(si); }
             else if (ev.key === 'Enter') { ev.preventDefault(); checkSpelling(); }
