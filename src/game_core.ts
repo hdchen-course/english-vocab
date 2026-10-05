@@ -701,9 +701,15 @@
       } else if (didReset) {
         queueToast('休息一下很好，今天重新開始就好，之前學過的都還在 🌱', 'streak');
       }
-      if (!deferBadges) { // deferBadges（由 award 傳入）時延後徽章處理，交給 award() 的 checkBadges 發 toast + 計入 newBadges；standalone/init 呼叫維持原本 emit 行為
+      if (!deferBadges) { // standalone/init：streak 剛跨過里程碑（本區塊在 changed 內）要慶祝 toast，其餘徽章只 emit（init 的靜默回溯補授交給 L1226 的 checkBadges）
         var nb = checkBadges();
-        for (var i = 0; i < nb.length; i++) emit('badge', nb[i]);
+        var mat = pageMaturity() === 'advanced';
+        for (var i = 0; i < nb.length; i++) {
+          emit('badge', nb[i]);
+          if (nb[i] && nb[i].id && nb[i].id.indexOf('streak_') === 0) {
+            queueToast((mat ? '達成成就：' : '獲得徽章：') + nb[i].icon + ' ' + nb[i].name, 'badge');
+          }
+        }
       }
     }
     save();

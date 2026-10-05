@@ -4083,7 +4083,9 @@
         g.restore();
         // 聲調點名（含「一聲不標」提示）。
         var TN = ['一聲', '二聲', '三聲', '四聲', '輕聲'];
-        var markName = tone.mark === '' ? (TN[0] + '（不標調號）') : ('第 ' + (idx + 1) + ' 聲 ' + tone.mark);
+        var NAMEBYMARK: any = { '': '一聲', 'ˊ': '二聲', 'ˇ': '三聲', 'ˋ': '四聲', '˙': '輕聲' };
+        // 以實際調號取名，不用陣列位置（否則單一/重排/輕聲的 tones 會被標錯，例：ˊ 應為二聲、˙ 應為輕聲而非「第 5 聲」）
+        var markName = tone.mark === '' ? (TN[0] + '（不標調號）') : ((NAMEBYMARK[tone.mark] || TN[Math.min(idx, 4)]) + ' ' + tone.mark);
         label(g, markName, w / 2, 30, tone.mark === '' ? inkColor() : theme, 11, 'center');
       }
       bottomCap(g, w, h, assembling ? '聲母滑向韻母，合成一個字音' : '同一個字音，配不同聲調就是不同的字', ink);
@@ -4106,7 +4108,9 @@
           if (tone.mark) label(g, tone.mark, cx + gsz * 0.9, h * 0.34 - gsz * 0.35, theme, gsz * 0.7, 'center');
           label(g, tone.char || '', cx, h * 0.58, ink, gsz * 1.2, 'center');
           var TN = ['一聲', '二聲', '三聲', '四聲', '輕聲'];
-          label(g, tone.mark === '' ? (TN[0] + '·不標') : TN[Math.min(i, 4)], cx, h * 0.82, tone.mark === '' ? ink : theme, 10.5, 'center');
+          var NAMEBYMARK: any = { '': '一聲', 'ˊ': '二聲', 'ˇ': '三聲', 'ˋ': '四聲', '˙': '輕聲' };
+          // 以實際調號取名，不用陣列位置（支援單一/重排/輕聲的 tones）
+          label(g, tone.mark === '' ? (TN[0] + '·不標') : (NAMEBYMARK[tone.mark] || TN[Math.min(i, 4)]), cx, h * 0.82, tone.mark === '' ? ink : theme, 10.5, 'center');
         }
       },
       draw: draw
@@ -4865,7 +4869,11 @@
       if (/wh|疑問|問/.test(n)) return EN_WH;
       return EN_OBJ;
     }
-    function dropS(v: string): string { return v.replace(/ies$/, 'y').replace(/([^s])s$/, '$1'); }
+    function dropS(v: string): string {
+      if (v === 'has') return 'have';
+      // 先處理 -ies→y、再處理噝音/-o 的 -es（goes→go, watches→watch, does→do, boxes→box, passes→pass），最後才去掉單純的 -s（likes→like）
+      return v.replace(/ies$/, 'y').replace(/(ss|x|z|ch|sh|o)es$/, '$1').replace(/([^s])s$/, '$1');
+    }
 
     // ---- statement 狀態（可點放置）----
     var placed: boolean[] = []; for (var pi = 0; pi < tiles.length; pi++) placed.push(false);
@@ -5683,7 +5691,7 @@
   // 場景 S4：causalChain — 一條「因果鏈／流程」逐格揭示（PLAYABLE，可重播）。
   //   cfg = { nodes:[{label, note?}], mode?:'cause'|'flow', title?, label? }
   //   方塊由上而下逐一出現、以向下箭頭相連（箭頭意思＝「導致／接著」）；每格可讀、箭頭貼住兩端。
-  //   同一場景兼用：歷史因果鏈（如 1945→遷台→二二八→戒嚴→解嚴→直選）與流程（法案如何通過）。
+  //   同一場景兼用：歷史因果鏈（如 1945→二二八→戒嚴→政府遷台→解嚴→直選）與流程（法案如何通過）。
   //   4–7 個節點、每格可多字(自動折 2 行)、note 當小字補充。reduced-motion：一次畫出全部節點與箭頭。
   // ====================================================================
   function causalChain(host: HTMLElement, cfg: any) {
