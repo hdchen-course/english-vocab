@@ -411,10 +411,12 @@ window.CEFR_SRS = (window.SRS && window.SRS.createStore) ? window.SRS.createStor
       else slots.push({ type: 'slot', ch: ch, filled: null });
     }
 
-    // 字母磚池：可編輯 slot 的正解字母；進階加 2-4 個誘答字母
-    let bankLetters = slots.filter(s => s.type === 'slot').map(s => s.ch.toLowerCase());
+    // 字母磚池：可編輯 slot 的正解字母（保留原始大小寫，否則 ID/USA 等大寫字會被組成並判「正確」成小寫 id/usa，教錯拼法；評分本就大小寫不敏感）；進階加 2-4 個誘答字母
+    const allCaps = word === word.toUpperCase() && word !== word.toLowerCase();   // 全大寫字（如 ID）誘答磚也轉大寫，避免磚池大小寫混雜
+    let bankLetters = slots.filter(s => s.type === 'slot').map(s => s.ch);
     if (peak >= 3) {
-      const decoys = pickDecoys(word, Math.min(4, Math.max(2, Math.round(bankLetters.length / 3))));
+      let decoys = pickDecoys(word, Math.min(4, Math.max(2, Math.round(bankLetters.length / 3))));
+      if (allCaps) decoys = decoys.map(function(c){ return c.toUpperCase(); });
       bankLetters = bankLetters.concat(decoys);
     }
     const bank = shuffle(bankLetters).map(function(ch, i){ return { ch: ch, id: 'b' + i, used: false }; });
