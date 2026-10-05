@@ -2449,7 +2449,7 @@
       if (counterOn) {
         var cp = easeInOut(clamp01((p - 0.80) / 0.2));
         if (cp > 0.01) {
-          var tag = '🦢 ' + (counter.text || '出現一隻黑天鵝');
+          var tag = (counter.emoji !== undefined ? (counter.emoji ? counter.emoji + ' ' : '') : '🦢 ') + (counter.text || '出現一隻黑天鵝');
           g.save(); g.font = '700 10px system-ui, sans-serif';
           var tw = g.measureText(tag).width + 12;
           var tx = cbx + cbw / 2 - tw / 2;

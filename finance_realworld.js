@@ -268,6 +268,128 @@
         s += '<text x="140" y="146" text-anchor="middle" font-size="10" fill="' + INK + '">先存地基，再談投資</text>';
         return s + '</svg>';
     }
+    // ---------- Group 4：匯率與數位支付 專用 SVG（stepped / static）----------
+    // 換錢亭：1 美元 ↔ 約 32 新台幣（中性示例，數字每天會變、不預測）。
+    function fxBooth() {
+        var s = '<svg viewBox="0 0 280 150" role="img" aria-label="換錢亭示意：1 美元大約可以換到 32 元新台幣，這個數字每天都會隨市場變動，只是中性的例子不是預測">';
+        s += '<text x="140" y="18" text-anchor="middle" font-size="12" font-weight="800" fill="' + GOLD + '">換錢亭：不同國家的錢互相換</text>';
+        // 左：1 美元
+        s += '<rect x="24" y="40" width="92" height="58" rx="10" fill="#dcfce7" stroke="' + GREEN + '" stroke-width="2"/>';
+        s += '<text x="70" y="68" text-anchor="middle" font-size="22">💵</text>';
+        s += '<text x="70" y="90" text-anchor="middle" font-size="13" font-weight="800" fill="' + INKL + '">1 美元</text>';
+        // 雙向箭頭
+        s += '<line x1="120" y1="69" x2="160" y2="69" stroke="' + INK + '" stroke-width="2.5"/>';
+        s += '<polygon points="120,69 130,64 130,74" fill="' + INK + '"/><polygon points="160,69 150,64 150,74" fill="' + INK + '"/>';
+        s += '<text x="140" y="58" text-anchor="middle" font-size="10" fill="' + INK + '">換</text>';
+        // 右：約 32 新台幣
+        s += '<rect x="164" y="40" width="92" height="58" rx="10" fill="#fef3c7" stroke="' + GOLD + '" stroke-width="2"/>';
+        s += '<text x="210" y="68" text-anchor="middle" font-size="22">💰</text>';
+        s += '<text x="210" y="90" text-anchor="middle" font-size="13" font-weight="800" fill="' + INKL + '">約 32 新台幣</text>';
+        s += '<text x="140" y="122" text-anchor="middle" font-size="11" font-weight="800" fill="' + INK + '">匯率 ≈ 1 美元 : 32 新台幣</text>';
+        s += '<text x="140" y="140" text-anchor="middle" font-size="9.5" fill="' + MUT + '">（數字每天都會變動，這只是示例）</text>';
+        return s + '</svg>';
+    }
+    // 升值 vs 貶值：同樣 320 新台幣，台幣升值換到較多美元、貶值換到較少（方向示意，不預測）。
+    function fxUpDown() {
+        var s = '<svg viewBox="0 0 280 184" role="img" aria-label="同樣拿 320 元新台幣去換美元：台幣升值時台幣更值錢，可以換到比較多的美元，出國或買進口貨相對便宜；台幣貶值時換到比較少的美元，出國與進口變貴，但出口相對有利；箭頭只是示意方向，不是預測漲跌">';
+        s += '<text x="140" y="16" text-anchor="middle" font-size="11.5" font-weight="800" fill="' + GOLD + '">同樣 320 新台幣，換到的美元不一樣</text>';
+        s += '<line x1="140" y1="24" x2="140" y2="166" stroke="' + INK + '" stroke-opacity="0.25" stroke-width="1.3"/>';
+        // 左：升值（換到比較多）
+        s += '<rect x="12" y="30" width="116" height="28" rx="8" fill="#dcfce7" stroke="' + GREEN + '" stroke-width="1.8"/>';
+        s += '<text x="70" y="49" text-anchor="middle" font-size="12.5" font-weight="800" fill="' + GREEN + '">台幣升值 ↑</text>';
+        s += '<text x="70" y="88" text-anchor="middle" font-size="24">💵💵</text>';
+        s += '<text x="70" y="112" text-anchor="middle" font-size="12" font-weight="800" fill="' + GREEN + '">換到比較多美元</text>';
+        s += '<text x="70" y="132" text-anchor="middle" font-size="9.5" fill="' + INK + '">台幣更值錢</text>';
+        s += '<text x="70" y="148" text-anchor="middle" font-size="9.5" fill="' + INK + '">出國、買進口貨變便宜</text>';
+        // 右：貶值（換到比較少）
+        s += '<rect x="152" y="30" width="116" height="28" rx="8" fill="#fee2e2" stroke="' + RED + '" stroke-width="1.8"/>';
+        s += '<text x="210" y="49" text-anchor="middle" font-size="12.5" font-weight="800" fill="' + RED + '">台幣貶值 ↓</text>';
+        s += '<text x="210" y="88" text-anchor="middle" font-size="24">💵</text>';
+        s += '<text x="210" y="112" text-anchor="middle" font-size="12" font-weight="800" fill="' + RED + '">換到比較少美元</text>';
+        s += '<text x="210" y="132" text-anchor="middle" font-size="9.5" fill="' + INK + '">台幣變便宜</text>';
+        s += '<text x="210" y="148" text-anchor="middle" font-size="9.5" fill="' + INK + '">出國、進口變貴；出口有利</text>';
+        s += '<text x="140" y="178" text-anchor="middle" font-size="9" fill="' + MUT + '">↑↓ 只是示意方向，不預測漲跌</text>';
+        return s + '</svg>';
+    }
+    // 匯率每天隨供需上下變動（中性示意，不預測漲跌）。
+    function fxWobble() {
+        var vals = [32.1, 31.8, 32.2, 31.9, 32.0];
+        var s = '<svg viewBox="0 0 280 150" role="img" aria-label="匯率每天隨市場供需上下變動的示意圖，五天的 1 美元兌新台幣在 32 元附近上下跳動，這只是說明會變動，不是預測漲跌">';
+        s += '<text x="140" y="16" text-anchor="middle" font-size="11.5" font-weight="800" fill="' + GOLD + '">匯率每天都會上下變動</text>';
+        s += '<text x="140" y="28" text-anchor="middle" font-size="8.5" fill="' + MUT + '">1 美元換多少新台幣（示意，不預測）</text>';
+        s += '<line x1="24" y1="92" x2="248" y2="92" stroke="' + INK + '" stroke-opacity="0.3" stroke-width="1.3" stroke-dasharray="4 4"/>';
+        s += '<text x="26" y="88" text-anchor="start" font-size="8.5" fill="' + MUT + '">約 32</text>';
+        var pts = '';
+        for (var i = 0; i < 5; i++) {
+            var cx = 50 + i * 44, cy = 92 - (vals[i] - 32) * 120;
+            pts += cx + ',' + cy.toFixed(1) + ' ';
+        }
+        s += '<polyline points="' + pts.trim() + '" fill="none" stroke="' + GOLD + '" stroke-width="2"/>';
+        for (var j = 0; j < 5; j++) {
+            var x = 50 + j * 44, y = 92 - (vals[j] - 32) * 120;
+            s += '<circle cx="' + x + '" cy="' + y.toFixed(1) + '" r="4" fill="' + GOLD + '"/>';
+            s += '<text x="' + x + '" y="' + (y - 9).toFixed(1) + '" text-anchor="middle" font-size="8.5" font-weight="700" fill="' + INK + '">' + vals[j].toFixed(1) + '</text>';
+            s += '<text x="' + x + '" y="136" text-anchor="middle" font-size="9" fill="' + INK + '">第' + (j + 1) + '天</text>';
+        }
+        return s + '</svg>';
+    }
+    // 行動支付＝把「錢的鑰匙」放進手機，所以手機與密碼要特別顧好。
+    function payKey() {
+        var s = '<svg viewBox="0 0 280 150" role="img" aria-label="行動支付就像把錢的鑰匙放進手機，手機裡存著付款的權限，所以手機和它的密碼要特別顧好">';
+        s += '<text x="140" y="18" text-anchor="middle" font-size="12" font-weight="800" fill="' + GOLD + '">行動支付＝把「錢的鑰匙」放進手機</text>';
+        s += '<rect x="104" y="34" width="72" height="104" rx="12" fill="#fef3c7" stroke="' + GOLD + '" stroke-width="2.5"/>';
+        s += '<rect x="112" y="46" width="56" height="68" rx="6" fill="#ffffff" stroke="' + GOLD + '" stroke-opacity="0.5" stroke-width="1.3"/>';
+        s += '<text x="140" y="84" text-anchor="middle" font-size="26">🔑</text>';
+        s += '<text x="140" y="107" text-anchor="middle" font-size="10" font-weight="800" fill="' + INKL + '">付款權限</text>';
+        s += '<circle cx="140" cy="126" r="5" fill="none" stroke="' + GOLD + '" stroke-width="1.5"/>';
+        s += '<text x="56" y="92" text-anchor="middle" font-size="22">💰</text>';
+        s += '<text x="224" y="92" text-anchor="middle" font-size="22">💳</text>';
+        return s + '</svg>';
+    }
+    // 安全付款四步流程 + 檢查清單。
+    function payFlow() {
+        var s = '<svg viewBox="0 0 280 230" role="img" aria-label="安全的行動支付流程四步：先開啟官方 App，再用密碼或生物辨識驗證，接著核對金額與收款對象，確認無誤才付款；下方的安全檢查清單包含設密碼或生物辨識、只用官方 App 或可信網站、核對金額與對象、不在公用 Wi-Fi 做金流">';
+        s += '<text x="140" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + GOLD + '">安全付款，照順序走四步</text>';
+        var steps = [['①', '開啟官方 App'], ['②', '密碼／生物辨識'], ['③', '核對金額與對象'], ['④', '確認無誤才付款']];
+        for (var i = 0; i < 4; i++) {
+            var y = 26 + i * 28;
+            s += '<rect x="30" y="' + y + '" width="220" height="22" rx="7" fill="#fef3c7" stroke="' + GOLD + '" stroke-width="1.6"/>';
+            s += '<text x="46" y="' + (y + 15) + '" text-anchor="middle" font-size="12" font-weight="800" fill="' + GOLD + '">' + steps[i][0] + '</text>';
+            s += '<text x="64" y="' + (y + 15) + '" text-anchor="start" font-size="11.5" font-weight="700" fill="' + INKL + '">' + steps[i][1] + '</text>';
+            if (i < 3)
+                s += '<path d="M140 ' + (y + 22) + ' L140 ' + (y + 28) + '" stroke="' + GOLD + '" stroke-width="1.6"/>';
+        }
+        // 安全檢查清單（2×2）
+        s += '<rect x="18" y="150" width="244" height="72" rx="10" fill="#dcfce7" stroke="' + GREEN + '" stroke-width="1.8"/>';
+        s += '<text x="140" y="167" text-anchor="middle" font-size="10.5" font-weight="800" fill="' + GREEN + '">安全檢查清單</text>';
+        var chk = ['設密碼／生物辨識', '只用官方 App', '核對金額與對象', '不在公用 Wi-Fi 轉錢'];
+        for (var k = 0; k < 4; k++) {
+            var tx = 30 + (k % 2) * 120, ty = 188 + Math.floor(k / 2) * 22;
+            s += '<text x="' + tx + '" y="' + ty + '" text-anchor="start" font-size="10" fill="' + INKL + '">✅ ' + chk[k] + '</text>';
+        }
+        return s + '</svg>';
+    }
+    // 遇到可疑付款情境，先停下來查證：陌生 QR 碼、要驗證碼/卡號、幫忙代收代付 → 停 → 打 165/問家人。
+    function payDanger() {
+        var cards = [['🔳', '陌生 QR 碼', '要你掃碼付款'], ['🔢', '要驗證碼／卡號', '說「報一下就好」'], ['📦', '代收代付', '幫忙收錢再轉出']];
+        var s = '<svg viewBox="0 0 280 196" role="img" aria-label="遇到以下情況都要先停下來查證：有人要你掃來路不明的 QR 碼付款、有人要你的簡訊驗證碼或信用卡號、有人要你幫忙代收代付；不管哪一種，先停下來打 165 或問家人再決定">';
+        s += '<text x="140" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + RED + '">遇到這些，先停下來查證</text>';
+        for (var i = 0; i < 3; i++) {
+            var cx = 8 + i * 92;
+            s += '<rect x="' + cx + '" y="26" width="84" height="60" rx="9" fill="#fee2e2" stroke="' + RED + '" stroke-width="1.8"/>';
+            s += '<text x="' + (cx + 42) + '" y="48" text-anchor="middle" font-size="20">' + cards[i][0] + '</text>';
+            s += '<text x="' + (cx + 42) + '" y="66" text-anchor="middle" font-size="9.5" font-weight="800" fill="' + INKL + '">' + cards[i][1] + '</text>';
+            s += '<text x="' + (cx + 42) + '" y="79" text-anchor="middle" font-size="7.2" fill="' + INKL + '">' + cards[i][2] + '</text>';
+            s += '<text x="' + (cx + 74) + '" y="34" text-anchor="middle" font-size="12">🚩</text>';
+            s += '<path d="M' + (cx + 42) + ' 88 L140 118" stroke="' + RED + '" stroke-width="1.5" marker-end="url(#pdr)"/>';
+        }
+        s += '<rect x="40" y="120" width="200" height="34" rx="10" fill="#fef3c7" stroke="' + GOLD + '" stroke-width="2"/>';
+        s += '<text x="140" y="142" text-anchor="middle" font-size="12" font-weight="800" fill="' + GOLD + '">🛑 先停下來，不要馬上照做</text>';
+        s += '<rect x="40" y="160" width="200" height="30" rx="10" fill="#dcfce7" stroke="' + GREEN + '" stroke-width="2"/>';
+        s += '<text x="140" y="179" text-anchor="middle" font-size="11" font-weight="800" fill="' + GREEN + '">打 165 或問家人，再決定</text>';
+        s += '<defs><marker id="pdr" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="' + RED + '"/></marker></defs>';
+        return s + '</svg>';
+    }
     window.CONCEPT = {
         progKey: 'finance_realworld_v1', practiceHref: 'economics_advanced.html',
         lessons: [
@@ -440,6 +562,43 @@
                         options: ['先備好緊急預備金，再用短期用不到的錢投資', '先借錢投資', '把學費也拿去投', '把全部的錢都投進去'], answer: 0,
                         whyWrong: { 1: '借錢投資一旦虧了會連本帶利賠，風險很大。' },
                         why: '先有緊急預備金才不會被迫在低點賣出；只投入短期用不到的閒錢。' }
+                ] },
+            // ============ 群組 4：匯率與數位支付安全 ============
+            { id: 'fx_rate', name: '匯率：不同國家的錢怎麼換', emoji: '💱', color: '#ca8a04', sub: '兩種錢的交換比例',
+                done: '匯率是兩種錢的交換比例，每天都在變。',
+                steps: [
+                    { type: 'teach', kicker: '先認識', title: '匯率＝兩種貨幣交換的比例', svg: fxBooth(),
+                        text: '不同國家用不同貨幣：台灣用<b>新台幣</b>、美國用<b>美元</b>。<b>匯率</b>就是兩種貨幣<b>交換的比例</b>，例如約 <b>1 美元換 32 元新台幣</b>（這只是示例，數字每天會變動）。出國換錢、網購付外幣時都會用到。' },
+                    { type: 'teach', kicker: '升值與貶值', title: '台幣升值，能換到更多外幣', svg: fxUpDown(),
+                        text: '新台幣「<b>升值</b>」代表台幣更值錢：拿同樣的台幣能<b>換到更多外幣</b>，<b>出國、買進口貨相對變便宜</b>。「<b>貶值</b>」相反——換到的外幣變少，出國與進口變貴，但<b>台灣的出口相對有利</b>（外國人買台灣貨變便宜）。' },
+                    { type: 'teach', kicker: '每天都在變', title: '匯率隨市場供需上下變動', svg: fxWobble(),
+                        text: '匯率不是固定的，會隨<b>市場供需每天上下變動</b>。所以出國換匯、付外幣前，先查<b>當天的匯率</b>。匯率的漲跌沒有人能保證——這裡只教你看懂它<b>是什麼</b>、怎麼變，<b>不預測、也不報明牌</b>。' },
+                    { type: 'quiz', kicker: '換你試試', title: '「匯率」指的是什麼？',
+                        options: ['兩種貨幣互相交換的比例', '銀行的樓層數', '錢幣的重量', '提款機的數量'], answer: 0,
+                        whyWrong: { 1: '銀行有幾層樓跟匯率完全無關。', 2: '錢幣多重不是匯率；匯率講的是兩種貨幣交換的比例。', 3: '提款機數量跟匯率無關。' },
+                        why: '匯率是兩種貨幣的交換比例，例如 1 美元可換約 32 元新台幣，數字會隨市場變動。' },
+                    { type: 'quiz', kicker: '想一想', title: '新台幣「升值」時，拿同樣的台幣去換美元會？',
+                        options: ['換到比較多的美元', '換到比較少的美元', '完全不能換', '跟匯率無關'], answer: 0,
+                        whyWrong: { 1: '換到比較少剛好相反，那是台幣「貶值」時的情形。', 2: '升值不是不能換，而是同樣的台幣能換到更多外幣。', 3: '能換多少正是由匯率決定的，怎麼會無關呢？' },
+                        why: '升值代表台幣更值錢，同樣金額能換到更多外幣，出國或買進口貨相對變便宜。' }
+                ] },
+            { id: 'fx_pay', name: '數位支付安全：方便但要守規矩', emoji: '📱', color: '#0d9488', sub: '鑰匙要顧好',
+                done: '支付很方便，鑰匙更要顧好。',
+                steps: [
+                    { type: 'teach', kicker: '先想一想', title: '手機付款＝把錢的鑰匙放進手機', svg: payKey(),
+                        text: '<b>行動支付</b>、電子票證、網路刷卡都很方便，掃一下、按一下就付款。但這也等於把「<b>錢的鑰匙</b>」放進手機——所以<b>手機本身和它的密碼</b>，要特別顧好。萬一<b>手機不見了</b>，盡快用另一支裝置<b>鎖定／清除手機、停用付款、改密碼</b>，並通知家人或銀行。' },
+                    { type: 'teach', kicker: '安全守則', title: '照順序走，付款才安全', svg: payFlow(),
+                        text: '安全付款有幾個習慣：<b>設密碼或生物辨識</b>解鎖、<b>只在官方 App 或可信網站</b>付款、付款前<b>核對金額與收款對象</b>、<b>不在公用 Wi-Fi</b> 做轉帳等金流。照清單一項項確認，就不容易出錯。' },
+                    { type: 'teach', kicker: '遇到可疑先停', title: '陌生 QR 碼、要驗證碼？先停下來查證', svg: payDanger(),
+                        text: '如果有人要你「<b>掃這個 QR 碼付款</b>」「<b>把驗證碼或卡號報給我</b>」「<b>幫忙代收代付</b>」，先<b>停下來查證</b>：<b>驗證碼、密碼、卡號絕不給任何人</b>。不確定就打 <b>165</b> 或問家人。被騙不是你的錯，願意先停、先問最重要。' },
+                    { type: 'quiz', kicker: '換你試試', title: '使用行動支付時，下列哪一個做法最安全？',
+                        options: ['設定密碼或生物辨識、只在官方 App 付款、核對金額', '把密碼寫在手機背面', '在公用 Wi-Fi 轉大筆錢', '把驗證碼給陌生人'], answer: 0,
+                        whyWrong: { 1: '把密碼寫在手機背面，手機一旦遺失別人就能直接動你的錢。', 2: '公用 Wi-Fi 可能被側錄，不適合做轉帳等金流。', 3: '驗證碼等於帳戶鑰匙，給了陌生人錢就被轉走。' },
+                        why: '數位支付等於把錢的鑰匙放進手機，設好驗證、用官方 App、核對金額才安全。' },
+                    { type: 'quiz', kicker: '想一想', title: '陌生人要你「掃這個 QR 碼付款」或「把驗證碼給他」，應該？',
+                        options: ['先停下來查證，可打 165 或問家人', '馬上照做', '覺得對方好心就相信', '把密碼也一起給'], answer: 0,
+                        whyWrong: { 1: '馬上照做正中詐騙下懷；陌生 QR 碼和要驗證碼都很可疑。', 2: '裝好心正是常見話術，不能因為「感覺好心」就相信。', 3: '密碼絕不能給任何人，給了等於把帳戶整個交出去。' },
+                        why: '陌生 QR 碼與要驗證碼是常見詐騙手法，先停、查證再決定（接 FIN-SCAM）。' }
                 ] }
         ]
     };

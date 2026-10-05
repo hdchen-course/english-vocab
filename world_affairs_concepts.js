@@ -406,6 +406,212 @@
         s += '<defs><marker id="rpg" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="' + GREEN + '"/></marker></defs>';
         return s + '</svg>';
     }
+    // ===== lesson 群組 2：全球議題縱深（id 前綴 glob_）static SVG helpers =====================
+    //   難民 / 貧富差距 / NGO。難民第 1 課重用 playable Anim.worldLocator（示意跨國移動），
+    //   其餘 teach step 皆 static SVG（每步都有推理視覺、零純文字）。中性、同理、非恐嚇。
+    // G1 teach2：難民到了新地方面臨的四種挑戰（安置／語言／工作／身心照顧）——同理框架。
+    function refugeeChallenges() {
+        var s = '<svg viewBox="0 0 300 200" role="img" aria-label="難民被迫離開家園、來到新地方後，重新生活並不容易，常會面臨四種挑戰。第一是安置，要找到安全的住處。第二是語言，當地語言的聽說讀寫都要重新適應。第三是工作，要重新找到工作與收入。第四是身心照顧，經歷過戰亂或災難的辛苦，需要時間和關心慢慢復原。這些都需要時間，也需要社會的理解與支持">';
+        s += '<text x="150" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + SU + '">難民常面臨的挑戰</text>';
+        s += '<text x="150" y="32" text-anchor="middle" font-size="9" fill="' + MUT + '">被迫離開家園、重新生活並不容易</text>';
+        var cards = [
+            ['🏠', '安置', '找到安全的住處', SKY],
+            ['💬', '語言', '聽說讀寫要重新適應', PURP],
+            ['💼', '工作', '重新找工作與收入', AMBER],
+            ['🫂', '身心照顧', '受過的辛苦需要被關心', GREEN]
+        ];
+        for (var i = 0; i < 4; i++) {
+            var col = i % 2, row = Math.floor(i / 2);
+            var x = 14 + col * 140, y = 42 + row * 62;
+            s += '<rect x="' + x + '" y="' + y + '" width="132" height="56" rx="10" fill="' + cards[i][3] + '" opacity="0.1"/>';
+            s += '<rect x="' + x + '" y="' + y + '" width="132" height="56" rx="10" fill="none" stroke="' + cards[i][3] + '" stroke-width="1.3"/>';
+            s += '<text x="' + (x + 22) + '" y="' + (y + 32) + '" text-anchor="middle" font-size="17">' + cards[i][0] + '</text>';
+            s += '<text x="' + (x + 42) + '" y="' + (y + 22) + '" font-size="10" font-weight="800" fill="' + cards[i][3] + '">' + cards[i][1] + '</text>';
+            s += '<text x="' + (x + 42) + '" y="' + (y + 40) + '" font-size="8.5" fill="currentColor">' + cards[i][2] + '</text>';
+        }
+        s += '<text x="150" y="192" text-anchor="middle" font-size="9.5" fill="' + MUT + '">這些都需要時間，也需要社會的理解與支持。</text>';
+        return s + '</svg>';
+    }
+    // G1 teach3：國際上有組織與公約一起保護難民（保護傘）——理解勝過指責。
+    function refugeeProtection() {
+        var s = '<svg viewBox="0 0 300 196" role="img" aria-label="國際上有組織和公約一起保護難民，像一把大傘撐在幾個人的上方，傘上寫著國際組織和人道公約。傘下的人代表受到保護的難民。這些保護做兩件事：幫忙安置與照顧基本生活所需、以及保障他們的安全與人權。面對難民議題，比較合適的態度是理解，而不是指責，因為他們和我們一樣，都只是想要安全的生活">';
+        s += '<text x="150" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + SU + '">國際上有人一起保護難民</text>';
+        // 保護傘（半圓罩）
+        s += '<path d="M50 118 A100 100 0 0 1 250 118" fill="' + GREEN + '" opacity="0.1"/>';
+        s += '<path d="M50 118 A100 100 0 0 1 250 118" fill="none" stroke="' + GREEN + '" stroke-width="1.6"/>';
+        s += '<text x="150" y="64" text-anchor="middle" font-size="10" font-weight="800" fill="' + GREEN + '">國際組織・人道公約</text>';
+        s += '<text x="150" y="80" text-anchor="middle" font-size="8.5" fill="' + MUT + '">（像一把保護傘）</text>';
+        // 傘下的人
+        for (var i = 0; i < 3; i++) {
+            var x = 116 + i * 34;
+            s += '<circle cx="' + x + '" cy="98" r="7" fill="' + SU + '" opacity="0.5"/>';
+            s += '<rect x="' + (x - 6) + '" y="106" width="12" height="12" rx="4" fill="' + SU + '" opacity="0.5"/>';
+        }
+        s += '<text x="150" y="134" text-anchor="middle" font-size="8.5" fill="currentColor">受到保護的人</text>';
+        s += '<text x="150" y="152" text-anchor="middle" font-size="9" fill="currentColor">幫忙安置與基本需要 ・ 保障安全與人權</text>';
+        s += '<text x="150" y="172" text-anchor="middle" font-size="10" font-weight="800" fill="' + SU + '">面對難民，理解勝過指責。</text>';
+        s += '<text x="150" y="188" text-anchor="middle" font-size="9" fill="' + MUT + '">他們和我們一樣，都想要安全的生活。</text>';
+        return s + '</svg>';
+    }
+    // G2 teach1：財富與機會分配不均——兩個「爬墊腳石」的人，高度落差＝貧富差距。
+    function wealthLadder() {
+        var s = '<svg viewBox="0 0 300 200" role="img" aria-label="財富與機會的分配並不平均，畫面用兩個往上爬的人來比喻。左邊的人有比較多墊腳石，由下往上分別是教育、健康、工作機會、地區發展，所以站得比較高，代表機會較多、比較容易往上。右邊的人只有教育和健康兩塊墊腳石，上面工作機會和地區發展的位置是空的虛線，所以站得比較低，代表機會較少。兩個人高度的落差就是貧富差距。這些墊腳石不是人人都一樣多">';
+        s += '<text x="150" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + SU + '">財富與機會，分配並不平均</text>';
+        s += '<text x="150" y="31" text-anchor="middle" font-size="9" fill="' + MUT + '">往上的「墊腳石」，不是人人都一樣多</text>';
+        var labelsL = ['教育', '健康', '工作機會', '地區發展'];
+        var ys = [152, 130, 108, 86];
+        for (var i = 0; i < 4; i++) {
+            s += '<rect x="40" y="' + ys[i] + '" width="72" height="16" rx="5" fill="' + SU + '" opacity="0.28"/>';
+            s += '<rect x="40" y="' + ys[i] + '" width="72" height="16" rx="5" fill="none" stroke="' + SU + '" stroke-width="1"/>';
+            s += '<text x="76" y="' + (ys[i] + 11) + '" text-anchor="middle" font-size="8.5" fill="currentColor">' + labelsL[i] + '</text>';
+        }
+        s += '<circle cx="76" cy="70" r="7" fill="' + GREEN + '" opacity="0.6"/>';
+        s += '<rect x="70" y="78" width="12" height="14" rx="4" fill="' + GREEN + '" opacity="0.6"/>';
+        s += '<text x="76" y="60" text-anchor="middle" font-size="8.5" font-weight="800" fill="' + GREEN + '">機會較多</text>';
+        for (var j = 0; j < 4; j++) {
+            if (j < 2) {
+                s += '<rect x="188" y="' + ys[j] + '" width="72" height="16" rx="5" fill="' + SU + '" opacity="0.28"/>';
+                s += '<rect x="188" y="' + ys[j] + '" width="72" height="16" rx="5" fill="none" stroke="' + SU + '" stroke-width="1"/>';
+                s += '<text x="224" y="' + (ys[j] + 11) + '" text-anchor="middle" font-size="8.5" fill="currentColor">' + labelsL[j] + '</text>';
+            }
+            else {
+                s += '<rect x="188" y="' + ys[j] + '" width="72" height="16" rx="5" fill="none" stroke="' + MUT + '" stroke-width="1" stroke-dasharray="4 3" opacity="0.6"/>';
+            }
+        }
+        s += '<circle cx="224" cy="114" r="7" fill="' + AMBER + '" opacity="0.6"/>';
+        s += '<rect x="218" y="122" width="12" height="14" rx="4" fill="' + AMBER + '" opacity="0.6"/>';
+        s += '<text x="224" y="104" text-anchor="middle" font-size="8.5" font-weight="800" fill="' + AMBER + '">機會較少</text>';
+        s += '<line x1="150" y1="70" x2="150" y2="114" stroke="' + WARN + '" stroke-width="1.6" stroke-dasharray="4 3" marker-start="url(#wlu)" marker-end="url(#wld)"/>';
+        s += '<text x="158" y="94" font-size="9" font-weight="800" fill="' + WARN + '">差距</text>';
+        s += '<text x="150" y="192" text-anchor="middle" font-size="9" fill="' + MUT + '">兩人高度的落差，就是貧富差距。</text>';
+        s += '<defs>' +
+            '<marker id="wlu" markerWidth="7" markerHeight="7" refX="3" refY="5" orient="auto"><path d="M3 0 L6 6 L0 6 z" fill="' + WARN + '"/></marker>' +
+            '<marker id="wld" markerWidth="7" markerHeight="7" refX="3" refY="2" orient="auto"><path d="M0 0 L6 0 L3 6 z" fill="' + WARN + '"/></marker>' +
+            '</defs>';
+        return s + '</svg>';
+    }
+    // G2 teach2：成因複雜——多種因素交織，匯流到「貧富差距」結果框（單一箭頭，止於框緣）。
+    function inequalityCauses() {
+        var s = '<svg viewBox="0 0 300 192" role="img" aria-label="貧富差距的成因很複雜，是許多因素交織在一起造成的，包括教育機會、工作機會、健康、地區發展和歷史因素，這五個因素彼此交織影響，一起造成貧富差距，而不是單一原因。所以不能簡化成單一原因，也不應該歸咎於個人">';
+        s += '<text x="150" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + SU + '">成因複雜：多種因素交織</text>';
+        var chips = [
+            ['教育機會', 16, 30, SKY], ['工作機會', 108, 30, PURP], ['健康', 200, 30, GREEN],
+            ['地區發展', 62, 60, AMBER], ['歷史因素', 154, 60, MUT]
+        ];
+        for (var i = 0; i < chips.length; i++) {
+            var x = chips[i][1], y = chips[i][2], c = chips[i][3];
+            s += '<rect x="' + x + '" y="' + y + '" width="84" height="24" rx="12" fill="' + c + '" opacity="0.14"/>';
+            s += '<rect x="' + x + '" y="' + y + '" width="84" height="24" rx="12" fill="none" stroke="' + c + '" stroke-width="1.2"/>';
+            s += '<text x="' + (x + 42) + '" y="' + (y + 16) + '" text-anchor="middle" font-size="9.5" font-weight="700" fill="currentColor">' + chips[i][0] + '</text>';
+        }
+        s += '<text x="150" y="100" text-anchor="middle" font-size="9" fill="' + MUT + '">彼此交織影響</text>';
+        s += '<path d="M150 104 L150 118" stroke="' + MUT + '" stroke-width="1.8" marker-end="url(#icd)"/>';
+        s += '<rect x="54" y="122" width="192" height="40" rx="12" fill="' + SU + '" opacity="0.12"/>';
+        s += '<rect x="54" y="122" width="192" height="40" rx="12" fill="none" stroke="' + SU + '" stroke-width="1.5"/>';
+        s += '<text x="150" y="140" text-anchor="middle" font-size="10.5" font-weight="800" fill="' + SU + '">造成貧富差距</text>';
+        s += '<text x="150" y="156" text-anchor="middle" font-size="8.8" fill="currentColor">多重因素交織的結構性問題</text>';
+        s += '<text x="150" y="182" text-anchor="middle" font-size="9" fill="' + MUT + '">不能簡化成單一原因，也不該歸咎個人。</text>';
+        s += '<defs><marker id="icd" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="' + MUT + '"/></marker></defs>';
+        return s + '</svg>';
+    }
+    // G2 teach3：改善方向——教育機會／社會安全網／公平制度 → 縮小差距。
+    function inequalitySolutions() {
+        var s = '<svg viewBox="0 0 300 192" role="img" aria-label="改善貧富差距有幾個常見的努力方向。第一是擴大教育與學習的機會，第二是建立社會安全網照顧需要幫助的人，第三是建立公平的制度。這三個方向一起努力，就能幫助更多人有機會，讓差距慢慢縮小。沒有單一答案，但每個人都可以關心這個議題">';
+        s += '<text x="150" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + SU + '">可以努力的方向</text>';
+        var cards = [
+            ['📚', '擴大教育', '與學習機會', SKY],
+            ['🛟', '社會安全網', '照顧需要的人', GREEN],
+            ['⚖️', '公平制度', '機會更公平', PURP]
+        ];
+        for (var i = 0; i < 3; i++) {
+            var x = 14 + i * 94;
+            s += '<rect x="' + x + '" y="34" width="84" height="58" rx="10" fill="' + cards[i][3] + '" opacity="0.1"/>';
+            s += '<rect x="' + x + '" y="34" width="84" height="58" rx="10" fill="none" stroke="' + cards[i][3] + '" stroke-width="1.3"/>';
+            s += '<text x="' + (x + 42) + '" y="58" text-anchor="middle" font-size="18">' + cards[i][0] + '</text>';
+            s += '<text x="' + (x + 42) + '" y="76" text-anchor="middle" font-size="9.5" font-weight="800" fill="' + cards[i][3] + '">' + cards[i][1] + '</text>';
+            s += '<text x="' + (x + 42) + '" y="89" text-anchor="middle" font-size="8" fill="currentColor">' + cards[i][2] + '</text>';
+        }
+        s += '<path d="M150 96 L150 110" stroke="' + GREEN + '" stroke-width="1.8" marker-end="url(#isd)"/>';
+        s += '<rect x="40" y="114" width="220" height="34" rx="10" fill="' + GREEN + '" opacity="0.12"/>';
+        s += '<rect x="40" y="114" width="220" height="34" rx="10" fill="none" stroke="' + GREEN + '" stroke-width="1.4"/>';
+        s += '<text x="150" y="135" text-anchor="middle" font-size="9.5" font-weight="700" fill="currentColor">讓更多人有機會，差距就能慢慢縮小</text>';
+        s += '<text x="150" y="170" text-anchor="middle" font-size="9.5" fill="currentColor">沒有單一答案，但每個人都可以關心。</text>';
+        s += '<defs><marker id="isd" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="' + GREEN + '"/></marker></defs>';
+        return s + '</svg>';
+    }
+    // G3 teach1：NGO＝民間自發、非營利、為公益；投入人道／環境／醫療／教育等領域。
+    function ngoDomains() {
+        var s = '<svg viewBox="0 0 300 196" role="img" aria-label="NGO 是非政府組織，由民間自發成立、不以營利為主要目的，為了公益而行動。它們投入很多不同領域，常見的有四種：人道救援、環境保護、醫療，以及教育。這些都是民間為了讓世界更好而投入的公益行動">';
+        s += '<text x="150" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + SU + '">NGO：民間自發、為公益</text>';
+        s += '<rect x="16" y="26" width="268" height="40" rx="10" fill="' + SU + '" opacity="0.1"/>';
+        s += '<rect x="16" y="26" width="268" height="40" rx="10" fill="none" stroke="' + SU + '" stroke-width="1.3"/>';
+        s += '<text x="150" y="44" text-anchor="middle" font-size="9.5" font-weight="800" fill="' + SU + '">NGO（非政府組織）</text>';
+        s += '<text x="150" y="59" text-anchor="middle" font-size="8.8" fill="currentColor">民間自發成立、不以營利為主，為公益行動</text>';
+        var doms = [
+            ['🆘', '人道救援', WARN], ['🌱', '環境', GREEN], ['➕', '醫療', SKY], ['📖', '教育', AMBER]
+        ];
+        for (var i = 0; i < 4; i++) {
+            var x = 12 + i * 70;
+            s += '<rect x="' + x + '" y="88" width="66" height="72" rx="10" fill="' + doms[i][2] + '" opacity="0.1"/>';
+            s += '<rect x="' + x + '" y="88" width="66" height="72" rx="10" fill="none" stroke="' + doms[i][2] + '" stroke-width="1.3"/>';
+            s += '<text x="' + (x + 33) + '" y="122" text-anchor="middle" font-size="22">' + doms[i][0] + '</text>';
+            s += '<text x="' + (x + 33) + '" y="146" text-anchor="middle" font-size="10" font-weight="800" fill="' + doms[i][2] + '">' + doms[i][1] + '</text>';
+        }
+        s += '<text x="150" y="182" text-anchor="middle" font-size="9" fill="' + MUT + '">投入人道、環境、醫療、教育等不同領域。</text>';
+        return s + '</svg>';
+    }
+    // G3 teach2：國際合作——各國政府／聯合國體系／國際 NGO／在地組織連到地球，一起面對共同問題。
+    function globalCooperation() {
+        var s = '<svg viewBox="0 0 300 196" role="img" aria-label="國際合作是指各國政府、聯合國體系、國際的 NGO 和在地組織，跨越國界一起合作。畫面中間是一顆地球，四個角落各有一個合作的夥伴，用線連到地球，代表大家一起透過全球合作，共同面對難民、災難、疾病和氣候這些需要跨國一起處理的問題">';
+        s += '<text x="150" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + SU + '">國際合作：跨國一起面對</text>';
+        var gx = 150, gy = 96, gr = 28;
+        var nodes = [
+            ['各國政府', 66, 52], ['聯合國體系', 234, 52], ['國際 NGO', 66, 140], ['在地組織', 234, 140]
+        ];
+        for (var i = 0; i < 4; i++) {
+            var nx = nodes[i][1], ny = nodes[i][2];
+            var dx = gx - nx, dy = gy - ny, d = Math.sqrt(dx * dx + dy * dy);
+            var ux = dx / d, uy = dy / d;
+            var x1 = (nx + ux * 7).toFixed(1), y1 = (ny + uy * 7).toFixed(1);
+            var x2 = (gx - ux * gr).toFixed(1), y2 = (gy - uy * gr).toFixed(1);
+            s += '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="' + MUT + '" stroke-width="1.4" stroke-dasharray="4 3" opacity="0.7"/>';
+        }
+        s += '<circle cx="' + gx + '" cy="' + gy + '" r="' + gr + '" fill="' + SKY + '" opacity="0.16"/>';
+        s += '<circle cx="' + gx + '" cy="' + gy + '" r="' + gr + '" fill="none" stroke="' + SKY + '" stroke-width="1.6"/>';
+        s += '<text x="' + gx + '" y="' + (gy + 8) + '" text-anchor="middle" font-size="22">🌍</text>';
+        for (var j = 0; j < 4; j++) {
+            var px = nodes[j][1], py = nodes[j][2];
+            s += '<circle cx="' + px + '" cy="' + py + '" r="7" fill="' + SU + '" opacity="0.5"/>';
+            var al = px < gx ? 'end' : 'start';
+            var tx = px < gx ? px - 10 : px + 10;
+            s += '<text x="' + tx + '" y="' + (py + 3) + '" text-anchor="' + al + '" font-size="9" font-weight="700" fill="currentColor">' + nodes[j][0] + '</text>';
+        }
+        s += '<text x="150" y="180" text-anchor="middle" font-size="9" fill="currentColor">一起面對：難民 ・ 災難 ・ 疾病 ・ 氣候</text>';
+        s += '<text x="150" y="193" text-anchor="middle" font-size="8.5" fill="' + MUT + '">跨越國界，各國與組織合作處理共同問題。</text>';
+        return s + '</svg>';
+    }
+    // G3 teach3：學生參與全球議題的三步——了解議題→理性討論→適度參與（箭頭止於框緣）。
+    function studentAction() {
+        var s = '<svg viewBox="0 0 300 182" role="img" aria-label="身為學生，想參與全球議題可以這樣開始。第一步先了解議題，去讀可信的資訊。第二步理性討論，聽聽不同的意見。第三步適度參與，像是參加校內的公益活動或當志工。這三步做下來，世界就會因此多一點好">';
+        s += '<text x="150" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + SU + '">小公民可以這樣開始</text>';
+        var steps = [
+            ['📖', '了解議題', '讀可信的資訊'], ['💬', '理性討論', '聽不同意見'], ['🙌', '適度參與', '校內公益・志工']
+        ];
+        for (var i = 0; i < 3; i++) {
+            var x = 14 + i * 94;
+            s += '<rect x="' + x + '" y="40" width="84" height="56" rx="10" fill="' + GREEN + '" opacity="0.1"/>';
+            s += '<rect x="' + x + '" y="40" width="84" height="56" rx="10" fill="none" stroke="' + GREEN + '" stroke-width="1.3"/>';
+            s += '<text x="' + (x + 42) + '" y="64" text-anchor="middle" font-size="18">' + steps[i][0] + '</text>';
+            s += '<text x="' + (x + 42) + '" y="80" text-anchor="middle" font-size="9.5" font-weight="800" fill="' + GREEN + '">' + steps[i][1] + '</text>';
+            s += '<text x="' + (x + 42) + '" y="92" text-anchor="middle" font-size="7.8" fill="currentColor">' + steps[i][2] + '</text>';
+            if (i < 2)
+                s += '<path d="M' + (x + 84) + ' 68 L' + (x + 94) + ' 68" stroke="' + GREEN + '" stroke-width="2" marker-end="url(#sad)"/>';
+        }
+        s += '<text x="150" y="124" text-anchor="middle" font-size="10" font-weight="700" fill="' + SU + '">→ 世界因此多一點好 🌍</text>';
+        s += '<text x="150" y="150" text-anchor="middle" font-size="9" fill="' + MUT + '">從力所能及的事開始，就是最好的參與。</text>';
+        s += '<defs><marker id="sad" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="' + GREEN + '"/></marker></defs>';
+        return s + '</svg>';
+    }
     window.CONCEPT = {
         progKey: 'world_affairs_concepts_v1', practiceHref: '',
         lessons: [
@@ -599,6 +805,126 @@
                         answer: 0,
                         why: '多元世界強調互相尊重與理解差異，先好奇、理解脈絡，才能真正和世界接軌。',
                         whyWrong: { 1: '覺得只有自己的文化對、別人都錯，是偏見，無法真正理解世界。', 2: '嘲笑和自己不一樣的人會傷害別人，也看不見對方真實的樣子。', 3: '完全不想了解，就會一直停在誤會裡，無法跟世界接軌。' }
+                    }
+                ]
+            },
+            // ===== lesson 群組 2：全球議題縱深（glob_）— 難民／貧富差距／NGO =====================
+            {
+                id: 'glob_refugee', name: '難民與移動', emoji: '🧳', color: SU,
+                sub: '難民是被迫離家、尋求安全的人；理解而非指責',
+                done: '記住：難民是因為戰爭、迫害或災難，被迫離開家園、尋求安全的人，和「自由選擇」移動的一般移民不同。他們常要面對安置、語言、工作與身心照顧的挑戰；國際上也有組織與公約一起保護難民。面對難民議題，用理解與尊重人權的態度，勝過指責。難民是被迫離家的人，理解勝過指責。',
+                steps: [
+                    {
+                        type: 'teach', kicker: '什麼是難民', title: '難民：被迫離開家園的人',
+                        svg: animCanvas(300, 196, '世界地圖定位動畫：一張只畫七大洲色塊與海洋、完全不含國界的風格化世界地圖。動畫會依序掉下定位針並脈動光環，示意難民因戰爭、迫害或災難，被迫從原本的家園跨越邊界、移動到鄰近的安全地（皆為假想地點），幫你理解難民是被迫移動、尋求安全的人。'),
+                        mount: function (host) {
+                            var h = window.Anim.worldLocator(host, {
+                                cycle: true,
+                                caption: '難民被迫離開家園，跨越邊界到鄰近安全地（假想情境）',
+                                pins: [
+                                    { xFrac: 0.30, yFrac: 0.40, label: '原本的家園' },
+                                    { xFrac: 0.60, yFrac: 0.40, label: '鄰近安全地' }
+                                ]
+                            });
+                            return function () { h.stop(); };
+                        },
+                        text: '<b>難民</b>和一般<b>移民</b>不一樣。一般移民是為了讀書、工作等原因<b>自由選擇</b>搬到別的地方；<b>難民</b>則是因為<b>戰爭、迫害或災難</b>，<b>被迫</b>離開自己的家園，到別的地方<b>尋求安全</b>。看動畫：他們常常要<b>跨越邊界</b>，從原本的家園移動到<b>鄰近的安全地</b>（這裡用<b>假想</b>的地點示意）。記得：他們不是去旅遊或留學，而是為了<b>活下去、求安全</b>。'
+                    },
+                    {
+                        type: 'teach', kicker: '不容易的開始', title: '到了新地方，面臨許多挑戰',
+                        svg: refugeeChallenges(),
+                        text: '被迫離開家園、來到陌生的地方，重新生活並<b>不容易</b>。難民常會遇到四種挑戰：要找到安全的<b>住處（安置）</b>、<b>語言</b>要重新適應、重新<b>找工作</b>與收入、還有經歷過辛苦後的<b>身心照顧</b>。這些都需要<b>時間</b>，也需要周圍的人與社會給予<b>理解與支持</b>。'
+                    },
+                    {
+                        type: 'teach', kicker: '不是孤單的', title: '國際上有人一起保護難民',
+                        svg: refugeeProtection(),
+                        text: '難民並<b>不是孤單</b>面對這一切。國際上有許多<b>組織</b>，也有大家共同約定的<b>公約</b>，像一把<b>保護傘</b>，一起幫忙<b>安置與照顧</b>難民、<b>保障</b>他們的<b>安全與人權</b>。面對難民議題，比較合適的態度是<b>理解</b>他們的處境、<b>尊重</b>人權，而不是<b>指責</b>他們為什麼要離開——因為他們和我們一樣，都只是想要<b>安全的生活</b>。'
+                    },
+                    {
+                        type: 'quiz', kicker: '換你試試', title: '「難民」和一般「移民」最主要的差別是？',
+                        options: ['難民是被迫離開家園尋求安全，不是自由選擇', '完全一樣', '難民是去旅遊', '難民是去留學'],
+                        answer: 0,
+                        why: '難民因戰爭、迫害或災難被迫離開，處境特殊，需要保護與協助；一般移民多是自由選擇移動。',
+                        whyWrong: { 1: '難民和一般移民並不「完全一樣」——難民是被迫離開，移民多是自由選擇。', 2: '難民不是去旅遊，而是為了逃離危險、尋求安全。', 3: '難民不是去留學，而是因戰爭、迫害或災難被迫離開家園。' }
+                    },
+                    {
+                        type: 'quiz', kicker: '想一想', title: '面對難民議題，比較合適的態度是？',
+                        options: ['理解他們的處境、尊重其人權', '指責他們為什麼要離開', '覺得與自己無關', '嘲笑他們'],
+                        answer: 0,
+                        why: '以理解他們的處境、尊重人權的態度看待難民，是面對難民議題合適的方式。',
+                        whyWrong: { 1: '指責他們為什麼要離開，忽略了他們是「被迫」離開、處境艱難。', 2: '難民議題關係到許多人的安全與人權，不該覺得與自己完全無關。', 3: '嘲笑別人的苦難並不恰當，也看不見他們真實的處境。' }
+                    }
+                ]
+            },
+            {
+                id: 'glob_inequality', name: '貧富差距', emoji: '📊', color: SU,
+                sub: '財富與機會分配不均；成因複雜，教育與機會是關鍵',
+                done: '記住：世界與各國內部都存在貧富差距，也就是財富與機會分配不平均。它的成因很複雜——教育、工作機會、健康、地區發展、歷史因素等交織在一起，不能簡化成單一原因，也不該歸咎個人。改善的方向包括擴大教育與機會、建立社會安全網與公平制度；沒有單一答案，但人人都可以關心。差距成因複雜，機會與教育是關鍵。',
+                steps: [
+                    {
+                        type: 'teach', kicker: '不平均的分配', title: '財富與機會，分配並不平均',
+                        svg: wealthLadder(),
+                        text: '不管是整個<b>世界</b>，還是一個<b>國家裡面</b>，<b>財富</b>和<b>機會</b>的分配都<b>不平均</b>——這就是<b>貧富差距</b>。看圖的比喻：往上爬需要一些<b>「墊腳石」</b>，像<b>教育、健康、工作機會、地區發展</b>。有的人<b>墊腳石比較多</b>，比較容易往上；有的人<b>比較少</b>，就比較難。兩個人高度的<b>落差</b>，就是差距的樣子。'
+                    },
+                    {
+                        type: 'teach', kicker: '為什麼會這樣', title: '成因複雜：多種因素交織',
+                        svg: inequalityCauses(),
+                        text: '貧富差距<b>為什麼</b>會發生？原因<b>很複雜</b>，是許多因素<b>交織</b>在一起造成的：<b>教育機會、工作機會、健康、地區發展、歷史因素</b>……彼此影響。所以它是一個<b>結構性</b>的問題，<b>不能</b>簡化成「某個人懶惰」這種<b>單一原因</b>，也<b>不該歸咎個人</b>。看清成因複雜，才能理性討論。'
+                    },
+                    {
+                        type: 'teach', kicker: '可以怎麼改善', title: '努力的方向：機會與公平',
+                        svg: inequalitySolutions(),
+                        text: '雖然沒有<b>單一答案</b>，但有一些常見的<b>努力方向</b>：<b>擴大教育與學習的機會</b>、建立照顧需要幫助的人的<b>社會安全網</b>、以及讓機會更公平的<b>公平制度</b>。這些方向都指向同一件事——<b>讓更多人有機會</b>，差距就能<b>慢慢縮小</b>。這件事<b>人人都可以關心</b>，從理解與討論開始。'
+                    },
+                    {
+                        type: 'quiz', kicker: '換你試試', title: '關於貧富差距的成因，下列何者較正確？',
+                        options: ['成因複雜，教育、工作、健康、地區發展等交織', '純粹因為窮人懶惰', '只跟運氣有關', '跟教育完全無關'],
+                        answer: 0,
+                        why: '貧富差距是教育、工作、健康、地區發展等多重因素交織的結構性議題，不能簡化成單一原因或歸咎個人。',
+                        whyWrong: { 1: '把貧窮簡化成「窮人懶惰」，忽略了教育、機會、地區等結構性因素，並不正確。', 2: '差距不是「只跟運氣有關」，而是多種社會因素長期交織的結果。', 3: '教育機會其實和貧富差距關係密切，說「跟教育完全無關」並不對。' }
+                    },
+                    {
+                        type: 'quiz', kicker: '想一想', title: '下列哪一項較可能幫助縮小貧富差距？',
+                        options: ['讓更多人獲得教育與公平的機會', '讓機會更集中在少數人', '取消所有學校', '什麼都不做'],
+                        answer: 0,
+                        why: '擴大教育與機會、建立社會安全網與公平制度，是改善貧富差距的常見方向。',
+                        whyWrong: { 1: '讓機會更集中在少數人，只會讓差距更大，不是縮小。', 2: '取消所有學校會讓更多人失去教育機會，反而擴大差距。', 3: '什麼都不做，差距不會自己縮小，問題可能持續。' }
+                    }
+                ]
+            },
+            {
+                id: 'glob_ngo', name: 'NGO 與國際合作', emoji: '🤝', color: SU,
+                sub: '民間自發為公益；國際合作；學生也能參與',
+                done: '記住：NGO（非政府組織）由民間自發成立、不以營利為主，投入人道、環境、教育、醫療等公益；各國與組織還會透過國際合作，一起面對難民、災難、疾病、氣候等跨國問題。身為學生，可以從了解議題、理性討論、參與校內公益或志工開始。了解、討論、參與——世界因此多一點好。',
+                steps: [
+                    {
+                        type: 'teach', kicker: '什麼是 NGO', title: 'NGO：民間自發、為公益',
+                        svg: ngoDomains(),
+                        text: '<b>NGO</b> 是<b>非政府組織</b>（Non-Governmental Organization）的縮寫。它<b>不是</b>政府的部門，也<b>不是</b>以賺錢為主的公司，而是由<b>民間自發</b>成立、<b>不以營利為主</b>、為了<b>公益</b>而行動的組織。NGO 投入很多<b>不同領域</b>：<b>人道救援、環境保護、醫療、教育</b>……都是為了讓世界<b>更好</b>一點。'
+                    },
+                    {
+                        type: 'teach', kicker: '一起面對', title: '國際合作：跨國一起處理',
+                        svg: globalCooperation(),
+                        text: '有些問題<b>一個國家</b>很難獨自解決——像<b>難民、災難、疾病、氣候</b>。這時就需要<b>國際合作</b>：<b>各國政府</b>、<b>聯合國體系</b>、<b>國際的 NGO</b> 和<b>在地組織</b>，<b>跨越國界</b>一起合作、分工幫忙。看圖：大家都連到中間的<b>地球</b>，代表<b>一起</b>面對共同的問題。世界是<b>連在一起</b>的，合作才走得遠。'
+                    },
+                    {
+                        type: 'teach', kicker: '我也能參與', title: '小公民可以這樣開始',
+                        svg: studentAction(),
+                        text: '關心全球議題，<b>不用等長大</b>，<b>學生</b>現在就能開始。三個簡單的步驟：先<b>了解議題</b>（去讀<b>可信的資訊</b>）→ <b>理性討論</b>（聽聽<b>不同的意見</b>）→ <b>適度參與</b>（像參加<b>校內公益</b>活動或當<b>志工</b>）。從<b>力所能及</b>的小事開始，世界就會因此<b>多一點好</b>。'
+                    },
+                    {
+                        type: 'quiz', kicker: '換你試試', title: 'NGO（非政府組織）主要是？',
+                        options: ['民間自發、為公益行動的組織', '政府的一個部門', '營利為主的公司', '一種遊戲'],
+                        answer: 0,
+                        why: 'NGO 由民間自發成立，投入人道、環境、教育、醫療等公益，不以營利為主要目的，也不是政府部門。',
+                        whyWrong: { 1: 'NGO 是「非政府」組織，不是政府的部門。', 2: 'NGO 不以營利為主要目的，和以賺錢為主的公司不同。', 3: 'NGO 是真實投入公益的組織，不是一種遊戲。' }
+                    },
+                    {
+                        type: 'quiz', kicker: '想一想', title: '身為學生，想參與全球議題可以怎麼開始？',
+                        options: ['了解議題、理性討論、參與校內公益或志工', '等長大再說', '覺得與自己無關', '只在網路上罵人'],
+                        answer: 0,
+                        why: '從了解議題、理性討論開始，再參與力所能及的校內公益或志工，是學生關心全球議題的合適起點。',
+                        whyWrong: { 1: '「等長大再說」會錯過現在就能做的事，了解與參與不用等長大。', 2: '全球議題和每個人都有關，不該覺得與自己無關。', 3: '只在網路上罵人無助於解決問題，理性討論才有幫助。' }
                     }
                 ]
             }

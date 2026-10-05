@@ -170,6 +170,146 @@ function lawRevise() {
     '</defs></svg>';
 }
 
+// ---- core-argument-structure（L4–L5）／core-fact-vs-opinion（L6–L7）新增的檔案區域 SVG helper ----
+// 動畫課複用 window.Anim.argFlow（L4 highlightIndicators、L5 counter）與 fallacySpotlight（L7），不改場景；
+// 其餘 teach step 以下列 static SVG（每步都有視覺、連接線止於框緣、<text> 不含內嵌 <b>/<i>、以 currentColor 支援深色）。
+
+// L4 teach2：論證＝用前提（理由）支持結論；先找結論（主張）、再找前提。
+function premiseConcl() {
+  return '<svg viewBox="0 0 300 186" role="img" aria-label="論證就是用前提支持結論：上面是結論（主張）我要帶傘，下面是前提（理由）今天會下雨，前提用箭頭往上支持結論；讀的時候先找結論，再找支持它的前提">' +
+    '<text x="150" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + SU + '">論證＝用前提（理由）支持結論</text>' +
+    '<rect x="68" y="30" width="164" height="44" rx="10" fill="' + SU + '" opacity="0.12"/>' +
+    '<rect x="68" y="30" width="164" height="44" rx="10" fill="none" stroke="' + SU + '" stroke-width="1.6"/>' +
+    '<text x="150" y="48" text-anchor="middle" font-size="10.5" font-weight="700" fill="' + SU + '">結論（主張）</text>' +
+    '<text x="150" y="65" text-anchor="middle" font-size="11.5" fill="currentColor">我要帶傘</text>' +
+    '<path d="M150 120 L150 76" stroke="' + OK + '" stroke-width="2.4" marker-end="url(#rpc)"/>' +
+    '<text x="186" y="100" text-anchor="middle" font-size="10" fill="' + MUT + '">支持</text>' +
+    '<rect x="68" y="120" width="164" height="44" rx="10" fill="' + OK + '" opacity="0.12"/>' +
+    '<rect x="68" y="120" width="164" height="44" rx="10" fill="none" stroke="' + OK + '" stroke-width="1.6"/>' +
+    '<text x="150" y="138" text-anchor="middle" font-size="10.5" font-weight="700" fill="' + OK + '">前提（理由）</text>' +
+    '<text x="150" y="155" text-anchor="middle" font-size="11.5" fill="currentColor">今天會下雨</text>' +
+    '<text x="150" y="180" text-anchor="middle" font-size="10.5" fill="' + MUT + '">先找「結論」（主張），再找支持它的「前提」。</text>' +
+    '<defs><marker id="rpc" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="' + OK + '"/></marker></defs>' +
+    '</svg>';
+}
+
+// L5 teach2：隱藏假設＝前提與結論之間沒說出口、卻被偷偷當理由的那一步。
+function hiddenPremise() {
+  return '<svg viewBox="0 0 300 192" role="img" aria-label="有些前提沒說出口（隱藏假設）：論證他是運動員所以他身體健康，中間藏著一個沒說出口的假設運動員都健康，用虛線框標出；把它找出來就看見漏洞">' +
+    '<text x="150" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + AMBER + '">隱藏假設：沒說出口的前提</text>' +
+    '<rect x="8" y="52" width="84" height="52" rx="9" fill="' + SU + '" opacity="0.12"/>' +
+    '<rect x="8" y="52" width="84" height="52" rx="9" fill="none" stroke="' + SU + '" stroke-width="1.5"/>' +
+    '<text x="50" y="70" text-anchor="middle" font-size="9.5" font-weight="700" fill="' + SU + '">前提（說出口）</text>' +
+    '<text x="50" y="88" text-anchor="middle" font-size="11" fill="currentColor">他是運動員</text>' +
+    '<rect x="108" y="46" width="84" height="64" rx="9" fill="' + AMBER + '" opacity="0.12" stroke="' + AMBER + '" stroke-width="1.5" stroke-dasharray="5 4"/>' +
+    '<text x="150" y="64" text-anchor="middle" font-size="9.5" font-weight="700" fill="' + AMBER + '">隱藏假設</text>' +
+    '<text x="150" y="82" text-anchor="middle" font-size="10.5" fill="currentColor">運動員</text>' +
+    '<text x="150" y="97" text-anchor="middle" font-size="10.5" fill="currentColor">都健康？</text>' +
+    '<rect x="208" y="52" width="84" height="52" rx="9" fill="' + OK + '" opacity="0.12"/>' +
+    '<rect x="208" y="52" width="84" height="52" rx="9" fill="none" stroke="' + OK + '" stroke-width="1.5"/>' +
+    '<text x="250" y="70" text-anchor="middle" font-size="9.5" font-weight="700" fill="' + OK + '">結論</text>' +
+    '<text x="250" y="88" text-anchor="middle" font-size="11" fill="currentColor">他身體健康</text>' +
+    '<path d="M92 78 L108 78" stroke="' + MUT + '" stroke-width="2" marker-end="url(#rhp)"/>' +
+    '<path d="M192 78 L208 78" stroke="' + MUT + '" stroke-width="2" marker-end="url(#rhp)"/>' +
+    '<text x="150" y="134" text-anchor="middle" font-size="10.5" fill="' + WARN + '">運動員不一定都健康 → 這個假設一戳就破。</text>' +
+    '<text x="150" y="156" text-anchor="middle" font-size="10.5" fill="currentColor">把沒說出口的前提攤開，常常就看見論證的漏洞。</text>' +
+    '<text x="150" y="178" text-anchor="middle" font-size="10" fill="' + MUT + '">隱藏假設，常是一個論證最弱的一環。</text>' +
+    '<defs><marker id="rhp" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="' + MUT + '"/></marker></defs>' +
+    '</svg>';
+}
+
+// L6 teach1：分類器——句子落入「事實（可查證真假）」與「意見（個人判斷或喜好）」兩個桶。
+function factOpinionSort() {
+  var s = '<svg viewBox="0 0 300 206" role="img" aria-label="把句子分到兩個桶：事實桶（可以查證真假）放水在100度沸騰、台北是台灣的城市；意見桶（個人判斷或喜好）放這首歌最好聽、夏天比冬天好">';
+  s += '<text x="150" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + SU + '">兩個桶：事實 vs 意見</text>';
+  s += '<rect x="10" y="26" width="136" height="156" rx="10" fill="' + OK + '" opacity="0.07"/>';
+  s += '<rect x="10" y="26" width="136" height="156" rx="10" fill="none" stroke="' + OK + '" stroke-width="1.5"/>';
+  s += '<text x="78" y="44" text-anchor="middle" font-size="11" font-weight="800" fill="' + OK + '">事實</text>';
+  s += '<text x="78" y="59" text-anchor="middle" font-size="9" fill="' + MUT + '">可以查證真假</text>';
+  var fcards = ['水在 100°C 沸騰', '台北是台灣的城市'];
+  for (var i = 0; i < 2; i++) {
+    var fy = 70 + i * 54;
+    s += '<rect x="20" y="' + fy + '" width="116" height="46" rx="8" fill="' + OK + '" opacity="0.12"/>';
+    s += '<rect x="20" y="' + fy + '" width="116" height="46" rx="8" fill="none" stroke="' + OK + '" stroke-width="1.2"/>';
+    s += '<text x="78" y="' + (fy + 28) + '" text-anchor="middle" font-size="10" fill="currentColor">' + fcards[i] + '</text>';
+  }
+  s += '<rect x="154" y="26" width="136" height="156" rx="10" fill="' + AMBER + '" opacity="0.07"/>';
+  s += '<rect x="154" y="26" width="136" height="156" rx="10" fill="none" stroke="' + AMBER + '" stroke-width="1.5"/>';
+  s += '<text x="222" y="44" text-anchor="middle" font-size="11" font-weight="800" fill="' + AMBER + '">意見</text>';
+  s += '<text x="222" y="59" text-anchor="middle" font-size="9" fill="' + MUT + '">個人判斷或喜好</text>';
+  var ocards = ['這首歌最好聽', '夏天比冬天好'];
+  for (var j = 0; j < 2; j++) {
+    var oy = 70 + j * 54;
+    s += '<rect x="164" y="' + oy + '" width="116" height="46" rx="8" fill="' + AMBER + '" opacity="0.12"/>';
+    s += '<rect x="164" y="' + oy + '" width="116" height="46" rx="8" fill="none" stroke="' + AMBER + '" stroke-width="1.2"/>';
+    s += '<text x="222" y="' + (oy + 28) + '" text-anchor="middle" font-size="10" fill="currentColor">' + ocards[j] + '</text>';
+  }
+  s += '<text x="150" y="200" text-anchor="middle" font-size="10" fill="' + MUT + '">事實＝查得到真假；意見＝個人判斷，無所謂真假。</text>';
+  return s + '</svg>';
+}
+
+// L6 teach2：事實『類』 ≠ 正確——能查證真假者皆為事實類（含為假的）；意見無真假、但有沒有道理之分。
+function factTypeNotCorrect() {
+  return '<svg viewBox="0 0 300 192" role="img" aria-label="事實類不等於正確：地球是平的可以查證真假（結果是假），所以它是事實類陳述只是不正確；意見像這首歌最好聽無所謂真假，但可以有沒有道理之分">' +
+    '<text x="150" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + WARN + '">事實『類』 ≠ 正確</text>' +
+    '<rect x="14" y="28" width="150" height="46" rx="9" fill="' + SU + '" opacity="0.1"/>' +
+    '<rect x="14" y="28" width="150" height="46" rx="9" fill="none" stroke="' + SU + '" stroke-width="1.5"/>' +
+    '<text x="89" y="45" text-anchor="middle" font-size="9" fill="' + MUT + '">事實類（可查證）</text>' +
+    '<text x="89" y="63" text-anchor="middle" font-size="11" fill="currentColor">地球是平的</text>' +
+    '<path d="M164 51 L196 51" stroke="' + WARN + '" stroke-width="2" marker-end="url(#rft)"/>' +
+    '<rect x="198" y="30" width="88" height="42" rx="9" fill="' + WARN + '" opacity="0.1"/>' +
+    '<rect x="198" y="30" width="88" height="42" rx="9" fill="none" stroke="' + WARN + '" stroke-width="1.5"/>' +
+    '<text x="242" y="48" text-anchor="middle" font-size="10" fill="' + WARN + '">查證結果</text>' +
+    '<text x="242" y="64" text-anchor="middle" font-size="11" font-weight="700" fill="' + WARN + '">假 ✗</text>' +
+    '<text x="150" y="92" text-anchor="middle" font-size="10" fill="currentColor">能被查證真假（結果為假）→ 仍是「事實類」，只是不正確。</text>' +
+    '<line x1="20" y1="106" x2="280" y2="106" stroke="' + MUT + '" stroke-width="1" opacity="0.35"/>' +
+    '<rect x="14" y="118" width="150" height="46" rx="9" fill="' + AMBER + '" opacity="0.1"/>' +
+    '<rect x="14" y="118" width="150" height="46" rx="9" fill="none" stroke="' + AMBER + '" stroke-width="1.5"/>' +
+    '<text x="89" y="135" text-anchor="middle" font-size="9" fill="' + MUT + '">意見</text>' +
+    '<text x="89" y="153" text-anchor="middle" font-size="11" fill="currentColor">這首歌最好聽</text>' +
+    '<text x="222" y="135" text-anchor="middle" font-size="10" fill="' + AMBER + '">無所謂真假</text>' +
+    '<text x="222" y="153" text-anchor="middle" font-size="10" fill="' + MUT + '">但有沒有道理之分</text>' +
+    '<text x="150" y="182" text-anchor="middle" font-size="10.5" fill="' + MUT + '">事實句不等於「正確的句子」；意見無真假，但有沒有道理。</text>' +
+    '<defs><marker id="rft" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="' + WARN + '"/></marker></defs>' +
+    '</svg>';
+}
+
+// L6 teach3：有人不同意 ≠ 它就是意見——能用證據定真假的仍是事實類。
+function disagreeNotOpinion() {
+  return '<svg viewBox="0 0 300 178" role="img" aria-label="有人不同意不等於它就是意見：像地球繞著太陽轉，就算有人反對，它仍然能用證據判定真假，所以還是事實類；判斷是不是意見要看能不能用證據定真假，不是看有沒有人反對">' +
+    '<text x="150" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + SU + '">「有人不同意」≠ 就是意見</text>' +
+    '<rect x="80" y="28" width="140" height="42" rx="10" fill="' + SU + '" opacity="0.12"/>' +
+    '<rect x="80" y="28" width="140" height="42" rx="10" fill="none" stroke="' + SU + '" stroke-width="1.6"/>' +
+    '<text x="150" y="54" text-anchor="middle" font-size="11" fill="currentColor">地球繞著太陽轉</text>' +
+    '<text x="56" y="92" text-anchor="middle" font-size="10" fill="' + WARN + '">有人說：才不是！</text>' +
+    '<text x="244" y="92" text-anchor="middle" font-size="10" fill="' + WARN + '">有人反對</text>' +
+    '<rect x="60" y="104" width="180" height="30" rx="8" fill="' + OK + '" opacity="0.12"/>' +
+    '<rect x="60" y="104" width="180" height="30" rx="8" fill="none" stroke="' + OK + '" stroke-width="1.4"/>' +
+    '<text x="150" y="123" text-anchor="middle" font-size="10" font-weight="700" fill="' + OK + '">能用證據判定真假 → 仍是「事實類」</text>' +
+    '<text x="150" y="156" text-anchor="middle" font-size="10.5" fill="' + MUT + '">看「能不能用證據定真假」，不是看「有沒有人反對」。</text>' +
+    '<text x="150" y="172" text-anchor="middle" font-size="10" fill="' + MUT + '">有爭議的事實，還是事實。</text>' +
+    '</svg>';
+}
+
+// L7 teach2：意見也分高下——加上理由＋證據，純偏好才升級為「有根據的意見」；看理由，不看聲音大小或人氣。
+function opinionLadder() {
+  return '<svg viewBox="0 0 300 192" role="img" aria-label="意見也分高下：下層是純偏好我就是喜歡沒為什麼，較難參考；上層是有根據的意見這樣比較好因為有理由加事實，較值得參考；中間箭頭是加上理由與證據；評估意見看背後的理由，不是看聲音大小或人氣">' +
+    '<text x="150" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="' + SU + '">意見也分高下</text>' +
+    '<rect x="40" y="26" width="220" height="48" rx="10" fill="' + OK + '" opacity="0.12"/>' +
+    '<rect x="40" y="26" width="220" height="48" rx="10" fill="none" stroke="' + OK + '" stroke-width="1.6"/>' +
+    '<text x="150" y="43" text-anchor="middle" font-size="10.5" font-weight="700" fill="' + OK + '">有根據的意見（較值得參考）</text>' +
+    '<text x="150" y="62" text-anchor="middle" font-size="10.5" fill="currentColor">「這樣比較好，因為…（理由＋事實）」</text>' +
+    '<path d="M150 120 L150 78" stroke="' + SU + '" stroke-width="2.4" marker-end="url(#rol)"/>' +
+    '<text x="200" y="100" text-anchor="middle" font-size="9.5" fill="' + MUT + '">加上理由＋證據</text>' +
+    '<rect x="40" y="120" width="220" height="48" rx="10" fill="' + MUT + '" opacity="0.1"/>' +
+    '<rect x="40" y="120" width="220" height="48" rx="10" fill="none" stroke="' + MUT + '" stroke-width="1.6"/>' +
+    '<text x="150" y="137" text-anchor="middle" font-size="10.5" font-weight="700" fill="' + MUT + '">純偏好（較難參考）</text>' +
+    '<text x="150" y="156" text-anchor="middle" font-size="10.5" fill="currentColor">「我就是喜歡，沒為什麼」</text>' +
+    '<text x="150" y="186" text-anchor="middle" font-size="10.5" fill="' + MUT + '">評估意見看「背後的理由」，不看聲音大小或人氣。</text>' +
+    '<defs><marker id="rol" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="' + SU + '"/></marker></defs>' +
+    '</svg>';
+}
+
 window.CONCEPT = { progKey: 'reasoning_concepts_v1', practiceHref: 'logic_reasoning.html', lessons: [
   {
     id: 'rc_deduction',
@@ -288,6 +428,158 @@ window.CONCEPT = { progKey: 'reasoning_concepts_v1', practiceHref: 'logic_reason
         answer: 0,
         why: '只用三個同學（樣本太小、又不具代表性）就推論「全班都不守時」，是歸納得太草率——這就是以偏概全的壞歸納。',
         whyWrong: { 1: '演繹要有能保證結論的通則前提；這裡只有幾個例子硬推全體，是歸納、而且推得太草率，不是正確的演繹。', 2: '訴諸權威是搬出名人或專家當理由；這句話沒有引用任何權威。', 3: '假兩難是把選項硬塞成二選一；這題沒有限縮選項。' }
+      }
+    ]
+  },
+  {
+    id: 'rc_argstruct_premise',
+    name: '拆解論證',
+    emoji: '🧩',
+    color: SU,
+    sub: '找出前提與結論（因為…所以…）',
+    done: '記住這句：論證＝用前提（理由）支持一個結論。先找「結論」（主張），再找支持它的「前提」；「因為／由於／既然」後面通常是前提，「所以／因此／可見」後面通常是結論。拆出結構，才能進一步問前提真不真、能不能真正支持結論。',
+    steps: [
+      {
+        type: 'teach', kicker: '先看動畫', title: '把一句話拆成前提與結論',
+        svg: animCanvas(300, 216, '論證流（標指示詞）：左欄前提卡「今天會下雨」標著「因為」，用實線箭頭流入右側結論卡「我要帶傘」、標著「所以」，示範怎麼用指示詞拆出前提與結論。'),
+        mount: function (host) { var h = window.Anim.argFlow(host, { mode: 'deduction', highlightIndicators: true, premises: [{ text: '今天會下雨' }], conclusion: { text: '我要帶傘' } }); return function () { h.stop(); }; },
+        text: '看動畫：「<b>因為</b>今天會下雨，<b>所以</b>我要帶傘。」一個<b>論證</b>就是用<b>前提</b>（理由）去支持一個<b>結論</b>（主張）。前提卡上標了「<b>因為</b>」、結論卡上標了「<b>所以</b>」——這些就是<b>指示詞</b>：「因為／由於／既然」常引出<b>前提</b>，「所以／因此／可見」常引出<b>結論</b>。看到指示詞，就能快速把一句話拆成前提和結論。'
+      },
+      {
+        type: 'teach', kicker: '怎麼拆', title: '先找結論，再找前提',
+        svg: premiseConcl(),
+        text: '拆論證有個順序：<b>先找結論</b>（整段話想說服你接受的那個<b>主張</b>），<b>再找前提</b>（用來支持結論的<b>理由</b>）。像上圖，「我要帶傘」是結論，「今天會下雨」是支持它的前提。把結構拆出來以後，才有辦法進一步問：這些前提<b>是真的嗎</b>？它們<b>真的能支持</b>這個結論嗎？這一步，正是判斷一個論證好不好的開始。'
+      },
+      {
+        type: 'quiz', kicker: '換你試試',
+        title: '「因為今天會下雨，所以我要帶傘。」這段話的結論是哪一句？',
+        options: ['我要帶傘', '今天會下雨', '兩句都是前提', '這段話沒有結論'],
+        answer: 0,
+        why: '「所以」後面的「我要帶傘」是結論（想說服你接受的主張）；「因為」後面的「今天會下雨」是支持它的前提。',
+        whyWrong: { 1: '「今天會下雨」前面有指示詞「因為」，是支持結論的前提，不是結論。', 2: '這段話明明有一個主張（我要帶傘）當結論，不是兩句都是前提。', 3: '「所以」帶出的「我要帶傘」就是結論，怎麼會沒有結論。' }
+      },
+      {
+        type: 'quiz', kicker: '換你試試',
+        title: '要判斷一個論證好不好，正確的順序是？',
+        options: ['先找出結論與前提，再看前提是否為真、是否真能支持結論', '先看這段話是誰說的', '先看字數多不多', '先看有沒有名人背書'],
+        answer: 0,
+        why: '要先把結構拆出來——哪句是結論、哪些是前提——接著才談前提是不是真的、能不能真正支持結論。先拆結構，再論真假與支持力。',
+        whyWrong: { 1: '看「是誰說的」容易變成訴諸權威或人身；論證好不好要看前提與推理，不是看說話的人。', 2: '字數多少跟論證有沒有道理無關；長篇大論也可能站不住腳。', 3: '有沒有名人背書是訴諸權威，不是判斷論證的根據。' }
+      }
+    ]
+  },
+  {
+    id: 'rc_argstruct_hidden',
+    name: '隱藏假設',
+    emoji: '🔍',
+    color: SU,
+    sub: '找出沒說出口的前提',
+    done: '記住這句：有些前提沒說出口（隱藏假設）。看看前提到結論之間是不是偷偷多跳了一步，把那個沒說出口的前提攤開來檢查，常常就看見論證的漏洞——隱藏假設往往是一個論證最弱的一環。',
+    steps: [
+      {
+        type: 'teach', kicker: '先看動畫', title: '沒說出口的那一步',
+        svg: animCanvas(300, 216, '論證流（隱藏假設）：前提卡「他是運動員」流向結論卡「他身體一定健康」，結論上方浮現一張標著隱藏假設的卡，並用紅✗把結論打叉，表示這個沒說出口的假設不一定成立。'),
+        mount: function (host) { var h = window.Anim.argFlow(host, { mode: 'induction', premises: [{ text: '他是運動員' }], conclusion: { text: '他身體一定健康' }, counter: { text: '隱藏假設', on: true, emoji: '❓' } }); return function () { h.stop(); }; },
+        text: '看動畫：「他是運動員，所以他身體<b>一定</b>健康。」這段話中間其實藏著一個<b>沒說出口的前提</b>——「<b>所有運動員都健康</b>」。這種沒講明、卻被偷偷當成理由的前提，叫做<b>隱藏假設</b>。動畫把它當成一張浮出的卡片標出來：一旦攤開來看，就會發現它<b>不一定成立</b>（真的每個運動員都健康嗎？），結論也就被打了個叉——不再被保證。'
+      },
+      {
+        type: 'teach', kicker: '怎麼找', title: '看看中間偷偷多跳了哪一步',
+        svg: hiddenPremise(),
+        text: '找隱藏假設的方法：看看<b>前提</b>和<b>結論</b>之間，是不是<b>偷偷多跳了一步</b>。像「他是運動員」要跳到「他身體健康」，中間一定假設了「<b>運動員都健康</b>」——但這個假設<b>一戳就破</b>（有的運動員也會生病、受傷）。把這個沒說出口的前提找出來、檢查它成不成立，常常就看見整個論證<b>最弱的地方</b>。'
+      },
+      {
+        type: 'quiz', kicker: '換你試試',
+        title: '「這本書很多人買，所以一定很好看。」這段話藏著哪個沒說出口的假設？',
+        options: ['「賣得好＝好看」這個假設（不一定成立）', '這本書很厚', '作者很有名', '這段話沒有任何假設'],
+        answer: 0,
+        why: '從「很多人買」要跳到「一定很好看」，中間偷偷假設了「暢銷＝品質好」。把這個隱藏前提攤開，就看出漏洞——賣得好不一定好看（這也連回「訴諸群眾」）。',
+        whyWrong: { 1: '書厚不厚這段話根本沒提，也不是它用來支持結論的隱藏前提。', 2: '作者有不有名這段話沒講，也不是這個論證偷偷假設的那一步。', 3: '正因為它偷偷假設了「暢銷＝好看」，才會從「很多人買」跳到「一定好看」，怎麼會沒有假設。' }
+      },
+      {
+        type: 'quiz', kicker: '換你試試',
+        title: '把一個論證的「隱藏假設」找出來，最大的好處是？',
+        options: ['能檢查那個沒說的前提到底成不成立，避免被唬過去', '能讓論證看起來更長', '可以從此不用證據', '跟邏輯一點關係都沒有'],
+        answer: 0,
+        why: '隱藏假設常是論證最弱的一環。把它攤開來，就能檢查它成不成立；一旦它站不住，整個論證也跟著垮——這樣就不會被含糊帶過、唬過去。',
+        whyWrong: { 1: '找隱藏假設是為了看穿漏洞，不是為了把論證拉長；長度跟對錯無關。', 2: '剛好相反——找出隱藏假設正是要用證據去檢查它成不成立。', 3: '隱藏假設就是沒說出口的前提，正是邏輯與論證的核心，關係很大。' }
+      }
+    ]
+  },
+  {
+    id: 'rc_factopinion_classify',
+    name: '事實 vs 意見',
+    emoji: '🪣',
+    color: SU,
+    sub: '可查證的是事實，個人判斷的是意見',
+    done: '記住這句：事實＝可以查證真假（含被證明為假的，如「地球是平的」仍屬事實類）；意見＝個人判斷或喜好，無所謂真假。重點在「能不能查證真假」，不是「它對不對」；「有人不同意」也不等於它就是意見。',
+    steps: [
+      {
+        type: 'teach', kicker: '分兩個桶', title: '事實＝可查證；意見＝個人判斷',
+        svg: factOpinionSort(),
+        text: '先學會分兩種句子。<b>事實</b>＝<b>可以查證真假</b>的句子，像「水在 100°C 沸騰」「台北是台灣的城市」，我們能拿證據去確認它對不對。<b>意見</b>＝<b>個人判斷或喜好</b>，像「這首歌最好聽」「夏天比冬天好」，不同人感受不同，<b>沒辦法</b>用證據判定誰對誰錯。分清楚這兩種，別人想把「意見」當「事實」塞給你時，你就看得出來。'
+      },
+      {
+        type: 'teach', kicker: '最容易搞錯', title: '事實『類』≠正確',
+        svg: factTypeNotCorrect(),
+        text: '這裡有個很重要、也很容易搞錯的點：<b>事實句不等於「正確的句子」</b>。像「地球是平的」——它<b>可以被查證真假</b>（查下去結果是<b>假</b>），所以它仍然是一句<b>事實類</b>的陳述，只是這句事實類陳述<b>剛好是錯的</b>。重點在<b>「能不能查證真假」</b>，而不是「它對不對」。相對地，<b>意見</b>（像「這首歌最好聽」）<b>無所謂真假</b>，但可以有「<b>有沒有道理</b>」之分。'
+      },
+      {
+        type: 'teach', kicker: '另一個誤會', title: '有人不同意，不代表那是意見',
+        svg: disagreeNotOpinion(),
+        text: '還有一個常見的誤會：以為「<b>有人不同意</b>」就代表那是<b>意見</b>。其實不然。像「地球繞著太陽轉」，就算歷史上<b>有人大力反對</b>，它仍然<b>能用證據判定真假</b>——所以它是<b>事實類</b>，不是意見。判斷一句話是不是意見，要看它<b>能不能用證據定真假</b>，<b>不是</b>看有沒有人反對。有爭議的事實，還是事實。'
+      },
+      {
+        type: 'quiz', kicker: '換你試試',
+        title: '下列哪一句是「意見」？',
+        options: ['「我覺得這部電影最好看」', '「這部電影片長 2 小時」', '「水結冰會變成固體」', '「台灣在亞洲」'],
+        answer: 0,
+        why: '「最好看」是個人判斷、每個人感受不同，沒辦法用證據判定誰對誰錯，所以是意見；其餘三句都能查證真假，屬於事實類。',
+        whyWrong: { 1: '片長 2 小時可以實際量、去查證真假，是事實類，不是意見。', 2: '水結冰變固體能用實驗查證真假，是事實類。', 3: '台灣在不在亞洲可以查地圖證實，是事實類，不是個人判斷。' }
+      },
+      {
+        type: 'quiz', kicker: '換你試試',
+        title: '「月球是用起司做的」這句話屬於？',
+        options: ['事實類陳述（可查證，而且是假的）', '意見', '既不是事實也不是意見', '無法分類'],
+        answer: 0,
+        why: '它可以用證據去判定真假（查下去是假的），所以是「事實類」陳述——只是不正確。再次提醒：事實類≠正確，能查證真假的就算事實類，哪怕它是錯的。',
+        whyWrong: { 1: '它不是個人喜好或判斷，而是一個能被證據判定真假的說法，所以不是意見。', 2: '凡能用證據判定真假的句子都能歸類（這裡歸「事實類、為假」），不是「既不是也不是」。', 3: '正因為它能被查證真假，所以分得出來——屬於事實類（為假），不是無法分類。' }
+      }
+    ]
+  },
+  {
+    id: 'rc_factopinion_grounded',
+    name: '意見也分高下',
+    emoji: '🗣️',
+    color: SU,
+    sub: '有根據的意見 vs 純偏好',
+    done: '記住這句：意見也分高下——拿得出事實與理由支持的「有根據的意見」，比「我就是喜歡」的純偏好更值得參考。評估一個意見，看它背後的理由與證據，不看聲音大小或人氣。',
+    steps: [
+      {
+        type: 'teach', kicker: '先看動畫', title: '有根據的意見 vs 純偏好',
+        svg: animCanvas(300, 216, '論證聚光燈（對比兩種意見）：左框是有根據的意見「這方案較好，因為…有理由加事實」，右框用紅色標出純偏好「我就是不喜歡，沒為什麼」，底部點出純偏好拿不出理由、較難參考。'),
+        mount: function (host) { var h = window.Anim.fallacySpotlight(host, { type: 'generic', title: '兩種意見：有根據 vs 純偏好', left: { label: '有根據的意見', text: '這方案較好，因為…（理由＋事實）' }, right: { label: '純偏好', text: '我就是不喜歡，沒為什麼' }, breakLabel: '純偏好：拿不出理由，只說「我就喜歡」', label: '對比兩種意見：左框有根據的意見拿得出理由與事實，右框純偏好只有好惡、說不出理由，底部點出純偏好較難拿來說服別人。' }); return function () { h.stop(); }; },
+        text: '意見和意見之間，<b>也有高下之分</b>。看動畫：左邊是<b>有根據的意見</b>——「這方案比較好，<b>因為…</b>」後面拿得出<b>理由和事實</b>；右邊用紅色標出<b>純偏好</b>——「我就是喜歡／不喜歡，<b>沒為什麼</b>」，講不出任何理由。拿得出理由與證據的意見，<b>比較值得參考</b>；只有好惡、說不出理由的純偏好，就比較難拿來說服別人。'
+      },
+      {
+        type: 'teach', kicker: '怎麼評估', title: '看理由，不看人氣與音量',
+        svg: opinionLadder(),
+        text: '所以，評估一個意見<b>值不值得聽</b>，重點不是「說的人是誰」或「多少人同意」，而是看它<b>背後有沒有理由和證據</b>撐著。純偏好（我就是喜歡）沒有對錯，但也<b>很難拿來說服別人</b>；加上<b>理由＋事實</b>，它才升級成「有根據的意見」，<b>比較值得參考</b>。記住：看<b>理由</b>，不看<b>聲音大小</b>或<b>人氣</b>。'
+      },
+      {
+        type: 'quiz', kicker: '換你試試',
+        title: '兩個人都說「應該多運動」，哪一個是「有根據的意見」？',
+        options: ['「因為研究顯示運動能增強體力、改善心情，所以應該多運動」', '「反正多運動就對了，別問那麼多」', '「大家都說要運動，你就運動」', '「我爸叫我運動的」'],
+        answer: 0,
+        why: '它拿得出事實與理由（研究顯示運動能增強體力、改善心情）來支持主張，是有根據的意見；評估意見，就看背後有沒有理由與證據。',
+        whyWrong: { 1: '「別問那麼多」正好是拒絕給理由，是純偏好或蠻幹，不是有根據的意見。', 2: '「大家都說」是訴諸群眾——人多不等於有理由，不算有根據。', 3: '「我爸叫我」是訴諸權威或聽命，不是提出理由與證據。' }
+      },
+      {
+        type: 'quiz', kicker: '換你試試',
+        title: '要判斷一個意見值不值得聽，應該看？',
+        options: ['它有沒有事實與合理理由支持', '講的人聲音大不大', '有多少人按讚', '講的人有不有名'],
+        answer: 0,
+        why: '意見的分量看它背後的理由與證據，不看人氣或音量——聲音大、人多、名氣響，都不等於有道理（這也連回訴諸群眾／權威）。',
+        whyWrong: { 1: '聲音大只是比較吵，跟意見有沒有道理無關。', 2: '按讚數是人氣，人多不代表對，這是訴諸群眾。', 3: '有不有名是名氣，拿名氣當理由是訴諸權威，不是看論點本身。' }
       }
     ]
   }
