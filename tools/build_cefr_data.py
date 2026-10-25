@@ -30,7 +30,7 @@ def sha12(text):
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, "src")
 SERIES = "cefr"
-LEVELS = ["a1", "a2", "b1"]  # A 期：站內現有；B2–C2 待 sourcing（延後）
+LEVELS = ["a1", "a2", "b1", "b2", "c1", "c2"]  # A1–B1 站內字表；B2–C2 開放清單（NGSL/AWL，review 定案）
 OVERRIDES = os.path.join(SRC, "dict_slug_overrides_cefr.json")
 AUTHORED = os.path.join(SRC, "dict_authored_cefr.json")
 US_UK = os.path.join(SRC, "dict_us_uk.json")

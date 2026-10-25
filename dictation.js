@@ -38,11 +38,11 @@
     }
     catch (e) { } }
     var accent = 'us'; // 預設 us（§2.5）；startSet 時依 currentSeries 重載
-    var scaffold = { zh: false, firstLetter: false, ipa: false };
+    var scaffold = { firstLetter: false, ipa: false };
     function loadSeriesState() {
         var a = readJSON(ACCENT_KEY(), null);
         accent = (a && a.accent === 'gb') ? 'gb' : 'us';
-        scaffold = readJSON(SCAFFOLD_KEY(), { zh: false, firstLetter: false, ipa: false });
+        scaffold = readJSON(SCAFFOLD_KEY(), { firstLetter: false, ipa: false });
     }
     function setAccent(a) { accent = (a === 'gb') ? 'gb' : 'us'; writeJSON(ACCENT_KEY(), { accent: accent }); }
     function saveScaffold() { writeJSON(SCAFFOLD_KEY(), scaffold); }
@@ -142,11 +142,12 @@
                 bonusWrap.appendChild(btn);
             });
         }
-        // 系列 A（CEFR）單字軌：A1–B1（站內字表）；B2–C2 待 sourcing（§12 OPEN-C 定案）
+        // 系列 A（CEFR）單字軌 + 例句軌：A1–B1（站內字表）、B2–C2（NGSL/AWL 開放清單）
         var cefrWrap = $('dct-cefr');
         if (cefrWrap) {
             cefrWrap.innerHTML = '';
-            [['cefr-a1', 'A1 入門'], ['cefr-a2', 'A2 基礎'], ['cefr-b1', 'B1 進階']].forEach(function (c) {
+            [['cefr-a1', 'A1 入門'], ['cefr-a2', 'A2 基礎'], ['cefr-b1', 'B1 進階'],
+                ['cefr-b2', 'B2 高階'], ['cefr-c1', 'C1 流利'], ['cefr-c2', 'C2 精通']].forEach(function (c) {
                 if (!byLevel[c[0]])
                     return;
                 var all = byLevel[c[0]] || [];
@@ -167,7 +168,7 @@
         }
     }
     function syncScaffoldToggles() {
-        [['dct-sc-firstletter', 'firstLetter'], ['dct-sc-ipa', 'ipa'], ['dct-sc-zh', 'zh']].forEach(function (p) {
+        [['dct-sc-firstletter', 'firstLetter'], ['dct-sc-ipa', 'ipa']].forEach(function (p) {
             var b = $(p[0]);
             if (!b)
                 return;
@@ -291,16 +292,6 @@
         var fl = $('dct-firstletter');
         if (fl) {
             fl.textContent = (!isSent && scaffold.firstLetter) ? ('提示：' + item.word.charAt(0) + '…') : '';
-        }
-        // 中文提示（需 zh，缺則隱藏）
-        var zh = $('dct-zh-hint');
-        if (zh) {
-            if (scaffold.zh && item.zh) {
-                zh.textContent = '中文：' + item.zh;
-                show(zh);
-            }
-            else
-                hide(zh);
         }
         // 揭曉面板清空
         var rv = $('dct-reveal');
@@ -460,14 +451,7 @@
             p.textContent = 'IPA：' + item.ipa;
             rv.appendChild(p);
         }
-        // 中文（有才顯）
-        if (item.zh) {
-            var z = document.createElement('div');
-            z.className = 'dct-reveal__row';
-            z.textContent = '中文：' + item.zh;
-            rv.appendChild(z);
-        }
-        // 系列 B（DK）無例句列。
+        // 系列 B（DK）無例句列；單字軌不顯中文（使用者定案：單字中文無價值，移除）。
         rv.appendChild(rateButtons());
         show(rv);
     }
@@ -605,7 +589,6 @@
         // 鷹架 toggles
         bindScaffoldToggle('dct-sc-firstletter', 'firstLetter');
         bindScaffoldToggle('dct-sc-ipa', 'ipa');
-        bindScaffoldToggle('dct-sc-zh', 'zh');
         renderMenu();
         showScreen('menu');
     }
@@ -635,15 +618,6 @@
         var fl = $('dct-firstletter');
         if (fl) {
             fl.textContent = (!isSent && scaffold.firstLetter) ? ('提示：' + item.word.charAt(0) + '…') : '';
-        }
-        var zh = $('dct-zh-hint');
-        if (zh) {
-            if (scaffold.zh && item.zh) {
-                zh.textContent = '中文：' + item.zh;
-                show(zh);
-            }
-            else
-                hide(zh);
         }
         var rv = $('dct-reveal');
         if (rv && !rv.classList.contains('hidden') && rv.innerHTML)
