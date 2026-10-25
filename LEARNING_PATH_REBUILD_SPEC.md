@@ -46,8 +46,8 @@
     禁用無法量測的模糊詞（「適當」「盡量」「清楚」「友善」須改寫成可量測定義，如「≤40 字」「對比度 ≥4.5:1」「≤2 次點擊可達」）。
   - **範例 ≥3**：至少 1 個 **✅正例（compliant）**、1 個 **❌反例（violation＋為何違規）**、1 個 **⚠邊界/易混淆案例**。
 - **anti-vagueness gate（fail-closed）**：(a) content_audit 對任何「只有原則、無細則、或範例 <3」的規範段判 defect；
-  (b) 確定性 lint `tools/spec_concreteness_lint.py`（**已建＋已紅隊** 2026-10-26）：**章（##）級**聚合——每個規範章（§2/§6/§7/§8/§9/§10/§11）整段內（含子節，如 §8.1/§9.5/§10.1）
-      必須同時含 `細則`＋`範例`＋至少一個 `❌`，否則 exit≠0；描述/索引/已關閉章（§0/§1/§3/§5/§13/§14）豁免。紅隊：移除全部 ❌ 的副本 → 擋 5 章；真檔 → 放行。
+  (b) 確定性 lint `tools/spec_concreteness_lint.py`（**已建＋已紅隊** 2026-10-26）：**章（##）級**聚合——每個規範章（**§2/§6/§7/§8/§9/§10/§11/§11.A/§12，共 9 章**）整段內（含子節，如 §8.1/§9.5/§10.1）
+      必須同時含 `細則`＋`範例`＋至少一個 `❌`，否則 exit≠0；豁免章＝`EXEMPT_CHAPTERS={0,1,3,4,5,13,14}`（描述/索引/事實/已關閉；§4 明細在附錄 A）。紅隊：移除全部 ❌ 的副本 → 擋 **9 章**；真檔 → 放行。
       **細粒度 vagueness（單一子節/單一規則仍太模糊）交 content_audit 專家 panel 判**（§12），lint 擋「整章缺具體化」的粗漏。
 - **已完成的具體化範本**：§6.6（品質恆定）、§7.1/§7.2/§7.3（獎勵，含風險表＋RT 案例）、§6.5 R-STYLE-3（自適應卡）、§4.1 DEPTH-STD、§9.5（知識受限模擬，下）。
   **尚待比照補齊**：§2 各 R（逐條加細則＋3 範例）、§6.1~§6.4、§8、§10、§11。全部補齊後 spec 才可定案（§12）。
@@ -169,9 +169,10 @@
 > 教訓（Sidewalk documents）：一開始沒把 source-code list 逐項列舉並 gate 住，成果就淺薄。本 spec 以附錄 A 列舉 ＋
 > §11 coverage gate 複製其「清單驅動完整度」的做法，杜絕「挑幾個做做、其餘略過」的淺薄實作。
 
-- **binding 列舉 ＋ 穩定 id**：附錄 A 每一條知識點都配**穩定字串 id**，格式 `<domain>.<tier>.<strand>.<slug>`
-  （例 `math.t_adv.alg.quadratic-formula`、`sci.t_hs.phys.kinematics`、`life.safety.online.grooming-signals`）。
-  `tier` 為**內部難度階**（不是學制、learner 端不顯示，R11），id 一經指派不得改語意（與 §7 獎勵 id 同哲學）。
+- **binding 列舉 ＋ 穩定 id**：附錄 A 每一條知識點都配**穩定字串 id**，**依域分兩種格式**（別宣稱單一格式）：
+  - **學科域**（math／chi／eng／sci／soc-hist／soc-geo／soc-civ）：`<domain>.<tier>.<strand>.<slug>`，第 2 段＝tier（例 `math.t_adv.alg.quadratic-formula`、`sci.t_adv.phys.kinematics`）。
+  - **跨課綱 life 域**：`life.<category>.<strand>.<slug>`，第 2 段＝能力類別（safety／sel／learn／think／digital／data／compute／finance／sustain／innovate；例 `life.safety.online.grooming-signals`）；**life 的 tier 不放 id、只存 manifest `tier` 欄**。
+  兩域的 `tier`（t_base／t_mid／t_adv／t_sub／t_enrich）皆為**內部難度階**（非學制、learner 端不顯示，R11）；id 一經指派不得改語意（與 §7 獎勵 id 同哲學）。**解析 tier 一律讀 manifest `tier` 欄，不得純以 id 位置推斷。**
 - **機器可讀 manifest（Phase 1 首要產物）**：由附錄 A 產生 `authoring/knowledge_points.json`，一列一 id，欄含
   `{id, domain, tier, strand, title_zh, exam_tags[], status, unit_ids[]}`。此 manifest 是覆蓋追蹤與 §6.2 unit metadata 的連結鍵。
 - **涵蓋全域（§2 R12）**：附錄 A 含 (甲) 學科課綱（國小/國中/高中內部 tier）＋ (乙) 跨課綱生活與核心能力
@@ -430,9 +431,11 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 | 9 | 空間美感設計（spatial-aesthetics） | 空間充分利用、無置中窄島、對齊間距 | 評版面空間 |
 | 10 | 產品經理（PM） | 讀者旅程/範疇/路徑取捨 | 評 scope 與旅程 |
 | 11 | **知識受限學習者（模擬學生）** | 走一次路徑，只用「已學到的知識」 | **核心限制角色**：見 §9 |
+| 12 | 動畫師（animator） | **每個 frame**：無重疊/裁切/溢出、箭頭指向正確、frame 間尺寸恆定、時間節奏順、無破圖 | 評動畫逐 frame（R10／§11 item 3／AC-VIZ-1 的「四角色」之一） |
 
-- 角色 1–10 為**審查透鏡**（找缺陷）。角色 11 為**路徑驗證器**（證明 INV-1..4）。
-- 必要時可增角色（如各科教練、無障礙 QA），但**不得少於**上列。
+- **viz-QA 四角色＝美術設計（#8）／空間美感（#9）／眼科（#6）／動畫師（#12）**，對應 R10／§11.3／AC-VIZ-1 的逐張簽核；此四角色為**必備**（與視覺 QA 規則檔一致）。
+- 角色 1–10、12 為**審查透鏡**（找缺陷）。角色 11 為**路徑驗證器**（證明 INV-1..4）。
+- 必要時可增角色（如各科教練、無障礙 QA），但**不得少於**上列（含 #12 動畫師）。
 
 ### 8.1 專家 panel 運作細則與範例（§0.3 具體化）
 - **細則**：每個單元/章 publish 前，由上表角色 panel 逐一裁決（沿用 static-doc-audit `content_audit` 的裁決規則）：
