@@ -301,7 +301,7 @@
 - `練`：可玩、即時、低門檻；題型契合該知識點（如數學非選要能寫步驟）。
 - `自評`：翻答案→三級自評（還不熟/快會了/會了）→ 餵 SRS（srs_engine）；**不假裝自動判讀**。
 - `metadata`：`unit_id`、`stage`、`subject`、`strand`、`knowledge_point_ids[]`、`prerequisites[]`、
-  `est_minutes`（認知負荷/倦怠控制）。
+  `est_minutes`（認知負荷/倦怠控制）、`deviation_reason`（**條件性/選填**：僅在偏離 §6.6.1 golden 範本時必填，供 AC-UNIT-3 讀取；不偏離則省略）。
 - **計時模式（可選功能；使用者 2026-10-26 認可）**：練習/測驗可開啟**計時器**——倒數計時、配速提示（每題建議秒數）、交卷提醒鈴，
   用於會考/學測的「嚴格計時、畫卡節奏、時間分配」應考能力（§4.x）。**心理/SEL 鐵律**：計時是工具不是壓力——
   **預設可關、隨時可暫停/關閉**、正向框架（顯示「配速練習」而非「倒數催促」），不得製造焦慮或以紅色警示轟炸（呼應 §8-7 心理醫生、INV-4 不倦怠）。
@@ -355,7 +355,7 @@
      ③ 內容卡自適應寬（R-STYLE-3）；④ **每個題目正解 play-through 代入朗讀語句通順無誤**（correctness；play-through-sim）；⑤ 自評三級＋寫入 SRS、不假裝自動批改；
      ⑥ 繁體零簡體零 PRC（scan_simplified）；⑦ `knowledge_point_ids[]` 全部對映到附錄 A 既有 id、`prerequisites[]` 已宣告且無循環，**且每一條宣告的 id 必須「真教＋真考」**——在「教」段落實際教授該微技能、且「練/評」至少有一題 retrieval 涵蓋它（**禁止宣告塞 id 卻不教不考**；declaration-stuffing＝fail，杜絕 §4 淺薄覆蓋，供 AC-COV-1 核對）；⑧ `est_minutes ≤ 12`（過長拆單元，INV-4）；
      ⑨ viz 逐 frame iPad Air 13 render＋四角色簽核（R10）；⑩ 含可執行碼則附 code-download bundle 並從乾淨解壓可執行。
-  3. **同一 gate、逐單元、不可抽樣**：每個單元檔跑 per-file content_audit 到 5 clean ＋ `tools/unit_acceptance_lint.py`（待建，機械驗 ②③⑥⑦⑧⑩）＋ 視覺 QA；
+  3. **同一 gate、逐單元、不可抽樣**：每個單元檔跑 per-file content_audit 到 5 clean ＋ `tools/unit_acceptance_lint.py`（待建，機械驗 ②③⑥⑦⑧⑩ ＋ **golden 結構 diff：與對應 `authoring/golden/<archetype>.html` 比對，偏離而 unit metadata 無 `deviation_reason` 即 FAIL**，對應 §11.A AC-UNIT-3）＋ 視覺 QA；
      全過才得併入學習路徑、才可宣告完成。rubric 任一項 fail＝擋關（fail-closed）。
 - **範例：**
   - ✅**正例** `math.t_mid.equation.quadratic-formula`：教（配方法動畫，純 token 色）＋練（可玩、即時回饋）＋評（翻答案→三級自評→SRS）；
@@ -408,6 +408,8 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 - **RT-6（最關鍵）：存檔塞入壞 JSON（壞一個 byte）→ reload → 已賺得獎勵零遺失**（壞檔被備份、不被空白覆寫）。
 - RT-7：localStorage 配額逼近/超出 → 新賺得 badge/XP 的寫入失敗時「告警並保全」，不靜默吞掉。
 - RT-8：A 分頁 reset('all')，B 分頁已開 → B 分頁的已賺得不被 A 的重設傳染（跨分頁用聯集/防護）。
+- **RT-9（對應 R8 原子性）：人為把記憶體中某已賺得欄位清空（如 `owned=[]`）後觸發 save → 驗證「寫前快照／異常回滾」保全該欄位，壞寫入不落地**（證明單欄誤清不會整物件持久化覆寫）。
+- **RT-10（對應 R3 reset 守門）：`reset('all')` 必須二次使用者確認且不可由非使用者路徑（程式自動/事件/他分頁）觸發全清**；植入一個非使用者路徑呼叫 reset → 須被擋、已賺得保留。
 
 ---
 
@@ -525,8 +527,8 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
   - **Phase 1 exit**：`knowledge_points.json`＋id registry＋unit schema＋hub/roadmap 骨架＋`migrate()`＋additive-merge 就緒；`AC-COV-2`、`AC-REWARD-1` 綠。
   - **Phase 2 exit**：既有單元全數接線（宣告 `prerequisites`/`knowledge_point_ids`），每檔 5 clean。
   - **Phase 3 exit**：`AC-COV-1` ＝ 0 個未覆蓋 minimum id（gap 全補）。
-  - **Phase 4 exit**：獎勵擴充**只新增 id**、RT-1..8 全綠 ＋ **`AC-NOBACKEND` 綠**（獎勵/排行/社交類零對外請求，no_backend_gate exit 0）。
-  - **Phase 5 exit**：§11.A 全 **18 條 AC**（含 AC-SPEC）綠且 `acceptance_ledger.json` 全登錄。
+  - **Phase 4 exit**：獎勵擴充**只新增 id**、RT-1..10 全綠 ＋ **`AC-NOBACKEND` 綠**（獎勵/排行/社交類零對外請求，no_backend_gate exit 0）。
+  - **Phase 5 exit**：§11.A 全 **19 條 AC**（含 AC-SPEC）綠且 `acceptance_ledger.json` 全登錄。
 - **範例**：
   - ✅**正例**：Phase 3 結束時 `coverage_gate` 報「未覆蓋 minimum id ＝ 0」→ 得進 Phase 4。
   - ❌**反例**：宣稱「Phase 3 大致完成」但 coverage 顯示 37 個 minimum id 無對映單元 → **不得**進 Phase 4，須列 37 id 補完。
@@ -547,7 +549,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 7. **code-download bundle**（若該單元/模組含可執行程式，依 house 規範提供完整可執行+可驗證下載）。
 8. **house 視覺/結構一致**；效能（R9）未退化。
 
-- **細則**：上列 8 項為「完成」的硬性必要條件**摘要（非窮舉）**；其**逐條可機械驗且窮舉的版本＝§11.A 驗收準則矩陣（18 條 AC，各附驗證方法/門檻/證據）**，§11.A 為唯一完工判準。
+- **細則**：上列 8 項為「完成」的硬性必要條件**摘要（非窮舉）**；其**逐條可機械驗且窮舉的版本＝§11.A 驗收準則矩陣（19 條 AC，各附驗證方法/門檻/證據）**，§11.A 為唯一完工判準。
   完成 ⟺ §11.A 全 AC PASS 且證據登 `authoring/acceptance_ledger.json`（綁 sha）。任一項未過即未完成，**不接受「大致上」**。逐檔與全書都適用（per-file 先、whole-book 後）。
 - **範例**：✅ 某單元檔：5 clean＋簡體 0＋四角色簽核（sha 相符）＋rubric 10/10＋覆蓋 id 存在 → 該檔完成。 ❌ 只跑到 3 clean 就宣告完成（違第 1 項）→ 擋。 ⚠ 第 3 項四角色已簽核，但事後又改版面（sha 變）→ 舊簽核作廢，須重 render＋重簽（§11.A AC-VIZ-1 ⚠）。
 
@@ -565,9 +567,10 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 | AC-COV-2 | 知識母體本身完整且無重複 id、無不符格式 bullet | `tools/_kp_build.py` | 重複 id＝0、不符格式（扣 section 說明行）＝0 | build 報告 |
 | AC-UNIT-1 | **每個**單元通過 §6.6 的 10 項 rubric | `tools/unit_acceptance_lint.py`（待建）＋ 人工 play-through | 每單元 10/10；0 單元缺項 | 逐單元 rubric 結果 |
 | AC-UNIT-2 | 每個單元檔 content_audit 連續 **5 clean**（同 sha、L3 exit 0） | `/static-doc-audit` per-file + `coverage_check.js` | 每檔 5 clean、L3 exit 0 | convergence ledger |
+| AC-UNIT-3 | 每個新單元與對應 golden 範本做**結構 diff**（§6.6.1 凍結黃金範本防品質漂移）；偏離而 unit metadata 無 `deviation_reason` 即 FAIL | `tools/unit_acceptance_lint.py`（讀 unit metadata `deviation_reason` ＋ 與 `authoring/golden/<archetype>.html` 結構比對） | 未解釋的偏離數＝**0**（exit 0） | golden-diff 報告 |
 | AC-PATH-1 | 每條主要學習路徑**無斷層**（INV-1） | §9 知識受限模擬 | 每路徑每 U `result=pass`、`gaps=[]` | 模擬輸出 JSON |
 | AC-PATH-2 | 可學會/記得牢/不倦怠（INV-2/3/4） | §9 模擬（§9.3 三級門檻） | `learnable=true`、`retention_ok=true`、`burnout_risk≤med`（且 `med` 須 `mitigation` 欄非空）全數 | 模擬輸出 JSON |
-| AC-REWARD-1 | 已賺得獎勵**永不消失**（含壞檔/升版/catalog改/配額/跨分頁） | §7.3 紅隊 RT-1…RT-8 | RT-1…8 **全綠** | 紅隊測試輸出 |
+| AC-REWARD-1 | 已賺得獎勵**永不消失**（含壞檔/升版/catalog改/配額/跨分頁/原子性/reset守門） | §7.3 紅隊 RT-1…RT-10（每條 R1–R8 風險皆有對應 RT：R1→RT-6、R2→RT-4、R3→RT-10、R4/R5→RT-2、R6→RT-7、R7→RT-8、R8→RT-9） | RT-1…10 **全綠** | 紅隊測試輸出 |
 | AC-STYLE-1 | 設計一致：無私有 class 重造共用元件、內容卡自適應寬 | `design_consistency_gate.js`＋content-card lint | 重造＝0、違規卡＝0（exit 0） | gate 報告 |
 | AC-STYLE-2 | 零硬編色碼/px 魔術數，全走 `app.css` token | lint（待建，掃非 token 色值/魔術數） | 命中＝0 | lint 報告 |
 | AC-NOGRADE | learner-facing **不出現**「國小/國中/高中/年級/會考/學測/分科」等年段字樣（R11） | `tools/no_grade_label_gate.py`（待建，掃 render 後可見文字） | 命中＝0 | gate 報告 |
@@ -581,7 +584,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 | AC-SPEC | 本 spec 自身：§0.3 anti-vagueness 全節通過 ＋ content_audit 5 clean ＋ 紅隊零繞過 | spec_concreteness_lint＋content_audit＋紅隊 | 全綠 | spec convergence ledger |
 
 - **細則**：每條 AC 必對應一個**確定性腳本或綁 sha 的簽核**（上表「驗證方法」欄）；標「待建」者於 Phase 1 建並**紅隊**（證明壞案例被擋、好案例放行）才可啟用。`acceptance_ledger.json` 一列一次通過紀錄，sha 一變該 AC 作廢須重驗。
-- **範例**：✅ 全 **18 條 AC**（AC-COV-1…AC-ANTIDRIFT 共 17 條產品 AC ＋ AC-SPEC meta）在同一 sha 皆有 PASS 列＋證據 → 可宣告完成並（經使用者）push。 ❌ AC-COV-1 顯示 37 個 minimum id 無單元 → 未完成，列出 37 個待補 id。 ⚠ AC-VIZ-1 四角色已簽核但 sha 已變（之後又改了版面）→ 舊簽核作廢，須重 render+重簽才算數。
+- **範例**：✅ 全 **19 條 AC**（AC-COV-1…AC-ANTIDRIFT 共 18 條產品 AC ＋ AC-SPEC meta）在同一 sha 皆有 PASS 列＋證據 → 可宣告完成並（經使用者）push。 ❌ AC-COV-1 顯示 37 個 minimum id 無單元 → 未完成，列出 37 個待補 id。 ⚠ AC-VIZ-1 四角色已簽核但 sha 已變（之後又改了版面）→ 舊簽核作廢，須重 render+重簽才算數。
 
 ## 12. 本 spec 自身的收斂協定（meta-process）
 
