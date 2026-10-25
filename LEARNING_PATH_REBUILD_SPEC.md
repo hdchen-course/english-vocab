@@ -576,7 +576,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 | AC-PERF-1 | 效能不退化：單頁初始 JS ≤ 既有基準、無無限 inline 膨脹、資產按需載入（R9） | 體積量測腳本（待建，定基準數值） | 每頁 ≤ 基準；0 超標 | 體積報告 |
 | AC-A11Y-1 | 對比度 ≥4.5:1、點擊目標 ≥44px、尊重 `prefers-reduced-motion` | 既有 contrast gate + 量測 | 違規＝0 | a11y 報告 |
 | AC-CODE-DL | 含可執行碼的模組提供完整下載且**乾淨解壓可跑** | 解壓到 temp＋跑 README 指令 | build/test 綠 | 執行 log |
-| AC-NOBACKEND | 無 backend 鐵律（§1.3/§7.4）機器堵死：learner 端與獎勵模組**零對外網路請求**（排行榜/對戰/好友/雲端同步/金流一律禁） | `tools/no_backend_gate.py`（待建，掃 `fetch`/`XMLHttpRequest`/`WebSocket`/`EventSource`/`navigator.sendBeacon`/第三方同步 SDK）＋紅隊（植入排行榜 fetch 須被擋、純 localStorage 放行） | 對外請求命中＝**0**（exit 0） | gate 報告 |
+| AC-NOBACKEND | 無 backend 鐵律（§1.3/§7.4）機器堵死：learner 端與獎勵模組**零對外網路請求**（排行榜/對戰/好友/雲端同步/金流一律禁） | `tools/no_backend_gate.py`（待建，**同源白名單式**判定：預設僅允許同源相對 URL 的靜態資產；對**任何指向外部 origin 的資源請求**一律 fail，掃描向量須涵蓋 `fetch`/`XMLHttpRequest`/`WebSocket`/`EventSource`/`navigator.sendBeacon`、`Image().src`/`new Image`/`<img src>`、動態或外部 `<script src>`/`<link href>`、`<form action>` 外部 POST、`<a ping>`、WebRTC（`RTCPeerConnection`/DataChannel）、以及無法靜態證明同源的動態 URL）＋紅隊（**上述每一種向量各植入一個外部呼叫須被擋、純 localStorage/同源靜態放行**，記 §13 ledger） | 對外 origin 請求命中＝**0**（exit 0） | gate 報告 |
 | AC-ANTIDRIFT | §0.2 四防漂移錨點**已交付且 fail-closed**：(a) 專案 `.claude/settings.json` hook、(b) `inject-sop-carriers.py` `[learning-path-sop]` echo、(c) `~/.claude/rules/` 規則檔、(d) `MEMORY.md` 指標 ＋ `design_consistency_gate.js` | 錨點存在性檢查 ＋ 紅隊（「未重讀本檔即宣告任一檔收斂」的壞案例須被 hook **DENY**、好案例 ALLOW） | 四錨點齊備、hook 壞案例 DENY/好案例 ALLOW | 錨點清單 ＋ 紅隊 log |
 | AC-SPEC | 本 spec 自身：§0.3 anti-vagueness 全節通過 ＋ content_audit 5 clean ＋ 紅隊零繞過 | spec_concreteness_lint＋content_audit＋紅隊 | 全綠 | spec convergence ledger |
 
