@@ -16,11 +16,16 @@ asserts：slug 1:1（兩不同字→同 slug 報錯，需 override 解）、反�
 用法：/Volumes/workplace/EnglishTraining/.venv/bin/python -I tools/build_cefr_data.py
 """
 import glob
+import hashlib
 import json
 import os
 import re
 import sys
 import unicodedata
+
+
+def sha12(text):
+    return hashlib.sha1(text.encode("utf-8")).hexdigest()[:12]
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, "src")
@@ -101,6 +106,42 @@ def main():
             add(w, lv)
         per_level[lv] = len(items) - before
 
+    # 例句軌（B 期）：讀 src/cefr_sentences_{LV}.json（自寫句，6-lens team 審）
+    # sent item：word=整句、audioSlug=hash(句)、kind='sent'、4 音檔鍵（us/gb × 正常/slow）；
+    # wordTimings 由 gen_dict_audio 的 WordBoundary 擷取回填（src/cefr_wordtimings.json，§5.4）。
+    timings = load_json(os.path.join(SRC, "cefr_wordtimings.json"), {})
+    sent_per_level = {}
+    for lv in LEVELS:
+        spath = os.path.join(SRC, "cefr_sentences_%s.json" % lv)
+        if not os.path.exists(spath):
+            sent_per_level[lv] = 0
+            continue
+        cnt = 0
+        for s in load_json(spath, {}).get("items", []):
+            sentence = (s.get("sentence") or "").strip()
+            if not sentence:
+                continue
+            ak = "cefr-%s::na::sent::%s" % (lv, sentence)
+            if ak in authkeys:
+                continue  # 同級同句去重
+            authkeys[ak] = 1
+            h = sha12(sentence)
+            it = {
+                "id": "%s::cefr-%s::na::sent::%s" % (SERIES, lv, h),
+                "word": sentence, "kind": "sent", "day": "na",
+                "level": "cefr-%s" % lv, "src": "cefr-%s-sent" % lv, "audioSlug": h,
+                "audioKeys": ["sent_dict_%s_%s_us" % (SERIES, h), "sent_dict_%s_%s_gb" % (SERIES, h),
+                              "sent_dict_%s_%s_us_slow" % (SERIES, h), "sent_dict_%s_%s_gb_slow" % (SERIES, h)],
+                "authKey": ak,
+            }
+            if s.get("zh"):
+                it["zh"] = s["zh"]
+            if h in timings:
+                it["wordTimings"] = timings[h]
+            items.append(it)
+            cnt += 1
+        sent_per_level[lv] = cnt
+
     # authored merge（B 期；A 期檔空）
     AF = ("zh", "syll", "ipa", "pos", "sentence")
     by_ak = {it["authKey"]: it for it in items}
@@ -118,11 +159,12 @@ def main():
     if unused:
         die("未套用的 override key：%s" % sorted(unused))
 
-    distinct = set(it["audioSlug"] for it in items)
-    n = len(distinct)
-    # A 期 word-only：sent_* = 0（固定 6 鍵，缺鍵 gate(e) FAIL，故恆列）
-    expected = {"word_us": n, "word_gb": n, "sent_us": 0, "sent_gb": 0,
-                "sent_slow_us": 0, "sent_slow_gb": 0}
+    word_slugs = set(it["audioSlug"] for it in items if it["kind"] == "word")
+    sent_h = set(it["audioSlug"] for it in items if it["kind"] == "sent")
+    nw, ns = len(word_slugs), len(sent_h)
+    # 固定 6 鍵恆列（缺鍵 gate(e) FAIL）：word 兩腔；sent 兩腔 + 兩腔 slow（例句軌才 >0）
+    expected = {"word_us": nw, "word_gb": nw, "sent_us": ns, "sent_gb": ns,
+                "sent_slow_us": ns, "sent_slow_gb": ns}
 
     sidecar_items = []
     for it in items:
@@ -135,7 +177,7 @@ def main():
 
     # per-level dict_data_cefr_{LV}.ts（→ window.DICT_CEFR concat）
     DF = ("id", "word", "ukSpelling", "syll", "ipa", "zh", "pos", "sentence",
-          "audioSlug", "kind", "day", "level", "src")
+          "wordTimings", "audioSlug", "kind", "day", "level", "src")
     for lv in LEVELS:
         rows = []
         for it in items:
@@ -148,10 +190,10 @@ def main():
             json.dump(rows, f, ensure_ascii=False, separators=(",", ":"))
             f.write(");\n")
 
-    sys.stdout.write("OK build_cefr_data: %s；總 item %d；相異 audioSlug %d → word mp3 %d×2腔=%d；"
-                     "ukSpelling %d；authored %d。\n" % (
-                         per_level, len(items), n, n, n * 2,
-                         sum(1 for it in items if "ukSpelling" in it),
+    sys.stdout.write("OK build_cefr_data: 單字 %s（%d 相異 slug→%d mp3）；例句 %s（%d 相異句→%d mp3: us/gb×正常/slow）；"
+                     "總 item %d；ukSpelling %d；authored %d。\n" % (
+                         per_level, nw, nw * 2, sent_per_level, ns, ns * 4,
+                         len(items), sum(1 for it in items if "ukSpelling" in it),
                          len([k for k in authored if not k.startswith("_")])))
 
 

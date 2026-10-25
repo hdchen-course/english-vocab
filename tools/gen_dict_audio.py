@@ -39,6 +39,11 @@ SLOW_RATE = "-25%"  # 僅例句軌用；word 軌不用（§5.4）
 CONC = int(os.environ.get("DCT_CONC", "8"))
 LIMIT = int(os.environ.get("DCT_LIMIT", "0"))
 
+# 逐詞播放時間戳（§2.3/§5.4）：sent 軌 us 非慢速合成時擷取 edge-tts WordBoundary，
+# keyed by 句子 hash（= sent 的 audioSlug = sha12(sentence)）；build_cefr 回填 wordTimings。
+TIMINGS_PATH = os.path.join(SRC, "cefr_wordtimings.json")
+TIMINGS = {}
+
 
 def sha12(text):
     return hashlib.sha1(text.encode("utf-8")).hexdigest()[:12]
@@ -75,6 +80,8 @@ def build_jobs(items):
             jobs[key] = {
                 "audioKey": key, "text": text, "accent": accent,
                 "slow": slow, "file": fname, "kind": kind,
+                # 僅 sent 軌、us、非慢速 擷取 WordBoundary（一個代表即可；§5.4）
+                "capture_timings": (kind == "sent" and accent == "us" and not slow),
             }
     return jobs
 
@@ -121,8 +128,25 @@ async def synth_one(job, sem, manifest, stats):
         last_err = None
         for attempt in range(3):
             try:
-                comm = edge_tts.Communicate(text, voice, **kwargs)
-                await comm.save(target)
+                if job.get("capture_timings"):
+                    # 以 stream 擷取音訊 + WordBoundary（t=秒）；寫入 TIMINGS[sha]
+                    # 必須 boundary="WordBoundary"（edge-tts 7.3.x 預設 SentenceBoundary，否則無逐詞）
+                    comm = edge_tts.Communicate(text, voice, boundary="WordBoundary", **kwargs)
+                    audio = b""
+                    wb = []
+                    async for ch in comm.stream():
+                        if ch["type"] == "audio":
+                            audio += ch["data"]
+                        elif ch["type"] == "WordBoundary":
+                            wb.append({"w": ch.get("text", ""), "t": round(ch.get("offset", 0) / 1e7, 3)})
+                    if not audio:
+                        raise RuntimeError("empty output")
+                    with open(target, "wb") as f:
+                        f.write(audio)
+                    TIMINGS[cur_sha] = wb
+                else:
+                    comm = edge_tts.Communicate(text, voice, **kwargs)
+                    await comm.save(target)
                 if os.path.getsize(target) <= 0:
                     raise RuntimeError("empty output")
                 # 原子寫 .sha（synth-time 見證）
@@ -190,6 +214,20 @@ async def run():
     with open(MANIFEST, "w", encoding="utf-8") as f:
         json.dump(manifest, f, ensure_ascii=False, indent=0)
         f.write("\n")
+
+    # 逐詞時間戳回填來源（§5.4）：合併既有、只更新本次擷取的句子（持久增量）
+    if TIMINGS:
+        existing = {}
+        if os.path.exists(TIMINGS_PATH):
+            try:
+                existing = json.load(open(TIMINGS_PATH, encoding="utf-8"))
+            except Exception:
+                existing = {}
+        existing.update(TIMINGS)
+        with open(TIMINGS_PATH, "w", encoding="utf-8") as f:
+            json.dump(existing, f, ensure_ascii=False, indent=0)
+            f.write("\n")
+        sys.stdout.write("wordTimings captured for %d sentences → %s\n" % (len(TIMINGS), os.path.basename(TIMINGS_PATH)))
 
     sys.stdout.write("DONE made=%d skip=%d fail=%d manifest=%d entries\n" % (
         stats["made"], stats["skip"], stats["fail"], len(manifest)))

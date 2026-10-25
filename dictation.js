@@ -149,11 +149,20 @@
             [['cefr-a1', 'A1 入門'], ['cefr-a2', 'A2 基礎'], ['cefr-b1', 'B1 進階']].forEach(function (c) {
                 if (!byLevel[c[0]])
                     return;
-                var cards = (byLevel[c[0]] || []).slice();
-                var btn = dayButton(c[1] + '（' + cards.length + ' 字）', unitState(idsOf(cards)), function () {
-                    startSet(cards, 'dict_cefr_' + c[0].replace('cefr-', '') + '_word_v1', 10, 'cefr');
-                });
-                cefrWrap.appendChild(btn);
+                var all = byLevel[c[0]] || [];
+                var wordCards = all.filter(function (x) { return x.kind !== 'sent'; });
+                var sentCards = all.filter(function (x) { return x.kind === 'sent'; });
+                var lv = c[0].replace('cefr-', '');
+                if (wordCards.length) {
+                    cefrWrap.appendChild(dayButton(c[1] + ' · 單字（' + wordCards.length + '）', unitState(idsOf(wordCards)), function () {
+                        startSet(wordCards, 'dict_cefr_' + lv + '_word_v1', 10, 'cefr');
+                    }));
+                }
+                if (sentCards.length) {
+                    cefrWrap.appendChild(dayButton(c[1] + ' · 例句（' + sentCards.length + '）', unitState(idsOf(sentCards)), function () {
+                        startSet(sentCards, 'dict_cefr_' + lv + '_sent_v1', 10, 'cefr');
+                    }));
+                }
             });
         }
     }
@@ -268,10 +277,20 @@
             c.textContent = (idx + 1) + ' / ' + session.length;
         // 腔調 pills 狀態
         syncAccentPills();
-        // 鷹架：首字母提示（由 word[0] 導出；預設關）
+        // 例句軌專屬控制（慢速 / 逐詞播放）只在 sent 顯示
+        var isSent = item.kind === 'sent';
+        var slowBtn = $('dct-slow'), wbwBtn = $('dct-wbw');
+        if (slowBtn) {
+            slowBtn.classList.toggle('hidden', !isSent);
+            slowBtn.classList.toggle('active', isSent && slowMode);
+        }
+        if (wbwBtn) {
+            wbwBtn.classList.toggle('hidden', !(isSent && item.wordTimings && item.wordTimings.length));
+        }
+        // 鷹架：首字母提示（僅單字軌有意義；由 word[0] 導出；預設關）
         var fl = $('dct-firstletter');
         if (fl) {
-            fl.textContent = scaffold.firstLetter ? ('提示：' + item.word.charAt(0) + '…') : '';
+            fl.textContent = (!isSent && scaffold.firstLetter) ? ('提示：' + item.word.charAt(0) + '…') : '';
         }
         // 中文提示（需 zh，缺則隱藏）
         var zh = $('dct-zh-hint');
@@ -288,7 +307,7 @@
         if (rv)
             rv.innerHTML = '';
         // 自動播音（在此同步呼叫鏈內，來自使用者手勢 → 首題起每題自動響，§2.5）
-        playAudio(item);
+        playAudio(item, isSent ? slowMode : false);
         // 靜音提醒一次（§2.5；旗標存 hints key）
         if (!hintShown('mute')) {
             var m = $('dct-mutehint');
@@ -298,13 +317,70 @@
             markHint('mute');
         }
     }
-    function playAudio(item) {
-        var name = 'word_dict_' + seriesOf(item) + '_' + item.audioSlug + '_' + accent + '.mp3';
+    var slowMode = false; // 例句軌慢速 toggle（§2.2；單字軌無慢速）
+    var curAudio = null;
+    function audioName(item, slow) {
+        var s = seriesOf(item);
+        if (item.kind === 'sent')
+            return 'sent_dict_' + s + '_' + item.audioSlug + '_' + accent + (slow ? '_slow' : '') + '.mp3';
+        return 'word_dict_' + s + '_' + item.audioSlug + '_' + accent + '.mp3';
+    }
+    function playAudio(item, slow) {
         try {
-            var a = new Audio('audio/' + name);
-            var p = a.play();
+            if (curAudio) {
+                try {
+                    curAudio.pause();
+                }
+                catch (e) { }
+            }
+            curAudio = new Audio('audio/' + audioName(item, !!slow));
+            var p = curAudio.play();
             if (p && p.catch)
                 p.catch(function () { show($('dct-playbtn')); }); // reject → 顯示播放鈕，不靜默
+        }
+        catch (e) {
+            show($('dct-playbtn'));
+        }
+    }
+    // 逐詞播放（§2.3 例句軌 scaffold；用 wordTimings seek 單一整句 mp3，不另產逐詞檔）
+    function playWordByWord(item) {
+        var wt = item.wordTimings;
+        if (!wt || !wt.length) {
+            playAudio(item, slowMode);
+            return;
+        }
+        try {
+            if (curAudio) {
+                try {
+                    curAudio.pause();
+                }
+                catch (e) { }
+            }
+            curAudio = new Audio('audio/' + audioName(item, false));
+            var i = 0, a = curAudio;
+            function step() {
+                if (a !== curAudio || i >= wt.length) {
+                    try {
+                        a.pause();
+                    }
+                    catch (e) { }
+                    return;
+                }
+                a.currentTime = wt[i].t;
+                var next = (i + 1 < wt.length) ? wt[i + 1].t : (wt[i].t + 0.6);
+                var dur = Math.max(260, (next - wt[i].t) * 1000);
+                i++;
+                a.play().catch(function () { show($('dct-playbtn')); });
+                setTimeout(function () { if (a === curAudio) {
+                    try {
+                        a.pause();
+                    }
+                    catch (e) { }
+                    setTimeout(step, 170);
+                } }, dur);
+            }
+            a.addEventListener('canplaythrough', function () { step(); }, { once: true });
+            a.load();
         }
         catch (e) {
             show($('dct-playbtn'));
@@ -318,12 +394,47 @@
             gb.classList.toggle('active', accent === 'gb');
     }
     /* ---- 揭曉（只顯示正解；絕不比對輸入） ---- */
+    function rateButtons() {
+        var rate = document.createElement('div');
+        rate.className = 'dct-rate fc-rate';
+        rate.innerHTML =
+            '<button type="button" class="fc-rate__btn again" data-grade="again" aria-label="還不熟">😅<span class="fc-rate__btn__label">還不熟</span></button>'
+                + '<button type="button" class="fc-rate__btn good" data-grade="good" aria-label="快會了">🙂<span class="fc-rate__btn__label">快會了</span></button>'
+                + '<button type="button" class="fc-rate__btn easy" data-grade="easy" aria-label="會了">😎<span class="fc-rate__btn__label">會了</span></button>';
+        rate.addEventListener('click', function (e) {
+            var btn = e.target.closest ? e.target.closest('[data-grade]') : null;
+            if (btn)
+                rateCard(btn.getAttribute('data-grade'));
+        });
+        return rate;
+    }
     function reveal() {
         var item = cur();
         var rv = $('dct-reveal');
         if (!rv)
             return;
         rv.innerHTML = '';
+        if (item.kind === 'sent') {
+            // 例句軌：整句正解（§2.2）+ 逐詞斷詞供自己核對（不自動判，R3）
+            var sLine = document.createElement('div');
+            sLine.className = 'dct-reveal__sentence';
+            sLine.textContent = item.word;
+            rv.appendChild(sLine);
+            var segs = ('' + item.word).replace(/\s+/g, ' ').trim().split(' ');
+            var seg = document.createElement('div');
+            seg.className = 'dct-reveal__row';
+            seg.textContent = '逐詞：' + segs.join(' · ');
+            rv.appendChild(seg);
+            if (item.zh) {
+                var zz = document.createElement('div');
+                zz.className = 'dct-reveal__row';
+                zz.textContent = '中文：' + item.zh;
+                rv.appendChild(zz);
+            }
+            rv.appendChild(rateButtons());
+            show(rv);
+            return;
+        }
         // US 拼字（必顯，R3）
         var usLine = document.createElement('div');
         usLine.className = 'dct-reveal__word';
@@ -357,19 +468,7 @@
             rv.appendChild(z);
         }
         // 系列 B（DK）無例句列。
-        // 三級自評鈕
-        var rate = document.createElement('div');
-        rate.className = 'dct-rate fc-rate';
-        rate.innerHTML =
-            '<button type="button" class="fc-rate__btn again" data-grade="again" aria-label="還不熟">😅<span class="fc-rate__btn__label">還不熟</span></button>'
-                + '<button type="button" class="fc-rate__btn good" data-grade="good" aria-label="快會了">🙂<span class="fc-rate__btn__label">快會了</span></button>'
-                + '<button type="button" class="fc-rate__btn easy" data-grade="easy" aria-label="會了">😎<span class="fc-rate__btn__label">會了</span></button>';
-        rate.addEventListener('click', function (e) {
-            var btn = e.target.closest ? e.target.closest('[data-grade]') : null;
-            if (btn)
-                rateCard(btn.getAttribute('data-grade'));
-        });
-        rv.appendChild(rate);
+        rv.appendChild(rateButtons());
         show(rv);
     }
     function rateCard(grade) {
@@ -462,18 +561,28 @@
         var revealBtn = $('dct-reveal-btn');
         if (revealBtn)
             revealBtn.addEventListener('click', reveal);
+        function replayCur() { var it = cur(); if (it)
+            playAudio(it, it.kind === 'sent' ? slowMode : false); }
         var replay = $('dct-replay');
         if (replay)
-            replay.addEventListener('click', function () { playAudio(cur()); });
+            replay.addEventListener('click', replayCur);
         var playbtn = $('dct-playbtn');
         if (playbtn)
-            playbtn.addEventListener('click', function () { hide(playbtn); playAudio(cur()); });
+            playbtn.addEventListener('click', function () { hide(playbtn); replayCur(); });
         var us = $('dct-accent-us');
         if (us)
-            us.addEventListener('click', function () { setAccent('us'); syncAccentPills(); playAudio(cur()); });
+            us.addEventListener('click', function () { setAccent('us'); syncAccentPills(); replayCur(); });
         var gb = $('dct-accent-gb');
         if (gb)
-            gb.addEventListener('click', function () { setAccent('gb'); syncAccentPills(); playAudio(cur()); });
+            gb.addEventListener('click', function () { setAccent('gb'); syncAccentPills(); replayCur(); });
+        var slowBtn = $('dct-slow');
+        if (slowBtn)
+            slowBtn.addEventListener('click', function () { slowMode = !slowMode; slowBtn.classList.toggle('active', slowMode); var it = cur(); if (it)
+                playAudio(it, slowMode); });
+        var wbw = $('dct-wbw');
+        if (wbw)
+            wbw.addEventListener('click', function () { var it = cur(); if (it)
+                playWordByWord(it); });
         var back = $('dct-back');
         if (back)
             back.addEventListener('click', function () { renderMenu(); showScreen('menu'); });
