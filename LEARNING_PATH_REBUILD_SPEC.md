@@ -300,6 +300,11 @@
   `../engineering/languages/typescript/ts_capstone_satellite_map.html`、`..._solar_system.html`、`../engineering/languages/python/python_capstone_nbody.html`
   （衛星地圖／太陽系／N 體重力模擬）。**實作鐵律**：既然這些等級的互動模擬做得出來，自然科動畫**不得退回淺薄靜圖**；但一律仍過 viz-QA＋R-STYLE＋效能＋眼舒適。
 
+#### 6.2.1 單元骨架範例（§0.3）
+- ✅**正例**：`eng.t_mid.tense.present-perfect` 單元＝教（時間軸動畫示現「已完成且與現在有關」，token 色）→ 練（看情境選 have/has＋填空，即時回饋）→ 評（翻答案→三級自評→SRS）；metadata 齊（`prerequisites:["eng.t_mid.tense.past-simple"]`、`est_minutes:8`）。
+- ❌**反例**：一個單元塞「現在完成＋過去完成＋完成進行」三概念、`est_minutes:25`、只有教學文字無練無評 → 違 R4/§6.6①、INV-4（過載）、`est_minutes>12` → 擋關、須拆成 3 單元。
+- ⚠**邊界**：純聆聽單元（無文字輸入）→ 仍須「教＋至少一個 retrieval（如聽後選圖/口說跟讀）＋自評」，不得只播音檔就算完成。
+
 ### 6.3 進度與精熟
 - 逐單元進度存 localStorage（§7 持久化規範）；精熟由 SRS 狀態 ＋ 自評歷史決定。
 - 進度與**獎勵解耦**：進度前進可觸發獎勵，但獎勵一旦賺得即永久（§7）。
