@@ -273,6 +273,9 @@
     var slowBtn = $('dct-slow'), wbwBtn = $('dct-wbw');
     if (slowBtn) { slowBtn.classList.toggle('hidden', !isSent); slowBtn.classList.toggle('active', isSent && slowMode); }
     if (wbwBtn) { wbwBtn.classList.toggle('hidden', !(isSent && item.wordTimings && item.wordTimings.length)); }
+    // 鷹架（首字母/音標）僅單字軌有意義；例句軌隱藏整組（音標對例句無 item.ipa、首字母對整句無用）
+    var scaff = document.querySelector('.dct-scaffolds');
+    if (scaff) { scaff.classList.toggle('hidden', isSent); }
     // 鷹架：首字母提示（僅單字軌有意義；由 word[0] 導出；預設關）
     var fl = $('dct-firstletter');
     if (fl) { fl.textContent = (!isSent && scaffold.firstLetter) ? ('提示：' + item.word.charAt(0) + '…') : ''; }
