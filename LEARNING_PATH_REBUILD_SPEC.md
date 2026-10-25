@@ -90,6 +90,19 @@
 - **R9 效能**：頁面不得無限 inline 膨脹；按需渲染／載資產；vanilla 優先。
 - **R10 視覺 QA（iPad Air 13"）**：所有畫面/frame 以 iPad Air 13" 實 render、逐張看過、四角色簽核，
   未簽核不得宣告視覺工作完成（§11 ＋ 視覺 QA 規則檔）。
+- **R11 不曝露年段（learner-facing 無「國小/國中/高中/年級/會考/學測/分科」字樣）**：學習者端一律**不顯示**任何
+  年段或升學考試階段標籤；路徑呈現為「**能學就一路往上**」的連續進程（以技能/主題/難度階梯命名，不以學制命名）。
+  年段/考試階段僅為**內部 metadata**（排序、先備、難度、覆蓋追蹤），不得作為顯示字串。
+  動機：避免「這是高中＝太難」「這是國小＝太幼稚」的天花板與標籤感，支持連續成長（呼應心理醫生 §8-7 視角）。
+- **R13 課綱＝下限，深度無上限（minimum, not ceiling）**：108 課綱／考試範圍是**必須全覆蓋的最低要求**，
+  不是天花板。鼓勵收錄**超綱延伸**知識點（更深、更廣、跨學科、真正理解導向），標記 `tier:t_enrich`、`beyond:true`。
+  **延伸上限 = 大學入門程度（university-intro）**：可延伸到大一普通程度（如微積分銜接、普通物理/化學/生物、線代/離散、經濟學原理…），
+  以「打好銜接、滿足好奇」為度，不做研究所深度。
+  **coverage gate 對「課綱 minimum」嚴格**（少一條即 FAIL）；**超綱延伸為加分、不設上限、可選、絕不 gating**，
+  且同樣不曝露年段（R11）——以「想更深入？」之類中性邀請呈現，不標「超難／高年級」。
+- **R12 知識涵蓋全域（不限學科課綱）**：知識母體含「學科（課綱）」**＋**「跨課綱生活與核心能力」
+  （兒少安全自保／社會情緒 SEL／學會如何學習／思考與推理／數位與媒體素養／資料素養／運算思維與科技／
+  理財素養／永續與世界公民／創新）。完整清單見**附錄 A**（`authoring/KNOWLEDGE_POINT_INVENTORY.md`，本 spec 不可分割的一部分）。
 
 ---
 
@@ -116,15 +129,36 @@
 
 ## 4. 知識點母體清單（RECON C 回填）
 
-**母體清單已落檔於 `authoring/KNOWLEDGE_POINT_INVENTORY.md`**（recon C 產出，598 條，STAGE→SUBJECT→STRAND→具體知識點）。
-本節僅摘要與規範，明細以該檔為準（該檔須經 content_audit ＋各科領域專家核對才算定案；`(待核)` 項建置前對照教育部課綱/大考中心）。
+**附錄 A ＝ `authoring/KNOWLEDGE_POINT_INVENTORY.md`，是本 spec 不可分割、BINDING 的列舉清單**（不是「參考」）。
+「涵蓋數學」這種空話**禁止**出現在 spec：涵蓋什麼，必須逐條列舉在附錄 A，且每條可被 coverage gate 機器追蹤。
+> 教訓（Sidewalk documents）：一開始沒把 source-code list 逐項列舉並 gate 住，成果就淺薄。本 spec 以附錄 A 列舉 ＋
+> §11 coverage gate 複製其「清單驅動完整度」的做法，杜絕「挑幾個做做、其餘略過」的淺薄實作。
 
-- **總量**：國小 158 ＋ 國中 223 ＋ 高中 217 ＝ **598 條**；另標示「高中數學必補 8 strands」顯性追蹤。
-- **知識點 id 規範**：每條配穩定字串 id，格式 `<subject>.<stage>.<strand>.<slug>`（例 `math.g8.alg.quadratic-formula`、
-  `sci.g10.phys.kinematics`）。id 一經指派不得改語意（與 §7 獎勵 id 同哲學：穩定、可追蹤、不重用）。
-  id 清冊（registry）為 Phase 1 產出，是覆蓋矩陣與 §6.2 unit metadata 的連結鍵。
-- **gap（§4 − §5.5）**：主要落在**高中段**（三自然科無高中、數學無微積分/三角/向量/矩陣/複數/圓錐、國文僅 primer）
-  與**社會分流**（歷地公未依 strand/年段分離）；國小/國中以「接線＋補強」為主。gap 明細於 Phase 1 產出覆蓋矩陣後逐條列。
+- **binding 列舉 ＋ 穩定 id**：附錄 A 每一條知識點都配**穩定字串 id**，格式 `<domain>.<tier>.<strand>.<slug>`
+  （例 `math.t_adv.alg.quadratic-formula`、`sci.t_hs.phys.kinematics`、`life.safety.online.grooming-signals`）。
+  `tier` 為**內部難度階**（不是學制、learner 端不顯示，R11），id 一經指派不得改語意（與 §7 獎勵 id 同哲學）。
+- **機器可讀 manifest（Phase 1 首要產物）**：由附錄 A 產生 `authoring/knowledge_points.json`，一列一 id，欄含
+  `{id, domain, tier, strand, title_zh, exam_tags[], status, unit_ids[]}`。此 manifest 是覆蓋追蹤與 §6.2 unit metadata 的連結鍵。
+- **涵蓋全域（§2 R12）**：附錄 A 含 (甲) 學科課綱（國小/國中/高中內部 tier）＋ (乙) 跨課綱生活與核心能力
+  （安全自保／SEL／學會學習／思考推理／數位媒體素養／資料素養／運算思維科技／理財／永續世界公民／創新）。
+  目前量：學科 598 條；跨課綱域（section G）彙整中，完成後併計並重列每域 count。
+- **gap（附錄 A − §5.5 現況）**：主要落在**高階學科**（三自然科無高階層、數學無微積分/三角/向量/矩陣/複數/圓錐、
+  國文高階僅 primer）與**社會分流**；國小/國中段以「接線＋補強」為主。gap 明細 = coverage gate 首次執行時所有 `status!=done` 的 id 清單。
+
+### 4.1 附錄 A 的建置方法（list-first ＋ 深掘 fan-out ＋ binding；杜絕淺薄）
+> 教訓：單一 context 自己寫整份清單 **一定淺**（context 受限），且清單不在 spec 裡就會在實作時漂走。
+- **深度標準（DEPTH-STD）**：清單的每一條 = **一個具體、可測、可出題的微技能**（例：不是「二次方程式」，而是
+  `一元二次方程式的公式解`、`判別式判根數`、`配方法`、`根與係數關係`、`含參數的二次方程式應用` 各自一條）。
+  廣義標題（「涵蓋數學」「方程式」）**不可**作為一條知識點——會被 content_audit 判為淺薄 defect。
+- **建置法 = 每領域一位 expert 平行 fan-out 深掘**：按下表 slice 矩陣，每個 slice 指派一位領域 expert agent，
+  **只深挖自己那一小塊**到 DEPTH-STD，並各配獨立對抗式 reviewer 核對「對課綱/考試範圍是否窮盡、有無錯/年段錯置」。
+  不得由單一 agent 一次寫完全部（那會淺）。各 slice 回來合併去重，配穩定 id，emit 成 `knowledge_points.json`。
+- **slice 矩陣（學科）**：數學／國語文／英語／自然-理化／自然-生物／自然-地科／社會-歷史／社會-地理／社會-公民，
+  各跨 基礎／中階／高階 三內部 tier。**跨課綱域**：安全自保／SEL／學會學習／思考推理／數位媒體素養／資料素養／
+  運算思維科技／理財／永續世界公民／創新（section G）。
+- **現有 598 條 = 粗胚（coarse first cut）**：僅供起步，**必被各 slice 深掘結果取代/擴充**；深掘後重列每 slice count。
+- **spec 出場 gate（硬性）**：附錄 A 未完成「全 slice 深掘到 DEPTH-STD ＋ 每 slice 獨立審查 ＋ content_audit 5 clean ＋ 紅隊」，
+  **spec 不算定案、不得進實作**（§12）。這確保「清單一開始就在 spec 裡、且夠深」。
 
 ### 4.x 應考能力清單（策略層，與知識點並列追蹤）
 - 考古題近 5–10 年模式辨識；錯題本；嚴格計時與畫卡節奏。
@@ -214,7 +248,19 @@
 - `自評`：翻答案→三級自評（還不熟/快會了/會了）→ 餵 SRS（srs_engine）；**不假裝自動判讀**。
 - `metadata`：`unit_id`、`stage`、`subject`、`strand`、`knowledge_point_ids[]`、`prerequisites[]`、
   `est_minutes`（認知負荷/倦怠控制）。
+- **計時模式（可選功能；使用者 2026-10-26 認可）**：練習/測驗可開啟**計時器**——倒數計時、配速提示（每題建議秒數）、交卷提醒鈴，
+  用於會考/學測的「嚴格計時、畫卡節奏、時間分配」應考能力（§4.x）。**心理/SEL 鐵律**：計時是工具不是壓力——
+  **預設可關、隨時可暫停/關閉**、正向框架（顯示「配速練習」而非「倒數催促」），不得製造焦慮或以紅色警示轟炸（呼應 §8-7 心理醫生、INV-4 不倦怠）。
 - 資料與引擎分離（R5）：單元資料走 sidecar（JSON/TS data），共用 renderer。
+- **動畫/視覺技術不限 JavaScript stepper**（使用者定 2026-10-26）：自然科（理化/地科/生物）等概念，動畫可用最能把概念講清楚的技術——
+  CSS/SVG/SMIL 動畫、`<canvas>`、**WebGL**（如 3D 分子/場、軌道、波）、Lottie、或預渲染影片皆可，不侷限 `anim_core` 的 JS stepper。
+  **但仍受全部既有約束**：viz-QA（iPad Air 13 逐 frame render＋四角色簽核，R10/視覺 QA 規則檔）、R-STYLE 設計一致（§6.5，共用調色盤）、
+  效能（R9，按需載入、體積控管、低階裝置可降級）、眼舒適（不刺眼/不暈/可暫停，尊重 `prefers-reduced-motion`）。
+  **參考語料／能力實證（同作者先前作品，證明高互動 WebGL/canvas 模擬可做到；僅取手法，勿複製內容或混品牌/混 repo）**：
+  `../engineering/topics/physics`（c1–c34＋`sim.html`）、`../engineering/topics/chemistry`（`chem-viz.js`、`molecule-webgl.js` WebGL 3D 分子）、
+  `../engineering/topics/calculus/index.html`、`../engineering/numla/index.html`（數值/線代視覺化）、
+  `../engineering/languages/typescript/ts_capstone_satellite_map.html`、`..._solar_system.html`、`../engineering/languages/python/python_capstone_nbody.html`
+  （衛星地圖／太陽系／N 體重力模擬）。**實作鐵律**：既然這些等級的互動模擬做得出來，自然科動畫**不得退回淺薄靜圖**；但一律仍過 viz-QA＋R-STYLE＋效能＋眼舒適。
 
 ### 6.3 進度與精熟
 - 逐單元進度存 localStorage（§7 持久化規範）；精熟由 SRS 狀態 ＋ 自評歷史決定。
@@ -369,6 +415,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 
 ## 12. 本 spec 自身的收斂協定（meta-process）
 
+0. **附錄 A 深掘完成（前提）**：依 §4.1 各 slice 深掘到 DEPTH-STD＋各自獨立審查＋合併配 id＋emit `knowledge_points.json`。附錄 A 未深掘完成，spec 不得宣告定案。
 1. 本檔先補齊 §4/§5/§7.2 回填 → 全文完整。
 2. 以 `/static-doc-audit` 的 content_audit 對本 spec 跑 round，panel 判定 defect，修到
    **連續 5 round 零 panel-confirmed defect（同一未變更 sha）**。
