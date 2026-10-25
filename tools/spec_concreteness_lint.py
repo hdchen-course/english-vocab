@@ -14,22 +14,18 @@ from pathlib import Path
 SPEC = Path(sys.argv[1]) if len(sys.argv) > 1 else \
     Path(__file__).resolve().parent.parent / "LEARNING_PATH_REBUILD_SPEC.md"
 
-# 標題開頭數字/代號 → 是否免檢(描述性、索引、事實、已關閉)。比對用標題「前綴」。
-EXEMPT_PREFIXES = (
-    "## 0", "### 0.1", "### 0.2",        # 文件控制/待回填/防漂移錨點(本身是說明)
-    "## 1",                               # 目的與範圍
-    "## 3",                               # 讀者畫像(描述性；INV 由 §9 驗)
-    "### 3.1", "### 3.2", "### 3.3",
-    "## 5", "### 5.1", "### 5.2", "### 5.3", "### 5.4", "### 5.5",  # 現況盤點(事實)
-    "### 4.x",                            # 應考能力清單(清單型)
-    "## 13",                              # ledger(表格)
-    "## 14",                              # 開放問題(已全關閉)
-    "## 4.",                              # §4 摘要(明細在附錄A/§4.1)
-)
-# 規範段關鍵前綴：必須具體化(細則+範例+❌)
+# 免檢章(描述性/索引/事實/已關閉)——以「精確章號」比對，不用 startswith(避免 `## 1` 吞 §10/§11/§12)。
+# 章號取自 "## <num>"，num 形如 0,1,2,...,11,11.A。免檢集合：
+EXEMPT_CHAPTERS = {"0", "1", "3", "4", "5", "13", "14"}
+# 需具體化(細則+範例+❌)的章：2,6,7,8,9,10,11,11.A,12（即非免檢的規範章）。
+_CH_RE = re.compile(r"^##\s+([0-9]+(?:\.[A-Za-z0-9]+)?)")
+
+
 def is_exempt(title: str) -> bool:
-    t = title.strip()
-    return any(t.startswith(p) for p in EXEMPT_PREFIXES)
+    m = _CH_RE.match(title.strip())
+    if not m:
+        return True  # 無法辨識章號(異常標題)→不強制
+    return m.group(1) in EXEMPT_CHAPTERS
 
 
 def main():
