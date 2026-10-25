@@ -299,7 +299,7 @@
 
 ### 6.2 單元設計規格（每個 Unit 的統一骨架）
 - **粒度與檔案映射鐵律（R-GRAIN；杜絕「一知識點一檔」誤解與檔名爆炸/連鎖改名）**：
-  - **知識點 ≠ 單元 ≠ 檔案**。知識點（附錄 A 3092 條）是**標籤**（micro-skill id），只用於覆蓋追蹤（manifest `unit_ids[]`），**嚴禁「一個知識點生一個 HTML 檔」**。
+  - **知識點 ≠ 單元 ≠ 檔案**。知識點（附錄 A 3092 條）是**標籤**（micro-skill id），用於覆蓋追蹤（manifest `unit_ids[]`），並作為 §9 知識隔離／先備計算（K(U)=K_pre∪teach(U)）與 §6.6 rubric⑦「真教真考」綁定的**連結鍵**；但**不作為檔案/頁的切分依據**——**嚴禁「一個知識點生一個 HTML 檔」**。
   - **單元（unit）**是一個「教→練→評」小叢集，`knowledge_point_ids[]` 為**清單**——一個單元可掛**數個相關知識點**；單元大小以**認知負荷**（`est_minutes≤12`、不過載 INV-4）為界，**不以「每條知識點各一單元」為界**。
   - **一個 HTML 頁可容納多個單元**（unit＝頁內區塊/stepper，沿用現站「一頁多概念」模式）；**不得**為了對映知識點把站點炸成數百~上千個檔。
   - **既有檔名/路徑一律穩定**：reuse 的頁**原地包裝、保留原檔名與路徑**；rebuild 只改**內容**不改檔名；**禁止大規模改名/搬移**（否則書籤、跨頁連結、獎勵 `progKey`、git history 全斷，牴觸 never-disappear 精神）。確有必要改名＝例外，須附 redirect ＋ `progKey` 遷移對照並納入 §7.3 紅隊；預設**不改名**。新增頁才給新檔名。
@@ -367,7 +367,7 @@
      ③ 內容卡自適應寬（R-STYLE-3）；④ **每個題目正解 play-through 代入朗讀語句通順無誤**（correctness；play-through-sim）；⑤ 自評三級＋寫入 SRS、不假裝自動批改；
      ⑥ 繁體零簡體零 PRC（scan_simplified）；⑦ `knowledge_point_ids[]` 全部對映到附錄 A 既有 id、`prerequisites[]` 已宣告且無循環，**且每一條宣告的 id 必須「真教＋真考」**——在「教」段落實際教授該微技能、且「練/評」至少有一題 retrieval 涵蓋它（**禁止宣告塞 id 卻不教不考**；declaration-stuffing＝fail，杜絕 §4 淺薄覆蓋，供 AC-COV-1 核對）；⑧ `est_minutes ≤ 12`（過長拆單元，INV-4）；
      ⑨ viz 逐 frame iPad Air 13 render＋四角色簽核（R10）；⑩ 含可執行碼則附 code-download bundle 並從乾淨解壓可執行。
-  3. **同一 gate、逐單元、不可抽樣**：每個單元檔跑 per-file content_audit 到 5 clean ＋ `tools/unit_acceptance_lint.py`（待建，機械驗 ②③⑥⑦⑧⑩ ＋ **golden 結構 diff：與對應 `authoring/golden/<archetype>.html` 比對，偏離而 unit metadata 無 `deviation_reason` 即 FAIL**，對應 §11.A AC-UNIT-3）＋ 視覺 QA；
+  3. **同一 gate、逐檔（頁）、不可抽樣**：每個**檔案（頁）**跑 per-file content_audit 到 5 clean（頁內各單元的驗收走 AC-UNIT-1 的 per-unit rubric，粒度分開） ＋ `tools/unit_acceptance_lint.py`（待建，機械驗 ②③⑥⑦⑧⑩ ＋ **golden 結構 diff：與對應 `authoring/golden/<archetype>.html` 比對，偏離而 unit metadata 無 `deviation_reason` 即 FAIL**，對應 §11.A AC-UNIT-3）＋ 視覺 QA；
      全過才得併入學習路徑、才可宣告完成。rubric 任一項 fail＝擋關（fail-closed）。
 - **範例：**
   - ✅**正例** `math.t_mid.equation.quadratic-formula`：教（配方法動畫，純 token 色）＋練（可玩、即時回饋）＋評（翻答案→三級自評→SRS）；
@@ -565,7 +565,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 
 - **細則**：上列 8 項為「完成」的硬性必要條件**摘要（非窮舉）**；其**逐條可機械驗且窮舉的版本＝§11.A 驗收準則矩陣（19 條 AC，各附驗證方法/門檻/證據）**，§11.A 為唯一完工判準。
   完成 ⟺ §11.A 全 AC PASS 且證據登 `authoring/acceptance_ledger.json`（綁 sha）。任一項未過即未完成，**不接受「大致上」**。逐檔與全書都適用（per-file 先、whole-book 後）。
-- **範例**：✅ 某單元檔：5 clean＋簡體 0＋四角色簽核（sha 相符）＋rubric 10/10＋覆蓋 id 存在 → 該檔完成。 ❌ 只跑到 3 clean 就宣告完成（違第 1 項）→ 擋。 ⚠ 第 3 項四角色已簽核，但事後又改版面（sha 變）→ 舊簽核作廢，須重 render＋重簽（§11.A AC-VIZ-1 ⚠）。
+- **範例**：✅ 某檔案（頁）：5 clean＋簡體 0＋四角色簽核（sha 相符）＋頁內各單元 rubric 10/10＋覆蓋 id 存在 → 該檔完成。 ❌ 只跑到 3 clean 就宣告完成（違第 1 項）→ 擋。 ⚠ 第 3 項四角色已簽核，但事後又改版面（sha 變）→ 舊簽核作廢，須重 render＋重簽（§11.A AC-VIZ-1 ⚠）。
 
 ---
 
@@ -580,7 +580,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 | AC-COV-1 | 課綱 minimum 知識點**真覆蓋**：每個非 `beyond` 的 id 至少對映 1 個已完成單元，**且該單元對此 id 通過 §6.6 rubric ⑦「真教＋真考」綁定**（不接受只宣告於 `knowledge_point_ids[]` 卻未教未考） | `tools/coverage_gate.py`（待建）**分階段驗**：**Phase 3 exit** 僅查 `unit_ids[]` ∩ `unit_acceptance_lint` 的 ⑦ 通過集（path-independent、逐檔即有，不依賴 §9）；**Phase 5 done-gate** 再加 ∩ §9 模擬 `taught_kps_exercised`（二次確認，呼應 §9.4） | 未真覆蓋 minimum id 數 ＝ **0**（exit 0） | coverage 報告 JSON |
 | AC-COV-2 | 知識母體本身完整且無重複 id、無不符格式 bullet | `tools/_kp_build.py` | 重複 id＝0、不符格式（扣 section 說明行）＝0 | build 報告 |
 | AC-UNIT-1 | **每個**單元通過 §6.6 的 10 項 rubric | `tools/unit_acceptance_lint.py`（待建）＋ 人工 play-through | 每單元 10/10；0 單元缺項 | 逐單元 rubric 結果 |
-| AC-UNIT-2 | 每個單元檔 content_audit 連續 **5 clean**（同 sha、L3 exit 0） | `/static-doc-audit` per-file + `coverage_check.js` | 每檔 5 clean、L3 exit 0 | convergence ledger |
+| AC-UNIT-2 | 每個**檔案（頁）** content_audit 連續 **5 clean**（同 sha、L3 exit 0；content_audit 粒度＝檔案，單元層面走 AC-UNIT-1） | `/static-doc-audit` per-file + `coverage_check.js` | 每檔 5 clean、L3 exit 0 | convergence ledger |
 | AC-UNIT-3 | 每個新單元與對應 golden 範本做**結構 diff**（§6.6 細則① 凍結黃金範本防品質漂移）；偏離而 unit metadata 無 `deviation_reason` 即 FAIL | `tools/unit_acceptance_lint.py`（讀 unit metadata `deviation_reason` ＋ 與 `authoring/golden/<archetype>.html` 結構比對） | 未解釋的偏離數＝**0**（exit 0） | golden-diff 報告 |
 | AC-PATH-1 | 每條主要學習路徑**無斷層**（INV-1） | §9 知識受限模擬 | 每路徑每 U `result=pass`、`gaps=[]` | 模擬輸出 JSON |
 | AC-PATH-2 | 可學會/記得牢/不倦怠（INV-2/3/4） | §9 模擬（§9.3 三級門檻） | `learnable=true`、`retention_ok=true`、`burnout_risk≤med`（且 `med` 須 `mitigation` 欄非空）全數 | 模擬輸出 JSON |
