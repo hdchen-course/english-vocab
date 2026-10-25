@@ -372,7 +372,7 @@
 - **穩定字串 id**：所有可賺得物（skin/border/badge/shop item/成就/解鎖）以穩定字串 id 識別，
   **絕不用陣列 index**；catalog 擴充只新增 id，不重用/不改既有 id 語意。
 - **additive 合併**：讀檔時只「補缺省、不覆蓋既有」；絕不以 freshProfile 整個覆寫 storage key。
-- **真實遷移 migrate()**：`schemaVersion` 必須被讀取並驅動逐版 migrate；新欄位用遷移補齊，舊的賺得資料保留。
+- **真實遷移 migrate()**：讀取**存檔 profile 的 `version` 欄**（§7.2 R2 指出 game_core.js 目前 `version: CONFIG.schemaVersion` 有寫無人讀），與當前 `CONFIG.schemaVersion` 常數比對以驅動逐版 migrate；**切勿改讀自我恆等的 `CONFIG.schemaVersion`**（永遠等於當前版、偵測不到舊檔＝migrate 永不觸發，牴觸 never-disappear/RT-4）。新欄位用遷移補齊，舊的賺得資料保留。
 - **catalog 變更安全**：id 若下架，owned 參照需 graceful fallback（顯示占位或保留為已擁有），不得清除。
 - **寫前先讀**：任何 save 前先 load＋merge，杜絕「先寫預設再讀」把已賺得清掉。
 - **壞檔不重設（最高優先）**：若存檔 JSON 解析失敗，**絕不**以空白 freshProfile 覆寫 key；必須
@@ -483,8 +483,10 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
   即 AC-PATH-2 的 `burnout_risk≤med` PASS ⟺ 本處 `high` 才算 **INV-4 倦怠 defect**（注意：「斷層」為 INV-1 專用詞、受 AC-PATH-1 的零斷層 gate；倦怠 defect 不計入 INV-1 斷層）；`med` 以「附緩解說明」放行、不得無說明放行。
 
 ### 9.4 執行
+- **「主要路徑」定義（gate 範疇，須可滿足）**：取 §6.1 先備 DAG 中每個學科/strand 的一組 root→leaf 路徑，**其聯集必須走過 DAG 的每一個單元**（即不存在「不落在任何被模擬路徑上」的單元；孤立節點也各自成一條單點路徑）。這保證每個非 `beyond` minimum KP 的 home 單元都至少被模擬一次，`taught_kps_exercised` 必產生 → AC-COV-1 可滿足。
 - 全書實作完成後，對每條主要路徑跑知識受限模擬；發現斷層→修→重跑，loop 到零斷層。
 - 模擬為**獨立 agent**，知識邊界由協定強制（prompt 僅注入 K(U)），不得讓它偷看後續內容。
+- **覆蓋與模擬的分工（避免 gate 不可滿足）**：AC-COV-1 的「真教真考」綁定**主由每單元 `unit_acceptance_lint` rubric ⑦ 驗證**（對全部單元執行，與路徑選取無關）；§9 模擬的 `taught_kps_exercised` 為路徑端二次確認。因上一條已保證路徑聯集走過所有單元，兩者皆可滿足、不互相造成死結。
 
 ### 9.5 細則與範例（知識受限模擬；本節為 §0.3 具體化範本）
 - **細則：**
