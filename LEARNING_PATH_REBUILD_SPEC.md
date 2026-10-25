@@ -520,13 +520,13 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 
 ### 10.1 各 Phase 的進入/退出準則與 rollback（§0.3 具體化）
 - **細則**：每個 Phase 都有明確 **exit gate**，未過不得進下一 Phase；Phase 內每檔完成即 commit（訊息標 Phase），rollback＝`git revert`/`git checkout` 回該 commit。
-  - **Phase 0 exit**：spec 過 §12（content_audit 5 clean ＋ 紅隊零繞過 ＋ `spec_concreteness_lint` exit 0）。
+  - **Phase 0 exit**：spec 過 §12（content_audit 5 clean ＋ 紅隊零繞過 ＋ `spec_concreteness_lint` exit 0）＋ **`AC-ANTIDRIFT` 綠**（§0.2 四錨點已交付、hook 對壞案例 DENY／好案例 ALLOW 經紅隊）。
   - **Phase 0.5 exit**：`design_consistency_gate` exit 0（既有不一致歸零到 token）＋ §7.2 之 R1 壞檔不重設/R2 真 migrate 修妥 ＋ `RT-6` 綠。
   - **Phase 1 exit**：`knowledge_points.json`＋id registry＋unit schema＋hub/roadmap 骨架＋`migrate()`＋additive-merge 就緒；`AC-COV-2`、`AC-REWARD-1` 綠。
   - **Phase 2 exit**：既有單元全數接線（宣告 `prerequisites`/`knowledge_point_ids`），每檔 5 clean。
   - **Phase 3 exit**：`AC-COV-1` ＝ 0 個未覆蓋 minimum id（gap 全補）。
-  - **Phase 4 exit**：獎勵擴充**只新增 id**、RT-1..8 全綠。
-  - **Phase 5 exit**：§11.A 全 **16 條 AC**（含 AC-SPEC）綠且 `acceptance_ledger.json` 全登錄。
+  - **Phase 4 exit**：獎勵擴充**只新增 id**、RT-1..8 全綠 ＋ **`AC-NOBACKEND` 綠**（獎勵/排行/社交類零對外請求，no_backend_gate exit 0）。
+  - **Phase 5 exit**：§11.A 全 **18 條 AC**（含 AC-SPEC）綠且 `acceptance_ledger.json` 全登錄。
 - **範例**：
   - ✅**正例**：Phase 3 結束時 `coverage_gate` 報「未覆蓋 minimum id ＝ 0」→ 得進 Phase 4。
   - ❌**反例**：宣稱「Phase 3 大致完成」但 coverage 顯示 37 個 minimum id 無對映單元 → **不得**進 Phase 4，須列 37 id 補完。
@@ -536,7 +536,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 
 ## 11. DONE-GATE（全書完成的定義）
 
-一個檔案／全書「完成」須全部通過：
+一個檔案／全書「完成」須全部通過（**下列 8 項為必要條件摘要、非窮舉；唯一且完整的完工定義見 §11.A 的 AC 矩陣**，含 no-grade/coverage/rubric/no-backend/anti-drift 等本摘要未逐列者）：
 1. **逐檔 content_audit 5 連續 clean**（同一 sha），L3 coverage_check exit 0（不可用抽樣/粗分片假 clean）。
 2. **簡體/PRC 詞掃描**零命中（R2）。
 3. **視覺 QA（iPad Air 13"）**：全畫面/frame render（1366×1024 ＋ 1024×1366，http）、逐張 PNG 看過、
@@ -547,7 +547,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 7. **code-download bundle**（若該單元/模組含可執行程式，依 house 規範提供完整可執行+可驗證下載）。
 8. **house 視覺/結構一致**；效能（R9）未退化。
 
-- **細則**：上列 8 項為「完成」的硬性必要條件；其**逐條可機械驗版本＝§11.A 驗收準則矩陣（16 條 AC，各附驗證方法/門檻/證據）**。
+- **細則**：上列 8 項為「完成」的硬性必要條件**摘要（非窮舉）**；其**逐條可機械驗且窮舉的版本＝§11.A 驗收準則矩陣（18 條 AC，各附驗證方法/門檻/證據）**，§11.A 為唯一完工判準。
   完成 ⟺ §11.A 全 AC PASS 且證據登 `authoring/acceptance_ledger.json`（綁 sha）。任一項未過即未完成，**不接受「大致上」**。逐檔與全書都適用（per-file 先、whole-book 後）。
 - **範例**：✅ 某單元檔：5 clean＋簡體 0＋四角色簽核（sha 相符）＋rubric 10/10＋覆蓋 id 存在 → 該檔完成。 ❌ 只跑到 3 clean 就宣告完成（違第 1 項）→ 擋。 ⚠ 第 3 項四角色已簽核，但事後又改版面（sha 變）→ 舊簽核作廢，須重 render＋重簽（§11.A AC-VIZ-1 ⚠）。
 
@@ -576,10 +576,12 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 | AC-PERF-1 | 效能不退化：單頁初始 JS ≤ 既有基準、無無限 inline 膨脹、資產按需載入（R9） | 體積量測腳本（待建，定基準數值） | 每頁 ≤ 基準；0 超標 | 體積報告 |
 | AC-A11Y-1 | 對比度 ≥4.5:1、點擊目標 ≥44px、尊重 `prefers-reduced-motion` | 既有 contrast gate + 量測 | 違規＝0 | a11y 報告 |
 | AC-CODE-DL | 含可執行碼的模組提供完整下載且**乾淨解壓可跑** | 解壓到 temp＋跑 README 指令 | build/test 綠 | 執行 log |
+| AC-NOBACKEND | 無 backend 鐵律（§1.3/§7.4）機器堵死：learner 端與獎勵模組**零對外網路請求**（排行榜/對戰/好友/雲端同步/金流一律禁） | `tools/no_backend_gate.py`（待建，掃 `fetch`/`XMLHttpRequest`/`WebSocket`/`EventSource`/`navigator.sendBeacon`/第三方同步 SDK）＋紅隊（植入排行榜 fetch 須被擋、純 localStorage 放行） | 對外請求命中＝**0**（exit 0） | gate 報告 |
+| AC-ANTIDRIFT | §0.2 四防漂移錨點**已交付且 fail-closed**：(a) 專案 `.claude/settings.json` hook、(b) `inject-sop-carriers.py` `[learning-path-sop]` echo、(c) `~/.claude/rules/` 規則檔、(d) `MEMORY.md` 指標 ＋ `design_consistency_gate.js` | 錨點存在性檢查 ＋ 紅隊（「未重讀本檔即宣告任一檔收斂」的壞案例須被 hook **DENY**、好案例 ALLOW） | 四錨點齊備、hook 壞案例 DENY/好案例 ALLOW | 錨點清單 ＋ 紅隊 log |
 | AC-SPEC | 本 spec 自身：§0.3 anti-vagueness 全節通過 ＋ content_audit 5 clean ＋ 紅隊零繞過 | spec_concreteness_lint＋content_audit＋紅隊 | 全綠 | spec convergence ledger |
 
 - **細則**：每條 AC 必對應一個**確定性腳本或綁 sha 的簽核**（上表「驗證方法」欄）；標「待建」者於 Phase 1 建並**紅隊**（證明壞案例被擋、好案例放行）才可啟用。`acceptance_ledger.json` 一列一次通過紀錄，sha 一變該 AC 作廢須重驗。
-- **範例**：✅ 全 **16 條 AC**（AC-COV-1…AC-CODE-DL 共 15 條產品 AC ＋ AC-SPEC meta）在同一 sha 皆有 PASS 列＋證據 → 可宣告完成並（經使用者）push。 ❌ AC-COV-1 顯示 37 個 minimum id 無單元 → 未完成，列出 37 個待補 id。 ⚠ AC-VIZ-1 四角色已簽核但 sha 已變（之後又改了版面）→ 舊簽核作廢，須重 render+重簽才算數。
+- **範例**：✅ 全 **18 條 AC**（AC-COV-1…AC-ANTIDRIFT 共 17 條產品 AC ＋ AC-SPEC meta）在同一 sha 皆有 PASS 列＋證據 → 可宣告完成並（經使用者）push。 ❌ AC-COV-1 顯示 37 個 minimum id 無單元 → 未完成，列出 37 個待補 id。 ⚠ AC-VIZ-1 四角色已簽核但 sha 已變（之後又改了版面）→ 舊簽核作廢，須重 render+重簽才算數。
 
 ## 12. 本 spec 自身的收斂協定（meta-process）
 
@@ -590,6 +592,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 3. **紅隊**：獨立 agent 嘗試證明「規範可被繞過/遺漏」——例如：能否跳過先備宣告而仍過 gate？
    能否新增獎勵卻讓舊獎勵孤兒化而不被 §7.3 抓到？能否讓模擬角色偷看後續知識？每找到一個繞過＝
    補一道子 gate ＋ 紅隊證明（§13 ledger）。紅隊零繞過才算定案。
+3.5. **交付 §0.2 四防漂移錨點並紅隊（`AC-ANTIDRIFT`）**：fail-closed hook／carrier echo／rule 檔／MEMORY 指標 ＋ `design_consistency_gate.js` 皆就位，證明「未重讀本檔即宣告收斂」壞案例被 DENY。錨點未交付＝不算定案（呼應 §0.2「承諾無效、只有 fail-closed 機器強制有效」）。
 4. 定案後才進 Phase 1（§10）。
 
 - **細則**：每 round 以**不同 partition framing** 跑（避免抽樣假 clean）；「5 連續 clean」＝**同一未變更 sha** 連 5 round 零 panel-confirmed defect，
