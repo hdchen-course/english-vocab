@@ -158,7 +158,7 @@
    並宣告其**先備單元（prerequisites）**與**知識點標籤（knowledge-point ids）**。
 
 ### 3.3 路徑不變量（invariants，§9 模擬據此驗證）
-- **INV-1 無斷層**：一個單元用到的每個概念，都在其先備單元鏈中教過。
+- **INV-1 無斷層**：一個單元的「練/評」用到的每個概念，都在其**先備單元鏈中教過，或在本單元自己的「教」段落中教過**；只有「既非先備、又非本單元所教，而是路徑更後面的單元才教（或全書沒教）」的概念才算斷層。（單元引入並測試自己的新概念＝正常，不是斷層。）
 - **INV-2 可學會**：依路徑學習者，在不借助「尚未教的知識」下，能完成該單元的練與評。
 - **INV-3 記得牢**：關鍵知識點有 retrieval practice ＋ 間隔複習（SRS）覆蓋。
 - **INV-4 不倦怠**：單元長度／認知負荷受控；難度階梯平滑；有節奏的獎勵與成就回饋。
@@ -469,13 +469,13 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 證明學習路徑滿足 §3.3 的 INV-1..4：無斷層、可學會、記得牢、不倦怠。
 
 ### 9.2 知識隔離（關鍵機制）
-- 模擬一個學習者走到路徑上的單元 U 時，給該 agent 的**可取得知識 = U 的先備單元鏈所教過的知識點之聯集**，
-  **不給** U 尚未教、或路徑更後面才教的任何概念/詞彙/技巧。
-- 操作化：以 §6.2 的 `knowledge_point_ids` ＋ `prerequisites` 計算「到 U 為止的已授知識集 K(U)」；
-  模擬 prompt 只載入 K(U) 對應的教學內容，明令「只能用 K(U) 內的知識作答，遇到未教概念要回報為斷層」。
+- 模擬一個學習者走到路徑上的單元 U 時，給該 agent 的**可取得知識 K(U) = (U 先備單元鏈所教知識點之聯集 `K_pre`) ∪ (U 自己「教」段落所授知識點 `teach(U)`)**；
+  **不給** 路徑更後面單元才教的任何概念/詞彙/技巧（亦即不得偷看 U 之後的內容）。先讀先備、再讀 U 本身的「教」，然後才作 U 的「練/評」——這正模擬真實學習者：帶著先備知識、上完這一課、再做本課練習。
+- 操作化：以 §6.2 的 `knowledge_point_ids` ＋ `prerequisites`，K_pre ＝ `prerequisites` 遞移閉包所涵蓋的 `knowledge_point_ids`；teach(U) ＝ U 自己宣告的 `knowledge_point_ids`；K(U) ＝ 兩者聯集；
+  模擬 prompt 載入 K_pre 的教學摘要 ＋ U 本身的「教」內容，明令「只能用 K(U) 內的知識作答，遇到不在 K(U)（即路徑更後面才教）的概念要回報為斷層」。
 
 ### 9.3 判定
-- **斷層（INV-1 違反）**：U 要求用到不在 K(U) 的概念 → defect（需調整先備鏈或補前置單元）。
+- **斷層（INV-1 違反）**：U 的練/評要求用到**既不在 K_pre、也不是 U 自己教的**概念（即落在 K(U) 之外、僅由路徑更後面單元所教或全書未教）→ defect（需調整先備鏈、補前置單元、或把該點設為 U 先備）。
 - **學不會（INV-2）**：在 K(U) 下無法完成練/評 → defect。
 - **記不牢（INV-3）**：關鍵知識點無 retrieval/spacing 覆蓋 → defect。
 - **倦怠（INV-4）**：由心理醫生＋學習科學家依「單元過長/負荷過重/難度跳階/回饋稀疏」共判 `burnout_risk∈{low,med,high}`，門檻**三級**（與 AC-PATH-2 單一一致，可機械判定）：
@@ -488,12 +488,12 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 
 ### 9.5 細則與範例（知識受限模擬；本節為 §0.3 具體化範本）
 - **細則：**
-  1. 輸入＝目標單元 U 的 `unit_id`。計算 **K(U)** ＝ U 的 `prerequisites` 遞移閉包所涵蓋的全部 `knowledge_point_ids` 聯集（U 本身「尚未教、排在更後面」的概念不計入）。
-  2. 模擬 agent 的 prompt **只注入 K(U) 對應單元的教學摘要**，並明令：「只能用 K(U) 內的知識作答；遇到未教概念即停、回報斷層並指出缺哪個先備」。嚴禁注入 U 之後才教的內容。
+  1. 輸入＝目標單元 U 的 `unit_id`。計算 **K_pre** ＝ U 的 `prerequisites` 遞移閉包所涵蓋的全部 `knowledge_point_ids` 聯集；**teach(U)** ＝ U 自己宣告的 `knowledge_point_ids`；**K(U) ＝ K_pre ∪ teach(U)**（即「先備所學」＋「本課所教」；只排除路徑更後面單元才教的點）。
+  2. 模擬 agent 的 prompt **注入 K_pre 的教學摘要 ＋ U 本身「教」段落的內容**，並明令：「可用 K(U)（先備＋本課所教）內的知識作答；遇到不在 K(U)（即更後面才教）的概念即停、回報斷層並指出缺哪個先備」。嚴禁注入 U 之後才教的內容。
   3. 輸出格式固定：`{unit_id, result: pass|blocked, gaps:[{missing_concept, where_used}], learnable:bool, retention_ok:bool, burnout_risk:low|med|high, notes}`。
   4. 門檻：一條路徑上每個 U 皆 `result=pass` 且 `gaps=[]`，該路徑才算無斷層（INV-1）；任一 `blocked` → 調整先備鏈或補前置單元 → 重跑，loop 到零斷層。
 - **範例：**
-  - ✅**正例**：U＝`math.t_mid.equation.quadratic-formula`，其 prerequisites 閉包已含「因式分解解一元二次、配方法、平方根運算、正負數」→ K(U) 足以推導公式解 → `result:pass, gaps:[]`。
+  - ✅**正例**：U＝`math.t_mid.equation.quadratic-formula`（公式解即 teach(U)，由本課「教」段落教授），其 prerequisites 閉包 K_pre 已含「因式分解解一元二次、配方法、平方根運算、正負數」→ 學習者讀完先備＋本課即能推導並套用公式解，練/評所用皆在 K(U)=K_pre∪teach(U) 內 → `result:pass, gaps:[]`。（單元測自己剛教的公式＝正常，非斷層。）
   - ❌**反例**：U 的練習第 3 題用到「判別式 Δ＝b²−4ac」，但該知識點 `math.t_mid.equation.quadratic-discriminant` 排在 U 之後、不在 K(U) → `result:blocked, gaps:[{missing_concept:"math.t_mid.equation.quadratic-discriminant", where_used:"練習第3題"}]` → 須把 discriminant 設為 U 先備或移除該題。
   - ⚠**邊界**：某概念雖與 U 同一 tier，但其單元在路徑順序上排 U **之後** → 仍算斷層（K(U) 以 `prerequisites` 鏈計，**不以 tier/stage 計**）→ `blocked`，需修正先備宣告或單元排序。
 
