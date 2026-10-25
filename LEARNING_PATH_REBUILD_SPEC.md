@@ -39,6 +39,17 @@
 
 ---
 
+### 0.3 具體化規範（ANTI-VAGUENESS；每條規範都要「細則＋範例」，否則擋關）
+> 使用者疑慮（2026-10-26）：spec 太原則化 → 同一／跨 session 都會自由心證、亂解讀。對策：**原則不算數，細則＋範例才算數**。
+- 每一條規範性 §／R MUST 附：
+  - **細則（operational detail）**：精確到可照做——具體欄位、門檻數值、檔名/格式、步驟、輸入→輸出；
+    禁用無法量測的模糊詞（「適當」「盡量」「清楚」「友善」須改寫成可量測定義，如「≤40 字」「對比度 ≥4.5:1」「≤2 次點擊可達」）。
+  - **範例 ≥3**：至少 1 個 **✅正例（compliant）**、1 個 **❌反例（violation＋為何違規）**、1 個 **⚠邊界/易混淆案例**。
+- **anti-vagueness gate（fail-closed）**：(a) content_audit 對任何「只有原則、無細則、或範例 <3」的規範段判 defect；
+  (b) 確定性 lint（待建 `tools/spec_concreteness_lint.py`）掃描每個 `##`/`###`/`- **R..**` 規範段，缺 `細則：` 或 `範例：`（含至少一個 ❌）即 exit≠0，進 §12/§11 gate。
+- **已完成的具體化範本**：§6.6（品質恆定）、§7.1/§7.2/§7.3（獎勵，含風險表＋RT 案例）、§6.5 R-STYLE-3（自適應卡）、§4.1 DEPTH-STD、§9.5（知識受限模擬，下）。
+  **尚待比照補齊**：§2 各 R（逐條加細則＋3 範例）、§6.1~§6.4、§8、§10、§11。全部補齊後 spec 才可定案（§12）。
+
 ## 1. 目的與範圍
 
 ### 1.1 一句話目的
@@ -98,6 +109,11 @@
   不是天花板。鼓勵收錄**超綱延伸**知識點（更深、更廣、跨學科、真正理解導向），標記 `tier:t_enrich`、`beyond:true`。
   **延伸上限 = 大學入門程度（university-intro）**：可延伸到大一普通程度（如微積分銜接、普通物理/化學/生物、線代/離散、經濟學原理…），
   以「打好銜接、滿足好奇」為度，不做研究所深度。
+  **英文例外（使用者 2026-10-26）**：英文深度**完全無上限**（不受大學上限限制），**實用派為主**，優先序明確：
+  **(1) 生活與實用（最優先）**——道地日常溝通、**旅居海外能生存**、**出國讀書聽得懂**（survival English／study-abroad listening）、
+  慣用語/片語/口語/真實情境；**(2) 各類資格認證（次之）**——TOEIC／TOEFL／IELTS／GEPT 等；
+  **(3) 台灣考試（最後）**——會考/學測英文；使用者判斷：前兩者做好，台灣考試通常自然涵蓋、出問題機率很低，故列最後。
+  愈道地愈好，一切服務於「用得出來」。
   **coverage gate 對「課綱 minimum」嚴格**（少一條即 FAIL）；**超綱延伸為加分、不設上限、可選、絕不 gating**，
   且同樣不曝露年段（R11）——以「想更深入？」之類中性邀請呈現，不標「超難／高年級」。
 - **R12 知識涵蓋全域（不限學科課綱）**：知識母體含「學科（課綱）」**＋**「跨課綱生活與核心能力」
@@ -287,6 +303,24 @@
 - **R-STYLE-5 既有不一致 remediation**：先盤點全站「卡片/按鈕/色碼硬編/私有重造」清單，統一到 token ＋ R-STYLE-3
   自適應卡，**再**開新內容（§10 Phase 0.5）。否則越補越亂。
 
+### 6.6 品質恆定（ANTI-QUALITY-DRIFT：凍結黃金範本 ＋ 單元驗收 rubric ＋ 逐單元同一 gate）
+> 使用者疑慮（2026-10-26）：產出的東西**品質會飄**——不同 session／agent 做出來不一樣。對策：凍結「好的樣子」，每個單元用**同一把機器尺**量。
+- **細則：**
+  1. **黃金範本單元（golden unit，凍結）**：每種原型（概念頁／bespoke 遊戲／flashcard）先各做 1 個到滿分 bar，commit 凍結為
+     `authoring/golden/<archetype>.html`（＋其資料）。之後每個新單元 MUST 與對應 golden 做結構 diff（相同的區塊骨架、共用 class、互動模式、a11y、viz 規格）；偏離須在 unit metadata 寫 `deviation_reason`，否則 gate 視為漂移。
+  2. **單元驗收 rubric（逐條 pass/fail，全過才算完成）**：① 教→練→評三段齊備；② 僅用 `app.css` token、零硬編色碼／px 魔術數（design_consistency_gate）；
+     ③ 內容卡自適應寬（R-STYLE-3）；④ **每個題目正解 play-through 代入朗讀語句通順無誤**（correctness；play-through-sim）；⑤ 自評三級＋寫入 SRS、不假裝自動批改；
+     ⑥ 繁體零簡體零 PRC（scan_simplified）；⑦ `knowledge_point_ids[]` 全部對映到附錄 A 既有 id、`prerequisites[]` 已宣告且無循環；⑧ `est_minutes ≤ 12`（過長拆單元，INV-4）；
+     ⑨ viz 逐 frame iPad Air 13 render＋四角色簽核（R10）；⑩ 含可執行碼則附 code-download bundle 並從乾淨解壓可執行。
+  3. **同一 gate、逐單元、不可抽樣**：每個單元檔跑 per-file content_audit 到 5 clean ＋ `tools/unit_acceptance_lint.py`（待建，機械驗 ②③⑥⑦⑧⑩）＋ 視覺 QA；
+     全過才得併入學習路徑、才可宣告完成。rubric 任一項 fail＝擋關（fail-closed）。
+- **範例：**
+  - ✅**正例** `math.t_mid.alg.quadratic-formula`：教（配方法動畫，純 token 色）＋練（可玩、即時回饋）＋評（翻答案→三級自評→SRS）；
+    卡自適應寬；`est_minutes:9`；正解代入朗讀通順；viz 逐 frame 簽核；`knowledge_point_ids:["math.t_mid.alg.quadratic-formula"]` 存在於附錄 A。rubric ⑩項全綠。
+  - ❌**反例**：某單元用 `#3b82f6` 硬編藍（違②）、作答後只顯示「對/錯」無三級自評（違⑤）、填空正解代入後「他把把書放桌上」重字不通（違④）、
+    `knowledge_point_ids:["math.quadratic"]` 在附錄 A 查無（違⑦）→ 四項 fail，擋關、不得併入。
+  - ⚠**邊界**：純閱讀型概念（無選擇題）→ 仍須「教 ＋ 至少一個 retrieval 練習（如填空/自問自答）＋ 自評」，**不得只有教學文字就當完成**（否則記不牢，違 INV-3／rubric①）。
+
 ---
 
 ## 7. 獎勵系統擴充 ＋「永不消失」保證（RECON B 回填風險點；設計原則如下）
@@ -378,6 +412,17 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 ### 9.4 執行
 - 全書實作完成後，對每條主要路徑跑知識受限模擬；發現斷層→修→重跑，loop 到零斷層。
 - 模擬為**獨立 agent**，知識邊界由協定強制（prompt 僅注入 K(U)），不得讓它偷看後續內容。
+
+### 9.5 細則與範例（知識受限模擬；本節為 §0.3 具體化範本）
+- **細則：**
+  1. 輸入＝目標單元 U 的 `unit_id`。計算 **K(U)** ＝ U 的 `prerequisites` 遞移閉包所涵蓋的全部 `knowledge_point_ids` 聯集（U 本身「尚未教、排在更後面」的概念不計入）。
+  2. 模擬 agent 的 prompt **只注入 K(U) 對應單元的教學摘要**，並明令：「只能用 K(U) 內的知識作答；遇到未教概念即停、回報斷層並指出缺哪個先備」。嚴禁注入 U 之後才教的內容。
+  3. 輸出格式固定：`{unit_id, result: pass|blocked, gaps:[{missing_concept, where_used}], learnable:bool, retention_ok:bool, burnout_risk:low|med|high, notes}`。
+  4. 門檻：一條路徑上每個 U 皆 `result=pass` 且 `gaps=[]`，該路徑才算無斷層（INV-1）；任一 `blocked` → 調整先備鏈或補前置單元 → 重跑，loop 到零斷層。
+- **範例：**
+  - ✅**正例**：U＝`math.t_mid.alg.quadratic-formula`，其 prerequisites 閉包已含「因式分解解一元二次、配方法、平方根運算、正負數」→ K(U) 足以推導公式解 → `result:pass, gaps:[]`。
+  - ❌**反例**：U 的練習第 3 題用到「判別式 Δ＝b²−4ac」，但該知識點 `math.t_mid.alg.discriminant` 排在 U 之後、不在 K(U) → `result:blocked, gaps:[{missing_concept:"math.t_mid.alg.discriminant", where_used:"練習第3題"}]` → 須把 discriminant 設為 U 先備或移除該題。
+  - ⚠**邊界**：某概念雖與 U 同一 tier，但其單元在路徑順序上排 U **之後** → 仍算斷層（K(U) 以 `prerequisites` 鏈計，**不以 tier/stage 計**）→ `blocked`，需修正先備宣告或單元排序。
 
 ---
 
