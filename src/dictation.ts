@@ -130,6 +130,21 @@
           bonusWrap.appendChild(btn);
         });
     }
+    // 高價值「主題例句」聽寫（只有例句）：日常/片語/慣用/數字情境/金句（level=cefr-<set>）
+    var themesWrap = $('dct-themes');
+    if (themesWrap) {
+      themesWrap.innerHTML = '';
+      [['cefr-daily', '💬 日常對話'], ['cefr-phrasal', '🔗 片語動詞'], ['cefr-idioms', '✨ 常用慣用語'],
+       ['cefr-practical', '🔢 數字・時間・情境'], ['cefr-quotes', '📜 名言佳句']].forEach(function (c) {
+        var all = byLevel[c[0]] || [];
+        var sentCards = all.filter(function (x) { return x.kind === 'sent'; });
+        if (!sentCards.length) return;
+        var lv = c[0].replace('cefr-', '');
+        themesWrap.appendChild(dayButton(c[1] + '（' + sentCards.length + ' 句）', unitState(idsOf(sentCards)), function () {
+          startSet(sentCards, 'dict_cefr_' + lv + '_sent_v1', 10, 'cefr');
+        }));
+      });
+    }
     // 系列 A（CEFR）單字軌 + 例句軌：A1–B1（站內字表）、B2–C2（NGSL/AWL 開放清單）
     var cefrWrap = $('dct-cefr');
     if (cefrWrap) {

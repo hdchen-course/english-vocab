@@ -31,6 +31,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, "src")
 SERIES = "cefr"
 LEVELS = ["a1", "a2", "b1", "b2", "c1", "c2"]  # A1–B1 站內字表；B2–C2 開放清單（NGSL/AWL，review 定案）
+# 高價值「主題例句」集（只有例句、無單字軌）：日常/片語/慣用/數字情境/金句。
+# level=cefr-<set>，與 CEFR 等級並存於 cefr series（store key dict_cefr_<set>_sent_v1）。
+SENT_SETS = ["daily", "phrasal", "idioms", "practical", "quotes"]
 OVERRIDES = os.path.join(SRC, "dict_slug_overrides_cefr.json")
 AUTHORED = os.path.join(SRC, "dict_authored_cefr.json")
 US_UK = os.path.join(SRC, "dict_us_uk.json")
@@ -111,7 +114,7 @@ def main():
     # wordTimings 由 gen_dict_audio 的 WordBoundary 擷取回填（src/cefr_wordtimings.json，§5.4）。
     timings = load_json(os.path.join(SRC, "cefr_wordtimings.json"), {})
     sent_per_level = {}
-    for lv in LEVELS:
+    for lv in LEVELS + SENT_SETS:
         spath = os.path.join(SRC, "cefr_sentences_%s.json" % lv)
         if not os.path.exists(spath):
             sent_per_level[lv] = 0
@@ -178,7 +181,7 @@ def main():
     # per-level dict_data_cefr_{LV}.ts（→ window.DICT_CEFR concat）
     DF = ("id", "word", "ukSpelling", "syll", "ipa", "zh", "pos", "sentence",
           "wordTimings", "audioSlug", "kind", "day", "level", "src")
-    for lv in LEVELS:
+    for lv in LEVELS + SENT_SETS:
         rows = []
         for it in items:
             if it["level"] != "cefr-%s" % lv:
