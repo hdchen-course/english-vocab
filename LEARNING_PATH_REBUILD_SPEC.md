@@ -509,7 +509,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 
 ## 10. 安全執行：phase 化與 rollback
 
-- **Phase 0｜spec 定案**：本檔達 5 clean ＋ 紅隊通過（§12）。gate 之前不進 Phase 1。
+- **Phase 0｜spec 定案**：本檔達 5 clean ＋ 紅隊通過（§12）。gate 之前不進 Phase 0.5／Phase 1（定案後的下一階段是 Phase 0.5，非直接 Phase 1）。
 - **Phase 0.5｜既有不一致 remediation ＋ 獎勵安全地基（先做，before 任何新內容）**：
   (a) 盤點全站卡片/按鈕/色碼硬編/私有重造清單，統一到 token ＋ §6.5 R-STYLE-3 自適應卡（修現有不一致）；
   (b) 修 §7.2 的 R1 壞檔全毀（壞檔不重設）＋ R2 真實 migrate()，並以 §7.3 RT-6 紅隊證明——**獎勵永不消失地基先穩**。
@@ -598,7 +598,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
    能否新增獎勵卻讓舊獎勵孤兒化而不被 §7.3 抓到？能否讓模擬角色偷看後續知識？每找到一個繞過＝
    補一道子 gate ＋ 紅隊證明（§13 ledger）。紅隊零繞過才算定案。
 3.5. **交付 §0.2 四防漂移錨點並紅隊（`AC-ANTIDRIFT`）**：fail-closed hook／carrier echo／rule 檔／MEMORY 指標 ＋ `design_consistency_gate.js` 皆就位，證明「未重讀本檔即宣告收斂」壞案例被 DENY。錨點未交付＝不算定案（呼應 §0.2「承諾無效、只有 fail-closed 機器強制有效」）。
-4. 定案後才進 Phase 1（§10）。
+4. 定案後才進入實作，**下一階段為 §10 Phase 0.5（既有不一致 remediation ＋ 獎勵安全地基，先做、before 任何新內容），非直接 Phase 1**。
 
 - **細則**：每 round 以**不同 partition framing** 跑（避免抽樣假 clean）；「5 連續 clean」＝**同一未變更 sha** 連 5 round 零 panel-confirmed defect，
   **sha 一變 streak 歸零**；每 round 結果 commit；紅隊至少涵蓋三類繞過——(a) 跳過先備宣告仍過 gate、(b) 新增獎勵致舊獎勵孤兒化而 §7.3 未抓、(c) 模擬角色偷看 K(U) 之後的知識；每找到一個繞過＝補子 gate＋紅隊並記 §13。
