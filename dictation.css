@@ -88,7 +88,14 @@
 .dct-canvas-wrap { position: relative; width: 100%; }
 .dct-canvas {
   width: 100%; height: clamp(160px, 34vh, 300px); display: block;
-  background: var(--card); border: 2px dashed var(--card-border); border-radius: var(--r-lg);
+  /* 筆記本橫線：固定 3 條淡灰線（25%/50%/75% 高度，不論畫布多高都 3 條＝可寫三行），
+     寫在線上。筆跡畫在透明 bitmap 上，線由 CSS 背景透出；清除/縮放都不影響；亮暗主題皆淡且可見。 */
+  background:
+    repeating-linear-gradient(to bottom,
+      transparent 0, transparent calc(25% - 1px),
+      rgba(128,128,128,.22) calc(25% - 1px), rgba(128,128,128,.22) 25%),
+    var(--card);
+  border: 2px dashed var(--card-border); border-radius: var(--r-lg);
   touch-action: none; cursor: crosshair;
   /* iPad/iOS：壓住或長按 canvas 不可跳選取反白 + callout（拷貝／Google 智慧鏡頭），
      否則寫到一半會被打斷、要點旁邊才能繼續。搭配 JS 的 touchstart/contextmenu preventDefault。 */
