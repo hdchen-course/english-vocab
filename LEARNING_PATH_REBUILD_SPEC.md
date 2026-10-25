@@ -411,6 +411,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 - RT-8：A 分頁 reset('all')，B 分頁已開 → B 分頁的已賺得不被 A 的重設傳染（跨分頁用聯集/防護）。
 - **RT-9（對應 R8 原子性）：人為把記憶體中某已賺得欄位清空（如 `owned=[]`）後觸發 save → 驗證「寫前快照／異常回滾」保全該欄位，壞寫入不落地**（證明單欄誤清不會整物件持久化覆寫）。
 - **RT-10（對應 R3 reset 守門）：`reset('all')` 必須二次使用者確認且不可由非使用者路徑（程式自動/事件/他分頁）觸發全清**；植入一個非使用者路徑呼叫 reset → 須被擋、已賺得保留。
+- **RT-11（對應 R4 已裝備物下架）：裝備某 skin/border → 下架或改名其 catalog id → reload → 該 owned+equipped 物件 graceful 存活**（保留為已擁有或占位、不報錯、不清除）；有別於 RT-2（只測 badge/R5 被動顯示），RT-11 專測 `wish_shop byId`／`isOwned`／equipped 渲染路徑。
 
 ---
 
@@ -528,7 +529,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
   - **Phase 1 exit**：`knowledge_points.json`＋id registry＋unit schema＋hub/roadmap 骨架＋`migrate()`＋additive-merge 就緒；`AC-COV-2`、`AC-REWARD-1` 綠。
   - **Phase 2 exit**：既有單元全數接線（宣告 `prerequisites`/`knowledge_point_ids`），每檔 5 clean。
   - **Phase 3 exit**：`AC-COV-1`（**Phase 3 變體**：`unit_ids[]` ∩ rubric⑦ 通過集，不含 §9 項）＝ 0 個未覆蓋 minimum id（gap 全補）。§9 `taught_kps_exercised` 的二次確認留到 Phase 5 done-gate。
-  - **Phase 4 exit**：獎勵擴充**只新增 id**、RT-1..10 全綠 ＋ **`AC-NOBACKEND` 綠**（獎勵/排行/社交類零對外請求，no_backend_gate exit 0）。
+  - **Phase 4 exit**：獎勵擴充**只新增 id**、RT-1..11 全綠 ＋ **`AC-NOBACKEND` 綠**（獎勵/排行/社交類零對外請求，no_backend_gate exit 0）。
   - **Phase 5 exit**：§11.A 全 **19 條 AC**（含 AC-SPEC）綠且 `acceptance_ledger.json` 全登錄。
 - **範例**：
   - ✅**正例**：Phase 3 結束時 `coverage_gate` 報「未覆蓋 minimum id ＝ 0」→ 得進 Phase 4。
@@ -571,7 +572,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 | AC-UNIT-3 | 每個新單元與對應 golden 範本做**結構 diff**（§6.6.1 凍結黃金範本防品質漂移）；偏離而 unit metadata 無 `deviation_reason` 即 FAIL | `tools/unit_acceptance_lint.py`（讀 unit metadata `deviation_reason` ＋ 與 `authoring/golden/<archetype>.html` 結構比對） | 未解釋的偏離數＝**0**（exit 0） | golden-diff 報告 |
 | AC-PATH-1 | 每條主要學習路徑**無斷層**（INV-1） | §9 知識受限模擬 | 每路徑每 U `result=pass`、`gaps=[]` | 模擬輸出 JSON |
 | AC-PATH-2 | 可學會/記得牢/不倦怠（INV-2/3/4） | §9 模擬（§9.3 三級門檻） | `learnable=true`、`retention_ok=true`、`burnout_risk≤med`（且 `med` 須 `mitigation` 欄非空）全數 | 模擬輸出 JSON |
-| AC-REWARD-1 | 已賺得獎勵**永不消失**（含壞檔/升版/catalog改/配額/跨分頁/原子性/reset守門） | §7.3 紅隊 RT-1…RT-10（每條 R1–R8 風險皆有對應 RT：R1→RT-6、R2→RT-4、R3→RT-10、R4/R5→RT-2、R6→RT-7、R7→RT-8、R8→RT-9） | RT-1…10 **全綠** | 紅隊測試輸出 |
+| AC-REWARD-1 | 已賺得獎勵**永不消失**（含壞檔/升版/catalog改/配額/跨分頁/原子性/reset守門/已裝備物下架） | §7.3 紅隊 RT-1…RT-11（每條 R1–R8 風險皆有對應 RT：R1→RT-6、R2→RT-4、R3→RT-10、**R4→RT-11**（已裝備 skin/border 下架）、**R5→RT-2**（badge 下架）、R6→RT-7、R7→RT-8、R8→RT-9） | RT-1…11 **全綠** | 紅隊測試輸出 |
 | AC-STYLE-1 | 設計一致：無私有 class 重造共用元件、內容卡自適應寬 | `design_consistency_gate.js`（**待建**：接用 static-doc-audit skill 既有同名 gate，Phase 0.5 前接線成專案 gate 並**紅隊**，`SDA_CSS=app.css,game_core.css`）＋content-card lint（待建） | 重造＝0、違規卡＝0（exit 0） | gate 報告 |
 | AC-STYLE-2 | 零硬編色碼/px 魔術數，全走 `app.css` token | lint（待建，掃非 token 色值/魔術數） | 命中＝0 | lint 報告 |
 | AC-NOGRADE | learner-facing **不出現**「國小/國中/高中/年級/會考/學測/分科」等年段字樣（R11） | `tools/no_grade_label_gate.py`（待建，掃 render 後可見文字） | 命中＝0 | gate 報告 |
@@ -584,7 +585,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 | AC-ANTIDRIFT | §0.2 四防漂移錨點**已交付且 fail-closed**：(a) 專案 `.claude/settings.json` hook、(b) `inject-sop-carriers.py` `[learning-path-sop]` echo、(c) `~/.claude/rules/` 規則檔、(d) `MEMORY.md` 指標 ＋ `design_consistency_gate.js` | 錨點存在性檢查 ＋ 紅隊（「未重讀本檔即宣告任一檔收斂」的壞案例須被 hook **DENY**、好案例 ALLOW） | 四錨點齊備、hook 壞案例 DENY/好案例 ALLOW | 錨點清單 ＋ 紅隊 log |
 | AC-SPEC | 本 spec 自身：§0.3 anti-vagueness 全節通過 ＋ content_audit 5 clean ＋ 紅隊零繞過 | spec_concreteness_lint＋content_audit＋紅隊 | 全綠 | spec convergence ledger |
 
-- **細則**：每條 AC 必對應一個**確定性腳本或綁 sha 的簽核**（上表「驗證方法」欄）；標「待建」者於 Phase 1 建並**紅隊**（證明壞案例被擋、好案例放行）才可啟用。`acceptance_ledger.json` 一列一次通過紀錄，sha 一變該 AC 作廢須重驗。
+- **細則**：每條 AC 必對應一個**確定性腳本或綁 sha 的簽核**（上表「驗證方法」欄）；標「待建」者於 Phase 1 建並**紅隊**（證明壞案例被擋、好案例放行）才可啟用——**例外**：`design_consistency_gate.js`（及其 content-card lint、`AC-ANTIDRIFT` 的錨點 hook）因 **Phase 0.5 exit 即需消費**（§6.5 R-STYLE-4／AC-STYLE-1 明訂「Phase 0.5 前接線+紅隊」），須在 **Phase 0.5 前**建好並紅隊，不得延到 Phase 1（否則 Phase 0.5「未建先用」）。`acceptance_ledger.json` 一列一次通過紀錄，sha 一變該 AC 作廢須重驗。
 - **範例**：✅ 全 **19 條 AC**（AC-COV-1…AC-ANTIDRIFT 共 18 條產品 AC ＋ AC-SPEC meta）在同一 sha 皆有 PASS 列＋證據 → 可宣告完成並（經使用者）push。 ❌ AC-COV-1 顯示 37 個 minimum id 無單元 → 未完成，列出 37 個待補 id。 ⚠ AC-VIZ-1 四角色已簽核但 sha 已變（之後又改了版面）→ 舊簽核作廢，須重 render+重簽才算數。
 
 ## 12. 本 spec 自身的收斂協定（meta-process）
