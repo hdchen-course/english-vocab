@@ -251,7 +251,7 @@
 ### 5.3 共用架構（重構必須沿用，不得另造）
 | 層 | 檔 | 提供 |
 |---|---|---|
-| 設計 token/元件 CSS | `assets/app.css`（~56KB，§5.1 token 層：色/間距 `--s*`/圓角/`--tap-min`/`--content-max`） | 每頁必 link；**style 單一來源**（§6.5） |
+| 設計 token/元件 CSS | `assets/app.css`（~56KB，token 單一來源＝§6.5 R-STYLE-1：色/間距 `--s*`/圓角/`--tap-min`/`--content-max`） | 每頁必 link；**style 單一來源**（§6.5） |
 | 遊戲化引擎 | `game_core.js`（`src/game_core.ts`）→ `window.Game` | XP/coins/level/6 計分科目/combo/每日目標/badge/mastery/streak/事件/toast/**單一 localStorage key `player_profile_v1`** |
 | 遊戲化 CSS | `game_core.css` | 與 game_core 配套 |
 | 概念課引擎 | `concept_engine.js`（`src/concept_engine.ts`） | 「教一點→即測」渲染；頁面設 `window.CONCEPT={progKey,lessons[...]}`；進度存**頁面各自 progKey（不餵主 XP）** |
