@@ -1,0 +1,123 @@
+/* =====================================================================
+ * dictation.css — 英文聽寫頁專屬樣式（DICTATION_BUILD_SPEC.md §8/§9）
+ * 僅承載 dct-* 規則；不得寫進 game_core.css / app.css（§10.2 R9）。
+ * 本地、無外部匯入與外部資源參照。復用共用 token（--accent/--card/--ink/--s*/
+ * --r-lg/--shadow-*）與共用 .fc-rate / .app-bar / .shell。
+ * ===================================================================== */
+
+#dct-screen-menu, #dct-screen-play, #dct-screen-done { }
+.dct-hidden, .hidden { display: none !important; }
+
+/* ---- 選單：週格 ---- */
+.dct-intro { text-align: center; margin-bottom: var(--s4); }
+.dct-intro .dct-emoji { font-size: 44px; display: block; margin-bottom: var(--s2); }
+.dct-intro h1 { font-size: var(--fs-h1); font-weight: 800; color: var(--ink); }
+.dct-intro p { color: var(--ink-soft); font-size: var(--fs-small); font-weight: 600; margin-top: var(--s1); }
+
+.dct-section-title { font-size: var(--fs-body); font-weight: 800; color: var(--ink); margin: var(--s4) 0 var(--s2); }
+
+.dct-week-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s2);
+}
+@media (min-width: 720px) { .dct-week-grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1100px) { .dct-week-grid { grid-template-columns: 1fr 1fr 1fr; } }
+
+.dct-week { background: var(--card); border: 2px solid var(--card-border); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-sm); }
+.dct-week__head {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--s2);
+  padding: 14px 16px; background: var(--card); border: 0; cursor: pointer;
+  font-family: var(--font); font-size: clamp(15px,3vw,17px); font-weight: 800; color: var(--ink);
+  transition: background .2s ease;
+}
+.dct-week__head:hover { background: var(--accent-tint); }
+.dct-week__label { text-align: left; }
+.dct-week__body { padding: 0 12px 12px; display: flex; flex-direction: column; gap: var(--s2); }
+
+.dct-day, .dct-bonus-btn {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--s2);
+  min-height: 48px; padding: 10px 14px; border: 2px solid var(--card-border); border-radius: 14px;
+  background: var(--card); font-family: var(--font); font-size: clamp(14px,3vw,16px); font-weight: 700;
+  color: var(--ink); cursor: pointer; transition: transform .12s ease, border-color .2s ease, background .2s ease;
+}
+.dct-day:hover, .dct-bonus-btn:hover { border-color: var(--accent); background: var(--accent-tint); }
+.dct-day:active, .dct-bonus-btn:active { transform: scale(.98); }
+
+/* ---- 完成度點（三態，非只靠顏色：附符號） ---- */
+.dct-dot {
+  flex: 0 0 auto; width: 22px; height: 22px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 900; line-height: 1;
+  border: 2px solid var(--card-border); color: var(--on-accent);
+}
+.dct-dot--none { background: transparent; border-style: dashed; color: transparent; }
+.dct-dot--partial { background: var(--c-warning, #f0ad4e); border-color: transparent; color: #3a2a00; }
+.dct-dot--done { background: var(--c-correct, #3bb273); border-color: transparent; color: #fff; }
+
+#dct-bonus { display: flex; flex-direction: column; gap: var(--s2); }
+
+/* ---- Play 畫面：畫布 + 控制列同屏（R7） ---- */
+.dct-play { display: flex; flex-direction: column; gap: var(--s3); max-width: 760px; margin: 0 auto; }
+.dct-playtop { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--s2); }
+.dct-counter { font-size: var(--fs-small); font-weight: 800; color: var(--ink-soft); }
+.dct-accent { display: inline-flex; gap: 6px; }
+.dct-pill, .dct-sc {
+  min-height: 40px; padding: 6px 14px; border: 2px solid var(--card-border); border-radius: 999px;
+  background: var(--card); font-family: var(--font); font-size: var(--fs-small); font-weight: 700;
+  color: var(--ink-soft); cursor: pointer; transition: background .2s, border-color .2s, color .2s;
+}
+.dct-pill.active, .dct-sc.active { background: var(--c-english-btn, var(--accent)); color: var(--on-accent); border-color: transparent; }
+.dct-controls-row { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; }
+.dct-scaffolds { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.dct-bigplay {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 10px 18px; border: 2px solid var(--accent); border-radius: 14px;
+  background: var(--card); color: var(--c-english-ink, var(--accent-ink)); font-family: var(--font);
+  font-size: clamp(15px,3vw,17px); font-weight: 800; cursor: pointer;
+}
+.dct-mutehint { font-size: var(--fs-small); color: var(--ink-soft); font-weight: 600; text-align: center; }
+.dct-firstletter { min-height: 20px; font-size: var(--fs-small); font-weight: 700; color: var(--ink-soft); text-align: center; }
+.dct-zh-hint { font-size: var(--fs-small); font-weight: 700; color: var(--ink); text-align: center; }
+
+/* canvas：basic，手指/Pencil/滑鼠皆可寫 */
+.dct-canvas-wrap { position: relative; width: 100%; }
+.dct-canvas {
+  width: 100%; height: clamp(160px, 34vh, 300px); display: block;
+  background: var(--card); border: 2px dashed var(--card-border); border-radius: var(--r-lg);
+  touch-action: none; cursor: crosshair;
+}
+.dct-toolbar { display: flex; gap: var(--s2); margin-top: var(--s1); }
+.dct-fallback { width: 100%; min-height: 56px; margin-top: var(--s1); padding: 10px 12px; border: 2px solid var(--card-border); border-radius: 12px; font-family: var(--font); font-size: var(--fs-body); background: var(--card); color: var(--ink); }
+
+.dct-btn {
+  min-height: 48px; padding: 12px 20px; border: 2px solid transparent; border-radius: 14px;
+  background: var(--c-english-btn, var(--accent)); color: var(--on-accent);
+  font-family: var(--font); font-size: clamp(15px,3vw,17px); font-weight: 800; cursor: pointer;
+  box-shadow: var(--shadow-sm); transition: transform .12s ease, box-shadow .2s ease;
+}
+.dct-btn:hover { box-shadow: var(--shadow-lg); }
+.dct-btn:active { transform: scale(.97); }
+.dct-btn--ghost { background: var(--card); color: var(--ink); border-color: var(--card-border); box-shadow: none; }
+
+/* 揭曉 */
+.dct-reveal {
+  background: var(--card); border: 1px solid var(--card-border); border-left: 5px solid var(--accent);
+  border-radius: var(--r-lg); padding: var(--s4); box-shadow: var(--shadow-sm);
+  display: flex; flex-direction: column; gap: var(--s2); align-items: center;
+}
+.dct-reveal__word { font-size: clamp(28px,7vw,40px); font-weight: 800; color: var(--c-english-ink, var(--ink)); text-align: center; display: flex; flex-wrap: wrap; gap: 6px 16px; justify-content: center; }
+.dct-reveal__uk { color: var(--ink-soft); }
+.dct-reveal__row { font-size: var(--fs-body); font-weight: 600; color: var(--ink-soft); }
+.dct-rate { margin-top: var(--s2); }
+
+/* 完成畫面：復用 result-card 語言 */
+.dct-done { text-align: center; background: var(--card); border: 1px solid var(--card-border); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); padding: var(--s6) var(--s4); max-width: 520px; margin: 0 auto; }
+.dct-done .dct-big { font-size: clamp(56px,20vw,96px); line-height: 1.1; margin-bottom: var(--s3); }
+.dct-done h2 { font-size: var(--fs-h2); font-weight: 800; margin-bottom: var(--s3); }
+.dct-done p { font-size: var(--fs-body); font-weight: 700; color: var(--ink-soft); margin: 0 auto var(--s5); max-width: 32ch; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dct-day:active, .dct-bonus-btn:active, .dct-btn:active { transform: none; }
+}
