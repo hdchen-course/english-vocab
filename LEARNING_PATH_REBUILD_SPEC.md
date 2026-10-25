@@ -458,6 +458,34 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 
 ---
 
+## 11.A 驗收準則矩陣（ACCEPTANCE CRITERIA；spec ＝ 最終核對清單）
+
+> 使用者要求：spec 要詳細到**最後能用它逐條核對是否都完成**。下表是**唯一的完工判準**：
+> **「完成」⟺ 下列每一條 AC 都 PASS，且證據登錄於 `authoring/acceptance_ledger.json`（含 AC-id、通過時間、對應 sha、證據路徑）。**
+> 任一條 fail＝未完成；**禁止以「大致上/應該可以」宣告**。每條 AC 皆可驗（確定性腳本或綁 sha 的簽核 manifest），不接受口頭判斷。
+
+| AC-id | 準則（具體） | 驗證方法 | 通過門檻 | 證據產物 |
+|---|---|---|---|---|
+| AC-COV-1 | 課綱 minimum 知識點**全覆蓋**：`knowledge_points.json` 中每個非 `beyond` 的 id 至少對映 1 個已完成單元 | `tools/coverage_gate.py`（待建，比對 manifest `unit_ids[]`） | 未覆蓋 minimum id 數 ＝ **0**（exit 0） | coverage 報告 JSON |
+| AC-COV-2 | 知識母體本身完整且無重複 id、無不符格式 bullet | `tools/_kp_build.py` | 重複 id＝0、不符格式（扣 section 說明行）＝0 | build 報告 |
+| AC-UNIT-1 | **每個**單元通過 §6.6 的 10 項 rubric | `tools/unit_acceptance_lint.py`（待建）＋ 人工 play-through | 每單元 10/10；0 單元缺項 | 逐單元 rubric 結果 |
+| AC-UNIT-2 | 每個單元檔 content_audit 連續 **5 clean**（同 sha、L3 exit 0） | `/static-doc-audit` per-file + `coverage_check.js` | 每檔 5 clean、L3 exit 0 | convergence ledger |
+| AC-PATH-1 | 每條主要學習路徑**無斷層**（INV-1） | §9 知識受限模擬 | 每路徑每 U `result=pass`、`gaps=[]` | 模擬輸出 JSON |
+| AC-PATH-2 | 可學會/記得牢/不倦怠（INV-2/3/4） | §9 模擬 | `learnable=true`、`retention_ok=true`、`burnout_risk≤med` 全數 | 模擬輸出 JSON |
+| AC-REWARD-1 | 已賺得獎勵**永不消失**（含壞檔/升版/catalog改/配額/跨分頁） | §7.3 紅隊 RT-1…RT-8 | RT-1…8 **全綠** | 紅隊測試輸出 |
+| AC-STYLE-1 | 設計一致：無私有 class 重造共用元件、內容卡自適應寬 | `design_consistency_gate.js`＋content-card lint | 重造＝0、違規卡＝0（exit 0） | gate 報告 |
+| AC-STYLE-2 | 零硬編色碼/px 魔術數，全走 `app.css` token | lint（待建，掃非 token 色值/魔術數） | 命中＝0 | lint 報告 |
+| AC-NOGRADE | learner-facing **不出現**「國小/國中/高中/年級/會考/學測/分科」等年段字樣（R11） | `tools/no_grade_label_gate.py`（待建，掃 render 後可見文字） | 命中＝0 | gate 報告 |
+| AC-VIZ-1 | 所有畫面/每個 frame 以 iPad Air 13 render、逐張看過、四角色簽核綁 sha（R10） | 視覺 QA harness + signoff manifest | 全畫面覆蓋、四角色逐張簽核、sha 相符 | render + signoff manifest |
+| AC-LANG-1 | 全繁體、零簡體、零 PRC 詞 | `scan_simplified.py`（全站 + 資料） | 簡體/PRC 命中＝0 | 掃描報告 |
+| AC-PERF-1 | 效能不退化：單頁初始 JS ≤ 既有基準、無無限 inline 膨脹、資產按需載入（R9） | 體積量測腳本（待建，定基準數值） | 每頁 ≤ 基準；0 超標 | 體積報告 |
+| AC-A11Y-1 | 對比度 ≥4.5:1、點擊目標 ≥44px、尊重 `prefers-reduced-motion` | 既有 contrast gate + 量測 | 違規＝0 | a11y 報告 |
+| AC-CODE-DL | 含可執行碼的模組提供完整下載且**乾淨解壓可跑** | 解壓到 temp＋跑 README 指令 | build/test 綠 | 執行 log |
+| AC-SPEC | 本 spec 自身：§0.3 anti-vagueness 全節通過 ＋ content_audit 5 clean ＋ 紅隊零繞過 | spec_concreteness_lint＋content_audit＋紅隊 | 全綠 | spec convergence ledger |
+
+- **細則**：每條 AC 必對應一個**確定性腳本或綁 sha 的簽核**（上表「驗證方法」欄）；標「待建」者於 Phase 1 建並**紅隊**（證明壞案例被擋、好案例放行）才可啟用。`acceptance_ledger.json` 一列一次通過紀錄，sha 一變該 AC 作廢須重驗。
+- **範例**：✅ 全 15 條 AC 在同一 sha 皆有 PASS 列＋證據 → 可宣告完成並（經使用者）push。 ❌ AC-COV-1 顯示 37 個 minimum id 無單元 → 未完成，列出 37 個待補 id。 ⚠ AC-VIZ-1 四角色已簽核但 sha 已變（之後又改了版面）→ 舊簽核作廢，須重 render+重簽才算數。
+
 ## 12. 本 spec 自身的收斂協定（meta-process）
 
 0. **附錄 A 深掘完成（前提）**：依 §4.1 各 slice 深掘到 DEPTH-STD＋各自獨立審查＋合併配 id＋emit `knowledge_points.json`。附錄 A 未深掘完成，spec 不得宣告定案。
