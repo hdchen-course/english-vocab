@@ -51,7 +51,8 @@
       **細粒度 vagueness（單一子節/單一規則仍太模糊）交 content_audit 專家 panel 判**（§12），lint 擋「整章缺具體化」的粗漏。
 - **章級具體化已完成（lint 綠）**：§2/§6/§7/§8/§9/§10/§11/§11.A/§12 九個規範章整段皆含 `細則`＋`範例`＋`❌`，
   `spec_concreteness_lint.py` exit 0（含 §6.6 品質恆定、§7.1/§7.2/§7.3 獎勵風險＋RT、§6.5 R-STYLE-3 自適應卡、§4.1 DEPTH-STD、§8.1 panel 細則、§9.5 受限模擬、§10.1 entry/exit）。
-  **定案 blocker 僅剩**：附錄 A 全 slice 深掘＋審查完成（已完成，3092 條）＋本 spec content_audit 連續 5 clean＋紅隊（§12）；**章級具體化不再是 blocker**。
+  **已除的 blocker**：附錄 A 全 slice 深掘＋審查（已完成，3092 條）、章級具體化（lint 綠）皆**不再是 blocker**。
+  **定案 blocker 僅剩**：本 spec content_audit **連續 5 clean**＋**紅隊**（§12）兩項。
   章內單一規則若仍嫌模糊屬**細粒度 vagueness**，交 content_audit 專家 panel 逐輪判（§0.3 (c)、§12），非擋定案的粗漏。
 
 ## 1. 目的與範圍
@@ -278,6 +279,7 @@
 | 理財 | ● | ◐ | ◐（2 薄頁） |
 | 安全 | ● | ●（物質/青少年標國中・高中） | ◐ |
 | 核心能力 | ● | ● | ◐（跨年段共用，無高中專屬層） |
+| 科技（運算思維） | ◐ | ◐ | ◐（hub `#path-tech` 有頁但薄；為 §4.1 section G `compute` strand，於此獨立列出避免被「核心能力」吞沒；精確 per-年段覆蓋待 Phase 1 manifest 對映時逐頁盤點精算） |
 
 **結論：高中(G10–G12) 全面最弱**——三自然科 advanced 封頂於國中、數學止於 RSA 無微積分、國文僅 primer；
 國小/國中大致齊全；社會歷地公被綑在共用 `social_advanced*`，未依 strand/年段分離。這決定 §4−§5 的 gap 主要落在**高中段**與**社會分流**。
@@ -478,7 +480,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 - **記不牢（INV-3）**：關鍵知識點無 retrieval/spacing 覆蓋 → defect。
 - **倦怠（INV-4）**：由心理醫生＋學習科學家依「單元過長/負荷過重/難度跳階/回饋稀疏」共判 `burnout_risk∈{low,med,high}`，門檻**三級**（與 AC-PATH-2 單一一致，可機械判定）：
   `high` → **defect**（擋關，必修：拆長/降載/補階/加回饋後重判）；`med` → **不擋關但須於模擬輸出附緩解說明**（mitigation 欄非空）；`low` → pass。
-  即 AC-PATH-2 的 `burnout_risk≤med` PASS ⟺ 本處 `high` 才算斷層 defect；`med` 以「附緩解說明」放行、不得無說明放行。
+  即 AC-PATH-2 的 `burnout_risk≤med` PASS ⟺ 本處 `high` 才算 **INV-4 倦怠 defect**（注意：「斷層」為 INV-1 專用詞、受 AC-PATH-1 的零斷層 gate；倦怠 defect 不計入 INV-1 斷層）；`med` 以「附緩解說明」放行、不得無說明放行。
 
 ### 9.4 執行
 - 全書實作完成後，對每條主要路徑跑知識受限模擬；發現斷層→修→重跑，loop 到零斷層。
