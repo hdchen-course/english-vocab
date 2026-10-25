@@ -49,8 +49,10 @@
   (b) 確定性 lint `tools/spec_concreteness_lint.py`（**已建＋已紅隊** 2026-10-26）：**章（##）級**聚合——每個規範章（**§2/§6/§7/§8/§9/§10/§11/§11.A/§12，共 9 章**）整段內（含子節，如 §8.1/§9.5/§10.1）
       必須同時含 `細則`＋`範例`＋至少一個 `❌`，否則 exit≠0；豁免章＝`EXEMPT_CHAPTERS={0,1,3,4,5,13,14}`（描述/索引/事實/已關閉；§4 明細在附錄 A）。紅隊：移除全部 ❌ 的副本 → 擋 **9 章**；真檔 → 放行。
       **細粒度 vagueness（單一子節/單一規則仍太模糊）交 content_audit 專家 panel 判**（§12），lint 擋「整章缺具體化」的粗漏。
-- **已完成的具體化範本**：§6.6（品質恆定）、§7.1/§7.2/§7.3（獎勵，含風險表＋RT 案例）、§6.5 R-STYLE-3（自適應卡）、§4.1 DEPTH-STD、§9.5（知識受限模擬，下）。
-  **尚待比照補齊**：§2 各 R（逐條加細則＋3 範例）、§6.1~§6.4、§8、§10、§11。全部補齊後 spec 才可定案（§12）。
+- **章級具體化已完成（lint 綠）**：§2/§6/§7/§8/§9/§10/§11/§11.A/§12 九個規範章整段皆含 `細則`＋`範例`＋`❌`，
+  `spec_concreteness_lint.py` exit 0（含 §6.6 品質恆定、§7.1/§7.2/§7.3 獎勵風險＋RT、§6.5 R-STYLE-3 自適應卡、§4.1 DEPTH-STD、§8.1 panel 細則、§9.5 受限模擬、§10.1 entry/exit）。
+  **定案 blocker 僅剩**：附錄 A 全 slice 深掘＋審查完成（已完成，3092 條）＋本 spec content_audit 連續 5 clean＋紅隊（§12）；**章級具體化不再是 blocker**。
+  章內單一規則若仍嫌模糊屬**細粒度 vagueness**，交 content_audit 專家 panel 逐輪判（§0.3 (c)、§12），非擋定案的粗漏。
 
 ## 1. 目的與範圍
 
@@ -223,10 +225,8 @@
 
 ## 5. 現況盤點（RECON A 回填）
 
-> 待 recon A（repo 結構 agent）回報後填入：
-> 5.1 全頁面清單（檔名→科目/年段/KB）；5.2 現行導覽與路徑機制（hub？roadmap？平面清單？有無先備關係）；
-> 5.3 共用架構（game_core/srs_engine/app.css 提供什麼、哪些頁重用 vs bespoke）；
-> 5.4 典型單元資料/引擎模式；5.5 (科目×年段) 覆蓋矩陣（有內容 vs 缺/薄）。
+> RECON A 已回填（見下 §5.1–§5.5）：5.1 全頁面清單（檔名→科目/年段/KB）；5.2 現行導覽與路徑機制（hub／roadmap／平面清單、有無先備關係）；
+> 5.3 共用架構（game_core/srs_engine/app.css 提供什麼、哪些頁重用 vs bespoke）；5.4 典型單元資料/引擎模式；5.5 (科目×年段) 覆蓋矩陣（有內容 vs 缺/薄）。
 >
 > §4（母體）與 §5.5（現況覆蓋）相減＝**gap 清單**，為 §6 實作 backlog 的輸入。
 
@@ -284,7 +284,7 @@
 
 ---
 
-## 6. 學習路徑重構設計（偵察無關的設計原則；具體 backlog 待 §4/§5 回填）
+## 6. 學習路徑重構設計（設計原則＋具體 backlog；輸入＝§4−§5.5 gap，已回填）
 
 ### 6.1 導覽與路徑結構
 - 單一**中央 hub**：以 stage → subject → strand → unit 的層次呈現；顯示每單元狀態（未解鎖/可學/進行中/已精熟）。
@@ -476,7 +476,9 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 - **斷層（INV-1 違反）**：U 要求用到不在 K(U) 的概念 → defect（需調整先備鏈或補前置單元）。
 - **學不會（INV-2）**：在 K(U) 下無法完成練/評 → defect。
 - **記不牢（INV-3）**：關鍵知識點無 retrieval/spacing 覆蓋 → defect。
-- **倦怠（INV-4）**：單元過長/負荷過重/難度跳階/回饋稀疏 → defect（心理醫生＋學習科學家共判）。
+- **倦怠（INV-4）**：由心理醫生＋學習科學家依「單元過長/負荷過重/難度跳階/回饋稀疏」共判 `burnout_risk∈{low,med,high}`，門檻**三級**（與 AC-PATH-2 單一一致，可機械判定）：
+  `high` → **defect**（擋關，必修：拆長/降載/補階/加回饋後重判）；`med` → **不擋關但須於模擬輸出附緩解說明**（mitigation 欄非空）；`low` → pass。
+  即 AC-PATH-2 的 `burnout_risk≤med` PASS ⟺ 本處 `high` 才算斷層 defect；`med` 以「附緩解說明」放行、不得無說明放行。
 
 ### 9.4 執行
 - 全書實作完成後，對每條主要路徑跑知識受限模擬；發現斷層→修→重跑，loop 到零斷層。
@@ -558,7 +560,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 | AC-UNIT-1 | **每個**單元通過 §6.6 的 10 項 rubric | `tools/unit_acceptance_lint.py`（待建）＋ 人工 play-through | 每單元 10/10；0 單元缺項 | 逐單元 rubric 結果 |
 | AC-UNIT-2 | 每個單元檔 content_audit 連續 **5 clean**（同 sha、L3 exit 0） | `/static-doc-audit` per-file + `coverage_check.js` | 每檔 5 clean、L3 exit 0 | convergence ledger |
 | AC-PATH-1 | 每條主要學習路徑**無斷層**（INV-1） | §9 知識受限模擬 | 每路徑每 U `result=pass`、`gaps=[]` | 模擬輸出 JSON |
-| AC-PATH-2 | 可學會/記得牢/不倦怠（INV-2/3/4） | §9 模擬 | `learnable=true`、`retention_ok=true`、`burnout_risk≤med` 全數 | 模擬輸出 JSON |
+| AC-PATH-2 | 可學會/記得牢/不倦怠（INV-2/3/4） | §9 模擬（§9.3 三級門檻） | `learnable=true`、`retention_ok=true`、`burnout_risk≤med`（且 `med` 須 `mitigation` 欄非空）全數 | 模擬輸出 JSON |
 | AC-REWARD-1 | 已賺得獎勵**永不消失**（含壞檔/升版/catalog改/配額/跨分頁） | §7.3 紅隊 RT-1…RT-8 | RT-1…8 **全綠** | 紅隊測試輸出 |
 | AC-STYLE-1 | 設計一致：無私有 class 重造共用元件、內容卡自適應寬 | `design_consistency_gate.js`＋content-card lint | 重造＝0、違規卡＝0（exit 0） | gate 報告 |
 | AC-STYLE-2 | 零硬編色碼/px 魔術數，全走 `app.css` token | lint（待建，掃非 token 色值/魔術數） | 命中＝0 | lint 報告 |
