@@ -113,8 +113,7 @@
             return;
         grid.innerHTML = '';
         for (var w = 1; w <= 52; w++) {
-            var level = 'dk-w' + ('0' + w)[('' + w).length > 2 ? 0 : -2]; // placeholder, fixed below
-            level = 'dk-w' + ('0' + w).slice(-2);
+            var level = 'dk-w' + ('0' + w).slice(-2);
             if (!byLevel[level])
                 continue;
             grid.appendChild(weekCard(level, w));
