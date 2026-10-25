@@ -353,7 +353,7 @@
      `authoring/golden/<archetype>.html`（＋其資料）。之後每個新單元 MUST 與對應 golden 做結構 diff（相同的區塊骨架、共用 class、互動模式、a11y、viz 規格）；偏離須在 unit metadata 寫 `deviation_reason`，否則 gate 視為漂移。
   2. **單元驗收 rubric（逐條 pass/fail，全過才算完成）**：① 教→練→評三段齊備；② 僅用 `app.css` token、零硬編色碼／px 魔術數（design_consistency_gate）；
      ③ 內容卡自適應寬（R-STYLE-3）；④ **每個題目正解 play-through 代入朗讀語句通順無誤**（correctness；play-through-sim）；⑤ 自評三級＋寫入 SRS、不假裝自動批改；
-     ⑥ 繁體零簡體零 PRC（scan_simplified）；⑦ `knowledge_point_ids[]` 全部對映到附錄 A 既有 id、`prerequisites[]` 已宣告且無循環；⑧ `est_minutes ≤ 12`（過長拆單元，INV-4）；
+     ⑥ 繁體零簡體零 PRC（scan_simplified）；⑦ `knowledge_point_ids[]` 全部對映到附錄 A 既有 id、`prerequisites[]` 已宣告且無循環，**且每一條宣告的 id 必須「真教＋真考」**——在「教」段落實際教授該微技能、且「練/評」至少有一題 retrieval 涵蓋它（**禁止宣告塞 id 卻不教不考**；declaration-stuffing＝fail，杜絕 §4 淺薄覆蓋，供 AC-COV-1 核對）；⑧ `est_minutes ≤ 12`（過長拆單元，INV-4）；
      ⑨ viz 逐 frame iPad Air 13 render＋四角色簽核（R10）；⑩ 含可執行碼則附 code-download bundle 並從乾淨解壓可執行。
   3. **同一 gate、逐單元、不可抽樣**：每個單元檔跑 per-file content_audit 到 5 clean ＋ `tools/unit_acceptance_lint.py`（待建，機械驗 ②③⑥⑦⑧⑩）＋ 視覺 QA；
      全過才得併入學習路徑、才可宣告完成。rubric 任一項 fail＝擋關（fail-closed）。
@@ -490,7 +490,9 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 - **細則：**
   1. 輸入＝目標單元 U 的 `unit_id`。計算 **K_pre** ＝ U 的 `prerequisites` 遞移閉包所涵蓋的全部 `knowledge_point_ids` 聯集；**teach(U)** ＝ U 自己宣告的 `knowledge_point_ids`；**K(U) ＝ K_pre ∪ teach(U)**（即「先備所學」＋「本課所教」；只排除路徑更後面單元才教的點）。
   2. 模擬 agent 的 prompt **注入 K_pre 的教學摘要 ＋ U 本身「教」段落的內容**，並明令：「可用 K(U)（先備＋本課所教）內的知識作答；遇到不在 K(U)（即更後面才教）的概念即停、回報斷層並指出缺哪個先備」。嚴禁注入 U 之後才教的內容。
-  3. 輸出格式固定：`{unit_id, result: pass|blocked, gaps:[{missing_concept, where_used}], learnable:bool, retention_ok:bool, burnout_risk:low|med|high, notes}`。
+  3. 輸出格式固定：`{unit_id, result: pass|blocked, gaps:[{missing_concept, where_used}], learnable:bool, retention_ok:bool, burnout_risk:low|med|high, mitigation, taught_kps_exercised:[...], notes}`。
+     其中 `mitigation` ＝ 當 `burnout_risk=med` 時必填的緩解說明（`high`/`low` 可空）；AC-PATH-2 的 med 放行判定讀此欄（欄名與 §9.3、§11.A 一致）。
+     `taught_kps_exercised` ＝ 模擬實際在「練/評」用到的 `teach(U)` 知識點 id 清單，供 AC-COV-1 核對「宣告即真教真考」（見 §6.6 rubric ⑦、§11.A）。
   4. 門檻：一條路徑上每個 U 皆 `result=pass` 且 `gaps=[]`，該路徑才算無斷層（INV-1）；任一 `blocked` → 調整先備鏈或補前置單元 → 重跑，loop 到零斷層。
 - **範例：**
   - ✅**正例**：U＝`math.t_mid.equation.quadratic-formula`（公式解即 teach(U)，由本課「教」段落教授），其 prerequisites 閉包 K_pre 已含「因式分解解一元二次、配方法、平方根運算、正負數」→ 學習者讀完先備＋本課即能推導並套用公式解，練/評所用皆在 K(U)=K_pre∪teach(U) 內 → `result:pass, gaps:[]`。（單元測自己剛教的公式＝正常，非斷層。）
@@ -557,7 +559,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 
 | AC-id | 準則（具體） | 驗證方法 | 通過門檻 | 證據產物 |
 |---|---|---|---|---|
-| AC-COV-1 | 課綱 minimum 知識點**全覆蓋**：`knowledge_points.json` 中每個非 `beyond` 的 id 至少對映 1 個已完成單元 | `tools/coverage_gate.py`（待建，比對 manifest `unit_ids[]`） | 未覆蓋 minimum id 數 ＝ **0**（exit 0） | coverage 報告 JSON |
+| AC-COV-1 | 課綱 minimum 知識點**真覆蓋**：每個非 `beyond` 的 id 至少對映 1 個已完成單元，**且該單元對此 id 通過 §6.6 rubric ⑦「真教＋真考」綁定**（不接受只宣告於 `knowledge_point_ids[]` 卻未教未考） | `tools/coverage_gate.py`（待建，比對 manifest `unit_ids[]` ∩ `unit_acceptance_lint` 的 ⑦ 通過集 ∩ §9 模擬 `taught_kps_exercised`） | 未真覆蓋 minimum id 數 ＝ **0**（exit 0） | coverage 報告 JSON |
 | AC-COV-2 | 知識母體本身完整且無重複 id、無不符格式 bullet | `tools/_kp_build.py` | 重複 id＝0、不符格式（扣 section 說明行）＝0 | build 報告 |
 | AC-UNIT-1 | **每個**單元通過 §6.6 的 10 項 rubric | `tools/unit_acceptance_lint.py`（待建）＋ 人工 play-through | 每單元 10/10；0 單元缺項 | 逐單元 rubric 結果 |
 | AC-UNIT-2 | 每個單元檔 content_audit 連續 **5 clean**（同 sha、L3 exit 0） | `/static-doc-audit` per-file + `coverage_check.js` | 每檔 5 clean、L3 exit 0 | convergence ledger |
