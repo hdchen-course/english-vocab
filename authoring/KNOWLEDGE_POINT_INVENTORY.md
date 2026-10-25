@@ -1,695 +1,4303 @@
-# 台灣 108 課綱 K-12 知識點母體清單（國小 → 國中會考 → 高中學測＋分科測驗）
+# 附錄 A — 知識點母體清單（深掘 v1，binding）
 
-> 用途：`LEARNING_PATH_REBUILD_SPEC.md` §4 的權威知識點 reference（de-duplicated、階層化、checklist）。
-> 體例：STAGE → SUBJECT → STRAND → 具體可測知識點。`(待核)` = 108 課綱細節需人工對照教育部課綱/大考中心考試說明核實。
-> 語言：全繁體、零簡體、零 PRC 詞彙（一律「國小／國中／高中」）。
-> 來源：recon C（課綱 agent，2026-10-26）。數字為條目基準，供覆蓋追蹤；實作時每條可再展開為多個題型/練習單位。
-> 註：本檔仍須經 content_audit 與領域專家核對後才算定案（尤其 `(待核)` 項與各科年段歸屬）。
-
----
-
-## A. 國小（G1–G6）— 餵養國中會考的地基
-
-### A-1 數學
-**數與量**
-- 1–10000（乃至更大位值）之數的認、讀、寫、位值與位名
-- 加減直式計算（含進位、退位）與驗算
-- 乘法九九、兩位數以上乘法直式
-- 除法（含餘數、被除數／除數／商／餘數關係）
-- 四則混合運算與運算順序（先乘除後加減、括號優先）
-- 整數的因數、倍數、公因數、公倍數、最大公因數、最小公倍數
-- 質數與合數的辨認
-- 分數概念（真分數/假分數/帶分數）、等值分數、約分、通分
-- 分數四則運算
-- 小數概念、位值（十分位、百分位…）、小數四則運算
-- 分數與小數的互換
-- 概數與四捨五入（取概數估算）
-- 量與計量：長度、重量、容量、時間、角度、面積、體積之實測與單位換算
-- 時間的加減與時刻/時距計算
-- 貨幣與簡單金額計算 (待核：理財啟蒙深度依版本)
-
-**幾何**
-- 基本圖形辨認：三角形、四邊形、多邊形、圓
-- 點、線（直線/線段/射線）、面、角（銳角/直角/鈍角/平角）
-- 平行與垂直
-- 三角形分類（依邊、依角）與內角和 180°
-- 四邊形分類（正方形/長方形/平行四邊形/梯形/菱形）與性質
-- 周長計算
-- 面積：長方形、正方形、平行四邊形、三角形、梯形面積公式
-- 圓的認識（圓心、半徑、直徑）、圓周率概念、圓周長與圓面積 (待核：圓面積多在高年段)
-- 體積：正方體、長方體體積與表面積
-- 對稱（線對稱圖形、對稱軸）
-- 放大與縮小、比例尺的初步
-
-**代數初步（數量關係/樣式）**
-- 數與形的規律（數列樣式、圖形樣式之推理與延續）
-- 以符號（□、( )、文字）表示未知數
-- 簡單的一步驟「等量公理」雛形（填空型方程式）
-- 數量關係式的列式與解讀（文字題翻譯成算式）
-
-**統計與機率**
-- 資料的蒐集、分類與整理
-- 長條圖、折線圖的製作與判讀
-- 圓形圖（百分比）的判讀 (待核)
-- 統計表的填寫與讀取
-- 平均數（算術平均）概念與計算
-- 可能性/機會的直覺概念（較可能/較不可能、公平）
-
-**關係（比與比例）**
-- 比、比值的概念
-- 正比、反比的直覺理解 (待核：正式名稱多在國中)
-- 比例式與簡單應用（速率、單價）
-- 百分率（折扣、成數、利率的生活應用）
-
-### A-2 國語文
-**識字與寫字**
-- 國字筆順、部首、筆畫
-- 常用字認讀與書寫（累積約 2200–2700 字）(待核：確切字數)
-- 形近字、同音字辨析
-- 部首表義、形聲字結構
-- 硬筆字正確字形與工整書寫
-- 查字典（部首/筆畫/注音檢字法）
-
-**注音與拼讀**
-- 注音符號認讀與拼音
-- 聲調（一二三四聲與輕聲）
-- 結合韻母
-
-**閱讀**
-- 朗讀與默讀
-- 擷取文章明示訊息（人事時地物）
-- 歸納段落大意與全文主旨
-- 推論文章隱含訊息、因果關係
-- 辨識記敘/說明/應用文體
-- 詞語在文中的意義（一詞多義）
-- 文本與生活經驗連結、提問
-
-**寫作**
-- 句子的完整與通順（主詞＋述語）
-- 標點符號正確使用（句號、逗號、頓號、問號、驚嘆號、冒號、引號、書名號）
-- 段落結構（開頭/經過/結尾）
-- 記敘文、日記、書信、應用文（通知/便條）寫作
-- 擴寫、縮寫、仿寫
-- 修辭初步：譬喻、擬人、排比、類疊
-
-**聆聽與口語表達**
-- 聽懂重點並複述
-- 有條理的口頭報告與討論
-
-### A-3 英語
-**字母與拼讀（Phonics）**
-- 26 字母大小寫認讀與書寫
-- 字母名稱音 vs 字母發音
-- 子音/母音基本發音、常見字母組合（sh, ch, th, ea, oo…）
-- 看字讀音、聽音拼字（自然發音法）
-
-**基礎字彙（約 300–600 字）**
-- 主題字彙：數字、顏色、身體部位、家庭成員、食物、動物、文具、交通、天氣、衣物、職業
-- 名詞單複數基本概念
-
-**日常句型**
-- 問候與自我介紹（What's your name? / How are you?）
-- Be 動詞句（I am / You are / This is…）
-- There is / There are
-- 一般現在式簡單句（I like… / I have…）
-- 現在進行式（be + V-ing）基礎
-- Wh- 疑問詞（what/who/where/when/how many）基礎
-- 祈使句（Open the book. / Sit down.）
-- 情態助動詞 can（能力）
-
-**聽說讀寫入門**
-- 聽懂簡單指令與對話
-- 口說日常對話、歌謠韻文
-- 朗讀簡短句子/對話
-- 抄寫與仿寫簡單句子
-
-### A-4 自然科學（含探究技能）
-**生物**
-- 動物的特徵、分類、生活習性與棲地
-- 植物的構造（根莖葉花果實種子）與功能
-- 生物的生命週期（昆蟲變態、植物生長）
-- 生物的繁殖與遺傳初步
-- 生態系、食物鏈/食物網初步
-- 人體與健康：感官、骨骼肌肉、消化、呼吸初步
-
-**物質**
-- 物質三態（固/液/氣）與狀態變化（熔化、凝固、蒸發、凝結）
-- 物質的性質（軟硬、浮沉、磁性、導電、酸鹼初步）
-- 溶解與混合物的分離（過濾、蒸發）
-- 空氣與水的性質
-
-**能量**
-- 光（直進、反射、影子、顏色）
-- 熱（傳導、溫度與溫度計）
-- 力與運動（推拉、摩擦、槓桿/輪軸/滑輪初步）
-- 聲音（發聲、傳播、大小高低）
-- 電（電路、電池、燈泡、導體與絕緣體）
-- 磁（磁鐵吸引、磁極、指南針）
-
-**地球與環境**
-- 天氣與氣象觀測（氣溫、降雨、風）
-- 四季、晝夜與太陽位置
-- 月相變化
-- 星星與星座初步
-- 地表地形、岩石與土壤
-- 水資源與水的循環
-- 自然災害（地震、颱風）與防災
-- 環境保護、資源回收、永續初步
-
-**探究技能（跨主題）**
-- 觀察、提問、預測
-- 實驗的操縱變因/控制變因初步（公平測試）
-- 測量與記錄、製表製圖
-- 依據證據做結論、表達與溝通
-
-### A-5 社會
-**歷史（時間軸概念）**
-- 個人與家庭的過去、家族故事
-- 社區/家鄉的變遷
-- 台灣歷史大事序列初步（原住民、荷西、鄭氏、清領、日治、戰後）(待核：深度依年段)
-- 歷史人物與文化資產
-
-**地理（空間概念）**
-- 方位（東西南北、八方位）與地圖符號
-- 平面圖、地圖的判讀、比例尺、圖例
-- 家鄉/台灣的位置、地形、氣候、河流
-- 台灣各區域的產業與聚落
-- 世界五大洲/四大洋、台灣在世界的位置
-
-**公民（社會啟蒙）**
-- 自我與群己關係、人際相處
-- 家庭、學校、社區的角色與規範
-- 規則、法律與權利義務初步
-- 民主、投票、公共參與初步
-- 消費與理財初步（需要 vs 想要、儲蓄）
-- 多元文化、性別平等、人權尊重
-- 媒體識讀初步
-
-### ⚠ 國小→國中 橋接（G6 須精熟，否則 G7 落後）
-- **數學**：分數/小數四則流暢、因倍數與最大公因數/最小公倍數、負數概念雛形、比與比例、用符號表未知數＋等量公理、面積體積公式熟練、長條圖/折線圖判讀與平均數
-- **國文**：2000+ 常用字書寫無礙、標點正確、能擷取長文明示訊息並歸納主旨、通順成段寫作
-- **英語**：自然發音可拼讀、300–600 核心字彙、be 動詞/一般現在式/現在進行式/can/Wh- 疑問句
-- **自然**：操縱/控制變因、圖表判讀
-- **社會**：地圖判讀與方位、時間軸排序
+> 這是 `LEARNING_PATH_REBUILD_SPEC.md` 的**附錄 A，spec 不可分割的一部分**（§4.1）。
+> 本檔由 10 個領域 expert 平行深掘 slice 組成（取代舊 598 粗胚）；機器可讀 manifest＝`authoring/knowledge_points.json`。
+> 每條格式：`- [<id>] <title_zh>  {<tier>, <exam>}`；id＝`<domain>.<tier>.<strand>.<slug>`，穩定不重用。
+> **tier 為內部難度分層（t_base/t_mid/t_adv/t_sub/t_enrich），learner 端不顯示（R11）。** 課綱＝下限、可向上延伸至大學入門（英文無上限，實用優先）（R13）。
+> **總計 3092 條唯一-id 微技能**。by_domain：{'chi': 355, 'eng': 296, 'math': 263, 'sci': 986, 'life': 381, 'soc-civ': 322, 'soc-geo': 355, 'soc-hist': 134}。by_tier：{'t_base': 446, 't_mid': 1200, 't_adv': 952, 't_sub': 494}。
+> `(待核)` 項建置前對照教育部課綱／大考中心核實；本清單須經 content_audit＋領域專家核對才定案。
 
 ---
 
-## B. 國中（G7–G9）會考 5 科 + 寫作
 
-### B-1 數學
-**數與式**
-- 正負數與數線、絕對值
-- 整數/有理數四則運算與運算律
-- 指數律（含乘除、次方的次方、零次方、負指數）
-- 科學記號
-- 平方根與根號運算、最簡根式、分母有理化
-- 無理數與實數的概念、實數與數線
-- 近似值與誤差
-- 一元一次式的運算、多項式的加減乘除
-- 乘法公式（和平方、差平方、平方差）
-- 因式分解（提公因式、乘法公式逆用、十字交乘法）
 
-**代數（方程式、不等式、函數）**
-- 一元一次方程式的解與應用問題
-- 二元一次聯立方程式（代入消去法、加減消去法）與應用
-- 一元一次不等式與其解、數線表示、應用
-- 一元二次方程式：因式分解解法
-- 一元二次方程式：配方法
-- 一元二次方程式：公式解與判別式（b²−4ac 判根的個數/性質）
-- 一元二次方程式的應用問題
-- 比與比例式、正比與反比（y=kx、y=k/x）及其圖形
-- 線型函數 y=ax+b 的圖形、斜率、截距
-- 二次函數 y=ax²+bx+c 的圖形、頂點、對稱軸、開口、最大最小值
+# ===== 領域：math（263 條，來源 math.md）=====
 
-**幾何**
-- 基本作圖（尺規：中垂線、角平分線、過點作垂線/平行線）
-- 角的關係（對頂角、同位角、內錯角、同旁內角與平行線性質）
-- 三角形內角和、外角定理
-- 三角形的全等（SSS、SAS、ASA、AAS、RHS）
-- 三角形的邊角關係、三角形兩邊和大於第三邊
-- 等腰三角形、正三角形性質
-- 畢氏定理及其逆敘述與應用
-- 平行四邊形、矩形、菱形、正方形、梯形之性質與判別
-- 相似形、相似三角形判別（AA、SAS、SSS）與比例線段
-- 平行線截線段成比例
-- 圓：圓心角、圓周角、弧、弦、切線、弦切角
-- 圓內接四邊形、切線性質
-- 幾何中心：外心（外接圓/垂直平分線交點）、內心（內切圓/角平分線交點）、重心（中線交點 2:1）、垂心
-- 幾何證明的推理與書寫
+# 數學 知識點母體（深掘枚舉版）— 基礎(國小) → 中階(國中/會考) → 高階(高中學測) → 深階(分科 數甲/數乙)
 
-**統計與機率**
-- 統計圖表：長條圖、折線圖、圓形圖、直方圖、次數分配表
-- 累積次數、相對次數
-- 平均數、中位數、眾數（集中趨勢）
-- 全距、四分位數、箱形圖（資料分布） (待核：箱形圖年段)
-- 百分位數
-- 機率的意義（古典機率）、樣本空間與事件
-- 簡單事件機率計算、用樹狀圖/列表法計數
-
-### B-2 國文
-**字詞基礎**
-- 字音（含破音字、多音字）
-- 字形（形近字、錯別字辨正）
-- 字義（本義/引申義、一字多義）
-- 詞語辨析、成語意義與運用
-- 六書概念（象形/指事/會意/形聲/轉注/假借）
-
-**文言基礎**
-- 文言虛字（之、乎、者、也、以、而、於、其、則…）的用法
-- 文言實詞一字多義、古今異義
-- 詞類活用初步
-- 文言句讀與語譯
-- 常見文言句式（判斷句、被動句、倒裝、省略）
-
-**閱讀（白話＋文言）**
-- 白話文本的擷取、統整、解釋
-- 文言短文的理解與翻譯
-- 長文本訊息擷取與整合
-- 因果、轉折、並列等邏輯關係判讀（含轉折連詞）
-- 作者觀點、寫作目的、文章結構分析
-- 跨文本/圖文整合題
-- 文體辨識（記敘/抒情/論說/應用）
-- 古典詩詞格律與意象初步
-
-**修辭與文法**
-- 修辭：譬喻、轉化（擬人/擬物）、誇飾、映襯、排比、對偶、設問、引用、頂真、回文、借代
-- 句子成分與句型
-- 標點符號的精確使用
-
-### B-3 英語
-**字彙（約 1200 → 2000 字）**
-- 教育部參考字表 1200 核心字、擴充至 2000 (待核：確切字數)
-- 構詞：字首、字根、字尾、合成字、派生字
-- 同義/反義/相關詞
-
-**文法與句型**
-- 時態：現在簡單/進行、過去簡單/進行、未來（will / be going to）、現在完成式
-- 名詞（可數/不可數、單複數、所有格）
-- 代名詞（人稱/所有/反身/指示/不定代名詞）
-- 冠詞（a/an/the）
-- 形容詞與副詞、比較級與最高級
-- 助動詞與情態助動詞（can/could/may/must/should/have to）
-- 介系詞（時間/地點/方向）
-- 連接詞（and/but/or/so/because/although/when/if…）
-- 不定詞與動名詞
-- 被動語態
-- 關係代名詞（who/which/that）、關係子句
-- 附屬子句（名詞/形容詞/副詞子句）
-- 間接問句、附加問句
-- 假設語氣初步 (待核：年段)
-- 句型：五大基本句型、There be、祈使句、感嘆句
-
-**閱讀**
-- 主旨與大意
-- 細節擷取
-- 推論與猜測字義（由上下文）
-- 指代關係（代名詞指涉）
-- 文章結構與連接詞（轉折 however/therefore/although）
-- 圖表/告示/應用文閱讀
-
-**英聽**
-- 辨識語音、語調、重音
-- 聽懂對話與短文的人事時地物
-- 聽辨轉折詞與語氣轉變
-- 看圖/情境選答
-
-### B-4 自然
-**理化（物質）**
-- 物質的組成：元素、化合物、混合物
-- 原子、分子、原子結構（質子/中子/電子）
-- 元素週期表初步（原子序、符號）
-- 純物質與混合物的分離（蒸餾、層析、結晶）
-- 物質的狀態變化與粒子觀點
-- 溶液：濃度（重量百分濃度）、溶解度
-- 物理變化與化學變化
-- 化學反應與化學式、化學反應式與平衡（係數）
-- 質量守恆定律
-- 酸、鹼、鹽與 pH 值、酸鹼中和
-- 氧化還原初步、燃燒
-- 常見氣體的製備與檢驗
-
-**理化（運動與力）**
-- 速度、速率、加速度、位移
-- 力的種類與測量（重力、摩擦力、彈力、浮力）
-- 力的合成與分解、力圖
-- 牛頓運動定律（慣性、F=ma、作用反作用）
-- 功、功率
-- 力矩、槓桿與簡單機械
-- 壓力（固體/液體/大氣壓）、浮力與阿基米德原理
-
-**理化（電磁與能量）**
-- 電荷、靜電、庫侖作用初步
-- 電流、電壓、電阻、歐姆定律
-- 串聯與並聯電路
-- 電功率與電能
-- 電流的磁效應、電磁鐵
-- 電磁感應初步
-- 能量的形式與轉換、能量守恆
-- 熱量、比熱、熱平衡、熱膨脹
-- 波（波長/頻率/振幅）、聲波、光（反射/折射/透鏡/面鏡/光譜）
-
-**生物**
-- 細胞構造與功能、細胞分裂
-- 生物體的組成層次（細胞→組織→器官→系統）
-- 營養與消化、循環、呼吸、排泄系統
-- 神經與內分泌（協調）
-- 生殖（有性/無性）與遺傳（基因、染色體、孟德爾遺傳、性別決定）
-- 演化與生物多樣性、生物分類（界門綱目科屬種）
-- 光合作用與呼吸作用
-- 生態系、能量流動與物質循環、族群與群集
-- 生物與環境、人類活動對環境的影響
-
-**地球科學**
-- 地球的構造（地殼/地函/地核）、板塊運動
-- 岩石與礦物、岩石循環
-- 地震與火山、地質作用（風化/侵蝕/搬運/堆積）
-- 大氣的組成與結構、天氣與氣象（氣壓/鋒面/颱風）
-- 氣候與季節、全球暖化與氣候變遷
-- 水圈：海洋、洋流、潮汐、水循環
-- 天文：地球自轉與公轉、四季、晝夜、月相、日食月食、太陽系與星體
-
-**探究與實作**
-- 操縱變因、控制變因、應變變因的辨識
-- 實驗設計與公平測試
-- 數據的表格化與繪圖（折線/長條/散布）
-- 圖表判讀與趨勢分析
-- 由證據推論、誤差與再現性
-- 科學論證與表達
-
-### B-5 社會
-**歷史**
-- 台灣史：史前與原住民、荷西時期、鄭氏、清領、日治、戰後至今的政治/經濟/社會變遷
-- 中國史：朝代更替主軸、重要制度與文化、近代變局 (待核：課綱以主題式統整)
-- 世界史：古文明、重要文明交流、近代歐洲、工業革命、兩次世界大戰、冷戰、全球化
-- 歷史分期、因果與時序、史料辨析
-
-**地理**
-- 地圖判讀：絕對位置（經緯度）與相對位置
-- 比例尺、方位、等高線地形圖
-- 統計地圖（點子圖/面量圖/等值線圖）判讀
-- 地形、氣候、水文、土壤、自然景觀
-- 台灣地理：區域特色、產業、交通、人口、都市化
-- 中國地理區域特色 (待核)
-- 世界區域地理（各洲自然與人文特色）
-- 人口（人口金字塔、人口成長/遷移）
-- 產業（一級/二級/三級）、全球化與國際分工
-- 環境議題與永續發展
-
-**公民**
-- 自我、家庭、社會化、群己關係
-- 社會規範、文化與多元文化
-- 人權、性別平等、兒少權益
-- 政治：國家、政府體制、民主政治、選舉與政黨、權力分立
-- 法律：法律的意義、憲法與人權保障、民法/刑法/行政法初步、權利義務與責任
-- 經濟：需求供給、市場與價格、貨幣與金融、分工與交易、消費者保護、政府財政與租稅
-- 全球關聯：國際組織、全球議題
-
-**跨科題組整合**
-- 歷史×地理×公民的時事/議題整合題（圖表＋文本＋地圖綜合判讀）
-- 由多素材推論、論證、評析
-
-### B-6 寫作測驗
-- 引導式寫作：讀懂題幹引導與圖表
-- 四段論結構（起／承／轉／合）
-- 立意取材、確立中心
-- 個人觀點的提出與論述
-- 以具體事例/經驗支持觀點
-- 條理分明的組織與段落銜接
-- 遣詞用字、修辭、標點的正確與得體
-- 字數與時間的掌控
+> 說明：每一列 = 一個「可出題、可檢核」的微技能（micro-skill）。tier 為內部標記（學習者看不到）：
+> `t_base`=國小範圍／`t_mid`=國中/會考／`t_adv`=高中學測(高一二)／`t_sub`=分科(數甲/數乙 高三)。
+> exam 標籤：會考／學測／分科-數甲／分科-數乙／無(基礎)。id 穩定、不重用。
+> 標準：繁體中文、零簡體、零 PRC 詞彙（國小/國中/高中）。年段/分流不確定者標 `(待核)`。
 
 ---
 
-## C. 高中（G10–G12）學測（高一二範圍）＋分科測驗（高三選修深水區）
+## 一、數與量（number & quantity）
 
-### C-1 數學（數A／數B／數甲分流）
-**共同基礎（高一，數A/數B共通核心）**
-- 數與式：實數、絕對值不等式、根式、指數律
-- 多項式：除法原理、餘式定理、因式定理、綜合除法、最高公因式/最低公倍式
-- 多項式方程式（含虛根成對、有理根檢驗）與不等式
-- 直線方程式、斜率、兩線關係、點到直線距離
-- 圓方程式與直線圓關係
-- 指數與對數：定義、運算律、指數/對數函數與圖形、換底公式、對數尺（pH/分貝/地震規模應用）
-- 數列與級數：等差、等比數列與級數、求和（Σ記號）、無窮等比級數
-- 三角比與三角函數初步（正弦/餘弦定理、面積公式）
-- 排列組合：加法/乘法原理、排列、組合、二項式定理
-- 機率：古典機率、條件機率、貝氏（Bayes）初步、期望值
-- 數據分析：一維數據（平均數/標準差/變異數）、二維數據（相關係數、迴歸直線）
+- [math.t_base.numquant.place-value-read-write] 萬以內（含更大位值）數的認、讀、寫與位名位值  {t_base, 無}
+- [math.t_base.numquant.compare-order] 整數大小比較與排序（含數線定位）  {t_base, 無}
+- [math.t_base.numquant.add-sub-vertical] 整數加減直式（進位、退位）與驗算  {t_base, 無}
+- [math.t_base.numquant.multiplication-table] 乘法九九表的熟記與應用  {t_base, 無}
+- [math.t_base.numquant.multi-digit-mult] 兩位數以上乘法直式計算  {t_base, 無}
+- [math.t_base.numquant.division-remainder] 除法直式與餘數（被除數／除數／商／餘數關係）  {t_base, 無}
+- [math.t_base.numquant.mixed-operations-order] 四則混合運算順序（先乘除後加減、括號優先）  {t_base, 無}
+- [math.t_base.numquant.factors-multiples] 因數、倍數的意義與求法  {t_base, 無}
+- [math.t_base.numquant.gcd-lcm] 最大公因數、最小公倍數的求法與應用  {t_base, 無}
+- [math.t_base.numquant.prime-composite] 質數與合數的辨認、質因數分解  {t_base, 無}
+- [math.t_base.numquant.fraction-concept] 分數概念（真分數/假分數/帶分數）與互換  {t_base, 無}
+- [math.t_base.numquant.equivalent-fractions] 等值分數、約分、通分  {t_base, 無}
+- [math.t_base.numquant.fraction-arithmetic] 分數的四則運算（含異分母）  {t_base, 無}
+- [math.t_base.numquant.decimal-place-value] 小數概念與位值（十分位、百分位…）  {t_base, 無}
+- [math.t_base.numquant.decimal-arithmetic] 小數的四則運算  {t_base, 無}
+- [math.t_base.numquant.fraction-decimal-convert] 分數與小數的互換  {t_base, 無}
+- [math.t_base.numquant.rounding-estimate] 概數、四捨五入與估算  {t_base, 無}
+- [math.t_base.numquant.unit-conversion] 長度/重量/容量/時間/角度/面積/體積的實測與單位換算  {t_base, 無}
+- [math.t_base.numquant.time-calculation] 時間的加減與時刻/時距計算  {t_base, 無}
+- [math.t_base.numquant.money-calculation] 貨幣與簡單金額計算  {t_base, 無}
+- [math.t_mid.numquant.signed-numbers] 正負數的意義、數線上的表示與大小比較  {t_mid, 會考}
+- [math.t_mid.numquant.absolute-value] 絕對值的定義、幾何意義與數線距離  {t_mid, 會考}
+- [math.t_mid.numquant.rational-operations] 有理數四則運算與運算律（交換/結合/分配）  {t_mid, 會考}
+- [math.t_mid.numquant.exponent-laws] 指數律（同底相乘除、次方的次方、零次方、負指數）  {t_mid, 會考}
+- [math.t_mid.numquant.scientific-notation] 科學記號的表示與運算（含大數小數）  {t_mid, 會考}
+- [math.t_mid.numquant.square-root] 平方根與根號的意義、估算  {t_mid, 會考}
+- [math.t_mid.numquant.radical-simplify] 最簡根式、根式的四則運算  {t_mid, 會考}
+- [math.t_mid.numquant.rationalize-denominator] 分母有理化  {t_mid, 會考}
+- [math.t_mid.numquant.irrational-reals] 無理數與實數的概念、實數與數線的對應  {t_mid, 會考}
+- [math.t_mid.numquant.approximation-error] 近似值與誤差的判讀  {t_mid, 會考}
 
-**數A 特有（偏理工，空間/抽象/嚴謹推導）**
-- 三角函數：弧度量、三角函數的圖形與週期、和差角/倍角/半角公式、正餘弦疊合、三角方程式
-- 向量：平面向量與空間向量、內積、外積、向量的幾何應用
-- 空間概念：空間中點線面的關係、空間坐標、平面方程式、直線的參數式
-- 矩陣：矩陣運算、反矩陣、線性方程組（高斯消去）、矩陣變換 (待核：數甲/數A歸屬)
-- 行列式：二階/三階行列式、克拉瑪公式
-- 複數系與複數平面、棣美弗定理 (待核：歸屬數A/數甲)
-- 圓錐曲線：拋物線、橢圓、雙曲線的定義與方程式
-- 較嚴謹的數學歸納法與證明
+## 二、比與比例（ratio & proportion）
 
-**數B 特有（偏社會/商管，生活應用）**
-- 數列級數的生活應用：單利與複利、年金、貸款分期
-- 比例成長與衰退（指數成長/衰退模型、半衰期）
-- 經緯度與地球上的距離應用 (待核)
-- 統計與機率在社會科學的應用（抽樣、問卷、風險）
-- 線性規劃（目標函數＋限制式的最佳化）
-- 數據分析與決策的生活情境應用
+- [math.t_base.ratio.ratio-value] 比與比值的概念  {t_base, 無}
+- [math.t_base.ratio.direct-inverse-intuition] 正比、反比的直覺理解  {t_base, 無}
+- [math.t_base.ratio.proportion-equation] 比例式與簡單應用（速率、單價）  {t_base, 無}
+- [math.t_base.ratio.percentage-life] 百分率（折扣、成數、利率的生活應用）  {t_base, 無}
+- [math.t_base.ratio.scale-map] 比例尺、放大與縮小的初步  {t_base, 無}
+- [math.t_mid.ratio.ratio-simplify] 連比與比例式的化簡與求解  {t_mid, 會考}
+- [math.t_mid.ratio.direct-variation] 正比 y=kx 的意義、圖形與應用  {t_mid, 會考}
+- [math.t_mid.ratio.inverse-variation] 反比 y=k/x 的意義、圖形與應用  {t_mid, 會考}
+- [math.t_mid.ratio.proportion-apply] 比例式應用問題（分配、混合、速率）  {t_mid, 會考}
 
-**數甲（分科測驗，高三選修深水區，理工）**
-- 極限與連續：數列極限、函數極限、連續性
-- 微分：導數定義、微分公式、鏈鎖法則、高階導數
-- 微分應用：切線、增減與凹凸、極值、函數圖形描繪、相關變率、最佳化
-- 積分：反導數、定積分與微積分基本定理、面積與體積（旋轉體）
-- 積分技巧（代換、分部）初步
-- 三角函數/指對數函數的微積分
-- 空間向量與平面/直線的進階
-- 矩陣與線性變換進階、二次曲線的矩陣觀點
+## 三、數與式（number & algebraic expression）
 
-**數乙（分科，偏商管）(待核：分科測驗科目設置)**
-- 微積分在商管的應用（邊際分析、彈性）
-- 機率分布與統計推論的應用
+- [math.t_base.algexpr.pattern-sequence] 數與形的規律（樣式推理與延續）  {t_base, 無}
+- [math.t_base.algexpr.symbol-unknown] 以符號（□、( )、文字）表示未知數  {t_base, 無}
+- [math.t_base.algexpr.translate-word] 文字題翻譯成算式與列式解讀  {t_base, 無}
+- [math.t_mid.algexpr.linear-expression] 一元一次式的運算與化簡（合併同類項）  {t_mid, 會考}
+- [math.t_mid.algexpr.polynomial-add-sub] 多項式的加減  {t_mid, 會考}
+- [math.t_mid.algexpr.polynomial-mult] 多項式的乘法（分配律展開）  {t_mid, 會考}
+- [math.t_mid.algexpr.polynomial-div] 多項式的除法（長除法）  {t_mid, 會考}
+- [math.t_mid.algexpr.mult-formula-square] 乘法公式：和的平方、差的平方  {t_mid, 會考}
+- [math.t_mid.algexpr.mult-formula-diff] 乘法公式：平方差  {t_mid, 會考}
+- [math.t_mid.algexpr.factor-common] 因式分解：提取公因式  {t_mid, 會考}
+- [math.t_mid.algexpr.factor-formula] 因式分解：乘法公式逆用  {t_mid, 會考}
+- [math.t_mid.algexpr.factor-cross] 因式分解：十字交乘法  {t_mid, 會考}
+- [math.t_adv.algexpr.poly-division-principle] 多項式除法原理與餘式定理  {t_adv, 學測}
+- [math.t_adv.algexpr.factor-theorem] 因式定理與有理根檢驗  {t_adv, 學測}
+- [math.t_adv.algexpr.synthetic-division] 綜合除法  {t_adv, 學測}
+- [math.t_adv.algexpr.poly-gcd-lcm] 多項式的最高公因式與最低公倍式  {t_adv, 學測}
+- [math.t_adv.algexpr.binomial-theorem] 二項式定理與二項係數  {t_adv, 學測}
+- [math.t_adv.algexpr.partial-fraction] 部分分式分解 (待核：常見於數甲積分前置)  {t_sub, 分科-數甲}
 
-### C-2 國文
-**國語文綜合能力測驗（選擇題，學測）**
-- 字音、字形、字義、成語
-- 詞語與語法、語句重組
-- 文言文閱讀與語譯（文白各半）
-- 白話文閱讀理解
-- 雙文本比較閱讀（兩篇素材的異同、觀點對照、整合推論）
-- 圖表與文字整合題
-- 文化經典（論孟學庸、史傳、詩詞曲、現代文學）
-- 文學流派與文學史常識 (待核)
-- 應用文與實用文本（企劃、報導、說明）
+## 四、方程式與不等式（equations & inequalities）
 
-**國語文寫作能力測驗（國寫，兩大題）**
-- 知性題（理性思辨）：閱讀材料後，分析、歸納、提出論點並論證；資訊整理與批判
-- 情意題（感性抒情）：抒發情感、經驗敘寫、想像與體悟
-- 立意取材、結構組織、遣詞造句、修辭
-- 審題與回應題幹要求、字數與時間掌控
+- [math.t_base.equation.one-step-balance] 等量公理雛形（填空型一步方程式）  {t_base, 無}
+- [math.t_mid.equation.linear-one-var] 一元一次方程式的解法  {t_mid, 會考}
+- [math.t_mid.equation.linear-one-var-apply] 一元一次方程式的應用問題（年齡/數字/幾何）  {t_mid, 會考}
+- [math.t_mid.equation.linear-system-substitution] 二元一次聯立：代入消去法  {t_mid, 會考}
+- [math.t_mid.equation.linear-system-elimination] 二元一次聯立：加減消去法  {t_mid, 會考}
+- [math.t_mid.equation.linear-system-apply] 二元一次聯立的應用問題  {t_mid, 會考}
+- [math.t_mid.inequality.linear-one-var] 一元一次不等式的解與數線表示  {t_mid, 會考}
+- [math.t_mid.inequality.linear-apply] 一元一次不等式的應用問題  {t_mid, 會考}
+- [math.t_mid.equation.quadratic-factor] 一元二次方程式：因式分解解法  {t_mid, 會考}
+- [math.t_mid.equation.quadratic-complete-square] 一元二次方程式：配方法  {t_mid, 會考}
+- [math.t_mid.equation.quadratic-formula] 一元二次方程式：公式解  {t_mid, 會考}
+- [math.t_mid.equation.quadratic-discriminant] 判別式 b²−4ac 判根的個數與性質  {t_mid, 會考}
+- [math.t_mid.equation.quadratic-apply] 一元二次方程式的應用（面積/數字/速率）  {t_mid, 會考}
+- [math.t_adv.equation.quadratic-vieta] 根與係數關係（韋達定理）  {t_adv, 學測}
+- [math.t_adv.equation.quadratic-param-range] 含參數的二次方程式求範圍（判別式/根的分布）  {t_adv, 學測}
+- [math.t_adv.equation.poly-equation-complex-roots] 多項式方程式與虛根成對定理  {t_adv, 學測}
+- [math.t_adv.inequality.quadratic] 一元二次不等式的解（含圖形法）  {t_adv, 學測}
+- [math.t_adv.inequality.polynomial] 高次多項式不等式（分區間判號）  {t_adv, 學測}
+- [math.t_adv.inequality.rational] 分式不等式  {t_adv, 學測}
+- [math.t_adv.inequality.absolute-value] 絕對值方程式與不等式  {t_adv, 學測}
+- [math.t_adv.inequality.am-gm] 算術幾何平均不等式（AM–GM）與極值應用  {t_adv, 學測}
+- [math.t_adv.equation.exp-log] 指數方程式與對數方程式的解法  {t_adv, 學測}
+- [math.t_adv.inequality.exp-log] 指數不等式與對數不等式  {t_adv, 學測}
 
-### C-3 英文
-**字彙（約 4500 → 6000 字）**
-- 學測參考字表 4500 字；分科/進階擴充至 6000 (待核：確切字數)
-- 構詞（字首/字根/字尾）、搭配詞（collocation）、片語動詞
-- 同反義與語意辨析
+## 五、函數（functions）
 
-**文法與用法（高階）**
-- 完成式全系列（現在/過去/未來完成、完成進行）
-- 假設語氣（與現在/過去/未來事實相反、混合）
-- 分詞構句、獨立分詞
-- 關係子句（限定/非限定、關係副詞、介系詞＋關代、複合關代 what）
-- 倒裝句、強調句（It is…that）、分裂句
-- 名詞子句、同位語
-- 連接詞與轉折副詞的邏輯
-- 虛主詞/虛受詞、使役動詞、感官動詞
+- [math.t_mid.function.linear-graph] 線型函數 y=ax+b 的圖形、斜率、截距  {t_mid, 會考}
+- [math.t_mid.function.quadratic-graph] 二次函數 y=ax²+bx+c 的圖形（開口/對稱軸/頂點）  {t_mid, 會考}
+- [math.t_mid.function.quadratic-max-min] 二次函數的最大值與最小值  {t_mid, 會考}
+- [math.t_adv.function.concept-domain-range] 函數的定義、定義域與值域  {t_adv, 學測}
+- [math.t_adv.function.quadratic-closed-interval] 二次函數在閉區間上的極值  {t_adv, 學測}
+- [math.t_adv.function.graph-transformation] 函數圖形的平移、伸縮與對稱變換  {t_adv, 學測}
+- [math.t_adv.function.composite-inverse] 合成函數與反函數  {t_adv, 學測}
+- [math.t_adv.function.exp-definition] 指數函數的定義、圖形與性質  {t_adv, 學測}
+- [math.t_adv.function.log-definition] 對數的定義、運算律與圖形  {t_adv, 學測}
+- [math.t_adv.function.log-change-base] 換底公式與對數值估算  {t_adv, 學測}
+- [math.t_adv.function.log-scale-apply] 對數尺的應用（pH／分貝／地震規模／星等）  {t_adv, 學測}
+- [math.t_adv.function.exp-growth-decay] 指數成長與衰退模型（半衰期/複利連結）  {t_adv, 學測}
+- [math.t_sub.function.rational-graph] 有理函數的圖形與漸近線  {t_sub, 分科-數甲}
 
-**閱讀測驗**
-- 主旨/目的/態度/語氣
-- 細節、推論、字義（by context）
-- 篇章結構、指代、作者論證
-- 多篇/圖表整合、長篇學術性文章
-- 克漏字（cloze）、文意選填、篇章結構（段落排序/句子插入）
+## 六、幾何（geometry：作圖／全等／相似／圓／幾何中心／證明）
 
-**寫作**
-- 中譯英（兩句，句型與用字精確）
-- 英文作文：看圖/主題式，論點＋發展＋結論；段落組織、連接詞、時態一致、用字精確
-- 書信/報導/議論等文體
+- [math.t_base.geom.basic-shapes] 基本圖形辨認（三角形/四邊形/多邊形/圓）  {t_base, 無}
+- [math.t_base.geom.point-line-angle] 點、線（直線/線段/射線）、面、角的辨認  {t_base, 無}
+- [math.t_base.geom.angle-types] 角的分類（銳角/直角/鈍角/平角）  {t_base, 無}
+- [math.t_base.geom.parallel-perpendicular] 平行與垂直的辨認  {t_base, 無}
+- [math.t_base.geom.triangle-classify] 三角形分類（依邊/依角）與內角和 180°  {t_base, 無}
+- [math.t_base.geom.quadrilateral-classify] 四邊形分類與性質（正方形/長方形/平行四邊形/梯形/菱形）  {t_base, 無}
+- [math.t_base.geom.perimeter] 周長計算  {t_base, 無}
+- [math.t_base.geom.area-formulas] 面積公式（長方形/正方形/平行四邊形/三角形/梯形）  {t_base, 無}
+- [math.t_base.geom.circle-basics] 圓的認識（圓心/半徑/直徑）、圓周率  {t_base, 無}
+- [math.t_base.geom.circle-circumference-area] 圓周長與圓面積  {t_base, 無}
+- [math.t_base.geom.volume-surface] 正方體/長方體的體積與表面積  {t_base, 無}
+- [math.t_base.geom.symmetry] 線對稱圖形與對稱軸  {t_base, 無}
+- [math.t_mid.geom.construction-bisector] 尺規作圖：中垂線、角平分線  {t_mid, 會考}
+- [math.t_mid.geom.construction-perp-parallel] 尺規作圖：過點作垂線、平行線  {t_mid, 會考}
+- [math.t_mid.geom.angle-relations] 角的關係（對頂角/同位角/內錯角/同旁內角與平行線性質）  {t_mid, 會考}
+- [math.t_mid.geom.triangle-angle-exterior] 三角形內角和與外角定理  {t_mid, 會考}
+- [math.t_mid.geom.triangle-congruence] 三角形全等判別（SSS/SAS/ASA/AAS/RHS）  {t_mid, 會考}
+- [math.t_mid.geom.triangle-inequality] 三角形邊角關係、兩邊和大於第三邊  {t_mid, 會考}
+- [math.t_mid.geom.isosceles-equilateral] 等腰三角形與正三角形性質  {t_mid, 會考}
+- [math.t_mid.geom.pythagorean] 畢氏定理及其逆敘述與應用  {t_mid, 會考}
+- [math.t_mid.geom.quadrilateral-properties] 平行四邊形/矩形/菱形/正方形/梯形之性質與判別  {t_mid, 會考}
+- [math.t_mid.geom.similar-triangles] 相似三角形判別（AA/SAS/SSS）  {t_mid, 會考}
+- [math.t_mid.geom.proportional-segments] 平行線截線段成比例、比例線段  {t_mid, 會考}
+- [math.t_mid.geom.similar-area-volume-ratio] 相似形的面積比與體積比  {t_mid, 會考}
+- [math.t_mid.geom.circle-angle] 圓的圓心角、圓周角與弧的關係  {t_mid, 會考}
+- [math.t_mid.geom.circle-chord-tangent] 弦、切線、弦切角的性質  {t_mid, 會考}
+- [math.t_mid.geom.circle-inscribed-quad] 圓內接四邊形與切線性質  {t_mid, 會考}
+- [math.t_mid.geom.center-circumcenter] 幾何中心：外心（外接圓/垂直平分線交點）  {t_mid, 會考}
+- [math.t_mid.geom.center-incenter] 幾何中心：內心（內切圓/角平分線交點）  {t_mid, 會考}
+- [math.t_mid.geom.center-centroid] 幾何中心：重心（中線交點 2:1）  {t_mid, 會考}
+- [math.t_mid.geom.center-orthocenter] 幾何中心：垂心（三高交點）  {t_mid, 會考}
+- [math.t_mid.geom.proof-writing] 幾何證明的推理與書寫格式  {t_mid, 會考}
+- [math.t_adv.geom.coordinate-distance] 坐標平面上兩點距離與分點公式  {t_adv, 學測}
+- [math.t_adv.geom.line-equation] 直線方程式（點斜式/斜截式/一般式）  {t_adv, 學測}
+- [math.t_adv.geom.line-slope-relations] 斜率與兩線關係（平行/垂直/夾角）  {t_adv, 學測}
+- [math.t_adv.geom.point-line-distance] 點到直線的距離公式  {t_adv, 學測}
+- [math.t_adv.geom.circle-equation] 圓方程式與圓心半徑的判讀  {t_adv, 學測}
+- [math.t_adv.geom.line-circle-relation] 直線與圓的關係（相交/相切/相離）  {t_adv, 學測}
+- [math.t_adv.geom.tangent-line-circle] 過圓上/圓外點的切線方程式  {t_adv, 學測}
 
-**英聽（高中英聽測驗，獨立施測）(待核：採計方式依校系)**
-- 看圖辨義、對答、簡短對話、短文聽解
+## 七、三角（trigonometry：三角比／三角函數）
 
-### C-4 自然（高一基礎揉合 + 分科深水區）
-**物理**
-- 運動學（等加速、拋體、相對運動）
-- 牛頓運動定律與應用、摩擦力、圓周運動與向心力
-- 功與能、動能定理、位能、力學能守恆
-- 動量與衝量、碰撞、動量守恆
-- 萬有引力與行星運動（克卜勒定律）
-- 簡諧運動與波動、聲波、都卜勒效應
-- 光學：幾何光學（反射/折射/透鏡/面鏡）、物理光學（干涉/繞射/偏振）
-- 熱學：溫度、熱量、理想氣體、熱力學定律 (待核：分科深度)
-- 靜電學：電場、電位、電容
-- 電流與電路、電阻、電功率、克希荷夫定律
-- 電流磁效應、磁場、電磁感應、法拉第定律、交流電
-- 近代物理：量子（光電效應、能階）、原子模型、核物理、相對論初步
+- [math.t_adv.trig.ratio-acute] 銳角三角比（sin/cos/tan）的定義與特殊角  {t_adv, 學測}
+- [math.t_adv.trig.ratio-generalized] 廣義角三角比與象限符號  {t_adv, 學測}
+- [math.t_adv.trig.identity-basic] 三角基本關係式（平方關係/商數關係/餘角關係）  {t_adv, 學測}
+- [math.t_adv.trig.law-of-sines] 正弦定理與外接圓半徑  {t_adv, 學測}
+- [math.t_adv.trig.law-of-cosines] 餘弦定理  {t_adv, 學測}
+- [math.t_adv.trig.triangle-area] 三角形面積公式（含海龍公式）  {t_adv, 學測}
+- [math.t_adv.trig.solve-triangle-apply] 解三角形的測量應用（仰角/俯角/方位）  {t_adv, 學測}
+- [math.t_adv.trig.radian] 弧度量與弧長、扇形面積  {t_adv, 學測}
+- [math.t_adv.trig.function-graph] 三角函數的圖形、週期、振幅與相位  {t_adv, 學測}
+- [math.t_sub.trig.sum-difference] 和差角公式  {t_sub, 分科-數甲}
+- [math.t_sub.trig.double-half-angle] 倍角與半角公式  {t_sub, 分科-數甲}
+- [math.t_sub.trig.superposition] 正餘弦疊合（a sinθ + b cosθ）  {t_sub, 分科-數甲}
+- [math.t_sub.trig.product-sum] 積化和差與和差化積  {t_sub, 分科-數甲}
+- [math.t_sub.trig.equation] 三角方程式的解法  {t_sub, 分科-數甲}
+- [math.t_sub.trig.inverse-function] 反三角函數初步 (待核：數甲收錄深度)  {t_sub, 分科-數甲}
 
-**化學**
-- 物質的組成、原子結構、電子組態、週期表與週期性
-- 化學鍵（離子鍵/共價鍵/金屬鍵）、分子結構與極性、分子間作用力
-- 化學計量（莫耳、化學式量、反應式平衡、限量試劑、產率）
-- 氣體（理想氣體方程式、分壓）
-- 溶液與濃度（莫耳濃度、重量莫耳濃度、滲透壓、依數性質）
-- 化學反應速率與影響因素
-- 化學平衡、平衡常數、勒沙特列原理
-- 酸鹼（定義、pH、滴定、緩衝溶液）
-- 氧化還原、電化學（電池、電解、電極電位）
-- 熱化學（反應熱、赫斯定律）
-- 有機化學（官能基、常見有機物與反應、聚合物）
-- 無機與應用化學、化學與永續
+## 八、向量（vectors）
 
-**生物**
-- 細胞的構造、功能與物質運輸、酵素
-- 細胞代謝：光合作用、呼吸作用（詳細階段）
-- 細胞分裂（有絲/減數）與細胞週期
-- 遺傳：孟德爾定律、連鎖與互換、性聯遺傳、族群遺傳
-- 分子遺傳：DNA 結構、複製、轉錄、轉譯、基因表現調控、生物技術（PCR/基因重組）
-- 演化：天擇、族群遺傳變化、物種形成、生命樹
-- 生物多樣性與分類
-- 植物的構造與生理（運輸、生殖、激素）
-- 動物的恆定與生理：神經、內分泌、免疫、循環、呼吸、排泄、消化、肌肉骨骼、生殖發育
-- 生態學：族群、群集、生態系、能量流與物質循環、生物與環境、保育
+- [math.t_adv.vector.plane-definition] 平面向量的定義、相等與係數積  {t_adv, 學測}
+- [math.t_adv.vector.plane-add-sub] 平面向量的加減與幾何意義  {t_adv, 學測}
+- [math.t_adv.vector.component] 向量的分量表示與坐標運算  {t_adv, 學測}
+- [math.t_adv.vector.dot-product] 平面向量的內積與夾角  {t_adv, 學測}
+- [math.t_adv.vector.projection] 正射影與分量投影  {t_adv, 學測}
+- [math.t_adv.vector.linear-combination] 向量的線性組合與分點公式  {t_adv, 學測}
+- [math.t_sub.vector.space-vector] 空間向量的坐標與運算  {t_sub, 分科-數甲}
+- [math.t_sub.vector.space-dot-product] 空間向量內積與夾角  {t_sub, 分科-數甲}
+- [math.t_sub.vector.cross-product] 外積（向量積）與方向、模長  {t_sub, 分科-數甲}
+- [math.t_sub.vector.triangle-tetra-area] 以內外積求三角形面積、平行四邊形面積與四面體體積  {t_sub, 分科-數甲}
+- [math.t_sub.vector.geometry-apply] 向量在幾何證明與重心/共線的應用  {t_sub, 分科-數甲}
 
-**地球科學**
-- 地球的起源與構造、地球系統
-- 板塊構造學說、地震、火山、造山運動
-- 礦物與岩石、地質年代與化石
-- 大氣科學：大氣結構、天氣系統、氣象觀測、氣候與變遷
-- 海洋科學：海水性質、洋流、波浪、潮汐
-- 水文與地下水
-- 天文：宇宙起源、恆星演化、星系、太陽系、天球坐標與觀測、曆法
-- 環境與永續：全球變遷、自然災害與防災、資源與能源
+## 九、空間（space：空間中的點線面）
 
-**探究與實作（自然科，獨立學分 + 混合題組）**
-- 發現問題、形成可驗證的假說
-- 規劃與研究（變因控制、實驗設計、安全）
-- 論證與建模（由數據建立關係/模型）
-- 表達與分享（科學寫作、圖表、口頭報告）
-- 數據處理：誤差、有效數字、作圖與趨勢、相關與因果辨析
+- [math.t_sub.space.point-line-plane] 空間中點、線、面的位置關係（平行/垂直/歪斜）  {t_sub, 分科-數甲}
+- [math.t_sub.space.coordinate] 空間坐標系與兩點距離  {t_sub, 分科-數甲}
+- [math.t_sub.space.plane-equation] 平面方程式與法向量  {t_sub, 分科-數甲}
+- [math.t_sub.space.line-parametric] 空間直線的參數式與對稱式  {t_sub, 分科-數甲}
+- [math.t_sub.space.distance-angle] 點/線/面間的距離與夾角計算  {t_sub, 分科-數甲}
+- [math.t_sub.space.sphere] 球面方程式與直線/平面與球的關係 (待核：數甲收錄)  {t_sub, 分科-數甲}
 
-### C-5 社會（高一二基礎題組跨科 + 分科深水區）
-**歷史**
-- 台灣史（主題式：政權更替、族群、經濟、社會文化、對外關係）
-- 東亞史/中國史（主題式：國家與社會、人群移動、經濟與文化交流）(待核：課綱以「中國與東亞」主題呈現)
-- 世界史（主題式：古代文明、宗教、近代國家與帝國、工業化、現代世界）
-- 史料閱讀與辨析、歷史解釋、多元觀點、時序與因果
-- 分科深水：特定專題深入（如冷戰、全球化、人權史）
+## 十、矩陣與行列式（matrices & determinants）
 
-**地理**
-- 地理技能：地圖與 GIS、遙測、經緯度與時區、統計圖表
-- 自然地理：地形、氣候、水文、生物地理、自然災害
-- 人文地理：人口、聚落與都市、產業（農牧/工業/服務業）、交通與通訊
-- 區域地理：台灣、中國、世界各區域的系統與區域分析
-- 應用地理：環境議題、永續發展、空間規劃、地理資訊的決策應用
-- 分科深水：區域專題與議題探究
+- [math.t_sub.matrix.operations] 矩陣的加減與係數積  {t_sub, 分科-數甲}
+- [math.t_sub.matrix.multiplication] 矩陣乘法  {t_sub, 分科-數甲}
+- [math.t_sub.matrix.inverse] 反方陣的求法與性質  {t_sub, 分科-數甲}
+- [math.t_sub.matrix.linear-system] 以矩陣解線性方程組（高斯消去）  {t_sub, 分科-數甲}
+- [math.t_sub.matrix.transformation] 矩陣與平面線性變換（旋轉/伸縮/鏡射）  {t_sub, 分科-數甲}
+- [math.t_sub.determinant.2x2-3x3] 二階與三階行列式的計算與幾何意義  {t_sub, 分科-數甲}
+- [math.t_sub.determinant.cramer] 克拉瑪公式解聯立方程組  {t_sub, 分科-數甲}
 
-**公民與社會**
-- 心理與社會：自我、人際、社會化、社會團體、社會階層與流動
-- 政治：民主政治、憲政體制、政府組織、政黨與選舉、公共政策、公民參與
-- 法律：法律體系、憲法與基本人權、民法/刑法/行政救濟、消費者/勞動/性別相關法
-- 經濟：市場機制、供需與彈性、市場失靈與政府、國民所得、貨幣與金融、國際貿易與匯率、經濟成長與景氣
-- 全球關聯與國際關係、全球議題（人權、環境、移民）
-- 探究與實作（公共議題與社會探究）：議題分析、資料蒐集、論證、方案提出
-- 分科深水：跨領域議題整合與研究
+## 十一、複數（complex numbers）
 
-**題組跨科整合**
-- 歷史×地理×公民的綜合素材題（文本＋地圖＋統計圖＋法條）
-- 由多素材推論、比較、評價與論證
+- [math.t_adv.complex.definition-operations] 複數系的定義與四則運算  {t_adv, 學測}
+- [math.t_adv.complex.conjugate-modulus] 共軛複數與絕對值（模）  {t_adv, 學測}
+- [math.t_sub.complex.plane] 複數平面與幾何表示  {t_sub, 分科-數甲}
+- [math.t_sub.complex.polar-form] 複數的極式與乘除的幾何意義  {t_sub, 分科-數甲}
+- [math.t_sub.complex.de-moivre] 棣美弗定理與複數的 n 次方根  {t_sub, 分科-數甲}
+- [math.t_sub.complex.roots-of-unity] 單位根與其在幾何/方程式的應用  {t_sub, 分科-數甲}
 
-### C-6 混合題型（學測/分科新題型）
-- 選擇題（單選）＋多選題（部分給分/倒扣規則）
-- 非選擇題：簡答、填表、填空
-- 繪圖/製圖（作圖、標示、畫出圖形或趨勢線）
-- 精確文字陳述理由（用科學/數學語言說明「為什麼」，論證完整）
-- 嚴謹算式（完整列式與推導過程、單位、有效數字）
-- 素材整合題（文本/圖表/數據的跨段整合）
-- 情境化、生活化、跨領域的題幹設計
+## 十二、圓錐曲線（conic sections）
 
-### C-7 學習歷程檔案
-- 課程學習成果：修課作業、專題報告、實作成品（每學年上傳、有教師認證）
-- 多元表現：彈性學習、社團、競賽、檢定、志工、幹部、營隊、自主學習計畫成果
-- 過程反思導向：強調學習歷程、動機、反思與成長，而非僅成果堆疊
-- 自主學習計畫的規劃與執行紀錄
-- 學習歷程自述與多元表現綜整心得（申請入學用）
-- 與校系選才核心素養的對應
+- [math.t_sub.conic.parabola] 拋物線的定義、標準式、焦點與準線  {t_sub, 分科-數甲}
+- [math.t_sub.conic.ellipse] 橢圓的定義、標準式、焦點與長短軸  {t_sub, 分科-數甲}
+- [math.t_sub.conic.hyperbola] 雙曲線的定義、標準式、焦點與漸近線  {t_sub, 分科-數甲}
+- [math.t_sub.conic.eccentricity] 離心率與圓錐曲線的統整判別  {t_sub, 分科-數甲}
+- [math.t_sub.conic.translation] 平移後的圓錐曲線方程式（配方還原）  {t_sub, 分科-數甲}
+- [math.t_sub.conic.line-intersection] 直線與圓錐曲線的交點/切線  {t_sub, 分科-數甲}
+- [math.t_sub.conic.reflection-apply] 圓錐曲線的反射性質與應用 (待核：數甲收錄深度)  {t_sub, 分科-數甲}
+
+## 十三、數列與級數（sequences & series）
+
+- [math.t_adv.sequence.arithmetic] 等差數列的通項與性質  {t_adv, 學測}
+- [math.t_adv.sequence.arithmetic-sum] 等差級數求和  {t_adv, 學測}
+- [math.t_adv.sequence.geometric] 等比數列的通項與性質  {t_adv, 學測}
+- [math.t_adv.sequence.geometric-sum] 等比級數求和  {t_adv, 學測}
+- [math.t_adv.sequence.sigma-notation] Σ 記號與求和公式（Σk、Σk²、Σk³）  {t_adv, 學測}
+- [math.t_adv.sequence.infinite-geometric] 無窮等比級數的收斂與和  {t_adv, 學測}
+- [math.t_adv.sequence.recursion] 遞迴關係與數列的建立  {t_adv, 學測}
+- [math.t_sub.sequence.induction] 數學歸納法的證明  {t_sub, 分科-數甲}
+- [math.t_sub.sequence.limit] 數列極限的概念與求法  {t_sub, 分科-數甲}
+
+## 十四、排列組合（permutations & combinations）
+
+- [math.t_adv.counting.add-mult-principle] 加法原理與乘法原理  {t_adv, 學測}
+- [math.t_adv.counting.permutation] 直線排列（含部分相異物）  {t_adv, 學測}
+- [math.t_adv.counting.permutation-repeat] 重複排列與相同物排列  {t_adv, 學測}
+- [math.t_adv.counting.circular-permutation] 環狀排列  {t_adv, 學測}
+- [math.t_adv.counting.combination] 組合的意義與計算  {t_adv, 學測}
+- [math.t_adv.counting.combination-apply] 組合的應用（分組/選取/路徑）  {t_adv, 學測}
+- [math.t_adv.counting.binomial-coefficient] 二項係數與巴斯卡三角形  {t_adv, 學測}
+- [math.t_adv.counting.inclusion-exclusion] 排容原理（取捨原理）  {t_adv, 學測}
+- [math.t_sub.counting.distribution] 重複組合與分配問題  {t_sub, 分科-數甲}
+
+## 十五、機率（probability）
+
+- [math.t_base.prob.likelihood-intuition] 可能性的直覺（較可能/較不可能/公平）  {t_base, 無}
+- [math.t_mid.prob.classical] 古典機率的意義、樣本空間與事件  {t_mid, 會考}
+- [math.t_mid.prob.simple-event] 簡單事件的機率計算  {t_mid, 會考}
+- [math.t_mid.prob.tree-list] 以樹狀圖/列表法計數求機率  {t_mid, 會考}
+- [math.t_adv.prob.complement-addition] 餘事件與機率的加法法則  {t_adv, 學測}
+- [math.t_adv.prob.mutually-exclusive] 互斥事件與獨立事件  {t_adv, 學測}
+- [math.t_adv.prob.conditional] 條件機率  {t_adv, 學測}
+- [math.t_adv.prob.multiplication-rule] 機率的乘法法則與相依事件  {t_adv, 學測}
+- [math.t_adv.prob.bayes] 貝氏定理（Bayes）初步  {t_adv, 學測}
+- [math.t_adv.prob.expected-value] 隨機變數的期望值  {t_adv, 學測}
+- [math.t_sub.prob.variance] 隨機變數的變異數與標準差  {t_sub, 分科-數甲}
+- [math.t_sub.prob.binomial-distribution] 二項分布與其期望值/變異數  {t_sub, 分科-數甲}
+- [math.t_sub.prob.normal-distribution] 常態分布與標準化（z 值）  {t_sub, 分科-數甲}
+- [math.t_sub.prob.sampling-confidence] 抽樣分布、信賴區間與統計推論初步  {t_sub, 分科-數乙}
+
+## 十六、統計與數據分析（statistics & data analysis）
+
+- [math.t_base.stats.collect-organize] 資料的蒐集、分類與整理  {t_base, 無}
+- [math.t_base.stats.bar-line-chart] 長條圖與折線圖的製作與判讀  {t_base, 無}
+- [math.t_base.stats.pie-chart] 圓形圖（百分比）的判讀  {t_base, 無}
+- [math.t_base.stats.table-read] 統計表的填寫與讀取  {t_base, 無}
+- [math.t_base.stats.mean] 算術平均數的概念與計算  {t_base, 無}
+- [math.t_mid.stats.frequency-table] 次數分配表與直方圖  {t_mid, 會考}
+- [math.t_mid.stats.cumulative-relative] 累積次數與相對次數  {t_mid, 會考}
+- [math.t_mid.stats.central-tendency] 集中趨勢：平均數/中位數/眾數  {t_mid, 會考}
+- [math.t_mid.stats.range-quartile] 全距與四分位數  {t_mid, 會考}
+- [math.t_mid.stats.box-plot] 箱形圖的製作與判讀  {t_mid, 會考}
+- [math.t_mid.stats.percentile] 百分位數  {t_mid, 會考}
+- [math.t_adv.stats.variance-std] 一維數據的變異數與標準差  {t_adv, 學測}
+- [math.t_adv.stats.standardization] 數據的標準化與線性變換對統計量的影響  {t_adv, 學測}
+- [math.t_adv.stats.bivariate-scatter] 二維數據與散布圖  {t_adv, 學測}
+- [math.t_adv.stats.correlation] 相關係數的意義與計算  {t_adv, 學測}
+- [math.t_adv.stats.regression-line] 最適合直線（迴歸直線）與預測  {t_adv, 學測}
+- [math.t_sub.stats.sampling-survey] 抽樣方法與問卷/調查設計  {t_sub, 分科-數乙}
+- [math.t_sub.stats.risk-decision] 統計與機率在社會科學的風險/決策應用  {t_sub, 分科-數乙}
+
+## 十七、極限與微積分（limits & calculus）
+
+- [math.t_sub.calc.sequence-limit] 數列極限與收斂/發散判定  {t_sub, 分科-數甲}
+- [math.t_sub.calc.function-limit] 函數極限的概念與運算  {t_sub, 分科-數甲}
+- [math.t_sub.calc.continuity] 函數的連續性  {t_sub, 分科-數甲}
+- [math.t_sub.calc.derivative-definition] 導數的定義（差商極限）與切線斜率  {t_sub, 分科-數甲}
+- [math.t_sub.calc.differentiation-rules] 微分公式（冪/和差/積/商）  {t_sub, 分科-數甲}
+- [math.t_sub.calc.chain-rule] 鏈鎖法則  {t_sub, 分科-數甲}
+- [math.t_sub.calc.higher-derivative] 高階導數  {t_sub, 分科-數甲}
+- [math.t_sub.calc.tangent-normal] 切線與法線方程式  {t_sub, 分科-數甲}
+- [math.t_sub.calc.increasing-concavity] 函數的增減與凹凸（一階/二階判定）  {t_sub, 分科-數甲}
+- [math.t_sub.calc.extrema] 極值（極大/極小）的判定  {t_sub, 分科-數甲}
+- [math.t_sub.calc.curve-sketch] 函數圖形的描繪  {t_sub, 分科-數甲}
+- [math.t_sub.calc.related-rates] 相關變率  {t_sub, 分科-數甲}
+- [math.t_sub.calc.optimization] 最佳化應用問題  {t_sub, 分科-數甲}
+- [math.t_sub.calc.antiderivative] 反導數與不定積分  {t_sub, 分科-數甲}
+- [math.t_sub.calc.definite-integral] 定積分與微積分基本定理  {t_sub, 分科-數甲}
+- [math.t_sub.calc.area] 定積分求曲線下面積與兩曲線間面積  {t_sub, 分科-數甲}
+- [math.t_sub.calc.volume-revolution] 旋轉體體積  {t_sub, 分科-數甲}
+- [math.t_sub.calc.integration-substitution] 積分技巧：代換法  {t_sub, 分科-數甲}
+- [math.t_sub.calc.integration-by-parts] 積分技巧：分部積分  {t_sub, 分科-數甲}
+- [math.t_sub.calc.exp-log-calculus] 指數/對數函數的微積分  {t_sub, 分科-數甲}
+- [math.t_sub.calc.trig-calculus] 三角函數的微積分  {t_sub, 分科-數甲}
+
+## 十八、財務數學與線性規劃（financial math & linear programming）
+
+- [math.t_adv.finmath.simple-compound-interest] 單利與複利的計算  {t_adv, 學測}
+- [math.t_sub.finmath.annuity] 年金的現值與終值  {t_sub, 分科-數乙}
+- [math.t_sub.finmath.loan-installment] 貸款分期與攤還  {t_sub, 分科-數乙}
+- [math.t_sub.finmath.growth-decay-model] 比例成長與衰退模型（含半衰期）  {t_sub, 分科-數乙}
+- [math.t_sub.finmath.geo-distance] 經緯度與地球上的距離應用 (待核：數B/數乙歸屬)  {t_sub, 分科-數乙}
+- [math.t_sub.linprog.feasible-region] 線性規劃：限制式與可行解區域  {t_sub, 分科-數乙}
+- [math.t_sub.linprog.objective-optimize] 線性規劃：目標函數的最佳化（頂點法）  {t_sub, 分科-數乙}
+- [math.t_sub.finmath.marginal-elasticity] 微積分在商管的應用（邊際分析/彈性） (待核：數乙範圍)  {t_sub, 分科-數乙}
 
 ---
 
-## D. ⚠ 高中數學「常被基礎覆蓋遺漏、必須補建」的 strands
-（基礎教材常缺、學測/分科必考，build spec 必須明確建置）
-- 三角函數（弧度量、圖形與週期、和差角/倍角/半角、正餘弦疊合、三角方程式）— 數A
-- 向量（平面/空間向量、內積、外積、幾何應用）— 數A
-- 矩陣與行列式（矩陣運算、反矩陣、線性方程組、行列式、克拉瑪公式）— 數A/數甲 (待核歸屬)
-- 複數系（複數運算、複數平面、極式、棣美弗定理）— 數A/數甲 (待核歸屬)
-- 圓錐曲線（拋物線、橢圓、雙曲線的定義、方程式與性質）— 數A/數甲
-- 數列與級數（等差/等比、Σ求和、無窮等比級數、數學歸納法）
-- 極限與微積分（數列/函數極限、連續、導數與微分應用、定積分與面積/體積）— 數甲
-- 機率分布/統計推論（期望值、變異數、二項分布、常態分布、信賴區間與抽樣、條件機率/貝氏）
+## 每一 strand 知識點計數
+
+| strand | t_base | t_mid | t_adv | t_sub | 小計 |
+|---|---|---|---|---|---|
+| 一、數與量 | 20 | 10 | 0 | 0 | 30 |
+| 二、比與比例 | 5 | 4 | 0 | 0 | 9 |
+| 三、數與式 | 3 | 9 | 5 | 1 | 18 |
+| 四、方程式與不等式 | 1 | 12 | 10 | 0 | 23 |
+| 五、函數 | 0 | 3 | 9 | 1 | 13 |
+| 六、幾何 | 12 | 20 | 7 | 0 | 39 |
+| 七、三角 | 0 | 0 | 9 | 6 | 15 |
+| 八、向量 | 0 | 0 | 6 | 5 | 11 |
+| 九、空間 | 0 | 0 | 0 | 6 | 6 |
+| 十、矩陣與行列式 | 0 | 0 | 0 | 7 | 7 |
+| 十一、複數 | 0 | 0 | 2 | 4 | 6 |
+| 十二、圓錐曲線 | 0 | 0 | 0 | 7 | 7 |
+| 十三、數列與級數 | 0 | 0 | 7 | 2 | 9 |
+| 十四、排列組合 | 0 | 0 | 8 | 1 | 9 |
+| 十五、機率 | 1 | 3 | 6 | 4 | 14 |
+| 十六、統計與數據分析 | 5 | 6 | 5 | 2 | 18 |
+| 十七、極限與微積分 | 0 | 0 | 0 | 21 | 21 |
+| 十八、財務數學與線性規劃 | 0 | 0 | 1 | 7 | 8 |
+| **合計** | **47** | **67** | **92** | **57** | **263** |
+
+**總計：263 個數學微技能**（t_base 47／t_mid 67／t_adv 92／t_sub 57）。
+
+> 註：t_base 47 與 base 盤點的國小 51 略低，係因本清單把「正比/反比直覺、放大縮小」等歸入「比與比例」strand 並拆分為可測微技能，且國小統計/機率併入對應 strand；涵蓋面不減反增（base 的國小項目皆對應得到）。
+
+
+# ===== 領域：chi（355 條，來源 chi.md）=====
+
+# 國語文 — 深度知識點母體清單（基礎→中階→高階→深階）
+
+> 範圍：台灣 108 課綱「國語文」領域，由地基（約 G1–G6）→ 會考（約 G7–G9）→ 學測國綜（高一二為主）→ 學測國寫／進階深水區。
+> 每一條 = 一個具體、可出題檢測的微技能。tier 僅供內部分層，學習者不可見。
+> id 格式：`chi.<tier>.<strand>.<slug>`；tier ∈ {t_base 基礎, t_mid 中階/會考, t_adv 高階/學測國綜, t_sub 深階/國寫}。
+> exam ∈ 會考／學測-國綜／學測-國寫／無。`(待核)` = 需再核課綱/考試規範確認。
 
 ---
 
-## E. 每（STAGE × SUBJECT）知識點計數（供覆蓋追蹤）
+## 1. 注音與拼讀（strand: phon）
 
-### A. 國小
-| 科目 | 知識點數 |
+- [chi.t_base.phon.symbols-37] 37 個注音符號認讀（21 聲符＋16 韻符）  {t_base, 無}
+- [chi.t_base.phon.initials] 聲符（聲母）發音與書寫  {t_base, 無}
+- [chi.t_base.phon.single-finals] 單韻母 ㄚㄛㄜㄝㄧㄨㄩ 認讀  {t_base, 無}
+- [chi.t_base.phon.compound-finals] 複韻母 ㄞㄟㄠㄡ 拼讀  {t_base, 無}
+- [chi.t_base.phon.nasal-finals] 聲隨韻母 ㄢㄣㄤㄥ 拼讀  {t_base, 無}
+- [chi.t_base.phon.er-final] 捲舌韻 ㄦ 的拼讀  {t_base, 無}
+- [chi.t_base.phon.blend-finals] 結合韻母（ㄧㄚ／ㄨㄛ／ㄩㄝ…）拼讀  {t_base, 無}
+- [chi.t_base.phon.tones-four] 一二三四聲調號標示與辨讀  {t_base, 無}
+- [chi.t_base.phon.neutral-tone] 輕聲判讀與標示  {t_base, 無}
+- [chi.t_base.phon.tone-sandhi-third] 三聲連讀變調（上上相連前字近陽平）(待核：課綱明列程度)  {t_base, 無}
+- [chi.t_base.phon.yi-bu-sandhi] 「一」「不」的變調  {t_base, 無}
+- [chi.t_base.phon.erhua] 兒化韻現象辨識  {t_base, 無}
+- [chi.t_base.phon.tone-mark-position] 直書拼音時聲調號標示位置  {t_base, 無}
+- [chi.t_base.phon.input-index] 注音輸入法／注音檢字應用  {t_base, 無}
+- [chi.t_mid.phon.polyphone-by-sense] 多音字因詞定音（破音字正確讀音選擇）  {t_mid, 會考}
+
+## 2. 識字與寫字：筆順／部首／六書／形音義／查字典（strand: char）
+
+- [chi.t_base.char.stroke-names] 基本筆畫名稱（橫豎撇捺點提鉤折）辨識  {t_base, 無}
+- [chi.t_base.char.stroke-order-rules] 筆順規則（先橫後豎、先撇後捺、由上而下、由左而右、先外後內、先中後旁、先裡後封口）  {t_base, 無}
+- [chi.t_base.char.stroke-count] 計算字的筆畫數  {t_base, 無}
+- [chi.t_base.char.radical-id] 部首辨識  {t_base, 無}
+- [chi.t_base.char.radical-meaning] 部首表義（以部首推字義類別）  {t_base, 無}
+- [chi.t_base.char.structure-frame] 字的間架結構（左右／上下／包圍／獨體）辨識與書寫  {t_base, 無}
+- [chi.t_base.char.components] 偏旁部件組字  {t_base, 無}
+- [chi.t_base.char.recognition-count] 常用字認讀與書寫累積量（國小約 2200–2700 字）(待核：確切字數)  {t_base, 無}
+- [chi.t_base.char.hard-pen-form] 硬筆正確字形與工整書寫  {t_base, 無}
+- [chi.t_base.char.dict-radical] 查字典：部首檢字法（部首外筆畫數）  {t_base, 無}
+- [chi.t_base.char.dict-stroke] 查字典：筆畫檢字法  {t_base, 無}
+- [chi.t_base.char.dict-zhuyin] 查字典：注音檢字法  {t_base, 無}
+- [chi.t_base.char.dict-sense-pick] 依上下文從字典義項中選取正確釋義  {t_base, 無}
+- [chi.t_mid.char.liushu-xiangxing] 六書：象形  {t_mid, 會考}
+- [chi.t_mid.char.liushu-zhishi] 六書：指事  {t_mid, 會考}
+- [chi.t_mid.char.liushu-huiyi] 六書：會意  {t_mid, 會考}
+- [chi.t_mid.char.liushu-xingsheng] 六書：形聲（形符表義／聲符表音）  {t_mid, 會考}
+- [chi.t_mid.char.liushu-zhuanzhu] 六書：轉注  {t_mid, 會考}
+- [chi.t_mid.char.liushu-jiajie] 六書：假借  {t_mid, 會考}
+- [chi.t_mid.char.phonetic-radical] 形聲字聲符表音、形符表義之判讀  {t_mid, 會考}
+- [chi.t_base.char.near-form] 形近字辨析（己已巳／戌戍戊／辨辯辯瓣…）  {t_base, 會考}
+- [chi.t_base.char.homophone-chars] 同音字辨析（的得地／在再／作做…）  {t_base, 會考}
+- [chi.t_mid.char.wrong-char-correct] 錯別字辨正  {t_mid, 會考}
+- [chi.t_mid.char.variant-standard] 異體字與標準字形辨識  {t_mid, 無}
+
+## 3. 字詞：一字多義／成語／詞語辨析（strand: word）
+
+- [chi.t_mid.word.polyphone-sense] 字音：破音字因義異讀（說 ㄕㄨㄛ／ㄕㄨㄟˋ、樂 ㄌㄜˋ／ㄩㄝˋ）  {t_mid, 會考}
+- [chi.t_mid.word.multi-sound] 字音：多音字辨讀  {t_mid, 會考}
+- [chi.t_mid.word.wrong-char-adv] 字形：進階錯別字辨正（同音誤代）  {t_mid, 會考}
+- [chi.t_base.word.original-sense] 字義：本義  {t_base, 無}
+- [chi.t_mid.word.extended-sense] 字義：引申義  {t_mid, 會考}
+- [chi.t_mid.word.metaphor-sense] 字義：比喻義  {t_mid, 會考}
+- [chi.t_mid.word.one-char-many-sense] 一字多義（依文定義）  {t_mid, 會考}
+- [chi.t_mid.word.synonym-distinguish] 同義／近義詞細微語義辨析  {t_mid, 會考}
+- [chi.t_base.word.antonym] 反義詞  {t_base, 無}
+- [chi.t_adv.word.near-syn-usage] 近義詞語用差別（結果／後果 的褒貶與搭配）  {t_adv, 學測-國綜}
+- [chi.t_adv.word.emotive-color] 詞語褒貶色彩（感情色彩）判讀  {t_adv, 學測-國綜}
+- [chi.t_adv.word.register-color] 詞語語體色彩（書面／口語）判讀  {t_adv, 學測-國綜}
+- [chi.t_mid.word.idiom-meaning] 成語意義理解  {t_mid, 會考}
+- [chi.t_adv.word.idiom-origin] 成語典故出處  {t_adv, 學測-國綜}
+- [chi.t_mid.word.idiom-usage] 成語語境正確運用  {t_mid, 會考}
+- [chi.t_adv.word.idiom-misuse] 成語誤用辨析（對象錯置／褒貶錯用／語意重複）  {t_adv, 學測-國綜}
+- [chi.t_mid.word.idiom-cloze] 成語填空  {t_mid, 會考}
+- [chi.t_base.word.reduplication] 疊字詞  {t_base, 無}
+- [chi.t_mid.word.lianmian] 連綿詞（雙聲／疊韻）  {t_mid, 無}
+- [chi.t_base.word.loanword] 外來語詞辨識  {t_base, 無}
+- [chi.t_base.word.measure-word] 量詞正確搭配  {t_base, 無}
+- [chi.t_mid.word.correlative] 關聯詞語搭配（雖然…但是／不但…而且／因為…所以）  {t_mid, 會考}
+- [chi.t_mid.word.content-function] 實詞與虛詞（白話）分類  {t_mid, 會考}
+- [chi.t_adv.word.cultural-sense] 詞語的時代／文化意涵  {t_adv, 學測-國綜}
+- [chi.t_mid.word.saying-proverb] 熟語／諺語／歇後語／格言理解  {t_mid, 會考}
+
+## 4. 標點符號（strand: punc）
+
+- [chi.t_base.punc.period] 句號用法  {t_base, 無}
+- [chi.t_base.punc.comma] 逗號用法  {t_base, 無}
+- [chi.t_base.punc.enumeration-comma] 頓號（並列詞語間）  {t_base, 無}
+- [chi.t_mid.punc.semicolon] 分號（並列分句間）  {t_mid, 會考}
+- [chi.t_base.punc.colon] 冒號（提示下文）  {t_base, 無}
+- [chi.t_base.punc.quotation] 引號（直接引語／強調／口語篇名）  {t_base, 無}
+- [chi.t_mid.punc.nested-quote] 單引號與雙引號的層次嵌套  {t_mid, 會考}
+- [chi.t_base.punc.question] 問號  {t_base, 無}
+- [chi.t_base.punc.exclamation] 驚嘆號  {t_base, 無}
+- [chi.t_mid.punc.dash] 破折號（解釋／語氣轉變／聲音延續）  {t_mid, 會考}
+- [chi.t_mid.punc.ellipsis] 刪節號（省略／語意未盡）  {t_mid, 會考}
+- [chi.t_base.punc.book-title] 書名號（《》〈〉）  {t_base, 會考}
+- [chi.t_mid.punc.proper-name] 專名號  {t_mid, 無}
+- [chi.t_mid.punc.parenthesis] 夾注號（括號）  {t_mid, 無}
+- [chi.t_mid.punc.misuse] 標點誤用辨析（逗號句號混用、問號濫用）  {t_mid, 會考}
+- [chi.t_adv.punc.semantic-effect] 標點判讀影響語意／語氣之辨析  {t_adv, 學測-國綜}
+
+## 5. 白話閱讀：擷取／統整／推論／主旨／結構（strand: read）
+
+- [chi.t_base.read.read-aloud-silent] 朗讀與默讀策略  {t_base, 無}
+- [chi.t_base.read.explicit-info] 擷取明示訊息（人、事、時、地、物）  {t_base, 會考}
+- [chi.t_base.read.keyword] 找出關鍵詞句  {t_base, 會考}
+- [chi.t_base.read.para-main] 統整段落大意  {t_base, 會考}
+- [chi.t_mid.read.theme] 歸納全文主旨  {t_mid, 會考}
+- [chi.t_mid.read.infer-implicit] 推論隱含訊息  {t_mid, 會考}
+- [chi.t_mid.read.infer-cause] 推論因果關係  {t_mid, 會考}
+- [chi.t_adv.read.infer-attitude] 推論作者未明說的觀點／態度  {t_adv, 學測-國綜}
+- [chi.t_mid.read.word-in-context] 判斷詞語在文中的意義  {t_mid, 會考}
+- [chi.t_mid.read.referent] 判斷代詞指稱對象  {t_mid, 會考}
+- [chi.t_mid.read.structure] 分析文章結構（總分總／並列／層遞／對比）  {t_mid, 會考}
+- [chi.t_mid.read.expository-method] 辨識說明方法（舉例／分類／比較／數據／定義／因果）  {t_mid, 會考}
+- [chi.t_mid.read.narrative-order] 辨識記敘順序（順敘／倒敘／插敘／補敘）  {t_mid, 會考}
+- [chi.t_adv.read.argument-parts] 辨識論點／論據／論證三要素  {t_adv, 學測-國綜}
+- [chi.t_adv.read.fact-opinion] 區辨事實與意見  {t_adv, 學測-國綜}
+- [chi.t_mid.read.purpose] 判斷寫作目的（說服／說明／抒情／記敘）  {t_mid, 會考}
+- [chi.t_mid.read.title-function] 分析標題作用  {t_mid, 會考}
+- [chi.t_mid.read.open-close] 分析開頭／結尾作用（首尾呼應／點題／伏筆）  {t_mid, 會考}
+- [chi.t_adv.read.transition-echo] 分析過渡銜接與前後照應  {t_adv, 學測-國綜}
+- [chi.t_base.read.life-connection] 文本與生活經驗連結  {t_base, 無}
+- [chi.t_base.read.self-question] 自我提問與預測策略  {t_base, 無}
+- [chi.t_mid.read.summary] 摘要與縮寫  {t_mid, 會考}
+- [chi.t_mid.read.graphic-text] 判讀圖文整合訊息（圖表／流程圖）  {t_mid, 會考}
+- [chi.t_adv.read.critical] 評估文本可信度與論證漏洞（批判閱讀）  {t_adv, 學測-國綜}
+- [chi.t_adv.read.compare-views] 比較文中不同段落／人物觀點  {t_adv, 學測-國綜}
+- [chi.t_adv.read.irony-subtext] 理解反諷與言外之意  {t_adv, 學測-國綜}
+- [chi.t_adv.read.symbolism] 分析象徵意涵  {t_adv, 學測-國綜}
+- [chi.t_mid.read.character-image] 分析人物形象（言行／對話塑造）  {t_mid, 會考}
+- [chi.t_adv.read.narrative-pov] 分析敘事觀點（第一／第三人稱／全知）  {t_adv, 學測-國綜}
+
+## 6. 文言閱讀：虛字／實詞古今義／詞類活用／句式／語譯／句讀（strand: classical）
+
+### 6a. 文言虛字逐字
+
+- [chi.t_mid.classical.xu-zhi] 「之」：助詞／代詞／動詞「往」／取消句子獨立性  {t_mid, 會考}
+- [chi.t_mid.classical.xu-qi] 「其」：代詞／語氣副詞（難道／大概）  {t_mid, 會考}
+- [chi.t_mid.classical.xu-yi] 「以」：介詞（用／因為）／連詞／「以為」  {t_mid, 會考}
+- [chi.t_mid.classical.xu-er] 「而」：順承／轉折／並列／修飾  {t_mid, 會考}
+- [chi.t_mid.classical.xu-yu] 「於」：介詞（在／向／比／被）  {t_mid, 會考}
+- [chi.t_mid.classical.xu-ze] 「則」：就／卻／是  {t_mid, 會考}
+- [chi.t_mid.classical.xu-zhe] 「者」：…的人／停頓／判斷標誌  {t_mid, 會考}
+- [chi.t_mid.classical.xu-ye] 「也」：判斷／語氣詞  {t_mid, 會考}
+- [chi.t_adv.classical.xu-hu] 「乎」：疑問／感嘆／相當於「於」  {t_adv, 學測-國綜}
+- [chi.t_adv.classical.xu-yan] 「焉」：兼詞（於之）／語氣／疑問代詞  {t_adv, 學測-國綜}
+- [chi.t_adv.classical.xu-zai] 「哉」：感嘆／反問語氣  {t_adv, 學測-國綜}
+- [chi.t_adv.classical.xu-yi2] 「矣」：表完成／語氣  {t_adv, 學測-國綜}
+- [chi.t_adv.classical.xu-er2] 「耳」：相當於「而已」  {t_adv, 學測-國綜}
+- [chi.t_adv.classical.xu-fu] 「夫」：發語詞／指示代詞「那」  {t_adv, 學測-國綜}
+- [chi.t_adv.classical.xu-gai] 「蓋」：發語詞／大概／因為  {t_adv, 學測-國綜}
+- [chi.t_mid.classical.xu-nai] 「乃」：於是／竟然／是／你的  {t_mid, 會考}
+- [chi.t_mid.classical.xu-qie] 「且」：而且／將要／尚且  {t_mid, 會考}
+- [chi.t_mid.classical.xu-wei] 「為」：介詞／動詞／表被動  {t_mid, 會考}
+- [chi.t_adv.classical.xu-suo] 「所」：所字結構（所＋動詞）  {t_adv, 學測-國綜}
+- [chi.t_adv.classical.xu-yu2] 「與」：和／給／通「歟」  {t_adv, 學測-國綜}
+- [chi.t_adv.classical.xu-yin] 「因」：於是／憑藉／因為  {t_adv, 學測-國綜}
+- [chi.t_adv.classical.xu-gu] 「故」：所以／緣故／舊  {t_adv, 學測-國綜}
+- [chi.t_mid.classical.xu-ruo-ru] 「若／如」：如果／像／你  {t_mid, 會考}
+- [chi.t_adv.classical.xu-zhu] 「諸」：兼詞（之於／之乎）  {t_adv, 學測-國綜}
+- [chi.t_adv.classical.xu-compare] 同一虛字不同用法的比較辨析  {t_adv, 學測-國綜}
+
+### 6b. 文言實詞與句法
+
+- [chi.t_mid.classical.ancient-modern] 古今異義詞  {t_mid, 會考}
+- [chi.t_adv.classical.shici-multi] 實詞一詞多義  {t_adv, 學測-國綜}
+- [chi.t_mid.classical.noun-as-verb] 詞類活用：名詞作動詞  {t_mid, 會考}
+- [chi.t_adv.classical.noun-as-adverb] 詞類活用：名詞作狀語  {t_adv, 學測-國綜}
+- [chi.t_adv.classical.causative] 詞類活用：使動用法  {t_adv, 學測-國綜}
+- [chi.t_adv.classical.putative] 詞類活用：意動用法  {t_adv, 學測-國綜}
+- [chi.t_adv.classical.adj-flex] 詞類活用：形容詞作動詞／名詞  {t_adv, 學測-國綜}
+- [chi.t_mid.classical.tongjia] 通假字  {t_mid, 會考}
+- [chi.t_adv.classical.pianyi] 偏義複詞  {t_adv, 學測-國綜}
+- [chi.t_mid.classical.judgment-sentence] 判斷句（…者…也）  {t_mid, 會考}
+- [chi.t_mid.classical.passive-sentence] 被動句（為…所／見／於）  {t_mid, 會考}
+- [chi.t_adv.classical.obj-fronting] 倒裝：賓語前置  {t_adv, 學測-國綜}
+- [chi.t_adv.classical.attr-postpose] 倒裝：定語後置  {t_adv, 學測-國綜}
+- [chi.t_adv.classical.adv-postpose] 倒裝：狀語（介詞結構）後置  {t_adv, 學測-國綜}
+- [chi.t_mid.classical.omission] 省略句（省主語／賓語／介詞）  {t_mid, 會考}
+- [chi.t_adv.classical.fixed-patterns] 固定句式（無乃…乎／何…之有／不亦…乎／得無…乎／孰與）  {t_adv, 學測-國綜}
+- [chi.t_mid.classical.juodu] 句讀／斷句  {t_mid, 會考}
+- [chi.t_mid.classical.translate] 文言語譯（以直譯為主）  {t_mid, 會考}
+- [chi.t_adv.classical.theme-emotion] 文言文主旨與作者情志把握  {t_adv, 學測-國綜}
+- [chi.t_adv.classical.honorific] 謙稱／敬稱等稱謂詞判讀  {t_adv, 學測-國綜}
+- [chi.t_adv.classical.culture-common] 古代文化常識（紀年／官職／地理／禮俗）  {t_adv, 學測-國綜}
+- [chi.t_adv.classical.allusion] 用典（典故）的理解  {t_adv, 學測-國綜}
+- [chi.t_mid.classical.poem-meaning] 古典詩詞曲文意理解  {t_mid, 會考}
+
+## 7. 雙文本比較閱讀（strand: dual，高階）
+
+- [chi.t_adv.dual.theme-compare] 兩文本主旨異同比較  {t_adv, 學測-國綜}
+- [chi.t_adv.dual.view-contrast] 兩文本觀點對照（立場衝突／互補）  {t_adv, 學測-國綜}
+- [chi.t_adv.dual.technique-compare] 兩文本寫作手法比較  {t_adv, 學測-國綜}
+- [chi.t_adv.dual.classic-vernacular] 文白對讀（同主題古今文本）  {t_adv, 學測-國綜}
+- [chi.t_adv.dual.image-text] 圖＋文雙素材整合推論  {t_adv, 學測-國綜}
+- [chi.t_adv.dual.table-text] 表格＋文章資料交叉判讀  {t_adv, 學測-國綜}
+- [chi.t_adv.dual.evidence-synth] 跨文本整合證據以支持論點  {t_adv, 學測-國綜}
+- [chi.t_adv.dual.intertext] 辨識兩文本的互文／對話關係  {t_adv, 學測-國綜}
+- [chi.t_adv.dual.cross-eval] 以甲文觀點評論乙文  {t_adv, 學測-國綜}
+
+## 8. 修辭（strand: rhet）
+
+- [chi.t_base.rhet.simile] 譬喻（明喻／暗喻／借喻／略喻）  {t_base, 會考}
+- [chi.t_base.rhet.personification] 轉化：擬人  {t_base, 會考}
+- [chi.t_mid.rhet.objectification] 轉化：擬物  {t_mid, 會考}
+- [chi.t_mid.rhet.abstraction-concrete] 轉化：形象化（抽象化為具體）  {t_mid, 會考}
+- [chi.t_mid.rhet.hyperbole] 誇飾  {t_mid, 會考}
+- [chi.t_mid.rhet.contrast] 映襯（正襯／反襯／雙襯）  {t_mid, 會考}
+- [chi.t_base.rhet.parallelism] 排比  {t_base, 會考}
+- [chi.t_mid.rhet.antithesis] 對偶（句中對／單句對／隔句對）  {t_mid, 會考}
+- [chi.t_adv.rhet.climax] 層遞  {t_adv, 學測-國綜}
+- [chi.t_mid.rhet.rhetorical-question] 設問（提問／激問／懸問）  {t_mid, 會考}
+- [chi.t_mid.rhet.quotation] 引用（明引／暗引）  {t_mid, 會考}
+- [chi.t_mid.rhet.anadiplosis] 頂真（聯珠）  {t_mid, 會考}
+- [chi.t_adv.rhet.palindrome] 回文  {t_adv, 學測-國綜}
+- [chi.t_mid.rhet.metonymy] 借代（以特徵／工具／部分代全體）  {t_mid, 會考}
+- [chi.t_adv.rhet.imagining] 示現（追述／預言／懸想）  {t_adv, 學測-國綜}
+- [chi.t_base.rhet.reduplication] 類疊（疊字／類字／疊句／類句）  {t_base, 會考}
+- [chi.t_mid.rhet.depiction] 摹寫（視／聽／嗅／味／觸覺摹寫）  {t_mid, 會考}
+- [chi.t_adv.rhet.pun] 雙關（音雙關／義雙關）  {t_adv, 學測-國綜}
+- [chi.t_adv.rhet.euphemism] 婉曲（委婉）  {t_adv, 學測-國綜}
+- [chi.t_adv.rhet.irony-figure] 倒反（反語／反諷）  {t_adv, 學測-國綜}
+- [chi.t_adv.rhet.word-split] 析字  {t_adv, 學測-國綜}
+- [chi.t_adv.rhet.transference] 轉品（詞性轉換）  {t_adv, 學測-國綜}
+- [chi.t_adv.rhet.apostrophe] 呼告  {t_adv, 學測-國綜}
+- [chi.t_adv.rhet.huwen] 互文（文言互文見義）  {t_adv, 學測-國綜}
+- [chi.t_adv.rhet.intricacy] 錯綜  {t_adv, 學測-國綜}
+- [chi.t_mid.rhet.symbol-vs-simile] 象徵與譬喻之辨析  {t_mid, 會考}
+- [chi.t_mid.rhet.identify] 判別句中所用修辭格  {t_mid, 會考}
+- [chi.t_adv.rhet.effect-analysis] 分析修辭的表達效果  {t_adv, 學測-國綜}
+
+## 9. 語法與句型：詞類／句子成分／病句（strand: gram）
+
+- [chi.t_mid.gram.pos-noun] 詞類：名詞  {t_mid, 會考}
+- [chi.t_mid.gram.pos-verb] 詞類：動詞  {t_mid, 會考}
+- [chi.t_mid.gram.pos-adj] 詞類：形容詞  {t_mid, 會考}
+- [chi.t_mid.gram.pos-adv] 詞類：副詞  {t_mid, 會考}
+- [chi.t_mid.gram.pos-pronoun] 詞類：代名詞  {t_mid, 會考}
+- [chi.t_mid.gram.pos-prep] 詞類：介詞  {t_mid, 會考}
+- [chi.t_mid.gram.pos-conj] 詞類：連詞  {t_mid, 會考}
+- [chi.t_mid.gram.pos-particle] 詞類：助詞  {t_mid, 會考}
+- [chi.t_mid.gram.pos-interj] 詞類：嘆詞  {t_mid, 會考}
+- [chi.t_mid.gram.pos-num-measure] 詞類：數詞／量詞  {t_mid, 會考}
+- [chi.t_mid.gram.subject] 句子成分：主語  {t_mid, 會考}
+- [chi.t_mid.gram.predicate] 句子成分：謂語  {t_mid, 會考}
+- [chi.t_mid.gram.object] 句子成分：賓語  {t_mid, 會考}
+- [chi.t_adv.gram.attributive] 句子成分：定語  {t_adv, 學測-國綜}
+- [chi.t_adv.gram.adverbial] 句子成分：狀語  {t_adv, 學測-國綜}
+- [chi.t_adv.gram.complement] 句子成分：補語  {t_adv, 學測-國綜}
+- [chi.t_mid.gram.single-sentence] 單句結構分析  {t_mid, 會考}
+- [chi.t_mid.gram.sentence-types] 句型：敘事句／有無句／表態句／判斷句  {t_mid, 會考}
+- [chi.t_mid.gram.compound-coord] 複句：並列  {t_mid, 會考}
+- [chi.t_mid.gram.compound-seq] 複句：承接  {t_mid, 會考}
+- [chi.t_mid.gram.compound-prog] 複句：遞進  {t_mid, 會考}
+- [chi.t_mid.gram.compound-choice] 複句：選擇  {t_mid, 會考}
+- [chi.t_mid.gram.compound-turn] 複句：轉折  {t_mid, 會考}
+- [chi.t_mid.gram.compound-cause] 複句：因果  {t_mid, 會考}
+- [chi.t_mid.gram.compound-hypo] 複句：假設  {t_mid, 會考}
+- [chi.t_mid.gram.compound-cond] 複句：條件  {t_mid, 會考}
+- [chi.t_adv.gram.compound-concede] 複句：讓步  {t_adv, 學測-國綜}
+- [chi.t_adv.gram.compound-purpose] 複句：目的  {t_adv, 學測-國綜}
+- [chi.t_mid.gram.reorder] 語句重組（調整語序成通順句）  {t_mid, 會考}
+- [chi.t_mid.gram.bad-missing] 病句：成分殘缺  {t_mid, 會考}
+- [chi.t_mid.gram.bad-collocation] 病句：搭配不當  {t_mid, 會考}
+- [chi.t_mid.gram.bad-order] 病句：語序不當  {t_mid, 會考}
+- [chi.t_mid.gram.bad-redundant] 病句：重複贅餘  {t_mid, 會考}
+- [chi.t_adv.gram.bad-logic] 病句：邏輯矛盾  {t_adv, 學測-國綜}
+- [chi.t_adv.gram.bad-mix] 病句：句式雜糅  {t_adv, 學測-國綜}
+- [chi.t_adv.gram.ambiguity] 歧義句辨析  {t_adv, 學測-國綜}
+- [chi.t_base.gram.complete-sentence] 句子的完整與通順（主語＋述語）  {t_base, 無}
+- [chi.t_adv.gram.long-short] 長句化短／短句合併  {t_adv, 學測-國綜}
+- [chi.t_adv.gram.active-passive] 主動句與被動句轉換  {t_adv, 學測-國綜}
+- [chi.t_mid.gram.direct-indirect] 直述句改間接引述  {t_mid, 會考}
+
+## 10. 文學常識：文體／韻文格律／文學史（strand: lit）
+
+- [chi.t_mid.lit.genre-class] 文體分類：韻文／散文／駢文／小說／戲劇  {t_mid, 會考}
+- [chi.t_adv.lit.ancient-modern-verse] 古體詩與近體詩之別  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.jinti-pingze] 近體詩格律：平仄  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.jinti-rhyme] 近體詩格律：押韻  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.jinti-parallel] 近體詩格律：對仗（頷聯、頸聯）  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.jueju-lushi] 近體詩：絕句與律詩之辨  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.ci-tune] 詞：詞牌／詞調／長短句  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.ci-length] 詞：小令／中調／長調  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.ci-schools] 詞：婉約派與豪放派  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.qu-types] 曲：散曲（小令／套數）與雜劇  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.qu-gongdiao] 曲：宮調／曲牌  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.yuefu] 樂府詩特徵  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.pianwen] 駢文特徵（四六句／對仗／用典／聲律）  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.tang-song-eight] 唐宋古文八大家  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.shijing-liuyi] 詩經六義（風雅頌賦比興）  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.hist-preqin] 文學史：先秦（詩經／楚辭／諸子散文）  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.hist-han] 文學史：兩漢（辭賦／史傳／樂府）  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.hist-weijin] 文學史：魏晉南北朝（建安／田園／山水／志怪）  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.hist-tang] 文學史：唐（詩／傳奇／古文運動）  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.hist-song] 文學史：宋（詞／古文／話本）  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.hist-yuan] 文學史：元（曲／雜劇）  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.hist-mingqing] 文學史：明清（章回小說／八股文）  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.modern-newlit] 現代文學：新文學（白話文）運動  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.taiwan-lit] 台灣文學發展（鄉土／現代主義）(待核：學測常識範圍)  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.author-works] 重要作家與代表作配對  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.schools] 文學流派與主張  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.classic-source] 經典出處（四書五經／諸子）辨識  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.lunyu] 文化基本教材：論語思想  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.mengzi] 文化基本教材：孟子思想  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.style-id] 作品風格辨識（豪放／婉約／寫實／浪漫）  {t_adv, 學測-國綜}
+- [chi.t_mid.lit.couplet-knowledge] 題辭／對聯基本常識（婚喪喜慶用語、上下聯）  {t_mid, 會考}
+
+## 11. 寫作：記敘／抒情／說明／議論（strand: writ）
+
+- [chi.t_mid.writ.theme-intent] 審題立意  {t_mid, 會考}
+- [chi.t_mid.writ.material] 取材選材（切題／具體／新穎）  {t_mid, 會考}
+- [chi.t_mid.writ.outline] 擬定寫作大綱  {t_mid, 會考}
+- [chi.t_mid.writ.para-layering] 段落安排與層次  {t_mid, 會考}
+- [chi.t_base.writ.narrative-six] 記敘文六要素（時地人事因果）  {t_base, 無}
+- [chi.t_mid.writ.narrative-order] 記敘文敘事順序運用  {t_mid, 會考}
+- [chi.t_mid.writ.detail-balance] 詳寫與略寫得當  {t_mid, 會考}
+- [chi.t_mid.writ.lyric-scene] 抒情文：借景抒情／融情入景  {t_mid, 會考}
+- [chi.t_mid.writ.lyric-direct-indirect] 抒情文：直接抒情與間接抒情  {t_mid, 會考}
+- [chi.t_adv.writ.lyric-object] 抒情文：托物言志  {t_adv, 無}
+- [chi.t_mid.writ.expo-order] 說明文：說明順序（時間／空間／邏輯）  {t_mid, 會考}
+- [chi.t_mid.writ.expo-method] 說明文：說明方法運用  {t_mid, 會考}
+- [chi.t_mid.writ.expo-accuracy] 說明文：語言準確客觀  {t_mid, 會考}
+- [chi.t_adv.writ.arg-thesis] 議論文：論點明確  {t_adv, 學測-國寫}
+- [chi.t_adv.writ.arg-evidence] 議論文：論據（事例／數據／引言／道理）  {t_adv, 學測-國寫}
+- [chi.t_adv.writ.arg-method] 議論文：論證方法（舉例／對比／比喻／引用／因果／歸謬）  {t_adv, 學測-國寫}
+- [chi.t_adv.writ.arg-refute] 議論文：駁論（先破後立）  {t_adv, 學測-國寫}
+- [chi.t_mid.writ.arg-structure] 議論文：結構（起承轉合／總分）  {t_mid, 會考}
+- [chi.t_mid.writ.opening] 開頭技巧（開門見山／設問／引用／場景）  {t_mid, 會考}
+- [chi.t_mid.writ.closing] 結尾技巧（總結／呼應／昇華／留白）  {t_mid, 會考}
+- [chi.t_mid.writ.transition] 過渡與銜接  {t_mid, 會考}
+- [chi.t_mid.writ.word-choice] 遣詞造句精準生動  {t_mid, 會考}
+- [chi.t_mid.writ.rhet-use] 修辭運用增色  {t_mid, 會考}
+- [chi.t_mid.writ.describe-person] 人物描寫（外貌／語言／動作／心理／神態）  {t_mid, 會考}
+- [chi.t_mid.writ.describe-scene] 景物描寫  {t_mid, 會考}
+- [chi.t_adv.writ.describe-situation] 場面描寫  {t_adv, 無}
+- [chi.t_mid.writ.revise] 文章修改與潤飾  {t_mid, 會考}
+- [chi.t_base.writ.expand] 擴寫  {t_base, 無}
+- [chi.t_base.writ.condense] 縮寫  {t_base, 無}
+- [chi.t_base.writ.imitate] 仿寫  {t_base, 無}
+- [chi.t_mid.writ.continue-rewrite] 續寫／改寫  {t_mid, 無}
+
+## 12. 寫作：四段論／引導寫作（會考寫作測驗）（strand: writjh）
+
+- [chi.t_mid.writjh.read-prompt] 審讀引導說明與題意  {t_mid, 會考}
+- [chi.t_mid.writjh.four-para] 四段式結構（起承轉合）布局  {t_mid, 會考}
+- [chi.t_mid.writjh.para1-open] 第一段破題引入  {t_mid, 會考}
+- [chi.t_mid.writjh.mid-develop] 中間段舉例論述／敘事鋪陳  {t_mid, 會考}
+- [chi.t_mid.writjh.para-end] 結尾段收束與昇華  {t_mid, 會考}
+- [chi.t_mid.writjh.life-example] 結合生活經驗舉例  {t_mid, 會考}
+- [chi.t_mid.writjh.on-topic] 切合題旨、不離題  {t_mid, 會考}
+- [chi.t_mid.writjh.six-level-rubric] 六級分評分規準理解（立意取材／結構組織／遣詞造句／錯別字格式標點）  {t_mid, 會考}
+- [chi.t_mid.writjh.chart-prompt] 圖表式引導題判讀與回應  {t_mid, 會考}
+- [chi.t_mid.writjh.time-length] 時間分配與字數掌控  {t_mid, 會考}
+- [chi.t_mid.writjh.neatness] 卷面整潔與作文格式（標點佔格、分段）  {t_mid, 會考}
+
+## 13. 國寫：知性思辨（strand: gwrk，深階）
+
+- [chi.t_sub.gwrk.read-material] 精確解讀知性題閱讀材料  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrk.extract-data] 擷取並整理材料中的資訊／數據  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrk.summarize-view] 歸納材料觀點  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrk.take-stance] 提出明確的個人立場  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrk.organize-argument] 論點與論據的組織  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrk.multi-angle] 正反思辨與多角度分析  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrk.critique] 批判與評論材料觀點  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrk.example-arg] 以恰當事例論證  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrk.rebut] 反駁並回應對立觀點  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrk.chart-to-text] 將圖表資料轉化為論述  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrk.two-subtasks] 分項作答（第一小題資訊整理＋第二小題申論）  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrk.coherence] 邏輯連貫與條理  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrk.precise-language] 精簡準確的說理語言  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrk.time-budget] 字數與時間分配（知性題約規範字數）(待核：字數上限)  {t_sub, 學測-國寫}
+
+## 14. 國寫：感性抒情（strand: gwrq，深階）
+
+- [chi.t_sub.gwrq.read-situation] 讀懂抒情性材料的情境  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrq.life-link] 聯結個人生命經驗  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrq.sincere] 真情實感、不矯飾  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrq.concrete-detail] 具體情境與細節描寫  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrq.sensory] 感官摹寫營造畫面  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrq.emotion-layer] 情感的層次與轉折  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrq.insight] 由事及情、由物及理的體悟昇華  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrq.symbol-entrust] 以象徵／比喻寄託情思  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrq.narrate-lyric] 敘事與抒情的結合  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrq.structure] 情感脈絡的結構鋪陳  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrq.literary-language] 文學性語言與修辭的運用  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrq.respond-prompt] 回應題幹的想像／體悟要求  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrq.open-close] 開頭情境營造與結尾餘韻  {t_sub, 學測-國寫}
+
+## 15. 應用文／實用文本（strand: prac）
+
+- [chi.t_base.prac.letter] 書信格式（稱謂／提稱語／問候／正文／結尾敬辭／署名）  {t_base, 會考}
+- [chi.t_mid.prac.envelope] 書信信封的直／橫式格式  {t_mid, 會考}
+- [chi.t_base.prac.note-notice] 便條與通知  {t_base, 無}
+- [chi.t_base.prac.diary] 日記格式  {t_base, 無}
+- [chi.t_mid.prac.announcement] 啟事／公告  {t_mid, 會考}
+- [chi.t_mid.prac.inscription] 題辭（婚喪喜慶用語）  {t_mid, 會考}
+- [chi.t_mid.prac.couplet] 對聯（上下聯平仄／對仗／張貼方位）  {t_mid, 會考}
+- [chi.t_mid.prac.invitation] 柬帖（請柬／訃聞）  {t_mid, 會考}
+- [chi.t_adv.prac.resume-autobio] 自傳／履歷  {t_adv, 學測-國綜}
+- [chi.t_mid.prac.book-report] 讀書報告／心得  {t_mid, 無}
+- [chi.t_adv.prac.proposal] 企劃書  {t_adv, 學測-國綜}
+- [chi.t_adv.prac.news-report] 新聞報導（標題／導言／本體／倒金字塔結構）  {t_adv, 學測-國綜}
+- [chi.t_adv.prac.manual] 說明書／操作指南判讀  {t_adv, 學測-國綜}
+- [chi.t_adv.prac.ad-copy] 廣告文案判讀  {t_adv, 學測-國綜}
+- [chi.t_mid.prac.poster-slogan] 海報／標語  {t_mid, 無}
+- [chi.t_adv.prac.civic-text] 便民實用文本判讀（時刻表／標示／契約／說明）  {t_adv, 學測-國綜}
+- [chi.t_mid.prac.minutes] 會議紀錄  {t_mid, 無}
+- [chi.t_adv.prac.speech] 演講稿／致詞稿  {t_adv, 無}
+- [chi.t_base.prac.email] 電子郵件格式與禮儀  {t_base, 無}
+- [chi.t_adv.prac.official-doc] 公文基本格式 (待核：是否納入高中範圍)  {t_adv, 無}
+- [chi.t_adv.prac.multimedia-text] 數位／多媒體文本識讀  {t_adv, 學測-國綜}
+
+---
+
+## 每一 strand 計數表
+
+| strand | 中文名 | 數量 |
+|---|---|---|
+| phon | 注音與拼讀 | 15 |
+| char | 識字與寫字（筆順／部首／六書／形音義／查字典） | 24 |
+| word | 字詞（一字多義／成語／詞語辨析） | 25 |
+| punc | 標點符號 | 16 |
+| read | 白話閱讀 | 29 |
+| classical | 文言閱讀（虛字／實詞／活用／句式／語譯／句讀） | 48 |
+| dual | 雙文本比較閱讀 | 9 |
+| rhet | 修辭 | 28 |
+| gram | 語法與句型（詞類／成分／病句） | 40 |
+| lit | 文學常識（文體／韻文格律／文學史） | 31 |
+| writ | 寫作-記敘／抒情／說明／議論 | 31 |
+| writjh | 寫作-四段論／引導寫作（會考） | 11 |
+| gwrk | 國寫-知性思辨 | 14 |
+| gwrq | 國寫-感性抒情 | 13 |
+| prac | 應用文／實用文本 | 21 |
+| **總計** | | **355** |
+
+### tier 分布（概覽）
+- t_base（基礎）：約 56
+- t_mid（中階／會考）：約 140
+- t_adv（高階／學測國綜）：約 134
+- t_sub（深階／國寫）：27
+
+### 待核（(待核)）項目彙整
+- `chi.t_base.phon.tone-sandhi-third` 三聲連讀變調 — 課綱是否明列此拼讀層級須核。
+- `chi.t_base.char.recognition-count` 國小常用字認讀書寫量（約 2200–2700 字）— 確切字數待核。
+- `chi.t_adv.lit.taiwan-lit` 台灣文學發展史 — 學測文學常識涵蓋範圍／深度待核。
+- （另 `chi.t_sub.gwrk.time-budget` 國寫知性題字數上限、`chi.t_adv.prac.official-doc` 公文是否納入高中範圍亦標 (待核)。）
+
+
+# ===== 領域：eng（296 條，來源 eng.md）=====
+
+# 英語 知識點清單（深階枚舉）
+
+> 範圍：基礎（國小 phonics／300–600 字）→ 中階（國中 1200→2000 字／會考）→ 高階（學測 4500 字）→ 深階（6000 字／進階、分科）。
+> tier 為內部分層（t_base／t_mid／t_adv／t_sub），不對應固定單一年段；exam 標該知識點主要出沒的大考。
+> 每一條＝一個具體、可出題的微技能。字表細目由站上 vocab/CEFR/COCA 既有系統承載，本清單聚焦「知識點」。
+> 108 課綱英語領綱＋大考中心考試說明為定案前核實依據。
+
+---
+
+## 字母與自然發音（phonics）
+
+- [eng.t_base.phonics.letter-recognition] 26 字母大小寫認讀  {tier: t_base, exam: 無}
+- [eng.t_base.phonics.letter-writing] 字母大小寫書寫與筆順  {tier: t_base, exam: 無}
+- [eng.t_base.phonics.name-vs-sound] 字母「名稱音」vs「發音」區辨  {tier: t_base, exam: 無}
+- [eng.t_base.phonics.alphabet-order] 字母順序與字典序查找  {tier: t_base, exam: 無}
+- [eng.t_base.phonics.short-vowels] 短母音 a/e/i/o/u（CVC 拼讀）  {tier: t_base, exam: 無}
+- [eng.t_base.phonics.silent-e] 長母音與 silent e（magic e：a_e/i_e/o_e/u_e）  {tier: t_base, exam: 無}
+- [eng.t_base.phonics.single-consonants] 單子音發音  {tier: t_base, exam: 無}
+- [eng.t_base.phonics.consonant-blends] 子音群 blends（bl/cr/st/sp/tr…）  {tier: t_base, exam: 無}
+- [eng.t_base.phonics.consonant-digraphs] 子音組合 digraphs（sh/ch/th 有聲無聲/wh/ph/ng/ck）  {tier: t_base, exam: 無}
+- [eng.t_base.phonics.vowel-teams] 母音組合（ee/ea/oo 長短/ai/ay/oa/ow/oi/oy/au/aw）  {tier: t_base, exam: 無}
+- [eng.t_base.phonics.r-controlled] r-controlled 母音（ar/er/ir/or/ur）  {tier: t_base, exam: 無}
+- [eng.t_base.phonics.hard-soft-cg] 硬軟 c/g（cat/city、go/giant）  {tier: t_base, exam: 無}
+- [eng.t_base.phonics.decoding] 看字讀音（decoding）  {tier: t_base, exam: 無}
+- [eng.t_base.phonics.encoding] 聽音拼字（encoding）  {tier: t_base, exam: 無}
+- [eng.t_base.phonics.syllable-stress] 音節切分與單字重音  {tier: t_base, exam: 無}
+- [eng.t_base.phonics.schwa] 弱化音 schwa /ə/  {tier: t_base, exam: 無}
+- [eng.t_base.phonics.final-le] 字尾 -le 音節（table/little）  {tier: t_base, exam: 無}
+- [eng.t_base.phonics.plural-s-sound] 複數/三單 -s/-es 發音 /s//z//ɪz/  {tier: t_base, exam: 無}
+- [eng.t_base.phonics.ed-sound] 過去式 -ed 發音 /t//d//ɪd/  {tier: t_base, exam: 無}
+- [eng.t_mid.phonics.kk-ipa] KK 音標／IPA 符號認讀與對應  {tier: t_mid, exam: 無}
+
+## 字彙與主題詞（分級）
+
+- [eng.t_base.vocab.numbers] 基數與序數  {tier: t_base, exam: 無}
+- [eng.t_base.vocab.colors] 顏色  {tier: t_base, exam: 無}
+- [eng.t_base.vocab.body] 身體部位  {tier: t_base, exam: 無}
+- [eng.t_base.vocab.family] 家庭成員  {tier: t_base, exam: 無}
+- [eng.t_base.vocab.food] 食物與飲料  {tier: t_base, exam: 無}
+- [eng.t_base.vocab.animals] 動物  {tier: t_base, exam: 無}
+- [eng.t_base.vocab.school-supplies] 文具與教室用品  {tier: t_base, exam: 無}
+- [eng.t_base.vocab.transport] 交通工具  {tier: t_base, exam: 無}
+- [eng.t_base.vocab.weather] 天氣  {tier: t_base, exam: 無}
+- [eng.t_base.vocab.clothes] 衣物  {tier: t_base, exam: 無}
+- [eng.t_base.vocab.jobs] 職業  {tier: t_base, exam: 無}
+- [eng.t_base.vocab.calendar] 星期／月份／日期  {tier: t_base, exam: 無}
+- [eng.t_base.vocab.telling-time] 時間報讀（o'clock/half past/quarter）  {tier: t_base, exam: 無}
+- [eng.t_base.vocab.places] 地點與學校場所  {tier: t_base, exam: 無}
+- [eng.t_mid.vocab.emotion-personality] 情緒與個性形容詞  {tier: t_mid, exam: 會考}
+- [eng.t_mid.vocab.hobby-leisure] 興趣嗜好與休閒活動  {tier: t_mid, exam: 會考}
+- [eng.t_mid.vocab.travel-geography] 旅遊與地理  {tier: t_mid, exam: 會考}
+- [eng.t_mid.vocab.health-illness] 健康與身體不適  {tier: t_mid, exam: 會考}
+- [eng.t_mid.vocab.shopping-money] 購物與金錢  {tier: t_mid, exam: 會考}
+- [eng.t_mid.vocab.festivals-culture] 節慶與文化  {tier: t_mid, exam: 會考}
+- [eng.t_mid.vocab.tech-media] 科技與媒體日常詞  {tier: t_mid, exam: 會考}
+- [eng.t_mid.vocab.environment-nature] 環境與自然  {tier: t_mid, exam: 會考}
+- [eng.t_mid.vocab.quantifiers-units] 數量詞與單位詞  {tier: t_mid, exam: 會考}
+- [eng.t_mid.vocab.core-1200] 教育部參考 1200 核心字精熟  {tier: t_mid, exam: 會考}
+- [eng.t_mid.vocab.expand-2000] 擴充至 2000 字  {tier: t_mid, exam: 會考}  (待核：確切字數)
+- [eng.t_adv.vocab.ceec-4500] 學測參考 4500 字表精熟  {tier: t_adv, exam: 學測}  (待核：確切字數)
+- [eng.t_adv.vocab.abstract-affective] 抽象概念與情意詞彙  {tier: t_adv, exam: 學測}
+- [eng.t_adv.vocab.academic-topics] 學術主題詞（科學/社會/環境/科技）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.vocab.synonym-nuance] 近義詞語意辨析（nuance）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.vocab.register] 詞彙語域（formal/informal）  {tier: t_adv, exam: 學測}
+- [eng.t_sub.vocab.expand-6000] 進階擴充至 6000 字  {tier: t_sub, exam: 分科}  (待核：確切字數)
+
+## 構詞（字首/字根/字尾/合成/派生）
+
+- [eng.t_base.morph.suffix-adverb-ly] 副詞字尾 -ly 構成  {tier: t_base, exam: 無}
+- [eng.t_base.morph.compound-noun] 合成名詞（classroom/raincoat）  {tier: t_base, exam: 無}
+- [eng.t_mid.morph.suffix-noun] 名詞字尾（-tion/-ment/-ness/-ity/-er/-or/-ist/-ship）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.morph.suffix-adjective] 形容詞字尾（-ful/-less/-ous/-ive/-al/-ic/-able/-y/-ish）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.morph.suffix-verb] 動詞字尾（-ize/-ify/-en/-ate）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.morph.prefix-negative] 否定/反義字首（un-/in-/im-/il-/ir-/dis-/non-/mis-）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.morph.word-family] 派生與詞類轉換（beauty/beautiful/beautifully）  {tier: t_mid, exam: 會考}
+- [eng.t_adv.morph.prefix-degree] 數量/程度字首（bi-/tri-/multi-/semi-/over-/under-/super-）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.morph.prefix-relation] 關係/方位字首（re-/pre-/post-/inter-/trans-/sub-/ex-/co-）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.morph.latin-greek-roots] 拉丁希臘字根（spect/port/dict/ject/vert/scrib/tele/bio/geo/graph）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.morph.compound-adjective] 合成形容詞（well-known、a ten-year-old boy）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.morph.conversion] 轉品（water/to water 名動互轉）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.morph.guess-by-morphology] 以構詞推測字義  {tier: t_adv, exam: 學測}
+
+## 名詞與冠詞
+
+- [eng.t_base.noun.regular-plural] 可數名詞規則複數（-s/-es 拼寫）  {tier: t_base, exam: 無}
+- [eng.t_base.noun.irregular-plural] 不規則複數（man/men、child/children、foot/feet）  {tier: t_base, exam: 無}
+- [eng.t_base.noun.proper-capitalization] 專有名詞與大寫規則  {tier: t_base, exam: 無}
+- [eng.t_base.noun.possessive] 名詞所有格（'s / s'）  {tier: t_base, exam: 無}
+- [eng.t_mid.noun.same-form-plural] 單複同形（sheep/deer/fish）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.noun.uncountable] 不可數名詞概念  {tier: t_mid, exam: 會考}
+- [eng.t_mid.noun.uncountable-quantify] 不可數名詞量化（a piece/cup/slice of）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.noun.collective] 集合名詞  {tier: t_mid, exam: 會考}
+- [eng.t_mid.noun.noun-as-modifier] 名詞當形容詞修飾名詞  {tier: t_mid, exam: 會考}
+- [eng.t_adv.noun.double-possessive] 雙重所有格（a friend of mine）  {tier: t_adv, exam: 學測}
+- [eng.t_base.article.indefinite] 不定冠詞 a/an（依母音音開頭）  {tier: t_base, exam: 無}
+- [eng.t_mid.article.definite] 定冠詞 the（特指/獨一/再次提及）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.article.zero] 零冠詞（泛指複數/不可數/專有名詞）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.article.idiom] 冠詞慣用語（play the piano、go to school）  {tier: t_mid, exam: 會考}
+
+## 代名詞
+
+- [eng.t_base.pron.subject-object] 人稱代名詞主格/受格  {tier: t_base, exam: 無}
+- [eng.t_base.pron.possessive] 所有格形容詞 vs 所有格代名詞（my/mine）  {tier: t_base, exam: 無}
+- [eng.t_base.pron.demonstrative] 指示代名詞（this/that/these/those）  {tier: t_base, exam: 無}
+- [eng.t_mid.pron.reflexive] 反身代名詞與強調用法（myself…）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.pron.indefinite] 不定代名詞（some/any/no/every 複合字 someone/anything…）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.pron.one-ones] one/ones 替代  {tier: t_mid, exam: 會考}
+- [eng.t_mid.pron.it-usage] it 的用法（虛主詞/天氣時間距離/強調）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.pron.interrogative] 疑問代名詞（who/whom/whose/what/which）  {tier: t_mid, exam: 會考}
+- [eng.t_adv.pron.reciprocal] 相互代名詞（each other / one another）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.pron.quantifier-agreement] 數量代名詞與動詞一致（both/either/neither/all/none/each）  {tier: t_adv, exam: 學測}
+
+## 動詞與時態
+
+- [eng.t_base.verb.be] be 動詞（am/is/are）與句型  {tier: t_base, exam: 無}
+- [eng.t_base.verb.there-be] There is / There are  {tier: t_base, exam: 無}
+- [eng.t_base.verb.present-simple] 一般現在式與第三人稱單數  {tier: t_base, exam: 無}
+- [eng.t_base.verb.present-progressive] 現在進行式構成與 -ing 拼寫  {tier: t_base, exam: 無}
+- [eng.t_mid.verb.present-simple-vs-prog] 現在簡單 vs 現在進行對比  {tier: t_mid, exam: 會考}
+- [eng.t_base.verb.past-simple-regular] 過去簡單式（規則動詞 -ed）  {tier: t_base, exam: 無}
+- [eng.t_mid.verb.past-simple-irregular] 過去簡單式（不規則動詞）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.verb.past-progressive] 過去進行式  {tier: t_mid, exam: 會考}
+- [eng.t_mid.verb.past-when-while] 過去簡單 vs 過去進行（when/while）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.verb.future-will] 未來式 will  {tier: t_mid, exam: 會考}
+- [eng.t_mid.verb.future-going-to] 未來 be going to  {tier: t_mid, exam: 會考}
+- [eng.t_mid.verb.will-vs-going-to] will vs be going to 辨析  {tier: t_mid, exam: 會考}
+- [eng.t_mid.verb.present-prog-future] 現在進行表未來計畫  {tier: t_mid, exam: 會考}
+- [eng.t_mid.verb.present-perfect] 現在完成式（經驗/完成/繼續）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.verb.present-perfect-vs-past] 現在完成 vs 過去簡單  {tier: t_mid, exam: 會考}
+- [eng.t_mid.verb.irregular-three-forms] 不規則動詞三態精熟  {tier: t_mid, exam: 會考}
+- [eng.t_mid.verb.stative-verbs] 狀態動詞不用進行式  {tier: t_mid, exam: 會考}
+- [eng.t_adv.verb.present-perfect-progressive] 現在完成進行式  {tier: t_adv, exam: 學測}
+- [eng.t_adv.verb.past-perfect] 過去完成式  {tier: t_adv, exam: 學測}
+- [eng.t_adv.verb.future-perfect] 未來完成式  {tier: t_adv, exam: 學測}
+- [eng.t_adv.verb.future-progressive] 未來進行式  {tier: t_adv, exam: 學測}
+- [eng.t_sub.verb.past-perfect-progressive] 過去完成進行式  {tier: t_sub, exam: 分科}
+- [eng.t_sub.verb.future-perfect-progressive] 未來完成進行式  {tier: t_sub, exam: 分科}
+- [eng.t_adv.verb.tense-consistency] 時態一致與時間副詞搭配  {tier: t_adv, exam: 學測}
+- [eng.t_adv.verb.used-to-family] used to / be used to / get used to 辨析  {tier: t_adv, exam: 學測}
+- [eng.t_mid.verb.ditransitive] 授與動詞雙受詞（give sb sth / to/for）  {tier: t_mid, exam: 會考}
+
+## 語態（被動）
+
+- [eng.t_mid.voice.basic] 被動語態構成（be + p.p.）  {tier: t_mid, exam: 會考}
+- [eng.t_adv.voice.all-tenses] 各時態被動（現在/過去/完成/未來）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.voice.modal] 情態助動詞被動  {tier: t_adv, exam: 學測}
+- [eng.t_mid.voice.by-agent] by 片語與施事者省略  {tier: t_mid, exam: 會考}
+- [eng.t_adv.voice.ditransitive] 授與動詞雙受詞被動  {tier: t_adv, exam: 學測}
+- [eng.t_adv.voice.causative-perception] 感官/使役被動（be made to / be seen to）  {tier: t_adv, exam: 學測}
+- [eng.t_sub.voice.nonfinite] 被動不定詞/動名詞（to be done / being done）  {tier: t_sub, exam: 分科}
+- [eng.t_sub.voice.it-is-said] It is said that… / be said to 結構  {tier: t_sub, exam: 分科}
+- [eng.t_mid.voice.active-passive-transform] 主動被動轉換  {tier: t_mid, exam: 會考}
+
+## 助動詞與情態
+
+- [eng.t_base.modal.can] can（能力/許可/請求）  {tier: t_base, exam: 無}
+- [eng.t_mid.modal.could] could（過去能力/委婉請求/可能）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.modal.may-might] may/might（許可/推測）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.modal.must] must（義務/強烈推測）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.modal.have-to] have to / have got to（外在義務）  {tier: t_mid, exam: 會考}
+- [eng.t_adv.modal.must-vs-haveto] must vs have to 與否定（mustn't / don't have to）  {tier: t_adv, exam: 學測}
+- [eng.t_mid.modal.should-ought] should / ought to（勸告建議）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.modal.had-better] had better  {tier: t_mid, exam: 會考}
+- [eng.t_mid.modal.shall-would-like] shall（提議）/ would like  {tier: t_mid, exam: 會考}
+- [eng.t_adv.modal.would] would（過去習慣/委婉/意願）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.modal.perfect] 情態 + 完成式（must/should/could have 表過去推測或後悔）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.modal.probability-ladder] 推測確定度階梯（must > may > might > can't）  {tier: t_adv, exam: 學測}
+- [eng.t_sub.modal.need-dare] need / dare 作情態助動詞  {tier: t_sub, exam: 分科}
+
+## 形容詞、副詞與比較
+
+- [eng.t_mid.adjadv.adjective-position] 形容詞位置（限定/敘述、前位/後位）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.adjadv.participle-adjective] 分詞形容詞 -ing vs -ed（boring/bored）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.adjadv.adverb-types] 副詞種類（方式/地點/時間/頻率/程度）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.adjadv.frequency-position] 頻率副詞位置  {tier: t_mid, exam: 會考}
+- [eng.t_mid.adjadv.comparative] 比較級（規則與不規則）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.adjadv.superlative] 最高級與範圍（of/in）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.adjadv.as-as] 原級比較 as…as / not as…as  {tier: t_mid, exam: 會考}
+- [eng.t_mid.adjadv.too-enough-so-such] too…to / enough to / so…that / such…that  {tier: t_mid, exam: 會考}
+- [eng.t_adv.adjadv.adjective-order] 多個形容詞排序  {tier: t_adv, exam: 學測}
+- [eng.t_adv.adjadv.comparative-modifier] 比較級修飾語（much/far/a little + 比較級）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.adjadv.the-more-the-more] the + 比較級, the + 比較級（越…越…）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.adjadv.more-and-more] 比較級 + and + 比較級（越來越…）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.adjadv.multiple-comparison] 倍數比較（twice/three times as…as）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.adjadv.comparison-ellipsis] 比較句的省略與平行（than I do）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.adjadv.confusable-pairs] 易混形副（hard/hardly、late/lately、near/nearly）  {tier: t_adv, exam: 學測}
+
+## 介系詞
+
+- [eng.t_base.prep.time-at-on-in] 時間介系詞 at/on/in  {tier: t_base, exam: 無}
+- [eng.t_base.prep.place-at-on-in] 地點介系詞 at/on/in  {tier: t_base, exam: 無}
+- [eng.t_mid.prep.direction] 方向/移動介系詞（to/into/onto/toward/through/across/along）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.prep.position] 位置介系詞（above/below/over/under/between/among/beside/behind）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.prep.duration] 期間介系詞（for/during/since/by/until/within）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.prep.means] by/with/in 表方式與工具  {tier: t_mid, exam: 會考}
+- [eng.t_mid.prep.verb-prep-collocation] 介系詞慣用搭配（depend on、be good at）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.prep.prep-gerund] 介系詞 + 動名詞  {tier: t_mid, exam: 會考}
+- [eng.t_adv.prep.phrasal-prep] 片語介系詞（because of / in spite of / instead of）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.prep.others] 其他介系詞語意（about/of/for/against/despite）  {tier: t_adv, exam: 學測}
+
+## 連接詞與轉折
+
+- [eng.t_mid.conj.coordinating] 對等連接詞 FANBOYS（and/but/or/so/for/nor/yet）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.conj.subordinate-time] 從屬連接詞-時間（when/while/as/before/after/until/as soon as）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.conj.subordinate-reason] 從屬-原因（because/since/as）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.conj.subordinate-concession] 從屬-讓步（although/though/even though/even if）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.conj.subordinate-condition] 從屬-條件（if/unless/as long as）  {tier: t_mid, exam: 會考}
+- [eng.t_adv.conj.correlative] 相關連接詞與動詞一致（both…and/either…or/neither…nor/not only…but also）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.conj.purpose-result] 從屬-目的/結果（so that / in order that / so…that）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.conj.conjunctive-adverb] 轉折/連接副詞與標點（however/therefore/moreover/nevertheless/otherwise/thus）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.conj.conj-vs-prep] 連接詞 vs 介系詞辨析（because/because of；although/despite）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.conj.contrast-while-whereas] while/whereas 表對比  {tier: t_adv, exam: 學測}
+
+## 不定詞與動名詞
+
+- [eng.t_mid.nonfinite.infinitive-noun] 不定詞當名詞（主/受/補）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.nonfinite.infinitive-purpose] 不定詞表目的  {tier: t_mid, exam: 會考}
+- [eng.t_mid.nonfinite.infinitive-adj-adv] 不定詞當形容詞/副詞  {tier: t_mid, exam: 會考}
+- [eng.t_mid.nonfinite.wh-infinitive] 疑問詞 + 不定詞（how to…）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.nonfinite.gerund-roles] 動名詞當主詞/受詞/補語/介受  {tier: t_mid, exam: 會考}
+- [eng.t_mid.nonfinite.verb-plus-infinitive] 接不定詞的動詞（want/hope/decide/promise）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.nonfinite.verb-plus-gerund] 接動名詞的動詞（enjoy/finish/mind/avoid/keep）  {tier: t_mid, exam: 會考}
+- [eng.t_adv.nonfinite.meaning-change] 接不定詞或動名詞意義不同（stop/remember/forget/try/mean/regret）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.nonfinite.subject-of-infinitive] 不定詞意義主詞（for sb to / of sb to）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.nonfinite.bare-infinitive] 原形不定詞（make/let/have/see/hear + 原形）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.nonfinite.gerund-idioms] 慣用動名詞句型（feel like/can't help/be worth/It's no use）  {tier: t_adv, exam: 學測}
+- [eng.t_sub.nonfinite.perfect-passive] 不定詞/動名詞的完成式與被動式  {tier: t_sub, exam: 分科}
+
+## 關係子句
+
+- [eng.t_mid.relcl.who-whom] 關係代名詞 who/whom  {tier: t_mid, exam: 會考}
+- [eng.t_mid.relcl.which] 關係代名詞 which  {tier: t_mid, exam: 會考}
+- [eng.t_mid.relcl.that] 關係代名詞 that 與使用時機  {tier: t_mid, exam: 會考}
+- [eng.t_mid.relcl.whose] 關係代名詞 whose（所有格）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.relcl.omission] 受格關係代名詞省略  {tier: t_mid, exam: 會考}
+- [eng.t_adv.relcl.restrictive-vs-nonrestrictive] 限定 vs 非限定關係子句（逗號）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.relcl.relative-adverb] 關係副詞 when/where/why  {tier: t_adv, exam: 學測}
+- [eng.t_adv.relcl.prep-plus-relative] 介系詞 + 關係代名詞（in which / for whom）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.relcl.what] 複合關係代名詞 what  {tier: t_adv, exam: 學測}
+- [eng.t_adv.relcl.reduce-to-participle] 關係子句化簡為分詞（the man standing…）  {tier: t_adv, exam: 學測}
+- [eng.t_sub.relcl.compound-wh-ever] 複合關係代名詞 whatever/whoever/whichever  {tier: t_sub, exam: 分科}
+- [eng.t_sub.relcl.quantifier-of-which] 數量詞 + of + which/whom（some of which）  {tier: t_sub, exam: 分科}
+
+## 名詞子句
+
+- [eng.t_mid.nouncl.that-object] that 名詞子句當受詞（I think that…）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.nouncl.indirect-yesno] 間接問句（if/whether 是非）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.nouncl.indirect-wh] 間接問句（wh- 疑問詞）語序  {tier: t_mid, exam: 會考}
+- [eng.t_adv.nouncl.that-subject] that 子句當主詞 / 虛主詞 it  {tier: t_adv, exam: 學測}
+- [eng.t_adv.nouncl.whether-or-not] whether…or not  {tier: t_adv, exam: 學測}
+- [eng.t_adv.nouncl.complement-apposition] 名詞子句當補語/同位語  {tier: t_adv, exam: 學測}
+- [eng.t_adv.nouncl.sequence-of-tenses] 名詞子句的時態呼應  {tier: t_adv, exam: 學測}
+- [eng.t_sub.nouncl.suggest-should] 建議要求動詞後 that 子句（suggest that sb (should) do）  {tier: t_sub, exam: 分科}
+
+## 副詞子句
+
+- [eng.t_mid.advcl.time-future-present] 時間副詞子句（表未來用現在式）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.advcl.first-conditional] 條件副詞子句（第一類：if + 現在式, will）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.advcl.concession] 讓步副詞子句  {tier: t_mid, exam: 會考}
+- [eng.t_adv.advcl.purpose-result] 目的/結果副詞子句  {tier: t_adv, exam: 學測}
+- [eng.t_adv.advcl.manner-as-if] 方式副詞子句（as if / as though）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.advcl.no-matter] no matter how/what/where 讓步  {tier: t_adv, exam: 學測}
+
+## 假設語氣
+
+- [eng.t_adv.subj.present-unreal] 與現在事實相反（If + 過去式, would/could/might + V）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.subj.past-unreal] 與過去事實相反（If + had p.p., would have p.p.）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.subj.as-if] as if / as though 與事實相反  {tier: t_adv, exam: 學測}
+- [eng.t_adv.subj.wish] I wish 句型（現在/過去/未來願望）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.subj.indicative-vs-subjunctive] 直說 vs 假設語氣判別  {tier: t_adv, exam: 學測}
+- [eng.t_sub.subj.future-unreal] 與未來不可能/假設（If + were to / should）  {tier: t_sub, exam: 分科}
+- [eng.t_sub.subj.mixed] 混合假設（過去條件→現在結果）  {tier: t_sub, exam: 分科}
+- [eng.t_sub.subj.inversion-omit-if] 省略 if 的倒裝（Were I / Had I / Should you）  {tier: t_sub, exam: 分科}
+- [eng.t_sub.subj.would-rather] would rather (+ that 子句過去式)  {tier: t_sub, exam: 分科}
+- [eng.t_sub.subj.if-only] if only  {tier: t_sub, exam: 分科}
+- [eng.t_sub.subj.its-time] It's (high) time + 過去式  {tier: t_sub, exam: 分科}
+- [eng.t_sub.subj.mandative] 建議/要求/命令動詞/形容詞後假設（insist/essential that sb (should) do）  {tier: t_sub, exam: 分科}
+- [eng.t_sub.subj.without-but-for] without / but for 隱含條件  {tier: t_sub, exam: 分科}
+
+## 特殊句構（倒裝/強調/分裂/分詞構句）
+
+- [eng.t_mid.special.so-neither] 倒裝 So do I / Neither do I  {tier: t_mid, exam: 會考}
+- [eng.t_mid.special.exclamatory] 感嘆句 What… / How…  {tier: t_mid, exam: 會考}
+- [eng.t_mid.special.tag-question] 附加問句（tag question）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.special.formal-subject-it] 虛主詞 it（It is + adj + to / that）  {tier: t_mid, exam: 會考}
+- [eng.t_adv.special.cleft-it] 分裂句/強調句 It is X that…  {tier: t_adv, exam: 學測}
+- [eng.t_adv.special.do-emphasis] do/does/did 強調動詞  {tier: t_adv, exam: 學測}
+- [eng.t_adv.special.participial-active] 分詞構句（現在分詞表主動/同時）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.special.participial-passive] 分詞構句（過去分詞表被動）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.special.formal-object-it] 虛受詞 it（find it hard to…）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.special.apposition] 同位語  {tier: t_adv, exam: 學測}
+- [eng.t_adv.special.inversion-place] 地方副詞/介片語句首倒裝（Here comes…）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.special.ellipsis] 省略（對話省略/子句省略）  {tier: t_adv, exam: 學測}
+- [eng.t_sub.special.inversion-negative] 否定副詞句首倒裝（Never/Seldom/Hardly/Not only…）  {tier: t_sub, exam: 分科}
+- [eng.t_sub.special.inversion-only] only + 副詞片語句首倒裝  {tier: t_sub, exam: 分科}
+- [eng.t_sub.special.inversion-so-such] so/such 句首倒裝  {tier: t_sub, exam: 分科}
+- [eng.t_sub.special.what-cleft] what 強調句（What I need is…）  {tier: t_sub, exam: 分科}
+- [eng.t_sub.special.perfect-participle] 完成式分詞構句（Having done…）  {tier: t_sub, exam: 分科}
+- [eng.t_sub.special.absolute-with] 獨立分詞構句（with + 受詞 + 分詞 / 主詞不同）  {tier: t_sub, exam: 分科}
+
+## 基本句型
+
+- [eng.t_base.pattern.imperative] 祈使句（肯定/否定/Let's）  {tier: t_base, exam: 無}
+- [eng.t_base.pattern.question-order] 疑問句語序（Yes/No、Wh-、選擇疑問）  {tier: t_base, exam: 無}
+- [eng.t_base.pattern.sentence-kinds] 句子種類（直述/疑問/祈使/感嘆）  {tier: t_base, exam: 無}
+- [eng.t_mid.pattern.sv] 句型一 S + V（完全不及物）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.pattern.svc] 句型二 S + V + C（主詞補語/連綴動詞）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.pattern.svo] 句型三 S + V + O（完全及物）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.pattern.svoo] 句型四 S + V + O + O（授與雙受詞）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.pattern.svoc] 句型五 S + V + O + C（受詞補語）  {tier: t_mid, exam: 會考}
+- [eng.t_adv.pattern.sv-agreement] 主詞動詞一致（單複數/就近/集合名詞）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.pattern.sentence-types] 簡單句/合句/複句/複合句辨識  {tier: t_adv, exam: 學測}
+- [eng.t_adv.pattern.run-on-comma-splice] 連寫句/逗號拼接錯誤辨識與修正  {tier: t_adv, exam: 學測}
+
+## 閱讀技巧
+
+- [eng.t_mid.reading.main-idea] 主旨與大意（main idea）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.reading.detail] 細節擷取（scanning）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.reading.guess-word] 由上下文猜測字義  {tier: t_mid, exam: 會考}
+- [eng.t_mid.reading.reference] 指代關係（代名詞/this/that 指涉）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.reading.functional-text] 應用文/告示/廣告/email 判讀  {tier: t_mid, exam: 會考}
+- [eng.t_mid.reading.skim-scan] 略讀 skimming / 尋讀 scanning 策略  {tier: t_mid, exam: 會考}
+- [eng.t_adv.reading.best-title] 標題選擇（best title）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.reading.purpose] 作者目的/寫作意圖  {tier: t_adv, exam: 學測}
+- [eng.t_adv.reading.attitude-tone] 作者態度/語氣/情感  {tier: t_adv, exam: 學測}
+- [eng.t_adv.reading.inference] 推論與言外之意（inference）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.reading.text-structure] 篇章結構/組織（比較對比/因果/時序/問題解決）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.reading.cohesion] 文章連貫與銜接詞判斷  {tier: t_adv, exam: 學測}
+- [eng.t_adv.reading.fact-vs-opinion] 事實 vs 意見辨別  {tier: t_adv, exam: 學測}
+- [eng.t_adv.reading.graph-integration] 圖表/數據整合（non-continuous text）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.reading.multi-text] 多篇文本整合  {tier: t_adv, exam: 學測}
+- [eng.t_adv.reading.cloze] 克漏字（文法 + 語意 + 連貫）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.reading.gap-filling] 文意選填（word-bank gap filling）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.reading.discourse-ordering] 篇章結構題（句子/段落插入與排序）  {tier: t_adv, exam: 學測}
+- [eng.t_sub.reading.academic-long] 長篇學術性文章閱讀  {tier: t_sub, exam: 分科}
+
+## 英聽
+
+- [eng.t_base.listening.picture-id] 看圖辨義  {tier: t_base, exam: 無}
+- [eng.t_mid.listening.phonology] 語音辨識（最小對立音/連音/縮讀）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.listening.stress-intonation] 重音與語調辨識（升降調/語氣）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.listening.response] 問答（對應回應選擇）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.listening.short-dialogue] 簡短對話理解（人事時地物）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.listening.transition-cue] 聽辨轉折詞與語氣轉變  {tier: t_mid, exam: 會考}
+- [eng.t_mid.listening.numbers] 數字/時間/價格/日期聽辨  {tier: t_mid, exam: 會考}
+- [eng.t_mid.listening.dictation] 聽寫（dictation）  {tier: t_mid, exam: 會考}
+- [eng.t_adv.listening.monologue] 短文/獨白聽解（主旨/細節/推論）  {tier: t_adv, exam: 學測}  (待核：高中英聽測驗採計方式依校系)
+- [eng.t_adv.listening.implication] 情境與言外之意推測  {tier: t_adv, exam: 學測}
+
+## 寫作
+
+- [eng.t_base.writing.copy-imitate] 抄寫與仿寫句子  {tier: t_base, exam: 無}
+- [eng.t_mid.writing.sentence-making] 單句造句（依句型/提示）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.writing.punctuation-caps] 標點符號與大小寫規則  {tier: t_mid, exam: 會考}
+- [eng.t_mid.writing.picture-basic] 看圖寫作（描述圖片/看圖造句）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.writing.letter-email] 書信/email 格式與體裁  {tier: t_mid, exam: 會考}
+- [eng.t_adv.writing.c2e-translation] 中譯英（句型與用字精確）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.writing.picture-narrative] 看圖寫作（敘事/四格圖串接）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.writing.topic-essay] 主題式作文（論點 + 發展 + 結論）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.writing.paragraph-structure] 段落組織（主題句/支持句/結論句）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.writing.cohesive-devices] 連接詞與轉折語使用（篇章連貫）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.writing.consistency] 時態一致與人稱一致  {tier: t_adv, exam: 學測}
+- [eng.t_adv.writing.narrative] 敘事文體（記敘文）  {tier: t_adv, exam: 學測}
+- [eng.t_adv.writing.expository] 說明文/報導文體  {tier: t_adv, exam: 學測}
+- [eng.t_adv.writing.avoid-chinglish] 用字精確與避免中式英文  {tier: t_adv, exam: 學測}
+- [eng.t_adv.writing.sentence-combining] 改寫/合併句子（sentence combining）  {tier: t_adv, exam: 學測}
+- [eng.t_sub.writing.argumentative] 議論文體與論證  {tier: t_sub, exam: 分科}
+
+---
+
+## 每一分項計數表
+
+| strand 分項 | 數量 |
 |---|---|
-| 數學 | 51 |
-| 國語文 | 29 |
-| 英語 | 22 |
-| 自然科學 | 33 |
-| 社會 | 23 |
-| **國小小計** | **158** |
+| 字母與自然發音（phonics） | 20 |
+| 字彙與主題詞（分級） | 31 |
+| 構詞 | 13 |
+| 名詞與冠詞 | 14 |
+| 代名詞 | 10 |
+| 動詞與時態 | 26 |
+| 語態（被動） | 9 |
+| 助動詞與情態 | 13 |
+| 形容詞、副詞與比較 | 15 |
+| 介系詞 | 10 |
+| 連接詞與轉折 | 10 |
+| 不定詞與動名詞 | 12 |
+| 關係子句 | 12 |
+| 名詞子句 | 8 |
+| 副詞子句 | 6 |
+| 假設語氣 | 13 |
+| 特殊句構 | 18 |
+| 基本句型 | 11 |
+| 閱讀技巧 | 19 |
+| 英聽 | 10 |
+| 寫作 | 16 |
+| **總計** | **296** |
 
-（另：國小→國中橋接 5 科共 5 條統整提示，不計入總數）
 
-### B. 國中
-| 科目 | 知識點數 |
+# ===== 領域：sci-physchem（419 條，來源 sci-physchem.md）=====
+
+# 理化（物理＋化學）知識點母體 — 深層 enumerated 清單
+
+> 範圍：自然科-理化（物理＋化學）only；生物／地科不在本切片。
+> 分層（tier，學習者看不到，純內部排序）：
+> `t_base`=國小自然相關地基 ｜ `t_mid`=國中理化/會考 ｜ `t_adv`=高中物理·化學（學測，高一二範圍）｜ `t_sub`=分科測驗（高三選修深水區）。
+> 體例：`- [id] 標題  {tier, exam}`；id = `sci.<tier>.<strand>.<slug>`（strand 前綴 phys.* 或 chem.*）；id 穩定、可被 spec 引用。
+> exam ∈ 會考 / 學測 / 分科-物理 / 分科-化學 / 無。
+> 深度標準：每一條 = 一個具體、可測的 micro-skill；寬標題（如「酸鹼」「電路」）不得當條目。
+> 語言：全繁體、零簡體、零 PRC 詞彙。`(待核)` = 年段/分流/課綱歸屬需對照教育部《十二年國教課程綱要自然領域》與大考中心考試說明核實。
+> 來源：理化領域專家 recon（2026-10-26），以 KNOWLEDGE_POINT_INVENTORY.md 之 A-4/B-4/C-4 為粗起點再深化。
+
+---
+
+## 物理 PHYSICS
+
+### 物理-01 測量與單位 `phys-meas`
+- [sci.t_base.phys-meas.measure-tools] 長度/質量/時間/溫度用適當工具測量  {t_base, 無}
+- [sci.t_base.phys-meas.unit-idea] 量需要單位、認識常見生活單位  {t_base, 無}
+- [sci.t_mid.phys-meas.si-base] SI 基本量與單位（公尺/公斤/秒/安培/克耳文…）  {t_mid, 會考}
+- [sci.t_mid.phys-meas.unit-convert] 單位的換算（含詞頭 k/m/μ 等）  {t_mid, 會考}
+- [sci.t_mid.phys-meas.sci-notation] 以科學記號表示極大極小的量  {t_mid, 會考}
+- [sci.t_mid.phys-meas.sigfig-read] 刻度的最小刻度 1/10 估讀  {t_mid, 會考}
+- [sci.t_mid.phys-meas.err-type] 系統誤差與隨機誤差的區別  {t_mid, 會考}
+- [sci.t_mid.phys-meas.accuracy-precision] 準確度與精密度的區別  {t_mid, 會考}
+- [sci.t_mid.phys-meas.scalar-vector] 純量與向量的區分  {t_mid, 會考}
+- [sci.t_adv.phys-meas.dimension] 因次（量綱）分析檢驗公式  {t_adv, 學測}
+- [sci.t_adv.phys-meas.sigfig-ops] 有效數字在加減與乘除運算的規則  {t_adv, 學測}
+- [sci.t_adv.phys-meas.mean-sd] 實驗數據的平均值與標準差（不確定度估計）  {t_adv, 學測}
+- [sci.t_sub.phys-meas.err-propagation] 測量不確定度的傳遞（誤差傳播）  {t_sub, 分科-物理}
+
+### 物理-02 運動學 `phys-kin`
+- [sci.t_base.phys-kin.motion-describe] 描述物體位置改變與運動快慢  {t_base, 無}
+- [sci.t_mid.phys-kin.displacement-path] 位移與路徑長的區別  {t_mid, 會考}
+- [sci.t_mid.phys-kin.velocity-speed] 速度與速率的區別  {t_mid, 會考}
+- [sci.t_mid.phys-kin.avg-inst] 平均速度與瞬時速度  {t_mid, 會考}
+- [sci.t_mid.phys-kin.acceleration] 加速度的定義與單位  {t_mid, 會考}
+- [sci.t_mid.phys-kin.xt-graph] 等速度運動 x-t 圖的判讀（斜率=速度）  {t_mid, 會考}
+- [sci.t_mid.phys-kin.vt-graph] 等加速度 v-t 圖判讀（斜率=加速度、面積=位移）  {t_mid, 會考}
+- [sci.t_mid.phys-kin.free-fall] 自由落體與重力加速度 g  {t_mid, 會考}
+- [sci.t_adv.phys-kin.uniform-accel-eq] 等加速度運動三公式（v=v₀+at 等）運用  {t_adv, 學測}
+- [sci.t_adv.phys-kin.vertical-throw] 鉛直上拋運動的分析  {t_adv, 學測}
+- [sci.t_adv.phys-kin.vector-kinematics] 平面運動的位置/速度/加速度向量  {t_adv, 學測}
+- [sci.t_adv.phys-kin.projectile-h] 水平拋射運動的水平鉛直分量分解  {t_adv, 學測}
+- [sci.t_sub.phys-kin.projectile-angled] 斜向拋體運動（射程/最大高度/飛行時間）  {t_sub, 分科-物理}
+- [sci.t_sub.phys-kin.relative-motion] 相對運動與相對速度（一維/二維）  {t_sub, 分科-物理}
+
+### 物理-03 力與牛頓運動定律 `phys-force`
+- [sci.t_base.phys-force.push-pull] 推與拉是力、力能改變運動與形狀  {t_base, 無}
+- [sci.t_base.phys-force.friction-exist] 摩擦力的存在與影響  {t_base, 無}
+- [sci.t_mid.phys-force.force-elements] 力的三要素與力圖表示  {t_mid, 會考}
+- [sci.t_mid.phys-force.force-unit] 力的單位（牛頓）與彈簧測力計測量  {t_mid, 會考}
+- [sci.t_mid.phys-force.weight-mass] 重力與質量的區別（W=mg）  {t_mid, 會考}
+- [sci.t_mid.phys-force.hooke] 虎克定律（彈力與形變量成正比）  {t_mid, 會考}
+- [sci.t_mid.phys-force.friction-factor] 靜摩擦與動摩擦及影響因素  {t_mid, 會考}
+- [sci.t_mid.phys-force.force-add-1d] 一維同向/反向力的合成  {t_mid, 會考}
+- [sci.t_adv.phys-force.resolve-compose] 共點力的合成與分解（分量法）  {t_adv, 學測}
+- [sci.t_adv.phys-force.equilibrium] 力平衡（合力為零）的靜力問題  {t_adv, 學測}
+- [sci.t_adv.phys-force.newton1] 牛頓第一運動定律（慣性）  {t_adv, 學測}
+- [sci.t_adv.phys-force.newton2] 牛頓第二運動定律（F=ma）應用  {t_adv, 學測}
+- [sci.t_adv.phys-force.newton3] 牛頓第三運動定律（作用反作用）辨識  {t_adv, 學測}
+- [sci.t_adv.phys-force.incline] 斜面上物體的受力分析  {t_adv, 學測}
+- [sci.t_adv.phys-force.tension-system] 繩張力與連結體系統（電梯/阿特午機）  {t_adv, 學測}
+- [sci.t_adv.phys-force.friction-coeff] 靜/動摩擦係數的定量計算  {t_adv, 學測}
+- [sci.t_sub.phys-force.noninertial] 非慣性座標系與假想力（慣性力/離心力）  {t_sub, 分科-物理}
+- [sci.t_sub.phys-force.newton-2d] 二維牛頓定律聯立求解  {t_sub, 分科-物理}
+
+### 物理-04 功、能量與動量 `phys-energy`
+- [sci.t_base.phys-energy.energy-forms] 能量的形式（動能/位能/光/熱/電）  {t_base, 無}
+- [sci.t_base.phys-energy.simple-machine] 簡單機械省力（槓桿/滑輪/輪軸）初步  {t_base, 無}
+- [sci.t_mid.phys-energy.work-def] 功的定義（力沿位移方向作功）  {t_mid, 會考}
+- [sci.t_mid.phys-energy.power-def] 功率的定義與單位（瓦特）  {t_mid, 會考}
+- [sci.t_mid.phys-energy.ke-pe] 動能與（重力）位能的概念  {t_mid, 會考}
+- [sci.t_mid.phys-energy.energy-conserve] 能量守恆與形式轉換  {t_mid, 會考}
+- [sci.t_mid.phys-energy.lever-torque] 槓桿原理與力矩（省力/費力/等臂）  {t_mid, 會考}
+- [sci.t_mid.phys-energy.pulley-wheel] 滑輪/輪軸/斜面的機械利益  {t_mid, 會考}
+- [sci.t_mid.phys-energy.work-principle] 功的原理（省力費距離）  {t_mid, 會考}
+- [sci.t_adv.phys-energy.work-cos] 功的計算（W=Fs cosθ）  {t_adv, 學測}
+- [sci.t_adv.phys-energy.work-energy-thm] 功能定理（淨功=動能變化）  {t_adv, 學測}
+- [sci.t_adv.phys-energy.pe-types] 重力位能與彈性位能  {t_adv, 學測}
+- [sci.t_adv.phys-energy.mech-conserve] 力學能守恆定律應用  {t_adv, 學測}
+- [sci.t_adv.phys-energy.conservative] 保守力與非保守力、摩擦生熱  {t_adv, 學測}
+- [sci.t_adv.phys-energy.power-fv] 瞬時功率與 P=Fv  {t_adv, 學測}
+- [sci.t_adv.phys-energy.momentum-impulse] 動量與衝量（I=Ft=Δp）  {t_adv, 學測}
+- [sci.t_adv.phys-energy.momentum-conserve] 動量守恆定律  {t_adv, 學測}
+- [sci.t_adv.phys-energy.collision-1d] 一維碰撞（彈性/非彈性/完全非彈性）  {t_adv, 學測}
+- [sci.t_sub.phys-energy.collision-2d] 二維碰撞與動量守恆分量  {t_sub, 分科-物理}
+- [sci.t_sub.phys-energy.elastic-formula] 彈性碰撞速度公式推導  {t_sub, 分科-物理}
+- [sci.t_sub.phys-energy.center-of-mass] 質心運動與質心座標  {t_sub, 分科-物理}
+- [sci.t_sub.phys-energy.variable-force-work] 變力作功（力-位移圖面積/積分）  {t_sub, 分科-物理}
+
+### 物理-05 圓周運動與重力/天體 `phys-circ`
+- [sci.t_mid.phys-circ.circular-idea] 等速圓周運動方向持續改變的概念  {t_mid, 會考}
+- [sci.t_adv.phys-circ.angular-speed] 角速度、週期、頻率與線速度關係（v=rω）  {t_adv, 學測}
+- [sci.t_adv.phys-circ.centripetal-accel] 向心加速度（a=v²/r）  {t_adv, 學測}
+- [sci.t_adv.phys-circ.centripetal-force] 向心力的來源與計算  {t_adv, 學測}
+- [sci.t_adv.phys-circ.vertical-circle] 水平圓周與鉛直圓周運動  {t_adv, 學測}
+- [sci.t_adv.phys-circ.kepler] 克卜勒行星運動三定律  {t_adv, 學測}
+- [sci.t_adv.phys-circ.gravitation] 萬有引力定律（F=GMm/r²）  {t_adv, 學測}
+- [sci.t_adv.phys-circ.g-variation] 重力場與重力加速度隨高度變化  {t_adv, 學測}
+- [sci.t_adv.phys-circ.satellite] 人造衛星環繞速度與脫離速度  {t_adv, 學測}
+- [sci.t_sub.phys-circ.shm-link] 等速圓周運動與簡諧運動的關係  {t_sub, 分科-物理}
+- [sci.t_sub.phys-circ.kepler3-derive] 克卜勒第三定律（圓軌道）的推導  {t_sub, 分科-物理}
+- [sci.t_sub.phys-circ.orbit-energy] 以能量觀點分析衛星軌道（束縛能/脫離速度）  {t_sub, 分科-物理}
+- [sci.t_sub.phys-circ.grav-pe] 重力位能（−GMm/r）與重力位  {t_sub, 分科-物理}
+
+### 物理-06 流體與壓力浮力 `phys-fluid`
+- [sci.t_base.phys-fluid.float-sink] 物體在水中的浮沉現象  {t_base, 無}
+- [sci.t_mid.phys-fluid.pressure-def] 壓力的定義（P=F/A）與單位（帕）  {t_mid, 會考}
+- [sci.t_mid.phys-fluid.solid-pressure] 固體壓力與受力面積的關係  {t_mid, 會考}
+- [sci.t_mid.phys-fluid.liquid-pressure] 液體壓力（P=ρgh）與連通管  {t_mid, 會考}
+- [sci.t_mid.phys-fluid.atm-pressure] 大氣壓力與托里切利水銀柱實驗  {t_mid, 會考}
+- [sci.t_mid.phys-fluid.buoyancy-idea] 浮力的概念與測量  {t_mid, 會考}
+- [sci.t_mid.phys-fluid.archimedes] 阿基米德原理（浮力=排開流體重）  {t_mid, 會考}
+- [sci.t_mid.phys-fluid.float-condition] 浮沉條件（密度比較）  {t_mid, 會考}
+- [sci.t_mid.phys-fluid.pascal] 帕斯卡原理與液壓機  {t_mid, 會考}
+- [sci.t_adv.phys-fluid.buoyancy-calc] 浮力與視重的定量計算  {t_adv, 學測}
+- [sci.t_adv.phys-fluid.float-quant] 浮體/沉體/懸浮的定量分析  {t_adv, 學測}
+- [sci.t_sub.phys-fluid.continuity] 流體連續方程式（A₁v₁=A₂v₂）  {t_sub, 分科-物理 (待核)}
+- [sci.t_sub.phys-fluid.bernoulli] 白努利原理與應用  {t_sub, 分科-物理 (待核)}
+
+### 物理-07 熱學 `phys-heat`
+- [sci.t_base.phys-heat.thermometer] 溫度與溫度計的使用  {t_base, 無}
+- [sci.t_base.phys-heat.conduction-basic] 熱由高溫傳向低溫  {t_base, 無}
+- [sci.t_mid.phys-heat.temp-vs-heat] 溫度與熱量的區別  {t_mid, 會考}
+- [sci.t_mid.phys-heat.celsius] 攝氏溫標與溫度計原理  {t_mid, 會考}
+- [sci.t_mid.phys-heat.heat-unit] 熱量單位（卡/焦耳）與熱功當量  {t_mid, 會考}
+- [sci.t_mid.phys-heat.specific-heat] 比熱與熱容量（Q=mcΔT）  {t_mid, 會考}
+- [sci.t_mid.phys-heat.thermal-equilibrium] 熱平衡與混合後終溫計算  {t_mid, 會考}
+- [sci.t_mid.phys-heat.heat-transfer] 熱的三種傳播（傳導/對流/輻射）  {t_mid, 會考}
+- [sci.t_mid.phys-heat.expansion] 熱膨脹（固/液/氣）與應用  {t_mid, 會考}
+- [sci.t_mid.phys-heat.latent-heat] 潛熱（熔化熱/汽化熱）與相變化吸放熱  {t_mid, 會考}
+- [sci.t_adv.phys-heat.kelvin] 絕對溫標（克耳文）與絕對零度  {t_adv, 學測}
+- [sci.t_adv.phys-heat.ideal-gas-law] 理想氣體方程式（PV=nRT）  {t_adv, 學測}
+- [sci.t_adv.phys-heat.gas-laws] 波以耳/查理/給呂薩克定律  {t_adv, 學測}
+- [sci.t_adv.phys-heat.kinetic-theory] 氣體分子動力論（壓力與分子運動）  {t_adv, 學測}
+- [sci.t_adv.phys-heat.internal-energy] 內能與溫度的微觀意義  {t_adv, 學測}
+- [sci.t_adv.phys-heat.thermo1] 熱力學第一定律（ΔU=Q−W）  {t_adv, 學測}
+- [sci.t_sub.phys-heat.pv-processes] 等溫/等壓/等容/絕熱過程的 PV 圖與作功  {t_sub, 分科-物理}
+- [sci.t_sub.phys-heat.molar-heat] 氣體莫耳比熱（Cp、Cv）與自由度  {t_sub, 分科-物理}
+- [sci.t_sub.phys-heat.entropy] 熱力學第二定律與熵的概念  {t_sub, 分科-物理 (待核)}
+- [sci.t_sub.phys-heat.carnot] 熱機效率與卡諾循環  {t_sub, 分科-物理 (待核)}
+
+### 物理-08 波動與聲 `phys-wave`
+- [sci.t_base.phys-wave.sound-produce] 聲音由物體振動產生與傳播  {t_base, 無}
+- [sci.t_base.phys-wave.loud-pitch] 聲音的大小與高低  {t_base, 無}
+- [sci.t_mid.phys-wave.wave-type] 波的分類（橫波/縱波）  {t_mid, 會考}
+- [sci.t_mid.phys-wave.wave-quantities] 波長/頻率/週期/振幅與波速（v=fλ）  {t_mid, 會考}
+- [sci.t_mid.phys-wave.medium] 力學波的傳播需要介質  {t_mid, 會考}
+- [sci.t_mid.phys-wave.sound-medium] 聲速與介質/溫度的關係  {t_mid, 會考}
+- [sci.t_mid.phys-wave.sound-three] 聲音三要素（響度/音調/音品）  {t_mid, 會考}
+- [sci.t_mid.phys-wave.echo] 回聲與聲音的反射  {t_mid, 會考}
+- [sci.t_mid.phys-wave.resonance] 共鳴/共振現象  {t_mid, 會考}
+- [sci.t_adv.phys-wave.wave-behavior] 波的反射/折射/繞射/干涉  {t_adv, 學測}
+- [sci.t_adv.phys-wave.standing-wave] 駐波與弦/空氣柱共振（基音/泛音）  {t_adv, 學測}
+- [sci.t_adv.phys-wave.doppler] 都卜勒效應（聲源/觀察者運動）  {t_adv, 學測}
+- [sci.t_adv.phys-wave.shm] 簡諧運動的位移/速度/加速度與相位  {t_adv, 學測}
+- [sci.t_adv.phys-wave.shm-period] 簡諧運動週期（彈簧 2π√(m/k)、單擺 2π√(L/g)）  {t_adv, 學測}
+- [sci.t_sub.phys-wave.shm-energy] 簡諧運動的能量（動能/位能轉換）  {t_sub, 分科-物理}
+- [sci.t_sub.phys-wave.superposition] 波的疊加原理與相位差  {t_sub, 分科-物理}
+- [sci.t_sub.phys-wave.standing-quant] 駐波節點/腹點與頻率的定量關係  {t_sub, 分科-物理}
+- [sci.t_sub.phys-wave.doppler-calc] 都卜勒效應頻率公式計算  {t_sub, 分科-物理}
+
+### 物理-09 光學（幾何＋物理） `phys-optics`
+- [sci.t_base.phys-optics.straight-shadow] 光的直進與影子  {t_base, 無}
+- [sci.t_base.phys-optics.reflection-mirror] 光的反射與鏡子成像  {t_base, 無}
+- [sci.t_base.phys-optics.color-basic] 光的色散與顏色（彩虹/三稜鏡）  {t_base, 無}
+- [sci.t_mid.phys-optics.pinhole] 光的直進與針孔成像  {t_mid, 會考}
+- [sci.t_mid.phys-optics.reflection-law] 反射定律（入射角=反射角）  {t_mid, 會考}
+- [sci.t_mid.phys-optics.plane-mirror] 平面鏡成像（虛像/左右相反/等距）  {t_mid, 會考}
+- [sci.t_mid.phys-optics.refraction-idea] 光的折射現象（初步）  {t_mid, 會考}
+- [sci.t_mid.phys-optics.lens-action] 凸/凹透鏡對光的作用與焦點  {t_mid, 會考}
+- [sci.t_mid.phys-optics.convex-image] 凸透鏡成像規律（物距與像的關係）  {t_mid, 會考}
+- [sci.t_mid.phys-optics.curved-mirror] 凹/凸面鏡成像初步  {t_mid, 會考}
+- [sci.t_mid.phys-optics.dispersion-color] 光的色散、可見光光譜與物體顏色  {t_mid, 會考}
+- [sci.t_adv.phys-optics.snell] 司乃耳折射定律（n₁sinθ₁=n₂sinθ₂）  {t_adv, 學測}
+- [sci.t_adv.phys-optics.refractive-index] 絕對/相對折射率與光速變化  {t_adv, 學測}
+- [sci.t_adv.phys-optics.total-reflection] 全反射與臨界角、光纖原理  {t_adv, 學測}
+- [sci.t_adv.phys-optics.imaging-eq] 透鏡/面鏡成像公式（1/f=1/p+1/q）與放大率  {t_adv, 學測}
+- [sci.t_adv.phys-optics.optical-instr] 放大鏡/顯微鏡/望遠鏡的成像原理  {t_adv, 學測}
+- [sci.t_sub.phys-optics.double-slit] 楊氏雙狹縫干涉（亮暗紋條件與間距）  {t_sub, 分科-物理}
+- [sci.t_sub.phys-optics.diffraction] 單狹縫繞射與繞射光柵  {t_sub, 分科-物理}
+- [sci.t_sub.phys-optics.thin-film] 薄膜干涉  {t_sub, 分科-物理}
+- [sci.t_sub.phys-optics.polarization] 光的偏振與偏振片  {t_sub, 分科-物理}
+- [sci.t_sub.phys-optics.em-spectrum] 電磁波譜與光的電磁波本質  {t_sub, 分科-物理}
+
+### 物理-10 靜電與電路 `phys-estatic`
+- [sci.t_base.phys-estatic.circuit-basic] 電池、燈泡、導線組成簡單電路  {t_base, 無}
+- [sci.t_base.phys-estatic.conductor-insulator] 導體與絕緣體的區別  {t_base, 無}
+- [sci.t_base.phys-estatic.static-basic] 摩擦起電與靜電現象  {t_base, 無}
+- [sci.t_mid.phys-estatic.charge] 電荷（正/負）與同性相斥異性相吸  {t_mid, 會考}
+- [sci.t_mid.phys-estatic.charging] 摩擦/感應/接觸起電  {t_mid, 會考}
+- [sci.t_mid.phys-estatic.electroscope] 驗電器的原理  {t_mid, 會考}
+- [sci.t_mid.phys-estatic.current-def] 電流的定義與方向（I=Q/t）  {t_mid, 會考}
+- [sci.t_mid.phys-estatic.voltage] 電壓（電位差）與電池  {t_mid, 會考}
+- [sci.t_mid.phys-estatic.resistance] 電阻的概念與影響因素（材質/長度/截面積/溫度）  {t_mid, 會考}
+- [sci.t_mid.phys-estatic.ohm-law] 歐姆定律（V=IR）  {t_mid, 會考}
+- [sci.t_mid.phys-estatic.series] 串聯電路（電流相同、分壓）  {t_mid, 會考}
+- [sci.t_mid.phys-estatic.parallel] 並聯電路（電壓相同、分流）  {t_mid, 會考}
+- [sci.t_mid.phys-estatic.electric-power] 電功率（P=IV）與電能（度/千瓦小時）  {t_mid, 會考}
+- [sci.t_mid.phys-estatic.home-safety] 家庭用電安全（保險絲/斷路器/接地）  {t_mid, 會考}
+- [sci.t_adv.phys-estatic.coulomb] 庫侖定律（F=kq₁q₂/r²）  {t_adv, 學測}
+- [sci.t_adv.phys-estatic.e-field] 電場與電場線、點電荷電場  {t_adv, 學測}
+- [sci.t_adv.phys-estatic.potential] 電位與電位差、等電位面  {t_adv, 學測}
+- [sci.t_adv.phys-estatic.capacitor] 電容器與電容（C=Q/V）、平行板電容  {t_adv, 學測}
+- [sci.t_adv.phys-estatic.equivalent-r] 電阻串並聯等效電阻計算  {t_adv, 學測}
+- [sci.t_adv.phys-estatic.kirchhoff] 克希荷夫定律（節點電流/迴路電壓）  {t_adv, 學測}
+- [sci.t_adv.phys-estatic.emf-internal-r] 電動勢與內電阻  {t_adv, 學測}
+- [sci.t_sub.phys-estatic.cap-energy] 電容器儲存能量（½CV²）與充放電  {t_sub, 分科-物理}
+- [sci.t_sub.phys-estatic.charge-in-field] 電場中帶電粒子的運動  {t_sub, 分科-物理}
+- [sci.t_sub.phys-estatic.wheatstone] 惠斯登電橋  {t_sub, 分科-物理}
+- [sci.t_sub.phys-estatic.rc-circuit] RC 電路充放電  {t_sub, 分科-物理 (待核)}
+
+### 物理-11 電磁與感應 `phys-em`
+- [sci.t_base.phys-em.magnet-basic] 磁鐵的磁極、吸引與指南針  {t_base, 無}
+- [sci.t_mid.phys-em.mag-field] 磁極（N/S）、磁力、磁場與磁力線  {t_mid, 會考}
+- [sci.t_mid.phys-em.geomagnetism] 地磁與指南針指向  {t_mid, 會考}
+- [sci.t_mid.phys-em.oersted] 電流的磁效應（安培右手定則）  {t_mid, 會考}
+- [sci.t_mid.phys-em.coil-field] 通電導線/線圈/螺線管的磁場  {t_mid, 會考}
+- [sci.t_mid.phys-em.electromagnet] 電磁鐵與應用（電鈴/繼電器）  {t_mid, 會考}
+- [sci.t_mid.phys-em.motor-basic] 電流在磁場中受力（馬達原理）  {t_mid, 會考}
+- [sci.t_mid.phys-em.induction-basic] 電磁感應與發電機原理初步  {t_mid, 會考}
+- [sci.t_adv.phys-em.field-of-current] 直導線/線圈/螺線管磁場的方向與強度  {t_adv, 學測}
+- [sci.t_adv.phys-em.force-on-wire] 載流導線在磁場受力（F=BIL）與左手定則  {t_adv, 學測}
+- [sci.t_adv.phys-em.lorentz] 運動電荷在磁場受力（勞侖茲力 F=qvB）  {t_adv, 學測}
+- [sci.t_adv.phys-em.faraday-law] 法拉第電磁感應定律（感應電動勢與磁通變化率）  {t_adv, 學測}
+- [sci.t_adv.phys-em.lenz] 冷次定律（感應電流方向）  {t_adv, 學測}
+- [sci.t_adv.phys-em.motor-generator] 直流馬達與交流發電機原理  {t_adv, 學測}
+- [sci.t_adv.phys-em.ac-basic] 交流電的產生與有效值  {t_adv, 學測}
+- [sci.t_sub.phys-em.flux-emf-calc] 磁通量與感應電動勢的定量計算  {t_sub, 分科-物理}
+- [sci.t_sub.phys-em.transformer] 自感/互感與變壓器原理  {t_sub, 分科-物理}
+- [sci.t_sub.phys-em.circular-in-field] 帶電粒子在磁場中的圓周運動（回旋半徑）  {t_sub, 分科-物理}
+- [sci.t_sub.phys-em.mass-spec] 質譜儀/迴旋加速器原理  {t_sub, 分科-物理}
+- [sci.t_sub.phys-em.em-wave-gen] LC 振盪與電磁波的產生  {t_sub, 分科-物理 (待核)}
+
+### 物理-12 近代物理（量子/原子/核/相對論） `phys-modern`
+- [sci.t_adv.phys-modern.photoelectric] 光電效應與光子能量（E=hf）  {t_adv, 學測}
+- [sci.t_adv.phys-modern.bohr-model] 原子光譜與波耳氫原子能階模型  {t_adv, 學測}
+- [sci.t_adv.phys-modern.matter-wave] 物質波（德布羅意波）概念  {t_adv, 學測}
+- [sci.t_adv.phys-modern.atom-evolution] 原子結構演進（湯姆森/拉塞福/波耳）  {t_adv, 學測}
+- [sci.t_adv.phys-modern.nucleus] 原子核組成、同位素與質能概念  {t_adv, 學測}
+- [sci.t_adv.phys-modern.radioactivity] 放射性（α/β/γ 射線）與半衰期概念  {t_adv, 學測}
+- [sci.t_sub.phys-modern.photoeq] 光電方程式（hf=W+Ek）與遏止電壓  {t_sub, 分科-物理}
+- [sci.t_sub.phys-modern.compton] 康普頓效應  {t_sub, 分科-物理 (待核)}
+- [sci.t_sub.phys-modern.spectral-lines] 能階躍遷與光譜線波長計算  {t_sub, 分科-物理}
+- [sci.t_sub.phys-modern.nuclear-reaction] 核反應（衰變/分裂/融合）與質能互換（E=mc²）  {t_sub, 分科-物理}
+- [sci.t_sub.phys-modern.half-life-calc] 半衰期的定量計算  {t_sub, 分科-物理}
+- [sci.t_sub.phys-modern.uncertainty] 不確定性原理與量子概念初步  {t_sub, 分科-物理 (待核)}
+- [sci.t_sub.phys-modern.relativity] 狹義相對論（時間膨脹/長度收縮/質能等效）初步  {t_sub, 分科-物理}
+
+---
+
+## 化學 CHEMISTRY
+
+### 化學-01 物質分類與分離 `chem-matter`
+- [sci.t_base.chem-matter.three-states] 物質三態與狀態變化（熔化/凝固/蒸發/凝結/昇華）  {t_base, 無}
+- [sci.t_base.chem-matter.properties] 物質性質（軟硬/浮沉/磁性/導電）  {t_base, 無}
+- [sci.t_base.chem-matter.dissolve-mix] 溶解與混合物的概念  {t_base, 無}
+- [sci.t_base.chem-matter.filter-evap] 以過濾、蒸發分離混合物  {t_base, 無}
+- [sci.t_mid.chem-matter.pure-vs-mixture] 純物質與混合物的區別  {t_mid, 會考}
+- [sci.t_mid.chem-matter.classify] 元素、化合物、混合物的分類  {t_mid, 會考}
+- [sci.t_mid.chem-matter.phys-vs-chem-change] 物理變化與化學變化的判別  {t_mid, 會考}
+- [sci.t_mid.chem-matter.phys-vs-chem-prop] 物理性質與化學性質的區別  {t_mid, 會考}
+- [sci.t_mid.chem-matter.homo-hetero] 均勻與非均勻混合物  {t_mid, 會考}
+- [sci.t_mid.chem-matter.density] 密度的定義與測量（d=m/V）  {t_mid, 會考}
+- [sci.t_mid.chem-matter.particle-view] 以粒子觀點解釋三態與狀態變化  {t_mid, 會考}
+- [sci.t_mid.chem-matter.separation] 混合物分離（過濾/蒸發結晶/蒸餾/萃取/層析）  {t_mid, 會考}
+- [sci.t_adv.chem-matter.fractional-distill] 分餾原理（利用沸點差）  {t_adv, 學測}
+- [sci.t_adv.chem-matter.recrystallize] 再結晶純化與溶解度關係  {t_adv, 學測}
+- [sci.t_adv.chem-matter.chromatography] 層析分離原理（極性/吸附差異）  {t_adv, 學測}
+- [sci.t_sub.chem-matter.purity-test] 以熔點/沸點檢定純度並選擇分離技術  {t_sub, 分科-化學}
+
+### 化學-02 原子結構與週期性 `chem-atom`
+- [sci.t_mid.chem-atom.dalton] 原子的概念與道耳頓原子說  {t_mid, 會考}
+- [sci.t_mid.chem-atom.subatomic] 原子結構（質子/中子/電子）與電性  {t_mid, 會考}
+- [sci.t_mid.chem-atom.atomic-number] 原子序與質量數、同位素  {t_mid, 會考}
+- [sci.t_mid.chem-atom.symbols] 元素符號與常見元素  {t_mid, 會考}
+- [sci.t_mid.chem-atom.periodic-basic] 週期表排列（原子序/週期/族）初步  {t_mid, 會考}
+- [sci.t_mid.chem-atom.atom-molecule] 原子與分子的區別、分子式  {t_mid, 會考}
+- [sci.t_adv.chem-atom.model-evolution] 原子模型演進（湯姆森/拉塞福）  {t_adv, 學測}
+- [sci.t_adv.chem-atom.electron-config] 電子組態與電子殼層（主/副殼層、軌域）  {t_adv, 學測}
+- [sci.t_adv.chem-atom.valence-octet] 價電子與八隅體規則  {t_adv, 學測}
+- [sci.t_adv.chem-atom.periodic-structure] 週期表結構（週期/族/s·p·d·f 區塊）  {t_adv, 學測}
+- [sci.t_adv.chem-atom.radius-trend] 原子/離子半徑的週期趨勢  {t_adv, 學測}
+- [sci.t_adv.chem-atom.ionization-trend] 游離能的週期趨勢  {t_adv, 學測}
+- [sci.t_adv.chem-atom.electronegativity-trend] 電子親和力與電負度的週期趨勢  {t_adv, 學測}
+- [sci.t_adv.chem-atom.metal-nonmetal] 金屬/非金屬/類金屬的分區與性質  {t_adv, 學測}
+- [sci.t_sub.chem-atom.quantum-numbers] 量子數（n, l, m, s）與軌域  {t_sub, 分科-化學}
+- [sci.t_sub.chem-atom.aufbau-rules] 構築原理、包立不相容與洪德定則  {t_sub, 分科-化學}
+- [sci.t_sub.chem-atom.successive-ie] 連續游離能與價電子數判定  {t_sub, 分科-化學}
+- [sci.t_sub.chem-atom.isoelectronic] 等電子序列的半徑比較  {t_sub, 分科-化學}
+
+### 化學-03 化學鍵與分子 `chem-bond`
+- [sci.t_mid.chem-bond.ion-form] 離子的形成（陽離子/陰離子）  {t_mid, 會考}
+- [sci.t_mid.chem-bond.ionic-basic] 離子鍵與離子化合物初步  {t_mid, 會考}
+- [sci.t_mid.chem-bond.covalent-basic] 共價鍵與分子化合物初步  {t_mid, 會考}
+- [sci.t_adv.chem-bond.ionic-property] 離子鍵的形成與離子化合物性質（熔點/導電）  {t_adv, 學測}
+- [sci.t_adv.chem-bond.covalent-lewis] 共價鍵（單/雙/參鍵）與路易斯結構  {t_adv, 學測}
+- [sci.t_adv.chem-bond.coordinate] 配位共價鍵  {t_adv, 學測}
+- [sci.t_adv.chem-bond.metallic] 金屬鍵與金屬性質（導電/延展）  {t_adv, 學測}
+- [sci.t_adv.chem-bond.bond-polarity] 電負度差與鍵的極性（極性/非極性共價）  {t_adv, 學測}
+- [sci.t_adv.chem-bond.molecule-polarity] 分子極性的判斷（對稱性/偶極矩）  {t_adv, 學測}
+- [sci.t_adv.chem-bond.vsepr] VSEPR 價殼層電子對互斥與分子形狀  {t_adv, 學測}
+- [sci.t_adv.chem-bond.intermolecular] 分子間作用力（凡得瓦力/偶極/氫鍵）與沸點  {t_adv, 學測}
+- [sci.t_sub.chem-bond.hybridization] 混成軌域（sp/sp²/sp³）與鍵角  {t_sub, 分科-化學}
+- [sci.t_sub.chem-bond.sigma-pi] σ 鍵與 π 鍵、鍵能與鍵長  {t_sub, 分科-化學}
+- [sci.t_sub.chem-bond.resonance] 共振結構與形式電荷  {t_sub, 分科-化學}
+- [sci.t_sub.chem-bond.mo-theory] 分子軌域理論初步  {t_sub, 分科-化學 (待核)}
+- [sci.t_sub.chem-bond.crystal-types] 晶體分類（離子/共價網狀/分子/金屬）與性質  {t_sub, 分科-化學}
+
+### 化學-04 化學計量 `chem-stoich`
+- [sci.t_mid.chem-stoich.formula] 化學式的意義與讀寫  {t_mid, 會考}
+- [sci.t_mid.chem-stoich.balance] 化學反應式的平衡（係數配平）  {t_mid, 會考}
+- [sci.t_mid.chem-stoich.mass-conserve] 質量守恆定律  {t_mid, 會考}
+- [sci.t_mid.chem-stoich.atomic-mass] 原子量與分子量/式量  {t_mid, 會考}
+- [sci.t_mid.chem-stoich.definite-multiple] 定比定律與倍比定律  {t_mid, 會考}
+- [sci.t_adv.chem-stoich.mole] 莫耳概念與亞佛加厥數  {t_adv, 學測}
+- [sci.t_adv.chem-stoich.mole-mass-num] 莫耳/質量/粒子數的換算  {t_adv, 學測}
+- [sci.t_adv.chem-stoich.mole-ratio] 反應式的計量關係（莫耳比）  {t_adv, 學測}
+- [sci.t_adv.chem-stoich.limiting] 限量試劑與過量試劑的判定  {t_adv, 學測}
+- [sci.t_adv.chem-stoich.yield] 理論產量、實際產量與產率  {t_adv, 學測}
+- [sci.t_adv.chem-stoich.empirical] 實驗式與分子式的求法  {t_adv, 學測}
+- [sci.t_adv.chem-stoich.combustion-analysis] 以燃燒分析求化學式  {t_adv, 學測}
+- [sci.t_sub.chem-stoich.multistep] 多步驟（連續反應）的計量  {t_sub, 分科-化學}
+- [sci.t_sub.chem-stoich.mixture-analysis] 混合物計量與含量分析  {t_sub, 分科-化學}
+- [sci.t_sub.chem-stoich.titration-gas] 計量在滴定/氣體體積的綜合應用  {t_sub, 分科-化學}
+
+### 化學-05 氣體 `chem-gas`
+- [sci.t_mid.chem-gas.gas-properties] 氣體的性質與粒子觀點  {t_mid, 會考}
+- [sci.t_mid.chem-gas.prepare-test] 常見氣體的製備與檢驗（氧/氫/二氧化碳）  {t_mid, 會考}
+- [sci.t_adv.chem-gas.boyle] 波以耳定律（PV=定值）  {t_adv, 學測}
+- [sci.t_adv.chem-gas.charles] 查理/給呂薩克定律（V-T、P-T）  {t_adv, 學測}
+- [sci.t_adv.chem-gas.combined] 聯合氣體定律  {t_adv, 學測}
+- [sci.t_adv.chem-gas.avogadro] 亞佛加厥定律（同溫同壓同體積同分子數）  {t_adv, 學測}
+- [sci.t_adv.chem-gas.ideal-gas] 理想氣體方程式（PV=nRT）應用  {t_adv, 學測}
+- [sci.t_adv.chem-gas.molar-volume] 氣體莫耳體積（STP 22.4 L）  {t_adv, 學測}
+- [sci.t_adv.chem-gas.dalton-partial] 道耳頓分壓定律與莫耳分率  {t_adv, 學測}
+- [sci.t_sub.chem-gas.kinetic-rms] 氣體分子動力論與方均根速率  {t_sub, 分科-化學}
+- [sci.t_sub.chem-gas.graham] 格銳目擴散定律  {t_sub, 分科-化學}
+- [sci.t_sub.chem-gas.real-gas] 真實氣體偏差與凡得瓦方程式  {t_sub, 分科-化學 (待核)}
+
+### 化學-06 溶液與濃度 `chem-soln`
+- [sci.t_base.chem-soln.solution-idea] 溶解與溶液的概念  {t_base, 無}
+- [sci.t_mid.chem-soln.solute-solvent] 溶質/溶劑/溶液的辨識  {t_mid, 會考}
+- [sci.t_mid.chem-soln.solubility-curve] 溶解度與溶解度曲線判讀  {t_mid, 會考}
+- [sci.t_mid.chem-soln.saturation] 飽和/未飽和/過飽和溶液  {t_mid, 會考}
+- [sci.t_mid.chem-soln.solubility-factor] 影響溶解度的因素（溫度/壓力）  {t_mid, 會考}
+- [sci.t_mid.chem-soln.weight-percent] 重量百分濃度計算  {t_mid, 會考}
+- [sci.t_mid.chem-soln.ppm] 濃度 ppm 的初步概念  {t_mid, 會考}
+- [sci.t_mid.chem-soln.electrolyte] 電解質與非電解質、溶液導電  {t_mid, 會考}
+- [sci.t_adv.chem-soln.molarity] 體積莫耳濃度（M）計算  {t_adv, 學測}
+- [sci.t_adv.chem-soln.molality] 重量莫耳濃度（m）  {t_adv, 學測}
+- [sci.t_adv.chem-soln.dilution] 溶液的稀釋（M₁V₁=M₂V₂）  {t_adv, 學測}
+- [sci.t_adv.chem-soln.mole-fraction] 莫耳分率  {t_adv, 學測}
+- [sci.t_adv.chem-soln.vapor-lower] 依數性質：蒸氣壓下降（拉午耳定律）  {t_adv, 學測}
+- [sci.t_adv.chem-soln.bp-fp] 依數性質：沸點上升與凝固點下降  {t_adv, 學測}
+- [sci.t_adv.chem-soln.osmotic] 依數性質：滲透壓  {t_adv, 學測}
+- [sci.t_sub.chem-soln.colligative-calc] 依數性質定量計算與凡特何夫因子  {t_sub, 分科-化學}
+- [sci.t_sub.chem-soln.ksp-common-ion] 溶解度積與同離子效應  {t_sub, 分科-化學}
+
+### 化學-07 反應速率 `chem-rate`
+- [sci.t_mid.chem-rate.rate-idea] 化學反應速率（快慢）的概念  {t_mid, 會考}
+- [sci.t_mid.chem-rate.factors] 影響反應速率的因素（濃度/溫度/表面積/催化劑）  {t_mid, 會考}
+- [sci.t_adv.chem-rate.rate-express] 反應速率的定義與表示（濃度變化率）  {t_adv, 學測}
+- [sci.t_adv.chem-rate.collision] 碰撞學說與有效碰撞  {t_adv, 學測}
+- [sci.t_adv.chem-rate.activation-energy] 活化能與反應位能圖  {t_adv, 學測}
+- [sci.t_adv.chem-rate.catalyst] 催化劑對活化能的影響  {t_adv, 學測}
+- [sci.t_adv.chem-rate.temp-effect] 溫度對速率的影響（定性）  {t_adv, 學測}
+- [sci.t_sub.chem-rate.rate-law] 速率定律與反應級數（由數據求）  {t_sub, 分科-化學}
+- [sci.t_sub.chem-rate.arrhenius] 速率常數與溫度（阿瑞尼士方程式）  {t_sub, 分科-化學}
+- [sci.t_sub.chem-rate.mechanism] 反應機構與速率決定步驟  {t_sub, 分科-化學}
+- [sci.t_sub.chem-rate.half-life] 一級反應的半衰期  {t_sub, 分科-化學}
+
+### 化學-08 化學平衡 `chem-eq`
+- [sci.t_adv.chem-eq.reversible] 可逆反應與動態平衡的概念  {t_adv, 學測}
+- [sci.t_adv.chem-eq.kc-meaning] 平衡常數 Kc 的意義與表示  {t_adv, 學測}
+- [sci.t_adv.chem-eq.kc-calc] 平衡常數的計算  {t_adv, 學測}
+- [sci.t_adv.chem-eq.le-chatelier] 勒沙特列原理（濃度/壓力/溫度的影響）  {t_adv, 學測}
+- [sci.t_adv.chem-eq.catalyst-noeffect] 催化劑不改變平衡位置  {t_adv, 學測}
+- [sci.t_sub.chem-eq.kp-kc] Kp 與 Kc 的關係  {t_sub, 分科-化學}
+- [sci.t_sub.chem-eq.reaction-quotient] 反應商 Q 與平衡方向判定  {t_sub, 分科-化學}
+- [sci.t_sub.chem-eq.ice-table] 以 ICE 表格求平衡濃度  {t_sub, 分科-化學}
+- [sci.t_sub.chem-eq.ksp] 溶解度積 Ksp 與沉澱生成判定  {t_sub, 分科-化學}
+- [sci.t_sub.chem-eq.common-ion] 同離子效應與分段沉澱  {t_sub, 分科-化學}
+
+### 化學-09 酸鹼 `chem-acidbase`
+- [sci.t_mid.chem-acidbase.properties] 酸與鹼的通性（味道/指示劑/腐蝕）  {t_mid, 會考}
+- [sci.t_mid.chem-acidbase.common] 常見酸鹼與日常應用  {t_mid, 會考}
+- [sci.t_mid.chem-acidbase.indicator-ph] 指示劑/廣用試紙與 pH 值初步  {t_mid, 會考}
+- [sci.t_mid.chem-acidbase.neutralization] 酸鹼中和反應與鹽的生成  {t_mid, 會考}
+- [sci.t_mid.chem-acidbase.salts] 鹽類的性質與應用  {t_mid, 會考}
+- [sci.t_adv.chem-acidbase.arrhenius] 阿瑞尼士酸鹼定義  {t_adv, 學測}
+- [sci.t_adv.chem-acidbase.bronsted] 布忍司特-洛瑞定義與共軛酸鹼對  {t_adv, 學測}
+- [sci.t_adv.chem-acidbase.kw] 水的自解離與 Kw  {t_adv, 學測}
+- [sci.t_adv.chem-acidbase.ph-poh] pH 與 pOH 的定義與計算  {t_adv, 學測}
+- [sci.t_adv.chem-acidbase.strong-ph] 強酸強鹼的 pH 計算  {t_adv, 學測}
+- [sci.t_adv.chem-acidbase.weak-ka] 弱酸弱鹼的解離與 Ka/Kb  {t_adv, 學測}
+- [sci.t_adv.chem-acidbase.equivalent] 酸鹼中和當量與濃度計算  {t_adv, 學測}
+- [sci.t_adv.chem-acidbase.titration] 酸鹼滴定與當量點  {t_adv, 學測}
+- [sci.t_sub.chem-acidbase.titration-curve] 滴定曲線判讀（強/弱酸鹼組合）  {t_sub, 分科-化學}
+- [sci.t_sub.chem-acidbase.indicator-choice] 指示劑的選擇（變色範圍 vs 當量點）  {t_sub, 分科-化學}
+- [sci.t_sub.chem-acidbase.buffer-principle] 緩衝溶液的組成與原理  {t_sub, 分科-化學}
+- [sci.t_sub.chem-acidbase.buffer-calc] 緩衝溶液 pH 計算（韓德森-哈塞爾巴赫）  {t_sub, 分科-化學}
+- [sci.t_sub.chem-acidbase.salt-hydrolysis] 鹽類水解與溶液酸鹼性判定  {t_sub, 分科-化學}
+- [sci.t_sub.chem-acidbase.lewis] 路易斯酸鹼定義  {t_sub, 分科-化學 (待核)}
+- [sci.t_sub.chem-acidbase.polyprotic] 多質子酸的分段解離  {t_sub, 分科-化學}
+
+### 化學-10 氧化還原與電化學 `chem-redox`
+- [sci.t_mid.chem-redox.oxid-reduc-idea] 氧化與還原的概念（得氧失氧/燃燒）  {t_mid, 會考}
+- [sci.t_mid.chem-redox.activity-basic] 金屬活性大小（活性序）初步  {t_mid, 會考}
+- [sci.t_mid.chem-redox.common] 常見氧化還原現象（生鏽/燃燒/呼吸）  {t_mid, 會考}
+- [sci.t_adv.chem-redox.oxidation-number] 氧化數的定義與計算規則  {t_adv, 學測}
+- [sci.t_adv.chem-redox.identify] 以氧化數變化判別氧化還原  {t_adv, 學測}
+- [sci.t_adv.chem-redox.agents] 氧化劑與還原劑的判定  {t_adv, 學測}
+- [sci.t_adv.chem-redox.balance] 氧化還原反應式的平衡（氧化數法/半反應法）  {t_adv, 學測}
+- [sci.t_adv.chem-redox.activity-series] 金屬活性序與置換反應  {t_adv, 學測}
+- [sci.t_adv.chem-redox.galvanic] 原電池（伏打電池）的構造與原理  {t_adv, 學測}
+- [sci.t_adv.chem-redox.electrolysis] 電解與電鍍原理  {t_adv, 學測}
+- [sci.t_sub.chem-redox.electrode-potential] 標準電極電位與電池電動勢計算  {t_sub, 分科-化學}
+- [sci.t_sub.chem-redox.spontaneity] 以 E° 與 ΔG 判定反應自發性  {t_sub, 分科-化學}
+- [sci.t_sub.chem-redox.nernst] 能斯特方程式  {t_sub, 分科-化學 (待核)}
+- [sci.t_sub.chem-redox.faraday-electrolysis] 法拉第電解定律（電量與析出量）  {t_sub, 分科-化學}
+- [sci.t_sub.chem-redox.batteries] 常見電池（乾電池/鉛蓄電池/燃料電池）  {t_sub, 分科-化學}
+- [sci.t_sub.chem-redox.corrosion] 金屬腐蝕與防蝕（犧牲陽極/鍍層）  {t_sub, 分科-化學}
+
+### 化學-11 熱化學 `chem-thermo`
+- [sci.t_mid.chem-thermo.endo-exo] 吸熱與放熱反應的判別  {t_mid, 會考}
+- [sci.t_mid.chem-thermo.energy-change] 反應伴隨的能量變化（定性）  {t_mid, 會考}
+- [sci.t_adv.chem-thermo.enthalpy] 反應熱（焓變 ΔH）的意義與正負  {t_adv, 學測}
+- [sci.t_adv.chem-thermo.energy-diagram] 反應位能圖與活化能  {t_adv, 學測}
+- [sci.t_adv.chem-thermo.heat-types] 生成熱、燃燒熱與中和熱  {t_adv, 學測}
+- [sci.t_adv.chem-thermo.hess] 赫斯定律與反應熱計算  {t_adv, 學測}
+- [sci.t_adv.chem-thermo.bond-energy] 以鍵能估算反應熱  {t_adv, 學測}
+- [sci.t_sub.chem-thermo.standard-enthalpy] 標準生成焓與反應焓計算  {t_sub, 分科-化學}
+- [sci.t_sub.chem-thermo.entropy] 熵（ΔS）與亂度的概念  {t_sub, 分科-化學}
+- [sci.t_sub.chem-thermo.gibbs] 自由能（ΔG=ΔH−TΔS）與反應自發性  {t_sub, 分科-化學}
+- [sci.t_sub.chem-thermo.temp-spontaneity] 溫度對反應自發性的影響  {t_sub, 分科-化學}
+
+### 化學-12 有機化學 `chem-organic`
+- [sci.t_mid.chem-organic.carbon-idea] 有機化合物的概念與碳的特性  {t_mid, 會考}
+- [sci.t_mid.chem-organic.common] 常見有機物（甲烷/乙醇/醋酸）與生活應用  {t_mid, 會考}
+- [sci.t_adv.chem-organic.carbon-bonding] 碳的鍵結特性與有機物多樣性  {t_adv, 學測}
+- [sci.t_adv.chem-organic.hydrocarbons] 烷/烯/炔（飽和/不飽和烴）與通式  {t_adv, 學測}
+- [sci.t_adv.chem-organic.isomer-idea] 同分異構物的概念  {t_adv, 學測}
+- [sci.t_adv.chem-organic.functional-groups] 官能基的辨識（羥基/羰基/羧基/胺基）  {t_adv, 學測}
+- [sci.t_adv.chem-organic.oxygen-families] 醇/醛/酮/羧酸/酯的分類與性質  {t_adv, 學測}
+- [sci.t_adv.chem-organic.esterification] 酯化反應  {t_adv, 學測}
+- [sci.t_adv.chem-organic.polymers] 聚合物（加成/縮合聚合）與塑膠  {t_adv, 學測}
+- [sci.t_adv.chem-organic.biomolecules] 生物分子初步（醣類/蛋白質/脂質）  {t_adv, 學測}
+- [sci.t_sub.chem-organic.iupac] 有機物命名（IUPAC）初步  {t_sub, 分科-化學}
+- [sci.t_sub.chem-organic.stereoisomer] 結構異構與立體異構（順反/鏡像）  {t_sub, 分科-化學}
+- [sci.t_sub.chem-organic.reaction-types] 取代/加成/消去反應類型  {t_sub, 分科-化學}
+- [sci.t_sub.chem-organic.aromatic] 芳香烴（苯）與其結構  {t_sub, 分科-化學}
+- [sci.t_sub.chem-organic.mechanism] 有機反應機構初步  {t_sub, 分科-化學 (待核)}
+- [sci.t_sub.chem-organic.saponification] 皂化反應與界面活性劑  {t_sub, 分科-化學}
+
+### 化學-13 應用/永續化學 `chem-applied`
+- [sci.t_base.chem-applied.household-acidbase] 生活中的酸鹼物質（清潔劑/食物）  {t_base, 無}
+- [sci.t_mid.chem-applied.pollution] 空氣汙染與水汙染（成因/防治）  {t_mid, 會考}
+- [sci.t_mid.chem-applied.materials] 常見材料（金屬/塑膠/陶瓷）與回收  {t_mid, 會考}
+- [sci.t_mid.chem-applied.fuels] 燃料與能源（化石燃料/燃燒產物）  {t_mid, 會考}
+- [sci.t_adv.chem-applied.greenhouse] 溫室效應與碳排放的化學  {t_adv, 學測}
+- [sci.t_adv.chem-applied.acid-rain] 酸雨的成因與影響  {t_adv, 學測}
+- [sci.t_adv.chem-applied.green-chemistry] 綠色化學與永續發展概念  {t_adv, 學測}
+- [sci.t_adv.chem-applied.energy-storage] 電池與能源儲存的化學  {t_adv, 學測}
+- [sci.t_sub.chem-applied.alt-energy] 替代能源與燃料電池的化學  {t_sub, 分科-化學}
+- [sci.t_sub.chem-applied.nanomaterials] 奈米材料與新興材料初步  {t_sub, 分科-化學 (待核)}
+- [sci.t_sub.chem-applied.remediation] 化學在環境治理的應用  {t_sub, 分科-化學}
+
+---
+
+## 探究與實作 `inquiry`（跨物理/化學）
+- [sci.t_base.inquiry.observe-predict] 觀察、提問與預測  {t_base, 無}
+- [sci.t_base.inquiry.fair-test] 操縱變因與控制變因初步（公平測試）  {t_base, 無}
+- [sci.t_base.inquiry.measure-record] 測量、記錄與製表製圖  {t_base, 無}
+- [sci.t_mid.inquiry.variables] 辨識操縱/應變/控制變因  {t_mid, 會考}
+- [sci.t_mid.inquiry.hypothesis] 提出可驗證的假說  {t_mid, 會考}
+- [sci.t_mid.inquiry.experiment-design] 實驗設計與對照組  {t_mid, 會考}
+- [sci.t_mid.inquiry.data-graph] 數據表格化與折線/長條/散布圖繪製  {t_mid, 會考}
+- [sci.t_mid.inquiry.graph-trend] 圖表判讀與趨勢分析  {t_mid, 會考}
+- [sci.t_mid.inquiry.error-repro] 誤差來源與再現性  {t_mid, 會考}
+- [sci.t_mid.inquiry.evidence-conclusion] 由證據推論並形成結論  {t_mid, 會考}
+- [sci.t_mid.inquiry.lab-safety] 實驗室安全與器材操作規範  {t_mid, 會考}
+- [sci.t_adv.inquiry.sigfig-uncertainty] 有效數字與測量不確定度  {t_adv, 學測}
+- [sci.t_adv.inquiry.linear-relation] 由數據建立數學關係（線性迴歸/比例）  {t_adv, 學測}
+- [sci.t_adv.inquiry.rigor] 控制變因的實驗嚴謹性評估  {t_adv, 學測}
+- [sci.t_adv.inquiry.argumentation] 科學論證（主張-證據-推理）  {t_adv, 學測}
+- [sci.t_adv.inquiry.slope-intercept] 作圖求斜率/截距的物理意義  {t_adv, 學測}
+- [sci.t_sub.inquiry.modeling] 建模與數據擬合  {t_sub, 分科-物理}
+- [sci.t_sub.inquiry.systematic-error] 系統誤差的辨識與修正  {t_sub, 分科-化學}
+- [sci.t_sub.inquiry.uncertainty-propagation] 不確定度傳遞與結果可信度評估  {t_sub, 分科-物理}
+- [sci.t_sub.inquiry.sci-writing] 科學寫作與同儕審查  {t_sub, 分科-化學}
+
+---
+
+## 每-strand 計數表
+
+### 物理
+| strand | 條數 |
 |---|---|
-| 數學 | 53 |
-| 國文 | 32 |
-| 英語 | 42 |
-| 自然 | 56 |
-| 社會 | 32 |
-| 寫作測驗 | 8 |
-| **國中小計** | **223** |
+| phys-meas 測量與單位 | 13 |
+| phys-kin 運動學 | 14 |
+| phys-force 力與牛頓運動定律 | 18 |
+| phys-energy 功能量動量 | 22 |
+| phys-circ 圓周與重力/天體 | 13 |
+| phys-fluid 流體與壓力浮力 | 13 |
+| phys-heat 熱學 | 20 |
+| phys-wave 波動與聲 | 18 |
+| phys-optics 光學 | 21 |
+| phys-estatic 靜電與電路 | 25 |
+| phys-em 電磁與感應 | 20 |
+| phys-modern 近代物理 | 13 |
+| **物理小計** | **210** |
 
-### C. 高中
-| 科目 | 知識點數 |
+### 化學
+| strand | 條數 |
 |---|---|
-| 數學（含數A/B/甲/乙） | 61 |
-| 國文（國綜 + 國寫） | 18 |
-| 英文 | 27 |
-| 自然（物/化/生/地科/探究） | 66 |
-| 社會（史/地/公民/題組） | 30 |
-| 混合題型 | 8 |
-| 學習歷程檔案 | 7 |
-| **高中小計** | **217** |
+| chem-matter 物質分類與分離 | 16 |
+| chem-atom 原子結構與週期性 | 18 |
+| chem-bond 化學鍵與分子 | 16 |
+| chem-stoich 化學計量 | 15 |
+| chem-gas 氣體 | 12 |
+| chem-soln 溶液與濃度 | 17 |
+| chem-rate 反應速率 | 11 |
+| chem-eq 化學平衡 | 10 |
+| chem-acidbase 酸鹼 | 20 |
+| chem-redox 氧化還原與電化學 | 16 |
+| chem-thermo 熱化學 | 11 |
+| chem-organic 有機化學 | 16 |
+| chem-applied 應用/永續化學 | 11 |
+| **化學小計** | **189** |
 
-### 補建缺口（D 區）
+### 探究與實作
+| strand | 條數 |
+|---|---|
+| inquiry 探究與實作 | 20 |
+| **探究小計** | **20** |
+
+### 分層（tier）橫向計數
+| tier | 條數 |
+|---|---|
+| t_base 國小 | 28 |
+| t_mid 國中/會考 | 133 |
+| t_adv 高中/學測 | 157 |
+| t_sub 分科 | 101 |
+| **合計** | **419** |
+
+### 全切片總計
 | 區塊 | 條數 |
 |---|---|
-| 高中數學必補 strands | 8（與高中數學部分重疊，顯性追蹤，不重複計入） |
-
-### 全書總計
-| 階段 | 知識點數 |
-|---|---|
-| 國小 | 158 |
-| 國中 | 223 |
-| 高中 | 217 |
-| **總計（A+B+C）** | **598** |
+| 物理 | 210 |
+| 化學 | 189 |
+| 探究與實作 | 20 |
+| **理化總計** | **419** |
 
 ---
 
-## F. 使用與待核提醒
-- 全文零簡體、零 PRC 詞彙；一律「國小／國中／高中」。
-- `(待核)` 標記處（字彙確切字數、箱形圖/圓面積/複數矩陣之確切年段與數A/數甲歸屬、數乙科目設置、英聽採計、中國史課綱主題呈現方式等）建置前請對照教育部《十二年國教課程綱要》各領域綱要與最新大考中心考試說明核實。
-- 計數為條目基準，供 spec 覆蓋追蹤；實作時每一條可再向下展開為多個題型/練習單位。
-- 本清單須經 content_audit 與各科領域專家核對後才算定案。
+## 待核清單（建置前對照教育部《十二年國教課綱自然領域》與大考中心考試說明）
+> 全部 `(待核)` 標記條目見內文；以下三項最需人工覆核年段/分流歸屬，優先處理：
+
+1. **白努利原理/流體連續方程式**（`sci.t_sub.phys-fluid.bernoulli`、`sci.t_sub.phys-fluid.continuity`）— 108 課綱物理選修對流體力學著墨不深，是否列入分科-物理考試範圍、以及是否下放至學測需核實。
+2. **熱力學第二定律與熵、卡諾循環**（`sci.t_sub.phys-heat.entropy`、`sci.t_sub.phys-heat.carnot`）— 熵/卡諾循環在高中物理的深度與是否出現於分科測驗，各版本差異大，需對照考試說明確認收納深度。
+3. **路易斯酸鹼定義**（`sci.t_sub.chem-acidbase.lewis`）— 路易斯酸鹼於 108 課綱化學究竟屬必修/選修或僅作延伸閱讀，年段歸屬不確定，需核實是否實際入題。
+
+
+# ===== 領域：sci-bio（359 條，來源 sci-bio.md）=====
+
+# 自然科 — 生物 知識點清冊（基礎→中階→高階→深階）
+
+> 深度分層：t_base＝國小自然（生物相關）／t_mid＝國中生物·會考／t_adv＝高一基礎生物·學測／t_sub＝選修生物·分科測驗。
+> 每一條為一個具體、可出題、可評量的微技能。tier 僅供內部分層使用；exam 標示最主要落點。
+> `(待核)` 標記年段歸屬或分科深度仍需與現行教科書版本/課綱逐條對照者。
+
+---
+
+## 1. 生命的特徵與組成層次 {strand: life-levels}
+
+- [sci.t_base.bio-life-levels.living-vs-nonliving] 分辨生物與非生物（會長大、需營養、能繁殖、會對刺激反應）  {t_base, 無}
+- [sci.t_base.bio-life-levels.life-needs] 說出生物生存的基本需求（空氣、水、養分、陽光、適當溫度與空間）  {t_base, 無}
+- [sci.t_base.bio-life-levels.life-events] 舉例生物的共同生命現象：生長、運動、繁殖、死亡  {t_base, 無}
+- [sci.t_mid.bio-life-levels.characteristics-list] 列舉生物的共同特徵：生長發育、新陳代謝、感應、生殖、遺傳、演化、恆定  {t_mid, 會考}
+- [sci.t_mid.bio-life-levels.metabolism-def] 定義新陳代謝為同化（合成）與異化（分解）作用的總和  {t_mid, 會考}
+- [sci.t_mid.bio-life-levels.homeostasis-intro] 說明恆定性：生物維持體內環境穩定（體溫、血糖、水分）  {t_mid, 會考}
+- [sci.t_mid.bio-life-levels.levels-order] 由小到大排列組成層次：細胞→組織→器官→器官系統→個體  {t_mid, 會考}
+- [sci.t_mid.bio-life-levels.ecol-levels-order] 由小到大排列生態層次：個體→族群→群集→生態系→生物圈  {t_mid, 會考}
+- [sci.t_mid.bio-life-levels.unicell-vs-multicell] 區分單細胞生物（草履蟲、變形蟲）與多細胞生物的分工差異  {t_mid, 會考}
+- [sci.t_mid.bio-life-levels.tissue-types-animal] 舉例動物四大組織：上皮、結締、肌肉、神經組織及其功能  {t_mid, 會考}
+- [sci.t_mid.bio-life-levels.tissue-types-plant] 舉例植物組織：分生、表皮、維管束（木質部/韌皮部）、基本組織  {t_mid, 會考}
+- [sci.t_adv.bio-life-levels.emergent-property] 說明「層次愈高會出現新性質（emergent property）」的概念  {t_adv, 學測}
+- [sci.t_adv.bio-life-levels.homeostasis-feedback] 以負回饋說明恆定性的調控邏輯（偏離設定值→修正）  {t_adv, 學測}
+
+## 2. 細胞構造與功能 {strand: cell-structure}
+
+- [sci.t_base.bio-cell-structure.microscope-use] 使用放大鏡/顯微鏡觀察微小生物與細胞的概念  {t_base, 無}
+- [sci.t_base.bio-cell-structure.cell-is-unit] 知道生物體由細胞構成、細胞是生命的基本單位  {t_base, 無}
+- [sci.t_mid.bio-cell-structure.microscope-parts] 辨識複式顯微鏡各部位（目鏡/物鏡/載物台/光圈/準焦螺旋）與操作步驟  {t_mid, 會考}
+- [sci.t_mid.bio-cell-structure.total-magnification] 計算顯微鏡總放大倍率＝目鏡倍率×物鏡倍率  {t_mid, 會考}
+- [sci.t_mid.bio-cell-structure.image-inversion] 說明顯微鏡成像為上下左右顛倒、移動玻片方向與視野相反  {t_mid, 會考}
+- [sci.t_mid.bio-cell-structure.cell-theory] 敘述細胞學說三要點（生物由細胞構成/細胞是基本單位/細胞來自既存細胞）  {t_mid, 會考}
+- [sci.t_mid.bio-cell-structure.plant-vs-animal] 比較動植物細胞差異（細胞壁、葉綠體、大液胞之有無）  {t_mid, 會考}
+- [sci.t_mid.bio-cell-structure.organelle-nucleus] 說明細胞核功能：含遺傳物質、控制細胞活動  {t_mid, 會考}
+- [sci.t_mid.bio-cell-structure.organelle-membrane] 說明細胞膜功能：區隔內外、選擇性通透、控制物質進出  {t_mid, 會考}
+- [sci.t_mid.bio-cell-structure.organelle-cytoplasm] 說明細胞質為代謝反應發生場所  {t_mid, 會考}
+- [sci.t_mid.bio-cell-structure.organelle-chloroplast] 說明葉綠體為光合作用場所、含葉綠素  {t_mid, 會考}
+- [sci.t_mid.bio-cell-structure.organelle-vacuole] 說明液胞功能：貯存、維持膨壓  {t_mid, 會考}
+- [sci.t_mid.bio-cell-structure.cell-wall-function] 說明細胞壁（纖維素）支持與保護功能  {t_mid, 會考}
+- [sci.t_adv.bio-cell-structure.prokaryote-eukaryote] 比較原核與真核細胞（有無核膜、膜狀胞器、大小、DNA 形式）  {t_adv, 學測}
+- [sci.t_adv.bio-cell-structure.mitochondria] 說明粒線體為有氧呼吸、產生 ATP 的場所、具雙層膜與自有 DNA  {t_adv, 學測}
+- [sci.t_adv.bio-cell-structure.ribosome] 說明核糖體為蛋白質合成場所（可附著於內質網或游離）  {t_adv, 學測}
+- [sci.t_adv.bio-cell-structure.er-rough-smooth] 區分粗糙型（附核糖體/合成蛋白）與平滑型內質網（合成脂質/解毒）  {t_adv, 學測}
+- [sci.t_adv.bio-cell-structure.golgi] 說明高基氏體的加工、分類、包裝與分泌功能  {t_adv, 學測}
+- [sci.t_adv.bio-cell-structure.lysosome] 說明溶體含水解酶、行胞內消化與自噬  {t_adv, 學測}
+- [sci.t_adv.bio-cell-structure.cytoskeleton] 說明細胞骨架（微管/微絲/中間絲）支持、運輸與運動功能  {t_adv, 學測}
+- [sci.t_adv.bio-cell-structure.centriole-cilia] 說明中心粒與纖毛/鞭毛的微管結構（9+2）與運動功能  {t_adv, 分科-生物}
+- [sci.t_adv.bio-cell-structure.endomembrane-system] 統整內膜系統的物質流（內質網→高基氏體→囊泡→膜）  {t_adv, 分科-生物}
+- [sci.t_sub.bio-cell-structure.membrane-fluid-mosaic] 以流體鑲嵌模型描述細胞膜（磷脂雙層＋鑲嵌蛋白＋膽固醇＋醣蛋白）  {t_sub, 分科-生物}
+- [sci.t_sub.bio-cell-structure.endosymbiosis] 以內共生學說解釋粒線體與葉綠體的起源證據  {t_sub, 分科-生物}
+- [sci.t_sub.bio-cell-structure.nuclear-pore] 說明核膜、核孔與核仁（rRNA 與核糖體次單元組裝）  {t_sub, 分科-生物}
+
+## 3. 物質進出細胞 {strand: membrane-transport}
+
+- [sci.t_mid.bio-membrane-transport.diffusion] 定義擴散：分子由高濃度往低濃度移動  {t_mid, 會考}
+- [sci.t_mid.bio-membrane-transport.osmosis] 定義滲透：水分子透過半透膜由高水位往低水位移動  {t_mid, 會考}
+- [sci.t_mid.bio-membrane-transport.tonicity-cell] 預測細胞在高張/低張/等張溶液中的脹縮（溶血、膨壓）  {t_mid, 會考}
+- [sci.t_mid.bio-membrane-transport.selective-permeability] 說明細胞膜的選擇性通透  {t_mid, 會考}
+- [sci.t_adv.bio-membrane-transport.passive-vs-active] 區分被動運輸（不耗能、順濃度梯度）與主動運輸（耗 ATP、逆梯度）  {t_adv, 學測}
+- [sci.t_adv.bio-membrane-transport.facilitated-diffusion] 說明促進擴散需載體/通道蛋白、仍為被動  {t_adv, 學測}
+- [sci.t_adv.bio-membrane-transport.sodium-potassium-pump] 以鈉鉀幫浦為例說明主動運輸（3Na⁺出/2K⁺入、耗 ATP）  {t_adv, 分科-生物}
+- [sci.t_adv.bio-membrane-transport.endo-exocytosis] 說明胞吞（吞噬/胞飲）與胞吐運送大分子  {t_adv, 學測}
+- [sci.t_sub.bio-membrane-transport.water-potential] 以水勢（溶質勢＋壓力勢）解釋植物細胞的水分移動  {t_sub, 分科-生物}
+- [sci.t_sub.bio-membrane-transport.aquaporin] 說明水通道蛋白（aquaporin）加速水分跨膜  {t_sub, 分科-生物}
+- [sci.t_sub.bio-membrane-transport.electrochemical-gradient] 以電化學梯度與次級主動運輸（共運輸）說明葡萄糖吸收  {t_sub, 分科-生物}
+
+## 4. 酵素與能量 {strand: enzyme-energy}
+
+- [sci.t_mid.bio-enzyme-energy.enzyme-def] 說明酵素為生物催化劑、能加速反應、本身不被消耗  {t_mid, 會考}
+- [sci.t_mid.bio-enzyme-energy.enzyme-protein] 知道大多數酵素的本質為蛋白質、具專一性  {t_mid, 會考}
+- [sci.t_mid.bio-enzyme-energy.enzyme-temp-ph] 描述溫度與 pH 對酵素活性的影響（最適值、過高變性）  {t_mid, 會考}
+- [sci.t_mid.bio-enzyme-energy.digestive-enzymes] 舉例消化酵素（澱粉酶/蛋白酶/脂肪酶）的受質  {t_mid, 會考}
+- [sci.t_adv.bio-enzyme-energy.activation-energy] 說明酵素降低活化能、不改變反應平衡  {t_adv, 學測}
+- [sci.t_adv.bio-enzyme-energy.lock-and-key] 以鎖鑰/誘發契合模型說明酵素—受質結合（活性部位）  {t_adv, 學測}
+- [sci.t_adv.bio-enzyme-energy.atp-structure] 說明 ATP 結構（腺苷＋三磷酸）與水解釋能供細胞使用  {t_adv, 學測}
+- [sci.t_adv.bio-enzyme-energy.cofactor-coenzyme] 區分輔因子（金屬離子）與輔酶（維生素衍生物如 NAD⁺/FAD）  {t_adv, 分科-生物}
+- [sci.t_sub.bio-enzyme-energy.enzyme-inhibition] 區分競爭性與非競爭性抑制、別構調節  {t_sub, 分科-生物}
+- [sci.t_sub.bio-enzyme-energy.feedback-inhibition] 說明代謝途徑的終產物回饋抑制  {t_sub, 分科-生物}
+- [sci.t_sub.bio-enzyme-energy.exergonic-endergonic] 區分放能與吸能反應、以 ATP 偶聯耦合反應  {t_sub, 分科-生物}
+- [sci.t_sub.bio-enzyme-energy.enzyme-kinetics] 以酵素濃度/受質濃度對反應速率繪圖並判讀飽和現象  {t_sub, 分科-生物}
+
+## 5. 光合作用 {strand: photosynthesis}
+
+- [sci.t_base.bio-photosynthesis.plant-makes-food] 知道綠色植物能自行製造養分（需陽光）  {t_base, 無}
+- [sci.t_mid.bio-photosynthesis.overall-equation] 寫出光合作用總反應（CO₂＋H₂O →光/葉綠素→ 葡萄糖＋O₂）  {t_mid, 會考}
+- [sci.t_mid.bio-photosynthesis.raw-products] 指出光合作用的原料與產物、場所（葉綠體）  {t_mid, 會考}
+- [sci.t_mid.bio-photosynthesis.chlorophyll-role] 說明葉綠素吸收光能的角色  {t_mid, 會考}
+- [sci.t_mid.bio-photosynthesis.starch-test] 以碘液檢測葉片澱粉驗證光合作用（含去綠、脫色步驟）  {t_mid, 會考}
+- [sci.t_mid.bio-photosynthesis.factors] 說明光度、CO₂濃度、溫度對光合速率的影響  {t_mid, 會考}
+- [sci.t_adv.bio-photosynthesis.light-reaction] 說明光反應於類囊膜、產生 ATP 與 NADPH、釋放 O₂  {t_adv, 學測}
+- [sci.t_adv.bio-photosynthesis.water-split] 說明光反應中水的分解（光解）為電子與 O₂來源  {t_adv, 學測}
+- [sci.t_adv.bio-photosynthesis.calvin-cycle] 說明暗反應（卡爾文循環）於基質、固定 CO₂合成醣類  {t_adv, 學測}
+- [sci.t_adv.bio-photosynthesis.chloroplast-structure] 指出葉綠體的類囊膜（葉綠餅）與基質對應光/暗反應  {t_adv, 學測}
+- [sci.t_sub.bio-photosynthesis.photosystem] 說明光系統 I、II 與電子傳遞鏈、光磷酸化  {t_sub, 分科-生物}
+- [sci.t_sub.bio-photosynthesis.rubisco] 說明 RuBisCO 固碳酵素與 RuBP 的角色  {t_sub, 分科-生物}
+- [sci.t_sub.bio-photosynthesis.photorespiration] 說明光呼吸的成因（O₂與 CO₂競爭 RuBisCO）  {t_sub, 分科-生物}
+- [sci.t_sub.bio-photosynthesis.c4-cam] 比較 C3、C4、CAM 植物的固碳策略與環境適應  {t_sub, 分科-生物}
+- [sci.t_sub.bio-photosynthesis.absorption-spectrum] 判讀光合色素的吸收光譜與作用光譜（紅/藍光最佳）  {t_sub, 分科-生物}
+
+## 6. 呼吸作用 {strand: respiration}
+
+- [sci.t_mid.bio-respiration.cellular-resp-def] 說明細胞呼吸：分解養分釋放能量供生命活動  {t_mid, 會考}
+- [sci.t_mid.bio-respiration.overall-equation] 寫出有氧呼吸總反應（葡萄糖＋O₂→CO₂＋H₂O＋能量）  {t_mid, 會考}
+- [sci.t_mid.bio-respiration.resp-vs-photo] 比較呼吸作用與光合作用（原料/產物/能量/場所）之互補  {t_mid, 會考}
+- [sci.t_mid.bio-respiration.all-cells-respire] 知道所有活細胞（含植物、日夜）都進行呼吸作用  {t_mid, 會考}
+- [sci.t_adv.bio-respiration.glycolysis] 說明糖解作用於細胞質、葡萄糖→丙酮酸、淨得少量 ATP  {t_adv, 學測}
+- [sci.t_adv.bio-respiration.krebs-cycle] 說明檸檬酸循環於粒線體基質、釋 CO₂、產 NADH/FADH₂  {t_adv, 學測}
+- [sci.t_adv.bio-respiration.electron-transport] 說明電子傳遞鏈於內膜、O₂為最終電子受體、產大量 ATP  {t_adv, 學測}
+- [sci.t_adv.bio-respiration.fermentation] 說明無氧呼吸/發酵（乳酸發酵、酒精發酵）與產物  {t_adv, 學測}
+- [sci.t_adv.bio-respiration.atp-yield] 比較有氧（約 30–38 ATP）與無氧呼吸的能量產量差異  {t_adv, 學測}
+- [sci.t_sub.bio-respiration.pyruvate-oxidation] 說明丙酮酸氧化（連結反應）生成乙醯輔酶 A  {t_sub, 分科-生物}
+- [sci.t_sub.bio-respiration.chemiosmosis] 以化學滲透與質子梯度說明 ATP 合成酶產 ATP  {t_sub, 分科-生物}
+- [sci.t_sub.bio-respiration.other-substrates] 說明脂質與蛋白質進入呼吸代謝途徑的切入點  {t_sub, 分科-生物}
+
+## 7. 細胞分裂與細胞週期 {strand: cell-division}
+
+- [sci.t_mid.bio-cell-division.why-divide] 說明細胞分裂用於生長、修補與生殖  {t_mid, 會考}
+- [sci.t_mid.bio-cell-division.chromosome-intro] 認識染色體、DNA 與基因的包含關係  {t_mid, 會考}
+- [sci.t_mid.bio-cell-division.mitosis-result] 說明有絲分裂產生兩個染色體數與母細胞相同的細胞  {t_mid, 會考}
+- [sci.t_mid.bio-cell-division.meiosis-result] 說明減數分裂產生染色體數減半的生殖細胞（配子）  {t_mid, 會考}
+- [sci.t_mid.bio-cell-division.diploid-haploid] 區分體細胞（2n）與配子（n）的染色體套數  {t_mid, 會考}
+- [sci.t_adv.bio-cell-division.cell-cycle-phases] 說明細胞週期（G1/S/G2/M）與 S 期 DNA 複製  {t_adv, 學測}
+- [sci.t_adv.bio-cell-division.mitosis-stages] 依序描述有絲分裂前期/中期/後期/末期的染色體行為  {t_adv, 學測}
+- [sci.t_adv.bio-cell-division.cytokinesis] 比較動植物細胞質分裂（收縮環 vs. 細胞板）  {t_adv, 學測}
+- [sci.t_adv.bio-cell-division.meiosis-two-divisions] 說明減數分裂兩次連續分裂（減數I、減數II）  {t_adv, 學測}
+- [sci.t_adv.bio-cell-division.crossing-over-meiosis] 說明減數I同源染色體聯會與互換增加變異  {t_adv, 學測}
+- [sci.t_adv.bio-cell-division.independent-assortment-chrom] 說明同源染色體隨機分配造成配子多樣性  {t_adv, 學測}
+- [sci.t_adv.bio-cell-division.mitosis-vs-meiosis] 表列比較有絲與減數分裂（次數/產物數/染色體數/變異）  {t_adv, 學測}
+- [sci.t_sub.bio-cell-division.cell-cycle-checkpoint] 說明細胞週期檢查點與 cyclin/CDK 調控  {t_sub, 分科-生物}
+- [sci.t_sub.bio-cell-division.cancer-cell-cycle] 連結細胞週期調控失常與癌症（原癌/抑癌基因）  {t_sub, 分科-生物}
+- [sci.t_sub.bio-cell-division.apoptosis] 區分計畫性細胞死亡（凋亡）與壞死  {t_sub, 分科-生物}
+- [sci.t_sub.bio-cell-division.nondisjunction] 以染色體不分離解釋唐氏症等染色體數目異常  {t_sub, 分科-生物}
+
+## 8. 營養與消化 {strand: digestion}
+
+- [sci.t_base.bio-digestion.balanced-diet] 認識均衡飲食與食物六大類（我的餐盤）  {t_base, 無}
+- [sci.t_base.bio-digestion.teeth-stomach] 初步認識牙齒咀嚼與胃腸消化食物  {t_base, 無}
+- [sci.t_mid.bio-digestion.nutrients-six] 列舉六大營養素（醣類/蛋白質/脂質/維生素/礦物質/水）及功能  {t_mid, 會考}
+- [sci.t_mid.bio-digestion.food-tests] 以本氏液、碘液、蛋白質試劑、脂肪（紙上透光）檢測營養素  {t_mid, 會考}
+- [sci.t_mid.bio-digestion.mechanical-chemical] 區分物理性（咀嚼/攪拌）與化學性消化（酵素分解）  {t_mid, 會考}
+- [sci.t_mid.bio-digestion.alimentary-canal] 依序列出消化道（口→食道→胃→小腸→大腸→肛門）  {t_mid, 會考}
+- [sci.t_mid.bio-digestion.accessory-organs] 說明唾腺、肝、膽囊、胰的消化輔助功能  {t_mid, 會考}
+- [sci.t_mid.bio-digestion.enzyme-sites] 對應各營養素消化的部位與酵素（口腔澱粉、胃蛋白、小腸全部）  {t_mid, 會考}
+- [sci.t_mid.bio-digestion.bile-emulsify] 說明膽汁（不含酵素）乳化脂肪的作用  {t_mid, 會考}
+- [sci.t_mid.bio-digestion.villi-absorption] 說明小腸絨毛增加吸收表面積、養分吸收路徑  {t_mid, 會考}
+- [sci.t_mid.bio-digestion.large-intestine] 說明大腸吸收水分、形成糞便  {t_mid, 會考}
+- [sci.t_adv.bio-digestion.absorption-routes] 區分一般養分（微血管→肝門靜脈）與脂質（乳糜管/淋巴）吸收路徑  {t_adv, 學測}
+- [sci.t_adv.bio-digestion.liver-functions] 說明肝臟在養分代謝、解毒、儲存肝糖的角色  {t_adv, 學測}
+- [sci.t_sub.bio-digestion.hormonal-control] 說明胃泌素、胰泌素等激素對消化液分泌的調節  {t_sub, 分科-生物}
+
+## 9. 循環 {strand: circulation}
+
+- [sci.t_base.bio-circulation.heart-beat] 知道心臟跳動、血液在體內流動  {t_base, 無}
+- [sci.t_mid.bio-circulation.blood-components] 列舉血液組成（血漿、紅血球、白血球、血小板）及功能  {t_mid, 會考}
+- [sci.t_mid.bio-circulation.rbc-hemoglobin] 說明紅血球以血紅素運送氧氣  {t_mid, 會考}
+- [sci.t_mid.bio-circulation.platelet-clot] 說明血小板與凝血的關係  {t_mid, 會考}
+- [sci.t_mid.bio-circulation.vessels-three] 比較動脈、靜脈、微血管的構造與功能（含靜脈瓣）  {t_mid, 會考}
+- [sci.t_mid.bio-circulation.heart-chambers] 指出心臟四腔（左右心房/心室）與瓣膜防逆流  {t_mid, 會考}
+- [sci.t_mid.bio-circulation.double-circulation] 說明體循環與肺循環的路徑（雙循環）  {t_mid, 會考}
+- [sci.t_mid.bio-circulation.oxygenated-blood] 追蹤含氧血/缺氧血在心臟與循環中的流向  {t_mid, 會考}
+- [sci.t_mid.bio-circulation.lymphatic-system] 說明淋巴系統回收組織液、運送脂質與防禦  {t_mid, 會考}
+- [sci.t_mid.bio-circulation.blood-type-abo] 說明 ABO 血型與輸血相容性（初步）  {t_mid, 會考}
+- [sci.t_adv.bio-circulation.tissue-fluid] 說明微血管端的血漿滲出形成組織液與物質交換  {t_adv, 學測}
+- [sci.t_adv.bio-circulation.heart-conduction] 說明竇房結、房室結與心搏節律的自發調控  {t_adv, 分科-生物}
+- [sci.t_adv.bio-circulation.blood-pressure] 說明血壓（收縮壓/舒張壓）與其調節  {t_adv, 學測}
+- [sci.t_sub.bio-circulation.open-closed-circ] 比較開放式與閉鎖式循環系統（跨動物門）  {t_sub, 分科-生物}
+- [sci.t_sub.bio-circulation.rh-factor] 說明 Rh 血型與新生兒溶血症  {t_sub, 分科-生物}
+- [sci.t_sub.bio-circulation.hemoglobin-dissociation] 判讀氧合血紅素解離曲線與波爾效應  {t_sub, 分科-生物}
+
+## 10. 呼吸（氣體交換） {strand: gas-exchange}
+
+- [sci.t_base.bio-gas-exchange.breathe-air] 知道人以鼻口呼吸、吸入空氣  {t_base, 無}
+- [sci.t_mid.bio-gas-exchange.respiratory-tract] 依序列出呼吸道（鼻→咽→喉→氣管→支氣管→肺泡）  {t_mid, 會考}
+- [sci.t_mid.bio-gas-exchange.alveoli-features] 說明肺泡薄壁、多且富微血管利於氣體交換  {t_mid, 會考}
+- [sci.t_mid.bio-gas-exchange.gas-diffusion] 說明肺泡與微血管間 O₂、CO₂依擴散方向交換  {t_mid, 會考}
+- [sci.t_mid.bio-gas-exchange.breathing-mechanism] 以橫膈與肋間肌、胸腔容積變化解釋吸氣與呼氣  {t_mid, 會考}
+- [sci.t_mid.bio-gas-exchange.inhale-exhale-air] 比較吸入與呼出氣體的成分差異（O₂、CO₂、水氣）  {t_mid, 會考}
+- [sci.t_adv.bio-gas-exchange.gas-transport] 說明 O₂由血紅素、CO₂多以碳酸氫根運送  {t_adv, 學測}
+- [sci.t_adv.bio-gas-exchange.breathing-control] 說明腦（延腦）依血中 CO₂/pH 調節呼吸速率  {t_adv, 分科-生物}
+- [sci.t_sub.bio-gas-exchange.gill-tracheal] 比較鰓、氣管（昆蟲）、肺等不同呼吸構造的氣體交換  {t_sub, 分科-生物}
+- [sci.t_sub.bio-gas-exchange.bird-lung] 說明鳥類氣囊與單向氣流的高效氣體交換  {t_sub, 分科-生物}
+
+## 11. 排泄 {strand: excretion}
+
+- [sci.t_mid.bio-excretion.metabolic-waste] 列舉代謝廢物（CO₂、含氮廢物如尿素、多餘水與鹽）  {t_mid, 會考}
+- [sci.t_mid.bio-excretion.organs-involved] 說明腎、肺、皮膚（汗腺）排除廢物的分工  {t_mid, 會考}
+- [sci.t_mid.bio-excretion.urinary-system] 依序列出泌尿系統（腎→輸尿管→膀胱→尿道）  {t_mid, 會考}
+- [sci.t_mid.bio-excretion.nephron-intro] 認識腎臟內的腎元為製造尿液的單位  {t_mid, 會考}
+- [sci.t_mid.bio-excretion.urine-formation] 概述尿液形成（過濾、再吸收）  {t_mid, 會考}
+- [sci.t_mid.bio-excretion.liver-urea] 說明肝臟將胺基酸代謝的含氮廢物轉為尿素  {t_mid, 會考}
+- [sci.t_adv.bio-excretion.nephron-detail] 說明腎元各段（腎小球/鮑氏囊/腎小管/亨利氏環）的過濾、再吸收、分泌  {t_adv, 學測}
+- [sci.t_adv.bio-excretion.osmoregulation] 說明滲透壓調節與水分平衡（抗利尿激素 ADH）  {t_adv, 學測}
+- [sci.t_sub.bio-excretion.nitrogenous-waste-types] 比較氨、尿素、尿酸三種含氮廢物與動物棲地的關係  {t_sub, 分科-生物}
+- [sci.t_sub.bio-excretion.countercurrent] 以逆流機制說明亨利氏環濃縮尿液  {t_sub, 分科-生物}
+- [sci.t_sub.bio-excretion.raas] 說明腎素—血管收縮素—醛固酮系統對血壓與鈉的調節  {t_sub, 分科-生物}
+
+## 12. 神經與內分泌協調 {strand: coordination}
+
+- [sci.t_base.bio-coordination.five-senses] 認識五種感官（視/聽/嗅/味/觸）與刺激反應  {t_base, 無}
+- [sci.t_mid.bio-coordination.stimulus-response] 說明刺激→受器→神經→動器→反應的基本流程  {t_mid, 會考}
+- [sci.t_mid.bio-coordination.neuron-structure] 辨識神經元構造（樹突/細胞本體/軸突）與傳導方向  {t_mid, 會考}
+- [sci.t_mid.bio-coordination.cns-pns] 區分中樞神經（腦、脊髓）與周邊神經系統  {t_mid, 會考}
+- [sci.t_mid.bio-coordination.brain-parts] 說明大腦、小腦、腦幹（延腦）的主要功能  {t_mid, 會考}
+- [sci.t_mid.bio-coordination.reflex-arc] 說明反射弧（如縮手反射）不經大腦、反應快速  {t_mid, 會考}
+- [sci.t_mid.bio-coordination.endocrine-glands] 列舉主要內分泌腺與激素（腦垂腺/甲狀腺/胰島/腎上腺/性腺）  {t_mid, 會考}
+- [sci.t_mid.bio-coordination.insulin-glucagon] 說明胰島素與升糖素對血糖的拮抗調節  {t_mid, 會考}
+- [sci.t_mid.bio-coordination.nerve-vs-hormone] 比較神經（快/短暫）與激素（慢/持久）協調的差異  {t_mid, 會考}
+- [sci.t_mid.bio-coordination.thermoregulation] 說明體溫恆定（流汗、顫抖、血管舒縮）的調節  {t_mid, 會考}
+- [sci.t_adv.bio-coordination.action-potential] 說明神經衝動以膜電位變化（去極化/再極化）傳導  {t_adv, 分科-生物}
+- [sci.t_adv.bio-coordination.synapse-transmission] 說明突觸以神經傳遞物質跨越突觸間隙  {t_adv, 分科-生物}
+- [sci.t_adv.bio-coordination.autonomic-ns] 區分交感與副交感神經的拮抗作用  {t_adv, 學測}
+- [sci.t_adv.bio-coordination.negative-feedback-hormone] 以甲狀腺素/下視丘—腦垂腺軸說明激素的負回饋調節  {t_adv, 學測}
+- [sci.t_adv.bio-coordination.hypothalamus-pituitary] 說明下視丘與腦垂腺（前葉/後葉）的調控關係  {t_adv, 分科-生物}
+- [sci.t_sub.bio-coordination.resting-potential] 說明靜止膜電位的鈉鉀分布與離子基礎  {t_sub, 分科-生物}
+- [sci.t_sub.bio-coordination.saltatory-conduction] 說明髓鞘與蘭氏結造成的跳躍式傳導  {t_sub, 分科-生物}
+- [sci.t_sub.bio-coordination.second-messenger] 區分水溶性（受體在膜/二級傳訊）與脂溶性激素（入胞內）作用機制  {t_sub, 分科-生物}
+- [sci.t_sub.bio-coordination.eye-ear-detail] 說明眼（視網膜/桿細胞錐細胞）與耳（耳蝸/前庭）的受器機制  {t_sub, 分科-生物}
+
+## 13. 免疫 {strand: immunity}
+
+- [sci.t_mid.bio-immunity.pathogen-types] 區分病原體類型（細菌、病毒、真菌、寄生蟲）  {t_mid, 會考}
+- [sci.t_mid.bio-immunity.barriers] 說明第一道防線（皮膚、黏膜、分泌物）的物理化學屏障  {t_mid, 會考}
+- [sci.t_mid.bio-immunity.phagocytes] 說明白血球吞噬病原體的非專一性防禦  {t_mid, 會考}
+- [sci.t_mid.bio-immunity.antibody-intro] 認識抗原與抗體的專一性結合  {t_mid, 會考}
+- [sci.t_mid.bio-immunity.vaccine] 說明疫苗原理（引發免疫記憶、產生抗體）  {t_mid, 會考}
+- [sci.t_adv.bio-immunity.innate-adaptive] 區分非專一性（先天）與專一性（後天）免疫  {t_adv, 學測}
+- [sci.t_adv.bio-immunity.inflammation] 說明發炎反應（紅腫熱痛）的機制與意義  {t_adv, 學測}
+- [sci.t_adv.bio-immunity.humoral-cellular] 區分體液免疫（B細胞/抗體）與細胞免疫（T細胞）  {t_adv, 分科-生物}
+- [sci.t_adv.bio-immunity.primary-secondary-response] 比較初次與二次免疫反應（記憶細胞、更快更強）  {t_adv, 學測}
+- [sci.t_adv.bio-immunity.active-passive] 區分主動免疫（疫苗/感染）與被動免疫（抗體注射/母乳）  {t_adv, 學測}
+- [sci.t_sub.bio-immunity.t-cell-types] 區分輔助型、胞毒型 T 細胞與抗原呈現、MHC 的角色  {t_sub, 分科-生物}
+- [sci.t_sub.bio-immunity.clonal-selection] 以株落選殖學說說明淋巴球的專一化與增殖  {t_sub, 分科-生物}
+- [sci.t_sub.bio-immunity.allergy-autoimmune] 區分過敏、自體免疫與免疫缺乏（如 AIDS）  {t_sub, 分科-生物}
+
+## 14. 運動（骨骼肌肉） {strand: musculoskeletal}
+
+- [sci.t_base.bio-musculoskeletal.bones-support] 知道骨骼支撐身體、肌肉使身體活動  {t_base, 無}
+- [sci.t_mid.bio-musculoskeletal.skeleton-functions] 列舉骨骼功能（支持、保護、運動、造血、儲鈣）  {t_mid, 會考}
+- [sci.t_mid.bio-musculoskeletal.joint-types] 認識關節（可動/不可動）與韌帶、軟骨  {t_mid, 會考}
+- [sci.t_mid.bio-musculoskeletal.antagonistic-muscles] 說明拮抗肌（如肱二頭肌/肱三頭肌）成對收縮帶動骨骼  {t_mid, 會考}
+- [sci.t_mid.bio-musculoskeletal.muscle-types] 區分骨骼肌、平滑肌、心肌（隨意/不隨意、構造）  {t_mid, 會考}
+- [sci.t_mid.bio-musculoskeletal.tendon] 說明肌腱連接肌肉與骨骼  {t_mid, 會考}
+- [sci.t_sub.bio-musculoskeletal.sarcomere-sliding] 以肌小節與肌絲滑動學說說明肌肉收縮  {t_sub, 分科-生物}
+- [sci.t_sub.bio-musculoskeletal.calcium-contraction] 說明鈣離子與 ATP 在肌肉收縮中的角色  {t_sub, 分科-生物}
+
+## 15. 生殖與發育 {strand: reproduction}
+
+- [sci.t_base.bio-reproduction.animal-babies] 知道動物會繁殖後代、親代照顧幼體  {t_base, 無}
+- [sci.t_base.bio-reproduction.insect-metamorphosis] 認識昆蟲的變態（完全/不完全，如蝴蝶、蝗蟲）  {t_base, 無}
+- [sci.t_base.bio-reproduction.plant-seed-growth] 觀察種子發芽與植物生長的生命週期  {t_base, 無}
+- [sci.t_mid.bio-reproduction.asexual-types] 舉例無性生殖（分裂、出芽、營養繁殖、孢子）  {t_mid, 會考}
+- [sci.t_mid.bio-reproduction.sexual-def] 說明有性生殖需配子結合、後代具變異  {t_mid, 會考}
+- [sci.t_mid.bio-reproduction.asexual-vs-sexual] 比較無性與有性生殖的優缺點（變異/繁殖速度）  {t_mid, 會考}
+- [sci.t_mid.bio-reproduction.human-repro-organs] 認識人類生殖系統主要器官與配子（精子/卵）  {t_mid, 會考}
+- [sci.t_mid.bio-reproduction.fertilization-pregnancy] 說明受精、著床、胚胎發育與胎盤的角色  {t_mid, 會考}
+- [sci.t_mid.bio-reproduction.menstrual-cycle-intro] 初步認識月經週期與排卵  {t_mid, 會考}
+- [sci.t_adv.bio-reproduction.gametogenesis] 區分精子與卵的形成（配子發生）與減數分裂的連結  {t_adv, 學測}
+- [sci.t_adv.bio-reproduction.hormone-cycle] 說明性激素（雌/黃體/FSH/LH）對生殖週期的調控  {t_adv, 分科-生物}
+- [sci.t_adv.bio-reproduction.embryo-development] 說明早期胚胎發育（受精卵→囊胚→胚層分化）  {t_adv, 分科-生物}
+- [sci.t_sub.bio-reproduction.germ-layers] 說明三胚層（外/中/內胚層）分化為各器官系統  {t_sub, 分科-生物}
+- [sci.t_sub.bio-reproduction.plant-alternation] 說明植物世代交替（孢子體/配子體）  {t_sub, 分科-生物}
+
+## 16. 遺傳（古典） {strand: genetics-classical}
+
+- [sci.t_base.bio-genetics-classical.resemblance] 觀察子代與親代的相似與相異特徵  {t_base, 無}
+- [sci.t_mid.bio-genetics-classical.gene-chromosome] 說明基因位於染色體、控制性狀遺傳  {t_mid, 會考}
+- [sci.t_mid.bio-genetics-classical.dominant-recessive] 區分顯性與隱性性狀、顯隱性表現  {t_mid, 會考}
+- [sci.t_mid.bio-genetics-classical.geno-pheno] 區分基因型（如 Aa）與表現型  {t_mid, 會考}
+- [sci.t_mid.bio-genetics-classical.mendel-segregation] 說明孟德爾分離律與單性狀雜交（3:1）  {t_mid, 會考}
+- [sci.t_mid.bio-genetics-classical.punnett-monohybrid] 用旁氏表推算單基因雜交子代比例  {t_mid, 會考}
+- [sci.t_mid.bio-genetics-classical.sex-determination] 說明人類性別由 X/Y 染色體決定  {t_mid, 會考}
+- [sci.t_mid.bio-genetics-classical.abo-genetics] 以複對偶基因說明 ABO 血型遺傳  {t_mid, 會考}
+- [sci.t_adv.bio-genetics-classical.independent-assortment] 說明自由組合律與雙性狀雜交（9:3:3:1）  {t_adv, 學測}
+- [sci.t_adv.bio-genetics-classical.test-cross] 以試交判定顯性個體的基因型  {t_adv, 學測}
+- [sci.t_adv.bio-genetics-classical.incomplete-dominance] 說明不完全顯性（如紅白花→粉紅）  {t_adv, 學測}
+- [sci.t_adv.bio-genetics-classical.codominance] 說明共顯性（如 AB 血型、鐮型紅血球異型合子）  {t_adv, 學測}
+- [sci.t_adv.bio-genetics-classical.multiple-alleles] 說明複對偶基因的概念（一基因座多個對偶）  {t_adv, 學測}
+- [sci.t_adv.bio-genetics-classical.sex-linked] 說明性聯遺傳（如色盲、血友病）的遺傳模式  {t_adv, 學測}
+- [sci.t_adv.bio-genetics-classical.pedigree] 判讀家族譜系推斷遺傳模式與機率  {t_adv, 學測}
+- [sci.t_sub.bio-genetics-classical.linkage-recombination] 說明基因連鎖與互換、重組率  {t_sub, 分科-生物}
+- [sci.t_sub.bio-genetics-classical.gene-mapping] 以重組率繪製基因圖譜（圖距）  {t_sub, 分科-生物}
+- [sci.t_sub.bio-genetics-classical.polygenic] 說明多基因遺傳造成連續變異（如身高、膚色）  {t_sub, 分科-生物}
+- [sci.t_sub.bio-genetics-classical.epistasis] 說明基因間上位作用對表現型的影響  {t_sub, 分科-生物}
+- [sci.t_sub.bio-genetics-classical.chromosome-theory] 敘述染色體遺傳學說（基因在染色體上）的實驗證據（摩根果蠅）  {t_sub, 分科-生物}
+- [sci.t_sub.bio-genetics-classical.chi-square-genetics] 以卡方檢定判斷遺傳實驗觀察值與期望值的符合度  {t_sub, 分科-生物} (待核)
+
+## 17. 分子遺傳（DNA／複製／轉錄／轉譯／調控） {strand: genetics-molecular}
+
+- [sci.t_mid.bio-genetics-molecular.dna-is-genetic] 知道 DNA 為遺傳物質、位於細胞核  {t_mid, 會考}
+- [sci.t_adv.bio-genetics-molecular.dna-double-helix] 描述 DNA 雙螺旋結構（去氧核糖、磷酸、含氮鹼基）  {t_adv, 學測}
+- [sci.t_adv.bio-genetics-molecular.base-pairing] 說明鹼基互補配對（A-T、G-C）與氫鍵  {t_adv, 學測}
+- [sci.t_adv.bio-genetics-molecular.dna-replication] 說明 DNA 半保留複製的概念與過程  {t_adv, 學測}
+- [sci.t_adv.bio-genetics-molecular.central-dogma] 敘述中心法則（DNA→RNA→蛋白質）  {t_adv, 學測}
+- [sci.t_adv.bio-genetics-molecular.transcription] 說明轉錄：以 DNA 為模板合成 mRNA  {t_adv, 學測}
+- [sci.t_adv.bio-genetics-molecular.translation] 說明轉譯：核糖體依 mRNA 密碼子合成多肽  {t_adv, 學測}
+- [sci.t_adv.bio-genetics-molecular.codon-table] 利用密碼子表由 mRNA 推出胺基酸序列  {t_adv, 學測}
+- [sci.t_adv.bio-genetics-molecular.dna-rna-diff] 比較 DNA 與 RNA（糖、鹼基 U/T、單雙股）  {t_adv, 學測}
+- [sci.t_adv.bio-genetics-molecular.mutation-types] 區分點突變（替換/插入/缺失）與移碼突變及其影響  {t_adv, 學測}
+- [sci.t_sub.bio-genetics-molecular.replication-enzymes] 說明複製相關酵素（解旋酶、DNA 聚合酶、連接酶、引子）  {t_sub, 分科-生物}
+- [sci.t_sub.bio-genetics-molecular.leading-lagging] 區分領先股與延遲股（岡崎片段）與 5'→3' 合成方向  {t_sub, 分科-生物}
+- [sci.t_sub.bio-genetics-molecular.rna-types] 區分 mRNA、tRNA、rRNA 的功能與 tRNA 反密碼子  {t_sub, 分科-生物}
+- [sci.t_sub.bio-genetics-molecular.rna-processing] 說明真核 mRNA 加工（加帽、加尾、剪接去除內含子）  {t_sub, 分科-生物}
+- [sci.t_sub.bio-genetics-molecular.operon] 以乳糖操縱組說明原核基因表現調控  {t_sub, 分科-生物}
+- [sci.t_sub.bio-genetics-molecular.eukaryotic-regulation] 說明真核基因表現調控層次（染色質/轉錄/轉譯後）  {t_sub, 分科-生物}
+- [sci.t_sub.bio-genetics-molecular.epigenetics] 初步說明表觀遺傳（甲基化、組蛋白修飾）不改變序列而影響表現  {t_sub, 分科-生物} (待核)
+
+## 18. 生物技術（PCR／基因重組／定序） {strand: biotech}
+
+- [sci.t_mid.bio-biotech.applications] 舉例生物技術應用（基改作物、疫苗、發酵食品）  {t_mid, 會考}
+- [sci.t_mid.bio-biotech.ethics-intro] 討論生物技術的倫理與安全議題  {t_mid, 會考}
+- [sci.t_adv.bio-biotech.genetic-engineering] 說明基因重組（轉殖）技術的基本概念與應用  {t_adv, 學測}
+- [sci.t_adv.bio-biotech.restriction-enzyme] 說明限制酶切割特定序列、黏性末端  {t_adv, 分科-生物}
+- [sci.t_adv.bio-biotech.plasmid-vector] 說明質體作為載體攜帶目標基因進入細菌  {t_adv, 分科-生物}
+- [sci.t_adv.bio-biotech.pcr] 說明 PCR 原理（變性/退火/延長）大量複製 DNA  {t_adv, 分科-生物}
+- [sci.t_adv.bio-biotech.gel-electrophoresis] 說明膠體電泳依 DNA 片段大小分離  {t_adv, 分科-生物}
+- [sci.t_adv.bio-biotech.gmo] 說明基因改造生物（GMO）的製作與爭議  {t_adv, 學測}
+- [sci.t_sub.bio-biotech.dna-sequencing] 說明 DNA 定序原理（桑格法概念）  {t_sub, 分科-生物}
+- [sci.t_sub.bio-biotech.cloning] 區分生殖性與治療性複製、以複製羊為例  {t_sub, 分科-生物}
+- [sci.t_sub.bio-biotech.dna-fingerprint] 說明 DNA 指紋在親子鑑定、刑事鑑識的應用  {t_sub, 分科-生物}
+- [sci.t_sub.bio-biotech.stem-cells] 說明幹細胞（胚胎/成體/iPS）與再生醫學  {t_sub, 分科-生物}
+- [sci.t_sub.bio-biotech.crispr] 初步認識 CRISPR 基因編輯技術及其倫理爭議  {t_sub, 分科-生物} (待核)
+- [sci.t_sub.bio-biotech.genome-project] 認識人類基因體計畫的意義與應用  {t_sub, 分科-生物}
+
+## 19. 演化 {strand: evolution}
+
+- [sci.t_mid.bio-evolution.fossil-evidence] 說明化石為生物演化的證據、推論古今生物的變化  {t_mid, 會考}
+- [sci.t_mid.bio-evolution.variation-source] 說明變異為演化的原料（來自突變與有性生殖重組）  {t_mid, 會考}
+- [sci.t_mid.bio-evolution.natural-selection-intro] 以達爾文天擇說明適者生存、不適者淘汰  {t_mid, 會考}
+- [sci.t_mid.bio-evolution.adaptation-examples] 舉例生物對環境的適應（擬態、保護色、構造）  {t_mid, 會考}
+- [sci.t_adv.bio-evolution.darwin-postulates] 分述天擇四要點（過度繁殖、變異、競爭、差別繁殖）  {t_adv, 學測}
+- [sci.t_adv.bio-evolution.evidence-types] 列舉演化證據（化石、比較解剖、胚胎、分子、生物地理）  {t_adv, 學測}
+- [sci.t_adv.bio-evolution.homology-analogy] 區分同源構造（共同祖先）與同功構造（趨同演化）  {t_adv, 學測}
+- [sci.t_adv.bio-evolution.antibiotic-resistance] 以抗生素抗藥性/農藥抗性說明天擇的實例  {t_adv, 學測}
+- [sci.t_adv.bio-evolution.lamarck-vs-darwin] 比較拉馬克（用進廢退）與達爾文（天擇）觀點  {t_adv, 學測}
+- [sci.t_sub.bio-evolution.hardy-weinberg] 以哈溫定律計算族群基因頻率與判斷是否演化  {t_sub, 分科-生物}
+- [sci.t_sub.bio-evolution.microevolution-forces] 說明突變、基因流、遺傳漂變、天擇、非隨機交配改變基因頻率  {t_sub, 分科-生物}
+- [sci.t_sub.bio-evolution.genetic-drift] 說明遺傳漂變（瓶頸效應、創始者效應）  {t_sub, 分科-生物}
+- [sci.t_sub.bio-evolution.selection-types] 區分安定、方向、分裂性天擇  {t_sub, 分科-生物}
+- [sci.t_sub.bio-evolution.speciation] 說明物種形成與生殖隔離（異域/同域）  {t_sub, 分科-生物}
+- [sci.t_sub.bio-evolution.species-concept] 以生物種概念定義物種  {t_sub, 分科-生物}
+- [sci.t_sub.bio-evolution.phylogenetic-tree] 判讀親緣（演化）樹與共同祖先關係  {t_sub, 分科-生物}
+
+## 20. 生物多樣性與分類 {strand: biodiversity}
+
+- [sci.t_base.bio-biodiversity.sort-animals] 依特徵將動物簡單分類（有無脊椎、棲地、食性）  {t_base, 無}
+- [sci.t_base.bio-biodiversity.sort-plants] 觀察植物的多樣性並簡單分類  {t_base, 無}
+- [sci.t_mid.bio-biodiversity.taxonomic-ranks] 依序列出分類階層（界門綱目科屬種）  {t_mid, 會考}
+- [sci.t_mid.bio-biodiversity.binomial-nomenclature] 說明二名法（屬名＋種小名、斜體/屬名大寫）  {t_mid, 會考}
+- [sci.t_mid.bio-biodiversity.five-kingdoms] 認識五界（原核/原生/真菌/植物/動物）分類概念  {t_mid, 會考}
+- [sci.t_mid.bio-biodiversity.vertebrate-classes] 區分脊椎動物五大類（魚/兩生/爬蟲/鳥/哺乳）特徵  {t_mid, 會考}
+- [sci.t_mid.bio-biodiversity.invertebrates] 舉例無脊椎動物主要類群（刺胞/軟體/節肢/環節/棘皮）  {t_mid, 會考}
+- [sci.t_mid.bio-biodiversity.plant-groups] 區分植物四大類（蘚苔/蕨/裸子/被子）的構造差異  {t_mid, 會考}
+- [sci.t_mid.bio-biodiversity.three-levels] 說明生物多樣性三層次（基因/物種/生態系）  {t_mid, 會考}
+- [sci.t_mid.bio-biodiversity.dichotomous-key] 使用二分檢索表辨識生物  {t_mid, 會考}
+- [sci.t_adv.bio-biodiversity.three-domains] 認識三域分類（細菌/古菌/真核）  {t_adv, 學測}
+- [sci.t_adv.bio-biodiversity.virus-features] 說明病毒的構造與非典型生命特徵（需宿主）  {t_adv, 學測}
+- [sci.t_sub.bio-biodiversity.molecular-taxonomy] 說明以分子（rRNA/DNA）資料建立親緣分類  {t_sub, 分科-生物}
+- [sci.t_sub.bio-biodiversity.monophyletic] 區分單系群、並系群、多系群的概念  {t_sub, 分科-生物} (待核)
+
+## 21. 植物的構造與生理 {strand: plant-physiology}
+
+- [sci.t_base.bio-plant-physiology.plant-parts] 辨識植物六大器官（根莖葉花果實種子）與功能  {t_base, 無}
+- [sci.t_base.bio-plant-physiology.root-water] 知道根吸收水分、葉行光合作用  {t_base, 無}
+- [sci.t_mid.bio-plant-physiology.xylem-phloem] 區分木質部（運水與礦物質，向上）與韌皮部（運養分）  {t_mid, 會考}
+- [sci.t_mid.bio-plant-physiology.transpiration] 說明蒸散作用及其拉動水分上升的角色  {t_mid, 會考}
+- [sci.t_mid.bio-plant-physiology.stomata] 說明氣孔與保衛細胞調節氣體交換與蒸散  {t_mid, 會考}
+- [sci.t_mid.bio-plant-physiology.leaf-structure] 辨識葉的構造（表皮/葉肉/葉脈）與光合作用的關係  {t_mid, 會考}
+- [sci.t_mid.bio-plant-physiology.flower-parts] 辨識花的構造（花萼/花瓣/雄蕊/雌蕊）與功能  {t_mid, 會考}
+- [sci.t_mid.bio-plant-physiology.pollination-fertilization] 說明授粉與受精、果實與種子的形成  {t_mid, 會考}
+- [sci.t_mid.bio-plant-physiology.seed-dispersal] 舉例種子與果實的傳播方式（風/水/動物/自力）  {t_mid, 會考}
+- [sci.t_mid.bio-plant-physiology.vegetative-propagation] 舉例植物的營養繁殖（扦插、壓條、嫁接、塊莖）  {t_mid, 會考}
+- [sci.t_mid.bio-plant-physiology.tropisms] 說明植物的向性（向光性、向地性、向水性）  {t_mid, 會考}
+- [sci.t_adv.bio-plant-physiology.transpiration-pull] 以內聚—張力學說說明水分由根到葉的連續上升  {t_adv, 學測}
+- [sci.t_adv.bio-plant-physiology.translocation] 以源—庫與壓力流學說說明韌皮部運輸  {t_adv, 分科-生物}
+- [sci.t_adv.bio-plant-physiology.auxin] 說明生長素（auxin）造成向光性與頂芽優勢  {t_adv, 學測}
+- [sci.t_adv.bio-plant-physiology.plant-hormones] 列舉植物激素（生長素/激勃素/細胞分裂素/離層酸/乙烯）功能  {t_adv, 分科-生物}
+- [sci.t_sub.bio-plant-physiology.guard-cell-mechanism] 說明保衛細胞因鉀離子與膨壓變化開關氣孔  {t_sub, 分科-生物}
+- [sci.t_sub.bio-plant-physiology.photoperiodism] 說明光週期與開花（長日/短日植物、植物光敏素）  {t_sub, 分科-生物}
+- [sci.t_sub.bio-plant-physiology.double-fertilization] 說明被子植物的雙重受精（胚與胚乳）  {t_sub, 分科-生物}
+- [sci.t_sub.bio-plant-physiology.secondary-growth] 說明形成層造成的次級生長與年輪  {t_sub, 分科-生物} (待核)
+
+## 22. 生態學（族群／群集／生態系／能量流／物質循環） {strand: ecology}
+
+- [sci.t_base.bio-ecology.food-chain-intro] 認識食物鏈（誰吃誰）與生物間的取食關係  {t_base, 無}
+- [sci.t_base.bio-ecology.habitat] 認識不同棲地（森林、池塘、草原）與其中的生物  {t_base, 無}
+- [sci.t_mid.bio-ecology.ecosystem-components] 區分生態系的生物因子與非生物因子  {t_mid, 會考}
+- [sci.t_mid.bio-ecology.producer-consumer-decomposer] 區分生產者、消費者（各級）、分解者的角色  {t_mid, 會考}
+- [sci.t_mid.bio-ecology.food-web] 以食物網說明多條食物鏈交織的取食關係  {t_mid, 會考}
+- [sci.t_mid.bio-ecology.energy-flow] 說明能量沿食物鏈單向流動、逐級遞減（約 10%）  {t_mid, 會考}
+- [sci.t_mid.bio-ecology.ecological-pyramid] 判讀能量塔/數量塔/生物量塔  {t_mid, 會考}
+- [sci.t_mid.bio-ecology.carbon-cycle] 說明碳循環（光合/呼吸/燃燒/分解）  {t_mid, 會考}
+- [sci.t_mid.bio-ecology.water-cycle] 說明水循環的主要過程  {t_mid, 會考}
+- [sci.t_mid.bio-ecology.population-def] 定義族群並說明密度、出生率、死亡率的概念  {t_mid, 會考}
+- [sci.t_mid.bio-ecology.symbiosis-types] 區分共生關係（互利、片利、寄生）與競爭、掠食  {t_mid, 會考}
+- [sci.t_mid.bio-ecology.succession] 說明生態演替（初級/次級）與顛峰群集  {t_mid, 會考}
+- [sci.t_mid.bio-ecology.biomes] 認識主要陸域生物群系（熱帶雨林/沙漠/草原/苔原等）與氣候  {t_mid, 會考}
+- [sci.t_adv.bio-ecology.population-growth] 比較指數型（J型）與邏輯型（S型）族群成長與環境負載量  {t_adv, 學測}
+- [sci.t_adv.bio-ecology.nitrogen-cycle] 說明氮循環（固氮/硝化/脫氮）與固氮菌  {t_adv, 學測}
+- [sci.t_adv.bio-ecology.niche] 說明生態區位（棲位）與競爭排斥原理  {t_adv, 分科-生物}
+- [sci.t_adv.bio-ecology.limiting-factor] 說明限制因子與耐受範圍對族群分布的影響  {t_adv, 分科-生物}
+- [sci.t_sub.bio-ecology.survivorship-curve] 判讀存活曲線（I/II/III 型）與生活史策略（r/K 選擇）  {t_sub, 分科-生物}
+- [sci.t_sub.bio-ecology.age-structure] 以年齡結構圖預測族群成長趨勢  {t_sub, 分科-生物}
+- [sci.t_sub.bio-ecology.keystone-species] 說明關鍵種與其對群集結構的影響  {t_sub, 分科-生物}
+- [sci.t_sub.bio-ecology.biomagnification] 說明生物累積與生物放大（如 DDT、汞）  {t_sub, 分科-生物}
+- [sci.t_sub.bio-ecology.phosphorus-cycle] 說明磷循環（無氣態、經岩石與沉積）  {t_sub, 分科-生物} (待核)
+
+## 23. 生物與環境保育 {strand: conservation}
+
+- [sci.t_base.bio-conservation.protect-animals] 認識愛護生物與環境、不隨意破壞棲地  {t_base, 無}
+- [sci.t_mid.bio-conservation.human-impact] 舉例人類活動造成的環境破壞（棲地破壞、污染、過度開發）  {t_mid, 會考}
+- [sci.t_mid.bio-conservation.pollution-types] 區分空氣、水、土壤污染及其對生物的影響  {t_mid, 會考}
+- [sci.t_mid.bio-conservation.global-warming] 說明溫室效應與全球暖化對生態的衝擊  {t_mid, 會考}
+- [sci.t_mid.bio-conservation.invasive-species] 說明外來入侵種對本土生態的威脅  {t_mid, 會考}
+- [sci.t_mid.bio-conservation.extinction] 說明物種滅絕的成因與生物多樣性喪失的後果  {t_mid, 會考}
+- [sci.t_mid.bio-conservation.conservation-methods] 舉例保育方法（保護區、復育、法規、永續利用）  {t_mid, 會考}
+- [sci.t_mid.bio-conservation.sustainability] 說明永續發展與資源的合理利用  {t_mid, 會考}
+- [sci.t_adv.bio-conservation.ecosystem-services] 說明生態系服務（供給/調節/文化/支持）的價值  {t_adv, 學測}
+- [sci.t_adv.bio-conservation.biodiversity-value] 論述維護生物多樣性的重要性（基因庫、醫藥、生態平衡）  {t_adv, 學測}
+- [sci.t_sub.bio-conservation.eutrophication] 說明優養化的成因、過程與對水域生態的影響  {t_sub, 分科-生物}
+- [sci.t_sub.bio-conservation.carbon-neutral] 討論碳中和、碳匯與減碳策略的生態意義  {t_sub, 分科-生物} (待核)
+
+## 24. 探究與實作 {strand: inquiry}
+
+- [sci.t_base.bio-inquiry.observe-record] 能觀察生物並做簡單記錄（文字、圖畫、表格）  {t_base, 無}
+- [sci.t_base.bio-inquiry.simple-question] 能對生物現象提出可探究的問題  {t_base, 無}
+- [sci.t_mid.bio-inquiry.variables] 辨識實驗的操縱變因、應變變因與控制變因  {t_mid, 會考}
+- [sci.t_mid.bio-inquiry.control-group] 說明對照組與實驗組的設計與意義  {t_mid, 會考}
+- [sci.t_mid.bio-inquiry.hypothesis] 能依問題提出可檢驗的假說並預測結果  {t_mid, 會考}
+- [sci.t_mid.bio-inquiry.fair-test] 說明單一變因原則（公平測試）的重要性  {t_mid, 會考}
+- [sci.t_mid.bio-inquiry.data-table-graph] 將資料整理成表格並選用適當圖表（長條/折線）呈現  {t_mid, 會考}
+- [sci.t_mid.bio-inquiry.read-graph] 判讀生物實驗的圖表並描述趨勢  {t_mid, 會考}
+- [sci.t_mid.bio-inquiry.conclusion-evidence] 依數據歸納結論、區分觀察與推論  {t_mid, 會考}
+- [sci.t_mid.bio-inquiry.repeat-reliability] 說明重複測量與取平均以提高可靠度  {t_mid, 會考}
+- [sci.t_mid.bio-inquiry.lab-safety] 遵守生物實驗室安全與器材使用規範  {t_mid, 會考}
+- [sci.t_adv.bio-inquiry.argumentation] 以主張—證據—推理建構科學論證並評估他人論點  {t_adv, 學測}
+- [sci.t_adv.bio-inquiry.experimental-flaw] 評估實驗設計的缺失並提出改進（樣本數、干擾變因）  {t_adv, 學測}
+- [sci.t_adv.bio-inquiry.correlation-causation] 區分相關性與因果關係  {t_adv, 學測}
+- [sci.t_sub.bio-inquiry.statistics-basic] 以平均數、標準差、誤差線與顯著性初步判讀生物數據  {t_sub, 分科-生物} (待核)
+
+---
+
+## 每一主軸計數表
+
+| # | 主軸 (strand) | 條目數 |
+|---|---------------|--------|
+| 1 | 生命的特徵與組成層次 | 13 |
+| 2 | 細胞構造與功能 | 25 |
+| 3 | 物質進出細胞 | 11 |
+| 4 | 酵素與能量 | 12 |
+| 5 | 光合作用 | 15 |
+| 6 | 呼吸作用 | 12 |
+| 7 | 細胞分裂與細胞週期 | 16 |
+| 8 | 營養與消化 | 14 |
+| 9 | 循環 | 16 |
+| 10 | 呼吸（氣體交換） | 10 |
+| 11 | 排泄 | 11 |
+| 12 | 神經與內分泌協調 | 19 |
+| 13 | 免疫 | 13 |
+| 14 | 運動（骨骼肌肉） | 8 |
+| 15 | 生殖與發育 | 14 |
+| 16 | 遺傳（古典） | 21 |
+| 17 | 分子遺傳 | 17 |
+| 18 | 生物技術 | 14 |
+| 19 | 演化 | 16 |
+| 20 | 生物多樣性與分類 | 14 |
+| 21 | 植物的構造與生理 | 19 |
+| 22 | 生態學 | 22 |
+| 23 | 生物與環境保育 | 12 |
+| 24 | 探究與實作 | 15 |
+| | **總計** | **359** |
+
+
+# ===== 領域：sci-earth（208 條，來源 sci-earth.md）=====
+
+# 知識點清單 — 自然科 · 地球科學（地科）
+
+深度標準：每一條為「一個具體、可測的微技能」。tier 僅供內部分層（t_base＝國小自然地球/天文相關；t_mid＝國中地科/會考；t_adv＝高中學測地科/探究）。
+exam 標註會考／學測／無（分科測驗不含地科獨立科目；深階歸學測或探究與實作）。
+全繁體中文，零簡體，零 PRC 詞彙。不確定者標 `(待核)`。
+
+---
+
+## 地球的構造與地球系統 (earth-system)
+
+- [sci.t_base.earth-earth-system.earth-shape] 地球是圓球形（由船隻、月食影子、太空照片等證據推論）  {t_base, 無}
+- [sci.t_base.earth-earth-system.land-sea-sky] 地球表面分陸地、海洋與大氣（海陸分布觀察）  {t_base, 無}
+- [sci.t_base.earth-earth-system.water-everywhere] 地球上水以海洋、河川、湖泊、冰、地下水、水氣等多種形式存在  {t_base, 無}
+- [sci.t_mid.earth-earth-system.layers-crust-mantle-core] 地球內部分層：地殼、地函、地核（由淺至深）  {t_mid, 會考}
+- [sci.t_mid.earth-earth-system.crust-ocean-vs-continent] 區分海洋地殼（較薄、密度大、玄武岩質）與大陸地殼（較厚、密度小、花岡岩質）  {t_mid, 會考}
+- [sci.t_mid.earth-earth-system.lithosphere-asthenosphere] 岩石圈（地殼＋上部地函頂）與軟流圈的區分與相對軟硬  {t_mid, 會考}
+- [sci.t_mid.earth-earth-system.four-spheres] 地球四大圈：岩石圈、水圈、大氣圈、生物圈的範圍與交互作用  {t_mid, 會考}
+- [sci.t_mid.earth-earth-system.temp-pressure-with-depth] 地球內部溫度與壓力隨深度增加而升高  {t_mid, 會考}
+- [sci.t_adv.earth-earth-system.seismic-wave-interior] 以地震波（P 波、S 波）傳播速度變化推論地球內部分層界面  {t_adv, 學測}
+- [sci.t_adv.earth-earth-system.moho-gutenberg] 莫氏不連續面（地殼—地函界）與古氏不連續面（地函—地核界）的定義  {t_adv, 學測}
+- [sci.t_adv.earth-earth-system.s-wave-no-liquid] S 波無法通過外核→推論外核為液態、內核為固態  {t_adv, 學測}
+- [sci.t_adv.earth-earth-system.core-composition] 地核主要由鐵、鎳組成；地球磁場源自外核流體運動（概念）  {t_adv, 學測}
+- [sci.t_adv.earth-earth-system.earth-origin] 地球與太陽系由原始星雲收縮、吸積形成（約 46 億年前）  {t_adv, 學測}
+- [sci.t_adv.earth-earth-system.differentiation] 地球早期熔融、重的物質下沉形成地核、輕者上浮成地殼的分化過程  {t_adv, 學測}
+- [sci.t_adv.earth-earth-system.system-feedback] 地球系統各圈層以能量與物質流動相互耦合、回饋（如碳循環跨圈層）  {t_adv, 學測}
+- [sci.t_adv.earth-earth-system.energy-sources] 地球系統三大能量來源：太陽輻射、地球內部熱能、重力（潮汐）  {t_adv, 學測}
+
+## 板塊構造與地體運動 (tectonics)
+
+- [sci.t_mid.earth-tectonics.continental-drift] 大陸漂移學說與其證據（海岸線契合、化石分布、古氣候）  {t_mid, 會考}
+- [sci.t_mid.earth-tectonics.seafloor-spreading] 海底擴張說：中洋脊處產生新海洋地殼  {t_mid, 會考}
+- [sci.t_mid.earth-tectonics.plate-tectonics-theory] 板塊構造學說：岩石圈分裂成數個板塊、在軟流圈上移動  {t_mid, 會考}
+- [sci.t_mid.earth-tectonics.major-plates] 全球主要板塊名稱與相對位置（歐亞、太平洋、菲律賓海板塊等）  {t_mid, 會考}
+- [sci.t_mid.earth-tectonics.divergent-boundary] 張裂（分離）型板塊邊界：中洋脊、裂谷，地殼生成  {t_mid, 會考}
+- [sci.t_mid.earth-tectonics.convergent-subduction] 聚合（碰撞）型板塊邊界—隱沒帶：海溝、火山島弧形成  {t_mid, 會考}
+- [sci.t_mid.earth-tectonics.convergent-collision] 聚合型—大陸碰撞造山（如喜馬拉雅山）  {t_mid, 會考}
+- [sci.t_mid.earth-tectonics.transform-boundary] 錯動（平移）型板塊邊界：轉形斷層（如聖安地列斯斷層）  {t_mid, 會考}
+- [sci.t_mid.earth-tectonics.taiwan-plate-setting] 臺灣位於歐亞板塊與菲律賓海板塊聚合帶，造成造山與多地震  {t_mid, 會考}
+- [sci.t_adv.earth-tectonics.mantle-convection] 板塊運動的驅動力：地函對流、隱沒板塊的拉力（slab pull）、中洋脊推力  {t_adv, 學測}
+- [sci.t_adv.earth-tectonics.paleomagnetism] 古地磁與海洋磁異常條帶對稱分布→支持海底擴張  {t_adv, 學測}
+- [sci.t_adv.earth-tectonics.age-of-seafloor] 海洋地殼年齡由中洋脊向兩側對稱增加，最老約 2 億年  {t_adv, 學測}
+- [sci.t_adv.earth-tectonics.hotspot] 熱點與火山島鏈（如夏威夷群島）記錄板塊移動方向與速率  {t_adv, 學測}
+- [sci.t_adv.earth-tectonics.taiwan-orogeny] 臺灣造山運動：弧陸碰撞使地層褶皺、抬升形成中央山脈  {t_adv, 學測}
+- [sci.t_adv.earth-tectonics.plate-velocity-calc] 由海洋磁條帶或 GPS 數據估算板塊移動速率（cm/年量級）  {t_adv, 學測}
+
+## 地震與火山 (quake-volcano)
+
+- [sci.t_base.earth-quake-volcano.earthquake-shake] 地震會使地面搖動、造成房屋損壞，需學會防震避難  {t_base, 無}
+- [sci.t_base.earth-quake-volcano.volcano-basic] 火山噴發會噴出岩漿、火山灰與氣體  {t_base, 無}
+- [sci.t_mid.earth-quake-volcano.fault-cause] 地震成因：岩層受力累積、沿斷層錯動釋放能量  {t_mid, 會考}
+- [sci.t_mid.earth-quake-volcano.focus-epicenter] 區分震源（地下破裂起點）與震央（震源正上方地表點）  {t_mid, 會考}
+- [sci.t_mid.earth-quake-volcano.p-s-waves] P 波（縱波、快、先到）與 S 波（橫波、慢、後到）的性質差異  {t_mid, 會考}
+- [sci.t_mid.earth-quake-volcano.magnitude-vs-intensity] 區分地震規模（能量大小，一次地震一個值）與震度（某地搖晃程度，各地不同）  {t_mid, 會考}
+- [sci.t_mid.earth-quake-volcano.cwb-intensity-scale] 臺灣（中央氣象署）震度分級的意義與使用  {t_mid, 會考}
+- [sci.t_mid.earth-quake-volcano.earthquake-hazards] 地震災害：建物倒塌、山崩、土壤液化、海嘯、火災  {t_mid, 會考}
+- [sci.t_mid.earth-quake-volcano.earthquake-safety] 地震避難三要領（趴下、掩護、穩住）與防災準備  {t_mid, 會考}
+- [sci.t_mid.earth-quake-volcano.volcano-types-products] 火山噴發產物：熔岩、火山碎屑（火山灰、火山彈）、氣體  {t_mid, 會考}
+- [sci.t_mid.earth-quake-volcano.taiwan-volcano] 臺灣火山分布（大屯火山群、龜山島等）與板塊關係  {t_mid, 會考}
+- [sci.t_adv.earth-quake-volcano.locate-epicenter] 利用 P、S 波到時差（走時差）推算測站到震央距離並三點定位震央  {t_adv, 學測}
+- [sci.t_adv.earth-quake-volcano.magnitude-energy] 地震規模每增 1，釋放能量約增 32 倍（概念與量級）  {t_adv, 學測}
+- [sci.t_adv.earth-quake-volcano.benioff-zone] 隱沒帶地震深度隨遠離海溝而加深（班尼奧夫帶）  {t_adv, 學測}
+- [sci.t_adv.earth-quake-volcano.early-warning] 地震預警原理：利用 P 波先到、電波比 S 波快爭取秒級預警  {t_adv, 學測}
+- [sci.t_adv.earth-quake-volcano.magma-composition-eruption] 岩漿黏滯度（二氧化矽含量）決定噴發是寧靜溢流或劇烈爆發  {t_adv, 學測}
+- [sci.t_adv.earth-quake-volcano.volcano-tectonic-setting] 火山分布與板塊邊界（隱沒帶、中洋脊、熱點）的對應  {t_adv, 學測}
+
+## 岩石與礦物與岩石循環 (rock-mineral)
+
+- [sci.t_base.earth-rock-mineral.rock-observe] 觀察並描述岩石的顏色、顆粒、軟硬等特徵  {t_base, 無}
+- [sci.t_base.earth-rock-mineral.soil-from-rock] 土壤由岩石風化碎屑與腐植質組成  {t_base, 無}
+- [sci.t_mid.earth-rock-mineral.mineral-definition] 礦物為天然、無機、具固定化學成分與結晶構造的固體  {t_mid, 會考}
+- [sci.t_mid.earth-rock-mineral.mineral-properties] 礦物鑑定性質：顏色、條痕、光澤、硬度（莫氏硬度）、解理  {t_mid, 會考}
+- [sci.t_mid.earth-rock-mineral.igneous-rock] 火成岩由岩漿冷卻凝固而成（火山岩 vs 深成岩，如玄武岩、花岡岩）  {t_mid, 會考}
+- [sci.t_mid.earth-rock-mineral.sedimentary-rock] 沉積岩由碎屑沉積壓密膠結而成，常具層理與化石（如砂岩、頁岩、石灰岩）  {t_mid, 會考}
+- [sci.t_mid.earth-rock-mineral.metamorphic-rock] 變質岩由原岩受高溫高壓改變而成（如大理岩、片岩、板岩）  {t_mid, 會考}
+- [sci.t_mid.earth-rock-mineral.rock-cycle] 岩石循環：三大類岩石在地質作用下可互相轉變  {t_mid, 會考}
+- [sci.t_mid.earth-rock-mineral.rock-identify] 依特徵（晶粒、層理、葉理）判別岩石屬三大類何者  {t_mid, 會考}
+- [sci.t_adv.earth-rock-mineral.cooling-rate-texture] 岩漿冷卻速率決定火成岩晶粒大小（快冷細粒/玻璃質、慢冷粗粒）  {t_adv, 學測}
+- [sci.t_adv.earth-rock-mineral.felsic-mafic] 火成岩依二氧化矽含量分酸性（淺色、長英質）與基性（深色、鐵鎂質）  {t_adv, 學測}
+- [sci.t_adv.earth-rock-mineral.clastic-vs-chemical] 沉積岩分碎屑岩與化學/生物沉積岩（如石灰岩、燧石）  {t_adv, 學測}
+- [sci.t_adv.earth-rock-mineral.metamorphic-grade] 變質程度與葉理發育（板岩→片岩→片麻岩）隨溫壓升高  {t_adv, 學測}
+- [sci.t_adv.earth-rock-mineral.silicate-structure] 矽酸鹽礦物以矽氧四面體為基本單元組成（概念）  {t_adv, 學測}
+
+## 地質作用（風化、侵蝕、搬運、堆積） (geomorph)
+
+- [sci.t_base.earth-geomorph.landform-observe] 認識常見地形：山、河、海岸、平原  {t_base, 無}
+- [sci.t_base.earth-geomorph.water-shapes-land] 流水會侵蝕與堆積改變地表（河流、海浪）  {t_base, 無}
+- [sci.t_mid.earth-geomorph.weathering-physical-chemical] 風化分物理風化（破碎）與化學風化（成分改變），及影響因素  {t_mid, 會考}
+- [sci.t_mid.earth-geomorph.erosion-agents] 侵蝕營力：流水、海浪、風、冰河  {t_mid, 會考}
+- [sci.t_mid.earth-geomorph.transport-deposition] 搬運與堆積：顆粒大小、流速與沉積物沉降的關係  {t_mid, 會考}
+- [sci.t_mid.earth-geomorph.river-landforms] 河流地形：上游 V 型谷、中游曲流、下游三角洲與沖積扇  {t_mid, 會考}
+- [sci.t_mid.earth-geomorph.coastal-landforms] 海岸地形：海蝕平台、海蝕洞、沙灘、沙洲（侵蝕岸 vs 堆積岸）  {t_mid, 會考}
+- [sci.t_mid.earth-geomorph.taiwan-landforms] 臺灣特殊地形（如野柳、太魯閣峽谷、海岸階地）的成因  {t_mid, 會考}
+- [sci.t_mid.earth-geomorph.karst] 石灰岩地區溶蝕形成鐘乳石、石筍等喀斯特地形  {t_mid, 會考}
+- [sci.t_adv.earth-geomorph.grain-size-velocity] 以流速—顆粒關係（侵蝕/搬運/堆積臨界流速）分析沉積作用  {t_adv, 學測}
+- [sci.t_adv.earth-geomorph.sorting-rounding] 沉積物的淘選度與圓磨度反映搬運距離與能量  {t_adv, 學測}
+- [sci.t_adv.earth-geomorph.mass-wasting] 塊體崩壞（山崩、土石流）的觸發條件（降雨、坡度、地震）  {t_adv, 學測}
+- [sci.t_adv.earth-geomorph.terrace-uplift] 河階、海階地形記錄地殼抬升與海水面升降  {t_adv, 學測}
+
+## 地質年代與化石 (geotime)
+
+- [sci.t_base.earth-geotime.fossil-basic] 化石是古代生物留下的遺骸或遺跡  {t_base, 無}
+- [sci.t_mid.earth-geotime.fossil-formation] 化石形成條件：生物遺體快速被沉積物掩埋、經長時間石化  {t_mid, 會考}
+- [sci.t_mid.earth-geotime.strata-superposition] 疊置定律：未擾動地層中，下層較老、上層較新  {t_mid, 會考}
+- [sci.t_mid.earth-geotime.index-fossil] 標準（指準）化石用於對比地層與判斷年代（分布廣、存在時間短）  {t_mid, 會考}
+- [sci.t_mid.earth-geotime.relative-age] 相對地質年代的概念與地層對比  {t_mid, 會考}
+- [sci.t_mid.earth-geotime.geologic-time-scale] 地質年代大分：古生代、中生代、新生代與代表生物  {t_mid, 會考}
+- [sci.t_adv.earth-geotime.original-horizontality] 原始水平定律與地層後期變形（褶皺、傾斜）的解讀  {t_adv, 學測}
+- [sci.t_adv.earth-geotime.cross-cutting] 截切關係定律：截切他層的岩脈/斷層較被截切者年輕  {t_adv, 學測}
+- [sci.t_adv.earth-geotime.unconformity] 不整合面代表沉積間斷或侵蝕，記錄缺失的地質時間  {t_adv, 學測}
+- [sci.t_adv.earth-geotime.radiometric-dating] 放射性定年原理：以半衰期與母子同位素比值測絕對年代  {t_adv, 學測}
+- [sci.t_adv.earth-geotime.half-life-calc] 由剩餘母核比例與半衰期計算岩石或化石的絕對年齡  {t_adv, 學測}
+- [sci.t_adv.earth-geotime.mass-extinction] 地質史上重大生物大滅絕事件與環境劇變的關聯  {t_adv, 學測}
+- [sci.t_adv.earth-geotime.earth-history-events] 地球歷史重大事件序（大氣含氧、生命起源、恐龍興衰）排序  {t_adv, 學測}
+
+## 大氣的組成與結構 (atmosphere)
+
+- [sci.t_base.earth-atmosphere.air-exists] 空氣確實存在且佔有空間、有重量（觀察實驗）  {t_base, 無}
+- [sci.t_mid.earth-atmosphere.air-composition] 大氣主要成分：氮約 78%、氧約 21%，其餘為氬、二氧化碳、水氣等  {t_mid, 會考}
+- [sci.t_mid.earth-atmosphere.atmospheric-pressure] 大氣壓力的存在、隨高度上升而減小  {t_mid, 會考}
+- [sci.t_mid.earth-atmosphere.layers-temperature] 大氣分層（對流層、平流層、中氣層、增溫層）依溫度垂直變化劃分  {t_mid, 會考}
+- [sci.t_mid.earth-atmosphere.troposphere-weather] 天氣現象主要發生於對流層，氣溫隨高度遞減  {t_mid, 會考}
+- [sci.t_mid.earth-atmosphere.ozone-layer] 臭氧層位於平流層，吸收紫外線保護地表生物  {t_mid, 會考}
+- [sci.t_adv.earth-atmosphere.stratosphere-inversion] 平流層氣溫隨高度上升（因臭氧吸收紫外線）→ 氣層穩定  {t_adv, 學測}
+- [sci.t_adv.earth-atmosphere.energy-balance] 太陽輻射、反照率、地球長波輻射的收支平衡  {t_adv, 學測}
+- [sci.t_adv.earth-atmosphere.greenhouse-mechanism] 溫室氣體吸收地表長波輻射再放射，維持地表適居溫度的機制  {t_adv, 學測}
+- [sci.t_adv.earth-atmosphere.ionosphere] 增溫層/電離層對無線電波的反射與極光的關係（概念）  {t_adv, 學測}
+
+## 天氣與氣象（氣壓、鋒面、颱風、氣團） (weather)
+
+- [sci.t_base.earth-weather.weather-elements] 觀測與記錄天氣：晴、陰、雨、氣溫、風  {t_base, 無}
+- [sci.t_base.earth-weather.seasons-weather] 不同季節的天氣特徵（冬冷、夏熱、梅雨、颱風季）  {t_base, 無}
+- [sci.t_mid.earth-weather.humidity-dewpoint] 水氣、相對濕度與露點的概念  {t_mid, 會考}
+- [sci.t_mid.earth-weather.cloud-rain-formation] 雲與雨的形成：空氣上升、絕熱冷卻、水氣凝結  {t_mid, 會考}
+- [sci.t_mid.earth-weather.precipitation-types] 降水型態：雨、雪、冰雹的形成條件差異  {t_mid, 會考}
+- [sci.t_mid.earth-weather.air-pressure-wind] 風由高氣壓吹向低氣壓；等壓線疏密反映風速  {t_mid, 會考}
+- [sci.t_mid.earth-weather.high-low-pressure] 高氣壓（下沉、晴朗）與低氣壓（上升、多雲雨）的天氣  {t_mid, 會考}
+- [sci.t_mid.earth-weather.air-mass] 氣團的概念與臺灣主要影響氣團（大陸冷氣團、海洋暖氣團）  {t_mid, 會考}
+- [sci.t_mid.earth-weather.cold-warm-front] 冷鋒與暖鋒的構造、符號與過境前後天氣變化  {t_mid, 會考}
+- [sci.t_mid.earth-weather.stationary-front-meiyu] 滯留鋒與臺灣梅雨季的關係  {t_mid, 會考}
+- [sci.t_mid.earth-weather.typhoon-structure] 颱風的結構（颱風眼、眼牆、螺旋雨帶）與成因（熱帶海洋）  {t_mid, 會考}
+- [sci.t_mid.earth-weather.typhoon-taiwan] 颱風路徑、災害（強風、豪雨、暴潮）與防颱準備  {t_mid, 會考}
+- [sci.t_mid.earth-weather.weather-map-read] 判讀天氣圖上的高低壓、鋒面符號與天氣預測  {t_mid, 會考}
+- [sci.t_adv.earth-weather.adiabatic-lapse] 乾、濕絕熱遞減率與大氣穩定度判斷  {t_adv, 學測}
+- [sci.t_adv.earth-weather.coriolis-wind] 科氏力使風偏轉，形成地轉風與高低壓環流方向（北半球）  {t_adv, 學測}
+- [sci.t_adv.earth-weather.cyclone-anticyclone-circulation] 北半球氣旋（逆時針輻合上升）與反氣旋（順時針輻散下沉）  {t_adv, 學測}
+- [sci.t_adv.earth-weather.front-cross-section] 冷暖鋒垂直剖面與雲系、降雨分布差異（積雨雲 vs 層狀雲）  {t_adv, 學測}
+- [sci.t_adv.earth-weather.typhoon-energy] 颱風以海面水氣潛熱為能量來源，登陸後減弱的原因  {t_adv, 學測}
+- [sci.t_adv.earth-weather.satellite-radar] 衛星雲圖與雷達回波在天氣分析的應用  {t_adv, 學測}
+
+## 氣候與氣候變遷 (climate)
+
+- [sci.t_base.earth-climate.climate-vs-weather] 區分「天氣」（短時）與「氣候」（長期平均）  {t_base, 無}
+- [sci.t_mid.earth-climate.climate-factors] 影響氣候的因素：緯度、海陸分布、地形、洋流  {t_mid, 會考}
+- [sci.t_mid.earth-climate.taiwan-climate] 臺灣氣候特徵：季風、南北與高低海拔氣候差異  {t_mid, 會考}
+- [sci.t_mid.earth-climate.monsoon] 季風成因：海陸比熱差異造成冬夏盛行風向反轉  {t_mid, 會考}
+- [sci.t_mid.earth-climate.greenhouse-warming] 溫室效應增強與全球暖化的因果關係  {t_mid, 會考}
+- [sci.t_mid.earth-climate.warming-impacts] 全球暖化的影響：海平面上升、極端天氣、生態改變  {t_mid, 會考}
+- [sci.t_adv.earth-climate.global-circulation] 三胞環流（哈德里、佛雷爾、極地胞）與氣壓帶、風帶分布  {t_adv, 學測}
+- [sci.t_adv.earth-climate.desert-belt] 副熱帶高壓帶下沉氣流與沙漠帶分布的關係  {t_adv, 學測}
+- [sci.t_adv.earth-climate.enso] 聖嬰—南方振盪（ENSO）對全球與臺灣天氣的影響  {t_adv, 學測}
+- [sci.t_adv.earth-climate.milankovitch] 米蘭科維奇循環（地球軌道要素變化）與冰期—間冰期 `(待核：是否為學測正式必考內容，部分版本列為延伸閱讀)`  {t_adv, 學測}
+- [sci.t_adv.earth-climate.carbon-cycle] 碳循環與二氧化碳在大氣、海洋、生物圈、岩石圈間的交換  {t_adv, 學測}
+- [sci.t_adv.earth-climate.paleoclimate-proxy] 以冰芯、樹輪、同位素等代用資料重建古氣候  {t_adv, 學測}
+- [sci.t_adv.earth-climate.mitigation-adaptation] 氣候變遷的減緩（減碳）與調適策略（概念與政策）  {t_adv, 學測}
+
+## 海洋（海水性質、洋流、波浪、潮汐） (ocean)
+
+- [sci.t_base.earth-ocean.sea-salty] 海水是鹹的、含有鹽分  {t_base, 無}
+- [sci.t_base.earth-ocean.waves-tide-observe] 觀察海邊的波浪與潮水漲退  {t_base, 無}
+- [sci.t_mid.earth-ocean.seawater-salinity] 海水鹽度的概念與主要溶解鹽類（氯化鈉為主）  {t_mid, 會考}
+- [sci.t_mid.earth-ocean.seawater-temp-distribution] 海水溫度隨緯度、深度的變化（表層暖、深層冷）  {t_mid, 會考}
+- [sci.t_mid.earth-ocean.surface-currents] 表層洋流由盛行風帶動；暖流與寒流對沿岸氣候的影響  {t_mid, 會考}
+- [sci.t_mid.earth-ocean.kuroshio] 黑潮（暖流）對臺灣氣候與漁業的影響  {t_mid, 會考}
+- [sci.t_mid.earth-ocean.waves-basic] 波浪由風力造成；波高、波長與風速、吹送距離有關  {t_mid, 會考}
+- [sci.t_mid.earth-ocean.tide-basic] 潮汐的漲退與一天兩次高低潮（臺灣多為半日潮）  {t_mid, 會考}
+- [sci.t_mid.earth-ocean.water-resource-sea] 海洋資源（漁業、鹽、能源）與永續利用  {t_mid, 會考}
+- [sci.t_adv.earth-ocean.thermocline-pycnocline] 海水垂直結構：混合層、斜溫層、深層與密度分層  {t_adv, 學測}
+- [sci.t_adv.earth-ocean.gyre-coriolis] 科氏力與風共同造成大洋環流（渦旋 gyre）及西方強化  {t_adv, 學測}
+- [sci.t_adv.earth-ocean.thermohaline-circulation] 溫鹽環流（深層環流）由海水溫度與鹽度差驅動  {t_adv, 學測}
+- [sci.t_adv.earth-ocean.upwelling] 湧升流形成機制與其對漁業（營養鹽）的重要性  {t_adv, 學測}
+- [sci.t_adv.earth-ocean.tide-generation] 潮汐成因：月球與太陽引潮力（月球主導）  {t_adv, 學測}
+- [sci.t_adv.earth-ocean.spring-neap-tide] 大潮（朔望）與小潮（上下弦）與日月相對位置的關係  {t_adv, 學測}
+- [sci.t_adv.earth-ocean.wave-motion] 深水波中水質點作圓周運動、波形傳遞能量而水不隨波前進  {t_adv, 學測}
+
+## 水文與地下水 (hydrology)
+
+- [sci.t_base.earth-hydrology.water-cycle-basic] 水循環：蒸發、凝結、降水、逕流的循環過程  {t_base, 無}
+- [sci.t_base.earth-hydrology.water-save] 珍惜與節約用水、認識水資源有限  {t_base, 無}
+- [sci.t_mid.earth-hydrology.water-cycle-energy] 水循環由太陽能驅動，水在三態間轉換  {t_mid, 會考}
+- [sci.t_mid.earth-hydrology.surface-water] 地表水：河川、湖泊、水庫與集水區概念  {t_mid, 會考}
+- [sci.t_mid.earth-hydrology.groundwater-aquifer] 地下水的儲存（含水層）與補注、抽取  {t_mid, 會考}
+- [sci.t_mid.earth-hydrology.water-table] 地下水位的概念與升降  {t_mid, 會考}
+- [sci.t_mid.earth-hydrology.taiwan-water-issue] 臺灣水資源問題：降雨時空分布不均、河短流急、留蓄不易  {t_mid, 會考}
+- [sci.t_adv.earth-hydrology.infiltration-runoff] 入滲與逕流的分配受地表、坡度、植被、降雨強度影響  {t_adv, 學測}
+- [sci.t_adv.earth-hydrology.land-subsidence] 超抽地下水導致地層下陷與海水入侵  {t_adv, 學測}
+- [sci.t_adv.earth-hydrology.water-balance] 集水區水平衡（降水＝蒸發＋逕流＋入滲±儲量）概念  {t_adv, 學測}
+
+## 天文（地球運動、日月食、太陽系、恆星、宇宙） (astronomy)
+
+- [sci.t_base.earth-astronomy.day-night] 地球自轉造成晝夜交替、太陽東升西落  {t_base, 無}
+- [sci.t_base.earth-astronomy.sun-position-seasons] 一年中太陽高度與日照長短隨季節變化  {t_base, 無}
+- [sci.t_base.earth-astronomy.moon-phases-observe] 觀察月亮形狀（月相）在一個月內的變化  {t_base, 無}
+- [sci.t_base.earth-astronomy.stars-constellations-base] 認識夜空中的亮星與常見星座（如北斗、獵戶）  {t_base, 無}
+- [sci.t_base.earth-astronomy.solar-system-members] 太陽系有太陽、八大行星與月球等成員  {t_base, 無}
+- [sci.t_mid.earth-astronomy.rotation-revolution] 區分地球自轉（晝夜、約 24 小時）與公轉（四季、約 365 天）  {t_mid, 會考}
+- [sci.t_mid.earth-astronomy.seasons-cause] 四季成因：地軸傾斜使各地太陽直射角與日照時數隨公轉改變  {t_mid, 會考}
+- [sci.t_mid.earth-astronomy.ecliptic-solar-terms] 黃道、二分二至（春分秋分、夏至冬至）與太陽直射點移動  {t_mid, 會考}
+- [sci.t_mid.earth-astronomy.moon-phase-cause] 月相成因：日、地、月相對位置使月球被照亮面可見比例改變  {t_mid, 會考}
+- [sci.t_mid.earth-astronomy.moon-phase-sequence] 月相週期順序（新月→上弦→滿月→下弦）與出沒時間  {t_mid, 會考}
+- [sci.t_mid.earth-astronomy.solar-eclipse] 日食成因：月球位於日地之間遮住太陽（發生於朔）  {t_mid, 會考}
+- [sci.t_mid.earth-astronomy.lunar-eclipse] 月食成因：地球位於日月之間、月球進入地影（發生於望）  {t_mid, 會考}
+- [sci.t_mid.earth-astronomy.solar-system-structure] 太陽系組成：恆星（太陽）、行星、衛星、小行星、彗星  {t_mid, 會考}
+- [sci.t_mid.earth-astronomy.terrestrial-jovian] 類地行星與類木行星的特徵差異  {t_mid, 會考}
+- [sci.t_adv.earth-astronomy.eclipse-why-not-monthly] 因白道與黃道約 5° 夾角，故非每月都發生日月食  {t_adv, 學測}
+- [sci.t_adv.earth-astronomy.celestial-sphere] 天球概念與天體周日運動、天球坐標（赤緯、時角概念）  {t_adv, 學測}
+- [sci.t_adv.earth-astronomy.sun-path-latitude] 不同緯度、不同季節太陽的視運動路徑與中天高度計算  {t_adv, 學測}
+- [sci.t_adv.earth-astronomy.kepler-laws] 克卜勒行星運動三定律（橢圓軌道、等面積、週期與距離關係）概念 `(待核：學測多考概念，第三定律是否要求量化計算視版本而定)`  {t_adv, 學測}
+- [sci.t_adv.earth-astronomy.sun-structure] 太陽的結構與活動（黑子、閃焰、太陽風）及對地球的影響  {t_adv, 學測}
+- [sci.t_adv.earth-astronomy.stellar-brightness] 恆星的視星等與絕對星等、亮度與距離的關係  {t_adv, 學測}
+- [sci.t_adv.earth-astronomy.hr-diagram] 赫羅圖（H-R 圖）與恆星的光度、表面溫度分類  {t_adv, 學測}
+- [sci.t_adv.earth-astronomy.stellar-evolution] 恆星的演化歷程（主序星→紅巨星→白矮星/超新星/中子星/黑洞）  {t_adv, 學測}
+- [sci.t_adv.earth-astronomy.distance-scale] 天文距離單位與尺度（天文單位 AU、光年、秒差距） `(待核：秒差距/視差測距是否納入學測範圍，各版本深淺不一)`  {t_adv, 學測}
+- [sci.t_adv.earth-astronomy.galaxy-milkyway] 銀河系的結構與太陽系在其中的位置  {t_adv, 學測}
+- [sci.t_adv.earth-astronomy.big-bang] 宇宙起源（大霹靂）與宇宙膨脹、哈伯定律（紅移）概念  {t_adv, 學測}
+- [sci.t_adv.earth-astronomy.cmb] 宇宙微波背景輻射作為大霹靂的證據（概念）  {t_adv, 學測}
+- [sci.t_adv.earth-astronomy.calendar] 曆法：陽曆（回歸年）、陰曆（朔望月）與陰陽合曆（置閏）  {t_adv, 學測}
+
+## 環境資源與永續／防災 (environment)
+
+- [sci.t_base.earth-environment.natural-resources] 認識自然資源（水、土壤、礦產、能源）及其有限性  {t_base, 無}
+- [sci.t_base.earth-environment.recycle-conserve] 資源回收、節能減碳等日常環保行動  {t_base, 無}
+- [sci.t_base.earth-environment.disaster-prepare] 認識地震、颱風、水災等災害並學會基本避難  {t_base, 無}
+- [sci.t_mid.earth-environment.rock-mineral-resources] 礦產與岩石資源（金屬礦、建材、石灰岩）的利用  {t_mid, 會考}
+- [sci.t_mid.earth-environment.fossil-fuel] 化石燃料（煤、石油、天然氣）的成因、利用與限制  {t_mid, 會考}
+- [sci.t_mid.earth-environment.renewable-energy] 再生能源（太陽能、風能、地熱、水力）與地球科學的關聯  {t_mid, 會考}
+- [sci.t_mid.earth-environment.air-pollution] 空氣污染（懸浮微粒 PM2.5、酸雨）的成因與影響  {t_mid, 會考}
+- [sci.t_mid.earth-environment.ozone-depletion] 臭氧層破洞的成因（氟氯碳化物）與防治  {t_mid, 會考}
+- [sci.t_mid.earth-environment.taiwan-geohazards] 臺灣常見地質災害（地震、山崩、土石流、淹水）與坡地安全  {t_mid, 會考}
+- [sci.t_adv.earth-environment.hazard-vs-risk] 區分「天然災害潛勢」與「風險」（潛勢×曝露×脆弱度）概念  {t_adv, 學測}
+- [sci.t_adv.earth-environment.disaster-mitigation] 防災工程與非工程措施（預警、疏散、土地利用規劃）  {t_adv, 學測}
+- [sci.t_adv.earth-environment.sustainable-development] 永續發展與地球資源承載力、世代公平概念  {t_adv, 學測}
+- [sci.t_adv.earth-environment.marine-pollution] 海洋污染（塑膠微粒、優養化、油污）與海洋保育  {t_adv, 學測}
+
+## 探究與實作（觀測、數據、圖表、論證） (inquiry)
+
+- [sci.t_base.earth-inquiry.weather-record] 以簡單工具長期記錄天氣並製成表格  {t_base, 無}
+- [sci.t_base.earth-inquiry.shadow-sun] 測量一天中竿影長短變化推論太陽位置  {t_base, 無}
+- [sci.t_base.earth-inquiry.moon-diary] 連續數日觀察並畫下月相製成月相日記  {t_base, 無}
+- [sci.t_mid.earth-inquiry.read-topographic-map] 判讀等高線地形圖（坡度、山谷、山脊、高度）  {t_mid, 會考}
+- [sci.t_mid.earth-inquiry.read-weather-chart] 由天氣資料或天氣圖判讀並推論天氣變化  {t_mid, 會考}
+- [sci.t_mid.earth-inquiry.rock-mineral-id-lab] 以觀察與簡易測試（硬度、條痕）鑑定岩石礦物  {t_mid, 會考}
+- [sci.t_mid.earth-inquiry.graph-interpret] 判讀地科常見圖表（氣溫雨量圖、地震波走時圖）  {t_mid, 會考}
+- [sci.t_adv.earth-inquiry.variables-hypothesis] 界定問題、提出可驗證假說與辨識自變量/應變量/控制變量  {t_adv, 探究}
+- [sci.t_adv.earth-inquiry.data-analysis] 處理與分析觀測數據（求平均、趨勢、誤差與不確定性）  {t_adv, 探究}
+- [sci.t_adv.earth-inquiry.model-simulation] 運用模型或模擬（如地球儀、流水槽、光源模型）解釋地球現象  {t_adv, 探究}
+- [sci.t_adv.earth-inquiry.argument-evidence] 以證據進行科學論證、評估資料可信度並提出結論  {t_adv, 探究}
+- [sci.t_adv.earth-inquiry.communicate-results] 以圖表、書面或口頭有效表達探究結果與限制  {t_adv, 探究}
+
+---
+
+## 每一分項計數表（per-strand count）
+
+| strand | t_base | t_mid | t_adv | 小計 |
+|---|---|---|---|---|
+| 地球的構造與地球系統 (earth-system) | 3 | 5 | 8 | 16 |
+| 板塊構造與地體運動 (tectonics) | 0 | 9 | 6 | 15 |
+| 地震與火山 (quake-volcano) | 2 | 9 | 6 | 17 |
+| 岩石與礦物與岩石循環 (rock-mineral) | 2 | 7 | 5 | 14 |
+| 地質作用（風化侵蝕搬運堆積） (geomorph) | 2 | 7 | 4 | 13 |
+| 地質年代與化石 (geotime) | 1 | 5 | 7 | 13 |
+| 大氣的組成與結構 (atmosphere) | 1 | 5 | 4 | 10 |
+| 天氣與氣象 (weather) | 2 | 11 | 6 | 19 |
+| 氣候與氣候變遷 (climate) | 1 | 5 | 7 | 13 |
+| 海洋 (ocean) | 2 | 7 | 7 | 16 |
+| 水文與地下水 (hydrology) | 2 | 5 | 3 | 10 |
+| 天文 (astronomy) | 5 | 9 | 13 | 27 |
+| 環境資源與永續／防災 (environment) | 3 | 6 | 4 | 13 |
+| 探究與實作 (inquiry) | 3 | 4 | 5 | 12 |
+| **總計** | **29** | **94** | **85** | **208** |
+
+**總微技能數：208**
+
+
+# ===== 領域：soc-hist（134 條，來源 soc-hist.md）=====
+
+# 社會科-歷史 知識點母體（soc-hist）— 深度列舉
+
+> 範圍：基礎（國小社會-歷史啟蒙）→ 中階（國中歷史／會考）→ 高階（高中歷史 學測）→ 深階（分科-歷史）。
+> 依 108課綱：歷史採「主題式統整」而非編年背誦。每一條 = 一個具體、可測的微技能或特定史實理解。
+> tier 為內部標記（學習者看不到）：t_base=國小、t_mid=國中/會考、t_adv=高中學測、t_sub=分科-歷史。
+> 用語鐵律：全繁體、零簡體、零 PRC 詞；指中國一律用「中國」（不用「大陸／中國大陸」）；用「國小/國中/高中」。
+> 政治敏感主題採中立、事實導向、適齡表述。
+
+---
+
+## 主題軸 1：歷史技能（史料辨析／時序／因果／歷史解釋／多元觀點）
+
+### 基礎（國小）
+- [soc-hist.t_base.skill.time-sequence] 判斷事件先後：用「以前／以後、更早／更晚」排序生活事件  {t_base, 無}
+- [soc-hist.t_base.skill.timeline-read] 讀簡單時間軸／年表，找出某事件落在哪一段  {t_base, 無}
+- [soc-hist.t_base.skill.family-past] 透過訪問長輩、看老照片認識家族的過去（口述歷史初步）  {t_base, 無}
+- [soc-hist.t_base.skill.change-continuity] 比較「過去與現在」的生活差異，說出變與不變  {t_base, 無}
+- [soc-hist.t_base.skill.first-source-intro] 認識文物、老照片、老地圖是了解過去的「線索」（一手來源初步）  {t_base, 無}
+- [soc-hist.t_base.skill.local-change] 說明家鄉／社區隨時間的變遷（地名由來、街景、建築）  {t_base, 無}
+
+### 中階（國中／會考）
+- [soc-hist.t_mid.skill.periodization] 理解歷史分期概念（史前／有史；各時期分界的依據）  {t_mid, 會考}
+- [soc-hist.t_mid.skill.calendar-convert] 西元／民國紀年互換，世紀與年代的換算與定位  {t_mid, 會考}
+- [soc-hist.t_mid.skill.source-primary-secondary] 區分一手史料與二手史料並舉例  {t_mid, 會考}
+- [soc-hist.t_mid.skill.source-value-limit] 評估史料的證據價值與侷限（立場、偏見、殘缺、真偽）  {t_mid, 會考}
+- [soc-hist.t_mid.skill.causation] 分析事件的遠因、近因與導火線  {t_mid, 會考}
+- [soc-hist.t_mid.skill.change-rupture] 辨識歷史變遷中的延續與斷裂  {t_mid, 會考}
+- [soc-hist.t_mid.skill.infer-from-source] 從圖表／文字／歷史地圖等多素材推論結論  {t_mid, 會考}
+- [soc-hist.t_mid.skill.why-interpretations-differ] 說明為何同一事件會有不同歷史解釋（史料／立場不同）  {t_mid, 會考}
+
+### 高階（高中／學測）
+- [soc-hist.t_adv.skill.knowing-past] 「如何認識過去」：理解歷史知識是被建構的、非照抄事實  {t_adv, 學測}
+- [soc-hist.t_adv.skill.source-criticism] 史料的來源批判：辨析作者、目的、脈絡、受眾  {t_adv, 學測}
+- [soc-hist.t_adv.skill.internal-external-criticism] 區分史料的外部考證（真偽）與內部考證（內容可信度）  {t_adv, 學測}
+- [soc-hist.t_adv.skill.fact-vs-interpretation] 區別歷史事實與歷史解釋  {t_adv, 學測}
+- [soc-hist.t_adv.skill.multiperspective] 多元觀點：同一事件在不同群體（族群／性別／階層）的記憶差異  {t_adv, 學測}
+- [soc-hist.t_adv.skill.structural-causation] 結構性與事件性因果的區分（長時段 vs 短期事件）  {t_adv, 學測}
+- [soc-hist.t_adv.skill.argument] 歷史論證：建立「主張—證據—推論」的連結並反駁對立說法  {t_adv, 學測}
+- [soc-hist.t_adv.skill.memory-identity] 分析歷史記憶、紀念與當代認同／政治的關係  {t_adv, 學測}
+
+### 深階（分科-歷史）
+- [soc-hist.t_sub.skill.inquiry-method] 歷史學探究流程：提問→蒐證→詮釋→論證→表達  {t_sub, 分科-歷史}
+- [soc-hist.t_sub.skill.source-types] 一手史料類型與運用（檔案／報刊／口述／影像／物質文化）  {t_sub, 分科-歷史}
+- [soc-hist.t_sub.skill.historiography] 史學方法流派初步（實證史學／年鑑學派／社會史／文化史／全球史）  {t_sub, 分科-歷史}
+- [soc-hist.t_sub.skill.historian-stance] 評析歷史書寫的主觀性與史家立場如何影響敘事  {t_sub, 分科-歷史}
+- [soc-hist.t_sub.skill.public-history] 公眾歷史、記憶政治與轉型正義中的史料運用  {t_sub, 分科-歷史}
+- [soc-hist.t_sub.skill.global-comparison] 以跨文化比較與全球史視角重估單一區域敘事  {t_sub, 分科-歷史}
+- [soc-hist.t_sub.skill.digital-quant] 數位史料與量化／空間史學（資料庫、GIS 於歷史研究）  {t_sub, 分科-歷史}
+
+---
+
+## 主題軸 2：台灣史（分期主題）
+
+### 基礎（國小）
+- [soc-hist.t_base.taiwan.hometown-change] 認識家鄉的今昔變遷（老地名、古蹟、產業轉變）  {t_base, 無}
+- [soc-hist.t_base.taiwan.period-overview] 說出台灣歷史大序列：原住民→荷西→鄭氏→清領→日治→戰後  {t_base, 無}
+- [soc-hist.t_base.taiwan.indigenous-intro] 認識台灣原住民族是最早的住民、族群多元（南島語族）  {t_base, 無}
+- [soc-hist.t_base.taiwan.heritage] 認識身邊的文化資產與古蹟並說明保存的意義  {t_base, 無}
+
+### 中階（國中／會考）
+- [soc-hist.t_mid.taiwan.prehistory] 史前台灣與考古文化（長濱文化、大坌坑、十三行等）  {t_mid, 會考}
+- [soc-hist.t_mid.taiwan.austronesian] 南島語族與台灣原住民族的社會與分布  {t_mid, 會考}
+- [soc-hist.t_mid.taiwan.dutch-spanish] 荷西時期：荷蘭東印度公司的統治與轉口貿易、西班牙據北台灣  {t_mid, 會考}
+- [soc-hist.t_mid.taiwan.koxinga] 鄭氏政權：驅逐荷蘭、反清復明、屯墾與對外貿易  {t_mid, 會考}
+- [soc-hist.t_mid.taiwan.qing-early-migration] 清領前期的移墾社會、渡台禁令與漢人移墾  {t_mid, 會考}
+- [soc-hist.t_mid.taiwan.qing-land-feud] 清領前期的土地制度（大小租／一田多主）與分類械鬥  {t_mid, 會考}
+- [soc-hist.t_mid.taiwan.qing-trade] 清領前期的郊商與區域貿易網絡  {t_mid, 會考}
+- [soc-hist.t_mid.taiwan.qing-open-ports] 清領後期開港通商與茶、糖、樟腦的出口貿易  {t_mid, 會考}
+- [soc-hist.t_mid.taiwan.mudan-reform] 牡丹社事件與沈葆楨、丁日昌的開山撫番與建設  {t_mid, 會考}
+- [soc-hist.t_mid.taiwan.qing-province] 台灣建省與劉銘傳的近代化建設（鐵路、電報、新政）  {t_mid, 會考}
+- [soc-hist.t_mid.taiwan.japan-colonial-rule] 日治殖民統治體制（總督府、警察、保甲制度）  {t_mid, 會考}
+- [soc-hist.t_mid.taiwan.japan-resistance] 日治前期武裝抗日與後期政治社會運動（議會設置請願、文化協會）  {t_mid, 會考}
+- [soc-hist.t_mid.taiwan.japan-economy] 日治殖民經濟（糖業、米作、基礎建設、工業化）  {t_mid, 會考}
+- [soc-hist.t_mid.taiwan.japan-assimilation] 日治教育、同化政策與皇民化運動  {t_mid, 會考}
+- [soc-hist.t_mid.taiwan.postwar-228] 戰後接收、二二八事件與白色恐怖（中立、適齡）  {t_mid, 會考}
+- [soc-hist.t_mid.taiwan.postwar-authoritarian] 戰後戒嚴與威權體制、地方自治與選舉  {t_mid, 會考}
+- [soc-hist.t_mid.taiwan.postwar-economy] 戰後經濟發展（土地改革、進口替代、出口導向、十大建設）  {t_mid, 會考}
+- [soc-hist.t_mid.taiwan.democratization] 解嚴與民主化（黨禁報禁解除、國會改革、總統直選）  {t_mid, 會考}
+- [soc-hist.t_mid.taiwan.social-change] 戰後社會變遷（人口成長、都市化、社會運動）  {t_mid, 會考}
+
+### 高階（高中／學測）
+- [soc-hist.t_adv.taiwan.multiethnic-formation] 「多元族群社會的形成」：原漢關係、族群互動與遷徙  {t_adv, 學測}
+- [soc-hist.t_adv.taiwan.early-global-trade] 早期台灣在東亞與全球貿易網絡中的位置（國際競逐）  {t_adv, 學測}
+- [soc-hist.t_adv.taiwan.qing-society-religion] 清代台灣社會組織與民間信仰（宗族、祭祀圈、移墾社會結構）  {t_adv, 學測}
+- [soc-hist.t_adv.taiwan.port-world-market] 開港後台灣經濟與世界市場的連結及其影響  {t_adv, 學測}
+- [soc-hist.t_adv.taiwan.colonial-modernity] 日治「殖民現代性」的雙重性（建設與剝削並存）  {t_adv, 學測}
+- [soc-hist.t_adv.taiwan.identity-shift] 認同的變遷：清帝國子民→殖民地人民→戰後國民  {t_adv, 學測}
+- [soc-hist.t_adv.taiwan.miracle-structure] 戰後經濟成長的結構、代價與國家角色  {t_adv, 學測}
+- [soc-hist.t_adv.taiwan.transitional-justice] 民主轉型的歷程與轉型正義的意義  {t_adv, 學測}
+- [soc-hist.t_adv.taiwan.external-relations] 台灣對外關係的演變（與中國、日本、美國）  {t_adv, 學測}
+
+### 深階（分科-歷史）
+- [soc-hist.t_sub.taiwan.historiography-debate] 台灣史分期論爭與史觀（移民史／殖民史／多元史觀）  {t_sub, 分科-歷史}
+- [soc-hist.t_sub.taiwan.indigenous-movement] 原住民族史與當代正名、自治與轉型正義  {t_sub, 分科-歷史}
+- [soc-hist.t_sub.taiwan.gender-history] 性別視角下的台灣史（女性勞動、參政、家庭角色變遷）  {t_sub, 分科-歷史}
+- [soc-hist.t_sub.taiwan.environmental-history] 環境史視角：台灣的開發、災害與生態變遷  {t_sub, 分科-歷史}
+- [soc-hist.t_sub.taiwan.postwar-migration] 戰後移民與族群認同史（外省、客家、新住民）  {t_sub, 分科-歷史}
+- [soc-hist.t_sub.taiwan.coldwar-taiwan] 冷戰結構下的台灣專題（美援、地緣政治）  {t_sub, 分科-歷史}
+
+---
+
+## 主題軸 3：中國與東亞史（108課綱以「中國與東亞的互動」主題式呈現）
+
+> 課綱將中國史置於東亞區域互動脈絡中統整，非獨立編年朝代背誦。(待核：主題歸屬與呈現方式依各版本教科書略有差異)
+
+### 中階（國中／會考）
+- [soc-hist.t_mid.eastasia.early-state] 中國早期國家與文明（商周、封建與宗法制度）  {t_mid, 會考}
+- [soc-hist.t_mid.eastasia.warring-thought] 春秋戰國的變局與諸子百家思想  {t_mid, 會考}
+- [soc-hist.t_mid.eastasia.qin-han-empire] 秦漢大一統帝國與中央集權制度的建立  {t_mid, 會考}
+- [soc-hist.t_mid.eastasia.division-fusion] 魏晉南北朝的分裂與民族互動融合  {t_mid, 會考}
+- [soc-hist.t_mid.eastasia.sui-tang] 隋唐的盛世、制度（科舉）與對外交流  {t_mid, 會考}
+- [soc-hist.t_mid.eastasia.song-yuan] 宋元：經濟重心南移、商業與科技發展、蒙古帝國  {t_mid, 會考}
+- [soc-hist.t_mid.eastasia.ming-qing] 明清：君主專制強化、海禁與對外關係  {t_mid, 會考}
+- [soc-hist.t_mid.eastasia.opium-treaties] 近代變局：鴉片戰爭與不平等條約體系  {t_mid, 會考}
+- [soc-hist.t_mid.eastasia.self-strengthening] 自強運動、戊戌變法與清末改革的成敗  {t_mid, 會考}
+- [soc-hist.t_mid.eastasia.1911-republic] 辛亥革命與中華民國的建立  {t_mid, 會考}
+- [soc-hist.t_mid.eastasia.republic-war] 民初軍閥、對日抗戰與國共關係（中立、適齡）  {t_mid, 會考}
+
+### 高階（高中／學測）
+- [soc-hist.t_adv.eastasia.state-society] 「國家與社會」：傳統中國的統治機制與官僚體制  {t_adv, 學測}
+- [soc-hist.t_adv.eastasia.registration-tax] 編戶齊民、賦役制度與國家對人民的控制  {t_adv, 學測}
+- [soc-hist.t_adv.eastasia.scholar-confucian] 士人與儒學在社會與政治中的角色  {t_adv, 學測}
+- [soc-hist.t_adv.eastasia.cultural-sphere] 「人群的移動與交流」：漢字、儒學、佛教構成的東亞文化圈  {t_adv, 學測}
+- [soc-hist.t_adv.eastasia.tribute-system] 朝貢體系與東亞國際秩序  {t_adv, 學測}
+- [soc-hist.t_adv.eastasia.maritime-silver] 東亞海洋貿易與白銀經濟的全球連結  {t_adv, 學測}
+- [soc-hist.t_adv.eastasia.modernization] 「現代化的歷程」：西力衝擊下東亞各國的改革（中日對比）  {t_adv, 學測}
+- [soc-hist.t_adv.eastasia.meiji] 日本明治維新與東亞近代化的分途  {t_adv, 學測}
+- [soc-hist.t_adv.eastasia.prc-founding] 中國共產革命與中華人民共和國的成立（中立、適齡）  {t_adv, 學測}
+
+### 深階（分科-歷史）
+- [soc-hist.t_sub.eastasia.china-concept] 東亞世界的形成與「中國」概念的歷史變化  {t_sub, 分科-歷史}
+- [soc-hist.t_sub.eastasia.examination-gentry] 科舉與士紳社會的專題探究  {t_sub, 分科-歷史}
+- [soc-hist.t_sub.eastasia.modernization-compare] 東亞近代化比較（中國、日本、朝鮮／韓國）  {t_sub, 分科-歷史}
+- [soc-hist.t_sub.eastasia.chinese-diaspora] 華人移民與東南亞／世界的華人網絡  {t_sub, 分科-歷史}
+- [soc-hist.t_sub.eastasia.coldwar-eastasia] 冷戰下的東亞分裂國家（兩韓、兩岸、戰後日本）專題  {t_sub, 分科-歷史}
+
+---
+
+## 主題軸 4：世界史（古文明／宗教／近代國家與帝國／工業化／兩次大戰／冷戰／全球化）
+
+### 中階（國中／會考）
+- [soc-hist.t_mid.world.mesopotamia-egypt] 兩河流域與埃及古文明  {t_mid, 會考}
+- [soc-hist.t_mid.world.india-ancient] 印度古文明與早期宗教（種姓制度、佛教起源）  {t_mid, 會考}
+- [soc-hist.t_mid.world.greece] 希臘城邦、雅典民主與希臘化文化  {t_mid, 會考}
+- [soc-hist.t_mid.world.rome] 羅馬共和與帝國、羅馬法與基督教的興起  {t_mid, 會考}
+- [soc-hist.t_mid.world.medieval-europe] 中古歐洲：封建制度、莊園經濟與教會  {t_mid, 會考}
+- [soc-hist.t_mid.world.islam] 伊斯蘭文明的興起與擴張  {t_mid, 會考}
+- [soc-hist.t_mid.world.renaissance-reformation] 文藝復興與宗教改革  {t_mid, 會考}
+- [soc-hist.t_mid.world.age-of-discovery] 地理大發現與海外擴張  {t_mid, 會考}
+- [soc-hist.t_mid.world.scientific-enlightenment] 科學革命與啟蒙運動  {t_mid, 會考}
+- [soc-hist.t_mid.world.american-french-rev] 美國獨立革命與法國大革命  {t_mid, 會考}
+- [soc-hist.t_mid.world.industrial-rev] 工業革命及其社會影響  {t_mid, 會考}
+- [soc-hist.t_mid.world.imperialism] 帝國主義與列強的殖民擴張  {t_mid, 會考}
+- [soc-hist.t_mid.world.wwi] 第一次世界大戰的起因、過程與戰後秩序  {t_mid, 會考}
+- [soc-hist.t_mid.world.depression-totalitarian] 經濟大恐慌與極權主義（法西斯／納粹）的興起  {t_mid, 會考}
+- [soc-hist.t_mid.world.wwii] 第二次世界大戰與大屠殺  {t_mid, 會考}
+- [soc-hist.t_mid.world.coldwar] 冷戰的形成與兩極對抗體系  {t_mid, 會考}
+- [soc-hist.t_mid.world.decolonization] 戰後去殖民化與新興國家的獨立  {t_mid, 會考}
+- [soc-hist.t_mid.world.globalization] 全球化與當代世界的形成  {t_mid, 會考}
+
+### 高階（高中／學測）
+- [soc-hist.t_adv.world.cross-civilization] 「古代文化與不同世界的互動」：跨區域文明交流（絲路、印度洋網絡）  {t_adv, 學測}
+- [soc-hist.t_adv.world.universal-religions] 普世宗教的傳播與世界（基督教、伊斯蘭、佛教）  {t_adv, 學測}
+- [soc-hist.t_adv.world.sovereign-states] 近代歐洲主權國家體系的形成（西發里亞體系）  {t_adv, 學測}
+- [soc-hist.t_adv.world.atlantic-economy] 資本主義與大西洋經濟（含奴隸貿易、三角貿易）  {t_adv, 學測}
+- [soc-hist.t_adv.world.nationalism] 近代革命浪潮、民族主義與民族國家的建立  {t_adv, 學測}
+- [soc-hist.t_adv.world.world-system] 工業化與資本主義世界體系的擴張  {t_adv, 學測}
+- [soc-hist.t_adv.world.new-imperialism] 新帝國主義與世界的被殖民及其回應  {t_adv, 學測}
+- [soc-hist.t_adv.world.total-war] 兩次大戰的總體戰性質與全球影響  {t_adv, 學測}
+- [soc-hist.t_adv.world.coldwar-ideology] 冷戰的意識形態對抗、代理戰爭與第三世界  {t_adv, 學測}
+- [soc-hist.t_adv.world.post-coldwar] 冷戰後的全球化、區域整合與全球議題  {t_adv, 學測}
+
+### 深階（分科-歷史）
+- [soc-hist.t_sub.world.global-divergence] 全球史視角：世界的連結與「大分流」論辯  {t_sub, 分科-歷史}
+- [soc-hist.t_sub.world.slavery-racism] 大西洋奴隸貿易與種族主義的歷史形成  {t_sub, 分科-歷史}
+- [soc-hist.t_sub.world.science-environment] 科技與環境史（工業化對環境與人類的衝擊）  {t_sub, 分科-歷史}
+- [soc-hist.t_sub.world.human-rights-history] 人權觀念的歷史演變（權利宣言到國際人權體系）  {t_sub, 分科-歷史}
+- [soc-hist.t_sub.world.gender-world] 性別與世界史（婦女勞動、參政與權利運動）  {t_sub, 分科-歷史}
+- [soc-hist.t_sub.world.post-coldwar-conflict] 冷戰後民族衝突、恐怖主義與國際秩序專題  {t_sub, 分科-歷史}
+
+---
+
+## 主題軸 5：跨科題組（史地公整合）
+
+### 中階（國中／會考）
+- [soc-hist.t_mid.cross.hist-geo] 歷史×地理：將史事置於空間脈絡（歷史地圖判讀）  {t_mid, 會考}
+- [soc-hist.t_mid.cross.hist-civic] 歷史×公民：制度變遷與今日政治／法律的連結  {t_mid, 會考}
+- [soc-hist.t_mid.cross.current-context] 時事議題的歷史脈絡化（圖表＋文本綜合判讀）  {t_mid, 會考}
+
+### 高階（高中／學測）
+- [soc-hist.t_adv.cross.multisource] 多素材（文本＋地圖＋統計圖）的史料綜合判讀  {t_adv, 學測}
+- [soc-hist.t_adv.cross.multifactor] 以地理／經濟／政治多因素分析歷史事件  {t_adv, 學測}
+- [soc-hist.t_adv.cross.past-present] 以史為鑑：歷史與當代公共議題的連結論證  {t_adv, 學測}
+
+### 深階（分科-歷史）
+- [soc-hist.t_sub.cross.interdisciplinary] 跨領域研究專題（議題的歷史—地理—社會整合論證）  {t_sub, 分科-歷史}
+- [soc-hist.t_sub.cross.source-quant] 一手史料＋量化資料的綜合探究與歷史書寫  {t_sub, 分科-歷史}
+
+---
+
+## 統計表（每主題軸計數）
+
+| 主題軸 | t_base | t_mid | t_adv | t_sub | 小計 |
+|---|---|---|---|---|---|
+| 1 歷史技能 | 6 | 8 | 8 | 7 | 29 |
+| 2 台灣史 | 4 | 19 | 9 | 6 | 38 |
+| 3 中國與東亞史 | 0 | 11 | 9 | 5 | 25 |
+| 4 世界史 | 0 | 18 | 10 | 6 | 34 |
+| 5 跨科題組 | 0 | 3 | 3 | 2 | 8 |
+| **合計** | **10** | **59** | **39** | **26** | **134** |
+
+**總計：134 個歷史微技能／知識點。**
+
+### (待核) 需人工覆核項目
+1. 主題軸 3 整體歸屬：108課綱將中國史統整於「中國與東亞的互動」主題脈絡，各版本教科書對「東亞／中國史」的切分與標題略有差異（待核呈現方式）。
+2. [soc-hist.t_mid.eastasia.republic-war]（民初軍閥／對日抗戰／國共關係）與 [soc-hist.t_adv.eastasia.prc-founding]（中華人民共和國成立）：政治敏感，須中立、事實導向、適齡，並確認國中／高中深度分配是否恰當。
+3. [soc-hist.t_mid.taiwan.postwar-228]（二二八與白色恐怖）國小是否完全不觸及、僅留文化資產與分期概覽（本列舉已將其歸 t_mid 起）——待核各年段適齡界線。
+
+
+# ===== 領域：soc-geo（355 條，來源 soc-geo.md）=====
+
+# 知識點清單 — 社會科・地理（soc-geo）
+
+> 範圍：基礎（國小社會-空間/地圖）→ 中階（國中地理/會考）→ 高階（學測地理）→ 深階（分科地理）。
+> tier 為內部欄位：t_base=國小基礎｜t_mid=國中會考｜t_adv=學測｜t_sub=分科地理。
+> exam：會考／學測／分科-地理／無。
+> 全繁體中文；指中國一律「中國」（不用「大陸」）；學制用「國小／國中／高中」。
+> 每一條 = 一個具體、可命題的微技能。
+
+---
+
+## 1. 地理技能（地圖／經緯度／統計圖表／GIS／遙測）strand=skill
+
+- [soc-geo.t_base.skill.direction-8] 辨認東西南北與八方位（含羅盤方位）  {t_base, 無}
+- [soc-geo.t_base.skill.compass-use] 使用指北針／太陽與影子判方向  {t_base, 無}
+- [soc-geo.t_base.skill.map-symbol] 判讀地圖圖例與常見地圖符號  {t_base, 無}
+- [soc-geo.t_base.skill.plan-view] 區辨平面圖／鳥瞰圖／實景的對應  {t_base, 無}
+- [soc-geo.t_base.skill.scale-intro] 用比例尺量算地圖上兩點的實際距離（初步）  {t_base, 無}
+- [soc-geo.t_base.skill.draw-schoolmap] 繪製校園／社區簡易地圖（含方位與圖例）  {t_base, 無}
+- [soc-geo.t_base.skill.grid-locate] 用格子（行列）在地圖上定位地物  {t_base, 無}
+- [soc-geo.t_base.skill.abs-rel-intro] 區辨絕對位置與相對位置（初步）  {t_base, 無}
+- [soc-geo.t_mid.skill.latlong-read] 判讀經緯度並寫出某點的絕對位置  {t_mid, 會考}
+- [soc-geo.t_mid.skill.graticule-feature] 說明經線／緯線特性（赤道、本初子午線、回歸線、極圈）  {t_mid, 會考}
+- [soc-geo.t_mid.skill.latlong-distance] 由緯度差估算南北距離（1°≈111km）  {t_mid, 會考}
+- [soc-geo.t_mid.skill.scale-types] 區辨文字式／數字式／線條式比例尺並互換  {t_mid, 會考}
+- [soc-geo.t_mid.skill.scale-coverage] 判斷比例尺大小與地圖詳細度／涵蓋範圍的關係  {t_mid, 會考}
+- [soc-geo.t_mid.skill.contour-read] 由等高線判讀山峰、山谷、鞍部、峭壁、緩坡與陡坡  {t_mid, 會考}
+- [soc-geo.t_mid.skill.contour-profile] 依等高線繪製地形剖面圖  {t_mid, 會考}
+- [soc-geo.t_mid.skill.elevation-relative] 區辨海拔高度與相對高度  {t_mid, 會考}
+- [soc-geo.t_mid.skill.dotmap] 判讀點子圖（點值×點數=數量）  {t_mid, 會考}
+- [soc-geo.t_mid.skill.choropleth] 判讀面量圖（分級著色的分布）  {t_mid, 會考}
+- [soc-geo.t_mid.skill.isoline-map] 判讀等值線圖（等溫線／等雨量線等）  {t_mid, 會考}
+- [soc-geo.t_mid.skill.proportional-symbol] 判讀比例符號圖（符號大小代表數量）  {t_mid, 會考}
+- [soc-geo.t_mid.skill.flow-map] 判讀流向圖（箭頭粗細代表流量）  {t_mid, 會考}
+- [soc-geo.t_mid.skill.timezone-calc] 以經度差換算時區與地方時（15°=1小時）  {t_mid, 會考}
+- [soc-geo.t_mid.skill.dateline] 說明國際換日線與跨線的日期增減  {t_mid, 會考}
+- [soc-geo.t_mid.skill.map-orientation] 判定地圖方位（有無指北標時）  {t_mid, 會考}
+- [soc-geo.t_mid.skill.gps-intro] 說明 GPS 定位的基本用途（初步）  {t_mid, 會考}
+- [soc-geo.t_adv.skill.gis-concept] 說明地理資訊系統（GIS）的組成與圖層疊加概念  {t_adv, 學測}
+- [soc-geo.t_adv.skill.vector-raster] 區辨向量資料與網格（網格/柵格）資料的特性  {t_adv, 學測}
+- [soc-geo.t_adv.skill.spatial-attribute] 區辨空間資料與屬性資料  {t_adv, 學測}
+- [soc-geo.t_adv.skill.rs-concept] 說明遙感探測（RS）原理並初步判讀衛星影像  {t_adv, 學測}
+- [soc-geo.t_adv.skill.gnss] 說明全球導航衛星系統（GNSS/GPS）三邊定位原理  {t_adv, 學測}
+- [soc-geo.t_adv.skill.isoline-interp] 在等值線圖上做內插估值  {t_adv, 學測}
+- [soc-geo.t_adv.skill.isochrone] 判讀等時線圖（可及性/通勤圈）  {t_adv, 學測}
+- [soc-geo.t_adv.skill.triangle-graph] 判讀三角圖（三級產業結構比重）  {t_adv, 學測}
+- [soc-geo.t_adv.skill.climograph] 判讀雨溫圖（氣候圖）辨識氣候類型  {t_adv, 學測}
+- [soc-geo.t_adv.skill.pop-pyramid-read] 判讀人口金字塔的年齡—性別結構  {t_adv, 學測}
+- [soc-geo.t_adv.skill.daylight-calc] 由緯度與季節判斷晝夜長短與日照時間  {t_adv, 學測}
+- [soc-geo.t_adv.skill.map-generalization] 說明比例尺與地圖概化（取捨）的關係  {t_adv, 學測}
+- [soc-geo.t_adv.skill.bearing-azimuth] 判定方位角／象限角  {t_adv, 學測}
+- [soc-geo.t_sub.skill.gis-buffer] GIS 環域分析（buffer）於區位問題的應用  {t_sub, 分科-地理}
+- [soc-geo.t_sub.skill.gis-overlay] GIS 疊圖分析（overlay）做適宜性評估  {t_sub, 分科-地理}
+- [soc-geo.t_sub.skill.gis-network] GIS 網路分析／最近設施分析  {t_sub, 分科-地理}
+- [soc-geo.t_sub.skill.gis-viewshed] GIS 視域分析（viewshed）  {t_sub, 分科-地理}
+- [soc-geo.t_sub.skill.gis-dem] 由數值地形模型（DEM）求坡度、坡向、陰影  {t_sub, 分科-地理}
+- [soc-geo.t_sub.skill.rs-multispectral] 遙測多光譜波段組合與假色影像判讀  {t_sub, 分科-地理}
+- [soc-geo.t_sub.skill.rs-ndvi] 以常態化差異植生指數（NDVI）判讀植被  {t_sub, 分科-地理}
+- [soc-geo.t_sub.skill.rs-active-passive] 區辨主動式（雷達）與被動式感測器  {t_sub, 分科-地理}
+- [soc-geo.t_sub.skill.rs-resolution] 區辨空間／光譜／時間解析度  {t_sub, 分科-地理}
+- [soc-geo.t_sub.skill.projection-distortion] 地圖投影類型（麥卡托／等積／方位）與變形特性  {t_sub, 分科-地理}
+- [soc-geo.t_sub.skill.greatcircle-rhumb] 區辨大圓航線與恆向線（麥卡托圖上的差異）  {t_sub, 分科-地理}
+- [soc-geo.t_sub.skill.spatial-interp] 空間內插法（反距離加權／克利金）概念  {t_sub, 分科-地理} (待核：克利金是否逾課綱)
+
+## 2. 自然地理-地形 strand=nat-landform
+
+- [soc-geo.t_base.nat-landform.names] 辨認山地、丘陵、平原、盆地、高原、台地等常見地形  {t_base, 無}
+- [soc-geo.t_base.nat-landform.tw-overview] 說明台灣「東高西低、中央山脈」的大致地形  {t_base, 無}
+- [soc-geo.t_mid.nat-landform.endo-exo] 區辨內營力與外營力對地形的作用  {t_mid, 會考}
+- [soc-geo.t_mid.nat-landform.plate-orogeny] 說明板塊運動造成造山與地震  {t_mid, 會考}
+- [soc-geo.t_mid.nat-landform.fold-fault] 辨認褶曲與斷層構造  {t_mid, 會考}
+- [soc-geo.t_mid.nat-landform.volcano] 辨認火山地形並舉台灣例（大屯火山群）  {t_mid, 會考}
+- [soc-geo.t_mid.nat-landform.weathering] 區辨物理風化與化學風化  {t_mid, 會考}
+- [soc-geo.t_mid.nat-landform.erosion-process] 說明侵蝕、搬運、堆積三作用  {t_mid, 會考}
+- [soc-geo.t_mid.nat-landform.river-forms] 辨認河流地形（V形谷、瀑布、曲流、沖積扇、三角洲）  {t_mid, 會考}
+- [soc-geo.t_mid.nat-landform.coast-forms] 辨認海岸地形（海蝕崖、海蝕平台、沙洲、潟湖）  {t_mid, 會考}
+- [soc-geo.t_mid.nat-landform.karst] 辨認喀斯特（石灰岩）地形  {t_mid, 會考}
+- [soc-geo.t_mid.nat-landform.glacial-intro] 辨認冰河地形（U形谷、冰斗）初步  {t_mid, 會考}
+- [soc-geo.t_mid.nat-landform.aeolian] 辨認風成地形（沙丘、黃土）  {t_mid, 會考}
+- [soc-geo.t_mid.nat-landform.tw-ranges] 說明台灣五大山脈走向與分布  {t_mid, 會考}
+- [soc-geo.t_adv.nat-landform.differential] 以差異侵蝕解釋構造與地形的關係  {t_adv, 學測}
+- [soc-geo.t_adv.nat-landform.rejuvenation] 說明回春作用與河階、準平原  {t_adv, 學測}
+- [soc-geo.t_adv.nat-landform.terrace] 區辨河階與海階的成因  {t_adv, 學測}
+- [soc-geo.t_adv.nat-landform.emerge-submerge] 區辨離水海岸與沉水海岸（谷灣、三角江）  {t_adv, 學測}
+- [soc-geo.t_adv.nat-landform.shelf-slope] 辨認大陸棚、大陸坡、海溝  {t_adv, 學測}
+- [soc-geo.t_adv.nat-landform.glacial-type] 區辨大陸冰河與山岳冰河及其地形  {t_adv, 學測}
+- [soc-geo.t_adv.nat-landform.arid-forms] 辨認乾燥地形（劣地、風蝕窪地、方山）  {t_adv, 學測}
+- [soc-geo.t_adv.nat-landform.mass-wasting] 區辨崩壞作用類型（地滑、土石流、潛移、落石）  {t_adv, 學測}
+- [soc-geo.t_adv.nat-landform.tw-tectonic] 說明台灣新期造山與地體構造特徵  {t_adv, 學測}
+- [soc-geo.t_sub.nat-landform.plate-boundary] 區辨張裂、聚合、錯動板塊邊界及其地形  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-landform.tectonic-theory] 說明大陸漂移→海底擴張→板塊構造學說演進  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-landform.rock-cycle] 說明岩石循環（火成／沉積／變質）與地形  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-landform.davis-penck] 比較戴維斯地形輪迴與動態均衡觀點  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-landform.graded-river] 說明河床均夷剖面與河流作用平衡  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-landform.classify] 將地形分為構造、侵蝕、堆積地形並判例  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-landform.coast-equilibrium] 說明海岸均衡剖面、沿岸流與漂沙  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-landform.tw-geo-history] 整合台灣地形分區與地質演化史  {t_sub, 分科-地理}
+
+## 3. 自然地理-氣候 strand=nat-climate
+
+- [soc-geo.t_base.nat-climate.weather-vs-climate] 區辨天氣與氣候（初步）  {t_base, 無}
+- [soc-geo.t_base.nat-climate.measure] 測量並記錄氣溫與降雨量  {t_base, 無}
+- [soc-geo.t_base.nat-climate.seasons] 說明四季變化與生活關係  {t_base, 無}
+- [soc-geo.t_base.nat-climate.tw-basic] 說明台灣「夏熱、冬溫、多雨」的概況  {t_base, 無}
+- [soc-geo.t_mid.nat-climate.temp-factors] 列舉影響氣溫的因素（緯度、高度、海陸、洋流、地形）  {t_mid, 會考}
+- [soc-geo.t_mid.nat-climate.lapse-rate] 說明氣溫隨高度遞減（約每百公尺降溫）  {t_mid, 會考}
+- [soc-geo.t_mid.nat-climate.temp-range] 區辨年溫差與日溫差並比較海陸差異  {t_mid, 會考}
+- [soc-geo.t_mid.nat-climate.rain-types] 區辨對流雨、地形雨、鋒面雨、氣旋雨  {t_mid, 會考}
+- [soc-geo.t_mid.nat-climate.monsoon] 以海陸比熱說明季風成因  {t_mid, 會考}
+- [soc-geo.t_mid.nat-climate.wind-cause] 說明風因氣壓梯度而生（高壓吹向低壓）  {t_mid, 會考}
+- [soc-geo.t_mid.nat-climate.climograph-type] 由雨溫圖判斷氣候類型  {t_mid, 會考}
+- [soc-geo.t_mid.nat-climate.koppen-major] 辨認柯本氣候五大類（熱帶、乾燥、溫帶、寒帶、高地）  {t_mid, 會考}
+- [soc-geo.t_mid.nat-climate.tw-features] 說明台灣季風、梅雨、颱風的氣候特徵  {t_mid, 會考}
+- [soc-geo.t_mid.nat-climate.isotherm] 判讀等溫線與等雨量線圖  {t_mid, 會考}
+- [soc-geo.t_adv.nat-climate.global-circulation] 說明三胞環流與信風、西風、極地東風  {t_adv, 學測}
+- [soc-geo.t_adv.nat-climate.pressure-belt] 說明氣壓帶與風帶的季節移動  {t_adv, 學測}
+- [soc-geo.t_adv.nat-climate.planetary-wind] 連結行星風系與氣候帶分布  {t_adv, 學測}
+- [soc-geo.t_adv.nat-climate.koppen-sub] 辨認柯本細分型（Af/Aw/BW/BS/Cfa/Cs/Cw/Df/ET 等）  {t_adv, 學測}
+- [soc-geo.t_adv.nat-climate.ocean-current] 說明暖流、寒流對沿岸氣候的影響  {t_adv, 學測}
+- [soc-geo.t_adv.nat-climate.enso] 說明聖嬰與反聖嬰現象的成因與影響  {t_adv, 學測}
+- [soc-geo.t_adv.nat-climate.fronts] 區辨冷鋒、暖鋒、滯留鋒、囚錮鋒  {t_adv, 學測}
+- [soc-geo.t_adv.nat-climate.air-mass] 區辨不同性質氣團（海洋／大陸、熱帶／極地）  {t_adv, 學測}
+- [soc-geo.t_adv.nat-climate.local-wind] 說明焚風與地方風（海陸風、山谷風）  {t_adv, 學測}
+- [soc-geo.t_adv.nat-climate.inversion] 說明逆溫現象與空氣污染關係  {t_adv, 學測}
+- [soc-geo.t_adv.nat-climate.urban-heat] 說明都市熱島與微氣候  {t_adv, 學測}
+- [soc-geo.t_sub.nat-climate.radiation-budget] 說明地球輻射平衡與能量收支  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-climate.adiabatic] 說明乾／濕絕熱遞減率與大氣穩定度  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-climate.humidity] 說明相對濕度、露點、飽和與凝結  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-climate.tropical-cyclone] 說明熱帶氣旋發展條件與結構  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-climate.midlat-cyclone] 說明中緯度（溫帶）氣旋的生命史  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-climate.monsoon-mechanism] 說明季風的動力與熱力機制  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-climate.change-mechanism] 說明氣候變遷機制（米蘭科維奇、溫室氣體）  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-climate.bioclimate] 連結氣候、植被與土壤的對應關係  {t_sub, 分科-地理}
+
+## 4. 自然地理-水文 strand=nat-hydro
+
+- [soc-geo.t_base.nat-hydro.cycle-intro] 說明水循環（蒸發→降雨→流回海）初步  {t_base, 無}
+- [soc-geo.t_base.nat-hydro.river-lake] 認識河流、湖泊與其用途  {t_base, 無}
+- [soc-geo.t_base.nat-hydro.tw-rivers] 認識台灣主要河川（濁水溪、淡水河等）  {t_base, 無}
+- [soc-geo.t_mid.nat-hydro.cycle-stages] 說明水循環各環節（蒸發、凝結、降水、逕流、下滲）  {t_mid, 會考}
+- [soc-geo.t_mid.nat-hydro.watershed] 說明流域、分水嶺與集水區  {t_mid, 會考}
+- [soc-geo.t_mid.nat-hydro.hydrograph-intro] 判讀河川流量歷線（初步）  {t_mid, 會考}
+- [soc-geo.t_mid.nat-hydro.groundwater] 說明地下水、泉與地下水位  {t_mid, 會考}
+- [soc-geo.t_mid.nat-hydro.tw-river-traits] 說明台灣河川短急、豐枯懸殊的特性  {t_mid, 會考}
+- [soc-geo.t_mid.nat-hydro.water-use] 說明水資源利用（灌溉、水庫、民生）  {t_mid, 會考}
+- [soc-geo.t_mid.nat-hydro.ocean-intro] 認識洋流、潮汐、波浪（初步）  {t_mid, 會考}
+- [soc-geo.t_adv.nat-hydro.flow-regime] 區辨雨水型、融雪型、地下水補注型的河川流量變化  {t_adv, 學測}
+- [soc-geo.t_adv.nat-hydro.urban-runoff] 說明都市化不透水面使洪峰提前增大  {t_adv, 學測}
+- [soc-geo.t_adv.nat-hydro.subsidence] 說明地下水超抽與地層下陷  {t_adv, 學測}
+- [soc-geo.t_adv.nat-hydro.lake-origin] 依成因分類湖泊（構造、火山、冰河、堰塞）  {t_adv, 學測}
+- [soc-geo.t_adv.nat-hydro.snowline] 說明雪線、永凍層與冰河補給  {t_adv, 學測}
+- [soc-geo.t_adv.nat-hydro.ocean-gyre] 說明表層洋流大洋環流系統  {t_adv, 學測}
+- [soc-geo.t_adv.nat-hydro.tide] 說明潮汐成因與大潮小潮、潮差  {t_adv, 學測}
+- [soc-geo.t_adv.nat-hydro.water-balance] 以水平衡（降水=蒸發+逕流+儲量變化）分析區域水量  {t_adv, 學測}
+- [soc-geo.t_sub.nat-hydro.basin-budget] 建立流域水收支方程並計算  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-hydro.sediment] 說明河川輸砂與泥沙收支  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-hydro.aquifer] 說明含水層、受壓地下水與自流井  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-hydro.thermohaline] 說明溫鹽環流（深層海洋環流）  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-hydro.sealevel] 說明海平面升降的成因與影響  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-hydro.drought-mgmt] 分析乾旱／缺水的水文機制與水資源管理  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-hydro.river-capture] 說明河川襲奪的成因與證據  {t_sub, 分科-地理}
+
+## 5. 自然地理-土壤與生物地理 strand=nat-soilbio
+
+- [soc-geo.t_base.nat-soilbio.soil-intro] 認識土壤成分（砂、黏土、腐植質）  {t_base, 無}
+- [soc-geo.t_base.nat-soilbio.plant-env] 認識植物與環境（陽光、水、溫度）的關係  {t_base, 無}
+- [soc-geo.t_mid.nat-soilbio.soil-profile] 說明土壤剖面層次（O/A/B/C 層）  {t_mid, 會考}
+- [soc-geo.t_mid.nat-soilbio.soil-factors] 列舉成土因素（氣候、母質、生物、地形、時間）  {t_mid, 會考}
+- [soc-geo.t_mid.nat-soilbio.soil-types] 辨認主要土壤（紅壤、灰化土、黑土、磚紅壤）  {t_mid, 會考}
+- [soc-geo.t_mid.nat-soilbio.biome-intro] 辨認主要生物群系（雨林、草原、沙漠、針葉林、苔原）  {t_mid, 會考}
+- [soc-geo.t_mid.nat-soilbio.veg-distribution] 說明植被的水平與垂直分布  {t_mid, 會考}
+- [soc-geo.t_adv.nat-soilbio.pedogenesis] 說明土壤化育作用（淋溶、聚積、鹽化、磚紅壤化）  {t_adv, 學測}
+- [soc-geo.t_adv.nat-soilbio.zonal-azonal] 區辨顯域土與隱域土  {t_adv, 學測}
+- [soc-geo.t_adv.nat-soilbio.biome-climate] 連結世界主要生物群系與氣候類型  {t_adv, 學測}
+- [soc-geo.t_adv.nat-soilbio.succession] 說明植物群落演替（初級、次級）  {t_adv, 學測}
+- [soc-geo.t_adv.nat-soilbio.vertical-zone] 說明山地植被的垂直地帶性  {t_adv, 學測}
+- [soc-geo.t_adv.nat-soilbio.horizontal-zone] 說明緯度造成的水平地帶性  {t_adv, 學測}
+- [soc-geo.t_sub.nat-soilbio.soil-classify] 認識土壤分類系統（美國新分類／FAO）  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-soilbio.nutrient-cycle] 說明碳、氮循環與生態系的地理差異  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-soilbio.island-biogeo] 說明島嶼生物地理學（面積、隔離與物種數）  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-soilbio.biome-carbon] 分析生物群系的碳吸存與氣候回饋  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-soilbio.biogeo-region] 說明生物地理區與物種分布界線  {t_sub, 分科-地理}
+
+## 6. 自然災害 strand=hazard
+
+- [soc-geo.t_base.hazard.quake-typhoon] 認識地震與颱風並知道基本避難行為  {t_base, 無}
+- [soc-geo.t_base.hazard.drill] 參與防災演練並準備避難包  {t_base, 無}
+- [soc-geo.t_mid.hazard.earthquake] 說明地震成因並區辨震度與規模  {t_mid, 會考}
+- [soc-geo.t_mid.hazard.typhoon] 說明颱風成因、結構與警報分級  {t_mid, 會考}
+- [soc-geo.t_mid.hazard.slope] 區辨山崩與土石流的成因與徵兆  {t_mid, 會考}
+- [soc-geo.t_mid.hazard.flood-drought] 說明水災與旱災的成因  {t_mid, 會考}
+- [soc-geo.t_mid.hazard.tw-distribution] 說明台灣主要災害的空間分布與原因  {t_mid, 會考}
+- [soc-geo.t_mid.hazard.mitigation] 列舉防災與減災措施  {t_mid, 會考}
+- [soc-geo.t_adv.hazard.compound] 分析複合型災害（地震引發海嘯、山崩）  {t_adv, 學測}
+- [soc-geo.t_adv.hazard.tsunami] 說明海嘯成因與傳播特性  {t_adv, 學測}
+- [soc-geo.t_adv.hazard.volcano-hazard] 說明火山災害（熔岩、火山灰、火山碎屑流）  {t_adv, 學測}
+- [soc-geo.t_adv.hazard.urban-amplify] 分析都市化如何放大淹水與熱災害  {t_adv, 學測}
+- [soc-geo.t_adv.hazard.climate-extreme] 連結氣候變遷與極端天氣事件增加  {t_adv, 學測}
+- [soc-geo.t_adv.hazard.risk-formula] 說明災害風險＝危害度×脆弱度×暴露量  {t_adv, 學測}
+- [soc-geo.t_adv.hazard.landuse-potential] 連結土地利用與災害潛勢  {t_adv, 學測}
+- [soc-geo.t_sub.hazard.mgmt-cycle] 說明災害管理週期（減災、整備、應變、復原）  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hazard.potential-map] 判讀災害潛勢圖並做風險評估  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hazard.slope-stability] 分析坡地穩定與地質敏感區  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hazard.vulnerability-adapt] 分析脆弱度與氣候調適（adaptation）策略  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hazard.disaster-planning] 將災害潛勢納入都市防災與土地開發決策  {t_sub, 分科-地理}
+
+## 7. 人文地理-人口 strand=hum-pop
+
+- [soc-geo.t_base.hum-pop.distribution-intro] 認識各地人口多寡與分布概況  {t_base, 無}
+- [soc-geo.t_base.hum-pop.hometown-change] 觀察家鄉人口的變化  {t_base, 無}
+- [soc-geo.t_mid.hum-pop.density] 計算與比較人口密度  {t_mid, 會考}
+- [soc-geo.t_mid.hum-pop.distribution-factor] 連結人口分布與自然／人文環境  {t_mid, 會考}
+- [soc-geo.t_mid.hum-pop.growth] 區辨自然增加與社會增加  {t_mid, 會考}
+- [soc-geo.t_mid.hum-pop.vital-rates] 計算出生率、死亡率與自然增加率  {t_mid, 會考}
+- [soc-geo.t_mid.hum-pop.pyramid-type] 辨認人口金字塔（擴張型、靜止型、縮減型）  {t_mid, 會考}
+- [soc-geo.t_mid.hum-pop.migration-pushpull] 以推拉理論說明人口遷移  {t_mid, 會考}
+- [soc-geo.t_mid.hum-pop.tw-concentration] 說明台灣人口向都市與西部集中  {t_mid, 會考}
+- [soc-geo.t_mid.hum-pop.aging-lowbirth] 說明高齡化與少子化的現象與影響  {t_mid, 會考}
+- [soc-geo.t_adv.hum-pop.transition] 說明人口轉型模式各階段  {t_adv, 學測}
+- [soc-geo.t_adv.hum-pop.dependency] 計算扶養比與老化指數  {t_adv, 學測}
+- [soc-geo.t_adv.hum-pop.demographic-dividend] 說明人口紅利與人口負債  {t_adv, 學測}
+- [soc-geo.t_adv.hum-pop.policy] 分析生育與移民政策的效果  {t_adv, 學測}
+- [soc-geo.t_adv.hum-pop.intl-migration] 說明國際移民與勞動移動  {t_adv, 學測}
+- [soc-geo.t_adv.hum-pop.refugee] 說明難民與被迫遷移的成因  {t_adv, 學測}
+- [soc-geo.t_adv.hum-pop.malthus] 說明馬爾薩斯人口與糧食論點及其批評  {t_adv, 學測}
+- [soc-geo.t_sub.hum-pop.transition-dev] 連結人口轉型與經濟發展階段  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hum-pop.spatial-center] 分析人口空間分布與人口重心移動  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hum-pop.aging-space] 分析高齡化社會的空間與服務效應  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hum-pop.migrant-network] 分析移民網絡與僑民／跨國社群經濟  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hum-pop.projection] 以人口統計資料做趨勢預測  {t_sub, 分科-地理}
+
+## 8. 人文地理-聚落與都市 strand=hum-settle
+
+- [soc-geo.t_base.hum-settle.rural-urban] 區辨鄉村與都市的生活差異  {t_base, 無}
+- [soc-geo.t_base.hum-settle.hometown-type] 認識家鄉的聚落型態  {t_base, 無}
+- [soc-geo.t_mid.hum-settle.site-factor] 列舉聚落形成條件（水源、地形、交通）  {t_mid, 會考}
+- [soc-geo.t_mid.hum-settle.cluster-dispersed] 區辨集村與散村及其成因  {t_mid, 會考}
+- [soc-geo.t_mid.hum-settle.function] 說明聚落機能（農、漁、工、商）  {t_mid, 會考}
+- [soc-geo.t_mid.hum-settle.urbanization] 說明都市化的意義與過程  {t_mid, 會考}
+- [soc-geo.t_mid.hum-settle.landuse-zone] 辨認都市機能分區（商業、住宅、工業）  {t_mid, 會考}
+- [soc-geo.t_mid.hum-settle.tw-metro] 說明台灣都市體系與主要都會區  {t_mid, 會考}
+- [soc-geo.t_mid.hum-settle.urban-problem] 列舉都市問題（交通、居住、環境）  {t_mid, 會考}
+- [soc-geo.t_adv.hum-settle.central-place] 以中地理論說明商閾與商品圈  {t_adv, 學測}
+- [soc-geo.t_adv.hum-settle.urban-hierarchy] 說明都市階層與等級—大小法則  {t_adv, 學測}
+- [soc-geo.t_adv.hum-settle.internal-model] 比較同心圓、扇形、多核心都市結構模型  {t_adv, 學測}
+- [soc-geo.t_adv.hum-settle.metro-satellite] 說明都會區、衛星城市、大都會帶  {t_adv, 學測}
+- [soc-geo.t_adv.hum-settle.urbanization-stage] 區辨郊區化、逆都市化、再都市化  {t_adv, 學測}
+- [soc-geo.t_adv.hum-settle.renewal-gentrify] 說明都市更新與仕紳化  {t_adv, 學測}
+- [soc-geo.t_adv.hum-settle.segregation] 說明居住隔離與貧民窟問題  {t_adv, 學測}
+- [soc-geo.t_sub.hum-settle.cp-principles] 說明中地理論的六邊形市場區與市場／交通／行政原則  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hum-settle.world-city] 說明世界都市／全球城市體系與分工  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hum-settle.sprawl-compact] 比較都市蔓延與緊湊城市  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hum-settle.sustainable-city] 說明永續城市與新都市主義  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hum-settle.nearest-neighbor] 以最近鄰分析量化聚落空間分布型態  {t_sub, 分科-地理}
+
+## 9. 人文地理-產業（農牧／工業／服務）strand=hum-industry
+
+- [soc-geo.t_base.hum-industry.sectors-intro] 區辨一級、二級、三級產業（初步）  {t_base, 無}
+- [soc-geo.t_base.hum-industry.hometown] 認識家鄉的農業、工業與商業  {t_base, 無}
+- [soc-geo.t_mid.hum-industry.ag-types] 區辨自給／商業、集約／粗放農業  {t_mid, 會考}
+- [soc-geo.t_mid.hum-industry.ag-location] 列舉農業區位因素  {t_mid, 會考}
+- [soc-geo.t_mid.hum-industry.livestock] 區辨游牧、放牧與酪農業  {t_mid, 會考}
+- [soc-geo.t_mid.hum-industry.fishery] 區辨近海、遠洋與養殖漁業  {t_mid, 會考}
+- [soc-geo.t_mid.hum-industry.ind-location] 列舉工業區位因素（原料、市場、勞力、動力、交通）  {t_mid, 會考}
+- [soc-geo.t_mid.hum-industry.ind-types] 區辨輕工業與重工業  {t_mid, 會考}
+- [soc-geo.t_mid.hum-industry.tertiary] 說明服務業與第三級產業  {t_mid, 會考}
+- [soc-geo.t_mid.hum-industry.tw-structure] 說明台灣產業結構由農轉工轉服務的變遷  {t_mid, 會考}
+- [soc-geo.t_mid.hum-industry.globalization] 說明全球化與國際分工（初步）  {t_mid, 會考}
+- [soc-geo.t_adv.hum-industry.vonthunen] 以范杜能圈說明農業土地利用的區位  {t_adv, 學測}
+- [soc-geo.t_adv.hum-industry.ag-intensity] 分析農業經營集約度與土地利用  {t_adv, 學測}
+- [soc-geo.t_adv.hum-industry.green-rev] 說明綠色革命、基改與有機農業的影響  {t_adv, 學測}
+- [soc-geo.t_adv.hum-industry.weber] 以韋伯最小成本理論與原料指數說明工業區位  {t_adv, 學測}
+- [soc-geo.t_adv.hum-industry.agglomeration] 說明工業慣性與聚集經濟、產業群聚  {t_adv, 學測}
+- [soc-geo.t_adv.hum-industry.offshoring] 分析產業外移與全球生產鏈  {t_adv, 學測}
+- [soc-geo.t_adv.hum-industry.mnc] 說明跨國企業與國際分工  {t_adv, 學測}
+- [soc-geo.t_adv.hum-industry.service-class] 區辨消費者服務與生產者服務業  {t_adv, 學測}
+- [soc-geo.t_adv.hum-industry.tourism] 分析觀光業與區域發展的關係  {t_adv, 學測}
+- [soc-geo.t_adv.hum-industry.hightech] 說明高科技產業區位（矽谷／科學園區模式）  {t_adv, 學測}
+- [soc-geo.t_sub.hum-industry.vonthunen-mod] 說明范杜能理論的修正與現實應用  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hum-industry.weber-triangle] 用韋伯區位三角與等費線求最適區位  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hum-industry.growth-pole] 說明成長極理論與核心—邊陲結構  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hum-industry.new-division] 說明新國際分工與產業鏈升級  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hum-industry.post-fordism] 說明彈性生產與後福特主義  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hum-industry.gvc] 以全球價值鏈（GVC）分析區域經濟角色  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hum-industry.innovation-region] 說明產業群聚與創新／學習型區域  {t_sub, 分科-地理}
+
+## 10. 人文地理-交通與通訊 strand=hum-transport
+
+- [soc-geo.t_base.hum-transport.modes-intro] 認識各種交通工具  {t_base, 無}
+- [soc-geo.t_base.hum-transport.hometown] 認識家鄉的交通方式  {t_base, 無}
+- [soc-geo.t_mid.hum-transport.mode-compare] 比較公路、鐵路、水運、航空、管線的特性  {t_mid, 會考}
+- [soc-geo.t_mid.hum-transport.cost-speed] 比較各運輸方式的成本、速度、載重  {t_mid, 會考}
+- [soc-geo.t_mid.hum-transport.dev-link] 連結交通與聚落、產業發展  {t_mid, 會考}
+- [soc-geo.t_mid.hum-transport.tw-network] 說明台灣交通網（高鐵、國道、港口、機場）  {t_mid, 會考}
+- [soc-geo.t_mid.hum-transport.ict-intro] 認識通訊與網際網路的發展（初步）  {t_mid, 會考}
+- [soc-geo.t_adv.hum-transport.cost-distance] 說明運費隨距離遞遠而遞減  {t_adv, 學測}
+- [soc-geo.t_adv.hum-transport.accessibility] 分析交通可及性與等時線  {t_adv, 學測}
+- [soc-geo.t_adv.hum-transport.node-gateway] 說明轉運點、門戶與節點機能  {t_adv, 學測}
+- [soc-geo.t_adv.hum-transport.container] 說明貨櫃運輸與複合運輸  {t_adv, 學測}
+- [soc-geo.t_adv.hum-transport.time-space] 說明時空收斂對區域的影響  {t_adv, 學測}
+- [soc-geo.t_adv.hum-transport.ict-space] 說明資訊通訊科技（ICT）與數位落差  {t_adv, 學測} (待核：數位落差命題頻度)
+- [soc-geo.t_sub.hum-transport.network-graph] 以圖論指標（連結度）做運輸網絡分析  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hum-transport.cost-structure] 分析運輸成本結構（端點成本與線路成本）  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hum-transport.hub-spoke] 說明樞紐輻射（hub-and-spoke）網絡  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hum-transport.logistics] 分析全球物流與供應鏈的地理  {t_sub, 分科-地理}
+- [soc-geo.t_sub.hum-transport.ecommerce] 分析電子商務對空間與零售的重組  {t_sub, 分科-地理}
+
+## 11. 區域地理-台灣 strand=reg-tw
+
+- [soc-geo.t_base.reg-tw.location] 說明台灣位置、輪廓與周圍海洋  {t_base, 無}
+- [soc-geo.t_base.reg-tw.landform-zone] 說明台灣地形的大致分區  {t_base, 無}
+- [soc-geo.t_base.reg-tw.hometown-pos] 指出家鄉在台灣的相對位置  {t_base, 無}
+- [soc-geo.t_mid.reg-tw.landform-regions] 說明台灣北、中、南、東與離島地形特色  {t_mid, 會考}
+- [soc-geo.t_mid.reg-tw.climate-zone] 說明台灣的氣候分區與南北差異  {t_mid, 會考}
+- [soc-geo.t_mid.reg-tw.hydrology] 說明台灣河川與水資源分布  {t_mid, 會考}
+- [soc-geo.t_mid.reg-tw.population] 說明台灣人口分布與都市化  {t_mid, 會考}
+- [soc-geo.t_mid.reg-tw.agriculture] 說明台灣農業分區與作物分布  {t_mid, 會考}
+- [soc-geo.t_mid.reg-tw.industry] 說明台灣工業分布（加工出口區、科學園區）  {t_mid, 會考}
+- [soc-geo.t_mid.reg-tw.transport] 說明台灣交通與區域連結  {t_mid, 會考}
+- [soc-geo.t_mid.reg-tw.islands] 說明澎湖、金門、馬祖、蘭嶼等離島特色  {t_mid, 會考}
+- [soc-geo.t_adv.reg-tw.regional-system] 整合自然與人文做台灣區域系統分析  {t_adv, 學測}
+- [soc-geo.t_adv.reg-tw.industry-upgrade] 分析台灣產業升級與區域差異  {t_adv, 學測}
+- [soc-geo.t_adv.reg-tw.environment] 分析台灣環境問題（地層下陷、空污、水污染）  {t_adv, 學測}
+- [soc-geo.t_adv.reg-tw.spatial-plan] 說明台灣國土空間規劃與區域計畫  {t_adv, 學測}
+- [soc-geo.t_adv.reg-tw.urban-rural-gap] 分析台灣城鄉差距與區域發展政策  {t_adv, 學測}
+- [soc-geo.t_adv.reg-tw.coast-ocean] 說明台灣海岸類型與海洋資源  {t_adv, 學測}
+- [soc-geo.t_sub.reg-tw.tectonic-system] 整合台灣地體構造與自然環境系統  {t_sub, 分科-地理}
+- [soc-geo.t_sub.reg-tw.balanced-dev] 分析台灣區域失衡與均衡發展策略  {t_sub, 分科-地理}
+- [soc-geo.t_sub.reg-tw.sustainable-land] 分析台灣永續國土與氣候調適  {t_sub, 分科-地理}
+- [soc-geo.t_sub.reg-tw.placemaking] 說明台灣地方創生與區域再生  {t_sub, 分科-地理}
+
+## 12. 區域地理-中國 strand=reg-cn
+
+- [soc-geo.t_base.reg-cn.location] 認識中國的位置與輪廓（初步）  {t_base, 無}
+- [soc-geo.t_mid.reg-cn.three-steps] 說明中國地形三大階梯  {t_mid, 會考}
+- [soc-geo.t_mid.reg-cn.climate] 說明中國氣候區（季風、乾燥、高地）  {t_mid, 會考}
+- [soc-geo.t_mid.reg-cn.rivers] 說明中國主要河川（長江、黃河）  {t_mid, 會考}
+- [soc-geo.t_mid.reg-cn.pop-line] 說明中國人口分布的東密西疏（胡煥庸線）  {t_mid, 會考} (待核：胡煥庸線是否逾國中層級)
+- [soc-geo.t_mid.reg-cn.ag-divide] 說明中國以秦嶺—淮河為界的稻麥農業分區  {t_mid, 會考}
+- [soc-geo.t_mid.reg-cn.regions] 說明中國東、中、西部的區域差異  {t_mid, 會考}
+- [soc-geo.t_adv.reg-cn.reform] 說明中國經濟改革與沿海開放  {t_adv, 學測}
+- [soc-geo.t_adv.reg-cn.migration] 說明中國都市化與人口遷移（民工潮）  {t_adv, 學測}
+- [soc-geo.t_adv.reg-cn.regional-gap] 分析中國東西與城鄉發展差距  {t_adv, 學測}
+- [soc-geo.t_adv.reg-cn.environment] 分析中國環境問題（沙漠化、水資源短缺）  {t_adv, 學測}
+- [soc-geo.t_adv.reg-cn.energy] 說明中國能源與資源分布  {t_adv, 學測}
+- [soc-geo.t_adv.reg-cn.world-factory] 說明中國「世界工廠」與產業轉型  {t_adv, 學測}
+- [soc-geo.t_sub.reg-cn.regional-policy] 分析中國區域政策（西部大開發等）與空間重構  {t_sub, 分科-地理}
+- [soc-geo.t_sub.reg-cn.pop-change] 分析中國人口政策與結構變遷  {t_sub, 分科-地理}
+- [soc-geo.t_sub.reg-cn.urbanization] 分析中國城鎮化模式與區域發展  {t_sub, 分科-地理}
+
+## 13. 區域地理-世界各洲 strand=reg-world
+
+- [soc-geo.t_base.reg-world.continents-oceans] 認識七大洲與五大洋的名稱與位置  {t_base, 無}
+- [soc-geo.t_base.reg-world.tw-in-world] 指出台灣在世界的位置  {t_base, 無}
+- [soc-geo.t_mid.reg-world.asia] 說明東亞、東南亞、南亞、西亞、中亞的區域特色  {t_mid, 會考}
+- [soc-geo.t_mid.reg-world.europe] 說明歐洲的自然與人文特色  {t_mid, 會考}
+- [soc-geo.t_mid.reg-world.africa] 說明非洲的自然與人文特色  {t_mid, 會考}
+- [soc-geo.t_mid.reg-world.americas] 說明北美與中南美洲的特色  {t_mid, 會考}
+- [soc-geo.t_mid.reg-world.oceania] 說明大洋洲的自然與人文特色  {t_mid, 會考}
+- [soc-geo.t_mid.reg-world.overview] 概覽各洲主要地形、氣候與產業  {t_mid, 會考}
+- [soc-geo.t_mid.reg-world.orgs-intro] 認識世界主要國家與區域組織（初步）  {t_mid, 會考}
+- [soc-geo.t_adv.reg-world.systematic] 對各洲做自然＋人文的系統地理分析  {t_adv, 學測}
+- [soc-geo.t_adv.reg-world.eu] 說明歐洲統合（歐盟）與區域整合  {t_adv, 學測}
+- [soc-geo.t_adv.reg-world.asean] 說明東南亞（東協/ASEAN）的區域發展  {t_adv, 學測}
+- [soc-geo.t_adv.reg-world.westasia-oil] 分析西亞石油與地緣政治  {t_adv, 學測}
+- [soc-geo.t_adv.reg-world.africa-dev] 分析非洲發展問題（殖民遺緒、貧窮）  {t_adv, 學測}
+- [soc-geo.t_adv.reg-world.latam] 分析拉丁美洲都市化與熱帶林開發  {t_adv, 學測}
+- [soc-geo.t_adv.reg-world.northam-econ] 說明北美的經濟地理  {t_adv, 學測}
+- [soc-geo.t_adv.reg-world.econ-orgs] 說明區域經濟組織（USMCA、APEC 等）  {t_adv, 學測}
+- [soc-geo.t_sub.reg-world.core-periphery] 以核心—邊陲結構分析世界區域  {t_sub, 分科-地理}
+- [soc-geo.t_sub.reg-world.uneven-dev] 分析全球化下的區域不均發展  {t_sub, 分科-地理}
+- [soc-geo.t_sub.reg-world.geopolitics] 分析區域地緣政治與衝突  {t_sub, 分科-地理}
+- [soc-geo.t_sub.reg-world.dev-gap] 比較已開發與開發中區域的發展落差  {t_sub, 分科-地理}
+- [soc-geo.t_sub.reg-world.env-sustain] 分析世界區域的環境與永續議題  {t_sub, 分科-地理}
+
+## 14. 應用地理與環境永續 strand=app-sustain
+
+- [soc-geo.t_base.app-sustain.recycle] 實作垃圾分類與資源回收  {t_base, 無}
+- [soc-geo.t_base.app-sustain.protect] 說明愛護環境的日常行為  {t_base, 無}
+- [soc-geo.t_base.app-sustain.save] 實作節能與節水  {t_base, 無}
+- [soc-geo.t_mid.app-sustain.pollution] 說明空氣、水、土壤污染的成因與影響  {t_mid, 會考}
+- [soc-geo.t_mid.app-sustain.warming] 說明全球暖化與溫室效應  {t_mid, 會考}
+- [soc-geo.t_mid.app-sustain.resources] 區辨再生與非再生資源  {t_mid, 會考}
+- [soc-geo.t_mid.app-sustain.sd-concept] 說明永續發展的概念  {t_mid, 會考}
+- [soc-geo.t_mid.app-sustain.balance] 討論環境保護與經濟發展的平衡  {t_mid, 會考}
+- [soc-geo.t_adv.app-sustain.global-issues] 說明臭氧層破洞、酸雨、生物多樣性喪失  {t_adv, 學測}
+- [soc-geo.t_adv.app-sustain.climate-adapt] 區辨氣候變遷的減緩與調適  {t_adv, 學測}
+- [soc-geo.t_adv.app-sustain.carbon] 說明碳循環、碳排放與碳權／碳費  {t_adv, 學測}
+- [soc-geo.t_adv.app-sustain.sdgs] 說明聯合國永續發展目標（SDGs）  {t_adv, 學測}
+- [soc-geo.t_adv.app-sustain.energy-transition] 說明能源轉型與再生能源  {t_adv, 學測}
+- [soc-geo.t_adv.app-sustain.eia] 說明環境影響評估的意義  {t_adv, 學測}
+- [soc-geo.t_adv.app-sustain.commons] 說明共有財悲劇與公共財問題  {t_adv, 學測}
+- [soc-geo.t_sub.app-sustain.three-pillars] 整合永續發展的環境、經濟、社會三面向  {t_sub, 分科-地理}
+- [soc-geo.t_sub.app-sustain.footprint] 說明生態足跡與環境承載力  {t_sub, 分科-地理}
+- [soc-geo.t_sub.app-sustain.circular] 說明循環經濟的運作  {t_sub, 分科-地理}
+- [soc-geo.t_sub.app-sustain.paris] 說明巴黎協定與氣候國際治理  {t_sub, 分科-地理}
+- [soc-geo.t_sub.app-sustain.justice] 分析環境正義與資源分配  {t_sub, 分科-地理}
+
+## 15. 空間規劃與地理資訊決策（深階）strand=spatial-decision
+
+- [soc-geo.t_sub.spatial-decision.landuse-zoning] 說明土地利用規劃與分區管制  {t_sub, 分科-地理}
+- [soc-geo.t_sub.spatial-decision.site-selection] 以適宜性分析做設施區位選擇  {t_sub, 分科-地理}
+- [soc-geo.t_sub.spatial-decision.mcda] 以多準則加權疊圖做空間決策  {t_sub, 分科-地理}
+- [soc-geo.t_sub.spatial-decision.service-area] 以環域／服務範圍分析支援規劃  {t_sub, 分科-地理}
+- [soc-geo.t_sub.spatial-decision.national-plan] 說明國土計畫與空間治理體系  {t_sub, 分科-地理}
+- [soc-geo.t_sub.spatial-decision.urban-regional-plan] 說明都市及區域計畫體系  {t_sub, 分科-地理}
+- [soc-geo.t_sub.spatial-decision.hazard-development] 將災害潛勢納入土地開發決策  {t_sub, 分科-地理}
+- [soc-geo.t_sub.spatial-decision.ppgis] 說明參與式 GIS 與公眾參與規劃  {t_sub, 分科-地理}
+- [soc-geo.t_sub.spatial-decision.smart-city] 說明智慧城市與空間資訊決策  {t_sub, 分科-地理}
+- [soc-geo.t_sub.spatial-decision.data-ethics] 說明空間資料倫理與隱私  {t_sub, 分科-地理} (待核：是否屬地理課綱範疇)
+
+---
+
+## 每一 strand 數量統計
+
+| # | strand | 條數 |
+|---|--------|------|
+| 1 | 地理技能（地圖/經緯度/統計圖表/GIS/遙測）skill | 50 |
+| 2 | 自然地理-地形 nat-landform | 31 |
+| 3 | 自然地理-氣候 nat-climate | 33 |
+| 4 | 自然地理-水文 nat-hydro | 25 |
+| 5 | 土壤與生物地理 nat-soilbio | 18 |
+| 6 | 自然災害 hazard | 20 |
+| 7 | 人文地理-人口 hum-pop | 22 |
+| 8 | 聚落與都市 hum-settle | 21 |
+| 9 | 產業（農牧/工業/服務）hum-industry | 28 |
+| 10 | 交通與通訊 hum-transport | 18 |
+| 11 | 區域地理-台灣 reg-tw | 21 |
+| 12 | 區域地理-中國 reg-cn | 16 |
+| 13 | 區域地理-世界各洲 reg-world | 22 |
+| 14 | 應用地理與環境永續 app-sustain | 20 |
+| 15 | 空間規劃與地理資訊決策 spatial-decision | 10 |
+| | **總計** | **355** |
+
+### 分階層（tier）小計
+- t_base（國小基礎）：約 32
+- t_mid（國中會考）：約 115
+- t_adv（學測）：約 125
+- t_sub（分科地理）：約 83
+
+### (待核) 項目
+1. soc-geo.t_sub.skill.spatial-interp — 克利金空間內插是否逾課綱
+2. soc-geo.t_mid.reg-cn.pop-line — 胡煥庸線是否逾國中層級
+3. soc-geo.t_adv.hum-transport.ict-space — 數位落差命題頻度
+4. soc-geo.t_sub.spatial-decision.data-ethics — 空間資料倫理是否屬地理課綱範疇
+
+
+# ===== 領域：soc-civ（322 條，來源 soc-civ.md）=====
+
+# 公民與社會 — 知識點母體（深掘枚舉）
+
+> 範圍：基礎（國小社會-公民啟蒙）→ 中階（國中公民／會考）→ 高階（學測公民）→ 深階（分科公民）。
+> 每一條 = 一個具體、可評量的微技能。id 格式：`soc-civ.<tier>.<strand>.<slug>`。
+> tier ∈ {t_base, t_mid, t_adv, t_sub}（內部用，對學生不顯示）。exam ∈ 會考／學測／分科-公民／無。
+> 用語：指中國一律「中國」；階段用「國小／國中／高中」。政治法律中立、事實導向、適齡。`(待核)` 標記需再查證處。
+
+---
+
+## 1. 自我與社會化（strand: self）
+
+### 1.1 自我與角色
+- [soc-civ.t_base.self.who-am-i] 認識自己的姓名、興趣、長處與特點  {tier:t_base, exam:無}
+- [soc-civ.t_base.self.feelings-name] 辨認與命名基本情緒（喜怒哀樂、緊張、害怕）  {tier:t_base, exam:無}
+- [soc-civ.t_base.self.needs-wants] 分辨自己的「需要」與「想要」  {tier:t_base, exam:無}
+- [soc-civ.t_base.self.roles-home-school] 說出自己在家庭、學校、社區扮演的不同角色  {tier:t_base, exam:無}
+- [soc-civ.t_base.self.growth-change] 察覺自己隨年齡的成長與改變（身體、能力、責任）  {tier:t_base, exam:無}
+- [soc-civ.t_base.self.self-care] 自我照顧與生活自理（作息、衛生、情緒調節初步）  {tier:t_base, exam:無}
+- [soc-civ.t_mid.self.self-concept] 自我概念的形成與來源（他人回饋、社會比較）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.self.self-esteem] 自尊與自我效能的意義與維護  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.self.role-set] 角色組（一人同時扮演多重角色）與角色期望  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.self.role-conflict] 角色衝突的成因與調適（如學生×子女×打工者）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.self.adolescence] 青春期身心發展與自我認同追尋  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.self.identity-erikson] 自我認同與認同危機（認同形成的發展觀點）  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.self.looking-glass] 「鏡中自我」與「概括化他人」等自我形成理論  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.self.me-and-i] 自我的主我（I）與客我（Me）之分  {tier:t_adv, exam:學測}
+
+### 1.2 社會化歷程與機構
+- [soc-civ.t_base.self.learn-rules] 從家庭與學校學習生活規矩與禮貌  {tier:t_base, exam:無}
+- [soc-civ.t_mid.self.socialization-meaning] 社會化的意義：學習社會規範、角色與價值  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.self.agents-family] 家庭作為初級社會化機構的功能  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.self.agents-school] 學校作為次級社會化機構的功能  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.self.agents-peer] 同儕團體對社會化的影響  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.self.agents-media] 大眾傳播媒體對社會化的影響  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.self.lifelong] 社會化是終身歷程（再社會化、預期社會化）  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.self.resocialization] 再社會化與全控機構（如軍隊、監獄）的概念  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.self.nature-nurture] 先天與後天對人格與行為的交互影響  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.self.socialization-theory] 社會化相關理論比較與批判（結構觀 vs 互動觀）  {tier:t_sub, exam:分科-公民}
+
+### 1.3 人際關係與溝通
+- [soc-civ.t_base.self.friendship] 交朋友、分享與輪流、化解爭吵  {tier:t_base, exam:無}
+- [soc-civ.t_base.self.respect-others] 尊重他人感受與差異，不嘲笑不霸凌  {tier:t_base, exam:無}
+- [soc-civ.t_mid.self.communication-skills] 有效溝通與同理傾聽的要素  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.self.conflict-resolve] 人際衝突的建設性處理方式  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.self.bullying] 校園霸凌的類型、影響與求助管道  {tier:t_mid, exam:會考}
+
+---
+
+## 2. 社會團體與社會階層流動（strand: group）
+
+### 2.1 社會團體與組織
+- [soc-civ.t_base.group.my-groups] 說出自己所屬的團體（家庭、班級、社團）  {tier:t_base, exam:無}
+- [soc-civ.t_base.group.cooperation] 團體中的合作、分工與共同目標  {tier:t_base, exam:無}
+- [soc-civ.t_mid.group.primary-secondary] 初級團體與次級團體的區別與特徵  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.group.in-out-group] 內團體與外團體（我群／他群）概念  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.group.formal-org] 正式組織與科層制（官僚制）的特徵  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.group.reference-group] 參照團體對態度與行為的影響  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.group.social-institution] 社會制度的意義與主要制度（家庭、教育、經濟、政治、宗教）  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.group.bureaucracy-critique] 科層制的優點與弊病（效率 vs 僵化、形式主義）  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.group.social-network] 社會網絡與社會資本的概念與作用  {tier:t_sub, exam:分科-公民}
+
+### 2.2 社會階層與不平等
+- [soc-civ.t_base.group.fairness] 公平對待、不因外表或家境差別待人  {tier:t_base, exam:無}
+- [soc-civ.t_mid.group.stratification] 社會階層化的意義（財富、權力、聲望）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.group.inequality-indicator] 以所得分配、貧富差距理解社會不平等  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.group.class-basis] 社會階層的衡量基礎：經濟、權力、社會聲望  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.group.poverty] 貧窮的類型（絕對貧窮／相對貧窮）與貧窮循環  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.group.gini] 以吉尼係數、所得五等分位倍數判讀分配不均  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.group.class-theory] 階層理論觀點比較（功能論 vs 衝突論）  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.group.cultural-capital] 文化資本、社會再製與教育機會不均  {tier:t_sub, exam:分科-公民}
+
+### 2.3 社會流動
+- [soc-civ.t_mid.group.mobility-meaning] 社會流動的意義（階層位置的改變）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.group.vertical-horizontal] 垂直流動與水平流動的區別  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.group.inter-intra] 代間流動與代內流動的區別與判讀  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.group.mobility-channel] 教育作為社會流動的主要管道與限制  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.group.open-closed] 開放社會與封閉社會的流動機會差異  {tier:t_sub, exam:分科-公民}
+
+### 2.4 社會變遷與社會問題
+- [soc-civ.t_mid.group.social-change] 社會變遷的面向（人口、科技、價值）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.group.aging-society] 高齡化與少子女化對社會的影響  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.group.social-problem] 社會問題的界定（客觀條件＋主觀認定）  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.group.deviance] 偏差行為的意義與社會控制  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.group.labeling] 標籤理論與偏差行為的建構觀點  {tier:t_sub, exam:分科-公民}
+
+---
+
+## 3. 多元文化與性別（strand: culture）
+
+### 3.1 文化與多元文化
+- [soc-civ.t_base.culture.festivals] 認識不同節慶、飲食與習俗  {tier:t_base, exam:無}
+- [soc-civ.t_base.culture.respect-diff] 尊重不同族群、語言與生活方式  {tier:t_base, exam:無}
+- [soc-civ.t_base.culture.new-residents] 認識新住民家庭與同學的文化  {tier:t_base, exam:無}
+- [soc-civ.t_mid.culture.culture-meaning] 文化的意義與組成（物質／非物質文化）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.culture.subculture] 次文化與反文化的概念  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.culture.ethnocentrism] 我族中心主義與文化相對論的對比  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.culture.multiculturalism] 多元文化主義的精神：尊重與包容差異  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.culture.taiwan-ethnic] 台灣多元族群（原住民族、閩南、客家、外省、新住民）  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.culture.cultural-change] 文化傳承、涵化與文化創新  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.culture.indigenous-rights] 原住民族的集體權與文化權保障  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.culture.stereotype] 刻板印象、偏見與歧視的區別與形成  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.culture.cultural-hegemony] 文化霸權與全球化下的文化同質／異質爭論  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.culture.identity-politics] 認同政治與多元文化政策的爭議  {tier:t_sub, exam:分科-公民}
+
+### 3.2 性別與社會
+- [soc-civ.t_base.culture.gender-equal-basic] 男女生都能做各種事、分擔家務  {tier:t_base, exam:無}
+- [soc-civ.t_base.culture.body-autonomy-basic] 身體自主：隱私部位、拒絕不當碰觸、勇敢求助  {tier:t_base, exam:無}
+- [soc-civ.t_mid.culture.sex-gender] 生理性別與社會性別（gender）的區別  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.culture.gender-role] 性別角色與性別刻板印象的形成與鬆動  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.culture.gender-equality] 性別平等的意義與日常實踐  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.culture.gender-division] 家庭與職場中的性別分工議題  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.culture.sexual-harassment] 辨識性騷擾、性霸凌與求助／申訴管道  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.culture.gender-diversity] 性別光譜與性傾向、性別認同的多元  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.culture.glass-ceiling] 職場性別不平等（玻璃天花板、同工不同酬）  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.culture.gender-mainstreaming] 性別主流化的概念與政策工具  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.culture.gender-theory] 性別理論觀點（性別作為社會建構）與爭議  {tier:t_sub, exam:分科-公民}
+
+---
+
+## 4. 人權與兒少權益（strand: rights）
+
+### 4.1 人權基礎
+- [soc-civ.t_base.rights.my-rights] 認識自己擁有被照顧、受教育、被保護的權利  {tier:t_base, exam:無}
+- [soc-civ.t_base.rights.rights-duty] 權利與義務相伴（享權利也要盡責任）  {tier:t_base, exam:無}
+- [soc-civ.t_mid.rights.human-rights-meaning] 人權的意義與特性（普遍、固有、不可剝奪）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.rights.rights-generations] 人權的演進（自由權、參政權、社會權等世代）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.rights.udhr] 世界人權宣言的精神與地位  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.rights.dignity] 人性尊嚴作為人權的核心基礎  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.rights.intl-covenants] 兩公約（公民與政治權利、經濟社會文化權利）的內國法化  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.rights.transitional-justice] 轉型正義的意義與面向  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.rights.rights-debate] 人權的普遍性與文化相對性之爭論  {tier:t_sub, exam:分科-公民}
+
+### 4.2 兒少與弱勢權益
+- [soc-civ.t_base.rights.child-safe] 遇到危險或被傷害時向大人／老師求助  {tier:t_base, exam:無}
+- [soc-civ.t_mid.rights.crc] 兒童權利公約四大原則（生存、發展、受保護、參與）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.rights.child-protection] 兒少保護法制與通報機制概念  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.rights.vulnerable-groups] 身心障礙者、弱勢族群的權益保障  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.rights.social-welfare] 社會福利與社會安全網的意義  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.rights.accessibility] 無障礙環境與合理調整的概念  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.rights.welfare-model] 福利國家類型與社會權保障的爭議  {tier:t_sub, exam:分科-公民}
+
+---
+
+## 5. 政治（strand: politics）
+
+### 5.1 國家與主權
+- [soc-civ.t_base.politics.country-symbols] 認識國家、國旗等共同符號與公共生活  {tier:t_base, exam:無}
+- [soc-civ.t_mid.politics.state-elements] 國家構成要素（人民、領土、政府、主權）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.politics.sovereignty] 主權的意義（對內最高、對外獨立）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.politics.nation-state] 國家、民族與政府概念的區辨  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.politics.state-origin] 國家起源與功能的理論（社會契約觀點）  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.politics.political-power] 政治權力、權威與正當性的區別  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.politics.sovereignty-debate] 全球化下國家主權的轉變與爭論  {tier:t_sub, exam:分科-公民}
+
+### 5.2 民主與政體
+- [soc-civ.t_base.politics.vote-basic] 班級投票、多數決與尊重少數初步體驗  {tier:t_base, exam:無}
+- [soc-civ.t_mid.politics.democracy-autocracy] 民主政治與獨裁（威權）政治的區別  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.politics.democracy-principles] 民主政治的基本原則（主權在民、多數決、尊重少數、法治）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.politics.direct-indirect] 直接民主與間接（代議）民主的區別  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.politics.majority-minority] 多數決原則與少數權益保障的平衡  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.politics.constitutionalism] 憲政主義：以憲法限制政府權力、保障人權  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.politics.rule-of-law-gov] 有限政府與責任政治的概念  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.politics.deliberative] 審議民主與公民參與式民主的理念  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.politics.democracy-theory] 民主理論類型（菁英、多元、參與、審議）比較  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.politics.democratization] 民主化與民主鞏固、民主倒退的概念  {tier:t_sub, exam:分科-公民}
+
+### 5.3 權力分立
+- [soc-civ.t_mid.politics.separation-powers] 權力分立與制衡的意義與目的  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.politics.five-powers] 我國五權分立（行政、立法、司法、考試、監察）  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.politics.checks-balances] 水平分權與垂直分權（中央／地方）的設計  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.politics.three-vs-five] 三權分立與五權憲法的比較與評析  {tier:t_sub, exam:分科-公民}
+
+### 5.4 中央政府體制
+- [soc-civ.t_mid.politics.gov-branches] 我國中央政府主要機關的職權（總統、行政院、立法院、司法院、考試院、監察院）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.politics.president-premier] 總統與行政院長產生方式與角色  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.politics.semi-presidential] 我國雙首長制（半總統制）的特徵與運作  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.politics.presidential-parliamentary] 總統制、內閣制、半總統制的比較  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.politics.accountability] 行政向立法負責的機制（質詢、信任投票、倒閣）  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.politics.constitutional-court] 憲法法庭／大法官的違憲審查職權  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.politics.cohabitation] 分立政府與一致政府、共治現象的分析  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.politics.constitution-amend] 修憲程序與憲政變遷  {tier:t_sub, exam:分科-公民}
+
+### 5.5 地方自治
+- [soc-civ.t_base.politics.local-service] 認識鄉鎮市區與社區公共服務（里長、公所）  {tier:t_base, exam:無}
+- [soc-civ.t_mid.politics.local-autonomy] 地方自治的意義與自治團體層級  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.politics.local-gov] 地方行政機關與地方民意機關的職權  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.politics.central-local] 中央與地方權限劃分與財政分配  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.politics.local-governance] 地方治理、跨域合作與府際關係  {tier:t_sub, exam:分科-公民}
+
+### 5.6 選舉與政黨
+- [soc-civ.t_mid.politics.election-principles] 選舉四大原則（普通、平等、直接、無記名）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.politics.suffrage] 選舉權與被選舉權的資格  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.politics.party-function] 政黨的功能（匯集民意、推舉候選人、監督政府）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.politics.party-system] 一黨制、兩黨制、多黨制的區別  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.politics.electoral-system] 選舉制度類型（多數決制、比例代表制、並立制）  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.politics.single-member] 單一選區兩票制的設計與效果  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.politics.interest-group] 利益團體與壓力團體的角色與遊說  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.politics.ruling-opposition] 執政黨與在野黨、政黨政治的運作  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.politics.duverger] 選舉制度對政黨體系的影響（席次比例性）  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.politics.gerrymandering] 選區劃分爭議與選舉公平性  {tier:t_sub, exam:分科-公民}
+
+### 5.7 公共政策與公民參與
+- [soc-civ.t_base.politics.class-affairs] 參與班級事務、提出建議與遵守共同決定  {tier:t_base, exam:無}
+- [soc-civ.t_mid.politics.public-affairs] 公共事務與公共利益的意義  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.politics.participation-ways] 公民參與的方式（投票、連署、陳情、集會遊行、擔任志工）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.politics.referendum] 公民投票（創制、複決）的意義與適用  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.politics.public-opinion] 民意的形成與民意調查的解讀  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.politics.policy-process] 公共政策形成歷程（問題認定、規劃、合法化、執行、評估）  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.politics.civil-society] 公民社會與非政府組織（NGO）的角色  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.politics.civil-disobedience] 公民不服從的意義與條件  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.politics.political-participation] 政治參與的層次與影響因素  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.politics.agenda-setting] 政策議程設定與利害關係人分析  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.politics.governance] 治理（governance）概念與公私協力  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.politics.deliberation-tools] 審議式民主工具（公民會議、參與式預算）的運作  {tier:t_sub, exam:分科-公民}
+
+---
+
+## 6. 法律（strand: law）
+
+### 6.1 法律的意義與體系
+- [soc-civ.t_base.law.rules-why] 為什麼要有規則：維護安全與秩序  {tier:t_base, exam:無}
+- [soc-civ.t_base.law.follow-rules] 遵守交通規則、校規與公共場所規範  {tier:t_base, exam:無}
+- [soc-civ.t_mid.law.law-meaning] 法律的意義與功能（維持秩序、保障權利、解決紛爭）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.law.norm-types] 法律與其他社會規範（道德、習俗、宗教）的區別  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.law.law-hierarchy] 法律位階（憲法 > 法律 > 命令）與中央法規  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.law.public-private] 公法與私法的區分  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.law.rule-of-law] 法治國原則（依法行政、法律保留、法律優位）  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.law.substantive-procedural] 實體法與程序法的區別  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.law.legal-interpretation] 法律解釋方法與法律漏洞補充  {tier:t_sub, exam:分科-公民}
+
+### 6.2 憲法與基本權利
+- [soc-civ.t_mid.law.constitution-status] 憲法作為國家根本大法的地位  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.law.basic-rights] 憲法保障的基本人權（自由權、平等權、受益權、參政權）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.law.equality-right] 平等權與禁止不合理差別待遇  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.law.freedom-rights] 人身自由、言論、集會結社、宗教信仰等自由權  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.law.basic-duty] 人民基本義務（納稅、服兵役、受國民教育）  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.law.rights-limit] 基本權利的限制與憲法第23條（比例原則、法律保留）  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.law.due-process] 正當法律程序與人身自由保障（提審、羈押）  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.law.constitutional-complaint] 憲法訴訟與人民聲請釋憲／裁判憲法審查  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.law.proportionality] 比例原則三階段（適當、必要、衡平）的適用  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.law.rights-conflict] 基本權利衝突與法益權衡  {tier:t_sub, exam:分科-公民}
+
+### 6.3 民法與日常生活
+- [soc-civ.t_mid.law.capacity] 權利能力與行為能力（完全、限制、無行為能力人）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.law.minor-contract] 未成年人法律行為的效力（需法定代理人同意）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.law.contract-basic] 契約的成立與誠信原則  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.law.tort-basic] 侵權行為與損害賠償責任的概念  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.law.property-obligation] 物權與債權的區別  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.law.family-law] 婚姻、親子與繼承的基本規範  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.law.liability-types] 無過失責任與過失責任、連帶責任  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.law.civil-principles] 民法基本原則（私法自治、契約自由及其限制）  {tier:t_sub, exam:分科-公民}
+
+### 6.4 刑法與刑事程序
+- [soc-civ.t_mid.law.crime-basic] 犯罪的成立要件概念與刑罰種類  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.law.legality] 罪刑法定原則  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.law.juvenile] 少年事件處理的保護精神與處遇  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.law.crime-elements] 構成要件該當、違法性、有責性三階層概念  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.law.intent-negligence] 故意與過失、既遂與未遂  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.law.presumption-innocence] 無罪推定與證據裁判原則  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.law.criminal-procedure] 刑事訴訟流程（偵查、起訴、審判、執行）概念  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.law.justification] 阻卻違法事由（正當防衛、緊急避難）  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.law.citizen-judge] 國民法官制度的意義與運作  {tier:t_sub, exam:分科-公民}
+
+### 6.5 行政法與權利救濟
+- [soc-civ.t_mid.law.admin-basic] 行政機關、行政行為與依法行政初步  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.law.remedy-ways] 權利受侵害時的救濟管道概念  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.law.admin-disposition] 行政處分的意義與合法性要件  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.law.appeal-litigation] 訴願與行政訴訟的程序與層級  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.law.state-compensation] 國家賠償與損失補償的區別  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.law.dispute-resolution] 調解、仲裁、訴訟等紛爭解決途徑比較  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.law.admin-discretion] 行政裁量與不確定法律概念  {tier:t_sub, exam:分科-公民}
+
+### 6.6 消費者、勞動與性別相關法
+- [soc-civ.t_base.law.consumer-basic] 購物看清標示、保留發票、可退換貨初步  {tier:t_base, exam:無}
+- [soc-civ.t_mid.law.consumer-protection] 消費者保護法：定型化契約、猶豫期（鑑賞期）、商品責任  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.law.consumer-remedy] 消費爭議的申訴與調解管道  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.law.labor-basic] 勞動基準法基本保障（工時、基本工資、休假）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.law.part-time-rights] 青少年打工的權益與勞動契約注意事項  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.law.labor-relations] 勞資關係與勞動三權（團結、協商、爭議）  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.law.gender-equality-law] 性別平等工作法與性別平等教育法的保障  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.law.sexual-harassment-law] 性騷擾防治三法的分工與適用（職場／校園／一般）  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.law.domestic-violence] 家庭暴力防治與保護令制度  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.law.labor-dispute] 勞動爭議處理與不當勞動行為裁決  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.law.anti-discrimination] 就業歧視禁止與合理調整義務  {tier:t_sub, exam:分科-公民}
+
+---
+
+## 7. 經濟（strand: economy）
+
+### 7.1 稀缺與選擇
+- [soc-civ.t_base.economy.need-want] 分辨需要與想要、資源有限要取捨  {tier:t_base, exam:無}
+- [soc-civ.t_base.economy.save-spend] 儲蓄、記帳與聰明消費的習慣  {tier:t_base, exam:無}
+- [soc-civ.t_base.economy.money-use] 認識金錢的用途與交易的概念  {tier:t_base, exam:無}
+- [soc-civ.t_mid.economy.scarcity] 稀少性是經濟問題的根源  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.economy.opportunity-cost] 機會成本的意義與計算  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.economy.trade-off] 理性選擇與成本效益分析初步  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.economy.marginal] 邊際分析與理性決策（邊際效益＝邊際成本）  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.ppf] 生產可能曲線（PPF）與機會成本遞增  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.sunk-cost] 沉沒成本不應影響決策  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.economy.comparative-advantage] 比較利益與專業分工的利得  {tier:t_sub, exam:分科-公民}
+
+### 7.2 供需與價格彈性
+- [soc-civ.t_mid.economy.demand-supply] 需求法則與供給法則  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.economy.equilibrium] 市場均衡價格與數量的決定  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.economy.shift-factors] 影響需求與供給變動的因素（非價格因素）  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.economy.movement-shift] 沿線移動與整條曲線移動的區別  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.price-elasticity-d] 需求的價格彈性及其決定因素  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.elasticity-revenue] 需求彈性與總收益的關係  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.price-elasticity-s] 供給彈性的概念  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.price-control] 價格管制（價格上限、價格下限）的效果  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.economy.other-elasticity] 所得彈性與交叉彈性（正常財／劣等財、替代／互補）  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.economy.surplus] 消費者剩餘、生產者剩餘與福利變化  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.economy.tax-incidence] 租稅歸宿與彈性的關係  {tier:t_sub, exam:分科-公民}
+
+### 7.3 市場與市場失靈
+- [soc-civ.t_mid.economy.division-labor] 分工、專業化與交易的利益  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.economy.market-role] 市場機制（價格機能）的協調功能  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.economy.market-structure] 市場結構（完全競爭、獨占、寡占、獨占性競爭）比較  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.market-failure] 市場失靈的成因（外部性、公共財、資訊不對稱、獨占）  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.externality] 外部效果（外部成本／外部效益）與矯正  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.public-goods] 公共財的特性（無排他、無敵對）與搭便車問題  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.economy.govt-failure] 政府失靈的概念與成因  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.economy.coase] 外部性的矯正工具（課稅、補貼、財產權界定）  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.economy.asymmetric-info] 資訊不對稱（逆選擇、道德危險）的實例與對策  {tier:t_sub, exam:分科-公民}
+
+### 7.4 貨幣與金融
+- [soc-civ.t_mid.economy.money-function] 貨幣的功能（交易媒介、價值衡量、價值儲存）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.economy.bank-role] 銀行的功能與存款、放款初步  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.economy.saving-invest] 儲蓄與投資的區別、風險與報酬概念  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.economy.financial-market] 金融市場（貨幣市場、資本市場）與金融工具  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.central-bank] 中央銀行的角色與貨幣政策工具  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.interest-rate] 利率的意義與對儲蓄、投資的影響  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.stock-bond] 股票與債券的性質與風險  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.economy.money-creation] 存款貨幣的創造與貨幣乘數  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.economy.monetary-policy] 公開市場操作、重貼現率、存款準備率的運作  {tier:t_sub, exam:分科-公民}
+
+### 7.5 國民所得與景氣
+- [soc-civ.t_mid.economy.gdp-basic] 國內生產毛額（GDP）作為經濟規模指標  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.economy.gdp-measure] GDP 的衡量（生產面、所得面、支出面）與限制  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.nominal-real] 名目 GDP 與實質 GDP、經濟成長率  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.cpi-inflation] 物價指數、通貨膨脹與通貨緊縮的影響  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.unemployment] 失業的類型（摩擦性、結構性、循環性）與失業率  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.business-cycle] 景氣循環的階段與景氣對策信號  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.economy.ad-as] 總合需求與總合供給模型初步  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.economy.phillips] 通膨與失業的取捨（菲利浦曲線概念）  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.economy.gdp-welfare] GDP 作為福祉指標的侷限與替代指標  {tier:t_sub, exam:分科-公民}
+
+### 7.6 政府財政與租稅
+- [soc-civ.t_mid.economy.tax-why] 政府為何課稅、稅收的用途  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.economy.govt-role] 政府在經濟中的角色（提供公共財、所得重分配）  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.economy.tax-types] 直接稅與間接稅、累進稅與比例稅  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.tax-principles] 租稅公平原則（量能課稅、受益原則）  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.fiscal-policy] 財政政策（政府支出與租稅）的運用  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.budget-deficit] 政府預算、赤字與公債的概念  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.economy.redistribution] 所得重分配政策（移轉性支出、社會保險）的效果與爭議  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.economy.fiscal-sustain] 財政紀律與世代財政負擔  {tier:t_sub, exam:分科-公民}
+
+### 7.7 國際貿易與匯率
+- [soc-civ.t_mid.economy.trade-why] 國際貿易的原因與進出口概念  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.economy.exchange-basic] 匯率的意義與升值、貶值的初步影響  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.economy.exchange-rate] 匯率的決定與升貶值對進出口的影響  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.trade-barrier] 關稅、配額等貿易障礙與自由貿易的爭論  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.balance-payment] 國際收支的概念（經常帳、金融帳）  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.economy.comparative-trade] 比較利益法則在國際貿易的應用  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.economy.exchange-regime] 固定匯率與浮動匯率制度的比較  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.economy.trade-org] 區域經濟整合與國際經貿組織（WTO 等）的角色  {tier:t_sub, exam:分科-公民}
+
+### 7.8 全球化（經濟面）
+- [soc-civ.t_mid.economy.globalization-basic] 全球化下商品、資金、人員的跨國流動  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.economy.global-division] 國際分工與跨國企業的角色  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.economy.globalization-impact] 全球化對就業、產業與所得分配的影響  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.economy.global-value-chain] 全球價值鏈與供應鏈重組  {tier:t_sub, exam:分科-公民}
+
+---
+
+## 8. 全球關聯與國際關係（strand: global）
+
+- [soc-civ.t_base.global.world-neighbors] 認識世界不同國家與文化、地球村概念  {tier:t_base, exam:無}
+- [soc-civ.t_mid.global.intl-org] 重要國際組織（聯合國等）的宗旨與功能概念  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.global.global-issues] 全球共同面對的議題（氣候、貧窮、疫病）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.global.ngo] 國際非政府組織與人道援助的角色  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.global.state-interaction] 國際社會中國家間的競爭與合作  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.global.intl-law] 國際法與國際人權機制的概念  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.global.regional-integration] 區域組織與區域整合（如歐盟）的運作  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.global.taiwan-intl] 台灣參與國際社會的處境與方式  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.global.ir-theory] 國際關係理論觀點（現實主義、自由主義）初步  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.global.global-governance] 全球治理與跨國問題的集體行動困境  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.global.soft-hard-power] 國家權力的面向（軟實力、硬實力）  {tier:t_sub, exam:分科-公民}
+
+---
+
+## 9. 當代議題（strand: issues）
+
+### 9.1 人權與社會議題
+- [soc-civ.t_mid.issues.human-rights-cases] 從生活案例討論人權保障與侵害  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.issues.death-penalty] 死刑存廢等價值衝突議題的多元觀點  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.issues.rights-tradeoff] 人權與公共安全（如防疫、監控）的權衡  {tier:t_sub, exam:分科-公民}
+
+### 9.2 環境與永續
+- [soc-civ.t_base.issues.recycle] 資源回收、節能減碳的日常行動  {tier:t_base, exam:無}
+- [soc-civ.t_mid.issues.sustainable] 永續發展與世代正義的概念  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.issues.climate-policy] 氣候變遷的治理與國際合作（減碳機制）  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.issues.env-justice] 環境正義與環境外部成本內部化  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.issues.sdgs] 聯合國永續發展目標（SDGs）的架構與落實爭議  {tier:t_sub, exam:分科-公民}
+
+### 9.3 移民與人口
+- [soc-civ.t_mid.issues.migration] 國際移民、移工與新住民的社會融入  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.issues.migrant-rights] 移工與移民權益保障的爭議  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.issues.refugee] 難民問題與國際人道責任  {tier:t_sub, exam:分科-公民}
+
+### 9.4 媒體與資訊
+- [soc-civ.t_base.issues.media-basic] 辨別廣告與真實訊息、不隨意轉傳  {tier:t_base, exam:無}
+- [soc-civ.t_mid.issues.media-literacy] 媒體識讀：查證來源、辨識假訊息  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.issues.press-freedom] 新聞自由與言論自由的意義  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.issues.media-democracy] 媒體作為第四權與媒體近用權  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.issues.privacy] 個人資料保護與隱私權（數位時代）  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.issues.disinformation] 假訊息治理與言論自由的界線  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.issues.ai-ethics] 科技（AI、演算法）發展的社會與倫理爭議  {tier:t_sub, exam:分科-公民}
+
+### 9.5 科技與財經素養
+- [soc-civ.t_mid.issues.consumer-finance] 青少年理財、信用卡與分期的風險  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.issues.financial-fraud] 金融詐騙與投資陷阱的辨識與防範  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.issues.digital-economy] 數位經濟、平台經濟與勞動型態的改變  {tier:t_sub, exam:分科-公民}
+
+---
+
+## 10. 探究與實作（strand: inquiry）
+
+- [soc-civ.t_base.inquiry.ask-question] 對身邊的公共事務提出好奇與問題  {tier:t_base, exam:無}
+- [soc-civ.t_base.inquiry.listen-views] 聆聽不同意見、嘗試找出大家都能接受的做法  {tier:t_base, exam:無}
+- [soc-civ.t_mid.inquiry.define-issue] 界定公共議題與區分事實與意見  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.inquiry.read-chart] 判讀統計圖表、表格與數據作為論據  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.inquiry.multi-perspective] 從不同利害關係人立場分析議題  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.inquiry.evidence] 區分證據的可信度與來源查核  {tier:t_mid, exam:會考}
+- [soc-civ.t_adv.inquiry.argument-structure] 論證結構（主張、理由、證據、反駁）的建構  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.inquiry.causal-correlation] 區辨因果關係與相關關係、避免謬誤  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.inquiry.value-clarification] 價值澄清與價值衝突的處理  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.inquiry.data-collection] 資料蒐集方法（問卷、訪談、觀察）與倫理  {tier:t_adv, exam:學測}
+- [soc-civ.t_adv.inquiry.law-text] 判讀法條、政策文本並應用於情境  {tier:t_adv, exam:學測}
+- [soc-civ.t_sub.inquiry.research-design] 社會探究的研究設計與抽樣概念  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.inquiry.quant-qual] 量化與質性研究方法的比較與適用  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.inquiry.solution-proposal] 公共問題解決方案的研擬、評估與可行性分析  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.inquiry.advocacy] 議題倡議、行動方案與成效評估  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.inquiry.cross-domain] 跨領域素材（文本＋圖表＋數據＋法條）的整合論證  {tier:t_sub, exam:分科-公民}
+
+---
+
+## 每一主軸計數表
+
+| strand 主軸 | 條目數 |
+|---|---|
+| 1. 自我與社會化（self） | 29 |
+| 2. 社會團體與社會階層流動（group） | 27 |
+| 3. 多元文化與性別（culture） | 24 |
+| 4. 人權與兒少權益（rights） | 16 |
+| 5. 政治（politics） | 56 |
+| 6. 法律（law） | 54 |
+| 7. 經濟（economy） | 68 |
+| 8. 全球關聯與國際關係（global） | 11 |
+| 9. 當代議題（issues） | 21 |
+| 10. 探究與實作（inquiry） | 16 |
+| **總計** | **322** |
+
+> tier 分布（內部參考）：t_base 基礎啟蒙、t_mid 國中會考、t_adv 學測、t_sub 分科深水區，四階梯貫穿每一主軸。
+
+
+# ===== 領域：life(跨課綱)（381 條，來源 section-G-cross-curricular.md）=====
+
+# G. 非學科領域 知識點盤點（其他／全人素養）
+
+> 範圍：國小／國中／高中跨年段的「其他」知識 — 學科（數/國/英/自/社）以外的全人素養。
+> 已盤點並對齊站上既有 26 頁，再補齊缺口。組織為 **領域 → 面向(strand) → 具體可檢核知識點**。
+> 多為跨年段；tier 對應 band：(小)→t_base、(國)→t_mid、(高)→t_adv。繁體中文、零簡體、零 PRC 詞彙。
+> 不含標籤/診斷/特教詞；求助一律「跟老師或輔導老師討論」。exam 一律「無」（非學科不綁考試）。不確定項以 (待核) 置於 {…} 之後。
+> id 格式：life.<domain>.<strand>.<slug>；domain 代碼 safety/sel/learn/think/digital/data/compute/finance/sustain/innovate。
+
+---
+
+## 領域 1：兒少安全與自我保護
+
+對齊既有頁：body_safety、safety、self_protection、digital_citizenship(部分)。
+
+### 1A 身體界線與同意（body_safety）
+- [life.safety.body-boundary.body-is-mine] 認識身體是自己的，有權決定誰可以碰  {t_base, 無}
+- [life.safety.body-boundary.private-parts] 分辨「隱私部位」＝泳衣遮住的地方  {t_base, 無}
+- [life.safety.body-boundary.touch-types] 「好的碰觸／不舒服的碰觸／讓人困惑的碰觸」三分法與身體感覺訊號  {t_base, 無}
+- [life.safety.body-boundary.consent-4elements] 同意四要素：可以說不、可以改變主意、沉默不等於同意、被強迫的同意不算數  {t_base, 無}
+- [life.safety.body-boundary.body-alarm] 身體警報感覺（心跳快、想逃、怪怪的）＝相信直覺  {t_base, 無}
+- [life.safety.body-boundary.safe-secrets] 安全的祕密 vs 不安全的祕密（讓你害怕/被威脅別說的祕密一定要說）  {t_base, 無}
+- [life.safety.body-boundary.trusted-adults] 三位可信任大人清單，講到有人相信為止  {t_base, 無}
+- [life.safety.body-boundary.refuse-3steps] 遇到不舒服：大聲說不→離開→告訴大人（拒絕三步）  {t_base, 無}
+- [life.safety.body-boundary.respect-others] 別人的界線也要尊重（問過再碰、對方說停就停）  {t_base, 無}
+- [life.safety.body-boundary.online-boundary] 線上也有身體界線：不被要求傳私密照、不看他人私密照  {t_mid, 無}
+
+### 1B 個人安全
+- [life.safety.personal.know-info] 記得全名、家長姓名、住家地址、緊急電話  {t_base, 無}
+- [life.safety.personal.if-lost] 走失原地等待／找穿制服的工作人員或帶小孩的家長  {t_base, 無}
+- [life.safety.personal.stranger] 陌生人安全：不跟陌生人走、不收不明食物禮物、不上陌生人的車  {t_base, 無}
+- [life.safety.personal.adult-asking-kid] 「大人向小孩求助」是警訊（大人該找大人幫忙）  {t_base, 無}
+- [life.safety.personal.safe-word] 核對暗號／接送確認，陌生人說「爸媽叫我來接你」要查證  {t_base, 無}
+- [life.safety.personal.home-alone] 獨自在家安全：不透露獨自在家、應門對策  {t_mid, 無}
+
+### 1C 居家安全
+- [life.safety.home.electricity] 用電安全：濕手不碰插座、不超載插座、不塞異物  {t_base, 無}
+- [life.safety.home.fire-gas] 用火／瓦斯：聞到瓦斯味不開電器、開窗、關閥、離開報修  {t_base, 無}
+- [life.safety.home.sharp-hot] 刀具、熱水、熱鍋、尖銳物的安全使用與收納  {t_base, 無}
+- [life.safety.home.fall-prevent] 高處／陽台／窗戶墜落預防  {t_base, 無}
+- [life.safety.home.chemicals] 藥品、清潔劑、化學品不亂碰亂吃，分辨標示  {t_base, 無}
+- [life.safety.home.bathroom-drown] 浴室防滑、泡澡/泳池溺水風險  {t_base, 無}
+- [life.safety.home.furniture-anchor] 居家防跌、家具傾倒固定  {t_mid, 無} (待核：各地建築差異)
+
+### 1D 交通安全
+- [life.safety.traffic.pedestrian] 行人：走人行道、過馬路看紅綠燈、斑馬線、停看聽、與駕駛眼神確認  {t_base, 無}
+- [life.safety.traffic.no-distraction] 不在路上追逐／玩手機（分心風險）  {t_base, 無}
+- [life.safety.traffic.in-vehicle] 乘車：繫安全帶、不把頭手伸出窗外、後座下車看後方  {t_base, 無}
+- [life.safety.traffic.bicycle] 自行車：戴安全帽、靠右行、打手勢、夜間燈具反光  {t_base, 無}
+- [life.safety.traffic.blind-spot] 機車/腳踏車路權、內輪差與大型車死角  {t_mid, 無}
+- [life.safety.traffic.drunk-driving] 酒駕/疲勞駕駛危害的概念（勸阻家人）  {t_mid, 無}
+
+### 1E 物質安全與健康風險（safety 青少年段）
+- [life.safety.substance.tobacco-alcohol] 菸（含電子煙）、酒、檳榔對發育中身體的危害  {t_mid, 無}
+- [life.safety.substance.new-drugs] 毒品與「包裝成糖果/飲料/郵票」的新興毒品辨識與拒絕技巧  {t_mid, 無}
+- [life.safety.substance.addiction] 成癮的機制：短期快感 vs 長期傷害、戒斷  {t_mid, 無}
+- [life.safety.substance.peer-refusal] 同儕壓力下的拒絕話術（找藉口、轉移、離開、找大人）  {t_mid, 無}
+- [life.safety.substance.medicine-use] 藥物正確使用：遵醫囑、不共用處方藥、不自行加量  {t_mid, 無}
+- [life.safety.substance.substance-law] 成癮物質與法律責任、求助管道  {t_adv, 無}
+
+### 1F 緊急應變與急救
+- [life.safety.emergency.hotlines] 110（警察）、119（火警/救護）、112、防災與消防  {t_base, 無}
+- [life.safety.emergency.report-clearly] 報案說清楚：地點、發生什麼、幾個人、是否受傷  {t_base, 無}
+- [life.safety.emergency.fire-escape] 火場應變：低姿、摸門溫、濕毛巾、往下逃、不搭電梯、到安全點集合  {t_base, 無}
+- [life.safety.emergency.earthquake] 地震：趴下—掩護—穩住（Drop–Cover–Hold）、遠離窗戶與高物  {t_base, 無}
+- [life.safety.emergency.first-aid] 基本急救概念：止血加壓、燙傷沖脫泡蓋送、異物哽塞求救  {t_mid, 無}
+- [life.safety.emergency.cpr-aed] CPR 與 AED 的概念與何時啟動（撥119→壓胸→取AED）  {t_mid, 無} (待核：教學深度分齡)
+- [life.safety.emergency.emergency-kit] 防災包內容與家庭集合點／聯絡計畫  {t_mid, 無}
+- [life.safety.emergency.natural-disaster] 颱風、淹水、土石流、雷擊的避險  {t_mid, 無}
+
+### 1G 線上與數位安全（與領域5交界）
+- [life.safety.online.no-personal-info] 不公開真實姓名、學校、住址、電話、即時位置  {t_base, 無}
+- [life.safety.online.meet-online-friend] 網友見面的風險，約見面一定先告訴大人並帶大人  {t_base, 無}
+- [life.safety.online.grooming] 陌生訊息/誘騙（grooming）警訊：過度關心、要求保密、索取照片  {t_mid, 無}
+- [life.safety.online.suspicious-links] 可疑連結、免費好康、帳號被盜的處置  {t_mid, 無}
+
+### 1H 詐騙辨識與求助（self_protection）
+- [life.safety.scam.common-scams] 常見詐騙：假網拍、假中獎、假客服、假檢警、解除分期、假投資、愛情/交友詐騙、遊戲點數代儲  {t_mid, 無}
+- [life.safety.scam.scam-signals] 詐騙共同訊號：製造急迫、要你保密、要求轉帳/買點數/提供驗證碼、太好康  {t_mid, 無}
+- [life.safety.scam.hotline-165] 165 反詐騙諮詢專線；臨櫃提款行員關懷提問  {t_mid, 無}
+- [life.safety.scam.protect-otp] 個資與驗證碼（OTP）絕不交給他人  {t_mid, 無}
+- [life.safety.scam.stop-verify] 停—看—聽—查證（掛斷用官方電話回撥）  {t_mid, 無}
+
+**待補缺口（本盤點新增）**
+- [life.safety.extra.bully-bystander] 校園/網路霸凌的旁觀者介入（不是加害、不是沉默）→ 與領域2/5 交界  {t_mid, 無}
+- [life.safety.extra.harassment] 性騷擾/性剝削的辨識與求助（兒少保護、113）  {t_mid, 無} (待核：措辭分齡)
+- [life.safety.extra.animal-safety] 動物安全：不逗弄陌生動物、被咬抓傷處理  {t_base, 無}
+- [life.safety.extra.outdoor-safety] 戲水/山林/野外活動安全（防溺五不、結伴、告知行程）  {t_base, 無}
+
+---
+
+## 領域 2：社會情緒學習 SEL 與情緒管理
+
+對齊既有頁：emotion_skills、emotion_practice(50情境)。採 CASEL 五核心能力架構（去標籤化、普世肯定）。
+
+### 2A 自我覺察 Self-awareness
+- [life.sel.self-aware.name-emotions] 辨認並命名基本情緒（開心、生氣、難過、害怕、驚訝、厭惡）  {t_base, 無}
+- [life.sel.self-aware.emotion-vocab] 擴充情緒詞彙（緊張、失望、尷尬、興奮、孤單、嫉妒、愧疚、感激、委屈）  {t_base, 無}
+- [life.sel.self-aware.body-clues] 身體是情緒的線索（臉紅、拳頭緊、胃揪、眼眶熱）  {t_base, 無}
+- [life.sel.self-aware.emotions-signals] 情緒沒有好壞，是訊號；行為才有合適不合適  {t_base, 無}
+- [life.sel.self-aware.emotion-thermometer] 情緒強度分級（情緒溫度計 1–10）  {t_mid, 無}
+- [life.sel.self-aware.triggers] 辨認觸發點（trigger）與自己的慣性反應  {t_mid, 無}
+- [life.sel.self-aware.strengths-values] 認識自己的優勢、興趣、價值觀  {t_mid, 無}
+- [life.sel.self-aware.identity-growth] 成長心態下的自我認同（能力可成長、我不等於一次表現）  {t_adv, 無}
+
+### 2B 自我管理／情緒調節 Self-management
+- [life.sel.self-manage.pause-breathe] 暫停技巧：深呼吸（方塊呼吸4-4-4-4）、數到十、喝口水  {t_base, 無}
+- [life.sel.self-manage.traffic-light-control] 「紅燈停、黃燈想、綠燈行」衝動控制  {t_base, 無}
+- [life.sel.self-manage.calm-corner] 冷靜角／安全出口，先降溫再處理  {t_base, 無}
+- [life.sel.self-manage.emotion-outlet] 把大情緒說出來或畫出來（情緒出口）  {t_base, 無}
+- [life.sel.self-manage.reframe] 重新框架（reframe）：換個角度看同一件事  {t_mid, 無}
+- [life.sel.self-manage.positive-self-talk] 正向自我對話取代災難化想法  {t_mid, 無}
+- [life.sel.self-manage.delay-gratification] 延遲滿足與自我獎勵  {t_mid, 無}
+- [life.sel.self-manage.stress-management] 壓力管理：睡眠、運動、放鬆、時間安排與求助  {t_mid, 無}
+- [life.sel.self-manage.cognitive-cycle] 辨識想法—情緒—行為的連動（認知循環），並介入  {t_adv, 無}
+- [life.sel.self-manage.seek-help] 情緒長期低落/過度焦慮時「跟老師或輔導老師討論」（去標籤求助）  {t_adv, 無}
+
+### 2C 社會覺察 Social awareness
+- [life.sel.social-aware.empathy] 同理心：想像對方的感受、換位思考  {t_base, 無}
+- [life.sel.social-aware.read-cues] 讀臉部表情、語氣、肢體語言  {t_base, 無}
+- [life.sel.social-aware.respect-diversity] 尊重差異（家庭、文化、能力、想法不同都正常）  {t_base, 無}
+- [life.sel.social-aware.notice-help-signals] 辨認他人求助訊號並適當回應  {t_mid, 無}
+- [life.sel.social-aware.context-reading] 情境閱讀：同一句話在不同場合的意思  {t_mid, 無}
+- [life.sel.social-aware.peer-pressure-stance] 群體中的從眾壓力與個人立場  {t_adv, 無}
+
+### 2D 人際技巧 Relationship skills
+- [life.sel.relationship.make-friends] 交朋友與加入遊戲的開場  {t_base, 無}
+- [life.sel.relationship.take-turns] 輪流、分享、合作、遵守規則  {t_base, 無}
+- [life.sel.relationship.i-message] 我訊息（「我覺得…因為…我希望…」）表達需求不攻擊人  {t_base, 無}
+- [life.sel.relationship.active-listening] 傾聽：看著對方、不打斷、重述確認  {t_base, 無}
+- [life.sel.relationship.conflict-resolution] 衝突解決步驟：冷靜→輪流說→找共識→道歉與修復  {t_base, 無}
+- [life.sel.relationship.boundaries] 設立並尊重界線、拒絕與被拒絕  {t_mid, 無}
+- [life.sel.relationship.healthy-friendship] 健康友誼 vs 有毒關係的辨認  {t_mid, 無}
+- [life.sel.relationship.online-communication] 線上溝通禮儀與誤解的澄清  {t_mid, 無}
+- [life.sel.relationship.teamwork] 團隊協作中的角色、分工與回饋文化  {t_adv, 無}
+
+### 2E 負責任的決策 Responsible decision-making
+- [life.sel.decision.choices-consequences] 選擇有後果：想一想再做  {t_base, 無}
+- [life.sel.decision.decide-4steps] 停—想—選—做（簡易決策四步）  {t_base, 無}
+- [life.sel.decision.weigh-impact] 權衡利弊、考慮對他人的影響  {t_mid, 無}
+- [life.sel.decision.learn-from-mistakes] 從錯誤中學習、承擔與修復  {t_mid, 無}
+- [life.sel.decision.ethical-dilemma] 價值觀導向的決策與倫理兩難取捨  {t_adv, 無}
+
+### 2F 被指正的回應 與 挫折／成長心態（使用者強調）
+- [life.sel.growth-mindset.feedback-not-attack] 被指正不等於「我很糟」，是幫我變更好的資訊  {t_base, 無}
+- [life.sel.growth-mindset.cool-before-respond] 聽到指正時的身體降溫（先呼吸再回應）  {t_base, 無}
+- [life.sel.growth-mindset.response-3lines] 回應三句：謝謝你告訴我／我想想看／我可以怎麼做更好  {t_base, 無}
+- [life.sel.growth-mindset.critique-vs-attack] 區分「對事的回饋」與「對人的攻擊」  {t_base, 無}
+- [life.sel.growth-mindset.not-yet] 把「我做不到」換成「我還沒做到（yet）」  {t_mid, 無}
+- [life.sel.growth-mindset.failure-is-process] 失敗是過程不是標籤；努力與策略可改變結果  {t_mid, 無}
+- [life.sel.growth-mindset.handle-losing] 面對輸/比較/嫉妒的健康調節  {t_mid, 無}
+- [life.sel.growth-mindset.seek-feedback] 尋求回饋、接受建設性批評、不過度自責  {t_mid, 無}
+- [life.sel.growth-mindset.resilience] 復原力：挫折後的再出發與支持系統  {t_adv, 無}
+
+**待補缺口（本盤點新增）**
+- [life.sel.extra.gratitude] 感恩與正向情緒的刻意練習  {t_base, 無}
+- [life.sel.extra.loneliness] 孤單/被排擠時的因應與求助  {t_mid, 無}
+- [life.sel.extra.grief] 哀傷與失落（寵物/親人/搬家轉學）的健康調適  {t_mid, 無} (待核：分齡措辭)
+- [life.sel.extra.digital-emotion] 數位情緒：social media 比較焦慮、FOMO 的覺察  {t_mid, 無}
+
+---
+
+## 領域 3：學會如何學習 與 核心學習力
+
+對齊既有頁：learn_how_to_learn、study_skills_concepts。
+
+### 3A 後設認知 Metacognition
+- [life.learn.metacognition.three-questions] 學習三問：我已經會什麼？我要學什麼？我怎麼知道學會了？  {t_base, 無}
+- [life.learn.metacognition.plan-monitor-review] 計畫—監控—回顧（學習循環）  {t_base, 無}
+- [life.learn.metacognition.know-vs-think-know] 判斷自己「懂了」vs「以為懂了」（自我測驗驗證）  {t_mid, 無}
+- [life.learn.metacognition.strategy-choice] 學習策略的選擇與調整（哪招對我有效）  {t_mid, 無}
+- [life.learn.metacognition.calibrate-confidence] 校準自信（避免過度自信/低估）  {t_adv, 無}
+
+### 3B 記憶與提取 Memory & retrieval
+- [life.learn.memory.active-recall] 主動回想（蓋起來自己說一遍）勝過重讀  {t_base, 無}
+- [life.learn.memory.spaced-repetition] 間隔複習（spaced repetition）與遺忘曲線  {t_mid, 無}
+- [life.learn.memory.interleaving] 交錯練習（interleaving）勝過集中單一題型  {t_mid, 無}
+- [life.learn.memory.distributed-practice] 分散學習 vs 臨時抱佛腳  {t_mid, 無}
+- [life.learn.memory.sleep-memory] 睡眠對記憶鞏固的作用  {t_mid, 無}
+- [life.learn.memory.mnemonics] 記憶術：聯想、故事法、位置法、口訣、組塊（chunking）  {t_mid, 無}
+- [life.learn.memory.retrieval-practice] 善用提取練習與考古題做形成性評量  {t_adv, 無}
+
+### 3C 讀書方法與做筆記 Study skills
+- [life.learn.study-skills.pomodoro] 番茄鐘（專注25分+休息5分）  {t_base, 無}
+- [life.learn.study-skills.mind-map] 心智圖整理概念  {t_base, 無}
+- [life.learn.study-skills.cornell-notes] 康乃爾筆記法（線索欄/筆記欄/摘要）  {t_mid, 無}
+- [life.learn.study-skills.sq3r] SQ3R 閱讀法（瀏覽—提問—閱讀—複述—複習）  {t_mid, 無}
+- [life.learn.study-skills.highlighting] 畫重點的正確用法（少而精＋自問）  {t_mid, 無}
+- [life.learn.study-skills.feynman] 費曼技巧：教別人來檢驗理解  {t_mid, 無}
+- [life.learn.study-skills.summarize] 摘要與改寫（用自己的話）  {t_mid, 無}
+- [life.learn.study-skills.citation] 文獻/資料整理與引用、避免抄襲  {t_adv, 無}
+
+### 3D 目標設定與時間管理 Goals & time
+- [life.learn.goals-time.break-goals] 把大目標拆成小步驟  {t_base, 無}
+- [life.learn.goals-time.smart-goals] SMART 目標（具體/可測/可達/相關/有期限）  {t_mid, 無}
+- [life.learn.goals-time.prioritize] 待辦清單與優先順序（重要/緊急四象限）  {t_mid, 無}
+- [life.learn.goals-time.schedule] 計畫表、月曆、期限倒推  {t_mid, 無}
+- [life.learn.goals-time.procrastination] 拖延的成因與對策（兩分鐘法則、起步最小化）  {t_mid, 無}
+- [life.learn.goals-time.project-milestones] 長期專案的里程碑與進度追蹤  {t_adv, 無}
+
+### 3E 專注與學習環境 Focus & environment
+- [life.learn.focus.tidy-desk] 收拾乾淨的書桌、移開干擾物  {t_base, 無}
+- [life.learn.focus.notification-management] 手機/通知的分心管理（勿擾、固定查看時段）  {t_mid, 無}
+- [life.learn.focus.single-tasking] 單工 vs 多工的迷思（切換成本）  {t_mid, 無}
+- [life.learn.focus.body-focus] 作息、運動、營養、水分對專注的影響  {t_mid, 無}
+- [life.learn.focus.deep-work] 深度工作時段規劃  {t_adv, 無}
+
+### 3F 學習心態與習慣 Mindset & habits
+- [life.learn.habits.brain-plasticity] 大腦像肌肉，練習會變強（神經可塑概念，去標籤）  {t_base, 無}
+- [life.learn.habits.habit-loop] 習慣迴圈（提示—行動—獎勵）與微習慣  {t_mid, 無}
+- [life.learn.habits.error-notebook] 錯題本：把錯誤變成學習資源  {t_mid, 無}
+- [life.learn.habits.asking-help] 求助不是弱點：問同學、老師、輔導老師  {t_mid, 無}
+- [life.learn.habits.self-regulated-learning] 自我調節學習（SRL）整合  {t_adv, 無}
+
+**待補缺口（本盤點新增）**
+- [life.learn.extra.reading-comprehension] 閱讀理解策略（預測、提問、連結、視覺化、摘要）  {t_base, 無}
+- [life.learn.extra.note-taking] 聆聽與抄寫（課堂筆記、重點辨識）  {t_mid, 無}
+- [life.learn.extra.test-strategy] 考試策略（審題、配分、時間分配、檢查）與考試焦慮調節  {t_mid, 無}
+- [life.learn.extra.online-resources] 線上/自主學習資源的選用與評估  {t_adv, 無}
+
+---
+
+## 領域 4：思考與推理
+
+對齊既有頁：logic_reasoning、reasoning_concepts、thinking_traps(+practice)、informal_fallacy_concepts、detective。
+
+### 4A 邏輯基礎 Logic
+- [life.think.logic.if-then] 條件句「若 P 則 Q」的意義  {t_mid, 無}
+- [life.think.logic.converse-contrapositive] 逆命題/否命題/逆否命題，與原命題的真假關係  {t_mid, 無}
+- [life.think.logic.sufficient-necessary] 充分條件 vs 必要條件  {t_mid, 無}
+- [life.think.logic.valid-forms] 肯定前件(modus ponens)／否定後件(modus tollens) 為有效  {t_mid, 無}
+- [life.think.logic.invalid-forms] 肯定後件／否定前件 為無效（常見謬誤）  {t_mid, 無}
+- [life.think.logic.quantifiers] 全稱與存在（所有/有些）、反例一個就能推翻全稱  {t_mid, 無}
+- [life.think.logic.and-or-not] 「且/或/非」與真值  {t_mid, 無}
+- [life.think.logic.argument-structure] 論證結構：前提—推論—結論的辨認與重建  {t_adv, 無}
+
+### 4B 演繹與歸納 Deduction & induction
+- [life.think.deduction-induction.detective-reasoning] 從線索推結論（偵探式推理，detective）  {t_base, 無}
+- [life.think.deduction-induction.deduction] 演繹：前提為真且有效則結論必真  {t_mid, 無}
+- [life.think.deduction-induction.induction] 歸納：從例子推通則，結論是「可能」不是「必然」  {t_mid, 無}
+- [life.think.deduction-induction.analogy] 類比推理與其限制  {t_mid, 無}
+- [life.think.deduction-induction.abduction] 溯因推理（最佳解釋，abduction 概念）  {t_mid, 無} (待核：分齡用詞)
+- [life.think.deduction-induction.overgeneralization] 過度一般化（以偏概全）的風險  {t_mid, 無}
+
+### 4C 事實、意見與證據 Evidence
+- [life.think.evidence.fact-vs-opinion] 分辨事實 vs 意見  {t_base, 無}
+- [life.think.evidence.testable-claims] 可檢驗的主張 vs 不可檢驗  {t_mid, 無}
+- [life.think.evidence.evidence-strength] 證據的強弱與相關性  {t_mid, 無}
+- [life.think.evidence.source-credibility] 來源可信度（誰說的、有無利益、能否查證）  {t_mid, 無}
+- [life.think.evidence.falsifiability] 可否證性（falsifiability）概念  {t_mid, 無}
+- [life.think.evidence.burden-of-proof] 舉證責任在主張者；「無法證明不存在≠存在」  {t_adv, 無}
+
+### 4D 認知偏誤 Cognitive biases（thinking_traps 10項）
+- [life.think.bias.confirmation-bias] 確認偏誤（只找支持自己的證據）  {t_mid, 無}
+- [life.think.bias.anchoring] 錨定效應（被第一個數字綁住）  {t_mid, 無}
+- [life.think.bias.availability] 可得性偏誤（印象深的以為常見）  {t_mid, 無}
+- [life.think.bias.herd] 從眾/羊群效應  {t_mid, 無}
+- [life.think.bias.survivorship] 倖存者偏誤  {t_mid, 無}
+- [life.think.bias.halo] 月暈效應（以一好/壞概括全部）  {t_mid, 無}
+- [life.think.bias.loss-aversion] 損失趨避與沉沒成本  {t_mid, 無}
+- [life.think.bias.hindsight] 後見之明偏誤  {t_mid, 無}
+- [life.think.bias.dunning-kruger] 鄧寧–克魯格效應（越不懂越自信）  {t_mid, 無} (待核：用詞分齡)
+- [life.think.bias.framing] 框架效應（說法不同影響判斷）  {t_mid, 無}
+- [life.think.bias.debiasing] 偏誤的覺察與去偏策略（放慢、找反例、換立場、同儕檢核）  {t_adv, 無}
+
+### 4E 非形式謬誤 Informal fallacies（informal_fallacy）
+- [life.think.fallacy.ad-hominem] 人身攻擊（ad hominem）  {t_mid, 無}
+- [life.think.fallacy.straw-man] 稻草人（扭曲對方立場）  {t_mid, 無}
+- [life.think.fallacy.slippery-slope] 滑坡謬誤  {t_mid, 無}
+- [life.think.fallacy.appeal-to] 訴諸權威（不當）／訴諸群眾／訴諸情感  {t_mid, 無}
+- [life.think.fallacy.false-dilemma] 假兩難（非黑即白）  {t_mid, 無}
+- [life.think.fallacy.circular] 循環論證／乞題  {t_mid, 無}
+- [life.think.fallacy.hasty-generalization] 以偏概全／輕率概化  {t_mid, 無}
+- [life.think.fallacy.post-hoc] 因果謬誤（前後≠因果，post hoc）  {t_mid, 無}
+- [life.think.fallacy.red-herring] 紅鯡魚（轉移焦點）  {t_mid, 無}
+- [life.think.fallacy.appeal-ignorance] 訴諸無知  {t_mid, 無}
+- [life.think.fallacy.spot-fallacies] 在真實文章/廣告/辯論中指認謬誤  {t_adv, 無}
+
+### 4F 批判性與創造性思考
+- [life.think.critical-creative.good-questions] 好問題的提出（為什麼、怎麼知道、還有呢）  {t_base, 無}
+- [life.think.critical-creative.multiple-perspectives] 多角度思考、找反例、檢核假設  {t_mid, 無}
+- [life.think.critical-creative.claim-reason-evidence] 區分主張、理由與證據  {t_mid, 無}
+- [life.think.critical-creative.steelman] 結構化論證與反方立場（steelman）  {t_adv, 無}
+- [life.think.critical-creative.creative-thinking] 創造性思考：發散—收斂、腦力激盪、SCAMPER  {t_adv, 無} (待核)
+
+**待補缺口（本盤點新增）**
+- [life.think.extra.classify-compare] 分類與比較（異同、歸類）  {t_base, 無}
+- [life.think.extra.problem-solving] 問題解決流程（定義—發想—評估—執行—回顧）  {t_mid, 無}
+- [life.think.extra.decision-tools] 決策工具（優缺點表、決策矩陣）  {t_mid, 無}
+
+---
+
+## 領域 5：數位與媒體素養
+
+對齊既有頁：digital_citizenship、media_ai_literacy。
+
+### 5A 數位公民與自我管理
+- [life.digital.citizen.screen-time] 螢幕時間自我管理與作息平衡  {t_base, 無}
+- [life.digital.citizen.digital-footprint] 數位足跡：貼出去的東西可能永遠在、會被截圖  {t_base, 無}
+- [life.digital.citizen.netiquette] 線上禮儀（netiquette）：對人尊重、不口出惡言  {t_base, 無}
+- [life.digital.citizen.digital-identity] 數位身分與形象經營  {t_mid, 無}
+- [life.digital.citizen.in-app-purchase] 遊戲課金/內購的風險與家長同意；不輸入家長信用卡  {t_mid, 無}
+- [life.digital.citizen.screen-addiction] 螢幕成癮訊號與自我調節  {t_mid, 無}
+
+### 5B 隱私與個資
+- [life.digital.privacy.strong-password] 密碼要強、不共用、不告訴別人；帳號登出  {t_base, 無}
+- [life.digital.privacy.no-public-info] 不隨意公開個資與位置  {t_base, 無}
+- [life.digital.privacy.privacy-settings] 隱私設定、App 權限、定位分享的管理  {t_mid, 無}
+- [life.digital.privacy.data-as-payment] 個資的價值與「免費服務用你的資料換」  {t_mid, 無}
+- [life.digital.privacy.two-factor] 兩步驟驗證（2FA）、釣魚辨識  {t_mid, 無}
+- [life.digital.privacy.data-rights] 資料被蒐集/販售的概念與數位權利  {t_adv, 無} (待核)
+
+### 5C 網路霸凌與線上人際
+- [life.digital.cyberbully.what-is-cyberbully] 什麼是網路霸凌（文字/排擠/散布）  {t_base, 無}
+- [life.digital.cyberbully.if-bullied] 被霸凌：截圖存證—封鎖—告訴大人  {t_base, 無}
+- [life.digital.cyberbully.bystander] 旁觀者：不轉傳、不按讚、支持被害者、通報  {t_base, 無}
+- [life.digital.cyberbully.no-share-private] 不散布他人私密影像；散布的法律與傷害  {t_mid, 無}
+- [life.digital.cyberbully.keyboard-ethics] 鍵盤倫理：面對面不會說的別在線上說  {t_mid, 無}
+
+### 5D 媒體與廣告素養（media_ai_literacy）
+- [life.digital.media.ad-purpose] 廣告的目的是要你買／要你點  {t_base, 無}
+- [life.digital.media.sponsored] 業配/置入性行銷的辨認  {t_base, 無}
+- [life.digital.media.clickbait] 標題黨（clickbait）與聳動標題  {t_base, 無}
+- [life.digital.media.spin] 訊息框架、選擇性報導、帶風向  {t_mid, 無}
+- [life.digital.media.content-types] 分辨新聞、評論、廣告、業配、假新聞  {t_mid, 無}
+- [life.digital.media.echo-chamber] 同溫層與回聲室效應  {t_mid, 無}
+
+### 5E AI 與演算法素養
+- [life.digital.ai-algo.recommendation-algo] 推薦演算法如何決定你看到什麼（同溫層成因）  {t_mid, 無}
+- [life.digital.ai-algo.deepfake] 深偽（deepfake）影像/語音的存在與查證  {t_mid, 無}
+- [life.digital.ai-algo.ai-hallucination] 生成式 AI 會「一本正經地說錯話」（幻覺），需查證  {t_mid, 無}
+- [life.digital.ai-algo.ai-detection] AI 生成內容的辨識線索與標示  {t_mid, 無} (待核：技術演進快)
+- [life.digital.ai-algo.ai-ethics] 用 AI 的倫理：不抄襲、標示來源、保護個資  {t_mid, 無}
+- [life.digital.ai-algo.algo-bias] 演算法偏見與資料來源的影響  {t_adv, 無}
+
+### 5F 查證與不實訊息（與領域9交界）
+- [life.digital.factcheck.pause-before-share] 看到驚人訊息先暫停、不急著轉傳  {t_base, 無}
+- [life.digital.factcheck.verify-3steps] 查三步：誰說的、何時、有無其他可信來源佐證  {t_mid, 無}
+- [life.digital.factcheck.reverse-search] 反向圖片搜尋、查原始出處、看日期  {t_mid, 無}
+- [life.digital.factcheck.factcheck-platforms] 事實查核平台的使用  {t_mid, 無} (待核：具體平台名)
+- [life.digital.factcheck.verify-responsibility] 「轉傳前先查證」的公民責任  {t_mid, 無}
+
+**待補缺口（本盤點新增）**
+- [life.digital.extra.online-shopping] 線上交易安全與消費者保護（退貨、評價造假）  {t_mid, 無}
+- [life.digital.extra.copyright] 著作權與合理使用（圖片/音樂/影片引用）  {t_mid, 無}
+- [life.digital.extra.digital-divide] 數位落差與科技近用公平  {t_adv, 無}
+
+---
+
+## 領域 6：資料素養
+
+對齊既有頁：data_literacy_concepts。
+
+### 6A 讀圖表
+- [life.data.charts.chart-types] 長條圖、折線圖、圓餅圖的用途與讀法  {t_base, 無}
+- [life.data.charts.chart-parts] 看懂座標軸、標題、單位、圖例  {t_base, 無}
+- [life.data.charts.advanced-charts] 表格、散布圖、直方圖的讀法  {t_mid, 無}
+- [life.data.charts.read-patterns] 趨勢、比較、佔比、分布的辨認  {t_mid, 無}
+
+### 6B 集中與分散的量數
+- [life.data.stats.mean-median-mode] 平均數、中位數、眾數的差異與何時用哪個  {t_mid, 無}
+- [life.data.stats.outliers] 極端值（離群值）如何扭曲平均  {t_mid, 無}
+- [life.data.stats.spread] 全距與基本離散概念  {t_mid, 無}
+- [life.data.stats.percentages] 百分比、百分點、比率、倍數的正確用法  {t_adv, 無}
+
+### 6C 誤導與資料陷阱
+- [life.data.misleading.y-axis-zero] Y 軸不從 0 起 → 誇大差異  {t_base, 無}
+- [life.data.misleading.chart-tricks] 截斷軸、比例失真、3D 失真、櫻桃挑選（cherry-picking）  {t_mid, 無}
+- [life.data.misleading.sampling-bias] 樣本偏誤、樣本太小、自我選擇樣本  {t_mid, 無}
+- [life.data.misleading.correlation-causation] 相關 ≠ 因果（含共同原因、巧合、反向因果）  {t_mid, 無}
+- [life.data.misleading.average-trap] 平均的陷阱（「平均薪資」被高薪拉高）  {t_mid, 無}
+- [life.data.misleading.simpson-paradox] 存活者偏誤、辛普森悖論  {t_adv, 無} (待核：高中適配)
+- [life.data.misleading.survey-bias] 問卷設計偏誤（引導性問題、無回應偏誤）  {t_adv, 無}
+
+### 6D 從資料到判斷
+- [life.data.judgment.data-questions] 提出可用資料回答的問題  {t_mid, 無}
+- [life.data.judgment.describe-vs-infer] 區分描述（是什麼）與推論（為什麼/會怎樣）  {t_mid, 無}
+- [life.data.judgment.evidence-claims] 用證據支持主張、量化不確定  {t_mid, 無}
+- [life.data.judgment.probability-intuition] 基本機率直覺與風險溝通（「十萬分之一」感）  {t_adv, 無}
+- [life.data.judgment.data-ethics] 資料倫理：隱私、去識別化、不誤用統計  {t_adv, 無} (待核)
+
+**待補缺口（本盤點新增）**
+- [life.data.extra.collect-data] 蒐集與記錄資料（劃記、簡單統計）  {t_base, 無}
+- [life.data.extra.data-cleaning] 資料清理與缺漏值的概念  {t_mid, 無}
+- [life.data.extra.magnitude] 單位與量級感（估算、數量級）  {t_mid, 無}
+
+---
+
+## 領域 7：運算思維 與 科技素養
+
+對齊既有頁：computational_thinking_concepts、computer_science。
+
+### 7A 運算思維四支柱
+- [life.compute.ct-pillars.decomposition] 問題拆解（decomposition）：大問題拆小步驟  {t_base, 無}
+- [life.compute.ct-pillars.pattern-recognition] 找規律（pattern recognition）  {t_base, 無}
+- [life.compute.ct-pillars.abstraction] 抽象化（抓重點、忽略不相關細節）  {t_base, 無}
+- [life.compute.ct-pillars.algorithm-design] 演算法設計（把解法寫成明確步驟）  {t_base, 無}
+
+### 7B 演算法與流程
+- [life.compute.algorithm.flowchart] 流程圖符號與順序  {t_base, 無}
+- [life.compute.algorithm.three-structures] 循序、選擇（if）、重複（loop）三種結構  {t_base, 無}
+- [life.compute.algorithm.everyday-algorithm] 把日常事（刷牙、過馬路）寫成演算法  {t_base, 無}
+- [life.compute.algorithm.debug] 除錯（debug）：找出並修正錯誤步驟  {t_mid, 無}
+- [life.compute.algorithm.conditions-loops] 條件判斷與巢狀、計數/條件迴圈  {t_mid, 無}
+- [life.compute.algorithm.sort-search] 排序與搜尋的直覺（找名字、猜數字=二分搜尋）  {t_mid, 無}
+- [life.compute.algorithm.variables-io] 變數、輸入/輸出的概念  {t_mid, 無}
+- [life.compute.algorithm.efficiency] 效率直覺（步驟多寡、大 O 的入門概念）  {t_adv, 無} (待核：高中適配)
+
+### 7C 電腦如何運作（computer_science）
+- [life.compute.hardware.hardware-parts] 硬體：CPU、記憶體、儲存、輸入/輸出裝置  {t_base, 無}
+- [life.compute.hardware.software-os] 軟體 vs 硬體、作業系統的角色  {t_base, 無}
+- [life.compute.hardware.binary] 二進位：0/1、位元與位元組、資料如何被編碼（數字/文字/圖片/聲音）  {t_mid, 無}
+- [life.compute.hardware.file-sizes] 檔案大小單位（KB/MB/GB）與量級感  {t_mid, 無}
+- [life.compute.hardware.compile-interpret] 程式如何被執行（編譯/直譯 概念）  {t_adv, 無} (待核)
+
+### 7D 網路與網際網路
+- [life.compute.network.ip-domain] 網路如何連接、IP/網域名稱的概念  {t_mid, 無}
+- [life.compute.network.client-server] 伺服器/用戶端、瀏覽器如何取得網頁  {t_mid, 無}
+- [life.compute.network.packets-bandwidth] 封包、頻寬、Wi-Fi vs 行動網路  {t_mid, 無}
+- [life.compute.network.cloud] 雲端的概念（資料存在別人的電腦）  {t_mid, 無}
+- [life.compute.network.https] HTTPS 與加密的基本概念  {t_adv, 無}
+
+### 7E 資訊安全 Cybersecurity
+- [life.compute.security.strong-password] 強密碼與不共用、登出  {t_base, 無}
+- [life.compute.security.malware] 惡意程式、病毒、釣魚、勒索的概念  {t_mid, 無}
+- [life.compute.security.security-habits] 兩步驟驗證、更新修補、備份  {t_mid, 無}
+- [life.compute.security.public-wifi] 公用 Wi-Fi 風險、不點不明連結  {t_mid, 無}
+- [life.compute.security.social-engineering] 社交工程與個資保護  {t_adv, 無}
+- [life.compute.security.encryption] 加密/解密的直覺  {t_adv, 無}
+
+### 7F 科技與社會
+- [life.compute.tech-society.code-everywhere] 程式無所不在（紅綠燈、提款機、手機）  {t_mid, 無}
+- [life.compute.tech-society.tech-tradeoffs] 科技的好處與代價（自動化、隱私、環境）  {t_mid, 無}
+- [life.compute.tech-society.algo-fairness] 演算法決策的公平與責任  {t_adv, 無} (待核)
+
+**待補缺口（本盤點新增）**
+- [life.compute.extra.typing-files] 基本打字與輸入法、檔案與資料夾管理  {t_base, 無}
+- [life.compute.extra.device-care] 負責任地使用裝置（護眼、姿勢、備份）  {t_base, 無}
+- [life.compute.extra.spreadsheet] 試算表基本（儲存格、公式、簡單函數）  {t_mid, 無}
+- [life.compute.extra.block-coding] 簡易程式體驗（Scratch/區塊式）的概念連結  {t_mid, 無} (待核)
+
+---
+
+## 領域 8：理財素養
+
+對齊既有頁：economics_concepts、finance_mindset_concepts、finance、economics_advanced、finance_realworld。分 band 鋪陳。
+
+### 8A 金錢基礎
+- [life.finance.money-basics.coins-notes] 認識面額、找錢、數錢  {t_base, 無}
+- [life.finance.money-basics.needs-wants] 需要 vs 想要  {t_base, 無}
+- [life.finance.money-basics.where-money-comes] 錢從哪裡來（工作、付出勞力與時間）  {t_base, 無}
+- [life.finance.money-basics.money-functions] 金錢的功能（交易媒介、儲值、計價）  {t_base, 無}
+- [life.finance.money-basics.barter-to-money] 以物易物到貨幣的由來  {t_base, 無}
+
+### 8B 儲蓄與消費
+- [life.finance.saving.save-first] 先存再花、儲蓄撲滿、設定儲蓄目標  {t_base, 無}
+- [life.finance.saving.opportunity-cost] 機會成本：選了這個就放棄那個  {t_base, 無}
+- [life.finance.saving.smart-shopping] 聰明消費：比價、看單位價格、分辨需要  {t_base, 無}
+- [life.finance.saving.spend-save-give] 分配法則（花/存/捐 三罐）  {t_mid, 無}
+- [life.finance.saving.impulse-buying] 延遲滿足與衝動購物的辨識  {t_mid, 無}
+- [life.finance.saving.sales-pressure] 廣告/促銷/限時搶購如何影響消費  {t_mid, 無}
+
+### 8C 預算與記帳
+- [life.finance.budget.income-expense] 收入 − 支出 = 結餘；量入為出  {t_mid, 無}
+- [life.finance.budget.bookkeeping] 記帳與分類（固定/變動支出）  {t_mid, 無}
+- [life.finance.budget.emergency-fund] 編預算與緊急備用金概念  {t_mid, 無}
+- [life.finance.budget.financial-goals] 設定短/中/長期財務目標  {t_mid, 無}
+
+### 8D 利息與複利
+- [life.finance.interest.simple-vs-compound] 單利 vs 複利的差異  {t_mid, 無}
+- [life.finance.interest.compound-time] 複利與時間的威力（越早開始越好）  {t_mid, 無}
+- [life.finance.interest.rule-of-72] 72 法則（本金翻倍）直覺  {t_mid, 無}
+- [life.finance.interest.inflation] 通貨膨脹如何侵蝕購買力  {t_adv, 無}
+- [life.finance.interest.nominal-real-rate] 名目利率 vs 實質利率  {t_adv, 無}
+
+### 8E 市場與經濟（economics_advanced）
+- [life.finance.market.supply-demand] 供給與需求、價格如何形成  {t_mid, 無}
+- [life.finance.market.scarcity] 稀缺性與選擇  {t_mid, 無}
+- [life.finance.market.trade-benefits] 分工與貿易的好處  {t_mid, 無}
+- [life.finance.market.competition-monopoly] 市場、競爭、獨占概念  {t_adv, 無}
+- [life.finance.market.gdp-cycle] GDP、景氣循環、失業的基本概念  {t_adv, 無} (待核：分齡深度)
+- [life.finance.market.tax-public-goods] 稅的概念與公共財  {t_adv, 無}
+
+### 8F 信用、借貸與風險（finance_realworld）
+- [life.finance.credit-risk.credit-record] 信用與信用紀錄；借錢是要還的（含利息）  {t_adv, 無}
+- [life.finance.credit-risk.loan-cost] 貸款、分期、信用卡循環利息的真實成本  {t_adv, 無}
+- [life.finance.credit-risk.insurance] 保險的原理（風險分攤）與常見險種概念  {t_adv, 無}
+- [life.finance.credit-risk.investing-basics] 投資基礎：股票/債券/基金是什麼、風險與報酬、分散  {t_adv, 無}
+- [life.finance.credit-risk.invest-vs-gamble] 投資 vs 投機 vs 賭博；天下沒有穩賺  {t_adv, 無}
+- [life.finance.credit-risk.financial-fraud] 金融詐騙辨識（假投資、保證獲利、龐氏）→ 與領域1交界  {t_adv, 無}
+- [life.finance.credit-risk.consumer-contract] 消費者權益與契約看清楚再簽  {t_adv, 無}
+
+### 8G 金錢價值觀（finance_mindset）
+- [life.finance.money-values.giving-sharing] 捐助與分享、金錢不是衡量人的標準  {t_base, 無}
+- [life.finance.money-values.financial-discipline] 財務目標與自制  {t_mid, 無}
+- [life.finance.money-values.rational-consumption] 理性消費、避免同儕比較消費、長期財務規劃  {t_adv, 無}
+
+**待補缺口（本盤點新增）**
+- [life.finance.extra.digital-payment] 數位支付與電子錢包安全（與領域5/7交界）  {t_mid, 無}
+- [life.finance.extra.first-job] 第一份工作/打工：薪資、勞健保、基本勞動權益概念  {t_adv, 無} (待核)
+- [life.finance.extra.fraud-recovery] 詐騙受害後的求助與止付流程（165、銀行）  {t_adv, 無}
+
+---
+
+## 領域 9：永續與世界公民
+
+對齊既有頁：sustainability、world_affairs。
+
+### 9A 環境與氣候（sustainability）
+- [life.sustain.climate.save-resources] 愛惜資源：節水、節電、隨手關燈  {t_base, 無}
+- [life.sustain.climate.recycling] 垃圾減量與資源回收分類（台灣回收類別）  {t_base, 無}
+- [life.sustain.climate.three-r] 3R：減量 Reduce、重用 Reuse、回收 Recycle  {t_base, 無}
+- [life.sustain.climate.greenhouse-effect] 溫室效應與氣候變遷的機制（簡化）  {t_mid, 無}
+- [life.sustain.climate.carbon-footprint] 碳足跡與日常減碳行動  {t_mid, 無}
+- [life.sustain.climate.energy-sources] 能源：化石燃料 vs 再生能源  {t_mid, 無}
+- [life.sustain.climate.biodiversity] 生物多樣性與棲地保護  {t_mid, 無}
+- [life.sustain.climate.pollution] 塑膠污染、海洋垃圾、水資源  {t_mid, 無}
+- [life.sustain.climate.carbon-neutral] 氣候調適與減緩、碳中和概念  {t_adv, 無}
+
+### 9B 永續發展目標 SDGs
+- [life.sustain.sdgs.sdgs-overview] 聯合國 17 項 SDGs 的概念與分類（人/地球/繁榮/和平/夥伴）  {t_mid, 無}
+- [life.sustain.sdgs.sdgs-examples] 認識幾個與生活相關的 SDG（教育、乾淨水、負責任消費等）  {t_mid, 無}
+- [life.sustain.sdgs.three-pillars] 永續＝環境、社會、經濟的平衡  {t_mid, 無}
+- [life.sustain.sdgs.local-global] 在地行動與全球議題的連結  {t_adv, 無}
+
+### 9C 台灣行動與公民參與
+- [life.sustain.civic-action.daily-action] 校園/家庭的永續行動（自備餐具水壺、省電）  {t_base, 無}
+- [life.sustain.civic-action.taiwan-issues] 台灣的環境議題與在地實例  {t_mid, 無} (待核：具體案例時效)
+- [life.sustain.civic-action.civic-participation] 公民參與：連署、志工、社區行動  {t_mid, 無}
+- [life.sustain.civic-action.policy-responsibility] 政策、企業責任與個人選擇的互動  {t_adv, 無}
+
+### 9D 世界公民與國際理解
+- [life.sustain.global-citizen.cultural-diversity] 文化多樣性與尊重差異  {t_mid, 無}
+- [life.sustain.global-citizen.interdependence] 全球相互依存（供應鏈、疫情、氣候跨國）  {t_mid, 無}
+- [life.sustain.global-citizen.human-rights] 人權、兒童權利公約的基本概念  {t_mid, 無}
+- [life.sustain.global-citizen.global-issues] 國際組織與全球議題（和平、貧窮、難民）的認識  {t_adv, 無}
+
+### 9E 時事與新聞素養（world_affairs，與領域5交界）
+- [life.sustain.news.read-news] 讀新聞：標題、導言、5W1H  {t_base, 無}
+- [life.sustain.news.news-types] 分辨新聞、評論、投書、業配  {t_mid, 無}
+- [life.sustain.news.source-check] 來源查核：誰報的、原始出處、多源比對、看日期  {t_mid, 無}
+- [life.sustain.news.bias-balance] 偏見與立場的辨識、平衡報導  {t_mid, 無}
+- [life.sustain.news.no-forward-unverified] 不轉傳未查證訊息（公民責任）  {t_mid, 無}
+- [life.sustain.news.media-manipulation] 媒體所有權、資訊操弄與境外影響的概念  {t_adv, 無} (待核)
+
+**待補缺口（本盤點新增）**
+- [life.sustain.extra.animal-welfare] 動物保護與友善對待  {t_base, 無}
+- [life.sustain.extra.food-education] 食農教育：food miles、在地食材、惜食不浪費  {t_mid, 無}
+- [life.sustain.extra.green-labels] 永續消費與綠色標章辨識  {t_adv, 無}
+
+---
+
+## 領域 10：創新與改變世界的人
+
+對齊既有頁：innovators。保持事實、通用、不涉敏感/內部資訊；公開大公司/人物可用。
+
+### 10A 創新心態
+- [life.innovate.mindset.curiosity] 好奇心與多問「為什麼／能不能更好」  {t_base, 無}
+- [life.innovate.mindset.fail-to-invent] 失敗是發明的一部分（試錯、原型）  {t_base, 無}
+- [life.innovate.mindset.design-cycle] 觀察問題→發想點子→動手做→改良（設計循環）  {t_base, 無}
+- [life.innovate.mindset.cross-domain] 創意來自跨領域連結與重組  {t_mid, 無}
+- [life.innovate.mindset.iteration-prototype] 迭代與原型（prototype）、最小可行版本概念  {t_mid, 無}
+- [life.innovate.mindset.design-thinking] 從問題到解決方案的創新流程（設計思考：同理—定義—發想—原型—測試）  {t_adv, 無}
+
+### 10B 改變世界的發明與發現（事實性）
+- [life.innovate.inventions.everyday-inventions] 日常發明的由來（電燈、電話、印刷術、輪子等）  {t_base, 無} (待核：具體歸屬避免簡化)
+- [life.innovate.inventions.science-improves-life] 科學發現如何改善生活（疫苗、抗生素、電力、網際網路）  {t_mid, 無}
+- [life.innovate.inventions.invention-society] 發明與社會的互動（交通、通訊、醫療的演進）  {t_mid, 無}
+- [life.innovate.inventions.tech-milestones] 重大科技里程碑的脈絡與影響  {t_adv, 無}
+
+### 10C 改變世界的人（通用、去敏感）
+- [life.innovate.people.contributor-stories] 各領域貢獻者的故事（科學家、醫者、教育者、環保/人權倡議者）  {t_base, 無}
+- [life.innovate.people.diverse-innovators] 多元背景的創新者（不同性別、國家、時代）  {t_mid, 無}
+- [life.innovate.people.persistence-luck] 堅持、合作與機運在成就中的角色  {t_mid, 無}
+- [life.innovate.people.innovation-ethics] 創新的倫理與責任（科技的雙面性）  {t_adv, 無}
+
+### 10D 把創新用在生活
+- [life.innovate.apply.hands-on-project] 動手做專題/小發明  {t_base, 無}
+- [life.innovate.apply.team-project] 團隊合作完成一個作品  {t_mid, 無}
+- [life.innovate.apply.pitch-idea] 把點子表達清楚（提案、簡報、demo）  {t_mid, 無}
+- [life.innovate.apply.entrepreneurship] 創業與社會創新的入門概念（解決真實問題、創造價值）  {t_adv, 無}
+
+**待補缺口（本盤點新增）**
+- [life.innovate.extra.ip-patents] 智慧財產與專利的基本概念（與領域5著作權交界）  {t_mid, 無}
+- [life.innovate.extra.user-research] 創新中的使用者研究與回饋  {t_mid, 無}
+
+---
+
+## 各領域知識點計數
+
+| # | 領域 | domain 代碼 | 知識點數 |
+|---|------|------------|---------|
+| 1 | 兒少安全與自我保護 | safety | 56 |
+| 2 | 社會情緒學習 SEL 與情緒管理 | sel | 51 |
+| 3 | 學會如何學習 與 核心學習力 | learn | 40 |
+| 4 | 思考與推理 | think | 50 |
+| 5 | 數位與媒體素養 | digital | 37 |
+| 6 | 資料素養 | data | 23 |
+| 7 | 運算思維 與 科技素養 | compute | 35 |
+| 8 | 理財素養 | finance | 39 |
+| 9 | 永續與世界公民 | sustain | 30 |
+| 10 | 創新與改變世界的人 | innovate | 20 |
+| | **總計** | | **381** |
+
+---
+
+## 盤點方法與備註
+- **計數基準**：總計 381 為實算（以檔內可機械計數的 bullet 為準，regex `^\s*-\s*\[life\.`）；各領域計數與內文 bullet 逐一對齊。
+- **對齊基礎**：已確認站上 26 個非學科頁面實際存在（body_safety, safety, self_protection, digital_citizenship, media_ai_literacy, emotion_skills, emotion_practice, learn_how_to_learn, study_skills_concepts, computational_thinking_concepts, logic_reasoning, reasoning_concepts, thinking_traps_concepts/practice, informal_fallacy_concepts, detective, data_literacy_concepts, economics_concepts, economics_advanced, finance_mindset_concepts, finance, finance_realworld, computer_science, innovators, sustainability, world_affairs）。本盤點以各頁既有涵蓋為骨幹，並在每領域末補齊缺口（strand 代碼 extra）。
+- **id/格式**：`- [life.<domain>.<strand>.<slug>] <title_zh>  {<tier>, 無}`；tier 由 band 對應 (小)→t_base、(國)→t_mid、(高)→t_adv（無 t_sub）；exam 一律「無」；(待核) 置於 {…} 之後。全檔 id 唯一。
+- **去標籤/兒童安全**：全程未使用診斷/特教/標籤詞；求助一律導向「跟老師或輔導老師討論」（並列出 110/119/165/113 等公開專線）。
+- **用語**：全繁體；「中國」不用「大陸」；「國小/國中/高中」；科技詞採台灣慣用（軟體/硬體/網路/程式/演算法/記憶體/螢幕）。
+- **(待核) 標記**：約 25 處，多為「分齡深度適配」「具體平台/案例時效」「技術演進快」「人物歸屬避免簡化」等，建議由學科/領域專家與事實查核二次確認。
+- **交界重疊**：安全×數位（線上安全/詐騙）、SEL×數位（比較焦慮/網路霸凌旁觀者）、資料×媒體（誤導圖表/查證）、理財×安全（投資詐騙）、永續×媒體（新聞素養）、創新×數位（著作權/專利）均於 title 內以交界註記，各歸主領域計數，不重複。
+
+**交付形式**：本文件為純參考盤點（reference inventory），未設計單元/UI，供作站上知識點盤點的 **G 區段**。
