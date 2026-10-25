@@ -87,7 +87,13 @@
   width: 100%; height: clamp(160px, 34vh, 300px); display: block;
   background: var(--card); border: 2px dashed var(--card-border); border-radius: var(--r-lg);
   touch-action: none; cursor: crosshair;
+  /* iPad/iOS：壓住或長按 canvas 不可跳選取反白 + callout（拷貝／Google 智慧鏡頭），
+     否則寫到一半會被打斷、要點旁邊才能繼續。搭配 JS 的 touchstart/contextmenu preventDefault。 */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
+.dct-canvas-wrap { -webkit-user-select: none; user-select: none; }
 .dct-toolbar { display: flex; gap: var(--s2); margin-top: var(--s1); }
 .dct-fallback { width: 100%; min-height: 56px; margin-top: var(--s1); padding: 10px 12px; border: 2px solid var(--card-border); border-radius: 12px; font-family: var(--font); font-size: var(--fs-body); background: var(--card); color: var(--ink); }
 

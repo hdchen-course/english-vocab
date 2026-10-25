@@ -422,6 +422,12 @@
     canvas.addEventListener('pointerup', end);
     canvas.addEventListener('pointercancel', end);
     canvas.addEventListener('pointerleave', end);
+    // iOS Safari：壓/長按 canvas 會跳出選取反白 + callout（拷貝／Google 智慧鏡頭）。
+    // pointer 事件擋不掉它——必須攔 contextmenu + 非被動的 touchstart/touchmove preventDefault，
+    // 搭配 CSS 的 -webkit-touch-callout:none / user-select:none（dictation.css）。
+    canvas.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+    canvas.addEventListener('touchstart', function (e) { e.preventDefault(); }, { passive: false });
+    canvas.addEventListener('touchmove', function (e) { e.preventDefault(); }, { passive: false });
     window.addEventListener('resize', function () { var img = null; resizeCanvas(); });
   }
   function resizeCanvas() {
@@ -472,8 +478,22 @@
       scaffold[key] = !scaffold[key]; saveScaffold();
       b.classList.toggle('active', !!scaffold[key]);
       b.setAttribute('aria-pressed', scaffold[key] ? 'true' : 'false');
-      if (session.length) renderItem();
+      // 只更新提示顯示，不重繪整題（renderItem 會重播音檔；切鷹架不該連帶重播）。
+      if (session.length) refreshScaffoldHints();
     });
+  }
+
+  // 依當前題與 scaffold 狀態，就地更新作答畫面的首字母/中文提示（不重播音檔）。
+  // IPA 僅在揭曉卡顯示：若已揭曉則重繪揭曉卡（reveal 不含 playAudio，安全）。
+  function refreshScaffoldHints() {
+    var item = cur(); if (!item) return;
+    var isSent = item.kind === 'sent';
+    var fl = $('dct-firstletter');
+    if (fl) { fl.textContent = (!isSent && scaffold.firstLetter) ? ('提示：' + item.word.charAt(0) + '…') : ''; }
+    var zh = $('dct-zh-hint');
+    if (zh) { if (scaffold.zh && item.zh) { zh.textContent = '中文：' + item.zh; show(zh); } else hide(zh); }
+    var rv = $('dct-reveal');
+    if (rv && !rv.classList.contains('hidden') && rv.innerHTML) reveal();
   }
 
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
