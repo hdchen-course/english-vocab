@@ -451,10 +451,11 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 | 10 | 產品經理（PM） | 讀者旅程/範疇/路徑取捨 | 評 scope 與旅程 |
 | 11 | **知識受限學習者（模擬學生）** | 走一次路徑，只用「已學到的知識」 | **核心限制角色**：見 §9 |
 | 12 | 動畫師（animator） | **每個 frame**：無重疊/裁切/溢出、箭頭指向正確、frame 間尺寸恆定、時間節奏順、無破圖 | 評動畫逐 frame（R10／§11 第3項（視覺 QA）／AC-VIZ-1 的「四角色」之一） |
+| 13 | 翻譯者（translator，繁中⇄英） | 中譯英/英文作文/雙語對照的**譯文正確與忠實度**；**唯一可判「誤譯」者**（§8.1 規則③） | 可取得雙語對照與原文語意；僅評譯文忠實，不評學科正確性 |
 
 - **viz-QA 四角色＝美術設計（#8）／空間美感（#9）／眼科（#6）／動畫師（#12）**，對應 R10／§11 第3項（視覺 QA）／AC-VIZ-1 的逐張簽核；此四角色為**必備**（與視覺 QA 規則檔一致）。
-- 角色 1–10、12 為**審查透鏡**（找缺陷）。角色 11 為**路徑驗證器**（證明 INV-1..4）。
-- 必要時可增角色（如各科教練、無障礙 QA），但**不得少於**上列（含 #12 動畫師）。
+- 角色 1–10、12、13 為**審查透鏡**（找缺陷）。角色 11 為**路徑驗證器**（證明 INV-1..4）。
+- 必要時可增角色（如各科教練、無障礙 QA），但**不得少於**上列 13 個（含 #12 動畫師、#13 翻譯者）。
 
 ### 8.1 專家 panel 運作細則與範例（§0.3 具體化）
 - **細則**：每個單元/章 publish 前，由上表角色 panel 逐一裁決（沿用 static-doc-audit `content_audit` 的裁決規則）：
@@ -582,7 +583,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 | AC-A11Y-1 | 對比度 ≥4.5:1、點擊目標 ≥44px、尊重 `prefers-reduced-motion` | 既有 contrast gate + 量測 | 違規＝0 | a11y 報告 |
 | AC-CODE-DL | 含可執行碼的模組提供完整下載且**乾淨解壓可跑** | 解壓到 temp＋跑 README 指令 | build/test 綠 | 執行 log |
 | AC-NOBACKEND | 無 backend 鐵律（§1.3/§7.4）機器堵死：learner 端與獎勵模組**零對外網路請求**（排行榜/對戰/好友/雲端同步/金流一律禁） | `tools/no_backend_gate.py`（待建，**同源白名單式**判定：預設僅允許同源相對 URL 的靜態資產；對**任何指向外部 origin 的資源請求**一律 fail，掃描向量須涵蓋 `fetch`/`XMLHttpRequest`/`WebSocket`/`EventSource`/`navigator.sendBeacon`、`Image().src`/`new Image`/`<img src>`、動態或外部 `<script src>`/`<link href>`、`<form action>` 外部 POST、`<a ping>`、WebRTC（`RTCPeerConnection`/DataChannel）、以及無法靜態證明同源的動態 URL）＋紅隊（**上述每一種向量各植入一個外部呼叫須被擋、純 localStorage/同源靜態放行**，記 §13 ledger） | 對外 origin 請求命中＝**0**（exit 0） | gate 報告 |
-| AC-ANTIDRIFT | §0.2 四防漂移錨點**已交付且 fail-closed**：(a) 專案 `.claude/settings.json` hook、(b) `inject-sop-carriers.py` `[learning-path-sop]` echo、(c) `~/.claude/rules/` 規則檔、(d) `MEMORY.md` 指標 ＋ `design_consistency_gate.js` | 錨點存在性檢查 ＋ 紅隊（「未重讀本檔即宣告任一檔收斂」的壞案例須被 hook **DENY**、好案例 ALLOW） | 四錨點齊備、hook 壞案例 DENY/好案例 ALLOW | 錨點清單 ＋ 紅隊 log |
+| AC-ANTIDRIFT | §0.2 四防漂移錨點**已交付且 fail-closed**：(a) 專案 `.claude/settings.json` hook、(b) `inject-sop-carriers.py` `[learning-path-sop]` echo、(c) `~/.claude/rules/` 規則檔、(d) `MEMORY.md` 指標（`design_consistency_gate.js` 不在此列，由 AC-STYLE-1 於 Phase 0.5 獨立驗） | 錨點存在性檢查 ＋ 紅隊（「未重讀本檔即宣告任一檔收斂」的壞案例須被 hook **DENY**、好案例 ALLOW） | 四錨點齊備、hook 壞案例 DENY/好案例 ALLOW | 錨點清單 ＋ 紅隊 log |
 | AC-SPEC | 本 spec 自身：§0.3 anti-vagueness 全節通過 ＋ content_audit 5 clean ＋ 紅隊零繞過 | spec_concreteness_lint＋content_audit＋紅隊 | 全綠 | spec convergence ledger |
 
 - **細則**：每條 AC 必對應一個**確定性腳本或綁 sha 的簽核**（上表「驗證方法」欄）；標「待建」者於 Phase 1 建並**紅隊**（證明壞案例被擋、好案例放行）才可啟用——**兩類例外（各自更早，不得延到 Phase 1）**：
@@ -599,7 +600,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 3. **紅隊**：獨立 agent 嘗試證明「規範可被繞過/遺漏」——例如：能否跳過先備宣告而仍過 gate？
    能否新增獎勵卻讓舊獎勵孤兒化而不被 §7.3 抓到？能否讓模擬角色偷看後續知識？每找到一個繞過＝
    補一道子 gate ＋ 紅隊證明（§13 ledger）。紅隊零繞過才算定案。
-3.5. **交付 §0.2 四防漂移錨點並紅隊（`AC-ANTIDRIFT`）**：fail-closed hook／carrier echo／rule 檔／MEMORY 指標 ＋ `design_consistency_gate.js` 皆就位，證明「未重讀本檔即宣告收斂」壞案例被 DENY。錨點未交付＝不算定案（呼應 §0.2「承諾無效、只有 fail-closed 機器強制有效」）。
+3.5. **交付 §0.2 四防漂移錨點並紅隊（`AC-ANTIDRIFT`）**：fail-closed hook／carrier echo／rule 檔／MEMORY 指標 四者皆就位，證明「未重讀本檔即宣告收斂」壞案例被 DENY。錨點未交付＝不算定案（呼應 §0.2「承諾無效、只有 fail-closed 機器強制有效」）。（`design_consistency_gate.js` 不屬此四錨點，由 AC-STYLE-1 於 Phase 0.5 前獨立交付+紅隊，見 §11.A 細則例外(b)。）
 4. 定案後才進入實作，**下一階段為 §10 Phase 0.5（既有不一致 remediation ＋ 獎勵安全地基，先做、before 任何新內容），非直接 Phase 1**。
 
 - **細則**：每 round 以**不同 partition framing** 跑（避免抽樣假 clean）；「5 連續 clean」＝**同一未變更 sha** 連 5 round 零 panel-confirmed defect，
