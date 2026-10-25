@@ -340,7 +340,7 @@
   上限值依卡型微調）——短內容小卡剛好包住、長內容到上限才換行。**不得固定寬、不得全寬**（短內容會靠左或空曠）、
   **不得無上限**（長內容整行過長難讀）。文字另設閱讀 measure 上限（如 `max-width: 40ch`）。
   *已落實範本：`english_dictation.html` 揭曉卡（`.dct-play > .dct-reveal`，dictation.css）——短句 244px 小卡、長句到 680px 換行、恆置中。*
-- **R-STYLE-4 機器強制（fail-closed）**：`design_consistency_gate.js`（`SDA_CSS=app.css,game_core.css`）偵測私有重造即 DENY；
+- **R-STYLE-4 機器強制（fail-closed）**：`design_consistency_gate.js`（**待建**：接用 static-doc-audit skill 既有同名 gate，Phase 0.5 前接線+紅隊；`SDA_CSS=app.css,game_core.css`）偵測私有重造即 DENY；
   新增一道（待建）**content-card 寬度 lint**：偵測卡片類別用固定 `width:` 或 `width:100%` 而未用 `fit-content`+cap → DENY。
   兩者連同簡體掃描、視覺 QA 簽核，進專案 `.claude/settings.json` 的 PreToolUse/Stop hook。gate 誤擋先修 gate＋紅隊。
 - **R-STYLE-5 既有不一致 remediation**：先盤點全站「卡片/按鈕/色碼硬編/私有重造」清單，統一到 token ＋ R-STYLE-3
@@ -526,7 +526,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
   - **Phase 0.5 exit**：`design_consistency_gate` exit 0（既有不一致歸零到 token）＋ §7.2 之 R1 壞檔不重設/R2 真 migrate 修妥 ＋ `RT-6` 綠。
   - **Phase 1 exit**：`knowledge_points.json`＋id registry＋unit schema＋hub/roadmap 骨架＋`migrate()`＋additive-merge 就緒；`AC-COV-2`、`AC-REWARD-1` 綠。
   - **Phase 2 exit**：既有單元全數接線（宣告 `prerequisites`/`knowledge_point_ids`），每檔 5 clean。
-  - **Phase 3 exit**：`AC-COV-1` ＝ 0 個未覆蓋 minimum id（gap 全補）。
+  - **Phase 3 exit**：`AC-COV-1`（**Phase 3 變體**：`unit_ids[]` ∩ rubric⑦ 通過集，不含 §9 項）＝ 0 個未覆蓋 minimum id（gap 全補）。§9 `taught_kps_exercised` 的二次確認留到 Phase 5 done-gate。
   - **Phase 4 exit**：獎勵擴充**只新增 id**、RT-1..10 全綠 ＋ **`AC-NOBACKEND` 綠**（獎勵/排行/社交類零對外請求，no_backend_gate exit 0）。
   - **Phase 5 exit**：§11.A 全 **19 條 AC**（含 AC-SPEC）綠且 `acceptance_ledger.json` 全登錄。
 - **範例**：
@@ -563,7 +563,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 
 | AC-id | 準則（具體） | 驗證方法 | 通過門檻 | 證據產物 |
 |---|---|---|---|---|
-| AC-COV-1 | 課綱 minimum 知識點**真覆蓋**：每個非 `beyond` 的 id 至少對映 1 個已完成單元，**且該單元對此 id 通過 §6.6 rubric ⑦「真教＋真考」綁定**（不接受只宣告於 `knowledge_point_ids[]` 卻未教未考） | `tools/coverage_gate.py`（待建，比對 manifest `unit_ids[]` ∩ `unit_acceptance_lint` 的 ⑦ 通過集 ∩ §9 模擬 `taught_kps_exercised`） | 未真覆蓋 minimum id 數 ＝ **0**（exit 0） | coverage 報告 JSON |
+| AC-COV-1 | 課綱 minimum 知識點**真覆蓋**：每個非 `beyond` 的 id 至少對映 1 個已完成單元，**且該單元對此 id 通過 §6.6 rubric ⑦「真教＋真考」綁定**（不接受只宣告於 `knowledge_point_ids[]` 卻未教未考） | `tools/coverage_gate.py`（待建）**分階段驗**：**Phase 3 exit** 僅查 `unit_ids[]` ∩ `unit_acceptance_lint` 的 ⑦ 通過集（path-independent、逐檔即有，不依賴 §9）；**Phase 5 done-gate** 再加 ∩ §9 模擬 `taught_kps_exercised`（二次確認，呼應 §9.4） | 未真覆蓋 minimum id 數 ＝ **0**（exit 0） | coverage 報告 JSON |
 | AC-COV-2 | 知識母體本身完整且無重複 id、無不符格式 bullet | `tools/_kp_build.py` | 重複 id＝0、不符格式（扣 section 說明行）＝0 | build 報告 |
 | AC-UNIT-1 | **每個**單元通過 §6.6 的 10 項 rubric | `tools/unit_acceptance_lint.py`（待建）＋ 人工 play-through | 每單元 10/10；0 單元缺項 | 逐單元 rubric 結果 |
 | AC-UNIT-2 | 每個單元檔 content_audit 連續 **5 clean**（同 sha、L3 exit 0） | `/static-doc-audit` per-file + `coverage_check.js` | 每檔 5 clean、L3 exit 0 | convergence ledger |
@@ -571,7 +571,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 | AC-PATH-1 | 每條主要學習路徑**無斷層**（INV-1） | §9 知識受限模擬 | 每路徑每 U `result=pass`、`gaps=[]` | 模擬輸出 JSON |
 | AC-PATH-2 | 可學會/記得牢/不倦怠（INV-2/3/4） | §9 模擬（§9.3 三級門檻） | `learnable=true`、`retention_ok=true`、`burnout_risk≤med`（且 `med` 須 `mitigation` 欄非空）全數 | 模擬輸出 JSON |
 | AC-REWARD-1 | 已賺得獎勵**永不消失**（含壞檔/升版/catalog改/配額/跨分頁/原子性/reset守門） | §7.3 紅隊 RT-1…RT-10（每條 R1–R8 風險皆有對應 RT：R1→RT-6、R2→RT-4、R3→RT-10、R4/R5→RT-2、R6→RT-7、R7→RT-8、R8→RT-9） | RT-1…10 **全綠** | 紅隊測試輸出 |
-| AC-STYLE-1 | 設計一致：無私有 class 重造共用元件、內容卡自適應寬 | `design_consistency_gate.js`＋content-card lint | 重造＝0、違規卡＝0（exit 0） | gate 報告 |
+| AC-STYLE-1 | 設計一致：無私有 class 重造共用元件、內容卡自適應寬 | `design_consistency_gate.js`（**待建**：接用 static-doc-audit skill 既有同名 gate，Phase 0.5 前接線成專案 gate 並**紅隊**，`SDA_CSS=app.css,game_core.css`）＋content-card lint（待建） | 重造＝0、違規卡＝0（exit 0） | gate 報告 |
 | AC-STYLE-2 | 零硬編色碼/px 魔術數，全走 `app.css` token | lint（待建，掃非 token 色值/魔術數） | 命中＝0 | lint 報告 |
 | AC-NOGRADE | learner-facing **不出現**「國小/國中/高中/年級/會考/學測/分科」等年段字樣（R11） | `tools/no_grade_label_gate.py`（待建，掃 render 後可見文字） | 命中＝0 | gate 報告 |
 | AC-VIZ-1 | 所有畫面/每個 frame 以 iPad Air 13 render、逐張看過、四角色簽核綁 sha（R10） | 視覺 QA harness + signoff manifest | 全畫面覆蓋、四角色逐張簽核、sha 相符 | render + signoff manifest |
