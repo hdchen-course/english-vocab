@@ -11,13 +11,18 @@
 (function () {
   'use strict';
 
-  var SERIES = 'dk';
-  var DONE_KEY = 'dict_dk_done_v1';            // cardId → 最後 grade（完成度點依此）
-  var ACCENT_KEY = 'dict_' + SERIES + '_accent_v1';   // 'us' | 'gb'
-  var SCAFFOLD_KEY = 'dict_' + SERIES + '_scaffold_v1';
-  var HINTS_KEY = 'dict_' + SERIES + '_hints_v1';     // 一次性提示 dismissals
+  // 本 hub 同時服務 DK 與 CEFR 兩系列；state key 皆 per currentSeries（§7/§10.2）。
+  var currentSeries = 'dk';  // startSet 時依該組 series 設定
+  function seriesOf(item) { var p = ('' + item.id).split('::')[0]; return (p === 'cefr') ? 'cefr' : 'dk'; }
+  function DONE_KEY() { return 'dict_' + currentSeries + '_done_v1'; }      // 完成度點依此
+  function ACCENT_KEY() { return 'dict_' + currentSeries + '_accent_v1'; } // 'us' | 'gb'
+  function SCAFFOLD_KEY() { return 'dict_' + currentSeries + '_scaffold_v1'; }
+  function HINTS_KEY() { return 'dict_' + currentSeries + '_hints_v1'; }    // 一次性提示 dismissals
 
-  var DICT = (typeof window !== 'undefined' && window.DICT_DK) ? window.DICT_DK : [];
+  var DICT = [].concat(
+    (typeof window !== 'undefined' && window.DICT_DK) ? window.DICT_DK : [],
+    (typeof window !== 'undefined' && window.DICT_CEFR) ? window.DICT_CEFR : []
+  );
   var byLevel = {};
   for (var i = 0; i < DICT.length; i++) {
     var it = DICT[i];
@@ -31,26 +36,30 @@
   }
   function writeJSON(key, obj) { try { localStorage.setItem(key, JSON.stringify(obj)); } catch (e) {} }
 
-  var accent = (function () {
-    var s = readJSON(ACCENT_KEY, null);
-    var v = s && s.accent;
-    return (v === 'gb') ? 'gb' : 'us'; // 預設 us（§2.5）
-  })();
-  function setAccent(a) { accent = (a === 'gb') ? 'gb' : 'us'; writeJSON(ACCENT_KEY, { accent: accent }); }
+  var accent = 'us';   // 預設 us（§2.5）；startSet 時依 currentSeries 重載
+  var scaffold = { zh: false, firstLetter: false, ipa: false };
+  function loadSeriesState() {
+    var a = readJSON(ACCENT_KEY(), null); accent = (a && a.accent === 'gb') ? 'gb' : 'us';
+    scaffold = readJSON(SCAFFOLD_KEY(), { zh: false, firstLetter: false, ipa: false });
+  }
+  function setAccent(a) { accent = (a === 'gb') ? 'gb' : 'us'; writeJSON(ACCENT_KEY(), { accent: accent }); }
+  function saveScaffold() { writeJSON(SCAFFOLD_KEY(), scaffold); }
 
-  var scaffold = readJSON(SCAFFOLD_KEY, { zh: false, firstLetter: false, ipa: false });
-  function saveScaffold() { writeJSON(SCAFFOLD_KEY, scaffold); }
+  function hintShown(id) { var h = readJSON(HINTS_KEY(), {}); return !!h[id]; }
+  function markHint(id) { var h = readJSON(HINTS_KEY(), {}); h[id] = true; writeJSON(HINTS_KEY(), h); }
 
-  function hintShown(id) { var h = readJSON(HINTS_KEY, {}); return !!h[id]; }
-  function markHint(id) { var h = readJSON(HINTS_KEY, {}); h[id] = true; writeJSON(HINTS_KEY, h); }
-
-  /* ---- 完成度（done store；cardId → 最後 grade） ---- */
-  function loadDone() { return readJSON(DONE_KEY, {}); }
-  function recordGrade(id, grade) { var d = loadDone(); d[id] = grade; writeJSON(DONE_KEY, d); }
+  /* ---- 完成度（done store；cardId → 最後 grade；per series，由 cardId 前綴決定，
+   *      故 renderMenu 不論 currentSeries 都讀對該單元自己 series 的 done store） ---- */
+  function doneKeyForSeries(s) { return 'dict_' + s + '_done_v1'; }
+  function recordGrade(id, grade) {
+    var s = (('' + id).split('::')[0] === 'cefr') ? 'cefr' : 'dk';
+    var key = doneKeyForSeries(s), d = readJSON(key, {}); d[id] = grade; writeJSON(key, d);
+  }
   // 一組 cardId → 'none' | 'partial' | 'done'（done = 每卡最後 grade ∈ {good,easy}，即 ≥快會）
   function unitState(ids) {
     if (!ids || !ids.length) return 'none';
-    var d = loadDone(), any = false, allDone = true;
+    var s = (('' + ids[0]).split('::')[0] === 'cefr') ? 'cefr' : 'dk';
+    var d = readJSON(doneKeyForSeries(s), {}), any = false, allDone = true;
     for (var k = 0; k < ids.length; k++) {
       var g = d[ids[k]];
       if (g != null) { any = true; if (g !== 'good' && g !== 'easy') allDone = false; }
@@ -121,6 +130,27 @@
           bonusWrap.appendChild(btn);
         });
     }
+    // 系列 A（CEFR）單字軌：A1–B1（站內字表）；B2–C2 待 sourcing（§12 OPEN-C 定案）
+    var cefrWrap = $('dct-cefr');
+    if (cefrWrap) {
+      cefrWrap.innerHTML = '';
+      [['cefr-a1', 'A1 入門'], ['cefr-a2', 'A2 基礎'], ['cefr-b1', 'B1 進階']].forEach(function (c) {
+        if (!byLevel[c[0]]) return;
+        var cards = (byLevel[c[0]] || []).slice();
+        var btn = dayButton(c[1] + '（' + cards.length + ' 字）', unitState(idsOf(cards)), function () {
+          startSet(cards, 'dict_cefr_' + c[0].replace('cefr-', '') + '_word_v1', 10, 'cefr');
+        });
+        cefrWrap.appendChild(btn);
+      });
+    }
+  }
+
+  function syncScaffoldToggles() {
+    [['dct-sc-firstletter', 'firstLetter'], ['dct-sc-ipa', 'ipa'], ['dct-sc-zh', 'zh']].forEach(function (p) {
+      var b = $(p[0]); if (!b) return;
+      b.classList.toggle('active', !!scaffold[p[1]]);
+      b.setAttribute('aria-pressed', scaffold[p[1]] ? 'true' : 'false');
+    });
   }
 
   function dot(state) {
@@ -183,12 +213,15 @@
   }
 
   /* ============================ 開始一組 ============================ */
-  function startSet(cards, storeKey, dailyNew) {
+  function startSet(cards, storeKey, dailyNew, series) {
+    currentSeries = series || (cards[0] ? seriesOf(cards[0]) : 'dk');
+    loadSeriesState();                 // 依 currentSeries 重載 accent/scaffold（§2.5/§2.3 per 系列）
     curStore = window.SRS.createStore(storeKey);
     session = curStore.buildSession(cards, { dailyNew: dailyNew, idOf: function (c) { return c.id; } });
     if (!session.length) { renderDone(true); showScreen('done'); return; }
     idx = 0;
     showScreen('play');
+    syncScaffoldToggles();
     // iOS autoplay 解鎖（§2.5）：_unlock.mp3 fire-and-forget（不得 await），同一同步 handler 內立即 renderItem
     if (!audioUnlocked) {
       try { var u = new Audio('audio/_unlock.mp3'); var up = u.play(); if (up && up.catch) up.catch(function () {}); } catch (e) {}
@@ -228,7 +261,7 @@
   }
 
   function playAudio(item) {
-    var name = 'word_dict_' + SERIES + '_' + item.audioSlug + '_' + accent + '.mp3';
+    var name = 'word_dict_' + seriesOf(item) + '_' + item.audioSlug + '_' + accent + '.mp3';
     try {
       var a = new Audio('audio/' + name);
       var p = a.play();

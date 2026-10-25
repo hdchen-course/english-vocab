@@ -34,16 +34,21 @@ audio/_unlock.mp3                iOS autoplay 解鎖用「靜態靜音資產」�
 
 ## 重建步驟
 ```bash
-# 1) 資料（讀版控快照 src/dk_index_us.json，不抓 live CloudFront → 確定性）
+# 1a) DK 資料（讀版控快照 src/dk_index_us.json，不抓 live CloudFront → 確定性）
 .venv/bin/python -I tools/build_dk_data.py
 #    → src/dict_data_dk.ts + src/dict_items_dk.json（1081 item、1035 相異 audioSlug）
 
-# 2) 編譯 TS → JS（dictation.js / dict_data_dk.js）
+# 1b) 系列 A（CEFR）單字軌：讀版控 src/cefr_words_{a1,a2,b1}.json（站內字表的字，事實）
+.venv/bin/python -I tools/build_cefr_data.py
+#    → src/dict_data_cefr_{a1,a2,b1}.ts + src/dict_items_cefr.json（1399 item、1350 相異 audioSlug）
+#    （例句軌 B 期延後：需 src/dict_authored_cefr.json 自寫例句 + 6-lens team 審）
+
+# 2) 編譯 TS → JS（dictation.js / dict_data_dk.js / dict_data_cefr_*.js）
 npm run build:legacy
 
-# 3) 音檔（edge-tts；冪等，已存且 .sha 相符則跳過）
+# 3) 音檔（edge-tts；讀全部 dict_items_*.json 的 .items 聯集；冪等，已存且 .sha 相符則跳過）
 .venv/bin/python -I tools/gen_dict_audio.py
-#    → audio/word_dict_dk_<slug>_<us|gb>.mp3（1035×2=2070）+ audio_manifest.json + 共置 .sha
+#    → audio/word_dict_dk_*（2070）+ audio/word_dict_cefr_*（2700）+ audio_manifest.json + 共置 .sha
 ```
 
 ## 驗證（gate）
