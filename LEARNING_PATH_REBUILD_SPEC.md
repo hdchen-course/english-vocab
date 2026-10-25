@@ -303,6 +303,12 @@
   - **單元（unit）**是一個「教→練→評」小叢集，`knowledge_point_ids[]` 為**清單**——一個單元可掛**數個相關知識點**；單元大小以**認知負荷**（`est_minutes≤12`、不過載 INV-4）為界，**不以「每條知識點各一單元」為界**。
   - **一個 HTML 頁可容納多個單元**（unit＝頁內區塊/stepper，沿用現站「一頁多概念」模式）；**不得**為了對映知識點把站點炸成數百~上千個檔。
   - **既有檔名/路徑一律穩定**：reuse 的頁**原地包裝、保留原檔名與路徑**；rebuild 只改**內容**不改檔名；**禁止大規模改名/搬移**（否則書籤、跨頁連結、獎勵 `progKey`、git history 全斷，牴觸 never-disappear 精神）。確有必要改名＝例外，須附 redirect ＋ `progKey` 遷移對照並納入 §7.3 紅隊；預設**不改名**。新增頁才給新檔名。
+  - **頁面分組規則（GR；可從知識點 id 機械推導，稽核一眼對得上）**：
+    - **預設分組＝一個「科目 × strand（主軸）」一頁**。strand ＝ 學科 id 第 3 段（`<domain>.<tier>.<strand>.<slug>`）、life id 第 2 段（`life.<category>.<strand>.<slug>`）。該頁 host 這個 strand 的**所有 tier**之單元，tier 作為**頁內由淺到深的進程**（節點排序依 `prerequisites`）。例：`math.*.equation.*` 全部（公式解/判別式/配方法/根與係數…各單元）同在一頁「方程式」。
+    - **拆頁條件（唯一）**：僅當該頁觸及 **R9 效能預算**（初始 JS/體積超標或低階裝置卡頓）才拆，**拆法固定**＝退一級到「科目 × strand × tier」一頁（tier 當檔名後綴），不得隨意另立命名。拆/不拆由效能量測決定，非主觀。
+    - **某知識點的 home 頁可由其 id 直接算出**（domain+strand→頁），故 `coverage_gate`／稽核可機械核對「每個 minimum id 落在其應屬的頁、且該頁有真教真考的單元」，無模糊空間。
+    - **既有頁沿用此對映**：把每個既有檔標記其 (科目,strand[,tier]) 歸屬、**保留原檔名**；同一 strand 現況散在多檔者，以 roadmap 連結串起、**不強制合檔**（合檔＝改名風險，預設不做）。
+    - ✅例：`eng` 的 `verb` strand 一頁，內含 `past-simple-irregular`、`present-perfect`、`past-perfect`… 各單元（tier 由淺到深）。❌例：為 `present-perfect` 單獨開一個 `eng_present_perfect.html`（違 GR：strand 內單一 slug 不另立檔）。
 - `教`：概念具體化／視覺化（圖解或互動 stepper），符合 §3.3 INV 與 R4；eye-comfort（§8-6）。
 - `練`：可玩、即時、低門檻；題型契合該知識點（如數學非選要能寫步驟）。
 - `自評`：翻答案→三級自評（還不熟/快會了/會了）→ 餵 SRS（srs_engine）；**不假裝自動判讀**。
