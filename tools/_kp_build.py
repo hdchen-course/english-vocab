@@ -77,7 +77,9 @@ def main():
                 strand = kid.split(".")[2] if len(kid.split(".")) >= 3 else ""
                 row = {
                     "id": kid, "domain": domain, "tier": tier, "strand": strand,
-                    "title_zh": title, "exam": exam, "src": f.name, "line": i,
+                    "title_zh": title, "exam": exam,
+                    "beyond": (tier == "t_enrich"),  # 超綱延伸(R13)；非 beyond＝課綱 minimum，AC-COV-1 嚴格覆蓋
+                    "src": f.name, "line": i,
                     "status": "todo", "unit_ids": [],
                 }
                 if kid in seen_ids:

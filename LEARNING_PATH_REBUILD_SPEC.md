@@ -2,7 +2,7 @@
 
 > 本檔為此工程的**唯一事實來源（single source of truth）**。任何規範要改，改這裡；
 > 不得在實作碼裡偷偷放寬。跨 `/clear` 以本檔 + `memory/live-workstreams-2026-10-25.md` 為錨。
-> 狀態：**草稿 v0.1（撰寫中，尚未定案）**。定案條件見 §12（content_audit 5 連續 clean ＋ 紅隊通過）。
+> 狀態：**草稿 v0.2（撰寫中，尚未定案）**。定案條件見 §12（content_audit 5 連續 clean ＋ 紅隊通過）。
 > 定案前**不得進入實作**。
 
 ---
@@ -170,11 +170,23 @@
 > §11 coverage gate 複製其「清單驅動完整度」的做法，杜絕「挑幾個做做、其餘略過」的淺薄實作。
 
 - **binding 列舉 ＋ 穩定 id**：附錄 A 每一條知識點都配**穩定字串 id**，**依域分兩種格式**（別宣稱單一格式）：
-  - **學科域**（math／chi／eng／sci／soc-hist／soc-geo／soc-civ）：`<domain>.<tier>.<strand>.<slug>`，第 2 段＝tier（例 `math.t_adv.alg.quadratic-formula`、`sci.t_adv.phys.kinematics`）。
-  - **跨課綱 life 域**：`life.<category>.<strand>.<slug>`，第 2 段＝能力類別（safety／sel／learn／think／digital／data／compute／finance／sustain／innovate；例 `life.safety.online.grooming-signals`）；**life 的 tier 不放 id、只存 manifest `tier` 欄**。
+  - **學科域**（math／chi／eng／sci／soc-hist／soc-geo／soc-civ）：`<domain>.<tier>.<strand>.<slug>`，第 2 段＝tier（例 `math.t_mid.equation.quadratic-formula`、`sci.t_adv.phys-kin.vector-kinematics`）。
+  - **跨課綱 life 域**：`life.<category>.<strand>.<slug>`，第 2 段＝能力類別（safety／sel／learn／think／digital／data／compute／finance／sustain／innovate；例 `life.safety.online.grooming`）；**life 的 tier 不放 id、只存 manifest `tier` 欄**。
   兩域的 `tier`（t_base／t_mid／t_adv／t_sub／t_enrich）皆為**內部難度階**（非學制、learner 端不顯示，R11）；id 一經指派不得改語意（與 §7 獎勵 id 同哲學）。**解析 tier 一律讀 manifest `tier` 欄，不得純以 id 位置推斷。**
+
+  **tier 語意對照表（唯一定義；與附錄 A 檔首、`tools/_kp_build.py` VALID_TIERS 一致）：**
+
+  | tier | 內部對應範圍 | coverage 性質（R13） |
+  |---|---|---|
+  | `t_base` | 基礎層（約當國小基礎、入門打底） | minimum（嚴格全覆蓋） |
+  | `t_mid` | 中階層（約當國中會考範圍） | minimum（嚴格全覆蓋） |
+  | `t_adv` | 高階層（約當高中學測範圍） | minimum（嚴格全覆蓋） |
+  | `t_sub` | 分科深階層（約當高中分科測驗／選修深水區） | minimum（嚴格全覆蓋） |
+  | `t_enrich` | 超綱延伸層（跨學科、大學入門；英文無上限） | beyond（鼓勵但不列 coverage 門檻；`beyond=true ⟺ tier==t_enrich`） |
+
+  > 「約當」僅為內部難度定位，**不是** learner 端顯示字串（R11）；coverage gate 只對 `beyond=false`（即 `t_base`／`t_mid`／`t_adv`／`t_sub`）的 id 嚴格要求（AC-COV-1）。
 - **機器可讀 manifest（Phase 1 首要產物）**：由附錄 A 產生 `authoring/knowledge_points.json`，一列一 id，欄含
-  `{id, domain, tier, strand, title_zh, exam_tags[], status, unit_ids[]}`。此 manifest 是覆蓋追蹤與 §6.2 unit metadata 的連結鍵。
+  `{id, domain, tier, strand, title_zh, exam, beyond, src, line, status, unit_ids[]}`（與 `tools/_kp_build.py` 實際輸出一致：`exam` 為單一字串如「無/會考/學測/分科-生物」；`beyond` 為布林，`beyond=true ⟺ tier==t_enrich`（超綱，R13）；`unit_ids[]` 由實作填）。此 manifest 是覆蓋追蹤與 §6.2 unit metadata 的連結鍵。
 - **涵蓋全域（§2 R12）**：附錄 A 含 (甲) 學科課綱（國小/國中/高中內部 tier）＋ (乙) 跨課綱生活與核心能力
   （安全自保／SEL／學會學習／思考推理／數位媒體素養／資料素養／運算思維科技／理財／永續世界公民／創新）。
   目前量（見附錄 A／manifest，已完成）：**總計 3092 條**＝學科 2711（chi 355／eng 296／math 263／sci 986／soc-civ 322／soc-geo 355／soc-hist 134）＋跨課綱 life 381。
@@ -190,7 +202,8 @@
   **只深挖自己那一小塊**到 DEPTH-STD，並各配獨立對抗式 reviewer 核對「對課綱/考試範圍是否窮盡、有無錯/年段錯置」。
   不得由單一 agent 一次寫完全部（那會淺）。各 slice 回來合併去重，配穩定 id，emit 成 `knowledge_points.json`。
 - **slice 矩陣（學科）**：數學／國語文／英語／自然-理化／自然-生物／自然-地科／社會-歷史／社會-地理／社會-公民，
-  各跨 基礎／中階／高階 三內部 tier。**跨課綱域**：安全自保／SEL／學會學習／思考推理／數位媒體素養／資料素養／
+  各跨 `t_base` 基礎／`t_mid` 中階／`t_adv` 高階／`t_sub` 分科深階 四內部 tier（定義見 §4 tier 語意對照表），
+  並視需要加收 `t_enrich` 超綱延伸（beyond）。**跨課綱域**：安全自保／SEL／學會學習／思考推理／數位媒體素養／資料素養／
   運算思維科技／理財／永續世界公民／創新（section G）。
 - **原 598 條粗胚已被取代（完成式）**：10 域 expert 平行深掘已完成，附錄 A 現為 **3092 條**（各 slice count 已重列，見附錄 A 檔首與 manifest）；598 僅為歷史起點，不再引用。
 - **spec 出場 gate（硬性）**：附錄 A 未完成「全 slice 深掘到 DEPTH-STD ＋ 每 slice 獨立審查 ＋ content_audit 5 clean ＋ 紅隊」，
@@ -302,7 +315,7 @@
   （衛星地圖／太陽系／N 體重力模擬）。**實作鐵律**：既然這些等級的互動模擬做得出來，自然科動畫**不得退回淺薄靜圖**；但一律仍過 viz-QA＋R-STYLE＋效能＋眼舒適。
 
 #### 6.2.1 單元骨架範例（§0.3）
-- ✅**正例**：`eng.t_mid.tense.present-perfect` 單元＝教（時間軸動畫示現「已完成且與現在有關」，token 色）→ 練（看情境選 have/has＋填空，即時回饋）→ 評（翻答案→三級自評→SRS）；metadata 齊（`prerequisites:["eng.t_mid.tense.past-simple"]`、`est_minutes:8`）。
+- ✅**正例**：`eng.t_mid.verb.present-perfect` 單元＝教（時間軸動畫示現「已完成且與現在有關」，token 色）→ 練（看情境選 have/has＋填空，即時回饋）→ 評（翻答案→三級自評→SRS）；metadata 齊（`prerequisites:["eng.t_mid.verb.past-simple-irregular"]`、`est_minutes:8`）。
 - ❌**反例**：一個單元塞「現在完成＋過去完成＋完成進行」三概念、`est_minutes:25`、只有教學文字無練無評 → 違 R4/§6.6①、INV-4（過載）、`est_minutes>12` → 擋關、須拆成 3 單元。
 - ⚠**邊界**：純聆聽單元（無文字輸入）→ 仍須「教＋至少一個 retrieval（如聽後選圖/口說跟讀）＋自評」，不得只播音檔就算完成。
 
@@ -343,8 +356,8 @@
   3. **同一 gate、逐單元、不可抽樣**：每個單元檔跑 per-file content_audit 到 5 clean ＋ `tools/unit_acceptance_lint.py`（待建，機械驗 ②③⑥⑦⑧⑩）＋ 視覺 QA；
      全過才得併入學習路徑、才可宣告完成。rubric 任一項 fail＝擋關（fail-closed）。
 - **範例：**
-  - ✅**正例** `math.t_mid.alg.quadratic-formula`：教（配方法動畫，純 token 色）＋練（可玩、即時回饋）＋評（翻答案→三級自評→SRS）；
-    卡自適應寬；`est_minutes:9`；正解代入朗讀通順；viz 逐 frame 簽核；`knowledge_point_ids:["math.t_mid.alg.quadratic-formula"]` 存在於附錄 A。rubric ⑩項全綠。
+  - ✅**正例** `math.t_mid.equation.quadratic-formula`：教（配方法動畫，純 token 色）＋練（可玩、即時回饋）＋評（翻答案→三級自評→SRS）；
+    卡自適應寬；`est_minutes:9`；正解代入朗讀通順；viz 逐 frame 簽核；`knowledge_point_ids:["math.t_mid.equation.quadratic-formula"]` 存在於附錄 A。rubric ⑩項全綠。
   - ❌**反例**：某單元用 `#3b82f6` 硬編藍（違②）、作答後只顯示「對/錯」無三級自評（違⑤）、填空正解代入後「他把把書放桌上」重字不通（違④）、
     `knowledge_point_ids:["math.quadratic"]` 在附錄 A 查無（違⑦）→ 四項 fail，擋關、不得併入。
   - ⚠**邊界**：純閱讀型概念（無選擇題）→ 仍須「教 ＋ 至少一個 retrieval 練習（如填空/自問自答）＋ 自評」，**不得只有教學文字就當完成**（否則記不牢，違 INV-3／rubric①）。
@@ -476,8 +489,8 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
   3. 輸出格式固定：`{unit_id, result: pass|blocked, gaps:[{missing_concept, where_used}], learnable:bool, retention_ok:bool, burnout_risk:low|med|high, notes}`。
   4. 門檻：一條路徑上每個 U 皆 `result=pass` 且 `gaps=[]`，該路徑才算無斷層（INV-1）；任一 `blocked` → 調整先備鏈或補前置單元 → 重跑，loop 到零斷層。
 - **範例：**
-  - ✅**正例**：U＝`math.t_mid.alg.quadratic-formula`，其 prerequisites 閉包已含「因式分解解一元二次、配方法、平方根運算、正負數」→ K(U) 足以推導公式解 → `result:pass, gaps:[]`。
-  - ❌**反例**：U 的練習第 3 題用到「判別式 Δ＝b²−4ac」，但該知識點 `math.t_mid.alg.discriminant` 排在 U 之後、不在 K(U) → `result:blocked, gaps:[{missing_concept:"math.t_mid.alg.discriminant", where_used:"練習第3題"}]` → 須把 discriminant 設為 U 先備或移除該題。
+  - ✅**正例**：U＝`math.t_mid.equation.quadratic-formula`，其 prerequisites 閉包已含「因式分解解一元二次、配方法、平方根運算、正負數」→ K(U) 足以推導公式解 → `result:pass, gaps:[]`。
+  - ❌**反例**：U 的練習第 3 題用到「判別式 Δ＝b²−4ac」，但該知識點 `math.t_mid.equation.quadratic-discriminant` 排在 U 之後、不在 K(U) → `result:blocked, gaps:[{missing_concept:"math.t_mid.equation.quadratic-discriminant", where_used:"練習第3題"}]` → 須把 discriminant 設為 U 先備或移除該題。
   - ⚠**邊界**：某概念雖與 U 同一 tier，但其單元在路徑順序上排 U **之後** → 仍算斷層（K(U) 以 `prerequisites` 鏈計，**不以 tier/stage 計**）→ `blocked`，需修正先備宣告或單元排序。
 
 ---
