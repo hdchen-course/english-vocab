@@ -427,6 +427,15 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 - 角色 1–10 為**審查透鏡**（找缺陷）。角色 11 為**路徑驗證器**（證明 INV-1..4）。
 - 必要時可增角色（如各科教練、無障礙 QA），但**不得少於**上列。
 
+### 8.1 專家 panel 運作細則與範例（§0.3 具體化）
+- **細則**：每個單元/章 publish 前，由上表角色 panel 逐一裁決（沿用 static-doc-audit `content_audit` 的裁決規則）：
+  ① 領域專家判「資訊錯誤」＝defect（最高）；② 否則 PM 的「out-of-scope」裁決優先；③ 否則該準則**擁有者**的 defect 票決定（只有翻譯者能判「誤譯」）；④ 否則多數決。
+  角色 1（領域專家）可見全部正解；**角色 11（知識受限學習者）僅見 K(U)**（§9.2），兩者不可混用同一 agent。每個 defect 必附 file:line＋理由；修完該角色重判。
+- **範例**：
+  - ✅**正例**：某數學單元——領域專家確認公式正確、學習科學家確認「先具體後抽象」、眼科確認 iPad 字級可讀、角色 11 模擬 `pass` → 全綠通過。
+  - ❌**反例**：單元僅作者一人自審即宣告完成（違 R6：必多-agent＋獨立對抗式 reviewer）→ 不算通過。
+  - ⚠**邊界**：native-English 與翻譯者對某英文例句中譯有歧見 → 依規則③「只有翻譯者能判誤譯」→ 由翻譯者裁決，不走多數決。
+
 ---
 
 ## 9. 知識受限學習者模擬協定（核心驗證）
@@ -477,6 +486,20 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 - **Phase 4｜獎勵擴充**：在已驗證的持久化地基上新增獎勵內容（只新增 id，不動既有）。
 - **Phase 5｜全書 audit ＋ 知識受限角色模擬 ＋ 視覺 QA**：loop 到零問題。
 - 每個 Phase（且其中每一檔）結束即 commit，可 rollback（R8）；push 僅在使用者明說。
+
+### 10.1 各 Phase 的進入/退出準則與 rollback（§0.3 具體化）
+- **細則**：每個 Phase 都有明確 **exit gate**，未過不得進下一 Phase；Phase 內每檔完成即 commit（訊息標 Phase），rollback＝`git revert`/`git checkout` 回該 commit。
+  - **Phase 0 exit**：spec 過 §12（content_audit 5 clean ＋ 紅隊零繞過 ＋ `spec_concreteness_lint` exit 0）。
+  - **Phase 0.5 exit**：`design_consistency_gate` exit 0（既有不一致歸零到 token）＋ §7.2 之 R1 壞檔不重設/R2 真 migrate 修妥 ＋ `RT-6` 綠。
+  - **Phase 1 exit**：`knowledge_points.json`＋id registry＋unit schema＋hub/roadmap 骨架＋`migrate()`＋additive-merge 就緒；`AC-COV-2`、`AC-REWARD-1` 綠。
+  - **Phase 2 exit**：既有單元全數接線（宣告 `prerequisites`/`knowledge_point_ids`），每檔 5 clean。
+  - **Phase 3 exit**：`AC-COV-1` ＝ 0 個未覆蓋 minimum id（gap 全補）。
+  - **Phase 4 exit**：獎勵擴充**只新增 id**、RT-1..8 全綠。
+  - **Phase 5 exit**：§11.A 全 15 條 AC 綠且 `acceptance_ledger.json` 全登錄。
+- **範例**：
+  - ✅**正例**：Phase 3 結束時 `coverage_gate` 報「未覆蓋 minimum id ＝ 0」→ 得進 Phase 4。
+  - ❌**反例**：宣稱「Phase 3 大致完成」但 coverage 顯示 37 個 minimum id 無對映單元 → **不得**進 Phase 4，須列 37 id 補完。
+  - ⚠**邊界**：Phase 2 某檔已 4 clean 後又被改動 → streak **歸零**、重跑 5 clean（不接受「只差一輪」通融）。
 
 ---
 
