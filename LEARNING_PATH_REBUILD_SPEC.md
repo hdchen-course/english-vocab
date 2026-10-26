@@ -50,7 +50,7 @@
       必須同時含 `細則`＋`範例`＋至少一個 `❌`，否則 exit≠0；豁免章＝`EXEMPT_CHAPTERS={0,1,3,4,5,13,14}`（描述/索引/事實/已關閉；§4 明細在附錄 A）。紅隊：移除全部 ❌ 的副本 → 擋 **9 章**；真檔 → 放行。
       **細粒度 vagueness（單一子節/單一規則仍太模糊）交 content_audit 專家 panel 判**（§12），lint 擋「整章缺具體化」的粗漏。
 - **章級具體化已完成（lint 綠）**：§2/§6/§7/§8/§9/§10/§11/§11.A/§12 九個規範章整段皆含 `細則`＋`範例`＋`❌`，
-  `spec_concreteness_lint.py` exit 0（含 §6.6 品質恆定、§7.1/§7.2/§7.3 獎勵風險＋RT、§6.5 R-STYLE-3 自適應卡、§4.1 DEPTH-STD、§8.1 panel 細則、§9.5 受限模擬、§10.1 entry/exit）。
+  `spec_concreteness_lint.py` exit 0（涵蓋 9 個規範章的子節：§6.6 品質恆定、§7.1/§7.2/§7.3 獎勵風險＋RT、§6.5 R-STYLE-3 自適應卡、§8.1 panel 細則、§9.5 受限模擬、§10.1 entry/exit；§4.1 DEPTH-STD 不由章級 lint 檢核，§4 為 EXEMPT 章，其具體化由附錄 A／`coverage_gate` 把關）。
   **已除的 blocker**：附錄 A 全 slice 深掘＋審查（已完成，3092 條）、章級具體化（lint 綠）皆**不再是 blocker**。
   **定案 blocker 僅剩**：本 spec content_audit **連續 5 clean**＋**紅隊**（§12）兩項。
   章內單一規則若仍嫌模糊屬**細粒度 vagueness**，交 content_audit 專家 panel 逐輪判（§0.3 (c)、§12），非擋定案的粗漏。
