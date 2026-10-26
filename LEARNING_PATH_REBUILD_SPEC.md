@@ -460,7 +460,7 @@
   | 檔 | 內容/schema | 產生者 | 何時 | 驗證 |
   |---|---|---|---|---|
   | `authoring/units_index.json` | 彙總全部 `*.units.json`：每 unit 的 metadata＋`home_page`＋`{file,anchor}` | build 工具掃 `*.units.json` | Phase 1 起、每次建置 | `AC-SCHEMA` |
-  | `authoring/strand_labels.json` | `strand slug→{title_zh}`（全 211 strand；含 sci 子領域前綴 `bio-/chem-/earth-/phys-`→子領域中文名＋排序） | 自 inventory 標題半自動＋人工補、鎖檔 | Phase 1 | `no_grade_label_gate` 掃（中性、無年段） |
+  | `authoring/strand_labels.json` | **鍵＝`(domain, strand)` 配對**（共 **211** 配對；**非裸 slug**——裸 slug 僅 208 且 `stats`(math/life)、`inquiry`(sci/soc-civ)、`skill`(soc-geo/soc-hist) 三個跨域共用、各域中文名不同，裸 slug 會覆蓋成錯名）→`{title_zh}`；含 sci 子領域前綴 `bio-/chem-/earth-/phys-`→子領域中文名＋排序 | 自 inventory 標題半自動＋人工補、鎖檔 | Phase 1 | `no_grade_label_gate` 掃（中性、無年段）＋鍵數＝211 且各跨域 slug 分域有別名 |
   | `authoring/subject_labels.json` | `domain/life-category→{title_zh, island, order}`（含複合島成員顯示名與島內序） | 人工定、鎖檔 | Phase 1 | 與 §6.1 島↔subject 表一致性檢查 |
   | `authoring/term_glossary.json` | `term_zh→{en, abbr?, is_term:true}`（R15 唯一英語來源） | 人工＋審查，持續增補 | Phase 1 起 | `term_annotation_gate`（查表） |
   | `nav_index.json` | 輕量導覽樹：島→subject→strand→tier→unit 的**計數/狀態**（不含 3092 逐條） | build 工具自 units_index＋manifest | Phase 1 | `AC-NAV`（首屏≤12 分區/可見≤~15） |
@@ -694,7 +694,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 7. **code-download bundle**（若該單元/模組含可執行程式，依 house 規範提供完整可執行+可驗證下載）。
 8. **house 視覺/結構一致**；效能（R9）未退化。
 
-- **細則**：上列 8 項為「完成」的硬性必要條件**摘要（非窮舉）**；其**逐條可機械驗且窮舉的版本＝§11.A 驗收準則矩陣（19 條 AC，各附驗證方法/門檻/證據）**，§11.A 為唯一完工判準。
+- **細則**：上列 8 項為「完成」的硬性必要條件**摘要（非窮舉）**；其**逐條可機械驗且窮舉的版本＝§11.A 驗收準則矩陣（22 條 AC，各附驗證方法/門檻/證據）**，§11.A 為唯一完工判準。
   完成 ⟺ §11.A 全 AC PASS 且證據登 `authoring/acceptance_ledger.json`（綁 sha）。任一項未過即未完成，**不接受「大致上」**。逐檔與全書都適用（per-file 先、whole-book 後）。
 - **範例**：✅ 某檔案（頁）：5 clean＋簡體 0＋四角色簽核（sha 相符）＋頁內各單元 rubric 10/10＋覆蓋 id 存在 → 該檔完成。 ❌ 只跑到 3 clean 就宣告完成（違第 1 項）→ 擋。 ⚠ 第 3 項四角色已簽核，但事後又改版面（sha 變）→ 舊簽核作廢，須重 render＋重簽（§11.A AC-VIZ-1 ⚠）。
 
