@@ -55,6 +55,15 @@ SIMPLIFIED = {
 # Code points to report only as INFO (accepted in Taiwan usage), never fail on.
 INFO_ONLY = {0x53F0}
 
+# PRC 詞（繁體字形，非簡體碼點，故碼點掃描抓不到）→ 台灣用詞。R2「零 PRC 詞」機器強制。
+# 只收「在台灣一定是錯」的無歧義 PRC 詞；刻意排除歧義詞以免誤報：
+#   質量（物理 mass 是合法台灣術語）、數據（台灣亦常用，如大數據/數據機）、信息（偶見，暫不收）。
+PRC_TERMS = {
+    "視頻": "影片", "軟件": "軟體", "硬件": "硬體", "網絡": "網路",
+    "鼠標": "滑鼠", "博客": "部落格", "內存": "記憶體",
+    "筆記本電腦": "筆記型電腦", "手機短信": "手機簡訊", "搜索引擎": "搜尋引擎",
+}
+
 DEFAULT_FILES = [
     "index.html", "home.html", "math.html", "multiply.html",
     "number_theory.html", "chinese.html", "game_core.js", "game_core.css",
@@ -62,7 +71,7 @@ DEFAULT_FILES = [
 ]
 
 def scan(paths):
-    fails, infos, lang_fail = {}, {}, []
+    fails, infos, lang_fail, prc = {}, {}, [], {}
     for p in paths:
         if not os.path.exists(p):
             print(f"  MISSING: {p}")
@@ -74,10 +83,14 @@ def scan(paths):
                 if cp in SIMPLIFIED:
                     bucket = infos if cp in INFO_ONLY else fails
                     bucket.setdefault(p, {}).setdefault(cp, []).append(i)
+            # PRC 繁體詞 substring 掃描（碼點掃描抓不到）
+            for term in PRC_TERMS:
+                if term in line:
+                    prc.setdefault(p, {}).setdefault(term, []).append(i)
         # Accept any Traditional-Chinese lang tag: zh-TW, zh-Hant, zh-Hant-TW.
         if p.endswith(".html") and not re.search(r'lang="zh-(TW|Hant)', txt):
             lang_fail.append(p)
-    return fails, infos, lang_fail
+    return fails, infos, lang_fail, prc
 
 def main():
     args = sys.argv[1:]
@@ -86,12 +99,13 @@ def main():
         paths.extend(sorted(glob.glob(a)) or [a])
     paths = paths or DEFAULT_FILES
 
-    fails, infos, lang_fail = scan(paths)
+    fails, infos, lang_fail, prc = scan(paths)
 
-    print("=== Simplified-Chinese scan (codepoints only, no glyphs) ===")
+    print("=== Simplified-codepoint + PRC-term scan ===")
     for p in paths:
-        if p in fails:
-            parts = [f"U+{cp:04X}(→{SIMPLIFIED[cp]})×{len(ls)}@L{ls[:6]}" for cp, ls in sorted(fails[p].items())]
+        if p in fails or p in prc:
+            parts = [f"U+{cp:04X}(→{SIMPLIFIED[cp]})×{len(ls)}@L{ls[:6]}" for cp, ls in sorted(fails.get(p, {}).items())]
+            parts += [f"PRC「{t}」(→{PRC_TERMS[t]})×{len(ls)}@L{ls[:6]}" for t, ls in sorted(prc.get(p, {}).items())]
             print(f"  FAIL {p}: " + "; ".join(parts))
         elif os.path.exists(p):
             print(f"  ok   {p}")
@@ -101,7 +115,7 @@ def main():
     if lang_fail:
         print("  lang FAIL (missing lang=\"zh-TW\"): " + ", ".join(lang_fail))
 
-    ok = not fails and not lang_fail
+    ok = not fails and not lang_fail and not prc
     print("RESULT:", "PASS ✅" if ok else "FAIL ❌")
     return 0 if ok else 1
 
