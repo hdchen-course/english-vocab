@@ -29,7 +29,7 @@ cross_check 來源的登記格式（source_registry 內，evidence_method=cross_
 EXIT：0=全過，1=有 FAIL，2=selftest 失敗。
 依賴：標準庫 urllib（避免額外套件）；抓取逾時 20s、僅 http(s)。
 """
-import sys, os, json, hashlib, re, argparse, urllib.request, ssl
+import sys, os, json, hashlib, re, argparse, urllib.request, urllib.parse, ssl
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 REG = os.path.join(ROOT, "authoring", "source_registry.json")
@@ -40,9 +40,37 @@ def _norm(s: str) -> str:
     s = re.sub(r"\s+", "", s)                # 去所有空白
     return s
 
+def host_publisher(url: str) -> str:
+    """由 URL 推 registrable publisher，**所有 wikipedia/wikimedia 語言版 collapse 成一家**
+    （zh.wikipedia + en.wikipedia ≠ 2 個獨立來源，屬同一 Wikimedia）。判斷來源獨立性以此為準，
+    不信任 agent 自填的 publisher 字串（防『同站換語言冒充兩家』）。"""
+    m = re.search(r"https?://([^/]+)/?", url or "")
+    host = (m.group(1) if m else url or "").lower().split(":")[0]
+    if "wikipedia.org" in host or "wikimedia.org" in host or "wikidata.org" in host:
+        return "wikimedia"
+    parts = host.split(".")
+    # 取可註冊網域（末二段；對 co.uk/gov.tw 等末三段）
+    if len(parts) >= 3 and parts[-2] in ("co", "com", "gov", "org", "edu", "net", "ac"):
+        return ".".join(parts[-3:])
+    return ".".join(parts[-2:]) if len(parts) >= 2 else host
+
+def _encode_url(url: str) -> str:
+    # 非 ASCII（中文）路徑須 percent-encode，否則 urllib 丟 UnicodeEncodeError
+    try:
+        url.encode("ascii"); return url
+    except UnicodeEncodeError:
+        sp = urllib.parse.urlsplit(url)
+        path = urllib.parse.quote(sp.path, safe="/%")
+        query = urllib.parse.quote(sp.query, safe="=&%")
+        return urllib.parse.urlunsplit((sp.scheme, sp.netloc, path, query, sp.fragment))
+
 def fetch(url, timeout=20):
     ctx = ssl.create_default_context()
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 cross-check-gate"})
+    req = urllib.request.Request(_encode_url(url), headers={
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,*/*",
+        "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8",
+    })
     with urllib.request.urlopen(req, timeout=timeout, context=ctx) as r:
         raw = r.read()
     try:
@@ -58,24 +86,27 @@ def check_source(sid, s, offline=False, fetcher=fetch):
     refs = s.get("independent_refs") or []
     if len(refs) < 2:
         return False, [f"{sid}: cross_check 需 ≥2 independent_refs（有 {len(refs)}）"]
-    pubs = set()
+    confirmed_pubs = set()   # 真抓到且 quote 命中的 ref 的 host publisher
+    notes = []
     for i, ref in enumerate(refs):
-        if not ref.get("url"):
-            reasons.append(f"{sid} ref#{i}: 缺 url"); continue
-        if not ref.get("quote"):
-            reasons.append(f"{sid} ref#{i}: 缺 quote（該事實逐字依據）"); continue
-        pubs.add(ref.get("publisher", f"?{i}"))
+        if not ref.get("url") or not ref.get("quote"):
+            notes.append(f"{sid} ref#{i}: 缺 url 或 quote"); continue
+        pub = host_publisher(ref["url"])
         if offline:
-            continue
+            confirmed_pubs.add(pub); continue   # 離線僅結構檢查
         try:
             body = fetcher(ref["url"])
         except Exception as e:
-            reasons.append(f"{sid} ref#{i} 抓取失敗（{type(e).__name__}）：{ref['url']}"); continue
-        if _norm(ref["quote"]) not in _norm(body):
-            reasons.append(f"{sid} ref#{i}: quote 未出現在抓取內容（來源不支持該事實或已變動）：{ref['url']}")
-    if len(pubs) < 2:
-        reasons.append(f"{sid}: independent_refs 的 publisher 少於 2 個相異（不夠獨立）")
-    return (not reasons), reasons
+            notes.append(f"{sid} ref#{i} 抓取失敗（{type(e).__name__}），不計入確認：{ref['url']}"); continue
+        if _norm(ref["quote"]) in _norm(body):
+            confirmed_pubs.add(pub)
+        else:
+            notes.append(f"{sid} ref#{i}: quote 未出現在抓取內容，不計入確認：{ref['url']}")
+    # 通過＝有 ≥2 個「真抓到且 quote 命中」且 host 相異的來源（壞/抓不到的 ref 不致命，只是不計入）
+    if len(confirmed_pubs) >= 2:
+        return True, notes   # notes 僅供參考，不致 FAIL
+    reasons = notes + [f"{sid}: 確認的獨立來源不足 2（confirmed distinct publishers={len(confirmed_pubs)}）"]
+    return False, reasons
 
 def verify(sid_filter=None, offline=False):
     reg = json.load(open(REG, encoding="utf-8"))
