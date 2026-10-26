@@ -35,6 +35,21 @@ def main():
         if not a or badclaim(e) or badclaim(a): skipped.append((kid,"一方存疑/查不到")); continue
         if man[kid].get("verification_status")=="pending": skipped.append((kid,"scope-待核")); continue
         concern=(a.get("concern") or "").strip()
+        # 只有「正確性」疑慮才排除；純取證完整度 caveat(gate 已保證 ≥2 confirmed 源)→ 仍驗、記 note
+        # HARD：出現即一律排除（真正主張本題有錯/過時/應改…），不因任何 all-clear 開頭而鬆動。
+        HARD=("錯","誤導","過時","過度簡化","不符","應改","須改","宜改","勿寫","勿用","誤用",
+              "wrong","incorrect","outdated","mislead","oversimplif","泥石流","排序")
+        # SOFT：迷思/misconception 這類字會合法出現在「破除…的迷思」教學提醒裡（非指本題犯錯）。
+        SOFT=("迷思","misconception")
+        # 校準：唯有「開頭即明示本題無正確性疑慮」且「只出現 SOFT 字」時，才視為教學框架提醒→仍驗。
+        # 任何 HARD 字 → 一律排除（紅隊：self-contradictory『無疑慮…但排序錯』仍 EXCLUDE）。
+        CLEAR=("無正確性疑慮","無正確性問題","無疑慮","無錯誤","正確無誤","內容正確",
+               "no correctness issue","no correctness concern","no issue","no error")
+        head=concern.lstrip("　 \t-•*（(【[「\"'")
+        concern_is_clear = any(head.startswith(m) for m in CLEAR)
+        has_hard = any(k in concern for k in HARD)
+        has_soft = any(k in concern for k in SOFT)
+        concern_is_error = (has_hard or (has_soft and not concern_is_clear)) if concern else False
         # union refs by url, host-distinct
         refs,seen=[],set()
         for r in e.get("refs",[])+a.get("refs",[]):
@@ -43,12 +58,14 @@ def main():
                 seen.add(u); refs.append({"url":u,"publisher":r["publisher"],"quote":r["quote"]})
         if len({host_pub(r["url"]) for r in refs})<2:
             skipped.append((kid,"union host<2")); continue
-        if concern:   # 對抗方有疑慮 → 不自動 verify，記 backlog
+        if concern_is_error:   # 正確性疑慮 → 不自動 verify，記 backlog
             excluded_concern.append(kid)
             bl["defects"].append({"kp_id_suffix":kid,"domain":kid.split('.')[0],
                 "found_by":f"{batch} adversarial(cross_check)","found_at":"2026-10-27","severity":"minor",
                 "issue":concern[:300],"fix":"實作時依 concern 修正措辭/來源後再驗。","status":"open"})
             continue
+        if concern:   # 僅取證完整度 caveat → 驗證但記 note（供實作加強，不擋）
+            bl.setdefault("cross_check_notes",[]).append({"kp_id_suffix":kid,"note":concern[:300],"severity":"sourcing"})
         accepted[kid]={"claim":e.get("claim") or a.get("claim"),"refs":refs}
 
     # 註冊 accepted
