@@ -46,6 +46,10 @@ SIMPLIFIED = {
     0x5FC6: "憶", 0x4EBF: "億", 0x529E: "辦", 0x7B14: "筆", 0x7EA2: "紅",
     0x7EFF: "綠", 0x8D25: "敗", 0x8FDB: "進", 0x8FD0: "運",
     0x9F99: "龍", 0x9E1F: "鳥", 0x9C7C: "魚", 0x513F: "兒",
+    # 常見 PRC 用語之簡體碼點（視頻/訊/軟件/硬盤/鼠標/網絡…），補齊 gate 盲點（R33 修）：
+    0x89C6: "視", 0x9891: "頻", 0x8BAF: "訊", 0x8F6F: "軟", 0x76D8: "盤",
+    0x6807: "標", 0x7F51: "網", 0x7EDC: "絡",
+    # 註：鼠(U+9F20)/硬(U+786C) 繁簡同形、非簡體，不得入表（否則誤報滑鼠/硬體）。
     0x53F0: "臺",  # 台 is tolerated in TW too; report as info, not hard-fail
 }
 # Code points to report only as INFO (accepted in Taiwan usage), never fail on.
