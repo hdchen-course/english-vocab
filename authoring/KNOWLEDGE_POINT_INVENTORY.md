@@ -364,23 +364,23 @@
 
 - [eng.t_base.phonics.letter-recognition] 26 字母大小寫認讀  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.letter-writing] 字母大小寫書寫與筆順  {t_base, 無}  · provisionally_verified
-- [eng.t_base.phonics.name-vs-sound] 字母「名稱音」vs「發音」區辨  {t_base, 無}  · unverified
+- [eng.t_base.phonics.name-vs-sound] 字母「名稱音」vs「發音」區辨  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.alphabet-order] 字母順序與字典序查找  {t_base, 無}  · provisionally_verified
-- [eng.t_base.phonics.short-vowels] 短母音 a/e/i/o/u（CVC 拼讀）  {t_base, 無}  · unverified
+- [eng.t_base.phonics.short-vowels] 短母音 a/e/i/o/u（CVC 拼讀）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.silent-e] 長母音與 silent e（magic e：a_e/i_e/o_e/u_e）  {t_base, 無}  · unverified
 - [eng.t_base.phonics.single-consonants] 單子音發音  {t_base, 無}  · unverified
-- [eng.t_base.phonics.consonant-blends] 子音群 blends（bl/cr/st/sp/tr…）  {t_base, 無}  · unverified
-- [eng.t_base.phonics.consonant-digraphs] 子音組合 digraphs（sh/ch/th 有聲無聲/wh/ph/ng/ck）  {t_base, 無}  · unverified
+- [eng.t_base.phonics.consonant-blends] 子音群 blends（bl/cr/st/sp/tr…）  {t_base, 無}  · provisionally_verified
+- [eng.t_base.phonics.consonant-digraphs] 子音組合 digraphs（sh/ch/th 有聲無聲/wh/ph/ng/ck）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.vowel-teams] 母音組合（ee/ea/oo 長短/ai/ay/oa/ow/oi/oy/au/aw）  {t_base, 無}  · unverified
-- [eng.t_base.phonics.r-controlled] r-controlled 母音（ar/er/ir/or/ur）  {t_base, 無}  · unverified
+- [eng.t_base.phonics.r-controlled] r-controlled 母音（ar/er/ir/or/ur）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.hard-soft-cg] 硬軟 c/g（cat/city、go/giant）  {t_base, 無}  · unverified
 - [eng.t_base.phonics.decoding] 看字讀音（decoding）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.encoding] 聽音拼字（encoding）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.syllable-stress] 音節切分與單字重音  {t_base, 無}  · unverified
-- [eng.t_base.phonics.schwa] 弱化音 schwa /ə/  {t_base, 無}  · unverified
-- [eng.t_base.phonics.final-le] 字尾 -le 音節（table/little）  {t_base, 無}  · unverified
-- [eng.t_base.phonics.plural-s-sound] 複數/三單 -s/-es 發音 /s//z//ɪz/  {t_base, 無}  · unverified
-- [eng.t_base.phonics.ed-sound] 過去式 -ed 發音 /t//d//ɪd/  {t_base, 無}  · unverified
+- [eng.t_base.phonics.schwa] 弱化音 schwa /ə/  {t_base, 無}  · provisionally_verified
+- [eng.t_base.phonics.final-le] 字尾 -le 音節（table/little）  {t_base, 無}  · provisionally_verified
+- [eng.t_base.phonics.plural-s-sound] 複數/三單 -s/-es 發音 /s//z//ɪz/  {t_base, 無}  · provisionally_verified
+- [eng.t_base.phonics.ed-sound] 過去式 -ed 發音 /t//d//ɪd/  {t_base, 無}  · provisionally_verified
 - [eng.t_mid.phonics.kk-ipa] KK 音標／IPA 符號認讀與對應  {t_mid, 無}  · unverified
 - [eng.t_base.vocab.numbers] 基數與序數  {t_base, 無}  · provisionally_verified
 - [eng.t_base.vocab.colors] 顏色  {t_base, 無}  · provisionally_verified
@@ -415,204 +415,204 @@
 - [eng.t_sub.vocab.expand-6000] 進階擴充至約 6,000 字（參考詞彙表第 5–6 級，逾學測；英文無上限、以生活實用為主）  {t_enrich, 無}  · unverified
 - [eng.t_base.morph.suffix-adverb-ly] 副詞字尾 -ly 構成  {t_base, 無}  · unverified
 - [eng.t_base.morph.compound-noun] 合成名詞（classroom/raincoat）  {t_base, 無}  · unverified
-- [eng.t_mid.morph.suffix-noun] 名詞字尾（-tion/-ment/-ness/-ity/-er/-or/-ist/-ship）  {t_mid, 會考}  · unverified
-- [eng.t_mid.morph.suffix-adjective] 形容詞字尾（-ful/-less/-ous/-ive/-al/-ic/-able/-y/-ish）  {t_mid, 會考}  · unverified
+- [eng.t_mid.morph.suffix-noun] 名詞字尾（-tion/-ment/-ness/-ity/-er/-or/-ist/-ship）  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.morph.suffix-adjective] 形容詞字尾（-ful/-less/-ous/-ive/-al/-ic/-able/-y/-ish）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.morph.suffix-verb] 動詞字尾（-ize/-ify/-en/-ate）  {t_mid, 會考}  · unverified
 - [eng.t_mid.morph.prefix-negative] 否定/反義字首（un-/in-/im-/il-/ir-/dis-/non-/mis-）  {t_mid, 會考}  · unverified
-- [eng.t_mid.morph.word-family] 派生與詞類轉換（beauty/beautiful/beautifully）  {t_mid, 會考}  · unverified
+- [eng.t_mid.morph.word-family] 派生與詞類轉換（beauty/beautiful/beautifully）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_adv.morph.prefix-degree] 數量/程度字首（bi-/tri-/multi-/semi-/over-/under-/super-）  {t_adv, 學測}  · unverified
-- [eng.t_adv.morph.prefix-relation] 關係/方位字首（re-/pre-/post-/inter-/trans-/sub-/ex-/co-）  {t_adv, 學測}  · unverified
-- [eng.t_adv.morph.latin-greek-roots] 拉丁希臘字根（spect/port/dict/ject/vert/scrib/tele/bio/geo/graph）  {t_adv, 學測}  · unverified
-- [eng.t_adv.morph.compound-adjective] 合成形容詞（well-known、a ten-year-old boy）  {t_adv, 學測}  · unverified
-- [eng.t_adv.morph.conversion] 轉品（water/to water 名動互轉）  {t_adv, 學測}  · unverified
+- [eng.t_adv.morph.prefix-relation] 關係/方位字首（re-/pre-/post-/inter-/trans-/sub-/ex-/co-）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_adv.morph.latin-greek-roots] 拉丁希臘字根（spect/port/dict/ject/vert/scrib/tele/bio/geo/graph）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_adv.morph.compound-adjective] 合成形容詞（well-known、a ten-year-old boy）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_adv.morph.conversion] 轉品（water/to water 名動互轉）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.morph.guess-by-morphology] 以構詞推測字義  {t_adv, 學測}  · provisionally_verified
 - [eng.t_base.noun.regular-plural] 可數名詞規則複數（-s/-es 拼寫）  {t_base, 無}  · unverified
-- [eng.t_base.noun.irregular-plural] 不規則複數（man/men、child/children、foot/feet）  {t_base, 無}  · unverified
-- [eng.t_base.noun.proper-capitalization] 專有名詞與大寫規則  {t_base, 無}  · unverified
-- [eng.t_base.noun.possessive] 名詞所有格（'s / s'）  {t_base, 無}  · unverified
+- [eng.t_base.noun.irregular-plural] 不規則複數（man/men、child/children、foot/feet）  {t_base, 無}  · provisionally_verified
+- [eng.t_base.noun.proper-capitalization] 專有名詞與大寫規則  {t_base, 無}  · provisionally_verified
+- [eng.t_base.noun.possessive] 名詞所有格（'s / s'）  {t_base, 無}  · provisionally_verified
 - [eng.t_mid.noun.same-form-plural] 單複同形（sheep/deer/fish）  {t_mid, 會考}  · unverified
 - [eng.t_mid.noun.uncountable] 不可數名詞概念  {t_mid, 會考}  · unverified
-- [eng.t_mid.noun.uncountable-quantify] 不可數名詞量化（a piece/cup/slice of）  {t_mid, 會考}  · unverified
+- [eng.t_mid.noun.uncountable-quantify] 不可數名詞量化（a piece/cup/slice of）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.noun.collective] 集合名詞  {t_mid, 會考}  · unverified
 - [eng.t_mid.noun.noun-as-modifier] 名詞當形容詞修飾名詞  {t_mid, 會考}  · unverified
-- [eng.t_adv.noun.double-possessive] 雙重所有格（a friend of mine）  {t_adv, 學測}  · unverified
-- [eng.t_base.article.indefinite] 不定冠詞 a/an（依「起始發音」而非字母：a university、an hour、an umbrella）  {t_base, 無}  · unverified
-- [eng.t_mid.article.definite] 定冠詞 the（特指/獨一/再次提及）  {t_mid, 會考}  · unverified
-- [eng.t_mid.article.zero] 零冠詞（泛指複數/不可數/專有名詞）  {t_mid, 會考}  · unverified
+- [eng.t_adv.noun.double-possessive] 雙重所有格（a friend of mine）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_base.article.indefinite] 不定冠詞 a/an（依「起始發音」而非字母：a university、an hour、an umbrella）  {t_base, 無}  · provisionally_verified
+- [eng.t_mid.article.definite] 定冠詞 the（特指/獨一/再次提及）  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.article.zero] 零冠詞（泛指複數/不可數/專有名詞）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.article.idiom] 冠詞慣用語（play the piano、go to school）  {t_mid, 會考}  · unverified
 - [eng.t_base.pron.subject-object] 人稱代名詞主格/受格  {t_base, 無}  · unverified
 - [eng.t_base.pron.possessive] 所有格形容詞 vs 所有格代名詞（my/mine）  {t_base, 無}  · unverified
-- [eng.t_base.pron.demonstrative] 指示代名詞（this/that/these/those）  {t_base, 無}  · unverified
+- [eng.t_base.pron.demonstrative] 指示代名詞（this/that/these/those）  {t_base, 無}  · provisionally_verified
 - [eng.t_mid.pron.reflexive] 反身代名詞與強調用法（myself…）  {t_mid, 會考}  · unverified
 - [eng.t_mid.pron.indefinite] 不定代名詞（some/any/no/every 複合字 someone/anything…）  {t_mid, 會考}  · unverified
-- [eng.t_mid.pron.one-ones] one/ones 替代  {t_mid, 會考}  · unverified
-- [eng.t_mid.pron.it-usage] it 的用法（虛主詞/天氣時間距離/強調）  {t_mid, 會考}  · unverified
-- [eng.t_mid.pron.interrogative] 疑問代名詞（who/whom/whose/what/which）  {t_mid, 會考}  · unverified
+- [eng.t_mid.pron.one-ones] one/ones 替代  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.pron.it-usage] it 的用法（虛主詞/天氣時間距離/強調）  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.pron.interrogative] 疑問代名詞（who/whom/whose/what/which）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_adv.pron.reciprocal] 相互代名詞（each other / one another）  {t_adv, 學測}  · unverified
 - [eng.t_adv.pron.quantifier-agreement] 數量代名詞與動詞一致（both/either/neither/all/none/each）  {t_adv, 學測}  · unverified
-- [eng.t_base.verb.be] be 動詞（am/is/are）與句型  {t_base, 無}  · unverified
-- [eng.t_base.verb.there-be] There is / There are  {t_base, 無}  · unverified
-- [eng.t_base.verb.present-simple] 一般現在式與第三人稱單數  {t_base, 無}  · unverified
+- [eng.t_base.verb.be] be 動詞（am/is/are）與句型  {t_base, 無}  · provisionally_verified
+- [eng.t_base.verb.there-be] There is / There are  {t_base, 無}  · provisionally_verified
+- [eng.t_base.verb.present-simple] 一般現在式與第三人稱單數  {t_base, 無}  · provisionally_verified
 - [eng.t_base.verb.present-progressive] 現在進行式構成與 -ing 拼寫  {t_base, 無}  · unverified
-- [eng.t_mid.verb.present-simple-vs-prog] 現在簡單 vs 現在進行對比  {t_mid, 會考}  · unverified
+- [eng.t_mid.verb.present-simple-vs-prog] 現在簡單 vs 現在進行對比  {t_mid, 會考}  · provisionally_verified
 - [eng.t_base.verb.past-simple-regular] 過去簡單式（規則動詞 -ed）  {t_base, 無}  · unverified
 - [eng.t_mid.verb.past-simple-irregular] 過去簡單式（不規則動詞）  {t_mid, 會考}  · unverified
-- [eng.t_mid.verb.past-progressive] 過去進行式  {t_mid, 會考}  · unverified
+- [eng.t_mid.verb.past-progressive] 過去進行式  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.verb.past-when-while] 過去簡單 vs 過去進行（when/while）  {t_mid, 會考}  · unverified
-- [eng.t_mid.verb.future-will] 未來式 will  {t_mid, 會考}  · unverified
-- [eng.t_mid.verb.future-going-to] 未來 be going to  {t_mid, 會考}  · unverified
-- [eng.t_mid.verb.will-vs-going-to] will vs be going to 辨析  {t_mid, 會考}  · unverified
-- [eng.t_mid.verb.present-prog-future] 現在進行表未來計畫  {t_mid, 會考}  · unverified
-- [eng.t_mid.verb.present-perfect] 現在完成式（經驗/完成/繼續）  {t_mid, 會考}  · unverified
-- [eng.t_mid.verb.present-perfect-vs-past] 現在完成 vs 過去簡單  {t_mid, 會考}  · unverified
-- [eng.t_mid.verb.irregular-three-forms] 不規則動詞三態精熟  {t_mid, 會考}  · unverified
-- [eng.t_mid.verb.stative-verbs] 狀態動詞多不用進行式；但轉為動態／暫時義時可用（be having lunch＝吃、be thinking about＝考慮；非正式口語 I'm loving it）  {t_mid, 會考}  · unverified
-- [eng.t_adv.verb.present-perfect-progressive] 現在完成進行式  {t_adv, 學測}  · unverified
-- [eng.t_adv.verb.past-perfect] 過去完成式  {t_adv, 學測}  · unverified
-- [eng.t_adv.verb.future-perfect] 未來完成式  {t_adv, 學測}  · unverified
-- [eng.t_adv.verb.future-progressive] 未來進行式  {t_adv, 學測}  · unverified
-- [eng.t_sub.verb.past-perfect-progressive] 過去完成進行式  {t_adv, 學測}  · unverified
-- [eng.t_sub.verb.future-perfect-progressive] 未來完成進行式  {t_adv, 學測}  · unverified
+- [eng.t_mid.verb.future-will] 未來式 will  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.verb.future-going-to] 未來 be going to  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.verb.will-vs-going-to] will vs be going to 辨析  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.verb.present-prog-future] 現在進行表未來計畫  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.verb.present-perfect] 現在完成式（經驗/完成/繼續）  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.verb.present-perfect-vs-past] 現在完成 vs 過去簡單  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.verb.irregular-three-forms] 不規則動詞三態精熟  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.verb.stative-verbs] 狀態動詞多不用進行式；但轉為動態／暫時義時可用（be having lunch＝吃、be thinking about＝考慮；非正式口語 I'm loving it）  {t_mid, 會考}  · provisionally_verified
+- [eng.t_adv.verb.present-perfect-progressive] 現在完成進行式  {t_adv, 學測}  · provisionally_verified
+- [eng.t_adv.verb.past-perfect] 過去完成式  {t_adv, 學測}  · provisionally_verified
+- [eng.t_adv.verb.future-perfect] 未來完成式  {t_adv, 學測}  · provisionally_verified
+- [eng.t_adv.verb.future-progressive] 未來進行式  {t_adv, 學測}  · provisionally_verified
+- [eng.t_sub.verb.past-perfect-progressive] 過去完成進行式  {t_adv, 學測}  · provisionally_verified
+- [eng.t_sub.verb.future-perfect-progressive] 未來完成進行式  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.verb.tense-consistency] 時態一致與時間副詞搭配  {t_adv, 學測}  · unverified
 - [eng.t_adv.verb.used-to-family] used to / be used to / get used to 辨析  {t_adv, 學測}  · unverified
 - [eng.t_mid.verb.ditransitive] 授與動詞雙受詞（give sb sth / to/for）  {t_mid, 會考}  · unverified
-- [eng.t_mid.voice.basic] 被動語態構成（be + p.p.）  {t_mid, 會考}  · unverified
-- [eng.t_adv.voice.all-tenses] 各時態被動（現在/過去/完成/未來）  {t_adv, 學測}  · unverified
-- [eng.t_adv.voice.modal] 情態助動詞被動  {t_adv, 學測}  · unverified
-- [eng.t_mid.voice.by-agent] by 片語與施事者省略  {t_mid, 會考}  · unverified
-- [eng.t_adv.voice.ditransitive] 授與動詞雙受詞被動  {t_adv, 學測}  · unverified
+- [eng.t_mid.voice.basic] 被動語態構成（be + p.p.）  {t_mid, 會考}  · provisionally_verified
+- [eng.t_adv.voice.all-tenses] 各時態被動（現在/過去/完成/未來）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_adv.voice.modal] 情態助動詞被動  {t_adv, 學測}  · provisionally_verified
+- [eng.t_mid.voice.by-agent] by 片語與施事者省略  {t_mid, 會考}  · provisionally_verified
+- [eng.t_adv.voice.ditransitive] 授與動詞雙受詞被動  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.voice.causative-perception] 感官/使役被動（be made to / be seen to）  {t_adv, 學測}  · unverified
-- [eng.t_sub.voice.nonfinite] 被動不定詞/動名詞（to be done / being done）  {t_adv, 學測}  · unverified
+- [eng.t_sub.voice.nonfinite] 被動不定詞/動名詞（to be done / being done）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.voice.it-is-said] It is said that… / be said to 結構  {t_adv, 學測}  · unverified
-- [eng.t_mid.voice.active-passive-transform] 主動被動轉換  {t_mid, 會考}  · unverified
-- [eng.t_base.modal.can] can（能力/許可/請求）  {t_base, 無}  · unverified
+- [eng.t_mid.voice.active-passive-transform] 主動被動轉換  {t_mid, 會考}  · provisionally_verified
+- [eng.t_base.modal.can] can（能力/許可/請求）  {t_base, 無}  · provisionally_verified
 - [eng.t_mid.modal.could] could（過去能力/委婉請求/可能）  {t_mid, 會考}  · unverified
-- [eng.t_mid.modal.may-might] may/might（許可/推測）  {t_mid, 會考}  · unverified
+- [eng.t_mid.modal.may-might] may/might（許可/推測）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.modal.must] must（義務/強烈推測）  {t_mid, 會考}  · unverified
-- [eng.t_mid.modal.have-to] have to / have got to（外在義務）  {t_mid, 會考}  · unverified
-- [eng.t_adv.modal.must-vs-haveto] must vs have to 與否定（mustn't / don't have to）  {t_adv, 學測}  · unverified
-- [eng.t_mid.modal.should-ought] should / ought to（勸告建議）  {t_mid, 會考}  · unverified
-- [eng.t_mid.modal.had-better] had better  {t_mid, 會考}  · unverified
-- [eng.t_mid.modal.shall-would-like] shall（提議）/ would like  {t_mid, 會考}  · unverified
+- [eng.t_mid.modal.have-to] have to / have got to（外在義務）  {t_mid, 會考}  · provisionally_verified
+- [eng.t_adv.modal.must-vs-haveto] must vs have to 與否定（mustn't / don't have to）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_mid.modal.should-ought] should / ought to（勸告建議）  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.modal.had-better] had better  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.modal.shall-would-like] shall（提議）/ would like  {t_mid, 會考}  · provisionally_verified
 - [eng.t_adv.modal.would] would（過去習慣/委婉/意願）  {t_adv, 學測}  · unverified
-- [eng.t_adv.modal.perfect] 情態 + 完成式（must/should/could have 表過去推測或後悔）  {t_adv, 學測}  · unverified
-- [eng.t_adv.modal.probability-ladder] 推測確定度（雙軸）：肯定方向 must＞may／might／could；否定方向 can't／couldn't 表「幾乎不可能」的高確定（非低機率）  {t_adv, 學測}  · unverified
+- [eng.t_adv.modal.perfect] 情態 + 完成式（must/should/could have 表過去推測或後悔）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_adv.modal.probability-ladder] 推測確定度（雙軸）：肯定方向 must＞may／might／could；否定方向 can't／couldn't 表「幾乎不可能」的高確定（非低機率）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.modal.need-dare] need / dare 作情態助動詞  {t_adv, 無}  · unverified
 - [eng.t_mid.adjadv.adjective-position] 形容詞位置（限定/敘述、前位/後位）  {t_mid, 會考}  · unverified
 - [eng.t_mid.adjadv.participle-adjective] 分詞形容詞 -ing vs -ed（boring/bored）  {t_mid, 會考}  · unverified
-- [eng.t_mid.adjadv.adverb-types] 副詞種類（方式/地點/時間/頻率/程度）  {t_mid, 會考}  · unverified
-- [eng.t_mid.adjadv.frequency-position] 頻率副詞位置  {t_mid, 會考}  · unverified
+- [eng.t_mid.adjadv.adverb-types] 副詞種類（方式/地點/時間/頻率/程度）  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.adjadv.frequency-position] 頻率副詞位置  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.adjadv.comparative] 比較級（規則與不規則）  {t_mid, 會考}  · unverified
-- [eng.t_mid.adjadv.superlative] 最高級與範圍（of/in）  {t_mid, 會考}  · unverified
-- [eng.t_mid.adjadv.as-as] 原級比較 as…as / not as…as  {t_mid, 會考}  · unverified
-- [eng.t_mid.adjadv.too-enough-so-such] too…to / enough to / so…that / such…that  {t_mid, 會考}  · unverified
-- [eng.t_adv.adjadv.adjective-order] 多個形容詞排序  {t_adv, 學測}  · unverified
+- [eng.t_mid.adjadv.superlative] 最高級與範圍（of/in）  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.adjadv.as-as] 原級比較 as…as / not as…as  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.adjadv.too-enough-so-such] too…to / enough to / so…that / such…that  {t_mid, 會考}  · provisionally_verified
+- [eng.t_adv.adjadv.adjective-order] 多個形容詞排序  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.adjadv.comparative-modifier] 比較級修飾語（much/far/a little + 比較級）  {t_adv, 學測}  · unverified
-- [eng.t_adv.adjadv.the-more-the-more] the + 比較級, the + 比較級（越…越…）  {t_adv, 學測}  · unverified
-- [eng.t_adv.adjadv.more-and-more] 比較級 + and + 比較級（越來越…）  {t_adv, 學測}  · unverified
-- [eng.t_adv.adjadv.multiple-comparison] 倍數比較（twice/three times as…as）  {t_adv, 學測}  · unverified
-- [eng.t_adv.adjadv.comparison-ellipsis] 比較句的省略與平行（than I do）  {t_adv, 學測}  · unverified
-- [eng.t_adv.adjadv.confusable-pairs] 易混形副（hard/hardly、late/lately、near/nearly）  {t_adv, 學測}  · unverified
+- [eng.t_adv.adjadv.the-more-the-more] the + 比較級, the + 比較級（越…越…）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_adv.adjadv.more-and-more] 比較級 + and + 比較級（越來越…）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_adv.adjadv.multiple-comparison] 倍數比較（twice/three times as…as）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_adv.adjadv.comparison-ellipsis] 比較句的省略與平行（than I do）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_adv.adjadv.confusable-pairs] 易混形副（hard/hardly、late/lately、near/nearly）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_base.prep.time-at-on-in] 時間介系詞 at/on/in  {t_base, 無}  · unverified
-- [eng.t_base.prep.place-at-on-in] 地點介系詞 at/on/in  {t_base, 無}  · unverified
-- [eng.t_mid.prep.direction] 方向/移動介系詞（to/into/onto/toward/through/across/along）  {t_mid, 會考}  · unverified
+- [eng.t_base.prep.place-at-on-in] 地點介系詞 at/on/in  {t_base, 無}  · provisionally_verified
+- [eng.t_mid.prep.direction] 方向/移動介系詞（to/into/onto/toward/through/across/along）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.prep.position] 位置介系詞（above/below/over/under/between/among/beside/behind）  {t_mid, 會考}  · unverified
-- [eng.t_mid.prep.duration] 期間介系詞（for/during/since/by/until/within）  {t_mid, 會考}  · unverified
+- [eng.t_mid.prep.duration] 期間介系詞（for/during/since/by/until/within）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.prep.means] by/with/in 表方式與工具  {t_mid, 會考}  · unverified
-- [eng.t_mid.prep.verb-prep-collocation] 介系詞慣用搭配（depend on、be good at）  {t_mid, 會考}  · unverified
+- [eng.t_mid.prep.verb-prep-collocation] 介系詞慣用搭配（depend on、be good at）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.prep.prep-gerund] 介系詞 + 動名詞  {t_mid, 會考}  · unverified
-- [eng.t_adv.prep.phrasal-prep] 片語介系詞（because of / in spite of / instead of）  {t_adv, 學測}  · unverified
+- [eng.t_adv.prep.phrasal-prep] 片語介系詞（because of / in spite of / instead of）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.prep.others] 其他介系詞語意（about/of/for/against/despite）  {t_adv, 學測}  · unverified
 - [eng.t_mid.conj.coordinating] 對等連接詞 FANBOYS（and/but/or/so/for/nor/yet）  {t_mid, 會考}  · unverified
-- [eng.t_mid.conj.subordinate-time] 從屬連接詞-時間（when/while/as/before/after/until/as soon as）  {t_mid, 會考}  · unverified
-- [eng.t_mid.conj.subordinate-reason] 從屬-原因（because/since/as）  {t_mid, 會考}  · unverified
+- [eng.t_mid.conj.subordinate-time] 從屬連接詞-時間（when/while/as/before/after/until/as soon as）  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.conj.subordinate-reason] 從屬-原因（because/since/as）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.conj.subordinate-concession] 從屬-讓步（although/though/even though/even if）  {t_mid, 會考}  · unverified
 - [eng.t_mid.conj.subordinate-condition] 從屬-條件（if/unless/as long as）  {t_mid, 會考}  · unverified
-- [eng.t_adv.conj.correlative] 相關連接詞與動詞一致（both…and/either…or/neither…nor/not only…but also）  {t_adv, 學測}  · unverified
-- [eng.t_adv.conj.purpose-result] 從屬-目的/結果（so that / in order that / so…that）  {t_adv, 學測}  · unverified
-- [eng.t_adv.conj.conjunctive-adverb] 轉折/連接副詞與標點（however/therefore/moreover/nevertheless/otherwise/thus）  {t_adv, 學測}  · unverified
+- [eng.t_adv.conj.correlative] 相關連接詞與動詞一致（both…and/either…or/neither…nor/not only…but also）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_adv.conj.purpose-result] 從屬-目的/結果（so that / in order that / so…that）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_adv.conj.conjunctive-adverb] 轉折/連接副詞與標點（however/therefore/moreover/nevertheless/otherwise/thus）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.conj.conj-vs-prep] 連接詞 vs 介系詞辨析（because/because of；although/despite）  {t_adv, 學測}  · unverified
-- [eng.t_adv.conj.contrast-while-whereas] while/whereas 表對比  {t_adv, 學測}  · unverified
-- [eng.t_mid.nonfinite.infinitive-noun] 不定詞當名詞（主/受/補）  {t_mid, 會考}  · unverified
-- [eng.t_mid.nonfinite.infinitive-purpose] 不定詞表目的  {t_mid, 會考}  · unverified
-- [eng.t_mid.nonfinite.infinitive-adj-adv] 不定詞當形容詞/副詞  {t_mid, 會考}  · unverified
+- [eng.t_adv.conj.contrast-while-whereas] while/whereas 表對比  {t_adv, 學測}  · provisionally_verified
+- [eng.t_mid.nonfinite.infinitive-noun] 不定詞當名詞（主/受/補）  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.nonfinite.infinitive-purpose] 不定詞表目的  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.nonfinite.infinitive-adj-adv] 不定詞當形容詞/副詞  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.nonfinite.wh-infinitive] 疑問詞 + 不定詞（how to…）  {t_mid, 會考}  · unverified
-- [eng.t_mid.nonfinite.gerund-roles] 動名詞當主詞/受詞/補語/介受  {t_mid, 會考}  · unverified
+- [eng.t_mid.nonfinite.gerund-roles] 動名詞當主詞/受詞/補語/介受  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.nonfinite.verb-plus-infinitive] 接不定詞的動詞（want/hope/decide/promise）  {t_mid, 會考}  · unverified
-- [eng.t_mid.nonfinite.verb-plus-gerund] 接動名詞的動詞（enjoy/finish/mind/avoid/keep）  {t_mid, 會考}  · unverified
-- [eng.t_adv.nonfinite.meaning-change] 接不定詞或動名詞意義不同（stop/remember/forget/try/mean/regret）  {t_adv, 學測}  · unverified
-- [eng.t_adv.nonfinite.subject-of-infinitive] 不定詞意義主詞（for sb to / of sb to）  {t_adv, 學測}  · unverified
+- [eng.t_mid.nonfinite.verb-plus-gerund] 接動名詞的動詞（enjoy/finish/mind/avoid/keep）  {t_mid, 會考}  · provisionally_verified
+- [eng.t_adv.nonfinite.meaning-change] 接不定詞或動名詞意義不同（stop/remember/forget/try/mean/regret）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_adv.nonfinite.subject-of-infinitive] 不定詞意義主詞（for sb to / of sb to）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.nonfinite.bare-infinitive] 原形不定詞（make/let/have/see/hear + 原形）  {t_adv, 學測}  · unverified
-- [eng.t_adv.nonfinite.gerund-idioms] 慣用動名詞句型（feel like/can't help/be worth/It's no use）  {t_adv, 學測}  · unverified
-- [eng.t_sub.nonfinite.perfect-passive] 不定詞/動名詞的完成式與被動式  {t_adv, 學測}  · unverified
+- [eng.t_adv.nonfinite.gerund-idioms] 慣用動名詞句型（feel like/can't help/be worth/It's no use）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_sub.nonfinite.perfect-passive] 不定詞/動名詞的完成式與被動式  {t_adv, 學測}  · provisionally_verified
 - [eng.t_mid.relcl.who-whom] 關係代名詞 who/whom  {t_mid, 會考}  · unverified
 - [eng.t_mid.relcl.which] 關係代名詞 which  {t_mid, 會考}  · unverified
-- [eng.t_mid.relcl.that] 關係代名詞 that 與使用時機  {t_mid, 會考}  · unverified
+- [eng.t_mid.relcl.that] 關係代名詞 that 與使用時機  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.relcl.whose] 關係代名詞 whose（所有格）  {t_mid, 會考}  · unverified
-- [eng.t_mid.relcl.omission] 受格關係代名詞省略  {t_mid, 會考}  · unverified
+- [eng.t_mid.relcl.omission] 受格關係代名詞省略  {t_mid, 會考}  · provisionally_verified
 - [eng.t_adv.relcl.restrictive-vs-nonrestrictive] 限定 vs 非限定關係子句（逗號）  {t_adv, 學測}  · unverified
-- [eng.t_adv.relcl.relative-adverb] 關係副詞 when/where/why  {t_adv, 學測}  · unverified
-- [eng.t_adv.relcl.prep-plus-relative] 介系詞 + 關係代名詞（in which / for whom）  {t_adv, 學測}  · unverified
+- [eng.t_adv.relcl.relative-adverb] 關係副詞 when/where/why  {t_adv, 學測}  · provisionally_verified
+- [eng.t_adv.relcl.prep-plus-relative] 介系詞 + 關係代名詞（in which / for whom）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.relcl.what] 複合關係代名詞 what  {t_adv, 學測}  · unverified
-- [eng.t_adv.relcl.reduce-to-participle] 關係子句化簡為分詞（the man standing…）  {t_adv, 學測}  · unverified
+- [eng.t_adv.relcl.reduce-to-participle] 關係子句化簡為分詞（the man standing…）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.relcl.compound-wh-ever] 複合關係代名詞 whatever/whoever/whichever  {t_adv, 學測}  · unverified
-- [eng.t_sub.relcl.quantifier-of-which] 數量詞 + of + which/whom（some of which）  {t_adv, 學測}  · unverified
-- [eng.t_mid.nouncl.that-object] that 名詞子句當受詞（I think that…）  {t_mid, 會考}  · unverified
+- [eng.t_sub.relcl.quantifier-of-which] 數量詞 + of + which/whom（some of which）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_mid.nouncl.that-object] that 名詞子句當受詞（I think that…）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.nouncl.indirect-yesno] 間接問句（if/whether 是非）  {t_mid, 會考}  · unverified
 - [eng.t_mid.nouncl.indirect-wh] 間接問句（wh- 疑問詞）語序  {t_mid, 會考}  · unverified
-- [eng.t_adv.nouncl.that-subject] that 子句當主詞 / 虛主詞 it  {t_adv, 學測}  · unverified
+- [eng.t_adv.nouncl.that-subject] that 子句當主詞 / 虛主詞 it  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.nouncl.whether-or-not] whether…or not  {t_adv, 學測}  · unverified
-- [eng.t_adv.nouncl.complement-apposition] 名詞子句當補語/同位語  {t_adv, 學測}  · unverified
+- [eng.t_adv.nouncl.complement-apposition] 名詞子句當補語/同位語  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.nouncl.sequence-of-tenses] 名詞子句的時態呼應  {t_adv, 學測}  · unverified
 - [eng.t_sub.nouncl.suggest-should] 建議要求動詞後 that 子句（suggest that sb (should) do）  {t_adv, 學測}  · unverified
-- [eng.t_mid.advcl.time-future-present] 時間副詞子句（表未來用現在式）  {t_mid, 會考}  · unverified
+- [eng.t_mid.advcl.time-future-present] 時間副詞子句（表未來用現在式）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.advcl.first-conditional] 條件副詞子句（第一類：if + 現在式, will）  {t_mid, 會考}  · unverified
-- [eng.t_mid.advcl.concession] 讓步副詞子句  {t_mid, 會考}  · unverified
-- [eng.t_adv.advcl.purpose-result] 目的/結果副詞子句  {t_adv, 學測}  · unverified
+- [eng.t_mid.advcl.concession] 讓步副詞子句  {t_mid, 會考}  · provisionally_verified
+- [eng.t_adv.advcl.purpose-result] 目的/結果副詞子句  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.advcl.manner-as-if] 方式副詞子句（as if / as though）  {t_adv, 學測}  · unverified
-- [eng.t_adv.advcl.no-matter] no matter how/what/where 讓步  {t_adv, 學測}  · unverified
+- [eng.t_adv.advcl.no-matter] no matter how/what/where 讓步  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.subj.present-unreal] 與現在事實相反（If + 過去式, would/could/might + V）  {t_adv, 學測}  · unverified
-- [eng.t_adv.subj.past-unreal] 與過去事實相反（If + had p.p., would have p.p.）  {t_adv, 學測}  · unverified
+- [eng.t_adv.subj.past-unreal] 與過去事實相反（If + had p.p., would have p.p.）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.subj.as-if] as if / as though 與事實相反  {t_adv, 學測}  · unverified
 - [eng.t_adv.subj.wish] I wish 句型（現在/過去/未來願望）  {t_adv, 學測}  · unverified
-- [eng.t_adv.subj.indicative-vs-subjunctive] 直說 vs 假設語氣判別  {t_adv, 學測}  · unverified
-- [eng.t_sub.subj.future-unreal] 與未來不可能/假設（If + were to / should）  {t_adv, 學測}  · unverified
+- [eng.t_adv.subj.indicative-vs-subjunctive] 直說 vs 假設語氣判別  {t_adv, 學測}  · provisionally_verified
+- [eng.t_sub.subj.future-unreal] 與未來不可能/假設（If + were to / should）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.subj.mixed] 混合假設（過去條件→現在結果）  {t_adv, 學測}  · unverified
-- [eng.t_sub.subj.inversion-omit-if] 省略 if 的倒裝（Were I / Had I / Should you）  {t_adv, 學測}  · unverified
-- [eng.t_sub.subj.would-rather] would rather (+ that 子句過去式)  {t_adv, 學測}  · unverified
-- [eng.t_sub.subj.if-only] if only  {t_adv, 學測}  · unverified
+- [eng.t_sub.subj.inversion-omit-if] 省略 if 的倒裝（Were I / Had I / Should you）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_sub.subj.would-rather] would rather (+ that 子句過去式)  {t_adv, 學測}  · provisionally_verified
+- [eng.t_sub.subj.if-only] if only  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.subj.its-time] It's (high) time + 過去式  {t_adv, 學測}  · unverified
-- [eng.t_sub.subj.mandative] 建議/要求/命令動詞/形容詞後假設（insist/essential that sb (should) do）  {t_adv, 學測}  · unverified
-- [eng.t_sub.subj.without-but-for] without / but for 隱含條件  {t_adv, 學測}  · unverified
-- [eng.t_mid.special.so-neither] 倒裝 So do I / Neither do I  {t_mid, 會考}  · unverified
+- [eng.t_sub.subj.mandative] 建議/要求/命令動詞/形容詞後假設（insist/essential that sb (should) do）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_sub.subj.without-but-for] without / but for 隱含條件  {t_adv, 學測}  · provisionally_verified
+- [eng.t_mid.special.so-neither] 倒裝 So do I / Neither do I  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.special.exclamatory] 感嘆句 What… / How…  {t_mid, 會考}  · unverified
 - [eng.t_mid.special.tag-question] 附加問句（tag question）  {t_mid, 會考}  · unverified
-- [eng.t_mid.special.formal-subject-it] 虛主詞 it（It is + adj + to / that）  {t_mid, 會考}  · unverified
-- [eng.t_adv.special.cleft-it] 分裂句/強調句 It is X that…  {t_adv, 學測}  · unverified
+- [eng.t_mid.special.formal-subject-it] 虛主詞 it（It is + adj + to / that）  {t_mid, 會考}  · provisionally_verified
+- [eng.t_adv.special.cleft-it] 分裂句/強調句 It is X that…  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.special.do-emphasis] do/does/did 強調動詞  {t_adv, 學測}  · unverified
 - [eng.t_adv.special.participial-active] 分詞構句（現在分詞表主動/同時）  {t_adv, 學測}  · unverified
-- [eng.t_adv.special.participial-passive] 分詞構句（過去分詞表被動）  {t_adv, 學測}  · unverified
-- [eng.t_adv.special.formal-object-it] 虛受詞 it（find it hard to…）  {t_adv, 學測}  · unverified
+- [eng.t_adv.special.participial-passive] 分詞構句（過去分詞表被動）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_adv.special.formal-object-it] 虛受詞 it（find it hard to…）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.special.apposition] 同位語  {t_adv, 學測}  · unverified
 - [eng.t_adv.special.inversion-place] 地方副詞/介片語句首倒裝（Here comes…）  {t_adv, 學測}  · unverified
-- [eng.t_adv.special.ellipsis] 省略（對話省略/子句省略）  {t_adv, 學測}  · unverified
-- [eng.t_sub.special.inversion-negative] 否定副詞句首倒裝（Never/Seldom/Hardly/Not only…）  {t_adv, 學測}  · unverified
-- [eng.t_sub.special.inversion-only] only + 副詞片語句首倒裝  {t_adv, 學測}  · unverified
-- [eng.t_sub.special.inversion-so-such] so/such 句首倒裝  {t_adv, 學測}  · unverified
-- [eng.t_sub.special.what-cleft] what 強調句（What I need is…）  {t_adv, 學測}  · unverified
+- [eng.t_adv.special.ellipsis] 省略（對話省略/子句省略）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_sub.special.inversion-negative] 否定副詞句首倒裝（Never/Seldom/Hardly/Not only…）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_sub.special.inversion-only] only + 副詞片語句首倒裝  {t_adv, 學測}  · provisionally_verified
+- [eng.t_sub.special.inversion-so-such] so/such 句首倒裝  {t_adv, 學測}  · provisionally_verified
+- [eng.t_sub.special.what-cleft] what 強調句（What I need is…）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.special.perfect-participle] 完成式分詞構句（Having done…）  {t_adv, 學測}  · unverified
-- [eng.t_sub.special.absolute-with] 獨立分詞構句（with + 受詞 + 分詞 / 主詞不同）  {t_adv, 學測}  · unverified
-- [eng.t_base.pattern.imperative] 祈使句（肯定/否定/Let's）  {t_base, 無}  · unverified
-- [eng.t_base.pattern.question-order] 疑問句語序（Yes/No、Wh-、選擇疑問）  {t_base, 無}  · unverified
-- [eng.t_base.pattern.sentence-kinds] 句子種類（直述/疑問/祈使/感嘆）  {t_base, 無}  · unverified
+- [eng.t_sub.special.absolute-with] 獨立分詞構句（with + 受詞 + 分詞 / 主詞不同）  {t_adv, 學測}  · provisionally_verified
+- [eng.t_base.pattern.imperative] 祈使句（肯定/否定/Let's）  {t_base, 無}  · provisionally_verified
+- [eng.t_base.pattern.question-order] 疑問句語序（Yes/No、Wh-、選擇疑問）  {t_base, 無}  · provisionally_verified
+- [eng.t_base.pattern.sentence-kinds] 句子種類（直述/疑問/祈使/感嘆）  {t_base, 無}  · provisionally_verified
 - [eng.t_mid.pattern.sv] 句型一 S + V（完全不及物）  {t_mid, 會考}  · unverified
 - [eng.t_mid.pattern.svc] 句型二 S + V + C（主詞補語/連綴動詞）  {t_mid, 會考}  · unverified
 - [eng.t_mid.pattern.svo] 句型三 S + V + O（完全及物）  {t_mid, 會考}  · unverified
-- [eng.t_mid.pattern.svoo] 句型四 S + V + O + O（授與雙受詞）  {t_mid, 會考}  · unverified
+- [eng.t_mid.pattern.svoo] 句型四 S + V + O + O（授與雙受詞）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.pattern.svoc] 句型五 S + V + O + C（受詞補語）  {t_mid, 會考}  · unverified
 - [eng.t_adv.pattern.sv-agreement] 主詞動詞一致（單複數/就近/集合名詞）  {t_adv, 學測}  · unverified
-- [eng.t_adv.pattern.sentence-types] 簡單句/合句/複句/複合句辨識  {t_adv, 學測}  · unverified
-- [eng.t_adv.pattern.run-on-comma-splice] 連寫句/逗號拼接錯誤辨識與修正  {t_adv, 學測}  · unverified
+- [eng.t_adv.pattern.sentence-types] 簡單句/合句/複句/複合句辨識  {t_adv, 學測}  · provisionally_verified
+- [eng.t_adv.pattern.run-on-comma-splice] 連寫句/逗號拼接錯誤辨識與修正  {t_adv, 學測}  · provisionally_verified
 - [eng.t_mid.reading.main-idea] 主旨與大意（main idea）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.reading.detail] 細節擷取（scanning）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.reading.guess-word] 由上下文猜測字義  {t_mid, 會考}  · provisionally_verified
