@@ -318,11 +318,11 @@
   - **一個 HTML 頁可容納多個單元**（unit＝頁內區塊/stepper，沿用現站「一頁多概念」模式）；**不得**為了對映知識點把站點炸成數百~上千個檔。
   - **既有檔名/路徑一律穩定**：reuse 的頁**原地包裝、保留原檔名與路徑**；rebuild 只改**內容**不改檔名；**禁止大規模改名/搬移**（否則書籤、跨頁連結、獎勵 `progKey`、git history 全斷，牴觸 never-disappear 精神）。確有必要改名＝例外，須附 redirect ＋ `progKey` 遷移對照，並依 §6.3／§7.1（`learning_progress_v1` 的 additive-merge／壞檔不重設／migrate）保護逐單元進度不遺失（獎勵 `player_profile_v1` 以穩定 id 識別、不受檔名影響，故 §7.3 RT 不涵蓋改名→進度遷移）；預設**不改名**。新增頁才給新檔名。
   - **頁面分組規則（GR；可從知識點 id 機械推導，稽核一眼對得上）**：
-    - **預設分組＝一個「科目 × strand（主軸）× tier（級別）」一頁**。**段位抽取（兩域不同，須分開）**：學科域 `<domain>.<tier>.<strand>.<slug>`→ tier＝第 2 段、strand＝第 3 段；life 域 `life.<category>.<strand>.<slug>`→ 第 2 段是 category（當 subject 分區用）、strand＝**第 3 段**、**tier 不在 id**。**tier 一律讀 manifest `tier` 欄，不得純以 id 位置推斷**（呼應 §4）：學科域 manifest tier 恰等於 id 第 2 段、life 域則只能自 manifest 取。該頁 host「此主軸、此級別」的所有單元（頁內節點依 `prerequisites` 由淺到深）。例：`math.t_base.numquant.*` → 頁「數與量（初級）」、`math.t_mid.numquant.*` → 頁「數與量（中級）」（strand `numquant`＝「數與量」，見附錄 A §一；勿誤名為「數論」number theory）——**不把一個主軸從國小到高中塞進單一巨頁、不混級**。
+    - **預設分組＝一個「科目 × strand（主軸）× tier（級別）」一頁**。**段位抽取（兩域不同，須分開）**：學科域 `<domain>.<tier>.<strand>.<slug>`→ tier＝第 2 段、strand＝第 3 段；life 域 `life.<category>.<strand>.<slug>`→ 第 2 段是 category（當 subject 分區用）、strand＝**第 3 段**、**tier 不在 id**。**tier 一律讀 manifest `tier` 欄（唯一權威），不得以 id 位置推斷**（呼應 §4／§179）：學科域 id 第 2 段**通常**等於 manifest tier，但以 manifest `tier` 欄為準（若個別 id 段與 tier 欄不符，一律以 tier 欄為真——建置時應 red-team 使兩者一致，見 §4.1）；life 域 tier 不在 id，只能自 manifest 取。該頁 host「此主軸、此級別」的所有單元（頁內節點依 `prerequisites` 由淺到深）。例：`math.t_base.numquant.*` → 頁「數與量（初級）」、`math.t_mid.numquant.*` → 頁「數與量（中級）」（strand `numquant`＝「數與量」，見附錄 A §一；勿誤名為「數論」number theory）——**不把一個主軸從國小到高中塞進單一巨頁、不混級**。
     - **級別頁名用中性難度詞、不曝露年段（R11 鐵律）**：tier→級別對照＝`t_base→初級`、`t_mid→中級`、`t_adv→高級`、`t_sub→進階`、`t_enrich→延伸挑戰`；頁名**只能**用這些中性詞，**嚴禁**「國小/國中/高中/年級/會考/學測/分科」等年段字樣（`no_grade_label_gate` 掃描）。
     - **防碎片併頁（唯一允許的偏離，機械可判）**：某 `(科目,strand,tier)` 的 minimum 知識點數 **≤3** 時，**併入同 strand 相鄰的較低級別頁**（無較低級則併較高級），避免只有 1–2 條的空頁；併入後該頁名仍取主級別、頁內分段標注。此門檻（≤3）寫死、非主觀。
     - **拆頁條件**：若某頁觸 **R9 效能預算**（初始 JS/體積超標或低階裝置卡頓），再依 slug 群組拆子頁（檔名加後綴），仍保留 id→頁可推導、既有檔名穩定。
-    - **某知識點的 home 頁可機械推導**：學科域＝(domain, strand=第3段, tier=第2段)→頁；**life 域＝(category=第2段, strand=第3段, tier 取自 manifest `tier` 欄)→頁**（因 life id 不含 tier）；兩者皆再套上述併頁規則。故 `coverage_gate`／稽核可機械核對「每個 minimum id 落在其應屬的頁、且該頁有真教真考的單元」，無模糊空間。
+    - **某知識點的 home 頁可機械推導**：學科域＝(domain, strand=第3段, tier 取自 manifest `tier` 欄)→頁；**life 域＝(category=第2段, strand=第3段, tier 取自 manifest `tier` 欄)→頁**（因 life id 不含 tier）；**兩域 tier 一律以 manifest `tier` 欄為準**（學科域 id 第 2 段僅供人眼參考，非推導來源），再套上述併頁規則。故 `coverage_gate`／稽核可機械核對「每個 minimum id 落在其應屬的頁、且該頁有真教真考的單元」，無模糊空間。
     - **既有頁沿用此對映**：把每個既有檔標記其 (科目,strand,tier) 歸屬、**保留原檔名**；同一 (strand,tier) 現況散在多檔者以 roadmap 串起、**不強制合檔**（合檔＝改名風險，預設不做）。
     - ✅例：`數與量（初級）`＝`math.t_base.numquant.*`、`數與量（中級）`＝`math.t_mid.numquant.*` 各一頁（條數以 manifest 實際為準）。❌例：(a) 一頁「數與量」從國小塞到高中混級（違預設級別分頁）；(b) 頁名叫「數與量（國中）」（違 R11 年段）；(c) 為單一 slug `present-perfect` 另開一檔（違粒度：同 strand,tier 內各 slug 是頁內單元，不另立檔）。
 - `教`：概念具體化／視覺化（圖解或互動 stepper），符合 §3.3 INV 與 R4；eye-comfort（§8-6）。
@@ -354,7 +354,7 @@
 - **逐單元進度的統一納管規則（兌現 §5.4 指派：progKey 與主 `player_profile_v1` 如何統一而不破壞 §7 永不消失）**：
   - **細則**：
     1. **獨立 key、不寫入 `player_profile_v1`**：進度存於獨立 key **`learning_progress_v1`**（與獎勵 key 分離——§7.2 已定 `player_profile_v1` 只由 `game_core.js` 寫入，進度模組不得改寫它，避免兩寫者互毀）。
-    2. **穩定命名**：`learning_progress_v1.units[<unitId>]`，`unitId`＝單元穩定 id（源自 §4 知識點 id／§6.2 GR，隨檔名穩定而穩定）；值含 `{srsState, selfRatings[], lastSeen, mastered:bool}`。**嚴禁用陣列索引或頁順序當鍵**（改版會錯位，牴觸 never-disappear）。
+    2. **穩定命名**：`learning_progress_v1.units[<unitId>]`，`unitId`＝單元穩定 id（源自 §4 知識點 id／§6.2 GR，**與檔名無關、改名不變**——GR 是「由 id 推導檔名」而非反向，故改名時 `learning_progress_v1.units[<unitId>]` 的鍵不動、進度不遺失；§6.2 line 319 需遷移對照的只是舊式頁內 progKey，非此 unitId）；值含 `{srsState, selfRatings[], lastSeen, mastered:bool}`。**嚴禁用陣列索引或頁順序當鍵**（改版會錯位，牴觸 never-disappear）。
     3. **與獎勵的對映（解耦但可連動）**：進度前進**事件**可呼叫 `window.Game` 發獎勵，寫入落在 `player_profile_v1`；進度本身留在 `learning_progress_v1`。兩 key 各自持久化，互不覆寫。
     4. **沿用 §7.1 的三道保護**：`learning_progress_v1` 一律套 §7.1（a）**壞檔不重設**（解析失敗→備份 `learning_progress_v1__corrupt_<ts>`、保留記憶體值、絕不空白覆寫）、（b）**additive 合併**（只補缺省不覆蓋既有）、（c）**真實 migrate()**（讀存檔 `version` 欄比對當前常數逐版遷移，不讀自我恆等值）。
   - **範例**：✅ 完成 `eng.t_mid.verb.present-perfect`→寫 `learning_progress_v1.units["eng.t_mid.verb.present-perfect"].mastered=true`，另呼叫 `Game` 加 XP（落 `player_profile_v1`）；重整後兩者皆在。

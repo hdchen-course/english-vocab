@@ -86,7 +86,7 @@
 - [math.t_adv.algexpr.synthetic-division] 綜合除法  {t_adv, 學測}
 - [math.t_adv.algexpr.poly-gcd-lcm] 多項式的最高公因式與最低公倍式  {t_adv, 學測}
 - [math.t_adv.algexpr.binomial-theorem] 二項式定理與二項係數  {t_adv, 學測}
-- [math.t_adv.algexpr.partial-fraction] 部分分式分解 (待核：常見於數甲積分前置)  {t_sub, 分科-數甲}
+- [math.t_sub.algexpr.partial-fraction] 部分分式分解（數甲積分前置）  {t_sub, 分科-數甲}
 
 ## 四、方程式與不等式（equations & inequalities）
 
