@@ -624,7 +624,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 - **細則**：每條 AC 必對應一個**確定性腳本或綁 sha 的簽核**（上表「驗證方法」欄）；標「待建」者於 Phase 1 建並**紅隊**（證明壞案例被擋、好案例放行）才可啟用——**兩類例外（各自更早，不得延到 Phase 1）**：
   (a) **`AC-ANTIDRIFT` 的四防漂移錨點 hook**：因 **Phase 0 exit／§12 定案即需消費**（§10.1 Phase 0 exit 要 `AC-ANTIDRIFT` 綠、§12 step 3.5 要錨點已交付+紅隊才算定案），須在 **Phase 0 內（定案前）**建好並紅隊；
   (b) **`design_consistency_gate.js`（及其 content-card lint）**：因 **Phase 0.5 exit 即需消費**（§6.5 R-STYLE-4／AC-STYLE-1 明訂「Phase 0.5 前接線+紅隊」），須在 **Phase 0.5 前**建好並紅隊。`acceptance_ledger.json` 一列一次通過紀錄，sha 一變該 AC 作廢須重驗。
-- **範例**：✅ 全 **19 條 AC**（AC-COV-1…AC-ANTIDRIFT 共 18 條產品 AC ＋ AC-SPEC meta）在同一 sha 皆有 PASS 列＋證據 → 可宣告完成並（經使用者）push。 ❌ AC-COV-1 顯示 37 個 minimum id 無單元 → 未完成，列出 37 個待補 id。 ⚠ AC-VIZ-1 四角色已簽核但 sha 已變（之後又改了版面）→ 舊簽核作廢，須重 render+重簽才算數。
+- **範例**：✅ 全 **19 條 AC**（AC-COV-1…AC-ANTIDRIFT 共 18 條產品 AC ＋ AC-SPEC meta）於**同一凍結 release 快照**皆有 PASS 列＋證據，且每條綁定其**對應產物的當前 content sha**（各 AC 的產物不同——AC-SPEC 綁 spec 檔、AC-VIZ-1 綁 render/簽核 manifest、AC-NOBACKEND 綁掃描報告…——故 sha 本就各異；關鍵是**無任一 AC 綁到過時 sha**，依本節細則「sha 一變該 AC 作廢須重驗」）→ 可宣告完成並（經使用者）push。 ❌ AC-COV-1 顯示 37 個 minimum id 無單元 → 未完成，列出 37 個待補 id。 ⚠ AC-VIZ-1 四角色已簽核但 sha 已變（之後又改了版面）→ 舊簽核作廢，須重 render+重簽才算數。
 
 ## 12. 本 spec 自身的收斂協定（meta-process）
 
