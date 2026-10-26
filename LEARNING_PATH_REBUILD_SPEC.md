@@ -302,7 +302,20 @@
 - **roadmap 視覺風格（O-2 定案 2026-10-26）＝科技樹（主幹）＋地圖式美術（外觀）**：以**節點＝單元、連線＝先備關係**直接把 §6.1 的 DAG 畫成科技樹；
   節點 4 狀態（建議先修／就緒／進行中／已精熟，**四態皆可點開**，無「鎖定」態），非只靠顏色區分（附圖示/形狀，眼科 §8-6）。**不顯年段字樣（R11）**、純 `app.css` token（R-STYLE）、
   過 viz-QA（iPad 逐 frame 簽核）。美術可走「地圖/島嶼」風格包裝，但底層資料是先備 DAG，不得為美觀假造不存在的關卡順序。
-- **節點 ↔ 單元 ↔ 頁 的銜接（與 §6.2 GR 一致，杜絕「點了不知落哪」）**：roadmap **節點＝單元（unit）**；一個「科目×strand×tier 頁」是同主軸同級別**多個 sibling 單元的容器**，在地圖上呈現為**一叢相鄰節點**（或可收合的群組地標，群組標題＝該頁級別名如「數與量（中級）」）。點任一節點＝**深連到該單元所在頁 ＋ 頁內 anchor**（捲動/高亮該單元），不另開一檔。故「瀏覽單位＝單元、檔案單位＝strand×tier 頁」並存不衝突：導覽以單元為節點、落點以頁+anchor 實現。導覽層級對映（**僅列 learner 可見層；R11 不含年段**）：subject/strand＝**地圖分區**、strand×tier＝**頁（節點叢）**、unit＝**節點**；**stage（年段）僅內部排序/先備 metadata，不對映任何可見地圖分區、不作顯示字串（R11）**——頂層可見分區＝科目（9 科目島，見 line 312），非年段。
+- **節點 ↔ 單元 ↔ 頁 的銜接（與 §6.2 GR 一致，杜絕「點了不知落哪」）**：roadmap **節點＝單元（unit）**；一個「科目×strand×tier 頁」是同主軸同級別**多個 sibling 單元的容器**，在地圖上呈現為**一叢相鄰節點**（或可收合的群組地標，群組標題＝該頁級別名如「數與量（中級）」）。點任一節點＝**深連到該單元所在頁 ＋ 頁內 anchor**（捲動/高亮該單元），不另開一檔。故「瀏覽單位＝單元、檔案單位＝strand×tier 頁」並存不衝突：導覽以單元為節點、落點以頁+anchor 實現。導覽層級對映（**僅列 learner 可見層；R11 不含年段**，由上而下）：**curated 島（頂層，9 個、≤12）→ subject（domain／life category）→ strand＝地圖分區 → strand×tier＝頁（節點叢）→ unit＝節點**；**stage（年段）僅內部排序/先備 metadata，不對映任何可見層、不作顯示字串（R11）**。
+  - **curated 島 ↔ subject 對映（機械可推、全覆蓋 7 學科 domain＋10 life category；島＝策展視覺群組，subject＝GR id 推導鍵）**：單一 subject 的島點進去直接到其 strand；複合島先展開其成員 subject 再到 strand。
+    | 島（頂層可見） | 成員 subject（domain／life category） |
+    |---|---|
+    | 安全 | `life.safety` |
+    | 核心能力 | `life.sel`／`life.learn`／`life.think`／`life.data`／`life.sustain`／`life.innovate` |
+    | 數學 | `math` |
+    | 英文 | `eng` |
+    | 國語 | `chi` |
+    | 自然 | `sci`（phys／chem／bio／earth strands） |
+    | 社會 | `soc-civ`／`soc-geo`／`soc-hist` |
+    | 科技 | `life.compute`／`life.digital` |
+    | 理財 | `life.finance` |
+  - 故頂層 9 島 ≠ 17 個 GR subject：9 島是策展 rollup（單一或複合），subject 是島下一層；GR 的 id→頁推導（§6.2 line 325）仍以 subject（domain/category）＋strand＋tier 為鍵，不受島分組影響。
 - **ND 漸進揭露鐵律（anti-overwhelm；全站 ~600+ 節點/單元，首屏絕不可把人「一眼擊垮」）**（註：~600+ 指節點/單元數，非頁數；頁數以 §5.1 的 ~100 現有頁＋gap 新增頁為準，節點≠頁，見 §6.1 節點↔單元↔頁銜接）：
   - **禁止 first-paint 傾倒全圖/長清單**：任何畫面初次載入**不得**一次渲染全部節點或一條超長捲動清單。首頁只顯示三樣：(a) **單一最醒目的「接著學這個／今天建議」CTA**（1–3 個當前可學節點，回訪者一眼知道下一步）；(b) **少數頂層分區入口**（科目/大島，**≤ 12 個**）；(c) 精簡**總進度概覽**（非逐節點）。
   - **地圖預設縮放在「分區/島」層、逐層展開**：進科目先看 strand 島嶼（**收合態**）；點某島才展開其級別（tier）與單元節點——**一次只深入一區**，不同時攤開所有 strand×tier。
@@ -354,7 +367,7 @@
 - **逐單元進度的統一納管規則（兌現 §5.4 指派：progKey 與主 `player_profile_v1` 如何統一而不破壞 §7 永不消失）**：
   - **細則**：
     1. **獨立 key、不寫入 `player_profile_v1`**：進度存於獨立 key **`learning_progress_v1`**（與獎勵 key 分離——§7.2 已定 `player_profile_v1` 只由 `game_core.js` 寫入，進度模組不得改寫它，避免兩寫者互毀）。
-    2. **穩定命名**：`learning_progress_v1.units[<unitId>]`，`unitId`＝**單元自有的穩定 slug**（格式 `<domain>.<tier>.<strand>.<unit-slug>`，與 §4 知識點 id 同命名空間但**獨立識別**：單一知識點的單元**可**沿用該知識點 slug 當 unit-slug；**掛多個知識點的單元**另取一個代表性 unit-slug，其 `knowledge_point_ids[]` 清單列全部所掛知識點——故 `unitId` **不等於**「某一個知識點 id」，呼應 §6.2 line 317「知識點≠單元、一單元可掛數個知識點」）。**與檔名無關、改名不變**（GR 是「由 id 推導檔名」而非反向，故改名時鍵不動、進度不遺失；§6.2 line 319 需遷移對照的只是舊式頁內 progKey，非此 unitId）；值含 `{srsState, selfRatings[], lastSeen, mastered:bool}`。**嚴禁用陣列索引或頁順序當鍵**（改版會錯位，牴觸 never-disappear）。
+    2. **穩定命名**：`learning_progress_v1.units[<unitId>]`。此處 `<unitId>` 即 §6.2 metadata 的 **`unit_id`** 欄同一值（JS 存取子寫 camelCase、metadata 欄寫 snake_case，指同一識別子，非兩個鍵）。`unit_id`＝**單元自有的穩定 slug**，**依域兩種格式（比照 §4 line 178／§6.2 line 321，別宣稱單一格式）**：學科域 `<domain>.<tier>.<strand>.<unit-slug>`、life 域 `life.<category>.<strand>.<unit-slug>`（tier 不在 id、讀 manifest）；與 §4 知識點 id **同命名空間、同格式族**但**獨立識別**：單一知識點的單元**可**沿用該知識點 slug 當 unit-slug；**掛多個知識點的單元**另取一個代表性 unit-slug，其 `knowledge_point_ids[]` 清單列全部所掛知識點——故 `unit_id` **不等於**「某一個知識點 id」，呼應 §6.2 line 317「知識點≠單元、一單元可掛數個知識點」。**與檔名無關、改名不變**（GR 是「由 id 推導檔名」而非反向，故改名時鍵不動、進度不遺失；§6.2 line 319 需遷移對照的只是舊式頁內 progKey，非此 unit_id）；值含 `{srsState, selfRatings[], lastSeen, mastered:bool}`。**嚴禁用陣列索引或頁順序當鍵**（改版會錯位，牴觸 never-disappear）。
     3. **與獎勵的對映（解耦但可連動）**：進度前進**事件**可呼叫 `window.Game` 發獎勵，寫入落在 `player_profile_v1`；進度本身留在 `learning_progress_v1`。兩 key 各自持久化，互不覆寫。
     4. **沿用 §7.1 的三道保護**：`learning_progress_v1` 一律套 §7.1（a）**壞檔不重設**（解析失敗→備份 `learning_progress_v1__corrupt_<ts>`、保留記憶體值、絕不空白覆寫）、（b）**additive 合併**（只補缺省不覆蓋既有）、（c）**真實 migrate()**（讀存檔 `version` 欄比對當前常數逐版遷移，不讀自我恆等值）。
   - **範例**：✅ 完成 `eng.t_mid.verb.present-perfect`→寫 `learning_progress_v1.units["eng.t_mid.verb.present-perfect"].mastered=true`，另呼叫 `Game` 加 XP（落 `player_profile_v1`）；重整後兩者皆在。
