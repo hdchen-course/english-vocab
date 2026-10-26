@@ -113,6 +113,7 @@
 - **R12 知識涵蓋全域（不限學科課綱）**：知識母體含「學科（課綱）」**＋**「跨課綱生活與核心能力」
   （兒少安全自保／社會情緒 SEL／學會如何學習／思考與推理／數位與媒體素養／資料素養／運算思維與科技／
   理財素養／永續與世界公民／創新）。完整清單見**附錄 A**（`authoring/KNOWLEDGE_POINT_INVENTORY.md`，本 spec 不可分割的一部分）。
+  - **必含生活自保技能（使用者 2026-10-26；life 安全/SEL strand）**：**人際與情緒自我保護**——不隨意向不熟/不安全對象透露個人想法與立場；學會**辨識情緒不穩/可能失控的人**並保持界線；遇敏感話題可**選擇保留、得體迴避、轉移或淡化**（**明確區分：這是「隱藏/不表態」的自保，不是教說謊或欺騙**）。一律以 **R16 後果框架**教（「如果在不確定對方反應時就表態，可能遇到…；你可以選擇先觀察、或這樣得體帶過…」），非恐嚇、非「不要講話」命令；由 §8 #7 心理醫生把關分寸（既自保又不致過度封閉/多疑）。
 - **R13 課綱＝下限，深度無上限（minimum, not ceiling）**：108 課綱／考試範圍是**必須全覆蓋的最低要求**，
   不是天花板。鼓勵收錄**超綱延伸**知識點（更深、更廣、跨學科、真正理解導向），標記 `tier:t_enrich`、`beyond:true`。
   **延伸上限 = 大學入門程度（university-intro）**：可延伸到大一普通程度（如微積分銜接、普通物理/化學/生物、線代/離散、經濟學原理…），
@@ -127,6 +128,7 @@
   且同樣不曝露年段（R11）——以「想更深入？」之類中性邀請呈現，不標「超難／高年級」。
 - **R14 英文科以英文學英文（沉浸式，使用者 2026-10-26）**：**英語科**單元的教／練／評一律**以英文為學習媒介**，不得用中文「翻譯教學」當學習路徑（不逐句中譯文法、不以中文解釋取代英文輸入）。**中文的唯一容許用途＝看答案/自評時的對照翻譯，且預設隱藏、鼓勵不看**——以收合元件呈現（如「看不懂？點開中文」），learner 真的不懂才一鍵點開；非教學媒介。本質原則始終是「用英文學英文」。初階可用圖像／情境／例句建立語感，**非靠中文**。此規則**僅限英語科**；其餘各科內文仍全繁體中文（R2）。
 - **R15 術語附國際通用英語（銜接大學/國際）**：**所有科目**的專有名詞／學術術語，於**每單元首次出現**時，於中文術語後以括號附**國際通用英語術語**（必要時含常用縮寫），例：最大公因數（greatest common divisor, GCD）、光合作用（photosynthesis）、導數（derivative）。目的：學生既掌握台灣繁體中文術語，又知其國際英語對應，便於銜接大學原文與國際場域。附註英語**不違 R2**（R2 禁的是簡體/PRC 詞，非英語術語）。
+- **R16 價值/情意/行為類用「後果框架」，不說教、不貼標籤（使用者 2026-10-26；怎麼教才聽得進去）**：凡公民素養、品格、情緒管理、安全、理財決策等**價值/行為導向**內容，**不用禁令/訓誡/恐嚇式**（「不可以…」「不要…」），改用**後果框架＋尊重自主選擇**（「如果…，可能的後果是…；你會怎麼選？」），呈現選項與後果讓學習者自己判斷。**價值層無絕對對錯**→多元觀點、持平，不灌輸單一立場；事實層（法條/數據/程序）仍走 §6.8 查證。語氣不評判、不貼標籤（呼應既有「零貼標籤」原則），避免心理反彈。由 §8 #7 心理醫生＋領域專家把關。
 
 ---
 
@@ -152,6 +154,9 @@
 - **R15 術語附國際通用英語**
   - 細則：各科術語於**每單元首次出現**時，中文後括號附國際通用英語（必要時含縮寫）：`中文術語（English term[, 縮寫]）`。同一單元內再次出現可只用中文。縮寫有國際慣例者附（GCD/LCM/DNA…），無則免。
   - 範例：✅「最大公因數（greatest common divisor, GCD）」「光合作用（photosynthesis）」「斜率（slope）」。 ❌整個數學單元只寫「最大公因數」從不附英語（違 R15，斷了大學/國際銜接）。 ⚠英語科本身術語即英文，不需再附（R15 針對非英語科的中文術語）。
+- **R16 後果框架、不說教不貼標籤**
+  - 細則：價值/情意/行為類內容用「情境→選項→各自可能後果→你會怎麼選」結構，取代「不可以/不要」禁令；價值層呈現多元觀點、不定唯一正解（事實層仍查證）；不評判人、不貼診斷/特教/道德標籤；由 §8 #7 心理醫生＋領域專家審「是否持平、是否後果框架、是否零標籤」。
+  - 範例：✅「如果借錢不還，朋友可能不再信任你、下次需要幫忙時沒人伸手——你覺得值得嗎？」（後果＋自主）。 ❌「借錢不還是壞孩子，絕對不可以」（訓誡＋貼標籤，心理反彈，違 R16）。 ⚠安全類（如用火/網路安全）仍須明確風險，但以「這樣做→可能發生 X 危險→較安全的做法是 Y」陳述，而非單純恐嚇。
 
 ## 3. 讀者畫像與學習路徑總體模型
 
@@ -349,8 +354,9 @@
 - `教`：概念具體化／視覺化（圖解或互動 stepper），符合 §3.3 INV 與 R4；eye-comfort（§8-6）。
 - `練`：可玩、即時、低門檻；題型契合該知識點（如數學非選要能寫步驟）。
 - `自評`：翻答案→三級自評（還不熟/快會了/會了）→ 餵 SRS（srs_engine）；**不假裝自動判讀**。
-- `metadata`：`unit_id`、`stage`、`subject`、`strand`、`knowledge_point_ids[]`、`prerequisites[]`、
+- `metadata`：`unit_id`、`subject`、`strand`、`knowledge_point_ids[]`、`prerequisites[]`、
   `est_minutes`（認知負荷/倦怠控制）、`deviation_reason`（**條件性/選填**：僅在偏離 §6.6 細則① golden 範本時必填，供 AC-UNIT-3 讀取；不偏離則省略）。
+  - **`stage`（年段）＝選填內部 metadata，非必填、非顯示（R11）**：排序一律用 `tier`＋`prerequisites`，不用 stage（stage 與 tier 高度重疊）；若存在僅供內部課綱對照/報表，**絕不**進 learner-facing 輸出。schema 不要求 stage 必填。
 - **計時模式（可選功能；使用者 2026-10-26 認可）**：練習/測驗可開啟**計時器**——倒數計時、配速提示（每題建議秒數）、交卷提醒鈴，
   用於會考/學測的「嚴格計時、畫卡節奏、時間分配」應考能力（§4.x）。**心理/SEL 鐵律**：計時是工具不是壓力——
   **預設可關、隨時可暫停/關閉**、正向框架（顯示「配速練習」而非「倒數催促」），不得製造焦慮或以紅色警示轟炸（呼應 §8-7 心理醫生、INV-4 不倦怠）。
@@ -370,6 +376,21 @@
 - ❌**反例**：一個單元塞「現在完成＋過去完成＋完成進行」三概念、`est_minutes:25`、只有教學文字無練無評 → 違 R4/§6.6①、INV-4（過載）、`est_minutes>12` → 擋關、須拆成 3 單元。
 - ⚠**邊界**：純聆聽單元（無文字輸入）→ 仍須「教＋至少一個 retrieval（如聽後選圖/口說跟讀）＋自評」，不得只播音檔就算完成。
 
+#### 6.2.2 單元「內容」資料 schema（權威欄位表；R14/R15/rubric⑦⑤/§6.3/§7.4 皆依賴，動工前必須定案）
+> 盲點修補（2026-10-26 角色模擬）：§6.2 原只定 **metadata**，未定「教→練→評」**內容本體**的欄位，導致 R14 收合中文、R15 術語、rubric⑦ 真教真考、rubric⑤ 自評+SRS、§6.3 進度、§7.4 徽章全部懸空。此節補上**唯一權威的單元內容資料契約**。
+- **存放（單一來源，R5）**：單元 metadata＋內容走 **sidecar 資料**（`<page>.units.json`，一頁一檔，含該頁所有單元陣列）＋共用 renderer；頁內以 `data-unit-id="<unit_id>"` 標出單元 DOM 邊界（供 §9 模擬器/`unit_acceptance_lint` 定位）。中央 `authoring/units_index.json` 由建置工具彙總所有 `*.units.json`（見 §6.7）。
+- **細則（每個 unit 物件的必填欄位；JSON Schema 由 `AC-SCHEMA` 機器驗）**：
+  1. `unit_id`（§6.3 規則）、`knowledge_point_ids[]`（宣告所掛知識點，皆須存在於 manifest）、`prerequisites[]`、`est_minutes`、`subject`、`strand`（`stage` 見 §6.3 註：非必填）。
+  2. `teach[]`：教學段陣列，每段 `{kind:"text|viz|example", body, kp_ids[]}`——**每段必標 `kp_ids[]`**（此段教哪些知識點）。
+  3. `practice[]`：練習題陣列，每題 `{type, stem, options?, answer, feedback, kp_ids[]}`——**每題必標 `kp_ids[]`**（此題考哪些知識點）。
+  4. `selfeval`：固定三級自評（還不熟/快會了/會了）→ 餵 `srs_engine`（rubric⑤）；**不假裝自動判讀手寫/作答**。
+  5. `zh_hint`（R14，僅英語科）：每個英文 teach 段/例句**可**附中文對照字串，renderer **預設 collapsed**（`AC-NAV` 掃「中文對照 default-collapsed」）。
+  6. `term_refs[]`（R15）：本單元首次出現的術語 key 清單，英語對照一律查 `term_glossary.json`（§6.7），renderer 自動渲 `中文（English, ABBR）`——**作者不手打英語**，避免 slope/gradient 不一致。
+- **rubric⑦「真教真考」機器可驗（兌現 §11.A AC-COV-1）**：因每 `teach` 段與每 `practice` 題都帶 `kp_ids[]`，`unit_acceptance_lint` 機械檢查 **`knowledge_point_ids[] ⊆ (∪teach.kp_ids) ∩ (∪practice.kp_ids)`**（宣告集必須既被教也被考），不再退回主觀。
+- **既有 `concept_engine` 升級契約（§5.4 指名重用，但現版不相容）**：現 `src/concept_engine.ts` 的 `lessons[].steps[]` 僅 teach+quiz（對錯選擇）、無自評三級、不接 `srs_engine`、進度存各頁 progKey、無 `kp_ids`/`zh_hint`/`term_refs`。**定案要求**：concept_engine 升級為新版，支援上列 schema（selfeval3 / SRS / `learning_progress_v1` / zh-collapse / per-segment kp_ids / term_refs），且 `lessons` 以 `unit_id` 命名；升級本身走 §6.4 重構（逐檔 5 clean）。
+- **est_minutes 估算法（消 §0.3 模糊）**：`est_minutes ≈ teach段數×1.5 + practice題數×1 + （含互動viz 每個+1）`，四捨五入；作者宣告值與此公式差 >50% 須附理由。門檻仍 ≤12（INV-4）。
+- **範例**：✅ 英文單元 `eng.t_mid.verb.present-perfect`：`teach:[{kind:"viz",body:時間軸動畫,kp_ids:["eng.t_mid.verb.present-perfect"]}]`、`practice:[{type:"cloze",stem:"She ___ here for ten years.",answer:"has lived",kp_ids:["eng.t_mid.verb.present-perfect"]}]`、每句 `zh_hint` 預設收合、`selfeval` 三級、`est_minutes:8`。 ❌ 一個 `teach` 段不標 `kp_ids`（rubric⑦ 無法驗）、或英語科作者手打「中文教學規則」當 teach body（違 R14）、或 practice 無 `kp_ids` 卻宣告該 KP（宣告集⊄考集，lint FAIL）。 ⚠ 多知識點單元：`knowledge_point_ids` 列全部，且**每條都要**在某 teach 段與某 practice 題的 `kp_ids` 出現，否則該條未真教真考。
+
 ### 6.3 進度與精熟
 - 逐單元進度存 localStorage；精熟由 SRS 狀態 ＋ 自評歷史決定。
 - **逐單元進度的統一納管規則（兌現 §5.4 指派：progKey 與主 `player_profile_v1` 如何統一而不破壞 §7 永不消失）**：
@@ -381,6 +402,15 @@
   - **範例**：✅ 完成 `eng.t_mid.verb.present-perfect`→寫 `learning_progress_v1.units["eng.t_mid.verb.present-perfect"].mastered=true`，另呼叫 `Game` 加 XP（落 `player_profile_v1`）；重整後兩者皆在。
   - ❌**反例**：把逐單元進度塞進 `player_profile_v1`（與 game_core.js 搶寫、違 §7.2 單一寫者）、或用 `units[3]` 索引當鍵（改版錯位）、或進度壞檔時以空白物件覆寫（違 §7.1 壞檔不重設）。
 - 進度與**獎勵解耦**：進度前進可觸發獎勵，但獎勵一旦賺得即永久（§7）。
+- **共用持久化模組 `safe_store.js`（單一來源，R5；§7.1 三道保護不得各寫各的）**：抽出共用 helper，`game_core.js`（`player_profile_v1`）與進度模組（`learning_progress_v1`）**都引用同一個**，含：
+  1. **load 順序鐵律**：`raw ← readLS` → `migrate(raw)` → `normalize`；**`normalize` 不得注入 `version` 預設**（version 只能由 migrate 決定），否則舊檔被 normalize 補成當前版、migrate 永遠偵測不到（RT-4 失效）。
+  2. **migrate() 契約**：`migrations = {2:fn,3:fn,…}` 有序表；每步 `migrateV_n(profile)→profile` 純函式；版本來源＝`profile.version`、目標＝該 key 的 `SCHEMA_VERSION` 常數；找不到步驟時保留原值並告警、不丟棄。**版本遞增判準**：欄位**改名/語意變/結構重組**走 migrate；**純新增欄位**走 additive-merge（不必 bump）。
+  3. **additive per-field 合併策略表**（additive-merge 與跨分頁 `onStorage` 共用）：`union-set`（`ownedItems`/`badges` 鍵/已完成 unit 集）、`monotonic-max`（`totalXp`/`coins`/`longestStreak`/mastery 等級）、`last-write`（`equippedSkin/Border`/`displayName`/`settings`）、`union-object`（`activity`/`subjects`）。**earned 類一律 union/max、永不縮小**。
+  4. **壞檔不重設**：解析失敗→備份 `<key>__corrupt_<ts>`（**同內容只備份一次**、最多留 N 份，防配額爆量）→ 保留記憶體值；**首次 load 即壞**→記憶體用 fresh 但設 `readOnlyUntilResolved` 旗標**禁止 save 覆寫磁碟**、觸發提示，待使用者確認才可寫。
+  5. **reset 守門（RT-10）**：`reset()` 須帶 `{userConfirmed:true, gestureToken}`，token 僅由 UI 手勢產生；程式路徑呼叫一律拒絕（紅隊植入程式呼叫→斷言被拒）。
+  6. **earned 單調不減不變量（RT-9）**：`save` 前驗 earned 集合（`ownedItems`/`badges`/`totalXp`）不得比上次持久值縮小，縮小＝視為誤清→拒寫＋回滾（非 exception 也要擋）。
+- **既有 `concept_engine` progKey → `learning_progress_v1` 遷移通則（§5.4；Phase 2 接線時，非只改名例外）**：現站每頁自有 progKey（如 `concepts_v1`）。Phase 2 把既有頁接入路徑時，須以 **additive** 把舊 progKey 進度搬進 `learning_progress_v1.units[<unit_id>]`（對照表 `authoring/progkey_migration.json`：`{old_progKey, new_unit_id, note}`，由改名/接線 PR 維護），**舊 progKey 保留不刪**（雙保險、never-disappear），搬遷走 §7.1 壞檔保護。對應新增 RT。
+- **localStorage 被清/驅逐的緩解（RT-12；iPad Safari ITP 7 天驅逐會打穿 never-disappear）**：見 §7.1 的匯出/匯入進度檔與邊界聲明——進度與獎勵的 never-disappear **僅保證「同瀏覽器、未被使用者/瀏覽器清除」**；跨裝置/被驅逐的正當解＝純前端匯出/匯入。
 
 ### 6.4 重構策略
 - 既有頁若符合 §6.2 骨架→包裝接入路徑；不符→重構或重做（R8）。逐檔進行，每檔自身 5 clean（§11）。
@@ -408,6 +438,8 @@
 - **細則：**
   1. **黃金範本單元（golden unit，凍結）**：每種原型（概念頁／bespoke 遊戲／flashcard）先各做 1 個到滿分 bar，commit 凍結為
      `authoring/golden/<archetype>.html`（＋其資料）。之後每個新單元 MUST 與對應 golden 做結構 diff（相同的區塊骨架、共用 class、互動模式、a11y、viz 規格）；偏離須在 unit metadata 寫 `deviation_reason`，否則 gate 視為漂移。
+     - **golden 自身的 bootstrap（消循環，O-9）**：golden 是「第一個」該原型單元，無前一個 golden 可比→**其滿分 bar 由 WRITERS ＋ §6 六審查鏡 ＋ §8 全 panel 逐項簽核**認定（而非 `AC-UNIT-3` 結構 diff，對 golden 自身**豁免** `AC-UNIT-3`）；簽核通過才 commit freeze、成為後續單元的 diff 基準。freeze 綁 sha，golden 內容變＝重簽。
+     - **bespoke 多 golden 子類**：bespoke 遊戲差異極大（如 math_modeling vs safety）→允許**多個 golden 子類**（或改以「共用層使用清單」為 diff 基準），避免單一 golden 逼出大量 `deviation_reason` 而弱化 `AC-UNIT-3`。
   2. **單元驗收 rubric（逐條 pass/fail，全過才算完成）**：① 教→練→評三段齊備；② 僅用 `app.css` token、零硬編色碼／px 魔術數（design_consistency_gate）；
      ③ 內容卡自適應寬（R-STYLE-3）；④ **每個題目正解 play-through 代入朗讀語句通順無誤**（correctness；play-through-sim）；⑤ 自評三級＋寫入 SRS、不假裝自動批改；
      ⑥ 繁體零簡體零 PRC（scan_simplified）；⑦ `knowledge_point_ids[]` 全部對映到附錄 A 既有 id、`prerequisites[]` 已宣告且無循環，**且每一條宣告的 id 必須「真教＋真考」**——在「教」段落實際教授該微技能、且「練/評」至少有一題 retrieval 涵蓋它（**禁止宣告塞 id 卻不教不考**；declaration-stuffing＝fail，杜絕 §4 淺薄覆蓋，供 AC-COV-1 核對）；⑧ `est_minutes ≤ 12`（過長拆單元，INV-4）；
@@ -420,6 +452,48 @@
   - ❌**反例**：某單元用 `#3b82f6` 硬編藍（違②）、作答後只顯示「對/錯」無三級自評（違⑤）、填空正解代入後「他把把書放桌上」重字不通（違④）、
     `knowledge_point_ids:["math.quadratic"]` 在附錄 A 查無（違⑦）→ 四項 fail，擋關、不得併入。
   - ⚠**邊界**：純閱讀型概念（無選擇題）→ 仍須「教 ＋ 至少一個 retrieval 練習（如填空/自問自答）＋ 自評」，**不得只有教學文字就當完成**（否則記不牢，違 INV-3／rubric①）。
+
+### 6.7 衍生資料產物與產生管線（build artifacts；每項定「檔/schema/產生者/何時產/誰驗」，消除 session 自由心證）
+> 盲點修補（2026-10-26 角色模擬）：導覽/單元/獎勵所需的「顯示層與解析層資料」大多不在 manifest 裡，散在 markdown 或未定義。此節把每個中間產物釘成**機器可讀檔＋產生管線**，避免實作時各自發明。
+- **鐵律**：learner 前端**不得**直讀 3092 列 `knowledge_points.json`（違 R9/ND）；一律讀下列**預生成**的輕量衍生檔。所有衍生檔由建置工具（Phase 1）從 manifest＋`*.units.json` 產生、進 git、並各有驗證 gate；**衍生檔不得手改**（手改來源再 regen）。
+- **產物清單（細則）**：
+  | 檔 | 內容/schema | 產生者 | 何時 | 驗證 |
+  |---|---|---|---|---|
+  | `authoring/units_index.json` | 彙總全部 `*.units.json`：每 unit 的 metadata＋`home_page`＋`{file,anchor}` | build 工具掃 `*.units.json` | Phase 1 起、每次建置 | `AC-SCHEMA` |
+  | `authoring/strand_labels.json` | `strand slug→{title_zh}`（全 211 strand；含 sci 子領域前綴 `bio-/chem-/earth-/phys-`→子領域中文名＋排序） | 自 inventory 標題半自動＋人工補、鎖檔 | Phase 1 | `no_grade_label_gate` 掃（中性、無年段） |
+  | `authoring/subject_labels.json` | `domain/life-category→{title_zh, island, order}`（含複合島成員顯示名與島內序） | 人工定、鎖檔 | Phase 1 | 與 §6.1 島↔subject 表一致性檢查 |
+  | `authoring/term_glossary.json` | `term_zh→{en, abbr?, is_term:true}`（R15 唯一英語來源） | 人工＋審查，持續增補 | Phase 1 起 | `term_annotation_gate`（查表） |
+  | `nav_index.json` | 輕量導覽樹：島→subject→strand→tier→unit 的**計數/狀態**（不含 3092 逐條） | build 工具自 units_index＋manifest | Phase 1 | `AC-NAV`（首屏≤12 分區/可見≤~15） |
+  | `roadmap_layout.json` | roadmap 節點座標/連線(先備 DAG 邊)/收合群組邊界 | 預生成佈局工具（從 units_index 的 prerequisites） | Phase 2（有 unit/DAG 後） | viz-QA + 連線端點檢查 |
+  | `authoring/progkey_migration.json` | `{old_progKey,new_unit_id,note}`（§6.3 進度遷移對照） | 接線/改名 PR 維護 | Phase 2 | 遷移 RT |
+  | 獎勵 id registry（`authoring/reward_catalog.json`） | skin/border/mascot/badge/shop：`{id, type, retired?}`（§7.2 R4/R5 只增不刪、下架改 `retired`） | 人工定、鎖檔 | Phase 0.5/1 | RT-5（孤兒/retired 保留 owned 顯示） |
+- **單元落點解析**：節點點擊→`units_index.json` 的 `{file,anchor}`（不靠公式猜檔名）；`home_page` 已套 §6.2 GR 併頁規則後的**實際頁**（消 GR 公式推導 vs 併頁實際頁的歧義）。
+- **範例**：✅ 前端首屏 `fetch('nav_index.json')` 只拿到 9 島＋各島計數/進度，點「數學島」才展開其 strand（資料已在 nav_index）。 ❌ 首屏直接 `fetch('authoring/knowledge_points.json')` 渲染 3092 列（違 R9/ND、`AC-NAV` FAIL）。 ⚠ 新增一個 strand 卻忘了在 `strand_labels.json` 補中文名→build 工具報缺、擋關（不得以 slug 當顯示名）。
+
+### 6.8 事實正確性驗證協定（CORRECTNESS-VERIFY；R1「教錯害人」的落地驗證，非只口號）
+> 使用者 2026-10-26 點出：R1 強調「正確性第一」，但**怎麼驗**散在原則裡、未升成有證據的完工 gate。此節把「正確性已驗證」變成**逐單元、可核對、留證**的協定，並由 `AC-CORRECT` 綁入 DONE-GATE。
+- **三層驗證（每個單元 ship 前全過）**：
+  1. **可計算事實＝強制執行驗證（確定性）**：凡數值/公式/單位換算/程式輸出等**可執行驗證**者，一律用 `.venv`／可執行環境**實跑比對**（禁「看起來對」）。例：沸點、質數判定、公式解、統計數字。可計算卻未附驗證紀錄＝FAIL。
+  2. **非計算事實＝權威來源 ＋ 領域專家簽核**：每個事實宣稱在 unit 內容帶 **`sources[]`**（權威來源：教科書/課綱/官方機構/學術；非個人部落格/內容農場）；並由 §8 #1 **領域專家**逐單元判定正確、**簽核記 `authoring/fact_check_ledger.json`**（`{unit_id, reviewer_role, verdict, sources[], sha}`，綁內容 sha，sha 變則作廢重簽——仿 AC-VIZ-1）。
+  3. **不確定一律 `(待核)` 且禁 ship**：未查證者標 `(待核)`；**shipped 單元零 `(待核)`**（確定性掃描）。
+- **各科驗證法（method 依科目不同；使用者 2026-10-26：「數理化能寫程式驗、英文查字典跟語料」）**：
+  | 科目 | 主驗證法（優先用可機器/可查證者） | 工具/來源 |
+  |---|---|---|
+  | 數學 | **寫程式實跑**：公式解/因式/機率/統計數字用 `.venv`（sympy 符號、numpy 數值）算出比對；幾何可座標驗算 | `.venv`（sympy/numpy） |
+  | 物理 | **程式驗**：單位換算、運動學/能量守恆、電路歐姆定律等代數值比對；常數查權威 | `.venv`＋CODATA/課本常數 |
+  | 化學 | **程式驗**：化學式配平、莫耳/濃度/pH 計算；元素性質/週期表查權威 | `.venv`＋IUPAC/課本 |
+  | 英文 | **字典＋語料庫＋母語者**：拼寫/詞性/詞義查字典；用法道地性/搭配/頻率查語料（repo 既有 `vocab_data_coca_*`＝COCA 詞頻）；例句自然度由 §8 #2 native-speaker 判 | 字典（Wiktionary dump/字典 API）＋COCA 詞頻＋§8#2 |
+  | 國語文 | 字音/字形/字義查**教育部國語辭典/成語典**；語法修辭由領域專家 | 教育部辭典＋§8#1 |
+  | 邏輯推理 | **可程式驗**：命題邏輯用**真值表**窮舉驗等值/有效論證；集合/條件機率可算；謬誤類型比對定義 | `.venv`（真值表/SAT）＋§8#1 |
+  | 地理 | **可驗**：絕對位置/經緯度/面積/人口/統計/地圖投影可程式/查表驗；地名以官方為準 | `.venv`＋官方地理/統計資料 |
+  | 歷史 | **來源＋多方交叉查證，且防史觀偏誤（鐵律）**：年代/事件/人物走權威來源；**嚴禁中國黨國（PRC）史觀**——中國慣於竄改歷史為其政權牟利，故**不採單一 PRC 官方敘事**，須以台灣/國際/多方非 PRC 控制的權威來源交叉查證；爭議事件**呈現多方觀點、持平**，不灌輸單一政治化史觀；用詞守「中國非大陸」（黨國語彙禁用）。由領域專家＋（必要時）媒體識讀視角審 | 多方國際/台灣學術史料＋§8#1 |
+  | 生物/地科/生活 | 多非計算型→**權威來源引用＋領域專家簽核**（數據型仍可程式/查表驗，如天文週期、統計、分類） | 課綱/官方機構/學術＋§8#1 |
+  | 公民/價值觀/情意(SEL) | **分兩層**：**事實層**（法條/制度/程序/數據＝有相對正確）走 source＋領域專家查證；**價值層**（孰優孰劣/立場）**無絕對對錯**→呈現多元觀點、持平中立，**不宣稱唯一正解**，由領域專家＋心理醫生(§8#7)判「是否持平、是否符 R16 框架」 | 官方法規/多元立場文獻＋§8#1,#7 |
+  - **原則**：能用程式或查表**客觀驗**的（數理化、邏輯真值表、數據、字典事實、法條），**一律優先用**、留驗證紀錄；真正無客觀解的（價值判斷/詮釋/道地語感/史觀持平）才交領域專家＋心理醫生＋來源，且遵 **R16 後果框架**（不說教）。使用者不需自己會驗——spec 定方法、建置流程執行。
+- **play-through 代入**：題目正解代入題幹（語言型朗讀通順、符號數學型代回原式驗算成立），納 `unit_acceptance_lint`。
+- **對抗式複核**：content_audit 的領域專家 lens 對每單元獨立再查一次（找 ship 前漏網的事實錯），與上述簽核互為雙保險。
+- **細則**：`sources[]` 對「常識/定義型」可省（如「水的化學式 H₂O」），但**具體數值/時間/比較級/因果宣稱**一律需 source 或執行驗證。英文例句的用法道地性由 §8 #2 native-speaker 判（屬語言正確，走同 ledger）。
+- **範例**：✅「玉山海拔 3952 公尺（source: 內政部）」、「水沸點 100°C（可計算/常識免 source）」、二次公式解跑 `.venv` 驗證代回原式成立並記錄。 ❌ 單元宣稱「某河全長 6300 公里」無 `sources[]` 也無執行驗證就 ship（AC-CORRECT FAIL）。 ⚠ 數字拿不準→標 `(待核)`，但**不得**帶 `(待核)` 上線（掃描擋關）。
 
 ---
 
@@ -435,6 +509,10 @@
 - **壞檔不重設（最高優先）**：若存檔 JSON 解析失敗，**絕不**以空白 freshProfile 覆寫 key；必須
   (a) 把原始壞字串備份到另一 key（如 `player_profile_v1__corrupt_<ts>`）、(b) 保留記憶體內既有 profile、
   (c) 明確提示，交由使用者/後續修復；寧可拒寫也不毀資料。（對應 §7.2 R1 當前最危險路徑。）
+- **never-disappear 的邊界聲明 ＋ localStorage 驅逐緩解（2026-10-26 角色模擬補；最常見裝置 iPad）**：
+  - **誠實邊界**：「永不消失」**僅保證「同一瀏覽器、且使用者/瀏覽器未清除 localStorage」**。iPad Safari ITP 對 7 天無互動站台會**驅逐 localStorage**；無後端（鐵律）下無法阻止瀏覽器清除——故不得宣稱「絕對永不消失」。
+  - **緩解（純前端、無後端）＝匯出/匯入進度檔**：提供一鍵**匯出**（進度＋獎勵合併成單一 JSON 檔下載）與**匯入**（上傳合併，走 §6.3 additive per-field 策略、不覆蓋較高值）。並以**非侵入提示**鼓勵定期匯出（如里程碑後「要不要存一份備份？」）。匯入一律 additive（earned union/max），不得倒退。
+  - 跨裝置（iPad＋手機）同步＝out-of-scope（無後端），匯出/匯入即其**唯一正當解**；spec 明載，不假裝自動同步。
 
 ### 7.2 風險點逐條（RECON B 回填）
 現況（recon B，2026-10-26；全站獎勵狀態集中於單一 key `player_profile_v1`，只有 `game_core.js` 寫入）：
@@ -562,6 +640,15 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
   - ❌**反例**：U 的練習第 3 題用到「判別式 Δ＝b²−4ac」，但該知識點 `math.t_mid.equation.quadratic-discriminant` 排在 U 之後、不在 K(U) → `result:blocked, gaps:[{missing_concept:"math.t_mid.equation.quadratic-discriminant", where_used:"練習第3題"}]` → 須把 discriminant 設為 U 先備或移除該題。
   - ⚠**邊界**：某概念雖與 U 同一 tier，但其單元在路徑順序上排 U **之後** → 仍算斷層（K(U) 以 `prerequisites` 鏈計，**不以 tier/stage 計**）→ `blocked`，需修正先備宣告或單元排序。
 
+### 9.6 模擬器確定性化補強（2026-10-26 角色模擬補；消「無法寫出可證明被擋的測試」）
+- **路徑覆蓋 gate（防 AC-PATH 假綠）**：§9.4 要求路徑聯集走過每個單元——加一道**確定性檢查** `每個 unit ≥1 次出現在被模擬路徑集`，覆蓋不足即 FAIL（不得選一組漏單元的路徑卻宣稱無斷層）。
+- **INV-1/2/3（per-unit）與 INV-4（per-sequence）分離**：INV-1/2/3 以**每單元**各模擬一次（K(U) 閉包、與路徑位置無關）判定；**INV-4 倦怠以「一條路徑的連續單元序列」為評估單位**（跨單元的難度跳階/配速/回饋密度），輸出掛在該序列上，不混入 per-unit 判定。
+- **burnout 可量測代理（補 §9.3 的質性判斷，使部分可機械預篩）**：量測代理觸發（命中則標記交 panel 複判，非自動 defect）：相鄰單元 `est_minutes` 跳升 >2×、相鄰單元新增 `kp` 數跳升 >2×、連續 ≥N 個單元無 retrieval 練習。最終 `high/med/low` 仍由 §8 #7 心理醫生＋#4 學習科學家判（panel 主、代理輔）。
+- **知識隔離改「強制顯式 kp 歸因」（LLM 無法真的忘記→改成可稽核）**：模擬 agent 對**每一題**須明列「我用到哪些 `kp_id`、各自屬 `K_pre`／`teach(U)`／`其他`」；凡出現「其他」＝越界/斷層證據，被 gate 抓（不再只靠「嚴禁偷看」的 prompt 指令）。
+- **K_pre 注入預算**：深 tier leaf 的先備閉包可能數百 kp→注入採**結構化摘要**（每先備單元「教」段落的要點），設 token/深度上限；超限則按 `prerequisites` 距離由近到遠截斷並標註（忠實度優先近層）。
+- **用到母體外概念 → inventory-gap 分支**：若某題用到的概念**不在 3092 母體**（無 id 可填 `missing_concept`）→ 回報 `inventory-gap`（建議補母體），與「排序斷層」區分處理。
+- **rubric⑦ vs §9 仲裁**：二者皆須通過；任一不符 → 標 `review`、不得逕自放行（§9.4 已定 rubric⑦ 為主、§9 二次確認，此處補明衝突時的處置）。
+
 ---
 
 ## 10. 安全執行：phase 化與 rollback
@@ -571,10 +658,9 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
   (a) 盤點全站卡片/按鈕/色碼硬編/私有重造清單，統一到 token ＋ §6.5 R-STYLE-3 自適應卡（修現有不一致）；
   (b) 修 §7.2 的 R1 壞檔全毀（壞檔不重設）＋ R2 真實 migrate()，並以 §7.3 RT-6 紅隊證明——**獎勵永不消失地基先穩**。
   完成後才進 Phase 1。此 Phase 直接回應使用者「書內已有不一致、難修」＋「獎勵別 refresh 消失」兩大顧慮。
-- **Phase 1｜基盤**：知識點 id registry、unit metadata schema、hub/roadmap 骨架、獎勵 id registry ＋ migrate() ＋
-  additive-merge（延續 Phase 0.5 的地基，§7.3 全綠）。
-- **Phase 2｜路徑接線**：既有單元接入路徑（宣告 prerequisites/knowledge-point ids），逐檔 5 clean。
-- **Phase 3｜gap 補齊**：依 §4−§5 gap，逐 stage×subject 補單元；一次一檔、每檔 5 clean。
+- **Phase 1｜基盤**：知識點 id registry（＝`knowledge_points.json`，非另一物）、**unit 內容+metadata schema（§6.2.2）＋ `unit_schema_gate`**、**凍結既有頁→(subject,strand,tier) 歸屬＋`unit_id` registry（Phase 2「全數接線」的分母）**、**§6.7 衍生資料產物管線**（`units_index`/`strand_labels`/`subject_labels`/`term_glossary`/`nav_index` 產生＋各 gate）、`safe_store.js`＋migrate()＋additive-merge（延續 Phase 0.5 地基，§7.3 全綠）、獎勵 id registry。**roadmap 骨架時序**：Phase 1 只渲染到 **島→subject→strand→tier 頁** 層（由 nav_index 推導）、**unit 節點層留佔位**；節點↔先備 DAG 連線（`roadmap_layout.json`）待 Phase 2 有 unit/prerequisites 後回填（消雞生蛋）。**`_kp_build.py` 的 `unit_ids[]`/`status` 改衍生唯讀**（由 `coverage_gate` 掃 unit metadata 反向生成、不手填、重跑不覆寫）。
+- **Phase 2｜路徑接線**：既有單元接入路徑（宣告 prerequisites/knowledge-point ids）、產 `roadmap_layout.json`＋`progkey_migration.json` 並把舊 progKey 進度 additive 搬入 `learning_progress_v1`，逐檔 5 clean。
+- **Phase 3｜gap 補齊**：依 §4−§5 gap，逐 subject×strand 補單元；一次一檔、每檔 5 clean。**可發布子集（拆 all-or-nothing 風險）**：**一個「島」或一科的 minimum 全覆蓋即可上線該島**作為里程碑（AC-COV-1 的 minimum 100% 仍為**全站 DONE-GATE** 終態，但發布不必等全站——先交付有價值的完整島）。優先序：先補使用者最在意/最弱者（如高中銜接、實用英文）。
 - **Phase 4｜獎勵擴充**：在已驗證的持久化地基上新增獎勵內容（只新增 id，不動既有）。
 - **Phase 5｜全書 audit ＋ 知識受限角色模擬 ＋ 視覺 QA**：loop 到零問題。
 - 每個 Phase（且其中每一檔）結束即 commit，可 rollback（R8）；push 僅在使用者明說。
@@ -583,11 +669,11 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 - **細則**：每個 Phase 都有明確 **exit gate**，未過不得進下一 Phase；Phase 內每檔完成即 commit（訊息標 Phase），rollback＝`git revert`/`git checkout` 回該 commit。
   - **Phase 0 exit**：spec 過 §12（content_audit 5 clean ＋ 紅隊零繞過 ＋ `spec_concreteness_lint` exit 0）＋ **`AC-ANTIDRIFT` 綠**（§0.2 四錨點已交付、hook 對壞案例 DENY／好案例 ALLOW 經紅隊）。
   - **Phase 0.5 exit**：`design_consistency_gate` exit 0（既有不一致歸零到 token）＋ §7.2 之 R1 壞檔不重設/R2 真 migrate 修妥 ＋ `RT-6` 綠。
-  - **Phase 1 exit**：`knowledge_points.json`＋id registry＋unit schema＋hub/roadmap 骨架＋`migrate()`＋additive-merge 就緒；`AC-COV-2`、`AC-REWARD-1` 綠。
+  - **Phase 1 exit**：`knowledge_points.json`＋unit schema（`AC-SCHEMA` 綠）＋凍結 unit registry/歸屬表＋§6.7 衍生檔全產出且各 gate 綠（含 `strand_labels`/`subject_labels`/`term_glossary`/`nav_index`）＋hub/roadmap 骨架（至 tier 頁層、過 `AC-NAV`＋AC-NOGRADE＋AC-VIZ-1 島/strand/tier 三層簽核）＋`safe_store.js`/`migrate()`/additive-merge 就緒；`AC-COV-2`、`AC-REWARD-1` 綠。
   - **Phase 2 exit**：既有單元全數接線（宣告 `prerequisites`/`knowledge_point_ids`），每檔 5 clean。
   - **Phase 3 exit**：`AC-COV-1`（**Phase 3 變體**：`unit_ids[]` ∩ rubric⑦ 通過集，不含 §9 項）＝ 0 個未覆蓋 minimum id（gap 全補）。§9 `taught_kps_exercised` 的二次確認留到 Phase 5 done-gate。
   - **Phase 4 exit**：獎勵擴充**只新增 id**、RT-1..11 全綠 ＋ **`AC-NOBACKEND` 綠**（獎勵/排行/社交類零對外請求，no_backend_gate exit 0）。
-  - **Phase 5 exit**：§11.A 全 **19 條 AC**（含 AC-SPEC）綠且 `acceptance_ledger.json` 全登錄。
+  - **Phase 5 exit**：§11.A 全 **22 條 AC**（含 AC-SPEC；含 AC-CORRECT/AC-SCHEMA/AC-NAV）綠且 `acceptance_ledger.json` 全登錄。
 - **範例**：
   - ✅**正例**：Phase 3 結束時 `coverage_gate` 報「未覆蓋 minimum id ＝ 0」→ 得進 Phase 4。
   - ❌**反例**：宣稱「Phase 3 大致完成」但 coverage 顯示 37 個 minimum id 無對映單元 → **不得**進 Phase 4，須列 37 id 補完。
@@ -627,6 +713,9 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 | AC-UNIT-1 | **每個**單元通過 §6.6 的 10 項 rubric | `tools/unit_acceptance_lint.py`（待建）＋ 人工 play-through | 每單元 10/10；0 單元缺項 | 逐單元 rubric 結果 |
 | AC-UNIT-2 | 每個**檔案（頁）** content_audit 連續 **5 clean**（同 sha、L3 exit 0；content_audit 粒度＝檔案，單元層面走 AC-UNIT-1） | `/static-doc-audit` per-file + `coverage_check.js` | 每檔 5 clean、L3 exit 0 | convergence ledger |
 | AC-UNIT-3 | 每個新單元與對應 golden 範本做**結構 diff**（§6.6 細則① 凍結黃金範本防品質漂移）；偏離而 unit metadata 無 `deviation_reason` 即 FAIL | `tools/unit_acceptance_lint.py`（讀 unit metadata `deviation_reason` ＋ 與 `authoring/golden/<archetype>.html` 結構比對） | 未解釋的偏離數＝**0**（exit 0） | golden-diff 報告 |
+| AC-CORRECT | **事實正確性已驗證**（R1「教錯害人」；§6.8 協定）：shipped 單元零 `(待核)`；可計算事實（數理化/數據）經程式/查表實跑驗證；非計算事實宣稱帶 `sources[]` 權威來源；每單元經 §8 #1 領域專家簽核 | **三部**：(1) 確定性掃描「`(待核)` 命中＝0」＋「具體數值/因果宣稱有 `sources[]` 或執行驗證紀錄」；(2) 可計算事實 `.venv`/查表實跑比對（§6.8 各科驗證法表）；(3) 每單元領域專家簽核記 `authoring/fact_check_ledger.json`（綁 sha，sha 變作廢重簽） | `(待核)`＝0、無來源/無驗證的事實宣稱＝0、每 shipped 單元有效簽核 | fact_check_ledger ＋ 執行驗證 log |
+| AC-SCHEMA | 每個單元的 metadata＋內容（§6.2.2）符合 JSON Schema：欄位齊備/型別/enum 正確、每 teach 段與每 practice 題帶 `kp_ids[]`、`knowledge_point_ids` 皆存在於 manifest | `tools/unit_schema_gate.py`（待建，JSON-Schema validator）＋ rubric⑦ 子集檢查（宣告集⊆教集∩考集） | schema 違規＝0、⑦ 綁定違規＝0（exit 0） | schema 驗證報告 |
+| AC-NAV | 導覽符合 ND/R-OPEN：首屏頂層分區 ≤12、預設可見節點 ≤~15、英文科中文對照 default-collapsed（R14）；且**無**任何 disabled/灰掉/鎖頭/「尚未解鎖」鎖定態（R-OPEN） | `tools/nav_gate.mjs`（待建，render 後量測分區/可見節點計數＋掃鎖定態/鎖 icon/「解鎖」字樣＋中文對照收合態）＋紅隊（鎖定態壞案例須擋） | 首屏分區 ≤12、可見節點 ≤~15、鎖定態命中＝0、未收合中文＝0 | nav gate 報告 |
 | AC-PATH-1 | 每條主要學習路徑**無斷層**（INV-1） | §9 知識受限模擬 | 每路徑每 U `result=pass`、`gaps=[]` | 模擬輸出 JSON |
 | AC-PATH-2 | 可學會/記得牢/不倦怠（INV-2/3/4） | §9 模擬（§9.3 三級門檻） | `learnable=true`、`retention_ok=true`、`burnout_risk≤med`（且 `med` 須 `mitigation` 欄非空）全數 | 模擬輸出 JSON |
 | AC-REWARD-1 | 已賺得獎勵**永不消失**（含壞檔/升版/catalog改/配額/跨分頁/原子性/reset守門/已裝備物下架） | §7.3 紅隊 RT-1…RT-11（每條 R1–R8 風險皆有對應 RT：R1→RT-6、R2→RT-4、R3→RT-10、**R4→RT-11**（已裝備 skin/border 下架）、**R5→RT-2**（badge 下架）、R6→RT-7、R7→RT-8、R8→RT-9） | RT-1…11 **全綠** | 紅隊測試輸出 |
@@ -645,7 +734,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 - **細則**：每條 AC 必對應一個**確定性腳本或綁 sha 的簽核**（上表「驗證方法」欄）；標「待建」者於 Phase 1 建並**紅隊**（證明壞案例被擋、好案例放行）才可啟用——**兩類例外（各自更早，不得延到 Phase 1）**：
   (a) **`AC-ANTIDRIFT` 的四防漂移錨點 hook**：因 **Phase 0 exit／§12 定案即需消費**（§10.1 Phase 0 exit 要 `AC-ANTIDRIFT` 綠、§12 step 3.5 要錨點已交付+紅隊才算定案），須在 **Phase 0 內（定案前）**建好並紅隊；
   (b) **`design_consistency_gate.js`（及其 content-card lint）**：因 **Phase 0.5 exit 即需消費**（§6.5 R-STYLE-4／AC-STYLE-1 明訂「Phase 0.5 前接線+紅隊」），須在 **Phase 0.5 前**建好並紅隊。`acceptance_ledger.json` 一列一次通過紀錄，sha 一變該 AC 作廢須重驗。
-- **範例**：✅ 全 **19 條 AC**（AC-COV-1…AC-ANTIDRIFT 共 18 條產品 AC ＋ AC-SPEC meta）於**同一凍結 release 快照**皆有 PASS 列＋證據，且每條綁定其**對應產物的當前 content sha**（各 AC 的產物不同——AC-SPEC 綁 spec 檔、AC-VIZ-1 綁 render/簽核 manifest、AC-NOBACKEND 綁掃描報告…——故 sha 本就各異；關鍵是**無任一 AC 綁到過時 sha**，依本節細則「sha 一變該 AC 作廢須重驗」）→ 可宣告完成並（經使用者）push。 ❌ AC-COV-1 顯示 37 個 minimum id 無單元 → 未完成，列出 37 個待補 id。 ⚠ AC-VIZ-1 四角色已簽核但 sha 已變（之後又改了版面）→ 舊簽核作廢，須重 render+重簽才算數。
+- **範例**：✅ 全 **22 條 AC**（AC-COV-1…AC-ANTIDRIFT 共 21 條產品 AC ＋ AC-SPEC meta；含 AC-CORRECT／AC-SCHEMA／AC-NAV）於**同一凍結 release 快照**皆有 PASS 列＋證據，且每條綁定其**對應產物的當前 content sha**（各 AC 的產物不同——AC-SPEC 綁 spec 檔、AC-VIZ-1 綁 render/簽核 manifest、AC-NOBACKEND 綁掃描報告…——故 sha 本就各異；關鍵是**無任一 AC 綁到過時 sha**，依本節細則「sha 一變該 AC 作廢須重驗」）→ 可宣告完成並（經使用者）push。 ❌ AC-COV-1 顯示 37 個 minimum id 無單元 → 未完成，列出 37 個待補 id。 ⚠ AC-VIZ-1 四角色已簽核但 sha 已變（之後又改了版面）→ 舊簽核作廢，須重 render+重簽才算數。
 
 ## 12. 本 spec 自身的收斂協定（meta-process）
 
@@ -657,6 +746,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
    能否新增獎勵卻讓舊獎勵孤兒化而不被 §7.3 抓到？能否讓模擬角色偷看後續知識？每找到一個繞過＝
    補一道子 gate ＋ 紅隊證明（§13 ledger）。紅隊零繞過才算定案。
 3.5. **交付 §0.2 四防漂移錨點並紅隊（`AC-ANTIDRIFT`）**：fail-closed hook／carrier echo／rule 檔／MEMORY 指標 四者皆就位，證明「未重讀本檔即宣告收斂」壞案例被 DENY。錨點未交付＝不算定案（呼應 §0.2「承諾無效、只有 fail-closed 機器強制有效」）。（`design_consistency_gate.js` 不屬此四錨點，由 AC-STYLE-1 於 Phase 0.5 前獨立交付+紅隊，見 §11.A 細則例外(b)。）
+3.6. **動工前角色模擬就緒 gate（使用者 2026-10-26；「做之前先模擬，看是否足夠完美可動工」）**：定案前，以**多個角色「假裝照 spec 動工」**獨立模擬執行，找「盲點／不知怎麼做／覺得缺什麼」——必含角色：**Phase-1 實作工程師、單元作者（數理+英文各一）、導覽前端工程師、獎勵/持久化工程師、§9 知識受限模擬器實作者、PM 就緒評估**。每角色輸出 ①盲點/未定義 ②不確定怎麼做 ③應有而缺。**所有 blocker 級盲點補進 spec（補完 sha 變→§12 收斂 streak 重跑）才算就緒**；此 gate 與 content_audit（找內部矛盾）互補——它找的是「可實作性」缺口。（首次執行：2026-10-26，5 角色挖出「單元內容 schema 缺／衍生資料管線缺／localStorage 驅逐打穿 never-disappear／§9 確定性／正確性驗證未 gate 化」等，已折進 §6.2.2/§6.7/§6.8/§6.3/§9.6/§11.A，見 §13 ledger。）
 4. 定案後才進入實作，**下一階段為 §10 Phase 0.5（既有不一致 remediation ＋ 獎勵安全地基，先做、before 任何新內容），非直接 Phase 1**。
 
 - **細則**：每 round 以**不同 partition framing** 跑（避免抽樣假 clean）；「5 連續 clean」＝**同一未變更 sha** 連 5 round 零 panel-confirmed defect，
@@ -672,7 +762,9 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 
 | 日期 | 發現的繞過 | 修補（新 gate/規則） | 紅隊結果 |
 |---|---|---|---|
-| （建置中累積） | | | |
+| 2026-10-26 | scan_simplified 只掃簡體碼點，繁體形 PRC 詞（登記於 `PRC_TERMS` 者）漏放卻宣稱「PRC 命中＝0」 | 加 `PRC_TERMS` substring denylist（排除歧義質量/數據）＋ AC-LANG-1 改兩層 | 壞案例 FAIL／台灣詞+物理質量 PASS ✅ |
+| 2026-10-26 | AC-NOBACKEND/AC-NOGRADE 列舉式可被未列向量/同義詞繞過 | 加「判定原則凌駕列舉」＋非窮舉＋同義詞紅隊 | 待 Phase 0.5/1 建 gate 時紅隊 |
+| 2026-10-26 | 動工前角色模擬（§12 step 3.6）揭「單元內容 schema 缺／衍生資料管線缺／localStorage 驅逐打穿 never-disappear／§9 確定性／正確性未 gate 化」 | 補 §6.2.2/§6.7/§6.8/§6.3 safe_store/§9.6/AC-CORRECT·SCHEMA·NAV/RT-12 | 補後重跑 content_audit 5 clean＋Phase 1 建 gate 時逐一紅隊 |
 
 ---
 
@@ -682,5 +774,10 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 - ~~O-2 roadmap 視覺風格~~ → **已定案 §6.1**（科技樹主幹＝先備 DAG ＋ 地圖式美術；4 節點狀態；不顯年段；過 viz-QA）。
 - ~~O-3 國小各科深度下限~~ → **已由 R13 涵蓋**（課綱＝下限、不分年段的連續路徑、深度只有上限（學科至大學入門、英文無上限）無下限之爭；國小段以「課綱 minimum＋銜接」為基、可向上延伸）。
 - ~~O-4 打掉重做 vs 包裝接入~~ → **已定案（使用者 2026-10-26：依 spec 規則自動判定，不逐頁問）**：判定規則＝既有頁**符合 §6.2 單元骨架＋§6.5 R-STYLE＋§6.6 rubric** 就「包裝接入」；任一不符就「打掉重做」。Phase 1 用覆蓋矩陣對每頁機械標記 `reuse|rebuild`，不需使用者逐頁裁示。
+- ~~O-5 首次 onboarding/空白首屏~~ → **已定案（2026-10-26 角色模擬補）**：新用戶（零進度）首屏＝**科目島 ＋ 中性邀請**（「想從哪裡開始？」），**不強制 placement 小測**（小測僅為可選建議）；回訪者才顯示「繼續」CTA。納 `AC-NAV`。
+- ~~O-6 搜尋無結果 ＋ R11 過濾~~ → **已定案**：搜尋常駐；**無結果**給中性提示＋建議相近主題；**搜尋輸出一律經 R11 過濾**（不得因 metadata 洩年段字樣）。
+- ~~O-7 跨裝置/離線/localStorage 驅逐邊界~~ → **已定案 §7.1**：never-disappear 僅限「同瀏覽器未被清」；跨裝置/被驅逐＝純前端**匯出/匯入進度檔**（RT-12）；離線（service worker/資產快取）**暫列 out-of-scope**（未來可加，不影響核心）。
+- ~~O-8 AC-PERF-1 閾值~~ → **已定案方法**：基準＝**同類頁現況初始 JS 中位數**，Phase 1 量測既有頁定出具體數值寫入 `AC-PERF-1`（不留「自由心證」）。
+- ~~O-9 golden 自身滿分 bar（bootstrap 循環）~~ → **已定案 §6.6**：每 archetype 的**第一個單元**由 WRITERS＋六審查鏡＋§8 全 panel 簽核為 golden、凍結（freeze 前 `AC-UNIT-3` 對它豁免、改以「六鏡＋panel 全簽」為通過條件）；bespoke 允許**多 golden 子類**避免單一 golden 逼出大量 deviation。
 
-**→ §14 四個開放問題（O-1…O-4）全數關閉；spec 無待使用者拍板項，可逕行走 §12 收斂。**
+**→ §14 開放問題 O-1…O-9 全數關閉；spec 無待使用者拍板項，可逕行走 §12 收斂。**
