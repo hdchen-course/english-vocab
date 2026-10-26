@@ -57,7 +57,7 @@
 - [soc-civ.t_mid.group.reference-group] 參照團體對態度與行為的影響  {tier:t_mid, exam:會考}
 - [soc-civ.t_adv.group.social-institution] 社會制度的意義與主要制度（家庭、教育、經濟、政治、宗教）  {tier:t_adv, exam:學測}
 - [soc-civ.t_adv.group.bureaucracy-critique] 科層制的優點與弊病（效率 vs 僵化、形式主義）  {tier:t_adv, exam:學測}
-- [soc-civ.t_sub.group.social-network] 社會網絡與社會資本的概念與作用  {tier:t_sub, exam:分科-公民}
+- [soc-civ.t_sub.group.social-network] 社會網絡（social network，社會學指人際關係網，非網際網路）與社會資本的概念與作用  {tier:t_sub, exam:分科-公民}
 
 ### 2.2 社會階層與不平等
 - [soc-civ.t_base.group.fairness] 公平對待、不因外表或家境差別待人  {tier:t_base, exam:無}
@@ -132,7 +132,8 @@
 
 ### 4.2 兒少與弱勢權益
 - [soc-civ.t_base.rights.child-safe] 遇到危險或被傷害時向大人／老師求助  {tier:t_base, exam:無}
-- [soc-civ.t_mid.rights.crc] 兒童權利公約四大原則（生存、發展、受保護、參與）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.rights.crc] 兒童權利公約四類權利（生存、發展、受保護、參與）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.rights.crc-principles] 兒童權利公約四大一般原則（不歧視、兒童最佳利益、生存與發展權、尊重兒童意見）  {tier:t_mid, exam:會考}
 - [soc-civ.t_mid.rights.child-protection] 兒少保護法制與通報機制概念  {tier:t_mid, exam:會考}
 - [soc-civ.t_mid.rights.vulnerable-groups] 身心障礙者、弱勢族群的權益保障  {tier:t_mid, exam:會考}
 - [soc-civ.t_adv.rights.social-welfare] 社會福利與社會安全網的意義  {tier:t_adv, exam:學測}

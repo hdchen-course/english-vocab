@@ -59,10 +59,23 @@ INFO_ONLY = {0x53F0}
 # 只收「在台灣一定是錯」的無歧義 PRC 詞；刻意排除歧義詞以免誤報：
 #   質量（物理 mass 是合法台灣術語）、數據（台灣亦常用，如大數據/數據機）、信息（偶見，暫不收）。
 PRC_TERMS = {
-    "視頻": "影片", "軟件": "軟體", "硬件": "硬體", "網絡": "網路",
+    "視頻": "影片", "軟件": "軟體", "硬件": "硬體",
     "鼠標": "滑鼠", "博客": "部落格", "內存": "記憶體",
     "筆記本電腦": "筆記型電腦", "手機短信": "手機簡訊", "搜索引擎": "搜尋引擎",
 }
+# 刻意排除的歧義詞（同 質量/數據/信息）：「網絡」在台灣學界是「關係網／抽象網路」的合法術語
+#   （社會網絡、貿易網絡、移民網絡、運輸網絡、絲路/印度洋網絡…皆台灣慣用），非一定是 PRC。
+#   blanket 列入會對社會科/地理/歷史大量誤報。簡體「网络」(U+7F51/U+7EDC) 仍由碼點掃描擋；
+#   真正「網絡＝網際網路」的誤用交 content_audit 專家 panel 判（NLP-hard，不做脆弱白名單）。
+# 合法台灣用法的上下文白名單機制（保留供未來窄用；目前為空）。
+PRC_ALLOW = {}
+
+# zh-TW lang-tag 斷言的 scope 豁免（僅豁免「必須 lang=zh-TW」這條；簡體/PRC 掃描仍全域適用）。
+#   這兩個檔不是 K-12 learner 繁體中文內容，對它們斷言 zh-TW 是錯誤要求，非「放寬 gate」：
+#   - googlea8c8d21b7f34ee51.html：Google Search Console 驗證 stub（53 bytes、單行、非頁面，Google 產生須逐字保留）。
+#   - cses_hints.html：全英文（lang="en"）競程題解頁，已明列排除於 K-12 教材（太難），正當為英文。
+#   紅隊：若把簡體字塞進被豁免檔，碼點/PRC 掃描仍會抓到並 FAIL（見下方 scan，豁免不涵蓋簡體/PRC）。
+SCOPE_EXCLUDE_LANG = {"googlea8c8d21b7f34ee51.html", "cses_hints.html"}
 
 DEFAULT_FILES = [
     "index.html", "home.html", "math.html", "multiply.html",
@@ -71,10 +84,11 @@ DEFAULT_FILES = [
 ]
 
 def scan(paths):
-    fails, infos, lang_fail, prc = {}, {}, [], {}
+    fails, infos, lang_fail, prc, missing = {}, {}, [], {}, []
     for p in paths:
         if not os.path.exists(p):
             print(f"  MISSING: {p}")
+            missing.append(p)
             continue
         txt = open(p, encoding="utf-8", errors="replace").read()
         for i, line in enumerate(txt.splitlines(), 1):
@@ -83,23 +97,39 @@ def scan(paths):
                 if cp in SIMPLIFIED:
                     bucket = infos if cp in INFO_ONLY else fails
                     bucket.setdefault(p, {}).setdefault(cp, []).append(i)
-            # PRC 繁體詞 substring 掃描（碼點掃描抓不到）
+            # PRC 繁體詞 substring 掃描（碼點掃描抓不到）；扣除白名單合法複合詞的出現次數
             for term in PRC_TERMS:
-                if term in line:
+                cnt = line.count(term)
+                if not cnt:
+                    continue
+                for ctx in PRC_ALLOW.get(term, []):
+                    cnt -= line.count(ctx)
+                if cnt > 0:
                     prc.setdefault(p, {}).setdefault(term, []).append(i)
         # Accept any Traditional-Chinese lang tag: zh-TW, zh-Hant, zh-Hant-TW.
-        if p.endswith(".html") and not re.search(r'lang="zh-(TW|Hant)', txt):
+        # SCOPE_EXCLUDE_LANG 檔豁免此斷言（非 K-12 繁中內容；簡體/PRC 掃描上方仍已套用）。
+        if (p.endswith(".html") and os.path.basename(p) not in SCOPE_EXCLUDE_LANG
+                and not re.search(r'lang="zh-(TW|Hant)', txt)):
             lang_fail.append(p)
-    return fails, infos, lang_fail, prc
+    return fails, infos, lang_fail, prc, missing
 
 def main():
-    args = sys.argv[1:]
+    # 忽略 orchestrator 附加的 --root <dir> / --release-id <id>（本工具靠展開後的實際檔路徑）
+    raw = sys.argv[1:]
+    args, skip = [], False
+    for a in raw:
+        if skip:
+            skip = False; continue
+        if a in ("--root", "--release-id"):
+            skip = True; continue
+        args.append(a)
+    explicit = bool(args)
     paths = []
     for a in args:
         paths.extend(sorted(glob.glob(a)) or [a])
     paths = paths or DEFAULT_FILES
 
-    fails, infos, lang_fail, prc = scan(paths)
+    fails, infos, lang_fail, prc, missing = scan(paths)
 
     print("=== Simplified-codepoint + PRC-term scan ===")
     for p in paths:
@@ -115,7 +145,9 @@ def main():
     if lang_fail:
         print("  lang FAIL (missing lang=\"zh-TW\"): " + ", ".join(lang_fail))
 
-    ok = not fails and not lang_fail and not prc
+    if explicit and missing:
+        print("  MISSING (explicit→FAIL): " + ", ".join(missing))
+    ok = not fails and not lang_fail and not prc and not (explicit and missing)
     print("RESULT:", "PASS ✅" if ok else "FAIL ❌")
     return 0 if ok else 1
 

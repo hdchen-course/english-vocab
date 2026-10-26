@@ -17,11 +17,12 @@
 | 狀態 | 草稿 v0.2 — 全章節具體化中；三項偵察（§5 現況／§4 附錄 A 母體／§7.2 獎勵風險）**均已回填**；待辦＝content_audit 5 clean＋紅隊＋Phase 1 待建工具 |
 | 收斂定義 | content_audit 連續 **5** round 零 panel-confirmed defect（同一未變更 sha）＋ 紅隊證明「規範無法被繞過/遺漏」 |
 | 實作準則 | 一次一個檔案；每檔自身跑到 5 clean；全書 audit；知識受限角色模擬；loop 到零問題 |
-| 相關檔 | `DICTATION_BUILD_SPEC.md`（聽寫系列，已上線，為流程範本）、`~/.claude/rules/visual-qa-ipad-signoff-do-not-delete.md`（視覺 QA 制度）、`../engineering/authoring/STANDING_AUDIT_SOP.md`（站級稽核契約；位於同層 engineering repo，非本 repo 的 authoring/） |
+| 相關檔 | `DICTATION_BUILD_SPEC.md`（聽寫系列**自身** spec，現為 DRAFT 未收斂；本檔僅引為 SOP 流程範本，不在此斷言其上線狀態——見 §0.4 階 5）、`~/.claude/rules/visual-qa-ipad-signoff-do-not-delete.md`（視覺 QA 制度）、`../engineering/authoring/STANDING_AUDIT_SOP.md`（站級常規稽核契約，N=2；與本檔 5-clean 不同流程，見 §0.4 階 4） |
+| ⚠ DRAFT 反轉 | 2026-10-26：外部嚴格審查 `LEARNING_PATH_REBUILD_STRICT_REVIEW.md` 查出會讓錯誤知識進產品的 blocker（見 §0.5）。**維持 DRAFT、停止 5-clean streak、不進教材實作**；先完成 §0.5 Phase -1 全綠才重啟收斂。 |
 
 ### 0.1 待回填區（偵察 agent 對應）— **三項偵察均已回填（2026-10-26）**
 - **§5 現況盤點**（頁面/導覽/共用架構/覆蓋矩陣）← recon A（repo 結構，**已回填**）。
-- **§4 知識點母體清單**（逐科逐 strand）← recon C（課綱）＋深掘 → **已回填（附錄 A，3092 條）**。
+- **§4 知識點母體清單**（逐科逐 strand）← recon C（課綱）＋深掘 → **已回填（附錄 A，3096 條）**。
 - **§7 獎勵永不消失**的風險點逐條 ← recon B（獎勵持久化，**已回填**）。
 - 其餘章節（§1–§3、§6 設計原則、§8–§14）為偵察無關，已於本稿撰寫。
 
@@ -51,9 +52,147 @@
       **細粒度 vagueness（單一子節/單一規則仍太模糊）交 content_audit 專家 panel 判**（§12），lint 擋「整章缺具體化」的粗漏。
 - **章級具體化已完成（lint 綠）**：§2/§6/§7/§8/§9/§10/§11/§11.A/§12 九個規範章整段皆含 `細則`＋`範例`＋`❌`，
   `spec_concreteness_lint.py` exit 0（涵蓋 9 個規範章的子節：§6.6 品質恆定、§7.1/§7.2/§7.3 獎勵風險＋RT、§6.5 R-STYLE-3 自適應卡、§8.1 panel 細則、§9.5 受限模擬、§10.1 entry/exit；§4.1 DEPTH-STD 不由章級 lint 檢核，§4 為 EXEMPT 章，其具體化由附錄 A／`coverage_gate` 把關）。
-  **已除的 blocker**：附錄 A 全 slice 深掘＋審查（已完成，3092 條）、章級具體化（lint 綠）皆**不再是 blocker**。
-  **定案 blocker 僅剩**：本 spec content_audit **連續 5 clean**＋**紅隊**（§12）兩項。
+  **已除的 blocker**：章級具體化（lint 綠）不再是 blocker。
+  **⚠ 2026-10-26 DRAFT 反轉（修正過期宣稱）**：外部嚴格審查查出會讓錯誤知識進產品的新 blocker（B-01 待核遺失〔已修〕、B-03 全當 minimum、B-04 exam 誤置、B-05/B-06 內容錯誤與安全口訣、B-07/B-08 證據層不足、B-09 多 SSOT 衝突）。**先前「定案 blocker 僅剩 5-clean＋紅隊」宣稱作廢。** 正確定案序＝先完成 §0.5 Phase -1（修 spec＋工具，不碰教材）全綠，才可重啟 content_audit 5-clean＋紅隊。
   章內單一規則若仍嫌模糊屬**細粒度 vagueness**，交 content_audit 專家 panel 逐輪判（§0.3 (c)、§12），非擋定案的粗漏。
+
+### 0.4 文件優先序（PRECEDENCE；B-09 — 解決多份文件互稱 SSOT 且規則衝突）
+> 問題：`LEARNING_PATH_REBUILD_SPEC.md`／`BLUEPRINT.md`／`DESIGN_SPEC.md` 都曾自稱「唯一／最終」規格，且對 hard gate、年段顯示、進階 XP、卡片寬度、audit 次數給相反要求。以下優先序為唯一裁決：
+
+| 階 | 文件 | 規範範圍（normative scope） | 衝突時 |
+|---|---|---|---|
+| 1 | **本檔 LEARNING_PATH_REBUILD_SPEC.md** | 學習路徑重構 ＋ 課綱/知識點 ＋ 導覽 ＋ 獎勵 ＋ 備考的**唯一 normative 來源** | 一律以本檔為準 |
+| 2 | 附錄 A `KNOWLEDGE_POINT_INVENTORY.md` ＋ `knowledge_points.json` | 知識點母體；**僅在本檔明示納入時** binding | 以本檔引用為準 |
+| 3 | `DESIGN_SPEC.md` ＋ 共用資產（`app.css` 等） | **設計系統/token 層的 SSOT**（§6.5 defer 給它）；**非**學習路徑政策來源 | 設計 token 以它為準；學習政策以本檔為準 |
+| 3b | `VISUAL_QA_BUILD_SPEC.md`（草稿） | **視覺驗收**契約的 repo-local 具現（§AC-VIZ 細化：iPad 基準/四角色逐 frame 簽核/fail-closed）；從屬本檔 | 視覺驗收細節以它為準；與本檔衝突以本檔為準 |
+| 4 | `../engineering/authoring/STANDING_AUDIT_SOP.md` | **站級常規稽核**流程（N=2 clean）；與本檔 5-clean 是**不同流程不同標的**，非衝突 | 常規稽核用 N=2；本 spec/新檔收斂用 5-clean |
+| 5 | `DICTATION_BUILD_SPEC.md` | 僅治理**聽寫系列**；該系列實作狀態以它自身為準（現為 DRAFT 未收斂） | 聽寫事務以它為準；本檔僅引為流程範本 |
+| 6 | `BLUEPRINT.md`／`STICKINESS_PROPOSAL.md`／`TS_MIGRATION_ROADMAP.md`／其餘舊檔 | **historical/background**；不具 normative 力 | 凡與本檔衝突（如 hard-gate、年段書架、「小四精通之路」牴觸 R-OPEN/R11）一律以本檔為準；引用須附「檔名＋章節＋sha」 |
+
+- **細則**：舊檔頂端加 superseded/scope banner、移除「唯一／最終」字樣（本次已處理 `BLUEPRINT.md`、`DESIGN_SPEC.md`）。任何實作 PR 若引用階 6 文件的規則，須在 PR 說明標注該規則不與本檔衝突，否則 reviewer DENY。
+- 範例：✅「依本檔 §6.3 safe_store 實作獎勵合併」；❌「依 BLUEPRINT §4.1 用 hard-gate 鎖國中內容」（牴觸 R-OPEN 不鎖定）；⚠「BLUEPRINT 的 `player_profile_v1` 單一 profile 概念與本檔不衝突 → 可沿用，但以本檔 §6.3 schema 為準」。
+
+### 0.5 Phase -1：規格與工具修訂（spec-only，先於 5-clean；B-10 + 嚴格審查 §7）
+> 外部嚴格審查 `LEARNING_PATH_REBUILD_STRICT_REVIEW.md` 要求：任何教材實作前，先完成下列「只修 spec＋工具、不碰教材內容」的前置，**全綠才可重啟 content_audit 5-clean**。狀態逐項更新：
+
+| # | 項目 | 對應 blocker | 狀態 |
+|---|---|---|---|
+| ① | `_kp_build.py` 無損 parser ＋ `verification_status/authority_refs/verified_as_of/verified_by` 欄 ＋ round-trip 守衛 | B-01/H-04 | **✅ 完成（2026-10-26；pending 27→64 救回、`--check` exit 0）** |
+| ② | §0.4 precedence table ＋ 舊檔 superseded banner | B-09 | **✅ 完成（本節）** |
+| ③ | 修已確認錯誤知識＋安全口訣（high-risk 雙 reviewer） | B-05/B-06/P0/P1 | **✅ 完成（2026-10-26）**：4 域專家＋對抗式 reviewer 定稿 16 類修正——滲透(溶質濃度)、生物需求(去普世律)、ATP(30–32/發酵)、河流地形(沖積扇出山口)、水平衡(入滲不重複計)、平面鏡(保留會考「左右相反」微增)、probability-ladder(雙軸)、stative-verbs(動態例外)、a/an(起始發音)、辨辯**辮**瓣、CRC 四類權利vs四大一般原則(拆條)、辛普森(去倖存者重複)、Dunning-Kruger(去標籤+爭議)、損失趨避/沉沒成本(拆)；**REJECT 2**(發酵≠無氧呼吸超綱致混淆、平面鏡前後反轉對會考過深)。**安全 4 類**(火場/瓦斯/CPR/急救拆 bleeding+burn+choking)去危險化並**一律維持 `(待核)` pending**(官網 live 擷取失敗、authority_refs 待人工覆核)。另修 `網絡` gate 誤報(移出 PRC denylist=歧義詞,簡體仍擋,已紅隊)。manifest 3092→3096、pending 68、exit 0。 |
+| ④ | 清 pending：5 域課綱 team＋對抗式 reviewer 逐條分類；`fact_check_ledger.json`（B-07）有登記官方源者→verified | B-02 | **🟡 大幅推進（2026-10-26）**：pending 68→**20**（解消 48）。ENRICH→t_enrich 退出 minimum；reviewer AGREE 的 in-scope/verified 去待核；**reviewer ESCALATE（無官方 PDF 無法定）＋KEEP-PENDING＋7 high-risk 一律保守留 pending（不假裝 verified）**。ledger 首筆 verified＝識字量（課綱 Ab-III 認讀2700/書寫2200）。剩 20 pending 待 ⑥ 官方 L3（使用者指示「照規劃、不無限上綱」，不逐一抓領綱）。**`AC-KP-VERIFY` 已入 §11.A（R2-03）**：binding minimum 必 `verified`（pending＋unverified 皆擋，不得以無待核字樣冒充）；`binding_unverified` 已輸出至 manifest meta（目前 3078），此數歸 0 為 Phase 0 ship-gate。 |
+| ⑤ | exam 改**受控 enum**（清掉分科英文與自由字串）＋重分 minimum vs enrichment（beyond 旗標） | B-03/B-04/H-03 | **✅ 完成（2026-10-26）**：`_kp_build.py` 加 `VALID_EXAMS` 受控詞彙 gate（擋自由字串/裸「分科」/「分科-英文」，exit≠0）＋`fact_check_ledger` 接線（B-07）。**26 筆分科英文全清零**（分科測驗無英文科）→學測/無；**t_enrich 0→17**（相對論/卡諾等選修在 minimum、克利金/分部積分/能斯特等逾綱→enrich），beyond 旗標恢復意義。manifest 3096、exit 0、round-trip 20=20、簡體/concreteness 全綠。決策與來源彙整於 `authoring/audit_scratch/kp_reclass_decisions.md`。 |
+| ⑥ | claim/question/visual/source 四層證據 schema ＋ gate；可計算驗證用**獨立 oracle**（生成器與驗證器不共用公式） | B-07/B-08 | **✅ 設計完成（2026-10-26）**：§6.8.1 四層證據粒度（KP/claim/question/visual）＋獨立 oracle（B-08 堵自證）＋風險分級最低驗證＋`recheck_after`＋部署 hash 一致；對應 gate 清單列入 §6.8.1（Phase 1 建+各自紅隊）。schema 已與 §6.2.2 單元內容欄位對接。 |
+| ⑦ | 單一 `verify:learning-path` orchestrator（固定順序跑全 gate） | H-10 | **✅ 完成（2026-10-26）**：`tools/verify_learning_path.py` 串 3 個現有確定性 gate（concreteness／簡體PRC／manifest B-01+B-04 round-trip），一條命令看全綠；Phase 1 待建 gate 以 roadmap 列出（不計成敗）。 |
+| ⑧ | repo-local `VISUAL_QA_BUILD_SPEC.md` ＋ anti-drift 四錨點 | B-10 | **🟡 草稿（2026-10-26；相位已釐清，R2-08）**：**Phase -1 交付物＝repo-local `VISUAL_QA_BUILD_SPEC.md` 草稿存在（已達）**，使 fresh-clone 不依賴 user-home。**render harness／四角色 signoff gate／guard hook／手機(390/375px)＋200%zoom＋鍵盤＋VoiceOver/reduced-motion 可及性驗收矩陣＝Phase 1 deliverable（非 Phase -1 blocker）**；該 spec 自身的 5-clean＋紅隊亦在 Phase 1 子軌。anti-drift 四錨點（carrier echo／memory 指標／專案 hook／規則檔）＝spec **定案時**交付（§0.2），非 Phase -1。**不再兩種說法並存。** |
+
+- **DONE-GATE（Phase -1，R2-02/03/08 釐清）**：Phase -1 完成＝(a) `verify_learning_path.py` 現有確定性 gate 全綠（`_kp_build.py --check` exit 0 含附錄同源/ledger 語意/round-trip；concreteness；簡體）＋(b) canonical inventory 單一來源一致（R2-01）＋(c) `AC-KP-VERIFY` 與四層 correctness AC **已定義入 §11.A**（R2-03/06）＋(d) `VISUAL_QA_BUILD_SPEC.md` 草稿入 repo（R2-08）＋(e) anti-drift 錨點於定案時交付。**注意：`verify_learning_path --phase=-1` 目前誠實回報 PARTIAL（10 待建 gate＋3078 binding-minimum 未 verified），故 Phase -1 尚未 DONE**。**「binding minimum 全部 verified」「四層/Visual QA gate 建成並紅隊」「5-clean」屬 Phase 0 定案 ship-gate，不是 Phase -1 門檻**——不得以 pending=0 代替 verified（R2-03：pending 與 unverified 皆須擋）。
+- 範例：✅「pending 由領域專家查教育部課綱後標 verified＋`authority_refs`」；❌「把 64 pending 直接改 verified 讓 gate 綠」（假裝 verified，審查明禁）；⚠「大學內容如 CRISPR 移 `t_enrich/beyond=true` 暫不 gating，合法」。
+
+### 0.6 第二輪複審（Kiro／另一模型）處置（2026-10-26）
+> 使用者把本 spec 交 Kiro 做第二意見，Kiro 第二輪（見 `LEARNING_PATH_REBUILD_STRICT_REVIEW.md` §0）抓到數個**真**問題，多為本次新引入。逐項處置（可稽核）：
+
+| Kiro R2 | 判定 | 處置 |
+|---|---|---|
+| R2-01 binding 母體分裂（附錄 MD 3092 vs JSON 3096、含舊危險文字/舊 first-aid/41 title 不符） | 實錘 | **已修**：`_kp_build.py` 改為**附錄 Markdown 從同一 rows 生成**（單一 canonical source＝slices）；`--check` 比對 committed 附錄/JSON 列數，分裂即 exit≠0。附錄重生＝3096、舊危險文字 0、新 id 入檔。 |
+| R2-02 `verify_learning_path` 假綠（未達 DONE 仍印 ALL GREEN） | 實錘（本次引入） | **已修**：orchestrator 改 **fail-closed**，Phase -1 未完成一律 `PARTIAL ⛔`＋exit 1（列 10 待建 gate＋3078 未 verified）；`--gates-only` 才單看現有 gate。 |
+| R2-03 `pending=0` 可被 unverified 繞過 | 實錘 | **已修**：新增 **`AC-KP-VERIFY`**（§11.A）＝binding minimum 必 `verified`，pending 與 unverified **皆擋**；manifest 輸出 `binding_unverified`。 |
+| R2-04 ledger 可用任意非空物件取得 verified／未來日 | 部分實錘 | **已修（首版語意檢查）**：`_kp_build` 擋空 sources／空 verified_by／未來 `verified_as_of`／未知 id。**註：Kiro 稱「未來日」係其環境時鐘＝2026-09-04；本專案權威注入真實時間＝2026-10-26（今天），故 2026-10-26 非未來**。完整 `ledger_schema_gate`（含 high-risk≥2 獨立 reviewer）列 Phase 1。 |
+| R2-05 40 個 id-tier mismatch／三契約矛盾 | 實錘 | **已修**：§4 **正式廢除「第 2 段＝tier」**，宣告 **id opaque**（不改 id、tier 只讀 manifest、禁由 id 推斷）；40 例 mismatch 合法非缺陷。 |
+| R2-06 四層 correctness 僅 prose 未入 AC | 實錘 | **已修**：`AC-CORRECT` 強化綁入 §6.8.1 四層＋獨立 oracle＋六個 Phase 1 gate（claim/question/generator/visual/freshness/release-hash）。 |
+| R2-07 無真正 source_registry | 實錘 | **已採納（排程 Phase 1）**：`source_registry.json`（source_id/publisher/version/locator/accessed_at/authority_class/fingerprint/recheck_after）＋ ledger 只引 source id；本輪先立 ledger 首版。 |
+| R2-08 Visual QA 相位矛盾＋手機/A11y 缺席 | 實錘（本次引入矛盾） | **已修**：§0.5 ⑧ 釐清——Phase -1 交付＝repo-local spec 草稿存在；harness/signoff-gate/hook＋**手機 390/375px＋200%zoom＋鍵盤＋VoiceOver/reduced-motion 驗收矩陣**＝Phase 1 deliverable；不再兩說並存。 |
+| R2 HIGH：DEPTH-STD 大包 KP／跨域 ownership／exam 未版本化（含「探究」混制度能力）／format gate backtick 繞過／門檻`≤~15`／AC-PERF 基準／fermentation·平面鏡措辭 | 採納 | 排入 backlog（多屬 Phase 1 或內容強化）；fermentation/平面鏡措辭與 exam 版本化（`assessment_refs`）列 spec 待辦，`探究` 是否自 exam enum 拆出另記。 |
+
+> **Kiro 第二輪總判定仍 CHANGES REQUIRED／DRAFT**：真 blocker＝「binding 資料分裂」＋「驗證器假綠」兩項已於本輪修復；其餘（binding minimum 逐條 verified、四層/Visual QA gate 建成並紅隊、source_registry、DEPTH-STD 拆包）為 Phase 0/1 工作。**維持 DRAFT、不重啟 5-clean、不進實作**，待再一輪複審確認 R2 處置無回歸。
+
+#### 第三輪（Kiro T3）處置（2026-10-26）— 攻擊 R2 修法的殘留洞
+> Kiro T3 確認 R2-01/02 目前資料已同步、不再假綠，但抓到 completion 判斷仍可繞過等殘留洞。逐項：
+
+| Kiro T3 | 判定 | 處置 |
+|---|---|---|
+| T3-01 Phase -1 驗證器要求 Phase 1 產物（時序死結） | 實錘 | **已修**：建 `authoring/acceptance_criteria.json` phase registry；`verify_learning_path.py` 改**依 phase 只驗該階段產物**（`--phase=-1` 不再要求 Phase 1 gate/資料），死結解除；`--phase=-1` 現 COMPLETE。 |
+| T3-02 orchestrator 只 `exists()`＋信任 cached meta | 實錘 | **已修**：registry gate **實際執行**並驗 exit；`binding_unverified` **從 live `items[]` 現算**（先經 `--check` 擋竄改），不信 cached `meta`。紅隊：meta 竄改為 0 → 仍 PARTIAL。 |
+| T3-03 `--check` JSON 只比筆數＋`except:pass` 吞錯 | 實錘 | **已修**：`--check` 改**完整 generated JSON 逐字串 deep-equal**＋parse 失敗即 FAIL。紅隊：改一欄 title／meta 歸零 → 皆 FAIL，還原 → clean。 |
+| T3-04 spec 仍寫 3092＋manifest schema 過期 | 實錘 | **已修**：全 spec 統計 3092→**3096**（by_domain 實算：學科 2712＋life 384）＋標「統計由 generator 產、勿手寫」；manifest schema 補 `verification_status/note/authority_refs/verified_as_of/verified_by`。 |
+| T3-05 ledger 弱檢查即授 verified | 實錘 | **已修**：parser 只授 **`provisionally_verified`**（非 release-grade）；日期改嚴格 ISO parse（禁「0000」）；release-grade verified 待 Phase 1 `ledger_schema_gate`＋`source_registry`。AC-KP-VERIFY 要求 `provisionally_verified` 亦＝0。 |
+| T3-06 orchestrator 未由 AC registry 驅動 | 實錘 | **已修**：`acceptance_criteria.json` 為單一來源，orchestrator 與（後續）§11.A 皆由它生成/交叉檢查；coverage_gate 等已歸正確 phase。 |
+| T3-H（DEPTH-STD 大包／fermentation·平面鏡措辭／跨域 ownership／exam 版本化「探究」拆／backtick 繞過／`≤~15`／Visual QA 子規格手機 matrix／工具註解 opaque） | 採納 | 工具 docstring/ID_RE 已改 opaque（T3-H8）；其餘入 Phase 0/1 backlog（DEPTH-STD 拆包、`assessment_refs` 版本化、科學措辭微調、子規格補手機/A11y matrix）。 |
+
+> **第三輪總判定仍 CHANGES REQUIRED／DRAFT**：verifier 執行語意、phase 時序、完整 JSON equality 已修並紅隊；真正 ship/定案仍待 Phase 0（binding minimum 全 release-grade verified＋anti-drift＋gate 建成紅隊）→ 才重啟 5-clean。**不進教材實作**。
+
+#### 第四輪（Kiro F4）處置（2026-10-26）— release orchestration 可繞過
+> F4 確認 T3-03/04 CLOSED，但最高風險轉移到 release orchestration（`--release` 降級、release 非累積、registry 未覆蓋 23 AC、Phase 0 不可達）。逐項：
+
+| Kiro F4 | 判定 | 處置（皆紅隊） |
+|---|---|---|
+| F4-01 未知/舊 CLI 參數靜默忽略，`--release` 取得 exit 0 | 實錘 | **已修**：改嚴格 `argparse`，未知參數 exit 2；`--release`＝`--phase=release` 正式 alias；第一行/`--json` 回報實際 mode。紅隊：`--release`→跑 release cumulative PARTIAL；`--gates-only`→exit 2。 |
+| F4-02 release 只跑一個 selftest、不累積、不驗 23 AC | 實錘 | **已修**：orchestrator **cumulative**（`--phase=release` 跑 -1→0→1→release 全部，本輪 24 項 FAIL→PARTIAL）；`release-artifact` check 需 `--release-id`（immutable）跑真實 hash，非 selftest。 |
+| F4-03 registry 非 23 AC root，可自刪 check | 實錘 | **已修**：registry 列全 23 `ac_id`＋orchestrator 內建**獨立 canonical 23-set** 三方 set-equality（`chk-registry-self`）。紅隊：刪 AC-NAV entry→FAIL。registry schema（唯一 id/合法 phase/kind）＋red-team 可執行化排 Phase 1。 |
+| F4-04 Phase 0 宣稱驗四錨點+source registry 實際只驗一 hook | 實錘 | **已修**：`AC-ANTIDRIFT` 改 `artifact-all` 列四錨點（hook/carrier/rule/memory 指標）＋新增 `chk-source-registry`＋`chk-ledger-gate`；全誠實 FAIL（未建）。存在性仍不足→hook/carrier 須壞例 DENY 好例 ALLOW（Phase 0 紅隊）。 |
+| F4-05 release-grade verified 無合法產生路徑、Phase 0 不可達 | 實錘 | **已修**：§6.8.1 定義**唯一 promotion flow**，且把 `ledger_schema_gate`＋`source_registry` 歸 **Phase 0**（非 Phase 1），`AC-KP-VERIFY` 在 Phase 0 即可達；`_kp_build` 永不寫 `verified`。 |
+| F4-06 phase 非 cumulative | 實錘 | **已修**：`--phase=X` 跑 phase_order ≤X 全部（見 F4-02）。 |
+| F4-HIGH 8/9 gate 用環境 python3／空 glob 無錯 | 採納 | **已修**：gate 用 orchestrator `sys.executable`（`PY`）／`node`（`NODE`）；`GLOB:` 空展開且 `allow_empty:false`→FAIL。其餘（DEPTH-STD 大包拆、fermentation/平面鏡措辭、`探究` 自 exam enum 拆、ownership、backtick 繞過、`≤~15`、子規格手機/A11y matrix）入 Phase 0/1 backlog。 |
+
+> **第四輪總判定仍 CHANGES REQUIRED／DRAFT**：release orchestration 的降級/非累積/registry 可刪/verified 不可達已修並紅隊；`--phase=-1` COMPLETE、`--phase=0/1/release` 誠實 PARTIAL。定案仍待 Phase 0 全綠（建 source_registry＋ledger_schema_gate＋四錨點 hook 並紅隊→promote 3079 筆→binding verified=0）→ 才重啟 5-clean。**不進教材實作**。
+
+#### 第五輪（Kiro F5）處置（2026-10-26）— selftest≠真證據、契約自檢可被自刪、promotion 無模組
+> F5 確認 F4 全改善，但紅隊指出 release 多跑 selftest（29 中 15）、`chk-registry-self` 可被 registry 自刪、promotion 只有 prose。逐項：
+
+| Kiro F5 | 判定 | 處置（皆紅隊） |
+|---|---|---|
+| F5-01 release 跑 gate selftest 非真實教材驗收 | 實錘 | **已修**：每個 AC 分 **`qualification_command`（selftest／正例PASS壞例FAIL）** 與 **`evidence_command`（對 immutable `--release-id` 的真實資料）**；`--phase≤1` 跑 qualification、**`--release` 只跑 evidence，selftest 不計入 release PASS**。 |
+| F5-02 registry 自檢可被自刪 | 實錘 | **已修**：orchestrator 讀 registry 後、選 checks 前**無條件**跑 hardcoded `bootstrap_validate()`（23 AC exact set＋每個恰一次、required helper ids、phase_order、合法 phase/kind）——**不是可刪的 registry entry**。紅隊：刪任一 AC 或 helper→exit 2。 |
+| F5-03 verified promotion 無可達資料流 | 實錘 | **已修**：建具名模組 **`tools/promote_verified.py`**（pure）讀 ledger＋`source_registry.json`→產 **`authoring/verified_overlay.json`**（綁 manifest_sha）；`_kp_build` 永不寫 verified；`AC-KP-VERIFY` 從 overlay∩當前 sha 現算。目前可執行、0 verified（source_registry 未建，honest 可達）。 |
+| F5-04 23 AC 只有名稱覆蓋非語意覆蓋 | 實錘 | **已修**：registry 支援 `components[]`——`AC-CORRECT` 拆 6 子 gate（claim/question/generator/visual/freshness/release-hash）、`AC-SPEC` 拆 concreteness＋5-clean 紅隊 ledger、`AC-UNIT-2` 改每頁 5-clean（非 `--mcq-cue`）、`AC-LANG-1` evidence 掃全站 html（非只 slices）、`AC-ANTIDRIFT` 改壞例DENY好例ALLOW gate。 |
+| F5-05 Phase 0 驗法仍不足 | 採納（排 Phase 0 實作） | source_registry 需 schema/fingerprint/freshness（已入 §6.8.1 flow）；anti-drift 需真 DENY/ALLOW（evidence_command 待建）；no-grade/no-backend evidence 掃真實 html（registry 已設 `GLOB:*.html`＋`allow_empty:false`）。 |
+| F5-06 `--json` 不純、`--help` exit 2 | 實錘 | **已修**：人類 log 全 stderr、**stdout 只純 JSON**；`--help` 由 argparse exit 0，僅解析錯誤 exit 2。 |
+
+> **第五輪總判定仍 CHANGES REQUIRED／DRAFT**：orchestration 契約已達 architecturally complete（qualification/evidence 分離、無條件 bootstrap、具名 promotion、components 語意覆蓋、pure json）。**殘留 PARTIAL 已收斂為「Phase 0/1 真實資料與 gate 尚未建」**——依本報告原則「不把未實作當缺陷」，此為下一哩路（Phase 0：建 source_registry＋各 evidence gate＋anti-drift hook 並紅隊，promote binding minimum 至 verified），非契約缺陷。Phase 0 全綠才重啟 5-clean。**不進教材實作**。
+
+#### 第六輪（Kiro F6）處置 ＋ **CONTRACT FREEZE**（2026-10-26）
+> F6 裁決：「管理方向正確，技術結論早一步」——採納「停止空轉、修完最後有限契約洞即 freeze、進 Phase 0」。先關 5 個有限、可重現的契約洞並紅隊，然後 **contract freeze，不再做第七輪泛化審查**。
+
+| Kiro F6 | 判定 | 處置（皆紅隊 fixture） |
+|---|---|---|
+| F6-01 Phase 0 跑 qualification 非 evidence | 實錘 | **已修**：`--phase=X`／`--release` 預設跑 **evidence_command**（真實資料）；另設 `--qualify` 單獨跑 gate 自測。紅隊：`--phase=0` 現跑 evidence。 |
+| F6-02 verified_overlay 可手工偽造 | 實錘 | **已修**：AC-KP-VERIFY metric **先重跑 `promote_verified.py --check`**（重算比對），不一致即 refuse。紅隊：手填 3079 ids 偽造 overlay→AC-KP refuse。 |
+| F6-03 scope/fact evidence 未分離 | 實錘 | **已修**：ledger 拆 `scope_source_ids[]`＋`fact_source_ids[]`；`promote_verified` 要求兩者皆通過才 verified（課綱不能代證事實）；§6.8.1 定為鐵律。 |
+| F6-04 high-risk/reviewer 規則不全 | 實錘 | **已修**：`HIGH_RISK_PATTERNS` 補 `life.*.emergency`、`soc-civ.*`法律/權利、健康醫療；reviewer 正規化身分去重（相同字串＝一位），high-risk 需 ≥2 相異＋官方來源。 |
+| F6-05 release-id 未決定 snapshot | 實錘 | **已修**：`--release` 須 `--release-id`→解析 `releases/<id>/` immutable snapshot；GLOB／工具 `--root` 對 snapshot 展開。紅隊：無 id→exit2、snapshot 不存在→exit1（不退回當前 workspace）。 |
+| F6-補 bootstrap 未驗 critical component set | 實錘 | **已修**：`bootstrap_validate` 加 `REQUIRED_COMPONENTS`（AC-CORRECT 6 子、AC-SPEC 2 子）。紅隊：刪 AC-CORRECT.question→exit2。 |
+
+> **CONTRACT FREEZE：ACCEPTED（2026-10-26）**——Kiro 第七輪複核確認 F6 六項主修正＋三契約不一致全成立，僅餘一個 component 級粒度修正（CF-01），已修並跑完其三個固定紅隊，依其裁決「修完即可直接標 ACCEPTED，不需再送泛化審查」。verification/orchestration 契約至此**定稿凍結**。
+>
+> | freeze 條件 | 修法 | 固定紅隊 |
+> |---|---|---|
+> | F6第1：Phase 0↔5-clean 循環（AC-SPEC evidence 要 5-clean，但 5-clean 在 Phase 0 後） | 新增 `--ready-for-5clean`＝phase 0 但排除 finalization-role → 此為「可開始 5-clean」訊號，循環斷開。正序：ready-for-5clean 綠→5-clean→紅隊→AC-SPEC 綠→定案 | 見 CF-01（下） |
+> | **CF-01（第七輪唯一殘留）：`finalization_role` 原掛在整筆 AC-SPEC，`--ready-for-5clean` 以 entry 為單位移除 → 連 concreteness lint 也被跳過** | **把 `finalization_role` 從 AC-SPEC entry 下放到其 `5clean+紅隊 ledger` component；ready 過濾改 component 級**：ready 模式移除帶 finalization_role 的 component，但保留並必跑 `concreteness`（`spec_concreteness_lint.py`） | ①注入 concreteness 失敗→ready 模式 AC-SPEC FAIL、rc=1（還原後逐字相同、PASS）✅ ②ready 模式含 `concreteness`、**不含** `5clean+紅隊 ledger`（grep 命中 1/0）✅ ③一般 `--phase=0` 兩 component 皆要求→AC-SPEC FAIL/PARTIAL（ledger gate 尚未建）✅ |
+> | F6第2：release snapshot 混用 workspace（`--root` 被忽略仍 exit 0） | `_kp_build.py` 吃 `--root`、缺路徑 exit 2；`scan_simplified.py` 忽略 `--root/--release-id`、明確缺檔 FAIL；orchestrator binding metric 一律讀**受驗 root** 的 manifest/overlay（release 時＝snapshot，且 snapshot overlay 無法就地重算 promote→保守 refuse）；release-id 限 `[A-Za-z0-9._-]`＋path containment | `--check --root 不存在`→exit2、`scan 缺檔`→exit1 ✅ |
+> | F6第3：一般 KP scope 用 `need_official=False`（blog 可當 scope） | `scope_source_ok` 強制 `authority_class∈{official,standard}`（scope＝約定須課綱權威）；fact 仍走 evidence_method 不訴諸權威 | blog scope→拒、official→過 ✅ |
+>
+> 契約其餘已補且紅隊：qualification/evidence 雙軌、evidence-by-default、無條件 bootstrap（23 AC＋helper＋component set；刪 AC-CORRECT.question→exit2）、具名 promotion（scope/fact/risk＋偽造 overlay refuse）、pure json、`--help` exit0。**不再做泛化 harness 審查（無第八輪）**。
+> **下一步＝正式進 Phase 0（真實工作，非再改 harness）**：按 domain 批次建 `source_registry.json`（＋schema）與每筆 KP 的 scope_evidence／fact_evidence，建各 evidence gate 與 anti-drift hook（壞例 DENY 紅隊），由 `promote_verified` 依 `release-grade verified ＝ scope✓ ＋ fact/procedure✓ ＋ 風險 reviewer✓` 逐 domain 批次升 verified——**不得用同一份課綱來源把 3079 筆一次標 verified**。Phase 0 `--phase=0` 真綠→重啟 5-clean→紅隊→定案→(使用者確認)→實作。**仍不進教材內容實作。**
+
+### 0.6.1 Phase 0 進度（2026-10-26，使用者授權「照順序一路做到結束」後啟動）
+> 本節為 Phase 0 的 live 進度；完工＝`verify_learning_path.py --phase=0` 真綠（evidence 模式）。**狀態：進行中 PARTIAL（5 未過）**。
+
+- **基礎建設（結構件）＝已交付並各自紅隊**：
+  1. `authoring/source_registry.schema.json`（draft-07；每 evidence_method 的必填欄：curriculum_scope→official/standard；derivation/program/truth_table/corpus→reproduction_ref；cross_check→≥2 independent_refs；consensus_current→recheck_after）。
+  2. `authoring/source_registry.json`（seed；含真實擷取的官方 108 總綱 scope 來源，sha256-16＝`d9558786473e4cde`）。
+  3. `tools/ledger_schema_gate.py`（結構/語意層，`--selftest` 證有牙／`--verify` 真驗；紅隊：fact 訴諸 curriculum_scope→擋、high-risk<2 reviewer→擋、缺 fingerprint→擋）。
+  4. `tools/verify/`＝anti-fabrication 執行層：`math_checks.py`（sympy 符號/窮舉真驗）＋`run_check.py`＋`repro_gate.py`（以 `.venv` **重跑** reproduction_ref、比對指紋；紅隊：竄改指紋→擋、壞 ref→擋）。接入 registry 為 `chk-repro-gate`（Phase 0 gate）。**另（2026-10-27）建 `cross_check_gate.py`**＝cross_check 事實的 anti-fabrication 對應物：逐 independent_ref **真抓取**、確認登記 `quote` 出現在抓到內容＋≥2 相異 publisher，否則 FAIL（補上「cross_check 原本只結構檢查、可杜撰引文」的洞，見 `GATES_HOLES_LEDGER.md` H-2，`--selftest` 5 壞例全 DENY 紅隊過）；第一批 cross_check 產生時接成 `chk-cross-check-gate`＋promote 要求通過。
+  5. **AC-ANTIDRIFT 四錨點全交付並紅隊**（`tools/anti_drift_gate.py` `--verify`／`--selftest` 綠）：(a) 專案 `.claude/hooks/lp-reanchor-guard.py` fail-closed hook＋`settings.json` 掛載（未重讀 spec 即宣告收斂/定案→**DENY**、一般編修不誤擋、壞輸入 fail-open）、(b) carrier `[learning-path-sop]` echo、(c) `~/.claude/rules/learning-path-sop-do-not-delete.md`、(d) MEMORY.md 指標。
+- **內容驗證（逐 domain 升 verified）＝進行中（2026-10-27 01:15）**：**release-grade verified 1203 筆**。兩條合法證據路徑並行：
+  - **(A) 可重跑自驗（derivation/program/truth_table）**：math 259 ＋ 物理 164 ＋ 化學 81 ＋ 生物/地科量化 64 ＋ 地理量化 28 ＋ 經濟 40 ＋ 生活邏輯/理財/統計 25。`repro_gate` 以 `.venv` 重跑比對指紋，造假/跑不過即 FAIL。
+  - **(B) expert_review（技能/主題型 KP，無單一可重現硬事實）**：scope＝官方課綱 ＋ **雙 agent 獨立對抗式審查**（educator＋adversarial-reviewer，皆 PASS 且皆 is_hard_fact=False 才採）→ review 記錄檔綁 sha → promote。已驗 eng 技能/字彙主題 79（skills-01 的 43 ＋ grammar-01 的 36 技能型）、chi 技能 109。高風險（安全/法律/醫療）**不走此路**（promote 要求 consensus_current/cross_check＋≥2 相異 reviewer）。
+  - `--phase=0` AC-KP-VERIFY 誠實顯示 **binding 3079−1203 ＝ 1876 待驗**（技能/探究/應用型兩批經雙審 expert_review 採計：`review-skill-inquiry-01` 113＋`review-skill-life-01` 97；夾帶事實主張者退回 cross_check）。**expert_review 技能脈已竭**——剩 1876 幾乎全為 descriptive/rule 硬事實（sci 619／soc-geo 295／chi 244／soc-civ 241／eng 215／life 154〔含 high-risk safety/sel 109 走 consensus〕／soc-hist 107），須真實來源 cross_check，最慢段。eng 文法 210 筆 is_hard_fact 規則型（雙審皆 PASS 但須走 cross_check 真實來源，非 expert_review）＋1 筆 FAIL（mis- 誤標否定字首，入 `content_defect_backlog.json`）＋3 筆 hf 歧見均已退回。**禁一次全標、禁 trivial assert 冒充**；循環/套套邏輯一律移除；reviewer 標 is_hard_fact=true 者退回走 cross_check。驗證模組 `tools/verify/*.py`、review 記錄 `authoring/reviews/*.json`。剩餘以硬事實 cross_check（需 ≥2 真實權威來源）與安全 consensus 為主，屬最慢段。
+- **Phase 0 harness ＝已 100% 建成並紅隊（2026-10-27 00:35）**：
+  - (ii) ✅ `tools/no_grade_label_gate.py`＋`tools/no_backend_gate.py` 建成並紅隊（`--selftest` 皆 PASS：壞例 DENY／好例 ALLOW／原則兜底抓清單未列向量）。`--qualify` 全綠。evidence：**AC-NOGRADE 連 legacy 都 PASS**（根目錄 learner 可見文字無年段標示，`年級` 命中皆 CSS 註解）；AC-NOBACKEND evidence 誠實 FAIL（legacy `cses_hints.html`＋`index.html` 共 406 外部向量＝字型 CDN／遠端資料，屬 rebuild 時清理）。已知漏洞記於 `authoring/GATES_HOLES_LEDGER.md`（H-1：JS 注入 learner 文字未掃，重構時補 render-after scan）。
+  - (iii) ✅ AC-LANG-1 evidence 收斂＝PASS。做法：`scan_simplified.py` 加 `SCOPE_EXCLUDE_LANG`（僅豁免「必須 zh-TW」斷言，**簡體/PRC 掃描仍全域**；紅隊：簡體塞進豁免檔仍被抓 FAIL）；`cses_hints.html`＝正當英文（競程，排除於 K-12）、`googlea8c8d21b7f34ee51.html`＝Google 驗證 stub（53B 非頁面）。
+  - (iv) ✅ `tools/spec_converge_gate.py` 建成並紅隊（`--selftest` 7 壞例全 DENY：不足5/連續被打斷/sha不一致/紅隊未過/綁舊sha/無紅隊/未來日；好例 ALLOW）。`--verify-ledger` 誠實 FAIL（spec 尚未開始 5-clean/紅隊，屬定案終點）。
+- **仍待（Phase 0 完工的唯一實質內容條件）**：**(i) 其餘 2083 binding-minimum 逐 domain 真驗**——descriptive/rule 硬事實為主，須 cross_check ≥2 **真實註冊權威來源**（chi→教育部辭典、soc-hist→多方交叉防黨國史觀、安全/SEL→consensus_current＋≥2 reviewer…），**不得造假、最慢段**；eng 文法 210 筆規則型已雙審皆 PASS 但仍須走 cross_check 真實來源（agent 意見屬 expert_review，不足證硬事實）。這是唯一還需要大量真實查證的工作；harness 不再是瓶頸。AC-NOBACKEND 的 legacy 外部依賴清理歸入實作重構階段。
+- **順序提醒**：Phase 0 全綠 → content_audit 5 連續 clean → 紅隊 → spec 定案 →（使用者確認）→ 實作。
 
 ## 1. 目的與範圍
 
@@ -187,7 +326,7 @@
 > §11 coverage gate 複製其「清單驅動完整度」的做法，杜絕「挑幾個做做、其餘略過」的淺薄實作。
 
 - **binding 列舉 ＋ 穩定 id**：附錄 A 每一條知識點都配**穩定字串 id**，**依域分兩種格式**（別宣稱單一格式）：
-  - **學科域**（math／chi／eng／sci／soc-hist／soc-geo／soc-civ）：`<domain>.<tier>.<strand>.<slug>`，第 2 段＝tier（例 `math.t_mid.equation.quadratic-formula`、`sci.t_adv.phys-kin.vector-kinematics`）。
+  - **學科域**（math／chi／eng／sci／soc-hist／soc-geo／soc-civ）：`<domain>.<tier-slug>.<strand>.<slug>`（例 `math.t_mid.equation.quadratic-formula`）。**⚠ id 為 opaque 穩定識別碼（R2-05 定案 2026-10-26）**：第 2 段僅為「建立時的 tier 命名痕跡」，**非權威、不保證等於現行 tier**；**tier 一律且只讀 manifest `tier` 欄**，任何程式/報表/coverage **禁止由 id 前綴推斷 tier**。重分類只改 manifest `tier`、**不改 id**（id 永久不變以保穩定引用），故 id 段與 tier 欄**容許不一致**（目前 40 例，皆合法，非缺陷）。「第 2 段＝tier」之舊契約**正式廢除**。
   - **跨課綱 life 域**：`life.<category>.<strand>.<slug>`，第 2 段＝能力類別（safety／sel／learn／think／digital／data／compute／finance／sustain／innovate；例 `life.safety.online.grooming`）；**life 的 tier 不放 id、只存 manifest `tier` 欄**。
   兩域的 `tier`（t_base／t_mid／t_adv／t_sub／t_enrich）皆為**內部難度階**（非學制、learner 端不顯示，R11）；id 一經指派不得改語意（與 §7 獎勵 id 同哲學）。**解析 tier 一律讀 manifest `tier` 欄，不得純以 id 位置推斷。**
 
@@ -202,11 +341,11 @@
   | `t_enrich` | 超綱延伸層（跨學科、大學入門；英文無上限） | beyond（鼓勵但不列 coverage 門檻；`beyond=true ⟺ tier==t_enrich`） |
 
   > 「約當」僅為內部難度定位，**不是** learner 端顯示字串（R11）；coverage gate 只對 `beyond=false`（即 `t_base`／`t_mid`／`t_adv`／`t_sub`）的 id 嚴格要求（AC-COV-1）。
-- **機器可讀 manifest（已產出；Phase 1 起正式納管/驗證）**：已由附錄 A 建置時 emit 於 `authoring/knowledge_points.json`（已存在、已驗證 count=3092），一列一 id，欄含
-  `{id, domain, tier, strand, title_zh, exam, beyond, src, line, status, unit_ids[]}`（與 `tools/_kp_build.py` 實際輸出一致：`exam` 為單一字串如「無/會考/學測/分科-生物」；`beyond` 為布林，`beyond=true ⟺ tier==t_enrich`（超綱，R13）；`unit_ids[]` 由實作填）。此 manifest 是覆蓋追蹤與 §6.2 unit metadata 的連結鍵。
+- **機器可讀 manifest（已產出；Phase 1 起正式納管/驗證）**：已由附錄 A 建置時 emit 於 `authoring/knowledge_points.json`（已存在、已驗證 count=3096（統計由 generator 輸出、勿手寫——T3-04）），一列一 id，欄含
+  `{id, domain, tier, strand, title_zh, exam, beyond, verification_status, verification_note, authority_refs[], verified_as_of, verified_by[], src, line, status, unit_ids[]}`（verification 欄見 §6.8/§6.8.1/AC-KP-VERIFY；`verification_status∈{verified, provisionally_verified, pending, unverified}`，T3-05）（與 `tools/_kp_build.py` 實際輸出一致：`exam` 為單一字串如「無/會考/學測/分科-生物」；`beyond` 為布林，`beyond=true ⟺ tier==t_enrich`（超綱，R13）；`unit_ids[]` 由實作填）。此 manifest 是覆蓋追蹤與 §6.2 unit metadata 的連結鍵。
 - **涵蓋全域（§2 R12）**：附錄 A 含 (甲) 學科課綱（國小/國中/高中內部 tier）＋ (乙) 跨課綱生活與核心能力
   （安全自保／SEL／學會學習／思考推理／數位媒體素養／資料素養／運算思維科技／理財／永續世界公民／創新）。
-  目前量（見附錄 A／manifest，已完成）：**總計 3092 條**＝學科 2711（chi 355／eng 296／math 263／sci 986／soc-civ 322／soc-geo 355／soc-hist 134）＋跨課綱 life 381。
+  目前量（見附錄 A／manifest，**統計由 generator 產出、勿手寫**，T3-04）：**總計 3096 條**＝學科 2712（chi 355／eng 296／math 263／sci 986／soc-civ 323／soc-geo 355／soc-hist 134）＋跨課綱 life 384（步③ 新增：first-aid 拆 bleeding/burn/choking、soc-civ.crc-principles、life.sunk-cost）。
 - **gap（附錄 A − §5.5 現況）**：主要落在**高階學科**（三自然科無高階層、數學無微積分/三角/向量/矩陣/複數/圓錐、
   國文高階僅 primer）與**社會分流**；國小/國中段以「接線＋補強」為主。gap 明細 = coverage gate 首次執行時所有 `status!=done` 的 id 清單。
 
@@ -222,7 +361,7 @@
   各跨 `t_base` 基礎／`t_mid` 中階／`t_adv` 高階／`t_sub` 分科深階 四內部 tier（定義見 §4 tier 語意對照表），
   並視需要加收 `t_enrich` 超綱延伸（beyond）。**跨課綱域**：安全自保／SEL／學會學習／思考推理／數位媒體素養／資料素養／
   運算思維科技／理財／永續世界公民／創新（section G）。
-- **原 598 條粗胚已被取代（完成式）**：10 域 expert 平行深掘已完成，附錄 A 現為 **3092 條**（各 slice count 已重列，見附錄 A 檔首與 manifest）；598 僅為歷史起點，不再引用。
+- **原 598 條粗胚已被取代（完成式）**：10 域 expert 平行深掘已完成，附錄 A 現為 **3096 條**（各 slice count 已重列，見附錄 A 檔首與 manifest）；598 僅為歷史起點，不再引用。
 - **spec 出場 gate（硬性）**：附錄 A 未完成「全 slice 深掘到 DEPTH-STD ＋ 每 slice 獨立審查 ＋ content_audit 5 clean ＋ 紅隊」，
   **spec 不算定案、不得進實作**（§12）。這確保「清單一開始就在 spec 裡、且夠深」。
 
@@ -308,7 +447,7 @@
 - **R-OPEN 不鎖定鐵律（learner 自由瀏覽）**：
   - **任何節點/頁隨時可開**：**嚴禁** disabled／灰掉不可點／隱藏於鎖頭／跳「尚未解鎖」擋下。先備未達**只**顯示**非強制**的黃色提示條「這課會用到 ○○、△△；還不熟的話建議先看 →（連結）」，但內容照常全開、可直接學。
   - **隨時可瀏覽全部內容並直達（但「瀏覽全部」＝分區逐層 drill-down，非一屏攤開全部）**：除漸進揭露的預設視圖外，**永遠提供**一個常駐入口能看到「到底有什麼」並點進任一頁——至少含 (a)「瀏覽全部／完整目錄」：一棵**可達全站**的樹，但**預設各層收合、一次只展開點到的那一區**（科目→strand→級別→單元逐層點開），**嚴禁**初次或任何單一動作把全科目×strand×級別×單元一次攤在同一畫面（會「一眼不想看」，與 ND 漸進揭露同一鐵律）；(b)**搜尋**（打關鍵字跳任一單元/頁）；(c) 地圖可自由縮放平移到任何區。設計意圖：**可達性 100%（任何內容都看得到、到得了），但呈現永遠分區逐層、每屏資訊量受控**。漸進揭露是**預設聚焦**，不得成為「看不到／到不了其他內容」的牢籠；「瀏覽全部」也不得反向變成「一屏傾倒全部」。
-    - ❌例：點「瀏覽全部」即展開 9 科 × 所有 strand × 所有級別 × 所有單元節點（~600）於同一長頁（資訊轟炸，違 ND；樹葉＝單元節點，見 §6.1「節點＝unit」，非列舉 3092 知識點）。✅例：點「瀏覽全部」先只見 9 個科目列（收合）；點「數學」才列其 strand（仍收合）；點「數與量」才列初/中/高級；點某級別才列該頁單元——每一步只增一層、每屏皆可一眼掃完。
+    - ❌例：點「瀏覽全部」即展開 9 科 × 所有 strand × 所有級別 × 所有單元節點（~600）於同一長頁（資訊轟炸，違 ND；樹葉＝單元節點，見 §6.1「節點＝unit」，非列舉 3096 知識點）。✅例：點「瀏覽全部」先只見 9 個科目列（收合）；點「數學」才列其 strand（仍收合）；點「數與量」才列初/中/高級；點某級別才列該頁單元——每一步只增一層、每屏皆可一眼掃完。
   - **起點自選、不強制由初級起**：learner 可**自選起點或直跳任一級別**（例：國中程度者直接進「中級」，不被逼先看「初級」——強逼回頭看簡單的只會讓人不想看）。系統**不預設把人丟到初級**；可選的「快速定位/小測」僅為**建議**用、可略過，絕不作為開啟門檻。
   - 動機哲學：引導而不設限——給方向與鷹架，但尊重自學者隨時跳看的自由（§8 #7 心理醫生、#4 學習科學、#10 PM）。
 - **路徑而非平面清單**：提供「建議學習順序」的視覺化 roadmap（可玩、具成就感），但允許自由探索。
@@ -339,12 +478,12 @@
 
 ### 6.2 單元設計規格（每個 Unit 的統一骨架）
 - **粒度與檔案映射鐵律（R-GRAIN；杜絕「一知識點一檔」誤解與檔名爆炸/連鎖改名）**：
-  - **知識點 ≠ 單元 ≠ 檔案**。知識點（附錄 A 3092 條）是**標籤**（micro-skill id），用於覆蓋追蹤（manifest `unit_ids[]`），並作為 §9 知識隔離／先備計算（K(U)=K_pre∪teach(U)）與 §6.6 rubric⑦「真教真考」綁定的**連結鍵**；但**不作為檔案/頁的切分依據**——**嚴禁「一個知識點生一個 HTML 檔」**。
+  - **知識點 ≠ 單元 ≠ 檔案**。知識點（附錄 A 3096 條）是**標籤**（micro-skill id），用於覆蓋追蹤（manifest `unit_ids[]`），並作為 §9 知識隔離／先備計算（K(U)=K_pre∪teach(U)）與 §6.6 rubric⑦「真教真考」綁定的**連結鍵**；但**不作為檔案/頁的切分依據**——**嚴禁「一個知識點生一個 HTML 檔」**。
   - **單元（unit）**是一個「教→練→評」小叢集，`knowledge_point_ids[]` 為**清單**——一個單元可掛**數個相關知識點**；單元大小以**認知負荷**（`est_minutes≤12`、不過載 INV-4）為界，**不以「每條知識點各一單元」為界**。
   - **一個 HTML 頁可容納多個單元**（unit＝頁內區塊/stepper，沿用現站「一頁多概念」模式）；**不得**為了對映知識點把站點炸成數百~上千個檔。
   - **既有檔名/路徑一律穩定**：reuse 的頁**原地包裝、保留原檔名與路徑**；rebuild 只改**內容**不改檔名；**禁止大規模改名/搬移**（否則書籤、跨頁連結、獎勵 `progKey`、git history 全斷，牴觸 never-disappear 精神）。確有必要改名＝例外，須附 redirect ＋ `progKey` 遷移對照，並依 §6.3／§7.1（`learning_progress_v1` 的 additive-merge／壞檔不重設／migrate）保護逐單元進度不遺失（獎勵 `player_profile_v1` 以穩定 id 識別、不受檔名影響，故 §7.3 RT 不涵蓋改名→進度遷移）；預設**不改名**。新增頁才給新檔名。
   - **頁面分組規則（GR；可從知識點 id 機械推導，稽核一眼對得上）**：
-    - **預設分組＝一個「科目 × strand（主軸）× tier（級別）」一頁**。**段位抽取（兩域不同，須分開）**：學科域 `<domain>.<tier>.<strand>.<slug>`→ tier＝第 2 段、strand＝第 3 段；life 域 `life.<category>.<strand>.<slug>`→ 第 2 段是 category（當 subject 分區用）、strand＝**第 3 段**、**tier 不在 id**。**tier 一律讀 manifest `tier` 欄（唯一權威），不得以 id 位置推斷**（呼應 §4「tier 一律讀 manifest tier 欄」）：學科域 id 第 2 段**通常**等於 manifest tier，但以 manifest `tier` 欄為準（若個別 id 段與 tier 欄不符，一律以 tier 欄為真——建置時應 red-team 使兩者一致，見 §4.1）；life 域 tier 不在 id，只能自 manifest 取。該頁 host「此主軸、此級別」的所有單元（頁內節點依 `prerequisites` 由淺到深）。例：`math.t_base.numquant.*` → 頁「數與量（初級）」、`math.t_mid.numquant.*` → 頁「數與量（中級）」（strand `numquant`＝「數與量」，見附錄 A §一；勿誤名為「數論」number theory）——**不把一個主軸從國小到高中塞進單一巨頁、不混級**。
+    - **預設分組＝一個「科目 × strand（主軸）× tier（級別）」一頁**。**段位抽取（兩域不同，須分開）**：學科域 `<domain>.<tier>.<strand>.<slug>`→ tier＝第 2 段、strand＝第 3 段；life 域 `life.<category>.<strand>.<slug>`→ 第 2 段是 category（當 subject 分區用）、strand＝**第 3 段**、**tier 不在 id**。**tier 一律讀 manifest `tier` 欄（唯一權威），不得以 id 位置推斷**（呼應 §4「tier 一律讀 manifest tier 欄」）：學科域 id 第 2 段為 opaque 命名痕跡、**非權威**（R2-05：id 不可解析 tier，容許與 tier 欄不一致），一律以 manifest `tier` 欄為準；life 域 tier 不在 id，只能自 manifest 取。該頁 host「此主軸、此級別」的所有單元（頁內節點依 `prerequisites` 由淺到深）。例：`math.t_base.numquant.*` → 頁「數與量（初級）」、`math.t_mid.numquant.*` → 頁「數與量（中級）」（strand `numquant`＝「數與量」，見附錄 A §一；勿誤名為「數論」number theory）——**不把一個主軸從國小到高中塞進單一巨頁、不混級**。
     - **級別頁名用中性難度詞、不曝露年段（R11 鐵律）**：tier→級別對照＝`t_base→初級`、`t_mid→中級`、`t_adv→高級`、`t_sub→進階`、`t_enrich→延伸挑戰`；頁名**只能**用這些中性詞，**嚴禁**「國小/國中/高中/年級/會考/學測/分科」等年段字樣（`no_grade_label_gate` 掃描）。
     - **防碎片併頁（唯一允許的偏離，機械可判）**：某 `(科目,strand,tier)` 的 minimum 知識點數 **≤3** 時，**併入同 strand 相鄰的較低級別頁**（無較低級則併較高級），避免只有 1–2 條的空頁；併入後該頁名仍取主級別、頁內分段標注。此門檻（≤3）寫死、非主觀。
     - **拆頁條件**：若某頁觸 **R9 效能預算**（初始 JS/體積超標或低階裝置卡頓），再依 slug 群組拆子頁（檔名加後綴），仍保留 id→頁可推導、既有檔名穩定。
@@ -455,7 +594,7 @@
 
 ### 6.7 衍生資料產物與產生管線（build artifacts；每項定「檔/schema/產生者/何時產/誰驗」，消除 session 自由心證）
 > 盲點修補（2026-10-26 角色模擬）：導覽/單元/獎勵所需的「顯示層與解析層資料」大多不在 manifest 裡，散在 markdown 或未定義。此節把每個中間產物釘成**機器可讀檔＋產生管線**，避免實作時各自發明。
-- **鐵律**：learner 前端**不得**直讀 3092 列 `knowledge_points.json`（違 R9/ND）；一律讀下列**預生成**的輕量衍生檔。所有衍生檔由建置工具（Phase 1）從 manifest＋`*.units.json` 產生、進 git、並各有驗證 gate；**衍生檔不得手改**（手改來源再 regen）。
+- **鐵律**：learner 前端**不得**直讀 3096 列 `knowledge_points.json`（違 R9/ND）；一律讀下列**預生成**的輕量衍生檔。所有衍生檔由建置工具（Phase 1）從 manifest＋`*.units.json` 產生、進 git、並各有驗證 gate；**衍生檔不得手改**（手改來源再 regen）。
 - **產物清單（細則）**：
   | 檔 | 內容/schema | 產生者 | 何時 | 驗證 |
   |---|---|---|---|---|
@@ -463,12 +602,12 @@
   | `authoring/strand_labels.json` | **鍵＝`(domain, strand)` 配對**（共 **211** 配對；**非裸 slug**——裸 slug 僅 208 且 `stats`(math/life)、`inquiry`(sci/soc-civ)、`skill`(soc-geo/soc-hist) 三個跨域共用、各域中文名不同，裸 slug 會覆蓋成錯名）→`{title_zh}`；含 sci 子領域前綴 `bio-/chem-/earth-/phys-`→子領域中文名＋排序 | 自 inventory 標題半自動＋人工補、鎖檔 | Phase 1 | `no_grade_label_gate` 掃（中性、無年段）＋鍵數＝211 且各跨域 slug 分域有別名 |
   | `authoring/subject_labels.json` | `domain/life-category→{title_zh, island, order}`（含複合島成員顯示名與島內序） | 人工定、鎖檔 | Phase 1 | 與 §6.1 島↔subject 表一致性檢查 |
   | `authoring/term_glossary.json` | `term_zh→{en, abbr?, is_term:true}`（R15 唯一英語來源） | 人工＋審查，持續增補 | Phase 1 起 | `term_annotation_gate`（查表） |
-  | `nav_index.json` | 輕量導覽樹：島→subject→strand→tier→unit 的**計數/狀態**（不含 3092 逐條） | build 工具自 units_index＋manifest | Phase 1 | `AC-NAV`（首屏≤12 分區/可見≤~15） |
+  | `nav_index.json` | 輕量導覽樹：島→subject→strand→tier→unit 的**計數/狀態**（不含 3096 逐條） | build 工具自 units_index＋manifest | Phase 1 | `AC-NAV`（首屏≤12 分區/可見≤~15） |
   | `roadmap_layout.json` | roadmap 節點座標/連線(先備 DAG 邊)/收合群組邊界 | 預生成佈局工具（從 units_index 的 prerequisites） | Phase 2（有 unit/DAG 後） | viz-QA + 連線端點檢查 |
   | `authoring/progkey_migration.json` | `{old_progKey,new_unit_id,note}`（§6.3 進度遷移對照） | 接線/改名 PR 維護 | Phase 2 | 遷移 RT |
   | 獎勵 id registry（`authoring/reward_catalog.json`） | skin/border/mascot/badge/shop：`{id, type, retired?}`（§7.2 R4/R5 只增不刪、下架改 `retired`） | 人工定、鎖檔 | Phase 0.5/1 | RT-5（孤兒/retired 保留 owned 顯示） |
 - **單元落點解析**：節點點擊→`units_index.json` 的 `{file,anchor}`（不靠公式猜檔名）；`home_page` 已套 §6.2 GR 併頁規則後的**實際頁**（消 GR 公式推導 vs 併頁實際頁的歧義）。
-- **範例**：✅ 前端首屏 `fetch('nav_index.json')` 只拿到 9 島＋各島計數/進度，點「數學島」才展開其 strand（資料已在 nav_index）。 ❌ 首屏直接 `fetch('authoring/knowledge_points.json')` 渲染 3092 列（違 R9/ND、`AC-NAV` FAIL）。 ⚠ 新增一個 strand 卻忘了在 `strand_labels.json` 補中文名→build 工具報缺、擋關（不得以 slug 當顯示名）。
+- **範例**：✅ 前端首屏 `fetch('nav_index.json')` 只拿到 9 島＋各島計數/進度，點「數學島」才展開其 strand（資料已在 nav_index）。 ❌ 首屏直接 `fetch('authoring/knowledge_points.json')` 渲染 3096 列（違 R9/ND、`AC-NAV` FAIL）。 ⚠ 新增一個 strand 卻忘了在 `strand_labels.json` 補中文名→build 工具報缺、擋關（不得以 slug 當顯示名）。
 
 ### 6.8 事實正確性驗證協定（CORRECTNESS-VERIFY；R1「教錯害人」的落地驗證，非只口號）
 > 使用者 2026-10-26 點出：R1 強調「正確性第一」，但**怎麼驗**散在原則裡、未升成有證據的完工 gate。此節把「正確性已驗證」變成**逐單元、可核對、留證**的協定，並由 `AC-CORRECT` 綁入 DONE-GATE。
@@ -493,7 +632,37 @@
 - **play-through 代入**：題目正解代入題幹（語言型朗讀通順、符號數學型代回原式驗算成立），納 `unit_acceptance_lint`。
 - **對抗式複核**：content_audit 的領域專家 lens 對每單元獨立再查一次（找 ship 前漏網的事實錯），與上述簽核互為雙保險。
 - **細則**：`sources[]` 對「常識/定義型」可省（如「水的化學式 H₂O」），但**具體數值/時間/比較級/因果宣稱**一律需 source 或執行驗證。英文例句的用法道地性由 §8 #2 native-speaker 判（屬語言正確，走同 ledger）。
-- **範例**：✅「玉山海拔 3952 公尺（source: 內政部）」、「水沸點 100°C（可計算/常識免 source）」、二次公式解跑 `.venv` 驗證代回原式成立並記錄。 ❌ 單元宣稱「某河全長 6300 公里」無 `sources[]` 也無執行驗證就 ship（AC-CORRECT FAIL）。 ⚠ 數字拿不準→標 `(待核)`，但**不得**帶 `(待核)` 上線（掃描擋關）。
+- **範例**：✅「玉山海拔 3952 公尺（source: 內政部）」、「純水在 1 atm 附近沸點約 100°C（附權威來源；非僅靠算式）」、二次公式解跑 `.venv` 驗證代回原式成立並記錄。 ❌ 單元宣稱「某河全長 6300 公里」無 `sources[]` 也無執行驗證就 ship（AC-CORRECT FAIL）。 ⚠ 數字拿不準→標 `(待核)`，但**不得**帶 `(待核)` 上線（掃描擋關）。
+
+#### 6.8.1 四層證據粒度 ＋ 獨立 oracle（B-07/B-08；嚴格審查 2026-10-26 升級）
+> 原協定的簽核綁在 **unit** 級，無法指出「哪個來源支援哪一句」，也抓不到「正解對、feedback 錯」「文字對、圖畫反」「兩個選項都對」。升級為逐 **claim／question／visual** 證據，並堵住「用同一個錯公式自我驗證」。四層與 `fact_check_ledger.json` 的 `entries[]` 對應（鍵可為 `unit_id` 或更細的 `claim_id/question_id/scene_id`）。
+- **第一層 KP**：知識點本身正確 ＆ 屬該 tier（`knowledge_points.json` 的 `verification_status`／`authority_refs`；本 Phase -1 已導入）。
+- **第二層 claim**：每個教材事實宣稱 `{claim_id, text, kind(definition|numeric|causal|historical|legal|health|language-usage), source_refs[], verification_ref, risk_class(normal|high), status}`。可繼承共用 canonical 來源（H₂O 等基礎事實指向一個共用 source，不必每頁重抄），但**每個 claim 都要能追到來源**。
+- **第三層 question**：每題 `{question_id, kp_ids[], required_kp_ids[], type, answer, answer_evidence[→claim], distractor_rationales{}, validation_method(exhaustive|oracle|source|expert)}`。MCQ 須證明**唯一可辯護正解**；多選定義完整合法集合；開放題有 rubric＋可接受邊界；feedback 綁 claim（答案改了解釋不會留舊）。
+- **第四層 visual**：每圖/動畫 scene 列 `{claim_ids[], 圖例語意, frames[], content_reviewer}`；Visual QA 的美術/裁切簽核（§AC-VIZ）**不**取代內容正確性簽核（例：四季動畫需地科 reviewer 確認地軸方向/日照角度與文字一致）。
+- **獨立 oracle（B-08，堵「自證」）**：可計算驗證的**生成器與 oracle 不得共用同一段待驗公式實作**；公式先由權威來源/推導證明，再用程式查代數/數值；重要題型兩種獨立方法交叉驗；隨機題生成器須固定 seed＋property tests＋小域窮舉，並測零/負/極端/邊界/單位/四捨五入。
+- **風險分級最低驗證要求**：一般數理語言＝來源或獨立 oracle＋1 reviewer；歷史/公民/考試範圍＝2 獨立來源＋1 領域 reviewer；**醫療/急救/消防/法律/兒少安全（risk_class=high）＝官方現行來源＋2 位獨立 reviewer，AI 多數決不算**；價值/情意＝不設唯一正解、心理安全＋多元觀點審（R16）。time-sensitive 內容（法律/考試/人口/地理數據/AI 平台）帶 `recheck_after`，過期擋 release。
+- **gate（Phase 1 建+各自紅隊，以真實資料跑；selftest 僅 gate 自身資格非 release 證據）**：`claim_evidence_gate`／`question_correctness_gate`／`generator_property_gate`／`visual_content_fidelity_gate`／`source_freshness_gate`／`release_hash_gate`（部署產物 hash＝簽核 hash，防「審 A 部署 B」）。Phase -1 已先立 `fact_check_ledger.json` 與 `verify_learning_path.py` orchestrator（registry 驅動、cumulative、嚴格 CLI）。
+- **release-grade verified 的唯一合法 promotion flow（F4-05/F5-03；具名、可達、可執行）**：採「overlay 不回寫 canonical」方案——
+  1. **Phase 0**（非 Phase 1）建 `authoring/source_registry.json`＋其 `source_registry.schema.json`（§6.2：`source_id/publisher/url_or_isbn/edition_or_version/locator/accessed_at/authority_class/content_fingerprint/recheck_after`）＋`tools/ledger_schema_gate.py`；`fact_check_ledger.json` 的條目改以 **`source_ids[]` 引用 registry**（非自由字串）。
+  2. **具名模組 `tools/promote_verified.py`**（pure function）讀 ledger＋registry，僅當某 KP 的每個 source 在 registry 可解、freshness/authority/fingerprint、high-risk（`life.safety.*`/`life.sel.*` 需官方來源＋≥2 獨立 reviewer）全過 → 列入 **輸出檔 `authoring/verified_overlay.json`** 的 `verified_ids[]`（**綁 `manifest_sha`**）；否則入 `rejected[]`。
+  3. `_kp_build.py` 的 canonical manifest **只存 `provisionally_verified`、永不寫 `verified`**；release-grade `verified` **只存在於 overlay**。`AC-KP-VERIFY` 由 orchestrator 從 `verified_overlay ∩ 當前 manifest_sha` 現算（overlay 的 sha≠當前→全作廢，防過時）。
+  4. 任何 manifest/ledger/source fingerprint 變動 → overlay 自動失效需重跑 `promote_verified.py`（綁 sha，仿 AC-VIZ）。
+  **故 ledger_schema_gate＋source_registry＋promote_verified 歸 Phase 0**，`AC-KP-VERIFY` 在 Phase 0 可達且無 Phase 1 依賴。
+- **scope evidence ＋ fact evidence 必須分開，且「權威≠正確」（F6-03 ＋ 使用者 2026-10-26 修正；鐵律）**：release-grade verified ＝ **scope_evidence ＋ fact/procedure_evidence ＋ 風險 reviewer policy** 三者皆過。
+  - **scope_evidence**（`ledger.scope_source_ids[]`）＝**約定/成員資格**宣稱：課綱「定義」台灣在哪個年段教什麼——採它當參照**不是因為它無誤**，而是 scope 本質由課綱約定。課綱本身的錯仍可被 flag（不盲信）。
+  - **fact_evidence**（`ledger.fact_source_ids[]`）＝**正確性**宣稱，**不得訴諸權威**（政府課綱也外包、會錯；「官方說的」不等於真）。依宣稱型別取**可重現/可推導/可交叉**的證據方法 `evidence_method`，推導/重跑優先：
+    | 型別 | evidence_method（authority-independent 優先） |
+    |---|---|
+    | 數學/邏輯/物理/化學 | `derivation`／`program`／`truth_table`：**自己推導、跑 `.venv`、真值表窮舉**——零權威、可重跑（最強） |
+    | 語言用法 | `corpus`：語料庫頻率＋母語者共識（descriptive；repo 既有 COCA） |
+    | 經驗事實（地理/年代/數據） | `cross_check`：**≥2 個獨立來源匯聚**（非單一權威） |
+    | 醫療/消防/急救（無法自推導） | `consensus_current`：**當前**專家共識指引，標「現行、會演進」＋ `recheck_after`＋保守預設；僅此類才容許（且仍非「無誤」，是「違反現行醫療共識才是危險預設」） |
+  - 範例：✅ 二次公式 KP 的 fact＝`program`（`.venv` 代回原式驗）＋scope＝數學領綱成員；完全不需官方 PDF。 ✅ 滲透 fact＝`cross_check`（多本大學生物學匯聚水勢定義）。 ❌ 只因「課綱這樣寫」就標 fact 正確（訴諸權威，promote 拒）。 ⚠ CPR＝high-risk 且無法自推導→`consensus_current`（現行急救指引）＋`recheck_after`＋`verified_by` ≥2 位身分相異（F6-04）。
+  - **實務**：3079 筆多為數理化/邏輯/英文用法→可**自我重算驗證、不需外部官方來源**；只有安全急救＋少數經驗值需 consensus/cross_check。
+- **high-risk 判定（F6-04）**：不只 `life.safety.*`/`life.sel.*`；含 `life.*.emergency.*`、`soc-civ.*` 法律/權利/消費者保護、健康醫療急救等（`promote_verified.HIGH_RISK_PATTERNS`，可擴充）。reviewer 以正規化身分去重，兩個相同字串＝一位。
+- **release 受驗 snapshot（F6-05）**：`--release` 須 `--release-id`，由它解析 immutable snapshot `releases/<id>/`；evidence 的 GLOB／工具 `--root` 對該 snapshot 展開（非當前 workspace），避免「驗 workspace A、hash artifact B」。snapshot 不存在即 FAIL。
+- **範例**：✅ 一題 MCQ 的 `answer_evidence` 指向 claim-03、三個干擾項各有 `distractor_rationale`、`validation_method=exhaustive` 且生成器與 oracle 分離。 ❌ 題目生成器與驗證器共用同一個 `solve()`→錯誤一致得假 PASS（B-08 違反）。 ⚠ 圖「對」但與文字敘述相反→第四層 visual reviewer 須擋（美術簽核放行不算數）。
 
 ---
 
@@ -646,7 +815,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 - **burnout 可量測代理（補 §9.3 的質性判斷，使部分可機械預篩）**：量測代理觸發（命中則標記交 panel 複判，非自動 defect）：相鄰單元 `est_minutes` 跳升 >2×、相鄰單元新增 `kp` 數跳升 >2×、連續 ≥N 個單元無 retrieval 練習。最終 `high/med/low` 仍由 §8 #7 心理醫生＋#4 學習科學家判（panel 主、代理輔）。
 - **知識隔離改「強制顯式 kp 歸因」（LLM 無法真的忘記→改成可稽核）**：模擬 agent 對**每一題**須明列「我用到哪些 `kp_id`、各自屬 `K_pre`／`teach(U)`／`其他`」；凡出現「其他」＝越界/斷層證據，被 gate 抓（不再只靠「嚴禁偷看」的 prompt 指令）。
 - **K_pre 注入預算**：深 tier leaf 的先備閉包可能數百 kp→注入採**結構化摘要**（每先備單元「教」段落的要點），設 token/深度上限；超限則按 `prerequisites` 距離由近到遠截斷並標註（忠實度優先近層）。
-- **用到母體外概念 → inventory-gap 分支**：若某題用到的概念**不在 3092 母體**（無 id 可填 `missing_concept`）→ 回報 `inventory-gap`（建議補母體），與「排序斷層」區分處理。
+- **用到母體外概念 → inventory-gap 分支**：若某題用到的概念**不在 3096 母體**（無 id 可填 `missing_concept`）→ 回報 `inventory-gap`（建議補母體），與「排序斷層」區分處理。
 - **rubric⑦ vs §9 仲裁**：二者皆須通過；任一不符 → 標 `review`、不得逕自放行（§9.4 已定 rubric⑦ 為主、§9 二次確認，此處補明衝突時的處置）。
 
 ---
@@ -673,7 +842,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
   - **Phase 2 exit**：既有單元全數接線（宣告 `prerequisites`/`knowledge_point_ids`），每檔 5 clean。
   - **Phase 3 exit**：`AC-COV-1`（**Phase 3 變體**：`unit_ids[]` ∩ rubric⑦ 通過集，不含 §9 項）＝ 0 個未覆蓋 minimum id（gap 全補）。§9 `taught_kps_exercised` 的二次確認留到 Phase 5 done-gate。
   - **Phase 4 exit**：獎勵擴充**只新增 id**、RT-1..11 全綠 ＋ **`AC-NOBACKEND` 綠**（獎勵/排行/社交類零對外請求，no_backend_gate exit 0）。
-  - **Phase 5 exit**：§11.A 全 **22 條 AC**（含 AC-SPEC；含 AC-CORRECT/AC-SCHEMA/AC-NAV）綠且 `acceptance_ledger.json` 全登錄。
+  - **Phase 5 exit**：§11.A 全 **23 條 AC**（含 AC-SPEC；含 AC-CORRECT/AC-SCHEMA/AC-NAV）綠且 `acceptance_ledger.json` 全登錄。
 - **範例**：
   - ✅**正例**：Phase 3 結束時 `coverage_gate` 報「未覆蓋 minimum id ＝ 0」→ 得進 Phase 4。
   - ❌**反例**：宣稱「Phase 3 大致完成」但 coverage 顯示 37 個 minimum id 無對映單元 → **不得**進 Phase 4，須列 37 id 補完。
@@ -694,7 +863,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 7. **code-download bundle**（若該單元/模組含可執行程式，依 house 規範提供完整可執行+可驗證下載）。
 8. **house 視覺/結構一致**；效能（R9）未退化。
 
-- **細則**：上列 8 項為「完成」的硬性必要條件**摘要（非窮舉）**；其**逐條可機械驗且窮舉的版本＝§11.A 驗收準則矩陣（22 條 AC，各附驗證方法/門檻/證據）**，§11.A 為唯一完工判準。
+- **細則**：上列 8 項為「完成」的硬性必要條件**摘要（非窮舉）**；其**逐條可機械驗且窮舉的版本＝§11.A 驗收準則矩陣（23 條 AC，各附驗證方法/門檻/證據）**，§11.A 為唯一完工判準。
   完成 ⟺ §11.A 全 AC PASS 且證據登 `authoring/acceptance_ledger.json`（綁 sha）。任一項未過即未完成，**不接受「大致上」**。逐檔與全書都適用（per-file 先、whole-book 後）。
 - **範例**：✅ 某檔案（頁）：5 clean＋簡體 0＋四角色簽核（sha 相符）＋頁內各單元 rubric 10/10＋覆蓋 id 存在 → 該檔完成。 ❌ 只跑到 3 clean 就宣告完成（違第 1 項）→ 擋。 ⚠ 第 3 項四角色已簽核，但事後又改版面（sha 變）→ 舊簽核作廢，須重 render＋重簽（§11.A AC-VIZ-1 ⚠）。
 
@@ -713,7 +882,8 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 | AC-UNIT-1 | **每個**單元通過 §6.6 的 10 項 rubric | `tools/unit_acceptance_lint.py`（待建）＋ 人工 play-through | 每單元 10/10；0 單元缺項 | 逐單元 rubric 結果 |
 | AC-UNIT-2 | 每個**檔案（頁）** content_audit 連續 **5 clean**（同 sha、L3 exit 0；content_audit 粒度＝檔案，單元層面走 AC-UNIT-1） | `/static-doc-audit` per-file + `coverage_check.js` | 每檔 5 clean、L3 exit 0 | convergence ledger |
 | AC-UNIT-3 | 每個新單元與對應 golden 範本做**結構 diff**（§6.6 細則① 凍結黃金範本防品質漂移）；偏離而 unit metadata 無 `deviation_reason` 即 FAIL | `tools/unit_acceptance_lint.py`（讀 unit metadata `deviation_reason` ＋ 與 `authoring/golden/<archetype>.html` 結構比對） | 未解釋的偏離數＝**0**（exit 0） | golden-diff 報告 |
-| AC-CORRECT | **事實正確性已驗證**（R1「教錯害人」；§6.8 協定）：shipped 單元零 `(待核)`；可計算事實（數理化/數據）經程式/查表實跑驗證；非計算事實宣稱帶 `sources[]` 權威來源；每單元經 §8 #1 領域專家簽核 | **三部**：(1) 確定性掃描「`(待核)` 命中＝0」＋「具體數值/因果宣稱有 `sources[]` 或執行驗證紀錄」；(2) 可計算事實 `.venv`/查表實跑比對（§6.8 各科驗證法表）；(3) 每單元領域專家簽核記 `authoring/fact_check_ledger.json`（綁 sha，sha 變作廢重簽） | `(待核)`＝0、無來源/無驗證的事實宣稱＝0、每 shipped 單元有效簽核 | fact_check_ledger ＋ 執行驗證 log |
+| AC-CORRECT | **事實正確性已驗證**（R1；§6.8＋§6.8.1 四層協定）：shipped 單元零 `(待核)`；可計算事實經**獨立 oracle**實跑（B-08，生成器與驗證器不共用公式）；非計算事實帶 `sources[]`；逐 **claim/question/visual** 證據（非只 unit 級）；feedback 綁 claim；部署產物 hash＝簽核 hash | **多部（R2-06 綁入）**：(1) `(待核)`＝0 掃描；(2) 可計算事實獨立 oracle 比對（§6.8 各科法表）；(3) `claim_evidence_gate`／`question_correctness_gate`（唯一正解＋干擾項說明）／`generator_property_gate`（固定seed+窮舉/property）／`visual_content_fidelity_gate`（圖文 claim 對應＋內容 reviewer，非美術簽核代替）／`source_freshness_gate`（`recheck_after` 過期 FAIL）／`release_hash_gate`（審 A 部署 B＝FAIL）——**皆待 Phase 1 建並各自紅隊**（§6.8.1） | 各 gate exit 0；無來源/無驗證事實＝0 | fact_check_ledger＋source_registry＋oracle/release-hash log |
+| **AC-KP-VERIFY** | **binding minimum 母體已驗證**（R2-03；B-02）：每個**非 `beyond`（minimum）**知識點 `verification_status` **必為 `verified`**——`pending` 與 `unverified` **兩者皆擋**（不得以「無 `(待核)` 字樣」＝unverified 冒充已驗證）；每筆 verified 必有 `fact_check_ledger` 條目且通過語意驗證（sources 非空、verified_by 非空且 high-risk≥2 獨立、`verified_as_of` 不晚於產生日、key 存在於 manifest）；可多 id 繼承**版本化 curriculum/source mapping**，但不得無證據。**T3-05：`_kp_build` 只授予 `provisionally_verified`（非 release-grade）；release-grade `verified` 須經 Phase 1 `ledger_schema_gate`＋`source_registry`（ISO 日期、source id 存在性、authority_class、fingerprint、high-risk≥2 獨立 reviewer）認定**——`provisionally_verified` 不算通過本 AC | `tools/kp_pending_gate.py`（待建）＝`binding_unverified==0`，**由 orchestrator 從 live `items[]` 現算、不信任 cached `meta`（T3-02）**＋`tools/ledger_schema_gate.py`（待建；`_kp_build` 已內建首版語意檢查：空來源/空reviewer/非ISO或未來日/未知id→FAIL） | binding minimum 非 `verified` 數量＝**0**（`pending`＝0 AND `unverified`＝0 AND `provisionally_verified`＝0） | live items[] 現算＋ledger |
 | AC-SCHEMA | 每個單元的 metadata＋內容（§6.2.2）符合 JSON Schema：欄位齊備/型別/enum 正確、每 teach 段與每 practice 題帶 `kp_ids[]`、`knowledge_point_ids` 皆存在於 manifest | `tools/unit_schema_gate.py`（待建，JSON-Schema validator）＋ rubric⑦ 子集檢查（宣告集⊆教集∩考集） | schema 違規＝0、⑦ 綁定違規＝0（exit 0） | schema 驗證報告 |
 | AC-NAV | 導覽符合 ND/R-OPEN：首屏頂層分區 ≤12、預設可見節點 ≤~15、英文科中文對照 default-collapsed（R14）；且**無**任何 disabled/灰掉/鎖頭/「尚未解鎖」鎖定態（R-OPEN） | `tools/nav_gate.mjs`（待建，render 後量測分區/可見節點計數＋掃鎖定態/鎖 icon/「解鎖」字樣＋中文對照收合態）＋紅隊（鎖定態壞案例須擋） | 首屏分區 ≤12、可見節點 ≤~15、鎖定態命中＝0、未收合中文＝0 | nav gate 報告 |
 | AC-PATH-1 | 每條主要學習路徑**無斷層**（INV-1） | §9 知識受限模擬 | 每路徑每 U `result=pass`、`gaps=[]` | 模擬輸出 JSON |
@@ -734,7 +904,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
 - **細則**：每條 AC 必對應一個**確定性腳本或綁 sha 的簽核**（上表「驗證方法」欄）；標「待建」者於 Phase 1 建並**紅隊**（證明壞案例被擋、好案例放行）才可啟用——**兩類例外（各自更早，不得延到 Phase 1）**：
   (a) **`AC-ANTIDRIFT` 的四防漂移錨點 hook**：因 **Phase 0 exit／§12 定案即需消費**（§10.1 Phase 0 exit 要 `AC-ANTIDRIFT` 綠、§12 step 3.5 要錨點已交付+紅隊才算定案），須在 **Phase 0 內（定案前）**建好並紅隊；
   (b) **`design_consistency_gate.js`（及其 content-card lint）**：因 **Phase 0.5 exit 即需消費**（§6.5 R-STYLE-4／AC-STYLE-1 明訂「Phase 0.5 前接線+紅隊」），須在 **Phase 0.5 前**建好並紅隊。`acceptance_ledger.json` 一列一次通過紀錄，sha 一變該 AC 作廢須重驗。
-- **範例**：✅ 全 **22 條 AC**（AC-COV-1…AC-ANTIDRIFT 共 21 條產品 AC ＋ AC-SPEC meta；含 AC-CORRECT／AC-SCHEMA／AC-NAV）於**同一凍結 release 快照**皆有 PASS 列＋證據，且每條綁定其**對應產物的當前 content sha**（各 AC 的產物不同——AC-SPEC 綁 spec 檔、AC-VIZ-1 綁 render/簽核 manifest、AC-NOBACKEND 綁掃描報告…——故 sha 本就各異；關鍵是**無任一 AC 綁到過時 sha**，依本節細則「sha 一變該 AC 作廢須重驗」）→ 可宣告完成並（經使用者）push。 ❌ AC-COV-1 顯示 37 個 minimum id 無單元 → 未完成，列出 37 個待補 id。 ⚠ AC-VIZ-1 四角色已簽核但 sha 已變（之後又改了版面）→ 舊簽核作廢，須重 render+重簽才算數。
+- **範例**：✅ 全 **23 條 AC**（AC-COV-1…AC-ANTIDRIFT 共 22 條產品 AC ＋ AC-SPEC meta；含 AC-CORRECT／AC-SCHEMA／AC-NAV）於**同一凍結 release 快照**皆有 PASS 列＋證據，且每條綁定其**對應產物的當前 content sha**（各 AC 的產物不同——AC-SPEC 綁 spec 檔、AC-VIZ-1 綁 render/簽核 manifest、AC-NOBACKEND 綁掃描報告…——故 sha 本就各異；關鍵是**無任一 AC 綁到過時 sha**，依本節細則「sha 一變該 AC 作廢須重驗」）→ 可宣告完成並（經使用者）push。 ❌ AC-COV-1 顯示 37 個 minimum id 無單元 → 未完成，列出 37 個待補 id。 ⚠ AC-VIZ-1 四角色已簽核但 sha 已變（之後又改了版面）→ 舊簽核作廢，須重 render+重簽才算數。
 
 ## 12. 本 spec 自身的收斂協定（meta-process）
 

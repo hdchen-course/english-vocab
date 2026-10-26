@@ -9,7 +9,7 @@
 ## 1. 生命的特徵與組成層次 {strand: life-levels}
 
 - [sci.t_base.bio-life-levels.living-vs-nonliving] 分辨生物與非生物（會長大、需營養、能繁殖、會對刺激反應）  {t_base, 無}
-- [sci.t_base.bio-life-levels.life-needs] 說出生物生存的基本需求（空氣、水、養分、陽光、適當溫度與空間）  {t_base, 無}
+- [sci.t_base.bio-life-levels.life-needs] 說出生物生存的基本需求（水、養分、適當的溫度與生活空間）；多數生物還需要空氣，綠色植物另需陽光來製造養分  {t_base, 無}
 - [sci.t_base.bio-life-levels.life-events] 舉例生物的共同生命現象：生長、運動、繁殖、死亡  {t_base, 無}
 - [sci.t_mid.bio-life-levels.characteristics-list] 列舉生物的共同特徵：生長發育、新陳代謝、感應、生殖、遺傳、演化、恆定  {t_mid, 會考}
 - [sci.t_mid.bio-life-levels.metabolism-def] 定義新陳代謝為同化（合成）與異化（分解）作用的總和  {t_mid, 會考}
@@ -53,7 +53,7 @@
 ## 3. 物質進出細胞 {strand: membrane-transport}
 
 - [sci.t_mid.bio-membrane-transport.diffusion] 定義擴散：分子由高濃度往低濃度移動  {t_mid, 會考}
-- [sci.t_mid.bio-membrane-transport.osmosis] 定義滲透：水分子透過半透膜由高水位往低水位移動  {t_mid, 會考}
+- [sci.t_mid.bio-membrane-transport.osmosis] 定義滲透：水分子透過半透膜，由溶質濃度低（水多）側淨移動到溶質濃度高（水少）側  {t_mid, 會考}
 - [sci.t_mid.bio-membrane-transport.tonicity-cell] 預測細胞在高張/低張/等張溶液中的脹縮（溶血、膨壓）  {t_mid, 會考}
 - [sci.t_mid.bio-membrane-transport.selective-permeability] 說明細胞膜的選擇性通透  {t_mid, 會考}
 - [sci.t_adv.bio-membrane-transport.passive-vs-active] 區分被動運輸（不耗能、順濃度梯度）與主動運輸（耗 ATP、逆梯度）  {t_adv, 學測}
@@ -107,7 +107,7 @@
 - [sci.t_adv.bio-respiration.krebs-cycle] 說明檸檬酸循環於粒線體基質、釋 CO₂、產 NADH/FADH₂  {t_adv, 學測}
 - [sci.t_adv.bio-respiration.electron-transport] 說明電子傳遞鏈於內膜、O₂為最終電子受體、產大量 ATP  {t_adv, 學測}
 - [sci.t_adv.bio-respiration.fermentation] 說明無氧呼吸/發酵（乳酸發酵、酒精發酵）與產物  {t_adv, 學測}
-- [sci.t_adv.bio-respiration.atp-yield] 比較有氧（約 30–38 ATP）與無氧呼吸的能量產量差異  {t_adv, 學測}
+- [sci.t_adv.bio-respiration.atp-yield] 比較有氧呼吸（現代估計約 30–32 ATP，舊教材 36–38）與發酵（僅糖解淨得約 2 ATP）的能量產量差異  {t_adv, 學測}
 - [sci.t_sub.bio-respiration.pyruvate-oxidation] 說明丙酮酸氧化（連結反應）生成乙醯輔酶 A  {t_sub, 分科-生物}
 - [sci.t_sub.bio-respiration.chemiosmosis] 以化學滲透與質子梯度說明 ATP 合成酶產 ATP  {t_sub, 分科-生物}
 - [sci.t_sub.bio-respiration.other-substrates] 說明脂質與蛋白質進入呼吸代謝途徑的切入點  {t_sub, 分科-生物}
@@ -282,7 +282,7 @@
 - [sci.t_sub.bio-genetics-classical.polygenic] 說明多基因遺傳造成連續變異（如身高、膚色）  {t_sub, 分科-生物}
 - [sci.t_sub.bio-genetics-classical.epistasis] 說明基因間上位作用對表現型的影響  {t_sub, 分科-生物}
 - [sci.t_sub.bio-genetics-classical.chromosome-theory] 敘述染色體遺傳學說（基因在染色體上）的實驗證據（摩根果蠅）  {t_sub, 分科-生物}
-- [sci.t_sub.bio-genetics-classical.chi-square-genetics] 以卡方檢定判斷遺傳實驗觀察值與期望值的符合度  {t_sub, 分科-生物} (待核)
+- [sci.t_sub.bio-genetics-classical.chi-square-genetics] 以卡方檢定判斷遺傳實驗觀察值與期望值的符合度  {t_enrich, 無}
 
 ## 17. 分子遺傳（DNA／複製／轉錄／轉譯／調控） {strand: genetics-molecular}
 
@@ -318,7 +318,7 @@
 - [sci.t_sub.bio-biotech.cloning] 區分生殖性與治療性複製、以複製羊為例  {t_sub, 分科-生物}
 - [sci.t_sub.bio-biotech.dna-fingerprint] 說明 DNA 指紋在親子鑑定、刑事鑑識的應用  {t_sub, 分科-生物}
 - [sci.t_sub.bio-biotech.stem-cells] 說明幹細胞（胚胎/成體/iPS）與再生醫學  {t_sub, 分科-生物}
-- [sci.t_sub.bio-biotech.crispr] 初步認識 CRISPR 基因編輯技術及其倫理爭議  {t_sub, 分科-生物} (待核)
+- [sci.t_sub.bio-biotech.crispr] 初步認識 CRISPR 基因編輯技術及其倫理爭議  {t_enrich, 無}
 - [sci.t_sub.bio-biotech.genome-project] 認識人類基因體計畫的意義與應用  {t_sub, 分科-生物}
 
 ## 19. 演化 {strand: evolution}
@@ -377,7 +377,7 @@
 - [sci.t_sub.bio-plant-physiology.guard-cell-mechanism] 說明保衛細胞因鉀離子與膨壓變化開關氣孔  {t_sub, 分科-生物}
 - [sci.t_sub.bio-plant-physiology.photoperiodism] 說明光週期與開花（長日/短日植物、植物光敏素）  {t_sub, 分科-生物}
 - [sci.t_sub.bio-plant-physiology.double-fertilization] 說明被子植物的雙重受精（胚與胚乳）  {t_sub, 分科-生物}
-- [sci.t_sub.bio-plant-physiology.secondary-growth] 說明形成層造成的次級生長與年輪  {t_sub, 分科-生物} (待核)
+- [sci.t_sub.bio-plant-physiology.secondary-growth] 說明形成層造成的次級生長與年輪  {t_sub, 分科-生物}
 
 ## 22. 生態學（族群／群集／生態系／能量流／物質循環） {strand: ecology}
 
@@ -402,7 +402,7 @@
 - [sci.t_sub.bio-ecology.age-structure] 以年齡結構圖預測族群成長趨勢  {t_sub, 分科-生物}
 - [sci.t_sub.bio-ecology.keystone-species] 說明關鍵種與其對群集結構的影響  {t_sub, 分科-生物}
 - [sci.t_sub.bio-ecology.biomagnification] 說明生物累積與生物放大（如 DDT、汞）  {t_sub, 分科-生物}
-- [sci.t_sub.bio-ecology.phosphorus-cycle] 說明磷循環（無氣態、經岩石與沉積）  {t_sub, 分科-生物} (待核)
+- [sci.t_sub.bio-ecology.phosphorus-cycle] 說明磷循環（無氣態、經岩石與沉積）  {t_sub, 分科-生物}
 
 ## 23. 生物與環境保育 {strand: conservation}
 
@@ -417,7 +417,7 @@
 - [sci.t_adv.bio-conservation.ecosystem-services] 說明生態系服務（供給/調節/文化/支持）的價值  {t_adv, 學測}
 - [sci.t_adv.bio-conservation.biodiversity-value] 論述維護生物多樣性的重要性（基因庫、醫藥、生態平衡）  {t_adv, 學測}
 - [sci.t_sub.bio-conservation.eutrophication] 說明優養化的成因、過程與對水域生態的影響  {t_sub, 分科-生物}
-- [sci.t_sub.bio-conservation.carbon-neutral] 討論碳中和、碳匯與減碳策略的生態意義  {t_sub, 分科-生物} (待核)
+- [sci.t_sub.bio-conservation.carbon-neutral] 討論碳中和、碳匯與減碳策略的生態意義  {t_sub, 分科-生物}
 
 ## 24. 探究與實作 {strand: inquiry}
 
@@ -435,7 +435,7 @@
 - [sci.t_adv.bio-inquiry.argumentation] 以主張—證據—推理建構科學論證並評估他人論點  {t_adv, 學測}
 - [sci.t_adv.bio-inquiry.experimental-flaw] 評估實驗設計的缺失並提出改進（樣本數、干擾變因）  {t_adv, 學測}
 - [sci.t_adv.bio-inquiry.correlation-causation] 區分相關性與因果關係  {t_adv, 學測}
-- [sci.t_sub.bio-inquiry.statistics-basic] 以平均數、標準差、誤差線與顯著性初步判讀生物數據  {t_sub, 分科-生物} (待核)
+- [sci.t_sub.bio-inquiry.statistics-basic] 以平均數、標準差、誤差線初步判讀生物數據（資料素養）  {t_sub, 探究}
 
 ---
 

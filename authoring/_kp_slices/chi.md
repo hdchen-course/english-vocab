@@ -18,7 +18,7 @@
 - [chi.t_base.phon.blend-finals] 結合韻母（ㄧㄚ／ㄨㄛ／ㄩㄝ…）拼讀  {t_base, 無}
 - [chi.t_base.phon.tones-four] 一二三四聲調號標示與辨讀  {t_base, 無}
 - [chi.t_base.phon.neutral-tone] 輕聲判讀與標示  {t_base, 無}
-- [chi.t_base.phon.tone-sandhi-third] 三聲連讀變調（上上相連前字近陽平）(待核：課綱明列程度)  {t_base, 無}
+- [chi.t_base.phon.tone-sandhi-third] 三聲連讀變調（上上相連前字近陽平）  {t_base, 無}
 - [chi.t_base.phon.yi-bu-sandhi] 「一」「不」的變調  {t_base, 無}
 - [chi.t_base.phon.erhua] 兒化韻現象辨識  {t_base, 無}
 - [chi.t_base.phon.tone-mark-position] 直書拼音時聲調號標示位置  {t_base, 無}
@@ -34,7 +34,7 @@
 - [chi.t_base.char.radical-meaning] 部首表義（以部首推字義類別）  {t_base, 無}
 - [chi.t_base.char.structure-frame] 字的間架結構（左右／上下／包圍／獨體）辨識與書寫  {t_base, 無}
 - [chi.t_base.char.components] 偏旁部件組字  {t_base, 無}
-- [chi.t_base.char.recognition-count] 常用字認讀與書寫累積量（國小約 2200–2700 字）(待核：確切字數)  {t_base, 無}
+- [chi.t_base.char.recognition-count] 常用字認讀與書寫累積量（國小畢業：認讀 2,700 字、其中 2,200 字能寫；課綱 Ab-III）  {t_base, 無}
 - [chi.t_base.char.hard-pen-form] 硬筆正確字形與工整書寫  {t_base, 無}
 - [chi.t_base.char.dict-radical] 查字典：部首檢字法（部首外筆畫數）  {t_base, 無}
 - [chi.t_base.char.dict-stroke] 查字典：筆畫檢字法  {t_base, 無}
@@ -47,7 +47,7 @@
 - [chi.t_mid.char.liushu-zhuanzhu] 六書：轉注  {t_mid, 會考}
 - [chi.t_mid.char.liushu-jiajie] 六書：假借  {t_mid, 會考}
 - [chi.t_mid.char.phonetic-radical] 形聲字聲符表音、形符表義之判讀  {t_mid, 會考}
-- [chi.t_base.char.near-form] 形近字辨析（己已巳／戌戍戊／辨辯辯瓣…）  {t_base, 會考}
+- [chi.t_base.char.near-form] 形近字辨析（己已巳／戌戍戊／辨辯辮瓣…）  {t_base, 會考}
 - [chi.t_base.char.homophone-chars] 同音字辨析（的得地／在再／作做…）  {t_base, 會考}
 - [chi.t_mid.char.wrong-char-correct] 錯別字辨正  {t_mid, 會考}
 - [chi.t_mid.char.variant-standard] 異體字與標準字形辨識  {t_mid, 無}
@@ -298,7 +298,7 @@
 - [chi.t_adv.lit.hist-yuan] 文學史：元（曲／雜劇）  {t_adv, 學測-國綜}
 - [chi.t_adv.lit.hist-mingqing] 文學史：明清（章回小說／八股文）  {t_adv, 學測-國綜}
 - [chi.t_adv.lit.modern-newlit] 現代文學：新文學（白話文）運動  {t_adv, 學測-國綜}
-- [chi.t_adv.lit.taiwan-lit] 台灣文學發展（鄉土／現代主義）(待核：學測常識範圍)  {t_adv, 學測-國綜}
+- [chi.t_adv.lit.taiwan-lit] 台灣文學發展（鄉土／現代主義）  {t_adv, 學測-國綜}
 - [chi.t_adv.lit.author-works] 重要作家與代表作配對  {t_adv, 學測-國綜}
 - [chi.t_adv.lit.schools] 文學流派與主張  {t_adv, 學測-國綜}
 - [chi.t_adv.lit.classic-source] 經典出處（四書五經／諸子）辨識  {t_adv, 學測-國綜}
@@ -370,7 +370,7 @@
 - [chi.t_sub.gwrk.two-subtasks] 分項作答（第一小題資訊整理＋第二小題申論）  {t_sub, 學測-國寫}
 - [chi.t_sub.gwrk.coherence] 邏輯連貫與條理  {t_sub, 學測-國寫}
 - [chi.t_sub.gwrk.precise-language] 精簡準確的說理語言  {t_sub, 學測-國寫}
-- [chi.t_sub.gwrk.time-budget] 字數與時間分配（知性題約規範字數）(待核：字數上限)  {t_sub, 學測-國寫}
+- [chi.t_sub.gwrk.time-budget] 字數與時間分配：國寫無統一字數上限，逐題依題幹字數規定，於全卷時間內分配知性題與情意題兩大題  {t_sub, 學測-國寫}
 
 ## 14. 國寫：感性抒情（strand: gwrq，深階）
 
@@ -409,7 +409,7 @@
 - [chi.t_mid.prac.minutes] 會議紀錄  {t_mid, 無}
 - [chi.t_adv.prac.speech] 演講稿／致詞稿  {t_adv, 無}
 - [chi.t_base.prac.email] 電子郵件格式與禮儀  {t_base, 無}
-- [chi.t_adv.prac.official-doc] 公文基本格式 (待核：是否納入高中範圍)  {t_adv, 無}
+- [chi.t_adv.prac.official-doc] 公文基本格式  {t_enrich, 無}
 - [chi.t_adv.prac.multimedia-text] 數位／多媒體文本識讀  {t_adv, 學測-國綜}
 
 ---

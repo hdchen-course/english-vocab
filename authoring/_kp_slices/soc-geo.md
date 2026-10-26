@@ -59,7 +59,7 @@
 - [soc-geo.t_sub.skill.rs-resolution] 區辨空間／光譜／時間解析度  {t_sub, 分科-地理}
 - [soc-geo.t_sub.skill.projection-distortion] 地圖投影類型（麥卡托／等積／方位）與變形特性  {t_sub, 分科-地理}
 - [soc-geo.t_sub.skill.greatcircle-rhumb] 區辨大圓航線與恆向線（麥卡托圖上的差異）  {t_sub, 分科-地理}
-- [soc-geo.t_sub.skill.spatial-interp] 空間內插法（反距離加權／克利金）概念  {t_sub, 分科-地理} (待核：克利金是否逾課綱)
+- [soc-geo.t_sub.skill.spatial-interp] 空間內插法（反距離加權／克利金）概念  {t_enrich, 無}
 
 ## 2. 自然地理-地形 strand=nat-landform
 
@@ -334,7 +334,7 @@
 - [soc-geo.t_mid.reg-cn.three-steps] 說明中國地形三大階梯  {t_mid, 會考}
 - [soc-geo.t_mid.reg-cn.climate] 說明中國氣候區（季風、乾燥、高地）  {t_mid, 會考}
 - [soc-geo.t_mid.reg-cn.rivers] 說明中國主要河川（長江、黃河）  {t_mid, 會考}
-- [soc-geo.t_mid.reg-cn.pop-line] 說明中國人口分布的東密西疏（胡煥庸線）  {t_mid, 會考} (待核：胡煥庸線是否逾國中層級)
+- [soc-geo.t_mid.reg-cn.pop-line] 中國人口分布東密西疏（受地形、氣候、經濟影響；「胡煥庸線／黑河—騰衝線」專名為補充）  {t_mid, 會考}
 - [soc-geo.t_mid.reg-cn.ag-divide] 說明中國以秦嶺—淮河為界的稻麥農業分區  {t_mid, 會考}
 - [soc-geo.t_mid.reg-cn.regions] 說明中國東、中、西部的區域差異  {t_mid, 會考}
 - [soc-geo.t_adv.reg-cn.reform] 說明中國經濟改革與沿海開放  {t_adv, 學測}

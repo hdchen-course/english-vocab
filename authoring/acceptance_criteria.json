@@ -1,0 +1,548 @@
+{
+  "_doc": "機器可讀 AC/phase registry（T3-06/F4-03/F5）。§11.A 23 AC 唯一 root。orchestrator 讀取後先跑**不可關閉的 bootstrap_validate**（hardcoded 23-set＋required helper＋phase_order＋合法 phase/kind）。每個 gate 分 qualification_command（正例PASS壞例FAIL，證 gate 可用）與 evidence_command（對 immutable --release-id 的真實資料）；`--phase≤1` 跑 qualification，`--release` **只跑 evidence，selftest 不計**。多子條件 AC 用 components[]（F5-04 語意覆蓋）。未建工具→honest FAIL。",
+  "canonical_ac_ids": [
+    "AC-SPEC",
+    "AC-LANG-1",
+    "AC-KP-VERIFY",
+    "AC-ANTIDRIFT",
+    "AC-NOGRADE",
+    "AC-NOBACKEND",
+    "AC-COV-1",
+    "AC-COV-2",
+    "AC-SCHEMA",
+    "AC-UNIT-1",
+    "AC-UNIT-2",
+    "AC-UNIT-3",
+    "AC-CORRECT",
+    "AC-NAV",
+    "AC-VIZ-1",
+    "AC-STYLE-1",
+    "AC-STYLE-2",
+    "AC-REWARD-1",
+    "AC-PATH-1",
+    "AC-PATH-2",
+    "AC-PERF-1",
+    "AC-A11Y-1",
+    "AC-CODE-DL"
+  ],
+  "required_helper_ids": [
+    "chk-manifest",
+    "chk-visualqa-draft",
+    "chk-source-registry",
+    "chk-ledger-gate",
+    "chk-release-artifact"
+  ],
+  "phase_order": [
+    "-1",
+    "0",
+    "1",
+    "release"
+  ],
+  "checks": [
+    {
+      "ac_id": "AC-SPEC",
+      "phase": "0",
+      "kind": "gate",
+      "_note": "concreteness=ready 前必跑；5clean+紅隊=定案終點（finalization_role 下放到該 component，--ready-for-5clean 只排除此 component 以破 Phase0↔5clean 循環，但仍跑 concreteness）—CF-01",
+      "components": [
+        {
+          "name": "concreteness:",
+          "qualification_command": [
+            "PY",
+            "tools/spec_concreteness_lint.py"
+          ],
+          "evidence_command": [
+            "PY",
+            "tools/spec_concreteness_lint.py"
+          ]
+        },
+        {
+          "name": "5clean+紅隊 ledger:",
+          "finalization_role": true,
+          "qualification_command": [
+            "PY",
+            "tools/spec_converge_gate.py",
+            "--selftest"
+          ],
+          "evidence_command": [
+            "PY",
+            "tools/spec_converge_gate.py",
+            "--verify-ledger"
+          ]
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-LANG-1",
+      "phase": "0",
+      "kind": "gate",
+      "qualification_command": [
+        "PY",
+        "tools/scan_simplified.py",
+        "GLOB:authoring/_kp_slices/*.md"
+      ],
+      "evidence_command": [
+        "PY",
+        "tools/scan_simplified.py",
+        "GLOB:*.html"
+      ],
+      "allow_empty": false
+    },
+    {
+      "id": "chk-manifest",
+      "phase": "-1",
+      "kind": "gate",
+      "qualification_command": [
+        "PY",
+        "tools/_kp_build.py",
+        "--check"
+      ],
+      "evidence_command": [
+        "PY",
+        "tools/_kp_build.py",
+        "--check"
+      ]
+    },
+    {
+      "id": "chk-visualqa-draft",
+      "phase": "-1",
+      "kind": "artifact-all",
+      "paths": [
+        "VISUAL_QA_BUILD_SPEC.md"
+      ]
+    },
+    {
+      "ac_id": "AC-KP-VERIFY",
+      "phase": "0",
+      "kind": "metric",
+      "metric": "binding_unverified_live",
+      "op": "==0",
+      "note": "release-grade verified 由 verified_overlay.json（promote_verified.py 產、綁 manifest sha）現算"
+    },
+    {
+      "id": "chk-source-registry",
+      "phase": "0",
+      "kind": "artifact-all",
+      "paths": [
+        "authoring/source_registry.json",
+        "authoring/source_registry.schema.json"
+      ]
+    },
+    {
+      "id": "chk-ledger-gate",
+      "phase": "0",
+      "kind": "gate",
+      "qualification_command": [
+        "PY",
+        "tools/ledger_schema_gate.py",
+        "--selftest"
+      ],
+      "evidence_command": [
+        "PY",
+        "tools/ledger_schema_gate.py",
+        "--verify"
+      ]
+    },
+    {
+      "id": "chk-repro-gate",
+      "phase": "0",
+      "kind": "gate",
+      "_note": "anti-fabrication：以 .venv 重跑每個 reproduction_ref，比對 registry 指紋；偽造/跑不過即 FAIL（B-08）",
+      "qualification_command": [
+        "PY",
+        "tools/verify/repro_gate.py",
+        "--selftest"
+      ],
+      "evidence_command": [
+        "PY",
+        "tools/verify/repro_gate.py",
+        "--verify"
+      ]
+    },
+    {
+      "ac_id": "AC-ANTIDRIFT",
+      "phase": "0",
+      "kind": "gate",
+      "qualification_command": [
+        "PY",
+        "tools/anti_drift_gate.py",
+        "--selftest"
+      ],
+      "evidence_command": [
+        "PY",
+        "tools/anti_drift_gate.py",
+        "--verify"
+      ],
+      "note": "須四錨點(hook/carrier/rule/memory 指標)存在且壞例DENY好例ALLOW紅隊；非只存在"
+    },
+    {
+      "ac_id": "AC-NOGRADE",
+      "phase": "0",
+      "kind": "gate",
+      "qualification_command": [
+        "PY",
+        "tools/no_grade_label_gate.py",
+        "--selftest"
+      ],
+      "evidence_command": [
+        "PY",
+        "tools/no_grade_label_gate.py",
+        "GLOB:*.html"
+      ],
+      "allow_empty": false
+    },
+    {
+      "ac_id": "AC-NOBACKEND",
+      "phase": "0",
+      "kind": "gate",
+      "qualification_command": [
+        "PY",
+        "tools/no_backend_gate.py",
+        "--selftest"
+      ],
+      "evidence_command": [
+        "PY",
+        "tools/no_backend_gate.py",
+        "GLOB:*.html"
+      ],
+      "allow_empty": false
+    },
+    {
+      "ac_id": "AC-COV-1",
+      "phase": "1",
+      "kind": "gate",
+      "qualification_command": [
+        "PY",
+        "tools/coverage_gate.py",
+        "--selftest"
+      ],
+      "evidence_command": [
+        "PY",
+        "tools/coverage_gate.py",
+        "--verify"
+      ]
+    },
+    {
+      "ac_id": "AC-COV-2",
+      "phase": "1",
+      "kind": "gate",
+      "qualification_command": [
+        "PY",
+        "tools/coverage_gate.py",
+        "--selftest-count"
+      ],
+      "evidence_command": [
+        "PY",
+        "tools/coverage_gate.py",
+        "--verify-count"
+      ]
+    },
+    {
+      "ac_id": "AC-SCHEMA",
+      "phase": "1",
+      "kind": "gate",
+      "qualification_command": [
+        "PY",
+        "tools/unit_schema_gate.py",
+        "--selftest"
+      ],
+      "evidence_command": [
+        "PY",
+        "tools/unit_schema_gate.py",
+        "--verify"
+      ]
+    },
+    {
+      "ac_id": "AC-UNIT-1",
+      "phase": "1",
+      "kind": "gate",
+      "qualification_command": [
+        "PY",
+        "tools/unit_acceptance_lint.py",
+        "--selftest"
+      ],
+      "evidence_command": [
+        "PY",
+        "tools/unit_acceptance_lint.py",
+        "--verify"
+      ]
+    },
+    {
+      "ac_id": "AC-UNIT-2",
+      "phase": "1",
+      "kind": "gate",
+      "qualification_command": [
+        "PY",
+        "tools/per_page_5clean_gate.py",
+        "--selftest"
+      ],
+      "evidence_command": [
+        "PY",
+        "tools/per_page_5clean_gate.py",
+        "--verify"
+      ],
+      "note": "每頁 content_audit 5-clean（F5-04 修：非 --mcq-cue）"
+    },
+    {
+      "ac_id": "AC-UNIT-3",
+      "phase": "1",
+      "kind": "gate",
+      "qualification_command": [
+        "PY",
+        "tools/unit_acceptance_lint.py",
+        "--selftest-golden"
+      ],
+      "evidence_command": [
+        "PY",
+        "tools/unit_acceptance_lint.py",
+        "--verify-golden"
+      ]
+    },
+    {
+      "ac_id": "AC-CORRECT",
+      "phase": "1",
+      "kind": "gate",
+      "components": [
+        {
+          "name": "claim:",
+          "qualification_command": [
+            "PY",
+            "tools/claim_evidence_gate.py",
+            "--selftest"
+          ],
+          "evidence_command": [
+            "PY",
+            "tools/claim_evidence_gate.py",
+            "--verify"
+          ]
+        },
+        {
+          "name": "question:",
+          "qualification_command": [
+            "PY",
+            "tools/question_correctness_gate.py",
+            "--selftest"
+          ],
+          "evidence_command": [
+            "PY",
+            "tools/question_correctness_gate.py",
+            "--verify"
+          ]
+        },
+        {
+          "name": "generator:",
+          "qualification_command": [
+            "PY",
+            "tools/generator_property_gate.py",
+            "--selftest"
+          ],
+          "evidence_command": [
+            "PY",
+            "tools/generator_property_gate.py",
+            "--verify"
+          ]
+        },
+        {
+          "name": "visual:",
+          "qualification_command": [
+            "PY",
+            "tools/visual_content_fidelity_gate.py",
+            "--selftest"
+          ],
+          "evidence_command": [
+            "PY",
+            "tools/visual_content_fidelity_gate.py",
+            "--verify"
+          ]
+        },
+        {
+          "name": "freshness:",
+          "qualification_command": [
+            "PY",
+            "tools/source_freshness_gate.py",
+            "--selftest"
+          ],
+          "evidence_command": [
+            "PY",
+            "tools/source_freshness_gate.py",
+            "--verify"
+          ]
+        },
+        {
+          "name": "release-hash:",
+          "qualification_command": [
+            "PY",
+            "tools/release_hash_gate.py",
+            "--selftest"
+          ],
+          "evidence_command": [
+            "PY",
+            "tools/release_hash_gate.py",
+            "--verify"
+          ]
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-NAV",
+      "phase": "1",
+      "kind": "gate",
+      "qualification_command": [
+        "NODE",
+        "tools/nav_gate.mjs",
+        "--selftest"
+      ],
+      "evidence_command": [
+        "NODE",
+        "tools/nav_gate.mjs",
+        "--verify"
+      ]
+    },
+    {
+      "ac_id": "AC-VIZ-1",
+      "phase": "1",
+      "kind": "gate",
+      "qualification_command": [
+        "NODE",
+        "tools/figure_signoff_gate.mjs",
+        "--selftest"
+      ],
+      "evidence_command": [
+        "NODE",
+        "tools/figure_signoff_gate.mjs",
+        "--verify"
+      ]
+    },
+    {
+      "ac_id": "AC-STYLE-1",
+      "phase": "1",
+      "kind": "gate",
+      "qualification_command": [
+        "NODE",
+        "tools/design_consistency_gate.js",
+        "--selftest"
+      ],
+      "evidence_command": [
+        "NODE",
+        "tools/design_consistency_gate.js",
+        "--verify"
+      ]
+    },
+    {
+      "ac_id": "AC-STYLE-2",
+      "phase": "1",
+      "kind": "gate",
+      "qualification_command": [
+        "NODE",
+        "tools/design_consistency_gate.js",
+        "--selftest-noinvent"
+      ],
+      "evidence_command": [
+        "NODE",
+        "tools/design_consistency_gate.js",
+        "--verify-noinvent"
+      ]
+    },
+    {
+      "ac_id": "AC-REWARD-1",
+      "phase": "1",
+      "kind": "gate",
+      "qualification_command": [
+        "NODE",
+        "tools/reward_safety_gate.mjs",
+        "--selftest"
+      ],
+      "evidence_command": [
+        "NODE",
+        "tools/reward_safety_gate.mjs",
+        "--verify"
+      ]
+    },
+    {
+      "ac_id": "AC-PATH-1",
+      "phase": "1",
+      "kind": "gate",
+      "qualification_command": [
+        "PY",
+        "tools/path_sim_gate.py",
+        "--selftest"
+      ],
+      "evidence_command": [
+        "PY",
+        "tools/path_sim_gate.py",
+        "--verify"
+      ]
+    },
+    {
+      "ac_id": "AC-PATH-2",
+      "phase": "1",
+      "kind": "gate",
+      "qualification_command": [
+        "PY",
+        "tools/path_sim_gate.py",
+        "--selftest-inv4"
+      ],
+      "evidence_command": [
+        "PY",
+        "tools/path_sim_gate.py",
+        "--verify-inv4"
+      ]
+    },
+    {
+      "ac_id": "AC-PERF-1",
+      "phase": "1",
+      "kind": "gate",
+      "qualification_command": [
+        "NODE",
+        "tools/perf_gate.mjs",
+        "--selftest"
+      ],
+      "evidence_command": [
+        "NODE",
+        "tools/perf_gate.mjs",
+        "--verify"
+      ]
+    },
+    {
+      "ac_id": "AC-A11Y-1",
+      "phase": "1",
+      "kind": "gate",
+      "qualification_command": [
+        "NODE",
+        "tools/a11y_gate.mjs",
+        "--selftest"
+      ],
+      "evidence_command": [
+        "NODE",
+        "tools/a11y_gate.mjs",
+        "--verify"
+      ]
+    },
+    {
+      "ac_id": "AC-CODE-DL",
+      "phase": "1",
+      "kind": "gate",
+      "qualification_command": [
+        "NODE",
+        "tools/code_download_gate.mjs",
+        "--selftest"
+      ],
+      "evidence_command": [
+        "NODE",
+        "tools/code_download_gate.mjs",
+        "--verify"
+      ]
+    },
+    {
+      "id": "chk-release-artifact",
+      "phase": "release",
+      "kind": "release-artifact",
+      "command": [
+        "PY",
+        "tools/release_hash_gate.py",
+        "--verify-artifact"
+      ],
+      "note": "須 --release-id；部署產物 hash＝簽核 hash"
+    }
+  ]
+}

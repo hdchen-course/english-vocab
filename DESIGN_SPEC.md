@@ -1,3 +1,7 @@
+<!-- ⚠ SCOPE BANNER (2026-10-26): 本檔為「設計系統/token 層」的 SSOT（LEARNING_PATH_REBUILD_SPEC.md §6.5 defer 給它），
+     在設計 token/版面契約範圍內 normative。但它【不是】學習路徑/導覽/獎勵/課綱政策的來源——那些以
+     LEARNING_PATH_REBUILD_SPEC.md 為唯一 normative（見其 §0.4 文件優先序，本檔列為階 3）。檔內「唯一真相」字樣僅指
+     設計 token（寬度/callout/app-bar 等），不得據以推翻學習政策。tap-target 等與 spec 數值衝突者以 spec 最終統一值為準。 -->
 <!-- 統一版面設計規格 v1 — 由 66 頁實碼分析綜合(workflow we1puqwm7)；audit 標準 + 新教材範本 -->
 <!-- v2 校正 2026-08-24 — 由「實際 render + reader 走查」團隊(profile→verify→synth→reconcile)重建；
      修正 v1「讀 source 而非看 render」造成的落差。以下 v2 契約凌駕 v1 §3通則(f) 與任何與渲染相反的敘述。 -->

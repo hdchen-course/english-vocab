@@ -1,6 +1,10 @@
 # 公館國小電子書 — 遊戲化改版藍圖
 
-> 本文件為總編輯統合全隊（內容體檢、遊戲設計、技術、UX、社會科、對抗式/兒童/QA 審查）後的**唯一可執行規格**。實作團隊以本文為準；凡與各子報告衝突之處，以本文的「裁決」為最終決定。
+> ⚠ **SUPERSEDED / HISTORICAL（2026-10-26）**：本檔為背景/歷史文件，**不具 normative 力**。學習路徑、導覽、獎勵、課綱政策的唯一 normative 來源為 `LEARNING_PATH_REBUILD_SPEC.md`（見其 §0.4 文件優先序，本檔列為階 6）。凡本檔與該 spec 衝突——特別是 **hard-gate 鎖內容、年段書架、「小四精通之路」等牴觸 R-OPEN（不鎖定）/R11（不曝露年段）之處——一律以該 spec 為準**。引用本檔的規則須附「檔名＋章節＋sha」並確認不與 spec 衝突。
+>
+> （以下為原始內容，保留供歷史參考。）
+>
+> 本文件為總編輯統合全隊（內容體檢、遊戲設計、技術、UX、社會科、對抗式/兒童/QA 審查）後的規格草案；凡與各子報告衝突之處，以本文的「裁決」為當時決定。
 
 ---
 
@@ -275,7 +279,7 @@ legacy key 永不刪除/覆寫；舊頁照常讀寫 `math_*`/`mult_progress`/`ch
 | 10 | 遷移正確性（reset/null/配額/冪等） | null-guard + try/catch + `v1_seeded` 守衛 + shadow 前移 + `delta<0` 不扣 | **遷移測試套件**全綠 |
 | 11 | 繁體字保證 | **確定性掃描 gate** | 見下 |
 
-**確定性簡體掃描 gate（必做、零命中才可上線）**：一支 script 掃描 Simplified-only 碼位集 + 精選變體/同形陷阱清單（説→說、裏→裡、麽→麼、爲/為、羣/群、鍾/鐘、简→簡、体→體、关→關、单→單、后→後 等），範圍涵蓋**所有** `.html` + `vocab_data_*.js` + `game_core.js` + `social_studies.html`，並掃**遠端** `hdchen-course.github.io` 副本；同時驗證 13 頁全帶 `lang="zh-TW"`。列為 ship checklist 必要 gate，非人工「self-check」。
+**確定性簡體掃描 gate（必做、零命中才可上線）**：一支 script 掃描 Simplified-only 碼位集 + 精選變體/同形陷阱清單（變體如 説→說、裏→裡、麽→麼、爲/為、羣/群、鍾/鐘；常見簡體以碼位表示避免本檔自觸 gate：U+7B80/U+4F53/U+5173/U+5355/U+540E 對應 簡/體/關/單/後 等），範圍涵蓋**所有** `.html` + `vocab_data_*.js` + `game_core.js` + `social_studies.html`，並掃**遠端** `hdchen-course.github.io` 副本；同時驗證 13 頁全帶 `lang="zh-TW"`。列為 ship checklist 必要 gate，非人工「self-check」。
 
 **裝置/斷點/origin 測試矩陣（真實 http server，非 file://）**：13" iPad 直式 1024w + 橫式 1366w、iPhone SE/小手機 375w、Android 360–412w、斷點邊界 599/600/1023/1024。每台驗證：HUD 不疊 math/chinese 原生 bar、底部 nav 讓開 iOS home indicator、移除 viewport 鎖後 pinch-zoom 生效、跨分頁 `storage` 事件刷新 HUD。
 

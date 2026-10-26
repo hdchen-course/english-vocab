@@ -56,13 +56,13 @@
 - [eng.t_mid.vocab.environment-nature] 環境與自然  {tier: t_mid, exam: 會考}
 - [eng.t_mid.vocab.quantifiers-units] 數量詞與單位詞  {tier: t_mid, exam: 會考}
 - [eng.t_mid.vocab.core-1200] 教育部參考 1200 核心字精熟  {tier: t_mid, exam: 會考}
-- [eng.t_mid.vocab.expand-2000] 擴充至 2000 字  {tier: t_mid, exam: 會考}  (待核：確切字數)
-- [eng.t_adv.vocab.ceec-4500] 學測參考 4500 字表精熟  {tier: t_adv, exam: 學測}  (待核：確切字數)
+- [eng.t_mid.vocab.expand-2000] 擴充至約 2,000 字（國中高標，逾會考命題基準 1,200 字，銜接學測）  {t_mid, 會考}
+- [eng.t_adv.vocab.ceec-4500] 學測參考 4500 字表精熟  {t_adv, 學測}
 - [eng.t_adv.vocab.abstract-affective] 抽象概念與情意詞彙  {tier: t_adv, exam: 學測}
 - [eng.t_adv.vocab.academic-topics] 學術主題詞（科學/社會/環境/科技）  {tier: t_adv, exam: 學測}
 - [eng.t_adv.vocab.synonym-nuance] 近義詞語意辨析（nuance）  {tier: t_adv, exam: 學測}
 - [eng.t_adv.vocab.register] 詞彙語域（formal/informal）  {tier: t_adv, exam: 學測}
-- [eng.t_sub.vocab.expand-6000] 進階擴充至 6000 字  {tier: t_sub, exam: 分科}  (待核：確切字數)
+- [eng.t_sub.vocab.expand-6000] 進階擴充至約 6,000 字（參考詞彙表第 5–6 級，逾學測；英文無上限、以生活實用為主）  {t_enrich, 無}
 
 ## 構詞（字首/字根/字尾/合成/派生）
 
@@ -92,7 +92,7 @@
 - [eng.t_mid.noun.collective] 集合名詞  {tier: t_mid, exam: 會考}
 - [eng.t_mid.noun.noun-as-modifier] 名詞當形容詞修飾名詞  {tier: t_mid, exam: 會考}
 - [eng.t_adv.noun.double-possessive] 雙重所有格（a friend of mine）  {tier: t_adv, exam: 學測}
-- [eng.t_base.article.indefinite] 不定冠詞 a/an（依母音音開頭）  {tier: t_base, exam: 無}
+- [eng.t_base.article.indefinite] 不定冠詞 a/an（依「起始發音」而非字母：a university、an hour、an umbrella）  {tier: t_base, exam: 無}
 - [eng.t_mid.article.definite] 定冠詞 the（特指/獨一/再次提及）  {tier: t_mid, exam: 會考}
 - [eng.t_mid.article.zero] 零冠詞（泛指複數/不可數/專有名詞）  {tier: t_mid, exam: 會考}
 - [eng.t_mid.article.idiom] 冠詞慣用語（play the piano、go to school）  {tier: t_mid, exam: 會考}
@@ -128,13 +128,13 @@
 - [eng.t_mid.verb.present-perfect] 現在完成式（經驗/完成/繼續）  {tier: t_mid, exam: 會考}
 - [eng.t_mid.verb.present-perfect-vs-past] 現在完成 vs 過去簡單  {tier: t_mid, exam: 會考}
 - [eng.t_mid.verb.irregular-three-forms] 不規則動詞三態精熟  {tier: t_mid, exam: 會考}
-- [eng.t_mid.verb.stative-verbs] 狀態動詞不用進行式  {tier: t_mid, exam: 會考}
+- [eng.t_mid.verb.stative-verbs] 狀態動詞多不用進行式；但轉為動態／暫時義時可用（be having lunch＝吃、be thinking about＝考慮；非正式口語 I'm loving it）  {tier: t_mid, exam: 會考}
 - [eng.t_adv.verb.present-perfect-progressive] 現在完成進行式  {tier: t_adv, exam: 學測}
 - [eng.t_adv.verb.past-perfect] 過去完成式  {tier: t_adv, exam: 學測}
 - [eng.t_adv.verb.future-perfect] 未來完成式  {tier: t_adv, exam: 學測}
 - [eng.t_adv.verb.future-progressive] 未來進行式  {tier: t_adv, exam: 學測}
-- [eng.t_sub.verb.past-perfect-progressive] 過去完成進行式  {tier: t_sub, exam: 分科}
-- [eng.t_sub.verb.future-perfect-progressive] 未來完成進行式  {tier: t_sub, exam: 分科}
+- [eng.t_sub.verb.past-perfect-progressive] 過去完成進行式  {t_adv, 學測}
+- [eng.t_sub.verb.future-perfect-progressive] 未來完成進行式  {t_adv, 學測}
 - [eng.t_adv.verb.tense-consistency] 時態一致與時間副詞搭配  {tier: t_adv, exam: 學測}
 - [eng.t_adv.verb.used-to-family] used to / be used to / get used to 辨析  {tier: t_adv, exam: 學測}
 - [eng.t_mid.verb.ditransitive] 授與動詞雙受詞（give sb sth / to/for）  {tier: t_mid, exam: 會考}
@@ -147,8 +147,8 @@
 - [eng.t_mid.voice.by-agent] by 片語與施事者省略  {tier: t_mid, exam: 會考}
 - [eng.t_adv.voice.ditransitive] 授與動詞雙受詞被動  {tier: t_adv, exam: 學測}
 - [eng.t_adv.voice.causative-perception] 感官/使役被動（be made to / be seen to）  {tier: t_adv, exam: 學測}
-- [eng.t_sub.voice.nonfinite] 被動不定詞/動名詞（to be done / being done）  {tier: t_sub, exam: 分科}
-- [eng.t_sub.voice.it-is-said] It is said that… / be said to 結構  {tier: t_sub, exam: 分科}
+- [eng.t_sub.voice.nonfinite] 被動不定詞/動名詞（to be done / being done）  {t_adv, 學測}
+- [eng.t_sub.voice.it-is-said] It is said that… / be said to 結構  {t_adv, 學測}
 - [eng.t_mid.voice.active-passive-transform] 主動被動轉換  {tier: t_mid, exam: 會考}
 
 ## 助動詞與情態
@@ -164,8 +164,8 @@
 - [eng.t_mid.modal.shall-would-like] shall（提議）/ would like  {tier: t_mid, exam: 會考}
 - [eng.t_adv.modal.would] would（過去習慣/委婉/意願）  {tier: t_adv, exam: 學測}
 - [eng.t_adv.modal.perfect] 情態 + 完成式（must/should/could have 表過去推測或後悔）  {tier: t_adv, exam: 學測}
-- [eng.t_adv.modal.probability-ladder] 推測確定度階梯（must > may > might > can't）  {tier: t_adv, exam: 學測}
-- [eng.t_sub.modal.need-dare] need / dare 作情態助動詞  {tier: t_sub, exam: 分科}
+- [eng.t_adv.modal.probability-ladder] 推測確定度（雙軸）：肯定方向 must＞may／might／could；否定方向 can't／couldn't 表「幾乎不可能」的高確定（非低機率）  {tier: t_adv, exam: 學測}
+- [eng.t_sub.modal.need-dare] need / dare 作情態助動詞  {t_adv, 無}
 
 ## 形容詞、副詞與比較
 
@@ -224,7 +224,7 @@
 - [eng.t_adv.nonfinite.subject-of-infinitive] 不定詞意義主詞（for sb to / of sb to）  {tier: t_adv, exam: 學測}
 - [eng.t_adv.nonfinite.bare-infinitive] 原形不定詞（make/let/have/see/hear + 原形）  {tier: t_adv, exam: 學測}
 - [eng.t_adv.nonfinite.gerund-idioms] 慣用動名詞句型（feel like/can't help/be worth/It's no use）  {tier: t_adv, exam: 學測}
-- [eng.t_sub.nonfinite.perfect-passive] 不定詞/動名詞的完成式與被動式  {tier: t_sub, exam: 分科}
+- [eng.t_sub.nonfinite.perfect-passive] 不定詞/動名詞的完成式與被動式  {t_adv, 學測}
 
 ## 關係子句
 
@@ -238,8 +238,8 @@
 - [eng.t_adv.relcl.prep-plus-relative] 介系詞 + 關係代名詞（in which / for whom）  {tier: t_adv, exam: 學測}
 - [eng.t_adv.relcl.what] 複合關係代名詞 what  {tier: t_adv, exam: 學測}
 - [eng.t_adv.relcl.reduce-to-participle] 關係子句化簡為分詞（the man standing…）  {tier: t_adv, exam: 學測}
-- [eng.t_sub.relcl.compound-wh-ever] 複合關係代名詞 whatever/whoever/whichever  {tier: t_sub, exam: 分科}
-- [eng.t_sub.relcl.quantifier-of-which] 數量詞 + of + which/whom（some of which）  {tier: t_sub, exam: 分科}
+- [eng.t_sub.relcl.compound-wh-ever] 複合關係代名詞 whatever/whoever/whichever  {t_adv, 學測}
+- [eng.t_sub.relcl.quantifier-of-which] 數量詞 + of + which/whom（some of which）  {t_adv, 學測}
 
 ## 名詞子句
 
@@ -250,7 +250,7 @@
 - [eng.t_adv.nouncl.whether-or-not] whether…or not  {tier: t_adv, exam: 學測}
 - [eng.t_adv.nouncl.complement-apposition] 名詞子句當補語/同位語  {tier: t_adv, exam: 學測}
 - [eng.t_adv.nouncl.sequence-of-tenses] 名詞子句的時態呼應  {tier: t_adv, exam: 學測}
-- [eng.t_sub.nouncl.suggest-should] 建議要求動詞後 that 子句（suggest that sb (should) do）  {tier: t_sub, exam: 分科}
+- [eng.t_sub.nouncl.suggest-should] 建議要求動詞後 that 子句（suggest that sb (should) do）  {t_adv, 學測}
 
 ## 副詞子句
 
@@ -268,14 +268,14 @@
 - [eng.t_adv.subj.as-if] as if / as though 與事實相反  {tier: t_adv, exam: 學測}
 - [eng.t_adv.subj.wish] I wish 句型（現在/過去/未來願望）  {tier: t_adv, exam: 學測}
 - [eng.t_adv.subj.indicative-vs-subjunctive] 直說 vs 假設語氣判別  {tier: t_adv, exam: 學測}
-- [eng.t_sub.subj.future-unreal] 與未來不可能/假設（If + were to / should）  {tier: t_sub, exam: 分科}
-- [eng.t_sub.subj.mixed] 混合假設（過去條件→現在結果）  {tier: t_sub, exam: 分科}
-- [eng.t_sub.subj.inversion-omit-if] 省略 if 的倒裝（Were I / Had I / Should you）  {tier: t_sub, exam: 分科}
-- [eng.t_sub.subj.would-rather] would rather (+ that 子句過去式)  {tier: t_sub, exam: 分科}
-- [eng.t_sub.subj.if-only] if only  {tier: t_sub, exam: 分科}
-- [eng.t_sub.subj.its-time] It's (high) time + 過去式  {tier: t_sub, exam: 分科}
-- [eng.t_sub.subj.mandative] 建議/要求/命令動詞/形容詞後假設（insist/essential that sb (should) do）  {tier: t_sub, exam: 分科}
-- [eng.t_sub.subj.without-but-for] without / but for 隱含條件  {tier: t_sub, exam: 分科}
+- [eng.t_sub.subj.future-unreal] 與未來不可能/假設（If + were to / should）  {t_adv, 學測}
+- [eng.t_sub.subj.mixed] 混合假設（過去條件→現在結果）  {t_adv, 學測}
+- [eng.t_sub.subj.inversion-omit-if] 省略 if 的倒裝（Were I / Had I / Should you）  {t_adv, 學測}
+- [eng.t_sub.subj.would-rather] would rather (+ that 子句過去式)  {t_adv, 學測}
+- [eng.t_sub.subj.if-only] if only  {t_adv, 學測}
+- [eng.t_sub.subj.its-time] It's (high) time + 過去式  {t_adv, 學測}
+- [eng.t_sub.subj.mandative] 建議/要求/命令動詞/形容詞後假設（insist/essential that sb (should) do）  {t_adv, 學測}
+- [eng.t_sub.subj.without-but-for] without / but for 隱含條件  {t_adv, 學測}
 
 ## 特殊句構（倒裝/強調/分裂/分詞構句）
 
@@ -291,12 +291,12 @@
 - [eng.t_adv.special.apposition] 同位語  {tier: t_adv, exam: 學測}
 - [eng.t_adv.special.inversion-place] 地方副詞/介片語句首倒裝（Here comes…）  {tier: t_adv, exam: 學測}
 - [eng.t_adv.special.ellipsis] 省略（對話省略/子句省略）  {tier: t_adv, exam: 學測}
-- [eng.t_sub.special.inversion-negative] 否定副詞句首倒裝（Never/Seldom/Hardly/Not only…）  {tier: t_sub, exam: 分科}
-- [eng.t_sub.special.inversion-only] only + 副詞片語句首倒裝  {tier: t_sub, exam: 分科}
-- [eng.t_sub.special.inversion-so-such] so/such 句首倒裝  {tier: t_sub, exam: 分科}
-- [eng.t_sub.special.what-cleft] what 強調句（What I need is…）  {tier: t_sub, exam: 分科}
-- [eng.t_sub.special.perfect-participle] 完成式分詞構句（Having done…）  {tier: t_sub, exam: 分科}
-- [eng.t_sub.special.absolute-with] 獨立分詞構句（with + 受詞 + 分詞 / 主詞不同）  {tier: t_sub, exam: 分科}
+- [eng.t_sub.special.inversion-negative] 否定副詞句首倒裝（Never/Seldom/Hardly/Not only…）  {t_adv, 學測}
+- [eng.t_sub.special.inversion-only] only + 副詞片語句首倒裝  {t_adv, 學測}
+- [eng.t_sub.special.inversion-so-such] so/such 句首倒裝  {t_adv, 學測}
+- [eng.t_sub.special.what-cleft] what 強調句（What I need is…）  {t_adv, 學測}
+- [eng.t_sub.special.perfect-participle] 完成式分詞構句（Having done…）  {t_adv, 學測}
+- [eng.t_sub.special.absolute-with] 獨立分詞構句（with + 受詞 + 分詞 / 主詞不同）  {t_adv, 學測}
 
 ## 基本句型
 
@@ -332,7 +332,7 @@
 - [eng.t_adv.reading.cloze] 克漏字（文法 + 語意 + 連貫）  {tier: t_adv, exam: 學測}
 - [eng.t_adv.reading.gap-filling] 文意選填（word-bank gap filling）  {tier: t_adv, exam: 學測}
 - [eng.t_adv.reading.discourse-ordering] 篇章結構題（句子/段落插入與排序）  {tier: t_adv, exam: 學測}
-- [eng.t_sub.reading.academic-long] 長篇學術性文章閱讀  {tier: t_sub, exam: 分科}
+- [eng.t_sub.reading.academic-long] 長篇學術性文章閱讀  {t_enrich, 無}
 
 ## 英聽
 
@@ -344,7 +344,7 @@
 - [eng.t_mid.listening.transition-cue] 聽辨轉折詞與語氣轉變  {tier: t_mid, exam: 會考}
 - [eng.t_mid.listening.numbers] 數字/時間/價格/日期聽辨  {tier: t_mid, exam: 會考}
 - [eng.t_mid.listening.dictation] 聽寫（dictation）  {tier: t_mid, exam: 會考}
-- [eng.t_adv.listening.monologue] 短文/獨白聽解（主旨/細節/推論）  {tier: t_adv, exam: 學測}  (待核：高中英聽測驗採計方式依校系)
+- [eng.t_adv.listening.monologue] 短文／獨白聽解（主旨／細節／推論）；高中英語聽力測驗為大考中心獨立測驗、等級制、採計方式依校系  {t_adv, 學測}
 - [eng.t_adv.listening.implication] 情境與言外之意推測  {tier: t_adv, exam: 學測}
 
 ## 寫作
@@ -364,7 +364,7 @@
 - [eng.t_adv.writing.expository] 說明文/報導文體  {tier: t_adv, exam: 學測}
 - [eng.t_adv.writing.avoid-chinglish] 用字精確與避免中式英文  {tier: t_adv, exam: 學測}
 - [eng.t_adv.writing.sentence-combining] 改寫/合併句子（sentence combining）  {tier: t_adv, exam: 學測}
-- [eng.t_sub.writing.argumentative] 議論文體與論證  {tier: t_sub, exam: 分科}
+- [eng.t_sub.writing.argumentative] 議論文體與論證  {t_enrich, 無}
 
 ---
 

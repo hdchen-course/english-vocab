@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "source_registry — LEARNING_PATH Phase 0 證據來源登記表 schema（§6.8.1）",
+  "_doc": "每個 source_id 是 scope 或 fact 證據的可解析來源。scope＝課綱約定（evidence_method=curriculum_scope，authority_class 必 official/standard）；fact＝正確性證據，不訴諸權威，evidence_method∈{derivation,program,truth_table,corpus(自驗，須 reproduction_ref),cross_check(須 ≥2 independent_refs),consensus_current(安全急救，須 recheck_after)}。content_fingerprint 必為實際擷取物的雜湊（禁造假）。",
+  "type": "object",
+  "required": ["schema_version", "sources"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string"},
+    "_doc": {"type": "string"},
+    "sources": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/source"}
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": ["publisher", "locator", "accessed_at", "evidence_method", "content_fingerprint"],
+      "additionalProperties": false,
+      "properties": {
+        "publisher": {"type": "string", "minLength": 1},
+        "url_or_isbn": {"type": "string"},
+        "edition_or_version": {"type": "string"},
+        "locator": {"type": "string", "minLength": 1, "_doc": "章節/條號/頁/行，精確到可覆核"},
+        "accessed_at": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+        "authority_class": {"type": "string", "enum": ["official", "standard", "academic", "corpus", "reproduction", "secondary"]},
+        "evidence_method": {"type": "string", "enum": ["curriculum_scope", "derivation", "program", "truth_table", "corpus", "cross_check", "consensus_current"]},
+        "content_fingerprint": {"type": "string", "minLength": 8, "_doc": "實際擷取物（PDF/HTML/腳本輸出/語料切片）的 sha256 前 N 碼；禁造假"},
+        "recheck_after": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "_doc": "time-sensitive（consensus_current/法律/數據）必填；過期 promote 擋"},
+        "reproduction_ref": {"type": "string", "_doc": "derivation/program/truth_table/corpus 必填：指向可重跑的腳本::check_id（gate 會真的重跑）"},
+        "independent_refs": {"type": "array", "items": {"type": "string"}, "_doc": "cross_check 必填且 ≥2：各自獨立的來源識別"},
+        "note": {"type": "string"}
+      }
+    }
+  }
+}

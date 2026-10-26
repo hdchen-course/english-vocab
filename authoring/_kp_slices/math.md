@@ -173,7 +173,7 @@
 - [math.t_sub.trig.superposition] 正餘弦疊合（a sinθ + b cosθ）  {t_sub, 分科-數甲}
 - [math.t_sub.trig.product-sum] 積化和差與和差化積  {t_sub, 分科-數甲}
 - [math.t_sub.trig.equation] 三角方程式的解法  {t_sub, 分科-數甲}
-- [math.t_sub.trig.inverse-function] 反三角函數初步 (待核：數甲收錄深度)  {t_sub, 分科-數甲}
+- [math.t_sub.trig.inverse-function] 反三角函數初步  {t_enrich, 無}
 
 ## 八、向量（vectors）
 
@@ -196,7 +196,7 @@
 - [math.t_sub.space.plane-equation] 平面方程式與法向量  {t_sub, 分科-數甲}
 - [math.t_sub.space.line-parametric] 空間直線的參數式與對稱式  {t_sub, 分科-數甲}
 - [math.t_sub.space.distance-angle] 點/線/面間的距離與夾角計算  {t_sub, 分科-數甲}
-- [math.t_sub.space.sphere] 球面方程式與直線/平面與球的關係 (待核：數甲收錄)  {t_sub, 分科-數甲}
+- [math.t_sub.space.sphere] 球面方程式與直線/平面與球的關係  {t_enrich, 無}
 
 ## 十、矩陣與行列式（matrices & determinants）
 
@@ -225,7 +225,7 @@
 - [math.t_sub.conic.eccentricity] 離心率與圓錐曲線的統整判別  {t_sub, 分科-數甲}
 - [math.t_sub.conic.translation] 平移後的圓錐曲線方程式（配方還原）  {t_sub, 分科-數甲}
 - [math.t_sub.conic.line-intersection] 直線與圓錐曲線的交點/切線  {t_sub, 分科-數甲}
-- [math.t_sub.conic.reflection-apply] 圓錐曲線的反射性質與應用 (待核：數甲收錄深度)  {t_sub, 分科-數甲}
+- [math.t_sub.conic.reflection-apply] 圓錐曲線的反射性質與應用  {t_sub, 分科-數甲}
 
 ## 十三、數列與級數（sequences & series）
 
@@ -309,7 +309,7 @@
 - [math.t_sub.calc.area] 定積分求曲線下面積與兩曲線間面積  {t_sub, 分科-數甲}
 - [math.t_sub.calc.volume-revolution] 旋轉體體積  {t_sub, 分科-數甲}
 - [math.t_sub.calc.integration-substitution] 積分技巧：代換法  {t_sub, 分科-數甲}
-- [math.t_sub.calc.integration-by-parts] 積分技巧：分部積分  {t_sub, 分科-數甲}
+- [math.t_sub.calc.integration-by-parts] 積分技巧：分部積分  {t_enrich, 無}
 - [math.t_sub.calc.exp-log-calculus] 指數/對數函數的微積分  {t_sub, 分科-數甲}
 - [math.t_sub.calc.trig-calculus] 三角函數的微積分  {t_sub, 分科-數甲}
 
@@ -322,7 +322,7 @@
 - [math.t_sub.finmath.geo-distance] 經緯度與地球上的距離應用 (待核：數B/數乙歸屬)  {t_sub, 分科-數乙}
 - [math.t_sub.linprog.feasible-region] 線性規劃：限制式與可行解區域  {t_sub, 分科-數乙}
 - [math.t_sub.linprog.objective-optimize] 線性規劃：目標函數的最佳化（頂點法）  {t_sub, 分科-數乙}
-- [math.t_sub.finmath.marginal-elasticity] 微積分在商管的應用（邊際分析/彈性） (待核：數乙範圍)  {t_sub, 分科-數乙}
+- [math.t_sub.finmath.marginal-elasticity] 微積分在商管的應用（邊際分析/彈性）  {t_sub, 分科-數乙}
 
 ---
 

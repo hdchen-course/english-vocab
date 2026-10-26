@@ -61,7 +61,7 @@
 - [sci.t_adv.phys-force.incline] 斜面上物體的受力分析  {t_adv, 學測}
 - [sci.t_adv.phys-force.tension-system] 繩張力與連結體系統（電梯/阿特午機）  {t_adv, 學測}
 - [sci.t_adv.phys-force.friction-coeff] 靜/動摩擦係數的定量計算  {t_adv, 學測}
-- [sci.t_sub.phys-force.noninertial] 非慣性座標系與假想力（慣性力/離心力）  {t_sub, 分科-物理}
+- [sci.t_sub.phys-force.noninertial] 非慣性座標系與假想力（慣性力/離心力）  {t_enrich, 無}
 - [sci.t_sub.phys-force.newton-2d] 二維牛頓定律聯立求解  {t_sub, 分科-物理}
 
 ### 物理-04 功、能量與動量 `phys-energy`
@@ -115,8 +115,8 @@
 - [sci.t_mid.phys-fluid.pascal] 帕斯卡原理與液壓機  {t_mid, 會考}
 - [sci.t_adv.phys-fluid.buoyancy-calc] 浮力與視重的定量計算  {t_adv, 學測}
 - [sci.t_adv.phys-fluid.float-quant] 浮體/沉體/懸浮的定量分析  {t_adv, 學測}
-- [sci.t_sub.phys-fluid.continuity] 流體連續方程式（A₁v₁=A₂v₂）  {t_sub, 分科-物理 (待核)}
-- [sci.t_sub.phys-fluid.bernoulli] 白努利原理與應用  {t_sub, 分科-物理 (待核)}
+- [sci.t_sub.phys-fluid.continuity] 流體連續方程式（A₁v₁=A₂v₂）  {t_enrich, 無}
+- [sci.t_sub.phys-fluid.bernoulli] 白努利原理與應用  {t_enrich, 無}
 
 ### 物理-07 熱學 `phys-heat`
 - [sci.t_base.phys-heat.thermometer] 溫度與溫度計的使用  {t_base, 無}
@@ -166,7 +166,7 @@
 - [sci.t_base.phys-optics.color-basic] 光的色散與顏色（彩虹/三稜鏡）  {t_base, 無}
 - [sci.t_mid.phys-optics.pinhole] 光的直進與針孔成像  {t_mid, 會考}
 - [sci.t_mid.phys-optics.reflection-law] 反射定律（入射角=反射角）  {t_mid, 會考}
-- [sci.t_mid.phys-optics.plane-mirror] 平面鏡成像（虛像/左右相反/等距）  {t_mid, 會考}
+- [sci.t_mid.phys-optics.plane-mirror] 平面鏡成像（正立虛像、左右相反、物像對鏡面等距、大小相同）  {t_mid, 會考}
 - [sci.t_mid.phys-optics.refraction-idea] 光的折射現象（初步）  {t_mid, 會考}
 - [sci.t_mid.phys-optics.lens-action] 凸/凹透鏡對光的作用與焦點  {t_mid, 會考}
 - [sci.t_mid.phys-optics.convex-image] 凸透鏡成像規律（物距與像的關係）  {t_mid, 會考}
@@ -240,11 +240,11 @@
 - [sci.t_adv.phys-modern.nucleus] 原子核組成、同位素與質能概念  {t_adv, 學測}
 - [sci.t_adv.phys-modern.radioactivity] 放射性（α/β/γ 射線）與半衰期概念  {t_adv, 學測}
 - [sci.t_sub.phys-modern.photoeq] 光電方程式（hf=W+Ek）與遏止電壓  {t_sub, 分科-物理}
-- [sci.t_sub.phys-modern.compton] 康普頓效應  {t_sub, 分科-物理 (待核)}
+- [sci.t_sub.phys-modern.compton] 康普頓效應  {t_sub, 分科-物理}
 - [sci.t_sub.phys-modern.spectral-lines] 能階躍遷與光譜線波長計算  {t_sub, 分科-物理}
 - [sci.t_sub.phys-modern.nuclear-reaction] 核反應（衰變/分裂/融合）與質能互換（E=mc²）  {t_sub, 分科-物理}
 - [sci.t_sub.phys-modern.half-life-calc] 半衰期的定量計算  {t_sub, 分科-物理}
-- [sci.t_sub.phys-modern.uncertainty] 不確定性原理與量子概念初步  {t_sub, 分科-物理 (待核)}
+- [sci.t_sub.phys-modern.uncertainty] 不確定性原理與量子概念初步  {t_sub, 分科-物理}
 - [sci.t_sub.phys-modern.relativity] 狹義相對論（時間膨脹/長度收縮/質能等效）初步  {t_sub, 分科-物理}
 
 ---
@@ -304,7 +304,7 @@
 - [sci.t_sub.chem-bond.hybridization] 混成軌域（sp/sp²/sp³）與鍵角  {t_sub, 分科-化學}
 - [sci.t_sub.chem-bond.sigma-pi] σ 鍵與 π 鍵、鍵能與鍵長  {t_sub, 分科-化學}
 - [sci.t_sub.chem-bond.resonance] 共振結構與形式電荷  {t_sub, 分科-化學}
-- [sci.t_sub.chem-bond.mo-theory] 分子軌域理論初步  {t_sub, 分科-化學 (待核)}
+- [sci.t_sub.chem-bond.mo-theory] 分子軌域理論初步  {t_enrich, 無}
 - [sci.t_sub.chem-bond.crystal-types] 晶體分類（離子/共價網狀/分子/金屬）與性質  {t_sub, 分科-化學}
 
 ### 化學-04 化學計量 `chem-stoich`
@@ -336,7 +336,7 @@
 - [sci.t_adv.chem-gas.dalton-partial] 道耳頓分壓定律與莫耳分率  {t_adv, 學測}
 - [sci.t_sub.chem-gas.kinetic-rms] 氣體分子動力論與方均根速率  {t_sub, 分科-化學}
 - [sci.t_sub.chem-gas.graham] 格銳目擴散定律  {t_sub, 分科-化學}
-- [sci.t_sub.chem-gas.real-gas] 真實氣體偏差與凡得瓦方程式  {t_sub, 分科-化學 (待核)}
+- [sci.t_sub.chem-gas.real-gas] 真實氣體偏差與凡得瓦方程式  {t_enrich, 無}
 
 ### 化學-06 溶液與濃度 `chem-soln`
 - [sci.t_base.chem-soln.solution-idea] 溶解與溶液的概念  {t_base, 無}
@@ -417,7 +417,7 @@
 - [sci.t_adv.chem-redox.electrolysis] 電解與電鍍原理  {t_adv, 學測}
 - [sci.t_sub.chem-redox.electrode-potential] 標準電極電位與電池電動勢計算  {t_sub, 分科-化學}
 - [sci.t_sub.chem-redox.spontaneity] 以 E° 與 ΔG 判定反應自發性  {t_sub, 分科-化學}
-- [sci.t_sub.chem-redox.nernst] 能斯特方程式  {t_sub, 分科-化學 (待核)}
+- [sci.t_sub.chem-redox.nernst] 能斯特方程式  {t_enrich, 無}
 - [sci.t_sub.chem-redox.faraday-electrolysis] 法拉第電解定律（電量與析出量）  {t_sub, 分科-化學}
 - [sci.t_sub.chem-redox.batteries] 常見電池（乾電池/鉛蓄電池/燃料電池）  {t_sub, 分科-化學}
 - [sci.t_sub.chem-redox.corrosion] 金屬腐蝕與防蝕（犧牲陽極/鍍層）  {t_sub, 分科-化學}
@@ -450,7 +450,7 @@
 - [sci.t_sub.chem-organic.stereoisomer] 結構異構與立體異構（順反/鏡像）  {t_sub, 分科-化學}
 - [sci.t_sub.chem-organic.reaction-types] 取代/加成/消去反應類型  {t_sub, 分科-化學}
 - [sci.t_sub.chem-organic.aromatic] 芳香烴（苯）與其結構  {t_sub, 分科-化學}
-- [sci.t_sub.chem-organic.mechanism] 有機反應機構初步  {t_sub, 分科-化學 (待核)}
+- [sci.t_sub.chem-organic.mechanism] 有機反應機構初步  {t_enrich, 無}
 - [sci.t_sub.chem-organic.saponification] 皂化反應與界面活性劑  {t_sub, 分科-化學}
 
 ### 化學-13 應用/永續化學 `chem-applied`

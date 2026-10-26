@@ -34,7 +34,7 @@
 
 ### 1C 居家安全
 - [life.safety.home.electricity] 用電安全：濕手不碰插座、不超載插座、不塞異物  {t_base, 無}
-- [life.safety.home.fire-gas] 用火／瓦斯：聞到瓦斯味不開電器、開窗、關閥、離開報修  {t_base, 無}
+- [life.safety.home.fire-gas] 聞到瓦斯味（孩子版）：不碰任何電器或電燈開關（開或關都不行）、不按門鈴、立刻離開到屋外、找大人並打119；關瓦斯閥、開窗、報修是大人的事  {t_base, 無} (待核：high-risk 需官方現行來源覆核)
 - [life.safety.home.sharp-hot] 刀具、熱水、熱鍋、尖銳物的安全使用與收納  {t_base, 無}
 - [life.safety.home.fall-prevent] 高處／陽台／窗戶墜落預防  {t_base, 無}
 - [life.safety.home.chemicals] 藥品、清潔劑、化學品不亂碰亂吃，分辨標示  {t_base, 無}
@@ -60,10 +60,12 @@
 ### 1F 緊急應變與急救
 - [life.safety.emergency.hotlines] 110（警察）、119（火警/救護）、112、防災與消防  {t_base, 無}
 - [life.safety.emergency.report-clearly] 報案說清楚：地點、發生什麼、幾個人、是否受傷  {t_base, 無}
-- [life.safety.emergency.fire-escape] 火場應變：低姿、摸門溫、濕毛巾、往下逃、不搭電梯、到安全點集合  {t_base, 無}
+- [life.safety.emergency.fire-escape] 火場應變：先判斷火與煙的位置決定「逃」或「躲」；能安全離開才逃、煙中壓低身體、不搭電梯、沿牆到最近安全出口；開門前先摸門板溫度，門外有濃煙或高溫就退回室內關門、用衣物塞住門縫、到有窗或陽台處向外求救並打119說清楚位置（依現場判斷，不套固定口訣）  {t_base, 無} (待核：high-risk 需官方現行來源覆核)
 - [life.safety.emergency.earthquake] 地震：趴下—掩護—穩住（Drop–Cover–Hold）、遠離窗戶與高物  {t_base, 無}
-- [life.safety.emergency.first-aid] 基本急救概念：止血加壓、燙傷沖脫泡蓋送、異物哽塞求救  {t_mid, 無}
-- [life.safety.emergency.cpr-aed] CPR 與 AED 的概念與何時啟動（撥119→壓胸→取AED）  {t_mid, 無} (待核：教學深度分齡)
+- [life.safety.emergency.bleeding] 傷口出血止血：隔著乾淨布或戴手套，直接用力壓住傷口並持續加壓；血流不止或傷口很大就打119、找大人  {t_mid, 無} (待核：high-risk 需官方現行來源覆核)
+- [life.safety.emergency.burn] 燙傷「沖脫泡蓋送」：用流動的自來水（涼而不冰）沖約 15–20 分鐘、不可冰敷或塗抹東西、小心脫除衣物、覆蓋乾淨布、儘速送醫  {t_mid, 無} (待核：high-risk 需官方現行來源覆核)
+- [life.safety.emergency.choking] 異物哽塞：還能有效咳嗽就鼓勵繼續咳；無法呼吸或出聲時由大人施作——成人與大童用背擊加腹部推擠（哈姆立克），未滿1歲嬰兒改為背擊加胸部按壓（不可腹部推擠），並立刻打119  {t_mid, 無} (待核：high-risk 需官方現行來源覆核)
+- [life.safety.emergency.cpr-aed] CPR／AED 概念與啟動時機：先確認現場安全→拍肩大聲叫喚、確認無反應且沒有正常呼吸→大聲呼救、打119並請人取AED→（能力所及才）持續用力快壓胸、依AED語音操作；孩子重點在「啟動救援、找大人」而非取代大人施救  {t_mid, 無} (待核：high-risk 需官方現行來源覆核)
 - [life.safety.emergency.emergency-kit] 防災包內容與家庭集合點／聯絡計畫  {t_mid, 無}
 - [life.safety.emergency.natural-disaster] 颱風、淹水、土石流、雷擊的避險  {t_mid, 無}
 
@@ -82,7 +84,7 @@
 
 **待補缺口（本盤點新增）**
 - [life.safety.extra.bully-bystander] 校園/網路霸凌的旁觀者介入（不是加害、不是沉默）→ 與領域2/5 交界  {t_mid, 無}
-- [life.safety.extra.harassment] 性騷擾/性剝削的辨識與求助（兒少保護、113）  {t_mid, 無} (待核：措辭分齡)
+- [life.safety.extra.harassment] 性騷擾/性剝削的辨識與求助（兒少保護、113）  {t_mid, 無}
 - [life.safety.extra.animal-safety] 動物安全：不逗弄陌生動物、被咬抓傷處理  {t_base, 無}
 - [life.safety.extra.outdoor-safety] 戲水/山林/野外活動安全（防溺五不、結伴、告知行程）  {t_base, 無}
 
@@ -154,7 +156,7 @@
 **待補缺口（本盤點新增）**
 - [life.sel.extra.gratitude] 感恩與正向情緒的刻意練習  {t_base, 無}
 - [life.sel.extra.loneliness] 孤單/被排擠時的因應與求助  {t_mid, 無}
-- [life.sel.extra.grief] 哀傷與失落（寵物/親人/搬家轉學）的健康調適  {t_mid, 無} (待核：分齡措辭)
+- [life.sel.extra.grief] 哀傷與失落（寵物/親人/搬家轉學）的健康調適  {t_mid, 無}
 - [life.sel.extra.digital-emotion] 數位情緒：social media 比較焦慮、FOMO 的覺察  {t_mid, 無}
 
 ---
@@ -238,7 +240,7 @@
 - [life.think.deduction-induction.deduction] 演繹：前提為真且有效則結論必真  {t_mid, 無}
 - [life.think.deduction-induction.induction] 歸納：從例子推通則，結論是「可能」不是「必然」  {t_mid, 無}
 - [life.think.deduction-induction.analogy] 類比推理與其限制  {t_mid, 無}
-- [life.think.deduction-induction.abduction] 溯因推理（最佳解釋，abduction 概念）  {t_mid, 無} (待核：分齡用詞)
+- [life.think.deduction-induction.abduction] 溯因推理（最佳解釋，abduction 概念）  {t_mid, 無}
 - [life.think.deduction-induction.overgeneralization] 過度一般化（以偏概全）的風險  {t_mid, 無}
 
 ### 4C 事實、意見與證據 Evidence
@@ -256,9 +258,10 @@
 - [life.think.bias.herd] 從眾/羊群效應  {t_mid, 無}
 - [life.think.bias.survivorship] 倖存者偏誤  {t_mid, 無}
 - [life.think.bias.halo] 月暈效應（以一好/壞概括全部）  {t_mid, 無}
-- [life.think.bias.loss-aversion] 損失趨避與沉沒成本  {t_mid, 無}
+- [life.think.bias.loss-aversion] 損失趨避（同樣大小，失去的痛苦大於得到的快樂）  {t_mid, 無}
+- [life.think.bias.sunk-cost] 沉沒成本謬誤（已付出且收不回的成本，不該左右接下來的決定）  {t_mid, 無}
 - [life.think.bias.hindsight] 後見之明偏誤  {t_mid, 無}
-- [life.think.bias.dunning-kruger] 鄧寧–克魯格效應（越不懂越自信）  {t_mid, 無} (待核：用詞分齡)
+- [life.think.bias.dunning-kruger] 鄧寧–克魯格效應：剛入門、了解有限時容易高估自己、也較難察覺自身不足（註：此效應的測量方法仍有統計上的爭論）  {t_mid, 無}
 - [life.think.bias.framing] 框架效應（說法不同影響判斷）  {t_mid, 無}
 - [life.think.bias.debiasing] 偏誤的覺察與去偏策略（放慢、找反例、換立場、同儕檢核）  {t_adv, 無}
 
@@ -280,7 +283,7 @@
 - [life.think.critical-creative.multiple-perspectives] 多角度思考、找反例、檢核假設  {t_mid, 無}
 - [life.think.critical-creative.claim-reason-evidence] 區分主張、理由與證據  {t_mid, 無}
 - [life.think.critical-creative.steelman] 結構化論證與反方立場（steelman）  {t_adv, 無}
-- [life.think.critical-creative.creative-thinking] 創造性思考：發散—收斂、腦力激盪、SCAMPER  {t_adv, 無} (待核)
+- [life.think.critical-creative.creative-thinking] 創造性思考：發散—收斂、腦力激盪、SCAMPER  {t_adv, 無}
 
 **待補缺口（本盤點新增）**
 - [life.think.extra.classify-compare] 分類與比較（異同、歸類）  {t_base, 無}
@@ -307,7 +310,7 @@
 - [life.digital.privacy.privacy-settings] 隱私設定、App 權限、定位分享的管理  {t_mid, 無}
 - [life.digital.privacy.data-as-payment] 個資的價值與「免費服務用你的資料換」  {t_mid, 無}
 - [life.digital.privacy.two-factor] 兩步驟驗證（2FA）、釣魚辨識  {t_mid, 無}
-- [life.digital.privacy.data-rights] 資料被蒐集/販售的概念與數位權利  {t_adv, 無} (待核)
+- [life.digital.privacy.data-rights] 資料被蒐集/販售的概念與數位權利  {t_adv, 無}
 
 ### 5C 網路霸凌與線上人際
 - [life.digital.cyberbully.what-is-cyberbully] 什麼是網路霸凌（文字/排擠/散布）  {t_base, 無}
@@ -328,7 +331,7 @@
 - [life.digital.ai-algo.recommendation-algo] 推薦演算法如何決定你看到什麼（同溫層成因）  {t_mid, 無}
 - [life.digital.ai-algo.deepfake] 深偽（deepfake）影像/語音的存在與查證  {t_mid, 無}
 - [life.digital.ai-algo.ai-hallucination] 生成式 AI 會「一本正經地說錯話」（幻覺），需查證  {t_mid, 無}
-- [life.digital.ai-algo.ai-detection] AI 生成內容的辨識線索與標示  {t_mid, 無} (待核：技術演進快)
+- [life.digital.ai-algo.ai-detection] AI 生成內容不一定看得出來：別只靠肉眼特徵判斷，要查證來源與是否有 AI 標示（內容來源／憑證）  {t_mid, 無}
 - [life.digital.ai-algo.ai-ethics] 用 AI 的倫理：不抄襲、標示來源、保護個資  {t_mid, 無}
 - [life.digital.ai-algo.algo-bias] 演算法偏見與資料來源的影響  {t_adv, 無}
 
@@ -336,7 +339,7 @@
 - [life.digital.factcheck.pause-before-share] 看到驚人訊息先暫停、不急著轉傳  {t_base, 無}
 - [life.digital.factcheck.verify-3steps] 查三步：誰說的、何時、有無其他可信來源佐證  {t_mid, 無}
 - [life.digital.factcheck.reverse-search] 反向圖片搜尋、查原始出處、看日期  {t_mid, 無}
-- [life.digital.factcheck.factcheck-platforms] 事實查核平台的使用  {t_mid, 無} (待核：具體平台名)
+- [life.digital.factcheck.factcheck-platforms] 善用事實查核平台：先查傳言是否已被查核、看它的查證方法與證據，再交叉比對（不依賴單一平台）  {t_mid, 無}
 - [life.digital.factcheck.verify-responsibility] 「轉傳前先查證」的公民責任  {t_mid, 無}
 
 **待補缺口（本盤點新增）**
@@ -368,7 +371,7 @@
 - [life.data.misleading.sampling-bias] 樣本偏誤、樣本太小、自我選擇樣本  {t_mid, 無}
 - [life.data.misleading.correlation-causation] 相關 ≠ 因果（含共同原因、巧合、反向因果）  {t_mid, 無}
 - [life.data.misleading.average-trap] 平均的陷阱（「平均薪資」被高薪拉高）  {t_mid, 無}
-- [life.data.misleading.simpson-paradox] 存活者偏誤、辛普森悖論  {t_adv, 無} (待核：高中適配)
+- [life.data.misleading.simpson-paradox] 辛普森悖論（分組看與合併看的趨勢相反）  {t_adv, 無} (待核：高中適配)
 - [life.data.misleading.survey-bias] 問卷設計偏誤（引導性問題、無回應偏誤）  {t_adv, 無}
 
 ### 6D 從資料到判斷
@@ -376,7 +379,7 @@
 - [life.data.judgment.describe-vs-infer] 區分描述（是什麼）與推論（為什麼/會怎樣）  {t_mid, 無}
 - [life.data.judgment.evidence-claims] 用證據支持主張、量化不確定  {t_mid, 無}
 - [life.data.judgment.probability-intuition] 基本機率直覺與風險溝通（「十萬分之一」感）  {t_adv, 無}
-- [life.data.judgment.data-ethics] 資料倫理：隱私、去識別化、不誤用統計  {t_adv, 無} (待核)
+- [life.data.judgment.data-ethics] 資料倫理：隱私、去識別化、不誤用統計  {t_adv, 無}
 
 **待補缺口（本盤點新增）**
 - [life.data.extra.collect-data] 蒐集與記錄資料（劃記、簡單統計）  {t_base, 無}
@@ -403,14 +406,14 @@
 - [life.compute.algorithm.conditions-loops] 條件判斷與巢狀、計數/條件迴圈  {t_mid, 無}
 - [life.compute.algorithm.sort-search] 排序與搜尋的直覺（找名字、猜數字=二分搜尋）  {t_mid, 無}
 - [life.compute.algorithm.variables-io] 變數、輸入/輸出的概念  {t_mid, 無}
-- [life.compute.algorithm.efficiency] 效率直覺（步驟多寡、大 O 的入門概念）  {t_adv, 無} (待核：高中適配)
+- [life.compute.algorithm.efficiency] 效率直覺（步驟多寡、大 O 的入門概念）  {t_adv, 無}
 
 ### 7C 電腦如何運作（computer_science）
 - [life.compute.hardware.hardware-parts] 硬體：CPU、記憶體、儲存、輸入/輸出裝置  {t_base, 無}
 - [life.compute.hardware.software-os] 軟體 vs 硬體、作業系統的角色  {t_base, 無}
 - [life.compute.hardware.binary] 二進位：0/1、位元與位元組、資料如何被編碼（數字/文字/圖片/聲音）  {t_mid, 無}
 - [life.compute.hardware.file-sizes] 檔案大小單位（KB/MB/GB）與量級感  {t_mid, 無}
-- [life.compute.hardware.compile-interpret] 程式如何被執行（編譯/直譯 概念）  {t_adv, 無} (待核)
+- [life.compute.hardware.compile-interpret] 程式如何被執行（編譯/直譯 概念）  {t_adv, 無}
 
 ### 7D 網路與網際網路
 - [life.compute.network.ip-domain] 網路如何連接、IP/網域名稱的概念  {t_mid, 無}
@@ -430,13 +433,13 @@
 ### 7F 科技與社會
 - [life.compute.tech-society.code-everywhere] 程式無所不在（紅綠燈、提款機、手機）  {t_mid, 無}
 - [life.compute.tech-society.tech-tradeoffs] 科技的好處與代價（自動化、隱私、環境）  {t_mid, 無}
-- [life.compute.tech-society.algo-fairness] 演算法決策的公平與責任  {t_adv, 無} (待核)
+- [life.compute.tech-society.algo-fairness] 演算法決策的公平與責任  {t_adv, 無}
 
 **待補缺口（本盤點新增）**
 - [life.compute.extra.typing-files] 基本打字與輸入法、檔案與資料夾管理  {t_base, 無}
 - [life.compute.extra.device-care] 負責任地使用裝置（護眼、姿勢、備份）  {t_base, 無}
 - [life.compute.extra.spreadsheet] 試算表基本（儲存格、公式、簡單函數）  {t_mid, 無}
-- [life.compute.extra.block-coding] 簡易程式體驗（Scratch/區塊式）的概念連結  {t_mid, 無} (待核)
+- [life.compute.extra.block-coding] 簡易程式體驗（Scratch/區塊式）的概念連結  {t_mid, 無}
 
 ---
 
@@ -477,7 +480,7 @@
 - [life.finance.market.scarcity] 稀缺性與選擇  {t_mid, 無}
 - [life.finance.market.trade-benefits] 分工與貿易的好處  {t_mid, 無}
 - [life.finance.market.competition-monopoly] 市場、競爭、獨占概念  {t_adv, 無}
-- [life.finance.market.gdp-cycle] GDP、景氣循環、失業的基本概念  {t_adv, 無} (待核：分齡深度)
+- [life.finance.market.gdp-cycle] GDP、景氣循環、失業的基本概念  {t_adv, 無}
 - [life.finance.market.tax-public-goods] 稅的概念與公共財  {t_adv, 無}
 
 ### 8F 信用、借貸與風險（finance_realworld）
@@ -496,7 +499,7 @@
 
 **待補缺口（本盤點新增）**
 - [life.finance.extra.digital-payment] 數位支付與電子錢包安全（與領域5/7交界）  {t_mid, 無}
-- [life.finance.extra.first-job] 第一份工作/打工：薪資、勞健保、基本勞動權益概念  {t_adv, 無} (待核)
+- [life.finance.extra.first-job] 第一份工作／打工：你有勞動權益——雇主應投保勞健保，工時、加班、最低工資受法律保障（實際金額逐年調整）  {t_adv, 無}
 - [life.finance.extra.fraud-recovery] 詐騙受害後的求助與止付流程（165、銀行）  {t_adv, 無}
 
 ---
@@ -524,7 +527,7 @@
 
 ### 9C 台灣行動與公民參與
 - [life.sustain.civic-action.daily-action] 校園/家庭的永續行動（自備餐具水壺、省電）  {t_base, 無}
-- [life.sustain.civic-action.taiwan-issues] 台灣的環境議題與在地實例  {t_mid, 無} (待核：具體案例時效)
+- [life.sustain.civic-action.taiwan-issues] 認識台灣常見的環境議題類型（空氣品質、水資源、海洋與河川污染、海廢、廢棄物與回收、生態與開發衝突、能源轉型）  {t_mid, 無}
 - [life.sustain.civic-action.civic-participation] 公民參與：連署、志工、社區行動  {t_mid, 無}
 - [life.sustain.civic-action.policy-responsibility] 政策、企業責任與個人選擇的互動  {t_adv, 無}
 
@@ -540,7 +543,7 @@
 - [life.sustain.news.source-check] 來源查核：誰報的、原始出處、多源比對、看日期  {t_mid, 無}
 - [life.sustain.news.bias-balance] 偏見與立場的辨識、平衡報導  {t_mid, 無}
 - [life.sustain.news.no-forward-unverified] 不轉傳未查證訊息（公民責任）  {t_mid, 無}
-- [life.sustain.news.media-manipulation] 媒體所有權、資訊操弄與境外影響的概念  {t_adv, 無} (待核)
+- [life.sustain.news.media-manipulation] 媒體所有權、資訊操弄與境外影響的概念  {t_adv, 無}
 
 **待補缺口（本盤點新增）**
 - [life.sustain.extra.animal-welfare] 動物保護與友善對待  {t_base, 無}
@@ -562,7 +565,7 @@
 - [life.innovate.mindset.design-thinking] 從問題到解決方案的創新流程（設計思考：同理—定義—發想—原型—測試）  {t_adv, 無}
 
 ### 10B 改變世界的發明與發現（事實性）
-- [life.innovate.inventions.everyday-inventions] 日常發明的由來（電燈、電話、印刷術、輪子等）  {t_base, 無} (待核：具體歸屬避免簡化)
+- [life.innovate.inventions.everyday-inventions] 日常發明是怎麼來的：多半是許多人長期接力改良的結果（破除單一發明者迷思）  {t_base, 無}
 - [life.innovate.inventions.science-improves-life] 科學發現如何改善生活（疫苗、抗生素、電力、網際網路）  {t_mid, 無}
 - [life.innovate.inventions.invention-society] 發明與社會的互動（交通、通訊、醫療的演進）  {t_mid, 無}
 - [life.innovate.inventions.tech-milestones] 重大科技里程碑的脈絡與影響  {t_adv, 無}

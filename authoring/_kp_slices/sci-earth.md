@@ -87,7 +87,7 @@ exam 標註會考／學測／無（分科測驗不含地科獨立科目；深階
 - [sci.t_mid.earth-geomorph.weathering-physical-chemical] 風化分物理風化（破碎）與化學風化（成分改變），及影響因素  {t_mid, 會考}
 - [sci.t_mid.earth-geomorph.erosion-agents] 侵蝕營力：流水、海浪、風、冰河  {t_mid, 會考}
 - [sci.t_mid.earth-geomorph.transport-deposition] 搬運與堆積：顆粒大小、流速與沉積物沉降的關係  {t_mid, 會考}
-- [sci.t_mid.earth-geomorph.river-landforms] 河流地形：上游 V 型谷、中游曲流、下游三角洲與沖積扇  {t_mid, 會考}
+- [sci.t_mid.earth-geomorph.river-landforms] 河流地形：上游 V 型谷、中游曲流、出山口（坡度驟減處）沖積扇、河口三角洲  {t_mid, 會考}
 - [sci.t_mid.earth-geomorph.coastal-landforms] 海岸地形：海蝕平台、海蝕洞、沙灘、沙洲（侵蝕岸 vs 堆積岸）  {t_mid, 會考}
 - [sci.t_mid.earth-geomorph.taiwan-landforms] 臺灣特殊地形（如野柳、太魯閣峽谷、海岸階地）的成因  {t_mid, 會考}
 - [sci.t_mid.earth-geomorph.karst] 石灰岩地區溶蝕形成鐘乳石、石筍等喀斯特地形  {t_mid, 會考}
@@ -193,7 +193,7 @@ exam 標註會考／學測／無（分科測驗不含地科獨立科目；深階
 - [sci.t_mid.earth-hydrology.taiwan-water-issue] 臺灣水資源問題：降雨時空分布不均、河短流急、留蓄不易  {t_mid, 會考}
 - [sci.t_adv.earth-hydrology.infiltration-runoff] 入滲與逕流的分配受地表、坡度、植被、降雨強度影響  {t_adv, 學測}
 - [sci.t_adv.earth-hydrology.land-subsidence] 超抽地下水導致地層下陷與海水入侵  {t_adv, 學測}
-- [sci.t_adv.earth-hydrology.water-balance] 集水區水平衡（降水＝蒸發＋逕流＋入滲±儲量）概念  {t_adv, 學測}
+- [sci.t_adv.earth-hydrology.water-balance] 集水區水平衡（降水 P＝蒸發散 ET＋逕流 Q±儲量變化 ΔS；入滲為系統內部分配，不另列為獨立輸出項）  {t_adv, 學測}
 
 ## 天文（地球運動、日月食、太陽系、恆星、宇宙） (astronomy)
 
@@ -214,12 +214,12 @@ exam 標註會考／學測／無（分科測驗不含地科獨立科目；深階
 - [sci.t_adv.earth-astronomy.eclipse-why-not-monthly] 因白道與黃道約 5° 夾角，故非每月都發生日月食  {t_adv, 學測}
 - [sci.t_adv.earth-astronomy.celestial-sphere] 天球概念與天體周日運動、天球坐標（赤緯、時角概念）  {t_adv, 學測}
 - [sci.t_adv.earth-astronomy.sun-path-latitude] 不同緯度、不同季節太陽的視運動路徑與中天高度計算  {t_adv, 學測}
-- [sci.t_adv.earth-astronomy.kepler-laws] 克卜勒行星運動三定律（橢圓軌道、等面積、週期與距離關係）概念 `(待核：學測多考概念，第三定律是否要求量化計算視版本而定)`  {t_adv, 學測}
+- [sci.t_adv.earth-astronomy.kepler-laws] 克卜勒行星運動三定律（橢圓軌道、等面積、週期與距離關係）概念 ``  {t_adv, 學測}
 - [sci.t_adv.earth-astronomy.sun-structure] 太陽的結構與活動（黑子、閃焰、太陽風）及對地球的影響  {t_adv, 學測}
 - [sci.t_adv.earth-astronomy.stellar-brightness] 恆星的視星等與絕對星等、亮度與距離的關係  {t_adv, 學測}
 - [sci.t_adv.earth-astronomy.hr-diagram] 赫羅圖（H-R 圖）與恆星的光度、表面溫度分類  {t_adv, 學測}
 - [sci.t_adv.earth-astronomy.stellar-evolution] 恆星的演化歷程（主序星→紅巨星→白矮星/超新星/中子星/黑洞）  {t_adv, 學測}
-- [sci.t_adv.earth-astronomy.distance-scale] 天文距離單位與尺度（天文單位 AU、光年、秒差距） `(待核：秒差距/視差測距是否納入學測範圍，各版本深淺不一)`  {t_adv, 學測}
+- [sci.t_adv.earth-astronomy.distance-scale] 天文距離單位與尺度（天文單位 AU、光年、秒差距） ``  {t_adv, 學測}
 - [sci.t_adv.earth-astronomy.galaxy-milkyway] 銀河系的結構與太陽系在其中的位置  {t_adv, 學測}
 - [sci.t_adv.earth-astronomy.big-bang] 宇宙起源（大霹靂）與宇宙膨脹、哈伯定律（紅移）概念  {t_adv, 學測}
 - [sci.t_adv.earth-astronomy.cmb] 宇宙微波背景輻射作為大霹靂的證據（概念）  {t_adv, 學測}
