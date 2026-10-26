@@ -280,7 +280,7 @@
 | 理財 | ● | ◐ | ◐（2 薄頁） |
 | 安全 | ● | ●（物質/青少年標國中・高中） | ◐ |
 | 核心能力 | ● | ● | ◐（跨年段共用，無高中專屬層） |
-| 科技（運算思維） | ◐ | ◐ | ◐（hub `#path-tech` 有頁但薄；為 §4.1 section G 的 `compute` 能力類別（category，life id 第 2 段；見 §4 line 178／§6.2 line 321、325），於此獨立列出避免被「核心能力」吞沒；精確 per-年段覆蓋待 Phase 1 manifest 對映時逐頁盤點精算） |
+| 科技（運算思維） | ◐ | ◐ | ◐（hub `#path-tech` 有頁但薄；為 §4.1 section G 的 `compute` 能力類別（category，life id 第 2 段；見 §4 id 格式定義／§6.2 GR「段位抽取」＋「id→頁推導」），於此獨立列出避免被「核心能力」吞沒；精確 per-年段覆蓋待 Phase 1 manifest 對映時逐頁盤點精算） |
 
 **結論：高中(G10–G12) 全面最弱**——三自然科 advanced 封頂於國中、數學止於 RSA 無微積分、國文僅 primer；
 國小/國中大致齊全；社會歷地公被綑在共用 `social_advanced*`，未依 strand/年段分離。這決定 §4−§5 的 gap 主要落在**高中段**與**社會分流**。
@@ -295,7 +295,7 @@
 - **R-OPEN 不鎖定鐵律（learner 自由瀏覽）**：
   - **任何節點/頁隨時可開**：**嚴禁** disabled／灰掉不可點／隱藏於鎖頭／跳「尚未解鎖」擋下。先備未達**只**顯示**非強制**的黃色提示條「這課會用到 ○○、△△；還不熟的話建議先看 →（連結）」，但內容照常全開、可直接學。
   - **隨時可瀏覽全部內容並直達（但「瀏覽全部」＝分區逐層 drill-down，非一屏攤開全部）**：除漸進揭露的預設視圖外，**永遠提供**一個常駐入口能看到「到底有什麼」並點進任一頁——至少含 (a)「瀏覽全部／完整目錄」：一棵**可達全站**的樹，但**預設各層收合、一次只展開點到的那一區**（科目→strand→級別→單元逐層點開），**嚴禁**初次或任何單一動作把全科目×strand×級別×單元一次攤在同一畫面（會「一眼不想看」，與 ND 漸進揭露同一鐵律）；(b)**搜尋**（打關鍵字跳任一單元/頁）；(c) 地圖可自由縮放平移到任何區。設計意圖：**可達性 100%（任何內容都看得到、到得了），但呈現永遠分區逐層、每屏資訊量受控**。漸進揭露是**預設聚焦**，不得成為「看不到／到不了其他內容」的牢籠；「瀏覽全部」也不得反向變成「一屏傾倒全部」。
-    - ❌例：點「瀏覽全部」即展開 9 科 × 所有 strand × 所有級別 × 所有單元節點（~600）於同一長頁（資訊轟炸，違 ND；樹葉＝單元節點，見 line 297／§6.1 node＝unit，非列舉 3092 知識點）。✅例：點「瀏覽全部」先只見 9 個科目列（收合）；點「數學」才列其 strand（仍收合）；點「數與量」才列初/中/高級；點某級別才列該頁單元——每一步只增一層、每屏皆可一眼掃完。
+    - ❌例：點「瀏覽全部」即展開 9 科 × 所有 strand × 所有級別 × 所有單元節點（~600）於同一長頁（資訊轟炸，違 ND；樹葉＝單元節點，見 §6.1「節點＝unit」，非列舉 3092 知識點）。✅例：點「瀏覽全部」先只見 9 個科目列（收合）；點「數學」才列其 strand（仍收合）；點「數與量」才列初/中/高級；點某級別才列該頁單元——每一步只增一層、每屏皆可一眼掃完。
   - **起點自選、不強制由初級起**：learner 可**自選起點或直跳任一級別**（例：國中程度者直接進「中級」，不被逼先看「初級」——強逼回頭看簡單的只會讓人不想看）。系統**不預設把人丟到初級**；可選的「快速定位/小測」僅為**建議**用、可略過，絕不作為開啟門檻。
   - 動機哲學：引導而不設限——給方向與鷹架，但尊重自學者隨時跳看的自由（§8 #7 心理醫生、#4 學習科學、#10 PM）。
 - **路徑而非平面清單**：提供「建議學習順序」的視覺化 roadmap（可玩、具成就感），但允許自由探索。
@@ -315,7 +315,7 @@
     | 社會 | `soc-civ`／`soc-geo`／`soc-hist` |
     | 科技 | `life.compute`／`life.digital` |
     | 理財 | `life.finance` |
-  - 故頂層 9 島 ≠ 17 個 GR subject：9 島是策展 rollup（單一或複合），subject 是島下一層；GR 的 id→頁推導（§6.2 line 325）仍以 subject（domain/category）＋strand＋tier 為鍵，不受島分組影響。
+  - 故頂層 9 島 ≠ 17 個 GR subject：9 島是策展 rollup（單一或複合），subject 是島下一層；GR 的 id→頁推導（§6.2 GR「id→頁推導」）仍以 subject（domain/category）＋strand＋tier 為鍵，不受島分組影響。
 - **ND 漸進揭露鐵律（anti-overwhelm；全站 ~600+ 節點/單元，首屏絕不可把人「一眼擊垮」）**（註：~600+ 指節點/單元數，非頁數；頁數以 §5.1 的 ~100 現有頁＋gap 新增頁為準，節點≠頁，見 §6.1 節點↔單元↔頁銜接）：
   - **禁止 first-paint 傾倒全圖/長清單**：任何畫面初次載入**不得**一次渲染全部節點或一條超長捲動清單。首頁只顯示三樣：(a) **單一最醒目的「接著學這個／今天建議」CTA**（1–3 個當前可學節點，回訪者一眼知道下一步）；(b) **少數頂層分區入口**（科目/大島，**≤ 12 個**）；(c) 精簡**總進度概覽**（非逐節點）。
   - **地圖預設縮放在「分區/島」層、逐層展開**：進科目先看 strand 島嶼（**收合態**）；點某島才展開其級別（tier）與單元節點——**一次只深入一區**，不同時攤開所有 strand×tier。
@@ -331,7 +331,7 @@
   - **一個 HTML 頁可容納多個單元**（unit＝頁內區塊/stepper，沿用現站「一頁多概念」模式）；**不得**為了對映知識點把站點炸成數百~上千個檔。
   - **既有檔名/路徑一律穩定**：reuse 的頁**原地包裝、保留原檔名與路徑**；rebuild 只改**內容**不改檔名；**禁止大規模改名/搬移**（否則書籤、跨頁連結、獎勵 `progKey`、git history 全斷，牴觸 never-disappear 精神）。確有必要改名＝例外，須附 redirect ＋ `progKey` 遷移對照，並依 §6.3／§7.1（`learning_progress_v1` 的 additive-merge／壞檔不重設／migrate）保護逐單元進度不遺失（獎勵 `player_profile_v1` 以穩定 id 識別、不受檔名影響，故 §7.3 RT 不涵蓋改名→進度遷移）；預設**不改名**。新增頁才給新檔名。
   - **頁面分組規則（GR；可從知識點 id 機械推導，稽核一眼對得上）**：
-    - **預設分組＝一個「科目 × strand（主軸）× tier（級別）」一頁**。**段位抽取（兩域不同，須分開）**：學科域 `<domain>.<tier>.<strand>.<slug>`→ tier＝第 2 段、strand＝第 3 段；life 域 `life.<category>.<strand>.<slug>`→ 第 2 段是 category（當 subject 分區用）、strand＝**第 3 段**、**tier 不在 id**。**tier 一律讀 manifest `tier` 欄（唯一權威），不得以 id 位置推斷**（呼應 §4 line 179）：學科域 id 第 2 段**通常**等於 manifest tier，但以 manifest `tier` 欄為準（若個別 id 段與 tier 欄不符，一律以 tier 欄為真——建置時應 red-team 使兩者一致，見 §4.1）；life 域 tier 不在 id，只能自 manifest 取。該頁 host「此主軸、此級別」的所有單元（頁內節點依 `prerequisites` 由淺到深）。例：`math.t_base.numquant.*` → 頁「數與量（初級）」、`math.t_mid.numquant.*` → 頁「數與量（中級）」（strand `numquant`＝「數與量」，見附錄 A §一；勿誤名為「數論」number theory）——**不把一個主軸從國小到高中塞進單一巨頁、不混級**。
+    - **預設分組＝一個「科目 × strand（主軸）× tier（級別）」一頁**。**段位抽取（兩域不同，須分開）**：學科域 `<domain>.<tier>.<strand>.<slug>`→ tier＝第 2 段、strand＝第 3 段；life 域 `life.<category>.<strand>.<slug>`→ 第 2 段是 category（當 subject 分區用）、strand＝**第 3 段**、**tier 不在 id**。**tier 一律讀 manifest `tier` 欄（唯一權威），不得以 id 位置推斷**（呼應 §4「tier 一律讀 manifest tier 欄」）：學科域 id 第 2 段**通常**等於 manifest tier，但以 manifest `tier` 欄為準（若個別 id 段與 tier 欄不符，一律以 tier 欄為真——建置時應 red-team 使兩者一致，見 §4.1）；life 域 tier 不在 id，只能自 manifest 取。該頁 host「此主軸、此級別」的所有單元（頁內節點依 `prerequisites` 由淺到深）。例：`math.t_base.numquant.*` → 頁「數與量（初級）」、`math.t_mid.numquant.*` → 頁「數與量（中級）」（strand `numquant`＝「數與量」，見附錄 A §一；勿誤名為「數論」number theory）——**不把一個主軸從國小到高中塞進單一巨頁、不混級**。
     - **級別頁名用中性難度詞、不曝露年段（R11 鐵律）**：tier→級別對照＝`t_base→初級`、`t_mid→中級`、`t_adv→高級`、`t_sub→進階`、`t_enrich→延伸挑戰`；頁名**只能**用這些中性詞，**嚴禁**「國小/國中/高中/年級/會考/學測/分科」等年段字樣（`no_grade_label_gate` 掃描）。
     - **防碎片併頁（唯一允許的偏離，機械可判）**：某 `(科目,strand,tier)` 的 minimum 知識點數 **≤3** 時，**併入同 strand 相鄰的較低級別頁**（無較低級則併較高級），避免只有 1–2 條的空頁；併入後該頁名仍取主級別、頁內分段標注。此門檻（≤3）寫死、非主觀。
     - **拆頁條件**：若某頁觸 **R9 效能預算**（初始 JS/體積超標或低階裝置卡頓），再依 slug 群組拆子頁（檔名加後綴），仍保留 id→頁可推導、既有檔名穩定。
@@ -367,7 +367,7 @@
 - **逐單元進度的統一納管規則（兌現 §5.4 指派：progKey 與主 `player_profile_v1` 如何統一而不破壞 §7 永不消失）**：
   - **細則**：
     1. **獨立 key、不寫入 `player_profile_v1`**：進度存於獨立 key **`learning_progress_v1`**（與獎勵 key 分離——§7.2 已定 `player_profile_v1` 只由 `game_core.js` 寫入，進度模組不得改寫它，避免兩寫者互毀）。
-    2. **穩定命名**：`learning_progress_v1.units[<unitId>]`。此處 `<unitId>` 即 §6.2 metadata 的 **`unit_id`** 欄同一值（JS 存取子寫 camelCase、metadata 欄寫 snake_case，指同一識別子，非兩個鍵）。`unit_id`＝**單元自有的穩定 slug**，**依域兩種格式（比照 §4 line 178／§6.2 line 321，別宣稱單一格式）**：學科域 `<domain>.<tier>.<strand>.<unit-slug>`、life 域 `life.<category>.<strand>.<unit-slug>`（tier 不在 id、讀 manifest）；與 §4 知識點 id **同命名空間、同格式族**但**獨立識別**：單一知識點的單元**可**沿用該知識點 slug 當 unit-slug；**掛多個知識點的單元**另取一個代表性 unit-slug，其 `knowledge_point_ids[]` 清單列全部所掛知識點——故 `unit_id` **不等於**「某一個知識點 id」，呼應 §6.2 line 317「知識點≠單元、一單元可掛數個知識點」。**與檔名無關、改名不變**（GR 是「由 id 推導檔名」而非反向，故改名時鍵不動、進度不遺失；§6.2 line 319 需遷移對照的只是舊式頁內 progKey，非此 unit_id）；值含 `{srsState, selfRatings[], lastSeen, mastered:bool}`。**嚴禁用陣列索引或頁順序當鍵**（改版會錯位，牴觸 never-disappear）。
+    2. **穩定命名**：`learning_progress_v1.units[<unitId>]`。此處 `<unitId>` 即 §6.2 metadata 的 **`unit_id`** 欄同一值（JS 存取子寫 camelCase、metadata 欄寫 snake_case，指同一識別子，非兩個鍵）。`unit_id`＝**單元自有的穩定 slug**，**依域兩種格式（比照 §4 id 格式定義／§6.2 GR「段位抽取」，別宣稱單一格式）**：學科域 `<domain>.<tier>.<strand>.<unit-slug>`、life 域 `life.<category>.<strand>.<unit-slug>`（tier 不在 id、讀 manifest）；與 §4 知識點 id **同命名空間、同格式族**但**獨立識別**：單一知識點的單元**可**沿用該知識點 slug 當 unit-slug；**掛多個知識點的單元**另取一個代表性 unit-slug，其 `knowledge_point_ids[]` 清單列全部所掛知識點——故 `unit_id` **不等於**「某一個知識點 id」，呼應 §6.2 R-GRAIN「知識點≠單元、一單元可掛數個知識點」。**與檔名無關、改名不變**（GR 是「由 id 推導檔名」而非反向，故改名時鍵不動、進度不遺失；§6.2 R-GRAIN 改名例外條需遷移對照的只是舊式頁內 progKey，非此 unit_id）；值含 `{srsState, selfRatings[], lastSeen, mastered:bool}`。**嚴禁用陣列索引或頁順序當鍵**（改版會錯位，牴觸 never-disappear）。
     3. **與獎勵的對映（解耦但可連動）**：進度前進**事件**可呼叫 `window.Game` 發獎勵，寫入落在 `player_profile_v1`；進度本身留在 `learning_progress_v1`。兩 key 各自持久化，互不覆寫。
     4. **沿用 §7.1 的三道保護**：`learning_progress_v1` 一律套 §7.1（a）**壞檔不重設**（解析失敗→備份 `learning_progress_v1__corrupt_<ts>`、保留記憶體值、絕不空白覆寫）、（b）**additive 合併**（只補缺省不覆蓋既有）、（c）**真實 migrate()**（讀存檔 `version` 欄比對當前常數逐版遷移，不讀自我恆等值）。
   - **範例**：✅ 完成 `eng.t_mid.verb.present-perfect`→寫 `learning_progress_v1.units["eng.t_mid.verb.present-perfect"].mastered=true`，另呼叫 `Game` 加 XP（落 `player_profile_v1`）；重整後兩者皆在。
