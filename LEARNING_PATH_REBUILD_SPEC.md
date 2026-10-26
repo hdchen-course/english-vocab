@@ -463,7 +463,7 @@ R8→關鍵賺得欄位的寫入加防護（寫前快照、異常回滾）。每
   - ❌ 伺服器端**防作弊驗證**、真實金流、每日「雲端」任務。
   - ❌ 純花招徽章（「點 100 下」「停留 10 分鐘」這種與學習無關、刷量可得）。
 - **範例：**
-  - ✅**正例** `badge-math-alg-master`：精熟 `math.t_mid.alg.*` 全部 knowledge_point 後頒發，存 `profile.badges`，reload 不滅（§7）。有意義、純本地可驗。
+  - ✅**正例** `badge-math-algexpr-master`：精熟 `math.t_mid.algexpr.*`（manifest 代數主軸 strand＝`algexpr`，非 `alg`）全部 knowledge_point 後頒發，存 `profile.badges`，reload 不滅（§7）。有意義、純本地可驗。
   - ❌**反例** `badge-top3-this-week`（本週全站前三名）：需伺服器比較 → 違可行性鐵律，禁止。
   - ⚠**邊界** `badge-streak-7`（連續 7 天）：本地 `streak` 可算、合法，但**連續中斷的定義與時區**要寫清楚（以裝置本地日期計、提供 freeze），避免跨裝置誤判——屬可做但需明確規格。
 
