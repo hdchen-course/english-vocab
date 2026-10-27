@@ -61,7 +61,7 @@
 - [life.safety.emergency.hotlines] 110（警察）、119（火警/救護）、112、防災與消防  {t_base, 無}
 - [life.safety.emergency.report-clearly] 報案說清楚：地點、發生什麼、幾個人、是否受傷  {t_base, 無}
 - [life.safety.emergency.fire-escape] 火場應變：先判斷火與煙的位置決定「逃」或「躲」；能安全離開才逃、煙中壓低身體、不搭電梯、沿牆到最近安全出口；開門前先摸門板溫度，門外有濃煙或高溫就退回室內關門、用衣物塞住門縫、到有窗或陽台處向外求救並打119說清楚位置（依現場判斷，不套固定口訣）  {t_base, 無} (待核：high-risk 需官方現行來源覆核)
-- [life.safety.emergency.earthquake] 地震：趴下—掩護—穩住（Drop–Cover–Hold）、遠離窗戶與高物  {t_base, 無}
+- [life.safety.emergency.earthquake] 地震：趴下—掩護—穩住（Drop, Cover, and Hold On）、遠離窗戶與高物、就地避難勿往外跑  {t_base, 無}
 - [life.safety.emergency.bleeding] 傷口出血止血：隔著乾淨布或戴手套，直接用力壓住傷口並持續加壓；血流不止或傷口很大就打119、找大人  {t_mid, 無} (待核：high-risk 需官方現行來源覆核)
 - [life.safety.emergency.burn] 燙傷「沖脫泡蓋送」：用流動的自來水（涼而不冰）沖約 15–20 分鐘、不可冰敷或塗抹東西、小心脫除衣物、覆蓋乾淨布、儘速送醫  {t_mid, 無} (待核：high-risk 需官方現行來源覆核)
 - [life.safety.emergency.choking] 異物哽塞：還能有效咳嗽就鼓勵繼續咳；無法呼吸或出聲時由大人施作——成人與大童用背擊加腹部推擠（哈姆立克），未滿1歲嬰兒改為背擊加胸部按壓（不可腹部推擠），並立刻打119  {t_mid, 無} (待核：high-risk 需官方現行來源覆核)
@@ -493,13 +493,13 @@
 - [life.finance.credit-risk.consumer-contract] 消費者權益與契約看清楚再簽  {t_adv, 無}
 
 ### 8G 金錢價值觀（finance_mindset）
-- [life.finance.money-values.giving-sharing] 捐助與分享、金錢不是衡量人的標準  {t_base, 無}
+- [life.finance.money-values.giving-sharing] 分享與給予：把用不到的資源分給需要的人，常讓關係更靠近、社群更能互相支援  {t_base, 無}
 - [life.finance.money-values.financial-discipline] 財務目標與自制  {t_mid, 無}
 - [life.finance.money-values.rational-consumption] 理性消費、避免同儕比較消費、長期財務規劃  {t_adv, 無}
 
 **待補缺口（本盤點新增）**
 - [life.finance.extra.digital-payment] 數位支付與電子錢包安全（與領域5/7交界）  {t_mid, 無}
-- [life.finance.extra.first-job] 第一份工作／打工：你有勞動權益——雇主應投保勞健保，工時、加班、最低工資受法律保障（實際金額逐年調整）  {t_adv, 無}
+- [life.finance.extra.first-job] 第一份工作／打工：你有勞動權益——雇主依法須為你投保職業災害保險（不分公司規模），工時、加班、最低工資也受法律保障（金額逐年調整）  {t_adv, 無}
 - [life.finance.extra.fraud-recovery] 詐騙受害後的求助與止付流程（165、銀行）  {t_adv, 無}
 
 ---

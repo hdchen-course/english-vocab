@@ -690,7 +690,7 @@
 - [life.safety.traffic.bicycle] 自行車：戴安全帽、靠右行、打手勢、夜間燈具反光  {t_base, 無}  · provisionally_verified
 - [life.safety.traffic.blind-spot] 機車/腳踏車路權、內輪差與大型車死角  {t_mid, 無}  · provisionally_verified
 - [life.safety.traffic.drunk-driving] 酒駕/疲勞駕駛危害的概念（勸阻家人）  {t_mid, 無}  · provisionally_verified
-- [life.safety.substance.tobacco-alcohol] 菸（含電子煙）、酒、檳榔對發育中身體的危害  {t_mid, 無}  · unverified
+- [life.safety.substance.tobacco-alcohol] 菸（含電子煙）、酒、檳榔對發育中身體的危害  {t_mid, 無}  · provisionally_verified
 - [life.safety.substance.new-drugs] 毒品與「包裝成糖果/飲料/郵票」的新興毒品辨識與拒絕技巧  {t_mid, 無}  · provisionally_verified
 - [life.safety.substance.addiction] 成癮的機制：短期快感 vs 長期傷害、戒斷  {t_mid, 無}  · provisionally_verified
 - [life.safety.substance.peer-refusal] 同儕壓力下的拒絕話術（找藉口、轉移、離開、找大人）  {t_mid, 無}  · provisionally_verified
@@ -699,7 +699,7 @@
 - [life.safety.emergency.hotlines] 110（警察）、119（火警/救護）、112、防災與消防  {t_base, 無}  · provisionally_verified
 - [life.safety.emergency.report-clearly] 報案說清楚：地點、發生什麼、幾個人、是否受傷  {t_base, 無}  · provisionally_verified
 - [life.safety.emergency.fire-escape] 火場應變：先判斷火與煙的位置決定「逃」或「躲」；能安全離開才逃、煙中壓低身體、不搭電梯、沿牆到最近安全出口；開門前先摸門板溫度，門外有濃煙或高溫就退回室內關門、用衣物塞住門縫、到有窗或陽台處向外求救並打119說清楚位置（依現場判斷，不套固定口訣）  {t_base, 無}  · pending
-- [life.safety.emergency.earthquake] 地震：趴下—掩護—穩住（Drop–Cover–Hold）、遠離窗戶與高物  {t_base, 無}  · unverified
+- [life.safety.emergency.earthquake] 地震：趴下—掩護—穩住（Drop, Cover, and Hold On）、遠離窗戶與高物、就地避難勿往外跑  {t_base, 無}  · provisionally_verified
 - [life.safety.emergency.bleeding] 傷口出血止血：隔著乾淨布或戴手套，直接用力壓住傷口並持續加壓；血流不止或傷口很大就打119、找大人  {t_mid, 無}  · pending
 - [life.safety.emergency.burn] 燙傷「沖脫泡蓋送」：用流動的自來水（涼而不冰）沖約 15–20 分鐘、不可冰敷或塗抹東西、小心脫除衣物、覆蓋乾淨布、儘速送醫  {t_mid, 無}  · pending
 - [life.safety.emergency.choking] 異物哽塞：還能有效咳嗽就鼓勵繼續咳；無法呼吸或出聲時由大人施作——成人與大童用背擊加腹部推擠（哈姆立克），未滿1歲嬰兒改為背擊加胸部按壓（不可腹部推擠），並立刻打119  {t_mid, 無}  · pending
@@ -716,8 +716,8 @@
 - [life.safety.scam.protect-otp] 個資與驗證碼（OTP）絕不交給他人  {t_mid, 無}  · provisionally_verified
 - [life.safety.scam.stop-verify] 停—看—聽—查證（掛斷用官方電話回撥）  {t_mid, 無}  · provisionally_verified
 - [life.safety.extra.bully-bystander] 校園/網路霸凌的旁觀者介入（不是加害、不是沉默）→ 與領域2/5 交界  {t_mid, 無}  · provisionally_verified
-- [life.safety.extra.harassment] 性騷擾/性剝削的辨識與求助（兒少保護、113）  {t_mid, 無}  · unverified
-- [life.safety.extra.animal-safety] 動物安全：不逗弄陌生動物、被咬抓傷處理  {t_base, 無}  · unverified
+- [life.safety.extra.harassment] 性騷擾/性剝削的辨識與求助（兒少保護、113）  {t_mid, 無}  · provisionally_verified
+- [life.safety.extra.animal-safety] 動物安全：不逗弄陌生動物、被咬抓傷處理  {t_base, 無}  · provisionally_verified
 - [life.safety.extra.outdoor-safety] 戲水/山林/野外活動安全（防溺五不、結伴、告知行程）  {t_base, 無}  · provisionally_verified
 - [life.sel.self-aware.name-emotions] 辨認並命名基本情緒（開心、生氣、難過、害怕、驚訝、厭惡）  {t_base, 無}  · provisionally_verified
 - [life.sel.self-aware.emotion-vocab] 擴充情緒詞彙（緊張、失望、尷尬、興奮、孤單、嫉妒、愧疚、感激、委屈）  {t_base, 無}  · provisionally_verified
@@ -758,11 +758,11 @@
 - [life.sel.decision.learn-from-mistakes] 從錯誤中學習、承擔與修復  {t_mid, 無}  · provisionally_verified
 - [life.sel.decision.ethical-dilemma] 價值觀導向的決策與倫理兩難取捨  {t_adv, 無}  · provisionally_verified
 - [life.sel.growth-mindset.feedback-not-attack] 被指正不等於「我很糟」，是幫我變更好的資訊  {t_base, 無}  · provisionally_verified
-- [life.sel.growth-mindset.cool-before-respond] 聽到指正時的身體降溫（先呼吸再回應）  {t_base, 無}  · unverified
+- [life.sel.growth-mindset.cool-before-respond] 聽到指正時的身體降溫（先呼吸再回應）  {t_base, 無}  · provisionally_verified
 - [life.sel.growth-mindset.response-3lines] 回應三句：謝謝你告訴我／我想想看／我可以怎麼做更好  {t_base, 無}  · provisionally_verified
 - [life.sel.growth-mindset.critique-vs-attack] 區分「對事的回饋」與「對人的攻擊」  {t_base, 無}  · provisionally_verified
-- [life.sel.growth-mindset.not-yet] 把「我做不到」換成「我還沒做到（yet）」  {t_mid, 無}  · unverified
-- [life.sel.growth-mindset.failure-is-process] 失敗是過程不是標籤；努力與策略可改變結果  {t_mid, 無}  · unverified
+- [life.sel.growth-mindset.not-yet] 把「我做不到」換成「我還沒做到（yet）」  {t_mid, 無}  · provisionally_verified
+- [life.sel.growth-mindset.failure-is-process] 失敗是過程不是標籤；努力與策略可改變結果  {t_mid, 無}  · provisionally_verified
 - [life.sel.growth-mindset.handle-losing] 面對輸/比較/嫉妒的健康調節  {t_mid, 無}  · provisionally_verified
 - [life.sel.growth-mindset.seek-feedback] 尋求回饋、接受建設性批評、不過度自責  {t_mid, 無}  · provisionally_verified
 - [life.sel.growth-mindset.resilience] 復原力：挫折後的再出發與支持系統  {t_adv, 無}  · provisionally_verified
@@ -837,9 +837,9 @@
 - [life.think.bias.survivorship] 倖存者偏誤  {t_mid, 無}  · provisionally_verified
 - [life.think.bias.halo] 月暈效應（以一好/壞概括全部）  {t_mid, 無}  · provisionally_verified
 - [life.think.bias.loss-aversion] 損失趨避（同樣大小，失去的痛苦大於得到的快樂）  {t_mid, 無}  · provisionally_verified
-- [life.think.bias.sunk-cost] 沉沒成本謬誤（已付出且收不回的成本，不該左右接下來的決定）  {t_mid, 無}  · unverified
+- [life.think.bias.sunk-cost] 沉沒成本謬誤（已付出且收不回的成本，不該左右接下來的決定）  {t_mid, 無}  · provisionally_verified
 - [life.think.bias.hindsight] 後見之明偏誤  {t_mid, 無}  · provisionally_verified
-- [life.think.bias.dunning-kruger] 鄧寧–克魯格效應：剛入門、了解有限時容易高估自己、也較難察覺自身不足（註：此效應的測量方法仍有統計上的爭論）  {t_mid, 無}  · unverified
+- [life.think.bias.dunning-kruger] 鄧寧–克魯格效應：剛入門、了解有限時容易高估自己、也較難察覺自身不足（註：此效應的測量方法仍有統計上的爭論）  {t_mid, 無}  · provisionally_verified
 - [life.think.bias.framing] 框架效應（說法不同影響判斷）  {t_mid, 無}  · provisionally_verified
 - [life.think.bias.debiasing] 偏誤的覺察與去偏策略（放慢、找反例、換立場、同儕檢核）  {t_adv, 無}  · provisionally_verified
 - [life.think.fallacy.ad-hominem] 人身攻擊（ad hominem）  {t_mid, 無}  · provisionally_verified
@@ -876,7 +876,7 @@
 - [life.digital.cyberbully.what-is-cyberbully] 什麼是網路霸凌（文字/排擠/散布）  {t_base, 無}  · provisionally_verified
 - [life.digital.cyberbully.if-bullied] 被霸凌：截圖存證—封鎖—告訴大人  {t_base, 無}  · provisionally_verified
 - [life.digital.cyberbully.bystander] 旁觀者：不轉傳、不按讚、支持被害者、通報  {t_base, 無}  · provisionally_verified
-- [life.digital.cyberbully.no-share-private] 不散布他人私密影像；散布的法律與傷害  {t_mid, 無}  · unverified
+- [life.digital.cyberbully.no-share-private] 不散布他人私密影像；散布的法律與傷害  {t_mid, 無}  · provisionally_verified
 - [life.digital.cyberbully.keyboard-ethics] 鍵盤倫理：面對面不會說的別在線上說  {t_mid, 無}  · provisionally_verified
 - [life.digital.media.ad-purpose] 廣告的目的是要你買／要你點  {t_base, 無}  · provisionally_verified
 - [life.digital.media.sponsored] 業配/置入性行銷的辨認  {t_base, 無}  · provisionally_verified
@@ -895,7 +895,7 @@
 - [life.digital.factcheck.reverse-search] 反向圖片搜尋、查原始出處、看日期  {t_mid, 無}  · provisionally_verified
 - [life.digital.factcheck.factcheck-platforms] 善用事實查核平台：先查傳言是否已被查核、看它的查證方法與證據，再交叉比對（不依賴單一平台）  {t_mid, 無}  · provisionally_verified
 - [life.digital.factcheck.verify-responsibility] 「轉傳前先查證」的公民責任  {t_mid, 無}  · provisionally_verified
-- [life.digital.extra.online-shopping] 線上交易安全與消費者保護（退貨、評價造假）  {t_mid, 無}  · unverified
+- [life.digital.extra.online-shopping] 線上交易安全與消費者保護（退貨、評價造假）  {t_mid, 無}  · provisionally_verified
 - [life.digital.extra.copyright] 著作權與合理使用（圖片/音樂/影片引用）  {t_mid, 無}  · provisionally_verified
 - [life.digital.extra.digital-divide] 數位落差與科技近用公平  {t_adv, 無}  · provisionally_verified
 - [life.data.charts.chart-types] 長條圖、折線圖、圓餅圖的用途與讀法  {t_base, 無}  · provisionally_verified
@@ -936,7 +936,7 @@
 - [life.compute.hardware.hardware-parts] 硬體：CPU、記憶體、儲存、輸入/輸出裝置  {t_base, 無}  · provisionally_verified
 - [life.compute.hardware.software-os] 軟體 vs 硬體、作業系統的角色  {t_base, 無}  · provisionally_verified
 - [life.compute.hardware.binary] 二進位：0/1、位元與位元組、資料如何被編碼（數字/文字/圖片/聲音）  {t_mid, 無}  · provisionally_verified
-- [life.compute.hardware.file-sizes] 檔案大小單位（KB/MB/GB）與量級感  {t_mid, 無}  · unverified
+- [life.compute.hardware.file-sizes] 檔案大小單位（KB/MB/GB）與量級感  {t_mid, 無}  · provisionally_verified
 - [life.compute.hardware.compile-interpret] 程式如何被執行（編譯/直譯 概念）  {t_adv, 無}  · provisionally_verified
 - [life.compute.network.ip-domain] 網路如何連接、IP/網域名稱的概念  {t_mid, 無}  · provisionally_verified
 - [life.compute.network.client-server] 伺服器/用戶端、瀏覽器如何取得網頁  {t_mid, 無}  · provisionally_verified
@@ -989,14 +989,14 @@
 - [life.finance.credit-risk.invest-vs-gamble] 投資 vs 投機 vs 賭博；天下沒有穩賺  {t_adv, 無}  · provisionally_verified
 - [life.finance.credit-risk.financial-fraud] 金融詐騙辨識（假投資、保證獲利、龐氏）→ 與領域1交界  {t_adv, 無}  · provisionally_verified
 - [life.finance.credit-risk.consumer-contract] 消費者權益與契約看清楚再簽  {t_adv, 無}  · provisionally_verified
-- [life.finance.money-values.giving-sharing] 捐助與分享、金錢不是衡量人的標準  {t_base, 無}  · provisionally_verified
+- [life.finance.money-values.giving-sharing] 分享與給予：把用不到的資源分給需要的人，常讓關係更靠近、社群更能互相支援  {t_base, 無}  · provisionally_verified
 - [life.finance.money-values.financial-discipline] 財務目標與自制  {t_mid, 無}  · provisionally_verified
 - [life.finance.money-values.rational-consumption] 理性消費、避免同儕比較消費、長期財務規劃  {t_adv, 無}  · provisionally_verified
 - [life.finance.extra.digital-payment] 數位支付與電子錢包安全（與領域5/7交界）  {t_mid, 無}  · provisionally_verified
-- [life.finance.extra.first-job] 第一份工作／打工：你有勞動權益——雇主應投保勞健保，工時、加班、最低工資受法律保障（實際金額逐年調整）  {t_adv, 無}  · unverified
+- [life.finance.extra.first-job] 第一份工作／打工：你有勞動權益——雇主依法須為你投保職業災害保險（不分公司規模），工時、加班、最低工資也受法律保障（金額逐年調整）  {t_adv, 無}  · provisionally_verified
 - [life.finance.extra.fraud-recovery] 詐騙受害後的求助與止付流程（165、銀行）  {t_adv, 無}  · unverified
 - [life.sustain.climate.save-resources] 愛惜資源：節水、節電、隨手關燈  {t_base, 無}  · provisionally_verified
-- [life.sustain.climate.recycling] 垃圾減量與資源回收分類（台灣回收類別）  {t_base, 無}  · unverified
+- [life.sustain.climate.recycling] 垃圾減量與資源回收分類（台灣回收類別）  {t_base, 無}  · provisionally_verified
 - [life.sustain.climate.three-r] 3R：減量 Reduce、重用 Reuse、回收 Recycle  {t_base, 無}  · provisionally_verified
 - [life.sustain.climate.greenhouse-effect] 溫室效應與氣候變遷的機制（簡化）  {t_mid, 無}  · provisionally_verified
 - [life.sustain.climate.carbon-footprint] 碳足跡與日常減碳行動  {t_mid, 無}  · provisionally_verified
@@ -1024,7 +1024,7 @@
 - [life.sustain.news.media-manipulation] 媒體所有權、資訊操弄與境外影響的概念  {t_adv, 無}  · provisionally_verified
 - [life.sustain.extra.animal-welfare] 動物保護與友善對待  {t_base, 無}  · provisionally_verified
 - [life.sustain.extra.food-education] 食農教育：food miles、在地食材、惜食不浪費  {t_mid, 無}  · provisionally_verified
-- [life.sustain.extra.green-labels] 永續消費與綠色標章辨識  {t_adv, 無}  · unverified
+- [life.sustain.extra.green-labels] 永續消費與綠色標章辨識  {t_adv, 無}  · provisionally_verified
 - [life.innovate.mindset.curiosity] 好奇心與多問「為什麼／能不能更好」  {t_base, 無}  · provisionally_verified
 - [life.innovate.mindset.fail-to-invent] 失敗是發明的一部分（試錯、原型）  {t_base, 無}  · provisionally_verified
 - [life.innovate.mindset.design-cycle] 觀察問題→發想點子→動手做→改良（設計循環）  {t_base, 無}  · provisionally_verified
