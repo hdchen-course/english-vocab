@@ -2638,7 +2638,7 @@
 - [soc-geo.t_base.skill.grid-locate] 用格子（行列）在地圖上定位地物  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_base.skill.abs-rel-intro] 區辨絕對位置與相對位置（初步）  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_mid.skill.latlong-read] 判讀經緯度並寫出某點的絕對位置  {t_mid, 會考}  · provisionally_verified
-- [soc-geo.t_mid.skill.graticule-feature] 說明經線／緯線特性（赤道、本初子午線、回歸線、極圈）  {t_mid, 會考}  · unverified
+- [soc-geo.t_mid.skill.graticule-feature] 說明經線／緯線特性（赤道、本初子午線、回歸線、極圈）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.skill.latlong-distance] 由緯度差估算南北距離（1°≈111km）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.skill.scale-types] 區辨文字式／數字式／線條式比例尺並互換  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.skill.scale-coverage] 判斷比例尺大小與地圖詳細度／涵蓋範圍的關係  {t_mid, 會考}  · provisionally_verified
@@ -2678,7 +2678,7 @@
 - [soc-geo.t_sub.skill.rs-resolution] 區辨空間／光譜／時間解析度  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.skill.projection-distortion] 地圖投影類型（麥卡托／等積／方位）與變形特性  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.skill.greatcircle-rhumb] 區辨大圓航線與恆向線（麥卡托圖上的差異）  {t_sub, 分科-地理}  · provisionally_verified
-- [soc-geo.t_sub.skill.spatial-interp] 空間內插法（反距離加權／克利金）概念  {t_enrich, 無}  · unverified
+- [soc-geo.t_sub.skill.spatial-interp] 空間內插法（反距離加權／克利金）概念  {t_enrich, 無}  · provisionally_verified
 - [soc-geo.t_base.nat-landform.names] 辨認山地、丘陵、平原、盆地、高原、台地等常見地形  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_base.nat-landform.tw-overview] 說明台灣「東高西低、中央山脈」的大致地形  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_mid.nat-landform.endo-exo] 區辨內營力與外營力對地形的作用  {t_mid, 會考}  · provisionally_verified
@@ -2702,7 +2702,7 @@
 - [soc-geo.t_adv.nat-landform.arid-forms] 辨認乾燥地形（劣地、風蝕窪地、方山）  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.nat-landform.mass-wasting] 區辨崩壞作用類型（地滑、土石流、潛移、落石）  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.nat-landform.tw-tectonic] 說明台灣新期造山與地體構造特徵  {t_adv, 學測}  · provisionally_verified
-- [soc-geo.t_sub.nat-landform.plate-boundary] 區辨張裂、聚合、錯動板塊邊界及其地形  {t_sub, 分科-地理}  · unverified
+- [soc-geo.t_sub.nat-landform.plate-boundary] 區辨張裂、聚合、錯動板塊邊界及其地形  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.nat-landform.tectonic-theory] 說明大陸漂移→海底擴張→板塊構造學說演進  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.nat-landform.rock-cycle] 說明岩石循環（火成／沉積／變質）與地形  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.nat-landform.davis-penck] 比較戴維斯地形輪迴與動態均衡觀點  {t_sub, 分科-地理}  · provisionally_verified
@@ -2717,11 +2717,11 @@
 - [soc-geo.t_mid.nat-climate.temp-factors] 列舉影響氣溫的因素（緯度、高度、海陸、洋流、地形）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-climate.lapse-rate] 說明氣溫隨高度遞減（約每百公尺降溫）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-climate.temp-range] 區辨年溫差與日溫差並比較海陸差異  {t_mid, 會考}  · provisionally_verified
-- [soc-geo.t_mid.nat-climate.rain-types] 區辨對流雨、地形雨、鋒面雨、氣旋雨  {t_mid, 會考}  · unverified
-- [soc-geo.t_mid.nat-climate.monsoon] 以海陸比熱說明季風成因  {t_mid, 會考}  · unverified
+- [soc-geo.t_mid.nat-climate.rain-types] 區辨對流雨、地形雨、鋒面雨、氣旋雨  {t_mid, 會考}  · provisionally_verified
+- [soc-geo.t_mid.nat-climate.monsoon] 以海陸比熱說明季風成因  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-climate.wind-cause] 說明風因氣壓梯度而生（高壓吹向低壓）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-climate.climograph-type] 由雨溫圖判斷氣候類型  {t_mid, 會考}  · provisionally_verified
-- [soc-geo.t_mid.nat-climate.koppen-major] 辨認柯本氣候五大類（熱帶、乾燥、溫帶、寒帶、高地）  {t_mid, 會考}  · unverified
+- [soc-geo.t_mid.nat-climate.koppen-major] 辨認柯本氣候五大類（A熱帶、B乾燥、C溫帶、D大陸性／副寒帶、E極地／寒帶）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-climate.tw-features] 說明台灣季風、梅雨、颱風的氣候特徵  {t_mid, 會考}  · unverified
 - [soc-geo.t_mid.nat-climate.isotherm] 判讀等溫線與等雨量線圖  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_adv.nat-climate.global-circulation] 說明三胞環流與信風、西風、極地東風  {t_adv, 學測}  · provisionally_verified
@@ -2740,7 +2740,7 @@
 - [soc-geo.t_sub.nat-climate.humidity] 說明相對濕度、露點、飽和與凝結  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.nat-climate.tropical-cyclone] 說明熱帶氣旋發展條件與結構  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.nat-climate.midlat-cyclone] 說明中緯度（溫帶）氣旋的生命史  {t_sub, 分科-地理}  · provisionally_verified
-- [soc-geo.t_sub.nat-climate.monsoon-mechanism] 說明季風的動力與熱力機制  {t_sub, 分科-地理}  · unverified
+- [soc-geo.t_sub.nat-climate.monsoon-mechanism] 說明季風的動力與熱力機制  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.nat-climate.change-mechanism] 說明氣候變遷機制（米蘭科維奇、溫室氣體）  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.nat-climate.bioclimate] 連結氣候、植被與土壤的對應關係  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_base.nat-hydro.cycle-intro] 說明水循環（蒸發→凝結成雲→降水→流回海）初步  {t_base, 無}  · provisionally_verified
@@ -2764,15 +2764,15 @@
 - [soc-geo.t_sub.nat-hydro.basin-budget] 建立流域水收支方程並計算  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.nat-hydro.sediment] 說明河川輸砂與泥沙收支  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.nat-hydro.aquifer] 說明含水層、受壓地下水與自流井  {t_sub, 分科-地理}  · provisionally_verified
-- [soc-geo.t_sub.nat-hydro.thermohaline] 說明溫鹽環流（深層海洋環流）  {t_sub, 分科-地理}  · unverified
-- [soc-geo.t_sub.nat-hydro.sealevel] 說明海平面升降的成因與影響  {t_sub, 分科-地理}  · unverified
+- [soc-geo.t_sub.nat-hydro.thermohaline] 說明溫鹽環流（深層海洋環流）  {t_sub, 分科-地理}  · provisionally_verified
+- [soc-geo.t_sub.nat-hydro.sealevel] 說明海平面升降的成因與影響  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.nat-hydro.drought-mgmt] 分析乾旱／缺水的水文機制與水資源管理  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.nat-hydro.river-capture] 說明河川襲奪的成因與證據  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_base.nat-soilbio.soil-intro] 認識土壤成分（砂、黏土、腐植質）  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_base.nat-soilbio.plant-env] 認識植物與環境（陽光、水、溫度）的關係  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_mid.nat-soilbio.soil-profile] 說明土壤剖面層次（O/A/B/C 層）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-soilbio.soil-factors] 列舉成土因素（氣候、母質、生物、地形、時間）  {t_mid, 會考}  · provisionally_verified
-- [soc-geo.t_mid.nat-soilbio.soil-types] 辨認主要土壤（紅壤、灰化土、黑土、磚紅壤）  {t_mid, 會考}  · unverified
+- [soc-geo.t_mid.nat-soilbio.soil-types] 辨認主要土壤（紅壤、灰化土、黑土、磚紅壤）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-soilbio.biome-intro] 辨認主要生物群系（雨林、草原、沙漠、針葉林、苔原）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-soilbio.veg-distribution] 說明植被的水平與垂直分布  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_adv.nat-soilbio.pedogenesis] 說明土壤化育作用（淋溶、聚積、鹽化、磚紅壤化）  {t_adv, 學測}  · provisionally_verified
@@ -2781,11 +2781,11 @@
 - [soc-geo.t_adv.nat-soilbio.succession] 說明植物群落演替（初級、次級）  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.nat-soilbio.vertical-zone] 說明山地植被的垂直地帶性  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.nat-soilbio.horizontal-zone] 說明緯度造成的水平地帶性  {t_adv, 學測}  · provisionally_verified
-- [soc-geo.t_sub.nat-soilbio.soil-classify] 認識土壤分類系統（美國新分類／FAO）  {t_sub, 分科-地理}  · unverified
+- [soc-geo.t_sub.nat-soilbio.soil-classify] 認識土壤分類系統（美國 USDA Soil Taxonomy／國際 WRB〔原 FAO-UNESCO 圖例〕）  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.nat-soilbio.nutrient-cycle] 說明碳、氮循環與生態系的地理差異  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.nat-soilbio.island-biogeo] 說明島嶼生物地理學（面積、隔離與物種數）  {t_sub, 分科-地理}  · unverified
 - [soc-geo.t_sub.nat-soilbio.biome-carbon] 分析生物群系的碳吸存與氣候回饋  {t_sub, 分科-地理}  · provisionally_verified
-- [soc-geo.t_sub.nat-soilbio.biogeo-region] 說明生物地理區與物種分布界線  {t_sub, 分科-地理}  · unverified
+- [soc-geo.t_sub.nat-soilbio.biogeo-region] 說明生物地理區與物種分布界線  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_base.hazard.quake-typhoon] 認識地震與颱風並知道基本避難行為  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_base.hazard.drill] 參與防災演練並準備避難包  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_mid.hazard.earthquake] 說明地震成因並區辨震度與規模  {t_mid, 會考}  · provisionally_verified
@@ -2801,7 +2801,7 @@
 - [soc-geo.t_adv.hazard.climate-extreme] 連結氣候變遷與極端天氣事件增加  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.hazard.risk-formula] 說明災害風險＝危害度×脆弱度×暴露量  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.hazard.landuse-potential] 連結土地利用與災害潛勢  {t_adv, 學測}  · provisionally_verified
-- [soc-geo.t_sub.hazard.mgmt-cycle] 說明災害管理週期（減災、整備、應變、復原）  {t_sub, 分科-地理}  · unverified
+- [soc-geo.t_sub.hazard.mgmt-cycle] 說明災害管理週期（減災、整備、應變、復原）  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.hazard.potential-map] 判讀災害潛勢圖並做風險評估  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.hazard.slope-stability] 分析坡地穩定與地質敏感區  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.hazard.vulnerability-adapt] 分析脆弱度與氣候調適（adaptation）策略  {t_sub, 分科-地理}  · provisionally_verified
@@ -2899,11 +2899,11 @@
 - [soc-geo.t_base.reg-tw.landform-zone] 說明台灣地形的大致分區  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_base.reg-tw.hometown-pos] 指出家鄉在台灣的相對位置  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_mid.reg-tw.landform-regions] 說明台灣北、中、南、東與離島地形特色  {t_mid, 會考}  · provisionally_verified
-- [soc-geo.t_mid.reg-tw.climate-zone] 說明台灣的氣候分區與南北差異  {t_mid, 會考}  · unverified
+- [soc-geo.t_mid.reg-tw.climate-zone] 說明台灣的氣候分區與南北差異  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.reg-tw.hydrology] 說明台灣河川與水資源分布  {t_mid, 會考}  · provisionally_verified
-- [soc-geo.t_mid.reg-tw.population] 說明台灣人口分布與都市化  {t_mid, 會考}  · unverified
-- [soc-geo.t_mid.reg-tw.agriculture] 說明台灣農業分區與作物分布  {t_mid, 會考}  · unverified
-- [soc-geo.t_mid.reg-tw.industry] 說明台灣工業分布（加工出口區、科學園區）  {t_mid, 會考}  · unverified
+- [soc-geo.t_mid.reg-tw.population] 說明台灣人口分布與都市化  {t_mid, 會考}  · provisionally_verified
+- [soc-geo.t_mid.reg-tw.agriculture] 說明台灣農業分區與作物分布  {t_mid, 會考}  · provisionally_verified
+- [soc-geo.t_mid.reg-tw.industry] 說明台灣工業分布（科技產業園區〔2021年由加工出口區更名〕、科學園區）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.reg-tw.transport] 說明台灣交通與區域連結  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.reg-tw.islands] 說明澎湖、金門、馬祖、蘭嶼等離島特色  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_adv.reg-tw.regional-system] 整合自然與人文做台灣區域系統分析  {t_adv, 學測}  · provisionally_verified
@@ -2921,7 +2921,7 @@
 - [soc-geo.t_mid.reg-cn.climate] 說明中國氣候區（季風、乾燥、高地）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.reg-cn.rivers] 說明中國主要河川（長江、黃河）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.reg-cn.pop-line] 中國人口分布東密西疏（受地形、氣候、經濟影響；「胡煥庸線／黑河—騰衝線」專名為補充）  {t_mid, 會考}  · provisionally_verified
-- [soc-geo.t_mid.reg-cn.ag-divide] 說明中國以秦嶺—淮河為界的稻麥農業分區  {t_mid, 會考}  · unverified
+- [soc-geo.t_mid.reg-cn.ag-divide] 說明中國以秦嶺—淮河為界的稻麥農業分區  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.reg-cn.regions] 說明中國東、中、西部的區域差異  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_adv.reg-cn.reform] 說明中國經濟改革與沿海開放  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.reg-cn.migration] 說明中國都市化與人口遷移（民工潮）  {t_adv, 學測}  · provisionally_verified
@@ -2939,8 +2939,8 @@
 - [soc-geo.t_mid.reg-world.africa] 說明非洲的自然與人文特色  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.reg-world.americas] 說明北美與中南美洲的特色  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.reg-world.oceania] 說明大洋洲的自然與人文特色  {t_mid, 會考}  · provisionally_verified
-- [soc-geo.t_mid.reg-world.overview] 概覽各洲主要地形、氣候與產業  {t_mid, 會考}  · unverified
-- [soc-geo.t_mid.reg-world.orgs-intro] 認識世界主要國家與區域組織（初步）  {t_mid, 會考}  · unverified
+- [soc-geo.t_mid.reg-world.overview] 概覽各洲主要地形、氣候與產業  {t_mid, 會考}  · provisionally_verified
+- [soc-geo.t_mid.reg-world.orgs-intro] 認識世界主要國家與區域組織（初步）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_adv.reg-world.systematic] 對各洲做自然＋人文的區域地理（regional geography）分析  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.reg-world.eu] 說明歐洲統合（歐盟）與區域整合  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.reg-world.asean] 說明東南亞（東協/ASEAN）的區域發展  {t_adv, 學測}  · provisionally_verified
@@ -2972,7 +2972,7 @@
 - [soc-geo.t_sub.app-sustain.three-pillars] 整合永續發展的環境、經濟、社會三面向  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.app-sustain.footprint] 說明生態足跡與環境承載力  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.app-sustain.circular] 說明循環經濟的運作  {t_sub, 分科-地理}  · provisionally_verified
-- [soc-geo.t_sub.app-sustain.paris] 說明巴黎協定與氣候國際治理  {t_sub, 分科-地理}  · unverified
+- [soc-geo.t_sub.app-sustain.paris] 說明巴黎協定與氣候國際治理  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.app-sustain.justice] 分析環境正義與資源分配  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.spatial-decision.landuse-zoning] 說明土地利用規劃與分區管制  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.spatial-decision.site-selection] 以適宜性分析做設施區位選擇  {t_sub, 分科-地理}  · provisionally_verified

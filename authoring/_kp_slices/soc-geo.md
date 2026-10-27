@@ -108,7 +108,7 @@
 - [soc-geo.t_mid.nat-climate.monsoon] 以海陸比熱說明季風成因  {t_mid, 會考}
 - [soc-geo.t_mid.nat-climate.wind-cause] 說明風因氣壓梯度而生（高壓吹向低壓）  {t_mid, 會考}
 - [soc-geo.t_mid.nat-climate.climograph-type] 由雨溫圖判斷氣候類型  {t_mid, 會考}
-- [soc-geo.t_mid.nat-climate.koppen-major] 辨認柯本氣候五大類（熱帶、乾燥、溫帶、寒帶、高地）  {t_mid, 會考}
+- [soc-geo.t_mid.nat-climate.koppen-major] 辨認柯本氣候五大類（A熱帶、B乾燥、C溫帶、D大陸性／副寒帶、E極地／寒帶）  {t_mid, 會考}
 - [soc-geo.t_mid.nat-climate.tw-features] 說明台灣季風、梅雨、颱風的氣候特徵  {t_mid, 會考}
 - [soc-geo.t_mid.nat-climate.isotherm] 判讀等溫線與等雨量線圖  {t_mid, 會考}
 - [soc-geo.t_adv.nat-climate.global-circulation] 說明三胞環流與信風、西風、極地東風  {t_adv, 學測}
@@ -174,7 +174,7 @@
 - [soc-geo.t_adv.nat-soilbio.succession] 說明植物群落演替（初級、次級）  {t_adv, 學測}
 - [soc-geo.t_adv.nat-soilbio.vertical-zone] 說明山地植被的垂直地帶性  {t_adv, 學測}
 - [soc-geo.t_adv.nat-soilbio.horizontal-zone] 說明緯度造成的水平地帶性  {t_adv, 學測}
-- [soc-geo.t_sub.nat-soilbio.soil-classify] 認識土壤分類系統（美國新分類／FAO）  {t_sub, 分科-地理}
+- [soc-geo.t_sub.nat-soilbio.soil-classify] 認識土壤分類系統（美國 USDA Soil Taxonomy／國際 WRB〔原 FAO-UNESCO 圖例〕）  {t_sub, 分科-地理}
 - [soc-geo.t_sub.nat-soilbio.nutrient-cycle] 說明碳、氮循環與生態系的地理差異  {t_sub, 分科-地理}
 - [soc-geo.t_sub.nat-soilbio.island-biogeo] 說明島嶼生物地理學（面積、隔離與物種數）  {t_sub, 分科-地理}
 - [soc-geo.t_sub.nat-soilbio.biome-carbon] 分析生物群系的碳吸存與氣候回饋  {t_sub, 分科-地理}
@@ -314,7 +314,7 @@
 - [soc-geo.t_mid.reg-tw.hydrology] 說明台灣河川與水資源分布  {t_mid, 會考}
 - [soc-geo.t_mid.reg-tw.population] 說明台灣人口分布與都市化  {t_mid, 會考}
 - [soc-geo.t_mid.reg-tw.agriculture] 說明台灣農業分區與作物分布  {t_mid, 會考}
-- [soc-geo.t_mid.reg-tw.industry] 說明台灣工業分布（加工出口區、科學園區）  {t_mid, 會考}
+- [soc-geo.t_mid.reg-tw.industry] 說明台灣工業分布（科技產業園區〔2021年由加工出口區更名〕、科學園區）  {t_mid, 會考}
 - [soc-geo.t_mid.reg-tw.transport] 說明台灣交通與區域連結  {t_mid, 會考}
 - [soc-geo.t_mid.reg-tw.islands] 說明澎湖、金門、馬祖、蘭嶼等離島特色  {t_mid, 會考}
 - [soc-geo.t_adv.reg-tw.regional-system] 整合自然與人文做台灣區域系統分析  {t_adv, 學測}
