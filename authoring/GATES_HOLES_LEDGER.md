@@ -29,3 +29,10 @@
 - gate 誤擋 → 修 gate 並紅隊（壞案例 DENY、好案例 ALLOW），不繞過。
 - 每個 gate 必備 `--selftest`（qualification，證有牙）＋真 evidence 模式。
 - 新發現繞過 → 當天記此檔 + 補子 gate + 紅隊，再繼續。
+
+## 2026-10-27 H-3：wikisource/wiktionary 未塌成 wikimedia → 維基百科+維基文庫冒充 2 獨立來源
+- 發現者：HD（質疑「wikimedia 可能錯」）。
+- 洞：`cross_check_gate.host_publisher` 只塌 wikipedia/wikimedia/wikidata，未含 wikisource/wiktionary/wikibooks… → 維基百科＋維基文庫被算 2 個獨立 publisher，29 筆（13 chi.lit＋9 eng.t_adv＋7 chi 虛字/修辭）靠此過 host<2。
+- 修補：host_publisher 把全部 Wikimedia 家族網域塌成單一 "wikimedia"。
+- 紅隊：維基雙語/百科+文庫/辭典+教科書→1；維基+OpenStax、教育部+法規→2（PASS）。
+- 處置：29 筆撤回 verified（2567→2538），改排 re-verify 用真權威（教育部辭典/成語典/台灣文學館/教科書、grammar 權威）。

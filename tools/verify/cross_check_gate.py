@@ -46,7 +46,12 @@ def host_publisher(url: str) -> str:
     不信任 agent 自填的 publisher 字串（防『同站換語言冒充兩家』）。"""
     m = re.search(r"https?://([^/]+)/?", url or "")
     host = (m.group(1) if m else url or "").lower().split(":")[0]
-    if "wikipedia.org" in host or "wikimedia.org" in host or "wikidata.org" in host:
+    # 所有 Wikimedia 基金會專案 collapse 成同一家（維基百科/文庫/辭典/教科書/語錄… 皆非彼此獨立來源；
+    # 杜絕「維基百科＋維基文庫冒充兩個獨立 publisher」——HD 2026-10-27 查出 13 筆 chi.lit 靠此繞過）。
+    _WIKIMEDIA = ("wikipedia.org", "wikimedia.org", "wikidata.org", "wikisource.org",
+                  "wiktionary.org", "wikibooks.org", "wikiquote.org", "wikiversity.org",
+                  "wikinews.org", "wikivoyage.org", "mediawiki.org", "wikifunctions.org")
+    if any(w in host for w in _WIKIMEDIA):
         return "wikimedia"
     parts = host.split(".")
     # 取可註冊網域（末二段；對 co.uk/gov.tw 等末三段）
