@@ -245,7 +245,7 @@
 
 ## 15. 生殖與發育 {strand: reproduction}
 
-- [sci.t_base.bio-reproduction.animal-babies] 知道動物會繁殖後代、親代照顧幼體  {t_base, 無}
+- [sci.t_base.bio-reproduction.animal-babies] 知道動物會繁殖後代，有些動物的親代會照顧幼體  {t_base, 無}
 - [sci.t_base.bio-reproduction.insect-metamorphosis] 認識昆蟲的變態（完全/不完全，如蝴蝶、蝗蟲）  {t_base, 無}
 - [sci.t_base.bio-reproduction.plant-seed-growth] 觀察種子發芽與植物生長的生命週期  {t_base, 無}
 - [sci.t_mid.bio-reproduction.asexual-types] 舉例無性生殖（分裂、出芽、營養繁殖、孢子）  {t_mid, 會考}

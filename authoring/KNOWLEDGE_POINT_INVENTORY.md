@@ -1509,7 +1509,7 @@
 - [sci.t_mid.bio-musculoskeletal.tendon] 說明肌腱連接肌肉與骨骼  {t_mid, 會考}  · provisionally_verified
 - [sci.t_sub.bio-musculoskeletal.sarcomere-sliding] 以肌小節與肌絲滑動學說說明肌肉收縮  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-musculoskeletal.calcium-contraction] 說明鈣離子與 ATP 在肌肉收縮中的角色  {t_sub, 分科-生物}  · provisionally_verified
-- [sci.t_base.bio-reproduction.animal-babies] 知道動物會繁殖後代、親代照顧幼體  {t_base, 無}  · unverified
+- [sci.t_base.bio-reproduction.animal-babies] 知道動物會繁殖後代，有些動物的親代會照顧幼體  {t_base, 無}  · unverified
 - [sci.t_base.bio-reproduction.insect-metamorphosis] 認識昆蟲的變態（完全/不完全，如蝴蝶、蝗蟲）  {t_base, 無}  · provisionally_verified
 - [sci.t_base.bio-reproduction.plant-seed-growth] 觀察種子發芽與植物生長的生命週期  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.bio-reproduction.asexual-types] 舉例無性生殖（分裂、出芽、營養繁殖、孢子）  {t_mid, 會考}  · provisionally_verified
@@ -1705,7 +1705,7 @@
 - [sci.t_adv.earth-tectonics.taiwan-orogeny] 臺灣造山運動：弧陸碰撞使地層褶皺、抬升形成中央山脈  {t_adv, 學測}  · unverified
 - [sci.t_adv.earth-tectonics.plate-velocity-calc] 由海洋磁條帶或 GPS 數據估算板塊移動速率（cm/年量級）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_base.earth-quake-volcano.earthquake-shake] 地震會使地面搖動、造成房屋損壞，需學會防震避難  {t_base, 無}  · provisionally_verified
-- [sci.t_base.earth-quake-volcano.volcano-basic] 火山噴發會噴出岩漿、火山灰與氣體  {t_base, 無}  · unverified
+- [sci.t_base.earth-quake-volcano.volcano-basic] 火山噴發會噴出熔岩（岩漿噴出地表後稱熔岩）、火山灰與氣體  {t_base, 無}  · unverified
 - [sci.t_mid.earth-quake-volcano.fault-cause] 地震成因：岩層受力累積、沿斷層錯動釋放能量  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-quake-volcano.focus-epicenter] 區分震源（地下破裂起點）與震央（震源正上方地表點）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-quake-volcano.p-s-waves] P 波（縱波、快、先到）與 S 波（橫波、慢、後到）的性質差異  {t_mid, 會考}  · provisionally_verified
@@ -1719,7 +1719,7 @@
 - [sci.t_adv.earth-quake-volcano.magnitude-energy] 地震規模每增 1，釋放能量約增 32 倍（概念與量級）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-quake-volcano.benioff-zone] 隱沒帶地震深度隨遠離海溝而加深（班尼奧夫帶）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-quake-volcano.early-warning] 地震預警原理：利用 P 波先到、電波比 S 波快爭取秒級預警  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.earth-quake-volcano.magma-composition-eruption] 岩漿黏滯度（二氧化矽含量）決定噴發是寧靜溢流或劇烈爆發  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-quake-volcano.magma-composition-eruption] 岩漿黏滯度（二氧化矽含量）與揮發分氣體共同決定噴發型態：高黏滯使氣體難逸出而積壓、爆發性強  {t_adv, 學測}  · unverified
 - [sci.t_adv.earth-quake-volcano.volcano-tectonic-setting] 火山分布與板塊邊界（隱沒帶、中洋脊、熱點）的對應  {t_adv, 學測}  · provisionally_verified
 - [sci.t_base.earth-rock-mineral.rock-observe] 觀察並描述岩石的顏色、顆粒、軟硬等特徵  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-rock-mineral.soil-from-rock] 土壤由岩石風化碎屑與腐植質組成  {t_base, 無}  · provisionally_verified
@@ -1733,7 +1733,7 @@
 - [sci.t_adv.earth-rock-mineral.cooling-rate-texture] 岩漿冷卻速率決定火成岩晶粒大小（快冷細粒/玻璃質、慢冷粗粒）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-rock-mineral.felsic-mafic] 火成岩依二氧化矽含量分酸性（淺色、長英質）與基性（深色、鐵鎂質）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-rock-mineral.clastic-vs-chemical] 沉積岩分碎屑岩與化學/生物沉積岩（如石灰岩、燧石）  {t_adv, 學測}  · unverified
-- [sci.t_adv.earth-rock-mineral.metamorphic-grade] 變質程度與葉理發育（板岩→片岩→片麻岩）隨溫壓升高  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-rock-mineral.metamorphic-grade] 變質程度隨溫壓升高；葉理源自定向應力下片狀礦物的優選排列（板岩→片岩→片麻岩）  {t_adv, 學測}  · unverified
 - [sci.t_adv.earth-rock-mineral.silicate-structure] 矽酸鹽礦物以矽氧四面體為基本單元組成（概念）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_base.earth-geomorph.landform-observe] 認識常見地形：山、河、海岸、平原  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-geomorph.water-shapes-land] 流水會侵蝕與堆積改變地表（河流、海浪）  {t_base, 無}  · provisionally_verified
@@ -1832,7 +1832,7 @@
 - [sci.t_base.earth-astronomy.day-night] 地球自轉造成晝夜交替、太陽東升西落  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-astronomy.sun-position-seasons] 一年中太陽高度與日照長短隨季節變化  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-astronomy.moon-phases-observe] 觀察月亮形狀（月相）在一個月內的變化  {t_base, 無}  · provisionally_verified
-- [sci.t_base.earth-astronomy.stars-constellations-base] 認識夜空中的亮星與常見星座（如北斗、獵戶）  {t_base, 無}  · unverified
+- [sci.t_base.earth-astronomy.stars-constellations-base] 認識夜空中的亮星與常見星座（如獵戶座）及星群（如北斗七星，屬大熊座）  {t_base, 無}  · unverified
 - [sci.t_base.earth-astronomy.solar-system-members] 太陽系有太陽、八大行星與月球等成員  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.earth-astronomy.rotation-revolution] 區分地球自轉（晝夜、約 24 小時）與公轉（四季、約 365 天）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-astronomy.seasons-cause] 四季成因：地軸傾斜使各地太陽直射角與日照時數隨公轉改變  {t_mid, 會考}  · unverified
@@ -1856,7 +1856,7 @@
 - [sci.t_adv.earth-astronomy.big-bang] 宇宙起源（大霹靂）與宇宙膨脹、哈伯定律（紅移）概念  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-astronomy.cmb] 宇宙微波背景輻射作為大霹靂的證據（概念）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-astronomy.calendar] 曆法：陽曆（回歸年）、陰曆（朔望月）與陰陽合曆（置閏）  {t_adv, 學測}  · provisionally_verified
-- [sci.t_base.earth-environment.natural-resources] 認識自然資源（水、土壤、礦產、能源）及其有限性  {t_base, 無}  · unverified
+- [sci.t_base.earth-environment.natural-resources] 認識自然資源（水、土壤、礦產、能源）並區分可再生與不可再生、其可用量有限  {t_base, 無}  · unverified
 - [sci.t_base.earth-environment.recycle-conserve] 資源回收、節能減碳等日常環保行動  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-environment.disaster-prepare] 認識地震、颱風、水災等災害並學會基本避難  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.earth-environment.rock-mineral-resources] 礦產與岩石資源（金屬礦、建材、石灰岩）的利用  {t_mid, 會考}  · provisionally_verified

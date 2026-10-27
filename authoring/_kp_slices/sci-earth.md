@@ -46,7 +46,7 @@ exam 標註會考／學測／無（分科測驗不含地科獨立科目；深階
 ## 地震與火山 (quake-volcano)
 
 - [sci.t_base.earth-quake-volcano.earthquake-shake] 地震會使地面搖動、造成房屋損壞，需學會防震避難  {t_base, 無}
-- [sci.t_base.earth-quake-volcano.volcano-basic] 火山噴發會噴出岩漿、火山灰與氣體  {t_base, 無}
+- [sci.t_base.earth-quake-volcano.volcano-basic] 火山噴發會噴出熔岩（岩漿噴出地表後稱熔岩）、火山灰與氣體  {t_base, 無}
 - [sci.t_mid.earth-quake-volcano.fault-cause] 地震成因：岩層受力累積、沿斷層錯動釋放能量  {t_mid, 會考}
 - [sci.t_mid.earth-quake-volcano.focus-epicenter] 區分震源（地下破裂起點）與震央（震源正上方地表點）  {t_mid, 會考}
 - [sci.t_mid.earth-quake-volcano.p-s-waves] P 波（縱波、快、先到）與 S 波（橫波、慢、後到）的性質差異  {t_mid, 會考}
@@ -60,7 +60,7 @@ exam 標註會考／學測／無（分科測驗不含地科獨立科目；深階
 - [sci.t_adv.earth-quake-volcano.magnitude-energy] 地震規模每增 1，釋放能量約增 32 倍（概念與量級）  {t_adv, 學測}
 - [sci.t_adv.earth-quake-volcano.benioff-zone] 隱沒帶地震深度隨遠離海溝而加深（班尼奧夫帶）  {t_adv, 學測}
 - [sci.t_adv.earth-quake-volcano.early-warning] 地震預警原理：利用 P 波先到、電波比 S 波快爭取秒級預警  {t_adv, 學測}
-- [sci.t_adv.earth-quake-volcano.magma-composition-eruption] 岩漿黏滯度（二氧化矽含量）決定噴發是寧靜溢流或劇烈爆發  {t_adv, 學測}
+- [sci.t_adv.earth-quake-volcano.magma-composition-eruption] 岩漿黏滯度（二氧化矽含量）與揮發分氣體共同決定噴發型態：高黏滯使氣體難逸出而積壓、爆發性強  {t_adv, 學測}
 - [sci.t_adv.earth-quake-volcano.volcano-tectonic-setting] 火山分布與板塊邊界（隱沒帶、中洋脊、熱點）的對應  {t_adv, 學測}
 
 ## 岩石與礦物與岩石循環 (rock-mineral)
@@ -77,7 +77,7 @@ exam 標註會考／學測／無（分科測驗不含地科獨立科目；深階
 - [sci.t_adv.earth-rock-mineral.cooling-rate-texture] 岩漿冷卻速率決定火成岩晶粒大小（快冷細粒/玻璃質、慢冷粗粒）  {t_adv, 學測}
 - [sci.t_adv.earth-rock-mineral.felsic-mafic] 火成岩依二氧化矽含量分酸性（淺色、長英質）與基性（深色、鐵鎂質）  {t_adv, 學測}
 - [sci.t_adv.earth-rock-mineral.clastic-vs-chemical] 沉積岩分碎屑岩與化學/生物沉積岩（如石灰岩、燧石）  {t_adv, 學測}
-- [sci.t_adv.earth-rock-mineral.metamorphic-grade] 變質程度與葉理發育（板岩→片岩→片麻岩）隨溫壓升高  {t_adv, 學測}
+- [sci.t_adv.earth-rock-mineral.metamorphic-grade] 變質程度隨溫壓升高；葉理源自定向應力下片狀礦物的優選排列（板岩→片岩→片麻岩）  {t_adv, 學測}
 - [sci.t_adv.earth-rock-mineral.silicate-structure] 矽酸鹽礦物以矽氧四面體為基本單元組成（概念）  {t_adv, 學測}
 
 ## 地質作用（風化、侵蝕、搬運、堆積） (geomorph)
@@ -200,7 +200,7 @@ exam 標註會考／學測／無（分科測驗不含地科獨立科目；深階
 - [sci.t_base.earth-astronomy.day-night] 地球自轉造成晝夜交替、太陽東升西落  {t_base, 無}
 - [sci.t_base.earth-astronomy.sun-position-seasons] 一年中太陽高度與日照長短隨季節變化  {t_base, 無}
 - [sci.t_base.earth-astronomy.moon-phases-observe] 觀察月亮形狀（月相）在一個月內的變化  {t_base, 無}
-- [sci.t_base.earth-astronomy.stars-constellations-base] 認識夜空中的亮星與常見星座（如北斗、獵戶）  {t_base, 無}
+- [sci.t_base.earth-astronomy.stars-constellations-base] 認識夜空中的亮星與常見星座（如獵戶座）及星群（如北斗七星，屬大熊座）  {t_base, 無}
 - [sci.t_base.earth-astronomy.solar-system-members] 太陽系有太陽、八大行星與月球等成員  {t_base, 無}
 - [sci.t_mid.earth-astronomy.rotation-revolution] 區分地球自轉（晝夜、約 24 小時）與公轉（四季、約 365 天）  {t_mid, 會考}
 - [sci.t_mid.earth-astronomy.seasons-cause] 四季成因：地軸傾斜使各地太陽直射角與日照時數隨公轉改變  {t_mid, 會考}
@@ -227,7 +227,7 @@ exam 標註會考／學測／無（分科測驗不含地科獨立科目；深階
 
 ## 環境資源與永續／防災 (environment)
 
-- [sci.t_base.earth-environment.natural-resources] 認識自然資源（水、土壤、礦產、能源）及其有限性  {t_base, 無}
+- [sci.t_base.earth-environment.natural-resources] 認識自然資源（水、土壤、礦產、能源）並區分可再生與不可再生、其可用量有限  {t_base, 無}
 - [sci.t_base.earth-environment.recycle-conserve] 資源回收、節能減碳等日常環保行動  {t_base, 無}
 - [sci.t_base.earth-environment.disaster-prepare] 認識地震、颱風、水災等災害並學會基本避難  {t_base, 無}
 - [sci.t_mid.earth-environment.rock-mineral-resources] 礦產與岩石資源（金屬礦、建材、石灰岩）的利用  {t_mid, 會考}
