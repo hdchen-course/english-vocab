@@ -303,6 +303,8 @@ def verify_ref(kp_id: str, ref: Any, cache_dir: Path) -> Optional[Dict[str, str]
     if not isinstance(url, str) or not url.strip():
         return {"kp_id": kp_id, "url": "", "reason": "missing URL"}
     url = url.strip()
+    if is_wikimedia_url(url):
+        return {"kp_id": kp_id, "url": url, "reason": "excluded Wikimedia source"}
 
     body, header_charset, fetch_error = fetch(url, cache_dir)
     if fetch_error:
