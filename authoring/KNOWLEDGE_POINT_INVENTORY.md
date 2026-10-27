@@ -5,7 +5,7 @@
 ## chi
 
 - [chi.t_base.phon.symbols-37] 37 個注音符號認讀（21 聲符＋16 韻符）  {t_base, 無}  · unverified
-- [chi.t_base.phon.initials] 聲符（聲母）發音與書寫  {t_base, 無}  · unverified
+- [chi.t_base.phon.initials] 聲母發音與書寫  {t_base, 無}  · provisionally_verified
 - [chi.t_base.phon.single-finals] 單韻母 ㄚㄛㄜㄝㄧㄨㄩ 認讀  {t_base, 無}  · unverified
 - [chi.t_base.phon.compound-finals] 複韻母 ㄞㄟㄠㄡ 拼讀  {t_base, 無}  · provisionally_verified
 - [chi.t_base.phon.nasal-finals] 聲隨韻母 ㄢㄣㄤㄥ 拼讀  {t_base, 無}  · provisionally_verified
@@ -13,7 +13,7 @@
 - [chi.t_base.phon.blend-finals] 結合韻母（ㄧㄚ／ㄨㄛ／ㄩㄝ…）拼讀  {t_base, 無}  · unverified
 - [chi.t_base.phon.tones-four] 一二三四聲調號標示與辨讀  {t_base, 無}  · provisionally_verified
 - [chi.t_base.phon.neutral-tone] 輕聲判讀與標示  {t_base, 無}  · provisionally_verified
-- [chi.t_base.phon.tone-sandhi-third] 三聲連讀變調（上上相連前字近陽平）  {t_base, 無}  · unverified
+- [chi.t_base.phon.tone-sandhi-third] 三聲連讀變調（上上相連前字近陽平）  {t_base, 無}  · provisionally_verified
 - [chi.t_base.phon.yi-bu-sandhi] 「一」「不」的變調  {t_base, 無}  · provisionally_verified
 - [chi.t_base.phon.erhua] 兒化韻現象辨識  {t_base, 無}  · unverified
 - [chi.t_base.phon.tone-mark-position] 直書拼音時聲調號標示位置  {t_base, 無}  · unverified
@@ -36,8 +36,8 @@
 - [chi.t_mid.char.liushu-zhishi] 六書：指事  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.char.liushu-huiyi] 六書：會意  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.char.liushu-xingsheng] 六書：形聲（形符表義／聲符表音）  {t_mid, 會考}  · provisionally_verified
-- [chi.t_mid.char.liushu-zhuanzhu] 六書：轉注  {t_mid, 會考}  · unverified
-- [chi.t_mid.char.liushu-jiajie] 六書：假借  {t_mid, 會考}  · unverified
+- [chi.t_mid.char.liushu-zhuanzhu] 六書：轉注  {t_mid, 會考}  · provisionally_verified
+- [chi.t_mid.char.liushu-jiajie] 六書：假借  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.char.phonetic-radical] 形聲字聲符表音、形符表義之判讀  {t_mid, 會考}  · provisionally_verified
 - [chi.t_base.char.near-form] 形近字辨析（己已巳／戌戍戊／辨辯辮瓣…）  {t_base, 會考}  · provisionally_verified
 - [chi.t_base.char.homophone-chars] 同音字辨析（的得地／在再／作做…）  {t_base, 會考}  · unverified
@@ -70,16 +70,16 @@
 - [chi.t_mid.word.saying-proverb] 熟語／諺語／歇後語／格言理解  {t_mid, 會考}  · provisionally_verified
 - [chi.t_base.punc.period] 句號用法  {t_base, 無}  · unverified
 - [chi.t_base.punc.comma] 逗號用法  {t_base, 無}  · unverified
-- [chi.t_base.punc.enumeration-comma] 頓號（並列詞語間）  {t_base, 無}  · unverified
+- [chi.t_base.punc.enumeration-comma] 頓號（並列詞語間）  {t_base, 無}  · provisionally_verified
 - [chi.t_mid.punc.semicolon] 分號（並列分句間）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_base.punc.colon] 冒號（提示下文）  {t_base, 無}  · provisionally_verified
 - [chi.t_base.punc.quotation] 引號（直接引語／強調／口語篇名）  {t_base, 無}  · unverified
-- [chi.t_mid.punc.nested-quote] 單引號與雙引號的層次嵌套  {t_mid, 會考}  · unverified
+- [chi.t_mid.punc.nested-quote] 單引號與雙引號的層次嵌套  {t_mid, 會考}  · provisionally_verified
 - [chi.t_base.punc.question] 問號  {t_base, 無}  · provisionally_verified
 - [chi.t_base.punc.exclamation] 驚嘆號  {t_base, 無}  · unverified
 - [chi.t_mid.punc.dash] 破折號（解釋／語氣轉變／聲音延續）  {t_mid, 會考}  · provisionally_verified
-- [chi.t_mid.punc.ellipsis] 刪節號（省略／語意未盡）  {t_mid, 會考}  · unverified
-- [chi.t_base.punc.book-title] 書名號（《》〈〉）  {t_base, 會考}  · unverified
+- [chi.t_mid.punc.ellipsis] 刪節號（省略／語意未盡）  {t_mid, 會考}  · provisionally_verified
+- [chi.t_base.punc.book-title] 書名號（《》〈〉）  {t_base, 會考}  · provisionally_verified
 - [chi.t_mid.punc.proper-name] 專名號  {t_mid, 無}  · provisionally_verified
 - [chi.t_mid.punc.parenthesis] 夾注號（括號）  {t_mid, 無}  · provisionally_verified
 - [chi.t_mid.punc.misuse] 標點誤用辨析（逗號句號混用、問號濫用）  {t_mid, 會考}  · provisionally_verified
@@ -204,9 +204,9 @@
 - [chi.t_mid.gram.pos-adv] 詞類：副詞  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.gram.pos-pronoun] 詞類：代名詞  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.gram.pos-prep] 詞類：介詞  {t_mid, 會考}  · provisionally_verified
-- [chi.t_mid.gram.pos-conj] 詞類：連詞  {t_mid, 會考}  · provisionally_verified
+- [chi.t_mid.gram.pos-conj] 詞類：連詞（連接詞）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.gram.pos-particle] 詞類：助詞  {t_mid, 會考}  · provisionally_verified
-- [chi.t_mid.gram.pos-interj] 詞類：嘆詞  {t_mid, 會考}  · provisionally_verified
+- [chi.t_mid.gram.pos-interj] 詞類：嘆詞（感嘆詞）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.gram.pos-num-measure] 詞類：數詞／量詞  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.gram.subject] 句子成分：主語  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.gram.predicate] 句子成分：謂語  {t_mid, 會考}  · provisionally_verified
@@ -245,7 +245,7 @@
 - [chi.t_adv.lit.jinti-parallel] 近體詩格律：對仗（頷聯、頸聯）  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.jueju-lushi] 近體詩：絕句與律詩之辨  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.ci-tune] 詞：詞牌／詞調／長短句  {t_adv, 學測-國綜}  · provisionally_verified
-- [chi.t_adv.lit.ci-length] 詞：小令／中調／長調  {t_adv, 學測-國綜}  · unverified
+- [chi.t_adv.lit.ci-length] 詞：小令／中調／長調  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.ci-schools] 詞：婉約派與豪放派  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.qu-types] 曲：散曲（小令／套數）與雜劇  {t_adv, 學測-國綜}  · unverified
 - [chi.t_adv.lit.qu-gongdiao] 曲：宮調／曲牌  {t_adv, 學測-國綜}  · provisionally_verified
@@ -268,7 +268,7 @@
 - [chi.t_adv.lit.lunyu] 文化基本教材：論語思想  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.mengzi] 文化基本教材：孟子思想  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.style-id] 作品風格辨識（豪放／婉約／寫實／浪漫）  {t_adv, 學測-國綜}  · provisionally_verified
-- [chi.t_mid.lit.couplet-knowledge] 題辭／對聯基本常識（婚喪喜慶用語、上下聯）  {t_mid, 會考}  · unverified
+- [chi.t_mid.lit.couplet-knowledge] 題辭／對聯基本常識（婚喪喜慶用語、上下聯）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.writ.theme-intent] 審題立意  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.writ.material] 取材選材（切題／具體／新穎）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.writ.outline] 擬定寫作大綱  {t_mid, 會考}  · provisionally_verified
@@ -307,7 +307,7 @@
 - [chi.t_mid.writjh.para-end] 結尾段收束與昇華  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.writjh.life-example] 結合生活經驗舉例  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.writjh.on-topic] 切合題旨、不離題  {t_mid, 會考}  · provisionally_verified
-- [chi.t_mid.writjh.six-level-rubric] 六級分評分規準理解（立意取材／結構組織／遣詞造句／錯別字格式標點）  {t_mid, 會考}  · unverified
+- [chi.t_mid.writjh.six-level-rubric] 六級分評分規準理解（立意取材／結構組織／遣詞造句／錯別字格式標點）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.writjh.chart-prompt] 圖表式引導題判讀與回應  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.writjh.time-length] 時間分配與字數掌控  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.writjh.neatness] 卷面整潔與作文格式（標點佔格、分段）  {t_mid, 會考}  · provisionally_verified
@@ -344,7 +344,7 @@
 - [chi.t_base.prac.diary] 日記格式  {t_base, 無}  · provisionally_verified
 - [chi.t_mid.prac.announcement] 啟事／公告  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.prac.inscription] 題辭（婚喪喜慶用語）  {t_mid, 會考}  · unverified
-- [chi.t_mid.prac.couplet] 對聯（上下聯平仄／對仗／張貼方位）  {t_mid, 會考}  · unverified
+- [chi.t_mid.prac.couplet] 對聯（上下聯平仄／對仗／張貼方位）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.prac.invitation] 柬帖（請柬／訃聞）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_adv.prac.resume-autobio] 自傳／履歷  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_mid.prac.book-report] 讀書報告／心得  {t_mid, 無}  · provisionally_verified

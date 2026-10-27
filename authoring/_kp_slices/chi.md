@@ -10,7 +10,7 @@
 ## 1. 注音與拼讀（strand: phon）
 
 - [chi.t_base.phon.symbols-37] 37 個注音符號認讀（21 聲符＋16 韻符）  {t_base, 無}
-- [chi.t_base.phon.initials] 聲符（聲母）發音與書寫  {t_base, 無}
+- [chi.t_base.phon.initials] 聲母發音與書寫  {t_base, 無}
 - [chi.t_base.phon.single-finals] 單韻母 ㄚㄛㄜㄝㄧㄨㄩ 認讀  {t_base, 無}
 - [chi.t_base.phon.compound-finals] 複韻母 ㄞㄟㄠㄡ 拼讀  {t_base, 無}
 - [chi.t_base.phon.nasal-finals] 聲隨韻母 ㄢㄣㄤㄥ 拼讀  {t_base, 無}
@@ -238,9 +238,9 @@
 - [chi.t_mid.gram.pos-adv] 詞類：副詞  {t_mid, 會考}
 - [chi.t_mid.gram.pos-pronoun] 詞類：代名詞  {t_mid, 會考}
 - [chi.t_mid.gram.pos-prep] 詞類：介詞  {t_mid, 會考}
-- [chi.t_mid.gram.pos-conj] 詞類：連詞  {t_mid, 會考}
+- [chi.t_mid.gram.pos-conj] 詞類：連詞（連接詞）  {t_mid, 會考}
 - [chi.t_mid.gram.pos-particle] 詞類：助詞  {t_mid, 會考}
-- [chi.t_mid.gram.pos-interj] 詞類：嘆詞  {t_mid, 會考}
+- [chi.t_mid.gram.pos-interj] 詞類：嘆詞（感嘆詞）  {t_mid, 會考}
 - [chi.t_mid.gram.pos-num-measure] 詞類：數詞／量詞  {t_mid, 會考}
 - [chi.t_mid.gram.subject] 句子成分：主語  {t_mid, 會考}
 - [chi.t_mid.gram.predicate] 句子成分：謂語  {t_mid, 會考}
