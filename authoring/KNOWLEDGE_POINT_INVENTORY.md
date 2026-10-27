@@ -2365,7 +2365,7 @@
 - [soc-civ.t_mid.culture.culture-meaning] 文化的意義與組成（物質／非物質文化）  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.culture.subculture] 次文化與反文化的概念  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.culture.ethnocentrism] 我族中心主義與文化相對論的對比  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.culture.multiculturalism] 多元文化主義的精神：尊重與包容差異  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.culture.multiculturalism] 多元文化主義的精神：尊重與包容差異  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.culture.taiwan-ethnic] 台灣多元族群（原住民族、閩南、客家、外省、新住民）  {t_mid, 會考}  · unverified
 - [soc-civ.t_adv.culture.cultural-change] 文化傳承、涵化與文化創新  {t_adv, 學測}  · unverified
 - [soc-civ.t_adv.culture.indigenous-rights] 原住民族的集體權與文化權保障  {t_adv, 學測}  · provisionally_verified
@@ -2375,9 +2375,9 @@
 - [soc-civ.t_base.culture.gender-equal-basic] 男女生都能做各種事、分擔家務  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_base.culture.body-autonomy-basic] 身體自主：隱私部位、拒絕不當碰觸、勇敢求助  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_mid.culture.sex-gender] 生理性別與社會性別（gender）的區別  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.culture.gender-role] 性別角色與性別刻板印象的形成與鬆動  {t_mid, 會考}  · unverified
-- [soc-civ.t_mid.culture.gender-equality] 性別平等的意義與日常實踐  {t_mid, 會考}  · unverified
-- [soc-civ.t_mid.culture.gender-division] 家庭與職場中的性別分工議題  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.culture.gender-role] 性別角色與性別刻板印象的形成與鬆動  {t_mid, 會考}  · provisionally_verified
+- [soc-civ.t_mid.culture.gender-equality] 性別平等的意義與日常實踐  {t_mid, 會考}  · provisionally_verified
+- [soc-civ.t_mid.culture.gender-division] 家庭與職場中的性別分工議題  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.culture.sexual-harassment] 辨識性騷擾、性霸凌與求助／申訴管道  {t_mid, 會考}  · unverified
 - [soc-civ.t_adv.culture.gender-diversity] 性別光譜與性傾向、性別認同的多元  {t_adv, 學測}  · unverified
 - [soc-civ.t_adv.culture.glass-ceiling] 職場性別不平等（玻璃天花板、同工不同酬）  {t_adv, 學測}  · unverified
@@ -2392,7 +2392,7 @@
 - [soc-civ.t_adv.rights.intl-covenants] 兩公約（公民與政治權利、經濟社會文化權利）的內國法化  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.rights.transitional-justice] 轉型正義的意義與面向  {t_adv, 學測}  · unverified
 - [soc-civ.t_sub.rights.rights-debate] 人權的普遍性與文化相對性之爭論  {t_sub, 分科-公民}  · provisionally_verified
-- [soc-civ.t_base.rights.child-safe] 遇到危險或被傷害時向大人／老師求助  {t_base, 無}  · unverified
+- [soc-civ.t_base.rights.child-safe] 遇到危險或被傷害時向大人／老師求助  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_mid.rights.crc] 兒童權利公約四類權利（生存、發展、受保護、參與）  {t_mid, 會考}  · unverified
 - [soc-civ.t_mid.rights.crc-principles] 兒童權利公約四大一般原則（不歧視、兒童最佳利益、生存與發展權、尊重兒童意見）  {t_mid, 會考}  · unverified
 - [soc-civ.t_mid.rights.child-protection] 兒少保護法制與通報機制概念  {t_mid, 會考}  · provisionally_verified
@@ -2414,7 +2414,7 @@
 - [soc-civ.t_mid.politics.majority-minority] 多數決原則與少數權益保障的平衡  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.politics.constitutionalism] 憲政主義：以憲法限制政府權力、保障人權  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.politics.rule-of-law-gov] 有限政府與責任政治的概念  {t_adv, 學測}  · provisionally_verified
-- [soc-civ.t_adv.politics.deliberative] 審議民主與公民參與式民主的理念  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.politics.deliberative] 審議民主與公民參與式民主的理念  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.politics.democracy-theory] 民主理論類型（菁英、多元、參與、審議）比較  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_sub.politics.democratization] 民主化與民主鞏固、民主倒退的概念  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_mid.politics.separation-powers] 權力分立與制衡的意義與目的  {t_mid, 會考}  · provisionally_verified
@@ -2449,15 +2449,15 @@
 - [soc-civ.t_mid.politics.participation-ways] 公民參與的方式（投票、連署、陳情、集會遊行、擔任志工）  {t_mid, 會考}  · unverified
 - [soc-civ.t_mid.politics.referendum] 公民投票（創制、複決）的意義與適用  {t_mid, 會考}  · unverified
 - [soc-civ.t_mid.politics.public-opinion] 民意的形成與民意調查的解讀  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_adv.politics.policy-process] 公共政策形成歷程（問題認定、規劃、合法化、執行、評估）  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.politics.policy-process] 公共政策形成歷程（問題認定、規劃、合法化、執行、評估）  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.politics.civil-society] 公民社會與非政府組織（NGO）的角色  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.politics.civil-disobedience] 公民不服從的意義與條件  {t_adv, 學測}  · provisionally_verified
-- [soc-civ.t_adv.politics.political-participation] 政治參與的層次與影響因素  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.politics.political-participation] 政治參與的層次與影響因素  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.politics.agenda-setting] 政策議程設定與利害關係人分析  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_sub.politics.governance] 治理（governance）概念與公私協力  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_sub.politics.deliberation-tools] 審議式民主工具（公民會議、參與式預算）的運作  {t_sub, 分科-公民}  · unverified
-- [soc-civ.t_base.law.rules-why] 為什麼要有規則：維護安全與秩序  {t_base, 無}  · unverified
-- [soc-civ.t_base.law.follow-rules] 遵守交通規則、校規與公共場所規範  {t_base, 無}  · unverified
+- [soc-civ.t_base.law.rules-why] 為什麼要有規則：維護安全與秩序  {t_base, 無}  · provisionally_verified
+- [soc-civ.t_base.law.follow-rules] 遵守交通規則、校規與公共場所規範  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_mid.law.law-meaning] 法律的意義與功能（維持秩序、保障權利、解決紛爭）  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.norm-types] 法律與其他社會規範（道德、習俗、宗教）的區別  {t_mid, 會考}  · unverified
 - [soc-civ.t_mid.law.law-hierarchy] 法律位階（憲法 > 法律 > 命令）與中央法規  {t_mid, 會考}  · provisionally_verified
@@ -2511,8 +2511,8 @@
 - [soc-civ.t_sub.law.labor-dispute] 勞動爭議處理與不當勞動行為裁決  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_sub.law.anti-discrimination] 就業歧視禁止與合理調整義務  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_base.economy.need-want] 分辨需要與想要、資源有限要取捨  {t_base, 無}  · provisionally_verified
-- [soc-civ.t_base.economy.save-spend] 儲蓄、記帳與聰明消費的習慣  {t_base, 無}  · unverified
-- [soc-civ.t_base.economy.money-use] 認識金錢的用途與交易的概念  {t_base, 無}  · unverified
+- [soc-civ.t_base.economy.save-spend] 儲蓄、記帳與聰明消費的習慣  {t_base, 無}  · provisionally_verified
+- [soc-civ.t_base.economy.money-use] 認識金錢的用途與交易的概念  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_mid.economy.scarcity] 稀少性是經濟問題的根源  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.economy.opportunity-cost] 機會成本的意義與計算  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.economy.trade-off] 理性選擇與成本效益分析初步  {t_mid, 會考}  · provisionally_verified
@@ -2541,7 +2541,7 @@
 - [soc-civ.t_sub.economy.coase] 外部性的矯正工具（課稅、補貼、財產權界定）  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_sub.economy.asymmetric-info] 資訊不對稱（逆選擇、道德危險）的實例與對策  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_mid.economy.money-function] 貨幣的功能（交易媒介、價值衡量、價值儲存）  {t_mid, 會考}  · unverified
-- [soc-civ.t_mid.economy.bank-role] 銀行的功能與存款、放款初步  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.economy.bank-role] 銀行的功能與存款、放款初步  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.economy.saving-invest] 儲蓄與投資的區別、風險與報酬概念  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.economy.financial-market] 金融市場（貨幣市場、資本市場）與金融工具  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.economy.central-bank] 中央銀行的角色與貨幣政策工具  {t_adv, 學測}  · provisionally_verified
@@ -2574,18 +2574,18 @@
 - [soc-civ.t_sub.economy.comparative-trade] 比較利益法則在國際貿易的應用  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_sub.economy.exchange-regime] 固定匯率與浮動匯率制度的比較  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_sub.economy.trade-org] 區域經濟整合與國際經貿組織（WTO 等）的角色  {t_sub, 分科-公民}  · unverified
-- [soc-civ.t_mid.economy.globalization-basic] 全球化下商品、資金、人員的跨國流動  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.economy.globalization-basic] 全球化下商品、資金、人員的跨國流動  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.economy.global-division] 國際分工與跨國企業的角色  {t_adv, 學測}  · unverified
 - [soc-civ.t_adv.economy.globalization-impact] 全球化對就業、產業與所得分配的影響  {t_adv, 學測}  · unverified
 - [soc-civ.t_sub.economy.global-value-chain] 全球價值鏈與供應鏈重組  {t_sub, 分科-公民}  · unverified
-- [soc-civ.t_base.global.world-neighbors] 認識世界不同國家與文化、地球村概念  {t_base, 無}  · unverified
+- [soc-civ.t_base.global.world-neighbors] 認識世界不同國家與文化、地球村概念  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_mid.global.intl-org] 重要國際組織（聯合國等）的宗旨與功能概念  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.global.global-issues] 全球共同面對的議題（氣候、貧窮、疫病）  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.global.global-issues] 全球共同面對的議題（氣候、貧窮、疫病）  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.global.ngo] 國際非政府組織與人道援助的角色  {t_mid, 會考}  · unverified
-- [soc-civ.t_adv.global.state-interaction] 國際社會中國家間的競爭與合作  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.global.state-interaction] 國際社會中國家間的競爭與合作  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.global.intl-law] 國際法與國際人權機制的概念  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.global.regional-integration] 區域組織與區域整合（如歐盟）的運作  {t_adv, 學測}  · unverified
-- [soc-civ.t_adv.global.taiwan-intl] 台灣參與國際社會的處境與方式  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.global.taiwan-intl] 台灣參與國際社會的處境與方式  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.global.ir-theory] 國際關係理論觀點（現實主義、自由主義）初步  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_sub.global.global-governance] 全球治理與跨國問題的集體行動困境  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_sub.global.soft-hard-power] 國家權力的面向（軟實力、硬實力）  {t_sub, 分科-公民}  · unverified
@@ -2594,10 +2594,10 @@
 - [soc-civ.t_sub.issues.rights-tradeoff] 人權與公共安全（如防疫、監控）的權衡  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_base.issues.recycle] 資源回收、節能減碳的日常行動  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_mid.issues.sustainable] 永續發展與世代正義的概念  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_adv.issues.climate-policy] 氣候變遷的治理與國際合作（減碳機制）  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.issues.climate-policy] 氣候變遷的治理與國際合作（減碳機制）  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.issues.env-justice] 環境正義與環境外部成本內部化  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.issues.sdgs] 聯合國永續發展目標（SDGs）的架構與落實爭議  {t_sub, 分科-公民}  · unverified
-- [soc-civ.t_mid.issues.migration] 國際移民、移工與新住民的社會融入  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.issues.migration] 國際移民、移工與新住民的社會融入  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.issues.migrant-rights] 移工與移民權益保障的爭議  {t_adv, 學測}  · unverified
 - [soc-civ.t_sub.issues.refugee] 難民問題與國際人道責任  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_base.issues.media-basic] 辨別廣告與真實訊息、不隨意轉傳  {t_base, 無}  · provisionally_verified
@@ -2607,7 +2607,7 @@
 - [soc-civ.t_adv.issues.privacy] 個人資料保護與隱私權（數位時代）  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.issues.disinformation] 假訊息治理與言論自由的界線  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_sub.issues.ai-ethics] 科技（AI、演算法）發展的社會與倫理爭議  {t_sub, 分科-公民}  · unverified
-- [soc-civ.t_mid.issues.consumer-finance] 青少年理財、信用卡與分期的風險  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.issues.consumer-finance] 青少年理財、信用卡與分期的風險  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.issues.financial-fraud] 金融詐騙與投資陷阱的辨識與防範  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.issues.digital-economy] 數位經濟、平台經濟與勞動型態的改變  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_base.inquiry.ask-question] 對身邊的公共事務提出好奇與問題  {t_base, 無}  · provisionally_verified
