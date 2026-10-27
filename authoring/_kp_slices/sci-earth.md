@@ -18,7 +18,7 @@ exam 標註會考／學測／無（分科測驗不含地科獨立科目；深階
 - [sci.t_mid.earth-earth-system.temp-pressure-with-depth] 地球內部溫度與壓力隨深度增加而升高  {t_mid, 會考}
 - [sci.t_adv.earth-earth-system.seismic-wave-interior] 以地震波（P 波、S 波）傳播速度變化推論地球內部分層界面  {t_adv, 學測}
 - [sci.t_adv.earth-earth-system.moho-gutenberg] 莫氏不連續面（地殼—地函界）與古氏不連續面（地函—地核界）的定義  {t_adv, 學測}
-- [sci.t_adv.earth-earth-system.s-wave-no-liquid] S 波無法通過外核→推論外核為液態、內核為固態  {t_adv, 學測}
+- [sci.t_adv.earth-earth-system.s-wave-no-liquid] S 波無法通過外核→推論外核為液態（內核為固態另由 P 波波速等證據推得）  {t_adv, 學測}
 - [sci.t_adv.earth-earth-system.core-composition] 地核主要由鐵、鎳組成；地球磁場源自外核流體運動（概念）  {t_adv, 學測}
 - [sci.t_adv.earth-earth-system.earth-origin] 地球與太陽系由原始星雲收縮、吸積形成（約 46 億年前）  {t_adv, 學測}
 - [sci.t_adv.earth-earth-system.differentiation] 地球早期熔融、重的物質下沉形成地核、輕者上浮成地殼的分化過程  {t_adv, 學測}
@@ -92,8 +92,8 @@ exam 標註會考／學測／無（分科測驗不含地科獨立科目；深階
 - [sci.t_mid.earth-geomorph.taiwan-landforms] 臺灣特殊地形（如野柳、太魯閣峽谷、海岸階地）的成因  {t_mid, 會考}
 - [sci.t_mid.earth-geomorph.karst] 石灰岩地區溶蝕形成鐘乳石、石筍等喀斯特地形  {t_mid, 會考}
 - [sci.t_adv.earth-geomorph.grain-size-velocity] 以流速—顆粒關係（侵蝕/搬運/堆積臨界流速）分析沉積作用  {t_adv, 學測}
-- [sci.t_adv.earth-geomorph.sorting-rounding] 沉積物的淘選度與圓磨度反映搬運距離與能量  {t_adv, 學測}
-- [sci.t_adv.earth-geomorph.mass-wasting] 塊體崩壞（山崩、土石流）的觸發條件（降雨、坡度、地震）  {t_adv, 學測}
+- [sci.t_adv.earth-geomorph.sorting-rounding] 沉積物的淘選度反映搬運能量；圓磨度反映磨蝕程度/搬運歷史（非單純等同搬運距離）  {t_adv, 學測}
+- [sci.t_adv.earth-geomorph.mass-wasting] 塊體崩壞（山崩、土石流）的誘發因子（降雨、地震）與控制因子（坡度、地質）  {t_adv, 學測}
 - [sci.t_adv.earth-geomorph.terrace-uplift] 河階、海階地形記錄地殼抬升與海水面升降  {t_adv, 學測}
 
 ## 地質年代與化石 (geotime)
@@ -110,7 +110,7 @@ exam 標註會考／學測／無（分科測驗不含地科獨立科目；深階
 - [sci.t_adv.earth-geotime.radiometric-dating] 放射性定年原理：以半衰期與母子同位素比值測絕對年代  {t_adv, 學測}
 - [sci.t_adv.earth-geotime.half-life-calc] 由剩餘母核比例與半衰期計算岩石或化石的絕對年齡  {t_adv, 學測}
 - [sci.t_adv.earth-geotime.mass-extinction] 地質史上重大生物大滅絕事件與環境劇變的關聯  {t_adv, 學測}
-- [sci.t_adv.earth-geotime.earth-history-events] 地球歷史重大事件序（大氣含氧、生命起源、恐龍興衰）排序  {t_adv, 學測}
+- [sci.t_adv.earth-geotime.earth-history-events] 地球歷史重大事件序（生命起源→大氣大量含氧→恐龍興衰）排序  {t_adv, 學測}
 
 ## 大氣的組成與結構 (atmosphere)
 
@@ -123,7 +123,7 @@ exam 標註會考／學測／無（分科測驗不含地科獨立科目；深階
 - [sci.t_adv.earth-atmosphere.stratosphere-inversion] 平流層氣溫隨高度上升（因臭氧吸收紫外線）→ 氣層穩定  {t_adv, 學測}
 - [sci.t_adv.earth-atmosphere.energy-balance] 太陽輻射、反照率、地球長波輻射的收支平衡  {t_adv, 學測}
 - [sci.t_adv.earth-atmosphere.greenhouse-mechanism] 溫室氣體吸收地表長波輻射再放射，維持地表適居溫度的機制  {t_adv, 學測}
-- [sci.t_adv.earth-atmosphere.ionosphere] 增溫層/電離層對無線電波的反射與極光的關係（概念）  {t_adv, 學測}
+- [sci.t_adv.earth-atmosphere.ionosphere] 增溫層/電離層對無線電波的反射；極光發生於增溫層高度，與電離層區域重疊（非因果關係）  {t_adv, 學測}
 
 ## 天氣與氣象（氣壓、鋒面、颱風、氣團） (weather)
 

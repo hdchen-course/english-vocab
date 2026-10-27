@@ -44,7 +44,7 @@
 - [sci.t_adv.bio-cell-structure.golgi] 說明高基氏體的加工、分類、包裝與分泌功能  {t_adv, 學測}
 - [sci.t_adv.bio-cell-structure.lysosome] 說明溶體含水解酶、行胞內消化與自噬  {t_adv, 學測}
 - [sci.t_adv.bio-cell-structure.cytoskeleton] 說明細胞骨架（微管/微絲/中間絲）支持、運輸與運動功能  {t_adv, 學測}
-- [sci.t_adv.bio-cell-structure.centriole-cilia] 說明中心粒與纖毛/鞭毛的微管結構（9+2）與運動功能  {t_adv, 分科-生物}
+- [sci.t_adv.bio-cell-structure.centriole-cilia] 區分中心粒／基體（9三聯體）與纖毛/鞭毛軸絲（9+2）的微管結構與運動功能  {t_adv, 分科-生物}
 - [sci.t_adv.bio-cell-structure.endomembrane-system] 統整內膜系統的物質流（內質網→高基氏體→囊泡→膜）  {t_adv, 分科-生物}
 - [sci.t_sub.bio-cell-structure.membrane-fluid-mosaic] 以流體鑲嵌模型描述細胞膜（磷脂雙層＋鑲嵌蛋白＋膽固醇＋醣蛋白）  {t_sub, 分科-生物}
 - [sci.t_sub.bio-cell-structure.endosymbiosis] 以內共生學說解釋粒線體與葉綠體的起源證據  {t_sub, 分科-生物}
@@ -89,8 +89,8 @@
 - [sci.t_mid.bio-photosynthesis.factors] 說明光度、CO₂濃度、溫度對光合速率的影響  {t_mid, 會考}
 - [sci.t_adv.bio-photosynthesis.light-reaction] 說明光反應於類囊膜、產生 ATP 與 NADPH、釋放 O₂  {t_adv, 學測}
 - [sci.t_adv.bio-photosynthesis.water-split] 說明光反應中水的分解（光解）為電子與 O₂來源  {t_adv, 學測}
-- [sci.t_adv.bio-photosynthesis.calvin-cycle] 說明暗反應（卡爾文循環）於基質、固定 CO₂合成醣類  {t_adv, 學測}
-- [sci.t_adv.bio-photosynthesis.chloroplast-structure] 指出葉綠體的類囊膜（葉綠餅）與基質對應光/暗反應  {t_adv, 學測}
+- [sci.t_adv.bio-photosynthesis.calvin-cycle] 說明碳反應（卡爾文循環，舊稱暗反應）於基質固定 CO₂合成醣類  {t_adv, 學測}
+- [sci.t_adv.bio-photosynthesis.chloroplast-structure] 指出葉綠體的類囊膜（葉綠餅）與基質分別對應光反應與碳反應（舊稱暗反應）  {t_adv, 學測}
 - [sci.t_sub.bio-photosynthesis.photosystem] 說明光系統 I、II 與電子傳遞鏈、光磷酸化  {t_sub, 分科-生物}
 - [sci.t_sub.bio-photosynthesis.rubisco] 說明 RuBisCO 固碳酵素與 RuBP 的角色  {t_sub, 分科-生物}
 - [sci.t_sub.bio-photosynthesis.photorespiration] 說明光呼吸的成因（O₂與 CO₂競爭 RuBisCO）  {t_sub, 分科-生物}
