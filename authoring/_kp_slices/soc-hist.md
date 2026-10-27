@@ -114,7 +114,7 @@
 - [soc-hist.t_mid.eastasia.opium-treaties] 近代變局：鴉片戰爭與不平等條約體系  {t_mid, 會考}
 - [soc-hist.t_mid.eastasia.self-strengthening] 自強運動、戊戌變法與清末改革的成敗  {t_mid, 會考}
 - [soc-hist.t_mid.eastasia.1911-republic] 辛亥革命與中華民國的建立  {t_mid, 會考}
-- [soc-hist.t_mid.eastasia.republic-war] 民初軍閥、對日抗戰與國共關係（中立、適齡）  {t_mid, 會考}
+- [soc-hist.t_mid.eastasia.republic-war] 民初軍閥混戰、中日戰爭（抗日戰爭）與國共的合作與衝突（中立、適齡）  {t_mid, 會考}
 
 ### 高階（高中／學測）
 - [soc-hist.t_adv.eastasia.state-society] 「國家與社會」：傳統中國的統治機制與官僚體制  {t_adv, 學測}

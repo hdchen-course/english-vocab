@@ -3017,14 +3017,14 @@
 - [soc-hist.t_sub.skill.global-comparison] 以跨文化比較與全球史視角重估單一區域敘事  {t_sub, 分科-歷史}  · provisionally_verified
 - [soc-hist.t_sub.skill.digital-quant] 數位史料與量化／空間史學（資料庫、GIS 於歷史研究）  {t_sub, 分科-歷史}  · provisionally_verified
 - [soc-hist.t_base.taiwan.hometown-change] 認識家鄉的今昔變遷（老地名、古蹟、產業轉變）  {t_base, 無}  · provisionally_verified
-- [soc-hist.t_base.taiwan.period-overview] 說出台灣歷史大序列：原住民→荷西→鄭氏→清領→日治→戰後  {t_base, 無}  · unverified
-- [soc-hist.t_base.taiwan.indigenous-intro] 認識台灣原住民族是最早的住民、族群多元（南島語族）  {t_base, 無}  · unverified
+- [soc-hist.t_base.taiwan.period-overview] 說出台灣歷史大序列：原住民→荷西→鄭氏→清領→日治→戰後  {t_base, 無}  · provisionally_verified
+- [soc-hist.t_base.taiwan.indigenous-intro] 認識台灣原住民族是最早的住民、族群多元（南島語族）  {t_base, 無}  · provisionally_verified
 - [soc-hist.t_base.taiwan.heritage] 認識身邊的文化資產與古蹟並說明保存的意義  {t_base, 無}  · provisionally_verified
-- [soc-hist.t_mid.taiwan.prehistory] 史前台灣與考古文化（長濱文化、大坌坑、十三行等）  {t_mid, 會考}  · unverified
-- [soc-hist.t_mid.taiwan.austronesian] 南島語族與台灣原住民族的社會與分布  {t_mid, 會考}  · unverified
+- [soc-hist.t_mid.taiwan.prehistory] 史前台灣與考古文化（長濱文化、大坌坑、十三行等）  {t_mid, 會考}  · provisionally_verified
+- [soc-hist.t_mid.taiwan.austronesian] 南島語族與台灣原住民族的社會與分布  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.taiwan.dutch-spanish] 荷西時期：荷蘭東印度公司的統治與轉口貿易、西班牙據北台灣  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.taiwan.koxinga] 鄭氏政權：驅逐荷蘭、反清復明、屯墾與對外貿易  {t_mid, 會考}  · provisionally_verified
-- [soc-hist.t_mid.taiwan.qing-early-migration] 清領前期的移墾社會、渡台禁令與漢人移墾  {t_mid, 會考}  · unverified
+- [soc-hist.t_mid.taiwan.qing-early-migration] 清領前期的移墾社會、渡台禁令與漢人移墾  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.taiwan.qing-land-feud] 清領前期的土地制度（大小租／一田多主）與分類械鬥  {t_mid, 會考}  · unverified
 - [soc-hist.t_mid.taiwan.qing-trade] 清領前期的郊商與區域貿易網絡  {t_mid, 會考}  · unverified
 - [soc-hist.t_mid.taiwan.qing-open-ports] 清領後期開港通商與茶、糖、樟腦的出口貿易  {t_mid, 會考}  · provisionally_verified
@@ -3054,9 +3054,9 @@
 - [soc-hist.t_sub.taiwan.environmental-history] 環境史視角：台灣的開發、災害與生態變遷  {t_sub, 分科-歷史}  · provisionally_verified
 - [soc-hist.t_sub.taiwan.postwar-migration] 戰後移民與族群認同史（外省、客家、新住民）  {t_sub, 分科-歷史}  · provisionally_verified
 - [soc-hist.t_sub.taiwan.coldwar-taiwan] 冷戰結構下的台灣專題（美援、地緣政治）  {t_sub, 分科-歷史}  · provisionally_verified
-- [soc-hist.t_mid.eastasia.early-state] 中國早期國家與文明（商周、封建與宗法制度）  {t_mid, 會考}  · unverified
+- [soc-hist.t_mid.eastasia.early-state] 中國早期國家與文明（商周、封建與宗法制度）  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.eastasia.warring-thought] 春秋戰國的變局與諸子百家思想  {t_mid, 會考}  · provisionally_verified
-- [soc-hist.t_mid.eastasia.qin-han-empire] 秦漢大一統帝國與中央集權制度的建立  {t_mid, 會考}  · unverified
+- [soc-hist.t_mid.eastasia.qin-han-empire] 秦漢大一統帝國與中央集權制度的建立  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.eastasia.division-fusion] 魏晉南北朝的分裂與民族互動融合  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.eastasia.sui-tang] 隋唐的盛世、制度（科舉）與對外交流  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.eastasia.song-yuan] 宋元：經濟重心南移、商業與科技發展、蒙古帝國  {t_mid, 會考}  · provisionally_verified
@@ -3064,7 +3064,7 @@
 - [soc-hist.t_mid.eastasia.opium-treaties] 近代變局：鴉片戰爭與不平等條約體系  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.eastasia.self-strengthening] 自強運動、戊戌變法與清末改革的成敗  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.eastasia.1911-republic] 辛亥革命與中華民國的建立  {t_mid, 會考}  · provisionally_verified
-- [soc-hist.t_mid.eastasia.republic-war] 民初軍閥、對日抗戰與國共關係（中立、適齡）  {t_mid, 會考}  · unverified
+- [soc-hist.t_mid.eastasia.republic-war] 民初軍閥混戰、中日戰爭（抗日戰爭）與國共的合作與衝突（中立、適齡）  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_adv.eastasia.state-society] 「國家與社會」：傳統中國的統治機制與官僚體制  {t_adv, 學測}  · provisionally_verified
 - [soc-hist.t_adv.eastasia.registration-tax] 編戶齊民、賦役制度與國家對人民的控制  {t_adv, 學測}  · provisionally_verified
 - [soc-hist.t_adv.eastasia.scholar-confucian] 士人與儒學在社會與政治中的角色  {t_adv, 學測}  · provisionally_verified
@@ -3091,7 +3091,7 @@
 - [soc-hist.t_mid.world.american-french-rev] 美國獨立革命與法國大革命  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.world.industrial-rev] 工業革命及其社會影響  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.world.imperialism] 帝國主義與列強的殖民擴張  {t_mid, 會考}  · provisionally_verified
-- [soc-hist.t_mid.world.wwi] 第一次世界大戰的起因、過程與戰後秩序  {t_mid, 會考}  · unverified
+- [soc-hist.t_mid.world.wwi] 第一次世界大戰的起因、過程與戰後秩序  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.world.depression-totalitarian] 經濟大恐慌與極權主義（法西斯／納粹）的興起  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.world.wwii] 第二次世界大戰與大屠殺  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.world.coldwar] 冷戰的形成與兩極對抗體系  {t_mid, 會考}  · provisionally_verified
