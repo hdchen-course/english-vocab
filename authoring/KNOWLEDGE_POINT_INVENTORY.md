@@ -1194,7 +1194,7 @@
 - [math.t_sub.trig.superposition] 正餘弦疊合（a sinθ + b cosθ）  {t_sub, 分科-數甲}  · provisionally_verified
 - [math.t_sub.trig.product-sum] 積化和差與和差化積  {t_sub, 分科-數甲}  · provisionally_verified
 - [math.t_sub.trig.equation] 三角方程式的解法  {t_sub, 分科-數甲}  · provisionally_verified
-- [math.t_sub.trig.inverse-function] 反三角函數初步  {t_enrich, 無}  · unverified
+- [math.t_sub.trig.inverse-function] 反三角函數初步  {t_enrich, 無}  · provisionally_verified
 - [math.t_adv.vector.plane-definition] 平面向量的定義、相等與係數積  {t_adv, 學測}  · provisionally_verified
 - [math.t_adv.vector.plane-add-sub] 平面向量的加減與幾何意義  {t_adv, 學測}  · provisionally_verified
 - [math.t_adv.vector.component] 向量的分量表示與坐標運算  {t_adv, 學測}  · provisionally_verified
@@ -1211,7 +1211,7 @@
 - [math.t_sub.space.plane-equation] 平面方程式與法向量  {t_sub, 分科-數甲}  · provisionally_verified
 - [math.t_sub.space.line-parametric] 空間直線的參數式與對稱式  {t_sub, 分科-數甲}  · provisionally_verified
 - [math.t_sub.space.distance-angle] 點/線/面間的距離與夾角計算  {t_sub, 分科-數甲}  · provisionally_verified
-- [math.t_sub.space.sphere] 球面方程式與直線/平面與球的關係  {t_enrich, 無}  · unverified
+- [math.t_sub.space.sphere] 球面方程式與直線/平面與球的關係  {t_enrich, 無}  · provisionally_verified
 - [math.t_sub.matrix.operations] 矩陣的加減與係數積  {t_sub, 分科-數甲}  · provisionally_verified
 - [math.t_sub.matrix.multiplication] 矩陣乘法  {t_sub, 分科-數甲}  · provisionally_verified
 - [math.t_sub.matrix.inverse] 反方陣的求法與性質  {t_sub, 分科-數甲}  · provisionally_verified

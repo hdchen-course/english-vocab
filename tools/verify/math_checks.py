@@ -166,7 +166,52 @@ def factor_cross():
     return _ok("math.factor-cross", "(x+p)(x+q)=x²+(p+q)x+pq；(ax+b)(cx+d) 一般式恆等")
 
 
+def inverse_trig():
+    # 反三角函數初步：定義域/值域 + 合成恆等（主值域內）
+    x = sp.Symbol("x", real=True)
+    # 值域（主值）：arcsin∈[-π/2,π/2]、arccos∈[0,π]、arctan∈(-π/2,π/2)
+    assert sp.asin(1) == sp.pi/2 and sp.asin(-1) == -sp.pi/2 and sp.asin(0) == 0
+    assert sp.acos(1) == 0 and sp.acos(-1) == sp.pi and sp.acos(0) == sp.pi/2
+    assert sp.atan(1) == sp.pi/4 and sp.atan(-1) == -sp.pi/4 and sp.atan(0) == 0
+    # 合成：sin(arcsin x)=x 於 x∈[-1,1]（定義域內）
+    for v in [sp.Rational(-1), sp.Rational(-1, 2), sp.Integer(0), sp.Rational(1, 2), sp.Integer(1)]:
+        assert sp.simplify(sp.sin(sp.asin(v)) - v) == 0
+        assert sp.simplify(sp.cos(sp.acos(v)) - v) == 0
+    # arcsin(sin θ) 取主值：θ=5π/6（超出主值域）應回 π/6，非 5π/6
+    assert sp.asin(sp.sin(sp.Rational(5, 6)*sp.pi)) == sp.pi/6
+    # 餘補關係 arcsin x + arccos x = π/2
+    for v in [sp.Rational(-1, 2), sp.Integer(0), sp.Rational(1, 2)]:
+        assert sp.simplify(sp.asin(v) + sp.acos(v) - sp.pi/2) == 0
+    return _ok("math.inverse-trig",
+               "arcsin∈[-π/2,π/2]/arccos∈[0,π]/arctan∈(-π/2,π/2)；sin(arcsin x)=x 於[-1,1]；arcsin(sin 5π/6)=π/6（取主值）；arcsin x+arccos x=π/2")
+
+
+def sphere_line_plane():
+    # 球面方程式與平面/直線關係：以球心到平面距離 d 與半徑 r 判交切離
+    x, y, z = sp.symbols("x y z", real=True)
+    cx, cy, cz, r = 0, 0, 0, 3   # 球 x²+y²+z²=9，球心原點、r=3
+    sphere = (x - cx)**2 + (y - cy)**2 + (z - cz)**2 - r**2
+    assert sp.expand(sphere) == x**2 + y**2 + z**2 - 9
+    def dist_center_to_plane(a, b, c, dconst):   # 平面 ax+by+cz=dconst，球心(0,0,0)
+        return sp.Abs(a*cx + b*cy + c*cz - dconst) / sp.sqrt(a**2 + b**2 + c**2)
+    # 平面 z=2 → d=2<r → 相交成圓，截圓半徑 ρ=√(r²-d²)=√5
+    d1 = dist_center_to_plane(0, 0, 1, 2); assert d1 == 2 and d1 < r
+    assert sp.sqrt(r**2 - d1**2) == sp.sqrt(5)
+    # 平面 z=3 → d=3=r → 相切（唯一交點）
+    d2 = dist_center_to_plane(0, 0, 1, 3); assert d2 == 3 and d2 == r
+    # 平面 z=5 → d=5>r → 不相交
+    d3 = dist_center_to_plane(0, 0, 1, 5); assert d3 == 5 and d3 > r
+    # 直線與球：直線 (0,0,t) 代入 → t²=9 → 兩交點 t=±3（d_line=0<r，過球心為直徑）
+    t = sp.Symbol("t", real=True)
+    sols = sp.solve(sp.Eq((0)**2 + (0)**2 + t**2, 9), t)
+    assert set(sols) == {-3, 3}
+    return _ok("math.sphere-line-plane",
+               "球x²+y²+z²=9(r=3)；平面距球心d: d<r(z=2,d=2)相交截圓ρ=√5、d=r(z=3)相切、d>r(z=5)相離；過球心直線交兩點t=±3")
+
+
 CHECKS = {
+    "inverse-trig": inverse_trig,
+    "sphere-line-plane": sphere_line_plane,
     "quadratic-formula": quadratic_formula,
     "quadratic-discriminant": quadratic_discriminant,
     "quadratic-vieta": quadratic_vieta,
