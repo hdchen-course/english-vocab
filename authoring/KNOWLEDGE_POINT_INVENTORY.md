@@ -122,9 +122,9 @@
 - [chi.t_mid.classical.xu-zhe] 「者」：…的人／停頓／判斷標誌  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.classical.xu-ye] 「也」：判斷／語氣詞  {t_mid, 會考}  · provisionally_verified
 - [chi.t_adv.classical.xu-hu] 「乎」：疑問／感嘆／相當於「於」  {t_adv, 學測-國綜}  · provisionally_verified
-- [chi.t_adv.classical.xu-yan] 「焉」：兼詞（於之）／語氣／疑問代詞  {t_adv, 學測-國綜}  · unverified
-- [chi.t_adv.classical.xu-zai] 「哉」：感嘆／反問語氣  {t_adv, 學測-國綜}  · unverified
-- [chi.t_adv.classical.xu-yi2] 「矣」：表完成／語氣  {t_adv, 學測-國綜}  · unverified
+- [chi.t_adv.classical.xu-yan] 「焉」：兼詞（於之）／語氣／疑問代詞  {t_adv, 學測-國綜}  · provisionally_verified
+- [chi.t_adv.classical.xu-zai] 「哉」：感嘆／反問語氣  {t_adv, 學測-國綜}  · provisionally_verified
+- [chi.t_adv.classical.xu-yi2] 「矣」：表完成／語氣  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.classical.xu-er2] 「耳」：相當於「而已」  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.classical.xu-fu] 「夫」：發語詞／指示代詞「那」  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.classical.xu-gai] 「蓋」：發語詞／大概／因為  {t_adv, 學測-國綜}  · provisionally_verified
@@ -251,20 +251,20 @@
 - [chi.t_adv.lit.qu-gongdiao] 曲：宮調／曲牌  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.yuefu] 樂府詩特徵  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.pianwen] 駢文特徵（四六句／對仗／用典／聲律）  {t_adv, 學測-國綜}  · provisionally_verified
-- [chi.t_adv.lit.tang-song-eight] 唐宋古文八大家  {t_adv, 學測-國綜}  · unverified
+- [chi.t_adv.lit.tang-song-eight] 唐宋古文八大家  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.shijing-liuyi] 詩經六義（風雅頌賦比興）  {t_adv, 學測-國綜}  · provisionally_verified
-- [chi.t_adv.lit.hist-preqin] 文學史：先秦（詩經／楚辭／諸子散文）  {t_adv, 學測-國綜}  · unverified
+- [chi.t_adv.lit.hist-preqin] 文學史：先秦（詩經／楚辭／諸子散文）  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.hist-han] 文學史：兩漢（辭賦／史傳／樂府）  {t_adv, 學測-國綜}  · unverified
-- [chi.t_adv.lit.hist-weijin] 文學史：魏晉南北朝（建安／田園／山水／志怪）  {t_adv, 學測-國綜}  · unverified
-- [chi.t_adv.lit.hist-tang] 文學史：唐（詩／傳奇／古文運動）  {t_adv, 學測-國綜}  · unverified
-- [chi.t_adv.lit.hist-song] 文學史：宋（詞／古文／話本）  {t_adv, 學測-國綜}  · unverified
-- [chi.t_adv.lit.hist-yuan] 文學史：元（曲／雜劇）  {t_adv, 學測-國綜}  · unverified
-- [chi.t_adv.lit.hist-mingqing] 文學史：明清（章回小說／八股文）  {t_adv, 學測-國綜}  · unverified
+- [chi.t_adv.lit.hist-weijin] 文學史：魏晉南北朝（建安／田園／山水／志怪）  {t_adv, 學測-國綜}  · provisionally_verified
+- [chi.t_adv.lit.hist-tang] 文學史：唐（詩／傳奇／古文運動）  {t_adv, 學測-國綜}  · provisionally_verified
+- [chi.t_adv.lit.hist-song] 文學史：宋（詞／古文／話本）  {t_adv, 學測-國綜}  · provisionally_verified
+- [chi.t_adv.lit.hist-yuan] 文學史：元（曲／雜劇）  {t_adv, 學測-國綜}  · provisionally_verified
+- [chi.t_adv.lit.hist-mingqing] 文學史：明清（章回小說／八股文）  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.modern-newlit] 現代文學：新文學（白話文）運動  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.taiwan-lit] 台灣文學發展（鄉土／現代主義）  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.author-works] 重要作家與代表作配對  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.schools] 文學流派與主張  {t_adv, 學測-國綜}  · unverified
-- [chi.t_adv.lit.classic-source] 經典出處（四書五經／諸子）辨識  {t_adv, 學測-國綜}  · unverified
+- [chi.t_adv.lit.classic-source] 經典出處（四書五經／諸子）辨識  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.lunyu] 文化基本教材：論語思想  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.mengzi] 文化基本教材：孟子思想  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.style-id] 作品風格辨識（豪放／婉約／寫實／浪漫）  {t_adv, 學測-國綜}  · provisionally_verified
@@ -422,9 +422,9 @@
 - [eng.t_mid.morph.word-family] 派生與詞類轉換（beauty/beautiful/beautifully）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_adv.morph.prefix-degree] 數量/程度字首（bi-/tri-/multi-/semi-/over-/under-/super-）  {t_adv, 學測}  · unverified
 - [eng.t_adv.morph.prefix-relation] 關係/方位字首（re-/pre-/post-/inter-/trans-/sub-/ex-/co-）  {t_adv, 學測}  · provisionally_verified
-- [eng.t_adv.morph.latin-greek-roots] 拉丁希臘字根（spect/port/dict/ject/vert/scrib/tele/bio/geo/graph）  {t_adv, 學測}  · unverified
+- [eng.t_adv.morph.latin-greek-roots] 拉丁希臘字根（spect/port/dict/ject/vert/scrib/tele/bio/geo/graph）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.morph.compound-adjective] 合成形容詞（well-known、a ten-year-old boy）  {t_adv, 學測}  · provisionally_verified
-- [eng.t_adv.morph.conversion] 轉品（water/to water 名動互轉）  {t_adv, 學測}  · unverified
+- [eng.t_adv.morph.conversion] 轉品（water/to water 名動互轉）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.morph.guess-by-morphology] 以構詞推測字義  {t_adv, 學測}  · provisionally_verified
 - [eng.t_base.noun.regular-plural] 可數名詞規則複數（-s/-es 拼寫）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.noun.irregular-plural] 不規則複數（man/men、child/children、foot/feet）  {t_base, 無}  · provisionally_verified
@@ -512,7 +512,7 @@
 - [eng.t_adv.adjadv.more-and-more] 比較級 + and + 比較級（越來越…）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.adjadv.multiple-comparison] 倍數比較（twice/three times as…as）  {t_adv, 學測}  · unverified
 - [eng.t_adv.adjadv.comparison-ellipsis] 比較句的省略與平行（than I do）  {t_adv, 學測}  · unverified
-- [eng.t_adv.adjadv.confusable-pairs] 易混形副（hard/hardly、late/lately、near/nearly）  {t_adv, 學測}  · unverified
+- [eng.t_adv.adjadv.confusable-pairs] 易混形副（hard/hardly、late/lately、near/nearly）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_base.prep.time-at-on-in] 時間介系詞 at/on/in  {t_base, 無}  · unverified
 - [eng.t_base.prep.place-at-on-in] 地點介系詞 at/on/in  {t_base, 無}  · provisionally_verified
 - [eng.t_mid.prep.direction] 方向/移動介系詞（to/into/onto/toward/through/across/along）  {t_mid, 會考}  · provisionally_verified
@@ -541,7 +541,7 @@
 - [eng.t_mid.nonfinite.verb-plus-infinitive] 接不定詞的動詞（want/hope/decide/promise）  {t_mid, 會考}  · unverified
 - [eng.t_mid.nonfinite.verb-plus-gerund] 接動名詞的動詞（enjoy/finish/mind/avoid/keep）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_adv.nonfinite.meaning-change] 接不定詞或動名詞意義不同（stop/remember/forget/try/mean/regret）  {t_adv, 學測}  · provisionally_verified
-- [eng.t_adv.nonfinite.subject-of-infinitive] 不定詞意義主詞（for sb to / of sb to）  {t_adv, 學測}  · unverified
+- [eng.t_adv.nonfinite.subject-of-infinitive] 不定詞意義主詞（for sb to / of sb to）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.nonfinite.bare-infinitive] 原形不定詞（make/let/have/see/hear + 原形）  {t_adv, 學測}  · unverified
 - [eng.t_adv.nonfinite.gerund-idioms] 慣用動名詞句型（feel like/can't help/be worth/It's no use）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.nonfinite.perfect-passive] 不定詞/動名詞的完成式與被動式  {t_adv, 學測}  · provisionally_verified
@@ -568,7 +568,7 @@
 - [eng.t_mid.advcl.time-future-present] 時間副詞子句（表未來用現在式）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.advcl.first-conditional] 條件副詞子句（第一類：if + 現在式, will）  {t_mid, 會考}  · unverified
 - [eng.t_mid.advcl.concession] 讓步副詞子句  {t_mid, 會考}  · provisionally_verified
-- [eng.t_adv.advcl.purpose-result] 目的/結果副詞子句  {t_adv, 學測}  · unverified
+- [eng.t_adv.advcl.purpose-result] 目的/結果副詞子句  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.advcl.manner-as-if] 方式副詞子句（as if / as though）  {t_adv, 學測}  · unverified
 - [eng.t_adv.advcl.no-matter] no matter how/what/where 讓步  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.subj.present-unreal] 與現在事實相反（If + 過去式, would/could/might + V）  {t_adv, 學測}  · unverified
@@ -689,7 +689,7 @@
 - [life.safety.traffic.in-vehicle] 乘車：繫安全帶、不把頭手伸出窗外、後座下車看後方  {t_base, 無}  · provisionally_verified
 - [life.safety.traffic.bicycle] 自行車：戴安全帽、靠右行、打手勢、夜間燈具反光  {t_base, 無}  · provisionally_verified
 - [life.safety.traffic.blind-spot] 機車/腳踏車路權、內輪差與大型車死角  {t_mid, 無}  · provisionally_verified
-- [life.safety.traffic.drunk-driving] 酒駕/疲勞駕駛危害的概念（勸阻家人）  {t_mid, 無}  · unverified
+- [life.safety.traffic.drunk-driving] 酒駕/疲勞駕駛危害的概念（勸阻家人）  {t_mid, 無}  · provisionally_verified
 - [life.safety.substance.tobacco-alcohol] 菸（含電子煙）、酒、檳榔對發育中身體的危害  {t_mid, 無}  · unverified
 - [life.safety.substance.new-drugs] 毒品與「包裝成糖果/飲料/郵票」的新興毒品辨識與拒絕技巧  {t_mid, 無}  · provisionally_verified
 - [life.safety.substance.addiction] 成癮的機制：短期快感 vs 長期傷害、戒斷  {t_mid, 無}  · provisionally_verified
