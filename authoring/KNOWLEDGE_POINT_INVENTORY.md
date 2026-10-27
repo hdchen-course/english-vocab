@@ -4,9 +4,9 @@
 
 ## chi
 
-- [chi.t_base.phon.symbols-37] 37 個注音符號認讀（21 聲符＋16 韻符）  {t_base, 無}  · unverified
+- [chi.t_base.phon.symbols-37] 37 個注音符號認讀（21 聲符＋16 韻符）  {t_base, 無}  · provisionally_verified
 - [chi.t_base.phon.initials] 聲母發音與書寫  {t_base, 無}  · provisionally_verified
-- [chi.t_base.phon.single-finals] 單韻母 ㄚㄛㄜㄝㄧㄨㄩ 認讀  {t_base, 無}  · unverified
+- [chi.t_base.phon.single-finals] 單韻母 ㄚㄛㄜㄝㄧㄨㄩ 認讀  {t_base, 無}  · provisionally_verified
 - [chi.t_base.phon.compound-finals] 複韻母 ㄞㄟㄠㄡ 拼讀  {t_base, 無}  · provisionally_verified
 - [chi.t_base.phon.nasal-finals] 聲隨韻母 ㄢㄣㄤㄥ 拼讀  {t_base, 無}  · provisionally_verified
 - [chi.t_base.phon.er-final] 捲舌韻 ㄦ 的拼讀  {t_base, 無}  · provisionally_verified
@@ -15,7 +15,7 @@
 - [chi.t_base.phon.neutral-tone] 輕聲判讀與標示  {t_base, 無}  · provisionally_verified
 - [chi.t_base.phon.tone-sandhi-third] 三聲連讀變調（上上相連前字近陽平）  {t_base, 無}  · provisionally_verified
 - [chi.t_base.phon.yi-bu-sandhi] 「一」「不」的變調  {t_base, 無}  · provisionally_verified
-- [chi.t_base.phon.erhua] 兒化韻現象辨識  {t_base, 無}  · unverified
+- [chi.t_base.phon.erhua] 兒化韻現象認識（與韻母ㄦ區辨）  {t_base, 無}  · provisionally_verified
 - [chi.t_base.phon.tone-mark-position] 直書拼音時聲調號標示位置  {t_base, 無}  · unverified
 - [chi.t_base.phon.input-index] 注音輸入法／注音檢字應用  {t_base, 無}  · provisionally_verified
 - [chi.t_mid.phon.polyphone-by-sense] 多音字因詞定音（破音字正確讀音選擇）  {t_mid, 會考}  · provisionally_verified
@@ -141,7 +141,7 @@
 - [chi.t_mid.classical.ancient-modern] 古今異義詞  {t_mid, 會考}  · unverified
 - [chi.t_adv.classical.shici-multi] 實詞一詞多義  {t_adv, 學測-國綜}  · unverified
 - [chi.t_mid.classical.noun-as-verb] 詞類活用：名詞作動詞  {t_mid, 會考}  · provisionally_verified
-- [chi.t_adv.classical.noun-as-adverb] 詞類活用：名詞作狀語  {t_adv, 學測-國綜}  · unverified
+- [chi.t_adv.classical.noun-as-adverb] 詞類活用：名詞作狀語  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.classical.causative] 詞類活用：使動用法  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.classical.putative] 詞類活用：意動用法  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.classical.adj-flex] 詞類活用：形容詞作動詞／名詞  {t_adv, 學測-國綜}  · provisionally_verified
@@ -178,7 +178,7 @@
 - [chi.t_mid.rhet.contrast] 映襯（正襯／反襯／雙襯）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_base.rhet.parallelism] 排比  {t_base, 會考}  · provisionally_verified
 - [chi.t_mid.rhet.antithesis] 對偶（句中對／單句對／隔句對）  {t_mid, 會考}  · provisionally_verified
-- [chi.t_adv.rhet.climax] 層遞  {t_adv, 學測-國綜}  · unverified
+- [chi.t_adv.rhet.climax] 層遞  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_mid.rhet.rhetorical-question] 設問（提問／激問／懸問）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.rhet.quotation] 引用（明引／暗引）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.rhet.anadiplosis] 頂真（聯珠）  {t_mid, 會考}  · provisionally_verified
@@ -188,8 +188,8 @@
 - [chi.t_base.rhet.reduplication] 類疊（疊字／類字／疊句／類句）  {t_base, 會考}  · provisionally_verified
 - [chi.t_mid.rhet.depiction] 摹寫（視／聽／嗅／味／觸覺摹寫）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_adv.rhet.pun] 雙關（音雙關／義雙關）  {t_adv, 學測-國綜}  · provisionally_verified
-- [chi.t_adv.rhet.euphemism] 婉曲（委婉）  {t_adv, 學測-國綜}  · unverified
-- [chi.t_adv.rhet.irony-figure] 倒反（反語／反諷）  {t_adv, 學測-國綜}  · unverified
+- [chi.t_adv.rhet.euphemism] 婉曲（委婉）  {t_adv, 學測-國綜}  · provisionally_verified
+- [chi.t_adv.rhet.irony-figure] 倒反（倒辭／反語）  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.rhet.word-split] 析字  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.rhet.transference] 轉品（詞性轉換）  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.rhet.apostrophe] 呼告  {t_adv, 學測-國綜}  · provisionally_verified
@@ -211,8 +211,8 @@
 - [chi.t_mid.gram.subject] 句子成分：主語  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.gram.predicate] 句子成分：謂語  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.gram.object] 句子成分：賓語  {t_mid, 會考}  · provisionally_verified
-- [chi.t_adv.gram.attributive] 句子成分：定語  {t_adv, 學測-國綜}  · provisionally_verified
-- [chi.t_adv.gram.adverbial] 句子成分：狀語  {t_adv, 學測-國綜}  · unverified
+- [chi.t_adv.gram.attributive] 句子成分：定語（attributive，台灣常稱修飾語）  {t_adv, 學測-國綜}  · provisionally_verified
+- [chi.t_adv.gram.adverbial] 句子成分：狀語（adverbial，台灣常稱修飾語）  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.gram.complement] 句子成分：補語  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_mid.gram.single-sentence] 單句結構分析  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.gram.sentence-types] 句型：敘事句／有無句／表態句／判斷句  {t_mid, 會考}  · provisionally_verified
@@ -247,14 +247,14 @@
 - [chi.t_adv.lit.ci-tune] 詞：詞牌／詞調／長短句  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.ci-length] 詞：小令／中調／長調  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.ci-schools] 詞：婉約派與豪放派  {t_adv, 學測-國綜}  · provisionally_verified
-- [chi.t_adv.lit.qu-types] 曲：散曲（小令／套數）與雜劇  {t_adv, 學測-國綜}  · unverified
+- [chi.t_adv.lit.qu-types] 曲：散曲（小令／套數）與雜劇  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.qu-gongdiao] 曲：宮調／曲牌  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.yuefu] 樂府詩特徵  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.pianwen] 駢文特徵（四六句／對仗／用典／聲律）  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.tang-song-eight] 唐宋古文八大家  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.shijing-liuyi] 詩經六義（風雅頌賦比興）  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.hist-preqin] 文學史：先秦（詩經／楚辭／諸子散文）  {t_adv, 學測-國綜}  · provisionally_verified
-- [chi.t_adv.lit.hist-han] 文學史：兩漢（辭賦／史傳／樂府）  {t_adv, 學測-國綜}  · unverified
+- [chi.t_adv.lit.hist-han] 文學史：兩漢（辭賦／史傳／樂府）  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.hist-weijin] 文學史：魏晉南北朝（建安／田園／山水／志怪）  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.hist-tang] 文學史：唐（詩／傳奇／古文運動）  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.hist-song] 文學史：宋（詞／古文／話本）  {t_adv, 學測-國綜}  · provisionally_verified
@@ -273,7 +273,7 @@
 - [chi.t_mid.writ.material] 取材選材（切題／具體／新穎）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.writ.outline] 擬定寫作大綱  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.writ.para-layering] 段落安排與層次  {t_mid, 會考}  · provisionally_verified
-- [chi.t_base.writ.narrative-six] 記敘文六要素（時地人事因果）  {t_base, 無}  · provisionally_verified
+- [chi.t_base.writ.narrative-six] 記敘文六要素（時間、地點、人物、起因、經過、結果）  {t_base, 無}  · provisionally_verified
 - [chi.t_mid.writ.narrative-order] 記敘文敘事順序運用  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.writ.detail-balance] 詳寫與略寫得當  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.writ.lyric-scene] 抒情文：借景抒情／融情入景  {t_mid, 會考}  · provisionally_verified

@@ -20,7 +20,7 @@
 - [chi.t_base.phon.neutral-tone] 輕聲判讀與標示  {t_base, 無}
 - [chi.t_base.phon.tone-sandhi-third] 三聲連讀變調（上上相連前字近陽平）  {t_base, 無}
 - [chi.t_base.phon.yi-bu-sandhi] 「一」「不」的變調  {t_base, 無}
-- [chi.t_base.phon.erhua] 兒化韻現象辨識  {t_base, 無}
+- [chi.t_base.phon.erhua] 兒化韻現象認識（與韻母ㄦ區辨）  {t_base, 無}
 - [chi.t_base.phon.tone-mark-position] 直書拼音時聲調號標示位置  {t_base, 無}
 - [chi.t_base.phon.input-index] 注音輸入法／注音檢字應用  {t_base, 無}
 - [chi.t_mid.phon.polyphone-by-sense] 多音字因詞定音（破音字正確讀音選擇）  {t_mid, 會考}
@@ -220,7 +220,7 @@
 - [chi.t_mid.rhet.depiction] 摹寫（視／聽／嗅／味／觸覺摹寫）  {t_mid, 會考}
 - [chi.t_adv.rhet.pun] 雙關（音雙關／義雙關）  {t_adv, 學測-國綜}
 - [chi.t_adv.rhet.euphemism] 婉曲（委婉）  {t_adv, 學測-國綜}
-- [chi.t_adv.rhet.irony-figure] 倒反（反語／反諷）  {t_adv, 學測-國綜}
+- [chi.t_adv.rhet.irony-figure] 倒反（倒辭／反語）  {t_adv, 學測-國綜}
 - [chi.t_adv.rhet.word-split] 析字  {t_adv, 學測-國綜}
 - [chi.t_adv.rhet.transference] 轉品（詞性轉換）  {t_adv, 學測-國綜}
 - [chi.t_adv.rhet.apostrophe] 呼告  {t_adv, 學測-國綜}
@@ -245,8 +245,8 @@
 - [chi.t_mid.gram.subject] 句子成分：主語  {t_mid, 會考}
 - [chi.t_mid.gram.predicate] 句子成分：謂語  {t_mid, 會考}
 - [chi.t_mid.gram.object] 句子成分：賓語  {t_mid, 會考}
-- [chi.t_adv.gram.attributive] 句子成分：定語  {t_adv, 學測-國綜}
-- [chi.t_adv.gram.adverbial] 句子成分：狀語  {t_adv, 學測-國綜}
+- [chi.t_adv.gram.attributive] 句子成分：定語（attributive，台灣常稱修飾語）  {t_adv, 學測-國綜}
+- [chi.t_adv.gram.adverbial] 句子成分：狀語（adverbial，台灣常稱修飾語）  {t_adv, 學測-國綜}
 - [chi.t_adv.gram.complement] 句子成分：補語  {t_adv, 學測-國綜}
 - [chi.t_mid.gram.single-sentence] 單句結構分析  {t_mid, 會考}
 - [chi.t_mid.gram.sentence-types] 句型：敘事句／有無句／表態句／判斷句  {t_mid, 會考}
@@ -313,7 +313,7 @@
 - [chi.t_mid.writ.material] 取材選材（切題／具體／新穎）  {t_mid, 會考}
 - [chi.t_mid.writ.outline] 擬定寫作大綱  {t_mid, 會考}
 - [chi.t_mid.writ.para-layering] 段落安排與層次  {t_mid, 會考}
-- [chi.t_base.writ.narrative-six] 記敘文六要素（時地人事因果）  {t_base, 無}
+- [chi.t_base.writ.narrative-six] 記敘文六要素（時間、地點、人物、起因、經過、結果）  {t_base, 無}
 - [chi.t_mid.writ.narrative-order] 記敘文敘事順序運用  {t_mid, 會考}
 - [chi.t_mid.writ.detail-balance] 詳寫與略寫得當  {t_mid, 會考}
 - [chi.t_mid.writ.lyric-scene] 抒情文：借景抒情／融情入景  {t_mid, 會考}
