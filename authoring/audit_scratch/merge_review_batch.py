@@ -16,6 +16,9 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 
 def main():
     batch, domain, f_exp, f_adv = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
+    # 選填 argv[5]/[6]：兩位 reviewer 的真實 role 標籤（忠實記錄審查鏡別，如 child-protection-educator / child-psychologist）
+    role_exp = sys.argv[5] if len(sys.argv) > 5 else "english-educator"
+    role_adv = sys.argv[6] if len(sys.argv) > 6 else "adversarial-reviewer"
     exp = json.loads(Path(f_exp).read_text(encoding="utf-8")).get("reviews", {})
     adv = json.loads(Path(f_adv).read_text(encoding="utf-8")).get("reviews", {})
     manifest_ids = {r["id"] for r in json.loads((ROOT/"authoring"/"knowledge_points.json").read_text(encoding="utf-8"))["items"]}
@@ -31,8 +34,8 @@ def main():
         skill = (e.get("is_hard_fact") is False) and (a.get("is_hard_fact") is False)
         if both_pass and skill:
             reviews[kid] = {"verdict": "PASS", "is_hard_fact": False, "reviewers": [
-                {"role": "english-educator", "reason": e.get("reason", "")[:200]},
-                {"role": "adversarial-reviewer", "reason": a.get("reason", "")[:200]},
+                {"role": role_exp, "reason": e.get("reason", "")[:200]},
+                {"role": role_adv, "reason": a.get("reason", "")[:200]},
             ]}
             accepted.append(kid)
         else:

@@ -661,61 +661,61 @@
 
 ## life
 
-- [life.safety.body-boundary.body-is-mine] 認識身體是自己的，有權決定誰可以碰  {t_base, 無}  · unverified
-- [life.safety.body-boundary.private-parts] 分辨「隱私部位」＝泳衣遮住的地方  {t_base, 無}  · unverified
-- [life.safety.body-boundary.touch-types] 「好的碰觸／不舒服的碰觸／讓人困惑的碰觸」三分法與身體感覺訊號  {t_base, 無}  · unverified
-- [life.safety.body-boundary.consent-4elements] 同意四要素：可以說不、可以改變主意、沉默不等於同意、被強迫的同意不算數  {t_base, 無}  · unverified
-- [life.safety.body-boundary.body-alarm] 身體警報感覺（心跳快、想逃、怪怪的）＝相信直覺  {t_base, 無}  · unverified
-- [life.safety.body-boundary.safe-secrets] 安全的祕密 vs 不安全的祕密（讓你害怕/被威脅別說的祕密一定要說）  {t_base, 無}  · unverified
-- [life.safety.body-boundary.trusted-adults] 三位可信任大人清單，講到有人相信為止  {t_base, 無}  · unverified
-- [life.safety.body-boundary.refuse-3steps] 遇到不舒服：大聲說不→離開→告訴大人（拒絕三步）  {t_base, 無}  · unverified
-- [life.safety.body-boundary.respect-others] 別人的界線也要尊重（問過再碰、對方說停就停）  {t_base, 無}  · unverified
-- [life.safety.body-boundary.online-boundary] 線上也有身體界線：不被要求傳私密照、不看他人私密照  {t_mid, 無}  · unverified
-- [life.safety.personal.know-info] 記得全名、家長姓名、住家地址、緊急電話  {t_base, 無}  · unverified
-- [life.safety.personal.if-lost] 走失原地等待／找穿制服的工作人員或帶小孩的家長  {t_base, 無}  · unverified
-- [life.safety.personal.stranger] 陌生人安全：不跟陌生人走、不收不明食物禮物、不上陌生人的車  {t_base, 無}  · unverified
-- [life.safety.personal.adult-asking-kid] 「大人向小孩求助」是警訊（大人該找大人幫忙）  {t_base, 無}  · unverified
-- [life.safety.personal.safe-word] 核對暗號／接送確認，陌生人說「爸媽叫我來接你」要查證  {t_base, 無}  · unverified
-- [life.safety.personal.home-alone] 獨自在家安全：不透露獨自在家、應門對策  {t_mid, 無}  · unverified
-- [life.safety.home.electricity] 用電安全：濕手不碰插座、不超載插座、不塞異物  {t_base, 無}  · unverified
+- [life.safety.body-boundary.body-is-mine] 認識身體是自己的，有權決定誰可以碰  {t_base, 無}  · provisionally_verified
+- [life.safety.body-boundary.private-parts] 分辨「隱私部位」＝泳衣遮住的地方  {t_base, 無}  · provisionally_verified
+- [life.safety.body-boundary.touch-types] 「好的碰觸／不舒服的碰觸／讓人困惑的碰觸」三分法與身體感覺訊號  {t_base, 無}  · provisionally_verified
+- [life.safety.body-boundary.consent-4elements] 同意四要素：可以說不、可以改變主意、沉默不等於同意、被強迫的同意不算數  {t_base, 無}  · provisionally_verified
+- [life.safety.body-boundary.body-alarm] 身體警報感覺（心跳快、想逃、怪怪的）＝相信直覺  {t_base, 無}  · provisionally_verified
+- [life.safety.body-boundary.safe-secrets] 安全的祕密 vs 不安全的祕密（讓你害怕/被威脅別說的祕密一定要說）  {t_base, 無}  · provisionally_verified
+- [life.safety.body-boundary.trusted-adults] 三位可信任大人清單，講到有人相信為止  {t_base, 無}  · provisionally_verified
+- [life.safety.body-boundary.refuse-3steps] 遇到不舒服：大聲說不→離開→告訴大人（拒絕三步）  {t_base, 無}  · provisionally_verified
+- [life.safety.body-boundary.respect-others] 別人的界線也要尊重（問過再碰、對方說停就停）  {t_base, 無}  · provisionally_verified
+- [life.safety.body-boundary.online-boundary] 線上也有身體界線：不被要求傳私密照、不看他人私密照  {t_mid, 無}  · provisionally_verified
+- [life.safety.personal.know-info] 記得全名、家長姓名、住家地址、緊急電話  {t_base, 無}  · provisionally_verified
+- [life.safety.personal.if-lost] 走失原地等待／找穿制服的工作人員或帶小孩的家長  {t_base, 無}  · provisionally_verified
+- [life.safety.personal.stranger] 陌生人安全：不跟陌生人走、不收不明食物禮物、不上陌生人的車  {t_base, 無}  · provisionally_verified
+- [life.safety.personal.adult-asking-kid] 「大人向小孩求助」是警訊（大人該找大人幫忙）  {t_base, 無}  · provisionally_verified
+- [life.safety.personal.safe-word] 核對暗號／接送確認，陌生人說「爸媽叫我來接你」要查證  {t_base, 無}  · provisionally_verified
+- [life.safety.personal.home-alone] 獨自在家安全：不透露獨自在家、應門對策  {t_mid, 無}  · provisionally_verified
+- [life.safety.home.electricity] 用電安全：濕手不碰插座、不超載插座、不塞異物  {t_base, 無}  · provisionally_verified
 - [life.safety.home.fire-gas] 聞到瓦斯味（孩子版）：不碰任何電器或電燈開關（開或關都不行）、不按門鈴、立刻離開到屋外、找大人並打119；關瓦斯閥、開窗、報修是大人的事  {t_base, 無}  · pending
-- [life.safety.home.sharp-hot] 刀具、熱水、熱鍋、尖銳物的安全使用與收納  {t_base, 無}  · unverified
-- [life.safety.home.fall-prevent] 高處／陽台／窗戶墜落預防  {t_base, 無}  · unverified
-- [life.safety.home.chemicals] 藥品、清潔劑、化學品不亂碰亂吃，分辨標示  {t_base, 無}  · unverified
-- [life.safety.home.bathroom-drown] 浴室防滑、泡澡/泳池溺水風險  {t_base, 無}  · unverified
+- [life.safety.home.sharp-hot] 刀具、熱水、熱鍋、尖銳物的安全使用與收納  {t_base, 無}  · provisionally_verified
+- [life.safety.home.fall-prevent] 高處／陽台／窗戶墜落預防  {t_base, 無}  · provisionally_verified
+- [life.safety.home.chemicals] 藥品、清潔劑、化學品不亂碰亂吃，分辨標示  {t_base, 無}  · provisionally_verified
+- [life.safety.home.bathroom-drown] 浴室防滑、泡澡/泳池溺水風險  {t_base, 無}  · provisionally_verified
 - [life.safety.home.furniture-anchor] 居家防跌、家具傾倒固定  {t_mid, 無}  · pending
-- [life.safety.traffic.pedestrian] 行人：走人行道、過馬路看紅綠燈、斑馬線、停看聽、與駕駛眼神確認  {t_base, 無}  · unverified
-- [life.safety.traffic.no-distraction] 不在路上追逐／玩手機（分心風險）  {t_base, 無}  · unverified
+- [life.safety.traffic.pedestrian] 行人：走人行道、過馬路看紅綠燈、斑馬線、停看聽、與駕駛眼神確認  {t_base, 無}  · provisionally_verified
+- [life.safety.traffic.no-distraction] 不在路上追逐／玩手機（分心風險）  {t_base, 無}  · provisionally_verified
 - [life.safety.traffic.in-vehicle] 乘車：繫安全帶、不把頭手伸出窗外、後座下車看後方  {t_base, 無}  · provisionally_verified
-- [life.safety.traffic.bicycle] 自行車：戴安全帽、靠右行、打手勢、夜間燈具反光  {t_base, 無}  · unverified
+- [life.safety.traffic.bicycle] 自行車：戴安全帽、靠右行、打手勢、夜間燈具反光  {t_base, 無}  · provisionally_verified
 - [life.safety.traffic.blind-spot] 機車/腳踏車路權、內輪差與大型車死角  {t_mid, 無}  · unverified
 - [life.safety.traffic.drunk-driving] 酒駕/疲勞駕駛危害的概念（勸阻家人）  {t_mid, 無}  · unverified
 - [life.safety.substance.tobacco-alcohol] 菸（含電子煙）、酒、檳榔對發育中身體的危害  {t_mid, 無}  · unverified
-- [life.safety.substance.new-drugs] 毒品與「包裝成糖果/飲料/郵票」的新興毒品辨識與拒絕技巧  {t_mid, 無}  · unverified
+- [life.safety.substance.new-drugs] 毒品與「包裝成糖果/飲料/郵票」的新興毒品辨識與拒絕技巧  {t_mid, 無}  · provisionally_verified
 - [life.safety.substance.addiction] 成癮的機制：短期快感 vs 長期傷害、戒斷  {t_mid, 無}  · provisionally_verified
-- [life.safety.substance.peer-refusal] 同儕壓力下的拒絕話術（找藉口、轉移、離開、找大人）  {t_mid, 無}  · unverified
+- [life.safety.substance.peer-refusal] 同儕壓力下的拒絕話術（找藉口、轉移、離開、找大人）  {t_mid, 無}  · provisionally_verified
 - [life.safety.substance.medicine-use] 藥物正確使用：遵醫囑、不共用處方藥、不自行加量  {t_mid, 無}  · unverified
 - [life.safety.substance.substance-law] 成癮物質與法律責任、求助管道  {t_adv, 無}  · unverified
 - [life.safety.emergency.hotlines] 110（警察）、119（火警/救護）、112、防災與消防  {t_base, 無}  · unverified
-- [life.safety.emergency.report-clearly] 報案說清楚：地點、發生什麼、幾個人、是否受傷  {t_base, 無}  · unverified
+- [life.safety.emergency.report-clearly] 報案說清楚：地點、發生什麼、幾個人、是否受傷  {t_base, 無}  · provisionally_verified
 - [life.safety.emergency.fire-escape] 火場應變：先判斷火與煙的位置決定「逃」或「躲」；能安全離開才逃、煙中壓低身體、不搭電梯、沿牆到最近安全出口；開門前先摸門板溫度，門外有濃煙或高溫就退回室內關門、用衣物塞住門縫、到有窗或陽台處向外求救並打119說清楚位置（依現場判斷，不套固定口訣）  {t_base, 無}  · pending
 - [life.safety.emergency.earthquake] 地震：趴下—掩護—穩住（Drop–Cover–Hold）、遠離窗戶與高物  {t_base, 無}  · unverified
 - [life.safety.emergency.bleeding] 傷口出血止血：隔著乾淨布或戴手套，直接用力壓住傷口並持續加壓；血流不止或傷口很大就打119、找大人  {t_mid, 無}  · pending
 - [life.safety.emergency.burn] 燙傷「沖脫泡蓋送」：用流動的自來水（涼而不冰）沖約 15–20 分鐘、不可冰敷或塗抹東西、小心脫除衣物、覆蓋乾淨布、儘速送醫  {t_mid, 無}  · pending
 - [life.safety.emergency.choking] 異物哽塞：還能有效咳嗽就鼓勵繼續咳；無法呼吸或出聲時由大人施作——成人與大童用背擊加腹部推擠（哈姆立克），未滿1歲嬰兒改為背擊加胸部按壓（不可腹部推擠），並立刻打119  {t_mid, 無}  · pending
 - [life.safety.emergency.cpr-aed] CPR／AED 概念與啟動時機：先確認現場安全→拍肩大聲叫喚、確認無反應且沒有正常呼吸→大聲呼救、打119並請人取AED→（能力所及才）持續用力快壓胸、依AED語音操作；孩子重點在「啟動救援、找大人」而非取代大人施救  {t_mid, 無}  · pending
-- [life.safety.emergency.emergency-kit] 防災包內容與家庭集合點／聯絡計畫  {t_mid, 無}  · unverified
-- [life.safety.emergency.natural-disaster] 颱風、淹水、土石流、雷擊的避險  {t_mid, 無}  · unverified
-- [life.safety.online.no-personal-info] 不公開真實姓名、學校、住址、電話、即時位置  {t_base, 無}  · unverified
-- [life.safety.online.meet-online-friend] 網友見面的風險，約見面一定先告訴大人並帶大人  {t_base, 無}  · unverified
-- [life.safety.online.grooming] 陌生訊息/誘騙（grooming）警訊：過度關心、要求保密、索取照片  {t_mid, 無}  · unverified
-- [life.safety.online.suspicious-links] 可疑連結、免費好康、帳號被盜的處置  {t_mid, 無}  · unverified
-- [life.safety.scam.common-scams] 常見詐騙：假網拍、假中獎、假客服、假檢警、解除分期、假投資、愛情/交友詐騙、遊戲點數代儲  {t_mid, 無}  · unverified
-- [life.safety.scam.scam-signals] 詐騙共同訊號：製造急迫、要你保密、要求轉帳/買點數/提供驗證碼、太好康  {t_mid, 無}  · unverified
+- [life.safety.emergency.emergency-kit] 防災包內容與家庭集合點／聯絡計畫  {t_mid, 無}  · provisionally_verified
+- [life.safety.emergency.natural-disaster] 颱風、淹水、土石流、雷擊的避險  {t_mid, 無}  · provisionally_verified
+- [life.safety.online.no-personal-info] 不公開真實姓名、學校、住址、電話、即時位置  {t_base, 無}  · provisionally_verified
+- [life.safety.online.meet-online-friend] 網友見面的風險，約見面一定先告訴大人並帶大人  {t_base, 無}  · provisionally_verified
+- [life.safety.online.grooming] 陌生訊息/誘騙（grooming）警訊：過度關心、要求保密、索取照片  {t_mid, 無}  · provisionally_verified
+- [life.safety.online.suspicious-links] 可疑連結、免費好康、帳號被盜的處置  {t_mid, 無}  · provisionally_verified
+- [life.safety.scam.common-scams] 常見詐騙：假網拍、假中獎、假客服、假檢警、解除分期、假投資、愛情/交友詐騙、遊戲點數代儲  {t_mid, 無}  · provisionally_verified
+- [life.safety.scam.scam-signals] 詐騙共同訊號：製造急迫、要你保密、要求轉帳/買點數/提供驗證碼、太好康  {t_mid, 無}  · provisionally_verified
 - [life.safety.scam.hotline-165] 165 反詐騙諮詢專線；臨櫃提款行員關懷提問  {t_mid, 無}  · unverified
-- [life.safety.scam.protect-otp] 個資與驗證碼（OTP）絕不交給他人  {t_mid, 無}  · unverified
-- [life.safety.scam.stop-verify] 停—看—聽—查證（掛斷用官方電話回撥）  {t_mid, 無}  · unverified
-- [life.safety.extra.bully-bystander] 校園/網路霸凌的旁觀者介入（不是加害、不是沉默）→ 與領域2/5 交界  {t_mid, 無}  · unverified
+- [life.safety.scam.protect-otp] 個資與驗證碼（OTP）絕不交給他人  {t_mid, 無}  · provisionally_verified
+- [life.safety.scam.stop-verify] 停—看—聽—查證（掛斷用官方電話回撥）  {t_mid, 無}  · provisionally_verified
+- [life.safety.extra.bully-bystander] 校園/網路霸凌的旁觀者介入（不是加害、不是沉默）→ 與領域2/5 交界  {t_mid, 無}  · provisionally_verified
 - [life.safety.extra.harassment] 性騷擾/性剝削的辨識與求助（兒少保護、113）  {t_mid, 無}  · unverified
 - [life.safety.extra.animal-safety] 動物安全：不逗弄陌生動物、被咬抓傷處理  {t_base, 無}  · unverified
 - [life.safety.extra.outdoor-safety] 戲水/山林/野外活動安全（防溺五不、結伴、告知行程）  {t_base, 無}  · unverified
@@ -752,8 +752,8 @@
 - [life.sel.relationship.healthy-friendship] 健康友誼 vs 有毒關係的辨認  {t_mid, 無}  · unverified
 - [life.sel.relationship.online-communication] 線上溝通禮儀與誤解的澄清  {t_mid, 無}  · unverified
 - [life.sel.relationship.teamwork] 團隊協作中的角色、分工與回饋文化  {t_adv, 無}  · unverified
-- [life.sel.decision.choices-consequences] 選擇有後果：想一想再做  {t_base, 無}  · unverified
-- [life.sel.decision.decide-4steps] 停—想—選—做（簡易決策四步）  {t_base, 無}  · unverified
+- [life.sel.decision.choices-consequences] 選擇有後果：想一想再做  {t_base, 無}  · provisionally_verified
+- [life.sel.decision.decide-4steps] 停—想—選—做（簡易決策四步）  {t_base, 無}  · provisionally_verified
 - [life.sel.decision.weigh-impact] 權衡利弊、考慮對他人的影響  {t_mid, 無}  · unverified
 - [life.sel.decision.learn-from-mistakes] 從錯誤中學習、承擔與修復  {t_mid, 無}  · unverified
 - [life.sel.decision.ethical-dilemma] 價值觀導向的決策與倫理兩難取捨  {t_adv, 無}  · unverified
@@ -984,8 +984,8 @@
 - [life.finance.market.tax-public-goods] 稅的概念與公共財  {t_adv, 無}  · provisionally_verified
 - [life.finance.credit-risk.credit-record] 信用與信用紀錄；借錢是要還的（含利息）  {t_adv, 無}  · provisionally_verified
 - [life.finance.credit-risk.loan-cost] 貸款、分期、信用卡循環利息的真實成本  {t_adv, 無}  · provisionally_verified
-- [life.finance.credit-risk.insurance] 保險的原理（風險分攤）與常見險種概念  {t_adv, 無}  · unverified
-- [life.finance.credit-risk.investing-basics] 投資基礎：股票/債券/基金是什麼、風險與報酬、分散  {t_adv, 無}  · unverified
+- [life.finance.credit-risk.insurance] 保險的原理（風險分攤）與常見險種概念  {t_adv, 無}  · provisionally_verified
+- [life.finance.credit-risk.investing-basics] 投資基礎：股票/債券/基金是什麼、風險與報酬、分散  {t_adv, 無}  · provisionally_verified
 - [life.finance.credit-risk.invest-vs-gamble] 投資 vs 投機 vs 賭博；天下沒有穩賺  {t_adv, 無}  · provisionally_verified
 - [life.finance.credit-risk.financial-fraud] 金融詐騙辨識（假投資、保證獲利、龐氏）→ 與領域1交界  {t_adv, 無}  · provisionally_verified
 - [life.finance.credit-risk.consumer-contract] 消費者權益與契約看清楚再簽  {t_adv, 無}  · provisionally_verified
@@ -1031,12 +1031,12 @@
 - [life.innovate.mindset.cross-domain] 創意來自跨領域連結與重組  {t_mid, 無}  · provisionally_verified
 - [life.innovate.mindset.iteration-prototype] 迭代與原型（prototype）、最小可行版本概念  {t_mid, 無}  · provisionally_verified
 - [life.innovate.mindset.design-thinking] 從問題到解決方案的創新流程（設計思考：同理—定義—發想—原型—測試）  {t_adv, 無}  · provisionally_verified
-- [life.innovate.inventions.everyday-inventions] 日常發明是怎麼來的：多半是許多人長期接力改良的結果（破除單一發明者迷思）  {t_base, 無}  · unverified
-- [life.innovate.inventions.science-improves-life] 科學發現如何改善生活（疫苗、抗生素、電力、網際網路）  {t_mid, 無}  · unverified
-- [life.innovate.inventions.invention-society] 發明與社會的互動（交通、通訊、醫療的演進）  {t_mid, 無}  · unverified
+- [life.innovate.inventions.everyday-inventions] 日常發明是怎麼來的：多半是許多人長期接力改良的結果（破除單一發明者迷思）  {t_base, 無}  · provisionally_verified
+- [life.innovate.inventions.science-improves-life] 科學發現如何改善生活（疫苗、抗生素、電力、網際網路）  {t_mid, 無}  · provisionally_verified
+- [life.innovate.inventions.invention-society] 發明與社會的互動（交通、通訊、醫療的演進）  {t_mid, 無}  · provisionally_verified
 - [life.innovate.inventions.tech-milestones] 重大科技里程碑的脈絡與影響  {t_adv, 無}  · unverified
-- [life.innovate.people.contributor-stories] 各領域貢獻者的故事（科學家、醫者、教育者、環保/人權倡議者）  {t_base, 無}  · unverified
-- [life.innovate.people.diverse-innovators] 多元背景的創新者（不同性別、國家、時代）  {t_mid, 無}  · unverified
+- [life.innovate.people.contributor-stories] 各領域貢獻者的故事（科學家、醫者、教育者、環保/人權倡議者）  {t_base, 無}  · provisionally_verified
+- [life.innovate.people.diverse-innovators] 多元背景的創新者（不同性別、國家、時代）  {t_mid, 無}  · provisionally_verified
 - [life.innovate.people.persistence-luck] 堅持、合作與機運在成就中的角色  {t_mid, 無}  · provisionally_verified
 - [life.innovate.people.innovation-ethics] 創新的倫理與責任（科技的雙面性）  {t_adv, 無}  · provisionally_verified
 - [life.innovate.apply.hands-on-project] 動手做專題/小發明  {t_base, 無}  · provisionally_verified
