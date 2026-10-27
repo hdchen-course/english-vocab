@@ -2386,7 +2386,7 @@
 - [soc-civ.t_base.rights.my-rights] 認識自己擁有被照顧、受教育、被保護的權利  {t_base, 無}  · unverified
 - [soc-civ.t_base.rights.rights-duty] 權利與義務相伴（享權利也要盡責任）  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_mid.rights.human-rights-meaning] 人權的意義與特性（普遍、固有、不可剝奪）  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.rights.rights-generations] 人權的演進（自由權、參政權、社會權等世代）  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.rights.rights-generations] 人權的世代演進（第一代公民與政治權、第二代經濟社會文化權、第三代集體權）  {t_mid, 會考}  · unverified
 - [soc-civ.t_mid.rights.udhr] 世界人權宣言的精神與地位  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.rights.dignity] 人性尊嚴作為人權的核心基礎  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.rights.intl-covenants] 兩公約（公民與政治權利、經濟社會文化權利）的內國法化  {t_adv, 學測}  · provisionally_verified
@@ -2425,7 +2425,7 @@
 - [soc-civ.t_mid.politics.president-premier] 總統與行政院長產生方式與角色  {t_mid, 會考}  · unverified
 - [soc-civ.t_adv.politics.semi-presidential] 我國雙首長制（半總統制）的特徵與運作  {t_adv, 學測}  · unverified
 - [soc-civ.t_adv.politics.presidential-parliamentary] 總統制、內閣制、半總統制的比較  {t_adv, 學測}  · provisionally_verified
-- [soc-civ.t_adv.politics.accountability] 行政向立法負責的機制（質詢、信任投票、倒閣）  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.politics.accountability] 行政向立法負責的機制（質詢、不信任案／倒閣；信任投票為內閣制之對照）  {t_adv, 學測}  · unverified
 - [soc-civ.t_adv.politics.constitutional-court] 憲法法庭／大法官的違憲審查職權  {t_adv, 學測}  · unverified
 - [soc-civ.t_sub.politics.cohabitation] 分立政府與一致政府、共治現象的分析  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_sub.politics.constitution-amend] 修憲程序與憲政變遷  {t_sub, 分科-公民}  · unverified
