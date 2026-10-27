@@ -686,13 +686,13 @@
 - [life.safety.home.furniture-anchor] 居家防跌、家具傾倒固定  {t_mid, 無}  · pending
 - [life.safety.traffic.pedestrian] 行人：走人行道、過馬路看紅綠燈、斑馬線、停看聽、與駕駛眼神確認  {t_base, 無}  · unverified
 - [life.safety.traffic.no-distraction] 不在路上追逐／玩手機（分心風險）  {t_base, 無}  · unverified
-- [life.safety.traffic.in-vehicle] 乘車：繫安全帶、不把頭手伸出窗外、後座下車看後方  {t_base, 無}  · unverified
+- [life.safety.traffic.in-vehicle] 乘車：繫安全帶、不把頭手伸出窗外、後座下車看後方  {t_base, 無}  · provisionally_verified
 - [life.safety.traffic.bicycle] 自行車：戴安全帽、靠右行、打手勢、夜間燈具反光  {t_base, 無}  · unverified
 - [life.safety.traffic.blind-spot] 機車/腳踏車路權、內輪差與大型車死角  {t_mid, 無}  · unverified
 - [life.safety.traffic.drunk-driving] 酒駕/疲勞駕駛危害的概念（勸阻家人）  {t_mid, 無}  · unverified
 - [life.safety.substance.tobacco-alcohol] 菸（含電子煙）、酒、檳榔對發育中身體的危害  {t_mid, 無}  · unverified
 - [life.safety.substance.new-drugs] 毒品與「包裝成糖果/飲料/郵票」的新興毒品辨識與拒絕技巧  {t_mid, 無}  · unverified
-- [life.safety.substance.addiction] 成癮的機制：短期快感 vs 長期傷害、戒斷  {t_mid, 無}  · unverified
+- [life.safety.substance.addiction] 成癮的機制：短期快感 vs 長期傷害、戒斷  {t_mid, 無}  · provisionally_verified
 - [life.safety.substance.peer-refusal] 同儕壓力下的拒絕話術（找藉口、轉移、離開、找大人）  {t_mid, 無}  · unverified
 - [life.safety.substance.medicine-use] 藥物正確使用：遵醫囑、不共用處方藥、不自行加量  {t_mid, 無}  · unverified
 - [life.safety.substance.substance-law] 成癮物質與法律責任、求助管道  {t_adv, 無}  · unverified
@@ -719,15 +719,15 @@
 - [life.safety.extra.harassment] 性騷擾/性剝削的辨識與求助（兒少保護、113）  {t_mid, 無}  · unverified
 - [life.safety.extra.animal-safety] 動物安全：不逗弄陌生動物、被咬抓傷處理  {t_base, 無}  · unverified
 - [life.safety.extra.outdoor-safety] 戲水/山林/野外活動安全（防溺五不、結伴、告知行程）  {t_base, 無}  · unverified
-- [life.sel.self-aware.name-emotions] 辨認並命名基本情緒（開心、生氣、難過、害怕、驚訝、厭惡）  {t_base, 無}  · unverified
+- [life.sel.self-aware.name-emotions] 辨認並命名基本情緒（開心、生氣、難過、害怕、驚訝、厭惡）  {t_base, 無}  · provisionally_verified
 - [life.sel.self-aware.emotion-vocab] 擴充情緒詞彙（緊張、失望、尷尬、興奮、孤單、嫉妒、愧疚、感激、委屈）  {t_base, 無}  · unverified
-- [life.sel.self-aware.body-clues] 身體是情緒的線索（臉紅、拳頭緊、胃揪、眼眶熱）  {t_base, 無}  · unverified
+- [life.sel.self-aware.body-clues] 身體是情緒的線索（臉紅、拳頭緊、胃揪、眼眶熱）  {t_base, 無}  · provisionally_verified
 - [life.sel.self-aware.emotions-signals] 情緒沒有好壞，是訊號；行為才有合適不合適  {t_base, 無}  · unverified
 - [life.sel.self-aware.emotion-thermometer] 情緒強度分級（情緒溫度計 1–10）  {t_mid, 無}  · unverified
 - [life.sel.self-aware.triggers] 辨認觸發點（trigger）與自己的慣性反應  {t_mid, 無}  · unverified
 - [life.sel.self-aware.strengths-values] 認識自己的優勢、興趣、價值觀  {t_mid, 無}  · unverified
 - [life.sel.self-aware.identity-growth] 成長心態下的自我認同（能力可成長、我不等於一次表現）  {t_adv, 無}  · unverified
-- [life.sel.self-manage.pause-breathe] 暫停技巧：深呼吸（方塊呼吸4-4-4-4）、數到十、喝口水  {t_base, 無}  · unverified
+- [life.sel.self-manage.pause-breathe] 暫停技巧：深呼吸（方塊呼吸4-4-4-4）、數到十、喝口水  {t_base, 無}  · provisionally_verified
 - [life.sel.self-manage.traffic-light-control] 「紅燈停、黃燈想、綠燈行」衝動控制  {t_base, 無}  · unverified
 - [life.sel.self-manage.calm-corner] 冷靜角／安全出口，先降溫再處理  {t_base, 無}  · unverified
 - [life.sel.self-manage.emotion-outlet] 把大情緒說出來或畫出來（情緒出口）  {t_base, 無}  · unverified
@@ -765,7 +765,7 @@
 - [life.sel.growth-mindset.failure-is-process] 失敗是過程不是標籤；努力與策略可改變結果  {t_mid, 無}  · unverified
 - [life.sel.growth-mindset.handle-losing] 面對輸/比較/嫉妒的健康調節  {t_mid, 無}  · unverified
 - [life.sel.growth-mindset.seek-feedback] 尋求回饋、接受建設性批評、不過度自責  {t_mid, 無}  · unverified
-- [life.sel.growth-mindset.resilience] 復原力：挫折後的再出發與支持系統  {t_adv, 無}  · unverified
+- [life.sel.growth-mindset.resilience] 復原力：挫折後的再出發與支持系統  {t_adv, 無}  · provisionally_verified
 - [life.sel.extra.gratitude] 感恩與正向情緒的刻意練習  {t_base, 無}  · unverified
 - [life.sel.extra.loneliness] 孤單/被排擠時的因應與求助  {t_mid, 無}  · unverified
 - [life.sel.extra.grief] 哀傷與失落（寵物/親人/搬家轉學）的健康調適  {t_mid, 無}  · unverified
@@ -779,7 +779,7 @@
 - [life.learn.memory.spaced-repetition] 間隔複習（spaced repetition）與遺忘曲線  {t_mid, 無}  · unverified
 - [life.learn.memory.interleaving] 交錯練習（interleaving）勝過集中單一題型  {t_mid, 無}  · provisionally_verified
 - [life.learn.memory.distributed-practice] 分散學習 vs 臨時抱佛腳  {t_mid, 無}  · provisionally_verified
-- [life.learn.memory.sleep-memory] 睡眠對記憶鞏固的作用  {t_mid, 無}  · unverified
+- [life.learn.memory.sleep-memory] 睡眠對記憶鞏固的作用  {t_mid, 無}  · provisionally_verified
 - [life.learn.memory.mnemonics] 記憶術：聯想、故事法、位置法、口訣、組塊（chunking）  {t_mid, 無}  · provisionally_verified
 - [life.learn.memory.retrieval-practice] 善用提取練習與考古題做形成性評量  {t_adv, 無}  · provisionally_verified
 - [life.learn.study-skills.pomodoro] 番茄鐘（專注25分+休息5分）  {t_base, 無}  · provisionally_verified
@@ -830,17 +830,17 @@
 - [life.think.evidence.source-credibility] 來源可信度（誰說的、有無利益、能否查證）  {t_mid, 無}  · provisionally_verified
 - [life.think.evidence.falsifiability] 可否證性（falsifiability）概念  {t_mid, 無}  · provisionally_verified
 - [life.think.evidence.burden-of-proof] 舉證責任在主張者；「無法證明不存在≠存在」  {t_adv, 無}  · provisionally_verified
-- [life.think.bias.confirmation-bias] 確認偏誤（只找支持自己的證據）  {t_mid, 無}  · unverified
-- [life.think.bias.anchoring] 錨定效應（被第一個數字綁住）  {t_mid, 無}  · unverified
-- [life.think.bias.availability] 可得性偏誤（印象深的以為常見）  {t_mid, 無}  · unverified
-- [life.think.bias.herd] 從眾/羊群效應  {t_mid, 無}  · unverified
+- [life.think.bias.confirmation-bias] 確認偏誤（只找支持自己的證據）  {t_mid, 無}  · provisionally_verified
+- [life.think.bias.anchoring] 錨定效應（被第一個數字綁住）  {t_mid, 無}  · provisionally_verified
+- [life.think.bias.availability] 可得性偏誤（印象深的以為常見）  {t_mid, 無}  · provisionally_verified
+- [life.think.bias.herd] 從眾/羊群效應  {t_mid, 無}  · provisionally_verified
 - [life.think.bias.survivorship] 倖存者偏誤  {t_mid, 無}  · unverified
-- [life.think.bias.halo] 月暈效應（以一好/壞概括全部）  {t_mid, 無}  · unverified
-- [life.think.bias.loss-aversion] 損失趨避（同樣大小，失去的痛苦大於得到的快樂）  {t_mid, 無}  · unverified
+- [life.think.bias.halo] 月暈效應（以一好/壞概括全部）  {t_mid, 無}  · provisionally_verified
+- [life.think.bias.loss-aversion] 損失趨避（同樣大小，失去的痛苦大於得到的快樂）  {t_mid, 無}  · provisionally_verified
 - [life.think.bias.sunk-cost] 沉沒成本謬誤（已付出且收不回的成本，不該左右接下來的決定）  {t_mid, 無}  · unverified
-- [life.think.bias.hindsight] 後見之明偏誤  {t_mid, 無}  · unverified
+- [life.think.bias.hindsight] 後見之明偏誤  {t_mid, 無}  · provisionally_verified
 - [life.think.bias.dunning-kruger] 鄧寧–克魯格效應：剛入門、了解有限時容易高估自己、也較難察覺自身不足（註：此效應的測量方法仍有統計上的爭論）  {t_mid, 無}  · unverified
-- [life.think.bias.framing] 框架效應（說法不同影響判斷）  {t_mid, 無}  · unverified
+- [life.think.bias.framing] 框架效應（說法不同影響判斷）  {t_mid, 無}  · provisionally_verified
 - [life.think.bias.debiasing] 偏誤的覺察與去偏策略（放慢、找反例、換立場、同儕檢核）  {t_adv, 無}  · provisionally_verified
 - [life.think.fallacy.ad-hominem] 人身攻擊（ad hominem）  {t_mid, 無}  · provisionally_verified
 - [life.think.fallacy.straw-man] 稻草人（扭曲對方立場）  {t_mid, 無}  · provisionally_verified
@@ -872,7 +872,7 @@
 - [life.digital.privacy.privacy-settings] 隱私設定、App 權限、定位分享的管理  {t_mid, 無}  · provisionally_verified
 - [life.digital.privacy.data-as-payment] 個資的價值與「免費服務用你的資料換」  {t_mid, 無}  · provisionally_verified
 - [life.digital.privacy.two-factor] 兩步驟驗證（2FA）、釣魚辨識  {t_mid, 無}  · provisionally_verified
-- [life.digital.privacy.data-rights] 資料被蒐集/販售的概念與數位權利  {t_adv, 無}  · unverified
+- [life.digital.privacy.data-rights] 資料被蒐集/販售的概念與數位權利  {t_adv, 無}  · provisionally_verified
 - [life.digital.cyberbully.what-is-cyberbully] 什麼是網路霸凌（文字/排擠/散布）  {t_base, 無}  · provisionally_verified
 - [life.digital.cyberbully.if-bullied] 被霸凌：截圖存證—封鎖—告訴大人  {t_base, 無}  · provisionally_verified
 - [life.digital.cyberbully.bystander] 旁觀者：不轉傳、不按讚、支持被害者、通報  {t_base, 無}  · provisionally_verified
@@ -896,7 +896,7 @@
 - [life.digital.factcheck.factcheck-platforms] 善用事實查核平台：先查傳言是否已被查核、看它的查證方法與證據，再交叉比對（不依賴單一平台）  {t_mid, 無}  · provisionally_verified
 - [life.digital.factcheck.verify-responsibility] 「轉傳前先查證」的公民責任  {t_mid, 無}  · provisionally_verified
 - [life.digital.extra.online-shopping] 線上交易安全與消費者保護（退貨、評價造假）  {t_mid, 無}  · unverified
-- [life.digital.extra.copyright] 著作權與合理使用（圖片/音樂/影片引用）  {t_mid, 無}  · unverified
+- [life.digital.extra.copyright] 著作權與合理使用（圖片/音樂/影片引用）  {t_mid, 無}  · provisionally_verified
 - [life.digital.extra.digital-divide] 數位落差與科技近用公平  {t_adv, 無}  · provisionally_verified
 - [life.data.charts.chart-types] 長條圖、折線圖、圓餅圖的用途與讀法  {t_base, 無}  · provisionally_verified
 - [life.data.charts.chart-parts] 看懂座標軸、標題、單位、圖例  {t_base, 無}  · provisionally_verified
@@ -933,9 +933,9 @@
 - [life.compute.algorithm.sort-search] 排序與搜尋的直覺（找名字、猜數字=二分搜尋）  {t_mid, 無}  · provisionally_verified
 - [life.compute.algorithm.variables-io] 變數、輸入/輸出的概念  {t_mid, 無}  · provisionally_verified
 - [life.compute.algorithm.efficiency] 效率直覺（步驟多寡、大 O 的入門概念）  {t_adv, 無}  · provisionally_verified
-- [life.compute.hardware.hardware-parts] 硬體：CPU、記憶體、儲存、輸入/輸出裝置  {t_base, 無}  · unverified
+- [life.compute.hardware.hardware-parts] 硬體：CPU、記憶體、儲存、輸入/輸出裝置  {t_base, 無}  · provisionally_verified
 - [life.compute.hardware.software-os] 軟體 vs 硬體、作業系統的角色  {t_base, 無}  · provisionally_verified
-- [life.compute.hardware.binary] 二進位：0/1、位元與位元組、資料如何被編碼（數字/文字/圖片/聲音）  {t_mid, 無}  · unverified
+- [life.compute.hardware.binary] 二進位：0/1、位元與位元組、資料如何被編碼（數字/文字/圖片/聲音）  {t_mid, 無}  · provisionally_verified
 - [life.compute.hardware.file-sizes] 檔案大小單位（KB/MB/GB）與量級感  {t_mid, 無}  · unverified
 - [life.compute.hardware.compile-interpret] 程式如何被執行（編譯/直譯 概念）  {t_adv, 無}  · provisionally_verified
 - [life.compute.network.ip-domain] 網路如何連接、IP/網域名稱的概念  {t_mid, 無}  · provisionally_verified
@@ -980,15 +980,15 @@
 - [life.finance.market.scarcity] 稀缺性與選擇  {t_mid, 無}  · provisionally_verified
 - [life.finance.market.trade-benefits] 分工與貿易的好處  {t_mid, 無}  · provisionally_verified
 - [life.finance.market.competition-monopoly] 市場、競爭、獨占概念  {t_adv, 無}  · provisionally_verified
-- [life.finance.market.gdp-cycle] GDP、景氣循環、失業的基本概念  {t_adv, 無}  · unverified
+- [life.finance.market.gdp-cycle] GDP、景氣循環、失業的基本概念  {t_adv, 無}  · provisionally_verified
 - [life.finance.market.tax-public-goods] 稅的概念與公共財  {t_adv, 無}  · provisionally_verified
-- [life.finance.credit-risk.credit-record] 信用與信用紀錄；借錢是要還的（含利息）  {t_adv, 無}  · unverified
-- [life.finance.credit-risk.loan-cost] 貸款、分期、信用卡循環利息的真實成本  {t_adv, 無}  · unverified
+- [life.finance.credit-risk.credit-record] 信用與信用紀錄；借錢是要還的（含利息）  {t_adv, 無}  · provisionally_verified
+- [life.finance.credit-risk.loan-cost] 貸款、分期、信用卡循環利息的真實成本  {t_adv, 無}  · provisionally_verified
 - [life.finance.credit-risk.insurance] 保險的原理（風險分攤）與常見險種概念  {t_adv, 無}  · unverified
 - [life.finance.credit-risk.investing-basics] 投資基礎：股票/債券/基金是什麼、風險與報酬、分散  {t_adv, 無}  · unverified
 - [life.finance.credit-risk.invest-vs-gamble] 投資 vs 投機 vs 賭博；天下沒有穩賺  {t_adv, 無}  · provisionally_verified
-- [life.finance.credit-risk.financial-fraud] 金融詐騙辨識（假投資、保證獲利、龐氏）→ 與領域1交界  {t_adv, 無}  · unverified
-- [life.finance.credit-risk.consumer-contract] 消費者權益與契約看清楚再簽  {t_adv, 無}  · unverified
+- [life.finance.credit-risk.financial-fraud] 金融詐騙辨識（假投資、保證獲利、龐氏）→ 與領域1交界  {t_adv, 無}  · provisionally_verified
+- [life.finance.credit-risk.consumer-contract] 消費者權益與契約看清楚再簽  {t_adv, 無}  · provisionally_verified
 - [life.finance.money-values.giving-sharing] 捐助與分享、金錢不是衡量人的標準  {t_base, 無}  · provisionally_verified
 - [life.finance.money-values.financial-discipline] 財務目標與自制  {t_mid, 無}  · provisionally_verified
 - [life.finance.money-values.rational-consumption] 理性消費、避免同儕比較消費、長期財務規劃  {t_adv, 無}  · provisionally_verified
@@ -998,15 +998,15 @@
 - [life.sustain.climate.save-resources] 愛惜資源：節水、節電、隨手關燈  {t_base, 無}  · provisionally_verified
 - [life.sustain.climate.recycling] 垃圾減量與資源回收分類（台灣回收類別）  {t_base, 無}  · unverified
 - [life.sustain.climate.three-r] 3R：減量 Reduce、重用 Reuse、回收 Recycle  {t_base, 無}  · provisionally_verified
-- [life.sustain.climate.greenhouse-effect] 溫室效應與氣候變遷的機制（簡化）  {t_mid, 無}  · unverified
+- [life.sustain.climate.greenhouse-effect] 溫室效應與氣候變遷的機制（簡化）  {t_mid, 無}  · provisionally_verified
 - [life.sustain.climate.carbon-footprint] 碳足跡與日常減碳行動  {t_mid, 無}  · provisionally_verified
-- [life.sustain.climate.energy-sources] 能源：化石燃料 vs 再生能源  {t_mid, 無}  · unverified
+- [life.sustain.climate.energy-sources] 能源：化石燃料 vs 再生能源  {t_mid, 無}  · provisionally_verified
 - [life.sustain.climate.biodiversity] 生物多樣性與棲地保護  {t_mid, 無}  · provisionally_verified
 - [life.sustain.climate.pollution] 塑膠污染、海洋垃圾、水資源  {t_mid, 無}  · provisionally_verified
 - [life.sustain.climate.carbon-neutral] 氣候調適與減緩、碳中和概念  {t_adv, 無}  · provisionally_verified
-- [life.sustain.sdgs.sdgs-overview] 聯合國 17 項 SDGs 的概念與分類（人/地球/繁榮/和平/夥伴）  {t_mid, 無}  · unverified
+- [life.sustain.sdgs.sdgs-overview] 聯合國 17 項 SDGs 的概念與分類（人/地球/繁榮/和平/夥伴）  {t_mid, 無}  · provisionally_verified
 - [life.sustain.sdgs.sdgs-examples] 認識幾個與生活相關的 SDG（教育、乾淨水、負責任消費等）  {t_mid, 無}  · provisionally_verified
-- [life.sustain.sdgs.three-pillars] 永續＝環境、社會、經濟的平衡  {t_mid, 無}  · unverified
+- [life.sustain.sdgs.three-pillars] 永續＝環境、社會、經濟的平衡  {t_mid, 無}  · provisionally_verified
 - [life.sustain.sdgs.local-global] 在地行動與全球議題的連結  {t_adv, 無}  · provisionally_verified
 - [life.sustain.civic-action.daily-action] 校園/家庭的永續行動（自備餐具水壺、省電）  {t_base, 無}  · provisionally_verified
 - [life.sustain.civic-action.taiwan-issues] 認識台灣常見的環境議題類型（空氣品質、水資源、海洋與河川污染、海廢、廢棄物與回收、生態與開發衝突、能源轉型）  {t_mid, 無}  · provisionally_verified
@@ -1014,7 +1014,7 @@
 - [life.sustain.civic-action.policy-responsibility] 政策、企業責任與個人選擇的互動  {t_adv, 無}  · provisionally_verified
 - [life.sustain.global-citizen.cultural-diversity] 文化多樣性與尊重差異  {t_mid, 無}  · provisionally_verified
 - [life.sustain.global-citizen.interdependence] 全球相互依存（供應鏈、疫情、氣候跨國）  {t_mid, 無}  · provisionally_verified
-- [life.sustain.global-citizen.human-rights] 人權、兒童權利公約的基本概念  {t_mid, 無}  · unverified
+- [life.sustain.global-citizen.human-rights] 人權、兒童權利公約的基本概念  {t_mid, 無}  · provisionally_verified
 - [life.sustain.global-citizen.global-issues] 國際組織與全球議題（和平、貧窮、難民）的認識  {t_adv, 無}  · provisionally_verified
 - [life.sustain.news.read-news] 讀新聞：標題、導言、5W1H  {t_base, 無}  · provisionally_verified
 - [life.sustain.news.news-types] 分辨新聞、評論、投書、業配  {t_mid, 無}  · provisionally_verified
@@ -1043,7 +1043,7 @@
 - [life.innovate.apply.team-project] 團隊合作完成一個作品  {t_mid, 無}  · provisionally_verified
 - [life.innovate.apply.pitch-idea] 把點子表達清楚（提案、簡報、demo）  {t_mid, 無}  · provisionally_verified
 - [life.innovate.apply.entrepreneurship] 創業與社會創新的入門概念（解決真實問題、創造價值）  {t_adv, 無}  · provisionally_verified
-- [life.innovate.extra.ip-patents] 智慧財產與專利的基本概念（與領域5著作權交界）  {t_mid, 無}  · unverified
+- [life.innovate.extra.ip-patents] 智慧財產與專利的基本概念（與領域5著作權交界）  {t_mid, 無}  · provisionally_verified
 - [life.innovate.extra.user-research] 創新中的使用者研究與回饋  {t_mid, 無}  · provisionally_verified
 
 ## math
