@@ -2680,7 +2680,7 @@
 - [soc-geo.t_sub.skill.greatcircle-rhumb] 區辨大圓航線與恆向線（麥卡托圖上的差異）  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.skill.spatial-interp] 空間內插法（反距離加權／克利金）概念  {t_enrich, 無}  · unverified
 - [soc-geo.t_base.nat-landform.names] 辨認山地、丘陵、平原、盆地、高原、台地等常見地形  {t_base, 無}  · provisionally_verified
-- [soc-geo.t_base.nat-landform.tw-overview] 說明台灣「東高西低、中央山脈」的大致地形  {t_base, 無}  · unverified
+- [soc-geo.t_base.nat-landform.tw-overview] 說明台灣「東高西低、中央山脈」的大致地形  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_mid.nat-landform.endo-exo] 區辨內營力與外營力對地形的作用  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-landform.plate-orogeny] 說明板塊運動造成造山與地震  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-landform.fold-fault] 辨認褶曲與斷層構造  {t_mid, 會考}  · provisionally_verified
@@ -2743,9 +2743,9 @@
 - [soc-geo.t_sub.nat-climate.monsoon-mechanism] 說明季風的動力與熱力機制  {t_sub, 分科-地理}  · unverified
 - [soc-geo.t_sub.nat-climate.change-mechanism] 說明氣候變遷機制（米蘭科維奇、溫室氣體）  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.nat-climate.bioclimate] 連結氣候、植被與土壤的對應關係  {t_sub, 分科-地理}  · provisionally_verified
-- [soc-geo.t_base.nat-hydro.cycle-intro] 說明水循環（蒸發→降雨→流回海）初步  {t_base, 無}  · unverified
+- [soc-geo.t_base.nat-hydro.cycle-intro] 說明水循環（蒸發→凝結成雲→降水→流回海）初步  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_base.nat-hydro.river-lake] 認識河流、湖泊與其用途  {t_base, 無}  · provisionally_verified
-- [soc-geo.t_base.nat-hydro.tw-rivers] 認識台灣主要河川（濁水溪、淡水河等）  {t_base, 無}  · unverified
+- [soc-geo.t_base.nat-hydro.tw-rivers] 認識台灣主要河川（濁水溪、淡水河等）  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_mid.nat-hydro.cycle-stages] 說明水循環各環節（蒸發、凝結、降水、逕流、下滲）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-hydro.watershed] 說明流域、分水嶺與集水區  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-hydro.hydrograph-intro] 判讀河川流量歷線（初步）  {t_mid, 會考}  · provisionally_verified
@@ -2768,7 +2768,7 @@
 - [soc-geo.t_sub.nat-hydro.sealevel] 說明海平面升降的成因與影響  {t_sub, 分科-地理}  · unverified
 - [soc-geo.t_sub.nat-hydro.drought-mgmt] 分析乾旱／缺水的水文機制與水資源管理  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.nat-hydro.river-capture] 說明河川襲奪的成因與證據  {t_sub, 分科-地理}  · provisionally_verified
-- [soc-geo.t_base.nat-soilbio.soil-intro] 認識土壤成分（砂、黏土、腐植質）  {t_base, 無}  · unverified
+- [soc-geo.t_base.nat-soilbio.soil-intro] 認識土壤成分（砂、黏土、腐植質）  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_base.nat-soilbio.plant-env] 認識植物與環境（陽光、水、溫度）的關係  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_mid.nat-soilbio.soil-profile] 說明土壤剖面層次（O/A/B/C 層）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-soilbio.soil-factors] 列舉成土因素（氣候、母質、生物、地形、時間）  {t_mid, 會考}  · provisionally_verified
@@ -2788,8 +2788,8 @@
 - [soc-geo.t_sub.nat-soilbio.biogeo-region] 說明生物地理區與物種分布界線  {t_sub, 分科-地理}  · unverified
 - [soc-geo.t_base.hazard.quake-typhoon] 認識地震與颱風並知道基本避難行為  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_base.hazard.drill] 參與防災演練並準備避難包  {t_base, 無}  · provisionally_verified
-- [soc-geo.t_mid.hazard.earthquake] 說明地震成因並區辨震度與規模  {t_mid, 會考}  · unverified
-- [soc-geo.t_mid.hazard.typhoon] 說明颱風成因、結構與警報分級  {t_mid, 會考}  · unverified
+- [soc-geo.t_mid.hazard.earthquake] 說明地震成因並區辨震度與規模  {t_mid, 會考}  · provisionally_verified
+- [soc-geo.t_mid.hazard.typhoon] 說明颱風成因、結構與警報分級  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.hazard.slope] 區辨山崩與土石流的成因與徵兆  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.hazard.flood-drought] 說明水災與旱災的成因  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.hazard.tw-distribution] 說明台灣主要災害的空間分布與原因  {t_mid, 會考}  · provisionally_verified
@@ -2835,7 +2835,7 @@
 - [soc-geo.t_mid.hum-settle.function] 說明聚落機能（農、漁、工、商）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.hum-settle.urbanization] 說明都市化的意義與過程  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.hum-settle.landuse-zone] 辨認都市機能分區（商業、住宅、工業）  {t_mid, 會考}  · provisionally_verified
-- [soc-geo.t_mid.hum-settle.tw-metro] 說明台灣都市體系與主要都會區  {t_mid, 會考}  · unverified
+- [soc-geo.t_mid.hum-settle.tw-metro] 說明台灣都市體系與主要都會區  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.hum-settle.urban-problem] 列舉都市問題（交通、居住、環境）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_adv.hum-settle.central-place] 以中地理論說明商閾與商品圈  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.hum-settle.urban-hierarchy] 說明都市階層與等級—大小法則  {t_adv, 學測}  · provisionally_verified
@@ -2895,7 +2895,7 @@
 - [soc-geo.t_sub.hum-transport.hub-spoke] 說明樞紐輻射（hub-and-spoke）網絡  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.hum-transport.logistics] 分析全球物流與供應鏈的地理  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.hum-transport.ecommerce] 分析電子商務對空間與零售的重組  {t_sub, 分科-地理}  · provisionally_verified
-- [soc-geo.t_base.reg-tw.location] 說明台灣位置、輪廓與周圍海洋  {t_base, 無}  · unverified
+- [soc-geo.t_base.reg-tw.location] 說明台灣位置、輪廓與周圍海洋  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_base.reg-tw.landform-zone] 說明台灣地形的大致分區  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_base.reg-tw.hometown-pos] 指出家鄉在台灣的相對位置  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_mid.reg-tw.landform-regions] 說明台灣北、中、南、東與離島地形特色  {t_mid, 會考}  · provisionally_verified
@@ -2916,7 +2916,7 @@
 - [soc-geo.t_sub.reg-tw.balanced-dev] 分析台灣區域失衡與均衡發展策略  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.reg-tw.sustainable-land] 分析台灣永續國土與氣候調適  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.reg-tw.placemaking] 說明台灣地方創生與區域再生  {t_sub, 分科-地理}  · provisionally_verified
-- [soc-geo.t_base.reg-cn.location] 認識中國的位置與輪廓（初步）  {t_base, 無}  · unverified
+- [soc-geo.t_base.reg-cn.location] 認識中國的位置與輪廓（初步）  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_mid.reg-cn.three-steps] 說明中國地形三大階梯  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.reg-cn.climate] 說明中國氣候區（季風、乾燥、高地）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.reg-cn.rivers] 說明中國主要河川（長江、黃河）  {t_mid, 會考}  · provisionally_verified
@@ -2932,8 +2932,8 @@
 - [soc-geo.t_sub.reg-cn.regional-policy] 分析中國區域政策（西部大開發等）與空間重構  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.reg-cn.pop-change] 分析中國人口政策與結構變遷  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.reg-cn.urbanization] 分析中國城鎮化模式與區域發展  {t_sub, 分科-地理}  · provisionally_verified
-- [soc-geo.t_base.reg-world.continents-oceans] 認識七大洲與五大洋的名稱與位置  {t_base, 無}  · unverified
-- [soc-geo.t_base.reg-world.tw-in-world] 指出台灣在世界的位置  {t_base, 無}  · unverified
+- [soc-geo.t_base.reg-world.continents-oceans] 認識七大洲與五大洋的名稱與位置  {t_base, 無}  · provisionally_verified
+- [soc-geo.t_base.reg-world.tw-in-world] 指出台灣在世界的位置  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_mid.reg-world.asia] 說明東亞、東南亞、南亞、西亞、中亞的區域特色  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.reg-world.europe] 說明歐洲的自然與人文特色  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.reg-world.africa] 說明非洲的自然與人文特色  {t_mid, 會考}  · provisionally_verified

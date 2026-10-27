@@ -133,7 +133,7 @@
 
 ## 4. 自然地理-水文 strand=nat-hydro
 
-- [soc-geo.t_base.nat-hydro.cycle-intro] 說明水循環（蒸發→降雨→流回海）初步  {t_base, 無}
+- [soc-geo.t_base.nat-hydro.cycle-intro] 說明水循環（蒸發→凝結成雲→降水→流回海）初步  {t_base, 無}
 - [soc-geo.t_base.nat-hydro.river-lake] 認識河流、湖泊與其用途  {t_base, 無}
 - [soc-geo.t_base.nat-hydro.tw-rivers] 認識台灣主要河川（濁水溪、淡水河等）  {t_base, 無}
 - [soc-geo.t_mid.nat-hydro.cycle-stages] 說明水循環各環節（蒸發、凝結、降水、逕流、下滲）  {t_mid, 會考}
