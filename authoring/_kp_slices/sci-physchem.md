@@ -383,7 +383,7 @@
 - [sci.t_sub.chem-eq.common-ion] 同離子效應與分段沉澱  {t_sub, 分科-化學}
 
 ### 化學-09 酸鹼 `chem-acidbase`
-- [sci.t_mid.chem-acidbase.properties] 酸與鹼的通性（味道/指示劑/腐蝕）  {t_mid, 會考}
+- [sci.t_mid.chem-acidbase.properties] 酸與鹼的通性（指示劑變色/導電性/腐蝕性；實驗室一律禁止以嚐味道檢驗）  {t_mid, 會考}
 - [sci.t_mid.chem-acidbase.common] 常見酸鹼與日常應用  {t_mid, 會考}
 - [sci.t_mid.chem-acidbase.indicator-ph] 指示劑/廣用試紙與 pH 值初步  {t_mid, 會考}
 - [sci.t_mid.chem-acidbase.neutralization] 酸鹼中和反應與鹽的生成  {t_mid, 會考}

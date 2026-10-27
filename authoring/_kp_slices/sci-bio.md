@@ -200,7 +200,7 @@
 - [sci.t_mid.bio-coordination.stimulus-response] 說明刺激→受器→神經→動器→反應的基本流程  {t_mid, 會考}
 - [sci.t_mid.bio-coordination.neuron-structure] 辨識神經元構造（樹突/細胞本體/軸突）與傳導方向  {t_mid, 會考}
 - [sci.t_mid.bio-coordination.cns-pns] 區分中樞神經（腦、脊髓）與周邊神經系統  {t_mid, 會考}
-- [sci.t_mid.bio-coordination.brain-parts] 說明大腦、小腦、腦幹（延腦）的主要功能  {t_mid, 會考}
+- [sci.t_mid.bio-coordination.brain-parts] 說明大腦、小腦、腦幹（尤其延腦）的主要功能  {t_mid, 會考}
 - [sci.t_mid.bio-coordination.reflex-arc] 說明反射弧（如縮手反射）不經大腦、反應快速  {t_mid, 會考}
 - [sci.t_mid.bio-coordination.endocrine-glands] 列舉主要內分泌腺與激素（腦垂腺/甲狀腺/胰島/腎上腺/性腺）  {t_mid, 會考}
 - [sci.t_mid.bio-coordination.insulin-glucagon] 說明胰島素與升糖素對血糖的拮抗調節  {t_mid, 會考}
@@ -237,7 +237,7 @@
 - [sci.t_base.bio-musculoskeletal.bones-support] 知道骨骼支撐身體、肌肉使身體活動  {t_base, 無}
 - [sci.t_mid.bio-musculoskeletal.skeleton-functions] 列舉骨骼功能（支持、保護、運動、造血、儲鈣）  {t_mid, 會考}
 - [sci.t_mid.bio-musculoskeletal.joint-types] 認識關節（可動/不可動）與韌帶、軟骨  {t_mid, 會考}
-- [sci.t_mid.bio-musculoskeletal.antagonistic-muscles] 說明拮抗肌（如肱二頭肌/肱三頭肌）成對收縮帶動骨骼  {t_mid, 會考}
+- [sci.t_mid.bio-musculoskeletal.antagonistic-muscles] 說明拮抗肌（如肱二頭肌/肱三頭肌）成對作用、一條收縮時另一條放鬆以帶動骨骼  {t_mid, 會考}
 - [sci.t_mid.bio-musculoskeletal.muscle-types] 區分骨骼肌、平滑肌、心肌（隨意/不隨意、構造）  {t_mid, 會考}
 - [sci.t_mid.bio-musculoskeletal.tendon] 說明肌腱連接肌肉與骨骼  {t_mid, 會考}
 - [sci.t_sub.bio-musculoskeletal.sarcomere-sliding] 以肌小節與肌絲滑動學說說明肌肉收縮  {t_sub, 分科-生物}
@@ -402,7 +402,7 @@
 - [sci.t_sub.bio-ecology.age-structure] 以年齡結構圖預測族群成長趨勢  {t_sub, 分科-生物}
 - [sci.t_sub.bio-ecology.keystone-species] 說明關鍵種與其對群集結構的影響  {t_sub, 分科-生物}
 - [sci.t_sub.bio-ecology.biomagnification] 說明生物累積與生物放大（如 DDT、汞）  {t_sub, 分科-生物}
-- [sci.t_sub.bio-ecology.phosphorus-cycle] 說明磷循環（無氣態、經岩石與沉積）  {t_sub, 分科-生物}
+- [sci.t_sub.bio-ecology.phosphorus-cycle] 說明磷循環（缺乏像碳、氮那樣的顯著氣態階段，主要經岩石風化與沉積）  {t_sub, 分科-生物}
 
 ## 23. 生物與環境保育 {strand: conservation}
 

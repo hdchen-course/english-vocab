@@ -1473,7 +1473,7 @@
 - [sci.t_mid.bio-coordination.stimulus-response] 說明刺激→受器→神經→動器→反應的基本流程  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-coordination.neuron-structure] 辨識神經元構造（樹突/細胞本體/軸突）與傳導方向  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-coordination.cns-pns] 區分中樞神經（腦、脊髓）與周邊神經系統  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.bio-coordination.brain-parts] 說明大腦、小腦、腦幹（延腦）的主要功能  {t_mid, 會考}  · unverified
+- [sci.t_mid.bio-coordination.brain-parts] 說明大腦、小腦、腦幹（尤其延腦）的主要功能  {t_mid, 會考}  · unverified
 - [sci.t_mid.bio-coordination.reflex-arc] 說明反射弧（如縮手反射）不經大腦、反應快速  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-coordination.endocrine-glands] 列舉主要內分泌腺與激素（腦垂腺/甲狀腺/胰島/腎上腺/性腺）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-coordination.insulin-glucagon] 說明胰島素與升糖素對血糖的拮抗調節  {t_mid, 會考}  · provisionally_verified
@@ -1504,7 +1504,7 @@
 - [sci.t_base.bio-musculoskeletal.bones-support] 知道骨骼支撐身體、肌肉使身體活動  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.bio-musculoskeletal.skeleton-functions] 列舉骨骼功能（支持、保護、運動、造血、儲鈣）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-musculoskeletal.joint-types] 認識關節（可動/不可動）與韌帶、軟骨  {t_mid, 會考}  · unverified
-- [sci.t_mid.bio-musculoskeletal.antagonistic-muscles] 說明拮抗肌（如肱二頭肌/肱三頭肌）成對收縮帶動骨骼  {t_mid, 會考}  · unverified
+- [sci.t_mid.bio-musculoskeletal.antagonistic-muscles] 說明拮抗肌（如肱二頭肌/肱三頭肌）成對作用、一條收縮時另一條放鬆以帶動骨骼  {t_mid, 會考}  · unverified
 - [sci.t_mid.bio-musculoskeletal.muscle-types] 區分骨骼肌、平滑肌、心肌（隨意/不隨意、構造）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-musculoskeletal.tendon] 說明肌腱連接肌肉與骨骼  {t_mid, 會考}  · provisionally_verified
 - [sci.t_sub.bio-musculoskeletal.sarcomere-sliding] 以肌小節與肌絲滑動學說說明肌肉收縮  {t_sub, 分科-生物}  · provisionally_verified
@@ -1645,7 +1645,7 @@
 - [sci.t_sub.bio-ecology.age-structure] 以年齡結構圖預測族群成長趨勢  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-ecology.keystone-species] 說明關鍵種與其對群集結構的影響  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-ecology.biomagnification] 說明生物累積與生物放大（如 DDT、汞）  {t_sub, 分科-生物}  · provisionally_verified
-- [sci.t_sub.bio-ecology.phosphorus-cycle] 說明磷循環（無氣態、經岩石與沉積）  {t_sub, 分科-生物}  · unverified
+- [sci.t_sub.bio-ecology.phosphorus-cycle] 說明磷循環（缺乏像碳、氮那樣的顯著氣態階段，主要經岩石風化與沉積）  {t_sub, 分科-生物}  · unverified
 - [sci.t_base.bio-conservation.protect-animals] 認識愛護生物與環境、不隨意破壞棲地  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.bio-conservation.human-impact] 舉例人類活動造成的環境破壞（棲地破壞、污染、過度開發）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-conservation.pollution-types] 區分空氣、水、土壤污染及其對生物的影響  {t_mid, 會考}  · provisionally_verified
@@ -1677,7 +1677,7 @@
 - [sci.t_base.earth-earth-system.land-sea-sky] 地球表面分陸地、海洋與大氣（海陸分布觀察）  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-earth-system.water-everywhere] 地球上水以海洋、河川、湖泊、冰、地下水、水氣等多種形式存在  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.earth-earth-system.layers-crust-mantle-core] 地球內部分層：地殼、地函、地核（由淺至深）  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.earth-earth-system.crust-ocean-vs-continent] 區分海洋地殼（較薄、密度大、玄武岩質）與大陸地殼（較厚、密度小、花岡岩質）  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-earth-system.crust-ocean-vs-continent] 區分海洋地殼（較薄、密度大、玄武岩質）與大陸地殼（較厚、密度小、花崗岩質）  {t_mid, 會考}  · unverified
 - [sci.t_mid.earth-earth-system.lithosphere-asthenosphere] 岩石圈（地殼＋上部地函頂）與軟流圈的區分與相對軟硬  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-earth-system.four-spheres] 地球四大圈：岩石圈、水圈、大氣圈、生物圈的範圍與交互作用  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-earth-system.temp-pressure-with-depth] 地球內部溫度與壓力隨深度增加而升高  {t_mid, 會考}  · provisionally_verified
@@ -1692,7 +1692,7 @@
 - [sci.t_mid.earth-tectonics.continental-drift] 大陸漂移學說與其證據（海岸線契合、化石分布、古氣候）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-tectonics.seafloor-spreading] 海底擴張說：中洋脊處產生新海洋地殼  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-tectonics.plate-tectonics-theory] 板塊構造學說：岩石圈分裂成數個板塊、在軟流圈上移動  {t_mid, 會考}  · unverified
-- [sci.t_mid.earth-tectonics.major-plates] 全球主要板塊名稱與相對位置（歐亞、太平洋、菲律賓海板塊等）  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-tectonics.major-plates] 全球主要板塊名稱與相對位置（如太平洋、歐亞、非洲、北美等；菲律賓海板塊為與臺灣相關的次要板塊）  {t_mid, 會考}  · unverified
 - [sci.t_mid.earth-tectonics.divergent-boundary] 張裂（分離）型板塊邊界：中洋脊、裂谷，地殼生成  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-tectonics.convergent-subduction] 聚合（碰撞）型板塊邊界—隱沒帶：海溝、火山島弧形成  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-tectonics.convergent-collision] 聚合型—大陸碰撞造山（如喜馬拉雅山）  {t_mid, 會考}  · provisionally_verified
@@ -1723,9 +1723,9 @@
 - [sci.t_adv.earth-quake-volcano.volcano-tectonic-setting] 火山分布與板塊邊界（隱沒帶、中洋脊、熱點）的對應  {t_adv, 學測}  · provisionally_verified
 - [sci.t_base.earth-rock-mineral.rock-observe] 觀察並描述岩石的顏色、顆粒、軟硬等特徵  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-rock-mineral.soil-from-rock] 土壤由岩石風化碎屑與腐植質組成  {t_base, 無}  · provisionally_verified
-- [sci.t_mid.earth-rock-mineral.mineral-definition] 礦物為天然、無機、具固定化學成分與結晶構造的固體  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-rock-mineral.mineral-definition] 礦物為天然、無機、具一定範圍化學組成與結晶構造的固體  {t_mid, 會考}  · unverified
 - [sci.t_mid.earth-rock-mineral.mineral-properties] 礦物鑑定性質：顏色、條痕、光澤、硬度（莫氏硬度）、解理  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.earth-rock-mineral.igneous-rock] 火成岩由岩漿冷卻凝固而成（火山岩 vs 深成岩，如玄武岩、花岡岩）  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-rock-mineral.igneous-rock] 火成岩由岩漿冷卻凝固而成（火山岩 vs 深成岩，如玄武岩、花崗岩）  {t_mid, 會考}  · unverified
 - [sci.t_mid.earth-rock-mineral.sedimentary-rock] 沉積岩由碎屑沉積壓密膠結而成，常具層理與化石（如砂岩、頁岩、石灰岩）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-rock-mineral.metamorphic-rock] 變質岩由原岩受高溫高壓改變而成（如大理岩、片岩、板岩）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-rock-mineral.rock-cycle] 岩石循環：三大類岩石在地質作用下可互相轉變  {t_mid, 會考}  · provisionally_verified
@@ -1740,7 +1740,7 @@
 - [sci.t_mid.earth-geomorph.weathering-physical-chemical] 風化分物理風化（破碎）與化學風化（成分改變），及影響因素  {t_mid, 會考}  · unverified
 - [sci.t_mid.earth-geomorph.erosion-agents] 侵蝕營力：流水、海浪、風、冰河  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-geomorph.transport-deposition] 搬運與堆積：顆粒大小、流速與沉積物沉降的關係  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.earth-geomorph.river-landforms] 河流地形：上游 V 型谷、中游曲流、出山口（坡度驟減處）沖積扇、河口三角洲  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-geomorph.river-landforms] 河流地形：上游 V 型谷、中下游曲流、出山口（坡度驟減處）沖積扇、河口三角洲  {t_mid, 會考}  · unverified
 - [sci.t_mid.earth-geomorph.coastal-landforms] 海岸地形：海蝕平台、海蝕洞、沙灘、沙洲（侵蝕岸 vs 堆積岸）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-geomorph.taiwan-landforms] 臺灣特殊地形（如野柳、太魯閣峽谷、海岸階地）的成因  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-geomorph.karst] 石灰岩地區溶蝕形成鐘乳石、石筍等喀斯特地形  {t_mid, 會考}  · provisionally_verified
@@ -1821,7 +1821,7 @@
 - [sci.t_adv.earth-ocean.wave-motion] 深水波中水質點作圓周運動、波形傳遞能量而水不隨波前進  {t_adv, 學測}  · unverified
 - [sci.t_base.earth-hydrology.water-cycle-basic] 水循環：蒸發、凝結、降水、逕流的循環過程  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-hydrology.water-save] 珍惜與節約用水、認識水資源有限  {t_base, 無}  · provisionally_verified
-- [sci.t_mid.earth-hydrology.water-cycle-energy] 水循環由太陽能驅動，水在三態間轉換  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-hydrology.water-cycle-energy] 水循環由太陽能與重力共同驅動，水在三態間轉換  {t_mid, 會考}  · unverified
 - [sci.t_mid.earth-hydrology.surface-water] 地表水：河川、湖泊、水庫與集水區概念  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-hydrology.groundwater-aquifer] 地下水的儲存（含水層）與補注、抽取  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-hydrology.water-table] 地下水位的概念與升降  {t_mid, 會考}  · provisionally_verified
@@ -2206,7 +2206,7 @@
 - [sci.t_sub.chem-eq.ice-table] 以 ICE 表格求平衡濃度  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-eq.ksp] 溶解度積 Ksp 與沉澱生成判定  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-eq.common-ion] 同離子效應與分段沉澱  {t_sub, 分科-化學}  · provisionally_verified
-- [sci.t_mid.chem-acidbase.properties] 酸與鹼的通性（味道/指示劑/腐蝕）  {t_mid, 會考}  · unverified
+- [sci.t_mid.chem-acidbase.properties] 酸與鹼的通性（指示劑變色/導電性/腐蝕性；實驗室一律禁止以嚐味道檢驗）  {t_mid, 會考}  · unverified
 - [sci.t_mid.chem-acidbase.common] 常見酸鹼與日常應用  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-acidbase.indicator-ph] 指示劑/廣用試紙與 pH 值初步  {t_mid, 會考}  · unverified
 - [sci.t_mid.chem-acidbase.neutralization] 酸鹼中和反應與鹽的生成  {t_mid, 會考}  · provisionally_verified

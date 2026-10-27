@@ -12,7 +12,7 @@ exam 標註會考／學測／無（分科測驗不含地科獨立科目；深階
 - [sci.t_base.earth-earth-system.land-sea-sky] 地球表面分陸地、海洋與大氣（海陸分布觀察）  {t_base, 無}
 - [sci.t_base.earth-earth-system.water-everywhere] 地球上水以海洋、河川、湖泊、冰、地下水、水氣等多種形式存在  {t_base, 無}
 - [sci.t_mid.earth-earth-system.layers-crust-mantle-core] 地球內部分層：地殼、地函、地核（由淺至深）  {t_mid, 會考}
-- [sci.t_mid.earth-earth-system.crust-ocean-vs-continent] 區分海洋地殼（較薄、密度大、玄武岩質）與大陸地殼（較厚、密度小、花岡岩質）  {t_mid, 會考}
+- [sci.t_mid.earth-earth-system.crust-ocean-vs-continent] 區分海洋地殼（較薄、密度大、玄武岩質）與大陸地殼（較厚、密度小、花崗岩質）  {t_mid, 會考}
 - [sci.t_mid.earth-earth-system.lithosphere-asthenosphere] 岩石圈（地殼＋上部地函頂）與軟流圈的區分與相對軟硬  {t_mid, 會考}
 - [sci.t_mid.earth-earth-system.four-spheres] 地球四大圈：岩石圈、水圈、大氣圈、生物圈的範圍與交互作用  {t_mid, 會考}
 - [sci.t_mid.earth-earth-system.temp-pressure-with-depth] 地球內部溫度與壓力隨深度增加而升高  {t_mid, 會考}
@@ -30,7 +30,7 @@ exam 標註會考／學測／無（分科測驗不含地科獨立科目；深階
 - [sci.t_mid.earth-tectonics.continental-drift] 大陸漂移學說與其證據（海岸線契合、化石分布、古氣候）  {t_mid, 會考}
 - [sci.t_mid.earth-tectonics.seafloor-spreading] 海底擴張說：中洋脊處產生新海洋地殼  {t_mid, 會考}
 - [sci.t_mid.earth-tectonics.plate-tectonics-theory] 板塊構造學說：岩石圈分裂成數個板塊、在軟流圈上移動  {t_mid, 會考}
-- [sci.t_mid.earth-tectonics.major-plates] 全球主要板塊名稱與相對位置（歐亞、太平洋、菲律賓海板塊等）  {t_mid, 會考}
+- [sci.t_mid.earth-tectonics.major-plates] 全球主要板塊名稱與相對位置（如太平洋、歐亞、非洲、北美等；菲律賓海板塊為與臺灣相關的次要板塊）  {t_mid, 會考}
 - [sci.t_mid.earth-tectonics.divergent-boundary] 張裂（分離）型板塊邊界：中洋脊、裂谷，地殼生成  {t_mid, 會考}
 - [sci.t_mid.earth-tectonics.convergent-subduction] 聚合（碰撞）型板塊邊界—隱沒帶：海溝、火山島弧形成  {t_mid, 會考}
 - [sci.t_mid.earth-tectonics.convergent-collision] 聚合型—大陸碰撞造山（如喜馬拉雅山）  {t_mid, 會考}
@@ -67,9 +67,9 @@ exam 標註會考／學測／無（分科測驗不含地科獨立科目；深階
 
 - [sci.t_base.earth-rock-mineral.rock-observe] 觀察並描述岩石的顏色、顆粒、軟硬等特徵  {t_base, 無}
 - [sci.t_base.earth-rock-mineral.soil-from-rock] 土壤由岩石風化碎屑與腐植質組成  {t_base, 無}
-- [sci.t_mid.earth-rock-mineral.mineral-definition] 礦物為天然、無機、具固定化學成分與結晶構造的固體  {t_mid, 會考}
+- [sci.t_mid.earth-rock-mineral.mineral-definition] 礦物為天然、無機、具一定範圍化學組成與結晶構造的固體  {t_mid, 會考}
 - [sci.t_mid.earth-rock-mineral.mineral-properties] 礦物鑑定性質：顏色、條痕、光澤、硬度（莫氏硬度）、解理  {t_mid, 會考}
-- [sci.t_mid.earth-rock-mineral.igneous-rock] 火成岩由岩漿冷卻凝固而成（火山岩 vs 深成岩，如玄武岩、花岡岩）  {t_mid, 會考}
+- [sci.t_mid.earth-rock-mineral.igneous-rock] 火成岩由岩漿冷卻凝固而成（火山岩 vs 深成岩，如玄武岩、花崗岩）  {t_mid, 會考}
 - [sci.t_mid.earth-rock-mineral.sedimentary-rock] 沉積岩由碎屑沉積壓密膠結而成，常具層理與化石（如砂岩、頁岩、石灰岩）  {t_mid, 會考}
 - [sci.t_mid.earth-rock-mineral.metamorphic-rock] 變質岩由原岩受高溫高壓改變而成（如大理岩、片岩、板岩）  {t_mid, 會考}
 - [sci.t_mid.earth-rock-mineral.rock-cycle] 岩石循環：三大類岩石在地質作用下可互相轉變  {t_mid, 會考}
@@ -87,7 +87,7 @@ exam 標註會考／學測／無（分科測驗不含地科獨立科目；深階
 - [sci.t_mid.earth-geomorph.weathering-physical-chemical] 風化分物理風化（破碎）與化學風化（成分改變），及影響因素  {t_mid, 會考}
 - [sci.t_mid.earth-geomorph.erosion-agents] 侵蝕營力：流水、海浪、風、冰河  {t_mid, 會考}
 - [sci.t_mid.earth-geomorph.transport-deposition] 搬運與堆積：顆粒大小、流速與沉積物沉降的關係  {t_mid, 會考}
-- [sci.t_mid.earth-geomorph.river-landforms] 河流地形：上游 V 型谷、中游曲流、出山口（坡度驟減處）沖積扇、河口三角洲  {t_mid, 會考}
+- [sci.t_mid.earth-geomorph.river-landforms] 河流地形：上游 V 型谷、中下游曲流、出山口（坡度驟減處）沖積扇、河口三角洲  {t_mid, 會考}
 - [sci.t_mid.earth-geomorph.coastal-landforms] 海岸地形：海蝕平台、海蝕洞、沙灘、沙洲（侵蝕岸 vs 堆積岸）  {t_mid, 會考}
 - [sci.t_mid.earth-geomorph.taiwan-landforms] 臺灣特殊地形（如野柳、太魯閣峽谷、海岸階地）的成因  {t_mid, 會考}
 - [sci.t_mid.earth-geomorph.karst] 石灰岩地區溶蝕形成鐘乳石、石筍等喀斯特地形  {t_mid, 會考}
@@ -186,7 +186,7 @@ exam 標註會考／學測／無（分科測驗不含地科獨立科目；深階
 
 - [sci.t_base.earth-hydrology.water-cycle-basic] 水循環：蒸發、凝結、降水、逕流的循環過程  {t_base, 無}
 - [sci.t_base.earth-hydrology.water-save] 珍惜與節約用水、認識水資源有限  {t_base, 無}
-- [sci.t_mid.earth-hydrology.water-cycle-energy] 水循環由太陽能驅動，水在三態間轉換  {t_mid, 會考}
+- [sci.t_mid.earth-hydrology.water-cycle-energy] 水循環由太陽能與重力共同驅動，水在三態間轉換  {t_mid, 會考}
 - [sci.t_mid.earth-hydrology.surface-water] 地表水：河川、湖泊、水庫與集水區概念  {t_mid, 會考}
 - [sci.t_mid.earth-hydrology.groundwater-aquifer] 地下水的儲存（含水層）與補注、抽取  {t_mid, 會考}
 - [sci.t_mid.earth-hydrology.water-table] 地下水位的概念與升降  {t_mid, 會考}
