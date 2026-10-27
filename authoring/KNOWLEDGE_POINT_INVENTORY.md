@@ -10,13 +10,13 @@
 - [chi.t_base.phon.compound-finals] 複韻母 ㄞㄟㄠㄡ 拼讀  {t_base, 無}  · provisionally_verified
 - [chi.t_base.phon.nasal-finals] 聲隨韻母 ㄢㄣㄤㄥ 拼讀  {t_base, 無}  · provisionally_verified
 - [chi.t_base.phon.er-final] 捲舌韻 ㄦ 的拼讀  {t_base, 無}  · provisionally_verified
-- [chi.t_base.phon.blend-finals] 結合韻母（ㄧㄚ／ㄨㄛ／ㄩㄝ…）拼讀  {t_base, 無}  · unverified
+- [chi.t_base.phon.blend-finals] 結合韻母（ㄧㄚ／ㄨㄛ／ㄩㄝ…）拼讀  {t_base, 無}  · provisionally_verified
 - [chi.t_base.phon.tones-four] 一二三四聲調號標示與辨讀  {t_base, 無}  · provisionally_verified
 - [chi.t_base.phon.neutral-tone] 輕聲判讀與標示  {t_base, 無}  · provisionally_verified
 - [chi.t_base.phon.tone-sandhi-third] 三聲連讀變調（上上相連前字近陽平）  {t_base, 無}  · provisionally_verified
 - [chi.t_base.phon.yi-bu-sandhi] 「一」「不」的變調  {t_base, 無}  · provisionally_verified
 - [chi.t_base.phon.erhua] 兒化韻現象認識（與韻母ㄦ區辨）  {t_base, 無}  · provisionally_verified
-- [chi.t_base.phon.tone-mark-position] 直書拼音時聲調號標示位置  {t_base, 無}  · unverified
+- [chi.t_base.phon.tone-mark-position] 直書拼音時聲調號標示位置  {t_base, 無}  · provisionally_verified
 - [chi.t_base.phon.input-index] 注音輸入法／注音檢字應用  {t_base, 無}  · provisionally_verified
 - [chi.t_mid.phon.polyphone-by-sense] 多音字因詞定音（破音字正確讀音選擇）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_base.char.stroke-names] 基本筆畫名稱（橫豎撇捺點提鉤折）辨識  {t_base, 無}  · provisionally_verified
@@ -30,7 +30,7 @@
 - [chi.t_base.char.hard-pen-form] 硬筆正確字形與工整書寫  {t_base, 無}  · provisionally_verified
 - [chi.t_base.char.dict-radical] 查字典：部首檢字法（部首外筆畫數）  {t_base, 無}  · provisionally_verified
 - [chi.t_base.char.dict-stroke] 查字典：筆畫檢字法  {t_base, 無}  · provisionally_verified
-- [chi.t_base.char.dict-zhuyin] 查字典：注音檢字法  {t_base, 無}  · unverified
+- [chi.t_base.char.dict-zhuyin] 查字典：注音檢字法  {t_base, 無}  · provisionally_verified
 - [chi.t_base.char.dict-sense-pick] 依上下文從字典義項中選取正確釋義  {t_base, 無}  · provisionally_verified
 - [chi.t_mid.char.liushu-xiangxing] 六書：象形  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.char.liushu-zhishi] 六書：指事  {t_mid, 會考}  · provisionally_verified
@@ -40,9 +40,9 @@
 - [chi.t_mid.char.liushu-jiajie] 六書：假借  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.char.phonetic-radical] 形聲字聲符表音、形符表義之判讀  {t_mid, 會考}  · provisionally_verified
 - [chi.t_base.char.near-form] 形近字辨析（己已巳／戌戍戊／辨辯辮瓣…）  {t_base, 會考}  · provisionally_verified
-- [chi.t_base.char.homophone-chars] 同音字辨析（的得地／在再／作做…）  {t_base, 會考}  · unverified
+- [chi.t_base.char.homophone-chars] 同音字辨析（的得地／在再／作做…）  {t_base, 會考}  · provisionally_verified
 - [chi.t_mid.char.wrong-char-correct] 錯別字辨正  {t_mid, 會考}  · provisionally_verified
-- [chi.t_mid.char.variant-standard] 異體字與標準字形辨識  {t_mid, 無}  · unverified
+- [chi.t_mid.char.variant-standard] 異體字與標準字形辨識  {t_mid, 無}  · provisionally_verified
 - [chi.t_mid.word.polyphone-sense] 字音：破音字因義異讀（說 ㄕㄨㄛ／ㄕㄨㄟˋ、樂 ㄌㄜˋ／ㄩㄝˋ）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.word.multi-sound] 字音：多音字辨讀  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.word.wrong-char-adv] 字形：進階錯別字辨正（同音誤代）  {t_mid, 會考}  · provisionally_verified
@@ -139,7 +139,7 @@
 - [chi.t_adv.classical.xu-zhu] 「諸」：兼詞（之於／之乎）  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.classical.xu-compare] 同一虛字不同用法的比較辨析  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_mid.classical.ancient-modern] 古今異義詞  {t_mid, 會考}  · unverified
-- [chi.t_adv.classical.shici-multi] 實詞一詞多義  {t_adv, 學測-國綜}  · unverified
+- [chi.t_adv.classical.shici-multi] 實詞一詞多義  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_mid.classical.noun-as-verb] 詞類活用：名詞作動詞  {t_mid, 會考}  · provisionally_verified
 - [chi.t_adv.classical.noun-as-adverb] 詞類活用：名詞作狀語  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.classical.causative] 詞類活用：使動用法  {t_adv, 學測-國綜}  · provisionally_verified
@@ -157,7 +157,7 @@
 - [chi.t_mid.classical.juodu] 句讀／斷句  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.classical.translate] 文言語譯（以直譯為主）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_adv.classical.theme-emotion] 文言文主旨與作者情志把握  {t_adv, 學測-國綜}  · provisionally_verified
-- [chi.t_adv.classical.honorific] 謙稱／敬稱等稱謂詞判讀  {t_adv, 學測-國綜}  · unverified
+- [chi.t_adv.classical.honorific] 謙稱／敬稱等稱謂詞判讀  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.classical.culture-common] 古代文化常識（紀年／官職／地理／禮俗）  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.classical.allusion] 用典（典故）的理解  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_mid.classical.poem-meaning] 古典詩詞曲文意理解  {t_mid, 會考}  · provisionally_verified
@@ -367,16 +367,16 @@
 - [eng.t_base.phonics.name-vs-sound] 字母「名稱音」vs「發音」區辨  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.alphabet-order] 字母順序與字典序查找  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.short-vowels] 短母音 a/e/i/o/u（CVC 拼讀）  {t_base, 無}  · provisionally_verified
-- [eng.t_base.phonics.silent-e] 長母音與 silent e（magic e：a_e/i_e/o_e/u_e）  {t_base, 無}  · unverified
-- [eng.t_base.phonics.single-consonants] 單子音發音  {t_base, 無}  · unverified
+- [eng.t_base.phonics.silent-e] 長母音與 silent e（magic e：a_e/i_e/o_e/u_e）  {t_base, 無}  · provisionally_verified
+- [eng.t_base.phonics.single-consonants] 單子音發音  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.consonant-blends] 子音群 blends（bl/cr/st/sp/tr…）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.consonant-digraphs] 子音組合 digraphs（sh/ch/th 有聲無聲/wh/ph/ng/ck）  {t_base, 無}  · provisionally_verified
-- [eng.t_base.phonics.vowel-teams] 母音組合（ee/ea/oo 長短/ai/ay/oa/ow/oi/oy/au/aw）  {t_base, 無}  · unverified
+- [eng.t_base.phonics.vowel-teams] 母音組合（ee/ea/oo 長短/ai/ay/oa/ow/oi/oy/au/aw）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.r-controlled] r-controlled 母音（ar/er/ir/or/ur）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.hard-soft-cg] 硬軟 c/g（cat/city、go/giant）  {t_base, 無}  · unverified
 - [eng.t_base.phonics.decoding] 看字讀音（decoding）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.encoding] 聽音拼字（encoding）  {t_base, 無}  · provisionally_verified
-- [eng.t_base.phonics.syllable-stress] 音節切分與單字重音  {t_base, 無}  · unverified
+- [eng.t_base.phonics.syllable-stress] 音節切分與單字重音  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.schwa] 弱化音 schwa /ə/  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.final-le] 字尾 -le 音節（table/little）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.plural-s-sound] 複數/三單 -s/-es 發音 /s//z//ɪz/  {t_base, 無}  · provisionally_verified
@@ -413,14 +413,14 @@
 - [eng.t_adv.vocab.synonym-nuance] 近義詞語意辨析（nuance）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.vocab.register] 詞彙語域（formal/informal）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.vocab.expand-6000] 進階擴充至約 6,000 字（參考詞彙表第 5–6 級，逾學測；英文無上限、以生活實用為主）  {t_enrich, 無}  · unverified
-- [eng.t_base.morph.suffix-adverb-ly] 副詞字尾 -ly 構成  {t_base, 無}  · unverified
-- [eng.t_base.morph.compound-noun] 合成名詞（classroom/raincoat）  {t_base, 無}  · unverified
+- [eng.t_base.morph.suffix-adverb-ly] 副詞字尾 -ly 構成  {t_base, 無}  · provisionally_verified
+- [eng.t_base.morph.compound-noun] 合成名詞（classroom/raincoat）  {t_base, 無}  · provisionally_verified
 - [eng.t_mid.morph.suffix-noun] 名詞字尾（-tion/-ment/-ness/-ity/-er/-or/-ist/-ship）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.morph.suffix-adjective] 形容詞字尾（-ful/-less/-ous/-ive/-al/-ic/-able/-y/-ish）  {t_mid, 會考}  · provisionally_verified
-- [eng.t_mid.morph.suffix-verb] 動詞字尾（-ize/-ify/-en/-ate）  {t_mid, 會考}  · unverified
+- [eng.t_mid.morph.suffix-verb] 動詞字尾（-ize/-ify/-en/-ate）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.morph.prefix-negative] 否定/反義字首（un-/in-/im-/il-/ir-/dis-/non-）  {t_mid, 會考}  · unverified
 - [eng.t_mid.morph.word-family] 派生與詞類轉換（beauty/beautiful/beautifully）  {t_mid, 會考}  · provisionally_verified
-- [eng.t_adv.morph.prefix-degree] 數量/程度字首（bi-/tri-/multi-/semi-/over-/under-/super-）  {t_adv, 學測}  · unverified
+- [eng.t_adv.morph.prefix-degree] 數量/程度字首（bi-/tri-/multi-/semi-/over-/under-/super-）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.morph.prefix-relation] 關係/方位字首（re-/pre-/post-/inter-/trans-/sub-/ex-/co-）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.morph.latin-greek-roots] 拉丁希臘字根（spect/port/dict/ject/vert/scrib/tele/bio/geo/graph）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.morph.compound-adjective] 合成形容詞（well-known、a ten-year-old boy）  {t_adv, 學測}  · provisionally_verified
@@ -453,12 +453,12 @@
 - [eng.t_base.verb.be] be 動詞（am/is/are）與句型  {t_base, 無}  · provisionally_verified
 - [eng.t_base.verb.there-be] There is / There are  {t_base, 無}  · provisionally_verified
 - [eng.t_base.verb.present-simple] 一般現在式與第三人稱單數  {t_base, 無}  · provisionally_verified
-- [eng.t_base.verb.present-progressive] 現在進行式構成與 -ing 拼寫  {t_base, 無}  · unverified
+- [eng.t_base.verb.present-progressive] 現在進行式構成與 -ing 拼寫  {t_base, 無}  · provisionally_verified
 - [eng.t_mid.verb.present-simple-vs-prog] 現在簡單 vs 現在進行對比  {t_mid, 會考}  · provisionally_verified
 - [eng.t_base.verb.past-simple-regular] 過去簡單式（規則動詞 -ed）  {t_base, 無}  · unverified
-- [eng.t_mid.verb.past-simple-irregular] 過去簡單式（不規則動詞）  {t_mid, 會考}  · unverified
+- [eng.t_mid.verb.past-simple-irregular] 過去簡單式（不規則動詞）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.verb.past-progressive] 過去進行式  {t_mid, 會考}  · provisionally_verified
-- [eng.t_mid.verb.past-when-while] 過去簡單 vs 過去進行（when/while）  {t_mid, 會考}  · unverified
+- [eng.t_mid.verb.past-when-while] 過去簡單 vs 過去進行（when/while）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.verb.future-will] 未來式 will  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.verb.future-going-to] 未來 be going to  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.verb.will-vs-going-to] will vs be going to 辨析  {t_mid, 會考}  · provisionally_verified
@@ -473,111 +473,111 @@
 - [eng.t_adv.verb.future-progressive] 未來進行式  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.verb.past-perfect-progressive] 過去完成進行式  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.verb.future-perfect-progressive] 未來完成進行式  {t_adv, 學測}  · provisionally_verified
-- [eng.t_adv.verb.tense-consistency] 時態一致與時間副詞搭配  {t_adv, 學測}  · unverified
+- [eng.t_adv.verb.tense-consistency] 時態一致與時間副詞搭配  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.verb.used-to-family] used to / be used to / get used to 辨析  {t_adv, 學測}  · unverified
-- [eng.t_mid.verb.ditransitive] 授與動詞雙受詞（give sb sth / to/for）  {t_mid, 會考}  · unverified
+- [eng.t_mid.verb.ditransitive] 授與動詞雙受詞（give sb sth / to/for）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.voice.basic] 被動語態構成（be + p.p.）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_adv.voice.all-tenses] 各時態被動（現在/過去/完成/未來）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.voice.modal] 情態助動詞被動  {t_adv, 學測}  · provisionally_verified
 - [eng.t_mid.voice.by-agent] by 片語與施事者省略  {t_mid, 會考}  · provisionally_verified
 - [eng.t_adv.voice.ditransitive] 授與動詞雙受詞被動  {t_adv, 學測}  · provisionally_verified
-- [eng.t_adv.voice.causative-perception] 感官/使役被動（be made to / be seen to）  {t_adv, 學測}  · unverified
+- [eng.t_adv.voice.causative-perception] 感官/使役被動（be made to / be seen to）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.voice.nonfinite] 被動不定詞/動名詞（to be done / being done）  {t_adv, 學測}  · provisionally_verified
-- [eng.t_sub.voice.it-is-said] It is said that… / be said to 結構  {t_adv, 學測}  · unverified
+- [eng.t_sub.voice.it-is-said] It is said that… / be said to 結構  {t_adv, 學測}  · provisionally_verified
 - [eng.t_mid.voice.active-passive-transform] 主動被動轉換  {t_mid, 會考}  · provisionally_verified
 - [eng.t_base.modal.can] can（能力/許可/請求）  {t_base, 無}  · provisionally_verified
-- [eng.t_mid.modal.could] could（過去能力/委婉請求/可能）  {t_mid, 會考}  · unverified
+- [eng.t_mid.modal.could] could（過去能力/委婉請求/可能）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.modal.may-might] may/might（許可/推測）  {t_mid, 會考}  · provisionally_verified
-- [eng.t_mid.modal.must] must（義務/強烈推測）  {t_mid, 會考}  · unverified
+- [eng.t_mid.modal.must] must（義務/強烈推測）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.modal.have-to] have to / have got to（外在義務）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_adv.modal.must-vs-haveto] must vs have to 與否定（mustn't / don't have to）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_mid.modal.should-ought] should / ought to（勸告建議）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.modal.had-better] had better  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.modal.shall-would-like] shall（提議）/ would like  {t_mid, 會考}  · provisionally_verified
-- [eng.t_adv.modal.would] would（過去習慣/委婉/意願）  {t_adv, 學測}  · unverified
+- [eng.t_adv.modal.would] would（過去習慣/委婉/意願）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.modal.perfect] 情態 + 完成式（must/should/could have 表過去推測或後悔）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.modal.probability-ladder] 推測確定度（雙軸）：肯定方向 must＞may／might／could；否定方向 can't／couldn't 表「幾乎不可能」的高確定（非低機率）  {t_adv, 學測}  · provisionally_verified
-- [eng.t_sub.modal.need-dare] need / dare 作情態助動詞  {t_adv, 無}  · unverified
+- [eng.t_sub.modal.need-dare] need / dare 作情態助動詞  {t_adv, 無}  · provisionally_verified
 - [eng.t_mid.adjadv.adjective-position] 形容詞位置（限定/敘述、前位/後位）  {t_mid, 會考}  · unverified
-- [eng.t_mid.adjadv.participle-adjective] 分詞形容詞 -ing vs -ed（boring/bored）  {t_mid, 會考}  · unverified
+- [eng.t_mid.adjadv.participle-adjective] 分詞形容詞 -ing vs -ed（boring/bored）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.adjadv.adverb-types] 副詞種類（方式/地點/時間/頻率/程度）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.adjadv.frequency-position] 頻率副詞位置  {t_mid, 會考}  · provisionally_verified
-- [eng.t_mid.adjadv.comparative] 比較級（規則與不規則）  {t_mid, 會考}  · unverified
+- [eng.t_mid.adjadv.comparative] 比較級（規則與不規則）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.adjadv.superlative] 最高級與範圍（of/in）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.adjadv.as-as] 原級比較 as…as / not as…as  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.adjadv.too-enough-so-such] too…to / enough to / so…that / such…that  {t_mid, 會考}  · provisionally_verified
 - [eng.t_adv.adjadv.adjective-order] 多個形容詞排序  {t_adv, 學測}  · provisionally_verified
-- [eng.t_adv.adjadv.comparative-modifier] 比較級修飾語（much/far/a little + 比較級）  {t_adv, 學測}  · unverified
+- [eng.t_adv.adjadv.comparative-modifier] 比較級修飾語（much/far/a little + 比較級）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.adjadv.the-more-the-more] the + 比較級, the + 比較級（越…越…）  {t_adv, 學測}  · unverified
 - [eng.t_adv.adjadv.more-and-more] 比較級 + and + 比較級（越來越…）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.adjadv.multiple-comparison] 倍數比較（twice/three times as…as）  {t_adv, 學測}  · unverified
 - [eng.t_adv.adjadv.comparison-ellipsis] 比較句的省略與平行（than I do）  {t_adv, 學測}  · unverified
 - [eng.t_adv.adjadv.confusable-pairs] 易混形副（hard/hardly、late/lately、near/nearly）  {t_adv, 學測}  · provisionally_verified
-- [eng.t_base.prep.time-at-on-in] 時間介系詞 at/on/in  {t_base, 無}  · unverified
+- [eng.t_base.prep.time-at-on-in] 時間介系詞 at/on/in  {t_base, 無}  · provisionally_verified
 - [eng.t_base.prep.place-at-on-in] 地點介系詞 at/on/in  {t_base, 無}  · provisionally_verified
 - [eng.t_mid.prep.direction] 方向/移動介系詞（to/into/onto/toward/through/across/along）  {t_mid, 會考}  · provisionally_verified
-- [eng.t_mid.prep.position] 位置介系詞（above/below/over/under/between/among/beside/behind）  {t_mid, 會考}  · unverified
+- [eng.t_mid.prep.position] 位置介系詞（above/below/over/under/between/among/beside/behind）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.prep.duration] 期間介系詞（for/during/since/by/until/within）  {t_mid, 會考}  · provisionally_verified
-- [eng.t_mid.prep.means] by/with/in 表方式與工具  {t_mid, 會考}  · unverified
+- [eng.t_mid.prep.means] by/with/in 表方式與工具  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.prep.verb-prep-collocation] 介系詞慣用搭配（depend on、be good at）  {t_mid, 會考}  · provisionally_verified
-- [eng.t_mid.prep.prep-gerund] 介系詞 + 動名詞  {t_mid, 會考}  · unverified
+- [eng.t_mid.prep.prep-gerund] 介系詞 + 動名詞  {t_mid, 會考}  · provisionally_verified
 - [eng.t_adv.prep.phrasal-prep] 片語介系詞（because of / in spite of / instead of）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.prep.others] 其他介系詞語意（about/of/for/against/despite）  {t_adv, 學測}  · unverified
-- [eng.t_mid.conj.coordinating] 對等連接詞 FANBOYS（and/but/or/so/for/nor/yet）  {t_mid, 會考}  · unverified
+- [eng.t_mid.conj.coordinating] 對等連接詞 FANBOYS（and/but/or/so/for/nor/yet）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.conj.subordinate-time] 從屬連接詞-時間（when/while/as/before/after/until/as soon as）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.conj.subordinate-reason] 從屬-原因（because/since/as）  {t_mid, 會考}  · provisionally_verified
-- [eng.t_mid.conj.subordinate-concession] 從屬-讓步（although/though/even though/even if）  {t_mid, 會考}  · unverified
-- [eng.t_mid.conj.subordinate-condition] 從屬-條件（if/unless/as long as）  {t_mid, 會考}  · unverified
+- [eng.t_mid.conj.subordinate-concession] 從屬-讓步（although/though/even though/even if）  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.conj.subordinate-condition] 從屬-條件（if/unless/as long as）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_adv.conj.correlative] 相關連接詞與動詞一致（both…and/either…or/neither…nor/not only…but also）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.conj.purpose-result] 從屬-目的/結果（so that / in order that / so…that）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.conj.conjunctive-adverb] 轉折/連接副詞與標點（however/therefore/moreover/nevertheless/otherwise/thus）  {t_adv, 學測}  · provisionally_verified
-- [eng.t_adv.conj.conj-vs-prep] 連接詞 vs 介系詞辨析（because/because of；although/despite）  {t_adv, 學測}  · unverified
+- [eng.t_adv.conj.conj-vs-prep] 連接詞 vs 介系詞辨析（because/because of；although/despite）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.conj.contrast-while-whereas] while/whereas 表對比  {t_adv, 學測}  · provisionally_verified
 - [eng.t_mid.nonfinite.infinitive-noun] 不定詞當名詞（主/受/補）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.nonfinite.infinitive-purpose] 不定詞表目的  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.nonfinite.infinitive-adj-adv] 不定詞當形容詞/副詞  {t_mid, 會考}  · provisionally_verified
-- [eng.t_mid.nonfinite.wh-infinitive] 疑問詞 + 不定詞（how to…）  {t_mid, 會考}  · unverified
+- [eng.t_mid.nonfinite.wh-infinitive] 疑問詞 + 不定詞（how to…）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.nonfinite.gerund-roles] 動名詞當主詞/受詞/補語/介受  {t_mid, 會考}  · provisionally_verified
-- [eng.t_mid.nonfinite.verb-plus-infinitive] 接不定詞的動詞（want/hope/decide/promise）  {t_mid, 會考}  · unverified
+- [eng.t_mid.nonfinite.verb-plus-infinitive] 接不定詞的動詞（want/hope/decide/promise）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.nonfinite.verb-plus-gerund] 接動名詞的動詞（enjoy/finish/mind/avoid/keep）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_adv.nonfinite.meaning-change] 接不定詞或動名詞意義不同（stop/remember/forget/try/mean/regret）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.nonfinite.subject-of-infinitive] 不定詞意義主詞（for sb to / of sb to）  {t_adv, 學測}  · provisionally_verified
-- [eng.t_adv.nonfinite.bare-infinitive] 原形不定詞（make/let/have/see/hear + 原形）  {t_adv, 學測}  · unverified
+- [eng.t_adv.nonfinite.bare-infinitive] 原形不定詞（make/let/have/see/hear + 原形）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.nonfinite.gerund-idioms] 慣用動名詞句型（feel like/can't help/be worth/It's no use）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.nonfinite.perfect-passive] 不定詞/動名詞的完成式與被動式  {t_adv, 學測}  · provisionally_verified
 - [eng.t_mid.relcl.who-whom] 關係代名詞 who/whom  {t_mid, 會考}  · unverified
-- [eng.t_mid.relcl.which] 關係代名詞 which  {t_mid, 會考}  · unverified
+- [eng.t_mid.relcl.which] 關係代名詞 which  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.relcl.that] 關係代名詞 that 與使用時機  {t_mid, 會考}  · provisionally_verified
-- [eng.t_mid.relcl.whose] 關係代名詞 whose（所有格）  {t_mid, 會考}  · unverified
+- [eng.t_mid.relcl.whose] 關係代名詞 whose（所有格）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.relcl.omission] 受格關係代名詞省略  {t_mid, 會考}  · provisionally_verified
-- [eng.t_adv.relcl.restrictive-vs-nonrestrictive] 限定 vs 非限定關係子句（逗號）  {t_adv, 學測}  · unverified
+- [eng.t_adv.relcl.restrictive-vs-nonrestrictive] 限定 vs 非限定關係子句（逗號）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.relcl.relative-adverb] 關係副詞 when/where/why  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.relcl.prep-plus-relative] 介系詞 + 關係代名詞（in which / for whom）  {t_adv, 學測}  · provisionally_verified
-- [eng.t_adv.relcl.what] 複合關係代名詞 what  {t_adv, 學測}  · unverified
+- [eng.t_adv.relcl.what] 複合關係代名詞 what  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.relcl.reduce-to-participle] 關係子句化簡為分詞（the man standing…）  {t_adv, 學測}  · provisionally_verified
-- [eng.t_sub.relcl.compound-wh-ever] 複合關係代名詞 whatever/whoever/whichever  {t_adv, 學測}  · unverified
+- [eng.t_sub.relcl.compound-wh-ever] 複合關係代名詞 whatever/whoever/whichever  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.relcl.quantifier-of-which] 數量詞 + of + which/whom（some of which）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_mid.nouncl.that-object] that 名詞子句當受詞（I think that…）  {t_mid, 會考}  · provisionally_verified
-- [eng.t_mid.nouncl.indirect-yesno] 間接問句（if/whether 是非）  {t_mid, 會考}  · unverified
-- [eng.t_mid.nouncl.indirect-wh] 間接問句（wh- 疑問詞）語序  {t_mid, 會考}  · unverified
+- [eng.t_mid.nouncl.indirect-yesno] 間接問句（if/whether 是非）  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.nouncl.indirect-wh] 間接問句（wh- 疑問詞）語序  {t_mid, 會考}  · provisionally_verified
 - [eng.t_adv.nouncl.that-subject] that 子句當主詞 / 虛主詞 it  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.nouncl.whether-or-not] whether…or not  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.nouncl.complement-apposition] 名詞子句當補語/同位語  {t_adv, 學測}  · provisionally_verified
-- [eng.t_adv.nouncl.sequence-of-tenses] 名詞子句的時態呼應  {t_adv, 學測}  · unverified
-- [eng.t_sub.nouncl.suggest-should] 建議要求動詞後 that 子句（suggest that sb (should) do）  {t_adv, 學測}  · unverified
+- [eng.t_adv.nouncl.sequence-of-tenses] 名詞子句的時態呼應  {t_adv, 學測}  · provisionally_verified
+- [eng.t_sub.nouncl.suggest-should] 建議要求動詞後 that 子句（suggest that sb (should) do）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_mid.advcl.time-future-present] 時間副詞子句（表未來用現在式）  {t_mid, 會考}  · provisionally_verified
-- [eng.t_mid.advcl.first-conditional] 條件副詞子句（第一類：if + 現在式, will）  {t_mid, 會考}  · unverified
+- [eng.t_mid.advcl.first-conditional] 條件副詞子句（第一類：if + 現在式, will）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.advcl.concession] 讓步副詞子句  {t_mid, 會考}  · provisionally_verified
 - [eng.t_adv.advcl.purpose-result] 目的/結果副詞子句  {t_adv, 學測}  · provisionally_verified
-- [eng.t_adv.advcl.manner-as-if] 方式副詞子句（as if / as though）  {t_adv, 學測}  · unverified
+- [eng.t_adv.advcl.manner-as-if] 方式副詞子句（as if / as though）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.advcl.no-matter] no matter how/what/where 讓步  {t_adv, 學測}  · provisionally_verified
-- [eng.t_adv.subj.present-unreal] 與現在事實相反（If + 過去式, would/could/might + V）  {t_adv, 學測}  · unverified
+- [eng.t_adv.subj.present-unreal] 與現在事實相反（If + 過去式, would/could/might + V）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.subj.past-unreal] 與過去事實相反（If + had p.p., would have p.p.）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.subj.as-if] as if / as though 的假設語氣（與事實相反；亦有對比可能為真的直陳用法）  {t_adv, 學測}  · unverified
-- [eng.t_adv.subj.wish] I wish 句型（現在/過去/未來願望）  {t_adv, 學測}  · unverified
+- [eng.t_adv.subj.wish] I wish 句型（現在/過去/未來願望）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.subj.indicative-vs-subjunctive] 直說 vs 假設語氣判別  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.subj.future-unreal] 與未來不可能/假設（If + were to / should）  {t_adv, 學測}  · provisionally_verified
-- [eng.t_sub.subj.mixed] 混合假設（兩型：過去條件→現在結果／現在持續條件→過去結果）  {t_adv, 學測}  · unverified
+- [eng.t_sub.subj.mixed] 混合假設（兩型：過去條件→現在結果／現在持續條件→過去結果）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.subj.inversion-omit-if] 省略 if 的倒裝（Were I / Had I / Should you）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.subj.would-rather] would rather (+ that 子句過去式)  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.subj.if-only] if only  {t_adv, 學測}  · provisionally_verified
@@ -589,12 +589,12 @@
 - [eng.t_mid.special.tag-question] 附加問句（tag question）  {t_mid, 會考}  · unverified
 - [eng.t_mid.special.formal-subject-it] 虛主詞 it（It is + adj + to / that）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_adv.special.cleft-it] 分裂句/強調句 It is X that…  {t_adv, 學測}  · provisionally_verified
-- [eng.t_adv.special.do-emphasis] do/does/did 強調動詞  {t_adv, 學測}  · unverified
+- [eng.t_adv.special.do-emphasis] do/does/did 強調動詞  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.special.participial-active] 分詞構句（現在分詞表主動/同時）  {t_adv, 學測}  · unverified
 - [eng.t_adv.special.participial-passive] 分詞構句（過去分詞表被動）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.special.formal-object-it] 虛受詞 it（find it hard to…）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.special.apposition] 同位語  {t_adv, 學測}  · unverified
-- [eng.t_adv.special.inversion-place] 地方副詞/介片語句首倒裝（Here comes…）  {t_adv, 學測}  · unverified
+- [eng.t_adv.special.inversion-place] 地方副詞/介片語句首倒裝（Here comes…）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.special.ellipsis] 省略（對話省略/子句省略）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.special.inversion-negative] 否定副詞句首倒裝（Never/Seldom/Hardly/Not only…）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.special.inversion-only] only + 副詞片語句首倒裝  {t_adv, 學測}  · provisionally_verified
@@ -605,11 +605,11 @@
 - [eng.t_base.pattern.imperative] 祈使句（肯定/否定/Let's）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.pattern.question-order] 疑問句語序（Yes/No、Wh-、選擇疑問）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.pattern.sentence-kinds] 句子種類（直述/疑問/祈使/感嘆）  {t_base, 無}  · provisionally_verified
-- [eng.t_mid.pattern.sv] 句型一 S + V（完全不及物）  {t_mid, 會考}  · unverified
-- [eng.t_mid.pattern.svc] 句型二 S + V + C（主詞補語/連綴動詞）  {t_mid, 會考}  · unverified
-- [eng.t_mid.pattern.svo] 句型三 S + V + O（完全及物）  {t_mid, 會考}  · unverified
+- [eng.t_mid.pattern.sv] 句型一 S + V（完全不及物）  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.pattern.svc] 句型二 S + V + C（主詞補語/連綴動詞）  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.pattern.svo] 句型三 S + V + O（完全及物）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.pattern.svoo] 句型四 S + V + O + O（授與雙受詞）  {t_mid, 會考}  · provisionally_verified
-- [eng.t_mid.pattern.svoc] 句型五 S + V + O + C（受詞補語）  {t_mid, 會考}  · unverified
+- [eng.t_mid.pattern.svoc] 句型五 S + V + O + C（受詞補語）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_adv.pattern.sv-agreement] 主詞動詞一致（單複數/就近/集合名詞）  {t_adv, 學測}  · unverified
 - [eng.t_adv.pattern.sentence-types] 簡單句/合句/複句/複合句辨識  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.pattern.run-on-comma-splice] 連寫句/逗號拼接錯誤辨識與修正  {t_adv, 學測}  · provisionally_verified
@@ -712,7 +712,7 @@
 - [life.safety.online.suspicious-links] 可疑連結、免費好康、帳號被盜的處置  {t_mid, 無}  · provisionally_verified
 - [life.safety.scam.common-scams] 常見詐騙：假網拍、假中獎、假客服、假檢警、解除分期、假投資、愛情/交友詐騙、遊戲點數代儲  {t_mid, 無}  · provisionally_verified
 - [life.safety.scam.scam-signals] 詐騙共同訊號：製造急迫、要你保密、要求轉帳/買點數/提供驗證碼、太好康  {t_mid, 無}  · provisionally_verified
-- [life.safety.scam.hotline-165] 165 反詐騙諮詢專線；臨櫃提款行員關懷提問  {t_mid, 無}  · unverified
+- [life.safety.scam.hotline-165] 165 反詐騙諮詢專線；臨櫃提款行員關懷提問  {t_mid, 無}  · provisionally_verified
 - [life.safety.scam.protect-otp] 個資與驗證碼（OTP）絕不交給他人  {t_mid, 無}  · provisionally_verified
 - [life.safety.scam.stop-verify] 停—看—聽—查證（掛斷用官方電話回撥）  {t_mid, 無}  · provisionally_verified
 - [life.safety.extra.bully-bystander] 校園/網路霸凌的旁觀者介入（不是加害、不是沉默）→ 與領域2/5 交界  {t_mid, 無}  · provisionally_verified
@@ -994,7 +994,7 @@
 - [life.finance.money-values.rational-consumption] 理性消費、避免同儕比較消費、長期財務規劃  {t_adv, 無}  · provisionally_verified
 - [life.finance.extra.digital-payment] 數位支付與電子錢包安全（與領域5/7交界）  {t_mid, 無}  · provisionally_verified
 - [life.finance.extra.first-job] 第一份工作／打工：你有勞動權益——雇主依法須為你投保職業災害保險（不分公司規模），工時、加班、最低工資也受法律保障（金額逐年調整）  {t_adv, 無}  · provisionally_verified
-- [life.finance.extra.fraud-recovery] 詐騙受害後的求助與止付流程（165、銀行）  {t_adv, 無}  · unverified
+- [life.finance.extra.fraud-recovery] 詐騙受害後的求助與止付流程（165、銀行）  {t_adv, 無}  · provisionally_verified
 - [life.sustain.climate.save-resources] 愛惜資源：節水、節電、隨手關燈  {t_base, 無}  · provisionally_verified
 - [life.sustain.climate.recycling] 垃圾減量與資源回收分類（台灣回收類別）  {t_base, 無}  · provisionally_verified
 - [life.sustain.climate.three-r] 3R：減量 Reduce、重用 Reuse、回收 Recycle  {t_base, 無}  · provisionally_verified
@@ -1336,7 +1336,7 @@
 - [sci.t_mid.bio-cell-structure.plant-vs-animal] 比較動植物細胞差異（細胞壁、葉綠體、大液胞之有無）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-cell-structure.organelle-nucleus] 說明細胞核功能：含遺傳物質、控制細胞活動  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-cell-structure.organelle-membrane] 說明細胞膜功能：區隔內外、選擇性通透、控制物質進出  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.bio-cell-structure.organelle-cytoplasm] 說明細胞質為代謝反應發生場所  {t_mid, 會考}  · unverified
+- [sci.t_mid.bio-cell-structure.organelle-cytoplasm] 說明細胞質為代謝反應發生場所  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-cell-structure.organelle-chloroplast] 說明葉綠體為光合作用場所、含葉綠素  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-cell-structure.organelle-vacuole] 說明液胞功能：貯存、維持膨壓  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-cell-structure.cell-wall-function] 說明細胞壁（纖維素）支持與保護功能  {t_mid, 會考}  · provisionally_verified
@@ -1346,7 +1346,7 @@
 - [sci.t_adv.bio-cell-structure.er-rough-smooth] 區分粗糙型（附核糖體/合成蛋白）與平滑型內質網（合成脂質/解毒）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-cell-structure.golgi] 說明高基氏體的加工、分類、包裝與分泌功能  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-cell-structure.lysosome] 說明溶體含水解酶、行胞內消化與自噬  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.bio-cell-structure.cytoskeleton] 說明細胞骨架（微管/微絲/中間絲）支持、運輸與運動功能  {t_adv, 學測}  · unverified
+- [sci.t_adv.bio-cell-structure.cytoskeleton] 說明細胞骨架（微管/微絲/中間絲）支持、運輸與運動功能  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-cell-structure.centriole-cilia] 區分中心粒／基體（9三聯體）與纖毛/鞭毛軸絲（9+2）的微管結構與運動功能  {t_adv, 分科-生物}  · unverified
 - [sci.t_adv.bio-cell-structure.endomembrane-system] 統整內膜系統的物質流（內質網→高基氏體→囊泡→膜）  {t_adv, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-cell-structure.membrane-fluid-mosaic] 以流體鑲嵌模型描述細胞膜（磷脂雙層＋鑲嵌蛋白＋膽固醇＋醣蛋白）  {t_sub, 分科-生物}  · provisionally_verified
@@ -1354,23 +1354,23 @@
 - [sci.t_sub.bio-cell-structure.nuclear-pore] 說明核膜、核孔與核仁（rRNA 與核糖體次單元組裝）  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_mid.bio-membrane-transport.diffusion] 定義擴散：分子由高濃度往低濃度移動  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-membrane-transport.osmosis] 定義滲透：水分子透過半透膜，由溶質濃度低（水多）側淨移動到溶質濃度高（水少）側  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.bio-membrane-transport.tonicity-cell] 預測細胞在高張/低張/等張溶液中的脹縮（溶血、膨壓）  {t_mid, 會考}  · unverified
+- [sci.t_mid.bio-membrane-transport.tonicity-cell] 預測細胞在高張/低張/等張溶液中的脹縮（溶血、膨壓）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-membrane-transport.selective-permeability] 說明細胞膜的選擇性通透  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.bio-membrane-transport.passive-vs-active] 區分被動運輸（不耗能、順濃度梯度）與主動運輸（耗 ATP、逆梯度）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-membrane-transport.facilitated-diffusion] 說明促進擴散需載體/通道蛋白、仍為被動  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-membrane-transport.sodium-potassium-pump] 以鈉鉀幫浦為例說明主動運輸（3Na⁺出/2K⁺入、耗 ATP）  {t_adv, 分科-生物}  · provisionally_verified
 - [sci.t_adv.bio-membrane-transport.endo-exocytosis] 說明胞吞（吞噬/胞飲）與胞吐運送大分子  {t_adv, 學測}  · provisionally_verified
-- [sci.t_sub.bio-membrane-transport.water-potential] 以水勢（溶質勢＋壓力勢）解釋植物細胞的水分移動  {t_sub, 分科-生物}  · unverified
+- [sci.t_sub.bio-membrane-transport.water-potential] 以水勢（溶質勢＋壓力勢）解釋植物細胞的水分移動  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-membrane-transport.aquaporin] 說明水通道蛋白（aquaporin）加速水分跨膜  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-membrane-transport.electrochemical-gradient] 以電化學梯度與次級主動運輸（共運輸）說明葡萄糖吸收  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_mid.bio-enzyme-energy.enzyme-def] 說明酵素為生物催化劑、能加速反應、本身不被消耗  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-enzyme-energy.enzyme-protein] 知道大多數酵素的本質為蛋白質、具專一性  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.bio-enzyme-energy.enzyme-temp-ph] 描述溫度與 pH 對酵素活性的影響（最適值、過高變性）  {t_mid, 會考}  · unverified
+- [sci.t_mid.bio-enzyme-energy.enzyme-temp-ph] 描述溫度與 pH 對酵素活性的影響（最適值、過高變性）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-enzyme-energy.digestive-enzymes] 舉例消化酵素（澱粉酶/蛋白酶/脂肪酶）的受質  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.bio-enzyme-energy.activation-energy] 說明酵素降低活化能、不改變反應平衡  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-enzyme-energy.lock-and-key] 以鎖鑰/誘發契合模型說明酵素—受質結合（活性部位）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-enzyme-energy.atp-structure] 說明 ATP 結構（腺苷＋三磷酸）與水解釋能供細胞使用  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.bio-enzyme-energy.cofactor-coenzyme] 區分輔因子（金屬離子）與輔酶（維生素衍生物如 NAD⁺/FAD）  {t_adv, 分科-生物}  · unverified
+- [sci.t_adv.bio-enzyme-energy.cofactor-coenzyme] 區分輔因子（金屬離子）與輔酶（維生素衍生物如 NAD⁺/FAD）  {t_adv, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-enzyme-energy.enzyme-inhibition] 區分競爭性與非競爭性抑制、別構調節  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-enzyme-energy.feedback-inhibition] 說明代謝途徑的終產物回饋抑制  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-enzyme-energy.exergonic-endergonic] 區分放能與吸能反應、以 ATP 偶聯耦合反應  {t_sub, 分科-生物}  · provisionally_verified
@@ -1384,19 +1384,19 @@
 - [sci.t_adv.bio-photosynthesis.light-reaction] 說明光反應於類囊膜、產生 ATP 與 NADPH、釋放 O₂  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-photosynthesis.water-split] 說明光反應中水的分解（光解）為電子與 O₂來源  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-photosynthesis.calvin-cycle] 說明碳反應（卡爾文循環，舊稱暗反應）於基質固定 CO₂合成醣類  {t_adv, 學測}  · unverified
-- [sci.t_adv.bio-photosynthesis.chloroplast-structure] 指出葉綠體的類囊膜（葉綠餅）與基質分別對應光反應與碳反應（舊稱暗反應）  {t_adv, 學測}  · unverified
-- [sci.t_sub.bio-photosynthesis.photosystem] 說明光系統 I、II 與電子傳遞鏈、光磷酸化  {t_sub, 分科-生物}  · unverified
+- [sci.t_adv.bio-photosynthesis.chloroplast-structure] 指出葉綠體的類囊膜（葉綠餅）與基質分別對應光反應與碳反應（舊稱暗反應）  {t_adv, 學測}  · provisionally_verified
+- [sci.t_sub.bio-photosynthesis.photosystem] 說明光系統 I、II 與電子傳遞鏈、光磷酸化  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-photosynthesis.rubisco] 說明 RuBisCO 固碳酵素與 RuBP 的角色  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-photosynthesis.photorespiration] 說明光呼吸的成因（O₂與 CO₂競爭 RuBisCO）  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-photosynthesis.c4-cam] 比較 C3、C4、CAM 植物的固碳策略與環境適應  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-photosynthesis.absorption-spectrum] 判讀光合色素的吸收光譜與作用光譜（紅/藍光最佳）  {t_sub, 分科-生物}  · unverified
-- [sci.t_mid.bio-respiration.cellular-resp-def] 說明細胞呼吸：分解養分釋放能量供生命活動  {t_mid, 會考}  · unverified
+- [sci.t_mid.bio-respiration.cellular-resp-def] 說明細胞呼吸：分解養分釋放能量供生命活動  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-respiration.overall-equation] 寫出有氧呼吸總反應（葡萄糖＋O₂→CO₂＋H₂O＋能量）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-respiration.resp-vs-photo] 比較呼吸作用與光合作用（原料/產物/能量/場所）之互補  {t_mid, 會考}  · unverified
 - [sci.t_mid.bio-respiration.all-cells-respire] 知道所有活細胞（含植物、日夜）都進行呼吸作用  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.bio-respiration.glycolysis] 說明糖解作用於細胞質、葡萄糖→丙酮酸、淨得少量 ATP  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-respiration.krebs-cycle] 說明檸檬酸循環於粒線體基質、釋 CO₂、產 NADH/FADH₂  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.bio-respiration.electron-transport] 說明電子傳遞鏈於內膜、O₂為最終電子受體、產大量 ATP  {t_adv, 學測}  · unverified
+- [sci.t_adv.bio-respiration.electron-transport] 說明電子傳遞鏈於內膜、O₂為最終電子受體、產大量 ATP  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-respiration.fermentation] 說明無氧呼吸/發酵（乳酸發酵、酒精發酵）與產物  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-respiration.atp-yield] 比較有氧呼吸（現代估計約 30–32 ATP，舊教材 36–38）與發酵（僅糖解淨得約 2 ATP）的能量產量差異  {t_adv, 學測}  · provisionally_verified
 - [sci.t_sub.bio-respiration.pyruvate-oxidation] 說明丙酮酸氧化（連結反應）生成乙醯輔酶 A  {t_sub, 分科-生物}  · provisionally_verified
@@ -1409,24 +1409,24 @@
 - [sci.t_mid.bio-cell-division.diploid-haploid] 區分體細胞（2n）與配子（n）的染色體套數  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.bio-cell-division.cell-cycle-phases] 說明細胞週期（G1/S/G2/M）與 S 期 DNA 複製  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-cell-division.mitosis-stages] 依序描述有絲分裂前期/中期/後期/末期的染色體行為  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.bio-cell-division.cytokinesis] 比較動植物細胞質分裂（收縮環 vs. 細胞板）  {t_adv, 學測}  · unverified
+- [sci.t_adv.bio-cell-division.cytokinesis] 比較動植物細胞質分裂（收縮環 vs. 細胞板）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-cell-division.meiosis-two-divisions] 說明減數分裂兩次連續分裂（減數I、減數II）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-cell-division.crossing-over-meiosis] 說明減數I同源染色體聯會與互換增加變異  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-cell-division.independent-assortment-chrom] 說明同源染色體隨機分配造成配子多樣性  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-cell-division.mitosis-vs-meiosis] 表列比較有絲與減數分裂（次數/產物數/染色體數/變異）  {t_adv, 學測}  · provisionally_verified
-- [sci.t_sub.bio-cell-division.cell-cycle-checkpoint] 說明細胞週期檢查點與 cyclin/CDK 調控  {t_sub, 分科-生物}  · unverified
+- [sci.t_sub.bio-cell-division.cell-cycle-checkpoint] 說明細胞週期檢查點與 cyclin/CDK 調控  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-cell-division.cancer-cell-cycle] 連結細胞週期調控失常與癌症（原癌/抑癌基因）  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-cell-division.apoptosis] 區分計畫性細胞死亡（凋亡）與壞死  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-cell-division.nondisjunction] 以染色體不分離解釋唐氏症等染色體數目異常  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_base.bio-digestion.balanced-diet] 認識均衡飲食與食物六大類（我的餐盤）  {t_base, 無}  · unverified
-- [sci.t_base.bio-digestion.teeth-stomach] 初步認識牙齒咀嚼與胃腸消化食物  {t_base, 無}  · unverified
+- [sci.t_base.bio-digestion.teeth-stomach] 初步認識牙齒咀嚼與胃腸消化食物  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.bio-digestion.nutrients-six] 列舉六大營養素（醣類/蛋白質/脂質/維生素/礦物質/水）及功能  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-digestion.food-tests] 以本氏液、碘液、蛋白質試劑、脂肪（紙上透光）檢測營養素  {t_mid, 會考}  · unverified
 - [sci.t_mid.bio-digestion.mechanical-chemical] 區分物理性（咀嚼/攪拌）與化學性消化（酵素分解）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-digestion.alimentary-canal] 依序列出消化道（口→食道→胃→小腸→大腸→肛門）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-digestion.accessory-organs] 說明唾腺、肝、膽囊、胰的消化輔助功能  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-digestion.enzyme-sites] 對應各營養素消化的部位與酵素（口腔澱粉、胃蛋白、小腸全部）  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.bio-digestion.bile-emulsify] 說明膽汁（不含酵素）乳化脂肪的作用  {t_mid, 會考}  · unverified
+- [sci.t_mid.bio-digestion.bile-emulsify] 說明膽汁（不含酵素）乳化脂肪的作用  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-digestion.villi-absorption] 說明小腸絨毛增加吸收表面積、養分吸收路徑  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-digestion.large-intestine] 說明大腸吸收水分、形成糞便  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.bio-digestion.absorption-routes] 區分一般養分（微血管→肝門靜脈）與脂質（乳糜管/淋巴）吸收路徑  {t_adv, 學測}  · provisionally_verified
@@ -1436,28 +1436,28 @@
 - [sci.t_mid.bio-circulation.blood-components] 列舉血液組成（血漿、紅血球、白血球、血小板）及功能  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-circulation.rbc-hemoglobin] 說明紅血球以血紅素運送氧氣  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-circulation.platelet-clot] 說明血小板與凝血的關係  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.bio-circulation.vessels-three] 比較動脈、靜脈、微血管的構造與功能（含靜脈瓣）  {t_mid, 會考}  · unverified
+- [sci.t_mid.bio-circulation.vessels-three] 比較動脈、靜脈、微血管的構造與功能（含靜脈瓣）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-circulation.heart-chambers] 指出心臟四腔（左右心房/心室）與瓣膜防逆流  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-circulation.double-circulation] 說明體循環與肺循環的路徑（雙循環）  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.bio-circulation.oxygenated-blood] 追蹤含氧血/缺氧血在心臟與循環中的流向  {t_mid, 會考}  · unverified
+- [sci.t_mid.bio-circulation.oxygenated-blood] 追蹤含氧血/缺氧血在心臟與循環中的流向  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-circulation.lymphatic-system] 說明淋巴系統回收組織液、運送脂質與防禦  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.bio-circulation.blood-type-abo] 說明 ABO 血型與輸血相容性（初步）  {t_mid, 會考}  · unverified
-- [sci.t_adv.bio-circulation.tissue-fluid] 說明微血管端的血漿滲出形成組織液與物質交換  {t_adv, 學測}  · unverified
+- [sci.t_mid.bio-circulation.blood-type-abo] 說明 ABO 血型與輸血相容性（初步）  {t_mid, 會考}  · provisionally_verified
+- [sci.t_adv.bio-circulation.tissue-fluid] 說明微血管端的血漿滲出形成組織液與物質交換  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-circulation.heart-conduction] 說明竇房結、房室結與心搏節律的自發調控  {t_adv, 分科-生物}  · provisionally_verified
-- [sci.t_adv.bio-circulation.blood-pressure] 說明血壓（收縮壓/舒張壓）與其調節  {t_adv, 學測}  · unverified
-- [sci.t_sub.bio-circulation.open-closed-circ] 比較開放式與閉鎖式循環系統（跨動物門）  {t_sub, 分科-生物}  · unverified
+- [sci.t_adv.bio-circulation.blood-pressure] 說明血壓（收縮壓/舒張壓）與其調節  {t_adv, 學測}  · provisionally_verified
+- [sci.t_sub.bio-circulation.open-closed-circ] 比較開放式與閉鎖式循環系統（跨動物門）  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-circulation.rh-factor] 說明 Rh 血型與新生兒溶血症  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-circulation.hemoglobin-dissociation] 判讀氧合血紅素解離曲線與波爾效應  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_base.bio-gas-exchange.breathe-air] 知道人以鼻口呼吸、吸入空氣  {t_base, 無}  · provisionally_verified
-- [sci.t_mid.bio-gas-exchange.respiratory-tract] 依序列出呼吸道（鼻→咽→喉→氣管→支氣管→肺泡）  {t_mid, 會考}  · unverified
+- [sci.t_mid.bio-gas-exchange.respiratory-tract] 依序列出呼吸道（鼻→咽→喉→氣管→支氣管→肺泡）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-gas-exchange.alveoli-features] 說明肺泡薄壁、多且富微血管利於氣體交換  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-gas-exchange.gas-diffusion] 說明肺泡與微血管間 O₂、CO₂依擴散方向交換  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-gas-exchange.breathing-mechanism] 以橫膈與肋間肌、胸腔容積變化解釋吸氣與呼氣  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-gas-exchange.inhale-exhale-air] 比較吸入與呼出氣體的成分差異（O₂、CO₂、水氣）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.bio-gas-exchange.gas-transport] 說明 O₂由血紅素、CO₂多以碳酸氫根運送  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.bio-gas-exchange.breathing-control] 說明腦（延腦）依血中 CO₂/pH 調節呼吸速率  {t_adv, 分科-生物}  · unverified
-- [sci.t_sub.bio-gas-exchange.gill-tracheal] 比較鰓、氣管（昆蟲）、肺等不同呼吸構造的氣體交換  {t_sub, 分科-生物}  · unverified
-- [sci.t_sub.bio-gas-exchange.bird-lung] 說明鳥類氣囊與單向氣流的高效氣體交換  {t_sub, 分科-生物}  · unverified
+- [sci.t_adv.bio-gas-exchange.breathing-control] 說明腦（延腦）依血中 CO₂/pH 調節呼吸速率  {t_adv, 分科-生物}  · provisionally_verified
+- [sci.t_sub.bio-gas-exchange.gill-tracheal] 比較鰓、氣管（昆蟲）、肺等不同呼吸構造的氣體交換  {t_sub, 分科-生物}  · provisionally_verified
+- [sci.t_sub.bio-gas-exchange.bird-lung] 說明鳥類氣囊與單向氣流的高效氣體交換  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_mid.bio-excretion.metabolic-waste] 列舉代謝廢物（CO₂、含氮廢物如尿素、多餘水與鹽）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-excretion.organs-involved] 說明腎、肺、皮膚（汗腺）排除廢物的分工  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-excretion.urinary-system] 依序列出泌尿系統（腎→輸尿管→膀胱→尿道）  {t_mid, 會考}  · provisionally_verified
@@ -1467,24 +1467,24 @@
 - [sci.t_adv.bio-excretion.nephron-detail] 說明腎元各段（腎小球/鮑氏囊/腎小管/亨利氏環）的過濾、再吸收、分泌  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-excretion.osmoregulation] 說明滲透壓調節與水分平衡（抗利尿激素 ADH）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_sub.bio-excretion.nitrogenous-waste-types] 比較氨、尿素、尿酸三種含氮廢物與動物棲地的關係  {t_sub, 分科-生物}  · provisionally_verified
-- [sci.t_sub.bio-excretion.countercurrent] 以逆流機制說明亨利氏環濃縮尿液  {t_sub, 分科-生物}  · unverified
+- [sci.t_sub.bio-excretion.countercurrent] 以逆流機制說明亨利氏環濃縮尿液  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-excretion.raas] 說明腎素—血管收縮素—醛固酮系統對血壓與鈉的調節  {t_sub, 分科-生物}  · provisionally_verified
-- [sci.t_base.bio-coordination.five-senses] 認識五種感官（視/聽/嗅/味/觸）與刺激反應  {t_base, 無}  · unverified
+- [sci.t_base.bio-coordination.five-senses] 認識五種感官（視/聽/嗅/味/觸）與刺激反應  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.bio-coordination.stimulus-response] 說明刺激→受器→神經→動器→反應的基本流程  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-coordination.neuron-structure] 辨識神經元構造（樹突/細胞本體/軸突）與傳導方向  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-coordination.cns-pns] 區分中樞神經（腦、脊髓）與周邊神經系統  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.bio-coordination.brain-parts] 說明大腦、小腦、腦幹（尤其延腦）的主要功能  {t_mid, 會考}  · unverified
+- [sci.t_mid.bio-coordination.brain-parts] 說明大腦、小腦、腦幹（尤其延腦）的主要功能  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-coordination.reflex-arc] 說明反射弧（如縮手反射）不經大腦、反應快速  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-coordination.endocrine-glands] 列舉主要內分泌腺與激素（腦垂腺/甲狀腺/胰島/腎上腺/性腺）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-coordination.insulin-glucagon] 說明胰島素與升糖素對血糖的拮抗調節  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.bio-coordination.nerve-vs-hormone] 比較神經（快/短暫）與激素（慢/持久）協調的差異  {t_mid, 會考}  · unverified
+- [sci.t_mid.bio-coordination.nerve-vs-hormone] 比較神經（快/短暫）與激素（慢/持久）協調的差異  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-coordination.thermoregulation] 說明體溫恆定（流汗、顫抖、血管舒縮）的調節  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.bio-coordination.action-potential] 說明神經衝動以膜電位變化（去極化/再極化）傳導  {t_adv, 分科-生物}  · provisionally_verified
 - [sci.t_adv.bio-coordination.synapse-transmission] 說明突觸以神經傳遞物質跨越突觸間隙  {t_adv, 分科-生物}  · provisionally_verified
 - [sci.t_adv.bio-coordination.autonomic-ns] 區分交感與副交感神經的拮抗作用  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.bio-coordination.negative-feedback-hormone] 以甲狀腺素/下視丘—腦垂腺軸說明激素的負回饋調節  {t_adv, 學測}  · unverified
+- [sci.t_adv.bio-coordination.negative-feedback-hormone] 以甲狀腺素/下視丘—腦垂腺軸說明激素的負回饋調節  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-coordination.hypothalamus-pituitary] 說明下視丘與腦垂腺（前葉/後葉）的調控關係  {t_adv, 分科-生物}  · provisionally_verified
-- [sci.t_sub.bio-coordination.resting-potential] 說明靜止膜電位的鈉鉀分布與離子基礎  {t_sub, 分科-生物}  · unverified
+- [sci.t_sub.bio-coordination.resting-potential] 說明靜止膜電位的鈉鉀分布與離子基礎  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-coordination.saltatory-conduction] 說明髓鞘與蘭氏結造成的跳躍式傳導  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-coordination.second-messenger] 區分水溶性（受體在膜/二級傳訊）與脂溶性激素（入胞內）作用機制  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-coordination.eye-ear-detail] 說明眼（視網膜/桿細胞錐細胞）與耳（耳蝸/前庭）的受器機制  {t_sub, 分科-生物}  · provisionally_verified
@@ -1493,7 +1493,7 @@
 - [sci.t_mid.bio-immunity.phagocytes] 說明白血球吞噬病原體的非專一性防禦  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-immunity.antibody-intro] 認識抗原與抗體的專一性結合  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-immunity.vaccine] 說明疫苗原理（引發免疫記憶、產生抗體）  {t_mid, 會考}  · provisionally_verified
-- [sci.t_adv.bio-immunity.innate-adaptive] 區分非專一性（先天）與專一性（後天）免疫  {t_adv, 學測}  · unverified
+- [sci.t_adv.bio-immunity.innate-adaptive] 區分非專一性（先天）與專一性（後天）免疫  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-immunity.inflammation] 說明發炎反應（紅腫熱痛）的機制與意義  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-immunity.humoral-cellular] 區分體液免疫（B細胞/抗體）與細胞免疫（T細胞）  {t_adv, 分科-生物}  · provisionally_verified
 - [sci.t_adv.bio-immunity.primary-secondary-response] 比較初次與二次免疫反應（記憶細胞、更快更強）  {t_adv, 學測}  · provisionally_verified
@@ -1503,8 +1503,8 @@
 - [sci.t_sub.bio-immunity.allergy-autoimmune] 區分過敏、自體免疫與免疫缺乏（如 AIDS）  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_base.bio-musculoskeletal.bones-support] 知道骨骼支撐身體、肌肉使身體活動  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.bio-musculoskeletal.skeleton-functions] 列舉骨骼功能（支持、保護、運動、造血、儲鈣）  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.bio-musculoskeletal.joint-types] 認識關節（可動/不可動）與韌帶、軟骨  {t_mid, 會考}  · unverified
-- [sci.t_mid.bio-musculoskeletal.antagonistic-muscles] 說明拮抗肌（如肱二頭肌/肱三頭肌）成對作用、一條收縮時另一條放鬆以帶動骨骼  {t_mid, 會考}  · unverified
+- [sci.t_mid.bio-musculoskeletal.joint-types] 認識關節（可動/不可動）與韌帶、軟骨  {t_mid, 會考}  · provisionally_verified
+- [sci.t_mid.bio-musculoskeletal.antagonistic-muscles] 說明拮抗肌（如肱二頭肌/肱三頭肌）成對作用、一條收縮時另一條放鬆以帶動骨骼  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-musculoskeletal.muscle-types] 區分骨骼肌、平滑肌、心肌（隨意/不隨意、構造）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-musculoskeletal.tendon] 說明肌腱連接肌肉與骨骼  {t_mid, 會考}  · provisionally_verified
 - [sci.t_sub.bio-musculoskeletal.sarcomere-sliding] 以肌小節與肌絲滑動學說說明肌肉收縮  {t_sub, 分科-生物}  · provisionally_verified
@@ -1522,7 +1522,7 @@
 - [sci.t_adv.bio-reproduction.hormone-cycle] 說明性激素（雌/黃體/FSH/LH）對生殖週期的調控  {t_adv, 分科-生物}  · provisionally_verified
 - [sci.t_adv.bio-reproduction.embryo-development] 說明早期胚胎發育（受精卵→囊胚→胚層分化）  {t_adv, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-reproduction.germ-layers] 說明三胚層（外/中/內胚層）分化為各器官系統  {t_sub, 分科-生物}  · provisionally_verified
-- [sci.t_sub.bio-reproduction.plant-alternation] 說明植物世代交替（孢子體/配子體）  {t_sub, 分科-生物}  · unverified
+- [sci.t_sub.bio-reproduction.plant-alternation] 說明植物世代交替（孢子體/配子體）  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_base.bio-genetics-classical.resemblance] 觀察子代與親代的相似與相異特徵  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.bio-genetics-classical.gene-chromosome] 說明基因位於染色體、控制性狀遺傳  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-genetics-classical.dominant-recessive] 區分顯性與隱性性狀、顯隱性表現  {t_mid, 會考}  · provisionally_verified
@@ -1544,11 +1544,11 @@
 - [sci.t_sub.bio-genetics-classical.epistasis] 說明基因間上位作用對表現型的影響  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-genetics-classical.chromosome-theory] 敘述染色體遺傳學說（基因在染色體上）的實驗證據（摩根果蠅）  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-genetics-classical.chi-square-genetics] 以卡方檢定判斷遺傳實驗觀察值與期望值的符合度  {t_enrich, 無}  · provisionally_verified
-- [sci.t_mid.bio-genetics-molecular.dna-is-genetic] 知道 DNA 為遺傳物質、位於細胞核  {t_mid, 會考}  · unverified
+- [sci.t_mid.bio-genetics-molecular.dna-is-genetic] 知道 DNA 為遺傳物質、位於細胞核  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.bio-genetics-molecular.dna-double-helix] 描述 DNA 雙螺旋結構（去氧核糖、磷酸、含氮鹼基）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-genetics-molecular.base-pairing] 說明鹼基互補配對（A-T、G-C）與氫鍵  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-genetics-molecular.dna-replication] 說明 DNA 半保留複製的概念與過程  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.bio-genetics-molecular.central-dogma] 敘述中心法則（DNA→RNA→蛋白質）  {t_adv, 學測}  · unverified
+- [sci.t_adv.bio-genetics-molecular.central-dogma] 敘述中心法則（DNA→RNA→蛋白質）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-genetics-molecular.transcription] 說明轉錄：以 DNA 為模板合成 mRNA  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-genetics-molecular.translation] 說明轉譯：核糖體依 mRNA 密碼子合成多肽  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-genetics-molecular.codon-table] 利用密碼子表由 mRNA 推出胺基酸序列  {t_adv, 學測}  · provisionally_verified
@@ -1558,7 +1558,7 @@
 - [sci.t_sub.bio-genetics-molecular.leading-lagging] 區分領先股與延遲股（岡崎片段）與 5'→3' 合成方向  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-genetics-molecular.rna-types] 區分 mRNA、tRNA、rRNA 的功能與 tRNA 反密碼子  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-genetics-molecular.rna-processing] 說明真核 mRNA 加工（加帽、加尾、剪接去除內含子）  {t_sub, 分科-生物}  · provisionally_verified
-- [sci.t_sub.bio-genetics-molecular.operon] 以乳糖操縱組說明原核基因表現調控  {t_sub, 分科-生物}  · unverified
+- [sci.t_sub.bio-genetics-molecular.operon] 以乳糖操縱組說明原核基因表現調控  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-genetics-molecular.eukaryotic-regulation] 說明真核基因表現調控層次（染色質/轉錄/轉譯後）  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-genetics-molecular.epigenetics] 初步說明表觀遺傳（甲基化、組蛋白修飾）不改變序列而影響表現  {t_sub, 分科-生物}  · pending
 - [sci.t_mid.bio-biotech.applications] 舉例生物技術應用（基改作物、疫苗、發酵食品）  {t_mid, 會考}  · provisionally_verified
@@ -1570,26 +1570,26 @@
 - [sci.t_adv.bio-biotech.gel-electrophoresis] 說明膠體電泳依 DNA 片段大小分離  {t_adv, 分科-生物}  · provisionally_verified
 - [sci.t_adv.bio-biotech.gmo] 說明基因改造生物（GMO）的製作與爭議  {t_adv, 學測}  · provisionally_verified
 - [sci.t_sub.bio-biotech.dna-sequencing] 說明 DNA 定序原理（桑格法概念）  {t_sub, 分科-生物}  · provisionally_verified
-- [sci.t_sub.bio-biotech.cloning] 區分生殖性與治療性複製、以複製羊為例  {t_sub, 分科-生物}  · unverified
+- [sci.t_sub.bio-biotech.cloning] 區分生殖性與治療性複製、以複製羊為例  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-biotech.dna-fingerprint] 說明 DNA 指紋在親子鑑定、刑事鑑識的應用  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-biotech.stem-cells] 說明幹細胞（胚胎/成體/iPS）與再生醫學  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-biotech.crispr] 初步認識 CRISPR 基因編輯技術及其倫理爭議  {t_enrich, 無}  · provisionally_verified
-- [sci.t_sub.bio-biotech.genome-project] 認識人類基因體計畫的意義與應用  {t_sub, 分科-生物}  · unverified
+- [sci.t_sub.bio-biotech.genome-project] 認識人類基因體計畫的意義與應用  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_mid.bio-evolution.fossil-evidence] 說明化石為生物演化的證據、推論古今生物的變化  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.bio-evolution.variation-source] 說明變異為演化的原料（來自突變與有性生殖重組）  {t_mid, 會考}  · unverified
-- [sci.t_mid.bio-evolution.natural-selection-intro] 以達爾文天擇說明適者生存、不適者淘汰  {t_mid, 會考}  · unverified
+- [sci.t_mid.bio-evolution.variation-source] 說明變異為演化的原料（來自突變與有性生殖重組）  {t_mid, 會考}  · provisionally_verified
+- [sci.t_mid.bio-evolution.natural-selection-intro] 以達爾文天擇說明適者生存、不適者淘汰  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-evolution.adaptation-examples] 舉例生物對環境的適應（擬態、保護色、構造）  {t_mid, 會考}  · provisionally_verified
-- [sci.t_adv.bio-evolution.darwin-postulates] 分述天擇四要點（過度繁殖、變異、競爭、差別繁殖）  {t_adv, 學測}  · unverified
+- [sci.t_adv.bio-evolution.darwin-postulates] 分述天擇四要點（過度繁殖、變異、競爭、差別繁殖）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-evolution.evidence-types] 列舉演化證據（化石、比較解剖、胚胎、分子、生物地理）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-evolution.homology-analogy] 區分同源構造（共同祖先）與同功構造（趨同演化）  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.bio-evolution.antibiotic-resistance] 以抗生素抗藥性/農藥抗性說明天擇的實例  {t_adv, 學測}  · unverified
+- [sci.t_adv.bio-evolution.antibiotic-resistance] 以抗生素抗藥性/農藥抗性說明天擇的實例  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-evolution.lamarck-vs-darwin] 比較拉馬克（用進廢退）與達爾文（天擇）觀點  {t_adv, 學測}  · provisionally_verified
 - [sci.t_sub.bio-evolution.hardy-weinberg] 以哈溫定律計算族群基因頻率與判斷是否演化  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-evolution.microevolution-forces] 說明突變、基因流、遺傳漂變、天擇、非隨機交配改變基因頻率  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-evolution.genetic-drift] 說明遺傳漂變（瓶頸效應、創始者效應）  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-evolution.selection-types] 區分安定、方向、分裂性天擇  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-evolution.speciation] 說明物種形成與生殖隔離（異域/同域）  {t_sub, 分科-生物}  · provisionally_verified
-- [sci.t_sub.bio-evolution.species-concept] 以生物種概念定義物種  {t_sub, 分科-生物}  · unverified
+- [sci.t_sub.bio-evolution.species-concept] 以生物種概念定義物種  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-evolution.phylogenetic-tree] 判讀親緣（演化）樹與共同祖先關係  {t_sub, 分科-生物}  · unverified
 - [sci.t_base.bio-biodiversity.sort-animals] 依特徵將動物簡單分類（有無脊椎、棲地、食性）  {t_base, 無}  · unverified
 - [sci.t_base.bio-biodiversity.sort-plants] 觀察植物的多樣性並簡單分類  {t_base, 無}  · unverified
@@ -1603,7 +1603,7 @@
 - [sci.t_mid.bio-biodiversity.dichotomous-key] 使用二分檢索表辨識生物  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.bio-biodiversity.three-domains] 認識三域分類（細菌/古菌/真核）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-biodiversity.virus-features] 說明病毒的構造與非典型生命特徵（需宿主）  {t_adv, 學測}  · provisionally_verified
-- [sci.t_sub.bio-biodiversity.molecular-taxonomy] 說明以分子（rRNA/DNA）資料建立親緣分類  {t_sub, 分科-生物}  · unverified
+- [sci.t_sub.bio-biodiversity.molecular-taxonomy] 說明以分子（rRNA/DNA）資料建立親緣分類  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-biodiversity.monophyletic] 區分單系群、並系群、多系群的概念  {t_sub, 分科-生物}  · pending
 - [sci.t_base.bio-plant-physiology.plant-parts] 辨識植物六大器官（根莖葉花果實種子）與功能  {t_base, 無}  · unverified
 - [sci.t_base.bio-plant-physiology.root-water] 知道根吸收水分、葉行光合作用  {t_base, 無}  · provisionally_verified
@@ -1621,10 +1621,10 @@
 - [sci.t_adv.bio-plant-physiology.auxin] 說明生長素（auxin）造成向光性與頂芽優勢  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-plant-physiology.plant-hormones] 列舉植物激素（生長素/激勃素/細胞分裂素/離層酸/乙烯）功能  {t_adv, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-plant-physiology.guard-cell-mechanism] 說明保衛細胞因鉀離子與膨壓變化開關氣孔  {t_sub, 分科-生物}  · provisionally_verified
-- [sci.t_sub.bio-plant-physiology.photoperiodism] 說明光週期與開花（長日/短日植物、植物光敏素）  {t_sub, 分科-生物}  · unverified
+- [sci.t_sub.bio-plant-physiology.photoperiodism] 說明光週期與開花（長日/短日植物、植物光敏素）  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-plant-physiology.double-fertilization] 說明被子植物的雙重受精（胚與胚乳）  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-plant-physiology.secondary-growth] 說明形成層造成的次級生長與年輪  {t_sub, 分科-生物}  · provisionally_verified
-- [sci.t_base.bio-ecology.food-chain-intro] 認識食物鏈（誰吃誰）與生物間的取食關係  {t_base, 無}  · unverified
+- [sci.t_base.bio-ecology.food-chain-intro] 認識食物鏈（誰吃誰）與生物間的取食關係  {t_base, 無}  · provisionally_verified
 - [sci.t_base.bio-ecology.habitat] 認識不同棲地（森林、池塘、草原）與其中的生物  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.bio-ecology.ecosystem-components] 區分生態系的生物因子與非生物因子  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-ecology.producer-consumer-decomposer] 區分生產者、消費者（各級）、分解者的角色  {t_mid, 會考}  · provisionally_verified
@@ -1645,16 +1645,16 @@
 - [sci.t_sub.bio-ecology.age-structure] 以年齡結構圖預測族群成長趨勢  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-ecology.keystone-species] 說明關鍵種與其對群集結構的影響  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-ecology.biomagnification] 說明生物累積與生物放大（如 DDT、汞）  {t_sub, 分科-生物}  · provisionally_verified
-- [sci.t_sub.bio-ecology.phosphorus-cycle] 說明磷循環（缺乏像碳、氮那樣的顯著氣態階段，主要經岩石風化與沉積）  {t_sub, 分科-生物}  · unverified
+- [sci.t_sub.bio-ecology.phosphorus-cycle] 說明磷循環（缺乏像碳、氮那樣的顯著氣態階段，主要經岩石風化與沉積）  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_base.bio-conservation.protect-animals] 認識愛護生物與環境、不隨意破壞棲地  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.bio-conservation.human-impact] 舉例人類活動造成的環境破壞（棲地破壞、污染、過度開發）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-conservation.pollution-types] 區分空氣、水、土壤污染及其對生物的影響  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.bio-conservation.global-warming] 說明溫室效應與全球暖化對生態的衝擊  {t_mid, 會考}  · unverified
+- [sci.t_mid.bio-conservation.global-warming] 說明溫室效應與全球暖化對生態的衝擊  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-conservation.invasive-species] 說明外來入侵種對本土生態的威脅  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-conservation.extinction] 說明物種滅絕的成因與生物多樣性喪失的後果  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-conservation.conservation-methods] 舉例保育方法（保護區、復育、法規、永續利用）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-conservation.sustainability] 說明永續發展與資源的合理利用  {t_mid, 會考}  · provisionally_verified
-- [sci.t_adv.bio-conservation.ecosystem-services] 說明生態系服務（供給/調節/文化/支持）的價值  {t_adv, 學測}  · unverified
+- [sci.t_adv.bio-conservation.ecosystem-services] 說明生態系服務（供給/調節/文化/支持）的價值  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-conservation.biodiversity-value] 論述維護生物多樣性的重要性（基因庫、醫藥、生態平衡）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_sub.bio-conservation.eutrophication] 說明優養化的成因、過程與對水域生態的影響  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-conservation.carbon-neutral] 討論碳中和、碳匯與減碳策略的生態意義  {t_sub, 分科-生物}  · provisionally_verified
@@ -1673,32 +1673,32 @@
 - [sci.t_adv.bio-inquiry.experimental-flaw] 評估實驗設計的缺失並提出改進（樣本數、干擾變因）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-inquiry.correlation-causation] 區分相關性與因果關係  {t_adv, 學測}  · provisionally_verified
 - [sci.t_sub.bio-inquiry.statistics-basic] 以平均數、標準差、誤差線初步判讀生物數據（資料素養）  {t_sub, 探究}  · provisionally_verified
-- [sci.t_base.earth-earth-system.earth-shape] 地球是圓球形（由船隻、月食影子、太空照片等證據推論）  {t_base, 無}  · unverified
+- [sci.t_base.earth-earth-system.earth-shape] 地球是圓球形（由船隻、月食影子、太空照片等證據推論）  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-earth-system.land-sea-sky] 地球表面分陸地、海洋與大氣（海陸分布觀察）  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-earth-system.water-everywhere] 地球上水以海洋、河川、湖泊、冰、地下水、水氣等多種形式存在  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.earth-earth-system.layers-crust-mantle-core] 地球內部分層：地殼、地函、地核（由淺至深）  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.earth-earth-system.crust-ocean-vs-continent] 區分海洋地殼（較薄、密度大、玄武岩質）與大陸地殼（較厚、密度小、花崗岩質）  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-earth-system.crust-ocean-vs-continent] 區分海洋地殼（較薄、密度大、玄武岩質）與大陸地殼（較厚、密度小、花崗岩質）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-earth-system.lithosphere-asthenosphere] 岩石圈（地殼＋上部地函頂）與軟流圈的區分與相對軟硬  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-earth-system.four-spheres] 地球四大圈：岩石圈、水圈、大氣圈、生物圈的範圍與交互作用  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-earth-system.temp-pressure-with-depth] 地球內部溫度與壓力隨深度增加而升高  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.earth-earth-system.seismic-wave-interior] 以地震波（P 波、S 波）傳播速度變化推論地球內部分層界面  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.earth-earth-system.moho-gutenberg] 莫氏不連續面（地殼—地函界）與古氏不連續面（地函—地核界）的定義  {t_adv, 學測}  · unverified
-- [sci.t_adv.earth-earth-system.s-wave-no-liquid] S 波無法通過外核→推論外核為液態（內核為固態另由 P 波波速等證據推得）  {t_adv, 學測}  · unverified
-- [sci.t_adv.earth-earth-system.core-composition] 地核主要由鐵、鎳組成；地球磁場源自外核流體運動（概念）  {t_adv, 學測}  · unverified
-- [sci.t_adv.earth-earth-system.earth-origin] 地球與太陽系由原始星雲收縮、吸積形成（約 46 億年前）  {t_adv, 學測}  · unverified
-- [sci.t_adv.earth-earth-system.differentiation] 地球早期熔融、重的物質下沉形成地核、輕者上浮成地殼的分化過程  {t_adv, 學測}  · unverified
-- [sci.t_adv.earth-earth-system.system-feedback] 地球系統各圈層以能量與物質流動相互耦合、回饋（如碳循環跨圈層）  {t_adv, 學測}  · unverified
-- [sci.t_adv.earth-earth-system.energy-sources] 地球系統三大能量來源：太陽輻射、地球內部熱能、重力（潮汐）  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-earth-system.moho-gutenberg] 莫氏不連續面（地殼—地函界）與古氏不連續面（地函—地核界）的定義  {t_adv, 學測}  · provisionally_verified
+- [sci.t_adv.earth-earth-system.s-wave-no-liquid] S 波無法通過外核→推論外核為液態（內核為固態另由 P 波波速等證據推得）  {t_adv, 學測}  · provisionally_verified
+- [sci.t_adv.earth-earth-system.core-composition] 地核主要由鐵、鎳組成；地球磁場源自外核流體運動（概念）  {t_adv, 學測}  · provisionally_verified
+- [sci.t_adv.earth-earth-system.earth-origin] 地球與太陽系由原始星雲收縮、吸積形成（約 46 億年前）  {t_adv, 學測}  · provisionally_verified
+- [sci.t_adv.earth-earth-system.differentiation] 地球早期熔融、重的物質下沉形成地核、輕者上浮成地殼的分化過程  {t_adv, 學測}  · provisionally_verified
+- [sci.t_adv.earth-earth-system.system-feedback] 地球系統各圈層以能量與物質流動相互耦合、回饋（如碳循環跨圈層）  {t_adv, 學測}  · provisionally_verified
+- [sci.t_adv.earth-earth-system.energy-sources] 地球系統三大能量來源：太陽輻射、地球內部熱能、重力（潮汐）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_mid.earth-tectonics.continental-drift] 大陸漂移學說與其證據（海岸線契合、化石分布、古氣候）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-tectonics.seafloor-spreading] 海底擴張說：中洋脊處產生新海洋地殼  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.earth-tectonics.plate-tectonics-theory] 板塊構造學說：岩石圈分裂成數個板塊、在軟流圈上移動  {t_mid, 會考}  · unverified
-- [sci.t_mid.earth-tectonics.major-plates] 全球主要板塊名稱與相對位置（如太平洋、歐亞、非洲、北美等；菲律賓海板塊為與臺灣相關的次要板塊）  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-tectonics.plate-tectonics-theory] 板塊構造學說：岩石圈分裂成數個板塊、在軟流圈上移動  {t_mid, 會考}  · provisionally_verified
+- [sci.t_mid.earth-tectonics.major-plates] 全球主要板塊名稱與相對位置（如太平洋、歐亞、非洲、北美等；菲律賓海板塊為與臺灣相關的次要板塊）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-tectonics.divergent-boundary] 張裂（分離）型板塊邊界：中洋脊、裂谷，地殼生成  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-tectonics.convergent-subduction] 聚合（碰撞）型板塊邊界—隱沒帶：海溝、火山島弧形成  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-tectonics.convergent-collision] 聚合型—大陸碰撞造山（如喜馬拉雅山）  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.earth-tectonics.transform-boundary] 錯動（平移）型板塊邊界：轉形斷層（如聖安地列斯斷層）  {t_mid, 會考}  · unverified
-- [sci.t_mid.earth-tectonics.taiwan-plate-setting] 臺灣位於歐亞板塊與菲律賓海板塊聚合帶，造成造山與多地震  {t_mid, 會考}  · unverified
-- [sci.t_adv.earth-tectonics.mantle-convection] 板塊運動的驅動力：地函對流、隱沒板塊的拉力（slab pull）、中洋脊推力  {t_adv, 學測}  · unverified
+- [sci.t_mid.earth-tectonics.transform-boundary] 錯動（平移）型板塊邊界：轉形斷層（如聖安地列斯斷層）  {t_mid, 會考}  · provisionally_verified
+- [sci.t_mid.earth-tectonics.taiwan-plate-setting] 臺灣位於歐亞板塊與菲律賓海板塊聚合帶，造成造山與多地震  {t_mid, 會考}  · provisionally_verified
+- [sci.t_adv.earth-tectonics.mantle-convection] 板塊運動的驅動力：地函對流、隱沒板塊的拉力（slab pull）、中洋脊推力  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-tectonics.paleomagnetism] 古地磁與海洋磁異常條帶對稱分布→支持海底擴張  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-tectonics.age-of-seafloor] 海洋地殼年齡由中洋脊向兩側對稱增加，最老約 2 億年  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-tectonics.hotspot] 熱點與火山島鏈（如夏威夷群島）記錄板塊移動方向與速率  {t_adv, 學測}  · provisionally_verified
@@ -1711,71 +1711,71 @@
 - [sci.t_mid.earth-quake-volcano.p-s-waves] P 波（縱波、快、先到）與 S 波（橫波、慢、後到）的性質差異  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-quake-volcano.magnitude-vs-intensity] 區分地震規模（能量大小，一次地震一個值）與震度（某地搖晃程度，各地不同）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-quake-volcano.cwb-intensity-scale] 臺灣（中央氣象署）震度分級的意義與使用  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.earth-quake-volcano.earthquake-hazards] 地震災害：建物倒塌、山崩、土壤液化、海嘯、火災  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-quake-volcano.earthquake-hazards] 地震災害：建物倒塌、山崩、土壤液化、海嘯、火災  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-quake-volcano.earthquake-safety] 地震避難三要領（趴下、掩護、穩住）與防災準備  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-quake-volcano.volcano-types-products] 火山噴發產物：熔岩、火山碎屑（火山灰、火山彈）、氣體  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.earth-quake-volcano.taiwan-volcano] 臺灣火山分布（大屯火山群、龜山島等）與板塊關係  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-quake-volcano.taiwan-volcano] 臺灣火山分布（大屯火山群、龜山島等）與板塊關係  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.earth-quake-volcano.locate-epicenter] 利用 P、S 波到時差（走時差）推算測站到震央距離並三點定位震央  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-quake-volcano.magnitude-energy] 地震規模每增 1，釋放能量約增 32 倍（概念與量級）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-quake-volcano.benioff-zone] 隱沒帶地震深度隨遠離海溝而加深（班尼奧夫帶）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-quake-volcano.early-warning] 地震預警原理：利用 P 波先到、電波比 S 波快爭取秒級預警  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.earth-quake-volcano.magma-composition-eruption] 岩漿黏滯度（二氧化矽含量）與揮發分氣體共同決定噴發型態：高黏滯使氣體難逸出而積壓、爆發性強  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-quake-volcano.magma-composition-eruption] 岩漿黏滯度（二氧化矽含量）與揮發分氣體共同決定噴發型態：高黏滯使氣體難逸出而積壓、爆發性強  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-quake-volcano.volcano-tectonic-setting] 火山分布與板塊邊界（隱沒帶、中洋脊、熱點）的對應  {t_adv, 學測}  · provisionally_verified
 - [sci.t_base.earth-rock-mineral.rock-observe] 觀察並描述岩石的顏色、顆粒、軟硬等特徵  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-rock-mineral.soil-from-rock] 土壤由岩石風化碎屑與腐植質組成  {t_base, 無}  · provisionally_verified
-- [sci.t_mid.earth-rock-mineral.mineral-definition] 礦物為天然、無機、具一定範圍化學組成與結晶構造的固體  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-rock-mineral.mineral-definition] 礦物為天然、無機、具一定範圍化學組成與結晶構造的固體  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-rock-mineral.mineral-properties] 礦物鑑定性質：顏色、條痕、光澤、硬度（莫氏硬度）、解理  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.earth-rock-mineral.igneous-rock] 火成岩由岩漿冷卻凝固而成（火山岩 vs 深成岩，如玄武岩、花崗岩）  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-rock-mineral.igneous-rock] 火成岩由岩漿冷卻凝固而成（火山岩 vs 深成岩，如玄武岩、花崗岩）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-rock-mineral.sedimentary-rock] 沉積岩由碎屑沉積壓密膠結而成，常具層理與化石（如砂岩、頁岩、石灰岩）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-rock-mineral.metamorphic-rock] 變質岩由原岩受高溫高壓改變而成（如大理岩、片岩、板岩）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-rock-mineral.rock-cycle] 岩石循環：三大類岩石在地質作用下可互相轉變  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-rock-mineral.rock-identify] 依特徵（晶粒、層理、葉理）判別岩石屬三大類何者  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.earth-rock-mineral.cooling-rate-texture] 岩漿冷卻速率決定火成岩晶粒大小（快冷細粒/玻璃質、慢冷粗粒）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-rock-mineral.felsic-mafic] 火成岩依二氧化矽含量分酸性（淺色、長英質）與基性（深色、鐵鎂質）  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.earth-rock-mineral.clastic-vs-chemical] 沉積岩分碎屑岩與化學/生物沉積岩（如石灰岩、燧石）  {t_adv, 學測}  · unverified
-- [sci.t_adv.earth-rock-mineral.metamorphic-grade] 變質程度隨溫壓升高；葉理源自定向應力下片狀礦物的優選排列（板岩→片岩→片麻岩）  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-rock-mineral.clastic-vs-chemical] 沉積岩分碎屑岩與化學/生物沉積岩（如石灰岩、燧石）  {t_adv, 學測}  · provisionally_verified
+- [sci.t_adv.earth-rock-mineral.metamorphic-grade] 變質程度隨溫壓升高；葉理源自定向應力下片狀礦物的優選排列（板岩→片岩→片麻岩）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-rock-mineral.silicate-structure] 矽酸鹽礦物以矽氧四面體為基本單元組成（概念）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_base.earth-geomorph.landform-observe] 認識常見地形：山、河、海岸、平原  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-geomorph.water-shapes-land] 流水會侵蝕與堆積改變地表（河流、海浪）  {t_base, 無}  · provisionally_verified
-- [sci.t_mid.earth-geomorph.weathering-physical-chemical] 風化分物理風化（破碎）與化學風化（成分改變），及影響因素  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-geomorph.weathering-physical-chemical] 風化分物理風化（破碎）與化學風化（成分改變），及影響因素  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-geomorph.erosion-agents] 侵蝕營力：流水、海浪、風、冰河  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-geomorph.transport-deposition] 搬運與堆積：顆粒大小、流速與沉積物沉降的關係  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.earth-geomorph.river-landforms] 河流地形：上游 V 型谷、中下游曲流、出山口（坡度驟減處）沖積扇、河口三角洲  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-geomorph.river-landforms] 河流地形：上游 V 型谷、中下游曲流、出山口（坡度驟減處）沖積扇、河口三角洲  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-geomorph.coastal-landforms] 海岸地形：海蝕平台、海蝕洞、沙灘、沙洲（侵蝕岸 vs 堆積岸）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-geomorph.taiwan-landforms] 臺灣特殊地形（如野柳、太魯閣峽谷、海岸階地）的成因  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-geomorph.karst] 石灰岩地區溶蝕形成鐘乳石、石筍等喀斯特地形  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.earth-geomorph.grain-size-velocity] 以流速—顆粒關係（侵蝕/搬運/堆積臨界流速）分析沉積作用  {t_adv, 學測}  · unverified
 - [sci.t_adv.earth-geomorph.sorting-rounding] 沉積物的淘選度反映搬運能量；圓磨度反映磨蝕程度/搬運歷史（非單純等同搬運距離）  {t_adv, 學測}  · unverified
-- [sci.t_adv.earth-geomorph.mass-wasting] 塊體崩壞（山崩、土石流）的誘發因子（降雨、地震）與控制因子（坡度、地質）  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-geomorph.mass-wasting] 塊體崩壞（山崩、土石流）的誘發因子（降雨、地震）與控制因子（坡度、地質）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-geomorph.terrace-uplift] 河階、海階地形記錄地殼抬升與海水面升降  {t_adv, 學測}  · unverified
 - [sci.t_base.earth-geotime.fossil-basic] 化石是古代生物留下的遺骸或遺跡  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.earth-geotime.fossil-formation] 化石形成條件：生物遺體快速被沉積物掩埋、經長時間石化  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-geotime.strata-superposition] 疊置定律：未擾動地層中，下層較老、上層較新  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.earth-geotime.index-fossil] 標準（指準）化石用於對比地層與判斷年代（分布廣、存在時間短）  {t_mid, 會考}  · unverified
-- [sci.t_mid.earth-geotime.relative-age] 相對地質年代的概念與地層對比  {t_mid, 會考}  · unverified
-- [sci.t_mid.earth-geotime.geologic-time-scale] 地質年代大分：古生代、中生代、新生代與代表生物  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-geotime.index-fossil] 標準（指準）化石用於對比地層與判斷年代（分布廣、存在時間短）  {t_mid, 會考}  · provisionally_verified
+- [sci.t_mid.earth-geotime.relative-age] 相對地質年代的概念與地層對比  {t_mid, 會考}  · provisionally_verified
+- [sci.t_mid.earth-geotime.geologic-time-scale] 地質年代大分：古生代、中生代、新生代與代表生物  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.earth-geotime.original-horizontality] 原始水平定律與地層後期變形（褶皺、傾斜）的解讀  {t_adv, 學測}  · unverified
 - [sci.t_adv.earth-geotime.cross-cutting] 截切關係定律：截切他層的岩脈/斷層較被截切者年輕  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-geotime.unconformity] 不整合面代表沉積間斷或侵蝕，記錄缺失的地質時間  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-geotime.radiometric-dating] 放射性定年原理：以半衰期與母子同位素比值測絕對年代  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-geotime.half-life-calc] 由剩餘母核比例與半衰期計算岩石或化石的絕對年齡  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.earth-geotime.mass-extinction] 地質史上重大生物大滅絕事件與環境劇變的關聯  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-geotime.mass-extinction] 地質史上重大生物大滅絕事件與環境劇變的關聯  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-geotime.earth-history-events] 地球歷史重大事件序（生命起源→大氣大量含氧→恐龍興衰）排序  {t_adv, 學測}  · unverified
-- [sci.t_base.earth-atmosphere.air-exists] 空氣確實存在且佔有空間、有重量（觀察實驗）  {t_base, 無}  · unverified
-- [sci.t_mid.earth-atmosphere.air-composition] 大氣主要成分：氮約 78%、氧約 21%，其餘為氬、二氧化碳、水氣等  {t_mid, 會考}  · unverified
+- [sci.t_base.earth-atmosphere.air-exists] 空氣確實存在且佔有空間、有重量（觀察實驗）  {t_base, 無}  · provisionally_verified
+- [sci.t_mid.earth-atmosphere.air-composition] 大氣主要成分：氮約 78%、氧約 21%，其餘為氬、二氧化碳、水氣等  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-atmosphere.atmospheric-pressure] 大氣壓力的存在、隨高度上升而減小  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-atmosphere.layers-temperature] 大氣分層（對流層、平流層、中氣層、增溫層）依溫度垂直變化劃分  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-atmosphere.troposphere-weather] 天氣現象主要發生於對流層，氣溫隨高度遞減  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-atmosphere.ozone-layer] 臭氧層位於平流層，吸收紫外線保護地表生物  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.earth-atmosphere.stratosphere-inversion] 平流層氣溫隨高度上升（因臭氧吸收紫外線）→ 氣層穩定  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-atmosphere.energy-balance] 太陽輻射、反照率、地球長波輻射的收支平衡  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.earth-atmosphere.greenhouse-mechanism] 溫室氣體吸收地表長波輻射再放射，維持地表適居溫度的機制  {t_adv, 學測}  · unverified
-- [sci.t_adv.earth-atmosphere.ionosphere] 增溫層/電離層對無線電波的反射；極光發生於增溫層高度，與電離層區域重疊（非因果關係）  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-atmosphere.greenhouse-mechanism] 溫室氣體吸收地表長波輻射再放射，維持地表適居溫度的機制  {t_adv, 學測}  · provisionally_verified
+- [sci.t_adv.earth-atmosphere.ionosphere] 增溫層/電離層對無線電波的反射；極光發生於增溫層高度，與電離層區域重疊（非因果關係）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_base.earth-weather.weather-elements] 觀測與記錄天氣：晴、陰、雨、氣溫、風  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-weather.seasons-weather] 不同季節的天氣特徵（冬冷、夏熱、梅雨、颱風季）  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.earth-weather.humidity-dewpoint] 水氣、相對濕度與露點的概念  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-weather.cloud-rain-formation] 雲與雨的形成：空氣上升、絕熱冷卻、水氣凝結  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.earth-weather.precipitation-types] 降水型態：雨、雪、冰雹的形成條件差異  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-weather.precipitation-types] 降水型態：雨、雪、冰雹的形成條件差異  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-weather.air-pressure-wind] 風由高氣壓吹向低氣壓；等壓線疏密反映風速  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-weather.high-low-pressure] 高氣壓（下沉、晴朗）與低氣壓（上升、多雲雨）的天氣  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-weather.air-mass] 氣團的概念與臺灣主要影響氣團（大陸冷氣團、海洋暖氣團）  {t_mid, 會考}  · provisionally_verified
@@ -1785,20 +1785,20 @@
 - [sci.t_mid.earth-weather.typhoon-taiwan] 颱風路徑、災害（強風、豪雨、暴潮）與防颱準備  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-weather.weather-map-read] 判讀天氣圖上的高低壓、鋒面符號與天氣預測  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.earth-weather.adiabatic-lapse] 乾、濕絕熱遞減率與大氣穩定度判斷  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.earth-weather.coriolis-wind] 科氏力使風偏轉，形成地轉風與高低壓環流方向（北半球）  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-weather.coriolis-wind] 科氏力使風偏轉，形成地轉風與高低壓環流方向（北半球）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-weather.cyclone-anticyclone-circulation] 北半球氣旋（逆時針輻合上升）與反氣旋（順時針輻散下沉）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-weather.front-cross-section] 冷暖鋒垂直剖面與雲系、降雨分布差異（積雨雲 vs 層狀雲）  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.earth-weather.typhoon-energy] 颱風以海面水氣潛熱為能量來源，登陸後減弱的原因  {t_adv, 學測}  · unverified
-- [sci.t_adv.earth-weather.satellite-radar] 衛星雲圖與雷達回波在天氣分析的應用  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-weather.typhoon-energy] 颱風以海面水氣潛熱為能量來源，登陸後減弱的原因  {t_adv, 學測}  · provisionally_verified
+- [sci.t_adv.earth-weather.satellite-radar] 衛星雲圖與雷達回波在天氣分析的應用  {t_adv, 學測}  · provisionally_verified
 - [sci.t_base.earth-climate.climate-vs-weather] 區分「天氣」（短時）與「氣候」（長期平均）  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.earth-climate.climate-factors] 影響氣候的因素：緯度、海陸分布、地形、洋流  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.earth-climate.taiwan-climate] 臺灣氣候特徵：季風、南北與高低海拔氣候差異  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-climate.taiwan-climate] 臺灣氣候特徵：季風、南北與高低海拔氣候差異  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-climate.monsoon] 季風成因：海陸比熱差異造成冬夏盛行風向反轉  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-climate.greenhouse-warming] 溫室效應增強與全球暖化的因果關係  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-climate.warming-impacts] 全球暖化的影響：海平面上升、極端天氣、生態改變  {t_mid, 會考}  · provisionally_verified
-- [sci.t_adv.earth-climate.global-circulation] 三胞環流（哈德里、佛雷爾、極地胞）與氣壓帶、風帶分布  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-climate.global-circulation] 三胞環流（哈德里、佛雷爾、極地胞）與氣壓帶、風帶分布  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-climate.desert-belt] 副熱帶高壓帶下沉氣流與沙漠帶分布的關係  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.earth-climate.enso] 聖嬰—南方振盪（ENSO）對全球與臺灣天氣的影響  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-climate.enso] 聖嬰—南方振盪（ENSO）對全球與臺灣天氣的影響  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-climate.milankovitch] 米蘭科維奇循環（地球軌道要素變化）與冰期—間冰期  {t_adv, 學測}  · pending
 - [sci.t_adv.earth-climate.carbon-cycle] 碳循環與二氧化碳在大氣、海洋、生物圈、岩石圈間的交換  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-climate.paleoclimate-proxy] 以冰芯、樹輪、同位素等代用資料重建古氣候  {t_adv, 學測}  · provisionally_verified
@@ -1821,42 +1821,42 @@
 - [sci.t_adv.earth-ocean.wave-motion] 深水波中水質點作圓周運動、波形傳遞能量而水不隨波前進  {t_adv, 學測}  · unverified
 - [sci.t_base.earth-hydrology.water-cycle-basic] 水循環：蒸發、凝結、降水、逕流的循環過程  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-hydrology.water-save] 珍惜與節約用水、認識水資源有限  {t_base, 無}  · provisionally_verified
-- [sci.t_mid.earth-hydrology.water-cycle-energy] 水循環由太陽能與重力共同驅動，水在三態間轉換  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-hydrology.water-cycle-energy] 水循環由太陽能與重力共同驅動，水在三態間轉換  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-hydrology.surface-water] 地表水：河川、湖泊、水庫與集水區概念  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-hydrology.groundwater-aquifer] 地下水的儲存（含水層）與補注、抽取  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-hydrology.water-table] 地下水位的概念與升降  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.earth-hydrology.taiwan-water-issue] 臺灣水資源問題：降雨時空分布不均、河短流急、留蓄不易  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-hydrology.taiwan-water-issue] 臺灣水資源問題：降雨時空分布不均、河短流急、留蓄不易  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.earth-hydrology.infiltration-runoff] 入滲與逕流的分配受地表、坡度、植被、降雨強度影響  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-hydrology.land-subsidence] 超抽地下水導致地層下陷與海水入侵  {t_adv, 學測}  · unverified
-- [sci.t_adv.earth-hydrology.water-balance] 集水區水平衡（降水 P＝蒸發散 ET＋逕流 Q±儲量變化 ΔS；入滲為系統內部分配，不另列為獨立輸出項）  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-hydrology.water-balance] 集水區水平衡（降水 P＝蒸發散 ET＋逕流 Q±儲量變化 ΔS；入滲為系統內部分配，不另列為獨立輸出項）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_base.earth-astronomy.day-night] 地球自轉造成晝夜交替、太陽東升西落  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-astronomy.sun-position-seasons] 一年中太陽高度與日照長短隨季節變化  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-astronomy.moon-phases-observe] 觀察月亮形狀（月相）在一個月內的變化  {t_base, 無}  · provisionally_verified
-- [sci.t_base.earth-astronomy.stars-constellations-base] 認識夜空中的亮星與常見星座（如獵戶座）及星群（如北斗七星，屬大熊座）  {t_base, 無}  · unverified
+- [sci.t_base.earth-astronomy.stars-constellations-base] 認識夜空中的亮星與常見星座（如獵戶座）及星群（如北斗七星，屬大熊座）  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-astronomy.solar-system-members] 太陽系有太陽、八大行星與月球等成員  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.earth-astronomy.rotation-revolution] 區分地球自轉（晝夜、約 24 小時）與公轉（四季、約 365 天）  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.earth-astronomy.seasons-cause] 四季成因：地軸傾斜使各地太陽直射角與日照時數隨公轉改變  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-astronomy.seasons-cause] 四季成因：地軸傾斜使各地太陽直射角與日照時數隨公轉改變  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-astronomy.ecliptic-solar-terms] 黃道、二分二至（春分秋分、夏至冬至）與太陽直射點移動  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.earth-astronomy.moon-phase-cause] 月相成因：日、地、月相對位置使月球被照亮面可見比例改變  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-astronomy.moon-phase-cause] 月相成因：日、地、月相對位置使月球被照亮面可見比例改變  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-astronomy.moon-phase-sequence] 月相週期順序（新月→上弦→滿月→下弦）與出沒時間  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-astronomy.solar-eclipse] 日食成因：月球位於日地之間遮住太陽（發生於朔）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-astronomy.lunar-eclipse] 月食成因：地球位於日月之間、月球進入地影（發生於望）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-astronomy.solar-system-structure] 太陽系組成：恆星（太陽）、行星、衛星、小行星、彗星  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-astronomy.terrestrial-jovian] 類地行星與類木行星的特徵差異  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.earth-astronomy.eclipse-why-not-monthly] 因白道與黃道約 5° 夾角，故非每月都發生日月食  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.earth-astronomy.celestial-sphere] 天球概念與天體周日運動、天球坐標（赤緯、時角概念）  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-astronomy.celestial-sphere] 天球概念與天體周日運動、天球坐標（赤緯、時角概念）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-astronomy.sun-path-latitude] 不同緯度、不同季節太陽的視運動路徑與中天高度計算  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-astronomy.kepler-laws] 克卜勒行星運動三定律（橢圓軌道、等面積、週期與距離關係）概念  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-astronomy.sun-structure] 太陽的結構與活動（黑子、閃焰、太陽風）及對地球的影響  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-astronomy.stellar-brightness] 恆星的視星等與絕對星等、亮度與距離的關係  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.earth-astronomy.hr-diagram] 赫羅圖（H-R 圖）與恆星的光度、表面溫度分類  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-astronomy.hr-diagram] 赫羅圖（H-R 圖）與恆星的光度、表面溫度分類  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-astronomy.stellar-evolution] 恆星的演化歷程（主序星→紅巨星→白矮星/超新星/中子星/黑洞）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-astronomy.distance-scale] 天文距離單位與尺度（天文單位 AU、光年、秒差距）  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.earth-astronomy.galaxy-milkyway] 銀河系的結構與太陽系在其中的位置  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-astronomy.galaxy-milkyway] 銀河系的結構與太陽系在其中的位置  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-astronomy.big-bang] 宇宙起源（大霹靂）與宇宙膨脹、哈伯定律（紅移）概念  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-astronomy.cmb] 宇宙微波背景輻射作為大霹靂的證據（概念）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-astronomy.calendar] 曆法：陽曆（回歸年）、陰曆（朔望月）與陰陽合曆（置閏）  {t_adv, 學測}  · provisionally_verified
-- [sci.t_base.earth-environment.natural-resources] 認識自然資源（水、土壤、礦產、能源）並區分可再生與不可再生、其可用量有限  {t_base, 無}  · unverified
+- [sci.t_base.earth-environment.natural-resources] 認識自然資源（水、土壤、礦產、能源）並區分可再生與不可再生、其可用量有限  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-environment.recycle-conserve] 資源回收、節能減碳等日常環保行動  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-environment.disaster-prepare] 認識地震、颱風、水災等災害並學會基本避難  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.earth-environment.rock-mineral-resources] 礦產與岩石資源（金屬礦、建材、石灰岩）的利用  {t_mid, 會考}  · provisionally_verified
@@ -1865,10 +1865,10 @@
 - [sci.t_mid.earth-environment.air-pollution] 空氣污染（懸浮微粒 PM2.5、酸雨）的成因與影響  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-environment.ozone-depletion] 臭氧層破洞的成因（氟氯碳化物）與防治  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-environment.taiwan-geohazards] 臺灣常見地質災害（地震、山崩、土石流、淹水）與坡地安全  {t_mid, 會考}  · provisionally_verified
-- [sci.t_adv.earth-environment.hazard-vs-risk] 區分「天然災害潛勢」與「風險」（潛勢×曝露×脆弱度）概念  {t_adv, 學測}  · unverified
-- [sci.t_adv.earth-environment.disaster-mitigation] 防災工程與非工程措施（預警、疏散、土地利用規劃）  {t_adv, 學測}  · unverified
-- [sci.t_adv.earth-environment.sustainable-development] 永續發展與地球資源承載力、世代公平概念  {t_adv, 學測}  · unverified
-- [sci.t_adv.earth-environment.marine-pollution] 海洋污染（塑膠微粒、優養化、油污）與海洋保育  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-environment.hazard-vs-risk] 區分「天然災害潛勢」與「風險」（潛勢×曝露×脆弱度）概念  {t_adv, 學測}  · provisionally_verified
+- [sci.t_adv.earth-environment.disaster-mitigation] 防災工程與非工程措施（預警、疏散、土地利用規劃）  {t_adv, 學測}  · provisionally_verified
+- [sci.t_adv.earth-environment.sustainable-development] 永續發展與地球資源承載力、世代公平概念  {t_adv, 學測}  · provisionally_verified
+- [sci.t_adv.earth-environment.marine-pollution] 海洋污染（塑膠微粒、優養化、油污）與海洋保育  {t_adv, 學測}  · provisionally_verified
 - [sci.t_base.earth-inquiry.weather-record] 以簡單工具長期記錄天氣並製成表格  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-inquiry.shadow-sun] 測量一天中竿影長短變化推論太陽位置  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-inquiry.moon-diary] 連續數日觀察並畫下月相製成月相日記  {t_base, 無}  · provisionally_verified
@@ -1924,7 +1924,7 @@
 - [sci.t_adv.phys-force.incline] 斜面上物體的受力分析  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.phys-force.tension-system] 繩張力與連結體系統（電梯/阿特午機）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.phys-force.friction-coeff] 靜/動摩擦係數的定量計算  {t_adv, 學測}  · provisionally_verified
-- [sci.t_sub.phys-force.noninertial] 非慣性座標系與假想力（慣性力/離心力）  {t_enrich, 無}  · unverified
+- [sci.t_sub.phys-force.noninertial] 非慣性座標系與假想力（慣性力/離心力）  {t_enrich, 無}  · provisionally_verified
 - [sci.t_sub.phys-force.newton-2d] 二維牛頓定律聯立求解  {t_sub, 分科-物理}  · provisionally_verified
 - [sci.t_base.phys-energy.energy-forms] 能量的形式（動能/位能/光/熱/電）  {t_base, 無}  · provisionally_verified
 - [sci.t_base.phys-energy.simple-machine] 簡單機械省力（槓桿/滑輪/輪軸）初步  {t_base, 無}  · provisionally_verified
@@ -1972,16 +1972,16 @@
 - [sci.t_mid.phys-fluid.pascal] 帕斯卡原理與液壓機  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.phys-fluid.buoyancy-calc] 浮力與視重的定量計算  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.phys-fluid.float-quant] 浮體/沉體/懸浮的定量分析  {t_adv, 學測}  · provisionally_verified
-- [sci.t_sub.phys-fluid.continuity] 流體連續方程式（A₁v₁=A₂v₂）  {t_enrich, 無}  · unverified
+- [sci.t_sub.phys-fluid.continuity] 流體連續方程式（A₁v₁=A₂v₂）  {t_enrich, 無}  · provisionally_verified
 - [sci.t_sub.phys-fluid.bernoulli] 白努利原理與應用  {t_enrich, 無}  · provisionally_verified
 - [sci.t_base.phys-heat.thermometer] 溫度與溫度計的使用  {t_base, 無}  · provisionally_verified
 - [sci.t_base.phys-heat.conduction-basic] 熱由高溫傳向低溫  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.phys-heat.temp-vs-heat] 溫度與熱量的區別  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.phys-heat.celsius] 攝氏溫標與溫度計原理  {t_mid, 會考}  · unverified
+- [sci.t_mid.phys-heat.celsius] 攝氏溫標與溫度計原理  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-heat.heat-unit] 熱量單位（卡/焦耳）與熱功當量  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-heat.specific-heat] 比熱與熱容量（Q=mcΔT）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-heat.thermal-equilibrium] 熱平衡與混合後終溫計算  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.phys-heat.heat-transfer] 熱的三種傳播（傳導/對流/輻射）  {t_mid, 會考}  · unverified
+- [sci.t_mid.phys-heat.heat-transfer] 熱的三種傳播（傳導/對流/輻射）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-heat.expansion] 熱膨脹（固/液/氣）與應用  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-heat.latent-heat] 潛熱（熔化熱/汽化熱）與相變化吸放熱  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.phys-heat.kelvin] 絕對溫標（克耳文）與絕對零度  {t_adv, 學測}  · provisionally_verified
@@ -1996,14 +1996,14 @@
 - [sci.t_sub.phys-heat.carnot] 熱機效率與卡諾循環  {t_sub, 分科-物理}  · pending
 - [sci.t_base.phys-wave.sound-produce] 聲音由物體振動產生與傳播  {t_base, 無}  · provisionally_verified
 - [sci.t_base.phys-wave.loud-pitch] 聲音的大小與高低  {t_base, 無}  · provisionally_verified
-- [sci.t_mid.phys-wave.wave-type] 波的分類（橫波/縱波）  {t_mid, 會考}  · unverified
+- [sci.t_mid.phys-wave.wave-type] 波的分類（橫波/縱波）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-wave.wave-quantities] 波長/頻率/週期/振幅與波速（v=fλ）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-wave.medium] 力學波的傳播需要介質  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-wave.sound-medium] 聲速與介質/溫度的關係  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-wave.sound-three] 聲音三要素（響度/音調/音品）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-wave.echo] 回聲與聲音的反射  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-wave.resonance] 共鳴/共振現象  {t_mid, 會考}  · provisionally_verified
-- [sci.t_adv.phys-wave.wave-behavior] 波的反射/折射/繞射/干涉  {t_adv, 學測}  · unverified
+- [sci.t_adv.phys-wave.wave-behavior] 波的反射/折射/繞射/干涉  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.phys-wave.standing-wave] 駐波與弦/空氣柱共振（基音/泛音）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.phys-wave.doppler] 都卜勒效應（聲源/觀察者運動）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.phys-wave.shm] 簡諧運動的位移/速度/加速度與相位  {t_adv, 學測}  · provisionally_verified
@@ -2022,7 +2022,7 @@
 - [sci.t_mid.phys-optics.lens-action] 凸/凹透鏡對光的作用與焦點  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-optics.convex-image] 凸透鏡成像規律（物距與像的關係）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-optics.curved-mirror] 凹/凸面鏡成像初步  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.phys-optics.dispersion-color] 光的色散、可見光光譜與物體顏色  {t_mid, 會考}  · unverified
+- [sci.t_mid.phys-optics.dispersion-color] 光的色散、可見光光譜與物體顏色  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.phys-optics.snell] 司乃耳折射定律（n₁sinθ₁=n₂sinθ₂）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.phys-optics.refractive-index] 絕對/相對折射率與光速變化  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.phys-optics.total-reflection] 全反射與臨界角、光纖原理  {t_adv, 學測}  · provisionally_verified
@@ -2046,7 +2046,7 @@
 - [sci.t_mid.phys-estatic.series] 串聯電路（電流相同、分壓）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-estatic.parallel] 並聯電路（電壓相同、分流）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-estatic.electric-power] 電功率（P=IV）與電能（度/千瓦小時）  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.phys-estatic.home-safety] 家庭用電安全（保險絲/斷路器/接地）  {t_mid, 會考}  · unverified
+- [sci.t_mid.phys-estatic.home-safety] 家庭用電安全（保險絲/斷路器/接地）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.phys-estatic.coulomb] 庫侖定律（F=kq₁q₂/r²）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.phys-estatic.e-field] 電場與電場線、點電荷電場  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.phys-estatic.potential] 電位與電位差、等電位面  {t_adv, 學測}  · provisionally_verified
@@ -2060,12 +2060,12 @@
 - [sci.t_sub.phys-estatic.rc-circuit] RC 電路充放電  {t_sub, 分科-物理}  · pending
 - [sci.t_base.phys-em.magnet-basic] 磁鐵的磁極、吸引與指南針  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.phys-em.mag-field] 磁極（N/S）、磁力、磁場與磁力線  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.phys-em.geomagnetism] 地磁與指南針指向  {t_mid, 會考}  · unverified
+- [sci.t_mid.phys-em.geomagnetism] 地磁與指南針指向  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-em.oersted] 電流的磁效應（安培右手定則）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-em.coil-field] 通電導線/線圈/螺線管的磁場  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-em.electromagnet] 電磁鐵與應用（電鈴/繼電器）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-em.motor-basic] 電流在磁場中受力（馬達原理）  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.phys-em.induction-basic] 電磁感應與發電機原理初步  {t_mid, 會考}  · unverified
+- [sci.t_mid.phys-em.induction-basic] 電磁感應與發電機原理初步  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.phys-em.field-of-current] 直導線/線圈/螺線管磁場的方向與強度  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.phys-em.force-on-wire] 載流導線在磁場受力（F=BIL）與左手定則  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.phys-em.lorentz] 運動電荷在磁場受力（勞侖茲力 F=qvB）  {t_adv, 學測}  · provisionally_verified
@@ -2089,38 +2089,38 @@
 - [sci.t_sub.phys-modern.spectral-lines] 能階躍遷與光譜線波長計算  {t_sub, 分科-物理}  · provisionally_verified
 - [sci.t_sub.phys-modern.nuclear-reaction] 核反應（衰變/分裂/融合）與質能互換（E=mc²）  {t_sub, 分科-物理}  · provisionally_verified
 - [sci.t_sub.phys-modern.half-life-calc] 半衰期的定量計算  {t_sub, 分科-物理}  · provisionally_verified
-- [sci.t_sub.phys-modern.uncertainty] 不確定性原理與量子概念初步  {t_sub, 分科-物理}  · unverified
+- [sci.t_sub.phys-modern.uncertainty] 不確定性原理與量子概念初步  {t_sub, 分科-物理}  · provisionally_verified
 - [sci.t_sub.phys-modern.relativity] 狹義相對論（時間膨脹/長度收縮/質能等效）初步  {t_sub, 分科-物理}  · provisionally_verified
 - [sci.t_base.chem-matter.three-states] 物質三態與狀態變化（熔化/凝固/蒸發/凝結/昇華）  {t_base, 無}  · provisionally_verified
-- [sci.t_base.chem-matter.properties] 物質性質（軟硬/浮沉/磁性/導電）  {t_base, 無}  · unverified
+- [sci.t_base.chem-matter.properties] 物質性質（軟硬/浮沉/磁性/導電）  {t_base, 無}  · provisionally_verified
 - [sci.t_base.chem-matter.dissolve-mix] 溶解與混合物的概念  {t_base, 無}  · provisionally_verified
-- [sci.t_base.chem-matter.filter-evap] 以過濾、蒸發分離混合物  {t_base, 無}  · unverified
-- [sci.t_mid.chem-matter.pure-vs-mixture] 純物質與混合物的區別  {t_mid, 會考}  · unverified
+- [sci.t_base.chem-matter.filter-evap] 以過濾、蒸發分離混合物  {t_base, 無}  · provisionally_verified
+- [sci.t_mid.chem-matter.pure-vs-mixture] 純物質與混合物的區別  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-matter.classify] 元素、化合物、混合物的分類  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.chem-matter.phys-vs-chem-change] 物理變化與化學變化的判別  {t_mid, 會考}  · unverified
+- [sci.t_mid.chem-matter.phys-vs-chem-change] 物理變化與化學變化的判別  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-matter.phys-vs-chem-prop] 物理性質與化學性質的區別  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-matter.homo-hetero] 均勻與非均勻混合物  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-matter.density] 密度的定義與測量（d=m/V）  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.chem-matter.particle-view] 以粒子觀點解釋三態與狀態變化  {t_mid, 會考}  · unverified
+- [sci.t_mid.chem-matter.particle-view] 以粒子觀點解釋三態與狀態變化  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-matter.separation] 混合物分離（過濾/蒸發結晶/蒸餾/萃取/層析）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.chem-matter.fractional-distill] 分餾原理（利用沸點差）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-matter.recrystallize] 再結晶純化與溶解度關係  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-matter.chromatography] 層析分離原理（極性/吸附差異）  {t_adv, 學測}  · provisionally_verified
-- [sci.t_sub.chem-matter.purity-test] 以熔點/沸點檢定純度並選擇分離技術  {t_sub, 分科-化學}  · unverified
-- [sci.t_mid.chem-atom.dalton] 原子的概念與道耳頓原子說  {t_mid, 會考}  · unverified
+- [sci.t_sub.chem-matter.purity-test] 以熔點/沸點檢定純度並選擇分離技術  {t_sub, 分科-化學}  · provisionally_verified
+- [sci.t_mid.chem-atom.dalton] 原子的概念與道耳頓原子說  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-atom.subatomic] 原子結構（質子/中子/電子）與電性  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-atom.atomic-number] 原子序與質量數、同位素  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-atom.symbols] 元素符號與常見元素  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.chem-atom.periodic-basic] 週期表排列（原子序/週期/族）初步  {t_mid, 會考}  · unverified
+- [sci.t_mid.chem-atom.periodic-basic] 週期表排列（原子序/週期/族）初步  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-atom.atom-molecule] 原子與分子的區別、分子式  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.chem-atom.model-evolution] 原子模型演進（湯姆森/拉塞福）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-atom.electron-config] 電子組態與電子殼層（主/副殼層、軌域）  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.chem-atom.valence-octet] 價電子與八隅體規則  {t_adv, 學測}  · unverified
+- [sci.t_adv.chem-atom.valence-octet] 價電子與八隅體規則  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-atom.periodic-structure] 週期表結構（週期/族/s·p·d·f 區塊）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-atom.radius-trend] 原子/離子半徑的週期趨勢  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-atom.ionization-trend] 游離能的週期趨勢  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.chem-atom.electronegativity-trend] 電子親和力與電負度的週期趨勢  {t_adv, 學測}  · unverified
-- [sci.t_adv.chem-atom.metal-nonmetal] 金屬/非金屬/類金屬的分區與性質  {t_adv, 學測}  · unverified
+- [sci.t_adv.chem-atom.electronegativity-trend] 電子親和力與電負度的週期趨勢  {t_adv, 學測}  · provisionally_verified
+- [sci.t_adv.chem-atom.metal-nonmetal] 金屬/非金屬/類金屬的分區與性質  {t_adv, 學測}  · provisionally_verified
 - [sci.t_sub.chem-atom.quantum-numbers] 量子數（n, l, m, s）與軌域  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-atom.aufbau-rules] 構築原理、包立不相容與洪德定則  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-atom.successive-ie] 連續游離能與價電子數判定  {t_sub, 分科-化學}  · provisionally_verified
@@ -2128,10 +2128,10 @@
 - [sci.t_mid.chem-bond.ion-form] 離子的形成（陽離子/陰離子）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-bond.ionic-basic] 離子鍵與離子化合物初步  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-bond.covalent-basic] 共價鍵與分子化合物初步  {t_mid, 會考}  · provisionally_verified
-- [sci.t_adv.chem-bond.ionic-property] 離子鍵的形成與離子化合物性質（熔點/導電）  {t_adv, 學測}  · unverified
-- [sci.t_adv.chem-bond.covalent-lewis] 共價鍵（單/雙/參鍵）與路易斯結構  {t_adv, 學測}  · unverified
+- [sci.t_adv.chem-bond.ionic-property] 離子鍵的形成與離子化合物性質（熔點/導電）  {t_adv, 學測}  · provisionally_verified
+- [sci.t_adv.chem-bond.covalent-lewis] 共價鍵（單/雙/參鍵）與路易斯結構  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-bond.coordinate] 配位共價鍵  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.chem-bond.metallic] 金屬鍵與金屬性質（導電/延展）  {t_adv, 學測}  · unverified
+- [sci.t_adv.chem-bond.metallic] 金屬鍵與金屬性質（導電/延展）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-bond.bond-polarity] 電負度差與鍵的極性（極性/非極性共價）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-bond.molecule-polarity] 分子極性的判斷（對稱性/偶極矩）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-bond.vsepr] VSEPR 價殼層電子對互斥與分子形狀  {t_adv, 學測}  · provisionally_verified
@@ -2140,7 +2140,7 @@
 - [sci.t_sub.chem-bond.sigma-pi] σ 鍵與 π 鍵、鍵能與鍵長  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-bond.resonance] 共振結構與形式電荷  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-bond.mo-theory] 分子軌域理論初步  {t_enrich, 無}  · provisionally_verified
-- [sci.t_sub.chem-bond.crystal-types] 晶體分類（離子/共價網狀/分子/金屬）與性質  {t_sub, 分科-化學}  · unverified
+- [sci.t_sub.chem-bond.crystal-types] 晶體分類（離子/共價網狀/分子/金屬）與性質  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_mid.chem-stoich.formula] 化學式的意義與讀寫  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-stoich.balance] 化學反應式的平衡（係數配平）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-stoich.mass-conserve] 質量守恆定律  {t_mid, 會考}  · provisionally_verified
@@ -2172,7 +2172,7 @@
 - [sci.t_mid.chem-soln.solute-solvent] 溶質/溶劑/溶液的辨識  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-soln.solubility-curve] 溶解度與溶解度曲線判讀  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-soln.saturation] 飽和/未飽和/過飽和溶液  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.chem-soln.solubility-factor] 影響溶解度的因素（溫度/壓力）  {t_mid, 會考}  · unverified
+- [sci.t_mid.chem-soln.solubility-factor] 影響溶解度的因素（溫度/壓力）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-soln.weight-percent] 重量百分濃度計算  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-soln.ppm] 濃度 ppm 的初步概念  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-soln.electrolyte] 電解質與非電解質、溶液導電  {t_mid, 會考}  · provisionally_verified
@@ -2191,13 +2191,13 @@
 - [sci.t_adv.chem-rate.collision] 碰撞學說與有效碰撞  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-rate.activation-energy] 活化能與反應位能圖  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-rate.catalyst] 催化劑對活化能的影響  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.chem-rate.temp-effect] 溫度對速率的影響（定性）  {t_adv, 學測}  · unverified
+- [sci.t_adv.chem-rate.temp-effect] 溫度對速率的影響（定性）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_sub.chem-rate.rate-law] 速率定律與反應級數（由數據求）  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-rate.arrhenius] 速率常數與溫度（阿瑞尼士方程式）  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-rate.mechanism] 反應機構與速率決定步驟  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-rate.half-life] 一級反應的半衰期  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_adv.chem-eq.reversible] 可逆反應與動態平衡的概念  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.chem-eq.kc-meaning] 平衡常數 Kc 的意義與表示  {t_adv, 學測}  · unverified
+- [sci.t_adv.chem-eq.kc-meaning] 平衡常數 Kc 的意義與表示  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-eq.kc-calc] 平衡常數的計算  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-eq.le-chatelier] 勒沙特列原理（濃度/壓力/溫度的影響）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-eq.catalyst-noeffect] 催化劑不改變平衡位置  {t_adv, 學測}  · provisionally_verified
@@ -2206,11 +2206,11 @@
 - [sci.t_sub.chem-eq.ice-table] 以 ICE 表格求平衡濃度  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-eq.ksp] 溶解度積 Ksp 與沉澱生成判定  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-eq.common-ion] 同離子效應與分段沉澱  {t_sub, 分科-化學}  · provisionally_verified
-- [sci.t_mid.chem-acidbase.properties] 酸與鹼的通性（指示劑變色/導電性/腐蝕性；實驗室一律禁止以嚐味道檢驗）  {t_mid, 會考}  · unverified
+- [sci.t_mid.chem-acidbase.properties] 酸與鹼的通性（指示劑變色/導電性/腐蝕性；實驗室一律禁止以嚐味道檢驗）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-acidbase.common] 常見酸鹼與日常應用  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.chem-acidbase.indicator-ph] 指示劑/廣用試紙與 pH 值初步  {t_mid, 會考}  · unverified
+- [sci.t_mid.chem-acidbase.indicator-ph] 指示劑/廣用試紙與 pH 值初步  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-acidbase.neutralization] 酸鹼中和反應與鹽的生成  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.chem-acidbase.salts] 鹽類的性質與應用  {t_mid, 會考}  · unverified
+- [sci.t_mid.chem-acidbase.salts] 鹽類的性質與應用  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.chem-acidbase.arrhenius] 阿瑞尼士酸鹼定義  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-acidbase.bronsted] 布忍司特-洛瑞定義與共軛酸鹼對  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-acidbase.kw] 水的自解離與 Kw  {t_adv, 學測}  · provisionally_verified
@@ -2234,19 +2234,19 @@
 - [sci.t_adv.chem-redox.agents] 氧化劑與還原劑的判定  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-redox.balance] 氧化還原反應式的平衡（氧化數法/半反應法）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-redox.activity-series] 金屬活性序與置換反應  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.chem-redox.galvanic] 原電池（伏打電池）的構造與原理  {t_adv, 學測}  · unverified
+- [sci.t_adv.chem-redox.galvanic] 原電池（伏打電池）的構造與原理  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-redox.electrolysis] 電解與電鍍原理  {t_adv, 學測}  · provisionally_verified
 - [sci.t_sub.chem-redox.electrode-potential] 標準電極電位與電池電動勢計算  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-redox.spontaneity] 以 E° 與 ΔG 判定反應自發性  {t_sub, 分科-化學}  · provisionally_verified
-- [sci.t_sub.chem-redox.nernst] 能斯特方程式  {t_enrich, 無}  · unverified
+- [sci.t_sub.chem-redox.nernst] 能斯特方程式  {t_enrich, 無}  · provisionally_verified
 - [sci.t_sub.chem-redox.faraday-electrolysis] 法拉第電解定律（電量與析出量）  {t_sub, 分科-化學}  · provisionally_verified
-- [sci.t_sub.chem-redox.batteries] 常見電池（乾電池/鉛蓄電池/燃料電池）  {t_sub, 分科-化學}  · unverified
-- [sci.t_sub.chem-redox.corrosion] 金屬腐蝕與防蝕（犧牲陽極/鍍層）  {t_sub, 分科-化學}  · unverified
+- [sci.t_sub.chem-redox.batteries] 常見電池（乾電池/鉛蓄電池/燃料電池）  {t_sub, 分科-化學}  · provisionally_verified
+- [sci.t_sub.chem-redox.corrosion] 金屬腐蝕與防蝕（犧牲陽極/鍍層）  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_mid.chem-thermo.endo-exo] 吸熱與放熱反應的判別  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-thermo.energy-change] 反應伴隨的能量變化（定性）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.chem-thermo.enthalpy] 反應熱（焓變 ΔH）的意義與正負  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.chem-thermo.energy-diagram] 反應位能圖與活化能  {t_adv, 學測}  · unverified
-- [sci.t_adv.chem-thermo.heat-types] 生成熱、燃燒熱與中和熱  {t_adv, 學測}  · unverified
+- [sci.t_adv.chem-thermo.energy-diagram] 反應位能圖與活化能  {t_adv, 學測}  · provisionally_verified
+- [sci.t_adv.chem-thermo.heat-types] 生成熱、燃燒熱與中和熱  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-thermo.hess] 赫斯定律與反應熱計算  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-thermo.bond-energy] 以鍵能估算反應熱  {t_adv, 學測}  · provisionally_verified
 - [sci.t_sub.chem-thermo.standard-enthalpy] 標準生成焓與反應焓計算  {t_sub, 分科-化學}  · provisionally_verified
@@ -2266,18 +2266,18 @@
 - [sci.t_sub.chem-organic.iupac] 有機物命名（IUPAC）初步  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-organic.stereoisomer] 結構異構與立體異構（順反/鏡像）  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-organic.reaction-types] 取代/加成/消去反應類型  {t_sub, 分科-化學}  · provisionally_verified
-- [sci.t_sub.chem-organic.aromatic] 芳香烴（苯）與其結構  {t_sub, 分科-化學}  · unverified
+- [sci.t_sub.chem-organic.aromatic] 芳香烴（苯）與其結構  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-organic.mechanism] 有機反應機構初步  {t_enrich, 無}  · provisionally_verified
 - [sci.t_sub.chem-organic.saponification] 皂化反應與界面活性劑  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_base.chem-applied.household-acidbase] 生活中的酸鹼物質（清潔劑/食物）  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.chem-applied.pollution] 空氣汙染與水汙染（成因/防治）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-applied.materials] 常見材料（金屬/塑膠/陶瓷）與回收  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-applied.fuels] 燃料與能源（化石燃料/燃燒產物）  {t_mid, 會考}  · provisionally_verified
-- [sci.t_adv.chem-applied.greenhouse] 溫室效應與碳排放的化學  {t_adv, 學測}  · unverified
+- [sci.t_adv.chem-applied.greenhouse] 溫室效應與碳排放的化學  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-applied.acid-rain] 酸雨的成因與影響  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-applied.green-chemistry] 綠色化學與永續發展概念  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-applied.energy-storage] 電池與能源儲存的化學  {t_adv, 學測}  · provisionally_verified
-- [sci.t_sub.chem-applied.alt-energy] 替代能源與燃料電池的化學  {t_sub, 分科-化學}  · unverified
+- [sci.t_sub.chem-applied.alt-energy] 替代能源與燃料電池的化學  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-applied.nanomaterials] 奈米材料與新興材料初步  {t_sub, 分科-化學}  · pending
 - [sci.t_sub.chem-applied.remediation] 化學在環境治理的應用  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_base.inquiry.observe-predict] 觀察、提問與預測  {t_base, 無}  · provisionally_verified
@@ -2316,11 +2316,11 @@
 - [soc-civ.t_mid.self.adolescence] 青春期身心發展與自我認同追尋  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.self.identity-erikson] 自我認同與認同危機（認同形成的發展觀點）  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.self.looking-glass] 「鏡中自我」與「概括化他人」等自我形成理論  {t_adv, 學測}  · unverified
-- [soc-civ.t_adv.self.me-and-i] 自我的主我（I）與客我（Me）之分  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.self.me-and-i] 自我的主我（I）與客我（Me）之分  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_base.self.learn-rules] 從家庭與學校學習生活規矩與禮貌  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_mid.self.socialization-meaning] 社會化的意義：學習社會規範、角色與價值  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.self.agents-family] 家庭作為初級社會化機構的功能  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.self.agents-school] 學校作為次級社會化機構的功能  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.self.agents-school] 學校作為次級社會化機構的功能  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.self.agents-peer] 同儕團體對社會化的影響  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.self.agents-media] 大眾傳播媒體對社會化的影響  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.self.lifelong] 社會化是終身歷程（再社會化、預期社會化）  {t_mid, 會考}  · provisionally_verified
@@ -2339,15 +2339,15 @@
 - [soc-civ.t_mid.group.formal-org] 正式組織與科層制（官僚制）的特徵  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.group.reference-group] 參照團體對態度與行為的影響  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.group.social-institution] 社會制度的意義與主要制度（家庭、教育、經濟、政治、宗教）  {t_adv, 學測}  · provisionally_verified
-- [soc-civ.t_adv.group.bureaucracy-critique] 科層制的優點與弊病（效率 vs 僵化、形式主義）  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.group.bureaucracy-critique] 科層制的優點與弊病（效率 vs 僵化、形式主義）  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.group.social-network] 社會網絡（social network，社會學指人際關係網，非網際網路）與社會資本的概念與作用  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_base.group.fairness] 公平對待、不因外表或家境差別待人  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_mid.group.stratification] 社會階層化的意義（財富、權力、聲望）  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.group.inequality-indicator] 以所得分配、貧富差距理解社會不平等  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.group.class-basis] 社會階層的衡量基礎：經濟、權力、社會聲望  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.group.poverty] 貧窮的類型（絕對貧窮／相對貧窮）與貧窮循環  {t_adv, 學測}  · provisionally_verified
-- [soc-civ.t_adv.group.gini] 以吉尼係數、所得五等分位倍數判讀分配不均  {t_adv, 學測}  · unverified
-- [soc-civ.t_sub.group.class-theory] 階層理論觀點比較（功能論 vs 衝突論）  {t_sub, 分科-公民}  · unverified
+- [soc-civ.t_adv.group.gini] 以吉尼係數、所得五等分位倍數判讀分配不均  {t_adv, 學測}  · provisionally_verified
+- [soc-civ.t_sub.group.class-theory] 階層理論觀點比較（功能論 vs 衝突論）  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_sub.group.cultural-capital] 文化資本、社會再製與教育機會不均  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_mid.group.mobility-meaning] 社會流動的意義（階層位置的改變）  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.group.vertical-horizontal] 垂直流動與水平流動的區別  {t_mid, 會考}  · provisionally_verified
@@ -2355,7 +2355,7 @@
 - [soc-civ.t_adv.group.mobility-channel] 教育作為社會流動的主要管道與限制  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.group.open-closed] 開放社會與封閉社會的流動機會差異  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_mid.group.social-change] 社會變遷的面向（人口、科技、價值）  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.group.aging-society] 高齡化與少子女化對社會的影響  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.group.aging-society] 高齡化與少子女化對社會的影響  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.group.social-problem] 社會問題的界定（客觀條件＋主觀認定）  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.group.deviance] 偏差行為的意義與社會控制  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.group.labeling] 標籤理論與偏差行為的建構觀點  {t_sub, 分科-公民}  · provisionally_verified
@@ -2366,8 +2366,8 @@
 - [soc-civ.t_mid.culture.subculture] 次文化與反文化的概念  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.culture.ethnocentrism] 我族中心主義與文化相對論的對比  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.culture.multiculturalism] 多元文化主義的精神：尊重與包容差異  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.culture.taiwan-ethnic] 台灣多元族群（原住民族、閩南、客家、外省、新住民）  {t_mid, 會考}  · unverified
-- [soc-civ.t_adv.culture.cultural-change] 文化傳承、涵化與文化創新  {t_adv, 學測}  · unverified
+- [soc-civ.t_mid.culture.taiwan-ethnic] 台灣多元族群（原住民族、閩南、客家、外省、新住民）  {t_mid, 會考}  · provisionally_verified
+- [soc-civ.t_adv.culture.cultural-change] 文化傳承、涵化與文化創新  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.culture.indigenous-rights] 原住民族的集體權與文化權保障  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.culture.stereotype] 刻板印象、偏見與歧視的區別與形成  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.culture.cultural-hegemony] 文化霸權與全球化下的文化同質／異質爭論  {t_sub, 分科-公民}  · provisionally_verified
@@ -2378,9 +2378,9 @@
 - [soc-civ.t_mid.culture.gender-role] 性別角色與性別刻板印象的形成與鬆動  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.culture.gender-equality] 性別平等的意義與日常實踐  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.culture.gender-division] 家庭與職場中的性別分工議題  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.culture.sexual-harassment] 辨識性騷擾、性霸凌與求助／申訴管道  {t_mid, 會考}  · unverified
-- [soc-civ.t_adv.culture.gender-diversity] 性別光譜與性傾向、性別認同的多元  {t_adv, 學測}  · unverified
-- [soc-civ.t_adv.culture.glass-ceiling] 職場性別不平等（玻璃天花板、同工不同酬）  {t_adv, 學測}  · unverified
+- [soc-civ.t_mid.culture.sexual-harassment] 辨識性騷擾、性霸凌與求助／申訴管道  {t_mid, 會考}  · provisionally_verified
+- [soc-civ.t_adv.culture.gender-diversity] 性別光譜與性傾向、性別認同的多元  {t_adv, 學測}  · provisionally_verified
+- [soc-civ.t_adv.culture.glass-ceiling] 職場性別不平等（玻璃天花板、同工不同酬）  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.culture.gender-mainstreaming] 性別主流化的概念與政策工具  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.culture.gender-theory] 性別理論觀點（性別作為社會建構）與爭議  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_base.rights.my-rights] 認識自己擁有被照顧、受教育、被保護的權利  {t_base, 無}  · unverified
@@ -2418,36 +2418,36 @@
 - [soc-civ.t_sub.politics.democracy-theory] 民主理論類型（菁英、多元、參與、審議）比較  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_sub.politics.democratization] 民主化與民主鞏固、民主倒退的概念  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_mid.politics.separation-powers] 權力分立與制衡的意義與目的  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.politics.five-powers] 我國五權分立（行政、立法、司法、考試、監察）  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.politics.five-powers] 我國五權分立（行政、立法、司法、考試、監察）  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.politics.checks-balances] 水平分權與垂直分權（中央／地方）的設計  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.politics.three-vs-five] 三權分立與五權憲法的比較與評析  {t_sub, 分科-公民}  · provisionally_verified
-- [soc-civ.t_mid.politics.gov-branches] 我國中央政府主要機關的職權（總統、行政院、立法院、司法院、考試院、監察院）  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.politics.gov-branches] 我國中央政府主要機關的職權（總統、行政院、立法院、司法院、考試院、監察院）  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.politics.president-premier] 總統與行政院長產生方式與角色  {t_mid, 會考}  · unverified
-- [soc-civ.t_adv.politics.semi-presidential] 我國雙首長制（半總統制）的特徵與運作  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.politics.semi-presidential] 我國雙首長制（半總統制）的特徵與運作  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.politics.presidential-parliamentary] 總統制、內閣制、半總統制的比較  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.politics.accountability] 行政向立法負責的機制（質詢、不信任案／倒閣；信任投票為內閣制之對照）  {t_adv, 學測}  · unverified
-- [soc-civ.t_adv.politics.constitutional-court] 憲法法庭／大法官的違憲審查職權  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.politics.constitutional-court] 憲法法庭／大法官的違憲審查職權  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.politics.cohabitation] 分立政府與一致政府、共治現象的分析  {t_sub, 分科-公民}  · provisionally_verified
-- [soc-civ.t_sub.politics.constitution-amend] 修憲程序與憲政變遷  {t_sub, 分科-公民}  · unverified
+- [soc-civ.t_sub.politics.constitution-amend] 修憲程序與憲政變遷  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_base.politics.local-service] 認識鄉鎮市區與社區公共服務（里長、公所）  {t_base, 無}  · unverified
-- [soc-civ.t_mid.politics.local-autonomy] 地方自治的意義與自治團體層級  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.politics.local-autonomy] 地方自治的意義與自治團體層級  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.politics.local-gov] 地方行政機關與地方民意機關的職權  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_adv.politics.central-local] 中央與地方權限劃分與財政分配  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.politics.central-local] 中央與地方權限劃分與財政分配  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.politics.local-governance] 地方治理、跨域合作與府際關係  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_mid.politics.election-principles] 選舉四大原則（普通、平等、直接、無記名）  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.politics.suffrage] 選舉權與被選舉權的資格  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.politics.suffrage] 選舉權與被選舉權的資格  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.politics.party-function] 政黨的功能（匯集民意、推舉候選人、監督政府）  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.politics.party-system] 一黨制、兩黨制、多黨制的區別  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_adv.politics.electoral-system] 選舉制度類型（多數決制、比例代表制、並立制）  {t_adv, 學測}  · unverified
-- [soc-civ.t_adv.politics.single-member] 單一選區兩票制的設計與效果  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.politics.electoral-system] 選舉制度類型（多數決制、比例代表制、並立制）  {t_adv, 學測}  · provisionally_verified
+- [soc-civ.t_adv.politics.single-member] 單一選區兩票制的設計與效果  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.politics.interest-group] 利益團體與壓力團體的角色與遊說  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.politics.ruling-opposition] 執政黨與在野黨、政黨政治的運作  {t_adv, 學測}  · provisionally_verified
-- [soc-civ.t_sub.politics.duverger] 選舉制度對政黨體系的影響（席次比例性）  {t_sub, 分科-公民}  · unverified
+- [soc-civ.t_sub.politics.duverger] 選舉制度對政黨體系的影響（席次比例性）  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_sub.politics.gerrymandering] 選區劃分爭議與選舉公平性  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_base.politics.class-affairs] 參與班級事務、提出建議與遵守共同決定  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_mid.politics.public-affairs] 公共事務與公共利益的意義  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.politics.participation-ways] 公民參與的方式（投票、連署、陳情、集會遊行、擔任志工）  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.politics.referendum] 公民投票（創制、複決）的意義與適用  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.politics.referendum] 公民投票（創制、複決）的意義與適用  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.politics.public-opinion] 民意的形成與民意調查的解讀  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.politics.policy-process] 公共政策形成歷程（問題認定、規劃、合法化、執行、評估）  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.politics.civil-society] 公民社會與非政府組織（NGO）的角色  {t_adv, 學測}  · provisionally_verified
@@ -2459,54 +2459,54 @@
 - [soc-civ.t_base.law.rules-why] 為什麼要有規則：維護安全與秩序  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_base.law.follow-rules] 遵守交通規則、校規與公共場所規範  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_mid.law.law-meaning] 法律的意義與功能（維持秩序、保障權利、解決紛爭）  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.law.norm-types] 法律與其他社會規範（道德、習俗、宗教）的區別  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.law.norm-types] 法律與其他社會規範（道德、習俗、宗教）的區別  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.law-hierarchy] 法律位階（憲法 > 法律 > 命令）與中央法規  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.law.public-private] 公法與私法的區分  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.law.public-private] 公法與私法的區分  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.law.rule-of-law] 法治國原則（依法行政、法律保留、法律優位）  {t_adv, 學測}  · provisionally_verified
-- [soc-civ.t_adv.law.substantive-procedural] 實體法與程序法的區別  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.law.substantive-procedural] 實體法與程序法的區別  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.law.legal-interpretation] 法律解釋方法與法律漏洞補充  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_mid.law.constitution-status] 憲法作為國家根本大法的地位  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.law.basic-rights] 憲法保障的基本人權（自由權、平等權、受益權、參政權）  {t_mid, 會考}  · unverified
-- [soc-civ.t_mid.law.equality-right] 平等權與禁止不合理差別待遇  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.law.basic-rights] 憲法保障的基本人權（自由權、平等權、受益權、參政權）  {t_mid, 會考}  · provisionally_verified
+- [soc-civ.t_mid.law.equality-right] 平等權與禁止不合理差別待遇  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.freedom-rights] 人身自由、言論、集會結社、宗教信仰等自由權  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.law.basic-duty] 人民基本義務（納稅、服兵役、受國民教育）  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.law.basic-duty] 人民基本義務（納稅、服兵役、受國民教育）  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.law.rights-limit] 基本權利的限制與憲法第23條（比例原則、法律保留）  {t_adv, 學測}  · provisionally_verified
-- [soc-civ.t_adv.law.due-process] 正當法律程序與人身自由保障（提審、羈押）  {t_adv, 學測}  · unverified
-- [soc-civ.t_adv.law.constitutional-complaint] 憲法訴訟與人民聲請釋憲／裁判憲法審查  {t_adv, 學測}  · unverified
-- [soc-civ.t_sub.law.proportionality] 比例原則三階段（適當、必要、衡平）的適用  {t_sub, 分科-公民}  · unverified
+- [soc-civ.t_adv.law.due-process] 正當法律程序與人身自由保障（提審、羈押）  {t_adv, 學測}  · provisionally_verified
+- [soc-civ.t_adv.law.constitutional-complaint] 憲法訴訟與人民聲請釋憲／裁判憲法審查  {t_adv, 學測}  · provisionally_verified
+- [soc-civ.t_sub.law.proportionality] 比例原則三階段（適當、必要、衡平）的適用  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_sub.law.rights-conflict] 基本權利衝突與法益權衡  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_mid.law.capacity] 權利能力與行為能力（完全、限制、無行為能力人）  {t_mid, 會考}  · unverified
 - [soc-civ.t_mid.law.minor-contract] 未成年人法律行為的效力（需法定代理人同意）  {t_mid, 會考}  · unverified
-- [soc-civ.t_mid.law.contract-basic] 契約的成立與誠信原則  {t_mid, 會考}  · unverified
-- [soc-civ.t_mid.law.tort-basic] 侵權行為與損害賠償責任的概念  {t_mid, 會考}  · unverified
-- [soc-civ.t_adv.law.property-obligation] 物權與債權的區別  {t_adv, 學測}  · unverified
-- [soc-civ.t_adv.law.family-law] 婚姻、親子與繼承的基本規範  {t_adv, 學測}  · unverified
-- [soc-civ.t_adv.law.liability-types] 無過失責任與過失責任、連帶責任  {t_adv, 學測}  · unverified
+- [soc-civ.t_mid.law.contract-basic] 契約的成立與誠信原則  {t_mid, 會考}  · provisionally_verified
+- [soc-civ.t_mid.law.tort-basic] 侵權行為與損害賠償責任的概念  {t_mid, 會考}  · provisionally_verified
+- [soc-civ.t_adv.law.property-obligation] 物權與債權的區別  {t_adv, 學測}  · provisionally_verified
+- [soc-civ.t_adv.law.family-law] 婚姻、親子與繼承的基本規範  {t_adv, 學測}  · provisionally_verified
+- [soc-civ.t_adv.law.liability-types] 無過失責任與過失責任、連帶責任  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.law.civil-principles] 民法基本原則（私法自治、契約自由及其限制）  {t_sub, 分科-公民}  · unverified
-- [soc-civ.t_mid.law.crime-basic] 犯罪的成立要件概念與刑罰種類  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.law.crime-basic] 犯罪的成立要件概念與刑罰種類  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.legality] 罪刑法定原則  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.law.juvenile] 少年事件處理的保護精神與處遇  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.law.juvenile] 少年事件處理的保護精神與處遇  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.law.crime-elements] 構成要件該當、違法性、有責性三階層概念  {t_adv, 學測}  · provisionally_verified
-- [soc-civ.t_adv.law.intent-negligence] 故意與過失、既遂與未遂  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.law.intent-negligence] 故意與過失、既遂與未遂  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.law.presumption-innocence] 無罪推定與證據裁判原則  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.law.criminal-procedure] 刑事訴訟流程（偵查、起訴、審判、執行）概念  {t_adv, 學測}  · provisionally_verified
-- [soc-civ.t_sub.law.justification] 阻卻違法事由（正當防衛、緊急避難）  {t_sub, 分科-公民}  · unverified
-- [soc-civ.t_sub.law.citizen-judge] 國民法官制度的意義與運作  {t_sub, 分科-公民}  · unverified
+- [soc-civ.t_sub.law.justification] 阻卻違法事由（正當防衛、緊急避難）  {t_sub, 分科-公民}  · provisionally_verified
+- [soc-civ.t_sub.law.citizen-judge] 國民法官制度的意義與運作  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_mid.law.admin-basic] 行政機關、行政行為與依法行政初步  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.law.remedy-ways] 權利受侵害時的救濟管道概念  {t_mid, 會考}  · unverified
-- [soc-civ.t_adv.law.admin-disposition] 行政處分的意義與合法性要件  {t_adv, 學測}  · unverified
-- [soc-civ.t_adv.law.appeal-litigation] 訴願與行政訴訟的程序與層級  {t_adv, 學測}  · unverified
+- [soc-civ.t_mid.law.remedy-ways] 權利受侵害時的救濟管道概念  {t_mid, 會考}  · provisionally_verified
+- [soc-civ.t_adv.law.admin-disposition] 行政處分的意義與合法性要件  {t_adv, 學測}  · provisionally_verified
+- [soc-civ.t_adv.law.appeal-litigation] 訴願與行政訴訟的程序與層級  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.law.state-compensation] 國家賠償與損失補償的區別  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.law.dispute-resolution] 調解、仲裁、訴訟等紛爭解決途徑比較  {t_adv, 學測}  · provisionally_verified
-- [soc-civ.t_sub.law.admin-discretion] 行政裁量與不確定法律概念  {t_sub, 分科-公民}  · unverified
+- [soc-civ.t_sub.law.admin-discretion] 行政裁量與不確定法律概念  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_base.law.consumer-basic] 購物看清標示、保留發票、可退換貨初步  {t_base, 無}  · unverified
 - [soc-civ.t_mid.law.consumer-protection] 消費者保護法：定型化契約、猶豫期（鑑賞期）、商品責任  {t_mid, 會考}  · unverified
 - [soc-civ.t_mid.law.consumer-remedy] 消費爭議的申訴與調解管道  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.law.labor-basic] 勞動基準法基本保障（工時、基本工資、休假）  {t_mid, 會考}  · unverified
-- [soc-civ.t_mid.law.part-time-rights] 青少年打工的權益與勞動契約注意事項  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.law.labor-basic] 勞動基準法基本保障（工時、基本工資、休假）  {t_mid, 會考}  · provisionally_verified
+- [soc-civ.t_mid.law.part-time-rights] 青少年打工的權益與勞動契約注意事項  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.law.labor-relations] 勞資關係與勞動三權（團結、協商、爭議）  {t_adv, 學測}  · unverified
-- [soc-civ.t_adv.law.gender-equality-law] 性別平等工作法與性別平等教育法的保障  {t_adv, 學測}  · unverified
-- [soc-civ.t_adv.law.sexual-harassment-law] 性騷擾防治三法的分工與適用（職場／校園／一般）  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.law.gender-equality-law] 性別平等工作法與性別平等教育法的保障  {t_adv, 學測}  · provisionally_verified
+- [soc-civ.t_adv.law.sexual-harassment-law] 性騷擾防治三法的分工與適用（職場／校園／一般）  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.law.domestic-violence] 家庭暴力防治與保護令制度  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.law.labor-dispute] 勞動爭議處理與不當勞動行為裁決  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_sub.law.anti-discrimination] 就業歧視禁止與合理調整義務  {t_sub, 分科-公民}  · provisionally_verified
@@ -2539,7 +2539,7 @@
 - [soc-civ.t_adv.economy.public-goods] 公共財的特性（無排他、無敵對）與搭便車問題  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.economy.govt-failure] 政府失靈的概念與成因  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_sub.economy.coase] 外部性的矯正工具（課稅、補貼、財產權界定）  {t_sub, 分科-公民}  · provisionally_verified
-- [soc-civ.t_sub.economy.asymmetric-info] 資訊不對稱（逆選擇、道德危險）的實例與對策  {t_sub, 分科-公民}  · unverified
+- [soc-civ.t_sub.economy.asymmetric-info] 資訊不對稱（逆選擇、道德危險）的實例與對策  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_mid.economy.money-function] 貨幣的功能（交易媒介、價值衡量、價值儲存）  {t_mid, 會考}  · unverified
 - [soc-civ.t_mid.economy.bank-role] 銀行的功能與存款、放款初步  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.economy.saving-invest] 儲蓄與投資的區別、風險與報酬概念  {t_mid, 會考}  · provisionally_verified
@@ -2555,7 +2555,7 @@
 - [soc-civ.t_adv.economy.cpi-inflation] 物價指數、通貨膨脹與通貨緊縮的影響  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.economy.unemployment] 失業的類型（摩擦性、結構性、循環性）與失業率  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.economy.business-cycle] 景氣循環的階段與景氣對策信號  {t_adv, 學測}  · provisionally_verified
-- [soc-civ.t_sub.economy.ad-as] 總合需求與總合供給模型初步  {t_sub, 分科-公民}  · unverified
+- [soc-civ.t_sub.economy.ad-as] 總合需求與總合供給模型初步  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_sub.economy.phillips] 通膨與失業的取捨（菲利浦曲線概念）  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_sub.economy.gdp-welfare] GDP 作為福祉指標的侷限與替代指標  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_mid.economy.tax-why] 政府為何課稅、稅收的用途  {t_mid, 會考}  · provisionally_verified
@@ -2565,7 +2565,7 @@
 - [soc-civ.t_adv.economy.fiscal-policy] 財政政策（政府支出與租稅）的運用  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.economy.budget-deficit] 政府預算、赤字與公債的概念  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.economy.redistribution] 所得重分配政策（移轉性支出、社會保險）的效果與爭議  {t_sub, 分科-公民}  · provisionally_verified
-- [soc-civ.t_sub.economy.fiscal-sustain] 財政紀律與世代財政負擔  {t_sub, 分科-公民}  · unverified
+- [soc-civ.t_sub.economy.fiscal-sustain] 財政紀律與世代財政負擔  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_mid.economy.trade-why] 國際貿易的原因與進出口概念  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.economy.exchange-basic] 匯率的意義與升值、貶值的初步影響  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.economy.exchange-rate] 匯率的決定與升貶值對進出口的影響  {t_adv, 學測}  · provisionally_verified
@@ -2573,15 +2573,15 @@
 - [soc-civ.t_adv.economy.balance-payment] 國際收支的概念（經常帳、金融帳）  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.economy.comparative-trade] 比較利益法則在國際貿易的應用  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_sub.economy.exchange-regime] 固定匯率與浮動匯率制度的比較  {t_sub, 分科-公民}  · provisionally_verified
-- [soc-civ.t_sub.economy.trade-org] 區域經濟整合與國際經貿組織（WTO 等）的角色  {t_sub, 分科-公民}  · unverified
+- [soc-civ.t_sub.economy.trade-org] 區域經濟整合與國際經貿組織（WTO 等）的角色  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_mid.economy.globalization-basic] 全球化下商品、資金、人員的跨國流動  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_adv.economy.global-division] 國際分工與跨國企業的角色  {t_adv, 學測}  · unverified
-- [soc-civ.t_adv.economy.globalization-impact] 全球化對就業、產業與所得分配的影響  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.economy.global-division] 國際分工與跨國企業的角色  {t_adv, 學測}  · provisionally_verified
+- [soc-civ.t_adv.economy.globalization-impact] 全球化對就業、產業與所得分配的影響  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.economy.global-value-chain] 全球價值鏈與供應鏈重組  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_base.global.world-neighbors] 認識世界不同國家與文化、地球村概念  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_mid.global.intl-org] 重要國際組織（聯合國等）的宗旨與功能概念  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.global.global-issues] 全球共同面對的議題（氣候、貧窮、疫病）  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.global.ngo] 國際非政府組織與人道援助的角色  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.global.ngo] 國際非政府組織與人道援助的角色  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.global.state-interaction] 國際社會中國家間的競爭與合作  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.global.intl-law] 國際法與國際人權機制的概念  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.global.regional-integration] 區域組織與區域整合（如歐盟）的運作  {t_adv, 學測}  · unverified
@@ -2598,18 +2598,18 @@
 - [soc-civ.t_adv.issues.env-justice] 環境正義與環境外部成本內部化  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.issues.sdgs] 聯合國永續發展目標（SDGs）的架構與落實爭議  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_mid.issues.migration] 國際移民、移工與新住民的社會融入  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_adv.issues.migrant-rights] 移工與移民權益保障的爭議  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.issues.migrant-rights] 移工與移民權益保障的爭議  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.issues.refugee] 難民問題與國際人道責任  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_base.issues.media-basic] 辨別廣告與真實訊息、不隨意轉傳  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_mid.issues.media-literacy] 媒體識讀：查證來源、辨識假訊息  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.issues.press-freedom] 新聞自由與言論自由的意義  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_adv.issues.media-democracy] 媒體作為第四權與媒體近用權  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.issues.media-democracy] 媒體作為第四權與媒體近用權  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.issues.privacy] 個人資料保護與隱私權（數位時代）  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.issues.disinformation] 假訊息治理與言論自由的界線  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_sub.issues.ai-ethics] 科技（AI、演算法）發展的社會與倫理爭議  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_mid.issues.consumer-finance] 青少年理財、信用卡與分期的風險  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.issues.financial-fraud] 金融詐騙與投資陷阱的辨識與防範  {t_adv, 學測}  · provisionally_verified
-- [soc-civ.t_sub.issues.digital-economy] 數位經濟、平台經濟與勞動型態的改變  {t_sub, 分科-公民}  · unverified
+- [soc-civ.t_sub.issues.digital-economy] 數位經濟、平台經濟與勞動型態的改變  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_base.inquiry.ask-question] 對身邊的公共事務提出好奇與問題  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_base.inquiry.listen-views] 聆聽不同意見、嘗試找出大家都能接受的做法  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_mid.inquiry.define-issue] 界定公共議題與區分事實與意見  {t_mid, 會考}  · provisionally_verified
@@ -2722,7 +2722,7 @@
 - [soc-geo.t_mid.nat-climate.wind-cause] 說明風因氣壓梯度而生（高壓吹向低壓）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-climate.climograph-type] 由雨溫圖判斷氣候類型  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-climate.koppen-major] 辨認柯本氣候五大類（A熱帶、B乾燥、C溫帶、D大陸性／副寒帶、E極地／寒帶）  {t_mid, 會考}  · provisionally_verified
-- [soc-geo.t_mid.nat-climate.tw-features] 說明台灣季風、梅雨、颱風的氣候特徵  {t_mid, 會考}  · unverified
+- [soc-geo.t_mid.nat-climate.tw-features] 說明台灣季風、梅雨、颱風的氣候特徵  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-climate.isotherm] 判讀等溫線與等雨量線圖  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_adv.nat-climate.global-circulation] 說明三胞環流與信風、西風、極地東風  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.nat-climate.pressure-belt] 說明氣壓帶與風帶的季節移動  {t_adv, 學測}  · provisionally_verified
@@ -2994,7 +2994,7 @@
 - [soc-hist.t_base.skill.first-source-intro] 認識文物、老照片、老地圖是了解過去的「線索」（一手來源初步）  {t_base, 無}  · provisionally_verified
 - [soc-hist.t_base.skill.local-change] 說明家鄉／社區隨時間的變遷（地名由來、街景、建築）  {t_base, 無}  · provisionally_verified
 - [soc-hist.t_mid.skill.periodization] 理解歷史分期概念（史前／有史；各時期分界的依據）  {t_mid, 會考}  · provisionally_verified
-- [soc-hist.t_mid.skill.calendar-convert] 西元／民國紀年互換，世紀與年代的換算與定位  {t_mid, 會考}  · unverified
+- [soc-hist.t_mid.skill.calendar-convert] 西元／民國紀年互換，世紀與年代的換算與定位  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.skill.source-primary-secondary] 區分一手史料與二手史料並舉例  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.skill.source-value-limit] 評估史料的證據價值與侷限（立場、偏見、殘缺、真偽）  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.skill.causation] 分析事件的遠因、近因與導火線  {t_mid, 會考}  · provisionally_verified
