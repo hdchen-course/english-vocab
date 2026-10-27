@@ -71,7 +71,7 @@
 - [eng.t_mid.morph.suffix-noun] 名詞字尾（-tion/-ment/-ness/-ity/-er/-or/-ist/-ship）  {tier: t_mid, exam: 會考}
 - [eng.t_mid.morph.suffix-adjective] 形容詞字尾（-ful/-less/-ous/-ive/-al/-ic/-able/-y/-ish）  {tier: t_mid, exam: 會考}
 - [eng.t_mid.morph.suffix-verb] 動詞字尾（-ize/-ify/-en/-ate）  {tier: t_mid, exam: 會考}
-- [eng.t_mid.morph.prefix-negative] 否定/反義字首（un-/in-/im-/il-/ir-/dis-/non-/mis-）  {tier: t_mid, exam: 會考}
+- [eng.t_mid.morph.prefix-negative] 否定/反義字首（un-/in-/im-/il-/ir-/dis-/non-）  {tier: t_mid, exam: 會考}
 - [eng.t_mid.morph.word-family] 派生與詞類轉換（beauty/beautiful/beautifully）  {tier: t_mid, exam: 會考}
 - [eng.t_adv.morph.prefix-degree] 數量/程度字首（bi-/tri-/multi-/semi-/over-/under-/super-）  {tier: t_adv, exam: 學測}
 - [eng.t_adv.morph.prefix-relation] 關係/方位字首（re-/pre-/post-/inter-/trans-/sub-/ex-/co-）  {tier: t_adv, exam: 學測}
@@ -265,11 +265,11 @@
 
 - [eng.t_adv.subj.present-unreal] 與現在事實相反（If + 過去式, would/could/might + V）  {tier: t_adv, exam: 學測}
 - [eng.t_adv.subj.past-unreal] 與過去事實相反（If + had p.p., would have p.p.）  {tier: t_adv, exam: 學測}
-- [eng.t_adv.subj.as-if] as if / as though 與事實相反  {tier: t_adv, exam: 學測}
+- [eng.t_adv.subj.as-if] as if / as though 的假設語氣（與事實相反；亦有對比可能為真的直陳用法）  {tier: t_adv, exam: 學測}
 - [eng.t_adv.subj.wish] I wish 句型（現在/過去/未來願望）  {tier: t_adv, exam: 學測}
 - [eng.t_adv.subj.indicative-vs-subjunctive] 直說 vs 假設語氣判別  {tier: t_adv, exam: 學測}
 - [eng.t_sub.subj.future-unreal] 與未來不可能/假設（If + were to / should）  {t_adv, 學測}
-- [eng.t_sub.subj.mixed] 混合假設（過去條件→現在結果）  {t_adv, 學測}
+- [eng.t_sub.subj.mixed] 混合假設（兩型：過去條件→現在結果／現在持續條件→過去結果）  {t_adv, 學測}
 - [eng.t_sub.subj.inversion-omit-if] 省略 if 的倒裝（Were I / Had I / Should you）  {t_adv, 學測}
 - [eng.t_sub.subj.would-rather] would rather (+ that 子句過去式)  {t_adv, 學測}
 - [eng.t_sub.subj.if-only] if only  {t_adv, 學測}
