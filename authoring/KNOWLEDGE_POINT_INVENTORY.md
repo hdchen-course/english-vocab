@@ -2658,7 +2658,7 @@
 - [soc-geo.t_adv.skill.vector-raster] 區辨向量資料與網格（網格/柵格）資料的特性  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.skill.spatial-attribute] 區辨空間資料與屬性資料  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.skill.rs-concept] 說明遙感探測（RS）原理並初步判讀衛星影像  {t_adv, 學測}  · provisionally_verified
-- [soc-geo.t_adv.skill.gnss] 說明全球導航衛星系統（GNSS/GPS）三邊定位原理  {t_adv, 學測}  · unverified
+- [soc-geo.t_adv.skill.gnss] 說明全球導航衛星系統（GNSS/GPS）三邊定位原理  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.skill.isoline-interp] 在等值線圖上做內插估值  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.skill.isochrone] 判讀等時線圖（可及性/通勤圈）  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.skill.triangle-graph] 判讀三角圖（三級產業結構比重）  {t_adv, 學測}  · provisionally_verified
@@ -2713,7 +2713,7 @@
 - [soc-geo.t_base.nat-climate.weather-vs-climate] 區辨天氣與氣候（初步）  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_base.nat-climate.measure] 測量並記錄氣溫與降雨量  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_base.nat-climate.seasons] 說明四季變化與生活關係  {t_base, 無}  · provisionally_verified
-- [soc-geo.t_base.nat-climate.tw-basic] 說明台灣「夏熱、冬溫、多雨」的概況  {t_base, 無}  · unverified
+- [soc-geo.t_base.nat-climate.tw-basic] 說明台灣「夏熱、冬溫、多雨」的概況  {t_base, 無}  · provisionally_verified
 - [soc-geo.t_mid.nat-climate.temp-factors] 列舉影響氣溫的因素（緯度、高度、海陸、洋流、地形）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-climate.lapse-rate] 說明氣溫隨高度遞減（約每百公尺降溫）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-climate.temp-range] 區辨年溫差與日溫差並比較海陸差異  {t_mid, 會考}  · provisionally_verified
@@ -2727,7 +2727,7 @@
 - [soc-geo.t_adv.nat-climate.global-circulation] 說明三胞環流與信風、西風、極地東風  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.nat-climate.pressure-belt] 說明氣壓帶與風帶的季節移動  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.nat-climate.planetary-wind] 連結行星風系與氣候帶分布  {t_adv, 學測}  · provisionally_verified
-- [soc-geo.t_adv.nat-climate.koppen-sub] 辨認柯本細分型（Af/Aw/BW/BS/Cfa/Cs/Cw/Df/ET 等）  {t_adv, 學測}  · unverified
+- [soc-geo.t_adv.nat-climate.koppen-sub] 辨認柯本細分型（Af/Aw/BW/BS/Cfa/Cs/Cw/Df/ET 等）  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.nat-climate.ocean-current] 說明暖流、寒流對沿岸氣候的影響  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.nat-climate.enso] 說明聖嬰與反聖嬰現象的成因與影響  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.nat-climate.fronts] 區辨冷鋒、暖鋒、滯留鋒、囚錮鋒  {t_adv, 學測}  · provisionally_verified
@@ -2941,7 +2941,7 @@
 - [soc-geo.t_mid.reg-world.oceania] 說明大洋洲的自然與人文特色  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.reg-world.overview] 概覽各洲主要地形、氣候與產業  {t_mid, 會考}  · unverified
 - [soc-geo.t_mid.reg-world.orgs-intro] 認識世界主要國家與區域組織（初步）  {t_mid, 會考}  · unverified
-- [soc-geo.t_adv.reg-world.systematic] 對各洲做自然＋人文的系統地理分析  {t_adv, 學測}  · provisionally_verified
+- [soc-geo.t_adv.reg-world.systematic] 對各洲做自然＋人文的區域地理（regional geography）分析  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.reg-world.eu] 說明歐洲統合（歐盟）與區域整合  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.reg-world.asean] 說明東南亞（東協/ASEAN）的區域發展  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.reg-world.westasia-oil] 分析西亞石油與地緣政治  {t_adv, 學測}  · provisionally_verified

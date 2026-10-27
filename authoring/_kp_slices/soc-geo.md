@@ -358,7 +358,7 @@
 - [soc-geo.t_mid.reg-world.oceania] 說明大洋洲的自然與人文特色  {t_mid, 會考}
 - [soc-geo.t_mid.reg-world.overview] 概覽各洲主要地形、氣候與產業  {t_mid, 會考}
 - [soc-geo.t_mid.reg-world.orgs-intro] 認識世界主要國家與區域組織（初步）  {t_mid, 會考}
-- [soc-geo.t_adv.reg-world.systematic] 對各洲做自然＋人文的系統地理分析  {t_adv, 學測}
+- [soc-geo.t_adv.reg-world.systematic] 對各洲做自然＋人文的區域地理（regional geography）分析  {t_adv, 學測}
 - [soc-geo.t_adv.reg-world.eu] 說明歐洲統合（歐盟）與區域整合  {t_adv, 學測}
 - [soc-geo.t_adv.reg-world.asean] 說明東南亞（東協/ASEAN）的區域發展  {t_adv, 學測}
 - [soc-geo.t_adv.reg-world.westasia-oil] 分析西亞石油與地緣政治  {t_adv, 學測}
