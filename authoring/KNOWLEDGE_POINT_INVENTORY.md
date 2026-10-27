@@ -1332,7 +1332,7 @@
 - [sci.t_mid.bio-cell-structure.microscope-parts] 辨識複式顯微鏡各部位（目鏡/物鏡/載物台/光圈/準焦螺旋）與操作步驟  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-cell-structure.total-magnification] 計算顯微鏡總放大倍率＝目鏡倍率×物鏡倍率  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-cell-structure.image-inversion] 說明顯微鏡成像為上下左右顛倒、移動玻片方向與視野相反  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.bio-cell-structure.cell-theory] 敘述細胞學說三要點（生物由細胞構成/細胞是基本單位/細胞來自既存細胞）  {t_mid, 會考}  · unverified
+- [sci.t_mid.bio-cell-structure.cell-theory] 敘述細胞學說三要點（生物由細胞構成/細胞是基本單位/細胞來自既存細胞）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-cell-structure.plant-vs-animal] 比較動植物細胞差異（細胞壁、葉綠體、大液胞之有無）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-cell-structure.organelle-nucleus] 說明細胞核功能：含遺傳物質、控制細胞活動  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-cell-structure.organelle-membrane] 說明細胞膜功能：區隔內外、選擇性通透、控制物質進出  {t_mid, 會考}  · provisionally_verified
@@ -1351,7 +1351,7 @@
 - [sci.t_adv.bio-cell-structure.endomembrane-system] 統整內膜系統的物質流（內質網→高基氏體→囊泡→膜）  {t_adv, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-cell-structure.membrane-fluid-mosaic] 以流體鑲嵌模型描述細胞膜（磷脂雙層＋鑲嵌蛋白＋膽固醇＋醣蛋白）  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-cell-structure.endosymbiosis] 以內共生學說解釋粒線體與葉綠體的起源證據  {t_sub, 分科-生物}  · provisionally_verified
-- [sci.t_sub.bio-cell-structure.nuclear-pore] 說明核膜、核孔與核仁（rRNA 與核糖體次單元組裝）  {t_sub, 分科-生物}  · unverified
+- [sci.t_sub.bio-cell-structure.nuclear-pore] 說明核膜、核孔與核仁（rRNA 與核糖體次單元組裝）  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_mid.bio-membrane-transport.diffusion] 定義擴散：分子由高濃度往低濃度移動  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-membrane-transport.osmosis] 定義滲透：水分子透過半透膜，由溶質濃度低（水多）側淨移動到溶質濃度高（水少）側  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-membrane-transport.tonicity-cell] 預測細胞在高張/低張/等張溶液中的脹縮（溶血、膨壓）  {t_mid, 會考}  · unverified
@@ -1485,7 +1485,7 @@
 - [sci.t_adv.bio-coordination.negative-feedback-hormone] 以甲狀腺素/下視丘—腦垂腺軸說明激素的負回饋調節  {t_adv, 學測}  · unverified
 - [sci.t_adv.bio-coordination.hypothalamus-pituitary] 說明下視丘與腦垂腺（前葉/後葉）的調控關係  {t_adv, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-coordination.resting-potential] 說明靜止膜電位的鈉鉀分布與離子基礎  {t_sub, 分科-生物}  · unverified
-- [sci.t_sub.bio-coordination.saltatory-conduction] 說明髓鞘與蘭氏結造成的跳躍式傳導  {t_sub, 分科-生物}  · unverified
+- [sci.t_sub.bio-coordination.saltatory-conduction] 說明髓鞘與蘭氏結造成的跳躍式傳導  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-coordination.second-messenger] 區分水溶性（受體在膜/二級傳訊）與脂溶性激素（入胞內）作用機制  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-coordination.eye-ear-detail] 說明眼（視網膜/桿細胞錐細胞）與耳（耳蝸/前庭）的受器機制  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_mid.bio-immunity.pathogen-types] 區分病原體類型（細菌、病毒、真菌、寄生蟲）  {t_mid, 會考}  · provisionally_verified
@@ -1573,7 +1573,7 @@
 - [sci.t_sub.bio-biotech.cloning] 區分生殖性與治療性複製、以複製羊為例  {t_sub, 分科-生物}  · unverified
 - [sci.t_sub.bio-biotech.dna-fingerprint] 說明 DNA 指紋在親子鑑定、刑事鑑識的應用  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-biotech.stem-cells] 說明幹細胞（胚胎/成體/iPS）與再生醫學  {t_sub, 分科-生物}  · provisionally_verified
-- [sci.t_sub.bio-biotech.crispr] 初步認識 CRISPR 基因編輯技術及其倫理爭議  {t_enrich, 無}  · unverified
+- [sci.t_sub.bio-biotech.crispr] 初步認識 CRISPR 基因編輯技術及其倫理爭議  {t_enrich, 無}  · provisionally_verified
 - [sci.t_sub.bio-biotech.genome-project] 認識人類基因體計畫的意義與應用  {t_sub, 分科-生物}  · unverified
 - [sci.t_mid.bio-evolution.fossil-evidence] 說明化石為生物演化的證據、推論古今生物的變化  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-evolution.variation-source] 說明變異為演化的原料（來自突變與有性生殖重組）  {t_mid, 會考}  · unverified
@@ -1593,7 +1593,7 @@
 - [sci.t_sub.bio-evolution.phylogenetic-tree] 判讀親緣（演化）樹與共同祖先關係  {t_sub, 分科-生物}  · unverified
 - [sci.t_base.bio-biodiversity.sort-animals] 依特徵將動物簡單分類（有無脊椎、棲地、食性）  {t_base, 無}  · unverified
 - [sci.t_base.bio-biodiversity.sort-plants] 觀察植物的多樣性並簡單分類  {t_base, 無}  · unverified
-- [sci.t_mid.bio-biodiversity.taxonomic-ranks] 依序列出分類階層（界門綱目科屬種）  {t_mid, 會考}  · unverified
+- [sci.t_mid.bio-biodiversity.taxonomic-ranks] 依序列出分類階層（界門綱目科屬種）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-biodiversity.binomial-nomenclature] 說明二名法（屬名＋種小名、斜體/屬名大寫）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-biodiversity.five-kingdoms] 認識五界（原核/原生/真菌/植物/動物）分類概念  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-biodiversity.vertebrate-classes] 區分脊椎動物五大類（魚/兩生/爬蟲/鳥/哺乳）特徵  {t_mid, 會考}  · provisionally_verified
@@ -1632,7 +1632,7 @@
 - [sci.t_mid.bio-ecology.energy-flow] 說明能量沿食物鏈單向流動、逐級遞減（約 10%）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-ecology.ecological-pyramid] 判讀能量塔/數量塔/生物量塔  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-ecology.carbon-cycle] 說明碳循環（光合/呼吸/燃燒/分解）  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.bio-ecology.water-cycle] 說明水循環的主要過程  {t_mid, 會考}  · unverified
+- [sci.t_mid.bio-ecology.water-cycle] 說明水循環的主要過程  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-ecology.population-def] 定義族群並說明密度、出生率、死亡率的概念  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-ecology.symbiosis-types] 區分共生關係（互利、片利、寄生）與競爭、掠食  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-ecology.succession] 說明生態演替（初級/次級）與顛峰群集  {t_mid, 會考}  · unverified
@@ -1694,8 +1694,8 @@
 - [sci.t_mid.earth-tectonics.plate-tectonics-theory] 板塊構造學說：岩石圈分裂成數個板塊、在軟流圈上移動  {t_mid, 會考}  · unverified
 - [sci.t_mid.earth-tectonics.major-plates] 全球主要板塊名稱與相對位置（歐亞、太平洋、菲律賓海板塊等）  {t_mid, 會考}  · unverified
 - [sci.t_mid.earth-tectonics.divergent-boundary] 張裂（分離）型板塊邊界：中洋脊、裂谷，地殼生成  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.earth-tectonics.convergent-subduction] 聚合（碰撞）型板塊邊界—隱沒帶：海溝、火山島弧形成  {t_mid, 會考}  · unverified
-- [sci.t_mid.earth-tectonics.convergent-collision] 聚合型—大陸碰撞造山（如喜馬拉雅山）  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-tectonics.convergent-subduction] 聚合（碰撞）型板塊邊界—隱沒帶：海溝、火山島弧形成  {t_mid, 會考}  · provisionally_verified
+- [sci.t_mid.earth-tectonics.convergent-collision] 聚合型—大陸碰撞造山（如喜馬拉雅山）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-tectonics.transform-boundary] 錯動（平移）型板塊邊界：轉形斷層（如聖安地列斯斷層）  {t_mid, 會考}  · unverified
 - [sci.t_mid.earth-tectonics.taiwan-plate-setting] 臺灣位於歐亞板塊與菲律賓海板塊聚合帶，造成造山與多地震  {t_mid, 會考}  · unverified
 - [sci.t_adv.earth-tectonics.mantle-convection] 板塊運動的驅動力：地函對流、隱沒板塊的拉力（slab pull）、中洋脊推力  {t_adv, 學測}  · unverified
@@ -1772,7 +1772,7 @@
 - [sci.t_adv.earth-atmosphere.greenhouse-mechanism] 溫室氣體吸收地表長波輻射再放射，維持地表適居溫度的機制  {t_adv, 學測}  · unverified
 - [sci.t_adv.earth-atmosphere.ionosphere] 增溫層/電離層對無線電波的反射與極光的關係（概念）  {t_adv, 學測}  · unverified
 - [sci.t_base.earth-weather.weather-elements] 觀測與記錄天氣：晴、陰、雨、氣溫、風  {t_base, 無}  · provisionally_verified
-- [sci.t_base.earth-weather.seasons-weather] 不同季節的天氣特徵（冬冷、夏熱、梅雨、颱風季）  {t_base, 無}  · unverified
+- [sci.t_base.earth-weather.seasons-weather] 不同季節的天氣特徵（冬冷、夏熱、梅雨、颱風季）  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.earth-weather.humidity-dewpoint] 水氣、相對濕度與露點的概念  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-weather.cloud-rain-formation] 雲與雨的形成：空氣上升、絕熱冷卻、水氣凝結  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-weather.precipitation-types] 降水型態：雨、雪、冰雹的形成條件差異  {t_mid, 會考}  · unverified
@@ -1794,7 +1794,7 @@
 - [sci.t_mid.earth-climate.climate-factors] 影響氣候的因素：緯度、海陸分布、地形、洋流  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-climate.taiwan-climate] 臺灣氣候特徵：季風、南北與高低海拔氣候差異  {t_mid, 會考}  · unverified
 - [sci.t_mid.earth-climate.monsoon] 季風成因：海陸比熱差異造成冬夏盛行風向反轉  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.earth-climate.greenhouse-warming] 溫室效應增強與全球暖化的因果關係  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-climate.greenhouse-warming] 溫室效應增強與全球暖化的因果關係  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-climate.warming-impacts] 全球暖化的影響：海平面上升、極端天氣、生態改變  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.earth-climate.global-circulation] 三胞環流（哈德里、佛雷爾、極地胞）與氣壓帶、風帶分布  {t_adv, 學測}  · unverified
 - [sci.t_adv.earth-climate.desert-belt] 副熱帶高壓帶下沉氣流與沙漠帶分布的關係  {t_adv, 學測}  · provisionally_verified
@@ -1811,18 +1811,18 @@
 - [sci.t_mid.earth-ocean.kuroshio] 黑潮（暖流）對臺灣氣候與漁業的影響  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-ocean.waves-basic] 波浪由風力造成；波高、波長與風速、吹送距離有關  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-ocean.tide-basic] 潮汐的漲退與一天兩次高低潮（臺灣多為半日潮）  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.earth-ocean.water-resource-sea] 海洋資源（漁業、鹽、能源）與永續利用  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-ocean.water-resource-sea] 海洋資源（漁業、鹽、能源）與永續利用  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.earth-ocean.thermocline-pycnocline] 海水垂直結構：混合層、斜溫層、深層與密度分層  {t_adv, 學測}  · unverified
 - [sci.t_adv.earth-ocean.gyre-coriolis] 科氏力與風共同造成大洋環流（渦旋 gyre）及西方強化  {t_adv, 學測}  · unverified
 - [sci.t_adv.earth-ocean.thermohaline-circulation] 溫鹽環流（深層環流）由海水溫度與鹽度差驅動  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-ocean.upwelling] 湧升流形成機制與其對漁業（營養鹽）的重要性  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.earth-ocean.tide-generation] 潮汐成因：月球與太陽引潮力（月球主導）  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-ocean.tide-generation] 潮汐成因：月球與太陽引潮力（月球主導）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-ocean.spring-neap-tide] 大潮（朔望）與小潮（上下弦）與日月相對位置的關係  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-ocean.wave-motion] 深水波中水質點作圓周運動、波形傳遞能量而水不隨波前進  {t_adv, 學測}  · unverified
 - [sci.t_base.earth-hydrology.water-cycle-basic] 水循環：蒸發、凝結、降水、逕流的循環過程  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-hydrology.water-save] 珍惜與節約用水、認識水資源有限  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.earth-hydrology.water-cycle-energy] 水循環由太陽能驅動，水在三態間轉換  {t_mid, 會考}  · unverified
-- [sci.t_mid.earth-hydrology.surface-water] 地表水：河川、湖泊、水庫與集水區概念  {t_mid, 會考}  · unverified
+- [sci.t_mid.earth-hydrology.surface-water] 地表水：河川、湖泊、水庫與集水區概念  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-hydrology.groundwater-aquifer] 地下水的儲存（含水層）與補注、抽取  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-hydrology.water-table] 地下水位的概念與升降  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-hydrology.taiwan-water-issue] 臺灣水資源問題：降雨時空分布不均、河短流急、留蓄不易  {t_mid, 會考}  · unverified
@@ -2066,7 +2066,7 @@
 - [sci.t_mid.phys-em.electromagnet] 電磁鐵與應用（電鈴/繼電器）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-em.motor-basic] 電流在磁場中受力（馬達原理）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-em.induction-basic] 電磁感應與發電機原理初步  {t_mid, 會考}  · unverified
-- [sci.t_adv.phys-em.field-of-current] 直導線/線圈/螺線管磁場的方向與強度  {t_adv, 學測}  · unverified
+- [sci.t_adv.phys-em.field-of-current] 直導線/線圈/螺線管磁場的方向與強度  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.phys-em.force-on-wire] 載流導線在磁場受力（F=BIL）與左手定則  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.phys-em.lorentz] 運動電荷在磁場受力（勞侖茲力 F=qvB）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.phys-em.faraday-law] 法拉第電磁感應定律（感應電動勢與磁通變化率）  {t_adv, 學測}  · provisionally_verified
@@ -2139,7 +2139,7 @@
 - [sci.t_sub.chem-bond.hybridization] 混成軌域（sp/sp²/sp³）與鍵角  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-bond.sigma-pi] σ 鍵與 π 鍵、鍵能與鍵長  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-bond.resonance] 共振結構與形式電荷  {t_sub, 分科-化學}  · provisionally_verified
-- [sci.t_sub.chem-bond.mo-theory] 分子軌域理論初步  {t_enrich, 無}  · unverified
+- [sci.t_sub.chem-bond.mo-theory] 分子軌域理論初步  {t_enrich, 無}  · provisionally_verified
 - [sci.t_sub.chem-bond.crystal-types] 晶體分類（離子/共價網狀/分子/金屬）與性質  {t_sub, 分科-化學}  · unverified
 - [sci.t_mid.chem-stoich.formula] 化學式的意義與讀寫  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-stoich.balance] 化學反應式的平衡（係數配平）  {t_mid, 會考}  · provisionally_verified
@@ -2167,7 +2167,7 @@
 - [sci.t_adv.chem-gas.dalton-partial] 道耳頓分壓定律與莫耳分率  {t_adv, 學測}  · provisionally_verified
 - [sci.t_sub.chem-gas.kinetic-rms] 氣體分子動力論與方均根速率  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-gas.graham] 格銳目擴散定律  {t_sub, 分科-化學}  · provisionally_verified
-- [sci.t_sub.chem-gas.real-gas] 真實氣體偏差與凡得瓦方程式  {t_enrich, 無}  · unverified
+- [sci.t_sub.chem-gas.real-gas] 真實氣體偏差與凡得瓦方程式  {t_enrich, 無}  · provisionally_verified
 - [sci.t_base.chem-soln.solution-idea] 溶解與溶液的概念  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.chem-soln.solute-solvent] 溶質/溶劑/溶液的辨識  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-soln.solubility-curve] 溶解度與溶解度曲線判讀  {t_mid, 會考}  · provisionally_verified
@@ -2267,14 +2267,14 @@
 - [sci.t_sub.chem-organic.stereoisomer] 結構異構與立體異構（順反/鏡像）  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-organic.reaction-types] 取代/加成/消去反應類型  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-organic.aromatic] 芳香烴（苯）與其結構  {t_sub, 分科-化學}  · unverified
-- [sci.t_sub.chem-organic.mechanism] 有機反應機構初步  {t_enrich, 無}  · unverified
+- [sci.t_sub.chem-organic.mechanism] 有機反應機構初步  {t_enrich, 無}  · provisionally_verified
 - [sci.t_sub.chem-organic.saponification] 皂化反應與界面活性劑  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_base.chem-applied.household-acidbase] 生活中的酸鹼物質（清潔劑/食物）  {t_base, 無}  · provisionally_verified
-- [sci.t_mid.chem-applied.pollution] 空氣汙染與水汙染（成因/防治）  {t_mid, 會考}  · unverified
+- [sci.t_mid.chem-applied.pollution] 空氣汙染與水汙染（成因/防治）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-applied.materials] 常見材料（金屬/塑膠/陶瓷）與回收  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-applied.fuels] 燃料與能源（化石燃料/燃燒產物）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.chem-applied.greenhouse] 溫室效應與碳排放的化學  {t_adv, 學測}  · unverified
-- [sci.t_adv.chem-applied.acid-rain] 酸雨的成因與影響  {t_adv, 學測}  · unverified
+- [sci.t_adv.chem-applied.acid-rain] 酸雨的成因與影響  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-applied.green-chemistry] 綠色化學與永續發展概念  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-applied.energy-storage] 電池與能源儲存的化學  {t_adv, 學測}  · provisionally_verified
 - [sci.t_sub.chem-applied.alt-energy] 替代能源與燃料電池的化學  {t_sub, 分科-化學}  · unverified
@@ -2374,7 +2374,7 @@
 - [soc-civ.t_sub.culture.identity-politics] 認同政治與多元文化政策的爭議  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_base.culture.gender-equal-basic] 男女生都能做各種事、分擔家務  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_base.culture.body-autonomy-basic] 身體自主：隱私部位、拒絕不當碰觸、勇敢求助  {t_base, 無}  · provisionally_verified
-- [soc-civ.t_mid.culture.sex-gender] 生理性別與社會性別（gender）的區別  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.culture.sex-gender] 生理性別與社會性別（gender）的區別  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.culture.gender-role] 性別角色與性別刻板印象的形成與鬆動  {t_mid, 會考}  · unverified
 - [soc-civ.t_mid.culture.gender-equality] 性別平等的意義與日常實踐  {t_mid, 會考}  · unverified
 - [soc-civ.t_mid.culture.gender-division] 家庭與職場中的性別分工議題  {t_mid, 會考}  · unverified
@@ -2385,17 +2385,17 @@
 - [soc-civ.t_sub.culture.gender-theory] 性別理論觀點（性別作為社會建構）與爭議  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_base.rights.my-rights] 認識自己擁有被照顧、受教育、被保護的權利  {t_base, 無}  · unverified
 - [soc-civ.t_base.rights.rights-duty] 權利與義務相伴（享權利也要盡責任）  {t_base, 無}  · unverified
-- [soc-civ.t_mid.rights.human-rights-meaning] 人權的意義與特性（普遍、固有、不可剝奪）  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.rights.human-rights-meaning] 人權的意義與特性（普遍、固有、不可剝奪）  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.rights.rights-generations] 人權的演進（自由權、參政權、社會權等世代）  {t_mid, 會考}  · unverified
-- [soc-civ.t_mid.rights.udhr] 世界人權宣言的精神與地位  {t_mid, 會考}  · unverified
-- [soc-civ.t_adv.rights.dignity] 人性尊嚴作為人權的核心基礎  {t_adv, 學測}  · unverified
-- [soc-civ.t_adv.rights.intl-covenants] 兩公約（公民與政治權利、經濟社會文化權利）的內國法化  {t_adv, 學測}  · unverified
+- [soc-civ.t_mid.rights.udhr] 世界人權宣言的精神與地位  {t_mid, 會考}  · provisionally_verified
+- [soc-civ.t_adv.rights.dignity] 人性尊嚴作為人權的核心基礎  {t_adv, 學測}  · provisionally_verified
+- [soc-civ.t_adv.rights.intl-covenants] 兩公約（公民與政治權利、經濟社會文化權利）的內國法化  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.rights.transitional-justice] 轉型正義的意義與面向  {t_adv, 學測}  · unverified
 - [soc-civ.t_sub.rights.rights-debate] 人權的普遍性與文化相對性之爭論  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_base.rights.child-safe] 遇到危險或被傷害時向大人／老師求助  {t_base, 無}  · unverified
 - [soc-civ.t_mid.rights.crc] 兒童權利公約四類權利（生存、發展、受保護、參與）  {t_mid, 會考}  · unverified
 - [soc-civ.t_mid.rights.crc-principles] 兒童權利公約四大一般原則（不歧視、兒童最佳利益、生存與發展權、尊重兒童意見）  {t_mid, 會考}  · unverified
-- [soc-civ.t_mid.rights.child-protection] 兒少保護法制與通報機制概念  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.rights.child-protection] 兒少保護法制與通報機制概念  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.rights.vulnerable-groups] 身心障礙者、弱勢族群的權益保障  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.rights.social-welfare] 社會福利與社會安全網的意義  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.rights.accessibility] 無障礙環境與合理調整的概念  {t_adv, 學測}  · provisionally_verified
@@ -2404,8 +2404,8 @@
 - [soc-civ.t_mid.politics.state-elements] 國家構成要素（人民、領土、政府、主權）  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.politics.sovereignty] 主權的意義（對內最高、對外獨立）  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.politics.nation-state] 國家、民族與政府概念的區辨  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_adv.politics.state-origin] 國家起源與功能的理論（社會契約觀點）  {t_adv, 學測}  · unverified
-- [soc-civ.t_adv.politics.political-power] 政治權力、權威與正當性的區別  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.politics.state-origin] 國家起源與功能的理論（社會契約觀點）  {t_adv, 學測}  · provisionally_verified
+- [soc-civ.t_adv.politics.political-power] 政治權力、權威與正當性的區別  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.politics.sovereignty-debate] 全球化下國家主權的轉變與爭論  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_base.politics.vote-basic] 班級投票、多數決與尊重少數初步體驗  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_mid.politics.democracy-autocracy] 民主政治與獨裁（威權）政治的區別  {t_mid, 會考}  · provisionally_verified
@@ -2431,7 +2431,7 @@
 - [soc-civ.t_sub.politics.constitution-amend] 修憲程序與憲政變遷  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_base.politics.local-service] 認識鄉鎮市區與社區公共服務（里長、公所）  {t_base, 無}  · unverified
 - [soc-civ.t_mid.politics.local-autonomy] 地方自治的意義與自治團體層級  {t_mid, 會考}  · unverified
-- [soc-civ.t_mid.politics.local-gov] 地方行政機關與地方民意機關的職權  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.politics.local-gov] 地方行政機關與地方民意機關的職權  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.politics.central-local] 中央與地方權限劃分與財政分配  {t_adv, 學測}  · unverified
 - [soc-civ.t_sub.politics.local-governance] 地方治理、跨域合作與府際關係  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_mid.politics.election-principles] 選舉四大原則（普通、平等、直接、無記名）  {t_mid, 會考}  · provisionally_verified
@@ -2465,10 +2465,10 @@
 - [soc-civ.t_adv.law.rule-of-law] 法治國原則（依法行政、法律保留、法律優位）  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.law.substantive-procedural] 實體法與程序法的區別  {t_adv, 學測}  · unverified
 - [soc-civ.t_sub.law.legal-interpretation] 法律解釋方法與法律漏洞補充  {t_sub, 分科-公民}  · provisionally_verified
-- [soc-civ.t_mid.law.constitution-status] 憲法作為國家根本大法的地位  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.law.constitution-status] 憲法作為國家根本大法的地位  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.basic-rights] 憲法保障的基本人權（自由權、平等權、受益權、參政權）  {t_mid, 會考}  · unverified
-- [soc-civ.t_mid.law.equality-right] 平等權與禁止不合理差別待遇  {t_mid, 會考}  · unverified
-- [soc-civ.t_mid.law.freedom-rights] 人身自由、言論、集會結社、宗教信仰等自由權  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.law.equality-right] 平等權與禁止不合理差別待遇  {t_mid, 會考}  · provisionally_verified
+- [soc-civ.t_mid.law.freedom-rights] 人身自由、言論、集會結社、宗教信仰等自由權  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.basic-duty] 人民基本義務（納稅、服兵役、受國民教育）  {t_mid, 會考}  · unverified
 - [soc-civ.t_adv.law.rights-limit] 基本權利的限制與憲法第23條（比例原則、法律保留）  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.law.due-process] 正當法律程序與人身自由保障（提審、羈押）  {t_adv, 學測}  · unverified
@@ -2477,7 +2477,7 @@
 - [soc-civ.t_sub.law.rights-conflict] 基本權利衝突與法益權衡  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_mid.law.capacity] 權利能力與行為能力（完全、限制、無行為能力人）  {t_mid, 會考}  · unverified
 - [soc-civ.t_mid.law.minor-contract] 未成年人法律行為的效力（需法定代理人同意）  {t_mid, 會考}  · unverified
-- [soc-civ.t_mid.law.contract-basic] 契約的成立與誠信原則  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.law.contract-basic] 契約的成立與誠信原則  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.tort-basic] 侵權行為與損害賠償責任的概念  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.law.property-obligation] 物權與債權的區別  {t_adv, 學測}  · unverified
 - [soc-civ.t_adv.law.family-law] 婚姻、親子與繼承的基本規範  {t_adv, 學測}  · unverified
@@ -2493,7 +2493,7 @@
 - [soc-civ.t_sub.law.justification] 阻卻違法事由（正當防衛、緊急避難）  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_sub.law.citizen-judge] 國民法官制度的意義與運作  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_mid.law.admin-basic] 行政機關、行政行為與依法行政初步  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.law.remedy-ways] 權利受侵害時的救濟管道概念  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.law.remedy-ways] 權利受侵害時的救濟管道概念  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.law.admin-disposition] 行政處分的意義與合法性要件  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.law.appeal-litigation] 訴願與行政訴訟的程序與層級  {t_adv, 學測}  · unverified
 - [soc-civ.t_adv.law.state-compensation] 國家賠償與損失補償的區別  {t_adv, 學測}  · provisionally_verified
@@ -2501,7 +2501,7 @@
 - [soc-civ.t_sub.law.admin-discretion] 行政裁量與不確定法律概念  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_base.law.consumer-basic] 購物看清標示、保留發票、可退換貨初步  {t_base, 無}  · unverified
 - [soc-civ.t_mid.law.consumer-protection] 消費者保護法：定型化契約、猶豫期（鑑賞期）、商品責任  {t_mid, 會考}  · unverified
-- [soc-civ.t_mid.law.consumer-remedy] 消費爭議的申訴與調解管道  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.law.consumer-remedy] 消費爭議的申訴與調解管道  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.labor-basic] 勞動基準法基本保障（工時、基本工資、休假）  {t_mid, 會考}  · unverified
 - [soc-civ.t_mid.law.part-time-rights] 青少年打工的權益與勞動契約注意事項  {t_mid, 會考}  · unverified
 - [soc-civ.t_adv.law.labor-relations] 勞資關係與勞動三權（團結、協商、爭議）  {t_adv, 學測}  · unverified
@@ -2510,7 +2510,7 @@
 - [soc-civ.t_adv.law.domestic-violence] 家庭暴力防治與保護令制度  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.law.labor-dispute] 勞動爭議處理與不當勞動行為裁決  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_sub.law.anti-discrimination] 就業歧視禁止與合理調整義務  {t_sub, 分科-公民}  · provisionally_verified
-- [soc-civ.t_base.economy.need-want] 分辨需要與想要、資源有限要取捨  {t_base, 無}  · unverified
+- [soc-civ.t_base.economy.need-want] 分辨需要與想要、資源有限要取捨  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_base.economy.save-spend] 儲蓄、記帳與聰明消費的習慣  {t_base, 無}  · unverified
 - [soc-civ.t_base.economy.money-use] 認識金錢的用途與交易的概念  {t_base, 無}  · unverified
 - [soc-civ.t_mid.economy.scarcity] 稀少性是經濟問題的根源  {t_mid, 會考}  · provisionally_verified
@@ -2689,7 +2689,7 @@
 - [soc-geo.t_mid.nat-landform.erosion-process] 說明侵蝕、搬運、堆積三作用  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-landform.river-forms] 辨認河流地形（V形谷、瀑布、曲流、沖積扇、三角洲）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-landform.coast-forms] 辨認海岸地形（海蝕崖、海蝕平台、沙洲、潟湖）  {t_mid, 會考}  · provisionally_verified
-- [soc-geo.t_mid.nat-landform.karst] 辨認喀斯特（石灰岩）地形  {t_mid, 會考}  · unverified
+- [soc-geo.t_mid.nat-landform.karst] 辨認喀斯特（石灰岩）地形  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-landform.glacial-intro] 辨認冰河地形（U形谷、冰斗）初步  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-landform.aeolian] 辨認風成地形（沙丘、黃土）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-landform.tw-ranges] 說明台灣五大山脈走向與分布  {t_mid, 會考}  · provisionally_verified
@@ -2738,18 +2738,18 @@
 - [soc-geo.t_sub.nat-climate.radiation-budget] 說明地球輻射平衡與能量收支  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.nat-climate.adiabatic] 說明乾／濕絕熱遞減率與大氣穩定度  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.nat-climate.humidity] 說明相對濕度、露點、飽和與凝結  {t_sub, 分科-地理}  · provisionally_verified
-- [soc-geo.t_sub.nat-climate.tropical-cyclone] 說明熱帶氣旋發展條件與結構  {t_sub, 分科-地理}  · unverified
+- [soc-geo.t_sub.nat-climate.tropical-cyclone] 說明熱帶氣旋發展條件與結構  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.nat-climate.midlat-cyclone] 說明中緯度（溫帶）氣旋的生命史  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.nat-climate.monsoon-mechanism] 說明季風的動力與熱力機制  {t_sub, 分科-地理}  · unverified
 - [soc-geo.t_sub.nat-climate.change-mechanism] 說明氣候變遷機制（米蘭科維奇、溫室氣體）  {t_sub, 分科-地理}  · provisionally_verified
-- [soc-geo.t_sub.nat-climate.bioclimate] 連結氣候、植被與土壤的對應關係  {t_sub, 分科-地理}  · unverified
+- [soc-geo.t_sub.nat-climate.bioclimate] 連結氣候、植被與土壤的對應關係  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_base.nat-hydro.cycle-intro] 說明水循環（蒸發→降雨→流回海）初步  {t_base, 無}  · unverified
 - [soc-geo.t_base.nat-hydro.river-lake] 認識河流、湖泊與其用途  {t_base, 無}  · unverified
 - [soc-geo.t_base.nat-hydro.tw-rivers] 認識台灣主要河川（濁水溪、淡水河等）  {t_base, 無}  · unverified
-- [soc-geo.t_mid.nat-hydro.cycle-stages] 說明水循環各環節（蒸發、凝結、降水、逕流、下滲）  {t_mid, 會考}  · unverified
+- [soc-geo.t_mid.nat-hydro.cycle-stages] 說明水循環各環節（蒸發、凝結、降水、逕流、下滲）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-hydro.watershed] 說明流域、分水嶺與集水區  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-hydro.hydrograph-intro] 判讀河川流量歷線（初步）  {t_mid, 會考}  · unverified
-- [soc-geo.t_mid.nat-hydro.groundwater] 說明地下水、泉與地下水位  {t_mid, 會考}  · unverified
+- [soc-geo.t_mid.nat-hydro.groundwater] 說明地下水、泉與地下水位  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-hydro.tw-river-traits] 說明台灣河川短急、豐枯懸殊的特性  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-hydro.water-use] 說明水資源利用（灌溉、水庫、民生）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.nat-hydro.ocean-intro] 認識洋流、潮汐、波浪（初步）  {t_mid, 會考}  · provisionally_verified
@@ -2762,8 +2762,8 @@
 - [soc-geo.t_adv.nat-hydro.tide] 說明潮汐成因與大潮小潮、潮差  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.nat-hydro.water-balance] 以水平衡（降水=蒸發+逕流+儲量變化）分析區域水量  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_sub.nat-hydro.basin-budget] 建立流域水收支方程並計算  {t_sub, 分科-地理}  · provisionally_verified
-- [soc-geo.t_sub.nat-hydro.sediment] 說明河川輸砂與泥沙收支  {t_sub, 分科-地理}  · unverified
-- [soc-geo.t_sub.nat-hydro.aquifer] 說明含水層、受壓地下水與自流井  {t_sub, 分科-地理}  · unverified
+- [soc-geo.t_sub.nat-hydro.sediment] 說明河川輸砂與泥沙收支  {t_sub, 分科-地理}  · provisionally_verified
+- [soc-geo.t_sub.nat-hydro.aquifer] 說明含水層、受壓地下水與自流井  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.nat-hydro.thermohaline] 說明溫鹽環流（深層海洋環流）  {t_sub, 分科-地理}  · unverified
 - [soc-geo.t_sub.nat-hydro.sealevel] 說明海平面升降的成因與影響  {t_sub, 分科-地理}  · unverified
 - [soc-geo.t_sub.nat-hydro.drought-mgmt] 分析乾旱／缺水的水文機制與水資源管理  {t_sub, 分科-地理}  · unverified
@@ -2809,7 +2809,7 @@
 - [soc-geo.t_base.hum-pop.distribution-intro] 認識各地人口多寡與分布概況  {t_base, 無}  · unverified
 - [soc-geo.t_base.hum-pop.hometown-change] 觀察家鄉人口的變化  {t_base, 無}  · unverified
 - [soc-geo.t_mid.hum-pop.density] 計算與比較人口密度  {t_mid, 會考}  · provisionally_verified
-- [soc-geo.t_mid.hum-pop.distribution-factor] 連結人口分布與自然／人文環境  {t_mid, 會考}  · unverified
+- [soc-geo.t_mid.hum-pop.distribution-factor] 連結人口分布與自然／人文環境  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.hum-pop.growth] 區辨自然增加與社會增加  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.hum-pop.vital-rates] 計算出生率、死亡率與自然增加率  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.hum-pop.pyramid-type] 辨認人口金字塔（擴張型、靜止型、縮減型）  {t_mid, 會考}  · provisionally_verified
@@ -2830,19 +2830,19 @@
 - [soc-geo.t_sub.hum-pop.projection] 以人口統計資料做趨勢預測  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_base.hum-settle.rural-urban] 區辨鄉村與都市的生活差異  {t_base, 無}  · unverified
 - [soc-geo.t_base.hum-settle.hometown-type] 認識家鄉的聚落型態  {t_base, 無}  · unverified
-- [soc-geo.t_mid.hum-settle.site-factor] 列舉聚落形成條件（水源、地形、交通）  {t_mid, 會考}  · unverified
+- [soc-geo.t_mid.hum-settle.site-factor] 列舉聚落形成條件（水源、地形、交通）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.hum-settle.cluster-dispersed] 區辨集村與散村及其成因  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.hum-settle.function] 說明聚落機能（農、漁、工、商）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.hum-settle.urbanization] 說明都市化的意義與過程  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.hum-settle.landuse-zone] 辨認都市機能分區（商業、住宅、工業）  {t_mid, 會考}  · unverified
 - [soc-geo.t_mid.hum-settle.tw-metro] 說明台灣都市體系與主要都會區  {t_mid, 會考}  · unverified
 - [soc-geo.t_mid.hum-settle.urban-problem] 列舉都市問題（交通、居住、環境）  {t_mid, 會考}  · provisionally_verified
-- [soc-geo.t_adv.hum-settle.central-place] 以中地理論說明商閾與商品圈  {t_adv, 學測}  · unverified
+- [soc-geo.t_adv.hum-settle.central-place] 以中地理論說明商閾與商品圈  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.hum-settle.urban-hierarchy] 說明都市階層與等級—大小法則  {t_adv, 學測}  · unverified
 - [soc-geo.t_adv.hum-settle.internal-model] 比較同心圓、扇形、多核心都市結構模型  {t_adv, 學測}  · unverified
-- [soc-geo.t_adv.hum-settle.metro-satellite] 說明都會區、衛星城市、大都會帶  {t_adv, 學測}  · unverified
-- [soc-geo.t_adv.hum-settle.urbanization-stage] 區辨郊區化、逆都市化、再都市化  {t_adv, 學測}  · unverified
-- [soc-geo.t_adv.hum-settle.renewal-gentrify] 說明都市更新與仕紳化  {t_adv, 學測}  · unverified
+- [soc-geo.t_adv.hum-settle.metro-satellite] 說明都會區、衛星城市、大都會帶  {t_adv, 學測}  · provisionally_verified
+- [soc-geo.t_adv.hum-settle.urbanization-stage] 區辨郊區化、逆都市化、再都市化  {t_adv, 學測}  · provisionally_verified
+- [soc-geo.t_adv.hum-settle.renewal-gentrify] 說明都市更新與仕紳化  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.hum-settle.segregation] 說明居住隔離與貧民窟問題  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_sub.hum-settle.cp-principles] 說明中地理論的六邊形市場區與市場／交通／行政原則  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.hum-settle.world-city] 說明世界都市／全球城市體系與分工  {t_sub, 分科-地理}  · provisionally_verified
@@ -2881,14 +2881,14 @@
 - [soc-geo.t_base.hum-transport.hometown] 認識家鄉的交通方式  {t_base, 無}  · unverified
 - [soc-geo.t_mid.hum-transport.mode-compare] 比較公路、鐵路、水運、航空、管線的特性  {t_mid, 會考}  · unverified
 - [soc-geo.t_mid.hum-transport.cost-speed] 比較各運輸方式的成本、速度、載重  {t_mid, 會考}  · unverified
-- [soc-geo.t_mid.hum-transport.dev-link] 連結交通與聚落、產業發展  {t_mid, 會考}  · unverified
+- [soc-geo.t_mid.hum-transport.dev-link] 連結交通與聚落、產業發展  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.hum-transport.tw-network] 說明台灣交通網（高鐵、國道、港口、機場）  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.hum-transport.ict-intro] 認識通訊與網際網路的發展（初步）  {t_mid, 會考}  · unverified
 - [soc-geo.t_adv.hum-transport.cost-distance] 說明運費隨距離遞遠而遞減  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.hum-transport.accessibility] 分析交通可及性與等時線  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.hum-transport.node-gateway] 說明轉運點、門戶與節點機能  {t_adv, 學測}  · provisionally_verified
-- [soc-geo.t_adv.hum-transport.container] 說明貨櫃運輸與複合運輸  {t_adv, 學測}  · unverified
-- [soc-geo.t_adv.hum-transport.time-space] 說明時空收斂對區域的影響  {t_adv, 學測}  · unverified
+- [soc-geo.t_adv.hum-transport.container] 說明貨櫃運輸與複合運輸  {t_adv, 學測}  · provisionally_verified
+- [soc-geo.t_adv.hum-transport.time-space] 說明時空收斂對區域的影響  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.hum-transport.ict-space] 說明資訊通訊科技（ICT）與數位落差  {t_adv, 學測}  · pending
 - [soc-geo.t_sub.hum-transport.network-graph] 以圖論指標（連結度）做運輸網絡分析  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.hum-transport.cost-structure] 分析運輸成本結構（端點成本與線路成本）  {t_sub, 分科-地理}  · unverified
@@ -2936,8 +2936,8 @@
 - [soc-geo.t_base.reg-world.tw-in-world] 指出台灣在世界的位置  {t_base, 無}  · unverified
 - [soc-geo.t_mid.reg-world.asia] 說明東亞、東南亞、南亞、西亞、中亞的區域特色  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.reg-world.europe] 說明歐洲的自然與人文特色  {t_mid, 會考}  · provisionally_verified
-- [soc-geo.t_mid.reg-world.africa] 說明非洲的自然與人文特色  {t_mid, 會考}  · unverified
-- [soc-geo.t_mid.reg-world.americas] 說明北美與中南美洲的特色  {t_mid, 會考}  · unverified
+- [soc-geo.t_mid.reg-world.africa] 說明非洲的自然與人文特色  {t_mid, 會考}  · provisionally_verified
+- [soc-geo.t_mid.reg-world.americas] 說明北美與中南美洲的特色  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.reg-world.oceania] 說明大洋洲的自然與人文特色  {t_mid, 會考}  · provisionally_verified
 - [soc-geo.t_mid.reg-world.overview] 概覽各洲主要地形、氣候與產業  {t_mid, 會考}  · unverified
 - [soc-geo.t_mid.reg-world.orgs-intro] 認識世界主要國家與區域組織（初步）  {t_mid, 會考}  · unverified
@@ -2970,7 +2970,7 @@
 - [soc-geo.t_adv.app-sustain.eia] 說明環境影響評估的意義  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.app-sustain.commons] 說明共有財悲劇與公共財問題  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_sub.app-sustain.three-pillars] 整合永續發展的環境、經濟、社會三面向  {t_sub, 分科-地理}  · provisionally_verified
-- [soc-geo.t_sub.app-sustain.footprint] 說明生態足跡與環境承載力  {t_sub, 分科-地理}  · unverified
+- [soc-geo.t_sub.app-sustain.footprint] 說明生態足跡與環境承載力  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.app-sustain.circular] 說明循環經濟的運作  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.app-sustain.paris] 說明巴黎協定與氣候國際治理  {t_sub, 分科-地理}  · unverified
 - [soc-geo.t_sub.app-sustain.justice] 分析環境正義與資源分配  {t_sub, 分科-地理}  · provisionally_verified
@@ -3073,7 +3073,7 @@
 - [soc-hist.t_adv.eastasia.maritime-silver] 東亞海洋貿易與白銀經濟的全球連結  {t_adv, 學測}  · unverified
 - [soc-hist.t_adv.eastasia.modernization] 「現代化的歷程」：西力衝擊下東亞各國的改革（中日對比）  {t_adv, 學測}  · provisionally_verified
 - [soc-hist.t_adv.eastasia.meiji] 日本明治維新與東亞近代化的分途  {t_adv, 學測}  · provisionally_verified
-- [soc-hist.t_adv.eastasia.prc-founding] 中國共產革命與中華人民共和國的成立（中立、適齡）  {t_adv, 學測}  · unverified
+- [soc-hist.t_adv.eastasia.prc-founding] 中國共產革命與中華人民共和國的成立（中立、適齡）  {t_adv, 學測}  · provisionally_verified
 - [soc-hist.t_sub.eastasia.china-concept] 東亞世界的形成與「中國」概念的歷史變化  {t_sub, 分科-歷史}  · unverified
 - [soc-hist.t_sub.eastasia.examination-gentry] 科舉與士紳社會的專題探究  {t_sub, 分科-歷史}  · unverified
 - [soc-hist.t_sub.eastasia.modernization-compare] 東亞近代化比較（中國、日本、朝鮮／韓國）  {t_sub, 分科-歷史}  · provisionally_verified
@@ -3084,17 +3084,17 @@
 - [soc-hist.t_mid.world.greece] 希臘城邦、雅典民主與希臘化文化  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.world.rome] 羅馬共和與帝國、羅馬法與基督教的興起  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.world.medieval-europe] 中古歐洲：封建制度、莊園經濟與教會  {t_mid, 會考}  · provisionally_verified
-- [soc-hist.t_mid.world.islam] 伊斯蘭文明的興起與擴張  {t_mid, 會考}  · unverified
+- [soc-hist.t_mid.world.islam] 伊斯蘭文明的興起與擴張  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.world.renaissance-reformation] 文藝復興與宗教改革  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.world.age-of-discovery] 地理大發現與海外擴張  {t_mid, 會考}  · provisionally_verified
-- [soc-hist.t_mid.world.scientific-enlightenment] 科學革命與啟蒙運動  {t_mid, 會考}  · unverified
+- [soc-hist.t_mid.world.scientific-enlightenment] 科學革命與啟蒙運動  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.world.american-french-rev] 美國獨立革命與法國大革命  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.world.industrial-rev] 工業革命及其社會影響  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.world.imperialism] 帝國主義與列強的殖民擴張  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.world.wwi] 第一次世界大戰的起因、過程與戰後秩序  {t_mid, 會考}  · unverified
 - [soc-hist.t_mid.world.depression-totalitarian] 經濟大恐慌與極權主義（法西斯／納粹）的興起  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.world.wwii] 第二次世界大戰與大屠殺  {t_mid, 會考}  · provisionally_verified
-- [soc-hist.t_mid.world.coldwar] 冷戰的形成與兩極對抗體系  {t_mid, 會考}  · unverified
+- [soc-hist.t_mid.world.coldwar] 冷戰的形成與兩極對抗體系  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.world.decolonization] 戰後去殖民化與新興國家的獨立  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.world.globalization] 全球化與當代世界的形成  {t_mid, 會考}  · unverified
 - [soc-hist.t_adv.world.cross-civilization] 「古代文化與不同世界的互動」：跨區域文明交流（絲路、印度洋網絡）  {t_adv, 學測}  · provisionally_verified
