@@ -1,0 +1,2490 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.35">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>STAT 200 | Elementary Statistics</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./Lesson00.html" rel="next">
+<link href="./assets/psulion.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-listing/list.min.js"></script>
+<script src="site_libs/quarto-listing/quarto-listing.js"></script>
+<script src="site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-46f66b053e56abd73bb6e954d61a315b.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-22b4aaf4c2978829df3684e8f2c068db.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-46f66b053e56abd73bb6e954d61a315b.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-3fdf9b8f6f8e0e6cefb8b3a520ba196a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-86de361813d7d599326712e825751f01.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-3fdf9b8f6f8e0e6cefb8b3a520ba196a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/language-name/language-name.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script>
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-lessons .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-image','listing-title','listing-categories','listing-file-modified',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-title","listing-author","listing-image","listing-description","listing-categories"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-lessons'] = new List('listing-lessons', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-GS5H0QNF18"></script>
+
+<script type="text/plain" cookie-consent="tracking">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-GS5H0QNF18', { 'anonymize_ip': true});
+</script>
+
+<script type="text/javascript" charset="UTF-8">
+document.addEventListener('DOMContentLoaded', function () {
+cookieconsent.run({
+  "notice_banner_type":"simple",
+  "consent_type":"express",
+  "palette":"light",
+  "language":"en",
+  "page_load_consent_levels":["strictly-necessary"],
+  "notice_banner_reject_button_hide":false,
+  "preferences_center_close_button_hide":false,
+  "website_name":""
+  ,
+"language":"en"
+  });
+});
+</script> 
+  
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: light;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: light;
+background-image: url(banner-stat200.png);
+background-size: cover;
+      }
+</style>
+<script>
+
+  window.addEventListener('load', function() {
+
+    document.getElementById("cc-nb-text").innerHTML = "We use cookies and other tracking technologies to improve your browsing experience on our website, to analyze our website traffic, and to understand where our visitors are coming from.";
+
+  });
+
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <div id="quarto-announcement" data-announcement-id="cb9d28251ca8388d2bc94ffe0e472446" class="alert alert-warning hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
+<p>Welcome to our newly redesigned course notes! Please update your bookmarks accordingly.</p>
+</div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">STAT 200 | Elementary Statistics</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://science.psu.edu/stat"> 
+<span class="menu-text">Department of Statistics</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Welcome to STAT 200!</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <div class="quarto-title-block"><div><h1 class="title">STAT 200 | Elementary Statistics</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="https://science.psu.edu/" class="sidebar-logo-link">
+      <img src="./PSU_Ecosshield.png" alt="Penn State Eberly College of Science" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="./PSU_Ecosshield.png" alt="Penn State Eberly College of Science" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      </a>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Welcome to STAT 200!</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Lessons</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Lesson00.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">0: Prerequisite Skills</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Lesson01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Collecting Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Lesson02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Describing Data, Part 1</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Lesson03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Describing Data, Part 2</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Lesson04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Confidence Intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Lesson05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Hypothesis Testing, Part 1</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Lesson06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Hypothesis Testing, Part 2</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Lesson07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Normal Distributions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Lesson08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Inference for One Sample</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Lesson09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Inference for Two Samples</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Lesson10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">One-Way ANOVA</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Lesson11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Chi-Square Tests</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Lesson12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Correlation &amp; Simple Linear Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Resources</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./MinitabQuickGuide.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><img src="assets/minitab.png" class="icon-image img-fluid"> Minitab Quick Guide</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./flashcards.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Glossary and Practice Deck</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-cloud"><div class="category" data-category="Qm9vdHN0cmFwcGluZw=="><span class="quarto-category-count category-cloud-1">Bootstrapping</span></div><div class="category" data-category="Q2F0ZWdvcmljYWwlMjBEYXRh"><span class="quarto-category-count category-cloud-2">Categorical Data</span></div><div class="category" data-category="Q2VudHJhbCUyMExpbWl0JTIwVGhlb3JlbQ=="><span class="quarto-category-count category-cloud-1">Central Limit Theorem</span></div><div class="category" data-category="Q2hpLVNxdWFyZSUyMFRlc3Rz"><span class="quarto-category-count category-cloud-1">Chi-Square Tests</span></div><div class="category" data-category="Q29tcGFyaW5nJTIwR3JvdXBz"><span class="quarto-category-count category-cloud-2">Comparing Groups</span></div><div class="category" data-category="Q29tcGFyaW5nJTIwTXVsdGlwbGUlMjBNZWFucw=="><span class="quarto-category-count category-cloud-1">Comparing Multiple Means</span></div><div class="category" data-category="Q29uZmlkZW5jZSUyMEludGVydmFscw=="><span class="quarto-category-count category-cloud-1">Confidence Intervals</span></div><div class="category" data-category="Q29ycmVsYXRpb24="><span class="quarto-category-count category-cloud-2">Correlation</span></div><div class="category" data-category="Q291cnNlJTIwT3JpZW50YXRpb24="><span class="quarto-category-count category-cloud-1">Course Orientation</span></div><div class="category" data-category="RGF0YSUyMFZpc3VhbGl6YXRpb24="><span class="quarto-category-count category-cloud-2">Data Visualization</span></div><div class="category" data-category="RGVzY3JpcHRpdmUlMjBTdGF0aXN0aWNz"><span class="quarto-category-count category-cloud-1">Descriptive Statistics</span></div><div class="category" data-category="RXJyb3JzJTIwYW5kJTIwUG93ZXI="><span class="quarto-category-count category-cloud-1">Errors and Power</span></div><div class="category" data-category="R29vZG5lc3Mtb2YtRml0JTIwVGVzdHM="><span class="quarto-category-count category-cloud-1">Goodness-of-Fit Tests</span></div><div class="category" data-category="SHlwb3RoZXNpcyUyMFRlc3Rpbmc="><span class="quarto-category-count category-cloud-1">Hypothesis Testing</span></div><div class="category" data-category="SW5kZXBlbmRlbnQlMjBNZWFucw=="><span class="quarto-category-count category-cloud-1">Independent Means</span></div><div class="category" data-category="Tm9ybWFsJTIwRGlzdHJpYnV0aW9ucw=="><span class="quarto-category-count category-cloud-1">Normal Distributions</span></div><div class="category" data-category="T25lJTIwTWVhbg=="><span class="quarto-category-count category-cloud-1">One Mean</span></div><div class="category" data-category="T25lJTIwUHJvcG9ydGlvbg=="><span class="quarto-category-count category-cloud-1">One Proportion</span></div><div class="category" data-category="T25lLVdheSUyMEFOT1ZB"><span class="quarto-category-count category-cloud-1">One-Way ANOVA</span></div><div class="category" data-category="cC1WYWx1ZXM="><span class="quarto-category-count category-cloud-1">p-Values</span></div><div class="category" data-category="UGFpcmVkJTIwTWVhbnM="><span class="quarto-category-count category-cloud-1">Paired Means</span></div><div class="category" data-category="UGFpcndpc2UlMjBDb21wYXJpc29ucw=="><span class="quarto-category-count category-cloud-1">Pairwise Comparisons</span></div><div class="category" data-category="UG9wdWxhdGlvbnMlMjBhbmQlMjBTYW1wbGVz"><span class="quarto-category-count category-cloud-1">Populations and Samples</span></div><div class="category" data-category="UHJhY3RpY2FsJTIwU2lnbmlmaWNhbmNl"><span class="quarto-category-count category-cloud-1">Practical Significance</span></div><div class="category" data-category="UHJlZGljdGlvbg=="><span class="quarto-category-count category-cloud-1">Prediction</span></div><div class="category" data-category="UHJvYmFiaWxpdHk="><span class="quarto-category-count category-cloud-1">Probability</span></div><div class="category" data-category="UXVhbnRpdGF0aXZlJTIwRGF0YQ=="><span class="quarto-category-count category-cloud-3">Quantitative Data</span></div><div class="category" data-category="UmFuZG9taXphdGlvbiUyMFRlc3Rz"><span class="quarto-category-count category-cloud-1">Randomization Tests</span></div><div class="category" data-category="UmVncmVzc2lvbiUyMEluZmVyZW5jZQ=="><span class="quarto-category-count category-cloud-1">Regression Inference</span></div><div class="category" data-category="UmVsYXRpdmUlMjBSaXNr"><span class="quarto-category-count category-cloud-1">Relative Risk</span></div><div class="category" data-category="UmVzZWFyY2glMjBEZXNpZ24="><span class="quarto-category-count category-cloud-1">Research Design</span></div><div class="category" data-category="U2FtcGxpbmclMjBEaXN0cmlidXRpb25z"><span class="quarto-category-count category-cloud-1">Sampling Distributions</span></div><div class="category" data-category="U2FtcGxpbmclMjBNZXRob2Rz"><span class="quarto-category-count category-cloud-1">Sampling Methods</span></div><div class="category" data-category="U2VsZWN0aW5nJTIwU3RhdGlzdGljYWwlMjBQcm9jZWR1cmVz"><span class="quarto-category-count category-cloud-1">Selecting Statistical Procedures</span></div><div class="category" data-category="U2ltcGxlJTIwTGluZWFyJTIwUmVncmVzc2lvbg=="><span class="quarto-category-count category-cloud-2">Simple Linear Regression</span></div><div class="category" data-category="U3RhdGlzdGljYWwlMjBGb3VuZGF0aW9ucw=="><span class="quarto-category-count category-cloud-1">Statistical Foundations</span></div><div class="category" data-category="U3RhdGlzdGljYWwlMjBJbmZlcmVuY2U="><span class="quarto-category-count category-cloud-6">Statistical Inference</span></div><div class="category" data-category="dC1EaXN0cmlidXRpb25z"><span class="quarto-category-count category-cloud-1">t-Distributions</span></div><div class="category" data-category="VGVjaG5vbG9neSUyMFNldHVw"><span class="quarto-category-count category-cloud-1">Technology Setup</span></div><div class="category" data-category="VGVzdHMlMjBvZiUyMEluZGVwZW5kZW5jZQ=="><span class="quarto-category-count category-cloud-1">Tests of Independence</span></div><div class="category" data-category="VHdvJTIwUHJvcG9ydGlvbnM="><span class="quarto-category-count category-cloud-1">Two Proportions</span></div><div class="category" data-category="VmFyaWFibGUlMjBUeXBlcw=="><span class="quarto-category-count category-cloud-1">Variable Types</span></div><div class="category" data-category="ei1TY29yZXM="><span class="quarto-category-count category-cloud-1">z-Scores</span></div></div></div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+
+<section id="welcome-to-stat-200" class="level1 unnumbered unlisted">
+<h1 class="unnumbered unlisted">Welcome to STAT 200!</h1>
+<section id="about-this-course" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="about-this-course">About this course</h2>
+<p>Welcome to the course notes for <strong>STAT 200: Elementary Statistics</strong>. These notes are designed and developed by <a href="https://science.psu.edu/stat">Penn State’s Department of Statistics</a> and offered as open educational resources. These notes are free to use under Creative Commons license <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a>.</p>
+<section id="currently-enrolled" class="level4 border-start ms-3 ps-2">
+<h4 class="anchored" data-anchor-id="currently-enrolled">Currently enrolled?</h4>
+<p>If you are a current student in this course, please see <a href="https://psu.instructure.com/">Canvas</a> for your syllabus, assignments, lesson videos, and communication from your instructor.</p>
+</section>
+<section id="course-overview" class="level3 unnumbered unlisted">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="course-overview">Course Overview</h3>
+<p>As a time expectation,&nbsp;<strong>most students require 8-16 hours per week to be successful in the course</strong>. This is comparable to the resident version of the course where students meet with an instructor 4 hours per week in a classroom plus time outside of class completing assignments and preparing for exams. We find that the most successful students in this course are those who do not wait until the last minute to complete assignments and those who post questions on the discussion boards.</p>
+<p>Students are encouraged to make a weekly schedule for themselves. Below is an example from a student whose assignments are all due Tuesday night:</p>
+<table class="w-auto table-sm mx-auto row-header small caption-top table">
+<caption>Weekly Schedule Example</caption>
+<colgroup>
+<col style="width: 42%">
+<col style="width: 57%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Weekday</th>
+<th style="text-align: left;">Activity</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Wednesday</td>
+<td style="text-align: left;">Work through the assigned readings and start the WileyPLUS assignment</td>
+</tr>
+<tr class="even">
+<td>Thursday</td>
+<td style="text-align: left;">Continue to work through the readings and the WileyPLUS assignment</td>
+</tr>
+<tr class="odd">
+<td>Friday</td>
+<td style="text-align: left;">Finish the WileyPLUS assignment</td>
+</tr>
+<tr class="even">
+<td>Saturday</td>
+<td style="text-align: left;">Relax, catch up / get ahead</td>
+</tr>
+<tr class="odd">
+<td>Sunday</td>
+<td style="text-align: left;">Start the lab assignment</td>
+</tr>
+<tr class="even">
+<td>Monday</td>
+<td style="text-align: left;">Finish the lab assignment/Take the quiz</td>
+</tr>
+<tr class="odd">
+<td>Tuesday</td>
+<td style="text-align: left;">Confirm that all assignments have been submitted</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;This&nbsp;course uses the textbook&nbsp;<em>Statistics: Unlocking the Power of Data</em>&nbsp;by Lock, Frazier Lock, Lock Morgan, Lock, &amp; Lock.</p>
+<p><em>(All images used in this website are from the public domain unless otherwise noted.)</em></p>
+
+
+
+<!-- -->
+
+</section>
+</section>
+</section>
+
+<div class="quarto-listing quarto-listing-container-grid" id="listing-lessons">
+<div class="list grid quarto-listing-cols-4">
+<div class="g-col-1" data-index="0" data-categories="Q291cnNlJTIwT3JpZW50YXRpb24lMkNTdGF0aXN0aWNhbCUyMEZvdW5kYXRpb25zJTJDVGVjaG5vbG9neSUyMFNldHVw" data-listing-file-modified-sort="1787170609353" data-listing-reading-time-sort="10" data-listing-word-count-sort="1806">
+<a href="./Lesson00.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-center">
+<p class="card-img-top">
+<img loading="lazy" src="./assets/L0card.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+0: Prerequisite Skills
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q291cnNlJTIwT3JpZW50YXRpb24='); return false;">Course Orientation</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U3RhdGlzdGljYWwlMjBGb3VuZGF0aW9ucw=='); return false;">Statistical Foundations</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('VGVjaG5vbG9neSUyMFNldHVw'); return false;">Technology Setup</div>
+
+</div>
+</div>
+<div class="card-footer">
+<div class="card-file-modified listing-file-modified">8/19/26</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="1" data-categories="UG9wdWxhdGlvbnMlMjBhbmQlMjBTYW1wbGVzJTJDVmFyaWFibGUlMjBUeXBlcyUyQ1NhbXBsaW5nJTIwTWV0aG9kcyUyQ1Jlc2VhcmNoJTIwRGVzaWdu" data-listing-file-modified-sort="1787170609353" data-listing-reading-time-sort="32" data-listing-word-count-sort="6272">
+<a href="./Lesson01.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-center">
+<p class="card-img-top">
+<img loading="lazy" src="./assets/L1card.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Collecting Data
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('UG9wdWxhdGlvbnMlMjBhbmQlMjBTYW1wbGVz'); return false;">Populations and Samples</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('VmFyaWFibGUlMjBUeXBlcw=='); return false;">Variable Types</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U2FtcGxpbmclMjBNZXRob2Rz'); return false;">Sampling Methods</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UmVzZWFyY2glMjBEZXNpZ24='); return false;">Research Design</div>
+
+</div>
+</div>
+<div class="card-footer">
+<div class="card-file-modified listing-file-modified">8/19/26</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="2" data-categories="Q2F0ZWdvcmljYWwlMjBEYXRhJTJDUXVhbnRpdGF0aXZlJTIwRGF0YSUyQ0RhdGElMjBWaXN1YWxpemF0aW9uJTJDRGVzY3JpcHRpdmUlMjBTdGF0aXN0aWNzJTJDUHJvYmFiaWxpdHk=" data-listing-file-modified-sort="1787170609353" data-listing-reading-time-sort="59" data-listing-word-count-sort="11753">
+<a href="./Lesson02.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-center">
+<p class="card-img-top">
+<img loading="lazy" src="./assets/L2card.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Describing Data, Part 1
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q2F0ZWdvcmljYWwlMjBEYXRh'); return false;">Categorical Data</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UXVhbnRpdGF0aXZlJTIwRGF0YQ=='); return false;">Quantitative Data</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RGF0YSUyMFZpc3VhbGl6YXRpb24='); return false;">Data Visualization</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RGVzY3JpcHRpdmUlMjBTdGF0aXN0aWNz'); return false;">Descriptive Statistics</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UHJvYmFiaWxpdHk='); return false;">Probability</div>
+
+</div>
+</div>
+<div class="card-footer">
+<div class="card-file-modified listing-file-modified">8/19/26</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="3" data-categories="UXVhbnRpdGF0aXZlJTIwRGF0YSUyQ0RhdGElMjBWaXN1YWxpemF0aW9uJTJDQ29tcGFyaW5nJTIwR3JvdXBzJTJDQ29ycmVsYXRpb24lMkNTaW1wbGUlMjBMaW5lYXIlMjBSZWdyZXNzaW9u" data-listing-file-modified-sort="1787170609353" data-listing-reading-time-sort="35" data-listing-word-count-sort="6813">
+<a href="./Lesson03.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-center">
+<p class="card-img-top">
+<img loading="lazy" src="./assets/L3card.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Describing Data, Part 2
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('UXVhbnRpdGF0aXZlJTIwRGF0YQ=='); return false;">Quantitative Data</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RGF0YSUyMFZpc3VhbGl6YXRpb24='); return false;">Data Visualization</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q29tcGFyaW5nJTIwR3JvdXBz'); return false;">Comparing Groups</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q29ycmVsYXRpb24='); return false;">Correlation</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U2ltcGxlJTIwTGluZWFyJTIwUmVncmVzc2lvbg=='); return false;">Simple Linear Regression</div>
+
+</div>
+</div>
+<div class="card-footer">
+<div class="card-file-modified listing-file-modified">8/19/26</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="4" data-categories="U3RhdGlzdGljYWwlMjBJbmZlcmVuY2UlMkNTYW1wbGluZyUyMERpc3RyaWJ1dGlvbnMlMkNDb25maWRlbmNlJTIwSW50ZXJ2YWxzJTJDQm9vdHN0cmFwcGluZw==" data-listing-file-modified-sort="1787170609353" data-listing-reading-time-sort="26" data-listing-word-count-sort="5156">
+<a href="./Lesson04.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-center">
+<p class="card-img-top">
+<img loading="lazy" src="./assets/L4card.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Confidence Intervals
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('U3RhdGlzdGljYWwlMjBJbmZlcmVuY2U='); return false;">Statistical Inference</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U2FtcGxpbmclMjBEaXN0cmlidXRpb25z'); return false;">Sampling Distributions</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q29uZmlkZW5jZSUyMEludGVydmFscw=='); return false;">Confidence Intervals</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Qm9vdHN0cmFwcGluZw=='); return false;">Bootstrapping</div>
+
+</div>
+</div>
+<div class="card-footer">
+<div class="card-file-modified listing-file-modified">8/19/26</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="5" data-categories="U3RhdGlzdGljYWwlMjBJbmZlcmVuY2UlMkNIeXBvdGhlc2lzJTIwVGVzdGluZyUyQ3AtVmFsdWVzJTJDUmFuZG9taXphdGlvbiUyMFRlc3Rz" data-listing-file-modified-sort="1787170609353" data-listing-reading-time-sort="23" data-listing-word-count-sort="4569">
+<a href="./Lesson05.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-center">
+<p class="card-img-top">
+<img loading="lazy" src="./assets/L5card.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Hypothesis Testing, Part 1
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('U3RhdGlzdGljYWwlMjBJbmZlcmVuY2U='); return false;">Statistical Inference</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('SHlwb3RoZXNpcyUyMFRlc3Rpbmc='); return false;">Hypothesis Testing</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('cC1WYWx1ZXM='); return false;">p-Values</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UmFuZG9taXphdGlvbiUyMFRlc3Rz'); return false;">Randomization Tests</div>
+
+</div>
+</div>
+<div class="card-footer">
+<div class="card-file-modified listing-file-modified">8/19/26</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="6" data-categories="U3RhdGlzdGljYWwlMjBJbmZlcmVuY2UlMkNFcnJvcnMlMjBhbmQlMjBQb3dlciUyQ1ByYWN0aWNhbCUyMFNpZ25pZmljYW5jZSUyQ1NlbGVjdGluZyUyMFN0YXRpc3RpY2FsJTIwUHJvY2VkdXJlcw==" data-listing-file-modified-sort="1787170609362" data-listing-reading-time-sort="23" data-listing-word-count-sort="4478">
+<a href="./Lesson06.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-center">
+<p class="card-img-top">
+<img loading="lazy" src="./assets/L6card.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Hypothesis Testing, Part 2
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('U3RhdGlzdGljYWwlMjBJbmZlcmVuY2U='); return false;">Statistical Inference</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RXJyb3JzJTIwYW5kJTIwUG93ZXI='); return false;">Errors and Power</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UHJhY3RpY2FsJTIwU2lnbmlmaWNhbmNl'); return false;">Practical Significance</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U2VsZWN0aW5nJTIwU3RhdGlzdGljYWwlMjBQcm9jZWR1cmVz'); return false;">Selecting Statistical Procedures</div>
+
+</div>
+</div>
+<div class="card-footer">
+<div class="card-file-modified listing-file-modified">8/19/26</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="7" data-categories="Tm9ybWFsJTIwRGlzdHJpYnV0aW9ucyUyQ3otU2NvcmVzJTJDQ2VudHJhbCUyMExpbWl0JTIwVGhlb3JlbSUyQ1N0YXRpc3RpY2FsJTIwSW5mZXJlbmNl" data-listing-file-modified-sort="1787170609364" data-listing-reading-time-sort="37" data-listing-word-count-sort="7269">
+<a href="./Lesson07.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-center">
+<p class="card-img-top">
+<img loading="lazy" src="./assets/L7card.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Normal Distributions
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('Tm9ybWFsJTIwRGlzdHJpYnV0aW9ucw=='); return false;">Normal Distributions</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('ei1TY29yZXM='); return false;">z-Scores</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q2VudHJhbCUyMExpbWl0JTIwVGhlb3JlbQ=='); return false;">Central Limit Theorem</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U3RhdGlzdGljYWwlMjBJbmZlcmVuY2U='); return false;">Statistical Inference</div>
+
+</div>
+</div>
+<div class="card-footer">
+<div class="card-file-modified listing-file-modified">8/19/26</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="8" data-categories="U3RhdGlzdGljYWwlMjBJbmZlcmVuY2UlMkNPbmUlMjBQcm9wb3J0aW9uJTJDT25lJTIwTWVhbiUyQ1BhaXJlZCUyME1lYW5zJTJDdC1EaXN0cmlidXRpb25z" data-listing-file-modified-sort="1787170609364" data-listing-reading-time-sort="79" data-listing-word-count-sort="15741">
+<a href="./Lesson08.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-center">
+<p class="card-img-top">
+<img loading="lazy" src="./assets/L8card.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Inference for One Sample
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('U3RhdGlzdGljYWwlMjBJbmZlcmVuY2U='); return false;">Statistical Inference</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('T25lJTIwUHJvcG9ydGlvbg=='); return false;">One Proportion</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('T25lJTIwTWVhbg=='); return false;">One Mean</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UGFpcmVkJTIwTWVhbnM='); return false;">Paired Means</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('dC1EaXN0cmlidXRpb25z'); return false;">t-Distributions</div>
+
+</div>
+</div>
+<div class="card-footer">
+<div class="card-file-modified listing-file-modified">8/19/26</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="9" data-categories="U3RhdGlzdGljYWwlMjBJbmZlcmVuY2UlMkNUd28lMjBQcm9wb3J0aW9ucyUyQ0luZGVwZW5kZW50JTIwTWVhbnMlMkNDb21wYXJpbmclMjBHcm91cHM=" data-listing-file-modified-sort="1787170609364" data-listing-reading-time-sort="38" data-listing-word-count-sort="7449">
+<a href="./Lesson09.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-center">
+<p class="card-img-top">
+<img loading="lazy" src="./assets/L9card.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Inference for Two Samples
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('U3RhdGlzdGljYWwlMjBJbmZlcmVuY2U='); return false;">Statistical Inference</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('VHdvJTIwUHJvcG9ydGlvbnM='); return false;">Two Proportions</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('SW5kZXBlbmRlbnQlMjBNZWFucw=='); return false;">Independent Means</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q29tcGFyaW5nJTIwR3JvdXBz'); return false;">Comparing Groups</div>
+
+</div>
+</div>
+<div class="card-footer">
+<div class="card-file-modified listing-file-modified">8/19/26</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="10" data-categories="U3RhdGlzdGljYWwlMjBJbmZlcmVuY2UlMkNPbmUtV2F5JTIwQU5PVkElMkNDb21wYXJpbmclMjBNdWx0aXBsZSUyME1lYW5zJTJDUGFpcndpc2UlMjBDb21wYXJpc29ucw==" data-listing-file-modified-sort="1787170609366" data-listing-reading-time-sort="24" data-listing-word-count-sort="4698">
+<a href="./Lesson10.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-center">
+<p class="card-img-top">
+<img loading="lazy" src="./assets/L10card.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+One-Way ANOVA
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('U3RhdGlzdGljYWwlMjBJbmZlcmVuY2U='); return false;">Statistical Inference</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('T25lLVdheSUyMEFOT1ZB'); return false;">One-Way ANOVA</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q29tcGFyaW5nJTIwTXVsdGlwbGUlMjBNZWFucw=='); return false;">Comparing Multiple Means</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UGFpcndpc2UlMjBDb21wYXJpc29ucw=='); return false;">Pairwise Comparisons</div>
+
+</div>
+</div>
+<div class="card-footer">
+<div class="card-file-modified listing-file-modified">8/19/26</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="11" data-categories="Q2F0ZWdvcmljYWwlMjBEYXRhJTJDQ2hpLVNxdWFyZSUyMFRlc3RzJTJDR29vZG5lc3Mtb2YtRml0JTIwVGVzdHMlMkNUZXN0cyUyMG9mJTIwSW5kZXBlbmRlbmNlJTJDUmVsYXRpdmUlMjBSaXNr" data-listing-file-modified-sort="1787170609368" data-listing-reading-time-sort="42" data-listing-word-count-sort="8331">
+<a href="./Lesson11.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-center">
+<p class="card-img-top">
+<img loading="lazy" src="./assets/L11card.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Chi-Square Tests
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q2F0ZWdvcmljYWwlMjBEYXRh'); return false;">Categorical Data</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q2hpLVNxdWFyZSUyMFRlc3Rz'); return false;">Chi-Square Tests</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('R29vZG5lc3Mtb2YtRml0JTIwVGVzdHM='); return false;">Goodness-of-Fit Tests</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('VGVzdHMlMjBvZiUyMEluZGVwZW5kZW5jZQ=='); return false;">Tests of Independence</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UmVsYXRpdmUlMjBSaXNr'); return false;">Relative Risk</div>
+
+</div>
+</div>
+<div class="card-footer">
+<div class="card-file-modified listing-file-modified">8/19/26</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="12" data-categories="UXVhbnRpdGF0aXZlJTIwRGF0YSUyQ0NvcnJlbGF0aW9uJTJDU2ltcGxlJTIwTGluZWFyJTIwUmVncmVzc2lvbiUyQ1JlZ3Jlc3Npb24lMjBJbmZlcmVuY2UlMkNQcmVkaWN0aW9u" data-listing-file-modified-sort="1787170609368" data-listing-reading-time-sort="47" data-listing-word-count-sort="9335">
+<a href="./Lesson12.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-center">
+<p class="card-img-top">
+<img loading="lazy" src="./assets/L12card.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Correlation &amp; Simple Linear Regression
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('UXVhbnRpdGF0aXZlJTIwRGF0YQ=='); return false;">Quantitative Data</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q29ycmVsYXRpb24='); return false;">Correlation</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U2ltcGxlJTIwTGluZWFyJTIwUmVncmVzc2lvbg=='); return false;">Simple Linear Regression</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UmVncmVzc2lvbiUyMEluZmVyZW5jZQ=='); return false;">Regression Inference</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UHJlZGljdGlvbg=='); return false;">Prediction</div>
+
+</div>
+</div>
+<div class="card-footer">
+<div class="card-file-modified listing-file-modified">8/19/26</div>
+</div>
+</div></a>
+</div>
+</div>
+<div class="listing-no-matching d-none">No matching items</div>
+</div></main> <!-- /main -->
+<!--<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const toc = document.getElementById('TOC');
+
+    const navbarCollapse = document.getElementById('navbarCollapse');
+
+    const menuButton = document.querySelector('.navbar-toggler');
+
+
+
+    // Function to move TOC to navbar on small screens
+
+    function handleTOCDisplay() {
+
+        if (window.innerWidth < 768) {
+
+            if (!navbarCollapse.contains(toc)) {
+
+                navbarCollapse.appendChild(toc); // Move TOC into the navbar
+
+            }
+
+        } else {
+
+            if (toc.parentNode !== document.getElementById('quarto-margin-sidebar')) {
+
+                document.getElementById('quarto-margin-sidebar').appendChild(toc); // Move TOC back to original location
+
+            }
+
+        }
+
+    }
+
+
+
+    // Initial check on page load
+
+    handleTOCDisplay();
+
+
+
+    // Check when resizing the window
+
+    window.addEventListener('resize', handleTOCDisplay);
+
+
+
+    // Toggle TOC visibility when navbar is expanded on small screens
+
+    menuButton.addEventListener('click', function() {
+
+        if (window.innerWidth < 768) {
+
+            toc.classList.toggle('toc-active'); // Toggle visibility of the TOC in the navbar
+
+        }
+
+    });
+
+});
+
+</script>-->
+
+
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const toc = document.getElementById('TOC'); // TOC element
+
+    const activeLesson = document.querySelector('.sidebar-item .sidebar-link.active'); // Active lesson link
+
+    const originalTocParent = toc.parentElement; // Store original TOC location
+
+
+
+    // Create a container for the TOC in the sidebar
+
+    const nestedTocContainer = document.createElement('ul');
+
+    nestedTocContainer.className = 'sidebar-toc-nested list-unstyled';
+
+
+
+    // Function to move the TOC into the sidebar
+
+    function moveTocToSidebar() {
+
+        if (!toc || !activeLesson) return;
+
+        while (toc.firstChild) {
+
+            nestedTocContainer.appendChild(toc.firstChild);
+
+        }
+
+        const parentItem = activeLesson.closest('.sidebar-item');
+
+        parentItem.appendChild(nestedTocContainer);
+
+        toc.style.display = 'none'; // Hide the original TOC container
+
+    }
+
+
+
+    // Function to restore the TOC to its original location
+
+    function restoreTocToOriginalLocation() {
+
+        if (nestedTocContainer.parentNode) {
+
+            while (nestedTocContainer.firstChild) {
+
+                toc.appendChild(nestedTocContainer.firstChild);
+
+            }
+
+            nestedTocContainer.remove(); // Remove the container
+
+            toc.style.display = ''; // Show the original TOC container
+
+        }
+
+    }
+
+
+
+    // Function to handle screen width changes
+
+    function handleScreenResize() {
+
+        if (window.innerWidth < 768) {
+
+            moveTocToSidebar();
+
+        } else {
+
+            restoreTocToOriginalLocation();
+
+        }
+
+    }
+
+
+
+    // Initial check and event listener for resize
+
+    handleScreenResize();
+
+    window.addEventListener('resize', handleScreenResize);
+
+});
+
+
+
+</script>
+<!---function to make the first column th instead of td when using markdown tables..just add .row-header as your class below the table!---->
+
+
+
+<script>
+
+    window.addEventListener('DOMContentLoaded', () => {
+
+        const tables = document.querySelectorAll('table.row-header');
+
+        
+
+        tables.forEach(table => {
+
+            const rows = table.querySelectorAll('tr');
+
+            
+
+            rows.forEach(row => {
+
+                const firstCell = row.cells[0];
+
+                if (firstCell && firstCell.tagName === 'TD') {
+
+                    const th = document.createElement('th');
+
+                    th.innerHTML = firstCell.innerHTML;
+
+                    th.setAttribute('scope', 'row');
+
+                    // Copy the inline style from the original td
+
+                    if (firstCell.style.textAlign) {
+
+                        th.style.textAlign = firstCell.style.textAlign;
+
+                    }
+
+                    row.replaceChild(th, firstCell);
+
+                }
+
+            });
+
+        });
+
+    });
+
+  
+
+  // removes automatic col groups from table with more than 10 columns which causes the table to go full width and ignores the w-auto class
+
+  document.querySelectorAll('table.w-auto colgroup').forEach(colgroup => colgroup.remove());
+
+</script>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", function () {
+
+    const elements = document.querySelectorAll('div[id^="exm-"]');
+
+
+
+    elements.forEach((element) => {
+
+      const theoremTitle = element.querySelector('.theorem-title');
+
+      // Use the Quarto-generated id (e.g. "exm-muscleexample") directly
+
+      const anchorId = element.id;
+
+
+
+      if (theoremTitle && anchorId) {
+
+        const anchor = document.createElement('a');
+
+        anchor.href = `#${anchorId}`;
+
+        anchor.className = 'anchor';
+
+        anchor.setAttribute('aria-label', `Link to ${theoremTitle.textContent.trim()}`);
+
+        anchor.innerHTML = '<i class="bi bi-link-45deg" aria-hidden="true"></i>';
+
+        theoremTitle.appendChild(anchor);
+
+        // No need to reassign element.id — it's already correct
+
+      }
+
+    });
+
+  });
+
+</script>
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  document.querySelectorAll(".theorem-title").forEach(t => {
+
+    t.setAttribute("role", "heading");
+
+
+
+    let level = 4; // fallback
+
+    const section = t.closest("section");
+
+
+
+    if (section) {
+
+      const heading = section.querySelector(":scope > h1, :scope > h2, :scope > h3, :scope > h4, :scope > h5, :scope > h6");
+
+      if (heading) {
+
+        level = Math.min(Number(heading.tagName[1]) + 1, 6);
+
+      }
+
+    }
+
+
+
+    t.setAttribute("aria-level", String(level));
+
+  });
+
+});
+
+</script>
+<style>
+
+  #mas-popup,
+
+  #mas-popup * {
+
+    box-sizing: border-box;
+
+  }
+
+
+
+  #mas-popup {
+
+    --mas-navy: #001e44;
+
+    --mas-blue: #1e407c;
+
+    --mas-sky: #96bee6;
+
+
+
+    position: fixed;
+
+    right: max(1.25rem, env(safe-area-inset-right));
+
+    bottom: max(1.25rem, env(safe-area-inset-bottom));
+
+    z-index: 1055;
+
+
+
+    width: min(25rem, calc(100vw - 2rem));
+
+    padding: 1.45rem 1.5rem 1.5rem 1.8rem;
+
+    overflow: hidden;
+
+
+
+    border: 1px solid rgba(0, 30, 68, 0.14);
+
+    border-radius: 0.75rem;
+
+    background: #ffffff;
+
+    color: #16243a;
+
+
+
+    box-shadow:
+
+      0 1.25rem 3.5rem rgba(0, 30, 68, 0.2),
+
+      0 0.2rem 0.7rem rgba(0, 30, 68, 0.08);
+
+
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    -webkit-font-smoothing: antialiased;
+
+
+
+    animation: mas-popup-in 320ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+  }
+
+
+
+  #mas-popup[hidden] {
+
+    display: none;
+
+  }
+
+
+
+  /* Blue accent along the left side */
+
+  #mas-popup::before {
+
+    position: absolute;
+
+    inset: 0 auto 0 0;
+
+    width: 0.35rem;
+
+    background: linear-gradient(
+
+      180deg,
+
+      var(--mas-sky),
+
+      var(--mas-blue)
+
+    );
+
+    content: "";
+
+  }
+
+
+
+  #mas-popup-kicker {
+
+    margin: 0 3rem 0.55rem 0;
+
+    color: var(--mas-blue);
+
+    font-size: 0.69rem;
+
+    font-weight: 700;
+
+    letter-spacing: 0.12em;
+
+    line-height: 1.3;
+
+    text-transform: uppercase;
+
+  }
+
+
+
+  #mas-popup h2#mas-popup-title {
+
+    margin: 1rem 2.5rem 0.65rem 0 !important; 
+
+    max-width: 19rem;
+
+    margin: 0 2.5rem 0.65rem 0 !important;
+
+    color: var(--mas-navy);
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 1.55rem;
+
+    font-weight: 600;
+
+    letter-spacing: -0.015em;
+
+    line-height: 1.18 !important;
+
+  }
+
+
+
+  #mas-popup-description {
+
+    max-width: 21rem;
+
+    margin: 0 0 1.15rem;
+
+    color: #46586e;
+
+    font-size: 0.95rem;
+
+    line-height: 1.55;
+
+  }
+
+
+
+  #mas-popup-cta {
+
+    display: inline-flex;
+
+    min-height: 2.75rem;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 0.65rem;
+
+
+
+    padding: 0.7rem 1rem;
+
+    border: 2px solid var(--mas-navy);
+
+    border-radius: 0.35rem;
+
+    background: var(--mas-navy);
+
+    color: #ffffff;
+
+
+
+    font-size: 0.88rem;
+
+    font-weight: 700;
+
+    text-decoration: none;
+
+
+
+    transition:
+
+      background-color 160ms ease,
+
+      border-color 160ms ease,
+
+      transform 160ms ease;
+
+  }
+
+
+
+  #mas-popup-cta:hover,
+
+  #mas-popup-cta:focus-visible {
+
+    border-color: var(--mas-blue);
+
+    background: var(--mas-blue);
+
+    color: #ffffff;
+
+    transform: translateY(-1px);
+
+  }
+
+
+
+  #mas-popup-cta-arrow {
+
+    font-size: 1.1rem;
+
+    transition: transform 160ms ease;
+
+  }
+
+
+
+  #mas-popup-cta:hover #mas-popup-cta-arrow,
+
+  #mas-popup-cta:focus-visible #mas-popup-cta-arrow {
+
+    transform: translateX(0.18rem);
+
+  }
+
+
+
+  #mas-popup-close {
+
+    position: absolute;
+
+    top: 0.65rem;
+
+    right: 0.65rem;
+
+
+
+    display: grid;
+
+    width: 2.75rem;
+
+    height: 2.75rem;
+
+    padding: 0;
+
+    place-items: center;
+
+
+
+    border: 0;
+
+    border-radius: 50%;
+
+    background: transparent;
+
+    color: #485b72;
+
+
+
+    font: inherit;
+
+    font-size: 1.55rem;
+
+    line-height: 1;
+
+
+
+    cursor: pointer;
+
+  }
+
+
+
+  #mas-popup-close:hover,
+
+  #mas-popup-close:focus-visible {
+
+    background: #edf2f7;
+
+    color: var(--mas-navy);
+
+  }
+
+
+
+  #mas-popup :focus-visible {
+
+    outline: 3px solid var(--mas-sky);
+
+    outline-offset: 3px;
+
+  }
+
+
+
+  @keyframes mas-popup-in {
+
+    from {
+
+      opacity: 0;
+
+      transform: translateY(1rem) scale(0.98);
+
+    }
+
+
+
+    to {
+
+      opacity: 1;
+
+      transform: translateY(0) scale(1);
+
+    }
+
+  }
+
+
+
+  @media (max-width: 520px) {
+
+    #mas-popup {
+
+      right: max(0.75rem, env(safe-area-inset-right));
+
+      bottom: max(0.75rem, env(safe-area-inset-bottom));
+
+      width: calc(100vw - 1.5rem);
+
+      padding: 1.25rem 1.25rem 1.3rem 1.55rem;
+
+    }
+
+
+
+    #mas-popup-title {
+
+      max-width: 17rem;
+
+      font-size: 1.4rem;
+
+    }
+
+
+
+    #mas-popup-cta {
+
+      width: 100%;
+
+    }
+
+  }
+
+
+
+  @media (prefers-reduced-motion: reduce) {
+
+    #mas-popup {
+
+      animation: none;
+
+    }
+
+
+
+    #mas-popup-cta,
+
+    #mas-popup-cta-arrow {
+
+      transition: none;
+
+    }
+
+  }
+
+</style>
+
+
+
+<aside id="mas-popup" role="region" aria-labelledby="mas-popup-title" aria-describedby="mas-popup-description" aria-live="polite" hidden="">
+
+  <button id="mas-popup-close" type="button" aria-label="Close this message">
+
+    <span aria-hidden="true">×</span>
+
+  </button>
+
+
+
+  <p id="mas-popup-kicker">
+
+    Online master’s program
+
+  </p>
+
+
+
+  <h2 id="mas-popup-title">
+
+    Take your statistics skills further
+
+  </h2>
+
+
+
+  <p id="mas-popup-description">
+
+    Explore Penn State’s online Master of Applied Statistics program.
+
+  </p>
+
+
+
+  <a id="mas-popup-cta" href="https://science.psu.edu/stat/graduate-programs/master-of-applied-statistics">
+
+    Explore the program
+
+    <span id="mas-popup-cta-arrow" aria-hidden="true">→</span>
+
+  </a>
+
+</aside>
+
+
+
+<script>
+
+  (() => {
+
+    const storageKey = "stat501-mas-popup-dismissed-v2";
+
+
+
+    // Show the popup after 15 seconds.
+
+    const showDelay = 15000;
+
+
+
+    // After closing it, hide it for 30 days.
+
+    const dismissalDays = 30;
+
+
+
+    const popup = document.getElementById("mas-popup");
+
+    const closeButton = document.getElementById("mas-popup-close");
+
+    const cta = document.getElementById("mas-popup-cta");
+
+
+
+    if (!popup || !closeButton || !cta) return;
+
+
+
+    let dismissalActive = false;
+
+
+
+    try {
+
+      const dismissedUntil = Number(
+
+        localStorage.getItem(storageKey)
+
+      );
+
+
+
+      dismissalActive =
+
+        Number.isFinite(dismissedUntil) &&
+
+        Date.now() < dismissedUntil;
+
+    } catch (error) {
+
+      // The popup still works if browser storage is unavailable.
+
+    }
+
+
+
+    if (dismissalActive) return;
+
+
+
+    const rememberDismissal = () => {
+
+      try {
+
+        const millisecondsPerDay = 24 * 60 * 60 * 1000;
+
+        const dismissedUntil =
+
+          Date.now() + dismissalDays * millisecondsPerDay;
+
+
+
+        localStorage.setItem(
+
+          storageKey,
+
+          String(dismissedUntil)
+
+        );
+
+      } catch (error) {
+
+        // Closing still works if browser storage is unavailable.
+
+      }
+
+    };
+
+
+
+    const showTimer = window.setTimeout(() => {
+
+      popup.hidden = false;
+
+    }, showDelay);
+
+
+
+    const dismissPopup = () => {
+
+      window.clearTimeout(showTimer);
+
+      popup.hidden = true;
+
+      rememberDismissal();
+
+    };
+
+
+
+    closeButton.addEventListener("click", dismissPopup);
+
+
+
+    // Prevent the popup from appearing again after someone uses the CTA.
+
+    cta.addEventListener("click", rememberDismissal);
+
+
+
+    document.addEventListener("keydown", (event) => {
+
+      if (event.key === "Escape" && !popup.hidden) {
+
+        dismissPopup();
+
+      }
+
+    });
+
+  })();
+
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./Lesson00.html" class="pagination-link" aria-label="0: Prerequisite Skills">
+        <span class="nav-page-text">0: Prerequisite Skills</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="codeblock-with-label markdown">
+<style>.codeblock-with-label pre.lang-label-1::before { content: "Markdown"; }</style>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown lang-label-1 code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title-block-banner:</span><span class="co"> banner-stat200.png #change the banner image</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">title-block-banner-color:</span><span class="co"> light</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">titlegraphic:</span><span class="co"> banner-stat200.png</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="an">grid:</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">      content-mode: standard</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">      margin-width: 390px  #right side margin width so it's wider on this home page because of the topics </span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">      body-width: 1100px </span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"> </span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="an">toc-title:</span><span class="co"> "Contents"  #changes the top of the TOC instead of saying in this lesson</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="an">listing:</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">  id: lessons</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">  categories: cloud</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">  contents:  #adjust as needed to the number of lessons</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">    - Lesson00.qmd</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">    - Lesson01.qmd</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">    - Lesson02.qmd</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">    - Lesson03.qmd</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">    - Lesson04.qmd</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co">    - Lesson05.qmd</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co">    - Lesson06.qmd</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co">    - Lesson07.qmd</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co">    - Lesson08.qmd</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">    - Lesson09.qmd</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co">    - Lesson10.qmd</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co">    - Lesson11.qmd</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co">    - Lesson12.qmd</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co">  type: grid</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co">  grid-columns: 4</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co">  grid-item-align: center</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co">  fields: [image,title, categories, file-modified]</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co">  field-display-names: </span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co">    title: "Lessons"</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co">    file-modified: "Updated:"</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co">  date-format: short</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co">  sort: "filename"</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="fu"># Welcome to STAT 200! {.unnumbered .unlisted}</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="fu">## About this course {.unnumbered}</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>Welcome to the course notes for **STAT 200: Elementary Statistics**. These notes are designed and developed by <span class="co">[</span><span class="ot">Penn State's Department of Statistics</span><span class="co">](https://science.psu.edu/stat)</span> and offered as open educational resources. These notes are free to use under Creative Commons license <span class="co">[</span><span class="ot">CC BY-NC 4.0</span><span class="co">](https://creativecommons.org/licenses/by-nc/4.0/)</span>.</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>::: {.border-start .ms-3 .ps-2}</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Currently enrolled?</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>If you are a current student in this course, please see <span class="co">[</span><span class="ot">Canvas</span><span class="co">](https://psu.instructure.com/)</span> for your syllabus, assignments, lesson videos, and communication from your instructor.</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="fu">### Course Overview {.unnumbered .unlisted}</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>As a time expectation,&nbsp;**most students require 8-16 hours per week to be successful in the course**. This is comparable to the resident version of the course where students meet with an instructor 4 hours per week in a classroom plus time outside of class completing assignments and preparing for exams. We find that the most successful students in this course are those who do not wait until the last minute to complete assignments and those who post questions on the discussion boards.</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>Students are encouraged to make a weekly schedule for themselves. Below is an example from a student whose assignments are all due Tuesday night:</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Weekday <span class="pp">|</span> Activity <span class="pp">|</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="pp">| ---</span> <span class="pp">|:---</span> <span class="pp">|</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Wednesday <span class="pp">|</span> Work through the assigned readings and start the WileyPLUS assignment <span class="pp">|</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Thursday <span class="pp">|</span> Continue to work through the readings and the WileyPLUS assignment <span class="pp">|</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Friday <span class="pp">|</span> Finish the WileyPLUS assignment <span class="pp">|</span></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Saturday <span class="pp">|</span> Relax, catch up / get ahead <span class="pp">|</span></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Sunday <span class="pp">|</span> Start the lab assignment <span class="pp">|</span></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Monday <span class="pp">|</span> Finish the lab assignment/Take the quiz <span class="pp">|</span></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Tuesday <span class="pp">|</span> Confirm that all assignments have been submitted <span class="pp">|</span></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>: Weekly Schedule Example {.w-auto .table-sm .mx-auto .row-header}</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>&nbsp;This&nbsp;course uses the textbook&nbsp;*Statistics: Unlocking the Power of Data*&nbsp;by Lock, Frazier Lock, Lock Morgan, Lock, &amp; Lock.</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>*(All images used in this website are from the public domain unless otherwise noted.)*</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Except where otherwise noted, content on this site is licensed under a <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> license.<br><br> <img src="assets/by-nc.svg" class="img-fluid" alt="BYNC"></p>
+</div>   
+    <div class="nav-footer-center">
+<p><a href="https://oer.psu.edu/">OPEN.ED@PSU</a></p>
+<div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
+    <div class="nav-footer-right">
+<a href="https://www.psu.edu/web-privacy-statement/">Privacy</a> | <a href="https://www.psu.edu/accessibilitystatement/">Accessibility</a> | <a href="https://www.psu.edu/copyright-information/">Copyright</a> <br> <a href="https://www.psu.edu/">The Pennsylvania State University</a> © <span id="copyright-year"></span> | <br> <a href="https://forms.office.com/r/GbC8H0pZhm">Leave Us Feedback</a>
+<script>
+document.getElementById("copyright-year").textContent = new Date().getFullYear();
+</script>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
