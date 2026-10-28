@@ -36,3 +36,10 @@
 - 修補：host_publisher 把全部 Wikimedia 家族網域塌成單一 "wikimedia"。
 - 紅隊：維基雙語/百科+文庫/辭典+教科書→1；維基+OpenStax、教育部+法規→2（PASS）。
 - 處置：29 筆撤回 verified（2567→2538），改排 re-verify 用真權威（教育部辭典/成語典/台灣文學館/教科書、grammar 權威）。
+
+## 2026-10-28 H-4：cross_check_gate 的 urllib 抓不到 JS-render／gov.tw 憑證鏈不全頁 → 正確事實無法驗證（HD 選項 A）
+- 發現者：HD（「政府公開頁一定打得開，403 很可疑；可能 header 少/抓太頻/要 headless render」）。
+- 診斷（實測，非臆測）：law.moj.gov.tw 刑法/民法條文 urllib **HTTP 200 可抓**（Sol 誤以為被擋、回 refs:[]）；司法院 cons.judicial 200；國健署 hpa.gov.tw ＝ **SSL CERTIFICATE_VERIFY_FAILED（憑證鏈不全，非 403）**；教育部辭典舊 URL 404（非封鎖）；Cambridge 403 ＝ 真反機器人（Cloudflare 安全驗證，headless 也不過）。→ 結論：soc-civ 法律卡住主因是 **Sol 沒引用其實可抓的 law.moj**，次因是少數 gov.tw 憑證鏈／JS-render 頁 urllib 抓不到。
+- 修補：新增 `tools/verify/js_fetch.mjs`（持久化 headless-Chrome，`--ignore-certificate-errors` 僅為讀 gov.tw 不全鏈**公開**頁、只回文字從不送資料）＋ `cross_check_gate` 加 `_JsFetcher`：**僅在 urllib 對某 ref 例外/SSL 失敗/quote 未命中時才 fallback headless**，再比對 quote。**≥2 相異 publisher＋逐字 quote 邏輯完全不變**（不弱化）；Cambridge 類反機器人頁 headless 取得的是安全驗證頁、不含 quote → 照樣 DENY（§1.3 不破反機器人）。
+- 紅隊：(a) `--selftest` 原 6 例全綠 ＋ 新 2 例：headless 救回真 quote（urllib 死連結）→ALLOW、headless 抓到頁但無該 quote（反機器人/杜撰）→仍 DENY。(b) **live 紅隊**（真實頁）：law.moj(urllib)＋國健署(urllib SSL 失敗→headless 救回真 quote「營養及健康飲食」) 好例→ALLOW；國健署 quote 改杜撰→DENY。另驗證 gate 正確拒絕**動態文字**（訪客計數/更新日期）當 quote（兩次抓取值不同→不match），逼 quote 取穩定本文。
+- 餘留：Cambridge 等商業反機器人站不採（用替代可抓源）；quote 必取**穩定頁面文字**（法條本文/定義/標題），非動態計數。

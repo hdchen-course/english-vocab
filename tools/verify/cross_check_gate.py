@@ -29,10 +29,11 @@ cross_check 來源的登記格式（source_registry 內，evidence_method=cross_
 EXIT：0=全過，1=有 FAIL，2=selftest 失敗。
 依賴：標準庫 urllib（避免額外套件）；抓取逾時 20s、僅 http(s)。
 """
-import sys, os, json, hashlib, re, argparse, urllib.request, urllib.parse, ssl
+import sys, os, json, hashlib, re, argparse, urllib.request, urllib.parse, ssl, subprocess, atexit, shutil
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 REG = os.path.join(ROOT, "authoring", "source_registry.json")
+JS_FETCH = os.path.join(ROOT, "tools", "verify", "js_fetch.mjs")
 
 def _norm(s: str) -> str:
     # 正規化：去空白差異，供 quote 子串比對（抓到的 HTML 可能有標籤/空白）
@@ -83,8 +84,49 @@ def fetch(url, timeout=20):
     except Exception:
         return raw.decode("latin-1", errors="replace")
 
-def check_source(sid, s, offline=False, fetcher=fetch):
-    """回傳 (ok, [reasons])。"""
+class _JsFetcher:
+    """持久化 headless-Chrome fallback（§1.3 不破反機器人；只讀公開頁、只回文字）。
+    懶啟動一個 node 子行程（js_fetch.mjs，單一瀏覽器重用）；fetch(url) 寫一行 URL、
+    讀回一行 JSON，回傳 render 後 innerText（失敗回 ""）。close() 收 stdin 令其關瀏覽器。
+    僅在 urllib 未能確認某 ref（例外/SSL/quote 未命中）時才被呼叫——省成本。"""
+    def __init__(self):
+        self.proc = None
+        self.ok = os.path.exists(JS_FETCH) and (shutil.which("node") is not None)
+    def _ensure(self):
+        if self.proc is not None:
+            return self.proc.poll() is None
+        if not self.ok:
+            return False
+        try:
+            self.proc = subprocess.Popen(["node", JS_FETCH], stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, bufsize=1, cwd=ROOT)
+            atexit.register(self.close)
+        except Exception:
+            self.proc = None; self.ok = False
+        return self.proc is not None
+    def fetch(self, url, timeout=45):
+        if not self._ensure():
+            return ""
+        try:
+            self.proc.stdin.write(url + "\n"); self.proc.stdin.flush()
+            line = self.proc.stdout.readline()   # 一行一回應（js_fetch 逐行回）
+            if not line:
+                return ""
+            obj = json.loads(line)
+            return obj.get("text", "") if obj.get("ok") else ""
+        except Exception:
+            return ""
+    def close(self):
+        if self.proc is not None:
+            try:
+                self.proc.stdin.close(); self.proc.wait(timeout=10)
+            except Exception:
+                try: self.proc.kill()
+                except Exception: pass
+            self.proc = None
+
+def check_source(sid, s, offline=False, fetcher=fetch, js_fetcher=None):
+    """回傳 (ok, [reasons])。js_fetcher（選填）＝urllib 未確認某 ref 時的 headless fallback。"""
     reasons = []
     if s.get("evidence_method") != "cross_check":
         return True, []   # 非本 gate 範疇
@@ -99,35 +141,48 @@ def check_source(sid, s, offline=False, fetcher=fetch):
         pub = host_publisher(ref["url"])
         if offline:
             confirmed_pubs.add(pub); continue   # 離線僅結構檢查
+        matched = False
         try:
             body = fetcher(ref["url"])
-        except Exception as e:
-            notes.append(f"{sid} ref#{i} 抓取失敗（{type(e).__name__}），不計入確認：{ref['url']}"); continue
-        if _norm(ref["quote"]) in _norm(body):
+            if _norm(ref["quote"]) in _norm(body):
+                matched = True
+        except Exception:
+            pass   # urllib 失敗（SSL/403/逾時）→ 下方 headless fallback 再試
+        # 僅在 urllib 未確認（例外或 quote 未命中）時才叫 headless，省成本
+        if not matched and js_fetcher is not None:
+            jsbody = js_fetcher.fetch(ref["url"])
+            if jsbody and _norm(ref["quote"]) in _norm(jsbody):
+                matched = True
+        if matched:
             confirmed_pubs.add(pub)
         else:
-            notes.append(f"{sid} ref#{i}: quote 未出現在抓取內容，不計入確認：{ref['url']}")
+            notes.append(f"{sid} ref#{i}: quote 未出現在抓取內容（urllib＋headless 皆未命中），不計入確認：{ref['url']}")
     # 通過＝有 ≥2 個「真抓到且 quote 命中」且 host 相異的來源（壞/抓不到的 ref 不致命，只是不計入）
     if len(confirmed_pubs) >= 2:
         return True, notes   # notes 僅供參考，不致 FAIL
     reasons = notes + [f"{sid}: 確認的獨立來源不足 2（confirmed distinct publishers={len(confirmed_pubs)}）"]
     return False, reasons
 
-def verify(sid_filter=None, offline=False):
+def verify(sid_filter=None, offline=False, use_js=True):
     reg = json.load(open(REG, encoding="utf-8"))
     xs = {k: v for k, v in reg["sources"].items()
           if v.get("evidence_method") == "cross_check" and (sid_filter is None or k == sid_filter)}
     if not xs:
         print("（registry 無 cross_check 來源可驗）"); print("RESULT: PASS ✅（空集）"); return 0
+    jsf = None if (offline or not use_js) else _JsFetcher()
     allok = True
-    for sid, s in sorted(xs.items()):
-        ok, reasons = check_source(sid, s, offline=offline)
-        if ok:
-            print(f"  ok   {sid}（{len(s.get('independent_refs',[]))} refs 皆支持）")
-        else:
-            allok = False
-            for r in reasons:
-                print(f"  FAIL {r}")
+    try:
+        for sid, s in sorted(xs.items()):
+            ok, reasons = check_source(sid, s, offline=offline, js_fetcher=jsf)
+            if ok:
+                print(f"  ok   {sid}（{len(s.get('independent_refs',[]))} refs 皆支持）")
+            else:
+                allok = False
+                for r in reasons:
+                    print(f"  FAIL {r}")
+    finally:
+        if jsf is not None:
+            jsf.close()
     print("RESULT:", "PASS ✅" if allok else "FAIL ❌")
     return 0 if allok else 1
 
@@ -165,6 +220,30 @@ def selftest():
         o, _ = check_source("xcheck-"+name, s, fetcher=fake)
         if o: print(f"  selftest FAIL：壞例『{name}』竟放行"); ok = False
         else: print(f"  selftest：壞例『{name}』→ DENY ✅")
+
+    # ── headless fallback 紅隊（js_fetcher 以 fake 注入，保持確定性）──
+    # 情境：urllib 對某 ref 失敗（死連結），但 headless 能 render 出含 quote 的頁 → 應被救回確認。
+    class _FakeJs:
+        def __init__(self, table): self.table = table
+        def fetch(self, url): return self.table.get(url, "")
+    # 好例：ref#1 urllib 死連結，但 headless 回傳含 quote 的頁 → 兩源皆確認 → ALLOW
+    js_good = {"evidence_method": "cross_check", "independent_refs": [
+        good["independent_refs"][0],
+        {"url": "https://ssl-fail.example/gov", "publisher": "國健署", "quote": "每日蔬果五七九"}]}
+    js_table_good = {"https://ssl-fail.example/gov": "衛教：建議每日蔬果五七九，均衡飲食。"}
+    o, _ = check_source("xcheck-js-good", js_good, fetcher=fake, js_fetcher=_FakeJs(js_table_good))
+    if o: print("  selftest：headless 救回真 quote（urllib 死連結）→ ALLOW ✅")
+    else: print("  selftest FAIL：headless 應救回真 quote 卻沒過"); ok = False
+    # 壞例（最關鍵）：headless 也抓到頁，但頁內**沒有**登記 quote（如 Cambridge 安全驗證頁/杜撰引文）
+    #   → 不得被 headless 假放行。
+    js_bad = {"evidence_method": "cross_check", "independent_refs": [
+        good["independent_refs"][0],
+        {"url": "https://antibot.example/x", "publisher": "某站", "quote": "這句是杜撰的引文不存在"}]}
+    js_table_bad = {"https://antibot.example/x": "Performing security verification. This website uses a security service."}
+    o, _ = check_source("xcheck-js-bad", js_bad, fetcher=fake, js_fetcher=_FakeJs(js_table_bad))
+    if o: print("  selftest FAIL：headless 竟對杜撰 quote 假放行"); ok = False
+    else: print("  selftest：headless 抓到頁但無該 quote（反機器人頁/杜撰）→ 仍 DENY ✅")
+
     print("SELFTEST:", "PASS ✅" if ok else "FAIL ❌")
     return 0 if ok else 2
 
@@ -174,12 +253,13 @@ def main():
     ap.add_argument("--verify", action="store_true")
     ap.add_argument("--offline-check", action="store_true")
     ap.add_argument("--sid")
+    ap.add_argument("--no-js", action="store_true", help="停用 headless fallback，只用 urllib")
     # 忽略 orchestrator 可能附加的 --root/--release-id
     ap.add_argument("--root"); ap.add_argument("--release-id")
     a = ap.parse_args()
     if a.selftest: return selftest()
-    if a.verify or a.offline_check: return verify(sid_filter=a.sid, offline=a.offline_check)
-    print("用法：--selftest | --verify [--sid X] | --offline-check"); return 2
+    if a.verify or a.offline_check: return verify(sid_filter=a.sid, offline=a.offline_check, use_js=not a.no_js)
+    print("用法：--selftest | --verify [--sid X] [--no-js] | --offline-check"); return 2
 
 if __name__ == "__main__":
     sys.exit(main())
