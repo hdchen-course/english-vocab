@@ -678,12 +678,12 @@
 - [life.safety.personal.safe-word] 核對暗號／接送確認，陌生人說「爸媽叫我來接你」要查證  {t_base, 無}  · provisionally_verified
 - [life.safety.personal.home-alone] 獨自在家安全：不透露獨自在家、應門對策  {t_mid, 無}  · provisionally_verified
 - [life.safety.home.electricity] 用電安全：濕手不碰插座、不超載插座、不塞異物  {t_base, 無}  · provisionally_verified
-- [life.safety.home.fire-gas] 聞到瓦斯味（孩子版）：不碰任何電器或電燈開關（開或關都不行）、不按門鈴、立刻離開到屋外、找大人並打119；關瓦斯閥、開窗、報修是大人的事  {t_base, 無}  · pending
+- [life.safety.home.fire-gas] 聞到瓦斯味（孩子版）：不碰任何電器或電燈開關（開或關都不行）、不按門鈴、立刻離開到屋外、找大人並打119；關瓦斯閥、開窗、報修是大人的事  {t_base, 無}  · provisionally_verified
 - [life.safety.home.sharp-hot] 刀具、熱水、熱鍋、尖銳物的安全使用與收納  {t_base, 無}  · provisionally_verified
 - [life.safety.home.fall-prevent] 高處／陽台／窗戶墜落預防  {t_base, 無}  · provisionally_verified
 - [life.safety.home.chemicals] 藥品、清潔劑、化學品不亂碰亂吃，分辨標示  {t_base, 無}  · provisionally_verified
 - [life.safety.home.bathroom-drown] 浴室防滑、泡澡/泳池溺水風險  {t_base, 無}  · provisionally_verified
-- [life.safety.home.furniture-anchor] 居家防跌、家具傾倒固定  {t_mid, 無}  · pending
+- [life.safety.home.furniture-anchor] 居家防跌、家具傾倒固定  {t_mid, 無}  · provisionally_verified
 - [life.safety.traffic.pedestrian] 行人：走人行道、過馬路看紅綠燈、斑馬線、停看聽、與駕駛眼神確認  {t_base, 無}  · provisionally_verified
 - [life.safety.traffic.no-distraction] 不在路上追逐／玩手機（分心風險）  {t_base, 無}  · provisionally_verified
 - [life.safety.traffic.in-vehicle] 乘車：繫安全帶、不把頭手伸出窗外、後座下車看後方  {t_base, 無}  · provisionally_verified
@@ -698,12 +698,12 @@
 - [life.safety.substance.substance-law] 成癮物質與法律責任、求助管道  {t_adv, 無}  · provisionally_verified
 - [life.safety.emergency.hotlines] 110（警察）、119（火警/救護）、112、防災與消防  {t_base, 無}  · provisionally_verified
 - [life.safety.emergency.report-clearly] 報案說清楚：地點、發生什麼、幾個人、是否受傷  {t_base, 無}  · provisionally_verified
-- [life.safety.emergency.fire-escape] 火場應變：先判斷火與煙的位置決定「逃」或「躲」；能安全離開才逃、煙中壓低身體、不搭電梯、沿牆到最近安全出口；開門前先摸門板溫度，門外有濃煙或高溫就退回室內關門、用衣物塞住門縫、到有窗或陽台處向外求救並打119說清楚位置（依現場判斷，不套固定口訣）  {t_base, 無}  · pending
+- [life.safety.emergency.fire-escape] 火場應變：先判斷火與煙的位置決定「逃」或「躲」；能安全離開才逃、煙中壓低身體、不搭電梯、沿牆到最近安全出口；開門前先摸門板溫度，門外有濃煙或高溫就退回室內關門、用衣物塞住門縫、到有窗或陽台處向外求救並打119說清楚位置（依現場判斷，不套固定口訣）  {t_base, 無}  · provisionally_verified
 - [life.safety.emergency.earthquake] 地震：趴下—掩護—穩住（Drop, Cover, and Hold On）、遠離窗戶與高物、就地避難勿往外跑  {t_base, 無}  · provisionally_verified
-- [life.safety.emergency.bleeding] 傷口出血止血：隔著乾淨布或戴手套，直接用力壓住傷口並持續加壓；血流不止或傷口很大就打119、找大人  {t_mid, 無}  · pending
-- [life.safety.emergency.burn] 燙傷「沖脫泡蓋送」：用流動的自來水（涼而不冰）沖約 15–20 分鐘、不可冰敷或塗抹東西、小心脫除衣物、覆蓋乾淨布、儘速送醫  {t_mid, 無}  · pending
-- [life.safety.emergency.choking] 異物哽塞：還能有效咳嗽就鼓勵繼續咳；無法呼吸或出聲時由大人施作——成人與大童用背擊加腹部推擠（哈姆立克），未滿1歲嬰兒改為背擊加胸部按壓（不可腹部推擠），並立刻打119  {t_mid, 無}  · pending
-- [life.safety.emergency.cpr-aed] CPR／AED 概念與啟動時機：先確認現場安全→拍肩大聲叫喚、確認無反應且沒有正常呼吸→大聲呼救、打119並請人取AED→（能力所及才）持續用力快壓胸、依AED語音操作；孩子重點在「啟動救援、找大人」而非取代大人施救  {t_mid, 無}  · pending
+- [life.safety.emergency.bleeding] 傷口出血止血：隔著乾淨布或戴手套，直接用力壓住傷口並持續加壓；血流不止或傷口很大就打119、找大人  {t_mid, 無}  · provisionally_verified
+- [life.safety.emergency.burn] 燙傷「沖脫泡蓋送」：用流動的自來水（涼而不冰）沖約 15–20 分鐘、不可冰敷或塗抹東西、小心脫除衣物、覆蓋乾淨布、儘速送醫  {t_mid, 無}  · provisionally_verified
+- [life.safety.emergency.choking] 異物哽塞：還能有效咳嗽就鼓勵繼續咳；無法呼吸或出聲時由大人施作——成人與大童用背擊加腹部推擠（哈姆立克），未滿1歲嬰兒改為背擊加胸部按壓（不可腹部推擠），並立刻打119  {t_mid, 無}  · provisionally_verified
+- [life.safety.emergency.cpr-aed] CPR／AED 概念與啟動時機：先確認現場安全→拍肩大聲叫喚、確認無反應且沒有正常呼吸→大聲呼救、打119並請人取AED→（能力所及才）持續用力快壓胸、依AED語音操作；孩子重點在「啟動救援、找大人」而非取代大人施救  {t_mid, 無}  · provisionally_verified
 - [life.safety.emergency.emergency-kit] 防災包內容與家庭集合點／聯絡計畫  {t_mid, 無}  · provisionally_verified
 - [life.safety.emergency.natural-disaster] 颱風、淹水、土石流、雷擊的避險  {t_mid, 無}  · provisionally_verified
 - [life.safety.online.no-personal-info] 不公開真實姓名、學校、住址、電話、即時位置  {t_base, 無}  · provisionally_verified
