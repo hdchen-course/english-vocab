@@ -90,11 +90,16 @@ def main():
     print(f"[{batch}] accepted-to-verify {len(accepted)}、concern排除 {len(excluded_concern)}、skip {len(skipped)}")
 
     # 真抓驗 + prune 未過（只驗「本批」新來源；舊批先前已 gate 驗過且 overlay 鎖定，不重抓以免愈跑愈慢）
+    # 帶 headless fallback（H-4）：urllib 抓不到 gov.tw 憑證鏈/JS-render 頁時改 headless 真抓，≥2 publisher+quote 不變。
+    jsf = g._JsFetcher()
     fail=[]
-    for sid,s in list(reg["sources"].items()):
-        if s.get("evidence_method")=="cross_check" and sid.startswith(f"xcheck-{batch}-"):
-            ok,_=g.check_source(sid,s)
-            if not ok: fail.append(sid)
+    try:
+        for sid,s in list(reg["sources"].items()):
+            if s.get("evidence_method")=="cross_check" and sid.startswith(f"xcheck-{batch}-"):
+                ok,_=g.check_source(sid,s,js_fetcher=jsf)
+                if not ok: fail.append(sid)
+    finally:
+        jsf.close()
     if fail:
         for sid in fail: reg["sources"].pop(sid,None)
         rm=[k for k,ent in led["entries"].items() if any(fs in fail for fs in ent.get("fact_source_ids",[]))]
