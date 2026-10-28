@@ -243,7 +243,7 @@
 
 ### 6.3 民法與日常生活
 - [soc-civ.t_mid.law.capacity] 權利能力與行為能力（完全、限制、無行為能力人）  {tier:t_mid, exam:會考}
-- [soc-civ.t_mid.law.minor-contract] 未成年人法律行為的效力（需法定代理人同意）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.law.minor-contract] 未成年人法律行為的效力（限制行為能力人原則上須法定代理人同意，但純獲法律上利益或日常生活所必需者除外；無行為能力人之行為無效）  {tier:t_mid, exam:會考}
 - [soc-civ.t_mid.law.contract-basic] 契約的成立與誠信原則  {tier:t_mid, exam:會考}
 - [soc-civ.t_mid.law.tort-basic] 侵權行為與損害賠償責任的概念  {tier:t_mid, exam:會考}
 - [soc-civ.t_adv.law.property-obligation] 物權與債權的區別  {tier:t_adv, exam:學測}

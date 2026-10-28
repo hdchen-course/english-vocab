@@ -2476,7 +2476,7 @@
 - [soc-civ.t_sub.law.proportionality] 比例原則三階段（適當、必要、衡平）的適用  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_sub.law.rights-conflict] 基本權利衝突與法益權衡  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_mid.law.capacity] 權利能力與行為能力（完全、限制、無行為能力人）  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.law.minor-contract] 未成年人法律行為的效力（需法定代理人同意）  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.law.minor-contract] 未成年人法律行為的效力（限制行為能力人原則上須法定代理人同意，但純獲法律上利益或日常生活所必需者除外；無行為能力人之行為無效）  {t_mid, 會考}  · unverified
 - [soc-civ.t_mid.law.contract-basic] 契約的成立與誠信原則  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.tort-basic] 侵權行為與損害賠償責任的概念  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.law.property-obligation] 物權與債權的區別  {t_adv, 學測}  · provisionally_verified
