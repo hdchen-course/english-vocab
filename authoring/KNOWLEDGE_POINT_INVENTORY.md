@@ -56,7 +56,7 @@
 - [chi.t_adv.word.emotive-color] 詞語褒貶色彩（感情色彩）判讀  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.word.register-color] 詞語語體色彩（書面／口語）判讀  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_mid.word.idiom-meaning] 成語意義理解  {t_mid, 會考}  · provisionally_verified
-- [chi.t_adv.word.idiom-origin] 成語典故出處  {t_adv, 學測-國綜}  · unverified
+- [chi.t_adv.word.idiom-origin] 成語典故出處  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_mid.word.idiom-usage] 成語語境正確運用  {t_mid, 會考}  · provisionally_verified
 - [chi.t_adv.word.idiom-misuse] 成語誤用辨析（對象錯置／褒貶錯用／語意重複）  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_mid.word.idiom-cloze] 成語填空  {t_mid, 會考}  · provisionally_verified
@@ -68,15 +68,15 @@
 - [chi.t_mid.word.content-function] 實詞與虛詞（白話）分類  {t_mid, 會考}  · provisionally_verified
 - [chi.t_adv.word.cultural-sense] 詞語的時代／文化意涵  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_mid.word.saying-proverb] 熟語／諺語／歇後語／格言理解  {t_mid, 會考}  · provisionally_verified
-- [chi.t_base.punc.period] 句號用法  {t_base, 無}  · unverified
-- [chi.t_base.punc.comma] 逗號用法  {t_base, 無}  · unverified
+- [chi.t_base.punc.period] 句號用法  {t_base, 無}  · provisionally_verified
+- [chi.t_base.punc.comma] 逗號用法  {t_base, 無}  · provisionally_verified
 - [chi.t_base.punc.enumeration-comma] 頓號（並列詞語間）  {t_base, 無}  · provisionally_verified
 - [chi.t_mid.punc.semicolon] 分號（並列分句間）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_base.punc.colon] 冒號（提示下文）  {t_base, 無}  · provisionally_verified
 - [chi.t_base.punc.quotation] 引號（直接引語／強調／口語篇名）  {t_base, 無}  · provisionally_verified
 - [chi.t_mid.punc.nested-quote] 單引號與雙引號的層次嵌套  {t_mid, 會考}  · provisionally_verified
 - [chi.t_base.punc.question] 問號  {t_base, 無}  · provisionally_verified
-- [chi.t_base.punc.exclamation] 驚嘆號  {t_base, 無}  · unverified
+- [chi.t_base.punc.exclamation] 驚嘆號  {t_base, 無}  · provisionally_verified
 - [chi.t_mid.punc.dash] 破折號（解釋／語氣轉變／聲音延續）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.punc.ellipsis] 刪節號（省略／語意未盡）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_base.punc.book-title] 書名號（《》〈〉）  {t_base, 會考}  · provisionally_verified
@@ -263,7 +263,7 @@
 - [chi.t_adv.lit.modern-newlit] 現代文學：新文學（白話文）運動  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.taiwan-lit] 台灣文學發展（鄉土／現代主義）  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.author-works] 重要作家與代表作配對  {t_adv, 學測-國綜}  · provisionally_verified
-- [chi.t_adv.lit.schools] 文學流派與主張  {t_adv, 學測-國綜}  · unverified
+- [chi.t_adv.lit.schools] 文學流派與主張  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.classic-source] 經典出處（四書五經／諸子）辨識  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.lunyu] 文化基本教材：論語思想  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.lit.mengzi] 文化基本教材：孟子思想  {t_adv, 學測-國綜}  · provisionally_verified
@@ -1389,7 +1389,7 @@
 - [sci.t_sub.bio-photosynthesis.rubisco] 說明 RuBisCO 固碳酵素與 RuBP 的角色  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-photosynthesis.photorespiration] 說明光呼吸的成因（O₂與 CO₂競爭 RuBisCO）  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-photosynthesis.c4-cam] 比較 C3、C4、CAM 植物的固碳策略與環境適應  {t_sub, 分科-生物}  · provisionally_verified
-- [sci.t_sub.bio-photosynthesis.absorption-spectrum] 判讀光合色素的吸收光譜與作用光譜（紅/藍光最佳）  {t_sub, 分科-生物}  · unverified
+- [sci.t_sub.bio-photosynthesis.absorption-spectrum] 判讀光合色素的吸收光譜與作用光譜（紅/藍光最佳）  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_mid.bio-respiration.cellular-resp-def] 說明細胞呼吸：分解養分釋放能量供生命活動  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-respiration.overall-equation] 寫出有氧呼吸總反應（葡萄糖＋O₂→CO₂＋H₂O＋能量）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-respiration.resp-vs-photo] 比較呼吸作用與光合作用（原料/產物/能量/場所）之互補  {t_mid, 會考}  · provisionally_verified
@@ -1418,10 +1418,10 @@
 - [sci.t_sub.bio-cell-division.cancer-cell-cycle] 連結細胞週期調控失常與癌症（原癌/抑癌基因）  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-cell-division.apoptosis] 區分計畫性細胞死亡（凋亡）與壞死  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-cell-division.nondisjunction] 以染色體不分離解釋唐氏症等染色體數目異常  {t_sub, 分科-生物}  · provisionally_verified
-- [sci.t_base.bio-digestion.balanced-diet] 認識均衡飲食與食物六大類（我的餐盤）  {t_base, 無}  · unverified
+- [sci.t_base.bio-digestion.balanced-diet] 認識均衡飲食與食物六大類（我的餐盤）  {t_base, 無}  · provisionally_verified
 - [sci.t_base.bio-digestion.teeth-stomach] 初步認識牙齒咀嚼與胃腸消化食物  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.bio-digestion.nutrients-six] 列舉六大營養素（醣類/蛋白質/脂質/維生素/礦物質/水）及功能  {t_mid, 會考}  · provisionally_verified
-- [sci.t_mid.bio-digestion.food-tests] 以本氏液、碘液、蛋白質試劑、脂肪（紙上透光）檢測營養素  {t_mid, 會考}  · unverified
+- [sci.t_mid.bio-digestion.food-tests] 以本氏液、碘液、蛋白質試劑、脂肪（紙上透光）檢測營養素  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-digestion.mechanical-chemical] 區分物理性（咀嚼/攪拌）與化學性消化（酵素分解）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-digestion.alimentary-canal] 依序列出消化道（口→食道→胃→小腸→大腸→肛門）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-digestion.accessory-organs] 說明唾腺、肝、膽囊、胰的消化輔助功能  {t_mid, 會考}  · provisionally_verified
@@ -2458,9 +2458,9 @@
 - [soc-civ.t_sub.politics.deliberation-tools] 審議式民主工具（公民會議、參與式預算）的運作  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_base.law.rules-why] 為什麼要有規則：維護安全與秩序  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_base.law.follow-rules] 遵守交通規則、校規與公共場所規範  {t_base, 無}  · provisionally_verified
-- [soc-civ.t_mid.law.law-meaning] 法律的意義與功能（維持秩序、保障權利、解決紛爭）  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.law.law-meaning] 法律的意義與功能（維持秩序、保障權利、解決紛爭）  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.norm-types] 法律與其他社會規範（道德、習俗、宗教）的區別  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.law.law-hierarchy] 法律位階（憲法 > 法律 > 命令）與中央法規  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.law.law-hierarchy] 法律位階（憲法 > 法律 > 命令）與中央法規  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.public-private] 公法與私法的區分  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.law.rule-of-law] 法治國原則（依法行政、法律保留、法律優位）  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.law.substantive-procedural] 實體法與程序法的區別  {t_adv, 學測}  · unverified
@@ -2475,32 +2475,32 @@
 - [soc-civ.t_adv.law.constitutional-complaint] 憲法訴訟與人民聲請釋憲／裁判憲法審查  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.law.proportionality] 比例原則三階段（適當、必要、衡平）的適用  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_sub.law.rights-conflict] 基本權利衝突與法益權衡  {t_sub, 分科-公民}  · provisionally_verified
-- [soc-civ.t_mid.law.capacity] 權利能力與行為能力（完全、限制、無行為能力人）  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.law.capacity] 權利能力與行為能力（完全、限制、無行為能力人）  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.minor-contract] 未成年人法律行為的效力（需法定代理人同意）  {t_mid, 會考}  · unverified
 - [soc-civ.t_mid.law.contract-basic] 契約的成立與誠信原則  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.tort-basic] 侵權行為與損害賠償責任的概念  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.law.property-obligation] 物權與債權的區別  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.law.family-law] 婚姻、親子與繼承的基本規範  {t_adv, 學測}  · provisionally_verified
-- [soc-civ.t_adv.law.liability-types] 無過失責任與過失責任、連帶責任  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.law.liability-types] 無過失責任與過失責任、連帶責任  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.law.civil-principles] 民法基本原則（私法自治、契約自由及其限制）  {t_sub, 分科-公民}  · unverified
-- [soc-civ.t_mid.law.crime-basic] 犯罪的成立要件概念與刑罰種類  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.law.crime-basic] 犯罪的成立要件概念與刑罰種類  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.legality] 罪刑法定原則  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.juvenile] 少年事件處理的保護精神與處遇  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_adv.law.crime-elements] 構成要件該當、違法性、有責性三階層概念  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.law.crime-elements] 構成要件該當、違法性、有責性三階層概念  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.law.intent-negligence] 故意與過失、既遂與未遂  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.law.presumption-innocence] 無罪推定與證據裁判原則  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.law.criminal-procedure] 刑事訴訟流程（偵查、起訴、審判、執行）概念  {t_adv, 學測}  · unverified
 - [soc-civ.t_sub.law.justification] 阻卻違法事由（正當防衛、緊急避難）  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_sub.law.citizen-judge] 國民法官制度的意義與運作  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_mid.law.admin-basic] 行政機關、行政行為與依法行政初步  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.law.remedy-ways] 權利受侵害時的救濟管道概念  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.law.remedy-ways] 權利受侵害時的救濟管道概念  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.law.admin-disposition] 行政處分的意義與合法性要件  {t_adv, 學測}  · unverified
 - [soc-civ.t_adv.law.appeal-litigation] 訴願與行政訴訟的程序與層級  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.law.state-compensation] 國家賠償與損失補償的區別  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.law.dispute-resolution] 調解、仲裁、訴訟等紛爭解決途徑比較  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.law.admin-discretion] 行政裁量與不確定法律概念  {t_sub, 分科-公民}  · unverified
 - [soc-civ.t_base.law.consumer-basic] 購物看清標示、保留發票、可退換貨初步  {t_base, 無}  · provisionally_verified
-- [soc-civ.t_mid.law.consumer-protection] 消費者保護法：定型化契約、猶豫期（鑑賞期）、商品責任  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.law.consumer-protection] 消費者保護法：定型化契約、猶豫期（鑑賞期）、商品責任  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.consumer-remedy] 消費爭議的申訴與調解管道  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.labor-basic] 勞動基準法基本保障（工時、基本工資、休假）  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.part-time-rights] 青少年打工的權益與勞動契約注意事項  {t_mid, 會考}  · provisionally_verified
@@ -3075,7 +3075,7 @@
 - [soc-hist.t_adv.eastasia.meiji] 日本明治維新與東亞近代化的分途  {t_adv, 學測}  · provisionally_verified
 - [soc-hist.t_adv.eastasia.prc-founding] 中國共產革命與中華人民共和國的成立（中立、適齡）  {t_adv, 學測}  · provisionally_verified
 - [soc-hist.t_sub.eastasia.china-concept] 東亞世界的形成與「中國」概念的歷史變化  {t_sub, 分科-歷史}  · provisionally_verified
-- [soc-hist.t_sub.eastasia.examination-gentry] 科舉與士紳社會的專題探究  {t_sub, 分科-歷史}  · unverified
+- [soc-hist.t_sub.eastasia.examination-gentry] 科舉與士紳社會的專題探究  {t_sub, 分科-歷史}  · provisionally_verified
 - [soc-hist.t_sub.eastasia.modernization-compare] 東亞近代化比較（中國、日本、朝鮮／韓國）  {t_sub, 分科-歷史}  · provisionally_verified
 - [soc-hist.t_sub.eastasia.chinese-diaspora] 華人移民與東南亞／世界的華人網絡  {t_sub, 分科-歷史}  · provisionally_verified
 - [soc-hist.t_sub.eastasia.coldwar-eastasia] 冷戰下的東亞分裂國家（兩韓、兩岸、戰後日本）專題  {t_sub, 分科-歷史}  · provisionally_verified
