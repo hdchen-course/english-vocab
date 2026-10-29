@@ -89,7 +89,7 @@
 - [eng.t_mid.noun.same-form-plural] 單複同形（sheep/deer/fish）  {tier: t_mid, exam: 會考}
 - [eng.t_mid.noun.uncountable] 不可數名詞概念  {tier: t_mid, exam: 會考}
 - [eng.t_mid.noun.uncountable-quantify] 不可數名詞量化（a piece/cup/slice of）  {tier: t_mid, exam: 會考}
-- [eng.t_mid.noun.collective] 集合名詞  {tier: t_mid, exam: 會考}
+- [eng.t_mid.noun.collective] 集合名詞（依語意可配單數或複數動詞；美式多用單數，英式常依語意用複數）  {tier: t_mid, exam: 會考}
 - [eng.t_mid.noun.noun-as-modifier] 名詞當形容詞修飾名詞  {tier: t_mid, exam: 會考}
 - [eng.t_adv.noun.double-possessive] 雙重所有格（a friend of mine）  {tier: t_adv, exam: 學測}
 - [eng.t_base.article.indefinite] 不定冠詞 a/an（依「起始發音」而非字母：a university、an hour、an umbrella）  {tier: t_base, exam: 無}

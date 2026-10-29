@@ -138,7 +138,7 @@
 - [chi.t_mid.classical.xu-ruo-ru] 「若／如」：如果／像／你  {t_mid, 會考}  · provisionally_verified
 - [chi.t_adv.classical.xu-zhu] 「諸」：兼詞（之於／之乎）  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.classical.xu-compare] 同一虛字不同用法的比較辨析  {t_adv, 學測-國綜}  · provisionally_verified
-- [chi.t_mid.classical.ancient-modern] 古今異義詞  {t_mid, 會考}  · unverified
+- [chi.t_mid.classical.ancient-modern] 古今異義詞  {t_mid, 會考}  · provisionally_verified
 - [chi.t_adv.classical.shici-multi] 實詞一詞多義  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_mid.classical.noun-as-verb] 詞類活用：名詞作動詞  {t_mid, 會考}  · provisionally_verified
 - [chi.t_adv.classical.noun-as-adverb] 詞類活用：名詞作狀語  {t_adv, 學測-國綜}  · provisionally_verified
@@ -433,7 +433,7 @@
 - [eng.t_mid.noun.same-form-plural] 單複同形（sheep/deer/fish）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.noun.uncountable] 不可數名詞概念  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.noun.uncountable-quantify] 不可數名詞量化（a piece/cup/slice of）  {t_mid, 會考}  · provisionally_verified
-- [eng.t_mid.noun.collective] 集合名詞  {t_mid, 會考}  · unverified
+- [eng.t_mid.noun.collective] 集合名詞（依語意可配單數或複數動詞；美式多用單數，英式常依語意用複數）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.noun.noun-as-modifier] 名詞當形容詞修飾名詞  {t_mid, 會考}  · provisionally_verified
 - [eng.t_adv.noun.double-possessive] 雙重所有格（a friend of mine）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_base.article.indefinite] 不定冠詞 a/an（依「起始發音」而非字母：a university、an hour、an umbrella）  {t_base, 無}  · provisionally_verified
@@ -3026,7 +3026,7 @@
 - [soc-hist.t_mid.taiwan.koxinga] 鄭氏政權：驅逐荷蘭、反清復明、屯墾與對外貿易  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.taiwan.qing-early-migration] 清領前期的移墾社會、渡台禁令與漢人移墾  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.taiwan.qing-land-feud] 清領前期的土地制度（大小租／一田多主）與分類械鬥  {t_mid, 會考}  · provisionally_verified
-- [soc-hist.t_mid.taiwan.qing-trade] 清領前期的郊商與區域貿易網絡  {t_mid, 會考}  · unverified
+- [soc-hist.t_mid.taiwan.qing-trade] 清領前期的郊商與區域貿易網絡  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.taiwan.qing-open-ports] 清領後期開港通商與茶、糖、樟腦的出口貿易  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.taiwan.mudan-reform] 牡丹社事件與沈葆楨、丁日昌的開山撫番與建設  {t_mid, 會考}  · provisionally_verified
 - [soc-hist.t_mid.taiwan.qing-province] 台灣建省與劉銘傳的近代化建設（鐵路、電報、新政）  {t_mid, 會考}  · provisionally_verified
