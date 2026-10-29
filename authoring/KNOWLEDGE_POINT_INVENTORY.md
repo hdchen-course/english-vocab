@@ -373,7 +373,7 @@
 - [eng.t_base.phonics.consonant-digraphs] 子音組合 digraphs（sh/ch/th 有聲無聲/wh/ph/ng/ck）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.vowel-teams] 母音組合（ee/ea/oo 長短/ai/ay/oa/ow/oi/oy/au/aw）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.r-controlled] r-controlled 母音（ar/er/ir/or/ur）  {t_base, 無}  · provisionally_verified
-- [eng.t_base.phonics.hard-soft-cg] 硬軟 c/g（cat/city、go/giant）  {t_base, 無}  · unverified
+- [eng.t_base.phonics.hard-soft-cg] 硬軟 c/g（cat/city、go/giant）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.decoding] 看字讀音（decoding）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.encoding] 聽音拼字（encoding）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.syllable-stress] 音節切分與單字重音  {t_base, 無}  · provisionally_verified
@@ -381,7 +381,7 @@
 - [eng.t_base.phonics.final-le] 字尾 -le 音節（table/little）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.plural-s-sound] 複數/三單 -s/-es 發音 /s//z//ɪz/  {t_base, 無}  · provisionally_verified
 - [eng.t_base.phonics.ed-sound] 過去式 -ed 發音 /t//d//ɪd/  {t_base, 無}  · provisionally_verified
-- [eng.t_mid.phonics.kk-ipa] KK 音標／IPA 符號認讀與對應  {t_mid, 無}  · unverified
+- [eng.t_mid.phonics.kk-ipa] KK 音標與 IPA：兩套不同標音系統的符號認讀與對照（KK 為 Kenyon & Knott 美式發音轉寫、IPA 為國際音標，兩者非同一套）  {t_mid, 無}  · provisionally_verified
 - [eng.t_base.vocab.numbers] 基數與序數  {t_base, 無}  · provisionally_verified
 - [eng.t_base.vocab.colors] 顏色  {t_base, 無}  · provisionally_verified
 - [eng.t_base.vocab.body] 身體部位  {t_base, 無}  · provisionally_verified
@@ -448,7 +448,7 @@
 - [eng.t_mid.pron.one-ones] one/ones 替代  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.pron.it-usage] it 的用法（虛主詞/天氣時間距離/強調）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.pron.interrogative] 疑問代名詞（who/whom/whose/what/which）  {t_mid, 會考}  · provisionally_verified
-- [eng.t_adv.pron.reciprocal] 相互代名詞（each other / one another）  {t_adv, 學測}  · unverified
+- [eng.t_adv.pron.reciprocal] 相互代名詞（each other / one another）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.pron.quantifier-agreement] 數量代名詞與動詞一致（both/either/neither/all/none/each）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_base.verb.be] be 動詞（am/is/are）與句型  {t_base, 無}  · provisionally_verified
 - [eng.t_base.verb.there-be] There is / There are  {t_base, 無}  · provisionally_verified
@@ -508,7 +508,7 @@
 - [eng.t_mid.adjadv.too-enough-so-such] too…to / enough to / so…that / such…that  {t_mid, 會考}  · provisionally_verified
 - [eng.t_adv.adjadv.adjective-order] 多個形容詞排序  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.adjadv.comparative-modifier] 比較級修飾語（much/far/a little + 比較級）  {t_adv, 學測}  · provisionally_verified
-- [eng.t_adv.adjadv.the-more-the-more] the + 比較級, the + 比較級（越…越…）  {t_adv, 學測}  · unverified
+- [eng.t_adv.adjadv.the-more-the-more] the + 比較級, the + 比較級（越…越…）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.adjadv.more-and-more] 比較級 + and + 比較級（越來越…）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.adjadv.multiple-comparison] 倍數比較（twice/three times as…as）  {t_adv, 學測}  · unverified
 - [eng.t_adv.adjadv.comparison-ellipsis] 比較句的省略與平行（than I do）  {t_adv, 學測}  · provisionally_verified
@@ -1760,7 +1760,7 @@
 - [sci.t_adv.earth-geotime.radiometric-dating] 放射性定年原理：以半衰期與母子同位素比值測絕對年代  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-geotime.half-life-calc] 由剩餘母核比例與半衰期計算岩石或化石的絕對年齡  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-geotime.mass-extinction] 地質史上重大生物大滅絕事件與環境劇變的關聯  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.earth-geotime.earth-history-events] 地球歷史重大事件序（生命起源→大氣大量含氧→恐龍興衰）排序  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-geotime.earth-history-events] 地球歷史重大事件序（生命起源→大氣大量含氧→恐龍興衰）排序  {t_adv, 學測}  · provisionally_verified
 - [sci.t_base.earth-atmosphere.air-exists] 空氣確實存在且佔有空間、有重量（觀察實驗）  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.earth-atmosphere.air-composition] 大氣主要成分：氮約 78%、氧約 21%，其餘為氬、二氧化碳、水氣等  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-atmosphere.atmospheric-pressure] 大氣壓力的存在、隨高度上升而減小  {t_mid, 會考}  · provisionally_verified
@@ -2224,7 +2224,7 @@
 - [sci.t_sub.chem-acidbase.buffer-principle] 緩衝溶液的組成與原理  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-acidbase.buffer-calc] 緩衝溶液 pH 計算（韓德森-哈塞爾巴赫）  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-acidbase.salt-hydrolysis] 鹽類水解與溶液酸鹼性判定  {t_sub, 分科-化學}  · provisionally_verified
-- [sci.t_sub.chem-acidbase.lewis] 路易斯酸鹼定義  {t_sub, 分科-化學}  · unverified
+- [sci.t_sub.chem-acidbase.lewis] 路易斯酸鹼定義  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-acidbase.polyprotic] 多質子酸的分段解離  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_mid.chem-redox.oxid-reduc-idea] 氧化與還原的概念（得氧失氧/燃燒）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-redox.activity-basic] 金屬活性大小（活性序）初步  {t_mid, 會考}  · provisionally_verified

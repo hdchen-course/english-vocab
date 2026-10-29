@@ -28,7 +28,7 @@
 - [eng.t_base.phonics.final-le] 字尾 -le 音節（table/little）  {tier: t_base, exam: 無}
 - [eng.t_base.phonics.plural-s-sound] 複數/三單 -s/-es 發音 /s//z//ɪz/  {tier: t_base, exam: 無}
 - [eng.t_base.phonics.ed-sound] 過去式 -ed 發音 /t//d//ɪd/  {tier: t_base, exam: 無}
-- [eng.t_mid.phonics.kk-ipa] KK 音標／IPA 符號認讀與對應  {tier: t_mid, exam: 無}
+- [eng.t_mid.phonics.kk-ipa] KK 音標與 IPA：兩套不同標音系統的符號認讀與對照（KK 為 Kenyon & Knott 美式發音轉寫、IPA 為國際音標，兩者非同一套）  {tier: t_mid, exam: 無}
 
 ## 字彙與主題詞（分級）
 
