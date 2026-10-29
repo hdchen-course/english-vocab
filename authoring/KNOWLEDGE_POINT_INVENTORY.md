@@ -146,9 +146,9 @@
 - [chi.t_adv.classical.putative] 詞類活用：意動用法  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.classical.adj-flex] 詞類活用：形容詞作動詞／名詞  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_mid.classical.tongjia] 通假字  {t_mid, 會考}  · provisionally_verified
-- [chi.t_adv.classical.pianyi] 偏義複詞  {t_adv, 學測-國綜}  · unverified
-- [chi.t_mid.classical.judgment-sentence] 判斷句（…者…也）  {t_mid, 會考}  · unverified
-- [chi.t_mid.classical.passive-sentence] 被動句（為…所／見／於）  {t_mid, 會考}  · unverified
+- [chi.t_adv.classical.pianyi] 偏義複詞  {t_adv, 學測-國綜}  · provisionally_verified
+- [chi.t_mid.classical.judgment-sentence] 判斷句（…者…也）  {t_mid, 會考}  · provisionally_verified
+- [chi.t_mid.classical.passive-sentence] 被動句（為…所／見／於）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_adv.classical.obj-fronting] 倒裝：賓語前置  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.classical.attr-postpose] 倒裝：定語後置  {t_adv, 學測-國綜}  · provisionally_verified
 - [chi.t_adv.classical.adv-postpose] 倒裝：狀語（介詞結構）後置  {t_adv, 學測-國綜}  · provisionally_verified
@@ -343,7 +343,7 @@
 - [chi.t_base.prac.note-notice] 便條與通知  {t_base, 無}  · provisionally_verified
 - [chi.t_base.prac.diary] 日記格式  {t_base, 無}  · provisionally_verified
 - [chi.t_mid.prac.announcement] 啟事／公告  {t_mid, 會考}  · provisionally_verified
-- [chi.t_mid.prac.inscription] 題辭（婚喪喜慶用語）  {t_mid, 會考}  · unverified
+- [chi.t_mid.prac.inscription] 題辭（婚喪喜慶用語）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.prac.couplet] 對聯（上下聯平仄／對仗／張貼方位）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_mid.prac.invitation] 柬帖（請柬／訃聞）  {t_mid, 會考}  · provisionally_verified
 - [chi.t_adv.prac.resume-autobio] 自傳／履歷  {t_adv, 學測-國綜}  · provisionally_verified
@@ -2386,7 +2386,7 @@
 - [soc-civ.t_base.rights.my-rights] 認識自己擁有被照顧、受教育、被保護的權利  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_base.rights.rights-duty] 權利與義務相伴（享權利也要盡責任）  {t_base, 無}  · provisionally_verified
 - [soc-civ.t_mid.rights.human-rights-meaning] 人權的意義與特性（普遍、固有、不可剝奪）  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.rights.rights-generations] 人權的世代演進（第一代公民與政治權、第二代經濟社會文化權、第三代集體權）  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.rights.rights-generations] 人權的三種世代（學說分類，Karel Vasak 1979 提出：第一代公民與政治權、第二代經濟社會文化權、第三代集體／連帶權）——屬學理分類而非法定，第三代內涵學界尚無共識  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.rights.udhr] 世界人權宣言的精神與地位  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.rights.dignity] 人性尊嚴作為人權的核心基礎  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.rights.intl-covenants] 兩公約（公民與政治權利、經濟社會文化權利）的內國法化  {t_adv, 學測}  · provisionally_verified
@@ -2463,7 +2463,7 @@
 - [soc-civ.t_mid.law.law-hierarchy] 法律位階（憲法 > 法律 > 命令）與中央法規  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.public-private] 公法與私法的區分  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.law.rule-of-law] 法治國原則（依法行政、法律保留、法律優位）  {t_adv, 學測}  · provisionally_verified
-- [soc-civ.t_adv.law.substantive-procedural] 實體法與程序法的區別  {t_adv, 學測}  · unverified
+- [soc-civ.t_adv.law.substantive-procedural] 實體法與程序法的區別  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_sub.law.legal-interpretation] 法律解釋方法與法律漏洞補充  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_mid.law.constitution-status] 憲法作為國家根本大法的地位  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.basic-rights] 憲法保障的基本人權（自由權、平等權、受益權、參政權）  {t_mid, 會考}  · provisionally_verified
@@ -2476,7 +2476,7 @@
 - [soc-civ.t_sub.law.proportionality] 比例原則三階段（適當、必要、衡平）的適用  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_sub.law.rights-conflict] 基本權利衝突與法益權衡  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_mid.law.capacity] 權利能力與行為能力（完全、限制、無行為能力人）  {t_mid, 會考}  · provisionally_verified
-- [soc-civ.t_mid.law.minor-contract] 未成年人法律行為的效力（限制行為能力人原則上須法定代理人同意，但純獲法律上利益或日常生活所必需者除外；無行為能力人之行為無效）  {t_mid, 會考}  · unverified
+- [soc-civ.t_mid.law.minor-contract] 未成年人法律行為的效力（限制行為能力人原則上須法定代理人同意，但純獲法律上利益或日常生活所必需者除外；無行為能力人之行為無效）  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.contract-basic] 契約的成立與誠信原則  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.tort-basic] 侵權行為與損害賠償責任的概念  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_adv.law.property-obligation] 物權與債權的區別  {t_adv, 學測}  · provisionally_verified
@@ -2490,7 +2490,7 @@
 - [soc-civ.t_adv.law.intent-negligence] 故意與過失、既遂與未遂  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.law.presumption-innocence] 無罪推定與證據裁判原則  {t_adv, 學測}  · provisionally_verified
 - [soc-civ.t_adv.law.criminal-procedure] 刑事訴訟流程（偵查、起訴、審判、執行）概念  {t_adv, 學測}  · provisionally_verified
-- [soc-civ.t_sub.law.justification] 阻卻違法事由（正當防衛、緊急避難）  {t_sub, 分科-公民}  · unverified
+- [soc-civ.t_sub.law.justification] 阻卻違法事由（正當防衛、緊急避難）  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_sub.law.citizen-judge] 國民法官制度的意義與運作  {t_sub, 分科-公民}  · provisionally_verified
 - [soc-civ.t_mid.law.admin-basic] 行政機關、行政行為與依法行政初步  {t_mid, 會考}  · provisionally_verified
 - [soc-civ.t_mid.law.remedy-ways] 權利受侵害時的救濟管道概念  {t_mid, 會考}  · provisionally_verified

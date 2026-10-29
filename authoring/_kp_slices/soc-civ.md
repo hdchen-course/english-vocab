@@ -123,7 +123,7 @@
 - [soc-civ.t_base.rights.my-rights] 認識自己擁有被照顧、受教育、被保護的權利  {tier:t_base, exam:無}
 - [soc-civ.t_base.rights.rights-duty] 權利與義務相伴（享權利也要盡責任）  {tier:t_base, exam:無}
 - [soc-civ.t_mid.rights.human-rights-meaning] 人權的意義與特性（普遍、固有、不可剝奪）  {tier:t_mid, exam:會考}
-- [soc-civ.t_mid.rights.rights-generations] 人權的世代演進（第一代公民與政治權、第二代經濟社會文化權、第三代集體權）  {tier:t_mid, exam:會考}
+- [soc-civ.t_mid.rights.rights-generations] 人權的三種世代（學說分類，Karel Vasak 1979 提出：第一代公民與政治權、第二代經濟社會文化權、第三代集體／連帶權）——屬學理分類而非法定，第三代內涵學界尚無共識  {tier:t_mid, exam:會考}
 - [soc-civ.t_mid.rights.udhr] 世界人權宣言的精神與地位  {tier:t_mid, exam:會考}
 - [soc-civ.t_adv.rights.dignity] 人性尊嚴作為人權的核心基礎  {tier:t_adv, exam:學測}
 - [soc-civ.t_adv.rights.intl-covenants] 兩公約（公民與政治權利、經濟社會文化權利）的內國法化  {tier:t_adv, exam:學測}
