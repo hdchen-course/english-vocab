@@ -430,16 +430,16 @@
 - [eng.t_base.noun.irregular-plural] 不規則複數（man/men、child/children、foot/feet）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.noun.proper-capitalization] 專有名詞與大寫規則  {t_base, 無}  · provisionally_verified
 - [eng.t_base.noun.possessive] 名詞所有格（'s / s'）  {t_base, 無}  · provisionally_verified
-- [eng.t_mid.noun.same-form-plural] 單複同形（sheep/deer/fish）  {t_mid, 會考}  · unverified
+- [eng.t_mid.noun.same-form-plural] 單複同形（sheep/deer/fish）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.noun.uncountable] 不可數名詞概念  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.noun.uncountable-quantify] 不可數名詞量化（a piece/cup/slice of）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.noun.collective] 集合名詞  {t_mid, 會考}  · unverified
 - [eng.t_mid.noun.noun-as-modifier] 名詞當形容詞修飾名詞  {t_mid, 會考}  · provisionally_verified
-- [eng.t_adv.noun.double-possessive] 雙重所有格（a friend of mine）  {t_adv, 學測}  · unverified
+- [eng.t_adv.noun.double-possessive] 雙重所有格（a friend of mine）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_base.article.indefinite] 不定冠詞 a/an（依「起始發音」而非字母：a university、an hour、an umbrella）  {t_base, 無}  · provisionally_verified
 - [eng.t_mid.article.definite] 定冠詞 the（特指/獨一/再次提及）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.article.zero] 零冠詞（泛指複數/不可數/專有名詞）  {t_mid, 會考}  · provisionally_verified
-- [eng.t_mid.article.idiom] 冠詞慣用語（play the piano、go to school）  {t_mid, 會考}  · unverified
+- [eng.t_mid.article.idiom] 冠詞慣用語（play the piano、go to school）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_base.pron.subject-object] 人稱代名詞主格/受格  {t_base, 無}  · provisionally_verified
 - [eng.t_base.pron.possessive] 所有格形容詞 vs 所有格代名詞（my/mine）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.pron.demonstrative] 指示代名詞（this/that/these/those）  {t_base, 無}  · provisionally_verified
@@ -449,13 +449,13 @@
 - [eng.t_mid.pron.it-usage] it 的用法（虛主詞/天氣時間距離/強調）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.pron.interrogative] 疑問代名詞（who/whom/whose/what/which）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_adv.pron.reciprocal] 相互代名詞（each other / one another）  {t_adv, 學測}  · unverified
-- [eng.t_adv.pron.quantifier-agreement] 數量代名詞與動詞一致（both/either/neither/all/none/each）  {t_adv, 學測}  · unverified
+- [eng.t_adv.pron.quantifier-agreement] 數量代名詞與動詞一致（both/either/neither/all/none/each）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_base.verb.be] be 動詞（am/is/are）與句型  {t_base, 無}  · provisionally_verified
 - [eng.t_base.verb.there-be] There is / There are  {t_base, 無}  · provisionally_verified
 - [eng.t_base.verb.present-simple] 一般現在式與第三人稱單數  {t_base, 無}  · provisionally_verified
 - [eng.t_base.verb.present-progressive] 現在進行式構成與 -ing 拼寫  {t_base, 無}  · provisionally_verified
 - [eng.t_mid.verb.present-simple-vs-prog] 現在簡單 vs 現在進行對比  {t_mid, 會考}  · provisionally_verified
-- [eng.t_base.verb.past-simple-regular] 過去簡單式（規則動詞 -ed）  {t_base, 無}  · unverified
+- [eng.t_base.verb.past-simple-regular] 過去簡單式（規則動詞 -ed）  {t_base, 無}  · provisionally_verified
 - [eng.t_mid.verb.past-simple-irregular] 過去簡單式（不規則動詞）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.verb.past-progressive] 過去進行式  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.verb.past-when-while] 過去簡單 vs 過去進行（when/while）  {t_mid, 會考}  · provisionally_verified
@@ -511,7 +511,7 @@
 - [eng.t_adv.adjadv.the-more-the-more] the + 比較級, the + 比較級（越…越…）  {t_adv, 學測}  · unverified
 - [eng.t_adv.adjadv.more-and-more] 比較級 + and + 比較級（越來越…）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.adjadv.multiple-comparison] 倍數比較（twice/three times as…as）  {t_adv, 學測}  · unverified
-- [eng.t_adv.adjadv.comparison-ellipsis] 比較句的省略與平行（than I do）  {t_adv, 學測}  · unverified
+- [eng.t_adv.adjadv.comparison-ellipsis] 比較句的省略與平行（than I do）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.adjadv.confusable-pairs] 易混形副（hard/hardly、late/lately、near/nearly）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_base.prep.time-at-on-in] 時間介系詞 at/on/in  {t_base, 無}  · provisionally_verified
 - [eng.t_base.prep.place-at-on-in] 地點介系詞 at/on/in  {t_base, 無}  · provisionally_verified
@@ -590,7 +590,7 @@
 - [eng.t_mid.special.formal-subject-it] 虛主詞 it（It is + adj + to / that）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_adv.special.cleft-it] 分裂句/強調句 It is X that…  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.special.do-emphasis] do/does/did 強調動詞  {t_adv, 學測}  · provisionally_verified
-- [eng.t_adv.special.participial-active] 分詞構句（現在分詞表主動/同時）  {t_adv, 學測}  · unverified
+- [eng.t_adv.special.participial-active] 分詞構句（現在分詞表主動/同時）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.special.participial-passive] 分詞構句（過去分詞表被動）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.special.formal-object-it] 虛受詞 it（find it hard to…）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.special.apposition] 同位語  {t_adv, 學測}  · provisionally_verified
@@ -600,7 +600,7 @@
 - [eng.t_sub.special.inversion-only] only + 副詞片語句首倒裝  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.special.inversion-so-such] so/such 句首倒裝  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.special.what-cleft] what 強調句（What I need is…）  {t_adv, 學測}  · provisionally_verified
-- [eng.t_sub.special.perfect-participle] 完成式分詞構句（Having done…）  {t_adv, 學測}  · unverified
+- [eng.t_sub.special.perfect-participle] 完成式分詞構句（Having done…）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_sub.special.absolute-with] 獨立分詞構句（with + 受詞 + 分詞 / 主詞不同）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_base.pattern.imperative] 祈使句（肯定/否定/Let's）  {t_base, 無}  · provisionally_verified
 - [eng.t_base.pattern.question-order] 疑問句語序（Yes/No、Wh-、選擇疑問）  {t_base, 無}  · provisionally_verified
@@ -610,7 +610,7 @@
 - [eng.t_mid.pattern.svo] 句型三 S + V + O（完全及物）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.pattern.svoo] 句型四 S + V + O + O（授與雙受詞）  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.pattern.svoc] 句型五 S + V + O + C（受詞補語）  {t_mid, 會考}  · provisionally_verified
-- [eng.t_adv.pattern.sv-agreement] 主詞動詞一致（單複數/就近/集合名詞）  {t_adv, 學測}  · unverified
+- [eng.t_adv.pattern.sv-agreement] 主詞動詞一致（單複數/就近/集合名詞）  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.pattern.sentence-types] 簡單句/合句/複句/複合句辨識  {t_adv, 學測}  · provisionally_verified
 - [eng.t_adv.pattern.run-on-comma-splice] 連寫句/逗號拼接錯誤辨識與修正  {t_adv, 學測}  · provisionally_verified
 - [eng.t_mid.reading.main-idea] 主旨與大意（main idea）  {t_mid, 會考}  · provisionally_verified
@@ -1383,7 +1383,7 @@
 - [sci.t_mid.bio-photosynthesis.factors] 說明光度、CO₂濃度、溫度對光合速率的影響  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.bio-photosynthesis.light-reaction] 說明光反應於類囊膜、產生 ATP 與 NADPH、釋放 O₂  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-photosynthesis.water-split] 說明光反應中水的分解（光解）為電子與 O₂來源  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.bio-photosynthesis.calvin-cycle] 說明碳反應（卡爾文循環，舊稱暗反應）於基質固定 CO₂合成醣類  {t_adv, 學測}  · unverified
+- [sci.t_adv.bio-photosynthesis.calvin-cycle] 說明碳反應（卡爾文循環，舊稱暗反應）於基質固定 CO₂合成醣類  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-photosynthesis.chloroplast-structure] 指出葉綠體的類囊膜（葉綠餅）與基質分別對應光反應與碳反應（舊稱暗反應）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_sub.bio-photosynthesis.photosystem] 說明光系統 I、II 與電子傳遞鏈、光磷酸化  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-photosynthesis.rubisco] 說明 RuBisCO 固碳酵素與 RuBP 的角色  {t_sub, 分科-生物}  · provisionally_verified
@@ -1560,7 +1560,7 @@
 - [sci.t_sub.bio-genetics-molecular.rna-processing] 說明真核 mRNA 加工（加帽、加尾、剪接去除內含子）  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-genetics-molecular.operon] 以乳糖操縱組說明原核基因表現調控  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-genetics-molecular.eukaryotic-regulation] 說明真核基因表現調控層次（染色質/轉錄/轉譯後）  {t_sub, 分科-生物}  · provisionally_verified
-- [sci.t_sub.bio-genetics-molecular.epigenetics] 初步說明表觀遺傳（甲基化、組蛋白修飾）不改變序列而影響表現  {t_sub, 分科-生物}  · unverified
+- [sci.t_sub.bio-genetics-molecular.epigenetics] 初步說明表觀遺傳（甲基化、組蛋白修飾）不改變序列而影響表現  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_mid.bio-biotech.applications] 舉例生物技術應用（基改作物、疫苗、發酵食品）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-biotech.ethics-intro] 討論生物技術的倫理與安全議題  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.bio-biotech.genetic-engineering] 說明基因重組（轉殖）技術的基本概念與應用  {t_adv, 學測}  · provisionally_verified
@@ -1604,7 +1604,7 @@
 - [sci.t_adv.bio-biodiversity.three-domains] 認識三域分類（細菌/古菌/真核）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-biodiversity.virus-features] 說明病毒的構造與非典型生命特徵（需宿主）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_sub.bio-biodiversity.molecular-taxonomy] 說明以分子（rRNA/DNA）資料建立親緣分類  {t_sub, 分科-生物}  · provisionally_verified
-- [sci.t_sub.bio-biodiversity.monophyletic] 區分單系群、並系群、多系群的概念  {t_sub, 分科-生物}  · unverified
+- [sci.t_sub.bio-biodiversity.monophyletic] 區分單系群、並系群、多系群的概念  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_base.bio-plant-physiology.plant-parts] 辨識植物六大器官（根莖葉花果實種子）與功能  {t_base, 無}  · provisionally_verified
 - [sci.t_base.bio-plant-physiology.root-water] 知道根吸收水分、葉行光合作用  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.bio-plant-physiology.xylem-phloem] 區分木質部（運水與礦物質，向上）與韌皮部（運養分）  {t_mid, 會考}  · provisionally_verified
@@ -1702,7 +1702,7 @@
 - [sci.t_adv.earth-tectonics.paleomagnetism] 古地磁與海洋磁異常條帶對稱分布→支持海底擴張  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-tectonics.age-of-seafloor] 海洋地殼年齡由中洋脊向兩側對稱增加，最老約 2 億年  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-tectonics.hotspot] 熱點與火山島鏈（如夏威夷群島）記錄板塊移動方向與速率  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.earth-tectonics.taiwan-orogeny] 臺灣造山運動：弧陸碰撞使地層褶皺、抬升形成中央山脈  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-tectonics.taiwan-orogeny] 臺灣造山運動：弧陸碰撞使地層褶皺、抬升形成中央山脈  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-tectonics.plate-velocity-calc] 由海洋磁條帶或 GPS 數據估算板塊移動速率（cm/年量級）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_base.earth-quake-volcano.earthquake-shake] 地震會使地面搖動、造成房屋損壞，需學會防震避難  {t_base, 無}  · provisionally_verified
 - [sci.t_base.earth-quake-volcano.volcano-basic] 火山噴發會噴出熔岩（岩漿噴出地表後稱熔岩）、火山灰與氣體  {t_base, 無}  · provisionally_verified
@@ -1745,7 +1745,7 @@
 - [sci.t_mid.earth-geomorph.taiwan-landforms] 臺灣特殊地形（如野柳、太魯閣峽谷、海岸階地）的成因  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.earth-geomorph.karst] 石灰岩地區溶蝕形成鐘乳石、石筍等喀斯特地形  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.earth-geomorph.grain-size-velocity] 以流速—顆粒關係（侵蝕/搬運/堆積臨界流速）分析沉積作用  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.earth-geomorph.sorting-rounding] 沉積物的淘選度反映搬運能量；圓磨度反映磨蝕程度/搬運歷史（非單純等同搬運距離）  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-geomorph.sorting-rounding] 沉積物的淘選度反映搬運能量；圓磨度反映磨蝕程度/搬運歷史（非單純等同搬運距離）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-geomorph.mass-wasting] 塊體崩壞（山崩、土石流）的誘發因子（降雨、地震）與控制因子（坡度、地質）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-geomorph.terrace-uplift] 河階、海階地形記錄地殼抬升與海水面升降  {t_adv, 學測}  · provisionally_verified
 - [sci.t_base.earth-geotime.fossil-basic] 化石是古代生物留下的遺骸或遺跡  {t_base, 無}  · provisionally_verified
@@ -1799,7 +1799,7 @@
 - [sci.t_adv.earth-climate.global-circulation] 三胞環流（哈德里、佛雷爾、極地胞）與氣壓帶、風帶分布  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-climate.desert-belt] 副熱帶高壓帶下沉氣流與沙漠帶分布的關係  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-climate.enso] 聖嬰—南方振盪（ENSO）對全球與臺灣天氣的影響  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.earth-climate.milankovitch] 米蘭科維奇循環（地球軌道要素變化）與冰期—間冰期  {t_adv, 學測}  · unverified
+- [sci.t_adv.earth-climate.milankovitch] 米蘭科維奇循環（地球軌道要素變化）與冰期—間冰期  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-climate.carbon-cycle] 碳循環與二氧化碳在大氣、海洋、生物圈、岩石圈間的交換  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-climate.paleoclimate-proxy] 以冰芯、樹輪、同位素等代用資料重建古氣候  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-climate.mitigation-adaptation] 氣候變遷的減緩（減碳）與調適策略（概念與政策）  {t_adv, 學測}  · provisionally_verified
@@ -1992,8 +1992,8 @@
 - [sci.t_adv.phys-heat.thermo1] 熱力學第一定律（ΔU=Q−W）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_sub.phys-heat.pv-processes] 等溫/等壓/等容/絕熱過程的 PV 圖與作功  {t_sub, 分科-物理}  · provisionally_verified
 - [sci.t_sub.phys-heat.molar-heat] 氣體莫耳比熱（Cp、Cv）與自由度  {t_sub, 分科-物理}  · provisionally_verified
-- [sci.t_sub.phys-heat.entropy] 熱力學第二定律與熵的概念  {t_sub, 分科-物理}  · unverified
-- [sci.t_sub.phys-heat.carnot] 熱機效率與卡諾循環  {t_sub, 分科-物理}  · unverified
+- [sci.t_sub.phys-heat.entropy] 熱力學第二定律與熵的概念  {t_sub, 分科-物理}  · provisionally_verified
+- [sci.t_sub.phys-heat.carnot] 熱機效率與卡諾循環  {t_sub, 分科-物理}  · provisionally_verified
 - [sci.t_base.phys-wave.sound-produce] 聲音由物體振動產生與傳播  {t_base, 無}  · provisionally_verified
 - [sci.t_base.phys-wave.loud-pitch] 聲音的大小與高低  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.phys-wave.wave-type] 波的分類（橫波/縱波）  {t_mid, 會考}  · provisionally_verified
@@ -2057,7 +2057,7 @@
 - [sci.t_sub.phys-estatic.cap-energy] 電容器儲存能量（½CV²）與充放電  {t_sub, 分科-物理}  · provisionally_verified
 - [sci.t_sub.phys-estatic.charge-in-field] 電場中帶電粒子的運動  {t_sub, 分科-物理}  · provisionally_verified
 - [sci.t_sub.phys-estatic.wheatstone] 惠斯登電橋  {t_sub, 分科-物理}  · provisionally_verified
-- [sci.t_sub.phys-estatic.rc-circuit] RC 電路充放電  {t_sub, 分科-物理}  · unverified
+- [sci.t_sub.phys-estatic.rc-circuit] RC 電路充放電  {t_sub, 分科-物理}  · provisionally_verified
 - [sci.t_base.phys-em.magnet-basic] 磁鐵的磁極、吸引與指南針  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.phys-em.mag-field] 磁極（N/S）、磁力、磁場與磁力線  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-em.geomagnetism] 地磁與指南針指向  {t_mid, 會考}  · provisionally_verified
@@ -2077,7 +2077,7 @@
 - [sci.t_sub.phys-em.transformer] 自感/互感與變壓器原理  {t_sub, 分科-物理}  · provisionally_verified
 - [sci.t_sub.phys-em.circular-in-field] 帶電粒子在磁場中的圓周運動（回旋半徑）  {t_sub, 分科-物理}  · provisionally_verified
 - [sci.t_sub.phys-em.mass-spec] 質譜儀/迴旋加速器原理  {t_sub, 分科-物理}  · provisionally_verified
-- [sci.t_sub.phys-em.em-wave-gen] LC 振盪與電磁波的產生  {t_sub, 分科-物理}  · unverified
+- [sci.t_sub.phys-em.em-wave-gen] LC 振盪與電磁波的產生  {t_sub, 分科-物理}  · provisionally_verified
 - [sci.t_adv.phys-modern.photoelectric] 光電效應與光子能量（E=hf）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.phys-modern.bohr-model] 原子光譜與波耳氫原子能階模型  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.phys-modern.matter-wave] 物質波（德布羅意波）概念  {t_adv, 學測}  · provisionally_verified
@@ -2135,7 +2135,7 @@
 - [sci.t_adv.chem-bond.bond-polarity] 電負度差與鍵的極性（極性/非極性共價）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-bond.molecule-polarity] 分子極性的判斷（對稱性/偶極矩）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-bond.vsepr] VSEPR 價殼層電子對互斥與分子形狀  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.chem-bond.intermolecular] 分子間作用力（凡得瓦力/偶極/氫鍵）與沸點  {t_adv, 學測}  · unverified
+- [sci.t_adv.chem-bond.intermolecular] 分子間作用力（凡得瓦力/偶極/氫鍵）與沸點  {t_adv, 學測}  · provisionally_verified
 - [sci.t_sub.chem-bond.hybridization] 混成軌域（sp/sp²/sp³）與鍵角  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-bond.sigma-pi] σ 鍵與 π 鍵、鍵能與鍵長  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-bond.resonance] 共振結構與形式電荷  {t_sub, 分科-化學}  · provisionally_verified
@@ -2253,7 +2253,7 @@
 - [sci.t_sub.chem-thermo.entropy] 熵（ΔS）與亂度的概念  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-thermo.gibbs] 自由能（ΔG=ΔH−TΔS）與反應自發性  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-thermo.temp-spontaneity] 溫度對反應自發性的影響  {t_sub, 分科-化學}  · provisionally_verified
-- [sci.t_mid.chem-organic.carbon-idea] 有機化合物的概念與碳的特性  {t_mid, 會考}  · unverified
+- [sci.t_mid.chem-organic.carbon-idea] 有機化合物的概念與碳的特性  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-organic.common] 常見有機物（甲烷/乙醇/醋酸）與生活應用  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.chem-organic.carbon-bonding] 碳的鍵結特性與有機物多樣性  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-organic.hydrocarbons] 烷/烯/炔（飽和/不飽和烴）與通式  {t_adv, 學測}  · provisionally_verified
@@ -2278,7 +2278,7 @@
 - [sci.t_adv.chem-applied.green-chemistry] 綠色化學與永續發展概念  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-applied.energy-storage] 電池與能源儲存的化學  {t_adv, 學測}  · provisionally_verified
 - [sci.t_sub.chem-applied.alt-energy] 替代能源與燃料電池的化學  {t_sub, 分科-化學}  · provisionally_verified
-- [sci.t_sub.chem-applied.nanomaterials] 奈米材料與新興材料初步  {t_sub, 分科-化學}  · unverified
+- [sci.t_sub.chem-applied.nanomaterials] 奈米材料與新興材料初步  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-applied.remediation] 化學在環境治理的應用  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_base.inquiry.observe-predict] 觀察、提問與預測  {t_base, 無}  · provisionally_verified
 - [sci.t_base.inquiry.fair-test] 操縱變因與控制變因初步（公平測試）  {t_base, 無}  · provisionally_verified
@@ -2889,7 +2889,7 @@
 - [soc-geo.t_adv.hum-transport.node-gateway] 說明轉運點、門戶與節點機能  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.hum-transport.container] 說明貨櫃運輸與複合運輸  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.hum-transport.time-space] 說明時空收斂對區域的影響  {t_adv, 學測}  · provisionally_verified
-- [soc-geo.t_adv.hum-transport.ict-space] 說明資訊通訊科技（ICT）與數位落差  {t_adv, 學測}  · unverified
+- [soc-geo.t_adv.hum-transport.ict-space] 說明資訊通訊科技（ICT）與數位落差  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_sub.hum-transport.network-graph] 以圖論指標（連結度）做運輸網絡分析  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.hum-transport.cost-structure] 分析運輸成本結構（端點成本與線路成本）  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.hum-transport.hub-spoke] 說明樞紐輻射（hub-and-spoke）網絡  {t_sub, 分科-地理}  · provisionally_verified
@@ -2983,7 +2983,7 @@
 - [soc-geo.t_sub.spatial-decision.hazard-development] 將災害潛勢納入土地開發決策  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.spatial-decision.ppgis] 說明參與式 GIS 與公眾參與規劃  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.spatial-decision.smart-city] 說明智慧城市與空間資訊決策  {t_sub, 分科-地理}  · provisionally_verified
-- [soc-geo.t_sub.spatial-decision.data-ethics] 說明空間資料倫理與隱私  {t_sub, 分科-地理}  · unverified
+- [soc-geo.t_sub.spatial-decision.data-ethics] 說明空間資料倫理與隱私  {t_sub, 分科-地理}  · provisionally_verified
 
 ## soc-hist
 
