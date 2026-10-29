@@ -399,7 +399,7 @@
 - [eng.t_mid.vocab.emotion-personality] 情緒與個性形容詞  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.vocab.hobby-leisure] 興趣嗜好與休閒活動  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.vocab.travel-geography] 旅遊與地理  {t_mid, 會考}  · provisionally_verified
-- [eng.t_mid.vocab.health-illness] 健康與身體不適  {t_mid, 會考}  · provisionally_verified
+- [eng.t_mid.vocab.health-illness] 健康與身體不適  {t_mid, 會考}  · unverified
 - [eng.t_mid.vocab.shopping-money] 購物與金錢  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.vocab.festivals-culture] 節慶與文化  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.vocab.tech-media] 科技與媒體日常詞  {t_mid, 會考}  · provisionally_verified
