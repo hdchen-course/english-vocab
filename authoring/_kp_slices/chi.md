@@ -34,7 +34,7 @@
 - [chi.t_base.char.radical-meaning] 部首表義（以部首推字義類別）  {t_base, 無}
 - [chi.t_base.char.structure-frame] 字的間架結構（左右／上下／包圍／獨體）辨識與書寫  {t_base, 無}
 - [chi.t_base.char.components] 偏旁部件組字  {t_base, 無}
-- [chi.t_base.char.recognition-count] 常用字認讀與書寫累積量（國小畢業：認讀 2,700 字、其中 2,200 字能寫；課綱 Ab-III）  {t_base, 無}
+- [chi.t_base.char.recognition-count] 常用國字累積量（第三學習階段／國小畢業：認識常用國字至少 2,700 字、使用 2,200 字；108 國語文領綱學習表現 4-Ⅲ-1）  {t_base, 無}
 - [chi.t_base.char.hard-pen-form] 硬筆正確字形與工整書寫  {t_base, 無}
 - [chi.t_base.char.dict-radical] 查字典：部首檢字法（部首外筆畫數）  {t_base, 無}
 - [chi.t_base.char.dict-stroke] 查字典：筆畫檢字法  {t_base, 無}
