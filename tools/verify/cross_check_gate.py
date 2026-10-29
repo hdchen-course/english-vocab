@@ -79,6 +79,24 @@ def fetch(url, timeout=20):
     })
     with urllib.request.urlopen(req, timeout=timeout, context=ctx) as r:
         raw = r.read()
+        ctype = (r.headers.get("Content-Type") or "").lower()
+    # PDF（官方課綱/考綱常見）：urllib 取得的是二進位，需以 pdftotext 抽文字才能逐字比對 quote。
+    if raw[:5] == b"%PDF-" or "application/pdf" in ctype or _encode_url(url).lower().split("?")[0].endswith(".pdf"):
+        if shutil.which("pdftotext"):
+            import tempfile
+            with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tf:
+                tf.write(raw); pdfp = tf.name
+            try:
+                p = subprocess.run(["pdftotext", "-q", pdfp, "-"], capture_output=True, timeout=60)
+                txt = p.stdout.decode("utf-8", errors="replace")
+                if txt.strip():
+                    return txt
+            except Exception:
+                pass
+            finally:
+                try: os.unlink(pdfp)
+                except Exception: pass
+        # 無 pdftotext 或抽取失敗 → 回傳原始 bytes 的寬鬆解碼（通常 quote 不會命中，保守不放行）
     try:
         return raw.decode("utf-8", errors="replace")
     except Exception:

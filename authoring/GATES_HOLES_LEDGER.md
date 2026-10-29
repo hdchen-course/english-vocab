@@ -43,3 +43,9 @@
 - 修補：新增 `tools/verify/js_fetch.mjs`（持久化 headless-Chrome，`--ignore-certificate-errors` 僅為讀 gov.tw 不全鏈**公開**頁、只回文字從不送資料）＋ `cross_check_gate` 加 `_JsFetcher`：**僅在 urllib 對某 ref 例外/SSL 失敗/quote 未命中時才 fallback headless**，再比對 quote。**≥2 相異 publisher＋逐字 quote 邏輯完全不變**（不弱化）；Cambridge 類反機器人頁 headless 取得的是安全驗證頁、不含 quote → 照樣 DENY（§1.3 不破反機器人）。
 - 紅隊：(a) `--selftest` 原 6 例全綠 ＋ 新 2 例：headless 救回真 quote（urllib 死連結）→ALLOW、headless 抓到頁但無該 quote（反機器人/杜撰）→仍 DENY。(b) **live 紅隊**（真實頁）：law.moj(urllib)＋國健署(urllib SSL 失敗→headless 救回真 quote「營養及健康飲食」) 好例→ALLOW；國健署 quote 改杜撰→DENY。另驗證 gate 正確拒絕**動態文字**（訪客計數/更新日期）當 quote（兩次抓取值不同→不match），逼 quote 取穩定本文。
 - 餘留：Cambridge 等商業反機器人站不採（用替代可抓源）；quote 必取**穩定頁面文字**（法條本文/定義/標題），非動態計數。
+
+## 2026-10-29 H-5：cross_check_gate 不會讀 PDF → 官方課綱/考綱/學術 PDF 無法當 cross_check 源
+- 發現：官方領綱/考試說明/學術論文多為 PDF，urllib 取得二進位，_norm 比對 quote 必不命中（recognition-count/time-budget/qing-trade 卡此）。
+- 修補：cross_check_gate.fetch() 偵測 PDF（magic %PDF- / Content-Type / .pdf 副檔名）→ 以 pdftotext 抽文字回傳，再逐字比對 quote。能力增強、quote+≥2publisher 邏輯不變。
+- 紅隊：--selftest 原 8 例全 PASS（沒改壞）；live：gate.fetch() 對官方 NAER 領綱 PDF 抽 46581 字、「認識常用國字至少 2,700 字」「使用 2,200 字」皆命中 True。
+- 影響：HD 提供的官方 PDF（NAER 領綱、ceec 國寫考試說明、中研院台史所/ntl 學術 PDF）現可當 gate 真抓源。
