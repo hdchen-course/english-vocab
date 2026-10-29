@@ -209,7 +209,31 @@ def sphere_line_plane():
                "球x²+y²+z²=9(r=3)；平面距球心d: d<r(z=2,d=2)相交截圓ρ=√5、d=r(z=3)相切、d>r(z=5)相離；過球心直線交兩點t=±3")
 
 
+def geo_distance():
+    # 經緯度→地球大圓距離：haversine 與球面餘弦定理兩獨立公式必須一致（互為 oracle），
+    # 並對一組已知座標給出合理值。台北101(25.0330,121.5654)↔高雄85(22.6118,120.2968)。
+    import math
+    R = 6371.0088  # 地球平均半徑 km（IUGG）
+    def haversine(la1, lo1, la2, lo2):
+        p1, p2 = math.radians(la1), math.radians(la2)
+        dphi, dl = math.radians(la2 - la1), math.radians(lo2 - lo1)
+        a = math.sin(dphi/2)**2 + math.cos(p1)*math.cos(p2)*math.sin(dl/2)**2
+        return 2*R*math.asin(math.sqrt(a))
+    def sph_law_cos(la1, lo1, la2, lo2):
+        p1, p2 = math.radians(la1), math.radians(la2)
+        dl = math.radians(lo2 - lo1)
+        c = math.sin(p1)*math.sin(p2) + math.cos(p1)*math.cos(p2)*math.cos(dl)
+        return R*math.acos(min(1.0, max(-1.0, c)))
+    pts = (25.0330, 121.5654, 22.6118, 120.2968)
+    d1, d2 = haversine(*pts), sph_law_cos(*pts)
+    assert abs(d1 - d2) < 1e-3, f"haversine 與球面餘弦不一致：{d1} vs {d2}"
+    # 赤道上經度差 1° ≈ 111.19 km 的健全性檢查
+    eq = haversine(0, 0, 0, 1)
+    assert 110.5 < eq < 111.9, f"赤道 1° 經距異常：{eq}"
+    return _ok("math.geo-distance", f"haversine≡球面餘弦定理(差<1e-3km)；台北101↔高雄85≈{d1:.1f}km；赤道1°經距≈{eq:.2f}km")
+
 CHECKS = {
+    "geo-distance": geo_distance,
     "inverse-trig": inverse_trig,
     "sphere-line-plane": sphere_line_plane,
     "quadratic-formula": quadratic_formula,

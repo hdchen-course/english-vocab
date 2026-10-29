@@ -911,7 +911,7 @@
 - [life.data.misleading.sampling-bias] 樣本偏誤、樣本太小、自我選擇樣本  {t_mid, 無}  · provisionally_verified
 - [life.data.misleading.correlation-causation] 相關 ≠ 因果（含共同原因、巧合、反向因果）  {t_mid, 無}  · provisionally_verified
 - [life.data.misleading.average-trap] 平均的陷阱（「平均薪資」被高薪拉高）  {t_mid, 無}  · provisionally_verified
-- [life.data.misleading.simpson-paradox] 辛普森悖論（分組看與合併看的趨勢相反）  {t_adv, 無}  · pending
+- [life.data.misleading.simpson-paradox] 辛普森悖論（分組看與合併看的趨勢相反）  {t_adv, 無}  · provisionally_verified
 - [life.data.misleading.survey-bias] 問卷設計偏誤（引導性問題、無回應偏誤）  {t_adv, 無}  · provisionally_verified
 - [life.data.judgment.data-questions] 提出可用資料回答的問題  {t_mid, 無}  · provisionally_verified
 - [life.data.judgment.describe-vs-infer] 區分描述（是什麼）與推論（為什麼/會怎樣）  {t_mid, 無}  · provisionally_verified
@@ -1307,7 +1307,7 @@
 - [math.t_sub.finmath.annuity] 年金的現值與終值  {t_sub, 分科-數乙}  · provisionally_verified
 - [math.t_sub.finmath.loan-installment] 貸款分期與攤還  {t_sub, 分科-數乙}  · provisionally_verified
 - [math.t_sub.finmath.growth-decay-model] 比例成長與衰退模型（含半衰期）  {t_sub, 分科-數乙}  · provisionally_verified
-- [math.t_sub.finmath.geo-distance] 經緯度與地球上的距離應用  {t_sub, 分科-數乙}  · pending
+- [math.t_sub.finmath.geo-distance] 經緯度與地球上的距離應用  {t_sub, 分科-數乙}  · provisionally_verified
 - [math.t_sub.linprog.feasible-region] 線性規劃：限制式與可行解區域  {t_sub, 分科-數乙}  · provisionally_verified
 - [math.t_sub.linprog.objective-optimize] 線性規劃：目標函數的最佳化（頂點法）  {t_sub, 分科-數乙}  · provisionally_verified
 - [math.t_sub.finmath.marginal-elasticity] 微積分在商管的應用（邊際分析/彈性）  {t_sub, 分科-數乙}  · provisionally_verified
@@ -1560,7 +1560,7 @@
 - [sci.t_sub.bio-genetics-molecular.rna-processing] 說明真核 mRNA 加工（加帽、加尾、剪接去除內含子）  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-genetics-molecular.operon] 以乳糖操縱組說明原核基因表現調控  {t_sub, 分科-生物}  · provisionally_verified
 - [sci.t_sub.bio-genetics-molecular.eukaryotic-regulation] 說明真核基因表現調控層次（染色質/轉錄/轉譯後）  {t_sub, 分科-生物}  · provisionally_verified
-- [sci.t_sub.bio-genetics-molecular.epigenetics] 初步說明表觀遺傳（甲基化、組蛋白修飾）不改變序列而影響表現  {t_sub, 分科-生物}  · pending
+- [sci.t_sub.bio-genetics-molecular.epigenetics] 初步說明表觀遺傳（甲基化、組蛋白修飾）不改變序列而影響表現  {t_sub, 分科-生物}  · unverified
 - [sci.t_mid.bio-biotech.applications] 舉例生物技術應用（基改作物、疫苗、發酵食品）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.bio-biotech.ethics-intro] 討論生物技術的倫理與安全議題  {t_mid, 會考}  · provisionally_verified
 - [sci.t_adv.bio-biotech.genetic-engineering] 說明基因重組（轉殖）技術的基本概念與應用  {t_adv, 學測}  · provisionally_verified
@@ -1604,7 +1604,7 @@
 - [sci.t_adv.bio-biodiversity.three-domains] 認識三域分類（細菌/古菌/真核）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.bio-biodiversity.virus-features] 說明病毒的構造與非典型生命特徵（需宿主）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_sub.bio-biodiversity.molecular-taxonomy] 說明以分子（rRNA/DNA）資料建立親緣分類  {t_sub, 分科-生物}  · provisionally_verified
-- [sci.t_sub.bio-biodiversity.monophyletic] 區分單系群、並系群、多系群的概念  {t_sub, 分科-生物}  · pending
+- [sci.t_sub.bio-biodiversity.monophyletic] 區分單系群、並系群、多系群的概念  {t_sub, 分科-生物}  · unverified
 - [sci.t_base.bio-plant-physiology.plant-parts] 辨識植物六大器官（根莖葉花果實種子）與功能  {t_base, 無}  · provisionally_verified
 - [sci.t_base.bio-plant-physiology.root-water] 知道根吸收水分、葉行光合作用  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.bio-plant-physiology.xylem-phloem] 區分木質部（運水與礦物質，向上）與韌皮部（運養分）  {t_mid, 會考}  · provisionally_verified
@@ -1799,7 +1799,7 @@
 - [sci.t_adv.earth-climate.global-circulation] 三胞環流（哈德里、佛雷爾、極地胞）與氣壓帶、風帶分布  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-climate.desert-belt] 副熱帶高壓帶下沉氣流與沙漠帶分布的關係  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-climate.enso] 聖嬰—南方振盪（ENSO）對全球與臺灣天氣的影響  {t_adv, 學測}  · provisionally_verified
-- [sci.t_adv.earth-climate.milankovitch] 米蘭科維奇循環（地球軌道要素變化）與冰期—間冰期  {t_adv, 學測}  · pending
+- [sci.t_adv.earth-climate.milankovitch] 米蘭科維奇循環（地球軌道要素變化）與冰期—間冰期  {t_adv, 學測}  · unverified
 - [sci.t_adv.earth-climate.carbon-cycle] 碳循環與二氧化碳在大氣、海洋、生物圈、岩石圈間的交換  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-climate.paleoclimate-proxy] 以冰芯、樹輪、同位素等代用資料重建古氣候  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.earth-climate.mitigation-adaptation] 氣候變遷的減緩（減碳）與調適策略（概念與政策）  {t_adv, 學測}  · provisionally_verified
@@ -1992,8 +1992,8 @@
 - [sci.t_adv.phys-heat.thermo1] 熱力學第一定律（ΔU=Q−W）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_sub.phys-heat.pv-processes] 等溫/等壓/等容/絕熱過程的 PV 圖與作功  {t_sub, 分科-物理}  · provisionally_verified
 - [sci.t_sub.phys-heat.molar-heat] 氣體莫耳比熱（Cp、Cv）與自由度  {t_sub, 分科-物理}  · provisionally_verified
-- [sci.t_sub.phys-heat.entropy] 熱力學第二定律與熵的概念  {t_sub, 分科-物理}  · pending
-- [sci.t_sub.phys-heat.carnot] 熱機效率與卡諾循環  {t_sub, 分科-物理}  · pending
+- [sci.t_sub.phys-heat.entropy] 熱力學第二定律與熵的概念  {t_sub, 分科-物理}  · unverified
+- [sci.t_sub.phys-heat.carnot] 熱機效率與卡諾循環  {t_sub, 分科-物理}  · unverified
 - [sci.t_base.phys-wave.sound-produce] 聲音由物體振動產生與傳播  {t_base, 無}  · provisionally_verified
 - [sci.t_base.phys-wave.loud-pitch] 聲音的大小與高低  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.phys-wave.wave-type] 波的分類（橫波/縱波）  {t_mid, 會考}  · provisionally_verified
@@ -2057,7 +2057,7 @@
 - [sci.t_sub.phys-estatic.cap-energy] 電容器儲存能量（½CV²）與充放電  {t_sub, 分科-物理}  · provisionally_verified
 - [sci.t_sub.phys-estatic.charge-in-field] 電場中帶電粒子的運動  {t_sub, 分科-物理}  · provisionally_verified
 - [sci.t_sub.phys-estatic.wheatstone] 惠斯登電橋  {t_sub, 分科-物理}  · provisionally_verified
-- [sci.t_sub.phys-estatic.rc-circuit] RC 電路充放電  {t_sub, 分科-物理}  · pending
+- [sci.t_sub.phys-estatic.rc-circuit] RC 電路充放電  {t_sub, 分科-物理}  · unverified
 - [sci.t_base.phys-em.magnet-basic] 磁鐵的磁極、吸引與指南針  {t_base, 無}  · provisionally_verified
 - [sci.t_mid.phys-em.mag-field] 磁極（N/S）、磁力、磁場與磁力線  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.phys-em.geomagnetism] 地磁與指南針指向  {t_mid, 會考}  · provisionally_verified
@@ -2077,7 +2077,7 @@
 - [sci.t_sub.phys-em.transformer] 自感/互感與變壓器原理  {t_sub, 分科-物理}  · provisionally_verified
 - [sci.t_sub.phys-em.circular-in-field] 帶電粒子在磁場中的圓周運動（回旋半徑）  {t_sub, 分科-物理}  · provisionally_verified
 - [sci.t_sub.phys-em.mass-spec] 質譜儀/迴旋加速器原理  {t_sub, 分科-物理}  · provisionally_verified
-- [sci.t_sub.phys-em.em-wave-gen] LC 振盪與電磁波的產生  {t_sub, 分科-物理}  · pending
+- [sci.t_sub.phys-em.em-wave-gen] LC 振盪與電磁波的產生  {t_sub, 分科-物理}  · unverified
 - [sci.t_adv.phys-modern.photoelectric] 光電效應與光子能量（E=hf）  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.phys-modern.bohr-model] 原子光譜與波耳氫原子能階模型  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.phys-modern.matter-wave] 物質波（德布羅意波）概念  {t_adv, 學測}  · provisionally_verified
@@ -2224,7 +2224,7 @@
 - [sci.t_sub.chem-acidbase.buffer-principle] 緩衝溶液的組成與原理  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-acidbase.buffer-calc] 緩衝溶液 pH 計算（韓德森-哈塞爾巴赫）  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_sub.chem-acidbase.salt-hydrolysis] 鹽類水解與溶液酸鹼性判定  {t_sub, 分科-化學}  · provisionally_verified
-- [sci.t_sub.chem-acidbase.lewis] 路易斯酸鹼定義  {t_sub, 分科-化學}  · pending
+- [sci.t_sub.chem-acidbase.lewis] 路易斯酸鹼定義  {t_sub, 分科-化學}  · unverified
 - [sci.t_sub.chem-acidbase.polyprotic] 多質子酸的分段解離  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_mid.chem-redox.oxid-reduc-idea] 氧化與還原的概念（得氧失氧/燃燒）  {t_mid, 會考}  · provisionally_verified
 - [sci.t_mid.chem-redox.activity-basic] 金屬活性大小（活性序）初步  {t_mid, 會考}  · provisionally_verified
@@ -2278,7 +2278,7 @@
 - [sci.t_adv.chem-applied.green-chemistry] 綠色化學與永續發展概念  {t_adv, 學測}  · provisionally_verified
 - [sci.t_adv.chem-applied.energy-storage] 電池與能源儲存的化學  {t_adv, 學測}  · provisionally_verified
 - [sci.t_sub.chem-applied.alt-energy] 替代能源與燃料電池的化學  {t_sub, 分科-化學}  · provisionally_verified
-- [sci.t_sub.chem-applied.nanomaterials] 奈米材料與新興材料初步  {t_sub, 分科-化學}  · pending
+- [sci.t_sub.chem-applied.nanomaterials] 奈米材料與新興材料初步  {t_sub, 分科-化學}  · unverified
 - [sci.t_sub.chem-applied.remediation] 化學在環境治理的應用  {t_sub, 分科-化學}  · provisionally_verified
 - [sci.t_base.inquiry.observe-predict] 觀察、提問與預測  {t_base, 無}  · provisionally_verified
 - [sci.t_base.inquiry.fair-test] 操縱變因與控制變因初步（公平測試）  {t_base, 無}  · provisionally_verified
@@ -2889,7 +2889,7 @@
 - [soc-geo.t_adv.hum-transport.node-gateway] 說明轉運點、門戶與節點機能  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.hum-transport.container] 說明貨櫃運輸與複合運輸  {t_adv, 學測}  · provisionally_verified
 - [soc-geo.t_adv.hum-transport.time-space] 說明時空收斂對區域的影響  {t_adv, 學測}  · provisionally_verified
-- [soc-geo.t_adv.hum-transport.ict-space] 說明資訊通訊科技（ICT）與數位落差  {t_adv, 學測}  · pending
+- [soc-geo.t_adv.hum-transport.ict-space] 說明資訊通訊科技（ICT）與數位落差  {t_adv, 學測}  · unverified
 - [soc-geo.t_sub.hum-transport.network-graph] 以圖論指標（連結度）做運輸網絡分析  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.hum-transport.cost-structure] 分析運輸成本結構（端點成本與線路成本）  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.hum-transport.hub-spoke] 說明樞紐輻射（hub-and-spoke）網絡  {t_sub, 分科-地理}  · provisionally_verified
@@ -2983,7 +2983,7 @@
 - [soc-geo.t_sub.spatial-decision.hazard-development] 將災害潛勢納入土地開發決策  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.spatial-decision.ppgis] 說明參與式 GIS 與公眾參與規劃  {t_sub, 分科-地理}  · provisionally_verified
 - [soc-geo.t_sub.spatial-decision.smart-city] 說明智慧城市與空間資訊決策  {t_sub, 分科-地理}  · provisionally_verified
-- [soc-geo.t_sub.spatial-decision.data-ethics] 說明空間資料倫理與隱私  {t_sub, 分科-地理}  · pending
+- [soc-geo.t_sub.spatial-decision.data-ethics] 說明空間資料倫理與隱私  {t_sub, 分科-地理}  · unverified
 
 ## soc-hist
 

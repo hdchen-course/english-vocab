@@ -297,7 +297,7 @@
 - [soc-geo.t_adv.hum-transport.node-gateway] 說明轉運點、門戶與節點機能  {t_adv, 學測}
 - [soc-geo.t_adv.hum-transport.container] 說明貨櫃運輸與複合運輸  {t_adv, 學測}
 - [soc-geo.t_adv.hum-transport.time-space] 說明時空收斂對區域的影響  {t_adv, 學測}
-- [soc-geo.t_adv.hum-transport.ict-space] 說明資訊通訊科技（ICT）與數位落差  {t_adv, 學測} (待核：數位落差命題頻度)
+- [soc-geo.t_adv.hum-transport.ict-space] 說明資訊通訊科技（ICT）與數位落差 {t_adv, 學測}
 - [soc-geo.t_sub.hum-transport.network-graph] 以圖論指標（連結度）做運輸網絡分析  {t_sub, 分科-地理}
 - [soc-geo.t_sub.hum-transport.cost-structure] 分析運輸成本結構（端點成本與線路成本）  {t_sub, 分科-地理}
 - [soc-geo.t_sub.hum-transport.hub-spoke] 說明樞紐輻射（hub-and-spoke）網絡  {t_sub, 分科-地理}
@@ -406,7 +406,7 @@
 - [soc-geo.t_sub.spatial-decision.hazard-development] 將災害潛勢納入土地開發決策  {t_sub, 分科-地理}
 - [soc-geo.t_sub.spatial-decision.ppgis] 說明參與式 GIS 與公眾參與規劃  {t_sub, 分科-地理}
 - [soc-geo.t_sub.spatial-decision.smart-city] 說明智慧城市與空間資訊決策  {t_sub, 分科-地理}
-- [soc-geo.t_sub.spatial-decision.data-ethics] 說明空間資料倫理與隱私  {t_sub, 分科-地理} (待核：是否屬地理課綱範疇)
+- [soc-geo.t_sub.spatial-decision.data-ethics] 說明空間資料倫理與隱私 {t_sub, 分科-地理}
 
 ---
 

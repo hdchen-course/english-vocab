@@ -137,8 +137,8 @@
 - [sci.t_adv.phys-heat.thermo1] 熱力學第一定律（ΔU=Q−W）  {t_adv, 學測}
 - [sci.t_sub.phys-heat.pv-processes] 等溫/等壓/等容/絕熱過程的 PV 圖與作功  {t_sub, 分科-物理}
 - [sci.t_sub.phys-heat.molar-heat] 氣體莫耳比熱（Cp、Cv）與自由度  {t_sub, 分科-物理}
-- [sci.t_sub.phys-heat.entropy] 熱力學第二定律與熵的概念  {t_sub, 分科-物理 (待核)}
-- [sci.t_sub.phys-heat.carnot] 熱機效率與卡諾循環  {t_sub, 分科-物理 (待核)}
+- [sci.t_sub.phys-heat.entropy] 熱力學第二定律與熵的概念 {t_sub, 分科-物理}
+- [sci.t_sub.phys-heat.carnot] 熱機效率與卡諾循環 {t_sub, 分科-物理}
 
 ### 物理-08 波動與聲 `phys-wave`
 - [sci.t_base.phys-wave.sound-produce] 聲音由物體振動產生與傳播  {t_base, 無}
@@ -208,7 +208,7 @@
 - [sci.t_sub.phys-estatic.cap-energy] 電容器儲存能量（½CV²）與充放電  {t_sub, 分科-物理}
 - [sci.t_sub.phys-estatic.charge-in-field] 電場中帶電粒子的運動  {t_sub, 分科-物理}
 - [sci.t_sub.phys-estatic.wheatstone] 惠斯登電橋  {t_sub, 分科-物理}
-- [sci.t_sub.phys-estatic.rc-circuit] RC 電路充放電  {t_sub, 分科-物理 (待核)}
+- [sci.t_sub.phys-estatic.rc-circuit] RC 電路充放電 {t_sub, 分科-物理}
 
 ### 物理-11 電磁與感應 `phys-em`
 - [sci.t_base.phys-em.magnet-basic] 磁鐵的磁極、吸引與指南針  {t_base, 無}
@@ -230,7 +230,7 @@
 - [sci.t_sub.phys-em.transformer] 自感/互感與變壓器原理  {t_sub, 分科-物理}
 - [sci.t_sub.phys-em.circular-in-field] 帶電粒子在磁場中的圓周運動（回旋半徑）  {t_sub, 分科-物理}
 - [sci.t_sub.phys-em.mass-spec] 質譜儀/迴旋加速器原理  {t_sub, 分科-物理}
-- [sci.t_sub.phys-em.em-wave-gen] LC 振盪與電磁波的產生  {t_sub, 分科-物理 (待核)}
+- [sci.t_sub.phys-em.em-wave-gen] LC 振盪與電磁波的產生 {t_sub, 分科-物理}
 
 ### 物理-12 近代物理（量子/原子/核/相對論） `phys-modern`
 - [sci.t_adv.phys-modern.photoelectric] 光電效應與光子能量（E=hf）  {t_adv, 學測}
@@ -401,7 +401,7 @@
 - [sci.t_sub.chem-acidbase.buffer-principle] 緩衝溶液的組成與原理  {t_sub, 分科-化學}
 - [sci.t_sub.chem-acidbase.buffer-calc] 緩衝溶液 pH 計算（韓德森-哈塞爾巴赫）  {t_sub, 分科-化學}
 - [sci.t_sub.chem-acidbase.salt-hydrolysis] 鹽類水解與溶液酸鹼性判定  {t_sub, 分科-化學}
-- [sci.t_sub.chem-acidbase.lewis] 路易斯酸鹼定義  {t_sub, 分科-化學 (待核)}
+- [sci.t_sub.chem-acidbase.lewis] 路易斯酸鹼定義 {t_sub, 分科-化學}
 - [sci.t_sub.chem-acidbase.polyprotic] 多質子酸的分段解離  {t_sub, 分科-化學}
 
 ### 化學-10 氧化還原與電化學 `chem-redox`
@@ -463,7 +463,7 @@
 - [sci.t_adv.chem-applied.green-chemistry] 綠色化學與永續發展概念  {t_adv, 學測}
 - [sci.t_adv.chem-applied.energy-storage] 電池與能源儲存的化學  {t_adv, 學測}
 - [sci.t_sub.chem-applied.alt-energy] 替代能源與燃料電池的化學  {t_sub, 分科-化學}
-- [sci.t_sub.chem-applied.nanomaterials] 奈米材料與新興材料初步  {t_sub, 分科-化學 (待核)}
+- [sci.t_sub.chem-applied.nanomaterials] 奈米材料與新興材料初步 {t_sub, 分科-化學}
 - [sci.t_sub.chem-applied.remediation] 化學在環境治理的應用  {t_sub, 分科-化學}
 
 ---

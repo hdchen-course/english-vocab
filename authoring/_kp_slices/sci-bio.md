@@ -302,7 +302,7 @@
 - [sci.t_sub.bio-genetics-molecular.rna-processing] 說明真核 mRNA 加工（加帽、加尾、剪接去除內含子）  {t_sub, 分科-生物}
 - [sci.t_sub.bio-genetics-molecular.operon] 以乳糖操縱組說明原核基因表現調控  {t_sub, 分科-生物}
 - [sci.t_sub.bio-genetics-molecular.eukaryotic-regulation] 說明真核基因表現調控層次（染色質/轉錄/轉譯後）  {t_sub, 分科-生物}
-- [sci.t_sub.bio-genetics-molecular.epigenetics] 初步說明表觀遺傳（甲基化、組蛋白修飾）不改變序列而影響表現  {t_sub, 分科-生物} (待核)
+- [sci.t_sub.bio-genetics-molecular.epigenetics] 初步說明表觀遺傳（甲基化、組蛋白修飾）不改變序列而影響表現 {t_sub, 分科-生物}
 
 ## 18. 生物技術（PCR／基因重組／定序） {strand: biotech}
 
@@ -355,7 +355,7 @@
 - [sci.t_adv.bio-biodiversity.three-domains] 認識三域分類（細菌/古菌/真核）  {t_adv, 學測}
 - [sci.t_adv.bio-biodiversity.virus-features] 說明病毒的構造與非典型生命特徵（需宿主）  {t_adv, 學測}
 - [sci.t_sub.bio-biodiversity.molecular-taxonomy] 說明以分子（rRNA/DNA）資料建立親緣分類  {t_sub, 分科-生物}
-- [sci.t_sub.bio-biodiversity.monophyletic] 區分單系群、並系群、多系群的概念  {t_sub, 分科-生物} (待核)
+- [sci.t_sub.bio-biodiversity.monophyletic] 區分單系群、並系群、多系群的概念 {t_sub, 分科-生物}
 
 ## 21. 植物的構造與生理 {strand: plant-physiology}
 

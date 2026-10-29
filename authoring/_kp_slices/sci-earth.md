@@ -158,7 +158,7 @@ exam 標註會考／學測／無（分科測驗不含地科獨立科目；深階
 - [sci.t_adv.earth-climate.global-circulation] 三胞環流（哈德里、佛雷爾、極地胞）與氣壓帶、風帶分布  {t_adv, 學測}
 - [sci.t_adv.earth-climate.desert-belt] 副熱帶高壓帶下沉氣流與沙漠帶分布的關係  {t_adv, 學測}
 - [sci.t_adv.earth-climate.enso] 聖嬰—南方振盪（ENSO）對全球與臺灣天氣的影響  {t_adv, 學測}
-- [sci.t_adv.earth-climate.milankovitch] 米蘭科維奇循環（地球軌道要素變化）與冰期—間冰期 `(待核：是否為學測正式必考內容，部分版本列為延伸閱讀)`  {t_adv, 學測}
+- [sci.t_adv.earth-climate.milankovitch] 米蘭科維奇循環（地球軌道要素變化）與冰期—間冰期 {t_adv, 學測}
 - [sci.t_adv.earth-climate.carbon-cycle] 碳循環與二氧化碳在大氣、海洋、生物圈、岩石圈間的交換  {t_adv, 學測}
 - [sci.t_adv.earth-climate.paleoclimate-proxy] 以冰芯、樹輪、同位素等代用資料重建古氣候  {t_adv, 學測}
 - [sci.t_adv.earth-climate.mitigation-adaptation] 氣候變遷的減緩（減碳）與調適策略（概念與政策）  {t_adv, 學測}

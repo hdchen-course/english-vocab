@@ -319,7 +319,7 @@
 - [math.t_sub.finmath.annuity] 年金的現值與終值  {t_sub, 分科-數乙}
 - [math.t_sub.finmath.loan-installment] 貸款分期與攤還  {t_sub, 分科-數乙}
 - [math.t_sub.finmath.growth-decay-model] 比例成長與衰退模型（含半衰期）  {t_sub, 分科-數乙}
-- [math.t_sub.finmath.geo-distance] 經緯度與地球上的距離應用 (待核：數B/數乙歸屬)  {t_sub, 分科-數乙}
+- [math.t_sub.finmath.geo-distance] 經緯度與地球上的距離應用 {t_sub, 分科-數乙}
 - [math.t_sub.linprog.feasible-region] 線性規劃：限制式與可行解區域  {t_sub, 分科-數乙}
 - [math.t_sub.linprog.objective-optimize] 線性規劃：目標函數的最佳化（頂點法）  {t_sub, 分科-數乙}
 - [math.t_sub.finmath.marginal-elasticity] 微積分在商管的應用（邊際分析/彈性）  {t_sub, 分科-數乙}

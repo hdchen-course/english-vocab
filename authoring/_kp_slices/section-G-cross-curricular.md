@@ -371,7 +371,7 @@
 - [life.data.misleading.sampling-bias] 樣本偏誤、樣本太小、自我選擇樣本  {t_mid, 無}
 - [life.data.misleading.correlation-causation] 相關 ≠ 因果（含共同原因、巧合、反向因果）  {t_mid, 無}
 - [life.data.misleading.average-trap] 平均的陷阱（「平均薪資」被高薪拉高）  {t_mid, 無}
-- [life.data.misleading.simpson-paradox] 辛普森悖論（分組看與合併看的趨勢相反）  {t_adv, 無} (待核：高中適配)
+- [life.data.misleading.simpson-paradox] 辛普森悖論（分組看與合併看的趨勢相反） {t_adv, 無}
 - [life.data.misleading.survey-bias] 問卷設計偏誤（引導性問題、無回應偏誤）  {t_adv, 無}
 
 ### 6D 從資料到判斷
