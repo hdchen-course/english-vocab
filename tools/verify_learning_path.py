@@ -105,8 +105,43 @@ def binding_unverified_live(root):
         ov = json.loads(ov_f.read_text(encoding="utf-8"))
         cur_sha = hashlib.sha256(man.read_bytes()).hexdigest()[:16]
         if ov.get("manifest_sha") == cur_sha: verified = set(ov.get("verified_ids", []))
-    n = sum(1 for i in binding if i not in verified)
-    return n, f"{n}（binding {len(binding)}−verified {len(verified)}；root={root.name}；overlay 綁 sha）"
+    # HD 授權 option(b) 的官方確認例外（2026-10-29）：事實已以官方來源逐字確認正確，僅因
+    # 「單一官方權威 vs ≥2 cross_check 規則」或 high-risk 樣式誤判無法自動翻 verified。**不偽造 overlay**；
+    # 僅把 HD 簽署、附 source 的 id 自 unverified 名單扣除，且該 id 必須「真的是 binding 且目前仍 unverified」
+    # （不能 except 非 binding／已 verified／杜撰的 id）。gate 仍證明：每個 binding KP 要嘛 release-grade verified、
+    # 要嘛在 HD 簽署的官方確認例外清冊上。
+    # round36 blocker 修：例外必須綁該 KP 的 fact-sha（id/title_zh/exam/beyond 的 canonical sha）。
+    # 事實一改→sha 不符→例外作廢→id 回計 unverified→AC-KP-VERIFY 轉紅（仿 overlay/AC-VIZ-1 的 sha 重綁紀律，
+    # 不讓「只綁 id」的 waiver 在例外 KP 事實被改後仍靜默放行）。
+    by_id = {r.get("id"): r for r in items}
+    def _kp_fact_sha(it):
+        payload = json.dumps({"id": it.get("id"), "title_zh": it.get("title_zh", ""),
+                              "exam": it.get("exam", ""), "beyond": it.get("beyond", False)},
+                             ensure_ascii=False, sort_keys=True)
+        return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
+    accepted = set()
+    exc_f = root / "authoring" / "accepted_exceptions.json"
+    if exc_f.exists():
+        try:
+            exc = json.loads(exc_f.read_text(encoding="utf-8"))
+            if exc.get("authorized_by") == "HD":
+                bind_set = set(binding)
+                for e in exc.get("exceptions", []):
+                    eid = e.get("id")
+                    if not (eid and e.get("reason") and e.get("source") and eid in bind_set and eid not in verified):
+                        continue
+                    # 必須附 kp_fact_sha 且等於該 KP 當前 fact-sha，否則該例外作廢（事實已漂移或未綁）。
+                    want = e.get("kp_fact_sha")
+                    it = by_id.get(eid)
+                    if not want or it is None or _kp_fact_sha(it) != want:
+                        continue
+                    accepted.add(eid)
+        except Exception:
+            accepted = set()   # 清冊壞檔 → 不信任、不扣除（保守）
+    unresolved = [i for i in binding if i not in verified and i not in accepted]
+    n = len(unresolved)
+    extra = f"；HD官方確認例外 {len(accepted)}" if accepted else ""
+    return n, f"{n}（binding {len(binding)}−verified {len(verified)}{extra}；root={root.name}；overlay 綁 sha）"
 
 def run_check(c, evidence, root, release_id):
     kind = c["kind"]

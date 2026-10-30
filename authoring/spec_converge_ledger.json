@@ -1,0 +1,460 @@
+{
+  "_doc": "spec §12 收斂證據 ledger。gate=tools/spec_converge_gate.py --verify-ledger 數法：rounds[] 中最後『連續 required_clean 筆、clean:true、spec_sha==當前 spec sha、recorded_at 合法』即通過，另需 redteam.passed 綁同 sha。每一筆 clean 必為『實跑 content_audit（.sda/content_audit.js, nshards:1）回 confirmedCount:0 且 coverageComplete:true，並各自經 node .sda/coverage_check.js L3 exit 0』才誠實記入——手造＝作弊。紀律：5 筆須跨 ≥3 個不同維度 angle（A=數值/計數/公式/交叉引用/角色編號/受控詞彙；B=對抗式 規範可繞過/gate escape-hatch；C=術語/learner 標籤/可讀性/簡PRC），避免單一角度 skim 假 clean。綁 spec_sha：spec 一改，所有 clean 輪與紅隊即作廢、streak 歸零。",
+  "spec_file": "LEARNING_PATH_REBUILD_SPEC.md",
+  "required_clean": 5,
+  "rounds": [
+    {
+      "round": 1,
+      "angle": "A 數值交叉/cross-ref/§6.3 line549-550 引用/§13 序(a)..(k)單調/RT-1..15 一致/R179",
+      "spec_sha": "eec6da8c434a4a26",
+      "clean": true,
+      "confirmed": 0,
+      "recorded_at": "2026-10-30T07:08:00+08:00"
+    },
+    {
+      "round": 2,
+      "angle": "B 對抗(最硬;攻 award-provenance catch-all/F1 migrate() ALLOW 分支/§13 by-letter cross-ref 未破)/R178",
+      "spec_sha": "eec6da8c434a4a26",
+      "clean": true,
+      "confirmed": 0,
+      "recorded_at": "2026-10-30T07:09:00+08:00"
+    },
+    {
+      "round": 3,
+      "angle": "C 術語/PRC/簡體/疊字/新修文字可讀性(F1 migrate()/AC-REWARD-1 準則欄/§13(a))/R180",
+      "spec_sha": "eec6da8c434a4a26",
+      "clean": true,
+      "confirmed": 0,
+      "recorded_at": "2026-10-30T07:10:00+08:00"
+    },
+    {
+      "round": 4,
+      "angle": "A+C 合併(爭議 R179/R180 clean;§6.3 line549/550 引用解析/§13(a)..(k)/RT-1..15/簡體PRC疊字)/R182",
+      "spec_sha": "eec6da8c434a4a26",
+      "clean": true,
+      "confirmed": 0,
+      "recorded_at": "2026-10-30T07:17:00+08:00"
+    },
+    {
+      "round": 5,
+      "angle": "B-deep 最硬對抗(爭議全部前輪;端到端攻 CLASS-B 全路徑/award-provenance catch-all/F1 migrate() ALLOW/CLASS-C/overclaim)/R181",
+      "spec_sha": "eec6da8c434a4a26",
+      "clean": true,
+      "confirmed": 0,
+      "recorded_at": "2026-10-30T07:18:30+08:00"
+    }
+  ],
+  "redteam": {
+    "spec_sha": "eec6da8c434a4a26",
+    "passed": true,
+    "recorded_at": "2026-10-30T07:25:00+08:00",
+    "note": "第四輪獨立對抗紅隊(fresh general-purpose agent,read-only,bound+verified sha eec6da8c,讀全 1000 行)對三類 bypass 逐一嘗試構造具體繞過:CLASS-A(反偷看/先備完整性:under-declare→§9.5 細則3a 已揭露殘餘非新洞、per_question_solution_chain+§9.6 二審兜底;over-stuff prereq→先備=路徑提前+被模擬;謊報 teach/manifest 外 id→AC-SCHEMA+rubric⑦+sim bucket 重算改判 other FAIL;join 不可空=§9.5 反 fail-open 鐵律)=BLOCKED;CLASS-B(reward never-disappear:走 §6.7 三道合擊 (a)-(g) 每條皆 FAIL——delete/delete-both/ship-unbaselined/squash/git-rm/edit-snapshot-content/grant-un-catalogued 全擋;type retire→items[].type→types[] 正向完整性+items no-shrink;equippable 降級→反向 equipped<Type> 鍵於仍 equippable(F1) FAIL;且 type 孤兒只丟 equip-pointer(fallback default)、earned id 仍在 ownedItems 可解析=非真孤兒)=BLOCKED;CLASS-C(role-11 隔離可稽核非真實+bucket 重算+注入 kp 白名單掃描;reward-orphan 併入 CLASS-B)=BLOCKED。零存活繞過、零新 dangling/overclaim/fail-open;RT-1..15 一致(§7.3 L713-727/Phase4 L868/AC-REWARD-1 L923)、§10.2 為前懸空『§10 收尾 SOP』實體、F1 降級 migrate 由 L549 契約+L550 合併表支撐。僅一非可利用 defense-in-depth nit(§10.2 ship snapshot 未明文含 types 區→type no-shrink 錨不如 items 顯式,但 items[].type→types[]+items no-shrink 已聯合 pin 住不生孤兒)——紅隊自判 NOT-a-defect;列為 Phase 0.5/1 建 release_snapshot_on_ship_gate 時可選加固(ship snapshot 併含 types 區使 type no-shrink 得同等不可變錨),不觸發 5-clean 重跑(非缺陷、避免收斂不終止)。三個揭露殘餘(deploy-side ledger 竄改=具名外部信任邊界、baseline_sha=pre-image 輔助)正確分級、非 repo-level 缺陷。"
+  },
+  "_history": [
+    {
+      "recorded_at": "2026-10-30T07:05:00+08:00",
+      "note": "sha ed0872f1(第三輪紅隊 CLASS-B(k) award-provenance + F1 修補後)重跑 5-clean 第一波 R175(B)/R176(A)/R177(C),三角度 coverageComplete 皆 true,但各揪真缺陷(非 CLASS-B 繞過,全為我本輪 (k)/F1 修補文字自身的次層缺陷——loop 正常收斂):【D1 major,R175+R177 雙重確認】F1/RT-15(line 613+727)以『§6.3 降級遷移對照』為降級合法處置依據,但 §6.3 從未定義此 artifact(只有 migrate() 契約 line549、equipped<Type> last-write 合併策略表 line550、progkey_migration.json)→懸空 cross-ref、ALLOW 分支無法實作(同 §13(i) 修過的『§10 收尾 SOP 懸空』類)。【D2 minor,R176】AC-REWARD-1 準則欄逐列 RT-11/12/13/14 失效情境卻漏 RT-15(孤兒頒獎),與同列驗證/門檻欄不一致。【D3 minor,R175】§13 2026-10-30 批次 root 列(§12 收斂紅隊鏈)無字母、缺(a)、置於(b)後破壞單調序(§13(i) 曾明文修同類序問題)。另 panel 判 NOT-a-defect(0/5):award-provenance 對 §7.4 動態徽章 id 誤擋——駁回正確(§6.7(3) entry 強制每可頒 id 為 locked catalog static literal,§7.4 正例用 badge-math-algexpr-master 等 literal,fail-closed-on-dynamic 為刻意 backstop)。批次修(sha ed0872f1→eec6da8c434a4a26,find-all-at-once):D1=line 613/727 改引 §6.3 migrate() 契約(equippable 語意變走 migrate+版本 bump 清除/重導 stored equipped<Type>,比照 line550 合併策略表),消懸空 artifact;D2=AC-REWARD-1 準則欄於 localStorage 驅逐前加『頒未入 catalog 的 id(孤兒頒獎/grant-provenance)』;D3=root 列標 (a) 並移至 (b) 前,序復單調 (a)..(k)(line180 等處 cross-ref 的『(b)』仍指 high-risk floor,未動其語意)。lint exit0、簡體 exit0、殘留『降級遷移對照』=0、§13 序 (a)..(k) 單調、ready COMPLETE。rounds[] 仍歸零,重跑 5-clean R178(B)/R179(A)/R180(C)。趨勢:CLASS-B 繞過類已 fixpoint(本波零 CLASS-B 新繞過),findings 降為修補文字的 cross-ref/列舉/序一致性 nit,逼近全淨 5-clean。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "recorded_at": "2026-10-30T06:50:00+08:00",
+      "note": "sha 201205f2 達 5/5 consecutive clean(R170 B-broad/R171 A/R172 C/R173 B-deep/R174 A+C 全 confirmed 0+coverageComplete+L3 exit0,sha 全程未變),進 §12 step3 第三輪獨立對抗紅隊→揪 1 個新 CLASS-B 真繞過(repo-level、不依賴外部 ledger),5-clean 依鐵律作廢重跑、redteam 不記 passed。CLASS-B(k):reward_catalog_gate 一路只驗 catalog 自身一致性(baseline/no-shrink/型別三簽/items[].type→types[]/equip-provenance),從未綁頒獎端 id provenance→頒獎 call-site 頒一個未入 items[] 的 id(最寫實 dev 疏漏,如 awardBadge('badge-c-new') 漏把 badge-c 入 catalog)→earned 寫入 profile.badges union-set(id-ownership 保)卻因顯示解析 catalog-keyed(getBadgeWall/wish_shop byId)永成孤兒,RT-1..14/baseline 全無擋。不對稱 tell:§6.7 已有 equip-provenance 靜態掃描 gate 卻無對稱 grant-provenance gate(§0.2 禁的散文承諾)。F1(低 sibling):反向 equipped<Type>→types[] 參照完整性只鍵於『type 存在』非『存在且仍 equippable』,re-signed 降級 equippable:true→false 留懸空 equipped 無遷移→靜默丟合併策略。CLASS-A/CLASS-C 全 BLOCKED(唯一殘餘仍=§9.5 細則3a 自由題依賴集,誠實標+雙 backstop)。批次修(sha 201205f2→ed0872f1c5c0335f):§6.7 reward_catalog_gate 加對稱 award/grant-provenance 靜態掃描交叉驗(頒獎經單一具名 helper grantReward/awardBadge/unlockItem,gate 斷言凡 grant-like 行為所頒 id⟹∈live(非retired)items[],catch-all:無法靜態證明的 grant-like 路徑一律 FAIL;誠實分級:具名 helper 確定性、間接 fail-closed、§8 外加 backstop);§6.7 三道合擊補路徑(g);§7.3 新增 RT-15(頒未入 items[] 的 id/繞過改名 helper→catch-all FAIL;併驗 F1 型別降級懸空)；AC-REWARD-1 RT-1..14→RT-1..15+evidence 欄加 award-provenance;§10.1 Phase4 exit RT-1..14→RT-1..15;§13 加 (k) 列;F1=反向參照完整性改鍵於『type 仍 equippable』,降級留懸空無遷移=FAIL。lint exit0、簡體 PASS、ready COMPLETE。rounds[] 歸零,重跑 5-clean R175(B)/R176(A)/R177(C)。趨勢:CLASS-B 的 catalog-端(baseline/型別/equip)已 fixpoint,此輪補上對稱的頒獎-端 id provenance,應封閉『earned 但顯示孤兒』整類。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "recorded_at": "2026-10-30T06:14:00+08:00",
+      "note": "sha 58e7a4cc(deploy-ledger 記 {id,snapshot_content_sha} 後)重掃 R167(B)/R168(A)/R169(C):R167(B,判 fixpoint 硬對抗)clean+L3、R169(C)clean+L3——content-fingerprint 外部錨定未再被攻破;僅 R168(A)1 minor(readability):§13(j) 一處把 ship-gate append 寫成 `{id, content_sha}`,與全檔 canonical `{id, snapshot_content_sha}` 不一致。CLASS-B 模型本身(content-fingerprinted external anchor)未被動、已過硬 B 輪。修(sha 58e7a4cc→201205f2a884dbc4,998行):§13(j) `{id, content_sha}`→`{id, snapshot_content_sha}`(單一 token、模型不變)。lint exit0、簡體 exit0、殘留0、ready COMPLETE。rounds[] 歸零,重跑 5-clean R170(B)/R171(A)/R172(C)。趨勢:CLASS-B 已達 fixpoint(R167 硬對抗零繞過),findings 降到純 ledger 散文機械 nit,逼近全淨 5-clean。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "recorded_at": "2026-10-30T06:06:00+08:00",
+      "note": "sha 8628d72f(deploy-ledger 存在性錨後)重掃 R164(B)/R165(A)/R166(C):R165/R166 clean,R164(B blocker,panel 4/5,owner security DEFECT)——信任錨最後缺口:deploy-side ledger 只錨 release-id 存在性、未錨 snapshot 內容→『既存 snapshot FILE 內容不得改＝FAIL』無 squash-surviving referent;編輯既存 releases/<id>/reward_id_baseline.json 刪 earned id X＋drop X from items[](auto-derived floor 一起縮)→三道全過、X 孤兒、未碰外部 ledger→『每條 repo-level 路徑皆 FAIL』仍 overclaim。批次修(sha 8628d72f→58e7a4cc84c09ff5,999行):deploy-side ledger 每筆改記 {id, snapshot_content_sha}(存在性＋內容指紋皆外部錨定);reward_catalog_gate 對每已記錄 release 斷言 (a)FILE 存在＋(b)FILE content sha＝ledger 值(不符 FAIL);no-shrink floor＝∪(ledger-recorded 且 content-verified 的 snapshot id-set)、工作樹 FILE 僅 cache;§10.2 ship-gate append {id,content_sha};§6.7 完整性(f)/§7.3 RT-14(a⁗)/AC-REWARD-1/§13(j) 同步。殘餘收斂為單一外部信任邊界(竄改外部 ledger 含 id＋content_sha)。lint exit0、簡體 exit0、§13 序 b..j 單調、ready COMPLETE。rounds[] 歸零,重跑 5-clean R167(B)/R168(A)/R169(C)。趨勢:floor 現 100% 外部錨定(存在＋內容),每 repo-level 變更路徑(刪FILE/改FILE內容/git rm/squash/drop items)皆對照外部 ledger 擋,應為 CLASS-B 真 fixpoint。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "recorded_at": "2026-10-30T05:53:00+08:00",
+      "note": "sha 9669e5d0(B-1 重導後)重掃 R161(B)/R162(A)/R163(C):R163 clean,R162 1 minor(§13(h)列誤置於(f)(g)前 forward-ref),R161(B) 1 blocker——B-1 的最後一層:(h) 把 floor 錨到 release snapshot FILE,但 snapshot-immutability(F6-05) 只被 cite、無獨立存在性紀錄→普通 commit `git rm -r releases/<id>/`+drop-both 可把 FILE floor 清成 ∅(與 genesis 空 floor 無法區分)、earned id 孤兒化,『每條路徑皆 FAIL』overclaim(floor 錨自身可被同一不受信任 repo 編輯刪)。批次修(sha 9669e5d0→8628d72ff0700c2d,998行):錨定 deploy-side append-only release ledger(CI/host 寫入 repo 工作樹+git 歷史之外的不可變/內容定址紀錄,為 WHICH releases 曾存在的權威來源);reward_catalog_gate 斷言每已記錄 release 的 snapshot FILE 必存在工作樹(缺=FAIL,堵 git rm,與 genesis 區分);§10.2 ship-gate 同時 append <id> 進 ledger;§6.7/§7.3 RT-14(a‴)/AC-REWARD-1 同步;誠實殘餘(仿 §9.5 終止無限回歸):竄改外部 deploy ledger=外部部署/基礎設施信任邊界、非 repo 威脅模型內,具名揭露不 overclaim。R162:§13(h) 移至(g)後、序復單調 b→i。lint exit0、簡體 exit0、§13 序 b..i 單調、無 stale RT-1..13、ready COMPLETE。rounds[] 歸零,重跑 5-clean R164(B)/R165(A)/R166(C)。趨勢:CLASS-B 的信任根已推到真實外部邊界(deploy ledger),repo-level 每路徑 fail-closed,應為 fixpoint。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "recorded_at": "2026-10-30T05:40:00+08:00",
+      "note": "sha 47c4533d(B-1/B-2 修補後)重掃 R158(B)/R159(A)/R160(C):R158 抓 2 blocker+R159 抓 2(含與 R160 同的 Phase4 stale RT)——皆我 B-1 修補自身回歸。(B-1′,blocker)(f) 把 no-shrink floor 移到 ∪release snapshots 但從未綁 ship↔snapshot→genesis/未-snapshot id floor 空;且移除舊 git-HEAD no-shrink 連普通 commit delete-both 保護都丟,不需 squash 即孤兒化未-snapshot earned id。(前置,blocker)reward_baseline_rewrite_gate 非 fail-closed(backup ref 缺/事後建不擋)且 cross-ref『§10 收尾 SOP』在 §10 無實體懸空。(stale)§10.1 Phase4 exit 仍 RT-1..13。CLASS-A/C 未再報。批次修(sha 47c4533d→9669e5d06458c601,992行):加 release_snapshot_on_ship_gate(earnability 綁定:部署使 id earnable 前必寫 releases/<id>/reward_id_baseline.json⊇live items)+no-shrink floor 錨 release snapshot FILE(工作樹中、squash 只摧毀歷史保留當前檔→摧毀不了;earnable⟹必在某 FILE→普通 commit 與 squash 皆擋,修回丟失保護)+snapshot immutable(F6-05)+genesis 空 floor 誠實標正確;rewrite_gate 改 fail-closed(backup ref 缺/非 pre-rewrite 即 DENY);新增 §10.2 部署／歷史改寫收尾 SOP(使懸空 cross-ref 有實體、前置機器強制);Phase4 exit RT-1..14;§6.7/§7.1/§7.3 RT-14(A)/AC-REWARD-1/§13(h) 同步。lint exit0、簡體 exit0、ready COMPLETE、無 live stale RT-1..13、§10.2 建成。rounds[] 歸零,重跑 5-clean R161(B)/R162(A)/R163(C)。趨勢:reward-baseline 類再補 earnability-binding/snapshot-FILE-floor/fail-closed-rewrite 三面,git-rooted 根因徹底拔除。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "recorded_at": "2026-10-30T05:24:00+08:00",
+      "note": "sha 2c34ed6c 達 5/5 consecutive clean(R153 B-硬對抗/R154 A/R155 C/R156 B-deep/R157 A+C 全 confirmed 0+L3 exit0),進 §12 step3 第二輪獨立對抗紅隊→揪 2 個新 CLASS-B 真繞過,5-clean 依鐵律作廢重跑、redteam 不記 passed。B-1(高、已實證):frozen-id baseline 真防線全根植 git(no-shrink vs git HEAD＋auto-derive=git 歷史 items 聯集),但本 repo 標準收尾 full-history squash+force-push(memory history-squash-purge-training 已執行且 recurring)→squash 後歷史消失、HEAD==工作樹,pre-squash 刪 earned id(無 tombstone)三道全過、孤兒化、零偵測;git-rooted 錨被自己收尾摧毀。B-2(低、新):types[] 只有 per-entry 三簽(驗現存不防刪)、無 no-shrink/tombstone、無 items[].type→types[] 參照完整性、無反向 stored equipped<Type>→types[] 檢查→整類下架孤兒 equip-state+型別可用性,RT-1..13 未涵蓋。CLASS-A/CLASS-C BLOCKED。批次修(sha 2c34ed6c→47c4533d3b1e79d6,988行):B-1=baseline no-shrink 錨改 immutable release snapshot(releases/<id>/,F6-05 內容定址、squash 不可摧毀)聯集、auto-derive 改 release snapshots∪工作樹 items(非 git 歷史)、新增 reward_baseline_rewrite_gate(歷史改寫前斷言改寫後⊇改寫前備份 ref backup-premigrate 否則 DENY)+§7.3 RT-14(A);B-2=types[] 加 retire-not-delete+no-shrink+tombstone(同錨 release snapshot)+items[].type→types[]+反向 equipped<Type>→types[] 參照完整性+§7.3 RT-14(B);§6.7/§7.1/AC-REWARD-1(RT-1..14)/§13(f)(g) 同步。lint exit0、簡體 exit0、ready COMPLETE、live stale git-HEAD=0(兩處皆『非 git HEAD』新文字)。rounds[] 歸零,重跑 5-clean R158(B)/R159(A)/R160(C)。趨勢:reward-baseline 類再補完 git-rooted-floor 與 type 維度兩新面,應更接近封閉。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "recorded_at": "2026-10-30T05:03:00+08:00",
+      "note": "sha 41111163(baseline 兩道修補後)重掃 R150(B)/R151(A)/R152(C):R151/R152=0+L3,但 R150(B blocker,panel 5/5)揪 baseline 第三層洞——只強制 (1)no-shrink(baseline⊇git HEAD)+(2)coverage(items∪tombstone⊇baseline),缺 (3)entry/completeness(items∪tombstone⊆baseline),沒機制強制『上架 id 必入 baseline』→ship-but-never-baselined 的 id 事後無 tombstone 刪除時 (1)(2) 偵測不到→重開 CLASS-B(floor 完整性是未強制承諾,違 §0.2)。另 raw『baseline_sha 裝飾性防竄改』panel 0/5 NOT(git HEAD no-shrink 才是真防線),不採。批次修(sha 41111163→2c34ed6c54d02b69,984行):baseline 升三道=(1)no-shrink+(2)coverage+(3)entry,(2)+(3)=集合相等,再加(1)⟹baseline 恆等於 catalog 曾出現所有 id 且只增不減;並建議 baseline 由 git 歷史曾提交 items id 單調聯集自動衍生(消人工維護缺口);§6.7/§7.1/§7.3 RT-13 case(iv)/AC-REWARD-1 同步;§13 加 (e) 列。lint exit0、簡體 exit0、ready COMPLETE。rounds[] 仍歸零,重跑 5-clean R153(B)/R154(A)/R155(C)。趨勢:同一 reward-baseline 集合不變量逐層補齊(CLASS-B→baseline 完整性→entry),三 sha 收斂為完整三元組,應封閉此類。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "recorded_at": "2026-10-30T04:50:00+08:00",
+      "note": "sha 76118e24(CLASS-B/F2 修補後)重掃 R147(B)/R148(A)/R149(C):R149=0+L3,但 R147(B)+R148(A) 各 1 真缺陷(皆我 (c) 修補新文字的次層洞,find-all-at-once 批次修)。R147(B blocker,panel 5/5)=frozen-id baseline 宣稱 append-only/sha-bound 但未定義其自身完整性,gate 只驗 items⊇baseline、baseline 檔可被竄改,同時刪 items 與 baseline 內該 id(=改名)維持 items⊇baseline 仍過關→重開 CLASS-B 孤兒(違 §0.2);且 sha-bound 無 pre-image(異於 kp_fact_sha 等)。R148(A blocker,panel 5/5)=§10.1 Phase 4 exit 仍 RT-1..12,未隨 RT-13/AC-REWARD-1 同步→reward-expansion 可不驗 RT-13 過關、重開 CLASS-B。批次修(sha 76118e24→41111163cf43ab09,983行):baseline 改兩道 fail-closed(自身 no-shrink 當前⊇git HEAD、baseline_sha=sha256(canonical_json(sorted(ids)))[:16] 具體 pre-image、原 items⊇baseline;兩道合擊堵『同時刪 items+baseline』)於 §6.7/§7.1/AC-REWARD-1+§7.3 RT-13 加 case(iii);§10.1 Phase4 exit RT-1..12→RT-1..13;§13 加 (d) 列。lint exit0、簡體 exit0、ready COMPLETE、殘留 stale RT-1..12=0(僅 §13(d) 描述文字)。rounds[] 仍歸零,重跑 5-clean R150(B)/R151(A)/R152(C)。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "recorded_at": "2026-10-30T04:38:00+08:00",
+      "note": "sha 2751341f：R142(B)/R143(A)/R144(C)/R145(B-deep)/R146(A+C) 連 5 clean+L3 達標(首度 5/5),但 §12 step3 獨立對抗紅隊(3 類 bypass)揪出 CLASS-B 真繞過→5-clean 依鐵律作廢重跑、redteam 不記 passed。CLASS-B=earned 非可裝備 reward id(badge/shop)整筆刪除或改名→顯示孤兒,reward_catalog_gate 無 frozen 全集 baseline/無 retire-not-delete 機器強制,RT-2 只測欄位移除、RT-11 只涵蓋可裝備型別,§7.1『只增不刪』僅散文(§0.2 不認)→打穿永不消失。CLASS-A/CLASS-C 全 BLOCKED(列舉機器向量 fail-closed,唯一殘餘=§9.5細則3a 自由題依賴集誠實標+雙 backstop)。free-sweep:F1 high-risk floor 延 Phase0/1(已 §13 2026-10-30(b)/§0.6.1 line180 誠實入帳,非新缺陷)、F2 rubric⑦ tag-consistency overclaim(修)、F3 術語層已於 §9.6 line830 誠實標非機器化(已預先處理)。批次修(sha 2751341f→76118e24b20b21c8,983行):§6.7 reward_catalog_gate 加 frozen-id baseline(reward_id_baseline.json,append-only,sha-bound,曾 ship id 無 retired:true tombstone 消失=FAIL)+§7.1 catalog 變更安全改 retire-not-delete fail-closed+§7.2 R4/R5 註機器強制+§7.3 RT-13(刪/改名 earned 非可裝備 id,對所有 owned 型別枚舉參數化)+AC-REWARD-1 掛 RT-13/baseline+§13 2026-10-30(c)列;F2=§6.6 rubric⑦ 加誠實分級(tag 綁定確定性,語意教學品質由 §8 panel+§9 backstop)。lint exit0、簡體 exit0、ready-for-5clean COMPLETE。rounds[] 歸零,重跑 5-clean R147(B)/R148(A)/R149(C)...",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "note": "sha 0d5d92ddcc1be717：R32(A)/R33(B)/R34(C)/R35(A') 連 4 clean + L3；R36(B 對抗) 找到真 blocker — accepted_exceptions.json waiver 只綁 id、不綁內容 sha（全 spec 唯一無 sha 重綁的簽核），例外 KP 事實被改仍靜默過 AC-KP-VERIFY（違反 R1）。streak 作廢。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "修補：accepted_exceptions.json 每筆加 kp_fact_sha；verify_learning_path.py binding_unverified_live 要求 stored sha==當前 fact-sha 才扣除，否則例外作廢回計；spec §0.6.1 line180 + AC-KP-VERIFY(line896) 補述 sha 重綁保證+紅隊案例。紅隊：GOOD n=0 / 改事實(stale sha) n=1 / 缺 sha n=1 / 非HD n=4 / 全舊 n=4，檔還原 OK。新 sha=ed9740c997d5ad64，重掃從 R37 起。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "sha ed9740：R37(A) clean 但被同 sha R38(B 對抗) 打臉作廢(已自 rounds 移除)。R38 找 2 major gate-bypass：F1 DEVIATION_CATEGORIES enum 擴充只散文管控、無 sha-bound 機器強制(3/5)；F2 §9 模擬輸出無 schema/enum gate、burnout_risk≤med 寫成『只有high才算defect』在空值/enum外值 fail-open(5/5)。R39(C) 找 1 major：『分區』術語重載(line475 保留給 strand 卻在 474/607/898 指頂層島,4/5)。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "批次修(sha ed9740→0fb392012bb1ac14)：F1=deviation_categories.json 每 enum 項帶美術§8-8+空間§8-9 雙簽綁 enum 檔 sha，unit_acceptance_lint/AC-UNIT-3 驗有效 sha-bound 雙簽否則 category 無效使引用單元 FAIL，加 §6.7 鎖檔列+紅隊；F2=新增 tools/sim_output_schema_gate.py(§9.5 細則3a)前置於 AC-PATH-1/2，強制 result/burnout_risk/learnable/retention_ok enum+型別,壞值 FAIL 不 fail-open+紅隊；F3=474/607/898 島層誤用『分區』改『頂層島/島』並加保留字註。ready-for-5clean COMPLETE、converge selftest exit0、零簡體。重掃 R40/41/42。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "sha 0fb392：R41(A) clean 但被同 sha R40(B)+R41 本身打臉。R40(B 對抗)抓 3：F-A(blocker)§9.6 逐題 kp 歸因宣稱 gate 抓但 §9.5 schema 無欄位+3a gate 不驗→退化 prompt-only(偷看 K(U) 類)；F-B(major)§9.6 路徑覆蓋 gate 只活散文、未接 AC-PATH-1/2;F-C(major)§7.4 avatar/stickers 列為獎勵但不在 reward_catalog 枚舉/id 規約→孤兒化。R41(A)抓 1：no_grade/no_backend gate 實已建+紅隊(Phase0)但 AC表/§11.A細則/§13ledger 仍標待建、延 Phase1,矛盾。R42(C)=0 confirmed(唯一 raw『單一一致』panel 判 NOT-a-defect)。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "批次修(sha 0fb392→6293169a8ce62d9e,971行)：F-A=§9.5 schema 加 per_question_kp_attribution:[{question_id,kp_ids:[{id,bucket∈{K_pre,teach,other}}]}]必填,3a gate 驗任一 bucket=other/缺歸因⟹FAIL,§9.6 改引 schema+gate(非prompt-only)+紅隊;F-B=AC-PATH-1 接入前置 path_coverage_gate(§9.6 模擬路徑集⊇全unit);F-C=avatar 加 avatar-* id+納 reward_catalog 枚舉(skin/border/mascot/avatar/badge/shop)+RT-11 擴及四種可裝備外觀,stickers 註明 progress-derived 非 catalog;R41=AC-NOGRADE(907)/AC-NOBACKEND(913)去待建+§11.A細則加(d)+§13ledger 標已紅隊。ready COMPLETE、selftest exit0、零簡體。重掃 R43/44/45。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "sha 6293169：R43(B 對抗)抓 2 blocker——F-α:上輪 sim_output_schema_gate 只驗自報 bucket enum、未以 §9.2 閉包重算,偷看 agent 標錯(越界kp 標 K_pre/teach)或省略即過;F-β:per-sequence burnout 寫 per-unit 單欄,DAG 交會單元多序列無取最壞值→high 被較低旁路值遮蔽→INV-4 擋關失效。R44(A)抓 1 minor:§7.1 line676 列舉未同步 mascot/avatar(上輪 F-C 副作用)。R45(C)抓 1 minor:line837 把 AC-KP-VERIFY 與兩 gate 並列說成『自 Phase1 移至 Phase0』,但 AC-KP-VERIFY 從非 Phase1 交付物。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "批次修(sha 6293169→f956ec776052d2e4,971行)：F-α=3a gate 改以 §9.2 prerequisites 閉包+teach(U) 重算每 kp 真實 bucket、不信任自報(自報 K_pre/teach 但實不在 K(U)→改判 other),並驗每題歸因⊇該題 practice/assess.kp_ids(堵標錯+省略兩種規避)+§9.6 bullet+紅隊例同步;F-β=§9.6 加『多序列交會單元 per-unit burnout 取所有所屬序列最壞值 MAX,gate 驗欄位<任一序列值即 FAIL』;R44=§7.1 line676 列舉補 mascot/avatar+『等』+指向 reward_catalog 權威;R45=line837 把 AC-KP-VERIFY 與兩 gate 分述(gate 被移動、AC-KP-VERIFY 僅因而可達)。ready COMPLETE、selftest exit0、零簡體。重掃 R46/47/48。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "sha f956ec：R46/R47/R48 三角度一致收斂到同兩個根缺陷(皆我上批 F-α/F-β 新文字自身不可執行)：F-α'(blocker)歸因完整性『⊇ practice[]/assess[].kp_ids』缺 join key——§6.2.2 practice[] 無 question_id、全 spec 無 assess[] 定義(只 teach/practice/selfeval);F-β'(blocker)MAX 反遮蔽需 per-sequence 值,但 §9.5 輸出只存單一已聚合 burnout_risk、無 per-sequence 載體,且 burnout 是質性 panel 判斷不可重算→檢查不可執行。R47 另確認無其他新數值/交叉引用問題。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "批次修(sha f956ec→beb3f4ff3e576e0c,972行)：F-α'=§6.2.2 practice[] 加 question_id(對齊 §6.8.1 question/§9.5 attribution 同命名空間)作 join key,3a gate+§9.6 的歸因完整性改 by question_id join『⊇ practice[].kp_ids ∪ §6.8.1 question.required_kp_ids』、去 assess[] 懸空(assess[] 殘留=0);F-β'=§9.5 輸出 schema 加必填 burnout_by_sequence:[{sequence_id,burnout_risk,mitigation}] 承載逐序列原始值,3a/§9.6 gate 做兩道確定性檢查(序列集⟺path_coverage_gate 由 DAG 重建之所屬序列集;per-unit burnout_risk⟺MAX(burnout_by_sequence))+紅隊例;gate 只驗聚合完整性非重判 panel。ready COMPLETE、selftest exit0、零簡體。重掃 R49/50/51。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "sha beb3f4：R49(B)抓 2 major——G-1:burnout_by_sequence 序列完整性比對的『序列集/sequence_id 命名空間』未 canonical 釘死(§9.4 被模擬集是非唯一覆蓋子集、無 canonical 選路、分支 DAG 下『由 DAG 重建』⊋『被模擬』→誤擋合法模擬 或 自相矛盾,且留『挑繞過高倦怠分支的覆蓋子集』縫)=我 F-β' 的洞;G-2:§6.8.1 question schema 同列 kp_ids/required_kp_ids 但 home 未定義 required_kp_ids。R50(A)+R51(C-H2):line838『§11.A line 921(c)』行號 off-by-one(插(d)致位移)。R51(C-H1):kp_ids 一名兩形(它處字串陣列 vs attribution 內 [{id,bucket}]物件陣列)=我 F-A schema 命名瑕疵。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "批次修(sha beb3f4→d5375e0786474bf8,972行)：G-1=§9.4 釘定 canonical 被模擬序列集 S(path_coverage_gate 固定演算法 emit、覆蓋每條 edge 杜絕繞過分支、穩定 sequence_id=節點串雜湊、O(edges)上限),§9.4/§9.5/§9.6 三節共用同一 S;路徑覆蓋 gate 改驗 S 覆蓋每 edge;§9.6/3a 的『由 DAG 重建』全改引 S;G-2=§6.8.1 補 required_kp_ids home 定義(此題實際依賴、⊇kp_ids,純字串陣列);H-1=attribution 內 kp_ids→kp_buckets:[{id,bucket}],3a 完整性改 kp_buckets[].id(kp_ids 永為字串陣列);H-2/R50=line838 去易碎行號改『§11.A 細則例外(c)』。ready COMPLETE、selftest exit0、零簡體、kp_ids:[{殘留0。重掃 R52/53/54。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "sha d5375e：R52(B)/R53(A)/R54(C) 共 3 根(皆上批新文字的洞/傳播遺漏)：B-1(=R53/R54 三角度同指)AC-PATH-1 列(line904)停在 node-cover 未隨 §9.4/§9.6 升級 edge-cover(傳播遺漏);B-2(5/5)歸因完整性 join 的 §6.8.1 required_kp_ids 無存在性/完整性保證(AC-SCHEMA 只驗 §6.2.2 kp_ids),缺紀錄→∪ 項靜默為空→退化 fail-open;B-3(4/5)canonical S 演算法『逐 edge 貪婪延展』未定分支 tie-break→emit 的 S 集合非唯一。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "批次修(sha d5375e→136fb1a4f1e300bb,972行)：B-1=AC-PATH-1 列改驗『S 覆蓋每條 DAG edge(故涵蓋每 unit)+孤立節點單點序列』杜絕繞分支子集;B-2=§6.8.1+AC-SCHEMA 強制每 practice 題有對應(同 question_id)§6.8.1 question 紀錄且 required_kp_ids 非空⊇kp_ids,缺則 unit_schema_gate FAIL,§9.5 line812 加反 fail-open 鐵律(嚴禁把 ∪ 項當空集);B-3=§9.4 加確定性 tie-break(延展遇分支取 node_id 字典序最小前驅/後繼、edge 按(u,v)字典序)使 S 集合唯一可重現。ready COMPLETE、selftest exit0、零簡體、舊 node-cover 字串清零。重掃 R55/56/57。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "sha 136fb1：R55(B)/R56(A)/R57(C) 共 3 組(皆 edge-cover/新文字精修)：J-1(R55 major)§9.6 line821 gate 描述只列 edge-cover+括號『故涵蓋每個 unit』,漏 §9.4(ii)/AC-PATH-1 的孤立節點單點序列子檢查(edge-cover 碰不到孤立節點→漏孤立 unit 的 S 會過+overclaim);J-2(R55 minor)line799 ⟹ 鏈對孤立節點不成立;R56(A major)AC-SCHEMA 共用述語把 question_id 誤分配 teach 段(§6.2.2 teach 無 question_id);R57(C minor)line966『用戶』全檔唯一偏PRC。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "批次修(sha 136fb1→26220a2751399c47,972行)：J-1=§9.6 line821 gate 改『(a)S 覆蓋每 edge ＋(b)每孤立節點各自成單點序列,(a)∪(b)方涵蓋每 unit』+去 overclaim;J-2=line799 ⟹ 鏈改『edge-cover(i)∪孤立節點(ii)⟹覆蓋每 node』;R56=AC-SCHEMA 拆述語『每 teach 段帶 kp_ids;每 practice 題帶 kp_ids+question_id(question_id 僅 practice)』;R57=新用戶→新使用者(用戶殘留0)。ready COMPLETE、selftest exit0、零簡體。重掃 R58/59/60。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "sha 26220a：R58(B blocker)AC-PATH-1 line904 括號『故涵蓋每個 unit,node≥1 僅必要後果』是上批自 §9.4/§9.6 移除之同一 overclaim 在 AC 列的傳播殘留(與 §9.4/§9.6 矛盾);R59(A)=0 confirmed;R60(C minor)『缺省』(line542/678/692)是 PRC default 用語、全文其餘 20 處用台灣詞『預設』、一名兩形違 R2(scan_simplified 同碼抓不到)。grep 確認 overclaim 殘留僅 line904 一處。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "批次修(sha 26220a→cf13ec3cfc443ac6,972行)：R58=AC-PATH-1 line904 去 overclaim、改『(a)S 覆蓋每 edge ＋(b)每孤立節點單點序列,(a)∪(b)方涵蓋每 unit』對齊 §9.4/§9.6;R60=3 處『缺省』→『預設』(殘留0)。ready COMPLETE、selftest exit0、零簡體、overclaim/缺省 殘留皆0。重掃 R61/62/63。趨勢:近 sha 幾乎全為 minor 用詞/overclaim 精度,邏輯已穩。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "sha cf13ec：R61(B,panel 4NOT-1DEFECT 但引擎 confirmed)§9.2 teach(U) 概念 gloss vs 操作定義雙寫(rubric⑦ 保證宣告⊆實際教、屬 fail-closed 保守向、可讀性澄清);R62(A)K-1 §0.5⑥ 層標籤『claim/question/visual/source』誤(應 KP/claim/question/visual,source 是欄位非層)、K-2 line651 source_registry.schema 誤引『§6.2』(實際在 inline+§0.6.1/R2-07);R63(C)line838『§10 line 下方』半截 crossref。PRC 徹掃0命中。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "批次修(sha cf13ec→9123923cc1a03ab8,972行)：R61=§9.2 line785 operational teach(U) 明述=宣告 knowledge_point_ids 並註=上段概念定義操作化+rubric⑦ ⊆ 實際教、取宣告集 fail-closed;K-1=§0.5⑥ 改 KP/claim/question/visual 四層+註 source 為欄位非層;K-2=line651 去『§6.2』誤引改『欄位…非§6.2』;R63=line838『§10 line 下方』→『見 §10 Phase 1 條目』。ready COMPLETE、selftest exit0、零簡體、各殘留0。重掃 R64/65/66。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "sha 9123923：R64(B blocker)AC-UNIT-3 簽核只驗 signoff.sha 綁當前單元 sha＋enum 項雙簽,但不驗 unit signoff.by[] 身分→漂移 session 可 signoff:{by:[\"self\"],sha:當前} 自簽架空 §6.6①(b) 的 golden-owner/§8-panel 簽核(簽核未綁身分縫);R65(A)=0;R66(C)=0。只此 1 blocker。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "批次修(sha 9123923→42124d68e87fdc44,972行)：R64=§6.6①(b)+AC-UNIT-3 加 signoff.by[] 身分綁定(每元素 ∈ §8 簽核者角色 allowlist、含必填 golden-owner＋該 category 對應 §8 審查鏡角色;by:[\"self\"]/空/杜撰/缺必填=無效 FAIL)+紅隊(sha 正確但 by[]=self/缺簽核者→DENY,合法 by[] 含必填→ALLOW)。ready COMPLETE、selftest exit0、零簡體。重掃 R67/68/69。對抗 B 加固:內容 sha→簽核者身分。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "sha 42124d：R67(B major)=我 R64 的 by[] 檢查引用『§8 簽核者角色 allowlist』與『category 對應 §8 審查鏡角色』,但 spec 從未枚舉該 allowlist(§8 名冊無 id 欄、art/spatial/pm 只『如』舉例、golden-owner 不在名冊)、亦無 category→§8 角色對映表→lint 無確定性 referent(同『引用集合無定義』類);R68(A major)=line 85 §0.5⑥ 把 claim 層 source 欄寫成 source_ids[],但 §6.8.1 home(line644)claim 層為 source_refs[]、source_ids[] 是 ledger→registry 欄(line651/657-658);R69(C)×2 minor=line581『簽核者者』疊字、pm(§8-#10) 畸形格式(art/spatial 寫 §8-8/§8-9)。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "批次修(sha 42124d→be837b7e93a08fa9,974行)：R67=§8 名冊加『角色 id』欄(13 個 closed-set id:domain/native-en/linguist/learning-sci/knowledge-viz/eye-comfort/psych/art/spatial/pm/sim-learner/animator/translator)+表末枚舉『簽核者角色 allowlist={golden-owner}∪13 id』(golden-owner=簽核身分非透鏡);deviation_categories.json 每 enum 項加非空 required_signer_roles[](⊆allowlist,為 category→§8 角色確定性對映)+雙簽 by:[art,spatial];§6.6①(b)/AC-UNIT-3/§6.7 鎖檔列全改引枚舉 allowlist+該 category required_signer_roles 為 by[] 必填子集(去散文舉例);紅隊加 required_signer_roles 空/含杜撰 id→DENY。R68=line85 改『claim 以 source_refs[] 追源、ledger 以 source_ids[] 引用 registry』。R69=『簽核者者』→『簽核者』、去 §8-#10 畸形(改引枚舉 id 欄)。ready COMPLETE、selftest exit0、零簡體、by:[art,space]/者者/§8-# 殘留皆0。重掃 R70/71/72。對抗 B 加固:簽核者身分 allowlist/對映 由『散文舉例』升為『枚舉 closed set + enum 項逐項宣告的確定性對映』。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "sha be837b：R72(C)=0+L3 exit0(真 clean);但 R70(B)+R71(A) 各找缺陷使本 sweep 非全0。R70(B blocker,line582)=我前批引入的 enum 項 signoff.sha 綁『該 enum 檔當前內容 sha』為自我指涉(sha 欄就在檔內)+未如 kp_fact_sha 明訂 canonical pre-image 子集→無法產出/確定性比對、機器強制形同虛設;R70(B)+R71(A)(同指 line901 major)=我上批 Fix4d 自引術語漂移:AC-UNIT-3 驗證方法欄把 by[] 許可集寫成『§8 角色 id allowlist』(=line767 的 13-id、不含 golden-owner)卻同句要 golden-owner→字面矛盾、lint 照字面會 false-brake 每筆合法簽核。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "批次修(sha be837b→cace0a78b3ed0f58,974行)：R70-blocker=enum 項 signoff.sha 改綁該項 cat_fact_sha=sha256(canonical{category,required_signer_roles})[:16](仿 kp_fact_sha,只雜湊 category+required_signer_roles 子集、明確排除 signoff 欄→消自我指涉、pre-image canonical 可重現),§6.6①②/§6.7/AC-UNIT-3 三處同步,lint 改驗 signoff.sha=現算 cat_fact_sha,紅隊改『改該項後未重簽→cat_fact_sha 失配使失效』;R70/R71-major=line901 AC-UNIT-3 驗證方法欄『§8 角色 id allowlist』→『§8 簽核者角色 allowlist({golden-owner}∪13,§8 表末 closed set)』與準則欄/§6.6①(b) 對齊(required_signer_roles 才 ⊆13-id『角色 id allowlist』、by[] ⊆14-id『簽核者角色 allowlist』)。ready COMPLETE、selftest exit0、零簡體、enum 內容 sha 殘留0、§8 角色 id allowlist 誤用(by[])殘留0。重掃 R73/74/75。對抗 B 連十 sha:簽核 sha 從『整檔自我指涉』修成『子集 canonical pre-image』(同 kp_fact_sha 紀律)。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "sha cace0a78：R74(A)=0+L3、R75(C)=0+L3 真 clean;但 R73(B major,panel 2DEFECT/3NOT 引擎 confirmed)揪對稱洞——單元級 signoff.sha(581『綁定該單元內容 sha』/901『綁當前單元 sha』)未如我剛修的 cat_fact_sha 明訂 canonical pre-image、未明述排除 signoff 欄→兩讀法,其一(對整個 unit metadata 物件雜湊、deviation_reason.signoff 內嵌其中)重蹈我剛為 cat_fact_sha 修掉的自我指涉。本 sweep 因此非全0。(另 1 raw:cat_fact_sha 的 sort_keys 不排序 array、ensure_ascii 未釘→panel 4/5 判 NOT-a-defect:僅 fail-closed re-sign 非繞過、單一共用序列器 sign/verify 同側;依紀律不修。)",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "批次修(sha cace0a78→b40e256bee475a36,974行)：R73-major=§6.6①(b) 單元 signoff.sha 明訂綁 unit_content_sha=sha256(canonical_json(§6.2.2 單元內容欄位,sort_keys=true))[:16]、明確排除 metadata.deviation_reason.signoff 本身及任何 signoff 清單(與 cat_fact_sha/AC-VIZ-1 同一自我指涉排除紀律),AC-UNIT-3 準則欄+驗證方法欄兩處同步為『綁/＝現算 unit_content_sha(排除 deviation_reason.signoff)』。只修引擎 confirmed 的對稱洞;cat_fact_sha array-order(notDefect)不動。ready COMPLETE、selftest exit0、零簡體、『當前單元 sha』殘留0。重掃 R76/77/78。對抗 B 連十一 sha:把『單元簽核 sha』比照 enum 簽核 sha 也釘成『子集 canonical pre-image+排除 signoff』,兩處對稱消自我指涉。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "sha b40e256：R77(A)=0+L3、R78(C)=0+L3 真 clean(R78 一次 review attempt 被 content-filter 擋、retry 救回、最終過 judge+coverageComplete);但 R76(B)抓 2 真缺陷使 sweep 非全0。R76-blocker(line581)=我上輪 unit_content_sha referent 自相矛盾:命名『§6.2.2 單元內容欄位』(items1-6 不含 deviation_reason,它在 §6.2 metadata)卻又『排除 deviation_reason.signoff』(暗示本在集合內)→字面讀法下 deviation_reason.category 不入 sha→簽核後偷改偏離類別不作廢=繞過 sha 重綁;R76-major(line620)=fact_check_ledger 條目 sha 只說『綁內容 sha、仿 AC-VIZ-1』無明文 canonical pre-image,是正確性鏈上唯一未釘 pre-image 的簽核 sha(其他三個本輪都釘),且 §6.8.1 允許 claim/question/scene 細粒度鍵卻未定義雜湊內容。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "批次修(sha b40e256→5c349dfe483783b4,974行)：R76-blocker=§6.6①(b) unit_content_sha pre-image 改明確欄位清單『該單元 §6.2 metadata(含 deviation_reason.category/note)＋§6.2.2 item1-6 內容欄位,唯一排除任何 signoff 子物件』→deviation_reason.category 納入 pre-image(偷改偏離類別即失配作廢重簽、堵繞過),AC-UNIT-3 準則欄+驗證方法欄兩處同步;R76-major=§6.8 line620 fact_check_ledger 條目 sha 加明文逐粒度 canonical pre-image(unit 級=unit_content_sha;claim/question/scene 級=sha256(canonical_json(該粒度內容欄位))[:16]、排除自身 signoff),鍵改 {unit_id|claim_id|question_id|scene_id},與其他三 sha 同一『明文 pre-image+排除 signoff』紀律。ready COMPLETE、selftest exit0、零簡體、舊 referent 殘留0。重掃 R79/80/81。對抗 B 連十二 sha:全部四個簽核 sha(unit/enum/kp/ledger)皆已明文 pre-image+排除 signoff,此類應封閉。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "sha 5c349d：R79(B 對抗)=0+L3(首度!連十二 sha 揪洞的對抗角度回零,自我指涉/gate-bypass 類封閉);但 R80(A)+R81(C)各 1 major 使 sweep 非全0。R80(A major,line188/196)=§0.6.1 的 2026-10-29 supersession note 只取代過期數字(1203/1876/2083),未取代 line188『進行中』/line196『仍待(Phase 0 完工唯一實質內容條件)』present-tense 狀態語氣→與 line180『已全數覆蓋/--ready-for-5clean COMPLETE』矛盾,讀者兩讀法;R81(C major,line903,panel 1DEFECT/4NOT 引擎依 learning understandability 判準 confirmed)=AC-KP-VERIFY 把 verified_by/verified_as_of(實為 manifest line347 欄)列在『fact_check_ledger 條目語意驗證』括號內,但 ledger schema(line620)簽核欄叫 reviewer_role、無 verified_as_of→欄位歸屬含糊、reviewer_role vs verified_by 疑一名兩形。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "批次修(sha 5c349d→c8a7d456ee7c873c,974行)：R80=line180 supersession note 擴充明示亦取代 line188-196『進行中/仍待(Phase 0 內容驗證未完成)』狀態語氣(非僅數字)、標 line188-196 僅存為歷程紀錄、當前狀態以本段為準(binding 已全覆蓋、ready COMPLETE);R81=line903 分明 ledger 欄(sources[]/key)vs manifest 欄(§0.6.1 line347:verified_by[]/verified_as_of)、註明 verified_by/verified_as_of 屬 manifest 非 ledger(ledger 以 reviewer_role 記簽核者,見 line620)、此處為跨檔語意驗證。ready COMPLETE、selftest exit0、零簡體。重掃 R82/83/84。對抗 B 已回零;剩 A/C 揪我前輪新文字的狀態框架/跨檔欄位歸屬精度,逼近 fixpoint。",
+      "fixed_at": "2026-10-29"
+    },
+    {
+      "note": "sha c8a7d456：R83(A)=0+L3、R84(C)=0+L3 真 clean;R82(B minor,line903)=我 R81 修補裡的 cross-ref『manifest 欄(§0.6.1 line347)』章節標籤錯——line347 實際在 §4(標題 line323),§0.6.1 只涵蓋 line177-198。修:§0.6.1→§4(已確認 line347 所屬 §4)。sweep 因此非全0。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "note": "GATE 日界 false-brake 修+紅隊(tools/promote_verified.py,非 spec 改動)：台北時間跨 2026-10-30 後 --ready-for-5clean 的 AC-KP-VERIFY 突 FAIL。根因=promote_verified --check 對 overlay 做整檔 byte 比對,而 overlay 內嵌 generated_as_of=today;儲存值 2026-10-29≠重算 2026-10-30→false-brake(manifest_sha 相符、verified_ids 3091 未變、recheck_after 全 2027 非 freshness)。修:--check 從雙方剝除 generated_as_of 再比(manifest_sha+verified_ids+rejected 完整比對,偽造偵測強度不減)。紅隊:GOOD(日期差)→ALLOW exit0、竄改 verified_ids→DENY exit1、竄改 manifest_sha→DENY exit1、還原→ALLOW。此為 always-check-realtime 規則的時間錯亂類。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "note": "批次修(sha c8a7d456→4a2c7a0362aa966b,974行)：R82=line903 cross-ref『§0.6.1 line347』→『§4 line347』。ready COMPLETE(gate false-brake 修後)、selftest exit0、零簡體、§0.6.1 line347 殘留0。重掃 R85/86/87。對抗 B 連兩 sha 回零(gate-bypass 類封閉);A/C/B 本 sha 僅各 0-1 minor cross-ref,逼近 fixpoint。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "note": "★紅隊(獨立對抗 agent,3 類 bypass)找到真洞→sha 4a2c7a0 的 5-clean 作廢重跑。Class1/3(同根)=§6.8.1 required_kp_ids 只有下限⊇kp_ids、無機器上限綁題目真實依賴集,§9.5 重算只重分類被列出的 kp、對作者低度宣告(從不列出越界 kp)零防禦,backstop 僅 LLM 誠實→『純機器判定』overclaim。Class2=reward_catalog type 枚舉無 deviation_categories 式 sha-bound 簽核 gate+RT-11 列舉四型別非參數化+§6.3 合併表漏 equippedMascot/avatar。皆逐行查證為真。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "note": "批次修(sha 4a2c7a0→e98501d341c0fc39,976行)：Class2=§6.7 reward_catalog type 封閉枚舉+美術/空間/PM 三簽綁 reward_type_sha(仿 cat_fact_sha 排除 signoff)+reward_catalog_gate、RT-11 改對枚舉參數化(每 equippable 型別各一 case 走實際渲染路徑,缺即 FAIL)、§6.3 合併表 equipped 欄對型別參數化補 equippedMascot/equippedAvatar;Class1/3=§9.5 輸出加 per_question_solution_chain(逐步求解推導鏈,每步 kp_cited∈K(U))+3a 加推導鏈閉合檢查(越界依賴一現身即抓、跳步交二審)+誠實修正『純機器判定』為『對被列出/被引用 kp fail-closed,自由題真實依賴集無法完全機器化,以推導鏈+對抗二審最小化殘餘、明記唯一非完全機器化例外』、§9.6 加對抗式隱含依賴二審+注入體 K(U) 白名單掃描 gate、§6.8.1 註明 required_kp_ids 完整性邊界+backstop。ready COMPLETE、selftest exit0、零簡體。rounds[] 歸零,重跑 5-clean(R90/91/92…)。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "note": "sha e98501d(紅隊修補後)重掃 R90(B)/R91(A)/R92(C)：R92(C)=0+L3,但 R90(B)抓3+R91(A)抓2=5 真缺陷(皆我紅隊修補新文字的下一層缺口):(1)§6.7 reward_type_sha 三簽 gate 運算元(per-type 記錄)無載體 schema—reward_catalog 只 per-item{id,type,retired?}無 per-type 區塊/equippable 欄;(2)line611『比照§6.6②』應§6.6①;(3)§9.6 注入掃描自稱確定性但比對 kp/術語,術語無 term→kp 對映→術語半非確定性+第二殘餘與814矛盾;(4)line810/814『每一 result:pass 練/評題』result 是單元層 enum、題層無→兩讀法;(5)reward_catalog_gate 未掛 §11.A AC-REWARD-1。皆查證為真。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "note": "批次修(sha e98501d→863daf77d14b7e3d,976行)：(1)reward_catalog.json 明訂兩區塊 items[]+types[](type_registry,每筆{type,equippable:bool,signoff:{by:[art,spatial,pm],sha}}=reward_catalog_gate 確定性運算元載體);(2)§6.6②→§6.6①(細則1);(3)注入掃描限定 kp_id 成員檢查=確定性、術語降為非綁定 panel 啟發式(不宣稱機器化,故非第二殘餘,與814唯一殘餘調和);(4)line810/814 改『result==pass 單元的每一 practice/eval 題』(result 單元層、題層無);(5)AC-REWARD-1 掛 reward_catalog_gate(每 types[] 筆三簽+RT-11 枚舉參數化,比照 AC-UNIT-3 納 §11.A 完工矩陣)。ready COMPLETE、selftest exit0、零簡體、殘留0。rounds[] 仍 [],重跑 5-clean R93/94/95。教訓:紅隊修補本身要再過 content_audit 三角度(新機制的載體 schema/確定性宣稱/欄位語意/AC 掛鉤 都是新缺陷面)。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "note": "紅隊第3圈(sha 863daf77):3 類皆 BLOCKED(機器可驗全 fail-closed、唯一殘餘誠實標+雙 backstop、Class2 載體/pre-image/三簽角色/枚舉參數化/AC 掛鉤全到位),逐行查證無誤、無新沉默繞過/機制洞/未標 overclaim。agent 另提 1 Class2 hardening(非退件):RT-11+equipped<Type> 合併策略皆以 equippable 旗標為 ground-truth,型別誤標 equippable:false 卻有 equip 碼可規避(需三簽誤放行、earned 狀態仍受 union-set/RT 保護)。依『每發現潛在繞過→補子 gate+紅隊、gate 永不算完工』鐵律採納。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "note": "批次修(sha 863daf77→<new>,補 hardening)：§6.7 reward_catalog_gate 加 equippable 旗標真實性交叉驗(equip 路徑作用於某 type ⟹ 該 type.equippable MUST=true,偵測 equip 路徑作用於 equippable:false→FAIL+紅隊),§11.A AC-REWARD-1 同步。封掉『誤標 equippable:false 規避 RT-11+合併策略』的 panel 治理依賴,使 Class2 完全機器化不再僅靠三簽人工。sha 變→5-clean 歸零,重跑 R98/99/100。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "note": "sha 9ad3fbcf(補 equippable 交叉驗後)重掃 R98(B)/R99(A)/R100(C):R99/R100=0+L3,但 R98(B blocker)抓我剛補的交叉驗自身洞:(a)overclaim『確定性/封 panel 依賴/不再僅靠三簽』(b)運算元『equip 路徑作用於某 type』無確定性萃取法、equip 形式只列舉無 catch-all、無『不確定即 fail』→間接/改名形式可繞,正違反 §13 ledger(枚舉式 gate 必帶原則凌駕列舉)教訓。panel 4/5 DEFECT。真實(我補洞卻犯枚舉 gate 老錯)。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "note": "批次修(sha 9ad3fbcf→<new>)：equippable 交叉驗改 option(i)+誠實分級:(a)裝備/卸除經單一具名 helper equipItem(type,id)(型別為參數→靜態可枚舉);(b)gate 驗經 helper/equip-like 作用之 type 須 equippable:true;(c)原則凌駕列舉 catch-all『無法靜態證明不作用於任何 type 的 equip-like 路徑一律 FAIL(不確定即 fail)』;去 overclaim 改『三簽之外加一道 fail-closed backstop、非取代三簽、非宣稱完全機器化任意 JS』;紅隊加 繞過/改名 helper→DENY。sha 變→5-clean 歸零,重跑 R101/102/103。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "note": "sha 4b810d(equippable 交叉驗修後)重掃 R101(B)/R102(A)/R103(C)=0+L3、R105(A)=0,但 R104(B blocker)抓 §9 line919 AC-NOBACKEND 紅隊案例自相矛盾:用 <video poster=外部> 當『清單未列但具 URL 屬性』vector 證 catch-all,但 poster 正在同行枚舉清單內(src/href/.../poster/...)→沒測到真未列 vector、catch-all 證明落空。與 equippable 同類(枚舉 gate catch-all 紅隊須用真未列 vector)。真實(a-wrong)。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "note": "批次修(sha 4b810d→<new>)：§9 line919 AC-NOBACKEND 紅隊案例改用真正未列舉 vector(CSS cursor:url(外部)/<meta http-equiv=refresh content URL 藏 content>)驗原則式掃描對真未列 vector 仍 fail(證原則凌駕列舉非只測已列舉者)。sha 變→5-clean 歸零,重跑 R106/107/108。教訓:枚舉 gate 的 catch-all 紅隊案例,其『未列 vector』示例本身必須真的不在枚舉內(否則紅隊空轉)——此類錯在 AC-NOBACKEND 與 equippable 交叉驗 各犯一次。",
+      "fixed_at": "2026-10-30"
+    },
+    {
+      "recorded_at": "2026-10-30T02:05:35.026294+08:00",
+      "event": "sha 641daedf→1f6dfca：三角度 R106/107/108 合併修 6 缺陷",
+      "findings": [
+        "R106(B) major: §6.8.1 第二/三/四層證據紀錄(required_kp_ids/answer_evidence/validation_method/distractor_rationales/claims/scene)只在散文、無載體檔+schema→§9.5/§9.6/AC-SCHEMA fail-closed join 運算元無 schema 可驗",
+        "R107(A) blocker: AC-KP-VERIFY(905)+§6.8 ledger schema(620) 來源欄名 sources[] 已過時(F6-03 後實際=scope_source_ids[]+fact_source_ids[],真實 ledger 3091 筆零 sources、ledger_schema_gate 只查這兩欄)",
+        "R107(A) minor: line103 R2-07 registry 欄名 version/fingerprint vs canonical(651/實際schema) edition_or_version/content_fingerprint 漂移",
+        "R108(C) minor x3 疊字: line796 單一一致 / line916 無無限 / line611&910 有有效"
+      ],
+      "fixes": [
+        "§6.2.2 practice[] 擴為第三層 question 證據實體載體(+required_kp_ids/answer_evidence/distractor_rationales/validation_method);新增細則7 claims[](二層)+teach.viz scene(四層);§6.7 加 <page>.units.json 登記列;§6.8.1 642/645 標明四層內容紀錄實體載體=§6.2.2 sidecar、ledger=簽核層引用;AC-SCHEMA 906 對齊",
+        "line905+620 sources[]→scope_source_ids[]+fact_source_ids[] 皆非空",
+        "line103 →edition_or_version/content_fingerprint(對齊 canonical)",
+        "796 單一一致→採同一套門檻定義彼此一致;916 無無限→不得無限;611&910 有有效→帶有效"
+      ],
+      "next": "sha 變→5-clean 歸零,重跑 R109(B)/R110(A)/R111(C)"
+    },
+    {
+      "recorded_at": "2026-10-30T02:18:25.733465+08:00",
+      "event": "sha 1f6dfca→3f09e559：三角度 R109/110/111 合併修 9 缺陷",
+      "findings": [
+        "R109(B) blocker x2: (1)新載體 answer_evidence[→claim_id]/scene.claim_ids[] 參照 claim 僅驗合schema、無 claim_id 參照存在性+唯一性(與 kp 存在於manifest+AC-COV-2 重複id=0 不對稱)→懸空/重複 claim_id 過關、打穿 feedback綁claim+visual↔claim;(2)§9.5/§9.6 反偷看 join 以 question_id 為鍵但無唯一性→兩題共用 question_id 使 join 歧義、越界 kp 藏匿(fail-closed gate 的 fail-open)",
+        "R110(A) major x2: (1)line85+653 ledger 欄名 source_ids[](單一)→實際拆 scope_source_ids[]+fact_source_ids[];(2)line906(AC-CORRECT)+622+640+641 per-claim 來源欄 sources[]→canonical source_refs[](§6.2.2 claims/§6.8.1 claim 用此名;sources[] 又被用作廢棄ledger欄→語意衝突)",
+        "R111(C) minor x5 詞界疊字: line56 審查查出/262 上限限制/615 節點點擊/753 母語語感/820 因式分解解一元二次"
+      ],
+      "fixes": [
+        "AC-SCHEMA(908)+§6.2.2 細則7 加: question_id/claim_id/scene_id 單元內唯一(重複FAIL)+answer_evidence/scene.claim_ids 的 claim_id 須解析到本單元 claims[](懸空FAIL)+紅隊(兩題共用question_id→DENY、指向不存在claim_id→DENY)",
+        "line85+653 source_ids[]→scope_source_ids[]+fact_source_ids[];622/640/641/906 per-claim sources[]→source_refs[](保留 ledger 廢棄欄標註)",
+        "5 疊字: 審查發現/程度上限約束/點擊節點/母語者的語感/因式分解法解一元二次"
+      ],
+      "next": "sha 變→5-clean 歸零,重跑 R112(B)/R113(A)/R114(C)"
+    },
+    {
+      "recorded_at": "2026-10-30T02:32:00.689943+08:00",
+      "event": "sha 3f09e559→67fb5bf6：R112(B) 3 缺陷修(R113 A/R114 C 本輪已 clean 但 sha 變歸零)",
+      "findings": [
+        "R112(B) blocker: 上輪加的 question_id/claim_id/scene_id 只保證單元內唯一,但 unit_id 本身(跨 sidecar 主 join 鍵:§6.3 progress/§6.7 units_index/§9.4 sequence_id)無全域唯一 gate(AC-COV-2 只 dedup KP id)→兩 sidecar unit_id 撞號靜默毀進度/索引/DAG",
+        "R112(B) major: fact_check_ledger entry 鍵可裸用 claim_id/question_id/scene_id,但細則7 只保證單元內唯一→裸鍵跨單元撞號、無 unit-qualify",
+        "R112(B) minor: AC-SCHEMA 紅隊子句只測 answer_evidence 懸空,漏 scene.claim_ids 懸空 DENY",
+        "R113(A)=0 clean+L3 0;R114(C)=0 clean+L3 0(2 findings 皆 panel 1/5 NOT:規範範圍/絕對對錯 合法複合詞)"
+      ],
+      "fixes": [
+        "AC-SCHEMA+§6.7 units_index 列+§6.3 加 unit_id 跨 *.units.json 全域唯一 gate(重複FAIL,比照 AC-COV-2)+紅隊(兩 sidecar 共用 unit_id→DENY)",
+        "ledger 鍵更細級一律 unit-qualify <unit_id>#<claim/question/scene_id>(§6.8.1 644/§6.8 622/§6.2.2 細則7)",
+        "AC-SCHEMA 紅隊補 scene.claim_ids[] 指向不存在 claim_id→DENY"
+      ],
+      "next": "sha 變→5-clean 歸零,重跑 R115(B)/R116(A)/R117(C)"
+    },
+    {
+      "recorded_at": "2026-10-30T02:42:36.675301+08:00",
+      "event": "sha 67fb5bf6→8b2506b8：R115(B) 2 缺陷修(R116 A/R117 C 本輪 clean 但 sha 變歸零)",
+      "findings": [
+        "R115(B) blocker: sequence_id=節點 id 串雜湊,但 unit_id 全域唯一不保證串接注入性(分隔符未定、unit_id 含 ./-/slug)→兩相異序列確定性撞同一 sequence_id→§9.6 burnout_by_sequence set-equality 塌縮、遮蔽高倦怠序列、繞過 AC-PATH-2 INV-4",
+        "R115(B) major: prerequisites[]→unit_id 是唯一無具名存在性 gate 的 id 參照(AC-SCHEMA 列了 kp/claim/scene/unit_id 唯一卻漏此);rubric⑦ 只驗已宣告+無循環,無環不擋指向不存在節點→懸空 prerequisite 過關毀 §9.2 K_pre 閉包/DAG",
+        "R116(A)=0 clean+L3 0(1 notDefect: line191 1876vs1875 off-by-one 在已退役歷史塊,panel 3/5 NOT);R117(C)=0 clean+L3 0"
+      ],
+      "fixes": [
+        "§9.4(iii) sequence_id 改用保留分隔符 U+001F(證不在 unit_id 字元集 [a-z0-9.-])連接→單射+path_coverage_gate 斷言 S 內 sequence_id 兩兩相異(碰撞FAIL)",
+        "rubric⑦+AC-SCHEMA 加 prerequisites[] 每條須解析到 units_index 既有 unit_id(懸空FAIL)+紅隊(懸空 prerequisite→DENY)"
+      ],
+      "next": "sha 變→5-clean 歸零,重跑 R118(B)/R119(A)/R120(C)"
+    },
+    {
+      "recorded_at": "2026-10-30T02:54:11.331526+08:00",
+      "event": "sha 8b2506b8→ba9ba436：R118(B) 3 缺陷修(含 R119 A/R120 C 同指的 charset)",
+      "findings": [
+        "B/A/C 三角度同指 blocker: §9.4 sequence_id clause 我寫字元集 [a-z0-9.-] 漏底線 _(學科 id tier 段 t_base/t_mid/... 皆含 _;ID_RE 允許),實作者據此寫 validator 會拒掉每個 id",
+        "R118(B) major: reward_catalog_gate 驗 types[] 簽核+items[].type 參照,但 items[].id 兩兩唯一/不重用未 gated(§7.1 說 id 是 byId/isOwned/equipped never-disappear 基礎)→重複 id 解析歧義",
+        "R118(B) minor: term_refs[]→term_glossary 懸空參照未 gated(AC-SCHEMA 對 kp/claim/scene/prerequisites/unit_id 都加懸空 FAIL 卻漏 term_refs)→懸空丟 R15 註解"
+      ],
+      "fixes": [
+        "charset [a-z0-9.-]→[a-z0-9._-](註明 tier 段含 _;U+001F 注入性結論不變)",
+        "reward_catalog_gate+AC-REWARD-1 加 items[].id 兩兩相異+不重用 retired id(比照 AC-COV-2)",
+        "AC-SCHEMA+§6.7 加 term_refs[] 每條解析到 term_glossary 既有鍵(懸空FAIL)+紅隊"
+      ],
+      "next": "sha 變→5-clean 歸零,重跑 R121(B)/R122(A)/R123(C)"
+    },
+    {
+      "recorded_at": "2026-10-30T03:05:48.814861+08:00",
+      "event": "sha ba9ba436→64ffe96a：R121(B) 1 缺陷修(R122 A/R123 C 本輪 clean 但 sha 變歸零)",
+      "findings": [
+        "R121(B) blocker: strand_labels.json gate 只比筆數(鍵數＝211)非鍵集合等式→過時/typo 鍵換掉一真(domain,strand)配對仍過 211 筆、卻使真配對落回 raw slug(＝T3-03『只比筆數』fail-open 類);且 unit.strand→strand_labels/unit.domain|category→subject_labels 不在 AC-SCHEMA 懸空閉包;與 line616「報缺擋關」及 §0.2 fail-closed 矛盾",
+        "R122(A)=0 clean+L3 0;R123(C)=0 clean+L3 0"
+      ],
+      "fixes": [
+        "strand_labels gate: 鍵數＝211→鍵集合精確等於 manifest 實際 (domain,strand) 配對集合(每配對恰一 label、零過時鍵;manifest 實測恰 211)",
+        "subject_labels gate: 加鍵集合覆蓋(涵蓋所有 domain/life-category)",
+        "AC-SCHEMA 懸空閉包加 unit (domain,strand)→strand_labels / domain·category→subject_labels 存在性+紅隊(無條目→DENY)"
+      ],
+      "next": "sha 變→5-clean 歸零,重跑 R124(B)/R125(A)/R126(C)"
+    },
+    {
+      "recorded_at": "2026-10-30T03:17:25.576508+08:00",
+      "event": "sha 64ffe96a→b18234f5：R124(B)+R125(A) 4 缺陷修(R126 C 因 content-filter 無效、整波重跑)",
+      "findings": [
+        "R124(B) major: AC-NOBACKEND 紅隊用 cursor:url(外部) 當「真未列 vector」,但同行已列舉「所有 CSS URL 參照 url()」→cursor:url 屬已列舉、非真未列(範例其實已被列舉自相矛盾類);只 meta-refresh content=url 真未列",
+        "R124(B) minor: AC-NOGRADE 紅隊用「高職二年級」當清單未列同義詞,但含列舉詞 高職/年級、substring gate 即命中;只「基測」真未列",
+        "R125(A) major: §6.8.1/§9.5/§9.6 三處引「紅隊 2026-10-30 Class 1/3」但 §13 ledger 最新列是 2026-10-29→漏記,違 §13 自身記錄規則",
+        "R125(A) minor: AC-SCHEMA 紅隊加了 strand_labels 懸空 DENY 卻漏對稱 subject_labels 懸空 DENY",
+        "R126(C) coverageComplete:false(content-filter 擋 2 agent)→無效,需重跑"
+      ],
+      "fixes": [
+        "AC-NOBACKEND 真未列例只留 meta-refresh+明禁用 cursor:url;AC-NOGRADE 真未列例改 基測/國三/高二(不含列舉詞)+明禁用 高職二年級",
+        "§13 ledger 補 2026-10-30 列(記 under-declaration/undefined-carrier/id 存在唯一/count-only 四類 bypass+修+紅隊)",
+        "AC-SCHEMA 紅隊補 subject_labels 懸空 DENY"
+      ],
+      "next": "sha 變→5-clean 歸零,整波重跑 R127(B)/R128(A)/R129(C)"
+    },
+    {
+      "recorded_at": "2026-10-30T03:28:21.357320+08:00",
+      "event": "sha b18234f5→12f7c364：R127(B) 1 缺陷修(R128 A/R129 C 本輪 clean 但 sha 變歸零)",
+      "findings": [
+        "R127(B) major(panel 2:3 split,zh owner DEFECT→確認): AC-NOGRADE catch-all 只掛年段詞彙(token),但掃描面清單(可見文字+aria-label/alt/title/sr-only)寫成封閉枚舉、無示例非窮舉標記、無未列載體紅隊——與 AC-NOBACKEND「掃所有具 URL 者」的原則式掃描面不對稱;年段字樣置於 placeholder/CSS ::before content/aria-description 等未列載體可能漏掃",
+        "R128(A)=0 clean+L3 0;R129(C)=0 clean+L3 0(content-filter 本輪未擋)"
+      ],
+      "fixes": [
+        "AC-NOGRADE 掃描面補原則式界定(任何 learner 可感知文字載體一律納掃,下列僅示例非窮舉,+placeholder/aria-description/aria-roledescription/CSS ::before|after content/<title>)+紅隊補「年段字樣置於清單未列的可感知載體(placeholder/CSS content)須擋」"
+      ],
+      "next": "sha 變→5-clean 歸零,重跑 R130(B)/R131(A)/R132(C)"
+    },
+    {
+      "recorded_at": "2026-10-30T03:40:38.853074+08:00",
+      "event": "sha 12f7c364→457dea28：R130(B) 1 blocker 修(R131 A/R132 C 本輪 clean 但 sha 變歸零)",
+      "findings": [
+        "R130(B) BLOCKER(panel 4:1,全 spec 最高風險 R1 教錯害人): high-risk 分級運算元=封閉 id 前綴枚舉(promote_verified.is_high_risk 純 regex over kid、忽略 kind/risk_class),line 654 散文 overclaim「依 claim kind 判、非純 id 前綴」與實際不符;無「不確定即 fail-closed」catch-all→跨命名空間安全宣稱(sci.* 濃酸,作者標 kind=causal/risk_class=normal)降為 1-reviewer 一般路徑",
+        "R131(A)=0 clean+L3 0;R132(C)=0 clean+L3 0"
+      ],
+      "fixes": [
+        "line650 加 high-risk fail-closed FLOOR 四條:機器粗篩只增不減/kind∈{health,legal}+任命名空間安全語義強制 high/risk_class 單調只升不降(作者自報 normal 不生效)/不確定即 high+reviewer 須主動具名清除",
+        "line654 去 overclaim,要求 promote_verified 消費 kind+reviewer 清除記錄、不得僅憑 id 前綴或作者自報 risk_class 降級",
+        "§13 補 2026-10-30 (b) 列(記此 high-risk fail-open+修+紅隊:sci.* 濃酸 kind=causal/risk_class=normal+1 reviewer→DENY)"
+      ],
+      "next": "sha 變→5-clean 歸零,重跑 R133(B)/R134(A)/R135(C)"
+    },
+    {
+      "recorded_at": "2026-10-30T03:51:13.022505+08:00",
+      "event": "sha 457dea28→c2931bfa：R133(B)+R135(C) 3 缺陷修(R134 A 本輪 clean 但 sha 變歸零)",
+      "findings": [
+        "R133(B) blocker: 我加 high-risk floor 後,line180「binding 3079 全數覆蓋=3075 release-grade verified/--ready-for-5clean COMPLETE」成未對帳 overclaim——3075 由 floor 前 id 前綴 is_high_risk 產出(跨命名空間安全宣稱只 1-reviewer),floor 程式強制延 Phase 0/1;二讀(pre-floor vs floor 標準)",
+        "R135(C) major: line103/622/907 cross-ref §6.8.1 line 651 過時(651 是 gate 清單,source_registry 欄名定義在 653)",
+        "R135(C) minor(panel 2:3,learning owner DEFECT): line650 risk_class「單調只升不降——…才可自 high 降」同句矛盾、須限定主體",
+        "R134(A)=0 clean+L3 0"
+      ],
+      "fixes": [
+        "line180 加 high-risk floor 對帳註:3075 係 floor 前產出、floor 程式強制延 Phase 0/1、強化後須 kind/risk_class-aware 重跑對 sci.* 等跨命名空間安全宣稱 ≥2-reviewer 重篩、binding 數可能變動=Phase 0 ship-gate 義務;明示不影響 §12 spec-text 5-clean(兩軌分離)→ready-for-5clean 仍 COMPLETE",
+        "cross-ref 651→section-anchor「promotion flow 第1點」(防行號再漂移),3 處",
+        "line650 risk_class 限定「只升不降」主體為作者/機器自動路徑、reviewer-clearance 為唯一例外降級路徑"
+      ],
+      "next": "sha 變→5-clean 歸零,重跑 R136(B)/R137(A)/R138(C)"
+    },
+    {
+      "recorded_at": "2026-10-30T04:02:25.677728+08:00",
+      "event": "sha c2931bfa→6e6f6dea：R136(B)+R138(C) 同指 2 處 §13 line 962 過時 cross-ref 修(R137 A clean)",
+      "findings": [
+        "R136(B)=R138(C): line650 與 line963 的「§13 line 962」指「原則凌駕列舉+不確定即 fail」原則,但該原則在 §13 line 960(2026-10-26 列),962 是 2026-10-29 列→行號 cross-ref 指錯列(我寫 high-risk floor 時引入的脆弱行號)",
+        "R137(A)=0 clean+L3 0"
+      ],
+      "fixes": [
+        "line650/963 的「§13 line 962」改日期錨點「§13 ledger 2026-10-26『判定原則凌駕列舉』列」(比照 line613 慣例,防行號漂移);全站已無 §13 line NNN 脆弱引用"
+      ],
+      "next": "sha 變→5-clean 歸零,重跑 R139(B)/R140(A)/R141(C)"
+    },
+    {
+      "recorded_at": "2026-10-30T04:15:17.153997+08:00",
+      "event": "sha 6e6f6dea→2751341f：R139(B)+R140(A) 3 處指錯硬行號 cross-ref 修(R141 C clean)",
+      "findings": [
+        "R139(B)/R140(A) 同指: line678「§6.7 line 611」應 613(611 是 roadmap_layout 列、reward_catalog 在 613);line530 與 907「§6.8 line 620」應 622(620 是三層驗證 header、ledger 條目 schema 在 622)——皆因我前面編輯位移而過時的硬行號",
+        "R141(C)=0 clean+L3 0",
+        "全面盤點: 其餘 19 處硬行號 ref(114/137/183/192/347/180/133/616/89/650/654/188)目前皆指向正確;收斂凍結 sha 後行號不再漂移故不會再壞"
+      ],
+      "fixes": [
+        "3 處指錯的改具名錨點(永不漂移): §6.7 line 611→「§6.7 的 reward_catalog.json 列」;§6.8 line 620→「§6.8 三層驗證之簽核層/ledger 條目 schema」(530 與 907 兩處)"
+      ],
+      "next": "sha 變→5-clean 歸零,重跑 R142(B)/R143(A)/R144(C)"
+    }
+  ]
+}
