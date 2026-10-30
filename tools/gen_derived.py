@@ -179,19 +179,30 @@ def main():
         bucket = "beyond" if r.get("beyond") else "min"
         tree[d][s][bucket][ti] += 1
 
+    # strand 建議學習順序（基礎→進階）：以 tier 分布推「入門階」＝有知識點的最低 tier；
+    # 同入門階者，base 數多（更基礎）在前、總數多在前、再以 slug 穩定排序。
+    # 這是**粗略線性建議順序**（非完整先備關係 DAG）；完整 §6.1 先備邊由各科領域專家 authored（待 Phase 2）。
+    def strand_order_key(cell):
+        combined = {t: cell["min"].get(t, 0) + cell["beyond"].get(t, 0) for t in TIERS}
+        entry = next((i for i, t in enumerate(TIERS) if combined[t] > 0), len(TIERS))
+        return (entry, -cell["min"].get("t_base", 0), -sum(combined.values()))
+
     islands = []
     for d, (title, order) in sorted(SUBJECTS.items(), key=lambda kv: kv[1][1]):
+        ordered = sorted(tree.get(d, {}),
+                         key=lambda s: strand_order_key(tree[d][s]) + (s,))
         strands = []
-        for s in sorted(tree.get(d, {})):
+        for pos, s in enumerate(ordered, start=1):
             cell = tree[d][s]
             mn = sum(cell["min"].values()); by = sum(cell["beyond"].values())
-            strands.append({"strand": s,
+            strands.append({"strand": s, "order": pos,  # 1-based 建議順序（基礎→進階）
                             "title_zh": strand_labels[f"{d}\u001f{s}"]["title_zh"],
                             "min_count": mn, "beyond_count": by,
                             "tiers": {t: cell["min"].get(t, 0) + cell["beyond"].get(t, 0)
                                       for t in TIERS if (cell["min"].get(t, 0) + cell["beyond"].get(t, 0))}})
         min_total = sum(x["min_count"] for x in strands)
         islands.append({"island": d, "subject": d, "title_zh": title, "order": order,
+                        "order_basis": "coarse-tier-sequence",  # 非 DAG；完整先備關係待 §6.1 authored
                         "strand_count": len(strands), "min_count": min_total,
                         "strands": strands})
     nav = {"_generated_by": "tools/gen_derived.py", "island_count": len(islands),
