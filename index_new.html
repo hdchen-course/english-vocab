@@ -2,69 +2,122 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>學習地圖（Phase 1 骨架）</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>學習地圖</title>
+<!-- 全站共用設計語言（暖奶油白、眼科實證低眩光、日夜切換）；不自訂調色盤 -->
+<link rel="stylesheet" href="assets/app.css">
+<script src="game_core.js"></script>
 <style>
-  :root{ --bg:#0f1720; --card:#17222e; --card2:#1d2b3a; --ink:#e8eef5; --sub:#9db2c6;
-         --acc:#4aa3ff; --line:#2a3b4d; --good:#3fb57a; }
-  *{box-sizing:border-box} html,body{margin:0}
-  body{background:var(--bg); color:var(--ink);
-       font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
-       line-height:1.5; padding:24px; max-width:1180px; margin:0 auto;}
-  h1{font-size:22px; margin:0 0 4px} .muted{color:var(--sub); font-size:13px; margin:0 0 18px}
-  .totals{display:flex; gap:18px; flex-wrap:wrap; background:var(--card); border:1px solid var(--line);
-          border-radius:12px; padding:12px 16px; margin-bottom:18px}
-  .totals b{color:var(--acc); font-size:18px}
-  .islands{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px}
-  .island{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px;
-          cursor:pointer; transition:border-color .15s, transform .05s}
-  .island:hover{border-color:var(--acc)} .island:active{transform:translateY(1px)}
-  .island h2{font-size:17px; margin:0 0 6px; display:flex; justify-content:space-between; align-items:center}
-  .chip{font-size:12px; color:var(--sub); font-weight:400}
-  .bar{height:6px; background:var(--card2); border-radius:4px; overflow:hidden; margin-top:8px}
-  .bar>i{display:block; height:100%; width:0; background:var(--good)}
-  .detail{display:none; margin-top:12px; border-top:1px solid var(--line); padding-top:10px}
-  .island.open .detail{display:block}
-  .strand{display:flex; justify-content:space-between; gap:8px; padding:5px 0; font-size:14px;
-          border-bottom:1px dashed var(--line)}
-  .strand:last-child{border-bottom:none}
-  .tiers{color:var(--sub); font-size:12px; white-space:nowrap}
-  .needs{color:#d9a441; font-size:11px}
-  footer{color:var(--sub); font-size:12px; margin-top:24px; border-top:1px solid var(--line); padding-top:12px}
+  /* 本頁版面：顏色一律取 app.css 房屋變數，不新增色票。以 iPad Air 13"（1366 寬）為基準，吃滿寬與高 */
+  .lp-wrap{ max-width:none; margin:0 auto; padding:14px clamp(18px,3vw,48px) 36px; }
+  .lp-intro{ margin:4px 0 14px; display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 20px; }
+  .lp-intro h1{ font-size:22px; margin:0; color:var(--ink); }
+  .lp-tot{ color:var(--ink-soft); font-size:13px; }
+  .lp-tot b{ color:var(--c-primary-ink); font-size:15px; }
+  /* 左島清單 + 右分區面板：填滿 app-bar 以下的高度 */
+  .lp-layout{ display:grid; grid-template-columns:clamp(220px,19vw,290px) 1fr; gap:22px; align-items:stretch; }
+  .lp-nav{ display:flex; flex-direction:column; gap:8px; position:sticky;
+    top:calc(var(--app-bar-h,56px) + 12px); align-self:start; }
+  .lp-navitem{ text-align:left; background:var(--card); color:var(--ink);
+    border:1px solid var(--card-border); border-left:6px solid var(--a,var(--c-primary));
+    border-radius:12px; padding:10px 12px; cursor:pointer; font:inherit;
+    display:flex; flex-direction:column; gap:2px; transition:box-shadow .12s, background .12s; }
+  .lp-navitem:hover{ box-shadow:0 2px 8px rgba(51,49,46,.1); }
+  .lp-navitem:focus-visible{ outline:3px solid var(--c-focus); outline-offset:2px; }
+  .lp-navitem.active{ background:var(--card-border); box-shadow:0 2px 10px rgba(51,49,46,.12); }
+  .lp-navitem .nm{ font-size:16px; font-weight:700; color:var(--aink,var(--ink)); }
+  .lp-navitem .mt{ font-size:12px; color:var(--ink-soft); }
+  /* 右面板 */
+  .lp-panel{ min-height:calc(100vh - var(--app-bar-h,56px) - 120px); }
+  .lp-panel-h{ display:flex; align-items:baseline; gap:12px; margin:2px 0 14px; }
+  .lp-panel-h h2{ font-size:20px; margin:0; color:var(--ptitle,var(--ink)); }
+  .lp-panel-h .sub{ color:var(--ink-soft); font-size:13px; }
+  .lp-strandgrid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(232px,1fr)); gap:14px; }
+  .lp-scard{ background:var(--card); border:1px solid var(--card-border);
+    border-top:4px solid var(--a,var(--c-primary)); border-radius:14px; padding:13px 15px;
+    display:flex; flex-direction:column; gap:7px; box-shadow:0 1px 3px rgba(51,49,46,.05); }
+  .lp-scard .snm{ font-size:15px; font-weight:700; color:var(--ink); line-height:1.35; }
+  .lp-scard .scount{ font-size:12px; color:var(--ink-soft); }
+  .lp-tiers{ display:flex; flex-wrap:wrap; gap:6px; }
+  .lp-tchip{ font-size:11.5px; padding:2px 8px; border-radius:999px;
+    background:var(--card-border); color:var(--ink-soft); white-space:nowrap; }
+  .lp-foot{ color:var(--ink-soft); font-size:12px; margin-top:24px;
+    border-top:1px solid var(--card-border); padding-top:12px; }
+  @media (max-width:860px){
+    .lp-layout{ grid-template-columns:1fr; }
+    .lp-nav{ position:static; flex-direction:row; flex-wrap:wrap; }
+    .lp-navitem{ flex:1 1 44%; }
+  }
 </style>
 </head>
-<body>
-  <h1>學習地圖</h1>
-  <p class="muted">想從哪裡開始？點一個島展開它的分區（strand）與級別。<span class="needs">（Phase 1 骨架：strand 中文名與九島策展待精修）</span></p>
-  <div class="totals" id="totals"></div>
-  <div class="islands" id="islands"></div>
-  <footer id="foot"></footer>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習基地</span>
+  </a>
+  <span class="app-bar__title">學習地圖</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="lp-wrap">
+  <div class="lp-intro">
+    <h1>學習地圖</h1>
+    <span class="lp-tot" id="tot"></span>
+  </div>
+  <div class="lp-layout">
+    <nav class="lp-nav" id="nav" aria-label="學習島"></nav>
+    <section class="lp-panel" id="panel" aria-live="polite"></section>
+  </div>
+  <footer class="lp-foot" id="foot"></footer>
+</main>
 
 <script>
 const TIER_ZH={t_base:"初階",t_mid:"中階",t_adv:"高階",t_sub:"銜接",t_enrich:"延伸"};
-fetch('authoring/nav_index.json').then(r=>r.json()).then(nav=>{
-  document.getElementById('totals').innerHTML =
-    `<span>學習島 <b>${nav.island_count}</b></span>`+
-    `<span>必備知識點 <b>${nav.minimum_total}</b></span>`+
-    `<span>延伸（選修） <b>${nav.beyond_total}</b></span>`;
-  const wrap=document.getElementById('islands');
-  nav.islands.forEach(isl=>{
-    const el=document.createElement('div'); el.className='island';
-    const strands=isl.strands.map(s=>{
-      const tiers=Object.entries(s.tiers).map(([t,n])=>`${TIER_ZH[t]||t} ${n}`).join('・');
-      const nd=s.needs_review?'':'';
-      return `<div class="strand"><span>${s.title_zh}</span><span class="tiers">${tiers}（${s.min_count}）</span></div>`;
-    }).join('');
-    el.innerHTML=`<h2>${isl.title_zh}<span class="chip">${isl.strand_count} 分區</span></h2>`+
-      `<div class="chip">必備 ${isl.min_count} 個知識點</div>`+
-      `<div class="bar"><i style="width:0%"></i></div>`+
-      `<div class="detail">${strands}</div>`;
-    el.addEventListener('click',()=>el.classList.toggle('open'));
-    wrap.appendChild(el);
+// 島 accent 一律取房屋科目色票（§5.6），不新增顏色
+const ACCENT={
+  chi:["var(--c-chinese)","var(--c-chinese-ink)"], eng:["var(--c-english)","var(--c-english-ink)"],
+  math:["var(--c-math)","var(--c-math-ink)"], sci:["var(--c-primary)","var(--c-primary-ink)"],
+  "soc-civ":["var(--c-social)","var(--c-social-ink)"], "soc-geo":["var(--c-finance)","var(--c-finance-ink)"],
+  "soc-hist":["var(--c-coin)","var(--c-coin-ink)"], life:["var(--c-primary-soft)","var(--c-primary-ink)"]};
+let NAV=null, cur=null;
+function renderPanel(isl){
+  const [fill,ink]=ACCENT[isl.island]||["var(--c-primary)","var(--c-primary-ink)"];
+  const panel=document.getElementById('panel');
+  panel.style.setProperty('--ptitle',ink);
+  const cards=isl.strands.map(s=>{
+    const tiers=Object.entries(s.tiers).map(([t,n])=>`<span class="lp-tchip">${TIER_ZH[t]||t} ${n}</span>`).join('');
+    return `<div class="lp-scard" style="--a:${fill}"><span class="snm">${s.title_zh}</span>`+
+      `<span class="scount">${s.min_count} 個必備知識點</span><span class="lp-tiers">${tiers}</span></div>`;
+  }).join('');
+  panel.innerHTML=`<div class="lp-panel-h"><h2>${isl.title_zh}</h2>`+
+    `<span class="sub">${isl.strand_count} 個分區 · 必備 ${isl.min_count} 個知識點</span></div>`+
+    `<div class="lp-strandgrid">${cards}</div>`;
+}
+function select(i){
+  cur=i;
+  [...document.querySelectorAll('.lp-navitem')].forEach((b,k)=>{
+    b.classList.toggle('active',k===i); b.setAttribute('aria-current',k===i?'true':'false');});
+  renderPanel(NAV.islands[i]);
+}
+fetch('authoring/nav_index.json',{cache:'no-store'}).then(r=>r.json()).then(nav=>{
+  NAV=nav;
+  document.getElementById('tot').innerHTML=
+    `${nav.island_count} 座學習島 · 必備知識點 <b>${nav.minimum_total}</b> · 延伸（選修） <b>${nav.beyond_total}</b>`;
+  const navEl=document.getElementById('nav');
+  nav.islands.forEach((isl,i)=>{
+    const [fill,ink]=ACCENT[isl.island]||["var(--c-primary)","var(--c-primary-ink)"];
+    const b=document.createElement('button'); b.type='button'; b.className='lp-navitem';
+    b.style.setProperty('--a',fill); b.style.setProperty('--aink',ink);
+    b.innerHTML=`<span class="nm">${isl.title_zh}</span><span class="mt">${isl.strand_count} 分區 · ${isl.min_count} 知識點</span>`;
+    b.addEventListener('click',()=>select(i));
+    navEl.appendChild(b);
   });
+  select(0);
   document.getElementById('foot').textContent=
-    `資料來源：authoring/nav_index.json（由 tools/gen_derived.py 自 knowledge_points.json 衍生）。進度條為佔位（Phase 2 接 learning_progress_v1 後顯示）。`;
-}).catch(e=>{document.getElementById('foot').textContent='載入 nav_index.json 失敗：'+e;});
+    '資料來源：authoring/nav_index.json（由 tools/gen_derived.py 自 knowledge_points.json 衍生）。學習進度將於 Phase 2 接 learning_progress_v1 後顯示。';
+}).catch(e=>{document.getElementById('foot').textContent='載入 nav_index.json 失敗（請用 http 開啟，勿用 file://）：'+e;});
 </script>
 </body>
 </html>
