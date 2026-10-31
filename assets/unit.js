@@ -96,7 +96,11 @@
         c.appendChild(rateRow());
       } else {
         const opts=el('div','gr-opts');
-        (p.options||[]).forEach(o=>{
+        // 洗牌顯示順序：資料裡正解常放第一個，若不打散，兒童「永遠點第一顆」就能全對而不讀題（位置偏誤）。
+        // 答案以「值」比對（o===p.answer），故打散順序完全安全；每次載入重新洗牌。
+        const shown=(p.options||[]).slice();
+        for(let i=shown.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=shown[i]; shown[i]=shown[j]; shown[j]=t; }
+        shown.forEach(o=>{
           const b=el('button','gr-opt', esc(o));
           b.onclick=()=>{
             if(o===p.answer){ b.classList.add('correct'); }
