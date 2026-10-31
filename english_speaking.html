@@ -7,25 +7,30 @@
 <link rel="stylesheet" href="assets/app.css">
 <script src="game_core.js"></script>
 <style>
-  .sp-wrap{ max-width:none; margin:0 auto; padding:14px clamp(18px,3vw,48px) 40px; }
-  .sp-intro{ margin:4px 0 16px; }
+  .sp-wrap{ max-width:none; margin:0 auto; padding:14px clamp(18px,3vw,48px) 44px; }
+  .sp-intro{ margin:4px 0 14px; }
   .sp-intro h1{ font-size:23px; margin:0 0 4px; color:var(--ink); display:flex; align-items:center; gap:10px; }
   .sp-intro p{ margin:0; color:var(--ink-soft); font-size:14px; line-height:1.55; }
-  /* 每個情境＝一格方框卡（外層 .sp-sit 匡起來，內含 標題 div + 單元卡 div）。
-     格線等高(align-items:stretch)＋標題固定兩行高 → 每格的單元卡起點一致、跨欄對齊。 */
-  .sp-groups{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; align-items:stretch; }
-  .sp-sit{ min-width:0; background:var(--card); border:1px solid var(--card-border);
-    border-top:3px solid var(--c-english); border-radius:14px; padding:12px 14px 14px;
-    display:flex; flex-direction:column; box-shadow:0 1px 3px rgba(51,49,46,.05); }
-  .sp-sit-head{ font-size:13px; font-weight:700; color:var(--c-english-ink); line-height:1.3;
-    min-height:2.6em; display:flex; align-items:flex-start; margin:0 0 9px; }
-  .sp-units{ display:flex; flex-direction:column; gap:8px; }
-  .sp-unit{ display:flex; align-items:center; gap:8px; text-decoration:none; background:var(--card);
-    border:1px solid var(--c-english); border-radius:10px; padding:9px 12px; color:var(--ink); }
+  .sp-overall{ font-size:13px; color:var(--c-english-ink); font-weight:700; margin-top:6px; }
+  /* 10 大情境類別：每類一個 section（類別標題列 + 該類單元卡牆）。 */
+  .sp-cats{ display:flex; flex-direction:column; gap:18px; margin-top:6px; }
+  .sp-cat{ min-width:0; }
+  .sp-cat-head{ display:flex; align-items:baseline; gap:10px; margin:0 0 10px;
+    padding-bottom:7px; border-bottom:2px solid var(--c-english); }
+  .sp-cat-em{ font-size:21px; line-height:1; }
+  .sp-cat-name{ font-size:16px; font-weight:800; color:var(--c-english-ink); }
+  .sp-cat-count{ font-size:12px; font-weight:700; color:#fff; background:var(--c-english);
+    border-radius:999px; padding:2px 9px; margin-left:auto; white-space:nowrap; }
+  /* 卡牆：auto-fill 多欄，充分利用 iPad 寬度；卡片等高齊左。 */
+  .sp-units{ display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:10px; }
+  .sp-unit{ display:flex; align-items:center; gap:9px; text-decoration:none; background:var(--card);
+    border:1px solid var(--c-english); border-radius:12px; padding:11px 13px; color:var(--ink);
+    box-shadow:0 1px 3px rgba(51,49,46,.05); transition:background .12s, color .12s; min-width:0; }
   .sp-unit:hover{ background:var(--c-english); color:#fff; }
   .sp-unit:focus-visible{ outline:3px solid var(--c-focus); outline-offset:2px; }
-  .sp-unit .em{ font-size:17px; }
-  .sp-foot{ color:var(--ink-soft); font-size:12px; margin-top:22px; border-top:1px solid var(--card-border); padding-top:12px; }
+  .sp-unit .em{ font-size:19px; flex:0 0 auto; }
+  .sp-unit .tx{ font-size:14px; line-height:1.3; min-width:0; }
+  .sp-foot{ color:var(--ink-soft); font-size:12px; margin-top:24px; border-top:1px solid var(--card-border); padding-top:12px; }
 </style>
 </head>
 <body data-game-hud="off">
@@ -41,32 +46,71 @@
 <main class="sp-wrap">
   <div class="sp-intro">
     <h1><span aria-hidden="true">🗣️</span>開口說（情境溝通）</h1>
-    <p>用真實生活情境學「能用的一句話」：先聽先感覺 → 練一練 → 跟著讀、模仿語調 → 自評。每個單元也內含聽寫與跟讀。選一個情境開始：</p>
+    <p>用真實生活情境學「能用的一句話」：先聽先感覺 → 練一練 → 跟著讀、模仿語調 → 自評。每個單元也內含聽寫與跟讀。分成十大生活情境，選一個開始：</p>
+    <div class="sp-overall" id="overall"></div>
   </div>
-  <div class="sp-groups" id="groups"><p id="loading" style="color:var(--ink-soft)">載入中…</p></div>
-  <footer class="sp-foot">資料來源：authoring/units_index.json（由 tools/gen_derived.py 掃各 *.units.json 衍生）。</footer>
+  <div class="sp-cats" id="cats"><p id="loading" style="color:var(--ink-soft)">載入中…</p></div>
+  <footer class="sp-foot">資料來源：authoring/units_index.json（由 tools/gen_derived.py 掃各 *.units.json 衍生）。情境分類見 authoring/english_island_blueprint.md §8。</footer>
 </main>
 <script>
-const EMO={ "english_greetings.html":"👋","english_directions.html":"🧭","english_ordering.html":"☕",
-  "english_shopping.html":"🛍️","english_time.html":"⏰","english_doctor.html":"🩺",
-  "english_hotel.html":"🏨","english_weather.html":"⛅","english_phone.html":"📞",
-  "english_borrow.html":"🤝","english_family.html":"👨‍👩‍👧","english_likes.html":"❤️",
-  "english_doing.html":"🏃","english_where.html":"🧭","english_thereis.html":"📦",
-  "english_age.html":"🎂","english_yesterday.html":"📅","english_colors.html":"🎨",
-  "english_days.html":"📆","english_canability.html":"🏊","english_want.html":"🥛",
-  "english_body.html":"🖐️","english_months.html":"🗓️","english_possessive.html":"🎒","english_howmany.html":"🔢",
-  "english_howareyou.html":"👋" };
+/* 每單元頁的 emoji */
+const EMO={ "english_greetings.html":"👋","english_howareyou.html":"🙂","english_phone.html":"📞",
+  "english_age.html":"🎂","english_family.html":"👨‍👩‍👧","english_likes.html":"❤️","english_possessive.html":"🎒",
+  "english_borrow.html":"🤝","english_thereis.html":"📦",
+  "english_time.html":"⏰","english_days.html":"📆","english_months.html":"🗓️","english_howmany.html":"🔢",
+  "english_ordering.html":"☕","english_want.html":"🥛",
+  "english_shopping.html":"🛍️","english_colors.html":"🎨",
+  "english_directions.html":"🧭","english_where.html":"📍","english_hotel.html":"🏨",
+  "english_body.html":"🖐️","english_doctor.html":"🩺",
+  "english_weather.html":"⛅",
+  "english_doing.html":"🏃","english_canability.html":"🏊","english_yesterday.html":"📅" };
+/* 10 大情境類別（固定順序；blueprint §8）。每類目標約 10 句。 */
+const CATS=[
+  {key:"social",   em:"👋", name:"打招呼與社交",     pages:["english_greetings.html","english_howareyou.html","english_phone.html"]},
+  {key:"people",   em:"🙋", name:"認識自己與他人",   pages:["english_age.html","english_family.html","english_likes.html","english_possessive.html"]},
+  {key:"school",   em:"🏫", name:"學校生活",         pages:["english_borrow.html","english_thereis.html"]},
+  {key:"numtime",  em:"🔢", name:"數字・時間・日期", pages:["english_time.html","english_days.html","english_months.html","english_howmany.html"]},
+  {key:"food",     em:"🍔", name:"食物與點餐",       pages:["english_ordering.html","english_want.html"]},
+  {key:"shopping", em:"🛍️", name:"購物",             pages:["english_shopping.html","english_colors.html"]},
+  {key:"travel",   em:"🧭", name:"問路與交通",       pages:["english_directions.html","english_where.html","english_hotel.html"]},
+  {key:"health",   em:"🩺", name:"身體與健康",       pages:["english_body.html","english_doctor.html"]},
+  {key:"weather",  em:"⛅", name:"天氣與季節",       pages:["english_weather.html"]},
+  {key:"daily",    em:"🏃", name:"日常生活與興趣 Daily life", pages:["english_doing.html","english_canability.html","english_yesterday.html"]}
+];
+const TARGET_PER_CAT=10;
 function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 fetch('authoring/units_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():{units:[]}).catch(()=>({units:[]})).then(ui=>{
   const us=(ui.units||[]).filter(u=>u.subject==='eng');
-  const el=document.getElementById('groups');
+  const byPage={}; us.forEach(u=>{ byPage[u.page]=u; });
+  const el=document.getElementById('cats');
   if(!us.length){ el.innerHTML='<p style="color:var(--ink-soft)">單元建置中。</p>'; return; }
-  const groups=[], gi={};
-  us.forEach(u=>{ const g=u.situation_group||'其他'; if(!(g in gi)){ gi[g]=groups.length; groups.push([g,[]]); } groups[gi[g]][1].push(u); });
-  el.innerHTML=groups.map(([g,list])=>
-    '<div class="sp-sit"><div class="sp-sit-head">'+esc(g)+'</div><div class="sp-units">'+
-    list.map(u=>'<a class="sp-unit" href="'+esc(u.page)+'"><span class="em" aria-hidden="true">'+(EMO[u.page]||'💡')+'</span><span>'+esc(u.title_zh)+'</span></a>').join('')+
-    '</div></div>').join('');
+  let placed=0;
+  const blocks=CATS.map(cat=>{
+    const units=cat.pages.map(p=>byPage[p]).filter(Boolean);
+    if(!units.length) return '';
+    placed+=units.length;
+    const cards=units.map(u=>
+      '<a class="sp-unit" href="'+esc(u.page)+'"><span class="em" aria-hidden="true">'+(EMO[u.page]||'💡')+
+      '</span><span class="tx">'+esc(u.title_zh)+'</span></a>').join('');
+    return '<section class="sp-cat"><div class="sp-cat-head">'+
+      '<span class="sp-cat-em" aria-hidden="true">'+cat.em+'</span>'+
+      '<span class="sp-cat-name">'+esc(cat.name)+'</span>'+
+      '<span class="sp-cat-count">'+units.length+' / '+TARGET_PER_CAT+'</span></div>'+
+      '<div class="sp-units">'+cards+'</div></section>';
+  }).join('');
+  el.innerHTML=blocks;
+  /* 未歸類的單元（新頁尚未加進 CATS）→ append 一個「其他」區塊，不遺漏 */
+  const known=new Set(CATS.flatMap(c=>c.pages));
+  const extra=us.filter(u=>!known.has(u.page));
+  if(extra.length){
+    const cards=extra.map(u=>'<a class="sp-unit" href="'+esc(u.page)+'"><span class="em" aria-hidden="true">'+(EMO[u.page]||'💡')+
+      '</span><span class="tx">'+esc(u.title_zh)+'</span></a>').join('');
+    el.insertAdjacentHTML('beforeend','<section class="sp-cat"><div class="sp-cat-head">'+
+      '<span class="sp-cat-em" aria-hidden="true">💡</span><span class="sp-cat-name">其他</span></div>'+
+      '<div class="sp-units">'+cards+'</div></section>');
+    placed+=extra.length;
+  }
+  document.getElementById('overall').textContent='目前 '+placed+' / ~'+(CATS.length*TARGET_PER_CAT)+' 句常用對話（十大情境持續補到每類約 '+TARGET_PER_CAT+' 句）';
 });
 </script>
 </body>
