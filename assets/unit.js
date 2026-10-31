@@ -66,12 +66,26 @@
       c.appendChild(el('div','gr-en', esc(p.stem)));
       if(p.type==='dictation'){
         const pad=makeCanvas(); c.appendChild(pad.box);
-        c.appendChild(el('div','gr-hint','用手指或觸控筆在上面寫；可重複按🔊聽。寫完按「看答案對照」自己核對。'));
+        // 鍵盤輸入框：與 canvas 同一位置切換（擇一顯示）；系統不批改，翻答案自評。
+        const ta=el('textarea','gr-ta'); ta.rows=3; ta.hidden=true;
+        ta.setAttribute('aria-label','鍵盤輸入（可選）');
+        ta.placeholder='想打字的話在這裡寫（系統不會批改，翻答案自己對）';
+        c.appendChild(ta);
+        const hint=el('div','gr-hint','用手指或觸控筆在上面寫（寫在淡線上）；可重複按🔊聽。寫完按「看答案對照」自己核對。');
+        c.appendChild(hint);
         const tools=el('div','gr-tools');
         const b=el('button','gr-play','🔊 聽（可重複）'); b.onclick=()=>play(p.audio); tools.appendChild(b);
-        const clr=el('button','gr-play','🧽 清除'); clr.onclick=()=>pad.clear(); tools.appendChild(clr);
+        const clr=el('button','gr-play','🧽 清除'); tools.appendChild(clr);
+        const kbtn=el('button','gr-play','⌨️ 改用鍵盤'); tools.appendChild(kbtn);
         const rev=el('button','gr-play','看答案對照'); tools.appendChild(rev);
         c.appendChild(tools);
+        let kb=false;
+        kbtn.onclick=()=>{ kb=!kb; pad.box.hidden=kb; ta.hidden=!kb;
+          kbtn.textContent = kb ? '✏️ 改用手寫' : '⌨️ 改用鍵盤';
+          hint.textContent = kb ? '用鍵盤打字（系統不批改）；可重複按🔊聽。寫完按「看答案對照」自己核對。'
+                                : '用手指或觸控筆在上面寫（寫在淡線上）；可重複按🔊聽。寫完按「看答案對照」自己核對。';
+          if(kb) setTimeout(()=>ta.focus(),0); };   // focus → iPad 底下跳出鍵盤
+        clr.onclick=()=>{ if(kb){ ta.value=''; ta.focus(); } else pad.clear(); };
         const ans=el('div','gr-fb', '正解：<b>'+esc(p.answer)+'</b><br>'+esc(p.feedback));
         rev.onclick=()=>ans.classList.add('show'); c.appendChild(ans);
         c.appendChild(rateRow());
