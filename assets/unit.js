@@ -12,6 +12,26 @@
       wrap.appendChild(b);
     }); return wrap;
   }
+  // 手寫作答 canvas：手指/觸控筆書寫；不自動判讀（寫完翻答案自評）。basic canvas，無 Pencil 專屬 API。
+  function makeCanvas(){
+    const box=el('div','gr-canvas-box');
+    const cv=document.createElement('canvas'); cv.className='gr-canvas';
+    cv.setAttribute('role','img'); cv.setAttribute('aria-label','手寫作答區，用手指或觸控筆寫下聽到的句子');
+    box.appendChild(cv);
+    const ctx=cv.getContext('2d'); let drawing=false, last=null, sized=false;
+    function size(){ const r=cv.getBoundingClientRect(); if(!r.width||!r.height) return;
+      const dpr=window.devicePixelRatio||1; cv.width=Math.round(r.width*dpr); cv.height=Math.round(r.height*dpr);
+      ctx.setTransform(dpr,0,0,dpr,0,0); ctx.lineWidth=2.6; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle='#33312E'; sized=true; }
+    function pt(e){ const r=cv.getBoundingClientRect(); return [e.clientX-r.left, e.clientY-r.top]; }
+    cv.addEventListener('pointerdown',e=>{ if(!sized)size(); drawing=true; last=pt(e);
+      try{cv.setPointerCapture(e.pointerId);}catch(_){} e.preventDefault(); });
+    cv.addEventListener('pointermove',e=>{ if(!drawing)return; const p=pt(e);
+      ctx.beginPath(); ctx.moveTo(last[0],last[1]); ctx.lineTo(p[0],p[1]); ctx.stroke(); last=p; e.preventDefault(); });
+    const stop=()=>{ drawing=false; }; ['pointerup','pointercancel','pointerleave'].forEach(ev=>cv.addEventListener(ev,stop));
+    function clear(){ if(!sized)size(); if(sized) ctx.clearRect(0,0,cv.width,cv.height); }
+    requestAnimationFrame(size); window.addEventListener('resize',()=>{sized=false; requestAnimationFrame(size);});
+    return { box, clear };
+  }
 
   const src=document.body.getAttribute('data-units');
   fetch(src,{cache:'no-store'}).then(r=>r.json()).then(data=>{
@@ -45,11 +65,15 @@
       const c=el('div','gr-card');
       c.appendChild(el('div','gr-en', esc(p.stem)));
       if(p.type==='dictation'){
-        const b=el('button','gr-play','🔊 聽，然後寫下來'); b.onclick=()=>play(p.audio); c.appendChild(b);
-        const ta=el('textarea','gr-ta'); ta.rows=2; ta.setAttribute('aria-label','聽寫作答'); c.appendChild(ta);
-        const rev=el('button','gr-play','看答案對照'); rev.style.marginTop='8px';
+        const pad=makeCanvas(); c.appendChild(pad.box);
+        c.appendChild(el('div','gr-hint','用手指或觸控筆在上面寫；可重複按🔊聽。寫完按「看答案對照」自己核對。'));
+        const tools=el('div','gr-tools');
+        const b=el('button','gr-play','🔊 聽（可重複）'); b.onclick=()=>play(p.audio); tools.appendChild(b);
+        const clr=el('button','gr-play','🧽 清除'); clr.onclick=()=>pad.clear(); tools.appendChild(clr);
+        const rev=el('button','gr-play','看答案對照'); tools.appendChild(rev);
+        c.appendChild(tools);
         const ans=el('div','gr-fb', '正解：<b>'+esc(p.answer)+'</b><br>'+esc(p.feedback));
-        rev.onclick=()=>ans.classList.add('show'); c.appendChild(rev); c.appendChild(ans);
+        rev.onclick=()=>ans.classList.add('show'); c.appendChild(ans);
         c.appendChild(rateRow());
       } else {
         const opts=el('div','gr-opts');
