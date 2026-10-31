@@ -1,0 +1,42 @@
+/* unit.css — 英語島 communicative 單元頁共用版面（所有 *.units 單元頁共用，避免各頁複製 CSS 漂移）。
+   顏色一律取 app.css 房屋變數。版面＝左固定導覽欄＋右寬內容＋選項多欄，吃滿寬不留置中空白。 */
+.gr-wrap{ max-width:1500px; margin:0 auto; padding:14px clamp(16px,3.5vw,44px) 48px; }
+.gr-layout{ display:grid; grid-template-columns:clamp(240px,22vw,300px) 1fr; gap:30px; align-items:start; }
+.gr-side{ position:sticky; top:calc(var(--app-bar-h,56px) + 14px); display:flex; flex-direction:column; gap:12px; }
+.gr-main{ min-width:0; }
+.gr-cando{ background:var(--card); border:1px solid var(--card-border); border-left:6px solid var(--c-english);
+  border-radius:14px; padding:13px 15px; }
+.gr-cando .lab{ font-size:12px; color:var(--c-english-ink); font-weight:700; }
+.gr-cando .txt{ font-size:15px; color:var(--ink); margin-top:4px; line-height:1.5; }
+.gr-nav{ display:flex; flex-direction:column; gap:5px; }
+.gr-nav a{ text-decoration:none; color:var(--ink); font-size:14px; padding:8px 12px; border-radius:10px;
+  border:1px solid var(--card-border); background:var(--card); }
+.gr-nav a:hover{ border-color:var(--c-english); color:var(--c-english-ink); }
+.gr-nav a:focus-visible{ outline:3px solid var(--c-focus); outline-offset:2px; }
+h2.gr-h{ font-size:18px; color:var(--ink); margin:0 0 12px; padding-bottom:6px; border-bottom:2px solid var(--card-border); scroll-margin-top:72px; }
+h2.gr-h:not(:first-child){ margin-top:26px; }
+.gr-card{ background:var(--card); border:1px solid var(--card-border); border-radius:12px; padding:14px 16px; margin:10px 0;
+  box-shadow:0 1px 3px rgba(51,49,46,.05); }
+.gr-en{ font-size:17px; color:var(--ink); line-height:1.55; }
+.gr-play{ font:inherit; cursor:pointer; border:1px solid var(--c-english); color:var(--c-english-ink);
+  background:var(--tint-english); border-radius:999px; padding:3px 12px; font-size:14px; margin-right:8px; }
+.gr-play:hover{ background:var(--c-english); color:#fff; }
+.gr-play:focus-visible{ outline:3px solid var(--c-focus); outline-offset:2px; }
+.gr-opts{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:9px; margin:11px 0 4px; }
+.gr-opt{ font:inherit; text-align:left; cursor:pointer; border:1px solid var(--card-border); background:var(--card);
+  border-radius:10px; padding:11px 14px; font-size:15px; color:var(--ink); transition:background .1s,border-color .1s; }
+.gr-opt:hover{ border-color:var(--c-english); }
+.gr-opt:focus-visible{ outline:3px solid var(--c-focus); outline-offset:2px; }
+.gr-opt.correct{ background:#e7f6ef; border-color:var(--c-correct-btn); color:var(--c-correct-ink); font-weight:700; }
+.gr-opt.wrong{ background:#fde8e8; border-color:var(--c-wrong-btn); color:var(--c-wrong-btn); }
+.gr-fb{ font-size:14px; margin-top:8px; padding:9px 12px; border-radius:9px; background:var(--tint-english); color:var(--ink); display:none; }
+.gr-fb.show{ display:block; }
+.gr-ta{ width:100%; font:inherit; font-size:16px; padding:9px 11px; border:1px solid var(--card-border); border-radius:9px; }
+.gr-rate{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+.gr-rate button{ font:inherit; cursor:pointer; border:1px solid var(--card-border); background:var(--card);
+  border-radius:999px; padding:6px 14px; font-size:14px; color:var(--ink); }
+.gr-rate button:hover{ border-color:var(--c-english); }
+.gr-rate button.sel{ background:var(--c-english); color:#fff; border-color:var(--c-english); }
+.gr-note{ font-size:12.5px; color:var(--ink-soft); margin-top:6px; }
+.gr-foot{ color:var(--ink-soft); font-size:12px; margin-top:28px; border-top:1px solid var(--card-border); padding-top:12px; }
+@media (max-width:900px){ .gr-layout{ grid-template-columns:1fr; } .gr-side{ position:static; } }
