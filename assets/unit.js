@@ -3,6 +3,30 @@
    原則：語感優先、音檔真實播放、自評不自動判讀（翻答案自己判）、聽寫/跟讀為核心模態。 */
 (function(){
   function play(f){ try{ new Audio('audio/'+f+'.mp3').play(); }catch(e){} }
+  // 跟讀用：錄自己唸→聽自己（純前端 MediaRecorder，不上傳、不批改發音，只給自己聽、對照模型音）
+  function mkRec(){
+    const wrap=el('span'); wrap.style.cssText='display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap';
+    let rec=null, chunks=[], url=null, stream=null;
+    const recBtn=el('button','gr-play','🎙️ 錄我的');
+    const playBtn=el('button','gr-play','▶ 聽我的'); playBtn.disabled=true; playBtn.style.opacity='.5';
+    if(!(navigator.mediaDevices && window.MediaRecorder)){ recBtn.disabled=true; recBtn.textContent='🎙️（此裝置不支援錄音）'; recBtn.style.opacity='.5'; return wrap.appendChild(recBtn), wrap; }
+    recBtn.onclick=async()=>{
+      if(rec && rec.state==='recording'){ rec.stop(); return; }
+      try{ stream=await navigator.mediaDevices.getUserMedia({audio:true}); }
+      catch(e){ recBtn.textContent='🎙️ 請允許麥克風'; return; }
+      chunks=[]; try{ rec=new MediaRecorder(stream); }catch(e){ recBtn.textContent='🎙️（此裝置不支援錄音）'; return; }
+      rec.ondataavailable=e=>{ if(e.data && e.data.size) chunks.push(e.data); };
+      rec.onstop=()=>{
+        if(url) URL.revokeObjectURL(url);
+        url=URL.createObjectURL(new Blob(chunks,{type:(chunks[0]&&chunks[0].type)||'audio/webm'}));
+        playBtn.disabled=false; playBtn.style.opacity='1'; recBtn.textContent='🎙️ 再錄一次';
+        try{ stream.getTracks().forEach(t=>t.stop()); }catch(_){}
+      };
+      rec.start(); recBtn.textContent='⏹ 停止';
+    };
+    playBtn.onclick=()=>{ if(url){ try{ new Audio(url).play(); }catch(e){} } };
+    wrap.appendChild(recBtn); wrap.appendChild(playBtn); return wrap;
+  }
   function el(tag, cls, html){ const e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e; }
   function esc(s){ return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
   function rateRow(levels){
@@ -121,11 +145,13 @@
       main.appendChild(el('h2','gr-h','③ 跟著讀 ＋ 模仿語調')).id='s3';
       const c=el('div','gr-card');
       c.appendChild(el('div','gr-note', esc(u.shadowing.note)));
+      c.appendChild(el('div','gr-note','🎙️ 按「錄我的」唸唸看，再按「聽我的」跟上面的 🔊 比比看（只給自己聽，不批改發音）。'));
       u.shadowing.lines.forEach(l=>{
         const row=el('div'); row.style.cssText='display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap';
         const b=el('button','gr-play','🔊'); b.onclick=()=>play(l.audio); row.appendChild(b);
         row.appendChild(el('span','gr-en', esc(l.text)));
         row.appendChild(el('span','gr-note','（'+esc(l.intonation)+'）'));
+        row.appendChild(mkRec());
         c.appendChild(row);
       });
       c.appendChild(rateRow()); main.appendChild(c);
