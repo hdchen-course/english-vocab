@@ -28,6 +28,11 @@
     cv.addEventListener('pointermove',e=>{ if(!drawing)return; const p=pt(e);
       ctx.beginPath(); ctx.moveTo(last[0],last[1]); ctx.lineTo(p[0],p[1]); ctx.stroke(); last=p; e.preventDefault(); });
     const stop=()=>{ drawing=false; }; ['pointerup','pointercancel','pointerleave'].forEach(ev=>cv.addEventListener(ev,stop));
+    // iOS：觸控筆短暫接觸會被判成「選取」而跳出 Copy/Search/Translate 編輯選單。
+    // pointer 事件的 preventDefault 擋不掉 iOS 合成的觸控選取，必須在 touch 事件（非 passive）＋contextmenu＋selectstart 上擋。
+    ['touchstart','touchmove','touchend'].forEach(ev=>cv.addEventListener(ev,e=>e.preventDefault(),{passive:false}));
+    cv.addEventListener('contextmenu',e=>e.preventDefault());
+    cv.addEventListener('selectstart',e=>e.preventDefault());
     function clear(){ if(!sized)size(); if(sized) ctx.clearRect(0,0,cv.width,cv.height); }
     requestAnimationFrame(size); window.addEventListener('resize',()=>{sized=false; requestAnimationFrame(size);});
     return { box, clear };
