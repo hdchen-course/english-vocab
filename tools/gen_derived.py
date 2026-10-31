@@ -211,8 +211,27 @@ def main():
            "islands": islands}
     json.dump(nav, open(os.path.join(AUTH, "nav_index.json"), "w"), ensure_ascii=False, indent=1)
 
+    # units_index（§6.7）：聚合站上所有 *.units.json 的單元 metadata（Phase 2 起逐步填）。
+    import glob
+    units = []
+    for uf in sorted(glob.glob(os.path.join(ROOT, "*.units.json"))):
+        try:
+            doc = json.loads(open(uf, encoding="utf-8").read())
+        except Exception:
+            continue
+        page = doc.get("page") or os.path.basename(uf).replace(".units.json", ".html")
+        for u in doc.get("units", []):
+            units.append({"unit_id": u.get("unit_id"), "page": page,
+                          "title_zh": u.get("title_zh", u.get("unit_id")),
+                          "subject": u.get("subject"), "strand": u.get("strand"),
+                          "can_do": u.get("can_do", ""),
+                          "situation_group": u.get("situation_group", ""),
+                          "est_minutes": u.get("est_minutes")})
+    units_index = {"_generated_by": "tools/gen_derived.py", "count": len(units), "units": units}
+    json.dump(units_index, open(os.path.join(AUTH, "units_index.json"), "w"), ensure_ascii=False, indent=1)
+
     print(f"寫出 subject_labels({len(subject_labels)})、strand_labels({len(strand_labels)} 配對)、"
-          f"nav_index({len(islands)} 島、minimum {nav['minimum_total']})")
+          f"nav_index({len(islands)} 島、minimum {nav['minimum_total']})、units_index({len(units)} 單元)")
 
 
 if __name__ == "__main__":
