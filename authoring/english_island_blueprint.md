@@ -96,6 +96,25 @@ HD 的結構迭代收斂成**全站資訊架構**，不只英語島：
 - 自評鐵律沿用：開放題走「自己想→看參考思路／多元觀點→自評」，不假裝自動判讀。
 - 真正動工前走 spec-first（§6 建置順序把練習區排在最後）。
 
+## 8. 開口說 — 10 大情境分類 × 每類 ~10 句（HD 2026-10-31 認可，固定分母）
+HD 定調：開口說**不無限展開**，收束成 **10 大生活情境類別，每類約 10 句最常用對話 → 總分母 ~100 單元**。
+各類句數可依真實常用度微浮動（非硬性 10×10），但總量有界、進度永遠可說「X/~100」。landing 的開口說帶依這 10 類分組（每類一小標＋該類單元卡牆），`situation_group` 掛到所屬類別。
+
+| # | 情境類別 | 已收斂單元（歸類） | 待補範例（每類補到 ~10） | 進度 |
+|---|---|---|---|---|
+| 1 | 👋 打招呼與社交 | greetings・howareyou・phone | 道別(Goodbye/See you)・道謝道歉(Thank you/Sorry)・介紹朋友(This is…)・祝福(Happy birthday)・請再說一次 | 3 |
+| 2 | 🙋 認識自己與他人 | age・family・likes・possessive | 名字(What's your name)・來自哪裡(Where are you from)・心情(happy/sad)・這是誰(Who is…)・長相(tall/short) | 4 |
+| 3 | 🏫 學校生活 | borrow・thereis | 文具(pencil/eraser)・科目(math/English)・教室指令(sit down/open your book)・問問題(How do you say…)・幾年級 | 2 |
+| 4 | 🔢 數字時間日期 | time・days・months・howmany | 數字1-20・今天幾號(date)・生日哪天(When's your birthday)・現在幾月 | 4 |
+| 5 | 🍔 食物與點餐 | ordering・want | 我餓了/渴了(I'm hungry)・喜歡的食物・餐廳點餐(I'd like)・好吃嗎(taste)・三餐 | 2 |
+| 6 | 🛍️ 購物 | shopping・colors | 多少錢(How much)・大小(big/small)・試穿・我要這個・太貴了 | 2 |
+| 7 | 🧭 問路與交通 | directions・where・hotel | 怎麼去(How do I get to)・左轉右轉・多遠・搭哪班車・到了嗎 | 3 |
+| 8 | 🩺 身體與健康 | body・doctor | 我不舒服(I don't feel well)・哪裡痛・感冒發燒・要多休息・看牙醫 | 2 |
+| 9 | ⛅ 天氣與季節 | weather | 季節(spring/summer)・今天冷嗎・要帶傘嗎・穿什麼・戶外活動 | 1 |
+| 10 | 🏃 日常生活與興趣 Daily life | doing・canability・yesterday | 興趣(hobby)・運動(play soccer)・週末做什麼・看電視/玩遊戲・每天常做(every day) | 3 |
+
+**合計 26/~100。** 補單元優先順序：第 9 類天氣(1) → 第 3/5/6/8 類(各 2) → 其餘。每個新單元走既定 pipeline（units.json §6.2.2 → edge-tts → schema/簡體 gate → iPad render 開圖 → 對抗式審查 2-consecutive-clean → commit+push）。每類補滿 ~10 即該類「完成」，10 類全滿＝開口說收斂。
+
 ## 7. 待 HD 確認
 - 五大分區的「名稱、順序、要不要合併/增減」？（例如要不要把「聽與寫」併進「開口說」各單元內、不獨立成區？）
 - 建置順序先做哪一區？（建議：先把 landing 五分區卡做出來給你看整體，再做單字大師）
