@@ -1,120 +1,61 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>英文口說・跟著唸 🎙️</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>開口說（情境溝通）</title>
 <link rel="stylesheet" href="assets/app.css">
-<link rel="stylesheet" href="game_core.css">
-<link rel="stylesheet" href="concept.css">
 <script src="game_core.js"></script>
-<script src="speaking_data.js"></script>
-<!--
-  英文口說・跟著唸（shadowing）：純靜態網頁能做的口說訓練＝「聽高品質範本音 → 跟著唸 → （可選）錄自己並排比較 → 自評」。
-  模型音＝edge-tts en-US-AnaNeural 童音（與全書 15k 英文閃卡同一把嗓子，清晰、不誤導；資料＋檔名見 speaking_data.js）。
-  慢速＝前端 playbackRate 0.72 + preservesPitch（不另存檔）。錄音用 MediaRecorder，只在記憶體，播完/下一題/離開就 revokeObjectURL 丟掉——不上傳、不寫任何儲存、練完消失。
-  不支援錄音的裝置優雅退回「仍可反覆聽＋跟著唸」。純本地練習（data-game-hud=off、只 pingActive 續 streak、不計 XP、不自動打分）。全繁體中文。進度只記練過幾題＋自評，絕不存語音。
--->
 <style>
-  :root{ --su:#0ea5a5; --su-d:#0f766e; --su-tint:rgba(14,165,165,0.12); }
-  :root[data-theme="dark"]{ --su:#5eead4; --su-d:#99f6e4; --su-tint:rgba(94,234,212,0.16); }
-  .sp-wrap{ width:100%; max-width:var(--content-max); margin-inline:auto; }
-  .sp-screen{ display:none; } .sp-screen.active{ display:block; animation: app-fade 0.3s ease; }
-  .sp-topbar{ display:flex; align-items:center; gap:var(--s3); margin-bottom:var(--s4); }
-  .sp-title{ font-size:var(--fs-h2); font-weight:800; color:var(--ink); }
-  .sp-hello{ display:flex; align-items:center; gap:var(--s3); padding:var(--s4); background:var(--su-tint);
-    border:1px solid var(--card-border); border-radius:var(--r-lg); margin-bottom:var(--s5); }
-  .sp-hello .sp-mascot{ font-size:44px; flex:none; }
-  .sp-htext{ font-size:var(--fs-body); font-weight:700; color:var(--ink); }
-  .sp-hsub{ font-size:var(--fs-small); color:var(--ink); font-weight:600; margin-top:2px; }
-  .sp-privacy{ display:flex; align-items:flex-start; gap:8px; max-width:var(--content-max); margin:0 auto var(--s5);
-    padding:var(--s3) var(--s4); background:var(--su-tint); border:1px dashed var(--su); border-radius:var(--r-md);
-    font-size:var(--fs-small); font-weight:700; color:var(--ink); line-height:1.7; }
-  .sp-privacy .ic{ font-size:20px; flex:none; }
-  .sp-card{ background:var(--card); border:1px solid var(--card-border); border-radius:var(--r-lg);
-    box-shadow:var(--shadow-sm); padding:var(--s5) var(--s4); max-width:var(--content-max); margin-inline:auto; }
-  .sp-scorebar{ display:flex; justify-content:space-between; align-items:center; font-size:var(--fs-small);
-    font-weight:800; color:var(--su-d); margin-bottom:var(--s3); }
-  .sp-lv{ background:var(--su-tint); border-radius:999px; padding:2px 10px; }
-  .sp-tag{ display:block; width:fit-content; font-size:var(--fs-small); font-weight:800; color:var(--su-d);
-    background:var(--su-tint); border-radius:999px; padding:3px 12px; margin:0 auto var(--s3); }
-  .sp-say{ font-size:26px; font-weight:800; color:var(--ink); text-align:center; line-height:1.6; margin:var(--s3) auto var(--s2); max-width:min(100%,22em); }
-  .sp-pair{ display:flex; justify-content:center; gap:var(--s4); flex-wrap:wrap; margin:var(--s3) 0 var(--s2); }
-  .sp-word{ font-size:28px; font-weight:800; color:var(--su-d); background:var(--su-tint); border:1px solid var(--card-border);
-    border-radius:var(--r-md); padding:8px 18px; cursor:pointer; font-family:var(--font); }
-  .sp-word:hover{ border-color:var(--su); }
-  .sp-word .sp-word-ic{ font-size:16px; margin-left:6px; opacity:.8; }
-  .sp-zh{ font-size:var(--fs-small); font-weight:700; color:var(--ink-soft); text-align:center; margin-bottom:var(--s2); }
-  .sp-dialog{ max-width:min(100%,24em); margin:var(--s3) auto var(--s2); }
-  .sp-line{ display:flex; gap:8px; align-items:baseline; margin:6px 0; font-size:var(--fs-body); font-weight:700; color:var(--ink); line-height:1.6; }
-  .sp-line .en{ cursor:pointer; border-bottom:1px dotted var(--su); display:inline-block; padding:6px 8px; border-radius:8px; }
-  .sp-who{ flex:none; width:1.8em; height:1.8em; border-radius:999px; background:var(--su-tint); color:var(--su-d);
-    font-size:var(--fs-small); font-weight:800; display:flex; align-items:center; justify-content:center; }
-  .sp-note{ max-width:min(100%,30em); margin:var(--s3) auto 0; padding:var(--s3) var(--s4); background:var(--su-tint);
-    border-left:4px solid var(--su); border-radius:var(--r-md); font-size:var(--fs-small); font-weight:700; color:var(--ink); line-height:1.7; }
-  .sp-scaffold{ list-style:none; padding:0; margin:6px 0 0; }
-  .sp-scaffold li{ padding:3px 0; }
-  .sp-example{ font-style:normal; color:var(--su-d); font-weight:800; }
-  .sp-controls{ display:flex; flex-wrap:wrap; gap:var(--s2); justify-content:center; margin-top:var(--s4); }
-  .sp-controls .btn{ min-width:120px; }
-  .sp-btn-rec{ background:var(--c-wrong-btn); color:var(--on-accent); border-color:var(--c-wrong-btn); }
-  .sp-btn-rec[aria-pressed="true"]{ animation: sp-pulse 1s ease-in-out infinite; }
-  @keyframes sp-pulse{ 0%,100%{ opacity:1 } 50%{ opacity:.55 } }
-  .sp-meter{ height:10px; border-radius:999px; background:var(--su-tint); overflow:hidden; max-width:min(100%,24em); margin:var(--s3) auto 0; }
-  .sp-meter > i{ display:block; height:100%; width:0%; background:var(--su); transition:width .08s linear; }
-  .sp-status{ text-align:center; font-size:var(--fs-small); font-weight:800; color:var(--su-d); margin-top:var(--s3); min-height:1.4em; }
-  .sp-compare{ display:none; gap:var(--s3); justify-content:center; flex-wrap:wrap; margin-top:var(--s3); }
-  .sp-compare.show{ display:flex; }
-  .sp-rate{ display:none; margin-top:var(--s4); }
-  .sp-rate.show{ display:block; }
-  .sp-rate-q{ text-align:center; font-size:var(--fs-small); font-weight:800; color:var(--ink); margin-bottom:var(--s3); }
-  .sp-rate-row{ display:flex; gap:var(--s2); }
-  .sp-rate-row .btn{ flex:1; min-width:0; }
-  .sp-actions{ margin-top:var(--s4); display:flex; gap:var(--s3); }
-  .sp-actions .btn{ flex:1; }
-  .sp-fallback{ display:none; max-width:min(100%,30em); margin:var(--s3) auto 0; text-align:center; color:var(--ink-soft);
-    font-size:var(--fs-small); font-weight:700; line-height:1.7; }
-  .sp-menu-note{ text-align:center; color:var(--ink-soft); font-size:var(--fs-small); margin-top:var(--s5);
-    font-weight:600; max-width:34em; margin-inline:auto; line-height:1.7; }
-  @media (prefers-reduced-motion: reduce){
-    .sp-btn-rec[aria-pressed="true"]{ animation:none; outline:3px solid var(--su); }
-    .sp-meter > i{ transition:none; }
-  }
+  .sp-wrap{ max-width:none; margin:0 auto; padding:14px clamp(18px,3vw,48px) 40px; }
+  .sp-intro{ margin:4px 0 16px; }
+  .sp-intro h1{ font-size:23px; margin:0 0 4px; color:var(--ink); display:flex; align-items:center; gap:10px; }
+  .sp-intro p{ margin:0; color:var(--ink-soft); font-size:14px; line-height:1.55; }
+  .sp-groups{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:12px 18px; align-items:start; }
+  .sp-sit{ min-width:0; } .sp-sit h2{ font-size:13px; font-weight:700; color:var(--c-english-ink); margin:0 0 7px; }
+  .sp-units{ display:flex; flex-direction:column; gap:8px; }
+  .sp-unit{ display:flex; align-items:center; gap:8px; text-decoration:none; background:var(--card);
+    border:1px solid var(--c-english); border-radius:10px; padding:9px 12px; color:var(--ink); }
+  .sp-unit:hover{ background:var(--c-english); color:#fff; }
+  .sp-unit:focus-visible{ outline:3px solid var(--c-focus); outline-offset:2px; }
+  .sp-unit .em{ font-size:17px; }
+  .sp-foot{ color:var(--ink-soft); font-size:12px; margin-top:22px; border-top:1px solid var(--card-border); padding-top:12px; }
 </style>
 </head>
 <body data-game-hud="off">
 <header class="app-bar">
-  <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
-    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
-    <span class="app-bar__home-label">學習基地</span>
+  <a class="app-bar__home" href="index_new.html" aria-label="回到學習地圖">
+    <span class="app-bar__home-icon" aria-hidden="true">🗺️</span><span class="app-bar__home-label">學習地圖</span>
   </a>
-  <span class="app-bar__title">英文口說・跟著唸 🎙️</span>
+  <span class="app-bar__title">開口說 🗣️</span>
   <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
     <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
   </button>
 </header>
-<main class="shell">
-  <section id="screen-menu" class="sp-screen active sp-wrap">
-    <div class="sp-topbar"><span class="sp-title">英文口說・跟著唸 🎙️</span></div>
-    <div class="sp-hello"><span class="sp-mascot" aria-hidden="true">🎙️</span>
-      <div><div class="sp-htext">開口說英文，最有效的方法是「跟讀」（shadowing）：先聽一次<b>標準的發音</b>，馬上跟著唸；想的話還可以錄下自己的聲音，跟標準音比一比，聽出哪裡不一樣。</div>
-      <div class="sp-hsub">選一個主題開始。聽 → 說 →（可選）錄起來比較 → 給自己打個氣，一題一題來。</div></div></div>
-    <div class="sp-privacy"><span class="ic" aria-hidden="true">🔒</span>
-      <span>如果你按「錄我說」，錄音<b>只留在這台裝置</b>、播完或換下一題就<b>自動消失</b>，不會上傳、不會被存起來。可以放心開口練習！</span></div>
-    <div id="sp-menu" class="cn-lessons"></div>
-    <a class="cn-nextup" href="english_sense.html"><span class="cn-nextup-ic" aria-hidden="true">🚀</span><span>想更懂英文的語氣和語調嗎？到「英文語感」繼續 →</span></a>
-    <p class="sp-menu-note">這是口說練習場，沒有對錯、不計分，重點是<b>敢開口、多練幾次</b>。聽不清楚可以按「🐢 慢慢唸」放慢，或多聽幾遍再跟著說。</p>
-  </section>
-  <section id="screen-levels" class="sp-screen sp-wrap">
-    <div class="sp-topbar"><button type="button" class="btn btn-icon" id="btn-back-levels" aria-label="回到主選單">←</button><span class="sp-title" id="levels-title">選一個等級</span></div>
-    <div id="sp-levels" class="cn-lessons"></div>
-    <p class="sp-menu-note">從你適合的等級開始（越後面越接近美國高中程度）。每一級都是「聽 → 說 →（想的話）錄起來比較 → 給自己打個氣」。</p>
-  </section>
-  <section id="screen-play" class="sp-screen sp-wrap">
-    <div class="sp-topbar"><button type="button" class="btn btn-icon" id="btn-back" aria-label="回到等級選單">←</button><span class="sp-title" id="play-title">英文口說</span></div>
-    <div id="stage"></div>
-  </section>
+<main class="sp-wrap">
+  <div class="sp-intro">
+    <h1><span aria-hidden="true">🗣️</span>開口說（情境溝通）</h1>
+    <p>用真實生活情境學「能用的一句話」：先聽先感覺 → 練一練 → 跟著讀、模仿語調 → 自評。每個單元也內含聽寫與跟讀。選一個情境開始：</p>
+  </div>
+  <div class="sp-groups" id="groups"><p id="loading" style="color:var(--ink-soft)">載入中…</p></div>
+  <footer class="sp-foot">資料來源：authoring/units_index.json（由 tools/gen_derived.py 掃各 *.units.json 衍生）。</footer>
 </main>
-<script src="english_speaking.js"></script>
+<script>
+const EMO={ "english_greetings.html":"👋","english_directions.html":"🧭","english_ordering.html":"☕",
+  "english_shopping.html":"🛍️","english_time.html":"⏰","english_doctor.html":"🩺",
+  "english_hotel.html":"🏨","english_weather.html":"⛅" };
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+fetch('authoring/units_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():{units:[]}).catch(()=>({units:[]})).then(ui=>{
+  const us=(ui.units||[]).filter(u=>u.subject==='eng');
+  const el=document.getElementById('groups');
+  if(!us.length){ el.innerHTML='<p style="color:var(--ink-soft)">單元建置中。</p>'; return; }
+  const groups=[], gi={};
+  us.forEach(u=>{ const g=u.situation_group||'其他'; if(!(g in gi)){ gi[g]=groups.length; groups.push([g,[]]); } groups[gi[g]][1].push(u); });
+  el.innerHTML=groups.map(([g,list])=>
+    '<div class="sp-sit"><h2>'+esc(g)+'</h2><div class="sp-units">'+
+    list.map(u=>'<a class="sp-unit" href="'+esc(u.page)+'"><span class="em" aria-hidden="true">'+(EMO[u.page]||'💡')+'</span><span>'+esc(u.title_zh)+'</span></a>').join('')+
+    '</div></div>').join('');
+});
+</script>
 </body>
 </html>

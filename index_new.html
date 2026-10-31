@@ -42,15 +42,23 @@
     min-width:22px; height:22px; padding:0 6px; border-radius:999px; font-size:12px; font-weight:700;
     background:var(--a,var(--c-primary)); color:#fff; }
   .lp-seqnote{ color:var(--ink-soft); font-size:12.5px; margin:2px 0 0; }
-  .lp-units{ background:var(--tint-english); border:1px solid var(--c-english); border-radius:12px;
-    padding:11px 14px; margin:12px 0 4px; }
-  .lp-units .uh{ font-size:13px; font-weight:700; color:var(--c-english-ink); margin-bottom:7px; }
-  .lp-unit{ display:inline-flex; align-items:center; gap:7px; text-decoration:none; background:var(--card);
-    border:1px solid var(--c-english); border-radius:10px; padding:8px 12px; margin:0 8px 8px 0; color:var(--ink); }
-  .lp-unit:hover{ background:var(--c-english); color:#fff; }
-  .lp-unit:focus-visible{ outline:3px solid var(--c-focus); outline-offset:2px; }
-  .lp-unit .u-emoji{ font-size:17px; } .lp-unit .u-min{ font-size:12px; color:var(--ink-soft); }
-  .lp-unit:hover .u-min{ color:#eafff6; }
+  /* 島面板兩帶：📘 跟著學（編號路徑卡）＋ 🎯 練習與應用（不編號 area 卡） */
+  .lp-band{ display:flex; align-items:baseline; gap:10px; margin:6px 0 10px; }
+  .lp-band .bem{ font-size:18px; flex:none; } .lp-band .bnm{ font-size:16px; font-weight:800; color:var(--ink); }
+  .lp-band .bmt{ font-size:12.5px; color:var(--ink-soft); }
+  .lp-zone{ margin-top:24px; }
+  a.lp-scard{ text-decoration:none; color:inherit; }
+  a.lp-scard:hover{ box-shadow:0 2px 10px rgba(51,49,46,.12); }
+  a.lp-scard:focus-visible{ outline:3px solid var(--c-focus); outline-offset:2px; }
+  .lp-scard .lp-aem{ font-size:19px; margin-right:3px; }
+  .lp-sdesc{ font-size:12.5px; color:var(--ink-soft); line-height:1.5; }
+  .lp-soonpin{ margin-left:auto; }
+  .lp-tchip.area{ background:var(--tint-english); color:var(--c-english-ink); }
+  .lp-tchip.soon{ background:var(--card-border); color:var(--ink-soft); }
+  /* 大島分類別：在「跟著學」帶內把分區分成類別群（小標＋該群卡牆） */
+  .lp-catsec{ margin-bottom:16px; }
+  .lp-cath{ font-size:13.5px; font-weight:800; color:var(--ptitle,var(--ink));
+    margin:14px 0 9px; display:flex; align-items:center; gap:7px; }
   .lp-scard .scount{ font-size:12px; color:var(--ink-soft); }
   .lp-tiers{ display:flex; flex-wrap:wrap; gap:6px; }
   .lp-tchip{ font-size:11.5px; padding:2px 8px; border-radius:999px;
@@ -95,25 +103,110 @@ const ACCENT={
   math:["var(--c-math)","var(--c-math-ink)"], sci:["var(--c-primary)","var(--c-primary-ink)"],
   "soc-civ":["var(--c-social)","var(--c-social-ink)"], "soc-geo":["var(--c-finance)","var(--c-finance-ink)"],
   "soc-hist":["var(--c-coin)","var(--c-coin-ink)"], life:["var(--c-primary-soft)","var(--c-primary-ink)"]};
+// 大島分類表：島 → [[emoji, 類別名, [分區 title_zh…]]]。有表的島在「跟著學」帶內分類別群；沒有的維持 flat。
+const CATMAP={
+  life:[
+    ['🛡️','安全與自我保護',['安全綜合','身體界線','居家安全','人身安全','緊急應變','交通安全','網路霸凌防治','網路交友安全','菸酒毒品防制','詐騙辨識']],
+    ['💗','情緒與人際',['人際關係','情緒調節','情緒覺察','成長型思維','同理與社會覺察']],
+    ['🧠','學會如何學',['讀書方法','後設認知','記憶策略','目標與時間管理','專注力','學習習慣']],
+    ['🤔','思考與推理',['決策思考','推理：演繹與歸納','事實與證據','批判與創意思考','認知偏誤','邏輯謬誤','邏輯推理','提問與判讀']],
+    ['💰','理財素養',['認識金錢','儲蓄與消費','金錢價值觀','市場與供需','利息與複利','預算規劃','信用與保險']],
+    ['📱','數位與資訊素養',['數位公民','媒體識讀','隱私與個資','電腦與資料','新聞識讀','資訊安全','訊息查證','AI 與演算法素養','網路原理']],
+    ['💡','運算與創客思維',['運算思維','演算法思維','設計與創客思考','專題實作']],
+    ['📊','數據與統計素養',['圖表判讀','誤導性統計圖表','統計概念']],
+    ['🌍','公民與永續',['環保與減碳','公民行動','全球公民','永續發展目標 SDGs','科技與社會']],
+    ['🌟','典範與啟發',['發明與科學進展','改變世界的人']],
+  ],
+  sci:[
+    ['🔬','科學方法與探究',['科學探究']],
+    ['⚛️','物理',{prefix:'物理：'}],
+    ['🧪','化學',{prefix:'化學：'}],
+    ['🧬','生物',{prefix:'生物：'}],
+    ['🌏','地球科學',{prefix:'地球科學：'}],
+  ],
+};
 let NAV=null, cur=null, UNITS={};
 function renderPanel(isl){
   const [fill,ink]=ACCENT[isl.island]||["var(--c-primary)","var(--c-primary-ink)"];
   const panel=document.getElementById('panel');
   panel.style.setProperty('--ptitle',ink);
-  const cards=isl.strands.map(s=>{
+  // 一張分區／路徑卡（num 省略＝不編號）
+  const strandCard=(s,num,label)=>{
     const tiers=Object.entries(s.tiers).map(([t,n])=>`<span class="lp-tchip">${TIER_ZH[t]||t} ${n}</span>`).join('');
-    return `<div class="lp-scard" style="--a:${fill}"><span class="snm"><span class="lp-step">${s.order||''}</span>${s.title_zh}</span>`+
+    return `<div class="lp-scard" style="--a:${fill}"><span class="snm">${num?`<span class="lp-step">${num}</span>`:''}${label||s.title_zh}</span>`+
       `<span class="scount">${s.min_count} 個必備知識點</span><span class="lp-tiers">${tiers}</span></div>`;
-  }).join('');
+  };
   const us=(UNITS[isl.island]||[]);
-  const unitsHtml = us.length ? (`<div class="lp-units"><div class="uh">▶ 可以開始做的單元（${us.length}）</div>`+
-    us.map(u=>`<a class="lp-unit" href="${u.page}"><span class="u-emoji">👋</span><span>${u.title_zh}`+
-      (u.est_minutes?` <span class="u-min">· 約 ${u.est_minutes} 分</span>`:'')+`</span></a>`).join('')+`</div>`) : '';
+  const isEng = isl.island==='eng';
+  let gridHtml, zoneHtml='';
+  if(isEng){
+    // 編號學習路徑：№1 自然發音 → №2 開口說 → №3… 文法分區（原序往後移一位）
+    const strands=isl.strands.slice().sort((a,b)=>(a.order||99)-(b.order||99));
+    const phon=strands.find(s=>s.order===1);
+    const rest=strands.filter(s=>s!==phon);
+    const speak = us.length ? (`<a class="lp-scard" style="--a:${fill}" href="english_speaking.html"><span class="snm"><span class="lp-step">2</span>開口說（情境溝通）</span>`+
+      `<span class="lp-sdesc">用真實情境學「能用的一句話」：聽 → 說 → 聽寫 → 跟讀模仿語調 → 自評（聽寫＋跟讀已內含）。</span>`+
+      `<span class="lp-tiers"><span class="lp-tchip area">${us.length} 個單元</span><span class="lp-tchip area">聽・說・寫</span></span></a>`) : '';
+    const arr=[];
+    if(phon) arr.push(strandCard(phon,1));
+    if(speak) arr.push(speak);
+    rest.forEach(s=>arr.push(strandCard(s,(s.order||0)+1)));
+    gridHtml=arr.join('');
+    // 🎯 練習與應用（不編號 area 卡；chip＝難度跨度）
+    const area=(em,nm,desc,chips)=>`<div class="lp-scard" style="--a:${fill}"><span class="snm"><span class="lp-aem" aria-hidden="true">${em}</span>${nm}<span class="lp-tchip soon lp-soonpin">建置中</span></span>`+
+      `<span class="lp-sdesc">${desc}</span><span class="lp-tiers">${chips}</span></div>`;
+    zoneHtml=`<div class="lp-zone"><div class="lp-band"><span class="bem" aria-hidden="true">🎯</span><span class="bnm">練習與應用</span>`+
+      `<span class="bmt">不排順序・隨時可練；卡片等級＝難度跨度，點進去才分階</span></div>`+
+      `<div class="lp-strandgrid">`+
+      area('📚','單字大師（分級字庫）','分級字卡：聽音優先・雙向・三級自評・SRS。重用 CEFR／COCA／英檢多益／YLE 字庫與語音。',
+        '<span class="lp-tchip area">A1</span><span class="lp-tchip area">A2</span><span class="lp-tchip area">B1</span><span class="lp-tchip area">B2–C2</span>')+
+      area('🎧','聽與寫（分級聽寫）','分級聽寫 drill：DK 入門單字 → CEFR 句子／短文；手寫／鍵盤＋跟讀＋自評。與開口說的情境句聽寫互補。',
+        '<span class="lp-tchip area">入門 DK</span><span class="lp-tchip area">初階 A1</span><span class="lp-tchip area">中階 A2–B1</span><span class="lp-tchip area">高階 B2+</span>')+
+      area('💬','慣用語與片語','道地語塊＋情境例句＋小故事，三級自評。重用既有慣用語／片語資料。',
+        '<span class="lp-tchip area">慣用語</span><span class="lp-tchip area">片語動詞</span>')+
+      `</div></div>`;
+  } else {
+    gridHtml=isl.strands.map(s=>strandCard(s,s.order)).join('');
+    // 其他科：練習帶佔位（全站架構一致，誠實標建置中）
+    zoneHtml=`<div class="lp-zone"><div class="lp-band"><span class="bem" aria-hidden="true">🎯</span><span class="bnm">練習與應用</span>`+
+      `<span class="bmt">這一科的整合練習與題庫建置中</span></div>`+
+      `<div class="lp-scard" style="--a:${fill}"><span class="snm"><span class="lp-aem" aria-hidden="true">🧩</span>練習區<span class="lp-tchip soon lp-soonpin">建置中</span></span>`+
+      `<span class="lp-sdesc">依這一科的特性提供整合練習（例如計算練習、題組、實作任務）。</span></div></div>`;
+  }
+  // 「跟著學」主體：有類別表的大島分類別群，否則單一卡牆
+  let teachBody;
+  const cats=CATMAP[isl.island];
+  if(cats && !isEng){
+    const byTitle={}; isl.strands.forEach(s=>byTitle[s.title_zh]=s);
+    const sorted=isl.strands.slice().sort((a,b)=>(a.order||99)-(b.order||99));
+    const used=new Set(); const secs=[];
+    cats.forEach(([em,title,sel])=>{
+      let inCat, labelOf;
+      if(sel && sel.prefix){ // 前綴規則：取未用過且 title 以該前綴開頭者，卡片顯示去前綴
+        inCat=sorted.filter(s=>!used.has(s.title_zh) && (s.title_zh||'').startsWith(sel.prefix));
+        labelOf=s=>s.title_zh.slice(sel.prefix.length);
+      } else {            // 明列分區名
+        inCat=sel.map(n=>byTitle[n]).filter(Boolean);
+        labelOf=s=>s.title_zh;
+      }
+      inCat.forEach(s=>used.add(s.title_zh));
+      if(inCat.length) secs.push(`<div class="lp-catsec"><h3 class="lp-cath"><span aria-hidden="true">${em}</span>${title}</h3>`+
+        `<div class="lp-strandgrid">${inCat.map(s=>strandCard(s,s.order,labelOf(s))).join('')}</div></div>`);
+    });
+    const left=isl.strands.filter(s=>!used.has(s.title_zh));
+    if(left.length) secs.push(`<div class="lp-catsec"><h3 class="lp-cath">其他</h3>`+
+      `<div class="lp-strandgrid">${left.map(s=>strandCard(s,s.order)).join('')}</div></div>`);
+    teachBody=secs.join('');
+  } else {
+    teachBody=`<div class="lp-strandgrid">${gridHtml}</div>`;
+  }
+  const teachBand=`<div class="lp-band"><span class="bem" aria-hidden="true">📘</span><span class="bnm">跟著學</span>`+
+    `<span class="bmt">${cats&&!isEng?'依類別整理；':''}數字＝建議學習順序（基礎 → 進階）；科技樹建置中</span></div>`;
   panel.innerHTML=`<div class="lp-panel-h"><h2>${isl.title_zh}</h2>`+
     `<span class="sub">${isl.strand_count} 個分區 · 必備 ${isl.min_count} 個知識點</span></div>`+
-    unitsHtml+
-    `<p class="lp-seqnote">數字＝建議學習順序（基礎 → 進階）。完整的分區先備關係圖（科技樹）建置中。</p>`+
-    `<div class="lp-strandgrid">${cards}</div>`;
+    teachBand+
+    teachBody+
+    zoneHtml;
 }
 function select(i){
   cur=i;

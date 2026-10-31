@@ -2,6 +2,8 @@
 
 > 狀態：**草案**。依 HD 2026-10-31 四條治理鐵律（見 memory `english-island-approach-2026-10-31`）起草，供 HD 審／改。
 > 非 normative；定案要走 roles-first 團隊 ＋ content_audit 5-clean ＋ HD 確認，再折入 `LEARNING_PATH_REBUILD_SPEC.md`。
+>
+> **➡ 最終呈現／分區／學習路徑／舊資產重用 的 clear picture 見 `english_island_blueprint.md`（HD 2026-10-31 定調：舊工具不原封連結，用新 house 設計重做體驗、只 reuse 底層材料＝資料 JSON＋既有音檔）。本檔保留雙層結構細節。**
 
 ## 0. 問題陳述
 現行英語島 22 個分區是**文法分類學**（verb/modal/relcl…）＝為台灣考試學英文的骨架。應試 OK、課綱覆蓋正確、**考試需求要保留**，但那是「檢索結構」不是「使用結構」：實際生活旅行/工作要的是**能開口、聽得懂、用得出來**。
