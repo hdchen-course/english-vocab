@@ -185,3 +185,8 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - coverage_gate.py --verify 報「未覆蓋 3086／3086」。**診斷**：gate 讀 `units_index.json`（gen_derived.py 產）算覆蓋，但該索引只帶輕量 metadata、**不帶 teach/practice/kp_ids** → 看不到綁定 → 誤報 0 覆蓋。實際 100 單元 teach∩practice 已真教真考綁定 **35 個 eng minimum KP**（手算確認）。→ **gate 少算 bug，已委派 worktree builder 修**（選 A：gen_derived 於 index additive 加 covered_kp_ids；或 B：gate 直讀 *.units.json）＋紅隊＋確認其他 index 讀取 gate 無回歸。
 - **即使修好＝35／3086**。AC-COV 真正缺口＝**全 8 科＋多數英語 minimum KP 尚未建單元**（chi/math/sci/soc×3/life 皆 0 單元；eng 僅 35/300）。這是整個學習路徑的**核心內容建置大工程**（~3051 個 KP 待建單元），需完整 authoring team、跨多 session。AC-COV FAIL 正確反映此 runway，非 gate 問題。
 - **剩餘大工程佇列（皆多-session）**：(1) AC-COV 內容建置（8 科單元，最大宗）；(2) AC-UNIT-2 每頁 5-clean 馬拉松（100 頁現有 + 新建頁）；(3) AC-UNIT-3 golden/ dir（§6.6/O-9：3 archetype 各 1 golden + §8 六鏡 panel 全簽 + deviation_categories enum）。
+
+## 🚧 內容建置程式開跑（2026-11-01 23:32:19）— 首批 6 個主題字彙 eng 單元
+- 全站 gate/infra/正確性 AC 已綠後，進入核心內容建置：為未覆蓋 265 個 eng minimum KP 建單元（先 vocab 主題字彙低風險批）。
+- 首批目標 KP：emotion-personality／hobby-leisure／travel-geography／health-illness／shopping-money／festivals-culture（皆 t_mid vocab）。派英語內容 team（worktree）：撰寫＋對抗式英語母語/語言學審查＋PM，沿用 §6.2.2 schema＋共用 unit.js/unit.css 引擎，過 unit_schema/claim_evidence/question_correctness/unit_acceptance/scan_simplified/no_grade/coverage gate＋iPad render＋a11y。正確性第一、source_refs 據實不杜撰。
+- 驗收＝coverage 覆蓋數由 35 增加。完成後我 review+gate 複驗+render 複核才合併，接著續建下一批（其餘 eng 分區→7 科）。
