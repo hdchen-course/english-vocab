@@ -19,14 +19,69 @@
   function SCAFFOLD_KEY() { return 'dict_' + currentSeries + '_scaffold_v1'; }
   function HINTS_KEY() { return 'dict_' + currentSeries + '_hints_v1'; }    // 一次性提示 dismissals
 
-  var DICT = [].concat(
-    (typeof window !== 'undefined' && window.DICT_DK) ? window.DICT_DK : [],
-    (typeof window !== 'undefined' && window.DICT_CEFR) ? window.DICT_CEFR : []
-  );
-  var byLevel = {};
-  for (var i = 0; i < DICT.length; i++) {
-    var it = DICT[i];
-    (byLevel[it.level] = byLevel[it.level] || []).push(it);
+  /* ---- 資料按需載入（AC-PERF-1 / R9「按需」原則）----
+   *  dict_data_*.js（≈1.95MB）不再於 HTML 初始同步載入；改為「選定系列／等級、真正要
+   *  開始練習」時才動態 inject 對應資料檔，再 rebuild byLevel。選單骨架（52 週格＋加碼＋
+   *  CEFR 入口）與完成度點皆可在未載入任何資料時先渲染：DK 結構由 build 保證規律
+   *  （每週 d1–d4 各 5 字、d5 複習 20 字＝每週 40 張；加碼為封閉集），完成度點改以
+   *  「done store 的 id 前綴 ＋ 預期張數」計算（unitStateByPrefix，與原 unitState(ids) 等價）。
+   *  本改動純為載入優化：單字／音檔／自評（SRS、三級評分、揭曉）邏輯一字未動。 */
+  var DATA_FILES = {
+    dk: ['dict_data_dk.js'],
+    cefr: ['dict_data_cefr_a1.js', 'dict_data_cefr_a2.js', 'dict_data_cefr_b1.js',
+      'dict_data_cefr_b2.js', 'dict_data_cefr_c1.js', 'dict_data_cefr_c2.js',
+      'dict_data_cefr_daily.js', 'dict_data_cefr_phrasal.js', 'dict_data_cefr_idioms.js',
+      'dict_data_cefr_practical.js', 'dict_data_cefr_quotes.js']
+  };
+  // DK 選單骨架常數（build 保證：§7 每週 d1–d4 共 20＋d5 複習 20＝40；§4.4 加碼封閉集）
+  var DK_WEEKS = 52, DK_DAY_N = 5, DK_D5_N = 20, DK_WEEK_N = 40;
+  var DK_BONUS = [['dk-bonus-numbers', '數字 Numbers', 22], ['dk-bonus-days', '星期 Days', 7], ['dk-bonus-months', '月份 Months', 12]];
+  var DICT = [], byLevel = {};
+  var fileLoaded = {}; // src → true（成功載入過，絕不重複 inject，避免 window.DICT_CEFR 重覆 concat）
+  var seriesLoaded = { dk: false, cefr: false };
+  var seriesLoading = { dk: false, cefr: false };
+  var seriesError = { dk: false, cefr: false };
+  function rebuildByLevel() {
+    DICT = [].concat(
+      (typeof window !== 'undefined' && window.DICT_DK) ? window.DICT_DK : [],
+      (typeof window !== 'undefined' && window.DICT_CEFR) ? window.DICT_CEFR : []
+    );
+    byLevel = {};
+    for (var i = 0; i < DICT.length; i++) {
+      var it = DICT[i];
+      (byLevel[it.level] = byLevel[it.level] || []).push(it);
+    }
+  }
+  function injectScript(src) {
+    return new Promise(function (resolve, reject) {
+      if (fileLoaded[src]) { resolve(); return; }
+      var s = document.createElement('script');
+      s.src = src;
+      s.async = false; // 維持注入順序（CEFR 多檔皆以 (DICT_CEFR||[]).concat 累進）
+      s.onload = function () { fileLoaded[src] = true; resolve(); };
+      s.onerror = function () { reject(new Error('載入失敗：' + src)); };
+      document.head.appendChild(s);
+    });
+  }
+  // 確保某系列資料檔已載入 → rebuild byLevel → cb()；失敗則標記並重繪（友善重試，不留白畫面）。
+  function ensureSeries(series, cb) {
+    if (seriesLoaded[series]) { cb(); return; }
+    if (seriesLoading[series]) { return; } // 載入中：忽略重複觸發（入口已顯示「載入中…」）
+    seriesLoading[series] = true;
+    seriesError[series] = false;
+    var files = DATA_FILES[series] || [];
+    var chain = Promise.resolve();
+    files.forEach(function (f) { chain = chain.then(function () { return injectScript(f); }); });
+    chain.then(function () {
+      seriesLoading[series] = false;
+      seriesLoaded[series] = true;
+      rebuildByLevel();
+      cb();
+    }).catch(function () {
+      seriesLoading[series] = false;
+      seriesError[series] = true;
+      renderMenu(); // 顯示重試入口，不留白畫面
+    });
   }
 
   /* ---- 小工具：localStorage JSON（done / accent / scaffold / hints） ---- */
@@ -66,6 +121,20 @@
       else { allDone = false; }
     }
     return !any ? 'none' : (allDone ? 'done' : 'partial');
+  }
+  // 以 done store 的「id 前綴 ＋ 預期張數」計算三態；與 unitState(ids) 等價
+  // （prefix 唯一界定該單元的 id，count＝該單元應有張數），但「不需先載入該系列資料」，
+  // 供未載入資料時渲染 DK 選單骨架的完成度點用。
+  function unitStateByPrefix(series, prefix, count) {
+    var d = readJSON(doneKeyForSeries(series), {}), any = false, n = 0, allDone = true;
+    for (var id in d) {
+      if (!d.hasOwnProperty(id)) continue;
+      if (('' + id).lastIndexOf(prefix, 0) !== 0) continue; // startsWith(prefix)
+      n++; any = true;
+      var g = d[id];
+      if (g !== 'good' && g !== 'easy') allDone = false;
+    }
+    return !any ? 'none' : (n === count && allDone ? 'done' : 'partial');
   }
 
   /* ---- 卡集建構 ---- */
@@ -109,29 +178,61 @@
 
   /* ============================ 選單 ============================ */
   function renderMenu() {
+    renderDkMenu();
+    renderCefrMenu();
+  }
+  // 載入入口按鈕（未載入該系列資料時顯示；點擊 → inject 資料 → 重繪選單）
+  function loadButton(text, series) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'dct-day dct-load';
+    var t = document.createElement('span');
+    t.textContent = text;
+    b.appendChild(t);
+    b.addEventListener('click', function () {
+      if (seriesLoading[series]) return;
+      t.textContent = '載入中…';
+      b.disabled = true;
+      ensureSeries(series, function () { renderMenu(); });
+    });
+    return b;
+  }
+  // DK 選單：骨架（52 週格＋加碼）在無資料時即可渲染；資料於「開始某單元」時才 inject。
+  function renderDkMenu() {
     var grid = $('dct-week-grid');
-    if (!grid) return;
-    grid.innerHTML = '';
-    for (var w = 1; w <= 52; w++) {
-      var level = 'dk-w' + ('0' + w).slice(-2);
-      if (!byLevel[level]) continue;
-      grid.appendChild(weekCard(level, w));
+    if (grid) {
+      grid.innerHTML = '';
+      for (var w = 1; w <= DK_WEEKS; w++) {
+        grid.appendChild(weekCard('dk-w' + ('0' + w).slice(-2), w));
+      }
     }
     var bonusWrap = $('dct-bonus');
     if (bonusWrap) {
       bonusWrap.innerHTML = '';
-      [['dk-bonus-numbers', '數字 Numbers'], ['dk-bonus-days', '星期 Days'], ['dk-bonus-months', '月份 Months']]
-        .forEach(function (b) {
-          if (!byLevel[b[0]]) return;
-          var cards = bonusCards(b[0]);
-          var btn = dayButton(b[1] + '（' + cards.length + ' 字）', unitState(idsOf(cards)), function () {
-            startSet(cards, bonusStoreKey(b[0]), cards.length);
+      DK_BONUS.forEach(function (b) {
+        var level = b[0], count = b[2];
+        var btn = dayButton(b[1] + '（' + count + ' 字）', unitStateByPrefix('dk', 'dk::' + level + '::', count), function () {
+          ensureSeries('dk', function () {
+            var cards = bonusCards(level);
+            startSet(cards, bonusStoreKey(level), cards.length);
           });
-          bonusWrap.appendChild(btn);
         });
+        bonusWrap.appendChild(btn);
+      });
+    }
+  }
+  // CEFR 選單：資料較大，點入才載。未載入時顯示單一載入入口；載入後渲染真實主題例句＋分級。
+  function renderCefrMenu() {
+    var themesWrap = $('dct-themes'), cefrWrap = $('dct-cefr');
+    if (!seriesLoaded['cefr']) {
+      if (themesWrap) {
+        themesWrap.innerHTML = '';
+        themesWrap.appendChild(loadButton(seriesError['cefr'] ? '⚠️ 載入失敗，點我重試' : '點我載入主題例句 ＋ CEFR 分級聽寫', 'cefr'));
+      }
+      if (cefrWrap) cefrWrap.innerHTML = '';
+      return;
     }
     // 高價值「主題例句」聽寫（只有例句）：日常/片語/慣用/數字情境/金句（level=cefr-<set>）
-    var themesWrap = $('dct-themes');
     if (themesWrap) {
       themesWrap.innerHTML = '';
       [['cefr-daily', '💬 日常對話'], ['cefr-phrasal', '🔗 片語動詞'], ['cefr-idioms', '✨ 常用慣用語'],
@@ -146,7 +247,6 @@
       });
     }
     // 系列 A（CEFR）單字軌 + 例句軌：A1–B1（站內字表）、B2–C2（NGSL/AWL 開放清單）
-    var cefrWrap = $('dct-cefr');
     if (cefrWrap) {
       cefrWrap.innerHTML = '';
       [['cefr-a1', 'A1 入門'], ['cefr-a2', 'A2 基礎'], ['cefr-b1', 'B1 進階'],
@@ -194,13 +294,11 @@
     var head = document.createElement('button');
     head.type = 'button';
     head.className = 'dct-week__head';
-    var d1 = dayCards(level, 'd1'), d2 = dayCards(level, 'd2'), d3 = dayCards(level, 'd3'), d4 = dayCards(level, 'd4');
-    var weekIds = idsOf(d1.concat(d2, d3, d4)).concat(idsOf(weekD5Cards(level)));
     var label = document.createElement('span');
     label.className = 'dct-week__label';
     label.textContent = '第 ' + w + ' 週 · 20 字';
     head.appendChild(label);
-    head.appendChild(dot(unitState(weekIds)));
+    head.appendChild(dot(unitStateByPrefix('dk', 'dk::' + level + '::', DK_WEEK_N)));
     var body = document.createElement('div');
     body.className = 'dct-week__body hidden';
     head.addEventListener('click', function () {
@@ -208,20 +306,22 @@
       head.setAttribute('aria-expanded', open ? 'false' : 'true');
     });
     head.setAttribute('aria-expanded', 'false');
-    // 五天
+    // 五天：骨架於無資料時即渲染（build 保證每週 d1–d4 各 5 字、d5 複習 20 字）；
+    // 真正的卡集於「開始該天」時才 inject DK 資料後建立。
     [['d1', 'Day 1'], ['d2', 'Day 2'], ['d3', 'Day 3'], ['d4', 'Day 4']].forEach(function (d) {
-      var cards = dayCards(level, d[0]);
-      if (!cards.length) return;
-      body.appendChild(dayButton(d[1] + '（5 字）', unitState(idsOf(cards)), function () {
-        startSet(cards, dayStoreKey(level, d[0]), 5);
+      var day = d[0];
+      body.appendChild(dayButton(d[1] + '（5 字）', unitStateByPrefix('dk', 'dk::' + level + '::' + day + '::word::', DK_DAY_N), function () {
+        ensureSeries('dk', function () {
+          startSet(dayCards(level, day), dayStoreKey(level, day), DK_DAY_N);
+        });
       }));
     });
-    var d5 = weekD5Cards(level);
-    if (d5.length) {
-      body.appendChild(dayButton('Day 5 複習（' + d5.length + ' 字）', unitState(idsOf(d5)), function () {
-        startSet(d5, d5StoreKey(level), d5.length);
-      }));
-    }
+    body.appendChild(dayButton('Day 5 複習（20 字）', unitStateByPrefix('dk', 'dk::' + level + '::d5::word::', DK_D5_N), function () {
+      ensureSeries('dk', function () {
+        var cards = weekD5Cards(level);
+        startSet(cards, d5StoreKey(level), cards.length);
+      });
+    }));
     card.appendChild(head);
     card.appendChild(body);
     return card;

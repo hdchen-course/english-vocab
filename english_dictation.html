@@ -111,18 +111,11 @@ body { font-family: var(--font); min-height: 100vh; background: var(--bg); color
 
 </main>
 
-<script src="dict_data_dk.js"></script>
-<script src="dict_data_cefr_a1.js"></script>
-<script src="dict_data_cefr_a2.js"></script>
-<script src="dict_data_cefr_b1.js"></script>
-<script src="dict_data_cefr_b2.js"></script>
-<script src="dict_data_cefr_c1.js"></script>
-<script src="dict_data_cefr_c2.js"></script>
-<script src="dict_data_cefr_daily.js"></script>
-<script src="dict_data_cefr_phrasal.js"></script>
-<script src="dict_data_cefr_idioms.js"></script>
-<script src="dict_data_cefr_practical.js"></script>
-<script src="dict_data_cefr_quotes.js"></script>
+<!-- 資料檔（dict_data_*.js，≈1.95MB）改為「按需載入」（AC-PERF-1 / R9「按需」原則）：
+     不再於此處初始同步載入（那會讓首屏初始 JS ~2MB、遠超同類頁基準），改由 dictation.js 在
+     「選定系列／等級、真正要開始練習」時動態 inject 對應資料檔（DK → dict_data_dk.js；
+     CEFR → dict_data_cefr_*.js）。選單骨架與完成度點於無資料時先渲染。白名單（§10.2 R9 a'）
+     仍只允許 dict_data_*.js，動態注入的目標即屬此白名單，未新增任何外部執行期依賴。 -->
 <script src="dictation.js"></script>
 </body>
 </html>
