@@ -124,3 +124,8 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 2. **RT-9 saveNow 無 earned-shrink rollback＋onStorage replace 非 union**：跨分頁/注入縮水 profile→memory 被 replace→後續 award 持久化縮水集→badges/ownedItems/totalXp 丟。修＝saveNow 前驗 earned 單調不減（縮小＝拒寫＋回滾，R8）＋onStorage 改 additive union（R7）。
 3. **RT-12 無 export/import**：§7.1 localStorage 驅逐（iPad Safari ITP 7 天）緩解未實作。修＝一鍵匯出單一 JSON＋非破壞 additive 匯入（safe_store.mergeIncoming 已是正確 primitive，缺 user-facing 接線）。
 **作法**：game_core 最高 blast-radius（204 頁共用引擎）→隔離 worktree＋審 diff＋main 重驗；**驗收＝`reward_safety_gate.mjs --verify` 由 exit3→exit0**（TDD，gate 已先行）＋既有 reward_catalog/provenance gate 仍綠＋全站 render 無回歸。嚴禁為過關弱化 gate。
+
+## AC-VIZ-1 釐清（2026-11-01 21:51）＝hub 視覺簽核（非單元 viz）
+英語島 100 單元**無 viz/scene SVG stepper**（units.json 零 `kind:viz`），故 AC-VIZ-1 非單元 viz 維度。`tools/figure_signoff_gate.py`（**存在且可用**，非 registry 誤指的 `.mjs`）守 visual-QA SOP：`index_new.html` 當前內容 sha 須有 `authoring/hub_render_manifest.json`（全狀態 render）＋`authoring/hub_signoff.json`（四角色逐狀態簽核）綁**同一 sha**。
+**現況 FAIL（正確/誠實）**：manifests 為 Oct31（source_sha 0b51cbd/e82bc6a），但 index_new.html 本 session 經 CATMAP/HUD/sidebar/進度 編修→當前 sha `c9525d2b`，舊簽核依「sha變則作廢」失效。
+**下一步（視覺 DONE-GATE）**：重 render index_new.html 的 10 個 required_states（CATMAP 各島展開/收合、練習帶、HUD、備份 sheet…portrait+landscape）→更新 hub_render_manifest.json（source_sha=c9525d2b＋逐 PNG）＋四角色逐狀態簽核更新 hub_signoff.json（states_reviewed ⊇ required_states）→figure_signoff_gate.py --verify exit0。另：registry AC-VIZ-1 由 `.mjs`（不存在）校正為 `PY tools/figure_signoff_gate.py --verify`（真實工具；gate 是 sha/manifest 檔檢查、非 renderer，.py 恰當，非弱化）。此為刻意的下一迭代（10 狀態 render＋4 角色判定＋manifest regen）。
