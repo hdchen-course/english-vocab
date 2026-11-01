@@ -230,3 +230,7 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
   - 落地規格草案已備（DOM/hash #subject/strand/siblings來源units_index/共用引擎改點/hub路由/app-bar home bug）。**app-bar home bug 範圍提醒：全站 219 html 有 href=index.html，含他島頁＋15手刻english頁，屬其他 lane，待協調決定是否一併修。**
   - **狀態：等 HD 拍板採哪案（HD 保留的設計決策），核准後才施工＋全gate＋四角色重簽。主session不自動實作。**
 - **下一步**：續 batch5 內容（再6單元混中/高階）。
+
+## 2026-11-02 01:39 — batch5 內容合併上線
+- commit 80dc5ba1d → main：6 單元（中階 presentvsprog/pastirregular/indefinitepron/freqadverb、高階 reladverb/wouldmodal）＋36 edge-tts mp3。全 gate 綠、coverage eng 59→65、units_index 124→130、nav_index 不變。對抗式修 7 處歧義（避免第二正解）。iPad 兩高階頁 render 四角色 pass。
+- eng 進度：65/300 covered。續 batch6。
