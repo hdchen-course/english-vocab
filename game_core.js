@@ -137,6 +137,10 @@
     var storageAvailable = true; // localStorage 是否可用
     var writingSelf = false; // 標記自身寫入，過濾 storage 事件
     var levelThresholdCache = null; // 等級累積門檻快取
+    // §7.1 壞檔不重設：首次 load 即偵測到存檔 JSON.parse 失敗（壞檔）時設為 true，
+    // 令所有 save 路徑「不寫磁碟」，避免以空白 freshProfile 靜默覆寫既有壞檔／既有獎勵進度；
+    // 記憶體仍以 fresh 運作（頁面可用），待使用者確認修復（resolveCorruptProfile）才解除。
+    var readOnlyUntilResolved = false;
     // ===================================================================
     // 主題（夜間模式）—— 使用者可切換、預設亮色（不跟隨系統）（§spec）
     // -------------------------------------------------------------------
@@ -225,6 +229,63 @@
             if (raw === null || raw === undefined)
                 return null;
             return JSON.parse(raw);
+        }
+        catch (e) {
+            return null;
+        }
+    }
+    // §7.1 壞檔不重設：讀「原始字串」而不解析，用來區分「key 不存在（正常首次）」
+    // 與「key 存在但 JSON.parse 失敗（壞檔）」。key 不存在／localStorage 不可用→回 null；
+    // 存在→回原始字串（可能是合法或壞 JSON）。（readLS 仍維持原合約，供其餘呼叫端 graceful 取值。）
+    function readRawLS(key) {
+        try {
+            var raw = localStorage.getItem(key);
+            return (raw === null || raw === undefined) ? null : raw;
+        }
+        catch (e) {
+            return null;
+        }
+    }
+    // §7.1(a) 壞檔不重設：把原始壞字串備份到 `<key>__corrupt_<ts>`。
+    //   - 同內容只備份一次（避免每次 load 都疊一份）；
+    //   - 最多留 3 份、超出時刪最舊（鍵名含毫秒時間戳，字典序≈時間序；防配額爆量）。
+    // 回傳實際使用（新建或既存同內容）的備份鍵名；任何例外都吞掉並回 null（絕不讓備份動作讓頁面崩潰）。
+    function backupCorrupt(key, rawStr) {
+        try {
+            var prefix = key + '__corrupt_';
+            var existing = [];
+            for (var i = 0; i < localStorage.length; i++) {
+                var k = localStorage.key(i);
+                if (k && k.indexOf(prefix) === 0)
+                    existing.push(k);
+            }
+            // 同內容只備份一次：若已有一份備份內容與此壞字串相同，直接重用、不新增。
+            for (var j = 0; j < existing.length; j++) {
+                try {
+                    if (localStorage.getItem(existing[j]) === rawStr)
+                        return existing[j];
+                }
+                catch (eInner) { /* 單筆讀取失敗略過 */ }
+            }
+            var backupKey = prefix + Date.now();
+            var suffix = 0;
+            // 同一毫秒內多次壞檔的極端情形：加遞增尾碼避免撞鍵覆蓋前一份備份。
+            while (localStorage.getItem(backupKey) !== null) {
+                suffix++;
+                backupKey = prefix + Date.now() + '_' + suffix;
+            }
+            localStorage.setItem(backupKey, rawStr);
+            existing.push(backupKey);
+            // 最多留 3 份：字典序排序後自前端（最舊）刪除，直到剩 3 份。
+            if (existing.length > 3) {
+                existing.sort();
+                while (existing.length > 3) {
+                    var oldest = existing.shift();
+                    try { localStorage.removeItem(oldest); }
+                    catch (eDel) { /* 刪除失敗略過 */ }
+                }
+            }
+            return backupKey;
         }
         catch (e) {
             return null;
@@ -439,14 +500,44 @@
             storageAvailable = false;
         }
         // §6.3 載入順序鐵律：raw ← readLS → migrate(raw) → normalize。
-        var raw = readLS(CONFIG.storageKey);
-        raw = migrateProfile(raw);
-        profile = normalizeProfile(raw);
+        // §7.1 壞檔不重設：先取原始字串，區分「key 不存在（正常首次）」與「key 存在但壞 JSON」。
+        var rawStr = readRawLS(CONFIG.storageKey);
+        if (rawStr === null) {
+            // key 不存在＝正常首次：以 fresh 啟動，且**不**設唯讀旗標→可正常 save。
+            profile = normalizeProfile(null);
+            return profile;
+        }
+        var parsed;
+        try {
+            parsed = JSON.parse(rawStr);
+        }
+        catch (e) {
+            // 壞檔（首次 load 即解析失敗）：絕不以空白 freshProfile 覆寫磁碟。§7.1(a)(b)(c)
+            // (a) 備份原始壞字串；(b) 記憶體用 fresh（頁面仍可用）；
+            // (c) 設 readOnlyUntilResolved→所有 save 路徑不寫磁碟；(d) 非侵入提示（warn，不 throw）。
+            var backupKey = backupCorrupt(CONFIG.storageKey, rawStr);
+            readOnlyUntilResolved = true;
+            if (window.console && window.console.warn)
+                window.console.warn('[game_core] ' + CONFIG.storageKey +
+                    ' 解析失敗（壞檔）：已備份原始內容至 ' + (backupKey || '(備份失敗)') +
+                    '，進入唯讀保護模式（readOnlyUntilResolved）——本工作階段不覆寫磁碟，' +
+                    '以免既有 XP／coins／badges／owned 被空白 fresh 靜默歸零。');
+            profile = normalizeProfile(null);
+            return profile;
+        }
+        // 正常存檔：依序 migrate → normalize（維持原行為）。
+        parsed = migrateProfile(parsed);
+        profile = normalizeProfile(parsed);
         return profile;
     }
     // 立即寫入（try/catch；配額滿不可讓頁面崩潰，§4.7）。
     function saveNow() {
         if (!storageAvailable || !profile)
+            return;
+        // §7.1 壞檔保護（唯一磁碟寫入點，涵蓋 save/saveNow/reset/seedOnce/pingActive/pagehide 等
+        // 所有會寫入的路徑）：首次 load 即壞檔時進入唯讀模式，禁止以記憶體 fresh 覆寫磁碟壞檔／既有進度。
+        // 待使用者確認修復（resolveCorruptProfile）解除後才可寫。記憶體仍正常運作，不影響頁面。
+        if (readOnlyUntilResolved)
             return;
         profile.updatedAt = nowISO();
         try {
@@ -1479,6 +1570,17 @@
         off: off,
         showToast: showToast,
         reset: reset,
+        // §7.1 壞檔保護狀態查詢：首次 load 即壞檔→true（此工作階段禁止寫磁碟）。
+        isReadOnly: function () { return readOnlyUntilResolved; },
+        // §7.1(c) 使用者確認修復：壞檔備份後，由明確的使用者手勢呼叫此方法解除唯讀、
+        // 使當前記憶體 profile 得以寫回磁碟（取代壞檔）。只由 UI 手勢觸發，不由程式自動呼叫。
+        resolveCorruptProfile: function () {
+            if (!readOnlyUntilResolved)
+                return false;
+            readOnlyUntilResolved = false;
+            saveNow();
+            return true;
+        },
         // 主題 API（夜間模式）
         setTheme: setTheme,
         toggleTheme: toggleTheme,
