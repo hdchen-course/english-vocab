@@ -81,6 +81,7 @@ registry arg 對齊。這些是大工程，需組 team＋spec 逐節 grounding�
 ## 變更流水帳（最新在上）
 | 時間(台北) | commit | 內容 |
 |---|---|---|
+| 2026-11-01 21:47 | `e584eaa1a` | game_core 修 3 真 reward-loss gap（RT-10 reset 手勢閘門／RT-9 saveNow reconcile union＋onStorage merge／RT-12 export-import＋UI）；AC-REWARD-1 RED→gate exit3→0；worktree＋審 diff＋四角色簽核；順修 PRC「內存」 |
 | 2026-11-01 21:01 | `c4b914712` | Phase 1：nav_gate.mjs reconcile（AC-NAV 接線，增補不刪）——加 --verify＋自管 server＋DATA↔DOM、**保留** R-OPEN/R14、ND 改對頂層島（CATMAP 一島展開放行）、R-OPEN 窄排除 #badge-wall；獨立紅隊 selftest/4 壞案例 DENY/GOOD 放行、實站 17 頁 0 違規 |
 | 2026-11-01 20:43 | `2359a3416` | Phase 1：design_consistency_gate.js 補 `--verify` CLI 相容層（AC-STYLE-1/2 由 crash→乾淨 exit0，DUPLICATE=0 NEAR=17 advisory）；紅隊壞目錄→99 fail-closed 哨兵仍在 |
 | 2026-11-01 20:37 | （無 commit，還原保護）| nav_gate.mjs builder 揪出我的錯誤前提：該檔**本就存在於 HEAD**（201 行、含 islands≤12／visible≤15 ND／R-OPEN 鎖定態／R14 zh-collapse 四檢查），builder 覆寫後掉了 R-OPEN 與 ND≤15→**我 git checkout 還原 HEAD，不 merge 掉檢查的 rewrite**。builder 新版存 /tmp/nav_gate_builder_new.mjs 待 reconcile |
@@ -116,7 +117,8 @@ registry＝`authoring/acceptance_criteria.json`；單一驗證入口＝`tools/ve
 
 **其他 queue**：weather-nature KP cross_check（待 ≥2 獨立開放授權來源、quote 可線上驗；主流字典 403 反機器人不破解）；nav/a11y 的真實 findings（1348 a11y＋17 style NEAR）入 rebuild backlog。
 
-## 🔴 高優先 must-fix（2026-11-01 21:27，reward_safety_gate.mjs 揪出的真 reward-loss）
+## ✅ 已解（2026-11-01 21:47，commit e584eaa1a）— 原 🔴 高優先 reward-loss（AC-REWARD-1 由 RED→gate exit0）
+> 下方 3 gap 已於隔離 worktree 修畢＋獨立審 diff＋main 重驗（reward_safety --verify exit3→0、RT-9/10/12 PASS、catalog/provenance/selftest 皆綠）＋匯出匯入 UI 四角色 iPad 簽核。backlog：備份 bottom-sheet 由 bottom-left 改置中（minor spatial polish）。
 AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06c3e09bc）對實站 exit3＝**3 個真 never-disappear gap，全在 `game_core.js` 的 `player_profile_v1`**（learning_progress_v1 經 safe_store 已保護、layer-B 全 PASS）。根因＝player_profile_v1 從未遷移到 safe_store 守衛。**這是 R1/R3 等級（核心承諾「獎勵永不消失」被打穿），下一迭代最高優先**：
 1. **RT-10 reset 無手勢閘門（最嚴重，證實 game_core.js:989-1000）**：`Game.reset('all')` 任何程式/事件/他分頁路徑呼叫→`profile=freshProfile(); saveNow()` 即刻全清並持久化、所有 earned 毀。修＝reset('all') 須 `{userConfirmed:true, gestureToken}`（比照 §6.3 UI／safe_store mint，程式路徑一律拒）。
 2. **RT-9 saveNow 無 earned-shrink rollback＋onStorage replace 非 union**：跨分頁/注入縮水 profile→memory 被 replace→後續 award 持久化縮水集→badges/ownedItems/totalXp 丟。修＝saveNow 前驗 earned 單調不減（縮小＝拒寫＋回滾，R8）＋onStorage 改 additive union（R7）。
