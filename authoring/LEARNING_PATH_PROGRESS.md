@@ -6,13 +6,13 @@
 
 ## ⚠ 2026-11-01 19:40 診斷發現（更正舊「乾淨地基」敘述）— 下一 session 必讀
 loop 深掘 `verify_learning_path.py --phase=1` 揭出真實地基狀態，**更正**下方 17:13 的樂觀敘述：
-1. **KP manifest 自身 provenance 掛（T3-03，foundational）**：committed `authoring/knowledge_points.json`
-   被**手工擴充**了 Phase-2 英語島 KP（如 `eng.t_base.vocab.weather-nature`/`...seasons`，`src=english_island_phase2`），
-   但 `authoring/_kp_slices/` **無對應來源**，故 `_kp_build.py --check` FAIL（committed≠regen，逐欄位）。
-   連鎖：manifest_sha 失配→`verified_overlay` 不再套用→`binding_unverified=3079`（非「全覆蓋 verified」）。
-   **正確修法＝為 Phase-2 英語島 KP 補真實來源的 `_kp_slices/` slice（走 §6.8.1 verified 流程），
-   使 regen 重現它們；嚴禁直接 regen+commit（會刪掉 100 單元參照的 KP、打穿 KP-ref 完整性）。**
-   診斷副本在 `/tmp/kpregen`（committed-only KP＝手工加的；regen 產 3096）。
+1. ✅ **已修（85db84e52）KP manifest provenance（T3-03 FAIL→PASS）**：根因＝committed
+   `knowledge_points.json` 被手工注入 **7 筆** Phase-2 英語島 KP（`src=english_island_phase2`/`line:0`），
+   `_kp_slices/` 無來源。修法＝在 `_kp_slices/eng.md` 補 7 筆真實 slice（2 vocab＋5 pattern，108 課綱英語
+   領綱基礎功能/字彙）→重生 manifest＋inventory＋overlay（綁新 sha `f0808844e4a0a525`）。id-set 不變（3103，
+   0 增 0 刪）→100 單元 KP-ref 完整（unit_schema_gate exit0）。結果：`chk-manifest` PASS、`AC-ANTIDRIFT` PASS、
+   `AC-KP-VERIFY` binding_unverified **3079→7**（7 新 KP 誠實標 unverified，待 §6.8.1 真實來源驗證；不造假）。
+   〔更正：`verified_overlay.json`＋`source_registry.json` **本就存在**（Oct30 建，非「未建」）；verified=3091 復原。〕
 2. **Phase 1 gate 戰隊大多未建（~12）**：registry（`authoring/acceptance_criteria.json`）指向尚未存在的
    node gate：`nav_gate.mjs`/`a11y_gate.mjs`/`perf_gate.mjs`/`figure_signoff_gate.mjs`/`reward_safety_gate.mjs`/
    `design_consistency_gate.js`/`per_page_5clean_gate.py`/`claim_evidence_gate.py`/`question_correctness_gate.py`/
@@ -76,6 +76,7 @@ registry arg 對齊。這些是大工程，需組 team＋spec 逐節 grounding�
 ## 變更流水帳（最新在上）
 | 時間(台北) | commit | 內容 |
 |---|---|---|
+| 2026-11-01 19:48 | `85db84e52` | Phase 0 地基修復：還原 KP manifest provenance（補 7 筆 eng.md slice→重生 manifest/overlay；T3-03 FAIL→PASS、binding_unverified 3079→7、id-set 不變、100 單元 KP-ref 完整） |
 | 2026-11-01 19:35 | `010fe76e3` | §6.3 要求4：壞檔唯讀→使用者手勢確認解除 UI（learning_progress isReadOnly/confirmReadOnlyResolved 兩層手勢防線＋game_core 自安裝 banner；隔離 worktree＋RT 24/24＋banner PNG 看過） |
 | 2026-11-01 19:05 | `cd784ffcc` | Phase 2 §6.3：英語島 100 單元接 learning_progress_v1（assets/learning_progress.js＋unit.js hook＋hub 真實進度＋100 html script）；never-disappear RT abcd＋hub/單元 render 全綠 |
 | 2026-11-01 18:48 | `(unit_schema_gate)` | Phase 1 AC-SCHEMA unit gate（§6.2 schema＋unit_id 全域唯一＋KP 參照完整性第5斷言）；現況 100 單元/185 KP refs 全綠 |
