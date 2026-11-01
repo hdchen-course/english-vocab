@@ -323,3 +323,12 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - 4 道確定性 gate 全綠（220 units），scan_simplified 12 檔 PASS。
 - iPad 三視埠 render：conjadverb 直＋modalperfect 橫逐張開圖，四角色簽核通過（右緣 97%、2–4 欄、無窄島、無重疊、老花可讀）。
 - builder 對抗式 review：0 blocker/0 minor/2 nit；修掉 relwhich P2 bike runs→goes；狀態動詞進行式、連接副詞逗號皆已適度 hedge 未 overstate。
+
+## batch21 合併（2026-11-02 06:55）
+- eng 155→161（+6），units 220→226。nav_index byte-unchanged。
+- 中階：interrogativepron（疑問代名詞 who/whose/what/which）、activepassive（主動↔被動轉換）、concessionclause（讓步子句 although/though/even though）、indirectyesno（間接問句 if/whether 是非）。
+- 高階：bareinfinitive（原形不定詞 make/let/have/see/hear+原形）、moreandmore（比較級+and+比較級 越來越）。
+- 4 道確定性 gate 全綠（226 units），scan_simplified 12 檔 PASS。
+- iPad 三視埠 render：bareinfinitive 橫＋moreandmore 直逐張開圖，四角色簽核通過（右緣 97%、2–4 欄、無窄島、無重疊、老花可讀）。
+- builder 覆蓋分析回報：t_mid 未覆蓋做完此批剩 ~10（接近用罄，剩 vocab/noun/verb/voice/nonfinite/relcl/advcl/pattern 各 1–2）；t_adv 遠未用罄。
+- 對抗式 review：0 blocker；builder 預修 interrogativepron P1 歧義（ate my sandwich→wants to go first）。
