@@ -208,3 +208,9 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
   - 高階 t_adv：musthaveto(must vs have to)、passivetenses(各時態被動)。
   - 目標 coverage eng 53→59。完工交回後由主 session 合併＋regen units_index＋全 gate＋iPad 四角色。
 - eng 現況：300 min、53 covered、247 未覆蓋（t_base 26 / t_mid 100 / t_adv 121 / t_enrich 0）。
+
+## 2026-11-02 01:06 — HD 導覽 UX 設計方向（睡前加碼）
+- HD 要「組 team 認真想整站從首頁往下的導覽 usability」，不只是麵包屑。
+- HD 具體候選：單元頁側欄改「固定頂部多列」——第1列情境/定位、第2列 jump label（快速跳轉：回分區單元牆/上下單元）、第3區下方整寬內容本體。
+- 進行中：unitnav builder 已轉為「設計探索先行」——team(PM/UX/learning/eye-comfort/對抗式)評比 3 候選並出 iPad render mockup：A=固定頂部三列(HD首選)、B=多層麵包屑、C=左側欄app-shell。選最佳→實作(共用引擎一次套118頁+hub hash深連結+修home→index_new bug)→全gate+iPad四角色。
+- 設計權屬我(design-authority)，HD丟friction訊號當驗收點。此方向待 builder 交回設計決策摘要後我審。
