@@ -216,6 +216,12 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description="AC-SCHEMA 單元內容資料契約 gate")
     ap.add_argument("--root", default=".", help="掃描根目錄（紅隊可指向暫存副本）")
     ap.add_argument("--json", action="store_true", help="stdout 印純 JSON 報告")
+    # AC 介面別名：acceptance_criteria.json 與 unit_acceptance_lint 皆以
+    # `unit_schema_gate.py --verify` 呼叫本 gate（見本檔 module docstring／unit_acceptance_lint 說明）。
+    # --verify 等同預設「全量掃描」，行為完全不變（不弱化任何斷言），僅補上被引用卻未實作的旗標，
+    # 使 verify_learning_path 的 AC-SCHEMA evidence_command 能真正跑到本 gate（原本因無此旗標而 argparse exit2）。
+    ap.add_argument("--verify", action="store_true",
+                    help="AC 介面別名：等同預設全量掃描（相容 acceptance_criteria.json／unit_acceptance_lint 呼叫；行為不變）")
     args = ap.parse_args(argv)
 
     violations, stats = run(args.root)
