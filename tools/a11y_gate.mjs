@@ -112,6 +112,10 @@ function pageScan(opts) {
   while ((tn = walker.nextNode())) {
     const el = tn.parentElement;
     if (!el || !isVisible(el)) continue;
+    // aria-hidden="true" 的（含祖先）＝不暴露給輔助技術、屬裝飾/incidental 內容，
+    // 依 WCAG 1.4.3 incidental 例外不計對比（與 axe-core 等標準 linter 一致）——
+    // 例：進階徽章頁的裝飾 emoji（aria-hidden，旁邊另有 ea-level-name 文字承載語義）。
+    if (el.closest('[aria-hidden="true"]')) continue;
     // text node 自身 range 需有尺寸（避免被收合/0 尺寸文字）
     const range = document.createRange();
     range.selectNodeContents(tn);
@@ -425,6 +429,7 @@ const INLINE_HTML = `<!doctype html><html lang="zh-Hant"><head><meta name="viewp
 .standalone{display:inline-block;width:30px;height:30px;background:#ddd;color:#111}</style></head><body>
 <p class="good-contrast">© 2026 <a href="#" style="color:#111">HD Chen</a> · 保留所有權利 All Rights Reserved</p>
 <div><a class="standalone" href="#">x</a></div>
+<span aria-hidden="true" style="color:#bbb;background:#fff;font-size:34px">🤝</span>
 </body></html>`;
 
 async function scanFixture(browser, html) {
@@ -468,6 +473,8 @@ async function selftest() {
     ['GOOD：按鈕 ≥44px → 0 違規', good.tap === 0],
     ['GOOD：動畫有 reduced-motion 處理 → 0 違規', good.motionViolation === false],
     ['INLINE：句中署名連結豁免、獨立小連結仍抓 → 恰 1 違規', inline.tap === 1],
+    ['ARIA-HIDDEN：裝飾 emoji(aria-hidden)低對比豁免 → 對比違規 0', inline.contrast === 0],
+    ['對照：可見低對比(BAD) 仍被抓 → 證非一律略過', bad.contrast > 0],
   ];
   let allok = true;
   for (const [msg, ok] of checks) { err(`  [${ok ? 'OK' : 'BAD'}] ${msg}`); allok = allok && ok; }
