@@ -41,6 +41,8 @@
 - [eng.t_base.vocab.school-supplies] 文具與教室用品  {tier: t_base, exam: 無}
 - [eng.t_base.vocab.transport] 交通工具  {tier: t_base, exam: 無}
 - [eng.t_base.vocab.weather] 天氣  {tier: t_base, exam: 無}
+- [eng.t_base.vocab.weather-nature] 天氣與自然現象（颱風/地震等）  {tier: t_base, exam: 無}
+- [eng.t_base.vocab.seasons] 季節（spring/summer/fall/winter）  {tier: t_base, exam: 無}
 - [eng.t_base.vocab.clothes] 衣物  {tier: t_base, exam: 無}
 - [eng.t_base.vocab.jobs] 職業  {tier: t_base, exam: 無}
 - [eng.t_base.vocab.calendar] 星期／月份／日期  {tier: t_base, exam: 無}
@@ -303,6 +305,11 @@
 - [eng.t_base.pattern.imperative] 祈使句（肯定/否定/Let's）  {tier: t_base, exam: 無}
 - [eng.t_base.pattern.question-order] 疑問句語序（Yes/No、Wh-、選擇疑問）  {tier: t_base, exam: 無}
 - [eng.t_base.pattern.sentence-kinds] 句子種類（直述/疑問/祈使/感嘆）  {tier: t_base, exam: 無}
+- [eng.t_base.pattern.time-greetings] 時段問候（Good morning/afternoon/evening/night）  {tier: t_base, exam: 無}
+- [eng.t_base.pattern.greet-places] 在不同場所打招呼（Welcome!/Come in!/Have a seat./See you tomorrow!）  {tier: t_base, exam: 無}
+- [eng.t_base.pattern.goodbye] 道別（Goodbye/Bye/See you/Good night）  {tier: t_base, exam: 無}
+- [eng.t_base.pattern.courtesy] 禮貌用語（Thank you/You're welcome/Excuse me/Sorry）  {tier: t_base, exam: 無}
+- [eng.t_base.pattern.encourage] 鼓勵與安慰朋友（Good job!/Try again!/Don't worry!/You can do it!）  {tier: t_base, exam: 無}
 - [eng.t_mid.pattern.sv] 句型一 S + V（完全不及物）  {tier: t_mid, exam: 會考}
 - [eng.t_mid.pattern.svc] 句型二 S + V + C（主詞補語/連綴動詞）  {tier: t_mid, exam: 會考}
 - [eng.t_mid.pattern.svo] 句型三 S + V + O（完全及物）  {tier: t_mid, exam: 會考}
