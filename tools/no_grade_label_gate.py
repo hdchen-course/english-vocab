@@ -14,12 +14,17 @@ EXIT：0=無年段洩漏；1=有；2=selftest 失敗。
 import argparse, json, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# AC-NOGRADE（R11）範疇＝學習路徑 learner-facing 頁面：hub（index_new.html）＋其導覽資料
+# ＋已建的學習路徑學習單元（english_*.html，共 100+）。**不含 legacy 舊站頁**（live index.html／
+# number_theory.html／geometry.html… 等，屬 strangler-fig 待汰換的舊站，其年段洩漏列入 standing-audit
+# backlog、非學習路徑 Phase 1 gate 範疇）。由 glob 自動納入所有 english_* 學習單元，避免漏掃新單元。
+import glob as _glob
 DEFAULT_TARGETS = [
     os.path.join(ROOT, "index_new.html"),
     os.path.join(ROOT, "authoring", "nav_index.json"),
     os.path.join(ROOT, "authoring", "subject_labels.json"),
     os.path.join(ROOT, "authoring", "strand_labels.json"),
-]
+] + sorted(_glob.glob(os.path.join(ROOT, "english_*.html")))
 
 # 高精度年段樣式（繁體）；只抓明確就學階段標記，避免「高一點／小一塊」等誤判。
 GRADE_PATTERNS = [
