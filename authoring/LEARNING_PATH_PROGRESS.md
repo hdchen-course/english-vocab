@@ -176,3 +176,7 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 ## ✅ 本輪（2026-11-01 22:58:59）AC-VIZ-1 重簽完成
 - hub .lp-step 對比修後 sha c9525d2b→a562ed0e；重 render 10 狀態+四角色簽核綁新 sha，figure_signoff_gate --verify PASS。開 4 代表張(eng綠/sci藍/iPad直2欄/16"5欄)實檢：step 徽章 color-mix 隨島色淺底深字、三視埠無版面回歸。commit 6cd6004f2 已 push。
 - **AC-A11Y-1(1348→0)＋AC-VIZ-1(綠) 本輪完成。**
+
+## ✅ 本輪（2026-11-01 23:13:39）AC-PERF-1 全綠（8→0）
+- english_sense LEVELS 內容(102KB)抽至 english_sense_data.js 按需載入(js 173→31KB)；perf_gate --verify **exit=0**(116頁0超標)。合併 builder 6 檔(含 src TS 鏡射+tsconfig)；render 雙埠驗證選單先渲染、進 level 才載資料、0 error；sense a11y 仍 0(senseAdvBadgeFab 修保留)、簡體 PASS。**AC-PERF-1 本輪由 8→1→0 完成。**
+- 殘留：dictation+sense 的 CEFR/level 按需載入屬純載入優化、CSS 版面未動；若要正式收尾可選擇性走 figure_signoff（非阻塞，低優先）。
