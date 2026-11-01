@@ -315,3 +315,11 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - 4 道確定性 gate 全綠（214 units），scan_simplified 12 檔 PASS（relthat 僅 info：台 U+53F0 量詞「一台」TW 可接受）。
 - iPad 三視埠 render：futureperfect 橫＋whilewhereas 直逐張開圖，四角色簽核通過（右緣 97%、2–4 欄、無窄島、無重疊、老花可讀）。
 - builder 對抗式 review：NO BLOCKER；2 minor（futureperfect P1 will start、wordfamily P4 quick）判定理由未 overstate、正解唯一，照原樣出貨。
+
+## batch20 合併（2026-11-02 06:34）
+- eng 149→155（+6），units 214→220。nav_index byte-unchanged。
+- 中階：zeroarticle（零冠詞 泛指複數/不可數/專有名詞）、relwhich（關代 which 指物/限定·非限定/回指整句）、stativeverb（狀態動詞多不用進行式）、itusage（it 虛主詞 天氣/時間/距離/代不定詞）。
+- 高階：conjadverb（連接副詞與標點 however/therefore/moreover，需分號）、modalperfect（情態+完成式 must/should/might/can't have+p.p.）。
+- 4 道確定性 gate 全綠（220 units），scan_simplified 12 檔 PASS。
+- iPad 三視埠 render：conjadverb 直＋modalperfect 橫逐張開圖，四角色簽核通過（右緣 97%、2–4 欄、無窄島、無重疊、老花可讀）。
+- builder 對抗式 review：0 blocker/0 minor/2 nit；修掉 relwhich P2 bike runs→goes；狀態動詞進行式、連接副詞逗號皆已適度 hedge 未 overstate。
