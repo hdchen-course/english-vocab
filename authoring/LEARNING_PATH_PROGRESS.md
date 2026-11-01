@@ -299,3 +299,11 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - 4 道確定性 gate 全綠（202 units），scan_simplified 12 檔 PASS。
 - iPad 三視埠 render：themore 橫＋correlative 直逐張開圖，四角色簽核通過（右緣 97%、2–4 欄、無窄島、無重疊、老花可讀）。
 - builder 對抗式 review：無 critical；修掉 prepcolloc P2「good in」overstate（美式口語偶有→改框為正式/會考用 good at），未動選項/正解/音檔。
+
+## batch18 合併（2026-11-02 05:53）
+- eng 137→143（+6），units 202→208。nav_index byte-unchanged。
+- 中階：hadbetter（had better 強烈建議/警告）、indirectwh（間接問句 wh- 直述語序不用助動詞）、prepgerund（介系詞+動名詞 good at/before -ing）、articleidiom（冠詞慣用語 a/an=per、go to school）。
+- 高階：pastperfect（過去完成式 had+p.p. 過去的過去）、convsprep（連接詞 vs 介系詞 because/although+子句 vs because of/despite+名詞，無 despite of）。
+- 4 道確定性 gate 全綠（208 units），scan_simplified 12 檔 PASS。
+- iPad 三視埠 render：pastperfect 橫＋convsprep 直逐張開圖，四角色簽核通過（右緣 97%、2–4 欄、無窄島、無重疊、老花可讀）。
+- builder 對抗式 review 抓到並修掉 2 blocker：articleidiom 原教 play the piano/guitar（美式可省冠詞=方言分歧→第二正解），整點改教 AmE/BrE 一致的 a/an=per 慣用語，重寫題目＋重生 aidm_ex1/sh1 mp3；另修 3 minor overstate 理由（convsprep reduced concessive、indirectwh emphatic did、pastperfect sh1 更自然化）。
