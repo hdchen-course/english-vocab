@@ -221,3 +221,12 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - 單元頁落地調整（專注互動非長捲動）：側欄(1)🏠學習地圖+←回分區單元牆(hash #eng/vocab) (2)同分區其他單元 siblings(current 高亮，最大 usability 收穫：練習中可跳別單元) (3)長 section 才加本頁章節。narrow→頂部 pill-nav=回分區+上/下 sibling。
 - 實作：共用引擎 assets/unit.js(插 shell+側欄+pill，siblings 來自 units_index subject+strand)+unit.css(移植 travel grid/sticky/pill 但用本站 app.css token)；一次套 118 頁；hub 加 #subject/strand 路由；修 home→index_new bug。
 - unitnav builder 已收到收斂指示（不再三案評比，照此 pattern 實作+render+四角色）。
+
+## 2026-11-02 01:22 — batch4 內容合併上線 + unitnav 導覽設計研究包交回（待 HD 拍板）
+- **batch4 合併**（commit d2d2cd134 → main）：6 單元（中階 futurewill/futuregoingto/participleadj/reflexive、高階 musthaveto/passivetenses）＋36 edge-tts mp3。全 gate 綠、coverage eng 53→59（uncovered 3033→3027）、units_index 118→124、nav_index 不變。對抗式審查修 futurewill P1（dark-clouds→forecast）。iPad 兩新頁 render 親看四角色 pass。
+- **unitnav 導覽設計研究包**（worktree-agent-ac2c13199f3ee950c，純研究未實作、production 乾淨、未 commit）：
+  - 3 候選＋iPad mockup（prototypes/ + /tmp/nav_proto/ 12 PNG）：候選1=travel式左側欄site-shell；候選2=HD頂部固定多列；候選3=精簡麵包屑＋同分區siblings跳轉條。
+  - **builder 推薦＝候選3**：最準命中 HD 三friction（麵包屑三層「我在哪」＋←單元牆回上層＋siblings chips跳同分區單元），滿版專注、最少chrome；關鍵：siblings直跳「橫向與直向都在」，候選1直式退化成只剩上下一個（最大收穫消失）、候選2要挑特定單元得退回單元牆。次佳=候選1（偏好與hub同構側欄、主要橫向大屏時）。
+  - 落地規格草案已備（DOM/hash #subject/strand/siblings來源units_index/共用引擎改點/hub路由/app-bar home bug）。**app-bar home bug 範圍提醒：全站 219 html 有 href=index.html，含他島頁＋15手刻english頁，屬其他 lane，待協調決定是否一併修。**
+  - **狀態：等 HD 拍板採哪案（HD 保留的設計決策），核准後才施工＋全gate＋四角色重簽。主session不自動實作。**
+- **下一步**：續 batch5 內容（再6單元混中/高階）。
