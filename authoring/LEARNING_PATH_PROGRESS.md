@@ -13,6 +13,7 @@ loop 深掘 `verify_learning_path.py --phase=1` 揭出真實地基狀態，**更
    0 增 0 刪）→100 單元 KP-ref 完整（unit_schema_gate exit0）。結果：`chk-manifest` PASS、`AC-ANTIDRIFT` PASS、
    `AC-KP-VERIFY` binding_unverified **3079→7**（7 新 KP 誠實標 unverified，待 §6.8.1 真實來源驗證；不造假）。
    〔更正：`verified_overlay.json`＋`source_registry.json` **本就存在**（Oct30 建，非「未建」）；verified=3091 復原。〕
+   **待辦（不弱化 floor）**：`eng.t_base.vocab.weather-nature`（颱風/地震＝安全相鄰）須補 2 個真實字典 cross_check 來源才 verified；補齊後 AC-KP-VERIFY→PASS（binding 全覆蓋＋4 HD 例外）。
 2. **Phase 1 gate 戰隊大多未建（~12）**：registry（`authoring/acceptance_criteria.json`）指向尚未存在的
    node gate：`nav_gate.mjs`/`a11y_gate.mjs`/`perf_gate.mjs`/`figure_signoff_gate.mjs`/`reward_safety_gate.mjs`/
    `design_consistency_gate.js`/`per_page_5clean_gate.py`/`claim_evidence_gate.py`/`question_correctness_gate.py`/
@@ -76,6 +77,7 @@ registry arg 對齊。這些是大工程，需組 team＋spec 逐節 grounding�
 ## 變更流水帳（最新在上）
 | 時間(台北) | commit | 內容 |
 |---|---|---|
+| 2026-11-01 19:54 | `b5512b340` | Phase 0：7 新英語 KP 經獨立雙鏡審查→6 verified（binding_unverified 7→1）；weather-nature 經 fail-closed high-risk floor 正確拒 expert_review（須 cross_check，不弱化）→誠實留 unverified |
 | 2026-11-01 19:48 | `85db84e52` | Phase 0 地基修復：還原 KP manifest provenance（補 7 筆 eng.md slice→重生 manifest/overlay；T3-03 FAIL→PASS、binding_unverified 3079→7、id-set 不變、100 單元 KP-ref 完整） |
 | 2026-11-01 19:35 | `010fe76e3` | §6.3 要求4：壞檔唯讀→使用者手勢確認解除 UI（learning_progress isReadOnly/confirmReadOnlyResolved 兩層手勢防線＋game_core 自安裝 banner；隔離 worktree＋RT 24/24＋banner PNG 看過） |
 | 2026-11-01 19:05 | `cd784ffcc` | Phase 2 §6.3：英語島 100 單元接 learning_progress_v1（assets/learning_progress.js＋unit.js hook＋hub 真實進度＋100 html script）；never-disappear RT abcd＋hub/單元 render 全綠 |
