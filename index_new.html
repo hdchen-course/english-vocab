@@ -71,6 +71,31 @@
     background:var(--card-border); color:var(--ink-soft); white-space:nowrap; }
   .lp-foot{ color:var(--ink-soft); font-size:12px; margin-top:24px;
     border-top:1px solid var(--card-border); padding-top:12px; }
+  /* ── 分區（strand）→ 其單元頁：可展開分區卡（§6.1 逐層 drill-down；預設收合、點擊才展開，
+       不違 ND／≤15，R-OPEN 無鎖定）。details/summary 原生互動、非 disabled。單元卡＝深連到該單元頁。 */
+  details.lp-scard{ padding:0; overflow:hidden; }
+  details.lp-scard>summary{ list-style:none; cursor:pointer; outline:none;
+    display:flex; flex-direction:column; gap:7px; padding:13px 15px; border-radius:13px 13px 0 0; }
+  details.lp-scard>summary::-webkit-details-marker{ display:none; }
+  details.lp-scard>summary::marker{ content:""; }
+  details.lp-scard>summary:focus-visible{ outline:3px solid var(--c-focus); outline-offset:-3px; }
+  details.lp-scard:not([open])>summary{ border-radius:13px; }
+  .lp-uhint{ font-size:12.5px; font-weight:700; color:var(--ink-soft);
+    display:flex; align-items:center; gap:6px; }
+  .lp-caret{ display:inline-block; transition:transform .15s; font-size:11px; }
+  details.lp-scard[open]>summary .lp-caret{ transform:rotate(90deg); }
+  .lp-unitlist{ display:flex; flex-direction:column; gap:8px; padding:2px 13px 14px; }
+  a.lp-unitcard{ display:flex; flex-direction:column; gap:4px; text-decoration:none; color:inherit;
+    background:var(--bg); border:1px solid var(--card-border);
+    border-left:4px solid var(--a,var(--c-primary)); border-radius:11px;
+    padding:11px 13px; min-height:44px; box-sizing:border-box; transition:box-shadow .12s; }
+  a.lp-unitcard:hover{ box-shadow:0 2px 9px rgba(51,49,46,.12); }
+  a.lp-unitcard:focus-visible{ outline:3px solid var(--c-focus); outline-offset:2px; }
+  .lp-utitle{ font-size:14.5px; font-weight:700; color:var(--ink); line-height:1.35; }
+  .lp-ucan{ font-size:12.5px; color:var(--ink-soft); line-height:1.5;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .lp-umeta{ display:flex; gap:10px; flex-wrap:wrap; margin-top:1px; }
+  .lp-umin{ font-size:11.5px; color:var(--ink-soft); font-weight:700; }
   @media (max-width:860px){
     .lp-layout{ grid-template-columns:1fr; }
     .lp-nav{ position:static; flex-direction:row; flex-wrap:wrap; }
@@ -191,17 +216,38 @@ const CATMAP={
   ],
 };
 let NAV=null, cur=null, UNITS={};
+const TIER_ORDER={t_base:0,t_mid:1,t_adv:2,t_sub:3,t_enrich:4};
+const esc=(s)=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 function renderPanel(isl){
   const [fill,ink]=ACCENT[isl.island]||["var(--c-primary)","var(--c-primary-ink)"];
   const panel=document.getElementById('panel');
   panel.style.setProperty('--ptitle',ink);
-  // 一張分區／路徑卡（num 省略＝不編號）
+  const us=(UNITS[isl.island]||[]);
+  // 該分區（strand）對應的已建單元，依級別→unit_id 穩定排序（§6.7 units_index 彙總）
+  const tierOf=(u)=>(u.unit_id||'').split('.')[1];
+  const unitsOf=(strand)=>us.filter(u=>u.strand===strand).slice()
+    .sort((a,b)=>((TIER_ORDER[tierOf(a)]??9)-(TIER_ORDER[tierOf(b)]??9))||(a.unit_id||'').localeCompare(b.unit_id||''));
+  // 單元卡＝<a href=該單元頁>：title_zh ＋ can_do（截斷 2 行）＋ 預估分鐘。深連進單元頁。
+  const unitCard=(u)=>{
+    const can=(u.can_do||'').trim();
+    const mins=u.est_minutes?`<span class="lp-umin">⏱ 約 ${esc(u.est_minutes)} 分</span>`:'';
+    return `<a class="lp-unitcard" style="--a:${fill}" href="${esc(u.page)}">`+
+      `<span class="lp-utitle">${esc(u.title_zh||u.unit_id)}</span>`+
+      (can?`<span class="lp-ucan">${esc(can)}</span>`:'')+
+      `<span class="lp-umeta">${mins}</span></a>`;
+  };
+  // 一張分區／路徑卡（num 省略＝不編號）。若該分區有已建單元 → 做成可展開 details（預設收合），
+  // 展開後於卡內列出各單元卡；無單元則維持原資訊卡。
   const strandCard=(s,num,label)=>{
     const tiers=Object.entries(s.tiers).map(([t,n])=>`<span class="lp-tchip">${TIER_ZH[t]||t} ${n}</span>`).join('');
-    return `<div class="lp-scard" style="--a:${fill}"><span class="snm">${num?`<span class="lp-step">${num}</span>`:''}${label||s.title_zh}</span>`+
-      `<span class="scount">${s.min_count} 個必備知識點</span><span class="lp-tiers">${tiers}</span></div>`;
+    const head=`<span class="snm">${num?`<span class="lp-step">${num}</span>`:''}${label||s.title_zh}</span>`+
+      `<span class="scount">${s.min_count} 個必備知識點</span><span class="lp-tiers">${tiers}</span>`;
+    const units=unitsOf(s.strand);
+    if(!units.length) return `<div class="lp-scard" style="--a:${fill}">${head}</div>`;
+    return `<details class="lp-scard" style="--a:${fill}">`+
+      `<summary>${head}<span class="lp-uhint">${units.length} 個單元可進入 <span class="lp-caret" aria-hidden="true">▸</span></span></summary>`+
+      `<div class="lp-unitlist">${units.map(unitCard).join('')}</div></details>`;
   };
-  const us=(UNITS[isl.island]||[]);
   const isEng = isl.island==='eng';
   let gridHtml, zoneHtml='';
   if(isEng){

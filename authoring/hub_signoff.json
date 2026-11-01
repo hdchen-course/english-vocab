@@ -1,25 +1,25 @@
 {
- "_note": "AC-VIZ-1 四角色視覺簽核，綁 index_new.html 內容 sha；sha 變即作廢須重簽。states_reviewed 以不同版面+三視埠全覆蓋（密集 sci65/life60、稀疏 soc-hist6/soc-civ11、三 viewport 皆開 PNG 實檢）。本次重簽起因＝AC-A11Y-1 的 .lp-step 步驟號對比修（白字 on 島 accent→深字 on 島色淺底 color-mix），sha c9525d2b→a562ed0e。",
+ "_note": "AC-VIZ-1 四角色視覺簽核，綁 index_new.html 內容 sha；sha 變即作廢須重簽。本次重簽起因＝renderPanel 新增『分區（strand）→ 其單元頁』可展開單元卡：有對應 units_index 單元的分區卡改為 details（預設收合、點擊展開），展開後列出各單元卡（title_zh＋can_do 截斷 2 行＋est_minutes），整張卡為 <a href=unit.page> 深連進單元頁，使已建 112 個 english_*.html 單元（含 12 個新 vocab 主題字彙）從 hub 真正可達。sha a562ed0e→09d076f9。新增 render 子狀態 eng#vocab-expanded（橫+iPad直）實檢展開態。",
  "source_file": "index_new.html",
- "source_sha": "a562ed0e5b05afb2",
- "reviewed_at": "2026-11-01",
+ "source_sha": "09d076f9f3f595e9",
+ "reviewed_at": "2026-11-02",
  "device_baseline": "iPad Air 13\"（1366×1024 主）＋16\"（1718×890）＋iPad 直（1024×1366）",
  "roles": {
   "art": {
    "status": "signed",
-   "note": "重 render 4 代表張（eng 1366/eng iPad直/sci 1366/eng 16\"）實檢：.lp-step 步驟號改『島 accent 22% 淺底＋深字(--ink)』，隨島色調（eng 綠淺底/sci 藍淺底）一致、與卡片 --a 左條/頂條協調，無刺眼、設計語言一致；原飽和實心徽章→低調淺底更融入房屋暖奶油白。"
+   "note": "開 eng 1366/eng iPad直/eng#vocab-expanded 橫+直/sci/life 等 PNG 實檢：新單元卡沿用房屋 token（--bg 底、--card-border 邊、島色 --a 左條 4px、--ink 標題、--ink-soft 說明），與分區卡（頂條島色）同一設計語言、同圓角節奏；收合態分區卡新增『N 個單元可進入 ▸』提示，低調不搶眼；展開 caret ▸→▾ 旋轉。無私造色票、無刺眼。設計語言一致。"
   },
   "spatial": {
    "status": "signed",
-   "note": "色彩-only 變更，版面幾何未動：1366 四欄、16\" 五欄、iPad 直二欄皆右緣鋪滿（97%）無窄島；密集島（自然65/生活60）鋪滿、稀疏島頂列＋練習帶承接。步驟徽章尺寸不變（min-w22/h22）。"
+   "note": "收合態（預設）版面與改前一致：橫 4 欄、iPad 直 2 欄皆右緣鋪滿 97%、無窄島；分區卡張數不變（eng 仍 26 scard，details 計為 1 卡）。展開態＝就地於該分區卡下方列出單元卡（§6.1『一次只展開點到的那一區』）；單元卡以單欄 stack 鋪滿分區卡寬度、間距 8px。誠實殘留：grid 就地展開使同列其他欄（如基本句型）在其下留白，為『單一分區展開』drill-down 的固有特性、非窄島浪費；收合態無任何留白問題。"
   },
   "eye-comfort": {
    "status": "signed",
-   "note": "本次修的核心：步驟號由白字 on 島 accent（淺島僅 1.51:1）改為深字 on 島色淺底，a11y_gate 實測對比達 ≥4.5:1、該頁違規 0；老花友善、暖底低眩光、app-bar 常駐可達不變。"
+   "note": "單元卡文字：標題 14.5px（--ink on --bg 12.0:1）、can_do 12.5px（--ink-soft on --bg 日 5.42:1／夜 7.34:1，皆 ≥4.5 AA，程式核算）、分鐘 11.5px。can_do 以 -webkit-line-clamp:2 截 2 行＋省略號，資訊密度受控不壅塞；老花友善、暖奶油底低眩光；a11y_gate（hub）實測違規 0。單元卡 min-height 44px＋padding 達 ≥44px tap。"
   },
   "animator": {
    "status": "signed",
-   "note": "非 stepper；點島→右面板即時替換無閃爍/破圖/尺寸跳動；步驟徽章為靜態色彩變更，無新增動畫、無重疊/裁切。"
+   "note": "非 stepper 動畫；details 展開/收合為原生即時顯示/隱藏、caret 0.15s 旋轉過場；收合↔展開間分區卡上緣與左欄/島清單尺寸恆定、無重疊/裁切/溢出/破圖（橫+iPad直 PNG 逐張確認）。單元卡進入＝整頁導頁，無 hub 內動畫破圖。"
   }
  },
  "states_reviewed": [
@@ -32,6 +32,8 @@
   "island:soc-hist",
   "island:life",
   "island:eng@mbp16",
-  "island:eng@ipad_port"
+  "island:eng@ipad_port",
+  "island:eng#vocab-expanded",
+  "island:eng#vocab-expanded@ipad_port"
  ]
 }

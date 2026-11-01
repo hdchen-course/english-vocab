@@ -11,7 +11,8 @@ import { fileURLToPath } from 'url';
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const OUT = '/tmp/hub_render';
-const BASE = 'http://127.0.0.1:8096/index_new.html';
+const PORT = process.env.HUB_PORT || '8096';  // 預設 8096；worktree 另起 server 時以 HUB_PORT 覆寫
+const BASE = `http://127.0.0.1:${PORT}/index_new.html`;
 mkdirSync(OUT, { recursive: true });
 
 const srcSha = createHash('sha256').update(readFileSync(join(ROOT, 'index_new.html'))).digest('hex').slice(0, 16);
@@ -24,6 +25,9 @@ const states = [];
 islands.forEach((isl, idx) => states.push({ id: `island:${isl.island}`, islandIndex: idx, island: isl.island, title: isl.title, w: PRIMARY[0], h: PRIMARY[1] }));
 states.push({ id: 'island:eng@mbp16', islandIndex: islands.findIndex(i => i.island === 'eng'), island: 'eng', title: '英語文', w: 1718, h: 890 });
 states.push({ id: 'island:eng@ipad_port', islandIndex: islands.findIndex(i => i.island === 'eng'), island: 'eng', title: '英語文', w: 1024, h: 1366 });
+// 新增子狀態：英語島「主題字彙」分區展開（列出 vocab 單元卡）——本次改動的核心新 UI，逐張看過
+states.push({ id: 'island:eng#vocab-expanded', islandIndex: islands.findIndex(i => i.island === 'eng'), island: 'eng', title: '英語文（主題字彙展開）', w: 1366, h: 1024, expandVocab: true });
+states.push({ id: 'island:eng#vocab-expanded@ipad_port', islandIndex: islands.findIndex(i => i.island === 'eng'), island: 'eng', title: '英語文（主題字彙展開）', w: 1024, h: 1366, expandVocab: true });
 
 const b = await puppeteer.launch({ executablePath: CHROME, headless: 'new', args: ['--no-sandbox', '--user-data-dir=/tmp/hub_render_chrome'] });
 const manifestStates = [];
@@ -34,9 +38,18 @@ for (const st of states) {
   await new Promise(r => setTimeout(r, 400));
   await p.evaluate((i) => document.querySelectorAll('.lp-navitem')[i]?.click(), st.islandIndex);
   await new Promise(r => setTimeout(r, 250));
+  if (st.expandVocab) {
+    await p.evaluate(() => {
+      document.querySelectorAll('#panel details.lp-scard').forEach(d => {
+        const sm = d.querySelector('summary');
+        if (sm && /主題字彙/.test(sm.textContent || '')) d.open = true;
+      });
+    });
+    await new Promise(r => setTimeout(r, 250));
+  }
   const m = await p.evaluate(() => {
     const lay = document.querySelector('.lp-layout'); const g = document.querySelector('.lp-strandgrid');
-    return { bodyH: document.body.scrollHeight, winW: window.innerWidth,
+    return { bodyH: document.body.scrollHeight, winW: window.innerWidth, unitcards: document.querySelectorAll('a.lp-unitcard').length,
       layRight: lay ? Math.round(lay.getBoundingClientRect().right) : 0,
       cols: g ? getComputedStyle(g).gridTemplateColumns.split(' ').length : 0,
       cards: document.querySelectorAll('.lp-scard').length };
@@ -44,7 +57,7 @@ for (const st of states) {
   const png = `${st.id.replace(/[:@]/g, '_')}_${st.w}x${st.h}.png`;
   await p.screenshot({ path: join(OUT, png) });
   manifestStates.push({ id: st.id, island: st.island, title: st.title, viewport: `${st.w}x${st.h}`, png,
-    cols: m.cols, cards: m.cards, layRightPct: Math.round(100 * m.layRight / m.winW), bodyH: m.bodyH });
+    cols: m.cols, cards: m.cards, unitcards: m.unitcards, layRightPct: Math.round(100 * m.layRight / m.winW), bodyH: m.bodyH });
   await p.close();
 }
 await b.close();
