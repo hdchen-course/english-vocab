@@ -37,7 +37,22 @@ const fs = require('fs');
 const path = require('path');
 
 const NOTHING_EXAMINED = 99;
-const DIR = process.argv[2] || process.cwd();
+// CLI 相容層（§11.A AC-STYLE 由 acceptance_criteria.json 以 `--verify` 呼叫；orchestrator
+// 另可能附加 `--release-id <id>`／`--root <dir>`）。原僅取 argv[2] 當 <dir>，故 `--verify`
+// 會被誤當目錄 → readdirSync('--verify') ENOENT crash。此處解析 argv：忽略 `--verify` 等旗標、
+// 吃掉 `--release-id <id>`、把 `--root <dir>` 或裸參數當掃描目錄；無指定則預設 repo cwd。
+// 行為對既有 `<dir>` 用法完全不變（偵測邏輯/exit 契約/SDA_CSS 一律不改）。
+const DIR = (() => {
+  const a = process.argv.slice(2);
+  let dir = process.cwd();
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] === '--root') { if (a[i + 1]) { dir = a[i + 1]; i++; } continue; }
+    if (a[i] === '--release-id') { i++; continue; }   // 跳過旗標＋其值
+    if (a[i].startsWith('--')) continue;              // 忽略 --verify 等
+    dir = a[i];                                        // 第一個裸參數＝掃描目錄
+  }
+  return dir;
+})();
 const SHARED = (process.env.SDA_CSS || 'assets/app.css,game_core.css').split(',').map(s => s.trim()).filter(Boolean);
 const SKIP = new Set((process.env.SDA_DC_SKIP || '').split(',').map(s => s.trim()).filter(Boolean));
 const SUFFIX = (process.env.SDA_DC_SUFFIX ||
