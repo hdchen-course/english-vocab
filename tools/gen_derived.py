@@ -30,6 +30,30 @@ SUBJECTS = {
 }
 TIERS = ["t_base", "t_mid", "t_adv", "t_sub", "t_enrich"]
 
+# §6.1 策展 9 島 rollup（curated_islands）。islands[] 仍以 domain 為單位（供 nav_gate.py／
+# prereq_dag_gate.py 的 (domain,strand) 雙射）；curated_islands 為**additive** 的前端首屏顯示層，
+# 把 domain／life-category 依 §6.1 表 rollup 成 9 座策展島（島→成員 subject→strand→tier）。
+# 成員 subject＝domain（學科域）或 life.<category>（生活域；因 life 單 domain 需再依 category 細分）。
+LIFE_CAT_ZH = {
+    "safety": "安全與自我保護", "sel": "情緒與人際", "learn": "學會如何學",
+    "think": "思考與推理", "data": "數據與統計素養", "sustain": "公民與永續",
+    "innovate": "創新與典範", "compute": "運算與資訊科技", "digital": "數位與媒體素養",
+    "finance": "理財素養",
+}
+# (island_id, title_zh, [成員 subject id…])；依 §6.1「島↔subject 對映」表，順序＝首屏顯示序。
+CURATED = [
+    ("safety",  "安全",     ["life.safety"]),
+    ("core",    "核心能力", ["life.sel", "life.learn", "life.think",
+                              "life.data", "life.sustain", "life.innovate"]),
+    ("chi",     "國語",     ["chi"]),
+    ("eng",     "英文",     ["eng"]),
+    ("math",    "數學",     ["math"]),
+    ("sci",     "自然",     ["sci"]),
+    ("soc",     "社會",     ["soc-civ", "soc-geo", "soc-hist"]),
+    ("tech",    "科技",     ["life.compute", "life.digital"]),
+    ("finance", "理財",     ["life.finance"]),
+]
+
 # strand 顯示正名（繁體；由各 strand 底下 KP 的 title_zh 歸納，逐一覆核）。
 # 鍵＝"<domain>\u001f<strand>"。未列入者 fallback 回 slug 並標 needs_review。
 STRAND_ZH = {
@@ -205,10 +229,67 @@ def main():
                         "order_basis": "coarse-tier-sequence",  # 非 DAG；完整先備關係待 §6.1 authored
                         "strand_count": len(strands), "min_count": min_total,
                         "strands": strands})
+    # ── curated_islands（§6.1 9 島 rollup；additive，前端首屏顯示層）──
+    def subject_of(r):
+        p = r["id"].split(".")
+        return f"life.{p[1]}" if p[0] == "life" else p[0]
+
+    def subject_title(subj):
+        return LIFE_CAT_ZH[subj.split(".", 1)[1]] if subj.startswith("life.") else SUBJECTS[subj][0]
+
+    def strand_title(dom, strand):
+        # life 的 `extra` 為跨 category catch-all，strand_labels 標「安全綜合」只對 safety 正確；
+        # 於策展層一律用中性「綜合應用」避免誤標非安全 category。
+        if dom == "life" and strand == "extra":
+            return "綜合應用"
+        return strand_labels[f"{dom}\u001f{strand}"]["title_zh"]
+
+    ctree = collections.defaultdict(lambda: collections.defaultdict(
+        lambda: {"min": collections.Counter(), "beyond": collections.Counter()}))
+    for r in items:
+        subj = subject_of(r); s = r.get("strand", ""); ti = r.get("tier", "")
+        bucket = "beyond" if r.get("beyond") else "min"
+        ctree[subj][s][bucket][ti] += 1
+
+    curated_members = set()
+    for _iid, _t, mem in CURATED:
+        curated_members.update(mem)
+    seen_subjects = set(ctree.keys())
+    assert seen_subjects == curated_members, (
+        f"CURATED 成員與 manifest subject 不符：缺 {curated_members - seen_subjects}、"
+        f"多 {seen_subjects - curated_members}")
+
+    curated_islands = []
+    for pos, (iid, ititle, members) in enumerate(CURATED, start=1):
+        mem_out, isl_min, isl_by, isl_sc = [], 0, 0, 0
+        for subj in members:
+            dom = "life" if subj.startswith("life.") else subj
+            s_ordered = sorted(ctree[subj], key=lambda s: strand_order_key(ctree[subj][s]) + (s,))
+            strands = []
+            for so, s in enumerate(s_ordered, start=1):
+                cell = ctree[subj][s]
+                mn = sum(cell["min"].values()); by = sum(cell["beyond"].values())
+                strands.append({"strand": s, "order": so, "title_zh": strand_title(dom, s),
+                                "min_count": mn, "beyond_count": by,
+                                "tiers": {t: cell["min"].get(t, 0) + cell["beyond"].get(t, 0)
+                                          for t in TIERS if (cell["min"].get(t, 0) + cell["beyond"].get(t, 0))}})
+            smin = sum(x["min_count"] for x in strands); sby = sum(x["beyond_count"] for x in strands)
+            mem_out.append({"subject": subj, "domain": dom, "title_zh": subject_title(subj),
+                            "strand_count": len(strands), "min_count": smin, "beyond_count": sby,
+                            "strands": strands})
+            isl_min += smin; isl_by += sby; isl_sc += len(strands)
+        curated_islands.append({"island_id": iid, "title_zh": ititle, "order": pos,
+                                "subject_count": len(mem_out), "strand_count": isl_sc,
+                                "min_count": isl_min, "beyond_count": isl_by, "members": mem_out})
+    assert sum(c["min_count"] for c in curated_islands) == sum(1 for r in items if not r.get("beyond")), \
+        "curated_islands min 加總 ≠ manifest 非 beyond"
+
     nav = {"_generated_by": "tools/gen_derived.py", "island_count": len(islands),
            "minimum_total": sum(1 for r in items if not r.get("beyond")),
            "beyond_total": sum(1 for r in items if r.get("beyond")),
-           "islands": islands}
+           "islands": islands,
+           "curated_island_count": len(curated_islands),
+           "curated_islands": curated_islands}
     json.dump(nav, open(os.path.join(AUTH, "nav_index.json"), "w"), ensure_ascii=False, indent=1)
 
     # units_index（§6.7）：聚合站上所有 *.units.json 的單元 metadata（Phase 2 起逐步填）。
@@ -221,12 +302,23 @@ def main():
             continue
         page = doc.get("page") or os.path.basename(uf).replace(".units.json", ".html")
         for u in doc.get("units", []):
+            # AC-COV-1：additively 預算真教真考綁定供 coverage_gate 讀取（§6.6 rubric⑦，per-unit）。
+            # covered_kp_ids ＝ 該單元 (∪teach.kp_ids) ∩ (∪practice.kp_ids)。
+            teach_kp = set()
+            for t in (u.get("teach") or []):
+                teach_kp.update(t.get("kp_ids") or [])
+            practice_kp = set()
+            for p in (u.get("practice") or []):
+                practice_kp.update(p.get("kp_ids") or [])
             units.append({"unit_id": u.get("unit_id"), "page": page,
                           "title_zh": u.get("title_zh", u.get("unit_id")),
                           "subject": u.get("subject"), "strand": u.get("strand"),
                           "can_do": u.get("can_do", ""),
                           "situation_group": u.get("situation_group", ""),
-                          "est_minutes": u.get("est_minutes")})
+                          "est_minutes": u.get("est_minutes"),
+                          "teach_kp_ids": sorted(teach_kp),
+                          "practice_kp_ids": sorted(practice_kp),
+                          "covered_kp_ids": sorted(teach_kp & practice_kp)})
     units_index = {"_generated_by": "tools/gen_derived.py", "count": len(units), "units": units}
     json.dump(units_index, open(os.path.join(AUTH, "units_index.json"), "w"), ensure_ascii=False, indent=1)
 

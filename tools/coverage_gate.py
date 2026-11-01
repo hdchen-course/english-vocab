@@ -33,14 +33,25 @@ def dup_ids(items):
 
 
 def uncovered_minimums(items, units):
-    """units＝unit 物件 list（或 units_index 的彙總）。回傳未『真教＋真考』的 minimum id 集合。"""
-    taught, tested = set(), set()
+    """units＝unit 物件 list（或 units_index 的彙總）。回傳未『真教＋真考』的 minimum id 集合。
+
+    『真教真考』＝**同一單元**其 (∪teach.kp_ids) 與 (∪practice.kp_ids) 皆含該 kp（§6.6 rubric⑦／本檔
+    docstring）。每單元的覆蓋集＝teach∩practice，全站覆蓋＝各單元覆蓋集之聯集。
+    units_index.json（gen_derived.py 彙總）每筆單元已 additively 預算 `covered_kp_ids`＝該單元 teach∩practice，
+    故有該欄時直接採用；無該欄的物件（如 selftest fixture 直接帶 teach/practice，或舊格式）則**同語意**地
+    由 teach∩practice 現算——兩路徑結果一致，確保 --verify（讀 index）與 --selftest（fixture）判準相同。
+    """
+    covered = set()
     for u in units:
-        for t in u.get("teach", []):
-            taught.update(t.get("kp_ids") or [])
-        for p in u.get("practice", []):
-            tested.update(p.get("kp_ids") or [])
-    covered = taught & tested
+        if u.get("covered_kp_ids") is not None:
+            covered.update(u.get("covered_kp_ids") or [])
+        else:
+            taught, tested = set(), set()
+            for t in u.get("teach", []):
+                taught.update(t.get("kp_ids") or [])
+            for p in u.get("practice", []):
+                tested.update(p.get("kp_ids") or [])
+            covered.update(taught & tested)
     minimums = [r["id"] for r in items if not r.get("beyond")]
     return [kid for kid in minimums if kid not in covered]
 
@@ -69,13 +80,25 @@ def _selftest():
     full = [{"teach": [{"kp_ids": ["m1", "m2"]}], "practice": [{"kp_ids": ["m1", "m2"]}]}]
     taught_only = [{"teach": [{"kp_ids": ["m1", "m2"]}], "practice": [{"kp_ids": ["m1"]}]}]
     none = []
+    # units_index 路徑：單元帶預算的 covered_kp_ids（gen_derived.py 彙總時寫入）
+    idx_full = [{"covered_kp_ids": ["m1", "m2"]}]
+    idx_partial = [{"covered_kp_ids": ["m1"], "teach_kp_ids": ["m1", "m2"],
+                    "practice_kp_ids": ["m1"]}]  # m2 教了沒考 → 不在 covered_kp_ids
+    # 跨單元不算覆蓋（per-unit 語意）：m1 在 A 單元教、在 B 單元考，非同一單元 → 未覆蓋
+    split = [{"teach": [{"kp_ids": ["m1"]}]}, {"practice": [{"kp_ids": ["m1"]}]}]
     ok1 = (uncovered_minimums(items, full) == [])                 # 全覆蓋（beyond e1 不計）
     ok2 = (uncovered_minimums(items, taught_only) == ["m2"])      # m2 教了沒考 → 未覆蓋
     ok3 = (sorted(uncovered_minimums(items, none)) == ["m1", "m2"])  # 無單元 → minimum 全未覆蓋
+    ok4 = (uncovered_minimums(items, idx_full) == [])             # index 路徑：covered_kp_ids 全覆蓋
+    ok5 = (uncovered_minimums(items, idx_partial) == ["m2"])      # index 路徑：教了沒考 → 未覆蓋
+    ok6 = (sorted(uncovered_minimums(items, split)) == ["m1", "m2"])  # 跨單元教/考 → 不算覆蓋（per-unit）
     print(f"  [{'OK' if ok1 else 'BAD'}] 真教真考全 minimum → 0 未覆蓋（beyond 不計）")
     print(f"  [{'OK' if ok2 else 'BAD'}] 教了沒考 → 該 id 未覆蓋")
     print(f"  [{'OK' if ok3 else 'BAD'}] 無單元 → minimum 全未覆蓋（誠實 FAIL，非 vacuous）")
-    return ok1 and ok2 and ok3
+    print(f"  [{'OK' if ok4 else 'BAD'}] units_index 路徑 covered_kp_ids 全覆蓋 → 0 未覆蓋")
+    print(f"  [{'OK' if ok5 else 'BAD'}] units_index 路徑 教了沒考 → 該 id 未覆蓋")
+    print(f"  [{'OK' if ok6 else 'BAD'}] 跨單元（A 教 B 考）→ 不算覆蓋（per-unit 真教真考）")
+    return ok1 and ok2 and ok3 and ok4 and ok5 and ok6
 
 
 def main():
