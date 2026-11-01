@@ -115,3 +115,10 @@ registry＝`authoring/acceptance_criteria.json`；單一驗證入口＝`tools/ve
 - AC-UNIT-3 golden-diff＝待建 `authoring/golden/<archetype>.html`（unit_acceptance_lint 已有 --verify-golden 的 SKIP-WITH-WARNING 誠實佔位）。
 
 **其他 queue**：weather-nature KP cross_check（待 ≥2 獨立開放授權來源、quote 可線上驗；主流字典 403 反機器人不破解）；nav/a11y 的真實 findings（1348 a11y＋17 style NEAR）入 rebuild backlog。
+
+## 🔴 高優先 must-fix（2026-11-01 21:27，reward_safety_gate.mjs 揪出的真 reward-loss）
+AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06c3e09bc）對實站 exit3＝**3 個真 never-disappear gap，全在 `game_core.js` 的 `player_profile_v1`**（learning_progress_v1 經 safe_store 已保護、layer-B 全 PASS）。根因＝player_profile_v1 從未遷移到 safe_store 守衛。**這是 R1/R3 等級（核心承諾「獎勵永不消失」被打穿），下一迭代最高優先**：
+1. **RT-10 reset 無手勢閘門（最嚴重，證實 game_core.js:989-1000）**：`Game.reset('all')` 任何程式/事件/他分頁路徑呼叫→`profile=freshProfile(); saveNow()` 即刻全清並持久化、所有 earned 毀。修＝reset('all') 須 `{userConfirmed:true, gestureToken}`（比照 §6.3 UI／safe_store mint，程式路徑一律拒）。
+2. **RT-9 saveNow 無 earned-shrink rollback＋onStorage replace 非 union**：跨分頁/注入縮水 profile→memory 被 replace→後續 award 持久化縮水集→badges/ownedItems/totalXp 丟。修＝saveNow 前驗 earned 單調不減（縮小＝拒寫＋回滾，R8）＋onStorage 改 additive union（R7）。
+3. **RT-12 無 export/import**：§7.1 localStorage 驅逐（iPad Safari ITP 7 天）緩解未實作。修＝一鍵匯出單一 JSON＋非破壞 additive 匯入（safe_store.mergeIncoming 已是正確 primitive，缺 user-facing 接線）。
+**作法**：game_core 最高 blast-radius（204 頁共用引擎）→隔離 worktree＋審 diff＋main 重驗；**驗收＝`reward_safety_gate.mjs --verify` 由 exit3→exit0**（TDD，gate 已先行）＋既有 reward_catalog/provenance gate 仍綠＋全站 render 無回歸。嚴禁為過關弱化 gate。
