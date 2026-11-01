@@ -75,6 +75,25 @@
     function startLesson(ls) { cur = ls; idx = 0; playTitle.textContent = ls.emoji + ' ' + ls.name; show(screenPlay); render(); }
     function renderProg() { var h = ''; for (var i = 0; i < cur.steps.length; i++)
         h += '<i class="' + (i < idx ? 'done' : (i === idx ? 'cur' : '')) + '"></i>'; progEl.innerHTML = h; }
+    // 延遲載入動畫引擎 anim_core.js（~371KB）：只在第一個動畫 teach 步驟真正要 mount 時才注入，
+    // 避免每頁初始就同步下載整包（§6.5 R9「按需載入」/ AC-PERF-1）。載入失敗則靜默跳過動畫
+    // （mount 內本就對缺 window.Anim 防呆），不影響非動畫 lesson。
+    var _animLoading = null;
+    function ensureAnim(cb) {
+        if (window.Anim) { cb(); return; }
+        if (!_animLoading) {
+            _animLoading = new Promise(function (resolve) {
+                var sc = document.createElement('script');
+                sc.src = 'anim_core.js';
+                sc.async = true;
+                sc.onload = function () { resolve(); };
+                sc.onerror = function () { resolve(); };
+                document.head.appendChild(sc);
+            });
+        }
+        _animLoading.then(cb);
+    }
+
     function render() {
         runCleanup();
         renderProg();
@@ -90,12 +109,18 @@
             if (typeof s.mount === 'function') {
                 var host = stage.querySelector('.cn-svg');
                 if (host) {
-                    try {
-                        curCleanup = s.mount(host);
-                    }
-                    catch (e) {
-                        curCleanup = null;
-                    }
+                    // anim_core.js 延遲載入後才 mount；載入期間若已換步/離場（host 脫離 DOM）則略過。
+                    (function (mountFn, hostEl) {
+                        ensureAnim(function () {
+                            if (!document.contains(hostEl)) return;
+                            try {
+                                curCleanup = mountFn(hostEl);
+                            }
+                            catch (e) {
+                                curCleanup = null;
+                            }
+                        });
+                    })(s.mount, host);
                 }
             }
             $('next').addEventListener('click', advance);
