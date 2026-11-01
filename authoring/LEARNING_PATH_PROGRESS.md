@@ -190,3 +190,8 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - 全站 gate/infra/正確性 AC 已綠後，進入核心內容建置：為未覆蓋 265 個 eng minimum KP 建單元（先 vocab 主題字彙低風險批）。
 - 首批目標 KP：emotion-personality／hobby-leisure／travel-geography／health-illness／shopping-money／festivals-culture（皆 t_mid vocab）。派英語內容 team（worktree）：撰寫＋對抗式英語母語/語言學審查＋PM，沿用 §6.2.2 schema＋共用 unit.js/unit.css 引擎，過 unit_schema/claim_evidence/question_correctness/unit_acceptance/scan_simplified/no_grade/coverage gate＋iPad render＋a11y。正確性第一、source_refs 據實不杜撰。
 - 驗收＝coverage 覆蓋數由 35 增加。完成後我 review+gate 複驗+render 複核才合併，接著續建下一批（其餘 eng 分區→7 科）。
+
+## ✅ 內容建置首批完成（2026-11-01 23:56:05，commit 543ed3083）
+- 6 個 t_mid vocab 主題字彙單元上線：情緒個性/興趣休閒/旅遊地理/健康不適/購物金錢/節慶文化。全確定性 gate 綠、coverage **35→41(+6)**、37 真 edge-tts mp3、對抗式英語審查揪修 1 真實用法錯(pay in cash)、iPad 四角色簽核、nav_index 不變。
+- **待查**：6 新頁是否已從 hub/nav 可達（nav_index 未變＝可能需把新 vocab 單元接進英語島 curated nav 或確認 units_index 動態路由）。列為下一步檢查項。
+- 續：派第 2 批內容 team（下一組未覆蓋 eng KP）。覆蓋 runway：eng 41/300→目標 300，再推 7 科。
