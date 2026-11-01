@@ -258,3 +258,7 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 ## 2026-11-02 03:28 — batch11 內容合併上線
 - 6 單元（中階 uncountable/maymight/relwhowhom/concession、高階 doemphasis/relwhat）＋36 mp3。全 gate 綠、coverage eng 95→101、units_index 160→166、nav_index 不變。對抗式 0 blocker（設計期鎖死第二正解）。iPad 兩高階頁四角色 pass。
 - eng 進度：101/300 covered（破 1/3；連八批 batch4-11 共 +48，皆含高階）。unitnav 導覽改版仍等 HD 拍板（候選3）。續 batch12。
+
+## 2026-11-02 03:47 — batch12 內容合併上線
+- 6 單元（中階 voicebasic/relwhose/thatobject/firstcond、高階 participlepassive/voiceditrans）＋36 mp3。全 gate 綠、coverage eng 101→107、units_index 166→172、nav_index 不變。對抗式 0 blocker。iPad 兩高階頁四角色 pass。
+- eng 進度：107/300 covered（連九批 batch4-12 共 +54，皆含高階）。unitnav 導覽改版仍等 HD 拍板（候選3）。續 batch13。
