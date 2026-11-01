@@ -341,3 +341,12 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - iPad 三視埠 render：multiplecomp 橫＋phrasalprep 直逐張開圖，四角色簽核通過（右緣 97%、2–4 欄、無窄島、無重疊、老花可讀）。
 - builder 覆蓋分析：t_mid 未覆蓋剩 6（noun.collective 刻意避開＝美式英式分歧地雷、pattern.sv/svo、voice.by-agent、vocab.core-1200/expand-2000）；t_adv 剩 59，充裕。
 - 對抗式 review 修掉 3 處：irregularverb3 P4 garden-path 題幹改寫、relomit P4 理由去 overstate、multiplecomp P1 誘答改純結構錯誤消第二解。
+
+## batch23 合併（2026-11-02 07:40）
+- eng 167→173（+6），units 232→238。nav_index byte-unchanged。
+- 中階（5）：patternsv（句型一 S+V 不及物）、patternsvo（句型三 S+V+O 及物）、voicebyagent（被動 by 片語與施事者省略）、corevocab（核心高頻字 thirsty/borrow/lend/repair/leave）、expandvocab（擴充字 protect/pollution/recycle/reduce/improve）。
+- 高階（1）：compmodifier（比較級修飾語 much/far/a little + 比較級；不用 very、不雙重比較）。
+- **t_mid 未覆蓋已用罄**（僅刻意跳過 noun.collective＝美式英式單複數分歧地雷）；之後批次改以 t_adv（剩 ~58）為主，另有 t_base ~5、t_sub 大量。
+- 4 道確定性 gate 全綠（238 units），scan_simplified 12 檔 PASS（compmodifier 台北101 僅 info）。
+- iPad render：compmodifier 橫＋expandvocab 直逐張開圖，四角色簽核通過。
+- 對抗式 review 修掉：voicebyagent P3 史觀爭議句（Columbus→Mona Lisa/Leonardo）、P1/P4 施事者去「（人）」窄化、expandvocab P3 第二正解（加 into new ones + distractor pollute）、patternsv P5 雙 the→arrive to。
