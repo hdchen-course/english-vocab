@@ -81,6 +81,7 @@ registry arg 對齊。這些是大工程，需組 team＋spec 逐節 grounding�
 ## 變更流水帳（最新在上）
 | 時間(台北) | commit | 內容 |
 |---|---|---|
+| 2026-11-01 22:01 | `ccd775e23` | Phase 1：AC-VIZ-1 PASS——hub 重 render 10 狀態＋四角色逐張重簽綁新 sha（manifests regen）＋registry .mjs→.py；figure_signoff_gate.py --verify exit0 |
 | 2026-11-01 21:47 | `e584eaa1a` | game_core 修 3 真 reward-loss gap（RT-10 reset 手勢閘門／RT-9 saveNow reconcile union＋onStorage merge／RT-12 export-import＋UI）；AC-REWARD-1 RED→gate exit3→0；worktree＋審 diff＋四角色簽核；順修 PRC「內存」 |
 | 2026-11-01 21:01 | `c4b914712` | Phase 1：nav_gate.mjs reconcile（AC-NAV 接線，增補不刪）——加 --verify＋自管 server＋DATA↔DOM、**保留** R-OPEN/R14、ND 改對頂層島（CATMAP 一島展開放行）、R-OPEN 窄排除 #badge-wall；獨立紅隊 selftest/4 壞案例 DENY/GOOD 放行、實站 17 頁 0 違規 |
 | 2026-11-01 20:43 | `2359a3416` | Phase 1：design_consistency_gate.js 補 `--verify` CLI 相容層（AC-STYLE-1/2 由 crash→乾淨 exit0，DUPLICATE=0 NEAR=17 advisory）；紅隊壞目錄→99 fail-closed 哨兵仍在 |
@@ -105,6 +106,7 @@ registry＝`authoring/acceptance_criteria.json`；單一驗證入口＝`tools/ve
 - AC-UNIT-1（unit_acceptance_lint.py，補 --verify 別名）✅
 - AC-STYLE-1/2（design_consistency_gate.js，補 --verify CLI 相容層；DUPLICATE=0，NEAR=17 advisory backlog）✅
 - AC-NAV（nav_gate.mjs reconcile：本就存在於 HEAD，增補 --verify/自管 server/DATA↔DOM、保留 R-OPEN/R14、ND 對頂層島、R-OPEN 窄排除 badge-wall；實站 0 違規）✅
+- AC-VIZ-1（figure_signoff_gate.py；hub 重 render 10 狀態＋四角色重簽綁 sha c9525d2b；registry .mjs→.py 校正）✅
 - AC-A11Y-1（新建 a11y_gate.mjs 真 render gate）→ **誠實 FAIL**：1348 真違規（.gr-play 30px tap target 遍佈 100+ 頁＋6 頁低對比）＝rebuild backlog，非 gate bug。
 
 **真 missing（工具未建），依難度/相依排序**：
