@@ -81,6 +81,7 @@ registry arg 對齊。這些是大工程，需組 team＋spec 逐節 grounding�
 ## 變更流水帳（最新在上）
 | 時間(台北) | commit | 內容 |
 |---|---|---|
+| 2026-11-01 22:05 | `29d391787` | Phase 0/1：AC-NOGRADE 接線修復＋擴 DEFAULT_TARGETS 涵蓋 100 學習單元（119 檔掃、年段洩漏0 PASS）；registry GLOB→--verify；誠實記 legacy 舊站 7 處年段洩漏為 standing-audit backlog |
 | 2026-11-01 22:01 | `ccd775e23` | Phase 1：AC-VIZ-1 PASS——hub 重 render 10 狀態＋四角色逐張重簽綁新 sha（manifests regen）＋registry .mjs→.py；figure_signoff_gate.py --verify exit0 |
 | 2026-11-01 21:47 | `e584eaa1a` | game_core 修 3 真 reward-loss gap（RT-10 reset 手勢閘門／RT-9 saveNow reconcile union＋onStorage merge／RT-12 export-import＋UI）；AC-REWARD-1 RED→gate exit3→0；worktree＋審 diff＋四角色簽核；順修 PRC「內存」 |
 | 2026-11-01 21:01 | `c4b914712` | Phase 1：nav_gate.mjs reconcile（AC-NAV 接線，增補不刪）——加 --verify＋自管 server＋DATA↔DOM、**保留** R-OPEN/R14、ND 改對頂層島（CATMAP 一島展開放行）、R-OPEN 窄排除 #badge-wall；獨立紅隊 selftest/4 壞案例 DENY/GOOD 放行、實站 17 頁 0 違規 |
