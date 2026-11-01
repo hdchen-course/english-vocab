@@ -266,3 +266,11 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 ## 2026-11-02 04:04 — batch13 內容合併上線
 - 6 單元（中階 pattern5/reasonclause/tagquestion/definiteart、高階 formalobjit/preprel）＋36 mp3。全 gate 綠、coverage eng 107→113、units_index 172→178、nav_index 不變。對抗式修 1 blocker(pattern5)。iPad 兩高階頁四角色 pass。
 - eng 進度：113/300 covered（連十批 batch4-13 共 +60，皆含高階）。unitnav 導覽改版仍等 HD 拍板（候選3）。續 batch14。
+
+## batch14 合併（2026-11-02 04:25，HEAD e99e3c9f0）
+- eng 113→119（+6），units 178→184。nav_index byte-unchanged。
+- 中階：nounmod（名詞當修飾語）、timeclause（when/while/as 時間子句）、soneither（So do I/Neither do I 附和倒裝）、pattern2（S+V+C 連綴動詞）。
+- 高階：nomatter（no matter how/what/where 讓步＝however/whatever/wherever）、reduceclause（關代＋be 化簡為分詞：主動-ing／被動 p.p.）。
+- 4 道確定性 gate 全綠（unit_schema/claim_evidence/question_correctness --verify＋scan_simplified 12 檔 PASS）。
+- iPad 三視埠 render：nomatter 橫＋reduceclause 直逐張開圖，四角色簽核通過（右緣 97%、2–4 欄 responsive、無窄島、無重疊、老花可讀、≥44px tap）。
+- builder 對抗式 review 修掉 soneither 自我附和病句（son_ex2/ex3 重生 mp3）、pattern2 P2 well 理由精確化。
