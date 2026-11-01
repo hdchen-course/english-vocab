@@ -45,7 +45,7 @@
 1. ✅ `reward_catalog` registry＋gate＋baseline（commit `758aad26e`）。
 2. ✅ §6.7 provenance 掃描 gate（RT-14/15，commit `1963295b4`）——唯讀，揪出上方 2 類真缺口。
 3. game_core.js 採用 `safe_store.js`（§10 Phase 0.5(b) never-disappear）＋順修上方兩個 provenance 缺口：**高風險（動 live 共用引擎）**，須每檔 5-clean＋RT（壞檔不 wipe）＋全站 render 驗證＋reward 兩 gate exit 0，謹慎做。
-4. 把已紅隊的 `design_consistency_gate.js`＋`content_card_width_lint.js`＋`nav_gate.mjs`＋`deviation_categories_gate.py`＋`reward_catalog_gate.py` wire 進專案 `.claude/settings.json` PreToolUse/Stop（R-STYLE-4 機器強制）＋紅隊。
+4. **部分完成**：獎勵兩 gate（catalog＋provenance）已做成 `reward-guard.sh` Stop hook wire 進 `.claude/settings.json`（fail-closed、紅隊：乾淨放行/破壞 block/venv 缺 fail-open），turn-end 自動把關 R3 never-disappear。**待續**：R-STYLE 內容結構 gate（design_consistency/content_card_width/nav/deviation/unit_acceptance/label_coverage）屬「宣告收斂前」檢查、非每 turn，需獨立設計一個 convergence-時機的整合 gate（避免每 turn 跑重的 render/掃描 wedge），另案謹慎做。（hook 在 `.claude/` 不 commit＝僅本機；誠實限制同前。）
 5. hub HUD 由唯讀手工接線 → 正式 `safe_store`＋`reward_catalog`＋`learning_progress_v1` 接線（§6.3/§6.7/§7）。
 6. 部署側 TODO（§6.7，需 CI/host 基礎設施）：`release_snapshot_on_ship_gate`／deploy-side append-only release ledger／`reward_baseline_rewrite_gate`。
 7. 續 Phase 1→2→3→4→5 至 §11.A 23 條 AC 全綠（DONE-GATE）。
