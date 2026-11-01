@@ -329,6 +329,13 @@ def main():
     ap.add_argument("--file")
     ap.add_argument("--root", default=ROOT)
     ap.add_argument("--no-delegate", action="store_true", help="關閉委派子行程（⑥/schema gate）")
+    # AC 介面別名：acceptance_criteria.json 的 AC-UNIT-1 以 `unit_acceptance_lint.py --verify` 呼叫；
+    # --verify 等同預設「全量 rubric lint」（AC-UNIT-1），行為完全不變、不弱化任何 check，
+    # 僅補上被引用卻未實作的旗標（原本因無此旗標而 argparse exit2 → AC-UNIT-1 假性 FAIL）。
+    # 註：AC-UNIT-3 的 `--verify-golden` 尚未加入——其正確實作依賴 authoring/golden/（尚未建），
+    #     本工具對缺依賴採 SKIP-WITH-WARNING（不假裝通過），故 AC-UNIT-3 維持誠實 pending，不以旗標樁冒充。
+    ap.add_argument("--verify", action="store_true",
+                    help="AC 介面別名：等同預設全量 rubric lint（AC-UNIT-1；行為不變）")
     args = ap.parse_args()
 
     if args.selftest:
