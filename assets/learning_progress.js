@@ -186,6 +186,50 @@
     return t;
   }
 
+  // ===================================================================
+  // 壞檔唯讀查詢／使用者確認解除（§6.3 要求 4 尾端：待使用者確認才可寫）
+  // -------------------------------------------------------------------
+  // isReadOnly()：首次 load 即壞檔時為 true（safe_store 禁止寫磁碟，保護既有
+  //   進度不被空白 fresh 覆寫）。呼叫會確保 store 已 load（才知道是否壞檔）。
+  //
+  // confirmReadOnlyResolved(evt)：唯一對外的「解除唯讀」入口，必須由**真實
+  //   使用者手勢**（click/keydown 等 DOM 事件）同步呼叫，並把該事件物件傳入。
+  //   防線分兩層：
+  //     (1) 瀏覽器層可驗證的手勢證明＝`evt.isTrusted === true`。真實使用者操作
+  //         產生的事件 isTrusted 為 true；由程式 dispatchEvent 合成的事件
+  //         isTrusted 為 false → 一律拒絕。此為**可強制**的手勢閘門。
+  //     (2) safe_store 的 gesture token：本函式在通過 (1) 後才呼叫
+  //         SafeStore.mintGestureToken() 取 token，再帶 token 呼叫私有的
+  //         store.confirmReadOnlyResolved({userConfirmed, gestureToken})。store
+  //         實例為本模組閉包私有、未對外曝露，故程式唯一可達路徑就是本函式，
+  //         而本函式被 (1) 擋住無真實事件者。
+  //   誠實限制：SafeStore.mintGestureToken() 本身並非由瀏覽器手勢 API 直接
+  //   gating（任何程式都能呼叫它產生 token）；真正「把 mint 綁到真實手勢」的，
+  //   是本函式的 isTrusted 檢查。若沒有 (1)，程式即可 mint＋confirm 繞過防線——
+  //   故 (1) 不可省。無真實事件、或 isTrusted 非 true → 回 {ok:false}，唯讀保持。
+  function isReadOnly() {
+    var s = ensureStore();
+    return !!(s && typeof s.isReadOnly === 'function' && s.isReadOnly());
+  }
+  function confirmReadOnlyResolved(evt) {
+    // (1) 可強制的真實手勢閘門：必須是 isTrusted 的 DOM 事件。
+    if (!evt || evt.isTrusted !== true) {
+      return { ok: false, reason: 'no-user-gesture' };
+    }
+    var s = ensureStore();
+    if (!s || typeof s.confirmReadOnlyResolved !== 'function') {
+      return { ok: false, reason: 'no-safe-store' };
+    }
+    if (!s.isReadOnly()) return { ok: true, reason: 'not-read-only' };
+    var SS = global.SafeStore;
+    if (!SS || typeof SS.mintGestureToken !== 'function') {
+      return { ok: false, reason: 'no-mint' };
+    }
+    // (2) 通過真實手勢後才 mint token，立即帶 token 呼叫私有解除（單次使用、短 TTL）。
+    var token = SS.mintGestureToken();
+    return s.confirmReadOnlyResolved({ userConfirmed: true, gestureToken: token });
+  }
+
   var LearningProgress = {
     KEY: KEY,
     SCHEMA_VERSION: SCHEMA_VERSION,
@@ -196,6 +240,8 @@
     islandCounts: islandCounts,
     totals: totals,
     islandOf: islandOf,
+    isReadOnly: isReadOnly,
+    confirmReadOnlyResolved: confirmReadOnlyResolved,
     isAvailable: function () { ensureStore(); return available; },
     status: function () { var s = ensureStore(); return s ? s.status() : 'no-safe-store'; },
     version: '1.0.0'

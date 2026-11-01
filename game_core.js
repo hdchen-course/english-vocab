@@ -1533,12 +1533,127 @@
                 window.addEventListener('resize', positionKofiFab);
             }
         };
+        // ===================================================================
+        // (4d) 壞檔唯讀提示 banner（§6.3 要求 4 尾端：「觸發提示，待使用者確認才可寫」）
+        // -------------------------------------------------------------------
+        // 自我安裝、免改任何 html：game_core.js 載於全站所有頁（且凡載
+        // learning_progress.js 之頁必也載本檔，為其超集），故由本檔統一偵測
+        // 「獎勵（player_profile_v1）」與「進度（learning_progress_v1）」兩種唯讀，
+        // 於 DOMContentLoaded 後注入單一 banner。never-disappear 不弱化：
+        // 解除唯讀只在真實 click 事件（e.isTrusted===true）內執行；進度側再經
+        // LearningProgress.confirmReadOnlyResolved(e)（內部 isTrusted 閘門＋手勢
+        // token），獎勵側走 game_core 既有 resolveCorruptProfile 等效動作。
+        // 設計遵 house 語言：只引用 app.css 既有變數、不新增色票；iPad 可讀、老花
+        // 友善（字級≥16px、tap≥44px）；文案繁體、後果框架、不嚇小孩（R16 精神）。
+        var ensureCorruptBanner = function () {
+            if (document.getElementById('hb-corrupt-banner'))
+                return; // 每頁只注入一次
+            var lp = window.LearningProgress;
+            var lpRO = !!(lp && typeof lp.isReadOnly === 'function' && lp.isReadOnly());
+            var gameRO = !!readOnlyUntilResolved;
+            if (!lpRO && !gameRO)
+                return; // 正常（無壞檔）→不出現 banner
+            if (!document.body)
+                return;
+
+            var box = document.createElement('div');
+            box.id = 'hb-corrupt-banner';
+            box.setAttribute('role', 'status');
+            box.setAttribute('aria-live', 'polite');
+            // 置中浮動卡片（非整條壓住 app-bar）；z-index 低於 toast(9500)、高於
+            // bottom-sheet(8500)/kofi(8000)，提示可被 toast 蓋過但一般內容蓋不住它。
+            box.style.cssText = [
+                'position:fixed',
+                'top:calc(env(safe-area-inset-top, 0px) + 12px)',
+                'left:12px', 'right:12px',
+                'margin:0 auto', 'max-width:560px', 'z-index:9400',
+                'box-sizing:border-box',
+                'background:var(--card, #FDFAF3)',
+                'border:1px solid var(--card-border, #e8f0fe)',
+                'border-left:6px solid var(--c-warn, #fdcb6e)',
+                'border-radius:var(--r-md, 20px)',
+                'box-shadow:var(--shadow-lg, 0 8px 24px rgba(45,52,54,0.16))',
+                'padding:16px 18px',
+                'font-family:var(--font, -apple-system, BlinkMacSystemFont, sans-serif)',
+                'color:var(--ink, #33312E)'
+            ].join(';');
+
+            var title = document.createElement('div');
+            title.style.cssText = 'font-size:18px;font-weight:800;line-height:1.3;margin:0 0 6px;color:var(--ink, #33312E);';
+            title.textContent = '小提醒：這個裝置上的存檔好像有點亂了';
+
+            var body = document.createElement('p');
+            body.style.cssText = 'font-size:16px;line-height:1.55;margin:0 0 14px;color:var(--ink-soft, #6B6459);';
+            body.textContent = '別擔心，你之前的學習進度和獎勵都已經被保護起來，不會被蓋掉。' +
+                '為了安全，我們先暫停把新的紀錄寫進這個裝置。如果你想繼續記錄新的進度，請點下面的按鈕。';
+
+            var row = document.createElement('div');
+            row.style.cssText = 'display:flex;gap:10px;flex-wrap:wrap;align-items:center;';
+
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.style.cssText = [
+                'appearance:none', 'border:0', 'cursor:pointer',
+                'min-height:44px', 'padding:10px 20px',
+                'font-size:16px', 'font-weight:800',
+                'font-family:inherit',
+                'border-radius:var(--r-sm, 14px)',
+                'background:var(--c-primary-btn, #0b6bb5)',
+                'color:var(--on-accent, #ffffff)',
+                'box-shadow:var(--shadow-sm, 0 2px 8px rgba(45,52,54,0.08))'
+            ].join(';');
+            btn.textContent = '我了解，繼續';
+
+            // 「稍後再說」：僅隱藏 banner、不解除唯讀（維持保護＝never-disappear 預設）。
+            var later = document.createElement('button');
+            later.type = 'button';
+            later.style.cssText = [
+                'appearance:none', 'border:0', 'cursor:pointer',
+                'min-height:44px', 'padding:10px 14px',
+                'font-size:15px', 'font-weight:700', 'font-family:inherit',
+                'border-radius:var(--r-sm, 14px)',
+                'background:transparent', 'color:var(--ink-soft, #6B6459)',
+                'text-decoration:underline'
+            ].join(';');
+            later.textContent = '稍後再說';
+
+            btn.addEventListener('click', function (e) {
+                // never-disappear 防線：僅在真實使用者手勢（isTrusted）內解除唯讀。
+                if (!e || e.isTrusted !== true)
+                    return;
+                if (lpRO && lp && typeof lp.confirmReadOnlyResolved === 'function')
+                    lp.confirmReadOnlyResolved(e); // 內部再驗 isTrusted＋mint 手勢 token
+                if (gameRO) {
+                    // game_core 既有 resolveCorruptProfile 的等效動作（本閉包內直接執行）：
+                    // 解除唯讀→以記憶體（已保全的）profile 寫回磁碟，取代壞檔。
+                    readOnlyUntilResolved = false;
+                    saveNow();
+                }
+                if (box.parentNode)
+                    box.parentNode.removeChild(box);
+                try { showToast('已恢復，之後的學習進度會正常記錄囉！', 'success'); } catch (_) { /* 無 toast 不可崩 */ }
+            });
+            later.addEventListener('click', function (e) {
+                if (!e || e.isTrusted !== true)
+                    return;
+                if (box.parentNode)
+                    box.parentNode.removeChild(box); // 只隱藏，唯讀保持（既有紀錄續受保護）
+            });
+
+            row.appendChild(btn);
+            row.appendChild(later);
+            box.appendChild(title);
+            box.appendChild(body);
+            box.appendChild(row);
+            document.body.appendChild(box);
+        };
         var domInit = function () {
             domReady = true;
             buildHud(); // (4) HUD 策略
             wireThemeToggles(); // (4b) 接線共用 app-bar 的主題切換鈕 + 同步圖示
             ensureToastRoot();
             ensureCopyright(); // (4c) 全站頁尾版權聲明（每頁只注入一次）
+            ensureCorruptBanner(); // (4d) 壞檔唯讀→注入使用者確認提示 banner（§6.3 要求 4）
             updateHud();
             flushToasts(); // (5) flush 佇列
         };
