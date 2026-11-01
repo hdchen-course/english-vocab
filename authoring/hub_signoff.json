@@ -1,25 +1,25 @@
 {
- "_note": "AC-VIZ-1 四角色視覺簽核，綁 index_new.html 內容 sha；sha 變即作廢須重簽。本次重簽起因＝renderPanel 新增『分區（strand）→ 其單元頁』可展開單元卡：有對應 units_index 單元的分區卡改為 details（預設收合、點擊展開），展開後列出各單元卡（title_zh＋can_do 截斷 2 行＋est_minutes），整張卡為 <a href=unit.page> 深連進單元頁，使已建 112 個 english_*.html 單元（含 12 個新 vocab 主題字彙）從 hub 真正可達。sha a562ed0e→09d076f9。新增 render 子狀態 eng#vocab-expanded（橫+iPad直）實檢展開態。",
+ "_note": "AC-VIZ-1 四角色視覺簽核，綁 index_new.html 內容 sha；sha 變即作廢須重簽。本次重簽起因＝重做 strand→unit 導覽 usability：把舊「details 就地展開（單元卡擠進單一窄分區欄疊成長條，其他欄空白）」改成純前端 in-panel 主從視圖——有單元的分區卡＝可點 <button>（顯示「N 個單元 →」），點擊只置換右側 panel 成該分區『單元牆』：頂部返回鈕（← 返回 英語文分區，≥44px、鍵盤可達、aria-label）＋分區標題，下方滿版多欄 responsive grid（auto-fit minmax 248px）依級別分段（初階→中階→高階→延伸，空段不顯示）、每張單元卡帶級別徽章（初階/中階/高階/延伸；延伸用 area chip 底色；R11 絕不顯年段）。左 sidebar（狐狸 HUD＋八島）全程不動。不開新頁、不 reload。sha 09d076f9→fb4e8d70。新 render 狀態 eng#vocab-detail（橫 1366 三欄／iPad 直 1024 兩欄／16\" 1718 五欄）實檢右側滿版多欄、無窄欄無大空白、分段標題＋徽章＋返回鈕可見。",
  "source_file": "index_new.html",
- "source_sha": "09d076f9f3f595e9",
+ "source_sha": "fb4e8d70a38cdbc3",
  "reviewed_at": "2026-11-02",
  "device_baseline": "iPad Air 13\"（1366×1024 主）＋16\"（1718×890）＋iPad 直（1024×1366）",
  "roles": {
   "art": {
    "status": "signed",
-   "note": "開 eng 1366/eng iPad直/eng#vocab-expanded 橫+直/sci/life 等 PNG 實檢：新單元卡沿用房屋 token（--bg 底、--card-border 邊、島色 --a 左條 4px、--ink 標題、--ink-soft 說明），與分區卡（頂條島色）同一設計語言、同圓角節奏；收合態分區卡新增『N 個單元可進入 ▸』提示，低調不搶眼；展開 caret ▸→▾ 旋轉。無私造色票、無刺眼。設計語言一致。"
+   "note": "開 eng 1366 主視圖、eng#vocab-detail 橫/iPad直/16\" 三張、sci/life/chi 等 PNG 實檢：單元牆單元卡沿用房屋 token（--card 底、--card-border 邊、島色 --a 4px 左條、--ink 標題、--ink-soft 說明、1px 陰影），與分區卡（頂條島色）同一設計語言、同圓角節奏；主視圖有單元的分區卡新增藍字『N 個單元 →』提示（--c-primary-ink），低調可辨、不搶眼；返回鈕沿用卡片樣式＋島色左條，造型一致。級別徽章＝既有 lp-tchip（初/中/高）與 lp-tchip.area（延伸，english tint），無私造色票。無刺眼、設計語言一致。"
   },
   "spatial": {
    "status": "signed",
-   "note": "收合態（預設）版面與改前一致：橫 4 欄、iPad 直 2 欄皆右緣鋪滿 97%、無窄島；分區卡張數不變（eng 仍 26 scard，details 計為 1 卡）。展開態＝就地於該分區卡下方列出單元卡（§6.1『一次只展開點到的那一區』）；單元卡以單欄 stack 鋪滿分區卡寬度、間距 8px。誠實殘留：grid 就地展開使同列其他欄（如基本句型）在其下留白，為『單一分區展開』drill-down 的固有特性、非窄島浪費；收合態無任何留白問題。"
+   "note": "核心修復確認：右側單元牆為滿版多欄 responsive grid——16\" 五欄、iPad 橫 三欄、iPad 直 兩欄，每張皆鋪滿內容區寬度（layRight 右緣 97%），無舊版『單一窄分區欄疊長條』、無大片空白、無窄島。左 sidebar（狐狸 HUD＋八島清單）在全部詳情態皆在且寬度不變（sidebarVisible=true）、未被擠壓。主視圖分區總覽維持 4 欄（iPad 橫）/5 欄（16\"）/2 欄（iPad 直）鋪滿如前。依級別分段（初階/中階）各自成滿版 grid，資訊密度恰當。誠實殘留：主題字彙 61 單元中初階 52／中階 9，中階段在初階段下方（需捲動）——屬同分區 progression 的自然縱向延伸、非窄島浪費。"
   },
   "eye-comfort": {
    "status": "signed",
-   "note": "單元卡文字：標題 14.5px（--ink on --bg 12.0:1）、can_do 12.5px（--ink-soft on --bg 日 5.42:1／夜 7.34:1，皆 ≥4.5 AA，程式核算）、分鐘 11.5px。can_do 以 -webkit-line-clamp:2 截 2 行＋省略號，資訊密度受控不壅塞；老花友善、暖奶油底低眩光；a11y_gate（hub）實測違規 0。單元卡 min-height 44px＋padding 達 ≥44px tap。"
+   "note": "單元卡文字：標題 14.5px（--ink on --card，日 ≈12:1）、can_do 12.5px（--ink-soft on --card 日 ≈5.4:1／夜 ≈7.3:1，皆 ≥4.5 AA）、級別徽章 11.5px、分鐘 11.5px；can_do -webkit-line-clamp:2 截 2 行防壅塞；暖奶油底低眩光、老花友善。返回鈕 min-height 44px＋padding 9×16 達 ≥44px tap；單元卡 min-height 44px＋padding 達標；分區卡 <button> 整張 ≥44px。a11y_gate（index_new.html，首屏主視圖）實測違規 0（對比／tap／reduced-motion 皆過）。整塊（左 sidebar＋右單元牆）於 iPad 橫/直/16\" 視窗內可達。"
   },
   "animator": {
    "status": "signed",
-   "note": "非 stepper 動畫；details 展開/收合為原生即時顯示/隱藏、caret 0.15s 旋轉過場；收合↔展開間分區卡上緣與左欄/島清單尺寸恆定、無重疊/裁切/溢出/破圖（橫+iPad直 PNG 逐張確認）。單元卡進入＝整頁導頁，無 hub 內動畫破圖。"
+   "note": "純前端視圖切換（JS 置換 #panel innerHTML），非 stepper 多 frame 動畫：主視圖↔單元牆為即時切換，無過場破圖；分區卡 hover caret → 位移 3px（transition .12s）、返回鈕 hover 陰影過場，皆微量不刺眼。切換前後左 sidebar、app-bar、島清單尺寸/位置恆定（三視埠 PNG 逐張確認），無重疊/裁切/溢出。單元卡點擊＝整頁導向單元頁，無 hub 內殘留動畫。reduced-motion 下 a11y_gate 無執行中非零動畫。"
   }
  },
  "states_reviewed": [
@@ -33,7 +33,8 @@
   "island:life",
   "island:eng@mbp16",
   "island:eng@ipad_port",
-  "island:eng#vocab-expanded",
-  "island:eng#vocab-expanded@ipad_port"
+  "island:eng#vocab-detail",
+  "island:eng#vocab-detail@ipad_port",
+  "island:eng#vocab-detail@mbp16"
  ]
 }

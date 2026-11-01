@@ -19,15 +19,18 @@ const srcSha = createHash('sha256').update(readFileSync(join(ROOT, 'index_new.ht
 const nav = JSON.parse(readFileSync(join(ROOT, 'authoring', 'nav_index.json'), 'utf8'));
 const islands = nav.islands.map(i => ({ island: i.island, title: i.title_zh }));
 
-// 要 render 的狀態：主視埠（iPad 橫 1366×1024）逐島；另 default 島加 16"(1718×890) 與 iPad 直(1024×1366)
+// 要 render 的狀態：主視埠（iPad 橫 1366×1024）逐島；另 eng 島加 16"(1718×890) 與 iPad 直(1024×1366)
 const PRIMARY = [1366, 1024];
+const engIdx = islands.findIndex(i => i.island === 'eng');
 const states = [];
 islands.forEach((isl, idx) => states.push({ id: `island:${isl.island}`, islandIndex: idx, island: isl.island, title: isl.title, w: PRIMARY[0], h: PRIMARY[1] }));
-states.push({ id: 'island:eng@mbp16', islandIndex: islands.findIndex(i => i.island === 'eng'), island: 'eng', title: '英語文', w: 1718, h: 890 });
-states.push({ id: 'island:eng@ipad_port', islandIndex: islands.findIndex(i => i.island === 'eng'), island: 'eng', title: '英語文', w: 1024, h: 1366 });
-// 新增子狀態：英語島「主題字彙」分區展開（列出 vocab 單元卡）——本次改動的核心新 UI，逐張看過
-states.push({ id: 'island:eng#vocab-expanded', islandIndex: islands.findIndex(i => i.island === 'eng'), island: 'eng', title: '英語文（主題字彙展開）', w: 1366, h: 1024, expandVocab: true });
-states.push({ id: 'island:eng#vocab-expanded@ipad_port', islandIndex: islands.findIndex(i => i.island === 'eng'), island: 'eng', title: '英語文（主題字彙展開）', w: 1024, h: 1366, expandVocab: true });
+states.push({ id: 'island:eng@mbp16', islandIndex: engIdx, island: 'eng', title: '英語文', w: 1718, h: 890 });
+states.push({ id: 'island:eng@ipad_port', islandIndex: engIdx, island: 'eng', title: '英語文', w: 1024, h: 1366 });
+// 核心新 UI：點「主題字彙」分區卡 → 右側 panel 換成該分區「單元牆」（滿版多欄＋依級別分組＋每卡級別徽章）。
+// 左 sidebar 不動；逐張看橫/iPad直/16"，確認右側鋪滿多欄、無窄欄無大空白、分段標題＋徽章可見。
+states.push({ id: 'island:eng#vocab-detail', islandIndex: engIdx, island: 'eng', title: '英語文（主題字彙·單元牆）', w: 1366, h: 1024, detailStrand: 'vocab' });
+states.push({ id: 'island:eng#vocab-detail@ipad_port', islandIndex: engIdx, island: 'eng', title: '英語文（主題字彙·單元牆）', w: 1024, h: 1366, detailStrand: 'vocab' });
+states.push({ id: 'island:eng#vocab-detail@mbp16', islandIndex: engIdx, island: 'eng', title: '英語文（主題字彙·單元牆）', w: 1718, h: 890, detailStrand: 'vocab' });
 
 const b = await puppeteer.launch({ executablePath: CHROME, headless: 'new', args: ['--no-sandbox', '--user-data-dir=/tmp/hub_render_chrome'] });
 const manifestStates = [];
@@ -38,26 +41,29 @@ for (const st of states) {
   await new Promise(r => setTimeout(r, 400));
   await p.evaluate((i) => document.querySelectorAll('.lp-navitem')[i]?.click(), st.islandIndex);
   await new Promise(r => setTimeout(r, 250));
-  if (st.expandVocab) {
-    await p.evaluate(() => {
-      document.querySelectorAll('#panel details.lp-scard').forEach(d => {
-        const sm = d.querySelector('summary');
-        if (sm && /主題字彙/.test(sm.textContent || '')) d.open = true;
-      });
-    });
-    await new Promise(r => setTimeout(r, 250));
+  if (st.detailStrand) {
+    await p.evaluate((slug) => {
+      const btn = document.querySelector(`#panel button.lp-scard-link[data-strand="${slug}"]`);
+      if (btn) btn.click();
+    }, st.detailStrand);
+    await new Promise(r => setTimeout(r, 350));
   }
   const m = await p.evaluate(() => {
     const lay = document.querySelector('.lp-layout'); const g = document.querySelector('.lp-strandgrid');
+    const side = document.querySelector('.lp-side');
     return { bodyH: document.body.scrollHeight, winW: window.innerWidth, unitcards: document.querySelectorAll('a.lp-unitcard').length,
       layRight: lay ? Math.round(lay.getBoundingClientRect().right) : 0,
       cols: g ? getComputedStyle(g).gridTemplateColumns.split(' ').length : 0,
-      cards: document.querySelectorAll('.lp-scard').length };
+      cards: document.querySelectorAll('.lp-scard').length,
+      hasBack: !!document.querySelector('.lp-back'),
+      tierHeads: document.querySelectorAll('#panel .lp-catsec .lp-cath').length,
+      sidebarVisible: !!(side && side.getBoundingClientRect().width > 1) };
   });
   const png = `${st.id.replace(/[:@]/g, '_')}_${st.w}x${st.h}.png`;
   await p.screenshot({ path: join(OUT, png) });
   manifestStates.push({ id: st.id, island: st.island, title: st.title, viewport: `${st.w}x${st.h}`, png,
-    cols: m.cols, cards: m.cards, unitcards: m.unitcards, layRightPct: Math.round(100 * m.layRight / m.winW), bodyH: m.bodyH });
+    cols: m.cols, cards: m.cards, unitcards: m.unitcards, layRightPct: Math.round(100 * m.layRight / m.winW), bodyH: m.bodyH,
+    hasBack: m.hasBack, tierHeads: m.tierHeads, sidebarVisible: m.sidebarVisible });
   await p.close();
 }
 await b.close();
@@ -72,4 +78,4 @@ const manifest = {
 };
 writeFileSync(join(ROOT, 'authoring', 'hub_render_manifest.json'), JSON.stringify(manifest, null, 1));
 console.log(`render manifest 寫出：${manifestStates.length} 狀態，source_sha=${srcSha}`);
-manifestStates.forEach(s => console.log(`  ${s.id} ${s.viewport} cols=${s.cols} cards=${s.cards} 右緣${s.layRightPct}%`));
+manifestStates.forEach(s => console.log(`  ${s.id} ${s.viewport} cols=${s.cols} cards=${s.cards} unit=${s.unitcards} 級別段=${s.tierHeads} 返回鈕=${s.hasBack} sidebar=${s.sidebarVisible} 右緣${s.layRightPct}%`));
