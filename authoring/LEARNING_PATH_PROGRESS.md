@@ -291,3 +291,11 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - iPad 三視埠 render：asif 橫＋tenseagree 直逐張開圖，四角色簽核通過（右緣 97%、2–4 欄、無窄島、無重疊、老花可讀）。
 - builder 對抗式 review：無 blocker；修掉 asif/tenseagree/pieceof 三處 overstated 理由（as if 口語可現在式、永遠真理 backshift 選用、cup/glass 慣例非硬規則），未動選項/正解/音檔。
 - strand 註：adjadv t_mid 已 0 未覆蓋→改 noun 補 1；relcl 未覆蓋皆 t_sub→高階取 nouncl+advcl。
+
+## batch17 合併（2026-11-02 05:27）
+- eng 131→137（+6），units 196→202。nav_index byte-unchanged。
+- 中階：could（過去能力/委婉請求/可能）、prepcolloc（介系詞慣用搭配 depend on/be good at）、oneones（代用詞 one/ones）、vgerund（接動名詞的動詞 enjoy/finish/mind/avoid/keep）。
+- 高階：themore（the+比較級 the+比較級 越…越…）、correlative（相關連接詞與主詞動詞一致 both→複數／either·neither·not only 就近原則）。
+- 4 道確定性 gate 全綠（202 units），scan_simplified 12 檔 PASS。
+- iPad 三視埠 render：themore 橫＋correlative 直逐張開圖，四角色簽核通過（右緣 97%、2–4 欄、無窄島、無重疊、老花可讀）。
+- builder 對抗式 review：無 critical；修掉 prepcolloc P2「good in」overstate（美式口語偶有→改框為正式/會考用 good at），未動選項/正解/音檔。
