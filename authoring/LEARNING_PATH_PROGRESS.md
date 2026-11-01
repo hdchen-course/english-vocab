@@ -4,8 +4,30 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
-## 當前狀態（更新：2026-11-01 17:13 台北）
-- **Phase**：spec 已定案（`spec_converge_gate --verify-ledger` PASS、sha `eec6da8c434a4a26`、binding 3079 全覆蓋、CONTRACT FREEZE ACCEPTED）→ **實作 Phase 0.5/1 進行中**。
+## ⚠ 2026-11-01 19:40 診斷發現（更正舊「乾淨地基」敘述）— 下一 session 必讀
+loop 深掘 `verify_learning_path.py --phase=1` 揭出真實地基狀態，**更正**下方 17:13 的樂觀敘述：
+1. **KP manifest 自身 provenance 掛（T3-03，foundational）**：committed `authoring/knowledge_points.json`
+   被**手工擴充**了 Phase-2 英語島 KP（如 `eng.t_base.vocab.weather-nature`/`...seasons`，`src=english_island_phase2`），
+   但 `authoring/_kp_slices/` **無對應來源**，故 `_kp_build.py --check` FAIL（committed≠regen，逐欄位）。
+   連鎖：manifest_sha 失配→`verified_overlay` 不再套用→`binding_unverified=3079`（非「全覆蓋 verified」）。
+   **正確修法＝為 Phase-2 英語島 KP 補真實來源的 `_kp_slices/` slice（走 §6.8.1 verified 流程），
+   使 regen 重現它們；嚴禁直接 regen+commit（會刪掉 100 單元參照的 KP、打穿 KP-ref 完整性）。**
+   診斷副本在 `/tmp/kpregen`（committed-only KP＝手工加的；regen 產 3096）。
+2. **Phase 1 gate 戰隊大多未建（~12）**：registry（`authoring/acceptance_criteria.json`）指向尚未存在的
+   node gate：`nav_gate.mjs`/`a11y_gate.mjs`/`perf_gate.mjs`/`figure_signoff_gate.mjs`/`reward_safety_gate.mjs`/
+   `design_consistency_gate.js`/`per_page_5clean_gate.py`/`claim_evidence_gate.py`/`question_correctness_gate.py`/
+   `generator_property_gate.py`/`visual_content_fidelity_gate.py`/`release_hash_gate.py`/`path_sim_gate.py`/
+   `code_download_gate.mjs`。repo 現有 `.py` 版（nav/a11y/perf/figure_signoff）是**過渡**且與 spec 指名的
+   node 檔名不符（spec §6.5/line920/924 指名 `nav_gate.mjs`/`design_consistency_gate.js`＝需真 render）；
+   `a11y_gate.py` 只掃 1 檔（弱）。另有 arg 失配：registry 呼 `unit_schema_gate.py --verify` 但該 gate 無 `--verify` 旗標。
+3. **已實作且真綠的部分（不受影響）**：100 英語島單元、learning_progress_v1 接線、§6.3 要求4 唯讀解除 UI、
+   reward registry/provenance/catalog gate、unit_acceptance_lint/nav_gate.py/label_coverage/a11y_gate.py/
+   prereq_dag/deviation_categories（--verify 皆綠）。
+**結論**：Phase 1 的真實 runway 遠大於 17:13 敘述——先補 manifest provenance（#1），再建 node gate 戰隊（#2），
+registry arg 對齊。這些是大工程，需組 team＋spec 逐節 grounding，非 loop 單 turn 可完。**未自行動 #1/#2（恐誤刪內容/需 HD 排序）。**
+
+## 當前狀態（更新：2026-11-01 17:13 台北｜部分已被上方 19:40 發現更正）
+- **Phase**：spec 文字已定案（`spec_converge_gate --verify-ledger` PASS、sha `eec6da8c434a4a26`、CONTRACT FREEZE ACCEPTED）→ **實作 Phase 0.5/1 進行中**。〔**更正**：「binding 3079 全覆蓋 verified」此刻**不成立**——manifest provenance 掛（見上 19:40 #1），`binding_unverified=3079`。spec『文字』收斂與 binding『資料』ship-gate 分屬兩軌，前者仍 PASS。〕
 - **hub `index_new.html`**：CATMAP 八島＋編號＋練習帶＋島內分類＋接回舊版 HUD（Profile/等級/XP/連勝/金幣/徽章牆，唯讀 game_core、never-disappear 守住）＋sidebar 對齊。**HD 認可定版、已 commit＋push**。strangler-fig 新 hub，**尚未取代 live `index.html`**。
 - **§6.7 獎勵 registry＋gate**：`reward_catalog.json`（items=34：22 badge＋6 skin＋6 border；types=3 帶三簽 sha）＋`reward_id_baseline.json`（genesis 34）＋`reward_catalog_gate.py`（三道 fail-closed）**已建、紅隊、自驗 exit0/注入壞案例 DENY、commit＋push（`758aad26e`）**。誠實發現：game_core 無 mascot/avatar/shop 可賺得 catalog，只註冊實際三型別。
 
