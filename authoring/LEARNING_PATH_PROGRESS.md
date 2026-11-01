@@ -96,3 +96,22 @@ registry arg 對齊。這些是大工程，需組 team＋spec 逐節 grounding�
 | 2026-11-01 17:13 | `758aad26e` | §6.7 獎勵 reward_catalog registry＋fail-closed gate＋baseline（紅隊＋自驗 DENY） |
 | 2026-11-01 17:04 | `d5c623ad4` | Phase 0.5/1 確定性工具組＋golden（safe_store/4 gate/lint/nav_gate/deviation_categories，皆紅隊） |
 | 2026-11-01 17:03 | `c226ab18c` | 學習地圖 hub `index_new.html`：CATMAP 八島＋接回舊版 HUD（rollback point） |
+
+## Phase 1 gate 戰隊狀態（2026-11-01 21:04 快照，跨 session resume）
+registry＝`authoring/acceptance_criteria.json`；單一驗證入口＝`tools/verify_learning_path.py --phase=1`。
+**已接線/通過（本 session）**：
+- AC-SCHEMA（unit_schema_gate.py，補 --verify 別名）✅
+- AC-UNIT-1（unit_acceptance_lint.py，補 --verify 別名）✅
+- AC-STYLE-1/2（design_consistency_gate.js，補 --verify CLI 相容層；DUPLICATE=0，NEAR=17 advisory backlog）✅
+- AC-NAV（nav_gate.mjs reconcile：本就存在於 HEAD，增補 --verify/自管 server/DATA↔DOM、保留 R-OPEN/R14、ND 對頂層島、R-OPEN 窄排除 badge-wall；實站 0 違規）✅
+- AC-A11Y-1（新建 a11y_gate.mjs 真 render gate）→ **誠實 FAIL**：1348 真違規（.gr-play 30px tap target 遍佈 100+ 頁＋6 頁低對比）＝rebuild backlog，非 gate bug。
+
+**真 missing（工具未建），依難度/相依排序**：
+- `reward_safety_gate.mjs`（AC-REWARD-1）＝**RT-1…RT-15 runtime never-disappear red-team harness**（headless 瀏覽器：種 localStorage→壞檔/升版/配額驅逐/retire/squash→斷言 earned 獎勵倖存）。§7.3 列舉 RT-1..15。靜態層已有 reward_catalog_gate.py＋reward_provenance_gate.py（data）＋Stop hook reward-guard.sh；缺的是 runtime RT 自動化。大 build，**下一個優先**，須先精讀 §7.3 逐條 RT。
+- `figure_signoff_gate.mjs`（AC-VIZ-1）＝圖/動畫兩簽核流（art-director＋eye-comfort，綁 sha）。有 figure_signoff_gate.py 可參考。
+- `perf_gate.mjs`（AC-PERF-1）＝初始 JS/資產預算——**預算數值 spec 未定（§6.5「Phase 1 定具體數值」）**，須先定 normative 門檻（量測各類頁基準）才建。
+- `code_download_gate.mjs`（AC-CODE-DL）＝完整可執行源碼下載——**對非書的 learner 站適用性待確認**（books norm；英語島可能 N/A）。
+- 6 內容 gate（AC-CORRECT 子：claim_evidence/question_correctness/generator_property/visual_content_fidelity/release_hash；AC-PATH path_sim；AC-UNIT-2 per_page_5clean）＝**依賴單元 claims[]/scene/question sidecar 資料與 5-clean 收斂 infra，目前 100 英語單元未 populate→建了也掃空，屬 premature**，待單元內容資料層就緒再建。
+- AC-UNIT-3 golden-diff＝待建 `authoring/golden/<archetype>.html`（unit_acceptance_lint 已有 --verify-golden 的 SKIP-WITH-WARNING 誠實佔位）。
+
+**其他 queue**：weather-nature KP cross_check（待 ≥2 獨立開放授權來源、quote 可線上驗；主流字典 403 反機器人不破解）；nav/a11y 的真實 findings（1348 a11y＋17 style NEAR）入 rebuild backlog。
