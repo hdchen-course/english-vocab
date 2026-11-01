@@ -17,6 +17,9 @@ fail-closed 斷言（§6.2.2 / §11.A AC-SCHEMA，本 gate 聚焦 team-lead 指�
   3. unit_id 格式符合 canonical ID_RE（opaque、≥3 段、字元集 [a-z0-9_-]，domain 段 [a-z0-9-]）。
   4. authoring/units_index.json 的 unit_id 集合與磁碟 *.units.json 的 unit_id 集合一致
      （缺漏／多餘皆＝violation；兌現 §6.7 衍生正確）。
+  5. 每個單元 knowledge_point_ids[] 的每個 id 皆解析到 authoring/knowledge_points.json 的
+     知識點（§6.2 R-GRAIN「知識點≠單元、一單元可掛數個知識點」；懸空參照＝violation）。
+     fail-closed：若有單元宣告 KP 參照但 manifest 缺失／無法解析＝violation。
 
 exit code ＝ violation 總數（0＝clean）。人類可讀 log 走 stderr；--json 時 stdout 印純 JSON。
 additive 工具，不改任何既有頁/資料/引擎。
@@ -84,6 +87,7 @@ def run(root):
 
     disk_ids = []          # [(unit_id, file_basename, unit_index)]
     id_to_locations = {}   # unit_id -> [location str]
+    kp_refs = []           # [(kid, loc)] 每個單元宣告的 knowledge_point 參照
 
     # ---- 斷言 1 + 3：逐檔逐單元驗必備欄位/型別 + id 格式 ----
     for f in unit_files:
@@ -127,6 +131,13 @@ def run(root):
                 id_to_locations.setdefault(uid, []).append(loc)
             # uid 非 str 已由 field-type 記錄
 
+            # 收集 KP 參照（供斷言 5）；非 str 元素已由 field-type list[str] 記錄
+            kpids = u.get("knowledge_point_ids")
+            if isinstance(kpids, list):
+                for kid in kpids:
+                    if isinstance(kid, str):
+                        kp_refs.append((kid, loc))
+
     # ---- 斷言 2：unit_id 跨所有 *.units.json 全域唯一 ----
     for uid, locs in sorted(id_to_locations.items()):
         if len(locs) > 1:
@@ -162,11 +173,40 @@ def run(root):
         except (OSError, json.JSONDecodeError) as e:
             violations.append(f"[units_index] 無法解析 authoring/units_index.json（{e}）")
 
+    # ---- 斷言 5：knowledge_point_ids 參照完整性（§6.2 R-GRAIN）----
+    kp_valid = 0
+    if kp_refs:
+        kp_path = os.path.join(root, "authoring", "knowledge_points.json")
+        kp_ids = None
+        if not os.path.isfile(kp_path):
+            violations.append(
+                f"[kp-ref] 有單元宣告 knowledge_point_ids 但缺 authoring/knowledge_points.json"
+                f"（{kp_path}；fail-closed）"
+            )
+        else:
+            try:
+                with open(kp_path, encoding="utf-8") as fh:
+                    kpm = json.load(fh)
+                items = kpm.get("knowledge_points") or kpm.get("items") or (kpm if isinstance(kpm, list) else [])
+                kp_ids = set(x.get("id") for x in items if isinstance(x, dict) and isinstance(x.get("id"), str))
+                kp_valid = len(kp_ids)
+            except (OSError, json.JSONDecodeError) as e:
+                violations.append(f"[kp-ref] 無法解析 authoring/knowledge_points.json（{e}；fail-closed）")
+        if kp_ids:
+            for kid, loc in kp_refs:
+                if kid not in kp_ids:
+                    violations.append(
+                        f"[kp-ref] {loc}: knowledge_point_id '{kid}' 在 knowledge_points.json 無對應"
+                        f"（§6.2 R-GRAIN 懸空參照）"
+                    )
+
     stats = {
         "root": root,
         "unit_files": len(unit_files),
         "units_on_disk": len(disk_ids),
         "unique_unit_ids": len(set(disk_ids)),
+        "kp_refs": len(kp_refs),
+        "kp_manifest_size": kp_valid,
         "violations": len(violations),
     }
     return violations, stats
