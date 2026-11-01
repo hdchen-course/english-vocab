@@ -282,3 +282,12 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - 4 道確定性 gate 全綠（unit_schema/claim_evidence/question_correctness --verify＋scan_simplified 12 檔 PASS，190 units）。
 - iPad 三視埠 render：meaningchange 橫＋causativepassive 直逐張開圖，四角色簽核通過（右緣 97%、2–4 欄、無窄島、無重疊、老花可讀）。
 - builder 對抗式 review：NO BLOCKER；設計上已避開 causativepassive 感官被動 -ing 誘答陷阱、meaningchange 保留中文 gloss 以收斂。
+
+## batch16 合併（2026-11-02 05:05）
+- eng 125→131（+6），units 190→196。nav_index byte-unchanged。
+- 中階：twoobjects（句型四 S+V+O+O 授與雙受詞）、sameplural（單複同形 sheep/deer/fish）、ifunless（條件連接詞 if/unless/as long as）、pieceof（不可數量化 a piece/cup/slice of）。
+- 高階：asif（方式副詞子句 as if/as though，可能為真→現在式／與事實相反→過去式 were）、tenseagree（名詞子句時態呼應 backshift，普遍真理例外）。
+- 4 道確定性 gate 全綠（196 units），scan_simplified 12 檔 PASS。
+- iPad 三視埠 render：asif 橫＋tenseagree 直逐張開圖，四角色簽核通過（右緣 97%、2–4 欄、無窄島、無重疊、老花可讀）。
+- builder 對抗式 review：無 blocker；修掉 asif/tenseagree/pieceof 三處 overstated 理由（as if 口語可現在式、永遠真理 backshift 選用、cup/glass 慣例非硬規則），未動選項/正解/音檔。
+- strand 註：adjadv t_mid 已 0 未覆蓋→改 noun 補 1；relcl 未覆蓋皆 t_sub→高階取 nouncl+advcl。
