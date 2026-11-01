@@ -195,3 +195,7 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - 6 個 t_mid vocab 主題字彙單元上線：情緒個性/興趣休閒/旅遊地理/健康不適/購物金錢/節慶文化。全確定性 gate 綠、coverage **35→41(+6)**、37 真 edge-tts mp3、對抗式英語審查揪修 1 真實用法錯(pay in cash)、iPad 四角色簽核、nav_index 不變。
 - **待查**：6 新頁是否已從 hub/nav 可達（nav_index 未變＝可能需把新 vocab 單元接進英語島 curated nav 或確認 units_index 動態路由）。列為下一步檢查項。
 - 續：派第 2 批內容 team（下一組未覆蓋 eng KP）。覆蓋 runway：eng 41/300→目標 300，再推 7 科。
+
+## ✅ 內容第2批完成（2026-11-02 00:23:26，commit b3cd0e833）coverage 41→47
+- 6 單元：科技媒體/環境自然/單位詞/比較級/最高級/as-as。全 gate 綠、36 mp3、對抗式審查 0 錯+2 潤飾(cause pollution/a huge network)、iPad 四角色、nav 不變。
+- 並行啟動：(A) hub strand→unit 導覽連結（讓 12 新+既有 vocab 單元從 hub 可達；動 index_new.html 需 AC-VIZ-1 重簽）；(B) 第 3 批內容。
