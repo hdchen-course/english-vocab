@@ -274,3 +274,11 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - 4 道確定性 gate 全綠（unit_schema/claim_evidence/question_correctness --verify＋scan_simplified 12 檔 PASS）。
 - iPad 三視埠 render：nomatter 橫＋reduceclause 直逐張開圖，四角色簽核通過（右緣 97%、2–4 欄 responsive、無窄島、無重疊、老花可讀、≥44px tap）。
 - builder 對抗式 review 修掉 soneither 自我附和病句（son_ex2/ex3 重生 mp3）、pattern2 P2 well 理由精確化。
+
+## batch15 合併（2026-11-02 04:44，HEAD 待填）
+- eng 119→125（+6），units 184→190。nav_index byte-unchanged。
+- 中階：ditransitive（授與動詞雙受詞 give sb sth / to·for sb）、haveto（have to 外在義務，don't have to≠禁止）、exclamatory（感嘆句 What a…/How…）、formalsubjit（虛主詞 it）。
+- 高階：meaningchange（remember/stop/forget/try 後接 to-V vs V-ing 意義不同）、causativepassive（使役/感官被動 be made/seen TO do）。
+- 4 道確定性 gate 全綠（unit_schema/claim_evidence/question_correctness --verify＋scan_simplified 12 檔 PASS，190 units）。
+- iPad 三視埠 render：meaningchange 橫＋causativepassive 直逐張開圖，四角色簽核通過（右緣 97%、2–4 欄、無窄島、無重疊、老花可讀）。
+- builder 對抗式 review：NO BLOCKER；設計上已避開 causativepassive 感官被動 -ing 誘答陷阱、meaningchange 保留中文 gloss 以收斂。
