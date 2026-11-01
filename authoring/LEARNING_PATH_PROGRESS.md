@@ -250,3 +250,7 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 ## 2026-11-02 02:53 — batch9 內容合併上線
 - 6 單元（中階 perfectvspast/suffixadj/adverbtypes/infnoun、高階 nounclsubj/advclpurpose）＋36 mp3。全 gate 綠、coverage eng 83→89、units_index 148→154、nav_index 不變。對抗式修 1 blocker(advclpurpose so→so that 第二正解)。iPad 兩高階頁四角色 pass。
 - eng 進度：89/300 covered（連六批 batch4-9 共 +36，皆含高階）。unitnav 導覽改版仍等 HD 拍板（候選3）。續 batch10。
+
+## 2026-11-02 03:13 — batch10 內容合併上線
+- 6 單元（中階 pastwhenwhile/suffixverb/whinf/adjposition、高階 participleactive/whetherclause）＋36 mp3。全 gate 綠、coverage eng 89→95、units_index 154→160、nav_index 不變。對抗式修 1 blocker(pastwhenwhile)。iPad 兩高階頁四角色 pass。
+- eng 進度：95/300 covered（連七批 batch4-10 共 +42，皆含高階）。unitnav 導覽改版仍等 HD 拍板（候選3）。續 batch11。
