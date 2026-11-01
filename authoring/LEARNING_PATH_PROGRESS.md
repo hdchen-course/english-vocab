@@ -199,3 +199,12 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 ## ✅ 內容第2批完成（2026-11-02 00:23:26，commit b3cd0e833）coverage 41→47
 - 6 單元：科技媒體/環境自然/單位詞/比較級/最高級/as-as。全 gate 綠、36 mp3、對抗式審查 0 錯+2 潤飾(cause pollution/a huge network)、iPad 四角色、nav 不變。
 - 並行啟動：(A) hub strand→unit 導覽連結（讓 12 新+既有 vocab 單元從 hub 可達；動 index_new.html 需 AC-VIZ-1 重簽）；(B) 第 3 批內容。
+
+## 2026-11-02 01:02 — hub 導覽重做合併上線 + batch 4 啟動
+- **hub 導覽重做合併**（commit 7bc625f4f → main）：分區卡→右側滿版單元牆（master-detail，app-shell，不開新頁、不 reload；左 sidebar 全程保留）。依級別分段（初階→中階→高階→延伸，空段不顯）、每卡級別徽章（R11 不顯年段）、返回鈕 ≥44px。取代舊 <details> 就地展開窄欄疊長條。
+  - AC-VIZ-1：index_new sha 09d076f9→fb4e8d70，13 狀態四角色重簽（figure_signoff --verify PASS）。親開三視埠詳情態 PNG（橫1366三欄/iPad直1024兩欄/16"1718五欄）確認左 sidebar 保留、右側滿版、分段＋徽章＋返回鈕。nav_gate 0 / a11y(index_new) 0 / scan PASS。units_index 不動（118 單元）。
+- **batch 4 啟動**（背景 worktree agent）：6 單元，刻意混中/高階（HD：別全初階）。
+  - 中階 t_mid：futurewill(未來式will)、futuregoingto(be going to)、participleadj(boring/bored)、reflexive(反身代名詞)。
+  - 高階 t_adv：musthaveto(must vs have to)、passivetenses(各時態被動)。
+  - 目標 coverage eng 53→59。完工交回後由主 session 合併＋regen units_index＋全 gate＋iPad 四角色。
+- eng 現況：300 min、53 covered、247 未覆蓋（t_base 26 / t_mid 100 / t_adv 121 / t_enrich 0）。
