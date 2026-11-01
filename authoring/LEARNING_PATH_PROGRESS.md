@@ -46,13 +46,15 @@
 2. ✅ §6.7 provenance 掃描 gate（RT-14/15，commit `1963295b4`）——唯讀，揪出上方 2 類真缺口。
 3. game_core.js 採用 `safe_store.js`（§10 Phase 0.5(b) never-disappear）＋順修上方兩個 provenance 缺口：**高風險（動 live 共用引擎）**，須每檔 5-clean＋RT（壞檔不 wipe）＋全站 render 驗證＋reward 兩 gate exit 0，謹慎做。
 4. **部分完成**：獎勵兩 gate（catalog＋provenance）已做成 `reward-guard.sh` Stop hook wire 進 `.claude/settings.json`（fail-closed、紅隊：乾淨放行/破壞 block/venv 缺 fail-open），turn-end 自動把關 R3 never-disappear。**待續**：R-STYLE 內容結構 gate（design_consistency/content_card_width/nav/deviation/unit_acceptance/label_coverage）屬「宣告收斂前」檢查、非每 turn，需獨立設計一個 convergence-時機的整合 gate（避免每 turn 跑重的 render/掃描 wedge），另案謹慎做。（hook 在 `.claude/` 不 commit＝僅本機；誠實限制同前。）
-5. ✅ Phase 2 §6.3 進度接線完成（cd784ffcc）：hub 顯示真實進度、單元記錄 learning_progress_v1。剩：壞檔唯讀解除 UI 入口（§6.3 要求4）。**progKey 遷移＝N/A**：rg 全站查無舊 per-頁進度鍵（concepts_v1/progKey/_progress_v1），英語島單元為新、只用 learning_progress_v1，故無遷移工作（不杜撰）。
+5. ✅ Phase 2 §6.3 進度接線完成（cd784ffcc）：hub 顯示真實進度、單元記錄 learning_progress_v1。**progKey 遷移＝N/A**：rg 全站查無舊 per-頁進度鍵（concepts_v1/progKey/_progress_v1），英語島單元為新、只用 learning_progress_v1，故無遷移工作（不杜撰）。
+   - ✅ **§6.3 要求4 壞檔唯讀解除 UI 完成（010fe76e3）**：learning_progress.js 暴露 isReadOnly()＋confirmReadOnlyResolved(evt)（唯一解除入口，兩層防線：evt.isTrusted===true 可強制手勢閘門＋閉包私有 store token）；game_core.js ensureCorruptBanner() 自我安裝統一 banner 偵測進度＋獎勵兩種唯讀，真實 click 才解除、稍後再說僅隱藏（never-disappear 預設）。隔離 worktree＋審 diff＋main 重驗（node --check×3 OK、3 gate exit0、RT 24/24 含無手勢解除被拒/磁碟零改寫、banner PNG 逐張看過）。純新增無刪改。
 6. 部署側 TODO（§6.7，需 CI/host 基礎設施）：`release_snapshot_on_ship_gate`／deploy-side append-only release ledger／`reward_baseline_rewrite_gate`。
 7. 續 Phase 1→2→3→4→5 至 §11.A 23 條 AC 全綠（DONE-GATE）。
 
 ## 變更流水帳（最新在上）
 | 時間(台北) | commit | 內容 |
 |---|---|---|
+| 2026-11-01 19:35 | `010fe76e3` | §6.3 要求4：壞檔唯讀→使用者手勢確認解除 UI（learning_progress isReadOnly/confirmReadOnlyResolved 兩層手勢防線＋game_core 自安裝 banner；隔離 worktree＋RT 24/24＋banner PNG 看過） |
 | 2026-11-01 19:05 | `cd784ffcc` | Phase 2 §6.3：英語島 100 單元接 learning_progress_v1（assets/learning_progress.js＋unit.js hook＋hub 真實進度＋100 html script）；never-disappear RT abcd＋hub/單元 render 全綠 |
 | 2026-11-01 18:48 | `(unit_schema_gate)` | Phase 1 AC-SCHEMA unit gate（§6.2 schema＋unit_id 全域唯一＋KP 參照完整性第5斷言）；現況 100 單元/185 KP refs 全綠 |
 | 2026-11-01 18:13 | `b9f475664` | Phase 0.5(b) 修 game_core §7.1 壞檔覆寫（readRawLS/backupCorrupt/saveNow 唯讀守衛/isReadOnly API）；三個 never-disappear 缺口全畢 |
