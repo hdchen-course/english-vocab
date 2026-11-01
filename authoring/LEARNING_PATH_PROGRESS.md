@@ -147,3 +147,9 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 3. **AC-A11Y-1 1348 真違規**（.gr-play 30px tap target 遍佈＋6 頁低對比）＝rebuild backlog。
 4. **AC-UNIT-3** golden/ dir 建置；**AC-COV** 覆蓋內容；weather-nature KP cross_check。
 當前 HEAD=55714091e。commit/push 已獲 HD 全面授權、每步當 rollback point。
+
+## ✅ 本輪續（2026-11-01 22:43:00）— AC-A11Y-1 共用修復 ＋ a11y_gate 兩個 gate-correctness 修（皆紅隊）
+- tap target ≥44px（WCAG 2.5.5）：違規主體＝共用 assets/unit.css 四控制件（.gr-play 30px／.gr-nav a 40px 步驟 tab／.gr-opt 39px 選項／.gr-rate button 36px 自評鈕），由 assets/unit.js 在全 100 單元頁生成 → 單一共用修（各加 min-height:44px＋flex 置中）覆蓋全站；另 game_core.js ko-fi FAB 40px→flex 置中 min 44×44。單頁（greetings）實測 13→0。
+- gate 修 1（inline 例外）：footer「© 2026 HD Chen · …」句中署名連結(15px) 屬 WCAG 2.5.5/2.5.8 inline-in-sentence 例外，a11y_gate 原未建模→over-flag。加例外：display:inline 的 a 且緊鄰前/後 text node 有非空文字（真句中）才豁免；inline-block/非句中不豁免。紅隊 fixture：句中署名豁免＋獨立 inline-block 30px 連結仍抓＝恰 1 違規，selftest PASS。
+- gate 修 2（CSS 快取 bug，重要）：a11y_gate 用持久 --user-data-dir → linked assets/unit.css 跨輪磁碟快取（HTML 有 ?v= bust、CSS 無）→ 改了 CSS 仍量到舊版＝假 pass/假 fail（本輪一度誤報 13→11）。修＝每頁 page.setCacheEnabled(false)。紅隊：填快取(0)→改矮不清快取(8，證立即反映)→還原不清快取(0)。
+- commit bef34fe02。全站 116 頁 a11y 驗證跑中：已發現 unit.css 以外殘留＝button#englishAdvBadgeFab(28px tap)＋span.ea-level-emoji 對比 2.41:1(需3:1)，待全站跑完一併修到 0。
