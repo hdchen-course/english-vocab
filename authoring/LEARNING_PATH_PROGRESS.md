@@ -132,3 +132,18 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 英語島 100 單元**無 viz/scene SVG stepper**（units.json 零 `kind:viz`），故 AC-VIZ-1 非單元 viz 維度。`tools/figure_signoff_gate.py`（**存在且可用**，非 registry 誤指的 `.mjs`）守 visual-QA SOP：`index_new.html` 當前內容 sha 須有 `authoring/hub_render_manifest.json`（全狀態 render）＋`authoring/hub_signoff.json`（四角色逐狀態簽核）綁**同一 sha**。
 **現況 FAIL（正確/誠實）**：manifests 為 Oct31（source_sha 0b51cbd/e82bc6a），但 index_new.html 本 session 經 CATMAP/HUD/sidebar/進度 編修→當前 sha `c9525d2b`，舊簽核依「sha變則作廢」失效。
 **下一步（視覺 DONE-GATE）**：重 render index_new.html 的 10 個 required_states（CATMAP 各島展開/收合、練習帶、HUD、備份 sheet…portrait+landscape）→更新 hub_render_manifest.json（source_sha=c9525d2b＋逐 PNG）＋四角色逐狀態簽核更新 hub_signoff.json（states_reviewed ⊇ required_states）→figure_signoff_gate.py --verify exit0。另：registry AC-VIZ-1 由 `.mjs`（不存在）校正為 `PY tools/figure_signoff_gate.py --verify`（真實工具；gate 是 sha/manifest 檔檢查、非 renderer，.py 恰當，非弱化）。此為刻意的下一迭代（10 狀態 render＋4 角色判定＋manifest regen）。
+
+## ✅ 本輪（2026-11-01 22:28:34）—「真 missing 工具未建」清單清零：8 個 AC gate 全建好＋驗證＋接線
+> 上面「真 missing（工具未建）」區塊已**過期**：該批 gate 本輪由 4 個平行 builder 全數建成，逐一獨立 selftest＋實站 verify＋紅隊，已 commit（55714091e／perf 75ebd0227）。不再 premature——改以**實站誠實 FAIL 當下一步內容工作**。
+- **AC-PERF-1**（`tools/perf_gate.mjs`，§6.5 R9 相對基準＝同類頁 median×1.5）：selftest 綠。實站初版 FAIL 8 → **修 anim_core.js(371KB) 改 concept_engine 按需 lazy-inject**（移除 6 概念頁同步 `<script>`；mount 前注入、host 脫 DOM 則略過）→ headless 實測：初始 window.Anim=false、進動畫步自動注入＋canvas 繪製成功＋零 JS error → **FAIL 8→2**。残 2＝english_dictation.html(2057KB，急載 12 個 dict_data≈1.95MB)＋english_sense.html(278KB，單檔 english_sense.js 173KB)。
+- **AC-CORRECT 5 子 gate**（claim_evidence／question_correctness／generator_property／visual_content_fidelity／release_hash）：selftest 全綠。實站：question_correctness 609 題全綠、generator honest N/A(0 generator)、visual_fidelity honest N/A(英語島 0 scene)、release_hash 綁 manifest_sha 綠；claim_evidence 揪 **1 真缺口**＝english_greetings P1-natural-greeting(mcq) 缺 answer_evidence → **已修**：加 `answer_evidence:["c-be-am"]`（I→am 正是正解依據）→ claim_evidence 實站 **0 violation**、question_correctness/unit_schema 回歸綠。
+- **AC-PATH-1/2**（`tools/path_sim_gate.py` --verify / --verify-inv4，INV-1 先備 DAG 無斷層＋INV-4 est≤12）：selftest 綠、實站 PASS（prerequisites 全空＝Phase 2 路徑接線後才長牙；結構正確）。
+- **AC-UNIT-2**（`tools/per_page_5clean_gate.py`，§11.A 每頁 content_audit 連續 5-clean 同 sha＋L3 exit0）：selftest 綠（12 壞例全 DENY）。實站 **FAIL 100**＝`authoring/page_converge_ledger.json` 尚未建、100 單元頁全無 5-clean 紀錄 → **下一步最核心內容工作**（逐頁跑 content_audit 收斂）。
+- 全部已接進 `authoring/acceptance_criteria.json`（evidence/qualification 用 --verify 系列），wiring 已驗。
+
+### 下一步佇列（實站 FAIL＝spec 定義的內容工作，非 blocked）
+1. **AC-PERF-1 残 2**：dictation 12 個 dict_data 改按 CEFR 等級/系列按需載入（同步 init→async；受 DICTATION_BUILD_SPEC 管，交 worktree builder 專做，純載入優化不動內容）；sense 173KB 引擎評估拆分。
+2. **AC-UNIT-2 每頁 5-clean**：建 page_converge_ledger 收斂 infra，逐頁 /static-doc-audit 跑到 5 連續 clean（workflow-size hook 上限 3 併發，分批）。
+3. **AC-A11Y-1 1348 真違規**（.gr-play 30px tap target 遍佈＋6 頁低對比）＝rebuild backlog。
+4. **AC-UNIT-3** golden/ dir 建置；**AC-COV** 覆蓋內容；weather-nature KP cross_check。
+當前 HEAD=55714091e。commit/push 已獲 HD 全面授權、每步當 rollback point。
