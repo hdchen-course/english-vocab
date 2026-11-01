@@ -8,6 +8,9 @@
 <link rel="stylesheet" href="assets/app.css">
 <link rel="stylesheet" href="game_core.css">
 <script src="game_core.js"></script>
+<!-- 逐單元學習進度（§6.3；獨立 key learning_progress_v1，只讀顯示，不寫 player_profile_v1） -->
+<script src="assets/safe_store.js"></script>
+<script src="assets/learning_progress.js"></script>
 <style>
   /* 本頁版面：顏色一律取 app.css 房屋變數，不新增色票。以 iPad Air 13"（1366 寬）為基準，吃滿寬與高 */
   .lp-wrap{ max-width:none; margin:0 auto; padding:14px clamp(18px,3vw,48px) 36px; }
@@ -281,18 +284,32 @@ fetch('authoring/units_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():{un
   NAV=nav;
   document.getElementById('tot').innerHTML=
     `${nav.island_count} 座學習島 · 必備知識點 <b>${nav.minimum_total}</b> · 延伸（選修） <b>${nav.beyond_total}</b>`;
+  // 逐單元學習進度（§6.3）：只讀 learning_progress_v1，顯示每島已學單元數。
+  // 零進度＝中性顯示（不嚇人，R-OPEN／§14 O-5）；絕不寫 player_profile_v1。
+  const LP=window.LearningProgress;
+  const ISLE=(LP&&LP.islandCounts&&LP.islandCounts())||{};
+  const islandTotal=(k)=>(UNITS[k]||[]).length;   // 該島已有單元總數（units_index）
   const navEl=document.getElementById('nav');
   nav.islands.forEach((isl,i)=>{
     const [fill,ink]=ACCENT[isl.island]||["var(--c-primary)","var(--c-primary-ink)"];
     const b=document.createElement('button'); b.type='button'; b.className='lp-navitem';
     b.style.setProperty('--a',fill); b.style.setProperty('--aink',ink);
-    b.innerHTML=`<span class="nm">${isl.title_zh}</span><span class="mt">${isl.strand_count} 分區 · ${isl.min_count} 知識點</span>`;
+    const seen=(ISLE[isl.island]&&ISLE[isl.island].seen)||0;
+    const tot=islandTotal(isl.island);
+    // 只在「島內已有單元且學過至少一個」時加學習進度，避免零進度時顯得空洞/嚇人。
+    const learned=(tot>0&&seen>0)?` · 已學 ${Math.min(seen,tot)}/${tot} 單元`:'';
+    b.innerHTML=`<span class="nm">${isl.title_zh}</span><span class="mt">${isl.strand_count} 分區 · ${isl.min_count} 知識點${learned}</span>`;
     b.addEventListener('click',()=>select(i));
     navEl.appendChild(b);
   });
   select(0);
-  document.getElementById('foot').textContent=
-    '資料來源：authoring/nav_index.json（由 tools/gen_derived.py 自 knowledge_points.json 衍生）。學習進度將於 Phase 2 接 learning_progress_v1 後顯示。';
+  // footer：真實總進度概覽（取代舊「Phase 2 後顯示」占位）
+  const T=(LP&&LP.totals&&LP.totals())||{seen:0,mastered:0};
+  const srcNote='資料來源：authoring/nav_index.json（由 tools/gen_derived.py 自 knowledge_points.json 衍生）。';
+  const progNote=(T.seen>0)
+    ? `學習進度（這台裝置）：已學 ${T.seen} 個單元、其中 ${T.mastered} 個標記為「會了」。繼續加油！`
+    : '學習進度（這台裝置）：還沒有紀錄，挑一座島、點一個單元就開始囉！';
+  document.getElementById('foot').textContent=srcNote+progNote;
 }).catch(e=>{document.getElementById('foot').textContent='載入 nav_index.json 失敗（請用 http 開啟，勿用 file://）：'+e;});
 </script>
 

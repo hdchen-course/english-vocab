@@ -29,10 +29,13 @@
   }
   function el(tag, cls, html){ const e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e; }
   function esc(s){ return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
-  function rateRow(levels){
-    const wrap=el('div','gr-rate'); (levels||["還不熟","快會了","會了"]).forEach(l=>{
+  function rateRow(levels, onPick){
+    const lv=(levels||["還不熟","快會了","會了"]);
+    const wrap=el('div','gr-rate'); lv.forEach((l,idx)=>{
       const b=el('button',null, esc(l));
-      b.onclick=()=>{ [...wrap.children].forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); };
+      b.onclick=()=>{ [...wrap.children].forEach(x=>x.classList.remove('sel')); b.classList.add('sel');
+        // 進度模組未載入時 graceful no-op（§6.3）：僅在提供 onPick 的實例（④ 自評）才記錄。
+        if(typeof onPick==='function'){ try{ onPick(l, idx, lv); }catch(e){} } };
       wrap.appendChild(b);
     }); return wrap;
   }
@@ -157,10 +160,16 @@
       c.appendChild(rateRow()); main.appendChild(c);
     }
 
-    // ④ 自評
+    // ④ 自評 — 此處三級自評＝單元完成訊號，接 learning_progress.recordUnit（§6.3）。
+    // additive：selfRatings push、mastered 單調為真（選最高級＝「會了」時）、lastSeen 更新。
+    // 只寫 learning_progress_v1，絕不碰 player_profile_v1（§7.2 單一寫者）。
     main.appendChild(el('h2','gr-h','④ 我到哪一步了')).id='s4';
     const se=el('div','gr-card');
-    se.appendChild(rateRow(u.selfeval));
+    se.appendChild(rateRow(u.selfeval, function(rating, idx, lv){
+      const LP=window.LearningProgress;
+      if(!LP || !u.unit_id) return;   // 未載入進度模組或無 unit_id → graceful no-op
+      LP.recordUnit(u.unit_id, { selfRating: rating, mastered: (idx === lv.length - 1) });
+    }));
     se.appendChild(el('div','gr-note', esc(u.selfeval_note||'')));
     main.appendChild(se);
 
