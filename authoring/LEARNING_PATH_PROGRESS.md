@@ -28,10 +28,10 @@
 3. **視覺基準＝iPad Air 13" M5**；設計已調成 MacBook Pro 16" 等比例縮放。
 4. **commit/push 已全面授權自主進行**（HD 2026-11-01）；每步當 rollback point、push、並在此詳記。不得 commit `.claude/`、`.sda/`、`training/`、`__pycache__`。
 
-## ⚠ Phase 0.5(b) MUST-FIX（provenance gate `1963295b4` 揪出的 never-disappear 真缺口；動 live game_core.js 須謹慎，每檔 5-clean＋全站 render＋RT）
-1. **mascot 殘留**：game_core.js `setProfileField` 有 `equippedMascot` 分支（:1446）＋schema 持久化 `equippedMascot` 欄（:309），但無 mascot 型別/物件＝equip-provenance＋反向參照雙懸空。修法擇一：(a) 移除殘留 equippedMascot 欄/setter＋§6.3 migrate 清 stored 值（傾向此，catalog `_scope_note` 已記）；(b) 正式補 mascot 型別入 types[]（需三簽＋equippable 決策＋type baseline）。
-2. **ownedItems 無守衛**：`spendCoins(amount,itemId)`→`ownedItems.push(itemId)`（:1468），itemId 公開 API 參數、無 catalog 成員守衛。修法：spendCoins 對 itemId 做 reward_catalog 成員守衛（或頒獎改經具名 helper 取 catalog id）。
-- 修完這兩項 → `reward_provenance_gate.py` 自然 exit 0。gate 預設嚴格 fail-closed（不掛 baseline），故任何 reward「完成」宣告前都被擋，符合 §0.2。
+## Phase 0.5(b) 進度
+- ✅ **mascot 殘留**＋✅ **ownedItems 守衛** 已修（commit `37e20d9ac`，隔離 worktree 開發＋審 diff＋main 重驗；provenance gate 3→0、catalog 0、瀏覽器 never-disappear RT、spendCoins 唯一呼叫者 wish_shop 不受影響）。
+- ⚠ **MUST-FIX（新，pre-existing，gcfix 揪出）壞檔覆寫（§7.1 違反）**：game_core `loadProfile` 的 `readLS` 把 JSON.parse 例外吞成 null → `normalizeProfile(null)` → freshProfile，init 的 save 路徑隨即把空白寫回磁碟＝**壞檔會靜默覆寫既有存檔**，違 §7.1「壞檔不重設/readOnlyUntilResolved」。最小修法：loadProfile 區分「key 不存在(null)」vs「存在但 parse 失敗(壞檔)」，壞檔時備份 `<key>__corrupt_<ts>`＋保留記憶體＋設 `readOnlyUntilResolved` 禁寫，或 game_core 改接 `assets/safe_store.js`。動 live 引擎須每檔 5-clean＋全站 render＋RT。
+- 註：合成 v1 seed 缺 `migratedFlags.v1_seeded` 會觸發既有 legacy-seed 一次性重算 totalXp→0（HEAD 同樣、非 gcfix 造成、真實使用者 profile 帶 flag 不觸發）；此為既有行為，未列 must-fix（非真實資料遺失），但留意。
 
 ## HD 新需求（2026-11-01）：英語島「單字大師」改用 Anki 源 ＋ 教 collocation（spec-first，練習帶＝最後做，先記不實作）
 - **資料源改採**（取代舊 `vocab_data_coca_*` 構想）：`/Volumes/workplace/EnglishTraining/Anki/data/cards.jsonl`（**10,000 筆、單一檔、`group` 1–10 各 1000**）＋ `/Volumes/workplace/EnglishTraining/Anki/audio/`（**29,921 個 mp3**，內容 hash 命名）。
@@ -52,6 +52,7 @@
 ## 變更流水帳（最新在上）
 | 時間(台北) | commit | 內容 |
 |---|---|---|
+| 2026-11-01 18:00 | `37e20d9ac` | Phase 0.5(b) 修 game_core 2 缺口（mascot 殘留清除＋schemaVersion→2 migrate；spendCoins ownedItems catalog 守衛）；provenance gate 3→0 |
 | 2026-11-01 17:24 | `1963295b4` | §6.7 provenance 掃描 gate（RT-14/15）；對真實 game_core exit3 揪出 mascot 殘留＋ownedItems 無守衛 2 類真缺口（列 Phase 0.5(b) must-fix） |
 | 2026-11-01 17:13 | `758aad26e` | §6.7 獎勵 reward_catalog registry＋fail-closed gate＋baseline（紅隊＋自驗 DENY） |
 | 2026-11-01 17:04 | `d5c623ad4` | Phase 0.5/1 確定性工具組＋golden（safe_store/4 gate/lint/nav_gate/deviation_categories，皆紅隊） |
