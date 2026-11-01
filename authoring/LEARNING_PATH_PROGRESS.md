@@ -23,6 +23,8 @@ loop 深掘 `verify_learning_path.py --phase=1` 揭出真實地基狀態，**更
    `a11y_gate.py` 只掃 1 檔（弱）。另有 arg 失配：registry 呼 `unit_schema_gate.py --verify` 但該 gate 無 `--verify` 旗標。
    **進展（20:24）**：`unit_schema_gate`/`unit_acceptance_lint` 補 `--verify` 別名（AC-SCHEMA/AC-UNIT-1 轉 PASS，紅隊不弱化）；**建成 `tools/a11y_gate.mjs`**（AC-A11Y-1 真 render gate）。`--phase=1` 未過 19→16（扣掉 a11y 這個「工具未建」轉「誠實 FAIL」不算淨減）。
    **新 backlog（a11y_gate 揪出，真實待修）**：共用聽寫引擎 `.gr-play` 按鈕高 30px(<44) 遍佈 100+ 英語頁（每頁 13 個）＋6 頁低對比（index_new `.lp-step` 1.51:1 等）＋footer 小連結——屬共用 CSS/設計層，rebuild 時統一修（勿逐頁 patch）。
+   **nav_gate.mjs 真實狀態（更正）**：AC-NAV 的 `--phase=1` 顯示 `exit=2` 是**『存在但 mis-invoke』非『工具未建』**（我先前誤判為未建而派 builder 重寫，險些 merge 掉 R-OPEN／ND≤15 檢查——builder 誠實揪出、已還原）。真實 gap＝舊 gate 需外部 `NAV_TARGET` server 且無 `--verify` 入口（registry 呼 `--verify` 故 exit2）。**reconcile 待辦（紅隊）**：把 builder 新版的 `--verify`＋自管 server＋DATA↔DOM 併入既有 gate、**保留 R-OPEN／R14**、並將 ND `visible≤15` 與 HD 認可的 CATMAP 首屏自動展開**對帳**（展開那一島為認可例外、cap 套在收合島集；證壞案例擋、CATMAP 放行），不可直接刪也不可讓它誤擋。
+   **教訓（banked）**：`verify_learning_path` 的 `exit=2`（存在但 arg/server mis-invoke）≠`工具未建：tools/xxx`（真缺檔）；派 builder 前先 `git ls-files` 確認檔是否已追蹤，別憑 orchestrator 摘要推斷。
 3. **已實作且真綠的部分（不受影響）**：100 英語島單元、learning_progress_v1 接線、§6.3 要求4 唯讀解除 UI、
    reward registry/provenance/catalog gate、unit_acceptance_lint/nav_gate.py/label_coverage/a11y_gate.py/
    prereq_dag/deviation_categories（--verify 皆綠）。
@@ -79,6 +81,7 @@ registry arg 對齊。這些是大工程，需組 team＋spec 逐節 grounding�
 ## 變更流水帳（最新在上）
 | 時間(台北) | commit | 內容 |
 |---|---|---|
+| 2026-11-01 20:37 | （無 commit，還原保護）| nav_gate.mjs builder 揪出我的錯誤前提：該檔**本就存在於 HEAD**（201 行、含 islands≤12／visible≤15 ND／R-OPEN 鎖定態／R14 zh-collapse 四檢查），builder 覆寫後掉了 R-OPEN 與 ND≤15→**我 git checkout 還原 HEAD，不 merge 掉檢查的 rewrite**。builder 新版存 /tmp/nav_gate_builder_new.mjs 待 reconcile |
 | 2026-11-01 20:24 | `0793e23c5` | Phase 1：建 tools/a11y_gate.mjs（AC-A11Y-1 真 render gate，3 準則＋紅隊）；獨立驗證後 merge。實站掃 116 頁→1348 真 a11y 違規（誠實 FAIL，非抑制）→ rebuild backlog |
 | 2026-11-01 19:54 | `b5512b340` | Phase 0：7 新英語 KP 經獨立雙鏡審查→6 verified（binding_unverified 7→1）；weather-nature 經 fail-closed high-risk floor 正確拒 expert_review（須 cross_check，不弱化）→誠實留 unverified |
 | 2026-11-01 19:48 | `85db84e52` | Phase 0 地基修復：還原 KP manifest provenance（補 7 筆 eng.md slice→重生 manifest/overlay；T3-03 FAIL→PASS、binding_unverified 3079→7、id-set 不變、100 單元 KP-ref 完整） |
