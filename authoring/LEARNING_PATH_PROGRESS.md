@@ -332,3 +332,12 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - iPad 三視埠 render：bareinfinitive 橫＋moreandmore 直逐張開圖，四角色簽核通過（右緣 97%、2–4 欄、無窄島、無重疊、老花可讀）。
 - builder 覆蓋分析回報：t_mid 未覆蓋做完此批剩 ~10（接近用罄，剩 vocab/noun/verb/voice/nonfinite/relcl/advcl/pattern 各 1–2）；t_adv 遠未用罄。
 - 對抗式 review：0 blocker；builder 預修 interrogativepron P1 歧義（ate my sandwich→wants to go first）。
+
+## batch22 合併（2026-11-02 07:17）
+- eng 161→167（+6），units 226→232。nav_index byte-unchanged。
+- 中階：futuretimeclause（時間副詞子句表未來用現在式）、infadjadv（不定詞當形容詞/副詞）、relomit（受格關代省略）、irregularverb3（不規則動詞三態）。
+- 高階：multiplecomp（倍數比較 twice/three times/half as…as）、phrasalprep（片語介系詞 because of/in spite of/instead of，despite 後不加 of）。
+- 4 道確定性 gate 全綠（232 units），scan_simplified 12 檔 PASS。
+- iPad 三視埠 render：multiplecomp 橫＋phrasalprep 直逐張開圖，四角色簽核通過（右緣 97%、2–4 欄、無窄島、無重疊、老花可讀）。
+- builder 覆蓋分析：t_mid 未覆蓋剩 6（noun.collective 刻意避開＝美式英式分歧地雷、pattern.sv/svo、voice.by-agent、vocab.core-1200/expand-2000）；t_adv 剩 59，充裕。
+- 對抗式 review 修掉 3 處：irregularverb3 P4 garden-path 題幹改寫、relomit P4 理由去 overstate、multiplecomp P1 誘答改純結構錯誤消第二解。
