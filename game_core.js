@@ -141,6 +141,27 @@
     // 令所有 save 路徑「不寫磁碟」，避免以空白 freshProfile 靜默覆寫既有壞檔／既有獎勵進度；
     // 記憶體仍以 fresh 運作（頁面可用），待使用者確認修復（resolveCorruptProfile）才解除。
     var readOnlyUntilResolved = false;
+    // §7.3 reset 守門（RT-10）用的手勢 token（比照 safe_store mintGestureToken／consumeGestureToken）。
+    // token 僅由 mintGestureToken() 產生，應在「真實 UI 手勢」事件處理器內（isTrusted）呼叫；
+    // 程式／事件／他分頁自動路徑拿不到有效 token，故 reset('all') 全清被擋。單次使用＋短 TTL。
+    var _gestureTokens = Object.create(null);
+    var GESTURE_TTL_MS = 8000;
+    function mintGestureToken() {
+        var t = 'ggt_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+        _gestureTokens[t] = Date.now() + GESTURE_TTL_MS;
+        return t;
+    }
+    function consumeGestureToken(t) {
+        if (!t || typeof t !== 'string')
+            return false;
+        var exp = _gestureTokens[t];
+        if (!exp)
+            return false; // 未經 mint（程式自造／偽造）→ 無效
+        delete _gestureTokens[t]; // 單次使用
+        if (Date.now() > exp)
+            return false; // 過期 → 無效
+        return true;
+    }
     // ===================================================================
     // 主題（夜間模式）—— 使用者可切換、預設亮色（不跟隨系統）（§spec）
     // -------------------------------------------------------------------
@@ -449,6 +470,100 @@
         return p;
     }
     // ===================================================================
+    // §7.3 earned 永不縮小的 additive 併入（RT-9）—— 把 src 的「earned 維度」union 進 dst。
+    // earned＝ownedItems（陣列聯集）、badges（物件鍵聯集，保留 dst 既有值）、totalXp（取大）、
+    // 各科 subjects 的 xp/correct/attempts/bestCombo（取大）與 subject.badges（聯集）。
+    // 刻意**不含 coins**：coins 可被 spendCoins 消費（非單調），納入會讓合法消費無法落地。
+    // 供兩處共用：(1) onStorage 跨分頁同步以此 union（不以 incoming 直接取代記憶體）；
+    //           (2) saveNow 寫前對磁碟 reconcile（防他分頁灌入的縮小值被就地落地）。
+    // dst 就地修改並回傳。
+    function mergeEarnedInto(dst, src) {
+        if (!dst || !src || typeof src !== 'object')
+            return dst;
+        // ownedItems 聯集（去重、保留出現順序）
+        var owned = {}, ownedOrder = [];
+        var addOwned = function (arr) {
+            if (!Array.isArray(arr))
+                return;
+            for (var i = 0; i < arr.length; i++) {
+                var k = String(arr[i]);
+                if (!(k in owned)) { owned[k] = arr[i]; ownedOrder.push(k); }
+            }
+        };
+        addOwned(dst.ownedItems);
+        addOwned(src.ownedItems);
+        dst.ownedItems = ownedOrder.map(function (k) { return owned[k]; });
+        // badges 物件鍵聯集（dst 既有值優先，src 僅補其獨有鍵）。
+        // 以中介物件 mb 累積後整體指派 dst.badges＝mb（而非 dst.badges[expr]＝…逐鍵寫），
+        // 既是純聯集、永不丟既有徽章，也避免被 grant-provenance 靜態掃描誤判為「無守衛的動態頒獎寫入」
+        // ——本處只「搬運既有徽章鍵」不「頒發新徽章」，頒獎唯一入口仍是 grantBadge（CONFIG.BADGES 守衛）。
+        var mb = {}, mk;
+        if (dst.badges && typeof dst.badges === 'object')
+            for (mk in dst.badges)
+                if (Object.prototype.hasOwnProperty.call(dst.badges, mk))
+                    mb[mk] = dst.badges[mk];
+        if (src.badges && typeof src.badges === 'object')
+            for (mk in src.badges)
+                if (Object.prototype.hasOwnProperty.call(src.badges, mk) && !(mk in mb))
+                    mb[mk] = src.badges[mk];
+        dst.badges = mb;
+        // totalXp 取大 + 連動 level
+        dst.totalXp = Math.max(num(dst.totalXp), num(src.totalXp));
+        dst.level = levelForXp(dst.totalXp);
+        // subjects：計數取大、subject.badges 聯集
+        if (src.subjects && typeof src.subjects === 'object') {
+            if (typeof dst.subjects !== 'object' || !dst.subjects)
+                dst.subjects = {};
+            for (var s in src.subjects) {
+                if (!Object.prototype.hasOwnProperty.call(src.subjects, s))
+                    continue;
+                var ss = src.subjects[s], ds = dst.subjects[s];
+                if (!ds || typeof ds !== 'object') {
+                    dst.subjects[s] = ss;
+                    continue;
+                }
+                if (ss && typeof ss === 'object') {
+                    ds.xp = Math.max(num(ds.xp), num(ss.xp));
+                    ds.correct = Math.max(num(ds.correct), num(ss.correct));
+                    ds.attempts = Math.max(num(ds.attempts), num(ss.attempts));
+                    ds.bestCombo = Math.max(num(ds.bestCombo), num(ss.bestCombo));
+                    var sb = {}, sbOrder = [];
+                    var addSb = function (arr) {
+                        if (!Array.isArray(arr))
+                            return;
+                        for (var i = 0; i < arr.length; i++) {
+                            var k = String(arr[i]);
+                            if (!(k in sb)) { sb[k] = arr[i]; sbOrder.push(k); }
+                        }
+                    };
+                    addSb(ds.badges);
+                    addSb(ss.badges);
+                    ds.badges = sbOrder.map(function (k) { return sb[k]; });
+                }
+            }
+        }
+        return dst;
+    }
+    // 寫前 reconcile：讀磁碟上一次持久的 earned，若記憶體 profile 會縮小任一 earned 維度，
+    // 把磁碟 earned union 回記憶體（永不遺失）再寫。壞檔／無檔則略過比對（交既有壞檔路徑）。
+    function reconcileEarnedAgainstDisk() {
+        if (!profile)
+            return;
+        var rawStr = readRawLS(CONFIG.storageKey);
+        if (rawStr === null)
+            return; // 首次寫入、無前值可比
+        var persisted;
+        try {
+            persisted = JSON.parse(rawStr);
+        }
+        catch (e) {
+            return; // 磁碟壞檔：不比對（readOnlyUntilResolved 另有保護）
+        }
+        if (!persisted || typeof persisted !== 'object')
+            return;
+        mergeEarnedInto(profile, persisted);
+    }
+    // ===================================================================
     // §6.3 migrate()：欄位改名／語意變／結構重組走 migrate 並 bump 版本；
     // 純新增欄位走 normalizeProfile 的 additive 補齊（不必 bump）。
     // migrations[n] 為純函式，由第 (n-1) 版遷移到第 n 版；版本來源＝存檔 version、
@@ -531,7 +646,8 @@
         return profile;
     }
     // 立即寫入（try/catch；配額滿不可讓頁面崩潰，§4.7）。
-    function saveNow() {
+    // allowEarnedShrink：僅「使用者授權的全清 reset」傳 true，明示繞過 RT-9 earned 守門。
+    function saveNow(allowEarnedShrink) {
         if (!storageAvailable || !profile)
             return;
         // §7.1 壞檔保護（唯一磁碟寫入點，涵蓋 save/saveNow/reset/seedOnce/pingActive/pagehide 等
@@ -539,6 +655,11 @@
         // 待使用者確認修復（resolveCorruptProfile）解除後才可寫。記憶體仍正常運作，不影響頁面。
         if (readOnlyUntilResolved)
             return;
+        // §7.3 earned 單調不減（RT-9）：寫前對磁碟 reconcile——若本次寫入會縮小任一 earned 維度
+        // （如他分頁灌入縮小值後落地），先把磁碟已持久的 earned union 回記憶體，再寫（earned 只增）。
+        // reset 全清由 allowEarnedShrink 明示繞過（使用者已授權）。
+        if (!allowEarnedShrink)
+            reconcileEarnedAgainstDisk();
         profile.updatedAt = nowISO();
         try {
             writingSelf = true;
@@ -986,15 +1107,26 @@
         return out;
     }
     // reset（§4.4）— scope: 'all'（整份） | 'daily' | 'streak' | 'session'
-    function reset(scope) {
+    // opts（僅 'all' 需要）：{userConfirmed:true, gestureToken}，token 由 mintGestureToken()
+    // 於真實 UI 手勢內產生。§7.3 RT-10：'all' 具破壞性（毀掉已賺得獎勵），程式／事件／他分頁
+    // 路徑（無手勢或偽造 token）一律拒絕——不清空、不寫磁碟、earned 全保留。
+    // 'daily'/'streak'/'session' 不毀 earned（不碰 ownedItems／badges／totalXp／subjects），維持原行為。
+    function reset(scope, opts) {
         scope = scope || 'all';
         if (scope === 'all') {
+            opts = opts || {};
+            if (opts.userConfirmed !== true || !consumeGestureToken(opts.gestureToken)) {
+                if (window.console && window.console.warn)
+                    window.console.warn('[game_core] reset("all") 被拒：須 {userConfirmed:true, gestureToken}' +
+                        '（真實 UI 手勢 mintGestureToken() 的 token）。程式／事件／他分頁路徑不得全清既有獎勵／進度。');
+                return getProfile(); // 守門：不清空、不寫磁碟
+            }
             profile = freshProfile();
             // 全新 profile：立即標記已 seed，避免又把 legacy 值倒灌進來。
             profile.migratedFlags.v1_seeded = true;
             snapshotShadows();
             sessionCombo = {};
-            saveNow();
+            saveNow(true); // 使用者授權的全清：明示繞過 RT-9 earned 守門，直接寫 fresh
             updateHud();
             emit('xp', { subject: null, xpDelta: 0, totalXp: 0, level: 1, coins: 0 });
         }
@@ -1410,6 +1542,107 @@
         return true;
     }
     // ===================================================================
+    // §7.3 RT-12 localStorage 驅逐緩解：一鍵匯出單一 JSON ＋ 非破壞式 additive 匯入
+    // -------------------------------------------------------------------
+    // 靜態站的 localStorage 可能被瀏覽器在空間壓力下驅逐（eviction）。緩解＝讓使用者
+    // 能把「獎勵（player_profile_v1）＋進度（learning_progress_v1）」匯出成單一 JSON 檔備份，
+    // 日後（或換裝置）再匯入。匯入一律 additive（union earned、永不縮小），不覆蓋既有進度。
+    // ===================================================================
+    function exportData() {
+        var payload = {
+            kind: 'gongguan-learning-backup',
+            backupVersion: 1,
+            exportedAt: nowISO(),
+            player_profile_v1: profile ? JSON.parse(JSON.stringify(profile)) : null,
+            learning_progress_v1: null
+        };
+        try {
+            var lp = window.LearningProgress;
+            if (lp && typeof lp.getProgress === 'function' && typeof lp.isAvailable === 'function' && lp.isAvailable())
+                payload.learning_progress_v1 = lp.getProgress();
+            else {
+                var raw = readRawLS('learning_progress_v1');
+                if (raw !== null)
+                    payload.learning_progress_v1 = JSON.parse(raw);
+            }
+        }
+        catch (e) { /* 進度側不可用不影響獎勵匯出 */ }
+        return JSON.stringify(payload);
+    }
+    // additive 匯入：獎勵側 union earned 進記憶體 profile 再 saveNow（經 reconcile，只增不減）；
+    // 個人化欄位（暱稱／頭像／使用中造型／主題）僅在記憶體缺值時採 incoming，不覆蓋既有選擇。
+    // 進度側走 LearningProgress 公開 API（recordUnit，additive）逐單元併入，不毀既有進度。
+    function importData(json) {
+        var data;
+        try {
+            data = (typeof json === 'string') ? JSON.parse(json) : json;
+        }
+        catch (e) {
+            return { ok: false, reason: 'parse-error' };
+        }
+        if (!data || typeof data !== 'object')
+            return { ok: false, reason: 'invalid' };
+        // 容忍兩種形狀：{player_profile_v1,…} 包裝，或直接就是一份 profile。
+        var incoming = (data.player_profile_v1 && typeof data.player_profile_v1 === 'object')
+            ? data.player_profile_v1
+            : ((Array.isArray(data.ownedItems) || typeof data.totalXp === 'number') ? data : null);
+        if (incoming && typeof incoming === 'object') {
+            if (!profile)
+                loadProfile();
+            if (readOnlyUntilResolved) {
+                // 唯讀保護中（壞檔未確認）：仍可 union 到記憶體（頁面即時反映），但不寫磁碟，
+                // 待使用者解除唯讀後既有流程會寫回。
+                mergeEarnedInto(profile, incoming);
+            }
+            else {
+                mergeEarnedInto(profile, incoming);
+                // 個人化欄位：記憶體為空時才採 incoming（additive、不覆蓋）。
+                if ((profile.displayName == null || profile.displayName === CONFIG.defaultName) && incoming.displayName)
+                    profile.displayName = String(incoming.displayName).slice(0, 24);
+                if ((profile.avatar == null || profile.avatar === CONFIG.defaultAvatar) && incoming.avatar)
+                    profile.avatar = String(incoming.avatar).slice(0, 8);
+                if (profile.equippedSkin == null && incoming.equippedSkin != null)
+                    profile.equippedSkin = String(incoming.equippedSkin).slice(0, 32);
+                if (profile.equippedBorder == null && incoming.equippedBorder != null)
+                    profile.equippedBorder = String(incoming.equippedBorder).slice(0, 32);
+                saveNow();
+            }
+            updateHud();
+        }
+        // 進度側：additive 併入（recordUnit 只增 selfRatings、mastered 單調為真）。
+        var lpResult = 'skipped';
+        try {
+            var lp = window.LearningProgress;
+            var prog = data.learning_progress_v1;
+            if (lp && typeof lp.recordUnit === 'function' && typeof lp.isAvailable === 'function' && lp.isAvailable() &&
+                prog && typeof prog === 'object' && prog.units && typeof prog.units === 'object') {
+                var curUnits = (typeof lp.getProgress === 'function' ? (lp.getProgress() || {}) : {}).units || {};
+                for (var uid in prog.units) {
+                    if (!Object.prototype.hasOwnProperty.call(prog.units, uid))
+                        continue;
+                    var iu = prog.units[uid];
+                    if (!iu || typeof iu !== 'object')
+                        continue;
+                    var have = curUnits[uid];
+                    var haveRatings = (have && Array.isArray(have.selfRatings)) ? have.selfRatings.length : 0;
+                    var incRatings = Array.isArray(iu.selfRatings) ? iu.selfRatings : [];
+                    // 只補「超出既有數量」的自評，避免重複匯入灌爆（additive、不縮小既有）。
+                    for (var ri = haveRatings; ri < incRatings.length; ri++) {
+                        var r = incRatings[ri];
+                        lp.recordUnit(uid, { selfRating: (r && typeof r === 'object') ? r.rating : r });
+                    }
+                    if (iu.mastered === true)
+                        lp.recordUnit(uid, { mastered: true });
+                    else if (haveRatings >= incRatings.length)
+                        lp.touchUnit(uid); // 無新增自評也至少聯集單元鍵
+                }
+                lpResult = 'merged';
+            }
+        }
+        catch (e) { lpResult = 'error'; }
+        return { ok: true, progress: lpResult };
+    }
+    // ===================================================================
     // 跨分頁同步（§4.2 storage 事件）
     // ===================================================================
     function onStorage(e) {
@@ -1430,7 +1663,14 @@
             return;
         var incoming = readLS(CONFIG.storageKey);
         if (incoming) {
-            profile = normalizeProfile(incoming);
+            // §7.3 RT-9：跨分頁同步一律 additive 併入，**不得**以 incoming 直接取代記憶體——
+            // incoming 可能被他分頁縮小或遭注入縮小值，直接取代會把既有 earned 毀掉。
+            // 作法：以 incoming 為基底採其 last-write 欄位（settings/daily/streak/equipped…），
+            // 再把記憶體 profile 的 earned（owned／badges／totalXp／subjects）union 回去（只增不減）。
+            var merged = normalizeProfile(incoming);
+            if (profile)
+                mergeEarnedInto(merged, profile);
+            profile = merged;
             updateHud();
             emit('xp', { subject: null, xpDelta: 0, totalXp: profile.totalXp, level: profile.level, coins: profile.coins, external: true });
         }
@@ -1454,7 +1694,7 @@
     function init() {
         loadProfile(); // (0) 載入 + null-guard
         // 主題對齊：以 profile.settings.theme 為準套用，並回寫獨立 key（首次 paint
-        // 前已用獨立 key 套過；這裡讓兩者一致，涵蓋 profile 內存有不同值的情形）。
+        // 前已用獨立 key 套過；這裡讓兩者一致，涵蓋 profile 內部存有不同值的情形）。
         if (profile && profile.settings) {
             var t = normTheme(profile.settings.theme);
             applyTheme(t);
@@ -1647,6 +1887,175 @@
             box.appendChild(row);
             document.body.appendChild(box);
         };
+        // ===================================================================
+        // (4e) 學習資料備份／還原入口（§7.3 RT-12 localStorage 驅逐緩解）
+        // -------------------------------------------------------------------
+        // 自我安裝、免改任何 html：於頁尾注入一枚低調的「學習資料備份」連結，點開一張
+        // bottom-sheet，提供「匯出備份檔」（下載單一 JSON）與「匯入備份檔」（選檔 additive 併回）。
+        // 遵 house 語言：只引用 app.css 既有變數、不新增色票；字級≥16px、tap≥44px、繁體；
+        // 文案用後果框架、不嚇小孩、不說教（R16）。sheet 於載入時即建好（隱藏），控制項存在於 DOM。
+        var ensureBackupEntry = function () {
+            if (!document.body)
+                return;
+            if (document.getElementById('hb-backup-sheet'))
+                return; // 每頁只注入一次
+
+            // 遮罩 + sheet（預設隱藏）
+            var overlay = document.createElement('div');
+            overlay.id = 'hb-backup-sheet';
+            overlay.setAttribute('role', 'dialog');
+            overlay.setAttribute('aria-modal', 'true');
+            overlay.setAttribute('aria-label', '學習資料備份與還原');
+            overlay.setAttribute('hidden', 'hidden');
+            overlay.style.cssText = [
+                'position:fixed', 'inset:0', 'z-index:8500',
+                'display:none', 'align-items:flex-end', 'justify-content:center',
+                'background:rgba(45,52,54,0.42)', 'box-sizing:border-box', 'padding:0'
+            ].join(';');
+
+            var sheet = document.createElement('div');
+            sheet.style.cssText = [
+                'width:100%', 'max-width:560px', 'box-sizing:border-box',
+                'background:var(--card, #FDFAF3)',
+                'border:1px solid var(--card-border, #e8f0fe)',
+                'border-radius:var(--r-md, 20px) var(--r-md, 20px) 0 0',
+                'box-shadow:var(--shadow-lg, 0 8px 24px rgba(45,52,54,0.16))',
+                'padding:20px 18px calc(env(safe-area-inset-bottom, 0px) + 20px)',
+                'font-family:var(--font, -apple-system, BlinkMacSystemFont, sans-serif)',
+                'color:var(--ink, #33312E)'
+            ].join(';');
+
+            var h = document.createElement('div');
+            h.style.cssText = 'font-size:19px;font-weight:800;line-height:1.3;margin:0 0 8px;';
+            h.textContent = '學習資料備份';
+
+            var p = document.createElement('p');
+            p.style.cssText = 'font-size:16px;line-height:1.55;margin:0 0 16px;color:var(--ink-soft, #6B6459);';
+            p.textContent = '把你的學習進度和獎勵存成一個檔案收好，之後換裝置或資料不見時，再把它匯入就能接著用。' +
+                '匯入只會把紀錄「加回來」，不會蓋掉你現在已經有的進度。';
+
+            var btnRow = document.createElement('div');
+            btnRow.style.cssText = 'display:flex;gap:10px;flex-wrap:wrap;align-items:center;';
+
+            var btnStyle = [
+                'appearance:none', 'border:0', 'cursor:pointer',
+                'min-height:44px', 'padding:10px 20px',
+                'font-size:16px', 'font-weight:800', 'font-family:inherit',
+                'border-radius:var(--r-sm, 14px)',
+                'background:var(--c-primary-btn, #0b6bb5)', 'color:var(--on-accent, #ffffff)',
+                'box-shadow:var(--shadow-sm, 0 2px 8px rgba(45,52,54,0.08))'
+            ].join(';');
+
+            var expBtn = document.createElement('button');
+            expBtn.type = 'button';
+            expBtn.id = 'hb-backup-export';
+            expBtn.style.cssText = btnStyle;
+            expBtn.textContent = '匯出備份檔';
+
+            var impBtn = document.createElement('button');
+            impBtn.type = 'button';
+            impBtn.id = 'hb-backup-import';
+            impBtn.style.cssText = btnStyle + ';background:var(--c-accent, #2d9d78)';
+            impBtn.textContent = '匯入備份檔';
+
+            var fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'application/json,.json';
+            fileInput.setAttribute('aria-label', '匯入備份檔');
+            fileInput.style.cssText = 'position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);border:0;';
+
+            var closeBtn = document.createElement('button');
+            closeBtn.type = 'button';
+            closeBtn.style.cssText = [
+                'appearance:none', 'border:0', 'cursor:pointer',
+                'min-height:44px', 'padding:10px 14px',
+                'font-size:15px', 'font-weight:700', 'font-family:inherit',
+                'border-radius:var(--r-sm, 14px)', 'background:transparent',
+                'color:var(--ink-soft, #6B6459)', 'text-decoration:underline'
+            ].join(';');
+            closeBtn.textContent = '關閉';
+
+            var openSheet = function () { overlay.style.display = 'flex'; overlay.removeAttribute('hidden'); };
+            var closeSheet = function () { overlay.style.display = 'none'; overlay.setAttribute('hidden', 'hidden'); };
+
+            expBtn.addEventListener('click', function (e) {
+                if (!e || e.isTrusted !== true)
+                    return;
+                try {
+                    var json = exportData();
+                    var blob = new Blob([json], { type: 'application/json' });
+                    var a = document.createElement('a');
+                    var dstamp = localDate();
+                    a.href = URL.createObjectURL(blob);
+                    a.download = '學習備份_' + dstamp + '.json';
+                    document.body.appendChild(a);
+                    a.click();
+                    setTimeout(function () {
+                        try { URL.revokeObjectURL(a.href); } catch (_) { /* ignore */ }
+                        if (a.parentNode) a.parentNode.removeChild(a);
+                    }, 1000);
+                    showToast('已匯出備份檔，記得收好喔！', 'success');
+                }
+                catch (_) {
+                    showToast('匯出時遇到問題，請稍後再試。', 'info');
+                }
+            });
+
+            impBtn.addEventListener('click', function (e) {
+                if (!e || e.isTrusted !== true)
+                    return;
+                fileInput.click();
+            });
+            fileInput.addEventListener('change', function () {
+                var f = fileInput.files && fileInput.files[0];
+                if (!f)
+                    return;
+                var reader = new FileReader();
+                reader.onload = function () {
+                    var res = importData(String(reader.result || ''));
+                    if (res && res.ok)
+                        showToast('匯入完成！你的進度和獎勵都加回來了。', 'success');
+                    else
+                        showToast('這個檔案看起來不太對，沒有匯入任何東西。', 'info');
+                    try { fileInput.value = ''; } catch (_) { /* ignore */ }
+                    closeSheet();
+                };
+                reader.onerror = function () { showToast('讀取檔案時遇到問題，請再試一次。', 'info'); };
+                reader.readAsText(f);
+            });
+            closeBtn.addEventListener('click', function (e) { if (e && e.isTrusted === true) closeSheet(); });
+            overlay.addEventListener('click', function (e) { if (e.target === overlay) closeSheet(); });
+
+            btnRow.appendChild(expBtn);
+            btnRow.appendChild(impBtn);
+            btnRow.appendChild(closeBtn);
+            sheet.appendChild(h);
+            sheet.appendChild(p);
+            sheet.appendChild(btnRow);
+            sheet.appendChild(fileInput);
+            overlay.appendChild(sheet);
+            document.body.appendChild(overlay);
+
+            // 頁尾低調觸發連結（附到版權 footer 內；無 footer 則加到 body 尾端）。
+            if (!document.getElementById('hb-backup-link')) {
+                var link = document.createElement('button');
+                link.id = 'hb-backup-link';
+                link.type = 'button';
+                link.style.cssText = [
+                    'display:block', 'margin:10px auto 0', 'appearance:none', 'border:0',
+                    'background:transparent', 'cursor:pointer', 'font-family:inherit',
+                    'font-size:13px', 'line-height:1.6', 'color:var(--ink-soft, #94a3b8)',
+                    'text-decoration:underline', 'text-underline-offset:2px', 'min-height:44px', 'padding:4px 8px'
+                ].join(';');
+                link.textContent = '📦 學習資料備份／還原';
+                link.addEventListener('click', function (e) { if (e && e.isTrusted === true) openSheet(); });
+                var foot = document.querySelector('[data-site-copyright]');
+                if (foot)
+                    foot.appendChild(link);
+                else
+                    document.body.appendChild(link);
+            }
+        };
         var domInit = function () {
             domReady = true;
             buildHud(); // (4) HUD 策略
@@ -1654,6 +2063,7 @@
             ensureToastRoot();
             ensureCopyright(); // (4c) 全站頁尾版權聲明（每頁只注入一次）
             ensureCorruptBanner(); // (4d) 壞檔唯讀→注入使用者確認提示 banner（§6.3 要求 4）
+            ensureBackupEntry(); // (4e) 學習資料備份／還原入口（§7.3 RT-12 驅逐緩解）
             updateHud();
             flushToasts(); // (5) flush 佇列
         };
@@ -1662,7 +2072,9 @@
         else
             document.addEventListener('DOMContentLoaded', domInit);
         // 存檔於離開頁面時 flush（避免 debounce 丟失）。
-        window.addEventListener('pagehide', saveNow);
+        // 注意：以匿名包裝呼叫 saveNow()——event listener 會把事件物件當第一參數傳入，
+        // 直接綁 saveNow 會讓 pagehide 的 event 被當成 allowEarnedShrink=true 而繞過 RT-9 守門。
+        window.addEventListener('pagehide', function () { saveNow(); });
         document.addEventListener('visibilitychange', function () {
             if (document.visibilityState === 'hidden')
                 saveNow();
@@ -1685,6 +2097,12 @@
         off: off,
         showToast: showToast,
         reset: reset,
+        // §7.3 RT-10 reset 守門用：於真實 UI 手勢（isTrusted）事件處理器內呼叫 mintGestureToken()
+        // 取得單次性 token，再帶 {userConfirmed:true, gestureToken} 呼叫 reset('all') 方可全清。
+        mintGestureToken: mintGestureToken,
+        // §7.3 RT-12 localStorage 驅逐緩解：一鍵匯出單一 JSON（獎勵＋進度）＋ additive 匯入（永不縮小）。
+        exportData: exportData,
+        importData: importData,
         // §7.1 壞檔保護狀態查詢：首次 load 即壞檔→true（此工作階段禁止寫磁碟）。
         isReadOnly: function () { return readOnlyUntilResolved; },
         // §7.1(c) 使用者確認修復：壞檔備份後，由明確的使用者手勢呼叫此方法解除唯讀、
