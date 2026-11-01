@@ -6,6 +6,7 @@
 <title>學習地圖</title>
 <!-- 全站共用設計語言（暖奶油白、眼科實證低眩光、日夜切換）；不自訂調色盤 -->
 <link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
 <script src="game_core.js"></script>
 <style>
   /* 本頁版面：顏色一律取 app.css 房屋變數，不新增色票。以 iPad Air 13"（1366 寬）為基準，吃滿寬與高 */
@@ -70,9 +71,37 @@
     .lp-nav{ position:static; flex-direction:row; flex-wrap:wrap; }
     .lp-navitem{ flex:1 1 44%; }
   }
+  /* ── 接回舊版遊戲 HUD：左欄 Profile 卡 + 底部徽章牆（唯讀顯示 game_core 狀態；R3 never-disappear）──
+     .profile-*／.badge-*／.section-* 規則自 index.html 既有版面 verbatim 移植，維持同一設計語言。 */
+  .lp-side{ display:flex; flex-direction:column; gap:14px; position:sticky;
+    top:calc(var(--app-bar-h,56px) + 12px); align-self:start; }
+  .lp-side .lp-nav{ position:static; align-self:stretch; }
+  .profile-top { display:flex; align-items:center; gap:var(--s3); }
+  .profile-avatar { font-size:30px; line-height:1; flex:none; }
+  .profile-id { min-width:0; flex:1; }
+  .profile-id .profile-name { display:flex; align-items:center; gap:var(--s2); }
+  .profile-xp-wrap { display:flex; flex-direction:column; gap:4px; }
+  .profile-xp-text { font-size:var(--fs-small); color:var(--ink-soft); font-weight:700; }
+  .section-label { font-size:var(--fs-small); font-weight:800; color:var(--ink-soft); letter-spacing:1px; margin:var(--s2) 0 0; padding-left:var(--s1); }
+  .section-note { font-size:12px; color:var(--ink-soft); font-weight:700; padding-left:var(--s1); margin-top:2px; }
+  .badge-head { display:flex; align-items:baseline; justify-content:space-between; gap:var(--s2); flex-wrap:wrap; }
+  .badge-count { font-size:var(--fs-small); font-weight:700; color:var(--ink-soft); }
+  .badge-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(104px, 1fr)); gap:var(--s3); margin-top:var(--s3); }
+  .badge-item { display:flex; flex-direction:column; align-items:center; text-align:center; gap:var(--s1);
+    padding:var(--s3) var(--s2); background:var(--card); border:1px solid var(--card-border); border-radius:var(--r-sm); }
+  .badge-item .b-ico { font-size:30px; line-height:1.15; }
+  .badge-item .b-name { font-size:var(--fs-small); font-weight:700; color:var(--ink); }
+  .badge-item .b-desc { font-size:11px; color:var(--ink-soft); line-height:1.4; }
+  .badge-item.is-earned { border-color:var(--c-coin); box-shadow:var(--shadow-sm); }
+  .badge-item.is-locked { background:var(--bg); }
+  .badge-item.is-locked .b-ico { filter:grayscale(1); opacity:0.5; }
+  .badge-item .b-state { font-size:11px; font-weight:700; }
+  .badge-item.is-earned .b-state { color:var(--c-finance-ink); }
+  .badge-item.is-locked .b-state { color:var(--ink-soft); }
+  @media (max-width:860px){ .lp-side{ position:static; } }
 </style>
 </head>
-<body data-game-hud="off">
+<body data-game-hud="native">
 <header class="app-bar">
   <a class="app-bar__home" href="index.html" aria-label="回到學習基地首頁">
     <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
@@ -89,9 +118,40 @@
     <span class="lp-tot" id="tot"></span>
   </div>
   <div class="lp-layout">
-    <nav class="lp-nav" id="nav" aria-label="學習島"></nav>
+    <div class="lp-side">
+      <!-- 左上角色 Profile 卡（唯讀顯示 game_core 狀態：頭像/暱稱/等級/經驗值進度條/火焰/金幣） -->
+      <section class="profile-card lp-profile" aria-label="我的角色">
+        <div class="profile-top">
+          <span class="profile-avatar" id="pf-avatar" aria-hidden="true">🦊</span>
+          <div class="profile-id">
+            <div class="profile-name"><span id="pf-name">小小探險家</span></div>
+            <div class="profile-level" id="pf-rank">🌱 探險新手 · 第 1 級</div>
+          </div>
+        </div>
+        <div class="profile-xp-wrap">
+          <div class="xp-bar" role="progressbar" aria-label="經驗值進度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="pf-xpbar">
+            <div class="xp-fill" id="pf-xpfill"></div>
+          </div>
+          <span class="profile-xp-text" id="pf-xptext">距離下一級還差 0 點經驗值</span>
+        </div>
+        <div class="profile-chips">
+          <span class="chip" id="pf-streak" title="連續學習天數">🔥 <span id="pf-streak-num">0</span> 天</span>
+          <span class="chip chip-chinese" id="pf-coins" title="金幣：玩學習關卡賺到的點數">🪙 <span id="pf-coins-num">0</span></span>
+        </div>
+      </section>
+      <nav class="lp-nav" id="nav" aria-label="學習島"></nav>
+    </div>
     <section class="lp-panel" id="panel" aria-live="polite"></section>
   </div>
+  <!-- 成就徽章牆：全部徽章（已解鎖＋未解鎖當目標）；唯讀 game_core.getBadgeWall() -->
+  <section id="badge-wall" class="lp-badges" style="margin-top:24px">
+    <div class="badge-head">
+      <h2 class="section-label">🏅 我的成就徽章</h2>
+      <span class="badge-count" id="badge-count">已收集 0 / 0</span>
+    </div>
+    <p class="section-note" style="margin-top:8px">每一個都是你努力的紀錄。還沒亮起來的是下一個小目標，別急，慢慢來就會收集到！</p>
+    <div class="badge-grid" id="badge-grid" aria-label="成就徽章清單"></div>
+  </section>
   <footer class="lp-foot" id="foot"></footer>
 </main>
 
@@ -234,6 +294,45 @@ fetch('authoring/units_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():{un
   document.getElementById('foot').textContent=
     '資料來源：authoring/nav_index.json（由 tools/gen_derived.py 自 knowledge_points.json 衍生）。學習進度將於 Phase 2 接 learning_progress_v1 後顯示。';
 }).catch(e=>{document.getElementById('foot').textContent='載入 nav_index.json 失敗（請用 http 開啟，勿用 file://）：'+e;});
+</script>
+
+<!-- 遊戲 HUD 唯讀渲染：讀 game_core 狀態填 Profile 卡 + 徽章牆；只讀不寫（R3 獎勵 never-disappear） -->
+<script>
+(function(){
+  var G=window.Game; if(!G) return;
+  function $(id){return document.getElementById(id);}
+  function renderBadges(){
+    if(!G.getBadgeWall) return;
+    var wall=G.getBadgeWall(), grid=$('badge-grid'); if(!grid) return;
+    var earned=0; grid.innerHTML='';
+    wall.forEach(function(b){
+      if(b.earned) earned++;
+      var el=document.createElement('div'); el.className='badge-item '+(b.earned?'is-earned':'is-locked');
+      var ico=document.createElement('div'); ico.className='b-ico'; ico.textContent=b.icon;
+      var nm=document.createElement('div'); nm.className='b-name'; nm.textContent=b.name;
+      var ds=document.createElement('div'); ds.className='b-desc'; ds.textContent=b.desc;
+      var st=document.createElement('div'); st.className='b-state'; st.textContent=b.earned?'✓ 已解鎖':'尚未解鎖';
+      el.appendChild(ico); el.appendChild(nm); el.appendChild(ds); el.appendChild(st);
+      el.setAttribute('aria-label', b.name+'：'+b.desc+'，'+(b.earned?'已解鎖':'尚未解鎖'));
+      grid.appendChild(el);
+    });
+    var cnt=$('badge-count'); if(cnt) cnt.textContent='已收集 '+earned+' / '+wall.length;
+  }
+  function render(){
+    if(!G.getProfile) return; var p=G.getProfile(); if(!p) return; var d=p.derived||{};
+    var av=$('pf-avatar'); if(av) av.textContent=p.avatar||'🦊';
+    $('pf-name').textContent=p.displayName||'小小探險家';
+    $('pf-rank').textContent=(d.rankIcon||'🌱')+' '+(d.rankName||'探險新手')+' · 第 '+(p.level||1)+' 級';
+    var prog=d.levelProgress||0; $('pf-xpfill').style.width=Math.round(prog*100)+'%';
+    var bar=$('pf-xpbar'); if(bar) bar.setAttribute('aria-valuenow', String(Math.round(prog*100)));
+    $('pf-xptext').textContent=d.isMaxLevel?'已達最高等級，你太厲害了！':'距離下一級還差 '+(d.xpToNext||0)+' 點經驗值';
+    $('pf-streak-num').textContent=(p.streak&&p.streak.current)||0;
+    $('pf-coins-num').textContent=p.coins||0;
+    renderBadges();
+  }
+  if(G.on){ ['xp','levelup','streak','badge','daily-complete'].forEach(function(e){ G.on(e,render); }); }
+  render();
+})();
 </script>
 </body>
 </html>
