@@ -1758,7 +1758,8 @@
                 fab.setAttribute('aria-label', 'Buy me a coffee at ko-fi.com');
                 // z-index 8000：浮在一般內容之上，但【低於】bottom-sheet 遮罩(8500)、toast(9500)、
                 // skip-link(9000)——這些 modal/通知出現時咖啡鈕要讓位、不可壓住小舖品項或提示。
-                fab.style.cssText = 'position:fixed;right:16px;bottom:16px;z-index:8000;line-height:0;border-radius:10px;box-shadow:0 3px 14px rgba(0,0,0,.22);transition:bottom .15s ease;';
+                // AC-A11Y-1：點擊目標 ≥44px（WCAG 2.5.5）——40px 圖以 flex 置中於 ≥44px 的可點 <a> 盒。
+                fab.style.cssText = 'position:fixed;right:16px;bottom:16px;z-index:8000;display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;box-sizing:border-box;border-radius:10px;box-shadow:0 3px 14px rgba(0,0,0,.22);transition:bottom .15s ease;';
                 fab.innerHTML = '<img src="https://storage.ko-fi.com/cdn/kofi6.png?v=6" alt="Buy Me a Coffee at ko-fi.com" height="40" loading="lazy" style="display:block !important;height:40px !important;width:auto !important;max-width:none !important;border-radius:10px;">';
                 document.body.appendChild(fab);
                 /* 首頁/數學等頁面有釘在視窗底的 .bottom-nav 分頁列,bottom:16 會壓在上面 →

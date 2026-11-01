@@ -156,6 +156,16 @@ function pageScan(opts) {
       el.hasAttribute('onclick') ||
       (el.getAttribute('tabindex') !== null && parseInt(el.getAttribute('tabindex'), 10) >= 0);
     if (!actionable) return;
+    // WCAG 2.5.5/2.5.8「inline（句中連結）」例外：display:inline 的 <a>，且其父層除本連結外
+    // 仍有可見文字（＝連結位於一個句子中），其尺寸受行高約束、非作者可調，依標準豁免點擊目標尺寸
+    // （例：頁尾「© 2026 HD Chen · …」中的署名連結）。只豁免真正 inline 流排文字連結——
+    // display:inline-block/inline-flex（可調尺寸）或非句中（父層無其他文字）一律不豁免。
+    if (tag === 'a' && cs.display === 'inline') {
+      // 「句中」＝連結的緊鄰前/後有非空文字節點（與文字同流），非僅「父層某處有文字」——
+      // 後者會把一個與段落同父的獨立小連結誤判豁免。只有真正夾在文字中的 inline 連結才豁免。
+      const adjText = (n) => !!n && n.nodeType === 3 && (n.textContent || '').trim().length > 0;
+      if (adjText(el.previousSibling) || adjText(el.nextSibling)) return;
+    }
     const r = el.getBoundingClientRect();
     const mn = Math.min(r.width, r.height);
     if (mn + 1e-6 < tapMin) {
@@ -319,6 +329,9 @@ async function verify() {
     for (const pg of pages) {
       const url = `http://127.0.0.1:${PORT}/${pg}`;
       const page = await browser.newPage();
+      // 停用快取：持久 --user-data-dir 會把 linked assets（尤其 assets/unit.css）跨輪磁碟快取，
+      // 導致改了 CSS 仍量到舊版（HTML 雖有 ?v= bust、linked CSS 無）→ 假 pass/假 fail。禁快取根治。
+      await page.setCacheEnabled(false);
       await page.setViewport(VIEW);
       let loaded = true;
       try {
@@ -403,6 +416,17 @@ const GOOD_HTML = `<!doctype html><html lang="zh-Hant"><head><meta name="viewpor
 <div class="spin"></div>
 </body></html>`;
 
+// 句中 inline 連結例外（WCAG 2.5.5/2.5.8）紅隊 fixture：
+//   - 夾在文字中的小 inline 連結（「© 2026 HD Chen · …」署名）→ 豁免、不計違規；
+//   - 獨立（非句中）的 inline-block 30px 小連結 → 仍計違規（證例外不過度豁免）。
+// 期望：tap 違規數 === 1（只有獨立者被抓）。
+const INLINE_HTML = `<!doctype html><html lang="zh-Hant"><head><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>.good-contrast{color:#111;background:#fff;font-size:12px}
+.standalone{display:inline-block;width:30px;height:30px;background:#ddd;color:#111}</style></head><body>
+<p class="good-contrast">© 2026 <a href="#" style="color:#111">HD Chen</a> · 保留所有權利 All Rights Reserved</p>
+<div><a class="standalone" href="#">x</a></div>
+</body></html>`;
+
 async function scanFixture(browser, html) {
   const page = await browser.newPage();
   await page.setViewport(VIEW);
@@ -423,10 +447,11 @@ async function selftest() {
   try { browser = await puppeteer.launch({ executablePath: CHROME, args: ['--no-sandbox', '--user-data-dir=/tmp/a11y_gate_chrome'] }); }
   catch (e) { err(`FAIL：瀏覽器無法啟動——${e.message}`); process.exit(2); }
 
-  let bad, good;
+  let bad, good, inline;
   try {
     bad = await scanFixture(browser, BAD_HTML);
     good = await scanFixture(browser, GOOD_HTML);
+    inline = await scanFixture(browser, INLINE_HTML);
   } catch (e) {
     err(`FAIL：selftest render 失敗——${e.message}`);
     await browser.close().catch(() => {});
@@ -442,6 +467,7 @@ async function selftest() {
     ['GOOD：對比足夠 → 0 違規', good.contrast === 0],
     ['GOOD：按鈕 ≥44px → 0 違規', good.tap === 0],
     ['GOOD：動畫有 reduced-motion 處理 → 0 違規', good.motionViolation === false],
+    ['INLINE：句中署名連結豁免、獨立小連結仍抓 → 恰 1 違規', inline.tap === 1],
   ];
   let allok = true;
   for (const [msg, ok] of checks) { err(`  [${ok ? 'OK' : 'BAD'}] ${msg}`); allok = allok && ok; }
