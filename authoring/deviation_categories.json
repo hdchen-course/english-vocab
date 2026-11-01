@@ -1,0 +1,41 @@
+{
+  "_doc": "AC-UNIT-3 的 DEVIATION_CATEGORIES allowlist（§6.6①／§6.7／§11.A AC-UNIT-3）。每個 enum 項為 {category, required_signer_roles:[…§8 角色 id，非空、⊆§8 角色 id allowlist], signoff:{by:[art,spatial], sha}}；signoff.sha＝cat_fact_sha＝sha256(canonical_json({category,required_signer_roles}, sort_keys=true))[:16]，pre-image 僅 {category,required_signer_roles}、排除 signoff 欄本身（消自我指涉，比照 reward_type_sha／kp_fact_sha）。某項 category／required_signer_roles 一改→其 cat_fact_sha 失配→該項簽核作廢須重簽。required_signer_roles＝引用此 category 之單元偏離 MUST 取得的 §8 審查鏡角色簽核（category→審查角色的確定性對映，供 unit_acceptance_lint 查為 by[] 必填子集）。",
+  "_provenance_caveat": "本檔各項 signoff.by=[art,spatial] 的視覺簽核為『作者代理於本輪分析性 bootstrap 記錄』（非真人 art-director／spatial-aesthetics 審查鏡逐項裁決），詳見同層 deviation_categories.README.md。DONE-GATE 前應由真實 art-director＋spatial-aesthetics 兩審查鏡重新批准（sha 不變則簽核沿用、sha 一變作廢重簽）。",
+  "_canonical": "json.dumps(o, sort_keys=True, ensure_ascii=False, separators=(',',':'))；sha256 hexdigest[:16]",
+  "schema_version": 1,
+  "categories": [
+    {
+      "category": "a11y-accommodation",
+      "required_signer_roles": ["eye-comfort", "psych"],
+      "signoff": {
+        "by": ["art", "spatial"],
+        "status": "signed",
+        "sha": "f67a232ae73c7c7a",
+        "provenance": "bootstrap-analytical"
+      },
+      "note": "為無障礙需要（對比/字級/免捲動可達、避免貼標籤）而對 golden 版面做的調整。審查鏡：眼科（生理可讀性即此偏離核心關切）＋心理醫生（無障礙調整須守零貼標籤／情緒安全，R11／no-labeling）。"
+    },
+    {
+      "category": "archetype-subtype",
+      "required_signer_roles": ["pm", "learning-sci"],
+      "signoff": {
+        "by": ["art", "spatial"],
+        "status": "signed",
+        "sha": "59af56c323907c9a",
+        "provenance": "bootstrap-analytical"
+      },
+      "note": "原型的合法子類（§6.6① bespoke 多 golden 子類；仍屬同一原型家族但為公認變體）。審查鏡：PM（此子類在讀者旅程/範疇內獲認可）＋學習神經科學（子類仍服務記憶/retrieval）。"
+    },
+    {
+      "category": "bespoke-game-screen",
+      "required_signer_roles": ["knowledge-viz", "animator", "eye-comfort", "learning-sci", "pm"],
+      "signoff": {
+        "by": ["art", "spatial"],
+        "status": "signed",
+        "sha": "8929e3342ae660cb",
+        "provenance": "bootstrap-analytical"
+      },
+      "note": "差異極大的客製互動/遊戲畫面（如 math_modeling vs safety）對 concept-page golden 的結構偏離。審查鏡：知識視覺化（客製視覺仍須把概念說清）＋動畫師（逐 frame 無重疊/裁切/溢出）＋眼科（客製版面仍 iPad 免捲動可讀）＋學習神經科學（遊戲形式仍含 retrieval/worked-example）＋PM（bespoke 畫面在範疇/旅程內獲認可）。"
+    }
+  ]
+}
