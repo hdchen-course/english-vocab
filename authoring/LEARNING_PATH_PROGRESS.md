@@ -172,3 +172,7 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 3. **AC-UNIT-2 每頁 5-clean 馬拉松**：100 單元頁逐頁 content_audit 連續 5-clean，記 authoring/page_converge_ledger.json（仿 spec_converge_gate 誠實 bank：實跑 content_audit nshards:1→confirmed:0+coverageComplete→L3 exit0）。per_page_5clean_gate 已就緒、實站 FAIL 100（ledger 未建）。**最大宗、跨 session**。
 4. **AC-UNIT-3** golden/ dir；**AC-COV** 覆蓋；weather-nature cross_check。
 5. **dictation UX delta 視覺簽核**：CEFR 單一載入入口（受 DICTATION_BUILD_SPEC 管）需 iPad render+四角色。
+
+## ✅ 本輪（2026-11-01 22:58:59）AC-VIZ-1 重簽完成
+- hub .lp-step 對比修後 sha c9525d2b→a562ed0e；重 render 10 狀態+四角色簽核綁新 sha，figure_signoff_gate --verify PASS。開 4 代表張(eng綠/sci藍/iPad直2欄/16"5欄)實檢：step 徽章 color-mix 隨島色淺底深字、三視埠無版面回歸。commit 6cd6004f2 已 push。
+- **AC-A11Y-1(1348→0)＋AC-VIZ-1(綠) 本輪完成。**
