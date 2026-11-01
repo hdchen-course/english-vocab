@@ -307,3 +307,11 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - 4 道確定性 gate 全綠（208 units），scan_simplified 12 檔 PASS。
 - iPad 三視埠 render：pastperfect 橫＋convsprep 直逐張開圖，四角色簽核通過（右緣 97%、2–4 欄、無窄島、無重疊、老花可讀）。
 - builder 對抗式 review 抓到並修掉 2 blocker：articleidiom 原教 play the piano/guitar（美式可省冠詞=方言分歧→第二正解），整點改教 AmE/BrE 一致的 a/an=per 慣用語，重寫題目＋重生 aidm_ex1/sh1 mp3；另修 3 minor overstate 理由（convsprep reduced concessive、indirectwh emphatic did、pastperfect sh1 更自然化）。
+
+## batch19 合併（2026-11-02 06:14）
+- eng 143→149（+6），units 208→214。nav_index byte-unchanged。
+- 中階：relthat（關代 that 指人或物限定）、shallwouldlike（Shall I/we…? 與 would like）、prepmeans（介系詞方式/工具 by/with/in）、wordfamily（派生詞類轉換 beauty/beautiful/beautifully）。
+- 高階：futureperfect（未來完成式 will have+p.p.，by the time 子句用現在式）、whilewhereas（while/whereas 對比，whereas 不表時間）。
+- 4 道確定性 gate 全綠（214 units），scan_simplified 12 檔 PASS（relthat 僅 info：台 U+53F0 量詞「一台」TW 可接受）。
+- iPad 三視埠 render：futureperfect 橫＋whilewhereas 直逐張開圖，四角色簽核通過（右緣 97%、2–4 欄、無窄島、無重疊、老花可讀）。
+- builder 對抗式 review：NO BLOCKER；2 minor（futureperfect P1 will start、wordfamily P4 quick）判定理由未 overstate、正解唯一，照原樣出貨。
