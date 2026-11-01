@@ -153,3 +153,22 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - gate 修 1（inline 例外）：footer「© 2026 HD Chen · …」句中署名連結(15px) 屬 WCAG 2.5.5/2.5.8 inline-in-sentence 例外，a11y_gate 原未建模→over-flag。加例外：display:inline 的 a 且緊鄰前/後 text node 有非空文字（真句中）才豁免；inline-block/非句中不豁免。紅隊 fixture：句中署名豁免＋獨立 inline-block 30px 連結仍抓＝恰 1 違規，selftest PASS。
 - gate 修 2（CSS 快取 bug，重要）：a11y_gate 用持久 --user-data-dir → linked assets/unit.css 跨輪磁碟快取（HTML 有 ?v= bust、CSS 無）→ 改了 CSS 仍量到舊版＝假 pass/假 fail（本輪一度誤報 13→11）。修＝每頁 page.setCacheEnabled(false)。紅隊：填快取(0)→改矮不清快取(8，證立即反映)→還原不清快取(0)。
 - commit bef34fe02。全站 116 頁 a11y 驗證跑中：已發現 unit.css 以外殘留＝button#englishAdvBadgeFab(28px tap)＋span.ea-level-emoji 對比 2.41:1(需3:1)，待全站跑完一併修到 0。
+
+## ✅ 本輪總結（2026-11-01 22:53:27）— AC-PERF-1 8→1、AC-A11Y-1 1348→1(僅 hub)、AC-CORRECT 0、8 gate 全建
+本輪 commit 流水：55714091e(8 gate+greetings) → 75ebd0227(anim_core lazy 6頁) → bcf5add3d/36e114ed7(進度) → bef34fe02(a11y unit.css+FAB+gate inline/cache修) → 60ef6a30d(gate aria-hidden豁免) → e0605f1c6(senseFAB+sp-cat-count) → 8c80fdaf0(dictation lazy)。
+
+### AC 現況（實站 verify）
+- AC-PERF-1：8→1。anim_core.js(371KB) 6 概念頁 lazy-inject＋english_dictation 12 dict_data(1.95MB) 按 DK/CEFR 按需。**僅餘 english_sense.html 278KB**（單檔 english_sense.js 173KB bespoke 引擎，非急載資料；拆分需較大重構，列追蹤）。
+- AC-A11Y-1：1348→1。共用 assets/unit.css 四控制件(.gr-play/.gr-nav a/.gr-opt/.gr-rate)≥44px 覆蓋全 100 頁；ko-fi FAB／englishAdvBadgeFab／senseAdvBadgeFab tap≥44px；sp-cat-count 白字底改 --c-english-ink(5.52:1)；9 個裝飾 emoji 經 gate aria-hidden 豁免。**僅餘 index_new.html 的 .lp-step**（白字 on 島 accent --a，淺島 1.51:1）。
+- AC-CORRECT 5 子 gate：全綠（claim_evidence 揪 greetings 缺 answer_evidence 已修 c-be-am）。
+- AC-PATH-1/2、AC-UNIT-2、AC-SCHEMA、AC-UNIT-1、AC-STYLE、AC-NAV、AC-VIZ-1、AC-NOGRADE、AC-REWARD-1：gate 皆建成+接線（見前文）。
+
+### a11y_gate 本輪 3 個 gate-correctness 修（皆紅隊 selftest 9/9）
+1. 句中 inline 連結例外（WCAG 2.5.5/2.5.8）；2. 持久 profile CSS 快取 bug（setCacheEnabled false，紅隊填快取→改矮→立即反映）；3. aria-hidden 裝飾內容豁免對比（WCAG 1.4.3 incidental，同 axe-core）。
+
+### 下一步佇列（實站 FAIL＝spec 定義工作，非 blocked）
+1. **hub .lp-step 對比**（唯一剩餘 a11y）：index_new.html 白字 step 號 on 淺島 accent → 需改 .lp-step 為固定深底(var(--ink))或深化。⚠ 動 index_new.html 會使 AC-VIZ-1 四角色簽核(綁 sha c9525d2b)失效 → 須 10 狀態重 render+四角色重簽。**建議與既有 pending 的 hub 重簽併做一次**。
+2. **AC-PERF-1 残 english_sense**：173KB bespoke 引擎拆分評估。
+3. **AC-UNIT-2 每頁 5-clean 馬拉松**：100 單元頁逐頁 content_audit 連續 5-clean，記 authoring/page_converge_ledger.json（仿 spec_converge_gate 誠實 bank：實跑 content_audit nshards:1→confirmed:0+coverageComplete→L3 exit0）。per_page_5clean_gate 已就緒、實站 FAIL 100（ledger 未建）。**最大宗、跨 session**。
+4. **AC-UNIT-3** golden/ dir；**AC-COV** 覆蓋；weather-nature cross_check。
+5. **dictation UX delta 視覺簽核**：CEFR 單一載入入口（受 DICTATION_BUILD_SPEC 管）需 iPad render+四角色。
