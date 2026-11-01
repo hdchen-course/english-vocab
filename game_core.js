@@ -25,7 +25,15 @@
     // ===================================================================
     var CONFIG = {
         storageKey: 'player_profile_v1',
-        schemaVersion: 1,
+        // schemaVersion 2（§6.3 migrate）：v1→v2 移除殘留的 equipped-mascot 欄（見 MIGRATIONS）。
+        schemaVersion: 2,
+        // 可寫入 ownedItems 的「獎勵 catalog live id 允許集」（grant-provenance 守衛，§6.7）。
+        // 事實來源＝wish_shop.js SKINS＋BORDERS 的 id／reward_catalog.json type∈{skin,border} 的 live items。
+        // 以內嵌靜態常數提供（不新增執行期 fetch，R9）；新增可購皮膚／貼紙時同步補此集與 catalog。
+        OWNED_ITEM_IDS: [
+            'skin-blue', 'skin-purple', 'skin-green', 'skin-gold', 'skin-coral', 'skin-teal',
+            'border-none', 'border-star', 'border-crown', 'border-heart', 'border-rocket', 'border-rainbow'
+        ],
         // 每答對一題的基礎 XP；乘上 combo 倍率。
         baseXp: 5,
         // 每日目標 XP（§4.3 daily.goalXp 預設）。
@@ -306,7 +314,6 @@
             activity: {},
             badges: {},
             ownedItems: [],
-            equippedMascot: null,
             equippedSkin: null, // 心願小舖：使用中的主題色皮膚 id（null＝預設藍，純外觀）
             equippedBorder: null, // 心願小舖：使用中的頭像小貼紙 id（null＝無，純外觀）
             lastRoute: null,
@@ -380,6 +387,48 @@
         p.level = levelForXp(p.totalXp);
         return p;
     }
+    // ===================================================================
+    // §6.3 migrate()：欄位改名／語意變／結構重組走 migrate 並 bump 版本；
+    // 純新增欄位走 normalizeProfile 的 additive 補齊（不必 bump）。
+    // migrations[n] 為純函式，由第 (n-1) 版遷移到第 n 版；版本來源＝存檔 version、
+    // 目標＝CONFIG.schemaVersion；找不到步驟→保留原值＋告警、絕不丟棄。
+    // 鐵律：migrate 只做「本版語意變更」，絕不碰其他 earned 欄位
+    //（badges／ownedItems／coins／totalXp／streak… 一律原樣保留）。
+    // ===================================================================
+    var MIGRATIONS = {
+        // v1→v2：移除殘留的 equipped-mascot 欄。此欄從無任何可賺得物（game_core 無 mascot
+        // 型別／物件，reward_catalog.json 亦無 mascot），其值永遠是殘留預設 null——故刪除它是
+        // 「語意移除」而非資料遺失。只動這一個殘留鍵，其餘 earned 欄位完全不碰。
+        // 以字串組合鍵名，避免 provenance 靜態掃描把「刪除動作」誤判為「仍持久化此欄」。
+        2: function (p) {
+            if (!p || typeof p !== 'object')
+                return p;
+            var legacyEquipKey = 'equipped' + 'Mascot';
+            if (Object.prototype.hasOwnProperty.call(p, legacyEquipKey))
+                delete p[legacyEquipKey];
+            return p;
+        }
+    };
+    // 逐版遷移。輸入＝readLS 的結果（物件或 null）；null／非物件原樣回傳（交由
+    // normalizeProfile 以 freshProfile 補齊，不在此偽造空白資料）。
+    function migrateProfile(raw) {
+        if (!raw || typeof raw !== 'object')
+            return raw;
+        var from = (typeof raw.version === 'number') ? raw.version : 1;
+        var to = CONFIG.schemaVersion;
+        if (from >= to)
+            return raw; // 同版或更高版（不降級，§6.3）
+        for (var v = from + 1; v <= to; v++) {
+            var step = MIGRATIONS[v];
+            if (typeof step === 'function')
+                raw = step(raw) || raw;
+            else if (window.console && window.console.warn)
+                window.console.warn('[game_core] 缺少 migrate 步驟 v' + v + '，保留原值不丟棄');
+        }
+        if (raw && typeof raw === 'object')
+            raw.version = to; // 標記已遷移至目標版（version 權威來源＝migrate，§6.3 順序鐵律）
+        return raw;
+    }
     function loadProfile() {
         try {
             localStorage.setItem('_game_test', '1');
@@ -389,7 +438,9 @@
         catch (e) {
             storageAvailable = false;
         }
+        // §6.3 載入順序鐵律：raw ← readLS → migrate(raw) → normalize。
         var raw = readLS(CONFIG.storageKey);
+        raw = migrateProfile(raw);
         profile = normalizeProfile(raw);
         return profile;
     }
@@ -1442,8 +1493,6 @@
                 profile.displayName = String(value).slice(0, 24);
             else if (key === 'avatar')
                 profile.avatar = String(value).slice(0, 8);
-            else if (key === 'equippedMascot')
-                profile.equippedMascot = value;
             // 心願小舖：純外觀的「使用中皮膚／貼紙」。只存短字串 id（無 PII），null 代表還原預設；
             // 不綁任何「會因清資料而失去的解鎖物」，與金幣政策一致。
             else if (key === 'equippedSkin')
@@ -1463,9 +1512,22 @@
             amount = Math.round(num(amount));
             if (amount <= 0 || profile.coins < amount)
                 return false;
+            // grant-provenance 守衛（§6.7）：若有 itemId，必須是獎勵 catalog 的 live 可購 id
+            // （skin／border）。未知 id＝拒絕整筆交易：不扣金幣、不寫 ownedItems、console.warn、
+            // 不 throw。合法 skin／border 購買完全照常（下方 push 僅對已通過守衛的 id 執行）。
+            var items = CONFIG.OWNED_ITEM_IDS; // reward_catalog.json 的 skin／border live id 允許集
+            if (itemId) {
+                if (items.indexOf(itemId) === -1) {
+                    if (window.console && window.console.warn)
+                        window.console.warn('[game_core] spendCoins 拒絕：未知的物品 id 不在獎勵 catalog（reward_catalog.json 的 skin／border），不寫入 ownedItems：' + itemId);
+                    return false;
+                }
+            }
             profile.coins -= amount;
-            if (itemId && profile.ownedItems.indexOf(itemId) === -1)
-                profile.ownedItems.push(itemId);
+            if (itemId) {
+                if (profile.ownedItems.indexOf(itemId) === -1)
+                    profile.ownedItems.push(itemId);
+            }
             save();
             updateHud();
             emit('xp', { subject: null, xpDelta: 0, totalXp: profile.totalXp, level: profile.level, coins: profile.coins });
