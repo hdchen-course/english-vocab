@@ -42,9 +42,11 @@
     display:flex; flex-direction:column; gap:7px; box-shadow:0 1px 3px rgba(51,49,46,.05); }
   .lp-scard .snm{ font-size:15px; font-weight:700; color:var(--ink); line-height:1.35;
     display:flex; align-items:baseline; gap:8px; }
+  /* AC-A11Y-1：步驟號對比 ≥4.5:1（WCAG AA）。原白字 on 島 accent --a，淺島僅 1.51:1。
+     改深字(--ink) on 「島 accent 22% 淺底」：深字 on 淺底通用達標、仍保留島色調（色仍由卡片 --a 邊框與此淺底呈現）。 */
   .lp-step{ flex:none; display:inline-flex; align-items:center; justify-content:center;
     min-width:22px; height:22px; padding:0 6px; border-radius:999px; font-size:12px; font-weight:700;
-    background:var(--a,var(--c-primary)); color:#fff; }
+    background:color-mix(in srgb, var(--a,var(--c-primary)) 22%, #fff); color:var(--ink); }
   .lp-seqnote{ color:var(--ink-soft); font-size:12.5px; margin:2px 0 0; }
   /* 島面板兩帶：📘 跟著學（編號路徑卡）＋ 🎯 練習與應用（不編號 area 卡） */
   .lp-band{ display:flex; align-items:baseline; gap:10px; margin:6px 0 10px; }
