@@ -214,3 +214,10 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - HD 具體候選：單元頁側欄改「固定頂部多列」——第1列情境/定位、第2列 jump label（快速跳轉：回分區單元牆/上下單元）、第3區下方整寬內容本體。
 - 進行中：unitnav builder 已轉為「設計探索先行」——team(PM/UX/learning/eye-comfort/對抗式)評比 3 候選並出 iPad render mockup：A=固定頂部三列(HD首選)、B=多層麵包屑、C=左側欄app-shell。選最佳→實作(共用引擎一次套118頁+hub hash深連結+修home→index_new bug)→全gate+iPad四角色。
 - 設計權屬我(design-authority)，HD丟friction訊號當驗收點。此方向待 builder 交回設計決策摘要後我審。
+
+## 2026-11-02 01:10 — 導覽設計收斂：mirror travel site-shell（HD 指定靈感來源）
+- HD 靈感來源＝本站 travel repo `/Volumes/workplace/EnglishTraining/travel/`（common.css + japan/chubu.html + site.js/common.js）。
+- 模式：responsive site-shell——≥1080px CSS grid「236px sticky 側欄 + 內容」，側欄多組 sb-group（站/首頁、同層清單 current 高亮、本頁章節 anchor）；<1080px 側欄隱藏改頂部 pill-nav 橫向跳轉。
+- 單元頁落地調整（專注互動非長捲動）：側欄(1)🏠學習地圖+←回分區單元牆(hash #eng/vocab) (2)同分區其他單元 siblings(current 高亮，最大 usability 收穫：練習中可跳別單元) (3)長 section 才加本頁章節。narrow→頂部 pill-nav=回分區+上/下 sibling。
+- 實作：共用引擎 assets/unit.js(插 shell+側欄+pill，siblings 來自 units_index subject+strand)+unit.css(移植 travel grid/sticky/pill 但用本站 app.css token)；一次套 118 頁；hub 加 #subject/strand 路由；修 home→index_new bug。
+- unitnav builder 已收到收斂指示（不再三案評比，照此 pattern 實作+render+四角色）。
