@@ -246,3 +246,7 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 ## 2026-11-02 02:35 — batch8 內容合併上線
 - 6 單元（中階 suffixnoun/prefixneg/verbinf/tooenough、高階 wishsubj/cleftit）＋36 mp3。全 gate 綠、coverage eng 77→83、units_index 142→148、nav_index 不變。對抗式修 2 minor。iPad 兩高階頁四角色 pass。
 - eng 進度：83/300 covered（連五批 batch4-8 共 +30，皆含高階）。unitnav 導覽改版仍等 HD 拍板（候選3）。續 batch9。
+
+## 2026-11-02 02:53 — batch9 內容合併上線
+- 6 單元（中階 perfectvspast/suffixadj/adverbtypes/infnoun、高階 nounclsubj/advclpurpose）＋36 mp3。全 gate 綠、coverage eng 83→89、units_index 148→154、nav_index 不變。對抗式修 1 blocker(advclpurpose so→so that 第二正解)。iPad 兩高階頁四角色 pass。
+- eng 進度：89/300 covered（連六批 batch4-9 共 +36，皆含高階）。unitnav 導覽改版仍等 HD 拍板（候選3）。續 batch10。
