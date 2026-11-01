@@ -180,3 +180,8 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 ## ✅ 本輪（2026-11-01 23:13:39）AC-PERF-1 全綠（8→0）
 - english_sense LEVELS 內容(102KB)抽至 english_sense_data.js 按需載入(js 173→31KB)；perf_gate --verify **exit=0**(116頁0超標)。合併 builder 6 檔(含 src TS 鏡射+tsconfig)；render 雙埠驗證選單先渲染、進 level 才載資料、0 error；sense a11y 仍 0(senseAdvBadgeFab 修保留)、簡體 PASS。**AC-PERF-1 本輪由 8→1→0 完成。**
 - 殘留：dictation+sense 的 CEFR/level 按需載入屬純載入優化、CSS 版面未動；若要正式收尾可選擇性走 figure_signoff（非阻塞，低優先）。
+
+## 📌 AC-COV 現況釐清（2026-11-01 23:15）
+- coverage_gate.py --verify 報「未覆蓋 3086／3086」。**診斷**：gate 讀 `units_index.json`（gen_derived.py 產）算覆蓋，但該索引只帶輕量 metadata、**不帶 teach/practice/kp_ids** → 看不到綁定 → 誤報 0 覆蓋。實際 100 單元 teach∩practice 已真教真考綁定 **35 個 eng minimum KP**（手算確認）。→ **gate 少算 bug，已委派 worktree builder 修**（選 A：gen_derived 於 index additive 加 covered_kp_ids；或 B：gate 直讀 *.units.json）＋紅隊＋確認其他 index 讀取 gate 無回歸。
+- **即使修好＝35／3086**。AC-COV 真正缺口＝**全 8 科＋多數英語 minimum KP 尚未建單元**（chi/math/sci/soc×3/life 皆 0 單元；eng 僅 35/300）。這是整個學習路徑的**核心內容建置大工程**（~3051 個 KP 待建單元），需完整 authoring team、跨多 session。AC-COV FAIL 正確反映此 runway，非 gate 問題。
+- **剩餘大工程佇列（皆多-session）**：(1) AC-COV 內容建置（8 科單元，最大宗）；(2) AC-UNIT-2 每頁 5-clean 馬拉松（100 頁現有 + 新建頁）；(3) AC-UNIT-3 golden/ dir（§6.6/O-9：3 archetype 各 1 golden + §8 六鏡 panel 全簽 + deviation_categories enum）。
