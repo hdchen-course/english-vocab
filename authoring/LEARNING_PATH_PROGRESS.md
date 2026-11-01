@@ -238,3 +238,7 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 ## 2026-11-02 01:58 — batch6 內容合併上線
 - commit (見下) → main：6 單元（中階 presentperfect/pastprog/infpurpose/prepdirection、高階 subjpresent/relcomma）＋36 edge-tts mp3。全 gate 綠、coverage eng 65→71、units_index 130→136、nav_index 不變。對抗式 0 blocker。iPad 兩高階頁 render 四角色 pass。
 - eng 進度：71/300 covered。續 batch7。unitnav 導覽改版仍等 HD 拍板（候選3）。
+
+## 2026-11-02 02:17 — batch7 內容合併上線
+- 6 單元（中階 willvsgoingto/gerundroles/presprogfuture/prepduration、高階 subjpast/voicemodal）＋36 mp3。全 gate 綠、coverage eng 71→77、units_index 136→142、nav_index 不變。對抗式 0 blocker。iPad 兩高階頁四角色 pass。
+- eng 進度：77/300 covered（連四批 batch4-7 共 +24，皆含高階）。unitnav 導覽改版仍等 HD 拍板（候選3）。續 batch8。
