@@ -254,3 +254,7 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 ## 2026-11-02 03:13 — batch10 內容合併上線
 - 6 單元（中階 pastwhenwhile/suffixverb/whinf/adjposition、高階 participleactive/whetherclause）＋36 mp3。全 gate 綠、coverage eng 89→95、units_index 154→160、nav_index 不變。對抗式修 1 blocker(pastwhenwhile)。iPad 兩高階頁四角色 pass。
 - eng 進度：95/300 covered（連七批 batch4-10 共 +42，皆含高階）。unitnav 導覽改版仍等 HD 拍板（候選3）。續 batch11。
+
+## 2026-11-02 03:28 — batch11 內容合併上線
+- 6 單元（中階 uncountable/maymight/relwhowhom/concession、高階 doemphasis/relwhat）＋36 mp3。全 gate 綠、coverage eng 95→101、units_index 160→166、nav_index 不變。對抗式 0 blocker（設計期鎖死第二正解）。iPad 兩高階頁四角色 pass。
+- eng 進度：101/300 covered（破 1/3；連八批 batch4-11 共 +48，皆含高階）。unitnav 導覽改版仍等 HD 拍板（候選3）。續 batch12。
