@@ -634,3 +634,10 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 新 `tools/rt_progkey_migration.mjs` 紅隊（node＋mock localStorage＋真實 safe_store/learning_progress）：**ALL PASS** — ①完成 lesson 遷移②舊 key 原封未改③idempotent(重跑 migrated=0/alreadyDone=1、不退化)④未完成/無 key/未知不遷移⑤SafeStore 缺 no-op⑥data.js 與來源一致＋所有 new_unit_id 存在。
 - class-wide 接線：**251 個正式頁**在 learning_progress.js 前插入 data.js（順序 safe_store→progkey_migration.data→learning_progress→unit.js）。排除 .claude/worktrees、training、nav_review 等非正式目錄。
 - **Phase 2 進度**：DAG✅、roadmap_layout✅、progkey_migration 資料✅、migrate 邏輯+RT✅、**逐檔 content_audit 5-clean ☐（最後一大塊，一次 1 round）**。
+
+## 2026-11-03 00:17 收斂前置 — 補建 52 個缺失單元頁（commit 點）
+- **發現**：per_page_5clean_gate --verify 揭露 units_index 的 page 欄參照 52 個磁碟上不存在的頁——先補齊階段建了 KP 內容 sidecar，但對應渲染頁（HTML 殼）未建 → 單元不可達/不可 audit。52 頁＝subj 8/special 8/morph 7/vocab 5/pattern 4/noun 4/verb 3/voice·modal·nouncl·adjadv·relcl 各 2/nonfinite·prep·pron 各 1。
+- 新 `tools/gen_unit_pages.py`：確定性模板實例化（內容在已 gate 的 sidecar，由 unit.js 讀 data-units 注入，非新撰內容）。範本比照 english_asas.html（含 progkey_migration.data.js 接線、asset 版本一致）；<title>/app-bar 取 sidecar title_zh 去尾括號＋strand emoji；idempotent 不覆蓋既有。
+- 建 52 頁 → units_index 全 306 頁皆存在（gen_unit_pages --verify CLEAN）。per_page gate 違規從「頁不存在」轉為「無收斂 ledger」（收斂未開始的正常狀態）。
+- **smoke render（iPad 1366×1024、http、puppeteer+chrome-headless-shell）**：抽 5 新頁（absolutewith/subjifonly/ceec4500/runoncomma/adjorder）全部 root 有內容、脫離「載入中」、零 JS/console error → KP sidecar 經 unit.js 正常渲染。unit_schema_gate 仍 CLEAN（頁非單元、無副作用）。
+- **現況**：英語島 336 單元內容＋頁全部到位且可渲染。下一步＝逐檔 content_audit 5-clean 收斂（AC-UNIT-2，306 頁、一次 1 round，/static-doc-audit per-file＋記入 page_converge_ledger.json，由 per_page_5clean_gate 驗）＋每頁視覺 iPad 四角色簽核。
