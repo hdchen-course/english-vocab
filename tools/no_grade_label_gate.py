@@ -40,6 +40,23 @@ GRADE_PATTERNS = [
 # 明確允許詞（tier 難度級別，非年段）——若整段僅含這些不視為違規。
 ALLOW_TOKENS = ("初階", "中階", "高階", "銜接", "延伸")
 
+# learner 在瀏覽器永遠看不到的「非內容」區：HTML 註解、整行 JS 註解（行首 //）。
+# 這些區塊常含 R11 自我說明（如「R11 不顯年段」「絕不出現年段」）——掃它們是 false-positive。
+# 只移除「整行」註解：整行 // 註解不可能是 learner 可見的 JS 字串字面值，故無 string-literal 誤刪風險；
+# 行尾 // 註解與 /* */ 區塊「不」移除（fail-closed 寧誤擋，避免誤刪 "https://…年級…" 這類字串字面值）。
+_HTML_COMMENT = re.compile(r"<!--.*?-->", re.S)
+_FULLLINE_JS_COMMENT = re.compile(r"(?m)^[ \t]*//.*$")
+
+
+def strip_noncontent(text, path):
+    """移除 learner 不可見的註解區（僅 .html/.js/.mjs；JSON 無註解不動）。"""
+    ext = os.path.splitext(path)[1].lower()
+    if ext not in (".html", ".htm", ".js", ".mjs"):
+        return text
+    text = _HTML_COMMENT.sub("", text)
+    text = _FULLLINE_JS_COMMENT.sub("", text)
+    return text
+
 
 def scan_text(text):
     """回傳 [(pattern_desc, 命中字串)]。"""
@@ -70,6 +87,21 @@ def _selftest():
     ]
     for text, label in bads:
         results.append((f"年段洩漏『{label}』→ DENY", len(scan_text(text)) > 0))
+    # 紅隊：learner 不可見的註解區不得誤判（strip 後 ALLOW）；但真正 learner 可見文字仍要 DENY。
+    c_fullline = "  // R11 不顯年段：絕不出現年段\n  const TIER='初階';\n"
+    results.append(("整行 // 註解提及『年段』→ ALLOW",
+                    scan_text(strip_noncontent(c_fullline, "x.js")) == []))
+    c_html = "<!-- TODO 年段 分組 -->\n<div>初階</div>\n"
+    results.append(("HTML 註解提及『年段』→ ALLOW",
+                    scan_text(strip_noncontent(c_html, "x.html")) == []))
+    # strip 後，真正 DOM 可見的年段仍須被抓（註解剝除不得變成繞過）
+    c_leak = "  // 說明\n<div class='card'>適合小四學生</div>\n"
+    results.append(("DOM 可見『小四』(同檔有註解) → DENY",
+                    len(scan_text(strip_noncontent(c_leak, "x.html"))) > 0))
+    # 行尾 // 註解「不」剝除 → 仍 fail-closed 擋（寧誤擋，避免誤刪字串字面值）
+    c_trailing = "let u='https://x/小四';\n"
+    results.append(("行尾/字串字面值『小四』→ DENY(fail-closed)",
+                    len(scan_text(strip_noncontent(c_trailing, "x.js"))) > 0))
     allok = True
     for msg, ok in results:
         print(f"  [{'OK' if ok else 'BAD'}] {msg}")
@@ -92,7 +124,7 @@ def main():
         for path in targets:
             if not os.path.exists(path):
                 print(f"  [skip] 不存在：{os.path.relpath(path, ROOT)}"); continue
-            text = open(path, encoding="utf-8").read()
+            text = strip_noncontent(open(path, encoding="utf-8").read(), path)
             hits = scan_text(text)
             for desc, frag in hits:
                 print(f"  [grade] {os.path.relpath(path, ROOT)}：{desc} → 命中「{frag}」")
