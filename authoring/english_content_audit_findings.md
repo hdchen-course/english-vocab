@@ -99,3 +99,9 @@ reciprocalpron each other/one another 正確處理為現代可互通、不列唯
 片2 audit-w8s2（食物點餐 10：ordering/want/hungry/canihave/likefood/helikes/fruit/morefood/drinks/fastfood）：全 10 CLEAN（a/an 母音子音判定、可數不可數+some/零冠詞、Yes,I am 不縮正確）。附注 ordering 題號跳 P4（僅編號不連續，非缺陷）。
 片3 audit-w8s3（購物衣物 10：shopping/colors/price/buyfruit/wantclothes/morecolors/wearmore/wearing/pricetens/pricehundred）：全 10 CLEAN（數字拼寫 forty/ninety/fifty 正確、try this on 可分離片語動詞、價格數字正確）。
 ## wave8 總結：30 單元，0 blocker/0 major/0 minor，無需修正。speaking 累計 60/100 審畢。
+
+## wave9（speaking 情境 7–9 類：方向交通／身體健康／天氣自然，30 單元）— 2026-11-02
+片1 audit-w9s1（方向交通 10：directions/where/hotel/commute/going/atplace/gomore/atplace2/seetransport/seeplaces）：全 10 CLEAN（by bus/on foot 慣用無冠詞、MRT 在地標註、問路指路句型對照 Swan 無誤）。
+片2 audit-w9s2（身體健康 10：body/doctor/feelok/hygiene/eatwell/bodycount/touchmore/sickadvice/touchbody/touchface）：全 10 CLEAN（身體部位單複數 feet/teeth 正確、My…hurts 第三人稱、照顧建議無醫學錯誤/無危險內容）。
+片3 audit-w9s3（天氣自然 10：weather/weatherwear/weathermore/isweather/nature/seasons/weatheradj/likeseason/likeweather/sky）：全 10 CLEAN（It's sunny/How's the weather、a typhoon/an earthquake、the sun/the moon、fall 美式一致）。
+## wave9 總結：30 單元，0 blocker/0 major/0 minor，無需修正。speaking 累計 90/100 審畢。
