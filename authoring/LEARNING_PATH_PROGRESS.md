@@ -653,3 +653,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 記入 `authoring/page_converge_ledger.json`：english_absolutewith.html round 1/5（content_sha=HTML+sidecar 聯集 a4d0ce44，per_page_5clean_gate 同步）。**收斂管線端到端證成**（launch→confirmed→L3→ledger，honest 記入）。
 - **marathon 策略**：306 頁、一次 1 round（資源受限）。效率改**批次**：每 round 一 shard 審 ≤5 檔（合 skill shard≤5 上限），per-file streak 逐頁記、同 sha 連續 5 clean＝該頁收斂；per_page_5clean_gate 驗；內容改→sidecar sha 變→streak 作廢（H-7 已修）。consecutive rounds 變換 partition/dispute 框架。
 - 進度：1/306 頁有 round 1（streak 1/5）。長尾多-session，續跑。
+
+## 2026-11-03 00:50 ★首個完整收斂頁：english_absolutewith 5/5 clean
+- content_audit rounds 1-5 全 clean（confirmed=0、coverageComplete=true、各輪 L3 coverage_check exit 0、同 sha a4d0ce44 全程未改）。每輪換 reviewer lens（correctness→對抗式→繁體/rubric⑦→MCQ整合性→逐行校對）避免橡皮圖章。
+- per_page_5clean_gate evaluate_page(該頁)=PASS「連續 5 clean」。**完整 per-file 5-clean 收斂管線證成**（launch→L3→記 ledger→gate PASS）。
+- 進度：1/306 頁完整收斂（AC-UNIT-2）。注意：頁 DONE-GATE 另需 iPad 四角色視覺簽核（全島後期步驟）。
+- 節流：burst-cap ≤3 round/480s + 一檔一 round hook → ~1 檔/15min（5 rounds），多-session。下一檔 special/apposition。
