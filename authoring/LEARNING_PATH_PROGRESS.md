@@ -626,3 +626,11 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
   2. tenses/modals/concepts/questions/morphology/grammar_plus 6 頁在自身檔名下 0 unit，主題打散到細顆粒新頁 → 採逐 lesson 跨頁對映。
 - **Phase 2 剩餘**：migrate() 邏輯（additive 把舊 progKey 進度搬進 learning_progress_v1.units[unit_id]、舊 progKey 永久保留，§6.3/§7.1）＋對應 RT；全島逐檔 content_audit 5-clean（AC-UNIT-2，一次 1 round）。
 - **Phase 2 進度**：DAG✅(c2b70082f)、roadmap_layout✅(4bb1b6fe2)、progkey_migration 資料✅(本 commit)、migrate 邏輯+RT ☐、逐檔 5-clean ☐。
+
+## 2026-11-03 00:03 Phase 2 — progkey additive 遷移實作＋紅隊（commit 點）
+- 確認舊格式：`localStorage[progKey] = { lesson_id: truthy代表完成 }`（讀 concept_engine.js load/save）。
+- `assets/learning_progress.js` 新增 `migrateFromProgKeys(mapping, storageObj)`：舊 lesson 完成→新 unit `recordUnit(id,{mastered:true})`（additive、mastered 單調不回退＝天然 idempotent）；**絕不刪改任何 old_progKey**（never-disappear 雙保險）；SafeStore 缺→graceful no-op；未完成/無 key/未知→跳過。頁載入時 autoMigrate 讀 window.PROGKEY_MIGRATION 自動跑一次。
+- 新 `tools/gen_progkey_runtime.py`：從 authoring/progkey_migration.json 單一來源生成 `assets/progkey_migration.data.js`（window.PROGKEY_MIGRATION，43 entries）＋--verify 一致性 gate。
+- 新 `tools/rt_progkey_migration.mjs` 紅隊（node＋mock localStorage＋真實 safe_store/learning_progress）：**ALL PASS** — ①完成 lesson 遷移②舊 key 原封未改③idempotent(重跑 migrated=0/alreadyDone=1、不退化)④未完成/無 key/未知不遷移⑤SafeStore 缺 no-op⑥data.js 與來源一致＋所有 new_unit_id 存在。
+- class-wide 接線：**251 個正式頁**在 learning_progress.js 前插入 data.js（順序 safe_store→progkey_migration.data→learning_progress→unit.js）。排除 .claude/worktrees、training、nav_review 等非正式目錄。
+- **Phase 2 進度**：DAG✅、roadmap_layout✅、progkey_migration 資料✅、migrate 邏輯+RT✅、**逐檔 content_audit 5-clean ☐（最後一大塊，一次 1 round）**。

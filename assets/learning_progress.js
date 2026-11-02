@@ -158,6 +158,59 @@
     return u ? JSON.parse(JSON.stringify(u)) : null;
   }
 
+  // ===================================================================
+  // §6.3／§7.1 舊 concept_engine progKey → learning_progress_v1 additive 遷移
+  //   舊格式：localStorage[progKey] = { <lesson_id>: <truthy 代表已完成> }
+  //   對照表：authoring/progkey_migration.json → 執行期 window.PROGKEY_MIGRATION
+  //           （每筆 {old_progKey, lesson_id, new_unit_id}；見 gen_progkey_runtime.py）
+  //   規則（never-disappear 雙保險）：
+  //     - 舊 lesson 已完成 → 對新 unit 呼 recordUnit(id,{mastered:true})（additive、
+  //       mastered 單調不回退 → 天然 idempotent，重跑安全）。
+  //     - **絕不刪除或改寫任何 old_progKey**（舊進度永久保留，雙保險）。
+  //     - SafeStore 未載入 → graceful no-op；未完成/無此 key/對不到 → 跳過不報錯。
+  //   storageObj 參數供測試注入；預設 global.localStorage。
+  // ===================================================================
+  function migrateFromProgKeys(mapping, storageObj) {
+    var s = ensureStore();
+    if (!s) return { available: false };            // graceful no-op
+    mapping = mapping || global.PROGKEY_MIGRATION || [];
+    var ls = storageObj || (typeof global.localStorage !== 'undefined' ? global.localStorage : null);
+    var res = { available: true, scanned: 0, migrated: 0, alreadyDone: 0, noKey: 0, notDone: 0 };
+    if (!ls || !Array.isArray(mapping)) return res;
+    var cache = {};                                 // 每個 progKey 只解析一次
+    function parsed(k) {
+      if (!(k in cache)) {
+        var raw = null;
+        try { raw = ls.getItem(k); } catch (_) { raw = null; }
+        if (raw == null) { cache[k] = null; }       // key 不存在
+        else { try { var p = JSON.parse(raw); cache[k] = (p && typeof p === 'object') ? p : {}; } catch (_) { cache[k] = {}; } }
+      }
+      return cache[k];
+    }
+    for (var i = 0; i < mapping.length; i++) {
+      var e = mapping[i];
+      if (!e || !e.old_progKey || !e.lesson_id || !e.new_unit_id) continue;
+      res.scanned++;
+      var prog = parsed(e.old_progKey);
+      if (prog == null) { res.noKey++; continue; }          // 舊 key 不存在（沒玩過該頁）
+      if (!prog[e.lesson_id]) { res.notDone++; continue; }  // 該課未完成
+      var existing = getUnit(e.new_unit_id);
+      if (existing && existing.mastered === true) { res.alreadyDone++; continue; }  // 已遷移/已學會
+      recordUnit(e.new_unit_id, { mastered: true });        // additive、單調、舊 key 不動
+      res.migrated++;
+    }
+    return res;   // 全程未觸碰任何 old_progKey
+  }
+
+  // 頁面載入時自動遷移一次（讀當下的 window.PROGKEY_MIGRATION；node 無 document 時不自動跑，由測試顯式呼叫）
+  function autoMigrate() { try { if (global.PROGKEY_MIGRATION) migrateFromProgKeys(); } catch (_) { /* 遷移失敗不可崩頁 */ } }
+  try {
+    if (typeof document !== 'undefined' && document.addEventListener) {
+      if (document.readyState !== 'loading') autoMigrate();
+      else document.addEventListener('DOMContentLoaded', autoMigrate);
+    }
+  } catch (_) { /* 無 document 環境略過 */ }
+
   function getProgress() {
     return JSON.parse(JSON.stringify(current()));
   }
@@ -236,6 +289,7 @@
     recordUnit: recordUnit,
     touchUnit: touchUnit,
     getUnit: getUnit,
+    migrateFromProgKeys: migrateFromProgKeys,
     getProgress: getProgress,
     islandCounts: islandCounts,
     totals: totals,
