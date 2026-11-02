@@ -37,3 +37,17 @@
 ### chi.t_mid.prac.envelope（信心高）中華郵政官方
 - 直式 post.gov.tw ID=21001:「收件人姓名書於中央」「地址書於右側」「郵遞區號...右上角紅框」「寄件人...左下側」「郵票貼於左上角」
 - 橫式 post.gov.tw ID=21002:「收件人地址姓名書於中央偏右」「寄件人...左上角」「郵遞區號...地址上方第1行」「郵票貼於右上角」
+
+## 完整 promote 配方（2026-11-02，precedent＝reviews/*.json expert_review + source_registry review-fact source）
+scope source 既有可用：moe-108-zonggang-2021（國教院 curriculum_scope）。識字量另可加精確領綱 scope：
+  國語文領綱 PDF 實測 sha256-16 = 210b2bea291bbc29（/tmp/guoyuwen.pdf；naer.edu.tw/upload/1/16/doc/806/...國語文.pdf）
+路徑 A（3 chi convention，非 high-risk→需 ≥1 但依 precedent 用 2 reviewer，is_hard_fact=false）：
+  1) 真跑 2 獨立 reviewer agent（chi-educator＋adversarial）判 recognition-count/time-budget/envelope＝在綱/敘述正確/非硬事實，寫 reviews/lp-chi-conventions-01.json（禁手寫冒充）
+  2) registry 加 review-fact source（evidence_method=expert_review, review_ref, content_fingerprint=該 review 檔 sha16）
+  3) ledger entries：scope_source_ids=[moe-108-zonggang-2021(或領綱 scope)]、fact_source_ids=[review source]、verified_by
+  4) promote_verified → overlay → AC-KP-VERIFY 重算
+路徑 B（2 eng vocab；cross_check 證據已齊 Longman+Wiktionary）：
+  - fact_source_ok 的 cross_check 分支只需 ≥2 independent_refs（不另要 reviewer）；但 high_risk_floor 對 地震/颱風/健康 語義命中→hr=True。
+  - 待決策：vocab-meaning KP 含安全相鄰詞是否套 safety high-risk bar（官方現行源＋2 reviewer），或 dictionary cross_check 即足？（floor 設計為寧誤報。）
+  - 另 chk-cross-check-gate 會真抓取比對 quote；Longman gate 端若 403 則該來源不算。
+KP2 國寫：知性/情意命名無官方逐字→verify 僅就「時間90/二大題/逐題字數」或 KP title 收斂；命名不宣稱 verified。
