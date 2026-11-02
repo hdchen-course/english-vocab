@@ -456,3 +456,14 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - **AC-STYLE-1 專案 gate 交付**：tools/design_consistency_gate.mjs——(A) 接線 skill design_consistency（scoped 學習路徑頁、SDA_CSS=app.css,unit.css,game_core.css、canon 69、DUPLICATE=0）+(B) content-card 自適應寬 lint（R-STYLE-3，卡類固定窄寬<520px=置中窄島→DENY）；--selftest 紅隊 4/4；live 重造0違規卡0 PASS。commit fbbd77c9f。2 NEAR（.ea-level/.ma-level ~~ .u-card 0.93）前已查為 tokenized 刻意變體。
 - **本 session Phase-1 淨結果**：既有可跑 AC 全綠（KP-VERIFY/NOGRADE(修gate)/NAV/A11Y/PERF/VIZ-1(重簽)/SCHEMA/UNIT/LANG/NOBACKEND/ANTIDRIFT/REWARD）＋ **AC-STYLE-1/2 兩個「待建」gate 已建成+紅隊+全綠**（Phase 0.5 gate-bootstrap）。
 - **待續**：(1) 把 style_token_lint / design_consistency_gate 併入專案 .claude/settings.json 的 fail-closed PreToolUse hook（目前為可跑 --verify gate，尚未掛 hook 擋關）；(2) site-wide correct/wrong tint 不一致統一（unit.css #fde8e8 vs bespoke rgba(255,118,117,.12)）＝R-STYLE-5，走視覺檢查；(3) AC-COV-1 覆蓋矩陣＝Phase 3（需建教材）。
+
+## 2026-11-02 19:0x 權威 verify_learning_path --phase=1 結果（重要狀態修正）
+背景跑 `tools/verify_learning_path.py --phase=1 --json`（task b47df71da, exit0, ~16min, http:8096）。**19 PASS / 6 FAIL**（report＝/tmp/vlp_phase1.report.txt）：
+- ✅ 新交付的 **AC-STYLE-1、AC-STYLE-2 orchestrator 認可 PASS**（本 session gate 生效）；另 SPEC/LANG/ANTIDRIFT/NOGRADE/COV-2/SCHEMA/UNIT-1/CORRECT(6子全綠)/NAV/VIZ-1/REWARD/PATH-1/PATH-2/PERF/A11Y＋helpers(visualqa-draft/source-registry/ledger-gate/repro-gate) 全 PASS。
+- ❌ **6 FAIL 真因**：
+  1. **chk-manifest(@P-1 exit1)→連帶 AC-KP-VERIFY refuse**：`tools/_kp_build.py --check` T3-03＝committed KP manifest JSON／附錄 markdown 與重新生成**逐欄不符**（drift；by vstatus 全 provisionally_verified、raw binding_unverified=3086 是 pre-overlay 統計）。**須診斷 regen 來源，不可盲改**（T3-03 是竄改偵測器）。注意：先前 session 的「AC-KP gap=0」是 verified_overlay/promote --check 層，與此 _kp_build regen 層不同；orchestrator 把 AC-KP-VERIFY 關在 chk-manifest 後。
+  2. **AC-UNIT-2(exit=250)＝0/250 頁達 content_audit 連續 5-clean**：`per_page_5clean_gate.py`。**這是 Phase-1 實作主體工程**（每檔 /static-doc-audit 跑到 5 clean），目前一頁未跑。屬大規模多-workflow fan-out，需明確規模授權（Workflow opt-in）後逐檔推進。
+  3. **AC-UNIT-3(exit=2)＝argparse 錯非真偏離**：acceptance_criteria.json 呼叫 `unit_acceptance_lint.py --verify-golden/--selftest-golden`，但工具未實作該 golden-diff 模式（golden 範本 `authoring/golden/communicative_unit.html` 已存在→可建）。**待建 gate 模式**。
+  4. **AC-CODE-DL＝`tools/code_download_gate.mjs` 未建**：學習路徑有 `downloads/dictation-src.zip`+README（聽寫系列可下載碼），非 N/A，須建 gate 驗「解壓到 temp＋跑 README＝build/test 綠」。**待建 gate**。
+  5. **AC-COV-1(exit1)＝Phase-3 覆蓋矩陣**（minimum 3086 未全有單元；需建教材＋HD 確認，非 Phase-1 blocker）。
+- **下一步佇列（tractable 先）**：(a) 建 `code_download_gate.mjs`+紅隊（驗 dictation bundle 乾淨解壓可跑）；(b) `unit_acceptance_lint.py` 加 `--verify-golden/--selftest-golden` golden 結構 diff＋deviation_reason 驗（§6.6①）+紅隊；(c) 診斷 chk-manifest T3-03 drift 根因（找出 committed JSON vs regen 哪欄不符、是否合法）；(d) AC-UNIT-2 250×5-clean＝主體收斂，需規模授權後開跑；(e) AC-COV-1 Phase 3。
