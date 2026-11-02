@@ -565,3 +565,8 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - **內容親驗（虛擬語氣極易錯，逐題查）**：mandative（suggest/insist/demand that + 主詞 + 原形：attend/be/choose、否定 not be fired、arrive 不加 s）、mixed conditional（過去條件→現在結果 had+pp→would+原形；現在條件→過去結果 were→would have+pp；could get now）、would rather（他人現在→過去式 didn't talk/drove、過去遺憾 had told、同主詞原形 stay）皆文法正確。
 - 7 道確定性 gate 全綠。eng 覆蓋 248→256/300。方言差異（got/gotten、were/was）一致處理、provisional 待母語 reviewer。
 - 下一步：special 8／morph 7／vocab 5／noun 4／pattern 4／verb 3／voice·modal·adjadv·relcl·nouncl 各 2／pron·prep·nonfinite 各 1（共 44）→ Phase 2 接線 → 全島 5-clean 收斂。
+
+## （補記）special strand 18/18（commit c489ec376）＋ morph strand 13/13
+- special：apposition/inversion-place/ellipsis/inversion-only/inversion-so-such/what-cleft/perfect-participle/absolute-with（8 新檔）。親驗倒裝/分裂/完成分詞文法全對。
+- morph：suffix-adverb-ly/compound-noun/prefix-degree/prefix-relation/latin-greek-roots/conversion/guess-by-morphology（7 新檔）。親驗字根義（port=carry/tele=far/bio=life/dict=say/graph=write）、詞類轉換、構詞猜義全對。-ly 拼寫 happy→happily/true→truly。
+- 已滿 strand：phonics/listening/reading/writing/subj/special/morph。
