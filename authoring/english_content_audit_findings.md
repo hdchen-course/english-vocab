@@ -52,3 +52,15 @@
 ## wave3 修正批次（2026-11-02 12:21）＋總結
 已修 2 處 minor（regularplural -ch /tʃ/ 限定、tenseagree P4 去 overstate）。片1 全 CLEAN。gate 全綠。
 **wave3 總結：24 單元，0 blocker / 0 major。** 高風險 meaningchange/複數分歧/間接問句全過。累計 core 72/150 審畢、全程 0 blocker/0 major。
+
+## wave4 片1（句型/介系詞 8）— audit-w4s1：blocker0/major0/minor1；CLEAN 7
+審：pattern5/patternsv/patternsvo/twoobjects/phrasalprep/prepcolloc/prepdirection/prepduration
+- [minor 已修] prepdirection | E 範圍一致性 | title/can_do 列 "to" 但 teach/claims/practice 未教 → 移除 title/can_do/_note 的「to（往目的地）」對齊實教（into/onto/through/across/along）。
+- 正面（高風險區確認無缺陷）：prepcolloc good at vs good in 以「美式口語偶爾、正式/會考用 good at」誠實 hedge 不 overstate；phrasalprep despite 不加 of；prepduration for/during/since/by/until/within 六者精準；twoobjects to/for 類劃分正確。零簡體零 PRC。
+
+## wave4 片3（代名詞/關係子句 8）— audit-w4s3：blocker0/major0/minor3；CLEAN 5
+審：reflexive/preprel/reduceclause/reladverb/relcomma/relomit/relthat/relwhat
+- [minor 已修] reflexive claim c-rf-standard＋teach＋_note＋P4 themself＋P5 ourself | D overstate | 把 themself/ourself 說成「無此標準字」誇大（themself 已被收為單數 they 標準反身、ourself 用於編輯語氣）→ 改錨定「本題主詞複數故用 -selves；themself 僅單數 they／ourself 僅 we 自稱單一者」。正解 themselves/ourselves 不變。
+- [minor 已修] relwhat P5 | D R14 | 理解題四選項中文 → 改英文（the thing(s) that you need / the reason… / the place… / the way…），同 wave1 moreandmore 先例。
+- [minor 已修] relomit P4 | B 邊界第二解 | 誘答「My brother you met yesterday is a doctor.」本身合文法（限定省略受格關代）→ rationale 補「此句文法正確但屬限定，不符題幹非限定補充語意」。
+- 正面：preprel/reduceclause/reladverb/relcomma/relthat 刻意不並列 who/which 避第二解，限定/非限定/省略規則正確。零簡體零 PRC。
