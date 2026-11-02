@@ -576,3 +576,8 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 親驗：synonym 強度（enormous/delighted/tiny/big）、集合名詞 AmE 單數 is/has（英式差異 teach 誠實標）、double-possessive（a friend of mine 非 of me、of my mother's）皆正確。
 - 收斂前待辦：這 9 檔省略 shadowing（依無音檔指示），--verify-golden 會判缺 shadowing，收斂階段補「無 audio 版 shadowing（text+intonation）」或走 deviation 簽核。
 - 已滿 strand：phonics/listening/reading/writing/subj/special/morph/vocab/noun（9 個）。eng 271→280/300。
+
+## 英語島 pattern 16/16＋verb 26/26 補滿（7 新 sidecar，含 text-only shadowing）
+- pattern：sentence-kinds/sv-agreement/sentence-types/run-on-comma-splice。verb：past-perfect-progressive/future-perfect-progressive/tense-consistency。
+- 親驗：主謂一致(walks/is/has)、run-on/comma-splice 辨識+四修法、時態一致判斷、had been/will have been+V-ing 形式皆正確。
+- 已滿 strand：phonics/listening/reading/writing/subj/special/morph/vocab/noun/pattern/verb（11 個）。eng 280→287/300。剩 13（voice/modal/adjadv/relcl/nouncl 各2＋pron/prep/nonfinite 各1）。
