@@ -64,3 +64,8 @@
 - [minor 已修] relwhat P5 | D R14 | 理解題四選項中文 → 改英文（the thing(s) that you need / the reason… / the place… / the way…），同 wave1 moreandmore 先例。
 - [minor 已修] relomit P4 | B 邊界第二解 | 誘答「My brother you met yesterday is a doctor.」本身合文法（限定省略受格關代）→ rationale 補「此句文法正確但屬限定，不符題幹非限定補充語意」。
 - 正面：preprel/reduceclause/reladverb/relcomma/relthat 刻意不並列 who/which 避第二解，限定/非限定/省略規則正確。零簡體零 PRC。
+
+## wave4 片2b（介系詞/代名詞 8，重跑）— audit-w4s2b：全 8 CLEAN，0 findings
+審：prepgerund/prepmeans/prepplace/indefinitepron/interrogativepron/itusage/oneones/reciprocalpron
+reciprocalpron each other/one another 正確處理為現代可互通、不列唯一正解題；prepmeans 避開 by cash/on foot BrE/AmE 兩可。零簡體。
+## wave4 總結：24 單元，0 blocker/0 major，修 4 minor（prepdirection/reflexive/relwhat/relomit）。累計 core 96/150 審畢、全程 0 blocker/0 major。
