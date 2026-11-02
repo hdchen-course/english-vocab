@@ -540,3 +540,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - **內容親驗**：三篇短文（Maya 花園／Tom 的狗 Rocky／圖書館告示）各題正解在文中皆有明確依據、單一可辯護答案；sunflower 題「比她高」vs 顏色誘答、he=Rocky/they=visitors 指涉、告示掃讀時間/罰款皆正確。
 - reading 純文字（無音檔）；shadowing 為純文字朗讀練習。9 道確定性 gate 全綠。eng 覆蓋 215→221/300。
 - 下一步：reading t_adv R4–R9（12 KP：best-title/purpose/attitude-tone/inference/text-structure/cohesion/fact-vs-opinion/graph-integration/multi-text/cloze/gap-filling/discourse-ordering）→ writing（15 KP）→ 已建未滿分區 → Phase 2 接線 → 全島 5-clean 收斂。
+
+## 2026-11-02 21:11 英語島 reading t_adv R4–R9 建成 → reading strand 18/18 KP 滿覆蓋 ✅
+- append R4 title-purpose／R5 tone-inference／R6 structure-cohesion／R7 factopinion-graph／R8 multitext-ordering／R9 cloze-gap（各 2 KP）。reading 6→18/18 KP、3→9 單元。**第三個 100% strand（phonics/listening/reading）。**
+- **內容親驗**：R4 說服目的（should/please 訊號）、R5 態度/推論（did not want to leave 線索）、R6 比較對照＋however/therefore、R7 事實vs意見＋數據（C=15、A+B=20）、R8 跨文本金額（70/剩10）＋泡茶排序唯一（First/Then/After/Finally）、R9 克漏字（needs/helps 主謂+時態一致、語境唯一）皆正確、單一可辯護答案。
+- 灰帶題（purpose/structure/cloze-2）皆判定為語境中單一最佳答案；R7「27本」誘答解釋略含糊（非正確性錯，收斂階段潤飾）。純文字無音檔。8 道確定性 gate 全綠。eng 覆蓋 221→233/300。
+- 下一步：writing（15 KP，自評不自動批改）→ 已建未滿分區（noun/vocab/pattern/special/subj/morph…~52 KP）→ Phase 2 接線 → 全島 5-clean 收斂。
