@@ -291,9 +291,12 @@ function renderPanel(isl){
     const strands=isl.strands.slice().sort((a,b)=>(a.order||99)-(b.order||99));
     const phon=strands.find(s=>s.order===1);
     const rest=strands.filter(s=>s!==phon);
-    const speak = us.length ? (`<a class="lp-scard" style="--a:${fill}" href="english_speaking.html"><span class="snm"><span class="lp-step">2</span>開口說（情境溝通）</span>`+
-      `<span class="lp-sdesc">用真實情境學「能用的一句話」：聽 → 說 → 聽寫 → 跟讀模仿語調 → 自評（聽寫＋跟讀已內含）。</span>`+
-      `<span class="lp-tiers"><span class="lp-tchip area">${us.length} 個單元</span><span class="lp-tchip area">聽・說・寫</span></span></a>`) : '';
+    // 開口說（情境溝通）＝導向 english_speaking.html 的入口卡。設計一致：鏡射 strandCard 結構
+    // （step badge＋名稱＋中性 lp-tchip＋藍色「N 個單元 →」uhint），不再用綠 area 膠囊/長描述破壞 grid 節奏。
+    const speak = us.length ? (`<a class="lp-scard" style="--a:${fill}" href="english_speaking.html" aria-label="開口說（情境溝通）：${us.length} 個單元，點擊看情境清單">`+
+      `<span class="snm"><span class="lp-step">2</span>開口說（情境溝通）</span>`+
+      `<span class="lp-tiers"><span class="lp-tchip">聽・說・寫</span></span>`+
+      `<span class="lp-uhint">${us.length} 個單元 <span class="lp-caret" aria-hidden="true">→</span></span></a>`) : '';
     const arr=[];
     if(phon) arr.push(strandCard(phon,1));
     if(speak) arr.push(speak);
