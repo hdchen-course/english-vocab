@@ -55,3 +55,9 @@
 - 修補：(a) prereq 移出 allrefs（allrefs 僅供「KP 必須在 manifest」）；(b) 另加獨立檢查 `prereq:unknown`＝prereq 必須解析到**全站 unit_id 集合**（--verify 預掃全部 *.units.json，即使 --file 單檔亦掃全站以解析跨檔 prereq）；(c) check_unit 新增 `unit_ids=None` 參數，None＝跳過（向後相容，_selftest/golden 路徑不受影響）。
 - 紅隊（--selftest）：原 9 例全綠 ＋ 新 3 例：①prereq 是合法 unit_id 但**不在 KP manifest**→PASS（正中舊 bug 的回歸守門）；②prereq 指向不存在單元→DENY `prereq:unknown`；③未提供 unit_ids（向後相容）＋懸空 prereq→不檢查、PASS。全站 --verify 252 單元 RESULT PASS。
 - 影響：Phase 2 接線（250 單元補宣告 prerequisites）不會再被此 gate 誤擋；prereq 懸空仍被真正擋下。
+
+## H-7（2026-11-03）per_page_5clean_gate content_sha 只綁 HTML＝fail-open
+- **漏洞**：`content_sha(page)` 只對 HTML bytes 取 sha，但單元教學內容在 `*.units.json`（unit.js 讀 data-units 執行期注入）。改 sidecar 內容不改 HTML → 5-clean streak 不作廢 → 審計過舊內容、改內容後仍算收斂（fail-open，等同 AC-UNIT-2 對內容變動無感）。
+- **修法**：content_sha 改綁 sha256(HTML bytes ＋ 其 data-units sidecar bytes)[:16]；sidecar 由頁 data-units 屬性解析（權威）；無 data-units/sidecar 缺→退回僅綁 HTML 不崩。
+- **紅隊**（--selftest content_sha 段）：改 sidecar 內容→指紋變 ✅、改 HTML→變 ✅、sidecar 缺→僅綁 HTML 不崩 ✅；原 evaluate_page 12 壞例仍全 DENY、好例 ALLOW。
+- 這是修 gate（堵 fail-open）非繞過；未弱化任何檢查。

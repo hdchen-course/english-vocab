@@ -641,3 +641,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 建 52 頁 → units_index 全 306 頁皆存在（gen_unit_pages --verify CLEAN）。per_page gate 違規從「頁不存在」轉為「無收斂 ledger」（收斂未開始的正常狀態）。
 - **smoke render（iPad 1366×1024、http、puppeteer+chrome-headless-shell）**：抽 5 新頁（absolutewith/subjifonly/ceec4500/runoncomma/adjorder）全部 root 有內容、脫離「載入中」、零 JS/console error → KP sidecar 經 unit.js 正常渲染。unit_schema_gate 仍 CLEAN（頁非單元、無副作用）。
 - **現況**：英語島 336 單元內容＋頁全部到位且可渲染。下一步＝逐檔 content_audit 5-clean 收斂（AC-UNIT-2，306 頁、一次 1 round，/static-doc-audit per-file＋記入 page_converge_ledger.json，由 per_page_5clean_gate 驗）＋每頁視覺 iPad 四角色簽核。
+
+## 2026-11-03 00:26 收斂前置 — 修 per_page_5clean_gate fail-open（H-7，commit 點）
+- 修 `tools/per_page_5clean_gate.py` content_sha：改綁 **HTML + data-units sidecar 聯集 sha**（原僅綁 HTML＝改 JSON 內容不重置 5-clean streak 的 fail-open）。sidecar 由頁 data-units 屬性解析；缺則退回僅綁 HTML 不崩。
+- 紅隊（--selftest）：原 12 壞例全 DENY＋好例 ALLOW 不變；新增 content_sha 三紅隊（改 sidecar→指紋變、改 HTML→變、sidecar 缺→不崩）全過。記入 GATES_HOLES_LEDGER H-7。
+- 修 gate 非繞過；AC-UNIT-2 收斂 ledger 現在會因內容（JSON）變動正確作廢 streak。
+- **下一步**：啟動 AC-UNIT-2 逐頁 content_audit 5-clean（審對應 sidecar、一次 1 round、記 page_converge_ledger、per_page_5clean_gate 驗）＋iPad 四角色簽核。

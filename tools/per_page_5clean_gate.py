@@ -28,7 +28,9 @@ Ledger：authoring/page_converge_ledger.json
       ...
     }
   }
-  * content_sha＝sha256(頁 HTML 檔 bytes)[:16]；round 只應在**實際跑完該輪 content_audit
+  * content_sha＝sha256(頁 HTML bytes ＋ 其 data-units sidecar bytes)[:16]（綁內容載體：
+    單元內容在 *.units.json、由 unit.js 執行期注入，故改頁或改 sidecar 任一都使指紋變、streak 作廢——
+    堵「只綁 HTML sha、改 JSON 內容卻不重置 streak」的 fail-open）；round 只應在**實際跑完該輪 content_audit
     且 L3 coverage_check exit 0** 後誠實記入（手造＝作弊；此 gate 只驗結構/一致/綁 sha，
     真實性靠「記入時實跑」的紀律＋綁 sha：改頁就得重跑）。
   * 本 gate fail-closed：round 未帶 `l3_exit==0` 或 `clean!=true` 或 `content_sha` 不等於
@@ -43,7 +45,7 @@ EXIT：
   --verify   → 0=零違規（PASS）；否則＝違規數 clamp 到 1..255（FAIL）
   無參數     → 印用法、exit 2
 """
-import sys, os, json, hashlib, datetime
+import sys, os, json, hashlib, datetime, re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LEDGER_REL = os.path.join("authoring", "page_converge_ledger.json")
@@ -52,8 +54,28 @@ REQUIRED_CLEAN = 5
 
 
 def content_sha(path):
+    """頁的內容指紋＝sha256(頁 HTML bytes ＋ 其 data-units sidecar bytes)[:16]。
+    為何綁 sidecar：單元教學內容在 `*.units.json`（由 unit.js 讀 <body data-units> 執行期注入），
+    HTML 殼幾乎不含內容。若只綁 HTML sha，改 sidecar 內容不會使 streak 作廢＝fail-open
+    （審計過的是內容、streak 卻對內容變動無感）。故改頁或改其 sidecar 任一，指紋都須改變。
+    sidecar 由頁的 data-units 屬性解析（權威，非僅檔名慣例）；無 data-units/sidecar 不存在→僅綁 HTML。"""
     with open(path, "rb") as f:
-        return hashlib.sha256(f.read()).hexdigest()[:16]
+        html_bytes = f.read()
+    sidecar_bytes = b""
+    try:
+        m = re.search(rb'data-units\s*=\s*"([^"]+)"', html_bytes)
+        if m:
+            side = os.path.join(os.path.dirname(path), m.group(1).decode("utf-8"))
+            if os.path.exists(side):
+                with open(side, "rb") as sf:
+                    sidecar_bytes = sf.read()
+    except Exception:
+        sidecar_bytes = b""   # 解析失敗→退回僅綁 HTML（不崩）
+    h = hashlib.sha256()
+    h.update(html_bytes)
+    h.update(b"\x00")          # 分隔符，避免 bytes 串接歧義
+    h.update(sidecar_bytes)
+    return h.hexdigest()[:16]
 
 
 def _iso_ok(s):
@@ -232,6 +254,37 @@ def selftest():
         print("  selftest FAIL：舊 sha 的 5-clean 對新頁 sha 竟被放行"); ok = False
     else:
         print("  selftest：壞例『頁內容已變、舊 sha 的 streak 對新 sha 作廢』→ DENY ✅")
+
+    # content_sha 紅隊：綁 HTML+sidecar 聯集——改頁或改 sidecar 任一，指紋都須改變（堵 fail-open）
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        pg = os.path.join(td, "english_x.html")
+        side = os.path.join(td, "english_x.units.json")
+        with open(pg, "w", encoding="utf-8") as f:
+            f.write('<body data-units="english_x.units.json"><div id="root"></div></body>')
+        with open(side, "w", encoding="utf-8") as f:
+            f.write('{"units":[{"unit_id":"eng.t.x.y","teach":[{"body":"A"}]}]}')
+        s1 = content_sha(pg)
+        # 改 sidecar 內容 → 指紋須變
+        with open(side, "w", encoding="utf-8") as f:
+            f.write('{"units":[{"unit_id":"eng.t.x.y","teach":[{"body":"B (edited)"}]}]}')
+        s2 = content_sha(pg)
+        # 改 HTML（非 sidecar）→ 指紋須變
+        with open(pg, "w", encoding="utf-8") as f:
+            f.write('<body data-units="english_x.units.json"><div id="root"> </div></body>')
+        s3 = content_sha(pg)
+        # 無 sidecar 檔 → 退回僅綁 HTML（不崩、有值）
+        os.remove(side)
+        s4 = content_sha(pg)
+        for label, cond in [
+            ("改 sidecar 內容→指紋變（堵 fail-open）", s2 != s1),
+            ("改 HTML→指紋變", s3 != s2),
+            ("sidecar 缺→僅綁 HTML 不崩", isinstance(s4, str) and len(s4) == 16),
+        ]:
+            if cond:
+                print(f"  selftest(content_sha)：{label} ✅")
+            else:
+                print(f"  selftest(content_sha) FAIL：{label}"); ok = False
 
     print("SELFTEST:", "PASS ✅" if ok else "FAIL ❌")
     return 0 if ok else 2
