@@ -504,3 +504,10 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - **gate 修補 H-6**：unit_acceptance_lint 把 prerequisites（unit_id）誤當 KP id 比對 manifest（潛伏 bug，U2 首個宣告 prereq 觸發）→修 `_collect_kp`+加 `prereq:unknown` 獨立檢查+紅隊 3 例。見 GATES_HOLES_LEDGER H-6。
 - **尚未**：content_audit 5-clean（依計畫 §7 待全島覆蓋+接線後才一次一檔收斂）；視覺 iPad 簽核；U3–U11 phonics 其餘 13 KP。
 - **下一步**：續建 phonics U3–U11（consonant-blends/-digraphs/silent-e/vowel-teams/r-controlled/schwa/syllable-stress/encoding/… 等 13 KP），再 reading/writing/listening（0 單元分區）。
+
+## 2026-11-02 20:12 英語島 phonics U3–U5 建成
+- U3 encoding（聽音拼字）／U4 silent-e（魔法 e）／U5 vowel-teams（母音組合），各掛 1 KP、prereq=[cvc-blending]。phonics 覆蓋 7→10/20 KP、2→5 單元。
+- **內容親驗（team lead 複核非信 subagent）**：cape/kite/hope/cube 長母音正確；silent-e 例外 have/give/come/love 誠實標 sight words；ea（bread/head /ɛ/、great/break /eɪ/）、oo（book/good /ʊ/）多讀音、u_e /juː/（用 cube/cute 避 tube/rude）皆誠實標；encoding 刻意避 /k/ 拼法歧義。小註：dog /ɑ/ 於非合併 GA 實為 /ɔ/（方言差；拼字 d-o-g 無歧義，provisional，留母語 reviewer）。
+- 音檔：edge-tts 生成 15 mp3（ph_enc_/ph_sile_/ph_vt_ ×5），音↔顯一致。audio_exist_gate CLEAN（1461 refs）。
+- 9 道確定性 gate 全綠（含修好的 unit_acceptance_lint prereq 檢查）。所有 claim status=provisional 待母語 reviewer。
+- 下一步：phonics U6（blends+digraphs）→ U7 r-controlled → U8 hard-soft-cg+final-le → U9 schwa+syllable-stress → U10 ed-sound+plural-s → U11 kk-ipa。
