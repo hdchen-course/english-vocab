@@ -546,3 +546,10 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - **內容親驗**：R4 說服目的（should/please 訊號）、R5 態度/推論（did not want to leave 線索）、R6 比較對照＋however/therefore、R7 事實vs意見＋數據（C=15、A+B=20）、R8 跨文本金額（70/剩10）＋泡茶排序唯一（First/Then/After/Finally）、R9 克漏字（needs/helps 主謂+時態一致、語境唯一）皆正確、單一可辯護答案。
 - 灰帶題（purpose/structure/cloze-2）皆判定為語境中單一最佳答案；R7「27本」誘答解釋略含糊（非正確性錯，收斂階段潤飾）。純文字無音檔。8 道確定性 gate 全綠。eng 覆蓋 221→233/300。
 - 下一步：writing（15 KP，自評不自動批改）→ 已建未滿分區（noun/vocab/pattern/special/subj/morph…~52 KP）→ Phase 2 接線 → 全島 5-clean 收斂。
+
+## 2026-11-02 21:26 英語島 writing W1–W3 建成（5/15 KP）＋自評產出題歸屬決策
+- 新檔 english_writing.units.json：W1 copy-imitate（t_base）／W2 sentence-punctuation（sentence-making+punctuation-caps）／W3 picture-letter（picture-basic+letter-email）。writing 0→5/15 KP、3 單元。
+- **設計決策（重要，非改 spec/gate）**：寫作自由產出題無唯一可驗證答案，spec §6.8.1 的 `practice[].validation_method` enum＝{exhaustive|oracle|source|expert}（無 self），question_correctness_gate 正確擋下 `validation_method:"self"`。依 spec 自評模型（rubric⑤＝單元層 selfeval 三級→SRS），把 6 個自由產出題**移出 practice[]、改成 teach 的「換你做＋範例」example 段**（R14 body 英文、zh_hint 繁中含自評指引）；客觀子技能 MCQ 留 practice[] 承載 rubric⑦。**未改 gate、未把 self 蒙混成 expert、未弱化任何規則**——gate 擋得對，調整的是內容歸屬。authoring subagent 正確拒絕作弊並如實回報，我據 spec 裁定。
+- **內容親驗**：抄寫/仿寫、完整句（主詞+動詞）、大小寫標點、條列逗號、看圖寫句、email 三段格式（問候/本文/署名）皆正確；MCQ 單一正解、distractor 文本內可判定。
+- 8 道確定性 gate 全綠（question_correctness 重構後 CLEAN）。eng 覆蓋 233→238/300。
+- 下一步：writing t_adv W4–W8（10 KP：paragraph-structure/cohesive-devices/topic-essay/consistency/narrative/picture-narrative/expository/sentence-combining/c2e-translation/avoid-chinglish）→ 已建未滿分區 → Phase 2 接線 → 全島 5-clean 收斂。
