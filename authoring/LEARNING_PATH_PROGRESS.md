@@ -412,3 +412,15 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - 新 fail-closed gate：tools/r14_body_gate.py（紅隊過）。英文品質 5 波獨立對抗 review 全 249 單元：0 blocker/0 major、修 21 minor。
 - 全 gate 綠（r14_body/schema/claim/question/簡體/nav AC-NAV 收合）；iPad render 跨 tier 抽查通過。全部 commit＋push。
 - 待辦（另案）：can_do 橫幅英化；音檔存在/可播 gate；iPad 四角色完整簽核。
+
+## 2026-11-02 15:1x Phase-0 gap 精確定位（R14 收尾後續推進 spec）
+- 誤解澄清：manifest meta `binding_unverified=3086` 是 **raw 前-overlay 統計**（_kp_build 從不寫 verified），**非 AC-KP-VERIFY 判決**。
+- 實算 AC-KP gap＝binding(3086) 不在 verified_overlay(3097 ids) 者＝**只 5 筆**：
+  1. chi.t_base.char.recognition-count（識字量 2700/2200；108 國語文領綱 4-Ⅲ-1）
+  2. chi.t_sub.gwrk.time-budget（學測國寫字數/時間分配；大考中心）
+  3. chi.t_mid.prac.envelope（書信信封直/橫式；郵局/課綱）
+  4. eng.t_base.vocab.weather-nature（颱風/地震 vocab；**high-risk 安全相鄰**→≥2 reviewer＋cross_check）
+  5. eng.t_mid.vocab.health-illness（健康/身體不適 vocab；會考；cross_check ≥2 字典）
+- 這 5 筆皆 Phase-2 手工注入殘留、`unit_ids:[]`、無 fact_check_ledger 條目；要 release-grade verified 需**真實外部權威來源**（scope 課綱官方 ＋ fact cross_check/consensus），**嚴禁造假 reproduction_ref/quote**（repro_gate/cross_check_gate 會真抓取比對）。
+- 其餘全部現況：fast 確定性 gate 全綠（unit_schema/ia_consistency/r14_body/audio/claim/question/簡體）；a11y 學習路徑頁 0 違規；nav AC-NAV 0 違規；promote_verified --check 一致 verified=3097。
+- 下一步：以驗證 team（domain expert＋對抗式 reviewer；2 筆 high-risk 需 ≥2 相異 reviewer）逐筆蒐證→registry/ledger→cross_check_gate 真抓取→promote_verified，gap 5→0；屬 Phase-0 ship-gate，非 content_audit 5-clean（兩軌）。
