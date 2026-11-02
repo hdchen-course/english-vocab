@@ -386,3 +386,15 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - **根因釐清**：HD 看單元頁「沒側欄、步驟變裸藍字、app-bar 還是『學習基地』」＝**瀏覽器吃到舊快取**（單元頁 unit.css/unit.js 連結無版本號）。server 實檔已驗證正確（app-bar『學習地圖』、grid 248px+1fr、psb display:block、pshell CSS 載入）。
 - **cache-bust**（commit 見上）：250 單元頁的 `assets/unit.css`/`assets/unit.js` 連結加 `?v=20261102c`，回訪者自動取新檔、不需手動硬重整。日後改這兩個共用檔要 bump 版本字串。
 - **開口說情境卡一致化**（commit 見上，HD「開口說的也要改吧」）：english_speaking.html 的 `.sp-unit` 原為 teal 細框小 chip（hover 填 teal 反白），與全站房屋卡不一致。改成對齊 index_new 的 `.lp-unitcard`：var(--card)＋1px card-border＋teal 4px 左條＋radius 12＋淡陰影、hover 抬陰影；內容 emoji＋標題（粗）＋can-do 2 行截斷＋⏱分鐘 meta。iPad 橫 render 四角色 pass（250 卡、5 欄滿版、整齊、無窄島）；scan PASS、a11y 0。
+
+## ⛔ 2026-11-02 11:35 HALT — IA 重大缺陷 + 驗證盲點（HD 抓到，已停所有自動內容）
+**HD 連環指出且經 gate 量化證實的問題（不辯解，全記）：**
+1. **IA 重複（headline）**：100 個「情境溝通」單元每個都**同時出現在開口說情境 ＋ 其文法 strand 牆**（greetings→verb、howareyou→pattern…），違反 spec §6.1「單一 home」。`tools/ia_consistency_gate.py --verify` 實站 FAIL：dual_presented=100、non_member_eng=150。
+2. **開口說「其他」洩漏**：english_speaking.html 把不在 CATS 白名單的 150 個文法單元全倒進「其他」區（本該只有 10 情境×10）。
+3. **「開口說/情境」軸非 spec**：來自已刪的 english_island_blueprint.md（§0.4 non-normative）；spec 只有 strand 單一軸。這條遺留軸疊在同一批單元上＝重複來源。
+4. **呈現層灌水**：250 單元為真實檔案（真音檔/題目/過機械 gate），但雙重呈現使 hub 數字（開口說「250」、主題字彙 63 其中 52 是情境）看起來遠多於實際獨立內容。
+5. **驗證盲點（根因）**：原 33 gate 無任何一個檢查 IA 一致性（跨區重複/成員定義/單一 home），故「gate 全綠」與「IA 錯」並存。且 Phase 0 地基未真打完（見 19:40 診斷）即開 batch 灌內容＝跳過 spec 順序。
+
+**本 session 已做：** 停 batch26（worktree 丟棄未合併）＋停自動 loop；建 `tools/ia_consistency_gate.py`（紅隊 PASS、實站 FAIL=1，量化上述）＋`authoring/speaking_cats.json`（開口說成員 SSOT，暫存）。
+
+**待 HD 定方向（未動）：** (A) 移除開口說情境軸、回 strand 單一 home〔我的建議〕；(B) 保留情境為 cross-cut 軸但正式納 spec＋設 speaking_cats allow_cross_cut＋重分類；(C) 先全審 250 單元內容正確性；是否 revert 近期批次待定。**在 HD 指示前不改架構、不 revert、不續灌內容。**
