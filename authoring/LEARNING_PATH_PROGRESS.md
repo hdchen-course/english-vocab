@@ -381,3 +381,8 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - **開口說入口卡一致化**（commit a75331cac，HD friction 訊號）：hub 英語文總覽「開口說（情境溝通）」卡原用綠 lp-tchip area 膠囊＋長 lp-sdesc，與相鄰 strandCard（step badge＋名稱＋中性 chips＋藍色 N 個單元 →）不一致且破壞 grid。改成鏡射 strandCard：step №2＋名稱＋中性「聽·說·寫」chip＋藍色「N 個單元 →」uhint（us.length 動態＝250）。
   - index_new.html sha d9fa7e59→3077661b；hub 13 狀態重 render＋四角色重簽（開 island:eng 總覽 PNG 複判開口說卡與鄰卡同設計語言、grid 對齊），figure_signoff PASS、a11y 0（含 index_new）、nav_gate 0。
 - 註：單元頁 Cand 1 左側欄導覽在**單元頁**可見；index_new.html 本身只多隱形 hash deep-link #<island>/<strand>（開 index_new.html#eng/vocab 會跳主題字彙單元牆）。
+
+## 設計一致化 + cache-bust（2026-11-02 11:14，HD friction 連環訊號）
+- **根因釐清**：HD 看單元頁「沒側欄、步驟變裸藍字、app-bar 還是『學習基地』」＝**瀏覽器吃到舊快取**（單元頁 unit.css/unit.js 連結無版本號）。server 實檔已驗證正確（app-bar『學習地圖』、grid 248px+1fr、psb display:block、pshell CSS 載入）。
+- **cache-bust**（commit 見上）：250 單元頁的 `assets/unit.css`/`assets/unit.js` 連結加 `?v=20261102c`，回訪者自動取新檔、不需手動硬重整。日後改這兩個共用檔要 bump 版本字串。
+- **開口說情境卡一致化**（commit 見上，HD「開口說的也要改吧」）：english_speaking.html 的 `.sp-unit` 原為 teal 細框小 chip（hover 填 teal 反白），與全站房屋卡不一致。改成對齊 index_new 的 `.lp-unitcard`：var(--card)＋1px card-border＋teal 4px 左條＋radius 12＋淡陰影、hover 抬陰影；內容 emoji＋標題（粗）＋can-do 2 行截斷＋⏱分鐘 meta。iPad 橫 render 四角色 pass（250 卡、5 欄滿版、整齊、無窄島）；scan PASS、a11y 0。
