@@ -360,3 +360,15 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - 對抗式 review 修掉 1 blocker：purposeresult P1 誘答 "so"（合法第二正解）→ 換 "because"（原因≠目的），理由去 overstate。
 - 剩餘乾淨 t_adv 未覆蓋 ~29（vocab/verb/morph/adjadv/special/pattern…；分歧地雷如集合名詞一致、none 單複數刻意不取）。
 - **unitnav 導覽改版：HD 2026-11-02 拍板 Cand 1（左側欄 app-shell）**。計畫：產品化 pshell/psb 進共用 assets/unit.{css,js}（一次套 244 頁）＋同分區單元由 units_index 動態帶＋①②③④錨點；hub index_new 加 #島/strand deep-link＋修 app-bar__home；全 gate＋iPad 四角色＋AC-VIZ-1 重簽。實作期間暫緩新內容批次避免 assets/unit.* churn。研究包存 repo nav_review/。
+
+## unitnav Cand 1 導覽改版上線（2026-11-02 10:39，HD 拍板案）
+- **HD 2026-11-02 拍板 Cand 1（左側欄 app-shell）已實作上線**。worktree builder 產品化、主 session 審 diff＋四角色 render＋merge。
+- **assets/unit.css**：移植 Cand 1 pshell/psb/pill-nav-row（proto.css→正式，token-only）；**斷點由 1080px 下修 820px**（iPad Air 13" 直式 1024px 也顯示左側欄，對齊 hub＋空間利用），<820px 真手機用頂部 pill-nav-row。移除舊 gr-layout/gr-side/gr-nav（grep 確認無參照）。
+- **assets/unit.js**：#root 內建 app-shell——側欄三組（你在哪裡 🏠學習地圖＋←subject·strand；同分區單元 runtime fetch units_index 篩 subject+strand、當前高亮、視窗化 10＋「共 N 個 →」；本單元流程 ①②③④）＋窄埠 pill-nav（←單元牆／上一個/下一個 sibling／①②③④）。右側 teach/practice(dictation canvas)/shadowing(錄音)/selfeval(recordUnit) 渲染零改動。siblings 不加 tier 徽章（R11＋避免依 id 推 tier）。
+- **index_new.html**：最小侵入 hash deep-link #<island>/<strand>→選島＋click 既有 strand 卡（重用 renderStrandDetail）；空/不合法維持預設首屏。
+- **244 單元頁 app-bar home**：index.html→index_new.html、「學習基地」→「學習地圖」一致化（同 lane，不動其他島/15 手刻頁）。
+- **gate 全綠**：scan_simplified PASS、design_consistency DUPLICATE=0、a11y_gate PASS 0（iPad 橫基準）、unit_schema/claim_evidence/question_correctness CLEAN（244 units）、nav_gate PASS 0（島 8／鎖定 0／zh 0）。
+- **AC-VIZ-1 重簽**：index_new.html sha fb4e8d70→**d9fa7e59**；hub_render.mjs 綁新 sha 重 render 13 狀態、hub_signoff 四角色重簽、figure_signoff --verify PASS。
+- **四角色 render（逐張開 PNG）**：單元頁 addition 橫/直/手機＋presperfcont 直＋hub eng總覽/vocab單元牆——側欄三組齊全/當前高亮/siblings 篩對 strand、窄埠 collapse 生效、右側滿版右緣97%、無窄島/重疊/溢出、≥44px、無年段。
+- 既有觀察（非本次引入、列 backlog）：ko-fi「Buy me a coffee」FAB 窄埠會蓋住部分內容（全站既有元件）。
+- 研究包 nav_review/ 仍為 repo 未追蹤 scratch，待後續正式化或刪。
