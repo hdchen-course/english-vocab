@@ -603,3 +603,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 輸出 `authoring/roadmap_layout.json`：eng 島 336 節點、184 先備 DAG 邊、22 收合群組。
 - 內建 `--verify`（＝spec 的「連線端點檢查」gate）：endpoint 全解析、無 self-loop、Kahn 無環、群組 node_ids 皆真節點 → CLEAN。
 - 仍待：viz-QA（roadmap UI 實際 render 時）＋ progkey_migration.json（需調查舊站各頁 progKey）＋ roadmap_layout/其餘各檔 5-clean。
+
+## 2026-11-02 23:36 Phase 2 — progkey_migration.json 調查（下一步，未捏造）
+- 掃描：176 個舊 .html 頁使用 **22 個頁級 progKey**（english_concepts_v1 / english_reading_v1 / biology_concepts_v1 / chinese_concepts_v1 / math(2)_concepts_v1 / geometry / linear_algebra / number_theory / physics / chemistry / earth_science / everyday_science / social / economics / finance_mindset / digital_citizen / media_ai / body_safety / self_protection / emotion_skills / thinking_traps）。
+- **問題**：progKey 是**整頁共用**（concept_engine 每頁一鍵、含多 lesson），新制 learning_progress_v1 是**逐 unit_id**。`{old_progKey,new_unit_id,note}` 需「舊頁 lesson → 新 unit_id」對照才誠實，不能一鍵對一單元硬塞。
+- **下一步（慎重、不捏造）**：逐一讀舊 concept 頁的 `window.CONCEPT.lessons[]` id 結構，對映到新 *.units.json 的 unit_id，產出逐 lesson 的 {old_progKey, lesson_id?, new_unit_id, note}。英語島先做（english_concepts_v1 / english_reading_v1 → eng 單元）。舊 progKey additive 保留、永不刪（§6.3/§7.1），故風險受控但映射須正確。
+- **Phase 2 進度**：DAG 接線✅(c2b70082f)、roadmap_layout.json✅(4bb1b6fe2)、progkey_migration ☐(調查中)、各檔 5-clean ☐。
