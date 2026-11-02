@@ -35,3 +35,20 @@
 ## wave2 修正批次（2026-11-02 12:15）＋總結
 已修 3 處 minor：suffixverb claim c-sv-en、reasonclause P5 歧義句、musthaveto P2 誘答措辭。皆不改正解。gate 全綠。
 **wave2 總結：24 單元，0 blocker / 0 major。** 情態助動詞（含 modalperfect 推測）語意正確、唯一正解設計貫徹。累計 core 48/150 審畢、全程 0 blocker/0 major。
+
+## wave3 片1（不定詞/動名詞 8）— audit-w3s1：blocker0/major0/minor0，全 8 CLEAN
+審：bareinfinitive/gerundidiom/gerundroles/infadjadv/infnoun/infpurpose/meaningchange/subjectofinfinitive
+高風險 meaningchange（remember/stop/forget/try to-V vs V-ing）逐題語境鎖唯一正解、誘答第二解不成立；subjectofinfinitive for/of 對比理由不 overstate；bareinfinitive 感官動詞 -ing 誠實標註且選項未放故唯一。零簡體（now 為掃描假命中）。無需修。
+
+## wave3 片2（不定詞/名詞複數 8）— audit-w3s2：blocker0/major0/minor1；CLEAN 7
+審：verbinf/vgerund/whinf/irregularplural/nounmod/pieceof/regularplural/sameplural
+- [minor 已修] regularplural claim c-rpl-es＋teach | A | 「-ch 加 -es」寫成無條件規則，但發 /k/ 音的 -ch（stomach→stomachs）加 -s → 補「-ch 指 /tʃ/ 音（watch/church）；少數 /k/ 音如 stomach 加 -s」限定。本單元所有例字/題目皆 /tʃ/，無反例，正解不受影響。
+- 正面：sameplural 只把 fishs 列錯、未否定 fishes（多種魚合法）；c-rpl-fves 用 "Some nouns" 避 roofs/chiefs overstate；verbinf/vgerund 刻意避開 like/begin/start 兩可動詞。零簡體（now 假命中）。
+
+## wave3 片3（名詞子句/間接問句 8）— audit-w3s3：blocker0/major0/minor1；CLEAN 7
+審：uncountable/indirectwh/indirectyesno/nounclsubj/thatobject/whetherclause/pattern2/tenseagree
+- [minor 已修] tenseagree P4 | C overstate | 「went 會讓人以為地球不再繞太陽」誇大（普遍真理 backshift 為可選、過去式不傳達真理失效）→ 理由改「真理慣用現在式 goes、最清楚；此處選 goes」，去失真語意。正解 goes 保留。
+- 正面：whetherclause 的 whether/if 高階分野（主詞位/介系詞後/接 to/or not）精準；indirectwh/yesno 間接問句語序與 backshift 正確。零簡體零 PRC。
+## wave3 修正批次（2026-11-02 12:21）＋總結
+已修 2 處 minor（regularplural -ch /tʃ/ 限定、tenseagree P4 去 overstate）。片1 全 CLEAN。gate 全綠。
+**wave3 總結：24 單元，0 blocker / 0 major。** 高風險 meaningchange/複數分歧/間接問句全過。累計 core 72/150 審畢、全程 0 blocker/0 major。
