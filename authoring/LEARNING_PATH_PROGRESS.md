@@ -372,3 +372,12 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - **四角色 render（逐張開 PNG）**：單元頁 addition 橫/直/手機＋presperfcont 直＋hub eng總覽/vocab單元牆——側欄三組齊全/當前高亮/siblings 篩對 strand、窄埠 collapse 生效、右側滿版右緣97%、無窄島/重疊/溢出、≥44px、無年段。
 - 既有觀察（非本次引入、列 backlog）：ko-fi「Buy me a coffee」FAB 窄埠會蓋住部分內容（全站既有元件）。
 - 研究包 nav_review/ 仍為 repo 未追蹤 scratch，待後續正式化或刪。
+
+## batch25 合併（2026-11-02 11:08）＋ 開口說入口卡一致化（HD friction）
+- **batch25**（commit 650928a0f）：6 單元全 t_adv 高階＋36 edge-tts mp3。eng 179→185，units 244→250，nav_index byte 不變。
+  - 單元：future-progressive（未來進行式 will be+V-ing）、used-to-family（used to／be used to／get used to 辨析，刻意全肯定句避 didn't use(d) to 分歧）、inversion-omit-if（省略 if 倒裝 Were/Had/Should）、its-time（It's time+過去式）、inversion-negative（否定副詞句首倒裝 Never/Seldom/Hardly/Not only…）、subject-of-infinitive（for sb to／of sb to 意義主詞）。
+  - 4 gate 全綠（250 units）、scan_simplified PASS。對抗式 review 修 3 minor（fpg P2 are→were watching、fpg P5 時間片語、全站 AmE apologize 一致化），無 blocker、無第二正解。
+  - iPad render：futureprogressive 橫/直/手機＋inversionnegative 四角色 pass（側欄三組/當前高亮/siblings 篩對 verb·special、窄埠 pill collapse、右側滿版 97%）。前綴 fpg/uto/ioi/ith/ivn/soi 各 6 mp3、0 碰撞。
+- **開口說入口卡一致化**（commit a75331cac，HD friction 訊號）：hub 英語文總覽「開口說（情境溝通）」卡原用綠 lp-tchip area 膠囊＋長 lp-sdesc，與相鄰 strandCard（step badge＋名稱＋中性 chips＋藍色 N 個單元 →）不一致且破壞 grid。改成鏡射 strandCard：step №2＋名稱＋中性「聽·說·寫」chip＋藍色「N 個單元 →」uhint（us.length 動態＝250）。
+  - index_new.html sha d9fa7e59→3077661b；hub 13 狀態重 render＋四角色重簽（開 island:eng 總覽 PNG 複判開口說卡與鄰卡同設計語言、grid 對齊），figure_signoff PASS、a11y 0（含 index_new）、nav_gate 0。
+- 註：單元頁 Cand 1 左側欄導覽在**單元頁**可見；index_new.html 本身只多隱形 hash deep-link #<island>/<strand>（開 index_new.html#eng/vocab 會跳主題字彙單元牆）。
