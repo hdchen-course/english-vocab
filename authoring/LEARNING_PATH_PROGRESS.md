@@ -398,3 +398,10 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 **本 session 已做：** 停 batch26（worktree 丟棄未合併）＋停自動 loop；建 `tools/ia_consistency_gate.py`（紅隊 PASS、實站 FAIL=1，量化上述）＋`authoring/speaking_cats.json`（開口說成員 SSOT，暫存）。
 
 **待 HD 定方向（未動）：** (A) 移除開口說情境軸、回 strand 單一 home〔我的建議〕；(B) 保留情境為 cross-cut 軸但正式納 spec＋設 speaking_cats allow_cross_cut＋重分類；(C) 先全審 250 單元內容正確性；是否 revert 近期批次待定。**在 HD 指示前不改架構、不 revert、不續灌內容。**
+
+## 2026-11-02 英語島內容正確性＋spec 吻合全審：完成（250/250）
+- 150 core（wave1–6）+ 100 speaking（wave7–10）全審畢。全程 0 blocker / 0 major，累計修 18 minor。
+- 方法：每波 2–3 個獨立對抗式 reviewer 併跑，逐檔逐項核 6 維（事實/唯一解/誘答不過度宣稱/R14/情境吻合/零簡體）。
+- 完整逐 wave findings 與 minor 修正清單見 authoring/english_content_audit_findings.md。
+- 系統性 backlog（另案）：R14 teach-body zh/en 混排字串需引擎層拆 en + 可收合 zh（影響全 corpus）。
+- 最新 commit 已 push origin/main。
