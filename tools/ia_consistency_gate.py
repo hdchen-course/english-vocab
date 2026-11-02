@@ -1,101 +1,102 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""ia_consistency_gate.py — 資訊架構(IA)一致性 gate（補上既有 33 個 gate 的盲點）。
+"""ia_consistency_gate.py — 資訊架構(IA)一致性 gate（補既有 gate 的盲點）。
 
 既有 gate 檢查 schema/claim/答案/簡體/a11y/nav不變量/覆蓋數，但**沒有任何一個**檢查
-「同一個單元是否被多個 learner 可見區域重複呈現」——這正是 2026-11-02 HD 抓到的缺陷
-（開口說情境 ＋ 文法 strand 牆 同時列同一批單元）。本 gate 把它變成可量測、fail-closed。
+「同一單元是否被多個 learner 可見區域重複呈現」。2026-11-02 HD 抓到：開口說情境單元同時被
+上方 spec strand 牆重播。本 gate 把「分軌不重複」變成可量測、fail-closed。
 
-spec 依據（LEARNING_PATH_REBUILD_SPEC.md §6.1/§6.2）：
-  nav 僅一條正規軸＝島→subject→strand→strand×tier 頁→unit；**每個單元只有一個 home 頁**
-  （「某知識點的 home 頁可機械推導」）。spec 未定義「開口說/情境」軸——它來自已刪除、
-  非 normative 的 english_island_blueprint.md。故任何單元同時出現在「strand 牆」與
-  「開口說情境」即為 IA 重複（違反單一 home 模型）。
+定案模型（HD 2026-11-02）：
+  - **core track**＝spec §6.1 strand 軸教材；顯示於上方編號 strand 分區牆（每單元單一 home）。
+  - **speaking track**＝開口說（情境會話，舊版 blueprint 移植、spec 外補充）；**只**顯示於
+    「練習與應用」的開口說頁，**不得**出現在任何 strand 牆。成員 SSOT＝authoring/speaking_cats.json。
+  - units_index 的 `track` 由 gen_derived 依 speaking_cats 成員機械標定；hub `unitsOf` 以
+    `track!=='speaking'` 過濾 strand 牆 → 零重複。
 
-斷言（對英語島）：
-  (1) 開口說成員（authoring/speaking_cats.json）若存在，其每個 page 必須是真實 eng 單元。
-  (2) 重複呈現：開口說成員 ∩（有文法 strand 的單元）＝被雙重呈現的單元；數量須為 0
-      （除非 speaking_cats.json 明示 `allow_cross_cut:true`，代表 HD 已接受情境為 cross-cut 軸）。
-  (3) 開口說頁不得有「其他/catch-all」把非成員 eng 單元倒進來：報告 eng 單元中「不在開口說成員」
-      的數量（供人眼確認那些是純文法單元、不該出現在開口說）。
-
+斷言：
+  (1) 每個 speaking_cats 成員都是真實 eng 單元。
+  (2) track 標定正確：成員↔track=="speaking"、非成員 eng↔track=="core"（gen_derived 需先 regen）。
+  (3) hub 接線：index_new.html 的 unitsOf 必含 `track!=='speaking'` 過濾（防有人靜默移除→strand 牆又重播）。
 介面：--verify / --selftest。EXIT：0=過；1=違規；2=selftest 失敗；99=讀不到資料（fail-closed）。
-本 gate 為「資料層」IA 檢查；render 層（實站是否真的雙列）另由 nav render 驗證。
 """
-import argparse, json, os, sys
+import argparse, json, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 A = os.path.join(ROOT, "authoring")
 UNITS = os.path.join(A, "units_index.json")
 SPEAK = os.path.join(A, "speaking_cats.json")
+HUB = os.path.join(ROOT, "index_new.html")
 
 
-def load():
-    units = json.loads(open(UNITS, encoding="utf-8").read()).get("units", [])
-    speak = None
-    if os.path.exists(SPEAK):
-        speak = json.loads(open(SPEAK, encoding="utf-8").read())
-    return units, speak
-
-
-def analyze(units, speak):
+def analyze(units, speak, hub_src):
     probs, info = [], {}
     eng = [u for u in units if u.get("subject") == "eng"]
     by_page = {u.get("page"): u for u in eng}
     info["eng_total"] = len(eng)
     if not speak:
         info["speaking_defined"] = False
-        return probs, info  # 無開口說定義＝無法判雙列；留給人眼/其他
-    allow_cross = bool(speak.get("allow_cross_cut"))
+        probs.append("authoring/speaking_cats.json 不存在＝開口說成員未定義（fail-closed）")
+        return probs, info
     members = []
     for c in speak.get("cats", []):
         members += c.get("pages", [])
-    members = list(dict.fromkeys(members))  # 去重保序
+    members = list(dict.fromkeys(members))
+    mset = set(members)
     info["speaking_defined"] = True
     info["speaking_members"] = len(members)
-    info["allow_cross_cut"] = allow_cross
 
     # (1) 成員須為真實 eng 單元
-    ghost = [p for p in members if p not in by_page]
-    for p in sorted(ghost):
+    for p in sorted(mset - set(by_page)):
         probs.append(f"開口說成員非真實 eng 單元：{p}")
 
-    # (2) 雙重呈現：開口說成員同時掛了文法 strand（＝會出現在該 strand 牆）
-    dual = [p for p in members if p in by_page and by_page[p].get("strand")]
-    info["dual_presented"] = len(dual)
-    info["dual_examples"] = [(p, by_page[p].get("strand"), by_page[p].get("title_zh")) for p in dual[:10]]
-    if dual and not allow_cross:
-        probs.append(
-            f"IA 重複：{len(dual)} 個單元同時出現在『開口說情境』與其文法 strand 牆"
-            f"（違反 spec §6.1 單一 home；若情境確定為 cross-cut 軸，須在 speaking_cats.json "
-            f"設 allow_cross_cut:true 並於 spec 正式定義）")
+    # (2) track 標定正確（需 gen_derived 已 regen）
+    missing_track = [u.get("page") for u in eng if "track" not in u]
+    if missing_track:
+        probs.append(f"units_index {len(missing_track)} 個 eng 單元缺 track 欄（需跑 gen_derived regen）："
+                     f"{missing_track[:3]}")
+    bad_member = [p for p in members if p in by_page and by_page[p].get("track") != "speaking"]
+    for p in sorted(bad_member):
+        probs.append(f"開口說成員 track≠speaking：{p}（track={by_page[p].get('track')}）")
+    bad_core = [u.get("page") for u in eng if u.get("page") not in mset and u.get("track") == "speaking"]
+    for p in sorted(bad_core):
+        probs.append(f"非開口說成員卻標 track=speaking：{p}")
+    info["speaking_track"] = sum(1 for u in eng if u.get("track") == "speaking")
+    info["core_track"] = sum(1 for u in eng if u.get("track") == "core")
 
-    # (3) 開口說頁的 catch-all 洩漏：非成員 eng 單元數（這些不該出現在開口說）
-    non_members = [u for u in eng if u.get("page") not in set(members)]
-    info["non_member_eng"] = len(non_members)
-    info["non_member_examples"] = [(u.get("page"), u.get("title_zh")) for u in non_members[:10]]
+    # strand 牆組成（core per strand；僅報告）
+    from collections import Counter
+    wall = Counter(u.get("strand") for u in eng if u.get("track") == "core")
+    info["core_by_strand"] = sorted(wall.items(), key=lambda kv: -kv[1])
+
+    # (3) hub 接線：unitsOf 必須過濾 speaking
+    if hub_src is not None:
+        m = re.search(r"unitsOf\s*=\s*\(strand\)\s*=>\s*us\.filter\([^)]*\)", hub_src)
+        wired = bool(m) and "track!=='speaking'" in m.group(0).replace(" ", "")
+        if not wired:
+            probs.append("index_new.html unitsOf 未過濾 track=='speaking'（strand 牆會重播開口說教材）")
+        info["hub_wired"] = wired
     return probs, info
 
 
 def _selftest():
-    units = [
-        {"subject": "eng", "page": "a.html", "strand": "vocab", "title_zh": "A"},
-        {"subject": "eng", "page": "b.html", "strand": "verb", "title_zh": "B"},
-        {"subject": "eng", "page": "g.html", "strand": "subj", "title_zh": "G"},
+    base = [
+        {"subject": "eng", "page": "g.html", "strand": "vocab", "track": "speaking"},
+        {"subject": "eng", "page": "v.html", "strand": "vocab", "track": "core"},
     ]
+    speak = {"cats": [{"pages": ["g.html"]}]}
+    good_hub = "const unitsOf=(strand)=>us.filter(u=>u.strand===strand && u.track!=='speaking').slice()"
+    bad_hub = "const unitsOf=(strand)=>us.filter(u=>u.strand===strand).slice()"
     res = []
-    # 好例：開口說成員都沒掛文法 strand → 這裡 a/b 掛了 → 應 DENY
-    speak = {"cats": [{"pages": ["a.html", "b.html"]}]}
-    p, _ = analyze(units, speak)
-    res.append(("成員同時掛 strand（雙列）→ DENY", any("IA 重複" in x for x in p)))
-    # allow_cross_cut 放行
-    speak2 = {"allow_cross_cut": True, "cats": [{"pages": ["a.html", "b.html"]}]}
-    p2, _ = analyze(units, speak2)
-    res.append(("allow_cross_cut:true → ALLOW", not any("IA 重複" in x for x in p2)))
-    # 幽靈成員
-    speak3 = {"cats": [{"pages": ["zzz.html"]}]}
-    p3, _ = analyze(units, speak3)
-    res.append(("成員非真實單元 → DENY", any("非真實" in x for x in p3)))
+    p, _ = analyze(base, speak, good_hub)
+    res.append(("正確分軌＋hub 已接線 → ALLOW", p == []))
+    p, _ = analyze(base, speak, bad_hub)
+    res.append(("hub 未過濾 speaking → DENY", any("未過濾" in x for x in p)))
+    bad = [{"subject": "eng", "page": "g.html", "strand": "vocab", "track": "core"},
+           {"subject": "eng", "page": "v.html", "strand": "vocab", "track": "core"}]
+    p, _ = analyze(bad, speak, good_hub)
+    res.append(("成員 track≠speaking → DENY", any("track≠speaking" in x for x in p)))
+    p, _ = analyze(base, {"cats": [{"pages": ["zzz.html"]}]}, good_hub)
+    res.append(("成員非真實單元 → DENY", any("非真實" in x for x in p)))
     ok = True
     for m, r in res:
         print(f"  [{'OK' if r else 'BAD'}] {m}"); ok = ok and r
@@ -112,21 +113,17 @@ def main():
         ok = _selftest(); print("RESULT:", "PASS ✅" if ok else "FAIL ❌"); sys.exit(0 if ok else 2)
     if args.verify:
         try:
-            units, speak = load()
+            units = json.loads(open(UNITS, encoding="utf-8").read()).get("units", [])
+            speak = json.loads(open(SPEAK, encoding="utf-8").read()) if os.path.exists(SPEAK) else None
+            hub_src = open(HUB, encoding="utf-8").read() if os.path.exists(HUB) else None
         except Exception as e:
             print(f"  [ia] 讀不到資料（fail-closed）：{e}"); sys.exit(99)
-        probs, info = analyze(units, speak)
-        print("=== ia_consistency_gate --verify（英語島 IA 一致性）===")
-        print(f"  eng 單元總數：{info.get('eng_total')}")
-        if info.get("speaking_defined"):
-            print(f"  開口說成員（speaking_cats.json）：{info['speaking_members']}"
-                  f"；allow_cross_cut={info['allow_cross_cut']}")
-            print(f"  ★ 雙重呈現（開口說＋文法 strand 牆同列同一單元）：{info['dual_presented']}")
-            for p, s, t in info.get("dual_examples", []):
-                print(f"      - {p}  strand={s}  {t}")
-            print(f"  非開口說成員的 eng 單元（不該出現在開口說；多為文法單元）：{info['non_member_eng']}")
-        else:
-            print("  （authoring/speaking_cats.json 不存在＝開口說成員未定義，無法判雙列）")
+        probs, info = analyze(units, speak, hub_src)
+        print("=== ia_consistency_gate --verify（英語島 IA 分軌一致性）===")
+        print(f"  eng 單元：{info.get('eng_total')}；開口說成員：{info.get('speaking_members')}")
+        print(f"  track：speaking={info.get('speaking_track')}（開口說頁）／core={info.get('core_track')}（strand 牆）")
+        print(f"  hub unitsOf 已過濾 speaking：{info.get('hub_wired')}")
+        print(f"  strand 牆(core)組成：{info.get('core_by_strand')}")
         for p in probs:
             print(f"  [ia] {p}")
         print(f"RESULT(IA): {'PASS ✅' if not probs else 'FAIL ❌'}（違規 {len(probs)}）")

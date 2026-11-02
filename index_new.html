@@ -233,7 +233,9 @@ function renderPanel(isl){
   const us=(UNITS[isl.island]||[]);
   // 該分區（strand）對應的已建單元，依級別→unit_id 穩定排序（§6.7 units_index 彙總）
   const tierOf=(u)=>(u.unit_id||'').split('.')[1];
-  const unitsOf=(strand)=>us.filter(u=>u.strand===strand).slice()
+  // strand 牆只顯示 core track；speaking track（開口說情境單元）只在「練習與應用」的開口說頁顯示，
+  // 不在 spec strand 分區重播（HD 2026-11-02：strand 牆不得重複開口說教材）。
+  const unitsOf=(strand)=>us.filter(u=>u.strand===strand && u.track!=='speaking').slice()
     .sort((a,b)=>((TIER_ORDER[tierOf(a)]??9)-(TIER_ORDER[tierOf(b)]??9))||(a.unit_id||'').localeCompare(b.unit_id||''));
   // 單元卡＝<a href=該單元頁>：級別徽章（初階/中階/高階/延伸，由 unit_id 第 2 段推；R11 不顯年段）
   // ＋ title_zh ＋ can_do（截斷 2 行）＋ 預估分鐘。深連進單元頁。

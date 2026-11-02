@@ -180,6 +180,14 @@ STRAND_ZH = {
 def main():
     items = json.loads(open(MANIFEST, encoding="utf-8").read())["items"]
 
+    # 開口說（情境會話）成員頁＝speaking track（spec 外補充；hub strand 牆排除、只在開口說顯示）。
+    # 來源 SSOT＝authoring/speaking_cats.json。units_index 以此標 track，供 hub 分軌＋ia gate 強制。
+    speaking_pages = set()
+    _sc = os.path.join(AUTH, "speaking_cats.json")
+    if os.path.exists(_sc):
+        for _c in json.loads(open(_sc, encoding="utf-8").read()).get("cats", []):
+            speaking_pages.update(_c.get("pages", []))
+
     # subject_labels
     subject_labels = {d: {"title_zh": t, "island": d, "order": o} for d, (t, o) in SUBJECTS.items()}
     json.dump(subject_labels, open(os.path.join(AUTH, "subject_labels.json"), "w"),
@@ -313,6 +321,7 @@ def main():
             units.append({"unit_id": u.get("unit_id"), "page": page,
                           "title_zh": u.get("title_zh", u.get("unit_id")),
                           "subject": u.get("subject"), "strand": u.get("strand"),
+                          "track": "speaking" if page in speaking_pages else "core",
                           "can_do": u.get("can_do", ""),
                           "situation_group": u.get("situation_group", ""),
                           "est_minutes": u.get("est_minutes"),
