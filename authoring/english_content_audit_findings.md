@@ -119,3 +119,15 @@ reciprocalpron each other/one another 正確處理為現代可互通、不列唯
   實際 minor 修正清單見上方各 wave 段落（wave1–10）。
 里程碑：core 150/150（wave1–6）+ speaking 100/100（wave7–10）＝ 250/250 全審畢，內容層面收斂。
 備註（非本審查範圍、系統性 backlog，另案處理）：R14 teach-body 目前為單一 zh/en 混排字串，無法在 learner 端隱藏中文，需引擎層拆成 en + 可收合 zh（影響全 corpus，延後）。
+
+## ================= R14 teach 拆兩塊（英文為教學媒介＋收合中文對照）：完成 =================
+日期：2026-11-02。動機：HD 指出 teach 內文中英混排、無法在 learner 端隱藏中文（違 R14「英文學英文、中文對照預設收合」）。
+做法：引擎 unit.js 改渲染英文 body + 預設收合的 zh_hint（🔊 與「中文對照」toggle 併一列、省行；JS toggle）；CSS 收合 pill 44px。
+內容遷移（250 檔、1329 teach 段）：
+ - 686 example 段：機械拆分（英文句→body、中文→zh_hint，以「（」為界、保留多句英文），0 殘留 CJK。
+ - 643 text 說明段：13 波團隊 agent 改寫為英文教學媒介 body + 繁中 zh_hint（core 用簡單英文後設語言、國小口說用情境＋例子帶語感），逐波 gate。
+驗證：新增 tools/r14_body_gate.py fail-closed gate（紅隊 selftest：CJK body / 缺 zh_hint 必擋）；全 250 檔 CLEAN（body 零 CJK、1329 段皆有 zh_hint）。
+英文品質獨立對抗 review（5 波 R1–R5，涵蓋全 249 單元新英文 body）：0 blocker / 0 major，修 21 minor（自然度/en-US 拼字/去歧義/通則限定）。
+gate 全綠：r14_body_gate / unit_schema / claim_evidence / question_correctness / scan_simplified / nav_gate(AC-NAV R14 default-collapsed)。
+iPad render 抽查（跨 tier：relwhat/tenseagree/greetings/voicebyagent/letsgo/shoppingmoney）：預設收合、點開顯中文、2 行精簡版面、house 設計一致。
+備註：can_do 橫幅仍中文（另一欄位，非 teach，本次未納入；若要英化可另案）。

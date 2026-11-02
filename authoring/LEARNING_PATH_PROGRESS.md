@@ -405,3 +405,10 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - 完整逐 wave findings 與 minor 修正清單見 authoring/english_content_audit_findings.md。
 - 系統性 backlog（另案）：R14 teach-body zh/en 混排字串需引擎層拆 en + 可收合 zh（影響全 corpus）。
 - 最新 commit 已 push origin/main。
+
+## 2026-11-02 R14 teach 拆兩塊：完成
+- 引擎 unit.js 渲染英文 body + 預設收合 zh_hint 中文對照（🔊＋toggle 併列、2 行精簡版面）；CSS pill 44px。
+- 250 檔、1329 teach 段全遷移（686 example 機械拆、643 text 團隊改寫英文媒介），body 零 CJK、每段有 zh_hint。
+- 新 fail-closed gate：tools/r14_body_gate.py（紅隊過）。英文品質 5 波獨立對抗 review 全 249 單元：0 blocker/0 major、修 21 minor。
+- 全 gate 綠（r14_body/schema/claim/question/簡體/nav AC-NAV 收合）；iPad render 跨 tier 抽查通過。全部 commit＋push。
+- 待辦（另案）：can_do 橫幅英化；音檔存在/可播 gate；iPad 四角色完整簽核。
