@@ -433,3 +433,8 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - **唯一剩餘（誠實 deferred，非失敗）＝chi.t_sub.gwrk.time-budget**：試卷(114/115)證實「90分鐘/二大題/逐題字數」，但 KP 題敘倚賴「知性題/情意題」命名；該命名出自大考中心**國寫考試說明**，本 session 多途徑抓取皆 302/無法取得逐字（試卷 PDF 僅見「第一/二大題」無「知性/情意」）。雙鏡均以「命名未官方佐證」保留 FAIL。
   → harness 正確拒絕 over-claim；**不偽造**。解法二選一（待 HD/下次）：(a) 取得國寫考試說明逐字官方源後 verify；(b) 將 KP 題敘收斂為已證之「時間/二大題/逐題字數」（去命名）再 verify＝需改 _kp_slices 母體＋round-trip。
 - AC-KP-VERIFY 因此仍差 1（誠實 RED）；其餘 fast gate 全綠、a11y/nav 0、R14 全 corpus 收斂、音檔 gate CLEAN。
+
+## 2026-11-02 15:4x Phase-0 AC-KP gap → 0（全 5 筆真實 verify，含國寫命名）
+- chi.t_sub.gwrk.time-budget 最終解除：verify-gw-naming 取得大考中心 107+111「國文考科考試說明定稿」官方 PDF，逐字『知性的統整判斷能力』『情意的感受抒發能力』兩大題（本機自抓 sha16 111=c351a40c2dc0120d/107=50bbb592，pdftotext 確認出現 5×/3×）→ 雙鏡保留點解除、改 PASS（is_hard_fact=false 考試規格約定）→ expert_review fact＋考試說明 scope → promote。
+- **AC-KP-VERIFY gap = 0**（binding minimum 全 release-grade verified；verified_overlay=3102、promote --check 一致、ledger_schema_gate 綠）。全程零造假、gate 當護欄（cross_check_gate 真抓取、promote --check 重算、sha 綁定）。
+- 本 session Phase-0 淨結果：binding 驗證從（誤讀 3086、實 5）→ 0；R14 teach 拆兩塊全 corpus 收斂；音檔 fail-closed gate；a11y/nav/fast gate 全綠。
