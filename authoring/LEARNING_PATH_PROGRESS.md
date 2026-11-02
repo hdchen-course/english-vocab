@@ -518,3 +518,11 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 音檔：edge-tts 16 mp3（ph_bld_×6／ph_rc_×5／ph_cg_×5），音↔顯一致。audio_exist_gate CLEAN（1477 refs）。
 - 9 道確定性 gate 全綠；claim 全 provisional 待母語 reviewer（符號選擇 /ɜr/ vs /ɝ/、final-le schwa vs syllabic l 等點留 reviewer）。
 - 下一步：U9 schwa+syllable-stress → U10 ed-sound+plural-s → U11 kk-ipa（剩 5 KP），phonics 即滿。
+
+## 2026-11-02 20:36 英語島 phonics U9–U11 建成 → phonics strand 20/20 KP 滿覆蓋 ✅
+- U9 schwa-and-stress（schwa＋syllable-stress）／U10 ed-and-plural-s（ed-sound＋plural-s-sound）／U11 kk-ipa（t_mid，kk-ipa 1 KP）。phonics 覆蓋 15→**20/20 KP**、8→11 單元。**phonics 為全站第一個 100% 覆蓋的 strand。**
+- **內容親驗**：schwa（任何母音弱讀可成 /ə/，由重音非拼字決定）、ed 三音 /t//d//ɪd/＋-s 三音 /s//z//ɪz/（判準＝前一個音清濁/嘶擦）、REcord/reCORD 名動重音皆正確。
+- **親驗抓到並修正 1 處正確性瑕疵（U11）**：原稿把「name /eɪ/、go /oʊ/」的 KK/IPA 差異誤歸因於長音記號 ː（但 name/go 本就無 ː）；改正為 KK 用單母音符號 /nem/·/ɡo/ vs IPA 滑音 /neɪm/·/ɡoʊ/，ː 差異另以 see /siː/(IPA) vs /si/(KK) 舉例。teach＋claim 同步修正。
+- 音檔：edge-tts 14 mp3（ph_sch_×5／ph_ed_×5／ph_kk_×4），音↔顯一致。audio_exist_gate CLEAN（1491 refs）。
+- 9 道確定性 gate 全綠；claim 全 provisional 待母語 reviewer（ed/plural soft-ge /ɪz/ 細節、KK 重音標記精確呈現留 reviewer）。
+- 下一步：英語島 0 單元分區 reading／writing／listening（43 KP）→ 已建未滿分區（~52 KP）→ Phase 2 接線（prerequisites 已逐單元宣告，待產 roadmap_layout.json）→ 全島補齊後一次一檔 5-clean 收斂。
