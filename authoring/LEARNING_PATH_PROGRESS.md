@@ -493,3 +493,14 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - **單元拆解（20 KP→11 單元，教學序）**：U1 字母認讀書寫(letter-recognition/letter-writing/alphabet-order/name-vs-sound)｜U2 單子音+短母音CVC(single-consonants/short-vowels/decoding)｜U3 聽音拼字encoding｜U4 silent-e｜U5 vowel-teams｜U6 blends+digraphs(consonant-blends/consonant-digraphs)｜U7 r-controlled｜U8 hard-soft-cg+final-le｜U9 schwa+syllable-stress｜U10 ed-sound+plural-s-sound｜U11 kk-ipa。
 - 每單元走建置 SOP（§6.2.2 schema＋§6.6 rubric＋英語島治理：語感/聽寫/跟讀、R14 英文媒介中文收合、R15 術語附英語、國小情境、共用引擎 unit.{css,js}）→ 全確定性 gate → edge-tts 真音檔 → content_audit 一次一 round 到 5-clean → 視覺簽核。
 - 流程：委派 English-phonics 作者 agent 起草 units.json、我把關 gate（資源限制：一次一 agent/一 round，不並發）。
+
+---
+
+## 2026-11-02 20:01 英語島補齊 — phonics U1+U2 建成（Phase 3「先補齊」）
+- **english_phonics.units.json**：U1 `eng.t_base.phonics.letters-basics`（4 KP：letter-recognition/-writing/name-vs-sound/alphabet-order）＋U2 `eng.t_base.phonics.cvc-blending`（3 KP：single-consonants/short-vowels/decoding，prereq＝U1）。phonics 覆蓋 0→7/20 KP、0→2 單元。
+- **內容驗證（我親自複核，非信 subagent）**：短母音 /ɑ/ hot（美式/KK，claim 已透明標 US /ɑ/・UK /ɒ/）、mop /ɑ/、字母名 m=/ɛm/・a=/eɪ/・b=/biː/ 皆正確；筆順「usually top to bottom」保守 hedge、status=provisional 待母語 reviewer。rubric⑦ 真教真考 U1 4/4、U2 3/3 齊。
+- **音檔**：edge-tts（en-US-AnaNeural）實際生成 10 mp3（ph_letters_*×5、ph_cvc_*×5）。因 edge-tts 無法乾淨唸孤立音素，3 條 IPA-first audio 行（U1 ex2/sh2、U2 ex1）改為「字母名＋錨定整字」使音檔與顯示一致、誠實（IPA 保留在相鄰非音檔 teach 區塊）。audio_exist_gate CLEAN（1446 refs 全存在可播）。
+- **確定性 gate（親跑）**：unit_schema / r14_body / scan_simplified / claim_evidence / question_correctness / audio_exist / no_grade_label / ia_consistency / unit_acceptance_lint --verify 全 9 綠。
+- **gate 修補 H-6**：unit_acceptance_lint 把 prerequisites（unit_id）誤當 KP id 比對 manifest（潛伏 bug，U2 首個宣告 prereq 觸發）→修 `_collect_kp`+加 `prereq:unknown` 獨立檢查+紅隊 3 例。見 GATES_HOLES_LEDGER H-6。
+- **尚未**：content_audit 5-clean（依計畫 §7 待全島覆蓋+接線後才一次一檔收斂）；視覺 iPad 簽核；U3–U11 phonics 其餘 13 KP。
+- **下一步**：續建 phonics U3–U11（consonant-blends/-digraphs/silent-e/vowel-teams/r-controlled/schwa/syllable-stress/encoding/… 等 13 KP），再 reading/writing/listening（0 單元分區）。

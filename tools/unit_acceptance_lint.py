@@ -91,11 +91,13 @@ def iter_units(data):
 
 # ────────────────────────── 單元層硬檢查 ──────────────────────────
 def _collect_kp(u):
-    """回傳 (宣告集, teach 聯集, practice 聯集, 全部引用的 kp id 集合)。"""
+    """回傳 (宣告集, teach 聯集, practice 聯集, 全部引用的 kp id 集合)。
+    注意：`prerequisites[]` 是**單元 id**（§6.2.2 的 unit-DAG 邊），不是 KP id，故
+    **不**併入 allrefs（allrefs 僅供 ⑦ 的「KP 必須存在於 manifest」檢查用）。prereq
+    的解析另由 check_unit 對「全站 unit_id 集合」驗證（見 prereq:unknown）。"""
     decl = [k for k in (u.get("knowledge_point_ids") or []) if isinstance(k, str)]
     teach_kp, prac_kp, allrefs = set(), set(), set()
     allrefs.update(decl)
-    allrefs.update(k for k in (u.get("prerequisites") or []) if isinstance(k, str))
     for t in (u.get("teach") or []):
         if isinstance(t, dict):
             for k in (t.get("kp_ids") or []):
@@ -165,9 +167,10 @@ def _has_code_bundle(u):
     return False
 
 
-def check_unit(u, manifest_ids, where):
+def check_unit(u, manifest_ids, where, unit_ids=None):
     """對單一 unit 跑所有已實作硬檢查。回傳 (failed_checks[], notes{})。
-    failed_checks：違反的 rubric 代號清單（去重）。notes：④/⑩ 的統計與 deviation 旁註。"""
+    failed_checks：違反的 rubric 代號清單（去重）。notes：④/⑩ 的統計與 deviation 旁註。
+    unit_ids：全站 unit_id 集合（供 prereq 解析檢查）；None＝跳過該檢查（向後相容）。"""
     failed = set()
     notes = {"num_symbolic": 0, "code_declared": False, "has_deviation": False}
 
@@ -210,6 +213,12 @@ def check_unit(u, manifest_ids, where):
         missing_manifest = {k for k in allrefs if k not in manifest_ids}
         if missing_manifest:
             failed.add("7:manifest")  # 懸空 kp id
+
+    # ── prereq 解析：每個 prerequisites[] 必須是已知 unit_id（非 KP id）──
+    if unit_ids is not None:
+        prereqs = [p for p in (u.get("prerequisites") or []) if isinstance(p, str)]
+        if any(p not in unit_ids for p in prereqs):
+            failed.add("prereq:unknown")  # 懸空 prereq 單元 id
 
     # ── ⑧ est_minutes ≤ 12 ──
     em = u.get("est_minutes")
@@ -309,10 +318,26 @@ def _selftest():
     cases.append(("⑩ 宣告碼且有 bundle（不應擋）",
                   lambda u: u.__setitem__("has_code", True) or u.__setitem__("code_download", "dl/x.zip"),
                   False, None))
+    # ── prereq 解析紅隊（prerequisites 是 unit_id，非 KP id）──
+    # 回歸守門：prereq 是「合法 unit_id 但不在 KP manifest」→ 必須 PASS（舊 bug 會誤報 7:manifest）。
+    PK = {"eng.t_base.phonics.letters-basics"}
+    cases.append(("prereq 合法單元（不在 KP manifest，不應擋）",
+                  lambda u: u.__setitem__("prerequisites", ["eng.t_base.phonics.letters-basics"]),
+                  False, None, PK))
+    # prereq 指向不存在的單元 → 應擋 prereq:unknown。
+    cases.append(("prereq 懸空單元（應擋）",
+                  lambda u: u.__setitem__("prerequisites", ["eng.nonexistent.unit"]),
+                  True, "prereq:unknown", PK))
+    # 無 unit_ids（向後相容）＋懸空 prereq → 不檢查、不應擋。
+    cases.append(("prereq 懸空但未提供 unit_ids（向後相容，不應擋）",
+                  lambda u: u.__setitem__("prerequisites", ["eng.nonexistent.unit"]),
+                  False, None, None))
 
     ok = True
-    for label, mut, expect_fail, which in cases:
-        failed, _notes = check_unit(mk(mut), mids, "selftest")
+    for case in cases:
+        label, mut, expect_fail, which = case[0], case[1], case[2], case[3]
+        uids = case[4] if len(case) > 4 else None
+        failed, _notes = check_unit(mk(mut), mids, "selftest", uids)
         did_fail = len(failed) > 0
         good = (did_fail == expect_fail)
         if which and expect_fail:
@@ -540,6 +565,21 @@ def main():
     golden_dir = os.path.join(root, "authoring", "golden")
     ac_unit3_ready = os.path.exists(dev_cats) and os.path.isdir(golden_dir)
 
+    # 預掃全站 unit_id（供 prereq 解析；永遠掃全部檔，即使 --file 只驗一檔，
+    # 才能解析跨檔 prereq）。
+    all_unit_ids = set()
+    for af in sorted(glob.glob(os.path.join(root, "**", "*.units.json"), recursive=True)):
+        if os.path.join("authoring", "golden") in af:
+            continue
+        try:
+            adata = json.loads(open(af, encoding="utf-8").read())
+        except Exception:  # noqa: BLE001
+            continue
+        for au in iter_units(adata):
+            uid = au.get("unit_id")
+            if isinstance(uid, str):
+                all_unit_ids.add(uid)
+
     total_units = 0
     failing = []           # (unit_id, file, [checks])
     num_symbolic = 0
@@ -555,7 +595,7 @@ def main():
             continue
         for u in iter_units(data):
             total_units += 1
-            checks, notes = check_unit(u, manifest_ids, os.path.basename(f))
+            checks, notes = check_unit(u, manifest_ids, os.path.basename(f), all_unit_ids)
             num_symbolic += notes["num_symbolic"]
             if notes["code_declared"]:
                 code_units += 1

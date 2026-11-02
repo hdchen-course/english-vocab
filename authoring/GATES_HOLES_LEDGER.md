@@ -49,3 +49,9 @@
 - 修補：cross_check_gate.fetch() 偵測 PDF（magic %PDF- / Content-Type / .pdf 副檔名）→ 以 pdftotext 抽文字回傳，再逐字比對 quote。能力增強、quote+≥2publisher 邏輯不變。
 - 紅隊：--selftest 原 8 例全 PASS（沒改壞）；live：gate.fetch() 對官方 NAER 領綱 PDF 抽 46581 字、「認識常用國字至少 2,700 字」「使用 2,200 字」皆命中 True。
 - 影響：HD 提供的官方 PDF（NAER 領綱、ceec 國寫考試說明、中研院台史所/ntl 學術 PDF）現可當 gate 真抓源。
+
+## 2026-11-02 H-6：unit_acceptance_lint 把 prerequisites[]（unit_id）當 KP id 比對 manifest → 誤報 7:manifest
+- 發現：`_collect_kp` 把 `prerequisites[]` 併入 `allrefs`，rubric⑦ 再拿 allrefs 比對 KP 母體。但 `prerequisites` 依 spec §6.2.2 是**單元 id**（unit-DAG 邊），非 KP id。既有 250 單元全 0 prerequisites 故從未觸發；英語島補齊第一個宣告 prereq 的單元（`eng.t_base.phonics.cvc-blending` prereq＝`letters-basics`）一宣告就被誤判懸空 KP → false FAIL。典型「潛伏路徑第一次被走到才爆」。
+- 修補：(a) prereq 移出 allrefs（allrefs 僅供「KP 必須在 manifest」）；(b) 另加獨立檢查 `prereq:unknown`＝prereq 必須解析到**全站 unit_id 集合**（--verify 預掃全部 *.units.json，即使 --file 單檔亦掃全站以解析跨檔 prereq）；(c) check_unit 新增 `unit_ids=None` 參數，None＝跳過（向後相容，_selftest/golden 路徑不受影響）。
+- 紅隊（--selftest）：原 9 例全綠 ＋ 新 3 例：①prereq 是合法 unit_id 但**不在 KP manifest**→PASS（正中舊 bug 的回歸守門）；②prereq 指向不存在單元→DENY `prereq:unknown`；③未提供 unit_ids（向後相容）＋懸空 prereq→不檢查、PASS。全站 --verify 252 單元 RESULT PASS。
+- 影響：Phase 2 接線（250 單元補宣告 prerequisites）不會再被此 gate 誤擋；prereq 懸空仍被真正擋下。
