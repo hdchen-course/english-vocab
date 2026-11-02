@@ -447,3 +447,12 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
   - unit.css 9 處硬編色→app.css 新 --u-* token（--u-on-english-solid/-tint-correct/-tint-wrong/-canvas-paper/-canvas-rule/-card-shadow；值=原字面值、主題中性、**零視覺變更**，250 單元頁渲染不變、無需重簽）。unit.css 現 lint CLEAN。
 - **待續（R-STYLE-5 remediation，需視覺簽核流程）**：hub index_new.html(9) + english_advanced(1)/idioms(3)/sense(1)/speaking(4) 共 **18 處 inline 硬編色**。figure_signoff 綁 index_new.html 原始碼 sha，故 hub 任何改動（即使零視覺變更）會使 AC-VIZ-1 四角色簽核作廢→必須重 render(iPad Air 13 十三狀態)+四角色重簽+更新 manifest/signoff sha。此 18 處屬下一項 tracked 任務，不可靜默 solo 編輯。
   - 剩餘多為 box-shadow 的 rgba(51,49,46,.XX) 品牌墨陰影（.05/.09/.1/.12 多階）＋color-mix 的 #fff＋idioms 的 #2e7d32/#c62828。remediation 時決定：零視覺變更（定 --u-* 等值 token）或 house 統一（--shadow-sm/-lg，屬視覺變更）——二者皆須走 figure_signoff 重簽。
+
+## 2026-11-02 18:3x–18:5x AC-STYLE gate-bootstrap 完成（Phase 0.5 交付）
+- **AC-STYLE-2 全交付**：tools/style_token_lint.py（紅隊：:root/--token 豁免、white-space FP、值位 white 仍擋、跨行值掃）。
+  - unit.css 9 處＋hub index_new.html 9 處＋4 bespoke 頁（advanced/sense/idioms/speaking）9 處＝全部硬編色→app.css 新 --u-* token（--u-on-english-solid/-tint-correct/-tint-wrong/-canvas-paper/-canvas-rule/-card-shadow/-shadow-nav-hover/-shadow-card-hover/-mix-lighten/-opt-wrong-tint，值=原字面值、主題中性、零視覺變更）。idioms 另移除已定義 token 的冗餘 var() fallback 字面值。
+  - **全站 267 檔 AC-STYLE-2 命中=0 全綠**。commit fa519e532/4c65196e3/d8c52221f。
+  - hub 改動→index_new.html sha 58dabbf3→ec2bffb5：**AC-VIZ-1 重 render 13 狀態＋四角色重簽**（實開 eng 主圖/eng#vocab-detail 單元牆+返回鈕/math 紫島色 PNG 逐張複判＝零回歸），figure_signoff PASS 綁新 sha。
+- **AC-STYLE-1 專案 gate 交付**：tools/design_consistency_gate.mjs——(A) 接線 skill design_consistency（scoped 學習路徑頁、SDA_CSS=app.css,unit.css,game_core.css、canon 69、DUPLICATE=0）+(B) content-card 自適應寬 lint（R-STYLE-3，卡類固定窄寬<520px=置中窄島→DENY）；--selftest 紅隊 4/4；live 重造0違規卡0 PASS。commit fbbd77c9f。2 NEAR（.ea-level/.ma-level ~~ .u-card 0.93）前已查為 tokenized 刻意變體。
+- **本 session Phase-1 淨結果**：既有可跑 AC 全綠（KP-VERIFY/NOGRADE(修gate)/NAV/A11Y/PERF/VIZ-1(重簽)/SCHEMA/UNIT/LANG/NOBACKEND/ANTIDRIFT/REWARD）＋ **AC-STYLE-1/2 兩個「待建」gate 已建成+紅隊+全綠**（Phase 0.5 gate-bootstrap）。
+- **待續**：(1) 把 style_token_lint / design_consistency_gate 併入專案 .claude/settings.json 的 fail-closed PreToolUse hook（目前為可跑 --verify gate，尚未掛 hook 擋關）；(2) site-wide correct/wrong tint 不一致統一（unit.css #fde8e8 vs bespoke rgba(255,118,117,.12)）＝R-STYLE-5，走視覺檢查；(3) AC-COV-1 覆蓋矩陣＝Phase 3（需建教材）。
