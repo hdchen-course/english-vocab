@@ -438,3 +438,12 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - chi.t_sub.gwrk.time-budget 最終解除：verify-gw-naming 取得大考中心 107+111「國文考科考試說明定稿」官方 PDF，逐字『知性的統整判斷能力』『情意的感受抒發能力』兩大題（本機自抓 sha16 111=c351a40c2dc0120d/107=50bbb592，pdftotext 確認出現 5×/3×）→ 雙鏡保留點解除、改 PASS（is_hard_fact=false 考試規格約定）→ expert_review fact＋考試說明 scope → promote。
 - **AC-KP-VERIFY gap = 0**（binding minimum 全 release-grade verified；verified_overlay=3102、promote --check 一致、ledger_schema_gate 綠）。全程零造假、gate 當護欄（cross_check_gate 真抓取、promote --check 重算、sha 綁定）。
 - 本 session Phase-0 淨結果：binding 驗證從（誤讀 3086、實 5）→ 0；R14 teach 拆兩塊全 corpus 收斂；音檔 fail-closed gate；a11y/nav/fast gate 全綠。
+
+## 2026-11-02 16:0x–18:3x Phase-1 AC 全掃 + AC-STYLE gate 開建
+- **AC-NOGRADE gate 修 false-positive**（commit 2f6120332）：index_new.html 兩處「年段」是 JS 整行註解（learner 不可見）。no_grade_label_gate.py 掃描前剝除 HTML 註解＋整行 // 註解（行尾註解/字串字面值仍 fail-closed）；紅隊 12 例全過；269 檔 AC-NOGRADE 全綠。
+- **Phase-1 既有 AC 全掃皆綠**：AC-KP-VERIFY(gap0)、AC-NAV(render 17 頁 0)、AC-A11Y-1、AC-PERF-1、AC-VIZ-1(figure_signoff sha 58dabbf…、13 狀態四角色 0 違規)、AC-CORRECT visual、AC-SCHEMA/UNIT(251/251)、AC-LANG、AC-NOBACKEND、AC-ANTIDRIFT、AC-REWARD、prereq/ia/source_freshness。AC-COV-1＝Phase 3（覆蓋矩陣，需建教材）。
+- **AC-STYLE-1**：skill design_consistency_gate scoped 實跑（canon 69、DUPLICATE=0 達「重造=0」）；2 NEAR（.ea-level/.ma-level ~~ .u-card 0.93）經查為 tokenized 刻意變體、非 drift。正式專案 gate 接線＋content-card lint 仍待建（Phase 0.5）。
+- **AC-STYLE-2 lint 已建+紅隊**（commit fa519e532）：tools/style_token_lint.py（--verify/--selftest；掃學習路徑 inline <style>＋assets/unit.css 硬編色；:root/--token 定義豁免；white-space FP 防護；跨行 background 值仍掃）。
+  - unit.css 9 處硬編色→app.css 新 --u-* token（--u-on-english-solid/-tint-correct/-tint-wrong/-canvas-paper/-canvas-rule/-card-shadow；值=原字面值、主題中性、**零視覺變更**，250 單元頁渲染不變、無需重簽）。unit.css 現 lint CLEAN。
+- **待續（R-STYLE-5 remediation，需視覺簽核流程）**：hub index_new.html(9) + english_advanced(1)/idioms(3)/sense(1)/speaking(4) 共 **18 處 inline 硬編色**。figure_signoff 綁 index_new.html 原始碼 sha，故 hub 任何改動（即使零視覺變更）會使 AC-VIZ-1 四角色簽核作廢→必須重 render(iPad Air 13 十三狀態)+四角色重簽+更新 manifest/signoff sha。此 18 處屬下一項 tracked 任務，不可靜默 solo 編輯。
+  - 剩餘多為 box-shadow 的 rgba(51,49,46,.XX) 品牌墨陰影（.05/.09/.1/.12 多階）＋color-mix 的 #fff＋idioms 的 #2e7d32/#c62828。remediation 時決定：零視覺變更（定 --u-* 等值 token）或 house 統一（--shadow-sm/-lg，屬視覺變更）——二者皆須走 figure_signoff 重簽。
