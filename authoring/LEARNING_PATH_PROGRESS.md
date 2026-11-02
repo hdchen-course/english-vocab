@@ -467,3 +467,20 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
   4. **AC-CODE-DL＝`tools/code_download_gate.mjs` 未建**：學習路徑有 `downloads/dictation-src.zip`+README（聽寫系列可下載碼），非 N/A，須建 gate 驗「解壓到 temp＋跑 README＝build/test 綠」。**待建 gate**。
   5. **AC-COV-1(exit1)＝Phase-3 覆蓋矩陣**（minimum 3086 未全有單元；需建教材＋HD 確認，非 Phase-1 blocker）。
 - **下一步佇列（tractable 先）**：(a) 建 `code_download_gate.mjs`+紅隊（驗 dictation bundle 乾淨解壓可跑）；(b) `unit_acceptance_lint.py` 加 `--verify-golden/--selftest-golden` golden 結構 diff＋deviation_reason 驗（§6.6①）+紅隊；(c) 診斷 chk-manifest T3-03 drift 根因（找出 committed JSON vs regen 哪欄不符、是否合法）；(d) AC-UNIT-2 250×5-clean＝主體收斂，需規模授權後開跑；(e) AC-COV-1 Phase 3。
+
+## 2026-11-02 19:2x HD 決策：英語島「先補齊」再收斂（重要方向）
+HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 只覆蓋 185（62%），**缺 115 KP 無單元**；22 分區有 4 個 0 單元；已建分區內部也沒做滿（noun 6/10、special 10/18、subj 5/13、morph 6/13…）。HD 指令＝**先補齊**（補到 300 KP 全覆蓋），補完再 5-clean 收斂。
+### 英語島補齊 backlog（缺口，依優先）
+- **0-單元分區（最急，63 KP）**：phonics 自然發音(20)、reading 閱讀理解(18)、writing 英文寫作(15)、listening 聽力(10)。
+- **已建未滿（52 KP）**：special(缺8)、subj(缺8)、morph(缺7)、vocab(缺5)、noun(缺4)、pattern(缺4)、relcl/voice/nouncl/adjadv/modal/pron/nonfinite/prep（各缺1–2）。
+- 覆蓋計算法：eng.<...> binding KP（非 beyond）被某單元 teach 或 practice 的 kp_ids 命中＝已覆蓋；指令：見本檔上方 per-strand 統計腳本。
+### 建置 SOP（每分區）
+1. 動工前本 session 完整讀 LEARNING_PATH_REBUILD_SPEC.md（§6.2 骨架／§6.6 rubric／§6.7 units_index 註冊）＋英語島治理鐵律（memory: english-island-approach-2026-10-31 / english-island-phase2-units-live：語感>文法、聽寫+跟讀+語調模仿核心、英文學英文 R14、術語附英語 R15、不教台式對比、國小情境化、共用引擎 assets/unit.{css,js}）。
+2. 組 team（writers＋native-en/linguist/learning-sci/knowledge-viz/pm/eye-comfort 六鏡＋對抗 reviewer），不 solo。
+3. 產 english_<strand>.units.json（＋必要時頁）、edge-tts 真實音檔、註冊 units_index/hub。
+4. 過全確定性 gate：unit_schema/claim_evidence/question_correctness/scan_simplified/r14_body/audio_exist/ia_consistency/nav/a11y/style_token/design_consistency/unit_acceptance(--verify+--verify-golden)/no_grade/no_backend。
+5. **一次只跑 1 個 content_audit workflow**（MacBook 資源；絕不並發整波）。
+6. 全島 300 KP 覆蓋到齊 → 才一次性驅動 per-page 5-clean 收斂（AC-UNIT-2）。
+### 本 session 已完成的驗證骨架（讓「補齊/收斂」有可驗標準）
+- AC-STYLE-2 lint（style_token_lint，commit fa51/4c65/d8c5）、AC-STYLE-1 專案 gate（design_consistency_gate.mjs, fbbd）、AC-CODE-DL gate（code_download_gate.mjs, 8d4c）、AC-UNIT-3 golden 模式（unit_acceptance_lint --verify-golden, 2d9c）、AC-NOGRADE FP 修（2f61）、hub AC-VIZ-1 重簽（4c65）。
+- 剩 --phase=1 未過：chk-manifest(KP manifest regen drift，待診斷)、AC-UNIT-2(補齊後才收斂)、AC-COV-1(全科覆蓋矩陣=Phase3)。
