@@ -487,3 +487,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 ### 本 session 已完成的驗證骨架（讓「補齊/收斂」有可驗標準）
 - AC-STYLE-2 lint（style_token_lint，commit fa51/4c65/d8c5）、AC-STYLE-1 專案 gate（design_consistency_gate.mjs, fbbd）、AC-CODE-DL gate（code_download_gate.mjs, 8d4c）、AC-UNIT-3 golden 模式（unit_acceptance_lint --verify-golden, 2d9c）、AC-NOGRADE FP 修（2f61）、hub AC-VIZ-1 重簽（4c65）。
 - 剩 --phase=1 未過：chk-manifest(KP manifest regen drift，待診斷)、AC-UNIT-2(補齊後才收斂)、AC-COV-1(全科覆蓋矩陣=Phase3)。
+
+## 2026-11-02 19:4x 英語島補齊開工（HD「照計畫做完不要停」）— phonics 分區
+- 開工 Phase 3 補齊，第一分區＝phonics 自然發音（20 KP，0 單元）。檔＝english_phonics.html／english_phonics.units.json（GR：eng×phonics×t_base「自然發音（初級）」；單一 t_mid kk-ipa 依 ≤3 併頁）。
+- **單元拆解（20 KP→11 單元，教學序）**：U1 字母認讀書寫(letter-recognition/letter-writing/alphabet-order/name-vs-sound)｜U2 單子音+短母音CVC(single-consonants/short-vowels/decoding)｜U3 聽音拼字encoding｜U4 silent-e｜U5 vowel-teams｜U6 blends+digraphs(consonant-blends/consonant-digraphs)｜U7 r-controlled｜U8 hard-soft-cg+final-le｜U9 schwa+syllable-stress｜U10 ed-sound+plural-s-sound｜U11 kk-ipa。
+- 每單元走建置 SOP（§6.2.2 schema＋§6.6 rubric＋英語島治理：語感/聽寫/跟讀、R14 英文媒介中文收合、R15 術語附英語、國小情境、共用引擎 unit.{css,js}）→ 全確定性 gate → edge-tts 真音檔 → content_audit 一次一 round 到 5-clean → 視覺簽核。
+- 流程：委派 English-phonics 作者 agent 起草 units.json、我把關 gate（資源限制：一次一 agent/一 round，不並發）。
