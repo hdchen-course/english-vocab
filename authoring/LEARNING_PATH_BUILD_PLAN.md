@@ -1,5 +1,31 @@
 # 學習路徑建置計畫（BUILD PLAN）— 單一事實進度圖＋自我稽核
 
+## §0. 固定檔案清單（CANONICAL FILES — 只維護這幾個、永不另生新檔）
+
+> HD 2026-11-02：「先整理好、維護固定檔案，不要換來換去搞不清楚是哪個。」
+> **以下是學習路徑工程的全部權威檔。做任何事只讀/只更新這些，絕不另開新的 plan/status/進度檔。** 全部在 `/Volumes/workplace/EnglishTraining/english-vocab-deploy`。
+
+| 檔 | 角色（單一） | 誰維護 | 能不能手改 |
+|---|---|---|---|
+| `LEARNING_PATH_REBUILD_SPEC.md` | **規範契約**：鐵律 R1–R16／gate／23 條 AC。衝突以它為準 | 規範（收斂定案） | 改規範才動它，走 §12 收斂 |
+| `authoring/LEARNING_PATH_BUILD_PLAN.md`（本檔） | **導航計畫**：固定檔案清單＋8 phase＋現狀＋完成定義＋先補齊 backlog | 我，更新 in place | 可更新（§3 狀態/§7 backlog） |
+| `authoring/LEARNING_PATH_PROGRESS.md` | **詳實流水帳**：HD 決策＋每次做了什麼＋commit 歷史 | 我，append | append 新條目；舊條目不回改 |
+| `tools/build_status.py` → 跑它 | **自我稽核儀表板**：即時覆蓋/單元/收斂數字（實檔現算） | 我 | 不手寫數字，改碼才動 |
+| `authoring/knowledge_points.json` | **KP 母體**（3103 條；該存在什麼）；由 `_kp_slices/` 生成 | `_kp_build.py` 生成 | **禁手改**（改 `_kp_slices/` 再重生） |
+| `authoring/units_index.json` ＋ `strand_labels/subject_labels/nav_index/term_glossary` | §6.7 衍生資料（導覽/標籤） | 生成器 | 禁手改（重生） |
+| `authoring/source_registry.json`／`fact_check_ledger.json`／`verified_overlay.json`／`accepted_exceptions.json` | KP 事實驗證證據鏈（Phase 0） | promote/gate | 走 gate，不手改 |
+| `authoring/acceptance_criteria.json` | 23 AC registry（orchestrator 由它驅動） | 規範 | 改 AC 才動 |
+| `authoring/RESUME_SNAPSHOT.md` | compact 前自動快照（resume 入口指標） | `lp-precompact-snapshot.sh` 自動 | **勿手改**（自動覆蓋） |
+| `authoring/GATES_HOLES_LEDGER.md` | gate 漏洞/強化 ledger | 我，append | append |
+| `english_*.units.json`（目前 250，英語島） | 教學單元內容（§6.2.2 schema） | 建教材時 | 走建置 SOP+gate |
+
+**從屬/歷史檔（不是權威計畫，別當計畫讀）**：`english_island_design_DRAFT.md`（Phase 2 設計提案草稿）、`practice_band_spec_draft.md`（練習帶草案）、`r14_split_contract.md`（R14 遷移契約，已執行完）、`english_content_audit_findings.md`（審查 findings 日誌）、`KNOWLEDGE_POINT_INVENTORY.md`（KP 母體的生成附錄，等同 json）。這些只在其專屬用途時看，**不代表計畫或進度**。
+
+**規則**：要記進度→更新 PROGRESS.md；要改計畫/狀態→更新本檔；要看即時數字→跑 build_status.py。**不准再生第五個「計畫/進度」檔。**
+
+---
+
+
 > **這份檔的定位**：`LEARNING_PATH_REBUILD_SPEC.md` 是「規範契約」（規則、gate、AC），很長很硬。
 > 本檔是從 spec 萃取出來、**人＋機都看得懂的「做什麼、什麼順序、現在在哪、怎麼算完成」計畫圖**。
 > 規範衝突以 spec 為準；本檔只負責「導航」，不新增規範。
