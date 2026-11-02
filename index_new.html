@@ -26,9 +26,9 @@
     border:1px solid var(--card-border); border-left:6px solid var(--a,var(--c-primary));
     border-radius:12px; padding:10px 12px; cursor:pointer; font:inherit;
     display:flex; flex-direction:column; gap:2px; transition:box-shadow .12s, background .12s; }
-  .lp-navitem:hover{ box-shadow:0 2px 8px rgba(51,49,46,.1); }
+  .lp-navitem:hover{ box-shadow:var(--u-shadow-nav-hover); }
   .lp-navitem:focus-visible{ outline:3px solid var(--c-focus); outline-offset:2px; }
-  .lp-navitem.active{ background:var(--card-border); box-shadow:0 2px 10px rgba(51,49,46,.12); }
+  .lp-navitem.active{ background:var(--card-border); box-shadow:var(--u-shadow-card-hover); }
   .lp-navitem .nm{ font-size:16px; font-weight:700; color:var(--aink,var(--ink)); }
   .lp-navitem .mt{ font-size:12px; color:var(--ink-soft); }
   /* 右面板 */
@@ -39,14 +39,14 @@
   .lp-strandgrid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(232px,1fr)); gap:14px; }
   .lp-scard{ background:var(--card); border:1px solid var(--card-border);
     border-top:4px solid var(--a,var(--c-primary)); border-radius:14px; padding:13px 15px;
-    display:flex; flex-direction:column; gap:7px; box-shadow:0 1px 3px rgba(51,49,46,.05); }
+    display:flex; flex-direction:column; gap:7px; box-shadow:var(--u-card-shadow); }
   .lp-scard .snm{ font-size:15px; font-weight:700; color:var(--ink); line-height:1.35;
     display:flex; align-items:baseline; gap:8px; }
   /* AC-A11Y-1：步驟號對比 ≥4.5:1（WCAG AA）。原白字 on 島 accent --a，淺島僅 1.51:1。
      改深字(--ink) on 「島 accent 22% 淺底」：深字 on 淺底通用達標、仍保留島色調（色仍由卡片 --a 邊框與此淺底呈現）。 */
   .lp-step{ flex:none; display:inline-flex; align-items:center; justify-content:center;
     min-width:22px; height:22px; padding:0 6px; border-radius:999px; font-size:12px; font-weight:700;
-    background:color-mix(in srgb, var(--a,var(--c-primary)) 22%, #fff); color:var(--ink); }
+    background:color-mix(in srgb, var(--a,var(--c-primary)) 22%, var(--u-mix-lighten)); color:var(--ink); }
   .lp-seqnote{ color:var(--ink-soft); font-size:12.5px; margin:2px 0 0; }
   /* 島面板兩帶：📘 跟著學（編號路徑卡）＋ 🎯 練習與應用（不編號 area 卡） */
   .lp-band{ display:flex; align-items:baseline; gap:10px; margin:6px 0 10px; }
@@ -54,7 +54,7 @@
   .lp-band .bmt{ font-size:12.5px; color:var(--ink-soft); }
   .lp-zone{ margin-top:24px; }
   a.lp-scard{ text-decoration:none; color:inherit; }
-  a.lp-scard:hover{ box-shadow:0 2px 10px rgba(51,49,46,.12); }
+  a.lp-scard:hover{ box-shadow:var(--u-shadow-card-hover); }
   a.lp-scard:focus-visible{ outline:3px solid var(--c-focus); outline-offset:2px; }
   .lp-scard .lp-aem{ font-size:19px; margin-right:3px; }
   .lp-sdesc{ font-size:12.5px; color:var(--ink-soft); line-height:1.5; }
@@ -75,7 +75,7 @@
        （§6.1 逐層 drill-down；主視圖＝分區總覽，詳情＝滿版多欄單元牆；左 sidebar 不動；不開新頁、
         不 reload；R-OPEN 無鎖定）。分區卡＝可點 <button>（非 disabled）；單元卡＝深連到該單元頁。 */
   button.lp-scard{ text-align:left; font:inherit; width:100%; cursor:pointer; }
-  button.lp-scard:hover{ box-shadow:0 2px 10px rgba(51,49,46,.12); }
+  button.lp-scard:hover{ box-shadow:var(--u-shadow-card-hover); }
   button.lp-scard:focus-visible{ outline:3px solid var(--c-focus); outline-offset:2px; }
   .lp-uhint{ font-size:12.5px; font-weight:700; color:var(--c-primary-ink,var(--ink-soft));
     display:flex; align-items:center; gap:6px; margin-top:1px; }
@@ -87,7 +87,7 @@
     background:var(--card); color:var(--ink); border:1px solid var(--card-border);
     border-left:5px solid var(--a,var(--c-primary)); border-radius:11px; cursor:pointer;
     font:inherit; font-size:14.5px; font-weight:700; transition:box-shadow .12s, background .12s; }
-  .lp-back:hover{ box-shadow:0 2px 9px rgba(51,49,46,.12); background:var(--card-border); }
+  .lp-back:hover{ box-shadow:var(--u-shadow-card-hover); background:var(--card-border); }
   .lp-back:focus-visible{ outline:3px solid var(--c-focus); outline-offset:2px; }
   .lp-back .bk-ar{ font-size:17px; line-height:1; }
   /* 單元牆：滿版多欄 responsive grid，鋪滿整個右側內容區寬度（比照島總覽，不留窄欄/大空白） */
@@ -96,8 +96,8 @@
     background:var(--card); border:1px solid var(--card-border);
     border-left:4px solid var(--a,var(--c-primary)); border-radius:12px;
     padding:13px 15px; min-height:44px; box-sizing:border-box;
-    box-shadow:0 1px 3px rgba(51,49,46,.05); transition:box-shadow .12s; }
-  a.lp-unitcard:hover{ box-shadow:0 2px 10px rgba(51,49,46,.12); }
+    box-shadow:var(--u-card-shadow); transition:box-shadow .12s; }
+  a.lp-unitcard:hover{ box-shadow:var(--u-shadow-card-hover); }
   a.lp-unitcard:focus-visible{ outline:3px solid var(--c-focus); outline-offset:2px; }
   .lp-utitle{ font-size:14.5px; font-weight:700; color:var(--ink); line-height:1.35; }
   .lp-ucan{ font-size:12.5px; color:var(--ink-soft); line-height:1.5;
