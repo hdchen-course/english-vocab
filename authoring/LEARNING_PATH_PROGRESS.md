@@ -647,3 +647,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 紅隊（--selftest）：原 12 壞例全 DENY＋好例 ALLOW 不變；新增 content_sha 三紅隊（改 sidecar→指紋變、改 HTML→變、sidecar 缺→不崩）全過。記入 GATES_HOLES_LEDGER H-7。
 - 修 gate 非繞過；AC-UNIT-2 收斂 ledger 現在會因內容（JSON）變動正確作廢 streak。
 - **下一步**：啟動 AC-UNIT-2 逐頁 content_audit 5-clean（審對應 sidecar、一次 1 round、記 page_converge_ledger、per_page_5clean_gate 驗）＋iPad 四角色簽核。
+
+## 2026-11-03 00:34 AC-UNIT-2 收斂 marathon 啟動＋管線證成（commit 點）
+- content_audit round 1 審 english_absolutewith.units.json：confirmed=0、coverageComplete=true；L3 coverage_check PASS（116 行+anchors 核對、0 failed）→ 合法 clean round。
+- 記入 `authoring/page_converge_ledger.json`：english_absolutewith.html round 1/5（content_sha=HTML+sidecar 聯集 a4d0ce44，per_page_5clean_gate 同步）。**收斂管線端到端證成**（launch→confirmed→L3→ledger，honest 記入）。
+- **marathon 策略**：306 頁、一次 1 round（資源受限）。效率改**批次**：每 round 一 shard 審 ≤5 檔（合 skill shard≤5 上限），per-file streak 逐頁記、同 sha 連續 5 clean＝該頁收斂；per_page_5clean_gate 驗；內容改→sidecar sha 變→streak 作廢（H-7 已修）。consecutive rounds 變換 partition/dispute 框架。
+- 進度：1/306 頁有 round 1（streak 1/5）。長尾多-session，續跑。
