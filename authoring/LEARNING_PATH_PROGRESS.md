@@ -597,3 +597,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - **產物**：`authoring/roadmap_layout.json`（node 座標／DAG edges／collapse-group；由 units_index＋prerequisites 預生成）＋`authoring/progkey_migration.json`（{old_progKey,new_unit_id,note} additive 遷移，舊 progKey 保留＝never-disappear）。兩檔各自 5-clean。
 - **Phase 2 exit**（spec §10 line 43）：既有單元全數接線＋每檔 5 clean。
 - **起步（安全、不動已 commit 檔）**：先產**唯讀 prerequisite-DAG proposal**（authoring agent 設計、tier 序鏈、無環、引真 unit_id），我 review 後逐 strand apply＋跑 unit_schema_gate（驗 prereq→unit_id 存在＋無環）＋gen_derived，分批 commit（rollback-safe）。依 SOP：authoring 用 team-of-one agent＋我獨立 review，非 solo。
+
+## 2026-11-02 23:35 Phase 2 — roadmap_layout.json 產生器＋輸出（commit 點）
+- 新 `tools/gen_roadmap_layout.py`（確定性）：從 units_index＋各 sidecar 的 prerequisites 生成 roadmap 佈局。座標模型：x 由 strand 欄位(strand.order)、y 由 tier 層(t_base→t_mid→t_adv→t_sub)，同桶單元沿 x 微展；收合群組＝每 strand 一組含 bbox。
+- 輸出 `authoring/roadmap_layout.json`：eng 島 336 節點、184 先備 DAG 邊、22 收合群組。
+- 內建 `--verify`（＝spec 的「連線端點檢查」gate）：endpoint 全解析、無 self-loop、Kahn 無環、群組 node_ids 皆真節點 → CLEAN。
+- 仍待：viz-QA（roadmap UI 實際 render 時）＋ progkey_migration.json（需調查舊站各頁 progKey）＋ roadmap_layout/其餘各檔 5-clean。
