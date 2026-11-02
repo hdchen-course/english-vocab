@@ -570,3 +570,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - special：apposition/inversion-place/ellipsis/inversion-only/inversion-so-such/what-cleft/perfect-participle/absolute-with（8 新檔）。親驗倒裝/分裂/完成分詞文法全對。
 - morph：suffix-adverb-ly/compound-noun/prefix-degree/prefix-relation/latin-greek-roots/conversion/guess-by-morphology（7 新檔）。親驗字根義（port=carry/tele=far/bio=life/dict=say/graph=write）、詞類轉換、構詞猜義全對。-ly 拼寫 happy→happily/true→truly。
 - 已滿 strand：phonics/listening/reading/writing/subj/special/morph。
+
+## 英語島 vocab 32/32＋noun 10/10 補滿（9 新 sidecar）
+- vocab：ceec-4500/abstract-affective/academic-topics/synonym-nuance/register（詞彙能力/策略，英文學英文）。noun：proper-capitalization/possessive/collective/double-possessive。
+- 親驗：synonym 強度（enormous/delighted/tiny/big）、集合名詞 AmE 單數 is/has（英式差異 teach 誠實標）、double-possessive（a friend of mine 非 of me、of my mother's）皆正確。
+- 收斂前待辦：這 9 檔省略 shadowing（依無音檔指示），--verify-golden 會判缺 shadowing，收斂階段補「無 audio 版 shadowing（text+intonation）」或走 deviation 簽核。
+- 已滿 strand：phonics/listening/reading/writing/subj/special/morph/vocab/noun（9 個）。eng 271→280/300。
