@@ -534,3 +534,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 音檔：edge-tts 45 mp3（lis_* 前綴，audio_script 完整英文句/對話），音↔腳本一致。audio_exist_gate CLEAN（1536 refs）。
 - 9 道確定性 gate 全綠。eng 覆蓋 205→215/300。
 - 下一步：reading（18 KP）→ writing（15 KP，自評）→ 已建未滿分區（~52 KP）→ Phase 2 接線 → 全島 5-clean 收斂。
+
+## 2026-11-02 20:59 英語島 reading t_mid R1–R3 建成（6/18 KP）
+- 新檔 english_reading.units.json：R1 main-detail（main-idea+detail）／R2 word-reference（guess-word+reference）／R3 functional-skim（functional-text+skim-scan）。reading 0→6/18 KP、3 單元。
+- **內容親驗**：三篇短文（Maya 花園／Tom 的狗 Rocky／圖書館告示）各題正解在文中皆有明確依據、單一可辯護答案；sunflower 題「比她高」vs 顏色誘答、he=Rocky/they=visitors 指涉、告示掃讀時間/罰款皆正確。
+- reading 純文字（無音檔）；shadowing 為純文字朗讀練習。9 道確定性 gate 全綠。eng 覆蓋 215→221/300。
+- 下一步：reading t_adv R4–R9（12 KP：best-title/purpose/attitude-tone/inference/text-structure/cohesion/fact-vs-opinion/graph-integration/multi-text/cloze/gap-filling/discourse-ordering）→ writing（15 KP）→ 已建未滿分區 → Phase 2 接線 → 全島 5-clean 收斂。
