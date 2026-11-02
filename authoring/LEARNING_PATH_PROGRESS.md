@@ -559,3 +559,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - **內容親驗**：W7 泡茶步驟順序合理、and/who 合併（which-for-person/主謂/who+she 冗餘誘答皆對）；W8 中譯英自然語序、turn on the light（正面框架道地說法非貼標籤）、Although 單連接詞；W5 時態/主謂/人稱一致；W6 敘事開頭+Finally+種子→澆水→發芽→開花順序皆正確。自由產出題在 teach「換你做」、MCQ 承載 rubric⑦（question_correctness CLEAN 無 self）。
 - 8 道確定性 gate 全綠。eng 覆蓋 238→248/300。**四大技能 strand（phonics/listening/reading/writing）全 100%。**
 - 下一步：已建未滿分區補滿（52 KP：noun/vocab/pattern/special/subj/morph/relcl/voice/nouncl/adjadv/modal/pron/nonfinite/prep 等）→ Phase 2 接線（roadmap_layout.json）→ 全島 5-clean 收斂 → 島 DONE-GATE。
+
+## 2026-11-02 21:53 英語島 subj 虛擬語氣 strand 補滿 13/13 KP ✅
+- 8 個新 sidecar 檔（一檔一 KP）：subjasif/subjindic/subjfuture/subjmixed/subjwouldrather/subjifonly/subjmandative/subjwithout。subj 5→13/13 KP。
+- **內容親驗（虛擬語氣極易錯，逐題查）**：mandative（suggest/insist/demand that + 主詞 + 原形：attend/be/choose、否定 not be fired、arrive 不加 s）、mixed conditional（過去條件→現在結果 had+pp→would+原形；現在條件→過去結果 were→would have+pp；could get now）、would rather（他人現在→過去式 didn't talk/drove、過去遺憾 had told、同主詞原形 stay）皆文法正確。
+- 7 道確定性 gate 全綠。eng 覆蓋 248→256/300。方言差異（got/gotten、were/was）一致處理、provisional 待母語 reviewer。
+- 下一步：special 8／morph 7／vocab 5／noun 4／pattern 4／verb 3／voice·modal·adjadv·relcl·nouncl 各 2／pron·prep·nonfinite 各 1（共 44）→ Phase 2 接線 → 全島 5-clean 收斂。
