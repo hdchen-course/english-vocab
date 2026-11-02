@@ -114,16 +114,9 @@ fetch('authoring/units_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():{un
       '<div class="sp-units">'+cards+'</div></section>';
   }).join('');
   el.innerHTML=blocks;
-  /* 未歸類的單元（新頁尚未加進 CATS）→ append 一個「其他」區塊，不遺漏 */
-  const known=new Set(CATS.flatMap(c=>c.pages));
-  const extra=us.filter(u=>!known.has(u.page));
-  if(extra.length){
-    const cards=extra.map(unitCard).join('');
-    el.insertAdjacentHTML('beforeend','<section class="sp-cat"><div class="sp-cat-head">'+
-      '<span class="sp-cat-em" aria-hidden="true">💡</span><span class="sp-cat-name">其他</span></div>'+
-      '<div class="sp-units">'+cards+'</div></section>');
-    placed+=extra.length;
-  }
+  /* 開口說＝情境會話練習，只呈現 CATS 定義的 10 大情境（SSOT）。
+     刻意「不」把未列入 CATS 的 eng 單元（文法單元等）倒進「其他」——那是舊版造成文法單元
+     洩漏進開口說的 bug 根源（2026-11-02 HD 抓到）。新情境單元要顯示，須明確加進對應情境的 CATS。 */
   document.getElementById('overall').textContent='目前 '+placed+' / ~'+(CATS.length*TARGET_PER_CAT)+' 句常用對話（十大情境持續補到每類約 '+TARGET_PER_CAT+' 句）';
 });
 </script>

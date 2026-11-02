@@ -287,27 +287,29 @@ function renderPanel(isl){
   const isEng = isl.island==='eng';
   let gridHtml, zoneHtml='';
   if(isEng){
-    // 編號學習路徑：№1 自然發音 → №2 開口說 → №3… 文法分區（原序往後移一位）
+    // 編號學習路徑＝**純 spec strand 軸**（§6.1：島→subject→strand→unit，每單元單一 home）。
+    // №1 自然發音 → №2 主題字彙 → №3 基本句型 →…（開口說不在此，移到下方「練習與應用」補充區）。
     const strands=isl.strands.slice().sort((a,b)=>(a.order||99)-(b.order||99));
     const phon=strands.find(s=>s.order===1);
     const rest=strands.filter(s=>s!==phon);
-    // 開口說（情境溝通）＝導向 english_speaking.html 的入口卡。設計一致：鏡射 strandCard 結構
-    // （step badge＋名稱＋中性 lp-tchip＋藍色「N 個單元 →」uhint），不再用綠 area 膠囊/長描述破壞 grid 節奏。
-    const speak = us.length ? (`<a class="lp-scard" style="--a:${fill}" href="english_speaking.html" aria-label="開口說（情境溝通）：${us.length} 個單元，點擊看情境清單">`+
-      `<span class="snm"><span class="lp-step">2</span>開口說（情境溝通）</span>`+
-      `<span class="lp-tiers"><span class="lp-tchip">聽・說・寫</span></span>`+
-      `<span class="lp-uhint">${us.length} 個單元 <span class="lp-caret" aria-hidden="true">→</span></span></a>`) : '';
     const arr=[];
     if(phon) arr.push(strandCard(phon,1));
-    if(speak) arr.push(speak);
-    rest.forEach(s=>arr.push(strandCard(s,(s.order||0)+1)));
+    rest.forEach(s=>arr.push(strandCard(s,s.order)));   // 用原 strand order（不偏移、不插入開口說）
     gridHtml=arr.join('');
-    // 🎯 練習與應用（不編號 area 卡；chip＝難度跨度）
+    // 🎯 練習與應用（spec 外補充／cross-cut；不編號、不計入上方 strand 覆蓋）
     const area=(em,nm,desc,chips)=>`<div class="lp-scard" style="--a:${fill}"><span class="snm"><span class="lp-aem" aria-hidden="true">${em}</span>${nm}<span class="lp-tchip soon lp-soonpin">建置中</span></span>`+
       `<span class="lp-sdesc">${desc}</span><span class="lp-tiers">${chips}</span></div>`;
+    // 開口說（情境會話）＝舊版 blueprint 移植、spec 外補充；cross-cut 重用上方 strand 單元、換情境角度練。
+    // 放補充區、非 spec strand 軸卡，故不與上方編號分區競爭、不灌 strand 覆蓋數。
+    const speak = us.length ? (`<a class="lp-scard" style="--a:${fill}" href="english_speaking.html" aria-label="開口說：10 大生活情境的情境會話練習（spec 外補充）">`+
+      `<span class="snm"><span class="lp-aem" aria-hidden="true">🗣️</span>開口說（情境會話）</span>`+
+      `<span class="lp-sdesc">真實生活 10 大情境的「能用的一句話」：先聽先感覺 → 練 → 跟讀模仿語調 → 自評（含情境聽寫）。舊版情境單元移植，屬 spec 外補充練習——換情境角度重練上面 strand 分區學過的句型與字彙。</span>`+
+      `<span class="lp-tiers"><span class="lp-tchip area">10 大情境</span><span class="lp-tchip area">聽・說・寫</span></span>`+
+      `<span class="lp-uhint">進入情境會話 <span class="lp-caret" aria-hidden="true">→</span></span></a>`) : '';
     zoneHtml=`<div class="lp-zone"><div class="lp-band"><span class="bem" aria-hidden="true">🎯</span><span class="bnm">練習與應用</span>`+
-      `<span class="bmt">不排順序・隨時可練；卡片等級＝難度跨度，點進去才分階</span></div>`+
+      `<span class="bmt">spec 外補充・不排順序・隨時可練；與上方 strand 分區是「換角度練同一批內容」，非另一套教材</span></div>`+
       `<div class="lp-strandgrid">`+
+      speak+
       area('📚','單字大師（分級字庫）','分級字卡：聽音優先・雙向・三級自評・SRS。重用 CEFR／COCA／英檢多益／YLE 字庫與語音。',
         '<span class="lp-tchip area">A1</span><span class="lp-tchip area">A2</span><span class="lp-tchip area">B1</span><span class="lp-tchip area">B2–C2</span>')+
       area('🎧','聽與寫（分級聽寫）','分級聽寫 drill：DK 入門單字 → CEFR 句子／短文；手寫／鍵盤＋跟讀＋自評。與開口說的情境句聽寫互補。',
