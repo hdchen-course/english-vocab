@@ -23,15 +23,22 @@
      --c-english-ink(#07775c，白字 5.52:1)達 WCAG AA。 */
   .sp-cat-count{ font-size:12px; font-weight:700; color:#fff; background:var(--c-english-ink);
     border-radius:999px; padding:2px 9px; margin-left:auto; white-space:nowrap; }
-  /* 卡牆：auto-fill 多欄，充分利用 iPad 寬度；卡片等高齊左。 */
-  .sp-units{ display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:10px; }
-  .sp-unit{ display:flex; align-items:center; gap:9px; text-decoration:none; background:var(--card);
-    border:1px solid var(--c-english); border-radius:12px; padding:11px 13px; color:var(--ink);
-    box-shadow:0 1px 3px rgba(51,49,46,.05); transition:background .12s, color .12s; min-width:0; }
-  .sp-unit:hover{ background:var(--c-english); color:#fff; }
+  /* 卡牆：auto-fill 多欄，充分利用 iPad 寬度。卡片對齊全站房屋卡（index_new .lp-unitcard）：
+     var(--card) 底＋1px card-border＋島色(teal) 4px 左條＋radius 12＋淡陰影，hover 抬陰影（不填色反白）；
+     內容＝emoji＋標題＋can-do（2 行截斷）＋分鐘 meta，與 hub 單元牆卡同設計語言。 */
+  .sp-units{ display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px; }
+  .sp-unit{ display:flex; flex-direction:column; gap:5px; text-decoration:none; background:var(--card);
+    border:1px solid var(--card-border); border-left:4px solid var(--c-english); border-radius:12px;
+    padding:13px 15px; color:var(--ink); box-shadow:0 1px 3px rgba(51,49,46,.05);
+    transition:box-shadow .12s; min-width:0; min-height:44px; box-sizing:border-box; }
+  .sp-unit:hover{ box-shadow:0 2px 10px rgba(51,49,46,.12); }
   .sp-unit:focus-visible{ outline:3px solid var(--c-focus); outline-offset:2px; }
+  .sp-unit .sp-u-top{ display:flex; align-items:center; gap:9px; min-width:0; }
   .sp-unit .em{ font-size:19px; flex:0 0 auto; }
-  .sp-unit .tx{ font-size:14px; line-height:1.3; min-width:0; }
+  .sp-unit .tx{ font-size:14.5px; font-weight:700; line-height:1.35; min-width:0; color:var(--ink); }
+  .sp-unit .sp-u-can{ font-size:12.5px; color:var(--ink-soft); line-height:1.5;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .sp-unit .sp-u-meta{ font-size:11.5px; color:var(--ink-soft); }
   .sp-foot{ color:var(--ink-soft); font-size:12px; margin-top:24px; border-top:1px solid var(--card-border); padding-top:12px; }
 </style>
 </head>
@@ -81,6 +88,14 @@ const CATS=[
 ];
 const TARGET_PER_CAT=10;
 function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+/* 單元卡（對齊全站房屋卡 .lp-unitcard）：emoji＋標題＋can-do（2 行截斷）＋分鐘 meta。 */
+function unitCard(u){
+  return '<a class="sp-unit" href="'+esc(u.page)+'">'+
+    '<span class="sp-u-top"><span class="em" aria-hidden="true">'+(EMO[u.page]||'💡')+'</span>'+
+    '<span class="tx">'+esc(u.title_zh)+'</span></span>'+
+    (u.can_do?'<span class="sp-u-can">'+esc(u.can_do)+'</span>':'')+
+    (u.est_minutes?'<span class="sp-u-meta">⏱ 約 '+esc(u.est_minutes)+' 分</span>':'')+'</a>';
+}
 fetch('authoring/units_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():{units:[]}).catch(()=>({units:[]})).then(ui=>{
   const us=(ui.units||[]).filter(u=>u.subject==='eng');
   const byPage={}; us.forEach(u=>{ byPage[u.page]=u; });
@@ -91,9 +106,7 @@ fetch('authoring/units_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():{un
     const units=cat.pages.map(p=>byPage[p]).filter(Boolean);
     if(!units.length) return '';
     placed+=units.length;
-    const cards=units.map(u=>
-      '<a class="sp-unit" href="'+esc(u.page)+'"><span class="em" aria-hidden="true">'+(EMO[u.page]||'💡')+
-      '</span><span class="tx">'+esc(u.title_zh)+'</span></a>').join('');
+    const cards=units.map(unitCard).join('');
     return '<section class="sp-cat"><div class="sp-cat-head">'+
       '<span class="sp-cat-em" aria-hidden="true">'+cat.em+'</span>'+
       '<span class="sp-cat-name">'+esc(cat.name)+'</span>'+
@@ -105,8 +118,7 @@ fetch('authoring/units_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():{un
   const known=new Set(CATS.flatMap(c=>c.pages));
   const extra=us.filter(u=>!known.has(u.page));
   if(extra.length){
-    const cards=extra.map(u=>'<a class="sp-unit" href="'+esc(u.page)+'"><span class="em" aria-hidden="true">'+(EMO[u.page]||'💡')+
-      '</span><span class="tx">'+esc(u.title_zh)+'</span></a>').join('');
+    const cards=extra.map(unitCard).join('');
     el.insertAdjacentHTML('beforeend','<section class="sp-cat"><div class="sp-cat-head">'+
       '<span class="sp-cat-em" aria-hidden="true">💡</span><span class="sp-cat-name">其他</span></div>'+
       '<div class="sp-units">'+cards+'</div></section>');
