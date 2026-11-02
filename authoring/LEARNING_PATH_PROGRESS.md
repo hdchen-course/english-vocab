@@ -424,3 +424,12 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - 這 5 筆皆 Phase-2 手工注入殘留、`unit_ids:[]`、無 fact_check_ledger 條目；要 release-grade verified 需**真實外部權威來源**（scope 課綱官方 ＋ fact cross_check/consensus），**嚴禁造假 reproduction_ref/quote**（repro_gate/cross_check_gate 會真抓取比對）。
 - 其餘全部現況：fast 確定性 gate 全綠（unit_schema/ia_consistency/r14_body/audio/claim/question/簡體）；a11y 學習路徑頁 0 違規；nav AC-NAV 0 違規；promote_verified --check 一致 verified=3097。
 - 下一步：以驗證 team（domain expert＋對抗式 reviewer；2 筆 high-risk 需 ≥2 相異 reviewer）逐筆蒐證→registry/ledger→cross_check_gate 真抓取→promote_verified，gap 5→0；屬 Phase-0 ship-gate，非 content_audit 5-clean（兩軌）。
+
+## 2026-11-02 15:4x Phase-0 AC-KP gap 5→1（4 筆真實升 verified，1 筆誠實 deferred）
+- 做法全程零造假、gate 當護欄：
+  - chi.recognition-count（識字量）＋chi.envelope（信封格式）：國語文領綱(sha210b2bea)/總綱 scope＋中華郵政官方＋**雙人對抗式審查真跑**（kprev-educator/adversary PASS、is_hard_fact=false）→ expert_review fact → promote。
+  - eng.weather-nature＋eng.health-illness：Longman＋Wiktionary（2 相異出版者）**cross_check_gate 真抓取 PASS**（re-fetch 比對 quote、≥2 host）→ promote。純字義非安全/醫療建議（雙鏡確認）。
+  - 全程 ledger_schema_gate／cross_check_gate／promote_verified --check 皆綠；verified 3097→3101；commit＋push。
+- **唯一剩餘（誠實 deferred，非失敗）＝chi.t_sub.gwrk.time-budget**：試卷(114/115)證實「90分鐘/二大題/逐題字數」，但 KP 題敘倚賴「知性題/情意題」命名；該命名出自大考中心**國寫考試說明**，本 session 多途徑抓取皆 302/無法取得逐字（試卷 PDF 僅見「第一/二大題」無「知性/情意」）。雙鏡均以「命名未官方佐證」保留 FAIL。
+  → harness 正確拒絕 over-claim；**不偽造**。解法二選一（待 HD/下次）：(a) 取得國寫考試說明逐字官方源後 verify；(b) 將 KP 題敘收斂為已證之「時間/二大題/逐題字數」（去命名）再 verify＝需改 _kp_slices 母體＋round-trip。
+- AC-KP-VERIFY 因此仍差 1（誠實 RED）；其餘 fast gate 全綠、a11y/nav 0、R14 全 corpus 收斂、音檔 gate CLEAN。
