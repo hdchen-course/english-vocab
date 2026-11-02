@@ -588,3 +588,12 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - **eng 全 22 strand 0 缺、300/300 binding KP 覆蓋**（build_status --domain eng 小計 300/300）。單元數 336、頁 306。
 - 全程 15 個 authoring agent 分 strand 建置，我逐批親驗內容正確性＋跑確定性 gate；全部 claim provisional 待英語母語 reviewer 複核。
 - **下一階段（非本「先補齊」範圍，QUEUE）**：Phase 2 接線（既有 250 communicative 單元補宣告 prerequisites／產 roadmap_layout.json）→ 全島一次一檔 content_audit 5-clean 收斂（AC-UNIT-2）→ 島 DONE-GATE（§11.A eng 子集）→ 視覺 iPad 簽核 → 里程碑上線。收斂前待辦：listening L2 prosody 真音複核、vocab/noun 9 檔補 shadowing、各 provisional claim 母語 reviewer。
+
+## 2026-11-02 23:20 Phase 2 接線 — 分析與起步
+- **結構前置已滿足**：全 336 單元都已宣告 `prerequisites[]`＋`knowledge_point_ids[]`（0 缺欄位）。其中 285 宣告 `[]`(root)、51 有實質邊（phonics/listening/reading/writing/subj/special/pattern/verb 的部分）。
+- **units_index.json 不帶 prerequisites 欄**（schema：unit_id/page/title_zh/subject/strand/track/can_do/situation_group/est_minutes/teach_kp_ids/practice_kp_ids/covered_kp_ids）；AC-SCHEMA 的 prereq→unit_id 存在性＋無環由讀 sidecar 的 gate 驗。roadmap_layout 需要 prerequisites → 要麼擴 units_index、要麼 roadmap 產生器直讀 sidecar。
+- **eng tier/strand**：t_base 119 / t_mid 108 / t_adv 89 / t_sub 20；22 strand（vocab 68、verb 38、pattern 29、modal 19、special 18、adjadv 15、subj/morph 13、nonfinite/relcl 12、phonics 11、conj/noun/pron 10、prep/voice 9、nouncl 8、reading/writing 9/8、advcl/listening 6、article 3）。
+- **真正 Phase 2 內容工作**＝為 285 個 root 中「學習上應有前置」者補**有意義的 prerequisite 邊**（預設：同 strand 內 tier 序 t_base→t_mid→t_adv→t_sub 鏈；跨 strand 僅必要處；真入口保持 []），讓 roadmap DAG 有學習順序（否則 285 孤兒 root＝§6.1 DAG/§9.2 K_pre 閉包空洞）。prerequisites＝建議非門鎖（R-OPEN）。
+- **產物**：`authoring/roadmap_layout.json`（node 座標／DAG edges／collapse-group；由 units_index＋prerequisites 預生成）＋`authoring/progkey_migration.json`（{old_progKey,new_unit_id,note} additive 遷移，舊 progKey 保留＝never-disappear）。兩檔各自 5-clean。
+- **Phase 2 exit**（spec §10 line 43）：既有單元全數接線＋每檔 5 clean。
+- **起步（安全、不動已 commit 檔）**：先產**唯讀 prerequisite-DAG proposal**（authoring agent 設計、tier 序鏈、無環、引真 unit_id），我 review 後逐 strand apply＋跑 unit_schema_gate（驗 prereq→unit_id 存在＋無環）＋gen_derived，分批 commit（rollback-safe）。依 SOP：authoring 用 team-of-one agent＋我獨立 review，非 solo。
