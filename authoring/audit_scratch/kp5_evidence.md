@@ -24,3 +24,16 @@
 4. HIGH-RISK：另跑 ≥2 相異 reviewer 簽核內容（floor 要求），記 reviews/。
 5. promote_verified.py 重算→verified_overlay（綁當前 manifest_sha）；AC-KP-VERIFY gap 重算。
 ## chi 3 筆（recognition-count/time-budget/envelope）：待 verify-chi 官方來源交回。
+
+## chi 3 筆（verify-chi 真實官方來源，2026-11-02）
+### chi.t_base.char.recognition-count（信心高）scope＋fact 同為官方領綱（convention/policy 事實）
+- 教育部/NAER 國語文領綱 PDF（/tmp/guoyuwen.pdf，pdftotext 抽）：
+  「4-Ⅲ-1 認識常用國字至少 2,700 字，使用 2,200 字。」＋「Ab-Ⅲ-1 2,700 個常用字的字形、字音和字義。」「Ab-Ⅲ-2 2,200 個常用字的使用。」＋實施要點「第一到第三學習階段宜掌握基本識字量 2,700 字」（文件內三處佐證）
+  URL: naer.edu.tw/upload/1/16/doc/806/...(語文領域─國語文).pdf
+### chi.t_sub.gwrk.time-budget（信心高，惟「知性/情意」命名未取得官方逐字）
+- 大考中心 115 國寫試卷: 「考試時間：90分鐘。請妥善分配作答時間。」「非選擇題共二大題」「共二大題，占 50 分」逐題字數（80字/400字…）URL ceec.edu.tw/.../07-115學測國寫試卷.pdf
+- 114 國寫試卷跨年佐證: 同「90分鐘」「二大題」「50分」。URL ceec.edu.tw/.../07-114學測國寫試題.pdf
+- ⚠「第一＝知性統整判斷／第二＝情意感受抒發」命名未取得官方逐字（考試說明頁 302 重導）→ KP2 fact 僅就「時間/二大題/逐題字數」驗；知性/情意命名**不宣稱 verified**（或 KP title 收斂到已證部分）。
+### chi.t_mid.prac.envelope（信心高）中華郵政官方
+- 直式 post.gov.tw ID=21001:「收件人姓名書於中央」「地址書於右側」「郵遞區號...右上角紅框」「寄件人...左下側」「郵票貼於左上角」
+- 橫式 post.gov.tw ID=21002:「收件人地址姓名書於中央偏右」「寄件人...左上角」「郵遞區號...地址上方第1行」「郵票貼於右上角」
