@@ -69,3 +69,12 @@
 審：prepgerund/prepmeans/prepplace/indefinitepron/interrogativepron/itusage/oneones/reciprocalpron
 reciprocalpron each other/one another 正確處理為現代可互通、不列唯一正解題；prepmeans 避開 by cash/on foot BrE/AmE 兩可。零簡體。
 ## wave4 總結：24 單元，0 blocker/0 major，修 4 minor（prepdirection/reflexive/relwhat/relomit）。累計 core 96/150 審畢、全程 0 blocker/0 major。
+
+## wave5（core 96–120，24 單元）— 2026-11-02
+片1 audit-w5s1（relwhich/relwhose/relwhowhom/cleftit/doemphasis/exclamatory/formalobjit/formalsubjit）：全 8 CLEAN。
+片2 audit-w5s2（inversionnegative/participleactive/participlepassive/soneither/tagquestion/inversionomitif/itstime/subjpast）：全 8 CLEAN。
+片3 audit-w5s3（subjpresent/wishsubj/ditransitive/futuregoingto/futureperfect/futureprogressive/futurewill/irregularverb3）：2 minor。
+修：
+- futurewill P5-promise：answer_evidence 原掛 c-will-future（僅涵蓋預測），新增 claim c-will-promise（will 表承諾/願意）並改掛，證據與題意吻合。
+- irregularverb3 P4-same-form："cuts" 誘答理由括號 (a minute ago) 與題幹 (A moment ago) 不一致 → 改 (a moment ago)。
+## wave5 總結：24 單元，0 blocker/0 major，修 2 minor。累計 core 120/150 審畢、全程 0 blocker/0 major。
