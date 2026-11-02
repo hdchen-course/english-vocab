@@ -581,3 +581,10 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - pattern：sentence-kinds/sv-agreement/sentence-types/run-on-comma-splice。verb：past-perfect-progressive/future-perfect-progressive/tense-consistency。
 - 親驗：主謂一致(walks/is/has)、run-on/comma-splice 辨識+四修法、時態一致判斷、had been/will have been+V-ing 形式皆正確。
 - 已滿 strand：phonics/listening/reading/writing/subj/special/morph/vocab/noun/pattern/verb（11 個）。eng 280→287/300。剩 13（voice/modal/adjadv/relcl/nouncl 各2＋pron/prep/nonfinite 各1）。
+
+## 2026-11-02 23:15 ★里程碑：英語島 eng 300/300 binding KP 全覆蓋達成（「先補齊」完成）
+- 最後 13 KP（13 新 sidecar）：voice(nonfinite/it-is-said)、modal(probability-ladder/need-dare)、adjadv(adjective-order/comparison-ellipsis)、relcl(compound-wh-ever/quantifier-of-which)、nouncl(complement-apposition/suggest-should)、pron(quantifier-agreement)、prep(others)、nonfinite(perfect-passive)。
+- 親驗：OSASCOMP 形容詞序(big red/lovely small/old blue)、it-is-said(to sing 同時/to have been stolen 完成被動)、推測階梯(must/can't/might)、need-dare(needn't+原形) 皆正確。
+- **eng 全 22 strand 0 缺、300/300 binding KP 覆蓋**（build_status --domain eng 小計 300/300）。單元數 336、頁 306。
+- 全程 15 個 authoring agent 分 strand 建置，我逐批親驗內容正確性＋跑確定性 gate；全部 claim provisional 待英語母語 reviewer 複核。
+- **下一階段（非本「先補齊」範圍，QUEUE）**：Phase 2 接線（既有 250 communicative 單元補宣告 prerequisites／產 roadmap_layout.json）→ 全島一次一檔 content_audit 5-clean 收斂（AC-UNIT-2）→ 島 DONE-GATE（§11.A eng 子集）→ 視覺 iPad 簽核 → 里程碑上線。收斂前待辦：listening L2 prosody 真音複核、vocab/noun 9 檔補 shadowing、各 provisional claim 母語 reviewer。
