@@ -1,5 +1,8 @@
 # 學習路徑重構 — 實作進度記錄（LIVE，跨 session resume）
 
+> ★★ **先讀計畫再看流水帳**：導航總圖＝`authoring/LEARNING_PATH_BUILD_PLAN.md`（分階段計畫＋現狀＋完成定義），
+> 即時進度＝`python -I tools/build_status.py`（自我稽核儀表板）。**每次 context compact 後，做任何學習路徑工作前先重讀 BUILD_PLAN＋spec**，否則會「忘了計畫就東做一個西做一個、甚至把英文當成做完」。本檔為其下的詳實流水帳。
+
 > 本檔＝**實作進度的詳實流水帳**（HD 2026-11-01 要求：進度詳實記錄、跨 session 可續做）。
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
