@@ -49,6 +49,16 @@ h2.gr-h:not(:first-child){ margin-top:26px; }
 .gr-card{ background:var(--card); border:1px solid var(--card-border); border-radius:12px; padding:14px 16px; margin:10px 0;
   box-shadow:0 1px 3px rgba(51,49,46,.05); }
 .gr-en{ font-size:17px; color:var(--ink); line-height:1.55; }
+/* R14：中文對照收合（預設隱藏，鼓勵先試英文；44px 觸控目標、老花/iPad 友善） */
+.gr-zh{ margin-top:11px; border-top:1px dashed var(--card-border); padding-top:9px; }
+.gr-zh>summary{ cursor:pointer; list-style:none; font-size:14px; color:var(--c-english-ink);
+  background:var(--tint-english); border:1px solid var(--c-english); border-radius:999px;
+  padding:6px 14px; min-height:44px; display:inline-flex; align-items:center; width:auto; }
+.gr-zh>summary::-webkit-details-marker{ display:none; }
+.gr-zh>summary::before{ content:"▸ "; margin-right:4px; }
+.gr-zh[open]>summary::before{ content:"▾ "; }
+.gr-zh>summary:focus-visible{ outline:3px solid var(--c-focus); outline-offset:2px; }
+.gr-zh .zh-hint{ font-size:15px; color:var(--ink); line-height:1.55; margin-top:9px; }
 .gr-play{ font:inherit; cursor:pointer; border:1px solid var(--c-english); color:var(--c-english-ink);
   background:var(--tint-english); border-radius:999px; padding:6px 14px; font-size:14px; margin-right:8px;
   /* AC-A11Y-1：點擊目標 ≥44px（WCAG 2.5.5）。inline-flex 讓 min-height 生效、圖示＋文字置中。 */
