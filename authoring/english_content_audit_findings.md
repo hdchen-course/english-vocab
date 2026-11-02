@@ -93,3 +93,9 @@ reciprocalpron each other/one another 正確處理為現代可互通、不列唯
 修：
 - possessive P2/P5：誘答「This is your pen?／This is your book?」為合法的上揚直述確認問句（輕微二義，且違反本批 jobs _note 自訂「避開上揚直述問法」標準）→ 改為明顯亂序句「Is this pen your?／Is this book your?」，與同題其餘亂序誘答風格一致。
 ## wave7 總結：30 單元，0 blocker/0 major，修 1 minor。speaking 累計 30/100 審畢。
+
+## wave8（speaking 情境 4–6 類：數字時間／食物點餐／購物衣物，30 單元）— 2026-11-02
+片1 audit-w8s1（數字時間 10：counting/teens/counting20/time/days/months/howmany/birthday/addition/subtraction）：全 10 CLEAN（加減算式逐題驗算正確、星期月份拼寫大寫正確、o'clock/at/on 道地）。
+片2 audit-w8s2（食物點餐 10：ordering/want/hungry/canihave/likefood/helikes/fruit/morefood/drinks/fastfood）：全 10 CLEAN（a/an 母音子音判定、可數不可數+some/零冠詞、Yes,I am 不縮正確）。附注 ordering 題號跳 P4（僅編號不連續，非缺陷）。
+片3 audit-w8s3（購物衣物 10：shopping/colors/price/buyfruit/wantclothes/morecolors/wearmore/wearing/pricetens/pricehundred）：全 10 CLEAN（數字拼寫 forty/ninety/fifty 正確、try this on 可分離片語動詞、價格數字正確）。
+## wave8 總結：30 單元，0 blocker/0 major/0 minor，無需修正。speaking 累計 60/100 審畢。
