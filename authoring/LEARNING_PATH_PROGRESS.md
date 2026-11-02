@@ -659,3 +659,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - per_page_5clean_gate evaluate_page(該頁)=PASS「連續 5 clean」。**完整 per-file 5-clean 收斂管線證成**（launch→L3→記 ledger→gate PASS）。
 - 進度：1/306 頁完整收斂（AC-UNIT-2）。注意：頁 DONE-GATE 另需 iPad 四角色視覺簽核（全島後期步驟）。
 - 節流：burst-cap ≤3 round/480s + 一檔一 round hook → ~1 檔/15min（5 rounds），多-session。下一檔 special/apposition。
+
+## 2026-11-03 00:58 收斂修正 — apposition「Everest tallest→highest」
+- apposition round 1 confirmed=0 但 rawCount=1：panel 4:1 裁 NOT A DEFECT 的「Mount Everest, the tallest mountain in the world」。
+- **team-lead 覆寫此 close call（correctness #1）**：Everest 正確最高級＝highest（海拔最高）；tallest 口語可接受但技術上不精確（base-to-summit 冠軍為 Mauna Kea）。K-12 教材正確性至上、highest 為標準教育用語、修正零風險且不引入 scope 外內容（同一同位語、僅更精確）。
+- 修 10 處一致（stem/answer/4 選項/3 distractor keys/feedback）tallest→highest；JSON 合法、MCQ answer∈options、distractor keys⊆options、unit_schema/question_correctness/簡體 gate 全綠。僅此檔含該句。
+- apposition 收斂從新 sha 重跑 round 1（原未記 ledger，無 streak 損失）。
