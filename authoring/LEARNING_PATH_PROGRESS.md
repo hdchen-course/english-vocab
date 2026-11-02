@@ -526,3 +526,11 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 音檔：edge-tts 14 mp3（ph_sch_×5／ph_ed_×5／ph_kk_×4），音↔顯一致。audio_exist_gate CLEAN（1491 refs）。
 - 9 道確定性 gate 全綠；claim 全 provisional 待母語 reviewer（ed/plural soft-ge /ɪz/ 細節、KK 重音標記精確呈現留 reviewer）。
 - 下一步：英語島 0 單元分區 reading／writing／listening（43 KP）→ 已建未滿分區（~52 KP）→ Phase 2 接線（prerequisites 已逐單元宣告，待產 roadmap_layout.json）→ 全島補齊後一次一檔 5-clean 收斂。
+
+## 2026-11-02 20:50 英語島 listening strand 建成 → 10/10 KP 滿覆蓋 ✅
+- 新檔 english_listening.units.json：L1 picture-id（t_base）／L2 sounds-stress（phonology+stress-intonation）／L3 qa-dialogue（response+short-dialogue）／L4 cue-numbers（transition-cue+numbers）／L5 dictation／L6 monologue-implication（t_adv）。listening 0→10/10 KP、6 單元，DAG prereq 由淺到深。
+- **內容親驗**：最小對立對 sheep/ship·bad/bat（真詞 TTS 可靠）、wh/yes-no 問答、轉折詞 but/because、報時報價、聽寫、獨白主旨、言外之意皆正確；答案皆可由聽到的字句/語法/情境推得。
+- **收斂前待辦（已記）**：L2 P3 句重音題（答 red）依賴 TTS 對比重音、L2 P4 問句語調題依賴 TTS 升調——收斂階段須對真實 mp3 複核語調是否明顯（答案本身 pedagogically 正確、且 P4 可由語法判定）；L3/L6 對話為單聲道單嗓；L1 選項為中文圖說（無真圖）。皆 provisional 待母語 reviewer＋真音複核。
+- 音檔：edge-tts 45 mp3（lis_* 前綴，audio_script 完整英文句/對話），音↔腳本一致。audio_exist_gate CLEAN（1536 refs）。
+- 9 道確定性 gate 全綠。eng 覆蓋 205→215/300。
+- 下一步：reading（18 KP）→ writing（15 KP，自評）→ 已建未滿分區（~52 KP）→ Phase 2 接線 → 全島 5-clean 收斂。
