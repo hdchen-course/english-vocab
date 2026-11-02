@@ -350,3 +350,13 @@ AC-REWARD-1 的 runtime harness（`tools/reward_safety_gate.mjs`，已 commit 06
 - 4 道確定性 gate 全綠（238 units），scan_simplified 12 檔 PASS（compmodifier 台北101 僅 info）。
 - iPad render：compmodifier 橫＋expandvocab 直逐張開圖，四角色簽核通過。
 - 對抗式 review 修掉：voicebyagent P3 史觀爭議句（Columbus→Mona Lisa/Leonardo）、P1/P4 施事者去「（人）」窄化、expandvocab P3 第二正解（加 into new ones + distractor pollute）、patternsv P5 雙 the→arrive to。
+
+## batch24 合併（2026-11-02 10:07）＋ unitnav 定案
+- eng 173→179（+6），units 238→244。nav_index byte-unchanged。全 6 個 **t_adv 高階**（t_mid 已用罄）。
+- 高階：compoundadj（合成形容詞 well-known/ten-year-old）、presperfcont（現在完成進行式 have/has been+V-ing，狀態動詞例外）、confusableadv（易混形副 hard/hardly…）、gerundidiom（慣用動名詞 feel like/worth/no use+V-ing）、reciprocalpron（相互代名詞 each other/one another）、purposeresult（目的/結果 so that／so…that／such…that）。
+- 注：前一次 batch24 於 Unit 5 遇暫時性 AWS 認證錯誤中斷、丟棄重啟，本批為重啟成果。
+- 4 gate 全綠（244 units），scan_simplified 12 檔 PASS（compoundadj 台→臺僅 info）。
+- iPad render：presperfcont 直＋purposeresult 橫四角色簽核通過。
+- 對抗式 review 修掉 1 blocker：purposeresult P1 誘答 "so"（合法第二正解）→ 換 "because"（原因≠目的），理由去 overstate。
+- 剩餘乾淨 t_adv 未覆蓋 ~29（vocab/verb/morph/adjadv/special/pattern…；分歧地雷如集合名詞一致、none 單複數刻意不取）。
+- **unitnav 導覽改版：HD 2026-11-02 拍板 Cand 1（左側欄 app-shell）**。計畫：產品化 pshell/psb 進共用 assets/unit.{css,js}（一次套 244 頁）＋同分區單元由 units_index 動態帶＋①②③④錨點；hub index_new 加 #島/strand deep-link＋修 app-bar__home；全 gate＋iPad 四角色＋AC-VIZ-1 重簽。實作期間暫緩新內容批次避免 assets/unit.* churn。研究包存 repo nav_review/。
