@@ -511,3 +511,10 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 音檔：edge-tts 生成 15 mp3（ph_enc_/ph_sile_/ph_vt_ ×5），音↔顯一致。audio_exist_gate CLEAN（1461 refs）。
 - 9 道確定性 gate 全綠（含修好的 unit_acceptance_lint prereq 檢查）。所有 claim status=provisional 待母語 reviewer。
 - 下一步：phonics U6（blends+digraphs）→ U7 r-controlled → U8 hard-soft-cg+final-le → U9 schwa+syllable-stress → U10 ed-sound+plural-s → U11 kk-ipa。
+
+## 2026-11-02 20:25 英語島 phonics U6–U8 建成
+- U6 blends-digraphs（consonant-blends＋consonant-digraphs 2 KP）／U7 r-controlled（1 KP）／U8 hard-soft-and-le（hard-soft-cg＋final-le 2 KP）。phonics 覆蓋 10→15/20 KP、5→8 單元。
+- **內容親驗**：blends 各子音保留音；digraphs th 清/濁兩讀（thin /θ/・this /ð/）、ck/ng、ch 例外（school/chef）僅註 verification_ref 不入 learner teach；r-controlled ar /ɑr/・or /ɔr/・er/ir/ur 重讀合流 /ɜr/＋弱讀 /ər/ 誠實標；hard-soft c/g（軟音在 e/i/y 前）＋例外 get/give /ɡ/ 標出；final-le /əl/（schwa，e 不單獨發音）皆正確。
+- 音檔：edge-tts 16 mp3（ph_bld_×6／ph_rc_×5／ph_cg_×5），音↔顯一致。audio_exist_gate CLEAN（1477 refs）。
+- 9 道確定性 gate 全綠；claim 全 provisional 待母語 reviewer（符號選擇 /ɜr/ vs /ɝ/、final-le schwa vs syllabic l 等點留 reviewer）。
+- 下一步：U9 schwa+syllable-stress → U10 ed-sound+plural-s → U11 kk-ipa（剩 5 KP），phonics 即滿。
