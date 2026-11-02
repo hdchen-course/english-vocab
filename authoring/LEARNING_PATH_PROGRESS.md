@@ -609,3 +609,10 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - **問題**：progKey 是**整頁共用**（concept_engine 每頁一鍵、含多 lesson），新制 learning_progress_v1 是**逐 unit_id**。`{old_progKey,new_unit_id,note}` 需「舊頁 lesson → 新 unit_id」對照才誠實，不能一鍵對一單元硬塞。
 - **下一步（慎重、不捏造）**：逐一讀舊 concept 頁的 `window.CONCEPT.lessons[]` id 結構，對映到新 *.units.json 的 unit_id，產出逐 lesson 的 {old_progKey, lesson_id?, new_unit_id, note}。英語島先做（english_concepts_v1 / english_reading_v1 → eng 單元）。舊 progKey additive 保留、永不刪（§6.3/§7.1），故風險受控但映射須正確。
 - **Phase 2 進度**：DAG 接線✅(c2b70082f)、roadmap_layout.json✅(4bb1b6fe2)、progkey_migration ☐(調查中)、各檔 5-clean ☐。
+
+## 2026-11-02 23:39 progkey_migration — 補充發現＋下一 tick 精確調查步驟
+- 更正：earlier 的「176 頁/22 progKey」**全在非正式目錄**（.claude/worktrees 過期副本、training/）。正式 root 頁 0 命中那 22 個 `*_concepts_v1` 字串。
+- 正式站真相：55 頁 `<script src="concept_engine.js">`（舊引擎），其中 english_ 僅 10 頁；english_asas.js/english_body.js 內**無** progKey/CONCEPT 字樣 → progKey 設定位置待查（可能在 concept_engine.js 由檔名/其他推導，或新頁改用 assets/unit.js 完全不同機制）。
+- **兩代引擎並存**：舊 concept_engine.js vs 新 communicative 單元 assets/unit.{css,js}（見 memory english-island-phase2-units-live）。progkey_migration 只需處理「舊 concept_engine 頁」→ 新 unit_id。
+- **下一 tick 調查步驟（不捏造）**：(1) 讀 concept_engine.js 看 progKey 如何決定（參數？檔名？）；(2) 列 55 個舊 concept 頁各自 progKey 值＋其 lesson id 清單；(3) 對映到對應新 *.units.json 的 unit_id（檔名對應 english_asas.html↔english_asas.units.json 為線索但須逐一確認）；(4) 產 authoring/progkey_migration.json {old_progKey, (lesson_id), new_unit_id, note}；(5) 寫 migrate 邏輯 additive 搬入 learning_progress_v1、舊 progKey 保留（§6.3/§7.1）＋對應 RT。可委派給聚焦 agent 產提案、我驗證（比照 prerequisite DAG 流程）。
+- **本 session Phase 2 已交付並 push**：prerequisite DAG 接線(c2b70082f)、roadmap_layout 產生器+輸出(4bb1b6fe2)、調查記錄(5cd942518)。剩 progkey_migration + 逐檔 5-clean 收斂。
