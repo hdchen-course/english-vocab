@@ -105,3 +105,17 @@ reciprocalpron each other/one another 正確處理為現代可互通、不列唯
 片2 audit-w9s2（身體健康 10：body/doctor/feelok/hygiene/eatwell/bodycount/touchmore/sickadvice/touchbody/touchface）：全 10 CLEAN（身體部位單複數 feet/teeth 正確、My…hurts 第三人稱、照顧建議無醫學錯誤/無危險內容）。
 片3 audit-w9s3（天氣自然 10：weather/weatherwear/weathermore/isweather/nature/seasons/weatheradj/likeseason/likeweather/sky）：全 10 CLEAN（It's sunny/How's the weather、a typhoon/an earthquake、the sun/the moon、fall 美式一致）。
 ## wave9 總結：30 單元，0 blocker/0 major/0 minor，無需修正。speaking 累計 90/100 審畢。
+
+## wave10（speaking 情境 10 類：動作/能力/動物，10 單元）— 2026-11-02
+片1 audit-w10s1（動作能力 5：doing/canability/yesterday/letsgo/canido）：全 5 CLEAN（V-ing/-ed 單純加綴、can+原形、Let's go to the+地方、Can I+動作 道地）。
+片2 audit-w10s2（動物 5：seeanimals/animalcolors/heshedoing/havepet/wildanimals）：全 5 CLEAN（a/an 搭配、He's/She's 進行式、字彙單複數正確）。
+## wave10 總結：10 單元，0 blocker/0 major/0 minor，無需修正。speaking 累計 100/100 審畢。
+
+## ================= 英語島全站內容正確性＋spec 吻合審查：完成（250/250） =================
+日期：2026-11-02。範圍：英語島全部 250 個 units.json（150 core 文法/時態/被動 + 100 speaking 情境口說）。
+方法：每波 2–3 個獨立對抗式 general-purpose reviewer 併跑，每檔逐項（claims/teach/每題 practice 選項代入朗讀/dictation/shadowing）核 6 維 —
+  A 事實正確性（對照 Swan PEU / Cambridge / Oxford）、B 唯一正解（play-through 代入）、C 誘答理由不過度宣稱、D R14、E strand/情境吻合、F 零簡體零 PRC 詞。
+結果：**0 blocker / 0 major 全程**；累計修 18 minor（16 core + 1 speaking possessive 二義 + 1 已含於計數）。
+  實際 minor 修正清單見上方各 wave 段落（wave1–10）。
+里程碑：core 150/150（wave1–6）+ speaking 100/100（wave7–10）＝ 250/250 全審畢，內容層面收斂。
+備註（非本審查範圍、系統性 backlog，另案處理）：R14 teach-body 目前為單一 zh/en 混排字串，無法在 learner 端隱藏中文，需引擎層拆成 en + 可收合 zh（影響全 corpus，延後）。
