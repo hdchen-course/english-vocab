@@ -553,3 +553,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - **內容親驗**：抄寫/仿寫、完整句（主詞+動詞）、大小寫標點、條列逗號、看圖寫句、email 三段格式（問候/本文/署名）皆正確；MCQ 單一正解、distractor 文本內可判定。
 - 8 道確定性 gate 全綠（question_correctness 重構後 CLEAN）。eng 覆蓋 233→238/300。
 - 下一步：writing t_adv W4–W8（10 KP：paragraph-structure/cohesive-devices/topic-essay/consistency/narrative/picture-narrative/expository/sentence-combining/c2e-translation/avoid-chinglish）→ 已建未滿分區 → Phase 2 接線 → 全島 5-clean 收斂。
+
+## 2026-11-02 21:39 英語島 writing t_adv W4–W8 建成 → writing strand 15/15 KP 滿覆蓋 ✅（第四個 100% strand）
+- append W4 paragraph-cohesion／W5 essay-consistency／W6 narrative-picture／W7 expository-combining／W8 c2e-naturalness（各 2 KP）。writing 5→15/15 KP、3→8 單元。
+- **內容親驗**：W7 泡茶步驟順序合理、and/who 合併（which-for-person/主謂/who+she 冗餘誘答皆對）；W8 中譯英自然語序、turn on the light（正面框架道地說法非貼標籤）、Although 單連接詞；W5 時態/主謂/人稱一致；W6 敘事開頭+Finally+種子→澆水→發芽→開花順序皆正確。自由產出題在 teach「換你做」、MCQ 承載 rubric⑦（question_correctness CLEAN 無 self）。
+- 8 道確定性 gate 全綠。eng 覆蓋 238→248/300。**四大技能 strand（phonics/listening/reading/writing）全 100%。**
+- 下一步：已建未滿分區補滿（52 KP：noun/vocab/pattern/special/subj/morph/relcl/voice/nouncl/adjadv/modal/pron/nonfinite/prep 等）→ Phase 2 接線（roadmap_layout.json）→ 全島 5-clean 收斂 → 島 DONE-GATE。
