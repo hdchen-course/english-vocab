@@ -23,3 +23,15 @@
 ## wave1 修正批次（2026-11-02 12:08）
 已修 5 處 minor（asas P3、asif P1/P2/P5、definiteart P3、moreandmore P5 中文選項→英文釋義）。皆不改正解。JSON 合法、scan_simplified PASS、claim_evidence/question_correctness/unit_schema CLEAN。
 **wave1 總結：24 單元，0 blocker / 0 major，教學事實正確、唯一正解全成立、零簡體。** 系統性 backlog：R14 teach-body 中英混寫宜拆 en/zh 可收合（engine 層級，另案）。
+
+## wave2 片3（構詞/其餘 8 單元）— audit-w2s3：blocker0/major0/minor1/INFO4；CLEAN 7
+審：shallwouldlike/wouldmodal/compoundadj/prefixneg/suffixadj/suffixnoun/suffixverb/wordfamily
+- [minor 已修] suffixverb claim c-sv-en | A 精確度 | 「strong/strength -> strengthen」暗示 strong+en（實為 *strongen）→ 改「…dark->darken；亦可加名詞：strength(noun)->strengthen」。teach body 本已正確，僅後台 claim 措辭。
+- INFO：suffixadj P2/P4 誘答為保守排除（非 overstate）；全 8 單元 R14 teach 雙語內嵌＝全站既有 house-style（系統性 backlog）。strand 全對、零簡體、唯一正解全成立。
+
+## wave2 片1（連接/副子句 8）＋片2（情態 8）— audit-w2s1/w2s2：blocker0/major0/minor
+片1：CLEAN 6；修 reasonclause P5（not…because 否定範圍歧義句→前置「Because it was cold, I didn't go out.」消歧義）。purposeresult teach 英文領述與他單元體例不一＝系統性 R14 backlog。
+片2：CLEAN 7；修 musthaveto P2 誘答「must to」理由刪誤導括號「has to 更自然」→「must 後直接接原形、此處填 has to」。maymight c-mm-might-less 以 often/usually hedge＝可接受 INFO、不修。modalperfect（最高風險）全 CLEAN。
+## wave2 修正批次（2026-11-02 12:15）＋總結
+已修 3 處 minor：suffixverb claim c-sv-en、reasonclause P5 歧義句、musthaveto P2 誘答措辭。皆不改正解。gate 全綠。
+**wave2 總結：24 單元，0 blocker / 0 major。** 情態助動詞（含 modalperfect 推測）語意正確、唯一正解設計貫徹。累計 core 48/150 審畢、全程 0 blocker/0 major。
