@@ -322,10 +322,177 @@ def _selftest():
     return ok
 
 
+# ──────────────────── AC-UNIT-3：golden 結構 diff ＋ deviation_reason 有效性 ────────────────────
+# §8 簽核者角色 allowlist（closed set，spec §8 表末 line 772-773）＝ {golden-owner} ∪ 13 §8 角色 id。
+SIGNER_ALLOWLIST = {
+    "golden-owner", "domain", "native-en", "linguist", "learning-sci", "knowledge-viz",
+    "eye-comfort", "psych", "art", "spatial", "pm", "sim-learner", "animator", "translator",
+}
+# golden 結構骨架（communicative archetype）：這些 section 必須存在且非空；teach kind 受控。
+GOLDEN_REQUIRED_SECTIONS = ("teach", "practice", "selfeval", "shadowing")
+GOLDEN_TEACH_KINDS = {"text", "example"}
+
+
+def _canon(o):
+    return json.dumps(o, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+
+
+def _sha16(s):
+    import hashlib
+    return hashlib.sha256(s.encode("utf-8")).hexdigest()[:16]
+
+
+def _cat_fact_sha(cat):
+    return _sha16(_canon({"category": cat["category"],
+                          "required_signer_roles": cat["required_signer_roles"]}))
+
+
+def _strip_signoff(obj):
+    """遞迴移除任何 'signoff' 子物件（unit_content_sha pre-image 唯一排除項）。"""
+    if isinstance(obj, dict):
+        return {k: _strip_signoff(v) for k, v in obj.items() if k != "signoff"}
+    if isinstance(obj, list):
+        return [_strip_signoff(x) for x in obj]
+    return obj
+
+
+def _unit_content_sha(unit):
+    return _sha16(_canon(_strip_signoff(unit)))
+
+
+def load_deviation_categories(root):
+    """回傳 {category: {valid:bool, required_signer_roles:[...], reason:str}}。"""
+    p = os.path.join(root, "authoring", "deviation_categories.json")
+    if not os.path.exists(p):
+        return None
+    d = json.loads(open(p, encoding="utf-8").read())
+    out = {}
+    for cat in d.get("categories", []):
+        name = cat.get("category")
+        rs = cat.get("required_signer_roles") or []
+        so = cat.get("signoff") or {}
+        reason = None
+        if not rs:
+            reason = "required_signer_roles 空"
+        elif any(r not in SIGNER_ALLOWLIST for r in rs):
+            reason = "required_signer_roles 含非 allowlist id"
+        elif set(so.get("by") or []) < {"art", "spatial"}:
+            reason = "缺美術/空間雙簽"
+        elif so.get("sha") != _cat_fact_sha(cat):
+            reason = "signoff.sha≠現算 cat_fact_sha（項被竄改未重簽）"
+        out[name] = {"valid": reason is None, "required_signer_roles": rs, "reason": reason}
+    return out
+
+
+def golden_conformant(unit):
+    """結構骨架 diff：回傳偏離原因清單（空＝conformant）。"""
+    dev = []
+    for sec in GOLDEN_REQUIRED_SECTIONS:
+        if not unit.get(sec):
+            dev.append(f"缺核心區塊 {sec}")
+    for t in unit.get("teach", []) or []:
+        if t.get("kind") not in GOLDEN_TEACH_KINDS:
+            dev.append(f"teach.kind 非骨架允許值：{t.get('kind')}")
+    return dev
+
+
+def validate_deviation(unit, dev_cats):
+    """單元有偏離時驗 deviation_reason 是否有效。回傳 None=有效 / str=失敗原因。"""
+    dr = unit.get("deviation_reason")
+    if not isinstance(dr, dict):
+        return "偏離但無 deviation_reason（或非物件）"
+    cat = dr.get("category")
+    if cat not in (dev_cats or {}):
+        return f"category『{cat}』不在 deviation_categories enum"
+    ci = dev_cats[cat]
+    if not ci["valid"]:
+        return f"category『{cat}』enum 項無效：{ci['reason']}"
+    so = dr.get("signoff") or {}
+    if so.get("sha") != _unit_content_sha(unit):
+        return "signoff.sha≠現算 unit_content_sha（單元/偏離理由改動未重簽）"
+    by = set(so.get("by") or [])
+    if any(b not in SIGNER_ALLOWLIST for b in by):
+        return f"signoff.by 含非 allowlist 身分：{sorted(by - SIGNER_ALLOWLIST)}"
+    required = {"golden-owner"} | set(ci["required_signer_roles"])
+    if not required <= by:
+        return f"signoff.by 缺必填簽核者：{sorted(required - by)}"
+    return None
+
+
+def run_golden_verify(root):
+    """AC-UNIT-3：對每個單元跑 golden 結構 diff；偏離須有有效 deviation_reason。回傳違規清單。"""
+    dev_cats = load_deviation_categories(root)
+    golden_dir = os.path.join(root, "authoring", "golden")
+    if dev_cats is None or not os.path.isdir(golden_dir):
+        return None, "fail-closed：缺 deviation_categories.json 或 authoring/golden/"
+    files = sorted(glob.glob(os.path.join(root, "**", "*.units.json"), recursive=True))
+    # 排除 golden 自身（§6.6① golden bootstrap 對 AC-UNIT-3 豁免）
+    files = [f for f in files if os.path.join("authoring", "golden") not in f]
+    viol, n = [], 0
+    for f in files:
+        try:
+            data = json.loads(open(f, encoding="utf-8").read())
+        except Exception as e:  # noqa: BLE001
+            viol.append((os.path.basename(f), "<parse>", f"JSON 解析失敗 {e}")); continue
+        for u in iter_units(data):
+            n += 1
+            dev = golden_conformant(u)
+            has_dr = isinstance(u.get("deviation_reason"), dict)
+            if not dev and not has_dr:
+                continue  # conformant、無偏離宣告 → OK
+            # 有偏離（結構 diff 偵出）或主動宣告 deviation_reason → 須有效 deviation_reason
+            why = validate_deviation(u, dev_cats)
+            if why:
+                reason = f"{why}" + (f"；結構偏離：{dev}" if dev else "")
+                viol.append((os.path.basename(f), u.get("unit_id"), reason))
+    return (n, viol), None
+
+
+def _selftest_golden(root):
+    dev_cats = load_deviation_categories(root)
+    ok = True
+    def t(label, cond):
+        nonlocal ok; print(f"  [{'OK' if cond else 'BAD'}] {label}"); ok = ok and cond
+    if dev_cats is None:
+        print("  [BAD] 缺 deviation_categories.json"); return False
+    # enum 檔本身：3 類皆 valid（sha 綁定）
+    t("deviation_categories 3 類 cat_fact_sha 皆有效", all(v["valid"] for v in dev_cats.values()))
+    base = {"unit_id": "x", "teach": [{"kind": "text"}], "practice": [{"question_id": "q"}],
+            "selfeval": ["a"], "shadowing": {"lines": [{"text": "x"}]}}
+    import copy
+    # conformant 無偏離 → ALLOW
+    t("conformant 單元（四區塊齊）→ ALLOW", golden_conformant(base) == [] )
+    # 缺區塊、無 deviation_reason → DENY
+    missing = copy.deepcopy(base); missing.pop("shadowing")
+    t("缺 shadowing 且無 deviation_reason → DENY",
+      validate_deviation(missing, dev_cats) is not None and golden_conformant(missing) != [])
+    # 缺區塊 + 自由文字 deviation_reason（非 enum）→ DENY
+    free = copy.deepcopy(missing); free["deviation_reason"] = {"note": "我覺得不用"}
+    t("自由文字 deviation_reason → DENY", validate_deviation(free, dev_cats) is not None)
+    # 有效 deviation：合法 category + 正確 unit_content_sha + by 含必填
+    cat = "a11y-accommodation"; req = dev_cats[cat]["required_signer_roles"]
+    valid = copy.deepcopy(missing)
+    valid["deviation_reason"] = {"category": cat, "note": "對比調整",
+                                 "signoff": {"by": ["golden-owner"] + req, "sha": "PLACEHOLDER"}}
+    valid["deviation_reason"]["signoff"]["sha"] = _unit_content_sha(valid)
+    t("合法 enum+sha-bound+by 含必填 → ALLOW", validate_deviation(valid, dev_cats) is None)
+    # by=['self'] → DENY
+    bad_by = copy.deepcopy(valid); bad_by["deviation_reason"]["signoff"]["by"] = ["self"]
+    bad_by["deviation_reason"]["signoff"]["sha"] = _unit_content_sha(bad_by)
+    t("by=['self']（缺 golden-owner+必填）→ DENY", validate_deviation(bad_by, dev_cats) is not None)
+    # 竄改 note 不重簽 → sha 失配 DENY
+    tamper = copy.deepcopy(valid); tamper["deviation_reason"]["note"] = "偷改理由"
+    t("改 note 未重簽（sha 失配）→ DENY", validate_deviation(tamper, dev_cats) is not None)
+    print("RESULT:", "PASS ✅" if ok else "FAIL ❌")
+    return ok
+
+
 # ────────────────────────── main ──────────────────────────
 def main():
     ap = argparse.ArgumentParser(description="§6.6 單元驗收 rubric 確定性子集 lint（fail-closed）")
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--selftest-golden", action="store_true", help="AC-UNIT-3 golden-diff 紅隊自測")
+    ap.add_argument("--verify-golden", action="store_true", help="AC-UNIT-3 golden 結構 diff＋deviation 驗")
     ap.add_argument("--file")
     ap.add_argument("--root", default=ROOT)
     ap.add_argument("--no-delegate", action="store_true", help="關閉委派子行程（⑥/schema gate）")
@@ -343,6 +510,22 @@ def main():
         ok = _selftest()
         print("RESULT:", "PASS ✅" if ok else "FAIL ❌")
         sys.exit(0 if ok else 2)
+
+    if args.selftest_golden:
+        print("=== unit_acceptance_lint --selftest-golden（AC-UNIT-3 紅隊）===")
+        sys.exit(0 if _selftest_golden(os.path.abspath(args.root)) else 2)
+
+    if args.verify_golden:
+        print("=== unit_acceptance_lint --verify-golden（AC-UNIT-3 golden 結構 diff＋deviation 驗）===")
+        res, err = run_golden_verify(os.path.abspath(args.root))
+        if err:
+            print("  " + err); sys.exit(99)
+        n, viol = res
+        for fn, uid, why in viol[:60]:
+            print(f"  ✗ {fn} [{uid}]：{why}")
+        print(f"RESULT(AC-UNIT-3): {'PASS ✅' if not viol else 'FAIL ❌'}"
+              f"（掃 {n} 單元，未解釋/無效偏離 {len(viol)}）")
+        sys.exit(0 if not viol else min(len(viol), 98))
 
     root = os.path.abspath(args.root)
     manifest_ids = load_manifest_ids(root)
