@@ -141,14 +141,17 @@
     main.appendChild(el('h2','gr-h','① 先聽、先感覺')).id='s1';
     u.teach.forEach(t=>{
       const c=el('div','gr-card');
-      if(t.audio){ const b=el('button','gr-play','🔊 聽'); b.onclick=()=>play(t.audio); c.appendChild(b); }
+      // 控制列：🔊 與「中文對照」toggle 同一列、置於卡片頂端，省掉多餘的行。
+      // R14：英文為學習媒介；中文對照預設收合隱藏、鼓勵先試英文（§6.2.2 zh_hint、AC-NAV default-collapsed）。
+      const row=el('div','gr-ctrls'); let tg=null;
+      if(t.audio){ const b=el('button','gr-play','🔊 聽'); b.onclick=()=>play(t.audio); row.appendChild(b); }
+      if(t.zh_hint){ tg=el('button','gr-zh-toggle','▸ 中文對照'); tg.setAttribute('aria-expanded','false'); row.appendChild(tg); }
+      if(row.childNodes.length) c.appendChild(row);
       c.appendChild(el('div','gr-en', esc(t.body)));
-      // R14：英文為學習媒介；中文對照收合、預設隱藏、鼓勵先試英文（§6.2.2 zh_hint、AC-NAV default-collapsed）。
       if(t.zh_hint){
-        const d=el('details','gr-zh');
-        d.appendChild(el('summary','gr-zh-sum','看不懂？點開中文對照'));
-        d.appendChild(el('div','zh-hint', esc(t.zh_hint)));
-        c.appendChild(d);
+        const zhDiv=el('div','zh-hint', esc(t.zh_hint)); zhDiv.hidden=true; c.appendChild(zhDiv);
+        tg.onclick=()=>{ const show=zhDiv.hidden; zhDiv.hidden=!show;
+          tg.setAttribute('aria-expanded',String(show)); tg.textContent=(show?'▾ ':'▸ ')+'中文對照'; };
       }
       main.appendChild(c);
     });
