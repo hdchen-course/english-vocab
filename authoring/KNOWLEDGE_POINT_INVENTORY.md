@@ -26,7 +26,7 @@
 - [chi.t_base.char.radical-meaning] 部首表義（以部首推字義類別）  {t_base, 無}  · provisionally_verified
 - [chi.t_base.char.structure-frame] 字的間架結構（左右／上下／包圍／獨體）辨識與書寫  {t_base, 無}  · provisionally_verified
 - [chi.t_base.char.components] 偏旁部件組字  {t_base, 無}  · provisionally_verified
-- [chi.t_base.char.recognition-count] 常用國字累積量（第三學習階段／國小畢業：認識常用國字至少 2,700 字、使用 2,200 字；108 國語文領綱學習表現 4-Ⅲ-1）  {t_base, 無}  · unverified
+- [chi.t_base.char.recognition-count] 常用國字累積量（第三學習階段／國小畢業：認識常用國字至少 2,700 字、使用 2,200 字；108 國語文領綱學習表現 4-Ⅲ-1）  {t_base, 無}  · provisionally_verified
 - [chi.t_base.char.hard-pen-form] 硬筆正確字形與工整書寫  {t_base, 無}  · provisionally_verified
 - [chi.t_base.char.dict-radical] 查字典：部首檢字法（部首外筆畫數）  {t_base, 無}  · provisionally_verified
 - [chi.t_base.char.dict-stroke] 查字典：筆畫檢字法  {t_base, 無}  · provisionally_verified
@@ -324,7 +324,7 @@
 - [chi.t_sub.gwrk.two-subtasks] 分項作答（第一小題資訊整理＋第二小題申論）  {t_sub, 學測-國寫}  · provisionally_verified
 - [chi.t_sub.gwrk.coherence] 邏輯連貫與條理  {t_sub, 學測-國寫}  · provisionally_verified
 - [chi.t_sub.gwrk.precise-language] 精簡準確的說理語言  {t_sub, 學測-國寫}  · provisionally_verified
-- [chi.t_sub.gwrk.time-budget] 字數與時間分配：國寫無統一字數上限，逐題依題幹字數規定，於全卷時間內分配知性題與情意題兩大題  {t_sub, 學測-國寫}  · unverified
+- [chi.t_sub.gwrk.time-budget] 字數與時間分配：國寫無統一字數上限，逐題依題幹字數規定，於全卷時間內分配知性題與情意題兩大題  {t_sub, 學測-國寫}  · provisionally_verified
 - [chi.t_sub.gwrq.read-situation] 讀懂抒情性材料的情境  {t_sub, 學測-國寫}  · provisionally_verified
 - [chi.t_sub.gwrq.life-link] 聯結個人生命經驗  {t_sub, 學測-國寫}  · provisionally_verified
 - [chi.t_sub.gwrq.sincere] 真情實感、不矯飾  {t_sub, 學測-國寫}  · provisionally_verified
@@ -339,7 +339,7 @@
 - [chi.t_sub.gwrq.respond-prompt] 回應題幹的想像／體悟要求  {t_sub, 學測-國寫}  · provisionally_verified
 - [chi.t_sub.gwrq.open-close] 開頭情境營造與結尾餘韻  {t_sub, 學測-國寫}  · provisionally_verified
 - [chi.t_base.prac.letter] 書信格式（稱謂／提稱語／問候／正文／結尾敬辭／署名）  {t_base, 會考}  · provisionally_verified
-- [chi.t_mid.prac.envelope] 書信信封的直／橫式格式  {t_mid, 會考}  · unverified
+- [chi.t_mid.prac.envelope] 書信信封的直／橫式格式  {t_mid, 會考}  · provisionally_verified
 - [chi.t_base.prac.note-notice] 便條與通知  {t_base, 無}  · provisionally_verified
 - [chi.t_base.prac.diary] 日記格式  {t_base, 無}  · provisionally_verified
 - [chi.t_mid.prac.announcement] 啟事／公告  {t_mid, 會考}  · provisionally_verified
@@ -401,7 +401,7 @@
 - [eng.t_mid.vocab.emotion-personality] 情緒與個性形容詞  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.vocab.hobby-leisure] 興趣嗜好與休閒活動  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.vocab.travel-geography] 旅遊與地理  {t_mid, 會考}  · provisionally_verified
-- [eng.t_mid.vocab.health-illness] 健康與身體不適  {t_mid, 會考}  · unverified
+- [eng.t_mid.vocab.health-illness] 健康與身體不適  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.vocab.shopping-money] 購物與金錢  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.vocab.festivals-culture] 節慶與文化  {t_mid, 會考}  · provisionally_verified
 - [eng.t_mid.vocab.tech-media] 科技與媒體日常詞  {t_mid, 會考}  · provisionally_verified
