@@ -393,7 +393,20 @@ fetch('authoring/units_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():{un
     b.addEventListener('click',()=>select(i));
     navEl.appendChild(b);
   });
-  select(0);
+  // hash deep-link（最小侵入）：#<island>/<strand>（如 #eng/vocab）→ 自動選該島並展開該分區
+  // 單元牆（等同使用者點了該 strand 卡）；hash 空／不合法＝維持現有預設首屏（第一島展開）。
+  function applyHash(){
+    const m=(location.hash||'').replace(/^#/,'').match(/^([a-z][a-z-]*)\/(.+)$/);
+    if(!m) return false;
+    const idx=NAV.islands.findIndex(isl=>isl.island===m[1]);
+    if(idx<0) return false;
+    select(idx);   // renderPanel 同步跑完，panel DOM 已就緒
+    const sel='#panel button.lp-scard-link[data-strand="'+((window.CSS&&CSS.escape)?CSS.escape(m[2]):m[2])+'"]';
+    const btn=document.querySelector(sel);
+    if(btn) btn.click();   // 重用既有 click → renderStrandDetail，不重寫導覽
+    return true;           // 島有效即視為已路由（該分區無單元卡時留在該島總覽）
+  }
+  if(!applyHash()) select(0);
   // footer：真實總進度概覽（取代舊「Phase 2 後顯示」占位）
   const T=(LP&&LP.totals&&LP.totals())||{seen:0,mastered:0};
   const srcNote='資料來源：authoring/nav_index.json（由 tools/gen_derived.py 自 knowledge_points.json 衍生）。';

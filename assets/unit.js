@@ -69,18 +69,73 @@
   fetch(src,{cache:'no-store'}).then(r=>r.json()).then(data=>{
     const u=data.units[0], root=document.getElementById('root');
     root.innerHTML='';
-    const layout=el('div','gr-layout'); const side=el('aside','gr-side'); const main=el('div','gr-main');
-    layout.appendChild(side); layout.appendChild(main); root.appendChild(layout);
 
-    // 左欄：can-do + 章節跳轉
-    const cd=el('div','gr-cando'); cd.innerHTML=
-      `<div class="lab">我學得會（can-do）· ${esc(u.situation_group)}</div><div class="txt">${esc(u.can_do)}</div>`;
-    side.appendChild(cd);
-    const nav=el('nav','gr-nav'); nav.setAttribute('aria-label','單元章節');
-    [['s1','① 先聽、先感覺'],['s2','② 練一練'],['s3','③ 跟著讀 ＋ 模仿語調'],['s4','④ 我到哪一步了']].forEach(([id,t])=>{
-      const a=el('a',null,esc(t)); a.href='#'+id; nav.appendChild(a);
+    // ── Cand 1 app-shell：頂部 pill-nav-row（<820px）＋ pshell-grid（psb 左側欄 + psb-main 內容）──
+    // island fallback＝subject（目前僅 eng 單元，eng→eng；subject_labels 到才可能改寫）。
+    let hashHref='index_new.html#'+u.subject+'/'+u.strand;
+
+    // 窄埠頂部快速跳轉列（back / 上一個 / 下一個 / ①②③④）；prev/next 於 nav 資料到後 insert。
+    const pnl=el('nav','pill-nav-row'); pnl.setAttribute('aria-label','單元內快速跳轉');
+    pnl.appendChild(el('span','pnl','跳到'));
+    const pBack=el('a','pill-nav','<span aria-hidden="true">←</span> 單元牆'); pBack.href=hashHref; pnl.appendChild(pBack);
+    let firstStep=null;
+    [['s1','① 先聽'],['s2','② 練'],['s3','③ 跟讀'],['s4','④ 自評']].forEach(([id,t],i)=>{
+      const a=el('a','pill-nav',esc(t)); a.href='#'+id; pnl.appendChild(a); if(i===0) firstStep=a; });
+    root.appendChild(pnl);
+
+    // grid：左側欄 psb ＋ 右內容 psb-main（內容本體沿用，main 變數名不變以零改動內容渲染）
+    const grid=el('div','pshell-grid'); const side=el('aside','psb'); const main=el('div','psb-main');
+    side.setAttribute('aria-label','導覽側欄');
+    grid.appendChild(side); grid.appendChild(main); root.appendChild(grid);
+
+    // 側欄 group1「你在哪裡」：🏠 學習地圖 + ← 分區單元牆（back）
+    const g1=el('div','sb-group'); g1.appendChild(el('div','sb-title','你在哪裡'));
+    const home=el('a','sb-home','<span aria-hidden="true">🏠</span> 學習地圖'); home.href='index_new.html'; g1.appendChild(home);
+    const sBack=el('a','sb-back','<span aria-hidden="true">←</span> 單元牆'); sBack.href=hashHref; g1.appendChild(sBack);
+    side.appendChild(g1);
+    // 側欄 group2「同分區單元」：nav 資料到才填（graceful：fetch 失敗則整組隱藏，不白掉）
+    const g2=el('div','sb-group'); g2.style.display='none'; side.appendChild(g2);
+    // 側欄 group3「本單元流程」：①②③④（R11 不顯年段）
+    const g3=el('div','sb-group'); g3.appendChild(el('div','sb-title','本單元流程'));
+    [['s1','① 先聽、先感覺'],['s2','② 練一練'],['s3','③ 跟著讀'],['s4','④ 我到哪一步了']].forEach(([id,t])=>{
+      const a=el('a',null,esc(t)); a.href='#'+id; g3.appendChild(a); });
+    side.appendChild(g3);
+
+    // nav 資料（同分區 siblings ＋ 中文標籤）：runtime fetch；每項 catch→null，整頁不因此白掉。
+    Promise.all([
+      fetch('authoring/units_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),
+      fetch('authoring/subject_labels.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),
+      fetch('authoring/strand_labels.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),
+    ]).then(([uidx,subjLab,strandLab])=>{
+      const sj=subjLab&&subjLab[u.subject]; const sk=u.subject+'\u001f'+u.strand;
+      const subjectZh=(sj&&sj.title_zh)||u.subject;
+      const island=(sj&&sj.island)||u.subject;
+      const strandZh=(strandLab&&strandLab[sk]&&strandLab[sk].title_zh)||u.strand;
+      hashHref='index_new.html#'+island+'/'+u.strand;
+      pBack.href=hashHref; pBack.innerHTML='<span aria-hidden="true">←</span> '+esc(strandZh)+' 單元牆';
+      sBack.href=hashHref; sBack.innerHTML='<span aria-hidden="true">←</span> '+esc(subjectZh)+' · '+esc(strandZh);
+      const sib=((uidx&&uidx.units)||[]).filter(x=>x.subject===u.subject && x.strand===u.strand);
+      if(sib.length){
+        const ci=sib.findIndex(x=>x.unit_id===u.unit_id);
+        const MAX=10; let shown;
+        if(sib.length<=MAX){ shown=sib; }
+        else { let start=0; if(ci>=MAX) start=ci-MAX+1; shown=sib.slice(start,start+MAX); }
+        g2.appendChild(el('div','sb-title','同分區單元（'+esc(strandZh)+'）'));
+        shown.forEach(s=>{ const a=el('a',null,esc(s.title_zh||s.unit_id)); a.href=s.page;
+          if(s.unit_id===u.unit_id){ a.className='current'; a.setAttribute('aria-current','page'); }
+          g2.appendChild(a); });
+        if(sib.length>shown.length){ const m=el('a','sb-more','… 共 '+sib.length+' 個單元 →'); m.href=hashHref; g2.appendChild(m); }
+        g2.style.display='';
+        // 窄埠 pill：相對當前 unit 的前／後一個同分區 sibling（首／尾則略該鈕）
+        if(ci>0){ const p=sib[ci-1]; const a=el('a','pill-nav','<span aria-hidden="true">‹</span> 上一個：'+esc(p.title_zh||p.unit_id)); a.href=p.page; pnl.insertBefore(a,firstStep); }
+        if(ci>=0 && ci<sib.length-1){ const n=sib[ci+1]; const a=el('a','pill-nav','下一個：'+esc(n.title_zh||n.unit_id)+' <span aria-hidden="true">›</span>'); a.href=n.page; pnl.insertBefore(a,firstStep); }
+      }
     });
-    side.appendChild(nav);
+
+    // can-do 橫幅（放內容最上，取代舊左欄 can-do 卡）
+    const cd=el('div','gr-cando gr-cando--banner'); cd.innerHTML=
+      `<div class="lab">我學得會（can-do）· ${esc(u.situation_group)}</div><div class="txt">${esc(u.can_do)}</div>`;
+    main.appendChild(cd);
 
     // 右欄：① 教
     main.appendChild(el('h2','gr-h','① 先聽、先感覺')).id='s1';
