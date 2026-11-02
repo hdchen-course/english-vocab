@@ -78,3 +78,10 @@ reciprocalpron each other/one another 正確處理為現代可互通、不列唯
 - futurewill P5-promise：answer_evidence 原掛 c-will-future（僅涵蓋預測），新增 claim c-will-promise（will 表承諾/願意）並改掛，證據與題意吻合。
 - irregularverb3 P4-same-form："cuts" 誘答理由括號 (a minute ago) 與題幹 (A moment ago) 不一致 → 改 (a moment ago)。
 ## wave5 總結：24 單元，0 blocker/0 major，修 2 minor。累計 core 120/150 審畢、全程 0 blocker/0 major。
+
+## wave6（core 120–150，30 單元）— 2026-11-02
+片1 audit-w6s1（時態 10：pastirregular/pastperfect/pastprog/pastwhenwhile/perfectvspast/presentperfect/presentvsprog/presperfcont/presprogfuture/stativeverb）：全 10 CLEAN。
+片2 audit-w6s2（時態+字彙 10：usedtofamily/willvsgoingto/corevocab/emotionadj/environment/expandvocab/festivals/hobbies/illness/quantifiers）：全 10 CLEAN。
+片3 audit-w6s3（字彙+被動 10：shoppingmoney/techmedia/travelgeo/activepassive/causativepassive/passivetenses/voicebasic/voicebyagent/voiceditrans/voicemodal）：全 10 CLEAN。
+## wave6 總結：30 單元，0 blocker/0 major/0 minor，無需修正。
+## === CORE 150/150 審畢 ===：wave1–6 共 150 個 core 單元審完，全程 0 blocker/0 major，累計修 16 minor。接續 100 個 speaking 單元。
