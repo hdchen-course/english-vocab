@@ -85,3 +85,11 @@ reciprocalpron each other/one another 正確處理為現代可互通、不列唯
 片3 audit-w6s3（字彙+被動 10：shoppingmoney/techmedia/travelgeo/activepassive/causativepassive/passivetenses/voicebasic/voicebyagent/voiceditrans/voicemodal）：全 10 CLEAN。
 ## wave6 總結：30 單元，0 blocker/0 major/0 minor，無需修正。
 ## === CORE 150/150 審畢 ===：wave1–6 共 150 個 core 單元審完，全程 0 blocker/0 major，累計修 16 minor。接續 100 個 speaking 單元。
+
+## wave7（speaking 情境 1–3 類：社交／人物／學校，30 單元）— 2026-11-02
+片1 audit-w7s1（社交 10：greetings/howareyou/phone/compliment/playwithme/timegreet/courtesy/seeyou/welcome/encourage）：全 10 CLEAN。
+片2 audit-w7s2（人物自介 10：age/family/likes/possessive/jobs/morefamily/morejobs/hecan/farmanimals/morejobs2）：9 CLEAN + 1 minor。
+片3 audit-w7s3（學校物品 10：borrow/thereis/schoolsupplies/myschoolthings/classroom/hehas/classcommands/myschool2/seeschool/haveschool）：全 10 CLEAN。
+修：
+- possessive P2/P5：誘答「This is your pen?／This is your book?」為合法的上揚直述確認問句（輕微二義，且違反本批 jobs _note 自訂「避開上揚直述問法」標準）→ 改為明顯亂序句「Is this pen your?／Is this book your?」，與同題其餘亂序誘答風格一致。
+## wave7 總結：30 單元，0 blocker/0 major，修 1 minor。speaking 累計 30/100 審畢。
