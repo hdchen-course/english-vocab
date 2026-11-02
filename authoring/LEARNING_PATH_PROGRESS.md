@@ -616,3 +616,13 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - **兩代引擎並存**：舊 concept_engine.js vs 新 communicative 單元 assets/unit.{css,js}（見 memory english-island-phase2-units-live）。progkey_migration 只需處理「舊 concept_engine 頁」→ 新 unit_id。
 - **下一 tick 調查步驟（不捏造）**：(1) 讀 concept_engine.js 看 progKey 如何決定（參數？檔名？）；(2) 列 55 個舊 concept 頁各自 progKey 值＋其 lesson id 清單；(3) 對映到對應新 *.units.json 的 unit_id（檔名對應 english_asas.html↔english_asas.units.json 為線索但須逐一確認）；(4) 產 authoring/progkey_migration.json {old_progKey, (lesson_id), new_unit_id, note}；(5) 寫 migrate 邏輯 additive 搬入 learning_progress_v1、舊 progKey 保留（§6.3/§7.1）＋對應 RT。可委派給聚焦 agent 產提案、我驗證（比照 prerequisite DAG 流程）。
 - **本 session Phase 2 已交付並 push**：prerequisite DAG 接線(c2b70082f)、roadmap_layout 產生器+輸出(4bb1b6fe2)、調查記錄(5cd942518)。剩 progkey_migration + 逐檔 5-clean 收斂。
+
+## 2026-11-02 23:58 Phase 2 — progkey_migration.json 提案（reviewed，commit 點）
+- 聚焦 agent 考古 55 個正式站 concept_engine 頁（排除 .claude/worktrees 等非正式目錄），抽各頁 window.CONCEPT.progKey/lessons→新 unit_id。我獨立複驗：46/46 new_unit_id 存在、0 缺欄位。
+- **team-lead review**：3 條 topically 錯的 low-confidence stand-in（english_concepts_v1/prep→duration、questions/be_q→sentence-kinds、questions/wh→interrogative）**降級 unmapped**（additive 遷移下漏接比錯接安全）。最終 **43 entries（27 high + 16 可接受 low：代表性/合併錨點，honestly 標註）、59 unmapped**。
+- **59 unmapped**：45 個非英文科 progKey（biology/chemistry/chinese×10/math×6/physics/social/finance/safety/skills…）——該科新制 units 尚未建置，待各科實作再精修；+ 11 英文 lesson（beverb/do-support 問句/時態複習/listening 具體短文等）新制無對應語法單元。
+- **重要架構發現（遷移實作時必讀）**：
+  1. **english_phonics/reading/writing/listening.html 磁碟上仍是舊 concept 引擎**，但 units_index 已對同 URL 指派新技能單元（phonics 11/reading 9/writing 8/listening 6）。新 units 是「技能/主題重新設計」非舊 lesson 換 id → 遷移時這 4 頁＝整頁內容被新技能單元取代（UI strangler-fig 換頁）。
+  2. tenses/modals/concepts/questions/morphology/grammar_plus 6 頁在自身檔名下 0 unit，主題打散到細顆粒新頁 → 採逐 lesson 跨頁對映。
+- **Phase 2 剩餘**：migrate() 邏輯（additive 把舊 progKey 進度搬進 learning_progress_v1.units[unit_id]、舊 progKey 永久保留，§6.3/§7.1）＋對應 RT；全島逐檔 content_audit 5-clean（AC-UNIT-2，一次 1 round）。
+- **Phase 2 進度**：DAG✅(c2b70082f)、roadmap_layout✅(4bb1b6fe2)、progkey_migration 資料✅(本 commit)、migrate 邏輯+RT ☐、逐檔 5-clean ☐。
