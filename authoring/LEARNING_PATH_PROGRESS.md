@@ -714,3 +714,15 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 ## 2026-11-03 — vocab 第 2 檔收斂
 - `english_academictopics.html` 達 5/5（round2 修 P1 冠詞洩答 an→the＋game→ceremony；新 sha bb85193007f5db70 從 r1 重跑；L3 exit 0）。commit e0059885e 之後數筆。per_page gate 22/311。
 - 開始 vocab 第 3 檔 `english_addition.html`（base 數字加法，含 5 音檔＋dictation＋shadowing；音檔已驗存在/可解碼；sha 695b34cc0fc6f4d1）round 1。
+
+## 2026-11-03 — 多單元舊頁→新引擎遷移完成（HD 發現新 hub 還連舊頁/無圖）
+- 根因：listening/phonics/reading/writing 原為「一頁多單元」舊引擎頁，新 hub 仍連舊頁；且 listening picture_id「看圖辨義」KP 需要真的圖，新引擎只渲染文字＝名實不符。
+- 處理：
+  - phonics 11 → 新引擎單一單元頁（音檔 55/55 已驗）；舊 english_phonics.html 不動。
+  - reading 9 → 8 新頁（factopinion-graph 需圖表，held）。
+  - writing 8 → 6 新頁（picture-letter、narrative-picture 需看圖，held）。
+  - listening picture_id（看圖辨義）→ held（需真的圖）。
+  - 共 **4 個「看圖/圖表」單元抽到 *.heldimg.json**，不進新 hub，待建圖片/表格渲染能力。
+- 驗證：新 hub units_index 332 單元，**0 舊引擎頁、0 斷連**（全 assets/unit.js 新引擎）。
+- **BLOCKER（新任務）**：新引擎需新增「圖片選項／看圖寫作／資料圖表」渲染能力＋兒童安全 SVG 場景，走 authoring team＋iPad 視覺QA 四角色簽核；完成後把 4 個 held 單元遷回並 5-clean。涉及 KP：eng.t_base.listening.picture-id、eng.t_adv.reading.factopinion-graph、eng.t_mid.writing.picture-letter、eng.t_adv.writing.narrative-picture。
+- 每個新遷移頁仍須各自走 5-clean 才算 converged（內容沿用舊 material，等同起點）。
