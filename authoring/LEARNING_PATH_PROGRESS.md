@@ -696,3 +696,11 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 轉入最大未收斂 strand = **vocab（68 頁，0 收斂）**。首檔 english_abstractaffective round1 進行中（sha 173702d6727afed4）。
 - 整體進度：全站 KP 覆蓋 300/3086（9.7%）｜全站收斂頁 20/306（6.5%）。
 - 下一 strand 佇列（未收斂頁數）：vocab 68 → verb 38 → pattern 29 → modal 19 → adjadv 14 → …（見 build_status.py）
+
+## 2026-11-03 13:45 台北 — 新 hub 連舊頁問題 → 多單元舊頁遷移（HD 政策）
+- HD 發現新 hub 點 listening 會到舊版 UI。根因：新引擎 unit.js 只渲染 units[0]，吃不下多單元 sidecar；listening/phonics/reading/writing 這 4 張是多單元舊頁。
+- HD 政策：(1)舊 hub＋舊頁＋舊連結不動；(2)新 hub 只連新版頁＋新版資料；(3)新版可重用舊 material。
+- 計數誠實性已驗證：20 收斂頁全新引擎、4 舊頁 0。另補 per_page_5clean_gate 守門：HTML 未載 assets/unit.js 不得算收斂（已紅隊，commit）。
+- 遷移做法：每個多單元 sidecar 拆成單一單元 sidecar＋新引擎頁（重用內容），gen_derived 重彙總 units_index→hub 自動連新頁。splitter＝/tmp/split_tools/split_strand.py。
+- ★listening 已遷移（6 新頁，commit）；待 HD 眼睛確認引擎合身後複製到 phonics(11)/reading(9)/writing(8)。
+- 這 34 新頁之後各自走 per-file 5-clean 收斂。
