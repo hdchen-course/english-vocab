@@ -730,3 +730,6 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 ## 2026-11-03 — vocab 第 3 檔收斂
 - `english_addition.html` 達 5/5（round2 修長度 cue one→four、round1 修 P5 feedback 幻影 one→補 four；sha 75b34477a295070b；5 音檔已驗）。per_page gate 23/332。
 - 開始 vocab 第 4 檔 `english_age.html`（說幾歲，3 KP：question-order/verb.be/numbers，6 音檔已驗；sha fdf961e465f75ee7）round 1。
+
+## 2026-11-03 — vocab 第 4 檔收斂
+- `english_age.html` 達 5/5（round4 修 reuse_pages 補 greetings；sha 51dbb8a70f3f19e2；6 音檔已驗）。per_page gate 24/332。
