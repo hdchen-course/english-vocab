@@ -665,3 +665,19 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - **team-lead 覆寫此 close call（correctness #1）**：Everest 正確最高級＝highest（海拔最高）；tallest 口語可接受但技術上不精確（base-to-summit 冠軍為 Mauna Kea）。K-12 教材正確性至上、highest 為標準教育用語、修正零風險且不引入 scope 外內容（同一同位語、僅更精確）。
 - 修 10 處一致（stem/answer/4 選項/3 distractor keys/feedback）tallest→highest；JSON 合法、MCQ answer∈options、distractor keys⊆options、unit_schema/question_correctness/簡體 gate 全綠。僅此檔含該句。
 - apposition 收斂從新 sha 重跑 round 1（原未記 ledger，無 streak 損失）。
+
+---
+## RESUME（2026-11-03 10:38 台北，重開機前快照）
+**現行工作：english_soneither.units.json（第 18 個收斂頁）AC-UNIT-2 5-clean 進行中。**
+
+- HEAD=`083971f4f`。soneither 內容檔已 commit，目前 sha=`3e997d8d38d5ba2e`（teach line42＋claim c-sn-aux-match 已補「do/does/did 配附和新主詞 So do I／So does he」）。
+- ledger `authoring/page_converge_ledger.json` 有**未 commit** 的 round1/round2 entry（sha 3e997d8d38d5ba2e，均 clean）。**但 round3 又抓到 2 個 confirmed，下面的修正會改檔→sha 變→streak 必須重置，故那兩筆會作廢**（重開機後先把 soneither rounds 清空重記）。
+
+**待修（round3 learning-sequence＋parity confirmed，尚未修）：**
+1. **line 8 `can_do`（major, instructional-design, owning learning 全同意）**：仍寫「助動詞要和前句動詞一致」，與修正後 teach text3/claim 矛盾；照字面套本單元例「She works hard」會推出錯形「So does I」。
+   修法：改為「助動詞要和前句動詞的**種類**一致（be配be、一般動詞配do/does/did、can配can），其中 do／does／did 配附和的**新主詞**（So do I／So does he）、極性要一致、而且語序要倒裝（So do I 不是 So I do）」。
+2. **line 34 首個 teach 例（minor, owning learning 判 defect；domain/english/zh 判 NOT，但引擎 confirmed）**：首例 "She works hard, and so do I." 把 works→do 的人稱對比前置於規則（teach text3）之前。
+   修法：首例改用兩邊皆 do 的 "They work hard, and so do I."（line34 body＋zh_hint），並把 line36 音檔例 son_ex1 一併改成 "They work hard, and so do I." → **需用 edge-tts 重生 son_ex1.mp3**（`/Volumes/workplace/EnglishTraining/.venv/bin/python tools/gen_audio.py <manifest> --force`，voice en-US-AnaNeural）。works→does/do 對比保留在 teach text3（line42）。
+
+**修完流程：** 5 道 pre-commit gate（json / scan_simplified / r14_body_gate / unit_schema_gate --verify / question_correctness_gate --verify）＋ audio_exist_gate → 算新 sha → ledger soneither rounds 清空＋寫 `_sha_reset_note3` → commit（含內容檔＋音檔＋ledger）→ 重跑 5-clean marathon（r1 domain→r2 MCQ→r3 learn+parity→r4 native→r5 終校），每輪 L3 exit 0、burst-cap ≤3/480s、每 tick HEARTBEAT。5/5 後 `tools/per_page_5clean_gate.py --verify`＋收斂 commit（第 18 頁）。
+**之後：** special strand 餘下 sidecar（tagquestion、whatcleft、perfectpassiveinf、perfectvspast）→ 其他 strand →全島 cross-file→DONE-GATE→iPad 視覺四角色簽核→go-live→其他 7 科。約剩 288 頁 / 306。
