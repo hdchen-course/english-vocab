@@ -184,6 +184,16 @@ def verify(root):
         except Exception as e:
             violations.append((page, f"無法讀頁內容算 sha：{e}"))
             continue
+        # fail-closed：HTML 外殼必須是新單元引擎（載 assets/unit.js）。舊版頁即使 ledger
+        # 給了 5-clean 也不得算收斂——content_audit 只審 sidecar 內容，不保證學習者看到的是
+        # 新版 UI；少了這道檢查，一張舊版頁可被 sidecar 收斂「假完成」（HD 2026-11-03 指出）。
+        try:
+            if b"assets/unit.js" not in open(page_path, "rb").read():
+                violations.append((page, "HTML 外殼非新引擎（未載 assets/unit.js）——舊版頁不得算收斂，須先遷移到新單元引擎"))
+                continue
+        except Exception as e:
+            violations.append((page, f"無法讀頁 HTML 檢查引擎：{e}"))
+            continue
         ok, reason = evaluate_page(pages_map.get(page), cur, need)
         if ok:
             passed += 1
