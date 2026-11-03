@@ -733,3 +733,6 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 
 ## 2026-11-03 — vocab 第 4 檔收斂
 - `english_age.html` 達 5/5（round4 修 reuse_pages 補 greetings；sha 51dbb8a70f3f19e2；6 音檔已驗）。per_page gate 24/332。
+
+## 2026-11-03 — vocab 第 5 檔收斂
+- `english_atplace.html` 達 5/5（I'm at the + place；sha c5f712ab37117fb9；5 音檔已驗；無修正，一次過）。per_page gate 25/332。
