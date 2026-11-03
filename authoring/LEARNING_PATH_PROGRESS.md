@@ -726,3 +726,7 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 驗證：新 hub units_index 332 單元，**0 舊引擎頁、0 斷連**（全 assets/unit.js 新引擎）。
 - **BLOCKER（新任務）**：新引擎需新增「圖片選項／看圖寫作／資料圖表」渲染能力＋兒童安全 SVG 場景，走 authoring team＋iPad 視覺QA 四角色簽核；完成後把 4 個 held 單元遷回並 5-clean。涉及 KP：eng.t_base.listening.picture-id、eng.t_adv.reading.factopinion-graph、eng.t_mid.writing.picture-letter、eng.t_adv.writing.narrative-picture。
 - 每個新遷移頁仍須各自走 5-clean 才算 converged（內容沿用舊 material，等同起點）。
+
+## 2026-11-03 — vocab 第 3 檔收斂
+- `english_addition.html` 達 5/5（round2 修長度 cue one→four、round1 修 P5 feedback 幻影 one→補 four；sha 75b34477a295070b；5 音檔已驗）。per_page gate 23/332。
+- 開始 vocab 第 4 檔 `english_age.html`（說幾歲，3 KP：question-order/verb.be/numbers，6 音檔已驗；sha fdf961e465f75ee7）round 1。
