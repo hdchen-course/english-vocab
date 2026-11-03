@@ -688,3 +688,11 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
   - minor：P1/P2 distractor 改合填空槽的人稱誤答；首例改 "They work hard, and so do I."（兩邊皆 do、去人稱對比前置）＋重生 son_ex1.mp3；teach "agree with So/Neither + 公式"→"reply with" 去 garden-path。
 - rounds 1-5 全 clean（confirmed=0、coverageComplete=true、各輪 L3 exit 0、同 sha 全程未改）；per_page_5clean_gate 通過 18/306。
 - 下一檔：english_tagquestion（已啟動 round 1，task w6a7kgvdd，sha d2d5fce05f5c6cba，6 音檔齊）。special strand 餘：whatcleft、perfectpassiveinf、perfectvspast。
+
+## 2026-11-03 13:21 台北 — special strand 收斂完成，轉入 vocab strand
+- ★第 19 收斂頁：english_tagquestion 5/5（commit ae167bed2；修 round4 2 major：to check right? 非道地定義＋do/does/did 的 did 缺 worked 例）
+- ★第 20 收斂頁：english_whatcleft 5/5（commit 71f3482fc；修 2：補複數 worked 例 What I need are new shoes＋claim c-wc-agree 冒號例重排貼子句）
+- **special strand 18/18 全收斂**。per_page gate：通過 20/306。
+- 轉入最大未收斂 strand = **vocab（68 頁，0 收斂）**。首檔 english_abstractaffective round1 進行中（sha 173702d6727afed4）。
+- 整體進度：全站 KP 覆蓋 300/3086（9.7%）｜全站收斂頁 20/306（6.5%）。
+- 下一 strand 佇列（未收斂頁數）：vocab 68 → verb 38 → pattern 29 → modal 19 → adjadv 14 → …（見 build_status.py）
