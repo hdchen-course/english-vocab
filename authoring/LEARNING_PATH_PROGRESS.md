@@ -681,3 +681,10 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 
 **修完流程：** 5 道 pre-commit gate（json / scan_simplified / r14_body_gate / unit_schema_gate --verify / question_correctness_gate --verify）＋ audio_exist_gate → 算新 sha → ledger soneither rounds 清空＋寫 `_sha_reset_note3` → commit（含內容檔＋音檔＋ledger）→ 重跑 5-clean marathon（r1 domain→r2 MCQ→r3 learn+parity→r4 native→r5 終校），每輪 L3 exit 0、burst-cap ≤3/480s、每 tick HEARTBEAT。5/5 後 `tools/per_page_5clean_gate.py --verify`＋收斂 commit（第 18 頁）。
 **之後：** special strand 餘下 sidecar（tagquestion、whatcleft、perfectpassiveinf、perfectvspast）→ 其他 strand →全島 cross-file→DONE-GATE→iPad 視覺四角色簽核→go-live→其他 7 科。約剩 288 頁 / 306。
+
+## 2026-11-03 11:27 ★第 18 個完整收斂頁：english_soneither 5/5 clean（commit 8ce00c00e）
+- 重開機後接續，soneither 共修 1 major＋5 minor 後達 5/5（sha 02b298917163a5f6）：
+  - major（instructional-design）：teach/claim/can_do 補「do/does/did 配附和的新主詞（So do I／So does he）」，去規則與自例矛盾。
+  - minor：P1/P2 distractor 改合填空槽的人稱誤答；首例改 "They work hard, and so do I."（兩邊皆 do、去人稱對比前置）＋重生 son_ex1.mp3；teach "agree with So/Neither + 公式"→"reply with" 去 garden-path。
+- rounds 1-5 全 clean（confirmed=0、coverageComplete=true、各輪 L3 exit 0、同 sha 全程未改）；per_page_5clean_gate 通過 18/306。
+- 下一檔：english_tagquestion（已啟動 round 1，task w6a7kgvdd，sha d2d5fce05f5c6cba，6 音檔齊）。special strand 餘：whatcleft、perfectpassiveinf、perfectvspast。
