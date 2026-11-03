@@ -704,3 +704,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 遷移做法：每個多單元 sidecar 拆成單一單元 sidecar＋新引擎頁（重用內容），gen_derived 重彙總 units_index→hub 自動連新頁。splitter＝/tmp/split_tools/split_strand.py。
 - ★listening 已遷移（6 新頁，commit）；待 HD 眼睛確認引擎合身後複製到 phonics(11)/reading(9)/writing(8)。
 - 這 34 新頁之後各自走 per-file 5-clean 收斂。
+
+## 2026-11-03 — vocab strand 首檔收斂
+- `english_abstractaffective.html` 達 5/5 連續 clean（sha ab6582e67f3986ba、L3 exit 0），commit e0059885e。per_page gate 21/311。
+- vocab strand：68 頁，67 未收斂、全為新引擎（無需遷移）。
+- 開始下一檔 `english_academictopics.html`（sha bbb2e19eedb18aa1）round 1（領域正確性）。
+- 全站：binding KP 覆蓋 300/3086（9%）；收斂頁 21/311。
