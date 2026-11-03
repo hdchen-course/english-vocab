@@ -710,3 +710,7 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - vocab strand：68 頁，67 未收斂、全為新引擎（無需遷移）。
 - 開始下一檔 `english_academictopics.html`（sha bbb2e19eedb18aa1）round 1（領域正確性）。
 - 全站：binding KP 覆蓋 300/3086（9%）；收斂頁 21/311。
+
+## 2026-11-03 — vocab 第 2 檔收斂
+- `english_academictopics.html` 達 5/5（round2 修 P1 冠詞洩答 an→the＋game→ceremony；新 sha bb85193007f5db70 從 r1 重跑；L3 exit 0）。commit e0059885e 之後數筆。per_page gate 22/311。
+- 開始 vocab 第 3 檔 `english_addition.html`（base 數字加法，含 5 音檔＋dictation＋shadowing；音檔已驗存在/可解碼；sha 695b34cc0fc6f4d1）round 1。
