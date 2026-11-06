@@ -12,9 +12,12 @@
   A [parity] 教→練對等：每個 claim_id 必須被至少一題 practice 的 answer_evidence[]
      引用。教了某事實卻零練習題檢索＝retrieval-practice parity gap（學測/會考單元
      尤忌）。此為「title/can_do 宣告卻無練習」的確定性代理（claim 即原子化可測事實）。
-  B [length-cue] MCQ 長度 cue：僅對「詞組型」選項（該題最長選項 ≥ LEN_PHRASE 字）檢。
-     若正解字數 > LEN_RATIO × 次長選項字數（明顯離群），或正解獨有括號補述
-     「（…）」/"(...)" 而所有誘答皆無 → 測驗取巧 cue（洗牌無法遮蔽字數線索）。
+  B [length-cue / lead-in-cue] MCQ 表面 cue：僅對「詞組型」中文散文選項（最長選項
+     ≥ LEN_PHRASE 字、且無 ASCII 字母）檢。四種取巧 cue（洗牌無法遮蔽）：
+       (1) 正解字數 > LEN_RATIO × 次長選項（明顯離群）；
+       (2) 正解獨有括號補述「（…）」/"(...)" 而所有誘答皆無（詳細度 cue）；
+       (3) 誘答長度全相同、正解差 ≥2 字＝正解為唯一長度離群（uniform-distractor cue）；
+       (4) 誘答共享 ≥2 字前綴而正解不以其開頭＝正解為結構上的唯一離群（lead-in cue）。
   C [shadow-note] shadowing note 與 per-line intonation 矛盾：note 若含「全稱詞
      （都|皆|兩句|每句|全部|所有）＋單一聲調方向（下收 或 上揚，且不含另一方向）」，
      卻有任一行 intonation 出現相反方向 → 自相矛盾的語調指示。
@@ -47,6 +50,18 @@ def _nonempty_str(v):
 def _disp_len(s):
     """選項顯示字數：去頭尾空白後的字元數。"""
     return len(s.strip()) if isinstance(s, str) else 0
+
+
+def _lcp(strs):
+    """回傳一組字串去頭尾空白後的最長共同前綴。"""
+    ss = [s.strip() for s in strs if isinstance(s, str)]
+    if not ss:
+        return ""
+    s1, s2 = min(ss), max(ss)
+    i = 0
+    while i < len(s1) and s1[i] == s2[i]:
+        i += 1
+    return s1[:i]
 
 
 def _check_parity(loc, unit, advisory):
@@ -89,7 +104,8 @@ def _check_length_cue(loc, unit, violations):
             continue  # 短選項不檢
         qid = p.get("question_id", "?")
         a_len = _disp_len(ans)
-        distractor_lens = [lens[o] for o in opts if o != ans and isinstance(o, str)]
+        distractors = [o for o in opts if o != ans and isinstance(o, str)]
+        distractor_lens = [lens[o] for o in distractors]
         if distractor_lens:
             second = max(distractor_lens)
             if a_len > LEN_RATIO * second:
@@ -97,9 +113,22 @@ def _check_length_cue(loc, unit, violations):
                     f"[length-cue] {loc} 題 {qid}: 正解字數 {a_len} > {LEN_RATIO}× 次長選項 {second}"
                     f"（正解明顯最長＝長度 cue）")
         ans_paren = bool(_PAREN.search(ans))
-        if ans_paren and not any(_PAREN.search(o) for o in opts if o != ans and isinstance(o, str)):
+        if ans_paren and not any(_PAREN.search(o) for o in distractors):
             violations.append(
                 f"[length-cue] {loc} 題 {qid}: 僅正解帶括號補述、誘答皆無（詳細度 cue）")
+        # uniform-distractor 長度離群：誘答長度全相同、正解差 ≥2 字＝正解為唯一離群
+        if len(distractor_lens) >= 3 and len(set(distractor_lens)) == 1 \
+                and abs(a_len - distractor_lens[0]) >= 2:
+            violations.append(
+                f"[length-cue] {loc} 題 {qid}: 誘答長度全為 {distractor_lens[0]} 字、正解 {a_len} 字"
+                f"為唯一長度離群（uniform-distractor cue）")
+        # lead-in cue：誘答共享 ≥2 字前綴而正解不以其開頭＝正解為結構上的唯一離群
+        if len(distractors) >= 3:
+            dcp = _lcp(distractors)
+            if len(dcp) >= 2 and not ans.startswith(dcp):
+                violations.append(
+                    f"[lead-in-cue] {loc} 題 {qid}: 誘答共享前綴「{dcp}」、正解未以其開頭"
+                    f"（正解為結構上的唯一離群＝lead-in cue）")
 
 
 def _check_shadow_note(loc, unit, violations):
@@ -218,9 +247,23 @@ def _selftest():
         u["shadowing"]["note"] = "兩句都是陳述句，句尾自然下收。"
         u["shadowing"]["lines"][1]["intonation"] = "前句警示上揚"
 
-    # parity → advisory（不計 hard）；length-cue/shadow-note → hard
+    def mut_leadin(u):      # 誘答皆以「因為」開頭、正解不是 → lead-in cue
+        u["practice"][1]["answer"] = "跑的是我但主句主詞是公車不一致"
+        u["practice"][1]["options"] = ["跑的是我但主句主詞是公車不一致",
+                                       "因為分詞要先改成過去式才能放句首",
+                                       "因為主句太短省略了真正的主詞才會錯",
+                                       "因為公車是沒有生命的名詞不能當主詞"]
+
+    def mut_uniform(u):     # 誘答長度全相同、正解長 2 字 → uniform-distractor cue
+        u["practice"][1]["answer"] = "學生聽到鈴聲後就站了起來"
+        u["practice"][1]["options"] = ["學生聽到鈴聲後就站了起來", "鈴聲反過來聽到了學生",
+                                       "學生被鈴聲吵醒了過來", "學生只是想要聽聽鈴聲"]
+
+    # parity → advisory（不計 hard）；length-cue/lead-in/shadow-note → hard
     hard_cases = {"length-cue: 正解離群長": mut_lencue_ratio,
                   "length-cue: 僅正解帶括號": mut_lencue_paren,
+                  "length-cue: 誘答等長正解離群": mut_uniform,
+                  "lead-in-cue: 誘答共享前綴正解無": mut_leadin,
                   "shadow-note: 全稱下收 vs 行上揚": mut_shadow}
     for name, mut in hard_cases.items():
         with tempfile.TemporaryDirectory() as b:
@@ -247,6 +290,19 @@ def _selftest():
         v, adv, _ = run(s)
         results.append(("短單字選項 → 不觸發 length-cue",
                         not any("length-cue" in x and "P2" in x for x in v), v))
+
+    # FP 防護：四選項皆共享前綴（含正解）→ 不應觸發 lead-in cue
+    with tempfile.TemporaryDirectory() as s:
+        u = _good_unit()
+        u["practice"][1]["answer"] = "因為跑的是我但主句主詞是公車不一致"
+        u["practice"][1]["options"] = ["因為跑的是我但主句主詞是公車不一致",
+                                       "因為分詞要先改成過去式才能放句首",
+                                       "因為主句太短省略了真正的主詞才會錯",
+                                       "因為公車是沒有生命的名詞不能當主詞"]
+        _mk(s, u)
+        v, adv, _ = run(s)
+        results.append(("四選項皆共享前綴 → 不觸發 lead-in cue",
+                        not any("lead-in" in x for x in v), v))
 
     ok = True
     for desc, passed, v in results:
