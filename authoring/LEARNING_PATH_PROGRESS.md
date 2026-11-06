@@ -7,6 +7,38 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-06 21:20 英語島收斂：新增 pedagogy_gate（效率化，HD 指示「用最有效率的方式做」）
+
+**背景**：HD 問「兩週 spec/知識驗證準備後，為何實作仍久、驗證不順？材料有用嗎？」診斷＝
+準備期驗的是**事實正確性＋基建**（故 harvest 至今**零正確性缺陷**，教錯害人守住了），卡的是
+**既有舊檔的教學設計債**（parity／長度 cue／chunking／shadowing note 矛盾）——這些舊檔早於 spec，
+過去只能靠每檔 content_audit LLM panel 一輪輪被動發現（meaningchange 花 9 輪）。
+
+**對策（已做）**：建 `tools/pedagogy_gate.py`（commit 02b475937）把反覆設計債缺陷類在 harvest 前
+確定性攔下。三檢、紅隊 selftest 通過：
+- **length-cue（fail-closed）**：MCQ **中文語意選項**正解離群長（>1.5×次長）或獨有括號補述。
+  含 ASCII 字母的英文選項（must/to lock…）一律跳過，避免文法性長度差誤判。
+- **shadow-note（fail-closed）**：shadowing note 全稱聲調（都/皆/兩句…＋下收或上揚）與某行
+  per-line intonation 反向＝矛盾。
+- **parity（ADVISORY，不計 exit）**：claim 未被 practice answer_evidence 引用。**不可 fail-closed**：
+  支援性/刻意 teach-only claim（禮貌回應 Thank you、附帶 vocab、延伸說明）未練習為合理設計，
+  交 content_audit expert panel 依 scope 判。真 gap（title/can_do 並列頭條卻零覆蓋，如 forget/try）仍由 panel 確認。
+
+**全站掃描結果**：23 hard（length-cue，12 檔）＋59 advisory（parity）。
+- **已收斂檔被抓到真 length-cue → 誠實 de-converge 重收**：`maymight`、`could`、`participleactive`
+  （commit ee3879265，四選項重平衡等長無括號、保單一正解）。收斂數 **176→173**。
+- 其餘 9 個**未收斂** length-cue 檔（modalperfect、phonics_kk_ipa、reading_functional_skim、
+  reading_structure_cohesion〔5〕、reading_title_purpose、sentencekinds、sentencetypes、
+  shallwouldlike、voiceditrans）→ 各檔輪到時由 gate 於 round 0 攔下、先修再 content_audit。
+- 22 個 parity-only 已收斂檔（age/colors/days/months/canability/hungry/compliment… 的支援性 claim）
+  **維持收斂**（panel 會判 NOT A DEFECT）。
+
+**新 DONE-GATE 成員（每檔收斂前必跑）**：在既有 unit_schema/question_correctness/scan_simplified/
+audio_exist/per_page_5clean 之外，**加 `pedagogy_gate.py --verify`（hard 須 0）**。
+
+**re-open 佇列（待重收 5-clean）**：maymight(sha 9686d8136d56fd7e)、could(d8126ba02be75a1d)、
+participleactive(0ae9cfb2d40f373e＋後續字串 Edit 已再動，須重算 sha)。另 modalmust 在 clean 2/5 續收。
+
 ## ⚠ 2026-11-01 19:40 診斷發現（更正舊「乾淨地基」敘述）— 下一 session 必讀
 loop 深掘 `verify_learning_path.py --phase=1` 揭出真實地基狀態，**更正**下方 17:13 的樂觀敘述：
 1. ✅ **已修（85db84e52）KP manifest provenance（T3-03 FAIL→PASS）**：根因＝committed
