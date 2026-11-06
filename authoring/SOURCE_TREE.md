@@ -3,12 +3,12 @@
 > 由 `tools/build_source_tree.py` 從 `authoring/units_index.json`（權威清單，
 > 同 per_page_5clean_gate 分母）× `page_converge_ledger.json` × 檔案系統產生。
 
-**總計 332 頁｜已收斂 176（53.0%）｜未收斂 156｜缺 html 0｜缺 sidecar 0**
+**總計 332 頁｜已收斂 173（52.1%）｜未收斂 159｜缺 html 0｜缺 sidecar 0**
 
 狀態符號：✅ 5-clean 收斂　▫️ 已建未收斂（n/5）　⛔ 缺檔
 
 
-## eng（176/332 收斂）
+## eng（173/332 收斂）
 
 
 ### strand=`adjadv`（10/15）
@@ -65,18 +65,18 @@
 - ▫️ `english_listening_qa_dialogue.html` 0/5
 - ▫️ `english_listening_sounds_stress.html` 0/5
 
-### strand=`modal`（9/19）
+### strand=`modal`（7/19）
 
 - ✅ `english_borrow.html`
 - ✅ `english_canability.html`
 - ✅ `english_canido.html`
 - ✅ `english_canihave.html`
-- ✅ `english_could.html`
+- ▫️ `english_could.html` 0/5
 - ✅ `english_hadbetter.html`
 - ✅ `english_haveto.html`
 - ✅ `english_hecan.html`
-- ✅ `english_maymight.html`
-- ▫️ `english_modalmust.html` 0/5
+- ▫️ `english_maymight.html` 0/5
+- ▫️ `english_modalmust.html` 2/5
 - ▫️ `english_modalperfect.html` 0/5
 - ▫️ `english_modalshould.html` 0/5
 - ▫️ `english_musthaveto.html` 0/5
@@ -239,7 +239,7 @@
 - ▫️ `english_relwhowhom.html` 0/5
 - ▫️ `english_whatever.html` 0/5
 
-### strand=`special`（18/18）
+### strand=`special`（17/18）
 
 - ✅ `english_absolutewith.html`
 - ✅ `english_apposition.html`
@@ -253,7 +253,7 @@
 - ✅ `english_inversiononly.html`
 - ✅ `english_inversionplace.html`
 - ✅ `english_inversionsosuch.html`
-- ✅ `english_participleactive.html`
+- ▫️ `english_participleactive.html` 0/5
 - ✅ `english_participlepassive.html`
 - ✅ `english_perfectparticiple.html`
 - ✅ `english_soneither.html`
