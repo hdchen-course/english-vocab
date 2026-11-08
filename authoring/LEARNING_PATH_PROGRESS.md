@@ -812,3 +812,11 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - Phase-1：內容文法經對抗式複核正確；RO2/RO3 freshen 成 teach 外新語境（The movie ended…／She was hungry…）避免 recall-not-transfer（學習神經科學鏡）。RO1/RO4/RO5/RO6 本已用新句、不動。
 - DONE-GATE：scan_simplified PASS／unit_schema CLEAN／question_correctness CLEAN／audio_exist CLEAN／per_page 本頁 absent／pedagogy 0 hits／build_source_tree 收斂 283/332。
 - eng 282→283。下一檔：english_sameplural。
+
+## eng-sameplural（單複同形 sheep/deer/fish）5/5 收斂 — 2026-11-09
+- 單元 eng.t_mid.noun.same-form-plural（sheep/deer/fish 單複同形不加 -s；動詞隨語意單複數）。
+- frozen_sha e85c82fce5ae6fc0；rounds 1–5 連 5 clean（L3 exit 0）。
+- 本檔 5 次重置、6 個 panel-confirmed defect（皆真缺陷，逐一修）：P6 dictation 與 teach 逐字重複（recall）→改 Three fish are swimming near the rocks.+regen sfp_dict1.mp3；teach「three most common」無據最高級→Three common examples；P5「ten deer」逐字＋P3「in the bowl」context recall＋主動修 P2「eating grass」→P2 drinking at the pond／P3 hiding under the plant／P5 six deer；P5「a deer」distractor 殘留十隻（改 six 時漏改）→六隻；teach「some」誤歸 large number/很多→脫鉤數量、改 more than one/不只一個。
+- DONE-GATE：scan_simplified PASS／unit_schema CLEAN／question_correctness CLEAN／audio_exist CLEAN／per_page 本頁 absent／pedagogy 0 hits／build_source_tree 收斂 284/332。
+- eng 283→284。下一檔：english_seeyou。
+- 教訓：grammar drill Phase-1 必逐題比對 teach collocation（數字+名詞、名詞+情境）；改數字須連 distractor 一起改；聽寫答案也要 teach 外新句；查無據最高級／量詞語義。
