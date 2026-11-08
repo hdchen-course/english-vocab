@@ -3,12 +3,12 @@
 > 由 `tools/build_source_tree.py` 從 `authoring/units_index.json`（權威清單，
 > 同 per_page_5clean_gate 分母）× `page_converge_ledger.json` × 檔案系統產生。
 
-**總計 332 頁｜已收斂 234（70.5%）｜未收斂 98｜缺 html 0｜缺 sidecar 0**
+**總計 332 頁｜已收斂 235（70.8%）｜未收斂 97｜缺 html 0｜缺 sidecar 0**
 
 狀態符號：✅ 5-clean 收斂　▫️ 已建未收斂（n/5）　⛔ 缺檔
 
 
-## eng（234/332 收斂）
+## eng（235/332 收斂）
 
 
 ### strand=`adjadv`（12/15）
@@ -188,7 +188,7 @@
 - ✅ `english_phonics_silent_e.html`
 - ✅ `english_phonics_vowel_teams.html`
 
-### strand=`prep`（6/9）
+### strand=`prep`（7/9）
 
 - ▫️ `english_phrasalprep.html` 0/5
 - ✅ `english_prepcolloc.html`
@@ -196,7 +196,7 @@
 - ✅ `english_prepduration.html`
 - ✅ `english_prepgerund.html`
 - ✅ `english_prepmeans.html`
-- ▫️ `english_prepothers.html` 0/5
+- ✅ `english_prepothers.html`
 - ✅ `english_prepplace.html`
 - ▫️ `english_where.html` 0/5
 
