@@ -774,3 +774,8 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - Phase-1 修 stale _note；round1 harvest 修 example 誤把離題標題標成 too-narrow；rounds2+3 unanimous panel 再抓 teach/claim cue 'you should' 不在短文（短文用 'We should all try'）→ 對齊 cue 為 'we should'/'you should'/'please'；並清 pedagogy length-cue（R4-purpose-action 正解 17→8 字平行誘答）。
 - round4 'too wide' vs 'too broad' 風格建議經 panel 0/5 判 NOT-A-DEFECT（wide↔narrow 正當反義對），未改。
 - DONE-GATE：scan_simplified/unit_schema/question_correctness/audio_exist/per_page_5clean(target absent)/pedagogy(0 hits) 全綠；source_tree 收斂 276→277/332（83.4%）、未收斂 55。
+
+## 2026-11-09 03:31 — reading_tone_inference 5/5 收斂（第 278 收斂頁）
+- english_reading_tone_inference.html 達 5/5 連續 clean（sha 3b3e33c9c136f1c5、各輪 L3 exit 0）。
+- Phase-1 僅修 stale _note（原描述一頁多單元 3×t_mid main-idea/guess-word/functional）→ 改為實際單一 t_adv 單元 tone-inference ＋ 2 KP（attitude-tone＋inference）；內容（公園短文、態度題、證據題、推論題）親驗正確、單一可辯護答案、pedagogy 無 length-cue。
+- rounds 1–5 全程 0 confirmed（round4 raw=0）；DONE-GATE scan/unit_schema/question_correctness/audio_exist/per_page(absent)/pedagogy(0) 全綠；source_tree 收斂 277→278/332（83.7%）、未收斂 54。
