@@ -751,6 +751,31 @@ a.app-bar__home:hover { background: var(--card-border); }
 .app-bar__theme:hover { background: var(--tint-primary); }
 .app-bar__theme-icon { line-height: 1; }
 
+/* 新舊版切換連結（index.html ⇄ index_new.html 並存期間的互跳鈕）。
+   樣式比照 .app-bar__home 的 tint pill；margin-left:auto 把它與主題鈕一起靠右。 */
+.app-bar__verswitch {
+  flex: none;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--tap-min);
+  padding: 6px 14px;
+  border-radius: var(--r-sm);
+  background: var(--tint-primary);
+  color: var(--c-primary-ink);
+  font-size: var(--fs-small);
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.app-bar__verswitch:hover { background: var(--card-border); }
+.app-bar__verswitch-icon { line-height: 1; }
+/* 緊接在 verswitch 後的主題鈕取消自身 margin-left:auto，避免「雙 auto」把兩者從中間拆開；
+   改由 verswitch 的 auto 統一把〔切換鈕＋主題鈕〕當一組推到最右相鄰。只命中這兩頁，不影響其他頁。 */
+.app-bar__verswitch + .app-bar__theme { margin-left: 0; }
+
 /* 統一的「回首頁」返回鈕（§ 一致性 + 48px 命中區） */
 .back-link {
   display: inline-flex;
