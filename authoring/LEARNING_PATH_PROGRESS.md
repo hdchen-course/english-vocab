@@ -792,3 +792,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - Phase-1 無修（內容正確）；惟 content_audit 兩輪分別以 owning learning-neuroscience lens 判出同一 recall-vs-transfer 設計債：P2（重用 teach 例 friends/borrowed/books）→改 students/corrected/essays；P3（重用 teach ex1 傳球情境）→改 neighbors/wave；並主動修 P1（原逐字＝claim c-rc-mutual 例 Tom/Amy/love）→Ben/Mia/trust。三處練習改 fresh context 測遷移非記憶。
 - DONE-GATE scan/unit_schema/question_correctness/audio_exist/per_page(absent)/pedagogy(0) 全綠；source_tree 收斂 279→280/332（84.3%）、未收斂 52。
 - 經驗（banked）：batch 建的文法 pron 檔常把 practice 情境直接沿用 teach 例句（recall-not-transfer），content_audit owning-lens 會判缺陷；下一檔 Phase-1 應主動掃 practice↔teach/claim 例句重疊。
+
+## 2026-11-09 05:03 — reflexive 5/5 收斂（第 281 收斂頁）
+- english_reflexive.html 達 5/5 連續 clean（sha 740f617c05770ee0、各輪 L3 exit 0）。
+- Phase-1 主動修 3 處 practice recall→transfer（P2 She looked at herself→She introduced herself；P3 brother tie shoes by himself→Danny fixed his bike by himself；P4 enjoy oneself→behave themselves）。
+- round1 抓 1 unanimous 缺陷：P6 聽寫答案用未教的強調反身 "made one herself"（與教過的 by+reflexive=alone 歧義、feedback 又當同句型）→改 "made one by herself"（教過句型）＋重生 rf_dict1.mp3；sha 4568…→740f…、streak 重置重跑 5 clean。
+- DONE-GATE scan/unit_schema/question_correctness/audio_exist/per_page(absent)/pedagogy(0) 全綠；source_tree 收斂 280→281/332（84.6%）、未收斂 51。
