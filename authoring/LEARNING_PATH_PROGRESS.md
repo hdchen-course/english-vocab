@@ -805,3 +805,10 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - Phase-1 修 2 defect：claim c-rpl-es「-ch /k/」措辭 grammaticality（sounded→pronounced with a /k/ sound）；去 imprecise jargon「齒擦音」→plain「s、ss、sh、ch、x 結尾」（verification_ref＋P1/P5 distractors）。
 - DONE-GATE：scan_simplified PASS／unit_schema CLEAN／question_correctness CLEAN／audio_exist CLEAN／per_page_5clean 本頁 absent from violations／pedagogy 0 hits／build_source_tree 收斂 282/332。
 - eng 281→282。下一檔：english_runoncomma。
+
+## eng-runoncomma（連寫句與逗號接合）5/5 收斂 — 2026-11-09
+- 單元 eng.t_adv.pattern.run-on-comma-splice（辨識連寫句/逗號接合＋四種修法：句號/分號/逗號+FANBOYS/從屬連接詞）。
+- frozen_sha 687759b1bbc8042a；rounds 1–5 連 5 clean（L3 exit 0）。
+- Phase-1：內容文法經對抗式複核正確；RO2/RO3 freshen 成 teach 外新語境（The movie ended…／She was hungry…）避免 recall-not-transfer（學習神經科學鏡）。RO1/RO4/RO5/RO6 本已用新句、不動。
+- DONE-GATE：scan_simplified PASS／unit_schema CLEAN／question_correctness CLEAN／audio_exist CLEAN／per_page 本頁 absent／pedagogy 0 hits／build_source_tree 收斂 283/332。
+- eng 282→283。下一檔：english_sameplural。
