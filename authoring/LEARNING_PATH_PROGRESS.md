@@ -820,3 +820,10 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - DONE-GATE：scan_simplified PASS／unit_schema CLEAN／question_correctness CLEAN／audio_exist CLEAN／per_page 本頁 absent／pedagogy 0 hits／build_source_tree 收斂 284/332。
 - eng 283→284。下一檔：english_seeyou。
 - 教訓：grammar drill Phase-1 必逐題比對 teach collocation（數字+名詞、名詞+情境）；改數字須連 distractor 一起改；聽寫答案也要 teach 外新句；查無據最高級／量詞語義。
+
+## eng-seeyou（說再見·約下次見）5/5 收斂 — 2026-11-09
+- 單元 eng.t_base.pattern.goodbye（Goodbye/Bye 一般道別；See you + 時間：tomorrow/later/on Monday/next week）。
+- frozen_sha 831d193155af51a9；rounds 1–5 連 5 clean（L3 exit 0）。
+- Phase-1：內容正確（See you+時間 四框架以情境錨定唯一正解、避第二正解，為正當設計）；P4 dictation「See you tomorrow.」與 teach ex1＋shadowing sh1 逐字→改 teach 外新組合「Bye. See you next week.」+regen bye_dict_01.mp3。MCQ 四時間 taxonomy 選項不動。
+- DONE-GATE：scan_simplified PASS／unit_schema CLEAN／question_correctness CLEAN／audio_exist CLEAN／per_page 本頁 absent／pedagogy 0 hits／build_source_tree 收斂 285/332。
+- eng 284→285。
