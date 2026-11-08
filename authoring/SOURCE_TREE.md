@@ -3,12 +3,12 @@
 > 由 `tools/build_source_tree.py` 從 `authoring/units_index.json`（權威清單，
 > 同 per_page_5clean_gate 分母）× `page_converge_ledger.json` × 檔案系統產生。
 
-**總計 332 頁｜已收斂 257（77.4%）｜未收斂 75｜缺 html 0｜缺 sidecar 0**
+**總計 332 頁｜已收斂 258（77.7%）｜未收斂 74｜缺 html 0｜缺 sidecar 0**
 
 狀態符號：✅ 5-clean 收斂　▫️ 已建未收斂（n/5）　⛔ 缺檔
 
 
-## eng（257/332 收斂）
+## eng（258/332 收斂）
 
 
 ### strand=`adjadv`（12/15）
@@ -260,13 +260,13 @@
 - ✅ `english_tagquestion.html`
 - ✅ `english_whatcleft.html`
 
-### strand=`subj`（12/13）
+### strand=`subj`（13/13）
 
 - ✅ `english_inversionomitif.html`
 - ✅ `english_itstime.html`
 - ✅ `english_subjasif.html`
 - ✅ `english_subjfuture.html`
-- ▫️ `english_subjifonly.html` 0/5
+- ✅ `english_subjifonly.html`
 - ✅ `english_subjindic.html`
 - ✅ `english_subjmandative.html`
 - ✅ `english_subjmixed.html`
