@@ -36,6 +36,25 @@
   .psb a.sb-more{ color:var(--ink-soft); font-weight:700; font-size:13px; }
 }
 
+/* ── 共用側欄「篩選／分類」按鈕元件 .sb-cat（練習葉頁用：word_master 分級、dictation 類別）──
+   與 .psb a 同一視覺語言；避免各頁自刻側欄按鈕（房屋一致、單一來源）。 */
+.psb .sb-cat{ display:flex; align-items:center; gap:8px; width:100%; min-height:44px; padding:9px 11px;
+  border-radius:10px; border:1px solid transparent; background:none; color:var(--ink); font-family:inherit;
+  font-size:14px; line-height:1.4; text-align:left; cursor:pointer; }
+.psb .sb-cat:hover{ background:var(--card); border-color:var(--card-border); }
+.psb .sb-cat:focus-visible{ outline:3px solid var(--c-focus); outline-offset:2px; }
+.psb .sb-cat.on{ background:var(--tint-english); color:var(--c-english-ink); font-weight:800; }
+.psb .sb-cat .n{ margin-left:auto; color:var(--ink-soft); font-size:12px; font-weight:600; }
+
+/* ── 練習葉頁行動版修飾符：<820px 讓側欄變頂部橫列（opt-in；單元頁不加此類，維持 pill-nav 行為）── */
+@media (max-width:820px){
+  .pshell-grid.pshell--mobilebar{ display:block; }
+  .pshell--mobilebar .psb{ display:flex; flex-direction:row; flex-wrap:wrap; gap:8px; position:static;
+    max-height:none; overflow:visible; margin-bottom:16px; }
+  .pshell--mobilebar .psb .sb-group{ margin-bottom:0; }
+  .pshell--mobilebar .psb .sb-cat{ width:auto; }
+}
+
 /* can-do 滿版橫幅（放內容最上，取代舊左欄 can-do 卡） */
 .gr-cando--banner{ margin:0 0 14px; border-left-width:6px; }
 

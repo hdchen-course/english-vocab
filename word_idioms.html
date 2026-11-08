@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>慣用語與片語 💬</title>
+<!-- 新版版面頁（練習與應用「慣用語與片語」）。只「重複使用」既有材料，絕不修改舊檔：
+     材料＝assets/wordmaster/idioms_data.js（96 筆慣用語資料，逐字取自 english_idioms.js 的 IDIOMS）
+           ＋ audio/idiom_<slug>.mp3（96/96，edge-tts 真實產生）。
+     版面＝共用房屋 pshell（assets/unit.css）＋房屋卡 .gr-card ＋三級自評 .fc-rate（assets/app.css）
+           ＋本頁 inline 覆蓋（house 卡片質感，.wi-* 前綴）。版面比照 word_master：選主題在側欄、主畫面直接顯示卡片。
+     舊檔 english_idioms.html / english_idioms.js 原封不動。 -->
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<script src="assets/srs_engine.js"></script>
+<link rel="stylesheet" href="assets/unit.css"><!-- 共用房屋 pshell（.pshell-grid/.psb/.psb-main/.sb-*/.sb-cat） -->
+<style>
+:root{ --accent:var(--c-english); --accent-tint:var(--tint-english); --accent-ink:var(--c-english-ink); }
+body{ font-family:var(--font); min-height:100vh; background:var(--bg); color:var(--ink); overflow-x:hidden; }
+
+/* 側欄本回合小字 */
+.wi-sbnote{ font-size:13px; font-weight:600; color:var(--ink-soft); line-height:1.6; }
+/* 主畫面頂部說明＋進度列 */
+.wi-lead{ color:var(--ink-soft); font-size:var(--fs-small); font-weight:600; margin:0 0 var(--s2); }
+.wi-deckline{ font-size:14px; font-weight:800; color:var(--c-english-ink,var(--accent-ink)); margin:0 0 var(--s3); }
+
+/* ① 聽／讀卡 */
+.wi-play{ display:flex; flex-direction:column; gap:16px; }
+.wi-listen{ text-align:center; }
+.wi-prompt-em{ font-size:40px; line-height:1; margin-bottom:8px; }
+.wi-idiom{ font-size:clamp(24px,5vw,34px); font-weight:800; color:var(--c-english-ink,var(--ink)); line-height:1.3; }
+.wi-bigplay{ display:inline-flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+  width:104px; height:104px; margin:14px auto 10px; border:none; border-radius:999px;
+  background:var(--accent); color:var(--on-accent); cursor:pointer; box-shadow:var(--shadow-lg); transition:transform .12s ease; }
+.wi-bigplay:hover{ transform:scale(1.04); } .wi-bigplay:active{ transform:scale(.96); }
+.wi-bigplay__icon{ font-size:38px; line-height:1; } .wi-bigplay__t{ font-size:14px; font-weight:800; }
+.wi-hint{ font-size:var(--fs-small); color:var(--ink-soft); font-weight:600; }
+
+.wi-actions{ display:flex; gap:12px; }
+.wi-btn{ flex:1; min-height:48px; padding:12px 20px; border:2px solid transparent; border-radius:14px;
+  background:var(--c-english-btn,var(--accent)); color:var(--on-accent); font-family:var(--font);
+  font-size:clamp(15px,3vw,17px); font-weight:800; cursor:pointer; box-shadow:var(--shadow-sm);
+  transition:transform .12s ease, box-shadow .2s ease; }
+.wi-btn:hover{ box-shadow:var(--shadow-lg); } .wi-btn:active{ transform:scale(.97); }
+
+/* ② 對答案卡 */
+.wi-reveal{ background:var(--card); border:1px solid var(--card-border); border-left:5px solid var(--accent);
+  border-radius:var(--r-lg); padding:var(--s4); box-shadow:var(--shadow-sm); display:flex; flex-direction:column; gap:14px; }
+.wi-reveal__meaning{ font-size:clamp(19px,4vw,24px); font-weight:800; color:var(--c-english-ink,var(--ink)); text-align:center; line-height:1.4; }
+.wi-block{ border-radius:12px; background:var(--accent-tint); padding:12px 14px; }
+.wi-block__lab{ display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:800; color:var(--c-english-ink,var(--accent-ink)); margin-bottom:4px; }
+.wi-block__txt{ font-size:var(--fs-body); font-weight:600; color:var(--ink); line-height:1.6; }
+.wi-ex__en{ font-size:var(--fs-body); font-weight:800; color:var(--c-english-ink,var(--ink)); line-height:1.5; }
+.wi-ex__zh{ font-size:var(--fs-small); font-weight:600; color:var(--ink-soft); margin-top:4px; }
+.wi-saying{ align-self:center; display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:999px;
+  background:var(--card); border:1px solid var(--card-border); font-size:var(--fs-small); font-weight:800; color:var(--ink); }
+.wi-replay{ align-self:center; display:inline-flex; align-items:center; gap:6px; min-height:40px; padding:8px 16px;
+  border-radius:999px; background:var(--card); border:1px solid var(--card-border); color:var(--c-english-ink);
+  font-family:inherit; font-size:14px; font-weight:800; cursor:pointer; }
+.wi-reveal .fc-rate{ width:min(460px,100%); margin:6px auto 0; }
+
+/* 完成 */
+.wi-done{ text-align:center; background:var(--card); border:1px solid var(--card-border); border-radius:var(--r-lg);
+  box-shadow:var(--shadow-sm); padding:var(--s6) var(--s4); max-width:520px; margin:0 auto; }
+.wi-done .wi-big{ font-size:clamp(56px,20vw,96px); line-height:1.1; margin-bottom:var(--s3); }
+.wi-done h2{ font-size:var(--fs-h2); font-weight:800; margin-bottom:var(--s3); }
+.wi-done p{ font-size:var(--fs-body); font-weight:700; color:var(--ink-soft); margin:0 auto var(--s5); max-width:32ch; }
+.wi-foot{ margin-top:var(--s4); font-size:var(--fs-small); color:var(--ink-soft); font-weight:600; }
+
+.hidden{ display:none !important; }
+</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index_new.html" aria-label="回到學習地圖">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習地圖</span>
+  </a>
+  <span class="app-bar__title">慣用語與片語 💬</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle
+          aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+
+<main class="shell"><div class="pshell-grid pshell--mobilebar">
+  <aside class="psb" aria-label="導覽側欄">
+    <div class="sb-group"><div class="sb-title">你在哪裡</div>
+      <a class="sb-back" href="index_new.html#eng"><span aria-hidden="true">←</span> 英語文</a>
+    </div>
+    <div class="sb-group" id="wi-cats"><div class="sb-title">選主題</div>
+      <button type="button" class="sb-cat on" data-cat="all">全部慣用語<span class="n">96</span></button>
+    </div>
+    <div class="sb-group"><div class="sb-title">本回合</div>
+      <div class="wi-sbnote" id="wi-sbnote">載入中…</div>
+    </div>
+  </aside>
+
+  <div class="psb-main">
+    <p class="wi-lead">聽發音 → 想意思 → 翻答案看字面小故事＋情境例句＋對應中文俗語 → 選「還不熟／快會了／會了」。聽音優先、間隔複習（SRS）。</p>
+    <div class="wi-deckline" id="wi-deckline"></div>
+
+    <!-- 作答（一直顯示；切主題由左側欄驅動，比照單字大師） -->
+    <section id="wi-screen-play">
+      <div class="wi-play">
+        <div class="gr-card wi-listen">
+          <div class="wi-prompt-em" id="wi-em" aria-hidden="true">💬</div>
+          <div class="wi-idiom" id="wi-idiom"></div>
+          <button type="button" class="wi-bigplay" id="wi-play" aria-label="播放英文發音">
+            <span class="wi-bigplay__icon" aria-hidden="true">🔊</span><span class="wi-bigplay__t">播放</span>
+          </button>
+          <div class="wi-hint">先唸出來，想想它的中文意思，再看答案。</div>
+        </div>
+        <div class="wi-actions">
+          <button type="button" class="wi-btn" id="wi-reveal-btn">看答案</button>
+        </div>
+        <div class="wi-reveal hidden" id="wi-reveal" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- 完成 -->
+    <section id="wi-screen-done" class="hidden">
+      <div class="wi-done">
+        <div class="wi-big">🎉</div>
+        <h2>這一組完成！</h2>
+        <p id="wi-done-msg"></p>
+        <button type="button" class="wi-btn" id="wi-done-again" style="max-width:260px;margin:0 auto;">再複習一組</button>
+      </div>
+    </section>
+
+    <p class="wi-foot">道地英語語塊＋字面小故事＋情境例句＋對應中文俗語。左側切主題；自評誠實選，SRS 會依此安排複習。</p>
+  </div>
+</div></main>
+
+<script src="assets/wordmaster/idioms_data.js"></script>
+<script>
+/* 慣用語卡引擎（版面比照單字大師）：左側欄選主題 → 主畫面直接顯示該主題卡片。
+   audio-first（按播放才發音、不自動播、連點不疊）；看答案顯示 意思＋小故事＋情境＋例句＋對應俗語 → 三級自評＋SRS。 */
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  var esc=function(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+  var BANK=window.IDIOM_BANK||[], THEMES=window.IDIOM_THEMES||{}, slug=window.idiomSlug||function(s){return String(s).toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');};
+  var STORE=(window.SRS&&window.SRS.createStore)?window.SRS.createStore('idioms_srs_v1'):null;
+  var idOf=function(c){return 'idiom::'+c.idiom;};
+  var THEME_ORDER=[]; BANK.forEach(function(o){ if(THEME_ORDER.indexOf(o.theme)<0) THEME_ORDER.push(o.theme); });
+
+  var SESS=null, POS=0, curTheme='all';
+
+  function screen(id){ ['wi-screen-play','wi-screen-done'].forEach(function(s){ var e=$(s); if(e) e.classList.toggle('hidden', s!==id); }); }
+  function themeCount(theme){ return BANK.filter(function(o){ return theme==='all'||o.theme===theme; }).length; }
+  function themeName(theme){ return theme==='all'?'全部慣用語':(THEMES[theme]||theme); }
+
+  var curAudio=null;
+  function stopAudio(){ if(curAudio){ try{ curAudio.pause(); curAudio.currentTime=0; }catch(e){} curAudio=null; } }
+  function playAudio(item){ stopAudio(); try{ curAudio=new Audio('audio/idiom_'+slug(item.idiom)+'.mp3'); var p=curAudio.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){} }
+
+  function renderSidebar(){
+    var wrap=$('wi-cats');
+    THEME_ORDER.forEach(function(t){
+      var b=document.createElement('button'); b.type='button'; b.className='sb-cat'; b.setAttribute('data-cat',t);
+      b.innerHTML=esc(THEMES[t]||t)+'<span class="n">'+themeCount(t)+'</span>';
+      wrap.appendChild(b);
+    });
+    [].slice.call(wrap.querySelectorAll('.sb-cat')).forEach(function(b){
+      b.setAttribute('aria-pressed', b.classList.contains('on')?'true':'false');
+      b.addEventListener('click', function(){
+        [].slice.call(wrap.querySelectorAll('.sb-cat')).forEach(function(x){ var on=x===b; x.classList.toggle('on', on); x.setAttribute('aria-pressed', on?'true':'false'); });
+        startTheme(b.getAttribute('data-cat'));
+      });
+    });
+  }
+
+  function startTheme(theme){
+    stopAudio(); curTheme=theme;
+    var pool=BANK.filter(function(o){ return theme==='all'||o.theme===theme; });
+    SESS = STORE ? STORE.buildSession(pool,{idOf:idOf, dailyNew:12}) : pool.slice();
+    if(!SESS||!SESS.length) SESS=pool.slice();
+    POS=0; screen('wi-screen-play'); showCard();
+    $('wi-sbnote').textContent=themeName(theme)+'：本回合 '+SESS.length+' 句（新卡＋到期複習）·全主題共 '+themeCount(theme)+' 句。';
+  }
+
+  function showCard(){
+    var item=SESS[POS]; if(!item){ finish(); return; }
+    $('wi-deckline').textContent='本回合：'+themeName(curTheme)+' · 第 '+(POS+1)+' / '+SESS.length+' 句';
+    $('wi-em').textContent=item.emoji||'💬';
+    var idEl=$('wi-idiom'); idEl.textContent=item.idiom; idEl.setAttribute('lang','en');
+    var rv=$('wi-reveal'); rv.classList.add('hidden'); rv.innerHTML='';
+    $('wi-reveal-btn').classList.remove('hidden');
+    // 不自動播放：由使用者按「播放」才發音。
+  }
+
+  function reveal(){
+    var item=SESS[POS]; if(!item) return;
+    $('wi-reveal-btn').classList.add('hidden');
+    var rv=$('wi-reveal');
+    rv.innerHTML=''
+      +'<div class="wi-reveal__meaning">'+esc(item.meaningZh)+'</div>'
+      +'<button type="button" class="wi-replay" id="wi-replay"><span aria-hidden="true">🔊</span> 再聽一次</button>'
+      +'<div class="wi-block"><span class="wi-block__lab">📖 字面小故事</span><div class="wi-block__txt">'+esc(item.literalZh)+'</div></div>'
+      +'<div class="wi-block"><span class="wi-block__lab">🕑 什麼時候用</span><div class="wi-block__txt">'+esc(item.whenZh)+'</div></div>'
+      +'<div class="wi-block"><span class="wi-block__lab">💬 情境例句</span>'
+        +'<div class="wi-ex__en" lang="en">'+esc(item.exampleEn)+'</div><div class="wi-ex__zh">'+esc(item.exampleZh)+'</div></div>'
+      +(item.zhSaying?('<span class="wi-saying"><span aria-hidden="true">🀄</span> 像中文的「'+esc(item.zhSaying)+'」</span>'):'')
+      +'<div class="fc-rate" id="wi-rate">'
+        +'<button type="button" class="fc-rate__btn again" data-grade="again" aria-label="還不熟">😅<span class="fc-rate__btn__label">還不熟</span></button>'
+        +'<button type="button" class="fc-rate__btn good" data-grade="good" aria-label="快會了">🙂<span class="fc-rate__btn__label">快會了</span></button>'
+        +'<button type="button" class="fc-rate__btn easy" data-grade="easy" aria-label="會了">😎<span class="fc-rate__btn__label">會了</span></button>'
+      +'</div>';
+    rv.classList.remove('hidden');
+    var firstRate=rv.querySelector('.fc-rate__btn'); if(firstRate){ try{ firstRate.focus(); }catch(e){} } // 看答案後焦點移到自評鈕
+    var rp=$('wi-replay'); if(rp) rp.addEventListener('click', function(){ playAudio(item); });
+    [].slice.call(rv.querySelectorAll('.fc-rate__btn')).forEach(function(b){
+      b.addEventListener('click', function(){ grade(item, b.getAttribute('data-grade')); });
+    });
+  }
+
+  function grade(item, g){
+    try{ if(STORE) STORE.rate(idOf(item), g); }catch(e){}
+    POS++;
+    if(POS>=SESS.length) finish(); else showCard();
+  }
+
+  function finish(){
+    stopAudio(); screen('wi-screen-done');
+    $('wi-done-msg').textContent='你複習了「'+themeName(curTheme)+'」'+(SESS?SESS.length:0)+' 句慣用語，下次它們會在你快忘記時再出現。';
+  }
+
+  // 綁定
+  $('wi-play').addEventListener('click', function(){ var item=SESS&&SESS[POS]; if(item) playAudio(item); });
+  $('wi-reveal-btn').addEventListener('click', reveal);
+  $('wi-done-again').addEventListener('click', function(){ startTheme(curTheme); });
+
+  // 啟動
+  if(!BANK.length){ $('wi-deckline').textContent='⚠️ 資料載入失敗。'; }
+  else { renderSidebar(); startTheme('all'); }
+})();
+</script>
+</body>
+</html>

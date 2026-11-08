@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>分級聽寫 🎧</title>
+<!-- 新版版面頁（練習與應用「聽與寫」）。只「重複使用」既有材料，絕不修改舊檔：
+     材料＝dictation.js（引擎）＋dict_data_*.js（資料）＋audio/*.mp3＋dictation.css（dct-* 元件樣式）。
+     版面＝共用房屋 pshell（assets/unit.css）＋本頁 inline 覆蓋（house 卡片質感）。
+     沿用相同 dct-screen-* / dct-* id，dictation.js 直接驅動，無需改引擎。 -->
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
+<script src="game_core.js"></script>
+<script src="assets/srs_engine.js"></script>
+<link rel="stylesheet" href="assets/unit.css"><!-- 共用房屋 pshell（.pshell-grid/.psb/.psb-main/.sb-*/.sb-cat） -->
+<link rel="stylesheet" href="dictation.css"><!-- 重用既有 dct-* 元件樣式（不改此檔） -->
+<style>
+/* 強調色＝英語科；版面用共用 pshell。以下為本新頁對 dct-* 的「house 卡片質感」覆蓋（不動 dictation.css）。 */
+:root{ --accent:var(--c-english); --accent-tint:var(--tint-english); --accent-ink:var(--c-english-ink); }
+body{ font-family:var(--font); min-height:100vh; background:var(--bg); color:var(--ink); overflow-x:hidden; }
+.dct-cat{ display:none; }
+.dct-cat.on{ display:block; }
+.dct-cat-hint{ color:var(--ink-soft); font-size:var(--fs-small); font-weight:600; margin:0 0 var(--s3); }
+/* 選單卡片 house 化（覆蓋 dictation.css 的扁平樣式；僅本頁生效） */
+.dct-section-title{ font-size:clamp(17px,3.4vw,20px); font-weight:800; margin:var(--s2) 0 4px; }
+.dct-week-grid{ gap:var(--s3); }
+@media (min-width:1200px){ .dct-week-grid{ grid-template-columns:1fr 1fr 1fr; } }
+.dct-week{ border:1px solid var(--card-border); border-left:4px solid var(--accent); border-radius:18px;
+  box-shadow:var(--shadow-sm); transition:transform .14s ease, box-shadow .2s ease; }
+.dct-week:hover{ transform:translateY(-2px); box-shadow:var(--shadow-lg); }
+.dct-week__head{ padding:16px 18px; }
+.dct-week__head::before{ content:"✍️"; margin-right:8px; }
+.dct-day, .dct-bonus-btn{ border:1px solid var(--card-border); border-radius:12px; box-shadow:var(--shadow-sm); background:var(--bg); }
+.dct-day:hover, .dct-bonus-btn:hover{ box-shadow:var(--shadow-lg); }
+/* 加碼／主題／CEFR：項目排成小卡格狀（比照單元頁卡牆，不用滿寬長條） */
+#dct-bonus, #dct-themes, #dct-cefr{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; }
+#dct-bonus > .dct-day, #dct-bonus > .dct-bonus-btn,
+#dct-themes > .dct-day, #dct-themes > .dct-bonus-btn,
+#dct-cefr > .dct-day, #dct-cefr > .dct-bonus-btn{
+  display:flex; flex-direction:column; align-items:flex-start; justify-content:center; gap:4px;
+  min-height:88px; border:1px solid var(--card-border); border-left:4px solid var(--accent);
+  border-radius:16px; padding:16px 18px; background:var(--card); box-shadow:var(--shadow-sm);
+  font-size:clamp(15px,3vw,17px); text-align:left; transition:transform .14s ease, box-shadow .2s ease; }
+#dct-bonus > .dct-day:hover, #dct-bonus > .dct-bonus-btn:hover,
+#dct-themes > .dct-day:hover, #dct-themes > .dct-bonus-btn:hover,
+#dct-cefr > .dct-day:hover, #dct-cefr > .dct-bonus-btn:hover{ transform:translateY(-2px); box-shadow:var(--shadow-lg); }
+/* 載入 CTA（主題例句尚未載入時）維持滿欄一條，不做成小卡 */
+#dct-themes > .dct-load{ grid-column:1/-1; }
+/* 作答畫面：房屋卡片版面（聽卡＋寫卡＋對答案卡），置中一欄。重用 .gr-card；dct-* 細節沿用 dictation.css。 */
+.wd-play{ display:flex; flex-direction:column; gap:16px; }   /* 100% 滿版，填滿 psb-main */
+.wd-topnav{ display:flex; align-items:center; gap:12px; }
+.wd-back{ display:inline-flex; align-items:center; gap:6px; min-height:40px; padding:8px 16px; border-radius:999px;
+  background:var(--card); color:var(--c-english-ink); border:1px solid var(--card-border); border-left:4px solid var(--accent);
+  font-family:inherit; font-size:14px; font-weight:800; cursor:pointer; }
+.wd-back:hover{ border-color:var(--accent); }
+.wd-step{ margin-left:auto; font-size:14px; font-weight:800; color:var(--ink-soft); }
+.wd-h{ margin:0 0 10px; font-size:15px; }
+.wd-listen{ text-align:center; }
+.wd-bigplay{ display:inline-flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+  width:116px; height:116px; margin:2px auto 12px; border:none; border-radius:999px;
+  background:var(--accent); color:var(--on-accent); cursor:pointer; box-shadow:var(--shadow-lg); transition:transform .12s ease; }
+.wd-bigplay:hover{ transform:scale(1.04); } .wd-bigplay:active{ transform:scale(.96); }
+.wd-bigplay__icon{ font-size:42px; line-height:1; } .wd-bigplay__t{ font-size:14px; font-weight:800; }
+.wd-auxrow{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
+.wd-write-top{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+.wd-write-top .wd-h{ margin:0; }
+.wd-tools{ display:inline-flex; gap:6px; }
+.wd-actions{ display:flex; gap:12px; }
+.wd-actions .dct-btn{ flex:1; }
+.wd-play .dct-canvas{ height:clamp(200px,34vh,300px); border-style:solid; border-color:var(--card-border); }
+/* 對答案卡：滿版卡、內容置中一致（句子＋逐詞＋中文都置中），三級自評鈕回到置中大鈕。 */
+.wd-play .dct-reveal{ width:100%; max-width:none; align-items:center; text-align:center; gap:10px; }
+.wd-play .dct-reveal__row{ text-align:center; max-width:60ch; }
+.wd-play .dct-reveal .fc-rate{ width:min(460px,100%); margin:14px auto 0; }
+</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index_new.html" aria-label="回到學習地圖">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
+    <span class="app-bar__home-label">學習地圖</span>
+  </a>
+  <span class="app-bar__title">分級聽寫 🎧</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle
+          aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+
+<main class="shell"><div class="pshell-grid pshell--mobilebar">
+  <aside class="psb" aria-label="導覽側欄">
+    <div class="sb-group"><div class="sb-title">你在哪裡</div>
+      <a class="sb-back" href="index_new.html#eng"><span aria-hidden="true">←</span> 英語文</a>
+    </div>
+    <div class="sb-group" id="dct-cats"><div class="sb-title">選聽寫類別</div>
+      <button type="button" class="sb-cat on" data-cat="dk">DK《5 Words a Day》<span class="n">52 週</span></button>
+      <button type="button" class="sb-cat" data-cat="bonus">加碼練習<span class="n">數字·星期·月份</span></button>
+      <button type="button" class="sb-cat" data-cat="themes">主題例句</button>
+      <button type="button" class="sb-cat" data-cat="cefr">CEFR 分級<span class="n">A1–C2</span></button>
+    </div>
+  </aside>
+
+  <div class="psb-main">
+    <!-- ===== 選單 ===== -->
+    <section id="dct-screen-menu">
+      <section class="dct-cat on" data-cat="dk">
+        <h2 class="dct-section-title">DK《5 Words a Day》— 52 週</h2>
+        <p class="dct-cat-hint">每天 5 個字，第 5 天複習整週 20 字。點週展開 Day 1–5。</p>
+        <div class="dct-week-grid" id="dct-week-grid"></div>
+      </section>
+
+      <section class="dct-cat" data-cat="bonus">
+        <h2 class="dct-section-title">加碼練習</h2>
+        <p class="dct-cat-hint">數字、星期、月份——實用主題小套組。</p>
+        <div id="dct-bonus"></div>
+      </section>
+
+      <section class="dct-cat" data-cat="themes">
+        <h2 class="dct-section-title">聽力重點・主題例句聽寫</h2>
+        <p class="dct-cat-hint">以整句聽寫練聽力與拼寫。</p>
+        <div id="dct-themes"></div>
+      </section>
+
+      <section class="dct-cat" data-cat="cefr">
+        <h2 class="dct-section-title">CEFR 分級聽寫（A1–C2・單字＋例句）</h2>
+        <p class="dct-cat-hint">依歐洲語言分級，由易到難：A1 → C2。</p>
+        <div id="dct-cefr"></div>
+      </section>
+    </section>
+
+    <!-- ===== 作答（房屋卡片版面；重用 .gr-card/.gr-h/.gr-note 房屋元件，保留所有 dct-* id） ===== -->
+    <section id="dct-screen-play" class="hidden">
+      <div class="wd-play">
+        <!-- 頂列：返回（移到上方，比照其他單元）＋ 進度 ＋ 口音 -->
+        <div class="wd-topnav">
+          <button type="button" class="wd-back" id="dct-back"><span aria-hidden="true">←</span> 回選單</button>
+          <span class="wd-step" id="dct-counter" aria-live="polite"></span>
+          <span class="dct-accent" role="group" aria-label="口音切換">
+            <button type="button" class="dct-pill" id="dct-accent-us">美 US</button>
+            <button type="button" class="dct-pill" id="dct-accent-gb">英 UK</button>
+          </span>
+        </div>
+
+        <!-- ① 聽：stimulus 卡（大播放鍵 + 控制） -->
+        <div class="gr-card wd-listen">
+          <div class="gr-h wd-h">① 聽一聽</div>
+          <button type="button" class="wd-bigplay" id="dct-replay" aria-label="播放發音">
+            <span class="wd-bigplay__icon" aria-hidden="true">🔊</span><span class="wd-bigplay__t">播放</span>
+          </button>
+          <div class="wd-auxrow">
+            <button type="button" class="dct-pill hidden" id="dct-slow" aria-label="慢速播放">🐢 慢速</button>
+            <button type="button" class="dct-pill hidden" id="dct-wbw" aria-label="逐詞播放">🔤 逐詞</button>
+            <span class="dct-scaffolds hidden" role="group" aria-label="提示開關">
+              <button type="button" class="dct-sc" id="dct-sc-firstletter" aria-pressed="false">首字母</button>
+              <button type="button" class="dct-sc" id="dct-sc-ipa" aria-pressed="false">音標</button>
+            </span>
+          </div>
+          <button type="button" class="dct-bigplay hidden" id="dct-playbtn">🔊 點我播放</button>
+          <div class="dct-mutehint hidden" id="dct-mutehint">聽不到？檢查 iPad 的靜音鍵與音量。</div>
+          <div class="dct-firstletter" id="dct-firstletter"></div>
+        </div>
+
+        <!-- ② 寫：手寫卡 -->
+        <div class="gr-card wd-write">
+          <div class="wd-write-top">
+            <div class="gr-h wd-h">② 寫下來</div>
+            <span class="wd-tools">
+              <button type="button" class="dct-pill" id="dct-clear" aria-label="清除手寫">🧽 清除</button>
+              <button type="button" class="dct-pill" id="dct-fallback-toggle" aria-label="改用鍵盤輸入">⌨️ 改用鍵盤</button>
+            </span>
+          </div>
+          <div class="dct-canvas-wrap">
+            <canvas class="dct-canvas" id="dct-canvas" aria-label="手寫畫布"></canvas>
+          </div>
+          <textarea class="dct-fallback hidden" id="dct-fallback" placeholder="想打字的話可以在這裡寫（系統不會批改，翻答案自己對）" aria-label="鍵盤輸入（可選）"></textarea>
+        </div>
+
+        <!-- 動作列：只留「看答案」滿欄（回選單已移到頂部） -->
+        <div class="wd-actions">
+          <button type="button" class="dct-btn" id="dct-reveal-btn">看答案</button>
+        </div>
+
+        <!-- ③ 對答案（result 卡；dictation.js 填入正解 + 三級自評） -->
+        <div class="dct-reveal hidden" id="dct-reveal" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- ===== 完成 ===== -->
+    <section id="dct-screen-done" class="hidden">
+      <div class="dct-done">
+        <div class="dct-big">🎉</div>
+        <h2>這一組完成！</h2>
+        <p id="dct-done-msg"></p>
+        <button type="button" class="dct-btn" id="dct-done-back">回選單</button>
+      </div>
+    </section>
+  </div>
+</div></main>
+
+<script src="dictation.js"></script>
+<script>
+/* 側欄「選聽寫類別」(.sb-cat) → 主欄只顯示該類 (.dct-cat.on)；獨立於 dictation.js（只操作本頁靜態外殼）。
+   主題例句／CEFR 共用同一個載入鈕（在 #dct-themes），切到任一類若尚未載入即自動觸發，否則 CEFR 會空白。 */
+/* 不動舊檔前提下，停止 dictation.js（curAudio 封閉在其 IIFE 內無法外部存取）播放中的音訊：
+   在本頁攔截全域 Audio 建構子，登記所有實例並提供 __stopDictAudio() 暫停全部。
+   dictation.js 以 new Audio() 播放，且只在使用者播放時才建立（lazy），本攔截在其首次播放前即生效。 */
+(function(){
+  var Native=window.Audio; if(!Native) return;
+  var insts=[]; var suppressUntil=0;
+  function Wrapped(src){
+    var a=new Native(src); insts.push(a); if(insts.length>64) insts.splice(0, insts.length-64);
+    var origPlay=a.play.bind(a);
+    a.play=function(){ if(Date.now()<suppressUntil) return Promise.resolve(); return origPlay(); };
+    return a;
+  }
+  Wrapped.prototype=Native.prototype;
+  window.Audio=Wrapped;
+  window.__stopDictAudio=function(){
+    // 暫停目前所有實例，並短暫抑制（蓋住逐詞播放 playWordByWord 的後續 setTimeout 連播）。
+    suppressUntil=Date.now()+1500;
+    insts.forEach(function(a){ try{ a.pause(); a.currentTime=0; }catch(e){} });
+    insts.length=0;
+  };
+})();
+(function(){
+  var cats=[].slice.call(document.querySelectorAll('#dct-cats .sb-cat'));
+  var secs=[].slice.call(document.querySelectorAll('.dct-cat'));
+  function show(cat){
+    if(window.__stopDictAudio) window.__stopDictAudio(); // 切類別先停殘響
+    // 若正在作答/完成畫面，先回選單（否則點側欄類別看似沒反應——選單被隱藏）。
+    var menu=document.getElementById('dct-screen-menu');
+    ['dct-screen-play','dct-screen-done'].forEach(function(id){ var e=document.getElementById(id); if(e) e.classList.add('hidden'); });
+    if(menu) menu.classList.remove('hidden');
+    cats.forEach(function(b){ var on=b.getAttribute('data-cat')===cat; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on?'true':'false'); });
+    secs.forEach(function(s){ s.classList.toggle('on', s.getAttribute('data-cat')===cat); });
+    if(cat==='themes'||cat==='cefr'){
+      // 點「當前分頁容器內」的載入鈕，讓載入中／失敗重試回饋顯示在使用者正在看的分頁（themes 與 cefr 各有一顆，載同一份資料）。
+      var loader=document.querySelector('#dct-'+cat+' .dct-load');
+      if(loader && !loader.disabled){ loader.click(); }
+    }
+  }
+  cats.forEach(function(b){ b.setAttribute('aria-pressed', b.classList.contains('on')?'true':'false'); b.addEventListener('click', function(){ show(b.getAttribute('data-cat')); }); });
+})();
+</script>
+</body>
+</html>

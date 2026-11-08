@@ -244,8 +244,13 @@
                 themesWrap.innerHTML = '';
                 themesWrap.appendChild(loadButton(seriesError['cefr'] ? '⚠️ 載入失敗，點我重試' : '點我載入主題例句 ＋ CEFR 分級聽寫', 'cefr'));
             }
-            if (cefrWrap)
+            // cefrWrap 也放一顆同系列的載入/重試入口：舊版（兩區同屏堆疊）會各自顯示一顆載入鈕，
+            // 新版分頁（主題例句／CEFR 各一分頁）則確保 CEFR 分頁本身就有可見的載入中／失敗重試回饋，
+            // 不會只在被隱藏的主題例句分頁。點任一顆都載入同一份 cefr 資料（seriesLoading 去重），成功後一起重繪。
+            if (cefrWrap) {
                 cefrWrap.innerHTML = '';
+                cefrWrap.appendChild(loadButton(seriesError['cefr'] ? '⚠️ 載入失敗，點我重試' : '點我載入 CEFR 分級聽寫（A1–C2・單字＋例句）', 'cefr'));
+            }
             return;
         }
         // 高價值「主題例句」聽寫（只有例句）：日常/片語/慣用/數字情境/金句（level=cefr-<set>）

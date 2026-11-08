@@ -69,6 +69,9 @@
   fetch(src,{cache:'no-store'}).then(r=>r.json()).then(data=>{
     const u=data.units[0], root=document.getElementById('root');
     root.innerHTML='';
+    // 練習與應用脈絡（additive，§2.1）：?from=speaking&cat=<key> → 側欄改綁開口說情境；無參時下方邏輯完全等價（零回歸）。
+    const PZQ=new URLSearchParams(location.search||'');
+    const pzSpeakCat=(PZQ.get('from')==='speaking')?PZQ.get('cat'):null;
 
     // ── Cand 1 app-shell：頂部 pill-nav-row（<820px）＋ pshell-grid（psb 左側欄 + psb-main 內容）──
     // island fallback＝subject（目前僅 eng 單元，eng→eng；subject_labels 到才可能改寫）。
@@ -88,9 +91,9 @@
     side.setAttribute('aria-label','導覽側欄');
     grid.appendChild(side); grid.appendChild(main); root.appendChild(grid);
 
-    // 側欄 group1「你在哪裡」：🏠 學習地圖 + ← 分區單元牆（back）
+    // 側欄 group1「你在哪裡」：← 分區單元牆（back）。
+    // 🏠 學習地圖 不在此重複——app-bar 左上已有 home（避免與頂列重複，系統性去重）。
     const g1=el('div','sb-group'); g1.appendChild(el('div','sb-title','你在哪裡'));
-    const home=el('a','sb-home','<span aria-hidden="true">🏠</span> 學習地圖'); home.href='index_new.html'; g1.appendChild(home);
     const sBack=el('a','sb-back','<span aria-hidden="true">←</span> 單元牆'); sBack.href=hashHref; g1.appendChild(sBack);
     side.appendChild(g1);
     // 側欄 group2「同分區單元」：nav 資料到才填（graceful：fetch 失敗則整組隱藏，不白掉）
@@ -106,29 +109,47 @@
       fetch('authoring/units_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),
       fetch('authoring/subject_labels.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),
       fetch('authoring/strand_labels.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),
-    ]).then(([uidx,subjLab,strandLab])=>{
+      fetch('authoring/speaking_nav_map.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),
+    ]).then(([uidx,subjLab,strandLab,spmap])=>{
       const sj=subjLab&&subjLab[u.subject]; const sk=u.subject+'\u001f'+u.strand;
       const subjectZh=(sj&&sj.title_zh)||u.subject;
       const island=(sj&&sj.island)||u.subject;
       const strandZh=(strandLab&&strandLab[sk]&&strandLab[sk].title_zh)||u.strand;
+      // 預設＝strand 脈絡（非-speaking 核心單元，零回歸）。
+      let ctxZh=strandZh, ctxCrumb=subjectZh+' · '+strandZh;
       hashHref='index_new.html#'+island+'/'+u.strand;
-      pBack.href=hashHref; pBack.innerHTML='<span aria-hidden="true">←</span> '+esc(strandZh)+' 單元牆';
-      sBack.href=hashHref; sBack.innerHTML='<span aria-hidden="true">←</span> '+esc(subjectZh)+' · '+esc(strandZh);
-      const sib=((uidx&&uidx.units)||[]).filter(x=>x.subject===u.subject && x.strand===u.strand);
+      let sib=((uidx&&uidx.units)||[]).filter(x=>x.subject===u.subject && x.strand===u.strand);
+      // 開口說情境 context：speaking-track 單元被排除在 strand 牆外、唯一 home 就是開口說，故**一律**用情境脈絡
+      // （不只在帶 ?from=speaking&cat= 時）。cat 來源＝顯式 param 優先，否則由 speaking_nav_map 反查該單元所屬 cat。
+      let spCatKey=pzSpeakCat;
+      if((!spCatKey||!(spmap&&spmap.cats&&spmap.cats[spCatKey])) && spmap&&spmap.cats){
+        for(const k in spmap.cats){ if((spmap.cats[k].units||[]).indexOf(u.unit_id)>=0){ spCatKey=k; break; } }
+      }
+      const spCat=spCatKey && spmap && spmap.cats && spmap.cats[spCatKey];
+      if(spCat){
+        ctxZh=spCat.label_zh||spCatKey; ctxCrumb=subjectZh+' · 開口說';
+        hashHref='index_new.html#'+island+'/pz-speaking';
+        const byId={}; ((uidx&&uidx.units)||[]).forEach(x=>{byId[x.unit_id]=x;});
+        sib=(spCat.units||[]).map(id=>byId[id]).filter(Boolean);
+      }
+      pBack.href=hashHref; pBack.innerHTML='<span aria-hidden="true">←</span> '+esc(ctxZh)+' 單元牆';
+      sBack.href=hashHref; sBack.innerHTML='<span aria-hidden="true">←</span> '+esc(ctxCrumb);
       if(sib.length){
         const ci=sib.findIndex(x=>x.unit_id===u.unit_id);
         const MAX=10; let shown;
         if(sib.length<=MAX){ shown=sib; }
         else { let start=0; if(ci>=MAX) start=ci-MAX+1; shown=sib.slice(start,start+MAX); }
-        g2.appendChild(el('div','sb-title','同分區單元（'+esc(strandZh)+'）'));
-        shown.forEach(s=>{ const a=el('a',null,esc(s.title_zh||s.unit_id)); a.href=s.page;
+        // 情境脈絡下 sibling/prev/next href 帶同一 ?from=speaking&cat= 以維持脈絡；無參時＝純 page（零回歸）。
+        const pzHref=(pg)=> spCat ? pg+'?from=speaking&cat='+encodeURIComponent(spCatKey) : pg;
+        g2.appendChild(el('div','sb-title','同分區單元（'+esc(ctxZh)+'）'));
+        shown.forEach(s=>{ const a=el('a',null,esc(s.title_zh||s.unit_id)); a.href=pzHref(s.page);
           if(s.unit_id===u.unit_id){ a.className='current'; a.setAttribute('aria-current','page'); }
           g2.appendChild(a); });
         if(sib.length>shown.length){ const m=el('a','sb-more','… 共 '+sib.length+' 個單元 →'); m.href=hashHref; g2.appendChild(m); }
         g2.style.display='';
         // 窄埠 pill：相對當前 unit 的前／後一個同分區 sibling（首／尾則略該鈕）
-        if(ci>0){ const p=sib[ci-1]; const a=el('a','pill-nav','<span aria-hidden="true">‹</span> 上一個：'+esc(p.title_zh||p.unit_id)); a.href=p.page; pnl.insertBefore(a,firstStep); }
-        if(ci>=0 && ci<sib.length-1){ const n=sib[ci+1]; const a=el('a','pill-nav','下一個：'+esc(n.title_zh||n.unit_id)+' <span aria-hidden="true">›</span>'); a.href=n.page; pnl.insertBefore(a,firstStep); }
+        if(ci>0){ const p=sib[ci-1]; const a=el('a','pill-nav','<span aria-hidden="true">‹</span> 上一個：'+esc(p.title_zh||p.unit_id)); a.href=pzHref(p.page); pnl.insertBefore(a,firstStep); }
+        if(ci>=0 && ci<sib.length-1){ const n=sib[ci+1]; const a=el('a','pill-nav','下一個：'+esc(n.title_zh||n.unit_id)+' <span aria-hidden="true">›</span>'); a.href=pzHref(n.page); pnl.insertBefore(a,firstStep); }
       }
     });
 

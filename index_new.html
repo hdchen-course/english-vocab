@@ -225,7 +225,7 @@ const CATMAP={
     ['🌏','地球科學',{prefix:'地球科學：'}],
   ],
 };
-let NAV=null, cur=null, UNITS={};
+let NAV=null, cur=null, UNITS={}, SPMAP=null;
 const TIER_ORDER={t_base:0,t_mid:1,t_adv:2,t_sub:3,t_enrich:4,t_beyond:5};
 const esc=(s)=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 function renderPanel(isl){
@@ -242,14 +242,16 @@ function renderPanel(isl){
   // 單元卡＝<a href=該單元頁>：級別徽章（初階/中階/高階/延伸，由 unit_id 第 2 段推；R11 不顯年段）
   // ＋ title_zh ＋ can_do（截斷 2 行）＋ 預估分鐘。深連進單元頁。
   const tierLabel=(t)=>TIER_ZH[t]||t;
-  const unitCard=(u)=>{
+  const unitCard=(u,hrefExtra)=>{
     const can=(u.can_do||'').trim();
     const mins=u.est_minutes?`<span class="lp-umin">⏱ 約 ${esc(u.est_minutes)} 分</span>`:'';
     const t=tierOf(u);
     // 延伸（選修）用 area chip 底色區隔；其餘用既有 lp-tchip（不私造樣式）
     const lvlCls=(t==='t_enrich'||t==='t_beyond')?'lp-tchip area':'lp-tchip';
     const lvl=t?`<span class="${lvlCls}">${esc(tierLabel(t))}</span>`:'';
-    return `<a class="lp-unitcard" style="--a:${fill}" href="${esc(u.page)}">`+
+    // hrefExtra（選用）＝練習與應用脈絡的 additive query（如 ?from=speaking&cat=social）；
+    // 無參時 href 與既有 strand 牆 byte-identical（零回歸）。
+    return `<a class="lp-unitcard" style="--a:${fill}" href="${esc(u.page)}${hrefExtra||''}">`+
       `<span class="lp-utitle">${esc(u.title_zh||u.unit_id)}</span>`+
       (can?`<span class="lp-ucan">${esc(can)}</span>`:'')+
       `<span class="lp-umeta">${lvl}${mins}</span></a>`;
@@ -288,6 +290,43 @@ function renderPanel(isl){
     bb.addEventListener('click',()=>renderPanel(isl));
     bb.focus();
   };
+  // 練習與應用（practice-zone）additive drill-down：複用 strand 牆的同一套 lp-* 結構
+  // （lp-panel-h/lp-back/lp-catsec/lp-cath/lp-unitwall/unitCard），僅改以「情境」分組、
+  // unit 卡帶 ?from=speaking&cat= additive query。零自刻樣式、零新 class（R0）。
+  const pzBack=()=>{
+    const backLabel=`返回 ${isl.title_zh} 分區總覽`;
+    return `<div class="lp-panel-h lp-detail-h"><button type="button" class="lp-back" style="--a:${fill}"`+
+      ` aria-label="${esc(backLabel)}"><span class="bk-ar" aria-hidden="true">←</span>返回 ${esc(isl.title_zh)}分區</button></div>`;
+  };
+  const pzWireBack=()=>{ const bb=panel.querySelector('.lp-back'); if(bb){ bb.addEventListener('click',()=>renderPanel(isl)); bb.focus(); } };
+  const renderSpeaking=(label)=>{
+    const back=pzBack();
+    const title=`<div class="lp-panel-h"><h2>${esc(label||'開口說（情境會話）')}</h2>`+
+      `<span class="sub">10 大生活情境 · 換情境角度練 strand 學過的句型與字彙</span></div>`;
+    const draw=(doc)=>{
+      const cats=doc&&doc.cats;
+      if(!cats){ // 合法入口但資料目標壞/缺 → 明確 error 標記，不退回可用畫面（§3 fallback 紀律）
+        panel.innerHTML=back+title+`<div class="lp-catsec"><p class="sub" role="alert">⚠ 情境資料（speaking_nav_map.json）暫時無法載入，請稍後再試。</p></div>`; pzWireBack(); return; }
+      const byId={}; us.forEach(u=>{ byId[u.unit_id]=u; });
+      const secs=Object.keys(cats).map(k=>{
+        const c=cats[k]||{};
+        const cards=(c.units||[]).map(uid=>byId[uid]).filter(Boolean)
+          .map(u=>unitCard(u,`?from=speaking&cat=${encodeURIComponent(k)}`)).join('');
+        if(!cards) return '';
+        const em=c.em?`<span aria-hidden="true">${esc(c.em)}</span> `:'';
+        return `<div class="lp-catsec"><h3 class="lp-cath">${em}${esc(c.label_en||k)}`+
+          `<span class="scount">（${(c.units||[]).length} 個單元）</span></h3>`+
+          `<div class="lp-strandgrid lp-unitwall">${cards}</div></div>`;
+      }).join('');
+      panel.innerHTML=back+title+secs; pzWireBack();
+    };
+    if(SPMAP) draw(SPMAP);
+    else fetch('authoring/speaking_nav_map.json',{cache:'no-store'}).then(r=>r.ok?r.json():null,()=>null).then(d=>{ SPMAP=d; draw(d); });
+  };
+  const renderPZDetail=(kind,label)=>{
+    if(kind==='speaking') return renderSpeaking(label);
+    // dictation / idioms / flashcard 入口於後續階段接上
+  };
   const isEng = isl.island==='eng';
   let gridHtml, zoneHtml='';
   if(isEng){
@@ -305,21 +344,32 @@ function renderPanel(isl){
       `<span class="lp-sdesc">${desc}</span><span class="lp-tiers">${chips}</span></div>`;
     // 開口說（情境會話）＝舊版 blueprint 移植、spec 外補充；cross-cut 重用上方 strand 單元、換情境角度練。
     // 放補充區、非 spec strand 軸卡，故不與上方編號分區競爭、不灌 strand 覆蓋數。
-    const speak = us.length ? (`<a class="lp-scard" style="--a:${fill}" href="english_speaking.html" aria-label="開口說：10 大生活情境的情境會話練習（spec 外補充）">`+
+    // 開口說＝in-page drill-down（§2.1）：點入口 → renderSpeaking 以 10 情境分組重用上方 strand 單元。
+    // 複用既有 lp-scard-link 卡型（同 data-* 委派模式），data-pz 取代 data-strand；零自刻樣式。
+    const speak = us.length ? (`<button type="button" class="lp-scard lp-scard-link" style="--a:${fill}" data-pz="speaking" data-label="開口說（情境會話）" aria-label="開口說：10 大生活情境，點擊看情境單元清單">`+
       `<span class="snm"><span class="lp-aem" aria-hidden="true">🗣️</span>開口說（情境會話）</span>`+
-      `<span class="lp-sdesc">真實生活 10 大情境的「能用的一句話」：先聽先感覺 → 練 → 跟讀模仿語調 → 自評（含情境聽寫）。舊版情境單元移植，屬 spec 外補充練習——換情境角度重練上面 strand 分區學過的句型與字彙。</span>`+
+      `<span class="lp-sdesc">真實生活 10 大情境：先聽感覺 → 跟讀模仿語調 → 自評。</span>`+
       `<span class="lp-tiers"><span class="lp-tchip area">10 大情境</span><span class="lp-tchip area">聽・說・寫</span></span>`+
-      `<span class="lp-uhint">進入情境會話 <span class="lp-caret" aria-hidden="true">→</span></span></a>`) : '';
+      `<span class="lp-uhint">進入情境會話 <span class="lp-caret" aria-hidden="true">→</span></span></button>`) : '';
     zoneHtml=`<div class="lp-zone"><div class="lp-band"><span class="bem" aria-hidden="true">🎯</span><span class="bnm">練習與應用</span>`+
       `<span class="bmt">spec 外補充・不排順序・隨時可練；與上方 strand 分區是「換角度練同一批內容」，非另一套教材</span></div>`+
       `<div class="lp-strandgrid">`+
       speak+
-      area('📚','單字大師（分級字庫）','分級字卡：聽音優先・雙向・三級自評・SRS。重用 CEFR／COCA／英檢多益／YLE 字庫與語音。',
-        '<span class="lp-tchip area">A1</span><span class="lp-tchip area">A2</span><span class="lp-tchip area">B1</span><span class="lp-tchip area">B2–C2</span>')+
-      area('🎧','聽與寫（分級聽寫）','分級聽寫 drill：DK 入門單字 → CEFR 句子／短文；手寫／鍵盤＋跟讀＋自評。與開口說的情境句聽寫互補。',
-        '<span class="lp-tchip area">入門 DK</span><span class="lp-tchip area">初階 A1</span><span class="lp-tchip area">中階 A2–B1</span><span class="lp-tchip area">高階 B2+</span>')+
-      area('💬','慣用語與片語','道地語塊＋情境例句＋小故事，三級自評。重用既有慣用語／片語資料。',
-        '<span class="lp-tchip area">慣用語</span><span class="lp-tchip area">片語動詞</span>')+
+      (us.length?(`<a class="lp-scard" style="--a:${fill}" href="word_master.html" aria-label="單字大師（分級字庫）：COCA 高頻字卡，聽音優先、三級自評、間隔複習">`+
+        `<span class="snm"><span class="lp-aem" aria-hidden="true">📚</span>單字大師（分級字庫）</span>`+
+        `<span class="lp-sdesc">分級字卡：聽音優先、看義想字、三級自評＋間隔複習（SRS）。</span>`+
+        `<span class="lp-tiers"><span class="lp-tchip area">COCA 10K</span><span class="lp-tchip area">聽音優先</span><span class="lp-tchip area">SRS</span></span>`+
+        `<span class="lp-uhint">進入單字大師 <span class="lp-caret" aria-hidden="true">→</span></span></a>`):'')+
+      (`<a class="lp-scard" style="--a:${fill}" href="word_dictation.html" aria-label="聽與寫（分級聽寫）：聽發音手寫、翻答案自評、間隔複習；DK 52 週＋加碼＋主題例句＋CEFR 分級">`+
+        `<span class="snm"><span class="lp-aem" aria-hidden="true">🎧</span>聽與寫（分級聽寫）</span>`+
+        `<span class="lp-sdesc">聽發音 → 畫布手寫 → 翻答案自己對，三級自評＋間隔複習（SRS）。</span>`+
+        `<span class="lp-tiers"><span class="lp-tchip area">入門 DK</span><span class="lp-tchip area">初階 A1</span><span class="lp-tchip area">中階 A2–B1</span><span class="lp-tchip area">高階 B2+</span></span>`+
+        `<span class="lp-uhint">進入分級聽寫 <span class="lp-caret" aria-hidden="true">→</span></span></a>`)+
+      (`<a class="lp-scard" style="--a:${fill}" href="word_idioms.html" aria-label="慣用語與片語：聽道地英語語塊、想意思、翻答案看字面小故事與情境例句，三級自評＋間隔複習">`+
+        `<span class="snm"><span class="lp-aem" aria-hidden="true">💬</span>慣用語與片語</span>`+
+        `<span class="lp-sdesc">聽發音 → 想意思 → 翻答案看小故事與情境例句，三級自評（SRS）。</span>`+
+        `<span class="lp-tiers"><span class="lp-tchip area">慣用語</span><span class="lp-tchip area">8 主題</span><span class="lp-tchip area">聽音優先</span><span class="lp-tchip area">SRS</span></span>`+
+        `<span class="lp-uhint">進入慣用語與片語 <span class="lp-caret" aria-hidden="true">→</span></span></a>`)+
       `</div></div>`;
   } else {
     gridHtml=isl.strands.map(s=>strandCard(s,s.order)).join('');
@@ -370,6 +420,10 @@ function renderPanel(isl){
       if(s) renderStrandDetail(s, btn.dataset.label||s.title_zh);
     });
   });
+  // 練習與應用入口（data-pz）→ additive drill-down（與 data-strand 同委派模式，不重寫既有導覽）
+  panel.querySelectorAll('button.lp-scard-link[data-pz]').forEach(btn=>{
+    btn.addEventListener('click',()=>renderPZDetail(btn.dataset.pz, btn.dataset.label));
+  });
 }
 function select(i){
   cur=i;
@@ -382,6 +436,8 @@ fetch('authoring/units_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():{un
   return fetch('authoring/nav_index.json',{cache:'no-store'}).then(r=>r.json());
 }).then(nav=>{
   NAV=nav;
+  // 練習與應用：開口說情境→單元對映（SSOT），非阻斷預載；renderSpeaking 另含 lazy fallback。
+  fetch('authoring/speaking_nav_map.json',{cache:'no-store'}).then(r=>r.ok?r.json():null,()=>null).then(d=>{SPMAP=d;});
   document.getElementById('tot').innerHTML=
     `${nav.island_count} 座學習島 · 必備知識點 <b>${nav.minimum_total}</b> · 延伸（選修） <b>${nav.beyond_total}</b>`;
   // 逐單元學習進度（§6.3）：只讀 learning_progress_v1，顯示每島已學單元數。
@@ -405,11 +461,19 @@ fetch('authoring/units_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():{un
   // hash deep-link（最小侵入）：#<island>/<strand>（如 #eng/vocab）→ 自動選該島並展開該分區
   // 單元牆（等同使用者點了該 strand 卡）；hash 空／不合法＝維持現有預設首屏（第一島展開）。
   function applyHash(){
-    const m=(location.hash||'').replace(/^#/,'').match(/^([a-z][a-z-]*)\/(.+)$/);
+    // #<island> 或 #<island>/<strand>（strand 選用）。只有島→選該島總覽（分區列表）。
+    const m=(location.hash||'').replace(/^#/,'').match(/^([a-z][a-z-]*)(?:\/(.+))?$/);
     if(!m) return false;
     const idx=NAV.islands.findIndex(isl=>isl.island===m[1]);
     if(idx<0) return false;
     select(idx);   // renderPanel 同步跑完，panel DOM 已就緒
+    if(!m[2]) return true;   // 只有島：停在該島總覽即可（修 #eng 之類島-only 連結落到預設首島）
+    // 練習與應用回返：#<island>/pz-<kind>（如 #eng/pz-speaking）→ 點該入口，重用 click → renderPZDetail。
+    if(/^pz-[a-z]+$/.test(m[2])){
+      const pb=document.querySelector('#panel button.lp-scard-link[data-pz="'+m[2].slice(3)+'"]');
+      if(pb) pb.click();
+      return true;
+    }
     const sel='#panel button.lp-scard-link[data-strand="'+((window.CSS&&CSS.escape)?CSS.escape(m[2]):m[2])+'"]';
     const btn=document.querySelector(sel);
     if(btn) btn.click();   // 重用既有 click → renderStrandDetail，不重寫導覽
