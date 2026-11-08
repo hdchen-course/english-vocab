@@ -786,3 +786,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - round3 抓 1 unanimous readability 缺陷：R2-ref-he 'Tom' 誘答理由 '後面才出現' 兩讀其一為假（Tom 於短文首句即出現）→ 改 '（第一句就提到）…他後來安撫 Rocky，躲起來的不是他'；sha 1c04…→d467…、streak 重置重跑 5 clean。
 - DONE-GATE scan/unit_schema/question_correctness/audio_exist/per_page(absent)/pedagogy(0) 全綠；source_tree 收斂 278→279/332（84.0%）、未收斂 53。
 - **reading strand 全 9 檔收斂**（main-detail/word-reference/functional-skim/cloze-gap/main-detail…/title-purpose/tone-inference/structure-cohesion/multitext-ordering）。
+
+## 2026-11-09 04:44 — reciprocalpron 5/5 收斂（第 280 收斂頁）
+- english_reciprocalpron.html 達 5/5 連續 clean（sha c695bc8f294d9e95、各輪 L3 exit 0）。
+- Phase-1 無修（內容正確）；惟 content_audit 兩輪分別以 owning learning-neuroscience lens 判出同一 recall-vs-transfer 設計債：P2（重用 teach 例 friends/borrowed/books）→改 students/corrected/essays；P3（重用 teach ex1 傳球情境）→改 neighbors/wave；並主動修 P1（原逐字＝claim c-rc-mutual 例 Tom/Amy/love）→Ben/Mia/trust。三處練習改 fresh context 測遷移非記憶。
+- DONE-GATE scan/unit_schema/question_correctness/audio_exist/per_page(absent)/pedagogy(0) 全綠；source_tree 收斂 279→280/332（84.3%）、未收斂 52。
+- 經驗（banked）：batch 建的文法 pron 檔常把 practice 情境直接沿用 teach 例句（recall-not-transfer），content_audit owning-lens 會判缺陷；下一檔 Phase-1 應主動掃 practice↔teach/claim 例句重疊。
