@@ -798,3 +798,10 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - Phase-1 主動修 3 處 practice recall→transfer（P2 She looked at herself→She introduced herself；P3 brother tie shoes by himself→Danny fixed his bike by himself；P4 enjoy oneself→behave themselves）。
 - round1 抓 1 unanimous 缺陷：P6 聽寫答案用未教的強調反身 "made one herself"（與教過的 by+reflexive=alone 歧義、feedback 又當同句型）→改 "made one by herself"（教過句型）＋重生 rf_dict1.mp3；sha 4568…→740f…、streak 重置重跑 5 clean。
 - DONE-GATE scan/unit_schema/question_correctness/audio_exist/per_page(absent)/pedagogy(0) 全綠；source_tree 收斂 280→281/332（84.6%）、未收斂 51。
+
+## eng-regularplural（規則複數）5/5 收斂 — 2026-11-09
+- 單元 eng.t_base.noun.regular-plural（規則複數：+s / -es(s/ss/sh/ch/x) / 子音+y→-ies / 母音+y→+s / -f·fe→-ves）。
+- frozen_sha 7bcc3ea5b7aa60cd；rounds 2–6 連 5 clean（L3 exit 0）。
+- Phase-1 修 2 defect：claim c-rpl-es「-ch /k/」措辭 grammaticality（sounded→pronounced with a /k/ sound）；去 imprecise jargon「齒擦音」→plain「s、ss、sh、ch、x 結尾」（verification_ref＋P1/P5 distractors）。
+- DONE-GATE：scan_simplified PASS／unit_schema CLEAN／question_correctness CLEAN／audio_exist CLEAN／per_page_5clean 本頁 absent from violations／pedagogy 0 hits／build_source_tree 收斂 282/332。
+- eng 281→282。下一檔：english_runoncomma。
