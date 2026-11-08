@@ -768,3 +768,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 
 ## 2026-11-03 — vocab 第 5 檔收斂
 - `english_atplace.html` 達 5/5（I'm at the + place；sha c5f712ab37117fb9；5 音檔已驗；無修正，一次過）。per_page gate 25/332。
+
+## 2026-11-09 03:17 — reading_title_purpose 5/5 收斂（第 277 收斂頁）
+- english_reading_title_purpose.html 達 5/5 連續 clean（sha a99cdbede9d51525、各輪 L3 exit 0）。
+- Phase-1 修 stale _note；round1 harvest 修 example 誤把離題標題標成 too-narrow；rounds2+3 unanimous panel 再抓 teach/claim cue 'you should' 不在短文（短文用 'We should all try'）→ 對齊 cue 為 'we should'/'you should'/'please'；並清 pedagogy length-cue（R4-purpose-action 正解 17→8 字平行誘答）。
+- round4 'too wide' vs 'too broad' 風格建議經 panel 0/5 判 NOT-A-DEFECT（wide↔narrow 正當反義對），未改。
+- DONE-GATE：scan_simplified/unit_schema/question_correctness/audio_exist/per_page_5clean(target absent)/pedagogy(0 hits) 全綠；source_tree 收斂 276→277/332（83.4%）、未收斂 55。
