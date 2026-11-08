@@ -779,3 +779,10 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - english_reading_tone_inference.html 達 5/5 連續 clean（sha 3b3e33c9c136f1c5、各輪 L3 exit 0）。
 - Phase-1 僅修 stale _note（原描述一頁多單元 3×t_mid main-idea/guess-word/functional）→ 改為實際單一 t_adv 單元 tone-inference ＋ 2 KP（attitude-tone＋inference）；內容（公園短文、態度題、證據題、推論題）親驗正確、單一可辯護答案、pedagogy 無 length-cue。
 - rounds 1–5 全程 0 confirmed（round4 raw=0）；DONE-GATE scan/unit_schema/question_correctness/audio_exist/per_page(absent)/pedagogy(0) 全綠；source_tree 收斂 277→278/332（83.7%）、未收斂 54。
+
+## 2026-11-09 03:57 — reading_word_reference 5/5 收斂（第 279 收斂頁）★reading strand 9/9 全收斂
+- english_reading_word_reference.html 達 5/5 連續 clean（sha d467f23b48370144、各輪 L3 exit 0）。
+- Phase-1 修 stale _note（原描述一頁多單元 3×t_mid）→ 實際單一 t_mid 單元 word-reference ＋ 2 KP（guess-word＋reference）。
+- round3 抓 1 unanimous readability 缺陷：R2-ref-he 'Tom' 誘答理由 '後面才出現' 兩讀其一為假（Tom 於短文首句即出現）→ 改 '（第一句就提到）…他後來安撫 Rocky，躲起來的不是他'；sha 1c04…→d467…、streak 重置重跑 5 clean。
+- DONE-GATE scan/unit_schema/question_correctness/audio_exist/per_page(absent)/pedagogy(0) 全綠；source_tree 收斂 278→279/332（84.0%）、未收斂 53。
+- **reading strand 全 9 檔收斂**（main-detail/word-reference/functional-skim/cloze-gap/main-detail…/title-purpose/tone-inference/structure-cohesion/multitext-ordering）。
