@@ -1057,3 +1057,8 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - sha a6048a57578286e2；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist[wcl_*5 音檔齊] / per_page_5clean[wantclothes ABSENT] / pedagogy[no hard] / build_source_tree）。
 - panel 修正：teach 抽象模板「I want + a thing」含冠詞 a，與本單元「衣物字皆不配 a/an、全程不碰 a/an」設計矛盾、恐誘導「I want a shoes」→ 改「I want + the thing you want」（模板不再於複數衣物 slot 前出現 a）。Layer A 零文法術語維持；衣物字 US pants=長褲、shorts=短褲。
 - 收斂 315/332（94.9%）。
+
+## eng-weathermore（Layer A 基礎：It's + 天氣 windy/cloudy/snowy/foggy）5/5 收斂 — 2026-11-10 05:30
+- sha 1fb169d2a71c68f8；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist[wm_*5 音檔齊] / per_page_5clean[weathermore ABSENT] / pedagogy[no hard] / build_source_tree）。
+- pre-freeze 預見性修正：teach 模板「It's + a weather word」含冠詞 a（與 wantclothes 同類）→「It's + the weather word」避免誘導「It's a windy」。panel round2 raw「what the weather is today vs is like today」經 0/5 判 NOT A DEFECT（風格微調、比對隱藏 claim metadata）已記 knownFP。Layer A 零文法術語維持；天氣字與 #8 sunny/rainy/hot/cold 刻意錯開。
+- 收斂 316/332（95.2%）。
