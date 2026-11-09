@@ -1042,3 +1042,8 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - knownFP：P2「thousands of stars can be seen」與 claim c-vm-can-could metadata 逐字同，但 learner-facing ex2 用 city/mountains → transfer；主動型誘答（must finish/can see/should lock）是「主詞為承受者」故意錯項、非缺陷。
 - DONE-GATE 七關：scan PASS / schema CLEAN / qc CLEAN / audio CLEAN / per_page voicemodal ABSENT / pedagogy voicemodal 無 hard hit / build_source_tree 收斂 312/332（94.0%）。
 - 下一檔（字母序）：english_voicenonfinite。
+
+## eng-voicenonfinite（非限定被動：被動不定詞/need+V-ing/使役 have sth done/被動動名詞）5/5 收斂 — 2026-11-10 03:59
+- sha a9615f934fb441a0；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist / per_page_5clean[voicenonfinite ABSENT] / pedagogy[no hard] / build_source_tree）。
+- 收斂過程修正（多輪對抗式 panel）：P1-P4 harvest 脫 teach；P5 bare-noun repair 兩解歧義＋P2 虛構語意 rationale；P3 recall-not-transfer（Nobody likes being→She can't stand）；P3 to-blame rationale「喜歡」與 can't stand 矛盾；被+結果/趨向補語翻譯腔 sweep（修好/洗好/填好/交出去/需要被洗-修-修理）；使役「在」語序（請人在粉刷→正在請人粉刷）；'want' 跨卡 verb-list 不一致→移除；'seem' 未舉例 loose end→移除；R14 teach-parity：補被動動名詞英文規則 text 項。
+- 收斂 313/332（94.3%）。
