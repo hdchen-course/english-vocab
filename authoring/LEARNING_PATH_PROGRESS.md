@@ -848,3 +848,11 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
   (3) DONE-GATE pedagogy_gate（content panel 漏抓）：ST3 正解「複句（含一個從屬子句）」帶括號補述屬 length/detail-cue→四選項平行去括號
 - 教訓（已內化）：content_audit 5-clean ≠ 完工；DONE-GATE deterministic pedagogy_gate 仍會抓 content panel 漏的 length-cue，收斂後必跑全 gate 再 commit。
 - commits: e3d01c9e8 / b8d78bfb6 / 9fc9db545
+
+## eng-shallwouldlike（Shall I/we…? 與 would like）5/5 收斂 — 2026-11-09
+- sha 7f71c4c7fd7d097b，L3 exit 0，DONE-GATE 七關全綠（含 pedagogy 0 hits）
+- 收斂 287→288/332（86.7%）
+- 修正軌跡：
+  (1) Phase-1 freshen：P6 dictation「Shall we start the game now?」近乎重複 teach「Shall we start now?」→「Shall we visit the museum this weekend?」＋重產 swl_dict1.mp3
+  (2) DONE-GATE pedagogy_gate：P3-meaning 正解「我想要一杯水（客氣的說法）」括號補述屬 length/detail-cue→去括號（客氣 nuance 留 feedback）
+- commits: 74a320390 / a110833a4
