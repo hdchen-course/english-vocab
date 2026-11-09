@@ -392,7 +392,8 @@
     function cur() { return session[idx]; }
     function renderItem() {
         var item = cur();
-        resizeCanvas(); // play 畫面可見後 canvas 才有實際尺寸，於此重設 backing store（修 R8：避免 1×1 畫不出筆跡）
+        resizeCanvas(); // play 畫面可見後 canvas 才有實際尺寸，於此確保 backing store（修 R8：避免 1×1 畫不出筆跡）
+        clearCanvas(); // 換題一律清空上一題手寫＋鍵盤輸入（resizeCanvas 自 2026-11-09 改為同尺寸不清空以保護捲動，故清空責任移到這裡）
         var _fb = $('dct-fallback');
         if (_fb)
             _fb.value = '';
