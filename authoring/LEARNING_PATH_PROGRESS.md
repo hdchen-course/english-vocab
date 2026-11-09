@@ -1082,3 +1082,8 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - sha 87b8e5d3a9dfbf30；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist[whc_* 音檔齊] / per_page_5clean[whetherclause ABSENT] / pedagogy[no hard] / build_source_tree）。
 - round3 panel 抓 2 真 defect 並修：(blocker) P5「what」誘答理由誤稱「what the train had left 不通」（實為合法句，what=left 受詞）→ 改成語意不合理由；(minor) P1「if」誘答疊字「不用來當『當主詞』」→「不能用來引導當主詞的名詞子句」。修正後 sha 16e5cff→87b8e5d3，ledger 重置重跑 5 輪（fresh ESL / learn-neuro+hiring-bar / adversarial grammarian / PM-journey / comms-linguist 五視角）全零 confirmed。高階文法單元文法術語適切；單一正解靠「只有 whether 能用」的位置（主詞/介系詞後/接 to/直接配 or not）。
 - 收斂 320/332（96.4%）。
+
+## eng-whilewhereas（t_adv 高階：while/whereas 表對比）5/5 收斂 — 2026-11-10 07:32
+- sha a792368990496243；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist[whw_* 音檔齊] / per_page_5clean[whilewhereas ABSENT] / pedagogy[no hard] / build_source_tree）。
+- 兩輪 panel 修同一缺陷類（learn-neuro owns b, minor）：example-card 重複 teach 同句卻譯法不一致。round2 修 ex1（我卻愛看書→我卻喜歡看書，sha→822c61c4），round3 掃出 ex2/ex3 漏修（湯姆安靜/妹妹健談→very…很愛講話；狗忠誠/較獨立→很忠誠/比較獨立，sha→a792368990496243），重跑五視角全零 confirmed。高階文法術語適切；while/whereas 單一正解靠選項中僅一個合法對比連接詞。
+- 收斂 321/332（96.7%）。
