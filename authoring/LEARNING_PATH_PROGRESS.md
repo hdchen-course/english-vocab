@@ -1072,3 +1072,8 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - sha e57732b9d3cd571c；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist[wel_* 音檔齊] / per_page_5clean[welcome ABSENT] / pedagogy[no hard] / build_source_tree）。
 - 自我 harvest 乾淨、pre-freeze 四 gate 皆綠，5 輪 content_audit（fresh adversarial ESL / learn-neuro+hiring-bar / child-edu / PM-journey / comms-linguist 五視角）零 confirmed。四招待語功能互異（進門/坐下/取用/帶路）→ 每題情境錨定唯一動作、無第二正解。knownFP：distractor 皆合法真句但情境不符（教學區辨點）；單一 KP greet-places 刻意；Welcome! 僅 teach 不練為刻意範圍。Layer A 零文法術語維持。
 - 收斂 318/332（95.8%）。
+
+## eng-where（Layer A 基礎：說東西在哪裡 It's on/in... / Where is...? / at home-school）5/5 收斂 — 2026-11-10 06:34
+- sha cd25aefd99ddca8a；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist[wh_* 音檔齊] / per_page_5clean[where ABSENT] / pedagogy[no hard] / build_source_tree）。
+- 自我 harvest 乾淨、pre-freeze 四 gate 皆綠，5 輪 content_audit（fresh ESL / learn-neuro+hiring-bar / child-edu / PM-journey / comms-linguist）零 confirmed。on=表面上方 vs in=容器內部，題幹錨定表面/容器→單一正解；at home/at school 固定說法。knownFP：on-vs-in/缺's'm'is/語序皆教過區辨點；「in the table/bed」為錯介系詞誘答非第二正解；at home/at school 以 example+zh_hint 承載規則（無平行 teach text）panel 5/5 判 NOT A DEFECT（polish）。Layer A 零文法術語維持。
+- 收斂 319/332（96.1%）。
