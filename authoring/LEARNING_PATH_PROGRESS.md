@@ -951,3 +951,15 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 設計要點（經對抗複核站得住）：Good evening 與 Good night 中文都是「晚安」＝第二正解風險，單元以『情境錨定』每題鎖唯一正解（早上到校／下午遇鄰居／睡覺前／傍晚到朋友家見爸媽／早上起床）；P1 與 P6 皆 Good morning. 但情境不同（到校 vs 起床），非重複。
 - DONE-GATE 七關：scan_simplified PASS／unit_schema CLEAN／question_correctness CLEAN／audio_exist CLEAN（含 tg_ 音檔）／per_page_5clean 本頁 absent from violations／pedagogy 0 hits／build_source_tree 收斂 302/332（91.0%）。
 - eng 301→302。下一檔：english_tooenough。
+
+## eng-tooenough（too…to／enough to／so…that／such…that）5/5 收斂 — 2026-11-09
+- 單元 eng.t_mid.adjadv.too-enough-so-such（程度與結果四結構＋so/such、so/too 辨析）。
+- frozen_sha 32b7e0da5857078c；rounds 1–5 連 5 clean（L3 exit 0）。
+- 修 3 個 recall-not-transfer（分兩批被不同 framing 抓出，最後完整 harvest 四題）：
+  - P4（major）整句複製 teach「It was such a good film that we watched it twice」→改「such an exciting game that the whole town came to watch」新情境
+  - P3（minor，learning 鏡 owns b）近乎複製 teach ex2「He ran so fast that no one could catch him」→改「She spoke so quietly that we could not hear her」
+  - P1（major）整句複製 teach-text「The coffee is too hot to drink」→改「The box was too heavy to lift by myself」；併同 harvest P2「tall enough to reach」（複製 teach-text）→改「The water in the pool was warm enough to swim in」
+  - 兩次晚修皆設 harvest_override 留漂移痕跡、sha 兩度重置（9dabe05e→a615ec4e→32b7e0da）、streak 重跑；五題全對 teach 例句脫鉤。
+- DONE-GATE 七關：scan_simplified PASS／unit_schema CLEAN／question_correctness CLEAN／audio_exist CLEAN（toe_）／per_page 本頁 absent／pedagogy 0 hits／build_source_tree 收斂 303/332（91.3%）。
+- eng 302→303。下一檔：english_twoobjects。
+- 教訓（已內化）：grammar 單元 harvest 階段必須一次把**全部** practice 題對**所有** teach 例句/片語（含 teach-text 內嵌短語如 tall enough to reach）掃完；find-one-fix-one 會多次 reset 浪費輪次。
