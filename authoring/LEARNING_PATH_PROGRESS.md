@@ -980,3 +980,11 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 修 1 defect：harvest（凍結前自掃）P1「I need some information about the schedule」近乎複製 teach ex1「I need some information about the trip.」→改「The guide has some information about the museum.」（全新主詞/情境）。P4 單位詞題、P6 dictation 重用為合理（非 recall）。
 - DONE-GATE 七關全綠（scan_simplified／unit_schema／question_correctness／audio_exist unc_／per_page absent／pedagogy 0／build_source_tree 305/332=91.9%）。
 - eng 304→305。下一檔：english_usedtofamily。
+
+## eng-usedtofamily（used to／be used to／get used to 辨析）5/5 收斂 — 2026-11-10
+- 單元 eng.t_adv.verb.used-to-family（used to+原形＝過去習慣；be/get used to+名詞/V-ing＝已/逐漸習慣，to 為介系詞）。
+- frozen_sha 6c716418e83bd8cf；rounds 1–5 連 5 clean（L3 exit 0）。
+- 修 1 defect：harvest（凍結前自掃）P6 dictation「It took me a while to get used to driving on the left.」＝teach ex3 逐字完全相同→改「We soon got used to living in a smaller house.」＋用 gen_audio.py 重產 uto_dict1.mp3（童聲 en-US-AnaNeural，24KB 合法 mp3）。
+- DONE-GATE 七關全綠（scan_simplified／unit_schema／question_correctness／audio_exist uto_／per_page absent／pedagogy 0／build_source_tree 306/332=92.2%）。
+- eng 305→306。下一檔：english_verbinf。
+- 教訓：dictation 答案若與 teach 例句「逐字完全相同」即使是聽寫也屬 recall 風險，harvest 階段應改句並重產音檔（gen_audio.py 單檔 manifest + --force）。
