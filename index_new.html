@@ -321,7 +321,7 @@ function renderPanel(isl){
       panel.innerHTML=back+title+secs; pzWireBack();
     };
     if(SPMAP) draw(SPMAP);
-    else fetch('authoring/speaking_nav_map.json',{cache:'no-store'}).then(r=>r.ok?r.json():null,()=>null).then(d=>{ SPMAP=d; draw(d); });
+    else fetch('data/speaking_nav_map.json',{cache:'no-store'}).then(r=>r.ok?r.json():null,()=>null).then(d=>{ SPMAP=d; draw(d); });
   };
   const renderPZDetail=(kind,label)=>{
     if(kind==='speaking') return renderSpeaking(label);
@@ -431,13 +431,13 @@ function select(i){
     b.classList.toggle('active',k===i); b.setAttribute('aria-current',k===i?'true':'false');});
   renderPanel(NAV.islands[i]);
 }
-fetch('authoring/units_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():{units:[]}).catch(()=>({units:[]})).then(ui=>{
+fetch('data/units_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():{units:[]}).catch(()=>({units:[]})).then(ui=>{
   (ui.units||[]).forEach(u=>{ (UNITS[u.subject]=UNITS[u.subject]||[]).push(u); });
-  return fetch('authoring/nav_index.json',{cache:'no-store'}).then(r=>r.json());
+  return fetch('data/nav_index.json',{cache:'no-store'}).then(r=>r.json());
 }).then(nav=>{
   NAV=nav;
   // 練習與應用：開口說情境→單元對映（SSOT），非阻斷預載；renderSpeaking 另含 lazy fallback。
-  fetch('authoring/speaking_nav_map.json',{cache:'no-store'}).then(r=>r.ok?r.json():null,()=>null).then(d=>{SPMAP=d;});
+  fetch('data/speaking_nav_map.json',{cache:'no-store'}).then(r=>r.ok?r.json():null,()=>null).then(d=>{SPMAP=d;});
   document.getElementById('tot').innerHTML=
     `${nav.island_count} 座學習島 · 必備知識點 <b>${nav.minimum_total}</b> · 延伸（選修） <b>${nav.beyond_total}</b>`;
   // 逐單元學習進度（§6.3）：只讀 learning_progress_v1，顯示每島已學單元數。
@@ -482,7 +482,7 @@ fetch('authoring/units_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():{un
   if(!applyHash()) select(0);
   // footer：真實總進度概覽（取代舊「Phase 2 後顯示」占位）
   const T=(LP&&LP.totals&&LP.totals())||{seen:0,mastered:0};
-  const srcNote='資料來源：authoring/nav_index.json（由 tools/gen_derived.py 自 knowledge_points.json 衍生）。';
+  const srcNote='資料來源：data/nav_index.json（由 tools/gen_derived.py 自 knowledge_points.json 衍生）。';
   const progNote=(T.seen>0)
     ? `學習進度（這台裝置）：已學 ${T.seen} 個單元、其中 ${T.mastered} 個標記為「會了」。繼續加油！`
     : '學習進度（這台裝置）：還沒有紀錄，挑一座島、點一個單元就開始囉！';

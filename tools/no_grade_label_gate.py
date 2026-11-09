@@ -21,9 +21,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 import glob as _glob
 DEFAULT_TARGETS = [
     os.path.join(ROOT, "index_new.html"),
-    os.path.join(ROOT, "authoring", "nav_index.json"),
-    os.path.join(ROOT, "authoring", "subject_labels.json"),
-    os.path.join(ROOT, "authoring", "strand_labels.json"),
+    os.path.join(ROOT, "data", "nav_index.json"),
+    os.path.join(ROOT, "data", "subject_labels.json"),
+    os.path.join(ROOT, "data", "strand_labels.json"),
 ] + sorted(_glob.glob(os.path.join(ROOT, "english_*.html")))
 
 # 高精度年段樣式（繁體）；只抓明確就學階段標記，避免「高一點／小一塊」等誤判。

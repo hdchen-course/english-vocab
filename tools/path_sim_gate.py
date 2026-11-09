@@ -18,7 +18,7 @@
 
   --verify（AC-PATH-1，INV-1 無斷層的確定性子基盤）斷言——
     (P1) 每個單元的 prerequisites 欄位存在且為 list（缺/型別錯＝violation，fail-closed）。
-    (P2) 每條 prerequisite 解析到既有單元 id（disk *.units.json ∪ authoring/units_index.json）；
+    (P2) 每條 prerequisite 解析到既有單元 id（disk *.units.json ∪ data/units_index.json）；
          懸空參照＝斷層（無此先備單元，學習者走不到）→ violation。
     (P3) 無自環：單元不得以自己為先備。
     (P4) 先備 DAG 無環：整張單元先備圖必須可拓撲排序（存在合法學習順序）；
@@ -108,18 +108,18 @@ def load_units(root):
 
 
 def load_index_ids(root):
-    """authoring/units_index.json 的 unit_id 集合（供 prereq 解析的額外來源）。
+    """data/units_index.json 的 unit_id 集合（供 prereq 解析的額外來源）。
     回傳 (ids, problems)。缺檔不視為致命（disk 為權威），但解析失敗 fail-closed 記問題。"""
     ids = set()
     problems = []
-    path = os.path.join(root, "authoring", "units_index.json")
+    path = os.path.join(root, "data", "units_index.json")
     if not os.path.isfile(path):
         return ids, problems
     try:
         with open(path, encoding="utf-8") as fh:
             idx = json.load(fh)
     except (OSError, json.JSONDecodeError) as e:
-        problems.append(f"[units_index] 無法解析 authoring/units_index.json（{e}；fail-closed）")
+        problems.append(f"[units_index] 無法解析 data/units_index.json（{e}；fail-closed）")
         return ids, problems
     for u in idx.get("units", []) if isinstance(idx.get("units"), list) else []:
         if isinstance(u, dict) and isinstance(u.get("unit_id"), str):

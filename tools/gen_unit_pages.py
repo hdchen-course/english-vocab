@@ -20,7 +20,7 @@ units_index 的 `page` 欄指向不存在的檔 → 不可達/不可渲染/不�
 import json, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-UNITS_INDEX = os.path.join(ROOT, "authoring", "units_index.json")
+UNITS_INDEX = os.path.join(ROOT, "data", "units_index.json")
 ASSET_VER = "20261102e"
 
 STRAND_EMOJI = {

@@ -16,9 +16,9 @@ spec §6.7 line 611：`roadmap_layout.json` = roadmap 節點座標/連線(先備
 import json, os, sys, glob
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-UNITS_INDEX = os.path.join(ROOT, "authoring", "units_index.json")
-NAV_INDEX   = os.path.join(ROOT, "authoring", "nav_index.json")
-SUBJ_LABELS = os.path.join(ROOT, "authoring", "subject_labels.json")
+UNITS_INDEX = os.path.join(ROOT, "data", "units_index.json")
+NAV_INDEX   = os.path.join(ROOT, "data", "nav_index.json")
+SUBJ_LABELS = os.path.join(ROOT, "data", "subject_labels.json")
 OUT         = os.path.join(ROOT, "authoring", "roadmap_layout.json")
 
 TIER_ORDER = {"t_base": 0, "t_mid": 1, "t_adv": 2, "t_sub": 3}

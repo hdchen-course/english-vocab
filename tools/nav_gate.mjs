@@ -35,7 +35,7 @@
 //       元素在首屏不可見（<details> 未 open／aria-expanded≠true／display:none／hidden）。port 自 HEAD
 //       的偵測精神並併入 /tmp 版的載體選擇器。
 //
-//   (D) HUB 資料↔DOM 對應（index_new.html 讀 authoring/nav_index.json 後渲染 CATMAP）：
+//   (D) HUB 資料↔DOM 對應（index_new.html 讀 data/nav_index.json 後渲染 CATMAP）：
 //       - nav_index.json 每座島的 title_zh 都要出現在 hub 導覽的渲染文字中（島名無遺漏）；
 //       - 渲染出的每個分區（strand）標籤都是其中文正名，**不得等於原始 slug**、**不得含 needs_review**；
 //       - 渲染出的頂層島數量 ＝ nav_index.json 的 island_count（且 ≤12）。
@@ -271,7 +271,7 @@ function evaluate(scan, expected, opts) {
 
 // ── 讀 nav_index.json 取期望值（島名集、slug 集、island_count）──
 function loadExpected() {
-  const nav = JSON.parse(readFileSync(join(A, 'nav_index.json'), 'utf-8'));
+  const nav = JSON.parse(readFileSync(join(ROOT, 'data', 'nav_index.json'), 'utf-8'));
   const islands = nav.islands || [];
   const islandTitles = islands.map((i) => i.title_zh).filter(Boolean);
   const slugSet = new Set();

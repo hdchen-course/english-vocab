@@ -59,7 +59,7 @@
     <div class="sp-overall" id="overall"></div>
   </div>
   <div class="sp-cats" id="cats"><p id="loading" style="color:var(--ink-soft)">載入中…</p></div>
-  <footer class="sp-foot">資料來源：authoring/units_index.json（由 tools/gen_derived.py 掃各 *.units.json 衍生）。情境分類見 authoring/english_island_blueprint.md §8。</footer>
+  <footer class="sp-foot">資料來源：data/units_index.json（由 tools/gen_derived.py 掃各 *.units.json 衍生）。情境分類見 authoring/english_island_blueprint.md §8。</footer>
 </main>
 <script>
 /* 每單元頁的 emoji */
@@ -96,7 +96,7 @@ function unitCard(u){
     (u.can_do?'<span class="sp-u-can">'+esc(u.can_do)+'</span>':'')+
     (u.est_minutes?'<span class="sp-u-meta">⏱ 約 '+esc(u.est_minutes)+' 分</span>':'')+'</a>';
 }
-fetch('authoring/units_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():{units:[]}).catch(()=>({units:[]})).then(ui=>{
+fetch('data/units_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():{units:[]}).catch(()=>({units:[]})).then(ui=>{
   const us=(ui.units||[]).filter(u=>u.subject==='eng');
   const byPage={}; us.forEach(u=>{ byPage[u.page]=u; });
   const el=document.getElementById('cats');

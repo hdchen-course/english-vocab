@@ -8,7 +8,7 @@ AC-COV-2（`--verify-count`／`--selftest-count`）：`knowledge_points.json` �
 
 AC-COV-1（`--verify`／`--selftest`）：每一條 **minimum（`beyond=false`）** 知識點都須被站上某單元**真教＋真考**
   ——即存在某 unit，其 `(∪teach.kp_ids)` 與 `(∪practice.kp_ids)` **皆**含該 kp（§6.2.2 rubric⑦／§10.1
-  Phase 3 DONE-GATE『未真覆蓋 minimum id＝0』）。單元來源＝`authoring/units_index.json`（build 工具彙總
+  Phase 3 DONE-GATE『未真覆蓋 minimum id＝0』）。單元來源＝`data/units_index.json`（build 工具彙總
   所有 `*.units.json`，見 §6.7）。**此為最終覆蓋門檻**：Phase 1/2 內容未齊時本檢查誠實 FAIL（列出未覆蓋
   minimum 數），不 vacuous 放行——覆蓋矩陣 100% 是 Phase 3 exit，不得假裝提前達成。
 
@@ -19,7 +19,7 @@ import argparse, collections, json, os, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MANIFEST = os.path.join(ROOT, "authoring", "knowledge_points.json")
-UNITS_INDEX = os.path.join(ROOT, "authoring", "units_index.json")
+UNITS_INDEX = os.path.join(ROOT, "data", "units_index.json")
 
 
 def _load_items(path=MANIFEST):

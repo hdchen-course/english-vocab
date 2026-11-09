@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Regenerate authoring/speaking_nav_map.json from SSOT (PRACTICE_ZONE_NAV_SPEC §2.1/§4).
+"""Regenerate data/speaking_nav_map.json from SSOT (PRACTICE_ZONE_NAV_SPEC §2.1/§4).
 SSOT: authoring/speaking_cats.json (cat->pages) + units_index.json (page->unit_id).
 label_en committed below (R14 main display). Deterministic; no network."""
 import json,re,os
 ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 cats=json.load(open(os.path.join(ROOT,'authoring/speaking_cats.json')))
-ui=json.load(open(os.path.join(ROOT,'authoring/units_index.json')))
+ui=json.load(open(os.path.join(ROOT,'data/units_index.json')))
 us=ui if isinstance(ui,list) else ui.get('units',ui)
 bypage={}
 for u in us: bypage.setdefault(u.get('page'),u)
@@ -21,5 +21,5 @@ for c in cats['cats']:
     out[k]={'label_en':LABEL_EN[k],'label_zh':zh(c['name']),'em':(c.get('em','').split()[0] if c.get('em') else ''),'units':units}
 doc={'_note':'DERIVED from authoring/speaking_cats.json + units_index.json. Regenerate via tools/build_speaking_nav_map.py. Per PRACTICE_ZONE_NAV_SPEC §2.1/§4.',
  '_schema':'{cat_key:{label_en,label_zh,em,units:[unit_id,...]}}','cats':out}
-json.dump(doc,open(os.path.join(ROOT,'authoring/speaking_nav_map.json'),'w'),ensure_ascii=False,indent=1)
+json.dump(doc,open(os.path.join(ROOT,'data/speaking_nav_map.json'),'w'),ensure_ascii=False,indent=1)
 print('ok',len(out),'cats',sum(len(v['units']) for v in out.values()),'units')

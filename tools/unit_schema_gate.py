@@ -15,7 +15,7 @@ fail-closed 斷言（§6.2.2 / §11.A AC-SCHEMA，本 gate 聚焦 team-lead 指�
   1. 必備欄位齊備＋型別正確（§6.2.2 細則 1–7；缺欄／型別錯＝violation）。
   2. unit_id 跨所有 *.units.json 全域唯一（§6.3 細則2／§6.7；撞號＝violation）。
   3. unit_id 格式符合 canonical ID_RE（opaque、≥3 段、字元集 [a-z0-9_-]，domain 段 [a-z0-9-]）。
-  4. authoring/units_index.json 的 unit_id 集合與磁碟 *.units.json 的 unit_id 集合一致
+  4. data/units_index.json 的 unit_id 集合與磁碟 *.units.json 的 unit_id 集合一致
      （缺漏／多餘皆＝violation；兌現 §6.7 衍生正確）。
   5. 每個單元 knowledge_point_ids[] 的每個 id 皆解析到 authoring/knowledge_points.json 的
      知識點（§6.2 R-GRAIN「知識點≠單元、一單元可掛數個知識點」；懸空參照＝violation）。
@@ -78,12 +78,12 @@ def run(root):
     violations = []
     root = os.path.abspath(root)
     unit_files = sorted(glob.glob(os.path.join(root, "*.units.json")))
-    index_path = os.path.join(root, "authoring", "units_index.json")
+    index_path = os.path.join(root, "data", "units_index.json")
 
     if not unit_files:
         violations.append(f"[discovery] 在 {root} 找不到任何 *.units.json（空 glob＝fail-closed）")
     if not os.path.isfile(index_path):
-        violations.append(f"[units_index] 缺 authoring/units_index.json（{index_path}）")
+        violations.append(f"[units_index] 缺 data/units_index.json（{index_path}）")
 
     disk_ids = []          # [(unit_id, file_basename, unit_index)]
     id_to_locations = {}   # unit_id -> [location str]
@@ -153,7 +153,7 @@ def run(root):
                 idx = json.load(fh)
             idx_units = idx.get("units")
             if not isinstance(idx_units, list):
-                violations.append("[units_index] authoring/units_index.json 缺 'units' 陣列")
+                violations.append("[units_index] data/units_index.json 缺 'units' 陣列")
             else:
                 idx_ids = set()
                 for j, u in enumerate(idx_units):
@@ -171,7 +171,7 @@ def run(root):
                         f"[units_index] units_index 有但磁碟 *.units.json 無：'{extra}'（過時/多餘條目）"
                     )
         except (OSError, json.JSONDecodeError) as e:
-            violations.append(f"[units_index] 無法解析 authoring/units_index.json（{e}）")
+            violations.append(f"[units_index] 無法解析 data/units_index.json（{e}）")
 
     # ---- 斷言 5：knowledge_point_ids 參照完整性（§6.2 R-GRAIN）----
     kp_valid = 0

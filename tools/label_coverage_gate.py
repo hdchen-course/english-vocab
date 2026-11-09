@@ -8,7 +8,7 @@ label_coverage_gate.py — LEARNING_PATH_REBUILD_SPEC.md §6.7／§11.A AC-SCHEM
 「鍵集合等式（非只比筆數）」；只比筆數＝T3-03 fail-open：一個過時/typo 鍵換掉
 一個真配對，筆數不變卻讓真配對落回 raw slug 顯示）：
 
-  1. authoring/strand_labels.json
+  1. data/strand_labels.json
      鍵＝`(domain, strand)` 配對（以 US 分隔字元 \\x1f 連接：`domain\\x1fstrand`）。
      鍵集合 MUST 精確等於 manifest（authoring/knowledge_points.json）＋任何
      `*.units.json` 單元宣告 實際出現的所有 (domain, strand) 配對集合。
@@ -16,7 +16,7 @@ label_coverage_gate.py — LEARNING_PATH_REBUILD_SPEC.md §6.7／§11.A AC-SCHEM
      ── 鍵是「配對」而非裸 slug：裸 slug 會跨域相撞（stats 於 math/life、
         inquiry 於 sci/soc-civ、skill 於 soc-geo/soc-hist 等），覆蓋成錯名。
 
-  2. authoring/subject_labels.json
+  2. data/subject_labels.json
      鍵＝`domain`／`life-category`。鍵集合 MUST 涵蓋 manifest（＋任何單元）
      實際出現的所有 domain／life-category；每個恰一條目、零缺、旗標多餘/過時鍵。
 
@@ -275,9 +275,9 @@ def main(argv=None):
     ap.add_argument("--manifest", default=None,
                     help="knowledge_points.json 路徑（預設 <root>/authoring/knowledge_points.json）")
     ap.add_argument("--strand-labels", default=None,
-                    help="strand_labels.json 路徑（預設 <root>/authoring/strand_labels.json）")
+                    help="strand_labels.json 路徑（預設 <root>/data/strand_labels.json）")
     ap.add_argument("--subject-labels", default=None,
-                    help="subject_labels.json 路徑（預設 <root>/authoring/subject_labels.json）")
+                    help="subject_labels.json 路徑（預設 <root>/data/subject_labels.json）")
     ap.add_argument("--units-glob", default="*.units.json",
                     help="單元宣告檔 glob（相對 root；預設 '*.units.json'）")
     ap.add_argument("--json", action="store_true", help="以 JSON 輸出報告")
@@ -285,8 +285,8 @@ def main(argv=None):
 
     root = args.root
     manifest_path = args.manifest or os.path.join(root, "authoring", "knowledge_points.json")
-    strand_path = args.strand_labels or os.path.join(root, "authoring", "strand_labels.json")
-    subject_path = args.subject_labels or os.path.join(root, "authoring", "subject_labels.json")
+    strand_path = args.strand_labels or os.path.join(root, "data", "strand_labels.json")
+    subject_path = args.subject_labels or os.path.join(root, "data", "subject_labels.json")
 
     report, exit_code = run(manifest_path, strand_path, subject_path, args.units_glob, root)
 

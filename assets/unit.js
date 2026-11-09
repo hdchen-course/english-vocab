@@ -106,10 +106,10 @@
 
     // nav 資料（同分區 siblings ＋ 中文標籤）：runtime fetch；每項 catch→null，整頁不因此白掉。
     Promise.all([
-      fetch('authoring/units_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),
-      fetch('authoring/subject_labels.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),
-      fetch('authoring/strand_labels.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),
-      fetch('authoring/speaking_nav_map.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),
+      fetch('data/units_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),
+      fetch('data/subject_labels.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),
+      fetch('data/strand_labels.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),
+      fetch('data/speaking_nav_map.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),
     ]).then(([uidx,subjLab,strandLab,spmap])=>{
       const sj=subjLab&&subjLab[u.subject]; const sk=u.subject+'\u001f'+u.strand;
       const subjectZh=(sj&&sj.title_zh)||u.subject;

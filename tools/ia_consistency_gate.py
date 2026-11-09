@@ -23,7 +23,7 @@ import argparse, json, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 A = os.path.join(ROOT, "authoring")
-UNITS = os.path.join(A, "units_index.json")
+UNITS = os.path.join(ROOT, "data", "units_index.json")
 SPEAK = os.path.join(A, "speaking_cats.json")
 HUB = os.path.join(ROOT, "index_new.html")
 

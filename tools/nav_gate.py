@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """nav_gate.py — AC-NAV 的資料層 fail-closed gate（§6.1/§6.7 導覽資料一致性）。
 
-驗 `authoring/nav_index.json`（hub 首屏唯一讀的輕量導覽檔，R9/ND）對 `knowledge_points.json` 的一致性，
+驗 `data/nav_index.json`（hub 首屏唯一讀的輕量導覽檔，R9/ND）對 `knowledge_points.json` 的一致性，
 並守 ND 漸進揭露不變量。渲染層（rendered nav DOM 吻合資料）另由 render gate 把關；本 gate 管資料正確。
 
 斷言：
@@ -135,10 +135,10 @@ def main():
         print("=== nav_gate --selftest ===")
         ok = _selftest(); print("RESULT:", "PASS ✅" if ok else "FAIL ❌"); sys.exit(0 if ok else 2)
     if args.verify:
-        nav = json.loads(open(os.path.join(A, "nav_index.json"), encoding="utf-8").read())
+        nav = json.loads(open(os.path.join(ROOT, "data", "nav_index.json"), encoding="utf-8").read())
         items = json.loads(open(os.path.join(A, "knowledge_points.json"), encoding="utf-8").read())["items"]
-        sl = json.loads(open(os.path.join(A, "strand_labels.json"), encoding="utf-8").read())
-        subj = json.loads(open(os.path.join(A, "subject_labels.json"), encoding="utf-8").read())
+        sl = json.loads(open(os.path.join(ROOT, "data", "strand_labels.json"), encoding="utf-8").read())
+        subj = json.loads(open(os.path.join(ROOT, "data", "subject_labels.json"), encoding="utf-8").read())
         probs = check(nav, items, subj, sl)
         for p in probs:
             print(f"  [nav] {p}")

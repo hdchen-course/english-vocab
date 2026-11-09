@@ -16,7 +16,7 @@ const BASE = `http://127.0.0.1:${PORT}/index_new.html`;
 mkdirSync(OUT, { recursive: true });
 
 const srcSha = createHash('sha256').update(readFileSync(join(ROOT, 'index_new.html'))).digest('hex').slice(0, 16);
-const nav = JSON.parse(readFileSync(join(ROOT, 'authoring', 'nav_index.json'), 'utf8'));
+const nav = JSON.parse(readFileSync(join(ROOT, 'data', 'nav_index.json'), 'utf8'));
 const islands = nav.islands.map(i => ({ island: i.island, title: i.title_zh }));
 
 // 要 render 的狀態：主視埠（iPad 橫 1366×1024）逐島；另 eng 島加 16"(1718×890) 與 iPad 直(1024×1366)

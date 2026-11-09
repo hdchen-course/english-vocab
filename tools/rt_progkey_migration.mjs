@@ -100,7 +100,7 @@ console.log('[RT] case 4：執行期 data.js 與來源一致 + 所有 new_unit_i
   const srcEntries = (src.entries || []).filter(e => e.old_progKey && e.lesson_id && e.new_unit_id)
     .map(e => ({ old_progKey: e.old_progKey, lesson_id: e.lesson_id, new_unit_id: e.new_unit_id }));
   ok(JSON.stringify(entries) === JSON.stringify(srcEntries), `data.js(${entries.length}) 與來源 entries(${srcEntries.length}) 一致`);
-  const idx = new Set(JSON.parse(fs.readFileSync(path.join(ROOT, 'authoring/units_index.json'), 'utf-8')).units.map(u => u.unit_id));
+  const idx = new Set(JSON.parse(fs.readFileSync(path.join(ROOT, 'data/units_index.json'), 'utf-8')).units.map(u => u.unit_id));
   const bad = entries.filter(e => !idx.has(e.new_unit_id));
   ok(bad.length === 0, `data.js 所有 new_unit_id 存在於 units_index（invalid ${bad.length}）`);
 }

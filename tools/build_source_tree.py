@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # =====================================================================
-# build_source_tree.py — 從 authoring/units_index.json（已建單元的權威清單，
+# build_source_tree.py — 從 data/units_index.json（已建單元的權威清單，
 # 同 per_page_5clean_gate 的分母）交叉比對 convergence ledger 與檔案系統，
 # 產出「所有應存在的教學 HTML 頁」的 source tree ＋ 每頁狀態清單，當作
 # 跨 session 的單一檢查清單（含已收斂與未收斂、含缺檔）。
@@ -21,7 +21,7 @@ import os
 import sys
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-UNITS_INDEX = os.path.join(REPO, "authoring", "units_index.json")
+UNITS_INDEX = os.path.join(REPO, "data", "units_index.json")
 LEDGER = os.path.join(REPO, "authoring", "page_converge_ledger.json")
 OUT_MD = os.path.join(REPO, "authoring", "SOURCE_TREE.md")
 OUT_JSON = os.path.join(REPO, "authoring", "source_tree.json")
@@ -109,7 +109,7 @@ def main():
                        "summary": summary, "pages": rows}, f, ensure_ascii=False, indent=1)
         lines = []
         lines.append("# 教學 HTML Source Tree（自動產生，勿手改）\n")
-        lines.append("> 由 `tools/build_source_tree.py` 從 `authoring/units_index.json`（權威清單，")
+        lines.append("> 由 `tools/build_source_tree.py` 從 `data/units_index.json`（權威清單，")
         lines.append("> 同 per_page_5clean_gate 分母）× `page_converge_ledger.json` × 檔案系統產生。\n")
         lines.append(f"**總計 {total} 頁｜已收斂 {converged}（{summary['pct_converged']}%）｜"
                      f"未收斂 {total - converged}｜缺 html {missing_html}｜缺 sidecar {missing_side}**\n")

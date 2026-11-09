@@ -12,7 +12,7 @@ per_page_5clean_gate.py — AC-UNIT-2 的驗收 gate：證明每個已建學習�
   舊的 clean streak 全部作廢（§10.1 邊界 line 873：「某檔已 4 clean 後又被改動 → streak
   歸零、重跑 5 clean」）。fail-closed：ledger 不足證據一律判為違規。
 
-這組「哪些頁要檢查」來自 `authoring/units_index.json`（已建單元的 `page` 欄）。
+這組「哪些頁要檢查」來自 `data/units_index.json`（已建單元的 `page` 欄）。
 
 Ledger：authoring/page_converge_ledger.json
   {
@@ -49,7 +49,7 @@ import sys, os, json, hashlib, datetime, re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LEDGER_REL = os.path.join("authoring", "page_converge_ledger.json")
-UNITS_INDEX_REL = os.path.join("authoring", "units_index.json")
+UNITS_INDEX_REL = os.path.join("data", "units_index.json")
 REQUIRED_CLEAN = 5
 
 

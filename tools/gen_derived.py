@@ -3,9 +3,9 @@
 """gen_derived.py — §6.7 衍生檔產生管線（Phase 1）。從 knowledge_points.json 衍生前端輕量檔。
 
 產出（皆進 git、不得手改、手改來源再 regen）：
-  authoring/subject_labels.json  domain→{title_zh, island, order}
-  authoring/strand_labels.json   "(domain,strand)"→{title_zh, needs_review}  （211 配對；中文名半自動，需人工覆核）
-  authoring/nav_index.json       島→subject→strand→tier 計數（不含 3096 逐條；前端首屏只讀此檔，R9/ND）
+  data/subject_labels.json  domain→{title_zh, island, order}
+  data/strand_labels.json   "(domain,strand)"→{title_zh, needs_review}  （211 配對；中文名半自動，需人工覆核）
+  data/nav_index.json       島→subject→strand→tier 計數（不含 3096 逐條；前端首屏只讀此檔，R9/ND）
 
 注意：島↔subject 的 §6.1 策展 9 島 rollup 與 strand 中文正名屬人工精修項；本工具先產**鍵集合完整、計數正確**
 的骨架（island 暫以 domain 為單位、strand title 自 slug 衍生並標 needs_review），供 hub 骨架渲染與 gate 鍵集合檢查；
@@ -16,6 +16,7 @@ import collections, json, os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MANIFEST = os.path.join(ROOT, "authoring", "knowledge_points.json")
 AUTH = os.path.join(ROOT, "authoring")
+DATA = os.path.join(ROOT, "data")  # runtime-served derived data (離開工作區 authoring/，避免清理誤刪)
 
 # 8 個 domain 的中文正名（最高層，確定）；island 暫＝domain（§6.1 九島 rollup 為人工精修項）
 SUBJECTS = {
@@ -190,7 +191,7 @@ def main():
 
     # subject_labels
     subject_labels = {d: {"title_zh": t, "island": d, "order": o} for d, (t, o) in SUBJECTS.items()}
-    json.dump(subject_labels, open(os.path.join(AUTH, "subject_labels.json"), "w"),
+    json.dump(subject_labels, open(os.path.join(DATA, "subject_labels.json"), "w"),
               ensure_ascii=False, indent=1)
 
     # strand_labels：(domain,strand) 鍵集合（精確等於 manifest 實際出現的配對）
@@ -200,7 +201,7 @@ def main():
         key = f"{d}\u001f{s}"  # U+001F 分隔，仿 §9.4
         zh = STRAND_ZH.get(key)
         strand_labels[key] = {"title_zh": zh if zh else s, "needs_review": zh is None}
-    json.dump(strand_labels, open(os.path.join(AUTH, "strand_labels.json"), "w"),
+    json.dump(strand_labels, open(os.path.join(DATA, "strand_labels.json"), "w"),
               ensure_ascii=False, indent=1)
 
     # nav_index：島→subject→strand→tier 計數（minimum 與 beyond 分開記）
@@ -298,7 +299,7 @@ def main():
            "islands": islands,
            "curated_island_count": len(curated_islands),
            "curated_islands": curated_islands}
-    json.dump(nav, open(os.path.join(AUTH, "nav_index.json"), "w"), ensure_ascii=False, indent=1)
+    json.dump(nav, open(os.path.join(DATA, "nav_index.json"), "w"), ensure_ascii=False, indent=1)
 
     # units_index（§6.7）：聚合站上所有 *.units.json 的單元 metadata（Phase 2 起逐步填）。
     import glob
@@ -329,7 +330,7 @@ def main():
                           "practice_kp_ids": sorted(practice_kp),
                           "covered_kp_ids": sorted(teach_kp & practice_kp)})
     units_index = {"_generated_by": "tools/gen_derived.py", "count": len(units), "units": units}
-    json.dump(units_index, open(os.path.join(AUTH, "units_index.json"), "w"), ensure_ascii=False, indent=1)
+    json.dump(units_index, open(os.path.join(DATA, "units_index.json"), "w"), ensure_ascii=False, indent=1)
 
     print(f"寫出 subject_labels({len(subject_labels)})、strand_labels({len(strand_labels)} 配對)、"
           f"nav_index({len(islands)} 島、minimum {nav['minimum_total']})、units_index({len(units)} 單元)")

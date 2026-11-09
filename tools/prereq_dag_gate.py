@@ -33,7 +33,7 @@ def manifest_pairs():
 
 def order_map_from_nav():
     """key -> (domain, order)；order 為 nav_index 內該 strand 的建議順序。"""
-    nav = json.loads(open(os.path.join(A, "nav_index.json"), encoding="utf-8").read())
+    nav = json.loads(open(os.path.join(ROOT, "data", "nav_index.json"), encoding="utf-8").read())
     m = {}
     for isl in nav["islands"]:
         d = isl["island"]

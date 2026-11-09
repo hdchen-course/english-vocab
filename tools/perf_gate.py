@@ -16,7 +16,7 @@ import argparse, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HUB = os.path.join(ROOT, "index_new.html")
-NAV = os.path.join(ROOT, "authoring", "nav_index.json")
+NAV = os.path.join(ROOT, "data", "nav_index.json")
 MAX_HTML_KB = int(os.environ.get("PERF_MAX_HTML_KB", "80"))
 MAX_INLINE_KB = int(os.environ.get("PERF_MAX_INLINE_KB", "40"))
 MAX_INLINE_IDS = int(os.environ.get("PERF_MAX_INLINE_IDS", "60"))
@@ -52,11 +52,11 @@ def check_html(html, nav_kb=None):
 
 def _selftest():
     good = ('<html><head><script src="game_core.js"></script></head><body>'
-            '<script>fetch("authoring/nav_index.json").then(r=>r.json())</script></body></html>')
+            '<script>fetch("data/nav_index.json").then(r=>r.json())</script></body></html>')
     heavy = good.replace('<script src="game_core.js"></script>', '<script src="https://cdn/react.production.min.js"></script>')
     inlinebig = good.replace('</body>', '<script>var X="' + ("x" * (MAX_INLINE_KB * 1024 + 10)) + '";</script></body>')
     manifestinline = good.replace('</body>', '<script>var D=[' + ",".join(['{"id":%d}' % i for i in range(MAX_INLINE_IDS + 5)]) + '];</script></body>')
-    heavyfetch = good.replace('authoring/nav_index.json', 'authoring/knowledge_points.json')
+    heavyfetch = good.replace('data/nav_index.json', 'authoring/knowledge_points.json')
     results = [
         ("好例（vanilla＋fetch nav_index）→ ALLOW", check_html(good, 50) == []),
         ("引 react → DENY", any("重前端框架" in p for p in check_html(heavy, 50))),
