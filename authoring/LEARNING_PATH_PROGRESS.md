@@ -7,6 +7,10 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-09 20:16 英語島收斂：eng-themore（the+比較級…the+比較級）5/5 → 收斂 299/332（90.1%）
+- **sha** `fa46e2bb0279baf4`，DONE-GATE 七關全綠。t_mid 會考級「the 比較級…, the 比較級…」雙子句結構（前後子句各一比較級、兩子句對應連動）。content_audit 修 1：
+  1. round5 minor（answer_evidence cross-ref）：P3「The less you worry, the happier you feel.」句無 more+noun 結構，`answer_evidence` 由 `c-tm-more-noun` → `c-tm-two-clauses`。修後重凍 sha、streak 重跑 1→5 連 clean（L3 皆 exit 0）一次過。
+
 ## 2026-11-09 19:43 英語島收斂：eng-thatobject（that 名詞子句當受詞）5/5 → 收斂 298/332（89.8%）
 - **sha** `0c07e728f02d1b96`，DONE-GATE 七關全綠。t_mid 會考級 that-object（that 引導名詞子句陳述事實/看法當 think/know/believe/say/hope 受詞、that 常可省略、子句是陳述句非問句、是非問句用 whether/if）。content_audit 修 2：
   1. round2 minor（english naturalness）：teach「say a yes/no question」→「ask」。
