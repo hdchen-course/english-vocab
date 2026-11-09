@@ -963,3 +963,13 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - DONE-GATE 七關：scan_simplified PASS／unit_schema CLEAN／question_correctness CLEAN／audio_exist CLEAN（toe_）／per_page 本頁 absent／pedagogy 0 hits／build_source_tree 收斂 303/332（91.3%）。
 - eng 302→303。下一檔：english_twoobjects。
 - 教訓（已內化）：grammar 單元 harvest 階段必須一次把**全部** practice 題對**所有** teach 例句/片語（含 teach-text 內嵌短語如 tall enough to reach）掃完；find-one-fix-one 會多次 reset 浪費輪次。
+
+## eng-twoobjects（句型四 S+V+O+O 授與雙受詞）5/5 收斂 — 2026-11-09
+- 單元 eng.t_mid.pattern.svoo（間接受詞人在前、直接受詞物在後；改寫 to-動詞 give/send/show/lend/tell/teach vs for-動詞 buy/make/get/cook）。
+- frozen_sha aa2b9791de780f7d；rounds 1–5 連 5 clean（L3 exit 0）。
+- 修 2 defect：
+  - harvest（凍結前自掃）P4「He sent me a postcard」近乎複製 teach ex2「He sent his friend a postcard」→改「She lent me her umbrella.」（lend 在授與動詞表但 teach 無例句、全新情境）
+  - r3（clean 輪，設 override 留痕）teach「How do you choose to or for?」garden-path（未加引號的 to 先讀成不定詞 choose to…）→改「When do you use to, and when do you use for?」；sha 6173420105→aa2b9791、streak 重跑
+- DONE-GATE 七關全綠（scan_simplified／unit_schema／question_correctness／audio_exist two_／per_page absent／pedagogy 0／build_source_tree 304/332=91.6%）。
+- eng 303→304。下一檔：english_uncountable。
+- 教訓：mentioned 功能詞（to/for）在選擇問句要加引號或「between X and Y」避免 garden-path；harvest 也要掃 teach 內嵌的「選擇式提問」句型。
