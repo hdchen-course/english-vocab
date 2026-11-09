@@ -973,3 +973,10 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - DONE-GATE 七關全綠（scan_simplified／unit_schema／question_correctness／audio_exist two_／per_page absent／pedagogy 0／build_source_tree 304/332=91.6%）。
 - eng 303→304。下一檔：english_uncountable。
 - 教訓：mentioned 功能詞（to/for）在選擇問句要加引號或「between X and Y」避免 garden-path；harvest 也要掃 teach 內嵌的「選擇式提問」句型。
+
+## eng-uncountable（不可數名詞 water／information／advice）5/5 收斂 — 2026-11-09
+- 單元 eng.t_mid.noun.uncountable（不可數名詞無 -s、不配 a/an、配 much/some/a little/a lot of 不配 many/a few、動詞單數、計量用單位詞 a piece/glass/slice/sheet of）。
+- frozen_sha 8dc39d5baee8a390；rounds 1–5 連 5 clean（L3 exit 0）。
+- 修 1 defect：harvest（凍結前自掃）P1「I need some information about the schedule」近乎複製 teach ex1「I need some information about the trip.」→改「The guide has some information about the museum.」（全新主詞/情境）。P4 單位詞題、P6 dictation 重用為合理（非 recall）。
+- DONE-GATE 七關全綠（scan_simplified／unit_schema／question_correctness／audio_exist unc_／per_page absent／pedagogy 0／build_source_tree 305/332=91.9%）。
+- eng 304→305。下一檔：english_usedtofamily。
