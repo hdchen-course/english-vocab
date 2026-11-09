@@ -1052,3 +1052,8 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - sha 557887fd5876331f；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist[wt_*6 音檔齊] / per_page_5clean[want ABSENT] / pedagogy[no hard] / build_source_tree）。
 - 多輪對抗式 panel 修正：zh gloss「我要飯」撞固定詞「要飯(乞討)」→「我要白飯」；接著 rice gloss 一致性（白飯 vs 飯）→ 全站統一「白飯」(c-food claim/P2,P5 rationale/P5 feedback/teach/P6 stem)。Layer A 零文法術語鐵律維持。
 - 收斂 314/332（94.6%）。
+
+## eng-wantclothes（Layer A 基礎：買衣服 I want + 衣物 shoes/socks/pants/shorts）5/5 收斂 — 2026-11-10 05:09
+- sha a6048a57578286e2；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist[wcl_*5 音檔齊] / per_page_5clean[wantclothes ABSENT] / pedagogy[no hard] / build_source_tree）。
+- panel 修正：teach 抽象模板「I want + a thing」含冠詞 a，與本單元「衣物字皆不配 a/an、全程不碰 a/an」設計矛盾、恐誘導「I want a shoes」→ 改「I want + the thing you want」（模板不再於複數衣物 slot 前出現 a）。Layer A 零文法術語維持；衣物字 US pants=長褲、shorts=短褲。
+- 收斂 315/332（94.9%）。
