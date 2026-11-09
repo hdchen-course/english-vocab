@@ -360,12 +360,17 @@ def scan(catalog_path, game_core_path, wish_shop_path):
         if lit:
             continue
         body = _enclosing_function_body(game_src, m.start())
-        # 唯一認可的 bounded 守衛：同函式內對某 catalog 來源做成員測試並以其結果 gate 此寫入。
-        # spendCoins(amount, itemId)→ownedItems.push(itemId) 無任何 catalog 成員守衛（itemId 為
-        # 公開 API 參數），故無法靜態證明 ∈ items[]＝catch-all FAIL（誠實：寧誤擋）。
+        # 唯一認可的 bounded 守衛：同函式內對某 catalog 來源（items/SKINS/BORDERS/CATALOG）做
+        # 成員測試並以其結果 gate 此寫入（如 `CONFIG.OWNED_ITEM_IDS.indexOf(itemId)===-1 → return`）。
+        # 反-pseudo-guard：itemId **自身作為 receiver** 的 `itemId.indexOf/.includes/.has(...)` 是對
+        # 「id 字串形狀」的假檢查、非 catalog 成員測試，一律不算守衛。
+        # 修（2026-11-09，gate 誤擋已正確守衛之碼）：舊規則用 `itemId[^\n]{0,40}(indexOf|includes|has)`
+        # 把 itemId 當『參數』時附近合法的去重 `profile.ownedItems.indexOf(itemId)` 也判成假守衛→誤擋
+        # spendCoins（它其實已用 OWNED_ITEM_IDS 成員測試＋未知即 return false）。改為只比對 itemId
+        # **緊接**成員方法（receiver 形式），精準擋假守衛、放行合法的 catalog.indexOf(itemId)＋去重。
         guarded = bool(
             re.search(r"(items|SKINS|BORDERS|CATALOG)\b[^\n]{0,40}" + re.escape(expr), body)
-            and re.search(re.escape(expr) + r"[^\n]{0,40}(indexOf|includes|has)\b", body) is None
+            and re.search(re.escape(expr) + r"\s*\.\s*(indexOf|includes|has)\b", body) is None
         ) and re.search(r"(SKINS|BORDERS|items)\s*[\[.(]", body) is not None
         if not guarded:
             findings.append(

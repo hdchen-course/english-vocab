@@ -61,3 +61,9 @@
 - **修法**：content_sha 改綁 sha256(HTML bytes ＋ 其 data-units sidecar bytes)[:16]；sidecar 由頁 data-units 屬性解析（權威）；無 data-units/sidecar 缺→退回僅綁 HTML 不崩。
 - **紅隊**（--selftest content_sha 段）：改 sidecar 內容→指紋變 ✅、改 HTML→變 ✅、sidecar 缺→僅綁 HTML 不崩 ✅；原 evaluate_page 12 壞例仍全 DENY、好例 ALLOW。
 - 這是修 gate（堵 fail-open）非繞過；未弱化任何檢查。
+
+## H-8（2026-11-09）reward_provenance_gate 的 ownedItems 守衛偵測誤擋已正確守衛之碼（false-brake）
+- **誤擋**：catch-all (4) 的 C2 用 `itemId[^\n]{0,40}(indexOf|includes|has)` 判「itemId 附近有成員方法＝假守衛」。但 `spendCoins` 已用真 catalog 成員測試 `CONFIG.OWNED_ITEM_IDS.indexOf(itemId)===-1 → return false` 守衛，其下方合法的去重 `profile.ownedItems.indexOf(itemId)===-1` 讓「itemId 參數」附近出現 indexOf → C2 誤判為假守衛 → 已正確守衛的碼被 FAIL（Stop hook 擋住）。
+- **修法**：C2 改為只比對 itemId **自身作為 receiver**（`itemId\s*\.\s*(indexOf|includes|has)\b`）才算假守衛——精準擋「對 id 字串形狀的假檢查」，放行「catalog.indexOf(itemId) 成員測試＋ownedItems.indexOf(itemId) 去重」。C1（catalog token 近 itemId）＋C3（SKINS/BORDERS/items 成員集）不變。
+- **紅隊**（fixtures，--game-core override）：GOOD（OWNED_ITEM_IDS.indexOf 守衛＋去重）→ 放行（no finding）✅；BAD1（全無守衛 push）→ DENY ✅；BAD2（`itemId.includes("skin")` 假守衛＋items.length token）→ DENY ✅。真 repo reward_provenance_gate＋reward_catalog_gate 皆 exit 0。
+- 這是修 gate 誤擋（false-positive）非弱化；pseudo-guard 保護原封不動、catalog 成員要求（C1+C3）未放寬。game_core.js 未改（本就正確）。
