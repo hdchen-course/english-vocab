@@ -7,6 +7,11 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-09 15:09 英語島收斂：eng-suggestshould（建議要求動詞後 that 子句 mandative subjunctive）5/5 → 收斂 293/332（88.3%）
+- **sha** `8403146044c609ad`，DONE-GATE 七關全綠，**content_audit 0 缺陷（5 輪一次過，無 fix）**。t_sub 學測級 mandative subjunctive（suggest/recommend/insist/demand/require/propose + that 子句用原形），內容依 Swan/Cambridge 正確；例句皆「要求」義（非 insist「斷言」義），無過度宣稱。
+- Phase-1 預檢全過：pedagogy 僅 2 parity-advisory（c-no-s-no-past 由過去式 distractor 實測、c-should-optional teach-only nuance，皆 panel 放行）；無音檔/dictation（text-only shadowing，_note 屬實、無 distractor-taxonomy 假宣稱）。
+- 效率對照：Phase-1 嚴謹預檢＋_note 無假宣稱＝一次過，與前幾檔舊 _note 債累積型（連 3–4 輪各 1 修）對比明顯。
+
 ## 2026-11-09 14:52 英語島收斂：eng-subjectofinfinitive（不定詞意義主詞 for/of）5/5 → 收斂 292/332（88.0%）
 - **sha** `752973c32508af97`，DONE-GATE 七關全綠。content_audit 共修 4 個 panel-confirmed（均舊檔 teaching 債）：
   1. claim 英文 `meaning subject`（意義主詞 calque）↔teach 標準 `logical subject` 不一致 → 統一 logical subject（中文術語「意義主詞」為正規配對、不動）。
