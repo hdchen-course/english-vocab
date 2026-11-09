@@ -827,3 +827,14 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - Phase-1：內容正確（See you+時間 四框架以情境錨定唯一正解、避第二正解，為正當設計）；P4 dictation「See you tomorrow.」與 teach ex1＋shadowing sh1 逐字→改 teach 外新組合「Bye. See you next week.」+regen bye_dict_01.mp3。MCQ 四時間 taxonomy 選項不動。
 - DONE-GATE：scan_simplified PASS／unit_schema CLEAN／question_correctness CLEAN／audio_exist CLEAN／per_page 本頁 absent／pedagogy 0 hits／build_source_tree 收斂 285/332。
 - eng 284→285。
+
+## eng-sentencekinds（句子的四種種類）5/5 收斂 — 2026-11-09
+- sha e5c2052abd6585fe，L3 exit 0，DONE-GATE 七關全綠（simplified/unit_schema/question_correctness/audio_exist/per_page_5clean/pedagogy/build_source_tree）
+- 收斂 285→286/332（86.1%）
+- 修正軌跡（同一缺陷類「祈使句/感嘆句規則絕對化 vs teach『可省/可前置』」，分批被不同分片 panel 抓出，共 5 處）：
+  (1) SK6 distractor+feedback「Please pass 以動詞原形開頭」→核心動詞原形 pass(please 可前置)
+  (2) SK4「What a」distractor 形容詞必需→名詞片語(形容詞可省,如 What a surprise!)
+  (3) can_do/_note/祈使句 verification_ref「動詞原形開頭」→核心動詞原形(可加 please)
+  (4) SK2 stem 一般定義「以動詞原形開頭」→核心動詞原形(可加 please)
+- 教訓（已內化）：祈使句的「一般定義」(can_do/claim/teach/stem 括號) 必須與「可加 please」一致；只有描述具體正解句的 feedback 可說「X 開頭」。先前誤判 SK2 stem 可保留，被 panel 推翻。
+- commits: 6d7c3ea7f / 362875c54 / d93f534ec / 93175229b
