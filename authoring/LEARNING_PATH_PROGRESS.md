@@ -838,3 +838,13 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
   (4) SK2 stem 一般定義「以動詞原形開頭」→核心動詞原形(可加 please)
 - 教訓（已內化）：祈使句的「一般定義」(can_do/claim/teach/stem 括號) 必須與「可加 please」一致；只有描述具體正解句的 feedback 可說「X 開頭」。先前誤判 SK2 stem 可保留，被 panel 推翻。
 - commits: 6d7c3ea7f / 362875c54 / d93f534ec / 93175229b
+
+## eng-sentencetypes（句型辨識 簡單句/合句/複句/複合句）5/5 收斂 — 2026-11-09
+- sha d9ebebfcc0634604，L3 exit 0，DONE-GATE 七關全綠（含 pedagogy 0 hits）
+- 收斂 286→287/332（86.4%）
+- 修正軌跡：
+  (1) Phase-1 freshen recall-not-transfer：ST2 正解原與 teach 合句例句逐字相同、ST1 近 teach 簡單句例句→改 teach 外情境（文法不變、minimal-pair 保留）
+  (2) round5 content panel（minor）：c-st-compound 例句接在「or with a semicolon:」後卻示範逗號+but→重寫為兩法各附例句（逗號+but／分號）
+  (3) DONE-GATE pedagogy_gate（content panel 漏抓）：ST3 正解「複句（含一個從屬子句）」帶括號補述屬 length/detail-cue→四選項平行去括號
+- 教訓（已內化）：content_audit 5-clean ≠ 完工；DONE-GATE deterministic pedagogy_gate 仍會抓 content panel 漏的 length-cue，收斂後必跑全 gate 再 commit。
+- commits: e3d01c9e8 / b8d78bfb6 / 9fc9db545
