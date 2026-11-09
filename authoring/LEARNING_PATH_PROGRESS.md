@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-09 21:42 英語島收斂：eng-timeclause（時間子句 when/while/as/before/after/until）5/5 → 收斂 301/332（90.7%）
+- **sha** `cc64e5618ccb1493`，DONE-GATE 七關全綠。t_mid 會考級時間子句（未來子句用現在式不用 will／while·as 同時／before·after·until 先後與終點）。content_audit 修 3（instructional-design 為主）：
+  1. r1 minor：title_zh／situation_group 漏列 `as`→補齊（與 can_do/teach 一致）。
+  2. r2 major：c-tc-order claim「before=earlier」未錨定參照→改「before X=動作比 X 早…」消歧義。
+  3. r3+r5 major：`as` 只提及未示範→teach 補 as 例句（As I was walking home…）；`until` 誤置 while/as 同時段→另立 before/after/until 順序段＋until 例句（與 c-tc-order 分組一致）。修後重凍 sha，r1-r5 連 5 clean。
+
 ## 2026-11-09 20:31 英語島收斂：eng-thereis（說有什麼 There is/are・Is there…?）5/5 → 收斂 300/332（90.4%）
 - **sha** `f37424d3612ef791`，DONE-GATE 七關全綠，content_audit **0 缺陷一次過**（5 連 clean、L3 皆 exit 0）。t_base communicative 單元：There is a+單數／There are+複數(字尾 s)／Is there a…?＋Yes, there is./No, there isn't.；學習者端零文法術語。
 - round1 唯一 raw finding（P1 distractor「Is there a cat.」以句點結尾）經 panel **7/7 判 NOT A DEFECT**：P1 要求選『陳述句』，四選項一律句點結尾＝刻意 anti-cue，逼以字序而非標點判斷；加問號反而重新注入 cue。已寫入 knownFP 傳入 r2-r5，後續零 raw。**里程碑：eng 破 300。**
