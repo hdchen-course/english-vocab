@@ -1025,3 +1025,12 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - **缺陷類（banked，後續檔預防）：example 句用「發現/發明」歸於單一人並當事實＝contested-attribution 違 R1。改用無爭議的「著作/畫作＋作者」（Hamlet/Shakespeare、Mona Lisa/da Vinci、Starry Night/van Gogh）。**
 - DONE-GATE 七關：scan PASS / schema CLEAN / qc CLEAN / audio CLEAN(1544) / per_page voicebyagent ABSENT / pedagogy voicebyagent ABSENT / build_source_tree 收斂 310/332（93.4%）。
 - 下一檔（字母序）：english_voiceditrans。
+
+## eng-voiceditrans（授與動詞雙受詞的被動 I was given a book）5/5 收斂 — 2026-11-10
+- frozen_sha: 1f44e3bff13f0bc3；rounds 1–5 全 clean（confirmed 0、coverageComplete true、L3 rc=0）。
+- 收斂前共修三輪（每次改→sha 重凍→streak 歸零重跑）：
+  1. harvest：P3「A book was given to me」＝ex2/teach text 逐字 → 「A postcard was sent to my grandmother」；P6 dictation「I was given a book by my teacher」＝ex1 逐字 → 「My sister was given a bike for her birthday」＋重產 vdt_dict1.mp3。
+  2. round3 兩處 zh naturalness DEFECT：非道地「被…給」翻譯腔 gloss（ex1 line86「我被老師給了一本書」、teach line94／ex2 line103「一本書被給了我」）→ 道地繁中（老師給了我一本書／有人給了我一本書）。
+  3. **DONE-GATE pedagogy hard length-cue**：P5-meaning 正解最長且唯一帶括號補述（詳細度 cue）→ 正解去括號、四選項等長。**教訓：凍 sha 前必跑 pedagogy_gate＋mcq_length_cue（deterministic，content_audit panel 不查），否則拖到 DONE-GATE 才爆、白跑 5 輪。見 [[phase1-prefreeze-gates]]。**
+- DONE-GATE 七關：scan PASS / schema CLEAN / qc CLEAN / audio CLEAN / per_page voiceditrans ABSENT / pedagogy voiceditrans 無 hard hit（僅 c-vd-two-obj foundational parity-advisory，非 hard）/ build_source_tree 收斂 311/332（93.7%）。
+- 下一檔（字母序）：english_voicemodal。
