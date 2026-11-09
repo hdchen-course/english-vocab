@@ -7,6 +7,10 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-09 19:06 英語島收斂：eng-tenseconsistency（時態一致）5/5 → 收斂 297/332（89.5%）
+- **sha** `d4bd6e5e2f0bdf5f`，DONE-GATE 七關全綠，**content_audit 0 缺陷（5 輪一次過，無 fix）**。t_adv 學測級 tense-consistency（同一時間軸不無故跳時態、過去敘事保持過去、現在習慣保持現在、時間真的改變才換時態）。6 題含 identify-bad（TC3）、justified-shift（TC4）、rewrite（TC6）多題型，皆唯一正解＋rationale＋evidence 兌現 claim；純文字 shadowing（無音檔）、_note 無假宣稱。
+- Phase-1 預檢全過＝一次過，延續「嚴謹預檢＋_note 無假宣稱」高效模式（對比上一檔 tenseagree 舊債重、改 4 處）。
+
 ## 2026-11-09 18:50 英語島收斂：eng-tenseagree（名詞子句時態呼應）5/5 → 收斂 296/332（89.2%）
 - **sha** `b45e1c09ee202a23`，DONE-GATE 七關全綠（含重產 `audio/tsq_dict1.mp3`）。t_adv 學測級 sequence-of-tenses（主句過去→子句退一步、will→would/can→could、真理可留現在式、主句現在不退步）。content_audit 共修 4 panel-confirmed＋1 Phase-1：
   1. Phase-1：P6 dictation 原「He said that he would call me later.」與 teach ex2 逐字重疊（recall-not-transfer）→ 改「She told me that she would visit us soon.」＋重產 tsq_dict1.mp3。
