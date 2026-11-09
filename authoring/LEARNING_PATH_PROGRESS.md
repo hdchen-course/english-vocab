@@ -1034,3 +1034,11 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
   3. **DONE-GATE pedagogy hard length-cue**：P5-meaning 正解最長且唯一帶括號補述（詳細度 cue）→ 正解去括號、四選項等長。**教訓：凍 sha 前必跑 pedagogy_gate＋mcq_length_cue（deterministic，content_audit panel 不查），否則拖到 DONE-GATE 才爆、白跑 5 輪。見 [[phase1-prefreeze-gates]]。**
 - DONE-GATE 七關：scan PASS / schema CLEAN / qc CLEAN / audio CLEAN / per_page voiceditrans ABSENT / pedagogy voiceditrans 無 hard hit（僅 c-vd-two-obj foundational parity-advisory，非 hard）/ build_source_tree 收斂 311/332（93.7%）。
 - 下一檔（字母序）：english_voicemodal。
+
+## eng-voicemodal（情態助動詞被動 modal + be + 過去分詞）5/5 收斂 — 2026-11-10
+- frozen_sha: e3dcaf975488b90c；rounds 1–5 全 clean（confirmed 0、coverageComplete true、L3 rc=0）。零 defect 迴圈（pre-freeze 已先清）。
+- 修正：harvest P3「Plastic bottles should be recycled, not thrown away」≈ teach ex3「Glass bottles should be recycled...must not be thrown」近複（只換 Glass→Plastic）→「The classroom door should be locked after school, not left open」。
+- **本檔起採強化 pre-freeze：併跑 pedagogy_gate＋mcq_length_cue（deterministic），凍前即確認無 hard hit → 收斂迴圈零 defect、不再拖到 DONE-GATE 才爆。見 [[phase1-prefreeze-gates]]。**
+- knownFP：P2「thousands of stars can be seen」與 claim c-vm-can-could metadata 逐字同，但 learner-facing ex2 用 city/mountains → transfer；主動型誘答（must finish/can see/should lock）是「主詞為承受者」故意錯項、非缺陷。
+- DONE-GATE 七關：scan PASS / schema CLEAN / qc CLEAN / audio CLEAN / per_page voicemodal ABSENT / pedagogy voicemodal 無 hard hit / build_source_tree 收斂 312/332（94.0%）。
+- 下一檔（字母序）：english_voicenonfinite。
