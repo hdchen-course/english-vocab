@@ -40,8 +40,7 @@
     var seriesLoading = { dk: false, cefr: false };
     var seriesError = { dk: false, cefr: false };
     function rebuildByLevel() {
-        DICT = [].concat((typeof window !== 'undefined' && window.DICT_DK) ? window.DICT_DK : [],
-            (typeof window !== 'undefined' && window.DICT_CEFR) ? window.DICT_CEFR : []);
+        DICT = [].concat((typeof window !== 'undefined' && window.DICT_DK) ? window.DICT_DK : [], (typeof window !== 'undefined' && window.DICT_CEFR) ? window.DICT_CEFR : []);
         byLevel = {};
         for (var i = 0; i < DICT.length; i++) {
             var it = DICT[i];
@@ -50,7 +49,10 @@
     }
     function injectScript(src) {
         return new Promise(function (resolve, reject) {
-            if (fileLoaded[src]) { resolve(); return; }
+            if (fileLoaded[src]) {
+                resolve();
+                return;
+            }
             var s = document.createElement('script');
             s.src = src;
             s.async = false; // 維持注入順序（CEFR 多檔皆以 (DICT_CEFR||[]).concat 累進）
@@ -61,8 +63,13 @@
     }
     // 確保某系列資料檔已載入 → rebuild byLevel → cb()；失敗則標記並重繪（友善重試，不留白畫面）。
     function ensureSeries(series, cb) {
-        if (seriesLoaded[series]) { cb(); return; }
-        if (seriesLoading[series]) { return; } // 載入中：忽略重複觸發（入口已顯示「載入中…」）
+        if (seriesLoaded[series]) {
+            cb();
+            return;
+        }
+        if (seriesLoading[series]) {
+            return;
+        } // 載入中：忽略重複觸發（入口已顯示「載入中…」）
         seriesLoading[series] = true;
         seriesError[series] = false;
         var files = DATA_FILES[series] || [];
@@ -244,13 +251,8 @@
                 themesWrap.innerHTML = '';
                 themesWrap.appendChild(loadButton(seriesError['cefr'] ? '⚠️ 載入失敗，點我重試' : '點我載入主題例句 ＋ CEFR 分級聽寫', 'cefr'));
             }
-            // cefrWrap 也放一顆同系列的載入/重試入口：舊版（兩區同屏堆疊）會各自顯示一顆載入鈕，
-            // 新版分頁（主題例句／CEFR 各一分頁）則確保 CEFR 分頁本身就有可見的載入中／失敗重試回饋，
-            // 不會只在被隱藏的主題例句分頁。點任一顆都載入同一份 cefr 資料（seriesLoading 去重），成功後一起重繪。
-            if (cefrWrap) {
+            if (cefrWrap)
                 cefrWrap.innerHTML = '';
-                cefrWrap.appendChild(loadButton(seriesError['cefr'] ? '⚠️ 載入失敗，點我重試' : '點我載入 CEFR 分級聽寫（A1–C2・單字＋例句）', 'cefr'));
-            }
             return;
         }
         // 高價值「主題例句」聽寫（只有例句）：日常/片語/慣用/數字情境/金句（level=cefr-<set>）
@@ -312,7 +314,7 @@
     function weekCard(level, w) {
         var card = document.createElement('div');
         card.className = 'dct-week';
-        // 週 header（可展開 d1–d5）；完成度點以前綴＋預期張數計算（不需先載入 DK 資料）
+        // 週 header（可展開 d1–d5）
         var head = document.createElement('button');
         head.type = 'button';
         head.className = 'dct-week__head';
@@ -649,7 +651,7 @@
         canvas.addEventListener('contextmenu', function (e) { e.preventDefault(); });
         canvas.addEventListener('touchstart', function (e) { e.preventDefault(); }, { passive: false });
         canvas.addEventListener('touchmove', function (e) { e.preventDefault(); }, { passive: false });
-        window.addEventListener('resize', function () { var img = null; resizeCanvas(); });
+        window.addEventListener('resize', function () { resizeCanvas(); });
     }
     function resizeCanvas() {
         var canvas = $('dct-canvas');
@@ -657,10 +659,35 @@
             return;
         var dpr = window.devicePixelRatio || 1;
         var w = canvas.clientWidth, h = canvas.clientHeight;
-        canvas.width = Math.max(1, Math.round(w * dpr));
-        canvas.height = Math.max(1, Math.round(h * dpr));
+        var nw = Math.max(1, Math.round(w * dpr));
+        var nh = Math.max(1, Math.round(h * dpr));
+        // 尺寸沒變就「完全不動」backing store：指派 canvas.width/height（即使同值）會清空畫布。
+        // iPad Safari 捲動時工具列顯隱會觸發 window resize；若每次都重設就會把手寫擦掉（使用者 2026-11-09 回報）。
+        if (canvas.width === nw && canvas.height === nh)
+            return;
+        // 尺寸真的改變才重設：先保存既有筆跡、重設後貼回，避免清空（裝置旋轉／字級變更等少數情況）。
+        var snap = null;
+        if (ctx && canvas.width > 1 && canvas.height > 1) {
+            try {
+                snap = document.createElement('canvas');
+                snap.width = canvas.width;
+                snap.height = canvas.height;
+                snap.getContext('2d').drawImage(canvas, 0, 0);
+            }
+            catch (_) {
+                snap = null;
+            }
+        }
+        canvas.width = nw;
+        canvas.height = nh;
         if (ctx) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (snap) {
+                try {
+                    ctx.drawImage(snap, 0, 0);
+                }
+                catch (_) { }
+            }
         }
     }
     function clearCanvas() {

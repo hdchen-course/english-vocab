@@ -542,16 +542,33 @@
     canvas.addEventListener('contextmenu', function (e) { e.preventDefault(); });
     canvas.addEventListener('touchstart', function (e) { e.preventDefault(); }, { passive: false });
     canvas.addEventListener('touchmove', function (e) { e.preventDefault(); }, { passive: false });
-    window.addEventListener('resize', function () { var img = null; resizeCanvas(); });
+    window.addEventListener('resize', function () { resizeCanvas(); });
   }
   function resizeCanvas() {
     var canvas = $('dct-canvas');
     if (!canvas) return;
     var dpr = window.devicePixelRatio || 1;
     var w = canvas.clientWidth, h = canvas.clientHeight;
-    canvas.width = Math.max(1, Math.round(w * dpr));
-    canvas.height = Math.max(1, Math.round(h * dpr));
-    if (ctx) { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+    var nw = Math.max(1, Math.round(w * dpr));
+    var nh = Math.max(1, Math.round(h * dpr));
+    // 尺寸沒變就「完全不動」backing store：指派 canvas.width/height（即使同值）會清空畫布。
+    // iPad Safari 捲動時工具列顯隱會觸發 window resize；若每次都重設就會把手寫擦掉（使用者 2026-11-09 回報）。
+    if (canvas.width === nw && canvas.height === nh) return;
+    // 尺寸真的改變才重設：先保存既有筆跡、重設後貼回，避免清空（裝置旋轉／字級變更等少數情況）。
+    var snap: HTMLCanvasElement | null = null;
+    if (ctx && canvas.width > 1 && canvas.height > 1) {
+      try {
+        snap = document.createElement('canvas');
+        snap.width = canvas.width; snap.height = canvas.height;
+        snap.getContext('2d')!.drawImage(canvas, 0, 0);
+      } catch (_) { snap = null; }
+    }
+    canvas.width = nw;
+    canvas.height = nh;
+    if (ctx) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (snap) { try { ctx.drawImage(snap, 0, 0); } catch (_) { } }
+    }
   }
   function clearCanvas() {
     var canvas = $('dct-canvas');

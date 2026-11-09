@@ -47,8 +47,17 @@
     box.appendChild(cv);
     const ctx=cv.getContext('2d'); let drawing=false, last=null, sized=false;
     function size(){ const r=cv.getBoundingClientRect(); if(!r.width||!r.height) return;
-      const dpr=window.devicePixelRatio||1; cv.width=Math.round(r.width*dpr); cv.height=Math.round(r.height*dpr);
-      ctx.setTransform(dpr,0,0,dpr,0,0); ctx.lineWidth=2.6; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle='#33312E'; sized=true; }
+      const dpr=window.devicePixelRatio||1; const nw=Math.round(r.width*dpr), nh=Math.round(r.height*dpr);
+      // 尺寸沒變就「完全不動」backing store：指派 cv.width/height（即使同值）會清空畫布。
+      // iPad Safari 捲動時工具列顯隱會觸發 window resize；若每次都重設就會把手寫擦掉（使用者 2026-11-09 回報）。
+      if(sized && cv.width===nw && cv.height===nh) return;
+      // 尺寸真的改變才重設：先保存既有筆跡、重設後貼回（裝置旋轉／字級變更等少數情況）。
+      let snap=null;
+      if(sized && cv.width>0 && cv.height>0){ try{ snap=document.createElement('canvas'); snap.width=cv.width; snap.height=cv.height; snap.getContext('2d').drawImage(cv,0,0); }catch(_){ snap=null; } }
+      cv.width=nw; cv.height=nh;
+      ctx.setTransform(dpr,0,0,dpr,0,0); ctx.lineWidth=2.6; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle='#33312E';
+      if(snap){ try{ ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.drawImage(snap,0,0); ctx.restore(); }catch(_){} }
+      sized=true; }
     function pt(e){ const r=cv.getBoundingClientRect(); return [e.clientX-r.left, e.clientY-r.top]; }
     cv.addEventListener('pointerdown',e=>{ if(!sized)size(); drawing=true; last=pt(e);
       try{cv.setPointerCapture(e.pointerId);}catch(_){} e.preventDefault(); });
@@ -61,7 +70,7 @@
     cv.addEventListener('contextmenu',e=>e.preventDefault());
     cv.addEventListener('selectstart',e=>e.preventDefault());
     function clear(){ if(!sized)size(); if(sized) ctx.clearRect(0,0,cv.width,cv.height); }
-    requestAnimationFrame(size); window.addEventListener('resize',()=>{sized=false; requestAnimationFrame(size);});
+    requestAnimationFrame(size); window.addEventListener('resize',()=>{ requestAnimationFrame(size); });
     return { box, clear };
   }
 
