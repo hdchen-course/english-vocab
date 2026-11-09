@@ -1047,3 +1047,8 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - sha a9615f934fb441a0；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist / per_page_5clean[voicenonfinite ABSENT] / pedagogy[no hard] / build_source_tree）。
 - 收斂過程修正（多輪對抗式 panel）：P1-P4 harvest 脫 teach；P5 bare-noun repair 兩解歧義＋P2 虛構語意 rationale；P3 recall-not-transfer（Nobody likes being→She can't stand）；P3 to-blame rationale「喜歡」與 can't stand 矛盾；被+結果/趨向補語翻譯腔 sweep（修好/洗好/填好/交出去/需要被洗-修-修理）；使役「在」語序（請人在粉刷→正在請人粉刷）；'want' 跨卡 verb-list 不一致→移除；'seem' 未舉例 loose end→移除；R14 teach-parity：補被動動名詞英文規則 text 項。
 - 收斂 313/332（94.3%）。
+
+## eng-want（Layer A 基礎：I want + 食物／Do you want…?）5/5 收斂 — 2026-11-10 04:41
+- sha 557887fd5876331f；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist[wt_*6 音檔齊] / per_page_5clean[want ABSENT] / pedagogy[no hard] / build_source_tree）。
+- 多輪對抗式 panel 修正：zh gloss「我要飯」撞固定詞「要飯(乞討)」→「我要白飯」；接著 rice gloss 一致性（白飯 vs 飯）→ 全站統一「白飯」(c-food claim/P2,P5 rationale/P5 feedback/teach/P6 stem)。Layer A 零文法術語鐵律維持。
+- 收斂 314/332（94.6%）。
