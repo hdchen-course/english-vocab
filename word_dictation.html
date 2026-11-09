@@ -72,6 +72,39 @@ body{ font-family:var(--font); min-height:100vh; background:var(--bg); color:var
 .wd-play .dct-reveal{ width:100%; max-width:none; align-items:center; text-align:center; gap:10px; }
 .wd-play .dct-reveal__row{ text-align:center; max-width:60ch; }
 .wd-play .dct-reveal .fc-rate{ width:min(460px,100%); margin:14px auto 0; }
+
+/* ===== iPad 友善版面：一屏不捲動 ＋ 聽卡翻面看答案 ＋ 看答案/自評釘底（2026-11-09，HD 核可方向） ===== */
+body{ overflow:hidden; }
+.shell{ height:calc(100dvh - 56px); }
+.pshell-grid{ height:100%; }
+.psb-main{ height:100%; min-height:0; display:flex; flex-direction:column; }
+#dct-screen-play{ flex:1 1 auto; min-height:0; }
+.wd-play{ height:100%; min-height:0; gap:12px; }
+/* ① 聽卡：翻面容器（正面＝聽；背面＝答案就地出現，不往下推、不新增捲動） */
+.wd-flip{ flex:0 0 auto; perspective:1400px; }
+.wd-flip-inner{ position:relative; transition:transform .5s; transform-style:preserve-3d; }
+.wd-flip.flipped .wd-flip-inner{ transform:rotateY(180deg); }
+.wd-flip .wd-face{ backface-visibility:hidden; margin:0; }
+.wd-flip .wd-face.back{ position:absolute; inset:0; transform:rotateY(180deg); display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:8px; text-align:center; }
+.wd-listen.gr-card{ min-height:176px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; }
+.wd-bigplay{ width:92px; height:92px; margin:2px auto 4px; }
+.wd-ans-label{ font-size:14px; font-weight:800; color:var(--accent); }
+/* 答案列（自 #dct-reveal 搬入背面）沿用 dictation.css 的 .dct-reveal__* 樣式 */
+.wd-back .dct-reveal__word{ font-size:clamp(26px,5vw,36px); font-weight:800; }
+.wd-back .dct-reveal__sentence{ font-size:clamp(20px,3.4vw,26px); font-weight:800; }
+/* ② 寫卡：填滿中段、canvas 撐滿 */
+.wd-write.gr-card{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; }
+.wd-play .dct-canvas-wrap{ flex:1 1 auto; min-height:0; }
+.wd-play .dct-canvas{ height:100%; min-height:0; }
+/* 釘底動作列：看答案（翻面前）→ 真 .fc-rate 自評（翻面後，原配色搬入） */
+.wd-actions{ flex:0 0 auto; margin-top:2px; align-items:stretch; }
+#wd-rate-slot{ display:none; flex:1 1 auto; }
+#wd-rate-slot.show{ display:block; }
+#wd-rate-slot .fc-rate{ width:100%; max-width:none; margin:0; display:flex; gap:12px; }  /* 搬入後撐滿底列 */
+#wd-rate-slot .fc-rate .fc-rate__btn{ flex:1 1 0; }  /* 三顆等寬橫向填滿；按鈕本身保留 app.css 原配色 */
+/* #dct-reveal 僅作 dictation.js 的資料來源，內容搬走後不自行顯示 */
+.wd-play #dct-reveal{ display:none !important; }
 </style>
 </head>
 <body data-game-hud="off">
@@ -141,23 +174,33 @@ body{ font-family:var(--font); min-height:100vh; background:var(--bg); color:var
           </span>
         </div>
 
-        <!-- ① 聽：stimulus 卡（大播放鍵 + 控制） -->
-        <div class="gr-card wd-listen">
-          <div class="gr-h wd-h">① 聽一聽</div>
-          <button type="button" class="wd-bigplay" id="dct-replay" aria-label="播放發音">
-            <span class="wd-bigplay__icon" aria-hidden="true">🔊</span><span class="wd-bigplay__t">播放</span>
-          </button>
-          <div class="wd-auxrow">
-            <button type="button" class="dct-pill hidden" id="dct-slow" aria-label="慢速播放">🐢 慢速</button>
-            <button type="button" class="dct-pill hidden" id="dct-wbw" aria-label="逐詞播放">🔤 逐詞</button>
-            <span class="dct-scaffolds hidden" role="group" aria-label="提示開關">
-              <button type="button" class="dct-sc" id="dct-sc-firstletter" aria-pressed="false">首字母</button>
-              <button type="button" class="dct-sc" id="dct-sc-ipa" aria-pressed="false">音標</button>
-            </span>
+        <!-- ① 聽：stimulus 卡（翻面容器：正面＝聽；背面＝答案就地出現） -->
+        <div class="wd-flip" id="wd-flip">
+          <div class="wd-flip-inner">
+            <div class="gr-card wd-listen wd-face front">
+              <div class="gr-h wd-h">① 聽一聽</div>
+              <button type="button" class="wd-bigplay" id="dct-replay" aria-label="播放發音">
+                <span class="wd-bigplay__icon" aria-hidden="true">🔊</span><span class="wd-bigplay__t">播放</span>
+              </button>
+              <div class="wd-auxrow">
+                <button type="button" class="dct-pill hidden" id="dct-slow" aria-label="慢速播放">🐢 慢速</button>
+                <button type="button" class="dct-pill hidden" id="dct-wbw" aria-label="逐詞播放">🔤 逐詞</button>
+                <span class="dct-scaffolds hidden" role="group" aria-label="提示開關">
+                  <button type="button" class="dct-sc" id="dct-sc-firstletter" aria-pressed="false">首字母</button>
+                  <button type="button" class="dct-sc" id="dct-sc-ipa" aria-pressed="false">音標</button>
+                </span>
+              </div>
+              <button type="button" class="dct-bigplay hidden" id="dct-playbtn">🔊 點我播放</button>
+              <div class="dct-mutehint hidden" id="dct-mutehint">聽不到？檢查 iPad 的靜音鍵與音量。</div>
+              <div class="dct-firstletter" id="dct-firstletter"></div>
+            </div>
+            <!-- 背面：答案（由 inline script 自 #dct-reveal 搬入 #wd-answer-slot；對照手寫自評） -->
+            <div class="gr-card wd-face back">
+              <div class="wd-ans-label">✅ 答案</div>
+              <div id="wd-answer-slot"></div>
+              <div class="wd-ans-cue" style="font-size:13px;color:var(--ink-soft);">對照你寫的，給自己評分 ↓</div>
+            </div>
           </div>
-          <button type="button" class="dct-bigplay hidden" id="dct-playbtn">🔊 點我播放</button>
-          <div class="dct-mutehint hidden" id="dct-mutehint">聽不到？檢查 iPad 的靜音鍵與音量。</div>
-          <div class="dct-firstletter" id="dct-firstletter"></div>
         </div>
 
         <!-- ② 寫：手寫卡 -->
@@ -175,12 +218,13 @@ body{ font-family:var(--font); min-height:100vh; background:var(--bg); color:var
           <textarea class="dct-fallback hidden" id="dct-fallback" placeholder="想打字的話可以在這裡寫（系統不會批改，翻答案自己對）" aria-label="鍵盤輸入（可選）"></textarea>
         </div>
 
-        <!-- 動作列：只留「看答案」滿欄（回選單已移到頂部） -->
+        <!-- 釘底動作列：看答案（翻面前）→ 真 .fc-rate 三級自評（翻面後，自 #dct-reveal 原配色搬入 #wd-rate-slot） -->
         <div class="wd-actions">
           <button type="button" class="dct-btn" id="dct-reveal-btn">看答案</button>
+          <div id="wd-rate-slot"></div>
         </div>
 
-        <!-- ③ 對答案（result 卡；dictation.js 填入正解 + 三級自評） -->
+        <!-- ③ 對答案來源（dictation.js 填入正解＋三級自評；內容由 inline script 搬到翻面卡與底列，本體不顯示） -->
         <div class="dct-reveal hidden" id="dct-reveal" aria-live="polite"></div>
       </div>
     </section>
@@ -240,6 +284,33 @@ body{ font-family:var(--font); min-height:100vh; background:var(--bg); color:var
     }
   }
   cats.forEach(function(b){ b.setAttribute('aria-pressed', b.classList.contains('on')?'true':'false'); b.addEventListener('click', function(){ show(b.getAttribute('data-cat')); }); });
+})();
+/* 翻面看答案版面（HD 核可 2026-11-09）：不改 dictation.js，只「搬移」它產生的 #dct-reveal 內容——
+   答案列 → 聽卡背面 #wd-answer-slot；真 .fc-rate（app.css 原配色）→ 釘底 #wd-rate-slot。換題/隱藏即還原正面。 */
+(function(){
+  var rv=document.getElementById('dct-reveal'), flip=document.getElementById('wd-flip'),
+      ansSlot=document.getElementById('wd-answer-slot'), rateSlot=document.getElementById('wd-rate-slot'),
+      revealBtn=document.getElementById('dct-reveal-btn');
+  if(!rv||!flip||!ansSlot||!rateSlot) return;
+  function toFront(){
+    flip.classList.remove('flipped');
+    rateSlot.classList.remove('show'); rateSlot.innerHTML=''; ansSlot.innerHTML='';
+    if(revealBtn) revealBtn.style.display='';
+  }
+  function toBack(){
+    var rate=rv.querySelector('.dct-rate, .fc-rate');
+    ansSlot.innerHTML='';
+    Array.prototype.slice.call(rv.children).forEach(function(c){ if(c!==rate) ansSlot.appendChild(c); });
+    if(rate){ rateSlot.appendChild(rate); rateSlot.classList.add('show'); }
+    if(revealBtn) revealBtn.style.display='none';
+    flip.classList.add('flipped');
+  }
+  var mo=new MutationObserver(function(){
+    var hidden=rv.classList.contains('hidden');
+    if(!hidden && rv.children.length){ toBack(); }
+    else if(hidden && flip.classList.contains('flipped')){ toFront(); }
+  });
+  mo.observe(rv,{attributes:true,attributeFilter:['class'],childList:true});
 })();
 </script>
 </body>

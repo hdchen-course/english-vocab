@@ -1,0 +1,25 @@
+{
+ "_note": "AC-VIZ 四角色視覺簽核，綁 word_dictation.html 內容 sha；sha 變即作廢須重簽。本次改動＝iPad 友善聽寫 play 畫面改版（HD 2026-11-09 核可方向）：①『聽一聽』卡改翻面容器（正面＝聽；按『看答案』翻面→背面就地顯示答案，不往下推、不新增捲動）；②『寫下來』canvas 卡 flex 撐滿中段；③動作列釘底：翻面前＝『看答案』單鈕，翻面後＝真 .fc-rate 三級自評（還不熟粉紅/快會了綠/會了藍，原 app.css 配色，由 inline MutationObserver 自 #dct-reveal『搬入』非重新造樣式）＝等寬橫向撐滿底列。body overflow:hidden＋shell=100dvh-56px 達一屏不捲動。不改 dictation.js 引擎，只搬移其產生的 #dct-reveal 內容；換題/隱藏即還原正面並清空。使用者原始 bug（看答案未評分→離開再重進仍停在舊單字畫面）經實測：回選單重進＝重置、側欄切類別重進＝重置（flipped=false、看答案鈕現、答案清空、0 pageerror）。",
+ "source_file": "word_dictation.html",
+ "source_sha": "ba3b86d081f95e27",
+ "reviewed_at": "2026-11-09",
+ "device_baseline": "iPad Air 13\"（landscape 1366×1024 主＋portrait 1024×1366），deviceScaleFactor=2，http render",
+ "render_manifest": [
+  {"state": "play-initial", "png": "/tmp/wd_shots/land_play.png", "orient": "landscape"},
+  {"state": "play-answer-flipped", "png": "/tmp/wd_shots/land_answer.png", "orient": "landscape"},
+  {"state": "play-initial", "png": "/tmp/wd_shots/port_play.png", "orient": "portrait"},
+  {"state": "play-answer-flipped", "png": "/tmp/wd_shots/port_answer.png", "orient": "portrait"}
+ ],
+ "measured": {
+  "landscape": {"flipped": true, "rateInFooter": true, "slotWidth": 988, "rateWidth": 988, "btnWidths": [321,321,321], "btnColors": ["rgb(194,24,91)","rgb(10,122,92)","rgb(11,107,181)"], "answerText": "one", "playBottom": 920, "vh": 1024},
+  "portrait": {"flipped": true, "rateInFooter": true, "slotWidth": 714, "rateWidth": 714, "btnWidths": [230,230,230], "btnColors": ["rgb(194,24,91)","rgb(10,122,92)","rgb(11,107,181)"], "answerText": "one", "playBottom": 1262, "vh": 1366},
+  "pageerrors": 0
+ },
+ "roles": {
+  "art": {"status": "signed", "note": "配色與分級聽寫英語科綠 accent 一致，卡片沿用房屋 .gr-card token（--card 底、--card-border 邊、圓角節奏）。底列三顆自評＝直接重用既有 app.css .fc-rate__btn 原配色（還不熟 #c2185b 粉／快會了 #0a7a5c 綠／會了 #0b6bb5 藍），非私造色票；翻面『✅ 答案』標籤用 --accent 綠，答案字大且色調一致。品牌調性、設計語言一致，無刺眼。"},
+  "spatial": {"status": "signed", "note": "滿版利用 iPad 寬度：答案卡與寫卡皆鋪滿內容區；底列三顆自評等寬（land 321×3＝撐滿 slot 988、port 230×3＝撐滿 714）橫向充分利用寬度，無置中窄島、無過寬孤鈕。寫卡 canvas flex 撐滿中段，資訊密度恰當。誠實殘留：翻面答案卡（沿用聽卡高度）上下留白略多（答案僅一字時），但不致空洞浪費、答案置中醒目。"},
+  "eye-comfort": {"status": "signed", "note": "答案字 clamp(26–36px) 大字綠色高對比、老花友善；三顆自評白字於飽和底色、字級足、tap 區 ≥44px。整塊（頂列＋答案/聽卡＋寫卡＋釘底動作列）於 iPad 橫 1366×1024（playBottom 920<1024）與直 1024×1366 皆免捲動可達（body overflow:hidden），無刺眼/閃爍。"},
+  "animator": {"status": "signed", "note": "翻面＝rotateY(180deg) .5s 單次過場，frame 間容器尺寸恆定（flip 容器 flex:0 0 auto、front/back 同框絕對定位），答案就地出現不推版、不重疊寫卡、不裁切、不溢出。換題/隱藏 #dct-reveal 即 toFront 還原正面並清空，無殘留動畫；回選單/側欄切換重進皆重置（實測 flipped=false），無破圖。"}
+ },
+ "states_reviewed": ["play-initial-landscape", "play-answer-landscape", "play-initial-portrait", "play-answer-portrait", "cycle: reveal→回選單→重進=reset", "cycle: reveal→側欄切類別→重進=reset"]
+}
