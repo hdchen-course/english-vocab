@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-09 12:52 英語島收斂：eng-sickadvice（生病時怎麼做）5/5 → 收斂 290/332（87.3%）
+- **sha** `b31616b3f1811b1c`，DONE-GATE 七關全綠（scan_simplified／unit_schema／question_correctness／audio_exist 1544refs／per_page_5clean／pedagogy 0／source_tree 290）。commit `5e676bee4`（修正）＋本收斂 commit。
+- **Phase-1 freshen**：P4 dictation 原 `Drink water.` 逐字等於 teach ex1/P1/P6/shadowing（recall-not-transfer）→跨兩組新組合 `Stay home. Get some rest.`＋重產 `sk_dict_01.mp3`（en-US-AnaNeural）。
+- **round2 panel defect（translator 擁有的 zh/en parity criterion 決定票）**：glosses `多喝水`↔`Drink water.`、`多休息`↔`Get some rest.` 的中文「多」(quantity) 英文裸祈使句沒有；且 sibling `english_modalshould` 把 `多喝水` 對應 `drink more water`，跨檔不一致。English 專家認可裸祈使句自然→**中文側修正**：`多喝水→喝水`、`多休息→休息`（English 不動、無需 regen 既有音檔），class-wide 掃全檔 40 處。重凍 sha、reset streak 後 5 連 clean。
+- **banked lesson 再驗**：pre-freeze 四 gate（simplified/unit_schema/question_correctness/pedagogy）事前全過，故 DONE-GATE 末段無 gate-only 爆雷；本檔卡點純在 content_audit panel 的 zh/en parity（translator-owned），非確定性 gate 可攔。
+
 ## 2026-11-06 21:20 英語島收斂：新增 pedagogy_gate（效率化，HD 指示「用最有效率的方式做」）
 
 **背景**：HD 問「兩週 spec/知識驗證準備後，為何實作仍久、驗證不順？材料有用嗎？」診斷＝
