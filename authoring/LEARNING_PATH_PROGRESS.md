@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-09 14:52 英語島收斂：eng-subjectofinfinitive（不定詞意義主詞 for/of）5/5 → 收斂 292/332（88.0%）
+- **sha** `752973c32508af97`，DONE-GATE 七關全綠。content_audit 共修 4 個 panel-confirmed（均舊檔 teaching 債）：
+  1. claim 英文 `meaning subject`（意義主詞 calque）↔teach 標準 `logical subject` 不一致 → 統一 logical subject（中文術語「意義主詞」為正規配對、不動）。
+  2. 測而未教：P3 考 verb-governed `wait for + object + to V`（claim c-si-waitfor）但 teach 只示範形容詞 for/of frame → teach 補 text block 示範該句型（內嵌例句，免新增音檔）。
+  3. zh_hint「邏輯主詞」↔title/can_do/_note「意義主詞」中文兩名 → 統一「意義主詞」。
+  4. word gap：P5 考 good of you、claim c-si-of 列 good，但 teach 形容詞清單漏 good（good of↔good for 最易混）→ teach body/zh_hint 補 good；另 _note 清單同步補 good（省 panel raise-dismiss 成本）。
+- P6 dictation `It was very kind of you to help me.` 非 teach/shadowing 逐字（kind vs nice、help me vs invite me）＝真 transfer。
+
 ## 2026-11-09 13:55 英語島收斂：eng-stativeverb（狀態動詞）5/5 → 收斂 291/332（87.7%）
 - **sha** `241c79153bd2a45f`，DONE-GATE 七關全綠。content_audit 共修 4 個 panel-confirmed 缺陷（均 full-panel、重度「舊檔 _note／教學設計債」累積型，一輪一個）：
   1. teach 英文 `'have' means 'own'`＋gloss `(owns)` 不精確（不 own 兄弟；stative have＝possession）＋與 claim 矛盾 → `'possess'`＋`(possession)`（domain a-wrong）。
