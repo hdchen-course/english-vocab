@@ -1067,3 +1067,8 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - sha e38fd54aade96ee6；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist[wc_* 音檔齊] / per_page_5clean[weatherwear ABSENT] / pedagogy[no hard] / build_source_tree）。
 - panel 修正：claim gloss「T-shirt = T 恤/短袖」袖長汙染 → 統一「T 恤」；teach 開場由比喻句（含未教的 put on）改為功能先行「To tell someone what to wear, say Wear your + clothing」。已記 knownFP：P3 kp_ids 省略 vocab.clothes 為刻意（umbrella=Take 雨具，panel 0/5 NOT A DEFECT）。Layer A 零文法術語維持；Wear 配衣物、Take 配雨傘。
 - 收斂 317/332（95.5%）。
+
+## eng-welcome（Layer A 基礎：當小主人招待客人 Come in / Have a seat / Help yourself / This way）5/5 收斂 — 2026-11-10 06:16
+- sha e57732b9d3cd571c；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist[wel_* 音檔齊] / per_page_5clean[welcome ABSENT] / pedagogy[no hard] / build_source_tree）。
+- 自我 harvest 乾淨、pre-freeze 四 gate 皆綠，5 輪 content_audit（fresh adversarial ESL / learn-neuro+hiring-bar / child-edu / PM-journey / comms-linguist 五視角）零 confirmed。四招待語功能互異（進門/坐下/取用/帶路）→ 每題情境錨定唯一動作、無第二正解。knownFP：distractor 皆合法真句但情境不符（教學區辨點）；單一 KP greet-places 刻意；Welcome! 僅 teach 不練為刻意範圍。Layer A 零文法術語維持。
+- 收斂 318/332（95.8%）。
