@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-09 19:43 英語島收斂：eng-thatobject（that 名詞子句當受詞）5/5 → 收斂 298/332（89.8%）
+- **sha** `0c07e728f02d1b96`，DONE-GATE 七關全綠。t_mid 會考級 that-object（that 引導名詞子句陳述事實/看法當 think/know/believe/say/hope 受詞、that 常可省略、子句是陳述句非問句、是非問句用 whether/if）。content_audit 修 2：
+  1. round2 minor（english naturalness）：teach「say a yes/no question」→「ask」。
+  2. round5 major（full-panel a-wrong）：P2「I think if he is right.」distractor 把 think+if 不合文法誤框為「意思變成不確定」（像合法變義）→ 改「句子不通；是否用 wonder/ask」與同題 what 誘答一致。
+- P6 dictation「I think that she will win the game.」非 teach/shadowing 逐字＝真 transfer。
+
 ## 2026-11-09 19:06 英語島收斂：eng-tenseconsistency（時態一致）5/5 → 收斂 297/332（89.5%）
 - **sha** `d4bd6e5e2f0bdf5f`，DONE-GATE 七關全綠，**content_audit 0 缺陷（5 輪一次過，無 fix）**。t_adv 學測級 tense-consistency（同一時間軸不無故跳時態、過去敘事保持過去、現在習慣保持現在、時間真的改變才換時態）。6 題含 identify-bad（TC3）、justified-shift（TC4）、rewrite（TC6）多題型，皆唯一正解＋rationale＋evidence 兌現 claim；純文字 shadowing（無音檔）、_note 無假宣稱。
 - Phase-1 預檢全過＝一次過，延續「嚴謹預檢＋_note 無假宣稱」高效模式（對比上一檔 tenseagree 舊債重、改 4 處）。
