@@ -1077,3 +1077,8 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - sha cd25aefd99ddca8a；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist[wh_* 音檔齊] / per_page_5clean[where ABSENT] / pedagogy[no hard] / build_source_tree）。
 - 自我 harvest 乾淨、pre-freeze 四 gate 皆綠，5 輪 content_audit（fresh ESL / learn-neuro+hiring-bar / child-edu / PM-journey / comms-linguist）零 confirmed。on=表面上方 vs in=容器內部，題幹錨定表面/容器→單一正解；at home/at school 固定說法。knownFP：on-vs-in/缺's'm'is/語序皆教過區辨點；「in the table/bed」為錯介系詞誘答非第二正解；at home/at school 以 example+zh_hint 承載規則（無平行 teach text）panel 5/5 判 NOT A DEFECT（polish）。Layer A 零文法術語維持。
 - 收斂 319/332（96.1%）。
+
+## eng-whetherclause（t_adv 高階：whether…or not 名詞子句 是否／要不要）5/5 收斂 — 2026-11-10 07:01
+- sha 87b8e5d3a9dfbf30；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist[whc_* 音檔齊] / per_page_5clean[whetherclause ABSENT] / pedagogy[no hard] / build_source_tree）。
+- round3 panel 抓 2 真 defect 並修：(blocker) P5「what」誘答理由誤稱「what the train had left 不通」（實為合法句，what=left 受詞）→ 改成語意不合理由；(minor) P1「if」誘答疊字「不用來當『當主詞』」→「不能用來引導當主詞的名詞子句」。修正後 sha 16e5cff→87b8e5d3，ledger 重置重跑 5 輪（fresh ESL / learn-neuro+hiring-bar / adversarial grammarian / PM-journey / comms-linguist 五視角）全零 confirmed。高階文法單元文法術語適切；單一正解靠「只有 whether 能用」的位置（主詞/介系詞後/接 to/直接配 or not）。
+- 收斂 320/332（96.4%）。
