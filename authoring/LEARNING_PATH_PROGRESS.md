@@ -988,3 +988,10 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - DONE-GATE 七關全綠（scan_simplified／unit_schema／question_correctness／audio_exist uto_／per_page absent／pedagogy 0／build_source_tree 306/332=92.2%）。
 - eng 305→306。下一檔：english_verbinf。
 - 教訓：dictation 答案若與 teach 例句「逐字完全相同」即使是聽寫也屬 recall 風險，harvest 階段應改句並重產音檔（gen_audio.py 單檔 manifest + --force）。
+
+## eng-verbinf（接不定詞的動詞 verb + to-infinitive）5/5 收斂 — 2026-11-10
+- 單元 eng.t_mid.nonfinite.verb-plus-infinitive（want/hope/decide/promise/plan/agree/refuse/need 後接 to+原形；不接 -ing；否定 not to V）。
+- frozen_sha 3489717dcf1534c3；rounds 1–5 連 5 clean（L3 exit 0）。
+- 修 1 defect：harvest（凍結前自掃）P4「promised to finish his homework」與 teach ex2「promised to do her homework」主題重疊（promise+homework）→改「promised to water the plants while his neighbor was on vacation」（全新情境）。P6 dictation 重用 ex1 的 want-to/hope-to 複合框架但內容全異（piano/song），屬可接受 dictation 框架重用。
+- DONE-GATE 七關全綠（scan_simplified／unit_schema／question_correctness／audio_exist vbi_／per_page absent／pedagogy 0／build_source_tree 307/332=92.5%）。
+- eng 306→307。下一檔：english_vgerund。
