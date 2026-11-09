@@ -7,6 +7,15 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-09 18:50 英語島收斂：eng-tenseagree（名詞子句時態呼應）5/5 → 收斂 296/332（89.2%）
+- **sha** `b45e1c09ee202a23`，DONE-GATE 七關全綠（含重產 `audio/tsq_dict1.mp3`）。t_adv 學測級 sequence-of-tenses（主句過去→子句退一步、will→would/can→could、真理可留現在式、主句現在不退步）。content_audit 共修 4 panel-confirmed＋1 Phase-1：
+  1. Phase-1：P6 dictation 原「He said that he would call me later.」與 teach ex2 逐字重疊（recall-not-transfer）→ 改「She told me that she would visit us soon.」＋重產 tsq_dict1.mp3。
+  2. round1 blocker（full-panel a-wrong）：P4 單選把選擇性 backshift「went」判錯（teach line110 真理 backshift 可選）＝雙解 → distractor went 換 go（三單漏 -s，無疑義錯）。
+  3. round1 minor（english naturalness）：teach「the clause tells a permanent fact」→「states」。
+  4. round2 major（full-panel test-before-teach）：P5 考「主句現在式→不退步」(c-ts-present-main) 但 teach 未教 → 補 present-main 不退步 teach text block。
+  5. round2 major（english decisive）：P1「will be」distractor 混「would be 或 was」（未來 vs 現在狀態退步）→ 只講 was。
+- 效率註記：此檔舊債較重（逐輪各 1），另一輪因 L3 淺 anchor（reviewer 只驗到 50% 深度）判 INVALID 撤回重跑——L3 truth-check 正常發揮，非內容問題。
+
 ## 2026-11-09 16:18 英語島收斂：eng-svagreement（主詞動詞一致）5/5 → 收斂 295/332（88.9%）
 - **sha** `ae6f173af8fdb41c`，DONE-GATE 七關全綠，**content_audit 0 缺陷（5 輪一次過，無 fix）**。t_adv 學測級 SVA：單/複數一致、第三人稱單數 -s、介系詞片語（of apples/in my class）不改變主詞數（The box of apples IS）、each/every＋單數視為單數（each of＋複數仍單數）。內容依 Swan/Cambridge/Oxford 正確；6 題皆唯一正解＋distractor_rationales＋answer_evidence 兌現 claim；SVA6 考 c-sva-article（A good dictionary helps）teach 例句有兌現。純文字 shadowing（無音檔）、_note 無假宣稱。
 - Phase-1 預檢全過（scan_simplified/unit_schema/question_correctness/pedagogy 皆綠）＝一次過，延續「嚴謹預檢＋_note 無假宣稱」高效模式。
