@@ -1003,3 +1003,15 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - knownFP 記錄：P3/P4 答案句與 claim metadata (c-vg-mind/c-vg-avoid) 逐字相同，但 learner-facing teach 用不同動詞（opening the window / avoid eating sugar）→ transfer 非 recall；P6 dictation「Would you mind closing the window?」為 P3 動詞+teach 名詞新組合 → 非逐字 recall。
 - DONE-GATE 七關全綠：scan_simplified PASS / unit_schema CLEAN / question_correctness CLEAN / audio_exist CLEAN(1544) / per_page_5clean vgerund ABSENT / pedagogy vgerund ABSENT / build_source_tree 收斂 308/332（92.8%）。
 - 下一檔（字母序）：english_voicebasic。
+
+## eng-voicebasic（被動語態構成 be + 過去分詞）5/5 收斂 — 2026-11-10
+- frozen_sha: e65dfd38a05f988a；rounds 1–5 全 clean（confirmed 0、coverageComplete true、L3 rc=0）。round 1 初版（sha b0ed7aab5c0d31a8）found 1 minor metadata DEFECT → 修 _note 後重凍 sha。
+- lenses: native-ESL-passive / skeptical-native-examiner / translator-learnneuro / fresh-adversarial-rationales / final-pass-child-ed。
+- 修正：
+  - P1 harvest：letter+written（近似 teach text「The letter was written yesterday」）→「The picture was drawn by a famous artist long ago」（drawn，脫離 teach）。
+  - P2 harvest：答案句「English is spoken in many countries.」＝ ex2 **逐字** recall → 「Many new houses are built near the river every year」（are built，兼考複數 are agreement）。
+  - P6 dictation harvest：「The cake was made by my mother yesterday」≈ ex1/teach 逐字 → 「Breakfast was cooked by my father this morning」＋重產 vbs_dict1.mp3（22KB 合法）。
+  - _note：移除不存在的誘答分類「過去分詞拼錯」（round-1 metadata-accuracy DEFECT）→「過去分詞用錯形式（過去式／原形／進行式）」。
+- 審閱備註（非 blocker）：pedagogy_gate 對 c-vb-by（by+動作者可選）出 parity-advisory（不計 exit）；by-optionality 已在 teach（P3 區塊＋ex3）充分教、by+doer 已在 P1/P4/P6 答案句產出、P3 答案省略 by，練習已涵蓋，5 輪 panel 全程未判缺陷 → 非真 gap。
+- DONE-GATE 七關：scan PASS / schema CLEAN / qc CLEAN / audio CLEAN(1544) / per_page voicebasic ABSENT / pedagogy voicebasic 僅 non-hard advisory / build_source_tree 收斂 309/332（93.1%）。
+- 下一檔（字母序）：english_voicebyagent。
