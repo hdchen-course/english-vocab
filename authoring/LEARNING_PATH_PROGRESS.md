@@ -7,6 +7,10 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-09 16:18 英語島收斂：eng-svagreement（主詞動詞一致）5/5 → 收斂 295/332（88.9%）
+- **sha** `ae6f173af8fdb41c`，DONE-GATE 七關全綠，**content_audit 0 缺陷（5 輪一次過，無 fix）**。t_adv 學測級 SVA：單/複數一致、第三人稱單數 -s、介系詞片語（of apples/in my class）不改變主詞數（The box of apples IS）、each/every＋單數視為單數（each of＋複數仍單數）。內容依 Swan/Cambridge/Oxford 正確；6 題皆唯一正解＋distractor_rationales＋answer_evidence 兌現 claim；SVA6 考 c-sva-article（A good dictionary helps）teach 例句有兌現。純文字 shadowing（無音檔）、_note 無假宣稱。
+- Phase-1 預檢全過（scan_simplified/unit_schema/question_correctness/pedagogy 皆綠）＝一次過，延續「嚴謹預檢＋_note 無假宣稱」高效模式。
+
 ## 2026-11-09 16:03 英語島收斂：eng-superlative（最高級）5/5 → 收斂 294/332（88.6%）
 - **sha** `c3b174a2c09bcc4b`，DONE-GATE 七關全綠（audio_exist 1544 refs 全存在；含重產 `audio/supl_dict1.mp3`）。content_audit 共修 3 個 panel-confirmed＋先前 Phase-1 補 CVC 雙寫教學：
   1. round2 zh/en parity（translator+PM DEFECT）：英文 teach 絕對句「Don't forget to put 'the' before a superlative.」↔zh_hint「通常」強度不一致、且絕對說法過度宣稱（possessive/adverb 例外）→ 英文軟化為「We usually put 'the' before a superlative.」、zh_hint 去「別忘了」。
