@@ -7,6 +7,15 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-09 13:55 英語島收斂：eng-stativeverb（狀態動詞）5/5 → 收斂 291/332（87.7%）
+- **sha** `241c79153bd2a45f`，DONE-GATE 七關全綠。content_audit 共修 4 個 panel-confirmed 缺陷（均 full-panel、重度「舊檔 _note／教學設計債」累積型，一輪一個）：
+  1. teach 英文 `'have' means 'own'`＋gloss `(owns)` 不精確（不 own 兄弟；stative have＝possession）＋與 claim 矛盾 → `'possess'`＋`(possession)`（domain a-wrong）。
+  2. P1 distractor `be understanding` 理由誤標「be+原形」（understanding 實為 -ing 形）＋與 line144/P4 矛盾 → 正確描述（domain a-wrong）。
+  3. P1/P2 裸 -ing distractor「缺助動詞」與 P3/P4/P5「缺 be 動詞」不一致（會考級助動詞=do/does）→ 統一「缺 be 動詞」（terminology）。
+  4. _note distractor 分類「助動詞後接 has」實際無此誘答（P3 has 是主詞一致性 we+has）→「主詞與動詞不一致」（a-wrong）；另修 _note see=meet 例句 doctor→dentist（與 learner 內容一致，省 panel 每輪 raise-dismiss 成本）。
+- **教訓（待 bank memory）**：冗長 _note 設計註解若對「自身 distractor 分類／例句」做事實宣稱，會成 content_audit finding sink——panel 把 _note 不實宣稱判 a-wrong（即使非 learner-facing）。日後 Phase-1 應把 _note 的 distractor-taxonomy／example 宣稱逐項對照實際題目預檢。
+- P6 dictation `She loves music and knows many songs.` 非 teach/shadowing 逐字＝真 transfer，無需 freshen。
+
 ## 2026-11-09 12:52 英語島收斂：eng-sickadvice（生病時怎麼做）5/5 → 收斂 290/332（87.3%）
 - **sha** `b31616b3f1811b1c`，DONE-GATE 七關全綠（scan_simplified／unit_schema／question_correctness／audio_exist 1544refs／per_page_5clean／pedagogy 0／source_tree 290）。commit `5e676bee4`（修正）＋本收斂 commit。
 - **Phase-1 freshen**：P4 dictation 原 `Drink water.` 逐字等於 teach ex1/P1/P6/shadowing（recall-not-transfer）→跨兩組新組合 `Stay home. Get some rest.`＋重產 `sk_dict_01.mp3`（en-US-AnaNeural）。
