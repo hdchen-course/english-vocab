@@ -3,15 +3,15 @@
 > 由 `tools/build_source_tree.py` 從 `data/units_index.json`（權威清單，
 > 同 per_page_5clean_gate 分母）× `page_converge_ledger.json` × 檔案系統產生。
 
-**總計 332 頁｜已收斂 301（90.7%）｜未收斂 31｜缺 html 0｜缺 sidecar 0**
+**總計 332 頁｜已收斂 308（92.8%）｜未收斂 24｜缺 html 0｜缺 sidecar 0**
 
 狀態符號：✅ 5-clean 收斂　▫️ 已建未收斂（n/5）　⛔ 缺檔
 
 
-## eng（301/332 收斂）
+## eng（308/332 收斂）
 
 
-### strand=`adjadv`（14/15）
+### strand=`adjadv`（15/15）
 
 - ✅ `english_adjorder.html`
 - ✅ `english_adjposition.html`
@@ -27,7 +27,7 @@
 - ✅ `english_participleadj.html`
 - ✅ `english_superlative.html`
 - ✅ `english_themore.html`
-- ▫️ `english_tooenough.html` 0/5
+- ✅ `english_tooenough.html`
 
 ### strand=`advcl`（6/6）
 
@@ -103,7 +103,7 @@
 - ✅ `english_suffixverb.html`
 - ✅ `english_wordfamily.html`
 
-### strand=`nonfinite`（9/12）
+### strand=`nonfinite`（11/12）
 
 - ✅ `english_bareinfinitive.html`
 - ✅ `english_gerundidiom.html`
@@ -114,11 +114,11 @@
 - ✅ `english_meaningchange.html`
 - ✅ `english_perfectpassiveinf.html`
 - ✅ `english_subjectofinfinitive.html`
-- ▫️ `english_verbinf.html` 0/5
-- ▫️ `english_vgerund.html` 0/5
+- ✅ `english_verbinf.html`
+- ✅ `english_vgerund.html`
 - ▫️ `english_whinf.html` 0/5
 
-### strand=`noun`（9/10）
+### strand=`noun`（10/10）
 
 - ✅ `english_collectivenoun.html`
 - ✅ `english_doublepossessive.html`
@@ -129,7 +129,7 @@
 - ✅ `english_propercap.html`
 - ✅ `english_regularplural.html`
 - ✅ `english_sameplural.html`
-- ▫️ `english_uncountable.html` 0/5
+- ✅ `english_uncountable.html`
 
 ### strand=`nouncl`（7/8）
 
@@ -142,7 +142,7 @@
 - ✅ `english_thatobject.html`
 - ▫️ `english_whetherclause.html` 0/5
 
-### strand=`pattern`（25/29）
+### strand=`pattern`（27/29）
 
 - ✅ `english_birthday.html`
 - ✅ `english_classcommands.html`
@@ -169,8 +169,8 @@
 - ✅ `english_sickadvice.html`
 - ✅ `english_svagreement.html`
 - ✅ `english_thereis.html`
-- ▫️ `english_timegreet.html` 0/5
-- ▫️ `english_twoobjects.html` 0/5
+- ✅ `english_timegreet.html`
+- ✅ `english_twoobjects.html`
 - ▫️ `english_weatherwear.html` 0/5
 - ▫️ `english_welcome.html` 0/5
 
@@ -276,7 +276,7 @@
 - ✅ `english_subjwouldrather.html`
 - ✅ `english_wishsubj.html`
 
-### strand=`verb`（32/38）
+### strand=`verb`（33/38）
 
 - ✅ `english_animalcolors.html`
 - ✅ `english_commute.html`
@@ -310,7 +310,7 @@
 - ✅ `english_presprogfuture.html`
 - ✅ `english_stativeverb.html`
 - ✅ `english_tenseconsistency.html`
-- ▫️ `english_usedtofamily.html` 0/5
+- ✅ `english_usedtofamily.html`
 - ▫️ `english_want.html` 0/5
 - ▫️ `english_wantclothes.html` 0/5
 - ▫️ `english_weathermore.html` 0/5

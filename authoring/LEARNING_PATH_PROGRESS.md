@@ -995,3 +995,11 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 修 1 defect：harvest（凍結前自掃）P4「promised to finish his homework」與 teach ex2「promised to do her homework」主題重疊（promise+homework）→改「promised to water the plants while his neighbor was on vacation」（全新情境）。P6 dictation 重用 ex1 的 want-to/hope-to 複合框架但內容全異（piano/song），屬可接受 dictation 框架重用。
 - DONE-GATE 七關全綠（scan_simplified／unit_schema／question_correctness／audio_exist vbi_／per_page absent／pedagogy 0／build_source_tree 307/332=92.5%）。
 - eng 306→307。下一檔：english_vgerund。
+
+## eng-vgerund（接動名詞的動詞 enjoy/finish/mind/avoid/keep）5/5 收斂 — 2026-11-10
+- frozen_sha: 6f0a9a9bcbe0f0b9；rounds 1–5 全 clean（confirmed 0、coverageComplete true、L3 rc=0）。
+- lenses: native-ESL-grammar / skeptical-native-examiner / translator-learnneuro / fresh-adversarial-rationales / final-pass-child-ed。
+- 修正：P1 自行 harvest — 「I enjoy reading comic books on weekends」→「I enjoy taking photos whenever I travel」（脫離 teach text 逐字片語 "I enjoy reading"，避 recall-not-transfer）。
+- knownFP 記錄：P3/P4 答案句與 claim metadata (c-vg-mind/c-vg-avoid) 逐字相同，但 learner-facing teach 用不同動詞（opening the window / avoid eating sugar）→ transfer 非 recall；P6 dictation「Would you mind closing the window?」為 P3 動詞+teach 名詞新組合 → 非逐字 recall。
+- DONE-GATE 七關全綠：scan_simplified PASS / unit_schema CLEAN / question_correctness CLEAN / audio_exist CLEAN(1544) / per_page_5clean vgerund ABSENT / pedagogy vgerund ABSENT / build_source_tree 收斂 308/332（92.8%）。
+- 下一檔（字母序）：english_voicebasic。
