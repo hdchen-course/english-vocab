@@ -1,17 +1,17 @@
 # 教學 HTML Source Tree（自動產生，勿手改）
 
-> 由 `tools/build_source_tree.py` 從 `authoring/units_index.json`（權威清單，
+> 由 `tools/build_source_tree.py` 從 `data/units_index.json`（權威清單，
 > 同 per_page_5clean_gate 分母）× `page_converge_ledger.json` × 檔案系統產生。
 
-**總計 332 頁｜已收斂 293（88.3%）｜未收斂 39｜缺 html 0｜缺 sidecar 0**
+**總計 332 頁｜已收斂 294（88.6%）｜未收斂 38｜缺 html 0｜缺 sidecar 0**
 
 狀態符號：✅ 5-clean 收斂　▫️ 已建未收斂（n/5）　⛔ 缺檔
 
 
-## eng（293/332 收斂）
+## eng（294/332 收斂）
 
 
-### strand=`adjadv`（12/15）
+### strand=`adjadv`（13/15）
 
 - ✅ `english_adjorder.html`
 - ✅ `english_adjposition.html`
@@ -25,7 +25,7 @@
 - ✅ `english_moreandmore.html`
 - ✅ `english_multiplecomp.html`
 - ✅ `english_participleadj.html`
-- ▫️ `english_superlative.html` 0/5
+- ✅ `english_superlative.html`
 - ▫️ `english_themore.html` 0/5
 - ▫️ `english_tooenough.html` 0/5
 

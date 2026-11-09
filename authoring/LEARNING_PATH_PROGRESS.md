@@ -7,6 +7,18 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-09 16:03 英語島收斂：eng-superlative（最高級）5/5 → 收斂 294/332（88.6%）
+- **sha** `c3b174a2c09bcc4b`，DONE-GATE 七關全綠（audio_exist 1544 refs 全存在；含重產 `audio/supl_dict1.mp3`）。content_audit 共修 3 個 panel-confirmed＋先前 Phase-1 補 CVC 雙寫教學：
+  1. round2 zh/en parity（translator+PM DEFECT）：英文 teach 絕對句「Don't forget to put 'the' before a superlative.」↔zh_hint「通常」強度不一致、且絕對說法過度宣稱（possessive/adverb 例外）→ 英文軟化為「We usually put 'the' before a superlative.」、zh_hint 去「別忘了」。
+  2. round3 shadowing note 引用不存在片語（full-panel，major）：note 說「the most interesting、the best 連著唸順」但兩句 shadowing 只有 the tallest / the best → 改「the tallest、the best」。
+  3. 先前：P6 dictation 原「This is the best day of my life.」與 teach ex3 逐字重疊（recall-not-transfer）→ 改「She is the happiest person I know.」＋重產 supl_dict1.mp3；CVC 雙寫規則（big→the biggest）can_do/claim 有而 teach 無 → 補 -est 後雙寫 text block。
+- 本檔 session 另落地 HD 要求的 **runtime 資料位置 gate**（見下方條目）。
+
+## 2026-11-09 15:XX 基建：runtime 資料位置 fail-closed gate（HD「這應該可以 gate 防止」）
+- 規則：runtime 檔（根 `*.html`＋`assets/*.{js,mjs}`）字串字面值（排除註解）不得 fetch/import/src `authoring/...` 資源——`authoring/` 是 workspace、loop 會清理、放 runtime 資料會線上 404（曾真的發生 speaking_nav_map.json）。
+- `tools/runtime_data_location_gate.py`（commit a05ce435f）：`--verify`/`--selftest`（紅隊）/`<file>`；全站 verify CLEAN；紅隊 PASS（壞案例擋 3、好案例含註解放行 0）。
+- push-guard hook `.claude/hooks/runtime-data-location-push-guard.sh` 掛 PreToolUse(Bash)：git push 時跑 gate、違規 deny；紅隊 4 案全過。`.claude/` 禁 commit 故 hook 留本地、gate 進 git。
+
 ## 2026-11-09 15:09 英語島收斂：eng-suggestshould（建議要求動詞後 that 子句 mandative subjunctive）5/5 → 收斂 293/332（88.3%）
 - **sha** `8403146044c609ad`，DONE-GATE 七關全綠，**content_audit 0 缺陷（5 輪一次過，無 fix）**。t_sub 學測級 mandative subjunctive（suggest/recommend/insist/demand/require/propose + that 子句用原形），內容依 Swan/Cambridge 正確；例句皆「要求」義（非 insist「斷言」義），無過度宣稱。
 - Phase-1 預檢全過：pedagogy 僅 2 parity-advisory（c-no-s-no-past 由過去式 distractor 實測、c-should-optional teach-only nuance，皆 panel 放行）；無音檔/dictation（text-only shadowing，_note 屬實、無 distractor-taxonomy 假宣稱）。
