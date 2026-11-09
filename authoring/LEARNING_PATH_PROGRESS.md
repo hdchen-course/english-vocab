@@ -1015,3 +1015,13 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 審閱備註（非 blocker）：pedagogy_gate 對 c-vb-by（by+動作者可選）出 parity-advisory（不計 exit）；by-optionality 已在 teach（P3 區塊＋ex3）充分教、by+doer 已在 P1/P4/P6 答案句產出、P3 答案省略 by，練習已涵蓋，5 輪 panel 全程未判缺陷 → 非真 gap。
 - DONE-GATE 七關：scan PASS / schema CLEAN / qc CLEAN / audio CLEAN(1544) / per_page voicebasic ABSENT / pedagogy voicebasic 僅 non-hard advisory / build_source_tree 收斂 309/332（93.1%）。
 - 下一檔（字母序）：english_voicebyagent。
+
+## eng-voicebyagent（被動語態 by 片語與施事者省略）5/5 收斂 — 2026-11-10
+- frozen_sha: d8b5ba10012d5162；rounds 1–5 全 clean（confirmed 0、coverageComplete true、L3 rc=0）。
+- 收斂前共修三輪 defect（每次改內容→sha 重凍→streak 歸零重跑）：
+  1. harvest P6 dictation「homework was checked by the teacher this morning」＝teach text 逐字 → 「The new library was opened by the mayor last week」＋重產 vba_dict1.mp3。
+  2. round1 major（instructional-design）：P4 考 by-vs-with（工具用 with）但 teach 未教 → 補 with-vs-by teach 行（scissors 例）＋新增 claim c-vba-with＋P4 answer_evidence 補 c-vba-with。
+  3. **contested-attribution 當事實（blocker/minor，連兩處）**：claim c-vba-form「America was discovered by Columbus」（歐洲中心）→「Hamlet was written by Shakespeare」；ex3 learner-facing＋claim c-vba-keep「The telephone was invented by Alexander Graham Bell」（Meucci/Gray 爭議，US House Res.269/2002）→「The Starry Night was painted by Vincent van Gogh」＋重產 vba_ex3.mp3。
+- **缺陷類（banked，後續檔預防）：example 句用「發現/發明」歸於單一人並當事實＝contested-attribution 違 R1。改用無爭議的「著作/畫作＋作者」（Hamlet/Shakespeare、Mona Lisa/da Vinci、Starry Night/van Gogh）。**
+- DONE-GATE 七關：scan PASS / schema CLEAN / qc CLEAN / audio CLEAN(1544) / per_page voicebyagent ABSENT / pedagogy voicebyagent ABSENT / build_source_tree 收斂 310/332（93.4%）。
+- 下一檔（字母序）：english_voiceditrans。
