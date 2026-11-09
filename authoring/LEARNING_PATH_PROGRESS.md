@@ -856,3 +856,13 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
   (1) Phase-1 freshen：P6 dictation「Shall we start the game now?」近乎重複 teach「Shall we start now?」→「Shall we visit the museum this weekend?」＋重產 swl_dict1.mp3
   (2) DONE-GATE pedagogy_gate：P3-meaning 正解「我想要一杯水（客氣的說法）」括號補述屬 length/detail-cue→去括號（客氣 nuance 留 feedback）
 - commits: 74a320390 / a110833a4
+
+## eng-shopping（買東西 this/that・Do you have・try on）5/5 收斂 — 2026-11-09
+- sha db273974d7e3ab52，L3 exit 0，DONE-GATE 七關全綠
+- 收斂 288→289/332（87.0%）
+- 修正軌跡：
+  (1) Phase-1 freshen：P5 dictation「Can I try this on?」逐字等於 teach ex3/P4/shadowing→「How much are those?」＋重產 shop_dict_01.mp3
+  (2) round1 content panel（major）：shop_ex1 zh_hint 孤立全形括號「我喜歡那一個）」+ 首句 How much is this? 中譯缺漏→（多少錢？／我喜歡那一個）括號平衡雙句翻譯
+  (3) DONE-GATE question_correctness（我 Phase-1 自引入）：P5 kp_ids 含 question-order 但 required_kp_ids 只 demonstrative→required 補 question-order
+- 教訓→寫入記憶 phase1-prefreeze-gates：Phase-1 凍 sha 前跑 deterministic gate 預檢（simplified+unit_schema+question_correctness+pedagogy），避免 DONE-GATE 末段才爆白跑 5 輪
+- commits: 5bcb77f38 / b25c8b611 / 19b2ced0a
