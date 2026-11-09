@@ -7,6 +7,10 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-09 20:31 英語島收斂：eng-thereis（說有什麼 There is/are・Is there…?）5/5 → 收斂 300/332（90.4%）
+- **sha** `f37424d3612ef791`，DONE-GATE 七關全綠，content_audit **0 缺陷一次過**（5 連 clean、L3 皆 exit 0）。t_base communicative 單元：There is a+單數／There are+複數(字尾 s)／Is there a…?＋Yes, there is./No, there isn't.；學習者端零文法術語。
+- round1 唯一 raw finding（P1 distractor「Is there a cat.」以句點結尾）經 panel **7/7 判 NOT A DEFECT**：P1 要求選『陳述句』，四選項一律句點結尾＝刻意 anti-cue，逼以字序而非標點判斷；加問號反而重新注入 cue。已寫入 knownFP 傳入 r2-r5，後續零 raw。**里程碑：eng 破 300。**
+
 ## 2026-11-09 20:16 英語島收斂：eng-themore（the+比較級…the+比較級）5/5 → 收斂 299/332（90.1%）
 - **sha** `fa46e2bb0279baf4`，DONE-GATE 七關全綠。t_mid 會考級「the 比較級…, the 比較級…」雙子句結構（前後子句各一比較級、兩子句對應連動）。content_audit 修 1：
   1. round5 minor（answer_evidence cross-ref）：P3「The less you worry, the happier you feel.」句無 more+noun 結構，`answer_evidence` 由 `c-tm-more-noun` → `c-tm-two-clauses`。修後重凍 sha、streak 重跑 1→5 連 clean（L3 皆 exit 0）一次過。
