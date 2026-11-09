@@ -943,3 +943,11 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
   (3) DONE-GATE question_correctness（我 Phase-1 自引入）：P5 kp_ids 含 question-order 但 required_kp_ids 只 demonstrative→required 補 question-order
 - 教訓→寫入記憶 phase1-prefreeze-gates：Phase-1 凍 sha 前跑 deterministic gate 預檢（simplified+unit_schema+question_correctness+pedagogy），避免 DONE-GATE 末段才爆白跑 5 輪
 - commits: 5bcb77f38 / b25c8b611 / 19b2ced0a
+
+## eng-timegreet（依時段打招呼 Good morning/afternoon/evening/night）5/5 收斂 — 2026-11-09
+- 單元 eng.t_base.pattern.time-greetings（依時段問候：早上 Good morning／下午 Good afternoon／傍晚見面 Good evening／睡覺前 Good night）。
+- frozen_sha 3e03f56fcfe98252；rounds 1–5 連 5 clean（L3 exit 0），各輪不同對抗 framing（r1 全面／r2 嘗試構造第二正解／r3 中文對照審查／r4 教學+道地性／r5 最終全維度複核）。
+- 修 1 defect（r1 minor，panel 全票）：claim c-greet-words 含 PRC 詞「早上好」（台灣用「早安」，違 R2）→刪「早上好/」只留「早安」；scan_simplified 複檢清零。
+- 設計要點（經對抗複核站得住）：Good evening 與 Good night 中文都是「晚安」＝第二正解風險，單元以『情境錨定』每題鎖唯一正解（早上到校／下午遇鄰居／睡覺前／傍晚到朋友家見爸媽／早上起床）；P1 與 P6 皆 Good morning. 但情境不同（到校 vs 起床），非重複。
+- DONE-GATE 七關：scan_simplified PASS／unit_schema CLEAN／question_correctness CLEAN／audio_exist CLEAN（含 tg_ 音檔）／per_page_5clean 本頁 absent from violations／pedagogy 0 hits／build_source_tree 收斂 302/332（91.0%）。
+- eng 301→302。下一檔：english_tooenough。
