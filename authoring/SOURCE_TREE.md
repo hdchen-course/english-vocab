@@ -3,12 +3,12 @@
 > 由 `tools/build_source_tree.py` 從 `data/units_index.json`（權威清單，
 > 同 per_page_5clean_gate 分母）× `page_converge_ledger.json` × 檔案系統產生。
 
-**總計 332 頁｜已收斂 312（94.0%）｜未收斂 20｜缺 html 0｜缺 sidecar 0**
+**總計 332 頁｜已收斂 317（95.5%）｜未收斂 15｜缺 html 0｜缺 sidecar 0**
 
 狀態符號：✅ 5-clean 收斂　▫️ 已建未收斂（n/5）　⛔ 缺檔
 
 
-## eng（312/332 收斂）
+## eng（317/332 收斂）
 
 
 ### strand=`adjadv`（15/15）
@@ -142,7 +142,7 @@
 - ✅ `english_thatobject.html`
 - ▫️ `english_whetherclause.html` 0/5
 
-### strand=`pattern`（27/29）
+### strand=`pattern`（28/29）
 
 - ✅ `english_birthday.html`
 - ✅ `english_classcommands.html`
@@ -171,7 +171,7 @@
 - ✅ `english_thereis.html`
 - ✅ `english_timegreet.html`
 - ✅ `english_twoobjects.html`
-- ▫️ `english_weatherwear.html` 0/5
+- ✅ `english_weatherwear.html`
 - ▫️ `english_welcome.html` 0/5
 
 ### strand=`phonics`（11/11）
@@ -276,7 +276,7 @@
 - ✅ `english_subjwouldrather.html`
 - ✅ `english_wishsubj.html`
 
-### strand=`verb`（33/38）
+### strand=`verb`（36/38）
 
 - ✅ `english_animalcolors.html`
 - ✅ `english_commute.html`
@@ -311,9 +311,9 @@
 - ✅ `english_stativeverb.html`
 - ✅ `english_tenseconsistency.html`
 - ✅ `english_usedtofamily.html`
-- ▫️ `english_want.html` 0/5
-- ▫️ `english_wantclothes.html` 0/5
-- ▫️ `english_weathermore.html` 0/5
+- ✅ `english_want.html`
+- ✅ `english_wantclothes.html`
+- ✅ `english_weathermore.html`
 - ▫️ `english_willvsgoingto.html` 0/5
 - ▫️ `english_yesterday.html` 0/5
 
@@ -388,7 +388,7 @@
 - ✅ `english_weatheradj.html`
 - ✅ `english_wildanimals.html`
 
-### strand=`voice`（8/9）
+### strand=`voice`（9/9）
 
 - ✅ `english_activepassive.html`
 - ✅ `english_causativepassive.html`
@@ -398,7 +398,7 @@
 - ✅ `english_voicebyagent.html`
 - ✅ `english_voiceditrans.html`
 - ✅ `english_voicemodal.html`
-- ▫️ `english_voicenonfinite.html` 0/5
+- ✅ `english_voicenonfinite.html`
 
 ### strand=`writing`（0/6）
 

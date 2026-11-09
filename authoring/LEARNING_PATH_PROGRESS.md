@@ -1062,3 +1062,8 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - sha 1fb169d2a71c68f8；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist[wm_*5 音檔齊] / per_page_5clean[weathermore ABSENT] / pedagogy[no hard] / build_source_tree）。
 - pre-freeze 預見性修正：teach 模板「It's + a weather word」含冠詞 a（與 wantclothes 同類）→「It's + the weather word」避免誘導「It's a windy」。panel round2 raw「what the weather is today vs is like today」經 0/5 判 NOT A DEFECT（風格微調、比對隱藏 claim metadata）已記 knownFP。Layer A 零文法術語維持；天氣字與 #8 sunny/rainy/hot/cold 刻意錯開。
 - 收斂 316/332（95.2%）。
+
+## eng-weatherwear（Layer A 基礎：看天氣穿戴 Wear your coat / Take your umbrella）5/5 收斂 — 2026-11-10 06:02
+- sha e38fd54aade96ee6；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist[wc_* 音檔齊] / per_page_5clean[weatherwear ABSENT] / pedagogy[no hard] / build_source_tree）。
+- panel 修正：claim gloss「T-shirt = T 恤/短袖」袖長汙染 → 統一「T 恤」；teach 開場由比喻句（含未教的 put on）改為功能先行「To tell someone what to wear, say Wear your + clothing」。已記 knownFP：P3 kp_ids 省略 vocab.clothes 為刻意（umbrella=Take 雨具，panel 0/5 NOT A DEFECT）。Layer A 零文法術語維持；Wear 配衣物、Take 配雨傘。
+- 收斂 317/332（95.5%）。
