@@ -7,6 +7,11 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-10 17:04 英語島收斂：english_zeroarticle（零冠詞・泛指複數/不可數/專有名詞）5/5 → 332/332（100%，全站英語島收斂完成）🎉
+- 凍 sha=0341977157983264 後 pre-freeze deterministic gates 全綠（scan_simplified/schema/correctness/pedagogy），round1–5 連續 clean（L3 exit 0、coverageComplete、sha 全相符），無任何 confirmed defect。
+- DONE-GATE 全綠：**per_page --verify 通過 332/332、違規 0 頁**；scan_simplified PASS、unit_schema CLEAN、question_correctness CLEAN、pedagogy 0 hard、audio_exist CLEAN（1544 refs）。
+- 里程碑：英語島全部 332 頁 units 皆達 per-file 5-consecutive-clean 收斂，per_page gate 首次 0 違規。
+
 ## 2026-11-10 16:49 英語島收斂：english_yesterday（說昨天做了什麼・過去式 -ed＋yesterday）5/5 → 331/332（99.7%）
 - 凍 sha 後 round1 抓到 P6「昨天是哪個英文字」四選項 yesterday/today/school/dinner 有長度＋同類 cue（正解最長），改為全時間詞 yesterday/tomorrow/tonight/weekend（長度相近、靠詞義辨別），重產無涉音檔；再凍 sha。
 - 重跑 round2 面板多數裁 teach 收尾例句「Today I play. / Yesterday I played.」與本單元唯一教的「yesterday 放句尾」規則衝突（R-learning b-hard-to-understand）；改為「I play today. / I played yesterday.」兩時間詞皆句尾、平行一致，zh_hint 補「時間字都放句尾」，重產 yd_ex3 音檔（edge-tts）；重凍 sha=66acbb64c491c694。
