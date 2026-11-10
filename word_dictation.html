@@ -278,8 +278,9 @@ body{ overflow:hidden; }
     cats.forEach(function(b){ var on=b.getAttribute('data-cat')===cat; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on?'true':'false'); });
     secs.forEach(function(s){ s.classList.toggle('on', s.getAttribute('data-cat')===cat); });
     if(cat==='themes'||cat==='cefr'){
-      // 點「當前分頁容器內」的載入鈕，讓載入中／失敗重試回饋顯示在使用者正在看的分頁（themes 與 cefr 各有一顆，載同一份資料）。
-      var loader=document.querySelector('#dct-'+cat+' .dct-load');
+      // themes 與 cefr 載同一份資料，但載入鈕只建在 #dct-themes；CEFR tab 找 #dct-cefr .dct-load 會落空→首點空白（HD 2026-11-10 回報）。
+      // 一律點「存在的那顆」loader（擇一 themes／cefr），兩容器都會在載完後填入；載入中回饋顯示在 themes 容器。
+      var loader=document.querySelector('#dct-themes .dct-load') || document.querySelector('#dct-cefr .dct-load');
       if(loader && !loader.disabled){ loader.click(); }
     }
   }

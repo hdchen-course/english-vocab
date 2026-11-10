@@ -420,6 +420,11 @@
         if (scaff) {
             scaff.classList.toggle('hidden', isSent);
         }
+        // 音標鈕：僅在該題真有 IPA 資料時顯示（多數 DK 單字無 ipa，按了也沒東西＝誤導，HD 2026-11-10 回報）
+        var ipaBtn = $('dct-sc-ipa');
+        if (ipaBtn) {
+            ipaBtn.classList.toggle('hidden', isSent || !item.ipa);
+        }
         // 鷹架：首字母提示（僅單字軌有意義；由 word[0] 導出；預設關）
         var fl = $('dct-firstletter');
         if (fl) {
