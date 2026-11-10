@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 06:35 數學島 numquant #16 收斂：math_numquant_fractiondecimalconvert（分數⇄小數互換：分母10/100↔小數位、通分法、小數→分數約最簡）5/5 → numquant 16/30
+- **frozen_sha `285cbf6ea7c36d3a`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：10 格面積圖（塗 5＝5/10=0.5，連結 1/2↔0.5）iPad 橫直四角色簽核於建立時過、SVG byte 未變仍有效。claim kind=definition（claim_evidence CLEAN）。prereq＝decimal-place-value＋equivalent-fractions。
+- **4 MCQ**：十分位分數→小數(7/10=0.7)／通分後分數→小數(1/2=0.5)／小數→最簡分數(0.25=1/4)／百分位分數→小數(3/100=0.03)。.venv(Fraction) 全核。
+- **收斂路徑（兩次 harvest 真缺陷）**：(1) **fd1**（7 鏡 DEFECT recall-not-transfer）teach block 1 的「7/10=0.7、3/100=0.03」與 practice FD-mcq-tenths/hundredths 答案逐字重疊→改「9/10=0.9、7/100=0.07、50/100=0.5」。(2) **fd2**（7 鏡 a-wrong，defect-class#1）FD-mcq-dectofrac「1/25」誘答說「分子分母寫顛倒」但顛倒無法導出 1/25（machine 無法產生該值）→改「分母誤用除數 25 而非 100÷25=4」。最終 sha 285cbf6e 上 fd3–fd7 連 5 clean（coverage_check L3 皆 exit 0）。commits：c6cad7c37(草稿)／ed74b71f7(fd1)／fbc22650a(fd2)／本收斂。
+- **教訓強化**：(a) recall-not-transfer 要查**全部 rendered teach 文字**（不只 figure），fd1 我漏了 teach block 1；(b) 誘答 rationale 的錯誤機制必須能**真正導出該誘答值**（「顛倒」要能算出該值才可用）。
+- **下一步**：numquant #17＝decimal-arithmetic（小數的加減，對齊小數點）。
+
 ## 2026-11-11 06:04 數學島 numquant #15 收斂：math_numquant_fractionarithmetic（分數加減：同分母直接加減、異分母通分、結果約最簡）5/5 → numquant 15/30（過半 🎉）
 - **frozen_sha `d5c015a7b0a80ca1`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：面積圖（6 格塗 4＝4/6，分母不變分子相加）iPad 橫直四角色簽核於建立時過、SVG byte 未變仍有效。claim kind=definition（claim_evidence CLEAN）。prereq＝equivalent-fractions＋gcd-lcm。
 - **4 MCQ**：同分母加(2/7+3/7=5/7)／同分母減並約到最簡(7/10-3/10→2/5)／異分母加(1/2+1/3=5/6)／異分母加法第一步概念(先通分)。.venv(Fraction,lcm,gcd) 全核。scope 聚焦加減（乘除另置後續，避免一課過載；content_audit panel 認可 out-of-scope）。
