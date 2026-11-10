@@ -1316,3 +1316,12 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 視覺 QA：iPad Air 13 render 四角色；陣列點圖 SVG（3 排×每排 4 綠點＝12，caption 4+4+4=3×4=12）清楚、無溢出、老花友善；無 undefined/③。
 - math numquant 進度：30 KP → 5 收斂（place-value、compare-order、rounding-estimate、add-sub-vertical、multiplication-table），25 待建。
 - 下一步：math.t_base.numquant.multi-digit-mult（兩位數以上乘法直式）或 division-remainder（除法直式餘數）。預設 multi-digit-mult（延續乘法脈絡＋直式對位）。
+
+---
+## 2026-11-11 02:05 — math_numquant_multidigitmult 5/5 收斂 + DONE-GATE 全綠（數學島第 6 單元上線）
+- frozen sha 95be8d0edcc4b3c1，rounds=[md6,md7,md8,md9,md10] 全 clean、L3 exit0、dispute-framed、每輪不同 partition/anchor。
+- 收斂前修 2 類（pre-freeze + 收斂初期）：ppmeaning 正解過長 length-cue（四選項對齊 ~9-10 字）；md5 apply 觸發條件誤指「份數多」(例子僅 6 份)→改「每一份是兩位數（像 15）」＋重凍（harvest override 留痕）。md6-md10 五輪零缺陷（教訓銀行持續壓低缺陷率）。
+- DONE-GATE 全綠：per_page 5/5、scan_simplified、unit_schema、question_correctness、pedagogy(0 hard, 含 mcq_length_cue)、audio_exist。
+- 視覺 QA：iPad Air 13 render（橫 1366×1024＋直 1024×1366）四角色；直式乘法 SVG（23×4＝92，十/個欄頭、橘色進位 1、綠得數）清楚、無溢出、老花友善、house palette 一致；無 undefined/③。
+- math numquant 進度：30 KP → 6 收斂（place-value、compare-order、rounding-estimate、add-sub-vertical、multiplication-table、multi-digit-mult），24 待建。
+- 下一步：math.t_base.numquant.division-remainder（除法直式含餘數）或 decimal 系列。預設 division-remainder（延續四則運算直式脈絡，與乘法互逆）。
