@@ -19,6 +19,12 @@
   7. `eng.t_adv.reading.graph-integration` 圖表/數據整合（non-continuous text）
 - 順序建議：picture 群（1→2→5）語感一致可共用情境；再 letter-email(3)、narrative(4)、reading(6→7)。一次一檔、每檔 5-clean→DONE-GATE→push。完成後 eng AC-COV-1=100%，英語島成為首個「可發布完整島」。
 
+## 2026-11-10 18:08 英語島 gap 單元 1/7 收斂：english_writing_letter_email（書信/email 格式）5/5 → 覆蓋 294/300（gap 6→5，但此為「新增覆蓋」非收斂頁數）
+- 新建單元 `eng.t_mid.writing.letter-email`（會考級，英文學英文）；收斂 sha 557743930322a5d5。
+- 收斂過程抓到並修掉一連串 part-count/格式一致性 defect（content_audit 團隊審查發揮作用）：(1) shadowing body 小寫 'do'＋結尾署名併行＋多餘句點 → 改四行分部、body 大寫、署名無句點；(2) shadowing note「email 四個部分」與教「email 5 部分（含主旨列）」矛盾 → 改稱四核心部分＋註明主旨列為 email 額外；(3) your-turn 例句「all four parts」→ 改「five parts」；(4) subject MCQ 正解唯一最短＝長度 cue → 改長度均衡、最短者為錯項、_note 校正。part-count 模型全單元統一（信核心 4／email 加主旨＝5）。
+- 修後 round1-5 連續 clean（L3 exit 0、sha 全符）。DONE-GATE 全綠：**per_page 通過 333/333、違規 0**；scan_simplified PASS、unit_schema/question_correctness/pedagogy/audio_exist 全 CLEAN。
+- eng gap 剩 5：writing.narrative、writing.picture-basic、writing.picture-narrative、reading.fact-vs-opinion、reading.graph-integration、listening.picture-id（純文字 narrative/fact-vs-opinion 先，餘 4 看圖需引擎擴充）。
+
 ## 2026-11-10 17:28 ★關鍵發現＋修訂建置順序（HD 授權「自己做到完畢」，含自繪 SVG）
 - **引擎現況**：`assets/unit.js` 無圖像/SVG 渲染分支；站上無任何帶圖單元（`english_environment` 的 "picture" 只是單字）。頁 HTML＝27 行殼＋`data-units` 指標；新單元＝新 units.json＋複製殼＋nav 註冊。
 - **我可自繪 inline SVG**（向量/純靜態/走 iPad 視覺 QA 四角色簽核），故 4 個看圖/圖表 KP 不卡素材；但需先擴充共用引擎（unit.js 加 figure 欄位＋白名單 SVG 渲染＋schema gate 放行），且動到全 332 頁共用檔須回歸驗證。
