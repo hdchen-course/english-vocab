@@ -7,6 +7,17 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 05:30 數學島 numquant #14 收斂：math_numquant_equivalentfractions（等值分數：同乘/同除不變＋約分＋最簡分數）5/5 → numquant 14/30
+- **frozen_sha `9d8f43174557516b`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent from violations／scan_simplified PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：面積圖（上條 2 格塗 1＝1/2、下條 4 格塗 2＝2/4、塗色精確對齊 130px）iPad 橫直四角色簽核於建立時過、SVG byte 未變仍有效。claim kind 用 `definition`（非 math-concept，避開 claim_evidence enum backlog、本頁 claim_evidence CLEAN）。
+- **4 MCQ**：填等值分子(1/2=?/6→3)／辨與 2/3 等值(4/6)／約分最簡(8/12→2/3)／辨非最簡(6/8)。.venv(Fraction,gcd) 全核。prereq＝fraction-concept＋gcd-lcm。
+- **收斂路徑（三次 harvest 各抓真缺陷，全在 learner-facing distractor_rationales）**：
+  1. **ef1**（初稿凍 ced5d1c→c1646ae4）：EQ-mcq-simplify 2/4 誘答「寫顛倒成 2/4」誤標錯誤機制（2=8÷4、4=12÷3 位置正確無顛倒、與同句「除的數不一樣」矛盾，7 鏡 DEFECT）→拿掉「寫顛倒成」。
+  2. **ef4**（c1646ae4→16c1368，de-converge 2→0）：2 缺陷——(blocker 7 鏡 a-wrong)「6」誘答結尾「等值分數的分子分母不會一樣」是錯的普遍規則（2/2·3/3·4/4 等於 1 的等值分數分子分母相等）→改「不是直接照抄分母 6」；(major owner=learning)4/5 誘答原混合運算「分子乘 2、分母加 2」與 3/4「各加 1」不平行→改「各加 2（2＋2、3＋2）」。
+  3. **ef5**（16c1368→9d8f4317，de-converge）：minor（5 鏡 DEFECT）EQ-mcq-notsimplest feedback 混用全形斜線「6／8」(U+FF0F)→統一 ASCII（line203 selfeval_note「答案／說明」全形斜線是中文分隔、保留）。
+  最終 sha 9d8f4317 上 ef6–ef10 連 5 clean（L3 皆 exit 0、手動核對 anchors 全符）。commits：38d108a1d(草稿)／7ca65de5(ef1)／475aa27c2(ef4)／66734e511(ef5)／本收斂。
+- **★關鍵認知更新（已 bank memory）**：`distractor_rationales` 是 **learner-facing**（unit.js:256 答錯時渲染），**非**內部 scaffolding——先前把它與 claims[] 一起當「非 render」是錯的。誘答 rationale 必須：單一乾淨錯誤路徑、不誤標錯誤機制、不陳述錯誤的普遍規則、與同題其他誘答平行、記號一致（ASCII 斜線）。
+- **下一步**：numquant #15＝fraction-arithmetic（同分母分數加減）。
+
 ## 2026-11-11 04:43 數學島 numquant #13 收斂：math_numquant_fractionconcept（分數概念：部分與整體＋同分母/同分子比大小）5/5 → numquant 13/30
 - **frozen_sha `71d52c7372ae5b64`**，DONE-GATE 六確定性 gate 全綠（per_page_5clean 本頁 absent from violations／scan_simplified PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：fraction-bar SVG（4 格塗 3＝3/4）byte 未變、建置時四角色簽核實質有效。
 - **收斂路徑（兩次晚修，皆真缺陷）**：
