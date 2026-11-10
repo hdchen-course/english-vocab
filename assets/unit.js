@@ -294,6 +294,6 @@
     main.appendChild(se);
 
     main.appendChild(el('footer','gr-foot',
-      '資料來源：'+esc(src)+'（Phase 2 英語島單元）。音檔為 edge-tts 童聲真實語音。自評不自動判讀，翻答案自己判斷。'));
+      '資料來源：'+esc(src)+'。自評不自動判讀，翻答案自己判斷。'));
   }).catch(e=>{ document.getElementById('root').innerHTML='<p>載入失敗（請用 http 開啟，勿用 file://）：'+esc(e)+'</p>'; });
 })();
