@@ -1194,3 +1194,12 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - commit 9c9e68d45 + push。eng non-beyond 覆蓋 295/300。
 - 剩餘 eng gap（5）：fact-vs-opinion(reading,文字,可即做)｜graph-integration｜picture-narrative｜picture-id｜picture-basic（後 4 需引擎圖像支援）。
 - 下一步：建 english_reading_factopinion（gap 3，最後一個純文字單元）→ 5-clean → 之後引擎擴充(unit.js 圖像/SVG field + schema gate + 紅隊) → 4 圖像單元 + iPad 視覺 QA 四角色簽核。
+
+---
+## 2026-11-10 19:00 — english_reading_factopinion 5/5 收斂（gap 3/7→完成）
+- frozen sha 6b095aa93dd5208b，rounds=[1,2,3,4,5] 全 clean、L3 exit0。
+- 收斂過程抓 3 真 defect：(1) opinion-distractor 相對詞 'long tail'（非普世真）→ two ears；(2) fact 正解長度 cue（唯一最短→three new computers，distractor 加長 in town）；(3) disagree-distractor 主觀詞 'small' 去除；另修 feedback 殘留舊句。
+- DONE-GATE 全綠：per_page 335/335 PASS、scan_simplified PASS、unit_schema CLEAN、question_correctness CLEAN、pedagogy 0 hard、audio_exist CLEAN。
+- eng non-beyond 覆蓋 296/300。剩 4 gap 皆需引擎圖像支援：graph-integration｜picture-narrative｜picture-id｜picture-basic。
+- 下一步：unit.js 引擎擴充（figure/inline-SVG field + schema gate + 紅隊）→ 4 圖像單元（手繪 SVG + iPad 視覺 QA 四角色簽核）→ eng 300/300。
+- 另：COCA 重產音檔 29921 檔已 rsync+commit+push 上線（audio_exist CLEAN）。
