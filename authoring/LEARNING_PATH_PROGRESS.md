@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-10 12:45 英語島：eng-reading-structure-cohesion 修 pedagogy length/form cue → 5/5 重收斂（回穩 325/332，97.9%）
+- **緣由**：c2e DONE-GATE 跑 pedagogy_gate --verify 時發現此「已標收斂頁」帶 length-cue 違規（R6-structure/R6-cohesion-however/R6-cohesion-therefore 正解帶括號補述且明顯最長＝可不讀猜最長/最詳者）——content_audit panel 不查、deterministic gate 才抓到的 blind spot（印證 [[phase1-prefreeze-gates]]：凍 sha 前要跑 pedagogy_gate）。correctness-first 優先修掉已上線缺陷。
+- **修法**：(1) 三題正解移除括號補述（解釋本就在 feedback）；(2) round1 content_audit 再抓 R6-cohesion-however 正解「表示轉折、對比」仍 odd-one-out（唯一「、」雙概念＋最長，誘答皆單概念）→ 改單概念「表示轉折」，四選項全單概念平行（表示轉折/原因/舉例/時間先後）。answer∈options 自驗 OK、JSON 合法、pedagogy_gate 本頁清零。
+- **收斂**：frozen sha 兩度重凍（7bbc9edc→dd8e4094→e54db6f09bf3caac），最終 sha 上 rounds[1-5] 連 5 clean（L3 exit 0，five-view reading-teacher panel 每輪換分局，0 confirmed）。DONE-GATE 七關本頁全綠。commits `35b279946`／`8ec1d7b95`／`4a4c6c6b5`＋push。
+- **缺陷類（供全站同類掃描）**：MCQ 正解帶括號補述／明顯最長／唯一複合形式＝length/detail/odd-one-out cue；修法＝選項長度與形式平行、解釋留 feedback。**TODO 佇列**：pedagogy_gate --verify 全站仍 RC=4（其他已標收斂頁尚有 length-cue），逐頁同法修＋重跑 5-clean。
+
 ## 2026-11-10 12:22 英語島收斂：eng-writing-c2e-naturalness（中譯英：翻意不翻字／選道地動詞／單一連接詞）5/5 → 收斂 325/332（97.9%）
 - **frozen_sha `4db2dcc2e54f6e9a`**，DONE-GATE 本頁全綠（G1 scan_simplified PASS／G2 unit_schema CLEAN／G3 question_correctness CLEAN／G4 audio_exist CLEAN／G5 per_page_5clean 本頁 absent from violations＝全站 325/332 通過／G6 pedagogy 本頁 absent）。t_adv 寫作（KP c2e-translation＋avoid-chinglish；3 claims、practice[] 3 題 MCQ、teach[] 2 題「Your turn」自評產出題；寫作 strand 無音檔）。
 - **收斂路徑**：rounds[1-5] 於同一 frozen_sha 連續 5 clean（each L3 `coverage_check.js` exit 0，five-view native-writing-teacher panel，每輪換分局角度，0 confirmed）。commit `ca49db09e`＋push（`5e083a432..ca49db09e`）。
