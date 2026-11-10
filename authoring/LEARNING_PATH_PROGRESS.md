@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-10 16:49 英語島收斂：english_yesterday（說昨天做了什麼・過去式 -ed＋yesterday）5/5 → 331/332（99.7%）
+- 凍 sha 後 round1 抓到 P6「昨天是哪個英文字」四選項 yesterday/today/school/dinner 有長度＋同類 cue（正解最長），改為全時間詞 yesterday/tomorrow/tonight/weekend（長度相近、靠詞義辨別），重產無涉音檔；再凍 sha。
+- 重跑 round2 面板多數裁 teach 收尾例句「Today I play. / Yesterday I played.」與本單元唯一教的「yesterday 放句尾」規則衝突（R-learning b-hard-to-understand）；改為「I play today. / I played yesterday.」兩時間詞皆句尾、平行一致，zh_hint 補「時間字都放句尾」，重產 yd_ex3 音檔（edge-tts）；重凍 sha=66acbb64c491c694。
+- 重凍後 round1–5 連續 clean（L3 exit 0、coverageComplete、sha 全相符）。knownFP：P1「TV I watched yesterday.」topicalization 為超綱讀法、面板 0/5 NOT。
+- DONE-GATE 全綠：per_page（本頁 clean）、scan_simplified PASS（U+53F0→臺 info-only）、unit_schema CLEAN、question_correctness CLEAN、pedagogy 0 hard、audio_exist CLEAN（1544 refs 含重產 yd_ex3）。
+- 另修兩線上 bug（HD iPad/MacBook 回報）：word_idioms 答案卡寬度放寬 90%；word_dictation 選單畫面可捲（#dct-screen-menu overflow-y:auto）——DK 52 週清單原被 body overflow:hidden＋固定高 psb-main 裁掉無法捲到底，render 驗證 mac16/iPad 皆可捲到第 52 週。commit 871e2c666/e5f55e16e 已 push。
+
 ## 2026-11-10 16:17 英語島收斂：eng-writing-sentence-punctuation（完整句＋大小寫標點）5/5 → 330/332（99.4%）
 - **frozen_sha `cd03e3eb91272c6d`**，DONE-GATE 本頁全綠（per_page 330/332／scan_simplified PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy CLEAN 0 hard／audio_exist CLEAN）。t_mid 寫作單元（2 KP sentence-making＋punctuation-caps，3 MCQ complete/caps/comma；寫作 strand 無音檔）。
 - **收斂路徑（含 1 輪缺陷修）**：round1 抓到 W2-mcq-comma 兩誘答 rationale 把「省略牛津逗號」當錯誤（牛津逗號在標準英文含 Cambridge 是可省的，教成硬規則＝事實錯，5/5 panel 全 DEFECT domain owns a-wrong）→ 改聚焦兩誘答的真錯（多餘逗號斷開主詞/動詞），不再把可選標點當錯。rounds[1-5] 連 5 clean（L3 exit 0，five-view writing-teacher panel 每輪換分局，0 confirmed）。
