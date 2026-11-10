@@ -546,7 +546,17 @@
             // 例句軌：整句正解（§2.2）+ 逐詞斷詞供自己核對（不自動判，R3）
             var sLine = document.createElement('div');
             sLine.className = 'dct-reveal__sentence';
-            sLine.textContent = item.word;
+            var sText = document.createElement('span');
+            sText.textContent = item.word;
+            sLine.appendChild(sText);
+            // 句尾 inline 🔊（比照單字大師例句，HD 2026-11-10）：重用 playAudio 播整句，可重複聽。
+            var sPlay = document.createElement('button');
+            sPlay.type = 'button';
+            sPlay.className = 'dct-reveal__play';
+            sPlay.setAttribute('aria-label', '播放這句');
+            sPlay.textContent = '🔊';
+            sPlay.addEventListener('click', function () { playAudio(item, slowMode); });
+            sLine.appendChild(sPlay);
             rv.appendChild(sLine);
             var segs = ('' + item.word).replace(/\s+/g, ' ').trim().split(' ');
             var seg = document.createElement('div');

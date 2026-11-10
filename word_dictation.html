@@ -94,9 +94,22 @@ body{ overflow:hidden; }
 .wd-listen.gr-card{ min-height:176px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; }
 .wd-bigplay{ width:92px; height:92px; margin:2px auto 4px; }
 .wd-ans-label{ font-size:14px; font-weight:800; color:var(--accent); }
-/* 答案列（自 #dct-reveal 搬入背面）沿用 dictation.css 的 .dct-reveal__* 樣式 */
-.wd-back .dct-reveal__word{ font-size:clamp(26px,5vw,36px); font-weight:800; }
-.wd-back .dct-reveal__sentence{ font-size:clamp(20px,3.4vw,26px); font-weight:800; }
+/* 答案列（自 #dct-reveal 搬入背面）沿用 dictation.css 的 .dct-reveal__* 樣式。
+   背面 flex align-items:center 會讓 #wd-answer-slot 收縮成內容寬 → 百分比 max-width 的句子被夾到硬換行；
+   故強制 slot 與 reveal 撐滿卡片寬、內容置中，短句即不再提早換行（HD 2026-11-10）。實際 class 為 .wd-face.back。 */
+.wd-face.back #wd-answer-slot{ width:100%; align-self:stretch; display:flex; flex-direction:column; align-items:center; gap:8px; }
+.wd-face.back #wd-answer-slot > *{ width:100%; }
+.wd-face.back .dct-reveal__word{ font-size:clamp(26px,5vw,36px); font-weight:800; }
+.wd-face.back .dct-reveal__sentence{ font-size:clamp(20px,3.4vw,26px); font-weight:800; max-width:92%; }
+.wd-face.back .dct-reveal__row{ max-width:92%; }
+/* 句尾 inline 🔊：緊跟句子結尾，不獨佔一行（比照單字大師例句）。 */
+.dct-reveal__sentence{ align-items:center; }
+.dct-reveal__play{ display:inline-flex; align-items:center; justify-content:center; vertical-align:middle;
+  margin-left:10px; width:40px; height:40px; min-width:40px; border-radius:999px; cursor:pointer;
+  border:1px solid var(--card-border); background:var(--tint-english,var(--card)); color:var(--ink);
+  font-size:18px; line-height:1; padding:0; }
+.dct-reveal__play:hover{ border-color:var(--c-english); }
+.dct-reveal__play:focus-visible{ outline:3px solid var(--c-focus); outline-offset:2px; }
 /* ② 寫卡：填滿中段、canvas 撐滿 */
 .wd-write.gr-card{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; }
 .wd-play .dct-canvas-wrap{ flex:1 1 auto; min-height:0; }
