@@ -1092,3 +1092,10 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - sha 09ba583a2760fb1f；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist[wvg_* 音檔齊，ex3 因文字改動重產] / per_page_5clean[willvsgoingto ABSENT] / pedagogy[no hard] / build_source_tree）。
 - 本檔 defect-rich，前後修 4 真缺陷各 sha-reset 重跑：(1) teach-example 相鄰性（ex3 證據句移至 text3 前、offer 例句內嵌 text3）；(2) ex3「be sick」AmE/BrE 歧義→改「Look how pale she is—I think she's going to faint.」並重產 wvg_ex3.mp3；(3) P3 疊字詞幹誘答（help/am help→going to/am go to）；(4) round5 CONFIRMED（english owns criterion b，4/5 判 claims[] 內部 metadata 非 reader-facing 但 english lens 於其所有 criterion 判 decisive）：claim c-wg-going-evidence「a prediction based on something you can see now」與自身例句「I feel dizzy」(感覺非看見)矛盾→改「see or feel now」。重跑五視角（ELT panel）全零 confirmed。中階文法術語適切；單一正解靠當場決定(will) vs 事先計畫/現在徵兆(be going to) 語境錨定。
 - 收斂 322/332（97.0%）。
+
+## eng-whinf（t_mid 中階：疑問詞＋不定詞 how to／what to／where to）5/5 收斂 — 2026-11-10 09:28
+- sha 08c70faa826c8a91；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist[whi_* 音檔齊] / per_page_5clean[whinf ABSENT] / pedagogy[no hard] / build_source_tree）。
+- 兩輪修 2 真 defect（各 sha-reset 重跑）：(1) P2「where/how」誘答理由用錯誤語言學理由（where to buy it 合法，真因是語意問『買什麼禮物』非地點，恐教錯「wh 字須與受詞型別相配」）→ 五視角一致 DEFECT，兩理由改語意框架；(2) can_do 列舉漏「which」（learning owns b，4/5 DEFECT）→ 補「which to」與 _note/claim/teach 的 6 字集一致。重跑五視角（ELT panel）全零 confirmed。
+- knownFP：c-wi-verbs 為 teach-only 支援性 claim（區辨點是 form/meaning 非 host 動詞）；「showed me how to make soup→教」gloss 5/5 NOT A DEFECT（show/teach 未做區辨、教為道地中文）；can_do 列六字但 teach/practice 只演示 how/what/where，5/5 NOT A DEFECT（單一規則可類推 when/who/which，逐字各設一題反增負荷）。
+- 中階文法術語適切；單一正解靠語意（問什麼/地點/方法）＋form（缺 to/用 -ing/why to）。
+- 收斂 323/332（97.3%）。
