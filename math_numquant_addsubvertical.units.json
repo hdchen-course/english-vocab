@@ -1,0 +1,204 @@
+{
+ "_note": "數學島 數與量（numquant）strand 第 4 個單元。涵蓋知識點 math.t_base.numquant.add-sub-vertical（整數加減直式：進位、退位與驗算；國小範圍、無考試標籤）。tier=t_base（學習者端不顯示年段 R11）。全繁體零簡體零 PRC 詞。數學科中文授課（非英語島，R14/R15 不適用）。prerequisites=place-value-read-write（直式要先懂位名位值才能對齊位）。practice 4 題 type:mcq、validation_method:expert：測『加法進位處理』『減法借位結果』『加減互逆驗算』『直式對齊哪一位』；每題唯一正解、綁 answer_evidence、每錯項附 distractor_rationales。所有數值事實已於 .venv 逐一核對（47+38=85；85-38=47；56+27=83、83-27=56；125+6=131；忘進位→75、不借位→53）。teach 帶一張站內手繪直式加法 inline SVG（十/個欄位對齊、進位 1 以橘色小字標、47+38=85），figure.svg 以 <svg 開頭、無 <script>、引擎 renderFigure 繪製、unit_schema_gate figure 驗證把關。figure-only example 無 body（引擎 body-optional，不印 undefined）。無音檔（數學直式計算、翻答案自評）。不用未教的不等式符號（≥/＜）。",
+ "page": "math_numquant_addsubvertical.html",
+ "units": [
+  {
+   "unit_id": "math.t_base.numquant.add-sub-vertical",
+   "title_zh": "直式加減（進位、退位與驗算）",
+   "can_do": "我會用直式把整數加起來、減下去——個位對個位、十位對十位對齊著算；加滿十就向左邊進位，不夠減就跟左邊借位；算完還能用加減互逆來驗算對不對。",
+   "situation_group": "數與量：直式加減",
+   "subject": "math",
+   "strand": "numquant",
+   "est_minutes": 10,
+   "knowledge_point_ids": [
+    "math.t_base.numquant.add-sub-vertical"
+   ],
+   "prerequisites": [
+    "math.t_base.numquant.place-value-read-write"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-carry",
+     "text": "直式加法要把相同的位對齊（個位對個位、十位對十位……），從個位（最右邊）開始一位一位加。某一位加起來滿十（得到 10 或更多）時，就把「十」的那一份進位到左邊一位（在上面記一個小小的 1），這一位只留下個位數字。",
+     "kind": "math-concept",
+     "source_refs": [
+      "整數加法直式與進位（國小數學）"
+     ],
+     "verification_ref": "直式對位、逢十進一；.venv 核 47+38=85（個位 7+8=15 留 5 進 1、十位 4+3+1=8）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-borrow",
+     "text": "直式減法也要把相同的位對齊，從個位開始減。某一位不夠減時，就跟左邊一位「借 1」，把這一位當成多 10 來減；借出去的左邊那一位，要記得先減少 1 再算。",
+     "kind": "math-concept",
+     "source_refs": [
+      "整數減法直式與退位（國小數學）"
+     ],
+     "verification_ref": "退位＝向左借 1 當 10、左位減 1；.venv 核 85-38=47（個位借位 15-8=7、十位 8-1-3=4）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-check",
+     "text": "加法和減法是互相「倒回去」的：知道兩數的和，用「和減掉其中一個加數」應該會得到另一個加數；算完減法，用「差加上減數」應該會變回被減數。用這個方法可以驗算答案對不對。",
+     "kind": "math-concept",
+     "source_refs": [
+      "加減互逆與驗算（國小數學）"
+     ],
+     "verification_ref": "加減互逆；.venv 核 56+27=83 且 83-27=56（驗算成立）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_base.numquant.add-sub-vertical"
+     ],
+     "body": "用直式算加法時，先把相同的位對齊寫好：個位對個位、十位對十位。接著從個位（最右邊）開始一位一位加。如果某一位加起來滿十，就把多出來的「十」進位到左邊一位（在上面記一個小小的 1），這一位只留下個位的數字。例如 47 ＋ 38：個位 7 ＋ 8 ＝ 15，寫下 5、向十位進 1；十位 4 ＋ 3 再加進位的 1 等於 8，合起來就是 85。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_base.numquant.add-sub-vertical"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 300 180' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif' text-anchor='middle'><g font-size='13' fill='#8a7a68'><text x='170' y='26'>十</text><text x='214' y='26'>個</text></g><text x='170' y='56' font-size='15' font-weight='700' fill='#b4532a'>1</text><g font-size='26' font-weight='800' fill='#33475b'><text x='170' y='90'>4</text><text x='214' y='90'>7</text><text x='120' y='128'>＋</text><text x='170' y='128'>3</text><text x='214' y='128'>8</text></g><line x1='110' y1='140' x2='232' y2='140' stroke='#33475b' stroke-width='2'/><g font-size='26' font-weight='800' fill='#2f6f54'><text x='170' y='172'>8</text><text x='214' y='172'>5</text></g></g></svg>",
+      "alt": "直式 47 加 38：十位欄是 4 和 3、個位欄是 7 和 8；個位 7+8=15 寫 5 並在十位上方記進位的 1，十位 4+3+1=8，答案 85。",
+      "caption": "個位 7＋8＝15，寫 5、向十位進 1（橘色小 1）；十位 4＋3＋1＝8，所以 47＋38＝85"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_base.numquant.add-sub-vertical"
+     ],
+     "body": "減法也一樣對齊位、從個位開始減。如果某一位不夠減，就跟左邊一位借 1，把這一位當成多 10 來減，左邊那一位記得先減少 1。例如 85 － 38：個位 5 不夠減 8，向十位借 1，變成 15 － 8 ＝ 7；十位本來 8 借走 1 剩 7，再減 3 等於 4，所以答案是 47。算完可以驗算：把差加回減數，47 ＋ 38 ＝ 85，和原來的被減數一樣，就對了。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "ASV-mcq-carry",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "直式算 47 ＋ 38，個位 7 ＋ 8 ＝ 15，接下來要怎麼做？",
+     "answer": "個位寫 5，向十位進位 1",
+     "kp_ids": [
+      "math.t_base.numquant.add-sub-vertical"
+     ],
+     "required_kp_ids": [
+      "math.t_base.numquant.add-sub-vertical"
+     ],
+     "options": [
+      "個位寫 5，向十位進位 1",
+      "個位直接寫 15",
+      "個位寫 1，向十位進位 5",
+      "個位寫 5，不用進位"
+     ],
+     "distractor_rationales": {
+      "個位直接寫 15": "一個位只能放一個數字；15 滿十了，要留個位的 5、把十的部分進位。",
+      "個位寫 1，向十位進位 5": "進位的是「滿十的那一份」＝1，留在個位的是 5；寫反了。",
+      "個位寫 5，不用進位": "7 ＋ 8 ＝ 15 已經滿十，一定要向十位進位 1，否則會少算。"
+     },
+     "answer_evidence": [
+      "c-carry"
+     ],
+     "feedback": "7 ＋ 8 ＝ 15 滿十：個位留 5，向十位進位 1；接著十位 4 ＋ 3 ＋ 1 ＝ 8，得 85。"
+    },
+    {
+     "question_id": "ASV-mcq-borrow",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "直式算 85 － 38，答案是多少？",
+     "answer": "47",
+     "kp_ids": [
+      "math.t_base.numquant.add-sub-vertical"
+     ],
+     "required_kp_ids": [
+      "math.t_base.numquant.add-sub-vertical"
+     ],
+     "options": [
+      "47",
+      "53",
+      "57",
+      "43"
+     ],
+     "distractor_rationales": {
+      "53": "這是沒有借位、把個位硬算成 8 － 5 ＝ 3 的錯誤；個位 5 不夠減 8，要借位成 15 － 8 ＝ 7。",
+      "57": "十位忘了把借走的 1 減掉：十位應是 8 借走 1 剩 7，再減 3 ＝ 4，不是 5。",
+      "43": "個位用了 8 － 5 ＝ 3（方向反了）；借位後應是 15 － 8 ＝ 7。"
+     },
+     "answer_evidence": [
+      "c-borrow"
+     ],
+     "feedback": "個位 5 不夠減 8，借位成 15 － 8 ＝ 7；十位 8 借走 1 剩 7，再 7 － 3 ＝ 4，所以是 47。"
+    },
+    {
+     "question_id": "ASV-mcq-check",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "小明算出 56 ＋ 27 ＝ 83，想驗算對不對，下面哪個方法可以？",
+     "answer": "算 83 － 27，看是不是等於 56",
+     "kp_ids": [
+      "math.t_base.numquant.add-sub-vertical"
+     ],
+     "required_kp_ids": [
+      "math.t_base.numquant.add-sub-vertical"
+     ],
+     "options": [
+      "算 83 － 27，看是不是等於 56",
+      "算 56 － 27，看是不是等於 83",
+      "算 83 ＋ 27，看是不是等於 56",
+      "算 56 ＋ 83，看是不是等於 27"
+     ],
+     "distractor_rationales": {
+      "算 56 － 27，看是不是等於 83": "方向錯了；要驗算的是和 83，用「和減一個加數」＝另一個加數，不是拿加數相減。",
+      "算 83 ＋ 27，看是不是等於 56": "和再加上加數只會更大，不會變回 56；驗算要用減法倒回去。",
+      "算 56 ＋ 83，看是不是等於 27": "這把和 83 當成加數再加，數字都用錯了。"
+     },
+     "answer_evidence": [
+      "c-check"
+     ],
+     "feedback": "加減互逆：和 83 減掉一個加數 27，應該得到另一個加數 56（83 － 27 ＝ 56），所以原來的加法對了。"
+    },
+    {
+     "question_id": "ASV-mcq-align",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "用直式算 125 ＋ 6，個位數 6 要對齊寫在哪一位下面？",
+     "answer": "個位（5 的下面）",
+     "kp_ids": [
+      "math.t_base.numquant.add-sub-vertical"
+     ],
+     "required_kp_ids": [
+      "math.t_base.numquant.add-sub-vertical"
+     ],
+     "options": [
+      "個位（5 的下面）",
+      "十位（2 的下面）",
+      "百位（1 的下面）",
+      "對齊最左邊"
+     ],
+     "distractor_rationales": {
+      "十位（2 的下面）": "6 是個位數，要對個位；放到十位會變成 6 個十＝60，算成 185 就錯了。",
+      "百位（1 的下面）": "放到百位會變成 600，和 125 相加就完全錯了；6 是個位數要對個位。",
+      "對齊最左邊": "直式要對齊的是「位」不是左邊；數字長度不同時，從個位（最右邊）對齊。"
+     },
+     "answer_evidence": [
+      "c-carry"
+     ],
+     "feedback": "直式從個位對齊：6 是個位數，寫在 5（個位）的下面，125 ＋ 6 ＝ 131。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（直式加減與驗算，不自動批改）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
