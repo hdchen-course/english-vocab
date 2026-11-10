@@ -7,6 +7,21 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-10 22:00 下一島 kickoff＝數學（math）；groundwork 完成，單元 #1 待下一 tick 新鮮脈絡建
+- **全站驗證狀態查核**：8 科 binding KP 全為 `provisionally_verified`、0 release-grade `verified`（含 eng）。即 spec 正式 Phase 0（升 release-grade、repro_gate）從未對任何科完成；eng 島也是建在 provisional＋靠 content_audit 專家 panel＋deterministic gates 當正確性後盾。其他 7 科起點與 eng 相同。
+- **選 math 為下一島**（合理預設）：事實可用 `.venv` 客觀驗證（算術/推導/程式）＝最低教錯風險；260 binding KP、bounded。
+- **math groundwork（SOP 動工前必讀，已做）**：治理 slice＝`authoring/_kp_slices/math.md`（355 行；tier 內部不顯示 R11、繁體零簡體零 PRC、對齊 108 課綱、exam 標籤）。入口 strand＝`numquant`（數與量），t_base 20 KP 成清楚序列（place-value→compare→add-sub→九九乘法→…→分數/小數/概數/單位換算/時間/貨幣）。舊站有 8 個 math*.html（素材參考，非逐頁遷移；新路徑建離散 §6.2.2 單元）。
+- **單元 #1＝`math.t_base.numquant.place-value-read-write`**（萬以內含更大位值的認讀寫與位名位值）——最基礎、數值可精確核。
+- **⏭ 下一 tick 動作**：以新鮮脈絡建 math 單元 #1：draft units.json（§6.2.2，teach 位值概念＋位值圖 SVG figure、practice MCQ 數值題、每數值 .venv 核）→頁殼→gen_derived→pre-freeze gates（scan_simplified/unit_schema/question_correctness/pedagogy）→iPad render 四角色（位值圖）→凍 sha→content_audit 5-clean（math 專家 panel）→DONE-GATE→commit+push。數學授課正確性關鍵，初稿不在長脈絡尾端趕工＝錯誤風險管理。
+- **英語島狀態**：100% 完成（300/300 覆蓋、339 頁 5-clean、接線到位、B 修正）。
+
+## 2026-11-10 21:25 Phase 2 接線（HD 裁示 B）＋接線結論：content_sha 排除純接線欄位→補順序不再重審
+- **HD 裁示 B**（「純粹標順序為什麼要重審」）：`per_page_5clean_gate.content_sha` 改為 sidecar 正規化**剝除純接線/排程欄位**（prerequisites/est_minutes/stage/reuse_pages）後才雜湊；教學欄位（teach/practice/claims/shadowing/selfeval/can_do…）仍全納入。紅隊：改接線欄位→指紋不變、改教學欄位→指紋變、壞 JSON→fail-safe。commit b06fd30e0。
+- **一次性遷移** `tools/migrate_content_sha_exclude_wiring.py`：忠實重鍵 ledger（舊算法→新算法，只換 content_sha==old_cur 的 round 與 frozen_sha、不動 clean/l3/日期）。APPLIED 339 頁/1695 rounds/77 frozen_sha；遷移後 per_page --verify=339/339（遷移前算法已改未遷移=0/339 sanity）。
+- **自動接線** `tools/auto_wire_prerequisites.py`（確定性，同 strand 鄰近下級 anchor＋基礎節點護欄）。**關鍵結論：164「未接線」中 160 為合法根節點**（該 strand 從此級起始、無下級＝起點，prerequisites 本就該空；175 既有單元已捕捉真實教學邊）；僅 4 個 leaf t_adv.special 有合理 tier-sequential anchor→已補（→formal-subject-it）。roadmap_layout 重生 339 nodes/188 edges。
+- **★B 端到端驗證**：編輯 4 個「已收斂」單元 prerequisites 後 per_page --verify=**339/339 PASS**（舊機制會作廢要重跑 20 輪；B 後 0 重審）。commit c4aa063e7。
+- **結果**：eng Phase 2 接線實質完成（真實邊＝175 既有＋4 新；160 根節點正確留空）。先前擔心的「820 輪重收斂」經 B 化解為 0 輪。
+
 ## 2026-11-10 21:05 🎉 里程碑：英語島 AC-COV-1 = 100%（eng 300/300 binding KP 全覆蓋）＝首個「可發布完整島」
 - **gap 7/7 收斂**：english_reading_graphintegration（圖表/數據整合·non-continuous text，KP eng.t_adv.reading.graph-integration）5/5。frozen_sha `25742f1d950cd43e`，rounds[1-5] 連 5 clean（each L3 exit 0、coverageComplete、sha 全相符、0 confirmed）。手繪長條圖 SVG（Books Read This Month：Ann4/Ben9/Cara6/Dan3，bar 頂標數字＋下標名字＋0/5/10 刻度），3 MCQ：讀單一值(Cara=6)/比較最大(Ben)/整合相減(Cara−Dan=3)；皆須讀圖、無 length-cue。四角色視覺簽核（iPad landscape+portrait render、bar 高度正確、字級可讀）。
 - **build_status 權威**：eng 小計 **300 KP／覆蓋 300／缺 0／339 單元／339 頁／339 已收斂頁**。DONE-GATE 七關全綠（per_page 339/339、scan_simplified PASS、unit_schema CLEAN、question_correctness CLEAN、pedagogy 0 hard、audio_exist CLEAN）。
