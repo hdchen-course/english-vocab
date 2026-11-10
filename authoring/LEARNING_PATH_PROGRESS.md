@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 07:44 數學島 numquant #18 收斂：math_numquant_moneycalculation（貨幣與簡單金額計算：總價加法/找零減法/同價物乘法）5/5 → numquant 18/30
+- **frozen_sha `8e418c18c160bc73`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：直式找零圖（60−24=36 單借位、綠線無、monospace 靠右對齊、元 單位標）本 figure sha iPad 橫直四角色 render 簽核過（mc2 僅改非-render _note，figure SVG byte 未變）。3 claim kind=definition（claim_evidence CLEAN）。幣別新臺幣「元」、零 PRC 用語。prereq＝add-sub-vertical＋multiplication-table。
+- **4 MCQ**：總價加法(45+20=65)／找零減法(50-35=15)／同價物乘法(8×5=40)／找零用減法概念題。.venv 全核。teach 四塊涵蓋加/減/乘三運算皆有 rendered worked example。
+- **收斂路徑（mc1 二 major＋mc2 一 minor）**：(1) **mc1**（7 鏡全 DEFECT）兩缺陷：MC-mcq-multi(8×5) 的乘法方法只在 unrendered claim＋can_do、rendered teach 無 worked example（banked defect-class『方法須在 rendered teach 不能只在 claims』）→ 補乘法 teach 塊 6×4=24；teach 找零圖原 100−43 是跨零借位、比 practice 50−35 單借位更難且「向前一位借位」對 100−43 誤導 → 改單借位 60−24=36、caption 寫清借位步驟。(2) **mc2**（7 鏡 a-wrong）mc1 修找零例時漏改 _note 結尾 anti-overlap 行的舊「100−43」→ 改實際數字。重凍 8e418c18 後 mc3/mc4/mc5/mc7/mc8 連 5 clean。**mc6 內容 clean 但 reviewer anchor 行漂移 5 行（L3 FAIL，class#11）未 bank、改跑 mc7 取代**——恪守 L3 不弱化。支/枝 classifier panel 0/5 判 NOT A DEFECT（兩者皆繁體有效）。commits：0fa614bd8(草稿)／e1b35b9db(mc1)／a64b28bfc(mc2)／a015f91b3(進度)／本收斂。
+- **下一步**：numquant #19＝time-calculation（時間計算，預設）；之後 unit-conversion（單位換算），即完成 t_base numquant 20/20。
+
 ## 2026-11-11 07:05 數學島 numquant #17 收斂：math_numquant_decimalarithmetic（小數加減：對齊小數點、補零、借位）5/5 → numquant 17/30
 - **frozen_sha `702b2c9c6195ae7f`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan_simplified PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：直式對齊圖（2.40＋1.35＝3.75，綠色對齊線貫穿小數點、2.40 補零、monospace 數字 text-anchor=end）本 sha iPad 橫直四角色重新 render＋逐張簽核過（美術/空間/眼科/動畫全綠；無重疊/裁切/溢出，老花友善大字）。3 claim kind=definition（claim_evidence CLEAN）。prereq＝decimal-place-value＋column-add-sub。
 - **4 MCQ**：0.3+0.4=0.7／0.6+0.45=1.05（補零）／1.5-0.7=0.8（借位）／對齊小數點概念題。.venv(Decimal) 全核。小數乘除 out-of-scope（panel 認可）。
