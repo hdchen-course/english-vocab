@@ -1,0 +1,205 @@
+{
+ "_note": "數學島 數與量（numquant）strand 第 17 個單元。知識點 math.t_base.numquant.decimal-arithmetic（小數的加減：小數點對齊、位數不同補零、借位；國小。課綱此 KP 含小數四則，本單元聚焦『加法與減法』＝動工前最常見核心，乘除另置後續單元避免一課過載，交 content_audit panel 依 scope 判）。tier=t_base（學習者端不顯示年段 R11）。全繁體零簡體零 PRC 詞。數學中文授課。prerequisites=decimal-place-value（十分位/百分位）＋add-sub-vertical（直式加減與借位）。practice 4 題 mcq：小數加(0.3+0.4=0.7)、位數不同補零對齊加(0.6+0.45=1.05)、小數減借位(1.5-0.7=0.8)、直式對齊概念(小數點對齊)。每題唯一正解、綁 answer_evidence、每錯項皆單一可導出錯誤（位值放錯/數字並排/忽略小數點/沒對齊小數點/湊整/沒借位取絕對差/誤用加法）。.venv(Decimal) 全核(0.3+0.4=0.7;0.6+0.45=1.05;1.5-0.7=0.8;2.4+1.35=3.75;5-0.6=4.4)。teach 帶直式小數點對齊圖(2.40+1.35=3.75，小數點同一直線)。claim kind=definition(避開 claim_evidence math-concept enum backlog)。無未教符號；figure-only example 無 body；無音檔。遵 math-unit-authoring-defect-classes 十一鐵律（誘答 rationale 為 learner-facing：單一乾淨錯誤且機制能真正導出該值、不說假普遍規則、與同題平行、ASCII 斜線；teach 例題數字不與 practice 整組重疊）。",
+ "page": "math_numquant_decimalarithmetic.html",
+ "units": [
+  {
+   "unit_id": "math.t_base.numquant.decimal-arithmetic",
+   "title_zh": "小數的加法與減法",
+   "can_do": "我會算小數的加法和減法：先把小數點對齊（相同位值對齊），位數不夠的在後面補 0 補齊，再像整數一樣相加減，答案的小數點直接往下對齊；相減不夠減時向前一位借位。",
+   "situation_group": "數與量：小數加減",
+   "subject": "math",
+   "strand": "numquant",
+   "est_minutes": 10,
+   "knowledge_point_ids": [
+    "math.t_base.numquant.decimal-arithmetic"
+   ],
+   "prerequisites": [
+    "math.t_base.numquant.decimal-place-value",
+    "math.t_base.numquant.add-sub-vertical"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-align-point",
+     "text": "小數加減時，要把「小數點對齊」（讓相同位值上下對齊），再像整數一樣相加減，答案的小數點直接往下對齊。例如 2.4 ＋ 1.35，把小數點對齊後相加，得到 3.75。對齊小數點就是把個位對個位、十分位對十分位、百分位對百分位。",
+     "kind": "definition",
+     "source_refs": [
+      "小數加減直式（國小數學）"
+     ],
+     "verification_ref": "小數點對齊再加減；.venv(Decimal) 核 2.4+1.35=3.75",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-pad-zero",
+     "text": "兩個小數的小數位數不一樣時，可以在位數少的後面補 0，讓它們一樣長再對齊（在小數後面補 0 不會改變大小，例如 0.6 和 0.60 一樣大）。例如 0.6 ＋ 0.45，先把 0.6 補成 0.60，再相加 0.60 ＋ 0.45 ＝ 1.05。",
+     "kind": "definition",
+     "source_refs": [
+      "小數補零對齊（國小數學）"
+     ],
+     "verification_ref": "位數不同補零；.venv(Decimal) 核 0.60+0.45=1.05、0.6=0.60",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-sub-borrow",
+     "text": "小數相減和整數一樣：某一位不夠減時，向前一位借 1 當成 10 來減。例如 1.5 － 0.7，十分位 5 不夠減 7，向個位借 1（個位 1 變 0），十分位變成 15 減 7 得 8，所以是 0.8。",
+     "kind": "definition",
+     "source_refs": [
+      "小數減法借位（國小數學）"
+     ],
+     "verification_ref": "不夠減向前借位；.venv(Decimal) 核 1.5-0.7=0.8",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_base.numquant.decimal-arithmetic"
+     ],
+     "body": "小數加減的關鍵是「小數點對齊」：讓個位對個位、十分位對十分位、百分位對百分位，再像整數一樣相加減，答案的小數點直接往下對齊。如果兩個小數位數不一樣，就在位數少的後面補 0 補齊（小數後面補 0 不改變大小，0.6 ＝ 0.60）。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_base.numquant.decimal-arithmetic"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 320 158' xmlns='http://www.w3.org/2000/svg'><g font-family='monospace'><line x1='170' y1='24' x2='170' y2='126' stroke='#a7d3bd' stroke-width='10'/><g font-size='26' font-weight='700' fill='#33475b' text-anchor='end'><text x='210' y='48'>2.40</text><text x='210' y='84'>1.35</text><text x='210' y='122'>3.75</text></g><text x='96' y='84' font-size='26' font-weight='700' fill='#2f6f54'>＋</text><line x1='88' y1='96' x2='214' y2='96' stroke='#33475b' stroke-width='2'/></g><g font-family='sans-serif'><text x='160' y='146' font-size='13' fill='#8a7a68' text-anchor='middle'>小數點對齊（綠線），像整數一樣相加，點往下對齊</text></g></svg>",
+      "alt": "直式計算 2.40 加 1.35，兩個小數的小數點上下對齊在同一條綠色直線上，相加得到 3.75，答案的小數點也在同一直線。",
+      "caption": "把小數點對齊（2.40 補了一個 0），像整數一樣相加，答案 3.75 的小數點往下對齊"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_base.numquant.decimal-arithmetic"
+     ],
+     "body": "相減也一樣先對齊小數點，某一位不夠減時向前一位借 1 當 10 來減。例如 1.5 － 0.7：十分位 5 不夠減 7，向個位借 1（個位 1 變 0），十分位變 15 減 7 得 8，所以是 0.8。整數減小數時，可以把整數看成小數，例如 5 ＝ 5.0 再對齊相減。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "DA-mcq-add",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "0.3 ＋ 0.4 等於多少？",
+     "answer": "0.7",
+     "kp_ids": [
+      "math.t_base.numquant.decimal-arithmetic"
+     ],
+     "required_kp_ids": [
+      "math.t_base.numquant.decimal-arithmetic"
+     ],
+     "options": [
+      "0.7",
+      "7",
+      "0.07",
+      "0.34"
+     ],
+     "distractor_rationales": {
+      "7": "7 是忽略小數點、把它當成整數 3 ＋ 4；但 0.3 和 0.4 都是十分位的小數，相加是 0.7。",
+      "0.07": "0.07 把答案放到了百分位；十分位 3 ＋ 4 ＝ 7，還在十分位，是 0.7。",
+      "0.34": "0.34 是把 3 和 4 並排寫在一起，不是相加；十分位 3 ＋ 4 ＝ 7，是 0.7。"
+     },
+     "answer_evidence": [
+      "c-align-point"
+     ],
+     "feedback": "小數點對齊，十分位 3 ＋ 4 ＝ 7，所以 0.3 ＋ 0.4 ＝ 0.7。"
+    },
+    {
+     "question_id": "DA-mcq-pad",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "0.6 ＋ 0.45 等於多少？",
+     "answer": "1.05",
+     "kp_ids": [
+      "math.t_base.numquant.decimal-arithmetic"
+     ],
+     "required_kp_ids": [
+      "math.t_base.numquant.decimal-arithmetic"
+     ],
+     "options": [
+      "1.05",
+      "0.51",
+      "0.105",
+      "1.1"
+     ],
+     "distractor_rationales": {
+      "0.51": "這是沒對齊小數點：把 0.6 的 6 對到百分位（當成 0.06）再加 0.45；要補零成 0.60 對齊，答案是 1.05。",
+      "0.105": "數字算對了（105），但小數點點錯位置少了一位；0.60 ＋ 0.45 ＝ 1.05，不是 0.105。",
+      "1.1": "這是把 0.45 看成 0.5 去湊整（0.6 ＋ 0.5）；但 0.45 不是 0.5，要補零成 0.60 ＋ 0.45 ＝ 1.05。"
+     },
+     "answer_evidence": [
+      "c-pad-zero"
+     ],
+     "feedback": "把 0.6 補成 0.60 對齊小數點，0.60 ＋ 0.45 ＝ 1.05。"
+    },
+    {
+     "question_id": "DA-mcq-sub",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "1.5 － 0.7 等於多少？",
+     "answer": "0.8",
+     "kp_ids": [
+      "math.t_base.numquant.decimal-arithmetic"
+     ],
+     "required_kp_ids": [
+      "math.t_base.numquant.decimal-arithmetic"
+     ],
+     "options": [
+      "0.8",
+      "1.2",
+      "2.2",
+      "0.08"
+     ],
+     "distractor_rationales": {
+      "1.2": "這是沒有借位：十分位 5 不夠減 7，就倒過來算 7 － 5 ＝ 2，個位留 1，得 1.2；正確要向個位借 1，15 － 7 ＝ 8，是 0.8。",
+      "2.2": "2.2 是用了加法（1.5 ＋ 0.7）；題目是相減，1.5 － 0.7 ＝ 0.8。",
+      "0.08": "數字 8 的位值放錯了：答案在十分位是 0.8，不是百分位的 0.08。"
+     },
+     "answer_evidence": [
+      "c-sub-borrow"
+     ],
+     "feedback": "十分位 5 不夠減 7，向個位借 1（1 變 0），15 － 7 ＝ 8，所以 1.5 － 0.7 ＝ 0.8。"
+    },
+    {
+     "question_id": "DA-mcq-align",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "用直式計算 3.5 ＋ 12.45 時，要怎麼對齊才對？",
+     "answer": "把小數點對齊，上下的小數點在同一直線上",
+     "kp_ids": [
+      "math.t_base.numquant.decimal-arithmetic"
+     ],
+     "required_kp_ids": [
+      "math.t_base.numquant.decimal-arithmetic"
+     ],
+     "options": [
+      "把小數點對齊，上下的小數點在同一直線上",
+      "把最右邊的數字對齊，像整數那樣靠右對齊",
+      "把最左邊的數字對齊",
+      "不用對齊，數字照寫下來相加就好"
+     ],
+     "distractor_rationales": {
+      "把最右邊的數字對齊，像整數那樣靠右對齊": "小數不能只靠右對齊：3.5 的 5 是十分位、12.45 的 5 是百分位，靠右對齊會把不同位值加在一起；要對齊小數點。",
+      "把最左邊的數字對齊": "靠左對齊會把 3 和 1 這種不同位值對在一起，也是錯的；小數加減要對齊小數點。",
+      "不用對齊，數字照寫下來相加就好": "不對齊會把不同位值的數字加錯；小數加減一定要先把小數點對齊。"
+     },
+     "answer_evidence": [
+      "c-align-point"
+     ],
+     "feedback": "小數加減要把小數點對齊（同一直線），讓相同位值對齊，3.5 要補成 3.50 再和 12.45 相加。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（小數的加法與減法、對齊小數點與借位，不自動批改）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
