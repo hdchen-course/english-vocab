@@ -7,6 +7,18 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-10 17:05 ★里程碑盤點＋下一增量佇列（英語島「頁收斂」完成，但「KP 全覆蓋」尚缺 7）
+- **現狀（build_status 現算）**：全站 binding KP 覆蓋 293/3086（9%）；eng 293/300 覆蓋、332/332 頁全 5-clean 收斂。其他 7 科（chi 354／life／math／sci／soc-geo 354／soc-hist 134…）在新路徑模型仍 0 單元。
+- **BUILD_PLAN §7 下一步＝把英語島做「全覆蓋」當完整島里程碑**（AC-COV-1 eng），再推其他科。eng 仍 7 個 binding KP 未被任何 teach/practice kp_ids 命中，需新建單元（roles-first 團隊＋edge-tts 音檔＋逐檔 5-clean→DONE-GATE）：
+  1. `eng.t_base.listening.picture-id` 看圖辨義（A1，最單純，建議先做）
+  2. `eng.t_mid.writing.picture-basic` 看圖寫作（描述圖片/看圖造句）
+  3. `eng.t_mid.writing.letter-email` 書信/email 格式與體裁
+  4. `eng.t_adv.writing.narrative` 敘事文體（記敘文）
+  5. `eng.t_adv.writing.picture-narrative` 看圖寫作（四格圖串接）
+  6. `eng.t_adv.reading.fact-vs-opinion` 事實 vs 意見辨別
+  7. `eng.t_adv.reading.graph-integration` 圖表/數據整合（non-continuous text）
+- 順序建議：picture 群（1→2→5）語感一致可共用情境；再 letter-email(3)、narrative(4)、reading(6→7)。一次一檔、每檔 5-clean→DONE-GATE→push。完成後 eng AC-COV-1=100%，英語島成為首個「可發布完整島」。
+
 ## 2026-11-10 17:04 英語島收斂：english_zeroarticle（零冠詞・泛指複數/不可數/專有名詞）5/5 → 332/332（100%，全站英語島收斂完成）🎉
 - 凍 sha=0341977157983264 後 pre-freeze deterministic gates 全綠（scan_simplified/schema/correctness/pedagogy），round1–5 連續 clean（L3 exit 0、coverageComplete、sha 全相符），無任何 confirmed defect。
 - DONE-GATE 全綠：**per_page --verify 通過 332/332、違規 0 頁**；scan_simplified PASS、unit_schema CLEAN、question_correctness CLEAN、pedagogy 0 hard、audio_exist CLEAN（1544 refs）。
