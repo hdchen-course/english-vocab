@@ -19,6 +19,15 @@
   7. `eng.t_adv.reading.graph-integration` 圖表/數據整合（non-continuous text）
 - 順序建議：picture 群（1→2→5）語感一致可共用情境；再 letter-email(3)、narrative(4)、reading(6→7)。一次一檔、每檔 5-clean→DONE-GATE→push。完成後 eng AC-COV-1=100%，英語島成為首個「可發布完整島」。
 
+## 2026-11-10 17:28 ★關鍵發現＋修訂建置順序（HD 授權「自己做到完畢」，含自繪 SVG）
+- **引擎現況**：`assets/unit.js` 無圖像/SVG 渲染分支；站上無任何帶圖單元（`english_environment` 的 "picture" 只是單字）。頁 HTML＝27 行殼＋`data-units` 指標；新單元＝新 units.json＋複製殼＋nav 註冊。
+- **我可自繪 inline SVG**（向量/純靜態/走 iPad 視覺 QA 四角色簽核），故 4 個看圖/圖表 KP 不卡素材；但需先擴充共用引擎（unit.js 加 figure 欄位＋白名單 SVG 渲染＋schema gate 放行），且動到全 332 頁共用檔須回歸驗證。
+- **修訂順序**（先零引擎風險、再引擎擴充）：
+  - A. 純文字 3 單元用現有引擎先建（各 5-clean→DONE-GATE→push）：`eng.t_mid.writing.letter-email`（書信/email）→ `eng.t_adv.writing.narrative`（記敘文）→ `eng.t_adv.reading.fact-vs-opinion`（事實vs意見）。
+  - B. 擴充 unit.js＋schema 支援 figure(inline SVG)，紅隊回歸證既有頁不變。
+  - C. 看圖/圖表 4 單元（各自繪 SVG＋四角色簽核＋5-clean）：`listening.picture-id`→`writing.picture-basic`→`writing.picture-narrative`→`reading.graph-integration`。
+- 完成＝eng 300/300 binding KP 全覆蓋（AC-COV-1）＋全頁 5-clean＝英語島首個可發布完整島。
+
 ## 2026-11-10 17:04 英語島收斂：english_zeroarticle（零冠詞・泛指複數/不可數/專有名詞）5/5 → 332/332（100%，全站英語島收斂完成）🎉
 - 凍 sha=0341977157983264 後 pre-freeze deterministic gates 全綠（scan_simplified/schema/correctness/pedagogy），round1–5 連續 clean（L3 exit 0、coverageComplete、sha 全相符），無任何 confirmed defect。
 - DONE-GATE 全綠：**per_page --verify 通過 332/332、違規 0 頁**；scan_simplified PASS、unit_schema CLEAN、question_correctness CLEAN、pedagogy 0 hard、audio_exist CLEAN（1544 refs）。
