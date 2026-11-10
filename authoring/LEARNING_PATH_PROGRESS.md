@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 07:05 數學島 numquant #17 收斂：math_numquant_decimalarithmetic（小數加減：對齊小數點、補零、借位）5/5 → numquant 17/30
+- **frozen_sha `702b2c9c6195ae7f`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan_simplified PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：直式對齊圖（2.40＋1.35＝3.75，綠色對齊線貫穿小數點、2.40 補零、monospace 數字 text-anchor=end）本 sha iPad 橫直四角色重新 render＋逐張簽核過（美術/空間/眼科/動畫全綠；無重疊/裁切/溢出，老花友善大字）。3 claim kind=definition（claim_evidence CLEAN）。prereq＝decimal-place-value＋column-add-sub。
+- **4 MCQ**：0.3+0.4=0.7／0.6+0.45=1.05（補零）／1.5-0.7=0.8（借位）／對齊小數點概念題。.venv(Decimal) 全核。小數乘除 out-of-scope（panel 認可）。
+- **收斂路徑（dc1 一次 harvest 真缺陷）**：**dc1**（recall-not-transfer，defect-class#10）teach block 3 的借位示範原用「1.5-0.7」與 practice DA-mcq-sub 逐字重疊→改「2.3-0.8=1.5」（.venv 核、不撞 practice）。de-converge 重凍 702b2c9c 後 dc2/dc4/dc5/dc6/dc7 連 5 clean（coverage_check L3 皆 exit 0）。**dc3 內容 clean 但 reviewer 第三 anchor 行號漂移 10 行（L3 FAIL，class#11 line-drift），未 bank、改跑 dc4 取代**——恪守 L3 不弱化、只 bank L3-pass 輪。commits：7e2175963(草稿)／02b2bd56b(dc1)／本收斂。
+- **下一步**：numquant #18＝money-calculation（錢幣計算／找零，預設）。
+- **旁註（QUEUED，非本單元 gate）**：hub `index_new.html` 的 AC-VIZ-1 figure_signoff_gate 顯示 render/signoff source_sha ec2bffb5 ≠ 當前 4741b69d（接線 commit af41df7a1 後 hub 內容 sha 漂移、簽核未同步）——屬 hub 視覺簽核工作線、非數學單元 DONE-GATE 成員，待獨立重 render+重簽處理。
+
 ## 2026-11-11 06:35 數學島 numquant #16 收斂：math_numquant_fractiondecimalconvert（分數⇄小數互換：分母10/100↔小數位、通分法、小數→分數約最簡）5/5 → numquant 16/30
 - **frozen_sha `285cbf6ea7c36d3a`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：10 格面積圖（塗 5＝5/10=0.5，連結 1/2↔0.5）iPad 橫直四角色簽核於建立時過、SVG byte 未變仍有效。claim kind=definition（claim_evidence CLEAN）。prereq＝decimal-place-value＋equivalent-fractions。
 - **4 MCQ**：十分位分數→小數(7/10=0.7)／通分後分數→小數(1/2=0.5)／小數→最簡分數(0.25=1/4)／百分位分數→小數(3/100=0.03)。.venv(Fraction) 全核。
