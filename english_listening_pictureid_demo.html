@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>看圖辨義（卡片模式 DEMO）</title>
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="assets/unit.css?v=20261110a">
+<script src="game_core.js"></script>
+<style>
+/* DEMO 版面：頂 tab 切換「先聽/練/跟讀」換卡，中段卡片 stage，底部釘三顆閃卡式自評。
+   只用於 demo，不影響正式單元引擎（assets/unit.js）。 */
+.dm-wrap{display:flex;flex-direction:column;height:calc(100vh - var(--app-bar-h,56px));min-height:0;max-width:1040px;margin:0 auto;padding:12px 16px 0;box-sizing:border-box}
+.dm-cando{background:var(--card);border:1px solid var(--card-border);border-left:4px solid var(--c-english);border-radius:14px;padding:10px 14px;margin-bottom:10px;flex:0 0 auto}
+.dm-cando .lab{font-size:11px;font-weight:800;letter-spacing:.05em;color:var(--c-english-ink)}
+.dm-cando .txt{font-size:14px;line-height:1.5;margin-top:2px}
+.dm-tabs{display:flex;gap:8px;flex:0 0 auto}
+.dm-tab{flex:1 1 0;font:inherit;cursor:pointer;border:1px solid var(--card-border);background:var(--card);color:var(--ink);
+  border-radius:12px 12px 0 0;padding:10px 6px;font-size:15px;font-weight:800;min-height:48px}
+.dm-tab.on{background:var(--c-english);color:var(--u-on-english-solid,#fff);border-color:var(--c-english)}
+.dm-tab:focus-visible{outline:3px solid var(--c-focus);outline-offset:2px}
+.dm-stage{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  border:1px solid var(--card-border);border-top:none;border-radius:0 0 14px 14px;background:var(--bg);padding:16px}
+.dm-count{font-size:12px;color:var(--ink-soft);text-align:right;margin-bottom:6px}
+.dm-ratebar{flex:0 0 auto;padding:12px 0 14px}
+.dm-ratebar .fc-rate{width:100%;max-width:none;margin:0;display:flex;gap:12px}
+.dm-ratebar .fc-rate__btn{flex:1 1 0}
+.dm-navrow{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px}
+.dm-navbtn{font:inherit;cursor:pointer;border:1px solid var(--card-border);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 16px;font-size:14px;font-weight:700;min-height:44px}
+.dm-navbtn[disabled]{opacity:.4;cursor:default}
+.dm-demobadge{position:fixed;left:10px;bottom:10px;background:var(--c-streak,#c2185b);color:#fff;font-size:11px;font-weight:800;border-radius:999px;padding:4px 10px;z-index:50}
+</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index_new.html" aria-label="回到學習地圖">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span><span class="app-bar__home-label">學習地圖</span>
+  </a>
+  <span class="app-bar__title">看圖辨義 · 卡片模式 DEMO 🖼️</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="dm-wrap" id="root"><p id="loading">載入中…</p></main>
+<div class="dm-demobadge">DEMO · 版面試作</div>
+<script src="assets/safe_store.js"></script>
+<script>
+(function(){
+  var UNITS='english_listening_pictureid.units.json';
+  function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+  function el(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;}
+  function play(f){try{new Audio('audio/'+f+'.mp3').play();}catch(e){}}
+  function figure(fig){
+    if(!fig||typeof fig.svg!=='string')return null;
+    var s=fig.svg.trim();if(s.indexOf('<svg')!==0||/<\s*script/i.test(s))return null;
+    var box=el('figure','gr-figure');var h=el('div','gr-figure__svg');h.innerHTML=s;
+    var n=h.firstElementChild;if(n&&n.tagName.toLowerCase()==='svg'){n.setAttribute('role','img');n.setAttribute('aria-label',fig.alt||'圖');}
+    box.appendChild(h);if(fig.caption)box.appendChild(el('figcaption','gr-figure__cap',esc(fig.caption)));
+    return box;
+  }
+  // 卡片清單：每個 tab 一組卡片（teach 段 / practice 題 / shadowing 行）
+  function buildCards(u){
+    var tabs=[{key:'listen',label:'① 先聽、先感覺',cards:[]},{key:'practice',label:'② 練一練',cards:[]},{key:'shadow',label:'③ 跟著讀',cards:[]}];
+    (u.teach||[]).forEach(function(t){tabs[0].cards.push(function(){
+      var c=el('div','gr-card');
+      if(t.figure){var f=figure(t.figure);if(f)c.appendChild(f);}
+      c.appendChild(el('div','gr-en',esc(t.body)));
+      if(t.zh_hint){var tg=el('button','gr-zh-toggle','▸ 中文對照');var zh=el('div','zh-hint',esc(t.zh_hint));zh.hidden=true;
+        tg.onclick=function(){var sh=zh.hidden;zh.hidden=!sh;tg.textContent=(sh?'▾ ':'▸ ')+'中文對照';};
+        var row=el('div','gr-ctrls');row.appendChild(tg);c.insertBefore(row,c.firstChild.nextSibling||null);c.appendChild(zh);}
+      return c;
+    });});
+    (u.practice||[]).forEach(function(p){tabs[1].cards.push(function(){
+      var c=el('div','gr-card');
+      if(p.figure){var f=figure(p.figure);if(f)c.appendChild(f);}
+      c.appendChild(el('div','gr-en',esc(p.stem)));
+      var opts=el('div','gr-opts');var shown=(p.options||[]).slice();
+      for(var i=shown.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=shown[i];shown[i]=shown[j];shown[j]=tmp;}
+      shown.forEach(function(o){var b=el('button','gr-opt',esc(o));b.onclick=function(){
+        if(o===p.answer)b.classList.add('correct');
+        else{b.classList.add('wrong');var dr=(p.distractor_rationales||{})[o];if(dr)b.innerHTML=esc(o)+' <span style="font-size:12px;color:var(--ink-soft)">— '+esc(dr)+'</span>';}
+        fb.classList.add('show');};opts.appendChild(b);});
+      c.appendChild(opts);var fb=el('div','gr-fb','✓ '+esc(p.feedback||''));c.appendChild(fb);
+      return c;
+    });});
+    if(u.shadowing){tabs[2].cards.push(function(){
+      var c=el('div','gr-card');c.appendChild(el('div','gr-note',esc(u.shadowing.note||'')));
+      (u.shadowing.lines||[]).forEach(function(l){var row=el('div');row.style.cssText='display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap';
+        if(l.audio){var b=el('button','gr-play','🔊');b.onclick=function(){play(l.audio);};row.appendChild(b);}
+        row.appendChild(el('span','gr-en',esc(l.text)));c.appendChild(row);});
+      return c;
+    });}
+    return tabs;
+  }
+  fetch(UNITS).then(function(r){return r.json();}).then(function(data){
+    var u=(data.units||[])[0];if(!u)throw new Error('no unit');
+    var root=document.getElementById('root');root.innerHTML='';
+    var cando=el('div','dm-cando','<div class="lab">我學得會（can-do）· '+esc(u.situation_group||'')+'</div><div class="txt">'+esc(u.can_do||'')+'</div>');
+    root.appendChild(cando);
+    var tabs=buildCards(u);
+    var tabbar=el('div','dm-tabs');var stage=el('div','dm-stage');
+    var state={tab:0,idx:[0,0,0]};
+    function render(){
+      [].forEach.call(tabbar.children,function(b,i){b.classList.toggle('on',i===state.tab);b.setAttribute('aria-selected',i===state.tab);});
+      stage.innerHTML='';var T=tabs[state.tab];var n=T.cards.length;var i=Math.min(state.idx[state.tab],n-1);state.idx[state.tab]=i;
+      if(n>1)stage.appendChild(el('div','dm-count',(i+1)+' / '+n));
+      stage.appendChild(T.cards[i]());
+      if(n>1){var nav=el('div','dm-navrow');
+        var prev=el('button','dm-navbtn','‹ 上一張');prev.disabled=i<=0;prev.onclick=function(){state.idx[state.tab]=i-1;render();};
+        var next=el('button','dm-navbtn','下一張 ›');next.disabled=i>=n-1;next.onclick=function(){state.idx[state.tab]=i+1;render();};
+        nav.appendChild(prev);nav.appendChild(next);stage.appendChild(nav);}
+    }
+    tabs.forEach(function(T,i){var b=el('button','dm-tab',esc(T.label));b.setAttribute('role','tab');b.onclick=function(){state.tab=i;render();};tabbar.appendChild(b);});
+    root.appendChild(tabbar);root.appendChild(stage);
+    // 釘底閃卡三鍵
+    var rate=el('div','dm-ratebar');
+    rate.innerHTML='<div class="fc-rate">'
+      +'<button type="button" class="fc-rate__btn again" data-g="again" aria-label="還不熟">😅<span class="fc-rate__btn__label">還不熟</span></button>'
+      +'<button type="button" class="fc-rate__btn good" data-g="good" aria-label="快會了">🙂<span class="fc-rate__btn__label">快會了</span></button>'
+      +'<button type="button" class="fc-rate__btn easy" data-g="easy" aria-label="會了">😎<span class="fc-rate__btn__label">會了</span></button></div>';
+    rate.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-g]');if(!b)return;
+      [].forEach.call(rate.querySelectorAll('.fc-rate__btn'),function(x){x.style.outline='';});b.style.outline='3px solid var(--c-focus)';});
+    root.appendChild(rate);
+    render();
+  }).catch(function(e){document.getElementById('root').innerHTML='<p>載入失敗（請用 http 開啟）：'+esc(e.message||e)+'</p>';});
+})();
+</script>
+</body>
+</html>
