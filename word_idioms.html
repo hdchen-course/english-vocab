@@ -7,57 +7,33 @@
 <!-- 新版版面頁（練習與應用「慣用語與片語」）。只「重複使用」既有材料，絕不修改舊檔：
      材料＝assets/wordmaster/idioms_data.js（96 筆慣用語資料，逐字取自 english_idioms.js 的 IDIOMS）
            ＋ audio/idiom_<slug>.mp3（96/96，edge-tts 真實產生）。
-     版面＝共用房屋 pshell（assets/unit.css）＋房屋卡 .gr-card ＋三級自評 .fc-rate（assets/app.css）
-           ＋本頁 inline 覆蓋（house 卡片質感，.wi-* 前綴）。版面比照 word_master：選主題在側欄、主畫面直接顯示卡片。
+     版面＝共用房屋 pshell（assets/unit.css）＋共用 word_* 練習骨架（assets/wd-practice.css：翻面卡＋釘底全寬自評）
+           ＋本頁 inline 覆蓋（慣用語答案卡內容樣式，.wi-* 前綴）。與 word_dictation／word_master 同一套版型（HD 2026-11-10 三頁統一）。
      舊檔 english_idioms.html / english_idioms.js 原封不動。 -->
 <link rel="stylesheet" href="assets/app.css">
 <link rel="stylesheet" href="game_core.css">
 <script src="game_core.js"></script>
 <script src="assets/srs_engine.js"></script>
 <link rel="stylesheet" href="assets/unit.css"><!-- 共用房屋 pshell（.pshell-grid/.psb/.psb-main/.sb-*/.sb-cat） -->
+<link rel="stylesheet" href="assets/wd-practice.css"><!-- 共用 word_* 練習骨架（翻面卡＋釘底全寬自評）；與 word_dictation／word_master 一致 -->
 <style>
 :root{ --accent:var(--c-english); --accent-tint:var(--tint-english); --accent-ink:var(--c-english-ink); }
-body{ font-family:var(--font); min-height:100vh; background:var(--bg); color:var(--ink); overflow-x:hidden; }
+body{ font-family:var(--font); background:var(--bg); color:var(--ink); overflow-x:hidden; }
 
 /* 側欄本回合小字 */
 .wi-sbnote{ font-size:13px; font-weight:600; color:var(--ink-soft); line-height:1.6; }
 /* 主畫面頂部說明＋進度列 */
-.wi-lead{ color:var(--ink-soft); font-size:var(--fs-small); font-weight:600; margin:0 0 var(--s2); }
-.wi-deckline{ font-size:14px; font-weight:800; color:var(--c-english-ink,var(--accent-ink)); margin:0 0 var(--s3); }
+.wi-lead{ color:var(--ink-soft); font-size:var(--fs-small); font-weight:600; margin:0; }
+.wi-deckline{ font-size:14px; font-weight:800; color:var(--c-english-ink,var(--accent-ink)); }
 
-/* ① 翻面卡（按「看答案」上方卡原地翻面；任一時刻只顯示一面 → iPad Air 13 一屏免捲） */
-.wi-play{ display:flex; flex-direction:column; gap:16px; }
-.wi-flip{ perspective:1800px; }
-.wi-flip__inner{ display:grid; transform-style:preserve-3d; transition:transform .5s cubic-bezier(.2,.7,.2,1); }
-.wi-flip.is-flipped .wi-flip__inner{ transform:rotateY(180deg); }
-.wi-face{ grid-area:1 / 1; -webkit-backface-visibility:hidden; backface-visibility:hidden; }
-.wi-face--back{ transform:rotateY(180deg); }
-/* 未翻面時背面不可互動、翻面後正面不可互動（避免被隱藏面搶焦點/點擊） */
-.wi-flip:not(.is-flipped) .wi-face--back{ visibility:hidden; }
-.wi-flip.is-flipped .wi-face--front{ visibility:hidden; }
-@media (prefers-reduced-motion: reduce){ .wi-flip__inner{ transition:none; } }
-
-.wi-listen{ text-align:center; display:flex; flex-direction:column; }
-.wi-prompt-em{ font-size:40px; line-height:1; margin-bottom:8px; }
+/* 正面：聽/讀卡的題面 */
+.wi-prompt-em{ font-size:40px; line-height:1; margin-bottom:4px; }
 .wi-idiom{ font-size:clamp(24px,5vw,34px); font-weight:800; color:var(--c-english-ink,var(--ink)); line-height:1.3; }
-.wi-bigplay{ display:inline-flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
-  width:104px; height:104px; margin:14px auto 10px; border:none; border-radius:999px;
-  background:var(--accent); color:var(--on-accent); cursor:pointer; box-shadow:var(--shadow-lg); transition:transform .12s ease; }
-.wi-bigplay:hover{ transform:scale(1.04); } .wi-bigplay:active{ transform:scale(.96); }
-.wi-bigplay__icon{ font-size:38px; line-height:1; } .wi-bigplay__t{ font-size:14px; font-weight:800; }
-.wi-hint{ font-size:var(--fs-small); color:var(--ink-soft); font-weight:600; }
 
-.wi-actions{ display:flex; gap:12px; margin-top:14px; }
-.wi-btn{ flex:1; min-height:48px; padding:12px 20px; border:2px solid transparent; border-radius:14px;
-  background:var(--c-english-btn,var(--accent)); color:var(--on-accent); font-family:var(--font);
-  font-size:clamp(15px,3vw,17px); font-weight:800; cursor:pointer; box-shadow:var(--shadow-sm);
-  transition:transform .12s ease, box-shadow .2s ease; }
-.wi-btn:hover{ box-shadow:var(--shadow-lg); } .wi-btn:active{ transform:scale(.97); }
-
-/* ② 對答案卡（背面；卡框由外層 .gr-card 提供） */
-.wi-reveal{ display:flex; flex-direction:column; gap:12px; }
+/* 背面：對答案卡內容（卡框由共用 .wd-face.back + .gr-card 提供） */
+.wi-reveal{ display:flex; flex-direction:column; gap:12px; width:100%; max-width:640px; }
 .wi-reveal__meaning{ font-size:clamp(19px,4vw,24px); font-weight:800; color:var(--c-english-ink,var(--ink)); text-align:center; line-height:1.4; }
-.wi-block{ border-radius:12px; background:var(--accent-tint); padding:12px 14px; }
+.wi-block{ border-radius:12px; background:var(--accent-tint); padding:12px 14px; text-align:left; }
 .wi-block__lab{ display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:800; color:var(--c-english-ink,var(--accent-ink)); margin-bottom:4px; }
 .wi-block__txt{ font-size:var(--fs-body); font-weight:600; color:var(--ink); line-height:1.6; }
 .wi-ex__en{ font-size:var(--fs-body); font-weight:800; color:var(--c-english-ink,var(--ink)); line-height:1.5; }
@@ -67,7 +43,6 @@ body{ font-family:var(--font); min-height:100vh; background:var(--bg); color:var
 .wi-replay{ align-self:center; display:inline-flex; align-items:center; gap:6px; min-height:40px; padding:8px 16px;
   border-radius:999px; background:var(--card); border:1px solid var(--card-border); color:var(--c-english-ink);
   font-family:inherit; font-size:14px; font-weight:800; cursor:pointer; }
-.wi-reveal .fc-rate{ width:min(460px,100%); margin:6px auto 0; }
 
 /* 完成 */
 .wi-done{ text-align:center; background:var(--card); border:1px solid var(--card-border); border-radius:var(--r-lg);
@@ -75,12 +50,11 @@ body{ font-family:var(--font); min-height:100vh; background:var(--bg); color:var
 .wi-done .wi-big{ font-size:clamp(56px,20vw,96px); line-height:1.1; margin-bottom:var(--s3); }
 .wi-done h2{ font-size:var(--fs-h2); font-weight:800; margin-bottom:var(--s3); }
 .wi-done p{ font-size:var(--fs-body); font-weight:700; color:var(--ink-soft); margin:0 auto var(--s5); max-width:32ch; }
-.wi-foot{ margin-top:var(--s4); font-size:var(--fs-small); color:var(--ink-soft); font-weight:600; }
 
 .hidden{ display:none !important; }
 </style>
 </head>
-<body data-game-hud="off">
+<body data-game-hud="off" class="wd-noscroll">
 <header class="app-bar">
   <a class="app-bar__home" href="index_new.html" aria-label="回到學習地圖">
     <span class="app-bar__home-icon" aria-hidden="true">🏠</span>
@@ -107,31 +81,35 @@ body{ font-family:var(--font); min-height:100vh; background:var(--bg); color:var
   </aside>
 
   <div class="psb-main">
-    <p class="wi-lead">聽發音 → 想意思 → 翻答案看字面小故事＋情境例句＋對應中文俗語 → 選「還不熟／快會了／會了」。聽音優先、間隔複習（SRS）。</p>
-    <div class="wi-deckline" id="wi-deckline"></div>
+    <!-- 作答（一直顯示；切主題由左側欄驅動，比照 word_master／word_dictation） -->
+    <section id="wi-screen-play" class="wd-screen">
+      <div class="wd-play">
+        <div class="wd-topnav">
+          <span class="wi-deckline wd-step" id="wi-deckline"></span>
+        </div>
 
-    <!-- 作答（一直顯示；切主題由左側欄驅動，比照單字大師） -->
-    <section id="wi-screen-play">
-      <div class="wi-play">
-        <div class="wi-flip" id="wi-flip">
-          <div class="wi-flip__inner">
-            <!-- 正面：聽發音＋想意思＋看答案 -->
-            <div class="wi-face wi-face--front gr-card wi-listen">
+        <!-- ① 聽：翻面卡（正面＝聽；背面＝答案就地翻面） -->
+        <div class="wd-flip" id="wd-flip">
+          <div class="wd-flip-inner">
+            <div class="gr-card wd-listen wd-face front">
               <div class="wi-prompt-em" id="wi-em" aria-hidden="true">💬</div>
-              <div class="wi-idiom" id="wi-idiom"></div>
-              <button type="button" class="wi-bigplay" id="wi-play" aria-label="播放英文發音">
-                <span class="wi-bigplay__icon" aria-hidden="true">🔊</span><span class="wi-bigplay__t">播放</span>
+              <div class="wi-idiom" id="wi-idiom" lang="en"></div>
+              <button type="button" class="wd-bigplay" id="wi-play" aria-label="播放英文發音">
+                <span class="wd-bigplay__icon" aria-hidden="true">🔊</span><span class="wd-bigplay__t">播放</span>
               </button>
-              <div class="wi-hint">先唸出來，想想它的中文意思，再看答案。</div>
-              <div class="wi-actions">
-                <button type="button" class="wi-btn" id="wi-reveal-btn">看答案</button>
-              </div>
+              <div class="wd-hint">先唸出來，想想它的中文意思，再看答案。</div>
             </div>
-            <!-- 背面：翻面後顯示意思＋小故事＋情境＋例句＋俗語＋三級自評 -->
-            <div class="wi-face wi-face--back gr-card">
+            <div class="gr-card wd-face back">
+              <div class="wd-ans-label">✅ 答案</div>
               <div class="wi-reveal" id="wi-reveal" aria-live="polite"></div>
             </div>
           </div>
+        </div>
+
+        <!-- 釘底動作列：看答案（翻面前）→ 全寬三級自評 .fc-rate（翻面後搬入 #wd-rate-slot） -->
+        <div class="wd-actions">
+          <button type="button" class="wd-revealbtn" id="wi-reveal-btn">看答案</button>
+          <div id="wd-rate-slot"></div>
         </div>
       </div>
     </section>
@@ -142,18 +120,17 @@ body{ font-family:var(--font); min-height:100vh; background:var(--bg); color:var
         <div class="wi-big">🎉</div>
         <h2>這一組完成！</h2>
         <p id="wi-done-msg"></p>
-        <button type="button" class="wi-btn" id="wi-done-again" style="max-width:260px;margin:0 auto;">再複習一組</button>
+        <button type="button" class="wd-revealbtn" id="wi-done-again" style="max-width:260px;margin:0 auto;">再複習一組</button>
       </div>
     </section>
-
-    <p class="wi-foot">道地英語語塊＋字面小故事＋情境例句＋對應中文俗語。左側切主題；自評誠實選，SRS 會依此安排複習。</p>
   </div>
 </div></main>
 
 <script src="assets/wordmaster/idioms_data.js"></script>
 <script>
-/* 慣用語卡引擎（版面比照單字大師）：左側欄選主題 → 主畫面直接顯示該主題卡片。
-   audio-first（按播放才發音、不自動播、連點不疊）；看答案顯示 意思＋小故事＋情境＋例句＋對應俗語 → 三級自評＋SRS。 */
+/* 慣用語卡引擎（版面＝共用 word_* 練習骨架 wd-practice.css）：左側欄選主題 → 主畫面顯示該主題卡片。
+   audio-first（按播放才發音、不自動播、連點不疊）；看答案＝翻面顯示 意思＋小故事＋情境＋例句＋對應俗語，
+   三級自評鈕（app.css .fc-rate）搬入釘底 #wd-rate-slot 全寬顯示 → SRS。與 word_dictation 同一套翻面/釘底版型。 */
 (function(){
   var $=function(id){return document.getElementById(id);};
   var esc=function(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
@@ -163,6 +140,7 @@ body{ font-family:var(--font); min-height:100vh; background:var(--bg); color:var
   var THEME_ORDER=[]; BANK.forEach(function(o){ if(THEME_ORDER.indexOf(o.theme)<0) THEME_ORDER.push(o.theme); });
 
   var SESS=null, POS=0, curTheme='all';
+  var flip=$('wd-flip'), rateSlot=$('wd-rate-slot'), revealBtn=$('wi-reveal-btn');
 
   function screen(id){ ['wi-screen-play','wi-screen-done'].forEach(function(s){ var e=$(s); if(e) e.classList.toggle('hidden', s!==id); }); }
   function themeCount(theme){ return BANK.filter(function(o){ return theme==='all'||o.theme===theme; }).length; }
@@ -197,13 +175,19 @@ body{ font-family:var(--font); min-height:100vh; background:var(--bg); color:var
     $('wi-sbnote').textContent=themeName(theme)+'：本回合 '+SESS.length+' 句（新卡＋到期複習）·全主題共 '+themeCount(theme)+' 句。';
   }
 
+  function toFront(){
+    if(flip) flip.classList.remove('flipped');
+    if(rateSlot){ rateSlot.classList.remove('show'); rateSlot.innerHTML=''; }
+    if(revealBtn) revealBtn.style.display='';
+    var rv=$('wi-reveal'); if(rv) rv.innerHTML='';
+  }
+
   function showCard(){
     var item=SESS[POS]; if(!item){ finish(); return; }
     $('wi-deckline').textContent='本回合：'+themeName(curTheme)+' · 第 '+(POS+1)+' / '+SESS.length+' 句';
     $('wi-em').textContent=item.emoji||'💬';
-    var idEl=$('wi-idiom'); idEl.textContent=item.idiom; idEl.setAttribute('lang','en');
-    var fl=$('wi-flip'); if(fl) fl.classList.remove('is-flipped');   // 回到正面（聽卡）
-    var rv=$('wi-reveal'); rv.innerHTML='';
+    $('wi-idiom').textContent=item.idiom;
+    toFront();
     // 不自動播放：由使用者按「播放」才發音。
   }
 
@@ -217,21 +201,24 @@ body{ font-family:var(--font); min-height:100vh; background:var(--bg); color:var
       +'<div class="wi-block"><span class="wi-block__lab">🕑 什麼時候用</span><div class="wi-block__txt">'+esc(item.whenZh)+'</div></div>'
       +'<div class="wi-block"><span class="wi-block__lab">💬 情境例句</span>'
         +'<div class="wi-ex__en" lang="en">'+esc(item.exampleEn)+'</div><div class="wi-ex__zh">'+esc(item.exampleZh)+'</div></div>'
-      +(item.zhSaying?('<span class="wi-saying"><span aria-hidden="true">🀄</span> 像中文的「'+esc(item.zhSaying)+'」</span>'):'')
-      +'<div class="fc-rate" id="wi-rate">'
+      +(item.zhSaying?('<span class="wi-saying"><span aria-hidden="true">🀄</span> 像中文的「'+esc(item.zhSaying)+'」</span>'):'');
+    var rp=$('wi-replay'); if(rp) rp.addEventListener('click', function(){ playAudio(item); });
+    // 三級自評（app.css .fc-rate 原 solid 配色）搬入釘底 #wd-rate-slot 全寬顯示
+    rateSlot.innerHTML='<div class="fc-rate" id="wi-rate">'
         +'<button type="button" class="fc-rate__btn again" data-grade="again" aria-label="還不熟">😅<span class="fc-rate__btn__label">還不熟</span></button>'
         +'<button type="button" class="fc-rate__btn good" data-grade="good" aria-label="快會了">🙂<span class="fc-rate__btn__label">快會了</span></button>'
         +'<button type="button" class="fc-rate__btn easy" data-grade="easy" aria-label="會了">😎<span class="fc-rate__btn__label">會了</span></button>'
       +'</div>';
-    var fl=$('wi-flip'); if(fl) fl.classList.add('is-flipped');   // 翻面：上方卡原地翻到背面顯示答案
-    // 翻面動畫結束後再把焦點移到自評鈕（背面翻面前 visibility:hidden，提前 focus 無效）
-    var focusRate=function(){ var b=rv.querySelector('.fc-rate__btn'); if(b){ try{ b.focus(); }catch(e){} } };
-    var reduce=false; try{ reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
-    if(reduce) focusRate(); else setTimeout(focusRate, 520);
-    var rp=$('wi-replay'); if(rp) rp.addEventListener('click', function(){ playAudio(item); });
-    [].slice.call(rv.querySelectorAll('.fc-rate__btn')).forEach(function(b){
+    [].slice.call(rateSlot.querySelectorAll('.fc-rate__btn')).forEach(function(b){
       b.addEventListener('click', function(){ grade(item, b.getAttribute('data-grade')); });
     });
+    if(revealBtn) revealBtn.style.display='none';
+    if(flip) flip.classList.add('flipped');
+    rateSlot.classList.add('show');
+    // 翻面動畫結束後把焦點移到自評鈕（背面翻面前 visibility:hidden，提前 focus 無效）
+    var focusRate=function(){ var b=rateSlot.querySelector('.fc-rate__btn'); if(b){ try{ b.focus(); }catch(e){} } };
+    var reduce=false; try{ reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+    if(reduce) focusRate(); else setTimeout(focusRate, 520);
   }
 
   function grade(item, g){
@@ -241,7 +228,7 @@ body{ font-family:var(--font); min-height:100vh; background:var(--bg); color:var
   }
 
   function finish(){
-    stopAudio(); screen('wi-screen-done');
+    stopAudio(); toFront(); screen('wi-screen-done');
     $('wi-done-msg').textContent='你複習了「'+themeName(curTheme)+'」'+(SESS?SESS.length:0)+' 句慣用語，下次它們會在你快忘記時再出現。';
   }
 

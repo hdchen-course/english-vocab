@@ -1,0 +1,62 @@
+/* ============================================================================
+   wd-practice.css — word_* 練習頁「共用版型」（單一事實來源，R5／R-STYLE）
+   word_dictation / word_idioms / word_master 三頁共用，確保「極度相似」：
+   · 一屏不捲動（body overflow:hidden＋psb-main 全高 flex）
+   · ① 翻面卡 .wd-flip（正面＝prompt；背面＝答案就地翻面，不往下推）
+   · 釘底動作列 .wd-actions：翻面前＝看答案鈕；翻面後＝全寬三級自評 .fc-rate
+   顏色一律吃 app.css 英語科 token；.fc-rate 配色沿用 app.css（solid again/good/easy）。
+   頁面各自的「選單/側欄/資料卡」樣式仍放各頁 inline，本檔只管共用練習骨架。
+   （抽自 word_dictation.html 2026-11-09 版型，HD 2026-11-10 核可三頁統一。）
+   ========================================================================== */
+
+/* 一屏不捲動：外殼與主欄填滿視窗高（app-bar 約 56px） */
+body.wd-noscroll{ overflow:hidden; }
+.wd-noscroll .shell{ height:calc(100dvh - 56px); }
+.wd-noscroll .pshell-grid{ height:100%; }
+.wd-noscroll .psb-main{ height:100%; min-height:0; display:flex; flex-direction:column; }
+
+/* 作答畫面填滿主欄 */
+.wd-screen{ flex:1 1 auto; min-height:0; }
+.wd-play{ display:flex; flex-direction:column; gap:12px; height:100%; min-height:0; }
+
+/* 頂列：進度（＋可選返回/口音，由各頁決定放什麼） */
+.wd-topnav{ display:flex; align-items:center; gap:12px; flex:0 0 auto; }
+.wd-step{ margin-left:auto; font-size:14px; font-weight:800; color:var(--ink-soft); }
+.wd-h{ margin:0 0 10px; font-size:15px; }
+
+/* ① 翻面卡：正面＝prompt；背面＝答案就地翻面（絕對定位疊同位，不新增捲動） */
+.wd-flip{ flex:1 1 auto; min-height:0; perspective:1400px; }
+.wd-flip-inner{ position:relative; height:100%; transition:transform .5s; transform-style:preserve-3d; }
+.wd-flip.flipped .wd-flip-inner{ transform:rotateY(180deg); }
+.wd-flip .wd-face{ -webkit-backface-visibility:hidden; backface-visibility:hidden; margin:0; }
+.wd-flip .wd-face.front{ position:relative; height:100%; display:flex; flex-direction:column; }
+.wd-flip .wd-face.back{ position:absolute; inset:0; transform:rotateY(180deg);
+  display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:10px;
+  text-align:center; overflow:auto; }
+/* 未翻面時背面不可互動、翻面後正面不可互動（避免隱藏面搶焦點/點擊） */
+.wd-flip:not(.flipped) .wd-face.back{ visibility:hidden; }
+.wd-flip.flipped .wd-face.front{ visibility:hidden; }
+@media (prefers-reduced-motion: reduce){ .wd-flip-inner{ transition:none; } }
+
+/* 聽/讀卡（正面）置中 */
+.wd-listen.gr-card{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; }
+.wd-bigplay{ display:inline-flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+  width:104px; height:104px; margin:2px auto 8px; border:none; border-radius:999px;
+  background:var(--accent); color:var(--on-accent); cursor:pointer; box-shadow:var(--shadow-lg); transition:transform .12s ease; }
+.wd-bigplay:hover{ transform:scale(1.04); } .wd-bigplay:active{ transform:scale(.96); }
+.wd-bigplay__icon{ font-size:40px; line-height:1; } .wd-bigplay__t{ font-size:14px; font-weight:800; }
+.wd-hint{ font-size:var(--fs-small); color:var(--ink-soft); font-weight:600; }
+.wd-ans-label{ font-size:14px; font-weight:800; color:var(--accent); }
+
+/* 釘底動作列：看答案（翻面前）→ 全寬三級自評 .fc-rate（翻面後搬入 #wd-rate-slot） */
+.wd-actions{ flex:0 0 auto; display:flex; gap:12px; margin-top:2px; align-items:stretch; }
+.wd-revealbtn{ flex:1; min-height:52px; padding:12px 20px; border:2px solid transparent; border-radius:14px;
+  background:var(--c-english-btn,var(--accent)); color:var(--on-accent); font-family:var(--font);
+  font-size:clamp(15px,3vw,17px); font-weight:800; cursor:pointer; box-shadow:var(--shadow-sm);
+  transition:transform .12s ease, box-shadow .2s ease; }
+.wd-revealbtn:hover{ box-shadow:var(--shadow-lg); } .wd-revealbtn:active{ transform:scale(.98); }
+#wd-rate-slot{ display:none; flex:1 1 auto; }
+#wd-rate-slot.show{ display:block; }
+/* 搬入後撐滿底列：三顆等寬橫向大鈕；按鈕本身保留 app.css 原 solid 配色 */
+#wd-rate-slot .fc-rate{ width:100%; max-width:none; margin:0; display:flex; gap:12px; }
+#wd-rate-slot .fc-rate .fc-rate__btn{ flex:1 1 0; min-height:56px; }
