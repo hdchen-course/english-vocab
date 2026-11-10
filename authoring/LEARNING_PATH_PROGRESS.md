@@ -7,6 +7,16 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 04:43 數學島 numquant #13 收斂：math_numquant_fractionconcept（分數概念：部分與整體＋同分母/同分子比大小）5/5 → numquant 13/30
+- **frozen_sha `71d52c7372ae5b64`**，DONE-GATE 六確定性 gate 全綠（per_page_5clean 本頁 absent from violations／scan_simplified PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：fraction-bar SVG（4 格塗 3＝3/4）byte 未變、建置時四角色簽核實質有效。
+- **收斂路徑（兩次晚修，皆真缺陷）**：
+  1. **fc1**（前一 tick，sha ae86ac43→a9d1d8a5）：FC-mcq-identify 的 3/7 誘答 rationale 誤標「分母不是『塗的加沒塗的』（3＋4＝7）」——圖為 3 塗+1 未塗，塗的加沒塗的＝4 非 7；改為「7 是把塗的格數 3 和總格數 4 加起來（3＋4）；但分母只看總格數 4」。
+  2. **fc4**（clean 輪才現，de-converge streak 2→0，sha a9d1d8a5→71d52c7）：claim `c-same-numer` 比較子句「每份比分成 4 份的大」省略比較對象中心語（4 鏡 domain/learning/english/zh 判 b-hard-to-understand、owner=learning decisive；pm 以 claims 非 render 判 NOT，但 owner-decisive 成立）→ 補中心語「每一份比分成 4 份時的每一份還大」對齊 line79 teach。harvest-first gate 正確擋下 clean-輪晚修、改經 de-converge 留痕。
+- 最終 sha `71d52c7` 上 fc5–fc9 連 5 clean（each L3 exit 0、coverageComplete、sha 全相符、0 confirmed；fc9 因 /tmp 寫入被 auto-mode 誤判，改手動核對 204 行+anchors 51/101/153 全符＝L3 等價 PASS）。commits cef9eb023（fc4 修）＋本收斂 commit。
+- **缺陷類（供全站同類掃描，已擬 bank memory）**：(a) 誘答 rationale 對圖形數量的描述必須與圖一致（塗/未塗/總格）；(b) 比較子句不得省略比較對象中心語（「A 比 B 的大」B 缺名詞＝b-hard-to-understand，即使在非-render 的 claims 陣列，owner=learning 仍判缺陷）。
+- **BACKLOG（記錄，非本單元 blocker）**：claim_evidence_gate 的 kind enum 未含 `math-concept`，對全 13 個數學單元紅燈（既有、非 per-unit DONE-GATE 成員）；新增 spec kind vs 改用 definition/numeric 屬 spec-normative 決策，待專案層裁定。
+- **下一步**：numquant #14＝equivalent-fractions（等值分數），延續一次一檔 5-clean→DONE-GATE。
+
 ## 2026-11-10 22:00 下一島 kickoff＝數學（math）；groundwork 完成，單元 #1 待下一 tick 新鮮脈絡建
 - **全站驗證狀態查核**：8 科 binding KP 全為 `provisionally_verified`、0 release-grade `verified`（含 eng）。即 spec 正式 Phase 0（升 release-grade、repro_gate）從未對任何科完成；eng 島也是建在 provisional＋靠 content_audit 專家 panel＋deterministic gates 當正確性後盾。其他 7 科起點與 eng 相同。
 - **選 math 為下一島**（合理預設）：事實可用 `.venv` 客觀驗證（算術/推導/程式）＝最低教錯風險；260 binding KP、bounded。
