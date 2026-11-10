@@ -1087,3 +1087,8 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - sha a792368990496243；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist[whw_* 音檔齊] / per_page_5clean[whilewhereas ABSENT] / pedagogy[no hard] / build_source_tree）。
 - 兩輪 panel 修同一缺陷類（learn-neuro owns b, minor）：example-card 重複 teach 同句卻譯法不一致。round2 修 ex1（我卻愛看書→我卻喜歡看書，sha→822c61c4），round3 掃出 ex2/ex3 漏修（湯姆安靜/妹妹健談→very…很愛講話；狗忠誠/較獨立→很忠誠/比較獨立，sha→a792368990496243），重跑五視角全零 confirmed。高階文法術語適切；while/whereas 單一正解靠選項中僅一個合法對比連接詞。
 - 收斂 321/332（96.7%）。
+
+## eng-willvsgoingto（t_mid 中階：will vs be going to）5/5 收斂 — 2026-11-10 08:36
+- sha 09ba583a2760fb1f；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist[wvg_* 音檔齊，ex3 因文字改動重產] / per_page_5clean[willvsgoingto ABSENT] / pedagogy[no hard] / build_source_tree）。
+- 本檔 defect-rich，前後修 4 真缺陷各 sha-reset 重跑：(1) teach-example 相鄰性（ex3 證據句移至 text3 前、offer 例句內嵌 text3）；(2) ex3「be sick」AmE/BrE 歧義→改「Look how pale she is—I think she's going to faint.」並重產 wvg_ex3.mp3；(3) P3 疊字詞幹誘答（help/am help→going to/am go to）；(4) round5 CONFIRMED（english owns criterion b，4/5 判 claims[] 內部 metadata 非 reader-facing 但 english lens 於其所有 criterion 判 decisive）：claim c-wg-going-evidence「a prediction based on something you can see now」與自身例句「I feel dizzy」(感覺非看見)矛盾→改「see or feel now」。重跑五視角（ELT panel）全零 confirmed。中階文法術語適切；單一正解靠當場決定(will) vs 事先計畫/現在徵兆(be going to) 語境錨定。
+- 收斂 322/332（97.0%）。

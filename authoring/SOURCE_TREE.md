@@ -3,12 +3,12 @@
 > 由 `tools/build_source_tree.py` 從 `data/units_index.json`（權威清單，
 > 同 per_page_5clean_gate 分母）× `page_converge_ledger.json` × 檔案系統產生。
 
-**總計 332 頁｜已收斂 321（96.7%）｜未收斂 11｜缺 html 0｜缺 sidecar 0**
+**總計 332 頁｜已收斂 322（97.0%）｜未收斂 10｜缺 html 0｜缺 sidecar 0**
 
 狀態符號：✅ 5-clean 收斂　▫️ 已建未收斂（n/5）　⛔ 缺檔
 
 
-## eng（321/332 收斂）
+## eng（322/332 收斂）
 
 
 ### strand=`adjadv`（15/15）
@@ -276,7 +276,7 @@
 - ✅ `english_subjwouldrather.html`
 - ✅ `english_wishsubj.html`
 
-### strand=`verb`（36/38）
+### strand=`verb`（37/38）
 
 - ✅ `english_animalcolors.html`
 - ✅ `english_commute.html`
@@ -314,7 +314,7 @@
 - ✅ `english_want.html`
 - ✅ `english_wantclothes.html`
 - ✅ `english_weathermore.html`
-- ▫️ `english_willvsgoingto.html` 0/5
+- ✅ `english_willvsgoingto.html`
 - ▫️ `english_yesterday.html` 0/5
 
 ### strand=`vocab`（68/68）
