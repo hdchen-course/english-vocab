@@ -7,14 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
-## 🔄 IN-PROGRESS（2026-11-10 10:55，reboot 前快照 v2）：english_writing_c2e_naturalness 收斂中（streak 0/5，剛修 claim defect 重凍 sha）
-- **檔**：`english_writing_c2e_naturalness.units.json`（t_adv 寫作，KP c2e-translation＋avoid-chinglish；3 claims、practice[] 3 題 MCQ、teach[] 2 題「Your turn」自評產出題；無音檔）。
-- **frozen_sha＝`6fdb7942636c0623`**（＝目前檔案 sha，已核對一致，無未 bank 漂移）。ledger `authoring/page_converge_ledger.json` 已落盤：**rounds=[]（streak 0/5）**。
-- ⚠ 更新原因：前一版 streak 2/5 的 sha `173dbef` 上，round3 事後回報 1 真 confirmed（claim c-natural-verbs「is said as」非道地，domain owns a-wrong）→ 已修為「is expressed in English as」、重凍 sha、streak 作廢重起。
-- **reboot 後續做（免改內容，直接跑）**：重讀 spec（lp-reanchor-guard）→ 對 `173dbef649c95d54` 重跑 content_audit round3→4→5（每輪 L3 `coverage_check.js` exit 0 才 bank 進 `d["pages"]["english_writing_c2e_naturalness.html"]["rounds"]`）→ 滿 5 clean → DONE-GATE 七關（scan_simplified／unit_schema_gate／question_correctness_gate／audio_exist_gate／per_page_5clean_gate --verify 目標頁 absent／pedagogy_gate／build_source_tree）→ commit+push → PROGRESS 追加 → **收斂 325/332**。
-- **本輪已修缺陷類（供後續同類掃描）**：(a) minimal teaching pair 一次只變一變項（L80 去多加的 still）；(b) meta-label 要道地（「double connector/double connecting word」→「using two connecting words together」）；(c) 術語全單元一致（connector→connecting word，claim_id/question_id 內部識別碼保留不算混用）；(d) `_note` authoring metadata 必與實際結構一致（去 stale 3-unit batch 描述、practice/teach 配置描述校正）；(e) 非道地 calque（「move words one by one in Chinese order」→「put English words in Chinese word order」）。
-- **下一批佇列（c2e 後）**：english_writing_copy_imitate、essay_consistency、expository_combining、paragraph_cohesion、sentence_punctuation、english_yesterday、english_zeroarticle → 朝 332/332。
-- 註：reboot 會殺掉背景 content_audit workflow（含 in-flight round3 wackeus8g）；那些未 bank、丟棄即可，ledger 狀態才是真相。
+## 2026-11-10 12:22 英語島收斂：eng-writing-c2e-naturalness（中譯英：翻意不翻字／選道地動詞／單一連接詞）5/5 → 收斂 325/332（97.9%）
+- **frozen_sha `4db2dcc2e54f6e9a`**，DONE-GATE 本頁全綠（G1 scan_simplified PASS／G2 unit_schema CLEAN／G3 question_correctness CLEAN／G4 audio_exist CLEAN／G5 per_page_5clean 本頁 absent from violations＝全站 325/332 通過／G6 pedagogy 本頁 absent）。t_adv 寫作（KP c2e-translation＋avoid-chinglish；3 claims、practice[] 3 題 MCQ、teach[] 2 題「Your turn」自評產出題；寫作 strand 無音檔）。
+- **收斂路徑**：rounds[1-5] 於同一 frozen_sha 連續 5 clean（each L3 `coverage_check.js` exit 0，five-view native-writing-teacher panel，每輪換分局角度，0 confirmed）。commit `ca49db09e`＋push（`5e083a432..ca49db09e`）。
+- **本檔累計已修缺陷類（跨前後 session；供後續同類掃描）**：(a) 非道地 calque（「move words one by one in Chinese order」→「put English words in Chinese word order」）；(b) claim 道地性（c-natural-verbs「is said as」→「is expressed in English as」，domain owns a-wrong）；(c) minimal teaching pair 一次只變一變項（L80 去多加的 still）；(d) meta-label 道地（「double connector / double connecting word」→「using two connecting words together」）；(e) 術語全單元一致（connector→connecting word；claim_id/question_id 內部識別碼保留不算混用）；(f) key-term 一致（teach L71「sound clear and real」→「natural」與 zh_hint「自然」對齊）；(g) 標點重複全變體掃零（`.。`／`.'。`／`。」。`）；(h) `_note` authoring metadata 與實際結構一致（去 stale 3-unit batch 描述、practice/teach 配置校正）。
+- **下一批佇列（→332/332）**：english_writing_copy_imitate、essay_consistency、expository_combining、paragraph_cohesion、sentence_punctuation、english_yesterday、english_zeroarticle（per_page_5clean 現列此 7 頁「無 5-clean 紀錄」＝待建收斂）。
+- ⚠ **另記 QUEUED gate-finding**：pedagogy_gate --verify 對 `english_reading_structure_cohesion.units.json`（reading 已標收斂頁）報多筆 [length-cue] 違規（正解帶括號補述、正解字數>1.5×次長）——deterministic gate 抓到、content_audit panel 不查之類。該頁需修 length-cue 並重凍 sha 重跑 5-clean（非本 c2e scope，排入佇列後續處理）。
 
 ## 2026-11-09 21:42 英語島收斂：eng-timeclause（時間子句 when/while/as/before/after/until）5/5 → 收斂 301/332（90.7%）
 - **sha** `cc64e5618ccb1493`，DONE-GATE 七關全綠。t_mid 會考級時間子句（未來子句用現在式不用 will／while·as 同時／before·after·until 先後與終點）。content_audit 修 3（instructional-design 為主）：
