@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-10 15:40 英語島收斂：eng-writing-paragraph-cohesion（段落結構＋連貫詞）5/5 → 329/332（99.1%）
+- **frozen_sha `f174e680f7999d93`**，DONE-GATE 本頁全綠（per_page 329/332 本頁已進通過集／scan_simplified PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy CLEAN 0 hard／audio_exist CLEAN）。t_adv 寫作單元（2 KP paragraph-structure＋cohesive-devices，4 MCQ topic/closing/however/also；寫作 strand 無音檔）。
+- **收斂路徑（含 3 輪缺陷修）**：W4-mcq-also 同類誘答 odd-one-out（三誘答全對比連接詞→換 For example/First 三異類）；W4-mcq-closing lead-in form cue（正解唯一帶前導詞→誘答加 Also 平衡）；claim c-para-three-parts「the same one main idea」疊字非道地→「the same main idea」（與 teach body 一致，harvest-override 留痕晚修）；zh 殘句「支持句都還不如」→「比支持句還瑣碎」。最終 sha rounds[1-5] 連 5 clean（each L3 exit 0，five-view writing-teacher panel 每輪換分局，0 confirmed）。commits（W4-also `…`／closing＋zh／claim 疊字）＋push。
+- **knownFP（記 ledger，同類勿重報）**：(1) teach「Your turn」範例答案與 W4-mcq-topic 正解同字串＝worked-example→retrieval 強化，panel 0/5 NOT A DEFECT；(2) W4-mcq-closing 正解最長(51 vs 44，1.16×<1.2×門檻)＝majority 1/5 NOT A DEFECT。
+- **另（HD 2026-11-10 新需求，已完成）**：`word_idioms.html`（慣用語與片語）改 dictation 式翻面卡（按看答案上方卡原地翻面揭曉）→ iPad Air 13 直式橫式一屏免捲（render 實測 scrollH==innerH、四角色簽核），push 1ddaa3fe0。可延伸 english_idioms（看圖秒懂）待 HD 確認。
+- **下一批佇列（→332/332）**：sentence_punctuation、english_yesterday、english_zeroarticle。
+
 ## 2026-11-10 14:55 英語島收斂：eng-writing-expository-combining（說明文結構＋合併句子）5/5 → 328/332（98.8%）
 - **frozen_sha `35219bd09b71c1f2`**，DONE-GATE 本頁全綠（scan_simplified PASS〔U+53F0→臺 info-only〕／unit_schema CLEAN／question_correctness CLEAN／pedagogy CLEAN 0 hard／audio_exist CLEAN／per_page_5clean 328/332 本頁已進通過集）。t_adv 寫作單元（2 KP expository＋sentence-combining，4 MCQ；寫作 strand 無音檔）。
 - **收斂路徑**：rounds[1-5] 同一 frozen_sha 連 5 clean（each L3 exit 0，five-view writing-teacher panel 每輪換分局，0 confirmed）。round1 已修 W7-mcq-expo-intro 長度/複雜度 cue（commit 97c186ab8）。can_do「兩三個短句」over-claim 經 panel 3/5（含 domain）判 NOT A DEFECT→記 knownFP 不修。commit `2632690c2`＋push。
