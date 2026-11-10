@@ -19,7 +19,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 UNITS_INDEX = os.path.join(ROOT, "data", "units_index.json")
 NAV_INDEX   = os.path.join(ROOT, "data", "nav_index.json")
 SUBJ_LABELS = os.path.join(ROOT, "data", "subject_labels.json")
-OUT         = os.path.join(ROOT, "authoring", "roadmap_layout.json")
+OUT         = os.path.join(ROOT, "data", "roadmap_layout.json")
 
 TIER_ORDER = {"t_base": 0, "t_mid": 1, "t_adv": 2, "t_sub": 3}
 STRAND_W = 260      # 每個 strand 欄位寬

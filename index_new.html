@@ -105,6 +105,9 @@
     display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
   .lp-umeta{ display:flex; gap:10px; flex-wrap:wrap; margin-top:1px; }
   .lp-umin{ font-size:11.5px; color:var(--ink-soft); font-weight:700; }
+  /* 先備連線（接線）提示：顯示「建議先學：X」，接線在卡片上可見（非強制鎖，spec §5.3）。 */
+  .lp-uprereq{ font-size:11.5px; color:var(--ink-soft); line-height:1.4; margin-top:2px;
+    padding-top:4px; border-top:1px dashed var(--card-border); }
   @media (max-width:860px){
     .lp-layout{ grid-template-columns:1fr; }
     .lp-nav{ position:static; flex-direction:row; flex-wrap:wrap; }
@@ -225,7 +228,7 @@ const CATMAP={
     ['🌏','地球科學',{prefix:'地球科學：'}],
   ],
 };
-let NAV=null, cur=null, UNITS={}, SPMAP=null;
+let NAV=null, cur=null, UNITS={}, SPMAP=null, ID2TITLE={};
 const TIER_ORDER={t_base:0,t_mid:1,t_adv:2,t_sub:3,t_enrich:4,t_beyond:5};
 const esc=(s)=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 function renderPanel(isl){
@@ -251,9 +254,13 @@ function renderPanel(isl){
     const lvl=t?`<span class="${lvlCls}">${esc(tierLabel(t))}</span>`:'';
     // hrefExtra（選用）＝練習與應用脈絡的 additive query（如 ?from=speaking&cat=social）；
     // 無參時 href 與既有 strand 牆 byte-identical（零回歸）。
+    // 先備連線（接線）：把 prerequisites 解析成單元名，顯示「建議先學：X」（spec §5.3 建議非鎖）。
+    const pres=(u.prerequisites||[]).map(id=>ID2TITLE[id]).filter(Boolean);
+    const preHint=pres.length?`<span class="lp-uprereq">🔗 建議先學：${esc(pres.join('、'))}</span>`:'';
     return `<a class="lp-unitcard" style="--a:${fill}" href="${esc(u.page)}${hrefExtra||''}">`+
       `<span class="lp-utitle">${esc(u.title_zh||u.unit_id)}</span>`+
       (can?`<span class="lp-ucan">${esc(can)}</span>`:'')+
+      preHint+
       `<span class="lp-umeta">${lvl}${mins}</span></a>`;
   };
   // 一張分區／路徑卡（num 省略＝不編號）。若該分區有已建單元 → 做成可點 <button>（點擊＝純前端
@@ -432,7 +439,7 @@ function select(i){
   renderPanel(NAV.islands[i]);
 }
 fetch('data/units_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():{units:[]}).catch(()=>({units:[]})).then(ui=>{
-  (ui.units||[]).forEach(u=>{ (UNITS[u.subject]=UNITS[u.subject]||[]).push(u); });
+  (ui.units||[]).forEach(u=>{ (UNITS[u.subject]=UNITS[u.subject]||[]).push(u); ID2TITLE[u.unit_id]=u.title_zh||u.unit_id; });
   return fetch('data/nav_index.json',{cache:'no-store'}).then(r=>r.json());
 }).then(nav=>{
   NAV=nav;

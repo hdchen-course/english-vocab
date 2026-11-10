@@ -326,6 +326,7 @@ def main():
                           "can_do": u.get("can_do", ""),
                           "situation_group": u.get("situation_group", ""),
                           "est_minutes": u.get("est_minutes"),
+                          "prerequisites": list(u.get("prerequisites", []) or []),
                           "teach_kp_ids": sorted(teach_kp),
                           "practice_kp_ids": sorted(practice_kp),
                           "covered_kp_ids": sorted(teach_kp & practice_kp)})
