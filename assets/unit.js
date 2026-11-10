@@ -112,7 +112,8 @@
     pnl.appendChild(el('span','pnl','跳到'));
     const pBack=el('a','pill-nav','<span aria-hidden="true">←</span> 單元牆'); pBack.href=hashHref; pnl.appendChild(pBack);
     let firstStep=null;
-    [['s1','① 先聽'],['s2','② 練'],['s3','③ 跟讀'],['s4','④ 自評']].forEach(([id,t],i)=>{
+    // ③ 跟讀僅在單元有 shadowing 時存在；無 shadowing（如數學單元）不列，避免連到不存在的 #s3 死連結。
+    [['s1','① 先聽'],['s2','② 練'],['s3','③ 跟讀'],['s4','④ 自評']].filter(([id])=>id!=='s3'||u.shadowing).forEach(([id,t],i)=>{
       const a=el('a','pill-nav',esc(t)); a.href='#'+id; pnl.appendChild(a); if(i===0) firstStep=a; });
     root.appendChild(pnl);
 
@@ -130,7 +131,7 @@
     const g2=el('div','sb-group'); g2.style.display='none'; side.appendChild(g2);
     // 側欄 group3「本單元流程」：①②③④（R11 不顯年段）
     const g3=el('div','sb-group'); g3.appendChild(el('div','sb-title','本單元流程'));
-    [['s1','① 先聽、先感覺'],['s2','② 練一練'],['s3','③ 跟著讀'],['s4','④ 我到哪一步了']].forEach(([id,t])=>{
+    [['s1','① 先聽、先感覺'],['s2','② 練一練'],['s3','③ 跟著讀'],['s4','④ 我到哪一步了']].filter(([id])=>id!=='s3'||u.shadowing).forEach(([id,t])=>{
       const a=el('a',null,esc(t)); a.href='#'+id; g3.appendChild(a); });
     side.appendChild(g3);
 
