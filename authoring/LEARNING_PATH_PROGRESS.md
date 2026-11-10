@@ -1203,3 +1203,11 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - eng non-beyond 覆蓋 296/300。剩 4 gap 皆需引擎圖像支援：graph-integration｜picture-narrative｜picture-id｜picture-basic。
 - 下一步：unit.js 引擎擴充（figure/inline-SVG field + schema gate + 紅隊）→ 4 圖像單元（手繪 SVG + iPad 視覺 QA 四角色簽核）→ eng 300/300。
 - 另：COCA 重產音檔 29921 檔已 rsync+commit+push 上線（audio_exist CLEAN）。
+
+---
+## 2026-11-10 19:05 — 引擎擴充：figure 欄位（圖像單元前置）
+- assets/unit.js 新增 renderFigure：teach/practice 元素可帶 figure={svg,alt,caption?}；只收 <svg 開頭的站內手繪 SVG、拒 <script>（防注入）、role=img+aria-label=alt、eye-comfort 高度上限 min(380px,44vh)。
+- assets/unit.css 新增 .gr-figure/.gr-figure__svg/.gr-figure__cap（置中、max-width 560、iPad/老花高度上限）。
+- tools/unit_schema_gate.py 新增 figure fail-closed 驗證（非 dict/缺 svg/非<svg>/含<script>/缺 alt 皆 FAIL）；全庫 335 仍 CLEAN。
+- 紅隊 tools/redteam_figure_gate.py 9/9 pass（壞案例 6 擋、好案例 3 放行）。commit 已 push。
+- 下一步：建 4 圖像單元 picture-id→picture-basic→picture-narrative→graph-integration，各手繪 SVG→5-clean→iPad 視覺 QA 四角色簽核→eng 300/300。
