@@ -1271,3 +1271,13 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - commit 流水：3497aaed3(batch6+重凍)→78e12c1d4(bank 2/5)→b5f39bc38(bank 3/5)→8fb1e3988(5/5+DONE-GATE+engine)。
 - math numquant 進度：30 KP → 1 收斂（place-value），29 待建。
 - 下一步：math.t_base.numquant.compare-order（整數大小比較與排序，含數線；先備＝place-value）→草稿→凍 sha→harvest 收斂→DONE-GATE。
+
+---
+## 2026-11-10 23:54 — math_numquant_compareorder 5/5 收斂 + DONE-GATE 全綠（數學島第 2 單元上線）
+- frozen sha 772abbe6524584e8，rounds=[1..5]（cor1–cor5）全 clean、L3 exit0、coverageComplete=true，零 confirmed defect（草稿品質佳，一次過）。
+- DONE-GATE 確定性 gate 全綠：per_page 5/5、scan_simplified、unit_schema、question_correctness、pedagogy(0 hard)、audio_exist。
+- 視覺 QA：iPad Air 13 landscape render，四角色簽核；手繪數線 SVG（0–50 刻度＋23/37 兩點同色＋右箭頭）清楚、無溢出、老花友善；③ 跟讀死連結已修（engine，math 無 shadowing 不列）。
+- engine render-only 修正（commit 10e337dfe，不綁 content_sha）：figure-only example 無 body 時不印字面「undefined」（compare-order 數線 example 抓到；同 undefined class）。紅隊雙向：compare-order 無 undefined、place-value（有 body）零回歸。
+- commit 流水：7cc7fd4b7(新單元+凍)→10e337dfe(engine body-optional)→17d2c8f4d(bank 3/5)→本次(bank 5/5)。
+- math numquant 進度：30 KP → 2 收斂（place-value、compare-order），28 待建。
+- 下一步：math.t_base.numquant.rounding-estimate 或 add-sub-vertical（擇一；rounding 概數估算較獨立、add-sub 需直式視覺）。預設先 rounding-estimate（概數/四捨五入/估算，數線可重用）。
