@@ -7,6 +7,16 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-10 13:35 英語島 pedagogy-cue 缺陷類全站清掃（由 c2e DONE-GATE 的 pedagogy_gate 連帶發現）→ pedagogy_gate HARD 全站 RC=0
+- **根因**：content_audit panel 不查「MCQ 選項表面 cue（長度/詳細度/形式/結構計數/lead-in）」，deterministic `pedagogy_gate` 才抓得到——多個「已標收斂頁」帶此類已上線缺陷（印證 [[phase1-prefreeze-gates]]：凍 sha 前必跑 pedagogy_gate）。correctness/fairness-first 逐頁修＋重跑 5-clean。
+- **本批修訖並 5/5 重收斂（commits 7e4253066 以前）**：
+  - `eng-reading-structure-cohesion`（R6 三題去括號補述＋however 正解改單概念「表示轉折」消 odd-one-out）→ sha e54db6f0，5/5。
+  - `eng-reading-functional-skim`（R3-skim-purpose 四選項全改等長(9)複合「A和B」消唯一複合/最長形式 cue）→ sha cf5bed40，5/5，push 4e005e500。
+  - `eng-reading-main-detail`（**同頁三題三種 cue**：sunflower uniform-length→正解等長(9)；morning 結構計數→三誘答改兩動作複合；main-idea length→正解縮「Maya 照顧花園的日常」(12 非最長)）→ sha ea7dce4f，5/5，push 7e4253066。
+  - `eng-futureperfect`（P5-meaning lead-in-cue：正解未以誘答共享前綴「科學家」開頭→改「科學家到 2030 年就找到解藥了」四選項統一開頭）→ sha 788a27d6，**pedagogy_gate RC=0 全站清零**，push 940650e93；重跑 5-clean 中。
+- **缺陷類通則（供全站 MCQ 掃描）**：正解不得（a）明顯最長/唯一帶括號補述（length/detail cue）；（b）唯一複合或唯一「、」列舉（form odd-one-out）；（c）stem 問 N 項時唯一具 N 個並列子句（結構計數 cue）；（d）與誘答共享 lead-in 前綴時成為唯一不同起頭（lead-in cue）。修法＝選項長度/形式/起頭平行化，解釋移 feedback；distractor 改寫須同步更新 rationale key。
+- **收斂數**：structure-cohesion/functional-skim/main-detail 已回 325/332；futureperfect 重跑中（暫 324，收斂後回 325）。
+
 ## 2026-11-10 12:45 英語島：eng-reading-structure-cohesion 修 pedagogy length/form cue → 5/5 重收斂（回穩 325/332，97.9%）
 - **緣由**：c2e DONE-GATE 跑 pedagogy_gate --verify 時發現此「已標收斂頁」帶 length-cue 違規（R6-structure/R6-cohesion-however/R6-cohesion-therefore 正解帶括號補述且明顯最長＝可不讀猜最長/最詳者）——content_audit panel 不查、deterministic gate 才抓到的 blind spot（印證 [[phase1-prefreeze-gates]]：凍 sha 前要跑 pedagogy_gate）。correctness-first 優先修掉已上線缺陷。
 - **修法**：(1) 三題正解移除括號補述（解釋本就在 feedback）；(2) round1 content_audit 再抓 R6-cohesion-however 正解「表示轉折、對比」仍 odd-one-out（唯一「、」雙概念＋最長，誘答皆單概念）→ 改單概念「表示轉折」，四選項全單概念平行（表示轉折/原因/舉例/時間先後）。answer∈options 自驗 OK、JSON 合法、pedagogy_gate 本頁清零。
