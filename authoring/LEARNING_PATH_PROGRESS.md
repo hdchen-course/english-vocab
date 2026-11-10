@@ -1307,3 +1307,12 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 視覺 QA：iPad Air 13 render 四角色；手繪直式加法 SVG（十/個欄對齊、進位 1 橘字、47+38=85）清楚、無溢出、老花友善；無 undefined/③。
 - math numquant 進度：30 KP → 4 收斂（place-value、compare-order、rounding-estimate、add-sub-vertical），26 待建。
 - 下一步：math.t_base.numquant.multiplication-table（九九表熟記與應用）或 multi-digit-mult。預設 multiplication-table（較基礎、乘法脈絡起點）。
+
+---
+## 2026-11-11 01:29 — math_numquant_multiplicationtable 5/5 收斂 + DONE-GATE 全綠（數學島第 5 單元上線）
+- frozen sha ef5eea4ad692f284，rounds=[mt2,mt3,mt4,mt5,mt6] 全 clean、L3 exit0。
+- 收斂僅抓 1 真缺陷（mt1 major）：連加題 stem「哪一個乘法算出來一樣多」把四選項都標為乘法，但 4＋5 是加法→去掉「乘法」。套用 math-unit-authoring-defect-classes memory 後，缺陷數大幅下降（add-sub 4 個→此單元 1 個，驗證教訓有效）。
+- DONE-GATE 全綠：per_page 5/5、scan_simplified、unit_schema、question_correctness、pedagogy(0 hard)、audio_exist。
+- 視覺 QA：iPad Air 13 render 四角色；陣列點圖 SVG（3 排×每排 4 綠點＝12，caption 4+4+4=3×4=12）清楚、無溢出、老花友善；無 undefined/③。
+- math numquant 進度：30 KP → 5 收斂（place-value、compare-order、rounding-estimate、add-sub-vertical、multiplication-table），25 待建。
+- 下一步：math.t_base.numquant.multi-digit-mult（兩位數以上乘法直式）或 division-remainder（除法直式餘數）。預設 multi-digit-mult（延續乘法脈絡＋直式對位）。
