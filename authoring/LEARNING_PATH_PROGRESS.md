@@ -1281,3 +1281,16 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - commit 流水：7cc7fd4b7(新單元+凍)→10e337dfe(engine body-optional)→17d2c8f4d(bank 3/5)→本次(bank 5/5)。
 - math numquant 進度：30 KP → 2 收斂（place-value、compare-order），28 待建。
 - 下一步：math.t_base.numquant.rounding-estimate 或 add-sub-vertical（擇一；rounding 概數估算較獨立、add-sub 需直式視覺）。預設先 rounding-estimate（概數/四捨五入/估算，數線可重用）。
+
+---
+## 2026-11-11 00:23 — math_numquant_roundingestimate 5/5 收斂 + DONE-GATE 全綠（數學島第 3 單元上線）
+- frozen sha b657b9f05be5fc8e（re1/re3 各修 1 真缺陷後重凍），rounds=[re4,re5,re6,re7,re8] 全 clean、L3 exit0。
+- 收斂抓 2 真缺陷（panel 5/5 一致，correctness/understandability）：
+  - re1 major：估算題選項 700 的 rationale 自相矛盾（「兩個都取小了」卻列 589→600 進位、加成 900，700 無乾淨導出路徑）→換選項 901（精確值 trap，強化估算≠精確）。
+  - re3 major（criterion b）：≥/＜ 不等式（國中符號）在國小單元用在教學前，出現於 teach/feedback/distractor（7 處）→改文字「是 5 或更大」「比 5 小」（數字規則已展開）。
+- DONE-GATE 全綠：per_page 5/5、scan_simplified、unit_schema、question_correctness、pedagogy(0 hard)、audio_exist。
+- 視覺 QA：iPad Air 13 render 四角色簽核；手繪數線 SVG（230–240、中點 235 橘虛線有標、237 綠點→240）清楚、無溢出、老花友善；無 undefined、無 ③ 死連結。
+- commit 流水：2aee780e5(新單元+凍)→2464bec05(re1 fix 901)→042b1b111(re3 fix ≥符號)→re4/re5+re6/re7 bank→本次(bank re8 5/5)。
+- math numquant 進度：30 KP → 3 收斂（place-value、compare-order、rounding-estimate），27 待建。
+- 教訓銀行：(a) 估算/排序題的 distractor 必須有「乾淨的單一錯誤路徑」能導出該錯誤選項，否則 rationale 會自相矛盾；(b) 國小數學單元禁用未教的 ≥/＜ 不等式符號，用文字描述（compare-order 的 ＞＜＝ 是該單元明確教的、不同）。
+- 下一步：math.t_base.numquant.add-sub-vertical（整數加減直式含進退位，需直式對位視覺）或 multiplication-table（九九表）。預設 add-sub-vertical（延續位值/比較的直式對位脈絡）。
