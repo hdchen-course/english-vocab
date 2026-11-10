@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-10 21:05 🎉 里程碑：英語島 AC-COV-1 = 100%（eng 300/300 binding KP 全覆蓋）＝首個「可發布完整島」
+- **gap 7/7 收斂**：english_reading_graphintegration（圖表/數據整合·non-continuous text，KP eng.t_adv.reading.graph-integration）5/5。frozen_sha `25742f1d950cd43e`，rounds[1-5] 連 5 clean（each L3 exit 0、coverageComplete、sha 全相符、0 confirmed）。手繪長條圖 SVG（Books Read This Month：Ann4/Ben9/Cara6/Dan3，bar 頂標數字＋下標名字＋0/5/10 刻度），3 MCQ：讀單一值(Cara=6)/比較最大(Ben)/整合相減(Cara−Dan=3)；皆須讀圖、無 length-cue。四角色視覺簽核（iPad landscape+portrait render、bar 高度正確、字級可讀）。
+- **build_status 權威**：eng 小計 **300 KP／覆蓋 300／缺 0／339 單元／339 頁／339 已收斂頁**。DONE-GATE 七關全綠（per_page 339/339、scan_simplified PASS、unit_schema CLEAN、question_correctness CLEAN、pedagogy 0 hard、audio_exist CLEAN）。
+- **★全站 class 缺陷根治（本 session 視覺 QA 抓到）**：34 個單元 shadowing 缺 `intonation`，engine assets/unit.js L274 無條件印 `（{l.intonation}）`→對學習者顯示字面「（undefined）」（content_audit 審 JSON 看不到、只有 render 現形）。根因修在引擎：改 `if(l.intonation)` 才渲染→一次修好全部 34 頁、不動任何 units.json（content_sha 綁 HTML+sidecar 不綁 unit.js，已 banked streak 全保留）。unit_schema_gate 新增 `_check_shadowing`（HARD 擋結構破壞、intonation 缺漏降 advisory），紅隊通過（壞案例 exit 23、好案例放行）。commit ec5daafa7。
+- **commits**：ec5daafa7（引擎＋gate）、174be1d34（graphintegration 凍結點）、本次（5/5 收斂 ledger＋PROGRESS）。
+- **backlog（post-300，非阻擋）**：33 個既有單元 shadowing 補 intonation 語調提示（advisory，豐富語調模仿練習）；其他 7 科（chi/math/sci/soc-geo/soc-hist/life/…）在新路徑模型仍 0 單元，待逐科建置。
+
 ## 2026-11-10 20:39 英語島 gap 單元 6/7 收斂：english_writing_picturenarrative（看圖寫作·四格敘事）5/5 → eng 覆蓋 299/300
 - frozen_sha `68b24fcdd1913865`，rounds[1-5] 連 5 clean（each L3 coverage_check exit 0、coverageComplete、sha 全相符、0 confirmed）。DONE-GATE 全綠：per_page 通過 338/338 違規 0、scan_simplified PASS、unit_schema CLEAN、question_correctness CLEAN、pedagogy 0 hard、audio_exist CLEAN（寫作 strand 無音檔）。figure 四角色視覺簽核於建立時通過、sha 未變仍綁定。
 - **收斂 knownFP（記 ledger，同類勿重報）**：PN-mcq-first-firstcue——round3 content_audit 報「PN-mcq-first 正解是唯一以 First 開頭的選項，學習者可靠 stem『開頭』→First 詞彙配對作答而不讀圖（與刻意加 content-mismatch 誘答的 PN-mcq-last 不對稱）」。依 content_audit 決策規則判 **NOT A DEFECT**（panel-split 4 NOT vs 1 DEFECT）：criterion-b（測驗效度/可理解性）擁有者 learning-neuroscience＋PM 皆判 NOT——『辨認開頭格→用 First』正是本 KP eng.t_adv.writing.picture-narrative 明訂教學子技能；domain/english 同判 NOT；僅 zh translator 投 DEFECT，而 zh 僅對誤譯有決定權，本案非誤譯，aggregate 過度加權 zh 票。round4/5 傳入 knownFP 後面板不再重報、連續 clean。
