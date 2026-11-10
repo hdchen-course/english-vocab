@@ -1367,3 +1367,14 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - math numquant 進度：30 KP → 10 收斂（place-value、compare-order、rounding-estimate、add-sub-vertical、multiplication-table、multi-digit-mult、division-remainder、mixed-operations-order、decimal-place-value、factors-multiples），20 待建。
 - 本 session 累計完成數學島 numquant 6→10 共 5 個單元（＋先前 1-5），全走 5-clean＋DONE-GATE 七關＋iPad 四角色視覺 QA，每步 commit。
 - 下一步：math.t_base.numquant.prime-composite（質數與合數，承接因數）或 decimal-arithmetic。預設 prime-composite（直接用因數概念定義質數/合數）。
+
+---
+## 2026-11-11 03:47 — math_numquant_primecomposite 5/5 收斂 + DONE-GATE 全綠（數學島第 11 單元上線）
+- frozen sha 0f0aa40554dba05a，rounds=[pc1,pc2,pc3b,pc4,pc6] 全 clean、L3 exit0；pc3/pc5 因 reviewer 第三 anchor 行號偏差 L3-invalid 不計入（pc3b/pc6 取代）。
+- 零內容缺陷。DONE-GATE 全綠：per_page 5/5、scan_simplified、unit_schema、question_correctness、pedagogy(0 hard)、audio_exist。
+- 視覺 QA：iPad Air 13 render（橫+直）四角色；質數/合數對比 SVG（7→{1,7}綠框質數、9→{1,3,9}橘框合數）清楚、無溢出、老花友善、house palette 一致。
+- .venv 全核：質數<20={2,3,5,7,11,13,17,19}；13 質數、9/15/21 合數、7/11/13 質數、1 既非質非合（只1個因數）、2 唯一偶質數；誘答各單一錯誤路徑。
+- 流程教訓（banked 本次）：先前把 L3 驗證與 bank 寫在同一 bash 命令、未按 L3 結果 gate，誤 bank 了 L3-invalid 的 pc3→已回退。修正：L3 與 bank 分離，L3 FAIL 絕不 bank（pc5/pc6 已照此辦理）。
+- math numquant 進度：30 KP → 11 收斂（place-value、compare-order、rounding-estimate、add-sub-vertical、multiplication-table、multi-digit-mult、division-remainder、mixed-operations-order、decimal-place-value、factors-multiples、prime-composite），19 待建。
+- 本 session 累計完成數學島 numquant 6→11 共 6 個單元。
+- 下一步：math.t_base.numquant.decimal-arithmetic（小數加減）或 gcd-lcm（最大公因數/最小公倍數）。預設 gcd-lcm（直接承接因數/倍數/質數脈絡）。
