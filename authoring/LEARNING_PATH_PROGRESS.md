@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-10 16:17 英語島收斂：eng-writing-sentence-punctuation（完整句＋大小寫標點）5/5 → 330/332（99.4%）
+- **frozen_sha `cd03e3eb91272c6d`**，DONE-GATE 本頁全綠（per_page 330/332／scan_simplified PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy CLEAN 0 hard／audio_exist CLEAN）。t_mid 寫作單元（2 KP sentence-making＋punctuation-caps，3 MCQ complete/caps/comma；寫作 strand 無音檔）。
+- **收斂路徑（含 1 輪缺陷修）**：round1 抓到 W2-mcq-comma 兩誘答 rationale 把「省略牛津逗號」當錯誤（牛津逗號在標準英文含 Cambridge 是可省的，教成硬規則＝事實錯，5/5 panel 全 DEFECT domain owns a-wrong）→ 改聚焦兩誘答的真錯（多餘逗號斷開主詞/動詞），不再把可選標點當錯。rounds[1-5] 連 5 clean（L3 exit 0，five-view writing-teacher panel 每輪換分局，0 confirmed）。
+- **缺陷類（供全站同類掃描）**：distractor rationale 不得把「可選的標點/用法慣例（牛津逗號等）」當成硬性錯誤——教成硬規則＝R1 事實錯。
+- **另（HD 2026-11-10，已完成並 push）**：(a) word_* 三頁版型統一＝共用 `assets/wd-practice.css`（翻面卡＋釘底全寬 solid 三色自評），word_idioms／word_master 重構到與 word_dictation 同骨架（push f8b63ef3c）；(b) word_dictation 兩 bug 修復＝無 IPA 資料時隱藏音標鈕（dictation.js 共用，english_dictation 同步）＋CEFR tab 首點空白 race（改點 #dct-themes 既有 loader）（push f9e21ee3f）。
+- **下一批佇列（→332/332）**：english_yesterday、english_zeroarticle。
+
 ## 2026-11-10 15:40 英語島收斂：eng-writing-paragraph-cohesion（段落結構＋連貫詞）5/5 → 329/332（99.1%）
 - **frozen_sha `f174e680f7999d93`**，DONE-GATE 本頁全綠（per_page 329/332 本頁已進通過集／scan_simplified PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy CLEAN 0 hard／audio_exist CLEAN）。t_adv 寫作單元（2 KP paragraph-structure＋cohesive-devices，4 MCQ topic/closing/however/also；寫作 strand 無音檔）。
 - **收斂路徑（含 3 輪缺陷修）**：W4-mcq-also 同類誘答 odd-one-out（三誘答全對比連接詞→換 For example/First 三異類）；W4-mcq-closing lead-in form cue（正解唯一帶前導詞→誘答加 Also 平衡）；claim c-para-three-parts「the same one main idea」疊字非道地→「the same main idea」（與 teach body 一致，harvest-override 留痕晚修）；zh 殘句「支持句都還不如」→「比支持句還瑣碎」。最終 sha rounds[1-5] 連 5 clean（each L3 exit 0，five-view writing-teacher panel 每輪換分局，0 confirmed）。commits（W4-also `…`／closing＋zh／claim 疊字）＋push。
