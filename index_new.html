@@ -284,7 +284,7 @@ function renderPanel(isl){
     const body=ordered.map(t=>
       `<div class="lp-catsec"><h3 class="lp-cath">${esc(tierLabel(t))}`+
       `<span class="scount">（${groups.get(t).length} 個單元）</span></h3>`+
-      `<div class="lp-strandgrid lp-unitwall">${groups.get(t).map(unitCard).join('')}</div></div>`).join('');
+      `<div class="lp-strandgrid lp-unitwall">${groups.get(t).map(u=>unitCard(u)).join('')}</div></div>`).join('');
     panel.innerHTML=back+title+body;
     const bb=panel.querySelector('.lp-back');
     bb.addEventListener('click',()=>renderPanel(isl));
