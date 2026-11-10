@@ -7,6 +7,11 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-10 14:55 英語島收斂：eng-writing-expository-combining（說明文結構＋合併句子）5/5 → 328/332（98.8%）
+- **frozen_sha `35219bd09b71c1f2`**，DONE-GATE 本頁全綠（scan_simplified PASS〔U+53F0→臺 info-only〕／unit_schema CLEAN／question_correctness CLEAN／pedagogy CLEAN 0 hard／audio_exist CLEAN／per_page_5clean 328/332 本頁已進通過集）。t_adv 寫作單元（2 KP expository＋sentence-combining，4 MCQ；寫作 strand 無音檔）。
+- **收斂路徑**：rounds[1-5] 同一 frozen_sha 連 5 clean（each L3 exit 0，five-view writing-teacher panel 每輪換分局，0 confirmed）。round1 已修 W7-mcq-expo-intro 長度/複雜度 cue（commit 97c186ab8）。can_do「兩三個短句」over-claim 經 panel 3/5（含 domain）判 NOT A DEFECT→記 knownFP 不修。commit `2632690c2`＋push。
+- **下一批佇列（→332/332）**：paragraph_cohesion（進行中）、sentence_punctuation、english_yesterday、english_zeroarticle。
+
 ## 2026-11-10 13:35 英語島 pedagogy-cue 缺陷類全站清掃（由 c2e DONE-GATE 的 pedagogy_gate 連帶發現）→ pedagogy_gate HARD 全站 RC=0
 - **根因**：content_audit panel 不查「MCQ 選項表面 cue（長度/詳細度/形式/結構計數/lead-in）」，deterministic `pedagogy_gate` 才抓得到——多個「已標收斂頁」帶此類已上線缺陷（印證 [[phase1-prefreeze-gates]]：凍 sha 前必跑 pedagogy_gate）。correctness/fairness-first 逐頁修＋重跑 5-clean。
 - **本批修訖並 5/5 重收斂（commits 7e4253066 以前）**：
