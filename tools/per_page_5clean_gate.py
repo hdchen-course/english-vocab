@@ -53,11 +53,38 @@ UNITS_INDEX_REL = os.path.join("data", "units_index.json")
 REQUIRED_CLEAN = 5
 
 
+# 純接線/排程 metadata 欄位（§5.3 DAG 建議、§6.2.2 排程）——非「教學內容」，content_audit
+# 專家 panel 不審查其教學正確性（DAG 正確性由結構 gate 如 ia_consistency/nav 把關）。故這些欄位
+# 的變動**不應**作廢「教學內容已 5-clean」的證據（2026-11-10 HD 裁示 B：純標順序不該觸發重審）。
+# content_sha 將 sidecar 正規化、剝除這些欄位後才雜湊 → 改 prerequisites/est_minutes/stage/
+# reuse_pages 不改指紋、streak 保留；改任何教學欄位（teach/practice/claims/shadowing/selfeval/
+# can_do/title_zh…）仍改指紋、streak 作廢（red-team 證之）。
+_WIRING_FIELDS = ("prerequisites", "est_minutes", "stage", "reuse_pages")
+
+
+def _canonical_teaching_bytes(sidecar_bytes):
+    """把 sidecar JSON 正規化成「剝除純接線/排程欄位」的確定性 bytes（供指紋）。
+    解析失敗→退回原始 bytes（fail-safe 保守：任何變動都作廢，不放寬）。"""
+    try:
+        obj = json.loads(sidecar_bytes.decode("utf-8"))
+    except Exception:
+        return sidecar_bytes  # 非合法 JSON → 保守用原始 bytes
+    units = obj.get("units") if isinstance(obj, dict) else None
+    if isinstance(units, list):
+        for u in units:
+            if isinstance(u, dict):
+                for k in _WIRING_FIELDS:
+                    u.pop(k, None)
+    return json.dumps(obj, ensure_ascii=False, sort_keys=True,
+                      separators=(",", ":")).encode("utf-8")
+
+
 def content_sha(path):
-    """頁的內容指紋＝sha256(頁 HTML bytes ＋ 其 data-units sidecar bytes)[:16]。
+    """頁的教學內容指紋＝sha256(頁 HTML bytes ＋ 其 data-units sidecar 的「教學正規化」bytes)[:16]。
     為何綁 sidecar：單元教學內容在 `*.units.json`（由 unit.js 讀 <body data-units> 執行期注入），
-    HTML 殼幾乎不含內容。若只綁 HTML sha，改 sidecar 內容不會使 streak 作廢＝fail-open
-    （審計過的是內容、streak 卻對內容變動無感）。故改頁或改其 sidecar 任一，指紋都須改變。
+    HTML 殼幾乎不含內容。若只綁 HTML sha，改 sidecar 教學內容不會使 streak 作廢＝fail-open。
+    為何「教學正規化」：剝除純接線/排程欄位（見 _WIRING_FIELDS）——這些非教學內容、content_audit
+    不審，其變動不該作廢教學 5-clean 證據（HD 裁示 B）。改任何教學欄位仍改指紋、streak 作廢。
     sidecar 由頁的 data-units 屬性解析（權威，非僅檔名慣例）；無 data-units/sidecar 不存在→僅綁 HTML。"""
     with open(path, "rb") as f:
         html_bytes = f.read()
@@ -71,10 +98,11 @@ def content_sha(path):
                     sidecar_bytes = sf.read()
     except Exception:
         sidecar_bytes = b""   # 解析失敗→退回僅綁 HTML（不崩）
+    teaching_bytes = _canonical_teaching_bytes(sidecar_bytes) if sidecar_bytes else b""
     h = hashlib.sha256()
     h.update(html_bytes)
     h.update(b"\x00")          # 分隔符，避免 bytes 串接歧義
-    h.update(sidecar_bytes)
+    h.update(teaching_bytes)
     return h.hexdigest()[:16]
 
 
