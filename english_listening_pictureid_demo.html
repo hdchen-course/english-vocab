@@ -14,21 +14,28 @@
 .dm-cando{background:var(--card);border:1px solid var(--card-border);border-left:4px solid var(--c-english);border-radius:14px;padding:10px 14px;margin-bottom:10px;flex:0 0 auto}
 .dm-cando .lab{font-size:11px;font-weight:800;letter-spacing:.05em;color:var(--c-english-ink)}
 .dm-cando .txt{font-size:14px;line-height:1.5;margin-top:2px}
-.dm-tabs{display:flex;gap:8px;flex:0 0 auto}
+/* tab 用站上原本的 pill 按鈕樣式（對齊 .dct-pill：圓角膠囊、card 底、英語島綠為選中）。 */
+.dm-tabs{display:flex;gap:8px;flex:0 0 auto;margin-bottom:10px}
 .dm-tab{flex:1 1 0;font:inherit;cursor:pointer;border:1px solid var(--card-border);background:var(--card);color:var(--ink);
-  border-radius:12px 12px 0 0;padding:10px 6px;font-size:15px;font-weight:800;min-height:48px}
-.dm-tab.on{background:var(--c-english);color:var(--u-on-english-solid,#fff);border-color:var(--c-english)}
+  border-radius:999px;padding:10px 14px;font-size:15px;font-weight:700;min-height:44px}
+.dm-tab.on{background:var(--c-english-btn,var(--c-english));color:var(--on-accent,#fff);border-color:transparent;font-weight:800}
 .dm-tab:focus-visible{outline:3px solid var(--c-focus);outline-offset:2px}
+/* stage：垂直置中卡片，自動填滿空白（不擠在上方）。內容過高時才捲動。 */
 .dm-stage{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
-  border:1px solid var(--card-border);border-top:none;border-radius:0 0 14px 14px;background:var(--bg);padding:16px}
-.dm-count{font-size:12px;color:var(--ink-soft);text-align:right;margin-bottom:6px}
+  display:flex;flex-direction:column;justify-content:center;
+  border:1px solid var(--card-border);border-radius:14px;background:var(--bg);padding:16px}
+.dm-count{font-size:12px;color:var(--ink-soft);text-align:right;margin-bottom:6px;flex:0 0 auto}
 .dm-ratebar{flex:0 0 auto;padding:12px 0 14px}
 .dm-ratebar .fc-rate{width:100%;max-width:none;margin:0;display:flex;gap:12px}
 .dm-ratebar .fc-rate__btn{flex:1 1 0}
-.dm-navrow{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px}
+.dm-navrow{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px;flex:0 0 auto}
 .dm-navbtn{font:inherit;cursor:pointer;border:1px solid var(--card-border);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 16px;font-size:14px;font-weight:700;min-height:44px}
 .dm-navbtn[disabled]{opacity:.4;cursor:default}
 .dm-demobadge{position:fixed;left:10px;bottom:10px;background:var(--c-streak,#c2185b);color:#fff;font-size:11px;font-weight:800;border-radius:999px;padding:4px 10px;z-index:50}
+/* demo：圖示縮小，讓卡片＋翻頁＋釘底三鍵免捲動（不出現 scroll bar）；只影響 demo。 */
+.dm-stage .gr-figure{margin-bottom:6px}
+.dm-stage .gr-figure__svg svg{max-height:min(190px,24vh);max-width:240px;padding:8px}
+.dm-stage .gr-card{padding:12px 14px}
 </style>
 </head>
 <body data-game-hud="off">
