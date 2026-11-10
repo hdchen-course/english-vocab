@@ -1211,3 +1211,13 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - tools/unit_schema_gate.py 新增 figure fail-closed 驗證（非 dict/缺 svg/非<svg>/含<script>/缺 alt 皆 FAIL）；全庫 335 仍 CLEAN。
 - 紅隊 tools/redteam_figure_gate.py 9/9 pass（壞案例 6 擋、好案例 3 放行）。commit 已 push。
 - 下一步：建 4 圖像單元 picture-id→picture-basic→picture-narrative→graph-integration，各手繪 SVG→5-clean→iPad 視覺 QA 四角色簽核→eng 300/300。
+
+---
+## 2026-11-10 19:49 — english_listening_pictureid 5/5 收斂（gap 4/7→完成，首個圖像單元）
+- frozen sha 15cbe5498e4cd012，rounds=[1,2,3,4,5] 全 clean、L3 exit0。
+- 收斂抓 1 真 defect：shadowing note「This is a ___」模板與「the sun」冠詞矛盾→列三整句(the sun/a fish/a cup)＋說明。
+- 手繪 inline SVG：apple(teach)/sun/fish/cup(MCQ)，figure 引擎首度實用，iPad render 四角色檢視通過（美術/空間/眼科/動畫[靜態]）。
+- DONE-GATE 全綠：per_page 336/336、scan_simplified、unit_schema(figure 驗證)、question_correctness、pedagogy 0 hard、audio_exist。
+- eng non-beyond 覆蓋 297/300。剩 3 gap：picture-basic(看圖造句)／picture-narrative(四格看圖敘事)／graph-integration(長條圖整合)。
+- UI：看圖辨義卡片模式 demo（english_listening_pictureid_demo.html）已依 HD 回饋定版（pill tab/圖小/垂直置中/翻頁/閃卡三鍵）。
+- 另修全站單元牆 href 尾接數字 bug（.map(unitCard) 傳 index）commit c297ce129。
