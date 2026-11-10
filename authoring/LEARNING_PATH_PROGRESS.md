@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 06:04 數學島 numquant #15 收斂：math_numquant_fractionarithmetic（分數加減：同分母直接加減、異分母通分、結果約最簡）5/5 → numquant 15/30（過半 🎉）
+- **frozen_sha `d5c015a7b0a80ca1`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：面積圖（6 格塗 4＝4/6，分母不變分子相加）iPad 橫直四角色簽核於建立時過、SVG byte 未變仍有效。claim kind=definition（claim_evidence CLEAN）。prereq＝equivalent-fractions＋gcd-lcm。
+- **4 MCQ**：同分母加(2/7+3/7=5/7)／同分母減並約到最簡(7/10-3/10→2/5)／異分母加(1/2+1/3=5/6)／異分母加法第一步概念(先通分)。.venv(Fraction,lcm,gcd) 全核。scope 聚焦加減（乘除另置後續，避免一課過載；content_audit panel 認可 out-of-scope）。
+- **收斂路徑（fa1 草稿一次 clean；fa2 clean 輪抓到 recall-not-transfer）**：fa2（owner=learning DEFECT、6 鏡 NOT panel-split）發現 teach block 3 用了與 practice FA-mcq-samesub(7/10-3/10→2/5)、FA-mcq-unlikeadd(1/2+1/3=5/6) **完全相同的數字與答案**→這兩題變成抄可見範例。依 pedagogy-first＋英語島 banked「recall-not-transfer」類修：teach 改用 1/2+1/5=7/10、5/6-1/6=4/6→2/3（.venv 核、不撞 practice）。de-converge 1→0、重凍 d5c015a7。最終 sha fa3–fa7 連 5 clean（coverage_check L3 皆 exit 0）。commits：9f42a7df7(草稿)／6614e5227(fa2)／本收斂。
+- **缺陷類（補 memory）**：teach 的 worked-example 不應與 practice item 用完全相同數字＋印出答案，否則該練習測「抄可見範例」非 retrieval/transfer（同英語島 recall-not-transfer；owner=learning b-hard，panel 可能 split 但 house 標準是修）。
+- **L3 工具用法**：reviewer 回報的 anchor 行號常有 ±1 偏差（如 risk_class/status 相鄰行），**以真正 `coverage_check.js` 的容差比對為準**，別用嚴格 sed 行比對誤判 FAIL。
+- **下一步**：numquant #16＝fraction-decimal-convert（分數⇄小數互換）。
+
 ## 2026-11-11 05:30 數學島 numquant #14 收斂：math_numquant_equivalentfractions（等值分數：同乘/同除不變＋約分＋最簡分數）5/5 → numquant 14/30
 - **frozen_sha `9d8f43174557516b`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent from violations／scan_simplified PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：面積圖（上條 2 格塗 1＝1/2、下條 4 格塗 2＝2/4、塗色精確對齊 130px）iPad 橫直四角色簽核於建立時過、SVG byte 未變仍有效。claim kind 用 `definition`（非 math-concept，避開 claim_evidence enum backlog、本頁 claim_evidence CLEAN）。
 - **4 MCQ**：填等值分子(1/2=?/6→3)／辨與 2/3 等值(4/6)／約分最簡(8/12→2/3)／辨非最簡(6/8)。.venv(Fraction,gcd) 全核。prereq＝fraction-concept＋gcd-lcm。
