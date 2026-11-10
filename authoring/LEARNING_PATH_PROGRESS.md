@@ -1294,3 +1294,16 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - math numquant 進度：30 KP → 3 收斂（place-value、compare-order、rounding-estimate），27 待建。
 - 教訓銀行：(a) 估算/排序題的 distractor 必須有「乾淨的單一錯誤路徑」能導出該錯誤選項，否則 rationale 會自相矛盾；(b) 國小數學單元禁用未教的 ≥/＜ 不等式符號，用文字描述（compare-order 的 ＞＜＝ 是該單元明確教的、不同）。
 - 下一步：math.t_base.numquant.add-sub-vertical（整數加減直式含進退位，需直式對位視覺）或 multiplication-table（九九表）。預設 add-sub-vertical（延續位值/比較的直式對位脈絡）。
+
+---
+## 2026-11-11 01:08 — math_numquant_addsubvertical 5/5 收斂 + DONE-GATE 全綠（數學島第 4 單元上線）
+- frozen sha 7af75b8399dcfd57→436377568dd1b312（最終），rounds=[asv10,asv11,asv12,asv13,asv14] 全 clean、L3 exit0。
+- 收斂抓 4 真缺陷（panel 嚴格把關國小用詞與教學完整性）：
+  - asv1 major：減法選項 43 無乾淨單一錯誤路徑→換 77（借位後忘減十位減數）。
+  - asv6 minor：標題「退位」vs body「借位」未連結→減法 teach 加橋接「也叫退位」（clean 階段發現，走 harvest override 留痕）。
+  - asv7+asv8 共識 major/minor：「一個位」與位名「個位」字面碰撞→「每一個數位」。
+  - asv9 major：加法驗算 tested-before-taught（只在不渲染的 claim）→加法 teach 補加法驗算示範。
+- DONE-GATE 全綠：per_page 5/5、scan_simplified、unit_schema、question_correctness、pedagogy(0 hard)、audio_exist。
+- 視覺 QA：iPad Air 13 render 四角色；手繪直式加法 SVG（十/個欄對齊、進位 1 橘字、47+38=85）清楚、無溢出、老花友善；無 undefined/③。
+- math numquant 進度：30 KP → 4 收斂（place-value、compare-order、rounding-estimate、add-sub-vertical），26 待建。
+- 下一步：math.t_base.numquant.multiplication-table（九九表熟記與應用）或 multi-digit-mult。預設 multiplication-table（較基礎、乘法脈絡起點）。
