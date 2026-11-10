@@ -1256,3 +1256,18 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 手繪場景 SVG：球在箱上/桌下/箱內（in-box 重畫為開口 U 箱釐清），測主詞+be+介系詞(on/in/under)描述；iPad render 四角色檢視通過。
 - DONE-GATE 全綠：per_page 337/337、scan_simplified、unit_schema(figure)、question_correctness、pedagogy 0 hard、audio_exist。
 - eng non-beyond 覆蓋 298/300。剩 2 gap：picture-narrative(四格看圖敘事)／graph-integration(長條圖整合)。
+
+---
+## 2026-11-10 23:33 — math_numquant_placevalue 5/5 收斂 + DONE-GATE 全綠（數學島首單元上線）
+- frozen sha 87ed887aec2164d4，rounds=[1..5]（b6r1–b6r5）全 clean、L3 exit0、coverageComplete=true。
+- batch6 修 6 真缺陷（correctness-first 兒童視角，兩輪 harvest）：
+  - blocker×2+major×1：「沒有填 0」否定歧義（兒童讀成「不必填 0」＝與答案相反）→全部改「沒有數量，用 0 佔位」（PV-mcq-compose 5280 rationale／feedback、PV-mcq-readwrite feedback）。
+  - minor×2：2030 rationale「兩千」→「二千」（單元數字讀法用二不用兩）；「第 5 位」未教序數→改「萬位（從右邊數第 5 個位子）」。
+  - minor×1：PV-mcq-compose stem「8 個一」teach 未橋接個位↔一→teach 補「個位有幾個一就是個位上的數字」。
+- DONE-GATE 確定性 gate 全綠：per_page 5/5、scan_simplified、unit_schema、question_correctness、pedagogy(0 hard)、audio_exist。
+- 視覺 QA：iPad Air 13 landscape(1366×1024)+portrait(1024×1366) render，四角色（art-director/spatial-aesthetics/eye-comfort/animator）逐張簽核；位值表手繪 SVG（千百十個欄＋數字 3456＋位值 3000/400/50/6）清楚、無橫向溢出、老花友善。
+- engine 修正（commit 8fb1e3988，不綁 content_sha 不作廢 streak）：unit.js 側欄/pill 流程列「③ 跟讀」改為僅 u.shadowing 時列出——math 無 shadowing，舊版無條件列出會連到不存在的 #s3 死連結（render-only 缺陷，JSON content_audit 看不到；同 shadowing undefined class）。紅隊：math 無③、eng(absolutewith) 仍有③，雙向零回歸。
+- ★不 bump HTML ?v= 版本字串（會改 339 eng 頁 HTML bytes、作廢全部 5-clean streak）。
+- commit 流水：3497aaed3(batch6+重凍)→78e12c1d4(bank 2/5)→b5f39bc38(bank 3/5)→8fb1e3988(5/5+DONE-GATE+engine)。
+- math numquant 進度：30 KP → 1 收斂（place-value），29 待建。
+- 下一步：math.t_base.numquant.compare-order（整數大小比較與排序，含數線；先備＝place-value）→草稿→凍 sha→harvest 收斂→DONE-GATE。
