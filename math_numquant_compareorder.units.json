@@ -1,0 +1,204 @@
+{
+ "_note": "數學島 數與量（numquant）strand 第 2 個單元。涵蓋知識點 math.t_base.numquant.compare-order（整數大小比較與排序，含數線定位；國小範圍、無考試標籤）。tier=t_base（內部標記，學習者端不顯示年段 R11）。全繁體零簡體零 PRC 詞。數學科中文授課（非英語島，R14/R15 不適用）。prerequisites=place-value-read-write（要先會位名位值才能逐位比較）。內容以客觀可驗證子技能 MCQ 承載：practice 4 題 type:mcq、validation_method:expert，測『用 > < = 記錄兩數比較』『位數不同時位數多者較大』『數線上愈右愈大』『由小到大排序』；每題唯一正解、綁 answer_evidence 指向本單元 claims、每錯項附 distractor_rationales；數值選項長度相近、正解非唯一最長/最短。所有數值事實已於 .venv 逐一核對（4512<4521；1002>985；sorted([320,302,299])=[299,302,320]；37>23）。teach 帶一張站內手繪數線 inline SVG（0–50 刻度、23 與 37 兩點，同色避免色義歧義），figure.svg 以 <svg 開頭、無 <script>、引擎 renderFigure 繪製、unit_schema_gate figure 驗證把關。無音檔（數學比較排序、翻答案自評）。",
+ "page": "math_numquant_compareorder.html",
+ "units": [
+  {
+   "unit_id": "math.t_base.numquant.compare-order",
+   "title_zh": "比大小與排序（含數線）",
+   "can_do": "我能比較兩個整數誰大誰小，用 ＞、＜、＝ 記下來；也能把一組數由小到大排好，並說出數線上愈右邊的數愈大。",
+   "situation_group": "數與量：比較與排序",
+   "subject": "math",
+   "strand": "numquant",
+   "est_minutes": 9,
+   "knowledge_point_ids": [
+    "math.t_base.numquant.compare-order"
+   ],
+   "prerequisites": [
+    "math.t_base.numquant.place-value-read-write"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-compare",
+     "text": "比較兩個整數誰大：先看位數（數字個數，最高位不是 0），位數多的數比較大；位數一樣時，從最高位（最左邊）開始一位一位比，碰到第一個不一樣的位，那一位數字大的數就比較大。可以用符號記錄：a ＞ b 表示 a 比 b 大，a ＜ b 表示 a 比 b 小，a ＝ b 表示一樣大。",
+     "kind": "math-concept",
+     "source_refs": [
+      "整數的大小比較（國小數學）"
+     ],
+     "verification_ref": "位數多者較大；同位數逐位比；> < = 定義；.venv 核 4512<4521（十位 1<2）、1002>985（四位>三位）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-numberline",
+     "text": "把整數放到數線上，愈往右邊的數愈大、愈往左邊的數愈小；每個整數在數線上對應一個點，位置由它的大小決定。所以兩個數放上同一條數線，站在右邊的那個比較大。",
+     "kind": "math-concept",
+     "source_refs": [
+      "數線與整數的對應（國小數學）"
+     ],
+     "verification_ref": "數線右大左小、整數↔點對應；.venv 核 37>23（37 的點在 23 右邊）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-sort",
+     "text": "排序就是把一組數照大小排好：由小到大排叫「遞增」，由大到小排叫「遞減」。排的時候反覆用比大小的規則，決定每個數的先後；排好後，相鄰兩個數都滿足同一個方向的大小關係。",
+     "kind": "math-concept",
+     "source_refs": [
+      "數的排序（國小數學）"
+     ],
+     "verification_ref": "遞增/遞減定義；逐次比較定序；.venv 核 sorted([320,302,299])=[299,302,320]",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_base.numquant.compare-order"
+     ],
+     "body": "比兩個整數誰大，先看「位數」——也就是數字有幾個（最高位不是 0）。位數多的數比較大：1002 有四位，985 只有三位，所以 1002 ＞ 985，就算 985 的開頭 9 看起來很大也一樣。位數一樣時，從最左邊的位開始一位一位比，碰到第一個不一樣的位，那一位數字大的數就比較大。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_base.numquant.compare-order"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 120' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><line x1='40' y1='72' x2='346' y2='72' stroke='#33475b' stroke-width='2'/><polygon points='352,72 342,67 342,77' fill='#33475b'/><g stroke='#8a97a6' stroke-width='1.5'><line x1='40' y1='66' x2='40' y2='78'/><line x1='100' y1='66' x2='100' y2='78'/><line x1='160' y1='66' x2='160' y2='78'/><line x1='220' y1='66' x2='220' y2='78'/><line x1='280' y1='66' x2='280' y2='78'/><line x1='340' y1='66' x2='340' y2='78'/></g><g font-size='12' fill='#8a7a68' text-anchor='middle'><text x='40' y='94'>0</text><text x='100' y='94'>10</text><text x='160' y='94'>20</text><text x='220' y='94'>30</text><text x='280' y='94'>40</text><text x='340' y='94'>50</text></g><g fill='#2f6f54'><circle cx='178' cy='72' r='5'/><circle cx='262' cy='72' r='5'/></g><g font-size='15' font-weight='800' fill='#2f6f54' text-anchor='middle'><text x='178' y='52'>23</text><text x='262' y='52'>37</text></g></g></svg>",
+      "alt": "一條 0 到 50 的數線，23 的點在左邊、37 的點在右邊；37 在右邊，所以 37 比較大。",
+      "caption": "數線上愈右邊的數愈大：37 在 23 的右邊，所以 37 ＞ 23"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_base.numquant.compare-order"
+     ],
+     "body": "把比較結果寫下來可以用符號：a ＞ b 讀作「a 大於 b」、a ＜ b 讀作「a 小於 b」、a ＝ b 讀作「a 等於 b」。開口大的那邊對著大的數。把一組數由小到大排好叫「遞增」，由大到小叫「遞減」；排好後從頭到尾，相鄰兩個數都朝同一個方向（例如遞增就是每個都比前一個大）。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "CO-mcq-symbol",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "4512 和 4521 比，哪一個式子是對的？",
+     "answer": "4512 ＜ 4521",
+     "kp_ids": [
+      "math.t_base.numquant.compare-order"
+     ],
+     "required_kp_ids": [
+      "math.t_base.numquant.compare-order"
+     ],
+     "options": [
+      "4512 ＜ 4521",
+      "4512 ＞ 4521",
+      "4512 ＝ 4521",
+      "4521 ＜ 4512"
+     ],
+     "distractor_rationales": {
+      "4512 ＞ 4521": "方向相反；兩數千位 4、百位 5 都一樣，十位 1 ＜ 2，所以 4512 比較小。",
+      "4512 ＝ 4521": "兩數不一樣大；十位一個是 1、一個是 2。",
+      "4521 ＜ 4512": "方向相反；4521 的十位 2 比 4512 的十位 1 大，所以 4521 比較大。"
+     },
+     "answer_evidence": [
+      "c-compare"
+     ],
+     "feedback": "千位 4、百位 5 一樣，比到十位 1 ＜ 2，所以 4512 ＜ 4521。"
+    },
+    {
+     "question_id": "CO-mcq-digitcount",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "985 和 1002，哪一個比較大？",
+     "answer": "1002",
+     "kp_ids": [
+      "math.t_base.numquant.compare-order"
+     ],
+     "required_kp_ids": [
+      "math.t_base.numquant.compare-order"
+     ],
+     "options": [
+      "1002",
+      "985",
+      "一樣大",
+      "沒辦法比"
+     ],
+     "distractor_rationales": {
+      "985": "985 的開頭 9 看起來大，但它只有三位數；1002 有四位數，位數多的比較大。",
+      "一樣大": "兩數不一樣大；一個三位、一個四位。",
+      "沒辦法比": "整數都能比大小；先比位數就知道 1002 比較大。"
+     },
+     "answer_evidence": [
+      "c-compare"
+     ],
+     "feedback": "1002 有四位數、985 只有三位數，位數多的比較大，所以 1002 ＞ 985。"
+    },
+    {
+     "question_id": "CO-mcq-numberline",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "把 23 和 37 放到同一條數線上，哪一句是對的？",
+     "answer": "37 在 23 的右邊，37 比較大",
+     "kp_ids": [
+      "math.t_base.numquant.compare-order"
+     ],
+     "required_kp_ids": [
+      "math.t_base.numquant.compare-order"
+     ],
+     "options": [
+      "37 在 23 的右邊，37 比較大",
+      "37 在 23 的左邊，37 比較小",
+      "兩個點會在同一個位置",
+      "愈右邊的數愈小"
+     ],
+     "distractor_rationales": {
+      "37 在 23 的左邊，37 比較小": "位置相反；37 比 23 大，所以 37 的點在右邊。",
+      "兩個點會在同一個位置": "只有一樣大的數才會同一個位置；23 和 37 不一樣大。",
+      "愈右邊的數愈小": "數線相反；數線上愈右邊的數愈大。"
+     },
+     "answer_evidence": [
+      "c-numberline"
+     ],
+     "feedback": "數線上愈右邊的數愈大，37 ＞ 23，所以 37 的點在 23 的右邊。"
+    },
+    {
+     "question_id": "CO-mcq-sort",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "把 320、302、299 由小到大排好，正確的順序是？",
+     "answer": "299、302、320",
+     "kp_ids": [
+      "math.t_base.numquant.compare-order"
+     ],
+     "required_kp_ids": [
+      "math.t_base.numquant.compare-order"
+     ],
+     "options": [
+      "299、302、320",
+      "299、320、302",
+      "302、299、320",
+      "320、302、299"
+     ],
+     "distractor_rationales": {
+      "299、320、302": "320 和 302 排反了：兩數百位都是 3，比十位，302 的十位 0 比 320 的十位 2 小，所以 302 比較小、要排在 320 前面。",
+      "302、299、320": "299 最小要排最前面；299 只有兩百多，比 302 小。",
+      "320、302、299": "這是由大到小（遞減），題目要由小到大。"
+     },
+     "answer_evidence": [
+      "c-sort"
+     ],
+     "feedback": "299 最小（兩百多），302 和 320 都是三百多、比到十位 0 ＜ 2，所以由小到大是 299、302、320。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（比大小與排序，不自動批改）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
