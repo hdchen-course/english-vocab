@@ -1378,3 +1378,13 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - math numquant 進度：30 KP → 11 收斂（place-value、compare-order、rounding-estimate、add-sub-vertical、multiplication-table、multi-digit-mult、division-remainder、mixed-operations-order、decimal-place-value、factors-multiples、prime-composite），19 待建。
 - 本 session 累計完成數學島 numquant 6→11 共 6 個單元。
 - 下一步：math.t_base.numquant.decimal-arithmetic（小數加減）或 gcd-lcm（最大公因數/最小公倍數）。預設 gcd-lcm（直接承接因數/倍數/質數脈絡）。
+
+---
+## 2026-11-11 04:01 — math_numquant_gcdlcm 5/5 收斂 + DONE-GATE 全綠（數學島第 12 單元上線）
+- frozen sha a3af270ba2cff2da，rounds=[gl1,gl2,gl3,gl4,gl5] 全 clean、L3 exit0（L3 皆在 bank 前 gate，無誤 bank）。
+- 零內容缺陷。DONE-GATE 全綠：per_page 5/5、scan_simplified、unit_schema、question_correctness、pedagogy(0 hard)、audio_exist。
+- 視覺 QA：iPad Air 13 render（橫+直）四角色；GCD 對比 SVG（12&18 公因數 1,2,3,6，綠框圈最大 6）清楚、無溢出、老花友善、house palette 一致。
+- .venv 全核：gcd(12,18)=6（公因數 1,2,3,6）、lcm(4,6)=12、gcd(24,36)=12、lcm(4,6)=12；誘答各單一錯誤路徑（公因數非最大/GCD-LCM 混淆/公倍數非最小/兩數相加）。
+- math numquant 進度：30 KP → 12 收斂（place-value、compare-order、rounding-estimate、add-sub-vertical、multiplication-table、multi-digit-mult、division-remainder、mixed-operations-order、decimal-place-value、factors-multiples、prime-composite、gcd-lcm），18 待建。
+- 本 session 累計完成數學島 numquant 6→12 共 7 個單元。
+- 下一步：math.t_base.numquant.fraction-concept（分數概念：部分與整體）或 decimal-arithmetic。預設 fraction-concept（分數族群起點，為等值分數/分數運算鋪路）。
