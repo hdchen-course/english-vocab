@@ -5,58 +5,45 @@
 <link rel="stylesheet" href="game_core.css">
 <script src="game_core.js"></script>
 <script src="assets/srs_engine.js"></script>
-<link rel="stylesheet" href="assets/unit.css"><!-- 共用房屋 pshell（.pshell-grid/.psb/.psb-main/.sb-*/.sb-cat）；與 dictation / 333 單元頁同一套 -->
+<link rel="stylesheet" href="assets/unit.css"><!-- 共用房屋 pshell -->
+<link rel="stylesheet" href="assets/wd-practice.css"><!-- 共用 word_* 練習骨架（翻面卡＋釘底全寬自評）；與 word_idioms／word_dictation 一致（HD 2026-11-10 三頁統一） -->
 <style>
-/* 單字大師（分級字庫）葉工具頁。資料＝Anki COCA 10K（sense-aligned）；色彩一律吃 app.css 英語科 token。 */
+/* 單字大師（分級字庫）葉工具頁。資料＝Anki COCA 10K（sense-aligned）；色彩一律吃 app.css 英語科 token。
+   版型＝共用 wd-practice.css（翻面卡＋釘底全寬 .fc-rate）；本檔只留卡面「內容」樣式與 scheme 小控制。 */
 :root{ --accent:var(--c-english); --accent-tint:var(--tint-english); --accent-ink:var(--c-english-ink); }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.55;overflow-x:hidden}
-/* 版面＝共用房屋 pshell（unit.css：.pshell-grid/.psb/.psb-main/.sb-group/.sb-title/.sb-back/.sb-cat）。本頁只留卡片與 scheme 小控制。 */
 .sb-note{font-size:12px;color:var(--ink-soft);padding:0 2px;line-height:1.5}
-.wm-intro h1{font-size:21px;margin:0 0 4px;display:flex;align-items:center;gap:9px}
-.wm-intro p{margin:0;color:var(--ink-soft);font-size:13.5px}
-.wm-deckline{font-size:13px;color:var(--accent-ink);font-weight:700;margin:10px 2px 14px}
-/* 卡片 */
-.wm-card{background:var(--card);border:1px solid var(--card-border);border-radius:18px;box-shadow:var(--shadow-lg);max-width:600px;margin:0 auto;min-height:360px;display:flex;flex-direction:column;overflow:hidden}
-.wm-tag{display:flex;gap:6px;flex-wrap:wrap;padding:12px 18px 0}
+.wm-deckline{font-size:14px;color:var(--accent-ink);font-weight:800}
+/* 卡面內容（卡框＝共用 .gr-card + .wd-face） */
+.wm-face-in{flex:1 1 auto;min-height:0;overflow:auto;display:flex;flex-direction:column;justify-content:center;gap:2px;width:100%;max-width:620px;margin:0 auto}
+.wm-tag{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:10px}
 .tg{font-size:11px;font-weight:800;border-radius:999px;padding:2px 9px;background:var(--accent-tint);color:var(--accent-ink)}
-.tg.band{background:var(--accent);color:var(--on-accent)}
-.wm-face{flex:1;display:flex;flex-direction:column;justify-content:center;padding:14px 26px 8px}
-.wm-def{font-size:23px;font-weight:700;text-align:center;line-height:1.4;margin:6px 4px 12px}
+.tg.lvl{background:var(--accent);color:var(--on-accent)}
+.tg.freq{background:var(--card);border:1px solid var(--card-border);color:var(--ink-soft)}
+.tg.na{background:var(--card);border:1px dashed var(--card-border);color:var(--ink-soft)}
+.wm-def{font-size:clamp(20px,4vw,24px);font-weight:700;text-align:center;line-height:1.4;margin:6px 4px 10px}
 .wm-pos{text-align:center;font-size:13px;color:var(--ink-soft);margin-bottom:8px}
 .wm-hintrow{text-align:center;margin:2px 0 8px}
 .wm-hintbtn{border:1px dashed var(--accent);background:none;color:var(--accent-ink);border-radius:999px;padding:5px 13px;font-size:13px;font-weight:700;cursor:pointer}
 .wm-hintshow{font-size:22px;letter-spacing:.3em;color:var(--accent-ink);font-weight:800;margin:2px 0 8px;text-align:center}
-.wm-hr{border:none;border-top:1px solid var(--card-border);margin:8px 0}
-.wm-ex{font-size:18px;margin:11px 2px;line-height:1.6}
+.wm-hr{border:none;border-top:1px solid var(--card-border);margin:8px 0;width:100%}
+.wm-ex{font-size:clamp(16px,3.2vw,18px);margin:11px 2px;line-height:1.6;text-align:center}
 .wm-blank{display:inline-block;min-width:72px;border-bottom:2.5px solid var(--accent);color:transparent;margin:0 3px;vertical-align:bottom}
 .wm-wordrow{display:flex;align-items:center;justify-content:center;gap:14px;margin:4px 0 6px}
-.wm-word{font-size:42px;font-weight:800;color:var(--accent-ink)}
-.wm-ipa{text-align:center;font-size:17px;color:var(--ink-soft);margin-bottom:12px}
+.wm-word{font-size:clamp(32px,7vw,42px);font-weight:800;color:var(--accent-ink)}
+.wm-ipa{text-align:center;font-size:16px;color:var(--ink-soft);margin-bottom:10px}
 .wm-ipa b{color:var(--ink);font-weight:600}
 .wm-exrow{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--card-border)}
-.wm-exrow .wm-ex{flex:1;margin:0}
+.wm-exrow .wm-ex{flex:1;margin:0;text-align:left}
 .wm-ans{color:var(--accent-ink);font-weight:800}
 .wm-rnd{width:46px;height:46px;border-radius:999px;border:1px solid var(--card-border);background:var(--accent-tint);color:var(--accent-ink);font-size:19px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto}
 .wm-rnd.sm{width:40px;height:40px;font-size:16px}
-.wm-ctl{padding:10px 18px 18px;border-top:1px solid var(--card-border)}
-.wm-flip{width:100%;min-height:50px;border:none;border-radius:12px;background:var(--accent);color:var(--on-accent);font-size:16px;font-weight:800;cursor:pointer}
-.wm-flipback{width:100%;min-height:40px;border:1px solid var(--card-border);background:var(--card);color:var(--accent-ink);border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px}
-.wm-flipback:hover{border-color:var(--accent)}
-.wm-rate{display:flex;gap:10px}
-.wm-rate button{flex:1;min-height:50px;border-radius:12px;border:1px solid var(--card-border);background:var(--card);color:var(--ink);font-size:14.5px;font-weight:700;cursor:pointer}
-.wm-rate button.again{border-color:#e0894a;color:#c56a1f}
-.wm-rate button.good{border-color:var(--accent);color:var(--accent-ink)}
-.wm-rate button.easy{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
-.wm-foot{text-align:center;color:var(--ink-soft);font-size:12.5px;margin-top:14px}
 .wm-schemes{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 9px}
-.wm-schemes button{min-height:0;width:auto;flex:0 0 auto;padding:4px 10px;font-size:12px;font-weight:700;border:1px solid var(--card-border);border-radius:999px}
+.wm-schemes button{min-height:0;width:auto;flex:0 0 auto;padding:4px 10px;font-size:12px;font-weight:700;border:1px solid var(--card-border);border-radius:999px;background:var(--card);color:var(--ink)}
 .wm-schemes button.on{background:var(--accent);color:var(--on-accent);border-color:var(--accent);font-weight:800}
-.tg.lvl{background:var(--accent);color:var(--on-accent)}
-.tg.freq{background:var(--card);border:1px solid var(--card-border);color:var(--ink-soft)}
-.tg.na{background:var(--card);border:1px dashed var(--card-border);color:var(--ink-soft)}
 </style></head>
-<body data-game-hud="off">
+<body data-game-hud="off" class="wd-noscroll">
 <header class="app-bar">
   <a class="app-bar__home" href="index_new.html"><span aria-hidden="true">🏠</span> 學習地圖</a>
   <span class="app-bar__title">單字大師（分級字庫）📚</span>
@@ -76,15 +63,27 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line
     </div>
   </aside>
   <div class="psb-main">
-    <div class="wm-intro">
-      <p>COCA 高頻字 · 聽音優先 · 看義想字 · 首字母提示 · 三級自評 · 間隔複習（SRS）。先看定義與例句回想單字，翻面對答案並聽發音。</p></div>
-    <div class="wm-deckline" id="deckLine"></div>
-    <div class="wm-card" id="card" aria-live="polite">
-      <div class="wm-tag" id="cardTag"></div>
-      <div class="wm-face" id="face"></div>
-      <div class="wm-ctl" id="ctl"></div>
-    </div>
-    <p class="wm-foot">英文學英文：卡面只給英文定義與例句；字長大於 2 可按「提示」看首字母。自評誠實選，SRS 會依此安排複習。</p>
+    <section class="wd-screen">
+      <div class="wd-play">
+        <div class="wd-topnav">
+          <span class="wm-deckline wd-step" id="deckLine"></span>
+        </div>
+
+        <!-- ① 翻面卡：正面＝看義想字（定義＋挖空例句）；背面＝單字＋IPA＋例句＋發音 -->
+        <div class="wd-flip" id="wd-flip">
+          <div class="wd-flip-inner">
+            <div class="gr-card wd-face front"><div class="wm-face-in" id="wmFront" aria-live="polite"></div></div>
+            <div class="gr-card wd-face back"><div class="wm-face-in" id="wmBack"></div></div>
+          </div>
+        </div>
+
+        <!-- 釘底動作列：翻面看答案（翻面前）→ 全寬三級自評 .fc-rate（翻面後搬入 #wd-rate-slot） -->
+        <div class="wd-actions">
+          <button type="button" class="wd-revealbtn" id="flipBtn">翻面看答案 ↻</button>
+          <div id="wd-rate-slot"></div>
+        </div>
+      </div>
+    </section>
   </div>
 </div></main>
 <script>
@@ -95,10 +94,11 @@ let CARDS=[], idx=0, flipped=false, hinted=false;
 let INDEX=null, scheme='cefr', curLevel=null, curPool=[];
 const shardCache={};
 const STORE=(window.SRS&&window.SRS.createStore)?window.SRS.createStore('wordmaster_srs_v1'):null;
-const DAILY_NEW=20;  // 每回合新卡上限（到期複習不受限，優先排入）
-// scheme → level 顯示設定（難易度軸＝CEFR；band 僅頻率，不當級別）
-const CEFR_LV=['a1','a2','b1','b2','c1','c2'], CEFR_UP={a1:'A1',a2:'A2',b1:'B1',b2:'B2',c1:'C1',c2:'C2'};
+const DAILY_NEW=20;
+const CEFR_UP={a1:'A1',a2:'A2',b1:'B1',b2:'B2',c1:'C1',c2:'C2'};
 const YLE_ZH={starters:'Starters',movers:'Movers',flyers:'Flyers'};
+const flipEl=()=>document.getElementById('wd-flip');
+const rateSlot=()=>document.getElementById('wd-rate-slot');
 function playAudio(f){ if(!f) return; try{ new Audio(AUD+f).play().catch(()=>{}); }catch(e){} }
 function blankExample(text, hw){
   const re=new RegExp('\\b'+hw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(s|es|ed|ing|d)?\\b','ig');
@@ -118,72 +118,92 @@ function levelChips(c){
   h += `<span class="tg freq">COCA ${esc(c.band)} 頻率</span>`;
   return h;
 }
+function toFront(){
+  flipped=false;
+  if(flipEl()) flipEl().classList.remove('flipped');
+  const rs=rateSlot(); if(rs){ rs.classList.remove('show'); rs.innerHTML=''; }
+  const fb=document.getElementById('flipBtn'); if(fb) fb.style.display='';
+}
 function render(){
   const c=CARDS[idx]; if(!c){ return; }
-  document.getElementById('cardTag').innerHTML=levelChips(c);
-  const face=document.getElementById('face'), ctl=document.getElementById('ctl');
+  const front=document.getElementById('wmFront'), back=document.getElementById('wmBack');
   const exs=(c.ex||[]).slice(0,2);
-  if(!flipped){
-    const hintHtml = (c.hw||'').length>2
-      ? (hinted ? `<div class="wm-hintshow">${esc(hintMask(c.hw))}</div>`
-                : `<div class="wm-hintrow"><button class="wm-hintbtn" id="hintBtn">💡 提示（首字母）</button></div>`)
-      : '';
-    face.innerHTML=`<div class="wm-def">${esc(c.def)}</div>`+
-      `<div class="wm-pos">${esc(c.pos||'')}</div>`+hintHtml+`<hr class="wm-hr">`+
-      exs.map(e=>`<div class="wm-ex">${blankExample(e,c.hw)}</div>`).join('');
-    ctl.innerHTML=`<button class="wm-flip" id="flipBtn">翻面看答案 ↻</button>`;
-    const hb=document.getElementById('hintBtn'); if(hb) hb.onclick=()=>{hinted=true;render();};
-    document.getElementById('flipBtn').onclick=()=>{flipped=true;render();};
-  }else{
-    face.innerHTML=`<div class="wm-wordrow"><span class="wm-word">${esc(c.hw)}</span>`+
-      `<button class="wm-rnd" id="wAudio" title="播放單字發音" aria-label="播放單字發音">🔊</button></div>`+
-      `<div class="wm-ipa">US <b>/${esc(c.ipaus)}/</b> &nbsp; UK <b>/${esc(c.ipauk)}/</b></div>`+
-      exs.map((e,i)=>`<div class="wm-exrow"><div class="wm-ex">${restoreExample(e,c.hw)}</div>`+
-        ((c.ae&&c.ae[i])?`<button class="wm-rnd sm" data-ae="${i}" title="播放例句" aria-label="播放例句">🔊</button>`:'')+`</div>`).join('');
-    ctl.innerHTML=`<button class="wm-flipback" id="backBtn">↩ 翻回正面看定義</button>`+
-      `<div class="wm-rate"><button class="again">還不熟</button><button class="good">快會了</button><button class="easy">會了 ✓</button></div>`;
-    const bk=document.getElementById('backBtn'); if(bk) bk.onclick=()=>{ flipped=false; render(); };
-    const wa=document.getElementById('wAudio'); if(wa) wa.onclick=()=>playAudio(c.aw);
-    face.querySelectorAll('[data-ae]').forEach(b=>b.onclick=()=>playAudio(c.ae[+b.dataset.ae]));
-    const grades=['again','good','easy'];
-    ctl.querySelectorAll('.wm-rate button').forEach((b,i)=>b.onclick=()=>rate(grades[i]));
-    playAudio(c.aw); // audio-first：翻面即播單字
-  }
+  // 正面：定義＋詞性＋（首字母提示）＋挖空例句
+  const hintHtml = (c.hw||'').length>2
+    ? (hinted ? `<div class="wm-hintshow">${esc(hintMask(c.hw))}</div>`
+              : `<div class="wm-hintrow"><button class="wm-hintbtn" id="hintBtn">💡 提示（首字母）</button></div>`)
+    : '';
+  front.innerHTML=`<div class="wm-tag">${levelChips(c)}</div>`+
+    `<div class="wm-def">${esc(c.def)}</div>`+
+    `<div class="wm-pos">${esc(c.pos||'')}</div>`+hintHtml+`<hr class="wm-hr">`+
+    exs.map(e=>`<div class="wm-ex">${blankExample(e,c.hw)}</div>`).join('');
+  // 背面：單字＋發音＋IPA＋例句（填回）
+  back.innerHTML=`<div class="wm-wordrow"><span class="wm-word">${esc(c.hw)}</span>`+
+    `<button class="wm-rnd" id="wAudio" title="播放單字發音" aria-label="播放單字發音">🔊</button></div>`+
+    `<div class="wm-ipa">US <b>/${esc(c.ipaus)}/</b> &nbsp; UK <b>/${esc(c.ipauk)}/</b></div>`+
+    exs.map((e,i)=>`<div class="wm-exrow"><div class="wm-ex">${restoreExample(e,c.hw)}</div>`+
+      ((c.ae&&c.ae[i])?`<button class="wm-rnd sm" data-ae="${i}" title="播放例句" aria-label="播放例句">🔊</button>`:'')+`</div>`).join('');
+  const hb=document.getElementById('hintBtn'); if(hb) hb.onclick=()=>{hinted=true;render();};
   document.getElementById('deckLine').innerHTML=`本回合牌組：${esc(deckLabel())} · 第 ${idx+1} / ${CARDS.length} 張`;
+  // 依 flipped 狀態擺正/翻面
+  if(flipped){ showBack(); } else { toFront(); }
+}
+function showBack(){
+  const c=CARDS[idx]; if(!c) return;
+  flipped=true;
+  if(flipEl()) flipEl().classList.add('flipped');
+  const fb=document.getElementById('flipBtn'); if(fb) fb.style.display='none';
+  // 綁發音
+  const wa=document.getElementById('wAudio'); if(wa) wa.onclick=()=>playAudio(c.aw);
+  document.getElementById('wmBack').querySelectorAll('[data-ae]').forEach(b=>b.onclick=()=>playAudio(c.ae[+b.dataset.ae]));
+  // 三級自評（app.css .fc-rate solid 配色）搬入釘底 #wd-rate-slot 全寬
+  const rs=rateSlot();
+  rs.innerHTML='<div class="fc-rate">'
+    +'<button type="button" class="fc-rate__btn again" data-grade="again" aria-label="還不熟">😅<span class="fc-rate__btn__label">還不熟</span></button>'
+    +'<button type="button" class="fc-rate__btn good" data-grade="good" aria-label="快會了">🙂<span class="fc-rate__btn__label">快會了</span></button>'
+    +'<button type="button" class="fc-rate__btn easy" data-grade="easy" aria-label="會了">😎<span class="fc-rate__btn__label">會了</span></button>'
+    +'</div>';
+  const grades=['again','good','easy'];
+  rs.querySelectorAll('.fc-rate__btn').forEach((b,i)=>b.onclick=()=>rate(grades[i]));
+  rs.classList.add('show');
+  playAudio(c.aw); // audio-first：翻面即播單字
+  const focusRate=()=>{ const b=rs.querySelector('.fc-rate__btn'); if(b){ try{ b.focus(); }catch(e){} } };
+  let reduce=false; try{ reduce=matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+  if(reduce) focusRate(); else setTimeout(focusRate,520);
 }
 function startSession(){
   const pool=curPool||[];
   CARDS = STORE ? STORE.buildSession(pool,{idOf:c=>c.sk, dailyNew:DAILY_NEW}) : pool.slice();
   idx=0; flipped=false; hinted=false;
   const rn=document.getElementById('roundNote');
-  if(!pool.length){ document.getElementById('face').innerHTML='<p class="wm-foot">這一級目前沒有字。</p>'; if(rn) rn.innerHTML='本回合：'+esc(deckLabel()); return; }
+  if(!pool.length){ document.getElementById('wmFront').innerHTML='<p class="wm-pos">這一級目前沒有字。</p>'; toFront(); if(rn) rn.innerHTML='本回合：'+esc(deckLabel()); return; }
   if(!CARDS.length){ renderDone(); if(rn) rn.innerHTML='本回合：'+esc(deckLabel())+'<br>今日複習已完成 🎉'; return; }
   if(rn) rn.innerHTML='本回合：'+esc(deckLabel())+'<br>'+CARDS.length+' 張（新卡＋到期複習）· 全級共 '+pool.length+' 字';
   render();
 }
 function renderDone(){
-  document.getElementById('cardTag').innerHTML='';
-  document.getElementById('face').innerHTML='<div class="wm-def">這一級今天的新卡與到期複習都做完了 🎉</div>'+
+  const front=document.getElementById('wmFront'), back=document.getElementById('wmBack');
+  toFront();
+  front.innerHTML='<div class="wm-def">這一級今天的新卡與到期複習都做完了 🎉</div>'+
     '<div class="wm-pos">換個分級，或明天再回來複習（SRS 已記住你的進度）。</div>';
-  document.getElementById('ctl').innerHTML='<button class="wm-flip" id="moreBtn">再來一批 / 重新開始 ↻</button>';
-  const mb=document.getElementById('moreBtn'); if(mb) mb.onclick=()=>startSession();
+  back.innerHTML='';
+  const fb=document.getElementById('flipBtn'); if(fb){ fb.textContent='再來一批 / 重新開始 ↻'; fb.style.display=''; fb.onclick=()=>{ fb.textContent='翻面看答案 ↻'; fb.onclick=onFlip; startSession(); }; }
   document.getElementById('deckLine').innerHTML='本回合牌組：'+esc(deckLabel())+' · 完成';
 }
 function rate(grade){
   const c=CARDS[idx];
   try{ if(STORE) STORE.rate(c.sk, grade); }catch(e){}
-  if(idx>=CARDS.length-1){ startSession(); return; } // 回合結束→重建取下一批（今日清空則顯示完成）
-  next();
+  if(idx>=CARDS.length-1){ startSession(); return; }
+  idx=(idx+1)%CARDS.length; flipped=false; hinted=false; render();
 }
-function next(){ idx=(idx+1)%CARDS.length; flipped=false; hinted=false; render(); }
+function onFlip(){ hinted=hinted; showBack(); }
 function deckLabel(){
-  const S=INDEX&&INDEX.schemes[scheme];
   if(!curLevel) return '—';
   if(scheme==='cefr') return curLevel==='unclassified'?'未分級':'CEFR '+(CEFR_UP[curLevel]||curLevel);
   if(scheme==='yle')  return 'YLE '+(YLE_ZH[curLevel]||curLevel);
   if(scheme==='toeic')return 'TOEIC（TSL）';
   if(scheme==='coca')  return curLevel==='tail'?'COCA 較少見字':'COCA 最常用 '+curLevel;
-  return (S?S.label_zh:'')+' '+curLevel;
+  const S=INDEX&&INDEX.schemes[scheme]; return (S?S.label_zh:'')+' '+curLevel;
 }
 function shardKey(level){ return scheme==='cefr' ? level : (scheme+'/'+level); }
 function loadLevel(level){
@@ -192,7 +212,7 @@ function loadLevel(level){
   const key=shardKey(level), file=DATA+'cards/'+key.replace(/\//g,'_')+'.json';
   const use=d=>{ curPool=(d&&d.cards)||[]; startSession(); };
   if(shardCache[key]) return use(shardCache[key]);
-  document.getElementById('face').innerHTML='<p class="wm-foot">載入中…</p>';
+  document.getElementById('wmFront').innerHTML='<p class="wm-pos">載入中…</p>'; toFront();
   fetch(file,{cache:'no-store'}).then(r=>r.ok?r.json():null,()=>null).then(d=>{ shardCache[key]=d; use(d); });
 }
 function levelsFor(scm){
@@ -213,13 +233,13 @@ function renderLevels(){
   const ll=document.getElementById('levelList');
   ll.innerHTML=levelsFor(scheme).map(it=>`<button class="sb-cat" data-lv="${it.lv}">${esc(it.label)} <span class="n">${it.n}</span></button>`).join('');
   ll.querySelectorAll('button').forEach(b=>b.onclick=()=>loadLevel(b.dataset.lv));
-  // 預設載該 scheme 第一個非空級別
   const first=levelsFor(scheme).find(it=>it.n>0) || levelsFor(scheme)[0];
   if(first) loadLevel(first.lv);
 }
+document.getElementById('flipBtn').onclick=onFlip;
 document.getElementById('themeBtn').onclick=()=>document.documentElement.classList.toggle('dark');
 fetch(DATA+'index.json',{cache:'no-store'}).then(r=>r.ok?r.json():null,()=>null).then(d=>{
-  if(!d||!d.schemes){ document.getElementById('face').innerHTML='<p class="wm-foot" role="alert">⚠ 字庫索引暫時無法載入（請用 http 開啟）。</p>'; return; }
+  if(!d||!d.schemes){ document.getElementById('wmFront').innerHTML='<p class="wm-pos" role="alert">⚠ 字庫索引暫時無法載入（請用 http 開啟）。</p>'; return; }
   INDEX=d; renderSidebar();
 });
 </script>
