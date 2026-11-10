@@ -1346,3 +1346,13 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 教訓（banked 本次）：content_audit reviewer 的第三 coverage anchor（~75% 深度）行號常報高約 9-10 行→L3 FAIL，不是內容問題；對策＝不弱化 L3，只 bank L3-pass 輪、多發幾輪補足（dr/mo 系列各遇 1-2 次）。
 - math numquant 進度：30 KP → 8 收斂（place-value、compare-order、rounding-estimate、add-sub-vertical、multiplication-table、multi-digit-mult、division-remainder、mixed-operations-order），22 待建。
 - 下一步：math.t_base.numquant.decimal-place-value（小數位值：十分位、百分位）或 factors-multiples。預設 decimal-place-value（延續位值脈絡進入小數）。
+
+---
+## 2026-11-11 03:07 — math_numquant_decimalplacevalue 5/5 收斂 + DONE-GATE 全綠（數學島第 9 單元上線）
+- frozen sha d294365923f028eb，rounds=[dp1,dp2,dp3,dp4,dp5] 全 clean、L3 exit0（本單元 reviewer 行號全對、未遇 L3-invalid）。
+- 零內容缺陷（草稿即遵四鐵律＋pre-freeze 僅一個 pedagogy advisory：c-decimal-meaning→DP-mcq-digitvalue 補 answer_evidence 消除，因「8 代表 0.08」確實用到小數意義）。
+- DONE-GATE 全綠：per_page 5/5、scan_simplified、unit_schema、question_correctness、pedagogy(0 hard)、audio_exist。
+- 視覺 QA：iPad Air 13 render（橫+直）四角色；小數位值表 SVG（3.45：橘框圈小數部分、個位藍/十分位4百分位5綠、各標代表 3/0.4/0.05）清楚、無溢出、老花友善、house palette 一致。
+- .venv(Decimal) 全核：3.45=3+0.4+0.05、0.1=1/10、0.01=1/100、2.58 的 8=0.08、0.06≠0.6≠0.006；誘答各單一錯誤路徑（位值全忽略/十分百分顛倒/位值放大縮小/多零少零）。
+- math numquant 進度：30 KP → 9 收斂（place-value、compare-order、rounding-estimate、add-sub-vertical、multiplication-table、multi-digit-mult、division-remainder、mixed-operations-order、decimal-place-value），21 待建。
+- 下一步：math.t_base.numquant.factors-multiples（因數與倍數）或 decimal-arithmetic。預設 factors-multiples（承接整除/除法脈絡，為 gcd-lcm/prime 鋪路）。
