@@ -200,7 +200,9 @@
       if(t.zh_hint){ tg=el('button','gr-zh-toggle','▸ 中文對照'); tg.setAttribute('aria-expanded','false'); row.appendChild(tg); }
       if(row.childNodes.length) c.appendChild(row);
       if(t.figure){ const f=renderFigure(t.figure); if(f) c.appendChild(f); }
-      c.appendChild(el('div','gr-en', esc(t.body)));
+      // body 為可選：figure-only 的 example 元素可無 body。無條件 esc(t.body) 會把缺欄位印成字面「undefined」
+      // 給學習者（2026-11-10 數學島 compare-order render 抓到；同 shadowing intonation 的 undefined class）。
+      if(t.body){ c.appendChild(el('div','gr-en', esc(t.body))); }
       if(t.zh_hint){
         const zhDiv=el('div','zh-hint', esc(t.zh_hint)); zhDiv.hidden=true; c.appendChild(zhDiv);
         tg.onclick=()=>{ const show=zhDiv.hidden; zhDiv.hidden=!show;
