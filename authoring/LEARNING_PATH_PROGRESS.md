@@ -1186,3 +1186,11 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 兩輪修 2 真缺陷（同一缺陷類「誘答理由用錯誤詞性理由而非語意/功能」，各 sha-reset 重跑）：(1) P1「would be」理由『後面接名詞或 -ing』漏形容詞（would be happy）→改「would be 後接形容詞/名詞/-ing、不接原形」；(2) P5(round5) P2「Are」理由『like 不是形容詞』詞性理由錯誤（like 是介系詞、Are you like your mother? 合法）→改語意/功能『無法表達禮貌提議』。class-wide 掃描其餘誘答皆語意型。重跑五視角（ELT panel）全零 confirmed。
 - 高階文法術語適切；would=過去重複習慣(like used to，狀態用 used to)／禮貌請求提議(Would you…? Would you like…?)／意願假設(I would help if…)；單一正解靠語境＋功能。
 - 收斂 324/332（97.6%）。
+
+---
+## 2026-11-10 18:33 — english_writing_narrative 5/5 收斂（gap 2/7→完成）
+- frozen sha 3abd677d4fe201c2，rounds=[1,2,3,4,5] 全 clean、L3 exit0。
+- DONE-GATE 全綠：per_page 334/334 PASS、scan_simplified PASS（U+53F0 info）、unit_schema CLEAN、question_correctness CLEAN(1911 q)、pedagogy 0 hard、audio_exist CLEAN(1544)。
+- commit 9c9e68d45 + push。eng non-beyond 覆蓋 295/300。
+- 剩餘 eng gap（5）：fact-vs-opinion(reading,文字,可即做)｜graph-integration｜picture-narrative｜picture-id｜picture-basic（後 4 需引擎圖像支援）。
+- 下一步：建 english_reading_factopinion（gap 3，最後一個純文字單元）→ 5-clean → 之後引擎擴充(unit.js 圖像/SVG field + schema gate + 紅隊) → 4 圖像單元 + iPad 視覺 QA 四角色簽核。
