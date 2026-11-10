@@ -1325,3 +1325,13 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 視覺 QA：iPad Air 13 render（橫 1366×1024＋直 1024×1366）四角色；直式乘法 SVG（23×4＝92，十/個欄頭、橘色進位 1、綠得數）清楚、無溢出、老花友善、house palette 一致；無 undefined/③。
 - math numquant 進度：30 KP → 6 收斂（place-value、compare-order、rounding-estimate、add-sub-vertical、multiplication-table、multi-digit-mult），24 待建。
 - 下一步：math.t_base.numquant.division-remainder（除法直式含餘數）或 decimal 系列。預設 division-remainder（延續四則運算直式脈絡，與乘法互逆）。
+
+---
+## 2026-11-11 02:26 — math_numquant_divisionremainder 5/5 收斂 + DONE-GATE 全綠（數學島第 7 單元上線）
+- frozen sha 696216d23a43073d，rounds=[dr1,dr2,dr4,dr5,dr6] 全 clean、L3 exit0；dr3 因 reviewer anchor 行號（報 154 實為 148）L3-invalid 不計入、以 dr4 取代。
+- 零內容缺陷（草稿即遵 math-unit-authoring-defect-classes 四鐵律；pre-freeze 僅一個 pedagogy advisory：c-div-meaning 未被 practice 引用→DR-mcq-apply 補 c-div-meaning answer_evidence，因情境題確實用到包含除意義，消除 advisory 且更準確）。
+- DONE-GATE 全綠：per_page 5/5、scan_simplified、unit_schema、question_correctness、pedagogy(0 hard)、audio_exist。
+- 視覺 QA：iPad Air 13 render（橫+直）四角色；長除法直式 SVG（47÷6=7…5，商綠標「商」、6×7=42 橘、餘 5 綠標「餘數」、標準長除法框線、位值對位）清楚、無溢出、老花友善、house palette 一致；無 undefined/③。
+- .venv 全核：56÷8=7餘0、47÷6=7餘5（6×7+5=47,5<6）、100÷7=14餘2（7×14=98）、□÷7 最大餘=6、13÷4=3餘1；誘答各單一錯誤路徑（試商過大/過小、餘=除數可再分、餘>除數、乘積非商）。
+- math numquant 進度：30 KP → 7 收斂（place-value、compare-order、rounding-estimate、add-sub-vertical、multiplication-table、multi-digit-mult、division-remainder），23 待建。
+- 下一步：math.t_base.numquant.mixed-operations-order（先乘除後加減、括號優先）或 decimal-place-value。預設 mixed-operations-order（四則運算收尾、承接加減乘除、無需新視覺資產較快）。
