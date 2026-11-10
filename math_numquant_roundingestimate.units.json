@@ -1,0 +1,205 @@
+{
+ "_note": "數學島 數與量（numquant）strand 第 3 個單元。涵蓋知識點 math.t_base.numquant.rounding-estimate（概數、四捨五入與估算；國小範圍、無考試標籤）。tier=t_base（內部標記，學習者端不顯示年段 R11）。全繁體零簡體零 PRC 詞。數學科中文授課（非英語島，R14/R15 不適用）。prerequisites=place-value-read-write（要先會位名位值才能決定看哪一位四捨五入）。內容以客觀可驗證子技能 MCQ 承載：practice 4 題 type:mcq、validation_method:expert，測『四捨五入到十位』『四捨五入到百位』『用概數估算和』『概數概念』；每題唯一正解、綁 answer_evidence 指向本單元 claims、每錯項附 distractor_rationales。所有數值事實已於 .venv 以 round-half-up 逐一核對（237→十位=240；2638→百位=2600；312→300、589→600、估和=900 實際 901）。teach 帶一張站內手繪數線 inline SVG（230–240、中點 235 虛線、237 的點在中點右邊→進位到 240），figure.svg 以 <svg 開頭、無 <script>、引擎 renderFigure 繪製、unit_schema_gate figure 驗證把關。figure-only example 無 body（引擎 body-optional，不印 undefined）。無音檔（數學估算、翻答案自評）。",
+ "page": "math_numquant_roundingestimate.html",
+ "units": [
+  {
+   "unit_id": "math.t_base.numquant.rounding-estimate",
+   "title_zh": "概數、四捨五入與估算",
+   "can_do": "我會用四捨五入把一個數變成概數（大約的整數），知道要看右邊下一位來決定進位或捨去；也會先把數取成概數再算，快速估出答案大約多少。",
+   "situation_group": "數與量：概數與估算",
+   "subject": "math",
+   "strand": "numquant",
+   "est_minutes": 9,
+   "knowledge_point_ids": [
+    "math.t_base.numquant.rounding-estimate"
+   ],
+   "prerequisites": [
+    "math.t_base.numquant.place-value-read-write"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-rounding",
+     "text": "四捨五入到某一位，要看它「右邊下一位」的數字：那個數字是 0、1、2、3、4 就「捨去」（這一位不變，它右邊全部變成 0）；是 5、6、7、8、9 就「進位」（這一位加 1，它右邊全部變成 0）。",
+     "kind": "math-concept",
+     "source_refs": [
+      "四捨五入（國小數學）"
+     ],
+     "verification_ref": "四捨五入規則：看下一位，0–4 捨、5–9 進；.venv round-half-up 核 237→十位=240（個位 7 進）、2638→百位=2600（十位 3 捨）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-approx-meaning",
+     "text": "概數是一個數「大約是多少」的說法，不是精確值；四捨五入是取概數最常用的方法。用概數可以快速掌握一個數大概多大，方便比較和估算。",
+     "kind": "math-concept",
+     "source_refs": [
+      "概數的意義（國小數學）"
+     ],
+     "verification_ref": "概數＝近似值、非精確值；四捨五入為取概數方法；概念定義",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-estimate",
+     "text": "估算就是先把要算的數各自取成概數，再把概數算一算，得到「大約」的答案。估算用來快速判斷或檢查答案合不合理，不必算到完全精確；取的位愈大，估得愈快但愈粗略。",
+     "kind": "math-concept",
+     "source_refs": [
+      "估算（國小數學）"
+     ],
+     "verification_ref": "估算＝先取概數再算得近似；.venv 核 312→300、589→600、估和 900（實際 901，相差 1）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_base.numquant.rounding-estimate"
+     ],
+     "body": "把一個數變成「大約的整數」叫做取概數，最常用的方法是四捨五入。要四捨五入到哪一位，就看它「右邊下一位」的數字：那個數字是 0、1、2、3、4 就捨去，這一位不變、右邊全變成 0；是 5、6、7、8、9 就進位，這一位加 1、右邊全變成 0。例如 237 要四捨五入到十位，看個位是 7（≥5），所以十位進位，變成 240。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_base.numquant.rounding-estimate"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 120' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><line x1='60' y1='74' x2='320' y2='74' stroke='#33475b' stroke-width='2'/><g stroke='#8a97a6' stroke-width='1.5'><line x1='60' y1='68' x2='60' y2='80'/><line x1='320' y1='68' x2='320' y2='80'/></g><line x1='190' y1='60' x2='190' y2='88' stroke='#b4532a' stroke-width='1.5' stroke-dasharray='4 3'/><g font-size='12' fill='#8a7a68' text-anchor='middle'><text x='60' y='100'>230</text><text x='320' y='100'>240</text></g><text x='190' y='54' font-size='11' fill='#b4532a' text-anchor='middle'>中點 235</text><circle cx='242' cy='74' r='5' fill='#2f6f54'/><text x='242' y='46' font-size='15' font-weight='800' fill='#2f6f54' text-anchor='middle'>237</text></g></svg>",
+      "alt": "230 到 240 的數線，中點 235 用虛線標出；237 的點在中點右邊，離 240 比較近，所以四捨五入到十位是 240。",
+      "caption": "237 的點超過中點 235、離 240 比較近，所以四捨五入到十位是 240"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_base.numquant.rounding-estimate"
+     ],
+     "body": "概數是「大約多少」的說法，不是精確的數。估算就是先把每個數各自取成概數，再算一算，很快得到大約的答案，用來判斷或檢查答案合不合理。例如算 312 ＋ 589，先四捨五入到百位：312 大約是 300、589 大約是 600，估得 300 ＋ 600 ＝ 900（精確答案是 901，差不多）。取的位愈大，估得愈快，但也愈粗略。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "RE-mcq-round10",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "把 237 四捨五入到十位，是多少？",
+     "answer": "240",
+     "kp_ids": [
+      "math.t_base.numquant.rounding-estimate"
+     ],
+     "required_kp_ids": [
+      "math.t_base.numquant.rounding-estimate"
+     ],
+     "options": [
+      "240",
+      "230",
+      "200",
+      "250"
+     ],
+     "distractor_rationales": {
+      "230": "這是把個位捨去了；但個位是 7（≥5）要進位，所以十位從 3 變 4，答案是 240。",
+      "200": "200 是四捨五入到百位（看十位 3 捨去）；題目要到十位，答案是 240。",
+      "250": "進位只讓十位加 1（3 變 4），不是加到 5；答案是 240。"
+     },
+     "answer_evidence": [
+      "c-rounding"
+     ],
+     "feedback": "四捨五入到十位看個位：個位 7（≥5）進位，十位 3 變 4，右邊變 0，所以是 240。"
+    },
+    {
+     "question_id": "RE-mcq-round100",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "把 2638 四捨五入到百位，是多少？",
+     "answer": "2600",
+     "kp_ids": [
+      "math.t_base.numquant.rounding-estimate"
+     ],
+     "required_kp_ids": [
+      "math.t_base.numquant.rounding-estimate"
+     ],
+     "options": [
+      "2600",
+      "2700",
+      "2640",
+      "3000"
+     ],
+     "distractor_rationales": {
+      "2700": "這是進位了；但百位右邊下一位是十位 3（＜5）要捨去，百位不變，所以是 2600。",
+      "2640": "2640 是四捨五入到十位（看個位 8 進位）；題目要到百位，答案是 2600。",
+      "3000": "3000 是四捨五入到千位（看百位 6 進位）；題目要到百位，答案是 2600。"
+     },
+     "answer_evidence": [
+      "c-rounding"
+     ],
+     "feedback": "四捨五入到百位看十位：十位 3（＜5）捨去，百位 6 不變，右邊全變 0，所以是 2600。"
+    },
+    {
+     "question_id": "RE-mcq-estimate",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "先把每個數四捨五入到百位，估算 312 ＋ 589 大約是多少？",
+     "answer": "900",
+     "kp_ids": [
+      "math.t_base.numquant.rounding-estimate"
+     ],
+     "required_kp_ids": [
+      "math.t_base.numquant.rounding-estimate"
+     ],
+     "options": [
+      "900",
+      "800",
+      "1000",
+      "700"
+     ],
+     "distractor_rationales": {
+      "800": "589 到百位是 600 不是 500（十位 8≥5 進位）；300 ＋ 600 ＝ 900。",
+      "1000": "312 到百位是 300 不是 400（十位 1＜5 捨去）；300 ＋ 600 ＝ 900。",
+      "700": "兩個都取小了；312→300、589→600，相加是 900。"
+     },
+     "answer_evidence": [
+      "c-estimate",
+      "c-rounding"
+     ],
+     "feedback": "312 到百位是 300、589 到百位是 600，估算 300 ＋ 600 ＝ 900（精確答案 901，很接近）。"
+    },
+    {
+     "question_id": "RE-mcq-concept",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "關於「概數」，哪一句說明是對的？",
+     "answer": "概數是大約的數，不是精確值",
+     "kp_ids": [
+      "math.t_base.numquant.rounding-estimate"
+     ],
+     "required_kp_ids": [
+      "math.t_base.numquant.rounding-estimate"
+     ],
+     "options": [
+      "概數是大約的數，不是精確值",
+      "概數一定比原來的數大",
+      "概數一定比原來的數小",
+      "概數和原來的數一定相等"
+     ],
+     "distractor_rationales": {
+      "概數一定比原來的數大": "不一定；捨去時概數會比原數小（例如 312 到百位是 300，比 312 小）。",
+      "概數一定比原來的數小": "不一定；進位時概數會比原數大（例如 589 到百位是 600，比 589 大）。",
+      "概數和原來的數一定相等": "通常不相等；概數只是大約，精確值才是原來的數。"
+     },
+     "answer_evidence": [
+      "c-approx-meaning"
+     ],
+     "feedback": "概數是「大約多少」的說法，可能比原數大、也可能比原數小，不是精確值。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（四捨五入與估算，不自動批改）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
