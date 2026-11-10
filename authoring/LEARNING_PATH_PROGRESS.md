@@ -1221,3 +1221,10 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - eng non-beyond 覆蓋 297/300。剩 3 gap：picture-basic(看圖造句)／picture-narrative(四格看圖敘事)／graph-integration(長條圖整合)。
 - UI：看圖辨義卡片模式 demo（english_listening_pictureid_demo.html）已依 HD 回饋定版（pill tab/圖小/垂直置中/翻頁/閃卡三鍵）。
 - 另修全站單元牆 href 尾接數字 bug（.map(unitCard) 傳 index）commit c297ce129。
+
+---
+## 2026-11-10 20:07 — english_writing_picturebasic 5/5 收斂（gap 5/7→完成）
+- frozen sha 6ca08a2a8ab7fc68，rounds=[1,2,3,4,5] 全 clean、L3 exit0。round3 唯一 raw（第一題沿用教學例圖）panel 0/7 判 near-transfer 鷹架＝NOT-a-defect，記 knownFP。
+- 手繪場景 SVG：球在箱上/桌下/箱內（in-box 重畫為開口 U 箱釐清），測主詞+be+介系詞(on/in/under)描述；iPad render 四角色檢視通過。
+- DONE-GATE 全綠：per_page 337/337、scan_simplified、unit_schema(figure)、question_correctness、pedagogy 0 hard、audio_exist。
+- eng non-beyond 覆蓋 298/300。剩 2 gap：picture-narrative(四格看圖敘事)／graph-integration(長條圖整合)。
