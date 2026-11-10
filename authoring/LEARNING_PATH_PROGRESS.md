@@ -1335,3 +1335,14 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - .venv 全核：56÷8=7餘0、47÷6=7餘5（6×7+5=47,5<6）、100÷7=14餘2（7×14=98）、□÷7 最大餘=6、13÷4=3餘1；誘答各單一錯誤路徑（試商過大/過小、餘=除數可再分、餘>除數、乘積非商）。
 - math numquant 進度：30 KP → 7 收斂（place-value、compare-order、rounding-estimate、add-sub-vertical、multiplication-table、multi-digit-mult、division-remainder），23 待建。
 - 下一步：math.t_base.numquant.mixed-operations-order（先乘除後加減、括號優先）或 decimal-place-value。預設 mixed-operations-order（四則運算收尾、承接加減乘除、無需新視覺資產較快）。
+
+---
+## 2026-11-11 02:50 — math_numquant_mixedopsorder 5/5 收斂 + DONE-GATE 全綠（數學島第 8 單元上線）
+- frozen sha 99a172af2ea1f839，rounds=[mo1,mo4,mo5,mo6,mo7] 全 clean、L3 exit0；mo2/mo3 因 reviewer 第三 anchor（~75% 深度）行號偏高約 9-10 行 L3-invalid 不計入、以後續輪取代。
+- 零內容缺陷（草稿即遵 math-unit-authoring-defect-classes 四鐵律＋pre-freeze gates 全綠含 pedagogy 無 advisory）。
+- DONE-GATE 全綠：per_page 5/5、scan_simplified、unit_schema、question_correctness、pedagogy(0 hard)、audio_exist。
+- 視覺 QA：iPad Air 13 render（橫+直）四角色；運算順序 SVG（2+3×4：橘框高亮 3×4 標①先算乘、綠 2+12=14 標②再算加）清楚、無溢出、老花友善、house palette 一致；無 undefined/③。
+- .venv 全核：2+3×4=14、3×(4+2)=18、20−8−3=9、20−3×5=5；三規則（先乘除後加減／括號優先／同級左到右）各有 practice＋teach 示範；誘答各單一錯誤路徑。
+- 教訓（banked 本次）：content_audit reviewer 的第三 coverage anchor（~75% 深度）行號常報高約 9-10 行→L3 FAIL，不是內容問題；對策＝不弱化 L3，只 bank L3-pass 輪、多發幾輪補足（dr/mo 系列各遇 1-2 次）。
+- math numquant 進度：30 KP → 8 收斂（place-value、compare-order、rounding-estimate、add-sub-vertical、multiplication-table、multi-digit-mult、division-remainder、mixed-operations-order），22 待建。
+- 下一步：math.t_base.numquant.decimal-place-value（小數位值：十分位、百分位）或 factors-multiples。預設 decimal-place-value（延續位值脈絡進入小數）。
