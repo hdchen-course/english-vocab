@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-10 20:39 英語島 gap 單元 6/7 收斂：english_writing_picturenarrative（看圖寫作·四格敘事）5/5 → eng 覆蓋 299/300
+- frozen_sha `68b24fcdd1913865`，rounds[1-5] 連 5 clean（each L3 coverage_check exit 0、coverageComplete、sha 全相符、0 confirmed）。DONE-GATE 全綠：per_page 通過 338/338 違規 0、scan_simplified PASS、unit_schema CLEAN、question_correctness CLEAN、pedagogy 0 hard、audio_exist CLEAN（寫作 strand 無音檔）。figure 四角色視覺簽核於建立時通過、sha 未變仍綁定。
+- **收斂 knownFP（記 ledger，同類勿重報）**：PN-mcq-first-firstcue——round3 content_audit 報「PN-mcq-first 正解是唯一以 First 開頭的選項，學習者可靠 stem『開頭』→First 詞彙配對作答而不讀圖（與刻意加 content-mismatch 誘答的 PN-mcq-last 不對稱）」。依 content_audit 決策規則判 **NOT A DEFECT**（panel-split 4 NOT vs 1 DEFECT）：criterion-b（測驗效度/可理解性）擁有者 learning-neuroscience＋PM 皆判 NOT——『辨認開頭格→用 First』正是本 KP eng.t_adv.writing.picture-narrative 明訂教學子技能；domain/english 同判 NOT；僅 zh translator 投 DEFECT，而 zh 僅對誤譯有決定權，本案非誤譯，aggregate 過度加權 zh 票。round4/5 傳入 knownFP 後面板不再重報、連續 clean。
+- **流程記錄**：此 finding 於 clean 輪（round3）才發現，harvest-first hook 與 auto-mode 皆阻止 reset-churn；判定為 panel-split 非缺陷故記 knownFP 續跑（非 reset），並重跑 round3 驗證判定穩健（0 confirmed）才 bank。
+- eng gap 剩 1：`eng.t_adv.reading.graph-integration`（圖表/數據整合，non-continuous text）——需自繪 bar-chart SVG。完成後 eng 300/300（AC-COV-1 100%），英語島成為首個「可發布完整島」。
+
 ## 2026-11-10 17:05 ★里程碑盤點＋下一增量佇列（英語島「頁收斂」完成，但「KP 全覆蓋」尚缺 7）
 - **現狀（build_status 現算）**：全站 binding KP 覆蓋 293/3086（9%）；eng 293/300 覆蓋、332/332 頁全 5-clean 收斂。其他 7 科（chi 354／life／math／sci／soc-geo 354／soc-hist 134…）在新路徑模型仍 0 單元。
 - **BUILD_PLAN §7 下一步＝把英語島做「全覆蓋」當完整島里程碑**（AC-COV-1 eng），再推其他科。eng 仍 7 個 binding KP 未被任何 teach/practice kp_ids 命中，需新建單元（roles-first 團隊＋edge-tts 音檔＋逐檔 5-clean→DONE-GATE）：
