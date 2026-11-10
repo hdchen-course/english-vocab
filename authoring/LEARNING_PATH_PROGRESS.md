@@ -1099,3 +1099,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - knownFP：c-wi-verbs 為 teach-only 支援性 claim（區辨點是 form/meaning 非 host 動詞）；「showed me how to make soup→教」gloss 5/5 NOT A DEFECT（show/teach 未做區辨、教為道地中文）；can_do 列六字但 teach/practice 只演示 how/what/where，5/5 NOT A DEFECT（單一規則可類推 when/who/which，逐字各設一題反增負荷）。
 - 中階文法術語適切；單一正解靠語意（問什麼/地點/方法）＋form（缺 to/用 -ing/why to）。
 - 收斂 323/332（97.3%）。
+
+## eng-wouldmodal（t_adv 高階：would 過去習慣／委婉／意願）5/5 收斂 — 2026-11-10 10:12
+- sha 8784e3b3a5017223；DONE-GATE 七關全綠（scan_simplified / unit_schema / question_correctness / audio_exist[wld_* 音檔齊] / per_page_5clean[wouldmodal ABSENT] / pedagogy[no hard] / build_source_tree）。
+- 兩輪修 2 真缺陷（同一缺陷類「誘答理由用錯誤詞性理由而非語意/功能」，各 sha-reset 重跑）：(1) P1「would be」理由『後面接名詞或 -ing』漏形容詞（would be happy）→改「would be 後接形容詞/名詞/-ing、不接原形」；(2) P5(round5) P2「Are」理由『like 不是形容詞』詞性理由錯誤（like 是介系詞、Are you like your mother? 合法）→改語意/功能『無法表達禮貌提議』。class-wide 掃描其餘誘答皆語意型。重跑五視角（ELT panel）全零 confirmed。
+- 高階文法術語適切；would=過去重複習慣(like used to，狀態用 used to)／禮貌請求提議(Would you…? Would you like…?)／意願假設(I would help if…)；單一正解靠語境＋功能。
+- 收斂 324/332（97.6%）。
