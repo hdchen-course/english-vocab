@@ -74,8 +74,10 @@ def _type_ok(value, spec):
 
 
 def run(root):
-    """回傳 (violations:list[str], stats:dict)。violations 每條一個字串 finding。"""
+    """回傳 (violations:list[str], stats:dict)。violations 每條一個字串 finding。
+    stats['advisories']＝非阻擋性提醒（不計入 exit code）。"""
     violations = []
+    advisories = []
     root = os.path.abspath(root)
     unit_files = sorted(glob.glob(os.path.join(root, "*.units.json")))
     index_path = os.path.join(root, "data", "units_index.json")
@@ -168,6 +170,30 @@ def run(root):
             _check_figures(u.get("teach"), "teach")
             _check_figures(u.get("practice"), "practice")
 
+            # 7. shadowing 欄位（§6.2.2）：
+            #    HARD＝結構破壞（lines 非陣列、行非物件、text 缺）會讓 render 崩或空行。
+            #    ADVISORY＝intonation 缺漏：engine assets/unit.js 已改為「僅在 intonation 存在時渲染
+            #    （…）」（2026-11-10 視覺 QA 抓到「（undefined）」後修根因），故缺 intonation 不再是
+            #    可見缺陷，只是語調模仿（英語島核心練習模態）少了語調提示＝豐富度 backlog，不阻擋。
+            sh = u.get("shadowing")
+            if isinstance(sh, dict):
+                lines = sh.get("lines")
+                if not isinstance(lines, list):
+                    violations.append(f"[shadowing] {loc}: shadowing 缺 'lines' 陣列")
+                else:
+                    for m, ln in enumerate(lines):
+                        sloc = f"{loc}.shadowing.lines#{m}"
+                        if not isinstance(ln, dict):
+                            violations.append(f"[shadowing] {sloc}: 行須為物件，實為 {type(ln).__name__}")
+                            continue
+                        if not (isinstance(ln.get("text"), str) and ln["text"].strip()):
+                            violations.append(f"[shadowing] {sloc}: 缺非空 'text'")
+                        if not (isinstance(ln.get("intonation"), str) and ln["intonation"].strip()):
+                            advisories.append(
+                                f"[shadowing-intonation] {sloc}: 缺 'intonation' 語調提示"
+                                f"（engine 已容忍不顯示；建議補上以利語調模仿練習）"
+                            )
+
     # ---- 斷言 2：unit_id 跨所有 *.units.json 全域唯一 ----
     for uid, locs in sorted(id_to_locations.items()):
         if len(locs) > 1:
@@ -238,6 +264,7 @@ def run(root):
         "kp_refs": len(kp_refs),
         "kp_manifest_size": kp_valid,
         "violations": len(violations),
+        "advisories": advisories,
     }
     return violations, stats
 
@@ -270,6 +297,11 @@ def main(argv=None):
                 print("  - " + v, file=sys.stderr)
         else:
             print("[unit_schema_gate] CLEAN（0 violation）", file=sys.stderr)
+        adv = stats.get("advisories") or []
+        if adv:
+            print(f"[unit_schema_gate] {len(adv)} advisory（不阻擋，不計入 exit code）:", file=sys.stderr)
+            for a in adv:
+                print("  · " + a, file=sys.stderr)
 
     return len(violations)
 

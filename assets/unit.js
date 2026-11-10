@@ -271,7 +271,9 @@
         const row=el('div'); row.style.cssText='display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap';
         const b=el('button','gr-play','🔊'); b.onclick=()=>play(l.audio); row.appendChild(b);
         row.appendChild(el('span','gr-en', esc(l.text)));
-        row.appendChild(el('span','gr-note','（'+esc(l.intonation)+'）'));
+        // intonation 為可選欄位：僅在存在時渲染「（…）」。否則不輸出該 span——
+        // 無條件 esc(l.intonation) 會把缺欄位印成字面「（undefined）」給學習者（2026-11-10 視覺 QA 抓到）。
+        if(l.intonation){ row.appendChild(el('span','gr-note','（'+esc(l.intonation)+'）')); }
         row.appendChild(mkRec());
         c.appendChild(row);
       });
