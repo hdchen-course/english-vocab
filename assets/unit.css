@@ -121,3 +121,10 @@ h2.gr-h:not(:first-child){ margin-top:26px; }
 .gr-rate button.sel{ background:var(--c-english); color:var(--u-on-english-solid); border-color:var(--c-english); }
 .gr-note{ font-size:12.5px; color:var(--ink-soft); margin-top:6px; }
 .gr-foot{ color:var(--ink-soft); font-size:12px; margin-top:28px; border-top:1px solid var(--card-border); padding-top:12px; }
+/* 圖像單元（figure）：手繪 inline SVG 置中、填滿卡片寬度；高度上限兼顧 iPad Air 13 與老花，
+   整塊（圖＋caption）免捲動可達後續控制列。SVG 自身以 viewBox 縮放、不固定像素寬。 */
+.gr-figure{ margin:0 0 10px; display:flex; flex-direction:column; align-items:center; }
+.gr-figure__svg{ width:100%; display:flex; justify-content:center; }
+.gr-figure__svg svg{ width:100%; height:auto; max-width:560px; max-height:min(380px,44vh);
+  background:var(--card); border:1px solid var(--card-border); border-radius:12px; padding:10px; box-sizing:border-box; }
+.gr-figure__cap{ font-size:13px; color:var(--ink-soft); margin-top:6px; text-align:center; }

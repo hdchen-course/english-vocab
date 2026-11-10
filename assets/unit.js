@@ -29,6 +29,27 @@
   }
   function el(tag, cls, html){ const e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e; }
   function esc(s){ return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+  // 圖像欄位（§6.2.2 figure）：teach / practice 皆可帶 figure={svg,alt,caption?}。
+  // svg 為站內手繪靜態 SVG（可信、非使用者輸入），以 innerHTML 注入；僅接受 <svg 開頭字串，
+  // 其餘（含 <script>/外部 URL）一律拒絕繪製，回傳 null。alt 進 role=img 的 aria-label，
+  // 視覺 QA 以 iPad Air 13 render＋四角色簽核；高度上限兼顧 iPad/老花（免捲動可達控制列）。
+  function renderFigure(fig){
+    if(!fig || typeof fig.svg!=='string') return null;
+    const svg=fig.svg.trim();
+    if(!svg.startsWith('<svg')) return null;          // 只收手繪 inline SVG
+    if(/<\s*script/i.test(svg)) return null;          // 防注入：拒絕含 <script> 的 SVG
+    const box=el('figure','gr-figure');
+    const holder=el('div','gr-figure__svg'); holder.innerHTML=svg;
+    const node=holder.firstElementChild;
+    if(node && node.tagName && node.tagName.toLowerCase()==='svg'){
+      node.setAttribute('role','img');
+      node.setAttribute('aria-label', fig.alt ? String(fig.alt) : '圖');
+      if(!node.getAttribute('preserveAspectRatio')) node.setAttribute('preserveAspectRatio','xMidYMid meet');
+    }
+    box.appendChild(holder);
+    if(fig.caption){ box.appendChild(el('figcaption','gr-figure__cap', esc(fig.caption))); }
+    return box;
+  }
   function rateRow(levels, onPick){
     const lv=(levels||["還不熟","快會了","會了"]);
     const wrap=el('div','gr-rate'); lv.forEach((l,idx)=>{
@@ -177,6 +198,7 @@
       if(t.audio){ const b=el('button','gr-play','🔊 聽'); b.onclick=()=>play(t.audio); row.appendChild(b); }
       if(t.zh_hint){ tg=el('button','gr-zh-toggle','▸ 中文對照'); tg.setAttribute('aria-expanded','false'); row.appendChild(tg); }
       if(row.childNodes.length) c.appendChild(row);
+      if(t.figure){ const f=renderFigure(t.figure); if(f) c.appendChild(f); }
       c.appendChild(el('div','gr-en', esc(t.body)));
       if(t.zh_hint){
         const zhDiv=el('div','zh-hint', esc(t.zh_hint)); zhDiv.hidden=true; c.appendChild(zhDiv);
@@ -190,6 +212,7 @@
     main.appendChild(el('h2','gr-h','② 練一練')).id='s2';
     u.practice.forEach(p=>{
       const c=el('div','gr-card');
+      if(p.figure){ const f=renderFigure(p.figure); if(f) c.appendChild(f); }
       c.appendChild(el('div','gr-en', esc(p.stem)));
       if(p.type==='dictation'){
         const pad=makeCanvas(); c.appendChild(pad.box);

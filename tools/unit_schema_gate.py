@@ -138,6 +138,36 @@ def run(root):
                     if isinstance(kid, str):
                         kp_refs.append((kid, loc))
 
+            # 6. figure 欄位（§6.2.2 figure；圖像單元）：teach/practice 元素可選帶 figure。
+            #    present 時 fail-closed 驗證——必為 dict、svg 為 <svg 開頭字串、禁 <script>、alt 為非空 str。
+            #    與 assets/unit.js renderFigure 契約一致；壞 figure 直接 FAIL，不靜默略過。
+            def _check_figures(items, kind):
+                if not isinstance(items, list):
+                    return
+                for k, it in enumerate(items):
+                    if not isinstance(it, dict) or "figure" not in it:
+                        continue
+                    fig = it["figure"]
+                    floc = f"{loc}.{kind}#{k}.figure"
+                    if not isinstance(fig, dict):
+                        violations.append(f"[figure-type] {floc}: figure 須為物件，實為 {type(fig).__name__}")
+                        continue
+                    svg = fig.get("svg")
+                    if not isinstance(svg, str):
+                        violations.append(f"[figure-svg] {floc}: 缺 'svg' 字串欄位")
+                    else:
+                        s = svg.strip()
+                        if not s.startswith("<svg"):
+                            violations.append(f"[figure-svg] {floc}: svg 須以 '<svg' 開頭（手繪 inline SVG）")
+                        if re.search(r"<\s*script", s, re.I):
+                            violations.append(f"[figure-svg] {floc}: svg 禁含 <script>（防注入）")
+                    alt = fig.get("alt")
+                    if not (isinstance(alt, str) and alt.strip()):
+                        violations.append(f"[figure-alt] {floc}: figure 缺非空 'alt'（無障礙 aria-label／視覺 QA 必備）")
+
+            _check_figures(u.get("teach"), "teach")
+            _check_figures(u.get("practice"), "practice")
+
     # ---- 斷言 2：unit_id 跨所有 *.units.json 全域唯一 ----
     for uid, locs in sorted(id_to_locations.items()):
         if len(locs) > 1:
