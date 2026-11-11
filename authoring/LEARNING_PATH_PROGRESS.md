@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 11:51 數學島 numquant #24 收斂：math_numquant_exponentlaws（指數律：同底乘除/次方的次方/零次方/負指數；會考）5/5 → numquant 24/30
+- **frozen_sha `88ccf316101f36a8`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：指數律整理表 SVG（5 列，左欄列標籤同底相乘/同底相除/次方的次方/零次方/負指數，右欄對應公式）iPad 橫直四角色 render 簽核過。3 claim kind=definition。prereq＝multi-digit-mult＋division-remainder。scope 聚焦同底乘除/次方的次方/零次方/負指數；科學記號 out-of-scope（另置 #25）。
+- **4 MCQ**：同底相乘(2^3×2^2=2^5，誘答乘指數3×2/底相乘4^5/減指數)／同底相除(5^6÷5^2=5^4，誘答加/除/乘指數)／次方的次方((3^2)^4=3^8，誘答加指數/2的4次方=16/只留內層；★全同底 3^n 避 9^8=3^16 同值撞號)／零次方(7^0=1，誘答以為=0/=底數/混負一次方 1/7)。teach 用 10^2×10^3=10^5、6^5÷6^2=6^3、(4^3)^2=4^6、9^0=1、2^(−3)=1/8（.venv 全核，與 practice 不重疊）。
+- **收斂路徑（3 真缺陷，皆 content_audit 擋下）**：初凍 c0ad21f0、el1 clean 後——**el2**（owner learning b-hard decisive，class rule-missing-a≠0）：負指數規則 a^(−m)=1/a^m 漏標 (a≠0)、與同頁除法/零次方規則不一致→claim c-zero-neg 與 teach block2 補條件，重凍 33a10ee4。**el3**（五鏡、owner learning b-hard decisive，class distractor-reuses-verb-two-referents）：EL-mcq-div 的 5^3 誘答『相除是把指數相減、不是相除』中「相除」兩義自相矛盾→改『同底數相除要把指數相減』與 5^8/5^12 平行，重凍 88ccf316。後 el4–el8 連 5 clean（L3 皆 exit0）。commits：e5204d822(草稿)／518e4d7d1(el2)／a7d949f9e(el3)／各輪進度／本收斂。
+- **里程碑**：numquant 24/30（t_mid 4/10 完成）；剩 t_mid 6 個（scientific-notation/square-root/radical-simplify/rationalize-denominator/irrational-reals/approximation-error）。
+- **下一步**：numquant #25＝scientific-notation（科學記號：a×10^n 表示法與運算；會考，預設）。
+
 ## 2026-11-11 10:48 數學島 numquant #23 收斂：math_numquant_rationaloperations（有理數四則運算：加減乘除符號規則；會考）5/5 → numquant 23/30
 - **frozen_sha `9729c64494b53f48`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：乘除符號表 SVG（2 列：上列同號得正含（＋）×（＋）＝＋、（−）×（−）＝＋；下列異號得負含（＋）×（−）＝−、（−）×（＋）＝−；左欄列標籤對齊各列）iPad 橫直四角色 render 簽核過。3 claim kind=definition。prereq＝signed-numbers＋add-sub-vertical。scope 聚焦正負數加減乘除符號規則；指數律/科學記號 out-of-scope。
 - **4 MCQ**：異號加法((−7)+3=−4，誘答符號取錯/絕對值相加/同號相加忘符號)／減法轉加相反數(5−(−2)=7，誘答沒變相反數/符號弄反/把整個式子看成 −(5−2)=−3)／乘法同號得正((−4)×(−3)=12)／除法異號得負((−20)÷5=−4)。teach 用 (−2)+(−3)=−5、(−8)+5=−3、7−(−4)=11、(−2)×(−5)=10、(−3)×4=−12、(−15)÷3=−5（.venv 全核，與 practice 不重疊）。
