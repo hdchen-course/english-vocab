@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 17:50 數學島 algexpr #3 收斂：math_algexpr_translateword（文字題翻成算式）5/5 → algexpr 3/18
+- **frozen_sha `a3188ff15c28c763`**，DONE-GATE 六確定性 gate 全綠（per_page 372/372 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：選運算重點表 SVG（**四列各 1:1**：合起來・增加→用加法 ＋／拿走・相差→用減法 −／幾倍→用乘法 ×／平分→用除法 ÷）iPad 橫直四角色 render 簽核過（經 z1 拆列後重 render）。2 claim kind=definition（c-translate 選運算並列式、c-read 列式解讀），兩 claim 皆被 practice answer_evidence 引用。prereq=symbol-unknown。scope＝看關係選運算＋照關係列式（□ 代未知）＋列式解讀（由算式還原情況）。國小只用 + − × ÷ = □ ( )。
+- **4 MCQ**：合併選算式(一盒12枝+一盒8枝→12＋8，誘答 相差12−8／誤當倍數12×8／誤當平分12÷8)／平分選算式(24顆平分給4人→24÷4，誘答 拿走24−4／4個24相乘24×4／增加24＋4)／幾倍選算式(弟3枚哥哥4倍→3×4，誘答 多4枚3＋4／相差4−3／平分3÷4)／列式解讀(□−6=10 對應「原本□、吃掉6、剩10」，誘答 加法□+6=10情境／6為原本數6+□=10／角色互換10−□=6)。teach 用 7＋6=13、15−9=6、5×3=15、18÷6=3、解讀例 □−3=8（.venv 全核，與 practice 不整組重疊）。
+- **收斂路徑（草稿後連 6 輪、5 真缺陷全由 content_audit panel 擋下）**：初凍 d0e03c94 → **v1**（Q1「12×8」誘答「把『一共』當成其中一盒的幾倍」繞口、操作被解量、與 Q2 不平行，panel 5/5 b-hard）→ **w1**（Q3「4−3」誘答「算兩人相差」把倍數 4 當成人數、反向強化「4倍=4枚」迷思，panel 5/5 b-hard）→ **x1**（teach 指向句「重點整理在下面的表」未限定、暗示表含列式解讀但表只有選運算，panel 7 鏡 b-hard）→ **y1**（teach 減法例「有15個拿走9個剩下」run-on 無標點、與平行例不一致，4 鏡 b-hard、owner=english）→ **z1**（teach 重點表 row3「幾倍・平分｜用乘法、除法」兩關係對兩運算未 1:1 配對、破壞 row1-2 模式，panel 7/7 b-hard）拆四列各 1:1 → **aa1–aa5** 連 5 clean（L3 皆 exit0）。每次真缺陷修正後皆重 render iPad 四角色簽核（teach/figure 變動共 render 3 次）。commits：72aa83726(草稿)／7b3c83ce8(v1)／c751085a4(w1)／1185da8ea(x1)／97505194f(y1)／34decbe7f(z1)／各輪 banked／4b0a1c487(本收斂)。
+- **教訓（banked，已入 math-unit defect-classes 記憶）**：(a) 誘答 rationale 要「直白命名實際做錯的運算」且四題平行，不可用繞口的「把 X 當成 Y」框架；(b) 倍數題誘答不可把「倍數」講成「某人的數量」，會反向強化正要破除的迷思；(c) teach 指向圖/表的收尾句要限定範圍（「選運算的重點整理」），否則暗示表涵蓋剛教完的所有概念；(d) teach 平行例句節奏要一致（都用標點斷句）；(e) 重點表每個 row 要 1:1（左關係→右單一運算），多對多擠一格會有「任一對任一」誤讀——即使 body/caption 正確、表本身仍須自足。
+- **里程碑**：algexpr 3/18（numquant 已 30/30 全收斂）。
+- **下一步**：algexpr #4。依 build_status 選 t_base 剩餘或 t_mid linear-expression 類最合理起點（預設跑 `python3 -I tools/build_status.py` 看 algexpr strand 缺口後選）。
+
 ## 2026-11-11 16:57 數學島 algexpr #2 收斂：math_algexpr_symbolunknown（用符號表示未知數）5/5 → algexpr 2/18
 - **frozen_sha `de77bd66414b2683`**，DONE-GATE 六確定性 gate 全綠（per_page 371/371 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：以符號表示未知數重點表 SVG（3 列左欄步驟：用符號 不知道的數用 □ 代替／求出符號 用相反的運算還原／翻成算式 照題目關係列式）iPad 橫直四角色 render 簽核過。3 claim kind=definition（c-symbol 定義性/teach-only、c-inverse、c-translate）。prereq=pattern-sequence。scope＝用符號(□/()/文字)代替未知數列式、用逆運算(加↔減、乘↔除)求值、文字情境翻算式。國小層級只用 + − × ÷ = □ ( )，不出現字母變數或不等式、不教移項法則術語。
 - **4 MCQ**：加法空格(□+6=13→7，誘答 13+6=19／13−5=8少減1／直接抄題目6)／減法空格(□−4=5→9，誘答 5−4=1／5×4=20／併成45)／文字翻譯求值(一個數加8等於20→12，誘答 20+8=28／20×8=160／減兩次20−8−8=4)／選正確算式(姊姊原□再買5共12→□+5=12，誘答 □−5當減少／□×5當5倍／5−□拿原數去減)。teach 用 □+9=15→6、□−7=10→17、某數×3=18→6（.venv 全核，與 practice 不重疊）。
