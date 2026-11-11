@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 20:06 數學島 algexpr #8 收斂：math_algexpr_multformuladiff（乘法公式：平方差）5/5 → algexpr 8/18
+- **frozen_sha `ed1f1d2c3c9426a7`**，DONE-GATE 六確定性 gate 全綠（per_page 377/377 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN 2077 題／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：平方差重點表 SVG（3 列左欄：平方差公式 x²−b²／為何沒中間項 −bx＋bx＝0／常見錯誤 尾項符號弄成加）iPad 橫直四角色 render 簽核過（x² 上標正確、無重疊/裁切、圖文與 alt/caption 一致、landscape 選項 3 欄/portrait 2 欄充分利用寬度）。2 claim kind=definition（c-diff-formula 公式／c-why-cancel 中間項抵銷原理），皆被四題 answer_evidence 引用。prereq=mult-formula-square。scope＝(x+b)(x−b)=x²−b²（一加一減數字相同→中間兩項抵銷）、為何沒中間項（−bx+bx=0）、最常錯尾項符號弄成加。
+- **4 MCQ**：(x+4)(x−4)=x²−16（誘答 尾項符號正x²+16／中間沒抵銷x²−8x−16／尾項算2倍x²−8）／(x+6)(x−6)=x²−36（誘答 x²+36／x²−12x−36／x²−12）／(x−5)(x+5)=x²−25（順序對調測交換律；誘答 x²+25／x²−10x−25／x²−10）／(x+2)(x−2)=x²−4（誘答 x²+4／x²−4x−4／尾項沒平方x²−2，因 b=2 時 2×2=2² 同值故改『直接當答案忘平方』避免誘答模糊）。teach 用 (x+7)(x−7)=x²−49、(x+3)(x−3)=x²−9（sympy 全核，與 practice 不整組重疊）。
+- **收斂路徑（★草稿後首輪即 clean、連 5 輪零 content_audit 缺陷）**：初凍 ed1f1d2c → v1–v5 連 5 clean（L3 皆 exit0），零真缺陷。繼 #5/#6 之後第三個「草稿一次到位」單元——#7 教訓（誘答括號算法與標籤一致）＋尾項誘答避開撞別題正解（P4 b=2 特案）在草稿期預先處理。pre-freeze 時 pedagogy advisory（c-why-cancel 未被引用）當場把四題 answer_evidence 補上 c-why-cancel 化解、免一輪。commits：bb9a48703(草稿)／各輪 banked（f28d1cc/4d3b1e1/453bd54/964f976/本收斂）。
+- **教訓（banked）**：平方差三誘答機制「尾項符號弄成加／中間項沒抵銷誤留／尾項沒平方」彼此平行且各單一乾淨，panel 零異議。解釋性 claim（為何沒中間項）即使 teach-only 也宜綁進 practice answer_evidence，否則 pedagogy 會報 parity advisory；草稿 SOP 已納入此檢查。
+- **里程碑**：algexpr 8/18（t_base 3/3、t_mid 5/8；numquant 已 30/30）。
+- **下一步**：algexpr #9。t_mid 因式分解線：建議 factor-common（提公因式，會考）接乘法公式最自然（展開的逆操作，預設）。
+
 ## 2026-11-11 19:45 數學島 algexpr #7 收斂：math_algexpr_multformulasquare（乘法公式：和的平方、差的平方）5/5 → algexpr 7/18
 - **frozen_sha `c74d64a37d375e25`**，DONE-GATE 六確定性 gate 全綠（per_page 376/376 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN 2073 題／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：乘法公式平方重點表 SVG（3 列左欄：和的平方 x²＋2bx＋b²／差的平方 x²−2bx＋b²／常見錯誤 漏掉中間 2bx 這一項）iPad 橫直四角色 render 簽核過（x² 上標正確、無重疊/裁切、圖文與 alt/caption 一致）。2 claim kind=definition（c-sum/c-diff），皆被 practice answer_evidence 引用。prereq=polynomial-mult。scope＝(x+b)²=x²+2bx+b²（頭平方・兩倍積・尾平方）、(x−b)²=x²−2bx+b²（中間變減、尾項仍正）、最常見錯誤＝漏中間 2bx。
 - **4 MCQ**：和的平方 (x+3)²=x²+6x+9（誘答 漏中項x²+9／中項忘乘2得x²+3x+9／尾項算成2倍x²+6x+6）／差的平方 (x−4)²=x²−8x+16（誘答 漏中項x²+16／尾項當負x²−8x−16／中項忘變號x²+8x+16）／和的平方 (x+5)²=x²+10x+25（誘答 漏中項x²+25／中項忘乘2得x²+5x+25／尾項算成2倍x²+10x+10）／差的平方 (x−1)²=x²−2x+1（誘答 漏中項x²+1／尾項當負x²−2x−1／中項忘變號x²+2x+1）。teach 用 (x+7)²=x²+14x+49、(x−6)²=x²−12x+36、(x+1)²=x²+2x+1（sympy 全核，與 practice 不整組重疊）。
