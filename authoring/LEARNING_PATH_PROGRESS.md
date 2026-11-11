@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 19:16 數學島 algexpr #6 收斂：math_algexpr_polynomialmult（多項式的乘法/分配律展開）5/5 → algexpr 6/18
+- **frozen_sha `fe5caa4c2acb23a1`**，DONE-GATE 六確定性 gate 全綠（per_page 375/375 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：多項式乘法重點表 SVG（3 列左欄：x乘x／單項式乘多項式／二項式乘二項式）iPad 橫直四角色 render 簽核過（x² 上標正確、× 正常、無重疊/裁切、圖文與 alt/caption 一致）。2 claim kind=definition（c-mono/c-binom），皆被 practice answer_evidence 引用。prereq=polynomial-add-sub。scope＝單項式乘多項式（分配律乘每一項）、二項式乘二項式（每項乘每項再合併、別漏交叉項）、x·x=x²。
+- **4 MCQ**：單項式×二項式 3x(x+4)=3x²+12x（誘答 x·x當x沒升次15x／漏乘第二項3x²+4／第二項掉x 3x²+12）／純數×二項式 2(3x+5)=6x+10（誘答 漏乘第二項6x+5／漏乘第一項3x+10／常數相加2+5=7）／二項式×二項式 (x+2)(x+3)=x²+5x+6（誘答 漏交叉項x²+6／常數相加2+3=5／x·x當x得6x+6）／(x+1)(x+5)=x²+6x+5（誘答 漏交叉項x²+5／常數相加1+5=6／x·x當x得7x+5）。teach 用 2x(x+3)=2x²+6x、3(2x+4)=6x+12、(x+1)(x+2)=x²+3x+2（sympy 全核，與 practice 不整組重疊）。
+- **收斂路徑（★草稿後首輪即 clean、連 5 輪零 content_audit 缺陷）**：初凍 fe5caa4c → v1–v5 連 5 clean（L3 皆 exit0），零真缺陷。繼 #5 之後第二個「草稿一次到位」單元——defect-class 教訓（誘答直白命名平行、teach 道地、重點表 1:1 圖文一致、無 teach↔practice 同式同答重疊、sympy 預核）在草稿期全部預先避開。commits：47b994e75(草稿)／各輪 banked／74507dc94(本收斂)。
+- **里程碑**：algexpr 6/18（t_base 3/3、t_mid 3/8；numquant 已 30/30）。
+- **下一步**：algexpr #7。t_mid 建議 mult-formula-square（乘法公式：和的平方、差的平方，會考）接 polynomial-mult 最自然（預設）。
+
 ## 2026-11-11 18:57 數學島 algexpr #5 收斂：math_algexpr_polynomialaddsub（多項式的加減）5/5 → algexpr 5/18
 - **frozen_sha `1398383ea734dc72`**，DONE-GATE 六確定性 gate 全綠（per_page 374/374 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN 含 x²/x⁴ 誘答／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：多項式加減重點表 SVG（3 列左欄：同類項／加法／減法）iPad 橫直四角色 render 簽核過（x² 上標正確、無重疊/裁切、teach body 道地、圖文與 alt/caption 一致）。2 claim kind=definition（c-add/c-sub），皆被 practice answer_evidence 引用。prereq=linear-expression。scope＝多項式相加（同次係數相加、次數不變）、相減（減號分配到每一項變號再合併）、含 x²/x/常數多次數合併。
 - **4 MCQ**：加法含常數(2x+3)+(5x+6)=7x+9（誘答 把常數當x全加16x／係數相乘10x+9／常數相乘7x+18）／減法變號(8x+7)−(3x+2)=5x+5（誘答 整個沒變號11x+9／只變x項5x+9／只變常數11x+5）／加法含x²(x²+4x)+(3x²+2x)=4x²+6x（誘答 全當同次10x²／次數相加4x⁴+6x²／x項寫成x² 4x²+6x²）／減法含x²(6x²+5x)−(2x²+3x)=4x²+2x（誘答 沒變號8x²+8x／只變x²項4x²+8x／只變x項8x²+2x）。teach 用 (x+6)+(4x+2)=5x+8、(7x+5)−(2x+1)=5x+4、(2x²+x)+(x²+3x)=3x²+4x（sympy 全核，與 practice 不整組重疊）。
