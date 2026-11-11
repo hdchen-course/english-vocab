@@ -1,0 +1,197 @@
+{
+ "_note": "數學島 代數式（algexpr）strand 第 12 個單元（t_mid 第九個，也是 t_mid algexpr 最後一個）。知識點 math.t_mid.algexpr.polynomial-div（多項式除法／長除法）。tier=t_mid（國中；學習者端不顯示年段 R11）。全繁體零簡體零 PRC 詞。數學中文授課。★t_mid 可用 x、x²。scope 聚焦：多項式長除法（像數字長除法：最高次項相除得商、乘回去相減、重複到餘式次數比除式低）、停止條件（餘式次數<除式次數）、除法原理（被除式＝除式×商＋餘，可乘回去驗算）。prereq=polynomial-mult（要用到乘回去）。★自檢（math-unit defect-classes #1/#10/#14）：每個誘答的（商,餘）組必須能由單一錯誤機制導出且 sympy 驗證（商×除式+餘 的重建值：『未除完』型＝被除式但餘式次數仍≥除式＝合法誘答、『算錯』型≠被除式），誘答不撞別題正解，teach 例題不與 practice 重疊，全半形一致，道地中文。practice 4 mcq：(x²+5x+6)÷(x+2)=商x+3餘0、(x²+7x+10)÷(x+2)=商x+5餘0、(x²+4x+5)÷(x+1)=商x+3餘2、(2x²+7x+3)÷(x+3)=商2x+1餘0。teach 例題避開 practice：(x²+6x+8)÷(x+2)=商x+4餘0、(x²+2x+5)÷(x+1)=商x+1餘4、(x²−x−6)÷(x−3)=商x+2餘0。teach 帶「長除法」重點表圖(左欄:最高次項相除/乘回去相減/停止條件)。claim kind=definition。figure-only example 無 body；無音檔。",
+ "page": "math_algexpr_polynomialdiv.html",
+ "units": [
+  {
+   "unit_id": "math.t_mid.algexpr.polynomial-div",
+   "title_zh": "多項式的除法（長除法）",
+   "can_do": "我會用長除法做多項式除法：像數字的長除法一樣，先用被除式的最高次項除以除式的最高次項得到商的一項，乘回去相減，把剩下的再除，一直做到餘式的次數比除式低為止。我也記得「被除式 ＝ 除式 × 商 ＋ 餘」，可以乘回去驗算。",
+   "situation_group": "代數式：多項式除法（長除法）",
+   "subject": "math",
+   "strand": "algexpr",
+   "est_minutes": 10,
+   "knowledge_point_ids": [
+    "math.t_mid.algexpr.polynomial-div"
+   ],
+   "prerequisites": [
+    "math.t_mid.algexpr.polynomial-mult"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-longdiv",
+     "text": "多項式長除法：像數字長除法一樣，先用被除式的最高次項除以除式的最高次項，得到商的第一項；把這一項乘回除式再相減；把剩下的式子再用同樣方法除下去。例如 (x² ＋ 6x ＋ 8) ÷ (x ＋ 2)：x² ÷ x ＝ x，x × (x ＋ 2) ＝ x² ＋ 2x，相減剩 4x ＋ 8；4x ÷ x ＝ 4，4 × (x ＋ 2) ＝ 4x ＋ 8，相減剩 0。所以商是 x ＋ 4、餘是 0。",
+     "kind": "definition",
+     "source_refs": [
+      "多項式長除法（國中數學）"
+     ],
+     "verification_ref": "sympy div(x²+6x+8, x+2)=(x+4, 0)",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-check-stop",
+     "text": "什麼時候停？一直除到「餘式的次數比除式低」為止；如果餘式的次數還大於或等於除式，就要繼續除。除完後會有「被除式 ＝ 除式 × 商 ＋ 餘」，可以把除式乘商再加餘，看是不是等於被除式來驗算。例如 (x² ＋ 2x ＋ 5) ÷ (x ＋ 1)：商 x ＋ 1、餘 4，驗算 (x ＋ 1)(x ＋ 1) ＋ 4 ＝ x² ＋ 2x ＋ 5 ✓。",
+     "kind": "definition",
+     "source_refs": [
+      "多項式除法 除法原理 餘式次數（國中數學）"
+     ],
+     "verification_ref": "被除式=除式×商+餘；sympy div(x²+2x+5, x+1)=(x+1, 4)、(x+1)(x+1)+4=x²+2x+5",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.algexpr.polynomial-div"
+     ],
+     "body": "多項式除法用「長除法」，跟數字的長除法很像：先用被除式的最高次項除以除式的最高次項，得到商的第一項；把這一項乘回除式再相減；剩下的式子再用同樣方法除下去。例如 (x² ＋ 6x ＋ 8) ÷ (x ＋ 2)：x² ÷ x ＝ x，x × (x ＋ 2) ＝ x² ＋ 2x，相減剩 4x ＋ 8；再 4x ÷ x ＝ 4，4 × (x ＋ 2) ＝ 4x ＋ 8，相減剩 0。所以商是 x ＋ 4、餘是 0。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.algexpr.polynomial-div"
+     ],
+     "body": "一直除到「餘式的次數比除式低」才停；餘式次數如果還大於或等於除式，就要繼續除。除完是「被除式 ＝ 除式 × 商 ＋ 餘」，可以乘回去驗算。例如 (x² ＋ 2x ＋ 5) ÷ (x ＋ 1)：商 x ＋ 1、餘 4，驗算 (x ＋ 1)(x ＋ 1) ＋ 4 ＝ x² ＋ 2x ＋ 5 ✓；又例如 (x² − x − 6) ÷ (x − 3)：商 x ＋ 2、餘 0。重點整理在下面的表。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_mid.algexpr.polynomial-div"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 380 150' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><rect x='16' y='12' width='348' height='126' rx='12' fill='none' stroke='#cdbfa6' stroke-width='1.5'/><line x1='128' y1='12' x2='128' y2='138' stroke='#e3d8c4' stroke-width='1'/><line x1='16' y1='54' x2='364' y2='54' stroke='#e3d8c4' stroke-width='1'/><line x1='16' y1='96' x2='364' y2='96' stroke='#e3d8c4' stroke-width='1'/><g font-size='12.5' fill='#2f6f54' text-anchor='middle' font-weight='700'><text x='72' y='37'>每一步</text><text x='72' y='79'>再相減</text><text x='72' y='121'>停止條件</text></g><g fill='#33475b' text-anchor='middle'><text x='246' y='37' font-size='12'>最高次項相除得商一項</text><text x='246' y='79' font-size='12'>商乘除式、乘回去相減</text><text x='246' y='121' font-size='11.5'>餘式次數＜除式次數</text></g></g></svg>",
+      "alt": "多項式長除法重點表，分三列，左欄是步驟、右欄是內容：每一步 最高次項相除得商的一項；再相減 把商乘回除式再相減；停止條件 餘式次數小於除式次數。",
+      "caption": "長除法三步：最高次項相除得商一項 → 商乘回除式相減 → 重複到餘式次數＜除式次數；被除式＝除式×商＋餘可驗算"
+     }
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "PD-mcq-1",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "把 (x² ＋ 5x ＋ 6) 除以 (x ＋ 2)，商式和餘式是多少？",
+     "answer": "商 x ＋ 3、餘 0",
+     "kp_ids": [
+      "math.t_mid.algexpr.polynomial-div"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.algexpr.polynomial-div"
+     ],
+     "options": [
+      "商 x ＋ 3、餘 0",
+      "商 x ＋ 2、餘 0",
+      "商 x、餘 3x ＋ 6",
+      "商 x ＋ 3、餘 6"
+     ],
+     "distractor_rationales": {
+      "商 x ＋ 2、餘 0": "這是第二步算錯了；相減剩 3x ＋ 6 後，3x ÷ x ＝ 3（不是 2），所以商是 x ＋ 3、餘 0。",
+      "商 x、餘 3x ＋ 6": "這是只除了一步就停；相減剩的 3x ＋ 6 次數（1 次）和除式 x ＋ 2 一樣、還能再除，要除到餘式次數比除式低，繼續除得商 x ＋ 3、餘 0。",
+      "商 x ＋ 3、餘 6": "這是把被除式原本的常數項 6 當成餘數了；第二步會把 6 一起除掉、相減剩 0，所以餘是 0、商是 x ＋ 3。"
+     },
+     "answer_evidence": [
+      "c-longdiv",
+      "c-check-stop"
+     ],
+     "feedback": "(x² ＋ 5x ＋ 6) ÷ (x ＋ 2)：x² ÷ x ＝ x、相減剩 3x ＋ 6；3x ÷ x ＝ 3、相減剩 0。商 x ＋ 3、餘 0。驗算 (x ＋ 2)(x ＋ 3) ＝ x² ＋ 5x ＋ 6 ✓。"
+    },
+    {
+     "question_id": "PD-mcq-2",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "把 (x² ＋ 7x ＋ 10) 除以 (x ＋ 2)，商式和餘式是多少？",
+     "answer": "商 x ＋ 5、餘 0",
+     "kp_ids": [
+      "math.t_mid.algexpr.polynomial-div"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.algexpr.polynomial-div"
+     ],
+     "options": [
+      "商 x ＋ 5、餘 0",
+      "商 x ＋ 4、餘 0",
+      "商 x、餘 5x ＋ 10",
+      "商 x ＋ 5、餘 10"
+     ],
+     "distractor_rationales": {
+      "商 x ＋ 4、餘 0": "這是第二步算錯了；相減剩 5x ＋ 10 後，5x ÷ x ＝ 5（不是 4），所以商是 x ＋ 5、餘 0。",
+      "商 x、餘 5x ＋ 10": "這是只除了一步就停；相減剩的 5x ＋ 10 次數和除式一樣、還能再除，繼續除得商 x ＋ 5、餘 0。",
+      "商 x ＋ 5、餘 10": "這是把原本的常數項 10 當成餘數了；第二步會把 10 一起除掉、相減剩 0，所以餘是 0、商是 x ＋ 5。"
+     },
+     "answer_evidence": [
+      "c-longdiv",
+      "c-check-stop"
+     ],
+     "feedback": "(x² ＋ 7x ＋ 10) ÷ (x ＋ 2)：x² ÷ x ＝ x、相減剩 5x ＋ 10；5x ÷ x ＝ 5、相減剩 0。商 x ＋ 5、餘 0。驗算 (x ＋ 2)(x ＋ 5) ＝ x² ＋ 7x ＋ 10 ✓。"
+    },
+    {
+     "question_id": "PD-mcq-3",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "把 (x² ＋ 4x ＋ 5) 除以 (x ＋ 1)，商式和餘式是多少？",
+     "answer": "商 x ＋ 3、餘 2",
+     "kp_ids": [
+      "math.t_mid.algexpr.polynomial-div"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.algexpr.polynomial-div"
+     ],
+     "options": [
+      "商 x ＋ 3、餘 2",
+      "商 x ＋ 3、餘 0",
+      "商 x ＋ 4、餘 2",
+      "商 x、餘 3x ＋ 5"
+     ],
+     "distractor_rationales": {
+      "商 x ＋ 3、餘 0": "這是漏了餘數；最後相減剩的是 2（不是 0），要寫出餘 2，所以商 x ＋ 3、餘 2。",
+      "商 x ＋ 4、餘 2": "這是商的常數項算錯了；相減剩 3x ＋ 5 後，3x ÷ x ＝ 3（不是 4），所以商是 x ＋ 3、餘 2。",
+      "商 x、餘 3x ＋ 5": "這是只除了一步就停；相減剩的 3x ＋ 5 次數和除式一樣、還能再除，繼續除得商 x ＋ 3、餘 2。"
+     },
+     "answer_evidence": [
+      "c-longdiv",
+      "c-check-stop"
+     ],
+     "feedback": "(x² ＋ 4x ＋ 5) ÷ (x ＋ 1)：x² ÷ x ＝ x、相減剩 3x ＋ 5；3x ÷ x ＝ 3、相減剩 2（次數比除式低，停）。商 x ＋ 3、餘 2。驗算 (x ＋ 1)(x ＋ 3) ＋ 2 ＝ x² ＋ 4x ＋ 5 ✓。"
+    },
+    {
+     "question_id": "PD-mcq-4",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "把 (2x² ＋ 7x ＋ 3) 除以 (x ＋ 3)，商式和餘式是多少？",
+     "answer": "商 2x ＋ 1、餘 0",
+     "kp_ids": [
+      "math.t_mid.algexpr.polynomial-div"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.algexpr.polynomial-div"
+     ],
+     "options": [
+      "商 2x ＋ 1、餘 0",
+      "商 x ＋ 1、餘 0",
+      "商 2x ＋ 3、餘 0",
+      "商 2x ＋ 1、餘 3"
+     ],
+     "distractor_rationales": {
+      "商 x ＋ 1、餘 0": "這是第一步的係數算錯了；2x² ÷ x ＝ 2x（不是 x），所以商的第一項是 2x，得商 2x ＋ 1、餘 0。",
+      "商 2x ＋ 3、餘 0": "這是第二步算錯了；相減剩 x ＋ 3 後，x ÷ x ＝ 1（不是 3），所以商是 2x ＋ 1、餘 0。",
+      "商 2x ＋ 1、餘 3": "這是把原本的常數項 3 當成餘數了；第二步會把 3 一起除掉、相減剩 0，所以餘是 0、商是 2x ＋ 1。"
+     },
+     "answer_evidence": [
+      "c-longdiv",
+      "c-check-stop"
+     ],
+     "feedback": "(2x² ＋ 7x ＋ 3) ÷ (x ＋ 3)：2x² ÷ x ＝ 2x、2x × (x ＋ 3) ＝ 2x² ＋ 6x、相減剩 x ＋ 3；x ÷ x ＝ 1、相減剩 0。商 2x ＋ 1、餘 0。驗算 (x ＋ 3)(2x ＋ 1) ＝ 2x² ＋ 7x ＋ 3 ✓。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（長除法：最高次項相除得商一項、乘回去相減、重複到餘式次數比除式低才停；被除式＝除式×商＋餘，乘回去驗算，不自動批改）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
