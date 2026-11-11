@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 09:20 數學島 numquant #21 收斂：math_numquant_signednumbers（正負數與數線；t_mid 起點，會考）5/5 → numquant 21/30
+- **frozen_sha `c89a30e2743ed944`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：數線 SVG（−4..+4、0 粗體原點、綠點標 −3 與 +2、雙向箭頭、「越右越大→」）iPad 橫直四角色 render 簽核過。3 claim kind=definition。prereq＝compare-order＋add-sub-vertical。scope 聚焦正負數意義/數線/比大小/相反數；絕對值定義另置 #22。
+- **4 MCQ**：兩負數比大小(−2 vs −5→−2)／相反數(+6→−6)／情境正負表示(下降5層=−5)／0 不分正負概念題。.venv 全核。
+- **收斂路徑（3 真缺陷，多為 MCQ-craft/metadata）**：**sn1** 7鏡 a-wrong：_note 寫數線「−5..+5」但實際 SVG「−4..+4」→改 _note。**sn2** owner-decisive：SN-mcq-concept 選項4「負數都比正數大」不提0、題幹限定關於0→破壞選項平行；改談0的假敘述後觸發 lead-in cue（三誘答皆「0 是」開頭）→選項4改「0 比所有的負數都還要小」破壞共同前綴。**sn6** owner-decisive(defect-class#10 recall-not-transfer)：teach block3 與 claim c-numberline 的負數比較例「−2＞−5」與 practice SN-mcq-compare 逐字相同→de-converge、teach/claim 改 −1＞−4（practice 題目本身保留 −2/−5）。重凍 c89a30e2 後 sn7–sn11 連 5 clean（L3 皆 exit0）。另 pre-freeze pedagogy 抓 length-cue（concept 正解最長）已於草稿修。commits：4ac1c0d71(草稿)／0e5a3547a(sn1)／e3e47d82e(sn2)／b8f9ecd21(sn6)／進度／本收斂。
+- **里程碑**：**數學島 numquant t_mid 第一個 KP 完成**；numquant 21/30，剩 t_mid 9 個（absolute-value/rational-operations/exponent-laws/scientific-notation/square-root/radical-simplify/rationalize-denominator/irrational-reals/approximation-error）。
+- **下一步**：numquant #22＝absolute-value（絕對值定義、幾何意義與數線距離，會考，預設）。
+
 ## 2026-11-11 08:25 數學島 numquant #20 收斂：math_numquant_unitconversion（單位換算 長度/重量/容量）5/5 → numquant 20/30 ★t_base numquant 20/20 全部完成 🎉
 - **frozen_sha `1ff379bdc30a53e7`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：進率表圖（長度 1公尺=100公分／重量 1公斤=1000公克／容量 1公升=1000毫升 三列、分隔線、caption）iPad 橫直四角色 render 簽核過。3 claim kind=definition（claim_evidence CLEAN）。prereq＝multi-digit-mult＋division-remainder。
 - **4 MCQ**：長度大→小(5公尺=500公分)／重量大→小(6公斤=6000公克)／容量大→小(4公升=4000毫升)／小→大用除法概念題(P4)。.venv 全核。核心＝大→小用乘(數量變多)、小→大用除(數量變少)，要記進率。
