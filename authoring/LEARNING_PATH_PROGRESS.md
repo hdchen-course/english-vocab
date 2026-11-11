@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 08:04 數學島 numquant #19 收斂：math_numquant_timecalculation（時間加減：時刻/時距、60 進位借位進位）5/5 → numquant 19/30
+- **frozen_sha `22f63e7090e2f341`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：直式時間借位圖（4時15分−1時40分=2時35分，靠右對齊、圖內簡短說明「分不夠減→向時借1時=60分」、詳細借位在引擎 caption）iPad 橫直四角色 render 簽核過。3 claim kind=definition（claim_evidence CLEAN）。prereq＝add-sub-vertical＋place-value-read-write。
+- **4 MCQ**：時距借位(7:50→9:10=1時20分)／時刻加時距進位(2:40+30分=3:10)／分鐘換時分(100分=1時40分)／1時=60分概念題。.venv 全核。**核心教學點＝時間 60 進位非 10 進位**（誘答涵蓋沒借位倒減、借位後時沒扣1、當十進位小數、沒進位、每10分算1時等單一錯誤）。
+- **收斂路徑（tc1 一次即 clean；建立時 render 抓到一個視覺缺陷）**：建立時 iPad render 發現直式借位圖內說明文字過長被裁切（viz-qa#3 NO CLIPPING／#4 TEXT FITS，右側「時 4－1－1＝2」切掉、左側「減」切成「咸」）→縮短圖內文字、詳細說明移到引擎 caption、重 render 四角色過、重凍 22f63e7。之後 tc1–tc5 連 5 clean（coverage_check L3 皆 exit0，partition 每輪不同）。commits：6acfb22d6(草稿)／進度 commit／本收斂。
+- **教訓（補強）**：**SVG figure 內嵌說明文字務必先 render 實測寬度**——viewBox 窄（~340）時長中文句會溢出被裁；原則＝圖內只放極短提示，詳細算式放引擎 caption（figure.caption）。
+- **下一步**：numquant #20＝unit-conversion（單位換算，長度/重量/容量），完成後即達成 **t_base numquant 20/20**。
+
 ## 2026-11-11 07:44 數學島 numquant #18 收斂：math_numquant_moneycalculation（貨幣與簡單金額計算：總價加法/找零減法/同價物乘法）5/5 → numquant 18/30
 - **frozen_sha `8e418c18c160bc73`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：直式找零圖（60−24=36 單借位、綠線無、monospace 靠右對齊、元 單位標）本 figure sha iPad 橫直四角色 render 簽核過（mc2 僅改非-render _note，figure SVG byte 未變）。3 claim kind=definition（claim_evidence CLEAN）。幣別新臺幣「元」、零 PRC 用語。prereq＝add-sub-vertical＋multiplication-table。
 - **4 MCQ**：總價加法(45+20=65)／找零減法(50-35=15)／同價物乘法(8×5=40)／找零用減法概念題。.venv 全核。teach 四塊涵蓋加/減/乘三運算皆有 rendered worked example。
