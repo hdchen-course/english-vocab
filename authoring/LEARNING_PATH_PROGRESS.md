@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 05:42 數學島 geom #8 收斂：math_geom_area（面積公式：正方形與長方形，t_base 國小）5/5 → geom strand 8/39
+- **frozen_sha `d52072d8948681fb`**，DONE-GATE 六確定性 gate 全綠（per_page 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：格子圖（正方形 3×3＝9 格、長方形 4×2＝8 格，平方公分單位視覺化）＋標邊長（邊3/長4/寬2 皆帶公分）＋公式於各圖下，iPad 橫直四角色 render 簽核過（格數與標示相符、兩維單位一致、無溢出重疊）。2 claim kind=definition（c-area-def 面積＝內部大小、單位平方公分、面積≠周長；c-area-formula 正方形＝邊×邊、長方形＝長×寬），皆被 practice answer_evidence 引用。★t_base 國小：僅用公分/平方公分/×/＝與數字，禁 x、禁 ≥＜。prereq=perimeter（對比面積≠周長）。scope＝正方形/長方形面積與面積概念，不涉三角形/圓面積。算術全 sympy 驗（6×6=36、7×4=28、3×3=9、4×2=8）。
+- **4 MCQ**：Q1 正方形邊6面積=36〔誘答 24邊×4(周長)/12邊×2/30〕／Q2 長方形長7寬4面積=28〔誘答 22(長+寬)×2(周長)/11加一次/14只乘2〕／Q3 面積意思=圖形裡面佔多大範圍〔誘答 外圍一圈長度(周長)/最長邊/角度〕／Q4 面積單位=平方公分〔誘答 公分/度/公斤〕。★誘答刻意用「周長值」(24、22)當混淆項以強化面積≠周長區辨（panel 認可為教學設計）。
+- **收斂路徑（草稿後 R1 修 1 minor、R2–R6 連 5 clean，僅 1 次 de-converge，最順一次）**：pre-freeze 六類 gate 全綠（含格子 SVG render 驗）→ 初凍 b82d481c → **R1**（1 minor b-hard：SVG 長方形寬只標「2」無「公分」，此單元正教公分vs平方公分更需一致→補三行「寬／2／公分」＋同步 alt，重凍 d52072d8）→ R2–R6 連 5 clean（R2 有 2 findings 皆 panel 判 NOT A DEFECT：_note 內部註記 digit 4 重用無害、Q4「平方公分」較長為構念相關非 length cue；L3 皆 exit0、agents_error 全 0）。★首度套用新銀行的缺陷類 #15（SVG 尺寸帶單位），draft 幾乎一次到位。
+- **里程碑**：數學島 geom（幾何）strand **8/39**（t_base 8/12）。algexpr strand 已 18/18 COMPLETE。
+- **下一步**：geom #9＝`math.t_base.geom.circle-basics`（圓的基本：圓心/半徑/直徑，直徑＝半徑×2），續 geom t_base 依序。
+
 ## 2026-11-12 05:16 數學島 geom #7 收斂：math_geom_perimeter（周長的計算，t_base 國小）5/5 → geom strand 7/39
 - **frozen_sha `3762097d43b39083`**，DONE-GATE 六確定性 gate 全綠（per_page 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：標邊長的長方形（長7寬2公分，比例 3.5:1）＋正方形（邊6公分）SVG，公式標於各圖下方，iPad 橫直四角色 render 簽核過（比例與標示相符、三邊單位一致、無溢出重疊）。2 claim kind=definition（c-perimeter-def 周長＝各邊相加、周長≠面積；c-square-rect-perimeter 正方形＝邊×4、長方形＝(長+寬)×2），皆被 practice answer_evidence 引用。★t_base 國小：僅用公分/＋/×/＝與數字，禁 x、禁 ≥＜。prereq=quadrilateral-classify。scope＝直線多邊形周長計算與概念辨識，不涉圓周長/面積。算術全 sympy 驗（5×4=20、(8+3)×2=22、3+4+5=12、6×4=24、(7+2)×2=18、2+5+6=13）。
 - **4 MCQ**：Q1 正方形邊5周長=20〔誘答 10只兩邊/25當面積5×5/15邊×3〕／Q2 長方形長8寬3周長=22〔誘答 11只加一次/24當面積8×3/16只算長8×2〕／Q3 三角形3+4+5周長=12〔誘答 7只加兩邊/9漏一邊/60相乘〕／Q4 周長意思=圖形外圍繞一圈的總長度〔誘答 內部範圍(面積)/最長一邊/對角線〕。誘答單一清楚錯誤機制（只加部分/算成面積/漏乘/相乘）。
