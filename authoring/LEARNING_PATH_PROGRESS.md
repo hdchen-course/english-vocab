@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 03:02 數學島 geom #4 收斂：math_geom_parallelperp（平行與垂直的辨認，t_base 國小）5/5 → geom strand 4/39
+- **frozen_sha `dc3a2222c40bba60`**，DONE-GATE 六確定性 gate 全綠（per_page 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：左右兩組線 SVG（平行兩水平線等寬不交＋垂直十字帶金色直角方記號）iPad 橫直四角色 render 簽核過；★直角方記號用 exact L 形座標（非弧），避開 geom #3 的弧端點缺陷類。2 claim kind=definition（c-parallel 同平面不相交處處等寬／c-perpendicular 相交且交角直角、相交非直角不算垂直），皆被 practice answer_evidence 引用。★t_base 國小：可用已教的度/90/直角，禁 x、禁 ≥＜（用文字描述）。prereq=angle-types。scope＝辨認平行/垂直兩種直線關係。
+- **4 MCQ**：Q1 永不相交處處等寬=互相平行〔誘答 垂直/相交/重疊〕／Q2 相交成直角90度=互相垂直〔誘答 平行/相交銳角/相交鈍角〕／Q3 平行特點=永不相交處處等寬（與長度無關）〔誘答 相交成直角/越來越近終相交/一定一樣長〕／Q4 垂直實例=牆角兩邊交成直角〔誘答 鐵軌(平行)/筆記本橫線(平行)/剪刀斜交(相交非直角)〕。
+- **收斂路徑（★草稿首輪即 clean、連 5 輪零缺陷）**：pre-freeze gates 全綠（含禁用符號掃描）→初凍 dc3a2222 → v1 clean（草稿首輪即清）→ v2–v5 clean（L3 皆 exit0、agents_error 全 0）。sha 全程未變（純審查無改檔）。commits：feat 草稿凍結／v1–v4 banked／本收斂。
+- **教訓（banked）**：承接 geom #3 弧端點缺陷教訓，本單元凡需「直角記號」一律用 exact L 形兩段線座標（M x1 y1 L x1 y2 L x2 y2）而非 arc，座標精確可控、panel knowledge-viz 鏡無從挑剔——首輪即 clean。平行/垂直用「同平面不相交vs相交成直角」兩判準＋鐵軌/牆角實例＋「相交非直角不算垂直」的常見誤解當 Q2/Q4 誘答。
+- **里程碑**：數學島 geom（幾何）strand **4/39**（t_base 4/12）。algexpr strand 已 18/18 COMPLETE。
+- **下一步**：geom #5＝`math.t_base.geom.triangle-classify`（三角形分類〔依邊/依角〕與內角和 180°），續 geom t_base 依序。
+
 ## 2026-11-12 02:42 數學島 geom #3 收斂：math_geom_angletypes（角的分類 銳角/直角/鈍角/平角，t_base 國小）5/5 → geom strand 3/39
 - **frozen_sha `b2039e96eacf233d`**，DONE-GATE 六確定性 gate 全綠（per_page 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：四類角並排 SVG（銳角窄弧／直角方記號／鈍角寬弧／平角半圓直線）iPad 橫直四角色 render 簽核過；★四角弧端點程式驗證皆落在 ray 上（銳角差0.1°/鈍角0.0°、半徑18；平角半圓、直角方記號 exact）。2 claim kind=definition（c-landmark-angles 直角90/平角180兩基準／c-acute-obtuse 銳角比直角小、鈍角介於直角平角），皆被 practice answer_evidence 引用。★t_base 國小：可用已教的度/90/180，禁 x、禁 ≥＜（用「比…大/小」文字比較）。prereq=point-line-angle。scope＝以直角平角兩基準分出四類角。
 - **4 MCQ**：Q1 剛好90度像書角=直角〔誘答 銳角/鈍角/平角〕／Q2 比直角小=銳角〔誘答 直角/鈍角/平角〕／Q3 兩邊成一直線180度=平角〔誘答 直角/銳角/鈍角〕／Q4 比直角大但比平角小=鈍角〔誘答 銳角/直角/平角〕。四題覆蓋直角/銳角/平角/鈍角四類。
