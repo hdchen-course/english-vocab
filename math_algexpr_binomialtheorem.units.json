@@ -1,0 +1,193 @@
+{
+ "_note": "數學島 代數式（algexpr）strand 第 17 個單元（t_adv 第五個、t_adv algexpr 最後一個）。知識點 math.t_adv.algexpr.binomial-theorem（二項式定理）。tier=t_adv（高中學測；學習者端不顯示年段 R11）。全繁體零簡體零 PRC 詞。數學中文授課。★t_adv 可用 x、x²、x³、x⁴、a、b、n、k、組合數 C(n,k)。scope 聚焦：二項式定理 (a+b)ⁿ 展開＝各項 C(n,k)·a^(n−k)·b^k 相加（k 從 0 到 n），係數是組合數 C(n,k)、也可用巴斯卡三角形讀；一般項（第 k+1 項）＝C(n,k)·a^(n−k)·b^k，可用來快速求某一項或某係數不必全展開。prereq=factor-cross（熟悉多項式展開/係數）。★自檢（math-unit defect-classes #1/#10/#14）：每個展開/係數由 sympy expand()/binomial() 驗證；誘答由單一機制（n 取錯／中間係數算錯／漏末項／忘中間項(a+b)ⁿ≠aⁿ+bⁿ／常數項算錯／用n=2係數／忘乘組合數／次方位置寫反／漏組合數／係數誤當n）導出；誘答顯示字串不撞同題別選項；teach 例題不與 practice 重疊；全半形一致；道地中文。practice：Q1 (a+b)⁴ 係數序 1,4,6,4,1〔誘答 1,3,3,1 用錯n=3／1,4,4,4,1 中間算錯／1,4,6,4 漏末項〕；Q2 (x+1)³=x³+3x²+3x+1〔誘答 x³+1 忘中間項／x³+3x²+3x+3 常數錯／x³+2x²+2x+1 用n=2係數〕；Q3 (x+2)³ 的 x 一次項係數=12（C(3,2)·2²=3·4）〔誘答 4 忘乘組合數只算2²／6 用2¹（C(3,1)·2）／8 把常數項2³當x係數〕；Q4 概念 一般項 C(n,k)a^(n−k)b^k。teach 例題避開 practice：(a+b)³=a³+3a²b+3ab²+b³（巴斯卡 1,3,3,1）、一般項求 (x+1)⁵ 的 x³ 項係數=C(5,3)=10。teach 帶「二項式定理」重點表圖(左欄:係數哪來 組合數C(n,k)即巴斯卡／展開式 (a+b)ⁿ=ΣC(n,k)a^(n−k)b^k／一般項 第k+1項=C(n,k)a^(n−k)b^k)。claim kind=definition。figure-only example 無 body；無音檔。",
+ "page": "math_algexpr_binomialtheorem.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.algexpr.binomial-theorem",
+   "title_zh": "二項式定理",
+   "can_do": "我會用二項式定理展開 (a ＋ b)ⁿ：每一項是 C(n, k) × a^(n−k) × b^k 相加，係數就是組合數 C(n, k)，也可以用巴斯卡三角形讀出來。我也會用「一般項」——第 k ＋ 1 項是 C(n, k) a^(n−k) b^k，不用整個展開就能快速求出某一項或某個係數。",
+   "situation_group": "代數式：二項式定理",
+   "subject": "math",
+   "strand": "algexpr",
+   "est_minutes": 10,
+   "knowledge_point_ids": [
+    "math.t_adv.algexpr.binomial-theorem"
+   ],
+   "prerequisites": [
+    "math.t_mid.algexpr.factor-cross"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-binomial",
+     "text": "二項式定理：(a ＋ b)ⁿ 展開後，每一項長得像 C(n, k) × a^(n−k) × b^k，把 k 從 0 加到 n 全部相加。各項的係數就是組合數 C(n, k)，也可以用巴斯卡三角形讀出來（第 n 列就是 (a ＋ b)ⁿ 的係數）。例如 (a ＋ b)³：巴斯卡第 3 列是 1、3、3、1，所以 (a ＋ b)³ ＝ a³ ＋ 3a²b ＋ 3ab² ＋ b³。注意 (a ＋ b)ⁿ 不等於 aⁿ ＋ bⁿ，中間的項不能漏掉。",
+     "kind": "definition",
+     "source_refs": [
+      "二項式定理（高中數學 學測）"
+     ],
+     "verification_ref": "sympy expand((a+b)³)=a³+3a²b+3ab²+b³；binomial(3,k)=1,3,3,1；巴斯卡第3列",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-general-term",
+     "text": "一般項：(a ＋ b)ⁿ 展開的第 k ＋ 1 項是 C(n, k) a^(n−k) b^k（k 從 0 開始算）。有了一般項，就能不用整個展開、直接求某一項或某個係數：把對應的 k 代進去算就好。例如要求 (x ＋ 1)⁵ 裡 x³ 的係數：x³ 表示 a ＝ x 的次方是 3，也就是 n − k ＝ 3、n ＝ 5，所以 k ＝ 2，係數 ＝ C(5, 2) × 1² ＝ 10。",
+     "kind": "definition",
+     "source_refs": [
+      "二項式定理 一般項（高中數學 學測）"
+     ],
+     "verification_ref": "sympy (x+1)⁵ x³ 係數=binomial(5,2)=10；一般項 C(n,k)a^(n−k)b^k",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.algexpr.binomial-theorem"
+     ],
+     "body": "二項式定理告訴我們 (a ＋ b)ⁿ 怎麼展開：每一項長得像 C(n, k) × a^(n−k) × b^k，k 從 0 加到 n。各項的係數就是組合數 C(n, k)，也可以用巴斯卡三角形讀——第 n 列就是 (a ＋ b)ⁿ 的係數。例如 (a ＋ b)³：巴斯卡第 3 列是 1、3、3、1，所以 (a ＋ b)³ ＝ a³ ＋ 3a²b ＋ 3ab² ＋ b³。要小心：(a ＋ b)ⁿ 不等於 aⁿ ＋ bⁿ，中間的項不能漏。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.algexpr.binomial-theorem"
+     ],
+     "body": "如果只想要某一項，不必整個展開，用「一般項」：(a ＋ b)ⁿ 的第 k ＋ 1 項是 C(n, k) a^(n−k) b^k。例如求 (x ＋ 1)⁵ 裡 x³ 的係數：x 的次方是 3，就是 n − k ＝ 3，而 n ＝ 5，所以 k ＝ 2，係數 ＝ C(5, 2) × 1² ＝ 10。這樣一步就算出來。重點整理在下面的表。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.algexpr.binomial-theorem"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 380 150' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><rect x='16' y='12' width='348' height='126' rx='12' fill='none' stroke='#cdbfa6' stroke-width='1.5'/><line x1='120' y1='12' x2='120' y2='138' stroke='#e3d8c4' stroke-width='1'/><line x1='16' y1='54' x2='364' y2='54' stroke='#e3d8c4' stroke-width='1'/><line x1='16' y1='96' x2='364' y2='96' stroke='#e3d8c4' stroke-width='1'/><g font-size='12' fill='#2f6f54' text-anchor='middle' font-weight='700'><text x='68' y='37'>係數哪來</text><text x='68' y='79'>展開式</text><text x='68' y='121'>一般項</text></g><g fill='#33475b' text-anchor='middle'><text x='244' y='37' font-size='11.5'>組合數 C(n, k)，即巴斯卡三角形</text><text x='244' y='79' font-size='11'>(a＋b)ⁿ＝ΣC(n, k)a^(n−k)b^k</text><text x='244' y='121' font-size='11.5'>第 k＋1 項＝C(n, k)a^(n−k)b^k</text></g></g></svg>",
+      "alt": "二項式定理重點表，分三列，左欄是項目、右欄是內容：係數哪來 組合數 C(n, k)、也就是巴斯卡三角形；展開式 (a＋b)的 n 次方等於各項 C(n, k) 乘 a 的 (n−k) 次方乘 b 的 k 次方相加；一般項 第 k＋1 項等於 C(n, k) a 的 (n−k) 次方 b 的 k 次方。",
+      "caption": "二項式定理：係數＝組合數 C(n, k)（巴斯卡三角形）；展開式 (a＋b)ⁿ＝ΣC(n, k)a^(n−k)b^k；一般項（第 k＋1 項）＝C(n, k)a^(n−k)b^k"
+     }
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "BT-mcq-1",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "把 (a ＋ b)⁴ 展開，各項係數從 a⁴ 到 b⁴ 依序是多少？",
+     "answer": "1、4、6、4、1",
+     "kp_ids": [
+      "math.t_adv.algexpr.binomial-theorem"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.algexpr.binomial-theorem"
+     ],
+     "options": [
+      "1、4、6、4、1",
+      "1、3、3、1",
+      "1、4、4、4、1",
+      "1、4、6、4"
+     ],
+     "distractor_rationales": {
+      "1、3、3、1": "這是 (a ＋ b)³ 的係數（巴斯卡第 3 列），n 取錯成 3 了；(a ＋ b)⁴ 要用第 4 列 1、4、6、4、1。",
+      "1、4、4、4、1": "這是中間的係數算錯了；巴斯卡第 4 列是 1、4、6、4、1，中間是 6（＝C(4, 2)）不是 4。",
+      "1、4、6、4": "這漏了最後一項；(a ＋ b)⁴ 展開有 5 項（從 a⁴ 到 b⁴），係數是 1、4、6、4、1，共 5 個。"
+     },
+     "answer_evidence": [
+      "c-binomial"
+     ],
+     "feedback": "(a ＋ b)⁴ 的係數是巴斯卡第 4 列：C(4,0) 到 C(4,4) ＝ 1、4、6、4、1，所以 (a ＋ b)⁴ ＝ a⁴ ＋ 4a³b ＋ 6a²b² ＋ 4ab³ ＋ b⁴。"
+    },
+    {
+     "question_id": "BT-mcq-2",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "把 (x ＋ 1)³ 展開，結果是多少？",
+     "answer": "x³ ＋ 3x² ＋ 3x ＋ 1",
+     "kp_ids": [
+      "math.t_adv.algexpr.binomial-theorem"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.algexpr.binomial-theorem"
+     ],
+     "options": [
+      "x³ ＋ 3x² ＋ 3x ＋ 1",
+      "x³ ＋ 1",
+      "x³ ＋ 3x² ＋ 3x ＋ 3",
+      "x³ ＋ 2x² ＋ 2x ＋ 1"
+     ],
+     "distractor_rationales": {
+      "x³ ＋ 1": "這漏了中間兩項；(x ＋ 1)³ 不等於 x³ ＋ 1³，要用二項式定理展開，係數 1、3、3、1，得 x³ ＋ 3x² ＋ 3x ＋ 1。",
+      "x³ ＋ 3x² ＋ 3x ＋ 3": "這是常數項算錯了；最後一項是 1³ ＝ 1（不是 3），所以是 x³ ＋ 3x² ＋ 3x ＋ 1。",
+      "x³ ＋ 2x² ＋ 2x ＋ 1": "這用錯了係數；(x ＋ 1)³ 的係數是巴斯卡第 3 列 1、3、3、1（不是 1、2、2、1），得 x³ ＋ 3x² ＋ 3x ＋ 1。"
+     },
+     "answer_evidence": [
+      "c-binomial"
+     ],
+     "feedback": "(x ＋ 1)³ 用係數 1、3、3、1 展開：x³ ＋ 3x²·1 ＋ 3x·1² ＋ 1³ ＝ x³ ＋ 3x² ＋ 3x ＋ 1。"
+    },
+    {
+     "question_id": "BT-mcq-3",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "把 (x ＋ 2)³ 展開後，x 的一次項（x¹）係數是多少？",
+     "answer": "12",
+     "kp_ids": [
+      "math.t_adv.algexpr.binomial-theorem"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.algexpr.binomial-theorem"
+     ],
+     "options": [
+      "12",
+      "4",
+      "6",
+      "8"
+     ],
+     "distractor_rationales": {
+      "4": "這只算了 2² ＝ 4、忘了乘組合數；x¹ 這一項對應 k ＝ 2，係數 ＝ C(3, 2) × 2² ＝ 3 × 4 ＝ 12。",
+      "6": "這用錯了 b 的次方；x¹ 項是 C(3, 2)·x·2²，要用 2²（不是 2¹），係數 ＝ 3 × 4 ＝ 12。",
+      "8": "這是把常數項 2³ ＝ 8 當成 x 的係數了；常數項才是 8，x 的一次項係數是 12。"
+     },
+     "answer_evidence": [
+      "c-general-term"
+     ],
+     "feedback": "用一般項：x¹ 項的 x 次方是 1，即 3 − k ＝ 1、k ＝ 2，係數 ＝ C(3, 2) × 2² ＝ 3 × 4 ＝ 12。（驗算 (x ＋ 2)³ ＝ x³ ＋ 6x² ＋ 12x ＋ 8）"
+    },
+    {
+     "question_id": "BT-mcq-4",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "根據二項式定理，(a ＋ b)ⁿ 展開的第 k ＋ 1 項（一般項）是下列何者？",
+     "answer": "C(n, k) a^(n−k) b^k",
+     "kp_ids": [
+      "math.t_adv.algexpr.binomial-theorem"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.algexpr.binomial-theorem"
+     ],
+     "options": [
+      "C(n, k) a^(n−k) b^k",
+      "C(n, k) a^k b^(n−k)",
+      "a^(n−k) b^k",
+      "n · a^(n−k) b^k"
+     ],
+     "distractor_rationales": {
+      "C(n, k) a^k b^(n−k)": "這是把 a、b 的次方寫反了；一般項裡 a 的次方是 n − k、b 的次方是 k，寫成 C(n, k) a^(n−k) b^k。",
+      "a^(n−k) b^k": "這漏了係數；每一項前面要乘組合數 C(n, k)，正確是 C(n, k) a^(n−k) b^k。",
+      "n · a^(n−k) b^k": "這把係數誤當成 n 了；一般項的係數是組合數 C(n, k)（不是 n），寫成 C(n, k) a^(n−k) b^k。"
+     },
+     "answer_evidence": [
+      "c-general-term"
+     ],
+     "feedback": "二項式定理的一般項（第 k ＋ 1 項）是 C(n, k) a^(n−k) b^k：係數是組合數 C(n, k)，a 的次方 n − k、b 的次方 k，兩個次方加起來剛好是 n。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（二項式定理：(a＋b)ⁿ 係數＝組合數 C(n, k)、即巴斯卡三角形；(a＋b)ⁿ≠aⁿ＋bⁿ 中間項不能漏；一般項第 k＋1 項＝C(n, k)a^(n−k)b^k，可快速求某係數；不自動批改）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
