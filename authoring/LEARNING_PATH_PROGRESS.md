@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 00:40 數學島 algexpr #17 收斂：math_algexpr_binomialtheorem（二項式定理）5/5 → algexpr 17/18（t_adv 5/5 全完成）
+- **frozen_sha `a62d621691331fc8`**，DONE-GATE 六確定性 gate 全綠（per_page 386/386 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：二項式定理重點表 SVG（3 列左欄：係數哪來 組合數C(n,k)即巴斯卡三角形／展開式 (a+b)ⁿ=ΣC(n,k)a^(n−k)b^k／一般項 第k+1項=C(n,k)a^(n−k)b^k）iPad 橫直四角色 render 簽核過（Σ 與 ^(n−k) caret 可讀不溢出、(a+b)ⁿ 上標正確、無重疊/裁切、選項 3 欄）。2 claim kind=definition（c-binomial 展開/巴斯卡/(a+b)ⁿ≠aⁿ+bⁿ／c-general-term 一般項快速求係數），皆被 practice answer_evidence 引用。prereq=factor-cross。scope＝(a+b)ⁿ=ΣC(n,k)a^(n−k)b^k、係數=組合數（巴斯卡）、一般項第k+1項=C(n,k)a^(n−k)b^k。
+- **4 MCQ**：Q1 (a+b)⁴ 係數序 1,4,6,4,1〔誘答 1,3,3,1 用錯n=3／1,4,4,4,1 中間算錯／1,4,6,4 漏末項〕／Q2 (x+1)³=x³+3x²+3x+1〔誘答 x³+1 忘中間項(a+b)ⁿ≠aⁿ+bⁿ／x³+3x²+3x+3 常數錯／x³+2x²+2x+1 用n=2係數〕／Q3 (x+2)³ 的 x 一次項係數=12（C(3,2)·2²=3·4）〔誘答 4 忘乘組合數只算2²／6 用2¹／8 把常數項2³當x係數〕／Q4 一般項 C(n,k)a^(n−k)b^k〔誘答 次方寫反/漏組合數/係數當n〕。teach 用 (a+b)³=a³+3a²b+3ab²+b³（巴斯卡 1,3,3,1）、(x+1)⁵ x³ 係數=C(5,3)=10（sympy expand/binomial 全核，與 practice 不重疊）。
+- **收斂路徑（★草稿後首輪即 clean、連 5 輪零缺陷）**：初凍 a62d6216 → v1 clean（草稿首輪即清）→ v2/v3/v4/v5 clean（L3 皆 exit0，agents_error 全 0）。sha 全程未變（純審查無改檔）。commits：feat 草稿凍結／v1–v4 banked／本收斂。
+- **教訓（banked）**：(a) 抽象公式含 Σ、組合數 C(n,k)、^(n−k) 指數時，SVG 與 teach 用一致的 caret 寫法（a^(n−k)b^k）比勉強上標更清楚可讀；(b) 二項式最經典誤解 (a+b)ⁿ≠aⁿ+bⁿ 要當 Q2 首誘答（x³+1）測；(c) 「求某項係數」用一般項 C(n,k)a^(n−k)b^k 避免全展開——Q3 三誘答（忘組合數／b 次方錯／常數項當係數）平行乾淨。
+- **里程碑**：algexpr 17/18（t_base 3/3、t_mid 9/9、t_adv **5/5 全完成**；numquant 已 30/30）。★t_adv algexpr 線全收尾（除法原理·餘式定理/因式定理/綜合除法/GCD·LCM/二項式定理）。
+- **下一步**：algexpr #18＝**t_sub partial-fraction 部分分式**（algexpr strand 最後一個；真分式拆成分母因式的部分分式之和）。完成後 algexpr strand 全 18 收斂，轉下一個數學 strand（geom/function/…）。
+
 ## 2026-11-12 00:21 數學島 algexpr #16 收斂：math_algexpr_polygcdlcm（多項式最大公因式與最小公倍式）5/5 → algexpr 16/18（t_adv 4/5）
 - **frozen_sha `cf48adb08f758541`**，DONE-GATE 六確定性 gate 全綠（per_page 385/385 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：GCD/LCM 重點表 SVG（3 列左欄：先因式分解 每個多項式都先分解成因式／最大公因式 取共同因式次數取最低／最小公倍式 取所有因式次數取最高）iPad 橫直四角色 render 簽核過（x² 上標正確、右欄長文字不溢出、無重疊/裁切、選項 3 欄）。2 claim kind=definition（c-gcd-lcm 取法／c-gcd-lcm-relation GCD×LCM=兩式相乘），皆被 practice answer_evidence 引用。prereq=factor-cross（要先會因式分解）。scope＝先因式分解、GCD 取共同因式次數最低、LCM 取所有因式次數最高、GCD×LCM=兩式相乘。
 - **4 MCQ**：Q1 A=(x+2)(x−3) B=(x+2)(x+5) GCD=(x+2)〔誘答 (x+2)(x−3)(x+5) 當LCM／(x−3)(x+5) 取非共同／(x+2)² 誤平方〕／Q2 A=x²−4 B=x²−4x+4 先分解 (x+2)(x−2)、(x−2)² GCD=(x−2)〔誘答 (x−2)² 次數取最高／(x+2)(x−2) 整個A／(x+2)(x−2)² 當LCM〕／Q3 A=(x+3)(x+1) B=(x+3)(x−4) LCM=(x+3)(x+1)(x−4)〔誘答 (x+3) GCD當LCM／(x+3)²(x+1)(x−4) 公因式重複／(x+1)(x−4) 漏公因式〕／Q4 關係 GCD×LCM=A×B〔誘答 相加／=GCD²／LCM 次數比A B低〕。teach 用 A=x²−1=(x+1)(x−1)、B=x²+2x+1=(x+1)² → GCD=(x+1)、LCM=(x+1)²(x−1)（sympy gcd/lcm/factor 全核，與 practice 不重疊）。
