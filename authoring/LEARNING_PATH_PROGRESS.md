@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 15:36 數學島 algexpr #1 收斂＝新 strand 首單元：math_algexpr_patternsequence（數與形的規律）5/5 → algexpr 1/18
+- **frozen_sha `b93c0dbb7e42e232`**，DONE-GATE 六確定性 gate 全綠（per_page 370/370 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：數與形規律重點表 SVG（3 列：加減規律 每次加或減固定的數／乘法規律 每次乘固定的數／圖形規律 先數成數再找規律）iPad 橫直四角色 render 簽核過。3 claim kind=definition（c-add 含加與減、c-mult、c-shape）。prereq=[]（t_base foundational entry）。scope＝數列相鄰關係(加/減/乘固定數)、圖形數量規律、文字描述並延續。國小層級只用 + − × ÷ =。
+- **4 MCQ**：遞增加法(3,6,9,12→15，誘答+1/+4/+6)／遞減減法(20,17,14,11→8，誘答−2/−4/−1)／圖形方塊(3,5,7→9塊，誘答+1/+4/+3)／乘法倍數(1,2,4,8→16，誘答 8+4=12/誤記乘3=24/誤加2=10)。teach 用 5,8,11,14(+3)、50,40,30(−10)、2,6,18(×3)、圓點每次多1（.venv 全核，與 practice 不重疊）。
+- **收斂路徑（1 真缺陷，content_audit 擋下）**：初凍 a3a60fea → **rd1**（PS-mcq-sub 1 major）：考遞減減法但 teach/claims 僅教加/乘/圖形、answer_evidence 綁加法-only c-add＝教→練缺鷹架＋證據不符 → 擴 c-add 為「每次加或減固定的數」補減法例(50,40,30 減10→20)、teach/figure/can_do 同步補減法，de-converge 重凍 b93c0dbb。後 s1–s5 連 5 clean（L3 皆 exit0）。commits：8f985ff60(草稿)／16954d05c(rd1 修)／各輪 banked／本收斂。
+- **教訓（banked）**：practice 的每種題型（含減法）都必須在 teach/claims 有對應鷹架、且 answer_evidence 綁的 claim 運算要吻合——不可只教加/乘卻考減。★近四單元連續都是「教學鷹架/誘答機制」草稿缺陷被 content_audit 擋，草稿前應加自檢：每題型有 teach 對應＋誘答機制可乾淨導出該值。
+- **里程碑**：algexpr 1/18（數學島第二個開工的 strand；numquant 已 30/30 全收斂）。
+- **下一步**：algexpr #2＝symbol-unknown（以符號□/()/文字表示未知數；t_base，預設）。
+
 ## 2026-11-11 14:58 ★數學島 numquant #30 收斂＝strand 全收斂 30/30：math_numquant_approximationerror（近似值與誤差）5/5
 - **frozen_sha `6824d6a40ddeca51`**，DONE-GATE 六確定性 gate 全綠（per_page 369/369 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：四捨五入/誤差/估算重點表 SVG（3 列：四捨五入 下一位≥5進位≤4捨去／誤差 |量測值−真實值|／估算 用概數算得更快）iPad 橫直四角色 render 簽核過。3 claim kind=definition。prereq＝decimal-place-value＋irrational-reals。scope 聚焦四捨五入取近似值/誤差=|量測−真實|/四捨五入後原數範圍/用概數估算。
 - **4 MCQ**：四捨五入到小數第一位(3.467→3.5，誘答 捨去3.4／捨到二位3.47／看錯位3.46)／誤差(真值50量48→2公分，誘答 相加98／量測當誤差48／真實當誤差50)／範圍(取整數得7→6.5≤x<7.5，誘答 下界誤用7−1=6／太寬6<x≤8／只往上7≤x<8)／概數估算(98看成100×3→300，誘答 硬算294／看成90得270／只算兩樣200)。teach 用 2.83→2.8、|21−20|=1、取整數得5→4.5≤x<5.5、52看成50（.venv decimal 全核，與 practice 不重疊）。
