@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 19:45 數學島 algexpr #7 收斂：math_algexpr_multformulasquare（乘法公式：和的平方、差的平方）5/5 → algexpr 7/18
+- **frozen_sha `c74d64a37d375e25`**，DONE-GATE 六確定性 gate 全綠（per_page 376/376 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN 2073 題／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：乘法公式平方重點表 SVG（3 列左欄：和的平方 x²＋2bx＋b²／差的平方 x²−2bx＋b²／常見錯誤 漏掉中間 2bx 這一項）iPad 橫直四角色 render 簽核過（x² 上標正確、無重疊/裁切、圖文與 alt/caption 一致）。2 claim kind=definition（c-sum/c-diff），皆被 practice answer_evidence 引用。prereq=polynomial-mult。scope＝(x+b)²=x²+2bx+b²（頭平方・兩倍積・尾平方）、(x−b)²=x²−2bx+b²（中間變減、尾項仍正）、最常見錯誤＝漏中間 2bx。
+- **4 MCQ**：和的平方 (x+3)²=x²+6x+9（誘答 漏中項x²+9／中項忘乘2得x²+3x+9／尾項算成2倍x²+6x+6）／差的平方 (x−4)²=x²−8x+16（誘答 漏中項x²+16／尾項當負x²−8x−16／中項忘變號x²+8x+16）／和的平方 (x+5)²=x²+10x+25（誘答 漏中項x²+25／中項忘乘2得x²+5x+25／尾項算成2倍x²+10x+10）／差的平方 (x−1)²=x²−2x+1（誘答 漏中項x²+1／尾項當負x²−2x−1／中項忘變號x²+2x+1）。teach 用 (x+7)²=x²+14x+49、(x−6)²=x²−12x+36、(x+1)²=x²+2x+1（sympy 全核，與 practice 不整組重疊）。
+- **收斂路徑（草稿後 v1 修 2 major，再連 5 輪零 content_audit 缺陷）**：初凍 a533f138 → **v1**（Q1「x²+6x+6」與 Q3「x²+10x+10」誘答標籤「尾項忘了平方（把 3×2 當成尾項）」與括號內算法 3×2/5×2＝2倍矛盾——忘了平方應得 3/5 而非 6/10，panel 5/5 b-hard）改標籤為「把尾項算成 2 倍（3×2＝6）而不是平方；尾項應該是 3²＝9」重凍 c74d64a3（純誘答 rationale 改，不重 render）→ **w1–w5** 連 5 clean（L3 皆 exit0）。commits：a1692a5b2(草稿)／650fb5c3f(v1 修)＋e7ce93474(ledger 懸空片段修復)／各輪 banked（df71c71/574a959/79126c1/e27a6ea/本收斂）。
+- **教訓（banked）**：誘答括號內若寫出具體算法（3×2＝6），標籤名稱必須與該算法一致——「忘了平方」與「算成 2 倍」是兩種不同錯誤機制（忘平方得 3，乘 2 得 6），標籤若與括號算法互斥即 b-hard。差的平方三誘答用「漏中項／尾項當負／中項忘變號」三種平行單一機制，panel 零異議。
+- **里程碑**：algexpr 7/18（t_base 3/3、t_mid 4/8；numquant 已 30/30）。
+- **下一步**：algexpr #8。t_mid 建議 mult-formula-diff（乘法公式：平方差 (a+b)(a−b)=a²−b²，會考）接 mult-formula-square 最自然（預設）。
+
 ## 2026-11-11 19:16 數學島 algexpr #6 收斂：math_algexpr_polynomialmult（多項式的乘法/分配律展開）5/5 → algexpr 6/18
 - **frozen_sha `fe5caa4c2acb23a1`**，DONE-GATE 六確定性 gate 全綠（per_page 375/375 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：多項式乘法重點表 SVG（3 列左欄：x乘x／單項式乘多項式／二項式乘二項式）iPad 橫直四角色 render 簽核過（x² 上標正確、× 正常、無重疊/裁切、圖文與 alt/caption 一致）。2 claim kind=definition（c-mono/c-binom），皆被 practice answer_evidence 引用。prereq=polynomial-add-sub。scope＝單項式乘多項式（分配律乘每一項）、二項式乘二項式（每項乘每項再合併、別漏交叉項）、x·x=x²。
 - **4 MCQ**：單項式×二項式 3x(x+4)=3x²+12x（誘答 x·x當x沒升次15x／漏乘第二項3x²+4／第二項掉x 3x²+12）／純數×二項式 2(3x+5)=6x+10（誘答 漏乘第二項6x+5／漏乘第一項3x+10／常數相加2+5=7）／二項式×二項式 (x+2)(x+3)=x²+5x+6（誘答 漏交叉項x²+6／常數相加2+3=5／x·x當x得6x+6）／(x+1)(x+5)=x²+6x+5（誘答 漏交叉項x²+5／常數相加1+5=6／x·x當x得7x+5）。teach 用 2x(x+3)=2x²+6x、3(2x+4)=6x+12、(x+1)(x+2)=x²+3x+2（sympy 全核，與 practice 不整組重疊）。
