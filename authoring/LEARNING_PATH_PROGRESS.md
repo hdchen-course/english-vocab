@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 10:48 數學島 numquant #23 收斂：math_numquant_rationaloperations（有理數四則運算：加減乘除符號規則；會考）5/5 → numquant 23/30
+- **frozen_sha `9729c64494b53f48`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：乘除符號表 SVG（2 列：上列同號得正含（＋）×（＋）＝＋、（−）×（−）＝＋；下列異號得負含（＋）×（−）＝−、（−）×（＋）＝−；左欄列標籤對齊各列）iPad 橫直四角色 render 簽核過。3 claim kind=definition。prereq＝signed-numbers＋add-sub-vertical。scope 聚焦正負數加減乘除符號規則；指數律/科學記號 out-of-scope。
+- **4 MCQ**：異號加法((−7)+3=−4，誘答符號取錯/絕對值相加/同號相加忘符號)／減法轉加相反數(5−(−2)=7，誘答沒變相反數/符號弄反/把整個式子看成 −(5−2)=−3)／乘法同號得正((−4)×(−3)=12)／除法異號得負((−20)÷5=−4)。teach 用 (−2)+(−3)=−5、(−8)+5=−3、7−(−4)=11、(−2)×(−5)=10、(−3)×4=−12、(−15)÷3=−5（.venv 全核，與 practice 不重疊）。
+- **收斂路徑（3 真缺陷，皆 content_audit 擋下）**：初凍 ddabda34、ro1/ro2 clean 後——**ro3**（七鏡一致 DEFECT、owner learning b-hard-to-understand，class svg-summary-label-placed-by-column-but-data-grouped-by-row）：符號表 grid 按列分組但標籤放成欄底註→同號得正落在異號負格正下方矛盾；SVG 改左欄列標籤對齊各列、alt/caption 改「上列/下列」，iPad 四角色重簽核，重凍 5b606be0。**ro6**（五鏡、owner learning，class distractor-chaining-two-errors）：RO-mcq-sub 的 −3 誘答 rationale 串兩個獨立錯誤→改單一錯誤「把整個式子看成 −(5−2)=−3，對整個差取負號」，重凍 19945c7c。**ro8**（panel split、domain a-wrong decisive，class non-latin-cyrillic-mojibake-in-_note）：_note 含西里爾亂碼「практ」→改 practice；全站 units.json Cyrillic class sweep 確認僅此一處。重凍 9729c644 後 ro9–ro13 連 5 clean（L3 皆 exit0）。commits：9b87764d1(草稿)／89c18d22a(ro3)／b3d9b2c8d(ro6)／adf480a1a(ro8)／各輪進度／本收斂。
+- **里程碑**：numquant 23/30（t_mid 3/10 完成）；剩 t_mid 7 個（exponent-laws/scientific-notation/square-root/radical-simplify/rationalize-denominator/irrational-reals/approximation-error）。
+- **下一步**：numquant #24＝exponent-laws（指數律：同底數乘除、次方的次方；會考，預設）。
+
 ## 2026-11-11 09:46 數學島 numquant #22 收斂：math_numquant_absolutevalue（絕對值：定義/幾何意義/數線距離；會考）5/5 → numquant 22/30
 - **frozen_sha `e36ba437c7808df6`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：數線弧線 SVG（−3..3、0 原點、兩綠弧 |−3|=3 與 |+3|=3 對稱）iPad 橫直四角色 render 簽核過。3 claim kind=definition。prereq＝signed-numbers。scope 聚焦絕對值定義（到 0 距離、非負）/幾何意義/相反數絕對值相等/數線距離 |a−b|；解 |x|=k out-of-scope。
 - **4 MCQ**：|−8|=8（誘答 −8 沒去負號/0/「8 或 −8」兩值）／數線距離 3與−2=5（誘答當 +2 相減=1/只算一段=2/距離為負）／絕對值能否為負（概念：不可能、≥0、含 |0|=0 的「大於0」陷阱）／|−3| vs |+3| 一樣大。.venv 全核。
