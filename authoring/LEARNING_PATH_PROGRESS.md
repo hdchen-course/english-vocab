@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 12:31 數學島 numquant #25 收斂：math_numquant_scientificnotation（科學記號 a×10^n：大數/小數/相乘；會考）5/5 → numquant 25/30
+- **frozen_sha `722ea4f035584c06`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：科學記號重點表 SVG（3 列，左欄定義/大數/小數，右欄 a×10^n(1≤a<10)、45000=4.5×10^4、0.0062=6.2×10^-3）iPad 橫直四角色 render 簽核過。3 claim kind=definition。prereq＝exponent-laws＋decimal-place-value。scope 聚焦定義(1≤a<10)/大數正指數/小數負指數/相乘；#26 起另置開根號等。
+- **4 MCQ**：大數表示(36000=3.6×10^4)／科學記號還原(5.2×10^3=5200)／小數表示(0.0047=4.7×10^-3)／相乘((2×10^5)(4×10^3)=8×10^8)。★form-trap 誘答 36×10^3、47×10^-4 數值等於答案但係數超 1~10、非合法科學記號（會考標準誘答，題幹已明訂 1≤a<10、rationale 明說、唯一合法正解為答案；刻意設計非兩正解）。teach 用 45000=4.5×10^4、0.0062=6.2×10^-3、(3×10^2)(2×10^4)=6×10^6（.venv 全核，與 practice 不重疊）。
+- **收斂路徑（3 真缺陷，皆 content_audit 擋下）**：初凍 8fdff210——**scn1**（blocker、domain a-wrong decisive，class sci-notation-feedback-wrong-digit-position）：SN-mcq-large feedback 寫小數點移到『4 與 6 之間』但 36000 無數字 4→改『3 與 6 之間』，重凍 7a92853f。**scn2**（七鏡 b-hard、owner learning，class teach-promises-more-than-figure-shows）：teach 教完相乘說『規則整理在下面的表』但表無相乘列→收窄為『定義、大數與小數的寫法整理在下面的表』，重凍 87f6e6a3。**scn5**（domain a-wrong decisive、其餘六鏡 NOT，class _note-lists-example-absent-from-teach）：_note 聲稱 teach 用 7.3×10^2=730 但實際無此例→移除，重凍 722ea4f0。後 scn6–scn10 連 5 clean（L3 皆 exit0）。commits：82d9c5691(草稿)／806d840ed(scn1)／db1eedf80(scn2)／b3f74fea9(scn5)／各輪進度／本收斂。
+- **里程碑**：numquant 25/30（t_mid 5/10 完成）；剩 t_mid 5 個（square-root/radical-simplify/rationalize-denominator/irrational-reals/approximation-error）。
+- **下一步**：numquant #26＝square-root（平方根與根號：定義、估算、√a²=|a|；會考，預設）。
+
 ## 2026-11-11 11:51 數學島 numquant #24 收斂：math_numquant_exponentlaws（指數律：同底乘除/次方的次方/零次方/負指數；會考）5/5 → numquant 24/30
 - **frozen_sha `88ccf316101f36a8`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：指數律整理表 SVG（5 列，左欄列標籤同底相乘/同底相除/次方的次方/零次方/負指數，右欄對應公式）iPad 橫直四角色 render 簽核過。3 claim kind=definition。prereq＝multi-digit-mult＋division-remainder。scope 聚焦同底乘除/次方的次方/零次方/負指數；科學記號 out-of-scope（另置 #25）。
 - **4 MCQ**：同底相乘(2^3×2^2=2^5，誘答乘指數3×2/底相乘4^5/減指數)／同底相除(5^6÷5^2=5^4，誘答加/除/乘指數)／次方的次方((3^2)^4=3^8，誘答加指數/2的4次方=16/只留內層；★全同底 3^n 避 9^8=3^16 同值撞號)／零次方(7^0=1，誘答以為=0/=底數/混負一次方 1/7)。teach 用 10^2×10^3=10^5、6^5÷6^2=6^3、(4^3)^2=4^6、9^0=1、2^(−3)=1/8（.venv 全核，與 practice 不重疊）。
