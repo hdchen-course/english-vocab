@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 03:55 數學島 geom #5 收斂：math_geom_triangleclassify（三角形分類與內角和，t_base 國小）5/5 → geom strand 5/39
+- **frozen_sha `9957892efe695e5a`**，DONE-GATE 六確定性 gate 全綠（per_page 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：依邊三類三角形 SVG（正三角形邊長均60等邊／等腰兩腰均65對稱／不等邊三邊 60.8/73.6/82.1 明顯不同）iPad 橫直四角色 render 簽核過；teach 次序＝依邊text→圖→依角text（圖緊接依邊 text）。3 claim kind=definition（c-by-sides 依邊三類／c-by-angles 依角三類＋至多一直角或鈍角／c-angle-sum 內角和180、第三角=180−兩角和），皆被 practice answer_evidence 引用。★t_base 國小：可用已教的度/180/60/直角/銳角/鈍角，禁 x、禁 ≥＜（用「比…大/小」文字）。prereq=angle-types。scope＝依邊/依角分類＋內角和180。
+- **4 MCQ**：Q1 三邊等三角60度=正三角形〔誘答 不等邊/直角/鈍角三角形，避開等腰雙正解〕／Q2 有一直角=直角三角形〔誘答 銳角/鈍角/正三角形〕／Q3 內角和=180度〔誘答 90/360/270〕／Q4 已知60度70度求第三角=50度（180−60−70）〔誘答 130兩角相加/70抄角/60抄角〕。sympy 驗算 Q4=50、正三角形三角各60、SVG 三角形邊長分類。
+- **收斂路徑（★最耗輪：草稿後 v1 clean、v2/v4/v7 各修 1 缺陷、共 4 次 de-converge，最終 v7b–v11 連 5 clean）**：初凍 1bcaed06 → v1 clean → **v2**（1 minor terminology：alt 用「等邊三角形」同義詞／偏 PRC 課綱 → 改「正立、三邊等長」統一正三角形，重凍 4f586c88）→ v3 clean → **v4**（2 major：Q3 feedback 用只在不-render claim 的「平角」術語→改「排成一條直線」；nav-crossref 依邊圖被依角 text 隔開→重排 teach 依邊text→圖→依角text，重凍 c7e67ec5）→ v4b/v5/v6 clean → **v7**（1 major knowledge-viz：不等邊三角形兩邊近等長70.2/68.8易看成等腰→重算座標使三邊明顯不同，重凍 9957892e）→ v7b–v11 連 5 clean（L3 皆 exit0、agents_error 全 0）。Q1 草稿期已先避開正三角形↔等腰包容定義雙正解。
+- **教訓（banked）★★★**：此單元連中 3 類「rendered-only / 語境一致性」缺陷，皆非確定性 gate 能抓、僅 panel＋視覺現形：(1) alt／feedback 等 rendered 輔助文字不可引入未教同義詞或只在不-render claim 出現的術語（等邊三角形、平角）；(2) 多段 teach＋figure 時「下面的圖」必須圖緊接該段、不被別段隔開（teach 陣列順序＝render 順序）；(3) 分類代表圖的差異要「肉眼明顯」（三邊/三角差 ≥~10%，非僅數值不同 2%）。草稿期把這三點當 checklist 可大幅減少 de-converge。
+- **里程碑**：數學島 geom（幾何）strand **5/39**（t_base 5/12）。algexpr strand 已 18/18 COMPLETE。
+- **下一步**：geom #6＝`math.t_base.geom.quadrilateral-classify`（四邊形分類與性質：正方形/長方形/平行四邊形/梯形/菱形），續 geom t_base 依序。
+
 ## 2026-11-12 03:02 數學島 geom #4 收斂：math_geom_parallelperp（平行與垂直的辨認，t_base 國小）5/5 → geom strand 4/39
 - **frozen_sha `dc3a2222c40bba60`**，DONE-GATE 六確定性 gate 全綠（per_page 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：左右兩組線 SVG（平行兩水平線等寬不交＋垂直十字帶金色直角方記號）iPad 橫直四角色 render 簽核過；★直角方記號用 exact L 形座標（非弧），避開 geom #3 的弧端點缺陷類。2 claim kind=definition（c-parallel 同平面不相交處處等寬／c-perpendicular 相交且交角直角、相交非直角不算垂直），皆被 practice answer_evidence 引用。★t_base 國小：可用已教的度/90/直角，禁 x、禁 ≥＜（用文字描述）。prereq=angle-types。scope＝辨認平行/垂直兩種直線關係。
 - **4 MCQ**：Q1 永不相交處處等寬=互相平行〔誘答 垂直/相交/重疊〕／Q2 相交成直角90度=互相垂直〔誘答 平行/相交銳角/相交鈍角〕／Q3 平行特點=永不相交處處等寬（與長度無關）〔誘答 相交成直角/越來越近終相交/一定一樣長〕／Q4 垂直實例=牆角兩邊交成直角〔誘答 鐵軌(平行)/筆記本橫線(平行)/剪刀斜交(相交非直角)〕。
