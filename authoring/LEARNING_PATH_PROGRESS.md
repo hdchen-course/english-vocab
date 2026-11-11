@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 14:28 數學島 numquant #29 收斂：math_numquant_irrationalreals（無理數與實數：無理數意義/有理數範圍/實數與數線一一對應）5/5 → numquant 29/30
+- **frozen_sha `2ebdd167a0ca4f57`**，DONE-GATE 六確定性 gate 全綠（per_page 368/368 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：無理數/有理數/實數與數線重點表 SVG（3 列：無理數 無限不循環 √2/π／有理數 可寫成分數 1/3/0.5／實數與數線 每個點↔一個實數）iPad 橫直四角色 render 簽核過。3 claim kind=definition。prereq＝square-root＋radical-simplify。scope 聚焦無理數意義/有理數範圍/實數＝有理∪無理/實數與數線一一對應。
+- **4 MCQ**：辨無理數(√2，誘答 √16=4 完全平方有理／0.6 有限小數有理／3/4 分數有理)／辨有理數(0.25=1/4，誘答 √7/√8/√10 皆非完全平方為無理)／數線關係概念(數線上每點都對應一個實數，誘答「只有有理數的點」/「無理數標不上數線」/「有些點不對應任何數」)／無理數小數特性(無限不循環，誘答 一定終止／會循環／沒有小數部分)。teach 用 √2≈1.41421356、π≈3.14159、1/3=0.333…循環、0.5、√16=4（.venv 全核，與 practice 不重疊）。
+- **收斂路徑**：初凍 2ebdd167 → rd1–rd5 連 5 clean（L3 皆 exit0），零 content_audit confirmed 缺陷（草稿一次到位）。★rd4 曾被 burst-cap hook 擋（3 輪 480s 窗內），等槽位釋放後重發、未弱化 gate。commits：695822b5a(草稿)／各輪 banked／本收斂。
+- **里程碑**：numquant 29/30（t_mid 9/10 完成）；剩 t_mid 1 個（approximation-error）→ 完成後 numquant strand 全收斂 30/30。
+- **下一步**：numquant #30＝approximation-error（近似值與誤差的判讀；會考，預設）＝ numquant strand 最後一個單元。
+
 ## 2026-11-11 14:08 數學島 numquant #28 收斂：math_numquant_rationalizedenominator（分母有理化：單一根號/帶係數/共軛帶到）5/5 → numquant 28/30
 - **frozen_sha `13cb536a07299efa`**，DONE-GATE 六確定性 gate 全綠（per_page 367/367 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：分母有理化重點表 SVG（3 列：做法 分子分母同乘分母的根號／單一根號 1/√7=√7/7／帶係數 3/√2=3√2/2）iPad 橫直四角色 render 簽核過（r4 修正後重 render、sha 未變簽核有效）。3 claim kind=definition。prereq＝radical-simplify＋square-root。scope 聚焦單一根號有理化(上下同乘該根號、√b×√b=b)+帶係數約分；共軛((a+b)(a−b)=a²−b²)僅 teach/claim 帶一例(1/(√3+1)=(√3−1)/2)、practice 不深練。
 - **4 MCQ**：單一根號(1/√3=√3/3，誘答只變分母 1/3／分母平方算 9 得 √3/9／分子誤乘 3 未有理化 3/√3 form-trap)／帶係數(2/√5=2√5/5，誘答只變分母 2/5／分子漏保留 2 的 √5/5／丟分母 2√5)／可約分(5/√5=√5，誘答當 5/5=1／5 放錯 √5/5／忘約分 5√5)／方法概念(1/√2 同乘 √2，誘答乘 2／乘結果 √2/2／乘 1/2)。teach 用 1/√7=√7/7、3/√2=3√2/2、1/(√3+1)=(√3−1)/2（.venv 全核，與 practice 不重疊）。
