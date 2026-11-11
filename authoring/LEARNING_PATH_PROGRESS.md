@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 02:09 數學島 geom #2 收斂：math_geom_pointlineangle（點、線、角的辨認，t_base 國小）5/5 → geom strand 2/39
+- **frozen_sha `05e62ac22225563a`**，DONE-GATE 六確定性 gate 全綠（per_page 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：基本幾何元素並排 SVG（左欄四列 點/直線〔雙箭頭〕/線段〔兩端點〕/射線〔一端點+箭頭〕+短註；右側 角＝頂點+兩邊+小弧）iPad 橫直四角色 render 簽核過（箭頭皆附著指向正確、端點小圓點清楚、角的頂點標註、無重疊/裁切、選項 2–3 欄不裁切）。2 claim kind=definition（c-point-lines 點/三種線的分別／c-angle 角由兩射線從頂點張開），皆被 practice answer_evidence 引用。★t_base 國小：只用已教詞與符號（點/線/端點/頂點/直線/線段/射線/面/角/邊；無 x、無 ≥＜）。prereq=basic-shapes。scope＝辨認點/直線/線段/射線/角，不涉角度度數。
+- **4 MCQ**：Q1 有兩個端點可量長度=線段〔誘答 直線/射線/點〕／Q2 向兩方向一直延伸沒有端點=直線〔誘答 線段/射線/角〕／Q3 關於角正確=兩條邊從同一頂點張開〔誘答 一條彎曲的線/一定要三條邊/沒有頂點〕／Q4 射線特徵=有一個端點向一個方向一直延伸〔誘答 兩個端點可量長(線段)/沒有端點雙向(直線)/沒有長度只表位置(點)〕。四題覆蓋線段/直線/角/射線，點作誘答。
+- **收斂路徑（草稿後 v1 修 1 minor，再連 5 輪零缺陷）**：pre-freeze gates 全綠→初凍 680c3e2e → **v1**（1 minor instructional-design／b-hard-to-understand：teach/claims 用「一直延伸」但 can_do/Q4 用教學未出現的「無限延伸」，在「只用已教詞」t_base 單元形成 teach↔practice 用詞落差；panel learning/zh 判 DEFECT owned criterion b、domain/english/pm 判 NOT→engine 以 learning owns b 定案 confirmed）統一全單元為「一直延伸」（跨 can_do/Q4 選項+誘答鍵）de-converge 重凍 05e62ac2、重 render 四角色 → v2–v6 連 5 clean（L3 皆 exit0、agents_error 全 0、coverageComplete）。commits：feat 草稿凍結／fix v1 修／v2–v5 banked／本收斂。v5 L3 我一度漏報 1 anchor→補回 3 anchor 後 exit0（非缺陷、工具操作）。
+- **教訓（banked）**：★「只用已教詞」t_base 單元的用詞一致性是 learning/zh 鏡的真缺陷類——practice/can_do 不可引入 teach 未出現的同義詞（即使如「無限」是國小日常詞）；草稿期把 teach 用語當白名單、practice 僅能用其內出現過的詞。content_audit L3 需 3 anchors，自行建 coverage JSON 時用程式逐行抓真實行內容（避免手打跳 anchor／跳脫漂移）。
+- **里程碑**：數學島 geom（幾何）strand **2/39**（t_base 2/12）。algexpr strand 已 18/18 COMPLETE。
+- **下一步**：geom #3＝`math.t_base.geom.angle-types`（角的分類：銳角/直角/鈍角/平角），續 geom t_base 依序；沿用 draft→gen_derived→pre-freeze gates→iPad 四角色 render→freeze→5-clean→DONE-GATE 紀律。
+
 ## 2026-11-12 01:40 數學島 geom #1 收斂：math_geom_basicshapes（基本圖形的辨認，t_base 國小）5/5 → ★geom strand 起步 1/39
 - **frozen_sha `0d59da64352fa604`**，DONE-GATE 六確定性 gate 全綠（per_page 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard 0 advisory／audio_exist CLEAN 1544 refs）。視覺 QA：四圖並排 SVG（三角形3邊3角／四邊形4邊4角／五邊形5邊5角／圓 沒有直邊沒有角）iPad 橫直四角色 render 簽核過（真實圖形、名稱＋邊角數標註可讀、圓以 circle 畫、無重疊/裁切、Q4 等長選項按鈕不裁切）。2 claim kind=definition（c-polygon 多邊形邊數＝角數＝頂點數＋命名規則／c-circle 圓非多邊形無直邊無角），皆被 practice answer_evidence 引用。★t_base 國小：只用已教詞與符號（邊/角/頂點/直線段/封閉/圓心/圓周；無 x、無 ≥＜）。prereq 無（geom strand 起點）。scope＝辨認基本平面圖形、多邊形邊數＝角數、圓非多邊形。
 - **4 MCQ**：Q1 3直邊3角=三角形〔誘答 四邊形/五邊形/圓〕／Q2 哪個不是多邊形=圓〔誘答 三角形/長方形/五邊形 皆是〕／Q3 五邊形幾邊=5〔誘答 4六/6六邊形/3三角〕／Q4 關於圓正確=「圓沒有直邊，也沒有角」〔誘答 圓有四個角像四邊形/圓是多邊形的一種/圓有三條直的邊，四選項等長〕。
