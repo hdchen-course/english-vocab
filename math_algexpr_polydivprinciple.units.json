@@ -1,0 +1,193 @@
+{
+ "_note": "數學島 代數式（algexpr）strand 第 13 個單元（t_adv 第一個）。知識點 math.t_adv.algexpr.poly-division-principle（多項式除法原理與餘式定理）。tier=t_adv（高中學測；學習者端不顯示年段 R11）。全繁體零簡體零 PRC 詞。數學中文授課。★t_adv 可用 x、x²、x³、f(x)、a。scope 聚焦：除法原理（任一多項式 f(x) 除以非零 g(x)，存在唯一商 q(x) 與餘式 r(x) 使 f(x)＝g(x)q(x)＋r(x)，且 r(x)＝0 或 deg r＜deg g）、餘式定理（f(x) 除以 (x−a) 的餘式＝f(a)，因 f(x)＝(x−a)q(x)＋r、r 為常數、代 x＝a 得 r＝f(a)）。prereq=polynomial-div（先會長除法）。★自檢（math-unit defect-classes #1/#10/#14）：每個誘答值由單一錯誤機制導出且 sympy 驗證（div()／subs()）；誘答顯示字串不撞同題別選項、feedback 驗算正確；teach 例題不與 practice 重疊；全半形一致；道地中文。practice：Q1 f=x²+2x+5 ÷(x−1) 餘 f(1)=8〔誘答 4=誤取 a=−1 的 f(−1)／5=只把 f 常數項當餘／3=把商 x+3 的常數項當餘〕；Q2 f=x²−4x+7 ÷(x−2) 餘 f(2)=3〔誘答 19=f(−2)／7=常數項／−2=商 x−2 常數項〕；Q3 f=x³+2x−3 ÷(x+1) 餘 f(−1)=−6〔誘答 0=f(1)／−3=常數項／−4=(−1)³ 符號算成 +1〕；Q4 概念 二次除式的餘式次數〔正解 r=0 或次數＜2；誘答 一定=2／可以≥2／一定是常數〕。teach 例題避開 practice：(x²+5x+7)÷(x+2)=商x+3餘1、餘式定理 f=x²+3x+5 除以(x−1)餘 f(1)=9、(x³+x+2)÷(x+1)=商x²−x+2餘0。teach 帶「除法原理」重點表圖(左欄:除法原理 f=gq+r／餘式條件 r=0或次數<除式／餘式定理 除以x−a餘f(a))。claim kind=definition。figure-only example 無 body；無音檔。",
+ "page": "math_algexpr_polydivprinciple.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.algexpr.poly-division-principle",
+   "title_zh": "多項式除法原理與餘式定理",
+   "can_do": "我懂多項式的除法原理：任何多項式 f(x) 除以一個不是零的 g(x)，都會有唯一的商 q(x) 和餘式 r(x)，讓 f(x) ＝ g(x) × q(x) ＋ r(x)，而且餘式 r(x) 不是 0 就是次數比除式低。我也會用餘式定理：f(x) 除以 (x − a) 的餘式剛好等於 f(a)，不用真的做長除法就能算餘數。",
+   "situation_group": "代數式：除法原理與餘式定理",
+   "subject": "math",
+   "strand": "algexpr",
+   "est_minutes": 10,
+   "knowledge_point_ids": [
+    "math.t_adv.algexpr.poly-division-principle"
+   ],
+   "prerequisites": [
+    "math.t_mid.algexpr.polynomial-div"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-division-principle",
+     "text": "除法原理：任一多項式 f(x) 除以一個不是零的多項式 g(x)，都存在唯一的商 q(x) 和餘式 r(x)，使 f(x) ＝ g(x) × q(x) ＋ r(x)，而且餘式 r(x) ＝ 0 或 r(x) 的次數比除式 g(x) 低。例如 (x² ＋ 5x ＋ 7) ÷ (x ＋ 2)：商 x ＋ 3、餘 1，所以 x² ＋ 5x ＋ 7 ＝ (x ＋ 2)(x ＋ 3) ＋ 1，餘式 1 是常數、次數比一次式 (x ＋ 2) 低，符合停止條件。",
+     "kind": "definition",
+     "source_refs": [
+      "多項式除法原理（高中數學 學測）"
+     ],
+     "verification_ref": "sympy div(x²+5x+7, x+2)=(x+3, 1)；f=g·q+r 且 deg r<deg g 唯一",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-remainder-theorem",
+     "text": "餘式定理：f(x) 除以 (x − a) 的餘式，剛好等於 f(a)。為什麼？因為除以一次式 (x − a) 時餘式一定是常數 r，由除法原理 f(x) ＝ (x − a) × q(x) ＋ r，把 x ＝ a 代進去，(a − a) ＝ 0 使前一項消失，就得到 f(a) ＝ r。所以只要算 f(a) 就知道餘數，不必做長除法。例如 f(x) ＝ x² ＋ 3x ＋ 5 除以 (x − 1)，餘式 ＝ f(1) ＝ 1 ＋ 3 ＋ 5 ＝ 9。",
+     "kind": "definition",
+     "source_refs": [
+      "餘式定理（高中數學 學測）"
+     ],
+     "verification_ref": "sympy div(x²+3x+5, x−1)=(x+4, 9)、f(1)=9；餘式定理 r=f(a)",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.algexpr.poly-division-principle"
+     ],
+     "body": "多項式除法有一條「除法原理」：任何多項式 f(x) 除以一個不是零的 g(x)，都會有唯一的商 q(x) 和餘式 r(x)，讓 f(x) ＝ g(x) × q(x) ＋ r(x)，而且餘式 r(x) 不是 0、就是次數比除式 g(x) 低（這正是長除法「除到餘式次數比除式低才停」的道理）。例如 (x² ＋ 5x ＋ 7) ÷ (x ＋ 2)：商 x ＋ 3、餘 1，寫成 x² ＋ 5x ＋ 7 ＝ (x ＋ 2)(x ＋ 3) ＋ 1；餘式 1 是常數，次數比一次式低，符合停止條件。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.algexpr.poly-division-principle"
+     ],
+     "body": "當除式是 (x − a) 這種一次式時，有更快的方法叫「餘式定理」：f(x) 除以 (x − a) 的餘式，剛好等於 f(a)。道理是：除以一次式餘式一定是常數 r，由除法原理 f(x) ＝ (x − a) × q(x) ＋ r，把 x ＝ a 代進去，(a − a) ＝ 0 讓前一項消失，就得到 f(a) ＝ r。所以算餘數不用做長除法，直接算 f(a) 就好。例如 f(x) ＝ x² ＋ 3x ＋ 5 除以 (x − 1)，餘式 ＝ f(1) ＝ 9；又例如 (x³ ＋ x ＋ 2) ÷ (x ＋ 1)，用 a ＝ − 1 得 f(− 1) ＝ − 1 − 1 ＋ 2 ＝ 0，餘 0（剛好整除）。重點整理在下面的表。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.algexpr.poly-division-principle"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 380 150' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><rect x='16' y='12' width='348' height='126' rx='12' fill='none' stroke='#cdbfa6' stroke-width='1.5'/><line x1='128' y1='12' x2='128' y2='138' stroke='#e3d8c4' stroke-width='1'/><line x1='16' y1='54' x2='364' y2='54' stroke='#e3d8c4' stroke-width='1'/><line x1='16' y1='96' x2='364' y2='96' stroke='#e3d8c4' stroke-width='1'/><g font-size='12.5' fill='#2f6f54' text-anchor='middle' font-weight='700'><text x='72' y='37'>除法原理</text><text x='72' y='79'>餘式條件</text><text x='72' y='121'>餘式定理</text></g><g fill='#33475b' text-anchor='middle'><text x='246' y='37' font-size='12.5'>f(x)＝g(x)·q(x)＋r(x)</text><text x='246' y='79' font-size='11.5'>r(x)＝0 或 次數＜除式</text><text x='246' y='121' font-size='12'>除以 (x−a) 餘式＝f(a)</text></g></g></svg>",
+      "alt": "除法原理重點表，分三列，左欄是名稱、右欄是內容：除法原理 f(x)＝g(x)·q(x)＋r(x)；餘式條件 r(x)＝0 或次數小於除式；餘式定理 除以 (x−a) 的餘式等於 f(a)。",
+      "caption": "除法原理：f(x)＝g(x)·q(x)＋r(x)，餘式 r(x)＝0 或次數＜除式；餘式定理：除以 (x−a) 的餘式＝f(a)，算 f(a) 就知道餘數"
+     }
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "PP-mcq-1",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "用餘式定理求 f(x) ＝ x² ＋ 2x ＋ 5 除以 (x − 1) 的餘式。",
+     "answer": "8",
+     "kp_ids": [
+      "math.t_adv.algexpr.poly-division-principle"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.algexpr.poly-division-principle"
+     ],
+     "options": [
+      "8",
+      "4",
+      "5",
+      "3"
+     ],
+     "distractor_rationales": {
+      "4": "這是把 a 的符號取錯了；除式是 (x − 1)，對應 a ＝ ＋ 1（不是 − 1），要算 f(1) 不是 f(− 1)。f(− 1) ＝ 1 − 2 ＋ 5 ＝ 4 是錯的，正確是 f(1) ＝ 8。",
+      "5": "這是只把 f(x) 的常數項當成餘數了；餘式定理要把整個 x ＝ 1 代進去算 f(1) ＝ 1 ＋ 2 ＋ 5 ＝ 8，不是只看常數項 5。",
+      "3": "這是把商的常數項當成餘數了；長除法得商 x ＋ 3、餘 8，商的常數項 3 不是餘數，餘數是 f(1) ＝ 8。"
+     },
+     "answer_evidence": [
+      "c-remainder-theorem"
+     ],
+     "feedback": "除式 (x − 1) 對應 a ＝ 1，由餘式定理餘式 ＝ f(1) ＝ 1² ＋ 2×1 ＋ 5 ＝ 8。驗算長除法：x² ＋ 2x ＋ 5 ＝ (x − 1)(x ＋ 3) ＋ 8 ✓。"
+    },
+    {
+     "question_id": "PP-mcq-2",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "用餘式定理求 f(x) ＝ x² − 4x ＋ 7 除以 (x − 2) 的餘式。",
+     "answer": "3",
+     "kp_ids": [
+      "math.t_adv.algexpr.poly-division-principle"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.algexpr.poly-division-principle"
+     ],
+     "options": [
+      "3",
+      "19",
+      "7",
+      "− 2"
+     ],
+     "distractor_rationales": {
+      "19": "這是把 a 的符號取錯了；除式 (x − 2) 對應 a ＝ ＋ 2，要算 f(2)。f(− 2) ＝ 4 ＋ 8 ＋ 7 ＝ 19 是錯的，正確是 f(2) ＝ 4 − 8 ＋ 7 ＝ 3。",
+      "7": "這是只把 f(x) 的常數項當成餘數了；要代 x ＝ 2 算整個 f(2) ＝ 4 − 8 ＋ 7 ＝ 3，不是只看常數項 7。",
+      "− 2": "這是把商的常數項當成餘數了；長除法得商 x − 2、餘 3，商的常數項 − 2 不是餘數，餘數是 f(2) ＝ 3。"
+     },
+     "answer_evidence": [
+      "c-remainder-theorem"
+     ],
+     "feedback": "除式 (x − 2) 對應 a ＝ 2，餘式 ＝ f(2) ＝ 2² − 4×2 ＋ 7 ＝ 4 − 8 ＋ 7 ＝ 3。驗算：x² − 4x ＋ 7 ＝ (x − 2)(x − 2) ＋ 3 ✓。"
+    },
+    {
+     "question_id": "PP-mcq-3",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "用餘式定理求 f(x) ＝ x³ ＋ 2x − 3 除以 (x ＋ 1) 的餘式。",
+     "answer": "− 6",
+     "kp_ids": [
+      "math.t_adv.algexpr.poly-division-principle"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.algexpr.poly-division-principle"
+     ],
+     "options": [
+      "− 6",
+      "0",
+      "− 3",
+      "− 4"
+     ],
+     "distractor_rationales": {
+      "0": "這是把 a 的符號取錯了；除式 (x ＋ 1) 可以寫成 (x − (− 1))，對應 a ＝ − 1，要算 f(− 1)。f(1) ＝ 1 ＋ 2 − 3 ＝ 0 是錯的，正確是 f(− 1) ＝ − 6。",
+      "− 3": "這是只把 f(x) 的常數項當成餘數了；要代 x ＝ − 1 算整個 f(− 1)，不是只看常數項 − 3。",
+      "− 4": "這是 (− 1)³ 的符號算錯了；(− 1)³ ＝ − 1（不是 ＋ 1），若誤算成 ＋ 1 會得 1 − 2 − 3 ＝ − 4，正確 f(− 1) ＝ − 1 − 2 − 3 ＝ − 6。"
+     },
+     "answer_evidence": [
+      "c-remainder-theorem"
+     ],
+     "feedback": "除式 (x ＋ 1) ＝ (x − (− 1)) 對應 a ＝ − 1，餘式 ＝ f(− 1) ＝ (− 1)³ ＋ 2×(− 1) − 3 ＝ − 1 − 2 − 3 ＝ − 6。"
+    },
+    {
+     "question_id": "PP-mcq-4",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "一個多項式 f(x) 除以一個二次式 g(x)，根據除法原理，餘式 r(x) 的次數有什麼限制？",
+     "answer": "r(x) ＝ 0，或 r(x) 的次數小於 2（最高是一次式）",
+     "kp_ids": [
+      "math.t_adv.algexpr.poly-division-principle"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.algexpr.poly-division-principle"
+     ],
+     "options": [
+      "r(x) ＝ 0，或 r(x) 的次數小於 2（最高是一次式）",
+      "r(x) 的次數一定等於 2",
+      "r(x) 的次數可以大於或等於 2",
+      "r(x) 一定是常數（次數 0）"
+     ],
+     "distractor_rationales": {
+      "r(x) 的次數一定等於 2": "這是誤以為餘式和除式同次；除法原理要求餘式次數比除式低，除式是二次，餘式不可能也是二次，而是 0 或次數小於 2。",
+      "r(x) 的次數可以大於或等於 2": "這違反停止條件；餘式次數若還大於或等於除式（二次），就表示還能再除、不算除完，所以餘式次數一定比二次低。",
+      "r(x) 一定是常數（次數 0）": "這漏掉了一次式；除以二次式時，餘式可以是常數（次數 0），也可以是一次式（次數 1），只要比二次低都行，不是只能常數。"
+     },
+     "answer_evidence": [
+      "c-division-principle"
+     ],
+     "feedback": "除法原理規定餘式 r(x) ＝ 0 或次數比除式低。除式是二次，所以餘式是 0、或次數小於 2（可能是常數或一次式）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（除法原理 f(x)＝g(x)·q(x)＋r(x)、餘式 r(x)＝0 或次數＜除式；餘式定理 除以 (x−a) 的餘式＝f(a)，(x＋1) 對應 a＝−1；不自動批改）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
