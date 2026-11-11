@@ -7,6 +7,15 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 16:57 數學島 algexpr #2 收斂：math_algexpr_symbolunknown（用符號表示未知數）5/5 → algexpr 2/18
+- **frozen_sha `de77bd66414b2683`**，DONE-GATE 六確定性 gate 全綠（per_page 371/371 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：以符號表示未知數重點表 SVG（3 列左欄步驟：用符號 不知道的數用 □ 代替／求出符號 用相反的運算還原／翻成算式 照題目關係列式）iPad 橫直四角色 render 簽核過。3 claim kind=definition（c-symbol 定義性/teach-only、c-inverse、c-translate）。prereq=pattern-sequence。scope＝用符號(□/()/文字)代替未知數列式、用逆運算(加↔減、乘↔除)求值、文字情境翻算式。國小層級只用 + − × ÷ = □ ( )，不出現字母變數或不等式、不教移項法則術語。
+- **4 MCQ**：加法空格(□+6=13→7，誘答 13+6=19／13−5=8少減1／直接抄題目6)／減法空格(□−4=5→9，誘答 5−4=1／5×4=20／併成45)／文字翻譯求值(一個數加8等於20→12，誘答 20+8=28／20×8=160／減兩次20−8−8=4)／選正確算式(姊姊原□再買5共12→□+5=12，誘答 □−5當減少／□×5當5倍／5−□拿原數去減)。teach 用 □+9=15→6、□−7=10→17、某數×3=18→6（.venv 全核，與 practice 不重疊）。
+- **收斂路徑（草稿期 3 批＋收斂期 1 真缺陷，皆 content_audit/panel 擋下）**：初凍 a6744de7 → rd1 修 SU-mcq-add「8」可讀性 → **s1** 修 2 major（SU-mcq-add「6」首句雙重路徑導不出6／SU-mcq-translate「4」無動機「減成一半」）重凍 4bf0366a → t1/t2 連清 → **t3**（SU-mcq-sub「45」1 minor，panel 五審一致 DEFECT b-hard-to-understand）：誘答敘述「把 5 和 4 併成數字 45」digit 提及順序(5 先)與結果 45 位值順序(4 先 5 後)及題目 □−4＝5 由左而右矛盾、照字面讀出是 54 → 改「把題目的 4 和 5 併成數字 45；它們要相加不是併在一起…」順序一致並點明應相加，de-converge 重凍 de77bd66 → u1–u5 連 5 clean（L3 皆 exit0）。commits：1b1f97a5d(草稿)／8fb360485(rd1)／bebf3e1a6(s1)／1eef70d82(t3 修)／各輪 banked／75e55ba52(本收斂＋ledger 修復)。
+- **教訓（banked）**：誘答「數字併接(concatenation)」的 rationale，digit 提及順序必須與結果位值順序一致（「5 和 4 併成 45」讀起來是 54）——併接是順序即意義的操作，順序寫反＝b-hard-to-understand 清晰度缺陷。併 math-unit defect-class 補一條。
+- **★另修：ledger line14 懸空片段**（我 t3 編輯 last_fix 時舊值殘餘沒清掉→JSON 無法解析→`per_page_5clean_gate` fail-closed 視全站所有頁證據作廢）。Python 精準截斷修復、JSON 復原、per_page --verify 重 PASS。教訓：改 ledger 長字串欄位後務必 `python3 -c 'import json; json.load(...)'` 驗 JSON 合法再 commit。
+- **里程碑**：algexpr 2/18（數學島第二個開工的 strand；numquant 已 30/30 全收斂）。
+- **下一步**：algexpr #3＝translate-word（文字題翻譯成算式與列式解讀；t_base，預設）。
+
 ## 2026-11-11 15:36 數學島 algexpr #1 收斂＝新 strand 首單元：math_algexpr_patternsequence（數與形的規律）5/5 → algexpr 1/18
 - **frozen_sha `b93c0dbb7e42e232`**，DONE-GATE 六確定性 gate 全綠（per_page 370/370 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：數與形規律重點表 SVG（3 列：加減規律 每次加或減固定的數／乘法規律 每次乘固定的數／圖形規律 先數成數再找規律）iPad 橫直四角色 render 簽核過。3 claim kind=definition（c-add 含加與減、c-mult、c-shape）。prereq=[]（t_base foundational entry）。scope＝數列相鄰關係(加/減/乘固定數)、圖形數量規律、文字描述並延續。國小層級只用 + − × ÷ =。
 - **4 MCQ**：遞增加法(3,6,9,12→15，誘答+1/+4/+6)／遞減減法(20,17,14,11→8，誘答−2/−4/−1)／圖形方塊(3,5,7→9塊，誘答+1/+4/+3)／乘法倍數(1,2,4,8→16，誘答 8+4=12/誤記乘3=24/誤加2=10)。teach 用 5,8,11,14(+3)、50,40,30(−10)、2,6,18(×3)、圓點每次多1（.venv 全核，與 practice 不重疊）。
