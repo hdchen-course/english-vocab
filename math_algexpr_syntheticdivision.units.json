@@ -1,0 +1,193 @@
+{
+ "_note": "數學島 代數式（algexpr）strand 第 15 個單元（t_adv 第三個）。知識點 math.t_adv.algexpr.synthetic-division（綜合除法）。tier=t_adv（高中學測；學習者端不顯示年段 R11）。全繁體零簡體零 PRC 詞。數學中文授課。★t_adv 可用 x、x²、x³、a、f(x)。scope 聚焦：綜合除法是「除以 (x−a) 一次式」的快速算法——把被除式係數按次數由高到低排一列（缺項補 0），用 a（注意 (x+2) 的 a＝−2）；首項係數抄下，乘 a 加到下一個係數，重複；最後一欄是餘數，其餘是商的係數（次數降一次）。只能用在除式為 (x−a) 一次式（首項係數 1）。是長除法的簡寫。prereq=poly-division-principle。★自檢（math-unit defect-classes #1/#10/#14）：每個誘答的（商,餘）由單一錯誤機制（a 符號取錯／忘了乘 a 只相加／首項係數漏掉當 1／漏算最後一欄餘數／商沒有降次）經手算＋sympy 驗證導出；誘答顯示字串不撞同題別選項、不撞別題正解；teach 例題不與 practice 重疊；全半形一致；避開 a＝1（會使『忘乘a』誘答與正解重合）。practice：Q1 (2x²−3x+4)÷(x−2)=商2x+1餘6〔誘答 2x−7餘18 a=−2符號錯／2x−1餘3 忘乘a／x−1餘2 首項當1〕；Q2 (x²+7x+12)÷(x+3)=商x+4餘0〔誘答 x+10餘42 a=3符號錯／x+4餘12 漏最後步把常數12當餘／x²+4x餘0 商沒降次〕；Q3 (x³+3x²−4x+5)÷(x+2)=商x²+x−6餘17〔誘答 x²+x−6餘0 漏算餘數／x²+5x+6餘17 a=2符號錯／x²+4x餘5 忘乘a〕；Q4 概念 綜合除法只能用在 (x−a) 一次式。teach 例題避開 practice：(x²+5x+6)÷(x+2)=商x+3餘0、(2x³+3x²−1)÷(x+1)=商2x²+x−1餘0（缺 x 項補 0）。teach 帶「綜合除法」重點表圖(左欄:怎麼擺 係數排一列缺項補0旁寫a／怎麼算 首項抄下乘a加下一個／讀結果 最後一欄餘數其餘是商降一次)。claim kind=definition。figure-only example 無 body；無音檔。",
+ "page": "math_algexpr_syntheticdivision.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.algexpr.synthetic-division",
+   "title_zh": "綜合除法",
+   "can_do": "我會用綜合除法快速把多項式除以 (x − a)：把係數由高次到低次排一列（缺的項補 0），用 a（例如除以 (x ＋ 2) 時 a ＝ − 2）；第一個係數直接抄下來，乘以 a 加到下一個係數，一直做到最後；最後一欄就是餘數，前面幾欄是商的係數（次數比被除式低一次）。我也知道它只能用在除式是 (x − a) 這種一次式。",
+   "situation_group": "代數式：綜合除法",
+   "subject": "math",
+   "strand": "algexpr",
+   "est_minutes": 10,
+   "knowledge_point_ids": [
+    "math.t_adv.algexpr.synthetic-division"
+   ],
+   "prerequisites": [
+    "math.t_adv.algexpr.poly-division-principle"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-synthetic",
+     "text": "綜合除法是把多項式除以 (x − a) 的快速算法：把被除式的係數由高次到低次排成一列（缺的項要補 0），旁邊寫 a；第一個係數直接抄下來，把它乘以 a 加到下一個係數，得到的數再乘 a 加到下一個，一直做到最後。最後一欄是餘數，前面幾欄是商的係數（次數比被除式低一次）。要注意符號：除以 (x ＋ 2) 時 a ＝ − 2。例如 (x² ＋ 5x ＋ 6) ÷ (x ＋ 2)：a ＝ − 2，係數 1、5、6 → 抄 1；1 ×(− 2) ＝ − 2，5 ＋(− 2) ＝ 3；3 ×(− 2) ＝ − 6，6 ＋(− 6) ＝ 0。商 x ＋ 3、餘 0。",
+     "kind": "definition",
+     "source_refs": [
+      "綜合除法（高中數學 學測）"
+     ],
+     "verification_ref": "sympy div(x²+5x+6, x+2)=(x+3, 0)；synthetic a=−2 列 [1,3,0]",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-synthetic-limit",
+     "text": "綜合除法其實是長除法的簡寫：每一步「乘 a 再加下來」就對應長除法的「把商乘回除式再相減」，只是省去寫 x 的部分，所以更快。但它有限制——只能用在除式是 (x − a) 這種一次式（而且首項係數是 1）；如果除式是二次式或首項係數不是 1，就不能直接這樣做。缺項一定要補 0 佔位，否則位置會錯。例如 (2x³ ＋ 3x² − 1) ÷ (x ＋ 1) 要把一次項補成 0：係數 2、3、0、− 1，a ＝ − 1，算得商 2x² ＋ x − 1、餘 0。",
+     "kind": "definition",
+     "source_refs": [
+      "綜合除法 限制 缺項補零（高中數學 學測）"
+     ],
+     "verification_ref": "sympy div(2x³+3x²−1, x+1)=(2x²+x−1, 0)；synthetic a=−1 列 [2,1,-1,0]，缺 x 項補 0",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.algexpr.synthetic-division"
+     ],
+     "body": "綜合除法是把多項式除以 (x − a) 的快速算法。做法：把被除式的係數由高次到低次排成一列（缺的項補 0），旁邊寫 a；第一個係數直接抄下來，乘以 a 加到下一個係數，得到的數再乘 a 加到下一個，做到最後。最後一欄是餘數，前面幾欄是商的係數（次數比被除式低一次）。注意符號：除以 (x ＋ 2) 時 a ＝ − 2。例如 (x² ＋ 5x ＋ 6) ÷ (x ＋ 2)：a ＝ − 2，係數 1、5、6 → 抄 1；1 ×(− 2) ＝ − 2，5 ＋(− 2) ＝ 3；3 ×(− 2) ＝ − 6，6 ＋(− 6) ＝ 0。所以商 x ＋ 3、餘 0。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.algexpr.synthetic-division"
+     ],
+     "body": "綜合除法其實是長除法的簡寫，每一步「乘 a 再加下來」對應長除法的「乘回去相減」，所以更快。但只能用在除式是 (x − a) 一次式（首項係數 1）；而且缺項一定要補 0 佔位，否則位置會錯。例如 (2x³ ＋ 3x² − 1) ÷ (x ＋ 1)：一次項缺要補 0，係數排成 2、3、0、− 1，a ＝ − 1，算得商 2x² ＋ x − 1、餘 0。重點整理在下面的表。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.algexpr.synthetic-division"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 380 150' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><rect x='16' y='12' width='348' height='126' rx='12' fill='none' stroke='#cdbfa6' stroke-width='1.5'/><line x1='120' y1='12' x2='120' y2='138' stroke='#e3d8c4' stroke-width='1'/><line x1='16' y1='54' x2='364' y2='54' stroke='#e3d8c4' stroke-width='1'/><line x1='16' y1='96' x2='364' y2='96' stroke='#e3d8c4' stroke-width='1'/><g font-size='12.5' fill='#2f6f54' text-anchor='middle' font-weight='700'><text x='68' y='37'>怎麼擺</text><text x='68' y='79'>怎麼算</text><text x='68' y='121'>讀結果</text></g><g fill='#33475b' text-anchor='middle'><text x='244' y='37' font-size='11.5'>係數排一列（缺項補 0），旁寫 a</text><text x='244' y='79' font-size='11.5'>首項抄下，乘 a 加到下一個</text><text x='244' y='121' font-size='11.5'>最後一欄是餘數，其餘是商</text></g></g></svg>",
+      "alt": "綜合除法重點表，分三列，左欄是步驟、右欄是內容：怎麼擺 係數由高到低排一列、缺項補 0、旁邊寫 a；怎麼算 第一個係數抄下來、乘 a 加到下一個、重複；讀結果 最後一欄是餘數、其餘是商的係數（降一次）。",
+      "caption": "綜合除法（除以 x−a）：係數排一列缺項補 0、旁寫 a → 首項抄下乘 a 加下一個 → 最後一欄餘數、其餘是商（降一次）"
+     }
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "SD-mcq-1",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "用綜合除法算 (2x² − 3x ＋ 4) ÷ (x − 2)，商式和餘式是多少？",
+     "answer": "商 2x ＋ 1、餘 6",
+     "kp_ids": [
+      "math.t_adv.algexpr.synthetic-division"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.algexpr.synthetic-division"
+     ],
+     "options": [
+      "商 2x ＋ 1、餘 6",
+      "商 2x − 7、餘 18",
+      "商 2x − 1、餘 3",
+      "商 x − 1、餘 2"
+     ],
+     "distractor_rationales": {
+      "商 2x − 7、餘 18": "這是把 a 的符號取錯了；除以 (x − 2) 要用 a ＝ ＋ 2，不是 − 2。用 a ＝ 2：抄 2；2 × 2 ＝ 4、− 3 ＋ 4 ＝ 1；1 × 2 ＝ 2、4 ＋ 2 ＝ 6，得商 2x ＋ 1、餘 6。",
+      "商 2x − 1、餘 3": "這是忘了乘 a、只把係數相加了；每一步要先乘 a 再加。正確：2；(− 3) ＋ 2 × 2 ＝ 1；4 ＋ 1 × 2 ＝ 6，得商 2x ＋ 1、餘 6。",
+      "商 x − 1、餘 2": "這是把首項係數 2 漏掉當成 1 了；首項係數要原封不動抄下來（是 2）。正確得商 2x ＋ 1、餘 6。"
+     },
+     "answer_evidence": [
+      "c-synthetic"
+     ],
+     "feedback": "a ＝ 2，係數 2、− 3、4：抄 2；2 × 2 ＝ 4，− 3 ＋ 4 ＝ 1；1 × 2 ＝ 2，4 ＋ 2 ＝ 6。最後一欄 6 是餘數，前面 2、1 是商的係數，所以商 2x ＋ 1、餘 6。驗算 (x − 2)(2x ＋ 1) ＋ 6 ＝ 2x² − 3x ＋ 4 ✓。"
+    },
+    {
+     "question_id": "SD-mcq-2",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "用綜合除法算 (x² ＋ 7x ＋ 12) ÷ (x ＋ 3)，商式和餘式是多少？",
+     "answer": "商 x ＋ 4、餘 0",
+     "kp_ids": [
+      "math.t_adv.algexpr.synthetic-division"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.algexpr.synthetic-division"
+     ],
+     "options": [
+      "商 x ＋ 4、餘 0",
+      "商 x ＋ 10、餘 42",
+      "商 x ＋ 4、餘 12",
+      "商 x² ＋ 4x、餘 0"
+     ],
+     "distractor_rationales": {
+      "商 x ＋ 10、餘 42": "這是把 a 的符號取錯了；除以 (x ＋ 3) 要用 a ＝ − 3，不是 ＋ 3。用 a ＝ − 3：抄 1；1 ×(− 3) ＝ − 3、7 ＋(− 3) ＝ 4；4 ×(− 3) ＝ − 12、12 ＋(− 12) ＝ 0，得商 x ＋ 4、餘 0。",
+      "商 x ＋ 4、餘 12": "這是漏了最後一步、把原本的常數項 12 直接當成餘數了；最後一欄也要做「乘 a 再加」：4 ×(− 3) ＝ − 12，12 ＋(− 12) ＝ 0，所以餘是 0 不是 12。",
+      "商 x² ＋ 4x、餘 0": "這是商的次數沒有降一次；被除式是二次、除以一次式，商應該是一次式。前面的係數 1、4 要配成 x ＋ 4（不是 x² ＋ 4x）。"
+     },
+     "answer_evidence": [
+      "c-synthetic"
+     ],
+     "feedback": "a ＝ − 3，係數 1、7、12：抄 1；1 ×(− 3) ＝ − 3，7 ＋(− 3) ＝ 4；4 ×(− 3) ＝ − 12，12 ＋(− 12) ＝ 0。商 x ＋ 4、餘 0。驗算 (x ＋ 3)(x ＋ 4) ＝ x² ＋ 7x ＋ 12 ✓。"
+    },
+    {
+     "question_id": "SD-mcq-3",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "用綜合除法算 (x³ ＋ 3x² − 4x ＋ 5) ÷ (x ＋ 2)，商式和餘式是多少？",
+     "answer": "商 x² ＋ x − 6、餘 17",
+     "kp_ids": [
+      "math.t_adv.algexpr.synthetic-division"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.algexpr.synthetic-division"
+     ],
+     "options": [
+      "商 x² ＋ x − 6、餘 17",
+      "商 x² ＋ x − 6、餘 0",
+      "商 x² ＋ 5x ＋ 6、餘 17",
+      "商 x² ＋ 4x、餘 5"
+     ],
+     "distractor_rationales": {
+      "商 x² ＋ x − 6、餘 0": "商算對了，但漏算了餘數、誤以為整除；最後一欄要做 (− 6) ×(− 2) ＝ 12，5 ＋ 12 ＝ 17，所以餘是 17 不是 0。",
+      "商 x² ＋ 5x ＋ 6、餘 17": "這是把 a 的符號取錯了；除以 (x ＋ 2) 要用 a ＝ − 2，不是 ＋ 2。用 a ＝ − 2 才會得到商 x² ＋ x − 6、餘 17。",
+      "商 x² ＋ 4x、餘 5": "這是忘了乘 a、只把係數相加了；每一步要先乘 a 再加。正確用 a ＝ − 2 得商 x² ＋ x − 6、餘 17。"
+     },
+     "answer_evidence": [
+      "c-synthetic"
+     ],
+     "feedback": "a ＝ − 2，係數 1、3、− 4、5：抄 1；1 ×(− 2) ＝ − 2，3 ＋(− 2) ＝ 1；1 ×(− 2) ＝ − 2，− 4 ＋(− 2) ＝ − 6；(− 6) ×(− 2) ＝ 12，5 ＋ 12 ＝ 17。商 x² ＋ x − 6、餘 17。"
+    },
+    {
+     "question_id": "SD-mcq-4",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "關於綜合除法，下列敘述何者正確？",
+     "answer": "綜合除法只能用在除式是 (x − a) 這種一次式",
+     "kp_ids": [
+      "math.t_adv.algexpr.synthetic-division"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.algexpr.synthetic-division"
+     ],
+     "options": [
+      "綜合除法只能用在除式是 (x − a) 這種一次式",
+      "綜合除法可以用在任何除式，包括二次式",
+      "除以 (x ＋ 2) 時，a 要寫 ＋ 2",
+      "綜合除法算出的最後一欄是商的常數項"
+     ],
+     "distractor_rationales": {
+      "綜合除法可以用在任何除式，包括二次式": "這不對；綜合除法只適用於除式是 (x − a) 一次式（首項係數 1），除式是二次式時要改用長除法。",
+      "除以 (x ＋ 2) 時，a 要寫 ＋ 2": "這是符號弄反了；(x ＋ 2) 可以寫成 (x − (− 2))，所以 a ＝ − 2，不是 ＋ 2。",
+      "綜合除法算出的最後一欄是商的常數項": "這記錯了；最後一欄是餘數，前面幾欄才是商的係數。"
+     },
+     "answer_evidence": [
+      "c-synthetic-limit"
+     ],
+     "feedback": "綜合除法是長除法的簡寫，只能用在除式是 (x − a) 一次式；(x ＋ 2) 對應 a ＝ − 2；算出的一列中最後一欄是餘數、其餘是商的係數。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（綜合除法：係數排一列缺項補 0、旁寫 a（(x＋2)→a＝−2）、首項抄下乘 a 加下一個、最後一欄餘數其餘是商降一次；只能用在 (x−a) 一次式；不自動批改）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
