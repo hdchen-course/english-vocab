@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 07:34 數學島 geom #11 收斂：math_geom_volume（體積：長方體與正方體＋表面積概念，t_base 國小高年級）5/5 → geom strand 11/39
+- **frozen_sha `f574d168275c7399`**，DONE-GATE 六確定性 gate 全綠（per_page 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：長方體斜角圖（綠單色邊＋長/寬/高 中性 slate 標籤＋圖下公式中性灰）iPad 橫直四角色 render 簽核過（無溢出、標籤不重疊）。3 claim kind=definition（c-volume-def 體積＝立體佔空間、單位立方公分＝邊1公分正方體、三單位辨異；c-volume-formula 長方體＝長×寬×高、正方體＝邊×邊×邊；c-surface 表面積＝6個面面積和、單位平方公分、與體積不同），皆被 practice answer_evidence 引用。★t_base 國小高年級：僅用公分/平方公分/立方公分/×/＋/＝與數字，禁 x、禁 ≥＜、禁次方符號（寫「邊×邊×邊」不寫 邊³）。表面積只教概念不做複雜計算。prereq=circle-circumference-area。算術全 sympy 驗（6×5×2=60、5×5×5=125、4×3×2=24、2×2×2=8）。
+- **4 MCQ**：Q1 長方體長6寬5高2體積=60〔誘答 13(相加6+5+2)/30(漏高6×5)/10(漏長5×2)〕／Q2 正方體邊5體積=125〔誘答 25(只乘兩次=面積)/15(相加5+5+5)/20(一個面周長4×5)〕／Q3 體積單位=立方公分〔誘答 平方公分(面積)/公分(長度)/公斤(重量)〕／Q4 表面積意思=6個面面積全部加起來〔誘答 裡面空間(體積)/最大一面/所有邊長相加(稜長和)〕。誘答單一乾淨機制。
+- **收斂路徑（草稿 R1 clean、R2 修 2 major、R3/R4/R6 各修、共數次 de-converge，R7–R11 連 5 clean）**：pre-freeze 六類 gate 全綠（體積 sympy 驗＋長方體斜角 SVG render）→ **R2**（2 major：Q1 誘答12＝相加(5+4+3)又＝4×3漏長雙路徑；Q2 誘答9＝面積(3×3)又＝相加雙路徑→改 Q1 長6寬5高2[相加13≠任兩維積]、Q2 邊5[面積25≠相加15]）→ **R3**（_note 殘留 pre-R2 數字 stale→同步）→ **R4**（_note「數字不重疊」字面不實→改「答案值與整組維度不重疊」）→ **R6**（minor：Q2 誘答10＝5×2 恆等於 5+5 撞相加族→改 20＝一個面周長4×5 單一概念，de-converge 重凍 f574d168）→ R7–R11 連 5 clean（L3 皆 exit0、agents_error 全 0；R11 claimedLines 205 vs 實 204 在 coverage_check 容差內、3 anchors 全驗）。
+- **教訓（banked 缺陷類 #15–#19 已入 math memory；本單元複用）**：誘答避「×2 機制恆等於加兩邊」隱性雙路徑（改用面周長 4×邊）；_note 中繼資料編輯後必與 practice 同步（stale→a-wrong）；體積/面積/長度 三單位辨異題有效。
+- **里程碑**：數學島 geom（幾何）strand **11/39**（t_base 11/12）。algexpr strand 已 18/18 COMPLETE。本 session 已上線 geom #7/#8/#9/#10/#11。
+- **下一步**：geom #12＝`math.t_base.geom.symmetry`（線對稱／對稱軸），t_base geom 最後一個單元；之後進 geom t_mid（20）→t_adv（7）。
+
 ## 2026-11-12 06:41 數學島 geom #10 收斂：math_geom_circlemeasure（圓周長與圓面積，引入 π≈3.14，t_base 國小高年級）5/5 → geom strand 10/39
 - **frozen_sha `e3b3ee7acb723106`**，DONE-GATE 六確定性 gate 全綠（per_page 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：圓圖（圓框灰＋半徑綠＋直徑橙各唯一色、兩行公式文字中性 slate）iPad 橫直四角色 render 簽核過。3 claim kind=definition（c-pi 圓周率＝周長÷直徑恆約3.14；c-circumference 周長＝直徑×圓周率；c-circle-area 面積＝半徑×半徑×圓周率、與周長公式不同），皆被 practice answer_evidence 引用。★t_base 國小高年級：圓周率用近似值 3.14（台灣課綱慣例），禁 x、禁 ≥＜、禁 π 符號。prereq=circle-basics。scope＝圓周率＋圓周長＋圓面積，不涉扇形/球。算術全 sympy 驗（round 2 位：10×3.14=31.4、5×5×3.14=78.5、6×3.14=18.84、4×4×3.14=50.24）。
 - **4 MCQ**：Q1 直徑10圓周長=31.4〔誘答 13.14(相加)/20(×2漏π)/100(平方)〕／Q2 半徑5圓面積=78.5〔誘答 15.7(只乘一個半徑)/31.4(算成周長)/25(漏π)〕／Q3 圓周率約=3.14〔誘答 3.41/1.57/6.28〕／Q4 圓面積公式=半徑×半徑×圓周率〔誘答 直徑×圓周率(周長)/半徑×2×圓周率(周長)/半徑×半徑(漏π)〕。
