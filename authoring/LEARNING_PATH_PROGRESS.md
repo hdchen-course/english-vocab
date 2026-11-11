@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 18:34 數學島 algexpr #4 收斂＝首個 t_mid 單元：math_algexpr_linearexpression（合併同類項，化簡一次式）5/5 → algexpr 4/18
+- **frozen_sha `11c5a95062a641ea`**，DONE-GATE 六確定性 gate 全綠（per_page 373/373 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN 含字母變數 x／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：合併同類項重點表 SVG（3 列左欄：同類項／合併／化簡）iPad 橫直四角色 render 簽核過（x 變數正確顯示、無重疊/裁切、共 render 3 次）。2 claim kind=definition（c-liketerm/c-combine/c-simplify… 實為 3 claim），皆被 practice answer_evidence 引用。prereq=translate-word。★首個 t_mid（國中）單元，可用字母變數 x（與 t_base 國小只用 □ 不同）。scope＝認同類項（文字部分相同）、合併同類項（係數相加減文字不變）、化簡一次式（含 x 的項與常數各自合併、處理減號）。
+- **4 MCQ**：合併純x項(3x+5x=8x，誘答 丟x得8／係數相乘15x／加次數8x²)／辨識同類項(6x與2x，誘答 5x與5一含x一常數／4x與4x²次數不同／3與3x一常數一含x)／含常數合併(2x+7+3x=5x+7，誘答 把常數7當x項12x／漏常數5x／把3加到常數2x+10)／含減號化簡(6x+4−2x+1=4x+5，誘答 減號當加號8x+5／+1當−1得4x+3／漏末項4x+4)。teach 用 7x與4x/3與8、4x+3x=7x/9x−5x=4x、3x+2+x+5=4x+7（.venv 全核，與 practice 不整組重疊）。
+- **收斂路徑（草稿後連 4 輪、4 真缺陷全由 content_audit panel 擋下，皆清晰度/自然度/重疊）**：初凍 c8b4108f → **v1**（teach 表 row3 SVG「含 x 的、常數各自合併」漏名詞「項」、與 alt/caption 不一致，panel 7 鏡 b-hard）補「項」→ **w1**（teach[0] 辨識正例「2x 和 6x」與 practice identify 正解「6x 和 2x」整組重疊＝defect-class#10 延伸，owner=learning b-hard）改 7x/4x → **x1**（teach body＋claim「找在一起」非道地搭配，應「放在一起」，panel 多鏡 b-hard）兩處改「放在一起」→ **y1–y5** 連 5 clean（L3 皆 exit0）。每次 teach/figure 變動皆重 render iPad 四角色簽核（共 3 次）。commits：cfb05d2f6(草稿)／0f66d928e(v1)／1c426cbb3(w1)／ef6028ff7(x1)／各輪 banked／97cbcab4b(本收斂)。
+- **教訓（banked 入 math-unit defect-classes 記憶）**：(a) teach SVG 圖內文字若與 alt/caption 用詞不一致（漏名詞「項」）＝render-only b-hard，content_audit 審 svg 字串能抓、但仍要重 render 確認；(b) defect-class#10 teach↔practice 整組重疊延伸——「辨識/選擇題的選項組」也算（teach 正例「2x 和 6x」撞 identify 正解「6x 和 2x」），草稿重疊清單要納入選項組非只數值組；(c) 「找在一起」非道地（找＝尋找），歸類放置要用「放／湊／歸在一起」。
+- **里程碑**：algexpr 4/18（首個 t_mid 國中單元；t_base 3/3、numquant 已 30/30）。
+- **下一步**：algexpr #5。t_mid 多項式線：建議 polynomial-add-sub（多項式加減，會考）接 linear-expression 最自然（預設）。
+
 ## 2026-11-11 17:50 數學島 algexpr #3 收斂：math_algexpr_translateword（文字題翻成算式）5/5 → algexpr 3/18
 - **frozen_sha `a3188ff15c28c763`**，DONE-GATE 六確定性 gate 全綠（per_page 372/372 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：選運算重點表 SVG（**四列各 1:1**：合起來・增加→用加法 ＋／拿走・相差→用減法 −／幾倍→用乘法 ×／平分→用除法 ÷）iPad 橫直四角色 render 簽核過（經 z1 拆列後重 render）。2 claim kind=definition（c-translate 選運算並列式、c-read 列式解讀），兩 claim 皆被 practice answer_evidence 引用。prereq=symbol-unknown。scope＝看關係選運算＋照關係列式（□ 代未知）＋列式解讀（由算式還原情況）。國小只用 + − × ÷ = □ ( )。
 - **4 MCQ**：合併選算式(一盒12枝+一盒8枝→12＋8，誘答 相差12−8／誤當倍數12×8／誤當平分12÷8)／平分選算式(24顆平分給4人→24÷4，誘答 拿走24−4／4個24相乘24×4／增加24＋4)／幾倍選算式(弟3枚哥哥4倍→3×4，誘答 多4枚3＋4／相差4−3／平分3÷4)／列式解讀(□−6=10 對應「原本□、吃掉6、剩10」，誘答 加法□+6=10情境／6為原本數6+□=10／角色互換10−□=6)。teach 用 7＋6=13、15−9=6、5×3=15、18÷6=3、解讀例 □−3=8（.venv 全核，與 practice 不整組重疊）。
