@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 06:09 數學島 geom #9 收斂：math_geom_circlebasics（圓心/半徑/直徑，t_base 國小）5/5 → geom strand 9/39
+- **frozen_sha `1b38ae5c118738fc`**，DONE-GATE 六確定性 gate 全綠（per_page 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：圓圖（圓框中性灰＋半徑綠·上＋直徑橙·過圓心橫＋圓心 slate 點，每特徵唯一色）iPad 橫直四角色 render 簽核過（色彩圖例清晰、標示不重疊、無溢出）。2 claim kind=definition（c-circle-parts 三名詞定義＋半徑處處相等；c-diameter-radius 直徑＝半徑×2、半徑＝直徑÷2），皆被 practice answer_evidence 引用。★t_base 國小：僅用公分/×/÷/＝/倍與數字，禁 x、禁 ≥＜、禁 π（圓周率後續單元）。prereq=area-formulas。scope＝圓心/半徑/直徑三名詞＋直徑半徑倍數關係，不涉圓周長/圓面積/π。算術全 sympy 驗（6×2=12、14÷2=7、4×2=8、10÷2=5）。
+- **4 MCQ**：Q1 半徑6→直徑=12〔誘答 3(÷2方向反)/8(+2)/36(平方)〕／Q2 直徑14→半徑=7〔誘答 28(×2方向反)/16(+2)/12(−2)〕／Q3 圓心到圓上任一點的距離=半徑〔誘答 直徑/圓心/圓周〕／Q4 直徑是半徑的幾倍=2倍〔誘答 3倍/一半/一樣長〕。誘答單一機制（除法方向反/相加/平方/倍數記反）。
+- **收斂路徑（草稿後 R1 clean、R2 修 1 minor、R3–R7 連 5 clean，1 次 de-converge）**：pre-freeze 六類 gate 全綠（含圓 SVG render 驗）→ 初凍 63c6ac17 → R1 clean（streak1）→ **R2**（1 minor b-hard，panel 6/7 owner=learning decisive：SVG 圓外框與半徑線同用綠 #2f6f54，綠色不再唯一對應半徑→圓框改中性灰 #94a3b8、半徑綠/直徑橙加粗區分，de-converge 重凍 1b38ae5c）→ R3–R7 連 5 clean（L3 皆 exit0、agents_error 全 0）。
+- **教訓（banked 缺陷類 #17 候選）★**：SVG 色彩圖例單元——當圖用「顏色對應標記特徵」（圓心/半徑/直徑各一色），圖形「外框/背景」不可與某個被標記特徵同色，否則該色不再唯一對應、特徵與外框在交點處融合（panel owner=learning 判 b-hard）。修法＝外框用中性灰，保留彩色給被標記的特徵。草稿時：列出「每個會被 label 的特徵→其顏色」，確認外框/輔助線用的是清單外的中性色。
+- **里程碑**：數學島 geom（幾何）strand **9/39**（t_base 9/12）。algexpr strand 已 18/18 COMPLETE。
+- **下一步**：geom #10＝`math.t_base.geom.circle-circumference-area`（圓周長與圓面積，引入圓周率 π≈3.14），續 geom t_base 依序（此單元起可用 π）。
+
 ## 2026-11-12 05:42 數學島 geom #8 收斂：math_geom_area（面積公式：正方形與長方形，t_base 國小）5/5 → geom strand 8/39
 - **frozen_sha `d52072d8948681fb`**，DONE-GATE 六確定性 gate 全綠（per_page 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：格子圖（正方形 3×3＝9 格、長方形 4×2＝8 格，平方公分單位視覺化）＋標邊長（邊3/長4/寬2 皆帶公分）＋公式於各圖下，iPad 橫直四角色 render 簽核過（格數與標示相符、兩維單位一致、無溢出重疊）。2 claim kind=definition（c-area-def 面積＝內部大小、單位平方公分、面積≠周長；c-area-formula 正方形＝邊×邊、長方形＝長×寬），皆被 practice answer_evidence 引用。★t_base 國小：僅用公分/平方公分/×/＝與數字，禁 x、禁 ≥＜。prereq=perimeter（對比面積≠周長）。scope＝正方形/長方形面積與面積概念，不涉三角形/圓面積。算術全 sympy 驗（6×6=36、7×4=28、3×3=9、4×2=8）。
 - **4 MCQ**：Q1 正方形邊6面積=36〔誘答 24邊×4(周長)/12邊×2/30〕／Q2 長方形長7寬4面積=28〔誘答 22(長+寬)×2(周長)/11加一次/14只乘2〕／Q3 面積意思=圖形裡面佔多大範圍〔誘答 外圍一圈長度(周長)/最長邊/角度〕／Q4 面積單位=平方公分〔誘答 公分/度/公斤〕。★誘答刻意用「周長值」(24、22)當混淆項以強化面積≠周長區辨（panel 認可為教學設計）。
