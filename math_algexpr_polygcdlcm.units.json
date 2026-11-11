@@ -1,0 +1,193 @@
+{
+ "_note": "數學島 代數式（algexpr）strand 第 16 個單元（t_adv 第四個）。知識點 math.t_adv.algexpr.poly-gcd-lcm（多項式最大公因式與最小公倍式）。tier=t_adv（高中學測；學習者端不顯示年段 R11）。全繁體零簡體零 PRC 詞。數學中文授課。★t_adv 可用 x、x²、x³。scope 聚焦：先把每個多項式因式分解；最大公因式（GCD）＝取共同的因式、次數取最低；最小公倍式（LCM）＝取出現過的所有因式、次數取最高；關係 GCD × LCM ＝ 兩多項式相乘（取 monic 首一）。prereq=factor-cross（要先會因式分解）。★自檢（math-unit defect-classes #1/#10/#14）：每個 GCD/LCM 由 sympy gcd()/lcm()/factor() 驗證；誘答由單一機制（取所有因式當GCD／取非共同因式／次數取錯高低／公因式重複算／漏掉公因式／GCD LCM 互換）導出；誘答顯示字串不撞同題別選項也不撞別題正解；teach 例題不與 practice 重疊；全半形一致；道地中文。practice：Q1 A=(x+2)(x−3) B=(x+2)(x+5) GCD=(x+2)〔誘答 (x+2)(x−3)(x+5) 當LCM／(x−3)(x+5) 取非共同／(x+2)² 誤平方〕；Q2 A=x²−4 B=x²−4x+4 先分解 (x+2)(x−2)、(x−2)² GCD=(x−2)〔誘答 (x−2)² 次數取最高／(x+2)(x−2) 整個A／(x+2)(x−2)² 當LCM〕；Q3 A=(x+3)(x+1) B=(x+3)(x−4) LCM=(x+3)(x+1)(x−4)〔誘答 (x+3) GCD當LCM／(x+3)²(x+1)(x−4) 公因式重複／(x+1)(x−4) 漏公因式〕；Q4 關係 GCD×LCM=兩式相乘。teach 例題避開 practice：A=x²−1=(x+1)(x−1)、B=x²+2x+1=(x+1)² → GCD=(x+1)、LCM=(x+1)²(x−1)。teach 帶「GCD/LCM」重點表圖(左欄:先因式分解／最大公因式 取共同因式次數最低／最小公倍式 取所有因式次數最高)。claim kind=definition。figure-only example 無 body；無音檔。",
+ "page": "math_algexpr_polygcdlcm.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.algexpr.poly-gcd-lcm",
+   "title_zh": "多項式的最大公因式與最小公倍式",
+   "can_do": "我會求兩個多項式的最大公因式和最小公倍式：先把每個多項式因式分解，最大公因式就是「共同的因式、次數取最低」，最小公倍式就是「出現過的所有因式、次數取最高」。我也知道它們的關係——最大公因式乘最小公倍式，等於這兩個多項式相乘。",
+   "situation_group": "代數式：最大公因式與最小公倍式",
+   "subject": "math",
+   "strand": "algexpr",
+   "est_minutes": 10,
+   "knowledge_point_ids": [
+    "math.t_adv.algexpr.poly-gcd-lcm"
+   ],
+   "prerequisites": [
+    "math.t_mid.algexpr.factor-cross"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-gcd-lcm",
+     "text": "求兩多項式的最大公因式（GCD）和最小公倍式（LCM），要先把每個多項式因式分解。最大公因式 ＝ 取「兩邊都有」的共同因式，每個的次數取較低的那個；最小公倍式 ＝ 取「出現過的所有」因式，每個的次數取較高的那個。例如 A ＝ x² − 1 ＝ (x ＋ 1)(x − 1)，B ＝ x² ＋ 2x ＋ 1 ＝ (x ＋ 1)²：共同因式是 (x ＋ 1)，次數取最低（1 次），所以最大公因式是 (x ＋ 1)；所有因式是 (x ＋ 1) 和 (x − 1)，(x ＋ 1) 次數取最高（2 次），所以最小公倍式是 (x ＋ 1)²(x − 1)。",
+     "kind": "definition",
+     "source_refs": [
+      "多項式最大公因式 最小公倍式（高中數學 學測）"
+     ],
+     "verification_ref": "sympy gcd(x²−1, x²+2x+1)=x+1、lcm=(x+1)²(x−1)；factor 後取共同/所有因式",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-gcd-lcm-relation",
+     "text": "最大公因式和最小公倍式有一個好用的關係：最大公因式 × 最小公倍式 ＝ 這兩個多項式相乘（都取首項係數為 1 的形式）。例如上面的 A、B：最大公因式 (x ＋ 1) × 最小公倍式 (x ＋ 1)²(x − 1) ＝ (x ＋ 1)³(x − 1)，而 A × B ＝ (x ＋ 1)(x − 1) × (x ＋ 1)² ＝ (x ＋ 1)³(x − 1)，兩邊相等。這和整數的「兩數乘積 ＝ 最大公因數 × 最小公倍數」是一樣的道理。",
+     "kind": "definition",
+     "source_refs": [
+      "最大公因式 最小公倍式 關係（高中數學 學測）"
+     ],
+     "verification_ref": "sympy gcd·lcm = A·B = (x+1)³(x−1)；對應整數 gcd×lcm=ab",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.algexpr.poly-gcd-lcm"
+     ],
+     "body": "求兩多項式的最大公因式和最小公倍式，先把每個多項式因式分解。最大公因式 ＝ 取「兩邊都有」的共同因式、次數取較低的；最小公倍式 ＝ 取「出現過的所有」因式、次數取較高的。例如 A ＝ x² − 1 ＝ (x ＋ 1)(x − 1)，B ＝ x² ＋ 2x ＋ 1 ＝ (x ＋ 1)²：共同因式只有 (x ＋ 1)、次數取最低，所以最大公因式是 (x ＋ 1)；出現過的因式有 (x ＋ 1) 和 (x − 1)，(x ＋ 1) 次數取最高（2 次），所以最小公倍式是 (x ＋ 1)²(x − 1)。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.algexpr.poly-gcd-lcm"
+     ],
+     "body": "有一個好用的關係：最大公因式 × 最小公倍式 ＝ 這兩個多項式相乘。用上面的 A、B 檢查：(x ＋ 1) × (x ＋ 1)²(x − 1) ＝ (x ＋ 1)³(x − 1)，而 A × B ＝ (x ＋ 1)(x − 1) × (x ＋ 1)² 也是 (x ＋ 1)³(x − 1)，兩邊相等。這跟整數「兩數相乘 ＝ 最大公因數 × 最小公倍數」一樣。重點整理在下面的表。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.algexpr.poly-gcd-lcm"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 380 150' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><rect x='16' y='12' width='348' height='126' rx='12' fill='none' stroke='#cdbfa6' stroke-width='1.5'/><line x1='132' y1='12' x2='132' y2='138' stroke='#e3d8c4' stroke-width='1'/><line x1='16' y1='54' x2='364' y2='54' stroke='#e3d8c4' stroke-width='1'/><line x1='16' y1='96' x2='364' y2='96' stroke='#e3d8c4' stroke-width='1'/><g font-size='12' fill='#2f6f54' text-anchor='middle' font-weight='700'><text x='74' y='37'>先因式分解</text><text x='74' y='79'>最大公因式</text><text x='74' y='121'>最小公倍式</text></g><g fill='#33475b' text-anchor='middle'><text x='250' y='37' font-size='11.5'>每個多項式都先分解成因式</text><text x='250' y='79' font-size='11.5'>取共同因式、次數取最低</text><text x='250' y='121' font-size='11.5'>取所有因式、次數取最高</text></g></g></svg>",
+      "alt": "最大公因式與最小公倍式重點表，分三列，左欄是步驟、右欄是內容：先因式分解 每個多項式都先分解成因式；最大公因式 取共同的因式、次數取最低；最小公倍式 取出現過的所有因式、次數取最高。",
+      "caption": "最大公因式／最小公倍式：先因式分解 → 最大公因式取共同因式次數最低、最小公倍式取所有因式次數最高；且 GCD × LCM ＝ 兩式相乘"
+     }
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "GL-mcq-1",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "A ＝ (x ＋ 2)(x − 3)，B ＝ (x ＋ 2)(x ＋ 5)，求 A 和 B 的最大公因式。",
+     "answer": "(x ＋ 2)",
+     "kp_ids": [
+      "math.t_adv.algexpr.poly-gcd-lcm"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.algexpr.poly-gcd-lcm"
+     ],
+     "options": [
+      "(x ＋ 2)",
+      "(x ＋ 2)(x − 3)(x ＋ 5)",
+      "(x − 3)(x ＋ 5)",
+      "(x ＋ 2)²"
+     ],
+     "distractor_rationales": {
+      "(x ＋ 2)(x − 3)(x ＋ 5)": "這是最小公倍式（取所有因式），不是最大公因式；最大公因式只取兩邊共同的因式，共同的只有 (x ＋ 2)。",
+      "(x − 3)(x ＋ 5)": "這取的是兩邊「不同」的因式；最大公因式要取「共同」的因式，(x − 3) 只在 A、(x ＋ 5) 只在 B，共同的是 (x ＋ 2)。",
+      "(x ＋ 2)²": "這把公因式多乘了一次；(x ＋ 2) 在 A、B 裡各只出現一次（1 次方），次數取最低是 1 次，所以最大公因式是 (x ＋ 2) 不是 (x ＋ 2)²。"
+     },
+     "answer_evidence": [
+      "c-gcd-lcm"
+     ],
+     "feedback": "A ＝ (x ＋ 2)(x − 3)、B ＝ (x ＋ 2)(x ＋ 5)，兩邊共同的因式只有 (x ＋ 2)、次數都是 1 次，所以最大公因式是 (x ＋ 2)。"
+    },
+    {
+     "question_id": "GL-mcq-2",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "A ＝ x² − 4，B ＝ x² − 4x ＋ 4，求 A 和 B 的最大公因式。",
+     "answer": "(x − 2)",
+     "kp_ids": [
+      "math.t_adv.algexpr.poly-gcd-lcm"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.algexpr.poly-gcd-lcm"
+     ],
+     "options": [
+      "(x − 2)",
+      "(x − 2)²",
+      "(x ＋ 2)(x − 2)",
+      "(x ＋ 2)(x − 2)²"
+     ],
+     "distractor_rationales": {
+      "(x − 2)²": "這是次數取錯了；A ＝ (x ＋ 2)(x − 2) 裡 (x − 2) 只有 1 次，最大公因式的次數要取「較低」的，所以是 (x − 2) 不是 (x − 2)²。",
+      "(x ＋ 2)(x − 2)": "這是把 A 整個當成最大公因式了；(x ＋ 2) 不是共同因式（B 沒有），最大公因式只取共同的 (x − 2)。",
+      "(x ＋ 2)(x − 2)²": "這是最小公倍式（取所有因式、次數取最高），不是最大公因式；最大公因式是共同因式 (x − 2)。"
+     },
+     "answer_evidence": [
+      "c-gcd-lcm"
+     ],
+     "feedback": "先因式分解：A ＝ x² − 4 ＝ (x ＋ 2)(x − 2)、B ＝ x² − 4x ＋ 4 ＝ (x − 2)²。共同因式是 (x − 2)、次數取最低（1 次），所以最大公因式是 (x − 2)。"
+    },
+    {
+     "question_id": "GL-mcq-3",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "A ＝ (x ＋ 3)(x ＋ 1)，B ＝ (x ＋ 3)(x − 4)，求 A 和 B 的最小公倍式。",
+     "answer": "(x ＋ 3)(x ＋ 1)(x − 4)",
+     "kp_ids": [
+      "math.t_adv.algexpr.poly-gcd-lcm"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.algexpr.poly-gcd-lcm"
+     ],
+     "options": [
+      "(x ＋ 3)(x ＋ 1)(x − 4)",
+      "(x ＋ 3)",
+      "(x ＋ 3)²(x ＋ 1)(x − 4)",
+      "(x ＋ 1)(x − 4)"
+     ],
+     "distractor_rationales": {
+      "(x ＋ 3)": "這是最大公因式（共同因式），不是最小公倍式；最小公倍式要取出現過的「所有」因式 (x ＋ 3)、(x ＋ 1)、(x − 4)。",
+      "(x ＋ 3)²(x ＋ 1)(x − 4)": "這把共同因式 (x ＋ 3) 算了兩次；(x ＋ 3) 在 A、B 裡各只有 1 次，次數取最高也只是 1 次，不是平方。",
+      "(x ＋ 1)(x − 4)": "這漏掉了公因式 (x ＋ 3)；最小公倍式要包含出現過的所有因式，(x ＋ 3) 也要算進去。"
+     },
+     "answer_evidence": [
+      "c-gcd-lcm"
+     ],
+     "feedback": "A ＝ (x ＋ 3)(x ＋ 1)、B ＝ (x ＋ 3)(x − 4)，出現過的因式有 (x ＋ 3)、(x ＋ 1)、(x − 4)，各取最高次（都 1 次），所以最小公倍式是 (x ＋ 3)(x ＋ 1)(x − 4)。"
+    },
+    {
+     "question_id": "GL-mcq-4",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "關於兩多項式 A、B 的最大公因式與最小公倍式，下列關係何者正確？",
+     "answer": "最大公因式 × 最小公倍式 ＝ A × B",
+     "kp_ids": [
+      "math.t_adv.algexpr.poly-gcd-lcm"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.algexpr.poly-gcd-lcm"
+     ],
+     "options": [
+      "最大公因式 × 最小公倍式 ＝ A × B",
+      "最大公因式 ＋ 最小公倍式 ＝ A ＋ B",
+      "最大公因式 × 最小公倍式 ＝ 最大公因式的平方",
+      "最小公倍式的次數一定比 A、B 都低"
+     ],
+     "distractor_rationales": {
+      "最大公因式 ＋ 最小公倍式 ＝ A ＋ B": "這記成相加了；正確關係是「相乘」——最大公因式 × 最小公倍式 ＝ A × B，和加法無關。",
+      "最大公因式 × 最小公倍式 ＝ 最大公因式的平方": "這不對；最大公因式 × 最小公倍式 ＝ A × B，只有在 A ＝ B 的特殊情況才會等於最大公因式的平方。",
+      "最小公倍式的次數一定比 A、B 都低": "這剛好相反；最小公倍式要包含所有因式，次數一定大於或等於 A、B，不會比較低（次數較低的是最大公因式）。"
+     },
+     "answer_evidence": [
+      "c-gcd-lcm-relation"
+     ],
+     "feedback": "最大公因式 × 最小公倍式 ＝ A × B，和整數的「最大公因數 × 最小公倍數 ＝ 兩數相乘」一樣。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（先因式分解；最大公因式＝共同因式、次數取最低；最小公倍式＝所有因式、次數取最高；GCD×LCM＝A×B；不自動批改）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
