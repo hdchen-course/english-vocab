@@ -1,0 +1,194 @@
+{
+ "_note": "數學島 代數式（algexpr）strand 第 14 個單元（t_adv 第二個）。知識點 math.t_adv.algexpr.factor-theorem（因式定理）。tier=t_adv（高中學測；學習者端不顯示年段 R11）。全繁體零簡體零 PRC 詞。數學中文授課。★t_adv 可用 x、x²、x³、f(x)、a。scope 聚焦：因式定理——(x−a) 是 f(x) 的因式，等價於 f(a)＝0（兩個方向：f(a)＝0 就有因式 (x−a)；(x−a) 是因式就 f(a)＝0）。由餘式定理推得（除以 (x−a) 餘式＝f(a)，餘式＝0 即整除即因式）。用途：試代可能的根（常看常數項的因數）找一次因式。prereq=poly-division-principle（餘式定理）。★自檢（math-unit defect-classes #1/#10/#14）：每個誘答『不是因式』必須 sympy 驗 f(值)≠0、且誘答不可剛好是真因式（Q1 真因式 (x−3)(x+2) 避開 (x+2)；Q2 真因式 (x−2)(x+4) 避開 (x+4)）；誘答由單一機制（符號取錯/代錯值/算錯）導出；誘答顯示字串不撞同題別選項；teach 例題不與 practice 重疊；全半形一致；道地中文。practice：Q1 x²−x−6 因式=(x−3)〔誘答 (x+3) f(−3)=6／(x−2) f(2)=−4／(x−1) f(1)=−6〕；Q2 x²+2x−8 因式=(x−2)〔誘答 (x+2) f(−2)=−8／(x−4) f(4)=16／(x−1) f(1)=−5〕；Q3 概念 f(5)=0〔正解 (x−5) 是因式；誘答 (x+5) 符號反／餘式=5 混餘式定理／f 一定一次式〕；Q4 判斷 (x−2) 是否 x³−3x²+4 因式〔正解 是 f(2)=0；誘答 不是 f(2)≠0 算錯／是 f(−2)=0 代錯 a／不是 f(0)=4 代 x=0〕。teach 例題避開 practice：x²−5x+6=(x−2)(x−3) f(2)=0、x³−7x+6=(x−1)(x−2)(x+3) f(1)=0。teach 帶「因式定理」重點表圖(左欄:因式定理 f(a)=0就有因式x−a／怎麼用 試代常數項因數／和餘式定理 餘式=f(a)餘0即整除)。claim kind=definition。figure-only example 無 body；無音檔。",
+ "page": "math_algexpr_factortheorem.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.algexpr.factor-theorem",
+   "title_zh": "因式定理",
+   "can_do": "我懂因式定理：(x − a) 是多項式 f(x) 的因式，和 f(a) ＝ 0 是同一件事。所以要判斷 (x − a) 是不是因式，只要算 f(a)：等於 0 就是因式、不等於 0 就不是。我也會用它找一次因式——試代常數項的因數，哪個讓 f(a) ＝ 0，(x − a) 就是因式。",
+   "situation_group": "代數式：因式定理",
+   "subject": "math",
+   "strand": "algexpr",
+   "est_minutes": 10,
+   "knowledge_point_ids": [
+    "math.t_adv.algexpr.factor-theorem"
+   ],
+   "prerequisites": [
+    "math.t_adv.algexpr.poly-division-principle"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-factor-theorem",
+     "text": "因式定理：(x − a) 是多項式 f(x) 的因式，等於說 f(a) ＝ 0；這兩個方向互通——f(a) ＝ 0 就表示 (x − a) 是因式，(x − a) 是因式就表示 f(a) ＝ 0。道理來自餘式定理：f(x) 除以 (x − a) 的餘式 ＝ f(a)，當 f(a) ＝ 0 時餘式是 0、代表剛好整除，所以 (x − a) 是因式。例如 f(x) ＝ x² − 5x ＋ 6，f(2) ＝ 4 − 10 ＋ 6 ＝ 0，所以 (x − 2) 是因式，且 f(x) ＝ (x − 2)(x − 3)。",
+     "kind": "definition",
+     "source_refs": [
+      "因式定理（高中數學 學測）"
+     ],
+     "verification_ref": "sympy factor(x²−5x+6)=(x−2)(x−3)、f(2)=0；(x−a)|f ⟺ f(a)=0 由餘式定理",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-use-factor",
+     "text": "怎麼用因式定理找因式？先試代幾個可能的值（通常先試常數項的因數，例如常數項是 6 就試 ± 1、± 2、± 3、± 6），哪個 a 讓 f(a) ＝ 0，(x − a) 就是一個因式；找到後再用長除法把 f(x) 除以 (x − a)，得到其餘的因式。要注意：(x − a) 對應的值是 a，所以 (x ＋ 1) 要代 x ＝ − 1。例如 f(x) ＝ x³ − 7x ＋ 6，試 f(1) ＝ 1 − 7 ＋ 6 ＝ 0，所以 (x − 1) 是因式。",
+     "kind": "definition",
+     "source_refs": [
+      "因式定理 試根 找因式（高中數學 學測）"
+     ],
+     "verification_ref": "sympy factor(x³−7x+6)=(x−1)(x−2)(x+3)、f(1)=0；試常數項因數找根",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.algexpr.factor-theorem"
+     ],
+     "body": "因式定理：(x − a) 是多項式 f(x) 的因式，和「f(a) ＝ 0」是同一件事。兩個方向都通——f(a) ＝ 0 就表示 (x − a) 是因式；(x − a) 是因式也就表示 f(a) ＝ 0。這是從餘式定理來的：f(x) 除以 (x − a) 的餘式剛好是 f(a)，當 f(a) ＝ 0 時餘式是 0、代表整除，所以 (x − a) 是因式。例如 f(x) ＝ x² − 5x ＋ 6，f(2) ＝ 4 − 10 ＋ 6 ＝ 0，所以 (x − 2) 是因式，分解得 f(x) ＝ (x − 2)(x − 3)。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.algexpr.factor-theorem"
+     ],
+     "body": "用因式定理找因式的方法：先試代幾個可能的值（通常先試常數項的因數），哪個 a 讓 f(a) ＝ 0，(x − a) 就是因式；找到後再用長除法除出其餘因式。要小心符號：(x − a) 對應的值是 a，所以 (x ＋ 1) 要代 x ＝ − 1。例如 f(x) ＝ x³ − 7x ＋ 6，試 f(1) ＝ 1 − 7 ＋ 6 ＝ 0，所以 (x − 1) 是因式（再除下去可得 f(x) ＝ (x − 1)(x − 2)(x ＋ 3)）。重點整理在下面的表。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.algexpr.factor-theorem"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 380 150' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><rect x='16' y='12' width='348' height='126' rx='12' fill='none' stroke='#cdbfa6' stroke-width='1.5'/><line x1='120' y1='12' x2='120' y2='138' stroke='#e3d8c4' stroke-width='1'/><line x1='16' y1='54' x2='364' y2='54' stroke='#e3d8c4' stroke-width='1'/><line x1='16' y1='96' x2='364' y2='96' stroke='#e3d8c4' stroke-width='1'/><g font-size='12.5' fill='#2f6f54' text-anchor='middle' font-weight='700'><text x='68' y='37'>因式定理</text><text x='68' y='79'>怎麼用</text><text x='68' y='121'>和餘式定理</text></g><g fill='#33475b' text-anchor='middle'><text x='244' y='37' font-size='12'>f(a)＝0 就有因式 (x−a)</text><text x='244' y='79' font-size='11.5'>試代常數項的因數找 f(a)＝0</text><text x='244' y='121' font-size='11.5'>餘式＝f(a)，餘 0 即整除</text></g></g></svg>",
+      "alt": "因式定理重點表，分三列，左欄是名稱、右欄是內容：因式定理 f(a)＝0 就有因式 (x−a)；怎麼用 試代常數項的因數找使 f(a)＝0 的值；和餘式定理 餘式等於 f(a)，餘 0 就是整除。",
+      "caption": "因式定理：f(a)＝0 ⟷ (x−a) 是因式；用法：試代常數項的因數找 f(a)＝0；根源：餘式＝f(a)，餘 0 即整除"
+     }
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "FT-mcq-1",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "下列哪一個是 f(x) ＝ x² − x − 6 的因式？",
+     "answer": "(x − 3)",
+     "kp_ids": [
+      "math.t_adv.algexpr.factor-theorem"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.algexpr.factor-theorem"
+     ],
+     "options": [
+      "(x − 3)",
+      "(x ＋ 3)",
+      "(x − 2)",
+      "(x − 1)"
+     ],
+     "distractor_rationales": {
+      "(x ＋ 3)": "(x ＋ 3) 對應 a ＝ − 3，要算 f(− 3) ＝ 9 ＋ 3 − 6 ＝ 6 ≠ 0，所以不是因式；可能把符號取錯了。正解是 (x − 3)，因為 f(3) ＝ 9 − 3 − 6 ＝ 0。",
+      "(x − 2)": "(x − 2) 對應 a ＝ 2，f(2) ＝ 4 − 2 − 6 ＝ − 4 ≠ 0，所以不是因式；正解是 (x − 3)，f(3) ＝ 0。",
+      "(x − 1)": "(x − 1) 對應 a ＝ 1，f(1) ＝ 1 − 1 − 6 ＝ − 6 ≠ 0，所以不是因式；正解是 (x − 3)，f(3) ＝ 0。"
+     },
+     "answer_evidence": [
+      "c-factor-theorem"
+     ],
+     "feedback": "由因式定理，(x − 3) 對應 a ＝ 3，f(3) ＝ 3² − 3 − 6 ＝ 9 − 3 − 6 ＝ 0，餘式為 0 所以 (x − 3) 是因式。驗算：x² − x − 6 ＝ (x − 3)(x ＋ 2) ✓。"
+    },
+    {
+     "question_id": "FT-mcq-2",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "下列哪一個是 f(x) ＝ x² ＋ 2x − 8 的因式？",
+     "answer": "(x − 2)",
+     "kp_ids": [
+      "math.t_adv.algexpr.factor-theorem"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.algexpr.factor-theorem"
+     ],
+     "options": [
+      "(x − 2)",
+      "(x ＋ 2)",
+      "(x − 4)",
+      "(x − 1)"
+     ],
+     "distractor_rationales": {
+      "(x ＋ 2)": "(x ＋ 2) 對應 a ＝ − 2，f(− 2) ＝ 4 − 4 − 8 ＝ − 8 ≠ 0，所以不是因式；可能把符號取錯了。正解是 (x − 2)，f(2) ＝ 0。",
+      "(x − 4)": "(x − 4) 對應 a ＝ 4，f(4) ＝ 16 ＋ 8 − 8 ＝ 16 ≠ 0，所以不是因式；正解是 (x − 2)，f(2) ＝ 0。",
+      "(x − 1)": "(x − 1) 對應 a ＝ 1，f(1) ＝ 1 ＋ 2 − 8 ＝ − 5 ≠ 0，所以不是因式；正解是 (x − 2)，f(2) ＝ 0。"
+     },
+     "answer_evidence": [
+      "c-factor-theorem"
+     ],
+     "feedback": "由因式定理，(x − 2) 對應 a ＝ 2，f(2) ＝ 2² ＋ 2×2 − 8 ＝ 4 ＋ 4 − 8 ＝ 0，所以 (x − 2) 是因式。驗算：x² ＋ 2x − 8 ＝ (x − 2)(x ＋ 4) ✓。"
+    },
+    {
+     "question_id": "FT-mcq-3",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "已知多項式 f(x) 滿足 f(5) ＝ 0。根據因式定理，下列敘述何者正確？",
+     "answer": "(x − 5) 是 f(x) 的因式",
+     "kp_ids": [
+      "math.t_adv.algexpr.factor-theorem"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.algexpr.factor-theorem"
+     ],
+     "options": [
+      "(x − 5) 是 f(x) 的因式",
+      "(x ＋ 5) 是 f(x) 的因式",
+      "f(x) 除以 (x − 5) 的餘式是 5",
+      "f(x) 一定是一次式"
+     ],
+     "distractor_rationales": {
+      "(x ＋ 5) 是 f(x) 的因式": "這是把符號弄反了；f(a) ＝ 0 對應的因式是 (x − a)，a ＝ 5 得到的是 (x − 5)，不是 (x ＋ 5)。",
+      "f(x) 除以 (x − 5) 的餘式是 5": "這是把餘式定理記錯了；餘式 ＝ f(5) ＝ 0（不是 5），正因為餘式是 0 才說 (x − 5) 是因式。",
+      "f(x) 一定是一次式": "這推論太多；f(5) ＝ 0 只表示 5 是一個根、(x − 5) 是因式，f(x) 可以是任何次數（二次、三次……都行）。"
+     },
+     "answer_evidence": [
+      "c-factor-theorem"
+     ],
+     "feedback": "由因式定理，f(5) ＝ 0 等於說 (x − 5) 是 f(x) 的因式（因為除以 (x − 5) 的餘式 ＝ f(5) ＝ 0、剛好整除）。"
+    },
+    {
+     "question_id": "FT-mcq-4",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "用因式定理判斷 (x − 2) 是不是 f(x) ＝ x³ − 3x² ＋ 4 的因式？",
+     "answer": "是，因為 f(2) ＝ 0",
+     "kp_ids": [
+      "math.t_adv.algexpr.factor-theorem"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.algexpr.factor-theorem"
+     ],
+     "options": [
+      "是，因為 f(2) ＝ 0",
+      "不是，因為 f(2) ≠ 0",
+      "是，因為 f(− 2) ＝ 0",
+      "不是，因為 f(0) ＝ 4 ≠ 0"
+     ],
+     "distractor_rationales": {
+      "不是，因為 f(2) ≠ 0": "這是把 f(2) 算錯了；f(2) ＝ 2³ − 3×2² ＋ 4 ＝ 8 − 12 ＋ 4 ＝ 0（不是不等於 0），所以 (x − 2) 是因式。",
+      "是，因為 f(− 2) ＝ 0": "結論對、理由錯：(x − 2) 對應的值是 a ＝ 2，要算 f(2) 不是 f(− 2)；而且 f(− 2) ＝ − 8 − 12 ＋ 4 ＝ − 16 ≠ 0。正確理由是 f(2) ＝ 0。",
+      "不是，因為 f(0) ＝ 4 ≠ 0": "這是代錯值；判斷 (x − 2) 要代 x ＝ 2，不是 x ＝ 0。f(2) ＝ 0 才是依據，所以 (x − 2) 是因式。"
+     },
+     "answer_evidence": [
+      "c-factor-theorem",
+      "c-use-factor"
+     ],
+     "feedback": "(x − 2) 對應 a ＝ 2，f(2) ＝ 2³ − 3×2² ＋ 4 ＝ 8 − 12 ＋ 4 ＝ 0，由因式定理 (x − 2) 是因式（事實上 x³ − 3x² ＋ 4 ＝ (x − 2)²(x ＋ 1)）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（因式定理：(x−a) 是因式 ⟷ f(a)＝0；判斷 (x−a) 就算 f(a)，(x＋1) 要代 x＝−1；餘式＝f(a)、餘 0 即整除；不自動批改）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
