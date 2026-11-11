@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 04:33 數學島 geom #6 收斂：math_geom_quadclassify（四邊形分類與特徵，t_base 國小）5/5 → geom strand 6/39
+- **frozen_sha `b3b8378a6c777cd2`**，DONE-GATE 六確定性 gate 全綠（per_page 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：五種四邊形並排 SVG（正方形/長方形帶金色直角 exact L 記號、平行四邊形傾斜、梯形上短下長恰一組對邊平行、菱形對角線52/36 角110.6/69.4非直角）iPad 橫直四角色 render 簽核過；SVG 形狀座標全驗（正方形菱形四邊等、長方形長寬不同、梯形恰一組平行、平行四邊形兩組平行、菱形角非直角）。3 claim kind=definition（c-square-rect／c-para-trap-rhombus／c-family 包含關係），皆被 practice answer_evidence 引用。★t_base 國小：可用已教的直角/90/平行，禁 x、禁 ≥＜。prereq=parallel-perpendicular。scope＝五種四邊形辨認與特徵＋包含關係。
+- **4 MCQ**：Q1 四邊等＋四角直角 最精確=正方形〔誘答 長方形/平行四邊形/梯形〕／Q2 四角直角＋長寬不同 最精確=長方形〔誘答 正方形/平行四邊形/梯形〕／Q3 只一組對邊平行=梯形〔誘答 平行四邊形/長方形/正方形〕／Q4 四邊等＋角非直角 最精確=菱形〔誘答 正方形/長方形/梯形〕。★全用「最精確名稱」或唯一特徵避開包容定義雙正解。
+- **收斂路徑（草稿後 v1/v2 各修 1 缺陷，v2b–v6 連 5 clean）**：pre-freeze gates 全綠（SVG 形狀座標驗邊長）→初凍 58da32b8 → **v1**（1 BLOCKER a-wrong：菱形畫成對角線等長＝45°旋轉正方形四角直角，與「角不是直角」標籤矛盾——我只驗邊長漏驗角度→改對角線52/36 角110.6/69.4，重凍 48234aa3）→ v1b clean → **v2**（1 BLOCKER inclusive-def 雙正解 panel 5/5：Q2 漏「最精確」→長方形也是平行四邊形成第二正解，誘答說明又與包容關係矛盾→補「最精確」＋改說明，harvest gate 正確擋改→de-converge＋override 留痕，重凍 b3b8378a）→ v2b–v6 連 5 clean（L3 皆 exit0、agents_error 全 0）。
+- **教訓（banked）★★★**：此單元新增 2 類缺陷：(1) ★菱形/平行四邊形 SVG 要驗「角度」非只「邊長」——菱形若對角線等長即成旋轉正方形（四角直角），與「角不一定直」矛盾；草稿畫菱形務必對角線不等（驗內角非90）。(2) ★包容定義單元裡，凡選項含「超類」（平行四邊形 vs 長方形、正方形 vs 菱形）的辨認題，stem 都必須寫「最精確的名稱」，且誘答說明不可用與包容關係矛盾的推理（不能說「四角直角→不是平行四邊形」）。harvest gate 於 clean 輪後正確擋 sidecar 改，真缺陷晚修須 de-converge＋override 留痕。
+- **里程碑**：數學島 geom（幾何）strand **6/39**（t_base 6/12）。algexpr strand 已 18/18 COMPLETE。
+- **下一步**：geom #7＝`math.t_base.geom.perimeter`（周長計算），續 geom t_base 依序。
+
 ## 2026-11-12 03:55 數學島 geom #5 收斂：math_geom_triangleclassify（三角形分類與內角和，t_base 國小）5/5 → geom strand 5/39
 - **frozen_sha `9957892efe695e5a`**，DONE-GATE 六確定性 gate 全綠（per_page 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：依邊三類三角形 SVG（正三角形邊長均60等邊／等腰兩腰均65對稱／不等邊三邊 60.8/73.6/82.1 明顯不同）iPad 橫直四角色 render 簽核過；teach 次序＝依邊text→圖→依角text（圖緊接依邊 text）。3 claim kind=definition（c-by-sides 依邊三類／c-by-angles 依角三類＋至多一直角或鈍角／c-angle-sum 內角和180、第三角=180−兩角和），皆被 practice answer_evidence 引用。★t_base 國小：可用已教的度/180/60/直角/銳角/鈍角，禁 x、禁 ≥＜（用「比…大/小」文字）。prereq=angle-types。scope＝依邊/依角分類＋內角和180。
 - **4 MCQ**：Q1 三邊等三角60度=正三角形〔誘答 不等邊/直角/鈍角三角形，避開等腰雙正解〕／Q2 有一直角=直角三角形〔誘答 銳角/鈍角/正三角形〕／Q3 內角和=180度〔誘答 90/360/270〕／Q4 已知60度70度求第三角=50度（180−60−70）〔誘答 130兩角相加/70抄角/60抄角〕。sympy 驗算 Q4=50、正三角形三角各60、SVG 三角形邊長分類。
