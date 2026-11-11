@@ -1,0 +1,194 @@
+{
+ "_note": "數學島 代數式（algexpr）strand 第 18 個單元（t_sub、algexpr strand 最後一個）。知識點 math.t_sub.algexpr.partial-fraction（部分分式）。tier=t_sub（高中補充；學習者端不顯示年段 R11）。全繁體零簡體零 PRC 詞。數學中文授課。★可用 x、分式、根。scope 聚焦：把真分式（分子次數＜分母次數）拆成「分母各一次因式各配一個 常數/(x−根)」之和；用蓋住法求係數——要求 A/(x−r) 的 A，就把 x＝r 代進「蓋住 (x−r) 後剩下的式子」。prereq=factor-cross（分母要先因式分解）。★自檢（math-unit defect-classes #1/#10/#14）：每個拆解/係數由 sympy apart() 驗證；誘答由單一機制（某係數符號錯／A、B 互換（代錯根）／忘了除以另一因式代入值／沒用蓋住法亂配／真分式前提記反／代入點符號錯）導出；誘答顯示字串不撞同題別選項；teach 例題不與 practice 重疊；全半形一致；道地中文。practice：Q1 (x+5)/((x+1)(x+3))＝2/(x+1)−1/(x+3)〔誘答 2/(x+1)+1/(x+3) B符號錯／−2/(x+1)−1/(x+3) A符號錯／4/(x+1)−2/(x+3) 忘除分母差〕；Q2 (2x+7)/((x+2)(x+3)) 的 A（A/(x+2)）＝3〔誘答 −3 符號／−1 求成B(代x=−3)／7 只取分子常數沒代入〕；Q3 概念 部分分式前提＝真分式(分子次數＜分母)；Q4 蓋住法求 1/(x+1) 係數＝代 x=−1 入 (x+5)/(x+3)〔誘答 代x=+1 符號錯／代x=−3 那是求另一係數／代x=0 代錯值〕。teach 例題避開 practice：(3x+1)/((x+1)(x+2))＝−2/(x+1)+5/(x+2)（蓋住法 A=(3·−1+1)/(−1+2)=−2、B=(3·−2+1)/(−2+1)=5）。teach 帶「部分分式」重點表圖(左欄:前提 先是真分式／拆法 每個一次因式配常數/(x−根)／求係數 蓋住法代根)。claim kind=definition。figure-only example 無 body；無音檔。",
+ "page": "math_algexpr_partialfraction.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.algexpr.partial-fraction",
+   "title_zh": "部分分式",
+   "can_do": "我會把一個真分式（分子次數比分母低）拆成「部分分式」：分母每一個一次因式各配一個 常數 ÷ (x − 根) 相加。我也會用「蓋住法」快速求每個常數——要求 (x − r) 這一項的係數，就把 x ＝ r 代進「蓋住 (x − r) 之後剩下的式子」。",
+   "situation_group": "代數式：部分分式",
+   "subject": "math",
+   "strand": "algexpr",
+   "est_minutes": 10,
+   "knowledge_point_ids": [
+    "math.t_sub.algexpr.partial-fraction"
+   ],
+   "prerequisites": [
+    "math.t_mid.algexpr.factor-cross"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-partial-fraction",
+     "text": "部分分式：如果一個分式是「真分式」（分子的次數比分母低），而且分母可以分解成相異的一次因式，就能把它拆成每個一次因式各配一個「常數 ÷ (x − 根)」相加。例如 (3x ＋ 1) ÷ ((x ＋ 1)(x ＋ 2))，可以寫成 A/(x ＋ 1) ＋ B/(x ＋ 2) 的形式。要先確定是真分式；如果分子次數不比分母低，要先做除法。",
+     "kind": "definition",
+     "source_refs": [
+      "部分分式（高中數學 補充）"
+     ],
+     "verification_ref": "sympy apart((3x+1)/((x+1)(x+2)))=−2/(x+1)+5/(x+2)；真分式前提",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-cover-up",
+     "text": "蓋住法（快速求係數）：要求 A/(x − r) 這一項的常數 A，就把原式中的因式 (x − r)「蓋住」（遮掉不看），再把 x ＝ r 代進剩下的式子，算出來就是 A。例如 (3x ＋ 1) ÷ ((x ＋ 1)(x ＋ 2))：求 (x ＋ 1) 那一項的係數，蓋住 (x ＋ 1)、把 x ＝ − 1 代進剩下的 (3x ＋ 1)/(x ＋ 2)，得 (3·(− 1) ＋ 1)/((− 1) ＋ 2) ＝ (− 2)/1 ＝ − 2；同理 (x ＋ 2) 那一項代 x ＝ − 2 得 (3·(− 2) ＋ 1)/((− 2) ＋ 1) ＝ (− 5)/(− 1) ＝ 5。所以 ＝ − 2/(x ＋ 1) ＋ 5/(x ＋ 2)。",
+     "kind": "definition",
+     "source_refs": [
+      "部分分式 蓋住法（高中數學 補充）"
+     ],
+     "verification_ref": "sympy apart=−2/(x+1)+5/(x+2)；蓋住法代根 x=−1、x=−2",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.algexpr.partial-fraction"
+     ],
+     "body": "部分分式是把一個分式拆成好幾個簡單分式相加。前提：要先是「真分式」（分子的次數比分母低），而且分母能分解成相異的一次因式。做法是分母每一個一次因式各配一個「常數 ÷ (x − 根)」。例如 (3x ＋ 1) ÷ ((x ＋ 1)(x ＋ 2)) 可以寫成 A/(x ＋ 1) ＋ B/(x ＋ 2)。如果分子次數不比分母低，要先做除法再拆。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.algexpr.partial-fraction"
+     ],
+     "body": "求每個常數可以用「蓋住法」：要求 (x − r) 那一項的係數，就把 (x − r) 蓋住、再把 x ＝ r 代進剩下的式子。例如 (3x ＋ 1) ÷ ((x ＋ 1)(x ＋ 2))：求 (x ＋ 1) 的係數，蓋住 (x ＋ 1)、代 x ＝ − 1 進 (3x ＋ 1)/(x ＋ 2)，得 (− 2)/1 ＝ − 2；求 (x ＋ 2) 的係數，代 x ＝ − 2 進 (3x ＋ 1)/(x ＋ 1)，得 (− 5)/(− 1) ＝ 5。所以 ＝ − 2/(x ＋ 1) ＋ 5/(x ＋ 2)。重點整理在下面的表。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.algexpr.partial-fraction"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 380 150' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><rect x='16' y='12' width='348' height='126' rx='12' fill='none' stroke='#cdbfa6' stroke-width='1.5'/><line x1='120' y1='12' x2='120' y2='138' stroke='#e3d8c4' stroke-width='1'/><line x1='16' y1='54' x2='364' y2='54' stroke='#e3d8c4' stroke-width='1'/><line x1='16' y1='96' x2='364' y2='96' stroke='#e3d8c4' stroke-width='1'/><g font-size='12.5' fill='#2f6f54' text-anchor='middle' font-weight='700'><text x='68' y='37'>前提</text><text x='68' y='79'>拆法</text><text x='68' y='121'>求係數</text></g><g fill='#33475b' text-anchor='middle'><text x='244' y='37' font-size='11.5'>先是真分式（分子次數＜分母）</text><text x='244' y='79' font-size='11'>每個一次因式配 常數 ÷ (x−根)</text><text x='244' y='121' font-size='11.5'>蓋住法：蓋住該因式、代入其根</text></g></g></svg>",
+      "alt": "部分分式重點表，分三列，左欄是項目、右欄是內容：前提 要先是真分式（分子次數小於分母）；拆法 分母每個一次因式各配一個 常數除以 (x−根)；求係數 用蓋住法，蓋住該因式、把它的根代進剩下的式子。",
+      "caption": "部分分式：前提先是真分式（分子次數＜分母）；拆法 每個一次因式配 常數÷(x−根)；求係數 蓋住法——蓋住該因式、代入它的根"
+     }
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "PF-mcq-1",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "把 (x ＋ 5) ÷ ((x ＋ 1)(x ＋ 3)) 拆成部分分式，結果是多少？",
+     "answer": "2/(x ＋ 1) − 1/(x ＋ 3)",
+     "kp_ids": [
+      "math.t_sub.algexpr.partial-fraction"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.algexpr.partial-fraction"
+     ],
+     "options": [
+      "2/(x ＋ 1) − 1/(x ＋ 3)",
+      "2/(x ＋ 1) ＋ 1/(x ＋ 3)",
+      "− 2/(x ＋ 1) − 1/(x ＋ 3)",
+      "4/(x ＋ 1) − 2/(x ＋ 3)"
+     ],
+     "distractor_rationales": {
+      "2/(x ＋ 1) ＋ 1/(x ＋ 3)": "這是 (x ＋ 3) 那一項的符號算錯了；用蓋住法代 x ＝ − 3 得 (− 3 ＋ 5)/((− 3) ＋ 1) ＝ 2/(− 2) ＝ − 1（是負的），所以是 − 1/(x ＋ 3)。",
+      "− 2/(x ＋ 1) − 1/(x ＋ 3)": "這是 (x ＋ 1) 那一項的符號算錯了；代 x ＝ − 1 得 (− 1 ＋ 5)/((− 1) ＋ 3) ＝ 4/2 ＝ ＋ 2（是正的），所以是 2/(x ＋ 1)。",
+      "4/(x ＋ 1) − 2/(x ＋ 3)": "這是忘了除以另一個因式的代入值；蓋住 (x ＋ 1) 後要代進 (x ＋ 5)/(x ＋ 3)，不是只算分子 x ＋ 5。A ＝ 4/2 ＝ 2，不是 4。"
+     },
+     "answer_evidence": [
+      "c-partial-fraction",
+      "c-cover-up"
+     ],
+     "feedback": "蓋住法：A（(x ＋ 1) 項）代 x ＝ − 1 進 (x ＋ 5)/(x ＋ 3) ＝ 4/2 ＝ 2；B（(x ＋ 3) 項）代 x ＝ − 3 進 (x ＋ 5)/(x ＋ 1) ＝ 2/(− 2) ＝ − 1。所以 ＝ 2/(x ＋ 1) − 1/(x ＋ 3)。"
+    },
+    {
+     "question_id": "PF-mcq-2",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "把 (2x ＋ 7) ÷ ((x ＋ 2)(x ＋ 3)) 寫成 A/(x ＋ 2) ＋ B/(x ＋ 3)，則 A 是多少？",
+     "answer": "3",
+     "kp_ids": [
+      "math.t_sub.algexpr.partial-fraction"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.algexpr.partial-fraction"
+     ],
+     "options": [
+      "3",
+      "− 3",
+      "− 1",
+      "7"
+     ],
+     "distractor_rationales": {
+      "− 3": "這是符號弄錯了；A ＝ (2·(− 2) ＋ 7)/((− 2) ＋ 3) ＝ 3/1 ＝ ＋ 3，是正的。",
+      "− 1": "這算成 B 了；B 要代 x ＝ − 3，得 (2·(− 3) ＋ 7)/((− 3) ＋ 2) ＝ 1/(− 1) ＝ − 1。A 要代 x ＝ − 2，得 3。",
+      "7": "這只看了分子的常數項 7、沒有把 x ＝ − 2 代進去算；A ＝ (2·(− 2) ＋ 7)/((− 2) ＋ 3) ＝ 3/1 ＝ 3。"
+     },
+     "answer_evidence": [
+      "c-cover-up"
+     ],
+     "feedback": "用蓋住法求 A：蓋住 (x ＋ 2)、代 x ＝ − 2 進 (2x ＋ 7)/(x ＋ 3) ＝ (2·(− 2) ＋ 7)/((− 2) ＋ 3) ＝ 3/1 ＝ 3。"
+    },
+    {
+     "question_id": "PF-mcq-3",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "要把一個分式拆成部分分式，對這個分式有什麼前提要求？",
+     "answer": "要先是真分式：分子的次數比分母低",
+     "kp_ids": [
+      "math.t_sub.algexpr.partial-fraction"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.algexpr.partial-fraction"
+     ],
+     "options": [
+      "要先是真分式：分子的次數比分母低",
+      "分子的次數要比分母高",
+      "分母一定要是質數",
+      "分子和分母的次數沒有任何限制"
+     ],
+     "distractor_rationales": {
+      "分子的次數要比分母高": "這剛好相反；部分分式要先是真分式，也就是分子次數比分母低。如果分子次數比分母高（假分式），要先做除法把它變成「多項式 ＋ 真分式」再拆。",
+      "分母一定要是質數": "質數是整數的概念，用在這裡沒有意義；前提是分子次數比分母低，而且分母能分解成一次因式。",
+      "分子和分母的次數沒有任何限制": "這不對；一定要先是真分式（分子次數比分母低）才能直接拆，否則要先做除法。"
+     },
+     "answer_evidence": [
+      "c-partial-fraction"
+     ],
+     "feedback": "部分分式的前提是「真分式」——分子的次數要比分母低。若分子次數不比分母低，要先做除法，把它化成多項式加真分式，再拆真分式的部分。"
+    },
+    {
+     "question_id": "PF-mcq-4",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "把 (x ＋ 5) ÷ ((x ＋ 1)(x ＋ 3)) 拆開時，用蓋住法求 1/(x ＋ 1) 這一項的係數，正確做法是哪一個？",
+     "answer": "蓋住 (x ＋ 1)，把 x ＝ − 1 代進 (x ＋ 5)/(x ＋ 3)",
+     "kp_ids": [
+      "math.t_sub.algexpr.partial-fraction"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.algexpr.partial-fraction"
+     ],
+     "options": [
+      "蓋住 (x ＋ 1)，把 x ＝ − 1 代進 (x ＋ 5)/(x ＋ 3)",
+      "蓋住 (x ＋ 1)，把 x ＝ ＋ 1 代進 (x ＋ 5)/(x ＋ 3)",
+      "蓋住 (x ＋ 1)，把 x ＝ − 3 代進 (x ＋ 5)/(x ＋ 3)",
+      "蓋住 (x ＋ 1)，把 x ＝ 0 代進 (x ＋ 5)/(x ＋ 3)"
+     ],
+     "distractor_rationales": {
+      "蓋住 (x ＋ 1)，把 x ＝ ＋ 1 代進 (x ＋ 5)/(x ＋ 3)": "這是符號取錯了；(x ＋ 1) 的根是 x ＝ − 1（讓 x ＋ 1 ＝ 0），不是 ＋ 1。",
+      "蓋住 (x ＋ 1)，把 x ＝ − 3 代進 (x ＋ 5)/(x ＋ 3)": "這代的是 (x ＋ 3) 的根，用來求另一項 1/(x ＋ 3) 的係數；要求 (x ＋ 1) 這一項，應代它自己的根 x ＝ − 1。",
+      "蓋住 (x ＋ 1)，把 x ＝ 0 代進 (x ＋ 5)/(x ＋ 3)": "這代錯了值；蓋住法要代「被蓋住因式的根」，(x ＋ 1) 的根是 x ＝ − 1，不是 0。"
+     },
+     "answer_evidence": [
+      "c-cover-up"
+     ],
+     "feedback": "蓋住法：要求 (x ＋ 1) 這一項的係數，先蓋住 (x ＋ 1)，再把它的根 x ＝ − 1 代進剩下的 (x ＋ 5)/(x ＋ 3)，得 4/2 ＝ 2。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（部分分式：先是真分式（分子次數＜分母）；分母每個一次因式配 常數÷(x−根)；蓋住法——蓋住該因式、把它的根代進剩下的式子求係數；不自動批改）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
