@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 13:24 數學島 numquant #27 收斂：math_numquant_radicalsimplify（最簡根式/根號乘法/同類根式加減；會考）5/5 → numquant 27/30
+- **frozen_sha `d9a6a87f3b024367`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：根式化簡重點表 SVG（3 列：最簡根式 根號裡沒有完全平方因數／化簡 √20=√(4×5)=2√5／相乘 √a×√b=√(ab)）iPad 橫直四角色 render 簽核過。3 claim kind=definition。prereq＝square-root＋multi-digit-mult。scope 聚焦最簡根式定義/化簡提因數/根號乘法/同類根式加減；分母有理化另置 #28。
+- **4 MCQ**：化最簡(√50=5√2，誘答 25 沒開根搬出/係數根號弄反/以為不能化簡)／相乘化簡(√6×√2=2√3，誘答乘對未化簡√12/內相加√8/去根號12)／同類根式加(√12+√3=3√3，誘答內相加√15/只化簡忘加2√3/以為不能相加)／辨認最簡根式(√5，誘答√8/√12/√18 皆可再化簡)。teach 用 √20=2√5、√2×√7=√14、√8+√2=3√2（.venv 全核，與 practice 不重疊）。
+- **收斂路徑**：初凍 d9a6a87f → rs1–rs5 連 5 clean（內容零 content_audit 缺陷）。★rs3 首次因 reviewer coverage anchor 行號漂移（宣稱 154 實際 145，>±1）被 L3 判 INVALID，不弱化 gate、重跑 rs3b 通過（體現 L3 覆蓋真實性把關）。commits：2670e4201(草稿)／各輪進度／本收斂。
+- **里程碑**：numquant 27/30（t_mid 7/10 完成）；剩 t_mid 3 個（rationalize-denominator/irrational-reals/approximation-error）。
+- **下一步**：numquant #28＝rationalize-denominator（分母有理化：分母含根號乘同根號；會考，預設）。
+
 ## 2026-11-11 12:52 數學島 numquant #26 收斂：math_numquant_squareroot（平方根與根號：意義/估算/√(a²)=|a|；會考）5/5 → numquant 26/30
 - **frozen_sha `e87f7106081085c7`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：平方根重點表 SVG（3 列：意義 √a 平方得 a 的非負數／完全平方 √16=4／估算 9<13<16→3<√13<4）iPad 橫直四角色 render 簽核過。3 claim kind=definition。prereq＝signed-numbers＋multi-digit-mult。scope 聚焦根號意義/根號平方抵消/完全平方求值/估算夾擠/√(a²)=|a|；根式化簡另置 #27 起。★一次五連清、零修正（草稿品質佳）。
 - **4 MCQ**：完全平方(√36=6，誘答 ÷2=18／×2=72／平方=1296)／根號平方抵消((√5)²=5，誘答 5²=25／×2=10／÷2=2.5)／估算夾擠(√30 在 5 和 6 之間，誘答取太大/太小區間/以為接近 30)／先平方再開根(√((−4)²)=4，誘答 −4 直接搬出／16 只平方沒開根／−16 平方留負號)。teach 用 √16=4、√49=7、(√3)²=3、√13 在 3 和 4 之間、√((−5)²)=5（.venv 全核，與 practice 不重疊）。
