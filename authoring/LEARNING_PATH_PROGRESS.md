@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 08:25 數學島 numquant #20 收斂：math_numquant_unitconversion（單位換算 長度/重量/容量）5/5 → numquant 20/30 ★t_base numquant 20/20 全部完成 🎉
+- **frozen_sha `1ff379bdc30a53e7`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：進率表圖（長度 1公尺=100公分／重量 1公斤=1000公克／容量 1公升=1000毫升 三列、分隔線、caption）iPad 橫直四角色 render 簽核過。3 claim kind=definition（claim_evidence CLEAN）。prereq＝multi-digit-mult＋division-remainder。
+- **4 MCQ**：長度大→小(5公尺=500公分)／重量大→小(6公斤=6000公克)／容量大→小(4公升=4000毫升)／小→大用除法概念題(P4)。.venv 全核。核心＝大→小用乘(數量變多)、小→大用除(數量變少)，要記進率。
+- **收斂路徑（uc1 一次即 clean；pre-freeze 抓 lead-in cue）**：pre-freeze pedagogy 抓 UC-mcq-weight lead-in cue——原小→大除法題(3000公克=3公斤)誘答皆「3＋零」(30/3000/3000000)、正解「3」為唯一最短結構離群（test-wise 可挑最短）。**此為 power-of-10 單位換算題的結構性 cue：小→大除法題答案恆最小**→修法：三計算題全改大→小(答案為大數、誘答為其前綴不成離群)，小→大除法方向改由概念題 P4＋teach block3＋claim c-small-to-big 教與測；c-rate 補進 P1/P2/P3 answer_evidence 消 parity-advisory。重凍後 uc1–uc5 連 5 clean（L3 皆 exit0）。commits：47b4040b0(草稿)／進度／本收斂。
+- **教訓（補強 defect-class）**：**power-of-10 換算 MCQ 若答案為最小數（小→大），power-of-10 誘答必共享答案前綴→答案成 lead-in 結構離群**。解法＝計算題用「答案為大數」方向（大→小乘法），縮小方向改概念題或 teach/claim 教測。
+- **里程碑**：**數學島 numquant strand 的 t_base 20 個 KP 全部收斂完成（place-value…unit-conversion）**。numquant 總進度 20/30，剩 t_mid 10 個（signed-numbers/absolute-value/rational-operations/exponent-laws/scientific-notation/square-root/radical-simplify/rationalize-denominator/irrational-reals/approximation-error）。
+- **下一步**：numquant #21＝signed-numbers（正負數與數線，t_mid 起點，預設）。
+
 ## 2026-11-11 08:04 數學島 numquant #19 收斂：math_numquant_timecalculation（時間加減：時刻/時距、60 進位借位進位）5/5 → numquant 19/30
 - **frozen_sha `22f63e7090e2f341`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：直式時間借位圖（4時15分−1時40分=2時35分，靠右對齊、圖內簡短說明「分不夠減→向時借1時=60分」、詳細借位在引擎 caption）iPad 橫直四角色 render 簽核過。3 claim kind=definition（claim_evidence CLEAN）。prereq＝add-sub-vertical＋place-value-read-write。
 - **4 MCQ**：時距借位(7:50→9:10=1時20分)／時刻加時距進位(2:40+30分=3:10)／分鐘換時分(100分=1時40分)／1時=60分概念題。.venv 全核。**核心教學點＝時間 60 進位非 10 進位**（誘答涵蓋沒借位倒減、借位後時沒扣1、當十進位小數、沒進位、每10分算1時等單一錯誤）。
