@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 02:42 數學島 geom #3 收斂：math_geom_angletypes（角的分類 銳角/直角/鈍角/平角，t_base 國小）5/5 → geom strand 3/39
+- **frozen_sha `b2039e96eacf233d`**，DONE-GATE 六確定性 gate 全綠（per_page 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：四類角並排 SVG（銳角窄弧／直角方記號／鈍角寬弧／平角半圓直線）iPad 橫直四角色 render 簽核過；★四角弧端點程式驗證皆落在 ray 上（銳角差0.1°/鈍角0.0°、半徑18；平角半圓、直角方記號 exact）。2 claim kind=definition（c-landmark-angles 直角90/平角180兩基準／c-acute-obtuse 銳角比直角小、鈍角介於直角平角），皆被 practice answer_evidence 引用。★t_base 國小：可用已教的度/90/180，禁 x、禁 ≥＜（用「比…大/小」文字比較）。prereq=point-line-angle。scope＝以直角平角兩基準分出四類角。
+- **4 MCQ**：Q1 剛好90度像書角=直角〔誘答 銳角/鈍角/平角〕／Q2 比直角小=銳角〔誘答 直角/鈍角/平角〕／Q3 兩邊成一直線180度=平角〔誘答 直角/銳角/鈍角〕／Q4 比直角大但比平角小=鈍角〔誘答 銳角/直角/平角〕。四題覆蓋直角/銳角/平角/鈍角四類。
+- **收斂路徑（草稿後 v1/v2 各修 1 knowledge-viz，再連 5 輪零缺陷）**：pre-freeze gates 全綠（含禁用符號掃描）→初凍 2d7affdf → **v1**（1 major knowledge-viz：鈍角角弧只張51°、端點不在頂點半徑18圓上、未連 ray2→改端點至 ray2 方向半徑18處）de-converge 重凍 5eb39e2f → **v2**（1 minor knowledge-viz：銳角弧超掃 ray2 約7°→精修半徑18落點；同時精修鈍角端點；四弧端點程式驗證差≤0.1°）de-converge 重凍 b2039e96 → v3–v7 連 5 clean（L3 皆 exit0、agents_error 全 0）。收斂末輪 v7 曾被 enforce-workflow-size hook 正確擋下並發第4輪、等 480s 窗釋出後重啟（未繞過 gate）。commits：feat 草稿凍結／fix v1／fix v2／v3–v6 banked／本收斂。
+- **教訓（banked）★★**：SVG 角弧/幾何記號的端點必須程式驗證落在對應 ray 上（半徑一致、角度對），不能只靠 render「看起來像」——鈍角/銳角弧端點偏差（51°截斷、7°超掃）在 iPad render 肉眼初看會漏，panel knowledge-viz 鏡用座標算出偏差抓到。草稿期凡畫「角弧」就先用 `vertex + 半徑×單位向量(ray方向)` 算出精確端點，再寫進 path。這是繼 shadowing(undefined) 之後另一類 render-only／座標級缺陷。
+- **里程碑**：數學島 geom（幾何）strand **3/39**（t_base 3/12）。algexpr strand 已 18/18 COMPLETE。
+- **下一步**：geom #4＝`math.t_base.geom.parallel-perpendicular`（平行與垂直的辨認），續 geom t_base 依序。
+
 ## 2026-11-12 02:09 數學島 geom #2 收斂：math_geom_pointlineangle（點、線、角的辨認，t_base 國小）5/5 → geom strand 2/39
 - **frozen_sha `05e62ac22225563a`**，DONE-GATE 六確定性 gate 全綠（per_page 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：基本幾何元素並排 SVG（左欄四列 點/直線〔雙箭頭〕/線段〔兩端點〕/射線〔一端點+箭頭〕+短註；右側 角＝頂點+兩邊+小弧）iPad 橫直四角色 render 簽核過（箭頭皆附著指向正確、端點小圓點清楚、角的頂點標註、無重疊/裁切、選項 2–3 欄不裁切）。2 claim kind=definition（c-point-lines 點/三種線的分別／c-angle 角由兩射線從頂點張開），皆被 practice answer_evidence 引用。★t_base 國小：只用已教詞與符號（點/線/端點/頂點/直線/線段/射線/面/角/邊；無 x、無 ≥＜）。prereq=basic-shapes。scope＝辨認點/直線/線段/射線/角，不涉角度度數。
 - **4 MCQ**：Q1 有兩個端點可量長度=線段〔誘答 直線/射線/點〕／Q2 向兩方向一直延伸沒有端點=直線〔誘答 線段/射線/角〕／Q3 關於角正確=兩條邊從同一頂點張開〔誘答 一條彎曲的線/一定要三條邊/沒有頂點〕／Q4 射線特徵=有一個端點向一個方向一直延伸〔誘答 兩個端點可量長(線段)/沒有端點雙向(直線)/沒有長度只表位置(點)〕。四題覆蓋線段/直線/角/射線，點作誘答。
