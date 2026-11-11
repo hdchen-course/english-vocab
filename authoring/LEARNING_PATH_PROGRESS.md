@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 01:40 數學島 geom #1 收斂：math_geom_basicshapes（基本圖形的辨認，t_base 國小）5/5 → ★geom strand 起步 1/39
+- **frozen_sha `0d59da64352fa604`**，DONE-GATE 六確定性 gate 全綠（per_page 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard 0 advisory／audio_exist CLEAN 1544 refs）。視覺 QA：四圖並排 SVG（三角形3邊3角／四邊形4邊4角／五邊形5邊5角／圓 沒有直邊沒有角）iPad 橫直四角色 render 簽核過（真實圖形、名稱＋邊角數標註可讀、圓以 circle 畫、無重疊/裁切、Q4 等長選項按鈕不裁切）。2 claim kind=definition（c-polygon 多邊形邊數＝角數＝頂點數＋命名規則／c-circle 圓非多邊形無直邊無角），皆被 practice answer_evidence 引用。★t_base 國小：只用已教詞與符號（邊/角/頂點/直線段/封閉/圓心/圓周；無 x、無 ≥＜）。prereq 無（geom strand 起點）。scope＝辨認基本平面圖形、多邊形邊數＝角數、圓非多邊形。
+- **4 MCQ**：Q1 3直邊3角=三角形〔誘答 四邊形/五邊形/圓〕／Q2 哪個不是多邊形=圓〔誘答 三角形/長方形/五邊形 皆是〕／Q3 五邊形幾邊=5〔誘答 4六/6六邊形/3三角〕／Q4 關於圓正確=「圓沒有直邊，也沒有角」〔誘答 圓有四個角像四邊形/圓是多邊形的一種/圓有三條直的邊，四選項等長〕。
+- **收斂路徑（草稿後 v1 修 1 major，再連 5 輪零缺陷）**：pre-freeze pedagogy_gate 抓 Q4 長度 cue（正解16＞1.5×8）→改四選項為等長平行句（免費期修）。初凍後 **v1**（1 major instructional-design 5 鏡全 DEFECT：「多邊形依邊數命名」與首例三角形矛盾——三角形是看角數命名非「三邊形」）改寫命名規則為「邊數＝角數；四/五邊形看邊數、三角形看角數（剛好也 3 邊）」跨 claim/teach/caption/can_do/Q3-feedback/_note，de-converge 重凍 0d59da64、重 render 四角色 → v2–v6 連 5 clean（L3 皆 exit0、agents_error 全 0、coverageComplete）。commits：feat 草稿凍結／fix v1 修／v2–v5 banked／本收斂。
+- **教訓（banked）**：★國小幾何「命名規則」陳述必須與單元自己舉的例子一致——「多邊形依邊數命名」看似通則，但三角形正是反例（它依角數命名），草稿期凡下通則先用自己的例子逐一代入檢查有無反例。t_base 符號紀律（無 x/≥＜）與 pedagogy 長度 cue 要在 pre-freeze 免費關先清，別拖到凍結後。
+- **里程碑**：★數學島 geom（幾何）strand 起步 **1/39**（t_base 12／t_mid 20／t_adv 7）。algexpr strand 已 18/18 COMPLETE。
+- **下一步**：geom #2＝`math.t_base.geom.point-line-angle`（點、線、面、角的辨認），續 geom t_base 依序；沿用 draft→gen_derived→pre-freeze gates→iPad 四角色 render→freeze→5-clean→DONE-GATE 紀律。
+
 ## 2026-11-12 01:10 ★數學島 algexpr #18 收斂：math_algexpr_partialfraction（部分分式）5/5 → ★★algexpr strand 18/18 全收斂（strand COMPLETE）
 - **frozen_sha `4feb3e99822fa8e2`**，DONE-GATE 六確定性 gate 全綠（per_page 387/387 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：部分分式重點表 SVG（3 列左欄：前提 先是真分式分子次數＜分母／拆法 每個一次因式配 常數÷(x−根)／求係數 蓋住法蓋住該因式代入其根）iPad 橫直四角色 render 簽核過（分式/蓋住法可讀、Q4 長選項按鈕內換行不裁切、右緣0%）。2 claim kind=definition（c-partial-fraction 真分式前提＋拆法／c-cover-up 蓋住法），皆被 practice answer_evidence 引用。prereq=factor-cross。scope＝真分式拆成每個一次因式配 常數÷(x−根)、蓋住法求係數。
 - **4 MCQ**：Q1 (x+5)/((x+1)(x+3))＝2/(x+1)−1/(x+3)〔誘答 2/(x+1)+1/(x+3) B符號錯／−2/(x+1)−1/(x+3) A符號錯／4/(x+1)+2/(x+3) 兩項都只算分子忘除〕／Q2 (2x+7)/((x+2)(x+3)) 的 A＝3〔誘答 −3符號／−1求成B(代x=−3)／7只取分子常數沒代入〕／Q3 概念 前提＝真分式(分子次數＜分母)〔誘答 分子次數要高／分母要質數／沒限制〕／Q4 蓋住法求 1/(x+1) 係數＝代 x=−1 入 (x+5)/(x+3)〔誘答 代x=+1符號／代x=−3求另項／代x=0代錯值〕。teach 用 (3x+1)/((x+1)(x+2))＝−2/(x+1)+5/(x+2)（sympy apart 全核，與 practice 不重疊）。
