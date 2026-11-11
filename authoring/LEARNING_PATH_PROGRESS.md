@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 09:46 數學島 numquant #22 收斂：math_numquant_absolutevalue（絕對值：定義/幾何意義/數線距離；會考）5/5 → numquant 22/30
+- **frozen_sha `e36ba437c7808df6`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：數線弧線 SVG（−3..3、0 原點、兩綠弧 |−3|=3 與 |+3|=3 對稱）iPad 橫直四角色 render 簽核過。3 claim kind=definition。prereq＝signed-numbers。scope 聚焦絕對值定義（到 0 距離、非負）/幾何意義/相反數絕對值相等/數線距離 |a−b|；解 |x|=k out-of-scope。
+- **4 MCQ**：|−8|=8（誘答 −8 沒去負號/0/「8 或 −8」兩值）／數線距離 3與−2=5（誘答當 +2 相減=1/只算一段=2/距離為負）／絕對值能否為負（概念：不可能、≥0、含 |0|=0 的「大於0」陷阱）／|−3| vs |+3| 一樣大。.venv 全核。
+- **收斂路徑（av1 一真缺陷）**：**av1**（6 鏡 DEFECT、owner=learning，defect-class#10 recall-not-transfer）teach block3 負數距離例「3與−2=5」含與 practice AV-mcq-distance 逐字相同走格→改 teach/claim 用「2與−4=6」（practice 題目本身保留 3/−2）。重凍 e36ba437 後 av2–av6 連 5 clean（L3 皆 exit0）。commits：004177633(草稿)／81323dde0(av1)／進度／本收斂。
+- **教訓（連兩單元複犯）**：sn6 與 av1 都在 teach 的「bridging worked-example」（含負數那一步）無意撞上 practice 數字→recall-not-transfer。草稿期 SOP 補強：列出 practice 全部數字清單，teach 每個 worked-example 逐一比對避開（尤其負數橋接例）。
+- **里程碑**：numquant 22/30（t_mid 2/10 完成）；剩 t_mid 8 個（rational-operations/exponent-laws/scientific-notation/square-root/radical-simplify/rationalize-denominator/irrational-reals/approximation-error）。
+- **下一步**：numquant #23＝rational-operations（有理數的四則運算，會考，預設）。
+
 ## 2026-11-11 09:20 數學島 numquant #21 收斂：math_numquant_signednumbers（正負數與數線；t_mid 起點，會考）5/5 → numquant 21/30
 - **frozen_sha `c89a30e2743ed944`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema 無 hard／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：數線 SVG（−4..+4、0 粗體原點、綠點標 −3 與 +2、雙向箭頭、「越右越大→」）iPad 橫直四角色 render 簽核過。3 claim kind=definition。prereq＝compare-order＋add-sub-vertical。scope 聚焦正負數意義/數線/比大小/相反數；絕對值定義另置 #22。
 - **4 MCQ**：兩負數比大小(−2 vs −5→−2)／相反數(+6→−6)／情境正負表示(下降5層=−5)／0 不分正負概念題。.venv 全核。
