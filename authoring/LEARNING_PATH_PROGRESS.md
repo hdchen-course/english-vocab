@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 14:58 ★數學島 numquant #30 收斂＝strand 全收斂 30/30：math_numquant_approximationerror（近似值與誤差）5/5
+- **frozen_sha `6824d6a40ddeca51`**，DONE-GATE 六確定性 gate 全綠（per_page 369/369 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：四捨五入/誤差/估算重點表 SVG（3 列：四捨五入 下一位≥5進位≤4捨去／誤差 |量測值−真實值|／估算 用概數算得更快）iPad 橫直四角色 render 簽核過。3 claim kind=definition。prereq＝decimal-place-value＋irrational-reals。scope 聚焦四捨五入取近似值/誤差=|量測−真實|/四捨五入後原數範圍/用概數估算。
+- **4 MCQ**：四捨五入到小數第一位(3.467→3.5，誘答 捨去3.4／捨到二位3.47／看錯位3.46)／誤差(真值50量48→2公分，誘答 相加98／量測當誤差48／真實當誤差50)／範圍(取整數得7→6.5≤x<7.5，誘答 下界誤用7−1=6／太寬6<x≤8／只往上7≤x<8)／概數估算(98看成100×3→300，誘答 硬算294／看成90得270／只算兩樣200)。teach 用 2.83→2.8、|21−20|=1、取整數得5→4.5≤x<5.5、52看成50（.venv decimal 全核，與 practice 不重疊）。
+- **收斂路徑（1 真缺陷，content_audit 擋下）**：初凍 7d198609 → **rd1**（AE-mcq-range 1 blocker）：「6≤x<7」誘答原稱整段「會四捨五入成 6」為假（[6.5,7) 其實進位成 7、與本題 feedback 矛盾、對半段不成立）→ 改為乾淨單一誤解「把結果 7 的下界誤用成 7−1=6」，de-converge 重凍 6824d6a4。後 s1–s5 連 5 clean（L3 皆 exit0）。commits：93e21d847(草稿)／9ea62d1d7(rd1 修)／各輪 banked／本收斂。
+- **教訓（banked）**：四捨五入「範圍題」的誘答 rationale 不可用「會四捨五入成 X」描述一段區間，除非該描述對整段都成立（[6,7) 上半 [6.5,7) 其實成 7）——誘答機制須對其標示的整個集合成立（math-unit defect-class：機制-區間不符）。
+- **★里程碑：numquant strand 全收斂 30/30（t_mid 10/10 完成）**。這是數學島第一個全收斂的 strand。
+- **下一步**：依 BUILD_PLAN 轉數學島下一 strand（跑 `python3 -I tools/build_status.py` 看各 strand 缺口，選最合理起點）。
+
 ## 2026-11-11 14:28 數學島 numquant #29 收斂：math_numquant_irrationalreals（無理數與實數：無理數意義/有理數範圍/實數與數線一一對應）5/5 → numquant 29/30
 - **frozen_sha `2ebdd167a0ca4f57`**，DONE-GATE 六確定性 gate 全綠（per_page 368/368 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：無理數/有理數/實數與數線重點表 SVG（3 列：無理數 無限不循環 √2/π／有理數 可寫成分數 1/3/0.5／實數與數線 每個點↔一個實數）iPad 橫直四角色 render 簽核過。3 claim kind=definition。prereq＝square-root＋radical-simplify。scope 聚焦無理數意義/有理數範圍/實數＝有理∪無理/實數與數線一一對應。
 - **4 MCQ**：辨無理數(√2，誘答 √16=4 完全平方有理／0.6 有限小數有理／3/4 分數有理)／辨有理數(0.25=1/4，誘答 √7/√8/√10 皆非完全平方為無理)／數線關係概念(數線上每點都對應一個實數，誘答「只有有理數的點」/「無理數標不上數線」/「有些點不對應任何數」)／無理數小數特性(無限不循環，誘答 一定終止／會循環／沒有小數部分)。teach 用 √2≈1.41421356、π≈3.14159、1/3=0.333…循環、0.5、√16=4（.venv 全核，與 practice 不重疊）。
