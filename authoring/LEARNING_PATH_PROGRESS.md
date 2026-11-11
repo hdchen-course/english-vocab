@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 14:08 數學島 numquant #28 收斂：math_numquant_rationalizedenominator（分母有理化：單一根號/帶係數/共軛帶到）5/5 → numquant 28/30
+- **frozen_sha `13cb536a07299efa`**，DONE-GATE 六確定性 gate 全綠（per_page 367/367 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：分母有理化重點表 SVG（3 列：做法 分子分母同乘分母的根號／單一根號 1/√7=√7/7／帶係數 3/√2=3√2/2）iPad 橫直四角色 render 簽核過（r4 修正後重 render、sha 未變簽核有效）。3 claim kind=definition。prereq＝radical-simplify＋square-root。scope 聚焦單一根號有理化(上下同乘該根號、√b×√b=b)+帶係數約分；共軛((a+b)(a−b)=a²−b²)僅 teach/claim 帶一例(1/(√3+1)=(√3−1)/2)、practice 不深練。
+- **4 MCQ**：單一根號(1/√3=√3/3，誘答只變分母 1/3／分母平方算 9 得 √3/9／分子誤乘 3 未有理化 3/√3 form-trap)／帶係數(2/√5=2√5/5，誘答只變分母 2/5／分子漏保留 2 的 √5/5／丟分母 2√5)／可約分(5/√5=√5，誘答當 5/5=1／5 放錯 √5/5／忘約分 5√5)／方法概念(1/√2 同乘 √2，誘答乘 2／乘結果 √2/2／乘 1/2)。teach 用 1/√7=√7/7、3/√2=3√2/2、1/(√3+1)=(√3−1)/2（.venv 全核，與 practice 不重疊）。
+- **收斂路徑（2 批真缺陷，皆 content_audit 擋下）**：初凍 177498357724a697 → **rd1**（RD-mcq-reduce 2 defect）：5√5 誘答(blocker)原「忘了約分」機制導出 √5(正解)不自洽→改「丟掉分母」路徑；√5/5(major)原籠統「5 放錯位置」又重導正解→改「把 5/√5 當 1/√5、分子 5 先約掉」路徑，重凍 475f73cd。r1–r3 連清後 **r4**（RD-mcq-method 1 blocker）：1/2 誘答原「乘 1/2 把數變小、分母還是 √2」錯——題幹是「分子分母**同乘**」、上下同乘 1/2 數值不變、分母變 √2/2 仍帶根號、與核心原理矛盾→改乾淨單一錯誤（仿同題 2 誘答），de-converge 清 r1-r3、重凍 13cb536a。後 s1–s5 連 5 clean（L3 皆 exit0）。commits：c9c23ba0d(草稿)／0d3e1e2b1(rd1 修)／274d67569(r4 修)／各輪 banked／本收斂。
+- **教訓（banked）**：「分子分母同乘」題型的誘答 rationale 不可寫成「把數變小」——同乘不改值；誘答機制須能真正導出該選項值且不與單元核心原理矛盾（math-unit defect-class：誘答機制-值不符）。
+- **里程碑**：numquant 28/30（t_mid 8/10 完成）；剩 t_mid 2 個（irrational-reals/approximation-error）。
+- **下一步**：numquant #29＝irrational-reals（無理數與實數：無理數的意義、實數系、數線上的點；會考，預設）。
+
 ## 2026-11-11 13:24 數學島 numquant #27 收斂：math_numquant_radicalsimplify（最簡根式/根號乘法/同類根式加減；會考）5/5 → numquant 27/30
 - **frozen_sha `d9a6a87f3b024367`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：根式化簡重點表 SVG（3 列：最簡根式 根號裡沒有完全平方因數／化簡 √20=√(4×5)=2√5／相乘 √a×√b=√(ab)）iPad 橫直四角色 render 簽核過。3 claim kind=definition。prereq＝square-root＋multi-digit-mult。scope 聚焦最簡根式定義/化簡提因數/根號乘法/同類根式加減；分母有理化另置 #28。
 - **4 MCQ**：化最簡(√50=5√2，誘答 25 沒開根搬出/係數根號弄反/以為不能化簡)／相乘化簡(√6×√2=2√3，誘答乘對未化簡√12/內相加√8/去根號12)／同類根式加(√12+√3=3√3，誘答內相加√15/只化簡忘加2√3/以為不能相加)／辨認最簡根式(√5，誘答√8/√12/√18 皆可再化簡)。teach 用 √20=2√5、√2×√7=√14、√8+√2=3√2（.venv 全核，與 practice 不重疊）。
