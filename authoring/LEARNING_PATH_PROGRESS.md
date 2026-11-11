@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 18:57 數學島 algexpr #5 收斂：math_algexpr_polynomialaddsub（多項式的加減）5/5 → algexpr 5/18
+- **frozen_sha `1398383ea734dc72`**，DONE-GATE 六確定性 gate 全綠（per_page 374/374 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN 含 x²/x⁴ 誘答／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：多項式加減重點表 SVG（3 列左欄：同類項／加法／減法）iPad 橫直四角色 render 簽核過（x² 上標正確、無重疊/裁切、teach body 道地、圖文與 alt/caption 一致）。2 claim kind=definition（c-add/c-sub），皆被 practice answer_evidence 引用。prereq=linear-expression。scope＝多項式相加（同次係數相加、次數不變）、相減（減號分配到每一項變號再合併）、含 x²/x/常數多次數合併。
+- **4 MCQ**：加法含常數(2x+3)+(5x+6)=7x+9（誘答 把常數當x全加16x／係數相乘10x+9／常數相乘7x+18）／減法變號(8x+7)−(3x+2)=5x+5（誘答 整個沒變號11x+9／只變x項5x+9／只變常數11x+5）／加法含x²(x²+4x)+(3x²+2x)=4x²+6x（誘答 全當同次10x²／次數相加4x⁴+6x²／x項寫成x² 4x²+6x²）／減法含x²(6x²+5x)−(2x²+3x)=4x²+2x（誘答 沒變號8x²+8x／只變x²項4x²+8x／只變x項8x²+2x）。teach 用 (x+6)+(4x+2)=5x+8、(7x+5)−(2x+1)=5x+4、(2x²+x)+(x²+3x)=3x²+4x（sympy 全核，與 practice 不整組重疊）。
+- **收斂路徑（★草稿後首輪即 clean、連 5 輪零 content_audit 缺陷）**：初凍 1398383e → v1–v5 連 5 clean（L3 皆 exit0），零真缺陷。這是 algexpr strand 首個「草稿一次到位」的單元——因把 #2–#4 累積的 defect-class 教訓（誘答直白命名平行、teach 道地「放在一起」、重點表 1:1 且圖文與 alt/caption 一致、teach↔practice 不同式同答重疊含選項組、sympy 預核）在草稿期全部預先避開。commits：4a07fbbbb(草稿)／各輪 banked／778c8e362(本收斂)。
+- **教訓（banked）**：把前幾個單元被 panel 擋下的 defect-class 在草稿 SOP 就逐條檢查，可從「6 輪/4 輪才首清」降到「首輪即清」——content_audit 成本大幅下降。減法多項式的三個誘答用「整個沒變號／只變高次項／只變低次項與常數」三種部分分配錯誤，彼此平行且各為單一乾淨機制，panel 零異議。
+- **里程碑**：algexpr 5/18（t_base 3/3、t_mid 2/8；numquant 已 30/30）。
+- **下一步**：algexpr #6。t_mid 建議 polynomial-mult（多項式乘法/分配律展開，會考）接 add-sub 最自然（預設）。
+
 ## 2026-11-11 18:34 數學島 algexpr #4 收斂＝首個 t_mid 單元：math_algexpr_linearexpression（合併同類項，化簡一次式）5/5 → algexpr 4/18
 - **frozen_sha `11c5a95062a641ea`**，DONE-GATE 六確定性 gate 全綠（per_page 373/373 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN 含字母變數 x／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：合併同類項重點表 SVG（3 列左欄：同類項／合併／化簡）iPad 橫直四角色 render 簽核過（x 變數正確顯示、無重疊/裁切、共 render 3 次）。2 claim kind=definition（c-liketerm/c-combine/c-simplify… 實為 3 claim），皆被 practice answer_evidence 引用。prereq=translate-word。★首個 t_mid（國中）單元，可用字母變數 x（與 t_base 國小只用 □ 不同）。scope＝認同類項（文字部分相同）、合併同類項（係數相加減文字不變）、化簡一次式（含 x 的項與常數各自合併、處理減號）。
 - **4 MCQ**：合併純x項(3x+5x=8x，誘答 丟x得8／係數相乘15x／加次數8x²)／辨識同類項(6x與2x，誘答 5x與5一含x一常數／4x與4x²次數不同／3與3x一常數一含x)／含常數合併(2x+7+3x=5x+7，誘答 把常數7當x項12x／漏常數5x／把3加到常數2x+10)／含減號化簡(6x+4−2x+1=4x+5，誘答 減號當加號8x+5／+1當−1得4x+3／漏末項4x+4)。teach 用 7x與4x/3與8、4x+3x=7x/9x−5x=4x、3x+2+x+5=4x+7（.venv 全核，與 practice 不整組重疊）。
