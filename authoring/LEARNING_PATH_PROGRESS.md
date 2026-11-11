@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 06:41 數學島 geom #10 收斂：math_geom_circlemeasure（圓周長與圓面積，引入 π≈3.14，t_base 國小高年級）5/5 → geom strand 10/39
+- **frozen_sha `e3b3ee7acb723106`**，DONE-GATE 六確定性 gate 全綠（per_page 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：圓圖（圓框灰＋半徑綠＋直徑橙各唯一色、兩行公式文字中性 slate）iPad 橫直四角色 render 簽核過。3 claim kind=definition（c-pi 圓周率＝周長÷直徑恆約3.14；c-circumference 周長＝直徑×圓周率；c-circle-area 面積＝半徑×半徑×圓周率、與周長公式不同），皆被 practice answer_evidence 引用。★t_base 國小高年級：圓周率用近似值 3.14（台灣課綱慣例），禁 x、禁 ≥＜、禁 π 符號。prereq=circle-basics。scope＝圓周率＋圓周長＋圓面積，不涉扇形/球。算術全 sympy 驗（round 2 位：10×3.14=31.4、5×5×3.14=78.5、6×3.14=18.84、4×4×3.14=50.24）。
+- **4 MCQ**：Q1 直徑10圓周長=31.4〔誘答 13.14(相加)/20(×2漏π)/100(平方)〕／Q2 半徑5圓面積=78.5〔誘答 15.7(只乘一個半徑)/31.4(算成周長)/25(漏π)〕／Q3 圓周率約=3.14〔誘答 3.41/1.57/6.28〕／Q4 圓面積公式=半徑×半徑×圓周率〔誘答 直徑×圓周率(周長)/半徑×2×圓周率(周長)/半徑×半徑(漏π)〕。
+- **收斂路徑（草稿後 R1/R2/R3 各修缺陷、R4–R8 連 5 clean，3 次 de-converge）**：pre-freeze 六類 gate 全綠（含 π 算術 round 驗、圓 SVG render）→ 初凍 6e727aaf → **R1**（1 major b-hard 全鏡：Q1「100公分」誘答旁白「像在算面積」錯誤——本單元面積＝半徑×半徑×圓周率、直徑×直徑非面積，且反植本單元要防的周長/面積混淆→改單一平方機制，重凍 dd4c7565）→ **R2**（1 blocker b-hard 全鏡：claim c-circle-area「圓周長用的是直徑（繞一圈的長度）」括號緊接直徑→誤讀「直徑＝繞一圈長度」→補述改接圓周長/圓面積後，重凍 0c93de98）→ **R3**（1 minor：SVG 圓周長公式文字用綠＝半徑色、與直徑橙衝突→兩行公式改中性 slate，重凍 e3b3ee7a）→ R4–R8 連 5 clean（L3 皆 exit0、agents_error 全 0）。
+- **教訓（banked 缺陷類 #18/#19 候選）★★**：(#18) 誘答 rationale 做跨公式類比時，不可把「本單元正警示別混淆的另一公式」錯誤套上去（直徑²說成「像面積」反植誤解）——只描述該誘答自身的單一錯誤機制即可。(#19) 中文括號補述要緊接「被描述的量」，不可接在公式輸入量後（「圓周長（繞一圈長度）用直徑」對；「圓周長用直徑（繞一圈長度）」錯——就近修飾使讀者誤讀「直徑＝繞一圈長度」）。皆 owner=learning b-hard decisive，即使在非 render 的 claim 也判缺陷。
+- **里程碑**：數學島 geom（幾何）strand **10/39**（t_base 10/12）。algexpr strand 已 18/18 COMPLETE。本 session 已上線 geom #7/#8/#9/#10。
+- **下一步**：geom #11＝`math.t_base.geom.volume-surface`（長方體體積＝長×寬×高；單位立方公分），續 geom t_base 依序。
+
 ## 2026-11-12 06:09 數學島 geom #9 收斂：math_geom_circlebasics（圓心/半徑/直徑，t_base 國小）5/5 → geom strand 9/39
 - **frozen_sha `1b38ae5c118738fc`**，DONE-GATE 六確定性 gate 全綠（per_page 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：圓圖（圓框中性灰＋半徑綠·上＋直徑橙·過圓心橫＋圓心 slate 點，每特徵唯一色）iPad 橫直四角色 render 簽核過（色彩圖例清晰、標示不重疊、無溢出）。2 claim kind=definition（c-circle-parts 三名詞定義＋半徑處處相等；c-diameter-radius 直徑＝半徑×2、半徑＝直徑÷2），皆被 practice answer_evidence 引用。★t_base 國小：僅用公分/×/÷/＝/倍與數字，禁 x、禁 ≥＜、禁 π（圓周率後續單元）。prereq=area-formulas。scope＝圓心/半徑/直徑三名詞＋直徑半徑倍數關係，不涉圓周長/圓面積/π。算術全 sympy 驗（6×2=12、14÷2=7、4×2=8、10÷2=5）。
 - **4 MCQ**：Q1 半徑6→直徑=12〔誘答 3(÷2方向反)/8(+2)/36(平方)〕／Q2 直徑14→半徑=7〔誘答 28(×2方向反)/16(+2)/12(−2)〕／Q3 圓心到圓上任一點的距離=半徑〔誘答 直徑/圓心/圓周〕／Q4 直徑是半徑的幾倍=2倍〔誘答 3倍/一半/一樣長〕。誘答單一機制（除法方向反/相加/平方/倍數記反）。
