@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 05:16 數學島 geom #7 收斂：math_geom_perimeter（周長的計算，t_base 國小）5/5 → geom strand 7/39
+- **frozen_sha `3762097d43b39083`**，DONE-GATE 六確定性 gate 全綠（per_page 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：標邊長的長方形（長7寬2公分，比例 3.5:1）＋正方形（邊6公分）SVG，公式標於各圖下方，iPad 橫直四角色 render 簽核過（比例與標示相符、三邊單位一致、無溢出重疊）。2 claim kind=definition（c-perimeter-def 周長＝各邊相加、周長≠面積；c-square-rect-perimeter 正方形＝邊×4、長方形＝(長+寬)×2），皆被 practice answer_evidence 引用。★t_base 國小：僅用公分/＋/×/＝與數字，禁 x、禁 ≥＜。prereq=quadrilateral-classify。scope＝直線多邊形周長計算與概念辨識，不涉圓周長/面積。算術全 sympy 驗（5×4=20、(8+3)×2=22、3+4+5=12、6×4=24、(7+2)×2=18、2+5+6=13）。
+- **4 MCQ**：Q1 正方形邊5周長=20〔誘答 10只兩邊/25當面積5×5/15邊×3〕／Q2 長方形長8寬3周長=22〔誘答 11只加一次/24當面積8×3/16只算長8×2〕／Q3 三角形3+4+5周長=12〔誘答 7只加兩邊/9漏一邊/60相乘〕／Q4 周長意思=圖形外圍繞一圈的總長度〔誘答 內部範圍(面積)/最長一邊/對角線〕。誘答單一清楚錯誤機制（只加部分/算成面積/漏乘/相乘）。
+- **收斂路徑（草稿後 R1/R2/R4/R5 各修缺陷、共 4 次 de-converge，R6–R10 連 5 clean）**：pre-freeze 修 Q4 length/lead-in cue（四選項同句式無括號）＋SVG 長方形比例 → 初凍 09849a8a → **R1**（1 BLOCKER b-hard：9公分誘答說明用省略號截斷算式「3＋...」，三邊中只有 4＋5＝9→改「只算 4＋5＝9，漏掉了 3」，重凍 819240ad）→ **R2**（1 minor：SVG 寬只標「2」無「公分」與長7/邊6不一致→補三行「寬／2／公分」，重凍 26bea62d）→ R3 clean(streak1) → **R4**（2 minor：teach 三角形例 3+4+5=12 與 Q3 完全相同違反自訂 no-overlap→改 2+5+6=13；alt「寬 2」未帶單位→補「寬 2 公分」，de-converge 重凍 c0ef1e9d）→ **R5**（1 minor a-wrong：claim verification_ref 仍寫舊例 3+4+5=12→同步 2+5+6=13，重凍 3762097d）→ R6–R10 連 5 clean（L3 皆 exit0、agents_error 全 0）。
+- **教訓（banked）★★**：此單元新增/再證 3 類缺陷：(1) ★誘答說明不可用省略號留截斷算式，且所舉例子必須真能得出該誘答值（「3＋...＝9」在 3/4/5 中不成立，只有 4＋5＝9）。(2) ★teach worked example 的數字不可與某題 practice 完全相同（否則該題變純記憶非遷移）；草稿期即讓 teach 例與每題 practice 用不同數字。(3) ★編輯 claim/teach 內容後，同一 claim 的 verification_ref（及 alt／其他中繼欄位）要同步更新，否則 panel 以 a-wrong 判 stale 中繼資料。周長單元特有：Q4 概念題四選項要同句式（避免 pedagogy_gate 的 length/lead-in cue）。
+- **里程碑**：數學島 geom（幾何）strand **7/39**（t_base 7/12）。algexpr strand 已 18/18 COMPLETE。
+- **下一步**：geom #8＝`math.t_base.geom.area-formulas`（面積公式：正方形邊×邊、長方形長×寬），續 geom t_base 依序。
+
 ## 2026-11-12 04:33 數學島 geom #6 收斂：math_geom_quadclassify（四邊形分類與特徵，t_base 國小）5/5 → geom strand 6/39
 - **frozen_sha `b3b8378a6c777cd2`**，DONE-GATE 六確定性 gate 全綠（per_page 含本頁 5/5／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard 0 advisory／audio_exist CLEAN）。視覺 QA：五種四邊形並排 SVG（正方形/長方形帶金色直角 exact L 記號、平行四邊形傾斜、梯形上短下長恰一組對邊平行、菱形對角線52/36 角110.6/69.4非直角）iPad 橫直四角色 render 簽核過；SVG 形狀座標全驗（正方形菱形四邊等、長方形長寬不同、梯形恰一組平行、平行四邊形兩組平行、菱形角非直角）。3 claim kind=definition（c-square-rect／c-para-trap-rhombus／c-family 包含關係），皆被 practice answer_evidence 引用。★t_base 國小：可用已教的直角/90/平行，禁 x、禁 ≥＜。prereq=parallel-perpendicular。scope＝五種四邊形辨認與特徵＋包含關係。
 - **4 MCQ**：Q1 四邊等＋四角直角 最精確=正方形〔誘答 長方形/平行四邊形/梯形〕／Q2 四角直角＋長寬不同 最精確=長方形〔誘答 正方形/平行四邊形/梯形〕／Q3 只一組對邊平行=梯形〔誘答 平行四邊形/長方形/正方形〕／Q4 四邊等＋角非直角 最精確=菱形〔誘答 正方形/長方形/梯形〕。★全用「最精確名稱」或唯一特徵避開包容定義雙正解。
