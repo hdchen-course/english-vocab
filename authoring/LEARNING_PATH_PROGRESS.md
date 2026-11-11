@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-11 12:52 數學島 numquant #26 收斂：math_numquant_squareroot（平方根與根號：意義/估算/√(a²)=|a|；會考）5/5 → numquant 26/30
+- **frozen_sha `e87f7106081085c7`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：平方根重點表 SVG（3 列：意義 √a 平方得 a 的非負數／完全平方 √16=4／估算 9<13<16→3<√13<4）iPad 橫直四角色 render 簽核過。3 claim kind=definition。prereq＝signed-numbers＋multi-digit-mult。scope 聚焦根號意義/根號平方抵消/完全平方求值/估算夾擠/√(a²)=|a|；根式化簡另置 #27 起。★一次五連清、零修正（草稿品質佳）。
+- **4 MCQ**：完全平方(√36=6，誘答 ÷2=18／×2=72／平方=1296)／根號平方抵消((√5)²=5，誘答 5²=25／×2=10／÷2=2.5)／估算夾擠(√30 在 5 和 6 之間，誘答取太大/太小區間/以為接近 30)／先平方再開根(√((−4)²)=4，誘答 −4 直接搬出／16 只平方沒開根／−16 平方留負號)。teach 用 √16=4、√49=7、(√3)²=3、√13 在 3 和 4 之間、√((−5)²)=5（.venv 全核，與 practice 不重疊）。
+- **收斂路徑**：初凍 e87f7106 → sq1–sq5 連 5 clean（L3 皆 exit0），無任何 content_audit confirmed 缺陷（草稿一次到位）。commits：d34c71fe8(草稿)／各輪進度／本收斂。
+- **里程碑**：numquant 26/30（t_mid 6/10 完成）；剩 t_mid 4 個（radical-simplify/rationalize-denominator/irrational-reals/approximation-error）。
+- **下一步**：numquant #27＝radical-simplify（根式化簡：√(ab)=√a·√b、提出完全平方因數；會考，預設）。
+
 ## 2026-11-11 12:31 數學島 numquant #25 收斂：math_numquant_scientificnotation（科學記號 a×10^n：大數/小數/相乘；會考）5/5 → numquant 25/30
 - **frozen_sha `722ea4f035584c06`**，DONE-GATE 六確定性 gate 全綠（per_page 本頁 absent／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：科學記號重點表 SVG（3 列，左欄定義/大數/小數，右欄 a×10^n(1≤a<10)、45000=4.5×10^4、0.0062=6.2×10^-3）iPad 橫直四角色 render 簽核過。3 claim kind=definition。prereq＝exponent-laws＋decimal-place-value。scope 聚焦定義(1≤a<10)/大數正指數/小數負指數/相乘；#26 起另置開根號等。
 - **4 MCQ**：大數表示(36000=3.6×10^4)／科學記號還原(5.2×10^3=5200)／小數表示(0.0047=4.7×10^-3)／相乘((2×10^5)(4×10^3)=8×10^8)。★form-trap 誘答 36×10^3、47×10^-4 數值等於答案但係數超 1~10、非合法科學記號（會考標準誘答，題幹已明訂 1≤a<10、rationale 明說、唯一合法正解為答案；刻意設計非兩正解）。teach 用 45000=4.5×10^4、0.0062=6.2×10^-3、(3×10^2)(2×10^4)=6×10^6（.venv 全核，與 practice 不重疊）。
