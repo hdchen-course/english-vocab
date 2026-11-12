@@ -183,6 +183,7 @@
     function bonusStoreKey(level) { return 'dict_dk_bonus_' + level.replace('dk-bonus-', '') + '_word_v1'; }
     /* ---- 執行期 state ---- */
     var session = [], idx = 0, curStore = null, audioUnlocked = false, ctx = null;
+    var erasing = false; // 橡皮擦模式：true＝擦掉（destination-out），false＝寫字；由 🧽 橡皮擦 鈕切換
     /* ============================ 畫面切換 ============================ */
     function $(id) { return document.getElementById(id); }
     function show(el) { if (el)
@@ -646,8 +647,17 @@
             if (!drawing)
                 return;
             var p = pos(e);
-            ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--ink') || '#222';
-            ctx.lineWidth = 3 * (window.devicePixelRatio || 1);
+            var dpr = window.devicePixelRatio || 1;
+            if (erasing) {
+                // 橡皮擦：以 destination-out 把筆跡擦成透明（露出 CSS 底線），不影響背景橫線。筆頭較粗好擦。
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.strokeStyle = 'rgba(0,0,0,1)';
+                ctx.lineWidth = 24 * dpr;
+            } else {
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--ink') || '#222';
+                ctx.lineWidth = 3 * dpr;
+            }
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
             ctx.beginPath();
@@ -720,6 +730,20 @@
         var clear = $('dct-clear');
         if (clear)
             clear.addEventListener('click', clearCanvas);
+        // 橡皮擦 toggle：點一下進入擦除模式（鈕呈「按下」樣式），再點一下回到寫字模式。
+        var eraser = $('dct-eraser');
+        function syncEraser() {
+            if (!eraser) return;
+            eraser.classList.toggle('active', erasing);
+            eraser.setAttribute('aria-pressed', erasing ? 'true' : 'false');
+            eraser.textContent = erasing ? '✏️ 改回寫字' : '🧽 橡皮擦';
+            var canvas = $('dct-canvas');
+            if (canvas) canvas.style.cursor = erasing ? 'cell' : 'crosshair';
+        }
+        if (eraser) {
+            eraser.addEventListener('click', function () { erasing = !erasing; syncEraser(); });
+            syncEraser();
+        }
         var revealBtn = $('dct-reveal-btn');
         if (revealBtn)
             revealBtn.addEventListener('click', reveal);

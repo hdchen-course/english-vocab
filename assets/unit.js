@@ -66,7 +66,7 @@
     const cv=document.createElement('canvas'); cv.className='gr-canvas';
     cv.setAttribute('role','img'); cv.setAttribute('aria-label','手寫作答區，用手指或觸控筆寫下聽到的句子');
     box.appendChild(cv);
-    const ctx=cv.getContext('2d'); let drawing=false, last=null, sized=false;
+    const ctx=cv.getContext('2d'); let drawing=false, last=null, sized=false, erasing=false;
     function size(){ const r=cv.getBoundingClientRect(); if(!r.width||!r.height) return;
       const dpr=window.devicePixelRatio||1; const nw=Math.round(r.width*dpr), nh=Math.round(r.height*dpr);
       // 尺寸沒變就「完全不動」backing store：指派 cv.width/height（即使同值）會清空畫布。
@@ -83,6 +83,8 @@
     cv.addEventListener('pointerdown',e=>{ if(!sized)size(); drawing=true; last=pt(e);
       try{cv.setPointerCapture(e.pointerId);}catch(_){} e.preventDefault(); });
     cv.addEventListener('pointermove',e=>{ if(!drawing)return; const p=pt(e);
+      if(erasing){ ctx.globalCompositeOperation='destination-out'; ctx.strokeStyle='rgba(0,0,0,1)'; ctx.lineWidth=18; }
+      else { ctx.globalCompositeOperation='source-over'; ctx.strokeStyle='#33312E'; ctx.lineWidth=2.6; }
       ctx.beginPath(); ctx.moveTo(last[0],last[1]); ctx.lineTo(p[0],p[1]); ctx.stroke(); last=p; e.preventDefault(); });
     const stop=()=>{ drawing=false; }; ['pointerup','pointercancel','pointerleave'].forEach(ev=>cv.addEventListener(ev,stop));
     // iOS：觸控筆短暫接觸會被判成「選取」而跳出 Copy/Search/Translate 編輯選單。
@@ -92,7 +94,7 @@
     cv.addEventListener('selectstart',e=>e.preventDefault());
     function clear(){ if(!sized)size(); if(sized) ctx.clearRect(0,0,cv.width,cv.height); }
     requestAnimationFrame(size); window.addEventListener('resize',()=>{ requestAnimationFrame(size); });
-    return { box, clear };
+    return { box, clear, setErase(on){ erasing=!!on; cv.style.cursor = erasing ? 'cell' : 'crosshair'; }, isErasing(){ return erasing; } };
   }
 
   const src=document.body.getAttribute('data-units');
@@ -228,7 +230,8 @@
         c.appendChild(hint);
         const tools=el('div','gr-tools');
         const b=el('button','gr-play','🔊 聽（可重複）'); b.onclick=()=>play(p.audio); tools.appendChild(b);
-        const clr=el('button','gr-play','🧽 清除'); tools.appendChild(clr);
+        const ers=el('button','gr-play','🧽 橡皮擦'); ers.setAttribute('aria-pressed','false'); ers.setAttribute('aria-label','橡皮擦：擦掉寫錯的地方'); tools.appendChild(ers);
+        const clr=el('button','gr-play','🧹 全部清除'); tools.appendChild(clr);
         const kbtn=el('button','gr-play','⌨️ 改用鍵盤'); tools.appendChild(kbtn);
         const rev=el('button','gr-play','看答案對照'); tools.appendChild(rev);
         c.appendChild(tools);
@@ -239,6 +242,11 @@
                                 : '用手指或觸控筆在上面寫（寫在淡線上）；可重複按🔊聽。寫完按「看答案對照」自己核對。';
           if(kb) setTimeout(()=>ta.focus(),0); };   // focus → iPad 底下跳出鍵盤
         clr.onclick=()=>{ if(kb){ ta.value=''; ta.focus(); } else pad.clear(); };
+        // 橡皮擦 toggle：點一下進入擦除（鈕「按下」樣式），再點回到寫字；切到鍵盤時自動關閉。
+        function syncErase(){ const on=pad.isErasing(); ers.classList.toggle('active',on); ers.setAttribute('aria-pressed',on?'true':'false'); ers.textContent=on?'✏️ 改回寫字':'🧽 橡皮擦'; }
+        ers.onclick=()=>{ pad.setErase(!pad.isErasing()); syncErase(); };
+        // 切到鍵盤模式時把橡皮擦關掉（手寫才用得到）；接回上面的 kbtn.onclick。
+        const _kbPrev=kbtn.onclick; kbtn.onclick=(e)=>{ _kbPrev&&_kbPrev(e); if(kb){ pad.setErase(false); syncErase(); } };
         const ans=el('div','gr-fb', '正解：<b>'+esc(p.answer)+'</b><br>'+esc(p.feedback));
         rev.onclick=()=>ans.classList.add('show'); c.appendChild(ans);
         c.appendChild(rateRow());
