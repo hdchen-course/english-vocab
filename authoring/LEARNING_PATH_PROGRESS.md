@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-13 02:18 數學島 equation strand #4（全島#31）收斂：math_equation_linear_system_substitution（二元一次聯立 代入消去法，國中 t_mid）5/5 → equation strand 4/15
+- **frozen_sha `942ccaf2a925bc7a`**。DONE-GATE 六確定性 gate 全綠（per_page RESULT PASS 含本頁 5/5／scan PASS／unit_schema 0 violation／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN 1544 refs）。視覺 QA：代入消去流程——slate 框列聯立「① y＝x＋1／② 2x＋y＝7」＋綠色向下箭頭＋綠框代入後式子「2x＋(x＋1)＝7」＋綠文字「把 ① 的 y 代入 ②，只剩未知數 x」iPad 橫直四角色 render 簽核過（箭頭正確附著、無重疊/裁切、唯一綠=代入消去關係 #17、alt 與 SVG text 一致 #33）。4 claim kind=definition（c-system 聯立解意義、c-substitute 代入消去、c-backsub 回代、c-pick 挑哪式最省事），皆被 answer_evidence 引用。prereq=linear-one-var。全 .venv(sympy) 驗（teach {y=x+1,2x+y=7}→(2,3)・{x+y=5,x=2y−1}→(3,2)；practice {y=2x,x+y=12}→4・{y=x−3,x+y=11}→7・{x=y+2,2x+3y=19}→5）。
+- **4 MCQ（teach↔practice 方程式組全不重疊避#10）**：Q1 {y=2x,x+y=12}→x=4〔誘答 8=y／6=直接平分／12=和〕／Q2 第一步＝用一式表示一未知數再代入〔誘答 直接相加（加減消去）／相乘／各自解〕／Q3 {y=x−3,x+y=11}→x=7〔誘答 4=y／14=忘除係數／11=和〕／Q4 {x=y+2,2x+3y=19}→x=5〔誘答 3=y／19=常數／2=式中常數〕。四值/敘述兩兩相異（#29）；運算子/標點全形一致（記取 #30 教訓）。
+- **收斂路徑（零真缺陷，草稿一次到位）**：初凍 942ccaf2→R1–R5 連 5 clean（confirmed 全 0、L3 皆 exit0、agents_error 全 0；無 de-converge）。顯示記取 #29/#30 的 house-consistency/歧義缺陷類後，草稿品質提升、一次過。
+- **里程碑**：★ 數學島 **equation（方程式）strand 4/15**（t_base 1/1、t_mid 第 3 個 linear-system-substitution 收斂）。geom 39/39、algexpr 18/18、numquant 30/30 皆 COMPLETE。
+- **教訓**：前幾單元反覆抓到的半/全形標點、誘答歧義在本單元草稿階段已主動避開（learner-facing 全形＝＋−／、誘答說明明寫「設 A x、B 是…」）→ 零 de-converge；證明把缺陷類前載進草稿能省多輪重凍。
+- **下一步**：equation t_mid 剩 7 個 KP。預設接 `math.t_mid.equation.linear-system-elimination`（二元一次聯立：加減消去法）。
+
 ## 2026-11-13 01:57 數學島 equation strand #3（全島#30）收斂：math_equation_linear_one_var_apply（一元一次方程式應用 列式與求解，國中 t_mid）5/5 → equation strand 3/15
 - **frozen_sha `84ad6624988c8c99`**。DONE-GATE 六確定性 gate 全綠（per_page RESULT PASS 含本頁 5/5／scan PASS／unit_schema 0 violation／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN 1544 refs）。視覺 QA：文字→方程式翻譯流程——slate 文字框「妹妹 x 歲、姊姊 x＋4 歲」＋綠色向下箭頭＋綠框式子「x＋(x＋4)＝28」＋綠文字「把文字翻成式子：兩人年齡和是 28」iPad 橫直四角色 render 簽核過（箭頭正確附著上框→下框、無重疊/裁切、唯一綠=列式關係 #17、alt 與 SVG text 一致 #33）。4 claim kind=definition（c-steps 四步驟、c-set-unknown 設未知數、c-translate 關鍵詞列式、c-check 檢驗），皆被 answer_evidence 引用。prereq=linear-one-var。全 .venv(sympy) 驗（teach 姊妹 x+(x+4)=28→12・長方形 2(x+(x+3))=30→6；practice 4x=60→15・哥弟 x+(x+10)=50→20・媽年齡 3x−x=24→12）。
 - **4 MCQ（teach↔practice 情境數字全不重疊避#10）**：Q1 買筆記本 4x=60→15〔誘答 240相乘/64相加/56相減〕／Q2 哥弟存錢→弟弟20〔誘答 30哥哥/25直接折半/40=50−10〕／Q3 列式概念→正確式 x−20＝30〔誘答 x＋20＝30加減反/20−x＝30順序反/x−30＝20花費剩餘互換〕／Q4 媽年齡3倍差24→小華12〔誘答 36媽媽/24年齡差/6混用和關係〕。四值/敘述兩兩相異（#29）。
