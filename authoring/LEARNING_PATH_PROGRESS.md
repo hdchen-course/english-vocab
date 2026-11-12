@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-13 07:51 數學島 equation strand #14（全島#41）收斂：math_equation_poly_complex_roots（多項式方程式與複數根，高中 t_adv）5/5 → equation strand 14/15
+- **frozen_sha `475242636e4d226f`**。DONE-GATE 六確定性 gate 全綠。視覺 QA：共軛成對 figure——slate 框「實係數多項式方程式」＋綠色向下箭頭＋綠框兩行「虛根成對出現」「a＋bi 是根，a－bi 也是根」＋綠文字「所以虛根個數是偶數」iPad 橫直四角色 render 簽核過（x³/x²/i/±/－ 皆清晰、箭頭貼合、無 ＝0＝ 鏈、唯一綠=共軛成對 #17、alt 逐字一致 #33）。3 claim kind=definition（c-fta 代數基本定理 n 次 n 根、c-conjugate 實係數虛根共軛成對虛部變號、c-odd-real 奇數次至少一實根）。prereq=quadratic-discriminant＋quadratic-formula。全 .venv(sympy) 驗（teach x³－1 有 1 實＋2 共軛虛、x²＋4 有 ±2i；practice Q4 x³－8＝(x－2)(x²＋2x＋4) 實根 x＝2）。
+- **4 MCQ（teach↔practice 全不重疊避#10，且與 #7-#13 單元亦不重疊）**：Q1 代數基本定理計根數（五次→5〔誘答 4 次數減1／10 ×2／1 誤為至少實根數〕）／Q2 共軛成對（3＋2i 的根→3－2i〔誘答 －3＋2i 實部變號／－3－2i 整個變號／2＋3i 實虛對調〕）／Q3 奇數次至少一實根概念（答「虛根成對，奇數次至少有一實根」〔三誘答皆「理由，結論」平行結構近等長避#20 結構離群〕）／Q4 x³－8 實根（答 2〔誘答 ±2 平方根思維／8 常數當根／4 非立方根〕）。四選項長度均衡、數值/敘述兩兩相異（#29）。
+- **收斂路徑（零 de-converge、零修）**：草稿凍 47524263（pre-freeze 全 sympy 驗＋減號 U+FF0D＋無 ＝0＝ 鏈＋Q3 平行結構掃描＋en-dash 清理）→R1–R5 連 5 clean（confirmed 全 0）。第四個「草稿一次到位」單元（#37/#38 零 de-converge、#41 零修）。
+- **★里程碑**：數學島 **equation（方程式）strand 14/15**（t_adv 收第 3 個）。equation 僅剩 **t_adv 最後 1 個 KP**（exp-log 指數對數方程式）。geom 39/39、algexpr 18/18、numquant 30/30 皆 COMPLETE。
+- **下一步**：equation t_adv 最後一個 `math.t_adv.equation.exp-log`（指數與對數方程式，高中）。收完即 **equation strand 15/15 完結 → 全島首個完整 math strand**。
+
 ## 2026-11-13 07:30 數學島 equation strand #13（全島#40）收斂：math_equation_quadratic_param_range（判別式反求參數，高中 t_adv）5/5 → equation strand 13/15
 - **frozen_sha `41866d617df52ed2`**（R1 修後）。DONE-GATE 六確定性 gate 全綠。視覺 QA：反求參數 figure——slate 框「要重根 → 令 D＝0」＋綠色向下箭頭＋綠框兩行「k²－36＝0」「k＝6 或 k＝－6」＋綠文字「由『要重根』反推 k」iPad 橫直四角色 render 簽核過（k²/x²/D＞0/D＜0/≤/－ 皆清晰、箭頭貼合、無 ＝0＝ 鏈、唯一綠=反求參數 #17、alt 逐字一致 #33）。3 claim kind=definition（c-param-rule 三根況對應 D 正負、c-param-equal 令 D＝0 求值、c-param-range 令 D＞0 求範圍且相異嚴格不含等號）。prereq=quadratic-discriminant＋quadratic-formula。全 .venv(sympy) 驗（teach x²＋kx＋9 重根 k＝±6、x²－4x＋k 兩相異 k＜4；practice Q1 x²＋6x＋k 重根 k＝9、Q2 x²＋2x＋k 兩相異 k＜1、Q4 x²－kx＋4 重根 k＝±4）。
 - **4 MCQ（teach↔practice 方程式與數字全不重疊避#10，且與 #7–#12 單元亦不重疊）**：Q1 重根求值（x²＋6x＋k→9〔誘答 36 b²未除4／6 用 b／18 36的一半〕）／Q2 兩相異求範圍（x²＋2x＋k→k＜1〔誘答 k＞1 不等號反／k≤1 含重根等號／k＝1 D=0 重根〕四選項各 3 字長度齊）／Q3 無實根概念（答 D＜0〔誘答 D＞0/D＝0/D≥0〕各 3 字）／Q4 重根含負（x²－kx＋4→4 或 －4〔誘答 只有 4 漏負根／2 或 －2 開平方錯／16 或 －16 忘開平方〕）。四選項長度均衡（#20/#28）、數值/敘述兩兩相異（#29）。
