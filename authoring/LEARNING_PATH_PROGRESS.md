@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 13:22 數學島 geom t_mid #10 收斂：math_geom_similar_triangles（相似三角形判別 AA/SAS/SSS，國中）5/5 → geom strand 22/39（t_mid 10/20）
+- **frozen_sha `96c34832a67210af`**，DONE-GATE 六確定性 gate 全綠（per_page 409/409 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：左小右大兩相似直角三角形（形狀同、大小不同）＋綠色 ∼＋各底左角綠弧（對應角相等）iPad 橫直四角色 render 簽核過。3 claim kind=definition（c-similar-def 相似＝形狀同對應角等對應邊成比例、c-similar-criteria AA/SAS/SSS 判別、c-similar-apply 相似比求邊），皆被 practice answer_evidence 引用。★t_mid 國中：用相似(∼)、相似比。prereq=proportional-segments。全 numpy 驗（3,4,5 與 6,8,10 對應角皆 90/53.1/36.9、邊比 1:2；AA/SSS 相似；相似比 2≠1 故相似非全等）。
+- **4 MCQ**：Q1 相似意思=形狀相同大小可不一樣〔誘答 形狀大小都完全一樣(全等)/面積剛好相等/至少一條邊一樣長〕／Q2 哪組可判相似=兩組對應角分別相等(AA)〔誘答 只一組角/只一組邊/周長相等〕／Q3 小3,4,5 大最短邊6 求最長邊=10〔誘答 8(4×2對應錯邊)/5(照抄)/12(6×2用錯邊)〕／Q4 相似vs全等=相似不一定全等〔誘答 一定全等/一定不全等/面積一定相等〕。
+- **收斂路徑（R2 抓 2 minor、de-converge 1 次、R3–R7 連 5 clean、2 次重凍）**：pre-freeze 六類 gate 全綠（含 numpy 驗＋兩相似三角形 SVG render）→ 凍 e0f7ffa7 → **R1 clean** → **R2**（2 minor english b-hard：SM-mcq-1 選項『面積剛好相等就算相似』自我指涉破壞與其他三陳述式選項平行、SM-mcq-2『只有一組對應邊分別相等』的『分別』需複數分配對象單組誤用且與手足項不一致）→ 依 harvest-first SOP de-converge（清 R1 clean、留痕）＋SM-mcq-1 改『它們的面積剛好相等』、SM-mcq-2 改『只有一組對應邊相等而已』、重凍 96c34832 → R3–R7 連 5 clean（L3 皆 exit0、agents_error 全 0）。
+- **教訓（已入缺陷類精神）**：MCQ 四選項應句式平行——定義題所有選項都該是「對三角形的陳述」，不可其中一項用自我指涉的「…就算相似」把被定義詞塞回選項；「分別/各自」等分配副詞需有複數對象，單組（一組）時不可用。panel english/naturalness 鏡逐項比對平行性。
+- **里程碑**：數學島 geom（幾何）strand **22/39**（t_base 12/12、t_mid 10/20＝過半）。algexpr strand 已 18/18 COMPLETE。本 session 已上線 geom #7–#12＋t_mid #1–#10。
+- **下一步**：geom t_mid #11＝`math.t_mid.geom.similar-area-volume-ratio`（相似圖形面積比＝相似比平方、體積比＝相似比立方），續 t_mid 依序。
+
 ## 2026-11-12 12:49 數學島 geom t_mid #9 收斂：math_geom_proportional_segments（平行線截線段成比例與比例線段，國中）5/5 → geom strand 21/39（t_mid 9/20）
 - **frozen_sha `17a883d7b91d5ec1`**，DONE-GATE 六確定性 gate 全綠（per_page 408/408 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：灰色三角形 ABC＋內部綠色 DE 平行 BC（D 在 AB、E 在 AC）＋綠色平行箭號＋公式 DE∥BC⇒AD:DB=AE:EC iPad 橫直四角色 render 簽核過。3 claim kind=definition（c-parallel-cut-ratio 平行截對應線段成比例、c-triangle-parallel-ratio 三角形內 DE∥BC⇒AD:DB=AE:EC、c-parallel-converse 逆敘述），皆被 practice answer_evidence 引用。★t_mid 國中：用比（:）。prereq=pythagorean（相似形前置）。全 numpy 驗（DE∥BC⇒AD/DB=AE/EC 取 2:1/1:1/3:2 皆成立；2:3=4:6 交叉相乘）。
 - **4 MCQ**：Q1 DE∥BC 哪比例成立=AD:DB=AE:EC〔誘答 AD:DB=EC:AE(倒置)/AD:AB=AE:EC(對位錯)/AD×DB=AE×EC(相乘非比例)〕／Q2 AD=2 DB=3 AE=4 求 EC=6〔誘答 3(照抄DB)/2(照抄AD)/8(AE×AD 用錯運算)〕／Q3 平行截對應線段關係=長度會成比例〔誘答 長度一定相等(迷思)/相差固定值/完全沒關係〕／Q4 AD:DB=AE:EC 可推出=DE 一定平行 BC〔誘答 垂直/一樣長/D、E 是中點〕。
