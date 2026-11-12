@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 21:04 數學島 geom t_adv #3（全島#23）收斂：math_geom_line_slope_relations（斜率與兩線關係 平行/垂直/夾角，學測）5/5 → geom strand 35/39（t_adv 3/7）
+- **frozen_sha `769d901ccd4f90af`**。DONE-GATE 六確定性 gate 全綠（per_page RESULT PASS 含本頁 5/5／scan PASS〔U+53F0 info〕／unit_schema exit0／question_correctness CLEAN 2257 題／pedagogy 0 hard〔c-angle parity-advisory：夾角公式為 teach-only 推廣主張、非 title/can_do headline，panel 放行、不計 exit〕／audio_exist CLEAN 1544 refs）。視覺 QA：兩條綠色互相垂直的直線交於 P＋slate 直角記號（落交點 #23、`<path d>` 包裹 #32）＋斜率 2 與 −1/2 標示＋綠文字「兩線垂直 ⟺ 斜率相乘＝−1（2×（−1/2）＝−1）」iPad 橫直四角色 render 簽核過（唯一綠＝垂直關係 #17、短句在 SVG 詳述在 caption #19、alt 與 SVG text 一致 #33）。3 claim kind=definition（c-parallel 平行⟺m₁=m₂〔不重合〕、c-perpendicular 垂直⟺m₁·m₂=−1〔負倒數〕、c-angle 夾角 tanθ=|(m₁−m₂)/(1+m₁m₂)|〔平行/垂直皆特例〕）。prereq=line-equation。全 .venv 驗（2=2 平行；2×(−1/2)=−1 垂直；3 的負倒數 −1/3；m₁=1,m₂=0→tanθ=1→45°；m₁m₂=−1→分母0→90°）。
+- **4 MCQ（Q2 用斜率4→−1/4 與 teach/figure 2/−1/2 不重疊避#10）**：Q1 與斜率3平行=3〔誘答 −3變號／−1/3負倒數〔垂直〕／1/3倒數〕／Q2 與斜率4垂直=−1/4〔誘答 4平行誤為垂直／−4只變號／1/4只取倒數〕／Q3 兩線垂直斜率相乘=−1〔誘答 1／0／2〕／Q4 斜率同截距異=互相平行〔誘答 互相垂直／會相交於一點／完全重合〕。四值兩兩相異、長度近齊。
+- **收斂路徑（初凍 769d901c→R1–R5 連 5 clean，一次到位無 de-converge）**：草稿階段即按 math-unit defect-classes 逐條自檢（#10 數字避重疊、#17 唯一綠、#19 短句在 SVG、#22/#24/#30 術語台灣標準、#29 四值相異、#32 path 包裹、#33 alt 一致、#34 型別精確），R1–R5 五輪 confirmed 全 0、L3 皆 exit0、coverageComplete 全 true。
+- **里程碑**：數學島 geom（幾何）strand **35/39**（t_base 12/12、t_mid 20/20 COMPLETE、t_adv 3/7）。algexpr 18/18、numquant 30/30 COMPLETE。
+- **下一步**：geom t_adv 剩 4 個 KP＝point-line-distance（點到直線距離公式）、circle-equation（圓方程式）、line-circle-relation（直線與圓）、tangent-line-circle（切線）。預設接 `math.t_adv.geom.point-line-distance`。
+
 ## 2026-11-12 20:43 數學島 geom t_adv #2（全島#22）收斂：math_geom_line_equation（直線方程式 點斜式/斜截式/一般式，學測）5/5 → geom strand 34/39（t_adv 2/7）
 - **frozen_sha `6d6b651f1a35088a`**。DONE-GATE 六確定性 gate 全綠（per_page 421/421 含本頁 5/5／scan PASS／unit_schema exit0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：坐標平面畫綠色直線 y=2x+1＋灰虛線斜率三角形（往右1/往上2）＋slate 直角記號（落垂足 #23）＋y 截距點＋綠文字「斜率 2：往右 1、往上 2；直線 y＝2x＋1」iPad 橫直四角色 render 簽核過（唯一綠＝直線與斜率關係 #17、短句在 SVG 詳述在 caption #19、alt 與 SVG text 一致 #33）。3 claim kind=definition（c-slope 斜率=(y₂−y₁)/(x₂−x₁)、c-point-slope 點斜式 y−y₁=m(x−x₁)、c-forms 斜截式 y=mx+b〔b=y 截距〕＋一般式 ax+by+c=0 三式互換）。prereq=coordinate-distance。全 .venv(sympy) 驗（(0,−1)(2,5)斜率3；過(1,2)斜率3→y−2=3(x−1) 經兩點；y=2x+5 斜率2截距5；3x−y−1=0 斜率−a/b=3）。
 - **4 MCQ（Q1/Q3 坐標與 teach/figure 不重疊避#10）**：Q1 過(3,1)斜率2→y−1=2(x−3)〔誘答 x₁y₁對調／符號錯／m與y₁對調〕／Q2 y=2x+5 斜率=2〔誘答 5截距當斜率／−2符號／7相加〕／Q3 過(0,−1)(2,5)斜率=3〔誘答 6忘除Δx／2把Δx當斜率／1/3分子分母顛倒〕／Q4 b 是直線和 y 軸交點的「y 坐標」〔誘答 x坐標／斜率／長度〕。四值兩兩相異。
