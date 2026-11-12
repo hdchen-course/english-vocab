@@ -1,0 +1,205 @@
+{
+ "_note": "數學島 幾何（geom）strand t_adv 第 4 個單元（全島第 24；高中學測）。知識點 math.t_adv.geom.point-line-distance（點到直線的距離公式）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。★scope：(a) 點 (x₀,y₀) 到直線 ax+by+c=0 的距離 d＝|ax₀+by₀+c|/√(a²+b²)——把點代入直線左式、取絕對值、除以 √(a²+b²)；(b) 分子取絕對值因距離是非負長度，分母 √(a²+b²) 是法向量 (a,b) 的長度；(c) 兩平行線（a、b 相同）距離＝取一線上一點代另一線公式＝|c₁−c₂|/√(a²+b²)。prereq=line-equation（需一般式 ax+by+c=0，剛建）。★自檢（math-unit defect-classes）：事實已 .venv(sympy) 驗（P(3,4)到3x+4y−20=0 得 1；平行 4x+3y−2 與 4x+3y+13 得 3；P(0,0)到3x+4y−60=0 得 12；P(1,2)到x+y−6=0 得 3/√2；平行 5x+12y∓13 得 2）；誘答單一乾淨機制（忘除分母/忘取絕對值/分母誤用 a+b 或 a²+b²/平行誤為重合）；★teach worked example 數字與 practice 全不重疊（teach 用 P(3,4)→3x+4y−20 得 1、平行 4x+3y−2 與 4x+3y+13 得 3；practice 用 P(0,0)→3x+4y−60 得 12、P(1,2)→x+y−6 得 3/√2、分母概念、平行 5x+12y∓13 得 2）避缺陷類#10；四選項長度草稿前已 len 掃描（Q1 12/60/−12/60÷7 正解非唯一端點、Q2 皆含 3 的式、Q3 兩項皆 √(…) 正解非唯一最長、Q4 皆1-2字）；四選項兩兩相異（#29）；術語台灣課本標準（距離、絕對值、法向量、平行線、一般式，#22/#24/#30；「距離」是純量長度勿與線段混用 #30）；figure=一條直線 L＋線外一點 P＋綠色垂線段（到垂足 F）＝距離 d＋slate 直角記號（落垂足 F、用 `<path d>` 包裹 #32）＋綠文字（唯一綠=距離關係 #17、短句在 SVG 詳述在 caption #19、alt 與 SVG text 一致 #33）。practice 考的方法（代入公式、分母是什麼、平行線距離）都在 rendered teach 示範。claim kind=definition。figure-only example 無 body。",
+ "page": "math_geom_point_line_distance.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.geom.point-line-distance",
+   "title_zh": "點到直線的距離公式",
+   "can_do": "我知道點 (x₀, y₀) 到直線 ax＋by＋c＝0 的距離是 d＝|ax₀＋by₀＋c|/√(a²＋b²)：把點的坐標代進直線左式、取絕對值，再除以 √(a²＋b²)。我也知道分子取絕對值是因為距離不會是負的，而分母 √(a²＋b²) 是直線法向量 (a, b) 的長度；兩條平行線的距離也可以用這個公式（取一條線上的一點代入另一條線）算出來。",
+   "situation_group": "幾何：點到直線的距離",
+   "subject": "math",
+   "strand": "geom",
+   "est_minutes": 10,
+   "knowledge_point_ids": [
+    "math.t_adv.geom.point-line-distance"
+   ],
+   "prerequisites": [
+    "math.t_adv.geom.line-equation"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-formula",
+     "text": "點 (x₀, y₀) 到直線 ax＋by＋c＝0 的距離公式是 d＝|ax₀＋by₀＋c|/√(a²＋b²)：先把點的坐標代進直線方程式的左式 ax₀＋by₀＋c，取絕對值當分子，再除以 √(a²＋b²) 當分母。例如點 (3, 4) 到直線 3x＋4y−20＝0 的距離＝|3·3＋4·4−20|/√(3²＋4²)＝|5|/5＝1。",
+     "kind": "definition",
+     "source_refs": [
+      "點到直線距離公式（高中數學）"
+     ],
+     "verification_ref": "sympy 驗：|3·3+4·4−20|/√(9+16)=|5|/5=1",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-abs-denom",
+     "text": "分子要「取絕對值」是因為距離是一段長度、不會是負數；就算把點代進左式算出負值，取絕對值後才是真正的距離。分母 √(a²＋b²) 是直線法向量 (a, b) 的長度，用它把「代入左式的值」換算成垂直方向上的真實距離。",
+     "kind": "definition",
+     "source_refs": [
+      "點到直線距離公式的意義（高中數學）"
+     ],
+     "verification_ref": "距離為非負長度故分子取絕對值；分母 √(a²+b²)=法向量 (a,b) 長度（幾何意義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-parallel",
+     "text": "兩條平行線（x、y 的係數 a、b 相同、只有常數項不同）之間的距離，可以在其中一條線上任取一點，再用點到直線距離公式算它到另一條線的距離；結果等於 |c₁−c₂|/√(a²＋b²)。例如 4x＋3y−2＝0 和 4x＋3y＋13＝0 的距離＝|(−2)−13|/√(4²＋3²)＝15/5＝3。",
+     "kind": "definition",
+     "source_refs": [
+      "兩平行線間的距離（高中數學）"
+     ],
+     "verification_ref": "sympy 驗：|(−2)−13|/√(16+9)=15/5=3",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.geom.point-line-distance"
+     ],
+     "body": "要算一個點到一條直線的「最短距離」（也就是垂直距離），不必真的去找垂足。把直線寫成一般式 ax＋by＋c＝0，距離公式是 d＝|ax₀＋by₀＋c|/√(a²＋b²)：把點 (x₀, y₀) 代進左式 ax₀＋by₀＋c、取絕對值當分子，再除以 √(a²＋b²)。例如點 (3, 4) 到 3x＋4y−20＝0：分子＝|3·3＋4·4−20|＝|5|＝5，分母＝√(3²＋4²)＝5，距離＝5/5＝1。分子取絕對值，是因為距離是長度、不會是負的；分母 √(a²＋b²) 是直線法向量 (a, b) 的長度。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.geom.point-line-distance"
+     ],
+     "body": "兩條「平行線」之間的距離也用這個公式：平行線的 x、y 係數 a、b 一樣、只有常數項不同，所以在其中一條上任取一點，代進另一條的公式即可，結果等於 |c₁−c₂|/√(a²＋b²)。例如 4x＋3y−2＝0 和 4x＋3y＋13＝0：距離＝|(−2)−13|/√(4²＋3²)＝15/5＝3。下面的圖畫出一個點 P 到一條直線 L 的垂直距離 d，垂足處成直角。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.geom.point-line-distance"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 300 200' xmlns='http://www.w3.org/2000/svg'><line x1='40' y1='150' x2='260' y2='70' stroke='#94a3b8' stroke-width='1.6'/><line x1='90' y1='40' x2='119.5' y2='121.1' stroke='#2f6f54' stroke-width='1.9'/><path d='M128.0,118.0 L124.9,109.5 L116.4,112.6' stroke='#33475b' stroke-width='1.1' fill='none'/><g fill='#33475b'><circle cx='90' cy='40' r='2.8'/><circle cx='119.5' cy='121.1' r='2.4'/></g><g font-family='sans-serif' font-size='10.5' fill='#33475b'><text x='78' y='36'>P</text><text x='124' y='133'>F</text><text x='128' y='84'>距離 d</text><text x='238' y='66'>直線 L</text></g><text x='150' y='192' font-family='sans-serif' font-size='10' fill='#2f6f54' text-anchor='middle'>距離 d＝|ax₀＋by₀＋c|÷√(a²＋b²)</text></svg>",
+      "alt": "一條灰色直線 L 由左下往右上傾斜。線外上方有一個點 P，從 P 畫一條綠色線段垂直落到直線上的垂足 F，這段綠色線段就是點 P 到直線 L 的最短距離 d；在垂足 F 處有一個直角記號，表示 PF 垂直於直線 L。圖下方綠色文字：距離 d＝|ax₀＋by₀＋c|÷√(a²＋b²)。",
+      "caption": "點到直線的最短距離是「垂直距離」：從點 P 垂直落到直線 L 的那段 d，用公式 d＝|ax₀＋by₀＋c|/√(a²＋b²) 算，不必先求出垂足"
+     }
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "PLD-mcq-1",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "點 (0, 0) 到直線 3x＋4y−60＝0 的距離是多少？",
+     "answer": "12",
+     "kp_ids": [
+      "math.t_adv.geom.point-line-distance"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.geom.point-line-distance"
+     ],
+     "options": [
+      "12",
+      "60",
+      "−12",
+      "60/7"
+     ],
+     "distractor_rationales": {
+      "60": "這只算了分子 |3·0＋4·0−60|＝60，忘了除以分母 √(3²＋4²)＝5；距離＝60/5＝12。",
+      "−12": "代入左式得 0＋0−60＝−60，除以 5 得 −12，但忘了取絕對值；距離是長度不會是負的，應取 |−60|/5＝12。",
+      "60/7": "分母用錯了：不是把係數相加 3＋4＝7，而是 √(3²＋4²)＝5；距離＝60/5＝12。"
+     },
+     "answer_evidence": [
+      "c-formula"
+     ],
+     "feedback": "d＝|3·0＋4·0−60|/√(3²＋4²)＝60/5＝12。"
+    },
+    {
+     "question_id": "PLD-mcq-2",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "點 (1, 2) 到直線 x＋y−6＝0 的距離是多少？",
+     "answer": "3/√2",
+     "kp_ids": [
+      "math.t_adv.geom.point-line-distance"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.geom.point-line-distance"
+     ],
+     "options": [
+      "3/√2",
+      "3",
+      "3/2",
+      "−3/√2"
+     ],
+     "distractor_rationales": {
+      "3": "這只算了分子 |1＋2−6|＝3，忘了除以分母 √(1²＋1²)＝√2；距離＝3/√2。",
+      "3/2": "分母用錯了：不是 1²＋1²＝2，而是要再開根號 √2；距離＝3/√2，不是 3/2。",
+      "−3/√2": "代入左式得 1＋2−6＝−3，除以 √2 得 −3/√2，但忘了取絕對值；距離不會是負的，應取 |−3|/√2＝3/√2。"
+     },
+     "answer_evidence": [
+      "c-formula"
+     ],
+     "feedback": "d＝|1＋2−6|/√(1²＋1²)＝3/√2。"
+    },
+    {
+     "question_id": "PLD-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "點 (x₀, y₀) 到直線 ax＋by＋c＝0 的距離公式，分母是什麼？",
+     "answer": "√(a²＋b²)",
+     "kp_ids": [
+      "math.t_adv.geom.point-line-distance"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.geom.point-line-distance"
+     ],
+     "options": [
+      "√(a²＋b²)",
+      "√(a²−b²)",
+      "a²＋b²",
+      "a＋b"
+     ],
+     "distractor_rationales": {
+      "√(a²−b²)": "把加號記成減號了：法向量 (a, b) 的長度是 √(a²＋b²)，兩個係數都要平方相加，不是相減。",
+      "a²＋b²": "這是法向量長度的「平方」，還少了開根號；分母是 √(a²＋b²)。",
+      "a＋b": "這只把兩個係數相加，既沒平方也沒開根號；分母是 √(a²＋b²)。"
+     },
+     "answer_evidence": [
+      "c-formula",
+      "c-abs-denom"
+     ],
+     "feedback": "距離公式分母是 √(a²＋b²)，也就是直線法向量 (a, b) 的長度。"
+    },
+    {
+     "question_id": "PLD-mcq-4",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "兩條平行線 5x＋12y−13＝0 和 5x＋12y＋13＝0 之間的距離是多少？",
+     "answer": "2",
+     "kp_ids": [
+      "math.t_adv.geom.point-line-distance"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.geom.point-line-distance"
+     ],
+     "options": [
+      "2",
+      "26",
+      "0",
+      "1"
+     ],
+     "distractor_rationales": {
+      "26": "這只算了 |(−13)−13|＝26，忘了除以分母 √(5²＋12²)＝13；距離＝26/13＝2。",
+      "0": "平行線永遠不相交、但彼此有固定間距，距離不是 0；只有「完全重合」才是 0。這兩條常數項不同，距離＝26/13＝2。",
+      "1": "分母算錯了：√(5²＋12²)＝13，不是 26；距離＝26/13＝2，不是 26/26＝1。"
+     },
+     "answer_evidence": [
+      "c-parallel"
+     ],
+     "feedback": "在一條線上取一點代另一條線：距離＝|(−13)−13|/√(5²＋12²)＝26/13＝2。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（距離 d＝|ax₀＋by₀＋c|/√(a²＋b²)：代入左式、取絕對值、除以 √(a²＋b²)；分母是法向量長度；平行線取一點代另一線＝|c₁−c₂|/√(a²＋b²)）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
