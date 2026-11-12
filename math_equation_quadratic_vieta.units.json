@@ -1,0 +1,206 @@
+{
+ "_note": "數學島 方程式（equation）strand 第 12 個單元（全島第 39；高中 t_adv）。知識點 math.t_adv.equation.quadratic-vieta（一元二次方程式的根與係數關係／韋達定理）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。★scope：一元二次方程式 ax²＋bx＋c＝0（a≠0）的兩根 α、β，不必把方程式解出來就能知道兩根的『和』與『積』——兩根和 α＋β＝－b/a、兩根積 αβ＝c/a。這叫根與係數關係（韋達定理）。也能反過來：已知兩根的和與積，寫回方程式（首項係數 1 時為 x²－(和)x＋(積)＝0）。prereq=quadratic-formula（公式解，根從這裡來）＋quadratic-factor（因式分解）。★自檢（math-unit defect-classes）：事實已 .venv(sympy) 驗（teach x²－5x＋6 和5積6（根2,3）、2x²＋3x－2 和－3/2積－1（根1/2,－2）；practice Q1 x²－12x＋35 和12（根5,7）、Q2 x²＋4x＋3 積3（根－1,－3）、Q3 概念、Q4 和8積15→x²－8x＋15（根3,5））；符號 x²/α/β/＝/＋/－、分數 /（根與係數比值為標準分數記法，全 ASCII / 一致 #8d）皆高中已教；減號一律全形 U+FF0D（#39）；誘答單一乾淨機制（和積混淆、忘了變號直接用 b、用 c 當和、符號弄反、和積放錯位）且四選項長度均衡（#20/#28、Q1 已改 x²－12x＋35 使 12 非唯一最短）、數值兩兩相異（#29）；★teach worked-example（x²－5x＋6、2x²＋3x－2）與 practice（x²－12x＋35、x²＋4x＋3、概念、和8積15→x²－8x＋15）方程式與數字全不重疊避#10；且與 #7 factor／#8 formula／#9 complete-square／#10 discriminant／#11 apply 單元方程式亦不重疊；術語台灣課本標準（根與係數關係、韋達定理、兩根的和/積、首項係數，#22）；figure=根與係數對應：slate 框「ax²＋bx＋c＝0（兩根 α、β）」＋綠色向下箭頭＋綠框兩行「α＋β＝－b/a」「αβ＝c/a」＋綠文字「不必解方程式就知道兩根的和與積」（唯一綠=根與係數對應這一個關係 #17、短句在 SVG 詳述在 caption #43、alt 與 SVG text 逐字一致 #33）。practice 考的方法（算和、算積、反推方程式）都在 rendered teach 示範。claim kind=definition。figure-only example 無 body。",
+ "page": "math_equation_quadratic_vieta.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.equation.quadratic-vieta",
+   "title_zh": "一元二次方程式的根與係數關係（韋達定理）",
+   "can_do": "我會用根與係數關係：一元二次方程式 ax²＋bx＋c＝0 的兩根 α、β，不必把方程式解出來，就能算出兩根的和 α＋β＝－b/a 和兩根的積 αβ＝c/a；也能反過來，由已知的和與積寫回方程式。",
+   "situation_group": "方程式：根與係數關係",
+   "subject": "math",
+   "strand": "equation",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_adv.equation.quadratic-vieta"
+   ],
+   "prerequisites": [
+    "math.t_mid.equation.quadratic-formula",
+    "math.t_mid.equation.quadratic-factor"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-vieta-sum",
+     "text": "一元二次方程式 ax²＋bx＋c＝0（a≠0）的兩根記作 α、β。不必把方程式解出來，兩根的「和」就是 α＋β＝－b/a。例如 x²－5x＋6＝0，a＝1、b＝－5，兩根和＝－(－5)/1＝5。",
+     "kind": "definition",
+     "source_refs": [
+      "根與係數關係：兩根和＝－b/a（高中數學）"
+     ],
+     "verification_ref": "x²－5x＋6＝0 兩根 2、3，和＝5＝－b/a（sympy 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-vieta-prod",
+     "text": "同一個方程式 ax²＋bx＋c＝0 的兩根「積」就是 αβ＝c/a。例如 x²－5x＋6＝0，a＝1、c＝6，兩根積＝6/1＝6。這組「和＝－b/a、積＝c/a」就叫根與係數關係（也稱韋達定理）。",
+     "kind": "definition",
+     "source_refs": [
+      "根與係數關係：兩根積＝c/a（高中數學）"
+     ],
+     "verification_ref": "x²－5x＋6＝0 兩根 2、3，積＝6＝c/a（sympy 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-vieta-build",
+     "text": "反過來也成立：已知兩根的和與積，就能寫回方程式。當首項係數是 1 時，方程式是 x²－(和)x＋(積)＝0——一次項係數是「和」的相反數，常數項就是「積」。例如和是 5、積是 6，方程式就是 x²－5x＋6＝0。",
+     "kind": "definition",
+     "source_refs": [
+      "由兩根和與積反推方程式（高中數學）"
+     ],
+     "verification_ref": "和5積6 → x²－5x＋6＝0（首項係數1；一次項＝－和、常數＝積）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.equation.quadratic-vieta"
+     ],
+     "body": "一元二次方程式 ax²＋bx＋c＝0（a≠0）的兩根記作 α、β。有一個方便的關係：不必把方程式解出來，就能知道兩根的和與積——兩根的和 α＋β＝－b/a，兩根的積 αβ＝c/a。這叫「根與係數關係」，也稱韋達定理。反過來，已知兩根的和與積，也能寫回方程式：首項係數是 1 時，方程式是 x²－(和)x＋(積)＝0。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.equation.quadratic-vieta"
+     ],
+     "body": "例一：x²－5x＋6＝0，a＝1、b＝－5、c＝6。兩根和＝－b/a＝－(－5)/1＝5，兩根積＝c/a＝6/1＝6。（驗證：兩根是 2 和 3，和 5、積 6，吻合。）例二：2x²＋3x－2＝0，a＝2、b＝3、c＝－2。兩根和＝－b/a＝－3/2，兩根積＝c/a＝－2/2＝－1。（驗證：兩根是 1/2 和 －2，和 －3/2、積 －1，吻合。）注意 a 不是 1 時，和與積都要除以 a。下面的圖整理這組對應。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.equation.quadratic-vieta"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 300 205' xmlns='http://www.w3.org/2000/svg'><rect x='48' y='20' width='204' height='32' rx='8' fill='none' stroke='#94a3b8' stroke-width='1.4'/><text x='150' y='40' font-family='sans-serif' font-size='12.5' fill='#33475b' text-anchor='middle'>ax²＋bx＋c＝0（兩根 α、β）</text><line x1='150' y1='52' x2='150' y2='78' stroke='#2f6f54' stroke-width='1.8'/><path d='M150,79 L145,71 M150,79 L155,71' stroke='#2f6f54' stroke-width='1.8' fill='none'/><rect x='74' y='85' width='152' height='60' rx='8' fill='none' stroke='#2f6f54' stroke-width='1.8'/><g font-family='sans-serif' font-size='13' fill='#2f6f54' text-anchor='middle'><text x='150' y='106'>α＋β＝－b/a</text><text x='150' y='131'>αβ＝c/a</text></g><text x='150' y='174' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle'>不必解方程式就知道兩根的和與積</text></svg>",
+      "alt": "上方一個灰色方框，裡面寫著「ax²＋bx＋c＝0（兩根 α、β）」。方框下方有一條綠色向下箭頭，指向下方一個綠色方框，框裡分兩行：「α＋β＝－b/a」「αβ＝c/a」。圖下方綠色文字：不必解方程式就知道兩根的和與積。",
+      "caption": "根與係數關係（韋達定理）：一元二次方程式 ax²＋bx＋c＝0 的兩根 α、β，和＝α＋β＝－b/a、積＝αβ＝c/a，不必把方程式解出來就能求得"
+     }
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QV-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一元二次方程式 x²－12x＋35＝0 的兩根相加（兩根的和）是多少？",
+     "answer": "12",
+     "kp_ids": [
+      "math.t_adv.equation.quadratic-vieta"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.equation.quadratic-vieta"
+     ],
+     "options": [
+      "12",
+      "－12",
+      "35",
+      "－35"
+     ],
+     "distractor_rationales": {
+      "－12": "兩根和是 －b/a，要變號：b＝－12，和＝－(－12)/1＝12，不是直接用 b 的 －12。",
+      "35": "35 是常數項 c，那是兩根的「積」（c/a），不是和；兩根和＝－b/a＝12。",
+      "－35": "－35 是把常數項變號，但那和「兩根和」無關；兩根和＝－b/a＝12。"
+     },
+     "answer_evidence": [
+      "c-vieta-sum"
+     ],
+     "feedback": "a＝1、b＝－12，兩根和＝－b/a＝－(－12)/1＝12（兩根是 5 和 7，5＋7＝12）。"
+    },
+    {
+     "question_id": "QV-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一元二次方程式 x²＋4x＋3＝0 的兩根相乘（兩根的積）是多少？",
+     "answer": "3",
+     "kp_ids": [
+      "math.t_adv.equation.quadratic-vieta"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.equation.quadratic-vieta"
+     ],
+     "options": [
+      "3",
+      "－4",
+      "－3",
+      "4"
+     ],
+     "distractor_rationales": {
+      "－4": "－4 是兩根的「和」（－b/a＝－4/1），不是積；兩根積是 c/a＝3。",
+      "－3": "積是 c/a＝3/1＝3，是正的；符號弄反才會得 －3。",
+      "4": "4 是一次項係數 b，不是兩根積；兩根積要看常數項 c／a＝3。"
+     },
+     "answer_evidence": [
+      "c-vieta-prod"
+     ],
+     "feedback": "a＝1、c＝3，兩根積＝c/a＝3/1＝3（兩根是 －1 和 －3，(－1)×(－3)＝3）。"
+    },
+    {
+     "question_id": "QV-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "根與係數關係的用處是：不必解方程式，就能直接求出一元二次方程式的什麼？",
+     "answer": "兩根的和與積",
+     "kp_ids": [
+      "math.t_adv.equation.quadratic-vieta"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.equation.quadratic-vieta"
+     ],
+     "options": [
+      "兩根的和與積",
+      "每個根各是多少",
+      "方程式有幾個實根",
+      "方程式的次數"
+     ],
+     "distractor_rationales": {
+      "每個根各是多少": "根與係數關係只給「和」與「積」；要知道每個根各是多少，還是得解方程式（或由和、積再進一步算）。",
+      "方程式有幾個實根": "判斷有幾個實根要靠判別式 b²－4ac，不是根與係數關係。",
+      "方程式的次數": "次數看最高次項就知道（二次式是 2 次），和根與係數關係無關。"
+     },
+     "answer_evidence": [
+      "c-vieta-sum",
+      "c-vieta-prod"
+     ],
+     "feedback": "根與係數關係直接給出兩根的和（－b/a）與積（c/a），不必先把方程式解出來。"
+    },
+    {
+     "question_id": "QV-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "有一個一元二次方程式（首項係數是 1），它的兩根和是 8、兩根積是 15。這個方程式是下面哪一個？",
+     "answer": "x²－8x＋15＝0",
+     "kp_ids": [
+      "math.t_adv.equation.quadratic-vieta"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.equation.quadratic-vieta"
+     ],
+     "options": [
+      "x²－8x＋15＝0",
+      "x²＋8x＋15＝0",
+      "x²－15x＋8＝0",
+      "x²＋8x－15＝0"
+     ],
+     "distractor_rationales": {
+      "x²＋8x＋15＝0": "一次項係數要是「和的相反數」－8，不是＋8；首項係數 1 時方程式是 x²－(和)x＋(積)＝0。",
+      "x²－15x＋8＝0": "和與積放錯位了：一次項放「和」的相反數 －8、常數放「積」15，應是 x²－8x＋15＝0。",
+      "x²＋8x－15＝0": "兩個符號都錯：一次項該是 －8、常數該是 ＋15，正確是 x²－8x＋15＝0。"
+     },
+     "answer_evidence": [
+      "c-vieta-build"
+     ],
+     "feedback": "首項係數 1 時，方程式是 x²－(和)x＋(積)＝0＝x²－8x＋15＝0（驗證：兩根 3、5，和 8、積 15）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（ax²＋bx＋c＝0 兩根和＝－b/a、積＝c/a，這叫根與係數關係／韋達定理；a 不是 1 時和與積都要除以 a；反過來由和與積寫回方程式，首項係數 1 時為 x²－(和)x＋(積)＝0）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
