@@ -7,6 +7,17 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 18:20 數學島 geom t_mid #18 收斂：math_geom_center_centroid（三角形的重心與中線，國中）5/5 → geom strand 30/39（t_mid 18/20）
+- **frozen_sha `fbd4025e1e86e9b1`**。DONE-GATE 六確定性 gate 全綠（per_page 417/417／scan PASS／unit_schema exit0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：灰色銳角不等邊三角形 ABC（83.9/50.7/45.4 避特例 #31）＋三條綠色中線交於重心 G（slate）＋三邊中點成對等長記號（含 `<path d>` 包裹，R1 修裸-path 不渲染後實測顯示）＋一條中線標綠 2/1（2∶1）＋綠文字「三中線交於重心 G；頂點到 G ∶ G 到中點 ＝ 2 ∶ 1」iPad 橫直四角色 render 簽核過。3 claim kind=definition（c-centroid-def 重心＝三中線交點、c-ratio 分 2∶1＝頂點到重心 2/3、c-position 恆在內部平衡點），皆被 answer_evidence 引用。prereq=center-incenter。全 .venv(numpy) 驗（G=(A+B+C)/3 落三中線、分 2∶1、頂點到 G=2/3、恆內部）。
+- **4 MCQ**：Q1 重心=頂點到對邊的中線交點〔誘答 內心/外心/垂心〕／Q2 分中線比=2比1〔誘答 1比1/3比1/1比2〕／Q3 頂點到重心=三分之二〔誘答 1/2、1/3、3/4〕／Q4 落在哪=一定在三角形內部〔誘答 鈍角外部/直角斜邊/一定會落在某邊上，皆 cleanly false〕。四選項 len 齊、四值相異。
+- **收斂路徑（初凍→R1 抓 2 真缺陷→修→R1–R5 連 5 clean）**：R1（9 鏡）抓 figure 六個中點等長記號是**裸 M…L… path 文字在 `<g>` 內不渲染**（視覺 QA 誤把中點小圓點當記號漏看）＝新缺陷類 #32；另抓 Q4「位置隨三角形改變」字面為真無乾淨錯路（跨單元同 #17）。兩者修畢（記號包 `<path d>`、Q4 改「一定會落在某邊上」）重凍 fbd4025e → R1–R5 連 5 clean。
+- **里程碑**：數學島 geom（幾何）strand **30/39**（t_base 12/12、t_mid 18/20）。本 session 收斂 geom t_mid #11–#18。
+- **下一步**：geom t_mid 剩 2 個 KP＝`center-orthocenter`（垂心＝三高交點）、`proof-writing`（幾何證明推理與書寫）。預設取 center-orthocenter。
+
+## 2026-11-12 18:20 數學島 geom t_mid #17 收斂（重新達標）：math_geom_center_incenter（三角形的內心與內切圓，國中）5/5 → geom strand 29/39（t_mid 17/20）
+- **frozen_sha `15fbfd3296f51bbe`**（原 da267af9 已 5/5，後因 Q3 誘答跨單元缺陷 de-converge 重修、重凍、重數 5-clean）。**de-converge 原因**：#18 重心 R1 panel 判定誘答「位置隨三角形改變」有字面為真的第二讀法（座標確會隨三角形變）＝無乾淨單一錯誤路徑；#17 Q3 用了完全相同字串＝同一潛在缺陷（原 5 clean 未抓到）。依正確性第一＋跨單元一致，清 rounds 回 harvest，改「一定會落在某邊上」（8 字、對內心 cleanly false），重凍重數 R1–R5 連 5 clean。DONE-GATE 六關全綠。figure/teach/其餘 MCQ 不變。
+- **教訓**：誘答「位置/狀態隨 X 改變」類語句常有「字面描述（為真）vs 分類行為（為假）」雙讀，易成 b-hard；位置題誘答改用具體錯誤分類（「落在某邊上」「跑到外部」）＝cleanly false。此缺陷跨單元複用（內心/重心共用四心位置題組）時務必一起檢查。
+
 ## 2026-11-12 17:30 數學島 geom t_mid #17 收斂：math_geom_center_incenter（三角形的內心與內切圓，國中）5/5 → geom strand 29/39（t_mid 17/20）
 - **frozen_sha `da267af9830a879d`**。DONE-GATE 六確定性 gate 全綠（per_page 416/416 含本頁 5/5／scan PASS／unit_schema exit0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN 1544 refs）。視覺 QA：灰色三角形 ABC（銳角不等邊 83.9/50.7/45.4，避特例 #31）＋內切圓（灰，切三邊）＋內心 I（slate，三綠垂距交點）＋三條綠色等長垂直線段（內心到三邊切點）＋等長記號＋綠文字「內心到三邊等距：三段都＝內切圓半徑」iPad 橫直四角色 render 簽核過（唯一綠＝等距關係 #17、記號落線段 #23）。3 claim kind=definition（c-incenter-def 內心＝三內角角平分線交點、c-equidistant 到三邊等距＝內切圓半徑＝內切圓圓心切三邊、c-position 恆在三角形內部），皆被 practice answer_evidence 引用。★與前一單元『外心』刻意對比教學（外心到頂點/垂直平分線/隨形狀變位；內心到邊/角平分線/恆內部）。prereq=center-circumcenter。全 .venv(numpy) 驗（barycentric 內心到三邊垂直距離相等＝面積/半周長＝r；落三角平分線上；權重皆正→恆內部）。
 - **4 MCQ**：Q1 內心=三條什麼線交點=三內角的角平分線〔誘答 三邊的垂直平分線=外心／頂點到對邊的中線=重心／頂點到對邊的高線=垂心〕／Q2 內心到三邊距離=三段距離都相等〔誘答 只有兩段會相等／三段長度都不同／離最長邊比較近〕／Q3 內心落在哪=一定在三角形內部〔誘答 鈍角時會跑到外部／直角時會落在斜邊／位置隨三角形改變，三者皆外心行為＝乾淨混淆機制〕／Q4 內切圓和三邊關係=和三邊都相切〔誘答 通過三個頂點=外接圓／只和一邊相切／和三邊都相交〕。四選項 len 齊（mcq1 皆8/mcq2 皆7/mcq3 皆8/mcq4 皆6）、四值/語意相異、正解非唯一端點。
