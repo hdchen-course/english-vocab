@@ -1,0 +1,217 @@
+{
+ "_note": "數學島 方程式（equation）strand 第 10 個單元（全島第 37；國中 t_mid）。知識點 math.t_mid.equation.quadratic-discriminant（一元二次方程式：判別式判根數）。tier=t_mid。全繁體零簡體零 PRC 詞。數學中文授課無音檔。★scope：用判別式 D＝b²－4ac 判斷一元二次方程式有幾個實數根——不必解方程式，只看 D 正負：D＞0 兩個相異實根、D＝0 一個重根（兩個相等實根）、D＜0 沒有實數根；道理來自公式解根號裡 D 的正負。prereq=quadratic-formula（判別式就是公式根號內的量，剛學）＋linear-one-var。★自檢（math-unit defect-classes）：事實已 .venv(sympy) 驗（teach x²+x－2 D=9>0 兩實根・x²－6x+9 D=0 重根・x²+x+1 D=－3<0 無實根；practice Q1 x²+2x+5 D=－16・Q3 x²－10x+25 D=0 重根・Q4 x²－x－12 D=49>0 兩實根）；符號 x²/＞/＜/＝/＋/－/√ 皆國中已教（＞＜於國中不等式已學）；減號一律全形 U+FF0D（#39）；誘答單一乾淨機制（漏 b² 只算－4ac、符號錯、只算 b²、把 D=0/D<0 情形互換、以為最多三根）且四選項長度均衡（#20/#28）；★teach worked example（x²+x－2、x²－6x+9、x²+x+1）與 practice（x²+2x+5、概念、x²－10x+25、x²－x－12）全不重疊避#10；且與 #7 factor／#8 formula／#9 complete-square 單元方程式亦不重疊；四選項長度均衡、根數敘述兩兩相異（#29）；運算子/標點全形一致；術語台灣課本標準（判別式、相異實根、重根/相等實根、無實數根，#22）；figure=判根數對應：slate 框「算判別式 D＝b²－4ac」＋綠色向下箭頭＋綠框三行「D＞0：兩個相異實根／D＝0：一個重根／D＜0：沒有實數根」＋綠文字（唯一綠=D 正負對應根數這一個關係 #17、alt 與 SVG text 一致 #33）。practice 考的方法（算 D、依 D 正負判根數）都在 rendered teach 示範。claim kind=definition。figure-only example 無 body。",
+ "page": "math_equation_quadratic_discriminant.html",
+ "units": [
+  {
+   "unit_id": "math.t_mid.equation.quadratic-discriminant",
+   "title_zh": "一元二次方程式：判別式判根數",
+   "can_do": "我會用判別式 D＝b²－4ac 判斷一元二次方程式有幾個實數根：不必解出來，只看 D 的正負——D＞0 有兩個相異實根、D＝0 有一個重根、D＜0 沒有實數根。",
+   "situation_group": "方程式：一元二次方程式",
+   "subject": "math",
+   "strand": "equation",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_mid.equation.quadratic-discriminant"
+   ],
+   "prerequisites": [
+    "math.t_mid.equation.quadratic-formula",
+    "math.t_mid.equation.linear-one-var"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-disc",
+     "text": "判別式（記作 D）就是公式解根號裡的那個量 b²－4ac。不必把方程式真的解出來，只要算 D 的正負，就能判斷一元二次方程式有幾個實數根。",
+     "kind": "definition",
+     "source_refs": [
+      "判別式 D＝b²－4ac（國中數學）"
+     ],
+     "verification_ref": "D＝b²－4ac，取自公式解 x＝(－b±√(b²－4ac))÷2a 的根號內",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-pos",
+     "text": "當 D＞0（b²－4ac 大於 0），方程式有「兩個相異實根」。因為根號裡是正數，±√D 開出兩個不同的值，代進公式得到兩個不同的解。",
+     "kind": "definition",
+     "source_refs": [
+      "D＞0 兩個相異實根（國中數學）"
+     ],
+     "verification_ref": "x²+x－2：D=9＞0 → 兩個相異實根（sympy 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-zero",
+     "text": "當 D＝0，方程式有「一個重根」（也就是兩個相等的實根）。因為 ±√0 都是 0，公式裡的兩個解合而為一。",
+     "kind": "definition",
+     "source_refs": [
+      "D＝0 一個重根（國中數學）"
+     ],
+     "verification_ref": "x²－6x+9：D=0 → 一個重根 x=3（sympy 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-neg",
+     "text": "當 D＜0（b²－4ac 小於 0），方程式「沒有實數根」。因為負數不能開平方得到實數，根號開不出實數值。",
+     "kind": "definition",
+     "source_refs": [
+      "D＜0 沒有實數根（國中數學）"
+     ],
+     "verification_ref": "x²+x+1：D=－3＜0 → 沒有實數根（sympy 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.equation.quadratic-discriminant"
+     ],
+     "body": "判別式（記作 D）就是公式解根號裡的那個量 b²－4ac。妙處是：只要算出 D 的正負，不必真的把方程式解出來，就能判斷一元二次方程式有幾個實數根。規則是——D＞0 有兩個相異實根、D＝0 有一個重根（兩個相等實根）、D＜0 沒有實數根。道理來自公式 x＝(－b±√(b²－4ac))÷2a：根號裡 D 的正負決定能不能開出實數、開出幾個值。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.equation.quadratic-discriminant"
+     ],
+     "body": "例一：x²＋x－2＝0，D＝1²－4×1×(－2)＝1＋8＝9＞0，所以有兩個相異實根。例二：x²－6x＋9＝0，D＝(－6)²－4×1×9＝36－36＝0，所以有一個重根（兩個解都是 x＝3）。例三：x²＋x＋1＝0，D＝1²－4×1×1＝1－4＝－3＜0，所以沒有實數根。下面的圖整理 D 的正負和實根個數的對應。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_mid.equation.quadratic-discriminant"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 300 210' xmlns='http://www.w3.org/2000/svg'><rect x='62' y='20' width='176' height='32' rx='8' fill='none' stroke='#94a3b8' stroke-width='1.4'/><text x='150' y='40' font-family='sans-serif' font-size='12.5' fill='#33475b' text-anchor='middle'>算判別式 D＝b²－4ac</text><line x1='150' y1='52' x2='150' y2='78' stroke='#2f6f54' stroke-width='1.8'/><path d='M150,79 L145,71 M150,79 L155,71' stroke='#2f6f54' stroke-width='1.8' fill='none'/><rect x='46' y='85' width='208' height='74' rx='8' fill='none' stroke='#2f6f54' stroke-width='1.8'/><g font-family='sans-serif' font-size='12.5' fill='#2f6f54' text-anchor='middle'><text x='150' y='106'>D＞0：兩個相異實根</text><text x='150' y='127'>D＝0：一個重根</text><text x='150' y='148'>D＜0：沒有實數根</text></g><text x='150' y='188' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle'>只看 D 正負就知道有幾個實根</text></svg>",
+      "alt": "上方一個灰色方框，裡面寫著「算判別式 D＝b²－4ac」。方框下方有一條綠色向下箭頭，指向下方一個綠色方框，框裡分三行：「D＞0：兩個相異實根」「D＝0：一個重根」「D＜0：沒有實數根」。圖下方綠色文字：只看 D 正負就知道有幾個實根。",
+      "caption": "判別式判根數：先算 D＝b²－4ac，再看正負——D＞0 有兩個相異實根、D＝0 有一個重根、D＜0 沒有實數根，不必把方程式解出來"
+     }
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QD-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一元二次方程式 x²＋2x＋5＝0 的判別式 b²－4ac 是多少？",
+     "answer": "－16",
+     "kp_ids": [
+      "math.t_mid.equation.quadratic-discriminant"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.equation.quadratic-discriminant"
+     ],
+     "options": [
+      "－16",
+      "－20",
+      "24",
+      "4"
+     ],
+     "distractor_rationales": {
+      "－20": "只算了 －4ac＝－4×1×5＝－20，漏掉前面的 b²；完整是 b²－4ac＝4－20＝－16。",
+      "24": "中間是「減」不是加：b²－4ac＝4－20，不是 4＋20＝24。",
+      "4": "4 只是 b²（2²），還要再減 4ac；b²－4ac＝4－20＝－16。"
+     },
+     "answer_evidence": [
+      "c-disc"
+     ],
+     "feedback": "a＝1、b＝2、c＝5，判別式 b²－4ac＝2²－4×1×5＝4－20＝－16。"
+    },
+    {
+     "question_id": "QD-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一元二次方程式的判別式 b²－4ac 小於 0，它有幾個實數根？",
+     "answer": "沒有實數根",
+     "kp_ids": [
+      "math.t_mid.equation.quadratic-discriminant"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.equation.quadratic-discriminant"
+     ],
+     "options": [
+      "沒有實數根",
+      "兩個相異實根",
+      "一個重根",
+      "無限多個實根"
+     ],
+     "distractor_rationales": {
+      "兩個相異實根": "兩個相異實根是 D＞0 的情形；D＜0 時根號裡是負數，開不出實數，所以沒有實數根。",
+      "一個重根": "一個重根是 D＝0 的情形；D＜0 時沒有實數根。",
+      "無限多個實根": "一元二次方程式最多只有兩個實根，不會有無限多個；D＜0 時是沒有實數根。"
+     },
+     "answer_evidence": [
+      "c-neg"
+     ],
+     "feedback": "D＜0 時，公式根號裡是負數、開不出實數，所以方程式沒有實數根。"
+    },
+    {
+     "question_id": "QD-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一元二次方程式 x²－10x＋25＝0 的判別式是 0，它有幾個實數根？",
+     "answer": "一個重根",
+     "kp_ids": [
+      "math.t_mid.equation.quadratic-discriminant"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.equation.quadratic-discriminant"
+     ],
+     "options": [
+      "一個重根",
+      "兩個相異實根",
+      "沒有實數根",
+      "三個實根"
+     ],
+     "distractor_rationales": {
+      "兩個相異實根": "兩個相異實根是 D＞0 的情形；D＝0 時 ±√0 都是 0，兩根合而為一，是一個重根。",
+      "沒有實數根": "沒有實數根是 D＜0 的情形；D＝0 時還是有實根，只是兩根相等（一個重根）。",
+      "三個實根": "一元二次方程式最多兩個實根，不會有三個；D＝0 是一個重根。"
+     },
+     "answer_evidence": [
+      "c-zero"
+     ],
+     "feedback": "D＝0 時，±√0 都是 0，兩個解合而為一，所以是一個重根（兩個相等實根）。"
+    },
+    {
+     "question_id": "QD-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用判別式判斷一元二次方程式 x²－x－12＝0 有幾個實數根？",
+     "answer": "兩個相異實根",
+     "kp_ids": [
+      "math.t_mid.equation.quadratic-discriminant"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.equation.quadratic-discriminant"
+     ],
+     "options": [
+      "兩個相異實根",
+      "一個重根",
+      "沒有實數根",
+      "無限多個實根"
+     ],
+     "distractor_rationales": {
+      "一個重根": "一個重根要 D＝0；這題 D＝(－1)²－4×1×(－12)＝1＋48＝49＞0，是兩個相異實根。",
+      "沒有實數根": "沒有實數根要 D＜0；這題 D＝49＞0，有兩個相異實根。",
+      "無限多個實根": "一元二次方程式最多兩個實根；這題 D＝49＞0，恰有兩個相異實根。"
+     },
+     "answer_evidence": [
+      "c-disc",
+      "c-pos"
+     ],
+     "feedback": "D＝(－1)²－4×1×(－12)＝1＋48＝49＞0，所以有兩個相異實根。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（判別式 D＝b²－4ac 就是公式根號裡的量；算 D 時先算 b² 再減 4ac、注意正負號；D＞0 兩個相異實根、D＝0 一個重根、D＜0 沒有實數根；一元二次最多兩個實根）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
