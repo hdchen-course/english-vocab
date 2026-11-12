@@ -1,0 +1,219 @@
+{
+ "_note": "數學島 方程式（equation）strand 第 5 個單元（全島第 32；國中 t_mid）。知識點 math.t_mid.equation.linear-system-elimination（二元一次聯立方程式：加減消去法）。tier=t_mid。全繁體零簡體零 PRC 詞。數學中文授課無音檔。★scope：解二元一次聯立的另一方法「加減消去法」：把兩式相加或相減，使某個未知數抵消（係數相同→相減、係數相反→相加），變成一元一次方程式解出，再回代求另一個。若該未知數兩式係數不同，先把一式（或兩式）乘以適當的數，讓係數變成相同或相反，再相加減。prereq=linear-one-var（相加減後要解一元一次方程式，剛建）。與代入消去法（#31）互為聯立兩解法。★自檢（math-unit defect-classes）：事實已 .venv(sympy) 驗（teach {x+y=7,x−y=3}→(5,2) 相加消 y、{2x+3y=13,x+y=5}→(2,3) 需乘倍；practice {x+y=10,x−y=2}→x=6、係數不同先乘倍概念、{3x+y=14,x+y=6}→x=4、{x+2y=11,x−y=2}→x=5）；符號皆國中已教（x、y、＋、−、×、＝、括號、①②）；誘答單一乾淨機制（答成另一個未知數、忘了除係數、把等號右邊的數當答、直接平分忽略另一式）且已驗為整數可得；★teach worked example（{x+y=7,x−y=3}、{2x+3y=13,x+y=5}）與 practice（{x+y=10,x−y=2}、乘倍概念、{3x+y=14,x+y=6}、{x+2y=11,x−y=2}）方程式組全不重疊避#10；四選項兩兩相異（#29）、皆短數字或短語；運算子/標點全形（＝＋−／）learner-facing 一致；術語台灣課本標準（聯立方程式、加減消去法、消去、係數、回代、乘倍，#22）；figure=加減消去流程：slate 框列聯立①②＋綠色向下箭頭＋綠框相加後式子「2x＝10」＋綠文字（唯一綠=加減消去這一個關係 #17、短句在 SVG 詳述在 caption #19、alt 與 SVG text 一致 #33）。practice 考的方法（相加減消去、乘倍湊係數、回代、聯立解意義）都在 rendered teach 示範。claim kind=definition。figure-only example 無 body。",
+ "page": "math_equation_linear_system_elimination.html",
+ "units": [
+  {
+   "unit_id": "math.t_mid.equation.linear-system-elimination",
+   "title_zh": "二元一次聯立方程式：加減消去法",
+   "can_do": "我會用「加減消去法」解二元一次聯立方程式：把兩條方程式相加或相減，讓某個未知數抵消（係數相同就相減、係數相反就相加），變成一元一次方程式解出，再回代求另一個。如果那個未知數兩式的係數不一樣，我會先把一式乘以適當的數，讓係數變成相同或相反，再相加減。",
+   "situation_group": "方程式：二元一次聯立",
+   "subject": "math",
+   "strand": "equation",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_mid.equation.linear-system-elimination"
+   ],
+   "prerequisites": [
+    "math.t_mid.equation.linear-one-var"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-system",
+     "text": "二元一次聯立方程式的「解」是一組 (x, y)，必須同時滿足兩條方程式。加減消去法和代入消去法都是用來找這組解的方法，差別只在消去未知數的手法不同。",
+     "kind": "definition",
+     "source_refs": [
+      "二元一次聯立方程式的解（國中數學）"
+     ],
+     "verification_ref": "聯立解＝同時滿足兩式的 (x, y)（國中定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-eliminate",
+     "text": "「加減消去法」是把兩條方程式「相加」或「相減」，讓某一個未知數抵消：如果這個未知數在兩式的係數「相同」，就把兩式「相減」消去它；如果係數「相反」（一正一負），就把兩式「相加」消去它。消去後就變成只剩一個未知數的一元一次方程式。",
+     "kind": "definition",
+     "source_refs": [
+      "加減消去法（國中數學）"
+     ],
+     "verification_ref": "x+y=7 與 x−y=3 相加 → 2x=10（消去 y）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-scale",
+     "text": "如果要消去的未知數在兩式的係數既不相同也不相反，就先把其中一式（或兩式）乘以適當的數，讓那個未知數的係數變成相同或相反，再相加減。例如 ① 2x＋3y＝13、② x＋y＝5，想消去 x，就把 ② 乘以 2 變成 2x＋2y＝10，再和 ① 相減。",
+     "kind": "definition",
+     "source_refs": [
+      "乘倍湊係數再消去（國中數學）"
+     ],
+     "verification_ref": "②×2：2x+2y=10，與 ① 2x+3y=13 相減 → y=3（消去 x）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-backsub",
+     "text": "相加減消去一個未知數、解出另一個的值之後，要把這個值「回代」到任何一條原式，求出被消去的那個未知數。兩個都求出來才算解完。例如由 x＋y＝7、x−y＝3 相加解得 x＝5，回代 x＋y＝7 得 y＝2，解是 (5, 2)。",
+     "kind": "definition",
+     "source_refs": [
+      "回代求另一未知數（國中數學）"
+     ],
+     "verification_ref": "回代：x=5 代入 x+y=7 → y=2，解 (5,2)",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.equation.linear-system-elimination"
+     ],
+     "body": "解二元一次聯立方程式，除了代入消去法，還有「加減消去法」。它的想法是：把兩條方程式「相加」或「相減」，讓其中一個未知數剛好抵消，變成只剩一個未知數的一元一次方程式。判斷相加還是相減很簡單：那個未知數的係數「相同」就相減、「相反」（一正一負）就相加。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.equation.linear-system-elimination"
+     ],
+     "body": "例一：① x＋y＝7、② x−y＝3。y 的係數是 ＋1 和 −1（相反），把兩式「相加」：(x＋y)＋(x−y)＝7＋3，y 抵消，得 2x＝10，x＝5；回代 ① 得 y＝2，解是 (5, 2)。例二：① 2x＋3y＝13、② x＋y＝5。想消去 x，但係數 2 和 1 不同，先把 ② 乘以 2 變成 2x＋2y＝10，再和 ① 相減：(2x＋3y)−(2x＋2y)＝13−10，x 抵消，得 y＝3；回代 ② 得 x＝2，解是 (2, 3)。下面的圖示範「相加消去」這一步。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_mid.equation.linear-system-elimination"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 300 200' xmlns='http://www.w3.org/2000/svg'><rect x='40' y='22' width='220' height='50' rx='8' fill='none' stroke='#94a3b8' stroke-width='1.4'/><g font-family='sans-serif' font-size='12.5' fill='#33475b' text-anchor='middle'><text x='150' y='42'>① x＋y＝7</text><text x='150' y='61'>② x−y＝3</text></g><line x1='150' y1='72' x2='150' y2='100' stroke='#2f6f54' stroke-width='1.8'/><path d='M150,101 L145,93 M150,101 L155,93' stroke='#2f6f54' stroke-width='1.8' fill='none'/><rect x='70' y='107' width='160' height='38' rx='8' fill='none' stroke='#2f6f54' stroke-width='1.8'/><text x='150' y='131' font-family='sans-serif' font-size='13.5' fill='#2f6f54' text-anchor='middle'>2x＝10</text><text x='150' y='178' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle'>兩式相加，y 與 −y 抵消，剩 2x＝10</text></svg>",
+      "alt": "上方一個灰色方框，裡面是聯立方程式兩式：① x＋y＝7、② x−y＝3。方框下方有一條綠色向下箭頭，指向下方一個綠色方框，框裡是相加後的式子「2x＝10」，表示把兩式相加、y 和 −y 抵消。圖下方綠色文字：兩式相加，y 與 −y 抵消，剩 2x＝10。",
+      "caption": "加減消去法：① x＋y＝7 與 ② x−y＝3 的 y 係數相反（＋1、−1），兩式相加 y 抵消，得 2x＝10，解得 x＝5、再回代得 y＝2"
+     }
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "LE-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用加減消去法解聯立方程式 ① x＋y＝10、② x−y＝2，x 的值是多少？",
+     "answer": "6",
+     "kp_ids": [
+      "math.t_mid.equation.linear-system-elimination"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.equation.linear-system-elimination"
+     ],
+     "options": [
+      "6",
+      "4",
+      "12",
+      "5"
+     ],
+     "distractor_rationales": {
+      "4": "4 是 y 的值，題目問的是 x；y 的係數相反（＋1、−1），兩式相加：2x＝12，x＝6。",
+      "12": "12 是兩式相加後 2x＝12 的 12，還沒除以係數；x 前面係數是 2，要再除以 2，x＝6。",
+      "5": "5 是把 10 直接平分成兩半，忽略了第二式 x−y＝2；要兩式相加得 2x＝12，x＝6。"
+     },
+     "answer_evidence": [
+      "c-system",
+      "c-eliminate"
+     ],
+     "feedback": "y 係數相反，兩式相加：(x＋y)＋(x−y)＝10＋2，2x＝12，x＝6（y＝4）。"
+    },
+    {
+     "question_id": "LE-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用加減消去法時，如果要消去的未知數在兩式的係數既不相同也不相反（例如一式 2x、另一式 x），要先怎麼做？",
+     "answer": "先乘倍數使係數相同或相反",
+     "kp_ids": [
+      "math.t_mid.equation.linear-system-elimination"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.equation.linear-system-elimination"
+     ],
+     "options": [
+      "先乘倍數使係數相同或相反",
+      "直接把兩式相加起來消去",
+      "把兩個式子直接相乘",
+      "先把其中一式畫成圖"
+     ],
+     "distractor_rationales": {
+      "直接把兩式相加起來消去": "係數不同時直接相加不會讓未知數抵消（例如 2x＋x＝3x，沒消掉）；要先乘倍數湊成相同或相反。",
+      "把兩個式子直接相乘": "兩式相乘會變成更複雜的式子、不會消去未知數；加減消去法靠的是乘倍數湊係數再相加減。",
+      "先把其中一式畫成圖": "畫圖是另一種理解方式，不是加減消去法的步驟；這裡要先乘倍數讓係數相同或相反。"
+     },
+     "answer_evidence": [
+      "c-scale",
+      "c-eliminate"
+     ],
+     "feedback": "係數不同時，先把一式乘以適當的數，讓那個未知數係數變成相同或相反，再相加減消去。"
+    },
+    {
+     "question_id": "LE-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用加減消去法解聯立方程式 ① 3x＋y＝14、② x＋y＝6，x 的值是多少？",
+     "answer": "4",
+     "kp_ids": [
+      "math.t_mid.equation.linear-system-elimination"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.equation.linear-system-elimination"
+     ],
+     "options": [
+      "4",
+      "2",
+      "8",
+      "6"
+     ],
+     "distractor_rationales": {
+      "2": "2 是 y 的值，題目問的是 x；y 的係數都是 1（相同），兩式相減：2x＝8，x＝4。",
+      "8": "8 是兩式相減後 2x＝8 的 8，還沒除以係數；要再除以 2，x＝4。",
+      "6": "6 是第二式等號右邊的數，不是 x；兩式相減得 2x＝8，x＝4。"
+     },
+     "answer_evidence": [
+      "c-eliminate",
+      "c-backsub"
+     ],
+     "feedback": "y 係數相同，兩式相減：(3x＋y)−(x＋y)＝14−6，2x＝8，x＝4（y＝2）。"
+    },
+    {
+     "question_id": "LE-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用加減消去法解聯立方程式 ① x＋2y＝11、② x−y＝2，x 的值是多少？",
+     "answer": "5",
+     "kp_ids": [
+      "math.t_mid.equation.linear-system-elimination"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.equation.linear-system-elimination"
+     ],
+     "options": [
+      "5",
+      "3",
+      "9",
+      "2"
+     ],
+     "distractor_rationales": {
+      "3": "3 是 y 的值，題目問的是 x；x 係數都是 1（相同），兩式相減：3y＝9，y＝3，再回代得 x＝5。",
+      "9": "9 是兩式相減後 3y＝9 的 9，還沒除以係數；要再除以 3，y＝3，回代 x＝5。",
+      "2": "2 是第二式等號右邊的數，不是 x；兩式相減得 3y＝9、y＝3，回代 ② x−3＝2 得 x＝5。"
+     },
+     "answer_evidence": [
+      "c-eliminate",
+      "c-backsub"
+     ],
+     "feedback": "x 係數相同，兩式相減：(x＋2y)−(x−y)＝11−2，3y＝9，y＝3，回代 ② 得 x＝5。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（加減消去法：係數相同→相減、相反→相加，消去一個未知數變一元一次；係數不同先乘倍數湊相同或相反；解出後回代求另一個）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
