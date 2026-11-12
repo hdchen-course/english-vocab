@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 12:06 數學島 geom t_mid #8 收斂：math_geom_pythagorean（畢氏定理及其逆敘述與應用，國中）5/5 → geom strand 20/39（t_mid 8/20）
+- **frozen_sha `92db68e4dc8d95be`**，DONE-GATE 六確定性 gate 全綠（per_page 407/407 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：灰色直角三角形＋左下直角記號＋兩股 a/b＋斜邊 c＋綠色 a²+b²=c² 公式 iPad 橫直四角色 render 簽核過。3 claim kind=definition（c-pythagorean 定理本體、c-pythagorean-apply 求斜邊/求股、c-pythagorean-converse 逆敘述判直角），皆被 practice answer_evidence 引用。★t_mid 國中：用平方²、開根號√。prereq=isosceles-equilateral。全 sympy 驗（3,4,5／6,8,10／5,12,13／8,15,17 成立；兩股 6,8→斜邊 10；斜邊 13 股 5→另股 12；逆 9,12,15 是、4,5,6 非）。
+- **4 MCQ**：Q1 畢氏定理說什麼=兩股的平方和等於斜邊的平方〔誘答 兩股長度和=斜邊/斜邊平方=兩股長度和(漏平方)/三邊都相等〕／Q2 兩股6,8求斜邊=10〔誘答 14(相加)/100(忘開根號)/2(相減)〕／Q3 斜邊13股5求另股=12〔誘答 8(相減)/18(相加)/144(忘開根號)〕／Q4 哪組可組直角三角形=9,12,15〔誘答 4,5,6／5,6,7／6,7,8 皆非畢氏三元組〕。
+- **收斂路徑（R1–R5 連 5 clean、0 次重凍）**：pre-freeze 六類 gate 全綠（含 sympy 驗＋直角三角形 SVG render）→ 凍 92db68e4 → R1–R5 連 5 clean（confirmed 全 0、L3 皆 exit0、agents_error 全 0）。本單元 draft 一次到位、無內容重凍（連續第二個零重凍單元，defect-class 累積避開生效）。
+- **里程碑**：數學島 geom（幾何）strand **20/39**（t_base 12/12、t_mid 8/20）。algexpr strand 已 18/18 COMPLETE。本 session 已上線 geom #7–#12＋t_mid #1–#8。
+- **下一步**：geom t_mid #9＝待查 KP 順序（候選 `math.t_mid.geom.quadrilateral-properties` 四邊形性質 或 `math.t_mid.geom.similar-triangles` 相似三角形），續 t_mid 依序。
+
 ## 2026-11-12 11:47 數學島 geom t_mid #7 收斂：math_geom_isosceles_equilateral（等腰三角形與正三角形性質，國中）5/5 → geom strand 19/39（t_mid 7/20）
 - **frozen_sha `67b39ca271d7dc19`**，DONE-GATE 六確定性 gate 全綠（per_page 406/406 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：灰色等腰三角形＋頂點 A（頂角）/B/C＋兩腰綠色等長記號＋兩底角綠弧（綠＝相等唯一意義色）iPad 橫直四角色 render 簽核過。3 claim kind=definition（c-isosceles-base-angles 等邊對等角、c-three-lines-one 三線合一、c-equilateral 正三角形 60°為等腰特例）；前二與 c-equilateral 中 c-isosceles-base-angles/c-equilateral 被 practice answer_evidence 引用，c-three-lines-one 為 teach-only 支援性 claim（pedagogy parity-advisory、panel R1–R5 皆未判缺陷）。★t_mid 國中：用度（°）。prereq=triangle-inequality。全 numpy 驗（等腰 AB=AC=5 底 6→兩底角 53.1° 頂角 73.7°、頂角 80°→底角 50°、正三角形三角都 60°、正三角形為等腰特例）。
 - **4 MCQ**：Q1 兩腰相等導致=兩個底角相等〔誘答 三內角都相等(正三角形才有)/兩底角和180/底邊和腰一樣長〕／Q2 頂角80°底角=50〔誘答 100(忘除2)/80(抄頂角)/40(頂角一半)〕／Q3 正三角形每內角=60〔誘答 90/45/180〕／Q4 正三角形與等腰關係=正三角形是特別的等腰三角形〔誘答 兩者無關/等腰都是正三角形(反了)/正三角形三角不相等〕。
