@@ -1,0 +1,204 @@
+{
+ "_note": "數學島 幾何（geom）strand t_mid 第 6 個單元（國中）。知識點 math.t_mid.geom.triangle-inequality（三角形邊角關係、兩邊和大於第三邊）。tier=t_mid（國中；學習者端不顯示年段 R11）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。★t_mid 國中：可用不等式符號（>、<）、絕對值概念以文字表達、對應角/對邊等語彙。scope 聚焦：(a) 三角形任意兩邊長度的和一定大於第三邊（三組都要成立才能拼成三角形）；(b) 由此推出第三邊的範圍：兩邊差 < 第三邊 < 兩邊和；(c) 邊角關係：同一個三角形裡，較長的邊對著較大的角、較大的角對著較長的邊（大邊對大角、大角對大邊）。prereq=triangle-congruence。★自檢（math-unit defect-classes）：概念已 sympy/numpy 驗（2+3 不大於 5 故 2,3,5 不能拼成三角形；兩邊 5,8 第三邊範圍 3<c<13；邊 3,4,5 角 36.9/53.1/90，最長邊 5 對最大角 90＝大邊對大角）；誘答單一乾淨機制（取等號邊界/比差還小/相加當答案/大邊對小角相反）；四選項長度趨近、正解非唯一離群（#20），數字選項不觸長度 cue；術語台灣標準（兩邊和、第三邊、大邊對大角）；figure 用字母 a/b/c 標邊避免與 practice 數字（2/3/5、5/8）重疊（#10）、綠色只給關鍵不等式 a+b>c、三角形外框灰（#17 外框不搶特徵色）、alt 同步（#15/#16）；practice 考的方法（兩邊和>第三邊判定、第三邊範圍、大邊對大角）都在 rendered teach 示範。practice 4：Q1 任意兩邊的和與第三邊關係=一定大於第三邊〔誘答 一定小於/一定等於/可能大於也可能小於〕；Q2 哪組長度不能拼成三角形=2,3,5（2+3 不大於 5）〔誘答 3,4,5／6,8,10／4,4,7 都可以〕；Q3 兩邊 5 和 8 第三邊可以是多少=10〔誘答 3(=8−5 等於差不行)／13(=8+5 等於和不行)／2(比兩邊差還小)〕；Q4 三角形中最長的邊對著的角=最大的角〔誘答 最小的角／一定是直角／和別的角一樣大〕。claim kind=definition。figure-only example 無 body。",
+ "page": "math_geom_triangle_inequality.html",
+ "units": [
+  {
+   "unit_id": "math.t_mid.geom.triangle-inequality",
+   "title_zh": "三角形的邊角關係與兩邊和大於第三邊",
+   "can_do": "我知道一個三角形裡，任意兩邊長度的和一定大於第三邊；也知道由這個性質可以算出第三邊的範圍（比兩邊的差大、比兩邊的和小）。我還知道在同一個三角形裡，較長的邊會對著較大的角、較大的角會對著較長的邊（大邊對大角、大角對大邊）。",
+   "situation_group": "幾何：三角形邊角關係",
+   "subject": "math",
+   "strand": "geom",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_mid.geom.triangle-inequality"
+   ],
+   "prerequisites": [
+    "math.t_mid.geom.triangle-congruence"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-two-sides-sum",
+     "text": "在任何一個三角形裡，任意兩邊長度的和一定大於第三邊。也就是說，三組「兩邊的和」都要大於剩下那一邊（a＋b＞c、b＋c＞a、a＋c＞b），三組同時成立，這三條線段才拼得成一個三角形。只要有一組「兩邊的和」不大於第三邊（剛好等於、或小於），三條線段就會疊在一起或接不起來，拼不成三角形。",
+     "kind": "definition",
+     "source_refs": [
+      "三角形兩邊和大於第三邊（國中數學）"
+     ],
+     "verification_ref": "任意兩邊和＞第三邊，三組都成立才是三角形（sympy 驗：2,3,5 因 2＋3 不大於 5 拼不成；3,4,5／6,8,10／4,4,7 三組都成立可拼成）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-third-side-range",
+     "text": "由「兩邊和大於第三邊」可以推出第三邊的範圍：如果已經知道其中兩邊的長度，那麼第三邊一定要比「這兩邊的差」大、又要比「這兩邊的和」小。例如兩邊長是 5 和 8，第三邊就要比 8－5＝3 大、又要比 8＋5＝13 小，所以第三邊可以是 4、5、6、……一直到 12（不能剛好是 3，也不能剛好是 13）。",
+     "kind": "definition",
+     "source_refs": [
+      "三角形第三邊的範圍（國中數學）"
+     ],
+     "verification_ref": "兩邊差＜第三邊＜兩邊和（sympy 驗：兩邊 5,8 時 3＜c＜13，c 可取 4…12；c=3 或 c=13 為退化不成三角形）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-side-angle",
+     "text": "在同一個三角形裡，邊和它「對面」的角有固定的大小關係：較長的邊一定對著較大的角，較大的角也一定對著較長的邊，這叫做「大邊對大角、大角對大邊」。例如三邊長是 3、4、5 的三角形，最長的邊 5 對著最大的角（剛好是 90 度的直角），最短的邊 3 對著最小的角。",
+     "kind": "definition",
+     "source_refs": [
+      "三角形大邊對大角（國中數學）"
+     ],
+     "verification_ref": "大邊對大角、大角對大邊（numpy 餘弦定理驗：邊 3,4,5 對角 36.9°,53.1°,90°，最長邊 5 對最大角 90°、最短邊 3 對最小角 36.9°）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.geom.triangle-inequality"
+     ],
+     "body": "三條線段要能拼成一個三角形，有一個條件：任意兩邊長度的和，一定要大於第三邊。三組「兩邊的和」（a＋b、b＋c、a＋c）都要大於剩下那一邊，三組同時成立才拼得成三角形。只要有一組剛好等於、或小於第三邊，三條線段就接不成三角形。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.geom.triangle-inequality"
+     ],
+     "body": "由這個性質可以推出第三邊的範圍：已知兩邊時，第三邊一定比「兩邊的差」大、又比「兩邊的和」小。例如兩邊是 7 和 10，第三邊就要比 10－7＝3 大、比 10＋7＝17 小，可以是 4 到 16。另外，在同一個三角形裡，較長的邊對著較大的角、較大的角對著較長的邊（大邊對大角、大角對大邊）。下面的圖就是這個「兩邊和大於第三邊」的關係。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_mid.geom.triangle-inequality"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 300 160' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><polygon points='60,120 240,120 115,45' fill='none' stroke='#94a3b8' stroke-width='2'/><g font-size='13' fill='#33475b' text-anchor='middle'><text x='150' y='136'>c</text><text x='79' y='78'>a</text><text x='186' y='78'>b</text></g><g font-size='11' fill='#33475b' text-anchor='middle'><text x='54' y='124'>A</text><text x='246' y='124'>B</text><text x='115' y='39'>C</text></g><text x='150' y='156' font-size='13' fill='#2f6f54' text-anchor='middle'>a ＋ b ＞ c（任兩邊的和 ＞ 第三邊）</text></g></svg>",
+      "alt": "一個灰色三角形，三個頂點標 A、B、C。底邊標 c，左上斜邊標 a，右上斜邊標 b。圖下方有一行綠色文字：a ＋ b ＞ c（任兩邊的和大於第三邊）。",
+      "caption": "三角形任意兩邊的和都大於第三邊：a＋b＞c、b＋c＞a、a＋c＞b，三組同時成立才拼得成三角形"
+     }
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "TI-mcq-1",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "在一個三角形裡，任意兩邊長度的和，和第三邊比起來一定怎樣？",
+     "answer": "一定大於第三邊",
+     "kp_ids": [
+      "math.t_mid.geom.triangle-inequality"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.geom.triangle-inequality"
+     ],
+     "options": [
+      "一定大於第三邊",
+      "一定小於第三邊",
+      "一定剛好等於第三邊",
+      "可能大於也可能小於第三邊"
+     ],
+     "distractor_rationales": {
+      "一定小於第三邊": "剛好相反；兩邊的和如果小於第三邊，三條線段根本接不起來，拼不成三角形。",
+      "一定剛好等於第三邊": "兩邊的和如果剛好等於第三邊，三條線段會疊成一條直線，也拼不成三角形；要「大於」才行。",
+      "可能大於也可能小於第三邊": "在能拼成三角形的情況下，任意兩邊的和「一定」大於第三邊，不是有時大有時小。"
+     },
+     "answer_evidence": [
+      "c-two-sides-sum"
+     ],
+     "feedback": "三角形任意兩邊的和一定大於第三邊（三組都要成立才拼得成三角形）。"
+    },
+    {
+     "question_id": "TI-mcq-2",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "下面哪一組長度（公分）「不能」拼成一個三角形？",
+     "answer": "2、3、5",
+     "kp_ids": [
+      "math.t_mid.geom.triangle-inequality"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.geom.triangle-inequality"
+     ],
+     "options": [
+      "2、3、5",
+      "3、4、5",
+      "6、8、10",
+      "4、4、7"
+     ],
+     "distractor_rationales": {
+      "3、4、5": "3＋4＝7 大於 5、3＋5 大於 4、4＋5 大於 3，三組都成立，可以拼成三角形。",
+      "6、8、10": "6＋8＝14 大於 10、6＋10 大於 8、8＋10 大於 6，三組都成立，可以拼成三角形。",
+      "4、4、7": "4＋4＝8 大於 7、4＋7 大於 4，三組都成立，可以拼成三角形（兩腰相等的等腰三角形）。"
+     },
+     "answer_evidence": [
+      "c-two-sides-sum"
+     ],
+     "feedback": "2＋3＝5，剛好等於第三邊 5、沒有大於，所以 2、3、5 拼不成三角形。"
+    },
+    {
+     "question_id": "TI-mcq-3",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "一個三角形有兩邊長是 5 公分和 8 公分，第三邊的長度可以是下面哪一個？",
+     "answer": "10 公分",
+     "kp_ids": [
+      "math.t_mid.geom.triangle-inequality"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.geom.triangle-inequality"
+     ],
+     "options": [
+      "10 公分",
+      "3 公分",
+      "13 公分",
+      "2 公分"
+     ],
+     "distractor_rationales": {
+      "3 公分": "第三邊要比兩邊的差 8－5＝3 大；剛好等於 3 會疊成一條直線，拼不成三角形。",
+      "13 公分": "第三邊要比兩邊的和 8＋5＝13 小；剛好等於 13 會疊成一條直線，拼不成三角形。",
+      "2 公分": "2 比兩邊的差 3 還小，這時 2＋5＝7 不大於 8，拼不成三角形。"
+     },
+     "answer_evidence": [
+      "c-third-side-range"
+     ],
+     "feedback": "第三邊要比兩邊差 3 大、比兩邊和 13 小（3＜第三邊＜13），所以可以是 10 公分。"
+    },
+    {
+     "question_id": "TI-mcq-4",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "在同一個三角形裡，最長的那一邊，對著的角會是怎樣的角？",
+     "answer": "最大的角",
+     "kp_ids": [
+      "math.t_mid.geom.triangle-inequality"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.geom.triangle-inequality"
+     ],
+     "options": [
+      "最大的角",
+      "最小的角",
+      "一定是直角",
+      "和別的角一樣大"
+     ],
+     "distractor_rationales": {
+      "最小的角": "剛好相反；最長的邊對的是最大的角，最短的邊才對最小的角（大邊對大角）。",
+      "一定是直角": "最長的邊對最大的角，但那個角不一定剛好是 90 度；只有直角三角形的最長邊（斜邊）才對直角。",
+      "和別的角一樣大": "三邊長度不一樣時，三個角也不一樣大；最長的邊對的是其中最大的那個角。"
+     },
+     "answer_evidence": [
+      "c-side-angle"
+     ],
+     "feedback": "大邊對大角：最長的邊對著最大的角，最短的邊對著最小的角。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（任意兩邊和＞第三邊、三組都成立才拼得成三角形；第三邊範圍＝兩邊差＜第三邊＜兩邊和；大邊對大角、大角對大邊；不自動批改）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
