@@ -95,6 +95,7 @@ let INDEX=null, scheme='cefr', curLevel=null, curPool=[];
 const shardCache={};
 const STORE=(window.SRS&&window.SRS.createStore)?window.SRS.createStore('wordmaster_srs_v1'):null;
 const DAILY_NEW=20;
+const ROUND_SIZE=20; // 一回合最多 20 張（到期複習優先、再補新卡）；做完要再練才按「再來一回合」，避免每日複習量雪球式暴增
 const CEFR_UP={a1:'A1',a2:'A2',b1:'B1',b2:'B2',c1:'C1',c2:'C2'};
 const YLE_ZH={starters:'Starters',movers:'Movers',flyers:'Flyers'};
 const flipEl=()=>document.getElementById('wd-flip');
@@ -173,12 +174,12 @@ function showBack(){
 }
 function startSession(){
   const pool=curPool||[];
-  CARDS = STORE ? STORE.buildSession(pool,{idOf:c=>c.sk, dailyNew:DAILY_NEW}) : pool.slice();
+  CARDS = STORE ? STORE.buildSession(pool,{idOf:c=>c.sk, dailyNew:DAILY_NEW, reviewCap:ROUND_SIZE}) : pool.slice(0,ROUND_SIZE);
   idx=0; flipped=false; hinted=false;
   const rn=document.getElementById('roundNote');
   if(!pool.length){ document.getElementById('wmFront').innerHTML='<p class="wm-pos">這一級目前沒有字。</p>'; toFront(); if(rn) rn.innerHTML='本回合：'+esc(deckLabel()); return; }
   if(!CARDS.length){ renderDone(); if(rn) rn.innerHTML='本回合：'+esc(deckLabel())+'<br>今日複習已完成 🎉'; return; }
-  if(rn) rn.innerHTML='本回合：'+esc(deckLabel())+'<br>'+CARDS.length+' 張（新卡＋到期複習）· 全級共 '+pool.length+' 字';
+  if(rn) rn.innerHTML='本回合：'+esc(deckLabel())+'<br>'+CARDS.length+' 張（一回合最多 '+ROUND_SIZE+'：到期複習優先＋新卡）· 全級共 '+pool.length+' 字';
   render();
 }
 function renderDone(){
@@ -193,8 +194,33 @@ function renderDone(){
 function rate(grade){
   const c=CARDS[idx];
   try{ if(STORE) STORE.rate(c.sk, grade); }catch(e){}
-  if(idx>=CARDS.length-1){ startSession(); return; }
-  idx=(idx+1)%CARDS.length; flipped=false; hinted=false; render();
+  if(idx>=CARDS.length-1){ renderRoundComplete(); return; }
+  idx++; flipped=false; hinted=false; render();
+}
+// 一回合（最多 ROUND_SIZE 張）做完：不自動再開一回合（否則到期卡越滾越多、每天量暴增）。
+// 顯示完成畫面＋「再來一回合」按鈕；想多練才按，按了才建下一批。若已無到期/新卡則顯示今日完成。
+function renderRoundComplete(){
+  const done=CARDS.length;
+  // 唯讀預看下一回合是否還有卡（buildSession 只讀 peek、不改狀態）
+  let nextN=0;
+  try{ if(STORE){ nextN=STORE.buildSession(curPool||[],{idOf:c=>c.sk, dailyNew:DAILY_NEW, reviewCap:ROUND_SIZE}).length; } }catch(e){}
+  toFront();
+  const front=document.getElementById('wmFront'), back=document.getElementById('wmBack');
+  back.innerHTML='';
+  const fb=document.getElementById('flipBtn');
+  if(nextN>0){
+    front.innerHTML='<div class="wm-def">這一回合 '+done+' 張做完了，很棒！🎉</div>'+
+      '<div class="wm-pos">今天先到這裡就可以囉。想多練的話，按「再來一回合」會再給你一批（最多 '+ROUND_SIZE+' 張）。</div>';
+    if(fb){ fb.textContent='再來一回合（還有 '+Math.min(nextN,ROUND_SIZE)+' 張）↻'; fb.style.display='';
+      fb.onclick=()=>{ fb.textContent='翻面看答案 ↻'; fb.onclick=onFlip; startSession(); }; }
+  } else {
+    front.innerHTML='<div class="wm-def">這一回合 '+done+' 張做完，今天的複習也全部完成了 🎉</div>'+
+      '<div class="wm-pos">換個分級，或明天再回來（SRS 已記住你的進度）。</div>';
+    if(fb){ fb.textContent='重新開始這一級 ↻'; fb.style.display='';
+      fb.onclick=()=>{ fb.textContent='翻面看答案 ↻'; fb.onclick=onFlip; startSession(); }; }
+  }
+  document.getElementById('deckLine').innerHTML='本回合牌組：'+esc(deckLabel())+' · 完成';
+  const rn=document.getElementById('roundNote'); if(rn) rn.innerHTML='本回合：'+esc(deckLabel())+'<br>這一回合完成 ✓'+(nextN>0?('（還有約 '+nextN+' 張可練）'):'（今日複習已完成）');
 }
 function onFlip(){ hinted=hinted; showBack(); }
 function deckLabel(){
