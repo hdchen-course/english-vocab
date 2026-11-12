@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-13 00:44 數學島 equation strand #2（全島#29）收斂：math_equation_linear_one_var（一元一次方程式 移項與去係數，國中 t_mid）5/5 → equation strand 2/15
+- **frozen_sha `91d94c12f001d77f`**。DONE-GATE 六確定性 gate 全綠（per_page RESULT PASS 含本頁 5/5／scan PASS〔U+53F0 info〕／unit_schema 0 violation／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN 1544 refs）。視覺 QA：以 2x＋3＝11 示「移項變號」——slate 方程式＋綠色弧形箭頭把 ＋3 跨過等號、下一行 2x＝11 綠色「−3」＝8＋綠文字「移項要變號：＋3 跨過等號變成 −3」iPad 橫直四角色 render 簽核過（箭頭正確附著 +3→右側、無重疊/裁切、唯一綠=移項變號關係 #17、短句在 SVG 詳述在 caption #19、alt 與 SVG text 一致 #33）。4 claim kind=definition（c-transpose 移項變號、c-coefficient 去係數兩邊同除、c-both-sides 兩邊都有 x 先合併、c-bracket 去括號分配律），皆被 answer_evidence 引用。prereq=one-step-balance。全 .venv(sympy) 驗（teach 2x+3=11→4・3x+2=x+8→3・bracket 3(x−2)=9→5；practice 2x−5=7→6・4x+1=2x+9→4・2(x+3)=10→2）。
+- **4 MCQ（teach↔practice 方程式全不重疊避#10）**：Q1 2x−5=7→6〔誘答 1 移項沒變號／12 忘除係數／7 右邊〕／Q2 4x+1=2x+9→4〔誘答 5 移常數沒變號／8 忘除／9 右邊〕／Q3 移項要改變正負號〔誘答 照抄不變／改乘除／取倒數〕／Q4 2(x+3)=10→2〔誘答 7 去括號沒乘／5 把中間值當答／8 展開移項沒變號〕。四值/敘述兩兩相異（#29）、Q3 四選項平衡長度（避 length-cue）。
+- **收斂路徑（草稿後連抓 2 真缺陷，de-converge 2 次）**：初凍 a725cbc1（pedagogy length-cue 於 pre-freeze 先修 Q3）→**R1 抓 #10 teach↔practice 重疊（原 Q4 3(x−2)=9 與 teach/claim c-bracket 完全相同、Q1 3x−6=9 是其展開；panel 3/5 DEFECT）**→MCQ1/4 換成 2x−5=7/2(x+3)=10、更正 _note、重凍 d8c307d1→**R1 重跑抓量詞「一條方程式」港式（台灣標準「一個」；5/5 panel DEFECT；alt 箭頭「條」保留正確）**→改 alt、重凍 91d94c12→R1–R5 連 5 clean（confirmed 全 0、L3 皆 exit0、agents_error 全 0；R5 一 reviewer content-filter 曾於 #28 出現此處無）。
+- **里程碑**：★ 數學島 **equation（方程式）strand 2/15**（t_base 1/1 one-step-balance、t_mid 第 1 個 linear-one-var 收斂）。geom 39/39、algexpr 18/18、numquant 30/30 皆 COMPLETE。
+- **教訓（強化缺陷類）**：#10 teach↔practice 不重疊要連「展開後的中間式」一起算（3(x−2)=9 與其展開 3x−6=9 都算與 teach 重疊）；量詞台灣標準——方程式/算式/等式用「個/道」非港式「條」（但「條」形容線條/箭頭正確）；pedagogy length-cue 在 pre-freeze 先掃可省一輪。
+- **下一步**：equation t_mid 剩 9 個 KP。預設接 `math.t_mid.equation.linear-one-var-apply`（一元一次方程式的應用問題：列式與求解）。
+
 ## 2026-11-13 00:06 數學島 equation strand #1（全島#28）收斂：math_equation_one_step_balance（天平與等量公理雛形：一步填空方程式，國小 t_base）5/5 → equation strand 1/15
 - **frozen_sha `9b7216521d7d0a9c`**。DONE-GATE 六確定性 gate 全綠（per_page RESULT PASS 含本頁 5/5／scan PASS〔U+53F0 info〕／unit_schema 0 violation／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN 1544 refs）。視覺 QA：天平橫桿水平平衡＋左盤「□＋3」右盤「8」＋支點三角＋綠文字「兩邊一樣重＝平衡；兩邊同減 3 → □＝5」iPad 橫直四角色 render 簽核過（唯一綠=平衡關係 #17、短句在 SVG 詳述在 caption #19、alt 與 SVG text 一致 #33）。3 claim kind=definition（c-balance 等號兩邊一樣＝天平平衡、兩邊同加同減仍平衡＝等量公理；c-solve-add □＋a＝b 兩邊同減 a；c-solve-sub □−a＝b 兩邊同加 a），皆被 answer_evidence 引用。prereq=無（最基礎國小整數加減）。全整數加減手驗。
 - **4 MCQ（teach↔figure↔practice 數字全不重疊避#10）**：Q1 □+5=12→7〔誘答 17兩邊相加／5題中加的數／12等號右邊〕／Q2 □−4=9→13〔誘答 5兩邊相減／9右邊／4題中減的數〕／Q3 天平左加2→右也放上2公克〔誘答 拿掉2／放4／不用做〕／Q4 □+a=b 解法=同減那個加上去的數〔誘答 同加／只減左邊／同乘〕。四值/敘述兩兩相異（#29）。只用 □、＋、−、＝（國小已教符號，無 ≥＜#2）。
