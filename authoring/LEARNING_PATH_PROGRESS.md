@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 10:22 數學島 geom t_mid #4 收斂：math_geom_triangle_angle_exterior（三角形內角和與外角定理，國中）5/5 → geom strand 16/39（t_mid 4/20）
+- **frozen_sha `818d8754f6ddf641`**，DONE-GATE 六確定性 gate 全綠（per_page 403/403 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：三角形（灰）＋底邊延長虛線＋頂點/左下內角弧（slate）＋右下外角綠弧（掃過延長線與斜向邊之間的真外角）iPad 橫直四角色 render 簽核過。2 claim kind=definition（c-angle-sum 三內角和180；c-exterior 外角=不相鄰兩內角和、外角+相鄰內角=180），皆被 practice answer_evidence 引用。★t_mid 國中：用度（°）。prereq=angle-relations。全 sympy 驗（180−50−60=70、外角 40+75=115、相鄰內角 180−115=65）。
+- **4 MCQ**：Q1 兩內角50/60→第三內角=70〔誘答 110(相加)/80/60(給定值)〕／Q2 外角定理：不相鄰兩內角40/75→外角=115〔誘答 65(相鄰內角)/35(相減)/140〕／Q3 三內角和=180度〔誘答 90/360/270〕／Q4 外角定理=和它不相鄰的兩個內角的和〔誘答 三內角和/相鄰那一內角/最大內角〕。
+- **收斂路徑（R1 抓 2 blocker、R2 抓 1 major、R3–R7 連 5 clean、3 次重凍）**：pre-freeze 六類 gate 全綠（含 sympy 驗＋三角形外角 SVG render）→ 初凍 401d768d → **R1**（2 blocker 14-agent panel：(1) 幾何 a-wrong 7 鏡——SVG 外角綠弧終點未達斜向邊、只畫 ~49° 而非真外角 ~133°；(2) b-hard——claim 括號「算出來一樣是 115」懸空誤讀成相鄰內角=115）→ 修外角弧終點落在邊上掃真外角＋改寫補述寫明代入、重凍 a3ed02ed → **R2**（1 major a-wrong 7 鏡：alt 用「斜邊」稱非直角三角形的斜向邊＝術語誤用）→ 改中性說法、重凍 818d8754 → R3–R7 連 5 clean（L3 皆 exit0、agents_error 全 0）。
+- **教訓（banked 候選）★★**：(a) SVG 角弧兩端點必須正好落在構成該角的兩條射線上，否則畫錯角度（panel 當 a-wrong 幾何錯非配色；缺陷類#21 延伸）。(b)「斜邊」(hypotenuse) 專指直角三角形對直角的邊，勿用來稱一般三角形的斜向邊（a-wrong 術語誤用）。(c) 多步推導的括號補述省略主詞易被最近名詞吸走→誤讀，要寫明每步代入值。
+- **里程碑**：數學島 geom（幾何）strand **16/39**（t_base 12/12、t_mid 4/20）。algexpr strand 已 18/18 COMPLETE。本 session 已上線 geom #7–#12＋t_mid #1–#4。
+- **下一步**：geom t_mid #5＝`math.t_mid.geom.triangle-congruence`（三角形全等判別 SSS/SAS/ASA/AAS/RHS），續 t_mid 依序。
+
 ## 2026-11-12 09:45 數學島 geom t_mid #3 收斂：math_geom_angle_relations（角的關係：對頂角/同位角/內錯角/同側內角，國中）5/5 → geom strand 15/39（t_mid 3/20）
 - **frozen_sha `77e5f80143976b28`**，DONE-GATE 六確定性 gate 全綠（per_page 402/402 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：兩平行線（平行箭號）＋截線（slate）＋上下交點同位角綠弧（位置相同）iPad 橫直四角色 render 簽核過。2 claim kind=definition（c-intersect 對頂角相等、鄰角互補；c-parallel-cut 同位角/內錯角相等、同側內角互補），皆被 practice answer_evidence 引用。★t_mid 國中：用度（°）。prereq=construction-perp-parallel。角度關係全 numpy 坐標驗（70°：對頂角=70、同位角=70、內錯角=70、同側內角和=180、鄰角=110）。★術語用台灣課綱標準「同側內角」（非 PRC 的「同旁內角」）。
 - **4 MCQ**：Q1 對頂角：一角70°→對頂角=70〔誘答 110(補角)/20(餘角)/35(一半)〕／Q2 同位角：平行線被截一角65°→同位角=65〔誘答 115(同側內角/補角)/25(餘角)/130(兩倍)〕／Q3 內錯角關係=兩個角一定完全相等〔誘答 和180/和90/兩倍〕／Q4 同側內角關係=加起來180度〔誘答 相等/和90/兩倍〕。
