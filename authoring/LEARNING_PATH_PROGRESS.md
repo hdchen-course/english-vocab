@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 10:51 數學島 geom t_mid #5 收斂：math_geom_triangle_congruence（三角形全等判別 SSS/SAS/ASA/AAS/RHS，國中）5/5 → geom strand 17/39（t_mid 5/20）
+- **frozen_sha `2bbc294d578d5716`**，DONE-GATE 六確定性 gate 全綠（per_page 404/404 含本頁 5/5／scan PASS〔U+53F0「台」為臺異體 info 級非簡體〕／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：兩全等三角形（灰）＋綠色 ≅ 符號、頂點 A/B/C 與 A′/B′/C′ 標示 iPad 橫直四角色 render 簽核過（初凍前完成）。2 claim kind=definition（c-congruence-def 全等＝形狀大小都相同、可完全疊合、對應邊角相等、與相似區分；c-criteria 判別法 SSS/SAS/ASA/AAS＋直角三角形 RHS、AAA 只相似、SSA 歧義），皆被 practice answer_evidence 引用。★t_mid 國中：可用全等（≅）、對應邊/角、夾角、夾邊、斜邊、股、SSS/SAS/ASA/AAS/RHS 代號（台灣標準）。prereq=triangle-angle-exterior。全等判別概念 sympy 驗（SSS 同三邊⇒對應角相同=全等、AAA 同角不同邊長=相似非全等、SSA 歧義）。
+- **4 MCQ**：Q1 全等的意思=形狀和大小都一樣能完全疊合〔誘答 形狀一樣大小可不同(相似)/面積剛好一樣/至少一個角相同〕／Q2 哪組可判定全等=三組對應邊相等(SSS)〔誘答 三角相等(AAA只相似)/只一組對應邊/兩邊加非夾角(SSA歧義)〕／Q3 哪組『不能』保證全等=三角相等(AAA)〔誘答 SSS/SAS/ASA 皆可〕／Q4 RHS 用在哪種三角形=直角三角形〔誘答 任何三角形/只正三角形/只鈍角三角形〕。
+- **收斂路徑（R1–R6，5 consecutive clean 達成）**：pre-freeze 六類 gate 全綠（含 sympy 判別驗＋兩全等三角形 SVG render；★教訓：Q1 選項長度『齊化到全相同』觸發 pedagogy_gate uniform-distractor cue→改回有變化分佈、正解落在誘答長度分佈之內）→ 凍 2bbc294d → R1 clean（唯一 raw「只有一組對應邊分別相等而已」之『分別』語感 panel 5/5 判 NOT A DEFECT）→ R2 clean → R3 clean → **R4 內容乾淨但 L3 深度 FAIL（anchor 僅達 52%、reviewer skim top）→ 判 INVALID 不計 streak、重跑**→ R5 clean（anchor 深度達 83%）→ R6 clean。5 clean＝R1/R2/R3/R5/R6（同 sha、L3 皆 exit0、agents_error 全 0）。
+- **教訓（已入記憶 defect-classes）**：(a) Q1 概念題誘答『齊化到全部等長』會觸發 pedagogy_gate 的 uniform-distractor cue（誘答全同長、正解成唯一離群）——正解應落在誘答長度分佈『之內』而非讓誘答全部等長（#20 的孿生面向）。(b) content_audit reviewer anchor 常集中檔案前半（深度僅 ~52%）→ L3 深度 FAIL＝coverage-proof 不足非內容缺陷（#5/#11）；prompt 明確要求第三 anchor 落在 75% 以下深層（如末段 distractor_rationales/selfeval_note）可根治，重跑一輪即過。
+- **里程碑**：數學島 geom（幾何）strand **17/39**（t_base 12/12、t_mid 5/20）。algexpr strand 已 18/18 COMPLETE。本 session 已上線 geom #7–#12＋t_mid #1–#5。
+- **下一步**：geom t_mid #6＝`math.t_mid.geom.triangle-inequality`（三角形的邊角關係、兩邊和大於第三邊），續 t_mid 依序。
+
 ## 2026-11-12 10:22 數學島 geom t_mid #4 收斂：math_geom_triangle_angle_exterior（三角形內角和與外角定理，國中）5/5 → geom strand 16/39（t_mid 4/20）
 - **frozen_sha `818d8754f6ddf641`**，DONE-GATE 六確定性 gate 全綠（per_page 403/403 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：三角形（灰）＋底邊延長虛線＋頂點/左下內角弧（slate）＋右下外角綠弧（掃過延長線與斜向邊之間的真外角）iPad 橫直四角色 render 簽核過。2 claim kind=definition（c-angle-sum 三內角和180；c-exterior 外角=不相鄰兩內角和、外角+相鄰內角=180），皆被 practice answer_evidence 引用。★t_mid 國中：用度（°）。prereq=angle-relations。全 sympy 驗（180−50−60=70、外角 40+75=115、相鄰內角 180−115=65）。
 - **4 MCQ**：Q1 兩內角50/60→第三內角=70〔誘答 110(相加)/80/60(給定值)〕／Q2 外角定理：不相鄰兩內角40/75→外角=115〔誘答 65(相鄰內角)/35(相減)/140〕／Q3 三內角和=180度〔誘答 90/360/270〕／Q4 外角定理=和它不相鄰的兩個內角的和〔誘答 三內角和/相鄰那一內角/最大內角〕。
