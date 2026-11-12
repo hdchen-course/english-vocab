@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 09:07 數學島 geom t_mid #2 收斂：math_geom_construction_perp_parallel（尺規作圖：過點作垂線、平行線，國中）5/5 → geom strand 14/39（t_mid 2/20）
+- **frozen_sha `ade36d3362362f02`**，DONE-GATE 六確定性 gate 全綠（per_page 401/401 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：左過 P 垂線（綠虛線落在灰線上＋直角標記）／右過 P 平行線（綠虛線與原線平行、標籤貼綠線）iPad 橫直四角色 render 簽核過。2 claim kind=definition（c-perp-through-point 過 P 垂線＝通過 P 且垂直原線、唯一；c-parallel-through-point 過線外 P 平行線＝通過 P 且平行原線、平行＝同平面永不相交、過線外一點恰一條平行線＝平行公理），皆被 practice answer_evidence 引用。★t_mid 國中：重作圖結果特徵與唯一性，非逐步作圖動畫。prereq=construction-bisector。性質全 sympy 驗（過 P(3,2) 對 x 軸的垂線⊥原線且過 P、平行線∥原線且過 P）。
+- **4 MCQ**：Q1 過P作垂線特徵=通過P且垂直已知直線〔誘答 通過P但平行/垂直但不過P/通過P且重疊〕／Q2 過P作平行線特徵=通過P且平行已知直線〔誘答 通過P且垂直/通過P且相交/平行但不過P〕／Q3 過線外一點能作幾條平行線=只有一條（平行公理）〔誘答 兩條/無數條/一條都作不出來〕／Q4『兩直線平行』的意思=在同一平面上永遠不會相交〔誘答 長度一定一樣/相交成直角/一上一下排列〕。
+- **收斂路徑（R1/R2 各抓 1 minor、R3–R7 連 5 clean、2 次重凍）**：pre-freeze 六類 gate 全綠（含 sympy 性質驗＋雙圖 SVG render，render 修垂線碎片）→ 初凍 3a845d7e → **R1**（1 minor：Q4 正解唯一帶「在同一平面上」限定詞且最長＝completeness cue，同缺陷類#20）→ 加長三誘答至 ~14 字、保留必要限定詞（不照建議刪，刪了失精確：平面外兩線可不相交但不平行）→ 重凍 84d66acc → **R2**（1 minor：PP-mcq-2 誘答「…相交於一點」~17字 為長度離群，owner=learning decisive、4 鏡 NOT 因離群在誘答）→ 收斂為「…相交」使四選項齊長 → 重凍 ade36d33 → R3–R7 連 5 clean（L3 皆 exit0、agents_error 全 0）。
+- **教訓（已入 #20/#21）★**：content_audit learning 鏡對「任何可見長度離群」都判 b-hard——即使離群在誘答（非正解、不會 cue 正解）、即使 pedagogy_gate 的 1.5× 比例閾值放行；故草稿期四選項一律齊長。必要的定義限定詞（如「在同一平面上」）不可為了消 cue 而刪——改加長其他選項。
+- **里程碑**：數學島 geom（幾何）strand **14/39**（t_base 12/12、t_mid 2/20）。algexpr strand 已 18/18 COMPLETE。本 session 已上線 geom #7–#12＋t_mid #1/#2。
+- **下一步**：geom t_mid #3＝`math.t_mid.geom.angle-relations`（角的關係：對頂角/同位角/內錯角/同旁內角與平行線性質），續 t_mid 依序。
+
 ## 2026-11-12 08:31 數學島 geom t_mid #1 收斂：math_geom_construction_bisector（尺規作圖：中垂線與角平分線，國中）5/5 → geom strand 13/39（t_mid 1/20 開跑）
 - **frozen_sha `1942d2481aa6e398`**，DONE-GATE 六確定性 gate 全綠（per_page 400/400 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：左線段＋中垂線（綠虛線＋直角標記＋中點）／右角＋角平分線（綠虛線在兩邊中間、標籤貼綠線）iPad 橫直四角色 render 簽核過。3 claim kind=definition（c-tools 尺規＝圓規＋無刻度直尺；c-perp-bisector 中垂線＝垂直且過中點、線上每點到兩端等距、逆命題成立；c-angle-bisector 角平分線＝把角分兩相等角、線上每點到兩邊等距），皆被 practice answer_evidence 引用。★t_mid 國中：線對稱概念具體、中垂線/角平分線性質。prereq=symmetry（中垂線是線段的對稱軸）。性質全 sympy 驗（(2,5)到(0,0)(4,0)皆√29；中垂線 x=2 垂直 AB 且過中點 (2,0)；角平分線 y=x 上 (3,3) 到兩軸皆 3）。
 - **4 MCQ**：Q1 尺規作圖工具=圓規和一把沒有刻度的直尺〔誘答 圓規和有刻度直尺(有刻度 vs 沒刻度鑑別點)/量角器和有刻度直尺/三角板和量角器〕／Q2 中垂線上任一點性質=到 A、B 距離相等〔誘答 到A比到B近/一定在線段AB上/到直線AB距離固定〕／Q3 中垂線和線段AB的關係=垂直且過中點〔誘答 只過中點不垂直/只垂直不一定過中點/平行不相交〕／Q4 角平分線上任一點性質=到角兩邊距離相等〔誘答 到頂點距離固定/把兩邊長度等分/離頂點越遠差越大〕。
