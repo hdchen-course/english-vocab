@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 11:47 數學島 geom t_mid #7 收斂：math_geom_isosceles_equilateral（等腰三角形與正三角形性質，國中）5/5 → geom strand 19/39（t_mid 7/20）
+- **frozen_sha `67b39ca271d7dc19`**，DONE-GATE 六確定性 gate 全綠（per_page 406/406 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：灰色等腰三角形＋頂點 A（頂角）/B/C＋兩腰綠色等長記號＋兩底角綠弧（綠＝相等唯一意義色）iPad 橫直四角色 render 簽核過。3 claim kind=definition（c-isosceles-base-angles 等邊對等角、c-three-lines-one 三線合一、c-equilateral 正三角形 60°為等腰特例）；前二與 c-equilateral 中 c-isosceles-base-angles/c-equilateral 被 practice answer_evidence 引用，c-three-lines-one 為 teach-only 支援性 claim（pedagogy parity-advisory、panel R1–R5 皆未判缺陷）。★t_mid 國中：用度（°）。prereq=triangle-inequality。全 numpy 驗（等腰 AB=AC=5 底 6→兩底角 53.1° 頂角 73.7°、頂角 80°→底角 50°、正三角形三角都 60°、正三角形為等腰特例）。
+- **4 MCQ**：Q1 兩腰相等導致=兩個底角相等〔誘答 三內角都相等(正三角形才有)/兩底角和180/底邊和腰一樣長〕／Q2 頂角80°底角=50〔誘答 100(忘除2)/80(抄頂角)/40(頂角一半)〕／Q3 正三角形每內角=60〔誘答 90/45/180〕／Q4 正三角形與等腰關係=正三角形是特別的等腰三角形〔誘答 兩者無關/等腰都是正三角形(反了)/正三角形三角不相等〕。
+- **收斂路徑（R1–R5 連 5 clean、0 次重凍）**：pre-freeze 六類 gate 全綠（含 numpy 驗＋等腰 SVG render；★pedagogy 初版抓 IE-mcq-4 僅正解帶括號補述「（三邊都相等）」＝詳細度 cue→移除括號、資訊留 feedback/rationale 後 CLEAN）→ 凍 67b39ca2 → R1–R5 連 5 clean（confirmed 全 0、L3 皆 exit0、agents_error 全 0；panel 正確放行 c-three-lines-one teach-only claim 不當缺陷）。本單元 draft 一次到位、無內容重凍，顯示 defect-class 累積（#20 括號 cue／#25 邊標／#26 rationale 前提）已在草稿期有效避開。
+- **里程碑**：數學島 geom（幾何）strand **19/39**（t_base 12/12、t_mid 7/20）。algexpr strand 已 18/18 COMPLETE。本 session 已上線 geom #7–#12＋t_mid #1–#7。
+- **下一步**：geom t_mid #8＝待查 KP 順序（候選 `math.t_mid.geom.quadrilateral-properties` 四邊形性質 或 `math.t_mid.geom.pythagorean` 畢氏定理），續 t_mid 依序。
+
 ## 2026-11-12 11:26 數學島 geom t_mid #6 收斂：math_geom_triangle_inequality（三角形邊角關係與兩邊和大於第三邊，國中）5/5 → geom strand 18/39（t_mid 6/20）
 - **frozen_sha `42c8b42f1c4d95a9`**，DONE-GATE 六確定性 gate 全綠（per_page 405/405 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：灰色三角形＋頂點 A/B/C＋邊 a/b/c（符合邊a對角A：左 AC 邊 b、右 BC 邊 a、底 AB 邊 c）＋綠色 a+b>c 不等式 iPad 橫直四角色 render 簽核過（R1 修標籤後重 render）。3 claim kind=definition（c-two-sides-sum 任兩邊和>第三邊三組都成立、c-third-side-range 兩邊差<第三邊<兩邊和、c-side-angle 大邊對大角大角對大邊），皆被 practice answer_evidence 引用。★t_mid 國中：可用不等式符號 >、<。prereq=triangle-congruence。全 sympy/numpy 驗（2,3,5 因 2+3 不大於 5 拼不成、3,4,5／6,8,10／4,4,7 可拼成；兩邊 5,8 第三邊 3<c<13；邊 3,4,5 對角 36.9/53.1/90 大邊對大角）。
 - **4 MCQ**：Q1 任意兩邊和與第三邊=一定大於第三邊〔誘答 一定小於/一定等於/可能大可能小〕／Q2 哪組不能拼成三角形=2,3,5（2+3 不大於 5）〔誘答 3,4,5／6,8,10／4,4,7 都可以〕／Q3 兩邊 5,8 第三邊可以是=10〔誘答 3(=差)/13(=和)/2(比差小)〕／Q4 最長邊對的角=最大的角〔誘答 最小的角/一定直角/和別的角一樣大〕。
