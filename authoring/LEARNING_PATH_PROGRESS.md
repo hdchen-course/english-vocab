@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 09:45 數學島 geom t_mid #3 收斂：math_geom_angle_relations（角的關係：對頂角/同位角/內錯角/同側內角，國中）5/5 → geom strand 15/39（t_mid 3/20）
+- **frozen_sha `77e5f80143976b28`**，DONE-GATE 六確定性 gate 全綠（per_page 402/402 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：兩平行線（平行箭號）＋截線（slate）＋上下交點同位角綠弧（位置相同）iPad 橫直四角色 render 簽核過。2 claim kind=definition（c-intersect 對頂角相等、鄰角互補；c-parallel-cut 同位角/內錯角相等、同側內角互補），皆被 practice answer_evidence 引用。★t_mid 國中：用度（°）。prereq=construction-perp-parallel。角度關係全 numpy 坐標驗（70°：對頂角=70、同位角=70、內錯角=70、同側內角和=180、鄰角=110）。★術語用台灣課綱標準「同側內角」（非 PRC 的「同旁內角」）。
+- **4 MCQ**：Q1 對頂角：一角70°→對頂角=70〔誘答 110(補角)/20(餘角)/35(一半)〕／Q2 同位角：平行線被截一角65°→同位角=65〔誘答 115(同側內角/補角)/25(餘角)/130(兩倍)〕／Q3 內錯角關係=兩個角一定完全相等〔誘答 和180/和90/兩倍〕／Q4 同側內角關係=加起來180度〔誘答 相等/和90/兩倍〕。
+- **收斂路徑（R1/R2 各抓 1 缺陷、R3–R7 連 5 clean、2 次重凍）**：pre-freeze 六類 gate 全綠（含角度 numpy 驗＋同位角 SVG render）→ 初凍 25f5ce37 → **R1**（1 major 7 鏡全 DEFECT：Q3 正解「兩個角一定相等」(7字) 長度離群＋與 Q4「完全相等」不一致）→ 改齊、重凍 ab7dc497 → **R2**（1 major domain a-wrong 7 鏡全 DEFECT：★「同旁內角」＝中國 PRC 用語，台灣課綱標準為「同側內角」——全檔 24 處＋HTML 標題＋KP 標題全域替換，class-wide 掃描 live repo 零殘留）→ 重凍 77e5f80 → R3–R7 連 5 clean（L3 皆 exit0、agents_error 全 0）。
+- **教訓（banked #22）★★**：台灣課綱幾何術語 same-side interior angles＝「同側內角」非「同旁內角」（後者 PRC）＝a-wrong（教錯害人）；建任何學科單元用專有術語時查「台灣慣用名」而非憑記憶，尤其角/幾何/物理兩岸常不同；改完 grep class-wide 掃全站殘留（排除 .claude/worktrees 其他 session）含 KP manifest。這是本 session 首個真正確性缺陷，panel domain 鏡正確攔下。
+- **里程碑**：數學島 geom（幾何）strand **15/39**（t_base 12/12、t_mid 3/20）。algexpr strand 已 18/18 COMPLETE。本 session 已上線 geom #7–#12＋t_mid #1/#2/#3。
+- **下一步**：geom t_mid #4＝`math.t_mid.geom.triangle-angle-exterior`（三角形內角和與外角定理），續 t_mid 依序。
+
 ## 2026-11-12 09:07 數學島 geom t_mid #2 收斂：math_geom_construction_perp_parallel（尺規作圖：過點作垂線、平行線，國中）5/5 → geom strand 14/39（t_mid 2/20）
 - **frozen_sha `ade36d3362362f02`**，DONE-GATE 六確定性 gate 全綠（per_page 401/401 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：左過 P 垂線（綠虛線落在灰線上＋直角標記）／右過 P 平行線（綠虛線與原線平行、標籤貼綠線）iPad 橫直四角色 render 簽核過。2 claim kind=definition（c-perp-through-point 過 P 垂線＝通過 P 且垂直原線、唯一；c-parallel-through-point 過線外 P 平行線＝通過 P 且平行原線、平行＝同平面永不相交、過線外一點恰一條平行線＝平行公理），皆被 practice answer_evidence 引用。★t_mid 國中：重作圖結果特徵與唯一性，非逐步作圖動畫。prereq=construction-bisector。性質全 sympy 驗（過 P(3,2) 對 x 軸的垂線⊥原線且過 P、平行線∥原線且過 P）。
 - **4 MCQ**：Q1 過P作垂線特徵=通過P且垂直已知直線〔誘答 通過P但平行/垂直但不過P/通過P且重疊〕／Q2 過P作平行線特徵=通過P且平行已知直線〔誘答 通過P且垂直/通過P且相交/平行但不過P〕／Q3 過線外一點能作幾條平行線=只有一條（平行公理）〔誘答 兩條/無數條/一條都作不出來〕／Q4『兩直線平行』的意思=在同一平面上永遠不會相交〔誘答 長度一定一樣/相交成直角/一上一下排列〕。
