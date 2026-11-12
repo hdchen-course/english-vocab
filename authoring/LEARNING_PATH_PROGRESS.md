@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-13 07:30 數學島 equation strand #13（全島#40）收斂：math_equation_quadratic_param_range（判別式反求參數，高中 t_adv）5/5 → equation strand 13/15
+- **frozen_sha `41866d617df52ed2`**（R1 修後）。DONE-GATE 六確定性 gate 全綠。視覺 QA：反求參數 figure——slate 框「要重根 → 令 D＝0」＋綠色向下箭頭＋綠框兩行「k²－36＝0」「k＝6 或 k＝－6」＋綠文字「由『要重根』反推 k」iPad 橫直四角色 render 簽核過（k²/x²/D＞0/D＜0/≤/－ 皆清晰、箭頭貼合、無 ＝0＝ 鏈、唯一綠=反求參數 #17、alt 逐字一致 #33）。3 claim kind=definition（c-param-rule 三根況對應 D 正負、c-param-equal 令 D＝0 求值、c-param-range 令 D＞0 求範圍且相異嚴格不含等號）。prereq=quadratic-discriminant＋quadratic-formula。全 .venv(sympy) 驗（teach x²＋kx＋9 重根 k＝±6、x²－4x＋k 兩相異 k＜4；practice Q1 x²＋6x＋k 重根 k＝9、Q2 x²＋2x＋k 兩相異 k＜1、Q4 x²－kx＋4 重根 k＝±4）。
+- **4 MCQ（teach↔practice 方程式與數字全不重疊避#10，且與 #7–#12 單元亦不重疊）**：Q1 重根求值（x²＋6x＋k→9〔誘答 36 b²未除4／6 用 b／18 36的一半〕）／Q2 兩相異求範圍（x²＋2x＋k→k＜1〔誘答 k＞1 不等號反／k≤1 含重根等號／k＝1 D=0 重根〕四選項各 3 字長度齊）／Q3 無實根概念（答 D＜0〔誘答 D＞0/D＝0/D≥0〕各 3 字）／Q4 重根含負（x²－kx＋4→4 或 －4〔誘答 只有 4 漏負根／2 或 －2 開平方錯／16 或 －16 忘開平方〕）。四選項長度均衡（#20/#28）、數值/敘述兩兩相異（#29）。
+- **收斂路徑（1 次修，無 de-converge）**：草稿凍 8299eaae→R1 抓 can_do 把參數 k 誤稱「未知數」（台灣課本 未知數=要解的 x、k 是參數；7 鏡 major 術語 #22）→rounds 空直接編輯、改「未知參數 k」、重凍 41866d61、can_do 於頂部 banner render 已驗→R1–R5 連 5 clean。
+- **★里程碑**：數學島 **equation（方程式）strand 13/15**（t_adv 收第 2 個）。equation 僅剩 t_adv 2 個 KP（poly-equation-complex-roots／exp-log）。geom 39/39、algexpr 18/18、numquant 30/30 皆 COMPLETE。
+- **下一步**：equation t_adv `math.t_adv.equation.poly-equation-complex-roots`（多項式方程式與複數根，高中）。收完剩 2 個 → equation strand 15/15 完結 → 其他 math strand。
+
 ## 2026-11-13 07:05 數學島 equation strand #12（全島#39）收斂：math_equation_quadratic_vieta（根與係數關係／韋達定理，高中 t_adv）5/5 → equation strand 12/15 ★ equation t_adv 開跑
 - **frozen_sha `393f429d63ee520d`**（de-converge 後最終）。DONE-GATE 六確定性 gate 全綠（per_page RESULT PASS 含本頁 5/5／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：根與係數對應 figure——slate 框「ax²＋bx＋c＝0（兩根 α、β）」＋綠色向下箭頭＋綠框兩行「α＋β＝－b/a」「αβ＝c/a」＋綠文字「不必解方程式就知道兩根的和與積」iPad 橫直四角色 render 簽核過（α/β/x²/－/分數 /皆清晰、箭頭貼合、唯一綠=根與係數對應 #17、alt 兩行與 SVG text 逐字一致 #33、滿版卡片無置中窄島）。3 claim kind=definition（c-vieta-sum 和＝－b/a、c-vieta-prod 積＝c/a、c-vieta-build 反推方程式 x²－(和)x＋(積)＝0）。prereq=quadratic-formula＋quadratic-factor。全 .venv(sympy) 驗（teach x²－5x＋6 和5積6、2x²＋3x－2 和－3/2積－1；practice Q1 x²－12x＋35 和12、Q2 x²＋4x＋3 積3、Q4 和8積15→x²－8x＋15）。
 - **4 MCQ（teach↔practice 方程式與數字全不重疊避#10，且與 #7/#8/#9/#10/#11 單元亦不重疊）**：Q1 算兩根和（x²－12x＋35→12〔誘答 －12 忘變號用 b／35 用 c（積）／－35 常數變號〕）／Q2 算兩根積（x²＋4x＋3→3〔誘答 －4 答成和／－3 符號反／4 用 b〕）／Q3 根與係數用處概念（答 兩根的和與積〔誘答 每個根各是多少／有幾個實根＝判別式／方程式的次數〕）／Q4 由和8積15反推方程式（答 x²－8x＋15＝0〔誘答 ＋8x 沒變號／－15x＋8 和積放錯位／＋8x－15 兩符號都錯〕）。四選項長度均衡（Q1 已改 x²－12x＋35 使 12 非唯一最短 #20/#28）、數值兩兩相異（#29）。
