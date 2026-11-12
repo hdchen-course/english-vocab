@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-12 18:54 數學島 geom t_mid #19 收斂：math_geom_center_orthocenter（三角形的垂心與高，國中）5/5 → geom strand 31/39（t_mid 19/20）
+- **frozen_sha `32e434cff6a2ee65`**。DONE-GATE 六確定性 gate 全綠（per_page 418/418 含本頁 5/5／scan PASS〔U+53F0 info〕／unit_schema exit0／question_correctness CLEAN 2241 題／pedagogy 0 hard／audio_exist CLEAN 1544 refs）。視覺 QA：灰色銳角不等邊三角形 ABC（角 72.3/49.9/57.8 刻意非直角非等腰避特例 #31）＋三條綠色高（頂點⊥對邊）交於垂心 H（slate）＋三個垂足綠色直角記號（含 `<path d>` 包裹 #32）＋綠文字「三條高交於垂心 H；每條高都垂直於它的對邊」iPad 橫直四角色 render 簽核過（唯一綠＝高與直角 #17、記號落垂足 #23）。3 claim kind=definition（c-orthocenter-def 垂心＝三高交點、c-altitude-perp 高⊥對邊、c-position 銳角內/直角頂點/鈍角外），皆被 answer_evidence 引用。★四心對比收尾（外心垂直平分線到頂點／內心角平分線到邊／重心中線 2∶1／垂心高⊥對邊）。prereq=center-centroid。全 .venv(numpy) 驗（H＝兩高交點驗 AH⊥BC、BH⊥CA；銳角 H 內部、直角 H＝直角頂點、鈍角 100° H 外部）。
+- **4 MCQ**：Q1 垂心=頂點到對邊的高線交點〔誘答 角平分線=內心／垂直平分線=外心／中線=重心〕／Q2 高和對邊關係=互相垂直〔誘答 互相平行／長度相等／通過中點〕／Q3 直角三角形垂心=直角的頂點〔誘答 斜邊中點=外心／內部=銳角／外部=鈍角，cleanly false〕／Q4 三高畫出來=交於同一點〔誘答 永遠不相交／兩兩都平行／兩條才相交〕。四選項 len 齊、四值相異。
+- **收斂路徑（初凍 1b58567b→R1 抓 Q3「兩條股」未教先用術語→修→重凍 32e434cf→R1–R5 連 5 clean）**：R1 panel（owned-criterion b-hard）判 Q3 distractor_rationale 用「兩條股」＝國中直角三角形兩股術語未在本單元/allowed-terminology 教先用。依正確性第一＋未教先用鐵律，de-converge 清 rounds 回 harvest、兩處「兩條股」→「兩條直角邊」（台灣課本標準自解）、重凍 32e434cff6a2ee65 → R1–R5 連 5 clean（confirmed 全 0、L3 皆 exit0、agents_error 全 0；最後對抗式 numpy/繁體/術語/誘答門亦 0）。
+- **里程碑**：數學島 geom（幾何）strand **31/39**（t_base 12/12、t_mid 19/20）。algexpr strand 已 18/18 COMPLETE。本 session 收斂 geom t_mid #11–#19。
+- **下一步**：geom t_mid 剩最後 1 個 KP＝`math.t_mid.geom.proof-writing`（幾何證明推理與書寫）→ 收斂後 t_mid 20/20 COMPLETE。預設取 proof-writing。
+
 ## 2026-11-12 18:20 數學島 geom t_mid #18 收斂：math_geom_center_centroid（三角形的重心與中線，國中）5/5 → geom strand 30/39（t_mid 18/20）
 - **frozen_sha `fbd4025e1e86e9b1`**。DONE-GATE 六確定性 gate 全綠（per_page 417/417／scan PASS／unit_schema exit0／question_correctness CLEAN／pedagogy 0 hard／audio_exist CLEAN）。視覺 QA：灰色銳角不等邊三角形 ABC（83.9/50.7/45.4 避特例 #31）＋三條綠色中線交於重心 G（slate）＋三邊中點成對等長記號（含 `<path d>` 包裹，R1 修裸-path 不渲染後實測顯示）＋一條中線標綠 2/1（2∶1）＋綠文字「三中線交於重心 G；頂點到 G ∶ G 到中點 ＝ 2 ∶ 1」iPad 橫直四角色 render 簽核過。3 claim kind=definition（c-centroid-def 重心＝三中線交點、c-ratio 分 2∶1＝頂點到重心 2/3、c-position 恆在內部平衡點），皆被 answer_evidence 引用。prereq=center-incenter。全 .venv(numpy) 驗（G=(A+B+C)/3 落三中線、分 2∶1、頂點到 G=2/3、恆內部）。
 - **4 MCQ**：Q1 重心=頂點到對邊的中線交點〔誘答 內心/外心/垂心〕／Q2 分中線比=2比1〔誘答 1比1/3比1/1比2〕／Q3 頂點到重心=三分之二〔誘答 1/2、1/3、3/4〕／Q4 落在哪=一定在三角形內部〔誘答 鈍角外部/直角斜邊/一定會落在某邊上，皆 cleanly false〕。四選項 len 齊、四值相異。
