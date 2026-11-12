@@ -135,6 +135,27 @@ def load_oxford():
                     any_lv.setdefault(k, set()).add(lv)
     return any_lv
 
+# ---------- Supplementary CEFR（kamome cefr-highlight index；僅補 authoritative 全缺的進階字）----------
+# 來源：github.com/kamome1037/cefr-highlight server/data/cefr_index.json（社群彙編，72k 詞）。
+# ★正確性守則：此源低端(A1/A2/B1)標註對「本就不在 CEFR-J/Oxford(A1–C1)/octanove 的罕用字」明顯不可靠
+#   （實測 copulate→A1、annul→A2、burnish→A2），且與權威清單的沉默矛盾。故 **只接受 B2/C1/C2**，
+#   低端一律丟棄（該字誠實留 unclassified）。僅用於 authoritative 全部落空的字，絕不覆蓋 authoritative。
+def load_supplementary():
+    any_lv = {}  # na-key -> set(levels)
+    p = os.path.join(SRC, "kamome_cefr_index.json")
+    if not os.path.exists(p):
+        return any_lv
+    d = json.load(open(p, encoding="utf-8"))
+    for term, entries in d.items():
+        k = na(term)
+        if not k:
+            continue
+        for e in (entries or []):
+            lv = (e.get("level") or "").strip().upper()
+            if lv in CEFR_ORDER:
+                any_lv.setdefault(k, set()).add(lv)
+    return any_lv
+
 # ---------- GEPT (High-Intermediate PDF: all 3 levels, per-word) ----------
 def load_gept():
     import pdfplumber
@@ -217,6 +238,7 @@ def main():
     cards = [json.loads(l) for l in open(CARDS, encoding="utf-8")]
     cefr_by_pos, cefr_any = load_cefr()
     oxford = load_oxford()
+    suppl = load_supplementary()
     gept = load_gept()
     yle = load_yle()
     tsl = load_tsl()
@@ -258,6 +280,15 @@ def main():
                 if k in oxford: ox |= oxford[k]
             if ox:
                 cefr = min(ox, key=CEFR_ORDER.index); cefr_src = "oxford"
+            else:
+                # supplementary（kamome）：僅補 authoritative 全缺的進階字；只接受 B2/C1/C2，
+                # 低端(A1/A2/B1)對罕用字不可靠（見 load_supplementary 註），一律丟棄→誠實留 unclassified。
+                sv = set()
+                for k in keys:
+                    if k in suppl: sv |= suppl[k]
+                adv = sv & {"B2", "C1", "C2"}
+                if adv:
+                    cefr = min(adv, key=CEFR_ORDER.index); cefr_src = "kamome-suppl"
         # GEPT
         g_hit = [gept[k] for k in keys if k in gept]
         gept_lv = min(g_hit, key=GEPT_ORDER.index) if g_hit else None
@@ -287,7 +318,8 @@ def main():
     for fn in ["cefrj-vocabulary-profile-1.5.csv","octanove-vocabulary-profile-c1c2-1.0.csv",
                "oxford_20260715160822-oxford-3000.en.tsv","oxford_20260715165539-oxford-5000-expanded.en.tsv",
                "gept_GEPT_High-Intermediate.pdf","yle_starters_hd_paste.txt","yle_movers_hd_paste.txt",
-               "yle_flyers_hd_paste.txt","tsl_TSL_12_alphabetized_description.txt","american_to_british.json"]:
+               "yle_flyers_hd_paste.txt","tsl_TSL_12_alphabetized_description.txt","american_to_british.json",
+               "kamome_cefr_index.json"]:
         pth = os.path.join(SRC, fn)
         if os.path.exists(pth):
             manifest[fn] = {"sha256": sha256_file(pth), "bytes": os.path.getsize(pth)}
@@ -295,7 +327,7 @@ def main():
     out = {"schema": "wordmaster-tags/1", "fingerprint_sha256": fp,
            "built_utc": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
            "cards_sha256": sha256_file(CARDS),
-           "sources": {"cefr":"CEFR-J Vocabulary Profile 1.5 + Octanove C1/C2 1.0 (openlanguageprofiles); fallback Oxford 3000/5000 (A1–C1) 補基本字缺口",
+           "sources": {"cefr":"CEFR-J Vocabulary Profile 1.5 + Octanove C1/C2 1.0 (openlanguageprofiles); fallback Oxford 3000/5000 (A1–C1) 補基本字缺口; 最後 supplementary=kamome1037/cefr-highlight（社群彙編；僅接受 B2/C1/C2 補 authoritative 全缺進階字，低端 A1/A2/B1 因對罕用字不可靠而丟棄；絕不覆蓋 authoritative）",
                        "gept":"LTTC 全民英檢官方參考字表（初級/中級/中高級）",
                        "yle":"Cambridge YLE Starters/Movers/Flyers Picture Book A–Z Word List (2018)",
                        "toeic":"TOEIC Service List (TSL v1.2, Browne & Culligan) — 代用，非 ETS 官方"},
