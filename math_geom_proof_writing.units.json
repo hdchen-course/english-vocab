@@ -1,0 +1,206 @@
+{
+ "_note": "數學島 幾何（geom）strand t_mid 第 20 個單元（國中・geom t_mid 最後一個 KP）。知識點 math.t_mid.geom.proof-writing（幾何證明的推理與書寫格式）。tier=t_mid（國中；學習者端不顯示年段 R11）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。★scope 聚焦證明的『格式與推理』非新幾何事實：(a) 一個幾何證明要寫出『已知』『求證』『證明（步驟）』三部分；(b) 證明的每一步都要寫出『根據（理由）』——定義、性質、或前面已經證出的結果，不能跳步或只憑直覺；(c) 推理是一條鏈：從已知出發，用允許的理由一步步推到求證，常用『因為…（根據…），所以…』。★worked example＝等腰三角形『兩腰相等⇒兩底角相等』用 SAS 全等證明（獨立 oracle：sympy/numpy 以座標驗等腰三角形兩底角確實相等；此為 math_checks5::geom.proof-writing 的可重跑自驗）。prereq＝triangle-congruence（需 SAS 全等判別，已建）＋isosceles-equilateral（需等腰三角形、腰、頂角、底角、角平分線概念，已建）——worked example 的每個概念皆落在 K(U)＝prereq∪teach，不偷看後面才教的內容（INV-1）。★自檢（math-unit defect-classes）：概念已 .venv(numpy) 驗（A=(150,30)、B、C 等腰 AB=AC，頂角平分線 AD 交 BC 中點，△ABD≅△ACD(SAS)，對應角 ∠B=∠C 以座標算內積驗相等）；誘答單一乾淨機制（proof 三部分↔答案/標題/結論混淆；每步理由↔時間/頁碼/分數；全等對應角相等↔內角和/內錯角/對頂角三個不適用於此的定理；正確推理觀念↔跳步/只寫答案/省略理由）；四選項長度草稿前已 len 掃描齊（缺陷類#28，Q1 皆5、Q2 皆6、Q3 皆10、Q4 皆8）；四選項兩兩相異（缺陷類#29）；術語台灣課本標準（已知、求證、證明、根據、全等、對應角、角平分線、頂角、底角、SAS，皆 prereq 已教或本單元定義，缺陷類#22/#24/#30）；figure＝等腰三角形 ABC（AB=AC）＋綠色頂角平分線 AD＋兩腰等長記號＋頂角兩等角記號＋綠文字，直角記號不畫（本證明走 SAS 不假設 AD⊥BC，避免暗示未用到的前提）＋slate 頂點/標籤，alt 同步（#17 唯一綠＝SAS 三要素關係、#23 記號落腰與頂角）。practice 考的方法（證明三部分、每步寫理由、全等對應角相等、正確推理觀念）都在 rendered teach 示範。practice 4：Q1 證明開頭先寫什麼＝已知和求證〔誘答 答案和分數／標題和日期／結論和感想〕；Q2 每一步除了推論還要寫什麼＝每一步的根據〔誘答 時間／頁碼／分數〕；Q3 證出△ABD≅△ACD後為何∠B＝∠C＝全等三角形對應角相等〔誘答 三角形內角和一百八十／兩直線平行內錯角相等／同一頂點的對頂角相等，皆真定理但不適用於此＝乾淨混淆〕；Q4 關於幾何證明推理哪個正確＝每一步都要有根據〔誘答 憑直覺跳過也可以／只要寫出最後答案／理由全部省略不寫〕。claim kind=definition。figure-only example 無 body。",
+ "page": "math_geom_proof_writing.html",
+ "units": [
+  {
+   "unit_id": "math.t_mid.geom.proof-writing",
+   "title_zh": "幾何證明的推理與書寫",
+   "can_do": "我知道一個幾何證明要先寫出「已知」和「求證」，再一步一步推理，而且每一步都要寫出「根據」（理由）。我看得懂也能寫出像「因為…（根據…），所以…」這種有理由支撐的推理步驟，而不是憑直覺跳步或只寫一個答案。我也能看懂一個完整的例子：用「兩個三角形全等」來證明「等腰三角形的兩個底角相等」。",
+   "situation_group": "幾何：證明的推理與書寫",
+   "subject": "math",
+   "strand": "geom",
+   "est_minutes": 11,
+   "knowledge_point_ids": [
+    "math.t_mid.geom.proof-writing"
+   ],
+   "prerequisites": [
+    "math.t_mid.geom.triangle-congruence",
+    "math.t_mid.geom.isosceles-equilateral"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-proof-structure",
+     "text": "一個幾何證明通常要清楚寫出三個部分：「已知」（題目給了什麼條件）、「求證」（要證明的目標是什麼）、「證明」（一步一步的推理過程）。先把已知和求證寫清楚，才知道從哪裡出發、要推到哪裡。",
+     "kind": "definition",
+     "source_refs": [
+      "幾何證明的書寫格式：已知／求證／證明（國中數學）"
+     ],
+     "verification_ref": "格式定義（國中數學教材一致）；worked example 的全等結論以 numpy 座標驗（等腰 AB=AC 時兩底角相等）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-reason-each-step",
+     "text": "證明的每一個步驟，除了寫出「推論出什麼」，一定還要寫出這一步的「根據」（理由）：可以是定義、已知條件、幾何性質，或前面已經證出的結果（例如某兩個三角形全等）。不能跳步，也不能只憑直覺說「看起來就是這樣」。",
+     "kind": "definition",
+     "source_refs": [
+      "證明每一步需附理由（國中數學）"
+     ],
+     "verification_ref": "推理規範（國中數學教材一致）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-reasoning-chain",
+     "text": "整個證明是一條「推理鏈」：從「已知」出發，每一步都用一個允許的理由往前推，一步接一步，最後推到「求證」的目標。常見的寫法是「因為…（根據…），所以…」。舉例：要證明「等腰三角形的兩個底角相等」，可以先作頂角的角平分線，說明分出來的兩個三角形全等（SAS），再根據「全等三角形的對應角相等」得到兩個底角相等。",
+     "kind": "definition",
+     "source_refs": [
+      "等腰三角形兩底角相等的證明（SAS 全等；國中數學）"
+     ],
+     "verification_ref": "numpy 驗：等腰三角形 AB=AC，作頂角平分線 AD 交 BC 於 D，△ABD 與 △ACD 符合 SAS（AB=AC、∠BAD=∠CAD、AD 公用），且 ∠B＝∠C（以座標算兩底角內積／角度相等）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.geom.proof-writing"
+     ],
+     "body": "做一個幾何證明，開頭要先寫清楚三件事：「已知」是題目給你的條件、「求證」是你要證明的目標、「證明」是中間一步一步的推理。把已知和求證先寫出來，你就知道「從哪裡出發、要推到哪裡」。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.geom.proof-writing"
+     ],
+     "body": "證明最重要的規矩：每一步都要寫出「根據」（理由）。理由可以是定義、已知條件、幾何性質，或前面已經證出的結果——不能跳步、也不能只說「看起來就是這樣」。整個證明是一條推理鏈，常用「因為…（根據…），所以…」。下面用一個完整例子示範：要證明「等腰三角形的兩個底角相等」，先作頂角的角平分線 AD，就得到兩個三角形 △ABD 和 △ACD；因為 AB＝AC（已知）、∠BAD＝∠CAD（AD 是角平分線）、AD＝AD（公用邊），根據 SAS 可知 △ABD ≅ △ACD；再根據「全等三角形的對應角相等」，就得到 ∠B＝∠C，證明完成。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_mid.geom.proof-writing"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 320 172' xmlns='http://www.w3.org/2000/svg'><polygon points='150,30 84,140 216,140' fill='none' stroke='#94a3b8' stroke-width='1.8'/><line x1='150' y1='30' x2='150' y2='140' stroke='#2f6f54' stroke-width='1.7'/><g stroke='#2f6f54' stroke-width='1.2' fill='none'><path d='M112.7,82.4 L121.3,87.6'/><path d='M187.3,82.4 L178.7,87.6'/><path d='M140.7,45.4 A 18,18 0 0 1 150,48'/><path d='M150,48 A 18,18 0 0 1 159.3,45.4'/></g><g fill='#33475b'><circle cx='150' cy='30' r='2.4'/><circle cx='84' cy='140' r='2.2'/><circle cx='216' cy='140' r='2.2'/><circle cx='150' cy='140' r='2.2'/></g><g font-family='sans-serif' font-size='11' fill='#33475b'><text x='144' y='25'>A</text><text x='70' y='144'>B</text><text x='220' y='144'>C</text><text x='150' y='156' text-anchor='middle'>D</text></g><text x='160' y='169' font-family='sans-serif' font-size='10.5' fill='#2f6f54' text-anchor='middle'>頂角平分線 AD：△ABD ≅ △ACD（SAS）</text></svg>",
+      "alt": "一個等腰三角形 ABC，A 在上方頂點、B 在左下、C 在右下，兩腰 AB 與 AC 各標一個等長記號表示 AB＝AC。從頂點 A 畫一條綠色的頂角平分線到底邊 BC 上的點 D，頂角 A 處用兩個小弧記號表示 ∠BAD＝∠CAD 相等。這樣 △ABD 和 △ACD 因為 AB＝AC、∠BAD＝∠CAD、AD 是兩者公用的邊，符合 SAS 而全等；再根據全等三角形對應角相等，就得到底角 ∠B＝∠C。圖下方綠色文字：作頂角平分線 AD：AB＝AC、∠BAD＝∠CAD、AD 公用 → △ABD ≅ △ACD（SAS）。",
+      "caption": "用 SAS 全等證明「等腰三角形兩底角相等」：作頂角平分線 AD，先證 △ABD ≅ △ACD，再由對應角相等得 ∠B＝∠C"
+     }
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "PW-mcq-1",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "寫一個幾何證明，開頭通常要先寫出哪兩樣？",
+     "answer": "已知和求證",
+     "kp_ids": [
+      "math.t_mid.geom.proof-writing"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.geom.proof-writing"
+     ],
+     "options": [
+      "已知和求證",
+      "答案和分數",
+      "標題和日期",
+      "結論和感想"
+     ],
+     "distractor_rationales": {
+      "答案和分數": "幾何證明的開頭是「已知」和「求證」，不是先寫答案或打分數；分數是別人改完才有的。",
+      "標題和日期": "標題、日期是作業格式，不是證明本身的結構；證明要先寫清楚已知和求證。",
+      "結論和感想": "結論要放在推理完成之後，感想更不是證明的一部分；開頭先寫已知和求證。"
+     },
+     "answer_evidence": [
+      "c-proof-structure"
+     ],
+     "feedback": "幾何證明先寫「已知」（給了什麼）和「求證」（要證什麼），再寫證明步驟。"
+    },
+    {
+     "question_id": "PW-mcq-2",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "證明的每一個步驟，除了寫出推論，還一定要寫出什麼？",
+     "answer": "每一步的根據",
+     "kp_ids": [
+      "math.t_mid.geom.proof-writing"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.geom.proof-writing"
+     ],
+     "options": [
+      "每一步的根據",
+      "每一步的時間",
+      "每一步的頁碼",
+      "每一步的分數"
+     ],
+     "distractor_rationales": {
+      "每一步的時間": "證明不需要記每一步花多少時間；每一步要寫的是「根據」（理由），讓推論站得住腳。",
+      "每一步的頁碼": "頁碼和證明的正確性無關；每一步真正要附的是它的根據（定義／性質／已證結果）。",
+      "每一步的分數": "分數是批改才有的，不是證明的一部分；每一步要寫出的是支撐這一步的理由。"
+     },
+     "answer_evidence": [
+      "c-reason-each-step"
+     ],
+     "feedback": "每一步都要寫出「根據」（定義、已知、性質或已證的結果），不能跳步。"
+    },
+    {
+     "question_id": "PW-mcq-3",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "在上面的例子裡，已經證出 △ABD ≅ △ACD，為什麼就可以說「∠B ＝ ∠C」？",
+     "answer": "全等三角形對應角相等",
+     "kp_ids": [
+      "math.t_mid.geom.proof-writing"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.geom.proof-writing",
+      "math.t_mid.geom.triangle-congruence"
+     ],
+     "options": [
+      "全等三角形對應角相等",
+      "三角形內角和一百八十",
+      "兩直線平行內錯角相等",
+      "同一頂點的對頂角相等"
+     ],
+     "distractor_rationales": {
+      "三角形內角和一百八十": "內角和是 180 度講的是「同一個三角形三個角相加」，沒辦法直接推出 ∠B 和 ∠C 這兩個角相等。",
+      "兩直線平行內錯角相等": "內錯角相等要有「兩直線平行」這個前提，這個例子裡沒有用到平行線，不適用。",
+      "同一頂點的對頂角相等": "對頂角是兩條線交叉時相對的那組角，∠B 和 ∠C 不是對頂角，不適用。"
+     },
+     "answer_evidence": [
+      "c-reasoning-chain"
+     ],
+     "feedback": "兩個三角形全等後，對應的角一定相等；∠B 與 ∠C 是對應角，所以相等。"
+    },
+    {
+     "question_id": "PW-mcq-4",
+     "type": "mcq",
+     "validation_method": "expert",
+     "stem": "關於寫幾何證明的推理，下面哪一個說法是對的？",
+     "answer": "每一步都要有根據",
+     "kp_ids": [
+      "math.t_mid.geom.proof-writing"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.geom.proof-writing"
+     ],
+     "options": [
+      "每一步都要有根據",
+      "憑直覺跳過也可以",
+      "只要寫出最後答案",
+      "理由全部省略不寫"
+     ],
+     "distractor_rationales": {
+      "憑直覺跳過也可以": "證明不能憑直覺跳步；每一步都要有能寫出來的理由，別人才能照著檢查。",
+      "只要寫出最後答案": "幾何證明重視的是「推理過程」，只寫最後答案而沒有推理，不算完成證明。",
+      "理由全部省略不寫": "省略理由就看不出每一步為什麼成立；證明的核心正是每一步都附上根據。"
+     },
+     "answer_evidence": [
+      "c-reason-each-step"
+     ],
+     "feedback": "證明的核心是「每一步都有根據」，不能跳步、不能只寫答案、不能省略理由。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（證明三部分＝已知／求證／證明；每一步都要寫根據；全等三角形對應角相等；正確推理觀念＝不跳步不只寫答案不省理由；看懂等腰兩底角相等的 SAS 證明）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
