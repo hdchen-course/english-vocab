@@ -116,7 +116,7 @@ function restoreExample(text, hw){
 function hintMask(w){ return w[0]+' '+Array(Math.max(0,w.length-1)).fill('_').join(' '); }
 function levelChips(c){
   let h='';
-  h += c.cefr ? `<span class="tg lvl">CEFR ${esc(c.cefr)}</span>` : `<span class="tg na">未分級</span>`;
+  h += c.cefr ? `<span class="tg lvl">CEFR ${esc(c.cefr)}</span>` : (c.cefr_est ? `<span class="tg na">約 ${esc(c.cefr_est)}</span>` : `<span class="tg na">未分級</span>`);
   if(c.gept)  h += `<span class="tg">全民英檢 ${esc(c.gept)}</span>`;
   if(c.yle)   h += `<span class="tg">YLE ${esc(YLE_ZH[c.yle]||c.yle)}</span>`;
   if(c.toeic) h += `<span class="tg">TOEIC</span>`;
@@ -249,7 +249,7 @@ function levelsFor(scm){
   const S=INDEX.schemes[scm], cnt=INDEX.counts[scm]||{};
   const lbl=lv=>scm==='cefr'?(CEFR_UP[lv]||lv):scm==='yle'?YLE_ZH[lv]:scm==='toeic'?'TOEIC 字表':scm==='coca'?(lv==='tail'?'較少見字':'最常用 '+lv):lv;
   let items=S.levels.map(lv=>({lv, label: lbl(lv), n: scm==='cefr'?(cnt[CEFR_UP[lv]]||0):(scm==='toeic'?(INDEX.counts.toeic||0):(cnt[lv]||0))}));
-  if(scm==='cefr') items.push({lv:'unclassified', label:'未分級', n: cnt['unclassified']||0});
+  if(scm==='cefr' && (cnt['unclassified']||0)>0) items.push({lv:'unclassified', label:'未分級', n: cnt['unclassified']});
   return items;
 }
 function renderSidebar(){
@@ -268,9 +268,24 @@ function renderLevels(){
 }
 document.getElementById('flipBtn').onclick=onFlip;
 document.getElementById('themeBtn').onclick=()=>document.documentElement.classList.toggle('dark');
+// 單張模式：從「全部單字」清單點一個字進來（?w=<sk>）→ 直接顯示原本的閃卡
+const SINGLE_SK=new URLSearchParams(location.search).get('w');
+function openSingleCard(sk){
+  fetch(DATA+'cards/all.json',{cache:'no-store'}).then(r=>r.ok?r.json():null,()=>null).then(d=>{
+    const c=d&&d.cards&&d.cards.find(x=>x.sk===sk);
+    document.getElementById('schemeTabs').innerHTML='';
+    document.getElementById('levelList').innerHTML='<a class="sb-cat" href="word_browse.html">← 回全部單字</a>';
+    if(!c){ document.getElementById('wmFront').innerHTML='<p class="wm-pos">找不到這個單字。</p>'; toFront(); return; }
+    curLevel=null; curPool=[c]; CARDS=[c]; idx=0; flipped=false; hinted=false;
+    render();
+    document.getElementById('deckLine').innerHTML='全部單字 · '+esc(c.hw);
+    const rn=document.getElementById('roundNote'); if(rn) rn.innerHTML='單張預覽：'+esc(c.hw)+'<br>可翻面看答案、評分（會存進 SRS 進度）';
+  });
+}
 fetch(DATA+'index.json',{cache:'no-store'}).then(r=>r.ok?r.json():null,()=>null).then(d=>{
   if(!d||!d.schemes){ document.getElementById('wmFront').innerHTML='<p class="wm-pos" role="alert">⚠ 字庫索引暫時無法載入（請用 http 開啟）。</p>'; return; }
-  INDEX=d; renderSidebar();
+  INDEX=d;
+  if(SINGLE_SK){ openSingleCard(SINGLE_SK); } else { renderSidebar(); }
 });
 </script>
 </body></html>

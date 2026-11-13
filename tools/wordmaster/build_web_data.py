@@ -53,10 +53,17 @@ def main():
             "cefr": cefr, "cefr_est": cefr_est, "cefr_est_src": cefr_est_src,
             "gept": gept, "yle": yle, "toeic": toeic,
         }
-        b = cefr.lower() if cefr else "unclassified"
+        # CEFR 分桶用「有效等級」＝官方 cefr，官方全缺時用 cefr_est（估計，仍標「約」）。
+        # HD 2026-11-13：要把 1007 未分級字真的分進各級，不要留一個 1007 的未分級桶。
+        eff = cefr or cefr_est
+        b = eff.lower() if eff else "unclassified"
         buckets[b].append(rec)
-        if cefr: counts["cefr"][cefr] = counts["cefr"].get(cefr,0)+1
-        else: counts["cefr"]["unclassified"] = counts["cefr"].get("unclassified",0)+1
+        if eff:
+            counts["cefr"][eff] = counts["cefr"].get(eff,0)+1
+            if not cefr:  # 這一級裡有幾個是估計來的
+                counts.setdefault("cefr_est_in_level",{})[eff] = counts.setdefault("cefr_est_in_level",{}).get(eff,0)+1
+        else:
+            counts["cefr"]["unclassified"] = counts["cefr"].get("unclassified",0)+1
         if gept: counts["gept"][gept] = counts["gept"].get(gept,0)+1
         if yle: counts["yle"][yle] = counts["yle"].get(yle,0)+1
         if toeic: counts["toeic"] += 1

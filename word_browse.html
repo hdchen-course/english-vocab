@@ -7,47 +7,38 @@
 <link rel="stylesheet" href="assets/app.css">
 <script src="game_core.js"></script>
 <style>
-/* 單字大師字母序瀏覽 — 全部單字 A–Z 列表、狀態色點、CEFR 標籤、🔊、點開看定義（唯讀，不動 SRS）。 */
+/* 全部單字 A–Z 入口：乾淨清單，點一列＝開原本的單字大師閃卡（word_master.html?w=sk）。
+   盡量沿用 house token，不自創卡片樣式；狀態色點沿用單字大師四桶色。 */
 :root{ --wm-new:#b4ab9b; --wm-learning:#d9704f; --wm-almost:#cf9a1e; --wm-known:#2f8a63; }
 :root[data-theme="dark"]{ --wm-new:#8d8575; --wm-learning:#ff9a7a; --wm-almost:#e8c05a; --wm-known:#46c98f; }
-.wb-wrap{max-width:1060px;margin:0 auto;padding:8px 4px 48px}
+.wb-wrap{max-width:860px;margin:0 auto;padding:8px 0 48px}
 .wb-controls{position:sticky;top:calc(var(--app-bar-h) + env(safe-area-inset-top,0px));z-index:40;
   background:var(--bg);padding:9px 0 7px;border-bottom:1px solid var(--card-border)}
-.wb-search{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.wb-search{display:flex;gap:10px;align-items:center;margin-bottom:8px}
 .wb-search input{flex:1 1 auto;min-width:0;padding:10px 13px;font-size:15px;border:1px solid var(--card-border);
-  border-radius:11px;background:var(--card);color:var(--ink)}
+  border-radius:var(--r-sm);background:var(--card);color:var(--ink)}
 .wb-count{font-size:12.5px;color:var(--ink-soft);font-weight:700;flex:0 0 auto}
 .wb-filters{display:flex;flex-wrap:wrap;gap:6px}
 .wb-filters button{min-height:0;width:auto;flex:0 0 auto;padding:5px 12px;font-size:12.5px;font-weight:700;
   border:1px solid var(--card-border);border-radius:999px;background:var(--card);color:var(--ink);cursor:pointer;
   display:inline-flex;align-items:center;gap:6px}
-.wb-filters button.on{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
-.wb-dot{width:11px;height:11px;border-radius:50%;flex:0 0 auto;display:inline-block}
-.wb-az{display:flex;flex-wrap:wrap;gap:3px;margin:9px 0 4px}
-.wb-az a{font-size:12px;font-weight:700;color:var(--accent);text-decoration:none;padding:3px 7px;border-radius:7px}
+.wb-filters button.on{background:var(--c-primary);color:var(--on-accent);border-color:var(--c-primary)}
+.wb-dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto;display:inline-block}
+.wb-az{display:flex;flex-wrap:wrap;gap:3px;margin:9px 0 2px}
+.wb-az a{font-size:12px;font-weight:700;color:var(--c-primary);text-decoration:none;padding:3px 7px;border-radius:7px}
 .wb-az a:hover{background:var(--card-border)}
-.wb-sec{margin:16px 0 4px;font-size:16px;font-weight:800;color:var(--ink-soft);scroll-margin-top:150px;
-  border-bottom:2px solid var(--card-border);padding-bottom:3px}
+.wb-sec{margin:15px 0 2px;font-size:15px;font-weight:800;color:var(--ink-soft);scroll-margin-top:148px;
+  border-bottom:1px solid var(--card-border);padding-bottom:3px}
 .wb-list{list-style:none;margin:0;padding:0}
-.wb-item{border-bottom:1px solid var(--card-border);content-visibility:auto;contain-intrinsic-size:auto 54px}
-.wb-head{display:flex;align-items:center;gap:11px;padding:11px 6px;cursor:pointer}
-.wb-head:hover{background:var(--card)}
-.wb-hw{font-size:16.5px;font-weight:700;color:var(--ink);flex:0 0 auto}
+.wb-row{display:flex;align-items:center;gap:11px;padding:11px 8px;text-decoration:none;color:var(--ink);
+  border-bottom:1px solid var(--card-border);content-visibility:auto;contain-intrinsic-size:auto 48px}
+.wb-row:hover{background:var(--card)}
+.wb-hw{font-size:16px;font-weight:700;color:var(--ink);flex:0 0 auto}
 .wb-pos{font-size:12px;color:var(--ink-soft);font-style:italic;flex:0 0 auto}
 .wb-chip{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--card-border);color:var(--ink);flex:0 0 auto}
 .wb-chip.est{background:transparent;border:1px dashed var(--ink-soft);color:var(--ink-soft);font-weight:600}
-.wb-spacer{flex:1 1 auto}
-.wb-spk{flex:0 0 auto;border:none;background:transparent;font-size:18px;cursor:pointer;padding:4px;border-radius:8px;color:var(--ink)}
-.wb-spk:hover{background:var(--card-border)}
-.wb-detail{padding:2px 8px 15px 30px;display:none}
-.wb-item.open .wb-detail{display:block}
-.wb-def{font-size:14.5px;color:var(--ink);line-height:1.6;margin:2px 0 7px}
-.wb-ipa{font-size:12.5px;color:var(--ink-soft);margin-bottom:8px}
-.wb-exrow{display:flex;align-items:flex-start;gap:8px;margin:5px 0;font-size:13.5px;color:var(--ink-soft)}
-.wb-exrow .ex{line-height:1.55}
-.wb-exspk{border:none;background:transparent;font-size:15px;cursor:pointer;color:var(--ink);padding:1px 4px;border-radius:7px;flex:0 0 auto}
+.wb-go{margin-left:auto;flex:0 0 auto;color:var(--ink-soft);font-size:15px}
 .wb-empty{text-align:center;color:var(--ink-soft);padding:40px 10px;font-size:14px}
-@media (max-width:560px){ .wb-detail{padding-left:16px} }
 </style>
 </head>
 <body data-game-hud="off">
@@ -65,7 +56,7 @@
     <div class="wb-search">
       <input type="search" id="q" placeholder="搜尋單字…" aria-label="搜尋單字" autocomplete="off">
       <span class="wb-count" id="count">—</span>
-      <a href="word_stats.html" class="wb-count" style="color:var(--accent);text-decoration:none;flex:0 0 auto">📊 統計</a>
+      <a href="word_stats.html" class="wb-count" style="color:var(--c-primary);text-decoration:none;flex:0 0 auto">📊 統計</a>
     </div>
     <div class="wb-filters" id="filters" aria-label="依狀態篩選"></div>
     <nav class="wb-az" id="az" aria-label="字母跳轉"></nav>
@@ -76,11 +67,8 @@
 <script src="assets/srs_engine.js"></script>
 <script>
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const AUD='assets/wordmaster/audio/';
 const DATA='assets/wordmaster/';
 const STORE=(window.SRS&&window.SRS.createStore)?window.SRS.createStore('wordmaster_srs_v1'):null;
-const TODAY=(window.SRS&&window.SRS.today)?window.SRS.today():null;
-const YLE_ZH={starters:'Starters',movers:'Movers',flyers:'Flyers'};
 const BUCKETS={new:{label:'還沒學',color:'var(--wm-new)'},learning:{label:'不熟',color:'var(--wm-learning)'},
   almost:{label:'快會了',color:'var(--wm-almost)'},known:{label:'已學會',color:'var(--wm-known)'}};
 const FILTERS=[{k:'all',label:'全部',color:null},{k:'new',label:'還沒學',color:'var(--wm-new)'},
@@ -89,19 +77,11 @@ const FILTERS=[{k:'all',label:'全部',color:null},{k:'new',label:'還沒學',co
 let ALL=[], filter='all', query='';
 function bucketOf(sk){ const c=STORE?STORE.peek(sk):null; const b=c?(c.scheduleBox||0):0;
   if(b===0)return'new'; if(b<=2)return'learning'; if(b<=4)return'almost'; return'known'; }
-function playAudio(f){ if(!f)return; try{ new Audio(AUD+f).play().catch(()=>{}); }catch(e){} }
 function firstLetter(hw){ const c=(hw||'').trim().charAt(0).toUpperCase(); return (c>='A'&&c<='Z')?c:'#'; }
 function chip(c){
   if(c.cefr) return `<span class="wb-chip">CEFR ${esc(c.cefr)}</span>`;
   if(c.cefr_est) return `<span class="wb-chip est" title="官方未收錄，依${c.cefr_est_src==='coca'?'詞頻':'GEPT／YLE'}推估">約 ${esc(c.cefr_est)}</span>`;
   return `<span class="wb-chip est">未分級</span>`;
-}
-function detailHtml(c){
-  const ipa=(c.ipaus||c.ipauk)?`<div class="wb-ipa">${c.ipaus?('US /'+esc(c.ipaus)+'/'):''}${c.ipaus&&c.ipauk?' · ':''}${c.ipauk?('UK /'+esc(c.ipauk)+'/'):''}</div>`:'';
-  const exs=(c.ex||[]).slice(0,2).map((e,i)=>
-    `<div class="wb-exrow"><span class="ex">${esc(e)}</span>${(c.ae&&c.ae[i])?`<button class="wb-exspk" data-ae="${i}" aria-label="播放例句">🔊</button>`:''}</div>`).join('');
-  const tags=[c.gept?`全民英檢 ${esc(c.gept)}`:'',c.yle?`YLE ${esc(YLE_ZH[c.yle]||c.yle)}`:'',c.toeic?'TOEIC／學術字':'',c.band?`COCA ${esc(c.band)}`:''].filter(Boolean).join('　');
-  return `<div class="wb-def">${esc(c.def||'（暫無定義）')}</div>${ipa}${exs}${tags?`<div class="wb-ipa">${tags}</div>`:''}`;
 }
 function render(){
   const host=document.getElementById('listHost');
@@ -120,28 +100,16 @@ function render(){
   for(const L of letters){
     html+=`<h2 class="wb-sec" id="sec-${L}">${L} <span style="font-weight:600;font-size:12px">（${groups[L].length}）</span></h2><ul class="wb-list">`;
     for(const c of groups[L]){
-      const bk=bucketOf(c.sk), b=BUCKETS[bk];
-      html+=`<li class="wb-item" data-sk="${esc(c.sk)}"><div class="wb-head">
+      const b=BUCKETS[bucketOf(c.sk)];
+      html+=`<li><a class="wb-row" href="word_master.html?w=${encodeURIComponent(c.sk)}">
         <span class="wb-dot" style="background:${b.color}" title="${b.label}"></span>
         <span class="wb-hw">${esc(c.hw)}</span><span class="wb-pos">${esc(c.pos||'')}</span>
-        ${chip(c)}<span class="wb-spacer"></span>
-        ${c.aw?`<button class="wb-spk" data-aw="${esc(c.aw)}" aria-label="播放發音">🔊</button>`:''}</div>
-        <div class="wb-detail"></div></li>`;
+        ${chip(c)}<span class="wb-go" aria-hidden="true">›</span></a></li>`;
     }
     html+='</ul>';
   }
   host.innerHTML=html;
   renderAZ(new Set(letters));
-  host.querySelectorAll('.wb-item').forEach(li=>{
-    const sk=li.dataset.sk, c=ALL.find(x=>x.sk===sk);
-    li.querySelector('.wb-head').onclick=(e)=>{
-      if(e.target.closest('.wb-spk')) return;
-      const open=li.classList.toggle('open');
-      const d=li.querySelector('.wb-detail'); if(open&&!d.dataset.filled){ d.innerHTML=detailHtml(c); d.dataset.filled='1';
-        d.querySelectorAll('[data-ae]').forEach(btn=>btn.onclick=ev=>{ev.stopPropagation();playAudio(c.ae[+btn.dataset.ae]);}); }
-    };
-    const spk=li.querySelector('.wb-spk'); if(spk) spk.onclick=e=>{e.stopPropagation();playAudio(spk.dataset.aw);};
-  });
 }
 function renderAZ(present){
   const letters=['#'].concat('ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''));
