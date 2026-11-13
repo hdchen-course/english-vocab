@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-13 08:11 ★★ 數學島 equation strand #15（全島#42）收斂：math_equation_exp_log（指數與對數方程式，高中 t_adv）5/5 → equation strand 15/15 完結 ★★
+- **frozen_sha `157314f3cf47427a`**。DONE-GATE 六確定性 gate 全綠。視覺 QA：化同底 figure——slate 框「2ˣ＝16」＋綠色向下箭頭＋綠框兩行「化成 2ˣ＝2⁴」「底數相同 → x＝4」＋綠文字「同底時比較指數」iPad 橫直四角色 render 簽核過（上標 ˣ/⁴、下標 log₂/logₐ 實測清晰可讀、箭頭貼合、無 ＝0＝ 鏈、唯一綠 #17、alt 逐字一致 #33）。3 claim kind=definition（c-exp-samebase 化同底比較指數、c-log-def 對數定義 logₐN＝x 等價 aˣ＝N、c-domain 真數>0 底數>0 且≠1 與檢驗）。prereq=quadratic-formula＋quadratic-discriminant。全 .venv 驗（teach 2ˣ＝16→4、log₂x＝3→8；practice Q1 3ˣ＝27→3、Q2 log₃9→2、Q4 10ˣ＝1000→3）。
+- **4 MCQ（teach↔practice 全不重疊避#10，且與 #7-#14 單元亦不重疊）**：Q1 化同底解指數（3ˣ＝27→3〔誘答 9＝27÷3／27 真數／24＝27－3〕）／Q2 對數求值（log₃9→2〔誘答 3 底數／9 真數／27＝3³〕）／Q3 真數>0 檢驗概念（答「對數的真數一定要大於 0」〔三誘答平行近等長避#20〕）／Q4 化同底解指數（10ˣ＝1000→3〔誘答 2 數錯 0 個數／1000 真數／100＝10²〕）。四選項長度均衡、數值/敘述兩兩相異（#29）。
+- **收斂路徑（零 de-converge、零修）**：草稿凍 157314f3（pre-freeze 全 .venv 驗＋減號 U+FF0D＋無 ＝0＝ 鏈＋上標/下標 render 實測＋Q3 平行結構）→R1–R5 連 5 clean（confirmed 全 0）。第五個「草稿一次到位」單元。上標 ˣ(U+02E3)/⁴/下標 ₂₃ 經實機 render 確認清晰（新可用 figure/notation 樣式）。
+- **★★★ 重大里程碑：數學島 equation（方程式）strand 15/15 全數收斂完結 ＝ 全島（math/eng/…八島）第一個「完整收斂」的 math strand ★★★**。equation 涵蓋：t_base 1（one-step-balance）＋t_mid 10（linear-one-var/-apply、linear-system-sub/-elim/-apply、quadratic-factor/-formula/-complete-square/-discriminant/-apply）＋t_adv 4（quadratic-vieta/-param-range、poly-complex-roots、exp-log）。另 geom 39/39、algexpr 18/18、numquant 30/30 亦早已 COMPLETE。
+- **下一步**：開新 math strand。依 LEARNING_PATH_BUILD_PLAN 數學島尚缺 func（函數）/calc（微積分）/stats（統計）/trig（三角）/prob（機率）/vector（向量）。建議先開 **func（函數）strand** t_base 首個 KP（承接 equation 的自然延伸：一次函數圖形與斜率）。
+
 ## 2026-11-13 07:51 數學島 equation strand #14（全島#41）收斂：math_equation_poly_complex_roots（多項式方程式與複數根，高中 t_adv）5/5 → equation strand 14/15
 - **frozen_sha `475242636e4d226f`**。DONE-GATE 六確定性 gate 全綠。視覺 QA：共軛成對 figure——slate 框「實係數多項式方程式」＋綠色向下箭頭＋綠框兩行「虛根成對出現」「a＋bi 是根，a－bi 也是根」＋綠文字「所以虛根個數是偶數」iPad 橫直四角色 render 簽核過（x³/x²/i/±/－ 皆清晰、箭頭貼合、無 ＝0＝ 鏈、唯一綠=共軛成對 #17、alt 逐字一致 #33）。3 claim kind=definition（c-fta 代數基本定理 n 次 n 根、c-conjugate 實係數虛根共軛成對虛部變號、c-odd-real 奇數次至少一實根）。prereq=quadratic-discriminant＋quadratic-formula。全 .venv(sympy) 驗（teach x³－1 有 1 實＋2 共軛虛、x²＋4 有 ±2i；practice Q4 x³－8＝(x－2)(x²＋2x＋4) 實根 x＝2）。
 - **4 MCQ（teach↔practice 全不重疊避#10，且與 #7-#13 單元亦不重疊）**：Q1 代數基本定理計根數（五次→5〔誘答 4 次數減1／10 ×2／1 誤為至少實根數〕）／Q2 共軛成對（3＋2i 的根→3－2i〔誘答 －3＋2i 實部變號／－3－2i 整個變號／2＋3i 實虛對調〕）／Q3 奇數次至少一實根概念（答「虛根成對，奇數次至少有一實根」〔三誘答皆「理由，結論」平行結構近等長避#20 結構離群〕）／Q4 x³－8 實根（答 2〔誘答 ±2 平方根思維／8 常數當根／4 非立方根〕）。四選項長度均衡、數值/敘述兩兩相異（#29）。
