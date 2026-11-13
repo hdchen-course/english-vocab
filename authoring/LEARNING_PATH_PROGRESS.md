@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-13 11:54 數學島 function strand #6（全島#48）收斂：math_function_exp_definition（指數函數的定義、圖形與性質，高中 t_adv 學測）5/5 → function strand 6/12 ★ 半數
+- **frozen_sha `aba92c52045aac55`**（草稿一次到位、零 de-converge）。DONE-GATE 六確定性 gate 全綠。視覺 QA：★新 figure 類型「指數曲線座標圖」（geom 風灰軸＋綠色遞增指數曲線＋綠 (0,1) 點）——曲線用 <path d> cubic（M30,147 C72,143 84,137 90,135 C112,131 140,96 174,28）由左貼近 x 軸往右漸陡、(0,1) 綠點在曲線 join 上（#43）、左上標「y＝aˣ」（移左上避曲線重疊），iPad 橫直四角色 render 簽核過（ˣ/⁰/¹/² 上標清晰、曲線不碰 x 軸示漸近線、無重疊/裁切）。3 claim kind=definition（c-def 形式 y＝aˣ a＞0 且 a≠1 定義域全實數、c-through 恆過 (0,1) 因 a⁰＝1、c-shape a＞1 增 0＜a＜1 減值域 y＞0 x 軸漸近線）。術語附英語 R15（指數函數 exponential function/底數 base/漸近線 asymptote）。prereq=concept-domain-range＋quadratic-graph。全驗（a⁰＝1、2ˣ 增、(1/2)ˣ 減、aˣ＞0、5⁰＝1、2^(-1)=1/2 故值域非 y＞1）。
+- **4 MCQ（teach↔practice 底數兩兩不同避#10）**：Q1 底數條件（a＞0 且 a≠1〔誘答 任何數/只要 a＞0/只要 a≠0〕）／Q2 必過點（y＝5ˣ→(0,1) 因 5⁰＝1〔誘答 (0,5) 以為過(0,底數)/(1,0) xy 對調/(1,5) 在圖上但非必過點〕）／Q3 增減（y＝3ˣ 底數 3＞1→遞增〔誘答 遞減/水平/先減後增〕）／Q4 值域（y＝aˣ→y＞0〔誘答 y≥0 含 0/y＞1 忽略 x＜0/所有實數〕）。teach 用 2ˣ、(1/2)ˣ，Q2 5ˣ、Q3 3ˣ，底數全不同。
+- **收斂路徑（草稿一次到位、零 de-converge）**：iPad render 時發現頂部標籤「y＝aˣ（a＞1 遞增）」右段與陡升曲線輕微重疊→凍結前縮短移左上為「y＝aˣ」＋同步 alt（#33）→凍 aba92c52→R1–R5 連 5 clean（confirmed 全 0、L3 全 PASS、無 agent error）。第六個「草稿一次到位」單元。
+- **★里程碑**：數學島 **function（函數）strand 6/12（半數）**，exp/log 群第 1 個。新建「指數曲線座標圖」figure 樣式（cubic Bézier 曲線＋漸近線視覺＋特徵點，可複用於 log-definition）。equation 15/15、geom 39/39、algexpr 18/18、numquant 30/30 皆 COMPLETE。
+- **下一步**：function 餘 6 個 t_adv KP：log-definition（對數定義/運算律/圖形）／log-change-base（換底）／log-scale-apply（對數尺 pH/分貝/地震/星等）／exp-growth-decay（成長衰退模型/半衰期）／graph-transformation（平移伸縮對稱）／composite-inverse（合成/反函數）。建議接 log-definition（承接指數、互為反函數鋪陳）。
+
 ## 2026-11-13 11:27 數學島 function strand #5（全島#47）收斂：math_function_quadratic_closed_interval（二次函數在閉區間上的極值，高中 t_adv 學測）5/5 → function strand 5/12
 - **frozen_sha `8caf34cf6beac721`**（2 次 de-converge/修後最終）。DONE-GATE 六確定性 gate 全綠。視覺 QA：座標圖 figure（geom 風灰軸＋綠拋物線＋灰虛線標區間端 a/b＋綠頂點(min)＋綠端點(max)）——頂點與右端點 marker 皆依 #43 用 Bézier 精算（M70,40 Q130,240 190,40，x 線性：頂點 t=0.5→(130,140)、右端 x=175→(175,84)、左端 x=90→(90,96)），較遠端點 b 位置較高＝最大值，iPad 橫直四角色 render 簽核過。3 claim kind=definition（c-where 極值在頂點或兩端點、c-vertex-in 頂點在內 a＞0 頂點最小較遠端點最大、c-vertex-out 頂點不在內函數單調極值在兩端點）。prereq=quadratic-max-min＋quadratic-graph。全 sympy 驗（teach (x－2)²＋1 於[0,5] min1 max10、於[3,6] min2 max17；Q2/Q3 (x－1)²＋3 於[－2,5] min3 max19；Q4 (x－5)²＋1 於[0,3] 遞減 min5 max26）。
 - **4 MCQ（teach↔practice 函數式不重疊）**：Q1 極值位置概念（頂點或兩端點〔誘答 固定在頂點處/端點處/區間正中央，四選項皆 6 字〕）／Q2 頂點在內求 min（(x－1)²＋3 於[－2,5]→3〔誘答 1=h／12=f(－2)／19=max〕）／Q3 頂點在內求 max（較遠端點 x=5→19〔誘答 12=另一端點／3=min／5=x 坐標誤當值〕）／Q4 頂點不在內求 min（(x－5)²＋1 於[0,3] 遞減→5〔誘答 1=頂點值但頂點不在區間取不到／26=max／4=忘加常數〕）。
