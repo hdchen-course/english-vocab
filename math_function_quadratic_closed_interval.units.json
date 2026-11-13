@@ -1,0 +1,205 @@
+{
+ "_note": "數學島 函數（function）strand 第 5 個單元（全島第 47；高中 t_adv 學測）。知識點 math.t_adv.function.quadratic-closed-interval（二次函數在閉區間上的極值）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。★scope：在閉區間 [a, b]（含兩端點）上，二次函數的最大值與最小值只會出現在「頂點（若頂點 x 落在區間內）」或「兩個端點」。(1) 頂點 x 在 [a, b] 內：a＞0 頂點是最小值、最大值在離對稱軸較遠的端點；a＜0 相反。(2) 頂點 x 不在 [a, b] 內：函數在此區間一路遞增或遞減，極值都在兩端點。prereq=quadratic-max-min（頂點極值）＋quadratic-graph。坐標用國教院標準「坐標」（#42）。不教配方求頂點（假設已是頂點式或已知頂點）、不教參數型。★自檢（math-unit defect-classes）：事實已 sympy 驗（teach (x－2)²＋1 於 [0,5] 頂點2在內 min1 端點 f(0)=5 f(5)=10 max10；teach (x－2)²＋1 於 [3,6] 頂點2不在 min f(3)=2 max f(6)=17；Q2/Q3 (x－1)²＋3 於 [－2,5] 頂點1在內 min3 f(－2)=12 f(5)=19 max19；Q4 (x－5)²＋1 於 [0,3] 頂點5不在 遞減 min f(3)=5 max f(0)=26）；符號 x²（U+00B2）、＞＜ 高中已教、減號全形 U+FF0D（#39）；★無 ＝0＝ 鏈（#41）；坐標（非座 #42）；誘答單一乾淨機制（把頂點 y 當極值卻忽略頂點不在區間/把另一端點值當答/把 h 當函數值/忘加常數）且選項長度均衡（#20/#28，Q1 四敘述皆 6 字）、兩兩相異（#29）；★誘答 rationale 不否定真術語（#44）；★teach worked-example（(x－2)²＋1）與 practice（(x－1)²＋3、(x－5)²＋1）函數式兩兩不同避#10；figure=坐標圖（geom 風：灰軸中性＋綠拋物線＋綠頂點(min)＋綠端點(max)＋灰虛線標區間 [a,b]）：頂點 marker 與端點 marker 座標皆依 #43 用 Bézier 精算（M70,40 Q130,240 190,40，x 線性 70＋120t：頂點 t=0.5→(130,140)、右端點 x=175 t=0.875→(175,84)、左端點 x=90 t=1/6→(90,96)），灰虛線兩豎線標區間端 a、b，alt 與 SVG text 逐字一致（#33）、曲線用 <path d>（#32）。practice 考的方法（極值出現處、頂點在內取頂點為 min、較遠端點為 max、頂點不在內取端點）都在 rendered teach 示範。claim kind=definition。figure-only example 無 body。",
+ "page": "math_function_quadratic_closed_interval.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.function.quadratic-closed-interval",
+   "title_zh": "二次函數在閉區間上的最大值與最小值",
+   "can_do": "我會求二次函數在一個閉區間 [a, b] 上的最大值與最小值：先看頂點的 x 在不在區間內。在區間內時，a＞0 的頂點是最小值、最大值在離對稱軸較遠的端點；頂點不在區間內時，最大值與最小值都在兩個端點。",
+   "situation_group": "函數：閉區間極值",
+   "subject": "math",
+   "strand": "function",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_adv.function.quadratic-closed-interval"
+   ],
+   "prerequisites": [
+    "math.t_mid.function.quadratic-max-min",
+    "math.t_mid.function.quadratic-graph"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-where",
+     "text": "在一個閉區間 [a, b]（包含 a、b 兩端）上，二次函數的最大值與最小值只會出現在兩種地方：頂點（如果頂點的 x 落在區間內）或區間的兩個端點。所以把這幾個位置的 y 值算出來比一比就能找到。",
+     "kind": "definition",
+     "source_refs": [
+      "閉區間上二次函數極值在頂點或端點（高中數學）"
+     ],
+     "verification_ref": "連續函數在閉區間極值於臨界點(頂點)或端點取得（高中）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-vertex-in",
+     "text": "當頂點的 x 落在區間 [a, b] 內時：a＞0（開口向上），頂點就是最小值；最大值則出現在「離對稱軸較遠」的那一個端點。（a＜0 開口向下時剛好相反：頂點是最大值，最小值在較遠的端點。）",
+     "kind": "definition",
+     "source_refs": [
+      "頂點在區間內：a＞0 頂點為最小、較遠端點為最大（高中數學）"
+     ],
+     "verification_ref": "(x－1)²＋3 於 [－2,5]：頂點 x＝1 在內，min＝3，max＝f(5)＝19（較遠端點）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-vertex-out",
+     "text": "當頂點的 x 不在區間 [a, b] 內時，二次函數在這整段區間上會一路遞增或一路遞減，所以最大值和最小值都出現在兩個端點——把 f(a) 和 f(b) 算出來比大小就好。",
+     "kind": "definition",
+     "source_refs": [
+      "頂點不在區間：函數單調，極值在兩端點（高中數學）"
+     ],
+     "verification_ref": "(x－5)²＋1 於 [0,3]：頂點 x＝5 不在內，遞減，min＝f(3)＝5、max＝f(0)＝26",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.function.quadratic-closed-interval"
+     ],
+     "body": "前面學過：整條拋物線的頂點是它的最高或最低點。但如果只看一個閉區間 [a, b]（a 到 b、含兩端）呢？關鍵想法：在閉區間上，二次函數的最大值與最小值只會出現在「頂點（若頂點 x 在區間內）」或「兩個端點」。所以先看頂點的 x 在不在 [a, b] 內，再把該算的幾個點的 y 值比一比就好。分兩種情況處理。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.function.quadratic-closed-interval"
+     ],
+     "body": "情況一（頂點 x 在區間內）：以 f(x)＝(x－2)²＋1 在 [0, 5] 為例，頂點 x＝2 在 [0, 5] 內，a＝1＞0，所以頂點是最小值＝1。最大值看兩端點：f(0)＝(0－2)²＋1＝5、f(5)＝(5－2)²＋1＝10，較大的 10 是最大值（x＝5 離對稱軸 x＝2 比較遠）。情況二（頂點 x 不在區間內）：f(x)＝(x－2)²＋1 在 [3, 6]，頂點 x＝2 不在 [3, 6] 內，函數在這段一路遞增，所以最小值 f(3)＝2、最大值 f(6)＝17，都在端點。下面的圖示範情況一。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.function.quadratic-closed-interval"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 260 190' xmlns='http://www.w3.org/2000/svg'><line x1='18' y1='160' x2='244' y2='160' stroke='#94a3b8' stroke-width='1.4'/><path d='M244,160 L237,156 M244,160 L237,164' stroke='#94a3b8' stroke-width='1.4' fill='none'/><line x1='40' y1='178' x2='40' y2='16' stroke='#94a3b8' stroke-width='1.4'/><path d='M40,16 L36,23 M40,16 L44,23' stroke='#94a3b8' stroke-width='1.4' fill='none'/><text x='236' y='174' font-family='sans-serif' font-size='11' fill='#33475b'>x</text><text x='46' y='24' font-family='sans-serif' font-size='11' fill='#33475b'>y</text><text x='28' y='174' font-family='sans-serif' font-size='11' fill='#33475b'>O</text><line x1='90' y1='160' x2='90' y2='96' stroke='#94a3b8' stroke-width='1.1' stroke-dasharray='4 3'/><line x1='175' y1='160' x2='175' y2='84' stroke='#94a3b8' stroke-width='1.1' stroke-dasharray='4 3'/><text x='86' y='174' font-family='sans-serif' font-size='11' fill='#33475b'>a</text><text x='171' y='174' font-family='sans-serif' font-size='11' fill='#33475b'>b</text><path d='M70,40 Q130,240 190,40' stroke='#2f6f54' stroke-width='2' fill='none'/><circle cx='130' cy='140' r='3.4' fill='#2f6f54'/><text x='133' y='153' font-family='sans-serif' font-size='11' fill='#2f6f54'>最小值</text><circle cx='175' cy='84' r='3.4' fill='#2f6f54'/><text x='182' y='82' font-family='sans-serif' font-size='11' fill='#2f6f54'>最大值</text></svg>",
+      "alt": "一個坐標平面，灰色的 x 軸（右端有箭頭、標 x）和 y 軸（上端有箭頭、標 y），原點標 O。一條綠色的拋物線開口向上。x 軸上有兩條灰色虛線往上接到拋物線，左邊那條下方標 a、右邊那條下方標 b，代表閉區間的兩個端點。拋物線最低的那個綠點標著「最小值」。右邊端點 b 那條虛線接到拋物線的綠點（位置比較高）標著「最大值」。",
+      "caption": "在閉區間 [a, b] 上找開口向上二次函數的極值：頂點 x 在區間內時，頂點是最小值；最大值在離對稱軸較遠的那個端點（這張圖是端點 b）"
+     }
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QC-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在一個閉區間上，二次函數的最大值與最小值只可能出現在哪些位置？",
+     "answer": "頂點或兩端點",
+     "kp_ids": [
+      "math.t_adv.function.quadratic-closed-interval"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.function.quadratic-closed-interval"
+     ],
+     "options": [
+      "頂點或兩端點",
+      "固定在頂點處",
+      "固定在端點處",
+      "區間的正中央"
+     ],
+     "distractor_rationales": {
+      "固定在頂點處": "頂點 x 若不在區間內就取不到頂點；這時極值在端點。所以是「頂點或兩端點」，不是固定在頂點。",
+      "固定在端點處": "當頂點 x 在區間內時，頂點（最小或最大）也可能是極值；所以是「頂點或兩端點」，不是只有端點。",
+      "區間的正中央": "極值位置和「區間正中央」沒有關係；要看頂點 x 在不在區間內，答案在頂點或兩端點。"
+     },
+     "answer_evidence": [
+      "c-where"
+     ],
+     "feedback": "閉區間上二次函數的極值只會在頂點（若頂點 x 在區間內）或兩個端點，把這些點的 y 值比一比即可。"
+    },
+    {
+     "question_id": "QC-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "二次函數 f(x)＝(x－1)²＋3 在閉區間 [－2, 5] 上的最小值是多少？",
+     "answer": "3",
+     "kp_ids": [
+      "math.t_adv.function.quadratic-closed-interval"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.function.quadratic-closed-interval"
+     ],
+     "options": [
+      "3",
+      "1",
+      "12",
+      "19"
+     ],
+     "distractor_rationales": {
+      "1": "1 是頂點的 x 坐標 h，不是函數值；頂點 x＝1 在 [－2, 5] 內，a＞0，最小值是頂點的 y 值 3。",
+      "12": "12 是端點 f(－2)＝(－2－1)²＋3＝12，不是最小值；頂點 x＝1 在區間內，最小值在頂點＝3。",
+      "19": "19 是 f(5)＝(5－1)²＋3，那是這個區間的最大值，不是最小值；最小值在頂點＝3。"
+     },
+     "answer_evidence": [
+      "c-vertex-in"
+     ],
+     "feedback": "頂點 x＝1 在 [－2, 5] 內、a＞0，所以頂點就是最小值＝3（頂點的 y 坐標）。"
+    },
+    {
+     "question_id": "QC-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "二次函數 f(x)＝(x－1)²＋3 在閉區間 [－2, 5] 上的最大值是多少？",
+     "answer": "19",
+     "kp_ids": [
+      "math.t_adv.function.quadratic-closed-interval"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.function.quadratic-closed-interval"
+     ],
+     "options": [
+      "19",
+      "12",
+      "3",
+      "5"
+     ],
+     "distractor_rationales": {
+      "12": "12 是另一個端點 f(－2)＝12；但 x＝5 離對稱軸 x＝1 較遠（距離 4＞3），所以 f(5)＝19 才是最大值。",
+      "3": "3 是頂點的值，那是這個區間的最小值（a＞0）；最大值在較遠的端點 x＝5，是 19。",
+      "5": "5 是把 (5－1)²＋3 算錯的結果；(5－1)²＝16，16＋3＝19，所以最大值是 19。"
+     },
+     "answer_evidence": [
+      "c-vertex-in"
+     ],
+     "feedback": "頂點 x＝1 在區間內、a＞0，最大值在離對稱軸較遠的端點：x＝5 比 x＝－2 遠，f(5)＝(5－1)²＋3＝19。"
+    },
+    {
+     "question_id": "QC-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "二次函數 f(x)＝(x－5)²＋1 在閉區間 [0, 3] 上的最小值是多少？（注意頂點 x＝5 在不在區間內）",
+     "answer": "5",
+     "kp_ids": [
+      "math.t_adv.function.quadratic-closed-interval"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.function.quadratic-closed-interval"
+     ],
+     "options": [
+      "5",
+      "1",
+      "26",
+      "4"
+     ],
+     "distractor_rationales": {
+      "1": "1 是頂點的 y 值，但頂點 x＝5 不在 [0, 3] 內，取不到；此區間一路遞減，最小值在 x＝3：f(3)＝(3－5)²＋1＝5。",
+      "26": "26 是 f(0)＝(0－5)²＋1，那是這個區間的最大值，不是最小值；最小值在 x＝3＝5。",
+      "4": "(3－5)²＝4，別忘了還要加常數 ＋1，所以 f(3)＝4＋1＝5。"
+     },
+     "answer_evidence": [
+      "c-vertex-out"
+     ],
+     "feedback": "頂點 x＝5 不在 [0, 3] 內，函數在此區間一路遞減，最小值在右端點 x＝3：f(3)＝(3－5)²＋1＝5。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（閉區間 [a, b] 上二次函數極值只在頂點或兩端點；先看頂點 x 在不在區間內：在內時 a＞0 頂點為最小、較遠端點為最大；不在內時函數單調、極值都在兩端點，比 f(a)、f(b)）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
