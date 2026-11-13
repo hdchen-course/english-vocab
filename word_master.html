@@ -30,6 +30,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line
 .wm-pip.known{border-color:#2f8a63}
 .wm-pip.on.known{background:#2f8a63}
 .wm-mastery b{color:var(--ink)}
+.wm-mhint{color:var(--ink-soft);font-size:11.5px}
 .wm-def{font-size:clamp(20px,4vw,24px);font-weight:700;text-align:center;line-height:1.4;margin:6px 4px 10px}
 .wm-pos{text-align:center;font-size:13px;color:var(--ink-soft);margin-bottom:8px}
 .wm-hintrow{text-align:center;margin:2px 0 8px}
@@ -138,13 +139,15 @@ function toFront(){
   const rs=rateSlot(); if(rs){ rs.classList.remove('show'); rs.innerHTML=''; }
   const fb=document.getElementById('flipBtn'); if(fb) fb.style.display='';
 }
-// 卡背熟練度盒進度：讓使用者看到「會了」把這個字往「已學會（盒 5–6）」推進一步，
-// 而不是以為按了沒反應。盒 0=還沒學、1–2 不熟、3–4 快會了、5–6 已學會。
+// 卡背熟練度進度：讓使用者看到「會了」把這個字往「已學會」推進一步，而不是以為按了沒反應。
+// 白話階段（不用內部的「盒」術語，小孩看得懂）：還沒學 → 不熟 → 快會了 → 已學會。
+// 進度點＝這個字複習對了幾次；每隔幾天回來再複習對，就會往右長到「已學會」。
 function masteryLine(sk){
   let b=0; try{ if(STORE){ const c=STORE.peek(sk); b=c?(c.scheduleBox||0):0; } }catch(e){}
   let pips=''; for(let i=1;i<=6;i++){ pips+='<span class="wm-pip'+(i<=b?' on':'')+(i>=5?' known':'')+'"></span>'; }
   const label = b>=5?'已學會 🎉':(b>=3?'快會了':(b>=1?'不熟':'還沒學'));
-  return '<div class="wm-mastery" aria-label="熟練度：盒 '+b+' / 6">熟練度 <span class="wm-pips" aria-hidden="true">'+pips+'</span> 盒 '+b+'/6 · <b>'+label+'</b>（盒 5–6＝已學會）</div>';
+  const hint = b>=5 ? '' : '<span class="wm-mhint">（每隔幾天回來再複習對，就會變成「已學會」）</span>';
+  return '<div class="wm-mastery" aria-label="熟練度：'+label+'">熟練度 <span class="wm-pips" aria-hidden="true">'+pips+'</span> <b>'+label+'</b>'+hint+'</div>';
 }
 function render(){
   const c=CARDS[idx]; if(!c){ return; }
@@ -205,7 +208,7 @@ function renderDone(){
   const front=document.getElementById('wmFront'), back=document.getElementById('wmBack');
   toFront();
   front.innerHTML='<div class="wm-def">這一級今天的新卡與到期複習都做完了 🎉</div>'+
-    '<div class="wm-pos">換個分級，或明天再回來複習（SRS 已記住你的進度）。</div>';
+    '<div class="wm-pos">換個分級，或明天再回來複習（你的進度會自動存起來）。</div>';
   back.innerHTML='';
   const fb=document.getElementById('flipBtn'); if(fb){ fb.textContent='再來一批 / 重新開始 ↻'; fb.style.display=''; fb.onclick=()=>{ fb.textContent='翻面看答案 ↻'; fb.onclick=onFlip; startSession(); }; }
   document.getElementById('deckLine').innerHTML='本回合牌組：'+esc(deckLabel())+' · 完成';
@@ -242,7 +245,7 @@ function renderRoundComplete(){
       fb.onclick=()=>{ fb.textContent='翻面看答案 ↻'; fb.onclick=onFlip; startSession(); }; }
   } else {
     front.innerHTML='<div class="wm-def">這一回合 '+done+' 張做完，今天的複習也全部完成了 🎉</div>'+
-      '<div class="wm-pos">換個分級，或明天再回來（SRS 已記住你的進度）。</div>';
+      '<div class="wm-pos">換個分級，或明天再回來（你的進度會自動存起來）。</div>';
     if(fb){ fb.textContent='重新開始這一級 ↻'; fb.style.display='';
       fb.onclick=()=>{ fb.textContent='翻面看答案 ↻'; fb.onclick=onFlip; startSession(); }; }
   }
@@ -302,7 +305,7 @@ function openSingleCard(sk){
     curLevel=null; curPool=[c]; CARDS=[c]; idx=0; flipped=false; hinted=false;
     render();
     document.getElementById('deckLine').innerHTML='全部單字 · '+esc(c.hw);
-    const rn=document.getElementById('roundNote'); if(rn) rn.innerHTML='單張預覽：'+esc(c.hw)+'<br>可翻面看答案、評分（會存進 SRS 進度）';
+    const rn=document.getElementById('roundNote'); if(rn) rn.innerHTML='單張預覽：'+esc(c.hw)+'<br>可翻面看答案、評分（評分會自動存起來、記住你的進度）';
   });
 }
 fetch(DATA+'index.json',{cache:'no-store'}).then(r=>r.ok?r.json():null,()=>null).then(d=>{

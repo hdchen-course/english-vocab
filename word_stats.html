@@ -86,10 +86,10 @@ const DATA='assets/wordmaster/';
 const STORE=(window.SRS&&window.SRS.createStore)?window.SRS.createStore('wordmaster_srs_v1'):null;
 const TODAY=(window.SRS&&window.SRS.today)?window.SRS.today():null;
 const BUCKETS=[
-  {k:'known',   label:'已學會', note:'盒 5–6',  color:'var(--wm-known)'},
-  {k:'almost',  label:'快會了', note:'盒 3–4',  color:'var(--wm-almost)'},
-  {k:'learning',label:'不熟',   note:'盒 1–2',  color:'var(--wm-learning)'},
-  {k:'new',     label:'還沒學', note:'尚未開始',color:'var(--wm-new)'},
+  {k:'known',   label:'已學會', note:'隔幾天還記得', color:'var(--wm-known)'},
+  {k:'almost',  label:'快會了', note:'快記住了',   color:'var(--wm-almost)'},
+  {k:'learning',label:'不熟',   note:'還要多練',   color:'var(--wm-learning)'},
+  {k:'new',     label:'還沒學', note:'還沒開始',   color:'var(--wm-new)'},
 ];
 const CEFR_LEVELS=['A1','A2','B1','B2','C1','C2'];
 let ALL=[], scope='all';
@@ -141,7 +141,7 @@ function tiles(counts,total){
 }
 function legend(){
   document.getElementById('legend').innerHTML=BUCKETS.map(b=>
-    `<span><i class="ws-dot" style="background:${b.color}"></i>${b.label}（${b.note}）</span>`).join('');
+    `<span><i class="ws-dot" style="background:${b.color}"></i>${b.label}</span>`).join('');
 }
 function levels(byLevel){
   document.getElementById('levels').innerHTML=CEFR_LEVELS.map(l=>{
@@ -167,8 +167,8 @@ function render(){
   donut(r.counts,r.total); tiles(r.counts,r.total); legend(); levels(r.byLevel); dueLine(r.due);
   document.getElementById('knownPct').textContent=(r.total?Math.round(r.counts.known/r.total*100):0)+'%';
   document.getElementById('note').innerHTML=
-    `統計依你在「單字大師」的自評進度（SRS 間隔複習盒）即時計算，資料存在本機瀏覽器。範圍「${SCOPES.find(s=>s.k===scope).label}」共 ${r.total.toLocaleString()} 字。`+
-    `<br><b>為什麼剛按過「會了」，這裡的「已學會」還是 0？</b>「已學會」是指一個字<b>隔一段時間再複習、連續答對好幾次</b>（進入間隔複習盒 5–6）才算真的記牢——這樣才不會「背完就忘」。按一次「會了」會先讓那個字往前進一盒，先落在「不熟／快會了」，之後每隔幾天回來再按「會了」，它就會慢慢升到「已學會」。所以剛開始複習時，字會集中在「不熟／快會了」，「已學會」要過幾天、複習幾輪才會長出來，這是正常的。`+
+    `這些統計是依你在「單字大師」每個字按過的「還不熟／快會了／會了」紀錄即時算出來的，資料只存在你這台裝置的瀏覽器裡。範圍「${SCOPES.find(s=>s.k===scope).label}」共 ${r.total.toLocaleString()} 字。`+
+    `<br><b>為什麼剛按過「會了」，這裡的「已學會」還是 0？</b>「已學會」是指一個字<b>隔一段時間再複習、連續答對好幾次</b>才算真的記牢——這樣才不會「背完就忘」。按一次「會了」只是往前進一步，會先落在「不熟／快會了」；之後每隔幾天回來再按「會了」，它就會慢慢變成「已學會」。所以剛開始複習時，字會集中在「不熟／快會了」，「已學會」要過幾天、複習幾輪才會長出來，這是正常的。`+
     `CEFR 分級參考 GEPT／YLE 對照與 COCA 詞頻綜合歸入（沒有單一官方全字庫分級），作為難度參考。`;
 }
 function scopeBar(){
