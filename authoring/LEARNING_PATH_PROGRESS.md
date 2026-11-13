@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-13 21:52 數學島 ratio（比例）strand 7/9：math_ratio_direct_variation（正比 y＝kx 意義/圖形/應用，t_mid 會考）5/5 收斂
+- **frozen_sha `a89a16f77b439c43`**（草稿凍 70a60bf9→R1 content_audit 抓 1 真 confirmed〔major, instructional-design〕：Q1 誘答「4」rationale「把 x 和 y 相加後再想成別的」機制不乾淨——2+6=8 撞另一誘答、到 4 的乾淨路徑是 6−2=4(y−x)，panel 6 鏡一致 DEFECT→harvest 改「用 y 減 x（6−2＝4）」乾淨單一機制、重凍 a89a16f7→R1–R5 連 5 clean，L3 全 exit 0、confirmed 全 0）。DONE-GATE 全綠（per_page PASS 且 direct-variation absent from violations／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy advisory=0 CLEAN；數學無音檔）＋iPad 四角色 render 綁 sha a89a16f7（正比圖形 figure：座標軸＋O 原點、藍線過原點、三紅點 (1,2)(2,4)(3,6) 落在線上、「每組 y÷x 都＝2（比例常數 k），直線通過原點」；三視埠右緣0% 選項洗牌相異）。
+- **3 claim kind=definition**（c-dv-def y 與 x 成正比＝y＝kx、k 固定非零的比例常數、y÷x＝k；c-dv-findk 求 k＝代一組 (x,y) 入 y＝kx 解出；c-dv-graph 圖形＝過原點直線，x＝0⇒y＝0）。事實全 .venv 驗（6＝k×2⇒k＝3；y＝2x→(1,2)(2,4)(3,6) y÷x＝2；y＝4x@5＝20；y＝60x@3＝180；y＝5x@6＝30）。★正式化層：承接直覺層 direct-inverse-intuition（比值固定），引入 y＝kx＋圖形。乘號 ×、除號 ÷、等號 ＝、座標 (x,y)。術語附英語 R15（direct proportion／constant of proportionality／origin）。prereq=ratio-value＋direct-inverse-intuition。不含反比 y＝k/x、一次函數 y＝ax+b 一般圖形。
+- **4 MCQ**：Q1 (2,6)→k＝3〔12＝2×6/8＝2＋6/4＝6−2(y−x)，三機制各異〕／Q2 正比圖形→過原點直線〔過原點曲線/不過原點直線/水平線〕／Q3 y＝5x@6→30〔11＝5＋6/5＝只寫k/1.2＝6÷5〕／Q4 k 是什麼→固定非零數等於 y÷x〔隨x變/x的值/y的值〕。teach（k＝4/60）與 figure（k＝2）與 practice 答案（3/概念/30/概念）皆不重疊避#10。
+- **commits**：草稿凍結 92cf0d78f→R1 harvest 2139a8961→R1 bank 2d6f8d4af→R2 702c55d78→R3 6dfe29650→R4 e881f9fbf→R5＋PROGRESS 本次。
+- **★里程碑：數學島 ratio（比例）strand 7/9**。已 COMPLETE strand：function 13/13、equation 15/15、geom 39/39、algexpr 18/18、numquant 30/30＝115＋ratio 7＝122 單元。
+- **下一步**：ratio 其餘 2 KP（inverse-variation 反比函數 y＝k/x〔t_mid 會考〕／proportion-apply 比例式應用問題：分配/混合/速率〔t_mid 會考〕）。另 QUEUED：hub `index_new.html` AC-VIZ-1 figure_signoff 作廢待重 render＋四角色重簽。
+
 ## 2026-11-13 21:24 數學島 ratio（比例）strand 6/9：math_ratio_ratio_simplify（連比的化簡與合併，t_mid 會考）5/5 收斂
 - **frozen_sha `2833a3e980ffcf47`**（草稿凍 2833a3e9 一次到位、無 harvest：R1 content_audit 即 clean〔R1 把 c-continued 補進 Q1 answer_evidence 解 parity-advisory 屬凍結前調整〕→R1–R5 連 5 clean，L3 全 exit 0、confirmed 全 0）。DONE-GATE 全綠（per_page PASS 且 ratio-simplify absent from violations／scan PASS／unit_schema rc0／question_correctness CLEAN 2409 題／pedagogy advisory=0 CLEAN；數學無音檔）＋iPad 四角色 render 綁 sha 2833a3e9（連比化簡 figure：紅6/藍9/橘12 長條按值比例、→ 箭頭、2:3:4、「6：9：12 同除以 3（最大公因數）＝2：3：4」；三視埠右緣0% 無溢出、選項已洗牌兩兩相異）。
 - **3 claim kind=definition**（c-continued 連比 a：b：c＝三量並列；c-simplify 化最簡整數連比＝三項同除以最大公因數 GCD；c-combine 合併兩比 a：b 與 b：c：b 相同直接併、b 不同先取最小公倍數 LCM 把 b 化相同再併，擴大一個比前後項要一起乘）。事實全 .venv 驗（8:12:20 GCD4→2:3:5；6:9:12 GCD3→2:3:4；3:4 & 4:5 b同→3:4:5；2:3 & 4:5 LCM(3,4)=12→8:12:15；2:5 & 5:3→2:5:3；3:5 & 10:7 LCM(5,10)=10→6:10:7）。比號全形「：」、乘號 ×、除號 ÷。術語附英語 R15（continued ratio／greatest common divisor GCD／least common multiple LCM）。prereq=ratio-value。
