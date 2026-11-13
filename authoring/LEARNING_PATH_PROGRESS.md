@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-13 21:01 數學島 ratio（比例）strand 5/9：math_ratio_scale_map（比例尺、放大與縮小的初步，t_base）5/5 收斂
+- **frozen_sha `7ab09063b6e6e046`**（草稿凍 34a97c12→2 輪 harvest：R1 抓 2 confirmed〔導讀「用一張圖看清楚」主語誤讀成放大縮小→改「用一張圖把比例尺看清楚」；Q3 比例尺÷n 題正解唯一最小值 option-parity magnitude cue〔1000× 落差、結構性無乾淨小數誘答，3 expert 判 NOT／2 判 DEFECT，引擎 confirm〕→改縮小邊長題 8×1/4=2 誘答 magnitude 均衡〕→重凍；R2 抓 1 confirmed〔c-scale-def「n 越大同樣一張圖縮得越小」固定圖 vs 縮實際兩讀法矛盾→改「把實際縮得越多、同大小圖畫下更大範圍」〕→重凍 7ab09063→R3–R7 連 5 clean，L3 全 exit 0、confirmed 全 0）。DONE-GATE 全綠（per_page PASS 且 scale-map absent from violations／scan／schema／question／pedagogy advisory=0；數學無音檔）＋iPad 四角色 render 綁 sha 7ab09063（比例尺示意 figure：比例尺 1：1000、量尺「圖上 1 公分」、代表、實際 1000 公分＝10 公尺、換算公式）。
+- **3 claim kind=definition**（c-scale-def 比例尺 1：n＝圖上長度:實際長度、n 越大把實際縮得越多；c-scale-convert 實際＝圖上×n、圖上＝實際÷n；c-enlarge 放大縮小＝每邊乘同一放大率、形狀不變、>1 放大 <1 縮小）。事實全 .venv 驗（5×1000=5000=50m；3×3=9；8×1/4=2；4×300=1200；1公尺=100公分）。★台灣用法：比例尺 1：n 圖上在前實際在後、實際比圖大。術語附英語 R15（scale／enlargement／reduction）。prereq=ratio-value。
+- **4 MCQ**：Q1 1:1000 圖上5cm→實際5000〔1000 忘乘5/200 除反/1005 相加〕／Q2 3cm 放大3倍→9〔6 加一次/1 除3縮小/3 沒放大〕／Q3 8cm 縮成1/4→2〔32 放大方向反×4/4 誤用1/2/12 相加〕／Q4 比例尺1:1000意思→圖上1代表實際1000〔方向反/一樣大/圖比實際大〕。teach（1:300→1200、5×2=10、4000、6×1/2=3）與 figure（1000）與 practice 答案不重疊避#10。
+- **commits**：草稿凍結 abcc7942b→R1 harvest 7563be676→R2 harvest 9fe447905→R3/R4/R5/R6 bank→R7 本次。
+- **★里程碑：數學島 ratio（比例）strand 5/9**。已 COMPLETE strand：function 13/13、equation 15/15、geom 39/39、algexpr 18/18、numquant 30/30＝115＋ratio 5＝120 單元。
+- **下一步**：ratio 其餘 4 KP（ratio-simplify 連比與比例式化簡〔t_mid, 會考〕／direct-variation 正比函數 y＝kx〔t_mid, 會考〕／inverse-variation 反比函數 y＝k/x〔t_mid, 會考〕／proportion-apply 比例式應用問題〔t_mid, 會考〕）——皆 t_mid、進入會考範圍。另 QUEUED：hub `index_new.html` AC-VIZ-1 figure_signoff 作廢待重 render＋四角色重簽。
+
 ## 2026-11-13 20:26 數學島 ratio（比例）strand 4/9：math_ratio_direct_inverse_intuition（正比/反比的直覺理解，t_base）5/5 收斂
 - **frozen_sha `22286b9314e5de02`**（草稿凍 7bc4f650→R1 content_audit 抓真 #10 overlap：teach 反比求值示範 21÷7＝3 與 Q3（21顆/7人→3）數字情境答案完全相同、Q3 可用背的→harvest 改 20÷4＝5、重凍 22286b93→R2–R6 連 5 clean，L3 全 exit 0、confirmed 全 0）。DONE-GATE 全綠（per_page PASS 且 direct-inverse absent from violations／scan／schema／question／pedagogy advisory=0；數學無音檔）＋iPad 四角色 render 綁 sha 22286b93（正比/反比對照表 figure：綠「正比」卡 枝數1/2/3→總價5/10/15 比值固定5、橘「反比」卡 人數1/2/3→每人12/6/4 乘積固定12）。
 - **3 claim kind=definition**（c-direct 正比＝一起變多、相除的比值固定；c-inverse 反比＝一變多一變少、相乘的積固定；c-judge 判斷準則＋強調反比不是『隨便一變大一變小』必須乘積固定）。事實全 .venv 驗（5/10/15÷1/2/3＝5；1×12＝2×6＝3×4＝12；20÷4＝5；21÷7＝3）。**直覺層：不引入 y＝kx 函數/座標圖/k（scope 外屬 t_mid direct-variation）**。術語附英語 R15（direct proportion／inverse proportion）。prereq=ratio-value。
