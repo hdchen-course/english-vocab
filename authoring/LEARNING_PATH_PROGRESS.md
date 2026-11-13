@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-13 15:14 數學島 function strand #11（全島#53）收斂：math_function_graph_transformation（圖形平移/伸縮/對稱，高中 t_adv 學測）5/5 → function strand 11/12
+- **frozen_sha `69d951cc0e2369c9`**（4 次修：R1 導讀句 over-promise、重跑R1 2minor（把字句缺賓語＋can_do主語）、R3 Q3 題幹型別不一致）。DONE-GATE 六確定性 gate 全綠。視覺 QA：figure＝「原圖＋右移後兩拋物線」（灰軸 O/x/y＋兩綠拋物線頂點皆在 x 軸＋綠「右移 3」箭頭），iPad 橫直四角色 render 簽核過（x² 清晰、箭頭不壓曲線、標籤分離）。3 claim（c-translate 水平 f(x−h) 右移 h／垂直 f(x)+k 上移 k；c-scale a·f(x) 縱向伸縮；c-reflect −f(x) 對 x 軸、f(−x) 對 y 軸）。★核心易錯點＝水平平移方向（x−h 右移非左），teach/can_do 明講。術語附英語 R15（平移 translation／伸縮 scaling／對稱 reflection）。prereq=exp-definition＋quadratic-graph。
+- **4 MCQ**：Q1 f(x−4)→右移4〔誘答 左移/上移/下移〕／Q2 x²+3→上移3〔誘答 下移/右移/左移〕／Q3 −f(x) 對什麼對稱→x軸〔誘答 y軸/y=x/原點〕／Q4 f(x−2)+1→右移2上移1〔誘答 左下/右下/左上，四選項同長〕。teach (x−3)²/x²+2/−x²/2x² 與 practice 不重疊。
+- **收斂路徑（4 次修、1 次 de-converge）**：草稿凍 34629c5c→R1 抓 major（teach 導讀句承諾「先看對稱範例＋整理成表」但實際規則在前/只示範平移/無表，#46）→改→f126e6b3→重跑R1 抓 2minor（Q3 誘答「只把上下翻」缺賓語＋can_do「括號向右移」主語不精確）→改→b1d65d91→R1/R2 clean→R3 抓 minor（Q3 題幹「哪一條線」但誘答「原點」是點＝型別不一致，#20 延伸）→de-converge 清 2→題幹改「對什麼對稱」→69d951cc→R1–R5 連 5 clean。記憶補 #46（導讀句↔teach 本體一致）＋#20 補題幹型別一致實例。
+- **★里程碑**：數學島 **function（函數）strand 11/12**。equation 15/15、geom 39/39、algexpr 18/18、numquant 30/30 皆 COMPLETE。
+- **下一步**：function 最後 1 個 t_adv KP：composite-inverse（合成/反函數）→ 完成即 **function strand 12/12 全完結**。
+
 ## 2026-11-13 14:21 數學島 function strand #10（全島#52）收斂：math_function_exp_growth_decay（指數成長衰退模型/半衰期/複利，高中 t_adv 學測）5/5 → function strand 10/12
 - **frozen_sha `0f7f3efb9a52cab4`**（1 次修：R1 #10 teach 識別-r 5% 與 Q4 重疊）。DONE-GATE 六確定性 gate 全綠。視覺 QA：figure＝「成長/衰退兩曲線」（geom 風灰軸 O/n/y＋綠點 A 在縱軸＋兩條綠曲線皆自 (0,A) 出發、一升一降趨近橫軸＋文字標「成長 r＞1」「衰退 0＜r＜1」），iPad 橫直四角色 render 簽核過（rⁿ/(1/2)ᵏ/1.2²/10² 清晰、標籤不壓曲線、衰退曲線趨近橫軸不碰、無重疊裁切）。3 claim kind=definition（c-model y＝A·rⁿ、r＞1 成長 0＜r＜1 衰退 r＝1 不變；c-compound 複利每期乘(1＋利率)、n 期後 A·(1＋利率)ⁿ、對比單利每期固定加；c-halflife 每過半衰期乘 1/2、k 個後 A·(1/2)ᵏ）。★事實全 .venv 驗（複利 500×1.2²＝720、1000×1.1²＝1210、單利 1200、1年1100、3年1331；半衰期 40×(1/2)³＝5、80×(1/2)²＝20、1個40、3個10；r＝1.08/1.05）。術語附英語 R15（指數成長 exponential growth／衰退 decay／半衰期 half-life／複利 compound interest）。prereq=exp-definition。
 - **4 MCQ（★四法全列 teach 避#4、teach↔practice 數字不重疊避#10）**：Q1 衰退條件（0＜r＜1〔誘答 r＞1 成長/r＝1 不變/r 負數〕）／Q2 複利（1000元10% 2年→1210〔誘答 1200 單利/1100 只1年/1331 算3年〕）／Q3 半衰期（80克半衰期5天 10天→20〔誘答 40 少一步/10 多一步/0 以為歸零〕）／Q4 識別 r（人口成長5%→r＝1.05〔誘答 0.05 成長率當倍率/0.95 衰退方向/5 百分數當整數〕）。teach 示範 複利 500×1.2²、半衰期 40×(1/2)³、識別 r 成長8%→1.08，與 practice 數字不重疊。★數值正解非唯一最大（Q2 有 1331>1210、Q3 有 40>20）。
