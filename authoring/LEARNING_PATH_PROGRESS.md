@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-13 20:26 數學島 ratio（比例）strand 4/9：math_ratio_direct_inverse_intuition（正比/反比的直覺理解，t_base）5/5 收斂
+- **frozen_sha `22286b9314e5de02`**（草稿凍 7bc4f650→R1 content_audit 抓真 #10 overlap：teach 反比求值示範 21÷7＝3 與 Q3（21顆/7人→3）數字情境答案完全相同、Q3 可用背的→harvest 改 20÷4＝5、重凍 22286b93→R2–R6 連 5 clean，L3 全 exit 0、confirmed 全 0）。DONE-GATE 全綠（per_page PASS 且 direct-inverse absent from violations／scan／schema／question／pedagogy advisory=0；數學無音檔）＋iPad 四角色 render 綁 sha 22286b93（正比/反比對照表 figure：綠「正比」卡 枝數1/2/3→總價5/10/15 比值固定5、橘「反比」卡 人數1/2/3→每人12/6/4 乘積固定12）。
+- **3 claim kind=definition**（c-direct 正比＝一起變多、相除的比值固定；c-inverse 反比＝一變多一變少、相乘的積固定；c-judge 判斷準則＋強調反比不是『隨便一變大一變小』必須乘積固定）。事實全 .venv 驗（5/10/15÷1/2/3＝5；1×12＝2×6＝3×4＝12；20÷4＝5；21÷7＝3）。**直覺層：不引入 y＝kx 函數/座標圖/k（scope 外屬 t_mid direct-variation）**。術語附英語 R15（direct proportion／inverse proportion）。prereq=ratio-value。
+- **4 MCQ**：Q1 蘋果同價 顆數↔總價→正比〔反比/沒關係/有時正比有時反比〕／Q2 固定路 速度↔時間→反比〔正比/沒關係/…〕／Q3 21顆平分7人→3〔147 相乘/28 相加/14 相減〕／Q4 反比特徵→相乘的積固定〔相除比值固定(正比)/相加和固定/相減差固定〕。teach（正比 8、反比 24、反比求值 20÷4=5）與 figure（5、12）與 practice 答案不重疊避#10。
+- **commits**：草稿凍結 ff8244536→R1 harvest e549e0a9b→R2 → R3/R4/R5 bank → R6 本次。
+- **★里程碑：數學島 ratio（比例）strand 4/9**。已 COMPLETE strand：function 13/13、equation 15/15、geom 39/39、algexpr 18/18、numquant 30/30＝115＋ratio 4＝119 單元。
+- **下一步**：ratio 其餘 5 KP（scale-map 比例尺〔t_base〕／ratio-simplify 連比化簡〔t_mid〕／direct-variation 正比函數 y＝kx〔t_mid〕／inverse-variation 反比函數 y＝k/x〔t_mid〕／proportion-apply 比例式應用〔t_mid〕）。另 QUEUED：hub `index_new.html` AC-VIZ-1 figure_signoff 作廢待重 render＋四角色重簽。
+
 ## 2026-11-13 20:01 數學島 ratio（比例）strand 3/9：math_ratio_percentage_life（百分率：折扣/成數/利率生活應用，t_base）5/5 收斂
 - **frozen_sha `00bef03eeb4d0dd4`**（草稿凍 9cf915bd→R1 content_audit 抓真 blocker：Q1 25% 誘答 rationale「把分子分母看反」機制錯——3/4 看反是 4/3≈133% 非 1/4→harvest 改機制「算成剩下的那一份 1−3/4＝1/4＝25%」、重凍 00bef03e→R2–R6 連 5 clean，L3 全 exit 0、confirmed 全 0）。DONE-GATE 全綠（per_page PASS 且 percentage-life absent from violations／scan／schema／question／pedagogy advisory=0；數學無音檔）＋iPad 四角色 render 綁 sha 00bef03e（10×10 百格圖 25 格塗藍＝25%＝25/100＝1/4＝0.25；worked-example teach 段兌現導讀承諾）。
 - **3 claim kind=definition**（c-pct-def 百分率＝每百份佔幾份、% 與分數/小數互換 25%＝1/4＝0.25；c-discount-cheng 台灣折扣「打 X 折」＝付原價 X/10〔八折＝80%＝×0.8 非打掉八成〕、成數一成＝10%；c-interest 單利 利息＝本金×年利率×年數）。事實全 .venv 驗（25%＝0.25＝1/4；3/4＝75%；500×0.8＝400；三成 2000×1.3＝2600；1000×0.02＝20）。★台灣用法正確性鐵律：八折＝80%＝×0.8、一成＝10%。% 號、乘號 ×、分數 /。術語附英語 R15（percentage／discount／simple interest）。prereq=ratio-value。
