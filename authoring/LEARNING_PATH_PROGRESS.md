@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-13 20:01 數學島 ratio（比例）strand 3/9：math_ratio_percentage_life（百分率：折扣/成數/利率生活應用，t_base）5/5 收斂
+- **frozen_sha `00bef03eeb4d0dd4`**（草稿凍 9cf915bd→R1 content_audit 抓真 blocker：Q1 25% 誘答 rationale「把分子分母看反」機制錯——3/4 看反是 4/3≈133% 非 1/4→harvest 改機制「算成剩下的那一份 1−3/4＝1/4＝25%」、重凍 00bef03e→R2–R6 連 5 clean，L3 全 exit 0、confirmed 全 0）。DONE-GATE 全綠（per_page PASS 且 percentage-life absent from violations／scan／schema／question／pedagogy advisory=0；數學無音檔）＋iPad 四角色 render 綁 sha 00bef03e（10×10 百格圖 25 格塗藍＝25%＝25/100＝1/4＝0.25；worked-example teach 段兌現導讀承諾）。
+- **3 claim kind=definition**（c-pct-def 百分率＝每百份佔幾份、% 與分數/小數互換 25%＝1/4＝0.25；c-discount-cheng 台灣折扣「打 X 折」＝付原價 X/10〔八折＝80%＝×0.8 非打掉八成〕、成數一成＝10%；c-interest 單利 利息＝本金×年利率×年數）。事實全 .venv 驗（25%＝0.25＝1/4；3/4＝75%；500×0.8＝400；三成 2000×1.3＝2600；1000×0.02＝20）。★台灣用法正確性鐵律：八折＝80%＝×0.8、一成＝10%。% 號、乘號 ×、分數 /。術語附英語 R15（percentage／discount／simple interest）。prereq=ratio-value。
+- **4 MCQ**：Q1 3/4→75%〔34 拼接/25 剩下一份/12 相乘〕／Q2 500 元打八折→400〔460 當減8%/100 折扣額/40 當8%〕／Q3 2000 增三成→2600〔600 只增額/2060 當3%/1400 方向反〕／Q4 1000 元年利率2%單利一年→20〔200 當20%/1020 本利和/2 當0.2%〕。teach（25%＝1/4、折扣 270、成數 20%、利息 6）與 practice 答案 75%/400/2600/20 及誘答皆不重疊避#10。
+- **commits**：草稿凍結 75bf0bcd0→R1 harvest 862fd9e17→R2 b4164...→R3/R4/R5 bank→R6 本次。
+- **★里程碑：數學島 ratio（比例）strand 3/9**。已 COMPLETE strand：function 13/13、equation 15/15、geom 39/39、algexpr 18/18、numquant 30/30＝115＋ratio 3＝118 單元。
+- **下一步**：ratio 其餘 6 KP（direct-inverse-intuition／scale-map／ratio-simplify〔t_mid〕／direct-variation〔t_mid〕／inverse-variation〔t_mid〕／proportion-apply〔t_mid〕）。另 QUEUED：hub `index_new.html` AC-VIZ-1 figure_signoff 作廢待重 render＋四角色重簽。
+
 ## 2026-11-13 19:37 數學島 ratio（比例）strand 2/9：math_ratio_proportion_equation（比例式與生活應用，國小高年級→國中銜接 t_base）5/5 收斂
 - **frozen_sha `3bdf4f30ec9cca61`**（草稿凍 2c0bb1de→R1 content_audit 抓真 blocker#4/#46：T1 導讀承諾「最後看速率/單價生活問題」但 rendered teach 只到 2:3=4:6 figure、worked-example 只在不 render 的 claims c-apply，Q3/Q4 卻考此設置法→harvest 補 單價 worked-example（4:60=6:90，數字避#10）進 rendered teach、est 10→11、重凍 3bdf4f30→R2–R6 連 5 clean，L3 全 exit 0、confirmed 全 0）。DONE-GATE 全綠（per_page 456/456 PASS 且 proportion-equation absent from violations／scan／schema／question／pedagogy advisory=0；數學無音檔）＋iPad 四角色 render 綁 sha 3bdf4f30（交叉相乘 figure：綠弧連外項 2,6＝12、棕弧連內項 3,4＝12，端點正確無重疊；新 worked-example teach 段 landscape render clean）。
 - **3 claim kind=definition**（c-prop-def 比例式 a：b＝c：d 兩比值相等、a/d 外項 b/c 內項；c-cross 外項乘積＝內項乘積 a×d＝b×c 求未知項；c-apply 速率/單價生活應用列比例式交叉相乘）。事實全 .venv 驗（2:3=4:6→2×6=12=3×4=12；4:60=6:x→90；2:5=6:x→15；3:45=5:x→75；2:90=5:x→225）。比號全形「：」、乘號 ×、分數 /。術語附英語 R15（proportion／extremes／means）。prereq=ratio-value。
