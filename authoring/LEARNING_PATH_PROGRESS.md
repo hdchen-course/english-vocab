@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-13 21:24 數學島 ratio（比例）strand 6/9：math_ratio_ratio_simplify（連比的化簡與合併，t_mid 會考）5/5 收斂
+- **frozen_sha `2833a3e980ffcf47`**（草稿凍 2833a3e9 一次到位、無 harvest：R1 content_audit 即 clean〔R1 把 c-continued 補進 Q1 answer_evidence 解 parity-advisory 屬凍結前調整〕→R1–R5 連 5 clean，L3 全 exit 0、confirmed 全 0）。DONE-GATE 全綠（per_page PASS 且 ratio-simplify absent from violations／scan PASS／unit_schema rc0／question_correctness CLEAN 2409 題／pedagogy advisory=0 CLEAN；數學無音檔）＋iPad 四角色 render 綁 sha 2833a3e9（連比化簡 figure：紅6/藍9/橘12 長條按值比例、→ 箭頭、2:3:4、「6：9：12 同除以 3（最大公因數）＝2：3：4」；三視埠右緣0% 無溢出、選項已洗牌兩兩相異）。
+- **3 claim kind=definition**（c-continued 連比 a：b：c＝三量並列；c-simplify 化最簡整數連比＝三項同除以最大公因數 GCD；c-combine 合併兩比 a：b 與 b：c：b 相同直接併、b 不同先取最小公倍數 LCM 把 b 化相同再併，擴大一個比前後項要一起乘）。事實全 .venv 驗（8:12:20 GCD4→2:3:5；6:9:12 GCD3→2:3:4；3:4 & 4:5 b同→3:4:5；2:3 & 4:5 LCM(3,4)=12→8:12:15；2:5 & 5:3→2:5:3；3:5 & 10:7 LCM(5,10)=10→6:10:7）。比號全形「：」、乘號 ×、除號 ÷。術語附英語 R15（continued ratio／greatest common divisor GCD／least common multiple LCM）。prereq=ratio-value。
+- **4 MCQ**：Q1 8:12:20 化最簡→2:3:5〔4:6:10 只除2沒除到底/2:6:5 三項除不同數/8:12:20 未化簡〕／Q2 3:4&4:5 b同→3:4:5〔3:4:4:5 兩個b都寫/3:8:5 兩b相加/12:16:20 多乘4非最簡〕／Q3 2:3&4:5 b不同 LCM12→8:12:15〔2:3:5 沒通分直接併/2:12:5 只改中項沒同乘/2:7:5 兩b相加〕／Q4 化最簡方法概念→三項同除以最大公因數〔除以最小項/只除最大項/各除不同數〕。teach（6:9:12→2:3:4、2:5:3、6:10:7）與 figure（2:3:4）與 practice 答案（2:3:5/3:4:5/8:12:15/概念）皆不重疊避#10。
+- **commits**：草稿凍結 76efde4f9→R1 bank b7114766b→R2 ee5bd1a5d→R3 cb75545cd→R4 de3739f23→R5＋PROGRESS 本次。
+- **★里程碑：數學島 ratio（比例）strand 6/9**（過半）。已 COMPLETE strand：function 13/13、equation 15/15、geom 39/39、algexpr 18/18、numquant 30/30＝115＋ratio 6＝121 單元。
+- **下一步**：ratio 其餘 3 KP（direct-variation 正比函數 y＝kx〔t_mid 會考〕／inverse-variation 反比函數 y＝k/x〔t_mid 會考〕／proportion-apply 比例式應用問題：分配/混合/速率〔t_mid 會考〕）。另 QUEUED：hub `index_new.html` AC-VIZ-1 figure_signoff 作廢待重 render＋四角色重簽。
+
 ## 2026-11-13 21:01 數學島 ratio（比例）strand 5/9：math_ratio_scale_map（比例尺、放大與縮小的初步，t_base）5/5 收斂
 - **frozen_sha `7ab09063b6e6e046`**（草稿凍 34a97c12→2 輪 harvest：R1 抓 2 confirmed〔導讀「用一張圖看清楚」主語誤讀成放大縮小→改「用一張圖把比例尺看清楚」；Q3 比例尺÷n 題正解唯一最小值 option-parity magnitude cue〔1000× 落差、結構性無乾淨小數誘答，3 expert 判 NOT／2 判 DEFECT，引擎 confirm〕→改縮小邊長題 8×1/4=2 誘答 magnitude 均衡〕→重凍；R2 抓 1 confirmed〔c-scale-def「n 越大同樣一張圖縮得越小」固定圖 vs 縮實際兩讀法矛盾→改「把實際縮得越多、同大小圖畫下更大範圍」〕→重凍 7ab09063→R3–R7 連 5 clean，L3 全 exit 0、confirmed 全 0）。DONE-GATE 全綠（per_page PASS 且 scale-map absent from violations／scan／schema／question／pedagogy advisory=0；數學無音檔）＋iPad 四角色 render 綁 sha 7ab09063（比例尺示意 figure：比例尺 1：1000、量尺「圖上 1 公分」、代表、實際 1000 公分＝10 公尺、換算公式）。
 - **3 claim kind=definition**（c-scale-def 比例尺 1：n＝圖上長度:實際長度、n 越大把實際縮得越多；c-scale-convert 實際＝圖上×n、圖上＝實際÷n；c-enlarge 放大縮小＝每邊乘同一放大率、形狀不變、>1 放大 <1 縮小）。事實全 .venv 驗（5×1000=5000=50m；3×3=9；8×1/4=2；4×300=1200；1公尺=100公分）。★台灣用法：比例尺 1：n 圖上在前實際在後、實際比圖大。術語附英語 R15（scale／enlargement／reduction）。prereq=ratio-value。
