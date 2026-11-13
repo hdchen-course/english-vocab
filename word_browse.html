@@ -79,9 +79,9 @@ function bucketOf(sk){ const c=STORE?STORE.peek(sk):null; const b=c?(c.scheduleB
   if(b===0)return'new'; if(b<=2)return'learning'; if(b<=4)return'almost'; return'known'; }
 function firstLetter(hw){ const c=(hw||'').trim().charAt(0).toUpperCase(); return (c>='A'&&c<='Z')?c:'#'; }
 function chip(c){
-  if(c.cefr) return `<span class="wb-chip">CEFR ${esc(c.cefr)}</span>`;
-  if(c.cefr_est) return `<span class="wb-chip est" title="官方未收錄，依${c.cefr_est_src==='coca'?'詞頻':'GEPT／YLE'}推估">約 ${esc(c.cefr_est)}</span>`;
-  return `<span class="wb-chip est">未分級</span>`;
+  const lv = c.cefr || c.cefr_est;
+  if(lv) return `<span class="wb-chip">CEFR ${esc(lv)}</span>`;
+  return '';
 }
 function render(){
   const host=document.getElementById('listHost');

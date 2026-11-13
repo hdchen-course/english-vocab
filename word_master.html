@@ -117,7 +117,7 @@ function restoreExample(text, hw){
 function hintMask(w){ return w[0]+' '+Array(Math.max(0,w.length-1)).fill('_').join(' '); }
 function levelChips(c){
   let h='';
-  h += c.cefr ? `<span class="tg lvl">CEFR ${esc(c.cefr)}</span>` : (c.cefr_est ? `<span class="tg na">約 ${esc(c.cefr_est)}</span>` : `<span class="tg na">未分級</span>`);
+  { const lv = c.cefr || c.cefr_est; h += lv ? `<span class="tg lvl">CEFR ${esc(lv)}</span>` : ''; }
   if(c.gept)  h += `<span class="tg">全民英檢 ${esc(c.gept)}</span>`;
   if(c.yle)   h += `<span class="tg">YLE ${esc(YLE_ZH[c.yle]||c.yle)}</span>`;
   if(c.toeic) h += `<span class="tg">TOEIC</span>`;

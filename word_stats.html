@@ -95,7 +95,7 @@ const CEFR_LEVELS=['A1','A2','B1','B2','C1','C2'];
 let ALL=[], scope='all';
 const SCOPES=[
   {k:'all',   label:'全部字庫', test:()=>true},
-  {k:'cefr',  label:'官方 CEFR', test:c=>!!c.cefr},
+  {k:'cefr',  label:'CEFR 分級', test:c=>!!(c.cefr||c.cefr_est)},
   {k:'gept',  label:'全民英檢 GEPT', test:c=>!!c.gept},
   {k:'yle',   label:'劍橋 YLE', test:c=>!!c.yle},
   {k:'toeic', label:'TOEIC／學術字', test:c=>!!c.toeic},
@@ -151,8 +151,7 @@ function levels(byLevel){
       const b=BUCKETS.find(x=>x.k===k);
       return `<span style="width:${f}%;background:${b.color}" title="${l} ${b.label} ${d[k]} 字"></span>`;
     }).join('');
-    const estTxt=d.est>0?`<small>含約估 ${d.est}</small>`:'';
-    return `<div class="ws-row"><div class="lv">${l} <span style="color:var(--ink-soft);font-weight:600">${t}</span>${estTxt}</div>
+    return `<div class="ws-row"><div class="lv">${l} <span style="color:var(--ink-soft);font-weight:600">${t}</span></div>
       <div class="ws-bar">${t?segs:'<span style="width:100%;background:var(--card-border)"></span>'}</div></div>`;
   }).join('');
 }
@@ -169,7 +168,7 @@ function render(){
   document.getElementById('knownPct').textContent=(r.total?Math.round(r.counts.known/r.total*100):0)+'%';
   document.getElementById('note').innerHTML=
     `統計依你在「單字大師」的自評進度（SRS 間隔複習盒）即時計算，資料存在本機瀏覽器。範圍「${SCOPES.find(s=>s.k===scope).label}」共 ${r.total.toLocaleString()} 字。`+
-    `各分級以官方 CEFR 為準；官方未收錄的字以「約估」等級歸入（來源：GEPT／YLE 官方對照，或 COCA 詞頻推估），僅供參考、不等同官方分級。`;
+    `CEFR 分級參考 GEPT／YLE 對照與 COCA 詞頻綜合歸入（沒有單一官方全字庫分級），作為難度參考。`;
 }
 function scopeBar(){
   document.getElementById('scope').innerHTML=SCOPES.map(s=>`<button type="button" class="sb-cat${s.k===scope?' on':''}" data-k="${s.k}">${s.label}</button>`).join('');
