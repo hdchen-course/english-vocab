@@ -1,0 +1,214 @@
+{
+ "_note": "數學島 不等式（inequality）strand 第 5 個單元（全島第 69；t_adv 高中學測範圍）。知識點 math.t_adv.inequality.polynomial（高次多項式不等式，分區間判號）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15）：高次多項式不等式 (polynomial inequality)、數線 (number line)、根 (root)。★scope（高中學測）：解可因式分解成相異一次因式的高次多項式不等式（首項係數 a＞0），用『分區間判號』（sign chart）。方法：(1) 先因式分解、找出全部相異實根，由小到大排在數線上，分成數個區間。(2) 由最右（最大根右側）開始判號：a＞0 時最右區為正；每經過一個『單根』符號就變一次，所以區間符號左右交錯。(3) 依不等號取區間：＞0 取正號區、＜0 取負號區；含等號（≥≤）時把各根（端點）一起算進去。不含：a＜0（可乘 −1 變號轉成 a＞0）、重根（偶次根不變號）、含分式（屬 rational KP）、無法因式分解/無實根。prereq＝一元二次不等式（圖形/判號）。★自檢（math-unit defect-classes）：事實全 .venv/sympy solve_univariate_inequality 驗（teach：(x−1)(x−2)(x−3)＞0⇒1＜x＜2 或 x＞3；(x−1)(x−2)(x−3)＜0⇒x＜1 或 2＜x＜3。practice：(x+2)(x−1)(x−3)＞0⇒−2＜x＜1 或 x＞3；(x+1)(x−2)(x−4)＜0⇒x＜−1 或 2＜x＜4；(x+3)(x−1)(x−2)≥0⇒−3≤x≤1 或 x≥2）；不等號 ＞＜≥≤、乘號 ×、根號不用（可因式分解）；量詞不撞位名（本單元無位名，#3）；learner-facing 含 selfeval_note 用字詞（#2）；★figure＝(x−1)(x−2)(x−3) 的數線判號（低幾何風險：一條數線標三根 1/2/3、四區標符號 － ＋ － ＋〔由左到右〕、正號區藍底，標題「(x−1)(x−2)(x−3) 的正負號」），alt 與 SVG text 逐字一致（#33）；誘答單一乾淨機制（正負區取反＝取成相反不等號的解／只取最右一段漏掉中間正區／套二次「兩根外側」習慣取最外兩段／忘了含端點）、選項長度均衡（#20/#28）、兩兩相異且解集 sympy 驗非空非全集（#29）；★practice 所考方法（＞0 取正區、＜0 取負區、含等號取端點、判號方法概念）都在 rendered teach 示範（#4/#46：導讀承諾『先因式分解找全部根排數線、由最右判號左右交錯、依不等號取區間，用數線判號圖看，最後練』與實際一致；worked-example 在 rendered teach）；★teach worked-example（(x−1)(x−2)(x−3)＞0⇒1＜x＜2 或 x＞3；＜0⇒x＜1 或 2＜x＜3）與 figure（(x−1)(x−2)(x−3) 判號）與 practice 答案（Q1 −2＜x＜1 或 x＞3／Q2 x＜−1 或 2＜x＜4／Q3 −3≤x≤1 或 x≥2／Q4 概念）皆不重疊避#10。claim kind=definition。figure-only example 無 body。",
+ "page": "math_inequality_polynomial.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.inequality.polynomial",
+   "title_zh": "高次多項式不等式（分區間判號）",
+   "can_do": "我會解可以因式分解的高次多項式不等式：先找出全部相異的根，由小到大排在數線上，把數線分成幾個區間；再從最右邊開始判斷每一區是正還是負（首項係數為正時，最右區是正，每過一個根就換一次號）。最後依不等號取區間：要大於 0 取正號區、要小於 0 取負號區，含等號時把根一起算進去。",
+   "situation_group": "不等式：高次多項式",
+   "subject": "math",
+   "strand": "inequality",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_adv.inequality.polynomial"
+   ],
+   "prerequisites": [
+    "math.t_adv.inequality.quadratic"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-poly-factor",
+     "text": "高次多項式不等式 (polynomial inequality)：次數高於 2 的多項式用 ＞、＜、≥、≤ 連接，這裡看首項係數 a＞0 且能因式分解成相異一次因式的情形。第一步和解方程式一樣：因式分解，找出全部讓它等於 0 的根 (root)，再由小到大排在數線 (number line) 上，把數線分成幾個區間。例如 (x−1)(x−2)(x−3)，三個根 1、2、3，數線被分成四個區間。",
+     "kind": "definition",
+     "source_refs": [
+      "高次多項式不等式：因式分解找全部根排數線（高中數學）"
+     ],
+     "verification_ref": "(x−1)(x−2)(x−3) 根 1、2、3（sympy 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-poly-sign",
+     "text": "分區間判號 (sign chart)：從最右邊的區間（最大根的右側）開始判斷正負。首項係數 a＞0 時，最右區一定是正號；每經過一個『單根』，符號就變一次，所以各區間的符號是左右交錯的。例如 (x−1)(x−2)(x−3)：x＞3 是正、2＜x＜3 是負、1＜x＜2 是正、x＜1 是負（由右到左 ＋ − ＋ −）。",
+     "kind": "definition",
+     "source_refs": [
+      "分區間判號：最右區為正、過單根變號左右交錯（高中數學）"
+     ],
+     "verification_ref": "(x−1)(x−2)(x−3)＞0⇒1＜x＜2 或 x＞3（sympy 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-poly-interval",
+     "text": "依不等號取區間：要『＞0』就取所有正號區、要『＜0』就取所有負號區（高次常常不只一段，用『或』連起來）。含等號時再把各個根（端點）一起算進去——『≥0』取正號區並含端點、『≤0』取負號區並含端點。例如 (x−1)(x−2)(x−3)＞0 取正號區，得 1＜x＜2 或 x＞3；若是 ＜0 則取負號區，得 x＜1 或 2＜x＜3。",
+     "kind": "definition",
+     "source_refs": [
+      "高次多項式不等式：依不等號取正/負號區、含等號取端點（高中數學）"
+     ],
+     "verification_ref": "(x−1)(x−2)(x−3)＜0⇒x＜1 或 2＜x＜3（sympy 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.inequality.polynomial"
+     ],
+     "body": "前面會解一元二次不等式、也會用拋物線圖形判斷正負了。高次多項式（三次以上）沒辦法都畫圖，但有一個更一般的方法叫『分區間判號』。下面先講第一步——因式分解、找出全部的根排在數線上；再講怎麼從最右邊開始判號、符號左右交錯；最後依不等號取區間，用一張數線判號圖看清楚，最後練習。（這裡都先看首項係數 a＞0、能分解成相異一次因式的情形。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.inequality.polynomial"
+     ],
+     "body": "三個重點。(1) 因式分解找全部根，由小到大排數線：例 (x−1)(x−2)(x−3)，三根 1、2、3，數線分成四區。(2) 分區間判號：從最右區（最大根右側）開始，a＞0 時最右區是正；每過一個單根就換一次號，所以符號左右交錯。(x−1)(x−2)(x−3) 由右到左是 ＋ − ＋ −：x＞3 正、2＜x＜3 負、1＜x＜2 正、x＜1 負。(3) 依不等號取區間：＞0 取正號區、＜0 取負號區，含等號把端點一起取。所以 (x−1)(x−2)(x−3)＞0 取正號區，得 1＜x＜2 或 x＞3。下面用數線判號圖看這個例子。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.inequality.polynomial"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 158' xmlns='http://www.w3.org/2000/svg'><text x='170' y='22' font-family='sans-serif' font-size='13' fill='#2f6f54' text-anchor='middle' font-weight='bold'>(x－1)(x－2)(x－3) 的正負號</text><rect x='110' y='52' width='60' height='40' fill='#eef4ff'/><rect x='230' y='52' width='78' height='40' fill='#eef4ff'/><line x1='32' y1='92' x2='308' y2='92' stroke='#94a3b8' stroke-width='1.5'/><line x1='110' y1='87' x2='110' y2='97' stroke='#33475b' stroke-width='1.2'/><line x1='170' y1='87' x2='170' y2='97' stroke='#33475b' stroke-width='1.2'/><line x1='230' y1='87' x2='230' y2='97' stroke='#33475b' stroke-width='1.2'/><circle cx='110' cy='92' r='4' fill='#33475b'/><circle cx='170' cy='92' r='4' fill='#33475b'/><circle cx='230' cy='92' r='4' fill='#33475b'/><text x='110' y='112' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>1</text><text x='170' y='112' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>2</text><text x='230' y='112' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>3</text><text x='70' y='77' font-family='sans-serif' font-size='17' fill='#c67c1e' text-anchor='middle' font-weight='bold'>－</text><text x='140' y='78' font-family='sans-serif' font-size='17' fill='#5b8def' text-anchor='middle' font-weight='bold'>＋</text><text x='200' y='77' font-family='sans-serif' font-size='17' fill='#c67c1e' text-anchor='middle' font-weight='bold'>－</text><text x='268' y='78' font-family='sans-serif' font-size='17' fill='#5b8def' text-anchor='middle' font-weight='bold'>＋</text><text x='170' y='140' font-family='sans-serif' font-size='11.5' fill='#2f6f54' text-anchor='middle'>最右區正、過每個根變號；＞0 取正號區（藍底）：1＜x＜2 或 x＞3</text></svg>",
+      "alt": "一張數線判號圖，標題「(x－1)(x－2)(x－3) 的正負號」。數線上標了三個根 1、2、3，把數線分成四個區間。由左到右，各區間的符號是 －、＋、－、＋；其中兩個＋的區間（1 到 2 之間、以及 3 的右邊）用藍底標出。最下方綠字：「最右區正、過每個根變號；＞0 取正號區（藍底）：1＜x＜2 或 x＞3」。",
+      "caption": "三個根 1、2、3 把數線分成四區。從最右邊開始：x＞3 是正，每過一個根換一次號，往左依序是 負、正、負。要 ＞0 就取兩個正號區（藍底），得 1＜x＜2 或 x＞3。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.inequality.polynomial"
+     ],
+     "body": "最後練高次多項式不等式。步驟：先因式分解找全部根、由小到大排數線分區；從最右區（a＞0 為正）開始、過每個單根換號、符號左右交錯；＞0 取正號區、＜0 取負號區，含等號就把各根一起取。再看一個『小於』的例子：(x−1)(x−2)(x−3)＜0，取負號區（x＜1 的那區和 2＜x＜3 的那區），得 x＜1 或 2＜x＜3。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QY-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "解不等式 (x＋2)(x－1)(x－3)＞0。（三個根是 －2、1、3）x 的範圍是下列哪一個？",
+     "answer": "－2＜x＜1 或 x＞3",
+     "kp_ids": [
+      "math.t_adv.inequality.polynomial"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.inequality.polynomial"
+     ],
+     "options": [
+      "－2＜x＜1 或 x＞3",
+      "x＜－2 或 1＜x＜3",
+      "x＞3",
+      "－2＜x＜3"
+     ],
+     "distractor_rationales": {
+      "x＜－2 或 1＜x＜3": "這取成了負號區，是 (x＋2)(x－1)(x－3)＜0 的解；題目是 ＞0，要取正號區 －2＜x＜1 或 x＞3。",
+      "x＞3": "只取了最右邊一段，漏掉中間 －2＜x＜1 那一區也是正的；正號區有兩段，都要用『或』取。",
+      "－2＜x＜3": "把兩段正號區直接連成一個區間，忘了中間 1＜x＜3 其實是負的（每過一個根符號就會變）；正解是 －2＜x＜1 或 x＞3。"
+     },
+     "answer_evidence": [
+      "c-poly-sign",
+      "c-poly-interval"
+     ],
+     "feedback": "三根 －2、1、3，最右區（x＞3）正、過每根變號：由右到左 ＋ － ＋ －。＞0 取正號區，得 －2＜x＜1 或 x＞3。"
+    },
+    {
+     "question_id": "QY-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "解不等式 (x＋1)(x－2)(x－4)＜0。（三個根是 －1、2、4）x 的範圍是下列哪一個？",
+     "answer": "x＜－1 或 2＜x＜4",
+     "kp_ids": [
+      "math.t_adv.inequality.polynomial"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.inequality.polynomial"
+     ],
+     "options": [
+      "x＜－1 或 2＜x＜4",
+      "－1＜x＜2 或 x＞4",
+      "2＜x＜4",
+      "x＜－1 或 x＞4"
+     ],
+     "distractor_rationales": {
+      "－1＜x＜2 或 x＞4": "這取成了正號區，是 (x＋1)(x－2)(x－4)＞0 的解；題目是 ＜0，要取負號區 x＜－1 或 2＜x＜4。",
+      "2＜x＜4": "只取了中間一段，漏掉最左邊 x＜－1 那一區也是負的；負號區有兩段，都要取。",
+      "x＜－1 或 x＞4": "這是套用二次『兩根外側』的習慣只取最外兩段；但高次要逐區判號，x＞4 其實是正號區不該取，2＜x＜4 才是負的。"
+     },
+     "answer_evidence": [
+      "c-poly-sign",
+      "c-poly-interval"
+     ],
+     "feedback": "三根 －1、2、4，最右區（x＞4）正、過每根變號：由右到左 ＋ － ＋ －。＜0 取負號區，得 x＜－1 或 2＜x＜4。"
+    },
+    {
+     "question_id": "QY-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "解不等式 (x＋3)(x－1)(x－2)≥0。（三個根是 －3、1、2）x 的範圍是下列哪一個？",
+     "answer": "－3≤x≤1 或 x≥2",
+     "kp_ids": [
+      "math.t_adv.inequality.polynomial"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.inequality.polynomial"
+     ],
+     "options": [
+      "－3≤x≤1 或 x≥2",
+      "－3＜x＜1 或 x＞2",
+      "x≤－3 或 1≤x≤2",
+      "x≥2"
+     ],
+     "distractor_rationales": {
+      "－3＜x＜1 或 x＞2": "正負區判對了，但題目是 ≥（含等號），三個根 －3、1、2 都要算進去，要用 ≤、≥。",
+      "x≤－3 或 1≤x≤2": "這取成了負號區，是 (x＋3)(x－1)(x－2)≤0 的解；題目是 ≥0，要取正號區並含端點。",
+      "x≥2": "只取了 x≥2 一段，漏掉 －3≤x≤1 那一區也是正的；正號區有兩段，都要取。"
+     },
+     "answer_evidence": [
+      "c-poly-interval"
+     ],
+     "feedback": "三根 －3、1、2，由右到左 ＋ － ＋ －。≥0 取正號區並含端點（三個根都取），得 －3≤x≤1 或 x≥2。"
+    },
+    {
+     "question_id": "QY-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用『分區間判號』解首項係數為正的高次多項式不等式時，各區間的正負號有什麼規律？",
+     "answer": "最右區為正，每經過一個單根符號就變一次，所以左右交錯",
+     "kp_ids": [
+      "math.t_adv.inequality.polynomial"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.inequality.polynomial"
+     ],
+     "options": [
+      "最右區為正，每經過一個單根符號就變一次，所以左右交錯",
+      "整條數線都是同一個符號，由首項係數的正負決定",
+      "大於 0 一律取兩根外側、小於 0 取兩根內側",
+      "最左區一定為正，越往右符號越大"
+     ],
+     "distractor_rationales": {
+      "整條數線都是同一個符號，由首項係數的正負決定": "若整條同號，就不會有解集分段了；實際上每過一個單根符號會變一次，所以是交錯的。",
+      "大於 0 一律取兩根外側、小於 0 取兩根內側": "那是『一元二次』（只有兩根）的規律；高次有多個根、多個區間，要逐區判號，不能只分內外。",
+      "最左區一定為正，越往右符號越大": "是從『最右』區開始定（a＞0 最右為正），不是最左；而且符號只有正負、沒有『越來越大』。"
+     },
+     "answer_evidence": [
+      "c-poly-factor",
+      "c-poly-sign"
+     ],
+     "feedback": "a＞0 時最右區為正，每過一個單根變一次號，符號左右交錯；再依不等號取正號區或負號區。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（高次多項式不等式步驟：先因式分解找全部相異根、由小到大排數線分區；從最右區開始判號〔首項係數為正時最右區是正〕、每過一個單根換一次號、符號左右交錯；＞0 取正號區、＜0 取負號區，含等號 ≥≤ 時把各根一起取）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
