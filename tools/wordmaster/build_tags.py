@@ -250,6 +250,23 @@ def load_awl():
             keys.add(k)
     return keys
 
+def load_bsl():
+    # Business Service List v1.20（Browne & Culligan；1744 商業英語詞族，含變化形）。
+    # HD 2026-11-13：併入 TOEIC 標籤（商業英語與 TOEIC 高度相關）。行格式＝headword,form,form,...
+    keys = set()
+    p = os.path.join(SRC, "bsl_1.20_lemmatized.txt")
+    if not os.path.exists(p):
+        return keys
+    for ln in open(p, encoding="utf-8-sig"):
+        ln = ln.strip()
+        if not ln or ln.startswith("#"):
+            continue
+        for tok in ln.split(","):
+            k = na(tok)
+            if k:
+                keys.add(k)
+    return keys
+
 # ---------- CEFR 估級（authoritative 全缺時的透明估計；絕不覆蓋 authoritative cefr）----------
 # HD 2026-11-13：「1007 個單字在 CEFR 沒有分類，你有辦法自己大概分一分嗎？」
 # 原則：只對 cefr 為 None 的卡補 cefr_est，並記 cefr_est_src，UI 以「約 Bx」與官方分級視覺區分；
@@ -278,6 +295,7 @@ def main():
     yle = load_yle()
     tsl = load_tsl()
     awl = load_awl()
+    bsl = load_bsl()
 
     def coarse_card_pos(p):
         p = (p or "").lower()
@@ -290,7 +308,7 @@ def main():
     tags = {}
     stats = {"total": len(cards), "cefr": 0, "cefr_pos_matched": 0, "cefr_src": {}, "gept": 0, "yle": 0, "toeic": 0,
              "cefr_levels": {}, "gept_levels": {}, "yle_levels": {}, "none_of_four": 0,
-             "toeic_tsl": 0, "toeic_awl": 0, "toeic_awl_only": 0,
+             "toeic_tsl": 0, "toeic_awl": 0, "toeic_awl_only": 0, "toeic_bsl": 0, "toeic_bsl_only": 0,
              "cefr_est": 0, "cefr_est_src": {}, "cefr_est_levels": {}, "cefr_still_unclassified": 0}
     misses = []
     for c in cards:
@@ -333,10 +351,11 @@ def main():
         # YLE
         y_hit = [yle[k] for k in keys if k in yle]
         yle_lv = min(y_hit, key=YLE_ORDER.index) if y_hit else None
-        # TOEIC＝TSL（官方替代）∪ AWL（Academic Word List；HD 2026-11-13 併入）
+        # TOEIC＝TSL（官方替代）∪ AWL（Academic Word List）∪ BSL（Business Service List）；HD 2026-11-13 併入
         in_tsl = any(k in tsl for k in keys)
         in_awl = any(k in awl for k in keys)
-        toeic = in_tsl or in_awl
+        in_bsl = any(k in bsl for k in keys)
+        toeic = in_tsl or in_awl or in_bsl
         # CEFR 估級（只在 authoritative cefr 全缺時）
         cefr_est = None; cefr_est_src = None
         if not cefr:
@@ -347,6 +366,8 @@ def main():
         if in_tsl: stats["toeic_tsl"] += 1
         if in_awl: stats["toeic_awl"] += 1
         if in_awl and not in_tsl: stats["toeic_awl_only"] += 1
+        if in_bsl: stats["toeic_bsl"] += 1
+        if in_bsl and not (in_tsl or in_awl): stats["toeic_bsl_only"] += 1
         if cefr_est:
             stats["cefr_est"] += 1
             stats["cefr_est_src"][cefr_est_src] = stats["cefr_est_src"].get(cefr_est_src,0)+1
@@ -373,7 +394,7 @@ def main():
                "oxford_20260715160822-oxford-3000.en.tsv","oxford_20260715165539-oxford-5000-expanded.en.tsv",
                "gept_GEPT_High-Intermediate.pdf","yle_starters_hd_paste.txt","yle_movers_hd_paste.txt",
                "yle_flyers_hd_paste.txt","tsl_TSL_12_alphabetized_description.txt","american_to_british.json",
-               "kamome_cefr_index.json","awl_headwords.txt"]:
+               "kamome_cefr_index.json","awl_headwords.txt","bsl_1.20_lemmatized.txt"]:
         pth = os.path.join(SRC, fn)
         if os.path.exists(pth):
             manifest[fn] = {"sha256": sha256_file(pth), "bytes": os.path.getsize(pth)}
@@ -384,7 +405,7 @@ def main():
            "sources": {"cefr":"CEFR-J Vocabulary Profile 1.5 + Octanove C1/C2 1.0 (openlanguageprofiles); fallback Oxford 3000/5000 (A1–C1) 補基本字缺口; 最後 supplementary=kamome1037/cefr-highlight（社群彙編；僅接受 B2/C1/C2 補 authoritative 全缺進階字，低端 A1/A2/B1 因對罕用字不可靠而丟棄；絕不覆蓋 authoritative）",
                        "gept":"LTTC 全民英檢官方參考字表（初級/中級/中高級）",
                        "yle":"Cambridge YLE Starters/Movers/Flyers Picture Book A–Z Word List (2018)",
-                       "toeic":"TOEIC Service List (TSL v1.2, Browne & Culligan) — 代用，非 ETS 官方 ∪ Academic Word List (Coxhead 2000, 570 families, Sublists 1-10；HD 2026-11-13 併入 TOEIC)",
+                       "toeic":"TOEIC Service List (TSL v1.2, Browne & Culligan) — 代用，非 ETS 官方 ∪ Academic Word List (Coxhead 2000, 570 families, Sublists 1-10) ∪ Business Service List v1.20 (Browne & Culligan, 1744 families；HD 2026-11-13 併入 TOEIC)",
                        "cefr_est":"authoritative CEFR 全缺時的透明估計（不覆蓋 authoritative）：GEPT 初級→A2/中級→B1/中高級→B2（LTTC）、YLE starters/movers→A1 flyers→A2（Cambridge）、否則 COCA 頻率帶→CEFR（1k A1,2k A2,3k B1,4-5k B2,6-8k C1,9k-tail C2）"},
            "source_files": manifest, "stats": stats, "sample_unmapped": misses}
 
