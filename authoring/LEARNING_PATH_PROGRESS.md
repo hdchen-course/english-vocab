@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-13 16:52 數學島 function strand #12（全島#54）收斂：math_function_composite_inverse（合成函數與反函數，高中 t_adv 學測）5/5 → function strand 12/13
+- **frozen_sha `5dad0d8c8061fe98`**（1 次 harvest：R1 抓 #42 類「座標→坐標」國教院標準用字，7 鏡一致 a-wrong/b-hard，修 learner-facing lines 35/187/188/194＋_note）。DONE-GATE 確定性 gate 全綠（per_page 5-clean PASS／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy CLEAN；數學單元無音檔）。視覺 QA：figure＝合成流程框（三灰框 x→g(x)→f(g(x))＋兩綠箭頭「先用 g」「再用 f」＋綠字註「合成函數 f∘g：先做 g，再做 f（順序會影響結果）」，低幾何風險），iPad 橫 1366×1024＋直 1024×1366＋16" 1718×890 四角色 render 簽核過（流程框對齊、箭頭指向正確、綠字不裁切、側欄滿版、無重疊/溢出）。
+- **3 claim kind=definition**（c-composite (f∘g)(x)=f(g(x)) 先 g 再 f、順序影響，例 f=x+2,g=3x→14/18；c-inverse-def f⁻¹ 輸入輸出對調、f⁻¹(f(x))=x、對 y=x 對稱、過 (a,b)⟺過 (b,a)；c-find-inverse x、y 對調再解 y，例 f=3x−6→(x+6)/3）。★事實全 .venv/sympy 驗（f∘g(3)=19≠g∘f(3)=49；f=2x+1→f⁻¹=(x−1)/2 且 f⁻¹(f(x))=x；(2,5)↔(5,2)）。術語附英語 R15（合成函數 composite function／反函數 inverse function）。prereq=concept-domain-range＋linear-graph。
+- **4 MCQ**：Q1 (f∘g)(3)＝19〔誘答 49 順序反/9 只做 g/7 只做 f〕／Q2 (f∘g) 與 (g∘f) 關係→不一定相等順序影響〔四選項平行句式〕／Q3 f=2x+1 反函數→(x−1)/2〔誘答 (x+1)/2 移項號錯/2x−1 沒對調/1/(2x+1) 當倒數〕／Q4 f 過 (2,5) 則 f⁻¹ 過→(5,2)〔誘答 (2,5) 照抄/(−2,−5)(−5,−2) 變負號〕。
+- **收斂路徑（1 次 harvest、無 de-converge）**：草稿凍 04354544（c3082a4ae）→content_audit R1 抓 4 個 #42「座標」缺陷（rounds 空、直接改＝harvest-first 不需清 ledger）→修 座標→坐標＋re-freeze 5dad0d8c（d29a47885）→R2–R6 連 5 clean（L3 全 exit 0、confirmed 全 0、無 agent error；commits 85d25e42d/ba83741e2/d9517bc87/950f21178/326dc58fc）。記憶 defect-class #42 補 composite-inverse 複犯＋「metadata(_note/verification_ref) 的座標非 learner-facing 缺陷、勿為此 de-converge DONE 單元」scope 界定。
+- **★里程碑**：數學島 **function（函數）strand 12/13**。equation 15/15、geom 39/39、algexpr 18/18、numquant 30/30 皆 COMPLETE。
+- **下一步**：function 最後 1 個 KP＝`math.t_sub.function.rational-graph`（有理函數的圖形與漸近線，分科 t_sub）→ 完成即 **function strand 13/13 全完結**。另 QUEUED：`index_new.html`（hub）AC-VIZ-1 figure_signoff 作廢（signoff sha ec2bffb5≠當前 4741b69d，先前 prerequisites 接線編輯後未重簽）→需 hub 13 render 狀態重 render＋四角色重簽核。
+
 ## 2026-11-13 15:30 單字大師 v2（HD 插隊 3 請求，全上線 push HEAD accd13937）
 - **(A) CEFR 估級 1007 未分級字**（HD：「你有辦法自己大概分一分嗎？」）：`build_tags.py` 新增 `cefr_est`（**不覆蓋** authoritative `cefr=null` 的誠實留空）。優先序：GEPT 初級→A2/中級→B1/中高級→B2（LTTC 官方）、YLE starters/movers→A1 flyers→A2（Cambridge）、否則 COCA 頻率帶→CEFR（1k A1,2k A2,3k B1,4-5k B2,6-8k C1,9k-tail C2）。**1007 全數取得估計、0 仍未分級**（gept 274/coca 733/yle 2）。UI 以「約 Bx」虛線 chip 與官方實心 chip 視覺區分、標「僅供參考不等同官方」。
 - **(B) AWL 併入 TOEIC**（HD：eapfoundation AWL 清單歸 TOEIC）：Coxhead 2000 AWL 570 字族存 `sources/awl_headwords.txt`（附 provenance）；`toeic = TSL ∪ AWL`，新增 **518 AWL-only** 字（UK 拼寫經 spelling_variants 匹配美式，如 analyse→analyze）。
