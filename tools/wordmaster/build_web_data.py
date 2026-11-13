@@ -86,6 +86,33 @@ def main():
     for key, recs in scheme_buckets.items():
         dump(key, recs)
 
+    # all.json：依字母排序的全卡（供「統計圖表」與「字母序瀏覽」兩頁共用；buckets 依 CEFR 分割，每卡恰一次）
+    all_recs = []
+    for b in CEFR_BUCKETS:
+        all_recs.extend(buckets[b])
+    def hw_key(r):
+        h = (r.get("hw") or "").lower()
+        return (h, r.get("sk") or "")
+    all_recs = sorted(all_recs, key=hw_key)
+    allp = os.path.join(OUTDIR, "all.json")
+    all_payload = json.dumps({"bucket": "all", "count": len(all_recs), "cards": all_recs},
+                             ensure_ascii=False, separators=(",", ":"))
+    open(allp, "w", encoding="utf-8").write(all_payload)
+    shard_meta["all"] = {"count": len(all_recs), "bytes": len(all_payload.encode("utf-8")),
+                         "sha256": hashlib.sha256(all_payload.encode("utf-8")).hexdigest()[:16]}
+    print("all.json:", len(all_recs), "cards,", len(all_payload.encode("utf-8")), "bytes")
+
+    # stats_index.json：精簡 sk→tags（供「統計圖表」頁把 SRS 盒分布 join 到各分級；不含 def/ex，省頻寬）
+    si = [{"sk": r["sk"], "hw": r["hw"],
+           "cefr": r["cefr"], "cefr_est": r["cefr_est"],
+           "gept": r["gept"], "yle": r["yle"], "toeic": r["toeic"], "band": r["band"]}
+          for r in all_recs]
+    sip = os.path.join(OUTDIR, "stats_index.json")
+    si_payload = json.dumps({"schema": "wordmaster-stats-index/1", "count": len(si), "cards": si},
+                            ensure_ascii=False, separators=(",", ":"))
+    open(sip, "w", encoding="utf-8").write(si_payload)
+    print("stats_index.json:", len(si), "cards,", len(si_payload.encode("utf-8")), "bytes")
+
     index = {
         "schema": "wordmaster-web/1",
         "tags_fingerprint": json.load(open(TAGS, encoding="utf-8"))["fingerprint_sha256"],

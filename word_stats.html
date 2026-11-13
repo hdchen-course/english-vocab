@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>單字大師・學習統計</title>
+<link rel="stylesheet" href="assets/app.css">
+<script src="game_core.js"></script>
+<style>
+/* 單字大師學習統計頁 — 甜甜圈 + 四桶統計 + 各級堆疊條（Anki 風）。
+   狀態四色（亮/暗各定義，皆過 AA 對比）：還沒學=中性灰、不熟=暖珊瑚、快會了=琥珀、已學會=綠。 */
+:root{
+  --wm-new:#b4ab9b; --wm-learning:#d9704f; --wm-almost:#cf9a1e; --wm-known:#2f8a63;
+}
+:root[data-theme="dark"]{
+  --wm-new:#8d8575; --wm-learning:#ff9a7a; --wm-almost:#e8c05a; --wm-known:#46c98f;
+}
+.ws-wrap{max-width:1180px;margin:0 auto;padding:10px 4px 40px}
+.ws-scope{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 14px}
+.ws-scope button{min-height:0;width:auto;flex:0 0 auto;padding:6px 13px;font-size:13px;font-weight:700;
+  border:1px solid var(--card-border);border-radius:999px;background:var(--card);color:var(--ink);cursor:pointer}
+.ws-scope button.on{background:var(--accent);color:var(--on-accent);border-color:var(--accent);font-weight:800}
+.ws-hero{display:grid;grid-template-columns:minmax(220px,300px) 1fr;gap:18px;align-items:center;
+  background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:18px 20px}
+.ws-donutwrap{position:relative;width:100%;max-width:280px;margin:0 auto}
+.ws-donut{display:block;width:100%;height:auto}
+.ws-donut__center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.ws-donut__pct{font-size:40px;font-weight:800;color:var(--wm-known);line-height:1}
+.ws-donut__sub{font-size:13px;color:var(--ink-soft);margin-top:3px}
+.ws-tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.ws-tile{background:var(--bg);border:1px solid var(--card-border);border-radius:13px;padding:12px 14px;display:flex;align-items:center;gap:11px}
+.ws-dot{width:15px;height:15px;border-radius:50%;flex:0 0 auto}
+.ws-tile .tx{min-width:0}
+.ws-tile .v{font-size:25px;font-weight:800;color:var(--ink);line-height:1.05}
+.ws-tile .l{font-size:12.5px;color:var(--ink-soft);margin-top:2px}
+.ws-tile .p{font-size:12px;color:var(--ink-soft);font-weight:700}
+.ws-due{margin:16px 0 8px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:14.5px;color:var(--ink)}
+.ws-due b{color:var(--wm-learning);font-size:17px}
+.ws-due a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:800;font-size:13.5px;
+  padding:7px 14px;border-radius:999px;background:var(--accent);color:var(--on-accent)}
+.ws-sec{margin:22px 0 10px;font-size:15px;font-weight:800;color:var(--ink)}
+.ws-legend{display:flex;flex-wrap:wrap;gap:13px;margin:0 0 12px;font-size:12.5px;color:var(--ink-soft)}
+.ws-legend span{display:inline-flex;align-items:center;gap:6px}
+.ws-levels{display:flex;flex-direction:column;gap:11px}
+.ws-row{display:grid;grid-template-columns:116px 1fr;gap:12px;align-items:center}
+.ws-row .lv{font-size:13px;font-weight:700;color:var(--ink);text-align:right}
+.ws-row .lv small{display:block;color:var(--ink-soft);font-weight:600;font-size:11px}
+.ws-bar{display:flex;height:26px;border-radius:7px;overflow:hidden;background:var(--card-border)}
+.ws-bar span{height:100%}
+.ws-bar span:hover{filter:brightness(1.08)}
+.ws-note{margin-top:18px;font-size:12px;color:var(--ink-soft);line-height:1.7}
+@media (max-width:720px){
+  .ws-hero{grid-template-columns:1fr;gap:12px}
+  .ws-tiles{grid-template-columns:repeat(2,1fr)}
+  .ws-row{grid-template-columns:92px 1fr}
+}
+</style>
+</head>
+<body data-game-hud="off">
+<header class="app-bar">
+  <a class="app-bar__home" href="index_new.html#eng" aria-label="回到學習地圖">
+    <span class="app-bar__home-icon" aria-hidden="true">🏠</span><span class="app-bar__home-label">學習地圖</span>
+  </a>
+  <span class="app-bar__title">單字大師・學習統計 📊</span>
+  <button type="button" class="app-bar__theme" data-theme-toggle aria-label="切換日間／夜間模式" aria-pressed="false" title="切換日間／夜間模式">
+    <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
+  </button>
+</header>
+<main class="shell"><div class="ws-wrap">
+  <nav class="ws-scope" id="scope" aria-label="字庫範圍"></nav>
+  <div style="margin:-6px 0 12px;font-size:13px"><a href="word_browse.html" style="color:var(--accent);font-weight:700;text-decoration:none">📖 查看全部單字（字母序）→</a></div>
+  <section class="ws-hero">
+    <div class="ws-donutwrap">
+      <svg class="ws-donut" id="donut" viewBox="0 0 200 200" role="img" aria-labelledby="donutTitle"></svg>
+      <div class="ws-donut__center"><span class="ws-donut__pct" id="knownPct">—</span><span class="ws-donut__sub">已學會</span></div>
+      <span id="donutTitle" hidden>學習進度甜甜圈</span>
+    </div>
+    <div class="ws-tiles" id="tiles"></div>
+  </section>
+  <div class="ws-due" id="dueLine"></div>
+  <h2 class="ws-sec">各分級的掌握情形</h2>
+  <div class="ws-legend" id="legend"></div>
+  <div class="ws-levels" id="levels"></div>
+  <p class="ws-note" id="note"></p>
+</div></main>
+<script src="assets/safe_store.js"></script>
+<script src="assets/srs_engine.js"></script>
+<script>
+const DATA='assets/wordmaster/';
+const STORE=(window.SRS&&window.SRS.createStore)?window.SRS.createStore('wordmaster_srs_v1'):null;
+const TODAY=(window.SRS&&window.SRS.today)?window.SRS.today():null;
+const BUCKETS=[
+  {k:'known',   label:'已學會', note:'盒 5–6',  color:'var(--wm-known)'},
+  {k:'almost',  label:'快會了', note:'盒 3–4',  color:'var(--wm-almost)'},
+  {k:'learning',label:'不熟',   note:'盒 1–2',  color:'var(--wm-learning)'},
+  {k:'new',     label:'還沒學', note:'尚未開始',color:'var(--wm-new)'},
+];
+const CEFR_LEVELS=['A1','A2','B1','B2','C1','C2'];
+let ALL=[], scope='all';
+const SCOPES=[
+  {k:'all',   label:'全部字庫', test:()=>true},
+  {k:'cefr',  label:'官方 CEFR', test:c=>!!c.cefr},
+  {k:'gept',  label:'全民英檢 GEPT', test:c=>!!c.gept},
+  {k:'yle',   label:'劍橋 YLE', test:c=>!!c.yle},
+  {k:'toeic', label:'TOEIC／學術字', test:c=>!!c.toeic},
+];
+function bucketOf(sk){
+  const c=STORE?STORE.peek(sk):null; const b=c?(c.scheduleBox||0):0;
+  let bk; if(b===0)bk='new'; else if(b<=2)bk='learning'; else if(b<=4)bk='almost'; else bk='known';
+  const due=!!(c && c.status!=='new' && c.dueDate && TODAY && c.dueDate<=TODAY);
+  return {bk,due};
+}
+function effLevel(c){ return c.cefr || c.cefr_est || null; }
+function compute(pool){
+  const counts={new:0,learning:0,almost:0,known:0}; let due=0;
+  const byLevel={}; CEFR_LEVELS.forEach(l=>byLevel[l]={new:0,learning:0,almost:0,known:0,total:0,est:0});
+  for(const c of pool){
+    const r=bucketOf(c.sk);
+    counts[r.bk]++; if(r.due)due++;
+    const lv=effLevel(c);
+    const bk=r.bk;
+    if(lv&&byLevel[lv]){ byLevel[lv][bk]++; byLevel[lv].total++; if(!c.cefr&&c.cefr_est)byLevel[lv].est++; }
+  }
+  return {counts,due,byLevel,total:pool.length};
+}
+function donut(counts,total){
+  const C=2*Math.PI*78; let off=0; let seg='';
+  const order=['known','almost','learning','new'];
+  for(const k of order){
+    const b=BUCKETS.find(x=>x.k===k); const f=total?counts[k]/total:0;
+    if(f>0){
+      seg+=`<circle cx="100" cy="100" r="78" fill="none" stroke="${b.color}" stroke-width="30"
+        stroke-dasharray="${(f*C).toFixed(2)} ${(C-f*C).toFixed(2)}" stroke-dashoffset="${(-off*C).toFixed(2)}"
+        transform="rotate(-90 100 100)"><title>${b.label} ${counts[k]} 字</title></circle>`;
+      off+=f;
+    }
+  }
+  if(total===0) seg=`<circle cx="100" cy="100" r="78" fill="none" stroke="var(--card-border)" stroke-width="30"></circle>`;
+  document.getElementById('donut').innerHTML=seg;
+}
+function tiles(counts,total){
+  document.getElementById('tiles').innerHTML=BUCKETS.map(b=>{
+    const n=counts[b.k], p=total?Math.round(n/total*100):0;
+    return `<div class="ws-tile"><span class="ws-dot" style="background:${b.color}"></span>
+      <div class="tx"><div class="v">${n.toLocaleString()}</div><div class="l">${b.label} <span class="p">· ${p}%</span></div></div></div>`;
+  }).join('');
+}
+function legend(){
+  document.getElementById('legend').innerHTML=BUCKETS.map(b=>
+    `<span><i class="ws-dot" style="background:${b.color};width:12px;height:12px"></i>${b.label}（${b.note}）</span>`).join('');
+}
+function levels(byLevel){
+  const rows=CEFR_LEVELS.map(l=>{
+    const d=byLevel[l]; const t=d.total||0;
+    const segs=['known','almost','learning','new'].map(k=>{
+      const f=t?d[k]/t*100:0; if(f<=0)return '';
+      const b=BUCKETS.find(x=>x.k===k);
+      return `<span style="width:${f}%;background:${b.color}" title="${l} ${b.label} ${d[k]} 字"></span>`;
+    }).join('');
+    const estTxt=d.est>0?`<small>含約估 ${d.est}</small>`:'';
+    return `<div class="ws-row"><div class="lv">${l} <span style="color:var(--ink-soft);font-weight:600">${t}</span>${estTxt}</div>
+      <div class="ws-bar">${t?segs:'<span style="width:100%;background:var(--card-border)"></span>'}</div></div>`;
+  }).join('');
+  document.getElementById('levels').innerHTML=rows;
+}
+function dueLine(due){
+  const el=document.getElementById('dueLine');
+  if(due>0) el.innerHTML=`今天有 <b>${due}</b> 張到期要複習。<a href="word_master.html">▶ 去複習</a>`;
+  else el.innerHTML=`今天的複習都做完了 🎉　<a href="word_master.html">▶ 繼續學新字</a>`;
+}
+function render(){
+  const pool=ALL.filter(SCOPES.find(s=>s.k===scope).test);
+  const r=compute(pool);
+  donut(r.counts,r.total); tiles(r.counts,r.total); legend(); levels(r.byLevel); dueLine(r.due);
+  document.getElementById('knownPct').textContent=(r.total?Math.round(r.counts.known/r.total*100):0)+'%';
+  document.getElementById('note').innerHTML=
+    `統計依你在「單字大師」的自評進度（SRS 間隔複習盒）即時計算，資料存在本機瀏覽器。範圍「${SCOPES.find(s=>s.k===scope).label}」共 ${r.total.toLocaleString()} 字。`+
+    `各分級以官方 CEFR 為準；官方未收錄的字以「約估」等級歸入（來源：GEPT／YLE 官方對照，或 COCA 詞頻推估），僅供參考、不等同官方分級。`;
+}
+function scopeBar(){
+  document.getElementById('scope').innerHTML=SCOPES.map(s=>`<button data-k="${s.k}" class="${s.k===scope?'on':''}">${s.label}</button>`).join('');
+  document.querySelectorAll('#scope button').forEach(b=>b.onclick=()=>{
+    scope=b.dataset.k; document.querySelectorAll('#scope button').forEach(x=>x.classList.toggle('on',x===b)); render();
+  });
+}
+fetch(DATA+'cards/stats_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():null,()=>null).then(d=>{
+  if(!d||!d.cards){ document.getElementById('tiles').innerHTML='<p class="l" role="alert">⚠ 統計索引暫時無法載入（請用 http 開啟）。</p>'; return; }
+  ALL=d.cards; scopeBar(); render();
+});
+</script>
+</body>
+</html>
