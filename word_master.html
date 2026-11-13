@@ -23,6 +23,13 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line
 .tg.lvl{background:var(--accent);color:var(--on-accent)}
 .tg.freq{background:var(--card);border:1px solid var(--card-border);color:var(--ink-soft)}
 .tg.na{background:var(--card);border:1px dashed var(--card-border);color:var(--ink-soft)}
+.wm-mastery{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-soft);margin:4px 4px 10px}
+.wm-pips{display:inline-flex;gap:4px}
+.wm-pip{width:13px;height:13px;border-radius:4px;background:var(--card);border:1px solid var(--card-border);box-sizing:border-box}
+.wm-pip.on{background:var(--accent)}
+.wm-pip.known{border-color:#2f8a63}
+.wm-pip.on.known{background:#2f8a63}
+.wm-mastery b{color:var(--ink)}
 .wm-def{font-size:clamp(20px,4vw,24px);font-weight:700;text-align:center;line-height:1.4;margin:6px 4px 10px}
 .wm-pos{text-align:center;font-size:13px;color:var(--ink-soft);margin-bottom:8px}
 .wm-hintrow{text-align:center;margin:2px 0 8px}
@@ -131,6 +138,14 @@ function toFront(){
   const rs=rateSlot(); if(rs){ rs.classList.remove('show'); rs.innerHTML=''; }
   const fb=document.getElementById('flipBtn'); if(fb) fb.style.display='';
 }
+// 卡背熟練度盒進度：讓使用者看到「會了」把這個字往「已學會（盒 5–6）」推進一步，
+// 而不是以為按了沒反應。盒 0=還沒學、1–2 不熟、3–4 快會了、5–6 已學會。
+function masteryLine(sk){
+  let b=0; try{ if(STORE){ const c=STORE.peek(sk); b=c?(c.scheduleBox||0):0; } }catch(e){}
+  let pips=''; for(let i=1;i<=6;i++){ pips+='<span class="wm-pip'+(i<=b?' on':'')+(i>=5?' known':'')+'"></span>'; }
+  const label = b>=5?'已學會 🎉':(b>=3?'快會了':(b>=1?'不熟':'還沒學'));
+  return '<div class="wm-mastery" aria-label="熟練度：盒 '+b+' / 6">熟練度 <span class="wm-pips" aria-hidden="true">'+pips+'</span> 盒 '+b+'/6 · <b>'+label+'</b>（盒 5–6＝已學會）</div>';
+}
 function render(){
   const c=CARDS[idx]; if(!c){ return; }
   const front=document.getElementById('wmFront'), back=document.getElementById('wmBack');
@@ -146,7 +161,8 @@ function render(){
     `<button class="wm-rnd" id="wAudio" title="播放單字發音" aria-label="播放單字發音">🔊</button></div>`+
     `<div class="wm-ipa">US <b>/${esc(c.ipaus)}/</b> &nbsp; UK <b>/${esc(c.ipauk)}/</b></div>`+
     exs.map((e,i)=>`<div class="wm-exrow"><div class="wm-ex">${restoreExample(e,c.hw)}</div>`+
-      ((c.ae&&c.ae[i])?`<button class="wm-rnd sm" data-ae="${i}" title="播放例句" aria-label="播放例句">🔊</button>`:'')+`</div>`).join('');
+      ((c.ae&&c.ae[i])?`<button class="wm-rnd sm" data-ae="${i}" title="播放例句" aria-label="播放例句">🔊</button>`:'')+`</div>`).join('')+
+    masteryLine(c.sk);
   { const wmH=document.getElementById('wmHint'); if(wmH&&window.HintFirstLetter) window.HintFirstLetter.create(wmH,{minLen:3}).setWord(c.hw); }
   document.getElementById('deckLine').innerHTML=`本回合牌組：${esc(deckLabel())} · 第 ${idx+1} / ${CARDS.length} 張`;
   // 依 flipped 狀態擺正/翻面
@@ -194,11 +210,19 @@ function renderDone(){
   const fb=document.getElementById('flipBtn'); if(fb){ fb.textContent='再來一批 / 重新開始 ↻'; fb.style.display=''; fb.onclick=()=>{ fb.textContent='翻面看答案 ↻'; fb.onclick=onFlip; startSession(); }; }
   document.getElementById('deckLine').innerHTML='本回合牌組：'+esc(deckLabel())+' · 完成';
 }
+let rating=false;
 function rate(grade){
+  if(rating) return;               // 防連點（停留回饋期間）
   const c=CARDS[idx];
   try{ if(STORE) STORE.rate(c.sk, grade); }catch(e){}
-  if(idx>=CARDS.length-1){ renderRoundComplete(); return; }
-  idx++; flipped=false; hinted=false; render();
+  // 即時回饋：更新卡背熟練度，讓使用者看到這個字往「已學會」前進了一步（不是按了沒反應）。
+  const back=document.getElementById('wmBack');
+  const ml=back&&back.querySelector('.wm-mastery');
+  if(ml){ ml.outerHTML=masteryLine(c.sk); }
+  const rs=rateSlot(); if(rs){ rs.querySelectorAll('.fc-rate__btn').forEach(b=>b.disabled=true); }
+  const adv=()=>{ rating=false; if(idx>=CARDS.length-1){ renderRoundComplete(); return; } idx++; flipped=false; hinted=false; render(); };
+  let reduce=false; try{ reduce=matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+  if(reduce){ adv(); } else { rating=true; setTimeout(adv,640); }
 }
 // 一回合（最多 ROUND_SIZE 張）做完：不自動再開一回合（否則到期卡越滾越多、每天量暴增）。
 // 顯示完成畫面＋「再來一回合」按鈕；想多練才按，按了才建下一批。若已無到期/新卡則顯示今日完成。
