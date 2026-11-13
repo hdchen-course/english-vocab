@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-13 08:39 數學島 function strand #1（全島#43）收斂：math_function_linear_graph（一次函數的圖形：斜率與 y 截距，國中 t_mid）5/5 → function strand 1/12 ★ 開新 strand
+- **frozen_sha `8e965ddc827a4e88`**（R1 修後）。DONE-GATE 六確定性 gate 全綠。視覺 QA：★新 figure 類型「座標圖」（geom 風：灰色座標軸中性＋綠色有意義直線）——灰 x/y 軸（箭頭＋O/x/y 標記）＋綠色直線標「y＝ax＋b」＋綠色 y 截距點標「y 截距 b」＋caption iPad 橫直四角色 render 簽核過（軸箭頭貼合、綠線在框內、y 截距點在 y 軸上、標籤清楚不重疊、alt 逐字一致 #33、軸箭頭 M…L… 在 <path d>、直線用 <line> #32）。3 claim kind=definition（c-line 圖形是直線、c-slope a 斜率升降陡度、c-intercept b y 截距＝x＝0 時 y 值）。prereq=linear-one-var。全驗（y＝3x＋2 截距 2、y＝－2x＋5 斜率－2 往右下、y＝x＋3 過 (1,4)）。
+- **4 MCQ**：Q1 讀 y 截距（y＝3x＋2→2〔誘答 3 斜率當截距／－2 符號錯／0 以為過原點〕）／Q2 斜率辨識（答 a〔誘答 b y截距／x,y 變數〕）／Q3 斜率升降（y＝－2x＋5→往右下〔誘答 往右上 a>0／水平 a=0／垂直 不可能〕四敘述近等長）／Q4 代點檢驗（(1,4) 在 y＝x＋3 上〔誘答 (1,3)/(0,0)/(3,0) 代入不成立〕座標對等長）。四選項長度均衡、數值/敘述兩兩相異（#29）。
+- **收斂路徑（1 次修）**：草稿凍 5370ade6→R1 抓 alt「座標」與全檔「坐標」不一致（7 鏡 minor 術語一致性 #22；台灣國教院標準＝坐標）→全檔 座標→坐標、重凍 8e965ddc→R1–R5 連 5 clean。新 defect-class #42（坐標 vs 座標 異體字統一國教院標準）已入 memory。
+- **★里程碑**：開新 strand——數學島 **function（函數）strand 1/12**（首個單元收斂）。建立「座標圖」figure 樣式（geom 風灰軸＋綠線）可重用於後續函數圖形單元。equation 15/15、geom 39/39、algexpr 18/18、numquant 30/30 皆 COMPLETE。
+- **下一步**：function t_mid `math.t_mid.function.quadratic-graph`（二次函數的圖形：拋物線、開口、頂點），延用座標圖 figure 樣式。function 剩 11 個 KP（t_mid 2＋t_adv 9）。
+
 ## 2026-11-13 08:11 ★★ 數學島 equation strand #15（全島#42）收斂：math_equation_exp_log（指數與對數方程式，高中 t_adv）5/5 → equation strand 15/15 完結 ★★
 - **frozen_sha `157314f3cf47427a`**。DONE-GATE 六確定性 gate 全綠。視覺 QA：化同底 figure——slate 框「2ˣ＝16」＋綠色向下箭頭＋綠框兩行「化成 2ˣ＝2⁴」「底數相同 → x＝4」＋綠文字「同底時比較指數」iPad 橫直四角色 render 簽核過（上標 ˣ/⁴、下標 log₂/logₐ 實測清晰可讀、箭頭貼合、無 ＝0＝ 鏈、唯一綠 #17、alt 逐字一致 #33）。3 claim kind=definition（c-exp-samebase 化同底比較指數、c-log-def 對數定義 logₐN＝x 等價 aˣ＝N、c-domain 真數>0 底數>0 且≠1 與檢驗）。prereq=quadratic-formula＋quadratic-discriminant。全 .venv 驗（teach 2ˣ＝16→4、log₂x＝3→8；practice Q1 3ˣ＝27→3、Q2 log₃9→2、Q4 10ˣ＝1000→3）。
 - **4 MCQ（teach↔practice 全不重疊避#10，且與 #7-#14 單元亦不重疊）**：Q1 化同底解指數（3ˣ＝27→3〔誘答 9＝27÷3／27 真數／24＝27－3〕）／Q2 對數求值（log₃9→2〔誘答 3 底數／9 真數／27＝3³〕）／Q3 真數>0 檢驗概念（答「對數的真數一定要大於 0」〔三誘答平行近等長避#20〕）／Q4 化同底解指數（10ˣ＝1000→3〔誘答 2 數錯 0 個數／1000 真數／100＝10²〕）。四選項長度均衡、數值/敘述兩兩相異（#29）。
