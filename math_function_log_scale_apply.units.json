@@ -1,0 +1,204 @@
+{
+ "_note": "數學島 函數（function）strand 第 9 個單元（全島第 51；高中 t_adv 學測）。知識點 math.t_adv.function.log-scale-apply（對數尺的應用：pH／分貝／地震規模／星等）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15）：對數尺 (logarithmic scale)、pH 值 (pH)、分貝 (decibel)、地震規模 (magnitude)、星等 (magnitude)。★scope：對數尺＝刻度值是量取對數 log 的結果，特性是「刻度等距離＝量等倍率」——刻度每增加固定值，實際的量就變成固定的『倍數』（不是固定的增加量）；用在量跨好幾個數量級時。四個應用與其每步倍率：(1) pH 值＝－log₁₀[H⁺]（[H⁺]＝氫離子濃度），pH 每降低 1，[H⁺] 變 10 倍（越酸）；(2) 聲音分貝 (decibel)，每增加 10 分貝，聲音強度變 10 倍；(3) 地震規模 (magnitude)，每增加 1，地震波振幅變 10 倍；(4) 星等 (magnitude)，每相差 5 等，亮度差 100 倍（星等數字越小越亮）。算差幾倍＝先看差幾步、每步倍率連乘。不教對數定義/運算律（前置 log-definition）、不教換底（前置 log-change-base）、不深入各領域物理公式推導（只用對數尺倍率關係）。prereq=log-definition。坐標用國教院標準「坐標」（#42）。★自檢（math-unit defect-classes）：事實已 .venv 驗（pH 差2→10²＝100、差3→10³＝1000；分貝差20→10^(20/10)＝100；地震差2→10²＝100；星等差5→10^(5/2.5)＝100、Pogson 每差1≈2.512）；★事實正確性（教錯害人）：pH＝－log₁₀[H⁺] pH 低＝酸、分貝每10→10倍強度、地震規模每1→振幅10倍、星等越小越亮且差5→亮度100倍，皆台灣高中/科普標準；符號 下標 log₁₀（U+2081 U+2080）、上標 [H⁺]（U+207A superscript plus）、次方 10²/10³（U+00B2/U+00B3）、減號全形 U+FF0D（#39，pH＝－log 的負號）；★無 ＝0＝ 鏈（#41）；坐標（非座 #42）；誘答單一乾淨機制（把『差』當線性倍數／少算一步或多算一步／把步數當倍數／平方差當倍數／套錯別的應用的每步倍率）且選項長度均衡（#20/#28，數值選項正解避免唯一最大→Q2 加 10000 誘答使 1000 非極值）、兩兩相異（#29）；★誘答 rationale 不否定真術語（#44）；★practice 所考四種應用的每步倍率都在 rendered teach 列出（#4：pH/分貝/地震/星等四率全寫在 teach[1]）；★teach worked-example（pH 5→3 差2＝100、地震 4→6 差2＝100）與 practice（pH 差3、分貝差20、星等差5）數字/應用兩兩不同避#10；figure=對數尺數線（geom 風：灰軸中性＋綠刻度 1/10/100/1000 等距＋綠『×10』每格）：刻度等距但每格×10，alt 與 SVG text 逐字一致（#33）、刻度線用 <line>、無裸 path（#32）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_function_log_scale_apply.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.function.log-scale-apply",
+   "title_zh": "對數尺的應用：pH、分貝、地震規模、星等",
+   "can_do": "我知道對數尺 (logarithmic scale)：刻度等距離代表量等倍率（刻度每增加固定值，量就變成固定的倍數，不是固定增加量）。我會用各應用的每步倍率算「差幾倍」：pH 每降 1，氫離子濃度變 10 倍；分貝每增 10，聲音強度變 10 倍；地震規模每增 1，振幅變 10 倍；星等每差 5，亮度差 100 倍。",
+   "situation_group": "函數：對數尺應用",
+   "subject": "math",
+   "strand": "function",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_adv.function.log-scale-apply"
+   ],
+   "prerequisites": [
+    "math.t_adv.function.log-definition"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-idea",
+     "text": "對數尺 (logarithmic scale) 是把「量取對數 log」當作刻度的尺。它最大的特性是：刻度「等距離」對應的量「等倍率」——刻度每增加固定值，實際的量就變成固定的『倍數』（不是固定的增加量）。當一個量的範圍跨好幾個數量級（像 pH、聲音、地震、星星亮度）時，就用對數尺來表示。",
+     "kind": "definition",
+     "source_refs": [
+      "對數尺：刻度為 log(量)，等距對應等倍率（高中數學）"
+     ],
+     "verification_ref": "對數尺 刻度＝log(量)，刻度每+固定值 → 量×固定倍數（高中）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ph",
+     "text": "pH 值 (pH)＝－log₁₀[H⁺]（[H⁺] 是氫離子濃度）。因為前面有負號、底是 10，所以 pH 每「降低」1，[H⁺] 就變成原來的 10 倍（也就是越酸）。例如 pH 3 的溶液，[H⁺] 是 pH 5 的 10²＝100 倍。",
+     "kind": "definition",
+     "source_refs": [
+      "pH＝－log₁₀[H⁺]，pH 降 1 則 [H⁺] 變 10 倍（高中化學/數學）"
+     ],
+     "verification_ref": "pH 差2 → [H⁺] 比 10²＝100（.venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-scales",
+     "text": "其他常見的對數尺，每「一步」的倍率不同，但道理一樣：聲音分貝 (decibel)，每增加 10 分貝，聲音強度變 10 倍；地震規模 (magnitude)，每增加 1，地震波振幅變 10 倍；星等 (magnitude)，每相差 5 等，亮度差 100 倍（星等數字越小，星星越亮）。要算差幾倍，先看差了幾步、再把每步的倍率連乘。",
+     "kind": "definition",
+     "source_refs": [
+      "分貝每+10 強度×10、地震規模每+1 振幅×10、星等差5 亮度×100（高中/科普）"
+     ],
+     "verification_ref": "分貝差20→10²＝100；地震差2→10²＝100；星等差5→10^(5/2.5)＝100（.venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.function.log-scale-apply"
+     ],
+     "body": "有些量的範圍非常大——像聲音從耳語到噴射機、地震從無感到毀滅性——如果用普通的尺（等距離＝等差），根本畫不下。這時用「對數尺 (logarithmic scale)」：刻度值是把量取對數 log 的結果。它的關鍵特性是：刻度「等距離」對應的量「等倍率」。也就是說，刻度每增加固定的一步，實際的量就變成固定的『倍數』，而不是固定地加上某個數。下面的圖就是一把對數尺。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.function.log-scale-apply"
+     ],
+     "body": "四個常見的對數尺，每「一步」的倍率不同：(1) pH 值＝－log₁₀[H⁺]（[H⁺] 是氫離子濃度），pH 每降低 1，[H⁺] 變 10 倍（越酸）；(2) 聲音分貝 (decibel)，每增加 10 分貝，聲音強度變 10 倍；(3) 地震規模 (magnitude)，每增加 1，地震波振幅變 10 倍；(4) 星等 (magnitude)，每相差 5 等，亮度差 100 倍（星等數字越小越亮）。算「差幾倍」的方法：先看差了幾步、再把每步的倍率連乘。例一：pH 從 5 降到 3，降了 2，[H⁺] 變 10×10＝10²＝100 倍。例二：地震規模從 4 到 6，增了 2，振幅變 10²＝100 倍。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.function.log-scale-apply"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 300 110' xmlns='http://www.w3.org/2000/svg'><line x1='20' y1='66' x2='288' y2='66' stroke='#94a3b8' stroke-width='1.4'/><path d='M288,66 L281,62 M288,66 L281,70' stroke='#94a3b8' stroke-width='1.4' fill='none'/><line x1='44' y1='60' x2='44' y2='72' stroke='#2f6f54' stroke-width='2'/><line x1='124' y1='60' x2='124' y2='72' stroke='#2f6f54' stroke-width='2'/><line x1='204' y1='60' x2='204' y2='72' stroke='#2f6f54' stroke-width='2'/><line x1='264' y1='60' x2='264' y2='72' stroke='#2f6f54' stroke-width='2'/><text x='44' y='86' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle'>1</text><text x='124' y='86' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle'>10</text><text x='204' y='86' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle'>100</text><text x='264' y='86' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle'>1000</text><text x='84' y='52' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle'>×10</text><text x='164' y='52' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle'>×10</text><text x='234' y='52' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle'>×10</text><text x='150' y='22' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>刻度等距，每一格代表「乘以 10」</text></svg>",
+      "alt": "一把對數尺。一條灰色的水平數線，右端有箭頭。線上有四個等距的綠色刻度，由左到右標著 1、10、100、1000。每兩個刻度之間上方標著綠色的「×10」，表示每走一格、數值就乘以 10。數線上方的深色文字：刻度等距，每一格代表「乘以 10」。",
+      "caption": "對數尺：刻度看起來等距離，但每走一格，實際的量就「乘以 10」（1→10→100→1000）；這就是「等距離＝等倍率」"
+     }
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QS-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在對數尺上，刻度每增加固定的一步，對應的實際量會怎麼變化？",
+     "answer": "乘上固定的倍數",
+     "kp_ids": [
+      "math.t_adv.function.log-scale-apply"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.function.log-scale-apply"
+     ],
+     "options": [
+      "乘上固定的倍數",
+      "加上固定的數量",
+      "減去固定的數量",
+      "完全不會改變"
+     ],
+     "distractor_rationales": {
+      "加上固定的數量": "那是普通（等差）的尺；對數尺是刻度等距對應量「等倍率」，每一步是乘上固定倍數，不是加上固定量。",
+      "減去固定的數量": "對數尺每走一格是變大（乘上固定倍數），不是減少；而且是乘法不是加減。",
+      "完全不會改變": "刻度增加時量一定改變——對數尺是每一步乘上固定的倍數（例如每格 ×10）。"
+     },
+     "answer_evidence": [
+      "c-idea"
+     ],
+     "feedback": "對數尺的特性是「等距離＝等倍率」：刻度每增加一步，實際的量就乘上固定的倍數（例如每格 ×10）。"
+    },
+    {
+     "question_id": "QS-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "pH 值＝－log₁₀[H⁺]。pH 3 的溶液，氫離子濃度 [H⁺] 是 pH 6 溶液的幾倍？（pH 每降 1，[H⁺] 變 10 倍）",
+     "answer": "1000 倍",
+     "kp_ids": [
+      "math.t_adv.function.log-scale-apply"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.function.log-scale-apply"
+     ],
+     "options": [
+      "1000 倍",
+      "10000 倍",
+      "100 倍",
+      "3 倍"
+     ],
+     "distractor_rationales": {
+      "10000 倍": "多算了一步：pH 從 6 到 3 是降了 3（不是 4），所以是 10³＝1000 倍，不是 10⁴。",
+      "100 倍": "少算了一步：pH 從 6 降到 3 共降了 3，應該是 10³＝1000 倍；10²＝100 是只降 2 的情形。",
+      "3 倍": "pH 差 3 不是直接「3 倍」：每降 1 要乘 10，降 3 是 10×10×10＝1000 倍。"
+     },
+     "answer_evidence": [
+      "c-ph"
+     ],
+     "feedback": "pH 從 6 降到 3 共降了 3，每降 1 變 10 倍，所以 [H⁺] 變 10³＝1000 倍。"
+    },
+    {
+     "question_id": "QS-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "聲音從 40 分貝增加到 60 分貝，聲音強度變成原來的幾倍？（每增加 10 分貝，強度變 10 倍）",
+     "answer": "100 倍",
+     "kp_ids": [
+      "math.t_adv.function.log-scale-apply"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.function.log-scale-apply"
+     ],
+     "options": [
+      "100 倍",
+      "1000 倍",
+      "20 倍",
+      "2 倍"
+     ],
+     "distractor_rationales": {
+      "1000 倍": "多算了一步：40 到 60 是增加 20 分貝＝2 個「10 分貝」，所以是 10²＝100 倍；10³＝1000 是增加 30 分貝。",
+      "20 倍": "分貝的「差」不是直接當倍數：增加 20 分貝是 2 步，每步 ×10，所以是 10²＝100 倍。",
+      "2 倍": "2 是「步數」（20÷10＝2 步），不是倍數；每步要乘 10，所以是 10²＝100 倍。"
+     },
+     "answer_evidence": [
+      "c-scales"
+     ],
+     "feedback": "40 到 60 增加 20 分貝＝2 個「10 分貝」，每個 ×10，所以強度變 10²＝100 倍。"
+    },
+    {
+     "question_id": "QS-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "兩顆星星的星等相差 5 等，較亮的那顆比較暗的亮幾倍？（星等每相差 5，亮度差 100 倍）",
+     "answer": "100 倍",
+     "kp_ids": [
+      "math.t_adv.function.log-scale-apply"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.function.log-scale-apply"
+     ],
+     "options": [
+      "100 倍",
+      "25 倍",
+      "10 倍",
+      "5 倍"
+     ],
+     "distractor_rationales": {
+      "25 倍": "不是把 5 平方（5²＝25）；題目給的規則是「每相差 5 等，亮度差 100 倍」，差 5 剛好就是 100 倍。",
+      "10 倍": "10 倍是別的對數尺（像地震規模每差 1）的倍率；星星亮度是「每差 5 等→100 倍」，相差 5 就是 100 倍。",
+      "5 倍": "星等的「差」不是直接當倍數：相差 5 等對應的是亮度差 100 倍，不是 5 倍。"
+     },
+     "answer_evidence": [
+      "c-scales"
+     ],
+     "feedback": "星等每相差 5 等，亮度就差 100 倍；兩顆星相差剛好 5 等，所以亮度差 100 倍。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（對數尺＝刻度 log(量)、等距離對應等倍率；pH＝－log₁₀[H⁺]、pH 每降 1 則 [H⁺]×10；分貝每+10→強度×10；地震規模每+1→振幅×10；星等每差 5→亮度×100、數字越小越亮；算差幾倍＝差幾步、每步倍率連乘）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
