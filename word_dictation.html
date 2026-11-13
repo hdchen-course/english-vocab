@@ -122,6 +122,13 @@ body{ overflow:hidden; }
 #wd-rate-slot .fc-rate .fc-rate__btn{ flex:1 1 0; }  /* 三顆等寬橫向填滿；按鈕本身保留 app.css 原配色 */
 /* #dct-reveal 僅作 dictation.js 的資料來源，內容搬走後不自行顯示 */
 .wd-play #dct-reveal{ display:none !important; }
+/* 提示：與單字大師閃卡一致 —— 按鈕＝虛線「💡 提示（首字母）」(.wm-hintbtn)；顯示＝大字綠色遮罩「a _ _」(.wm-hintshow)。HD 2026-11-13 */
+#dct-sc-firstletter{ border:1px dashed var(--c-english); background:none; color:var(--c-english-ink); font-weight:700; }
+#dct-sc-firstletter[aria-pressed="true"], #dct-sc-firstletter.active, #dct-sc-firstletter.on{
+  border:1px dashed var(--c-english); background:var(--tint-english); color:var(--c-english-ink); }
+#dct-firstletter{ min-height:0; font-size:22px; letter-spacing:.3em; color:var(--c-english-ink);
+  font-weight:800; text-align:center; margin:6px 0 2px; }
+#dct-firstletter:empty{ margin:0; }
 </style>
 </head>
 <body data-game-hud="off">
@@ -203,7 +210,7 @@ body{ overflow:hidden; }
                 <button type="button" class="dct-pill hidden" id="dct-slow" aria-label="慢速播放">🐢 慢速</button>
                 <button type="button" class="dct-pill hidden" id="dct-wbw" aria-label="逐詞播放">🔤 逐詞</button>
                 <span class="dct-scaffolds hidden" role="group" aria-label="提示開關">
-                  <button type="button" class="dct-sc" id="dct-sc-firstletter" aria-pressed="false">首字母</button>
+                  <button type="button" class="dct-sc" id="dct-sc-firstletter" aria-pressed="false">💡 提示（首字母）</button>
                   <button type="button" class="dct-sc" id="dct-sc-ipa" aria-pressed="false">音標</button>
                 </span>
               </div>

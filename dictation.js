@@ -429,7 +429,7 @@
         // 鷹架：首字母提示（僅單字軌有意義；由 word 導出＝首字母＋其餘字母各一底線「n _ _ _」，與單字大師 hintMask 一致；預設關）
         var fl = $('dct-firstletter');
         if (fl) {
-            fl.textContent = (!isSent && scaffold.firstLetter) ? ('提示：' + item.word.charAt(0) + ' ' + Array(Math.max(0, item.word.length - 1)).fill('_').join(' ')) : '';
+            fl.textContent = (!isSent && scaffold.firstLetter) ? (item.word.charAt(0) + ' ' + Array(Math.max(0, item.word.length - 1)).fill('_').join(' ')) : '';
         }
         // 揭曉面板清空
         var rv = $('dct-reveal');
@@ -813,7 +813,7 @@
         var isSent = item.kind === 'sent';
         var fl = $('dct-firstletter');
         if (fl) {
-            fl.textContent = (!isSent && scaffold.firstLetter) ? ('提示：' + item.word.charAt(0) + ' ' + Array(Math.max(0, item.word.length - 1)).fill('_').join(' ')) : '';
+            fl.textContent = (!isSent && scaffold.firstLetter) ? (item.word.charAt(0) + ' ' + Array(Math.max(0, item.word.length - 1)).fill('_').join(' ')) : '';
         }
         var rv = $('dct-reveal');
         if (rv && !rv.classList.contains('hidden') && rv.innerHTML)
