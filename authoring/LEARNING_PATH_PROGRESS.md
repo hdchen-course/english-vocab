@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-13 17:44 ★數學島 function（函數）strand 13/13 全完結★ — 最後一個 KP rational-graph（有理函數圖形與漸近線，分科數甲 t_sub）5/5 收斂
+- **frozen_sha `92a1f10723682a60`**（草稿 d5d40e6e→2 次 harvest：R1 Q2「y＝－1」誘答 rationale 機制不符值#14→改為「垂直漸近線 x＝−1 誤當水平」；R2 teach「兩種漸近線」卻 (1)(2)(3) 連號列平移#46→平移改非編號項＋T1 導讀補預告→92a1f107；R3–R7 連 5 clean）。DONE-GATE 確定性 gate 全綠（per_page PASS／scan／schema／question／pedagogy；數學無音檔）＋iPad 四角色 render 綁 sha 92a1f107（雙曲線 figure：兩支綠曲線貼近兩軸虛線漸近線、(1,1) 在曲線上、path 點 .venv 實算）。
+- **3 claim**（c-rational-def P(x)/Q(x)、y＝1/x 雙曲線；c-vertical 分母為 0 的 x；c-horizontal 比較分子分母次數：低→y＝0、等→最高次係數相除、高→無；c-shift y＝1/(x−h)+k→x＝h,y＝k）。事實全 sympy 驗。術語附英語 R15（rational function／vertical·horizontal asymptote）。prereq=concept-domain-range＋linear-graph。
+- **4 MCQ**：Q1 1/(x−3) 垂直→x＝3／Q2 2/(x+1)−4 水平→y＝−4／Q3 3x/(x+2) 漸近線組→垂直 x＝−2 水平 y＝3（四選項平行）／Q4 概念：分子次數<分母→水平 y＝0。teach（1/(x−2)+3、(2x+1)/(x−1)）與 practice 數字不重疊避#10。
+- **commits**：草稿凍結 c079908f2→R1 修 ccd36d6a9→R2 修 2ff0a74c2→R3–R7 bank 8dfa1c372/296f81c32/c2273dfb2/7f869cb05/667c28388。
+- **★★里程碑：數學島 function strand 全 13 KP 收斂完結★★**（13/13 頁 per_page 5-clean）。數學島已 COMPLETE 的 strand：function 13/13、equation 15/15、geom 39/39、algexpr 18/18、numquant 30/30＝共 115 單元。
+- **下一步**：依 BUILD_PLAN 續推其餘數學 strand（calc 20／stats 18／trig 14／prob 14／vector 11／sequence 9／counting 9／ratio 9／inequality 8／conic 7／finmath 6／complex 6／space 5／matrix 5，皆 0 覆蓋）。另 QUEUED：hub `index_new.html` AC-VIZ-1 figure_signoff 作廢（signoff sha ec2bffb5≠當前）待重 render＋四角色重簽。
+
 ## 2026-11-13 16:52 數學島 function strand #12（全島#54）收斂：math_function_composite_inverse（合成函數與反函數，高中 t_adv 學測）5/5 → function strand 12/13
 - **frozen_sha `5dad0d8c8061fe98`**（1 次 harvest：R1 抓 #42 類「座標→坐標」國教院標準用字，7 鏡一致 a-wrong/b-hard，修 learner-facing lines 35/187/188/194＋_note）。DONE-GATE 確定性 gate 全綠（per_page 5-clean PASS／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy CLEAN；數學單元無音檔）。視覺 QA：figure＝合成流程框（三灰框 x→g(x)→f(g(x))＋兩綠箭頭「先用 g」「再用 f」＋綠字註「合成函數 f∘g：先做 g，再做 f（順序會影響結果）」，低幾何風險），iPad 橫 1366×1024＋直 1024×1366＋16" 1718×890 四角色 render 簽核過（流程框對齊、箭頭指向正確、綠字不裁切、側欄滿版、無重疊/溢出）。
 - **3 claim kind=definition**（c-composite (f∘g)(x)=f(g(x)) 先 g 再 f、順序影響，例 f=x+2,g=3x→14/18；c-inverse-def f⁻¹ 輸入輸出對調、f⁻¹(f(x))=x、對 y=x 對稱、過 (a,b)⟺過 (b,a)；c-find-inverse x、y 對調再解 y，例 f=3x−6→(x+6)/3）。★事實全 .venv/sympy 驗（f∘g(3)=19≠g∘f(3)=49；f=2x+1→f⁻¹=(x−1)/2 且 f⁻¹(f(x))=x；(2,5)↔(5,2)）。術語附英語 R15（合成函數 composite function／反函數 inverse function）。prereq=concept-domain-range＋linear-graph。
