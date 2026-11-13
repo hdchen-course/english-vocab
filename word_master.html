@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="game_core.css">
 <script src="game_core.js"></script>
 <script src="assets/srs_engine.js"></script>
+<script src="assets/hint_firstletter.js"></script><!-- 共用首字母提示元件（click-to-reveal；與分級聽寫共用） -->
 <link rel="stylesheet" href="assets/unit.css"><!-- 共用房屋 pshell -->
 <link rel="stylesheet" href="assets/wd-practice.css"><!-- 共用 word_* 練習骨架（翻面卡＋釘底全寬自評）；與 word_idioms／word_dictation 一致（HD 2026-11-10 三頁統一） -->
 <style>
@@ -135,10 +136,7 @@ function render(){
   const front=document.getElementById('wmFront'), back=document.getElementById('wmBack');
   const exs=(c.ex||[]).slice(0,2);
   // 正面：定義＋詞性＋（首字母提示）＋挖空例句
-  const hintHtml = (c.hw||'').length>2
-    ? (hinted ? `<div class="wm-hintshow">${esc(hintMask(c.hw))}</div>`
-              : `<div class="wm-hintrow"><button class="wm-hintbtn" id="hintBtn">💡 提示（首字母）</button></div>`)
-    : '';
+  const hintHtml = `<div class="wm-hintrow" id="wmHint"></div>`;  // 共用元件 HintFirstLetter 掛載點（click-to-reveal）
   front.innerHTML=`<div class="wm-tag">${levelChips(c)}</div>`+
     `<div class="wm-def">${esc(c.def)}</div>`+
     `<div class="wm-pos">${esc(c.pos||'')}</div>`+hintHtml+`<hr class="wm-hr">`+
@@ -149,7 +147,7 @@ function render(){
     `<div class="wm-ipa">US <b>/${esc(c.ipaus)}/</b> &nbsp; UK <b>/${esc(c.ipauk)}/</b></div>`+
     exs.map((e,i)=>`<div class="wm-exrow"><div class="wm-ex">${restoreExample(e,c.hw)}</div>`+
       ((c.ae&&c.ae[i])?`<button class="wm-rnd sm" data-ae="${i}" title="播放例句" aria-label="播放例句">🔊</button>`:'')+`</div>`).join('');
-  const hb=document.getElementById('hintBtn'); if(hb) hb.onclick=()=>{hinted=true;render();};
+  { const wmH=document.getElementById('wmHint'); if(wmH&&window.HintFirstLetter) window.HintFirstLetter.create(wmH,{minLen:3}).setWord(c.hw); }
   document.getElementById('deckLine').innerHTML=`本回合牌組：${esc(deckLabel())} · 第 ${idx+1} / ${CARDS.length} 張`;
   // 依 flipped 狀態擺正/翻面
   if(flipped){ showBack(); } else { toFront(); }

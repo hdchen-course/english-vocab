@@ -60,7 +60,7 @@ DK 官方站無內建測驗、單字又印在頁面上(有答案),且要家長�
 4. 三級自評 → SRS。 5. 下一題。
 
 ### 2.3 分級鷹架（預設關、可開；不影響計分口徑 R3）
-中文釋義提示(單字軌,需 `zh`,缺則自動隱藏)、首字母提示(由 `word` 導出:顯示首字母 + 其餘每個字母一個底線「n _ _ _」,與單字大師閃卡 hintMask 一致,讓學習者看得出字數;修 2026-11-13 HD——原本只顯示 `word[0]+…`,改為與單字大師相同的遮罩樣式)、逐詞播放(**例句軌,系列 A 專屬;修 r47**)。**逐詞播放不另產逐詞音檔**——改由 build 期 edge-tts 的 **WordBoundary 時間戳**存入該例句 item 的 `wordTimings[]`(§4 schema optional 欄),runtime **在單一整句 mp3 上 seek** 各詞起點播放(避免未納入 `audioKeys[]` 的幽靈檔破 R4/gate(e))。此 toggle **僅系列 A 出現**(DK 單字軌無例句、不涉),隨系列 A 一併實作。狀態存 localStorage(`dict_{series}_scaffold_v1`,§7)。
+中文釋義提示(單字軌,需 `zh`,缺則自動隱藏)、首字母提示(**word_dictation(分級聽寫)改用共用元件 `assets/hint_firstletter.js`＝`window.HintFirstLetter`**,與單字大師閃卡同一支:預設只顯示虛線按鈕「💡 提示（首字母）」、遮罩隱藏,點按鈕才 click-to-reveal 大字綠遮罩「n _ _ _」(首字母＋其餘每字母一底線)且按鈕消失,**換題自動重置**;dictation.js 每題呼叫 `window.__dictHintHook(item,isSent)` 讓宿主頁驅動,english_dictation 未定義此 hook→no-op 沿用原生持久 toggle;修 2026-11-13 HD——原生持久 toggle 會「一進去就顯示/狀態沒清/按鈕一直在」,改為與單字大師相同的 click-to-reveal 共用元件)、逐詞播放(**例句軌,系列 A 專屬;修 r47**)。**逐詞播放不另產逐詞音檔**——改由 build 期 edge-tts 的 **WordBoundary 時間戳**存入該例句 item 的 `wordTimings[]`(§4 schema optional 欄),runtime **在單一整句 mp3 上 seek** 各詞起點播放(避免未納入 `audioKeys[]` 的幽靈檔破 R4/gate(e))。此 toggle **僅系列 A 出現**(DK 單字軌無例句、不涉),隨系列 A 一併實作。狀態存 localStorage(`dict_{series}_scaffold_v1`,§7)。
 
 ### 2.4 全程不自動判手寫（R3）
 引擎只:播音、呈現畫布、揭曉正解、收自評。對錯由孩子看正解自判。

@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="game_core.css">
 <script src="game_core.js"></script>
 <script src="assets/srs_engine.js"></script>
+<script src="assets/hint_firstletter.js"></script><!-- 共用首字母提示元件（click-to-reveal；與單字大師共用） -->
 <link rel="stylesheet" href="assets/unit.css"><!-- 共用房屋 pshell（.pshell-grid/.psb/.psb-main/.sb-*/.sb-cat） -->
 <link rel="stylesheet" href="dictation.css"><!-- 重用既有 dct-* 元件樣式（不改此檔） -->
 <style>
@@ -122,13 +123,11 @@ body{ overflow:hidden; }
 #wd-rate-slot .fc-rate .fc-rate__btn{ flex:1 1 0; }  /* 三顆等寬橫向填滿；按鈕本身保留 app.css 原配色 */
 /* #dct-reveal 僅作 dictation.js 的資料來源，內容搬走後不自行顯示 */
 .wd-play #dct-reveal{ display:none !important; }
-/* 提示：與單字大師閃卡一致 —— 按鈕＝虛線「💡 提示（首字母）」(.wm-hintbtn)；顯示＝大字綠色遮罩「a _ _」(.wm-hintshow)。HD 2026-11-13 */
-#dct-sc-firstletter{ border:1px dashed var(--c-english); background:none; color:var(--c-english-ink); font-weight:700; }
-#dct-sc-firstletter[aria-pressed="true"], #dct-sc-firstletter.active, #dct-sc-firstletter.on{
-  border:1px dashed var(--c-english); background:var(--tint-english); color:var(--c-english-ink); }
-#dct-firstletter{ min-height:0; font-size:22px; letter-spacing:.3em; color:var(--c-english-ink);
-  font-weight:800; text-align:center; margin:6px 0 2px; }
-#dct-firstletter:empty{ margin:0; }
+/* 首字母提示改用共用元件 HintFirstLetter（#wd-hint-host，click-to-reveal、換題重置、與單字大師同元件）。
+   隱藏原生持久 toggle（#dct-sc-firstletter）與原生遮罩（#dct-firstletter），避免「一進去就顯示／狀態沒清／按鈕一直在」。HD 2026-11-13 */
+#dct-sc-firstletter{ display:none !important; }
+#dct-firstletter{ display:none !important; }
+#wd-hint-host{ margin:6px 0 2px; }
 </style>
 </head>
 <body data-game-hud="off">
@@ -217,6 +216,7 @@ body{ overflow:hidden; }
               <button type="button" class="dct-bigplay hidden" id="dct-playbtn">🔊 點我播放</button>
               <div class="dct-mutehint hidden" id="dct-mutehint">聽不到？檢查 iPad 的靜音鍵與音量。</div>
               <div class="dct-firstletter" id="dct-firstletter"></div>
+              <div id="wd-hint-host"></div><!-- 共用 HintFirstLetter 元件掛載點（click-to-reveal 首字母提示） -->
             </div>
             <!-- 背面：答案（由 inline script 自 #dct-reveal 搬入 #wd-answer-slot；對照手寫自評） -->
             <div class="gr-card wd-face back">
@@ -267,6 +267,16 @@ body{ overflow:hidden; }
 </div></main>
 
 <script src="dictation.js"></script>
+<script>
+/* 首字母提示＝共用元件 HintFirstLetter（與單字大師同一支）。dictation.js 每題呼叫 window.__dictHintHook，
+   本頁據此 setWord（單字軌才給字、例句軌清空），元件負責 click-to-reveal＋換題自動重置。 */
+(function () {
+  var host = document.getElementById('wd-hint-host');
+  if (!host || !window.HintFirstLetter) return;
+  var hint = window.HintFirstLetter.create(host, { minLen: 1 });
+  window.__dictHintHook = function (item, isSent) { hint.setWord((item && !isSent) ? item.word : ''); };
+})();
+</script>
 <script>
 /* 側欄「選聽寫類別」(.sb-cat) → 主欄只顯示該類 (.dct-cat.on)；獨立於 dictation.js（只操作本頁靜態外殼）。
    主題例句／CEFR 共用同一個載入鈕（在 #dct-themes），切到任一類若尚未載入即自動觸發，否則 CEFR 會空白。 */

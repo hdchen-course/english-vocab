@@ -431,6 +431,9 @@
         if (fl) {
             fl.textContent = (!isSent && scaffold.firstLetter) ? (item.word.charAt(0) + ' ' + Array(Math.max(0, item.word.length - 1)).fill('_').join(' ')) : '';
         }
+        // 每題提示 hook：讓宿主頁（如 word_dictation）用共用 HintFirstLetter 元件接管首字母提示（click-to-reveal、換題重置）。
+        // english_dictation 未定義此 hook → no-op，沿用原生持久 toggle。
+        if (window.__dictHintHook) { try { window.__dictHintHook(item, isSent); } catch (e) {} }
         // 揭曉面板清空
         var rv = $('dct-reveal');
         if (rv)
