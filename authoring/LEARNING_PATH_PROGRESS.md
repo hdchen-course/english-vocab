@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-13 19:08 數學島 ratio（比例）strand 開跑 1/9：math_ratio_ratio_value（比與比值的概念，國小高年級→國中銜接 t_base）5/5 收斂
+- **frozen_sha `84d75dbbeb95b5ab`**（草稿凍結後 2 次 harvest-first de-converge：R4 selfeval_note 用未教邏輯符號 ⟺（#2 延伸，國小 learner-facing 禁邏輯符號）→改「就是」；R6 前項/後項缺 R15 英語 gloss→補 (antecedent)/(consequent)；R7–R11 連 5 clean，L3 全 exit 0、confirmed 全 0；R9 一 reviewer content-filter error 但 coverage/L3 通過判有效）。DONE-GATE 全綠（per_page 455/455 PASS 且 ratio-value absent from violations／scan PASS／unit_schema rc0／question_correctness CLEAN 2389 題／pedagogy CLEAN；數學無音檔）＋iPad 四角色 render 綁 sha 84d75dbb（5 紅方格蘋果：3 橙方格橘子＝5：3 可數 figure，低幾何風險）。
+- **3 claim kind=definition**（c-ratio-def 比 a：b 念「a 比 b」、a 前項 b 後項、比值＝前項÷後項＝a/b；c-equiv 等值的比＝前後項同乘/同除同一非零數比值不變、最簡整數比＝同除以最大公因數；c-compare 兩比相等就是比值相等）。事實全 .venv 驗（8：12→2/3、18：12→3：2、6：4→3：2、10：4→5/2、15：10→3：2）。比號全形「：」、分數用 /。術語附英語 R15（ratio／ratio value／antecedent／consequent）。scope 不含連比/正反比函數/比例式求解（各屬他 KP）。
+- **4 MCQ**：Q1 10：4 比值→5/2〔誘答 2/5 前後項反/6 相減/14 相加〕／Q2 與 6：4 等值→3：2〔2：3 反/12：4 只乘前項/6：8 只乘後項〕／Q3 15：10 化最簡整數比→3：2〔2：3 反/5：2 除以不同數/15：10 未化簡〕／Q4 比值算法→前項÷後項（a÷b）〔四選項平行句式〕。teach（8：12、18：12）與 practice（10：4/6：4/15：10）與 figure（5：3）數字不重疊避#10。
+- **commits**：草稿/de-converge/harvest 見 R6 修 615510815→R7 bank d79ab6cd5→R8 bcf8267fa→R9 bbe8d5aed→R10 35186cc41→R11 本次。
+- **★里程碑：數學島 ratio（比例）strand 1/9 開跑**。已 COMPLETE strand：function 13/13、equation 15/15、geom 39/39、algexpr 18/18、numquant 30/30＝115 單元 ＋本頁＝116。
+- **下一步**：ratio 其餘 8 KP（direct-inverse-intuition／proportion-equation／percentage-life／scale-map／ratio-simplify／direct-variation／inverse-variation／proportion-apply）。另 QUEUED：hub `index_new.html` AC-VIZ-1 figure_signoff 作廢待重 render＋四角色重簽。
+
 ## 2026-11-13 17:44 ★數學島 function（函數）strand 13/13 全完結★ — 最後一個 KP rational-graph（有理函數圖形與漸近線，分科數甲 t_sub）5/5 收斂
 - **frozen_sha `92a1f10723682a60`**（草稿 d5d40e6e→2 次 harvest：R1 Q2「y＝－1」誘答 rationale 機制不符值#14→改為「垂直漸近線 x＝−1 誤當水平」；R2 teach「兩種漸近線」卻 (1)(2)(3) 連號列平移#46→平移改非編號項＋T1 導讀補預告→92a1f107；R3–R7 連 5 clean）。DONE-GATE 確定性 gate 全綠（per_page PASS／scan／schema／question／pedagogy；數學無音檔）＋iPad 四角色 render 綁 sha 92a1f107（雙曲線 figure：兩支綠曲線貼近兩軸虛線漸近線、(1,1) 在曲線上、path 點 .venv 實算）。
 - **3 claim**（c-rational-def P(x)/Q(x)、y＝1/x 雙曲線；c-vertical 分母為 0 的 x；c-horizontal 比較分子分母次數：低→y＝0、等→最高次係數相除、高→無；c-shift y＝1/(x−h)+k→x＝h,y＝k）。事實全 sympy 驗。術語附英語 R15（rational function／vertical·horizontal asymptote）。prereq=concept-domain-range＋linear-graph。
