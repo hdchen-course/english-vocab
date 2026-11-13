@@ -39,6 +39,7 @@ def main():
     for c in cards:
         sk = c["sense_key"]; t = tags.get(sk, {})
         cefr = t.get("cefr"); gept = t.get("gept"); yle = t.get("yle"); toeic = bool(t.get("toeic"))
+        cefr_est = t.get("cefr_est"); cefr_est_src = t.get("cefr_est_src")
         exs = []
         for col in (c.get("collocations") or [])[:2]:
             ex = col.get("example")
@@ -49,7 +50,8 @@ def main():
             "def": c.get("definition",""), "ex": exs,
             "aw": c.get("audio_word",""), "ae": (c.get("audio_examples") or [])[:2],
             "band": c.get("band",""), "rank": c.get("rank"),
-            "cefr": cefr, "gept": gept, "yle": yle, "toeic": toeic,
+            "cefr": cefr, "cefr_est": cefr_est, "cefr_est_src": cefr_est_src,
+            "gept": gept, "yle": yle, "toeic": toeic,
         }
         b = cefr.lower() if cefr else "unclassified"
         buckets[b].append(rec)

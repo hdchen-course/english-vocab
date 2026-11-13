@@ -234,6 +234,41 @@ def load_tsl():
         if k: keys.add(k)
     return keys
 
+def load_awl():
+    # Academic Word List（Coxhead 2000；570 word families, Sublists 1-10）。
+    # HD 2026-11-13：併入 TOEIC 標籤。行格式＝每行一個 headword，# 開頭為註解。
+    keys = set()
+    p = os.path.join(SRC, "awl_headwords.txt")
+    if not os.path.exists(p):
+        return keys
+    for ln in open(p, encoding="utf-8-sig"):
+        ln = ln.strip()
+        if not ln or ln.startswith("#"):
+            continue
+        k = na(ln)
+        if k:
+            keys.add(k)
+    return keys
+
+# ---------- CEFR 估級（authoritative 全缺時的透明估計；絕不覆蓋 authoritative cefr）----------
+# HD 2026-11-13：「1007 個單字在 CEFR 沒有分類，你有辦法自己大概分一分嗎？」
+# 原則：只對 cefr 為 None 的卡補 cefr_est，並記 cefr_est_src，UI 以「約 Bx」與官方分級視覺區分；
+# 不動 authoritative cefr（null 保持 null＝維持「誠實留空」）。優先序：官方對照 > 頻率對照。
+GEPT2CEFR = {"初級": "A2", "中級": "B1", "中高級": "B2"}      # LTTC 官方 GEPT-CEFR 對照
+YLE2CEFR  = {"starters": "A1", "movers": "A1", "flyers": "A2"}  # Cambridge（Pre-A1/A1/A2→就近取 A1/A1/A2）
+BAND2CEFR = {"1k": "A1", "2k": "A2", "3k": "B1", "4k": "B2", "5k": "B2",
+             "6k": "C1", "7k": "C1", "8k": "C1", "9k": "C2", "10k": "C2", "tail": "C2"}  # COCA 頻率帶→CEFR（粗估）
+
+def estimate_cefr(gept_lv, yle_lv, band):
+    if gept_lv and gept_lv in GEPT2CEFR:
+        return GEPT2CEFR[gept_lv], "gept"
+    if yle_lv and yle_lv in YLE2CEFR:
+        return YLE2CEFR[yle_lv], "yle"
+    b = (band or "").strip().lower()
+    if b in BAND2CEFR:
+        return BAND2CEFR[b], "coca"
+    return None, None
+
 def main():
     cards = [json.loads(l) for l in open(CARDS, encoding="utf-8")]
     cefr_by_pos, cefr_any = load_cefr()
@@ -242,6 +277,7 @@ def main():
     gept = load_gept()
     yle = load_yle()
     tsl = load_tsl()
+    awl = load_awl()
 
     def coarse_card_pos(p):
         p = (p or "").lower()
@@ -253,7 +289,9 @@ def main():
 
     tags = {}
     stats = {"total": len(cards), "cefr": 0, "cefr_pos_matched": 0, "cefr_src": {}, "gept": 0, "yle": 0, "toeic": 0,
-             "cefr_levels": {}, "gept_levels": {}, "yle_levels": {}, "none_of_four": 0}
+             "cefr_levels": {}, "gept_levels": {}, "yle_levels": {}, "none_of_four": 0,
+             "toeic_tsl": 0, "toeic_awl": 0, "toeic_awl_only": 0,
+             "cefr_est": 0, "cefr_est_src": {}, "cefr_est_levels": {}, "cefr_still_unclassified": 0}
     misses = []
     for c in cards:
         hw, pos, sk = c["headword"], c.get("pos",""), c["sense_key"]
@@ -295,10 +333,26 @@ def main():
         # YLE
         y_hit = [yle[k] for k in keys if k in yle]
         yle_lv = min(y_hit, key=YLE_ORDER.index) if y_hit else None
-        # TOEIC
-        toeic = any(k in tsl for k in keys)
+        # TOEIC＝TSL（官方替代）∪ AWL（Academic Word List；HD 2026-11-13 併入）
+        in_tsl = any(k in tsl for k in keys)
+        in_awl = any(k in awl for k in keys)
+        toeic = in_tsl or in_awl
+        # CEFR 估級（只在 authoritative cefr 全缺時）
+        cefr_est = None; cefr_est_src = None
+        if not cefr:
+            cefr_est, cefr_est_src = estimate_cefr(gept_lv, yle_lv, c.get("band"))
 
-        tags[sk] = {"cefr": cefr, "gept": gept_lv, "yle": yle_lv, "toeic": bool(toeic)}
+        tags[sk] = {"cefr": cefr, "cefr_est": cefr_est, "cefr_est_src": cefr_est_src,
+                    "gept": gept_lv, "yle": yle_lv, "toeic": bool(toeic)}
+        if in_tsl: stats["toeic_tsl"] += 1
+        if in_awl: stats["toeic_awl"] += 1
+        if in_awl and not in_tsl: stats["toeic_awl_only"] += 1
+        if cefr_est:
+            stats["cefr_est"] += 1
+            stats["cefr_est_src"][cefr_est_src] = stats["cefr_est_src"].get(cefr_est_src,0)+1
+            stats["cefr_est_levels"][cefr_est] = stats["cefr_est_levels"].get(cefr_est,0)+1
+        elif not cefr:
+            stats["cefr_still_unclassified"] += 1
         if cefr:
             stats["cefr"] += 1; stats["cefr_levels"][cefr] = stats["cefr_levels"].get(cefr,0)+1
             stats["cefr_src"][cefr_src] = stats["cefr_src"].get(cefr_src,0)+1
@@ -319,7 +373,7 @@ def main():
                "oxford_20260715160822-oxford-3000.en.tsv","oxford_20260715165539-oxford-5000-expanded.en.tsv",
                "gept_GEPT_High-Intermediate.pdf","yle_starters_hd_paste.txt","yle_movers_hd_paste.txt",
                "yle_flyers_hd_paste.txt","tsl_TSL_12_alphabetized_description.txt","american_to_british.json",
-               "kamome_cefr_index.json"]:
+               "kamome_cefr_index.json","awl_headwords.txt"]:
         pth = os.path.join(SRC, fn)
         if os.path.exists(pth):
             manifest[fn] = {"sha256": sha256_file(pth), "bytes": os.path.getsize(pth)}
@@ -330,7 +384,8 @@ def main():
            "sources": {"cefr":"CEFR-J Vocabulary Profile 1.5 + Octanove C1/C2 1.0 (openlanguageprofiles); fallback Oxford 3000/5000 (A1–C1) 補基本字缺口; 最後 supplementary=kamome1037/cefr-highlight（社群彙編；僅接受 B2/C1/C2 補 authoritative 全缺進階字，低端 A1/A2/B1 因對罕用字不可靠而丟棄；絕不覆蓋 authoritative）",
                        "gept":"LTTC 全民英檢官方參考字表（初級/中級/中高級）",
                        "yle":"Cambridge YLE Starters/Movers/Flyers Picture Book A–Z Word List (2018)",
-                       "toeic":"TOEIC Service List (TSL v1.2, Browne & Culligan) — 代用，非 ETS 官方"},
+                       "toeic":"TOEIC Service List (TSL v1.2, Browne & Culligan) — 代用，非 ETS 官方 ∪ Academic Word List (Coxhead 2000, 570 families, Sublists 1-10；HD 2026-11-13 併入 TOEIC)",
+                       "cefr_est":"authoritative CEFR 全缺時的透明估計（不覆蓋 authoritative）：GEPT 初級→A2/中級→B1/中高級→B2（LTTC）、YLE starters/movers→A1 flyers→A2（Cambridge）、否則 COCA 頻率帶→CEFR（1k A1,2k A2,3k B1,4-5k B2,6-8k C1,9k-tail C2）"},
            "source_files": manifest, "stats": stats, "sample_unmapped": misses}
 
     with open(OUT_TAGS, "w", encoding="utf-8") as f:
