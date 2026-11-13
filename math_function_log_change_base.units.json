@@ -1,0 +1,204 @@
+{
+ "_note": "數學島 函數（function）strand 第 8 個單元（全島第 50；高中 t_adv 學測）。知識點 math.t_adv.function.log-change-base（換底公式與對數值估算）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15）：換底公式 (change of base)、常用對數 (common logarithm)、底數 (base)、真數 (argument)。★scope：換底公式 logₐb＝(以新底 c 的 b 的對數)÷(以新底 c 的 a 的對數)，新底數 c 可任選（c＞0 且 c≠1）；常換成常用對數（底 10，直接寫 log）或換成某個方便的整數底。用換底可把「非標準底」的對數化成會算的形式：例 log₄8 換底到 2＝log₂8÷log₂4＝3÷2＝3/2。對數值估算：用已知的 log₁₀2≈0.301、log₁₀3≈0.477，配合運算律（積化和、商化差、次方化係數）估算其他常用對數：log₁₀6＝log₁₀2＋log₁₀3≈0.778、log₁₀5＝log₁₀(10÷2)＝1－log₁₀2≈0.699、log₁₀12＝log₁₀(2²×3)＝2·log₁₀2＋log₁₀3≈1.079。不教對數定義（前置單元 log-definition）、不教對數尺應用（另單元 log-scale-apply）。prereq=log-definition（對數定義與運算律）。坐標用國教院標準「坐標」（#42）。★自檢（math-unit defect-classes）：事實已 sympy 驗（log₄8＝3/2 因 4^(3/2)＝8；log₉27＝3/2 因 9^(3/2)＝27；log₈32＝5/3 因 8^(5/3)＝32；log₁₀6≈0.778＝log₁₀2＋log₁₀3；log₁₀5≈0.699＝1－log₁₀2；log₁₀12≈1.079＝2log₁₀2＋log₁₀3）；符號 下標 logₐ/log₂/log₃/log₄/log₈/log₉/log₁₀（U+2080 系列，exp/log 已 render 驗證）、上標 平方用 2²（U+00B2）、分數 3/2、5/3、約等於 ≈（U+2248，高中已教）、÷（U+00F7）、×（U+00D7）、減號全形 U+FF0D（#39）；★無 ＝0＝ 鏈（#41）；坐標（非座 #42）；誘答單一乾淨機制（換底分子分母對調／換底誤用相乘相減／估算漏算次方（把 12 當 6、把平方漏掉）／估算把除當乘（log5 誤成 1＋log2）／估算拿錯已知值）且選項長度均衡（#20/#28）、兩兩相異（#29）；★誘答 rationale 不否定真術語（#44）；★teach worked-example（log₄8 換底到 2、log₉27 換底到 3、估算 log₁₀6）與 practice（log₈32 換底、估算 log₁₀12、估算 log₁₀5、換底公式形式）底數/題型兩兩不同避#10；figure=換底 flow（slate 框＋綠單向箭頭 pattern，低幾何風險）：slate 框「logₐb」＋綠箭頭（標「換底」）→ slate 框內分數「log b ÷ log a」（分數橫線），下方綠字「log＝常用對數（底 10）」，alt 與 SVG text 逐字一致（#33）、箭頭用 <line>＋<path d>（#32）。practice 考的方法（換底公式形式、換底計算非標準底、用已知值＋運算律估算）都在 rendered teach 示範。claim kind=definition。figure-only example 無 body。",
+ "page": "math_function_log_change_base.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.function.log-change-base",
+   "title_zh": "換底公式與對數值估算",
+   "can_do": "我會用換底公式 (change of base)：logₐb＝(以新底 c 的 b 的對數)÷(以新底 c 的 a 的對數)，把非標準底的對數化成會算的形式（例如 log₄8 換底到 2＝log₂8÷log₂4＝3/2）。我也會用已知的 log₁₀2≈0.301、log₁₀3≈0.477，配合運算律估算其他常用對數。",
+   "situation_group": "函數：換底與對數估算",
+   "subject": "math",
+   "strand": "function",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_adv.function.log-change-base"
+   ],
+   "prerequisites": [
+    "math.t_adv.function.log-definition"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-formula",
+     "text": "換底公式 (change of base)：logₐb 可以換成任何新底數 c 來算——logₐb＝(以 c 為底的 b 的對數)÷(以 c 為底的 a 的對數)。新底數 c 只要 c＞0 且 c≠1 都可以；最常換成常用對數（底 10，直接寫 log），也就是 logₐb＝(log b)÷(log a)。",
+     "kind": "definition",
+     "source_refs": [
+      "換底公式 logₐb＝log_c b／log_c a（高中數學）"
+     ],
+     "verification_ref": "換底公式 logₐb＝log_c b/log_c a（任意 c＞0,c≠1）（高中）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-compute",
+     "text": "換底最常用來算「非標準底」的對數：把它換成一個方便的整數底就算得出來。例如 log₄8，換底到 2：log₄8＝log₂8÷log₂4＝3÷2＝3/2（驗證：4 的 3/2 次方＝8，正確）。",
+     "kind": "definition",
+     "source_refs": [
+      "log₄8＝log₂8／log₂4＝3/2（高中數學）"
+     ],
+     "verification_ref": "log₄8＝3/2 因 4^(3/2)＝8（sympy 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-estimate",
+     "text": "記住兩個常用對數值 log₁₀2≈0.301、log₁₀3≈0.477，再配合運算律（相乘變相加、相除變相減、次方提到前面），就能估算很多常用對數。例如 log₁₀6＝log₁₀2＋log₁₀3≈0.778；log₁₀5＝log₁₀(10÷2)＝1－log₁₀2≈0.699。",
+     "kind": "definition",
+     "source_refs": [
+      "用 log₁₀2、log₁₀3 與運算律估算常用對數（高中數學）"
+     ],
+     "verification_ref": "log₁₀6≈0.778＝log2＋log3；log₁₀5≈0.699＝1－log2（sympy 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.function.log-change-base"
+     ],
+     "body": "對數的底數如果不是我們方便計算的數（例如底數是 4），可以用「換底公式 (change of base)」換成好算的底。換底公式說：logₐb 可以換成任何新底數 c——logₐb＝(以 c 為底的 b 的對數)÷(以 c 為底的 a 的對數)。新底數 c 只要 c＞0 且 c≠1 都行。最常換成常用對數（底 10，直接寫 log），也就是 logₐb＝(log b)÷(log a)。下面的圖把這個「換底」的動作畫出來。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.function.log-change-base"
+     ],
+     "body": "兩個用途。(1) 算非標準底的對數：例如 log₄8，換底到 2＝log₂8÷log₂4＝3÷2＝3/2（因為 2³＝8、2²＝4）；又如 log₉27，換底到 3＝log₃27÷log₃9＝3÷2＝3/2。(2) 估算常用對數：記住 log₁₀2≈0.301、log₁₀3≈0.477，配合運算律就能估算——log₁₀6＝log₁₀2＋log₁₀3≈0.301＋0.477＝0.778（因為 6＝2×3，相乘變相加）。注意：遇到有次方的要先拆出來，例如 12＝2²×3，所以 log₁₀12＝2·log₁₀2＋log₁₀3。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.function.log-change-base"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 300 120' xmlns='http://www.w3.org/2000/svg'><rect x='18' y='40' width='78' height='44' rx='6' fill='none' stroke='#94a3b8' stroke-width='1.5'/><text x='38' y='68' font-family='sans-serif' font-size='15' fill='#33475b'>logₐb</text><line x1='102' y1='62' x2='158' y2='62' stroke='#2f6f54' stroke-width='2'/><path d='M158,62 L151,58 M158,62 L151,66' stroke='#2f6f54' stroke-width='2' fill='none'/><text x='112' y='54' font-family='sans-serif' font-size='10.5' fill='#2f6f54'>換底</text><rect x='164' y='32' width='118' height='60' rx='6' fill='none' stroke='#94a3b8' stroke-width='1.5'/><text x='223' y='56' font-family='sans-serif' font-size='13' fill='#33475b' text-anchor='middle'>log b</text><line x1='186' y1='63' x2='260' y2='63' stroke='#33475b' stroke-width='1.2'/><text x='223' y='82' font-family='sans-serif' font-size='13' fill='#33475b' text-anchor='middle'>log a</text><text x='150' y='110' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle'>log＝常用對數（底 10）</text></svg>",
+      "alt": "一個換底公式的關係圖。左邊一個灰色方框，框內寫著 logₐb；一個綠色箭頭指向右邊，箭頭上方標著綠字「換底」。右邊一個比較大的灰色方框，框內是一個分數：分子寫 log b、一條橫線、分母寫 log a。圖的下方一行綠字：log＝常用對數（底 10）。",
+      "caption": "換底公式：logₐb 可以換成任何新底數來算；換成常用對數（底 10，直接寫 log）就是 logₐb＝(log b)÷(log a)"
+     }
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QB-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "把 logₐb 換成常用對數（底 10，直接寫 log）來算，等於下列哪一個？",
+     "answer": "(log b)÷(log a)",
+     "kp_ids": [
+      "math.t_adv.function.log-change-base"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.function.log-change-base"
+     ],
+     "options": [
+      "(log b)÷(log a)",
+      "(log a)÷(log b)",
+      "(log b)×(log a)",
+      "(log b)－(log a)"
+     ],
+     "distractor_rationales": {
+      "(log a)÷(log b)": "分子分母對調了：真數 b 的對數在「上面」（分子）、底數 a 的對數在「下面」（分母），所以是 (log b)÷(log a)。",
+      "(log b)×(log a)": "換底是「相除」不是相乘：logₐb＝(log b)÷(log a) 是分數形式，不是兩個對數相乘。",
+      "(log b)－(log a)": "換底是「相除」不是相減：相減是商化差運算律的結果；換底公式是 (log b)÷(log a)。"
+     },
+     "answer_evidence": [
+      "c-formula"
+     ],
+     "feedback": "換成常用對數（底 10）：logₐb＝(log b)÷(log a)——真數 b 的對數當分子、底數 a 的對數當分母。"
+    },
+    {
+     "question_id": "QB-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用換底公式（換底到 2）計算 log₈32 的值。（提示：2⁵＝32、2³＝8）",
+     "answer": "5/3",
+     "kp_ids": [
+      "math.t_adv.function.log-change-base"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.function.log-change-base"
+     ],
+     "options": [
+      "5/3",
+      "3/5",
+      "15",
+      "2"
+     ],
+     "distractor_rationales": {
+      "3/5": "分子分母對調了：log₈32＝log₂32÷log₂8＝5÷3＝5/3，分子是 log₂32＝5、分母是 log₂8＝3。",
+      "15": "換底是「相除」不是相乘：log₂32×log₂8＝5×3＝15 是誤用；正確是 log₂32÷log₂8＝5/3。",
+      "2": "換底是「相除」不是相減：log₂32－log₂8＝5－3＝2 是誤用；正確是 log₂32÷log₂8＝5/3。"
+     },
+     "answer_evidence": [
+      "c-compute"
+     ],
+     "feedback": "log₈32 換底到 2＝log₂32÷log₂8＝5÷3＝5/3（因為 2⁵＝32、2³＝8）。"
+    },
+    {
+     "question_id": "QB-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "已知 log₁₀2≈0.301、log₁₀3≈0.477，估算 log₁₀12 最接近下列哪一個？（提示：12＝2²×3）",
+     "answer": "1.079",
+     "kp_ids": [
+      "math.t_adv.function.log-change-base"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.function.log-change-base"
+     ],
+     "options": [
+      "1.079",
+      "0.778",
+      "1.556",
+      "0.477"
+     ],
+     "distractor_rationales": {
+      "0.778": "把 12 誤拆成 2×3＝6，少算了一個 log₁₀2；12＝2²×3，要算 2·log₁₀2＋log₁₀3＝1.079。",
+      "1.556": "把整個 6 平方（2(log2＋log3)）多算了一個 log₁₀3；12＝2²×3 只有 2 要平方，答案是 2·log₁₀2＋log₁₀3＝1.079。",
+      "0.477": "只算了 log₁₀3、漏掉 2² 這部分；12＝2²×3，log₁₀12＝2·log₁₀2＋log₁₀3≈1.079。"
+     },
+     "answer_evidence": [
+      "c-estimate"
+     ],
+     "feedback": "12＝2²×3，所以 log₁₀12＝2·log₁₀2＋log₁₀3≈2×0.301＋0.477＝1.079。"
+    },
+    {
+     "question_id": "QB-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "已知 log₁₀2≈0.301，估算 log₁₀5 最接近下列哪一個？（提示：5＝10÷2）",
+     "answer": "0.699",
+     "kp_ids": [
+      "math.t_adv.function.log-change-base"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.function.log-change-base"
+     ],
+     "options": [
+      "0.699",
+      "1.301",
+      "0.301",
+      "0.602"
+     ],
+     "distractor_rationales": {
+      "1.301": "把「÷2」看成「×2」了：那會變成 log₁₀(10×2)＝log₁₀20＝1＋log₁₀2；題目是 5＝10÷2，要用 1－log₁₀2＝0.699。",
+      "0.301": "0.301 是 log₁₀2，不是 log₁₀5；由 5＝10÷2 得 log₁₀5＝1－log₁₀2＝0.699。",
+      "0.602": "0.602 是 2×log₁₀2（相當於 log₁₀4）；5 不是 2²，應該用 5＝10÷2 算 1－log₁₀2＝0.699。"
+     },
+     "answer_evidence": [
+      "c-estimate"
+     ],
+     "feedback": "5＝10÷2，所以 log₁₀5＝log₁₀10－log₁₀2＝1－0.301＝0.699。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（換底公式：logₐb 可換成任何新底數 c，常換成常用對數底 10＝(log b)÷(log a)；log₄8 換底到 2＝log₂8÷log₂4＝3/2；用 log₁₀2≈0.301、log₁₀3≈0.477 配合運算律估算：log₁₀6＝log2＋log3≈0.778、log₁₀5＝1－log2≈0.699、log₁₀12＝2log2＋log3≈1.079）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
