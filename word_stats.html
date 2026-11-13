@@ -1,27 +1,23 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>單字大師・學習統計</title>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>單字大師・學習統計 📊</title>
 <link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
 <script src="game_core.js"></script>
+<script src="assets/srs_engine.js"></script>
+<link rel="stylesheet" href="assets/unit.css"><!-- 共用房屋 pshell（側欄 .psb / .sb-cat） -->
+<link rel="stylesheet" href="assets/wd-practice.css"><!-- 與單字大師練習頁同骨架 -->
 <style>
-/* 學習統計：盡量沿用 house 元件（.stat-tile、card token、與單字大師同款 .wm-schemes pill）。
-   狀態四色沿用單字大師四桶（還沒學/不熟/快會了/已學會）。只留圖表必要的少量樣式。 */
+/* 學習統計：沿用房屋 shell（.pshell-grid + .psb 側欄）＋ house 元件（.stat-tile、.sb-cat）。
+   只留圖表必要樣式；狀態四色沿用單字大師四桶。 */
 :root{ --wm-new:#b4ab9b; --wm-learning:#d9704f; --wm-almost:#cf9a1e; --wm-known:#2f8a63; }
 :root[data-theme="dark"]{ --wm-new:#8d8575; --wm-learning:#ff9a7a; --wm-almost:#e8c05a; --wm-known:#46c98f; }
-.ws-wrap{max-width:900px;margin:0 auto;padding:10px 0 40px}
-/* 與單字大師側欄 scheme tab 同款 pill（維持家族一致） */
-.wm-schemes{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 6px}
-.wm-schemes button{min-height:0;width:auto;flex:0 0 auto;padding:5px 12px;font-size:12.5px;font-weight:700;border:1px solid var(--card-border);border-radius:999px;background:var(--card);color:var(--ink);cursor:pointer}
-.wm-schemes button.on{background:var(--c-primary);color:var(--on-accent);border-color:var(--c-primary);font-weight:800}
 .ws-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--r-md,14px);padding:16px}
 .ws-top{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center}
-.ws-donut{width:180px;height:180px;flex:0 0 auto}
-.ws-donutwrap{position:relative;width:180px;height:180px;margin:0 auto}
+.ws-donutwrap{position:relative;width:170px;height:170px;margin:0 auto;flex:0 0 auto}
+.ws-donut{display:block;width:170px;height:170px}
 .ws-donut__c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.ws-donut__pct{font-size:30px;font-weight:800;color:var(--wm-known);line-height:1}
+.ws-donut__pct{font-size:28px;font-weight:800;color:var(--wm-known);line-height:1}
 .ws-donut__sub{font-size:12px;color:var(--ink-soft);margin-top:2px}
 .ws-tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 .ws-tiles .stat-tile{align-items:flex-start;text-align:left}
@@ -29,7 +25,7 @@
 .ws-dot{width:11px;height:11px;border-radius:50%;flex:0 0 auto;display:inline-block}
 .ws-due{margin:14px 0 6px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:14px;color:var(--ink)}
 .ws-due b{color:var(--wm-learning);font-size:16px}
-.ws-due a{text-decoration:none;font-weight:800;font-size:13px;padding:7px 14px;border-radius:999px;background:var(--c-primary);color:var(--on-accent)}
+.ws-due a{text-decoration:none;font-weight:800;font-size:13px;padding:7px 14px;border-radius:999px;background:var(--c-english);color:var(--on-accent)}
 .ws-sec{margin:20px 0 8px;font-size:15px;font-weight:800;color:var(--ink)}
 .ws-legend{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 10px;font-size:12px;color:var(--ink-soft)}
 .ws-legend span{display:inline-flex;align-items:center;gap:6px}
@@ -53,26 +49,38 @@
     <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
   </button>
 </header>
-<main class="shell"><div class="ws-wrap">
-  <nav class="wm-schemes" id="scope" aria-label="字庫範圍"></nav>
-  <div style="margin:0 0 12px;font-size:13px"><a href="word_browse.html" style="color:var(--c-primary);font-weight:700;text-decoration:none">📖 查看全部單字（字母序）→</a></div>
-  <div class="ws-card">
-    <div class="ws-top">
-      <div class="ws-donutwrap">
-        <svg class="ws-donut" id="donut" viewBox="0 0 200 200" role="img" aria-label="學習進度甜甜圈"></svg>
-        <div class="ws-donut__c"><span class="ws-donut__pct" id="knownPct">—</span><span class="ws-donut__sub">已學會</span></div>
-      </div>
-      <div class="ws-tiles" id="tiles"></div>
+<main class="shell"><div class="pshell-grid pshell--mobilebar">
+  <aside class="psb" aria-label="導覽側欄">
+    <div class="sb-group"><div class="sb-title">你在哪裡</div>
+      <a class="sb-back" href="index_new.html#eng"><span aria-hidden="true">←</span> 英語文</a>
     </div>
+    <div class="sb-group"><div class="sb-title">字庫範圍</div>
+      <div id="scope"></div>
+    </div>
+    <div class="sb-group"><div class="sb-title">更多</div>
+      <a class="sb-cat" href="word_master.html">📚 單字大師練習</a>
+      <a class="sb-cat current" href="word_stats.html">📊 學習統計</a>
+      <a class="sb-cat" href="word_browse.html">📖 全部單字（字母序）</a>
+    </div>
+  </aside>
+  <div class="psb-main">
+    <div class="ws-card">
+      <div class="ws-top">
+        <div class="ws-donutwrap">
+          <svg class="ws-donut" id="donut" viewBox="0 0 200 200" role="img" aria-label="學習進度甜甜圈"></svg>
+          <div class="ws-donut__c"><span class="ws-donut__pct" id="knownPct">—</span><span class="ws-donut__sub">已學會</span></div>
+        </div>
+        <div class="ws-tiles" id="tiles"></div>
+      </div>
+    </div>
+    <div class="ws-due" id="dueLine"></div>
+    <h2 class="ws-sec">各分級的掌握情形</h2>
+    <div class="ws-legend" id="legend"></div>
+    <div class="ws-levels" id="levels"></div>
+    <p class="ws-note" id="note"></p>
   </div>
-  <div class="ws-due" id="dueLine"></div>
-  <h2 class="ws-sec">各分級的掌握情形</h2>
-  <div class="ws-legend" id="legend"></div>
-  <div class="ws-levels" id="levels"></div>
-  <p class="ws-note" id="note"></p>
 </div></main>
 <script src="assets/safe_store.js"></script>
-<script src="assets/srs_engine.js"></script>
 <script>
 const DATA='assets/wordmaster/';
 const STORE=(window.SRS&&window.SRS.createStore)?window.SRS.createStore('wordmaster_srs_v1'):null;
@@ -164,9 +172,9 @@ function render(){
     `各分級以官方 CEFR 為準；官方未收錄的字以「約估」等級歸入（來源：GEPT／YLE 官方對照，或 COCA 詞頻推估），僅供參考、不等同官方分級。`;
 }
 function scopeBar(){
-  document.getElementById('scope').innerHTML=SCOPES.map(s=>`<button data-k="${s.k}" class="${s.k===scope?'on':''}">${s.label}</button>`).join('');
-  document.querySelectorAll('#scope button').forEach(b=>b.onclick=()=>{
-    scope=b.dataset.k; document.querySelectorAll('#scope button').forEach(x=>x.classList.toggle('on',x===b)); render();
+  document.getElementById('scope').innerHTML=SCOPES.map(s=>`<button type="button" class="sb-cat${s.k===scope?' on':''}" data-k="${s.k}">${s.label}</button>`).join('');
+  document.querySelectorAll('#scope .sb-cat').forEach(b=>b.onclick=()=>{
+    scope=b.dataset.k; document.querySelectorAll('#scope .sb-cat').forEach(x=>x.classList.toggle('on',x===b)); render();
   });
 }
 fetch(DATA+'cards/stats_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():null,()=>null).then(d=>{
@@ -174,5 +182,4 @@ fetch(DATA+'cards/stats_index.json',{cache:'no-store'}).then(r=>r.ok?r.json():nu
   ALL=d.cards; scopeBar(); render();
 });
 </script>
-</body>
-</html>
+</body></html>

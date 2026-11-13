@@ -1,37 +1,27 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>單字大師・全部單字（字母序）</title>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>全部單字（字母序）📖</title>
 <link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="game_core.css">
 <script src="game_core.js"></script>
+<script src="assets/srs_engine.js"></script>
+<link rel="stylesheet" href="assets/unit.css"><!-- 共用房屋 pshell（側欄 .psb / .sb-cat） -->
+<link rel="stylesheet" href="assets/wd-practice.css"><!-- 與單字大師練習頁同骨架 -->
 <style>
-/* 全部單字 A–Z 入口：乾淨清單，點一列＝開原本的單字大師閃卡（word_master.html?w=sk）。
-   盡量沿用 house token，不自創卡片樣式；狀態色點沿用單字大師四桶色。 */
+/* 全部單字 A–Z 入口：沿用房屋 shell（.pshell-grid + .psb 側欄）＋ .sb-cat 導覽。
+   整列點擊＝開原本的單字大師閃卡（word_master.html?w=sk）。狀態四色沿用單字大師四桶。 */
 :root{ --wm-new:#b4ab9b; --wm-learning:#d9704f; --wm-almost:#cf9a1e; --wm-known:#2f8a63; }
 :root[data-theme="dark"]{ --wm-new:#8d8575; --wm-learning:#ff9a7a; --wm-almost:#e8c05a; --wm-known:#46c98f; }
-.wb-wrap{max-width:860px;margin:0 auto;padding:8px 0 48px}
-.wb-controls{position:sticky;top:calc(var(--app-bar-h) + env(safe-area-inset-top,0px));z-index:40;
-  background:var(--bg);padding:9px 0 7px;border-bottom:1px solid var(--card-border)}
-.wb-search{display:flex;gap:10px;align-items:center;margin-bottom:8px}
-.wb-search input{flex:1 1 auto;min-width:0;padding:10px 13px;font-size:15px;border:1px solid var(--card-border);
-  border-radius:var(--r-sm);background:var(--card);color:var(--ink)}
+.wb-search{display:flex;gap:10px;align-items:center;margin:0 0 10px}
+.wb-search input{flex:1 1 auto;min-width:0;padding:10px 13px;font-size:15px;border:1px solid var(--card-border);border-radius:var(--r-sm);background:var(--card);color:var(--ink)}
 .wb-count{font-size:12.5px;color:var(--ink-soft);font-weight:700;flex:0 0 auto}
-.wb-filters{display:flex;flex-wrap:wrap;gap:6px}
-.wb-filters button{min-height:0;width:auto;flex:0 0 auto;padding:5px 12px;font-size:12.5px;font-weight:700;
-  border:1px solid var(--card-border);border-radius:999px;background:var(--card);color:var(--ink);cursor:pointer;
-  display:inline-flex;align-items:center;gap:6px}
-.wb-filters button.on{background:var(--c-primary);color:var(--on-accent);border-color:var(--c-primary)}
+.wb-az{display:flex;flex-wrap:wrap;gap:3px;margin:0 0 4px}
+.wb-az a{font-size:12px;font-weight:700;color:var(--c-english-ink);text-decoration:none;padding:3px 7px;border-radius:7px}
+.wb-az a:hover{background:var(--card)}
 .wb-dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto;display:inline-block}
-.wb-az{display:flex;flex-wrap:wrap;gap:3px;margin:9px 0 2px}
-.wb-az a{font-size:12px;font-weight:700;color:var(--c-primary);text-decoration:none;padding:3px 7px;border-radius:7px}
-.wb-az a:hover{background:var(--card-border)}
-.wb-sec{margin:15px 0 2px;font-size:15px;font-weight:800;color:var(--ink-soft);scroll-margin-top:148px;
-  border-bottom:1px solid var(--card-border);padding-bottom:3px}
+.wb-sec{margin:15px 0 2px;font-size:15px;font-weight:800;color:var(--ink-soft);scroll-margin-top:72px;border-bottom:1px solid var(--card-border);padding-bottom:3px}
 .wb-list{list-style:none;margin:0;padding:0}
-.wb-row{display:flex;align-items:center;gap:11px;padding:11px 8px;text-decoration:none;color:var(--ink);
-  border-bottom:1px solid var(--card-border);content-visibility:auto;contain-intrinsic-size:auto 48px}
+.wb-row{display:flex;align-items:center;gap:11px;padding:11px 8px;text-decoration:none;color:var(--ink);border-bottom:1px solid var(--card-border);content-visibility:auto;contain-intrinsic-size:auto 48px}
 .wb-row:hover{background:var(--card)}
 .wb-hw{font-size:16px;font-weight:700;color:var(--ink);flex:0 0 auto}
 .wb-pos{font-size:12px;color:var(--ink-soft);font-style:italic;flex:0 0 auto}
@@ -51,20 +41,30 @@
     <span class="app-bar__theme-icon" aria-hidden="true">🌙</span>
   </button>
 </header>
-<main class="shell"><div class="wb-wrap">
-  <div class="wb-controls">
+<main class="shell"><div class="pshell-grid pshell--mobilebar">
+  <aside class="psb" aria-label="導覽側欄">
+    <div class="sb-group"><div class="sb-title">你在哪裡</div>
+      <a class="sb-back" href="index_new.html#eng"><span aria-hidden="true">←</span> 英語文</a>
+    </div>
+    <div class="sb-group"><div class="sb-title">依狀態篩選</div>
+      <div id="filters"></div>
+    </div>
+    <div class="sb-group"><div class="sb-title">更多</div>
+      <a class="sb-cat" href="word_master.html">📚 單字大師練習</a>
+      <a class="sb-cat" href="word_stats.html">📊 學習統計</a>
+      <a class="sb-cat current" href="word_browse.html">📖 全部單字（字母序）</a>
+    </div>
+  </aside>
+  <div class="psb-main">
     <div class="wb-search">
       <input type="search" id="q" placeholder="搜尋單字…" aria-label="搜尋單字" autocomplete="off">
       <span class="wb-count" id="count">—</span>
-      <a href="word_stats.html" class="wb-count" style="color:var(--c-primary);text-decoration:none;flex:0 0 auto">📊 統計</a>
     </div>
-    <div class="wb-filters" id="filters" aria-label="依狀態篩選"></div>
     <nav class="wb-az" id="az" aria-label="字母跳轉"></nav>
+    <div id="listHost"><p class="wb-empty">載入中…</p></div>
   </div>
-  <div id="listHost"><p class="wb-empty">載入中…</p></div>
 </div></main>
 <script src="assets/safe_store.js"></script>
-<script src="assets/srs_engine.js"></script>
 <script>
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const DATA='assets/wordmaster/';
@@ -117,9 +117,9 @@ function renderAZ(present){
     ?`<a href="#sec-${L}">${L}</a>`:`<a style="color:var(--ink-soft);opacity:.45;pointer-events:none">${L}</a>`).join('');
 }
 function filterBar(){
-  document.getElementById('filters').innerHTML=FILTERS.map(f=>`<button data-k="${f.k}" class="${f.k===filter?'on':''}">${f.color?`<span class="wb-dot" style="background:${f.color}"></span>`:''}${f.label}</button>`).join('');
-  document.querySelectorAll('#filters button').forEach(b=>b.onclick=()=>{ filter=b.dataset.k;
-    document.querySelectorAll('#filters button').forEach(x=>x.classList.toggle('on',x===b)); render(); });
+  document.getElementById('filters').innerHTML=FILTERS.map(f=>`<button type="button" class="sb-cat${f.k===filter?' on':''}" data-k="${f.k}">${f.color?`<span class="wb-dot" style="background:${f.color}"></span>`:''}${f.label}</button>`).join('');
+  document.querySelectorAll('#filters .sb-cat').forEach(b=>b.onclick=()=>{ filter=b.dataset.k;
+    document.querySelectorAll('#filters .sb-cat').forEach(x=>x.classList.toggle('on',x===b)); render(); });
 }
 let qt; document.getElementById('q').addEventListener('input',e=>{ query=e.target.value; clearTimeout(qt); qt=setTimeout(render,180); });
 fetch(DATA+'cards/all.json',{cache:'no-store'}).then(r=>r.ok?r.json():null,()=>null).then(d=>{
@@ -127,5 +127,4 @@ fetch(DATA+'cards/all.json',{cache:'no-store'}).then(r=>r.ok?r.json():null,()=>n
   ALL=d.cards; filterBar(); render();
 });
 </script>
-</body>
-</html>
+</body></html>
