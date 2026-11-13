@@ -1,0 +1,204 @@
+{
+ "_note": "數學島 函數（function）strand 第 10 個單元（全島第 52；高中 t_adv 學測）。知識點 math.t_adv.function.exp-growth-decay（指數成長與衰退模型，半衰期/複利連結）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15）：指數成長 (exponential growth)、指數衰退 (exponential decay)、半衰期 (half-life)、複利 (compound interest)。★scope：指數模型 y＝A·rⁿ（A＝初始量、r＝每一期的固定倍率、n＝期數）；r＞1 成長、0＜r＜1 衰退、r＝1 不變。兩個連結：(1) 複利成長＝每期乘以固定倍率（1＋利率），n 期後本利和＝A·(1＋利率)ⁿ（對比單利是每期固定加同一筆）；(2) 半衰期衰退＝每過一個半衰期量變成一半（×1/2），經 k 個半衰期後＝A·(1/2)ᵏ。只用倍率連乘的模型，不深入連續 e 指數/微積分、不深入財務單元公式（複利細算另有 finmath 單元）。prereq=exp-definition（指數函數）。坐標用國教院標準「坐標」（#42）。★自檢（math-unit defect-classes）：事實已 .venv 驗（複利 500×1.2²＝720、1000×1.1²＝1210、單利 1000(1+0.1×2)＝1200、1000×1.1＝1100、1000×1.1³＝1331；半衰期 40×(1/2)³＝5、80×(1/2)²＝20、80×(1/2)¹＝40、80×(1/2)³＝10；r＝1+0.05＝1.05；100×2³＝800）；符號 上標 rⁿ（U+207F superscript n）、次方 2²/2³（U+00B2/U+00B3）、分數 1/2、百分比 %、減號全形 U+FF0D（#39）；★無 ＝0＝ 鏈（#41）；坐標（非座 #42）；★figure 幾何精算（#43/#51：曲線座標要算、兩曲線皆過 (0,A)）；誘答單一乾淨機制（複利誤用單利/只算一期/多算一期；半衰期少一步/多一步/以為歸零；識別 r 把成長率當倍率/百分數當整數/方向相反）且選項長度均衡（#20/#28，數值選項正解非唯一最大：Q2 有 1331>1210、Q3 有 40>20）、兩兩相異（#29）；★誘答 rationale 不否定真術語（#44）；★practice 所考方法（判成長/衰退條件、複利連乘、半衰期連乘、識別 r）都在 rendered teach 示範（#4：teach 列模型＋複利例＋半衰期例＋r＝1+率）；★teach worked-example（複利 500×1.2²、半衰期 40×(1/2)³）與 practice（複利 1000×1.1²、半衰期 80×(1/2)²、識別 r 人口5%、概念）數字兩兩不同避#10；figure=坐標圖（geom 風：灰軸中性＋兩條綠曲線皆過綠點 (0,A)、一升一降＋文字標「成長 r＞1」「衰退 0＜r＜1」）：曲線用 <path d> cubic（#32），alt 與 SVG text 逐字一致（#33）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_function_exp_growth_decay.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.function.exp-growth-decay",
+   "title_zh": "指數成長與衰退模型（半衰期、複利）",
+   "can_do": "我知道指數模型 y＝A·rⁿ：A 是初始量、r 是每一期的固定倍率、n 是期數；r＞1 是成長、0＜r＜1 是衰退。我會用它算複利成長（每期乘 1＋利率，n 期後＝A·(1＋利率)ⁿ）和半衰期衰退（每過一個半衰期乘 1/2，k 個半衰期後＝A·(1/2)ᵏ）。",
+   "situation_group": "函數：指數成長與衰退",
+   "subject": "math",
+   "strand": "function",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_adv.function.exp-growth-decay"
+   ],
+   "prerequisites": [
+    "math.t_adv.function.exp-definition"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-model",
+     "text": "指數成長/衰退模型寫成 y＝A·rⁿ：A 是「初始量」（一開始有多少）、r 是「每一期乘上的固定倍率」、n 是「經過幾期」。r＞1 時每期越乘越大，叫指數成長 (exponential growth)；0＜r＜1 時每期越乘越小，叫指數衰退 (exponential decay)；r＝1 則保持不變。",
+     "kind": "definition",
+     "source_refs": [
+      "指數模型 y＝A·rⁿ，r＞1 成長、0＜r＜1 衰退（高中數學）"
+     ],
+     "verification_ref": "y＝A·rⁿ 模型；r＞1 遞增、0＜r＜1 遞減（高中）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-compound",
+     "text": "複利 (compound interest) 就是一種指數成長：每一期都乘上固定的「1＋利率」。本金 A、每期利率固定，n 期後的本利和＝A·(1＋利率)ⁿ。例如本金 500 元、每期成長 20%（每期乘 1.2），2 期後＝500×1.2²＝720 元。（注意：這和「單利」不同——單利是每期固定加同一筆錢，不是連乘。）",
+     "kind": "definition",
+     "source_refs": [
+      "複利本利和 A·(1＋利率)ⁿ，為指數成長（高中數學）"
+     ],
+     "verification_ref": "複利 500×1.2²＝720（.venv 驗）；複利連乘≠單利連加",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-halflife",
+     "text": "半衰期 (half-life) 是一種指數衰退：每過「一個半衰期」，量就變成原來的一半（乘 1/2）。初始量 A，經過 k 個半衰期後剩下＝A·(1/2)ᵏ。例如某物質半衰期 3 小時、初始 40 毫克，經過 9 小時（剛好 3 個半衰期）後剩下 40×(1/2)³＝40×1/8＝5 毫克。",
+     "kind": "definition",
+     "source_refs": [
+      "半衰期衰退 A·(1/2)ᵏ，k 為經過的半衰期個數（高中數學/科普）"
+     ],
+     "verification_ref": "半衰期 40×(1/2)³＝5（.venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.function.exp-growth-decay"
+     ],
+     "body": "很多真實變化是「每一期乘上固定倍率」：存款利滾利、人口成長、放射性物質衰變。這類變化用指數模型 y＝A·rⁿ 描述——A 是初始量、r 是每一期乘的固定倍率、n 是經過幾期。關鍵看 r：r＞1 每期越乘越大，是指數成長 (exponential growth)；0＜r＜1 每期越乘越小，是指數衰退 (exponential decay)；r＝1 保持不變。下面的圖把成長和衰退兩種走勢畫在一起。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.function.exp-growth-decay"
+     ],
+     "body": "兩個常見連結。(1) 複利成長：每期乘「1＋利率」。本金 A、n 期後本利和＝A·(1＋利率)ⁿ。例：本金 500 元、每期成長 20%（乘 1.2），2 期後＝500×1.2²＝720 元。（這和單利不同——單利是每期固定加同一筆，不是連乘。）要把成長率換成倍率 r：成長 5% 就是 r＝1＋0.05＝1.05。(2) 半衰期衰退：每過一個半衰期乘 1/2。初始 A、經過 k 個半衰期後＝A·(1/2)ᵏ。例：半衰期 3 小時、初始 40 毫克，過 9 小時（3 個半衰期）後＝40×(1/2)³＝5 毫克。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.function.exp-growth-decay"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 260 180' xmlns='http://www.w3.org/2000/svg'><line x1='18' y1='150' x2='244' y2='150' stroke='#94a3b8' stroke-width='1.4'/><path d='M244,150 L237,146 M244,150 L237,154' stroke='#94a3b8' stroke-width='1.4' fill='none'/><line x1='90' y1='170' x2='90' y2='16' stroke='#94a3b8' stroke-width='1.4'/><path d='M90,16 L86,23 M90,16 L94,23' stroke='#94a3b8' stroke-width='1.4' fill='none'/><text x='236' y='164' font-family='sans-serif' font-size='11' fill='#33475b'>n</text><text x='96' y='24' font-family='sans-serif' font-size='11' fill='#33475b'>y</text><text x='78' y='164' font-family='sans-serif' font-size='11' fill='#33475b'>O</text><path d='M90,85 C120,76 150,58 182,26' stroke='#2f6f54' stroke-width='2' fill='none'/><path d='M90,85 C122,106 158,130 212,143' stroke='#2f6f54' stroke-width='2' fill='none'/><circle cx='90' cy='85' r='3.4' fill='#2f6f54'/><text x='74' y='82' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='end'>A</text><text x='150' y='42' font-family='sans-serif' font-size='11' fill='#2f6f54'>成長（r＞1）</text><text x='150' y='134' font-family='sans-serif' font-size='11' fill='#2f6f54'>衰退（0＜r＜1）</text></svg>",
+      "alt": "一個坐標平面，灰色的橫軸（右端箭頭、標 n，代表期數）和縱軸（上端箭頭、標 y，代表量），原點標 O。縱軸上有一個綠色的點，旁邊標著 A（初始量）。從這個點出發有兩條綠色曲線：一條往右上方越升越快，旁邊標「成長（r＞1）」；另一條往右下方越降越平、越來越靠近橫軸，旁邊標「衰退（0＜r＜1）」。",
+      "caption": "指數模型 y＝A·rⁿ 的兩種走勢：兩條曲線都從初始量 A 出發；r＞1 往上是成長，0＜r＜1 往下（越來越靠近橫軸但碰不到）是衰退"
+     }
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "指數模型 y＝A·rⁿ 中，每一期乘上的倍率 r 滿足下列哪一個時，是「指數衰退」？",
+     "answer": "0＜r＜1",
+     "kp_ids": [
+      "math.t_adv.function.exp-growth-decay"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.function.exp-growth-decay"
+     ],
+     "options": [
+      "0＜r＜1",
+      "r＞1",
+      "r＝1",
+      "r 是負數"
+     ],
+     "distractor_rationales": {
+      "r＞1": "r＞1 是每期越乘越大，那是指數成長，不是衰退；衰退要每期越乘越小，即 0＜r＜1。",
+      "r＝1": "r＝1 每期乘 1、量保持不變（水平），既不成長也不衰退；衰退要 0＜r＜1。",
+      "r 是負數": "倍率是「乘上多少」，實際的量不會變負數，所以 r 不會是負數；衰退是 0＜r＜1。"
+     },
+     "answer_evidence": [
+      "c-model"
+     ],
+     "feedback": "衰退是每期越乘越小：倍率 r 介於 0 和 1 之間（0＜r＜1）；r＞1 是成長、r＝1 是不變。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "存入 1000 元，每年以複利成長、年利率 10%（每年乘 1.1）。2 年後的本利和是多少？",
+     "answer": "1210 元",
+     "kp_ids": [
+      "math.t_adv.function.exp-growth-decay"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.function.exp-growth-decay"
+     ],
+     "options": [
+      "1210 元",
+      "1200 元",
+      "1100 元",
+      "1331 元"
+     ],
+     "distractor_rationales": {
+      "1200 元": "1200 是「單利」的算法（每年固定加 100，2 年加 200）；複利是連乘：1000×1.1×1.1＝1210。",
+      "1100 元": "1100 只乘了 1 年（1000×1.1）；題目是 2 年，要再乘一次 1.1，得 1000×1.1²＝1210。",
+      "1331 元": "1331 是 3 年（1000×1.1³）；題目只有 2 年，是 1000×1.1²＝1210。"
+     },
+     "answer_evidence": [
+      "c-compound"
+     ],
+     "feedback": "複利每年乘 1.1：2 年後＝1000×1.1×1.1＝1000×1.1²＝1210 元。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "某物質的半衰期是 5 天，一開始有 80 克。經過 10 天後，還剩下多少克？",
+     "answer": "20 克",
+     "kp_ids": [
+      "math.t_adv.function.exp-growth-decay"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.function.exp-growth-decay"
+     ],
+     "options": [
+      "20 克",
+      "40 克",
+      "10 克",
+      "0 克"
+     ],
+     "distractor_rationales": {
+      "40 克": "40 只過了 1 個半衰期（80×1/2）；10 天是 2 個半衰期，要再乘一次 1/2，得 80×(1/2)²＝20 克。",
+      "10 克": "10 是過了 3 個半衰期（80×(1/2)³）；10 天÷5 天＝2 個半衰期，是 80×(1/2)²＝20 克。",
+      "0 克": "半衰期每次只減一半、不會歸零；10 天＝2 個半衰期，剩 80×(1/2)²＝20 克。"
+     },
+     "answer_evidence": [
+      "c-halflife"
+     ],
+     "feedback": "10 天÷5 天＝2 個半衰期，每個乘 1/2：80×(1/2)²＝80×1/4＝20 克。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "某城市人口每年成長 5%。用指數模型 y＝A·rⁿ 來描述，每年的倍率 r 應該是多少？",
+     "answer": "1.05",
+     "kp_ids": [
+      "math.t_adv.function.exp-growth-decay"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.function.exp-growth-decay"
+     ],
+     "options": [
+      "1.05",
+      "0.05",
+      "0.95",
+      "5"
+     ],
+     "distractor_rationales": {
+      "0.05": "0.05 是「成長率」本身，不是倍率；成長後是「原本的 1 倍再加 5%」，所以 r＝1＋0.05＝1.05。",
+      "0.95": "0.95 是「減少 5%」（衰退）的倍率；題目是成長 5%，要用 1＋0.05＝1.05。",
+      "5": "5 是把百分比的數字直接拿來用；5% 是 0.05，成長的倍率是 1＋0.05＝1.05。"
+     },
+     "answer_evidence": [
+      "c-compound"
+     ],
+     "feedback": "成長 5% 代表每年變成「原本的 1 倍再多 5%」，倍率 r＝1＋0.05＝1.05。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（指數模型 y＝A·rⁿ：A 初始量、r 每期倍率、n 期數；r＞1 成長、0＜r＜1 衰退、r＝1 不變；複利 n 期後＝A·(1＋利率)ⁿ、成長率換倍率 r＝1＋率；半衰期 k 個後＝A·(1/2)ᵏ）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
