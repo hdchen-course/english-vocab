@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-13 19:37 數學島 ratio（比例）strand 2/9：math_ratio_proportion_equation（比例式與生活應用，國小高年級→國中銜接 t_base）5/5 收斂
+- **frozen_sha `3bdf4f30ec9cca61`**（草稿凍 2c0bb1de→R1 content_audit 抓真 blocker#4/#46：T1 導讀承諾「最後看速率/單價生活問題」但 rendered teach 只到 2:3=4:6 figure、worked-example 只在不 render 的 claims c-apply，Q3/Q4 卻考此設置法→harvest 補 單價 worked-example（4:60=6:90，數字避#10）進 rendered teach、est 10→11、重凍 3bdf4f30→R2–R6 連 5 clean，L3 全 exit 0、confirmed 全 0）。DONE-GATE 全綠（per_page 456/456 PASS 且 proportion-equation absent from violations／scan／schema／question／pedagogy advisory=0；數學無音檔）＋iPad 四角色 render 綁 sha 3bdf4f30（交叉相乘 figure：綠弧連外項 2,6＝12、棕弧連內項 3,4＝12，端點正確無重疊；新 worked-example teach 段 landscape render clean）。
+- **3 claim kind=definition**（c-prop-def 比例式 a：b＝c：d 兩比值相等、a/d 外項 b/c 內項；c-cross 外項乘積＝內項乘積 a×d＝b×c 求未知項；c-apply 速率/單價生活應用列比例式交叉相乘）。事實全 .venv 驗（2:3=4:6→2×6=12=3×4=12；4:60=6:x→90；2:5=6:x→15；3:45=5:x→75；2:90=5:x→225）。比號全形「：」、乘號 ×、分數 /。術語附英語 R15（proportion／extremes／means）。prereq=ratio-value。
+- **4 MCQ**：Q1 2:5=6:x→15〔誘答 30 內項積沒除/3 前項相除/11 相加〕／Q2 a:b=c:d 恆成立式→a×d=b×c〔四式平行：a×c=b×d 配對錯/a×b=c×d 各比前後項乘/a+d=b+c 加法〕／Q3 單價 3枝45元買5枝→75元〔225 內項積沒除/15 單價未乘5/9 總價除新數量〕／Q4 速率 2時90km 5時→225km〔450 內項積沒除/45 時速未乘5/95 相加〕。teach（2:3=4:6→12、4:60=6:90）與 practice 答案 15/75/225 不重疊避#10。
+- **commits**：草稿凍結 03bc33949→R1 harvest 41f9c4738→R2 b4164dc0a→R3/R4/R5 bank→R6 本次。
+- **★里程碑：數學島 ratio（比例）strand 2/9**。已 COMPLETE strand：function 13/13、equation 15/15、geom 39/39、algexpr 18/18、numquant 30/30＝115＋ratio 2＝117 單元。
+- **下一步**：ratio 其餘 7 KP（percentage-life／direct-inverse-intuition／scale-map／ratio-simplify〔t_mid〕／direct-variation〔t_mid〕／inverse-variation〔t_mid〕／proportion-apply〔t_mid〕）。另 QUEUED：hub `index_new.html` AC-VIZ-1 figure_signoff 作廢待重 render＋四角色重簽。
+
 ## 2026-11-13 19:08 數學島 ratio（比例）strand 開跑 1/9：math_ratio_ratio_value（比與比值的概念，國小高年級→國中銜接 t_base）5/5 收斂
 - **frozen_sha `84d75dbbeb95b5ab`**（草稿凍結後 2 次 harvest-first de-converge：R4 selfeval_note 用未教邏輯符號 ⟺（#2 延伸，國小 learner-facing 禁邏輯符號）→改「就是」；R6 前項/後項缺 R15 英語 gloss→補 (antecedent)/(consequent)；R7–R11 連 5 clean，L3 全 exit 0、confirmed 全 0；R9 一 reviewer content-filter error 但 coverage/L3 通過判有效）。DONE-GATE 全綠（per_page 455/455 PASS 且 ratio-value absent from violations／scan PASS／unit_schema rc0／question_correctness CLEAN 2389 題／pedagogy CLEAN；數學無音檔）＋iPad 四角色 render 綁 sha 84d75dbb（5 紅方格蘋果：3 橙方格橘子＝5：3 可數 figure，低幾何風險）。
 - **3 claim kind=definition**（c-ratio-def 比 a：b 念「a 比 b」、a 前項 b 後項、比值＝前項÷後項＝a/b；c-equiv 等值的比＝前後項同乘/同除同一非零數比值不變、最簡整數比＝同除以最大公因數；c-compare 兩比相等就是比值相等）。事實全 .venv 驗（8：12→2/3、18：12→3：2、6：4→3：2、10：4→5/2、15：10→3：2）。比號全形「：」、分數用 /。術語附英語 R15（ratio／ratio value／antecedent／consequent）。scope 不含連比/正反比函數/比例式求解（各屬他 KP）。
