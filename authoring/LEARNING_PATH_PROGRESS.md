@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-13 15:30 單字大師 v2（HD 插隊 3 請求，全上線 push HEAD accd13937）
+- **(A) CEFR 估級 1007 未分級字**（HD：「你有辦法自己大概分一分嗎？」）：`build_tags.py` 新增 `cefr_est`（**不覆蓋** authoritative `cefr=null` 的誠實留空）。優先序：GEPT 初級→A2/中級→B1/中高級→B2（LTTC 官方）、YLE starters/movers→A1 flyers→A2（Cambridge）、否則 COCA 頻率帶→CEFR（1k A1,2k A2,3k B1,4-5k B2,6-8k C1,9k-tail C2）。**1007 全數取得估計、0 仍未分級**（gept 274/coca 733/yle 2）。UI 以「約 Bx」虛線 chip 與官方實心 chip 視覺區分、標「僅供參考不等同官方」。
+- **(B) AWL 併入 TOEIC**（HD：eapfoundation AWL 清單歸 TOEIC）：Coxhead 2000 AWL 570 字族存 `sources/awl_headwords.txt`（附 provenance）；`toeic = TSL ∪ AWL`，新增 **518 AWL-only** 字（UK 拼寫經 spelling_variants 匹配美式，如 analyse→analyze）。
+- **(C) 兩個新頁面**（HD：統計圖表頁＋字母序全單字列表）：`word_stats.html`（Anki 風甜甜圈 4 桶：還沒學/不熟/快會了/已學會＝SRS Leitner 盒 0/1-2/3-4/5-6＋stat tiles＋今日到期＋各 CEFR 級堆疊條含約估標註＋字庫範圍切換即時重算）；`word_browse.html`（全 9861 字 A–Z、狀態色點＋CEFR chip＋🔊、搜尋/狀態篩選/A–Z 跳轉、點開看定義/IPA/例句唯讀、content-visibility 省效能）。build_web_data 產 all.json(4.5MB)＋stats_index.json(1.1MB)。word_master 側欄「更多」連入、兩頁互連。
+- **視覺 QA**：iPad Air 13 四角色（美術/空間/眼科/動畫）render 簽核——橫 1366×1024＋直 1024×1366＋16" 1718×890＋互動狀態（scope 切 GEPT 重算 5601 字、展開 aback 顯定義/IPA/例句、篩選已學會 457＝甜甜圈 known），9 張 PNG 全開圖判定通過：無重疊/裁切/溢出、配色一致、滿版利用、可讀、估計級誠實標記。commit 4bbee1625（資料）＋25810515d（兩頁）＋accd13937（index）。
+- **防呆**：tags.json 無 fingerprint gate 釘住；資料在既有 `assets/wordmaster/cards/`（非 authoring，合規 runtime-data-location）；worktree 內他 session 的 *cefr*.json 未碰。
+
 ## 2026-11-13 15:14 數學島 function strand #11（全島#53）收斂：math_function_graph_transformation（圖形平移/伸縮/對稱，高中 t_adv 學測）5/5 → function strand 11/12
 - **frozen_sha `69d951cc0e2369c9`**（4 次修：R1 導讀句 over-promise、重跑R1 2minor（把字句缺賓語＋can_do主語）、R3 Q3 題幹型別不一致）。DONE-GATE 六確定性 gate 全綠。視覺 QA：figure＝「原圖＋右移後兩拋物線」（灰軸 O/x/y＋兩綠拋物線頂點皆在 x 軸＋綠「右移 3」箭頭），iPad 橫直四角色 render 簽核過（x² 清晰、箭頭不壓曲線、標籤分離）。3 claim（c-translate 水平 f(x−h) 右移 h／垂直 f(x)+k 上移 k；c-scale a·f(x) 縱向伸縮；c-reflect −f(x) 對 x 軸、f(−x) 對 y 軸）。★核心易錯點＝水平平移方向（x−h 右移非左），teach/can_do 明講。術語附英語 R15（平移 translation／伸縮 scaling／對稱 reflection）。prereq=exp-definition＋quadratic-graph。
 - **4 MCQ**：Q1 f(x−4)→右移4〔誘答 左移/上移/下移〕／Q2 x²+3→上移3〔誘答 下移/右移/左移〕／Q3 −f(x) 對什麼對稱→x軸〔誘答 y軸/y=x/原點〕／Q4 f(x−2)+1→右移2上移1〔誘答 左下/右下/左上，四選項同長〕。teach (x−3)²/x²+2/−x²/2x² 與 practice 不重疊。
