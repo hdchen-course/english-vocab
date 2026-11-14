@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 數列級數（sequence）strand 第 3 個單元（全島第 75；t_adv 高中學測範圍）。知識點 math.t_adv.sequence.geometric（等比數列的通項與性質）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15）：等比數列 (geometric sequence)、公比 (common ratio)、通項 (general term)、等比中項 (geometric mean)。★scope（高中學測）：(1) 等比數列＝相鄰兩項的比固定，這個固定比叫公比 r；r＝後項÷前項（任一項除以它的前一項）。(2) 通項公式：a_n＝a_1×r^(n−1)（第 n 項＝首項×(n−1) 個公比）。(3) 等比中項：若 a、b、c 成等比，則 b²＝ac，所以 b＝±√(ac)（★有正負兩個值，和算術中項只有一個不同）。不含：等比級數求和（Sn，屬 geometric-sum KP）、無窮等比、Σ 記號、遞迴、公比為負或複數的深入討論。prereq＝等差數列的通項與性質（arithmetic；對照公差 vs 公比、相減 vs 相除）。★自檢（math-unit defect-classes）：事實全 .venv 驗（2,6,18,54 公比 r=3、a_n=2×3^(n−1)、a_4=54；3,6,12 等比中項 6²=36=3×12；1,4,16,64 a_n=4^(n−1)、a_4=64；a_1=3,r=2 前5項 3,6,12,24,48、a_5=48；5,10,20,40 a_n=5×2^(n−1)；2 和 8 等比中項 b²=16 b=±4）；乘號 ×、除號 ÷、次方 r^(n−1) 用上標或 ^；量詞不撞位名（本單元無位名，#3）；learner-facing 含 selfeval_note 用字詞（#2）；★figure＝等比數列 2→6→18→54 每步 ×3（低幾何風險 #43/#32：四個方格標 2/6/18/54、方格間弧線標 ×3、標題「等比數列（公比 r＝3）」），alt 與 SVG text 逐字一致（#33）；誘答單一乾淨機制（通項忘了 n−1 用 r^n／漏乘首項／公比與公差混淆用加的／等比中項忘正負只取正／等比中項誤用算術中項平均／忘開根號）、選項長度均衡（#20/#28）、兩兩相異（#29）；★practice 所考方法（通項求第 n 項、由數列求通項、等比中項±、公比概念）都在 rendered teach 示範（#4/#46：導讀承諾『先講公比與通項公式 a_n=a_1×r^(n−1)、再講等比中項 b²=ac（有正負），用數列圖看，最後練』與實際一致；worked-example 在 rendered teach）；★teach worked-example（2,6,18,54 r=3 a_4=54；等比中項 3,6,12→6；§4 recap 1,4,16,64 a_n=4^(n−1) a_4=64）與 figure（2→6→18→54 ×3，僅展示 r=3 概念、不求通項）與 practice 答案（Q1 a1=3,r=2 a5=48／Q2 5,10,20,40⇒5×2^(n−1)／Q3 2和8等比中項±4／Q4 概念）皆不重疊避#10（草稿期修：原 Q2 用 2,6,18,54 與 teach §2 例完全撞號，已改 5,10,20,40⇒5×2^(n−1)；原 Q3 用與 teach 同值 6，已改 2和8⇒±4）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_sequence_geometric.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.sequence.geometric",
+   "title_zh": "等比數列的通項與性質",
+   "can_do": "我知道等比數列就是「相鄰兩項比固定」的數列，那個固定比叫公比 r（後項÷前項）。我會用通項公式 a_n＝a_1×r^(n−1) 求出第 n 項，也會由一串數列看出公比、寫出通項。我還記得等比中項：若 a、b、c 成等比，則 b²＝ac，所以 b 有正負兩個值 b＝±√(ac)。",
+   "situation_group": "數列：等比",
+   "subject": "math",
+   "strand": "sequence",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_adv.sequence.geometric"
+   ],
+   "prerequisites": [
+    "math.t_adv.sequence.arithmetic"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-geo-r",
+     "text": "等比數列 (geometric sequence)：從第二項起，每一項除以它的前一項都得到同一個固定的比，這個固定比叫『公比 (common ratio)』r。所以 r＝後項÷前項（任一項除以它的前一項）。例如 2、6、18、54…，每次都 ×3，公比 r＝3。這和等差數列的差別是：等差看相鄰兩項相『減』的差，等比看相鄰兩項相『除』的比。",
+     "kind": "definition",
+     "source_refs": [
+      "等比數列：相鄰兩項比固定＝公比（高中數學）"
+     ],
+     "verification_ref": "2,6,18,54 公比 r=3（驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-geo-general",
+     "text": "通項公式：等比數列的第 n 項 a_n＝a_1×r^(n−1)，也就是『首項，再乘上 (n−1) 個公比』（從第 1 項走到第 n 項，共走了 n−1 步，每步 ×r）。★注意指數是 (n−1) 不是 n。例如首項 a_1＝2、公比 r＝3，則 a_n＝2×3^(n−1)，第 4 項 a_4＝2×3³＝2×27＝54。",
+     "kind": "definition",
+     "source_refs": [
+      "等比數列通項 a_n=a_1×r^(n−1)（高中數學）"
+     ],
+     "verification_ref": "a_1=2,r=3⇒a_n=2×3^(n−1)、a_4=54（驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-geo-mean",
+     "text": "等比中項 (geometric mean)：如果三個數 a、b、c 依序成等比數列，那中間那一項 b 滿足 b²＝ac（因為 b/a＝c/b，交叉相乘就得到）。所以 b＝±√(ac)。★和算術中項不同：等比中項有正負『兩個』值（只要 ac＞0）。例如 3、6、12 成等比，中間的 6 滿足 6²＝36＝3×12；而 4 和 9 的等比中項是 ±√(4×9)＝±6。",
+     "kind": "definition",
+     "source_refs": [
+      "等比中項 b²=ac、b=±√(ac)（高中數學）"
+     ],
+     "verification_ref": "6²=36=3×12；√(4×9)=6（驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.sequence.geometric"
+     ],
+     "body": "上一個單元學了等差數列（每次加同一個數），這裡學『等比數列』——像 2、6、18、54… 這樣，每次都乘上同一個數。下面先講什麼是公比、怎麼用『通項公式』一步求出第 n 項（不用一個一個乘），再講『等比中項』（它有正負兩個值，和算術中項不一樣），用一張數列圖看清楚，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.sequence.geometric"
+     ],
+     "body": "三個重點。(1) 公比 r：相鄰兩項的固定比，r＝後項÷前項。例 2、6、18、54 每次 ×3，r＝3（等差看相減的差，等比看相除的比）。(2) ★通項公式：a_n＝a_1×r^(n−1)（首項乘上 (n−1) 個公比；走到第 n 項共走 n−1 步）。例 a_1＝2、r＝3 ⇒ a_n＝2×3^(n−1)，第 4 項 a_4＝2×3³＝54。注意指數是 (n−1) 不是 n。(3) 等比中項：a、b、c 成等比時 b²＝ac，所以 b＝±√(ac)〔有正負兩個值〕。例 3、6、12 中間的 6，6²＝36＝3×12。下面用圖看等比數列怎麼一步步 ×r。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.sequence.geometric"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 150' xmlns='http://www.w3.org/2000/svg'><text x='170' y='24' font-family='sans-serif' font-size='14' fill='#2f6f54' text-anchor='middle' font-weight='bold'>等比數列（公比 r ＝ 3）</text><rect x='26' y='70' width='48' height='40' rx='7' fill='#eef4ff' stroke='#5b8def' stroke-width='1.3'/><text x='50' y='96' font-family='sans-serif' font-size='16' fill='#33475b' text-anchor='middle' font-weight='bold'>2</text><rect x='114' y='70' width='48' height='40' rx='7' fill='#eef4ff' stroke='#5b8def' stroke-width='1.3'/><text x='138' y='96' font-family='sans-serif' font-size='16' fill='#33475b' text-anchor='middle' font-weight='bold'>6</text><rect x='202' y='70' width='48' height='40' rx='7' fill='#eef4ff' stroke='#5b8def' stroke-width='1.3'/><text x='226' y='96' font-family='sans-serif' font-size='16' fill='#33475b' text-anchor='middle' font-weight='bold'>18</text><rect x='290' y='70' width='48' height='40' rx='7' fill='#eef4ff' stroke='#5b8def' stroke-width='1.3'/><text x='314' y='96' font-family='sans-serif' font-size='16' fill='#33475b' text-anchor='middle' font-weight='bold'>54</text><path d='M78,66 Q94,48 110,66' fill='none' stroke='#c67c1e' stroke-width='1.6'/><text x='94' y='46' font-family='sans-serif' font-size='12' fill='#c67c1e' text-anchor='middle' font-weight='bold'>×3</text><path d='M166,66 Q182,48 198,66' fill='none' stroke='#c67c1e' stroke-width='1.6'/><text x='182' y='46' font-family='sans-serif' font-size='12' fill='#c67c1e' text-anchor='middle' font-weight='bold'>×3</text><path d='M254,66 Q270,48 286,66' fill='none' stroke='#c67c1e' stroke-width='1.6'/><text x='270' y='46' font-family='sans-serif' font-size='12' fill='#c67c1e' text-anchor='middle' font-weight='bold'>×3</text><text x='170' y='136' font-family='sans-serif' font-size='11.5' fill='#2f6f54' text-anchor='middle'>每一項都是前一項的 3 倍，所以公比 r ＝ 3</text></svg>",
+      "alt": "一張等比數列圖，標題「等比數列（公比 r ＝ 3）」。四個方格由左到右寫著 2、6、18、54；每相鄰兩個方格之間有一條橘色弧線，上面標「×3」。最下方綠字：「每一項都是前一項的 3 倍，所以公比 r ＝ 3」。",
+      "caption": "等比數列 2、6、18、54：每一項都是前一項的 3 倍（橘色「×3」），所以公比 r＝3。要跳到更後面的項，用通項公式 a_n＝a_1×r^(n−1) 一步算出，不必一個一個乘。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.sequence.geometric"
+     ],
+     "body": "最後練等比數列。步驟：先找公比 r（後項÷前項）；求第 n 項用通項 a_n＝a_1×r^(n−1)（記得指數是 n−1）；由一串數列寫通項，就代入 a_1 和 r；等比中項用 b²＝ac，別忘了有正負兩個值。再看一個求通項的例子：1、4、16、64…，公比 r＝4、首項 1，所以 a_n＝1×4^(n−1)＝4^(n−1)，第 4 項 a_4＝4³＝64。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個等比數列首項 a₁＝3、公比 r＝2。第 5 項 a₅ 是多少？",
+     "answer": "48",
+     "kp_ids": [
+      "math.t_adv.sequence.geometric"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.sequence.geometric"
+     ],
+     "options": [
+      "48",
+      "96",
+      "16",
+      "10"
+     ],
+     "distractor_rationales": {
+      "96": "這是用了 a₁×r⁵＝3×2⁵＝96，指數多乘了一個公比；通項是 a₁×r^(n−1)，第 5 項只乘 4 個 r：3×2⁴＝48。",
+      "16": "這是 2⁴＝16，只乘了公比卻漏了首項 3；要 3×2⁴＝48。",
+      "10": "這是把公比當成用『加』的（3＋2×…）或算成 3＋7＝10；等比是用『乘』的，a₅＝3×2⁴＝48。"
+     },
+     "answer_evidence": [
+      "c-geo-general"
+     ],
+     "feedback": "通項 a_n＝a₁×r^(n−1)，a₅＝3×2^(5−1)＝3×2⁴＝3×16＝48。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "數列 5、10、20、40… 是等比數列。它的通項 a_n（第 n 項）是下列哪一個？",
+     "answer": "5×2^(n−1)",
+     "kp_ids": [
+      "math.t_adv.sequence.geometric"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.sequence.geometric"
+     ],
+     "options": [
+      "5×2^(n−1)",
+      "5×2^n",
+      "2×5^(n−1)",
+      "5×2n"
+     ],
+     "distractor_rationales": {
+      "5×2^n": "這是用了 a₁×r^n，忘了指數是 (n−1)；正確 a_n＝5×2^(n−1)（代 n＝1 要得 5：5×2⁰＝5 才對，5×2¹＝10 就錯了）。",
+      "2×5^(n−1)": "把首項和公比弄反了：首項是 5、公比是 2（10÷5），不是首項 2、公比 5；正確 a_n＝5×2^(n−1)。",
+      "5×2n": "這把公比 2 乘以 n（變成等差的樣子），等比要用『次方』r^(n−1)；正確 a_n＝5×2^(n−1)。"
+     },
+     "answer_evidence": [
+      "c-geo-r",
+      "c-geo-general"
+     ],
+     "feedback": "公比 r＝10÷5＝2、首項 5，a_n＝5×2^(n−1)（代 n＝1 得 5、n＝2 得 10，正確）。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "2 和 8 的等比中項是多少？（也就是：2、□、8 成等比數列時，中間的□）",
+     "answer": "±4",
+     "kp_ids": [
+      "math.t_adv.sequence.geometric"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.sequence.geometric"
+     ],
+     "options": [
+      "±4",
+      "4",
+      "5",
+      "16"
+     ],
+     "distractor_rationales": {
+      "4": "只取了正的那一個：等比中項 b²＝2×8＝16，b＝±4，負的 −4 也成立（2、−4、8 的相鄰比都是 −2），所以答案是 ±4。",
+      "5": "這是 (2＋8)/2＝5，算成了『算術』中項（相加除以 2）；等比中項是 b²＝ac，b＝±√(2×8)＝±4。",
+      "16": "這是 2×8＝16，忘了還要開根號；等比中項 b²＝16 ⇒ b＝±4。"
+     },
+     "answer_evidence": [
+      "c-geo-mean"
+     ],
+     "feedback": "等比中項 b²＝ac＝2×8＝16，所以 b＝±√16＝±4（2、4、8 與 2、−4、8 都成等比）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在一個等比數列裡，公比 r 要怎麼求？",
+     "answer": "任一項除以它的前一項（相鄰兩項的比，固定）",
+     "kp_ids": [
+      "math.t_adv.sequence.geometric"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.sequence.geometric"
+     ],
+     "options": [
+      "任一項除以它的前一項（相鄰兩項的比，固定）",
+      "任一項減去它的前一項（相鄰兩項的差）",
+      "把首項乘以項數 n",
+      "把相鄰兩項相加起來"
+     ],
+     "distractor_rationales": {
+      "任一項減去它的前一項（相鄰兩項的差）": "相鄰兩項相減（差固定）是『等差數列』的公差；等比看的是相鄰兩項的『比』，用除的。",
+      "把首項乘以項數 n": "公比和首項乘以項數沒有關係；公比是相鄰兩項的比 r＝後項÷前項。",
+      "把相鄰兩項相加起來": "相加不會得到公比；公比是相鄰兩項相『除』（後項÷前項）。"
+     },
+     "answer_evidence": [
+      "c-geo-r"
+     ],
+     "feedback": "公比 r＝後項÷前項（任一項除以它的前一項），而且等比數列裡這個比是固定的。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（等比數列：相鄰兩項比固定＝公比 r〔後項÷前項〕；通項 a_n＝a_1×r^(n−1)〔記得指數是 n−1、首項乘 (n−1) 個公比〕；等比中項 b²＝ac，b＝±√(ac)〔★有正負兩個值〕）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
