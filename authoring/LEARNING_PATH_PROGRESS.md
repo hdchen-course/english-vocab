@@ -7,6 +7,11 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 03:22 defect-class #50 對齊批次：permutation_repeat 5/5 DONE-GATE 全綠（11/13）
+- **permutation_repeat frozen_sha `d89a111fdf03f0ce`**（figure row③ 對齊修正後 R1-R5 連 5 clean、L3 每輪 exit 0、confirmed 全 0；R3 一個 raw finding 經 panel 5/5 判 NOT-a-defect〔對照句每值各自標規則 tag，歸屬明確不歧義〕）。DONE-GATE 全綠：per_page 無 violation／scan PASS／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen＋iPad 四角色 render 綁 sha（對照卡 ①重複排列 可重複/放回→n^r、②直線排列 不可重複/不放回→nPr、③辨別 能不能重複用同一個？ 三列描述全左對齊 x=96/start/fs11；三視窗右緣0%；美術/空間/眼科/動畫師過）。單元教「重複排列 n^r」（每位獨立選、可重複），4 MCQ：3 位密碼 10³=1000、擲骰 3 次 6³=216、…。事實全 .venv。
+- **對齊批次 DONE-GATE 全綠已 push 增至 11/13**＝…（前 10）＋**permutation_repeat(d89a111f)**。待排＝trig_radian(92a9d364)、trig_solve_triangle_apply(2c0cd67c)（各 R1-R5）。
+- **下一步**：trig_radian R1-R5 → DONE-GATE；再推 trig_solve；之後續 prob strand 其餘 11 KP。
+
 ## 2026-11-15 03:02 defect-class #50 對齊批次：inclusion_exclusion 5/5 DONE-GATE 全綠（10/13）＋ permutation_repeat de-converge 重修（R3 抓 figure row③ 不一致）
 - **inclusion_exclusion frozen_sha `f5395729dc4d152d`**（can_do 把字句補語修正後 R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：per_page 無 violation／scan PASS／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen＋iPad 四角色 render 綁 sha（公式卡 ①兩集合 |A∪B|=|A|+|B|−|A∩B|、②三集合 單個加/兩兩扣/三個加回、③補集 都不符合=全部−|A∪B| 全左對齊；三視窗右緣0%；can_do 修正已顯示；美術/空間/眼科/動畫師過）。
 - **★permutation_repeat 重修**：R3 panel 判 confirmed minor（#50 家族）——figure 對照卡 row③「③辨別」描述「能不能重複用同一個？」用 x=226/text-anchor=middle/fs10.5，異於 ①② x=96/start/fs11。de-converge（棄 R1-R2）→改為 x=96/start/fs11 統一→4 pre-freeze gates 全綠→重凍 **d89a111fdf03f0ce**→重啟 R1。註：此單元為「重複排列 n^r」（每位獨立選、可重複），非多重集 n!/∏，scope 已於 R2 修正。
