@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 三角（trig）strand 第 3 個單元（t_adv 學測範圍）。知識點 math.t_adv.trig.law-of-sines（正弦定理與外接圓半徑）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15）：正弦定理 (law of sines)、外接圓 (circumscribed circle / circumcircle)、外接圓半徑 (circumradius)。★scope（學測 t_adv）：三角形中 a/sinA＝b/sinB＝c/sinC＝2R（a、b、c 為三邊長，A、B、C 為其對角，R 為外接圓半徑）。能用它由『一邊及其對角』求外接圓半徑、或由『一組邊角＋另一角』求另一邊。不含：餘弦定理（另單元）、面積公式、解三角形的綜合測量應用（另單元）。prereq＝銳角三角比（ratio-acute）。★自檢（math-unit defect-classes）：事實全 .venv/sympy 驗（a/sinA=b/sinB=c/sinC 恆等；a=6,A=30°⇒2R=12,R=6、b at B=45°=6√2；a=10,A=30°⇒R=10,2R=20；a=8,A=30°,B=60°⇒b=8√3、顛倒得 8√3/3、2R=16）；★figure＝三角形 ABC＋公式（#25 邊 a 對頂點 A：a＝BC 底邊、b＝CA 右邊、c＝AB 左邊，邊標在對角頂點的對邊；低幾何風險），alt 與 SVG text 逐字一致（#33）；★MCQ options 全 bare（#47：無 in-option 括號說明、說明全在 distractor_rationales）、誘答單一乾淨機制且數值兩兩相異（#14/#29）、長度均衡（#20/#28）；減號/等號統一全形（#39）；★導讀承諾順序＝實際 teach 牌組順序（#4/#46）：導讀『先講正弦定理 a/sinA＝b/sinB＝c/sinC＝2R、用 a=6、A=30° 示範求 2R 與 R 再求 b、用一張三角形＋公式圖看、最後練』＝實際 teach1 intro→teach2 定理+示範→teach3 figure→teach4 recap+練；worked-example 在 rendered teach；★teach worked-example 用 a=6,A=30°（⇒2R=12,R=6；b at B=45°=6√2），與 practice 答案（Q1 公式 a/sinA=b/sinB=c/sinC、Q2 a=10 的 R=10、Q3 a=8,B=60° 的 b=8√3、Q4 R＝外接圓半徑）皆不重疊避#10。claim kind=definition。figure-only example 無 body。",
+ "page": "math_trig_law_of_sines.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.trig.law-of-sines",
+   "title_zh": "正弦定理",
+   "can_do": "我知道正弦定理：在任何三角形中，a/sinA＝b/sinB＝c/sinC＝2R（a、b、c 是三邊，A、B、C 是它們的對角，R 是外接圓半徑）。我會用它由一邊和它的對角求外接圓半徑 R，也會由一組已知的邊和角求另一條邊。",
+   "situation_group": "三角：正弦定理",
+   "subject": "math",
+   "strand": "trig",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_adv.trig.law-of-sines"
+   ],
+   "prerequisites": [
+    "math.t_adv.trig.ratio-acute"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-los-formula",
+     "text": "正弦定理 (law of sines)：在任何三角形 ABC 中，每一邊除以它『對角』的正弦都相等，而且等於外接圓直徑 2R——a/sinA＝b/sinB＝c/sinC＝2R。這裡 a、b、c 是三邊長，A、B、C 是它們各自的對角（a 對 A、b 對 B、c 對 C），R 是這個三角形外接圓 (circumcircle) 的半徑。",
+     "kind": "definition",
+     "source_refs": [
+      "正弦定理 a/sinA＝b/sinB＝c/sinC＝2R（高中數學 學測）"
+     ],
+     "verification_ref": "a/sinA=b/sinB=c/sinC 恆等（sympy，A=30/B=45/C=105,a=6）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-los-radius",
+     "text": "求外接圓半徑：由 a/sinA＝2R，只要知道一邊 a 和它的對角 A，就能求出外接圓半徑 R＝a/(2 sinA)。例如 a＝6、A＝30°：2R＝a/sinA＝6/sin30°＝6/(1/2)＝12，所以 R＝6。",
+     "kind": "definition",
+     "source_refs": [
+      "正弦定理求外接圓半徑 R＝a/(2sinA)（高中數學 學測）"
+     ],
+     "verification_ref": "a=6,A=30°⇒2R=12,R=6（sympy）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-los-side",
+     "text": "求另一邊：由 a/sinA＝b/sinB，知道一組對應的邊角（a 與 A）再加另一角 B，就能求 b＝a·sinB/sinA。例如 a＝6、A＝30°、B＝45°：先得 2R＝12，則 b＝2R·sinB＝12·sin45°＝12·(√2/2)＝6√2（也可直接 b＝a·sinB/sinA＝6·(√2/2)/(1/2)＝6√2）。",
+     "kind": "definition",
+     "source_refs": [
+      "正弦定理求邊 b＝a·sinB/sinA（高中數學 學測）"
+     ],
+     "verification_ref": "a=6,A=30°,B=45°⇒b=6√2（sympy）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.trig.law-of-sines"
+     ],
+     "body": "這一單元學『正弦定理』——把三角形的每一邊和它對角的正弦連起來。下面先講正弦定理 a/sinA＝b/sinB＝c/sinC＝2R（R 是外接圓半徑），用 a＝6、A＝30° 的例子示範怎麼求 2R 與 R、再求另一邊 b，接著用一張三角形加公式的圖看清楚哪一邊對哪一角，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.trig.law-of-sines"
+     ],
+     "body": "正弦定理：在任何三角形 ABC 中，a/sinA＝b/sinB＝c/sinC＝2R（a 對 A、b 對 B、c 對 C；R 是外接圓半徑）。示範（a＝6、A＝30°）：求外接圓——2R＝a/sinA＝6/sin30°＝6/(1/2)＝12，所以 R＝6。再求另一邊（設 B＝45°）：b＝2R·sinB＝12·sin45°＝12·(√2/2)＝6√2。下面用一張三角形加公式的圖，看清楚每一邊對的是哪一個角。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.trig.law-of-sines"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 178' xmlns='http://www.w3.org/2000/svg'><text x='170' y='18' font-family='sans-serif' font-size='13.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>正弦定理</text><polygon points='170,40 66,126 274,126' fill='#eef4ff' stroke='#5b8def' stroke-width='1.5'/><text x='170' y='34' font-family='sans-serif' font-size='12.5' fill='#5b8def' text-anchor='middle' font-weight='bold'>A</text><text x='56' y='131' font-family='sans-serif' font-size='12.5' fill='#5b8def' text-anchor='middle' font-weight='bold'>B</text><text x='286' y='131' font-family='sans-serif' font-size='12.5' fill='#5b8def' text-anchor='middle' font-weight='bold'>C</text><text x='170' y='142' font-family='sans-serif' font-size='12' fill='#d08a3e' text-anchor='middle'>a</text><text x='240' y='82' font-family='sans-serif' font-size='12' fill='#d08a3e' text-anchor='middle'>b</text><text x='100' y='82' font-family='sans-serif' font-size='12' fill='#d08a3e' text-anchor='middle'>c</text><text x='170' y='164' font-family='sans-serif' font-size='12.5' fill='#33475b' text-anchor='middle'>a/sinA ＝ b/sinB ＝ c/sinC ＝ 2R</text></svg>",
+      "alt": "一個三角形，頂點標 A（上）、B（左下）、C（右下）。對邊用橘色標：底邊（B 到 C、對著頂點 A）標「a」、右邊（C 到 A、對著頂點 B）標「b」、左邊（A 到 B、對著頂點 C）標「c」。下方深色公式：「a/sinA ＝ b/sinB ＝ c/sinC ＝ 2R」。",
+      "caption": "正弦定理：每一邊除以它『對角』的正弦都相等，並等於外接圓直徑 2R——a/sinA＝b/sinB＝c/sinC＝2R（a 對 A、b 對 B、c 對 C；R 為外接圓半徑）。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.trig.law-of-sines"
+     ],
+     "body": "最後練正弦定理。重點：先認清哪一邊對哪一個角（a 對 A…）；求外接圓半徑用 R＝a/(2 sinA)；求另一邊用 b＝a·sinB/sinA（或 b＝2R·sinB）。小提醒：a/sinA 算出來的是『直徑 2R』不是半徑 R，要記得再除以 2 才是 R。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "正弦定理的內容是下列哪一個？（A、B、C 為 a、b、c 的對角）",
+     "answer": "a/sinA ＝ b/sinB ＝ c/sinC",
+     "kp_ids": [
+      "math.t_adv.trig.law-of-sines"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.trig.law-of-sines"
+     ],
+     "options": [
+      "a/sinA ＝ b/sinB ＝ c/sinC",
+      "a·sinA ＝ b·sinB ＝ c·sinC",
+      "a/cosA ＝ b/cosB ＝ c/cosC",
+      "a²/sinA ＝ b²/sinB ＝ c²/sinC"
+     ],
+     "distractor_rationales": {
+      "a·sinA ＝ b·sinB ＝ c·sinC": "正弦定理是邊『除以』對角的正弦，不是相乘；應為 a/sinA＝b/sinB＝c/sinC。",
+      "a/cosA ＝ b/cosB ＝ c/cosC": "正弦定理用的是『正弦 sin』不是餘弦 cos；應為 a/sinA＝b/sinB＝c/sinC。",
+      "a²/sinA ＝ b²/sinB ＝ c²/sinC": "邊不用平方；正弦定理是邊本身除以對角正弦，a/sinA＝b/sinB＝c/sinC。"
+     },
+     "answer_evidence": [
+      "c-los-formula"
+     ],
+     "feedback": "正弦定理：a/sinA＝b/sinB＝c/sinC（＝2R）——每一邊除以它對角的正弦都相等。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "三角形中 a＝10、對角 A＝30°。它的外接圓半徑 R 是多少？",
+     "answer": "10",
+     "kp_ids": [
+      "math.t_adv.trig.law-of-sines"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.trig.law-of-sines"
+     ],
+     "options": [
+      "10",
+      "20",
+      "5",
+      "2.5"
+     ],
+     "distractor_rationales": {
+      "20": "20 是直徑 2R（＝a/sinA＝10/(1/2)），不是半徑；還要再除以 2 得 R＝10。",
+      "5": "這是把 a 直接除以 2（10/2）、忘了先除以 sinA；正確是 R＝a/(2 sinA)＝10/(2×1/2)＝10。",
+      "2.5": "這是把 sinA 乘上去又除以 2（10×(1/2)÷2），用錯運算；sinA 應該是除不是乘，R＝10。"
+     },
+     "answer_evidence": [
+      "c-los-radius"
+     ],
+     "feedback": "R＝a/(2 sinA)＝10/(2×sin30°)＝10/(2×1/2)＝10。（注意 a/sinA＝20 是直徑 2R，要再除以 2。）"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "三角形中 a＝8、A＝30°、B＝60°。用正弦定理求 b。",
+     "answer": "8√3",
+     "kp_ids": [
+      "math.t_adv.trig.law-of-sines"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.trig.law-of-sines"
+     ],
+     "options": [
+      "8√3",
+      "8√3/3",
+      "8",
+      "16"
+     ],
+     "distractor_rationales": {
+      "8√3/3": "這是把比例寫顛倒了（算成 a·sinA/sinB）；正弦定理 a/sinA＝b/sinB 應得 b＝a·sinB/sinA＝8·(√3/2)/(1/2)＝8√3。",
+      "8": "這是直接照抄 a 的值、沒有換算；B 和 A 不同，b 要用 b＝a·sinB/sinA＝8√3。",
+      "16": "16 是這個三角形的直徑 2R（＝a/sinA＝8/(1/2)），不是 b；b＝a·sinB/sinA＝8√3。"
+     },
+     "answer_evidence": [
+      "c-los-side"
+     ],
+     "feedback": "b＝a·sinB/sinA＝8·sin60°/sin30°＝8·(√3/2)/(1/2)＝8√3。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "正弦定理 a/sinA＝b/sinB＝c/sinC＝2R 裡的 R 代表什麼？",
+     "answer": "三角形外接圓的半徑",
+     "kp_ids": [
+      "math.t_adv.trig.law-of-sines"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.trig.law-of-sines"
+     ],
+     "options": [
+      "三角形外接圓的半徑",
+      "三角形外接圓的直徑",
+      "三角形內切圓的半徑",
+      "三角形的周長"
+     ],
+     "distractor_rationales": {
+      "三角形外接圓的直徑": "直徑是 2R（整個 a/sinA 的值）；R 本身是『半徑』，不是直徑。",
+      "三角形內切圓的半徑": "正弦定理的 R 是『外接圓』（通過三頂點的圓）的半徑，不是內切圓。",
+      "三角形的周長": "R 是外接圓半徑，和周長（三邊之和）無關。"
+     },
+     "answer_evidence": [
+      "c-los-formula"
+     ],
+     "feedback": "R 是三角形外接圓（通過三個頂點的圓）的半徑；a/sinA＝2R 是直徑。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（正弦定理：任何三角形 a/sinA＝b/sinB＝c/sinC＝2R，a 對 A、b 對 B、c 對 C，R 為外接圓半徑；求半徑 R＝a/(2 sinA)〔a/sinA 是直徑 2R，要再除以 2〕；求另一邊 b＝a·sinB/sinA）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
