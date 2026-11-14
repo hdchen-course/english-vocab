@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 計數（counting）strand 第 7 個單元（t_adv 學測）。知識點 math.t_adv.counting.circular-permutation（環狀排列 (n－1)!）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，gloss 緊貼正確中文術語）：環狀排列 (circular permutation)、直線排列 (linear permutation)。★scope（學測 t_adv）：(1) 環狀排列——n 個相異物圍成一圈（只看相對位置、可整圈旋轉），排法數＝(n－1)!；原理＝直線排列 n! 中每一圈有 n 種旋轉版本算同一個，除以 n 得 n!/n＝(n－1)!（等價：固定其中一人當基準、其餘 n－1 人排 (n－1)!）。(2) 與直線排列對照：直線有頭尾（位置絕對）用 n!、圓排只看相對位置用 (n－1)!。(3) 可翻面的情形（項鍊、手環、鑰匙圈）正反看同一個，再除以 2＝(n－1)!/2（n≥3）；但座位/圓桌不能翻面不除 2。不含：有限制的環排（某些人必相鄰/不相鄰）、組合、重複排列。prereq＝permutation（直線排列 nPr/n!，剛建；環排＝直線除掉旋轉）。★自檢（math-unit defect-classes）：事實全 .venv 驗（teach 4 人圓桌固定一人剩 3 人＝3!＝6 vs 4 人直線 4!＝24、3 人圈直線 3!＝6 每圈 3 旋轉算同一→6/3＝2、4 珠手環可翻面 (4－1)!/2＝3；Q1 6 人圓桌 (6－1)!＝120、Q2 5 珠可翻面手鍊 (5－1)!/2＝12、Q3 概念 (n－1)!、Q4 辨別圓排用 (n－1)!；各 distractor 單一錯誤路徑）；減號僅出現在 n－1、n－2 等式，一律全形 U+FF0D（含 distractor_rationales key）；除法用斜線 n!/n、(n－1)!/2（house 慣例同 nCr＝nPr/r!）、無上標數字；★figure＝對照卡（低幾何風險：三列①環狀排列 圍一圈 只看相對位置→(n－1)!、②直線排列 有頭尾 位置絕對→n!、③可翻面 項鍊/手環→再÷2＝(n－1)!/2），alt 與 SVG text 逐字一致（#33）、figure 標題『圍一圈用 (n－1)!；排一列用 n!』寫進 alt 開頭；★MCQ options 全 bare（#47，說明在 distractor_rationales）、每個 distractor 乾淨單一錯誤路徑（當直線沒除旋轉 n!／多固定一人 (n－2)!／座位誤當可翻面又除 2 (n－1)!/2／可翻面忘了除 2 用 (n－1)!／當直線又除 2）、數值兩兩相異（#14/#29）、長度均衡（#20/#28）；★導讀承諾順序＝實際 teach 牌組順序（#4/#46）：導讀『先講環狀排列 (n－1)!（圍一圈只看相對位置、用固定一人法）、用 4 人圓桌固定一人剩 3 人＝6 示範、對照 4 人直線 4!＝24、用 3 人圈說明為何除 n（6/3＝2）、再講可翻面項鍊再÷2、用一張對照卡整理、最後練』＝實際 teach1 intro→teach2 定義＋固定一人示範＋對照＋除 n 原理＋項鍊→teach3 figure 對照卡→teach4 recap+練；worked-example 在 rendered teach；★teach worked-example 用 6／24／3／2，與 practice 答案（Q1 120、Q2 12、Q3 (n－1)!、Q4 文字）皆不重疊避#10。claim kind=definition。figure-only example 無 body。",
+ "page": "math_counting_circular_permutation.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.counting.circular-permutation",
+   "title_zh": "環狀排列",
+   "can_do": "我知道環狀排列 (circular permutation) 是把 n 個相異物圍成一圈、只看彼此的相對位置（整圈轉一下算同一種），排法數＝(n－1)!。我懂它的道理——直線排列 n! 裡每一圈有 n 種旋轉版本算成同一個，所以除以 n 得 n!/n＝(n－1)!（也可以『固定其中一人當基準、其餘 n－1 人去排』）。我也會分辨：圍一圈用 (n－1)!、排一列用 n!，而可翻面的項鍊再除以 2。",
+   "situation_group": "計數：環狀排列",
+   "subject": "math",
+   "strand": "counting",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_adv.counting.circular-permutation"
+   ],
+   "prerequisites": [
+    "math.t_adv.counting.permutation"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-circ-def",
+     "text": "環狀排列 (circular permutation)：把 n 個相異物圍成一圈，因為一圈沒有頭尾、只看彼此的相對位置，整圈一起轉動後看起來一樣的就算同一種排法。排法數＝(n－1)!。最好懂的算法是『固定一人當基準』：先把其中一個人固定在某個位子（消掉『整圈旋轉』的重複），剩下的 n－1 人去排其餘位子，就是 (n－1)! 種。例：4 個人圍一張圓桌，固定一個人，其餘 3 人排，共 3!＝6 種。",
+     "kind": "definition",
+     "source_refs": [
+      "環狀排列 (n－1)!（高中數學 學測）"
+     ],
+     "verification_ref": "4 人圓桌固定一人=3!=6；(n－1)!（.venv）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-circ-vs-line",
+     "text": "為什麼是 (n－1)! 而不是 n!：直線排列有頭有尾、每個位置是絕對的，所以 n 個相異物排一列有 n! 種；但圍成一圈只看相對位置，同一種圍法整圈轉一下（有 n 種旋轉版本）都算同一個，所以要把 n! 除以 n，得 n!/n＝(n－1)!。例：A、B、C 三人排一列有 3!＝6 種，但圍成一圈時每種圍法有 3 個旋轉版本算同一個，6/3＝2 種（就是 ABC 和 ACB 兩種相對順序）。",
+     "kind": "definition",
+     "source_refs": [
+      "環排與直線排列的關係 n!/n（高中數學 學測）"
+     ],
+     "verification_ref": "3 人直線 3!=6、圓排 6/3=2（.venv）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-circ-flip",
+     "text": "如果圍成的東西『可以翻面』——像項鍊、手環、鑰匙圈，正面看和翻過來背面看其實是同一個——那麼除了整圈旋轉，正反這兩種也要算同一個，所以在 (n－1)! 的基礎上再除以 2，得 (n－1)!/2（n≥3）。但如果是『座位、圓桌』這種不能翻面的情形，就不用再除 2，維持 (n－1)!。例：把 4 顆不同的珠子串成一個可翻面的手環，共 (4－1)!/2＝6/2＝3 種。",
+     "kind": "definition",
+     "source_refs": [
+      "可翻面項鍊 (n－1)!/2（高中數學 學測）"
+     ],
+     "verification_ref": "4 珠手環 (4－1)!/2=3（.venv）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.counting.circular-permutation"
+     ],
+     "body": "這一單元學『環狀排列』——把東西圍成一圈來排。下面先講環狀排列 (n－1)!（圍一圈只看相對位置，最好用『固定一人』來算），用 4 個人圍圓桌、固定一人、其餘 3 人排＝3!＝6 示範；對照 4 個人排一列是 4!＝24；再用 3 個人圍圈說明為什麼要除以 n（直線 3!＝6，每圈 3 個旋轉算同一個，6/3＝2）；接著講可翻面的項鍊要再除以 2；用一張對照卡整理，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.counting.circular-permutation"
+     ],
+     "body": "環狀排列：n 個相異物圍成一圈、只看相對位置，排法數＝(n－1)!。最好懂的算法是『固定一人』——先把一個人固定在某位子，消掉整圈旋轉的重複，其餘 n－1 人去排，就是 (n－1)!。示範：4 人圍圓桌，固定 1 人、其餘 3 人排，3!＝6 種。為什麼不是 n!？因為圍一圈時同一種圍法整圈轉一下（共 n 種旋轉版本）都算同一個，所以把直線的 n! 除以 n，n!/n＝(n－1)!。示範：3 人排一列 3!＝6，圍成圈每種有 3 個旋轉算同一個，6/3＝2 種。特別情形：項鍊、手環這種『可以翻面』的，正反算同一個，要在 (n－1)! 再除以 2＝(n－1)!/2；但座位、圓桌不能翻面就不除 2。下面用一張對照卡整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.counting.circular-permutation"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 350 136' xmlns='http://www.w3.org/2000/svg'><text x='175' y='18' font-family='sans-serif' font-size='12' fill='#2f6f54' text-anchor='middle' font-weight='bold'>圍一圈用 (n－1)!；排一列用 n!</text><rect x='12' y='30' width='326' height='30' rx='6' fill='#eef4ff' stroke='#5b8def' stroke-width='1.1'/><text x='22' y='49' font-family='sans-serif' font-size='10.5' fill='#5b8def' font-weight='bold'>①環狀排列</text><text x='224' y='50' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>圍一圈 只看相對位置 → (n－1)!</text><rect x='12' y='64' width='326' height='30' rx='6' fill='#eef7ee' stroke='#4e9a6b' stroke-width='1.1'/><text x='22' y='83' font-family='sans-serif' font-size='10.5' fill='#4e9a6b' font-weight='bold'>②直線排列</text><text x='224' y='84' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>排一列 有頭尾位置絕對 → n!</text><rect x='12' y='98' width='326' height='30' rx='6' fill='#fdf2e9' stroke='#d08a3e' stroke-width='1.1'/><text x='22' y='117' font-family='sans-serif' font-size='10.5' fill='#d08a3e' font-weight='bold'>③可翻面</text><text x='226' y='118' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='middle'>項鍊/手環 → 再÷2＝(n－1)!/2</text></svg>",
+      "alt": "標題「圍一圈用 (n－1)!；排一列用 n!」。一張對照卡，三列。第一列藍底「①環狀排列」：「圍一圈 只看相對位置 → (n－1)!」。第二列綠底「②直線排列」：「排一列 有頭尾位置絕對 → n!」。第三列橘底「③可翻面」：「項鍊/手環 → 再÷2＝(n－1)!/2」。",
+      "caption": "圍成一圈只看相對位置（整圈轉一下算同一個），用 (n－1)!；排成一列有頭尾、位置絕對，用 n!；若是可翻面的項鍊/手環，正反算同一個要再除以 2＝(n－1)!/2。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.counting.circular-permutation"
+     ],
+     "body": "最後練環狀排列。重點：n 個相異物圍一圈＝(n－1)!（用『固定一人、其餘 n－1 人排』最好算）；因為圍一圈只看相對位置，比直線 n! 少掉 n 種旋轉重複，所以 n!/n＝(n－1)!。小提醒：圍一圈別直接用 n!（那是排一列）；只要固定一人就好、不要固定兩人（會變 (n－2)! 算少了）；座位/圓桌不翻面不要除 2，只有可翻面的項鍊/手環才再除以 2。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "6 個人圍著一張圓桌坐（只看彼此的相對位置，整桌轉一下算同一種坐法）。共有幾種不同的坐法？",
+     "answer": "120",
+     "kp_ids": [
+      "math.t_adv.counting.circular-permutation"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.circular-permutation"
+     ],
+     "options": [
+      "120",
+      "720",
+      "60",
+      "24"
+     ],
+     "distractor_rationales": {
+      "720": "這是當成排成一列算（6!＝720）；圍一圈只看相對位置，整桌轉一下算同一種，要除以 6，720/6＝(6－1)!＝120。",
+      "60": "這是多除了『翻面』（(6－1)!/2＝60）；座位、圓桌不能翻面不用除 2，只有可翻面的項鍊才除，坐法是 (6－1)!＝120。",
+      "24": "這是多固定了一個人（固定兩人變成 (6－2)!＝4!＝24）；圍一圈只要固定『一個』人破除旋轉，其餘 5 人排，(6－1)!＝120。"
+     },
+     "answer_evidence": [
+      "c-circ-def"
+     ],
+     "feedback": "圍圓桌＝固定一人、其餘 5 人排＝(6－1)!＝5!＝120。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "把 5 顆不同的珠子串成一條手鍊（手鍊可以翻面，正面戴和翻過來戴算同一條）。共可串出幾種不同的手鍊？",
+     "answer": "12",
+     "kp_ids": [
+      "math.t_adv.counting.circular-permutation"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.circular-permutation"
+     ],
+     "options": [
+      "12",
+      "24",
+      "120",
+      "60"
+     ],
+     "distractor_rationales": {
+      "24": "這是只除了旋轉、忘了可翻面（(5－1)!＝24）；手鍊可翻面，正反算同一條還要再除以 2，(5－1)!/2＝12。",
+      "120": "這是當成排成一列算（5!＝120）；串成一圈只看相對位置要除旋轉、又可翻面要再除 2，5!/5/2＝12。",
+      "60": "這是當成一列又除了翻面（5!/2＝60）；串成一圈先要除掉旋轉 n，應是 (5－1)!/2＝24/2＝12。"
+     },
+     "answer_evidence": [
+      "c-circ-flip"
+     ],
+     "feedback": "可翻面的手鍊＝(5－1)!/2＝24/2＝12。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "有 n 個相異物圍成一圈（不能翻面，只看彼此的相對位置）。排法數是多少？",
+     "answer": "(n－1)!",
+     "kp_ids": [
+      "math.t_adv.counting.circular-permutation"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.circular-permutation"
+     ],
+     "options": [
+      "(n－1)!",
+      "n!",
+      "(n－1)!/2",
+      "(n－2)!"
+     ],
+     "distractor_rationales": {
+      "n!": "n! 是『排成一列』的數目（位置有頭尾、絕對）；圍一圈只看相對位置，整圈轉一下算同一個，要除以 n，n!/n＝(n－1)!。",
+      "(n－1)!/2": "再除以 2 是用在『可翻面』的項鍊/手環；題目說不能翻面，只除旋轉就好，是 (n－1)!。",
+      "(n－2)!": "(n－2)! 是固定了兩個人（固定太多）；圍一圈只要固定一個人破除旋轉，其餘 n－1 人排，(n－1)!。"
+     },
+     "answer_evidence": [
+      "c-circ-def"
+     ],
+     "feedback": "圍一圈（不可翻面）＝固定一人、其餘 n－1 人排＝(n－1)!。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "下列哪一種情況的排法數要用環狀排列 (n－1)!，而不是直線排列 n!？",
+     "answer": "6 個人圍著圓桌坐（只看彼此的相對位置）",
+     "kp_ids": [
+      "math.t_adv.counting.circular-permutation"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.circular-permutation"
+     ],
+     "options": [
+      "6 個人圍著圓桌坐（只看彼此的相對位置）",
+      "6 個人排成一排照相（由左到右）",
+      "6 本不同的書並排放在書架上",
+      "6 面不同的旗子由左到右掛成一列"
+     ],
+     "distractor_rationales": {
+      "6 個人排成一排照相（由左到右）": "排成一排有頭有尾、每個位置是絕對的，是直線排列，用 6!，不是環狀排列。",
+      "6 本不同的書並排放在書架上": "書並排放有左右、位置絕對，是直線排列，用 6!，不是環狀排列。",
+      "6 面不同的旗子由左到右掛成一列": "由左到右掛成一列有頭尾、位置絕對，是直線排列，用 6!，不是環狀排列。"
+     },
+     "answer_evidence": [
+      "c-circ-vs-line"
+     ],
+     "feedback": "圍圓桌只看相對位置（整圈轉一下算同一種）＝環狀排列 (n－1)!；其餘都排成一列、位置絕對＝直線排列 n!。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（環狀排列：n 個相異物圍一圈＝(n－1)!，用『固定一人、其餘 n－1 人排』最好算；因為圍一圈只看相對位置、比直線 n! 少掉 n 種旋轉，所以 n!/n＝(n－1)!；別直接用 n!〔那是排一列〕、只固定一人不要固定兩人、座位不翻面不除 2、只有可翻面的項鍊/手環才再除以 2＝(n－1)!/2）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
