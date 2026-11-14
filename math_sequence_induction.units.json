@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 數列級數（sequence）strand 第 8 個單元（全島第 80；t_sub 分科測驗-數甲範圍）。知識點 math.t_sub.sequence.induction（數學歸納法）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15）：數學歸納法 (mathematical induction)、基底/基礎步驟 (base case)、遞推/歸納步驟 (inductive step)、歸納假設 (inductive hypothesis)。★scope（分科-數甲）：證明一個對所有正整數 n 都成立的敘述 P(n) 的方法，兩個步驟缺一不可：(1) 基底步驟：驗證 n=1（最小的情形）時 P(1) 成立。(2) 遞推步驟：假設 n=k 時 P(k) 成立（歸納假設），由此『推出』n=k+1 時 P(k+1) 也成立。兩步都成立，就像骨牌——第一張倒下、且每一張都會推倒下一張，所以全部都會倒（對所有 n 成立）。不含：強歸納法、結構歸納、超限歸納、歸納證不等式的進階技巧。prereq＝遞迴關係（recursion；歸納法處理的常是遞迴/級數式）。★自檢（math-unit defect-classes）：事實全 .venv 驗（P(n):1+2+…+n=n(n+1)/2 的基底 n=1 ⇒ 1=1×2/2=1；遞推 假設 1+…+k=k(k+1)/2 ⇒ 1+…+k+(k+1)=k(k+1)/2+(k+1)=(k+1)(k+2)/2〔sympy 化簡相等〕；奇數和 1+3+…+(2n−1)=n²，1+3+5+7+9=25=5²）；加號、等號、n(n+1)/2、n=k+1；量詞不撞位名（本單元無位名，#3）；learner-facing 含 selfeval_note 用字詞（#2）；★figure＝兩步卡＋骨牌比喻（低幾何風險 #43/#32：兩列 ①基底 n=1 成立、②遞推 假設 n=k 成立 ⇒ n=k+1 成立，標「兩步都要，像骨牌一張推倒下一張」），alt 與 SVG text 逐字一致（#33）；誘答單一乾淨機制（只做基底沒做遞推／只做遞推沒驗基底／把歸納假設當成要證的結論〔循環論證〕／以為驗幾個數字就算證明）、選項長度均衡（#20/#28）、兩兩相異（#29）；★practice 所考方法（兩步是什麼、基底驗什麼、歸納假設是什麼、為何兩步都要）都在 rendered teach 示範（#4/#46：導讀承諾『先講歸納法兩步驟、用 1+…+n=n(n+1)/2 示範基底與遞推、再用骨牌比喻說為何兩步缺一不可，用兩步卡看，最後練』與實際一致；worked-example 在 rendered teach）；★teach worked-example（P(n):1+…+n=n(n+1)/2 的基底 n=1 與遞推 k→k+1；§4 recap 奇數和 1+3+…+(2n−1)=n² 基底 n=1）與 figure（兩步卡骨牌）與 practice 答案（Q1 兩步／Q2 基底 n=1／Q3 歸納假設／Q4 兩步都要）皆不重疊避#10。claim kind=definition。figure-only example 無 body。",
+ "page": "math_sequence_induction.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.sequence.induction",
+   "title_zh": "數學歸納法",
+   "can_do": "我知道數學歸納法是用來證明『對所有正整數 n 都成立』的敘述的方法，有兩個缺一不可的步驟：先驗證 n=1 成立（基底），再假設 n=k 成立並推出 n=k+1 也成立（遞推）。我懂得它為什麼成立——就像骨牌，第一張倒、而且每張都推倒下一張，所以全部都會倒。",
+   "situation_group": "數列：數學歸納法",
+   "subject": "math",
+   "strand": "sequence",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.sequence.induction"
+   ],
+   "prerequisites": [
+    "math.t_adv.sequence.recursion"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ind-two",
+     "text": "數學歸納法 (mathematical induction)：要證明一個對所有正整數 n 都成立的敘述 P(n)，用兩個步驟。(1) 基底步驟 (base case)：驗證最小的情形 n=1 時 P(1) 成立。(2) 遞推步驟 (inductive step)：假設 n=k 時 P(k) 成立（這個假設叫『歸納假設』），由它推出 n=k+1 時 P(k+1) 也成立。兩個步驟都做到，P(n) 就對所有正整數 n 成立。",
+     "kind": "definition",
+     "source_refs": [
+      "數學歸納法：基底＋遞推兩步驟（高中數學 分科）"
+     ],
+     "verification_ref": "P(n):1+…+n=n(n+1)/2 基底 n=1 ⇒ 1=1（驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ind-step",
+     "text": "遞推步驟怎麼做：先寫下『歸納假設』——假設 n=k 時結論成立，再用這個假設去證 n=k+1。例如證 1+2+…+n＝n(n+1)/2：假設 1+2+…+k＝k(k+1)/2，則 1+2+…+k+(k+1)＝k(k+1)/2＋(k+1)＝(k+1)(k+2)/2，正好是把公式的 n 換成 k+1 的樣子，所以 P(k+1) 成立。",
+     "kind": "definition",
+     "source_refs": [
+      "歸納遞推：用 P(k) 推 P(k+1)（高中數學 分科）"
+     ],
+     "verification_ref": "k(k+1)/2+(k+1)=(k+1)(k+2)/2（sympy 化簡相等）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ind-why",
+     "text": "為什麼兩步都要（骨牌比喻）：基底步驟像『推倒第一張骨牌』，遞推步驟像『保證每一張倒下都會推倒下一張』。只有第一張倒、沒有連鎖，後面不會倒；只有連鎖、第一張沒倒，整排也不會動。兩個都成立，才能保證從 n=1 開始一路成立到所有 n。所以少了任何一步，證明都不完整。",
+     "kind": "definition",
+     "source_refs": [
+      "數學歸納法的骨牌比喻（高中數學 分科）"
+     ],
+     "verification_ref": "兩步缺一不可（邏輯，骨牌比喻）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.sequence.induction"
+     ],
+     "body": "這一單元學『數學歸納法』——一個專門用來證明『對所有正整數 n 都成立』的敘述的方法。它只有兩個步驟，但兩個都不能少。下面先講這兩個步驟是什麼、用 1+2+…+n＝n(n+1)/2 當例子示範，再用骨牌比喻說清楚為什麼兩步缺一不可，用一張兩步卡看清楚，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.sequence.induction"
+     ],
+     "body": "兩個步驟。(1) 基底：驗證 n=1 成立。例 P(n):1+2+…+n＝n(n+1)/2，n=1 時左邊＝1、右邊＝1×2/2＝1，成立。(2) 遞推：假設 n=k 成立（歸納假設：1+…+k＝k(k+1)/2），推 n=k+1：1+…+k+(k+1)＝k(k+1)/2＋(k+1)＝(k+1)(k+2)/2，正是 n=k+1 的公式，成立。兩步都有＝對所有 n 成立。骨牌比喻：第一張倒（基底）＋每張推倒下一張（遞推）⇒ 全倒。下面用兩步卡看。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.sequence.induction"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 152' xmlns='http://www.w3.org/2000/svg'><text x='170' y='22' font-family='sans-serif' font-size='13.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>數學歸納法：兩步缺一不可</text><rect x='24' y='34' width='292' height='40' rx='7' fill='#eef4ff' stroke='#5b8def' stroke-width='1.3'/><text x='64' y='59' font-family='sans-serif' font-size='13' fill='#5b8def' text-anchor='middle' font-weight='bold'>① 基底</text><text x='204' y='59' font-family='sans-serif' font-size='12.5' fill='#33475b' text-anchor='middle'>驗證 n ＝ 1 成立</text><rect x='24' y='82' width='292' height='40' rx='7' fill='#eef7ee' stroke='#4e9a6b' stroke-width='1.3'/><text x='64' y='107' font-family='sans-serif' font-size='13' fill='#4e9a6b' text-anchor='middle' font-weight='bold'>② 遞推</text><text x='204' y='107' font-family='sans-serif' font-size='12.5' fill='#33475b' text-anchor='middle'>假設 n ＝ k 成立 ⇒ n ＝ k+1 成立</text><text x='170' y='142' font-family='sans-serif' font-size='11.5' fill='#2f6f54' text-anchor='middle'>像骨牌：第一張倒 ＋ 每張推倒下一張 ⇒ 全部都倒</text></svg>",
+      "alt": "一張數學歸納法兩步卡，標題「數學歸納法：兩步缺一不可」。第一列藍底：「① 基底」「驗證 n ＝ 1 成立」。第二列綠底：「② 遞推」「假設 n ＝ k 成立 ⇒ n ＝ k+1 成立」。最下方綠字：「像骨牌：第一張倒 ＋ 每張推倒下一張 ⇒ 全部都倒」。",
+      "caption": "數學歸納法的兩個步驟：① 基底——驗證 n=1 成立（藍）；② 遞推——假設 n=k 成立，推出 n=k+1 也成立（綠）。就像骨牌，第一張倒加上每張推倒下一張，整排才會全倒，兩步缺一不可。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.sequence.induction"
+     ],
+     "body": "最後練數學歸納法。重點：兩步都要寫（基底驗 n=1、遞推用歸納假設 P(k) 推 P(k+1)）；遞推時『假設 P(k) 成立』是允許的假設，不是把要證的結論當已知（那是循環論證）；驗幾個數字對不算證明，一定要做遞推。再看一個例子：證 1+3+5+…+(2n−1)＝n²，基底 n=1 時左邊＝1、右邊＝1²＝1 成立（遞推留給你練）。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用數學歸納法證明一個對所有正整數 n 成立的敘述，需要做哪兩個步驟？",
+     "answer": "驗證 n＝1 成立（基底），再假設 n＝k 成立推出 n＝k+1 成立（遞推）",
+     "kp_ids": [
+      "math.t_sub.sequence.induction"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.sequence.induction"
+     ],
+     "options": [
+      "驗證 n＝1 成立（基底），再假設 n＝k 成立推出 n＝k+1 成立（遞推）",
+      "只要驗證 n＝1 成立就夠了",
+      "只要假設 n＝k 成立推出 n＝k+1 成立就夠了",
+      "把 n＝1、2、3 都代進去驗證對就算證明完成"
+     ],
+     "distractor_rationales": {
+      "只要驗證 n＝1 成立就夠了": "只有基底、沒有遞推，就像只推倒第一張骨牌卻不保證會連鎖，後面的 n 不一定成立；還要做遞推步驟。",
+      "只要假設 n＝k 成立推出 n＝k+1 成立就夠了": "只有遞推、沒有驗基底，就像保證每張會推倒下一張、但第一張根本沒倒，整排不會動；還要先驗 n＝1。",
+      "把 n＝1、2、3 都代進去驗證對就算證明完成": "驗有限幾個數字成立不能保證『所有』n 都成立；必須用遞推步驟一次涵蓋全部。"
+     },
+     "answer_evidence": [
+      "c-ind-two",
+      "c-ind-why"
+     ],
+     "feedback": "兩步缺一不可：① 基底驗 n＝1 成立；② 遞推假設 n＝k 成立、推出 n＝k+1 成立。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用數學歸納法證明 1＋2＋…＋n ＝ n(n+1)/2 時，『基底步驟』要驗證什麼？",
+     "answer": "n＝1 時成立：左邊＝1，右邊＝1×2/2＝1",
+     "kp_ids": [
+      "math.t_sub.sequence.induction"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.sequence.induction"
+     ],
+     "options": [
+      "n＝1 時成立：左邊＝1，右邊＝1×2/2＝1",
+      "n＝k 時成立：左邊＝k(k+1)/2",
+      "n＝k+1 時成立：右邊＝(k+1)(k+2)/2",
+      "n＝0 時成立：左邊＝0"
+     ],
+     "distractor_rationales": {
+      "n＝k 時成立：左邊＝k(k+1)/2": "這是遞推步驟裡的『歸納假設』，不是基底；基底是驗證最小情形 n＝1。",
+      "n＝k+1 時成立：右邊＝(k+1)(k+2)/2": "這是遞推步驟要『推出』的目標，不是基底要驗的；基底驗 n＝1。",
+      "n＝0 時成立：左邊＝0": "這個敘述是對『正整數 n』，最小的是 n＝1 不是 n＝0；基底驗 n＝1。"
+     },
+     "answer_evidence": [
+      "c-ind-two"
+     ],
+     "feedback": "基底步驟驗證最小情形 n＝1：左邊 1＝右邊 1×2/2＝1，成立。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在遞推步驟裡，所謂的『歸納假設』是指什麼？",
+     "answer": "假設 n＝k 時敘述成立，再用它去推 n＝k+1",
+     "kp_ids": [
+      "math.t_sub.sequence.induction"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.sequence.induction"
+     ],
+     "options": [
+      "假設 n＝k 時敘述成立，再用它去推 n＝k+1",
+      "假設這個敘述對所有 n 都成立（也就是直接假設結論）",
+      "假設 n＝k+1 時敘述成立，再往回推 n＝k",
+      "假設這個敘述永遠不成立，再找矛盾"
+     ],
+     "distractor_rationales": {
+      "假設這個敘述對所有 n 都成立（也就是直接假設結論）": "那是把要證的結論直接當已知，是循環論證；歸納假設只假設『單一的 n＝k』成立。",
+      "假設 n＝k+1 時敘述成立，再往回推 n＝k": "方向反了：歸納假設是 n＝k 成立、要推『下一個』n＝k+1，不是倒過來。",
+      "假設這個敘述永遠不成立，再找矛盾": "那是反證法（歸謬法）的做法，不是數學歸納法的歸納假設。"
+     },
+     "answer_evidence": [
+      "c-ind-step"
+     ],
+     "feedback": "歸納假設＝假設 n＝k 這一個情形成立，再用它推出 n＝k+1 成立（不是直接假設結論，那會變循環論證）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "數學歸納法為什麼基底和遞推兩個步驟都不能少？（用骨牌來想）",
+     "answer": "少了基底像第一張沒倒、少了遞推像連鎖中斷，兩步缺一都不行",
+     "kp_ids": [
+      "math.t_sub.sequence.induction"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.sequence.induction"
+     ],
+     "options": [
+      "少了基底像第一張沒倒、少了遞推像連鎖中斷，兩步缺一都不行",
+      "其實只要有遞推步驟就夠了，基底步驟只是寫出來好看的",
+      "其實只要有基底步驟就夠了，遞推步驟根本是多此一舉",
+      "兩個步驟其實證的是完全相同的事，寫其中一個就好"
+     ],
+     "distractor_rationales": {
+      "其實只要有遞推步驟就夠了，基底步驟只是寫出來好看的": "沒有基底就像第一張骨牌沒倒，連鎖再完整整排也不會動；基底是必要的起點。",
+      "其實只要有基底步驟就夠了，遞推步驟根本是多此一舉": "沒有遞推就像只推倒第一張、後面不保證跟著倒，只能確定 n＝1；遞推才讓結論傳到所有 n。",
+      "兩個步驟其實證的是完全相同的事，寫其中一個就好": "兩步各管一件事——基底管『起點成立』、遞推管『能一路傳下去』，不是同一件事，缺一不可。"
+     },
+     "answer_evidence": [
+      "c-ind-why"
+     ],
+     "feedback": "基底＝第一張骨牌倒下（起點）；遞推＝每張都推倒下一張（連鎖）。兩個都要，整排才會從 n＝1 一路倒到所有 n。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（數學歸納法：證『對所有正整數 n 成立』的兩步法——① 基底驗 n＝1 成立；② 遞推假設 n＝k 成立〔歸納假設〕推出 n＝k+1 成立；骨牌比喻：第一張倒＋每張推倒下一張⇒全倒，兩步缺一不可；歸納假設不是直接假設結論，驗幾個數字不算證明）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
