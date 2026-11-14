@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-14 20:48 數學島 counting（排列組合）strand #4：math_counting_combination_apply（組合的應用，t_adv 學測）5/5 收斂
+- **frozen_sha `fe5da6296e7fc207`**（★一次過：草稿凍 fe5da629 即 R1-R5 連 5 clean、confirmed 全 0、coverageComplete 全 true、L3 每輪 exit 0、無修正）。DONE-GATE 全綠（per_page exit 0 且 combination_apply absent／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy CLEAN 0 hard；數學無音檔）＋iPad 四角色 render 綁 sha fe5da629（流程卡 figure：三列①分組選取〔藍〕各群 nCr 相乘、②格子路徑〔綠〕向右a上b→C(a＋b,a)、③指定元素〔橘〕必選→先放再選／必不選→從其餘選，全形減號、公式在框內、三 PNG 右緣0%、選項洗牌相異、無重疊裁切溢出）。
+- **3 claim kind=definition**（c-ca-group 分組各群 nCr 相乘、4C1×6C2=60；c-ca-path 格子路徑向右 a 上 b＝C(a＋b,a)、右2上2=4C2=6；c-ca-fixed 指定必選先放再選/必不選從其餘選）。事實全 .venv 驗（4C1×6C2=60、右2上2=4C2=6、Q1 7C2×4C1=84、Q2 C(6,2)=15、Q3 8選4含某人=7C3=35、Q4 7選3排除某人=6C3=20）。術語附英語 R15（combination gloss；排列僅對照）。prereq＝combination。不含重複組合/分配、排容、二項式。
+- **4 MCQ（全 bare options）**：Q1 7紅選2×4藍選1→84〔25=兩群相加21+4、28=7×4原料直乘沒取組合、11=7+4〕／Q2 格子路徑右4上2→15〔30=當排列6P2沒除2!、720=6步全排列6!、64=2⁶亂乘〕／Q3 8選4且某人必選→35〔70=忽略限制8C4、56=固定卻用基數8→8C3、21=選錯個數7C2〕／Q4 7選3且某人必不選→20〔35=忽略限制7C3、15=選錯個數6C2、10=基數多減5C3〕。每個 distractor 乾淨單一錯誤路徑。teach worked-example（60/6/6）與 practice 答案（84/15/35/20）皆不重疊避#10；導讀序＝實際 teach 牌組序。
+- **commits**：草稿凍 c208c26ad→R1-R5(fe5da629: e2776624f/48f52a615/4067a6a1c/3dbf1fcdf/本次)→DONE-GATE＋PROGRESS 本次。
+- **★里程碑：數學島 counting strand 4/9**。math 單元累計＝**154 單元**（sequence 9＋前 132＋trig 9＋counting 4）。
+- **下一步**：counting 其餘 5 KP。預設先推 **binomial-coefficient（二項係數與巴斯卡三角形）**——組合的直接延伸、學測核心（C(n,r) 的遞迴與對稱在巴斯卡三角形上的呈現）。另 QUEUED：hub `index_new.html` AC-VIZ-1 figure_signoff stale 須 hub 重 render＋四角色重簽。
+
 ## 2026-11-14 20:32 數學島 counting（排列組合）strand #3：math_counting_combination（組合 nCr，t_adv 學測）5/5 收斂
 - **frozen_sha `fa68af7ee85f803a`**（★一次過：草稿凍 fa68af7e 即 R1-R5 連 5 clean、confirmed 全 0、coverageComplete 全 true、L3 每輪 exit 0、無修正——把前兩單元教訓〔distractor 乾淨單一錯誤、R15 雙術語 gloss、全形減號〕草稿階段全做對）。R2 panel 對 Q4〔9C9/9C0 皆=1〕回報但 0/5 判 NOT-A-DEFECT（兩相異迷思全選 vs 都不選、正解 9C2=36 唯一、等值僅 psychometric polish 非 HD (a)/(b)/(c) 缺陷）→不 de-converge、加 knownFP。DONE-GATE 全綠（per_page exit 0 且 combination absent／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy CLEAN 0 hard；數學無音檔）＋iPad 四角色 render 綁 sha fa68af7e（公式卡 figure：三列①組合 nCr＝nPr/r!＝n!/(r!(n−r)!)〔藍〕②對稱 nCr＝nC(n−r)〔綠〕③辨別 在意順序→排列／不在意→組合〔橘〕，全形減號、公式在框內、三 PNG 右緣0%、選項洗牌相異、無重疊裁切溢出）。
 - **3 claim kind=definition**（c-comb-def 組合定義 nCr＝nPr/r!＝n!/(r!(n−r)!)＋5P2=20 vs 5C2=10 對照；c-comb-vs-perm 在意順序→排列、不在意→組合、nCr≤nPr；c-comb-symmetry 對稱 nCr＝nC(n−r)、挑 r 拿走⇔挑 n−r 留下、6C4=6C2=15）。事實全 .venv 驗（4C2=6、5P2=20、5C2=10、6C4=6C2=15、Q1 8C2=28、Q2 7C3=35、Q4 9C7=9C2=36）。術語附英語 R15（combination／permutation 均 gloss）。prereq＝permutation。不含重複組合/分配、二項式定理。
