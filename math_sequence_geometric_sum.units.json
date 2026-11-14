@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 數列級數（sequence）strand 第 4 個單元（全島第 76；t_adv 高中學測範圍）。知識點 math.t_adv.sequence.geometric-sum（等比級數求和）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15）：等比級數 (geometric series)、級數和 (sum)、公比 (common ratio)、首項 (first term)、項數 (number of terms)。★scope（高中學測）：(1) 等比級數求和公式（公比 r≠1 時）：S_n＝a_1×(r^n−1)/(r−1)，也可寫成 a_1×(1−r^n)/(1−r)（兩式等值）。(2) 由錯位相減導出：S−rS 把中間項全消掉，只剩首項和末項後一項。(3) ★特例 r＝1：每一項都等於 a_1，共 n 項，所以 S_n＝n×a_1（不能用公式，因為分母 r−1＝0）。不含：無窮等比級數（|r|<1 收斂，屬 infinite-geometric KP）、Σ 記號、遞迴、r 為負的深入討論。prereq＝等比數列的通項與性質（geometric）。★自檢（math-unit defect-classes）：事實全 .venv 驗（teach：2+6+18+54＝80＝2(3⁴−1)/(3−1)；1+2+4+8+16＝31＝(2⁵−1)/(2−1)；§4 recap 5+10+20＝35＝5(2³−1)/(2−1)。practice：3+6+12+24+48＝93＝3(2⁵−1)/(2−1)；1+3+9+27+81＝121＝(3⁵−1)/(3−1)；r=1,a_1=5,n=4 ⇒ S=20=4×5）；乘號 ×、除號/、次方 r^n、減號 U+2212；量詞不撞位名（本單元無位名，#3）；learner-facing 含 selfeval_note 用字詞（#2）；★figure＝等比級數求和公式卡（低幾何風險 #43/#32：兩列 公比 r≠1 → S_n＝a_1(r^n−1)/(r−1)、r＝1 → S_n＝n×a_1），alt 與 SVG text 逐字一致（#33）；誘答單一乾淨機制（公式分子忘減 1 用 a_1×r^n／漏乘首項只算 (r^n−1)/(r−1)／只寫最後一項沒加總／忘除以 (r−1)／r=1 誤代公式得 0）、選項長度均衡（#20/#28）、兩兩相異（#29）；★practice 所考方法（等比求和公式算總和、公式概念、另一組求和、r=1 特例）都在 rendered teach 示範（#4/#46：導讀承諾『先講求和公式 S_n=a_1(r^n−1)/(r−1)、用錯位相減看為什麼、再講 r=1 特例 n×a_1，用公式卡看，最後練』與實際一致；worked-example 在 rendered teach）；★teach worked-example（2+6+18+54=80；1+2+4+8+16=31；§4 recap 5+10+20=35）與 figure（求和公式卡）與 practice 答案（Q1 3+6+12+24+48=93／Q2 公式概念／Q3 1+3+9+27+81=121／Q4 r=1 特例 n×a_1）皆不重疊避#10。claim kind=definition。figure-only example 無 body。",
+ "page": "math_sequence_geometric_sum.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.sequence.geometric-sum",
+   "title_zh": "等比級數求和",
+   "can_do": "我會用公式 S_n＝a_1×(r^n−1)/(r−1) 求等比級數（公比 r≠1）前 n 項的和，也知道它是用錯位相減（S−rS）導出來的。我還記得特例：當公比 r＝1 時，每一項都一樣，和就是 n×a_1，不能套用上面那條（因為分母會變成 0）。",
+   "situation_group": "數列：等比級數",
+   "subject": "math",
+   "strand": "sequence",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_adv.sequence.geometric-sum"
+   ],
+   "prerequisites": [
+    "math.t_adv.sequence.geometric"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-gsum-formula",
+     "text": "等比級數 (geometric series) 求和公式（公比 r≠1 時）：前 n 項的和 S_n＝a_1×(r^n−1)/(r−1)，其中 a_1 是首項 (first term)、r 是公比 (common ratio)、n 是項數 (number of terms)。也可以寫成 a_1×(1−r^n)/(1−r)（分子分母同時變號，兩式相等，看哪個方便）。例如 2＋6＋18＋54，首項 2、公比 3、共 4 項，S_4＝2×(3⁴−1)/(3−1)＝2×80/2＝80。",
+     "kind": "definition",
+     "source_refs": [
+      "等比級數和 S_n=a_1(r^n−1)/(r−1)（高中數學）"
+     ],
+     "verification_ref": "2+6+18+54=80=2(3⁴−1)/(3−1)（驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-gsum-derive",
+     "text": "這條公式是用『錯位相減』導出來的：令 S＝a_1＋a_1 r＋a_1 r²＋…＋a_1 r^(n−1)，把每一項乘 r 得到 rS，再用 S−rS，中間的項會兩兩消掉，只剩 S−rS＝a_1−a_1 r^n，也就是 S(1−r)＝a_1(1−r^n)，兩邊除以 (1−r) 就得到 S＝a_1(1−r^n)/(1−r)。例如 1＋2＋4＋8＋16，首項 1、公比 2、共 5 項，S_5＝(2⁵−1)/(2−1)＝31/1＝31。",
+     "kind": "definition",
+     "source_refs": [
+      "等比級數和：錯位相減 S−rS 導出（高中數學）"
+     ],
+     "verification_ref": "1+2+4+8+16=31=(2⁵−1)/(2−1)（驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-gsum-r1",
+     "text": "★特例：當公比 r＝1 時，不能套用 S_n＝a_1(r^n−1)/(r−1)，因為分母 r−1＝0（除以 0 沒有意義）。這時每一項都等於首項 a_1，一共有 n 項，所以總和就是 S_n＝n×a_1（直接相加）。例如 5＋5＋5＋5（r＝1、a_1＝5、共 4 項），和＝4×5＝20。",
+     "kind": "definition",
+     "source_refs": [
+      "等比級數 r=1 特例：S_n=n×a_1（高中數學）"
+     ],
+     "verification_ref": "r=1,a_1=5,n=4 ⇒ S=20=4×5（驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.sequence.geometric-sum"
+     ],
+     "body": "上一個單元學了等比數列，這裡學把等比數列『加起來』（等比級數）怎麼快速求和。下面先給求和公式 S_n＝a_1×(r^n−1)/(r−1)，再用『錯位相減』看它為什麼成立，然後講一個很容易忽略的特例——公比 r＝1 的時候要特別處理，用一張公式卡看清楚，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.sequence.geometric-sum"
+     ],
+     "body": "三個重點。(1) 求和公式（r≠1）：S_n＝a_1×(r^n−1)/(r−1)。例 2＋6＋18＋54，首項 2、公比 3、共 4 項，S_4＝2×(3⁴−1)/(3−1)＝2×80/2＝80。(2) 為什麼：錯位相減——S 和 rS 相減，中間項全消掉，只剩 S(1−r)＝a_1(1−r^n)，除以 (1−r) 就得公式。例 1＋2＋4＋8＋16＝(2⁵−1)/(2−1)＝31。(3) ★特例 r＝1：分母 r−1＝0 不能用公式；這時每項都是 a_1、共 n 項，和＝n×a_1。下面用公式卡看兩種情況。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.sequence.geometric-sum"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 150' xmlns='http://www.w3.org/2000/svg'><text x='170' y='24' font-family='sans-serif' font-size='14' fill='#2f6f54' text-anchor='middle' font-weight='bold'>等比級數求和</text><rect x='22' y='40' width='296' height='44' rx='7' fill='#eef4ff' stroke='#5b8def' stroke-width='1.3'/><text x='96' y='67' font-family='sans-serif' font-size='13.5' fill='#33475b' text-anchor='middle' font-weight='bold'>公比 r ≠ 1</text><text x='154' y='67' font-family='sans-serif' font-size='13' fill='#2f6f54' text-anchor='middle'>→</text><text x='248' y='67' font-family='sans-serif' font-size='13' fill='#2f6f54' text-anchor='middle' font-weight='bold'>a₁(rⁿ − 1)/(r − 1)</text><rect x='22' y='92' width='296' height='44' rx='7' fill='#fff3e6' stroke='#e9a23b' stroke-width='1.3'/><text x='96' y='119' font-family='sans-serif' font-size='13.5' fill='#33475b' text-anchor='middle' font-weight='bold'>公比 r ＝ 1</text><text x='154' y='119' font-family='sans-serif' font-size='13' fill='#c67c1e' text-anchor='middle'>→</text><text x='248' y='119' font-family='sans-serif' font-size='13' fill='#c67c1e' text-anchor='middle' font-weight='bold'>n × a₁</text></svg>",
+      "alt": "一張等比級數求和公式卡，標題「等比級數求和」。第一列藍底：「公比 r ≠ 1」→「a₁(rⁿ − 1)/(r − 1)」。第二列橘底：「公比 r ＝ 1」→「n × a₁」。",
+      "caption": "等比級數求和看公比：r 不等於 1 時用公式 S_n＝a₁(rⁿ−1)/(r−1)（藍）；r 等於 1 時每項都一樣，和就是 n×a₁（橘），因為這時公式的分母 r−1 會變成 0 不能用。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.sequence.geometric-sum"
+     ],
+     "body": "最後練等比級數求和。步驟：先確認首項 a_1、公比 r、項數 n；若 r≠1 套 S_n＝a_1(r^n−1)/(r−1)（小心分子要先把 r^n 算出來再減 1，最後別忘了除以 (r−1)）；若 r＝1 就直接 n×a_1。再看一個例子：5＋10＋20（首項 5、公比 2、共 3 項），S_3＝5×(2³−1)/(2−1)＝5×7/1＝35。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "求等比級數 3 ＋ 6 ＋ 12 ＋ 24 ＋ 48 的總和（首項 3、公比 2、共 5 項）。",
+     "answer": "93",
+     "kp_ids": [
+      "math.t_adv.sequence.geometric-sum"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.sequence.geometric-sum"
+     ],
+     "options": [
+      "93",
+      "96",
+      "48",
+      "31"
+     ],
+     "distractor_rationales": {
+      "96": "這是 a_1×r^n＝3×2⁵＝96，忘了公式分子的 r^n 後面要減 1；S_5＝3×(2⁵−1)/(2−1)＝3×31＝93。",
+      "48": "這只是最後一項 a_5＝3×2⁴＝48，不是總和；整個級數的和要用 S_5＝3×(2⁵−1)/(2−1)＝93。",
+      "31": "這是 (2⁵−1)/(2−1)＝31，漏乘了首項 3；S_5＝3×(2⁵−1)/(2−1)＝3×31＝93。"
+     },
+     "answer_evidence": [
+      "c-gsum-formula"
+     ],
+     "feedback": "首項 3、公比 2、共 5 項：S_5＝3×(2⁵−1)/(2−1)＝3×31/1＝93（驗：3＋6＝9、＋12＝21、＋24＝45、＋48＝93）。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "等比級數前 n 項和的公式（公比 r≠1）S_n 是下列哪一個？",
+     "answer": "a₁ ×（rⁿ − 1）÷（r − 1）",
+     "kp_ids": [
+      "math.t_adv.sequence.geometric-sum"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.sequence.geometric-sum"
+     ],
+     "options": [
+      "a₁ ×（rⁿ − 1）÷（r − 1）",
+      "a₁ ×（rⁿ − 1）",
+      "a₁ ×（rⁿ⁻¹ − 1）÷（r − 1）",
+      "a₁ × n × r"
+     ],
+     "distractor_rationales": {
+      "a₁ ×（rⁿ − 1）": "少了最後要除以 (r−1)：錯位相減得到的是 S(1−r)＝a₁(1−r^n)，要再除以 (1−r)〔即 (r−1)〕；完整是 a₁(r^n−1)/(r−1)。",
+      "a₁ ×（rⁿ⁻¹ − 1）÷（r − 1）": "指數錯了：是 r^n 不是 r^(n−1)（n 項的和，最高次是 r^(n−1)，但公式分子是 r^n）；正確 a₁(r^n−1)/(r−1)。",
+      "a₁ × n × r": "這比較像把項數和公比直接相乘，和等比級數求和無關；公式是 a₁(r^n−1)/(r−1)。"
+     },
+     "answer_evidence": [
+      "c-gsum-formula",
+      "c-gsum-derive"
+     ],
+     "feedback": "S_n＝a₁×(r^n−1)/(r−1)（公比 r≠1）；由錯位相減 S−rS 導出。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "求等比級數 1 ＋ 3 ＋ 9 ＋ 27 ＋ 81 的總和（首項 1、公比 3、共 5 項）。",
+     "answer": "121",
+     "kp_ids": [
+      "math.t_adv.sequence.geometric-sum"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.sequence.geometric-sum"
+     ],
+     "options": [
+      "121",
+      "242",
+      "243",
+      "81"
+     ],
+     "distractor_rationales": {
+      "242": "這是 3⁵−1＝242，忘了還要除以 (r−1)＝(3−1)＝2；S_5＝(3⁵−1)/(3−1)＝242/2＝121。",
+      "243": "這是 3⁵＝243，公式分子要先減 1、再除以 (r−1)；S_5＝(3⁵−1)/(3−1)＝121。",
+      "81": "這只是最後一項 a_5＝3⁴＝81，不是總和；整個級數的和是 S_5＝(3⁵−1)/(3−1)＝121。"
+     },
+     "answer_evidence": [
+      "c-gsum-formula"
+     ],
+     "feedback": "首項 1、公比 3、共 5 項：S_5＝1×(3⁵−1)/(3−1)＝(243−1)/2＝242/2＝121。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個等比級數的公比 r ＝ 1、首項 a₁ ＝ 5、共 4 項（也就是 5 ＋ 5 ＋ 5 ＋ 5）。它的總和是多少？",
+     "answer": "20",
+     "kp_ids": [
+      "math.t_adv.sequence.geometric-sum"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.sequence.geometric-sum"
+     ],
+     "options": [
+      "20",
+      "0",
+      "5",
+      "625"
+     ],
+     "distractor_rationales": {
+      "0": "這是把 r＝1 硬代進公式 a₁(r^n−1)/(r−1)：分子 1⁴−1＝0，但分母 r−1 也是 0，變成 0/0 沒有意義；r＝1 時要用 n×a₁＝4×5＝20。",
+      "5": "這只是首項（或其中一項）a₁＝5，不是四項的總和；r＝1 時每項都是 5、共 4 項，和＝4×5＝20。",
+      "625": "這是 5⁴＝625（把項相乘了）；級數是相『加』，r＝1 時和＝n×a₁＝4×5＝20。"
+     },
+     "answer_evidence": [
+      "c-gsum-r1"
+     ],
+     "feedback": "公比 r＝1 時不能用公式（分母會是 0）；每項都等於 a₁＝5、共 4 項，S＝n×a₁＝4×5＝20。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（等比級數求和：公比 r≠1 時 S_n＝a_1×(r^n−1)/(r−1)〔分子 r^n 先算再減 1、最後除以 (r−1)〕，由錯位相減 S−rS 導出；★特例 r＝1 時每項都一樣，和＝n×a_1，不能套公式因為分母 r−1＝0）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
