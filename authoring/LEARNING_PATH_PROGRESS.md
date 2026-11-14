@@ -7,6 +7,15 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-14 15:46 數學島 trig（三角函數）strand #3：math_trig_law_of_sines（正弦定理與外接圓半徑，t_adv 學測）5/5 收斂
+- **frozen_sha `0614e0e9d89e414e`**（★一次過：草稿凍 0614e0e9 即 R1-R5 連 5 clean、confirmed 全 0、L3 每輪 exit 0、無 de-converge。R2 的 9-agent panel 查「figure 標題『正弦定理』未入 alt」但 **0/7 判 NOT-A-DEFECT**〔裝飾標題、caption 已逐字載〕→依 static-doc-audit 方法只修 panel-confirmed 缺陷、不 de-converge）。DONE-GATE 全綠（per_page exit 0 且 law_of_sines absent／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy CLEAN 0 hard；數學無音檔）＋iPad 四角色 render 綁 sha 0614e0e9（三角形 figure：頂點 A上/B左下/C右下、邊 a對A〔BC 底邊〕b對B〔CA 右邊〕c對C〔AB 左邊〕#25 驗正確＋公式 a/sinA＝b/sinB＝c/sinC＝2R；三 PNG 右緣0% 無重疊裁切）。
+- **3 claim kind=definition**（c-los-formula 正弦定理＝2R＋外接圓；c-los-radius R＝a/(2sinA)；c-los-side b＝a·sinB/sinA）。事實全 .venv/sympy 驗（a/sinA=b/sinB=c/sinC 恆等；a=6,A=30°⇒2R=12,R=6、b at B=45°=6√2；a=10,A=30°⇒R=10；a=8,A=30°,B=60°⇒b=8√3）。術語附英語 R15（law of sines／circumcircle／circumradius）。prereq=ratio-acute。不含餘弦定理/面積/測量應用。
+- **4 MCQ（全 bare options）**：Q1 定理公式→a/sinA＝b/sinB＝c/sinC〔相乘/用cos/平方〕／Q2 a=10,A=30° 的 R→10〔20=直徑2R、5=a/2 忘sinA、2.5 乘錯〕／Q3 a=8,A=30°,B=60° 的 b→8√3〔8√3/3 比例顛倒、8 抄a、16=2R混淆〕／Q4 R 代表→外接圓半徑〔直徑/內切圓半徑/周長〕。teach worked-example 用 a=6,A=30°（⇒2R=12,R=6、b at B=45°=6√2），與 practice 答案皆不重疊避#10；Q2/Q3 刻意用不同數字＋不同角度；導讀序＝實際 teach 牌組序。
+- **commits**：草稿凍結 de8be2e56→R1-R5(0614e0e9)→DONE-GATE＋PROGRESS 本次。
+- **★里程碑：數學島 trig strand 3/14**。math 單元累計＝**144 單元**（sequence 9＋前 132＋trig 3）。
+- **教訓（banked）**：panel 可能在 clean 輪提出「borderline NOT-A-DEFECT」（如 figure 裝飾標題未入 alt、caption 已載）——這類 0/N 判 NOT 的不是缺陷，**不 de-converge**（只修 panel-confirmed；de-converge 非缺陷＝白燒一輪重跑）。但下次建 figure 若有標題，draft 時順手把標題寫進 alt（與既有 ratio-acute/identity-basic 慣例一致），可完全避免此 borderline 被提出。
+- **下一步**：trig 其餘 11 個 minimum KP：ratio-generalized／law-of-cosines／triangle-area（含海龍）／solve-triangle-apply／radian／function-graph／sum-difference／double-half-angle／superposition／product-sum／equation。預設先推 law-of-cosines（餘弦定理，與正弦定理成對、學測高頻）。另 QUEUED：hub `index_new.html` AC-VIZ-1 figure_signoff stale（sha 4741b69d≠manifest ec2bffb5）須 hub 重 render＋四角色重簽。
+
 ## 2026-11-14 15:23 數學島 trig（三角函數）strand #2：math_trig_identity_basic（三角基本關係式，t_adv 學測）5/5 收斂
 - **frozen_sha `5d33f4c60b607b8a`**（★一次過：草稿凍 5d33f4c6 即 R1-R5 連 5 clean、confirmed 全 0、coverageComplete 全 true、L3 每輪 exit 0、無 de-converge——落實 #47 bare-option 教訓草稿階段就做對，省了 trig#1 的重凍迴圈）。DONE-GATE 全綠（per_page exit 0 且 identity_basic absent／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy CLEAN 0 hard；數學無音檔）＋iPad 四角色 render 綁 sha 5d33f4c6（三關係卡 figure：①平方藍底 sin²θ＋cos²θ＝1、②商數綠底 tanθ＝sinθ/cosθ、③餘角橙底 sin(90°－θ)＝cosθ；三 PNG 右緣0% 選項洗牌相異、無重疊裁切）。
 - **3 claim kind=definition**（c-id-pyth 平方關係＋由畢氏導出＋由 sinθ 求 cosθ；c-id-quot 商數關係 tanθ=sinθ/cosθ；c-id-cofunc 餘角關係 sin↔cos 對調）。事實全 .venv/sympy 驗（sin²θ+cos²θ=1、tanθ=sinθ/cosθ、sin(90−θ)=cosθ、cos(90−θ)=sinθ 恆等；3-4-5：sinθ=3/5⇒cosθ=4/5、tanθ=3/4；8-15-17：sinθ=8/17⇒cosθ=15/17）。術語附英語 R15（Pythagorean/quotient/co-function identity）。prereq=ratio-acute。不含廣義角/正餘割餘切/和差角/倍半角。
