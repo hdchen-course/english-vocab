@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 計數（counting）strand 第 4 個單元（t_adv 學測）。知識點 math.t_adv.counting.combination-apply（組合的應用：分組/選取/路徑）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，gloss 緊貼正確中文術語）：組合 (combination)。★scope（學測 t_adv）：把組合 nCr 用到情境題：(1) 分別從不同群各取幾個，用乘法原理把各群的組合數相乘；(2) 格子路徑——從一角走到對角、每步只能向右或向上，向右 a 步、向上 b 步，路徑數＝C(a＋b, a)（在 a＋b 步裡選哪 a 步向右）；(3) 指定元素——某元素『必選』＝先放它再從其餘選、某元素『必不選』＝直接從其餘選。不含：重複組合/分配（另單元）、排容原理（另單元）、二項式定理（另單元）。prereq＝combination（組合 nCr，剛建）。★自檢（math-unit defect-classes）：事實全 .venv 驗（teach 分組 4C1×6C2＝4×15＝60、路徑右2上2＝4C2＝6、指定班長必選剩4選2＝4C2＝6；Q1 7C2×4C1＝21×4＝84、Q2 右4上2＝6C2＝15、Q3 8選4含某人＝7C3＝35、Q4 7選3排除某人＝6C3＝20；各 distractor 單一錯誤路徑）；減號僅出現在 a＋b、n－r 等式，一律全形 U+FF0D（含 distractor_rationales key）；★figure＝應用流程卡（低幾何風險：三列①分組選取 各群 nCr 相乘、②格子路徑 向右a上b→C(a＋b,a)、③指定元素 必選→先放再選／必不選→從其餘選），alt 與 SVG text 逐字一致（#33）、figure 標題『組合應用：分組、路徑、指定元素』寫進 alt 開頭；★MCQ options 全 bare（#47，說明在 distractor_rationales）、每個 distractor 乾淨單一錯誤路徑（兩群誤加／原料直接相乘沒取組合／路徑忘除重複方向變排列／指定忽略限制／用錯基數或個數）、數值兩兩相異（#14/#29）、長度均衡（#20/#28）；★導讀承諾順序＝實際 teach 牌組順序（#4/#46）：導讀『先講三種組合應用（分組相乘、格子路徑、指定元素）、用 4 選 1×6 選 2＝60 示範分組、用右2上2＝4C2＝6 示範路徑、用班長必選剩 4 選 2＝6 示範指定、用一張流程卡整理、最後練』＝實際 teach1 intro→teach2 三法＋三示範→teach3 figure 流程卡→teach4 recap+練；worked-example 在 rendered teach；★teach worked-example 用 60／6／6，與 practice 答案（Q1 84、Q2 15、Q3 35、Q4 20）皆不重疊避#10。claim kind=definition。figure-only example 無 body。",
+ "page": "math_counting_combination_apply.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.counting.combination-apply",
+   "title_zh": "組合的應用",
+   "can_do": "我會把組合 (combination) 用到情境題：分別從不同群各取幾個時，用乘法原理把各群的組合數相乘；遇到格子路徑（每步只能向右或向上）時，用 C(總步數, 向右步數) 來算；碰到某元素『必選』就先放它再從其餘選、某元素『必不選』就直接從其餘選。",
+   "situation_group": "計數：組合的應用",
+   "subject": "math",
+   "strand": "counting",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_adv.counting.combination-apply"
+   ],
+   "prerequisites": [
+    "math.t_adv.counting.combination"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ca-group",
+     "text": "分別從不同群各取幾個：先算每一群各自的組合數，再用乘法原理相乘（因為選完一群還要接著選下一群，是分步完成）。例：從 4 位老師選 1 位、再從 6 位學生選 2 位當代表，共有 4C1×6C2＝4×15＝60 種。注意是把各群的組合數『相乘』不是相加，而且每一群內部是不計順序的『選取』要用組合。",
+     "kind": "definition",
+     "source_refs": [
+      "分組選取（乘法原理結合組合，高中數學 學測）"
+     ],
+     "verification_ref": "4C1*6C2=4*15=60（.venv）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ca-path",
+     "text": "格子路徑：從一角沿格線走到對角，每一步只能『向右』或『向上』。若總共要向右 a 步、向上 b 步，那麼整條路就是 a＋b 步裡安排哪幾步向右——只要選出『哪 a 步向右』就決定了整條路徑，所以路徑數＝C(a＋b, a)（也等於 C(a＋b, b)）。例：向右 2 步、向上 2 步，共 4 步選 2 步向右，4C2＝6 條路。",
+     "kind": "definition",
+     "source_refs": [
+      "格子路徑計數（高中數學 學測）"
+     ],
+     "verification_ref": "右2上2=4C2=6（.venv）；C(a+b,a)",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ca-fixed",
+     "text": "指定某元素要不要選：某元素『一定要選中』時，先把它放進去（佔掉一個名額），再從其餘元素補滿剩下的名額——例如從 5 個人選 3 個、班長一定入選，就先放班長、再從其餘 4 人選 2，4C2＝6 種。某元素『一定不選』時，就把它拿掉、直接從其餘元素選——例如從 5 人選 3、但某人不參加，就從其餘 4 人選 3，4C3＝4 種。",
+     "kind": "definition",
+     "source_refs": [
+      "指定元素必選/必不選（高中數學 學測）"
+     ],
+     "verification_ref": "必選剩4選2=4C2=6；必不選4選3=4C3=4（.venv）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.counting.combination-apply"
+     ],
+     "body": "這一單元學『組合的應用』——把組合 nCr 用到情境題。下面先講三種常見應用：分別從不同群各取幾個（各群組合數相乘）、格子路徑（每步只能向右或向上，用 C(總步數, 向右步數)）、指定元素必選或必不選；用從 4 位老師選 1、6 位學生選 2＝60 示範分組，用向右 2 上 2＝4C2＝6 示範路徑，用班長必選、剩 4 選 2＝6 示範指定，接著用一張流程卡整理，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.counting.combination-apply"
+     ],
+     "body": "分組選取：各群各自算組合再相乘。示範：從 4 位老師選 1、6 位學生選 2，4C1×6C2＝4×15＝60 種。格子路徑：每步只能向右或向上，向右 a 步、向上 b 步，路徑數＝C(a＋b, a)。示範：向右 2 步、向上 2 步，共 4 步選 2 步向右，4C2＝6 條。指定元素：某元素『必選』先放它再從其餘補滿——從 5 人選 3、班長必入，先放班長再從其餘 4 選 2，4C2＝6 種；某元素『必不選』就從其餘選。下面用一張流程卡整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.counting.combination-apply"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 350 136' xmlns='http://www.w3.org/2000/svg'><text x='175' y='18' font-family='sans-serif' font-size='12' fill='#2f6f54' text-anchor='middle' font-weight='bold'>組合應用：分組、路徑、指定元素</text><rect x='12' y='30' width='326' height='30' rx='6' fill='#eef4ff' stroke='#5b8def' stroke-width='1.1'/><text x='22' y='49' font-family='sans-serif' font-size='10.5' fill='#5b8def' font-weight='bold'>①分組選取</text><text x='222' y='50' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>各群 nCr 相乘</text><rect x='12' y='64' width='326' height='30' rx='6' fill='#eef7ee' stroke='#4e9a6b' stroke-width='1.1'/><text x='22' y='83' font-family='sans-serif' font-size='10.5' fill='#4e9a6b' font-weight='bold'>②格子路徑</text><text x='224' y='84' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>向右a上b → C(a＋b, a)</text><rect x='12' y='98' width='326' height='30' rx='6' fill='#fdf2e9' stroke='#d08a3e' stroke-width='1.1'/><text x='22' y='117' font-family='sans-serif' font-size='10.5' fill='#d08a3e' font-weight='bold'>③指定元素</text><text x='226' y='118' font-family='sans-serif' font-size='10' fill='#33475b' text-anchor='middle'>必選→先放再選；必不選→從其餘選</text></svg>",
+      "alt": "標題「組合應用：分組、路徑、指定元素」。一張流程卡，三列。第一列藍底「①分組選取」：「各群 nCr 相乘」。第二列綠底「②格子路徑」：「向右a上b → C(a＋b, a)」。第三列橘底「③指定元素」：「必選→先放再選；必不選→從其餘選」。",
+      "caption": "組合三種應用：分組選取把各群 nCr 相乘；格子路徑向右 a 上 b 走＝C(a＋b, a)；指定元素必選就先放它再補、必不選就從其餘選。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.counting.combination-apply"
+     ],
+     "body": "最後練組合的應用。重點：分組要把各群的組合數『相乘』（不是相加）；格子路徑用 C(總步數, 向右步數)（選哪幾步向右）；指定元素必選就先放它、再從其餘補滿剩下的名額，必不選就把它拿掉、從其餘選。小提醒：每一群內部是『選取』不計順序，要用組合不是排列；路徑別把同方向的步當成不同而多算。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "袋子裡有 7 顆紅球、4 顆藍球（每顆都不同）。要從紅球中選 2 顆、從藍球中選 1 顆，共有幾種選法？",
+     "answer": "84",
+     "kp_ids": [
+      "math.t_adv.counting.combination-apply"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.combination-apply"
+     ],
+     "options": [
+      "84",
+      "25",
+      "28",
+      "11"
+     ],
+     "distractor_rationales": {
+      "25": "這是把兩群的組合數相加了（7C2＋4C1＝21＋4）；要先各選再接著選是分步，該相乘，7C2×4C1＝21×4＝84。",
+      "28": "這是直接把球數相乘（7×4）、沒有先各自取組合；紅球要選 2 顆是 7C2＝21，再乘 4C1＝4，得 84。",
+      "11": "這是把球數相加了（7＋4）；要用 7C2×4C1＝21×4＝84。"
+     },
+     "answer_evidence": [
+      "c-ca-group"
+     ],
+     "feedback": "分別取再相乘：7C2×4C1＝21×4＝84。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在方格圖上從左下角走到右上角，每一步只能向右或向上。若要向右 4 步、向上 2 步，共有幾條不同的路徑？",
+     "answer": "15",
+     "kp_ids": [
+      "math.t_adv.counting.combination-apply"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.combination-apply"
+     ],
+     "options": [
+      "15",
+      "30",
+      "720",
+      "64"
+     ],
+     "distractor_rationales": {
+      "30": "這是當成有順序的排列（6P2＝6×5＝30），把 2 步向上分了先後；向上的步彼此相同不分先後，要除以 2!，C(6,2)＝15。",
+      "720": "這是把 6 步全當成不同的來全排列（6!＝720）；但向右的步之間、向上的步之間都相同，路徑數是 C(6,2)＝15。",
+      "64": "這是把每一步都當成 2 選 1 亂乘（2⁶＝64）；向右、向上的步數是固定的，路徑數＝在 6 步裡選 2 步向上＝C(6,2)＝15。"
+     },
+     "answer_evidence": [
+      "c-ca-path"
+     ],
+     "feedback": "總共 6 步、選 2 步向上（其餘向右）＝C(6,2)＝15。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "從 8 個人中選出 4 個人組成一隊（隊員地位相同）。若其中某 1 位『一定要入選』，共有幾種選法？",
+     "answer": "35",
+     "kp_ids": [
+      "math.t_adv.counting.combination-apply"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.combination-apply"
+     ],
+     "options": [
+      "35",
+      "70",
+      "56",
+      "21"
+     ],
+     "distractor_rationales": {
+      "70": "這是沒有用上『某人必選』的條件（直接 8C4＝70）；先把那個人放進去、剩 3 個名額從其餘 7 人選，7C3＝35。",
+      "56": "這是固定了那個人、卻仍用 8 當基數（8C3＝56）；那個人已入選，要從『其餘 7 人』選 3，7C3＝35。",
+      "21": "這是選錯名額個數（7C2＝21）；固定 1 人後還剩 3 個名額，要從其餘 7 人選 3，7C3＝35。"
+     },
+     "answer_evidence": [
+      "c-ca-fixed"
+     ],
+     "feedback": "某人必選＝先放他、再從其餘 7 人選 3＝7C3＝35。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "從 7 個人中選出 3 個人去打掃（三人工作相同）。若其中某 1 位『那天請假、不能入選』，共有幾種選法？",
+     "answer": "20",
+     "kp_ids": [
+      "math.t_adv.counting.combination-apply"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.combination-apply"
+     ],
+     "options": [
+      "20",
+      "35",
+      "15",
+      "10"
+     ],
+     "distractor_rationales": {
+      "35": "這是沒有用上『某人不能選』的條件（直接 7C3＝35）；那個人要排除，從其餘 6 人選 3，6C3＝20。",
+      "15": "這是選錯名額個數（6C2＝15）；排除 1 人後仍要選 3 個，從其餘 6 人選 3，6C3＝20。",
+      "10": "這是把基數多減了（從 5 人選 3，5C3＝10）；只排除 1 人，剩 6 人，6C3＝20。"
+     },
+     "answer_evidence": [
+      "c-ca-fixed"
+     ],
+     "feedback": "某人必不選＝把他排除、從其餘 6 人選 3＝6C3＝20。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（組合應用：分組＝各群 nCr 相乘〔不是相加、群內用組合不是排列〕；格子路徑＝C(總步數, 向右步數)、同方向的步相同別多算；指定元素必選＝先放它再從其餘補滿、必不選＝從其餘選）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
