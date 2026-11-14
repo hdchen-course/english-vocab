@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 05:34 prob strand #4 simple-event 5/5 DONE-GATE 全綠（新建單元收斂完成）
+- **math_prob_simple_event frozen_sha `22e0298cd506fb78`**（R1-R5 連 5 clean、L3 每輪 exit 0、confirmed 全 0）。DONE-GATE 全綠：per_page 無 violation／scan PASS／unit_schema 0（僅其他 english 檔 shadowing-intonation advisory，無本檔）／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen＋iPad 四角色 render 綁 sha（簡單事件機率卡 figure：①數清楚 全部結果數 |S|、有利結果數 |A|、②相除 P=|A|/|S|、③化簡 約成最簡+檢查 0~1；三列全左對齊 x=96/start/fs10.5〔#50/#51 合規〕；三視窗右緣0%；美術/空間/眼科/動畫師過）。
+- **事實全 .venv（Fraction）驗**：teach 擲骰 P(奇)=3/6=1/2、1~8 大於5 {6,7,8}=3/8、轉盤8格6藍 6/8=3/4；Q1 擲骰 3的倍數 {3,6}=2/6=1/3、Q2 20顆8紅 8/20=2/5、Q3 轉盤12格3紅 3/12=1/4、Q4 撲克人頭 JQK 12/52=3/13。teach worked-example(1/2,3/8,3/4) 與 practice 答案皆不重疊（避 #10）。
+- **收斂途中無 confirmed 缺陷**（R1-R5 全 0）；R4 一個 raw finding（can_do 用『大於 4』示範而 teach 用『大於 5』）經 panel 5/5 判 NOT-a-defect（兩者皆數學正確、目標陳述非承諾特定範例），記入 knownFP。R2 曾自主預修 recap/selfeval 的因數 clause（#46：recap 不得承諾未教內容），只 R1 banked 時 de-converge 代價低。
+- **下一步**：續 prob strand 其餘 10 KP（mutually-exclusive / conditional / multiplication-rule / bayes / expected-value〔t_adv〕／variance / binomial / normal / sampling-confidence〔t_sub〕／likelihood〔t_base〕）。prob strand 已建 classical / simple-event / tree-list / complement-addition 4 個。
+
 ## 2026-11-15 04:44 ★defect-class #50 對齊批次 13/13 全完成：trig_solve_triangle_apply 5/5 DONE-GATE 全綠
 - **trig_solve_triangle_apply frozen_sha `02283c3c487f7a7e`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：per_page 無 violation／scan PASS／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen＋iPad 四角色 render 綁 sha（決策卡 figure：知三邊/兩邊夾角→餘弦定理、知一組邊角+另一角→正弦定理、求面積→½·a·b·sinC；箭頭欄左標籤無重疊；右緣0%；四角色過）。事實全 .venv（SAS c²=9+25−2·3·5·cos120°=49→c=7；7,8,9⇒cosC=2/7）。
 - **★本單元兩次修正（de-converge 重收斂）**：(1) R3 panel 7/7 判決策卡左標籤（x=26）比 70px 欄距寬、同基線與 x=96 箭頭片語重疊（CJK 擠進→正弦/餘弦定理，render-only major）→箭頭欄右移 x=96→160、render 確認無重疊、重凍 dcac4d82；(2) R4 panel 判 Q1/Q3 需餘弦定理角版 cosC=(a²+b²−c²)/(2ab) 從三邊求角，但 rendered teach 只示範邊版、角版只在 feedback（#4/#46 major）→補 teach4 完整角版式（無數值避撞 Q3 的 2/7）、重凍 02283c3c。**兩類記入 memory #50：CJK 標籤超欄距同基線重疊；practice 方法須在 rendered teach 不能只在 feedback。**
