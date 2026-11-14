@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 07:19 prob strand #5 mutually-exclusive 5/5 DONE-GATE 全綠（互斥與獨立，新建單元收斂完成）
+- **math_prob_mutually_exclusive frozen_sha `0c20af7d62a379f4`**（R1-R5 連 5 clean、L3 每輪 exit 0、confirmed 全 0）。DONE-GATE 全綠：per_page 無 violation／scan PASS／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen＋iPad 四角色 render 綁 sha（對照卡 figure：①互斥 不能同時→P(A∪B)=P(A)+P(B)、②獨立 互不影響→P(A∩B)=P(A)·P(B)、③怎麼分 或用加/且用乘；三列左對齊 x=96/start/fs10.5〔#50/#51 合規〕；三視窗右緣0%；四角色過）。
+- **scope（t_adv 學測）**：承 complement-addition（一般加法法則已教、本單元不重教）。聚焦互斥（A∩B=∅→直接相加）＋獨立（P(A∩B)=P(A)·P(B) 相乘，NEW）＋辨別（『或』看互斥用加、『且』看獨立用乘；『不能同時』≠『互不影響』）。事實全 .venv：互斥 P(2或5)=1/3、獨立 兩骰都6=1/36；Q1 1/4+1/3=7/12、Q2 1/2·1/2=1/4、Q3 1/6·1/2=1/12、Q4 奇/偶互斥。
+- **★收斂途中修 2 個 panel-confirmed 缺陷（同 #52 類：distractor 說明命名的錯誤路徑必須真能算出該選項值）**：(1) R1 blocker——Q1 distractor 值 1/7 與其說明『(1＋1)/(4＋3)』矛盾（該路徑實際=2/7）→改 option+key 為 2/7；(2) R2 major——Q1 '1/2' 說明寫『只取其中一個』但取單一運算元得 1/4 或 1/3、非 1/2 →改為誠實估測框架『沒實際通分、憑印象估個大概（1/4 與 1/3 都不是 1/2）』。兩次皆誠實 de-converge（棄 banked、記 _deconverge_trace）後重凍重收斂。**教訓已是 #52 類，本單元兩度踩到→draft MCQ 時每個 distractor 都要先 .venv 反算其說明路徑的值 == option 值。**
+- **下一步**：續 prob strand 其餘 8 KP（conditional / multiplication-rule / bayes / expected-value〔t_adv〕／variance / binomial / normal / sampling-confidence〔t_sub〕）。prob strand 已建 classical / simple-event / tree-list / complement-addition / likelihood-intuition / mutually-exclusive 6 個（14 中 6 完成）。
+
 ## 2026-11-15 05:34 prob strand #4 simple-event 5/5 DONE-GATE 全綠（新建單元收斂完成）
 - **math_prob_simple_event frozen_sha `22e0298cd506fb78`**（R1-R5 連 5 clean、L3 每輪 exit 0、confirmed 全 0）。DONE-GATE 全綠：per_page 無 violation／scan PASS／unit_schema 0（僅其他 english 檔 shadowing-intonation advisory，無本檔）／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen＋iPad 四角色 render 綁 sha（簡單事件機率卡 figure：①數清楚 全部結果數 |S|、有利結果數 |A|、②相除 P=|A|/|S|、③化簡 約成最簡+檢查 0~1；三列全左對齊 x=96/start/fs10.5〔#50/#51 合規〕；三視窗右緣0%；美術/空間/眼科/動畫師過）。
 - **事實全 .venv（Fraction）驗**：teach 擲骰 P(奇)=3/6=1/2、1~8 大於5 {6,7,8}=3/8、轉盤8格6藍 6/8=3/4；Q1 擲骰 3的倍數 {3,6}=2/6=1/3、Q2 20顆8紅 8/20=2/5、Q3 轉盤12格3紅 3/12=1/4、Q4 撲克人頭 JQK 12/52=3/13。teach worked-example(1/2,3/8,3/4) 與 practice 答案皆不重疊（避 #10）。
