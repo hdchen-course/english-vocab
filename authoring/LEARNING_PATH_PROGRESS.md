@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-14 16:53 數學島 trig（三角函數）strand #6：math_trig_radian（弧度，t_adv 學測）5/5 收斂
+- **frozen_sha `2671aac3df9b58af`**（★一次過：草稿凍 2671aac3 即 R1-R5 連 5 clean、confirmed 全 0、coverageComplete 全 true、L3 每輪 exit 0、無 de-converge）。DONE-GATE 全綠（per_page exit 0 且 radian absent／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy CLEAN 0 hard；數學無音檔）＋iPad 四角色 render 綁 sha 2671aac3（三列公式卡 figure：①藍底度↔弧度 180°＝π、②綠底弧長 s＝r·θ、③橘底扇形面積 A＝½·r²·θ；mbp16+land+port 三 PNG 右緣0% θ/π/½/r² 可讀、選項洗牌相異、無重疊裁切）。
+- **3 claim kind=definition**（c-rad-def 弧度定義 180°＝π＋半圓弧長推導＋度換弧度乘 π/180；c-rad-arc 弧長 s=rθ＋正比例由來；c-rad-sector 扇形面積 A=½r²θ＝½rs＋正比例由來）。事實全 .venv/sympy 驗（180°=π、120°=2π/3、60°=π/3；teach r=3,θ=π/2⇒s=3π/2,A=9π/4；Q3 r=6,θ=π/3⇒s=2π；Q4 A=½r²θ=6π）。術語附英語 R15（radian／arc length／circular sector）。prereq=[]（弧度為 trig strand 另一入口根節點，角的度量方式不依賴銳角三角比；function-graph 以此為基石）。不含三角函數圖形/廣義角/週期。
+- **4 MCQ（全 bare options）**：Q1 180° 換弧度→π〔2π=360°、π/2=90°、π/180=1°〕／Q2 120° 換弧度→2π/3〔3π/2 上下顛倒、4π/3 用90除、π/3 約分錯〕／Q3 r=6,θ=π/3 弧長→2π〔π 誤乘½、6π 把θ當π、4π 用直徑2r〕／Q4 r=6,θ=π/3 扇形面積→6π〔12π 漏½、2π 誤用弧長rθ、π 漏平方r〕。每個 distractor 皆乾淨單一錯誤路徑。teach worked-example 用 60°=π/3 與 r=3,θ=π/2（⇒s=3π/2、A=9π/4），與 practice 答案（π、2π/3、2π、6π）皆不重疊避#10；Q3/Q4 同一扇形測兩公式；導讀序＝實際 teach 牌組序。
+- **commits**：草稿凍結 64722f0da→R1-R5(2671aac3: 62eceae42/91c878302/3af039728/73ee94569/本次)→DONE-GATE＋PROGRESS 本次。
+- **★里程碑：數學島 trig strand 6/14**。math 單元累計＝**147 單元**（sequence 9＋前 132＋trig 6）。
+- **下一步**：trig 其餘 8 個 minimum KP：ratio-generalized／solve-triangle-apply／function-graph／sum-difference／double-half-angle／superposition／product-sum／equation。預設先推 function-graph（三角函數圖形，以 radian 為基石、學測核心）或 ratio-generalized（廣義角三角比，為 function-graph 鋪路）。另 QUEUED：hub `index_new.html` AC-VIZ-1 figure_signoff stale（sha 4741b69d≠manifest ec2bffb5）須 hub 重 render＋四角色重簽。
+
 ## 2026-11-14 16:35 數學島 trig（三角函數）strand #5：math_trig_triangle_area（三角形面積，t_adv 學測）5/5 收斂
 - **frozen_sha `6ae583b0c9d8c0ef`**（★一次過：草稿凍 6ae583b0 即 R1-R5 連 5 clean、confirmed 全 0、coverageComplete 全 true、L3 每輪 exit 0、無 de-converge——把 law-of-cosines R1 兩教訓〔全形減號 #39、乾淨誘答路徑〕於草稿階段即做對，省了重凍迴圈）。DONE-GATE 全綠（per_page exit 0 且 triangle_area absent／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy CLEAN 0 hard；數學無音檔）＋iPad 四角色 render 綁 sha 6ae583b0（二法公式卡 figure：①藍底兩邊夾一角 Area＝½·a·b·sinC、②橘底海龍 s＝(a＋b＋c)/2＋Area＝√(s(s－a)(s－b)(s－c))；mbp16+land+port 三 PNG 右緣0% √ 可讀、選項洗牌相異、無重疊裁切）。
 - **3 claim kind=definition**（c-area-sas 兩邊夾一角版 Area=½ab·sinC＋高=a·sinC 由來；c-area-heron 海龍公式＋半周長；c-area-choose 兩法選用與一致性）。事實全 .venv/sympy 驗（½·6·8·sin30°=12；½·5·8·sin90°=20；海龍 3-4-5=6〔與直角 ½·3·4=6 一致〕；海龍 13-14-15：s=21,√(21·8·7·6)=√7056=84；5-6-7=6√6）。術語附英語 R15（area of a triangle／Heron's formula／semi-perimeter）。prereq=ratio-acute（sinC 來源）。不含正/餘弦定理、測量綜合應用。
