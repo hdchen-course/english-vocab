@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 01:32 數學島 機率 strand #3：math_prob_complement_addition（餘事件與加法法則，t_adv 學測）5/5 收斂 ＋ ★defect-class #50 全站對齊類批次修
+- **complement-addition frozen_sha `a4a7eeb9f1ff1bb9`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠（per_page absent／scan PASS／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen；數學無音檔）＋iPad 四角色 render 綁 sha a4a7eeb9（法則卡 figure 三列①餘事件 A'＝A 不發生→P(A')＝1－P(A)、②加法法則 P(A∪B)＝P(A)＋P(B)－P(A∩B)、③互斥 A∩B＝∅→P(A∪B)＝P(A)＋P(B)；公式左對齊、mbp16+iPad 直/橫三 PNG 右緣0%、無重疊裁切；美術/空間/眼科/動畫師皆過）。3 claim kind=definition。4 MCQ：Q1 不是紅心 3/4、Q2 1~20 的2或5倍數 3/5、Q3 概念 1－P(A)、Q4 互斥紅或白 4/5。事實全 .venv。
+- **★HD 2026-11-15 視覺回報「位置不能對齊好嗎？」→ 查出 defect-class #50（法則/公式/方法卡右欄公式 center-anchored 左緣參差＝clone 模板系統性缺陷，render-only、content_audit 審 JSON 抓不到）**。記入 memory #50。**批次修 13 個 math 單元**公式改左對齊（text-anchor=start、同 x 起點、統一字級）：sequence_sigma、prob_complement_addition、counting_{circular_permutation,combination,combination_apply,distribution,inclusion_exclusion,permutation,permutation_repeat}、prob_classical、prob_tree_list、trig_{radian,solve_triangle_apply}。全 de-converge（留 _deconverge_trace）＋4 pre-freeze gates 全綠＋重凍。render 驗證 3 張最難（inclusion fs9.5/radian fs13/permutation 最長列）皆對齊無溢出。
+- **另修 sigma 2 個真缺陷**（重收斂輪才現形）：R4 panel 5/5 b-hard Q4 答案 100 唯一最長又最大→誘答 64→400（=(4×5)²先平方忘除2）去長度cue；R1 panel blocker a-wrong Σ 上下界誤稱「上標/下標」（=superscript、與 k² 上標相撞、與英文 upper/lower limit 不符）→全改「上限/下限」。sigma 現 frozen 8b0bb45f。
+- **commits**：對齊批次 eba8c957a＋sigma 術語 re-freeze＋各輪 clean bank＋complement R5 DONE＋本次 PROGRESS。
+- **★里程碑：prob strand 3/14；math 單元累計 162**。重收斂中（classical 3/5、sigma 2/5、其餘 10 對齊單元待續；classical R4+sigma R3 跑中）。
+- **下一步**：推完 13 個重收斂單元各自 5/5 DONE-GATE；再續 prob strand 其餘 11 KP。
+
 ## 2026-11-15 00:27 數學島 機率（prob）strand #2：math_prob_tree_list（樹狀圖/列表法求機率，t_mid 國中會考）5/5 收斂
 - **frozen_sha `98b2e48d24062051`**（★一次過收斂＋1 次 pre-freeze 修正：草稿凍前 pedagogy_gate 抓 Q3 length-cue〔正解 20 字 >1.5× 次長 12〕→重寫四選項長度均衡 15/15/13/13〔正解不唯一最長〕→凍 98b2e48d→R1-R5 連 5 clean、confirmed 全 0、L3 每輪 exit 0、無內容缺陷）。DONE-GATE 全綠（per_page exit 0 且 tree_list absent／scan PASS／unit_schema exit 0／question_correctness CLEAN／pedagogy 0 hard 0 advisory〔三 claim 全被 answer_evidence 引用〕；數學無音檔）＋iPad 四角色 render 綁 sha 98b2e48d（方法卡 figure：三列①樹狀圖〔藍〕分階段逐層展開/一條路＝一結果、②列表法〔綠〕一軸一階段/格子＝一結果、③數出〔橘〕數 |S| 與有利數→P＝有利/全部；機率島 nav 正確、HT≠TH 說明清楚、三 PNG 右緣0%、無重疊裁切；美術/空間/眼科/動畫師皆過）。
 - **3 claim kind=definition**（c-tl-tree 樹狀圖分枝、兩硬幣 4 路 HH/HT/TH/TT、P(HH)=1/4；c-tl-table 列表法 6×6=36 格、和7=6/36=1/6；c-tl-order HT≠TH 要分先後、|S|=4 非 3、恰一正=2/4=1/2）。事實全 .venv Fraction＋brute-force 雙驗。術語附英語 R15（tree diagram／table method）。prereq＝classical。不含餘事件/加法、條件機率、獨立相乘公式（此處只靠列舉）。
