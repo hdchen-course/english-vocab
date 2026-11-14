@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 計數（counting）strand 第 5 個單元（t_adv 學測）。知識點 math.t_adv.counting.binomial-coefficient（二項係數與巴斯卡三角形）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，gloss 緊貼正確中文術語）：二項係數 (binomial coefficient)、巴斯卡三角形 (Pascal's triangle)。★scope（學測 t_adv）：(1) 二項係數 C(n,r) 就是組合數，也是 (a＋b)^n 展開式中 a^(n－r)·b^r 那一項的係數；(2) 巴斯卡三角形——把 C(n,0) 到 C(n,n) 排成一列，每個數等於它『肩上』左右兩數相加；(3) 巴斯卡遞迴關係 C(n,r)＝C(n－1,r－1)＋C(n－1,r)；(4) 每一列的總和 C(n,0)＋…＋C(n,n)＝2^n，且左右對稱 C(n,r)＝C(n,n－r)。不含：二項式定理的一般項求值與應用（另單元視為延伸）、多項式展開。prereq＝combination（組合 nCr，剛建；二項係數即組合數）。★自檢（math-unit defect-classes）：事實全 .venv 驗（(a＋b)^3 係數 1,3,3,1；第 4 列 1,4,6,4,1 且列和 16；C(6,2)＝C(5,1)＋C(5,2)＝5＋10＝15；Q1 (a＋b)^5 的 a³b² 係數＝C(5,2)＝10、Q2 C(7,3)＝C(6,2)＋C(6,3)＝15＋20＝35、Q3 列和＝2^n、Q4 第 6 列最大＝C(6,3)＝20；各 distractor 單一錯誤路徑）；減號僅出現在 n－1、n－r 等式，一律全形 U+FF0D（含 distractor_rationales key）；上標數字（a³b²、2ⁿ、2⁶）用 Unicode 上標、非簡體；★figure＝巴斯卡三角形卡（低幾何風險：列出前幾列 1／1 1／1 2 1／1 3 3 1／1 4 6 4 1，標『每數＝肩上兩數相加』與『C(n,r)＝C(n－1,r－1)＋C(n－1,r)』），alt 與 SVG text 逐字一致（#33）、figure 標題『巴斯卡三角形：肩上兩數相加』寫進 alt 開頭；★MCQ options 全 bare（#47，說明在 distractor_rationales）、每個 distractor 乾淨單一錯誤路徑（取錯 r／用排列沒除／端點值／列和／相加寫成相乘／遞迴列或位置錯）、數值兩兩相異（#14/#29）、長度均衡（#20/#28）；★導讀承諾順序＝實際 teach 牌組順序（#4/#46）：導讀『先講二項係數＝組合數＝(a＋b)^n 展開係數、用 (a＋b)^3 係數 1,3,3,1 示範、再講巴斯卡三角形每數＝肩上兩數相加用第 4 列 1,4,6,4,1 示範、講遞迴 C(n,r)＝C(n－1,r－1)＋C(n－1,r) 與列和 2^n、用一張三角形卡整理、最後練』＝實際 teach1 intro→teach2 二項係數＋巴斯卡＋遞迴＋列和＋示範→teach3 figure 三角形卡→teach4 recap+練；worked-example 在 rendered teach；★teach worked-example 用 1,3,3,1／1,4,6,4,1／C(6,2)＝15，與 practice 答案（Q1 10、Q2 C(6,2)＋C(6,3)、Q3 2ⁿ、Q4 20）皆不重疊避#10。claim kind=definition。figure-only example 無 body。",
+ "page": "math_counting_binomial_coefficient.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.counting.binomial-coefficient",
+   "title_zh": "二項係數與巴斯卡三角形",
+   "can_do": "我知道二項係數 (binomial coefficient) C(n,r) 就是組合數，也是 (a＋b)^n 展開式中 a^(n－r)·b^r 那一項的係數。我會用巴斯卡三角形 (Pascal's triangle)——每個數等於它肩上左右兩數相加——寫出各列的二項係數，也知道遞迴關係 C(n,r)＝C(n－1,r－1)＋C(n－1,r)、每列總和＝2^n、而且左右對稱。",
+   "situation_group": "計數：二項係數與巴斯卡三角形",
+   "subject": "math",
+   "strand": "counting",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_adv.counting.binomial-coefficient"
+   ],
+   "prerequisites": [
+    "math.t_adv.counting.combination"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-bin-coeff",
+     "text": "二項係數 (binomial coefficient)：C(n,r) 就是組合數『從 n 取 r』，它同時也是 (a＋b)^n 乘開後、a^(n－r)·b^r 那一項前面的係數。例：(a＋b)^3 乘開是 a³＋3a²b＋3ab²＋b³，四項的係數 1、3、3、1 剛好就是 C(3,0)、C(3,1)、C(3,2)、C(3,3)。所以要找某一項的係數，就是算對應的組合數。",
+     "kind": "definition",
+     "source_refs": [
+      "二項係數即組合數（高中數學 學測）"
+     ],
+     "verification_ref": "(a+b)^3 係數 1,3,3,1=C(3,0..3)（.venv）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-bin-pascal",
+     "text": "巴斯卡三角形 (Pascal's triangle)：把每一列寫成 C(n,0)、C(n,1)、…、C(n,n)，從頂端的單一個 1 往下排。它有個好用的規律——除了每列兩端恆為 1，中間每個數都等於它『肩上』左上和右上兩個數相加。例：第 3 列是 1 3 3 1，把相鄰兩數相加（1＋3、3＋3、3＋1）再補上兩端的 1，就得到第 4 列 1 4 6 4 1。",
+     "kind": "definition",
+     "source_refs": [
+      "巴斯卡三角形的建構（高中數學 學測）"
+     ],
+     "verification_ref": "第3列1,3,3,1→第4列1,4,6,4,1（.venv）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-bin-rule",
+     "text": "巴斯卡遞迴與列的性質：『肩上兩數相加』寫成式子就是 C(n,r)＝C(n－1,r－1)＋C(n－1,r)。例：C(6,2)＝C(5,1)＋C(5,2)＝5＋10＝15。此外每一列還有兩個常用性質：整列相加 C(n,0)＋C(n,1)＋…＋C(n,n)＝2^n（從只有一個 1 的那列當第 0 列算起）；而且左右對稱 C(n,r)＝C(n,n－r)。",
+     "kind": "definition",
+     "source_refs": [
+      "巴斯卡遞迴與列和 2^n（高中數學 學測）"
+     ],
+     "verification_ref": "C(6,2)=C(5,1)+C(5,2)=15；列和=2^n（.venv）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.counting.binomial-coefficient"
+     ],
+     "body": "這一單元學『二項係數與巴斯卡三角形』。下面先講二項係數——C(n,r) 就是組合數，也是 (a＋b)^n 展開式中 a^(n－r)·b^r 的係數，用 (a＋b)^3 的係數 1,3,3,1 示範；再講巴斯卡三角形，每個數等於它肩上左右兩數相加，用第 3 列 1 3 3 1 加出第 4 列 1 4 6 4 1 示範；接著講遞迴 C(n,r)＝C(n－1,r－1)＋C(n－1,r)、每列總和＝2^n；用一張三角形卡整理，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.counting.binomial-coefficient"
+     ],
+     "body": "二項係數：C(n,r) 既是組合數，也是 (a＋b)^n 展開後 a^(n－r)·b^r 的係數。示範：(a＋b)^3＝a³＋3a²b＋3ab²＋b³，係數 1、3、3、1＝C(3,0)…C(3,3)。巴斯卡三角形：每個數＝肩上左右兩數相加（兩端恆為 1）。示範：第 3 列 1 3 3 1，相鄰相加（1＋3、3＋3、3＋1）補上兩端 1，得第 4 列 1 4 6 4 1。遞迴寫成式子：C(n,r)＝C(n－1,r－1)＋C(n－1,r)，例如 C(6,2)＝C(5,1)＋C(5,2)＝5＋10＝15。每列總和＝2^n、左右對稱 C(n,r)＝C(n,n－r)。下面用一張三角形卡整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.counting.binomial-coefficient"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 344 150' xmlns='http://www.w3.org/2000/svg'><text x='172' y='18' font-family='sans-serif' font-size='12.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>巴斯卡三角形：肩上兩數相加</text><text x='172' y='42' font-family='sans-serif' font-size='13' fill='#33475b' text-anchor='middle'>1</text><text x='172' y='62' font-family='sans-serif' font-size='13' fill='#33475b' text-anchor='middle'>1　1</text><text x='172' y='82' font-family='sans-serif' font-size='13' fill='#33475b' text-anchor='middle'>1　2　1</text><text x='172' y='102' font-family='sans-serif' font-size='13' fill='#5b8def' text-anchor='middle' font-weight='bold'>1　3　3　1</text><text x='172' y='122' font-family='sans-serif' font-size='13' fill='#d08a3e' text-anchor='middle' font-weight='bold'>1　4　6　4　1</text><text x='172' y='142' font-family='sans-serif' font-size='10.5' fill='#4e9a6b' text-anchor='middle'>每數＝肩上兩數相加：C(n,r)＝C(n－1,r－1)＋C(n－1,r)</text></svg>",
+      "alt": "標題「巴斯卡三角形：肩上兩數相加」。一個三角形，由上往下五列：第一列「1」；第二列「1 1」；第三列「1 2 1」；第四列（藍色）「1 3 3 1」；第五列（橘色）「1 4 6 4 1」。底下一行說明：「每數＝肩上兩數相加：C(n,r)＝C(n－1,r－1)＋C(n－1,r)」。",
+      "caption": "巴斯卡三角形：每列兩端是 1、中間每個數等於肩上左右兩數相加（藍色第 3 列 1 3 3 1 加出橘色第 4 列 1 4 6 4 1）；寫成式子就是 C(n,r)＝C(n－1,r－1)＋C(n－1,r)。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.counting.binomial-coefficient"
+     ],
+     "body": "最後練二項係數與巴斯卡三角形。重點：要找 (a＋b)^n 某一項的係數，就算對應的組合數 C(n,r)（r 是 b 的次方）；巴斯卡三角形每個數＝肩上左右兩數『相加』（不是相乘）；遞迴 C(n,r)＝C(n－1,r－1)＋C(n－1,r)；每列總和＝2^n、左右對稱。小提醒：找係數時 r 要對準 b 的次方，別數錯；相加不是相乘。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "把 (a＋b)⁵ 乘開，其中 a³b² 這一項的係數是多少？",
+     "answer": "10",
+     "kp_ids": [
+      "math.t_adv.counting.binomial-coefficient"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.binomial-coefficient"
+     ],
+     "options": [
+      "10",
+      "5",
+      "20",
+      "1"
+     ],
+     "distractor_rationales": {
+      "5": "這是對準了 a 的次方 3 卻取錯（或取成 C(5,1)）；係數的 r 要對準 b 的次方 2，係數＝C(5,2)＝10。",
+      "20": "這是用排列 5P2＝5×4＝20、沒有除以 2!；二項係數是組合數 C(5,2)＝10。",
+      "1": "這是端點的係數（C(5,0) 或 C(5,5)，對應 a⁵ 或 b⁵）；a³b² 對應 C(5,2)＝10。"
+     },
+     "answer_evidence": [
+      "c-bin-coeff"
+     ],
+     "feedback": "a³b²：b 的次方是 2，係數＝C(5,2)＝10。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在巴斯卡三角形中，C(7,3) 等於它肩上（上一列）哪兩個數相加？",
+     "answer": "C(6,2)＋C(6,3)",
+     "kp_ids": [
+      "math.t_adv.counting.binomial-coefficient"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.binomial-coefficient"
+     ],
+     "options": [
+      "C(6,2)＋C(6,3)",
+      "C(6,3)＋C(6,4)",
+      "C(7,2)＋C(7,4)",
+      "C(6,2)×C(6,3)"
+     ],
+     "distractor_rationales": {
+      "C(6,3)＋C(6,4)": "位置挑錯了；遞迴是 C(n,r)＝C(n－1,r－1)＋C(n－1,r)，n＝7、r＝3 要配 C(6,2) 與 C(6,3)，不是 C(6,3)＋C(6,4)。",
+      "C(7,2)＋C(7,4)": "這是同一列（第 7 列）的數相加；巴斯卡的『肩上』指的是上一列 n－1＝6，應為 C(6,2)＋C(6,3)。",
+      "C(6,2)×C(6,3)": "巴斯卡是肩上兩數『相加』不是相乘；C(7,3)＝C(6,2)＋C(6,3)＝15＋20＝35。"
+     },
+     "answer_evidence": [
+      "c-bin-rule"
+     ],
+     "feedback": "遞迴 C(n,r)＝C(n－1,r－1)＋C(n－1,r)：C(7,3)＝C(6,2)＋C(6,3)＝15＋20＝35。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "從只有一個 1 的那列當第 0 列算起，巴斯卡三角形第 n 列所有數（C(n,0) 到 C(n,n)）的總和是多少？",
+     "answer": "2ⁿ",
+     "kp_ids": [
+      "math.t_adv.counting.binomial-coefficient"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.binomial-coefficient"
+     ],
+     "options": [
+      "2ⁿ",
+      "n²",
+      "2n",
+      "n!"
+     ],
+     "distractor_rationales": {
+      "n²": "n² 不是列和；實際把各列相加（1；1＋1＝2；1＋2＋1＝4；1＋3＋3＋1＝8…）會得到 1,2,4,8,…＝2ⁿ。",
+      "2n": "2n 是把『2 乘以 n』；列和是『2 的 n 次方』2ⁿ（例如第 3 列 1＋3＋3＋1＝8＝2³，不是 6）。",
+      "n!": "n! 成長比列和快得多；列和是 2ⁿ（第 3 列和為 8＝2³，而 3!＝6，不符）。"
+     },
+     "answer_evidence": [
+      "c-bin-rule"
+     ],
+     "feedback": "每列總和＝2ⁿ（如第 3 列 1＋3＋3＋1＝8＝2³）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "巴斯卡三角形第 6 列是 C(6,0) 到 C(6,6)（即 1, 6, 15, 20, 15, 6, 1）。這一列中最大的數是多少？",
+     "answer": "20",
+     "kp_ids": [
+      "math.t_adv.counting.binomial-coefficient"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.binomial-coefficient"
+     ],
+     "options": [
+      "20",
+      "15",
+      "6",
+      "64"
+     ],
+     "distractor_rationales": {
+      "15": "15 是 C(6,2)＝C(6,4)，是第二大的數；最大的在正中間 C(6,3)＝20。",
+      "6": "6 是 C(6,1)＝C(6,5)；最大的在正中間 C(6,3)＝20。",
+      "64": "64 是整列的總和（2⁶＝64），不是其中最大的一個數；最大的單一數是 C(6,3)＝20。"
+     },
+     "answer_evidence": [
+      "c-bin-rule"
+     ],
+     "feedback": "巴斯卡每列最大的數在正中間：第 6 列是 C(6,3)＝20。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（二項係數 C(n,r)＝組合數＝(a＋b)^n 展開式中 a^(n－r)·b^r 的係數，r 對準 b 的次方；巴斯卡三角形每數＝肩上兩數『相加』、遞迴 C(n,r)＝C(n－1,r－1)＋C(n－1,r)；每列總和＝2ⁿ、左右對稱 C(n,r)＝C(n,n－r)、最大在正中間）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
