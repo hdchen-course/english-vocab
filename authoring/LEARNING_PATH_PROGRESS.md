@@ -7,6 +7,15 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-14 11:51 數學島 sequence（數列級數）strand #4：math_sequence_geometric_sum（等比級數求和，t_adv 學測）5/5 收斂
+- **frozen_sha `10551d4989170f56`**（草稿凍即過：R1–R5 連 5 clean，L3 全 exit 0、confirmed 全 0，無 de-converge、無 parity-advisory〔三 claim 皆被 practice 引用〕）。DONE-GATE 全綠（per_page PASS 且 geometric_sum absent／scan PASS／unit_schema clean／question_correctness CLEAN／pedagogy CLEAN；數學無音檔）＋iPad 四角色 render 綁 sha 10551d49（求和公式卡 figure：兩列 公比 r≠1 → a₁(rⁿ−1)/(r−1)〔藍〕、公比 r＝1 → n×a₁〔橘〕、箭頭清楚、上標正常；mbp16+land+port 三視埠右緣0% 選項洗牌相異、無重疊裁切）。
+- **3 claim kind=definition**（c-gsum-formula 求和公式 r≠1：S_n＝a_1(r^n−1)/(r−1)＝a_1(1−r^n)/(1−r)；c-gsum-derive 錯位相減 S−rS 導出；c-gsum-r1 ★特例 r＝1：每項都 a_1、共 n 項、S_n＝n×a_1，不能用公式因分母 r−1＝0）。事實全 .venv 驗（teach 2+6+18+54=80、1+2+4+8+16=31、§4 recap 5+10+20=35；practice 3+6+12+24+48=93、1+3+9+27+81=121、r=1 a_1=5 n=4 ⇒ 20）。術語附英語 R15（geometric series／sum／common ratio／first term／number of terms）。prereq=sequence.geometric。不含無窮等比／Σ／遞迴。
+- **4 MCQ**：Q1 3+6+12+24+48→93〔96 a_1×r^n 忘減1/48 最後一項 a_5/31 (r^n−1)/(r−1) 漏乘首項〕／Q2 公式概念→a₁(rⁿ−1)/(r−1)〔忘除(r−1)/指數 n−1 錯/a₁×n×r〕／Q3 1+3+9+27+81→121〔242 3⁵−1 忘除2/243 3⁵ 沒減沒除/81 最後一項 a_5〕／Q4 r=1,a₁=5,n=4→20〔0 硬代公式 0/0/5 只一項/625 5⁴ 相乘〕。teach 答與 figure 與 practice 答皆不重疊避#10。
+- **commits**：草稿凍結 c8cd4bfbc→R1 bank 487c93897→R2 7f02eb4af→R3 a407db0f9→R4 defb2f8db→R5＋PROGRESS 本次。
+- **★里程碑：數學島 sequence strand 4/9**。已 COMPLETE strand 7 條（function/equation/geom/algexpr/numquant/ratio/inequality＝132）＋sequence 4＝**136 單元**。
+- **教訓（banked）**：等比級數求和的 signature 缺陷類＝(a) 公式分子忘把 r^n 減 1（誤用 a_1×r^n）、(b) 漏乘首項（只算 (r^n−1)/(r−1)）、(c) 只寫最後一項沒加總、(d) 忘除以 (r−1)；★特例 r＝1 必教（分母 0 不能套公式、改 n×a_1），誘答「0」正是把 r=1 硬代公式得 0/0 的錯誤。一次 5-clean 無 de-converge，延續成熟 pattern。
+- **下一步**：sequence 其餘 5 KP：sigma（Σ 記號 Σk,Σk²,Σk³）／infinite-geometric（無窮等比收斂）／recursion（遞迴）皆 t_adv 學測；induction（數學歸納法）／limit（數列極限）為 t_sub 分科-數甲。先推 sigma（Σ 記號與求和公式）。另 QUEUED：hub `index_new.html` AC-VIZ-1 figure_signoff 重簽。
+
 ## 2026-11-14 11:31 數學島 sequence（數列級數）strand #3：math_sequence_geometric（等比數列通項與性質，t_adv 學測）5/5 收斂
 - **frozen_sha `1c7a2d223a429cc5`**（草稿凍 3cdccaee→R1 抓 1 major〔instructional-design, panel 5:0 DEFECT b-hard-to-understand〕：Q1 誘答「10」rationale 兩條路徑（3＋2×…／3＋7＝10）都算不出 10＝無乾淨單一錯誤路徑→harvest 改誘答「11」＝把等比當等差用加的 3＋(5−1)×2＝11（單一乾淨機制、.venv 驗、與 48/96/16 相異）、重凍 1c7a2d22→R1 重跑–R5 連 5 clean，L3 全 exit 0、confirmed 全 0）。DONE-GATE 全綠（per_page PASS 且 geometric absent／scan PASS／unit_schema clean／question_correctness CLEAN／pedagogy CLEAN；數學無音檔）＋iPad 四角色 render 綁 sha 1c7a2d22（等比數列 figure：四格 2/6/18/54 等距、三道橘色 ×3 弧、caption；mbp16+land+port 三視埠右緣0% 選項洗牌相異、無重疊裁切）。
 - **3 claim kind=definition**（c-geo-r 公比 r＝後項÷前項、固定〔對照等差相減〕；c-geo-general 通項 a_n＝a_1×r^(n−1)〔★指數 n−1 非 n〕；c-geo-mean 等比中項 b²＝ac、b＝±√(ac)〔★有正負兩值，和算術中項只一個不同〕）。事實全 .venv 驗（2,6,18,54 r=3 a_n=2×3^(n−1) a_4=54；3,6,12 中項 6²=36=3×12；1,4,16,64 a_n=4^(n−1) a_4=64；a_1=3,r=2 a_5=48；5,10,20,40 a_n=5×2^(n−1)；2和8 中項 b²=16 b=±4）。術語附英語 R15（geometric sequence／common ratio／general term／geometric mean）。prereq=sequence.arithmetic。不含等比級數求和 Sn／無窮等比／Σ／遞迴。
