@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 02:46 defect-class #50 對齊批次：permutation 5/5 DONE-GATE 全綠（9/13）＋ inclusion de-converge 重修（R5 抓 can_do 把字句缺補語）
+- **permutation frozen_sha `b00279ac9210e3b9`**（R1-R5 連 5 clean、L3 每輪 exit 0、confirmed 全 0）。DONE-GATE 全綠：per_page_5clean 無 permutation violation／scan PASS／unit_schema exit 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen（數學無音檔）＋iPad 四角色 render 綁 sha（排列流程卡 figure 三列①階乘 n!＝n×(n−1)×…×1、②全排列 n 個相異物＝n!、③部分排列 nPr＝n×(n−1)×…×(n−r+1) 全部左對齊同 x 起點；三視窗右緣0%、無重疊裁切；美術/空間/眼科/動畫師皆過）。4 MCQ：Q1 4 人排一列＝4!＝24、Q2 6 取 3 排名＝6P3＝120、…。事實全 .venv。
+- **★inclusion_exclusion 重修**：R5 panel 抓到 can_do 把字句「把各條件的個數相加會把同時符合的重複算」光桿動詞「算」收尾缺補語、讀來截斷（b-hard minor，domain/english/zh/pm 皆 DEFECT）。de-converge（棄 R1-R4、留 _deconverge_trace）→重構為「把各條件的個數相加，會把同時符合的部分重複算到，所以要扣回來」（補完補語「到」，2/3 集合皆自然）→4 pre-freeze gates 全綠→重凍 **f5395729dc4d152d**→重啟 R1。**教訓：把字句以光桿動詞收尾＝defect class，草稿期應先掃**。
+- **對齊批次 DONE-GATE 全綠已 push 增至 9/13**＝complement-addition(a4a7eeb9)、classical(8296b02c)、sigma(8b0bb45f)、tree_list(6adc2622)、circular_permutation(32f1b81e)、combination(38176706)、distribution(388f2600)、combination_apply(9e2fd52a)、**permutation(b00279ac)**。進行中＝inclusion_exclusion 重收斂中（frozen f5395729，R1 跑中）；待排＝permutation_repeat/trig_radian/trig_solve_triangle_apply（各 R1-R5）。
+- **下一步**：inclusion R1-R5 → DONE-GATE；再推 3 個待排單元；之後續 prob strand 其餘 11 KP。
+
 ## 2026-11-15 02:38 defect-class #50 對齊批次：combination_apply 5/5 DONE-GATE 全綠（8/13）＋ inclusion 4/5、permutation 3/5
 - **combination_apply frozen_sha `9e2fd52abe33f29d`**（R1-R5 連 5 clean、L3 每輪 exit 0、confirmed 全 0）。DONE-GATE 全綠：per_page_5clean 無 combination_apply violation／scan PASS／unit_schema exit 0／question_correctness CLEAN（2573 題）／pedagogy 0 hard／content_sha==frozen 9e2fd52a（數學無音檔）＋iPad 四角色 render 綁 sha（流程卡 figure 三列①分組選取「各群 nCr 相乘」②格子路徑「向右a上b → C(a＋b, a)」③指定元素「必選→先放再選；必不選→從其餘選」全部左對齊同 x 起點；mbp16+iPad 直/橫三視窗右緣0%、無重疊裁切；美術/空間/眼科/動畫師皆過）。4 MCQ：Q1 7C2×4C1＝84、Q2 右4上2＝C(6,2)＝15、Q3 某人必選 7C3＝35、Q4 某人必不選 6C3＝20。事實全 .venv。
 - **對齊批次重收斂進度：DONE-GATE 全綠已 push 增至 8/13**＝complement-addition(a4a7eeb9)、classical(8296b02c)、sigma(8b0bb45f)、tree_list(6adc2622)、circular_permutation(32f1b81e)、combination(38176706)、distribution(388f2600)、**combination_apply(9e2fd52a)**。進行中＝inclusion_exclusion 4/5（frozen 4a1e29a8）、permutation 3/5（frozen b00279ac）；待排＝permutation_repeat/trig_radian/trig_solve_triangle_apply（各 R1-R5）。
