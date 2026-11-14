@@ -1,0 +1,210 @@
+{
+ "_note": "數學島 三角（trig）strand 第 1 個單元（本島新開；t_adv 學測範圍）。知識點 math.t_adv.trig.ratio-acute（銳角三角比 sin/cos/tan 的定義與特殊角）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15）：三角比 (trigonometric ratio)、正弦 (sine, sin)、餘弦 (cosine, cos)、正切 (tangent, tan)、對邊 (opposite side)、鄰邊 (adjacent side)、斜邊 (hypotenuse)。★scope（學測 t_adv）：在直角三角形中，對一個銳角 θ 定義三角比——sin θ＝對邊/斜邊、cos θ＝鄰邊/斜邊、tan θ＝對邊/鄰邊（口訣 SOH-CAH-TOA）；並記住特殊角 30°/45°/60° 的三角比值。不含：廣義角/象限符號、弧度量、三角函數圖形、正弦/餘弦定理、和差角等（各自另有單元）。prereq＝直角三角形與畢氏定理（幾何），因該幾何單元尚未建置故本單元 prerequisites 暫留空（strand 根節點，日後接線補）。★自檢（math-unit defect-classes）：事實全 .venv/sympy 驗（3-4-5 直角三角形 sin=3/5 cos=4/5 tan=3/4；5-12-13 sin=5/13 cos=12/13 tan=5/12；特殊角 sin30=1/2 cos30=√3/2 tan30=√3/3、sin45=cos45=√2/2 tan45=1、sin60=√3/2 cos60=1/2 tan60=√3；1/√2=√2/2、1/√3=√3/3 化簡相等）；量詞不撞位名（本單元無位名，#3）；learner-facing 含 selfeval_note 用字詞（#2）；★figure＝直角三角形標 θ/對邊/鄰邊/斜邊（低幾何風險 #43/#32：一個直角三角形，左下角標銳角 θ、右下角直角、底邊＝鄰邊、右直邊＝對邊、斜邊＝斜邊），alt 與 SVG text 逐字一致（#33）；誘答單一乾淨機制（sin/cos/tan 定義互換〔對/斜↔鄰/斜↔對/鄰〕、特殊角值張冠李戴）、選項長度均衡（#20/#28）、兩兩相異（#29）；★導讀承諾順序＝實際 teach 牌組順序（#4/#46，limit R4 教訓）：導讀『先講 sin/cos/tan 定義（SOH-CAH-TOA）、用 3-4-5 直角三角形示範、用一張直角三角形圖看清楚對邊/鄰邊/斜邊、再給 30/45/60 特殊角對照表、最後練』＝實際 teach1 intro→teach2 定義+3-4-5 例→teach3 figure→teach4 特殊角表+recap；worked-example 在 rendered teach；★teach 完整 worked-example＝3-4-5（sin=3/5 cos=4/5 tan=3/4）＋§4 recap 45-45-90 導出 sin45=cos45=√2/2，與 practice 答案（Q1 定義 對邊/斜邊、Q2 5-12-13 的 tan=5/12、Q3 sin30=1/2、Q4 tan60=√3）皆不重疊避#10；30/45/60 特殊角表為『參照資料（reference）』非 worked-example，Q3/Q4 測特殊角＝rubric⑦ 真教真考（教了特殊角就該考特殊角），與 #10（禁 worked-example 預解 practice 答案）不衝突。claim kind=definition。figure-only example 無 body。",
+ "page": "math_trig_ratio_acute.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.trig.ratio-acute",
+   "title_zh": "銳角三角比",
+   "can_do": "我知道在直角三角形中，對一個銳角 θ 可以定義三角比：sin θ＝對邊/斜邊、cos θ＝鄰邊/斜邊、tan θ＝對邊/鄰邊（口訣 SOH-CAH-TOA）。我會用這些定義算出一個直角三角形裡某銳角的三角比，也記得 30°、45°、60° 這些特殊角的三角比值。",
+   "situation_group": "三角：銳角三角比",
+   "subject": "math",
+   "strand": "trig",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_adv.trig.ratio-acute"
+   ],
+   "prerequisites": [],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ratio-def",
+     "text": "銳角三角比 (trigonometric ratio) 的定義：在直角三角形中，對一個銳角 θ，把三邊依與 θ 的位置命名為『對邊 (opposite side)』（θ 正對面那一邊）、『鄰邊 (adjacent side)』（夾住 θ 的直角邊）、『斜邊 (hypotenuse)』（直角所對、最長的一邊）。則 sin θ＝對邊/斜邊、cos θ＝鄰邊/斜邊、tan θ＝對邊/鄰邊。口訣 SOH-CAH-TOA（Sine＝Opposite/Hypotenuse、Cosine＝Adjacent/Hypotenuse、Tangent＝Opposite/Adjacent）。",
+     "kind": "definition",
+     "source_refs": [
+      "銳角三角比的定義：sin/cos/tan（高中數學 學測）"
+     ],
+     "verification_ref": "3-4-5 直角三角形 sin=3/5、cos=4/5、tan=3/4（sympy 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ratio-compute",
+     "text": "用定義算三角比：先認出相對於該銳角的對邊、鄰邊、斜邊，再代定義。例如一個直角三角形，某銳角 θ 的對邊長 3、鄰邊長 4、斜邊長 5，則 sin θ＝3/5、cos θ＝4/5、tan θ＝3/4。換一個角看，同一個三角形另一個銳角的對邊與鄰邊會對調，三角比也隨之不同——關鍵永遠是『相對於哪個角』來分對邊與鄰邊。",
+     "kind": "definition",
+     "source_refs": [
+      "用三邊長算 sin/cos/tan（高中數學 學測）"
+     ],
+     "verification_ref": "對邊3鄰邊4斜邊5 ⇒ 3/5,4/5,3/4（sympy 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ratio-special",
+     "text": "特殊角三角比（30°、45°、60°，須熟記）：sin30°＝1/2、cos30°＝√3/2、tan30°＝√3/3；sin45°＝√2/2、cos45°＝√2/2、tan45°＝1；sin60°＝√3/2、cos60°＝1/2、tan60°＝√3。這些值可由兩個基本三角形導出：45°－45°－90° 等腰直角三角形（兩股 1、1，斜邊 √2）給出 45° 的值；30°－60°－90° 直角三角形（三邊 1、√3、2）給出 30° 與 60° 的值。",
+     "kind": "definition",
+     "source_refs": [
+      "特殊角 30/45/60 的三角比（高中數學 學測）"
+     ],
+     "verification_ref": "30/45/60 各比值（sympy 驗）；1/√2=√2/2、1/√3=√3/3 化簡相等",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.trig.ratio-acute"
+     ],
+     "body": "這一單元學『銳角三角比』——在直角三角形裡，對一個銳角 θ 定義 sin、cos、tan 三個比值。下面先講這三個比的定義（口訣 SOH-CAH-TOA）、用一個 3-4-5 的直角三角形示範怎麼算，用一張直角三角形圖看清楚對邊、鄰邊、斜邊各是哪一條，再給 30°、45°、60° 特殊角的對照表，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.trig.ratio-acute"
+     ],
+     "body": "定義（相對於銳角 θ）：對邊＝θ 正對面那條、鄰邊＝夾住 θ 的直角邊、斜邊＝直角所對最長的一條。sin θ＝對邊/斜邊、cos θ＝鄰邊/斜邊、tan θ＝對邊/鄰邊（口訣 SOH-CAH-TOA）。示範：一個直角三角形，θ 的對邊＝3、鄰邊＝4、斜邊＝5，則 sin θ＝3/5、cos θ＝4/5、tan θ＝3/4。注意『對邊/鄰邊』是相對於所看的那個角而定，換一個銳角看就會對調。下面用圖看清楚三邊的位置。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.trig.ratio-acute"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 172' xmlns='http://www.w3.org/2000/svg'><text x='170' y='20' font-family='sans-serif' font-size='13' fill='#2f6f54' text-anchor='middle' font-weight='bold'>銳角三角比：sin＝對/斜、cos＝鄰/斜、tan＝對/鄰</text><polygon points='55,140 250,140 250,52' fill='#eef4ff' stroke='#5b8def' stroke-width='1.6'/><rect x='238' y='128' width='12' height='12' fill='none' stroke='#5b8def' stroke-width='1.2'/><path d='M 55 140 A 26 26 0 0 0 79 131' fill='none' stroke='#4e9a6b' stroke-width='1.4'/><text x='86' y='135' font-family='sans-serif' font-size='12' fill='#4e9a6b' font-weight='bold'>θ</text><text x='152' y='157' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>鄰邊</text><text x='262' y='100' font-family='sans-serif' font-size='12' fill='#33475b'>對邊</text><text x='135' y='88' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>斜邊</text><text x='170' y='168' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle'>對邊、鄰邊都是『相對於角 θ』來分</text></svg>",
+      "alt": "一個直角三角形，左下角標銳角 θ（綠色小弧），右下角是直角（小方框）。底邊標「鄰邊」、右側直邊標「對邊」、斜邊標「斜邊」。上方標題「銳角三角比：sin＝對/斜、cos＝鄰/斜、tan＝對/鄰」，最下方綠字「對邊、鄰邊都是『相對於角 θ』來分」。",
+      "caption": "銳角三角比：相對於銳角 θ，θ 正對面是對邊、夾住 θ 的直角邊是鄰邊、直角所對最長邊是斜邊。sin θ＝對邊/斜邊、cos θ＝鄰邊/斜邊、tan θ＝對邊/鄰邊。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.trig.ratio-acute"
+     ],
+     "body": "特殊角對照表（熟記）：30° → sin 1/2、cos √3/2、tan √3/3；45° → sin √2/2、cos √2/2、tan 1；60° → sin √3/2、cos 1/2、tan √3。由來：45°－45°－90° 等腰直角三角形兩股 1、1、斜邊 √2，所以 sin45°＝1/√2＝√2/2、cos45° 同、tan45°＝1/1＝1；30°－60°－90° 三邊 1、√3、2，由此讀出 30° 與 60° 的值。最後練銳角三角比。重點：先認清相對於哪個角分對邊/鄰邊，再代 sin＝對/斜、cos＝鄰/斜、tan＝對/鄰；特殊角直接記表。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在直角三角形中，相對於銳角 θ，sin θ 的定義是下列哪一個？",
+     "answer": "對邊 ÷ 斜邊",
+     "kp_ids": [
+      "math.t_adv.trig.ratio-acute"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.trig.ratio-acute"
+     ],
+     "options": [
+      "對邊 ÷ 斜邊",
+      "鄰邊 ÷ 斜邊",
+      "對邊 ÷ 鄰邊",
+      "斜邊 ÷ 對邊"
+     ],
+     "distractor_rationales": {
+      "鄰邊 ÷ 斜邊": "這是 cos θ 的定義（鄰邊/斜邊），不是 sin θ；sin θ 用的是對邊。",
+      "對邊 ÷ 鄰邊": "這是 tan θ 的定義（對邊/鄰邊），不是 sin θ；sin θ 的分母是斜邊。",
+      "斜邊 ÷ 對邊": "分子分母顛倒了；sin θ 是對邊在上、斜邊在下（對邊/斜邊），不是斜邊/對邊。"
+     },
+     "answer_evidence": [
+      "c-ratio-def"
+     ],
+     "feedback": "SOH：sin θ＝對邊/斜邊（Opposite/Hypotenuse）。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個直角三角形，相對於銳角 θ 的對邊長 5、鄰邊長 12、斜邊長 13。tan θ 是多少？",
+     "answer": "5/12（tan θ＝對邊/鄰邊＝5/12）",
+     "kp_ids": [
+      "math.t_adv.trig.ratio-acute"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.trig.ratio-acute"
+     ],
+     "options": [
+      "5/12（tan θ＝對邊/鄰邊＝5/12）",
+      "5/13（這是 sin θ＝對邊/斜邊，不是 tan θ）",
+      "12/13（這是 cos θ＝鄰邊/斜邊，不是 tan θ）",
+      "12/5（對邊與鄰邊放反了）"
+     ],
+     "distractor_rationales": {
+      "5/13（這是 sin θ＝對邊/斜邊，不是 tan θ）": "5/13 是 sin θ（對邊/斜邊）；tan θ 要用對邊/鄰邊＝5/12。",
+      "12/13（這是 cos θ＝鄰邊/斜邊，不是 tan θ）": "12/13 是 cos θ（鄰邊/斜邊）；tan θ 要用對邊/鄰邊＝5/12。",
+      "12/5（對邊與鄰邊放反了）": "tan θ＝對邊/鄰邊，對邊是 5、鄰邊是 12，應為 5/12；12/5 是把對邊鄰邊放反。"
+     },
+     "answer_evidence": [
+      "c-ratio-compute",
+      "c-ratio-def"
+     ],
+     "feedback": "tan θ＝對邊/鄰邊＝5/12。（5/13 是 sin、12/13 是 cos。）"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "特殊角：sin 30° 的值是多少？",
+     "answer": "1/2",
+     "kp_ids": [
+      "math.t_adv.trig.ratio-acute"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.trig.ratio-acute"
+     ],
+     "options": [
+      "1/2",
+      "√3/2（這是 sin 60° 或 cos 30° 的值）",
+      "√2/2（這是 sin 45° 的值）",
+      "√3/3（這是 tan 30° 的值）"
+     ],
+     "distractor_rationales": {
+      "√3/2（這是 sin 60° 或 cos 30° 的值）": "√3/2 是 sin 60°（也是 cos 30°）的值，不是 sin 30°；sin 30°＝1/2。",
+      "√2/2（這是 sin 45° 的值）": "√2/2 是 sin 45° 的值，不是 sin 30°；sin 30°＝1/2。",
+      "√3/3（這是 tan 30° 的值）": "√3/3 是 tan 30° 的值，不是 sin 30°；sin 30°＝1/2。"
+     },
+     "answer_evidence": [
+      "c-ratio-special"
+     ],
+     "feedback": "特殊角：sin 30°＝1/2（由 30°－60°－90° 三角形 1、√3、2 讀出）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "特殊角：tan 60° 的值是多少？",
+     "answer": "√3",
+     "kp_ids": [
+      "math.t_adv.trig.ratio-acute"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.trig.ratio-acute"
+     ],
+     "options": [
+      "√3",
+      "√3/3（這是 tan 30° 的值，剛好是 tan 60° 的倒數）",
+      "1（這是 tan 45° 的值）",
+      "1/2（這是 cos 60° 的值，不是 tan 60°）"
+     ],
+     "distractor_rationales": {
+      "√3/3（這是 tan 30° 的值，剛好是 tan 60° 的倒數）": "√3/3 是 tan 30°；tan 60°＝√3（兩者互為倒數，別搞混）。",
+      "1（這是 tan 45° 的值）": "1 是 tan 45°；tan 60°＝√3。",
+      "1/2（這是 cos 60° 的值，不是 tan 60°）": "1/2 是 cos 60°；題目問的是 tan 60°＝√3。"
+     },
+     "answer_evidence": [
+      "c-ratio-special"
+     ],
+     "feedback": "特殊角：tan 60°＝√3（由 30°－60°－90° 三角形 1、√3、2，對 60° 而言對邊√3、鄰邊1，tan＝√3/1＝√3）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（銳角三角比：直角三角形中相對於銳角 θ，sin θ＝對邊/斜邊、cos θ＝鄰邊/斜邊、tan θ＝對邊/鄰邊，口訣 SOH-CAH-TOA；對邊/鄰邊看『相對於哪個角』；特殊角 30°→sin 1/2 cos √3/2 tan √3/3、45°→sin cos √2/2 tan 1、60°→sin √3/2 cos 1/2 tan √3）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
