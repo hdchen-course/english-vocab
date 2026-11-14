@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 計數（counting）strand 第 9 個（最後一個）單元（t_sub 分科測驗・數甲）。知識點 math.t_sub.counting.distribution（重複組合與分配／隔板法）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，gloss 緊貼正確中文術語）：重複組合 (combination with repetition)。★scope（分科-數甲 t_sub）：(1) 重複組合——從 n 種相異物中、每種都可以取多次（可重複）、取出 r 個且不計順序的方法數＝H(n,r)＝C(n＋r－1, r)；(2) 隔板法（stars and bars）——把 r 個相同的東西分給 n 個不同的對象（可有對象分到 0）＝在『r 顆星＋(n－1) 個隔板』共 n＋r－1 個位置裡選 (n－1) 個放隔板＝C(n＋r－1, n－1)＝C(n＋r－1, r)；等價於 x₁＋x₂＋…＋x_n＝r 的非負整數解個數；(3) 與組合 nCr（不可重複）辨別：可重複不計順序用重複組合、不可重複用組合。不含：有上限的分配（某人至多 k 個，需再排容）、圓排、二項式定理。prereq＝combination（組合 nCr，本 strand 已建；重複組合即以組合數表示）。★自檢（math-unit defect-classes #1–#49）：事實全 .venv 驗（teach 3 味買 2＝H(3,2)＝C(4,2)＝6、對照不可重複 3C2＝3、隔板 x＋y＋z＝3 非負解＝C(5,2)＝10；Q1 4 味買 3＝H(4,3)＝C(6,3)＝20、Q2 x＋y＋z＝5 非負解＝C(7,2)＝21、Q3 概念 H(n,r)＝C(n＋r－1,r)、Q4 10 相同糖分 3 孩可有人 0＝C(12,2)＝66；各以 comb() 與 brute-force 雙驗）；減號全形 U+FF0D、加號全形 U+FF0B（含 distractor_rationales key）、具體上標用 Unicode（4³）變數上標用 caret（n^r）；★figure＝公式卡（低幾何風險：三列①重複組合 H(n,r)＝C(n＋r－1,r)、②隔板法 r 顆星＋(n－1) 隔板→C(n＋r－1,n－1)、③辨別 可重複不計順序→重複組合／不可重複→組合 nCr），alt 與 SVG text 逐字一致（#33）、figure 標題『重複組合：隔板法 C(n＋r－1, r)』寫進 alt 開頭；★MCQ options 全 bare（#47，說明在 distractor_rationales）、每個 distractor 乾淨單一錯誤路徑（當重複排列有序 n^r／當不可重複組合 nCr／當不可重複排列 nPr／隔板選錯個數／忘隔板佔位置／當每項至少 1 的正整數解），數值兩兩相異（#14/#29）、長度均衡（#20/#28/#47）；★導讀承諾順序＝實際 teach 牌組順序（#4/#46/#48）：導讀『先講重複組合 H(n,r)＝C(n＋r－1,r)、用從 3 種口味買 2 個＝C(4,2)＝6 示範、對照不可重複 3C2＝3、再講隔板法用 x＋y＋z＝3 非負解＝C(5,2)＝10 示範、用一張公式卡整理、最後練』＝實際 teach1 intro→teach2 重複組合＋示範＋對照＋隔板法＋示範→teach3 figure 公式卡→teach4 recap+練；worked-example 在 rendered teach，且真的演練隔板法（#48）；★teach worked-example 用 6／3／10，與 practice 答案（Q1 20、Q2 21、Q3 H(n,r)、Q4 66）皆不重疊避#10。claim kind=definition。figure-only example 無 body。★改任何 worked 數字要同步本 _note 導讀承諾/自檢 fact list（#49）。",
+ "page": "math_counting_distribution.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.counting.distribution",
+   "title_zh": "重複組合與分配",
+   "can_do": "我知道重複組合 (combination with repetition) 是『從 n 種相異物中、每種都可以取多次、取出 r 個且不計順序』的方法數，等於 H(n,r)＝C(n＋r－1, r)。我會用隔板法（r 顆星和 n－1 個隔板）來算『把 r 個相同的東西分給 n 個對象（可有對象分到 0）』，也就是 x₁＋x₂＋…＋x_n＝r 的非負整數解個數。我也會分辨：可重複不計順序用重複組合、不可重複用組合 nCr。",
+   "situation_group": "計數：重複組合與分配",
+   "subject": "math",
+   "strand": "counting",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.counting.distribution"
+   ],
+   "prerequisites": [
+    "math.t_adv.counting.combination"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-dist-def",
+     "text": "重複組合 (combination with repetition)：從 n 種相異物中取出 r 個，每一種都可以重複取（取了還可以再取），而且不計順序，方法數記作 H(n,r)，等於 H(n,r)＝C(n＋r－1, r)。和組合 nCr 的差別就在『可不可以重複取同一種』：不可重複用 nCr、可重複用 H(n,r)。例：手搖飲有 3 種口味，要買 2 杯（可以買一樣的、不分先後），共有 H(3,2)＝C(3＋2－1, 2)＝C(4,2)＝6 種買法。",
+     "kind": "definition",
+     "source_refs": [
+      "重複組合 H(n,r)＝C(n＋r－1,r)（高中數學 學測）"
+     ],
+     "verification_ref": "H(3,2)=C(4,2)=6；3C2=3（.venv）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-dist-stars",
+     "text": "隔板法（stars and bars）：要把 r 個『相同』的東西分給 n 個『不同』的對象、而且允許有的對象分到 0 個，可以想成把 r 顆星排成一列，再插入 n－1 個隔板把它們隔成 n 段（每段給一個對象）。星和隔板共 n＋r－1 個位置，只要決定『哪 n－1 個位置放隔板』就分好了，所以方法數＝C(n＋r－1, n－1)＝C(n＋r－1, r)。這也剛好是 x₁＋x₂＋…＋x_n＝r 的非負整數解的個數。例：x＋y＋z＝3 的非負整數解有 C(3＋2, 2)＝C(5,2)＝10 組。",
+     "kind": "definition",
+     "source_refs": [
+      "隔板法 / 非負整數解 C(n＋r－1,n－1)（高中數學 學測）"
+     ],
+     "verification_ref": "x＋y＋z=3 非負解=C(5,2)=10（.venv, brute-force 核對）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-dist-vs-comb",
+     "text": "重複組合和（一般）組合的辨別，一樣看『能不能重複取同一種』：不可以重複（取走就沒了）用組合 nCr＝C(n,r)；可以重複（取了還能再取）用重複組合 H(n,r)＝C(n＋r－1, r)。因為可重複時選擇更多，所以同樣從 n 取 r，重複組合的方法數通常比組合多。要特別小心：重複組合仍然『不計順序』，所以不是 n^r（那是可重複又『計順序』的重複排列）。",
+     "kind": "definition",
+     "source_refs": [
+      "重複組合與組合/重複排列的辨別（高中數學 學測）"
+     ],
+     "verification_ref": "H(n,r)＝C(n＋r－1,r)≥C(n,r)；≠n^r（教學慣例）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.counting.distribution"
+     ],
+     "body": "這一單元學『重複組合與分配』——從 n 種裡『可以重複取』、取 r 個、不計順序。下面先講重複組合 H(n,r)＝C(n＋r－1, r)，用從 3 種口味買 2 杯（可買一樣的、不分先後）＝H(3,2)＝C(4,2)＝6 示範，對照不可重複的組合 3C2＝3；再講隔板法（把 r 個相同東西分給 n 個對象、可分到 0），用 x＋y＋z＝3 的非負整數解＝C(5,2)＝10 示範；用一張公式卡整理，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.counting.distribution"
+     ],
+     "body": "重複組合：從 n 種相異物可重複地取 r 個、不計順序，H(n,r)＝C(n＋r－1, r)。示範：3 種口味買 2 杯（可買兩杯一樣的、不分先後），H(3,2)＝C(4,2)＝6 種；對照『不可重複』地選 2 種只有 3C2＝3 種——差在能不能買一樣的。隔板法：把 r 個相同的東西分給 n 個不同對象（可有人分到 0），想成 r 顆星排一列、插入 n－1 個隔板隔成 n 段，共 n＋r－1 個位置選 n－1 個放隔板＝C(n＋r－1, n－1)＝C(n＋r－1, r)；這也等於 x₁＋…＋x_n＝r 的非負整數解個數。示範：x＋y＋z＝3（3 顆星、2 個隔板）＝C(5,2)＝10 組。注意重複組合仍不計順序，所以不是 n^r（那是計順序的重複排列）。下面用一張公式卡整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.counting.distribution"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 352 136' xmlns='http://www.w3.org/2000/svg'><text x='176' y='18' font-family='sans-serif' font-size='12' fill='#2f6f54' text-anchor='middle' font-weight='bold'>重複組合：隔板法 C(n＋r－1, r)</text><rect x='12' y='30' width='328' height='30' rx='6' fill='#eef4ff' stroke='#5b8def' stroke-width='1.1'/><text x='22' y='49' font-family='sans-serif' font-size='10.5' fill='#5b8def' font-weight='bold'>①重複組合</text><text x='222' y='50' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='middle'>可重複、不計順序 → C(n＋r－1, r)</text><rect x='12' y='64' width='328' height='30' rx='6' fill='#eef7ee' stroke='#4e9a6b' stroke-width='1.1'/><text x='22' y='83' font-family='sans-serif' font-size='10.5' fill='#4e9a6b' font-weight='bold'>②隔板法</text><text x='220' y='84' font-family='sans-serif' font-size='10' fill='#33475b' text-anchor='middle'>r 顆星＋(n－1) 隔板 → C(n＋r－1, n－1)</text><rect x='12' y='98' width='328' height='30' rx='6' fill='#fdf2e9' stroke='#d08a3e' stroke-width='1.1'/><text x='22' y='117' font-family='sans-serif' font-size='10.5' fill='#d08a3e' font-weight='bold'>③辨別</text><text x='224' y='118' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='middle'>可重複→重複組合；不可重複→nCr</text></svg>",
+      "alt": "標題「重複組合：隔板法 C(n＋r－1, r)」。一張公式卡，三列。第一列藍底「①重複組合」：「可重複、不計順序 → C(n＋r－1, r)」。第二列綠底「②隔板法」：「r 顆星＋(n－1) 隔板 → C(n＋r－1, n－1)」。第三列橘底「③辨別」：「可重複→重複組合；不可重複→nCr」。",
+      "caption": "重複組合（可重複、不計順序）＝H(n,r)＝C(n＋r－1, r)；用隔板法把 r 個相同東西分給 n 個對象＝把 n＋r－1 個位置選 n－1 個放隔板；可重複用重複組合、不可重複用組合 nCr。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.counting.distribution"
+     ],
+     "body": "最後練重複組合與分配。重點：可重複地從 n 種取 r 個、不計順序＝H(n,r)＝C(n＋r－1, r)；把 r 個相同東西分給 n 個對象（可分到 0）用隔板法＝C(n＋r－1, n－1)，也就是 x₁＋…＋x_n＝r 的非負整數解個數。小提醒：隔板有 n－1 個（不是 n 個）、星和隔板的位置總數是 n＋r－1（別漏掉隔板佔的位置）；重複組合不計順序（不是 n^r）；若題目要求每個對象至少分到 1，先各給 1 個、再把剩下的用隔板法分。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "手搖飲店有 4 種口味。要買 3 杯，可以買一樣的口味、而且不分先後。共有幾種買法？",
+     "answer": "20",
+     "kp_ids": [
+      "math.t_sub.counting.distribution"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.counting.distribution"
+     ],
+     "options": [
+      "20",
+      "64",
+      "24",
+      "4"
+     ],
+     "distractor_rationales": {
+      "64": "這是當成『可重複又分先後』的重複排列（4³＝64）；買幾杯不分先後、不計順序，要用重複組合 H(4,3)＝C(6,3)＝20。",
+      "24": "這是當成『不可重複又分先後』的直線排列（4P3＝4×3×2＝24）；可以買一樣的、又不分先後，要用 H(4,3)＝C(6,3)＝20。",
+      "4": "這是當成『不可重複』的組合（4C3＝4）；題目可以買一樣的（可重複），要用重複組合 H(4,3)＝C(6,3)＝20。"
+     },
+     "answer_evidence": [
+      "c-dist-def"
+     ],
+     "feedback": "可重複、不計順序＝H(4,3)＝C(4＋3－1, 3)＝C(6,3)＝20。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "方程式 x＋y＋z＝5 有幾組非負整數解（x、y、z 都是 0 或正整數）？",
+     "answer": "21",
+     "kp_ids": [
+      "math.t_sub.counting.distribution"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.counting.distribution"
+     ],
+     "options": [
+      "21",
+      "6",
+      "35",
+      "10"
+     ],
+     "distractor_rationales": {
+      "6": "這是當成『每個都至少 1』的正整數解（先各給 1，再分剩下的 C(4,2)＝6）；題目允許為 0，直接用 C(5＋3－1, 3－1)＝C(7,2)＝21。",
+      "35": "這是隔板選錯個數（C(7,3)）；3 個變數用 n－1＝2 個隔板，要選 2 個位置放隔板不是 3，C(7,2)＝21。",
+      "10": "這是漏掉隔板也佔位置（只用 5 顆星的位置選 2，C(5,2)＝10）；位置總數是 5 顆星＋2 個隔板＝7，C(7,2)＝21。"
+     },
+     "answer_evidence": [
+      "c-dist-stars"
+     ],
+     "feedback": "隔板法：5 顆星、2 個隔板，C(5＋2, 2)＝C(7,2)＝21 組。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "從 n 種相異物中取出 r 個，每一種都可以重複取、而且不計順序。方法數是多少？",
+     "answer": "C(n＋r－1, r)",
+     "kp_ids": [
+      "math.t_sub.counting.distribution"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.counting.distribution"
+     ],
+     "options": [
+      "C(n＋r－1, r)",
+      "C(n, r)",
+      "n^r",
+      "nPr"
+     ],
+     "distractor_rationales": {
+      "C(n, r)": "C(n, r) 是『不可重複』地取 r 個（組合）；題目每種可以重複取，要用重複組合 C(n＋r－1, r)。",
+      "n^r": "n^r 是『可重複又計順序』的重複排列；重複組合不計順序，要用 C(n＋r－1, r)。",
+      "nPr": "nPr 是『不可重複又計順序』的直線排列；這裡可重複又不計順序，要用 C(n＋r－1, r)。"
+     },
+     "answer_evidence": [
+      "c-dist-def"
+     ],
+     "feedback": "可重複、不計順序＝重複組合 H(n,r)＝C(n＋r－1, r)。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "把 10 顆『相同』的糖果全部分給 3 個小孩，允許有的小孩分到 0 顆。共有幾種分法？",
+     "answer": "66",
+     "kp_ids": [
+      "math.t_sub.counting.distribution"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.counting.distribution"
+     ],
+     "options": [
+      "66",
+      "36",
+      "220",
+      "45"
+     ],
+     "distractor_rationales": {
+      "36": "這是當成『每個小孩至少分到 1 顆』（先各給 1、再分剩下 7 顆，C(9,2)＝36）；題目允許分到 0，直接用 C(10＋3－1, 3－1)＝C(12,2)＝66。",
+      "220": "這是隔板選錯個數（C(12,3)）；3 個小孩用 n－1＝2 個隔板，要選 2 個位置不是 3，C(12,2)＝66。",
+      "45": "這是漏掉隔板也佔位置（只用 10 顆糖的位置選 2，C(10,2)＝45）；位置總數是 10 顆星＋2 個隔板＝12，C(12,2)＝66。"
+     },
+     "answer_evidence": [
+      "c-dist-stars"
+     ],
+     "feedback": "隔板法：10 顆星、2 個隔板，C(10＋2, 2)＝C(12,2)＝66 種。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（重複組合＝可重複、不計順序從 n 取 r＝H(n,r)＝C(n＋r－1, r)；隔板法＝把 r 個相同東西分給 n 個對象〔可分到 0〕＝C(n＋r－1, n－1)＝x₁＋…＋x_n＝r 的非負整數解；隔板有 n－1 個、位置總數 n＋r－1 別漏隔板；不計順序不是 n^r；要求每個至少 1 就先各給 1 再用隔板分剩下）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
