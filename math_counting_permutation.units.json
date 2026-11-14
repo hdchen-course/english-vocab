@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 計數（counting）strand 第 2 個單元（t_adv 學測）。知識點 math.t_adv.counting.permutation（直線排列：階乘、全排列、部分排列 nPr）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，gloss 緊貼正確中文術語）：階乘 (factorial)、排列 (permutation)。★scope（學測 t_adv）：(1) 階乘 n!＝n×(n－1)×…×2×1；(2) 全排列——n 個相異物排成一列有 n! 種；(3) 部分排列——從 n 個相異物取 r 個排成一列有 nPr＝n×(n－1)×…×(n－r＋1)＝n!/(n－r)! 種（r 個遞減因子）。排列是『有序』的：位置/順序不同算不同方法。用乘法原理導出（第一位 n 種、第二位 n－1 種……取走就少一個）。不含：重複排列（n^r，另單元）、環狀排列（另單元）、組合 nCr（無序，另單元）。prereq＝add-mult-principle（乘法原理，剛建；排列是乘法原理每步可用數遞減的直接應用）。★自檢（math-unit defect-classes）：事實全 .venv 驗（teach 全排列 3!＝6、部分排列 5P3＝5×4×3＝60；Q1 4!＝24、Q2 6P3＝6×5×4＝120、Q3 5P2＝5×4＝20；各 distractor 單一錯誤路徑）；本單元減號僅出現在 n－1 等公式，一律全形 U+FF0D（吸取 law-of-cosines R1 #39 教訓，draft 即統一含 distractor_rationales key）；★figure＝階乘/排列流程卡（低幾何風險：三列①階乘 n!＝n×(n－1)×…×1、②全排列 n 物＝n!、③部分排列 nPr＝n×(n－1)×…×(n－r＋1)），alt 與 SVG text 逐字一致（#33）、figure 標題『排列：有序、取走就少一個』寫進 alt 開頭；★MCQ options 全 bare（#47，說明在 distractor_rationales）、每個 distractor 乾淨單一錯誤路徑（重複排列誤用 n^r／只排部分位數／誤用加法／只取 n）、數值兩兩相異（#14/#29）、長度均衡（#20/#28）；★導讀承諾順序＝實際 teach 牌組順序（#4/#46）：導讀『先講階乘與排列（全排列 n!、部分排列 nPr）、用 3 本書全排列 3!＝6 示範、用 5 取 3 排前三名 5P3＝60 示範部分排列、用一張流程卡整理、最後練』＝實際 teach1 intro→teach2 階乘+全排列+部分排列+兩示範→teach3 figure 流程卡→teach4 recap+練；worked-example 在 rendered teach；★teach worked-example 用 3!＝6／5P3＝60，與 practice 答案（Q1 24、Q2 120、Q3 20、Q4 概念）皆不重疊避#10。claim kind=definition。figure-only example 無 body。",
+ "page": "math_counting_permutation.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.counting.permutation",
+   "title_zh": "直線排列",
+   "can_do": "我知道排列是『有序』的：把相異的東西排成一列，位置不同就算不同排法。我會算 n 個相異物的全排列＝n!（n×(n－1)×…×1），也會算從 n 個取 r 個排成一列的部分排列 nPr＝n×(n－1)×…×(n－r＋1)（r 個一路遞減的因子相乘）。",
+   "situation_group": "計數：直線排列",
+   "subject": "math",
+   "strand": "counting",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_adv.counting.permutation"
+   ],
+   "prerequisites": [
+    "math.t_adv.counting.add-mult-principle"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-perm-factorial",
+     "text": "階乘 (factorial) 與全排列：把 n 個相異的東西排成一列，用乘法原理——第一個位置有 n 種放法、第二個位置剩 n－1 種、第三個 n－2 種……最後一個只剩 1 種，相乘得 n×(n－1)×…×2×1，記作 n!（讀作 n 階乘）。所以 n 個相異物的全排列有 n! 種。例：3 本不同的書排成一列，有 3!＝3×2×1＝6 種排法。重點：每放一個就少一個可用，所以因子一路遞減。",
+     "kind": "definition",
+     "source_refs": [
+      "階乘與全排列（高中數學 學測）"
+     ],
+     "verification_ref": "3!=6（.venv）；n! 全排列",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-perm-npr",
+     "text": "部分排列 nPr：從 n 個相異物中取出 r 個，排成一列（有先後、位置之分），方法數 nPr＝n×(n－1)×…×(n－r＋1)，也就是從 n 開始往下乘 r 個遞減的因子（等於 n!/(n－r)!）。例：從 5 個人選 3 個排前三名（第一、第二、第三名有別），有 5P3＝5×4×3＝60 種。重點：取 r 個就乘 r 個因子，從 n 遞減；排列算『有序』，名次不同就是不同結果。",
+     "kind": "definition",
+     "source_refs": [
+      "部分排列 nPr（高中數學 學測）"
+     ],
+     "verification_ref": "5P3=5*4*3=60（.venv）；nPr r 個遞減因子",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-perm-ordered",
+     "text": "排列是『有序』的：同樣一組東西，只要擺放的位置或先後順序不同，就算成不同的排列。這也是為什麼用乘法原理時因子會一路遞減——每個東西只能用一次，放掉一個下一個位置就少一個可選（不是每位都從 n 個重新挑）。先認清題目在不在意『順序』：在意順序、每個只用一次，就用排列。",
+     "kind": "definition",
+     "source_refs": [
+      "排列的有序性（高中數學 學測）"
+     ],
+     "verification_ref": "有序、不放回→因子遞減（教學慣例）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.counting.permutation"
+     ],
+     "body": "這一單元學『直線排列』——把相異的東西排成一列，數有幾種排法。下面先講階乘和排列：n 個相異物全部排成一列有 n! 種（全排列），從 n 個取 r 個排成一列有 nPr 種（部分排列）；用 3 本書排一列示範 3!＝6，用從 5 個人選 3 個排前三名示範部分排列 5P3＝60，接著用一張流程卡整理，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.counting.permutation"
+     ],
+     "body": "階乘與全排列：n 個相異物排成一列，第一位 n 種、第二位 n－1 種……最後 1 種，相乘＝n×(n－1)×…×1＝n!。示範：3 本不同的書排一列，有 3!＝3×2×1＝6 種。部分排列 nPr：從 n 個取 r 個排成一列，從 n 往下乘 r 個遞減因子，nPr＝n×(n－1)×…×(n－r＋1)。示範：從 5 個人選 3 個排前三名，有 5P3＝5×4×3＝60 種。重點：排列『有序』，每個只用一次，放掉一個下一位就少一個，因子一路遞減。下面用一張流程卡整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.counting.permutation"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 344 136' xmlns='http://www.w3.org/2000/svg'><text x='172' y='18' font-family='sans-serif' font-size='12.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>排列：有序、取走就少一個</text><rect x='14' y='30' width='316' height='30' rx='6' fill='#eef4ff' stroke='#5b8def' stroke-width='1.1'/><text x='24' y='49' font-family='sans-serif' font-size='10.5' fill='#5b8def' font-weight='bold'>①階乘</text><text x='210' y='50' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>n!＝n×(n－1)×…×1</text><rect x='14' y='64' width='316' height='30' rx='6' fill='#eef7ee' stroke='#4e9a6b' stroke-width='1.1'/><text x='24' y='83' font-family='sans-serif' font-size='10.5' fill='#4e9a6b' font-weight='bold'>②全排列</text><text x='210' y='84' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>n 個相異物 ＝ n!</text><rect x='14' y='98' width='316' height='30' rx='6' fill='#fdf2e9' stroke='#d08a3e' stroke-width='1.1'/><text x='24' y='117' font-family='sans-serif' font-size='10.5' fill='#d08a3e' font-weight='bold'>③部分排列</text><text x='214' y='118' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>nPr＝n×(n－1)×…×(n－r＋1)</text></svg>",
+      "alt": "標題「排列：有序、取走就少一個」。一張流程卡，三列。第一列藍底「①階乘」：「n!＝n×(n－1)×…×1」。第二列綠底「②全排列」：「n 個相異物 ＝ n!」。第三列橘底「③部分排列」：「nPr＝n×(n－1)×…×(n－r＋1)」。",
+      "caption": "排列是有序的、每個只用一次：階乘 n!＝n×(n－1)×…×1；n 個相異物全排列＝n!；從 n 取 r 個排列 nPr＝從 n 往下乘 r 個遞減因子。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.counting.permutation"
+     ],
+     "body": "最後練直線排列。重點：先看是『全部排』（n!）還是『取 r 個排』（nPr＝從 n 往下乘 r 個遞減因子）。小提醒：排列有序、每個只用一次，所以因子要一路遞減，不是每位都乘 n（那是可重複的情形）；取幾個就乘幾個因子，別多乘也別少乘。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "4 個人排成一列照相，共有幾種排法？",
+     "answer": "24",
+     "kp_ids": [
+      "math.t_adv.counting.permutation"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.permutation"
+     ],
+     "options": [
+      "24",
+      "12",
+      "10",
+      "4"
+     ],
+     "distractor_rationales": {
+      "12": "這是只排了前兩個位置（4×3）；4 個人全部排一列要乘到最後一位，4!＝4×3×2×1＝24。",
+      "10": "這是把因子相加了（4＋3＋2＋1）；排列用乘法原理要相乘，4!＝4×3×2×1＝24。",
+      "4": "這是只看人數沒有排（只取 n）；4 個人排成一列有 4!＝24 種。"
+     },
+     "answer_evidence": [
+      "c-perm-factorial"
+     ],
+     "feedback": "4 個相異物全排列＝4!＝4×3×2×1＝24。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "從 6 個人中選出 3 個人，分別排第一名、第二名、第三名（名次有別），共有幾種結果？",
+     "answer": "120",
+     "kp_ids": [
+      "math.t_adv.counting.permutation"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.permutation"
+     ],
+     "options": [
+      "120",
+      "216",
+      "30",
+      "15"
+     ],
+     "distractor_rationales": {
+      "216": "這是把每個名次都當成 6 個人都能選（6×6×6＝6³）；但人選過就不能再選，要遞減，6P3＝6×5×4＝120。",
+      "30": "這是只排了兩個名次（6×5）；要排三個名次就乘三個遞減因子，6P3＝6×5×4＝120。",
+      "15": "這是把因子相加了（6＋5＋4）；排列要相乘，6P3＝6×5×4＝120。"
+     },
+     "answer_evidence": [
+      "c-perm-npr"
+     ],
+     "feedback": "從 6 取 3 排名次＝6P3＝6×5×4＝120（排 3 個名次、因子從 6 遞減）。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "有 5 種不同顏色，要從中選 2 種分別塗在『上格』和『下格』（兩格顏色不同、位置有別），共有幾種塗法？",
+     "answer": "20",
+     "kp_ids": [
+      "math.t_adv.counting.permutation"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.permutation"
+     ],
+     "options": [
+      "20",
+      "25",
+      "10",
+      "9"
+     ],
+     "distractor_rationales": {
+      "25": "這是把兩格都當成 5 種都能塗（5×5＝5²）；但兩格顏色不同，塗過的不能再用，要遞減，5P2＝5×4＝20。",
+      "10": "這是把 5 乘以格數 2（5×2）；應該是從 5 往下乘 2 個遞減因子，5P2＝5×4＝20。",
+      "9": "這是把因子相加了（5＋4）；排列要相乘，5P2＝5×4＝20。"
+     },
+     "answer_evidence": [
+      "c-perm-npr"
+     ],
+     "feedback": "從 5 取 2 有序（兩格有別）＝5P2＝5×4＝20。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "排列用乘法原理算的時候，為什麼第一個位置有 n 種選擇，第二個位置只剩 n－1 種？",
+     "answer": "因為每個東西只能用一次，放掉一個下一位就少一個可選",
+     "kp_ids": [
+      "math.t_adv.counting.permutation"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.permutation"
+     ],
+     "options": [
+      "因為每個東西只能用一次，放掉一個下一位就少一個可選",
+      "因為每個位置都能重複使用同一個東西",
+      "因為各位置的方法數要相加不是相乘",
+      "因為排列不在意位置的先後順序"
+     ],
+     "distractor_rationales": {
+      "因為每個位置都能重複使用同一個東西": "若能重複使用，每位都還是 n 種，那是『重複排列』（n^r）；一般排列每個只用一次，所以下一位會少一個。",
+      "因為各位置的方法數要相加不是相乘": "排列是分步完成（每位都要排），用乘法原理相乘不是相加；因子遞減是因為用過不能再用。",
+      "因為排列不在意位置的先後順序": "排列正好『在意』順序（有序），位置不同算不同排法；因子遞減是因為每個只能用一次。"
+     },
+     "answer_evidence": [
+      "c-perm-ordered"
+     ],
+     "feedback": "排列每個東西只用一次（不放回），放掉一個下一位就少一個可選，所以因子從 n 一路遞減。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（直線排列：全排列 n!＝n×(n－1)×…×1；部分排列 nPr＝從 n 往下乘 r 個遞減因子＝n!/(n－r)!。排列有序、每個只用一次所以因子遞減，不是每位乘 n〔那是重複排列〕；取幾個就乘幾個因子）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
