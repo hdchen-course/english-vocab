@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-14 20:11 數學島 counting（排列組合）strand #2：math_counting_permutation（直線排列 nPr，t_adv 學測）5/5 收斂
+- **frozen_sha `1a7b69221b23d7c4`**（★一度誠實修正：草稿凍 464633201→R1 panel 5/5 DEFECT：R15 gloss 不一致〔「階乘 (factorial)」有 gloss 但核心術語「排列」（nPr 的 P 來源、can_do/teach/claim 多處首現）從未附 (permutation)〕違反本單元 _note 自檢；R1 無 clean banked 故直接修不需 de-converge→can_do 補「排列 (permutation)」→re-freeze sha 1a7b6922→R1-R5 連 5 clean、confirmed 全 0、coverageComplete 全 true、L3 每輪 exit 0）。DONE-GATE 全綠（per_page exit 0 且 permutation absent／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy CLEAN 0 hard；數學無音檔）＋iPad 四角色 render 綁 sha 1a7b6922（流程卡 figure：三列①階乘〔藍〕n!＝n×(n−1)×…×1、②全排列〔綠〕n 個相異物＝n!、③部分排列〔橘〕nPr＝n×(n−1)×…×(n−r＋1)，全形減號、公式在框內、三 PNG 右緣0%、選項洗牌相異、無重疊裁切溢出）。
+- **3 claim kind=definition**（c-perm-factorial 階乘 n!＝n×(n−1)×…×1＋全排列、3!＝6 示範；c-perm-npr 部分排列 nPr＝從 n 往下乘 r 個遞減因子＝n!/(n−r)!、5P3＝60 示範；c-perm-ordered 有序＋不放回故因子遞減）。事實全 .venv 驗（3!＝6、5P3＝60、Q1 4!＝24、Q2 6P3＝120、Q3 5P2＝20）。術語附英語 R15（factorial／permutation 均 gloss）。prereq＝add-mult-principle。不含重複排列 n^r／環狀／組合 nCr。
+- **4 MCQ（全 bare options）**：Q1 全排列 4 人→24〔12=停兩項4×3、10=全加4+3+2+1、4=只取n〕／Q2 部分排列 6 取 3 排名次→120〔216=重複6³、30=停兩項6×5、15=全加〕／Q3 部分排列 5 取 2 有序→20〔25=重複5²、10=5×2、9=全加5+4〕／Q4 概念「為何第二位剩 n−1」→每個只用一次放掉就少一個〔可重複用=重複排列、要相加、順序不重要=組合〕。每個 distractor 乾淨單一錯誤路徑。teach worked-example（3!＝6、5P3＝60）與 practice 答案（24/120/20/概念）皆不重疊避#10；導讀序＝實際 teach 牌組序。
+- **commits**：草稿凍 24c10fed1→R15 gloss 修 0a7596e52→R1-R5(1a7b6922: 7e9fa17e7/ddfc0df65/430608bf1/f5585606e/本次)→DONE-GATE＋PROGRESS 本次。
+- **★里程碑：數學島 counting strand 2/9**。math 單元累計＝**152 單元**（sequence 9＋前 132＋trig 9＋counting 2）。
+- **下一步**：counting 其餘 7 KP。預設先推 **combination（組合 nCr）**——排列的無序版、學測核心，與 permutation 對照教學最自然。另 QUEUED：hub `index_new.html` AC-VIZ-1 figure_signoff stale 須 hub 重 render＋四角色重簽。
+
 ## 2026-11-14 19:48 數學島 counting（排列組合）strand #1（首個）：math_counting_add_mult_principle（加法原理與乘法原理，t_adv 學測）5/5 收斂 — ★counting strand 開跑
 - **frozen_sha `ae58df4542376e4b`**（★一度誠實修正：草稿凍 63f749ae→R1 panel 5/5 DEFECT：Q1 distractor「20」(5×4) 為複合錯誤〔用錯原理＋漏一類，rationale 自承「既用錯原理又漏了漫畫」〕違反本單元 _note「每個 distractor 乾淨單一錯誤路徑」規則；R1 無 clean banked 故直接修不需 de-converge→改「20」→「6」(=4＋2，乾淨漏小說一類)→re-freeze sha ae58df45→R1-R5 連 5 clean、confirmed 全 0、coverageComplete 全 true、L3 每輪 exit 0）。DONE-GATE 全綠（per_page exit 0 且 add_mult_principle absent／scan PASS／unit_schema CLEAN／question_correctness CLEAN／pedagogy CLEAN 0 hard；數學無音檔）＋iPad 四角色 render 綁 sha ae58df45（決策卡 figure：兩列①加法原理〔藍〕「分類（擇一就完成）」→各類相加、②乘法原理〔綠〕「分步（都要做才完成）」→各步相乘，箭頭指向正確、文字在框內、三 PNG 右緣0%、選項洗牌相異、無重疊裁切溢出）。
 - **3 claim kind=definition**（c-cnt-add 加法原理＝互斥分類擇一相加、3＋4＝7 早餐示範；c-cnt-mult 乘法原理＝連續分步都要做相乘、2×3＝6 穿搭示範；c-cnt-choose 辨別＝「擇一完成→加／都要做才完成→乘」，語感「或→加、而且/再→乘」但真正判準非只看字面）。事實全 .venv 驗（3＋4＝7、2×3＝6、Q1 5＋4＋2＝11、Q2 3×4×2＝24、Q4 5×3×2＝30）。術語附英語 R15（addition/multiplication principle）。prereq＝[]（counting 根節點）。不含 nPr/nCr/排容。
