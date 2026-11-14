@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 計數（counting）strand 第 3 個單元（t_adv 學測）。知識點 math.t_adv.counting.combination（組合的意義與計算 nCr）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，gloss 緊貼正確中文術語）：組合 (combination)、排列 (permutation)。★scope（學測 t_adv）：(1) 組合定義——從 n 個相異物取 r 個『不計順序』的方法數 nCr；(2) 公式 nCr＝nPr/r!＝n!/(r!(n－r)!)（排列算了順序、每組被 r! 種排法重複算，所以除以 r!）；(3) 對稱性 nCr＝nC(n－r)（選 r 個拿走＝選 n－r 個留下，一一對應）；(4) 排列 vs 組合的辨別：在意順序用排列、不在意順序用組合。不含：重複組合/分配（另單元）、二項式定理（另單元）。prereq＝permutation（直線排列 nPr，剛建；nCr＝nPr/r! 直接以排列為基礎）。★自檢（math-unit defect-classes）：事實全 .venv 驗（teach 4C2＝4P2/2!＝12/2＝6、5P2＝20 vs 5C2＝10、對稱 6C4＝6C2＝15；Q1 8C2＝28、Q2 7C3＝35、Q4 9C7＝9C2＝36；各 distractor 單一錯誤路徑）；減號僅出現在 n－r 等公式，一律全形 U+FF0D（含 distractor_rationales key）；★figure＝公式卡（低幾何風險：三列①組合 nCr＝nPr/r!＝n!/(r!(n－r)!)、②對稱 nCr＝nC(n－r)、③辨別 在意順序→排列 nPr／不在意→組合 nCr），alt 與 SVG text 逐字一致（#33）、figure 標題『組合：不計順序、除掉重複的排法』寫進 alt 開頭；★MCQ options 全 bare（#47，說明在 distractor_rationales）、每個 distractor 乾淨單一錯誤路徑（當成排列沒除 r!／n×r 誤乘／n÷r 誤除／n＋r 誤加／對稱取錯 n－r）、數值兩兩相異（#14/#29）、長度均衡（#20/#28）；★導讀承諾順序＝實際 teach 牌組順序（#4/#46）：導讀『先講組合定義與公式 nCr＝nPr/r!、用從 4 取 2 示範 4C2＝6、用選 2 人〈排名次 vs 一組〉對照排列與組合、再講對稱 nCr＝nC(n－r) 用 6C4＝6C2＝15 示範、用一張公式卡整理、最後練』＝實際 teach1 intro→teach2 定義+公式+4C2示範+排列對照+對稱示範→teach3 figure 公式卡→teach4 recap+練；worked-example 在 rendered teach；★teach worked-example 用 4C2＝6／5P2＝20／5C2＝10／6C4＝6C2＝15，與 practice 答案（Q1 28、Q2 35、Q3 組合、Q4 9C2）皆不重疊避#10。claim kind=definition。figure-only example 無 body。",
+ "page": "math_counting_combination.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.counting.combination",
+   "title_zh": "組合的意義與計算",
+   "can_do": "我知道組合 (combination) 是『不計順序』地從 n 個相異物取 r 個，方法數 nCr＝nPr/r!＝n!/(r!(n－r)!)——因為排列把每組的 r! 種先後順序都算了一次，所以要除以 r! 去掉重複。我也會用對稱性 nCr＝nC(n－r)，並分辨題目在不在意順序來決定用排列還是組合。",
+   "situation_group": "計數：組合的意義與計算",
+   "subject": "math",
+   "strand": "counting",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_adv.counting.combination"
+   ],
+   "prerequisites": [
+    "math.t_adv.counting.permutation"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-comb-def",
+     "text": "組合 (combination)：從 n 個相異物中取出 r 個，『不計先後順序』，方法數記作 nCr。因為排列 nPr 把同一組 r 個東西的 r! 種排法都當成不同結果各算一次，而組合不在意順序，所以 nCr＝nPr/r!＝n!/(r!(n－r)!)。例：從 5 個人選 2 個『排名次』有 5P2＝20 種（有序），但只選 2 個『當一組』不分誰先誰後，就是 5C2＝5P2/2!＝20/2＝10 種。",
+     "kind": "definition",
+     "source_refs": [
+      "組合的定義與公式 nCr（高中數學 學測）"
+     ],
+     "verification_ref": "5P2=20,5C2=10,4C2=6（.venv）；nCr=nPr/r!",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-comb-vs-perm",
+     "text": "排列還是組合，看『在不在意順序』：在意先後、位置（例如排名次、排成一列）用排列 nPr；不在意順序（例如選出一組、挑幾個湊成一堆）用組合 nCr。兩者的關係是 nCr＝nPr/r!——先用排列算出有序的個數，再除以 r! 把每組被重複算的 r! 種順序除掉。所以同樣是『從 n 取 r』，組合一定不大於排列。",
+     "kind": "definition",
+     "source_refs": [
+      "排列與組合的辨別（高中數學 學測）"
+     ],
+     "verification_ref": "nCr=nPr/r!，組合≤排列（教學慣例）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-comb-symmetry",
+     "text": "對稱性：nCr＝nC(n－r)。因為『從 n 個裡挑出 r 個拿走』和『挑出剩下的 n－r 個留著』是一一對應的——決定了要拿走哪 r 個，等於同時決定了留下哪 n－r 個，兩種算法數目一樣。例：6C4＝6C2＝15（挑 4 個拿走 ⇔ 挑 2 個留下）。善用對稱性可以把 r 較大的組合換成 r 較小的來算，比較快。",
+     "kind": "definition",
+     "source_refs": [
+      "組合對稱性 nCr=nC(n－r)（高中數學 學測）"
+     ],
+     "verification_ref": "6C4=6C2=15（.venv）；選走r⇔留n－r",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.counting.combination"
+     ],
+     "body": "這一單元學『組合』——不計順序地從 n 個相異物取 r 個，數有幾種取法。下面先講組合的定義與公式 nCr＝nPr/r!（排列算了順序、每組被 r! 種排法重複算，所以除以 r!），用從 4 個取 2 個示範 4C2＝6，再用選 2 個人『排名次』對照『當一組』看排列和組合差在哪，接著講對稱性 nCr＝nC(n－r) 用 6C4＝6C2＝15 示範，用一張公式卡整理，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.counting.combination"
+     ],
+     "body": "組合定義：從 n 個取 r 個、不計順序，nCr＝nPr/r!＝n!/(r!(n－r)!)。示範：從 4 個取 2 個當一組，4C2＝4P2/2!＝12/2＝6。排列對照：從 5 個人選 2 個，『排名次』（有序）是 5P2＝20，『當一組』（不計順序）是 5C2＝20/2!＝10——差在組合把每組的 2! 種順序除掉了。對稱性：nCr＝nC(n－r)，因為挑 r 個拿走 ⇔ 挑 n－r 個留下，例如 6C4＝6C2＝15。下面用一張公式卡整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.counting.combination"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 348 136' xmlns='http://www.w3.org/2000/svg'><text x='174' y='18' font-family='sans-serif' font-size='12' fill='#2f6f54' text-anchor='middle' font-weight='bold'>組合：不計順序、除掉重複的排法</text><rect x='12' y='30' width='324' height='30' rx='6' fill='#eef4ff' stroke='#5b8def' stroke-width='1.1'/><text x='22' y='49' font-family='sans-serif' font-size='10.5' fill='#5b8def' font-weight='bold'>①組合</text><text x='212' y='50' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>nCr＝nPr/r!＝n!/(r!(n－r)!)</text><rect x='12' y='64' width='324' height='30' rx='6' fill='#eef7ee' stroke='#4e9a6b' stroke-width='1.1'/><text x='22' y='83' font-family='sans-serif' font-size='10.5' fill='#4e9a6b' font-weight='bold'>②對稱</text><text x='212' y='84' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>nCr＝nC(n－r)</text><rect x='12' y='98' width='324' height='30' rx='6' fill='#fdf2e9' stroke='#d08a3e' stroke-width='1.1'/><text x='22' y='117' font-family='sans-serif' font-size='10.5' fill='#d08a3e' font-weight='bold'>③辨別</text><text x='214' y='118' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='middle'>在意順序→排列；不在意→組合</text></svg>",
+      "alt": "標題「組合：不計順序、除掉重複的排法」。一張公式卡，三列。第一列藍底「①組合」：「nCr＝nPr/r!＝n!/(r!(n－r)!)」。第二列綠底「②對稱」：「nCr＝nC(n－r)」。第三列橘底「③辨別」：「在意順序→排列；不在意→組合」。",
+      "caption": "組合不計順序：nCr＝nPr/r!（把每組重複算的 r! 種順序除掉）＝n!/(r!(n－r)!)；對稱 nCr＝nC(n－r)；在意順序用排列、不在意用組合。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.counting.combination"
+     ],
+     "body": "最後練組合。重點：先判斷『在不在意順序』——不在意就用組合 nCr＝nPr/r!＝n!/(r!(n－r)!)。小提醒：組合要記得除以 r!（不要停在排列 nPr）；算對稱時 nCr＝nC(n－r)，那個是 n－r 不是別的；r 較大時用對稱換成較小的 r 算比較快。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "從 8 個人中選出 2 個人組成一個小組（兩人地位相同、不分先後），共有幾種選法？",
+     "answer": "28",
+     "kp_ids": [
+      "math.t_adv.counting.combination"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.combination"
+     ],
+     "options": [
+      "28",
+      "56",
+      "16",
+      "4"
+     ],
+     "distractor_rationales": {
+      "56": "這是當成排列算（8P2＝8×7＝56），把兩人分了先後；一組不分先後要除以 2!，8C2＝56/2＝28。",
+      "16": "這是把人數乘以組員數（8×2）；組合要用 8C2＝8P2/2!＝28。",
+      "4": "這是把人數除以組員數（8÷2）；組合不是這樣算，8C2＝28。"
+     },
+     "answer_evidence": [
+      "c-comb-def"
+     ],
+     "feedback": "選一組不計順序＝8C2＝8P2/2!＝(8×7)/2＝28。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "從 7 種不同的貼紙中挑出 3 種送給朋友（挑哪 3 種就好、不分先後），共有幾種挑法？",
+     "answer": "35",
+     "kp_ids": [
+      "math.t_adv.counting.combination"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.combination"
+     ],
+     "options": [
+      "35",
+      "210",
+      "21",
+      "10"
+     ],
+     "distractor_rationales": {
+      "210": "這是當成排列算（7P3＝7×6×5＝210），把挑出的 3 種又分了先後；不分先後要除以 3!，7C3＝210/6＝35。",
+      "21": "這是把種類數乘以挑的個數（7×3）；組合要用 7C3＝7P3/3!＝35。",
+      "10": "這是把種類數和個數相加（7＋3）；組合要相乘再除以 3!，7C3＝35。"
+     },
+     "answer_evidence": [
+      "c-comb-def"
+     ],
+     "feedback": "挑 3 種不計順序＝7C3＝7P3/3!＝(7×6×5)/6＝35。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "下列哪一種情況應該用『組合』來算，而不是排列？",
+     "answer": "從 10 個人選 3 個人當志工（三人工作相同、不分誰是誰）",
+     "kp_ids": [
+      "math.t_adv.counting.combination"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.combination"
+     ],
+     "options": [
+      "從 10 個人選 3 個人當志工（三人工作相同、不分誰是誰）",
+      "從 10 個人選 3 個人分別當正、副、祕書（職位有別）",
+      "把 5 個人排成一列照相",
+      "決定跑道上 8 個選手的第一、二、三名"
+     ],
+     "distractor_rationales": {
+      "從 10 個人選 3 個人分別當正、副、祕書（職位有別）": "職位有別＝在意誰擔任哪個職位（有順序之分），要用排列 nPr，不是組合。",
+      "把 5 個人排成一列照相": "排成一列＝位置有先後，是有序的，要用排列（5!），不是組合。",
+      "決定跑道上 8 個選手的第一、二、三名": "名次有別＝在意順序，要用排列（8P3），不是組合。"
+     },
+     "answer_evidence": [
+      "c-comb-vs-perm"
+     ],
+     "feedback": "三人工作相同、不分誰是誰＝不計順序，用組合 nCr；其餘都在意順序（職位、位置、名次），用排列。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "利用組合的對稱性，9C7 會等於下列哪一個？",
+     "answer": "9C2",
+     "kp_ids": [
+      "math.t_adv.counting.combination"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.combination"
+     ],
+     "options": [
+      "9C2",
+      "9C3",
+      "9C9",
+      "9C0"
+     ],
+     "distractor_rationales": {
+      "9C3": "對稱性是 nCr＝nC(n－r)，這裡 n－r＝9－7＝2，不是 3；所以 9C7＝9C2，不是 9C3。",
+      "9C9": "9C9＝1（全選），但 9C7＝36，兩者不相等；由對稱性 9C7＝9C(9－7)＝9C2。",
+      "9C0": "9C0＝1（都不選），但 9C7＝36，兩者不相等；由對稱性 9C7＝9C2。"
+     },
+     "answer_evidence": [
+      "c-comb-symmetry"
+     ],
+     "feedback": "對稱性 nCr＝nC(n－r)：9C7＝9C(9－7)＝9C2（兩者都是 36）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（組合＝不計順序從 n 取 r，nCr＝nPr/r!＝n!/(r!(n－r)!)，記得除以 r! 不要停在排列；對稱 nCr＝nC(n－r)，r 大時換成較小的算；先看在不在意順序決定用排列還是組合）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
