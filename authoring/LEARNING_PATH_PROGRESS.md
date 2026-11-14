@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 03:55 defect-class #50 對齊批次：trig_radian 5/5 DONE-GATE 全綠（12/13）
+- **trig_radian frozen_sha `c008a4fed0894951`**（Q2 π/3 誘答路徑修正後 R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：per_page 無 violation／scan PASS／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen＋iPad 四角色 render 綁 sha（三公式卡 ①度↔弧度 180°=π、②弧長 s=r·θ、③扇形面積 A=½·r²·θ 全左對齊；三視窗右緣0%；美術/空間/眼科/動畫師過）。
+- **★trig_radian R4 修正（instructional-design major）**：Q2（120°→弧度，正解 2π/3）的 π/3 誘答原說明歸因「約分約錯成 1/3」，但 120/180 約分保值只能得 2/3、1/3 不可達（約分不改變值）→誤描錯誤路徑。改為真正乾淨單一錯誤：「π/3 是 60° 的弧度；題目是 120°（60° 的兩倍）…2π/3，不是 π/3」。**教訓（記入 #50 類）：distractor 說明歸因的「錯誤操作」必須真能產生該誘答值；約分/化簡類保值操作不可能改變分數值，別把它當錯誤來源。** 重凍 c008a4fe。
+- **對齊批次 DONE-GATE 全綠已 push 增至 12/13**＝…（前 11）＋**trig_radian(c008a4fe)**。待排＝trig_solve_triangle_apply(2c0cd67c)（R1-R5，最後一個）。
+- **下一步**：trig_solve_triangle_apply R1-R5 → DONE-GATE（批次 13/13 完成）；之後續 prob strand 其餘 11 KP。
+
 ## 2026-11-15 03:22 defect-class #50 對齊批次：permutation_repeat 5/5 DONE-GATE 全綠（11/13）
 - **permutation_repeat frozen_sha `d89a111fdf03f0ce`**（figure row③ 對齊修正後 R1-R5 連 5 clean、L3 每輪 exit 0、confirmed 全 0；R3 一個 raw finding 經 panel 5/5 判 NOT-a-defect〔對照句每值各自標規則 tag，歸屬明確不歧義〕）。DONE-GATE 全綠：per_page 無 violation／scan PASS／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen＋iPad 四角色 render 綁 sha（對照卡 ①重複排列 可重複/放回→n^r、②直線排列 不可重複/不放回→nPr、③辨別 能不能重複用同一個？ 三列描述全左對齊 x=96/start/fs11；三視窗右緣0%；美術/空間/眼科/動畫師過）。單元教「重複排列 n^r」（每位獨立選、可重複），4 MCQ：3 位密碼 10³=1000、擲骰 3 次 6³=216、…。事實全 .venv。
 - **對齊批次 DONE-GATE 全綠已 push 增至 11/13**＝…（前 10）＋**permutation_repeat(d89a111f)**。待排＝trig_radian(92a9d364)、trig_solve_triangle_apply(2c0cd67c)（各 R1-R5）。
