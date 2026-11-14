@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 三角（trig）strand 第 9 個（最後一個 binding）單元（t_adv 學測範圍）。知識點 math.t_adv.trig.solve-triangle-apply（解三角形的綜合應用）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，gloss 緊貼正確中文術語）：解三角形 (solving a triangle)。★scope（學測 t_adv）：綜合運用正弦定理、餘弦定理、面積公式解三角形——依已知條件選對工具：知三邊 (SSS) 或兩邊夾角 (SAS) 用餘弦定理；知一組對應邊角＋另一角 (AAS/ASA) 用正弦定理；求面積用 ½·a·b·sinC（或海龍）。能把實際測量情境（測距/測高/三角地）化為三角形求未知。不含：正弦/餘弦定理本身的推導（各為前置單元）、立體測量。prereq＝law-of-sines＋law-of-cosines（＋triangle-area 面積，已於 triangle-area 單元）。★自檢（math-unit defect-classes）：事實全 .venv/sympy 驗（teach SAS a=3,b=5,C=120°⇒c=7、面積=15√3/4；正弦定理 a=6,A=30°,B=90°⇒b=12；Q3 a=7,b=8,c=9⇒cosC=(49+64－81)/(2·7·8)=32/112=2/7；Q4 a=4,A=30°,B=90°⇒b=a·sinB/sinA=4·1/(1/2)=8）；減號全形 U+FF0D（吸取 law-of-cosines R1 #39，draft 即統一含 distractor_rationales key）；★figure＝決策卡（低幾何風險 #43/#32：三列①知三邊/兩邊夾角→餘弦定理、②知一組邊角＋另一角→正弦定理、③求面積→½·a·b·sinC），alt 與 SVG text 逐字一致（#33）、figure 標題『解三角形：選用哪個工具』寫進 alt 開頭；★MCQ options 全 bare（#47，說明在 distractor_rationales）、每個 distractor 乾淨單一錯誤路徑（選錯定理／分母忘×2／求錯角／比例顛倒）、數值兩兩相異（#14/#29）、長度均衡（#20/#28）；★導讀承諾順序＝實際 teach 牌組順序（#4/#46，吸取 ratio-generalized R4 教訓逐項對齊）：導讀『先講選用定理的原則、用 a=3,b=5,C=120° 示範餘弦定理求 c 與面積、再用正弦定理示範求邊、用一張決策卡整理、最後練』＝實際 teach1 intro→teach2 選用原則+SAS 示範(c=7,面積)+正弦示範(b=12)→teach3 figure 決策卡→teach4 recap+練；worked-example 在 rendered teach；★teach worked-example 用 c=7／面積 15√3/4／b=12，與 practice 答案（Q1 餘弦定理、Q2 正弦定理、Q3 cosC=2/7、Q4 b=8）皆不重疊避#10。claim kind=definition。figure-only example 無 body。",
+ "page": "math_trig_solve_triangle_apply.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.trig.solve-triangle-apply",
+   "title_zh": "解三角形的應用",
+   "can_do": "我會依已知條件選對工具來解三角形：知道『三邊』或『兩邊及其夾角』就用餘弦定理；知道『一組對應的邊和角，再加另一個角』就用正弦定理；要面積就用 ½·a·b·sinC。我也會把測距、測高這類實際問題畫成三角形，標出已知邊角再求未知。",
+   "situation_group": "三角：解三角形的應用",
+   "subject": "math",
+   "strand": "trig",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_adv.trig.solve-triangle-apply"
+   ],
+   "prerequisites": [
+    "math.t_adv.trig.law-of-sines",
+    "math.t_adv.trig.law-of-cosines"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-sta-choose",
+     "text": "選用工具的原則：解三角形 (solving a triangle) 先看已知什麼。知道『三邊』(SSS) 或『兩邊及其夾角』(SAS)，用餘弦定理（三邊求角用角版 cosC＝(a²＋b²－c²)/(2ab)；兩邊夾角求第三邊用 c²＝a²＋b²－2ab·cosC）。知道『一組對應的邊和角，再加另一個角』(AAS/ASA)，用正弦定理 a/sinA＝b/sinB。要面積就用 ½·a·b·sinC（或只知三邊時用海龍公式）。",
+     "kind": "definition",
+     "source_refs": [
+      "解三角形選用正弦/餘弦定理原則（高中數學 學測）"
+     ],
+     "verification_ref": "SSS/SAS→餘弦、AAS/ASA→正弦（教學慣例）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-sta-solve",
+     "text": "兩邊夾角 (SAS) 綜合示範：已知 a＝3、b＝5、夾角 C＝120°。求第三邊用餘弦定理：c²＝3²＋5²－2·3·5·cos120°＝9＋25－30·(－1/2)＝34＋15＝49，所以 c＝7。求面積用 ½·a·b·sinC＝½·3·5·sin120°＝½·15·(√3/2)＝15√3/4。一個三角形只要已知足夠條件，就能把其餘的邊、角、面積都求出來。",
+     "kind": "definition",
+     "source_refs": [
+      "SAS 解三角形：餘弦定理＋面積（高中數學 學測）"
+     ],
+     "verification_ref": "a=3,b=5,C=120°⇒c=7、面積15√3/4（sympy）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-sta-measure",
+     "text": "正弦定理與測量應用：知道一組對應的邊和角（a 與 A），再加另一個角 B，用正弦定理 a/sinA＝b/sinB 求另一邊 b＝a·sinB/sinA。例：a＝6、A＝30°、B＝90°，則 b＝6·sin90°/sin30°＝6·1/(1/2)＝12。實際的測距、測高問題，常把看不到的距離放進一個三角形，量出能量的邊和角，再用這些定理把要求的距離算出來。",
+     "kind": "definition",
+     "source_refs": [
+      "正弦定理求邊、測量應用（高中數學 學測）"
+     ],
+     "verification_ref": "a=6,A=30°,B=90°⇒b=12（sympy）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.trig.solve-triangle-apply"
+     ],
+     "body": "這一單元學『解三角形的應用』——把正弦定理、餘弦定理、面積公式合起來用，依已知條件選對工具。下面先講選用定理的原則（三邊或兩邊夾角用餘弦定理、一組邊角再加另一角用正弦定理、面積用 ½·a·b·sinC），用 a＝3、b＝5、夾角 C＝120° 示範餘弦定理求第三邊 c 與面積，再用正弦定理示範求另一邊，接著用一張決策卡整理，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.trig.solve-triangle-apply"
+     ],
+     "body": "選用原則：知『三邊』或『兩邊夾角』用餘弦定理；知『一組對應邊角＋另一角』用正弦定理；面積用 ½·a·b·sinC。示範一（兩邊夾角 SAS，a＝3、b＝5、C＝120°）：餘弦定理 c²＝9＋25－2·3·5·cos120°＝34－30·(－1/2)＝34＋15＝49，c＝7；面積＝½·3·5·sin120°＝15√3/4。示範二（正弦定理，a＝6、A＝30°、B＝90°）：b＝a·sinB/sinA＝6·1/(1/2)＝12。測量問題（測距、測高）就是把未知距離放進三角形，量得能量的邊角後選對定理求出。下面用一張決策卡整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.trig.solve-triangle-apply"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 160' xmlns='http://www.w3.org/2000/svg'><text x='170' y='18' font-family='sans-serif' font-size='13' fill='#2f6f54' text-anchor='middle' font-weight='bold'>解三角形：選用哪個工具</text><rect x='16' y='30' width='308' height='34' rx='7' fill='#eef4ff' stroke='#5b8def' stroke-width='1.2'/><text x='26' y='50' font-family='sans-serif' font-size='10.5' fill='#5b8def' font-weight='bold'>知三邊 / 兩邊夾角</text><text x='214' y='51' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>→ 餘弦定理</text><rect x='16' y='70' width='308' height='34' rx='7' fill='#eef7ee' stroke='#4e9a6b' stroke-width='1.2'/><text x='26' y='90' font-family='sans-serif' font-size='10.5' fill='#4e9a6b' font-weight='bold'>知一組邊角 ＋ 另一角</text><text x='224' y='91' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>→ 正弦定理</text><rect x='16' y='110' width='308' height='34' rx='7' fill='#fdf2e9' stroke='#d08a3e' stroke-width='1.2'/><text x='26' y='130' font-family='sans-serif' font-size='10.5' fill='#d08a3e' font-weight='bold'>求面積</text><text x='214' y='131' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>→ ½·a·b·sinC</text></svg>",
+      "alt": "標題「解三角形：選用哪個工具」。一張決策卡。第一列藍底「知三邊 / 兩邊夾角」：「→ 餘弦定理」。第二列綠底「知一組邊角 ＋ 另一角」：「→ 正弦定理」。第三列橘底「求面積」：「→ ½·a·b·sinC」。",
+      "caption": "解三角形先看已知條件選工具：三邊或兩邊夾角 → 餘弦定理；一組對應邊角＋另一角 → 正弦定理；求面積 → ½·a·b·sinC。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.trig.solve-triangle-apply"
+     ],
+     "body": "最後練解三角形的應用。重點：先認清『已知哪些邊、哪些角』，再照決策卡選工具——三邊或兩邊夾角用餘弦定理、一組對應邊角＋另一角用正弦定理、求面積用 ½·a·b·sinC。小提醒：餘弦定理角版分母是 2ab 不要漏掉那個 2；正弦定理要配『對應』的邊與角（a 對 A）。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "已知三角形的『三邊長』，要求其中一個角，最適合用哪個工具？",
+     "answer": "餘弦定理",
+     "kp_ids": [
+      "math.t_adv.trig.solve-triangle-apply"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.trig.solve-triangle-apply"
+     ],
+     "options": [
+      "餘弦定理",
+      "正弦定理",
+      "面積公式 ½·a·b·sinC",
+      "畢氏定理"
+     ],
+     "distractor_rationales": {
+      "正弦定理": "正弦定理要有『一組對應的邊和角』才能用；只知三邊、沒有任何角，無法啟動正弦定理。知三邊求角要用餘弦定理角版 cosC＝(a²＋b²－c²)/(2ab)。",
+      "面積公式 ½·a·b·sinC": "面積公式是用來求面積的，不是求角；知三邊求角要用餘弦定理。",
+      "畢氏定理": "畢氏定理只適用於直角三角形；一般三角形知三邊求角要用餘弦定理（它正是畢氏定理的推廣）。"
+     },
+     "answer_evidence": [
+      "c-sta-choose"
+     ],
+     "feedback": "知三邊 (SSS) 求角用餘弦定理角版：cosC＝(a²＋b²－c²)/(2ab)。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "已知一組對應的邊和角（a 與 A），再加另一個角 B，要求另一邊 b，最適合用哪個工具？",
+     "answer": "正弦定理",
+     "kp_ids": [
+      "math.t_adv.trig.solve-triangle-apply"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.trig.solve-triangle-apply"
+     ],
+     "options": [
+      "正弦定理",
+      "餘弦定理",
+      "海龍公式",
+      "畢氏定理"
+     ],
+     "distractor_rationales": {
+      "餘弦定理": "餘弦定理適合『三邊』或『兩邊及其夾角』；這裡只有一邊和兩角，缺另一邊，用正弦定理 a/sinA＝b/sinB 才對。",
+      "海龍公式": "海龍公式要知道『三邊長』才能算面積，和這裡求邊、已知角的條件不符；用正弦定理。",
+      "畢氏定理": "畢氏定理只用於直角三角形的三邊關係，不能由邊角求邊；用正弦定理 b＝a·sinB/sinA。"
+     },
+     "answer_evidence": [
+      "c-sta-choose"
+     ],
+     "feedback": "知一組對應邊角 (a,A) 再加另一角 B，用正弦定理 b＝a·sinB/sinA。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "三角形三邊 a＝7、b＝8、c＝9。求 cosC（C 是邊 c 的對角）。",
+     "answer": "2/7",
+     "kp_ids": [
+      "math.t_adv.trig.solve-triangle-apply"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.trig.solve-triangle-apply"
+     ],
+     "options": [
+      "2/7",
+      "4/7",
+      "2/3",
+      "－2/7"
+     ],
+     "distractor_rationales": {
+      "4/7": "分母忘了乘 2；cosC＝(a²＋b²－c²)/(2ab)，分母是 2·7·8＝112 不是 56。(49＋64－81)/112＝32/112＝2/7。",
+      "2/3": "這是求錯角了，算成 cosA＝(b²＋c²－a²)/(2bc)＝(64＋81－49)/144＝96/144＝2/3；題目要的是 c 的對角 C，cosC＝2/7。",
+      "－2/7": "分子正負弄反了（算成 c²－a²－b²）；角版分子是 a²＋b²－c²＝49＋64－81＝32（正的），cosC＝32/112＝2/7。"
+     },
+     "answer_evidence": [
+      "c-sta-solve"
+     ],
+     "feedback": "cosC＝(a²＋b²－c²)/(2ab)＝(49＋64－81)/(2·7·8)＝32/112＝2/7。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "三角形中 a＝4、對角 A＝30°、另一角 B＝90°。用正弦定理求邊 b。",
+     "answer": "8",
+     "kp_ids": [
+      "math.t_adv.trig.solve-triangle-apply"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.trig.solve-triangle-apply"
+     ],
+     "options": [
+      "8",
+      "2",
+      "4",
+      "16"
+     ],
+     "distractor_rationales": {
+      "2": "比例寫顛倒了（算成 a·sinA/sinB）；正弦定理 a/sinA＝b/sinB 應得 b＝a·sinB/sinA＝4·1/(1/2)＝8。",
+      "4": "這是直接照抄 a 的值；A 和 B 不同，b 要換算：b＝a·sinB/sinA＝8。",
+      "16": "多乘了一次 2（把 a 當成 2a 或重複除 sinA）；正確 b＝4·sin90°/sin30°＝4·1/(1/2)＝8。"
+     },
+     "answer_evidence": [
+      "c-sta-measure"
+     ],
+     "feedback": "b＝a·sinB/sinA＝4·sin90°/sin30°＝4·1/(1/2)＝8。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（解三角形先看已知選工具：三邊或兩邊夾角→餘弦定理〔角版 cosC＝(a²＋b²－c²)/(2ab)、邊版 c²＝a²＋b²－2ab·cosC〕；一組對應邊角＋另一角→正弦定理 b＝a·sinB/sinA；面積→½·a·b·sinC。餘弦角版分母 2ab 別漏 2、正弦定理配對應的邊角 a 對 A）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
