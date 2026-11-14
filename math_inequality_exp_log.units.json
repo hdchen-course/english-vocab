@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 不等式（inequality）strand 第 8 個單元（全島第 72；t_adv 高中學測範圍）＝inequality strand 最後一個。知識點 math.t_adv.inequality.exp-log（指數不等式與對數不等式）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15）：指數不等式 (exponential inequality)、對數不等式 (logarithmic inequality)、底數 (base)、真數 (argument)。★scope（高中學測）：(1) 指數不等式：把兩邊化成同底 a 的次方再比較指數。★底數鐵律：底數 a＞1 時，比較指數方向不變（a^m＞a^n ⟺ m＞n）；0＜a＜1 時，方向要顛倒（a^m＞a^n ⟺ m＜n）。(2) 對數不等式：化成同底 log 再比較真數，底數規則同上（a＞1 不變、0＜a＜1 顛倒）。★定義域鐵律：對數的真數一定要＞0，解完要和真數＞0 取交集。不含：需換底公式的複雜題、指數方程式（屬 equation KP）、指對數函數圖形、兩個不同底混合。prereq＝指對數方程式（equation.exp-log）。★自檢（math-unit defect-classes）：事實全 .venv/sympy solve_univariate_inequality 驗（teach：2^x＞8 ⟹ x＞3〔底2＞1不變〕；(1/2)^x＞4 ⟹ x＜−2〔底1/2＜1顛倒〕；log₂x＞3 ⟹ x＞8。practice：3^x＜27 ⟹ x＜3；(1/3)^x≥9 ⟹ x≤−2〔顛倒〕；log₂x＜4 ⟹ 0＜x＜16〔真數＞0 取交集〕）；不等號 ＞＜≥≤、次方 ^、分數底 1/2 1/3；量詞不撞位名（本單元無位名，#3）；learner-facing 含 selfeval_note 用字詞（#2）；★figure＝底數規則卡（低幾何風險 #43/#32：兩列 底數 a＞1 → 方向不變、0＜a＜1 → 方向顛倒），alt 與 SVG text 逐字一致（#33）；誘答單一乾淨機制（底數＞1 不該翻卻翻／0＜底＜1 忘了翻／沒化同底把常數當指數／對數忘真數＞0 漏定義域／真數與底數次方算錯）、選項長度均衡（#20/#28）、兩兩相異（#29）；★practice 所考方法（底＞1 不變、0＜底＜1 顛倒、對數真數＞0 取交集、底數規則概念）都在 rendered teach 示範（#4/#46：導讀承諾『先講化同底比指數、底數＞1 不變與 0＜底＜1 顛倒、對數真數要＞0，用規則卡看，最後練』與實際一致；worked-example 在 rendered teach）；★teach worked-example（2^x＞8⟹x＞3；(1/2)^x＞4⟹x＜−2；log₂x＞3⟹x＞8）與 figure（底數規則卡）與 practice 答案（Q1 x＜3／Q2 x≤−2／Q3 0＜x＜16／Q4 概念）皆不重疊避#10。claim kind=definition。figure-only example 無 body。",
+ "page": "math_inequality_exp_log.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.inequality.exp-log",
+   "title_zh": "指數不等式與對數不等式（底數規則）",
+   "can_do": "我會解指數不等式和對數不等式：先把兩邊化成同一個底，再比較指數（或真數）。我記得最重要的底數規則：底數大於 1 時方向不變，底數在 0 和 1 之間時方向要顛倒。我也記得對數的真數一定要大於 0，解完要和這個條件取交集。",
+   "situation_group": "不等式：指數與對數",
+   "subject": "math",
+   "strand": "inequality",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_adv.inequality.exp-log"
+   ],
+   "prerequisites": [
+    "math.t_adv.equation.exp-log"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-el-exp",
+     "text": "指數不等式 (exponential inequality)：解法是把兩邊化成同一個底數 (base) a 的次方，再比較指數。★底數規則：當底數 a＞1 時，比較指數方向不變（a^m＞a^n ⟺ m＞n）；當 0＜a＜1 時，方向要顛倒（a^m＞a^n ⟺ m＜n）。例如 2^x＞8，把 8 寫成 2³，因為底數 2＞1 方向不變，由 2^x＞2³ 得 x＞3。",
+     "kind": "definition",
+     "source_refs": [
+      "指數不等式：化同底比指數、底數>1 不變（高中數學）"
+     ],
+     "verification_ref": "2^x＞8 ⟹ x＞3（sympy 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-el-flip",
+     "text": "★當底數在 0 和 1 之間（0＜a＜1）時，指數函數是遞減的，所以比較指數時不等號方向要『顛倒』。例如 (1/2)^x＞4，把 4 寫成 (1/2)^(−2)（因為 (1/2)^(−2)＝2²＝4），底數 1/2＜1 要顛倒方向，由 (1/2)^x＞(1/2)^(−2) 得 x＜−2。這和一元一次不等式『乘除負數要反向』一樣，是最容易錯的地方。",
+     "kind": "definition",
+     "source_refs": [
+      "指數不等式：0<底<1 方向顛倒（高中數學）"
+     ],
+     "verification_ref": "(1/2)^x＞4 ⟹ x＜−2（底<1 顛倒，sympy 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-el-log",
+     "text": "對數不等式 (logarithmic inequality)：把兩邊化成同底的對數再比較『真數 (argument)』，底數規則和指數一樣（a＞1 不變、0＜a＜1 顛倒）。★定義域鐵律：對數的真數一定要大於 0，所以解完一定要和『真數＞0』取交集。例如 log₂x＞3，把 3 寫成 log₂8，底數 2＞1 方向不變得 x＞8；而 x＞8 本來就滿足 x＞0，所以答案是 x＞8。",
+     "kind": "definition",
+     "source_refs": [
+      "對數不等式：比真數、底數規則同指數、真數>0 取交集（高中數學）"
+     ],
+     "verification_ref": "log₂x＞3 ⟹ x＞8（sympy 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.inequality.exp-log"
+     ],
+     "body": "這是不等式這一區的最後一個單元：指數不等式和對數不等式。前面會解指對數方程式了，不等式只多一條最重要的規則——『底數規則』。下面先講指數不等式怎麼化成同底比指數、底數大於 1 和介於 0 到 1 之間時方向的差別，再講對數不等式（多一個真數要大於 0 的定義域），用一張規則卡看清楚，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.inequality.exp-log"
+     ],
+     "body": "三個重點。(1) 指數不等式：化成同底再比指數。底數 a＞1 方向不變：例 2^x＞8＝2³，得 x＞3。(2) ★0＜a＜1 方向顛倒（指數函數遞減）：例 (1/2)^x＞4＝(1/2)^(−2)，底數 1/2＜1 要翻，得 x＜−2。這和『乘除負數要反向』一樣最容易錯。(3) 對數不等式：化同底比真數，底數規則相同；★真數一定要＞0，解完取交集：例 log₂x＞3＝log₂8，底 2＞1 不變得 x＞8（已滿足 x＞0）。下面用規則卡看底數怎麼決定方向。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.inequality.exp-log"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 150' xmlns='http://www.w3.org/2000/svg'><text x='170' y='24' font-family='sans-serif' font-size='14' fill='#2f6f54' text-anchor='middle' font-weight='bold'>底數決定方向</text><rect x='26' y='40' width='288' height='44' rx='7' fill='#eef4ff' stroke='#5b8def' stroke-width='1.3'/><text x='96' y='67' font-family='sans-serif' font-size='14' fill='#33475b' text-anchor='middle' font-weight='bold'>底數 ＞ 1</text><text x='168' y='67' font-family='sans-serif' font-size='14' fill='#2f6f54' text-anchor='middle'>→</text><text x='252' y='67' font-family='sans-serif' font-size='13' fill='#2f6f54' text-anchor='middle' font-weight='bold'>方向不變</text><rect x='26' y='92' width='288' height='44' rx='7' fill='#fff3e6' stroke='#e9a23b' stroke-width='1.3'/><text x='96' y='119' font-family='sans-serif' font-size='14' fill='#33475b' text-anchor='middle' font-weight='bold'>0 ＜ 底數 ＜ 1</text><text x='168' y='119' font-family='sans-serif' font-size='14' fill='#c67c1e' text-anchor='middle'>→</text><text x='252' y='119' font-family='sans-serif' font-size='13' fill='#c67c1e' text-anchor='middle' font-weight='bold'>方向顛倒</text></svg>",
+      "alt": "一張底數規則卡，標題「底數決定方向」。第一列藍底：「底數 ＞ 1」→「方向不變」。第二列橘底：「0 ＜ 底數 ＜ 1」→「方向顛倒」。",
+      "caption": "解指數或對數不等式、比較指數或真數時，看底數決定方向：底數大於 1 方向不變（藍）；底數在 0 和 1 之間方向要顛倒（橘）。這就像一元一次不等式乘除負數要反向。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.inequality.exp-log"
+     ],
+     "body": "最後練指數與對數不等式。步驟：先化成同底，比較指數（指數不等式）或真數（對數不等式）；底數＞1 方向不變、0＜底＜1 方向顛倒；對數還要讓真數＞0、解完取交集。再看一個對數的例子：log₂x＜4，把 4 寫成 log₂16，底 2＞1 方向不變得 x＜16，再和真數 x＞0 取交集，得 0＜x＜16。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QE-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "解不等式 3^x ＜ 27。x 的範圍是下列哪一個？",
+     "answer": "x ＜ 3",
+     "kp_ids": [
+      "math.t_adv.inequality.exp-log"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.inequality.exp-log"
+     ],
+     "options": [
+      "x ＜ 3",
+      "x ＞ 3",
+      "x ＜ 27",
+      "x ＞ 27"
+     ],
+     "distractor_rationales": {
+      "x ＞ 3": "方向弄反了：底數 3＞1，比較指數時方向不變，由 3^x＜3³ 得 x＜3，不是顛倒。",
+      "x ＜ 27": "沒有先把 27 化成 3³ 就比較，把 27 直接當成指數了；要寫成 3^x＜3³ 再比，得 x＜3。",
+      "x ＞ 27": "既沒化成同底（27 應是 3³）、方向也弄反了；正確是 x＜3。"
+     },
+     "answer_evidence": [
+      "c-el-exp"
+     ],
+     "feedback": "把 27 寫成 3³，底數 3＞1 方向不變，由 3^x＜3³ 得 x＜3。"
+    },
+    {
+     "question_id": "QE-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "解不等式 (1/3)^x ≥ 9。（提示：9 ＝ (1/3)^(−2)）x 的範圍是下列哪一個？",
+     "answer": "x ≤ －2",
+     "kp_ids": [
+      "math.t_adv.inequality.exp-log"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.inequality.exp-log"
+     ],
+     "options": [
+      "x ≤ －2",
+      "x ≥ －2",
+      "x ≤ 2",
+      "x ≥ 2"
+     ],
+     "distractor_rationales": {
+      "x ≥ －2": "忘了顛倒方向：底數 1/3 在 0 和 1 之間，比較指數時方向要翻，由 (1/3)^x ≥ (1/3)^(−2) 得 x ≤ −2，不是 ≥。",
+      "x ≤ 2": "方向翻對了，但把 9＝(1/3)^(−2) 的指數 −2 寫成 +2（漏了負號）；正確是 x ≤ −2。",
+      "x ≥ 2": "方向沒翻、指數符號也錯（−2 寫成 2）；底數＜1 要翻、9 是 (1/3)^(−2)，正確是 x ≤ −2。"
+     },
+     "answer_evidence": [
+      "c-el-flip"
+     ],
+     "feedback": "9＝(1/3)^(−2)，底數 1/3＜1 方向顛倒，由 (1/3)^x ≥ (1/3)^(−2) 得 x ≤ −2。"
+    },
+    {
+     "question_id": "QE-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "解不等式 log₂x ＜ 4。（提示：4 ＝ log₂16）x 的範圍是下列哪一個？",
+     "answer": "0 ＜ x ＜ 16",
+     "kp_ids": [
+      "math.t_adv.inequality.exp-log"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.inequality.exp-log"
+     ],
+     "options": [
+      "0 ＜ x ＜ 16",
+      "x ＜ 16",
+      "0 ＜ x ＜ 8",
+      "x ＞ 16"
+     ],
+     "distractor_rationales": {
+      "x ＜ 16": "上界對了，但忘了對數的真數一定要＞0；log₂x 要有意義必須 x＞0，所以要和 x＞0 取交集，得 0＜x＜16。",
+      "0 ＜ x ＜ 8": "把 4 當成 log₂8 了，但 log₂8＝3、log₂16 才等於 4；上界應是 16，得 0＜x＜16。",
+      "x ＞ 16": "方向弄反了：底數 2＞1 方向不變，由 log₂x＜log₂16 得 x＜16，再配合真數＞0，得 0＜x＜16。"
+     },
+     "answer_evidence": [
+      "c-el-log"
+     ],
+     "feedback": "4＝log₂16，底數 2＞1 方向不變得 x＜16；對數真數要＞0，取交集得 0＜x＜16。"
+    },
+    {
+     "question_id": "QE-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "解指數或對數不等式、比較指數（或真數）時，什麼情況下不等號方向要顛倒？",
+     "answer": "底數介於 0 與 1 之間（0＜底＜1）",
+     "kp_ids": [
+      "math.t_adv.inequality.exp-log"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.inequality.exp-log"
+     ],
+     "options": [
+      "底數介於 0 與 1 之間（0＜底＜1）",
+      "底數大於 1（即底數＞1）的情況",
+      "對數的真數是負數的情況",
+      "無論底數是多少都不必顛倒方向"
+     ],
+     "distractor_rationales": {
+      "底數大於 1（即底數＞1）的情況": "底數＞1 時方向『不變』；要顛倒的是底數介於 0 與 1 之間（0＜底＜1）的時候。",
+      "對數的真數是負數的情況": "對數的真數一定要＞0，根本不會是負數（那樣沒有定義）；方向顛倒看的是『底數』不是真數。",
+      "無論底數是多少都不必顛倒方向": "0＜底＜1 時指數／對數函數遞減，比較時方向一定要顛倒；不是永遠不變。"
+     },
+     "answer_evidence": [
+      "c-el-flip"
+     ],
+     "feedback": "底數在 0 和 1 之間（0＜底＜1）時，指數／對數函數遞減，比較指數或真數時方向要顛倒；底數＞1 則方向不變。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（指對數不等式步驟：先化成同底，比較指數〔指數不等式〕或真數〔對數不等式〕；★底數規則——底數＞1 方向不變、0＜底＜1 方向顛倒；★對數還要讓真數＞0、解完取交集）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
