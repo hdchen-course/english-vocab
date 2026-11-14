@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 計數（counting）strand 第 8 個單元（t_adv 學測）。知識點 math.t_adv.counting.inclusion-exclusion（排容原理）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，gloss 緊貼正確中文術語）：排容原理 (inclusion-exclusion principle)。★scope（學測 t_adv）：(1) 兩集合排容 |A∪B|＝|A|＋|B|－|A∩B|（把 A、B 個數相加會把交集算兩次，扣回一次）；(2) 三集合 |A∪B∪C|＝|A|＋|B|＋|C|－|A∩B|－|A∩C|－|B∩C|＋|A∩B∩C|（單個加、兩兩扣、三個一起的加回）；(3) 補集法：求『至少符合一個』用排容、求『都不符合』＝全部－|A∪B|。常見情境：集合聯集人數、1~N 中被某些數整除的個數。不含：超過三集合的一般式、錯位排列（另視為延伸）、重複組合。prereq＝add-mult-principle（加法/乘法原理，計數基礎）。★自檢（math-unit defect-classes）：事實全 .venv 驗（teach 2 集合 18＋12－5＝25、1~20 被 2 或 3＝10＋6－3＝13；Q1 40 人狗 22 貓 16 都 7 至少一種＝31、Q2 都不養＝40－31＝9、Q3 1~40 被 2 或 5＝20＋8－4＝24、Q4 1~100 被 2 或 3 或 5＝50＋33＋20－16－10－6＋3＝74；各 distractor 單一錯誤路徑）；減號一律全形 U+FF0D、加號全形 U+FF0B（含 distractor_rationales key）、無上標數字；★figure＝排容公式卡（低幾何風險：三列①兩集合 |A∪B|＝|A|＋|B|－|A∩B|、②三集合 |A∪B∪C|＝…（單加兩扣三加回）、③補集 都不＝全部－|A∪B|），三集合列字較長用較小字級避免溢框、alt 與 SVG text 逐字一致（#33）、figure 標題『排容原理：加了重複要扣回』寫進 alt 開頭；★MCQ options 全 bare（#47，說明在 distractor_rationales）、每個 distractor 乾淨單一錯誤路徑（忘扣交集／把交集加成正號／只算一個條件／補集算反／三集合忘加回三交集或方向錯）、數值兩兩相異（#14/#29）、長度均衡（#20/#28）；★導讀承諾順序＝實際 teach 牌組順序（#4/#46）：導讀『先講兩集合排容 |A∪B|＝|A|＋|B|－|A∩B|、用班上籃球排球 18＋12－5＝25 示範、再講三集合（單加兩扣三加回）、用 1~20 被 2 或 3＝13 示範、講補集都不＝全部－聯集、用一張公式卡整理、最後練』＝實際 teach1 intro→teach2 兩集合＋三集合＋補集＋示範→teach3 figure 公式卡→teach4 recap+練；worked-example 在 rendered teach；★teach worked-example 用 25／13，與 practice 答案（Q1 31、Q2 9、Q3 24、Q4 74）皆不重疊避#10。claim kind=definition。figure-only example 無 body。",
+ "page": "math_counting_inclusion_exclusion.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.counting.inclusion-exclusion",
+   "title_zh": "排容原理",
+   "can_do": "我知道排容原理 (inclusion-exclusion principle)：要數『至少符合一個條件』的個數時，把各條件的個數相加會把同時符合的重複算，所以要扣回來。兩個集合是 |A∪B|＝|A|＋|B|－|A∩B|；三個集合是 |A∪B∪C|＝|A|＋|B|＋|C|－|A∩B|－|A∩C|－|B∩C|＋|A∩B∩C|（單個加、兩兩扣、三個一起的加回）。我也會用補集：『都不符合』的個數＝全部－|A∪B|。",
+   "situation_group": "計數：排容原理",
+   "subject": "math",
+   "strand": "counting",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_adv.counting.inclusion-exclusion"
+   ],
+   "prerequisites": [
+    "math.t_adv.counting.add-mult-principle"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ie-two",
+     "text": "兩集合的排容原理：要數『屬於 A 或屬於 B』（至少符合一個）的個數，不能只把 |A| 和 |B| 相加，因為同時屬於 A 和 B 的（交集 A∩B）被算了兩次，要扣回來一次。所以 |A∪B|＝|A|＋|B|－|A∩B|。例：班上 30 人，打籃球的有 18 人、打排球的有 12 人、兩種都打的有 5 人，那麼至少打一種球的有 18＋12－5＝25 人。",
+     "kind": "definition",
+     "source_refs": [
+      "兩集合排容 |A∪B|＝|A|＋|B|－|A∩B|（高中數學 學測）"
+     ],
+     "verification_ref": "18＋12－5＝25（.venv）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ie-three",
+     "text": "三集合的排容原理：|A∪B∪C|＝|A|＋|B|＋|C|－|A∩B|－|A∩C|－|B∩C|＋|A∩B∩C|。規律是『單個的加、兩兩的交集扣、三個一起的交集再加回』——因為先把三個單獨相加會把每個兩兩交集多算，扣掉兩兩交集後又把三個都屬於的部分扣過頭，所以最後要把 |A∩B∩C| 加回來。例：1 到 20 的整數中，被 2 或被 3 整除的有幾個？被 2 的有 10 個、被 3 的有 6 個、被 6（即 2 和 3 的公倍數）的有 3 個，共 10＋6－3＝13 個。",
+     "kind": "definition",
+     "source_refs": [
+      "三集合排容（單加兩扣三加回，高中數學 學測）"
+     ],
+     "verification_ref": "1~20 被2或3：10＋6－3＝13（.venv）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ie-complement",
+     "text": "補集法：有時候『都不符合』比『至少符合一個』好算。因為全部的個數＝（至少符合一個）＋（都不符合），所以『都不符合』的個數＝全部－|A∪B|。例：全班 30 人，至少打一種球的有 25 人，那麼兩種球都不打的就有 30－25＝5 人。遇到『至少』『都不』這類問題，先想清楚要數的是聯集還是它的補集。",
+     "kind": "definition",
+     "source_refs": [
+      "補集法：都不符合＝全部－聯集（高中數學 學測）"
+     ],
+     "verification_ref": "30－25＝5（.venv）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.counting.inclusion-exclusion"
+     ],
+     "body": "這一單元學『排容原理』——數『至少符合一個條件』的個數時，相加會把重複的算兩次，要扣回來。下面先講兩集合 |A∪B|＝|A|＋|B|－|A∩B|，用班上打籃球 18 人、打排球 12 人、兩種都打 5 人、至少打一種＝18＋12－5＝25 示範；再講三集合（單個加、兩兩扣、三個一起加回），用 1 到 20 被 2 或 3 整除＝10＋6－3＝13 示範；接著講補集『都不符合＝全部－聯集』；用一張公式卡整理，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.counting.inclusion-exclusion"
+     ],
+     "body": "兩集合排容：|A∪B|＝|A|＋|B|－|A∩B|——相加會把交集算兩次，扣回一次。示範：班上 30 人，籃球 18、排球 12、兩種都打 5，至少打一種＝18＋12－5＝25 人。三集合排容：|A∪B∪C|＝|A|＋|B|＋|C|－|A∩B|－|A∩C|－|B∩C|＋|A∩B∩C|，口訣『單個加、兩兩扣、三個一起加回』。示範：1 到 20 中被 2 或 3 整除的，被 2 有 10 個、被 3 有 6 個、被 6 有 3 個，10＋6－3＝13 個。補集法：『都不符合』＝全部－|A∪B|，例如全班 30 人、至少打一種 25 人，都不打的＝30－25＝5 人。下面用一張公式卡整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.counting.inclusion-exclusion"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 352 136' xmlns='http://www.w3.org/2000/svg'><text x='176' y='18' font-family='sans-serif' font-size='12' fill='#2f6f54' text-anchor='middle' font-weight='bold'>排容原理：加了重複要扣回</text><rect x='12' y='30' width='328' height='30' rx='6' fill='#eef4ff' stroke='#5b8def' stroke-width='1.1'/><text x='22' y='49' font-family='sans-serif' font-size='10.5' fill='#5b8def' font-weight='bold'>①兩集合</text><text x='214' y='50' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>|A∪B|＝|A|＋|B|－|A∩B|</text><rect x='12' y='64' width='328' height='30' rx='6' fill='#eef7ee' stroke='#4e9a6b' stroke-width='1.1'/><text x='22' y='83' font-family='sans-serif' font-size='10.5' fill='#4e9a6b' font-weight='bold'>②三集合</text><text x='216' y='84' font-family='sans-serif' font-size='8.6' fill='#33475b' text-anchor='middle'>|A∪B∪C|＝單個加－兩兩扣＋三個加回</text><rect x='12' y='98' width='328' height='30' rx='6' fill='#fdf2e9' stroke='#d08a3e' stroke-width='1.1'/><text x='22' y='117' font-family='sans-serif' font-size='10.5' fill='#d08a3e' font-weight='bold'>③補集</text><text x='214' y='118' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>都不符合＝全部－|A∪B|</text></svg>",
+      "alt": "標題「排容原理：加了重複要扣回」。一張公式卡，三列。第一列藍底「①兩集合」：「|A∪B|＝|A|＋|B|－|A∩B|」。第二列綠底「②三集合」：「|A∪B∪C|＝單個加－兩兩扣＋三個加回」。第三列橘底「③補集」：「都不符合＝全部－|A∪B|」。",
+      "caption": "排容原理：相加會把重複的部分多算，所以要扣回。兩集合 |A∪B|＝|A|＋|B|－|A∩B|；三集合是單個加、兩兩扣、三個一起的加回；求『都不符合』就用全部－|A∪B|。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.counting.inclusion-exclusion"
+     ],
+     "body": "最後練排容原理。重點：數『至少符合一個』時，相加會把交集重複算，兩集合要扣一次 |A∪B|＝|A|＋|B|－|A∩B|；三集合是『單個加、兩兩扣、三個一起加回』；求『都不符合』用全部－|A∪B| 最快。小提醒：別忘了扣交集（也別把交集加成正號）；三集合最後那個 |A∩B∩C| 是『加回』不是再減；1~N 被某數整除的個數＝N 除以那個數取整數商。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個社團有 40 人。養狗的有 22 人、養貓的有 16 人，其中兩種都養的有 7 人。至少養一種（狗或貓）的有幾人？",
+     "answer": "31",
+     "kp_ids": [
+      "math.t_adv.counting.inclusion-exclusion"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.inclusion-exclusion"
+     ],
+     "options": [
+      "31",
+      "38",
+      "45",
+      "15"
+     ],
+     "distractor_rationales": {
+      "38": "這是把養狗和養貓直接相加（22＋16）；兩種都養的 7 人被算了兩次，要扣回一次，22＋16－7＝31。",
+      "45": "這是把交集也加上去了（22＋16＋7）；重複算的交集要『減』不是加，22＋16－7＝31。",
+      "15": "這是只算了『只養狗』的（22－7），漏掉養貓的人；至少養一種要用 22＋16－7＝31。"
+     },
+     "answer_evidence": [
+      "c-ie-two"
+     ],
+     "feedback": "至少養一種＝|狗∪貓|＝22＋16－7＝31 人。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "承上題：社團 40 人，養狗 22 人、養貓 16 人、兩種都養 7 人。狗和貓『都沒有養』的有幾人？",
+     "answer": "9",
+     "kp_ids": [
+      "math.t_adv.counting.inclusion-exclusion"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.inclusion-exclusion"
+     ],
+     "options": [
+      "9",
+      "2",
+      "31",
+      "18"
+     ],
+     "distractor_rationales": {
+      "2": "這是把 40 直接減掉 22 和 16（40－22－16）；兩種都養的 7 人被扣了兩次，要加回，正確是 40－(22＋16－7)＝9。",
+      "31": "這是『至少養一種』的人數；題目問的是都不養，要用全部－聯集＝40－31＝9。",
+      "18": "這是只扣掉養狗的（40－22），忘了養貓的；都不養＝全部－聯集＝40－(22＋16－7)＝9。"
+     },
+     "answer_evidence": [
+      "c-ie-complement"
+     ],
+     "feedback": "都不養＝全部－至少養一種＝40－31＝9 人。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在 1 到 40 的整數中，能被 2 整除或能被 5 整除的數共有幾個？",
+     "answer": "24",
+     "kp_ids": [
+      "math.t_adv.counting.inclusion-exclusion"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.inclusion-exclusion"
+     ],
+     "options": [
+      "24",
+      "28",
+      "32",
+      "20"
+     ],
+     "distractor_rationales": {
+      "28": "這是把被 2 的（20 個）和被 5 的（8 個）直接相加（20＋8）；被 10（2 和 5 的公倍數）整除的 4 個被算兩次，要扣回，20＋8－4＝24。",
+      "32": "這是把交集也加上去了（20＋8＋4）；重複算的『被 10 整除』要減不是加，20＋8－4＝24。",
+      "20": "這是只算了被 2 整除的（20 個），漏掉被 5 整除的；用排容 20＋8－4＝24。"
+     },
+     "answer_evidence": [
+      "c-ie-two"
+     ],
+     "feedback": "被 2 有 20 個、被 5 有 8 個、被 10 有 4 個：20＋8－4＝24。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在 1 到 100 的整數中，能被 2 或 3 或 5 整除的數共有幾個？（被 2 的 50 個、被 3 的 33 個、被 5 的 20 個、被 6 的 16 個、被 10 的 10 個、被 15 的 6 個、被 30 的 3 個）",
+     "answer": "74",
+     "kp_ids": [
+      "math.t_adv.counting.inclusion-exclusion"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.inclusion-exclusion"
+     ],
+     "options": [
+      "74",
+      "103",
+      "71",
+      "68"
+     ],
+     "distractor_rationales": {
+      "103": "這是只把單個的加起來（50＋33＋20）；還沒扣掉兩兩公倍數（被 6、10、15 整除的）被重複算的部分。",
+      "71": "這是扣了兩兩交集卻忘了把三個都整除的（被 30 整除的 3 個）加回來；50＋33＋20－16－10－6＋3＝74。",
+      "68": "這是連『三個都整除』的也減掉了（方向錯）；三集合的 |A∩B∩C| 要『加回』不是減，50＋33＋20－16－10－6＋3＝74。"
+     },
+     "answer_evidence": [
+      "c-ie-three"
+     ],
+     "feedback": "三集合排容：50＋33＋20－16－10－6＋3＝74（單個加、兩兩扣、三個加回）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（排容原理：數『至少符合一個』相加會重複算交集，兩集合 |A∪B|＝|A|＋|B|－|A∩B|〔扣一次〕；三集合單個加、兩兩扣、三個一起加回 |A∪B∪C|＝|A|＋|B|＋|C|－|A∩B|－|A∩C|－|B∩C|＋|A∩B∩C|；求『都不符合』＝全部－|A∪B|；別忘扣交集、別把交集加成正號、三交集是加回不是減）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
