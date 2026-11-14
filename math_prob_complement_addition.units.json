@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 機率（prob）strand 第 3 個單元（t_adv 學測）。知識點 math.t_adv.prob.complement-addition（餘事件與機率的加法法則）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，gloss 緊貼正確中文術語）：餘事件 (complement event)、加法法則 (addition rule)、互斥 (mutually exclusive)。★scope（學測 t_adv）：(1) 餘事件——事件 A 的餘事件 A'＝『A 不發生』，P(A')＝1－P(A)；求『至少…』常用補集較快。(2) 加法法則——P(A∪B)＝P(A)＋P(B)－P(A∩B)（相加會把交集算兩次，扣回一次，和計數的排容原理同理）。(3) 互斥特例——若 A、B 不會同時發生（A∩B＝∅、互斥），則 P(A∪B)＝P(A)＋P(B)。prereq＝classical（古典機率 P=|A|/|S|）。不含：獨立事件相乘公式（另單元 mutually-exclusive/multiplication 深入）、條件機率。★自檢（math-unit defect-classes #1–#49）：事實全 .venv（Fraction）驗（teach 餘 1－3/10=7/10、加 P(偶或>4)=3/6+2/6-1/6=2/3；Q1 不是紅心=1－13/52=3/4、Q2 1~20 的 2 或 5 倍數=10/20+4/20-2/20=3/5、Q3 概念 1－P(A)、Q4 互斥紅或白=5/10+3/10=4/5；各 distractor 單一錯誤路徑）；分數用斜線、減號全形 U+FF0D（含公式 1－P(A)、－P(A∩B)、distractor_rationales key）；★figure＝法則卡（低幾何風險：三列①餘事件 A'＝A 不發生→P(A')=1－P(A)、②加法法則 P(A∪B)=P(A)+P(B)－P(A∩B)、③互斥特例 A∩B=∅→P(A∪B)=P(A)+P(B)），alt 與 SVG text 逐字一致（#33）、figure 標題『餘事件 1－P(A)；加法法則 P(A)+P(B)－P(A∩B)』寫進 alt 開頭；★MCQ options 全 bare（#47，說明在 distractor_rationales）、每個 distractor 乾淨單一錯誤路徑（餘事件忘了取 1 減/加法忘扣交集/把交集加成正號/把『或』當『且』相乘/只算其中一個事件），數值兩兩相異（#14/#29）、長度均衡（#20/#28）；★導讀承諾順序＝實際 teach 牌組順序（#4/#46）：導讀『先講餘事件 P(A')=1－P(A)、用一袋球 P(不是紅)=1－3/10=7/10 示範、再講加法法則 P(A∪B)=P(A)+P(B)－P(A∩B)、用擲骰 P(偶或>4)=2/3 示範、講互斥特例不用扣交集、用一張卡整理、最後練』＝實際 teach1 intro→teach2 餘事件+加法法則+互斥+示範→teach3 figure 法則卡→teach4 recap+練；worked-example 在 rendered teach；★teach worked-example 用 7/10、2/3，與 practice 答案（Q1 3/4、Q2 3/5、Q3 概念、Q4 4/5）皆不重疊避#10；source_refs 標『高中數學 學測』對齊 t_adv。claim kind=definition。figure-only example 無 body。",
+ "page": "math_prob_complement_addition.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.prob.complement-addition",
+   "title_zh": "餘事件與加法法則",
+   "can_do": "我知道事件 A 的餘事件 (complement event) A'＝『A 不發生』，而且 P(A')＝1－P(A)——求『至少…』的機率時常用補集比較快。我也會用機率的加法法則 (addition rule)：P(A∪B)＝P(A)＋P(B)－P(A∩B)（相加會把同時發生的交集算兩次，要扣回一次）；若 A、B 互斥 (mutually exclusive)（不會同時發生），就直接 P(A∪B)＝P(A)＋P(B)。",
+   "situation_group": "機率：餘事件與加法法則",
+   "subject": "math",
+   "strand": "prob",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_adv.prob.complement-addition"
+   ],
+   "prerequisites": [
+    "math.t_mid.prob.classical"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ca-complement",
+     "text": "餘事件 (complement event)：事件 A 的餘事件 A' 就是『A 不發生』這件事。因為 A 發生和 A 不發生一定恰好占掉全部，所以 P(A)＋P(A')＝1，也就是 P(A')＝1－P(A)。遇到『至少…』『不是…』這種事件，先算它的餘事件常常比較快。例：一袋有 10 顆球、其中 3 顆是紅球，隨機抽 1 顆，抽到『不是紅球』的機率＝1－P(紅)＝1－3/10＝7/10。",
+     "kind": "definition",
+     "source_refs": [
+      "餘事件 P(A')=1－P(A)（高中數學 學測）"
+     ],
+     "verification_ref": "1－3/10=7/10（.venv Fraction）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ca-addition",
+     "text": "加法法則 (addition rule)：求『A 或 B 發生』的機率 P(A∪B)，不能只把 P(A) 和 P(B) 相加，因為同時發生（A∩B）的部分被算了兩次，要扣回一次：P(A∪B)＝P(A)＋P(B)－P(A∩B)（和計數的排容原理同一個道理）。例：擲一顆公正骰子，P(點數是偶數 或 大於 4)＝P(偶)＋P(>4)－P(偶且>4)＝3/6＋2/6－1/6＝4/6＝2/3（偶且>4 只有 6 一個）。",
+     "kind": "definition",
+     "source_refs": [
+      "機率加法法則 P(A∪B)=P(A)+P(B)－P(A∩B)（高中數學 學測）"
+     ],
+     "verification_ref": "3/6+2/6-1/6=2/3（.venv Fraction）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ca-exclusive",
+     "text": "互斥 (mutually exclusive) 的特例：如果 A 和 B 不可能同時發生（A∩B＝∅，像『抽到紅球』和『抽到白球』），那麼交集的機率 P(A∩B)＝0，加法法則就簡化成 P(A∪B)＝P(A)＋P(B)——直接相加就好、不用扣。但如果 A、B 可能同時發生（例如『偶數』和『大於 4』都包含 6），就一定要用完整的加法法則把交集扣掉，不能直接相加。",
+     "kind": "definition",
+     "source_refs": [
+      "互斥事件 P(A∪B)=P(A)+P(B)（高中數學 學測）"
+     ],
+     "verification_ref": "互斥 A∩B=∅ ⇒ 直接相加（教學慣例）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.prob.complement-addition"
+     ],
+     "body": "這一單元學『餘事件與加法法則』。下面先講餘事件——A 的餘事件 A' 是『A 不發生』，P(A')＝1－P(A)，用一袋 10 顆球 3 顆紅、P(不是紅)＝1－3/10＝7/10 示範；再講加法法則 P(A∪B)＝P(A)＋P(B)－P(A∩B)（相加會把交集算兩次要扣回），用擲一骰 P(偶數 或 >4)＝3/6＋2/6－1/6＝2/3 示範；接著講互斥的特例（不會同時發生就不用扣交集）；用一張卡整理，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.prob.complement-addition"
+     ],
+     "body": "餘事件：A' 是『A 不發生』，P(A)＋P(A')＝1，所以 P(A')＝1－P(A)。求『不是…』『至少…』常用補集較快。示範：一袋 10 顆球 3 顆紅，P(不是紅)＝1－3/10＝7/10。加法法則：P(A∪B)＝P(A)＋P(B)－P(A∩B)——相加會把同時發生的交集算兩次，扣回一次（和排容原理同理）。示範：擲一骰，P(偶數 或 >4)＝P(偶)＋P(>4)－P(偶且>4)＝3/6＋2/6－1/6＝4/6＝2/3（偶且>4 只有 6）。互斥特例：若 A、B 不會同時發生（A∩B＝∅，如紅球/白球），P(A∩B)＝0，直接 P(A∪B)＝P(A)＋P(B)；但會同時發生（如偶數和>4 都含 6）就一定要扣交集。下面用一張卡整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.prob.complement-addition"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 352 136' xmlns='http://www.w3.org/2000/svg'><text x='176' y='18' font-family='sans-serif' font-size='11.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>餘事件 1－P(A)；加法法則 P(A)＋P(B)－P(A∩B)</text><rect x='12' y='30' width='328' height='30' rx='6' fill='#eef4ff' stroke='#5b8def' stroke-width='1.1'/><text x='22' y='49' font-family='sans-serif' font-size='10.5' fill='#5b8def' font-weight='bold'>①餘事件</text><text x='224' y='50' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='middle'>A'＝A 不發生 → P(A')＝1－P(A)</text><rect x='12' y='64' width='328' height='30' rx='6' fill='#eef7ee' stroke='#4e9a6b' stroke-width='1.1'/><text x='22' y='83' font-family='sans-serif' font-size='10.5' fill='#4e9a6b' font-weight='bold'>②加法法則</text><text x='222' y='84' font-family='sans-serif' font-size='10' fill='#33475b' text-anchor='middle'>P(A∪B)＝P(A)＋P(B)－P(A∩B)</text><rect x='12' y='98' width='328' height='30' rx='6' fill='#fdf2e9' stroke='#d08a3e' stroke-width='1.1'/><text x='22' y='117' font-family='sans-serif' font-size='10.5' fill='#d08a3e' font-weight='bold'>③互斥</text><text x='224' y='118' font-family='sans-serif' font-size='10' fill='#33475b' text-anchor='middle'>A∩B＝∅ → P(A∪B)＝P(A)＋P(B)</text></svg>",
+      "alt": "標題「餘事件 1－P(A)；加法法則 P(A)＋P(B)－P(A∩B)」。一張卡，三列。第一列藍底「①餘事件」：「A'＝A 不發生 → P(A')＝1－P(A)」。第二列綠底「②加法法則」：「P(A∪B)＝P(A)＋P(B)－P(A∩B)」。第三列橘底「③互斥」：「A∩B＝∅ → P(A∪B)＝P(A)＋P(B)」。",
+      "caption": "餘事件 A'＝A 不發生，P(A')＝1－P(A)；求 A 或 B 用加法法則 P(A∪B)＝P(A)＋P(B)－P(A∩B)（相加把交集算兩次要扣回）；若 A、B 互斥（不會同時發生）則直接相加不用扣。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.prob.complement-addition"
+     ],
+     "body": "最後練餘事件與加法法則。重點：餘事件 P(A')＝1－P(A)（『不是…』『至少…』常用補集）；求『A 或 B』用 P(A∪B)＝P(A)＋P(B)－P(A∩B)，相加會把交集算兩次要扣回；只有在 A、B 互斥（不會同時發生、A∩B＝∅）時才可以直接相加。小提醒：先判斷 A、B 會不會同時發生——會就要扣交集、不會才直接加；餘事件別忘了用 1 去減；『或』是相加不是相乘。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "從一副 52 張的撲克牌（沒有鬼牌）中隨機抽 1 張，抽到『不是紅心』的機率是多少？",
+     "answer": "3/4",
+     "kp_ids": [
+      "math.t_adv.prob.complement-addition"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.prob.complement-addition"
+     ],
+     "options": [
+      "3/4",
+      "1/4",
+      "1/2",
+      "51/52"
+     ],
+     "distractor_rationales": {
+      "1/4": "這是『抽到紅心』的機率（13/52＝1/4）；題目問『不是紅心』，要用餘事件 1－1/4＝3/4。",
+      "1/2": "這是把『紅心』當成所有『紅色的牌』（紅心＋方塊＝26 張，不是紅色＝26/52＝1/2）；紅心只有 13 張，不是紅心＝1－13/52＝3/4。",
+      "51/52": "這是以為只有 1 張紅心（1－1/52）；紅心有 13 張，不是紅心＝1－13/52＝3/4。"
+     },
+     "answer_evidence": [
+      "c-ca-complement"
+     ],
+     "feedback": "不是紅心＝紅心的餘事件＝1－13/52＝1－1/4＝3/4。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在 1 到 20 的整數中隨機抽 1 個，抽到『2 的倍數 或 5 的倍數』的機率是多少？（被 2 整除有 10 個、被 5 整除有 4 個、被 10 整除有 2 個）",
+     "answer": "3/5",
+     "kp_ids": [
+      "math.t_adv.prob.complement-addition"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.prob.complement-addition"
+     ],
+     "options": [
+      "3/5",
+      "7/10",
+      "4/5",
+      "1/2"
+     ],
+     "distractor_rationales": {
+      "7/10": "這是忘了扣掉『又是 2 又是 5 的倍數』（10 的倍數）（10/20＋4/20＝14/20＝7/10）；加法法則要減交集，(10＋4－2)/20＝12/20＝3/5。",
+      "4/5": "這是把交集加上去了（10/20＋4/20＋2/20＝16/20＝4/5）；交集要『減』不是加，3/5。",
+      "1/2": "這是只算了 2 的倍數（10/20），漏掉 5 的倍數；要用加法法則 (10＋4－2)/20＝3/5。"
+     },
+     "answer_evidence": [
+      "c-ca-addition"
+     ],
+     "feedback": "加法法則：P＝(10＋4－2)/20＝12/20＝3/5。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "已知事件 A 的機率是 P(A)，那麼 A 的餘事件 A'（也就是『A 不發生』）的機率是多少？",
+     "answer": "1－P(A)",
+     "kp_ids": [
+      "math.t_adv.prob.complement-addition"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.prob.complement-addition"
+     ],
+     "options": [
+      "1－P(A)",
+      "P(A)－1",
+      "1/P(A)",
+      "P(A)"
+     ],
+     "distractor_rationales": {
+      "P(A)－1": "這是把相減的順序顛倒了（會變成負的或 0 以下）；因為 P(A)＋P(A')＝1，所以 P(A')＝1－P(A)。",
+      "1/P(A)": "這是取倒數，不是餘事件；餘事件是『總和 1 減掉 P(A)』，P(A')＝1－P(A)。",
+      "P(A)": "這是沒有改變（還是 A 發生的機率）；餘事件是 A『不發生』，P(A')＝1－P(A)。"
+     },
+     "answer_evidence": [
+      "c-ca-complement"
+     ],
+     "feedback": "P(A)＋P(A')＝1，所以餘事件 P(A')＝1－P(A)。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一袋中有 5 顆紅球、3 顆白球、2 顆藍球，共 10 顆。隨機抽 1 顆，抽到『紅球 或 白球』的機率是多少？",
+     "answer": "4/5",
+     "kp_ids": [
+      "math.t_adv.prob.complement-addition"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.prob.complement-addition"
+     ],
+     "options": [
+      "4/5",
+      "3/20",
+      "1/2",
+      "3/10"
+     ],
+     "distractor_rationales": {
+      "3/20": "這是把『或』當成『且』去相乘了（5/10×3/10＝3/20）；紅、白互斥的『或』要相加，5/10＋3/10＝4/5。",
+      "1/2": "這是只算了紅球（5/10），漏掉白球；紅或白＝5/10＋3/10＝4/5。",
+      "3/10": "這是只算了白球（3/10），漏掉紅球；紅或白＝5/10＋3/10＝4/5。"
+     },
+     "answer_evidence": [
+      "c-ca-exclusive"
+     ],
+     "feedback": "紅、白不會同時發生（互斥），直接相加＝5/10＋3/10＝8/10＝4/5。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（餘事件 A'＝A 不發生、P(A')＝1－P(A)，『不是…』『至少…』常用補集；加法法則 P(A∪B)＝P(A)＋P(B)－P(A∩B)，相加會把交集算兩次要扣回；只有 A、B 互斥〔不會同時發生、A∩B＝∅〕才可直接相加；先判斷會不會同時發生再決定要不要扣交集；『或』是相加不是相乘、餘事件別忘用 1 減）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
