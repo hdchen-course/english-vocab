@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 計數（counting）strand 第 6 個單元（t_adv 學測）。知識點 math.t_adv.counting.permutation-repeat（重複排列與相同物排列；本單元聚焦『可重複使用』的重複排列 n^r）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，gloss 緊貼正確中文術語）：重複排列 (permutation with repetition)。★scope（學測 t_adv）：重複排列——若每個位置都可以從 n 種東西中選（可重複、放回），排成 r 個位置共有 n^r 種（每位 n 種，用乘法原理 n×n×…×n 共 r 個）。與直線排列 nPr（不可重複、不放回、因子遞減）對照辨別：關鍵看『能不能重複用同一個』。不含：相同物排列（n!/(重複數階乘)，另視為延伸）、環狀排列（另單元）、組合。prereq＝permutation（直線排列 nPr，剛建；重複排列是放回版，與不放回的 nPr 對照）。★自檢（math-unit defect-classes）：事實全 .venv 驗（teach 兩位密碼 10²＝100、擲骰兩次 6²＝36、4 字母可重複排 2 位＝4²＝16 vs 不可重複＝4P2＝12；Q1 三位密碼 10³＝1000、Q2 擲骰三次 6³＝216、Q4 五題是非 2⁵＝32；各 distractor 單一錯誤路徑）；本單元上標（n^r、10³、6³、2⁵、4²）以 caret 或 Unicode 上標、非簡體；減號全形 U+FF0D（公式 n－1 等）；★figure＝對照卡（低幾何風險：三列①重複排列 可重複/放回→n^r〔每位都 n 種〕、②直線排列 不可重複/不放回→nPr〔因子遞減〕、③辨別 能不能重複用同一個），alt 與 SVG text 逐字一致（#33）、figure 標題『可重複用 n^r；不可重複用 nPr』寫進 alt 開頭；★MCQ options 全 bare（#47，說明在 distractor_rationales）、每個 distractor 乾淨單一錯誤路徑（當成不放回用 nPr／n×r 誤乘／底指顛倒 r^n／n＋r 誤加／n! 全排列）、數值兩兩相異（#14/#29）、長度均衡（#20/#28）；★導讀承諾順序＝實際 teach 牌組順序（#4/#46）：導讀『先講重複排列 n^r（可重複、每位 n 種）、用兩位密碼 10²＝100 示範、用擲骰兩次 6²＝36 再示範、對照直線排列用 4 字母可重複 4²＝16 vs 不可重複 4P2＝12、用一張對照卡整理、最後練』＝實際 teach1 intro→teach2 n^r 定義＋兩示範＋對照→teach3 figure 對照卡→teach4 recap+練；worked-example 在 rendered teach；★teach worked-example 用 100／36／16／12，與 practice 答案（Q1 1000、Q2 216、Q3 n^r、Q4 32）皆不重疊避#10。claim kind=definition。figure-only example 無 body。",
+ "page": "math_counting_permutation_repeat.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.counting.permutation-repeat",
+   "title_zh": "重複排列",
+   "can_do": "我知道重複排列 (permutation with repetition) 是『可以重複使用同一個』的排列：若每個位置都能從 n 種東西中選（放回、可重複），排成 r 個位置就有 n^r 種（每一位都是 n 種，相乘 n×n×…×n 共 r 個）。我也會分辨——可重複用 n^r、不可重複用直線排列 nPr。",
+   "situation_group": "計數：重複排列",
+   "subject": "math",
+   "strand": "counting",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_adv.counting.permutation-repeat"
+   ],
+   "prerequisites": [
+    "math.t_adv.counting.permutation"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-rep-def",
+     "text": "重複排列 (permutation with repetition)：如果每個位置都可以從 n 種東西中挑（挑過還可以再挑、放回），要排滿 r 個位置，那麼每一位都有 n 種選擇，用乘法原理相乘得 n×n×…×n（共 r 個）＝n^r 種。例：一個 3 位數密碼，每一位都可以是 0 到 9（10 種、可重複），共有 10×10×10＝10³＝1000 種。重點：因為『可重複、放回』，每一位都還是 n 種，不像直線排列會遞減。",
+     "kind": "definition",
+     "source_refs": [
+      "重複排列 n^r（高中數學 學測）"
+     ],
+     "verification_ref": "10³=1000、6²=36（.venv）；每位 n 種相乘",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-rep-vs-perm",
+     "text": "重複排列和直線排列的差別就看『能不能重複用同一個』：可以重複（放回）就用重複排列 n^r，每一位都還是 n 種；不可以重複（不放回、取走就少一個）就用直線排列 nPr，因子一路遞減。例：用 4 個字母排 2 個位置，若允許重複（像 AA 也可以）有 4²＝16 種；若不允許重複就是 4P2＝4×3＝12 種。所以同樣是『排 r 個位置』，可重複的情形通常比不可重複多。",
+     "kind": "definition",
+     "source_refs": [
+      "重複排列與直線排列的辨別（高中數學 學測）"
+     ],
+     "verification_ref": "4²=16 vs 4P2=12（.venv）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-rep-apply",
+     "text": "常見的重複排列情境：每一步（每一位）都獨立、而且都從同樣的幾種裡選。例如擲一顆骰子連續擲 r 次、依序記點數，每次都是 6 種，共 6^r 種結果序列；又例如一張 m 題的是非題考卷，每題都是『○或×』2 種，全部作答共 2^m 種。判斷時先確認：各位置是不是都可以用同一種（可重複），而且是『有順序、分位置』的。",
+     "kind": "definition",
+     "source_refs": [
+      "重複排列應用：骰子序列、是非題（高中數學 學測）"
+     ],
+     "verification_ref": "6^r、2^m 每位獨立相乘（教學慣例）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.counting.permutation-repeat"
+     ],
+     "body": "這一單元學『重複排列』——可以重複使用同一個的排列。下面先講重複排列 n^r（每個位置都可從 n 種裡選、可重複，排 r 個位置共 n^r 種），用一個兩位密碼（每位 0 到 9）示範 10²＝100，再用擲骰子兩次示範 6²＝36；接著對照直線排列：用 4 個字母排 2 位，可重複是 4²＝16、不可重複是 4P2＝12；用一張對照卡整理，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.counting.permutation-repeat"
+     ],
+     "body": "重複排列：每個位置都可從 n 種裡選（可重複、放回），排 r 個位置＝每位 n 種相乘＝n^r。示範一：一個兩位密碼、每位都是 0 到 9（10 種），共 10×10＝10²＝100 種。示範二：擲骰子兩次、依序記點數，每次 6 種，共 6×6＝6²＝36 種。對照直線排列（不可重複、不放回）：用 4 個字母排 2 位，可重複有 4²＝16 種，不可重複只有 4P2＝4×3＝12 種。差別就在『能不能重複用同一個』。下面用一張對照卡整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.counting.permutation-repeat"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 346 136' xmlns='http://www.w3.org/2000/svg'><text x='173' y='18' font-family='sans-serif' font-size='12' fill='#2f6f54' text-anchor='middle' font-weight='bold'>可重複用 n^r；不可重複用 nPr</text><rect x='12' y='30' width='322' height='30' rx='6' fill='#eef4ff' stroke='#5b8def' stroke-width='1.1'/><text x='22' y='49' font-family='sans-serif' font-size='10.5' fill='#5b8def' font-weight='bold'>①重複排列</text><text x='224' y='50' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>可重複/放回 → n^r（每位 n 種）</text><rect x='12' y='64' width='322' height='30' rx='6' fill='#eef7ee' stroke='#4e9a6b' stroke-width='1.1'/><text x='22' y='83' font-family='sans-serif' font-size='10.5' fill='#4e9a6b' font-weight='bold'>②直線排列</text><text x='224' y='84' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>不可重複/不放回 → nPr（遞減）</text><rect x='12' y='98' width='322' height='30' rx='6' fill='#fdf2e9' stroke='#d08a3e' stroke-width='1.1'/><text x='22' y='117' font-family='sans-serif' font-size='10.5' fill='#d08a3e' font-weight='bold'>③辨別</text><text x='226' y='118' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='middle'>能不能重複用同一個？</text></svg>",
+      "alt": "標題「可重複用 n^r；不可重複用 nPr」。一張對照卡，三列。第一列藍底「①重複排列」：「可重複/放回 → n^r（每位 n 種）」。第二列綠底「②直線排列」：「不可重複/不放回 → nPr（遞減）」。第三列橘底「③辨別」：「能不能重複用同一個？」。",
+      "caption": "先問『能不能重複用同一個』：可重複（放回）用重複排列 n^r，每位都 n 種；不可重複（不放回）用直線排列 nPr，因子遞減。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.counting.permutation-repeat"
+     ],
+     "body": "最後練重複排列。重點：每個位置都可從 n 種裡選、可重複，排 r 個位置就是 n^r（底是『每位的種類數 n』、指數是『位置數 r』）。小提醒：先確認是不是『可重複、放回』——可重複才用 n^r，不可重複要用直線排列 nPr；別把底和指數擺反（是 n^r 不是 r^n），也別和 n×r 搞混。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個 3 位數的密碼鎖，每一位都可以是 0 到 9（各位可以重複）。共有幾種不同的密碼？",
+     "answer": "1000",
+     "kp_ids": [
+      "math.t_adv.counting.permutation-repeat"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.permutation-repeat"
+     ],
+     "options": [
+      "1000",
+      "720",
+      "30",
+      "13"
+     ],
+     "distractor_rationales": {
+      "720": "這是當成不可重複（10P3＝10×9×8＝720）；但每一位都可以重複用 0 到 9，要用 10³＝1000。",
+      "30": "這是把種類數乘以位數（10×3）；重複排列是每位 10 種相乘 10×10×10＝10³＝1000。",
+      "13": "這是把種類數和位數相加（10＋3）；要用 10³＝1000。"
+     },
+     "answer_evidence": [
+      "c-rep-def"
+     ],
+     "feedback": "每位 10 種、可重複、3 位＝10³＝1000。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "擲一顆骰子連續擲 3 次，依序記下每次的點數。共有幾種不同的結果序列？",
+     "answer": "216",
+     "kp_ids": [
+      "math.t_adv.counting.permutation-repeat"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.permutation-repeat"
+     ],
+     "options": [
+      "216",
+      "120",
+      "18",
+      "729"
+     ],
+     "distractor_rationales": {
+      "120": "這是當成不可重複（6P3＝6×5×4＝120）；但每次都可能擲出同樣的點數（可重複），要用 6³＝216。",
+      "18": "這是把點數種類乘以次數（6×3）；重複排列是每次 6 種相乘 6×6×6＝6³＝216。",
+      "729": "這是把底和指數擺反了（算成 3⁶＝729）；底是『每次的點數種類 6』、指數是『次數 3』，6³＝216。"
+     },
+     "answer_evidence": [
+      "c-rep-apply"
+     ],
+     "feedback": "每次 6 種、可重複、擲 3 次＝6³＝216。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "有 n 種東西，要排進 r 個位置，而且每個位置都可以重複使用同一種東西。總共有幾種排法？",
+     "answer": "n^r",
+     "kp_ids": [
+      "math.t_adv.counting.permutation-repeat"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.permutation-repeat"
+     ],
+     "options": [
+      "n^r",
+      "nPr",
+      "nCr",
+      "n!"
+     ],
+     "distractor_rationales": {
+      "nPr": "nPr 是『不可重複、不放回』的直線排列（因子遞減）；題目說每位可以重複用同一種，要用 n^r。",
+      "nCr": "nCr 是『不計順序』地選 r 個（組合）；這裡分位置、有順序又可重複，要用 n^r。",
+      "n!": "n! 是把 n 個相異物『全部』排一列；這裡是排 r 個位置、可重複，要用 n^r。"
+     },
+     "answer_evidence": [
+      "c-rep-def"
+     ],
+     "feedback": "每位都可重複地從 n 種裡選、排 r 位＝n^r（底 n、指數 r）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一張考卷有 5 題是非題，每一題都要填「○」或「×」（2 種）。全部作答完，共有幾種不同的作答方式？",
+     "answer": "32",
+     "kp_ids": [
+      "math.t_adv.counting.permutation-repeat"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.counting.permutation-repeat"
+     ],
+     "options": [
+      "32",
+      "10",
+      "25",
+      "120"
+     ],
+     "distractor_rationales": {
+      "10": "這是把選項數乘以題數（2×5）；每題都是 2 選 1、可重複，5 題是 2×2×2×2×2＝2⁵＝32。",
+      "25": "這是把底和指數擺反了（算成 5²＝25）；底是『每題的選項 2』、指數是『題數 5』，2⁵＝32。",
+      "120": "這是 5!＝120（把 5 題當相異物全排列）；每題獨立 2 選 1、可重複，要用 2⁵＝32。"
+     },
+     "answer_evidence": [
+      "c-rep-apply"
+     ],
+     "feedback": "每題 2 種、可重複、5 題＝2⁵＝32。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（重複排列：每位都可從 n 種裡選、可重複，排 r 位＝n^r〔底 n、指數 r，別擺成 r^n〕；先確認『能不能重複用同一個』——可重複用 n^r、不可重複用直線排列 nPr；別和 n×r 或 n! 搞混）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
