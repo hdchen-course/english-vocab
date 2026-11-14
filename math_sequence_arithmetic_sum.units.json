@@ -1,0 +1,213 @@
+{
+ "_note": "數學島 數列級數（sequence）strand 第 2 個單元（全島第 74；t_adv 高中學測範圍）。知識點 math.t_adv.sequence.arithmetic-sum（等差級數求和）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15）：等差級數 (arithmetic series)、級數和 (sum)、首項 (first term)、末項 (last term)、項數 (number of terms)。★scope（高中學測）：(1) 高斯配對法：把等差級數頭尾配對，每一對的和都相等（首＋末），所以總和＝（配對數）×（每對和）。(2) 求和公式 S_n＝n×(a_1＋a_n)/2＝項數×(首項＋末項)/2（知道首項與末項時最好用）。(3) 不知末項時用 S_n＝(n/2)×[2a_1＋(n−1)d]（代入 a_n＝a_1＋(n−1)d 即得）。不含：等比級數求和、Σ 記號、無窮級數、遞迴。prereq＝等差數列的通項與性質（arithmetic）。★自檢（math-unit defect-classes）：事實全 .venv 驗（1+…+100=5050＝100×101/2；1+…+6=21＝3對×7〔高斯〕；a_1=3,d=4 前5項 3,7,11,15,19 和=55＝5×(3+19)/2；1+…+50=1275；a_1=2,d=3 前10項和=155〔a_10=29〕；2+4+…+20=110）；減號 U+2212、乘號 ×、除號/；量詞不撞位名（本單元無位名，#3）；learner-facing 含 selfeval_note 用字詞（#2）；★figure＝高斯配對 1+…+6（低幾何風險 #43/#32：三欄配對 1/6、2/5、3/4 各＝7、標「3 × 7 ＝ 21」），alt 與 SVG text 逐字一致（#33）；誘答單一乾淨機制（忘除以 2／只算首末和沒乘項數／漏首項只用末項／對數或項數算錯）、選項長度均衡（#20/#28）、兩兩相異（#29）；★practice 所考方法（高斯/公式求和、已知首項公差求前 n 項和、偶數和、公式概念）都在 rendered teach 示範（#4/#46：導讀承諾『先用高斯配對看為什麼、再給公式 S_n=n(首+末)/2 與不知末項時的式子，用配對圖看，最後練』與實際一致；worked-example 在 rendered teach）；★teach worked-example（1+…+100=5050；a_1=3,d=4 前5項和=55）與 figure（1+…+6=21）與 practice 答案（Q1 1275／Q2 155／Q3 110／Q4 概念）皆不重疊避#10。claim kind=definition。figure-only example 無 body。",
+ "page": "math_sequence_arithmetic_sum.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.sequence.arithmetic-sum",
+   "title_zh": "等差級數求和",
+   "can_do": "我知道把等差級數頭尾配對時，每一對的和都一樣（首項＋末項），所以可以快速求總和。我會用公式 S_n＝項數×(首項＋末項)/2 求等差級數的和；如果不知道末項，我會先用通項求出末項，或用 S_n＝(n/2)×[2a_1＋(n−1)d]。",
+   "situation_group": "數列：等差級數",
+   "subject": "math",
+   "strand": "sequence",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_adv.sequence.arithmetic-sum"
+   ],
+   "prerequisites": [
+    "math.t_adv.sequence.arithmetic"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-asum-gauss",
+     "text": "高斯配對法：把等差級數 (arithmetic series) 的項頭尾兩兩配對——第一項配最後一項、第二項配倒數第二項…每一對的和都相等，都等於『首項 (first term)＋末項 (last term)』。所以總和＝配對數 × 每對的和。例如 1＋2＋…＋100，把 1 配 100、2 配 99…每對都是 101，共 50 對，總和＝50×101＝5050。",
+     "kind": "definition",
+     "source_refs": [
+      "等差級數高斯配對：頭尾配對每對同和（高中數學）"
+     ],
+     "verification_ref": "1+…+100=5050=50×101（驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-asum-formula",
+     "text": "求和公式：等差級數前 n 項的和 S_n＝n×(a_1＋a_n)/2，也就是『項數 (number of terms) ×(首項＋末項)/2』。這正是高斯配對的意思：每對的和是 (a_1＋a_n)，一共有 n/2 對。例如首項 3、公差 4 的前 5 項 3、7、11、15、19，末項 a_5＝19，和 S_5＝5×(3＋19)/2＝5×22/2＝55。",
+     "kind": "definition",
+     "source_refs": [
+      "等差級數和 S_n=n(a_1+a_n)/2（高中數學）"
+     ],
+     "verification_ref": "a_1=3,d=4 前5項和=55=5×(3+19)/2（驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-asum-noend",
+     "text": "如果不知道末項，可以先用通項求末項 a_n＝a_1＋(n−1)d，再代進公式；或直接用另一個等價的式子 S_n＝(n/2)×[2a_1＋(n−1)d]（把 a_n＝a_1＋(n−1)d 代入 n(a_1＋a_n)/2 就得到）。兩個式子答案一樣，看題目給了什麼就用哪個方便。",
+     "kind": "definition",
+     "source_refs": [
+      "等差級數和 S_n=(n/2)[2a_1+(n−1)d]（高中數學）"
+     ],
+     "verification_ref": "S_n=n(a_1+a_n)/2 與 (n/2)[2a_1+(n−1)d] 等價（驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.sequence.arithmetic-sum"
+     ],
+     "body": "上一個單元學了等差數列，這裡學把等差數列『加起來』（等差級數）怎麼快速求和。核心是一個很漂亮的想法：高斯配對——把頭尾兩兩配對，每一對的和都一樣。下面先用這個想法看為什麼，再給求和公式 S_n＝項數×(首項＋末項)/2，以及不知道末項時怎麼辦，用一張配對圖看清楚，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.sequence.arithmetic-sum"
+     ],
+     "body": "三個重點。(1) 高斯配對：頭尾配對，每對的和都等於（首項＋末項）。例 1＋2＋…＋100，每對都是 101、共 50 對，總和＝50×101＝5050。(2) 公式：S_n＝n×(a_1＋a_n)/2＝項數×(首項＋末項)/2。例 首項 3、公差 4 的前 5 項 3、7、11、15、19，末項 19，和＝5×(3＋19)/2＝55。(3) 不知末項時：先用 a_n＝a_1＋(n−1)d 求末項再代，或用 S_n＝(n/2)×[2a_1＋(n−1)d]。下面用高斯配對圖看 1＋…＋6。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.sequence.arithmetic-sum"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 158' xmlns='http://www.w3.org/2000/svg'><text x='170' y='22' font-family='sans-serif' font-size='13.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>高斯配對：1 ＋ 2 ＋ … ＋ 6</text><rect x='52' y='36' width='68' height='84' rx='8' fill='#eef4ff' stroke='#5b8def' stroke-width='1.2'/><rect x='136' y='36' width='68' height='84' rx='8' fill='#eef4ff' stroke='#5b8def' stroke-width='1.2'/><rect x='220' y='36' width='68' height='84' rx='8' fill='#eef4ff' stroke='#5b8def' stroke-width='1.2'/><text x='86' y='60' font-family='sans-serif' font-size='15' fill='#33475b' text-anchor='middle' font-weight='bold'>1</text><text x='86' y='82' font-family='sans-serif' font-size='13' fill='#33475b' text-anchor='middle'>＋ 6</text><line x1='64' y1='92' x2='108' y2='92' stroke='#94a3b8' stroke-width='1'/><text x='86' y='110' font-family='sans-serif' font-size='14' fill='#2f6f54' text-anchor='middle' font-weight='bold'>＝ 7</text><text x='170' y='60' font-family='sans-serif' font-size='15' fill='#33475b' text-anchor='middle' font-weight='bold'>2</text><text x='170' y='82' font-family='sans-serif' font-size='13' fill='#33475b' text-anchor='middle'>＋ 5</text><line x1='148' y1='92' x2='192' y2='92' stroke='#94a3b8' stroke-width='1'/><text x='170' y='110' font-family='sans-serif' font-size='14' fill='#2f6f54' text-anchor='middle' font-weight='bold'>＝ 7</text><text x='254' y='60' font-family='sans-serif' font-size='15' fill='#33475b' text-anchor='middle' font-weight='bold'>3</text><text x='254' y='82' font-family='sans-serif' font-size='13' fill='#33475b' text-anchor='middle'>＋ 4</text><line x1='232' y1='92' x2='276' y2='92' stroke='#94a3b8' stroke-width='1'/><text x='254' y='110' font-family='sans-serif' font-size='14' fill='#2f6f54' text-anchor='middle' font-weight='bold'>＝ 7</text><text x='170' y='144' font-family='sans-serif' font-size='11.5' fill='#2f6f54' text-anchor='middle'>頭尾配對，每對都是 7，共 3 對：3 × 7 ＝ 21</text></svg>",
+      "alt": "一張高斯配對圖，標題「高斯配對：1 ＋ 2 ＋ … ＋ 6」。三個藍框，每框一對：第一框「1 ＋ 6 ＝ 7」、第二框「2 ＋ 5 ＝ 7」、第三框「3 ＋ 4 ＝ 7」。最下方綠字：「頭尾配對，每對都是 7，共 3 對：3 × 7 ＝ 21」。",
+      "caption": "把 1 到 6 頭尾配對：1＋6、2＋5、3＋4，每一對都是 7，一共 3 對，所以 1＋2＋…＋6＝3×7＝21。等差級數的和就是這樣算的。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.sequence.arithmetic-sum"
+     ],
+     "body": "最後練等差級數求和。步驟：確認首項、末項、項數，套 S_n＝項數×(首項＋末項)/2；不知末項就先用 a_n＝a_1＋(n−1)d 求出末項。小心別忘了最後要除以 2，也別只算首末和就當答案。再看一個例子：首項 2、公差 3，求前 10 項和——先求末項 a_10＝2＋9×3＝29，再 S_10＝10×(2＋29)/2＝10×31/2＝155。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QM-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "求 1 ＋ 2 ＋ 3 ＋ … ＋ 50（從 1 連加到 50）的總和。",
+     "answer": "1275",
+     "kp_ids": [
+      "math.t_adv.sequence.arithmetic-sum"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.sequence.arithmetic-sum"
+     ],
+     "options": [
+      "1275",
+      "2550",
+      "1250",
+      "51"
+     ],
+     "distractor_rationales": {
+      "2550": "這是 50×51＝2550，忘了最後要除以 2；公式是 S_n＝項數×(首項＋末項)/2＝50×51/2＝1275。",
+      "1250": "這是只用末項 50×50/2＝1250，漏了首項；要用（首項＋末項）＝(1＋50)＝51，得 50×51/2＝1275。",
+      "51": "這只是首項＋末項（1＋50＝51），還沒乘以項數再除以 2；完整是 50×51/2＝1275。"
+     },
+     "answer_evidence": [
+      "c-asum-gauss",
+      "c-asum-formula"
+     ],
+     "feedback": "共 50 項、首項 1、末項 50：S＝50×(1＋50)/2＝50×51/2＝1275（高斯：25 對 ×51）。"
+    },
+    {
+     "question_id": "QM-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個等差數列首項 2、公差 3。它的前 10 項和 S₁₀ 是多少？",
+     "answer": "155",
+     "kp_ids": [
+      "math.t_adv.sequence.arithmetic-sum"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.sequence.arithmetic-sum"
+     ],
+     "options": [
+      "155",
+      "310",
+      "145",
+      "31"
+     ],
+     "distractor_rationales": {
+      "310": "這是 10×31＝310（31＝首項2＋末項29），忘了最後要除以 2；S₁₀＝10×31/2＝155。",
+      "145": "這是只用末項 29×10/2＝145，漏了首項 2；要用（首項＋末項）＝(2＋29)＝31，得 10×31/2＝155。",
+      "31": "這只是首項＋末項（2＋29＝31），還沒乘項數再除以 2；完整是 10×31/2＝155。"
+     },
+     "answer_evidence": [
+      "c-asum-formula",
+      "c-asum-noend"
+     ],
+     "feedback": "先求末項 a₁₀＝2＋(10−1)×3＝29，再 S₁₀＝10×(2＋29)/2＝10×31/2＝155。"
+    },
+    {
+     "question_id": "QM-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "求 2 ＋ 4 ＋ 6 ＋ … ＋ 20（前 10 個正偶數）的總和。",
+     "answer": "110",
+     "kp_ids": [
+      "math.t_adv.sequence.arithmetic-sum"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.sequence.arithmetic-sum"
+     ],
+     "options": [
+      "110",
+      "220",
+      "200",
+      "22"
+     ],
+     "distractor_rationales": {
+      "220": "這是 10×22＝220（22＝首項2＋末項20），忘了最後要除以 2；S＝10×22/2＝110。",
+      "200": "這是項數×末項＝10×20＝200，漏了首項、也忘了除以 2；正確要用（首項＋末項）再除以 2：10×(2＋20)/2＝110。",
+      "22": "這只是首項＋末項（2＋20＝22），還沒乘項數再除以 2；完整是 10×22/2＝110。"
+     },
+     "answer_evidence": [
+      "c-asum-formula"
+     ],
+     "feedback": "共 10 項、首項 2、末項 20：S＝10×(2＋20)/2＝10×22/2＝110（高斯：5 對 ×22）。"
+    },
+    {
+     "question_id": "QM-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "等差級數前 n 項和的公式 S_n 是下列哪一個？",
+     "answer": "項數 ×（首項 ＋ 末項）÷ 2",
+     "kp_ids": [
+      "math.t_adv.sequence.arithmetic-sum"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.sequence.arithmetic-sum"
+     ],
+     "options": [
+      "項數 ×（首項 ＋ 末項）÷ 2",
+      "項數 ×（首項 ＋ 末項）",
+      "首項 × 末項 ÷ 2",
+      "（首項 ＋ 末項）× 公差"
+     ],
+     "distractor_rationales": {
+      "項數 ×（首項 ＋ 末項）": "少了最後的「÷2」：每對的和是（首項＋末項），但配對數只有項數的一半，所以要再除以 2。",
+      "首項 × 末項 ÷ 2": "是首項與末項相『加』不是相『乘』；公式是 項數×(首項＋末項)/2。",
+      "（首項 ＋ 末項）× 公差": "和公差沒有直接相乘的關係；等差級數和＝項數×(首項＋末項)/2。"
+     },
+     "answer_evidence": [
+      "c-asum-formula"
+     ],
+     "feedback": "S_n＝項數 ×（首項 ＋ 末項）÷ 2（高斯配對：每對和是首項＋末項，共 n/2 對）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（等差級數求和：高斯配對——頭尾每對的和都等於首項＋末項；公式 S_n＝項數×(首項＋末項)/2〔記得除以 2〕；不知末項先用 a_n＝a_1＋(n−1)d 求末項，或用 S_n＝(n/2)[2a_1＋(n−1)d]）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
