@@ -1,0 +1,213 @@
+{
+ "_note": "數學島 機率（prob）strand 第 2 個單元（t_mid 會考）。知識點 math.t_mid.prob.tree-list（以樹狀圖/列表法計數求機率）。tier=t_mid。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，gloss 緊貼正確中文術語）：樹狀圖 (tree diagram)、列表法 (table method)。★scope（會考 t_mid）：(1) 兩階段（或多階段）試驗——用樹狀圖（分階段逐層展開）或列表法（一軸代表一階段、每個格子＝一個結果）把『所有可能結果』不遺漏地列出來；(2) 數出樣本空間大小 |S| 與有利結果數 |A|，再用古典機率 P(A)=|A|/|S|；(3) 常見情境：丟兩次硬幣（樹狀圖 4 個結果）、擲兩顆骰子（6×6＝36 格列表）、兩次抽取。重點：兩次的結果要分開算（HT 與 TH 不同）。不含：餘事件/加法法則、條件機率、獨立事件相乘公式（另單元；此處只靠列舉）。prereq＝classical（古典機率 P=|A|/|S|，剛建）。★自檢（math-unit defect-classes #1–#49）：事實全 .venv（Fraction）＋brute-force 驗（teach 兩硬幣 P(HH)=1/4、兩骰和 7=6/36=1/6；Q1 兩硬幣恰一正=2/4=1/2、Q2 兩骰和 5=4/36=1/9、Q3 概念 樹狀圖/列表法、Q4 兩骰和≥11=3/36=1/12；各 distractor 單一錯誤路徑）；分數用斜線（house 慣例），不等號≤≥ t_mid 已教、機率不超過 1；★figure＝方法卡（低幾何風險：三列①樹狀圖 分階段逐層展開、②列表法 一軸一階段/格子＝一結果、③數出 |S| 與有利數→P），alt 與 SVG text 逐字一致（#33）、figure 標題『兩階段試驗：用樹狀圖/列表把結果列齊』寫進 alt 開頭；★MCQ options 全 bare（#47，說明在 distractor_rationales）、每個 distractor 乾淨單一錯誤路徑（漏數一種配對／把 HT TH 併成一種縮小樣本空間／多算不存在配對／只算一階段），數值兩兩相異（#14/#29）、長度均衡（#20/#28）；★導讀承諾順序＝實際 teach 牌組順序（#4/#46）：導讀『先講兩階段試驗要把所有結果列齊、用丟兩次硬幣樹狀圖 4 種示範 P(HH)=1/4、再用擲兩骰 6×6=36 格列表示範 P(和7)=6/36=1/6、強調 HT≠TH 要分開算、用一張方法卡整理、最後練』＝實際 teach1 intro→teach2 樹狀圖+列表+示範+HT≠TH→teach3 figure 方法卡→teach4 recap+練；worked-example 在 rendered teach；★teach worked-example 用 1/4、1/6，與 practice 答案（Q1 1/2、Q2 1/9、Q3 概念、Q4 1/12）皆不重疊避#10；source_refs 標『國中數學 會考』對齊 t_mid（會考＝國中教育會考）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_prob_tree_list.html",
+ "units": [
+  {
+   "unit_id": "math.t_mid.prob.tree-list",
+   "title_zh": "用樹狀圖與列表法求機率",
+   "can_do": "我會用樹狀圖 (tree diagram) 或列表法 (table method) 把『丟兩次、擲兩顆』這種兩階段試驗的所有可能結果不遺漏地列出來，數出樣本空間大小 |S| 與有利結果數 |A|，再用古典機率 P(A)=|A|/|S|。我知道兩次的結果要分開算——例如丟兩次硬幣，正反 (HT) 和反正 (TH) 是兩種不同的結果。",
+   "situation_group": "機率：樹狀圖與列表法",
+   "subject": "math",
+   "strand": "prob",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_mid.prob.tree-list"
+   ],
+   "prerequisites": [
+    "math.t_mid.prob.classical"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-tl-tree",
+     "text": "樹狀圖 (tree diagram)：遇到『分成幾個階段』的試驗（例如丟兩次硬幣），可以一層一層畫出分枝——第一層是第一次的結果，從每個結果再長出第二次的所有結果，走到底的每一條路就是一個完整的結果。例：丟兩次硬幣，第一次正(H)或反(T)，每個再接第二次正或反，共走出 4 條路：HH、HT、TH、TT，所以 |S|＝4，擲出兩次都正面 P(HH)＝1/4。",
+     "kind": "definition",
+     "source_refs": [
+      "樹狀圖計數求機率（國中數學 會考）"
+     ],
+     "verification_ref": "兩硬幣 |S|=4、P(HH)=1/4（.venv, brute-force）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-tl-table",
+     "text": "列表法 (table method)：如果兩個階段各自的結果比較多（例如擲兩顆骰子），畫樹狀圖會太大，改用表格比較清楚——用一個軸代表第一顆、另一個軸代表第二顆，每個格子就是一個 (第一顆, 第二顆) 的結果。例：擲兩顆骰子，6×6 的表共有 36 個格子，所以 |S|＝36；點數和為 7 的格子有 (1,6)、(2,5)、(3,4)、(4,3)、(5,2)、(6,1) 共 6 個，P(和＝7)＝6/36＝1/6。",
+     "kind": "definition",
+     "source_refs": [
+      "列表法計數求機率（國中數學 會考）"
+     ],
+     "verification_ref": "兩骰 |S|=36、和7=6/36=1/6（.venv, brute-force）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-tl-order",
+     "text": "兩階段試驗最常犯的錯是『把先後不同的結果當成同一種』。丟兩次硬幣時，第一次正、第二次反 (HT) 和第一次反、第二次正 (TH) 是兩種不同的結果，不能併成一種——所以樣本空間是 4 種不是 3 種。把它們分開算，機率才會對：例如『恰好出現一次正面』包含 HT 和 TH 兩種，P＝2/4＝1/2。用樹狀圖或列表法就是為了幫我們把這些分開、數齊。",
+     "kind": "definition",
+     "source_refs": [
+      "兩階段結果要分先後（國中數學 會考）"
+     ],
+     "verification_ref": "兩硬幣恰一正=2/4=1/2（.venv, brute-force）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.prob.tree-list"
+     ],
+     "body": "這一單元學『用樹狀圖和列表法求機率』——把兩階段試驗的所有結果先列齊，再用古典機率算。下面先講樹狀圖（分階段逐層展開），用丟兩次硬幣畫出 4 條路 HH、HT、TH、TT 示範 P(HH)＝1/4；再講列表法（一軸一階段、格子＝一個結果），用擲兩顆骰子的 6×6＝36 格示範 P(和＝7)＝6/36＝1/6；特別強調兩次要分先後（HT 和 TH 是兩種）；用一張方法卡整理，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.prob.tree-list"
+     ],
+     "body": "樹狀圖：一層一層畫分枝，走到底的每一條路是一個完整結果。示範：丟兩次硬幣，第一次 H 或 T、每個再接第二次 H 或 T，共 4 條路 HH、HT、TH、TT，|S|＝4，P(HH)＝1/4。列表法：結果多時改用表格，一軸第一顆、一軸第二顆，格子＝(第一顆, 第二顆)。示範：擲兩顆骰子 6×6＝36 格，|S|＝36；和為 7 的格子有 (1,6)(2,5)(3,4)(4,3)(5,2)(6,1) 共 6 個，P(和＝7)＝6/36＝1/6。最重要：兩次要分先後——HT（正反）和 TH（反正）是兩種不同結果，所以 |S| 是 4 不是 3；算完用古典機率 P＝有利結果數/全部結果數。下面用一張方法卡整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_mid.prob.tree-list"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 352 136' xmlns='http://www.w3.org/2000/svg'><text x='176' y='18' font-family='sans-serif' font-size='12' fill='#2f6f54' text-anchor='middle' font-weight='bold'>兩階段試驗：用樹狀圖/列表把結果列齊</text><rect x='12' y='30' width='328' height='30' rx='6' fill='#eef4ff' stroke='#5b8def' stroke-width='1.1'/><text x='22' y='49' font-family='sans-serif' font-size='10.5' fill='#5b8def' font-weight='bold'>①樹狀圖</text><text x='222' y='50' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='middle'>分階段逐層展開，一條路＝一個結果</text><rect x='12' y='64' width='328' height='30' rx='6' fill='#eef7ee' stroke='#4e9a6b' stroke-width='1.1'/><text x='22' y='83' font-family='sans-serif' font-size='10.5' fill='#4e9a6b' font-weight='bold'>②列表法</text><text x='220' y='84' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='middle'>一軸一階段，每個格子＝一個結果</text><rect x='12' y='98' width='328' height='30' rx='6' fill='#fdf2e9' stroke='#d08a3e' stroke-width='1.1'/><text x='22' y='117' font-family='sans-serif' font-size='10.5' fill='#d08a3e' font-weight='bold'>③數出</text><text x='224' y='118' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='middle'>數 |S| 與有利數 → P＝有利/全部</text></svg>",
+      "alt": "標題「兩階段試驗：用樹狀圖/列表把結果列齊」。一張方法卡，三列。第一列藍底「①樹狀圖」：「分階段逐層展開，一條路＝一個結果」。第二列綠底「②列表法」：「一軸一階段，每個格子＝一個結果」。第三列橘底「③數出」：「數 |S| 與有利數 → P＝有利/全部」。",
+      "caption": "兩階段試驗先把所有結果列齊：樹狀圖分階段逐層展開（一條路＝一個結果）、列表法用一軸代表一階段（每個格子＝一個結果）；數出全部結果數 |S| 與有利結果數，再用 P＝有利/全部。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.prob.tree-list"
+     ],
+     "body": "最後練樹狀圖與列表法。重點：兩階段試驗先用樹狀圖或列表把所有結果列齊，數出全部結果數 |S| 與有利結果數，再用 P＝有利/全部。小提醒：兩次要分先後（HT 和 TH 是兩種、不要併成一種），列表每個格子只算一個結果別漏別重複；擲兩顆骰子全部是 6×6＝36 種；數有利結果時把符合的配對一個一個列出來確認沒漏。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "丟一枚公正的硬幣兩次，恰好出現『一次正面』的機率是多少？",
+     "answer": "1/2",
+     "kp_ids": [
+      "math.t_mid.prob.tree-list"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.prob.tree-list"
+     ],
+     "options": [
+      "1/2",
+      "1/4",
+      "1/3",
+      "3/4"
+     ],
+     "distractor_rationales": {
+      "1/4": "這是只數到 1 種（例如只算正反 HT，漏了反正 TH）；恰好一次正面有 HT、TH 共 2 種，全部 4 種，P＝2/4＝1/2。",
+      "1/3": "這是把『一正一反』當成 1 種、以為樣本空間只有 3 種（HH、一正一反、TT）；但 HT 和 TH 要分開，全部是 4 種，P＝2/4＝1/2。",
+      "3/4": "這是算成『至少一次正面』（HH、HT、TH 共 3 種，3/4）；題目是『恰好一次』不含兩次都正，有 HT、TH 共 2 種，P＝2/4＝1/2。"
+     },
+     "answer_evidence": [
+      "c-tl-tree",
+      "c-tl-order"
+     ],
+     "feedback": "樹狀圖 4 種 HH/HT/TH/TT，恰一正＝HT、TH 共 2 種：P＝2/4＝1/2。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "擲兩顆公正的骰子，兩顆點數的『和為 5』的機率是多少？",
+     "answer": "1/9",
+     "kp_ids": [
+      "math.t_mid.prob.tree-list"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.prob.tree-list"
+     ],
+     "options": [
+      "1/9",
+      "1/12",
+      "1/18",
+      "5/36"
+     ],
+     "distractor_rationales": {
+      "1/12": "這是漏數了一種配對（只算 (1,4)、(2,3)、(3,2) 卻忘了 (4,1)，得 3/36）；和為 5 有 4 種，4/36＝1/9。",
+      "1/18": "這是只算了兩種（像 (1,4)、(4,1)，得 2/36）；和為 5 其實有 (1,4)(2,3)(3,2)(4,1) 共 4 種，4/36＝1/9。",
+      "5/36": "這是多算了一種不存在的配對（例如把 (0,5) 也算進去，骰子沒有 0 點）；和為 5 只有 4 種，4/36＝1/9。"
+     },
+     "answer_evidence": [
+      "c-tl-table"
+     ],
+     "feedback": "和為 5 的格子有 (1,4)(2,3)(3,2)(4,1) 共 4 個、全部 36 個：4/36＝1/9。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "要把『丟兩次硬幣、擲兩顆骰子』這種分成兩階段的試驗，所有可能結果不遺漏地列出來，最適合用哪種方法？",
+     "answer": "用樹狀圖或列表法把每個結果列齊",
+     "kp_ids": [
+      "math.t_mid.prob.tree-list"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.prob.tree-list"
+     ],
+     "options": [
+      "用樹狀圖或列表法把每個結果列齊",
+      "把兩個階段各自的結果數直接相加",
+      "只數其中一個階段裡的結果數",
+      "憑大概的印象估計有幾種結果"
+     ],
+     "distractor_rationales": {
+      "把兩個階段各自的結果數直接相加": "兩階段是『接著做』不是『二選一』，不能相加；要把每個第一階段結果再配上每個第二階段結果一一列出（樹狀圖/列表）。",
+      "只數其中一個階段裡的結果數": "只看一階段會漏掉另一階段的變化；兩階段要把所有組合都列出來，用樹狀圖或列表法。",
+      "憑大概的印象估計有幾種結果": "機率要精確數出全部結果，不能用估的；要用樹狀圖或列表法有系統地列齊。"
+     },
+     "answer_evidence": [
+      "c-tl-tree",
+      "c-tl-table"
+     ],
+     "feedback": "兩階段試驗用樹狀圖或列表法把所有結果有系統地列齊，才數得準。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "擲兩顆公正的骰子，兩顆點數的『和大於或等於 11』的機率是多少？",
+     "answer": "1/12",
+     "kp_ids": [
+      "math.t_mid.prob.tree-list"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.prob.tree-list"
+     ],
+     "options": [
+      "1/12",
+      "1/18",
+      "1/9",
+      "1/36"
+     ],
+     "distractor_rationales": {
+      "1/18": "這是漏數了一種（只算 (6,5)、(6,6)，得 2/36）；和≥11 有 (5,6)、(6,5)、(6,6) 共 3 種，3/36＝1/12。",
+      "1/9": "這是多算了一種和只有 10 的配對（例如把 (4,6) 也算進去，4+6=10 不到 11）；和≥11 只有 3 種，3/36＝1/12。",
+      "1/36": "這是只算到 (6,6) 一種（漏了和為 11 的 (5,6)、(6,5)）；和≥11 共 3 種，3/36＝1/12。"
+     },
+     "answer_evidence": [
+      "c-tl-table"
+     ],
+     "feedback": "和≥11 的格子有 (5,6)(6,5)(6,6) 共 3 個、全部 36 個：3/36＝1/12。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（兩階段試驗用樹狀圖〔分階段逐層展開、一條路＝一個結果〕或列表法〔一軸一階段、格子＝一個結果〕把所有結果列齊，數出 |S| 與有利結果數，再用 P＝有利/全部；兩次要分先後 HT≠TH、樣本空間才對；擲兩顆骰子全部 6×6＝36 種；數有利配對時一個一個列出來確認沒漏沒重複）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
