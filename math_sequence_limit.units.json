@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 數列級數（sequence）strand 第 9 個（最後一個）單元（全島第 81；t_sub 分科測驗-數甲範圍）。知識點 math.t_sub.sequence.limit（數列極限的概念與求法）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15）：數列極限 (limit of a sequence)、收斂 (convergence／converge)、發散 (divergence／diverge)、趨近 (approach／tend to)。★scope（分科-數甲）：數列極限的概念與求法——(1) 概念：當 n 越來越大（n→∞），若 aₙ 越來越接近某個定值 L，就說數列『收斂』到 L，記作 lim(n→∞)aₙ=L；若不接近任何定值則『發散』。(2) 基本極限：lim(n→∞)1/n=0。(3) 求法：分式數列分子分母同除以 n 的最高次方，再用 lim 1/n=0 等基本極限算出，例 (3n+1)/n=3+1/n→3。(4) 發散的兩種常見情形：無限變大（如 aₙ=2ⁿ→∞）、在幾個值間擺盪（如 aₙ=(−1)ⁿ 在 1 與 −1 間跳，不趨近單一定值）。不含：函數極限、ε–N 嚴格定義、夾擠定理、單調有界定理、無窮級數斂散性判別法。prereq＝遞迴關係（recursion）；本單元是 sequence strand 收尾。★自檢（math-unit defect-classes）：事實全 .venv 驗（lim 1/n=0；lim(3n+1)/n=3〔(3n+1)/n=3+1/n，sympy 化簡相等〕；lim(2n+3)/n=2〔=2+3/n〕；lim(n+1)/n=1；lim 2ⁿ=∞；(−1)ⁿ:−1,1,−1,1,−1 擺盪無極限）；量詞不撞位名（本單元無位名，#3）；learner-facing 含 selfeval_note 用字詞（#2）；★figure＝數線收斂示意（低幾何風險 #43/#32：一條水平數線標定值 L，點 a₁ 遠、a₂…a₅ 逐漸逼近 L，標「n 越大，aₙ 越接近 L」），alt 與 SVG text 逐字一致（#33）；誘答單一乾淨機制（把係數比讀成分子常數／以為分子變大就發散／擺盪取平均當極限／把發散當收斂）、選項長度均衡（#20/#28）、兩兩相異（#29）；★practice 所考方法（收斂定義、同除 n 求極限、辨識發散、擺盪無極限）都在 rendered teach 示範（#4/#46：導讀承諾『先講極限概念與收斂/發散、用 lim 1/n=0 與 (3n+1)/n→3 示範同除 n 求法、再講發散兩情形、用數線收斂圖看、最後練』與實際一致；worked-example 在 rendered teach）；★teach worked-example（lim 1/n=0；(3n+1)/n=3+1/n→3；§4 recap (n+1)/n=1+1/n→1）與 figure（數線收斂）與 practice 答案（Q1 收斂到 L／Q2 (2n+3)/n→2／Q3 2ⁿ發散／Q4 (−1)ⁿ擺盪無極限）皆不重疊避#10。claim kind=definition。figure-only example 無 body。",
+ "page": "math_sequence_limit.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.sequence.limit",
+   "title_zh": "數列極限",
+   "can_do": "我知道數列極限是在看『當 n 越來越大時，aₙ 會不會越來越接近某個定值 L』——會接近 L 就說數列收斂到 L，記作 lim(n→∞)aₙ=L；不接近任何定值就說它發散。我會用『分子分母同除以 n 的最高次方』配上 lim(n→∞)1/n=0 算出分式數列的極限，也能辨認『無限變大』和『來回擺盪』這兩種發散的情形。",
+   "situation_group": "數列：數列極限",
+   "subject": "math",
+   "strand": "sequence",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.sequence.limit"
+   ],
+   "prerequisites": [
+    "math.t_adv.sequence.recursion"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-lim-def",
+     "text": "數列極限 (limit of a sequence)：當 n 越來越大（n 趨近無窮大，記 n→∞）時，如果 aₙ 越來越接近某個定值 L，就說這個數列『收斂 (converge)』到 L，記作 lim(n→∞)aₙ＝L；如果 aₙ 不接近任何定值，就說它『發散 (diverge)』。一個最基本的極限是 lim(n→∞)1/n＝0（n 越大，1/n 越接近 0）。",
+     "kind": "definition",
+     "source_refs": [
+      "數列極限的概念：收斂與發散（高中數學 分科）"
+     ],
+     "verification_ref": "lim(n→∞)1/n=0（sympy 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-lim-method",
+     "text": "分式數列求極限的方法：分子、分母同除以 n 的最高次方，再用 lim(n→∞)1/n＝0 把含 1/n 的項都看成 0。例如求 lim(n→∞)(3n+1)/n：分子分母同除 n 得 (3+1/n)/1＝3+1/n，當 n→∞ 時 1/n→0，所以極限是 3。",
+     "kind": "definition",
+     "source_refs": [
+      "數列極限求法：同除最高次方（高中數學 分科）"
+     ],
+     "verification_ref": "lim(3n+1)/n=3、(3n+1)/n=3+1/n（sympy 化簡相等）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-lim-diverge",
+     "text": "發散的兩種常見情形：(1) 無限變大——aₙ 隨 n 增大一直變大、不停在任何定值，例 aₙ＝2ⁿ（2,4,8,16,…）越來越大，記 lim(n→∞)aₙ＝∞，屬發散。(2) 來回擺盪——aₙ 在幾個值之間反覆跳、不趨近單一定值，例 aₙ＝(−1)ⁿ 得到 −1,1,−1,1,…，一直在 −1 與 1 之間跳，沒有單一的接近值，所以沒有極限，也是發散。",
+     "kind": "definition",
+     "source_refs": [
+      "數列的發散：趨於無窮與擺盪（高中數學 分科）"
+     ],
+     "verification_ref": "lim 2ⁿ=∞；(−1)ⁿ:−1,1,−1,1,−1 擺盪（sympy/列舉驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.sequence.limit"
+     ],
+     "body": "這一單元學『數列極限』——看一個數列當 n 越來越大的時候，aₙ 會不會越來越接近某個定值。下面先講收斂與發散的概念、用最基本的 lim(n→∞)1/n＝0 和 (3n+1)/n 示範『分子分母同除以 n 的最高次方』的求法，再講發散的兩種常見情形，用一張數線收斂圖看清楚，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.sequence.limit"
+     ],
+     "body": "概念：n→∞ 時 aₙ 若越來越接近定值 L，就說數列『收斂』到 L，記 lim(n→∞)aₙ＝L；不接近任何定值就『發散』。最基本：lim(n→∞)1/n＝0（1,1/2,1/3,1/4,… 越來越接近 0）。求法（同除最高次方）：lim(n→∞)(3n+1)/n，分子分母同除 n 得 3+1/n，n→∞ 時 1/n→0，極限＝3。下面用數線收斂圖看 aₙ 怎麼逼近 L。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.sequence.limit"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 152' xmlns='http://www.w3.org/2000/svg'><text x='170' y='22' font-family='sans-serif' font-size='13.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>數列極限：aₙ 越來越接近定值 L</text><line x1='24' y1='96' x2='316' y2='96' stroke='#33475b' stroke-width='1.3'/><line x1='300' y1='84' x2='300' y2='108' stroke='#4e9a6b' stroke-width='1.6'/><text x='300' y='124' font-family='sans-serif' font-size='12.5' fill='#4e9a6b' text-anchor='middle' font-weight='bold'>L</text><circle cx='60' cy='96' r='4' fill='#5b8def'/><text x='60' y='80' font-family='sans-serif' font-size='11' fill='#5b8def' text-anchor='middle'>a₁</text><circle cx='150' cy='96' r='4' fill='#5b8def'/><text x='150' y='80' font-family='sans-serif' font-size='11' fill='#5b8def' text-anchor='middle'>a₂</text><circle cx='216' cy='96' r='4' fill='#5b8def'/><text x='216' y='80' font-family='sans-serif' font-size='11' fill='#5b8def' text-anchor='middle'>a₃</text><circle cx='258' cy='96' r='4' fill='#5b8def'/><text x='258' y='80' font-family='sans-serif' font-size='11' fill='#5b8def' text-anchor='middle'>a₄</text><circle cx='282' cy='96' r='4' fill='#5b8def'/><text x='282' y='80' font-family='sans-serif' font-size='11' fill='#5b8def' text-anchor='middle'>a₅</text><text x='170' y='144' font-family='sans-serif' font-size='11.5' fill='#2f6f54' text-anchor='middle'>n 越大，aₙ 越接近 L（收斂）</text></svg>",
+      "alt": "一條水平數線，右側標一條綠色短豎線與綠字「L」代表定值。數線上由左到右有五個藍點 a₁、a₂、a₃、a₄、a₅，位置一個比一個靠近 L（a₁ 最遠、a₅ 最近）。最下方綠字：「n 越大，aₙ 越接近 L（收斂）」。",
+      "caption": "數列極限示意：當 n 越來越大，數列的項 a₁、a₂、a₃… 在數線上一個比一個靠近定值 L。若這樣一直接近某個 L，就說數列收斂到 L，記作 lim(n→∞)aₙ＝L。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.sequence.limit"
+     ],
+     "body": "最後練數列極限。重點：求分式數列極限就『分子分母同除以 n 的最高次方』，再把 1/n、1/n² 這些項當 0；發散有兩種——一直變大（如 aₙ＝2ⁿ→∞）或來回擺盪（如 aₙ＝(−1)ⁿ 在 −1 與 1 間跳，沒有單一接近值），都沒有極限。再看一個例子：lim(n→∞)(n+1)/n，同除 n 得 1+1/n，n→∞ 時 1/n→0，極限＝1。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "當 n 越來越大時，如果數列的項 aₙ 越來越接近某個定值 L，我們就說這個數列怎麼樣？",
+     "answer": "收斂到 L，記作 lim(n→∞)aₙ＝L",
+     "kp_ids": [
+      "math.t_sub.sequence.limit"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.sequence.limit"
+     ],
+     "options": [
+      "收斂到 L，記作 lim(n→∞)aₙ＝L",
+      "發散到 L，因為 n 一直變大所以一定發散",
+      "以 L 為公比，形成一個等比數列",
+      "以 L 為週期，每隔 L 項重複一次"
+     ],
+     "distractor_rationales": {
+      "發散到 L，因為 n 一直變大所以一定發散": "搞反了：n 變大不代表數列發散；重點是 aₙ（不是 n）有沒有接近某定值。aₙ 接近定值 L 就是收斂，不是發散。",
+      "以 L 為公比，形成一個等比數列": "公比是等比數列相鄰兩項的倍數關係，和『aₙ 接近的定值 L』是兩回事；接近定值 L 叫收斂到 L。",
+      "以 L 為週期，每隔 L 項重複一次": "週期是數列每隔固定項數就重複，和『aₙ 接近某定值 L』無關；接近定值 L 叫收斂到 L。"
+     },
+     "answer_evidence": [
+      "c-lim-def"
+     ],
+     "feedback": "aₙ 隨 n 增大越來越接近定值 L，就說數列收斂到 L，記作 lim(n→∞)aₙ＝L。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "求 lim(n→∞)(2n+3)/n（分子分母同除以 n 的最高次方）。",
+     "answer": "2（因為 (2n+3)/n＝2+3/n，n→∞ 時 3/n→0）",
+     "kp_ids": [
+      "math.t_sub.sequence.limit"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.sequence.limit"
+     ],
+     "options": [
+      "2（因為 (2n+3)/n＝2+3/n，n→∞ 時 3/n→0）",
+      "3（直接看分子的常數項 3，忽略 2n）",
+      "5（把分子的 2 和 3 相加當成答案）",
+      "∞（以為分子 2n+3 一直變大，極限就是無窮大）"
+     ],
+     "distractor_rationales": {
+      "3（直接看分子的常數項 3，忽略 2n）": "同除 n 後是 2+3/n，主導的是 2 這個係數、不是常數 3；n→∞ 時 3/n→0，極限是 2。",
+      "5（把分子的 2 和 3 相加當成答案）": "2 與 3 不能相加；同除 n 得 2+3/n，3/n→0，極限是分子 n 的係數 2。",
+      "∞（以為分子 2n+3 一直變大，極限就是無窮大）": "分子變大但分母 n 也一起變大，兩邊同除 n 後是 2+3/n，趨近 2（有限值），不是無窮大。"
+     },
+     "answer_evidence": [
+      "c-lim-method"
+     ],
+     "feedback": "(2n+3)/n＝2+3/n；n→∞ 時 3/n→0，所以 lim(n→∞)(2n+3)/n＝2。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "下列哪一個數列是『發散』（不收斂到任何定值）的？",
+     "answer": "aₙ＝2ⁿ（2,4,8,16,…一直變大，不停在任何定值）",
+     "kp_ids": [
+      "math.t_sub.sequence.limit"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.sequence.limit"
+     ],
+     "options": [
+      "aₙ＝2ⁿ（2,4,8,16,…一直變大，不停在任何定值）",
+      "aₙ＝1/n（1,1/2,1/3,…越來越接近 0）",
+      "aₙ＝3/n（3,3/2,1,…越來越接近 0）",
+      "aₙ＝1/2ⁿ（1/2,1/4,1/8,…越來越接近 0）"
+     ],
+     "distractor_rationales": {
+      "aₙ＝1/n（1,1/2,1/3,…越來越接近 0）": "這個數列越來越接近定值 0（lim 1/n＝0），是收斂，不是發散。",
+      "aₙ＝3/n（3,3/2,1,…越來越接近 0）": "分子固定、分母 n 變大，值越來越接近 0（收斂到 0），不是發散。",
+      "aₙ＝1/2ⁿ（1/2,1/4,1/8,…越來越接近 0）": "每一項都是前一項的一半，越來越接近 0（收斂到 0），不是發散。"
+     },
+     "answer_evidence": [
+      "c-lim-diverge"
+     ],
+     "feedback": "aₙ＝2ⁿ 隨 n 增大一直變大、不接近任何定值（lim 2ⁿ＝∞），所以發散；其餘三個都越來越接近 0，是收斂。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "數列 aₙ＝(−1)ⁿ 會得到 −1,1,−1,1,…，下列對它極限的敘述哪一個正確？",
+     "answer": "它在 −1 與 1 之間反覆擺盪、不趨近任何單一定值，所以沒有極限",
+     "kp_ids": [
+      "math.t_sub.sequence.limit"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.sequence.limit"
+     ],
+     "options": [
+      "它在 −1 與 1 之間反覆擺盪、不趨近任何單一定值，所以沒有極限",
+      "它把 −1 和 1 平均起來剛好是 0，所以極限等於 0",
+      "它的項裡反覆出現 1 這個數值，所以極限等於 1",
+      "它的第一項剛好就是 −1，所以極限等於 −1"
+     ],
+     "distractor_rationales": {
+      "它把 −1 和 1 平均起來剛好是 0，所以極限等於 0": "極限看的是 aₙ 有沒有越來越接近某個定值，不是把出現過的值平均；它一直在 −1 與 1 間跳、不接近 0，所以沒有極限。",
+      "它的項裡反覆出現 1 這個數值，所以極限等於 1": "極限不是『出現過的某個值』；aₙ 在 −1 與 1 間反覆跳、不趨近 1，所以沒有極限。",
+      "它的第一項剛好就是 −1，所以極限等於 −1": "極限看的是 n 很大時 aₙ 接近什麼，不是第一項；它一直擺盪、不趨近 −1，所以沒有極限。"
+     },
+     "answer_evidence": [
+      "c-lim-diverge"
+     ],
+     "feedback": "(−1)ⁿ 得到 −1,1,−1,1,… 在兩個值間來回擺盪，不趨近任何單一定值，所以沒有極限（發散）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（數列極限：n→∞ 時 aₙ 若越來越接近定值 L 就收斂到 L〔lim(n→∞)aₙ＝L〕、不接近任何定值就發散；基本極限 lim(n→∞)1/n＝0；分式求法＝分子分母同除以 n 的最高次方再把 1/n 當 0〔如 (3n+1)/n＝3+1/n→3〕；發散兩情形＝無限變大〔2ⁿ→∞〕或來回擺盪〔(−1)ⁿ 在 −1 與 1 間跳、無極限〕）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
