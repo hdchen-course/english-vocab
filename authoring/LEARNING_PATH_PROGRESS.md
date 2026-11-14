@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 04:44 ★defect-class #50 對齊批次 13/13 全完成：trig_solve_triangle_apply 5/5 DONE-GATE 全綠
+- **trig_solve_triangle_apply frozen_sha `02283c3c487f7a7e`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：per_page 無 violation／scan PASS／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen＋iPad 四角色 render 綁 sha（決策卡 figure：知三邊/兩邊夾角→餘弦定理、知一組邊角+另一角→正弦定理、求面積→½·a·b·sinC；箭頭欄左標籤無重疊；右緣0%；四角色過）。事實全 .venv（SAS c²=9+25−2·3·5·cos120°=49→c=7；7,8,9⇒cosC=2/7）。
+- **★本單元兩次修正（de-converge 重收斂）**：(1) R3 panel 7/7 判決策卡左標籤（x=26）比 70px 欄距寬、同基線與 x=96 箭頭片語重疊（CJK 擠進→正弦/餘弦定理，render-only major）→箭頭欄右移 x=96→160、render 確認無重疊、重凍 dcac4d82；(2) R4 panel 判 Q1/Q3 需餘弦定理角版 cosC=(a²+b²−c²)/(2ab) 從三邊求角，但 rendered teach 只示範邊版、角版只在 feedback（#4/#46 major）→補 teach4 完整角版式（無數值避撞 Q3 的 2/7）、重凍 02283c3c。**兩類記入 memory #50：CJK 標籤超欄距同基線重疊；practice 方法須在 rendered teach 不能只在 feedback。**
+- **★★里程碑：defect-class #50 全站對齊類批次 13/13 全部 DONE-GATE 全綠並 push**＝complement-addition(a4a7eeb9)、classical(8296b02c)、sigma(8b0bb45f)、tree_list(6adc2622)、circular_permutation(32f1b81e)、combination(38176706)、distribution(388f2600)、combination_apply(9e2fd52a)、permutation(b00279ac)、inclusion_exclusion(f5395729)、permutation_repeat(d89a111f)、trig_radian(c008a4fe)、**trig_solve_triangle_apply(02283c3c)**。四角色簽核全過。沿途另修 6 個 panel-confirmed 真缺陷（sigma Q4 長度cue＋術語、inclusion can_do 把字句、permutation_repeat row③、trig_radian Q2 誘答路徑、trig_solve 決策卡重疊＋角版 teach）。
+- **下一步**：續 prob strand 其餘 11 KP（simple-event / mutually-exclusive / conditional / multiplication-rule / bayes / expected-value / variance / binomial / normal / sampling-confidence / likelihood）。
+
 ## 2026-11-15 03:55 defect-class #50 對齊批次：trig_radian 5/5 DONE-GATE 全綠（12/13）
 - **trig_radian frozen_sha `c008a4fed0894951`**（Q2 π/3 誘答路徑修正後 R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：per_page 無 violation／scan PASS／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen＋iPad 四角色 render 綁 sha（三公式卡 ①度↔弧度 180°=π、②弧長 s=r·θ、③扇形面積 A=½·r²·θ 全左對齊；三視窗右緣0%；美術/空間/眼科/動畫師過）。
 - **★trig_radian R4 修正（instructional-design major）**：Q2（120°→弧度，正解 2π/3）的 π/3 誘答原說明歸因「約分約錯成 1/3」，但 120/180 約分保值只能得 2/3、1/3 不可達（約分不改變值）→誤描錯誤路徑。改為真正乾淨單一錯誤：「π/3 是 60° 的弧度；題目是 120°（60° 的兩倍）…2π/3，不是 π/3」。**教訓（記入 #50 類）：distractor 說明歸因的「錯誤操作」必須真能產生該誘答值；約分/化簡類保值操作不可能改變分數值，別把它當錯誤來源。** 重凍 c008a4fe。
