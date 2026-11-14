@@ -1,0 +1,213 @@
+{
+ "_note": "數學島 機率（prob）strand 第 6 個單元（t_adv 學測範圍）。知識點 math.t_adv.prob.conditional（條件機率）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，gloss 緊貼正確中文術語）：條件機率 (conditional probability)、樣本空間 (sample space)。★scope（學測 t_adv）：承 mutually-exclusive（已認識 ∩、P(A∩B)）。本單元練『條件機率 P(A|B)』——在『已知事件 B 已經發生』的前提下 A 的機率：(1) 縮小樣本空間法——把全部結果縮小成『只有 B』的範圍，在 B 裡面數 A 佔多少；(2) 公式法 P(A|B)＝P(A∩B)/P(B)；(3) 分母一定要用『已知的那個條件 B』、不是全部、也不是 A。不含：乘法法則 P(A∩B)=P(B)·P(A|B) 的一般式與相依抽取（另單元 multiplication-rule，distractor 只借『沒縮小樣本／分母放錯』當錯誤路徑）、貝氏定理（另單元）。prereq＝mutually-exclusive。★自檢（math-unit defect-classes #1–#53）：事實全 .venv（Fraction）驗（teach 縮小樣本 擲骰已知>2{3,4,5,6} 求>4{5,6}=2/4=1/2、公式 8 紅球 6 有記號 P(記號|紅)=6/8=3/4；Q1 班級 P(科學|數學)=12/18=2/3、Q2 P(記號|紅)=3/12=1/4、Q3 兩骰和7 含3 =2/6=1/3、Q4 公式概念；teach worked 1/2、3/4 與 practice 答案 2/3、1/4、1/3 皆不重疊避#10）；★#53 已逐一 .venv 反算每個誘答 rationale 的錯誤路徑＝該 option 值（Q1：12/30=2/5 分母用全班、18/30=3/5 算成 P(數學)、6/18=1/3 餘事件；Q2：3/20 分母用全部、12/20=3/5 算成 P(紅)、9/12=3/4 餘事件；Q3：2/36=1/18 沒縮小、4/6=2/3 算不含3、1/6 漏算對稱(4,3)）；分數用斜線，無減號無上標；★figure＝條件機率卡（低幾何風險 #50/#51：三列①縮小樣本、②算比例、③公式；右欄全 text-anchor=start 同 x=96 統一 fs10.5；左標籤 x=22 不超欄距），alt 與 SVG text 逐字一致（#33）、figure 標題『條件機率：先縮小樣本空間』寫進 alt 開頭；★MCQ options 全 bare（#47，說明在 distractor_rationales）、每個 distractor 乾淨單一錯誤路徑、數值兩兩相異（#14/#29）、長度均衡（#20/#28/#47）；★導讀承諾順序＝實際 teach 牌組順序（#4/#46）：導讀『先講縮小樣本空間、用擲骰已知>2 求>4=1/2 示範、再講公式 P(A|B)=P(A∩B)/P(B)、用紅球有記號 6/8=3/4 示範、用一張卡整理、最後練』＝實際 teach1 intro→teach2 縮小樣本+示範+公式+示範→teach3 figure 卡→teach4 recap+練；worked-example 在 rendered teach。claim kind=definition。figure-only example 無 body。",
+ "page": "math_prob_conditional.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.prob.conditional",
+   "title_zh": "條件機率",
+   "can_do": "我會算『條件機率 (conditional probability)』P(A|B)：在『已知事件 B 已經發生』的前提下，A 發生的機率。我會用兩種方法：縮小樣本空間——把全部結果縮小成『只有 B』的範圍，在 B 裡面看 A 佔多少；或直接用公式 P(A|B)＝P(A∩B)/P(B)。我知道分母一定要用『已知的那個條件 B』，不是全部結果、也不是 A。",
+   "situation_group": "機率：條件機率",
+   "subject": "math",
+   "strand": "prob",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_adv.prob.conditional"
+   ],
+   "prerequisites": [
+    "math.t_adv.prob.mutually-exclusive"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-cond-space",
+     "text": "條件機率 (conditional probability) P(A|B)：在『已知 B 已經發生』的前提下 A 的機率。最直覺的算法是『縮小樣本空間 (sample space)』——既然 B 一定發生了，就把全部結果縮小成『只有 B』的範圍，在這個新範圍裡看 A 佔多少。例：擲一顆公正骰子，已知點數大於 2（結果縮成 {3,4,5,6}，共 4 個），求它大於 4 的機率；大於 4 的是 {5,6}（2 個），所以 P(大於 4｜大於 2)＝2/4＝1/2。",
+     "kind": "definition",
+     "source_refs": [
+      "條件機率與縮小樣本空間（高中數學 學測）"
+     ],
+     "verification_ref": "擲骰 已知>2 求>4 = 2/4 = 1/2（.venv Fraction）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-cond-formula",
+     "text": "條件機率的公式：P(A|B)＝P(A∩B)/P(B)。意思是『A 和 B 同時發生的機率』除以『B 發生的機率』。分母一定是已知的那個條件 B，不是全部、也不是 A。例：一袋有 8 顆紅球，其中 6 顆上面有記號；已知抽到的是紅球，求它有記號的機率＝P(有記號∩紅)/P(紅)＝6/8＝3/4（因為已知是紅球，就只在 8 顆紅球裡看有記號的 6 顆）。",
+     "kind": "definition",
+     "source_refs": [
+      "條件機率公式 P(A|B)=P(A∩B)/P(B)（高中數學 學測）"
+     ],
+     "verification_ref": "8 紅球 6 有記號 P(記號|紅)=6/8=3/4（.venv Fraction）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-cond-denom",
+     "text": "算條件機率最容易錯的地方是分母。P(A|B) 的分母是『已知條件 B』的機率（或在縮小樣本法裡是 B 的結果數），不是全部結果、也不是 A。如果忘了縮小、還用全部結果當分母，算出來的就是普通機率 P(A∩B) 而不是條件機率。先問自己：題目『已知』的是什麼？那個就是要當分母的 B。",
+     "kind": "definition",
+     "source_refs": [
+      "條件機率分母的判斷（高中數學 學測）"
+     ],
+     "verification_ref": "分母＝已知條件 B（教學慣例）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.prob.conditional"
+     ],
+     "body": "這一單元學『條件機率』——在『已知某件事已經發生』的前提下，另一件事的機率。下面先講最直覺的『縮小樣本空間』：既然已知 B 發生了，就把全部結果縮小成只有 B，在裡面看 A 佔多少；用擲一顆骰子、已知大於 2、求大於 4＝2/4＝1/2 示範。再講公式 P(A|B)＝P(A∩B)/P(B)，用一袋 8 顆紅球其中 6 顆有記號、已知是紅球求有記號＝6/8＝3/4 示範。接著用一張卡整理，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.prob.conditional"
+     ],
+     "body": "縮小樣本空間：已知 B 發生，就把全部結果縮小成『只有 B』，在這個新範圍裡看 A 佔多少。示範：擲一顆骰子，已知點數大於 2（縮成 {3,4,5,6}＝4 個），求大於 4（{5,6}＝2 個），P(大於 4｜大於 2)＝2/4＝1/2。公式法：P(A|B)＝P(A∩B)/P(B)，分母是已知條件 B。示範：一袋 8 顆紅球、其中 6 顆有記號，已知抽到紅球求有記號＝6/8＝3/4（只在 8 顆紅球裡看）。最容易錯的是分母：分母要用『已知的那個條件』，不是全部結果、也不是 A；忘了縮小還用全部當分母，算出來就變成普通機率不是條件機率。下面用一張卡整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.prob.conditional"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 350 136' xmlns='http://www.w3.org/2000/svg'><text x='175' y='18' font-family='sans-serif' font-size='12' fill='#2f6f54' text-anchor='middle' font-weight='bold'>條件機率：先縮小樣本空間</text><rect x='12' y='30' width='326' height='30' rx='6' fill='#eef4ff' stroke='#5b8def' stroke-width='1.1'/><text x='22' y='49' font-family='sans-serif' font-size='10.5' fill='#5b8def' font-weight='bold'>①縮小樣本</text><text x='96' y='50' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='start'>已知 B 發生，只看 B 這個範圍</text><rect x='12' y='64' width='326' height='30' rx='6' fill='#eef7ee' stroke='#4e9a6b' stroke-width='1.1'/><text x='22' y='83' font-family='sans-serif' font-size='10.5' fill='#4e9a6b' font-weight='bold'>②算比例</text><text x='96' y='84' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='start'>在 B 裡面，A 佔多少</text><rect x='12' y='98' width='326' height='30' rx='6' fill='#fdf2e9' stroke='#d08a3e' stroke-width='1.1'/><text x='22' y='117' font-family='sans-serif' font-size='10.5' fill='#d08a3e' font-weight='bold'>③公式</text><text x='96' y='118' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='start'>P(A|B)＝P(A∩B)/P(B)</text></svg>",
+      "alt": "標題「條件機率：先縮小樣本空間」。一張卡，三列。第一列藍底「①縮小樣本」：「已知 B 發生，只看 B 這個範圍」。第二列綠底「②算比例」：「在 B 裡面，A 佔多少」。第三列橘底「③公式」：「P(A|B)＝P(A∩B)/P(B)」。",
+      "caption": "算條件機率 P(A|B)：① 已知 B 發生就把樣本空間縮小成只有 B；② 在 B 這個範圍裡看 A 佔多少；③ 用公式 P(A|B)＝P(A∩B)/P(B)（分母一定是已知條件 B）。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.prob.conditional"
+     ],
+     "body": "最後練條件機率。重點：P(A|B) 是『已知 B 發生』後 A 的機率；可以縮小樣本空間（只看 B，在裡面看 A 佔多少），也可以用公式 P(A|B)＝P(A∩B)/P(B)。小提醒：分母一定要用『已知的那個條件 B』，不是全部結果、也不是 A；先問自己『題目已知的是什麼』，那個就是 B；算完檢查機率落在 0 到 1 之間。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個班有 30 人，其中 18 人喜歡數學；喜歡數學的人裡面有 12 人也喜歡科學。已知某人喜歡數學，他也喜歡科學的機率是多少？",
+     "answer": "2/3",
+     "kp_ids": [
+      "math.t_adv.prob.conditional"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.prob.conditional"
+     ],
+     "options": [
+      "2/3",
+      "2/5",
+      "3/5",
+      "1/3"
+     ],
+     "distractor_rationales": {
+      "2/5": "這是用全班 30 人當分母（12/30＝2/5）；題目已知『喜歡數學』，要縮小到 18 人當分母，P＝12/18＝2/3。",
+      "3/5": "這是算成『喜歡數學』本身的比例（18/30＝3/5）；題目問的是喜歡數學的人裡面也喜歡科學的比例，P＝12/18＝2/3。",
+      "1/3": "這是算成『喜歡數學卻不喜歡科學』的（18－12＝6 人，6/18＝1/3）；題目問的是也喜歡科學，P＝12/18＝2/3。"
+     },
+     "answer_evidence": [
+      "c-cond-space",
+      "c-cond-denom"
+     ],
+     "feedback": "已知喜歡數學（18 人）就在這 18 人裡看，也喜歡科學的有 12 人：P＝12/18＝2/3。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "袋中有 20 顆球：12 顆紅球、8 顆藍球；12 顆紅球裡面有 3 顆上面有記號。已知抽到的是紅球，它有記號的機率是多少？",
+     "answer": "1/4",
+     "kp_ids": [
+      "math.t_adv.prob.conditional"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.prob.conditional"
+     ],
+     "options": [
+      "1/4",
+      "3/20",
+      "3/5",
+      "3/4"
+     ],
+     "distractor_rationales": {
+      "3/20": "這是用全部 20 顆當分母（3/20）；題目已知是紅球，要縮小到 12 顆紅球當分母，P＝3/12＝1/4。",
+      "3/5": "這是算成『抽到紅球』本身的機率（12/20＝3/5）；題目問的是紅球裡有記號的比例，P＝3/12＝1/4。",
+      "3/4": "這是算成紅球裡『沒有記號』的（12－3＝9 顆，9/12＝3/4）；題目問有記號，P＝3/12＝1/4。"
+     },
+     "answer_evidence": [
+      "c-cond-formula",
+      "c-cond-denom"
+     ],
+     "feedback": "已知是紅球（12 顆）就在這 12 顆裡看，有記號的 3 顆：P＝3/12＝1/4。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "丟兩顆公正骰子，已知兩顆點數的和是 7。在這個前提下，其中有一顆點數是 3 的機率是多少？",
+     "answer": "1/3",
+     "kp_ids": [
+      "math.t_adv.prob.conditional"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.prob.conditional"
+     ],
+     "options": [
+      "1/3",
+      "1/18",
+      "2/3",
+      "1/6"
+     ],
+     "distractor_rationales": {
+      "1/18": "這是用全部 36 種結果當分母（2/36＝1/18）；題目已知和是 7，要縮小到『和為 7』的 6 種當分母，P＝2/6＝1/3。",
+      "2/3": "這是算成『沒有一顆是 3』的（和為 7 的 6 種裡，不含 3 的有 4 種，4/6＝2/3）；題目問有一顆是 3，P＝2/6＝1/3。",
+      "1/6": "這是只數到 1 種（只算 (3,4)、漏了 (4,3)）；和為 7 裡含 3 的有 (3,4)、(4,3) 共 2 種，P＝2/6＝1/3。"
+     },
+     "answer_evidence": [
+      "c-cond-space"
+     ],
+     "feedback": "和為 7 有 6 種結果，其中含 3 的是 (3,4)、(4,3) 共 2 種：P＝2/6＝1/3。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "條件機率 P(A|B)（已知 B 發生時 A 的機率）的公式是下列哪一個？",
+     "answer": "P(A∩B)/P(B)",
+     "kp_ids": [
+      "math.t_adv.prob.conditional"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.prob.conditional"
+     ],
+     "options": [
+      "P(A∩B)/P(B)",
+      "P(A∩B)/P(A)",
+      "P(A)·P(B)",
+      "P(A)＋P(B)"
+     ],
+     "distractor_rationales": {
+      "P(A∩B)/P(A)": "分母放錯了；已知的是 B，分母要用 P(B)，不是 P(A)。P(A|B)＝P(A∩B)/P(B)。",
+      "P(A)·P(B)": "這是『獨立事件』同時發生的乘法，不是條件機率；條件機率是 P(A∩B)/P(B)。",
+      "P(A)＋P(B)": "這是『互斥事件 A 或 B』的加法，和條件機率無關；P(A|B)＝P(A∩B)/P(B)。"
+     },
+     "answer_evidence": [
+      "c-cond-formula"
+     ],
+     "feedback": "條件機率 P(A|B)＝P(A∩B)/P(B)：A 與 B 同時發生的機率，除以已知條件 B 的機率。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（條件機率 P(A|B)＝已知 B 發生後 A 的機率：縮小樣本空間只看 B，在裡面看 A 佔多少；或用公式 P(A|B)＝P(A∩B)/P(B)。分母一定要用『已知的那個條件 B』，不是全部、也不是 A；先問『題目已知的是什麼』那個就是 B；算完檢查在 0 到 1 之間）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
