@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 三角（trig）strand 第 5 個單元（t_adv 學測範圍）。知識點 math.t_adv.trig.triangle-area（三角形面積：兩邊夾一角版＋海龍公式）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15）：三角形面積 (area of a triangle)、海龍公式 (Heron's formula)、半周長 (semi-perimeter)。★scope（學測 t_adv）：(1) 兩邊夾一角版 Area＝½·a·b·sinC（a、b 為兩邊，C 為其夾角）；(2) 海龍公式 s＝(a＋b＋c)/2，Area＝√(s(s－a)(s－b)(s－c))。能由『兩邊及夾角』或『三邊』求三角形面積，知道兩法在同一三角形給同一結果、依已知條件選用。不含：正弦/餘弦定理（另單元）、測量綜合應用（另單元）、外接圓/內切圓面積。prereq＝銳角三角比（ratio-acute，sinC 來源）。★自檢（math-unit defect-classes）：事實全 .venv/sympy 驗（½·6·8·sin30°=12；½·5·8·sin90°=20；海龍 3-4-5＝6〔與直角 ½·3·4=6 一致〕；海龍 13-14-15：s=21,Area=√(21·8·7·6)=√7056=84；海龍 5-6-7=6√6）；★figure＝二法公式卡（低幾何風險 #43/#32：兩列①兩邊夾一角 Area＝½·a·b·sinC、②海龍 s＝(a＋b＋c)/2 Area＝√(s(s－a)(s－b)(s－c))），alt 與 SVG text 逐字一致（#33）、figure 標題『三角形面積』一併寫進 alt 開頭（吸取 law-of-sines R2 borderline 教訓）；★全檔減號一律全形 U+FF0D『－』（吸取 law-of-cosines R1 #39 教訓，draft 階段即統一，prose/claims/teach/feedback/options/figure 全一致）；★MCQ options 全 bare（#47：無 in-option 括號說明、說明全在 distractor_rationales）、每個 distractor 有乾淨單一錯誤路徑（吸取 law-of-cosines R1 Q3 教訓）、數值兩兩相異（#14/#29）、長度均衡（#20/#28）；★導讀承諾順序＝實際 teach 牌組順序（#4/#46）：導讀『先講兩個面積公式（兩邊夾角版＋海龍）、用 a=6,b=8,C=30° 示範兩邊夾角版求面積＝12、再用 3-4-5 示範海龍＝6、用一張二法公式卡整理、最後練』＝實際 teach1 intro→teach2 兩公式+兩示範→teach3 figure 公式卡→teach4 recap+練；worked-example 在 rendered teach；★teach worked-example 用 a=6,b=8,C=30°（⇒12）與海龍 3-4-5（⇒6），與 practice 答案（Q1 SAS 公式、Q2 a=5,b=8,C=90° 的 20、Q3 海龍公式、Q4 海龍 13-14-15 的 84）皆不重疊避#10。claim kind=definition。figure-only example 無 body。",
+ "page": "math_trig_triangle_area.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.trig.triangle-area",
+   "title_zh": "三角形面積",
+   "can_do": "我會求三角形的面積：知道『兩邊和它們的夾角』就用 Area＝½·a·b·sinC；知道『三邊長』就用海龍公式 s＝(a＋b＋c)/2，Area＝√(s(s－a)(s－b)(s－c))。我也知道這兩個公式對同一個三角形會算出同一個面積。",
+   "situation_group": "三角：三角形面積",
+   "subject": "math",
+   "strand": "trig",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_adv.trig.triangle-area"
+   ],
+   "prerequisites": [
+    "math.t_adv.trig.ratio-acute"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-area-sas",
+     "text": "兩邊夾一角版 (area of a triangle)：若已知兩邊 a、b 和它們的夾角 C，則三角形面積 Area＝½·a·b·sinC。道理：以 b 為底，對應的高是 a·sinC（a 乘上夾角的正弦），而面積＝½·底·高＝½·b·(a·sinC)。注意乘的是『夾角』C 的正弦，不是別的角。",
+     "kind": "definition",
+     "source_refs": [
+      "三角形面積 Area＝½ab·sinC（高中數學 學測）"
+     ],
+     "verification_ref": "½·6·8·sin30°=12（sympy）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-area-heron",
+     "text": "海龍公式 (Heron's formula)：若只知道三邊長 a、b、c，先算半周長 (semi-perimeter) s＝(a＋b＋c)/2，則面積 Area＝√(s(s－a)(s－b)(s－c))。用途：三邊都知道、但沒有角度時，照樣能求面積。例：3、4、5 的三角形，s＝(3＋4＋5)/2＝6，Area＝√(6·3·2·1)＝√36＝6。",
+     "kind": "definition",
+     "source_refs": [
+      "海龍公式 Area＝√(s(s－a)(s－b)(s－c))（高中數學 學測）"
+     ],
+     "verification_ref": "Heron 3-4-5=6、13-14-15=84（sympy）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-area-choose",
+     "text": "兩法選用與一致性：知道『兩邊＋夾角』就用 ½·a·b·sinC；只知道『三邊』就用海龍公式。兩個公式算的是同一個三角形的面積，結果一定相同——例如 3-4-5 直角三角形，用海龍得 6，用兩股當底與高 ½·3·4 也得 6，彼此印證。",
+     "kind": "definition",
+     "source_refs": [
+      "三角形面積兩公式一致（高中數學 學測）"
+     ],
+     "verification_ref": "Heron 3-4-5=6 與 ½·3·4=6 一致（sympy）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.trig.triangle-area"
+     ],
+     "body": "這一單元學『三角形面積』的兩個公式。下面先講這兩個公式——兩邊夾一角版 Area＝½·a·b·sinC，和只靠三邊的海龍公式；用 a＝6、b＝8、夾角 C＝30° 示範兩邊夾角版求面積，再用 3、4、5 三邊示範海龍公式，接著用一張二法公式卡整理，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.trig.triangle-area"
+     ],
+     "body": "兩個公式：① 兩邊夾一角版 Area＝½·a·b·sinC（a、b 是兩邊，C 是它們的夾角）。示範（a＝6、b＝8、C＝30°）：Area＝½·6·8·sin30°＝½·48·½＝12。② 海龍公式：先算半周長 s＝(a＋b＋c)/2，再 Area＝√(s(s－a)(s－b)(s－c))。示範（三邊 3、4、5）：s＝(3＋4＋5)/2＝6，Area＝√(6·3·2·1)＝√36＝6（這是直角三角形，用 ½·3·4 也得 6，印證兩法一致）。下面用一張二法公式卡整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.trig.triangle-area"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 150' xmlns='http://www.w3.org/2000/svg'><text x='170' y='20' font-family='sans-serif' font-size='13.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>三角形面積</text><rect x='18' y='32' width='304' height='44' rx='7' fill='#eef4ff' stroke='#5b8def' stroke-width='1.2'/><text x='30' y='52' font-family='sans-serif' font-size='11' fill='#5b8def' font-weight='bold'>①兩邊夾一角</text><text x='186' y='62' font-family='sans-serif' font-size='13' fill='#33475b' text-anchor='middle'>Area ＝ ½ · a · b · sinC</text><rect x='18' y='82' width='304' height='54' rx='7' fill='#fdf2e9' stroke='#d08a3e' stroke-width='1.2'/><text x='30' y='100' font-family='sans-serif' font-size='11' fill='#d08a3e' font-weight='bold'>②海龍公式</text><text x='186' y='102' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>s ＝ (a ＋ b ＋ c) / 2</text><text x='186' y='122' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>Area ＝ √(s(s－a)(s－b)(s－c))</text></svg>",
+      "alt": "標題「三角形面積」。一張二法公式卡。第一列藍底「①兩邊夾一角」：「Area ＝ ½ · a · b · sinC」。第二列橘底「②海龍公式」：「s ＝ (a ＋ b ＋ c) / 2」與「Area ＝ √(s(s－a)(s－b)(s－c))」。",
+      "caption": "三角形面積兩公式：① 知兩邊 a、b 與夾角 C 用 Area＝½·a·b·sinC；② 只知三邊用海龍公式（先算半周長 s＝(a＋b＋c)/2）。兩法對同一三角形結果相同。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.trig.triangle-area"
+     ],
+     "body": "最後練三角形面積。重點：看已知條件選公式——給『兩邊＋夾角』用 ½·a·b·sinC（乘的一定是那兩邊的夾角的正弦）；給『三邊』用海龍公式（先算半周長 s＝(a＋b＋c)/2，再開根號）。小提醒：兩邊夾角版前面的 ½ 不能忘；海龍公式最後要記得開平方根。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "已知三角形兩邊 a、b 和它們的夾角 C，面積公式是下列哪一個？",
+     "answer": "½ · a · b · sinC",
+     "kp_ids": [
+      "math.t_adv.trig.triangle-area"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.trig.triangle-area"
+     ],
+     "options": [
+      "½ · a · b · sinC",
+      "a · b · sinC",
+      "½ · a · b · cosC",
+      "½ · a · b"
+     ],
+     "distractor_rationales": {
+      "a · b · sinC": "少了前面的 ½；面積是『半個』底乘高，公式是 ½·a·b·sinC，不是 a·b·sinC。",
+      "½ · a · b · cosC": "用錯三角比了；高是 a·sinC（用夾角的正弦），所以面積用 sinC 不是 cosC。",
+      "½ · a · b": "漏了 sinC；只有當 C＝90°（sinC＝1）時 ½·a·b 才對，一般的夾角要乘 sinC。"
+     },
+     "answer_evidence": [
+      "c-area-sas"
+     ],
+     "feedback": "兩邊夾一角版：Area＝½·a·b·sinC（高＝a·sinC，面積＝½·底·高）。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "三角形兩邊 a＝5、b＝8，夾角 C＝90°。它的面積是多少？",
+     "answer": "20",
+     "kp_ids": [
+      "math.t_adv.trig.triangle-area"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.trig.triangle-area"
+     ],
+     "options": [
+      "20",
+      "40",
+      "0",
+      "13"
+     ],
+     "distractor_rationales": {
+      "40": "忘了前面的 ½；½·5·8·sin90°＝½·40·1＝20，少乘 ½ 才會得 40。",
+      "0": "把公式記成 cosC 了；cos90°＝0 會算出 0，但面積公式用的是 sinC，sin90°＝1，面積＝20。",
+      "13": "這是把兩邊相加（5＋8），不是面積；面積要用 ½·a·b·sinC＝20。"
+     },
+     "answer_evidence": [
+      "c-area-sas"
+     ],
+     "feedback": "Area＝½·5·8·sin90°＝½·40·1＝20。（C＝90° 時 sinC＝1，正是 ½·底·高。）"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "只知道三邊長時，用海龍公式求面積。設 s＝(a＋b＋c)/2，面積等於下列哪一個？",
+     "answer": "√(s(s－a)(s－b)(s－c))",
+     "kp_ids": [
+      "math.t_adv.trig.triangle-area"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.trig.triangle-area"
+     ],
+     "options": [
+      "√(s(s－a)(s－b)(s－c))",
+      "s(s－a)(s－b)(s－c)",
+      "√(s(s＋a)(s＋b)(s＋c))",
+      "√((s－a)(s－b)(s－c))"
+     ],
+     "distractor_rationales": {
+      "s(s－a)(s－b)(s－c)": "忘了開平方根；海龍公式最後要開根號，Area＝√(s(s－a)(s－b)(s－c))。",
+      "√(s(s＋a)(s＋b)(s＋c))": "括號內該是『減』不是『加』；是 s 減去每一邊：s－a、s－b、s－c。",
+      "√((s－a)(s－b)(s－c))": "漏了最前面的那個 s；根號內是 s 乘上 (s－a)(s－b)(s－c) 四個因式。"
+     },
+     "answer_evidence": [
+      "c-area-heron"
+     ],
+     "feedback": "海龍公式：Area＝√(s(s－a)(s－b)(s－c))，其中 s＝(a＋b＋c)/2。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "三邊 a＝13、b＝14、c＝15 的三角形，用海龍公式求面積。",
+     "answer": "84",
+     "kp_ids": [
+      "math.t_adv.trig.triangle-area"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.trig.triangle-area"
+     ],
+     "options": [
+      "84",
+      "21",
+      "42",
+      "7056"
+     ],
+     "distractor_rationales": {
+      "21": "21 是半周長 s（＝(13＋14＋15)/2），不是面積；還要代進 √(s(s－a)(s－b)(s－c))＝√(21·8·7·6)＝84。",
+      "42": "42 是三邊之和（周長 13＋14＋15），不是面積；半周長 s＝42/2＝21，再代海龍公式得 84。",
+      "7056": "7056 是根號裡面的值 s(s－a)(s－b)(s－c)＝21·8·7·6，忘了開平方根；√7056＝84。"
+     },
+     "answer_evidence": [
+      "c-area-heron"
+     ],
+     "feedback": "s＝(13＋14＋15)/2＝21，Area＝√(21·(21－13)·(21－14)·(21－15))＝√(21·8·7·6)＝√7056＝84。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（三角形面積兩公式：① 兩邊夾一角 Area＝½·a·b·sinC〔高＝a·sinC，乘的是夾角的正弦，別忘前面的 ½〕；② 海龍公式 s＝(a＋b＋c)/2，Area＝√(s(s－a)(s－b)(s－c))〔先算半周長，最後要開根號〕。看已知條件選公式；兩法對同一三角形結果相同）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
