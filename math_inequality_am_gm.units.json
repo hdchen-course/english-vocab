@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 不等式（inequality）strand 第 7 個單元（全島第 71；t_adv 高中學測範圍）。知識點 math.t_adv.inequality.am-gm（算術幾何平均不等式 AM–GM 與極值應用）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15）：算術平均 (arithmetic mean)、幾何平均 (geometric mean)、算幾不等式 (AM–GM inequality)。★scope（高中學測）：兩個非負數 a、b 的 AM–GM：(a+b)/2 ≥ √(ab)，即 a+b ≥ 2√(ab)；等號『若且唯若 a=b』成立。來源＝(√a−√b)²≥0 展開。應用：(1) 求和的最小值——兩正數乘積固定時，x+k/x ≥ 2√k（x>0），最小值 2√k 在 x=√k（即兩項相等）。(2) 求積的最大值——兩正數和固定 a+b=S 時，ab ≤ (S/2)²，最大值在 a=b=S/2。鐵律：用 AM–GM 求極值一定要『兩項皆正』且能取到『相等』那一刻才成立。不含：三個以上變數的 AM–GM、加權 AM–GM、柯西不等式、需湊項的複雜題。prereq＝一元二次不等式（完全平方概念）。★自檢（math-unit defect-classes）：事實全 .venv/sympy 驗（teach：a=2,b=8 ⇒ (a+b)/2=5 ≥ √(ab)=4；x+4/x 最小值 4 在 x=2；a+b=10 ⇒ ab 最大 25 在 a=b=5。practice：x+9/x 最小值 6 在 x=3；a+b=12 ⇒ ab 最大 36 在 a=b=6；等號條件 a=b）；不等號 ≥、根號 √、乘號 ×；量詞不撞位名（本單元無位名，#3）；learner-facing 含 selfeval_note 用字詞（#2）；★figure＝算術平均 vs 幾何平均 長條比較（低幾何風險 #43/#32：a=2,b=8 時 AM=(a+b)/2=5 的長條、GM=√(ab)=4 的較短長條，標 AM≥GM、等號在 a=b），alt 與 SVG text 逐字一致（#33）；誘答單一乾淨機制（忘乘 2 只取 √／常數當答案／代特定值沒找極值／把和當積／(a+b)² 忘除 4）、選項長度均衡（#20/#28）、兩兩相異（#29）；★practice 所考方法（和的最小值 2√k、積的最大值 (S/2)²、等號條件 a=b、前提非負）都在 rendered teach 示範（#4/#46：導讀承諾『先講 AM≥GM 與等號在 a=b、再示範用它求和的最小值與積的最大值，用長條圖看，最後練』與實際一致；worked-example 在 rendered teach）；★teach worked-example（AM(2,8)=5≥GM=4；x+4/x 最小 4；a+b=10⇒ab≤25）與 figure（AM vs GM 長條）與 practice 答案（Q1 6／Q2 36／Q3 a=b／Q4 非負）皆不重疊避#10。claim kind=definition。figure-only example 無 body。",
+ "page": "math_inequality_am_gm.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.inequality.am-gm",
+   "title_zh": "算幾不等式（AM–GM）與極值",
+   "can_do": "我知道兩個非負數的『算術平均 ≥ 幾何平均』：(a+b)/2 ≥ √(ab)，也就是 a+b ≥ 2√(ab)，而且等號只有在 a=b 時成立。我會用它求極值：兩正數乘積固定時，它們的和在相等時最小；兩正數和固定時，它們的積在相等時最大。",
+   "situation_group": "不等式：算幾不等式",
+   "subject": "math",
+   "strand": "inequality",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_adv.inequality.am-gm"
+   ],
+   "prerequisites": [
+    "math.t_adv.inequality.quadratic"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-amgm-ineq",
+     "text": "算幾不等式 (AM–GM inequality)：對兩個非負數 a、b，『算術平均 (arithmetic mean)』(a+b)/2 一定大於或等於『幾何平均 (geometric mean)』√(ab)，即 (a+b)/2 ≥ √(ab)，兩邊乘 2 就是 a+b ≥ 2√(ab)。等號『只有在 a=b 時』成立。這來自 (√a−√b)² ≥ 0 展開：a−2√(ab)+b ≥ 0。例如 a=2、b=8：算術平均 (2+8)/2=5，幾何平均 √(2×8)=√16=4，確實 5 ≥ 4。",
+     "kind": "definition",
+     "source_refs": [
+      "算幾不等式 a+b≥2√(ab)、等號在 a=b（高中數學）"
+     ],
+     "verification_ref": "a=2,b=8⇒AM=5≥GM=4；(√a−√b)²≥0（sympy 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-amgm-min",
+     "text": "用 AM–GM 求『和的最小值』：如果兩個正數的乘積是固定的，那它們的和在兩數相等時最小。常見型：x>0 時，x + k/x ≥ 2√(x × k/x) = 2√k，所以最小值是 2√k，發生在 x = k/x（即 x=√k）的時候。例如 x>0，x + 4/x ≥ 2√4 = 4，最小值 4 在 x=2（因為 x=4/x 得 x²=4）。",
+     "kind": "definition",
+     "source_refs": [
+      "AM–GM 應用：乘積固定求和的最小值（高中數學）"
+     ],
+     "verification_ref": "x+4/x 最小值 4 在 x=2（sympy 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-amgm-max",
+     "text": "用 AM–GM 求『積的最大值』：如果兩個正數的和是固定的 a+b=S，那它們的積 ab 在兩數相等時最大。因為 √(ab) ≤ (a+b)/2 = S/2，兩邊平方得 ab ≤ (S/2)²，最大值 (S/2)² 在 a=b=S/2 時取到。例如 a、b 為正且 a+b=10，則 ab ≤ (10/2)²=25，最大值 25 在 a=b=5。★用 AM–GM 求極值一定要『兩數皆正』而且能取到『相等』那一刻。",
+     "kind": "definition",
+     "source_refs": [
+      "AM–GM 應用：和固定求積的最大值（高中數學）"
+     ],
+     "verification_ref": "a+b=10⇒ab 最大 25 在 a=b=5（sympy 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.inequality.am-gm"
+     ],
+     "body": "這一單元學一個很好用的不等式：算幾不等式（算術平均 ≥ 幾何平均）。它最常用來『求最大值或最小值』，不用微分就能做。下面先講這個不等式本身和它的等號條件（只有兩數相等時才取等號），再示範怎麼用它求『和的最小值』與『積的最大值』，用一張長條圖看算術平均和幾何平均的大小，最後練習。（這裡的數都先假設是非負數。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.inequality.am-gm"
+     ],
+     "body": "三個重點。(1) 算幾不等式：兩個非負數 a、b，(a+b)/2 ≥ √(ab)，即 a+b ≥ 2√(ab)；等號只有在 a=b 時成立（來自 (√a−√b)²≥0）。例：a=2、b=8，算術平均 5 ≥ 幾何平均 4。(2) 求和的最小值：x>0 時 x + k/x ≥ 2√k，最小值 2√k 在 x=√k（兩項相等）。例：x + 4/x ≥ 2√4 = 4，最小值 4 在 x=2。(3) 求積的最大值：兩正數和固定 a+b=S，則 ab ≤ (S/2)²，最大值在 a=b。例：a+b=10 ⇒ ab ≤ 25，最大值 25 在 a=b=5。★一定要兩數皆正、且取得到相等。下面用長條圖比大小。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.inequality.am-gm"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 150' xmlns='http://www.w3.org/2000/svg'><text x='170' y='22' font-family='sans-serif' font-size='13' fill='#2f6f54' text-anchor='middle' font-weight='bold'>算術平均 ≥ 幾何平均（a＝2, b＝8）</text><text x='20' y='58' font-family='sans-serif' font-size='11.5' fill='#33475b'>算術平均</text><rect x='96' y='46' width='200' height='22' rx='4' fill='#5b8def'/><text x='196' y='62' font-family='sans-serif' font-size='12' fill='#ffffff' text-anchor='middle' font-weight='bold'>(2＋8)/2 ＝ 5</text><text x='20' y='98' font-family='sans-serif' font-size='11.5' fill='#33475b'>幾何平均</text><rect x='96' y='86' width='160' height='22' rx='4' fill='#e9a23b'/><text x='176' y='102' font-family='sans-serif' font-size='12' fill='#ffffff' text-anchor='middle' font-weight='bold'>√(2×8) ＝ 4</text><text x='170' y='136' font-family='sans-serif' font-size='11.5' fill='#2f6f54' text-anchor='middle'>a＋b ≥ 2√(ab)；等號只有在 a＝b 時成立</text></svg>",
+      "alt": "一張長條比較圖，標題「算術平均 ≥ 幾何平均（a＝2, b＝8）」。上面一條藍色長條標「算術平均」，寫著「(2＋8)/2 ＝ 5」；下面一條橘色長條較短，標「幾何平均」，寫著「√(2×8) ＝ 4」。藍條比橘條長。最下方綠字：「a＋b ≥ 2√(ab)；等號只有在 a＝b 時成立」。",
+      "caption": "a＝2、b＝8 時，算術平均 (2＋8)/2＝5（藍條）比幾何平均 √(2×8)＝4（橘條）大。算幾不等式說 a＋b ≥ 2√(ab) 一定成立，等號只有在兩數相等 a＝b 時才發生。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.inequality.am-gm"
+     ],
+     "body": "最後練用算幾不等式求極值。口訣：乘積固定 → 兩數相等時『和最小』；和固定 → 兩數相等時『積最大』。做題時先確認兩數皆正，算出 2√(乘積) 或 (和/2)²，再確認相等那一刻取得到。再看一個求和最小值的例子：x>0，x + 1/x ≥ 2√(x × 1/x) = 2√1 = 2，最小值 2 在 x=1。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "設 x＞0，求 x ＋ 9/x 的最小值。",
+     "answer": "6",
+     "kp_ids": [
+      "math.t_adv.inequality.am-gm"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.inequality.am-gm"
+     ],
+     "options": [
+      "6",
+      "3",
+      "9",
+      "10"
+     ],
+     "distractor_rationales": {
+      "3": "這只算了 √(x × 9/x)＝√9＝3，忘了算幾不等式是 2√(ab)、要乘以 2；正確是 2√9＝6。",
+      "9": "把式子裡的常數 9 直接當成最小值了；要用 AM–GM 算 x＋9/x ≥ 2√(x×9/x)＝2√9＝6。",
+      "10": "這是隨便代 x＝1 得到 1＋9＝10，但 x＝1 不是最小值的位置；最小值在 x＝3（x＝9/x），值是 6。"
+     },
+     "answer_evidence": [
+      "c-amgm-min"
+     ],
+     "feedback": "x＞0，x ＋ 9/x ≥ 2√(x × 9/x)＝2√9＝6，最小值 6 在 x＝3（x＝9/x ⇒ x²＝9）。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "設 a、b 都是正數且 a ＋ b ＝ 12，求乘積 ab 的最大值。",
+     "answer": "36",
+     "kp_ids": [
+      "math.t_adv.inequality.am-gm"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.inequality.am-gm"
+     ],
+     "options": [
+      "36",
+      "6",
+      "144",
+      "12"
+     ],
+     "distractor_rationales": {
+      "6": "6 是最大值發生時 a、b 各自的值（a＝b＝6），不是乘積；乘積是 6×6＝36。",
+      "144": "這是把 (a＋b)²＝12²＝144 當成 ab 的上界，忘了要除以 4；正確是 ab ≤ (a＋b)²/4＝144/4＝36。",
+      "12": "12 是兩數的和，不是積；和固定時積的最大值是 (12/2)²＝36。"
+     },
+     "answer_evidence": [
+      "c-amgm-max"
+     ],
+     "feedback": "和固定 a＋b＝12，ab ≤ ((a＋b)/2)²＝(12/2)²＝36，最大值 36 在 a＝b＝6。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "算幾不等式 a ＋ b ≥ 2√(ab)（a、b 為非負數）的等號，在什麼時候成立？",
+     "answer": "只有在 a ＝ b 時",
+     "kp_ids": [
+      "math.t_adv.inequality.am-gm"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.inequality.am-gm"
+     ],
+     "options": [
+      "只有在 a ＝ b 時",
+      "只有在 a、b 互為倒數（ab＝1）時",
+      "只有在 a ＋ b ＝ 1 時",
+      "對任何非負的 a、b 都永遠成立等號"
+     ],
+     "distractor_rationales": {
+      "只有在 a、b 互為倒數（ab＝1）時": "ab＝1 只讓右邊變成 2，不是等號條件；等號來自 (√a−√b)²＝0，要 a＝b。",
+      "只有在 a ＋ b ＝ 1 時": "和等於多少不影響等號條件；等號條件只看兩數是否相等 a＝b。",
+      "對任何非負的 a、b 都永遠成立等號": "若永遠等號就不叫不等式了；只有 a＝b 時才取等號，a≠b 時是嚴格大於。"
+     },
+     "answer_evidence": [
+      "c-amgm-ineq"
+     ],
+     "feedback": "等號來自 (√a−√b)²＝0，所以只有在 a＝b 時 a＋b＝2√(ab)；否則是嚴格大於。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "要用算幾不等式 (a＋b)/2 ≥ √(ab) 時，對 a、b 有什麼前提條件？",
+     "answer": "a、b 都必須是非負數（≥ 0）",
+     "kp_ids": [
+      "math.t_adv.inequality.am-gm"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.inequality.am-gm"
+     ],
+     "options": [
+      "a、b 都必須是非負數（≥ 0）",
+      "a、b 都必須是整數",
+      "a、b 必須不相等（a ≠ b）",
+      "沒有任何前提，任何實數都可以"
+     ],
+     "distractor_rationales": {
+      "a、b 都必須是整數": "a、b 不必是整數，小數、分數都可以；關鍵前提是非負（否則 √(ab) 可能沒有意義）。",
+      "a、b 必須不相等（a ≠ b）": "剛好相反：a＝b 是可以的（那時取等號）；a≠b 只是會變成嚴格大於，不是前提。",
+      "沒有任何前提，任何實數都可以": "若 a、b 可為負，√(ab) 可能無意義或不等式不成立；前提是兩數非負。"
+     },
+     "answer_evidence": [
+      "c-amgm-ineq"
+     ],
+     "feedback": "算幾不等式需要 a、b 都是非負數（≥ 0），這樣 √(ab) 才有意義、不等式才成立。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（算幾不等式：兩非負數 (a+b)/2 ≥ √(ab)，即 a+b ≥ 2√(ab)，等號只有在 a=b 時成立；求極值——乘積固定時兩數相等『和最小』〔x+k/x 最小 2√k〕、和固定時兩數相等『積最大』〔ab ≤ (和/2)²〕；一定要兩數皆正且取得到相等）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
