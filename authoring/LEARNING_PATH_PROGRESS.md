@@ -7,6 +7,15 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-14 13:41 數學島 sequence（數列級數）strand #8：math_sequence_induction（數學歸納法，t_sub 分科-數甲）5/5 收斂
+- **frozen_sha `856ba49f60205325`**（草稿凍 856ba49f 即過內容無缺陷：R1–R5 連 5 clean、confirmed 全 0、coverageComplete 全 true、無 de-converge；本次每輪皆『先單獨 node coverage_check.js 確認 L3_EXIT=0 再 bank』＝落實 recursion R5 教訓，無任何 L3-before-bank 失誤）。DONE-GATE 全綠（per_page_5clean_gate --verify exit 0 且 induction absent／scan_simplified PASS／unit_schema_gate CLEAN／question_correctness_gate CLEAN／pedagogy_gate CLEAN 0 hard；數學無音檔）＋iPad 四角色 render 綁 sha 856ba49f（兩步卡 figure：①基底 n=1 成立〔藍〕、②遞推 假設 n=k 成立⇒n=k+1 成立〔綠〕、骨牌比喻「第一張倒＋每張推倒下一張⇒全倒」；mbp16+land+port 三 PNG 存 /tmp/unit_render/、右緣0% 無重疊裁切、選項洗牌相異）。
+- **3 claim kind=definition**（c-ind-two 兩步＝基底 n=1＋遞推 P(k)⇒P(k+1)；c-ind-step 遞推用歸納假設 1+…+k=k(k+1)/2 推 (k+1)(k+2)/2；c-ind-why 骨牌比喻為何兩步缺一不可）。事實全 .venv 驗（1+…+n=n(n+1)/2 基底 n=1 ⇒1=1×2/2=1；遞推 k(k+1)/2+(k+1)=(k+1)(k+2)/2 sympy 化簡相等；奇數和 1+3+…+(2n−1)=n² 基底 n=1）。術語附英語 R15（mathematical induction／base case／inductive step／inductive hypothesis）。prereq=sequence.recursion。不含強歸納/結構歸納/超限歸納/歸納證不等式進階。
+- **4 MCQ**：Q1 兩步是什麼→基底驗 n=1＋遞推假設 n=k 推 n=k+1〔只基底/只遞推/驗幾個數字〕／Q2 基底驗什麼→n=1（1=1×2/2）〔n=k 歸納假設/n=k+1 目標/n=0 非正整數〕／Q3 歸納假設是什麼→假設 n=k 成立推 k+1〔直接假設結論=循環論證/k+1→k 反向/假設永不成立=反證法〕／Q4 為何兩步都要（骨牌）→缺一不可〔只遞推/只基底/兩步同一件事〕。★pre-freeze pedagogy_gate 曾攔下 Q4 length-cue（正解 32 字>1.5×次長）→四選項重平衡等長。teach worked-example 與 figure 與 practice 正解皆不重疊避#10。
+- **commits**：草稿凍結 88472e503→R1 bank 18c33b56f→R2→R3→R4→R5＋DONE-GATE＋PROGRESS 本次。
+- **★里程碑：數學島 sequence strand 8/9**。已 COMPLETE strand 7 條（function/equation/geom/algexpr/numquant/ratio/inequality＝132）＋sequence 8＝**140 單元**。
+- **本 session 另做**：完整重讀 LEARNING_PATH_REBUILD_SPEC.md（1000 行），滿足 lp-reanchor-guard「宣告收斂前本 session 須重讀 spec」要求。
+- **下一步**：sequence 最後 1 KP＝limit（數列極限，t_sub 分科-數甲）→ sequence strand 9/9 完成。另 QUEUED：hub `index_new.html` AC-VIZ-1 figure_signoff 已 stale（sha 4741b69d≠manifest ec2bffb5）須 hub 重 render＋四角色重簽。
+
 ## 2026-11-14 13:04 數學島 sequence（數列級數）strand #7：math_sequence_recursion（遞迴關係，t_adv 學測）5/5 收斂
 - **frozen_sha `64dd93065ea034f3`**（草稿凍 64dd9306 即過內容無缺陷：R1–R5 連 5 clean、confirmed 全 0、無 de-converge。★但兩個 harness 層面問題：(a) R1 首跑又遇 rev:s1 content-filter 誤擋〔agents_error:1〕→重跑得完整才 bank；(b) ★R5 首跑 confirmed 0 但 L3 coverage_check FAIL〔reviewer 把 Q1 answer「14」行號報 105、實際 95，差 10 超容忍〕＝coverage 不實 INVALID→我誤在同一指令 bank+查、L3 FAIL 仍寫入→即時偵測並還原 streak 4→R5 重跑得正確行號、L3 exit 0 才 bank）。DONE-GATE 全綠（per_page PASS 且 recursion absent／scan PASS／unit_schema clean／question_correctness CLEAN／pedagogy CLEAN；數學無音檔）＋iPad 四角色 render 綁 sha 64dd9306（遞迴鏈 figure：標題 aₙ₊₁＝2aₙ＋1、三格 2/5/11、橘弧「×2 ＋1」；mbp16+land+port 三視埠右緣0% 選項洗牌相異、無重疊裁切）。
 - **3 claim kind=definition**（c-rec-def 遞迴要起始值+規則；c-rec-compute 逐項計算；c-rec-special 等差 a_{n+1}=a_n+d／等比 a_{n+1}=r·a_n／費氏 a_{n+2}=a_{n+1}+a_n 皆特殊遞迴）。事實全 .venv 逐項算（teach 2,5,11,23／3,5,7,9／費氏 1,1,2,3,5,8；practice Q1 a_4=14／Q3 a_5=13／Q4 公差3等差）。術語附英語 R15（recurrence relation／initial term）。prereq=sequence.arithmetic。不含解遞迴求通項／特徵方程式／歸納法證明。
