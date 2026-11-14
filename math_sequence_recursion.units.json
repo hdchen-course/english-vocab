@@ -1,0 +1,213 @@
+{
+ "_note": "數學島 數列級數（sequence）strand 第 7 個單元（全島第 79；t_adv 高中學測範圍）。知識點 math.t_adv.sequence.recursion（遞迴關係）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15）：遞迴關係 (recurrence relation)、遞迴 (recursion)、首項／起始值 (initial term)。★scope（高中學測）：(1) 遞迴數列＝用『前面的項』來定義後面的項：給起始值（首項，或前兩項）＋一條規則（遞迴關係），就能一項一項算出來。(2) 由遞迴關係逐項計算（如 a_{n+1}＝2a_n＋1）。(3) 看出等差／等比其實是特殊的遞迴（等差 a_{n+1}＝a_n＋d、等比 a_{n+1}＝r·a_n）。不含：解遞迴求通項（特徵方程式）、二階線性遞迴的封閉解、數學歸納法證明。prereq＝等差數列的通項與性質（arithmetic；對照『每項加固定數』的遞迴）。★自檢（math-unit defect-classes）：事實全 .venv 逐項算（teach：a_1=2,a_{n+1}=2a_n+1 ⇒ 2,5,11,23；a_1=3,a_{n+1}=a_n+2 ⇒ 3,5,7,9；§4 recap 費氏 a_1=a_2=1,a_{n+2}=a_{n+1}+a_n ⇒ 1,1,2,3,5,8。practice：a_1=1,a_{n+1}=3a_n−1 ⇒ 1,2,5,14〔a_4=14〕；a_1=2,a_2=3,a_{n+2}=a_{n+1}+a_n ⇒ 2,3,5,8,13〔a_5=13〕；a_{n+1}=a_n+3 為等差公差3）；減號 U+2212、乘號 ×、下標 a_n a_{n+1}；量詞不撞位名（本單元無位名，#3）；learner-facing 含 selfeval_note 用字詞（#2）；★figure＝遞迴鏈 2→5→11 每步「×2＋1」（低幾何風險 #43/#32：三方格標 2/5/11、方格間弧線標 ×2＋1、標題「遞迴：a_{n+1}＝2a_n＋1」），alt 與 SVG text 逐字一致（#33）；誘答單一乾淨機制（忘了規則的某一步／停早一項算成 a_3／多算一項算到 a_5／只給規則不給首項／等比等差混淆）、選項長度均衡（#20/#28）、兩兩相異（#29）；★practice 所考方法（逐項算單項遞迴、遞迴需要什麼、逐項算兩項遞迴、辨識等差遞迴）都在 rendered teach 示範（#4/#46：導讀承諾『先講遞迴是用前面的項定義後面、再示範逐項算、看出等差等比是特殊遞迴，用遞迴鏈圖看，最後練』與實際一致；worked-example 在 rendered teach）；★teach worked-example（2,5,11,23；3,5,7,9；§4 recap 費氏 1,1,2,3,5,8）與 figure（2→5→11 ×2+1）與 practice 答案（Q1 a_4=14／Q2 概念／Q3 a_5=13／Q4 等差公差3）皆不重疊避#10。claim kind=definition。figure-only example 無 body。",
+ "page": "math_sequence_recursion.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.sequence.recursion",
+   "title_zh": "遞迴關係",
+   "can_do": "我知道遞迴數列是用『前面的項』來定義後面的項：只要給起始值（首項，或前兩項）和一條規則（遞迴關係），就能一項一項算出來。我會照著遞迴關係逐項計算，也看得出等差、等比其實都是特殊的遞迴。",
+   "situation_group": "數列：遞迴",
+   "subject": "math",
+   "strand": "sequence",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_adv.sequence.recursion"
+   ],
+   "prerequisites": [
+    "math.t_adv.sequence.arithmetic"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-rec-def",
+     "text": "遞迴關係 (recurrence relation)：用『前面的項』來定義後面的項。要能一項一項算出整個數列，需要兩樣東西——起始值（第一項 a_1，或前兩項）和一條規則（告訴你怎麼從前一項得到下一項）。例如 a_1＝2、規則 a_{n+1}＝2a_n＋1：a_2＝2×2＋1＝5、a_3＝2×5＋1＝11、a_4＝2×11＋1＝23。少了起始值或少了規則，都算不出來。",
+     "kind": "definition",
+     "source_refs": [
+      "遞迴關係：起始值＋規則（高中數學）"
+     ],
+     "verification_ref": "a_1=2,a_{n+1}=2a_n+1 ⇒ 2,5,11,23（驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-rec-compute",
+     "text": "照遞迴關係計算：從起始值開始，每次把前一項代進規則，就得到下一項，一步一步往後算。想求第 n 項，就要先把前面的項都算出來。例如 a_1＝3、規則 a_{n+1}＝a_n＋2：a_2＝3＋2＝5、a_3＝5＋2＝7、a_4＝7＋2＝9（這其實就是公差 2 的等差數列）。",
+     "kind": "definition",
+     "source_refs": [
+      "遞迴逐項計算（高中數學）"
+     ],
+     "verification_ref": "a_1=3,a_{n+1}=a_n+2 ⇒ 3,5,7,9（驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-rec-special",
+     "text": "等差、等比其實都是特殊的遞迴：等差數列的規則是『每一項加上固定的公差』a_{n+1}＝a_n＋d；等比數列的規則是『每一項乘上固定的公比』a_{n+1}＝r·a_n。有些遞迴（例如費氏數列 1、1、2、3、5、8…，規則 a_{n+2}＝a_{n+1}＋a_n，要用前兩項相加）既不是等差也不是等比。",
+     "kind": "definition",
+     "source_refs": [
+      "等差/等比為特殊遞迴、費氏數列（高中數學）"
+     ],
+     "verification_ref": "費氏 a_{n+2}=a_{n+1}+a_n ⇒ 1,1,2,3,5,8（驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.sequence.recursion"
+     ],
+     "body": "這一單元學『遞迴』——用前面的項來定義後面的項的數列。和直接給通項公式不同，遞迴是給你一個『起點』和一條『怎麼走到下一步』的規則，你照著一項一項往後算。下面先講遞迴需要哪兩樣東西、怎麼逐項計算，再看出等差、等比其實都是特殊的遞迴，用一張遞迴鏈圖看清楚，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.sequence.recursion"
+     ],
+     "body": "三個重點。(1) 遞迴要兩樣：起始值（首項或前兩項）＋規則。例 a_1＝2、a_{n+1}＝2a_n＋1 ⇒ a_2＝5、a_3＝11、a_4＝23。(2) 逐項算：從起點開始，每次把前一項代進規則得下一項；要第 n 項就得先算出前面的項。例 a_1＝3、a_{n+1}＝a_n＋2 ⇒ 3、5、7、9（就是公差 2 的等差）。(3) 等差、等比是特殊遞迴（a_{n+1}＝a_n＋d、a_{n+1}＝r·a_n）；費氏數列 a_{n+2}＝a_{n+1}＋a_n ⇒ 1、1、2、3、5、8 要用前兩項相加。下面用遞迴鏈圖看。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.sequence.recursion"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 150' xmlns='http://www.w3.org/2000/svg'><text x='170' y='24' font-family='sans-serif' font-size='13.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>遞迴：a&#8345;&#8330;&#8321; ＝ 2a&#8345; ＋ 1</text><rect x='34' y='72' width='56' height='40' rx='7' fill='#eef4ff' stroke='#5b8def' stroke-width='1.3'/><text x='62' y='98' font-family='sans-serif' font-size='16' fill='#33475b' text-anchor='middle' font-weight='bold'>2</text><rect x='142' y='72' width='56' height='40' rx='7' fill='#eef4ff' stroke='#5b8def' stroke-width='1.3'/><text x='170' y='98' font-family='sans-serif' font-size='16' fill='#33475b' text-anchor='middle' font-weight='bold'>5</text><rect x='250' y='72' width='56' height='40' rx='7' fill='#eef4ff' stroke='#5b8def' stroke-width='1.3'/><text x='278' y='98' font-family='sans-serif' font-size='16' fill='#33475b' text-anchor='middle' font-weight='bold'>11</text><path d='M94,68 Q116,48 138,68' fill='none' stroke='#c67c1e' stroke-width='1.6'/><text x='116' y='46' font-family='sans-serif' font-size='12' fill='#c67c1e' text-anchor='middle' font-weight='bold'>×2 ＋1</text><path d='M202,68 Q224,48 246,68' fill='none' stroke='#c67c1e' stroke-width='1.6'/><text x='224' y='46' font-family='sans-serif' font-size='12' fill='#c67c1e' text-anchor='middle' font-weight='bold'>×2 ＋1</text><text x='170' y='136' font-family='sans-serif' font-size='11.5' fill='#2f6f54' text-anchor='middle'>從首項 2 開始，每次「×2 再＋1」得到下一項</text></svg>",
+      "alt": "一張遞迴鏈圖，標題「遞迴：a(n+1) ＝ 2a(n) ＋ 1」。三個方格由左到右寫著 2、5、11；每相鄰兩個方格之間有一條橘色弧線，上面標「×2 ＋1」。最下方綠字：「從首項 2 開始，每次『×2 再＋1』得到下一項」。",
+      "caption": "遞迴數列 a_{n+1}＝2a_n＋1，首項 2：每一項都把前一項「×2 再＋1」得到下一項（2→5→11…）。給了起點和規則，就能一項一項算下去。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.sequence.recursion"
+     ],
+     "body": "最後練遞迴。步驟：先看清楚起始值和規則；從起點開始，每次把前一項（或前兩項）代進規則，一步一步往後算到要的那一項（別多算或少算一步）。再看一個例子：a_1＝1、規則 a_{n+1}＝2a_n−1 ⇒ a_2＝2×1−1＝1、a_3＝2×1−1＝1…（這個數列每一項都是 1，是個常數數列）。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "數列的首項 a₁ ＝ 1，規則 a_{n+1} ＝ 3a_n − 1。第 4 項 a₄ 是多少？",
+     "answer": "14",
+     "kp_ids": [
+      "math.t_adv.sequence.recursion"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.sequence.recursion"
+     ],
+     "options": [
+      "14",
+      "15",
+      "5",
+      "41"
+     ],
+     "distractor_rationales": {
+      "15": "最後一步忘了減 1：a₄ 應該是 3×a₃−1＝3×5−1＝14，不是 3×5＝15。",
+      "5": "這是第 3 項 a₃（少算一項）：a₂＝3×1−1＝2、a₃＝3×2−1＝5、還要再算 a₄＝3×5−1＝14。",
+      "41": "這是多算了一項算到 a₅（3×14−1＝41）；題目要的是第 4 項 a₄＝14。"
+     },
+     "answer_evidence": [
+      "c-rec-def",
+      "c-rec-compute"
+     ],
+     "feedback": "逐項算：a₂＝3×1−1＝2、a₃＝3×2−1＝5、a₄＝3×5−1＝14。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "要用遞迴關係一項一項算出整個數列，最少需要下列哪一組資訊？",
+     "answer": "起始值（首項）和一條遞迴規則",
+     "kp_ids": [
+      "math.t_adv.sequence.recursion"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.sequence.recursion"
+     ],
+     "options": [
+      "起始值（首項）和一條遞迴規則",
+      "只要一條遞迴規則就夠了",
+      "只要知道首項是多少就夠了",
+      "只要知道一共有幾項（項數 n）"
+     ],
+     "distractor_rationales": {
+      "只要一條遞迴規則就夠了": "只有規則、不知道從哪個數開始，第一項就填不出來，後面也都算不了；還要有起始值。",
+      "只要知道首項是多少就夠了": "只有首項、不知道怎麼走到下一項，第二項就算不出來；還要有遞迴規則。",
+      "只要知道一共有幾項（項數 n）": "知道有幾項不能告訴你每一項是多少；要能算出來得有起始值和規則。"
+     },
+     "answer_evidence": [
+      "c-rec-def"
+     ],
+     "feedback": "遞迴要兩樣：起始值（第一項，或前兩項）＋一條把前一項變成下一項的規則，缺一不可。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "數列的前兩項 a₁ ＝ 2、a₂ ＝ 3，規則 a_{n+2} ＝ a_{n+1} ＋ a_n（像費氏數列那樣，每一項是前兩項的和）。第 5 項 a₅ 是多少？",
+     "answer": "13",
+     "kp_ids": [
+      "math.t_adv.sequence.recursion"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.sequence.recursion"
+     ],
+     "options": [
+      "13",
+      "8",
+      "21",
+      "5"
+     ],
+     "distractor_rationales": {
+      "8": "這是第 4 項 a₄（少算一項）：a₃＝3＋2＝5、a₄＝5＋3＝8、還要再算 a₅＝8＋5＝13。",
+      "21": "這是多算了一項算到 a₆（13＋8＝21）；題目要的是第 5 項 a₅＝13。",
+      "5": "這是第 3 項 a₃（2＋3＝5）；還要繼續算 a₄＝8、a₅＝13。"
+     },
+     "answer_evidence": [
+      "c-rec-compute",
+      "c-rec-special"
+     ],
+     "feedback": "逐項算：a₃＝3＋2＝5、a₄＝5＋3＝8、a₅＝8＋5＝13（數列 2、3、5、8、13）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個數列首項 a₁ ＝ 4、規則 a_{n+1} ＝ a_n ＋ 3。這是下列哪一種數列？",
+     "answer": "公差 3 的等差數列",
+     "kp_ids": [
+      "math.t_adv.sequence.recursion"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.sequence.recursion"
+     ],
+     "options": [
+      "公差 3 的等差數列",
+      "公比 3 的等比數列",
+      "公差 4 的等差數列",
+      "既不是等差也不是等比"
+     ],
+     "distractor_rationales": {
+      "公比 3 的等比數列": "規則是『加 3』不是『乘 3』；每次加固定數是等差（公差 3），每次乘固定數才是等比。",
+      "公差 4 的等差數列": "把首項 4 誤當成公差了；公差是規則裡每次加的數 3，不是首項。",
+      "既不是等差也不是等比": "每一項都比前一項多固定的 3，正是等差數列（公差 3）。"
+     },
+     "answer_evidence": [
+      "c-rec-special"
+     ],
+     "feedback": "規則 a_{n+1}＝a_n＋3 是『每項加固定的 3』，就是公差 3 的等差數列（4、7、10、13…）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（遞迴關係：用前面的項定義後面的項，需要『起始值＋規則』兩樣；逐項計算——從起點每次代入規則算下一項，別多算或少算一步；等差 a_{n+1}＝a_n＋d、等比 a_{n+1}＝r·a_n 都是特殊遞迴，費氏數列 a_{n+2}＝a_{n+1}＋a_n）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
