@@ -7,6 +7,15 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-14 09:47 數學島 inequality（不等式）strand 7/8：math_inequality_am_gm（算幾不等式 AM–GM 與極值，t_adv 學測）5/5 收斂
+- **frozen_sha `1ed03a0350189227`**（草稿凍即過：R1–R5 連 5 clean，L3 全 exit 0、confirmed 全 0，無 de-converge、無 parity-advisory〔三 claim 皆被 practice 引用〕；R4 首發曾被 enforce-workflow-size hook 擋〔近 480s 內 3 併發上限〕→等 ~60s 槽位釋放後重發，非缺陷）。DONE-GATE 全綠（per_page PASS 且 am_gm absent／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy advisory=0 CLEAN；數學無音檔）＋iPad 四角色 render 綁 sha 1ed03a03（AM/GM 長條比較 figure：a=2,b=8，藍條 算術平均 (2+8)/2=5、橘條 幾何平均 √(2×8)=4、長度 5:4 比例正確、caption「a+b ≥ 2√(ab)；等號只有在 a=b 時成立」；mbp16+land+port 三視埠右緣0% 選項洗牌相異、白字在色條上可讀、無重疊裁切）。
+- **3 claim kind=definition**（c-amgm-ineq (a+b)/2≥√(ab)、等號 a=b、來自 (√a−√b)²≥0；c-amgm-min 乘積固定求和最小 x+k/x≥2√k；c-amgm-max 和固定求積最大 ab≤(S/2)²）。事實全 .venv/sympy 驗（teach a=2,b=8⇒AM=5≥GM=4、x+4/x 最小 4 在 x=2、a+b=10⇒ab≤25 在 a=b=5、x+1/x 最小 2；practice x+9/x 最小 6 在 x=3、a+b=12⇒ab 最大 36 在 a=b=6）。四 MCQ 全部值與極值皆 sympy/微積分 solve(diff) 驗。術語附英語 R15（arithmetic mean／geometric mean／AM–GM inequality）。prereq=inequality.quadratic（完全平方）。不含三變數以上／加權／柯西／需湊項。
+- **4 MCQ**：Q1 x+9/x 最小值→6〔3 忘乘2只取√9/9 常數當答/10 代x=1沒找極值〕／Q2 a+b=12 求 ab 最大→36〔6 a值當ab/144 (a+b)²忘除4/12 和當積〕／Q3 等號條件→只有 a=b〔互為倒數ab=1/a+b=1/永遠等號〕／Q4 前提→a、b 非負〔要整數/a≠b/無前提〕。teach 答與 figure 與 practice 答皆不重疊避#10。
+- **commits**：草稿凍結 e7fd57a57→R1 bank dfb3251de→R2 0d6b50442→R3 c3b7e5f39→R4 d3ada2c76→R5＋PROGRESS 本次。
+- **★里程碑：數學島 inequality strand 7/8**。已 COMPLETE strand 6 條（function/equation/geom/algexpr/numquant/ratio＝124）＋inequality 7＝131 單元。
+- **教訓（banked）**：AM–GM 誘答覆蓋常見錯誤——忘乘 2（只取 √(ab)）、常數當答案、代特定值沒找極值、把和當積、(a+b)² 忘除 4（AM–GM 是 ((a+b)/2)² 非 (a+b)²）；每個極值用 sympy `solve(diff(f,x),x)` 驗臨界點＋代回求值。此單元一次 5-clean 無 de-converge，延續成熟 pattern。**workflow-size hook 正常運作**：連發 R1–R3 後 R4 被擋（3 併發上限），等槽位釋放重發即可、不繞過——gate 設計如預期，非缺陷。
+- **下一步**：inequality 最後 1 KP＝exp-log（指數不等式與對數不等式，t_adv 學測）。收斂後 inequality strand 8/8 全完結。另 QUEUED：hub `index_new.html` AC-VIZ-1 figure_signoff 重簽。
+
 ## 2026-11-14 07:00 數學島 inequality（不等式）strand 6/8：math_inequality_rational（分式不等式・分區間判號＋分母挖點，t_adv 學測）5/5 收斂
 - **frozen_sha `981579a11a8d5179`**（草稿凍即過：R1–R5 連 5 clean，L3 全 exit 0、confirmed 全 0，無 de-converge；草稿期 parity-advisory 補 Q1 answer_evidence 加 c-rat-points 後凍結）。DONE-GATE 全綠（per_page PASS 且 rational absent／scan PASS／unit_schema rc0／question_correctness CLEAN／pedagogy advisory=0 CLEAN；數學無音檔）＋iPad 四角色 render 綁 sha 981579a1（數線判號 figure：(x−1)/(x−3) 分子根 1 實心、分母根 3 紅色空心〔挖點，分母≠0〕、三區符號 ＋ － ＋、兩正號區藍底、caption「分母＝0 的 x＝3 空心挖掉；＞0 取正號區（藍底）：x＜1 或 x＞3」；mbp16+land+port 三視埠右緣0% 選項洗牌相異、無重疊裁切；實心 vs 紅空心對比直接教出挖點）。
 - **3 claim kind=definition**（c-rat-points 分子分母各因式分解找所有點排數線；c-rat-sign 判號同多項式〔分式正負＝分子×分母、最右區正、過單根變號〕；c-rat-exclude ★挖點：分母根永遠開、含等號時只有分子根閉）。事實全 .venv/sympy solve_univariate_inequality 驗（teach (x−1)/(x−3)＞0⇒x＜1或x＞3、＜0⇒1＜x＜3、(x+2)/(x−1)≥0⇒x≤−2或x＞1〔−2 閉、1 開〕；practice (x−2)/(x+1)＞0⇒x＜−1或x＞2、(x+3)/(x−2)＜0⇒−3＜x＜2、(x−1)/(x−4)≤0⇒1≤x＜4〔1 閉、4 開〕）。四 MCQ 全部選項解集與每個端點開/閉皆 sympy 驗。術語附英語 R15（rational inequality／number line／root）。prereq=inequality.polynomial。不含需移項通分的複雜分式／重根／無法因式分解。
