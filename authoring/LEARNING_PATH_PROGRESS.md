@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 17:39 ★prob strand 真正 14/14 完成★ — t_base likelihood-intuition 5/5 DONE-GATE 全綠（可能性直覺，國小）
+- **math_prob_likelihood frozen `673d755a0113ed6b`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 七關全綠（scan PASS／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen／per_page_5clean 0 self／iPad 四角色綁 sha，右緣0%）。**build_status 實測 math prob＝14 KP／14 覆蓋／0 缺／14 單元／14 已收斂頁**。
+- 國小直覺單元：純用可能性語彙（一定/不可能/較可能/較不可能/一樣可能＝公平），無分數、無 P=|A|/|S| 公式、無 ≥≤ 未教符號。核心把關：較不可能≠不可能、公平≠一定會出現、比數量多少判較可能/較不可能。計數全 .venv 驗。
+- 收斂修 1 類（R1 首跑 2 confirmed）：can_do 把「一定」定義漂成「想都想得到會發生」＝可想像≠必然（blocker，panel 全票）＋teach「想都知道」非道地（minor，english owns）→ 4 處 rendered 文字改為對仗、道地「怎麼樣都一定會發生／怎樣都不會發生」。R15 重複 gloss（can_do+teach）panel 0/7 判非 defect、未改。
+- **★prob strand 14 KP 全部 DONE-GATE 全綠（14/14 100%）**：likelihood-intuition/classical/simple-event/tree-list/complement-addition/mutually-exclusive/conditional/multiplication-rule/bayes/expected-value/variance/binomial/normal/sampling。
+- 下一條：trig strand 14 KP 中 9 收斂、剩 5 缺；另 hub AC-VIZ-1 figure_signoff stale（sha 4741b69d）待重簽（QUEUED 債）。
+
 ## 2026-11-15 17:02 prob strand #13 sampling-confidence 5/5 DONE-GATE 全綠（抽樣分布/信賴區間，分科-數乙）
 - **math_prob_sampling_confidence frozen `5715c45217947dde`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 七關全綠（scan PASS／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen／per_page_5clean 0 self／iPad 四角色綁 sha，右緣0%）。
 - 憑證恢復後 R1-R5 一次收完、零 panel-confirmed defect（離線 draft 時 4 本地 gates＋四角色已先綠）。R4 首跑 L3 因 reviewer anchor「]」非唯一而 INVALID→rollback 重跑用唯一行通過；R5 anchors 亦唯一行通過。
