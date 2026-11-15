@@ -7,6 +7,11 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 15:31 prob strand #11 binomial 5/5 DONE-GATE 全綠（二項分布，分科-數甲）
+- **math_prob_binomial_distribution frozen `d9c36d4be50d2884`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 七關全綠（scan PASS／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen／per_page_5clean 0／iPad 四角色綁 sha）。憑證恢復後 R4-R5 續跑收完。
+- **收斂迭代較多但每修皆 panel-confirmed**：Q4 collocation（數→求平均值 minor）、c-binom-ev 裸量 garden-path（→衡量 major，#55）、末句植入「變異數也乘k再加」誤解（→中性 major）、R15 gloss 期望值/變異數（minor）、prerequisites 補 combination（major，wiring-only content_sha 不變未作廢 streak）。commit 到 R5 bank。
+- **prob strand 14 中 12 完成**；剩 normal、sampling（皆已 drafted frozen、R1-R5 待跑）。
+
 ## 2026-11-15 15:22 ⚠️ AWS 憑證過期 → content_audit 全卡；prob strand 已 draft-complete（3 單元待憑證跑 audit）
 - **AWS token ExpiredToken**（`aws sts get-caller-identity` 回 ExpiredToken）→ content_audit 走 Bedrock 全部失敗（binomial R4 僅因此失敗、未 bank）。**需 HD 用 `!` 刷新 AWS 憑證**後才能續跑任何 content_audit。
 - **binomial（prob #11，二項分布）frozen `d9c36d4be50d2884`**：R1-R3 banked clean（3/5），R4-R5 待憑證。收斂途中修 4 個 panel-confirmed：Q4 collocation（數→求平均值）、c-binom-ev 裸量 garden-path（→衡量，#55）、末句植入「變異數也乘k再加」誤解（→中性）、prerequisites 漏接 combination（wiring-only、content_sha 不變、未作廢 streak）。commit 到 6e3d206ba。
