@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 機率（prob）strand 第 9 個單元（t_adv 學測範圍）。知識點 math.t_adv.prob.expected-value（隨機變數的期望值）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，gloss 緊貼正確中文術語）：隨機變數 (random variable)、期望值 (expected value)。★scope（學測 t_adv）：承 simple-event（會算每個結果的機率）。本單元練『離散隨機變數的期望值』：(1) 定義 E(X)＝Σ(值 × 該值的機率)——每個可能的值乘以它發生的機率，全部加起來；(2) 會算骰子/轉盤/抽獎這類情境的期望值；(3) 期望值的意義＝長期平均，可以是非整數、也可以是負的（遊戲會賠）；(4) 淨利期望＝得到的期望 − 付出的成本，可用來判斷公平（E＝0 公平、E<0 長期會賠）。不含：連續型隨機變數、變異數/標準差（另單元 variance）、二項分布期望值的公式 np（另單元 binomial）。prereq＝simple-event。★自檢（math-unit defect-classes #1–#54）：事實全 .venv（Fraction）驗（teach 擲骰期望點數 (1+2+3+4+5+6)/6=21/6=7/2、遊戲 1/4·8+3/4·0=2；Q1 轉盤 1,2,3,4 等機率 (1+2+3+4)/4=5/2、Q2 球標 1,1,2,8 等機率 (1+1+2+8)/4=3、Q3 付3元擲骰出6得12否則0 淨利期望=1/6·9+5/6·(－3)=－1、Q4 概念定義；teach 7/2、2 與 practice 答案 5/2、3、－1 不重疊避#10）；★#53 已逐一 .venv 反算每個誘答路徑＝該 option 值（Q1：直接相加沒除 10、取最大 4、算成 (1+4)/2=5/2 之對照用不同值；Q2：直接平均不計重複 4、只加不同值(1+2+8)/3=11/3、把 8 看成 5→(1+1+2+5)/4=9/4；Q3：忘減成本毛期望 2、只看出6分支 9、符號算反 3－2=1）；減號全形 U+FF0D（吸取 law-of-cosines R1 #39）；★figure＝期望值三步卡（低幾何風險 #50/#51：三列①定義 E(X)＝Σ(值×機率)、②算法 每個值乘機率再相加、③看長期 可能是小數或負數；右欄全 text-anchor=start 同 x=96 統一 fs10.5；左標籤 x=22 不超欄距），alt 與 SVG text 逐字一致（#33）、figure 標題『期望值：值乘機率再全部加起來』寫進 alt 開頭；★MCQ options 全 bare（#47，說明在 distractor_rationales）、每個 distractor 乾淨單一錯誤路徑、數值兩兩相異（#14/#29）、長度均衡（#20/#28/#47）；★#54 題幹總稱詞涵蓋選項已檢；★導讀承諾順序＝實際 teach 牌組順序（#4/#46）：導讀『先講期望值定義 E(X)＝Σ(值×機率)、用擲骰期望點數 7/2 示範、再講長期平均與淨利/公平、用遊戲 1/4·8=2 示範、用一張卡整理、最後練』＝實際 teach1 intro→teach2 定義+擲骰示範+長期平均+遊戲示範→teach3 figure 卡→teach4 recap+練；worked-example 在 rendered teach。claim kind=definition。figure-only example 無 body。",
+ "page": "math_prob_expected_value.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.prob.expected-value",
+   "title_zh": "隨機變數的期望值",
+   "can_do": "我會算『隨機變數 (random variable)』的『期望值 (expected value)』E(X)：把每一個可能的值乘以它發生的機率，再全部加起來（E(X)＝Σ 值 × 機率）。我知道期望值代表『長期平均』，可以是小數、也可以是負的。我也會算遊戲的『淨利期望』＝得到的期望 − 付出的成本，用它判斷遊戲公不公平（期望 0 公平、小於 0 長期會賠）。",
+   "situation_group": "機率：期望值",
+   "subject": "math",
+   "strand": "prob",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_adv.prob.expected-value"
+   ],
+   "prerequisites": [
+    "math.t_mid.prob.simple-event"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ev-def",
+     "text": "隨機變數 (random variable) 的期望值 (expected value) E(X)：把每一個可能的值，乘以它發生的機率，再全部加起來。寫成 E(X)＝Σ(值 × 機率)。例：擲一顆公正骰子，點數 1 到 6 各有 1/6 的機率，期望點數＝1·1/6＋2·1/6＋…＋6·1/6＝(1＋2＋3＋4＋5＋6)/6＝21/6＝7/2。注意每個值要配它自己的機率，不是把值直接平均。",
+     "kind": "definition",
+     "source_refs": [
+      "期望值定義 E(X)=Σx·P(x)（高中數學 學測）"
+     ],
+     "verification_ref": "擲骰期望點數 (1+2+3+4+5+6)/6=21/6=7/2（.venv Fraction）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ev-meaning",
+     "text": "期望值的意義是『長期平均』：如果把這個隨機試驗做很多很多次，每次結果的平均會接近期望值。它不一定是某一次真的會出現的值（擲骰期望 7/2，但骰子永遠不會真的出現 3.5 點），也可以是負的。例：一個遊戲有 1/4 機率得 8 分、3/4 機率得 0 分，期望得分＝1/4·8＋3/4·0＝2 分——長期每次平均拿 2 分。",
+     "kind": "definition",
+     "source_refs": [
+      "期望值的長期平均意義（高中數學 學測）"
+     ],
+     "verification_ref": "遊戲 1/4·8+3/4·0=2（.venv Fraction）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ev-fair",
+     "text": "淨利期望與公平：玩遊戲常要先付成本，這時看『淨利 ＝ 得到的錢 − 付出的成本』的期望值。淨利期望＝0 表示長期不賺不賠（公平）、大於 0 長期會賺、小於 0 長期會賠。算法是把每一種情形的『淨利』乘它的機率再加起來（或先算得到的期望，再減掉固定成本）。負的期望值很常見，正是許多付費遊戲對玩家不利的原因。",
+     "kind": "definition",
+     "source_refs": [
+      "淨利期望與公平遊戲（高中數學 學測）"
+     ],
+     "verification_ref": "付3元 1/6得12否則0 淨利期望=1/6·9+5/6·(－3)=－1（.venv Fraction）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.prob.expected-value"
+     ],
+     "body": "這一單元學『隨機變數的期望值』——把一個隨機結果的『平均會是多少』算出來。下面先講期望值的定義 E(X)＝Σ(值 × 機率)，用擲一顆骰子、期望點數＝(1＋2＋3＋4＋5＋6)/6＝7/2 示範；再講期望值代表『長期平均』、以及遊戲的淨利與公平，用一個 1/4 得 8 分的遊戲、期望得分＝2 分示範。接著用一張卡整理，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.prob.expected-value"
+     ],
+     "body": "定義：期望值 E(X)＝把每個可能的值乘以它的機率，再全部加起來＝Σ(值 × 機率)。示範：擲一顆公正骰子，點數 1~6 各 1/6，期望點數＝(1＋2＋3＋4＋5＋6)/6＝21/6＝7/2。長期平均：期望值是把試驗做很多次後每次結果的平均，不一定是某次真會出現的值（7/2 骰子擲不出來），也可以是負的。示範（遊戲）：1/4 機率得 8 分、3/4 機率得 0 分，期望得分＝1/4·8＋3/4·0＝2 分。淨利與公平：要先付成本時，看『淨利＝得到 − 成本』的期望——等於 0 公平、小於 0 長期會賠。小提醒：每個值要配它自己的機率、不是把值直接平均；機率全部加起來要等於 1。下面用一張卡整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.prob.expected-value"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 350 136' xmlns='http://www.w3.org/2000/svg'><text x='175' y='18' font-family='sans-serif' font-size='12' fill='#2f6f54' text-anchor='middle' font-weight='bold'>期望值：值乘機率再全部加起來</text><rect x='12' y='30' width='326' height='30' rx='6' fill='#eef4ff' stroke='#5b8def' stroke-width='1.1'/><text x='22' y='49' font-family='sans-serif' font-size='10.5' fill='#5b8def' font-weight='bold'>①定義</text><text x='96' y='50' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='start'>E(X)＝Σ(值 × 機率)</text><rect x='12' y='64' width='326' height='30' rx='6' fill='#eef7ee' stroke='#4e9a6b' stroke-width='1.1'/><text x='22' y='83' font-family='sans-serif' font-size='10.5' fill='#4e9a6b' font-weight='bold'>②算法</text><text x='96' y='84' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='start'>每個值乘它的機率，再相加</text><rect x='12' y='98' width='326' height='30' rx='6' fill='#fdf2e9' stroke='#d08a3e' stroke-width='1.1'/><text x='22' y='117' font-family='sans-serif' font-size='10.5' fill='#d08a3e' font-weight='bold'>③看長期</text><text x='96' y='118' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='start'>長期平均；可能是小數或負數</text></svg>",
+      "alt": "標題「期望值：值乘機率再全部加起來」。一張卡，三列。第一列藍底「①定義」：「E(X)＝Σ(值 × 機率)」。第二列綠底「②算法」：「每個值乘它的機率，再相加」。第三列橘底「③看長期」：「長期平均；可能是小數或負數」。",
+      "caption": "期望值 E(X)：① 定義 E(X)＝Σ(值 × 機率)；② 算法是每個可能的值乘它自己的機率再全部相加；③ 它代表長期平均，可能是小數、也可能是負數（遊戲長期會賠）。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.prob.expected-value"
+     ],
+     "body": "最後練期望值。重點：E(X)＝Σ(值 × 機率)——每個可能的值乘它自己的機率，再全部加起來；期望值是長期平均，可能是小數或負數。小提醒：每個值要配它自己的機率、不是把值直接平均；要先付成本的遊戲，看『淨利＝得到 − 成本』的期望（等於 0 公平、小於 0 長期會賠）；機率全部加起來要是 1。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個平均分成 4 格的轉盤，四格分別標著 1、2、3、4，指針停在每一格的機率都相同。指針停下來的數字，期望值是多少？",
+     "answer": "5/2",
+     "kp_ids": [
+      "math.t_adv.prob.expected-value"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.prob.expected-value"
+     ],
+     "options": [
+      "5/2",
+      "10",
+      "4",
+      "5"
+     ],
+     "distractor_rationales": {
+      "10": "這只把四個數字加起來（1＋2＋3＋4＝10），忘了每個值要乘它的機率 1/4；期望值＝(1＋2＋3＋4)·1/4＝5/2。",
+      "4": "這是取最大的那個數字；期望值不是取最大值，而是每個值乘機率再相加＝(1＋2＋3＋4)/4＝5/2。",
+      "5": "這是把總和除錯了個數（10÷2）；轉盤有 4 格、每格機率 1/4，要除以 4，期望值＝10/4＝5/2。"
+     },
+     "answer_evidence": [
+      "c-ev-def"
+     ],
+     "feedback": "每格機率 1/4：E＝1·1/4＋2·1/4＋3·1/4＋4·1/4＝(1＋2＋3＋4)/4＝10/4＝5/2。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個袋子裡有 4 顆外觀相同的球，分別標著 1、1、2、8。隨機抽 1 顆，球上數字的期望值是多少？",
+     "answer": "3",
+     "kp_ids": [
+      "math.t_adv.prob.expected-value"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.prob.expected-value"
+     ],
+     "options": [
+      "3",
+      "11/3",
+      "9/4",
+      "4"
+     ],
+     "distractor_rationales": {
+      "11/3": "這是把『不同的數字』1、2、8 平均〔(1＋2＋8)/3〕；但標 1 的有兩顆，要算四顆：E＝(1＋1＋2＋8)/4＝3。",
+      "9/4": "這是把其中一顆 8 看成 5〔(1＋1＋2＋5)/4＝9/4〕；照題目 8，E＝(1＋1＋2＋8)/4＝12/4＝3。",
+      "4": "這是把分母用成『不同數字的種類數』3〔總和 12÷3＝4〕；要除以球的總數 4（標 1 的有兩顆都要算），E＝12/4＝3。"
+     },
+     "answer_evidence": [
+      "c-ev-def"
+     ],
+     "feedback": "四顆各 1/4（標 1 的有兩顆）：E＝(1＋1＋2＋8)/4＝12/4＝3。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "玩一個遊戲要先付 3 元。擲一顆公正骰子，出 6 可以拿回 12 元、其他點數拿 0 元。玩一次的『淨利』（拿到的錢 － 付出的 3 元）期望值是多少？",
+     "answer": "－1",
+     "kp_ids": [
+      "math.t_adv.prob.expected-value"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.prob.expected-value"
+     ],
+     "options": [
+      "－1",
+      "2",
+      "9",
+      "1"
+     ],
+     "distractor_rationales": {
+      "2": "這只算了『拿到的錢』的期望（1/6·12＝2），忘了扣掉每次都要付的 3 元；淨利期望＝2－3＝－1。",
+      "9": "這只看『出 6』那一種情形的淨利（12－3＝9），忽略它只有 1/6 機率、也忽略其他 5/6 情形會賠 3 元；淨利期望＝1/6·9＋5/6·(－3)＝－1。",
+      "1": "這是把淨利算反了（用付出 3 元 － 拿到期望 2＝1）；淨利是『拿到 － 付出』，期望＝2－3＝－1。"
+     },
+     "answer_evidence": [
+      "c-ev-fair"
+     ],
+     "feedback": "淨利期望＝(拿到期望)－(成本)＝(1/6·12)－3＝2－3＝－1；長期每玩一次平均賠 1 元。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "隨機變數 X 的期望值 E(X)，正確的算法是下列哪一個？",
+     "answer": "把每個可能的值乘以它發生的機率，再全部加起來",
+     "kp_ids": [
+      "math.t_adv.prob.expected-value"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.prob.expected-value"
+     ],
+     "options": [
+      "把每個可能的值乘以它發生的機率，再全部加起來",
+      "把所有可能的值直接加起來，再除以值的個數",
+      "取機率最大的那一個值",
+      "把所有情形的機率加起來"
+     ],
+     "distractor_rationales": {
+      "把所有可能的值直接加起來，再除以值的個數": "這是『每個值機率都一樣』時才剛好等於的算術平均；一般各值機率不同，要用每個值乘它自己的機率再相加。",
+      "取機率最大的那一個值": "這是『最可能出現的值』（眾數）的想法，不是期望值；期望值要把所有值依機率加權平均。",
+      "把所有情形的機率加起來": "所有情形的機率加起來一定是 1，和期望值無關；期望值是值乘機率再相加。"
+     },
+     "answer_evidence": [
+      "c-ev-def"
+     ],
+     "feedback": "期望值 E(X)＝Σ(值 × 機率)：每個可能的值乘以它發生的機率，再全部加起來。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（期望值 E(X)＝Σ(值 × 機率)：每個可能的值乘它自己的機率再全部加起來。它是長期平均，可能是小數或負數；每個值要配它自己的機率、不是把值直接平均；要先付成本的遊戲看『淨利＝拿到 － 成本』的期望〔0 公平、小於 0 長期會賠〕；機率加起來要是 1）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
