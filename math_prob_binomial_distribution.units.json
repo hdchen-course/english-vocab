@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 機率（prob）strand 第 11 個單元（t_sub 分科-數甲）。知識點 math.t_sub.prob.binomial-distribution（二項分布與其期望值/變異數）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，gloss 緊貼正確中文術語）：二項分布 (binomial distribution)、隨機變數 (random variable)、組合 (combination)、期望值 (expected value)、變異數 (variance)。★scope（分科-數甲）：承 expected-value＋variance（會算 E(X)、Var(X)），組合數 C(n,k) 已於 counting strand 學。本單元練『二項分布 X~B(n,p)』：(1) 設定＝n 次互相獨立、每次成功機率都相同為 p 的重複試驗，X＝成功次數；(2) 機率 P(X＝k)＝C(n,k)·pᵏ·(1－p)ⁿ⁻ᵏ（C(n,k) 選哪 k 次成功、pᵏ 那 k 次都成功、(1－p)ⁿ⁻ᵏ 其餘 n－k 次都失敗）；(3) 期望值 E(X)＝np、變異數 Var(X)＝np(1－p)。不含：連續型、常態分布（另單元 normal）、抽樣與信賴區間（另單元 sampling-confidence）、不放回（超幾何，非二項）。prereq＝expected-value＋variance。★自檢（math-unit defect-classes #1–#54）：事實全 .venv（Fraction＋comb）驗（teach 擲硬幣 n=3 p=1/2：P(X=2)=C(3,2)(1/2)²(1/2)=3/8、E=np=3/2、Var=np(1－p)=3/4；Q1 放回抽 n=2 紅球機率 p=1/3，P(恰1紅)=C(2,1)(1/3)(2/3)=4/9；Q2 E=np n=10 p=1/5=2；Q3 Var=np(1－p) n=10 p=1/5=8/5；Q4 概念設定；teach 值 3/8、3/2、3/4 與 practice 答案 4/9、2、8/5 不重疊避#10）；★#53 已逐一 .venv 反算每個誘答路徑＝該 option 值（Q1：忘乘組合數 C(2,1)=2→(1/3)(2/3)=2/9、算成兩次都紅 (1/3)²=1/9、算成『至少 1 次』1－(2/3)²=5/9；Q2：只用 n=10、只用 p=1/5、算成變異數 np(1－p)=8/5；Q3：忘乘 (1－p) 得 np=2、把 (1－p) 誤用成 p 得 np·p=2/5、忘乘 n 得 p(1－p)=4/25）；上標用 Unicode（pᵏ、ⁿ⁻ᵏ、²），減號全形 U+FF0D，分數用斜線；★figure＝二項分布三步卡（低幾何風險 #50/#51：三列①設定 n 次獨立、成功機率都是 p、②機率公式 P(X=k)=C(n,k)·pᵏ·(1－p)ⁿ⁻ᵏ、③期望變異 E=np、Var=np(1－p)；右欄全 text-anchor=start 同 x=96 統一 fs10.5；左標籤 x=22 不超欄距），alt 與 SVG text 逐字一致（#33）、figure 標題『二項分布：n 次獨立試驗成功幾次』寫進 alt 開頭；★MCQ options 全 bare（#47，說明在 distractor_rationales）、每個 distractor 乾淨單一錯誤路徑、同題數值兩兩相異（#14/#29）、長度均衡（#20/#28/#47）；★#54 題幹總稱詞涵蓋選項已檢；★導讀承諾順序＝實際 teach 牌組順序（#4/#46）：導讀『先講二項分布設定與機率公式 P(X=k)=C(n,k)·pᵏ·(1－p)ⁿ⁻ᵏ、用擲硬幣 3 次恰 2 正面=3/8 示範、再講期望值 E=np 與變異數 Var=np(1－p)、用同一擲硬幣 E=3/2 Var=3/4 示範、用一張卡整理、最後練』＝實際 teach1 intro→teach2 設定+公式+示範+E/Var+示範→teach3 figure 卡→teach4 recap+練；worked-example 在 rendered teach。claim kind=definition。figure-only example 無 body。",
+ "page": "math_prob_binomial_distribution.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.prob.binomial-distribution",
+   "title_zh": "二項分布與其期望值／變異數",
+   "can_do": "我會辨認『二項分布 (binomial distribution)』X~B(n,p)：n 次互相獨立、每次成功機率都相同為 p 的重複試驗，X 數的是成功次數。我會用機率公式 P(X＝k)＝C(n,k)·pᵏ·(1－p)ⁿ⁻ᵏ 算出『恰好成功 k 次』的機率，也會用 E(X)＝np 算期望的成功次數、用 Var(X)＝np(1－p) 算變異數。",
+   "situation_group": "機率：二項分布",
+   "subject": "math",
+   "strand": "prob",
+   "est_minutes": 15,
+   "knowledge_point_ids": [
+    "math.t_sub.prob.binomial-distribution"
+   ],
+   "prerequisites": [
+    "math.t_adv.prob.expected-value",
+    "math.t_sub.prob.variance"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-binom-setting",
+     "text": "二項分布 (binomial distribution)：做 n 次『互相獨立、每次成功機率都相同為 p』的重複試驗，用 X 記成功的次數，X 就服從二項分布，記作 X~B(n,p)。三個條件缺一不可：次數 n 固定、每次只有成功／失敗兩種結果、每次成功機率 p 都一樣且互不影響。例：擲一枚公正硬幣 3 次、把『出現正面』當成功（p＝1/2），正面出現的次數就是 B(3, 1/2)。放回抽球、重複投籃都常是二項；不放回抽球會改變機率，不是二項。",
+     "kind": "definition",
+     "source_refs": [
+      "二項分布的定義與條件（高中數學 分科-數甲）"
+     ],
+     "verification_ref": "擲硬幣 3 次 p=1/2＝B(3,1/2)（教學慣例）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-binom-formula",
+     "text": "二項分布的機率公式：P(X＝k)＝C(n,k)·pᵏ·(1－p)ⁿ⁻ᵏ。意思是『恰好成功 k 次』的機率＝C(n,k)（從 n 次裡選哪 k 次成功的組合 (combination) 數）× pᵏ（那 k 次都成功）×(1－p)ⁿ⁻ᵏ（其餘 n－k 次都失敗）。例：擲公正硬幣 3 次，恰好 2 次正面的機率＝C(3,2)·(1/2)²·(1/2)¹＝3·(1/4)·(1/2)＝3/8。重點是別忘了乘組合數 C(n,k)——成功的那幾次可以發生在不同位置。",
+     "kind": "definition",
+     "source_refs": [
+      "二項分布機率公式 P(X=k)=C(n,k)pᵏ(1－p)ⁿ⁻ᵏ（高中數學 分科-數甲）"
+     ],
+     "verification_ref": "擲硬幣 3 次恰 2 正面 C(3,2)(1/2)²(1/2)=3/8（.venv Fraction+comb）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-binom-ev",
+     "text": "二項分布的期望值與變異數有現成公式：E(X)＝np、Var(X)＝np(1－p)。期望值 np 就是『平均會成功幾次』（n 次每次 p 的機率，平均 np 次）；變異數 np(1－p) 量成功次數的離散程度。例：擲公正硬幣 3 次（n＝3、p＝1/2），期望正面次數 E＝3·1/2＝3/2，變異數 Var＝3·1/2·1/2＝3/4。用這兩個公式比『把每個 k 的機率乘 k 再加』快很多。",
+     "kind": "definition",
+     "source_refs": [
+      "二項分布期望值 np、變異數 np(1－p)（高中數學 分科-數甲）"
+     ],
+     "verification_ref": "n=3 p=1/2：E=np=3/2、Var=np(1－p)=3/4（.venv Fraction）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.prob.binomial-distribution"
+     ],
+     "body": "這一單元學『二項分布』——做很多次同樣的試驗，算『成功幾次』的機率。下面先講二項分布的設定（n 次獨立、每次成功機率都是 p）和機率公式 P(X＝k)＝C(n,k)·pᵏ·(1－p)ⁿ⁻ᵏ，用擲一枚公正硬幣 3 次、恰好 2 次正面＝3/8 示範；再講兩個現成公式：期望值 E(X)＝np、變異數 Var(X)＝np(1－p)，用同一個擲硬幣例子 E＝3/2、Var＝3/4 示範。接著用一張卡整理，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.prob.binomial-distribution"
+     ],
+     "body": "設定：做 n 次『互相獨立、每次成功機率都相同為 p』的試驗，用 X 記成功次數，X~B(n,p)。機率公式：P(X＝k)＝C(n,k)·pᵏ·(1－p)ⁿ⁻ᵏ——C(n,k) 是從 n 次裡挑哪 k 次成功的組合 (combination) 數、pᵏ 是那 k 次都成功、(1－p)ⁿ⁻ᵏ 是其餘都失敗。示範：擲公正硬幣 3 次（p＝1/2），恰好 2 次正面＝C(3,2)·(1/2)²·(1/2)¹＝3·(1/4)·(1/2)＝3/8（別忘乘組合數 C(3,2)＝3）。期望值與變異數：E(X)＝np、Var(X)＝np(1－p)。同一個例子：E＝3·1/2＝3/2（平均 1.5 次正面）、Var＝3·1/2·1/2＝3/4。小提醒：先確認是不是二項（固定次數、只有成功／失敗、每次機率相同且獨立）；算 P(X＝k) 別漏乘 C(n,k)；期望值用 np、變異數用 np(1－p) 別搞混。下面用一張卡整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.prob.binomial-distribution"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 350 136' xmlns='http://www.w3.org/2000/svg'><text x='175' y='18' font-family='sans-serif' font-size='12' fill='#2f6f54' text-anchor='middle' font-weight='bold'>二項分布：n 次獨立試驗成功幾次</text><rect x='12' y='30' width='326' height='30' rx='6' fill='#eef4ff' stroke='#5b8def' stroke-width='1.1'/><text x='22' y='49' font-family='sans-serif' font-size='10.5' fill='#5b8def' font-weight='bold'>①設定</text><text x='96' y='50' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='start'>n 次獨立，成功機率都是 p</text><rect x='12' y='64' width='326' height='30' rx='6' fill='#eef7ee' stroke='#4e9a6b' stroke-width='1.1'/><text x='22' y='83' font-family='sans-serif' font-size='10.5' fill='#4e9a6b' font-weight='bold'>②機率</text><text x='96' y='84' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='start'>P(X＝k)＝C(n,k)·pᵏ·(1－p)ⁿ⁻ᵏ</text><rect x='12' y='98' width='326' height='30' rx='6' fill='#fdf2e9' stroke='#d08a3e' stroke-width='1.1'/><text x='22' y='117' font-family='sans-serif' font-size='10.5' fill='#d08a3e' font-weight='bold'>③期望變異</text><text x='96' y='118' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='start'>E(X)＝np、Var(X)＝np(1－p)</text></svg>",
+      "alt": "標題「二項分布：n 次獨立試驗成功幾次」。一張卡，三列。第一列藍底「①設定」：「n 次獨立，成功機率都是 p」。第二列綠底「②機率」：「P(X＝k)＝C(n,k)·pᵏ·(1－p)ⁿ⁻ᵏ」。第三列橘底「③期望變異」：「E(X)＝np、Var(X)＝np(1－p)」。",
+      "caption": "二項分布 X~B(n,p)：① 設定是 n 次獨立、每次成功機率都相同為 p；② 恰好成功 k 次的機率 P(X＝k)＝C(n,k)·pᵏ·(1－p)ⁿ⁻ᵏ（別忘乘組合數）；③ 期望值 E(X)＝np、變異數 Var(X)＝np(1－p)。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.prob.binomial-distribution"
+     ],
+     "body": "最後練二項分布。重點：設定＝n 次獨立、每次成功機率都是 p；恰好成功 k 次的機率 P(X＝k)＝C(n,k)·pᵏ·(1－p)ⁿ⁻ᵏ；期望值 E(X)＝np、變異數 Var(X)＝np(1－p)。小提醒：先確認是不是二項（固定次數、只有成功／失敗、每次機率相同且獨立；不放回就不是）；算 P(X＝k) 別漏乘組合數 C(n,k)；『恰好 k 次』和『至少 k 次』不一樣；期望值用 np、變異數用 np(1－p)，別把兩個公式搞混。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個袋子裡抽到紅球的機率是 1/3。每次抽完都放回，連抽 2 次。恰好有 1 次抽到紅球的機率是多少？",
+     "answer": "4/9",
+     "kp_ids": [
+      "math.t_sub.prob.binomial-distribution"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.prob.binomial-distribution"
+     ],
+     "options": [
+      "4/9",
+      "2/9",
+      "1/9",
+      "5/9"
+     ],
+     "distractor_rationales": {
+      "2/9": "這漏乘了組合數 C(2,1)＝2〔只算 (1/3)·(2/3)＝2/9〕；紅球那 1 次可以是第一次或第二次，要乘 C(2,1)，P＝2·(1/3)·(2/3)＝4/9。",
+      "1/9": "這是算成『2 次都抽到紅球』〔(1/3)²＝1/9〕；題目問恰好 1 次紅，P＝C(2,1)·(1/3)·(2/3)＝4/9。",
+      "5/9": "這是算成『至少 1 次紅』〔1－(2/3)²＝5/9〕；『恰好 1 次』不含『2 次都紅』，P＝C(2,1)·(1/3)·(2/3)＝4/9。"
+     },
+     "answer_evidence": [
+      "c-binom-formula"
+     ],
+     "feedback": "恰好 1 次紅：P＝C(2,1)·(1/3)¹·(2/3)¹＝2·(1/3)·(2/3)＝4/9。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個二項分布 X~B(n, p)，其中 n＝10、p＝1/5。它的期望值 E(X) 是多少？",
+     "answer": "2",
+     "kp_ids": [
+      "math.t_sub.prob.binomial-distribution"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.prob.binomial-distribution"
+     ],
+     "options": [
+      "2",
+      "10",
+      "1/5",
+      "8/5"
+     ],
+     "distractor_rationales": {
+      "10": "這只寫了試驗次數 n＝10，沒有乘成功機率 p；期望值要用 E(X)＝np＝10·1/5＝2。",
+      "1/5": "這只寫了每次的成功機率 p，沒有乘次數 n；期望值 E(X)＝np＝10·1/5＝2。",
+      "8/5": "這算成了『變異數』np(1－p)＝10·1/5·4/5＝8/5；題目問期望值，E(X)＝np＝2。"
+     },
+     "answer_evidence": [
+      "c-binom-ev"
+     ],
+     "feedback": "二項分布期望值 E(X)＝np＝10·1/5＝2。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "同上一題的二項分布 X~B(n, p)，n＝10、p＝1/5。它的變異數 Var(X) 是多少？",
+     "answer": "8/5",
+     "kp_ids": [
+      "math.t_sub.prob.binomial-distribution"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.prob.binomial-distribution"
+     ],
+     "options": [
+      "8/5",
+      "2",
+      "2/5",
+      "4/25"
+     ],
+     "distractor_rationales": {
+      "2": "這漏乘了 (1－p)〔只算 np＝10·1/5＝2，那是期望值〕；變異數 Var(X)＝np(1－p)＝10·1/5·4/5＝8/5。",
+      "2/5": "這把 (1－p) 誤用成 p〔算成 np·p＝10·1/5·1/5＝2/5〕；最後一項要用 1－p＝4/5，Var＝10·1/5·4/5＝8/5。",
+      "4/25": "這漏乘了次數 n〔只算 p(1－p)＝1/5·4/5＝4/25〕；變異數要乘 n，Var＝10·1/5·4/5＝8/5。"
+     },
+     "answer_evidence": [
+      "c-binom-ev"
+     ],
+     "feedback": "二項分布變異數 Var(X)＝np(1－p)＝10·1/5·4/5＝8/5。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "下列哪一種情形，成功次數 X 服從『二項分布』？",
+     "answer": "投一顆圖釘 20 次，每次釘尖朝上的機率都相同且互不影響，數朝上的次數",
+     "kp_ids": [
+      "math.t_sub.prob.binomial-distribution"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.prob.binomial-distribution"
+     ],
+     "options": [
+      "投一顆圖釘 20 次，每次釘尖朝上的機率都相同且互不影響，數朝上的次數",
+      "從 10 顆球不放回地一直抽，數抽到紅球的次數",
+      "一直擲骰子直到第一次出現 6，數總共擲了幾次",
+      "量測 100 位同學的身高，數身高的平均值"
+     ],
+     "distractor_rationales": {
+      "從 10 顆球不放回地一直抽，數抽到紅球的次數": "不放回會改變每次的機率（不獨立、p 不固定），這是超幾何分布不是二項；二項要每次機率相同且獨立。",
+      "一直擲骰子直到第一次出現 6，數總共擲了幾次": "這是『試到成功為止』、次數 n 不固定（幾何分布）；二項分布的試驗次數 n 要事先固定。",
+      "量測 100 位同學的身高，數身高的平均值": "身高是連續測量、也沒有『成功／失敗』兩種結果，和二項分布無關。"
+     },
+     "answer_evidence": [
+      "c-binom-setting"
+     ],
+     "feedback": "二項分布要：次數固定、每次只有成功／失敗、每次機率相同且獨立。投圖釘 20 次數朝上次數符合；不放回、試到成功為止、連續測量都不是。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（二項分布 X~B(n,p)：n 次獨立、每次成功機率都是 p，X＝成功次數。P(X＝k)＝C(n,k)·pᵏ·(1－p)ⁿ⁻ᵏ〔別漏乘組合數〕；期望值 E(X)＝np、變異數 Var(X)＝np(1－p)。先確認是不是二項〔固定次數、成功／失敗、機率相同且獨立；不放回就不是〕；『恰好 k 次』≠『至少 k 次』；E 用 np、Var 用 np(1－p) 別搞混）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
