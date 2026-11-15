@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 12:44 prob strand #9 expected-value 5/5 DONE-GATE 全綠（隨機變數的期望值）
+- **math_prob_expected_value frozen_sha `b5f5df229e5243af`**（R1-R5 連 5 clean、L3 每輪 exit 0、confirmed 全 0）。DONE-GATE 全綠：per_page 無 violation／scan PASS／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard（1 advisory：c-ev-meaning 長期平均 claim 為 teach-only 支援性、panel 連 5 輪放行）／content_sha==frozen＋iPad 四角色 render 綁 sha（期望值三步卡 figure：①定義 E(X)＝Σ(值 × 機率)、②算法 每個值乘機率再相加、③看長期 可能小數或負數；三列左對齊 x=96/start/fs10.5〔#50/#51〕；三視窗右緣0%；四角色過）。
+- **scope（t_adv 學測）**：承 simple-event。E(X)＝Σ(值 × 機率)、長期平均（可為小數或負）、淨利期望＝得到 － 成本＋公平判斷（0 公平、<0 長期賠）。事實全 .venv：teach 擲骰期望 7/2、遊戲 1/4·8=2；Q1 轉盤 1,2,3,4→5/2、Q2 球 1,1,2,8→3、Q3 付3元出6得12 淨利期望 1/6·9+5/6·(－3)=－1、Q4 概念。teach worked 7/2、2 與 practice 5/2、3、－1 不重疊（#10）。
+- **★收斂途中修 panel-confirmed minor（共 3 次誠實 de-converge）**：(1) R1 減號 U+2212 混用→全改全形 U+FF0D（5 處）；(2) R4 can_do 公式 `Σ 值 × 機率` 無括號→補 `Σ(值 × 機率)` 避 (Σ值)×機率 誤讀；(3) R2 兩 minor——Q1 誘答『除錯了個數』(除錯=debug) 歧義＋10÷2 不自然→換成 2=10÷5（自然數錯格數）、Q3 題幹 拿回/拿→統一『拿到』。#53 pre-freeze .venv 反算每個誘答路徑＝option 值仍逐一驗。
+- **下一步**：續 prob strand 其餘 4 KP（variance / binomial-distribution / normal-distribution / sampling-confidence〔t_sub〕）。**prob strand 14 中 10 完成，剩 4**。
+
 ## 2026-11-15 10:58 prob strand #8 bayes 5/5 DONE-GATE 全綠（貝氏定理初步）
 - **math_prob_bayes frozen_sha `221a5cc5ba65c6bf`**（R1-R5 連 5 clean、L3 每輪 exit 0、confirmed 全 0）。DONE-GATE 全綠：per_page 無 violation／scan PASS／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen＋iPad 四角色 render 綁 sha（貝氏三步卡 ①算分母/②反過來/③別搞混；三列左對齊 #50/#51；三視窗右緣0%；四角色過）。
 - **scope（t_adv 學測初步）**：承 conditional＋multiplication-rule。全機率算分母 P(B)→P(A|B)=P(B|A)·P(A)/P(B)→P(A|B)≠P(B|A)。事實全 .venv：teach 工廠 P(A|不良)=3/7；Q1 P(紅)=2/5、Q2 P(甲|紅)=3/4、Q3 P(甲|不良)=1/5、Q4 概念。
