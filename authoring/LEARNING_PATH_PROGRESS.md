@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 00:30 stats strand range-quartile 全距與四分位數 5/5 DONE-GATE 全綠（t_mid 會考）→ stats 3/18
+- **math_stats_range_quartile frozen `1f95aa6d7eab11ac`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：scan PASS／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==1f95aa6d／per_page_5clean range_quartile absent／iPad 4-role signoff（右緣0%）。build_status：math stats＝18 KP／3 覆蓋／15 缺。
+- 全距＝最大－最小；四分位數用★台灣國中「折半取中位數」法（Q2＝中位數、Q1＝下半部中位數、Q3＝上半部中位數，奇數個時下/上半不含 Q2；非 numpy percentile 線性插值）；四分位距 IQR＝Q3－Q1。teach [1,2,3,5,7,8,9]→Q1=2/Q2=5/Q3=8/全距8/IQR6。Q1 全距17、Q2 下四分位4、Q3 IQR12、Q4 概念（IQR 較不受極端值影響）。全部手算 .venv 驗。prereq＝central-tendency。
+- R1 抓 1 major：導讀把「四分位數」誤歸類為分散量（四分位數是位置點、分散量是全距與 IQR），與 can_do/claims 不一致→直接修（R1 first round）、重 freeze 1f95aa6d、重 render 4-role 重簽→R1-R5 連 5 clean。#57 位置挑選類誘答（Q1/Q2 的 20/8/3/5）正確歸為單一路徑例外。
+- 下一步：stats 其餘 15 單元（collect-organize/bar-line-chart/pie-chart/table-read/frequency-table/cumulative-relative/box-plot/percentile/variance-std/standardization/bivariate-scatter/correlation/regression-line/sampling-survey/risk-decision）；接著 calc/vector 等。hub AC-VIZ-1 figure_signoff 債待清。
+
 ## 2026-11-16 00:01 stats strand central-tendency 集中趨勢 5/5 DONE-GATE 全綠（t_mid 會考）→ stats 2/18
 - **math_stats_central_tendency frozen `778cb1803f103654`**（R1-R5 連 5 clean、L3 每輪 exit 0，★零 de-converge：#57/#58 心得生效、首輪即乾淨）。DONE-GATE 全綠：scan PASS／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==778cb180／per_page_5clean central_tendency absent／iPad 4-role signoff（右緣0%）。build_status：math stats＝18 KP／2 覆蓋／16 缺。
 - 平均數/中位數/眾數定義與計算＋何時用哪個（極端值時平均數被拉動、中位數穩健、代表多數用中位數）。Q1 眾數 [6,6,10,14,20]→6、Q2 中位數 [10,20,30,50]→(20+30)/2=25、Q3 最受極端值影響＝平均數、Q4 代表多數＝中位數。teach worked [2,3,3,4,8]→mean4/median3/mode3 一次展示三量。全部 statistics 模組 .venv 驗。prereq＝mean。
