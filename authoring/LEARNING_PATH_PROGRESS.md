@@ -7,6 +7,15 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 15:22 ⚠️ AWS 憑證過期 → content_audit 全卡；prob strand 已 draft-complete（3 單元待憑證跑 audit）
+- **AWS token ExpiredToken**（`aws sts get-caller-identity` 回 ExpiredToken）→ content_audit 走 Bedrock 全部失敗（binomial R4 僅因此失敗、未 bank）。**需 HD 用 `!` 刷新 AWS 憑證**後才能續跑任何 content_audit。
+- **binomial（prob #11，二項分布）frozen `d9c36d4be50d2884`**：R1-R3 banked clean（3/5），R4-R5 待憑證。收斂途中修 4 個 panel-confirmed：Q4 collocation（數→求平均值）、c-binom-ev 裸量 garden-path（→衡量，#55）、末句植入「變異數也乘k再加」誤解（→中性）、prerequisites 漏接 combination（wiring-only、content_sha 不變、未作廢 streak）。commit 到 6e3d206ba。
+- **normal-distribution（prob #12，常態分布與標準化 z 值，分科-數甲）frozen `58e08d59872c053b`**：離線 drafted＋4 本地 gates 綠＋四角色簽核＋自抓修 #55 裸量（z 量→z 衡量）。rounds=[]，R1-R5 待憑證。事實全 .venv(scipy.stats.norm)：68-95-99.7、z=(X－μ)/σ。commit 897e9096a。
+- **sampling-confidence（prob #13，抽樣分布/信賴區間，分科-數乙）frozen `5715c45217947dde`**：離線 drafted＋4 本地 gates 綠＋四角色簽核。rounds=[]，R1-R5 待憑證。SE=√(p̂(1－p̂)/n)、95%CI≈p̂±2·SE、★CI 詮釋（長期涵蓋率非單一區間機率）特別把關。commit 394bf2803。
+- **prob strand 14 KP 全部 draft 完成**：11 DONE-GATE 全綠（classical/simple-event/tree-list/complement-addition/likelihood/mutually-exclusive/conditional/multiplication-rule/bayes/expected-value/variance）＋binomial 3/5＋normal、sampling 各 0/5 drafted。**憑證回來後：binomial R4-R5→DONE、normal R1-5→DONE、sampling R1-5→DONE，三單元收完 prob strand 即 100%。**
+- **gate 修正（commit 1bb93a099）**：pedagogy_gate length-cue/lead-in-cue 降為 advisory（HD 2026-11-15 裁示 MCQ tells 非 defect/gate），shadow-note/parse/structure 仍 hard；紅隊 selftest 全綠、全站 0 hard。
+- **下一步（憑證回來）**：跑三單元 content_audit 到 5-clean→DONE-GATE→push；之後 trig strand 餘 5 KP；hub AC-VIZ-1 figure_signoff 重簽。
+
 ## 2026-11-15 13:48 prob strand #10 variance 5/5 DONE-GATE 全綠（變異數與標準差，分科-數甲）
 - **math_prob_variance frozen_sha `61a81c1e9d11b331`**（R1-R5 連 5 clean、L3 每輪 exit 0、confirmed 全 0）。DONE-GATE 七關全綠：per_page 無 violation／scan PASS／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen＋iPad 四角色 render 綁 sha（變異數三步卡 figure：①算期望 先求 μ=E(X)、②離差平方 (值 － μ)² 乘機率再相加、③開根號 σ=√變異數；三列左對齊〔#50/#51〕；三視窗右緣0%；四角色過）。
 - **scope（分科-數甲）**：承 expected-value。Var(X)=Σ(值 － μ)²×機率、σ=√變異數、離散程度意義（越大越分散）。事實全 .venv：teach X{1,3}μ2 Var1 σ1、對比 Y{1,5}μ3 Var4 σ2；Q1 X{3,9}μ6 Var9、Q2 Var25→σ5、Q3 意義、Q4 公式。teach Var 1、4、σ 1、2 與 practice 9、5 不重疊（#10）。
