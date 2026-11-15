@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 22:14 trig strand product-sum 積化和差與和差化積 5/5 DONE-GATE 全綠（分科-數甲）→ trig 13/14
+- **math_trig_product_sum frozen `794c3da6160d67f7`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：scan PASS／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==794c3da6／per_page_5clean product_sum absent／iPad 4-role signoff（右緣0%）。build_status：math trig＝14 KP／13 覆蓋／1 缺。
+- 積化和差 sinA cosB＝½[sin(A＋B)＋sin(A－B)]、cosA cosB＝½[cos(A＋B)＋cos(A－B)]、sinA sinB＝½[cos(A－B)－cos(A＋B)]；和差化積 sinX＋sinY＝2 sin((X＋Y)/2) cos((X－Y)/2)、cosX＋cosY＝2 cos((X＋Y)/2) cos((X－Y)/2)。teach worked sin75°cos15°＝(2＋√3)/4。恆等＋每誘答值全 sympy 驗。prereq＝sum-difference。
+- R1 修 teach 重複 R15 gloss（minor）。R3 抓 BLOCKER（#53）：Q2 −¼ 誘答 rationale 誤植機制（原寫 sinA sinB 形 ½[cos(A−B)−cos(A＋B)]＝＋¼，非 −¼）；真機制＝順序顛倒 ½[cos(A＋B)−cos(A−B)]＝½[cos90°−cos60°]＝−¼→誠實 de-converge（清 R1-R2 留 _deconverge_trace）→改寫 rationale→重凍 794c3da6→R1-R5 重收斂連 5 clean。
+- 下一條 trig 缺 1：equation（三角方程式）→ trig 14/14。接著 stats/calc/vector 等未開 strand。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d，須重 render+4-role 重簽）。
+
 ## 2026-11-15 21:18 trig strand superposition 正餘弦疊合 5/5 DONE-GATE 全綠（分科-數甲）→ trig 12/14
 - **math_trig_superposition frozen `b107aa4fd460b33d`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 七關全綠。build_status：math trig＝14 KP／12 覆蓋／2 缺。
 - a sinθ＋b cosθ＝R sin(θ＋φ)，R＝√(a²＋b²)（振幅）、φ 由 cosφ＝a/R 且 sinφ＝b/R 兩條件定；最大值＝R、最小值＝－R。R/φ/max 全 sympy/數值驗。prereq＝sum-difference。
