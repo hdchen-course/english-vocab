@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 01:41 stats strand percentile 百分位數 5/5 DONE-GATE 全綠（t_mid 會考）→ stats 5/18
+- **math_stats_percentile frozen `0645dbdd4b92c872`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==0645dbdd／per_page_5clean percentile absent／iPad 四角色簽核（右緣0%，對照卡三列 P25/P50/P75 幾何過）。
+- 百分位數＝把排好資料分成一百等份；第 k 百分位數 Pk 大約是「有 k% 資料小於等於它」的位置值。★對應（定義普世、零慣例爭議、不依 numpy percentile 內插）：P25＝Q1、P50＝中位數、P75＝Q3。百分等級 PR＝某數在整組資料裡大約贏過百分之幾。teach worked PR=80（約80%在以下，與 practice 答案 {50,75,90,Q1} 無交集避#10）。practice：Q1 中位數→P50(50)、Q2 Q3→P75(75)、Q3 PR=90→約90%在以下、Q4 P25→Q1。prereq＝range-quartile。
+- 收斂過程零 panel-confirmed defect；僅 pedagogy parity advisory（c-pct-def 未被引用）動工前即以 Q1 加 c-pct-def 證據消除（Q1 reasoning 本就依定義「中位數≈50%在以下」）。★R4 首跑因一 reviewer 觸 content-filter 中止、L3 判 anchors clustered shallow→誠實判 INVALID 不 bank、重跑 R4 L3 exit 0 才計入（L3 真值檢查成功擋下 skim 輪）。
+- 下一步：stats 其餘 13 單元（collect-organize/bar-line-chart/pie-chart/table-read/frequency-table/cumulative-relative/variance-std/standardization/bivariate-scatter/correlation/regression-line/sampling-survey/risk-decision）；接著 calc/vector 等未開 strand。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-16 01:13 stats strand box-plot 箱形圖 5/5 DONE-GATE 全綠（t_mid 會考，★按比例箱形圖 SVG）→ stats 4/18
 - **math_stats_box_plot frozen `b7fd1517195897c5`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：scan PASS／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==b7fd1517／per_page_5clean box_plot absent／iPad 4-role signoff（含動畫師幾何檢查，右緣0%）。build_status：math stats＝18 KP／4 覆蓋／14 缺。
 - 箱形圖＝五數摘要（最小/Q1/中位/Q3/最大）畫出：箱 Q1→Q3（箱長＝IQR）、箱中線＝中位數、兩鬚到最小最大（全長＝全距）。teach 用★按比例箱形圖 SVG（x 軸 10→70 線性，min x=40/Q1 x=87/中位 x=157/Q3 x=227/max x=320，.venv 算座標）。practice 用文字五數摘要：Q1 中位15、Q2 IQR18、Q3 全距49、Q4 概念（箱長＝IQR）。prereq＝range-quartile。
