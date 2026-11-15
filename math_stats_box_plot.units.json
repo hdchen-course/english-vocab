@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 統計（stats）strand t_mid 單元。知識點 math.t_mid.stats.box-plot（箱形圖的製作與判讀）。tier=t_mid（會考）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：箱形圖 (box plot)、五數摘要 (five-number summary)。★scope（會考 t_mid）：箱形圖用五數摘要（最小值、Q1、中位數Q2、Q3、最大值）畫出；箱子從 Q1 到 Q3（長度＝IQR＝中間一半資料）、箱中線是中位數、兩鬚延到最小與最大（全長＝全距）。會由箱形圖判讀五數摘要、算 IQR 與全距。prereq＝全距與四分位數 range-quartile。不含百分位數/變異數。★自檢（math-unit defect-classes #1–#58）：teach 箱形圖 B1 五數摘要 min10/Q1=20/中位35/Q3=50/max70（IQR=30、全距=60），★figure 按比例：x 軸 10→70 映到 x=40→320（4.667px/unit），min x=40、Q1 x=87、中位 x=157、Q3 x=227、max x=320（.venv 算）；practice 用文字五數摘要（數字與 teach 不撞）：Q1 中位數 [min3,Q1 9,中位15,Q3 24,max30]→15、Q2 IQR [min4,Q1 10,中位16,Q3 28,max40]→28−10=18、Q3 全距 [min6,Q1 12,中位20,Q3 30,max55]→55−6=49、Q4 概念：箱子長度＝IQR＝中間一半資料的範圍；teach 值集 {10,20,35,50,70,30,60} 與 practice 答案 {15,18,49} 無交集避#10。★figure＝按比例箱形圖（箱 Q1→Q3、中線中位數、兩鬚到 min/max、下方標 5 個值），alt 與 SVG text 逐字一致（#33）、標題『箱形圖：用五數摘要畫出』寫進 alt 開頭；★MCQ options bare（#47）、每 distractor .venv 反算乾淨單一錯誤（#53）、誘答值不撞題幹資料值（#57，讀取/位置挑選類單一路徑除外）、兩兩相異（#29）、長度均衡（#28）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55，一律衡量/測量）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_stats_box_plot.html",
+ "units": [
+  {
+   "unit_id": "math.t_mid.stats.box-plot",
+   "title_zh": "箱形圖的製作與判讀",
+   "can_do": "我會看懂『箱形圖 (box plot)』，它用『五數摘要 (five-number summary)』——最小值、Q1、中位數、Q3、最大值——把一組資料畫出來：箱子從 Q1 到 Q3（箱子長度就是四分位距 IQR、代表中間一半的資料），箱子裡的直線是中位數，左右兩條「鬚」延伸到最小值和最大值（整條的長度就是全距）。我會由箱形圖讀出這五個數，並算出 IQR 和全距。",
+   "situation_group": "統計：箱形圖",
+   "subject": "math",
+   "strand": "stats",
+   "est_minutes": 14,
+   "knowledge_point_ids": [
+    "math.t_mid.stats.box-plot"
+   ],
+   "prerequisites": [
+    "math.t_mid.stats.range-quartile"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-bp-parts",
+     "text": "箱形圖 (box plot) 用五數摘要畫成：最小值、第一四分位數 Q1、中位數、第三四分位數 Q3、最大值。箱子的左邊是 Q1、右邊是 Q3，所以箱子的長度就是四分位距 IQR（Q3－Q1）、代表中間一半的資料；箱子裡的那條直線是中位數；從箱子兩邊各畫一條「鬚」延伸到最小值和最大值，整條圖的左右跨距就是全距（最大－最小）。",
+     "kind": "definition",
+     "source_refs": [
+      "箱形圖的結構與五數摘要（國中數學 會考）"
+     ],
+     "verification_ref": "box=Q1..Q3（長度=IQR）、中線=中位數、鬚到 min/max（全長=range）（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-bp-read",
+     "text": "由箱形圖判讀：箱子裡的直線對到的數就是中位數；箱子左右邊對到的數是 Q1 和 Q3；兩條鬚的末端對到的數是最小值和最大值。例：某箱形圖最小值 10、Q1 是 20、中位數 35、Q3 是 50、最大值 70，那麼四分位距 IQR ＝ 50 － 20 ＝ 30、全距 ＝ 70 － 10 ＝ 60。",
+     "kind": "definition",
+     "source_refs": [
+      "由箱形圖判讀五數摘要與 IQR、全距（國中數學 會考）"
+     ],
+     "verification_ref": "min10/Q1 20/中位35/Q3 50/max70→IQR=30、全距=60（.venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-bp-iqr-range",
+     "text": "由箱形圖可以直接算兩個衡量分散程度的量：四分位距 IQR ＝ Q3 － Q1（就是箱子的長度，代表中間一半資料的分散）；全距 ＝ 最大值 － 最小值（就是整條圖的跨距）。例：五數摘要是最小 4、Q1 是 10、中位數 16、Q3 是 28、最大 40，則 IQR ＝ 28 － 10 ＝ 18、全距 ＝ 40 － 4 ＝ 36。",
+     "kind": "definition",
+     "source_refs": [
+      "由箱形圖算 IQR 與全距（國中數學 會考）"
+     ],
+     "verification_ref": "min4/Q1 10/中位16/Q3 28/max40→IQR=18、全距=36（.venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.stats.box-plot"
+     ],
+     "body": "這一單元學『箱形圖』——把一組資料的五數摘要（最小值、Q1、中位數、Q3、最大值）畫成一張圖。下面先講箱形圖的每個部分代表什麼（箱子＝Q1 到 Q3、箱中線＝中位數、兩鬚＝到最小與最大），用一張最小 10、Q1 是 20、中位數 35、Q3 是 50、最大 70 的箱形圖示範；再講怎麼由圖讀出五數摘要、算 IQR 與全距；用一張箱形圖整理，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.stats.box-plot"
+     ],
+     "body": "箱形圖的每個部分：箱子的左邊對到 Q1、右邊對到 Q3，所以箱子長度就是四分位距 IQR（中間一半的資料）；箱子裡的直線是中位數；兩條鬚分別延到最小值和最大值，整條的跨距就是全距。示範（看下面的圖）：最小值 10、Q1 是 20、中位數 35、Q3 是 50、最大值 70。由圖可算：四分位距 IQR ＝ Q3 － Q1 ＝ 50 － 20 ＝ 30（箱子的長度）；全距 ＝ 最大 － 最小 ＝ 70 － 10 ＝ 60（整條的長度）。小提醒：中位數不一定在箱子正中央——它的位置要看資料怎麼分布。下面用這張箱形圖整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_mid.stats.box-plot"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='18' font-family='sans-serif' font-size='13' fill='#2f6f54' text-anchor='middle' font-weight='bold'>箱形圖：用五數摘要畫出</text><line x1='40' y1='70' x2='87' y2='70' stroke='#5b8def' stroke-width='1.5'/><line x1='227' y1='70' x2='320' y2='70' stroke='#5b8def' stroke-width='1.5'/><line x1='40' y1='58' x2='40' y2='82' stroke='#5b8def' stroke-width='1.5'/><line x1='320' y1='58' x2='320' y2='82' stroke='#5b8def' stroke-width='1.5'/><rect x='87' y='52' width='140' height='36' rx='3' fill='#eef4ff' stroke='#4e9a6b' stroke-width='1.5'/><line x1='157' y1='52' x2='157' y2='88' stroke='#d08a3e' stroke-width='2'/><text x='40' y='104' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='middle'>最小 10</text><text x='87' y='104' font-family='sans-serif' font-size='10.5' fill='#4e9a6b' text-anchor='middle'>Q1 20</text><text x='157' y='104' font-family='sans-serif' font-size='10.5' fill='#d08a3e' text-anchor='middle'>中位 35</text><text x='227' y='104' font-family='sans-serif' font-size='10.5' fill='#4e9a6b' text-anchor='middle'>Q3 50</text><text x='320' y='104' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='middle'>最大 70</text><text x='157' y='126' font-family='sans-serif' font-size='11' fill='#4e9a6b' text-anchor='middle'>箱長 ＝ IQR ＝ 30</text><text x='180' y='146' font-family='sans-serif' font-size='11' fill='#5b8def' text-anchor='middle'>全長（鬚到鬚）＝ 全距 ＝ 60</text></svg>",
+      "alt": "標題「箱形圖：用五數摘要畫出」。一個橫向箱形圖：左鬚末端是最小 10，箱子左邊是 Q1 20，箱子裡的直線是中位 35，箱子右邊是 Q3 50，右鬚末端是最大 70。下方標註「箱長 ＝ IQR ＝ 30」與「全長（鬚到鬚）＝ 全距 ＝ 60」。",
+      "caption": "箱形圖用五數摘要畫出：箱子左右是 Q1、Q3（箱長＝IQR），箱中線是中位數，兩鬚到最小值與最大值（全長＝全距）。此圖：最小10、Q1 20、中位35、Q3 50、最大70，IQR＝30、全距＝60。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.stats.box-plot"
+     ],
+     "body": "最後練箱形圖。重點：箱子左右邊＝Q1、Q3（箱長＝四分位距 IQR＝Q3－Q1）；箱中線＝中位數；兩鬚末端＝最小值、最大值（全長＝全距＝最大－最小）。判讀時先找這五個數，再算 IQR 或全距。小提醒：中位數看箱中線、不是箱子中點；IQR 是箱長、全距是整條長。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "某箱形圖的五數摘要是：最小值 3、Q1 是 9、中位數 15、Q3 是 24、最大值 30。這組資料的中位數是多少？",
+     "answer": "15",
+     "kp_ids": [
+      "math.t_mid.stats.box-plot"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.stats.box-plot"
+     ],
+     "options": [
+      "15",
+      "9",
+      "24",
+      "16.5"
+     ],
+     "distractor_rationales": {
+      "9": "這是 Q1（箱子左邊），不是中位數；中位數是箱子裡那條直線對到的數，這裡是 15。",
+      "24": "這是 Q3（箱子右邊），不是中位數；中位數看箱中線，是 15。",
+      "16.5": "這是把 Q1 和 Q3 取平均（(9＋24)÷2），當成「箱子中點」；但中位數不一定在箱子正中央，要直接讀箱中線，是 15。"
+     },
+     "answer_evidence": [
+      "c-bp-read"
+     ],
+     "feedback": "中位數是箱子裡那條直線對到的數，這裡是 15（不是 Q1、Q3，也不是箱子中點）。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "某箱形圖的五數摘要是：最小值 4、Q1 是 10、中位數 16、Q3 是 28、最大值 40。這組資料的四分位距（IQR）是多少？",
+     "answer": "18",
+     "kp_ids": [
+      "math.t_mid.stats.box-plot"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.stats.box-plot"
+     ],
+     "options": [
+      "18",
+      "36",
+      "28",
+      "38"
+     ],
+     "distractor_rationales": {
+      "36": "這是全距（最大 － 最小 ＝ 40 － 4），是整條圖的長度；四分位距是箱子的長度 ＝ Q3 － Q1 ＝ 28 － 10 ＝ 18。",
+      "28": "這是只寫了 Q3（箱子右邊），還沒減 Q1；IQR ＝ Q3 － Q1 ＝ 28 － 10 ＝ 18。",
+      "38": "這是把 Q3 和 Q1 相加（28＋10），但 IQR 是相減；IQR ＝ 28 － 10 ＝ 18。"
+     },
+     "answer_evidence": [
+      "c-bp-iqr-range"
+     ],
+     "feedback": "四分位距 IQR ＝ 箱子長度 ＝ Q3 － Q1 ＝ 28 － 10 ＝ 18。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "某箱形圖的五數摘要是：最小值 6、Q1 是 12、中位數 20、Q3 是 30、最大值 55。這組資料的全距是多少？",
+     "answer": "49",
+     "kp_ids": [
+      "math.t_mid.stats.box-plot"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.stats.box-plot"
+     ],
+     "options": [
+      "49",
+      "18",
+      "55",
+      "43"
+     ],
+     "distractor_rationales": {
+      "18": "這是四分位距（箱子長度 ＝ Q3 － Q1 ＝ 30 － 12），不是全距；全距是整條圖的長度 ＝ 最大 － 最小 ＝ 55 － 6 ＝ 49。",
+      "55": "這是只寫了最大值，還沒減最小值；全距 ＝ 55 － 6 ＝ 49。",
+      "43": "這是把最大值減錯成減 Q1（55 － 12）；全距要用最大 － 最小 ＝ 55 － 6 ＝ 49。"
+     },
+     "answer_evidence": [
+      "c-bp-iqr-range"
+     ],
+     "feedback": "全距 ＝ 整條圖的跨距 ＝ 最大 － 最小 ＝ 55 － 6 ＝ 49。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在箱形圖裡，「箱子的長度」代表什麼？",
+     "answer": "四分位距（IQR），也就是中間一半資料的範圍",
+     "kp_ids": [
+      "math.t_mid.stats.box-plot"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.stats.box-plot"
+     ],
+     "options": [
+      "四分位距（IQR），也就是中間一半資料的範圍",
+      "全距，也就是全部資料的範圍",
+      "中位數的大小",
+      "資料的總數量"
+     ],
+     "distractor_rationales": {
+      "全距，也就是全部資料的範圍": "全距是整條圖（左鬚末端到右鬚末端）的長度；箱子的長度只從 Q1 到 Q3，代表的是四分位距 IQR。",
+      "中位數的大小": "中位數是箱子裡那條直線的位置，不是箱子的長度；箱子長度是 Q3 － Q1 ＝ IQR。",
+      "資料的總數量": "箱形圖不直接顯示資料有幾筆；箱子長度代表的是中間一半資料的範圍（IQR），不是數量。"
+     },
+     "answer_evidence": [
+      "c-bp-parts"
+     ],
+     "feedback": "箱子從 Q1 到 Q3，長度就是四分位距 IQR，代表中間一半資料的分散範圍。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（箱形圖＝五數摘要畫成：箱子左右＝Q1、Q3，箱長＝IQR；箱中線＝中位數；兩鬚＝最小、最大，全長＝全距。判讀先找五數再算 IQR＝Q3－Q1、全距＝最大－最小；中位數看箱中線不是箱子中點）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
