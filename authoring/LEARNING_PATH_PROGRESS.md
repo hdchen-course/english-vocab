@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 01:13 stats strand box-plot 箱形圖 5/5 DONE-GATE 全綠（t_mid 會考，★按比例箱形圖 SVG）→ stats 4/18
+- **math_stats_box_plot frozen `b7fd1517195897c5`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：scan PASS／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==b7fd1517／per_page_5clean box_plot absent／iPad 4-role signoff（含動畫師幾何檢查，右緣0%）。build_status：math stats＝18 KP／4 覆蓋／14 缺。
+- 箱形圖＝五數摘要（最小/Q1/中位/Q3/最大）畫出：箱 Q1→Q3（箱長＝IQR）、箱中線＝中位數、兩鬚到最小最大（全長＝全距）。teach 用★按比例箱形圖 SVG（x 軸 10→70 線性，min x=40/Q1 x=87/中位 x=157/Q3 x=227/max x=320，.venv 算座標）。practice 用文字五數摘要：Q1 中位15、Q2 IQR18、Q3 全距49、Q4 概念（箱長＝IQR）。prereq＝range-quartile。
+- R2 抓 1 major（learning-owned b）：唯一示範 figure 的中位數 35 恰為箱中點（35=(20+50)/2），與 teach「中位數不一定在正中央」提醒牴觸→誠實 de-converge（清 R1 留 trace）、reword caveat 明講「此圖剛好置中、一般不一定、要讀箱中線」（figure 移位會擠壓標籤故不動圖）、重 freeze b7fd1517→R1-R5 連 5 clean。
+- 下一步：stats 其餘 14 單元（collect-organize/bar-line-chart/pie-chart/table-read/frequency-table/cumulative-relative/percentile/variance-std/standardization/bivariate-scatter/correlation/regression-line/sampling-survey/risk-decision）；接著 calc/vector 等。hub AC-VIZ-1 figure_signoff 債待清。
+
 ## 2026-11-16 00:30 stats strand range-quartile 全距與四分位數 5/5 DONE-GATE 全綠（t_mid 會考）→ stats 3/18
 - **math_stats_range_quartile frozen `1f95aa6d7eab11ac`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：scan PASS／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==1f95aa6d／per_page_5clean range_quartile absent／iPad 4-role signoff（右緣0%）。build_status：math stats＝18 KP／3 覆蓋／15 缺。
 - 全距＝最大－最小；四分位數用★台灣國中「折半取中位數」法（Q2＝中位數、Q1＝下半部中位數、Q3＝上半部中位數，奇數個時下/上半不含 Q2；非 numpy percentile 線性插值）；四分位距 IQR＝Q3－Q1。teach [1,2,3,5,7,8,9]→Q1=2/Q2=5/Q3=8/全距8/IQR6。Q1 全距17、Q2 下四分位4、Q3 IQR12、Q4 概念（IQR 較不受極端值影響）。全部手算 .venv 驗。prereq＝central-tendency。
