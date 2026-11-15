@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 17:02 prob strand #13 sampling-confidence 5/5 DONE-GATE 全綠 → ★prob strand 14/14 完成★（抽樣分布/信賴區間，分科-數乙）
+- **math_prob_sampling_confidence frozen `5715c45217947dde`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 七關全綠（scan PASS／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen／per_page_5clean 0 self／iPad 四角色綁 sha，右緣0%）。
+- 憑證恢復後 R1-R5 一次收完、零 panel-confirmed defect（離線 draft 時 4 本地 gates＋四角色已先綠）。R4 首跑 L3 因 reviewer anchor「]」非唯一而 INVALID→rollback 重跑用唯一行通過；R5 anchors 亦唯一行通過。
+- **SE=√(p̂(1－p̂)/n)、95%CI≈p̂±2·SE、邊際誤差=2·SE**；★核心正確性 crux＝CI 詮釋「95% 信心＝方法長期涵蓋率、非單一區間機率」（teach C＋Q2 三誤答為三種常見 CI 迷思）。事實全 .venv(math.sqrt)：n=400 p̂=0.5→SE2.5%/margin5%/CI45~55%。
+- **★prob strand 14 KP 全部 DONE-GATE 全綠（14/14 100%）**：classical/simple-event/tree-list/complement-addition/likelihood/mutually-exclusive/conditional/multiplication-rule/bayes/expected-value/variance/binomial/normal/sampling。
+- 下一條：trig strand 剩 5 KP；另 hub AC-VIZ-1 figure_signoff stale（sha 4741b69d）待 hub 重 render+四角色重簽（QUEUED 債）。
+
 ## 2026-11-15 16:37 prob strand #12 normal-distribution 5/5 DONE-GATE 全綠（常態分布與標準化 z 值，分科-數甲）
 - **math_prob_normal_distribution frozen `bf8e7b21e3fc30df`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 七關全綠。68-95-99.7 經驗法則、z=(X－μ)/σ、鐘形對稱。事實全 .venv(scipy.stats.norm)。
 - 收斂修 2 個：離線 draft 時自抓 #55 裸量（z 量→z 衡量）；R2 R15 gloss minor（6-lens）標準常態分布 gloss 原只在非 rendered claim→teach2 首次 rendered 處補「標準常態分布 (standard normal distribution)」，de-converge 棄 R1 重收斂。
