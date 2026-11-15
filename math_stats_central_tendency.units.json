@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 統計（stats）strand t_mid 單元。知識點 math.t_mid.stats.central-tendency（集中趨勢：平均數/中位數/眾數）。tier=t_mid（會考）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：集中趨勢 (central tendency)、平均數 (mean)、中位數 (median)、眾數 (mode)。★scope（會考 t_mid）：三種集中趨勢的定義與計算（平均數＝總和÷個數；中位數＝排序後最中間，偶數個取中間兩數的平均；眾數＝出現最多次的值），以及何時用哪一個（有極端值時平均數會被拉動、中位數較穩健）。prereq＝算術平均數 mean。不含變異數/四分位數/百分位數（另單元）。★自檢（math-unit defect-classes #1–#58）：每題 .venv 驗（statistics 模組）：Q1 眾數 [6,6,10,14,20]→6（誘答 median10/mean11.2/max20 皆≠6，#57 不撞）；Q2 中位數 [10,20,30,50]→(20+30)/2=25（誘答 20/30＝只取單一中間數＝#57 中位數類單一路徑例外、27.5＝平均）；Q3 概念：最受極端值影響＝平均數；Q4 概念：少數高薪想表達多數人水準＝中位數；teach worked [2,3,3,4,8]→mean4/median3/mode3 展示三量、與 practice 答案（6/25/平均數/中位數）不重疊避#10。★figure＝三量對照卡（三列平均/中位/眾數，右欄 text-anchor=start 同 x 統一 fs），alt 與 SVG text 逐字一致（#33）、標題『集中趨勢：平均數・中位數・眾數』寫進 alt 開頭；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 .venv 反算）、誘答值不撞題幹資料值（#57，中位數類單一路徑除外）、兩兩相異（#29）、長度均衡（#28）；★情境量詞合理（#58，用杯數/分數在合理範圍、薪水用於概念不帶超常識數字）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55，一律衡量/測量）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_stats_central_tendency.html",
+ "units": [
+  {
+   "unit_id": "math.t_mid.stats.central-tendency",
+   "title_zh": "集中趨勢：平均數、中位數、眾數",
+   "can_do": "我知道三種『集中趨勢 (central tendency)』：『平均數 (mean)』是全部加起來除以個數；『中位數 (median)』是把資料排好後最中間的那個（如果是偶數個，就取中間兩個的平均）；『眾數 (mode)』是出現最多次的那個。我也知道當資料有特別大或特別小的極端值時，平均數會被拉動，這時用中位數比較能代表「多數人的水準」。",
+   "situation_group": "統計：集中趨勢",
+   "subject": "math",
+   "strand": "stats",
+   "est_minutes": 14,
+   "knowledge_point_ids": [
+    "math.t_mid.stats.central-tendency"
+   ],
+   "prerequisites": [
+    "math.t_base.stats.mean"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ct-def",
+     "text": "集中趨勢有三種常用的量：平均數 (mean) ＝ 所有資料的總和 ÷ 個數；中位數 (median) ＝ 把資料由小到大排好後最中間的那個數（資料是偶數個時，取最中間兩個數的平均）；眾數 (mode) ＝ 出現次數最多的那個數。例：2、3、3、4、8 這組，平均數 ＝ (2＋3＋3＋4＋8) ÷ 5 ＝ 4、排好後最中間是 3 所以中位數 ＝ 3、出現最多次的是 3 所以眾數 ＝ 3。",
+     "kind": "definition",
+     "source_refs": [
+      "平均數、中位數、眾數的定義（國中數學 會考）"
+     ],
+     "verification_ref": "statistics: mean([2,3,3,4,8])=4、median=3、mode=3（.venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ct-median-even",
+     "text": "求中位數要先把資料由小到大排好。資料個數是奇數時，最中間剛好有一個數，那就是中位數；個數是偶數時，最中間有兩個數，中位數 ＝ 這兩個數的平均。例：10、20、30、50 共 4 個（偶數），最中間是 20 和 30，中位數 ＝ (20＋30) ÷ 2 ＝ 25。注意只取其中一個（20 或 30）都不對，要取兩個的平均。",
+     "kind": "definition",
+     "source_refs": [
+      "偶數個資料的中位數（國中數學 會考）"
+     ],
+     "verification_ref": "statistics.median([10,20,30,50])=25.0（.venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ct-robust",
+     "text": "當資料裡有特別大（或特別小）的極端值時，平均數會被這個極端值明顯拉動，中位數和眾數比較不受單一極端值影響。所以遇到像「少數人薪水特別高」這種資料，想表達「多數人大概領多少」，用中位數會比平均數更有代表性。例：1、2、3、4、40，平均數 ＝ 10（被 40 拉高），但中位數 ＝ 3，更貼近多數資料。",
+     "kind": "definition",
+     "source_refs": [
+      "極端值對集中趨勢的影響、何時用中位數（國中數學 會考）"
+     ],
+     "verification_ref": "statistics: mean([1,2,3,4,40])=10、median=3（.venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.stats.central-tendency"
+     ],
+     "body": "這一單元學三種『集中趨勢』——平均數、中位數、眾數。下面先講三個的定義和算法（平均數＝總和÷個數、中位數＝排好後最中間、眾數＝出現最多次），用 2、3、3、4、8 一次示範三個；再講偶數個資料的中位數要取中間兩數的平均；接著講有極端值時為什麼常用中位數；用一張對照卡整理，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.stats.central-tendency"
+     ],
+     "body": "三種集中趨勢。① 平均數 ＝ 總和 ÷ 個數。② 中位數 ＝ 把資料由小到大排好後最中間的那個；偶數個時取最中間兩個的平均。③ 眾數 ＝ 出現次數最多的那個。示範：2、3、3、4、8，平均數 ＝ (2＋3＋3＋4＋8) ÷ 5 ＝ 20 ÷ 5 ＝ 4；排好後最中間是 3，中位數 ＝ 3；出現最多次的是 3（兩次），眾數 ＝ 3。偶數個的例子：10、20、30、50 共 4 個，最中間是 20 和 30，中位數 ＝ (20＋30) ÷ 2 ＝ 25（只取 20 或只取 30 都不對）。極端值：1、2、3、4、40，平均數被 40 拉到 10、但中位數還是 3——所以有少數特別大的值時，中位數比平均數更能代表多數人。下面用一張對照卡整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_mid.stats.central-tendency"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='20' font-family='sans-serif' font-size='13' fill='#2f6f54' text-anchor='middle' font-weight='bold'>集中趨勢：平均數・中位數・眾數</text><rect x='18' y='30' width='324' height='38' rx='7' fill='#eef4ff' stroke='#5b8def' stroke-width='1.2'/><text x='28' y='54' font-family='sans-serif' font-size='11.5' fill='#5b8def' font-weight='bold'>平均數</text><text x='104' y='54' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='start'>總和 ÷ 個數（易受極端值拉動）</text><rect x='18' y='74' width='324' height='38' rx='7' fill='#eef7ee' stroke='#4e9a6b' stroke-width='1.2'/><text x='28' y='98' font-family='sans-serif' font-size='11.5' fill='#4e9a6b' font-weight='bold'>中位數</text><text x='104' y='98' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='start'>排好後最中間（偶數取兩數平均）</text><rect x='18' y='118' width='324' height='38' rx='7' fill='#fdf2e9' stroke='#d08a3e' stroke-width='1.2'/><text x='28' y='142' font-family='sans-serif' font-size='11.5' fill='#d08a3e' font-weight='bold'>眾數</text><text x='104' y='142' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='start'>出現次數最多的那個</text></svg>",
+      "alt": "標題「集中趨勢：平均數・中位數・眾數」。一張卡，三列。第一列藍底「平均數」：「總和 ÷ 個數（易受極端值拉動）」。第二列綠底「中位數」：「排好後最中間（偶數取兩數平均）」。第三列橘底「眾數」：「出現次數最多的那個」。",
+      "caption": "三種集中趨勢：平均數＝總和÷個數（易受極端值拉動）；中位數＝排好後最中間（偶數個取中間兩數平均）；眾數＝出現次數最多的那個。有少數極端值時，中位數比平均數更能代表多數。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.stats.central-tendency"
+     ],
+     "body": "最後練集中趨勢。重點：平均數＝總和÷個數；中位數＝排好後最中間（偶數個取中間兩數的平均，只取一個不對）；眾數＝出現最多次的那個。小提醒：有特別大或特別小的極端值時，平均數會被拉動、中位數比較穩，想代表「多數人的水準」常用中位數。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "6、6、10、14、20 這組資料的眾數是多少？",
+     "answer": "6",
+     "kp_ids": [
+      "math.t_mid.stats.central-tendency"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.stats.central-tendency"
+     ],
+     "options": [
+      "6",
+      "10",
+      "20",
+      "11.2"
+     ],
+     "distractor_rationales": {
+      "10": "這是中位數（排好後最中間的數），不是眾數；眾數看「出現次數最多」，這組裡只有 6 出現兩次、其餘各一次，所以眾數是 6。",
+      "20": "這是資料裡最大的數，不是眾數；眾數看出現次數最多的那個，是出現兩次的 6。",
+      "11.2": "這是平均數（總和 56 ÷ 5），不是眾數；眾數是出現次數最多的 6。"
+     },
+     "answer_evidence": [
+      "c-ct-def"
+     ],
+     "feedback": "眾數是出現次數最多的那個數：6 出現兩次、其餘各一次，所以眾數是 6。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "10、20、30、50 這組資料（共 4 個）的中位數是多少？",
+     "answer": "25",
+     "kp_ids": [
+      "math.t_mid.stats.central-tendency"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.stats.central-tendency"
+     ],
+     "options": [
+      "25",
+      "20",
+      "30",
+      "27.5"
+     ],
+     "distractor_rationales": {
+      "20": "這是只取了最中間兩個數裡左邊那個；資料是偶數個時，中位數要取中間兩數的平均，(20＋30) ÷ 2 ＝ 25。",
+      "30": "這是只取了最中間兩個數裡右邊那個；偶數個時中位數要取中間兩數的平均，(20＋30) ÷ 2 ＝ 25。",
+      "27.5": "這是平均數（總和 110 ÷ 4），不是中位數；中位數要取排好後最中間兩數的平均，(20＋30) ÷ 2 ＝ 25。"
+     },
+     "answer_evidence": [
+      "c-ct-median-even"
+     ],
+     "feedback": "偶數個資料的中位數取最中間兩數的平均：最中間是 20 和 30，(20＋30) ÷ 2 ＝ 25。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一組資料裡出現了一個特別大的極端值，下列哪一個集中趨勢最容易被它拉動？",
+     "answer": "平均數",
+     "kp_ids": [
+      "math.t_mid.stats.central-tendency"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.stats.central-tendency"
+     ],
+     "options": [
+      "平均數",
+      "中位數",
+      "眾數",
+      "三個都一樣，不受影響"
+     ],
+     "distractor_rationales": {
+      "中位數": "中位數只看排好後最中間的位置，單一極端值通常改變不了中間的位置，所以較不受影響；最容易被拉動的是平均數（總和會被極端值大幅改變）。",
+      "眾數": "眾數只看哪個數出現最多次，一個極端值通常只出現一次、改變不了眾數，所以不受影響；被拉動的是平均數。",
+      "三個都一樣，不受影響": "並非都不受影響：平均數把每個數都加進總和，極端值會明顯拉動平均數，中位數與眾數才較不受影響。"
+     },
+     "answer_evidence": [
+      "c-ct-robust"
+     ],
+     "feedback": "平均數把每一個數都加進總和再除以個數，所以特別大的極端值會把平均數明顯拉高；中位數、眾數較不受單一極端值影響。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "某公司多數員工薪水相近，但有少數主管薪水特別高。想用一個數代表「多數員工大概領多少」，用哪一個最合適？",
+     "answer": "中位數",
+     "kp_ids": [
+      "math.t_mid.stats.central-tendency"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.stats.central-tendency"
+     ],
+     "options": [
+      "中位數",
+      "平均數",
+      "最大值",
+      "全部薪水的總和"
+     ],
+     "distractor_rationales": {
+      "平均數": "少數特別高的薪水會把平均數拉高，使它高於多數人實際領的；想代表多數人水準時，較不受極端值影響的中位數更合適。",
+      "最大值": "最大值是領最多的那個人的薪水，只代表一個極端，完全不能代表多數人；代表多數人用中位數。",
+      "全部薪水的總和": "總和是把所有人加起來的總額，不是「一個人大概領多少」的代表數；要代表多數人用中位數。"
+     },
+     "answer_evidence": [
+      "c-ct-robust"
+     ],
+     "feedback": "少數特別高的薪水會把平均數拉高，中位數較不受極端值影響，更能代表多數員工的水準。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（平均數＝總和÷個數；中位數＝排好後最中間、偶數個取中間兩數平均；眾數＝出現最多次；有極端值時平均數被拉動、中位數較穩、代表多數常用中位數）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
