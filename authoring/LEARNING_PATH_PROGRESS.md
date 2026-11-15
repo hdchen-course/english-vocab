@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 13:48 prob strand #10 variance 5/5 DONE-GATE 全綠（變異數與標準差，分科-數甲）
+- **math_prob_variance frozen_sha `61a81c1e9d11b331`**（R1-R5 連 5 clean、L3 每輪 exit 0、confirmed 全 0）。DONE-GATE 七關全綠：per_page 無 violation／scan PASS／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen＋iPad 四角色 render 綁 sha（變異數三步卡 figure：①算期望 先求 μ=E(X)、②離差平方 (值 － μ)² 乘機率再相加、③開根號 σ=√變異數；三列左對齊〔#50/#51〕；三視窗右緣0%；四角色過）。
+- **scope（分科-數甲）**：承 expected-value。Var(X)=Σ(值 － μ)²×機率、σ=√變異數、離散程度意義（越大越分散）。事實全 .venv：teach X{1,3}μ2 Var1 σ1、對比 Y{1,5}μ3 Var4 σ2；Q1 X{3,9}μ6 Var9、Q2 Var25→σ5、Q3 意義、Q4 公式。teach Var 1、4、σ 1、2 與 practice 9、5 不重疊（#10）。
+- **★收斂途中修 3 個 panel-confirmed readability major（皆 5-lens 全判 b-hard-to-understand）**：(1) c-var-meaning 冗餘括號『期望值 μ=3（和前面 X 的分散度不同、但這裡期望值是 3）』conflate mean/dispersion→刪；(2)(3) Q3 distractor-rationale＋feedback『變異數量的是』garden-path（動詞 量 緊接 變異數 被讀成複合名詞 變異數量）×2→『變異數衡量的是』。皆 rounds=[] 直接修、無 de-converge。
+- **★順帶修 gate（HD tells 裁示對齊，commit 1bb93a099）**：pedagogy_gate 的 length-cue/lead-in-cue 本為 fail-closed HARD，但 HD 2026-11-15 裁示 MCQ answer-tells（長度/詳細度 cue）OUT OF SCOPE、非 defect、不得當 gate（length 窗口逼 padding、英中上下限可能同時不可滿足）→降為 advisory，shadow-note/parse/structure 仍 hard；紅隊 selftest 全綠、全站 0 hard 無 regression。
+- **下一步**：續 prob strand 其餘 3 KP（binomial-distribution / normal-distribution / sampling-confidence〔t_sub 分科〕）。**prob strand 14 中 11 完成，剩 3**。
+
 ## 2026-11-15 12:44 prob strand #9 expected-value 5/5 DONE-GATE 全綠（隨機變數的期望值）
 - **math_prob_expected_value frozen_sha `b5f5df229e5243af`**（R1-R5 連 5 clean、L3 每輪 exit 0、confirmed 全 0）。DONE-GATE 全綠：per_page 無 violation／scan PASS／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard（1 advisory：c-ev-meaning 長期平均 claim 為 teach-only 支援性、panel 連 5 輪放行）／content_sha==frozen＋iPad 四角色 render 綁 sha（期望值三步卡 figure：①定義 E(X)＝Σ(值 × 機率)、②算法 每個值乘機率再相加、③看長期 可能小數或負數；三列左對齊 x=96/start/fs10.5〔#50/#51〕；三視窗右緣0%；四角色過）。
 - **scope（t_adv 學測）**：承 simple-event。E(X)＝Σ(值 × 機率)、長期平均（可為小數或負）、淨利期望＝得到 － 成本＋公平判斷（0 公平、<0 長期賠）。事實全 .venv：teach 擲骰期望 7/2、遊戲 1/4·8=2；Q1 轉盤 1,2,3,4→5/2、Q2 球 1,1,2,8→3、Q3 付3元出6得12 淨利期望 1/6·9+5/6·(－3)=－1、Q4 概念。teach worked 7/2、2 與 practice 5/2、3、－1 不重疊（#10）。
