@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 機率（prob）strand 第 13 個單元（t_sub 分科-數乙）。知識點 math.t_sub.prob.sampling-confidence（抽樣分布、信賴區間與統計推論初步）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，首次 rendered 出現處）：抽樣分布 (sampling distribution)、樣本比例 (sample proportion)、標準誤 (standard error)、信賴區間 (confidence interval)、邊際誤差 (margin of error)、信心水準 (confidence level)。★scope（分科-數乙 初步）：承 normal-distribution（會用常態與標準差）。本單元練『用樣本估母體 + 信賴區間』：(1) 抽樣分布＝每次抽 n 個算出的樣本比例 p̂ 會跳動，n 夠大時 p̂ 的分布近似常態、中心在真正的母體比例、標準差＝標準誤 SE＝√(p̂(1－p̂)/n)；(2) 95% 信賴區間 ≈ p̂ ± 2·SE，邊際誤差＝2·SE；(3) ★正確意義（本單元 correctness 核心、必須教對的常見迷思）＝『95% 信心』指的是『這套抽樣＋造區間的方法，長期重複做約 95% 的區間會蓋住固定的真值』，不是『這一個區間有 95% 機率包含真值』（真值固定，單一區間要嘛蓋到要嘛沒蓋到）；(4) n 越大 SE 越小、區間越窄（估計越精準）。不含：t 分布、兩樣本比較、假設檢定 p 值、查精確 z 表（只用 95%≈2·SE 的概數）。prereq＝normal-distribution。★自檢（math-unit defect-classes #1–#55）：事實全 .venv 驗（SE=√(p̂(1－p̂)/n)：teach n=400 p̂=0.5→SE=0.025、邊際誤差=2·SE=0.05=5%、95%CI=45%~55%；Q1 n=100 p̂=0.5→邊際誤差=2·√(0.25/100)=0.10=約10%；Q1 誘答 約5%=只 1·SE 忘乘 2、約20%=係數誤用 4、約14%=把 p̂(1－p̂) 誤用成 p̂ 得 2·√(0.5/100)=0.141；teach 值 5%、CI 45%~55% 與 practice 答案 約10% 不重疊避#10）；★#53 誘答路徑 .venv 反算；★#55 無裸「量」動詞（用「衡量/標準差/估計」）；★正確性特別把關 Q2 的信賴區間詮釋（唯一正解＝長期涵蓋率；三誘答皆為真實常見迷思：單一區間機率、母體個體分布、重抽落點）；上標無；百分比與斜線；減號全形 U+FF0D；★figure＝信賴區間三步卡（低幾何風險 #50/#51：三列①抽樣分布 p̂ 會跳動近似常態、②算區間 95%≈p̂±2·SE、③看意思 長期約95%區間蓋住真值；右欄全 text-anchor=start 同 x=96 統一 fs10.5；左標籤 x=22 不超欄距），alt 與 SVG text 逐字一致（#33）、figure 標題『信賴區間：用會跳動的樣本估固定的真值』寫進 alt 開頭；★MCQ options 全 bare（#47）、每個 distractor 乾淨單一錯誤路徑/迷思、同題兩兩相異（#14/#29）、長度均衡（#20/#28/#47）；★#54 題幹總稱詞涵蓋選項已檢；★導讀承諾順序＝實際 teach 牌組順序（#4/#46）：導讀『先講抽樣分布（p̂ 會跳動、近似常態、SE=√(p̂(1－p̂)/n)）、再講 95% 信賴區間 p̂±2·SE 並用 n=400 p̂=50% 邊際誤差5% CI45~55% 示範、再講正確意義（長期涵蓋率不是單一區間機率）與 n 的影響、用一張卡整理、最後練』＝實際 teach1 intro→teach2 抽樣分布+SE+信賴區間+示範+意義+n影響→teach3 figure 卡→teach4 recap+練；worked-example 在 rendered teach。claim kind=definition。figure-only example 無 body。",
+ "page": "math_prob_sampling_confidence.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.prob.sampling-confidence",
+   "title_zh": "抽樣分布、信賴區間與統計推論初步",
+   "can_do": "我會用樣本估母體：知道每次抽樣算出的『樣本比例 (sample proportion)』p̂ 會跳動，它的分布（『抽樣分布 (sampling distribution)』）在樣本夠大時近似常態、標準差是『標準誤 (standard error)』SE＝√(p̂(1－p̂)/n)。我會算 95%『信賴區間 (confidence interval)』≈ p̂ ± 2·SE（『邊際誤差 (margin of error)』＝2·SE）。我也知道『95% 信心水準 (confidence level)』的正確意思是『這套方法長期約 95% 的區間會蓋住真值』，不是『這一個區間有 95% 機率包含真值』。",
+   "situation_group": "機率：抽樣與信賴區間",
+   "subject": "math",
+   "strand": "prob",
+   "est_minutes": 16,
+   "knowledge_point_ids": [
+    "math.t_sub.prob.sampling-confidence"
+   ],
+   "prerequisites": [
+    "math.t_sub.prob.normal-distribution"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-samp-dist",
+     "text": "抽樣分布 (sampling distribution) 與標準誤 (standard error)：我們常用一個樣本去估母體（例如民調抽 n 個人、算支持率 p̂ 來估全體的支持率）。但每抽一次樣本、算出的『樣本比例 (sample proportion)』p̂ 都會有點不同——p̂ 本身是隨機的，它的分布就叫抽樣分布。當 n 夠大，p̂ 的抽樣分布近似常態、中心在真正的母體比例，標準差叫『標準誤』SE＝√(p̂(1－p̂)/n)。n 越大，SE 越小，p̂ 越集中在真值附近（估得越準）。",
+     "kind": "definition",
+     "source_refs": [
+      "抽樣分布與標準誤（高中數學 分科-數乙）"
+     ],
+     "verification_ref": "SE=√(p̂(1－p̂)/n)（.venv）；n↑→SE↓",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-samp-ci",
+     "text": "信賴區間 (confidence interval) 與邊際誤差 (margin of error)：用樣本比例 p̂ 估母體比例時，給一個區間比給一個數更誠實。常用的 95% 信賴區間 ≈ p̂ ± 2·SE，其中『邊際誤差』＝2·SE（2 是對應 95% 的概略係數，來自常態的 2 個標準差約涵蓋 95%）。例：民調抽 n＝400 人、支持率 p̂＝50%，SE＝√(0.5·0.5/400)＝2.5%，邊際誤差＝2·2.5%＝5%，95% 信賴區間＝50%±5%＝45% 到 55%。",
+     "kind": "definition",
+     "source_refs": [
+      "樣本比例的信賴區間 p̂±2·SE（高中數學 分科-數乙）"
+     ],
+     "verification_ref": "n=400 p̂=0.5：SE=2.5%、邊際誤差=5%、CI=45%~55%（.venv）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-samp-meaning",
+     "text": "『95% 信心水準 (confidence level)』的正確意思：如果用同一套方法重複抽很多次樣本、每次都造一個信賴區間，長期來看約有 95% 的區間會蓋住那個固定的母體真值。它『不是』說『這一個算出來的區間有 95% 機率包含真值』——真值是固定的數，這一個區間要嘛蓋到了、要嘛沒蓋到，不再是機率問題。信心是對『方法的長期表現』有信心，不是對某一個區間下機率。想讓區間更窄（估得更精準）就增加樣本數 n（SE 變小）；若提高信心水準（如 99%）區間反而會變寬。",
+     "kind": "definition",
+     "source_refs": [
+      "信賴區間的正確詮釋——長期涵蓋率（高中數學 分科-數乙）"
+     ],
+     "verification_ref": "信心水準＝方法長期涵蓋率，非單一區間機率（統計定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.prob.sampling-confidence"
+     ],
+     "body": "這一單元學『用樣本估母體』和『信賴區間』——民調、抽檢都在做這件事。下面先講抽樣分布：每次抽樣算出的樣本比例 p̂ 會跳動，它近似常態、標準差叫標準誤 SE＝√(p̂(1－p̂)/n)；再講 95% 信賴區間 ≈ p̂ ± 2·SE，用 n＝400、支持率 50%、邊際誤差 5%、區間 45%~55% 示範；再講一個最容易弄錯的重點——『95% 信心』的正確意思（方法的長期涵蓋率，不是單一區間的機率），以及 n 越大區間越窄。接著用一張卡整理，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.prob.sampling-confidence"
+     ],
+     "body": "抽樣分布：用樣本估母體時，每抽一次、算出的樣本比例 p̂ 都會有點不同，p̂ 本身是隨機的；n 夠大時 p̂ 近似常態、中心在真正的母體比例，標準差叫標準誤 SE＝√(p̂(1－p̂)/n)，n 越大 SE 越小、估得越準。信賴區間：95% 信賴區間 ≈ p̂ ± 2·SE，邊際誤差＝2·SE。示範：抽 n＝400 人、支持率 p̂＝50%，SE＝√(0.5·0.5/400)＝2.5%，邊際誤差＝2·2.5%＝5%，95% 信賴區間＝50%±5%＝45% 到 55%。★最重要、最常弄錯的意義：『95% 信心』是指『用同一套方法重複抽很多次、每次造一個區間，長期約 95% 的區間會蓋住固定的真值』；不是『這一個區間有 95% 機率包含真值』——真值固定，這一個區間要嘛蓋到、要嘛沒蓋到。想更精準（區間更窄）就加大 n；提高信心水準到 99% 反而會變寬。下面用一張卡整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.prob.sampling-confidence"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 350 136' xmlns='http://www.w3.org/2000/svg'><text x='175' y='18' font-family='sans-serif' font-size='12' fill='#2f6f54' text-anchor='middle' font-weight='bold'>信賴區間：用會跳動的樣本估固定的真值</text><rect x='12' y='30' width='326' height='30' rx='6' fill='#eef4ff' stroke='#5b8def' stroke-width='1.1'/><text x='22' y='49' font-family='sans-serif' font-size='10.5' fill='#5b8def' font-weight='bold'>①抽樣分布</text><text x='96' y='50' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='start'>樣本比例 p̂ 會跳動，近似常態</text><rect x='12' y='64' width='326' height='30' rx='6' fill='#eef7ee' stroke='#4e9a6b' stroke-width='1.1'/><text x='22' y='83' font-family='sans-serif' font-size='10.5' fill='#4e9a6b' font-weight='bold'>②算區間</text><text x='96' y='84' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='start'>95% ≈ p̂ ± 2·SE（邊際誤差）</text><rect x='12' y='98' width='326' height='30' rx='6' fill='#fdf2e9' stroke='#d08a3e' stroke-width='1.1'/><text x='22' y='117' font-family='sans-serif' font-size='10.5' fill='#d08a3e' font-weight='bold'>③看意思</text><text x='96' y='118' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='start'>長期約 95% 的區間蓋住真值</text></svg>",
+      "alt": "標題「信賴區間：用會跳動的樣本估固定的真值」。一張卡，三列。第一列藍底「①抽樣分布」：「樣本比例 p̂ 會跳動，近似常態」。第二列綠底「②算區間」：「95% ≈ p̂ ± 2·SE（邊際誤差）」。第三列橘底「③看意思」：「長期約 95% 的區間蓋住真值」。",
+      "caption": "信賴區間：① 樣本比例 p̂ 每次抽都會跳動、近似常態（標準差＝標準誤 SE）；② 95% 信賴區間 ≈ p̂ ± 2·SE，邊際誤差＝2·SE；③『95% 信心』＝用這套方法長期約 95% 的區間會蓋住固定的真值，不是單一區間的機率。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.prob.sampling-confidence"
+     ],
+     "body": "最後練抽樣與信賴區間。重點：樣本比例 p̂ 會跳動（抽樣分布近似常態，標準誤 SE＝√(p̂(1－p̂)/n)）；95% 信賴區間 ≈ p̂ ± 2·SE，邊際誤差＝2·SE；『95% 信心』＝方法長期約 95% 的區間蓋住固定真值，不是單一區間的機率。小提醒：邊際誤差別忘了乘 2（對應 95%）；想更精準就加大樣本數 n（SE 變小、區間變窄）；詮釋信賴區間時不要對單一區間說『有 95% 機率包含真值』。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "某民調訪問 n＝100 人，支持率 p̂＝50%。用 95% 信賴區間（≈ p̂ ± 2·SE，SE＝√(p̂(1－p̂)/n)）估計時，邊際誤差大約是多少？",
+     "answer": "約 10%",
+     "kp_ids": [
+      "math.t_sub.prob.sampling-confidence"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.prob.sampling-confidence"
+     ],
+     "options": [
+      "約 10%",
+      "約 5%",
+      "約 20%",
+      "約 14%"
+     ],
+     "distractor_rationales": {
+      "約 5%": "這只算了 1 個標準誤 SE＝√(0.5·0.5/100)＝5%，忘了 95% 要乘約 2 個 SE；邊際誤差＝2·5%＝10%。",
+      "約 20%": "這把係數用成 4（4·SE＝4·5%）；95% 對應的是約 2 個標準差，邊際誤差＝2·SE＝10%。",
+      "約 14%": "這把 p̂(1－p̂) 誤用成只有 p̂〔2·√(0.5/100)＝約14%〕；標準誤裡要用 p̂(1－p̂)＝0.5·0.5，邊際誤差＝2·√(0.25/100)＝10%。"
+     },
+     "answer_evidence": [
+      "c-samp-ci"
+     ],
+     "feedback": "SE＝√(0.5·0.5/100)＝5%；邊際誤差＝2·SE＝2·5%＝約 10%。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一份民調得到支持率的 95% 信賴區間是 45% 到 55%。下列哪一個是『95% 信心』的正確意思？",
+     "answer": "用同一套方法重複抽樣很多次，長期約 95% 造出的區間會蓋住真正的母體支持率",
+     "kp_ids": [
+      "math.t_sub.prob.sampling-confidence"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.prob.sampling-confidence"
+     ],
+     "options": [
+      "用同一套方法重複抽樣很多次，長期約 95% 造出的區間會蓋住真正的母體支持率",
+      "真正的母體支持率有 95% 的機率落在 45% 到 55% 這個區間裡",
+      "母體中有 95% 的人，支持率介於 45% 到 55% 之間",
+      "再抽一次樣本，有 95% 的機率算出的支持率會落在 45% 到 55% 裡"
+     ],
+     "distractor_rationales": {
+      "真正的母體支持率有 95% 的機率落在 45% 到 55% 這個區間裡": "這是最常見的迷思：真值是固定的數，這一個算好的區間要嘛蓋到、要嘛沒蓋到，不能對它說機率；『95%』是方法長期的涵蓋率，不是這一個區間的機率。",
+      "母體中有 95% 的人，支持率介於 45% 到 55% 之間": "混淆了『個體的分布』和『估計的區間』——信賴區間是在估一個母體比例，不是在描述 95% 的人落在哪。",
+      "再抽一次樣本，有 95% 的機率算出的支持率會落在 45% 到 55% 裡": "這把信賴區間誤解成『下一個樣本結果的預測範圍』；信賴區間講的是對固定真值的估計方法長期涵蓋率，不是預測下一次的 p̂。"
+     },
+     "answer_evidence": [
+      "c-samp-meaning"
+     ],
+     "feedback": "正確意思是方法的長期涵蓋率：重複抽很多次、每次造一個區間，長期約 95% 會蓋住固定的真值；不能對單一區間說『有 95% 機率包含真值』。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "其他條件不變，想讓 95% 信賴區間變窄一點（估計更精準），最直接的做法是下列哪一個？",
+     "answer": "增加樣本數 n",
+     "kp_ids": [
+      "math.t_sub.prob.sampling-confidence"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.prob.sampling-confidence"
+     ],
+     "options": [
+      "增加樣本數 n",
+      "減少樣本數 n",
+      "把信心水準從 95% 提高到 99%",
+      "區間寬度固定，沒辦法改變"
+     ],
+     "distractor_rationales": {
+      "減少樣本數 n": "方向相反：n 變小會讓標準誤 SE＝√(p̂(1－p̂)/n) 變大，區間反而變寬；要變窄得加大 n。",
+      "把信心水準從 95% 提高到 99%": "信心水準越高，要蓋住真值就得把網撒得更大，區間反而變寬（係數從約 2 變約 2.6）；這不能讓區間變窄。",
+      "區間寬度固定，沒辦法改變": "區間寬度由邊際誤差 2·SE 決定，而 SE 隨 n 改變；加大 n 就能讓它變窄。"
+     },
+     "answer_evidence": [
+      "c-samp-dist",
+      "c-samp-meaning"
+     ],
+     "feedback": "邊際誤差＝2·SE＝2·√(p̂(1－p̂)/n)；n 越大 SE 越小、區間越窄，所以增加樣本數最直接。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "關於『樣本比例 p̂』，下列哪一個敘述正確？",
+     "answer": "每次抽樣算出的 p̂ 會不同，它有一個分布；n 越大，p̂ 越集中在母體真值附近",
+     "kp_ids": [
+      "math.t_sub.prob.sampling-confidence"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.prob.sampling-confidence"
+     ],
+     "options": [
+      "每次抽樣算出的 p̂ 會不同，它有一個分布；n 越大，p̂ 越集中在母體真值附近",
+      "只要抽過一次，算出的 p̂ 就一定等於母體真正的比例",
+      "樣本數 n 不影響 p̂ 的準確度",
+      "p̂ 是固定的常數，不會因為換一組樣本而改變"
+     ],
+     "distractor_rationales": {
+      "只要抽過一次，算出的 p̂ 就一定等於母體真正的比例": "單一樣本的 p̂ 只是估計值、通常不剛好等於真值；這正是為什麼要給信賴區間而不是給一個數。",
+      "樣本數 n 不影響 p̂ 的準確度": "n 會影響——標準誤 SE＝√(p̂(1－p̂)/n) 隨 n 變大而變小，n 越大估得越準。",
+      "p̂ 是固定的常數，不會因為換一組樣本而改變": "剛好相反：換一組樣本就會算出不同的 p̂，p̂ 是隨機的（這就是抽樣分布）；固定的是母體真值。"
+     },
+     "answer_evidence": [
+      "c-samp-dist"
+     ],
+     "feedback": "樣本比例 p̂ 是隨機的（每次抽樣都不同），它有抽樣分布；n 越大標準誤越小、p̂ 越集中在母體真值附近。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（樣本比例 p̂ 會跳動＝抽樣分布，近似常態、標準誤 SE＝√(p̂(1－p̂)/n)；95% 信賴區間 ≈ p̂ ± 2·SE、邊際誤差＝2·SE。『95% 信心』＝方法長期約 95% 的區間蓋住固定真值，不是單一區間的機率；想更精準就加大 n、提高信心水準會變寬）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
