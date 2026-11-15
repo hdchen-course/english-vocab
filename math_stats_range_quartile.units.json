@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 統計（stats）strand t_mid 單元。知識點 math.t_mid.stats.range-quartile（全距與四分位數）。tier=t_mid（會考）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：全距 (range)、四分位數 (quartile)、四分位距 (interquartile range, IQR)。★scope（會考 t_mid）：全距＝最大值－最小值；四分位數用台灣國中「折半取中位數」法——先排序，中位數為 Q2；下半部（資料個數為奇數時不含 Q2）的中位數為 Q1、上半部的中位數為 Q3；四分位距 IQR＝Q3－Q1。prereq＝集中趨勢 central-tendency（中位數）。不含箱形圖繪製（box-plot 另單元）、百分位數（percentile 另單元）、變異數標準差。★自檢（math-unit defect-classes #1–#58）：四分位數一律用台灣國中折半取中位數法手算（非 numpy percentile 線性插值），.venv 驗：teach [1,2,3,5,7,8,9]→Q1=2,Q2=5,Q3=8,全距=8,IQR=6；Q1 全距 [3,7,8,12,20]→20−3=17（誘答 20=只取最大、23=3+20加成、13=20−7挑錯最小）；Q2 四分位數 Q1 [1,3,5,7,9,11,13,15]→(3+5)/2=4（誘答 8=Q2混淆、3=下半取左、5=下半取右，皆位置挑選單一路徑#57例外）；Q3 IQR [4,8,10,13,16,20,25]→Q3−Q1=20−8=12（誘答 20=只給Q3、21=全距25−4、28=Q3+Q1加成）；teach 值集 {2,5,8,6} 與 practice 答案 {17,4,12} 無交集避#10。★figure＝四分位數三步卡（三列①排序找中位數Q2②下半中位數Q1③上半中位數Q3，右欄 text-anchor=start 同 x 統一 fs），alt 與 SVG text 逐字一致（#33）、標題『四分位數：折半取中位數』寫進 alt 開頭；★MCQ options bare（#47）、每 distractor .venv 反算乾淨單一錯誤（#53）、誘答值不撞題幹資料值（#57，位置挑選類單一路徑除外）、兩兩相異（#29）、長度均衡（#28）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55，一律衡量/測量）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_stats_range_quartile.html",
+ "units": [
+  {
+   "unit_id": "math.t_mid.stats.range-quartile",
+   "title_zh": "全距與四分位數",
+   "can_do": "我會算一組資料的『全距 (range)』＝最大值 － 最小值。我也會用『四分位數 (quartile)』把排好的資料切成四份：先找中位數當 Q2，再找下半部的中位數當 Q1、上半部的中位數當 Q3；並算出『四分位距 (interquartile range, IQR)』＝ Q3 － Q1，用來衡量中間一半資料的分散程度。例如 1、2、3、5、7、8、9，Q1＝2、Q2＝5、Q3＝8，全距是 8、四分位距是 6。",
+   "situation_group": "統計：全距與四分位數",
+   "subject": "math",
+   "strand": "stats",
+   "est_minutes": 14,
+   "knowledge_point_ids": [
+    "math.t_mid.stats.range-quartile"
+   ],
+   "prerequisites": [
+    "math.t_mid.stats.central-tendency"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-rq-range",
+     "text": "全距 (range) ＝ 一組資料的最大值 － 最小值，用來看資料整體拉開多大。例：3、7、8、12、20 的全距 ＝ 20 － 3 ＝ 17。注意只寫最大值 20、或把最大和最小相加（3＋20）都不是全距，全距一定是「最大減最小」。",
+     "kind": "definition",
+     "source_refs": [
+      "全距的定義（國中數學 會考）"
+     ],
+     "verification_ref": "max−min: [3,7,8,12,20]→20−3=17（.venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-rq-quartile",
+     "text": "四分位數 (quartile) 把排好的資料切成四等份。作法（台灣國中）：先把資料由小到大排好，找出中位數當第二四分位數 Q2；再看「下半部」（資料是奇數個時不含中間的 Q2）的中位數，就是第一四分位數 Q1；「上半部」的中位數就是第三四分位數 Q3。例：1、3、5、7、9、11、13、15 共 8 個，下半部是 1、3、5、7，它的中位數 Q1 ＝ (3＋5) ÷ 2 ＝ 4（下半部有偶數個，要取中間兩數的平均，不能只取 3 或只取 5）。",
+     "kind": "definition",
+     "source_refs": [
+      "四分位數的定義與求法（國中數學 會考）"
+     ],
+     "verification_ref": "台灣國中折半法: [1,3,5,7,9,11,13,15]→Q1=(3+5)/2=4、Q2=8、Q3=12（.venv 手算驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-rq-iqr",
+     "text": "四分位距 (interquartile range, IQR) ＝ Q3 － Q1，衡量中間一半資料的分散程度（比全距更不受極端值影響）。例：4、8、10、13、16、20、25 共 7 個，Q2＝13，下半部 4、8、10 的中位數 Q1＝8、上半部 16、20、25 的中位數 Q3＝20，所以 IQR ＝ 20 － 8 ＝ 12。注意 IQR 是 Q3 減 Q1，不是只寫 Q3、也不是 Q3 加 Q1、更不是全距（25 － 4 ＝ 21）。",
+     "kind": "definition",
+     "source_refs": [
+      "四分位距的定義（國中數學 會考）"
+     ],
+     "verification_ref": "Q3−Q1: [4,8,10,13,16,20,25]→Q1=8、Q3=20、IQR=12；全距=21（.venv 手算驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.stats.range-quartile"
+     ],
+     "body": "這一單元學兩種衡量資料「分散程度」的量：全距和四分位數。下面先講全距＝最大值－最小值；再講四分位數怎麼用「折半取中位數」把資料切成四份（Q2＝中位數、Q1＝下半部中位數、Q3＝上半部中位數），用 1、2、3、5、7、8、9 示範；接著講四分位距 IQR＝Q3－Q1；用一張四分位數卡整理，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.stats.range-quartile"
+     ],
+     "body": "全距 ＝ 最大值 － 最小值，看資料整體拉開多大。四分位數把排好的資料切成四等份，作法是「折半取中位數」：① 先排序，找中位數當 Q2。② 看下半部（奇數個時不含 Q2）的中位數，當 Q1。③ 看上半部的中位數，當 Q3。示範：1、2、3、5、7、8、9 共 7 個，中位數 Q2 ＝ 5；下半部 1、2、3 的中位數 Q1 ＝ 2；上半部 7、8、9 的中位數 Q3 ＝ 8。全距 ＝ 9 － 1 ＝ 8。四分位距 IQR ＝ Q3 － Q1 ＝ 8 － 2 ＝ 6，衡量中間一半資料的分散程度（比全距更不受極端值影響）。小提醒：下半部若是偶數個，Q1 要取中間兩數的平均，不能只取一個。下面用一張四分位數卡整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_mid.stats.range-quartile"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='20' font-family='sans-serif' font-size='13' fill='#2f6f54' text-anchor='middle' font-weight='bold'>四分位數：折半取中位數</text><rect x='18' y='30' width='324' height='38' rx='7' fill='#eef4ff' stroke='#5b8def' stroke-width='1.2'/><text x='28' y='54' font-family='sans-serif' font-size='11.5' fill='#5b8def' font-weight='bold'>①Q2</text><text x='96' y='54' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='start'>排序後的中位數</text><rect x='18' y='74' width='324' height='38' rx='7' fill='#eef7ee' stroke='#4e9a6b' stroke-width='1.2'/><text x='28' y='98' font-family='sans-serif' font-size='11.5' fill='#4e9a6b' font-weight='bold'>②Q1</text><text x='96' y='98' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='start'>下半部的中位數</text><rect x='18' y='118' width='324' height='38' rx='7' fill='#fdf2e9' stroke='#d08a3e' stroke-width='1.2'/><text x='28' y='142' font-family='sans-serif' font-size='11.5' fill='#d08a3e' font-weight='bold'>③Q3</text><text x='96' y='142' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='start'>上半部的中位數（IQR＝Q3－Q1）</text></svg>",
+      "alt": "標題「四分位數：折半取中位數」。一張卡，三列。第一列藍底「①Q2」：「排序後的中位數」。第二列綠底「②Q1」：「下半部的中位數」。第三列橘底「③Q3」：「上半部的中位數（IQR＝Q3－Q1）」。",
+      "caption": "四分位數折半取中位數：① Q2＝排序後的中位數；② Q1＝下半部的中位數；③ Q3＝上半部的中位數。全距＝最大－最小；四分位距 IQR＝Q3－Q1。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.stats.range-quartile"
+     ],
+     "body": "最後練全距與四分位數。重點：全距＝最大值－最小值；四分位數折半取中位數（Q2＝中位數、Q1＝下半部中位數、Q3＝上半部中位數，下半部偶數個時 Q1 取中間兩數平均）；四分位距 IQR＝Q3－Q1。小提醒：全距不是只寫最大值、也不是最大加最小；IQR 是 Q3 減 Q1、不是 Q3 加 Q1，也不等於全距。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "3、7、8、12、20 這組資料的全距是多少？",
+     "answer": "17",
+     "kp_ids": [
+      "math.t_mid.stats.range-quartile"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.stats.range-quartile"
+     ],
+     "options": [
+      "17",
+      "20",
+      "23",
+      "13"
+     ],
+     "distractor_rationales": {
+      "20": "這是只寫了最大值，還沒減最小值；全距 ＝ 最大 － 最小 ＝ 20 － 3 ＝ 17。",
+      "23": "這是把最大和最小相加（3＋20），但全距是相減不是相加；全距 ＝ 20 － 3 ＝ 17。",
+      "13": "這是把最小值挑錯成 7 來減（20 － 7）；最小值是 3，全距 ＝ 20 － 3 ＝ 17。"
+     },
+     "answer_evidence": [
+      "c-rq-range"
+     ],
+     "feedback": "全距 ＝ 最大值 － 最小值 ＝ 20 － 3 ＝ 17。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "1、3、5、7、9、11、13、15 這組資料（共 8 個）的第一四分位數 Q1 是多少？",
+     "answer": "4",
+     "kp_ids": [
+      "math.t_mid.stats.range-quartile"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.stats.range-quartile"
+     ],
+     "options": [
+      "4",
+      "8",
+      "3",
+      "5"
+     ],
+     "distractor_rationales": {
+      "8": "這是整組的中位數 Q2（(7＋9) ÷ 2），不是 Q1；Q1 要看「下半部」1、3、5、7 的中位數 ＝ (3＋5) ÷ 2 ＝ 4。",
+      "3": "這是下半部 1、3、5、7 裡偏左那個數；下半部有 4 個（偶數），中位數要取中間兩數的平均 (3＋5) ÷ 2 ＝ 4。",
+      "5": "這是下半部 1、3、5、7 裡偏右那個數；下半部是偶數個，Q1 要取中間兩數的平均 (3＋5) ÷ 2 ＝ 4。"
+     },
+     "answer_evidence": [
+      "c-rq-quartile"
+     ],
+     "feedback": "下半部是 1、3、5、7（偶數個），Q1 ＝ 中間兩數的平均 ＝ (3＋5) ÷ 2 ＝ 4。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "4、8、10、13、16、20、25 這組資料的四分位距（IQR）是多少？（已知 Q1＝8、Q3＝20）",
+     "answer": "12",
+     "kp_ids": [
+      "math.t_mid.stats.range-quartile"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.stats.range-quartile"
+     ],
+     "options": [
+      "12",
+      "20",
+      "21",
+      "28"
+     ],
+     "distractor_rationales": {
+      "20": "這是只寫了 Q3，還沒減 Q1；四分位距 IQR ＝ Q3 － Q1 ＝ 20 － 8 ＝ 12。",
+      "21": "這是全距（最大 － 最小 ＝ 25 － 4），不是四分位距；IQR 用 Q3 － Q1 ＝ 20 － 8 ＝ 12。",
+      "28": "這是把 Q3 和 Q1 相加（20＋8），但四分位距是相減；IQR ＝ 20 － 8 ＝ 12。"
+     },
+     "answer_evidence": [
+      "c-rq-iqr"
+     ],
+     "feedback": "四分位距 IQR ＝ Q3 － Q1 ＝ 20 － 8 ＝ 12。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "關於全距和四分位距（IQR），下列哪一個說法正確？",
+     "answer": "IQR 衡量中間一半資料的分散，比全距更不受極端值影響",
+     "kp_ids": [
+      "math.t_mid.stats.range-quartile"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.stats.range-quartile"
+     ],
+     "options": [
+      "IQR 衡量中間一半資料的分散，比全距更不受極端值影響",
+      "全距只看中間一半的資料",
+      "IQR 等於最大值減最小值",
+      "全距一定比 IQR 小"
+     ],
+     "distractor_rationales": {
+      "全距只看中間一半的資料": "相反：全距用最大減最小，看的是整組「頭尾」拉多開；只看中間一半的是四分位距 IQR。",
+      "IQR 等於最大值減最小值": "那是全距的定義；IQR 是 Q3 － Q1，看的是中間一半。",
+      "全距一定比 IQR 小": "相反：全距用頭尾、範圍較大，通常全距 ≥ IQR（IQR 只取中間一半），不會「一定比較小」。"
+     },
+     "answer_evidence": [
+      "c-rq-range",
+      "c-rq-iqr"
+     ],
+     "feedback": "全距看頭尾（最大－最小）、容易被極端值拉大；IQR＝Q3－Q1 只看中間一半，較不受極端值影響。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（全距＝最大－最小；四分位數折半取中位數：Q2＝中位數、Q1＝下半部中位數、Q3＝上半部中位數，下半部偶數個時取中間兩數平均；四分位距 IQR＝Q3－Q1，衡量中間一半、較不受極端值影響）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
