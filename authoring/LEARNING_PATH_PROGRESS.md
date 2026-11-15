@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 09:53 prob strand #7 multiplication-rule 5/5 DONE-GATE 全綠（乘法法則與相依事件）
+- **math_prob_multiplication_rule frozen_sha `35d188e65d04a57b`**（R1-R5 連 5 clean、L3 每輪 exit 0、confirmed 全 0）。DONE-GATE 全綠：per_page 無 violation／scan PASS／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen＋iPad 四角色 render 綁 sha（乘法法則卡 figure：①公式 P(A∩B)=P(A)·P(B|A)、②相依 不放回、③獨立 放回；三列左對齊 x=96/start/fs10.5〔#50/#51〕；三視窗右緣0%；四角色過）。
+- **scope（t_adv 學測）**：承 conditional。乘法法則一般式＋相依(不放回)vs獨立(放回)辨別。事實全 .venv：teach 不放回 3/5·2/4=3/10、放回 3/5·3/5=9/25；Q1 4/6·3/5=2/5、Q2 公式、Q3 5/8·3/7=15/56、Q4 相依/獨立。teach worked 3/10、9/25 與 practice 答案不重疊（#10）。
+- **★收斂途中修 1 個 panel-confirmed（新缺陷類 #54）**：R5 panel 7 鏡 b-hard minor——Q4 題幹總稱「兩次抽取」涵蓋不了選項（擲骰/丟硬幣非抽取）→改中性詞「兩次動作」。誠實 de-converge（棄 R1-R4）重凍 35d188e6 重收斂。**#54 已記入 defect-classes memory：題幹類別詞必須涵蓋自己所有選項。** #53 pre-freeze 使所有 distractor 值零 value-mismatch 缺陷。
+- **下一步**：續 prob strand 其餘 6 KP（bayes / expected-value〔t_adv〕／variance / binomial-distribution / normal-distribution / sampling-confidence〔t_sub〕）。prob strand 14 中 8 完成（classical/simple-event/tree-list/complement-addition/likelihood-intuition/mutually-exclusive/conditional/multiplication-rule）。
+
 ## 2026-11-15 08:39 prob strand #6 conditional 5/5 DONE-GATE 全綠（條件機率，一次過無 de-converge）
 - **math_prob_conditional frozen_sha `ef720bf23b77eda8`**（R1-R5 連 5 clean、L3 每輪 exit 0、confirmed 全 0；**無任何 de-converge**——#53 凍檔前 .venv 反算誘答路徑奏效）。DONE-GATE 全綠：per_page 無 violation／scan PASS／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen＋iPad 四角色 render 綁 sha（條件機率卡 figure：①縮小樣本、②算比例、③公式 P(A|B)=P(A∩B)/P(B)；三列左對齊 x=96/start/fs10.5〔#50/#51 合規〕；三視窗右緣0%；四角色過）。
 - **scope（t_adv 學測）**：承 mutually-exclusive（∩、P(A∩B) 已識）。縮小樣本空間法＋公式 P(A|B)=P(A∩B)/P(B)＋分母判斷（已知條件 B）。事實全 .venv：teach 擲骰已知>2求>4=2/4=1/2、8紅6記號=6/8=3/4；Q1 班級 P(科學|數學)=12/18=2/3、Q2 P(記號|紅)=3/12=1/4、Q3 兩骰和7含3=2/6=1/3、Q4 公式。teach worked 1/2、3/4 與 practice 答案 2/3、1/4、1/3 不重疊（#10）。
