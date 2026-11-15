@@ -160,8 +160,9 @@ def _check_shadow_note(loc, unit, violations):
 
 def run(root, files=None):
     """回傳 (hard_violations, advisory, stats)。
-    hard_violations＝fail-closed（length-cue + shadow-note + 結構/parse）；計入 exit code。
-    advisory＝parity 候選；不計入 exit code。"""
+    hard_violations＝fail-closed（shadow-note + 結構/parse）；計入 exit code。
+    advisory＝parity 候選 + length-cue/lead-in-cue（HD 2026-11-15 裁示 MCQ tells
+    非 defect、非 gate）；不計入 exit code。"""
     violations = []
     advisory = []
     root = os.path.abspath(root)
@@ -192,7 +193,11 @@ def run(root, files=None):
             uid = u.get("unit_id")
             loc = f"{base}[{uid if isinstance(uid, str) else '#'+str(i)}]"
             _check_parity(loc, u, advisory)
-            _check_length_cue(loc, u, violations)
+            # length-cue / lead-in-cue：HD 裁示 2026-11-15「MCQ answer-tells 不是 gate
+            # 也不是 defect」(STANDING_AUDIT_SOP §2)。長度窗口會逼出 PADDING、且英文上限
+            # 與中文下限可能同時不可滿足——強制長度均衡反而劣化內容。故此類降為 advisory
+            # （不計 exit、交 panel 參考），不再 fail-closed 擋檔。
+            _check_length_cue(loc, u, advisory)
             _check_shadow_note(loc, u, violations)
     stats = {"root": root, "unit_files": len(unit_files), "units": n_units,
              "violations": len(violations), "advisory": len(advisory)}
@@ -259,12 +264,8 @@ def _selftest():
         u["practice"][1]["options"] = ["學生聽到鈴聲後就站了起來", "鈴聲反過來聽到了學生",
                                        "學生被鈴聲吵醒了過來", "學生只是想要聽聽鈴聲"]
 
-    # parity → advisory（不計 hard）；length-cue/lead-in/shadow-note → hard
-    hard_cases = {"length-cue: 正解離群長": mut_lencue_ratio,
-                  "length-cue: 僅正解帶括號": mut_lencue_paren,
-                  "length-cue: 誘答等長正解離群": mut_uniform,
-                  "lead-in-cue: 誘答共享前綴正解無": mut_leadin,
-                  "shadow-note: 全稱下收 vs 行上揚": mut_shadow}
+    # shadow-note → hard（唯一仍 fail-closed 的 cue 類；它是語調指示自相矛盾＝correctness）
+    hard_cases = {"shadow-note: 全稱下收 vs 行上揚": mut_shadow}
     for name, mut in hard_cases.items():
         with tempfile.TemporaryDirectory() as b:
             u = _good_unit()
@@ -272,6 +273,21 @@ def _selftest():
             _mk(b, u)
             v, adv, _ = run(b)
             results.append((f"壞例：{name} → ≥1 hard violation", len(v) >= 1, v))
+
+    # length-cue/lead-in-cue → advisory，絕不計 hard（HD 2026-11-15：MCQ tells 非 defect/gate）。
+    # 紅隊：壞案例必須 v==0（不擋檔）且 adv≥1（有被記為參考）。
+    advisory_cases = {"length-cue: 正解離群長": mut_lencue_ratio,
+                      "length-cue: 僅正解帶括號": mut_lencue_paren,
+                      "length-cue: 誘答等長正解離群": mut_uniform,
+                      "lead-in-cue: 誘答共享前綴正解無": mut_leadin}
+    for name, mut in advisory_cases.items():
+        with tempfile.TemporaryDirectory() as b:
+            u = _good_unit()
+            mut(u)
+            _mk(b, u)
+            v, adv, _ = run(b)
+            results.append((f"壞例：{name} → 0 hard（不擋）且 ≥1 advisory",
+                            len(v) == 0 and len(adv) >= 1, (v, adv)))
 
     with tempfile.TemporaryDirectory() as b:
         u = _good_unit()
@@ -281,15 +297,15 @@ def _selftest():
         results.append(("parity: claim 無題引用 → advisory（非 hard）",
                         len(v) == 0 and len(adv) >= 1, (v, adv)))
 
-    # 短單字選項不應觸發 length-cue（避免 must/may 誤擋）
+    # 短單字選項不應觸發 length-cue（連 advisory 都不該有）
     with tempfile.TemporaryDirectory() as s:
         u = _good_unit()
         u["practice"][1]["answer"] = "must not"
         u["practice"][1]["options"] = ["must not", "must", "may", "can"]
         _mk(s, u)
         v, adv, _ = run(s)
-        results.append(("短單字選項 → 不觸發 length-cue",
-                        not any("length-cue" in x and "P2" in x for x in v), v))
+        results.append(("短單字選項 → 不觸發 length-cue（v 與 adv 皆無）",
+                        not any("length-cue" in x and "P2" in x for x in (v + adv)), (v, adv)))
 
     # FP 防護：四選項皆共享前綴（含正解）→ 不應觸發 lead-in cue
     with tempfile.TemporaryDirectory() as s:
@@ -301,8 +317,8 @@ def _selftest():
                                        "因為公車是沒有生命的名詞不能當主詞"]
         _mk(s, u)
         v, adv, _ = run(s)
-        results.append(("四選項皆共享前綴 → 不觸發 lead-in cue",
-                        not any("lead-in" in x for x in v), v))
+        results.append(("四選項皆共享前綴 → 不觸發 lead-in cue（v 與 adv 皆無）",
+                        not any("lead-in" in x for x in (v + adv)), (v, adv)))
 
     ok = True
     for desc, passed, v in results:
