@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 機率（prob）strand 第 12 個單元（t_sub 分科-數甲）。知識點 math.t_sub.prob.normal-distribution（常態分布與標準化 z 值）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，gloss 緊貼正確中文術語，首次 rendered 出現處）：常態分布 (normal distribution)、標準化 (standardization)、z 值 (z-score)、標準常態分布 (standard normal distribution)、平均數 (mean)、標準差 (standard deviation)。★scope（分科-數甲）：承 variance（會算平均數 μ 與標準差 σ）＋expected-value。本單元練『常態分布 N(μ, σ²)』：(1) 形狀＝鐘形、左右對稱於平均數 μ，由 μ（中心位置）與 σ（胖瘦）決定；(2) 經驗法則 68–95–99.7：距 μ 1 個 σ 內約 68%、2 個 σ 內約 95%、3 個 σ 內約 99.7%（對稱→單尾用一半）；(3) 標準化 z 值 z＝(X－μ)/σ＝『X 距平均幾個標準差』，把任何常態轉成標準常態 N(0, 1²)。不含：查標準常態表算任意機率、連續型密度函數積分、中央極限定理（抽樣另單元 sampling-confidence）。prereq＝variance＋expected-value。★自檢（math-unit defect-classes #1–#55）：事實全 .venv（scipy.stats.norm）驗（68–95–99.7＝0.6827/0.9545/0.9973；標準化 teach X=115 μ=100 σ=15→z=1、teach 2σ(70~130)約95%；Q1 μ=70 σ=10 X=90→z=2；Q2 μ=170 σ=6 P(164<X<176)=1σ內約68%；Q3 P(X>176)=P(X>μ+σ)=0.1587 約16%；Q4 概念；teach 值 95%、z=1 與 practice 答案 z=2、約68%、約16% 不重疊避#10）；★#53 已逐一 .venv 反算每個誘答路徑＝該 option 值（Q1：忘除 σ 得 X－μ=20、把 X 直接除 σ 忘減 μ 得 9、分子相減反向得 －2；Q2：用 2σ 的約95%、用 3σ 的約99.7%、只取一半 68%/2≈約34%；Q3：1σ 外兩尾沒除以 2 得約32%、答成 1σ 內約68%、答成 P(X<176)=50%+34%≈約84%）；★#55 無裸「量」動詞（描述用「衡量/量多少/標準差」，皆非裸量）；上標用 Unicode（σ²、1²），減號全形 U+FF0D，分數/比例用百分比與斜線；★figure＝常態分布三步卡（低幾何風險 #50/#51：三列①形狀 鐘形、對稱於 μ、②經驗法則 1σ≈68%、2σ≈95%、3σ≈99.7%、③標準化 z＝(X－μ)/σ；右欄全 text-anchor=start 同 x=96 統一 fs10.5；左標籤 x=22 不超欄距），alt 與 SVG text 逐字一致（#33）、figure 標題『常態分布：鐘形、對稱、用 z 值定位』寫進 alt 開頭；★MCQ options 全 bare（#47，說明在 distractor_rationales）、每個 distractor 乾淨單一錯誤路徑、同題數值兩兩相異（#14/#29）、長度均衡（#20/#28/#47）；★#54 題幹總稱詞涵蓋選項已檢；★導讀承諾順序＝實際 teach 牌組順序（#4/#46）：導讀『先講常態分布的形狀（鐘形、對稱於 μ）、再講經驗法則 68–95–99.7 並用 μ=100 σ=15 的 2σ≈95% 示範、再講標準化 z＝(X－μ)/σ 並用 X=115→z=1 示範、用一張卡整理、最後練』＝實際 teach1 intro→teach2 形狀+經驗法則+示範+標準化+示範→teach3 figure 卡→teach4 recap+練；worked-example 在 rendered teach。claim kind=definition。figure-only example 無 body。",
+ "page": "math_prob_normal_distribution.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.prob.normal-distribution",
+   "title_zh": "常態分布與標準化（z 值）",
+   "can_do": "我會辨認『常態分布 (normal distribution)』N(μ, σ²)：一條以平均數 μ 為中心、左右對稱的鐘形曲線，μ 決定中心、σ（標準差）決定胖瘦。我會用『經驗法則 68–95–99.7』估機率（距 μ 1 個 σ 內約 68%、2 個 σ 內約 95%、3 個 σ 內約 99.7%），也會用『標準化 (standardization)』算 z 值 (z-score) z＝(X－μ)/σ，看一個值距平均幾個標準差。",
+   "situation_group": "機率：常態分布",
+   "subject": "math",
+   "strand": "prob",
+   "est_minutes": 15,
+   "knowledge_point_ids": [
+    "math.t_sub.prob.normal-distribution"
+   ],
+   "prerequisites": [
+    "math.t_sub.prob.variance",
+    "math.t_adv.prob.expected-value"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-norm-shape",
+     "text": "常態分布 (normal distribution) N(μ, σ²)：很多自然或測量的資料（身高、體重、考試分數）畫成直方圖都接近一條『鐘形』曲線——中間高、兩邊慢慢變低，而且左右對稱。它由兩個數決定：平均數 (mean) μ 是對稱中心、決定鐘形的位置；標準差 (standard deviation) σ 決定鐘形的胖瘦（σ 大就矮胖、資料散；σ 小就瘦高、資料集中）。因為對稱，平均數兩邊各佔一半（50%）。",
+     "kind": "definition",
+     "source_refs": [
+      "常態分布的鐘形與對稱性（高中數學 分科-數甲）"
+     ],
+     "verification_ref": "常態 N(μ,σ²) 對稱於 μ（教學慣例）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-norm-empirical",
+     "text": "經驗法則 68–95–99.7：常態分布的資料，距平均數 μ 一個標準差 σ 以內（μ－σ 到 μ＋σ）約佔 68%、兩個 σ 以內約佔 95%、三個 σ 以內約佔 99.7%。因為對稱，單邊尾巴用『一半』算：例如大於 μ＋σ 的部分＝(100%－68%)/2＝約 16%。例：某次考試接近常態、平均 100 分、σ＝15，則 70 到 130 分（距平均 2 個 σ 內）約佔 95% 的人。",
+     "kind": "definition",
+     "source_refs": [
+      "常態分布 68-95-99.7 經驗法則（高中數學 分科-數甲）"
+     ],
+     "verification_ref": "68-95-99.7＝0.6827/0.9545/0.9973、P(X>μ+σ)=0.1587（.venv scipy.stats.norm）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-norm-zscore",
+     "text": "標準化 (standardization) 與 z 值 (z-score)：把一個常態分布的值 X 減掉平均數再除以標準差，z＝(X－μ)/σ，得到的 z 值就是『X 距離平均數幾個標準差』。標準化後的分布是『標準常態分布 (standard normal distribution)』N(0, 1²)——平均 0、標準差 1。z 值讓不同的常態（不同 μ、σ）可以放在同一把尺上比較。例：平均 100、σ＝15，某人考 115 分，z＝(115－100)/15＝1，表示他比平均高 1 個標準差。",
+     "kind": "definition",
+     "source_refs": [
+      "常態分布標準化 z=(X－μ)/σ（高中數學 分科-數甲）"
+     ],
+     "verification_ref": "z=(115－100)/15=1（.venv）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.prob.normal-distribution"
+     ],
+     "body": "這一單元學『常態分布』——很多測量資料（身高、分數）畫出來都像一座對稱的鐘。下面先講它的形狀（鐘形、以平均數 μ 為對稱中心，σ 決定胖瘦）；再講『經驗法則 68–95–99.7』，用平均 100、σ＝15 的考試、2 個 σ 內（70~130 分）約 95% 示範；再講『標準化』z＝(X－μ)/σ，用考 115 分、z＝1 示範。接著用一張卡整理，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.prob.normal-distribution"
+     ],
+     "body": "形狀：常態分布 N(μ, σ²) 是鐘形曲線，左右對稱於平均數 μ；μ 決定中心位置、σ（標準差）決定胖瘦，σ 越大越矮胖（資料越散）。對稱→平均兩邊各一半。經驗法則 68–95–99.7：距 μ 一個 σ 內約 68%、兩個 σ 內約 95%、三個 σ 內約 99.7%；對稱所以單邊尾巴取一半（例如大於 μ＋σ＝(100%－68%)/2＝約 16%）。示範：考試接近常態、平均 100、σ＝15，則 70~130 分（距平均 2 個 σ 內）約 95%。標準化：把值轉成『距平均幾個標準差』，z＝(X－μ)/σ，標準化後是標準常態 N(0, 1²)（平均 0、σ＝1）。示範：考 115 分，z＝(115－100)/15＝1，比平均高 1 個標準差。小提醒：z 要先減平均再除標準差、別只相減忘了除；經驗法則只在接近常態時才好用；單邊機率記得取一半。下面用一張卡整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.prob.normal-distribution"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 350 136' xmlns='http://www.w3.org/2000/svg'><text x='175' y='18' font-family='sans-serif' font-size='12' fill='#2f6f54' text-anchor='middle' font-weight='bold'>常態分布：鐘形、對稱、用 z 值定位</text><rect x='12' y='30' width='326' height='30' rx='6' fill='#eef4ff' stroke='#5b8def' stroke-width='1.1'/><text x='22' y='49' font-family='sans-serif' font-size='10.5' fill='#5b8def' font-weight='bold'>①形狀</text><text x='96' y='50' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='start'>鐘形，左右對稱於平均數 μ</text><rect x='12' y='64' width='326' height='30' rx='6' fill='#eef7ee' stroke='#4e9a6b' stroke-width='1.1'/><text x='22' y='83' font-family='sans-serif' font-size='10.5' fill='#4e9a6b' font-weight='bold'>②經驗法則</text><text x='96' y='84' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='start'>1σ≈68%、2σ≈95%、3σ≈99.7%</text><rect x='12' y='98' width='326' height='30' rx='6' fill='#fdf2e9' stroke='#d08a3e' stroke-width='1.1'/><text x='22' y='117' font-family='sans-serif' font-size='10.5' fill='#d08a3e' font-weight='bold'>③標準化</text><text x='96' y='118' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='start'>z＝(X－μ)/σ＝距平均幾個 σ</text></svg>",
+      "alt": "標題「常態分布：鐘形、對稱、用 z 值定位」。一張卡，三列。第一列藍底「①形狀」：「鐘形，左右對稱於平均數 μ」。第二列綠底「②經驗法則」：「1σ≈68%、2σ≈95%、3σ≈99.7%」。第三列橘底「③標準化」：「z＝(X－μ)/σ＝距平均幾個 σ」。",
+      "caption": "常態分布 N(μ, σ²)：① 形狀是鐘形、左右對稱於平均數 μ（σ 決定胖瘦）；② 經驗法則——距 μ 一個 σ 內約 68%、兩個 σ 內約 95%、三個 σ 內約 99.7%；③ 標準化 z＝(X－μ)/σ，算一個值距平均幾個標準差。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.prob.normal-distribution"
+     ],
+     "body": "最後練常態分布。重點：形狀是鐘形、對稱於平均數 μ（σ 決定胖瘦）；經驗法則 1σ≈68%、2σ≈95%、3σ≈99.7%（對稱→單邊取一半）；標準化 z＝(X－μ)/σ＝距平均幾個標準差。小提醒：算 z 要先減平均『再除』標準差，別只相減；經驗法則只在資料接近常態時好用；問『大於某值』『小於某值』這種單邊機率，記得把對稱的一半算進去。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "某常態分布的平均數是 70、標準差是 10。數值 90 的 z 值（標準化後的值）是多少？",
+     "answer": "2",
+     "kp_ids": [
+      "math.t_sub.prob.normal-distribution"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.prob.normal-distribution"
+     ],
+     "options": [
+      "2",
+      "20",
+      "9",
+      "－2"
+     ],
+     "distractor_rationales": {
+      "20": "這只算了『減平均』（90－70＝20），忘了再除以標準差；z＝(90－70)/10＝2。",
+      "9": "這是把數值直接除以標準差（90÷10＝9），忘了先減平均數；z＝(90－70)/10＝2。",
+      "－2": "這是把分子的相減方向弄反了（70－90＝－20，再除 10）；z 是『值減平均』＝(90－70)/10＝2（正號表示比平均大）。"
+     },
+     "answer_evidence": [
+      "c-norm-zscore"
+     ],
+     "feedback": "標準化 z＝(X－μ)/σ＝(90－70)/10＝20/10＝2：數值 90 比平均高 2 個標準差。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "某校學生身高接近常態分布，平均 170 公分、標準差 6 公分。身高在 164 公分到 176 公分之間的學生，大約佔多少？",
+     "answer": "約 68%",
+     "kp_ids": [
+      "math.t_sub.prob.normal-distribution"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.prob.normal-distribution"
+     ],
+     "options": [
+      "約 68%",
+      "約 95%",
+      "約 99.7%",
+      "約 34%"
+     ],
+     "distractor_rationales": {
+      "約 95%": "約 95% 是『距平均 2 個標準差內』（158~182 公分）；164~176 只是距平均 1 個標準差內（170±6），約 68%。",
+      "約 99.7%": "約 99.7% 是『距平均 3 個標準差內』（152~188 公分）；題目的 164~176 是 1 個標準差內，約 68%。",
+      "約 34%": "這只取了一半（68%÷2）；164~176 是平均兩側各 1 個 σ、合起來約 68%，不是只算一邊。"
+     },
+     "answer_evidence": [
+      "c-norm-empirical"
+     ],
+     "feedback": "164~176＝170±6＝距平均 1 個標準差內，依經驗法則約 68%。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "同上題（身高接近常態，平均 170 公分、標準差 6 公分）。身高『高於 176 公分』的學生，大約佔多少？",
+     "answer": "約 16%",
+     "kp_ids": [
+      "math.t_sub.prob.normal-distribution"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.prob.normal-distribution"
+     ],
+     "options": [
+      "約 16%",
+      "約 32%",
+      "約 68%",
+      "約 84%"
+     ],
+     "distractor_rationales": {
+      "約 32%": "這是『距平均 1 個標準差以外』的兩尾合計（100%－68%＝32%），忘了只問高於 176 的一邊；對稱→取一半＝約 16%。",
+      "約 68%": "約 68% 是『164~176 之間』（1 個標準差內）的比例，不是高於 176 的尾巴；尾巴＝(100%－68%)/2＝約 16%。",
+      "約 84%": "約 84% 是『低於 176 公分』的比例（50%＋34%）；題目問高於 176，＝100%－84%＝約 16%。"
+     },
+     "answer_evidence": [
+      "c-norm-empirical"
+     ],
+     "feedback": "176＝170＋6＝平均加 1 個標準差；高於它的尾巴＝(100%－68%)/2＝約 16%。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "關於常態分布的標準化 z 值，下列哪一個敘述正確？",
+     "answer": "z＝(X－μ)/σ，表示 X 距離平均數幾個標準差",
+     "kp_ids": [
+      "math.t_sub.prob.normal-distribution"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.prob.normal-distribution"
+     ],
+     "options": [
+      "z＝(X－μ)/σ，表示 X 距離平均數幾個標準差",
+      "z＝X－μ，就是值和平均數的差",
+      "z＝X/σ，就是值除以標準差",
+      "z 越大，表示這個值出現的機率越大"
+     ],
+     "distractor_rationales": {
+      "z＝X－μ，就是值和平均數的差": "只減平均、沒有除以標準差，單位還是原來的；z 要再除以 σ 才是『幾個標準差』，z＝(X－μ)/σ。",
+      "z＝X/σ，就是值除以標準差": "少了先減平均數這一步；z＝(X－μ)/σ，要先把值拉到以平均為原點。",
+      "z 越大，表示這個值出現的機率越大": "剛好相反——z 越大表示離平均越遠、在鐘形的尾巴，那裡的資料反而越少；z 衡量的是『距平均幾個標準差』不是機率大小。"
+     },
+     "answer_evidence": [
+      "c-norm-zscore"
+     ],
+     "feedback": "標準化 z＝(X－μ)/σ：先減平均數、再除以標準差，得到『X 距離平均幾個標準差』。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（常態分布 N(μ, σ²)：鐘形、對稱於平均數 μ、σ 決定胖瘦。經驗法則 1σ≈68%、2σ≈95%、3σ≈99.7%，對稱→單邊取一半。標準化 z＝(X－μ)/σ＝距平均幾個標準差，標準常態是 N(0, 1²)。算 z 先減平均再除標準差；單邊機率記得取一半）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
