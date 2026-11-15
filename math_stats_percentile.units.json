@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 統計（stats）strand t_mid 單元。知識點 math.t_mid.stats.percentile（百分位數）。tier=t_mid（會考）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：百分位數 (percentile)、百分等級 (percentile rank, PR)。★scope（會考 t_mid）：百分位數把排好的資料分成一百等份；第 k 百分位數 Pk 大約是「有 k% 的資料小於等於它」的位置值。與四分位數的對應（定義、普世無慣例爭議）：第25百分位數 P25＝Q1、第50百分位數 P50＝中位數、第75百分位數 P75＝Q3。百分等級 PR＝某個數在整組資料中「大約贏過百分之幾」。prereq＝全距與四分位數 range-quartile。不限精確位置內插計算（慣例多樣，不教）。★自檢（math-unit defect-classes #1–#58）：Q1=P25/中位=P50/Q3=P75 為定義普世（無慣例爭議，不依 numpy percentile 內插）；teach worked PR=80（約80%在以下）；practice：Q1 中位數→P50(50)、Q2 Q3→P75(75)、Q3 PR=90→約90%在以下、Q4 P25→Q1（概念）；teach 例數 80 與 practice 答案 {50,75,90}（及 Q1）無交集避#10。★figure＝百分位數↔四分位數對照卡（三列 P25=Q1／P50=中位數／P75=Q3，右欄 text-anchor=start 同 x 統一 fs），alt 與 SVG text 逐字一致（#33）、標題『百分位數：把資料分成一百份』寫進 alt 開頭；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53）、兩兩相異（#29）、長度均衡（#28）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_stats_percentile.html",
+ "units": [
+  {
+   "unit_id": "math.t_mid.stats.percentile",
+   "title_zh": "百分位數",
+   "can_do": "我知道『百分位數 (percentile)』把排好的資料分成一百等份：第 k 百分位數（記成 Pk）大約是「有 k% 的資料小於等於它」的那個位置的值。我也知道它和四分位數的對應：第25百分位數 P25 就是 Q1、第50百分位數 P50 就是中位數、第75百分位數 P75 就是 Q3。我還知道一個數的『百分等級 (percentile rank, PR)』代表它在整組資料裡大約贏過百分之幾。",
+   "situation_group": "統計：百分位數",
+   "subject": "math",
+   "strand": "stats",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_mid.stats.percentile"
+   ],
+   "prerequisites": [
+    "math.t_mid.stats.range-quartile"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-pct-def",
+     "text": "百分位數 (percentile) 把排好的資料分成一百等份。第 k 百分位數（寫成 Pk）大約是「有 k% 的資料小於等於它」的位置的值。例如第 30 百分位數 P30，大約是「約 30% 的資料比它小或和它一樣」的那個值；數字越大的百分位數，位置越靠資料的高端。",
+     "kind": "definition",
+     "source_refs": [
+      "百分位數的意義（國中數學 會考）"
+     ],
+     "verification_ref": "Pk＝約 k% 資料 ≤ 它的位置值（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-pct-quartile",
+     "text": "百分位數和四分位數互相對應（這是定義，不管用哪種算法都一樣）：第 25 百分位數 P25 就是第一四分位數 Q1；第 50 百分位數 P50 就是中位數（也是 Q2）；第 75 百分位數 P75 就是第三四分位數 Q3。所以「中位數」換個說法就是「第 50 百分位數」。",
+     "kind": "definition",
+     "source_refs": [
+      "百分位數與四分位數的對應（國中數學 會考）"
+     ],
+     "verification_ref": "P25=Q1、P50=中位數、P75=Q3（定義普世）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-pct-pr",
+     "text": "一個數的百分等級 (percentile rank, PR) 代表它在整組資料裡大約贏過（大於或等於）百分之幾的資料。例如某位同學的成績百分等級 PR 是 80，表示全部考生裡大約有 80% 的人成績比他低或和他一樣——PR 越高，表示在這組人裡的相對位置越前面。",
+     "kind": "definition",
+     "source_refs": [
+      "百分等級 PR 的意義（國中數學 會考）"
+     ],
+     "verification_ref": "PR=k 表示約 k% 資料 ≤ 該數（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.stats.percentile"
+     ],
+     "body": "這一單元學『百分位數』——把一組排好的資料分成一百等份來看位置。下面先講第 k 百分位數 Pk 是什麼（大約有 k% 的資料小於等於它）；再講它和四分位數的對應（P25＝Q1、P50＝中位數、P75＝Q3）；接著講一個數的百分等級 PR 代表贏過百分之幾；用一張對照卡整理，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.stats.percentile"
+     ],
+     "body": "百分位數把排好的資料分成一百等份。第 k 百分位數 Pk 大約是「有 k% 的資料小於等於它」的位置值；k 越大、位置越靠高端。它和四分位數有固定對應（這是定義，和算法無關）：P25 就是 Q1、P50 就是中位數、P75 就是 Q3，所以「中位數」也可以說成「第 50 百分位數」。另外，一個數的百分等級 PR 是反過來看：它代表這個數在整組資料裡大約贏過百分之幾。示範：某位同學成績的百分等級 PR 是 80，就表示全部考生裡大約有 80% 的人成績比他低或一樣。下面用一張對照卡整理百分位數和四分位數的關係。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_mid.stats.percentile"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='20' font-family='sans-serif' font-size='13' fill='#2f6f54' text-anchor='middle' font-weight='bold'>百分位數：把資料分成一百份</text><rect x='18' y='30' width='324' height='38' rx='7' fill='#eef4ff' stroke='#5b8def' stroke-width='1.2'/><text x='28' y='54' font-family='sans-serif' font-size='11.5' fill='#5b8def' font-weight='bold'>P25</text><text x='96' y='54' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='start'>第25百分位數 ＝ Q1</text><rect x='18' y='74' width='324' height='38' rx='7' fill='#eef7ee' stroke='#4e9a6b' stroke-width='1.2'/><text x='28' y='98' font-family='sans-serif' font-size='11.5' fill='#4e9a6b' font-weight='bold'>P50</text><text x='96' y='98' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='start'>第50百分位數 ＝ 中位數</text><rect x='18' y='118' width='324' height='38' rx='7' fill='#fdf2e9' stroke='#d08a3e' stroke-width='1.2'/><text x='28' y='142' font-family='sans-serif' font-size='11.5' fill='#d08a3e' font-weight='bold'>P75</text><text x='96' y='142' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='start'>第75百分位數 ＝ Q3</text></svg>",
+      "alt": "標題「百分位數：把資料分成一百份」。一張卡，三列。第一列藍底「P25」：「第25百分位數 ＝ Q1」。第二列綠底「P50」：「第50百分位數 ＝ 中位數」。第三列橘底「P75」：「第75百分位數 ＝ Q3」。",
+      "caption": "百分位數與四分位數的對應（定義）：第25百分位數 P25＝Q1；第50百分位數 P50＝中位數；第75百分位數 P75＝Q3。第 k 百分位數大約是有 k% 資料小於等於它的位置值。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.stats.percentile"
+     ],
+     "body": "最後練百分位數。重點：第 k 百分位數 Pk 大約是「有 k% 的資料小於等於它」的位置值；對應四分位數 P25＝Q1、P50＝中位數、P75＝Q3；百分等級 PR 代表一個數在整組資料裡大約贏過百分之幾。小提醒：中位數就是第 50 百分位數；百分位數和百分等級互為「位置」與「贏過幾趴」的兩種看法。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一組資料的中位數，相當於第幾百分位數？",
+     "answer": "第 50 百分位數",
+     "kp_ids": [
+      "math.t_mid.stats.percentile"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.stats.percentile"
+     ],
+     "options": [
+      "第 50 百分位數",
+      "第 25 百分位數",
+      "第 75 百分位數",
+      "第 100 百分位數"
+     ],
+     "distractor_rationales": {
+      "第 25 百分位數": "第 25 百分位數 P25 對應的是 Q1（下四分位數），不是中位數；中位數在正中間、對應 P50。",
+      "第 75 百分位數": "第 75 百分位數 P75 對應的是 Q3（上四分位數），不是中位數；中位數對應 P50。",
+      "第 100 百分位數": "第 100 百分位數會對到資料的最大端，不是中間；中位數在正中間、對應第 50 百分位數。"
+     },
+     "answer_evidence": [
+      "c-pct-quartile",
+      "c-pct-def"
+     ],
+     "feedback": "中位數在資料正中間，大約有 50% 的資料小於等於它，所以相當於第 50 百分位數（P50）。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "第三四分位數 Q3 相當於第幾百分位數？",
+     "answer": "第 75 百分位數",
+     "kp_ids": [
+      "math.t_mid.stats.percentile"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.stats.percentile"
+     ],
+     "options": [
+      "第 75 百分位數",
+      "第 50 百分位數",
+      "第 25 百分位數",
+      "第 3 百分位數"
+     ],
+     "distractor_rationales": {
+      "第 50 百分位數": "第 50 百分位數對應中位數（Q2），不是 Q3；Q3 在資料的 3/4 位置、對應 P75。",
+      "第 25 百分位數": "第 25 百分位數對應 Q1（下四分位數），不是 Q3；Q3 對應 P75。",
+      "第 3 百分位數": "把「第三」四分位數的 3 直接當成百分位數的 3 了；Q3 在資料約 3/4（75%）的位置，對應第 75 百分位數。"
+     },
+     "answer_evidence": [
+      "c-pct-quartile"
+     ],
+     "feedback": "Q3 在資料約 3/4 的位置，大約有 75% 的資料小於等於它，所以相當於第 75 百分位數（P75）。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "某位同學考試成績的百分等級 PR 是 90。這大約表示什麼？",
+     "answer": "全部考生裡大約有 90% 的人成績比他低或一樣",
+     "kp_ids": [
+      "math.t_mid.stats.percentile"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.stats.percentile"
+     ],
+     "options": [
+      "全部考生裡大約有 90% 的人成績比他低或一樣",
+      "他只答對了 90% 的題目",
+      "全部考生裡大約有 90% 的人成績比他高",
+      "他的分數是 90 分"
+     ],
+     "distractor_rationales": {
+      "他只答對了 90% 的題目": "PR 講的是在整組人裡的相對位置，不是答對率；PR 90 表示大約贏過 90% 的人。",
+      "全部考生裡大約有 90% 的人成績比他高": "方向反了：PR 越高代表位置越前面；PR 90 是大約有 90% 的人比他低或一樣，不是比他高。",
+      "他的分數是 90 分": "PR 是相對位置（百分等級），不是實際分數；PR 90 和「考 90 分」是兩回事。"
+     },
+     "answer_evidence": [
+      "c-pct-pr"
+     ],
+     "feedback": "百分等級 PR 90 表示在整組考生裡，大約有 90% 的人成績比他低或一樣（相對位置很前面），不是分數也不是答對率。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "第 25 百分位數 P25，就是下列哪一個？",
+     "answer": "第一四分位數 Q1",
+     "kp_ids": [
+      "math.t_mid.stats.percentile"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.stats.percentile"
+     ],
+     "options": [
+      "第一四分位數 Q1",
+      "中位數",
+      "第三四分位數 Q3",
+      "最小值"
+     ],
+     "distractor_rationales": {
+      "中位數": "中位數對應第 50 百分位數 P50，不是 P25；P25 在資料約 1/4 的位置、對應 Q1。",
+      "第三四分位數 Q3": "Q3 對應第 75 百分位數 P75，不是 P25；P25 對應 Q1。",
+      "最小值": "最小值大約在第 0 百分位數的位置；P25 在約 1/4 處、對應 Q1，不是最小值。"
+     },
+     "answer_evidence": [
+      "c-pct-quartile"
+     ],
+     "feedback": "第 25 百分位數 P25 在資料約 1/4 的位置，正好是第一四分位數 Q1。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（百分位數把資料分成一百份，第 k 百分位數 Pk 大約有 k% 資料小於等於它；對應 P25＝Q1、P50＝中位數、P75＝Q3；百分等級 PR 代表一個數贏過百分之幾）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
