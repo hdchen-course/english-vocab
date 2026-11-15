@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 02:02 stats strand collect-organize 資料的蒐集與整理 5/5 DONE-GATE 全綠（t_base 國小，stats 根節點）→ stats 6/18
+- **math_stats_collect_organize frozen `61ad7d9cf328ff11`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==61ad7d9c／per_page_5clean collect_organize absent／iPad 四角色簽核（右緣0%，畫記→統計表對照卡三列對齊、合計行置中）。
+- 畫記（正字記號，一筆一畫、滿五畫成一個『正』字、一個正＝5 筆、五個一數）→ 數出每類數量 → 整理成一欄類別一欄數量的統計表；各類數量總和＝資料總筆數（可檢查）。teach worked 籃球正正=10/游泳正一=6/跑步正=5/合計21。Q1 畫記 正正一=11、Q2 統計表 7/3/5 總和=15、Q3 概念（滿五成正五個一數）、Q4 讀表選最多（蘋果）。全部 .venv 驗；teach 值集{10,6,5,21}與 practice 答案{11,15}無交集避#10。prereq=[]（stats 根節點）。
+- ★R1 抓 1 major（panel 全票）：我 pre-freeze 精簡 Q3 正解加「就」字卻沒同步 `distractor_rationales` key → unit.js 精確查表漏該誘答回饋（核心迷思 正=5 vs 正=1 的回饋被靜默丟失）。R1 首輪直接修（key 逐字對齊）、re-freeze 61ad7d9c、重跑 R1-R5 連 5 clean。★banked 新 defect-class #59（改 option 字串必須同步 rationale key，unit.js 精確查表；與 #49 同族）。length-cue advisory 以精簡正解消除（非 padding，遵 HD 2026-11-15 裁示）。
+- 下一步：stats 其餘 12 單元（bar-line-chart/pie-chart/table-read/frequency-table/cumulative-relative/variance-std/standardization/bivariate-scatter/correlation/regression-line/sampling-survey/risk-decision）；接著 calc/vector 等。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-16 01:41 stats strand percentile 百分位數 5/5 DONE-GATE 全綠（t_mid 會考）→ stats 5/18
 - **math_stats_percentile frozen `0645dbdd4b92c872`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==0645dbdd／per_page_5clean percentile absent／iPad 四角色簽核（右緣0%，對照卡三列 P25/P50/P75 幾何過）。
 - 百分位數＝把排好資料分成一百等份；第 k 百分位數 Pk 大約是「有 k% 資料小於等於它」的位置值。★對應（定義普世、零慣例爭議、不依 numpy percentile 內插）：P25＝Q1、P50＝中位數、P75＝Q3。百分等級 PR＝某數在整組資料裡大約贏過百分之幾。teach worked PR=80（約80%在以下，與 practice 答案 {50,75,90,Q1} 無交集避#10）。practice：Q1 中位數→P50(50)、Q2 Q3→P75(75)、Q3 PR=90→約90%在以下、Q4 P25→Q1。prereq＝range-quartile。
