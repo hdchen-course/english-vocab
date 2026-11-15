@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 10:58 prob strand #8 bayes 5/5 DONE-GATE 全綠（貝氏定理初步）
+- **math_prob_bayes frozen_sha `221a5cc5ba65c6bf`**（R1-R5 連 5 clean、L3 每輪 exit 0、confirmed 全 0）。DONE-GATE 全綠：per_page 無 violation／scan PASS／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen＋iPad 四角色 render 綁 sha（貝氏三步卡 ①算分母/②反過來/③別搞混；三列左對齊 #50/#51；三視窗右緣0%；四角色過）。
+- **scope（t_adv 學測初步）**：承 conditional＋multiplication-rule。全機率算分母 P(B)→P(A|B)=P(B|A)·P(A)/P(B)→P(A|B)≠P(B|A)。事實全 .venv：teach 工廠 P(A|不良)=3/7；Q1 P(紅)=2/5、Q2 P(甲|紅)=3/4、Q3 P(甲|不良)=1/5、Q4 概念。
+- **★收斂途中修 2 個 panel-confirmed minor（皆 R15 術語一致）**：(1) R3 teach4 用『先驗機率』其他處『事前機率』→統一；(2) 重跑 R3 panel（4 vs 3，engine confirmed）_note 列 事前機率 (prior) 為 R15 term 但 rendered 全 bare →首次 rendered 補 (prior)。兩次誠實 de-converge 後重收斂。#53 pre-freeze 使 distractor 零 value-mismatch。
+- **下一步**：續 prob strand 其餘 5 KP（expected-value〔t_adv〕／variance / binomial-distribution / normal-distribution / sampling-confidence〔t_sub〕）。prob strand 14 中 9 完成，剩 5。
+
 ## 2026-11-15 09:53 prob strand #7 multiplication-rule 5/5 DONE-GATE 全綠（乘法法則與相依事件）
 - **math_prob_multiplication_rule frozen_sha `35d188e65d04a57b`**（R1-R5 連 5 clean、L3 每輪 exit 0、confirmed 全 0）。DONE-GATE 全綠：per_page 無 violation／scan PASS／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen＋iPad 四角色 render 綁 sha（乘法法則卡 figure：①公式 P(A∩B)=P(A)·P(B|A)、②相依 不放回、③獨立 放回；三列左對齊 x=96/start/fs10.5〔#50/#51〕；三視窗右緣0%；四角色過）。
 - **scope（t_adv 學測）**：承 conditional。乘法法則一般式＋相依(不放回)vs獨立(放回)辨別。事實全 .venv：teach 不放回 3/5·2/4=3/10、放回 3/5·3/5=9/25；Q1 4/6·3/5=2/5、Q2 公式、Q3 5/8·3/7=15/56、Q4 相依/獨立。teach worked 3/10、9/25 與 practice 答案不重疊（#10）。
