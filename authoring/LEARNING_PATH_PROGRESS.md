@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 21:18 trig strand superposition 正餘弦疊合 5/5 DONE-GATE 全綠（分科-數甲）→ trig 12/14
+- **math_trig_superposition frozen `b107aa4fd460b33d`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 七關全綠。build_status：math trig＝14 KP／12 覆蓋／2 缺。
+- a sinθ＋b cosθ＝R sin(θ＋φ)，R＝√(a²＋b²)（振幅）、φ 由 cosφ＝a/R 且 sinφ＝b/R 兩條件定；最大值＝R、最小值＝－R。R/φ/max 全 sympy/數值驗。prereq＝sum-difference。
+- R1 修 2（Q2 換 5sinθ+12cosθ=13 避 #10 teach 的 3,4,5 次例重疊 major；teach 重複 R15 gloss 刪 minor）。R2 抓 stale _note（自檢清單 Q2 仍寫 5）＝defect-class #49→誠實 de-converge（清 R1 留 _deconverge_trace）→修 _note Q2 13→重凍 b107aa4f→重收斂 5 clean。
+- 下一條 trig 缺 2：product-sum（積化和差/和差化積）、equation（三角方程式）；接著 stats/calc/vector 等未開 strand。hub AC-VIZ-1 figure_signoff 債待清。
+
 ## 2026-11-15 20:35 trig strand double-half-angle 倍角與半角公式 5/5 DONE-GATE 全綠（分科-數甲）→ trig 11/14
 - **math_trig_double_half_angle frozen `576d335f88c93057`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 七關全綠。build_status：math trig＝14 KP／11 覆蓋／3 缺。
 - 倍角 sin2θ=2sinθcosθ、cos2θ=cos²θ－sin²θ=1－2sin²θ=2cos²θ－1、tan2θ=2tanθ/(1－tan²θ)；半角 cos(θ/2)=±√((1＋cosθ)/2)、sin(θ/2)=±√((1－cosθ)/2)。恆等＋數值全 sympy 驗。prereq＝sum-difference。
