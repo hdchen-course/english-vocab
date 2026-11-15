@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 00:01 stats strand central-tendency 集中趨勢 5/5 DONE-GATE 全綠（t_mid 會考）→ stats 2/18
+- **math_stats_central_tendency frozen `778cb1803f103654`**（R1-R5 連 5 clean、L3 每輪 exit 0，★零 de-converge：#57/#58 心得生效、首輪即乾淨）。DONE-GATE 全綠：scan PASS／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==778cb180／per_page_5clean central_tendency absent／iPad 4-role signoff（右緣0%）。build_status：math stats＝18 KP／2 覆蓋／16 缺。
+- 平均數/中位數/眾數定義與計算＋何時用哪個（極端值時平均數被拉動、中位數穩健、代表多數用中位數）。Q1 眾數 [6,6,10,14,20]→6、Q2 中位數 [10,20,30,50]→(20+30)/2=25、Q3 最受極端值影響＝平均數、Q4 代表多數＝中位數。teach worked [2,3,3,4,8]→mean4/median3/mode3 一次展示三量。全部 statistics 模組 .venv 驗。prereq＝mean。
+- 本單元驗證 #57（誘答值勿撞題幹資料值，Q1 眾數誘答 median10/mean11.2/max20 皆≠6；Q2 的 20/30＝只取單一中間數單一路徑＝#57 中位數類例外）、#58（量詞用杯數/分鐘等合理範圍）心得，首輪即零缺陷收斂。
+- 下一步：stats 其餘 16 單元（collect-organize/bar-line-chart/pie-chart/table-read/frequency-table/cumulative-relative/range-quartile/box-plot/percentile/variance-std/standardization/bivariate-scatter/correlation/regression-line/sampling-survey/risk-decision）；接著 calc/vector 等。hub AC-VIZ-1 figure_signoff 債待清。
+
 ## 2026-11-15 23:40 stats strand mean 算術平均數 5/5 DONE-GATE 全綠（t_base 國小）→ stats 1/18（開新 strand）
 - **math_stats_mean frozen `83143605b3e96cb3`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：scan PASS／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==83143605／per_page_5clean stats_mean absent／iPad 4-role signoff（右緣0%）。build_status：math stats＝18 KP／1 覆蓋／17 缺。
 - 平均數＝總和÷個數；會由資料算平均、也會由「總和＝平均×個數」反推總和。Q1 [4,8,9]→7、Q2 [6,10,20]→12、Q3 [60,70,80,90,150]→90、Q4 反推 15×4＝60。全部 .venv 驗。prereq=[]（根節點）。
