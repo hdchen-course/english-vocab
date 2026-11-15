@@ -7,6 +7,11 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 16:37 prob strand #12 normal-distribution 5/5 DONE-GATE 全綠（常態分布與標準化 z 值，分科-數甲）
+- **math_prob_normal_distribution frozen `bf8e7b21e3fc30df`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 七關全綠。68-95-99.7 經驗法則、z=(X－μ)/σ、鐘形對稱。事實全 .venv(scipy.stats.norm)。
+- 收斂修 2 個：離線 draft 時自抓 #55 裸量（z 量→z 衡量）；R2 R15 gloss minor（6-lens）標準常態分布 gloss 原只在非 rendered claim→teach2 首次 rendered 處補「標準常態分布 (standard normal distribution)」，de-converge 棄 R1 重收斂。
+- **prob strand 14 中 13 完成**；剩 sampling-confidence（已 drafted frozen 5715c45、R1-R5 待跑）。
+
 ## 2026-11-15 15:31 prob strand #11 binomial 5/5 DONE-GATE 全綠（二項分布，分科-數甲）
 - **math_prob_binomial_distribution frozen `d9c36d4be50d2884`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 七關全綠（scan PASS／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen／per_page_5clean 0／iPad 四角色綁 sha）。憑證恢復後 R4-R5 續跑收完。
 - **收斂迭代較多但每修皆 panel-confirmed**：Q4 collocation（數→求平均值 minor）、c-binom-ev 裸量 garden-path（→衡量 major，#55）、末句植入「變異數也乘k再加」誤解（→中性 major）、R15 gloss 期望值/變異數（minor）、prerequisites 補 combination（major，wiring-only content_sha 不變未作廢 streak）。commit 到 R5 bank。
