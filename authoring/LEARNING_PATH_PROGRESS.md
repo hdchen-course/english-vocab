@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 20:01 trig strand sum-difference 和差角公式 5/5 DONE-GATE 全綠（分科-數甲）→ trig 10/14
+- **math_trig_sum_difference frozen `ec0b19412cd2ddb8`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 七關全綠（scan PASS／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen／per_page_5clean 0 self／iPad 四角色綁 sha，右緣0%）。**build_status：math trig＝14 KP／10 覆蓋／4 缺**。
+- sin/cos/tan 六個和差角公式＋符號規則（sin 中間同左號、cos 相反號、tan 分子同號分母相反號），六恆等＋surd 全 sympy 驗（sin75°=(√6+√2)/4、cos75°=(√6−√2)/4）。
+- R1 累計修 3 個 panel-confirmed：_note 範例字元 U+FE63→U+FF0D（minor）；teach1 重複 R15 gloss 刪（minor，符合 gloss-once）；★Q4 誘答 rationale 誤植「整選項＝tan(α−β)」（major）→澄清「分母加號雖是差角特徵、但差角分子也要減、故兩者都不是」。R2-R5 連 clean。
+- **教訓（banked）**：此單元 R1 抓到「誘答 rationale 用『是 X』命名整選項等值，但 X 並不真等於該選項」的新缺陷類——寫 distractor rationale 時，若用「是 X」句式，X 必須真正等於該誘答選項，否則植入假公式。
+- 下一條 trig 缺 4：double-half-angle（倍角半角）、superposition（正餘弦疊合）、product-sum（積化和差）、equation（三角方程式）；接著 stats/calc/vector 等未開 strand。hub AC-VIZ-1 figure_signoff 債待清。
+
 ## 2026-11-15 17:39 ★prob strand 真正 14/14 完成★ — t_base likelihood-intuition 5/5 DONE-GATE 全綠（可能性直覺，國小）
 - **math_prob_likelihood frozen `673d755a0113ed6b`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 七關全綠（scan PASS／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen／per_page_5clean 0 self／iPad 四角色綁 sha，右緣0%）。**build_status 實測 math prob＝14 KP／14 覆蓋／0 缺／14 單元／14 已收斂頁**。
 - 國小直覺單元：純用可能性語彙（一定/不可能/較可能/較不可能/一樣可能＝公平），無分數、無 P=|A|/|S| 公式、無 ≥≤ 未教符號。核心把關：較不可能≠不可能、公平≠一定會出現、比數量多少判較可能/較不可能。計數全 .venv 驗。
