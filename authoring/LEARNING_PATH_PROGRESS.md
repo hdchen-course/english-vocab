@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 22:56 trig strand equation 三角方程式的解法 5/5 DONE-GATE 全綠（分科-數甲）→ ★trig 14/14 全 strand 完成★
+- **math_trig_equation frozen `2b6b0142c9e23992`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：scan PASS／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==2b6b0142／per_page_5clean equation absent／iPad 4-role signoff（右緣0%）。build_status：math trig＝14 KP／14 覆蓋／0 缺（★三角 strand 完整★）。
+- 解 sinθ=k、cosθ=k、tanθ=k 三步：①特別角求參考角 α、②看 k 正負號定象限（sin 看上下、cos 看左右、tan 看正負）、③寫出 [0,2π) 所有解，要全解再加週期（sin/cos 2kπ、tan kπ）。teach worked cosθ=½→π/3,5π/3。全解集＋每誘答角三角值 sympy solveset/數值驗。prereq＝ratio-generalized＋ratio-acute。
+- R1 抓 blocker：Q3 誘答把 tan 週期 π 誤稱「半週期」（與全單元「週期 π」矛盾）→直接修（R1 first round）。de-converge 後 R3 抓 2 blocker（同類）：「k＝±1 只有一個解」未限定函數、對 tan 假（Q3 tanθ=1 兩解）、與自身題目矛盾→誠實 de-converge（清 R1-2 留 trace、harvest_override 留痕）、5 處限定 sin/cos＋註 tan 無邊界、重 freeze 2b6b0142、重 render 4-role 重簽→R1-R5 重收斂連 5 clean。
+- ★trig strand（14 KP）全數 DONE：ratio-acute/ratio-generalized/radian/basic-identity/graph/law-of-cosines/law-of-sines/sum-difference/double-half-angle/superposition/product-sum/equation 等。下一步：math 其他未開 strand（stats 統計、calc 微積分、vector 向量…）。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d，須重 render+4-role 重簽）。
+
 ## 2026-11-15 22:14 trig strand product-sum 積化和差與和差化積 5/5 DONE-GATE 全綠（分科-數甲）→ trig 13/14
 - **math_trig_product_sum frozen `794c3da6160d67f7`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：scan PASS／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==794c3da6／per_page_5clean product_sum absent／iPad 4-role signoff（右緣0%）。build_status：math trig＝14 KP／13 覆蓋／1 缺。
 - 積化和差 sinA cosB＝½[sin(A＋B)＋sin(A－B)]、cosA cosB＝½[cos(A＋B)＋cos(A－B)]、sinA sinB＝½[cos(A－B)－cos(A＋B)]；和差化積 sinX＋sinY＝2 sin((X＋Y)/2) cos((X－Y)/2)、cosX＋cosY＝2 cos((X＋Y)/2) cos((X－Y)/2)。teach worked sin75°cos15°＝(2＋√3)/4。恆等＋每誘答值全 sympy 驗。prereq＝sum-difference。
