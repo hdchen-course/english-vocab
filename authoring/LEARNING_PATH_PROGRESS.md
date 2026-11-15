@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 23:40 stats strand mean 算術平均數 5/5 DONE-GATE 全綠（t_base 國小）→ stats 1/18（開新 strand）
+- **math_stats_mean frozen `83143605b3e96cb3`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：scan PASS／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==83143605／per_page_5clean stats_mean absent／iPad 4-role signoff（右緣0%）。build_status：math stats＝18 KP／1 覆蓋／17 缺。
+- 平均數＝總和÷個數；會由資料算平均、也會由「總和＝平均×個數」反推總和。Q1 [4,8,9]→7、Q2 [6,10,20]→12、Q3 [60,70,80,90,150]→90、Q4 反推 15×4＝60。全部 .venv 驗。prereq=[]（根節點）。
+- 本單元 panel 抓 3 個 pedagogical minor（皆非正確性）：R2「分數150」超國小滿分常識→改「攤位賣出杯數」；R2 Q2 ÷(n−1)=18 撞資料最大值 18（#53 非乾淨單一路徑）→改資料 6,10,20；R1 _note 自檢 stale（#49）→同步。各經誠實 de-converge／直接修。★新 defect-class 心得：MCQ 誘答值不可等於題幹任一資料值（會造成第二條迷思路徑到同一選項）、國小情境量詞數值勿超常識（分數≤100）。
+- 下一步：stats 其餘 17 單元（collect-organize/bar-line-chart/pie-chart/table-read/frequency-table/central-tendency/variance-std/correlation/regression-line…）；接著 calc/vector 等未開 strand。hub AC-VIZ-1 figure_signoff 債待清。
+
 ## 2026-11-15 22:56 trig strand equation 三角方程式的解法 5/5 DONE-GATE 全綠（分科-數甲）→ ★trig 14/14 全 strand 完成★
 - **math_trig_equation frozen `2b6b0142c9e23992`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：scan PASS／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==2b6b0142／per_page_5clean equation absent／iPad 4-role signoff（右緣0%）。build_status：math trig＝14 KP／14 覆蓋／0 缺（★三角 strand 完整★）。
 - 解 sinθ=k、cosθ=k、tanθ=k 三步：①特別角求參考角 α、②看 k 正負號定象限（sin 看上下、cos 看左右、tan 看正負）、③寫出 [0,2π) 所有解，要全解再加週期（sin/cos 2kπ、tan kπ）。teach worked cosθ=½→π/3,5π/3。全解集＋每誘答角三角值 sympy solveset/數值驗。prereq＝ratio-generalized＋ratio-acute。
