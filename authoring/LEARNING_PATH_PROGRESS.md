@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-15 08:39 prob strand #6 conditional 5/5 DONE-GATE 全綠（條件機率，一次過無 de-converge）
+- **math_prob_conditional frozen_sha `ef720bf23b77eda8`**（R1-R5 連 5 clean、L3 每輪 exit 0、confirmed 全 0；**無任何 de-converge**——#53 凍檔前 .venv 反算誘答路徑奏效）。DONE-GATE 全綠：per_page 無 violation／scan PASS／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen＋iPad 四角色 render 綁 sha（條件機率卡 figure：①縮小樣本、②算比例、③公式 P(A|B)=P(A∩B)/P(B)；三列左對齊 x=96/start/fs10.5〔#50/#51 合規〕；三視窗右緣0%；四角色過）。
+- **scope（t_adv 學測）**：承 mutually-exclusive（∩、P(A∩B) 已識）。縮小樣本空間法＋公式 P(A|B)=P(A∩B)/P(B)＋分母判斷（已知條件 B）。事實全 .venv：teach 擲骰已知>2求>4=2/4=1/2、8紅6記號=6/8=3/4；Q1 班級 P(科學|數學)=12/18=2/3、Q2 P(記號|紅)=3/12=1/4、Q3 兩骰和7含3=2/6=1/3、Q4 公式。teach worked 1/2、3/4 與 practice 答案 2/3、1/4、1/3 不重疊（#10）。
+- **★#53（新記）奏效**：凍檔前已用 .venv 逐一反算每個誘答 rationale 的錯誤路徑＝該 option 值（Q1 12/30=2/5/18/30=3/5/6/18=1/3；Q2 3/20/12/20=3/5/9/12=3/4；Q3 2/36=1/18/4/6=2/3/漏對稱1/6）→R1 起即 clean、零 de-converge（對比 mutually-exclusive 兩度 de-converge）。證明 #53 pre-freeze 檢查可省 1~2 輪。
+- **下一步**：續 prob strand 其餘 7 KP（multiplication-rule / bayes / expected-value〔t_adv〕／variance / binomial / normal / sampling-confidence〔t_sub〕）。prob strand 14 中 7 完成（classical/simple-event/tree-list/complement-addition/likelihood-intuition/mutually-exclusive/conditional）。
+
 ## 2026-11-15 07:19 prob strand #5 mutually-exclusive 5/5 DONE-GATE 全綠（互斥與獨立，新建單元收斂完成）
 - **math_prob_mutually_exclusive frozen_sha `0c20af7d62a379f4`**（R1-R5 連 5 clean、L3 每輪 exit 0、confirmed 全 0）。DONE-GATE 全綠：per_page 無 violation／scan PASS／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==frozen＋iPad 四角色 render 綁 sha（對照卡 figure：①互斥 不能同時→P(A∪B)=P(A)+P(B)、②獨立 互不影響→P(A∩B)=P(A)·P(B)、③怎麼分 或用加/且用乘；三列左對齊 x=96/start/fs10.5〔#50/#51 合規〕；三視窗右緣0%；四角色過）。
 - **scope（t_adv 學測）**：承 complement-addition（一般加法法則已教、本單元不重教）。聚焦互斥（A∩B=∅→直接相加）＋獨立（P(A∩B)=P(A)·P(B) 相乘，NEW）＋辨別（『或』看互斥用加、『且』看獨立用乘；『不能同時』≠『互不影響』）。事實全 .venv：互斥 P(2或5)=1/3、獨立 兩骰都6=1/36；Q1 1/4+1/3=7/12、Q2 1/2·1/2=1/4、Q3 1/6·1/2=1/12、Q4 奇/偶互斥。
