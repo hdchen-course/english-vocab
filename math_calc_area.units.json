@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 微積分（calc）strand t_sub 單元。知識點 math.t_sub.calc.area（定積分求曲線下面積與兩曲線間面積）。tier=t_sub（高中分科/選修深階，exam 分科-數甲）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換——見 math-unit defect #63）：定積分 (definite integral)、面積 (area)、積分 (integration)。前置假設：會用微積分基本定理算定積分（definite-integral 已教）。★scope（t_sub）：兩曲線 y＝f(x)（上）與 y＝g(x)（下）之間、從 x＝a 到 x＝b 的面積＝∫ₐᵇ[f(x)−g(x)] dx（上曲線減下曲線，再積分）；關鍵是先判斷「哪一條在上面」（在該區間代一個 x 值比大小）。以 y＝x 與 y＝x² 在 [0,1] 貫穿：0<x<1 時 x>x²（y＝x 在上），面積＝∫₀¹(x−x²) dx＝[x²/2−x³/3]₀¹＝1/2−1/3＝1/6。只到兩條已知哪條在上的多項式曲線、在交點間的面積；不含需分段（上下曲線互換）、不含對 y 積分、不含參數式。prereq＝definite-integral＋antiderivative。repro（tools/verify/math_checks7.py::calc.area）：∫₀¹(x−x²) dx＝1/6（.venv 已核）；practice 另用 y＝2x 與 y＝x² 在 [0,2]：∫₀²(2x−x²) dx＝4/3 以 .venv sympy 另核。★自檢（math-unit defect-classes #1–#63）：figure＝y＝x 與 y＝x² 在 [0,1] 間面積 SVG（座標軸、直線 y＝x、拋物線 y＝x²、兩線於 (0,0)(1,1) 相交、之間淺色陰影、左上標 ∫₀¹(x−x²)dx＝1/6 紅、陰影內標面積、x 軸 0/1），面積概念圖無角度/垂直關係（不需等軸#62），alt 與 SVG text 逐字一致（#33）、標題『兩曲線間面積：y＝x 與 y＝x²（0 到 1）』寫進 alt 開頭；practice 四答案＝{∫ₐᵇ[f−g]dx(Q1 公式),y＝x(Q2 誰在上),1/6(Q3 ∫₀¹(x−x²) hero retrieval),4/3(Q4 y＝2x 與 y＝x² transfer)} 與 teach 關鍵值無 #10（Q3 hero retrieval、options 載入洗牌無位置 tell）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算：如上下曲線顛倒、相加非相減、只算一條曲線的積分）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_calc_area.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.calc.area",
+   "title_zh": "定積分求曲線下面積與兩曲線間面積",
+   "can_do": "我會用『定積分 (definite integral)』求兩條曲線之間的『面積 (area)』。方法：兩曲線 y ＝ f(x)（上）與 y ＝ g(x)（下）之間、從 x ＝ a 到 x ＝ b 的面積 ＝ ∫ₐᵇ[f(x) − g(x)] dx（上曲線減下曲線，再積分）。做之前要先判斷「哪一條在上面」——在該區間裡代一個 x 值比大小就知道。例：y ＝ x 與 y ＝ x² 在 0 到 1 之間，因為 0<x<1 時 x>x²，所以 y ＝ x 在上，面積 ＝ ∫₀¹(x − x²) dx ＝ 1/2 − 1/3 ＝ 1/6。",
+   "situation_group": "微積分：面積應用",
+   "subject": "math",
+   "strand": "calc",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.calc.area"
+   ],
+   "prerequisites": [
+    "math.t_sub.calc.definite-integral",
+    "math.t_sub.calc.antiderivative"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ar-formula",
+     "text": "兩條曲線之間的面積：若在 x ＝ a 到 x ＝ b 之間，y ＝ f(x) 一直在 y ＝ g(x) 的上方，那麼它們之間圍出的面積 ＝ ∫ₐᵇ[f(x) − g(x)] dx，也就是「上曲線減下曲線」再積分。這其實是把很多「高度 ＝ 上 − 下」的細長條，從 a 到 b 累加起來。",
+     "kind": "definition",
+     "source_refs": [
+      "兩曲線間面積公式（高中數學 微積分）"
+     ],
+     "verification_ref": "兩曲線間面積=∫ₐᵇ[上−下]dx（公式）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ar-whichtop",
+     "text": "用公式前最關鍵的一步：先判斷「哪一條曲線在上面」。做法是在要算的區間裡隨便代一個 x 值，比較兩個函數值誰大，大的那條就在上面。如果搞反了（把下當上），算出來會差一個負號（得到負面積）。例：在 0 到 1 之間代 x ＝ 1/2，得 x ＝ 0.5、x² ＝ 0.25，所以 y ＝ x 在上、y ＝ x² 在下。",
+     "kind": "definition",
+     "source_refs": [
+      "判斷上下曲線（高中數學 微積分）"
+     ],
+     "verification_ref": "先代一點比大小定上下曲線；x>x² 於(0,1)（.venv 驗 0.5>0.25）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ar-example",
+     "text": "示範：求 y ＝ x 與 y ＝ x² 在 0 到 1 之間的面積。兩曲線在 (0, 0) 和 (1, 1) 相交；在 0 到 1 之間 y ＝ x 在上。面積 ＝ ∫₀¹(x − x²) dx ＝ [x²/2 − x³/3]₀¹ ＝ (1/2 − 1/3) − 0 ＝ 1/6。",
+     "kind": "definition",
+     "source_refs": [
+      "y=x 與 y=x² 間面積（高中數學 微積分）"
+     ],
+     "verification_ref": "∫₀¹(x−x²)dx=1/6（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.area"
+     ],
+     "body": "這一單元學怎麼用定積分求「兩條曲線之間的面積」。下面先講公式（上曲線減下曲線再積分）；再講最關鍵的一步——先判斷哪一條在上面；用 y ＝ x 與 y ＝ x² 在 0 到 1 之間完整示範一次，最後練習。（本單元接在『定積分與微積分基本定理』之後，核心就是「把定積分用在面積上」。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.area"
+     ],
+     "body": "① 公式：在 a 到 b 之間，若 y ＝ f(x) 在上、y ＝ g(x) 在下，兩曲線間面積 ＝ ∫ₐᵇ[f(x) − g(x)] dx（上減下再積分）。② 關鍵：先判斷「誰在上面」——在區間裡代一個 x 值比大小。③ 示範 y ＝ x 與 y ＝ x²（0 到 1）：代 x ＝ 1/2 得 0.5 > 0.25，所以 y ＝ x 在上；面積 ＝ ∫₀¹(x − x²) dx ＝ [x²/2 − x³/3]₀¹ ＝ 1/2 − 1/3 ＝ 1/6。看下面的圖（兩曲線之間就是這塊面積），最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.calc.area"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>兩曲線間面積：y＝x 與 y＝x²（0 到 1）</text><path d='M70,140 L250,45 L205,86.6 L160,116.25 L115,134.1 L70,140 Z' fill='#e6edf3' stroke='none'/><line x1='60' y1='140' x2='300' y2='140' stroke='#99a7b5' stroke-width='1'/><line x1='70' y1='140' x2='70' y2='30' stroke='#99a7b5' stroke-width='1'/><line x1='70' y1='140' x2='250' y2='45' stroke='#33475b' stroke-width='1.8'/><path d='M70,140 L115,134.1 L160,116.25 L205,86.6 L250,45' fill='none' stroke='#33475b' stroke-width='1.8'/><text x='120' y='62' font-family='sans-serif' font-size='10' fill='#33475b' text-anchor='middle'>∫₀¹(x − x²) dx</text><text x='120' y='80' font-family='sans-serif' font-size='11' fill='#c2535d' text-anchor='middle' font-weight='bold'>＝ 1/6</text><text x='243' y='52' font-family='sans-serif' font-size='9.5' fill='#33475b' text-anchor='middle'>y ＝ x</text><text x='228' y='103' font-family='sans-serif' font-size='9.5' fill='#33475b' text-anchor='middle'>y ＝ x²</text><text x='168' y='103' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>面積</text><text x='70' y='152' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>0</text><text x='250' y='152' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>1</text><text x='180' y='163' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>兩曲線間面積 ＝ ∫(上曲線 − 下曲線)；此處上為 y＝x</text></svg>",
+      "alt": "標題「兩曲線間面積：y＝x 與 y＝x²（0 到 1）」。座標軸上畫一條直線 y ＝ x 和一條開口向上的拋物線 y ＝ x²，兩者在 (0, 0) 與 (1, 1) 相交；在 0 到 1 之間直線 y ＝ x 在上、拋物線 y ＝ x² 在下，兩者之間的狹長區域被塗上淺色陰影。左上方寫出計算「∫₀¹(x − x²) dx」「＝ 1/6」（第二行紅色）。直線旁標「y ＝ x」、拋物線旁標「y ＝ x²」、陰影內標「面積」，x 軸標出「0」和「1」。最下方註「兩曲線間面積 ＝ ∫(上曲線 − 下曲線)；此處上為 y＝x」。",
+      "caption": "以 y ＝ x 與 y ＝ x² 在 0 到 1 之間示範兩曲線間面積：這段區間 y ＝ x 在上、y ＝ x² 在下，面積 ＝ ∫₀¹(x − x²) dx ＝ 1/2 − 1/3 ＝ 1/6。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.area"
+     ],
+     "body": "最後練兩曲線間面積。重點：面積 ＝ ∫ₐᵇ[上曲線 − 下曲線] dx；用公式前一定要先判斷哪一條在上面（在區間裡代一個 x 比大小）。小提醒：(1) 是「上減下」，別搞反（反了會得到負的面積）；(2) 上下限 a、b 通常是兩曲線的交點，先解 f(x) ＝ g(x) 找出來；(3) 算出來若是負的，多半是上下曲線判斷反了。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在 a 到 b 之間，y ＝ f(x) 在上、y ＝ g(x) 在下。兩曲線之間的面積等於下列哪一個？",
+     "answer": "∫ₐᵇ[f(x) − g(x)] dx",
+     "kp_ids": [
+      "math.t_sub.calc.area"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.area"
+     ],
+     "options": [
+      "∫ₐᵇ[f(x) − g(x)] dx",
+      "∫ₐᵇ[g(x) − f(x)] dx",
+      "∫ₐᵇ[f(x) ＋ g(x)] dx",
+      "∫ₐᵇ f(x)·g(x) dx"
+     ],
+     "distractor_rationales": {
+      "∫ₐᵇ[g(x) − f(x)] dx": "上下顛倒了：f 在上、g 在下，要「上減下」f − g；寫成 g − f 會得到負面積。",
+      "∫ₐᵇ[f(x) ＋ g(x)] dx": "面積是上下兩曲線的「差」不是「和」；每一條細長條的高度是上 − 下，不是上 ＋ 下。",
+      "∫ₐᵇ f(x)·g(x) dx": "面積不是把兩函數相乘再積分；是把高度（上 − 下）從 a 到 b 累加，即 ∫(f − g) dx。"
+     },
+     "answer_evidence": [
+      "c-ar-formula"
+     ],
+     "feedback": "兩曲線間面積 ＝ ∫ₐᵇ[上 − 下] dx ＝ ∫ₐᵇ[f(x) − g(x)] dx。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在 0 到 1 之間，y ＝ x 與 y ＝ x² 哪一條在上面？",
+     "answer": "y ＝ x 在上",
+     "kp_ids": [
+      "math.t_sub.calc.area"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.area"
+     ],
+     "options": [
+      "y ＝ x 在上",
+      "y ＝ x² 在上",
+      "兩條一樣高",
+      "無法判斷"
+     ],
+     "distractor_rationales": {
+      "y ＝ x² 在上": "剛好相反：在 0<x<1 時 x > x²（例如 x ＝ 1/2 時 0.5 > 0.25），所以 y ＝ x 在上。",
+      "兩條一樣高": "只有在交點 x ＝ 0 和 x ＝ 1 才一樣高；中間 0<x<1 時 x > x²，並不一樣。",
+      "無法判斷": "可以判斷：在區間裡代一個 x（如 1/2）比大小即可，得 x > x²，y ＝ x 在上。"
+     },
+     "answer_evidence": [
+      "c-ar-whichtop"
+     ],
+     "feedback": "代 x ＝ 1/2：x ＝ 0.5 > x² ＝ 0.25，所以 0 到 1 之間 y ＝ x 在上。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "y ＝ x 與 y ＝ x² 在 0 到 1 之間的面積 ＝ ∫₀¹(x − x²) dx，等於多少？",
+     "answer": "1/6",
+     "kp_ids": [
+      "math.t_sub.calc.area"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.area"
+     ],
+     "options": [
+      "1/6",
+      "1/2",
+      "1/3",
+      "5/6"
+     ],
+     "distractor_rationales": {
+      "1/2": "只算了 ∫₀¹x dx ＝ 1/2，漏了要減掉 ∫₀¹x² dx ＝ 1/3；面積 ＝ 1/2 − 1/3 ＝ 1/6。",
+      "1/3": "只算了 ∫₀¹x² dx ＝ 1/3（下曲線那條），沒有用「上 − 下」；正確是 1/2 − 1/3 ＝ 1/6。",
+      "5/6": "把兩個積分相加了（1/2 ＋ 1/3 ＝ 5/6）；面積要相減 1/2 − 1/3 ＝ 1/6。"
+     },
+     "answer_evidence": [
+      "c-ar-example"
+     ],
+     "feedback": "∫₀¹(x − x²) dx ＝ [x²/2 − x³/3]₀¹ ＝ 1/2 − 1/3 ＝ 1/6。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "y ＝ 2x 與 y ＝ x² 在 0 到 2 之間（此區間 y ＝ 2x 在上）的面積是多少？",
+     "answer": "4/3",
+     "kp_ids": [
+      "math.t_sub.calc.area"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.area"
+     ],
+     "options": [
+      "4/3",
+      "4",
+      "8/3",
+      "20/3"
+     ],
+     "distractor_rationales": {
+      "4": "只算了 ∫₀²2x dx ＝ 4（上曲線那條），漏了減 ∫₀²x² dx ＝ 8/3；面積 ＝ 4 − 8/3 ＝ 4/3。",
+      "8/3": "只算了 ∫₀²x² dx ＝ 8/3（下曲線那條）；要用「上 − 下」＝ 4 − 8/3 ＝ 4/3。",
+      "20/3": "把兩個積分相加了（4 ＋ 8/3 ＝ 20/3）；面積要相減 4 − 8/3 ＝ 4/3。"
+     },
+     "answer_evidence": [
+      "c-ar-formula"
+     ],
+     "feedback": "面積 ＝ ∫₀²(2x − x²) dx ＝ [x² − x³/3]₀² ＝ 4 − 8/3 ＝ 4/3。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（兩曲線間面積 ＝ ∫ₐᵇ[上曲線 − 下曲線] dx；用前先判斷誰在上——區間裡代一個 x 比大小；y＝x 與 y＝x² 於 0 到 1：x 在上，∫₀¹(x−x²)dx ＝ 1/2 − 1/3 ＝ 1/6；y＝2x 與 y＝x² 於 0 到 2：∫₀²(2x−x²)dx ＝ 4 − 8/3 ＝ 4/3；三鐵律＝上減下別反、上下限用交點、算出負值多半是上下判反）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
