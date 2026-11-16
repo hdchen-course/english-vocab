@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 13:09 stats strand bivariate-scatter 二維資料與散布圖 5/5 DONE-GATE 全綠（t_adv 高中，★散布圖 SVG）→ stats 14/18
+- **math_stats_bivariate_scatter frozen `f0c9f33f361c0ede`**（R1-R5 連 5 clean、L3 每輪 exit 0；R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==f0c9f33f／per_page_5clean bivariate_scatter absent／iPad 四角色簽核（散布圖 5 藍點左下→右上升高＝正關係清楚、兩軸齊、軸標籤分數/讀書時間、右緣0%）。
+- 二維資料與散布圖（t_adv）＝每對象記兩變數成對 (x,y)、對象數=成對數；散布圖每對畫一點、點數=成對數；點往右上＝正關係、右下＝負關係、散亂＝看不出關係（只定性讀方向，相關係數 r 在 correlation 另單元）。teach figure 讀書時間 vs 分數 5 點正關係。practice：Q1 點數(8 人→8 點)、Q2 正關係、Q3 負關係、Q4 散布圖用途(看兩變數關係 vs 折線/長條/圓形)。prereq＝standardization。首個 scatter-plot(點+軸)型 figure。
+- ★收斂全程 0 正確性缺陷；pre-freeze parity advisory（c-bv-pair 未被引用、為 can_do 頭條）→Q1 補 answer_evidence c-bv-pair（本質測「每人一對一點」）消除；Q4 length-cue advisory 依 HD 非 defect 不改；R1-R5 全 clean 無 panel finding。
+- 下一步：stats 其餘 4 單元（correlation/regression-line/sampling-survey/risk-decision）；接著 calc/vector 等。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-16 12:52 stats strand standardization 線性變換與標準化 5/5 DONE-GATE 全綠（t_adv 高中，★y=2x+3 影響表 SVG）→ stats 13/18
 - **math_stats_standardization frozen `ffc4b2548dc18678`**（R1-R5 連 5 clean、L3 每輪 exit 0；R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==ffc4b254／per_page_5clean standardization absent／iPad 四角色簽核（2 欄變換表 原資料x/變換後y 格線齊、算式 2×4＋3＝11 在欄內、2×3＝6 標紅、右緣0%）。
 - 線性變換與標準化（t_adv 母體）＝加減常數 b→平均±b、標準差不變（平移）；乘常數 a→平均×a、標準差×|a|、變異數×a²（縮放）；y=ax+b→新平均 a×舊+b、新標準差 |a|×舊；標準分數 z=(x−μ)/σ→標準化後平均0、標準差1。teach figure y=2x+3：x{1,1,7,7} mean4 std3→y{5,5,17,17} mean11 std6（repro math_checks7 .venv 驗）。practice：Q1 平移(20 std7 +5→25/7)、Q2 縮放(10 std5 ×2→20/10)、Q3 概念(加常數不改變＝標準差)、Q4 z-score(標準化後0/1)。prereq＝variance-std。
