@@ -134,6 +134,17 @@ def c_vec_component():
     assert list(uhat) == [sp.Rational(3, 5), sp.Rational(4, 5)]  # 單位向量=(3/5,4/5)
     assert uhat.norm() == 1                             # 單位向量長度=1
     return _ok("vector.component", "(3,4)=3i+4j；|v|=5；單位向量=(3/5,4/5)；|單位向量|=1")
+def c_vec_dot_product():
+    u = sp.Matrix([3, 4]); v = sp.Matrix([2, 1])
+    assert u.dot(v) == 10                               # 內積 3·2+4·1=10
+    a = sp.Matrix([3, 4]); b = sp.Matrix([4, -3])
+    assert a.dot(b) == 0                                # 垂直 ⟺ 內積0
+    # 夾角 cosθ=u·v/(|u||v|)；u=(3,4),v=(2,1)：10/(5·√5)=2/√5
+    cos = u.dot(v) / (u.norm() * v.norm())
+    assert sp.simplify(cos - 2/sp.sqrt(5)) == 0
+    # 自身內積=模平方
+    assert u.dot(u) == u.norm()**2 == 25
+    return _ok("vector.dot-product", "(3,4)·(2,1)=10；(3,4)·(4,−3)=0(垂直)；cosθ=2/√5；u·u=|u|²=25")
 
 # ---------- stats（18）----------
 D = [2, 4, 4, 4, 5, 5, 7, 9]      # 共用樣本（std 範例，μ=5,σ=2）
@@ -272,6 +283,7 @@ CHECKS = {s: fn for s, fn in {
     "vector.plane-add-sub": c_vec_plane_addsub,
     "vector.linear-combination": c_vec_linear_combination,
     "vector.component": c_vec_component,
+    "vector.dot-product": c_vec_dot_product,
     "stats.collect-organize": s_collect, "stats.bar-line-chart": s_bar_line,
     "stats.pie-chart": s_pie, "stats.table-read": s_table, "stats.mean": s_mean,
     "stats.frequency-table": s_freq_table, "stats.cumulative-relative": s_cumulative,

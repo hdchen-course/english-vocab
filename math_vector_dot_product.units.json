@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 向量（vector）strand 單元。知識點 math.t_adv.vector.dot-product（向量的內積）。tier=t_adv（高中進階/學測-分科）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；只列實際 render 給 reader 的術語）：內積 (dot product)、夾角 (angle between two vectors)、垂直 (perpendicular)。前置假設：已學分量與模（component）、單位向量。★scope（t_adv，接 component）：內積（點積）u·v＝u₁v₁＋u₂v₂（坐標，結果是一個『數』不是向量）；幾何意義 u·v＝|u||v|cosθ（θ 為兩向量夾角）；由此求夾角 cosθ＝u·v/(|u||v|)；垂直判定：u·v＝0 ⟺ u⊥v（夾角 90°、cos90°＝0）；自身內積 u·u＝|u|²。以 u＝(3,4)、v＝(2,1) 示範內積＝10；a＝(3,4)、b＝(4,−3) 示範垂直（a·b＝0）。只到平面內積/夾角/垂直判定/自身內積；不含外積（下一單元 projection 之後的 cross-product）、不含三維。prereq＝component。repro（tools/verify/math_checks7.py::vector.dot-product，本 session 新增並跑過 PASS）：(3,4)·(2,1)=10、(3,4)·(4,−3)=0(垂直)、cosθ=2/√5、u·u=|u|²=25（.venv sympy 驗）；practice 另用 (2,3)⊥(3,−2)（內積0）以 .venv 另核。★自檢（math-unit defect-classes #1–#64）：figure＝坐標平面 a=(3,4) 紅、b=(4,−3) 綠 從原點、直角記號標 a⊥b、註 a·b=0——★等軸比例（#62，才看得出直角）、箭頭端點方向正確（#43）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾圖畫的垂直案例 a·b=0（#4/#46，內積公式/夾角由 teach 文字教）；practice 四答案＝{10(Q1 內積計算),0(Q2 垂直內積 hero),內積等於 0(Q3 垂直判定),(3,−2)(Q4 與(2,3)垂直 transfer)} 與 teach 關鍵值無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算：相乘不相加、分量交叉、相減、忘負號、當自身內積、取平行向量）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_vector_dot_product.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.vector.dot-product",
+   "title_zh": "向量的內積",
+   "can_do": "我知道兩個向量的『內積 (dot product)』是把對應分量相乘再相加：u·v ＝ u₁v₁ ＋ u₂v₂，結果是一個『數』（不是向量）。我知道它的幾何意義 u·v ＝ |u||v|cosθ（θ 是兩向量的『夾角 (angle between two vectors)』），所以可以用 cosθ ＝ u·v/(|u||v|) 求夾角。我會用內積判斷『垂直 (perpendicular)』：u·v ＝ 0 ⟺ u ⊥ v。例：u ＝ (3, 4)、v ＝ (2, 1) 時 u·v ＝ 10；a ＝ (3, 4)、b ＝ (4, −3) 時 a·b ＝ 0，所以 a 垂直 b。",
+   "situation_group": "向量：平面向量入門",
+   "subject": "math",
+   "strand": "vector",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_adv.vector.dot-product"
+   ],
+   "prerequisites": [
+    "math.t_adv.vector.component"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-dp-def",
+     "text": "兩個向量的「內積」（也叫點積）定義是：把對應的分量相乘再相加。u ＝ (u₁, u₂)、v ＝ (v₁, v₂) 的內積 u·v ＝ u₁v₁ ＋ u₂v₂。特別注意：內積的結果是一個「數」（純量），不是向量。例：u ＝ (3, 4)、v ＝ (2, 1)，u·v ＝ 3×2 ＋ 4×1 ＝ 6 ＋ 4 ＝ 10。另外，一個向量和自己的內積等於它的模的平方：u·u ＝ |u|²，例 (3, 4)·(3, 4) ＝ 9 ＋ 16 ＝ 25 ＝ 5²。",
+     "kind": "definition",
+     "source_refs": [
+      "向量的內積（高中數學 向量）"
+     ],
+     "verification_ref": "u·v=u₁v₁+u₂v₂；(3,4)·(2,1)=10；u·u=|u|²=25（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-dp-angle",
+     "text": "內積的幾何意義是 u·v ＝ |u||v|cosθ，其中 θ 是兩向量的夾角（0° 到 180°）。把式子反過來，就能用內積求夾角：cosθ ＝ u·v/(|u||v|)。因為 |u|、|v| 都是正的，所以內積的「正負號」就看 cosθ：夾角是銳角時內積為正、鈍角時為負、剛好 90° 時為 0。",
+     "kind": "definition",
+     "source_refs": [
+      "內積與夾角（高中數學 向量）"
+     ],
+     "verification_ref": "u·v=|u||v|cosθ；cosθ=u·v/(|u||v|)；(3,4)·(2,1)：cosθ=2/√5（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-dp-perp",
+     "text": "垂直判定：兩個向量互相垂直（夾角 90°）的充要條件是它們的內積等於 0。因為 u·v ＝ |u||v|cos90° ＝ |u||v|×0 ＝ 0。所以要檢查兩向量是否垂直，只要算內積、看是不是 0 就好。例：a ＝ (3, 4)、b ＝ (4, −3)，a·b ＝ 3×4 ＋ 4×(−3) ＝ 12 − 12 ＝ 0，所以 a ⊥ b。",
+     "kind": "definition",
+     "source_refs": [
+      "內積與垂直判定（高中數學 向量）"
+     ],
+     "verification_ref": "u⊥v ⟺ u·v=0；(3,4)·(4,−3)=0（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.vector.dot-product"
+     ],
+     "body": "這一單元學向量的「內積」。下面先講定義（對應分量相乘再相加、結果是一個數）；再講幾何意義與夾角（u·v ＝ |u||v|cosθ，可反求夾角）；最後講最常用的垂直判定（u·v ＝ 0 ⟺ 兩向量垂直）；用 u ＝ (3, 4)、v ＝ (2, 1) 和垂直的 a ＝ (3, 4)、b ＝ (4, −3) 示範，最後練習。（接在『向量的分量與標準單位向量』之後。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.vector.dot-product"
+     ],
+     "body": "① 定義：u·v ＝ u₁v₁ ＋ u₂v₂（對應分量相乘再相加，結果是一個「數」不是向量）；例 (3, 4)·(2, 1) ＝ 6 ＋ 4 ＝ 10。自身內積 u·u ＝ |u|²。② 幾何與夾角：u·v ＝ |u||v|cosθ，所以 cosθ ＝ u·v/(|u||v|)；內積正負看夾角是銳角（正）、鈍角（負）、還是 90°（0）。③ 垂直判定：u·v ＝ 0 ⟺ u ⊥ v；例 (3, 4)·(4, −3) ＝ 12 − 12 ＝ 0，兩向量垂直。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.vector.dot-product"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>內積與垂直：a·b ＝ 0 ⟺ a ⊥ b（a＝(3,4)、b＝(4,−3)）</text><line x1='60' y1='92' x2='300' y2='92' stroke='#99a7b5' stroke-width='1'/><line x1='150' y1='28' x2='150' y2='150' stroke='#99a7b5' stroke-width='1'/><polyline points='156,84 164,90 158,98' fill='none' stroke='#6b7785' stroke-width='1'/><line x1='150' y1='92' x2='186' y2='44' stroke='#c2535d' stroke-width='2.2'/><path d='M186,44 L184.7,50.9 M186,44 L179.8,47.2' fill='none' stroke='#c2535d' stroke-width='2.2'/><line x1='150' y1='92' x2='198' y2='128' stroke='#2f6f54' stroke-width='2.2'/><path d='M198,128 L191.1,126.7 M198,128 L194.8,121.8' fill='none' stroke='#2f6f54' stroke-width='2.2'/><circle cx='150' cy='92' r='2.5' fill='#33475b'/><text x='189' y='42' font-family='sans-serif' font-size='9.5' fill='#c2535d' text-anchor='start'>a ＝ (3, 4)</text><text x='201' y='131' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='start'>b ＝ (4, −3)</text><text x='150' y='162' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>a·b ＝ 12 − 12 ＝ 0，所以 a ⊥ b</text></svg>",
+      "alt": "標題「內積與垂直：a·b ＝ 0 ⟺ a ⊥ b（a＝(3,4)、b＝(4,−3)）」。一個坐標平面（灰色坐標軸、原點）。從原點畫出兩個箭頭：紅色的 a ＝ (3, 4) 指向右上，綠色的 b ＝ (4, −3) 指向右下，兩者在原點處成一個直角（用一個小方角記號標出）。紅色箭頭旁標「a ＝ (3, 4)」，綠色箭頭旁標「b ＝ (4, −3)」。最下方註「a·b ＝ 12 − 12 ＝ 0，所以 a ⊥ b」。",
+      "caption": "以 a ＝ (3, 4)、b ＝ (4, −3) 示範垂直判定：內積 a·b ＝ 3×4 ＋ 4×(−3) ＝ 12 − 12 ＝ 0，內積是 0，所以兩向量互相垂直（圖中原點處的小方角）。坐標用相同比例，才看得出是直角。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.vector.dot-product"
+     ],
+     "body": "最後練內積。重點：u·v ＝ u₁v₁ ＋ u₂v₂（分量相乘再相加、結果是一個數）；u·v ＝ |u||v|cosθ 可求夾角；u·v ＝ 0 ⟺ 兩向量垂直。小提醒：(1) 內積是「先相乘再相加」得一個數，不是把分量相乘得一個新向量；(2) 算內積要照分量配對（x 配 x、y 配 y），而且小心負號（例如 b 的 −3）。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "向量 (3, 4) 和 (2, 1) 的內積是多少？",
+     "answer": "10",
+     "kp_ids": [
+      "math.t_adv.vector.dot-product"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.vector.dot-product"
+     ],
+     "options": [
+      "10",
+      "(6, 4)",
+      "11",
+      "2"
+     ],
+     "distractor_rationales": {
+      "(6, 4)": "這是把分量相乘後沒相加、還寫成向量了：內積要再相加 6 ＋ 4，而且結果是一個「數」10。",
+      "11": "分量配錯了（交叉相乘 3×1 ＋ 4×2）：要照位置配對 3×2 ＋ 4×1 ＝ 10。",
+      "2": "把兩項相減了（6 − 4）：內積是相乘後「相加」，得 6 ＋ 4 ＝ 10。"
+     },
+     "answer_evidence": [
+      "c-dp-def"
+     ],
+     "feedback": "(3, 4)·(2, 1) ＝ 3×2 ＋ 4×1 ＝ 6 ＋ 4 ＝ 10（結果是一個數）。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "向量 (3, 4) 和 (4, −3) 的內積是多少？",
+     "answer": "0",
+     "kp_ids": [
+      "math.t_adv.vector.dot-product"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.vector.dot-product"
+     ],
+     "options": [
+      "0",
+      "24",
+      "25",
+      "−24"
+     ],
+     "distractor_rationales": {
+      "24": "把 (4, −3) 的 −3 當成 ＋3 了（12 ＋ 12）：要保留負號，12 ＋ (−12) ＝ 0。",
+      "25": "這是 (3, 4) 和自己的內積（|a|² ＝ 25）：題目是和 (4, −3) 的內積，3×4 ＋ 4×(−3) ＝ 0。",
+      "−24": "兩項都當成負的了（−12 − 12）：只有第二項是負，12 ＋ (−12) ＝ 0。"
+     },
+     "answer_evidence": [
+      "c-dp-perp"
+     ],
+     "feedback": "(3, 4)·(4, −3) ＝ 12 ＋ (−12) ＝ 0，內積為 0 代表兩向量垂直。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "怎麼用內積判斷兩個向量互相垂直？",
+     "answer": "它們的內積等於 0",
+     "kp_ids": [
+      "math.t_adv.vector.dot-product"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.vector.dot-product"
+     ],
+     "options": [
+      "它們的內積等於 0",
+      "它們的內積等於 1",
+      "它們的長度相等",
+      "它們的分量剛好對調"
+     ],
+     "distractor_rationales": {
+      "它們的內積等於 1": "內積等於 1 沒有特別意義：垂直的條件是內積等於 0（因為 cos90° ＝ 0）。",
+      "它們的長度相等": "長度和垂直無關：兩向量就算一樣長也可以不垂直；垂直看的是內積是否為 0。",
+      "它們的分量剛好對調": "分量對調不代表垂直（例如 (2, 3) 和 (3, 2) 的內積是 12，不是 0）；垂直要內積等於 0。"
+     },
+     "answer_evidence": [
+      "c-dp-perp"
+     ],
+     "feedback": "u ⊥ v ⟺ u·v ＝ 0（因為 u·v ＝ |u||v|cos90° ＝ 0）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "下列哪一個向量和 (2, 3) 互相垂直？",
+     "answer": "(3, −2)",
+     "kp_ids": [
+      "math.t_adv.vector.dot-product"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.vector.dot-product"
+     ],
+     "options": [
+      "(3, −2)",
+      "(3, 2)",
+      "(2, 3)",
+      "(−2, −3)"
+     ],
+     "distractor_rationales": {
+      "(3, 2)": "內積 (2, 3)·(3, 2) ＝ 6 ＋ 6 ＝ 12 ≠ 0，不垂直；垂直要內積為 0，(3, −2) 才對。",
+      "(2, 3)": "這是同一個向量，內積 ＝ 4 ＋ 9 ＝ 13（等於 |v|²）≠ 0，不垂直。",
+      "(−2, −3)": "這是反向量（方向相反、平行），內積 ＝ −4 − 9 ＝ −13 ≠ 0，不垂直。"
+     },
+     "answer_evidence": [
+      "c-dp-perp"
+     ],
+     "feedback": "(2, 3)·(3, −2) ＝ 6 ＋ (−6) ＝ 0，所以 (3, −2) 和 (2, 3) 垂直。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（內積 u·v＝u₁v₁＋u₂v₂＝分量相乘再相加、結果是一個數；u·v＝|u||v|cosθ、cosθ＝u·v/(|u||v|) 求夾角、正負看銳角/鈍角/直角；垂直判定 u·v＝0 ⟺ u⊥v；自身內積 u·u＝|u|²；(3,4)·(2,1)＝10、(3,4)·(4,−3)＝0 垂直、(2,3)⊥(3,−2)；兩鐵律＝內積是先乘再加得一個數不是向量、照分量配對並小心負號）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
