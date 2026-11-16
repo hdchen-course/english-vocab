@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 統計（stats）strand t_mid 單元。知識點 math.t_mid.stats.cumulative-relative（累積次數與相對次數）。tier=t_mid（國中會考）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：累積次數 (cumulative frequency)、相對次數 (relative frequency)。★scope（國中 t_mid）：累積次數＝從第一組起把次數一組一組往下累加，到某組為止＝該組與前面所有組次數總和，最後一組累積次數＝總筆數；相對次數＝一組次數÷總筆數（占全部的比例，可寫小數或分數），所有組相對次數和＝1；用途：累積次數看到某範圍為止共幾筆、相對次數看各組占比（比較不同總筆數資料時用相對次數較公平）。只整數次數＋簡單小數相對次數、不含百分比換算/組中點/平均。prereq＝次數分配表 frequency-table。repro（tools/verify/math_checks7.py::stats.cumulative-relative）：freq[2,3,5]→cum[2,5,10]、相對次數首項 2÷10＝0.2、relsum 1.0（.venv 已核）。★自檢（math-unit defect-classes #1–#59）：figure＝次數分配表＋累積次數＋相對次數三欄 SVG grid（本數 0～2:次2/累2/相0.2、3～5:次3/累5/相0.3、6～8:次5/累10/相0.5，最後累積 10 標紅＝總人數），alt 與 SVG text 逐字一致（#33）、標題『累積次數與相對次數：累加、算比例』寫進 alt 開頭；teach 值集{2,3,5,10,0.2,0.3,0.5}與 practice 數值答案{7,0.4,1}無交集避#10；practice：Q1 累積次數（新表次3/4/6→到第二組累積3+4=7，選項筆數）、Q2 相對次數（某組8÷總20=0.4，選項小數）、Q3 相對次數和（=1，概念）、Q4 累積次數最後一項（=總筆數，概念）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53）、誘答值取自題幹表格衍生值（#57 讀表/累加路徑挑選）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_stats_cumulative_relative.html",
+ "units": [
+  {
+   "unit_id": "math.t_mid.stats.cumulative-relative",
+   "title_zh": "累積次數與相對次數",
+   "can_do": "我會算『累積次數 (cumulative frequency)』——從第一組起把次數一組一組往下加，到某一組為止的累積次數就是那一組和前面所有組的次數總和，最後一組的累積次數剛好是總筆數。我也會算『相對次數 (relative frequency)』——一組的次數除以總筆數，表示那一組占全部的比例，所有組的相對次數加起來剛好是 1。我知道累積次數方便看「到某範圍為止共有幾筆」、相對次數方便看「各組占全部的比例」。",
+   "situation_group": "統計：累積次數與相對次數",
+   "subject": "math",
+   "strand": "stats",
+   "est_minutes": 14,
+   "knowledge_point_ids": [
+    "math.t_mid.stats.cumulative-relative"
+   ],
+   "prerequisites": [
+    "math.t_mid.stats.frequency-table"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-cr-cum",
+     "text": "累積次數 (cumulative frequency) 是從第一組起，把各組的次數一組一組往下累加。到某一組為止的累積次數，就是那一組和它前面所有組的次數加起來的總和。最後一組的累積次數剛好等於資料的總筆數。例：三組的次數是 2、3、5，累積次數就是 2、2＋3＝5、2＋3＋5＝10，最後一項 10 剛好是總筆數。",
+     "kind": "definition",
+     "source_refs": [
+      "累積次數的定義與計算（國中數學 會考）"
+     ],
+     "verification_ref": "freq[2,3,5]→cum[2,5,10]，末項10＝總筆數（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-cr-rel",
+     "text": "相對次數 (relative frequency) 是一組的次數除以總筆數，表示那一組占全部的比例，可以寫成小數或分數。把所有組的相對次數加起來，剛好等於 1（就是整體）。例：總共 10 筆資料，某一組有 2 筆，這一組的相對次數＝2÷10＝0.2；三組的相對次數 0.2、0.3、0.5 加起來＝1。",
+     "kind": "definition",
+     "source_refs": [
+      "相對次數的定義與計算（國中數學 會考）"
+     ],
+     "verification_ref": "2÷10=0.2；0.2+0.3+0.5=1（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-cr-use",
+     "text": "累積次數方便看「到某一個範圍為止，一共有幾筆資料」；相對次數方便看「每一組占全部的比例」。特別是要比較兩份「總筆數不一樣」的資料時，直接比次數並不公平（人數基準不同），改用相對次數（比例）來比才公平。",
+     "kind": "definition",
+     "source_refs": [
+      "累積次數與相對次數的用途（國中數學 會考）"
+     ],
+     "verification_ref": "累積看到某範圍共幾筆；相對次數比例、跨不同總數比較用（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.stats.cumulative-relative"
+     ],
+     "body": "這一單元學『累積次數』和『相對次數』。下面先講累積次數——從第一組起把次數一組一組往下加，到某組為止的累積次數＝該組和前面所有組的總和；再講相對次數——一組次數除以總筆數、表示占全部的比例，所有組加起來＝1；接著講兩者的用途；用一張讀書本數的表示範，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.stats.cumulative-relative"
+     ],
+     "body": "① 累積次數：從第一組起把次數一組一組往下加。看下面的表（全班讀書本數）：次數是 2、3、5，累積次數就是第一組 2、第二組 2＋3＝5、第三組 2＋3＋5＝10，最後一項 10 剛好等於總人數。② 相對次數：一組的次數除以總筆數，就是那一組占全部的比例。總共 10 人，第一組 2 人，相對次數＝2÷10＝0.2；第二組 3÷10＝0.3、第三組 5÷10＝0.5，三組加起來 0.2＋0.3＋0.5＝1。③ 用途：累積次數方便看「到某範圍為止共幾筆」（例如讀 5 本以下的有 5 人）；相對次數方便看「各組占全部的比例」，比較兩班人數不一樣的資料時用相對次數才公平。下面用這張表整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_mid.stats.cumulative-relative"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='15' font-family='sans-serif' font-size='12.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>累積次數與相對次數：累加、算比例</text><rect x='24' y='30' width='312' height='30' fill='#eef4ff'/><rect x='24' y='30' width='312' height='120' fill='none' stroke='#99a7b5' stroke-width='1'/><line x1='120' y1='30' x2='120' y2='150' stroke='#99a7b5' stroke-width='1'/><line x1='192' y1='30' x2='192' y2='150' stroke='#99a7b5' stroke-width='1'/><line x1='264' y1='30' x2='264' y2='150' stroke='#99a7b5' stroke-width='1'/><line x1='24' y1='60' x2='336' y2='60' stroke='#99a7b5' stroke-width='1'/><line x1='24' y1='90' x2='336' y2='90' stroke='#99a7b5' stroke-width='1'/><line x1='24' y1='120' x2='336' y2='120' stroke='#99a7b5' stroke-width='1'/><text x='72' y='49' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>本數</text><text x='156' y='49' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>次數</text><text x='228' y='49' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>累積次數</text><text x='300' y='49' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>相對次數</text><text x='72' y='79' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>0～2</text><text x='156' y='79' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>2</text><text x='228' y='79' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>2</text><text x='300' y='79' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>0.2</text><text x='72' y='109' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>3～5</text><text x='156' y='109' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>3</text><text x='228' y='109' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>5</text><text x='300' y='109' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>0.3</text><text x='72' y='139' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>6～8</text><text x='156' y='139' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>5</text><text x='228' y='139' font-family='sans-serif' font-size='11.5' fill='#c2535d' text-anchor='middle' font-weight='bold'>10</text><text x='300' y='139' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>0.5</text><text x='180' y='163' font-family='sans-serif' font-size='10' fill='#6b7785' text-anchor='middle'>累積次數一組一組往下加，末項 10＝總人數；相對次數和 0.2＋0.3＋0.5＝1</text></svg>",
+      "alt": "標題「累積次數與相對次數：累加、算比例」。一張表，四欄 本數、次數、累積次數、相對次數：0～2 → 次數 2、累積次數 2、相對次數 0.2；3～5 → 次數 3、累積次數 5、相對次數 0.3；6～8 → 次數 5、累積次數 10（標紅）、相對次數 0.5。下方寫「累積次數一組一組往下加，末項 10＝總人數；相對次數和 0.2＋0.3＋0.5＝1」。",
+      "caption": "累積次數與相對次數表（全班讀書本數）：次數 2、3、5；累積次數是一組一組往下加 2、5、10，最後一項 10＝總人數；相對次數是每組次數除以 10，得 0.2、0.3、0.5，加起來剛好是 1。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_mid.stats.cumulative-relative"
+     ],
+     "body": "最後練累積次數與相對次數。重點：累積次數從第一組起一組一組往下加，到某組為止＝該組和前面所有組的總和，最後一項＝總筆數；相對次數＝一組次數÷總筆數（占全部的比例），所有組加起來＝1；累積次數看「到某範圍為止共幾筆」、相對次數看「各組占比」，比較不同總筆數的資料用相對次數才公平。小提醒：累積次數是「往下累加」不是只看單一組，相對次數是「比例」不是人數。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一張次數分配表由小到大有三組，次數分別是第一組 3 人、第二組 4 人、第三組 6 人。到第二組為止的累積次數是多少？",
+     "answer": "7 人",
+     "kp_ids": [
+      "math.t_mid.stats.cumulative-relative"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.stats.cumulative-relative"
+     ],
+     "options": [
+      "7 人",
+      "4 人",
+      "13 人",
+      "3 人"
+     ],
+     "distractor_rationales": {
+      "4 人": "4 人只是第二組自己的次數，沒把前面的第一組加進來；累積次數要把第一組和第二組一起加，3 ＋ 4 ＝ 7。",
+      "13 人": "13 人是三組全部加起來（到第三組的累積次數）；題目問到第二組為止，是 3 ＋ 4 ＝ 7。",
+      "3 人": "3 人是到第一組為止的累積次數；到第二組要再把第二組加上去，3 ＋ 4 ＝ 7。"
+     },
+     "answer_evidence": [
+      "c-cr-cum"
+     ],
+     "feedback": "累積次數是從第一組往下累加：到第二組為止 ＝ 第一組 3 ＋ 第二組 4 ＝ 7 人。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個次數分配表一共有 20 筆資料，其中某一組有 8 筆。這一組的相對次數是多少？",
+     "answer": "0.4",
+     "kp_ids": [
+      "math.t_mid.stats.cumulative-relative"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.stats.cumulative-relative"
+     ],
+     "options": [
+      "0.4",
+      "8",
+      "2.5",
+      "0.6"
+     ],
+     "distractor_rationales": {
+      "8": "8 是這一組的次數（筆數），不是相對次數；相對次數要用這組的次數除以總筆數，8 ÷ 20 ＝ 0.4。",
+      "2.5": "2.5 是把總筆數除以這組（20 ÷ 8）、除反了；相對次數是這組除以總筆數，8 ÷ 20 ＝ 0.4。",
+      "0.6": "0.6 是其他組（20 － 8 ＝ 12 筆）的相對次數；這一組是 8 ÷ 20 ＝ 0.4。"
+     },
+     "answer_evidence": [
+      "c-cr-rel"
+     ],
+     "feedback": "相對次數 ＝ 這組的次數 ÷ 總筆數 ＝ 8 ÷ 20 ＝ 0.4。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "把一個次數分配表裡「所有組」的相對次數加起來，會等於多少？",
+     "answer": "1",
+     "kp_ids": [
+      "math.t_mid.stats.cumulative-relative"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.stats.cumulative-relative"
+     ],
+     "options": [
+      "1",
+      "資料的總筆數",
+      "次數最多那一組的相對次數",
+      "0"
+     ],
+     "distractor_rationales": {
+      "資料的總筆數": "總筆數是把各組的「次數」加起來的結果；相對次數是比例，各組比例加起來剛好是整體 ＝ 1。",
+      "次數最多那一組的相對次數": "那只是其中一組的比例；題目問的是所有組加起來，全部比例合起來是 1。",
+      "0": "相對次數都是正的比例，加起來不會變成 0；所有組合起來就是整體，等於 1。"
+     },
+     "answer_evidence": [
+      "c-cr-rel"
+     ],
+     "feedback": "相對次數是各組占全部的比例，所有組加起來就是整體，剛好等於 1。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "甲班有 30 人、乙班有 40 人。要比較兩班「喜歡數學的人占各自班級的比例」，哪一種做法最公平？",
+     "answer": "算出各班喜歡數學的相對次數再比較",
+     "kp_ids": [
+      "math.t_mid.stats.cumulative-relative"
+     ],
+     "required_kp_ids": [
+      "math.t_mid.stats.cumulative-relative"
+     ],
+     "options": [
+      "算出各班喜歡數學的相對次數再比較",
+      "直接比兩班喜歡數學的人數誰多",
+      "比兩班的總人數誰多",
+      "比哪一班的累積次數比較大"
+     ],
+     "distractor_rationales": {
+      "直接比兩班喜歡數學的人數誰多": "兩班人數不一樣（30 和 40），直接比人數並不公平；要比「占各自班級的比例」就用相對次數。",
+      "比兩班的總人數誰多": "比的是全班人數，不是喜歡數學的占比；要算各班喜歡數學的相對次數再比。",
+      "比哪一班的累積次數比較大": "累積次數是把各組往下累加的總和，不是用來比兩班占比的；比占比要用相對次數。"
+     },
+     "answer_evidence": [
+      "c-cr-use"
+     ],
+     "feedback": "兩班人數不同，直接比人數不公平；算出各班喜歡數學的相對次數（占各自班級的比例）再比，才公平。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（累積次數＝從第一組一組一組往下加、到某組為止＝該組和前面所有組總和、最後一項＝總筆數；相對次數＝一組次數÷總筆數、占全部的比例、所有組加起來＝1；累積看到某範圍共幾筆、相對次數看占比、比較不同總數用相對次數）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
