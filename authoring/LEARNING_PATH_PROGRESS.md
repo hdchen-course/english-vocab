@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 15:00 ★ calc strand 開跑：function-limit 函數極限 5/5 DONE-GATE 全綠（t_sub 高中補充，★函數極限 hole 圖 SVG）→ calc 1/20
+- **math_calc_function_limit frozen `b7b97944feab1d02`**（R1-R5 連 5 clean、L3 每輪 exit 0 以實際檔案行文字建檔；R4/R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==b7b97944／per_page_5clean function_limit absent／iPad 四角色簽核（座標圖綠線 f(x)=(x²−1)/(x−1)、(1,2) 空心紅圈=x=1 無定義、虛線標 x=1/y=2、lim=2、右緣0%）。
+- 函數極限（t_sub，calc strand 起點、無 prereq）＝極限直觀概念（x→a 但 x≠a 時 f(x) 趨近的值，看趨勢非 x=a 的值、x=a 可能無定義）；左極限/右極限、極限存在⟺左右極限相等（同一有限值）；連續函數（多項式）直接代入、0/0 不定型先約分再代。teach figure hole 圖 lim_{x→1}(x²−1)/(x−1)=2（repro math_checks7 .venv sympy 驗；另 lim_{x→3}(2x+1)=7、lim_{x→2}(x²−4)/(x−2)=4 已核）。practice：Q1 代入連續函數(2x+1,x=3→7)、Q2 左右極限不等→不存在、Q3 極限意義(趨近值非 x=a 的值)、Q4 0/0 先約分((x²−4)/(x−2)→4)。只直觀+左右極限+代入/約分，不含 ε-δ/無窮極限/L'Hôpital。
+- ★figure 缺陷修正（R1 前 iPad 簽核抓到）：方程式標籤「f(x)＝(x²−1)/(x−1)」原壓在綠線上（動畫師/美術鏡 NO OVERLAP），移至線上方左側空白區、重凍 b7b97944、四角色重簽。★收斂全程 0 正確性缺陷、0 panel-confirmed defect；R2「x=1 半形=vs全形＝」panel 7/7 NOT A DEFECT、R3「不定型無英語 gloss」panel 7/7 NOT A DEFECT（0/0 就地定義、_note 刻意限 R15 gloss 於三個極限術語），依鐵律皆不改、記 knownFP。
+- 下一步：calc 其餘 19 單元（下個＝continuity 連續性 prereq=function-limit；接 sequence-limit/derivative-definition/differentiation-rules/chain-rule…）。全 20 calc KP 已有 math_checks7 repro check。接著 vector(11)/conic(7)/complex(6)/finmath(6)/space(5)/matrix(5)/linprog(2)/determinant(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-16 14:36 stats strand risk-decision 期望值與風險決策 5/5 DONE-GATE 全綠（t_sub 高中補充，★決策表 SVG）→ ★★ stats strand 18/18 整個完成 ★★
 - **math_stats_risk_decision frozen `38b2453639fdffbd`**（R1-R5 連 5 clean、L3 每輪 exit 0 以實際檔案行文字建檔；R4/R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard+0 advisory／content_sha==38b24536／per_page_5clean risk_decision absent／iPad 四角色簽核（決策表 方案A 0.5×100＋0.5×0＝50 標紅 vs 方案B 確定40、下註 E(A)50>E(B)40、house 藍表頭、右緣0%）。
 - 期望值與風險決策（t_sub）＝期望值 Σ(結果×機率)＝長期平均；用期望值比較方案選較高（只看平均報酬時）；★期望值只看平均、未反映風險（變動/最壞），實際決策還要看願不願意承擔風險。teach figure 決策表 E(A)=50 vs E(B)=40（repro math_checks7 .venv 驗 0.5×100+0.5×0=50、E(A)>E(B) 選 A）。practice：Q1 算期望值(0.5×20+0.5×0=10)、Q2 選較高(甲60>乙45)、Q3 期望值意義(長期平均)、Q4 風險觀念(期望值未含風險、看承受度、無唯一解)。只兩結果期望值+比較+風險觀念，不含變異數決策/效用函數/決策樹。prereq＝sampling-survey。
