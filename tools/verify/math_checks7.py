@@ -175,6 +175,17 @@ def c_vec_space_vector():
     assert a.norm() == sp.sqrt(14)                    # |(1,2,3)|=√14（展示公式）
     assert list(sp.Matrix([2, 4, 6])) == list(2 * a)  # (2,4,6)=2(1,2,3) 平行(係數成比例)
     return _ok("vector.space-vector", "(1,2,3)+(4,5,6)=(5,7,9)；差=(−3,−3,−3)；2(1,2,3)=(2,4,6)；|(2,3,6)|=7；|(1,2,3)|=√14；(2,4,6)∥(1,2,3)")
+def c_vec_space_dot_product():
+    a = sp.Matrix([1, 2, 2]); b = sp.Matrix([2, 0, 1])
+    assert a.dot(b) == 4                               # 空間內積 1·2+2·0+2·1=4
+    assert a.norm() == 3                               # |a|=√(1+4+4)=3
+    assert b.norm() == sp.sqrt(5)                      # |b|=√(4+0+1)=√5
+    cos = a.dot(b) / (a.norm() * b.norm())             # 夾角 cosθ=a·b/(|a||b|)=4/(3√5)
+    assert sp.simplify(cos - 4 / (3 * sp.sqrt(5))) == 0
+    c = sp.Matrix([2, -1, 0])
+    assert a.dot(c) == 0                               # 垂直 (1,2,2)·(2,−1,0)=2−2+0=0
+    assert a.dot(a) == a.norm()**2 == 9                # 自身內積=模平方
+    return _ok("vector.space-dot-product", "(1,2,2)·(2,0,1)=4；|a|=3、|b|=√5；cosθ=4/(3√5)；(1,2,2)·(2,−1,0)=0(垂直)；a·a=|a|²=9")
 
 # ---------- stats（18）----------
 D = [2, 4, 4, 4, 5, 5, 7, 9]      # 共用樣本（std 範例，μ=5,σ=2）
@@ -317,6 +328,7 @@ CHECKS = {s: fn for s, fn in {
     "vector.projection": c_vec_projection,
     "vector.cross-product": c_vec_cross_product,
     "vector.space-vector": c_vec_space_vector,
+    "vector.space-dot-product": c_vec_space_dot_product,
     "stats.collect-organize": s_collect, "stats.bar-line-chart": s_bar_line,
     "stats.pie-chart": s_pie, "stats.table-read": s_table, "stats.mean": s_mean,
     "stats.frequency-table": s_freq_table, "stats.cumulative-relative": s_cumulative,

@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 向量（vector）strand 單元。知識點 math.t_sub.vector.space-dot-product（空間向量內積與夾角）。tier=t_sub（高中分科/選修深階）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；只列實際 render 給 reader 的術語）：內積 (dot product)、夾角 (angle between two vectors)、垂直 (perpendicular)。前置假設：已學空間向量的坐標/加減/模（space-vector）、平面向量內積（dot-product）。★scope（t_sub，prereq space-vector）：空間向量內積 a·b＝a₁b₁＋a₂b₂＋a₃b₃（坐標、結果是一個『數』不是向量，和平面一樣只多一個 z 項）；自身內積 a·a＝|a|²；幾何 a·b＝|a||b|cosθ，由此 cosθ＝a·b/(|a||b|) 求夾角；垂直判定 a·b＝0 ⟺ a⊥b。以 a＝(1,2,2)、b＝(2,0,1) 貫穿：a·b＝4、|a|＝3、|b|＝√5、cosθ＝4/(3√5)；垂直示範 (1,2,2)·(2,−1,0)＝0；自身 a·a＝9。只到空間內積/夾角/垂直判定/自身內積；不含外積、不含投影/平面方程。prereq＝space-vector。repro（tools/verify/math_checks7.py::vector.space-dot-product，本 session 新增並跑過 PASS；binding 另有 math_checks6::vector.space-dot-product 驗 (1,2,2)·(2,0,1)=4、|a|=3）：a·b=4、|a|=3、|b|=√5、cosθ=4/(3√5)、(1,2,2)·(2,−1,0)=0(垂直)、a·a=|a|²=9（.venv 驗）。★自檢（math-unit defect-classes #1–#64）：figure＝3D 斜投影坐標系（z 上/y 右/x 左下三軸）、紅 a 與綠 b 從原點 O、兩者間標夾角 θ 小弧、下註 a·b=4——★此為 3D 示意圖非 2D 度量圖，#62 等軸 N/A（但箭頭端點方向正確 #43、各軸平行關係一致）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾圖畫的「兩向量 a、b 從 O 與夾角 θ、a·b=4」（#4/#46，內積公式/垂直判定由 teach 文字教）；practice 四答案＝{4(Q1 內積 hero),互相垂直(Q2→實為 Q3 概念；見下),9(…)}——實際：Q1 內積=4、Q2 垂直判定 transfer=(2,−1,0)、Q3 概念『內積0=垂直』、Q4 夾角 cosθ=4/(3√5)；與 teach 關鍵值無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算：2×0 誤為2、相乘沒相加寫成向量、見0就全0、分量配錯；垂直題取內積非0 的向量；夾角題分母相加/分子分母顛倒/漏|b|）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_vector_space_dot_product.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.vector.space-dot-product",
+   "title_zh": "空間向量內積與夾角",
+   "can_do": "我知道空間向量的『內積 (dot product)』和平面一樣是「對應分量相乘再相加」，只是多一個 z 項：a·b ＝ a₁b₁ ＋ a₂b₂ ＋ a₃b₃，結果是一個「數」（不是向量）。我知道它的幾何意義 a·b ＝ |a||b|cosθ（θ 是兩向量的『夾角 (angle between two vectors)』），所以 cosθ ＝ a·b/(|a||b|) 可求夾角。我會用內積判斷『垂直 (perpendicular)』：a·b ＝ 0 ⟺ a ⊥ b。例：a ＝ (1, 2, 2)、b ＝ (2, 0, 1)，a·b ＝ 1×2 ＋ 2×0 ＋ 2×1 ＝ 4；|a| ＝ 3、|b| ＝ √5，所以 cosθ ＝ 4/(3√5)。",
+   "situation_group": "向量：空間向量入門",
+   "subject": "math",
+   "strand": "vector",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.vector.space-dot-product"
+   ],
+   "prerequisites": [
+    "math.t_sub.vector.space-vector"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-sd-def",
+     "text": "空間向量的內積和平面一樣，是把「對應分量相乘再相加」，只是多一個 z 項：a ＝ (a₁, a₂, a₃)、b ＝ (b₁, b₂, b₃) 的內積 a·b ＝ a₁b₁ ＋ a₂b₂ ＋ a₃b₃。內積的結果是一個「數」（純量），不是向量。例：a ＝ (1, 2, 2)、b ＝ (2, 0, 1)，a·b ＝ 1×2 ＋ 2×0 ＋ 2×1 ＝ 2 ＋ 0 ＋ 2 ＝ 4。另外，一個向量和自己的內積等於它的模的平方：a·a ＝ |a|²，例 (1, 2, 2)·(1, 2, 2) ＝ 1 ＋ 4 ＋ 4 ＝ 9 ＝ 3²。",
+     "kind": "definition",
+     "source_refs": [
+      "空間向量的內積（高中數學 空間向量）"
+     ],
+     "verification_ref": "a·b=a₁b₁+a₂b₂+a₃b₃；(1,2,2)·(2,0,1)=4；a·a=|a|²=9（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-sd-angle",
+     "text": "內積的幾何意義和平面一樣：a·b ＝ |a||b|cosθ，其中 θ 是兩向量的夾角（0° 到 180°）。把式子反過來就能求夾角：cosθ ＝ a·b/(|a||b|)。例：a ＝ (1, 2, 2)、b ＝ (2, 0, 1)，a·b ＝ 4、|a| ＝ √(1 ＋ 4 ＋ 4) ＝ 3、|b| ＝ √(4 ＋ 0 ＋ 1) ＝ √5，所以 cosθ ＝ 4/(3√5)。內積的正負一樣看夾角：銳角為正、鈍角為負、剛好 90° 為 0。",
+     "kind": "definition",
+     "source_refs": [
+      "空間內積與夾角（高中數學 空間向量）"
+     ],
+     "verification_ref": "a·b=|a||b|cosθ；(1,2,2)·(2,0,1)：|a|=3、|b|=√5、cosθ=4/(3√5)（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-sd-perp",
+     "text": "垂直判定和平面一樣：兩個空間向量互相垂直（夾角 90°）的充要條件是它們的內積等於 0（因為 a·b ＝ |a||b|cos90° ＝ 0）。所以要檢查兩個空間向量是否垂直，只要算內積、看是不是 0。例：a ＝ (1, 2, 2)、c ＝ (2, −1, 0)，a·c ＝ 1×2 ＋ 2×(−1) ＋ 2×0 ＝ 2 − 2 ＋ 0 ＝ 0，所以 a ⊥ c。",
+     "kind": "definition",
+     "source_refs": [
+      "空間內積與垂直判定（高中數學 空間向量）"
+     ],
+     "verification_ref": "a⊥b ⟺ a·b=0；(1,2,2)·(2,−1,0)=0（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.vector.space-dot-product"
+     ],
+     "body": "這一單元把內積從平面帶到空間。因為做法和平面幾乎一樣，只是多一個 z 項，所以很快就能上手。先講定義（對應分量相乘再相加、多一個 z 項、結果是一個數）；再講幾何與夾角（a·b ＝ |a||b|cosθ，可反求夾角）；最後講垂直判定（a·b ＝ 0 ⟺ 兩向量垂直）。用 a ＝ (1, 2, 2)、b ＝ (2, 0, 1) 示範，最後練習。（接在『空間向量的坐標與運算』之後。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.vector.space-dot-product"
+     ],
+     "body": "① 定義：a·b ＝ a₁b₁ ＋ a₂b₂ ＋ a₃b₃（對應分量相乘再相加、比平面多一個 z 項、結果是一個「數」）；例 (1, 2, 2)·(2, 0, 1) ＝ 2 ＋ 0 ＋ 2 ＝ 4。自身內積 a·a ＝ |a|²，例 (1, 2, 2)·(1, 2, 2) ＝ 9。② 幾何與夾角：a·b ＝ |a||b|cosθ，所以 cosθ ＝ a·b/(|a||b|)；上例 |a| ＝ 3、|b| ＝ √5，cosθ ＝ 4/(3√5)。③ 垂直判定：a·b ＝ 0 ⟺ a ⊥ b；例 (1, 2, 2)·(2, −1, 0) ＝ 2 − 2 ＋ 0 ＝ 0，兩向量垂直。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.vector.space-dot-product"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>空間內積：兩向量 a、b 從 O 與夾角 θ（a·b ＝ 4）</text><line x1='120' y1='120' x2='120' y2='28' stroke='#99a7b5' stroke-width='1'/><path d='M120,28 L116,36 M120,28 L124,36' fill='none' stroke='#99a7b5' stroke-width='1'/><line x1='120' y1='120' x2='305' y2='120' stroke='#99a7b5' stroke-width='1'/><path d='M305,120 L297,116 M305,120 L297,124' fill='none' stroke='#99a7b5' stroke-width='1'/><line x1='120' y1='120' x2='60' y2='152' stroke='#99a7b5' stroke-width='1'/><path d='M60,152 L68,150 M60,152 L64,144' fill='none' stroke='#99a7b5' stroke-width='1'/><path d='M143,101 A30,30 0 0,1 150,117' fill='none' stroke='#6b7785' stroke-width='1'/><text x='156' y='103' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='start'>θ</text><line x1='120' y1='120' x2='186' y2='64' stroke='#c2535d' stroke-width='2.2'/><path d='M186,64 L181,72.5 M186,64 L176.9,67.5' fill='none' stroke='#c2535d' stroke-width='2.2'/><line x1='120' y1='120' x2='196' y2='112' stroke='#2f6f54' stroke-width='2.2'/><path d='M196,112 L187,116 M196,112 L187,110' fill='none' stroke='#2f6f54' stroke-width='2.2'/><circle cx='120' cy='120' r='2.5' fill='#33475b'/><text x='126' y='32' font-family='sans-serif' font-size='9.5' fill='#6b7785' text-anchor='start'>z</text><text x='302' y='133' font-family='sans-serif' font-size='9.5' fill='#6b7785' text-anchor='middle'>y</text><text x='54' y='150' font-family='sans-serif' font-size='9.5' fill='#6b7785' text-anchor='middle'>x</text><text x='112' y='131' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='end'>O</text><text x='189' y='61' font-family='sans-serif' font-size='9.5' fill='#c2535d' text-anchor='start'>a ＝ (1, 2, 2)</text><text x='200' y='115' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='start'>b ＝ (2, 0, 1)</text><text x='180' y='162' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>a·b ＝ 1×2 ＋ 2×0 ＋ 2×1 ＝ 4</text></svg>",
+      "alt": "標題「空間內積：兩向量 a、b 從 O 與夾角 θ（a·b ＝ 4）」。一個空間直角坐標系的斜投影示意圖：從原點 O 畫出三條互相垂直的灰色坐標軸——z 軸朝上、y 軸朝右、x 軸朝左下，各標上「z」「y」「x」。從 O 出發畫兩個向量：紅色的 a 指向右上、綠色的 b 指向右方略偏上，兩者在 O 處夾出一個角，用一小段弧標成「θ」。紅色向量旁標「a ＝ (1, 2, 2)」，綠色向量旁標「b ＝ (2, 0, 1)」，原點標「O」。最下方註「a·b ＝ 1×2 ＋ 2×0 ＋ 2×1 ＝ 4」。",
+      "caption": "以 a ＝ (1, 2, 2)、b ＝ (2, 0, 1) 示範空間內積：對應分量相乘再相加，a·b ＝ 1×2 ＋ 2×0 ＋ 2×1 ＝ 4（結果是一個數）。兩向量在 O 處的夾角 θ 可由 cosθ ＝ a·b/(|a||b|) 求出。（此為空間的斜投影示意圖，用來看兩向量與夾角，不是按比例量長度的平面圖。）"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.vector.space-dot-product"
+     ],
+     "body": "最後練空間內積。重點：a·b ＝ a₁b₁ ＋ a₂b₂ ＋ a₃b₃（對應分量相乘再相加、多一個 z 項、結果是一個數）；a·b ＝ |a||b|cosθ 可求夾角；a·b ＝ 0 ⟺ 兩向量垂直；自身內積 a·a ＝ |a|²。小提醒：(1) 內積是「先相乘再相加」得一個數，不是把分量相乘得一個新向量；(2) 某一項是 0（例如 2×0）只是那一項為 0，其他項還是要照算，別因為看到一個 0 就以為整個內積是 0。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "空間向量 (1, 2, 2) 和 (2, 0, 1) 的內積是多少？",
+     "answer": "4",
+     "kp_ids": [
+      "math.t_sub.vector.space-dot-product"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.vector.space-dot-product"
+     ],
+     "options": [
+      "4",
+      "(2, 0, 2)",
+      "6",
+      "0"
+     ],
+     "distractor_rationales": {
+      "(2, 0, 2)": "這是把對應分量相乘後沒相加、還寫成向量（1×2, 2×0, 2×1）：內積要再相加 2 ＋ 0 ＋ 2 ＝ 4，而且結果是一個「數」。",
+      "6": "這是把 2×0 錯算成 2（得 2 ＋ 2 ＋ 2）：2×0 ＝ 0，正確是 2 ＋ 0 ＋ 2 ＝ 4。",
+      "0": "看到中間有一項是 0（2×0）就以為整個內積是 0：其實只有那一項為 0，其他項還要照算，2 ＋ 0 ＋ 2 ＝ 4。"
+     },
+     "answer_evidence": [
+      "c-sd-def"
+     ],
+     "feedback": "(1, 2, 2)·(2, 0, 1) ＝ 1×2 ＋ 2×0 ＋ 2×1 ＝ 2 ＋ 0 ＋ 2 ＝ 4（結果是一個數）。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "下列哪一個空間向量和 (1, 2, 2) 互相垂直？",
+     "answer": "(2, −1, 0)",
+     "kp_ids": [
+      "math.t_sub.vector.space-dot-product"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.vector.space-dot-product"
+     ],
+     "options": [
+      "(2, −1, 0)",
+      "(2, 1, 0)",
+      "(1, 2, 2)",
+      "(0, 0, 1)"
+     ],
+     "distractor_rationales": {
+      "(2, 1, 0)": "內積 (1, 2, 2)·(2, 1, 0) ＝ 2 ＋ 2 ＋ 0 ＝ 4 ≠ 0，不垂直；垂直要內積為 0，(2, −1, 0) 才對。",
+      "(1, 2, 2)": "這是同一個向量，內積 ＝ 1 ＋ 4 ＋ 4 ＝ 9（等於 |a|²）≠ 0，不垂直。",
+      "(0, 0, 1)": "內積 (1, 2, 2)·(0, 0, 1) ＝ 0 ＋ 0 ＋ 2 ＝ 2 ≠ 0，不垂直。"
+     },
+     "answer_evidence": [
+      "c-sd-perp"
+     ],
+     "feedback": "(1, 2, 2)·(2, −1, 0) ＝ 1×2 ＋ 2×(−1) ＋ 2×0 ＝ 2 − 2 ＋ 0 ＝ 0，內積為 0 所以兩向量垂直。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "兩個空間向量的內積剛好等於 0，代表它們之間是什麼關係？",
+     "answer": "它們互相垂直",
+     "kp_ids": [
+      "math.t_sub.vector.space-dot-product"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.vector.space-dot-product"
+     ],
+     "options": [
+      "它們互相垂直",
+      "它們互相平行",
+      "它們長度相等",
+      "它們是同一個向量"
+     ],
+     "distractor_rationales": {
+      "它們互相平行": "平行是坐標成比例（一個是另一個的係數積）、不是內積為 0：內積為 0 代表夾角 90°，也就是垂直。",
+      "它們長度相等": "長度和垂直無關：兩向量就算一樣長也可以不垂直；內積為 0 代表的是垂直。",
+      "它們是同一個向量": "同一個向量的內積是 |a|²（通常不是 0）：內積為 0 代表夾角 90°、互相垂直。"
+     },
+     "answer_evidence": [
+      "c-sd-perp"
+     ],
+     "feedback": "a·b ＝ 0 ⟺ a ⊥ b（因為 a·b ＝ |a||b|cos90° ＝ 0），所以內積為 0 代表兩向量互相垂直。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "已知 a ＝ (1, 2, 2)、b ＝ (2, 0, 1)，且 a·b ＝ 4、|a| ＝ 3、|b| ＝ √5。它們夾角 θ 的 cosθ 是多少？",
+     "answer": "4/(3√5)",
+     "kp_ids": [
+      "math.t_sub.vector.space-dot-product"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.vector.space-dot-product"
+     ],
+     "options": [
+      "4/(3√5)",
+      "4/(3 ＋ √5)",
+      "3√5/4",
+      "4/3"
+     ],
+     "distractor_rationales": {
+      "4/(3 ＋ √5)": "分母用了相加 3 ＋ √5：公式是 cosθ ＝ a·b/(|a|×|b|)，分母要把兩個模相乘 3×√5。",
+      "3√5/4": "把分子分母顛倒了：cosθ ＝ a·b/(|a||b|)，分子是內積 4、分母是 3√5。",
+      "4/3": "只除了 |a|、漏掉 |b|：分母要兩個模都乘上去，3×√5 ＝ 3√5。"
+     },
+     "answer_evidence": [
+      "c-sd-angle"
+     ],
+     "feedback": "cosθ ＝ a·b/(|a||b|) ＝ 4/(3×√5) ＝ 4/(3√5)。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（空間內積 a·b＝a₁b₁＋a₂b₂＋a₃b₃＝對應分量相乘再相加、多一個 z 項、結果是一個數；a·b＝|a||b|cosθ、cosθ＝a·b/(|a||b|) 求夾角、正負看銳角/鈍角/直角；垂直判定 a·b＝0 ⟺ a⊥b；自身內積 a·a＝|a|²；(1,2,2)·(2,0,1)＝4、|a|＝3、|b|＝√5、cosθ＝4/(3√5)、(1,2,2)·(2,−1,0)＝0 垂直、a·a＝9；兩鐵律＝內積是先乘再加得一個數不是向量、某項為0只是那項為0其他項照算）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
