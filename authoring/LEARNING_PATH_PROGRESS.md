@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 05:20 vector space-vector 空間向量的坐標與運算 5/5 DONE-GATE 全綠（t_sub 高中 分科/深階，★3D 斜投影坐標示意 SVG）→ vector strand 8/11
+- **math_vector_space_vector frozen `8873862c9b428ee3`**（R1-R5 連 5 clean、L3 每輪 exit 0；R1-R5 一次過無 panel-confirmed defect；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==8873862c／per_page_5clean 564/564 頁 0 違規（space_vector absent）／repro PASS／iPad 四角色簽核（3D 斜投影坐標系 z 上/y 右/x 左下、灰虛線 O→x→y→z 補出長方體落點 P、深藍 OP 對角、標 P=(a,b,c)；★此為 3D 示意圖非 2D 度量圖 #62 N/A、箭頭方向正確 #43、右緣0%）。
+- 空間向量的坐標與運算（t_sub，空間向量入門、KP 本身無前置、教學接平面向量）＝空間直角坐標 x/y/z 三軸；向量＝三坐標 (a,b,c)；加減/係數積逐分量（和平面一樣）；模 |v|=√(a²+b²+c²)（比平面多一個 z 分量平方、先平方再加開根）；平行＝坐標成比例（一個是另一個係數積）。以 a=(1,2,3)、b=(4,5,6) 貫穿：a+b=(5,7,9)、a−b=(−3,−3,−3)、2a=(2,4,6)；模 |(2,3,6)|=7（乾淨）、|(1,2,3)|=√14（展示公式）。
+- ★repro：binding＝math_checks6::vector.space-vector（驗加法/係數積概念 PASS）；單元引 math_checks7::vector.space-vector（本 session 新增，驗精確數值 (1,2,3)+(4,5,6)=(5,7,9)/差/2a/|(2,3,6)|=7/|(1,2,3)|=√14/(2,4,6)∥(1,2,3)，.venv PASS）。同 cross-product 先例：同 slug 補充驗證、分屬不同 module、兩者皆過。
+- practice：Q1 加法 (5,7,9)（hero）、Q2 模 |(2,3,6)|=7、Q3 係數積 2a=(2,4,6)、Q4 平行＝(2,4,6)（transfer，坐標成比例）。★Q3/Q4 答案同為 (2,4,6) 但問不同運算（2a 結果 vs 哪個與 a 平行）、各自 stem 清楚、非 #10 碰撞（panel R1-R5 皆判非缺陷）。凍前 .venv 反算每誘答單一錯誤 #53：Q1 相減/分量相乘/混成內積一個數；Q2 直接相加/平方和忘開根/對和開根；Q3 只乘首分量/忘乘/係數用加；Q4 分量顛倒/只改一分量/第三分量非倍數。
+- ★收斂史：R1-R5 一次過、全程 0 正確性缺陷、無 L3 FAIL（無 de-converge）。
+- 下一步：vector 第 9 單元＝space-dot-product（空間向量內積與夾角，prereq space-vector；已有 math_checks6 repro）；vector 共 11 KP，剩 3（space-dot-product/triangle-tetra-area/geometry-apply，皆已有 math_checks6 repro）。接著 conic(7)/complex(6)/finmath(6)/space(5)/matrix(5)/linprog(2)/determinant(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 04:57 vector cross-product 平面向量的外積與面積 5/5 DONE-GATE 全綠（t_sub 高中 分科/深階，★平行四邊形面積 等軸 SVG）→ vector strand 7/11
 - **math_vector_cross_product frozen `78d6bba354f12b8a`**（R1-R5 連 5 clean、L3 每輪 exit 0；R1-R5 一次過無 panel-confirmed defect；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==78d6bba3／per_page_5clean 563/563 頁 0 違規（cross_product absent）／repro PASS／iPad 四角色簽核（坐標平面 u=(3,2) 紅、v=(1,3) 綠從原點、兩虛線補成平行四邊形、內部淺藍、標面積=7、等軸 #62、右緣0%）。
 - 外積與面積（t_sub，prereq dot-product/projection）＝平面向量外積（2D，取 3D 外積 z 分量）u×v=u₁v₂−u₂v₁——結果是一個帶正負號的數（不是向量）；反對稱 u×v=−(v×u)。幾何：|u×v|=u、v 張出的平行四邊形面積（=|u||v|sinθ），三角形面積=|u×v|/2。平行判定 u×v=0 ⟺ u、v 平行（共線）。★避免與內積混淆：內積 u₁v₁+u₂v₂（相乘相加、垂直判定），外積 u₁v₂−u₂v₁（交叉相乘相減、平行/面積判定）。以 u=(3,2)、v=(1,3) 貫穿：u×v=7、面積=7、三角形=7/2；內積=9≠7（★刻意不碰撞避 #10）。
