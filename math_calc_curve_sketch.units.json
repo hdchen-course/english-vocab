@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 微積分（calc）strand t_sub 單元。知識點 math.t_sub.calc.curve-sketch（函數圖形的描繪）。tier=t_sub（高中分科/選修深階，exam 分科-數甲）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：導數 (derivative)、一階導數 (first derivative)、二階導數 (second derivative)、臨界點 (critical point)、極大 (local maximum)、極小 (local minimum)、反曲點 (inflection point)、截距 (intercept)。前置假設：會用一階導數判增減/找極值、二階導數判凹凸/找反曲點（increasing-concavity＋extrema 已教）。★scope（t_sub）：綜合描繪多項式函數圖形的步驟——(1)與 x 軸交點（解 f(x)=0）、(2)用 f′ 找增減與極值、(3)用 f″ 找凹凸與反曲點、(4)把關鍵點（極值、反曲點、截距）標出再連成平滑曲線。以 f(x)＝x³−3x 貫穿（x 截距 0、±√3；極大(−1,2)、極小(1,−2)、反曲點(0,0)，左凹下右凹上）。只到多項式描繪；不含有理函數的漸近線、不含週期/三角函數描繪。prereq＝increasing-concavity＋extrema。repro（tools/verify/math_checks7.py::calc.curve-sketch）：x³−3x 極小(1,−2)、極大(−1,2)（.venv 已核）；教材用 x 截距{0,±√3}、反曲點(0,0) f″ 左負右正；practice 另用 h(x)=x³−12x（h′=3x²−12 臨界點±2、h″=6x、h(−2)=16 極大、h(2)=−16 極小）皆以 .venv sympy 另核。★自檢（math-unit defect-classes #1–#59）：figure＝x³−3x 完整描繪曲線 SVG（三次曲線標 極大(−1,2) 紅圈、極小(1,−2) 綠圈、反曲點(0,0) 空心圈，x 截距 −√3/√3 刻度，下註描繪步驟），alt 與 SVG text 逐字一致（#33）、標題『函數描繪：f(x)＝x³−3x 的完整圖形』寫進 alt 開頭；practice 四答案＝{凹凸與反曲點(Q1 f″ 作用),0、√3、−√3(Q2 x 截距),左凹下右凹上(Q3 反曲點左右),極大 x=−2、極小 x=2(Q4 用 h=x³−12x)} 與 teach 關鍵值無 #10（Q4 換函數）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53，如 f′f″ 作用互換/把臨界點當截距/凹凸左右反/臨界點解錯）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_calc_curve_sketch.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.calc.curve-sketch",
+   "title_zh": "函數圖形的描繪",
+   "can_do": "我會用導數的資訊把一個多項式函數的圖形描繪出來。步驟是：(1) 先找圖形與 x 軸的『截距 (intercept)』（解 f(x) ＝ 0）；(2) 用『一階導數 (first derivative)』f′ 找增減和極大、極小；(3) 用『二階導數 (second derivative)』f″ 找凹凸和『反曲點 (inflection point)』；(4) 把這些『臨界點 (critical point)』、極值、反曲點、截距標在圖上，再連成一條平滑曲線。以 f(x) ＝ x³ − 3x 為例：x 截距是 0、√3、−√3，有『極大 (local maximum)』(−1, 2)、『極小 (local minimum)』(1, −2)，反曲點 (0, 0)。",
+   "situation_group": "微積分：函數圖形描繪",
+   "subject": "math",
+   "strand": "calc",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.calc.curve-sketch"
+   ],
+   "prerequisites": [
+    "math.t_sub.calc.increasing-concavity",
+    "math.t_sub.calc.extrema"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-cs-steps",
+     "text": "描繪多項式函數圖形的步驟：(1) 解 f(x) ＝ 0 找出與 x 軸的截距；(2) 求 f′(x)，由 f′ 的正負找增減、由 f′ ＝ 0 找臨界點並判極大／極小；(3) 求 f″(x)，由 f″ 的正負找凹凸、由 f″ 變號找反曲點；(4) 把截距、極值、反曲點等關鍵點標在座標上，再依增減與凹凸把它們連成一條平滑曲線。",
+     "kind": "definition",
+     "source_refs": [
+      "函數圖形描繪步驟（高中數學 微積分）"
+     ],
+     "verification_ref": "描繪步驟：截距→f′ 增減極值→f″ 凹凸反曲點→連關鍵點（教學流程）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-cs-roles",
+     "text": "一階導數 f′ 和二階導數 f″ 在描繪時分工不同：f′ 的正負告訴我們圖形「往上或往下」（增減），f′ ＝ 0 的點是極值的候選；f″ 的正負告訴我們圖形「怎麼彎」（凹向上或凹向下），f″ 變號的點是反曲點。兩者合起來就能決定整條曲線的走勢。",
+     "kind": "definition",
+     "source_refs": [
+      "一階二階導數在描繪中的角色（高中數學 微積分）"
+     ],
+     "verification_ref": "f′→增減/極值、f″→凹凸/反曲點（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-cs-example",
+     "text": "以 f(x) ＝ x³ − 3x 為例：解 f ＝ x(x² − 3) ＝ 0 得 x 截距 0、√3、−√3；f′ ＝ 3x² − 3 給臨界點 x ＝ −1、1，判得極大 (−1, 2)、極小 (1, −2)；f″ ＝ 6x 在 x ＝ 0 變號（左負右正），所以反曲點是 (0, 0)、左側凹向下、右側凹向上。把這些點標出再連起來，就是一條先升到 (−1, 2)、再降到 (1, −2)、再上升的曲線。",
+     "kind": "definition",
+     "source_refs": [
+      "x³−3x 的描繪（高中數學 微積分）"
+     ],
+     "verification_ref": "x³−3x：截距{0,±√3}、極大(−1,2)、極小(1,−2)、反曲點(0,0)（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.curve-sketch"
+     ],
+     "body": "這一單元學怎麼把前面學過的工具合起來，描繪出一個多項式函數的完整圖形。下面先講描繪的四個步驟（截距、增減與極值、凹凸與反曲點、連成曲線）；再講 f′ 和 f″ 在描繪時各自的角色；用 f(x) ＝ x³ − 3x 完整示範一次，最後練習。（本單元接在『增減與凹凸』與『極值判定』之後，是把它們綜合起來用。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.curve-sketch"
+     ],
+     "body": "① 步驟：(1) 解 f ＝ 0 找 x 截距；(2) 用 f′ 找增減、找極值；(3) 用 f″ 找凹凸、找反曲點；(4) 標出關鍵點再連成平滑曲線。② 角色：f′ 管「往上往下」（增減、極值候選）、f″ 管「怎麼彎」（凹凸、反曲點）。以 f(x) ＝ x³ − 3x 為例：x 截距 0、√3、−√3；臨界點 −1、1 ⇒ 極大 (−1, 2)、極小 (1, −2)；f″ ＝ 6x 在 x ＝ 0 變號 ⇒ 反曲點 (0, 0)、左凹下、右凹上。看下面描好的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.calc.curve-sketch"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>函數描繪：f(x)＝x³−3x 的完整圖形</text><line x1='58' y1='95' x2='305' y2='95' stroke='#99a7b5' stroke-width='1'/><line x1='84.7' y1='92' x2='84.7' y2='98' stroke='#99a7b5' stroke-width='1'/><line x1='275.3' y1='92' x2='275.3' y2='98' stroke='#99a7b5' stroke-width='1'/><path d='M70.0,139.0 L75.5,120.5 L81.0,104.5 L86.5,90.9 L92.0,79.5 L97.5,70.2 L103.0,63.0 L108.5,57.5 L114.0,53.8 L119.5,51.7 L125.0,51.0 L130.5,51.6 L136.0,53.5 L141.5,56.3 L147.0,60.2 L152.5,64.8 L158.0,70.0 L163.5,75.8 L169.0,82.0 L174.5,88.4 L180.0,95.0 L185.5,101.6 L191.0,108.0 L196.5,114.2 L202.0,120.0 L207.5,125.2 L213.0,129.8 L218.5,133.7 L224.0,136.5 L229.5,138.4 L235.0,139.0 L240.5,138.3 L246.0,136.2 L251.5,132.5 L257.0,127.0 L262.5,119.8 L268.0,110.5 L273.5,99.1 L279.0,85.5 L284.5,69.5 L290.0,51.0' fill='none' stroke='#33475b' stroke-width='1.8'/><circle cx='125' cy='51' r='3.5' fill='#c2535d'/><circle cx='235' cy='139' r='3.5' fill='#2f6f54'/><circle cx='180' cy='95' r='3' fill='#ffffff' stroke='#2f6f54' stroke-width='1.4'/><text x='125' y='44' font-family='sans-serif' font-size='9' fill='#c2535d' text-anchor='middle'>極大 (−1, 2)</text><text x='235' y='152' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='middle'>極小 (1, −2)</text><text x='84.7' y='109' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>−√3</text><text x='150' y='109' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>反曲點 (0, 0)</text><text x='275.3' y='109' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>√3</text><text x='180' y='164' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>描繪步驟：截距 → f′ 找增減／極值 → f″ 找凹凸／反曲點 → 連成曲線</text></svg>",
+      "alt": "標題「函數描繪：f(x)＝x³−3x 的完整圖形」。一條三次曲線由左下升起、在最高點後下降、再從最低點上升；中間是 x 軸，軸上有 −√3 與 √3 兩個截距刻度。最高點用紅色圓點標「極大 (−1, 2)」，最低點用綠色圓點標「極小 (1, −2)」，曲線穿過 x 軸處有一個空心圓點標「反曲點 (0, 0)」。下方註「描繪步驟：截距 → f′ 找增減／極值 → f″ 找凹凸／反曲點 → 連成曲線」。",
+      "caption": "以 f(x)＝x³−3x 示範完整描繪：x 截距 0、−√3、√3；f′＝3x²−3 給極大 (−1, 2)、極小 (1, −2)；f″＝6x 在 x＝0 變號得反曲點 (0, 0)（左凹向下、右凹向上）。標出關鍵點再連成平滑曲線。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.curve-sketch"
+     ],
+     "body": "最後練函數描繪。重點：描繪步驟＝先找 x 截距（f ＝ 0）、再用 f′ 找增減與極值、再用 f″ 找凹凸與反曲點、最後連成平滑曲線；f′ 管增減（往上往下）、f″ 管凹凸（怎麼彎）。小提醒：f ＝ 0 的根是「x 截距」、f′ ＝ 0 的點是「臨界點（極值候選）」，兩者不同、別混在一起。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "描繪函數圖形時，用「二階導數 f″」主要是找出什麼？",
+     "answer": "凹凸方向與反曲點",
+     "kp_ids": [
+      "math.t_sub.calc.curve-sketch"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.curve-sketch"
+     ],
+     "options": [
+      "凹凸方向與反曲點",
+      "增減與極值",
+      "與 x 軸的截距",
+      "函數的定義域"
+     ],
+     "distractor_rationales": {
+      "增減與極值": "增減與極值是用「一階」f′ 找的；f″ 找的是凹凸與反曲點。",
+      "與 x 軸的截距": "x 截距是解 f(x) ＝ 0 找的，不用導數；f″ 找的是凹凸與反曲點。",
+      "函數的定義域": "定義域由函數本身決定（多項式是全體實數），不是 f″ 找的；f″ 找凹凸與反曲點。"
+     },
+     "answer_evidence": [
+      "c-cs-roles"
+     ],
+     "feedback": "f″ 管「怎麼彎」：它的正負給凹凸方向、變號處給反曲點。增減與極值則是 f′ 的工作。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "f(x) ＝ x³ − 3x 與 x 軸的交點（x 截距）有哪些？",
+     "answer": "x ＝ 0、√3、−√3",
+     "kp_ids": [
+      "math.t_sub.calc.curve-sketch"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.curve-sketch"
+     ],
+     "options": [
+      "x ＝ 0、√3、−√3",
+      "x ＝ −1、1",
+      "x ＝ 0、3、−3",
+      "x ＝ 2、−2"
+     ],
+     "distractor_rationales": {
+      "x ＝ −1、1": "−1、1 是 f′ ＝ 0 的臨界點（極值位置），不是 f ＝ 0 的截距；x 截距要解 f(x) ＝ 0。",
+      "x ＝ 0、3、−3": "解的是 x(x² − 3) ＝ 0，所以 x² ＝ 3、x ＝ ±√3，不是 ±3。",
+      "x ＝ 2、−2": "2、−2 不滿足 f ＝ 0（f(2) ＝ 2 ≠ 0）；x 截距是 0、√3、−√3。"
+     },
+     "answer_evidence": [
+      "c-cs-example"
+     ],
+     "feedback": "解 f ＝ x(x² − 3) ＝ 0：x ＝ 0，或 x² ＝ 3 即 x ＝ ±√3。所以 x 截距是 0、√3、−√3。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "f(x) ＝ x³ − 3x 的 f″ ＝ 6x，反曲點在 (0, 0)。那麼反曲點左側（x ＜ 0）與右側（x ＞ 0）的凹凸分別是？",
+     "answer": "左側凹向下、右側凹向上",
+     "kp_ids": [
+      "math.t_sub.calc.curve-sketch"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.curve-sketch"
+     ],
+     "options": [
+      "左側凹向下、右側凹向上",
+      "左側凹向上、右側凹向下",
+      "兩側都凹向上",
+      "兩側都凹向下"
+     ],
+     "distractor_rationales": {
+      "左側凹向上、右側凹向下": "方向反了：x ＜ 0 時 f″ ＝ 6x ＜ 0（凹向下）、x ＞ 0 時 f″ ＞ 0（凹向上）。",
+      "兩側都凹向上": "反曲點兩側凹凸一定「不同」（這就是反曲點的意思）；這裡左凹下、右凹上。",
+      "兩側都凹向下": "反曲點兩側凹凸必定相反，不會都一樣；左側才凹向下、右側是凹向上。"
+     },
+     "answer_evidence": [
+      "c-cs-example"
+     ],
+     "feedback": "f″ ＝ 6x：x ＜ 0 時 f″ ＜ 0（凹向下）、x ＞ 0 時 f″ ＞ 0（凹向上），所以左凹下、右凹上，(0, 0) 是反曲點。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "描繪 h(x) ＝ x³ − 12x（h′(x) ＝ 3x² − 12、h″(x) ＝ 6x）。它的極大、極小各在哪裡？",
+     "answer": "極大在 x ＝ −2、極小在 x ＝ 2",
+     "kp_ids": [
+      "math.t_sub.calc.curve-sketch"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.curve-sketch"
+     ],
+     "options": [
+      "極大在 x ＝ −2、極小在 x ＝ 2",
+      "極大在 x ＝ 2、極小在 x ＝ −2",
+      "極大在 x ＝ −4、極小在 x ＝ 4",
+      "極大在 x ＝ 0、極小在 x ＝ 12"
+     ],
+     "distractor_rationales": {
+      "極大在 x ＝ 2、極小在 x ＝ −2": "臨界點 ±2 對，但判反了：h″(−2) ＝ −12 ＜ 0 是極大、h″(2) ＝ 12 ＞ 0 是極小。",
+      "極大在 x ＝ −4、極小在 x ＝ 4": "臨界點要解 h′ ＝ 3x² − 12 ＝ 0 得 x² ＝ 4、x ＝ ±2，不是 ±4。",
+      "極大在 x ＝ 0、極小在 x ＝ 12": "x ＝ 0 不是臨界點（h′(0) ＝ −12 ≠ 0）；12 是一次項 −12x 的係數被誤當答案。臨界點是 ±2。"
+     },
+     "answer_evidence": [
+      "c-cs-steps"
+     ],
+     "feedback": "解 h′ ＝ 3x² − 12 ＝ 0 得臨界點 x ＝ ±2；h″ ＝ 6x，h″(−2) ＝ −12 ＜ 0 ⇒ x ＝ −2 極大、h″(2) ＝ 12 ＞ 0 ⇒ x ＝ 2 極小。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（描繪步驟：截距 f=0 → f′ 找增減/極值 → f″ 找凹凸/反曲點 → 連成平滑曲線；f′ 管增減、f″ 管凹凸；以 x³−3x 為例截距 0、±√3、極大(−1,2)、極小(1,−2)、反曲點(0,0)；x 截距與臨界點不同別混）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
