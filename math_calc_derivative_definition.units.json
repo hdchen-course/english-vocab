@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 微積分（calc）strand t_sub 單元。知識點 math.t_sub.calc.derivative-definition（導數的定義（差商極限）與切線斜率）。tier=t_sub（高中探究/選修補充）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：導數 (derivative)、差商 (difference quotient)、切線 (tangent line)、割線 (secant line)。★scope（t_sub）：導數的定義——平均變化率（割線斜率）＝差商 [f(a+h)−f(a)]/h；當 h→0，割線趨近切線，差商的極限＝切線斜率＝瞬時變化率＝導數 f'(a)＝lim_{h→0}[f(a+h)−f(a)]/h；用定義對 f(x)=x² 算 f'(x)=lim(2x+h)=2x。只定義＋割線→切線直觀＋用定義算簡單導數＋導數=切線斜率；不含微分公式庫（另單元）、不含高階導數/隱函數。prereq＝function-limit。repro（tools/verify/math_checks7.py::calc.derivative-definition）：差商極限 lim_{h→0}[(x+h)²−x²]/h=2x=f′（.venv sympy 已核）；另 f'(3)=6、f'(1)=2、割線[1,2]斜率=3、差商化簡=2x+h（.venv 已核）。★自檢（math-unit defect-classes #1–#59）：figure＝割線→切線趨近圖 SVG（拋物線 y=x²、P(1,1) 實心、Q(2,4) 實心、割線 PQ、P 點切線、箭頭 Q→P；px=40+x*120、py=140−y*22 to-scale），alt 與 SVG text 逐字一致（#33）、標題『導數＝割線斜率的極限（割線→切線）』寫進 alt 開頭；teach 值集{2x,f'(1)=2,割線斜率3}與 practice 數值答案{6}無交集避#10（Q2 用 f'(3)=6）；practice：Q1 差商公式（選項說法）、Q2 用導數求值（f'(x)=2x→f'(3)=6，選項數）、Q3 導數意義（瞬時變化率=切線斜率，選項說法）、Q4 h→0 割線→切線（選項說法）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53，如把 f(a) 當導數/把 x 當答案/相加非相乘/割線變水平/斜率趨0）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_calc_derivative_definition.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.calc.derivative-definition",
+   "title_zh": "導數的定義與切線斜率",
+   "can_do": "我知道『導數 (derivative)』是怎麼來的：先算兩點間的平均變化率，也就是過這兩點的『割線 (secant line)』斜率——這叫『差商 (difference quotient)』[f(a+h)−f(a)]/h；再讓第二個點越來越靠近第一個點（h→0），割線就會越來越接近『切線 (tangent line)』，差商的極限就是切線的斜率，也就是函數在那一點的瞬時變化率，記成 f'(a) ＝ lim_{h→0} [f(a+h)−f(a)]/h。我會用這個定義算簡單的導數，例如 f(x)＝x² 的導數是 f'(x)＝2x，而 f'(a) 就是函數圖形在 x＝a 處切線的斜率。",
+   "situation_group": "微積分：導數的定義與切線斜率",
+   "subject": "math",
+   "strand": "calc",
+   "est_minutes": 14,
+   "knowledge_point_ids": [
+    "math.t_sub.calc.derivative-definition"
+   ],
+   "prerequisites": [
+    "math.t_sub.calc.function-limit"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-der-diffquot",
+     "text": "兩點之間的『平均變化率』，就是過這兩點的『割線 (secant line)』的斜率。若一點的 x 是 a、另一點的 x 是 a＋h，這個斜率就是『差商 (difference quotient)』：[f(a＋h) − f(a)] / h——分子是 y 的變化、分母是 x 的變化（h）。它代表在 a 到 a＋h 這段區間上，y 平均每單位 x 變化多少。",
+     "kind": "definition",
+     "source_refs": [
+      "平均變化率、割線斜率與差商（高中數學 微積分）"
+     ],
+     "verification_ref": "差商=[f(a+h)−f(a)]/h；f=x² 割線[1,2]斜率=3（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-der-limit",
+     "text": "讓第二個點越來越靠近第一個點，也就是讓 h 越來越接近 0，割線就會越來越接近那一點的『切線 (tangent line)』。差商的極限就是切線的斜率，也就是函數在 x＝a 的『瞬時變化率』，這個值就叫 f 在 a 的『導數 (derivative)』：f'(a) ＝ lim_{h→0} [f(a＋h) − f(a)] / h。",
+     "kind": "definition",
+     "source_refs": [
+      "導數的定義：差商的極限（高中數學 微積分）"
+     ],
+     "verification_ref": "f'(a)=lim_{h→0}[f(a+h)−f(a)]/h；割線→切線（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-der-compute",
+     "text": "用定義就能算導數。以 f(x)＝x² 為例：差商 ＝ [(x＋h)² − x²] / h ＝ (2xh ＋ h²) / h ＝ 2x ＋ h；讓 h→0，得 f'(x) ＝ 2x。所以這條拋物線在任何一點 x 的切線斜率都是 2x，例如在 x＝1 斜率是 2、在 x＝3 斜率是 6。導數 f'(a) 的幾何意義就是「圖形在 x＝a 處切線的斜率」。",
+     "kind": "definition",
+     "source_refs": [
+      "用定義求導數 f(x)=x²（高中數學 微積分）"
+     ],
+     "verification_ref": "[(x+h)²−x²]/h=2x+h→2x；f'(1)=2、f'(3)=6（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.derivative-definition"
+     ],
+     "body": "這一單元學『導數』是怎麼定義的。下面先講平均變化率＝割線斜率＝差商 [f(a+h)−f(a)]/h；再講讓 h→0 時割線趨近切線，差商的極限＝切線斜率＝導數；接著用定義實際算 f(x)=x² 的導數；用一張割線趨近切線的圖示範，最後練習。（本單元接在『函數極限』之後，導數就是用極限定義的。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.derivative-definition"
+     ],
+     "body": "① 差商（割線斜率）：取圖形上兩點，x 分別是 a 和 a＋h，過這兩點的割線斜率 ＝ [f(a＋h) − f(a)] / h，叫差商，代表這段區間的平均變化率。看下面的圖：拋物線 y＝x² 上取 P（x＝1）和 Q（x＝2），割線 PQ 的斜率是 (4−1)/(2−1)＝3。② 讓 h→0：把 Q 沿著曲線往 P 靠近（h 越來越小），割線就越來越接近 P 點的切線；差商的極限就是切線斜率，也就是導數 f'(a) ＝ lim_{h→0} [f(a＋h) − f(a)] / h。③ 用定義算：f(x)＝x² 的差商 ＝ [(x＋h)² − x²] / h ＝ 2x ＋ h，h→0 得 f'(x) ＝ 2x，所以在 x＝1 切線斜率是 2。導數 f'(a) 的意義就是「圖形在 x＝a 處切線的斜率」。下面用這張圖整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.calc.derivative-definition"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>導數＝割線斜率的極限（割線→切線）</text><line x1='40' y1='30' x2='40' y2='140' stroke='#99a7b5' stroke-width='1'/><line x1='40' y1='140' x2='320' y2='140' stroke='#99a7b5' stroke-width='1'/><text x='34' y='36' font-family='sans-serif' font-size='10' fill='#6b7785' text-anchor='end'>y</text><text x='315' y='153' font-family='sans-serif' font-size='10' fill='#6b7785' text-anchor='end'>x</text><polyline points='40,140 88,136.5 136,125.9 160,118 196,102.8 232,83.7 280,52' fill='none' stroke='#5b8def' stroke-width='2'/><line x1='160' y1='118' x2='280' y2='52' stroke='#8a93a0' stroke-width='1.5' stroke-dasharray='4 3'/><line x1='118' y1='133.4' x2='244' y2='87.2' stroke='#2f9e6e' stroke-width='2'/><circle cx='160' cy='118' r='4' fill='#c2535d'/><circle cx='280' cy='52' r='4' fill='#33475b'/><text x='151' y='115' font-family='sans-serif' font-size='10.5' fill='#c2535d' text-anchor='end' font-weight='bold'>P</text><text x='288' y='52' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='start' font-weight='bold'>Q</text><text x='300' y='78' font-family='sans-serif' font-size='9.5' fill='#8a93a0' text-anchor='end'>割線</text><text x='250' y='96' font-family='sans-serif' font-size='9.5' fill='#2f9e6e' text-anchor='start'>切線</text><path d='M 250 60 Q 210 70 180 104' fill='none' stroke='#6b7785' stroke-width='1' marker-end='url(#ar)'/><defs><marker id='ar' markerWidth='7' markerHeight='7' refX='5' refY='3' orient='auto'><path d='M0,0 L6,3 L0,6 z' fill='#6b7785'/></marker></defs><text x='207' y='63' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>Q→P</text><text x='180' y='162' font-family='sans-serif' font-size='10' fill='#6b7785' text-anchor='middle'>Q 趨近 P（h→0），割線斜率 → 切線斜率 ＝ 導數</text></svg>",
+      "alt": "標題「導數＝割線斜率的極限（割線→切線）」。一張座標圖，橫軸 x、縱軸 y，一條藍色拋物線 y＝x²；線上標出 P 點（紅色實心）和較高的 Q 點（深色實心），一條灰色虛線是過 P、Q 的割線、標「割線」，一條綠線是 P 點的切線、標「切線」；一個箭頭標「Q→P」表示 Q 沿曲線靠近 P。下方寫「Q 趨近 P（h→0），割線斜率 → 切線斜率 ＝ 導數」。",
+      "caption": "割線趨近切線：拋物線 y＝x² 上 P(1,1)、Q(2,4)，過 P、Q 的割線斜率是 3；當 Q 沿曲線趨近 P（h→0），割線越來越接近 P 的切線，割線斜率趨近切線斜率 2（＝f'(1)），這個極限值就是導數。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.derivative-definition"
+     ],
+     "body": "最後練導數的定義。重點：差商 [f(a+h)−f(a)]/h ＝ 割線斜率 ＝ 平均變化率；h→0 時割線趨近切線，差商的極限 ＝ 切線斜率 ＝ 瞬時變化率 ＝ 導數 f'(a)；用定義可算出 f(x)＝x² 的導數是 2x。小提醒：導數 f'(a) 是「切線的斜率」，不是函數值 f(a)；差商的分母是 x 的變化 h、不是把兩個函數值相加。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在 x＝a 和 x＝a＋h 兩點之間，平均變化率（也就是割線的斜率、差商）怎麼算？",
+     "answer": "[f(a＋h) − f(a)] ÷ h",
+     "kp_ids": [
+      "math.t_sub.calc.derivative-definition"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.derivative-definition"
+     ],
+     "options": [
+      "[f(a＋h) − f(a)] ÷ h",
+      "[f(a＋h) ＋ f(a)] ÷ h",
+      "f(a＋h) − f(a)",
+      "[f(a＋h) − f(a)] × h"
+     ],
+     "distractor_rationales": {
+      "[f(a＋h) ＋ f(a)] ÷ h": "分子要相減（y 的變化量）不是相加；差商是 [f(a＋h) − f(a)] ÷ h。",
+      "f(a＋h) − f(a)": "這只是 y 的變化量，還要除以 x 的變化 h 才是斜率；差商是 [f(a＋h) − f(a)] ÷ h。",
+      "[f(a＋h) − f(a)] × h": "斜率是 y 變化除以 x 變化，要除以 h 不是乘以 h；差商是 [f(a＋h) − f(a)] ÷ h。"
+     },
+     "answer_evidence": [
+      "c-der-diffquot"
+     ],
+     "feedback": "斜率＝y 的變化 ÷ x 的變化；差商 ＝ [f(a＋h) − f(a)] ÷ h。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "已知 f(x) ＝ x² 的導數是 f'(x) ＝ 2x。求 f'(3)，也就是這條拋物線在 x＝3 處切線的斜率。",
+     "answer": "6",
+     "kp_ids": [
+      "math.t_sub.calc.derivative-definition"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.derivative-definition"
+     ],
+     "options": [
+      "6",
+      "9",
+      "3",
+      "5"
+     ],
+     "distractor_rationales": {
+      "9": "9 是 f(3)＝3²，那是函數值，不是導數（切線斜率）；導數用 f'(x)＝2x，f'(3)＝2 × 3 ＝ 6。",
+      "3": "3 是 x 的值，不是切線斜率；把 x＝3 代進 f'(x)＝2x，得 2 × 3 ＝ 6。",
+      "5": "5 是把 2 和 3 相加；f'(x)＝2x 要相乘，f'(3)＝2 × 3 ＝ 6。"
+     },
+     "answer_evidence": [
+      "c-der-compute"
+     ],
+     "feedback": "把 x＝3 代入 f'(x)＝2x：2 × 3 ＝ 6，就是 x＝3 處切線的斜率。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "導數 f'(a) 代表的幾何意義是什麼？",
+     "answer": "函數圖形在 x＝a 處切線的斜率（瞬時變化率）",
+     "kp_ids": [
+      "math.t_sub.calc.derivative-definition"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.derivative-definition"
+     ],
+     "options": [
+      "函數圖形在 x＝a 處切線的斜率（瞬時變化率）",
+      "函數在 x＝a 的值 f(a)",
+      "過兩點那條割線的斜率",
+      "函數能達到的最大值"
+     ],
+     "distractor_rationales": {
+      "函數在 x＝a 的值 f(a)": "f(a) 是函數值（圖形的高度），不是導數；導數是該點切線的斜率。",
+      "過兩點那條割線的斜率": "割線斜率是「平均」變化率（差商）；導數是讓 h→0 之後的極限，是切線（瞬時）的斜率。",
+      "函數能達到的最大值": "導數不是最大值；它是該點切線的斜率，代表瞬時變化率。"
+     },
+     "answer_evidence": [
+      "c-der-limit"
+     ],
+     "feedback": "導數 f'(a) 是函數圖形在 x＝a 處切線的斜率，也就是該點的瞬時變化率。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "當 h 越來越接近 0（第二個點沿曲線趨近第一個點）時，割線會怎麼變化？",
+     "answer": "割線越來越接近切線，割線斜率趨近切線斜率（＝導數）",
+     "kp_ids": [
+      "math.t_sub.calc.derivative-definition"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.derivative-definition"
+     ],
+     "options": [
+      "割線越來越接近切線，割線斜率趨近切線斜率（＝導數）",
+      "割線會變成水平線，斜率趨近 0",
+      "割線會變成鉛直線，斜率趨近無限大",
+      "割線和切線沒有關係，不會互相接近"
+     ],
+     "distractor_rationales": {
+      "割線會變成水平線，斜率趨近 0": "割線斜率趨近的是「切線斜率」，不一定是 0；只有切線本身水平時才是 0。",
+      "割線會變成鉛直線，斜率趨近無限大": "割線趨近的是切線，斜率趨近切線斜率這個有限值，不是無限大。",
+      "割線和切線沒有關係，不會互相接近": "正好相反：h→0 時割線會越來越接近切線，這正是導數的定義。"
+     },
+     "answer_evidence": [
+      "c-der-limit"
+     ],
+     "feedback": "h→0 時割線越來越接近切線，割線斜率趨近切線斜率，這個極限值就是導數。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（差商 [f(a+h)−f(a)]/h＝割線斜率＝平均變化率；h→0 割線趨近切線、差商極限＝切線斜率＝導數 f'(a)；f(x)=x² 用定義得 f'(x)=2x；導數＝切線斜率非函數值）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
