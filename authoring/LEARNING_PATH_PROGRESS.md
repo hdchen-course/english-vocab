@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 18:59 calc differentiation-rules 微分公式 5/5 DONE-GATE 全綠（t_sub 高中，★常用微分公式表 SVG）→ calc 4/20
+- **math_calc_differentiation_rules frozen `c170e35e509aa846`**（R1-R5 連 5 clean、L3 每輪 exit 0 以實際檔案行文字建檔；R4/R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 violation／question_correctness CLEAN／pedagogy 0 hard+0 advisory／content_sha==c170e35e／per_page_5clean differentiation_rules absent／iPad 四角色簽核（公式表 3 欄 規則/公式/例、4 列 冪 d(xⁿ)=n·xⁿ⁻¹ 例 d(x³)=3x²（標紅）/常數 d(c)=0 例 d(7)=0/和差 (f±g)′=f′±g′ 例 d(x²+x)=2x+1/積 (fg)′=f′g+fg′ 例 d(x²·x³)=5x⁴、house 藍表頭、右緣0%）。
+- 微分公式（t_sub，prereq derivative-definition）＝冪函數 d(xⁿ)=n·xⁿ⁻¹（次方乘下來、次方減一）／常數導數 0、常數倍提前／和差逐項 (f±g)′=f′±g′／積法則 (fg)′=f′g+fg′／商法則 (f/g)′=(f′g−fg′)/g²；套用於多項式與簡單分式，不必回差商定義。teach figure 常用微分公式表（repro math_checks7 .venv：d(x³)=3x²、d(7)=0、d(x²+x)=2x+1、d(x²·x³)=d(x⁵)=5x⁴ 皆核）。practice：Q1 冪函數 d(x⁴)=4x³、Q2 和差 d(x²+3x)=2x+3、Q3 積法則 f′g+fg′、Q4 常數 d(5)=0。
+- ★收斂全程 0 正確性缺陷；R1 重跑前兩度 de-converge 修可讀性/誘答（前 session：R2 Q2「2＋3」rationale 不產該值→改對應真錯誤路徑『微分後漏寫 2x 的 x、只留係數 2』；R2 teach② 冗贅末句『下面用這張表整理』三度重述同表→刪）。本 session R1-R5 一次過無 panel-confirmed defect、無 L3 FAIL。半形/全形混用、_note 措辭、distractor key 逐字相符皆記 knownFP（非缺陷）。
+- 下一步：calc 第 5 單元＝chain-rule（鏈鎖法則，prereq differentiation-rules）；接 higher-derivative/sequence-limit/trig-calculus/exp-log-calculus…共 20 calc KP（已有 math_checks7 repro），剩 16。接著 vector(11)/conic(7)/complex(6)/finmath(6)/space(5)/matrix(5)/linprog(2)/determinant(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-16 16:32 calc derivative-definition 導數定義與切線斜率 5/5 DONE-GATE 全綠（t_sub 高中，★割線→切線趨近圖 SVG）→ calc 3/20
 - **math_calc_derivative_definition frozen `7515c9f409b96ab3`**（R1-R5 連 5 clean、L3 每輪 exit 0；R4/R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==7515c9f4／per_page_5clean derivative_definition absent／iPad 四角色簽核（藍拋物線 y=x²、P(1,1)紅/Q(2,4)深、灰虛線割線、綠切線、Q→P 彎箭頭、右緣0%）。
 - 導數定義（t_sub，prereq function-limit）＝差商 [f(a+h)−f(a)]/h＝割線斜率＝平均變化率；h→0 割線趨近切線、差商極限＝切線斜率＝瞬時變化率＝導數 f'(a)；用定義算 f(x)=x²→f'(x)=2x；導數=切線斜率。teach figure 割線PQ(斜率3)→切線(斜率2)（repro math_checks7 .venv：差商=2x+h→2x、f'(1)=2、f'(3)=6、割線[1,2]=3）。practice：Q1 差商公式、Q2 f'(3)=6、Q3 導數=切線斜率非 f(a)、Q4 h→0 割線→切線。只定義+割線→切線+用定義算，不含微分公式庫/高階/隱函數。
