@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 19:35 calc higher-derivative 高階導數 5/5 DONE-GATE 全綠（t_sub 高中 分科-數甲，★連續微分 cascade SVG）→ calc 6/20
+- **math_calc_higher_derivative frozen `fbb1746942d261c8`**（R1-R5 連 5 clean、L3 每輪 exit 0 以實際檔案行文字建檔；R4/R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 violation／question_correctness CLEAN／pedagogy 0 hard（2 length-cue advisory，HD out-of-scope 不改）／content_sha==fbb17469／per_page_5clean higher_derivative absent／iPad 四角色簽核（直向 cascade：f(x)=x⁴ ↓微分 f′=4x³ ↓微分 f″=12x²（標紅）↓微分 f‴=24x ↓微分 f⁽⁴⁾=24＋歸零註、右緣0%）。
+- 高階導數（t_sub，prereq differentiation-rules）＝二階 f″(x)=d/dx(f′(x))、三階 f‴、第 n 階 f⁽ⁿ⁾；多項式連續微分每次次方降一、最後變常數再變 0；二階導數意義＝導數變化率（直線運動位置的二階導數＝加速度 s″=a）。teach figure x⁴ cascade（repro math_checks7::calc.higher-derivative d²(x⁴)=12x²；x³→f″=6x、x⁴−x²→f″=12x²−2 皆 .venv sympy 另核）。practice：Q1 二階導數定義、Q2 x³→f″=6x、Q3 x⁴−x²→f″=12x²−2、Q4 位置二階導數＝加速度。
+- ★收斂全程 0 正確性缺陷；R1-R5 一次過無 panel-confirmed defect、無 L3 FAIL。2 length-cue/detail-cue advisory（Q4「加速度（速度的變化率）」最長且唯一帶括號）依 HD 2026-11-15 裁定 out-of-scope、不改，記 knownFP。
+- 下一步：calc 第 7 單元＝sequence-limit（數列極限，與 function-limit 平行、prereq 可設 function-limit）或 trig-calculus；共 20 calc KP（已有 math_checks7 repro），剩 14（已完成 function-limit/continuity/derivative-definition/differentiation-rules/chain-rule/higher-derivative）。接著 vector(11)/conic(7)/complex(6)/finmath(6)/space(5)/matrix(5)/linprog(2)/determinant(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-16 19:19 calc chain-rule 鏈鎖法則 5/5 DONE-GATE 全綠（t_sub 高中 分科-數甲，★鏈鎖法則 worked-example SVG）→ calc 5/20
 - **math_calc_chain_rule frozen `fb10ec08240e3b8f`**（R1-R5 連 5 clean、L3 每輪 exit 0 以實際檔案行文字建檔；R4/R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 violation／question_correctness CLEAN／pedagogy 0 hard+0 advisory／content_sha==fb10ec08／per_page_5clean chain_rule absent／iPad 四角色簽核（worked-example：標題＋d/dx (x²＋1)³＋外層盒 3(x²＋1)²＋×＋內層盒 2x＋紅字結果 ＝6x(x²＋1)²、house 藍盒、右緣0%）。
 - 鏈鎖法則（t_sub，prereq differentiation-rules）＝合成函數 f(g(x)) 的微分 d/dx f(g(x))＝f′(g(x))·g′(x)（先微分外層、內層當整體代入，再乘內層導數）；冪的合成 d((g)ⁿ)＝n(g)ⁿ⁻¹·g′。teach figure worked-example d((x²+1)³)=3(x²+1)²·2x=6x(x²+1)²（repro .venv sympy expand/factor 另核；math_checks7::calc.chain-rule d/dx sin(x²)=2x·cos(x²) 僅 KP 層驗、不入教材）。practice：Q1 公式 f′(g(x))·g′(x)、Q2 d((3x+1)²)=6(3x+1)、Q3 d((x²+1)⁴)=8x(x²+1)³、Q4 診斷漏乘內層導數 d((2x+1)³)=6(2x+1)²。
