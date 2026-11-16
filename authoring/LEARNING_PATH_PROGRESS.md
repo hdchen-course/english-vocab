@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 12:16 stats strand cumulative-relative 累積次數與相對次數 5/5 DONE-GATE 全綠（t_mid 國中，★三欄次數表 SVG）→ stats 11/18
+- **math_stats_cumulative_relative frozen `38037d4de5ffc7f1`**（R1-R5 連 5 clean、L3 每輪 exit 0；R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==38037d4d／per_page_5clean cumulative_relative absent／iPad 四角色簽核（四欄表 本數/次數/累積次數/相對次數 格線齊、10 標紅、右緣0%）。
+- 累積次數（t_mid）＝從第一組起一組一組往下累加、到某組為止＝該組與前面所有組總和、末項＝總筆數；相對次數＝一組次數÷總筆數（占比、小數）、所有組和＝1。teach 表 本數 0~2/3~5/6~8：次數 2/3/5、累積 2/5/10、相對 0.2/0.3/0.5（repro math_checks7 .venv 驗）。practice：Q1 到第二組累積(3+4=7)、Q2 相對次數(8÷20=0.4)、Q3 相對次數和(=1)、Q4 相對次數用途(甲30/乙40 人數不等→比占比用相對次數公平，c-cr-use)。prereq＝frequency-table。
+- ★R1 抓 1 readability（panel domain/learning/zh 判 b-hard-to-understand）：claim c-cr-cum 累積式寫「2＋3＝5 再加 5＝10」重用 5 歧義（前綴 running total 5 與第三組次數 5 同字）→R1 首輪直接修為乾淨並列式「2＋3＋5＝10」（與 teach body 一致）、re-froze 38037d4d、重收斂 5 clean。
+- ★R2 唯一 finding＝_note 的 Q4 計劃描述 stale（改 Q4 為 fair-comparison 後 _note 沒同步），panel 5/5 判 NOT A DEFECT（_note 非 rendered scaffold、shipped Q4 本身正確）；harvest-first gate 正確擋下「clean 輪為非缺陷 reset」＝尊重 gate 不改、照常 bank（#49 教訓：草稿期就要讓 _note 與最終 Q 同步，避免此類 clean-round 噪音）。
+- 下一步：stats 其餘 7 單元（variance-std/standardization/bivariate-scatter/correlation/regression-line/sampling-survey/risk-decision）；接著 calc/vector 等。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-16 11:52 stats strand frequency-table 次數分配表 5/5 DONE-GATE 全綠（t_mid 國中，★次數分配表 grid SVG）→ stats 10/18
 - **math_stats_frequency_table frozen `8c4883f22085932c`**（R1-R5 連 5 clean、L3 每輪 exit 0；R5 最終確認輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==8c4883f2／per_page_5clean frequency_table absent／iPad 四角色簽核（次數分配表 grid 清晰、5 標紅、標題頓號「分組、數次數」消歧義、右緣0%）。
 - 次數分配表（t_mid）＝把範圍大的資料分成大小相同組別（組距）、數每組次數做成表；用「以上、未滿」分組邊界歸「以上」組只算一次；各組次數和＝總筆數、讀最多組。teach 身高表 140-150:3/150-160:5/160-170:2 合計10、組距10、150-160 最多。practice：Q1 邊界歸組(20→20以上未滿30)、Q2 讀最多組(甲4乙9丙6→乙)、Q3 總次數(4+9+6=19)、Q4 組距概念。只整數次數、不含相對/累積次數（另單元）。prereq＝table-read。
