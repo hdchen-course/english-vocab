@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 15:46 calc continuity 函數的連續性 5/5 DONE-GATE 全綠（t_sub 高中，★連續 vs 不連續對比雙面板 SVG）→ calc 2/20
+- **math_calc_continuity frozen `8a843b4d69f7c688`**（R1-R5 連 5 clean、L3 每輪 exit 0；R4/R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==8a843b4d／per_page_5clean continuity absent／iPad 四角色簽核（左連續平滑線＋實心點、右不連續下段空心圈＋上段實心點跳躍、圖例○無值/●有值、右緣0%）。
+- 連續性（t_sub，prereq function-limit）＝f 在 x=a 連續⟺三條件(f(a)有定義∧極限存在∧極限=f(a))；直觀圖形不斷裂不跳不挖洞一筆畫過；多項式/sin/cos/指對在定義域內處處連續；連續點求極限直接代入。teach figure 連續 vs 跳躍對比（repro math_checks7 .venv：f=x² 於 x=2 連續；f(x)=x²+1 代入=極限、f(3)=10）。practice：Q1 三條件、Q2 代入(x²+1,x=2→5)、Q3 極限2≠f(1)=5 不連續(有洞型)、Q4 連續圖形特徵。
+- ★收斂過程抓到 3 缺陷（嚴謹 panel 價值）：R1 Q3 rationale「三個條件都給了」數三列二（可讀性，panel 6/7）→改「判斷需要的資訊都給了」+點明第三條件；R2 Q4「不過原點」garden-path（不過=however，panel 5/5）→「很多連續函數並不通過原點」；R2 ★**BLOCKER 正確性**（panel 5/5）：小提醒誤把「跳一下」當「極限存在≠f(a)」——跳躍是左右極限不等、雙邊極限**不存在**(失敗條件2非3)、且與 figure caption 矛盾→改正確分開有洞(條件3)/跳躍(條件2)。每次皆誠實 de-converge（清輪+_deconverge_trace+override harvest gate）重跑。Q1「左右極限存在」稱「極限存在」panel 4/5 NOT（a-fortiori 最強情況反駁），依鐵律不改。
+- 下一步：calc 第 3 單元＝derivative-definition（導數定義 差商極限與切線斜率，prereq function-limit）；接 differentiation-rules/chain-rule/sequence-limit…共 20 calc KP（已有 math_checks7 repro）。接著 vector/conic/complex 等 strand。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-16 15:00 ★ calc strand 開跑：function-limit 函數極限 5/5 DONE-GATE 全綠（t_sub 高中補充，★函數極限 hole 圖 SVG）→ calc 1/20
 - **math_calc_function_limit frozen `b7b97944feab1d02`**（R1-R5 連 5 clean、L3 每輪 exit 0 以實際檔案行文字建檔；R4/R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==b7b97944／per_page_5clean function_limit absent／iPad 四角色簽核（座標圖綠線 f(x)=(x²−1)/(x−1)、(1,2) 空心紅圈=x=1 無定義、虛線標 x=1/y=2、lim=2、右緣0%）。
 - 函數極限（t_sub，calc strand 起點、無 prereq）＝極限直觀概念（x→a 但 x≠a 時 f(x) 趨近的值，看趨勢非 x=a 的值、x=a 可能無定義）；左極限/右極限、極限存在⟺左右極限相等（同一有限值）；連續函數（多項式）直接代入、0/0 不定型先約分再代。teach figure hole 圖 lim_{x→1}(x²−1)/(x−1)=2（repro math_checks7 .venv sympy 驗；另 lim_{x→3}(2x+1)=7、lim_{x→2}(x²−4)/(x−2)=4 已核）。practice：Q1 代入連續函數(2x+1,x=3→7)、Q2 左右極限不等→不存在、Q3 極限意義(趨近值非 x=a 的值)、Q4 0/0 先約分((x²−4)/(x−2)→4)。只直觀+左右極限+代入/約分，不含 ε-δ/無窮極限/L'Hôpital。
