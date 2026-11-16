@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 微積分（calc）strand t_sub 單元。知識點 math.t_sub.calc.differentiation-rules（微分公式 冪/和差/積/商）。tier=t_sub（高中探究/選修補充）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：微分 (differentiation)、導數 (derivative)。★scope（t_sub）：常用微分公式——冪函數 d(xⁿ)=n·xⁿ⁻¹；常數 d(c)=0、常數倍 d(c·f)=c·f′；和差 (f±g)′=f′±g′；積 (f·g)′=f′g+fg′；商 (f/g)′=(f′g−fg′)/g²；用公式快速求導數、不必每次回差商定義。只公式＋逐項套用；不含鏈鎖法則（另單元）、不含高階/隱函數。prereq＝derivative-definition。repro（tools/verify/math_checks7.py::calc.differentiation-rules）：d(x⁵)=5x⁴、積 d(x²·x³)=5x⁴=f′g+fg′（.venv sympy 已核）；另 d(x³)=3x²、d(3x²)=6x、d(x²+3x)=2x+3、d(7)=0、d(x⁴)=4x³、d(1/x)=−1/x²（.venv 已核）。★自檢（math-unit defect-classes #1–#59）：figure＝微分公式表 SVG（三欄 規則|公式|例，4 列：冪 d(xⁿ)=n·xⁿ⁻¹ 例 d(x³)=3x²／常數 d(c)=0 例 d(7)=0／和差 (f±g)′=f′±g′ 例 d(x²+x)=2x+1／積 (fg)′=f′g+fg′ 例 d(x²·x³)=5x⁴），alt 與 SVG text 逐字一致（#33）、標題『常用微分公式：冪／常數／和差／積』寫進 alt 開頭；teach 值集{x³→3x²,x²·x³→5x⁴,7→0,x²+x→2x+1}與 practice 數值/式答案{4x³,2x+3}無交集避#10（Q1 用 x⁴→4x³、Q2 用 x²+3x→2x+3，皆非 teach 例）；practice：Q1 冪函數(d(x⁴)=4x³,選項式)、Q2 和差逐項(d(x²+3x)=2x+3,選項式)、Q3 積法則公式(f′g+fg′,選項式)、Q4 常數導數(d(5)=0,選項數)；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53，如漏乘次方/漏減次方/次方加一/漏微分某項/積法則用減或相乘/常數當導數）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_calc_differentiation_rules.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.calc.differentiation-rules",
+   "title_zh": "微分公式（冪、和差、積、商）",
+   "can_do": "我會用常用的『微分 (differentiation)』公式快速求『導數 (derivative)』，不必每次都回到差商的定義：冪函數 d(xⁿ) ＝ n·xⁿ⁻¹（次方乘下來、次方再減一）；常數的導數是 0、常數倍可以提到前面；和、差可以逐項分開微分；兩個函數相乘用積法則 (f·g)′ ＝ f′g ＋ fg′；相除用商法則 (f/g)′ ＝ (f′g − fg′)/g²。我會把這些公式套用在簡單的多項式和分式上。",
+   "situation_group": "微積分：微分公式",
+   "subject": "math",
+   "strand": "calc",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.calc.differentiation-rules"
+   ],
+   "prerequisites": [
+    "math.t_sub.calc.derivative-definition"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-dr-power",
+     "text": "『冪函數』的微分公式：d(xⁿ) ＝ n·xⁿ⁻¹——把次方 n 乘到前面當係數，再把次方減一。例：d(x³) ＝ 3x²、d(x⁵) ＝ 5x⁴、d(x⁴) ＝ 4x³。另外，常數的導數是 0（d(c) ＝ 0，因為常數不隨 x 變化），常數倍可以提到前面（d(c·f) ＝ c·f′），例如 d(3x²) ＝ 3 × 2x ＝ 6x。",
+     "kind": "definition",
+     "source_refs": [
+      "冪函數微分公式與常數規則（高中數學 微積分）"
+     ],
+     "verification_ref": "d(xⁿ)=n xⁿ⁻¹；d(x³)=3x²、d(x⁵)=5x⁴、d(x⁴)=4x³、d(7)=0、d(3x²)=6x（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-dr-sumdiff",
+     "text": "『和差法則』：兩個函數相加或相減時，可以逐項分別微分再加減——(f ± g)′ ＝ f′ ± g′。所以多項式只要一項一項套冪函數公式就好。例：d(x² ＋ 3x) ＝ d(x²) ＋ d(3x) ＝ 2x ＋ 3；d(x² ＋ x) ＝ 2x ＋ 1。",
+     "kind": "definition",
+     "source_refs": [
+      "和差法則與多項式逐項微分（高中數學 微積分）"
+     ],
+     "verification_ref": "(f±g)′=f′±g′；d(x²+3x)=2x+3、d(x²+x)=2x+1（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-dr-prodquot",
+     "text": "兩個函數相乘或相除時不能只是把各自的導數相乘或相除，要用專門的公式：『積法則』(f·g)′ ＝ f′g ＋ fg′（第一個的導數乘第二個，加上第一個乘第二個的導數）；『商法則』(f/g)′ ＝ (f′g − fg′)/g²（注意分子是相減、分母是 g²）。例：d(x²·x³) 用積法則 ＝ 2x·x³ ＋ x²·3x² ＝ 5x⁴，和直接算 d(x⁵) ＝ 5x⁴ 一致。",
+     "kind": "definition",
+     "source_refs": [
+      "積法則與商法則（高中數學 微積分）"
+     ],
+     "verification_ref": "(fg)′=f′g+fg′；d(x²·x³)=2x·x³+x²·3x²=5x⁴=d(x⁵)；(f/g)′=(f′g−fg′)/g²（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.differentiation-rules"
+     ],
+     "body": "這一單元學常用的『微分公式』，有了公式就能快速求導數、不必每次回到差商定義。下面先講冪函數公式和常數規則；再講和差逐項微分；接著講兩個函數相乘、相除要用的積法則和商法則；用一張公式表整理，最後練習。（本單元接在『導數的定義』之後。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.differentiation-rules"
+     ],
+     "body": "① 冪函數：d(xⁿ) ＝ n·xⁿ⁻¹——次方乘下來當係數、次方再減一。例 d(x³) ＝ 3x²。常數的導數是 0（不隨 x 變），常數倍提到前面（d(3x²) ＝ 6x）。② 和差：逐項分別微分，(f ± g)′ ＝ f′ ± g′，所以 d(x² ＋ x) ＝ 2x ＋ 1。③ 積、商：相乘用積法則 (f·g)′ ＝ f′g ＋ fg′；相除用商法則 (f/g)′ ＝ (f′g − fg′)/g²——不是把各自導數直接相乘或相除。看下面的公式表，每條都配一個例子。下面用這張表整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.calc.differentiation-rules"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>常用微分公式：冪／常數／和差／積</text><rect x='20' y='26' width='320' height='24' fill='#eef4ff'/><rect x='20' y='26' width='320' height='128' fill='none' stroke='#99a7b5' stroke-width='1'/><line x1='96' y1='26' x2='96' y2='154' stroke='#99a7b5' stroke-width='1'/><line x1='232' y1='26' x2='232' y2='154' stroke='#99a7b5' stroke-width='1'/><line x1='20' y1='50' x2='340' y2='50' stroke='#99a7b5' stroke-width='1'/><line x1='20' y1='76' x2='340' y2='76' stroke='#99a7b5' stroke-width='1'/><line x1='20' y1='102' x2='340' y2='102' stroke='#99a7b5' stroke-width='1'/><line x1='20' y1='128' x2='340' y2='128' stroke='#99a7b5' stroke-width='1'/><text x='58' y='43' font-family='sans-serif' font-size='10.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>規則</text><text x='164' y='43' font-family='sans-serif' font-size='10.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>公式</text><text x='286' y='43' font-family='sans-serif' font-size='10.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>例</text><text x='58' y='67' font-family='sans-serif' font-size='10' fill='#33475b' text-anchor='middle'>冪函數</text><text x='164' y='67' font-family='sans-serif' font-size='10' fill='#33475b' text-anchor='middle'>d(xⁿ)＝n·xⁿ⁻¹</text><text x='286' y='67' font-family='sans-serif' font-size='10' fill='#c2535d' text-anchor='middle'>d(x³)＝3x²</text><text x='58' y='93' font-family='sans-serif' font-size='10' fill='#33475b' text-anchor='middle'>常數</text><text x='164' y='93' font-family='sans-serif' font-size='10' fill='#33475b' text-anchor='middle'>d(c)＝0</text><text x='286' y='93' font-family='sans-serif' font-size='10' fill='#33475b' text-anchor='middle'>d(7)＝0</text><text x='58' y='119' font-family='sans-serif' font-size='10' fill='#33475b' text-anchor='middle'>和差</text><text x='164' y='119' font-family='sans-serif' font-size='10' fill='#33475b' text-anchor='middle'>(f±g)′＝f′±g′</text><text x='286' y='119' font-family='sans-serif' font-size='10' fill='#33475b' text-anchor='middle'>d(x²+x)＝2x+1</text><text x='58' y='145' font-family='sans-serif' font-size='10' fill='#33475b' text-anchor='middle'>積</text><text x='164' y='145' font-family='sans-serif' font-size='10' fill='#33475b' text-anchor='middle'>(fg)′＝f′g＋fg′</text><text x='286' y='145' font-family='sans-serif' font-size='10' fill='#33475b' text-anchor='middle'>d(x²·x³)＝5x⁴</text></svg>",
+      "alt": "標題「常用微分公式：冪／常數／和差／積」。一張三欄表格：規則、公式、例。冪函數 → d(xⁿ)＝n·xⁿ⁻¹ → d(x³)＝3x²（標紅）；常數 → d(c)＝0 → d(7)＝0；和差 → (f±g)′＝f′±g′ → d(x²+x)＝2x+1；積 → (fg)′＝f′g＋fg′ → d(x²·x³)＝5x⁴。",
+      "caption": "常用微分公式表：冪函數 d(xⁿ)＝n·xⁿ⁻¹（例 d(x³)＝3x²）、常數 d(c)＝0（例 d(7)＝0）、和差逐項 (f±g)′＝f′±g′（例 d(x²+x)＝2x+1）、積法則 (fg)′＝f′g＋fg′（例 d(x²·x³)＝5x⁴）。相除另用商法則 (f/g)′＝(f′g−fg′)/g²。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.differentiation-rules"
+     ],
+     "body": "最後練微分公式。重點：冪函數 d(xⁿ)＝n·xⁿ⁻¹（次方乘下來、再減一）；常數導數為 0、常數倍提前；和差逐項微分；積法則 (fg)′＝f′g＋fg′、商法則 (f/g)′＝(f′g−fg′)/g²。小提醒：相乘、相除不能只把各自的導數相乘或相除，要用積法則、商法則；冪函數別忘了「次方要減一」。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用冪函數的微分公式求 d(x⁴)。",
+     "answer": "4x³",
+     "kp_ids": [
+      "math.t_sub.calc.differentiation-rules"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.differentiation-rules"
+     ],
+     "options": [
+      "4x³",
+      "x³",
+      "4x⁴",
+      "4x⁵"
+     ],
+     "distractor_rationales": {
+      "x³": "次方減一對了，但忘了把原本的次方 4 乘下來當係數；d(x⁴)＝4x³。",
+      "4x⁴": "次方 4 乘下來了，但忘了把次方減一；d(x⁴)＝4x³（次方要變 3）。",
+      "4x⁵": "係數乘對了，但次方是「減一」不是「加一」；d(x⁴)＝4x³。"
+     },
+     "answer_evidence": [
+      "c-dr-power"
+     ],
+     "feedback": "冪函數公式 d(xⁿ)＝n·xⁿ⁻¹：次方 4 乘下來、次方減一，d(x⁴)＝4x³。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用和差法則求 d(x² ＋ 3x)。",
+     "answer": "2x ＋ 3",
+     "kp_ids": [
+      "math.t_sub.calc.differentiation-rules"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.differentiation-rules"
+     ],
+     "options": [
+      "2x ＋ 3",
+      "2x",
+      "2x ＋ 3x",
+      "2 ＋ 3"
+     ],
+     "distractor_rationales": {
+      "2x": "只微分了 x²（得 2x），漏掉 ＋3x 的導數 3；逐項微分得 2x ＋ 3。",
+      "2x ＋ 3x": "x² 微分對了（2x），但第二項 3x 沒微分、照抄了；3x 的導數是 3，答案 2x ＋ 3。",
+      "2 ＋ 3": "把兩項都只取係數相加；要逐項微分，x²→2x、3x→3，得 2x ＋ 3。"
+     },
+     "answer_evidence": [
+      "c-dr-sumdiff"
+     ],
+     "feedback": "和差逐項微分：d(x²)＝2x、d(3x)＝3，相加得 2x ＋ 3。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "兩個函數相乘時，積法則 (f·g)′ 等於下面哪一個？",
+     "answer": "f′g ＋ f g′",
+     "kp_ids": [
+      "math.t_sub.calc.differentiation-rules"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.differentiation-rules"
+     ],
+     "options": [
+      "f′g ＋ f g′",
+      "f′ g′",
+      "f′g − f g′",
+      "f′ ＋ g′"
+     ],
+     "distractor_rationales": {
+      "f′ g′": "積法則不是把兩個導數直接相乘；正確是 f′g ＋ f g′。",
+      "f′g − f g′": "這是相減（而且是商法則分子的樣子）；積法則是相加，f′g ＋ f g′。",
+      "f′ ＋ g′": "這是把兩個導數相加，少了各自乘另一個函數；積法則是 f′g ＋ f g′。"
+     },
+     "answer_evidence": [
+      "c-dr-prodquot"
+     ],
+     "feedback": "積法則：(f·g)′ ＝ f′g ＋ f g′（第一個的導數乘第二個，加上第一個乘第二個的導數）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "常數的導數是多少？例如 d(5)。",
+     "answer": "0",
+     "kp_ids": [
+      "math.t_sub.calc.differentiation-rules"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.differentiation-rules"
+     ],
+     "options": [
+      "0",
+      "5",
+      "1",
+      "x"
+     ],
+     "distractor_rationales": {
+      "5": "5 是常數本身，不是它的導數；常數不隨 x 變化，導數是 0。",
+      "1": "常數不是一次項，導數不是 1；常數不變化，導數是 0。",
+      "x": "常數的導數不是 x；因為常數不隨 x 變化，變化率（導數）是 0。"
+     },
+     "answer_evidence": [
+      "c-dr-power"
+     ],
+     "feedback": "常數不隨 x 變化，變化率為 0，所以 d(5)＝0（任何常數的導數都是 0）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（冪函數 d(xⁿ)=n·xⁿ⁻¹ 次方乘下來再減一；常數導數0、常數倍提前；和差逐項微分；積法則 f′g+fg′、商法則 (f′g−fg′)/g²；相乘相除不可各自導數直接相乘/相除）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
