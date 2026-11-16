@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 微積分（calc）strand 單元。知識點 math.t_sub.calc.integration-by-parts（積分技巧：分部積分）。注意：此 KP 於 knowledge_points.json 標 tier=t_enrich、exam=無（加深充實、非考科指定），但屬 calc strand、接在積分技巧系列。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換——見 math-unit defect #63）：分部積分 (integration by parts)、乘積法則 (product rule)、反導數 (antiderivative)、不定積分 (indefinite integral)。前置假設：會求反導數、會用乘積法則微分（antiderivative＋differentiation-rules 已教）。指數寫成 eˣ 形式（上標 ˣ，避免誤讀、alt 與 SVG text 逐字一致）。★scope：分部積分公式 ∫u dv ＝ uv − ∫v du（乘積法則的逆），用在兩個函數相乘的積分；選 u／dv 原則：u 選「微分後會變簡單」的（如 x 微分成 1），dv 選「容易積分」的。以 ∫x·eˣ dx 貫穿：u＝x（du＝dx）、dv＝eˣ dx（v＝eˣ）→ uv − ∫v du ＝ x·eˣ − ∫eˣ dx ＝ x·eˣ − eˣ ＋ C ＝ (x−1)eˣ ＋ C。只到一次分部即可解的基本情形（x·eˣ、x·cos x 等）；不含需多次分部/循環的進階（如 ∫eˣ sin x dx）、不含表格法深究。prereq＝antiderivative＋differentiation-rules。repro（tools/verify/math_checks7.py::calc.integration-by-parts）：∫x·eˣ dx＝(x−1)eˣ、∫x·cos x dx＝x·sin x＋cos x、∫₀¹x·eˣ dx＝1（.venv 已核，本 session 新增此 repro 並跑過 PASS）。★自檢（math-unit defect-classes #1–#63）：figure＝分部積分公式＋∫x·eˣ 套用流程 SVG（∫u dv＝uv−∫v du 紅／u＝x(du＝dx)／dv＝eˣ dx(v＝eˣ)／＝x·eˣ−∫eˣ dx／＝x·eˣ−eˣ＋C，下註分部積分＝乘積法則的逆），流程圖無角度/垂直關係（不需等軸#62），alt 與 SVG text 逐字一致（#33）、標題『分部積分：∫x·eˣ dx』寫進 alt 開頭；practice 四答案＝{uv−∫v du(Q1 公式),u＝x、dv＝eˣ dx(Q2 選取),(x−1)eˣ＋C(Q3 hero retrieval),x·sin x＋cos x＋C(Q4 transfer)} 與 teach 關鍵值無 #10（Q3 hero retrieval、options 載入洗牌無位置 tell）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算：如公式符號用＋、漏積分項只寫 uv、u/dv 選反、積分符號錯、忘 ∫sinx=−cosx 負號）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★R15 gloss 運算/結果詞正確（#63）；★導讀承諾順序＝實際 teach 順序（#4/#46）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_calc_integration_by_parts.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.calc.integration-by-parts",
+   "title_zh": "積分技巧：分部積分",
+   "can_do": "我會用『分部積分 (integration by parts)』算兩個函數相乘的積分。它是『乘積法則 (product rule)』的逆運算，公式是 ∫u dv ＝ uv − ∫v du。用的時候要把被積函數拆成 u 和 dv 兩部分：u 選「微分後會變簡單」的（例如 x，微分就變成 1），dv 選「容易積分」的。例：∫x·eˣ dx，令 u ＝ x（du ＝ dx）、dv ＝ eˣ dx（v ＝ eˣ），代公式得 x·eˣ − ∫eˣ dx ＝ x·eˣ − eˣ ＋ C ＝ (x−1)eˣ ＋ C。",
+   "situation_group": "微積分：積分技巧（分部積分）",
+   "subject": "math",
+   "strand": "calc",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.calc.integration-by-parts"
+   ],
+   "prerequisites": [
+    "math.t_sub.calc.antiderivative",
+    "math.t_sub.calc.differentiation-rules"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ip-formula",
+     "text": "分部積分是乘積法則的「逆運算」。乘積法則說 d/dx[u·v] ＝ u′v ＋ uv′；把它整理、兩邊積分後，就得到分部積分公式：∫u dv ＝ uv − ∫v du。它的用途是處理「兩個函數相乘」的積分——當 ∫u dv 不好算時，換成算 uv 減去另一個積分 ∫v du，而那個新的積分通常比原來簡單。",
+     "kind": "definition",
+     "source_refs": [
+      "分部積分公式（高中數學 微積分）"
+     ],
+     "verification_ref": "∫u dv=uv−∫v du（乘積法則逆，公式）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ip-choose",
+     "text": "用分部積分時，怎麼把被積函數拆成 u 和 dv 很關鍵。原則：u 選「微分後會變簡單」的（例如多項式 x，微分一次就變常數 1，再微分就是 0）；dv 選「容易積分」的（例如 eˣ dx、cos x dx）。選對了，公式右邊的新積分 ∫v du 會比原來好算；若選反（例如把 eˣ 當 u、x dx 當 dv），新積分反而更複雜。",
+     "kind": "definition",
+     "source_refs": [
+      "分部積分 u 與 dv 的選取（高中數學 微積分）"
+     ],
+     "verification_ref": "u 選微分變簡單者、dv 選易積分者（選取原則）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ip-example",
+     "text": "示範 ∫x·eˣ dx。令 u ＝ x，則 du ＝ dx；令 dv ＝ eˣ dx，則 v ＝ ∫eˣ dx ＝ eˣ。代公式 ∫u dv ＝ uv − ∫v du ＝ x·eˣ − ∫eˣ dx。右邊 ∫eˣ dx ＝ eˣ，所以 ＝ x·eˣ − eˣ ＋ C ＝ (x−1)eˣ ＋ C。（可驗算：d/dx[(x−1)eˣ] ＝ eˣ ＋ (x−1)eˣ ＝ x·eˣ，正是被積函數。）",
+     "kind": "definition",
+     "source_refs": [
+      "分部積分範例 ∫x·eˣ dx（高中數學 微積分）"
+     ],
+     "verification_ref": "∫x·eˣdx=(x−1)eˣ+C（math_checks7 .venv 驗；∫₀¹=1）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.integration-by-parts"
+     ],
+     "body": "這一單元學「分部積分」——處理兩個函數相乘的積分，是乘積法則的逆運算。下面先講公式 ∫u dv ＝ uv − ∫v du；再講怎麼選 u 和 dv（u 選微分會變簡單的、dv 選容易積分的）；用 ∫x·eˣ dx 完整示範一次，最後提醒常犯的錯，再練習。（本單元接在『反導數』與『微分公式』之後，核心就是「把乘積法則倒過來用」。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.integration-by-parts"
+     ],
+     "body": "① 公式：∫u dv ＝ uv − ∫v du（乘積法則的逆），用在兩函數相乘的積分。② 選取：u 選「微分後會變簡單」的（如 x），dv 選「容易積分」的（如 eˣ dx）。③ 示範 ∫x·eˣ dx：令 u ＝ x（du ＝ dx）、dv ＝ eˣ dx（v ＝ eˣ）→ x·eˣ − ∫eˣ dx ＝ x·eˣ − eˣ ＋ C ＝ (x−1)eˣ ＋ C。看下面的流程圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.calc.integration-by-parts"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>分部積分：∫x·eˣ dx</text><text x='180' y='38' font-family='sans-serif' font-size='12.5' fill='#c2535d' text-anchor='middle' font-weight='bold'>∫u dv ＝ uv − ∫v du</text><text x='180' y='62' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='middle'>u ＝ x（du ＝ dx）</text><text x='180' y='80' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='middle'>dv ＝ eˣ dx（v ＝ eˣ）</text><text x='180' y='104' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>＝ x·eˣ − ∫eˣ dx</text><text x='180' y='126' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>＝ x·eˣ − eˣ ＋ C</text><text x='180' y='152' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>分部積分 ＝ 乘積法則的逆；u 選微分後會變簡單的</text></svg>",
+      "alt": "標題「分部積分：∫x·eˣ dx」。最上面是公式「∫u dv ＝ uv − ∫v du」（紅色）。接著列出選取：「u ＝ x（du ＝ dx）」「dv ＝ eˣ dx（v ＝ eˣ）」。再往下代入計算：「＝ x·eˣ − ∫eˣ dx」「＝ x·eˣ − eˣ ＋ C」。最下方註「分部積分 ＝ 乘積法則的逆；u 選微分後會變簡單的」。",
+      "caption": "以 ∫x·eˣ dx 示範分部積分：套用公式 ∫u dv ＝ uv − ∫v du，令 u ＝ x（du ＝ dx）、dv ＝ eˣ dx（v ＝ eˣ），得 x·eˣ − ∫eˣ dx ＝ x·eˣ − eˣ ＋ C。選 u ＝ x 是因為它微分後變成 1，讓右邊的新積分變簡單。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.integration-by-parts"
+     ],
+     "body": "最後練分部積分。重點：公式 ∫u dv ＝ uv − ∫v du；u 選「微分後會變簡單」的、dv 選「容易積分」的。小提醒：(1) 公式中間是「減號」uv − ∫v du，別寫成加號；(2) 別只寫出 uv 就停、一定要減掉 ∫v du 這一項；(3) u、dv 選反會讓新積分更難算——多項式（如 x）通常選作 u。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "分部積分公式 ∫u dv 等於下列哪一個？",
+     "answer": "uv − ∫v du",
+     "kp_ids": [
+      "math.t_sub.calc.integration-by-parts"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.integration-by-parts"
+     ],
+     "options": [
+      "uv − ∫v du",
+      "uv ＋ ∫v du",
+      "uv",
+      "∫u du · ∫v dv"
+     ],
+     "distractor_rationales": {
+      "uv ＋ ∫v du": "中間是減號不是加號：∫u dv ＝ uv − ∫v du（這來自乘積法則整理後的結果）。",
+      "uv": "少了後面那一項：公式是 uv 再「減掉」∫v du，只寫 uv 不完整。",
+      "∫u du · ∫v dv": "積分不能把兩個函數各自積分再相乘；分部積分公式是 uv − ∫v du。"
+     },
+     "answer_evidence": [
+      "c-ip-formula"
+     ],
+     "feedback": "分部積分公式：∫u dv ＝ uv − ∫v du（乘積法則的逆）。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "算 ∫x·eˣ dx 時，u 和 dv 要怎麼選最好？",
+     "answer": "u ＝ x、dv ＝ eˣ dx",
+     "kp_ids": [
+      "math.t_sub.calc.integration-by-parts"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.integration-by-parts"
+     ],
+     "options": [
+      "u ＝ x、dv ＝ eˣ dx",
+      "u ＝ eˣ、dv ＝ x dx",
+      "u ＝ x·eˣ、dv ＝ dx",
+      "怎麼選都一樣"
+     ],
+     "distractor_rationales": {
+      "u ＝ eˣ、dv ＝ x dx": "選反了：這樣 dv ＝ x dx 積分成 x²/2，新積分 ∫v du 反而更複雜；應讓會變簡單的 x 當 u。",
+      "u ＝ x·eˣ、dv ＝ dx": "把整個被積函數當 u、dv 只剩 dx，等於沒拆開，幫不上忙；要把 x 和 eˣ dx 分開。",
+      "怎麼選都一樣": "選法會大大影響難易：u 要選「微分後變簡單」的（x），選錯會讓新積分更難算。"
+     },
+     "answer_evidence": [
+      "c-ip-choose"
+     ],
+     "feedback": "u ＝ x（微分後變 1、變簡單）、dv ＝ eˣ dx（容易積分，v ＝ eˣ）。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "∫x·eˣ dx 等於多少？（u ＝ x、dv ＝ eˣ dx）",
+     "answer": "(x − 1)eˣ ＋ C",
+     "kp_ids": [
+      "math.t_sub.calc.integration-by-parts"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.integration-by-parts"
+     ],
+     "options": [
+      "(x − 1)eˣ ＋ C",
+      "(x ＋ 1)eˣ ＋ C",
+      "x·eˣ ＋ C",
+      "½x²·eˣ ＋ C"
+     ],
+     "distractor_rationales": {
+      "(x ＋ 1)eˣ ＋ C": "符號用錯（當成 uv ＋ ∫v du）：x·eˣ ＋ eˣ ＝ (x＋1)eˣ；正確是 x·eˣ − eˣ ＝ (x−1)eˣ。",
+      "x·eˣ ＋ C": "只寫了 uv ＝ x·eˣ，漏掉要減的 ∫v du ＝ ∫eˣ dx ＝ eˣ；答案是 x·eˣ − eˣ ＋ C。",
+      "½x²·eˣ ＋ C": "把 x 和 eˣ 各自積分再相乘了（x 積分成 x²/2）；積分不能這樣做，要用分部積分。"
+     },
+     "answer_evidence": [
+      "c-ip-example"
+     ],
+     "feedback": "∫x·eˣ dx ＝ x·eˣ − ∫eˣ dx ＝ x·eˣ − eˣ ＋ C ＝ (x − 1)eˣ ＋ C。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用分部積分求 ∫x·cos x dx（u ＝ x、dv ＝ cos x dx，v ＝ sin x）等於多少？",
+     "answer": "x·sin x ＋ cos x ＋ C",
+     "kp_ids": [
+      "math.t_sub.calc.integration-by-parts"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.integration-by-parts"
+     ],
+     "options": [
+      "x·sin x ＋ cos x ＋ C",
+      "x·sin x − cos x ＋ C",
+      "x·sin x ＋ C",
+      "− x·sin x ＋ cos x ＋ C"
+     ],
+     "distractor_rationales": {
+      "x·sin x − cos x ＋ C": "忘了 ∫sin x dx ＝ −cos x 的負號：uv − ∫v du ＝ x·sin x − (−cos x) ＝ x·sin x ＋ cos x。",
+      "x·sin x ＋ C": "只寫了 uv ＝ x·sin x，漏掉 − ∫v du ＝ − ∫sin x dx ＝ ＋ cos x 這一項。",
+      "− x·sin x ＋ cos x ＋ C": "uv 項符號錯：uv ＝ x·sin x（正號）；正確是 x·sin x ＋ cos x ＋ C。"
+     },
+     "answer_evidence": [
+      "c-ip-formula"
+     ],
+     "feedback": "∫x·cos x dx ＝ x·sin x − ∫sin x dx ＝ x·sin x − (−cos x) ＝ x·sin x ＋ cos x ＋ C。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（分部積分 ∫u dv ＝ uv − ∫v du（乘積法則的逆）；選取：u 選微分後變簡單者（如 x）、dv 選易積分者（如 eˣ dx）；∫x·eˣ dx ＝ x·eˣ − ∫eˣ dx ＝ (x−1)eˣ ＋ C；∫x·cos x dx ＝ x·sin x ＋ cos x ＋ C；三鐵律＝公式用減號、別只寫 uv 漏掉 ∫v du、多項式通常選作 u）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

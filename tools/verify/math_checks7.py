@@ -88,6 +88,12 @@ def c_integration_sub():
     # ∫₀¹ 2x·e^{x²} dx = e−1（代換 u=x²）
     assert simplify(integrate(2*x*exp(x**2), (x, 0, 1)) - (exp(1)-1)) == 0
     return _ok("calc.integration-substitution", "∫₀¹2x·e^{x²}dx=e−1（代換）")
+def c_integration_parts():
+    # 分部積分 ∫u dv = uv − ∫v du
+    assert integrate(x*exp(x), x) == (x-1)*exp(x)        # ∫x·eˣ=(x−1)eˣ
+    assert integrate(x*cos(x), x) == x*sin(x)+cos(x)     # ∫x·cosx=x·sinx+cosx
+    assert integrate(x*exp(x), (x, 0, 1)) == 1           # ∫₀¹x·eˣ=1
+    return _ok("calc.integration-by-parts", "∫x·eˣdx=(x−1)eˣ；∫x·cosx dx=x·sinx+cosx；∫₀¹x·eˣ=1")
 def c_exp_log_calc():
     assert diff(exp(x), x) == exp(x) and diff(log(x), x) == 1/x
     assert integrate(1/x, (x, 1, exp(1))) == 1
@@ -227,6 +233,7 @@ CHECKS = {s: fn for s, fn in {
     "calc.optimization": c_optimization, "calc.antiderivative": c_antiderivative,
     "calc.definite-integral": c_definite_integral, "calc.area": c_area,
     "calc.volume-revolution": c_volume_rev, "calc.integration-substitution": c_integration_sub,
+    "calc.integration-by-parts": c_integration_parts,
     "calc.exp-log-calculus": c_exp_log_calc, "calc.trig-calculus": c_trig_calc,
     "stats.collect-organize": s_collect, "stats.bar-line-chart": s_bar_line,
     "stats.pie-chart": s_pie, "stats.table-read": s_table, "stats.mean": s_mean,
