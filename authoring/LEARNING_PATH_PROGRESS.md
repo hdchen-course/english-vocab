@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 10:15 stats strand bar-line-chart 長條圖與折線圖 5/5 DONE-GATE 全綠（t_base 國小，★按比例長條圖＋y軸刻度）→ stats 7/18
+- **math_stats_bar_line_chart frozen `a7f3e9d724047eb5`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==a7f3e9d7／per_page_5clean bar_line_chart absent／iPad 四角色簽核（右緣0%，長條按比例＋y軸刻度 0/2/4/6 對齊 bar 頂）。
+- 長條圖＝長條高度表示數量（越高越多、看頂端對到 y 軸刻度、比較類別）；折線圖＝點連成線（往上增加/往下減少/平的不變、看隨時間變化）；選圖＝比較類別用長條圖、看隨時間變化用折線圖。teach bar 紅4/藍6/黃3（★y 軸刻度 0/2/4/6，14px/票）、line 週一10/週二15/週三12。Q1 讀長條最多(黃9)、Q2 讀折線週二→週三減少、Q3 選長條圖(比較班級)、Q4 選折線圖(每日氣溫)。prereq＝collect-organize。
+- ★收斂過程兩次 figure 修正（皆經四角色/panel）：(a) pre-freeze 四角色抓 藍 bar「6票」標籤與標題交疊→壓低長條高度；(b) R1 #49 _note 幾何 stale→同步；(c)★R4 panel 7 鏡 b-hard major：claim/teach 教「看長條頂端對到的刻度」但原圖無 y 軸刻度（僅直接標值）→誠實 de-converge（清 R1-R3）、**加 y 軸刻度 0/2/4/6 使看刻度可示範**、重收斂 5 clean。另修復 render server（port 8096 隨 session 死→重啟）。banked #59（改 option 字串須同步 rationale key）。
+- ★新教訓（已體現於本單元）：**figure 必須能示範 claim 所教的方法**——claim 教「看刻度」則 figure 就要畫刻度，否則教學與圖不符（panel b-hard）。此類 render-only+教學一致缺陷 content_audit（審 JSON＋設計意圖）能抓、但要 panel 對照 claim 與 figure 內容。
+- 下一步：stats 其餘 11 單元（pie-chart/table-read/frequency-table/cumulative-relative/variance-std/standardization/bivariate-scatter/correlation/regression-line/sampling-survey/risk-decision）；接著 calc/vector 等。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-16 02:02 stats strand collect-organize 資料的蒐集與整理 5/5 DONE-GATE 全綠（t_base 國小，stats 根節點）→ stats 6/18
 - **math_stats_collect_organize frozen `61ad7d9cf328ff11`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==61ad7d9c／per_page_5clean collect_organize absent／iPad 四角色簽核（右緣0%，畫記→統計表對照卡三列對齊、合計行置中）。
 - 畫記（正字記號，一筆一畫、滿五畫成一個『正』字、一個正＝5 筆、五個一數）→ 數出每類數量 → 整理成一欄類別一欄數量的統計表；各類數量總和＝資料總筆數（可檢查）。teach worked 籃球正正=10/游泳正一=6/跑步正=5/合計21。Q1 畫記 正正一=11、Q2 統計表 7/3/5 總和=15、Q3 概念（滿五成正五個一數）、Q4 讀表選最多（蘋果）。全部 .venv 驗；teach 值集{10,6,5,21}與 practice 答案{11,15}無交集避#10。prereq=[]（stats 根節點）。
