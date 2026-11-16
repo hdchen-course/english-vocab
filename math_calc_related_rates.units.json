@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 微積分（calc）strand t_sub 單元。知識點 math.t_sub.calc.related-rates（相關變率）。tier=t_sub（高中分科/選修深階，exam 分科-數甲）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：相關變率 (related rates)、變化率 (rate of change)、導數 (derivative)、鏈鎖法則 (chain rule)。前置假設：會用鏈鎖法則微分合成函數、會算冪函數導數（chain-rule＋differentiation-rules 已教）。★scope（t_sub）：相關變率——兩個量用一個方程式相連，對「時間 t」微分方程式兩邊（用鏈鎖法則）得到兩者變化率的關係式，再代入已知數值求未知變化率。以吹氣球球體積 V＝(4/3)πr³ 貫穿：對 t 微分得 dV/dt＝4πr²·(dr/dt)，代 r=3、dr/dt=2 得 72π。只到單一鏈鎖的相關變率（球體積/面積、正方形面積等一步相連）；不含需畢氏定理多變量隱函數的梯子滑動等多步題、不含最佳化。prereq＝differentiation-rules＋chain-rule。repro（tools/verify/math_checks7.py::calc.related-rates）：V=(4/3)πr³ ⇒ dV/dr=4πr²（.venv 已核）；教材用 dV/dt=4πr²·(dr/dt)、r=3 dr/dt=2 ⇒ 72π；practice 另用正方形 A=x² ⇒ dA/dt=2x·(dx/dt) 皆以 .venv sympy diff 另核。★自檢（math-unit defect-classes #1–#59）：figure＝相關變率流程 SVG（左一個脹大的球示意 實線圓＋虛線外圈＋外箭頭標 r↑，右一條垂直推導流：V＝(4/3)πr³ ↓對時間 t 微分（鏈鎖法則）dV/dt＝4πr²·(dr/dt)（標紅）↓代入 r＝3、dr/dt＝2 dV/dt＝4π·3²·2＝72π），alt 與 SVG text 逐字一致（#33）、標題『相關變率：吹氣球 V＝(4/3)πr³』寫進 alt 開頭；practice 四答案＝{對時間 t 微分兩邊(Q1 做法),4πr²(Q2 dV/dr),72π(Q3 代入),2x·(dx/dt)(Q4 正方形)} 與 teach 關鍵值無造成 #10（Q2/Q3 為核心推導結果屬 retrieval、Q4 換情境）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53，如漏乘 dr/dt、把 dV/dr 當 dV/dt、代入算錯、鏈鎖漏內層導數）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_calc_related_rates.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.calc.related-rates",
+   "title_zh": "相關變率",
+   "can_do": "我會解『相關變率 (related rates)』的問題：當兩個量用一個方程式相連、而且都隨時間 t 改變時，我會對方程式兩邊「對時間 t 微分」（用『鏈鎖法則 (chain rule)』），得到兩者『變化率 (rate of change)』之間的關係，再代入已知數值求出要找的那個變化率。例：吹氣球時球的體積 V ＝ (4/3)πr³，對 t 微分得 dV/dt ＝ 4πr²·(dr/dt)；若半徑 r ＝ 3、每秒脹大 dr/dt ＝ 2，則體積變化率 dV/dt ＝ 72π。",
+   "situation_group": "微積分：相關變率",
+   "subject": "math",
+   "strand": "calc",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.calc.related-rates"
+   ],
+   "prerequisites": [
+    "math.t_sub.calc.differentiation-rules",
+    "math.t_sub.calc.chain-rule"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-rr-method",
+     "text": "相關變率的做法：先找出把兩個量連在一起的方程式，再對「時間 t」微分方程式的兩邊。因為式子裡的量（如 r）本身是 t 的函數，微分時要用鏈鎖法則，會多乘上那個量對 t 的變化率（如 dr/dt）。這樣就得到兩個變化率之間的關係式，最後把已知的數值代進去求未知的變化率。",
+     "kind": "definition",
+     "source_refs": [
+      "相關變率的解法（高中數學 微積分）"
+     ],
+     "verification_ref": "對 t 微分兩邊＋鏈鎖法則得變率關係（解法流程）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-rr-sphere",
+     "text": "以吹氣球為例：球的體積 V ＝ (4/3)πr³。對 t 微分兩邊——右邊用鏈鎖法則，d/dt[(4/3)πr³] ＝ (4/3)π·3r²·(dr/dt) ＝ 4πr²·(dr/dt)。所以 dV/dt ＝ 4πr²·(dr/dt)。這條式子把「體積變化率」和「半徑變化率」連了起來。",
+     "kind": "definition",
+     "source_refs": [
+      "球體積的相關變率（高中數學 微積分）"
+     ],
+     "verification_ref": "V=(4/3)πr³ ⇒ dV/dr=4πr²、dV/dt=4πr²·(dr/dt)（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-rr-plugin",
+     "text": "有了關係式 dV/dt ＝ 4πr²·(dr/dt)，就能代入數值求變化率。例：某時刻半徑 r ＝ 3（公分）、半徑變化率 dr/dt ＝ 2（公分/秒），代入得 dV/dt ＝ 4π·3²·2 ＝ 4π·9·2 ＝ 72π（立方公分/秒）。也就是這一刻體積每秒增加 72π 立方公分。",
+     "kind": "definition",
+     "source_refs": [
+      "相關變率代入求值（高中數學 微積分）"
+     ],
+     "verification_ref": "r=3、dr/dt=2 ⇒ dV/dt=4π·9·2=72π（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.related-rates"
+     ],
+     "body": "這一單元學「相關變率」：兩個會隨時間改變的量，它們的變化率之間有什麼關係。下面先講做法（找出相連的方程式、對時間 t 微分兩邊、用鏈鎖法則）；再用吹氣球（球體積 V ＝ (4/3)πr³）示範怎麼得到 dV/dt 和 dr/dt 的關係；最後代入數值求出體積變化率，再練習。（本單元接在『微分公式』與『鏈鎖法則』之後，對時間微分時一直要用鏈鎖法則。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.related-rates"
+     ],
+     "body": "① 做法：找出連結兩量的方程式 → 對時間 t 微分兩邊（式中的量是 t 的函數，要用鏈鎖法則、多乘它對 t 的變化率）→ 得到變化率的關係式 → 代入已知值。② 吹氣球例：V ＝ (4/3)πr³，對 t 微分得 dV/dt ＝ 4πr²·(dr/dt)。③ 代入：若 r ＝ 3、dr/dt ＝ 2，則 dV/dt ＝ 4π·3²·2 ＝ 72π（立方公分/秒）。看下面的推導流程，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.calc.related-rates"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>相關變率：吹氣球 V＝(4/3)πr³</text><circle cx='52' cy='92' r='13' fill='none' stroke='#2f6f54' stroke-width='1.6'/><circle cx='52' cy='92' r='20' fill='none' stroke='#99a7b5' stroke-width='1' stroke-dasharray='3 2'/><line x1='52' y1='79' x2='52' y2='68' stroke='#2f6f54' stroke-width='1.4'/><path d='M52,68 l-3,5 M52,68 l3,5' fill='none' stroke='#2f6f54' stroke-width='1.4'/><text x='52' y='120' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>r↑</text><text x='215' y='40' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>V ＝ (4/3)πr³</text><text x='215' y='60' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>↓ 對時間 t 微分（鏈鎖法則）</text><text x='215' y='82' font-family='sans-serif' font-size='11' fill='#c2535d' text-anchor='middle' font-weight='bold'>dV/dt ＝ 4πr² · (dr/dt)</text><text x='215' y='102' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>↓ 代入 r ＝ 3、dr/dt ＝ 2</text><text x='215' y='124' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>dV/dt ＝ 4π·3²·2 ＝ 72π</text><text x='180' y='152' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>半徑變化率 2 cm/s ⇒ 體積變化率 72π cm³/s</text></svg>",
+      "alt": "標題「相關變率：吹氣球 V＝(4/3)πr³」。左邊一個脹大的球示意：一個實線圓、外面一圈虛線（表示變大後），一個向上的箭頭，下方標「r↑」。右邊一條由上而下的推導：V ＝ (4/3)πr³，↓ 對時間 t 微分（鏈鎖法則），dV/dt ＝ 4πr² · (dr/dt)（標紅），↓ 代入 r ＝ 3、dr/dt ＝ 2，dV/dt ＝ 4π·3²·2 ＝ 72π。最下方註「半徑變化率 2 cm/s ⇒ 體積變化率 72π cm³/s」。",
+      "caption": "以吹氣球示範相關變率：球體積 V＝(4/3)πr³，對時間 t 微分（鏈鎖法則）得 dV/dt＝4πr²·(dr/dt)；代入半徑 r＝3、半徑變化率 dr/dt＝2，得體積變化率 dV/dt＝4π·3²·2＝72π 立方公分/秒。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.related-rates"
+     ],
+     "body": "最後練相關變率。重點：找出連結兩量的方程式 → 對時間 t 微分兩邊（用鏈鎖法則，記得多乘那個量對 t 的變化率）→ 得到變化率的關係 → 代入已知值。小提醒：對 t 微分 r³ 時，不能只寫 3r²，必須再乘上 dr/dt（因為 r 是 t 的函數）——漏掉這個 dr/dt 是最常見的錯。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "解相關變率問題時，拿到連結兩個量的方程式後，關鍵的下一步是？",
+     "answer": "對「時間 t」微分方程式的兩邊",
+     "kp_ids": [
+      "math.t_sub.calc.related-rates"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.related-rates"
+     ],
+     "options": [
+      "對「時間 t」微分方程式的兩邊",
+      "把方程式兩邊平方",
+      "解出其中一個量等於多少",
+      "把已知數值先代進原方程式"
+     ],
+     "distractor_rationales": {
+      "把方程式兩邊平方": "平方不會產生變化率；要得到變化率的關係，必須對時間 t 微分兩邊。",
+      "解出其中一個量等於多少": "相關變率要的是「變化率」的關係，不是先解出某個量；關鍵步驟是對 t 微分。",
+      "把已知數值先代進原方程式": "數值要等到「微分出變化率關係式之後」再代入；先代入會把變數變成常數、微分就得不到變化率了。"
+     },
+     "answer_evidence": [
+      "c-rr-method"
+     ],
+     "feedback": "核心做法：對時間 t 微分方程式兩邊（用鏈鎖法則），得到變化率的關係式後，才代入已知數值。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "球的體積 V ＝ (4/3)πr³。把 V 對 r 微分，dV/dr 是多少？",
+     "answer": "4πr²",
+     "kp_ids": [
+      "math.t_sub.calc.related-rates"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.related-rates"
+     ],
+     "options": [
+      "4πr²",
+      "4πr³",
+      "(4/3)πr²",
+      "2πr"
+     ],
+     "distractor_rationales": {
+      "4πr³": "次方沒有降：微分 r³ 得 3r²（次方 3 降為 2），所以是 4πr²、不是 4πr³。",
+      "(4/3)πr²": "漏乘了 r³ 微分帶下來的 3：(4/3)π·3r² ＝ 4πr²，3 和分母的 3 要相消。",
+      "2πr": "2πr 是圓的周長公式，不是球體積的導數；dV/dr ＝ 4πr²（剛好是球的表面積）。"
+     },
+     "answer_evidence": [
+      "c-rr-sphere"
+     ],
+     "feedback": "d/dr[(4/3)πr³] ＝ (4/3)π·3r² ＝ 4πr²（3 與分母 3 相消）。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "由 dV/dt ＝ 4πr²·(dr/dt)。當半徑 r ＝ 3、且 dr/dt ＝ 2 時，體積變化率 dV/dt 是多少？",
+     "answer": "72π",
+     "kp_ids": [
+      "math.t_sub.calc.related-rates"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.related-rates"
+     ],
+     "options": [
+      "72π",
+      "36π",
+      "24π",
+      "12π"
+     ],
+     "distractor_rationales": {
+      "36π": "漏乘了 dr/dt ＝ 2：4π·3² ＝ 36π 只是 4πr²，還要再乘 dr/dt ＝ 2，得 72π。",
+      "24π": "把 r² 當成 r 來算了：4π·3·2 ＝ 24π；應是 4π·3²·2 ＝ 4π·9·2 ＝ 72π。",
+      "12π": "只算了 4π·3 ＝ 12π，既沒平方 r 也沒乘 dr/dt；正確是 4π·9·2 ＝ 72π。"
+     },
+     "answer_evidence": [
+      "c-rr-plugin"
+     ],
+     "feedback": "dV/dt ＝ 4πr²·(dr/dt) ＝ 4π·3²·2 ＝ 4π·9·2 ＝ 72π。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個正方形邊長為 x（會隨時間變），面積 A ＝ x²。對時間 t 微分，dA/dt 等於？",
+     "answer": "2x·(dx/dt)",
+     "kp_ids": [
+      "math.t_sub.calc.related-rates"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.related-rates"
+     ],
+     "options": [
+      "2x·(dx/dt)",
+      "2x",
+      "x²·(dx/dt)",
+      "2·(dx/dt)"
+     ],
+     "distractor_rationales": {
+      "2x": "漏掉了鏈鎖法則的 dx/dt：因為 x 是 t 的函數，d/dt(x²) ＝ 2x·(dx/dt)，不只是 2x。",
+      "x²·(dx/dt)": "次方沒有降：微分 x² 得 2x（不是 x²），再乘 dx/dt，所以是 2x·(dx/dt)。",
+      "2·(dx/dt)": "少了一個 x：d/dt(x²) ＝ 2x·(dx/dt)，係數是 2x、不是 2。"
+     },
+     "answer_evidence": [
+      "c-rr-method"
+     ],
+     "feedback": "d/dt(x²) ＝ 2x·(dx/dt)：先微分 x² 得 2x，再用鏈鎖法則乘上 dx/dt。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（相關變率做法：找連結方程式→對時間 t 微分兩邊（鏈鎖法則、多乘該量對 t 的變化率）→得變率關係→代入；球 V=(4/3)πr³ ⇒ dV/dt=4πr²·(dr/dt)，r=3、dr/dt=2 ⇒ 72π；正方形 A=x² ⇒ dA/dt=2x·(dx/dt)；最常見錯＝漏乘 dr/dt）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
