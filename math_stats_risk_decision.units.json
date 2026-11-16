@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 統計（stats）strand t_sub 單元。知識點 math.t_sub.stats.risk-decision（風險與期望值決策）。tier=t_sub（高中探究/選修補充）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：期望值 (expected value)。★scope（t_sub）：期望值＝每個可能結果×其機率再全部相加，代表長期平均每次大約得到多少；用期望值比較方案（只看平均報酬時選期望值高者）；期望值只看平均、未反映風險（變動/最壞情況），實際決策還要看是否願意承擔風險。只簡單兩結果期望值＋比較＋風險觀念；不含變異數決策、效用函數、決策樹多層。prereq＝抽樣調查 sampling-survey。repro（tools/verify/math_checks7.py::stats.risk-decision）：方案A 0.5×100+0.5×0＝50、方案B 確定40，E(A)>E(B) 選 A（.venv 已核）。★自檢（math-unit defect-classes #1–#59）：figure＝決策表 SVG（方案A 0.5×100＋0.5×0＝50 標紅、方案B 確定40，下註 E(A)50＞E(B)40 只看平均選A但A有風險），alt 與 SVG text 逐字一致（#33）、標題『期望值決策：每個結果×機率相加，比較後選較高』寫進 alt 開頭；teach 值集{100,0,50,40,0.5}與 practice 數值答案{10}無交集避#10（Q1 用 20/0→10）；practice：Q1 算期望值（0.5×20+0.5×0＝10，選項數）、Q2 選期望值高（甲60>乙45→甲，選項類別）、Q3 期望值意義（長期平均，選項說法）、Q4 風險觀念（期望值未含風險、看是否願承擔，選項說法）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53，如只看最大/最小/乘情況數/把平均當必得）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_stats_risk_decision.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.stats.risk-decision",
+   "title_zh": "期望值與風險決策",
+   "can_do": "我會算『期望值 (expected value)』：把每一個可能結果乘上它發生的機率，再全部加起來，代表長期平均下來每次大約可以得到多少。我會用期望值比較不同方案——只看平均報酬時，選期望值比較高的。我也知道期望值只看「平均」、沒有反映「風險」（結果的變動或最壞情況），所以實際做決定時，還要考慮自己願不願意承擔風險，不是只看期望值。",
+   "situation_group": "統計：期望值與風險決策",
+   "subject": "math",
+   "strand": "stats",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.stats.risk-decision"
+   ],
+   "prerequisites": [
+    "math.t_sub.stats.sampling-survey"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-rd-ev",
+     "text": "『期望值 (expected value)』是把每一個可能結果乘上它發生的機率，再全部加起來。它代表「長期平均」下來，每一次大約可以得到多少。例：一個遊戲有 0.5 的機率得到 100 元、0.5 的機率得到 0 元，期望值 ＝ 0.5 × 100 ＋ 0.5 × 0 ＝ 50 元——意思是長期多玩幾次，平均每次大約拿到 50 元。",
+     "kind": "definition",
+     "source_refs": [
+      "期望值的定義與計算（高中數學 機率統計）"
+     ],
+     "verification_ref": "Σ(結果×機率)；0.5×100+0.5×0=50（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-rd-compare",
+     "text": "要在幾個方案之間做決定時，可以先算出每個方案的期望值，再比較。如果只看「平均報酬」，就選期望值比較高的那個方案。例：方案A的期望值是 50 元、方案B（穩穩拿到）是 40 元，50 大於 40，只看平均報酬的話選方案A。",
+     "kind": "definition",
+     "source_refs": [
+      "用期望值比較方案（高中數學 機率統計）"
+     ],
+     "verification_ref": "比期望值選高者；E(A)=50>E(B)=40 選 A（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-rd-risk",
+     "text": "期望值只看「平均」，沒有反映「風險」（結果變動的大小、最壞會怎樣）。例：方案A期望值雖然較高（50），但有一半機率一無所獲（得 0）、風險大；方案B期望值雖然較低（40），卻是穩穩拿到、風險小。所以實際做決定時，除了比期望值，還要看自己願不願意承擔風險，不能只看期望值。",
+     "kind": "definition",
+     "source_refs": [
+      "期望值未反映風險、決策需考量風險（高中數學 機率統計）"
+     ],
+     "verification_ref": "期望值＝平均、不含風險；高期望值可能高風險（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.stats.risk-decision"
+     ],
+     "body": "這一單元學『期望值』和用它做『風險決策』。下面先講期望值——每個結果乘機率再相加、代表長期平均；再講用期望值比較方案、選較高的；接著講期望值只看平均、沒反映風險，決策還要考慮願不願意承擔風險；用一張方案比較表示範，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.stats.risk-decision"
+     ],
+     "body": "① 期望值：把每個可能結果乘上它的機率，再全部加起來，代表長期平均每次大約得到多少。看下面的表：方案A有 0.5 機率得 100 元、0.5 機率得 0 元，期望值 ＝ 0.5 × 100 ＋ 0.5 × 0 ＝ 50 元；方案B是穩穩拿到 40 元，期望值就是 40 元。② 比較：只看平均報酬的話，期望值高的比較好——50 大於 40，選方案A。③ 風險：但期望值只看平均、沒反映風險。方案A雖然平均較高，卻有一半機率得 0（風險大）；方案B雖然平均較低，卻穩拿 40（風險小）。所以實際決定還要看自己願不願意冒險，不能只看期望值。下面用這張表整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.stats.risk-decision"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='15' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>期望值決策：每個結果×機率相加，比較後選較高</text><rect x='24' y='28' width='312' height='26' fill='#eef4ff'/><rect x='24' y='28' width='312' height='86' fill='none' stroke='#99a7b5' stroke-width='1'/><line x1='96' y1='28' x2='96' y2='114' stroke='#99a7b5' stroke-width='1'/><line x1='270' y1='28' x2='270' y2='114' stroke='#99a7b5' stroke-width='1'/><line x1='24' y1='54' x2='336' y2='54' stroke='#99a7b5' stroke-width='1'/><line x1='24' y1='84' x2='336' y2='84' stroke='#99a7b5' stroke-width='1'/><text x='60' y='45' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>方案</text><text x='183' y='45' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>結果 × 機率</text><text x='303' y='45' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>期望值</text><text x='60' y='73' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>方案A</text><text x='183' y='73' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>0.5×100 ＋ 0.5×0</text><text x='303' y='73' font-family='sans-serif' font-size='12' fill='#c2535d' text-anchor='middle' font-weight='bold'>50</text><text x='60' y='103' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>方案B</text><text x='183' y='103' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>確定拿 40</text><text x='303' y='103' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>40</text><text x='180' y='130' font-family='sans-serif' font-size='10.5' fill='#6b7785' text-anchor='middle'>E(A)＝50 ＞ E(B)＝40：只看平均選 A</text><text x='180' y='146' font-family='sans-serif' font-size='10.5' fill='#6b7785' text-anchor='middle'>但 A 有一半機率得 0（風險大），B 穩拿 40（風險小）</text></svg>",
+      "alt": "標題「期望值決策：每個結果×機率相加，比較後選較高」。一張表，三欄 方案、結果 × 機率、期望值：方案A → 0.5×100 ＋ 0.5×0 → 期望值 50（標紅）；方案B → 確定拿 40 → 期望值 40。下方寫「E(A)＝50 ＞ E(B)＝40：只看平均選 A」與「但 A 有一半機率得 0（風險大），B 穩拿 40（風險小）」。",
+      "caption": "期望值決策表：方案A 的期望值 ＝ 0.5×100 ＋ 0.5×0 ＝ 50，方案B 穩拿 40。只看平均報酬 50＞40 選方案A；但方案A 有一半機率得 0（風險大）、方案B 穩拿 40（風險小），實際還要看願不願意承擔風險。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.stats.risk-decision"
+     ],
+     "body": "最後練期望值與風險決策。重點：期望值＝每個結果×機率再相加，代表長期平均；只看平均報酬就選期望值高的方案；但期望值沒反映風險，實際決定還要看願不願意承擔風險。小提醒：期望值是「平均」，不是一定會拿到的金額，也不是最大或最小的金額。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個遊戲有 0.5 的機率得到 20 元、0.5 的機率得到 0 元。這個遊戲的期望值是多少？",
+     "answer": "10 元",
+     "kp_ids": [
+      "math.t_sub.stats.risk-decision"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.stats.risk-decision"
+     ],
+     "options": [
+      "10 元",
+      "20 元",
+      "0 元",
+      "40 元"
+     ],
+     "distractor_rationales": {
+      "20 元": "20 是運氣好時最多能拿到的金額，不是平均；期望值要把每個結果乘機率相加，0.5 × 20 ＋ 0.5 × 0 ＝ 10。",
+      "0 元": "0 是運氣差時最少拿到的金額，不是期望值；期望值是 0.5 × 20 ＋ 0.5 × 0 ＝ 10。",
+      "40 元": "40 是把獎金 20 乘以 2（因為有兩種情況）；但期望值是乘上機率再相加，不是乘情況數，0.5 × 20 ＋ 0.5 × 0 ＝ 10。"
+     },
+     "answer_evidence": [
+      "c-rd-ev"
+     ],
+     "feedback": "期望值 ＝ 每個結果 × 機率再相加 ＝ 0.5 × 20 ＋ 0.5 × 0 ＝ 10 元。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "方案甲的期望值是 60 元、方案乙的期望值是 45 元。如果只看「平均報酬」，應該選哪一個方案？",
+     "answer": "方案甲",
+     "kp_ids": [
+      "math.t_sub.stats.risk-decision"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.stats.risk-decision"
+     ],
+     "options": [
+      "方案甲",
+      "方案乙",
+      "兩個方案一樣好",
+      "無法比較"
+     ],
+     "distractor_rationales": {
+      "方案乙": "方案乙期望值 45 比甲的 60 低；只看平均報酬要選期望值高的，是方案甲。",
+      "兩個方案一樣好": "60 和 45 不一樣；只看平均報酬，期望值高的方案甲比較好。",
+      "無法比較": "兩個方案的期望值都算出來了（60 和 45），可以直接比較；只看平均選較高的甲。"
+     },
+     "answer_evidence": [
+      "c-rd-compare"
+     ],
+     "feedback": "只看平均報酬，就選期望值較高的：甲 60 ＞ 乙 45，選方案甲。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "「期望值」代表的是什麼？",
+     "answer": "長期平均下來，每一次大約可以得到多少",
+     "kp_ids": [
+      "math.t_sub.stats.risk-decision"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.stats.risk-decision"
+     ],
+     "options": [
+      "長期平均下來，每一次大約可以得到多少",
+      "這一次一定會拿到的金額",
+      "運氣最好時最多能拿到的金額",
+      "運氣最差時最少拿到的金額"
+     ],
+     "distractor_rationales": {
+      "這一次一定會拿到的金額": "期望值是「平均」，不是這一次一定拿到的金額；單次結果可能高於或低於期望值。",
+      "運氣最好時最多能拿到的金額": "那是最大的可能結果，不是期望值；期望值把各結果乘機率相加、代表平均。",
+      "運氣最差時最少拿到的金額": "那是最小的可能結果，不是期望值；期望值是加權平均，介於最小和最大之間。"
+     },
+     "answer_evidence": [
+      "c-rd-ev"
+     ],
+     "feedback": "期望值代表長期平均每次大約得到多少，不是單次一定拿到、也不是最大或最小金額。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "方案A期望值較高但有一半機率一無所獲，方案B期望值較低卻穩穩拿到。關於怎麼選，下列何者最正確？",
+     "answer": "期望值只看平均、沒反映風險，實際選擇還要看自己願不願意承擔風險",
+     "kp_ids": [
+      "math.t_sub.stats.risk-decision"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.stats.risk-decision"
+     ],
+     "options": [
+      "期望值只看平均、沒反映風險，實際選擇還要看自己願不願意承擔風險",
+      "一定要選期望值比較高的方案A",
+      "一定要選穩穩拿到的方案B",
+      "期望值比較高就表示完全沒有風險"
+     ],
+     "distractor_rationales": {
+      "一定要選期望值比較高的方案A": "不是「一定」要選A；A 期望值雖高卻有風險（可能得 0），要不要選得看自己能否承擔風險。",
+      "一定要選穩穩拿到的方案B": "也不是「一定」要選B；願意承擔風險、追求較高平均報酬的人可能選A，沒有唯一答案。",
+      "期望值比較高就表示完全沒有風險": "期望值高不代表沒風險；A 期望值高但有一半機率得 0，風險其實很大。"
+     },
+     "answer_evidence": [
+      "c-rd-risk"
+     ],
+     "feedback": "期望值只反映平均、沒反映風險；A 平均高但可能一無所獲，實際選擇還要看自己願不願意承擔風險，沒有唯一標準答案。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（期望值＝每個結果×機率再相加、代表長期平均；只看平均報酬選期望值高的方案；期望值沒反映風險，實際決定還要看願不願意承擔風險）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
