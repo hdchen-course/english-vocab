@@ -1,11 +1,11 @@
 {
- "_note": "數學島 微積分（calc）strand t_sub 單元。知識點 math.t_sub.calc.area（定積分求曲線下面積與兩曲線間面積）。tier=t_sub（高中分科/選修深階，exam 分科-數甲）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換——見 math-unit defect #63）：定積分 (definite integral)、面積 (area)、積分 (integration)。前置假設：會用微積分基本定理算定積分（definite-integral 已教）。★scope（t_sub）：兩曲線 y＝f(x)（上）與 y＝g(x)（下）之間、從 x＝a 到 x＝b 的面積＝∫ₐᵇ[f(x)−g(x)] dx（上曲線減下曲線，再積分）；關鍵是先判斷「哪一條在上面」（在該區間代一個 x 值比大小）。以 y＝x 與 y＝x² 在 [0,1] 貫穿：0<x<1 時 x>x²（y＝x 在上），面積＝∫₀¹(x−x²) dx＝[x²/2−x³/3]₀¹＝1/2−1/3＝1/6。只到兩條已知哪條在上的多項式曲線、在交點間的面積；不含需分段（上下曲線互換）、不含對 y 積分、不含參數式。prereq＝definite-integral＋antiderivative。repro（tools/verify/math_checks7.py::calc.area）：∫₀¹(x−x²) dx＝1/6（.venv 已核）；practice 另用 y＝2x 與 y＝x² 在 [0,2]：∫₀²(2x−x²) dx＝4/3 以 .venv sympy 另核。★自檢（math-unit defect-classes #1–#63）：figure＝y＝x 與 y＝x² 在 [0,1] 間面積 SVG（座標軸、直線 y＝x、拋物線 y＝x²、兩線於 (0,0)(1,1) 相交、之間淺色陰影、左上標 ∫₀¹(x−x²)dx＝1/6 紅、陰影內標面積、x 軸 0/1），面積概念圖無角度/垂直關係（不需等軸#62），alt 與 SVG text 逐字一致（#33）、標題『兩曲線間面積：y＝x 與 y＝x²（0 到 1）』寫進 alt 開頭；practice 四答案＝{∫ₐᵇ[f−g]dx(Q1 公式),y＝x(Q2 誰在上),1/6(Q3 ∫₀¹(x−x²) hero retrieval),4/3(Q4 y＝2x 與 y＝x² transfer)} 與 teach 關鍵值無 #10（Q3 hero retrieval、options 載入洗牌無位置 tell）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算：如上下曲線顛倒、相加非相減、只算一條曲線的積分）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "_note": "數學島 微積分（calc）strand t_sub 單元。知識點 math.t_sub.calc.area（定積分求曲線下面積與兩曲線間面積）。tier=t_sub（高中分科/選修深階，exam 分科-數甲）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換——見 math-unit defect #63）：定積分 (definite integral)、面積 (area)。（『積分』為 prereq definite-integral 已教的運算詞、本單元不重複 gloss。）前置假設：會用微積分基本定理算定積分（definite-integral 已教）。★scope（t_sub）：兩曲線 y＝f(x)（上）與 y＝g(x)（下）之間、從 x＝a 到 x＝b 的面積＝∫ₐᵇ[f(x)−g(x)] dx（上曲線減下曲線，再積分）；關鍵是先判斷「哪一條在上面」（在該區間代一個 x 值比大小）。以 y＝x 與 y＝x² 在 [0,1] 貫穿：0<x<1 時 x>x²（y＝x 在上），面積＝∫₀¹(x−x²) dx＝[x²/2−x³/3]₀¹＝1/2−1/3＝1/6。★標題另含「曲線下面積」：teach④ 明教其為「下曲線＝x 軸(y＝0)」的特例＝∫ₐᵇ f(x) dx（f≥0），具體例 ∫₀³x² dx＝9（兌現標題兩主題，R1 instructional-design major 修正）。只到兩條已知哪條在上的多項式曲線、在交點間的面積；不含需分段（上下曲線互換）、不含對 y 積分、不含參數式。prereq＝definite-integral＋antiderivative。repro（tools/verify/math_checks7.py::calc.area）：∫₀¹(x−x²) dx＝1/6（.venv 已核）；practice 另用 y＝2x 與 y＝x² 在 [0,2]：∫₀²(2x−x²) dx＝4/3 以 .venv sympy 另核。★自檢（math-unit defect-classes #1–#63）：figure＝y＝x 與 y＝x² 在 [0,1] 間面積 SVG（座標軸、直線 y＝x、拋物線 y＝x²、兩線於 (0,0)(1,1) 相交、之間淺色陰影、左上標 ∫₀¹(x−x²)dx＝1/6 紅、陰影內標面積、x 軸 0/1），面積概念圖無角度/垂直關係（不需等軸#62），alt 與 SVG text 逐字一致（#33）、標題『兩曲線間面積：y＝x 與 y＝x²（0 到 1）』寫進 alt 開頭；practice 四答案＝{∫ₐᵇ[f−g]dx(Q1 公式),y＝x(Q2 誰在上),1/6(Q3 ∫₀¹(x−x²) hero retrieval),4/3(Q4 y＝2x 與 y＝x² transfer)} 與 teach 關鍵值無 #10（Q3 hero retrieval、options 載入洗牌無位置 tell）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算：如上下曲線顛倒、相加非相減、只算一條曲線的積分）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
  "page": "math_calc_area.html",
  "units": [
   {
    "unit_id": "math.t_sub.calc.area",
    "title_zh": "定積分求曲線下面積與兩曲線間面積",
-   "can_do": "我會用『定積分 (definite integral)』求兩條曲線之間的『面積 (area)』。方法：兩曲線 y ＝ f(x)（上）與 y ＝ g(x)（下）之間、從 x ＝ a 到 x ＝ b 的面積 ＝ ∫ₐᵇ[f(x) − g(x)] dx（上曲線減下曲線，再積分）。做之前要先判斷「哪一條在上面」——在該區間裡代一個 x 值比大小就知道。例：y ＝ x 與 y ＝ x² 在 0 到 1 之間，因為 0<x<1 時 x>x²，所以 y ＝ x 在上，面積 ＝ ∫₀¹(x − x²) dx ＝ 1/2 − 1/3 ＝ 1/6。",
+   "can_do": "我會用『定積分 (definite integral)』求兩條曲線之間的『面積 (area)』。方法：兩曲線 y ＝ f(x)（上）與 y ＝ g(x)（下）之間、從 x ＝ a 到 x ＝ b 的面積 ＝ ∫ₐᵇ[f(x) − g(x)] dx（上曲線減下曲線，再積分）。做之前要先判斷「哪一條在上面」——在該區間裡代一個 x 值比大小就知道。例：y ＝ x 與 y ＝ x² 在 0 到 1 之間，因為 0<x<1 時 x>x²，所以 y ＝ x 在上，面積 ＝ ∫₀¹(x − x²) dx ＝ 1/2 − 1/3 ＝ 1/6。『曲線下面積』是它的特例：當下曲線就是 x 軸（y ＝ 0）時，曲線 y ＝ f(x) 與 x 軸之間的面積 ＝ ∫ₐᵇ f(x) dx（f(x) ≥ 0 時）。",
    "situation_group": "微積分：面積應用",
    "subject": "math",
    "strand": "calc",
@@ -59,14 +59,14 @@
      "kp_ids": [
       "math.t_sub.calc.area"
      ],
-     "body": "這一單元學怎麼用定積分求「兩條曲線之間的面積」。下面先講公式（上曲線減下曲線再積分）；再講最關鍵的一步——先判斷哪一條在上面；用 y ＝ x 與 y ＝ x² 在 0 到 1 之間完整示範一次，最後練習。（本單元接在『定積分與微積分基本定理』之後，核心就是「把定積分用在面積上」。）"
+     "body": "這一單元學怎麼用定積分求面積——包括「曲線下面積」（曲線與 x 軸之間）和「兩條曲線之間的面積」。下面先講兩曲線間面積的公式（上曲線減下曲線再積分）；再講最關鍵的一步——先判斷哪一條在上面；用 y ＝ x 與 y ＝ x² 在 0 到 1 之間完整示範一次，並說明「曲線下面積」就是下曲線換成 x 軸的特例，最後練習。（本單元接在『定積分與微積分基本定理』之後，核心就是「把定積分用在面積上」。）"
     },
     {
      "kind": "text",
      "kp_ids": [
       "math.t_sub.calc.area"
      ],
-     "body": "① 公式：在 a 到 b 之間，若 y ＝ f(x) 在上、y ＝ g(x) 在下，兩曲線間面積 ＝ ∫ₐᵇ[f(x) − g(x)] dx（上減下再積分）。② 關鍵：先判斷「誰在上面」——在區間裡代一個 x 值比大小。③ 示範 y ＝ x 與 y ＝ x²（0 到 1）：代 x ＝ 1/2 得 0.5 > 0.25，所以 y ＝ x 在上；面積 ＝ ∫₀¹(x − x²) dx ＝ [x²/2 − x³/3]₀¹ ＝ 1/2 − 1/3 ＝ 1/6。看下面的圖（兩曲線之間就是這塊面積），最後練習。"
+     "body": "① 公式：在 a 到 b 之間，若 y ＝ f(x) 在上、y ＝ g(x) 在下，兩曲線間面積 ＝ ∫ₐᵇ[f(x) − g(x)] dx（上減下再積分）。② 關鍵：先判斷「誰在上面」——在區間裡代一個 x 值比大小。③ 示範 y ＝ x 與 y ＝ x²（0 到 1）：代 x ＝ 1/2 得 0.5 > 0.25，所以 y ＝ x 在上；面積 ＝ ∫₀¹(x − x²) dx ＝ [x²/2 − x³/3]₀¹ ＝ 1/2 − 1/3 ＝ 1/6。④ 曲線下面積（特例）：把下曲線換成 x 軸（y ＝ 0），曲線 y ＝ f(x) 與 x 軸之間的面積 ＝ ∫ₐᵇ f(x) dx（f(x) ≥ 0 時）；例如 ∫₀³ x² dx ＝ 9，就是 y ＝ x² 在 0 到 3 之下、與 x 軸之間的面積。看下面的圖（兩曲線之間就是這塊面積），最後練習。"
     },
     {
      "kind": "example",
