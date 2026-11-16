@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 11:52 stats strand frequency-table 次數分配表 5/5 DONE-GATE 全綠（t_mid 國中，★次數分配表 grid SVG）→ stats 10/18
+- **math_stats_frequency_table frozen `8c4883f22085932c`**（R1-R5 連 5 clean、L3 每輪 exit 0；R5 最終確認輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==8c4883f2／per_page_5clean frequency_table absent／iPad 四角色簽核（次數分配表 grid 清晰、5 標紅、標題頓號「分組、數次數」消歧義、右緣0%）。
+- 次數分配表（t_mid）＝把範圍大的資料分成大小相同組別（組距）、數每組次數做成表；用「以上、未滿」分組邊界歸「以上」組只算一次；各組次數和＝總筆數、讀最多組。teach 身高表 140-150:3/150-160:5/160-170:2 合計10、組距10、150-160 最多。practice：Q1 邊界歸組(20→20以上未滿30)、Q2 讀最多組(甲4乙9丙6→乙)、Q3 總次數(4+9+6=19)、Q4 組距概念。只整數次數、不含相對/累積次數（另單元）。prereq＝table-read。
+- ★R3 誠實 de-converge（清 R1-2，panel/7鏡 confirmed）：figure 標題「分組數次數」run-on 歧義（可讀成「分組數=組數」）→加頓號「分組、數次數」（SVG+alt+_note 同步）；Q1 誘答「20 和 30 那兩組」裸邊界數命名 phantom「30 組」→改全範圍「10 以上未滿 20 和 20 以上未滿 30 兩組都要算」。re-froze 8c4883f2 後 R1-R5 連 5 clean。
+- 下一步：stats 其餘 8 單元（cumulative-relative/variance-std/standardization/bivariate-scatter/correlation/regression-line/sampling-survey/risk-decision）；接著 calc/vector 等。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-16 11:19 stats strand table-read 報讀統計表 5/5 DONE-GATE 全綠（t_base 國小，★統計表 grid SVG）→ stats 9/18（過半）
 - **math_stats_table_read frozen `adb51b5ee7120d68`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==adb51b5e／per_page_5clean table_read absent／iPad 四角色簽核（統計表 grid 清晰、9 標紅、右緣0%）。
 - 報讀統計表＝看列（橫）欄（直）交叉格讀值、一列/一欄合計、比較格子大小。teach 表 班級×書（甲 故8漫5、乙 故6漫9），讀乙漫9、甲合計13、比漫5vs9。practice 用另一張表（飲料×時段：早 紅12綠7、下午 紅9綠15）：Q1 讀格(下午綠15)、Q2 一列合計(早上12+7=19)、Q3 比較(下午綠15>早綠7→下午)、Q4 概念(找早上紅茶看列×欄交叉格)。prereq＝collect-organize。
