@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 微積分（calc）strand t_sub 單元。知識點 math.t_sub.calc.extrema（極值 極大/極小 的判定）。tier=t_sub（高中分科/選修深階，exam 分科-數甲）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：導數 (derivative)、一階導數 (first derivative)、二階導數 (second derivative)、臨界點 (critical point)、極值 (extremum)、極大 (local maximum)、極小 (local minimum)。前置假設：會算多項式一階、二階導數，且已學增減與凹凸（一階/二階判定）。★scope（t_sub）：臨界點＝f′(x)＝0 的點（極值只可能發生在臨界點）；兩種判定——(1)一階變號法：f′ 由正變負⇒極大、由負變正⇒極小；(2)二階判定法：臨界點處 f″>0⇒極小、f″<0⇒極大。以 f(x)＝x³−3x 貫穿（f′＝3x²−3 臨界點 ±1；f″＝6x，x＝−1 極大值 2、x＝1 極小值 −2）。只到多項式的相對極值（臨界點＋一階變號或二階判定）；不含端點極值/閉區間絕對極值的完整流程、不含 f″＝0 需更高階判定的邊界情形、不含多變數。prereq＝differentiation-rules＋increasing-concavity。repro（tools/verify/math_checks7.py::calc.extrema）：x³−3x 臨界點{−1,1}、f″(1)=6>0 極小、f″(−1)=−6<0 極大（.venv 已核）；教材用 f(−1)=2、f(1)=−2；practice 另用 g(x)=x²−4x（g′=2x−4 臨界點 2、g″=2>0 極小、g(2)=−4）皆以 .venv sympy 另核。★自檢（math-unit defect-classes #1–#59）：figure＝x³−3x 極值曲線 SVG（三次曲線，峰標紅圈『極大 (−1, 2)』、谷標綠圈『極小 (1, −2)』，兩臨界點虛線對齊 x 軸，下註『二階判定：f″(−1)＝−6＜0 ⇒ 極大、f″(1)＝6＞0 ⇒ 極小』），alt 與 SVG text 逐字一致（#33）、標題『極值判定：f(x)＝x³−3x 的極大與極小』寫進 alt 開頭；practice 四答案＝{f′(x)=0 的點(Q1 概念),極小(Q2 二階 f″>0),極大(Q3 一階正→負),x＝2 處極小(Q4 用 g=x²−4x)} 與 teach 關鍵值無 #10 巧合（Q4 用不同函數）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53，如把極大極小判反/二階符號判反/把非臨界點當極值/一階變號方向記反）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_calc_extrema.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.calc.extrema",
+   "title_zh": "極值（極大／極小）的判定",
+   "can_do": "我會找函數的『極值 (extremum)』。我知道極值只可能出現在『臨界點 (critical point)』——也就是『一階導數 (first derivative)』f′(x) ＝ 0 的點。判斷極大或極小有兩種方法：(1) 一階變號法——f′ 由正變負是『極大 (local maximum)』、由負變正是『極小 (local minimum)』；(2) 二階判定法——在臨界點處，『二階導數 (second derivative)』f″ ＞ 0 是極小、f″ ＜ 0 是極大。以 f(x) ＝ x³ − 3x 為例：臨界點是 x ＝ −1、1；f″ ＝ 6x，所以 x ＝ −1 是極大（值 2）、x ＝ 1 是極小（值 −2）。",
+   "situation_group": "微積分：極值判定",
+   "subject": "math",
+   "strand": "calc",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.calc.extrema"
+   ],
+   "prerequisites": [
+    "math.t_sub.calc.differentiation-rules",
+    "math.t_sub.calc.increasing-concavity"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ex-crit",
+     "text": "極值（極大或極小）只可能出現在「臨界點」，也就是一階導數 f′(x) ＝ 0 的點。所以找極值的第一步，是先解 f′(x) ＝ 0 找出所有臨界點。例：f(x) ＝ x³ − 3x 的 f′(x) ＝ 3x² − 3 ＝ 0，解得臨界點 x ＝ −1、1。（要提醒：臨界點只是「候選」，還要再判斷它到底是極大、極小、還是都不是。）",
+     "kind": "definition",
+     "source_refs": [
+      "臨界點與極值（高中數學 微積分）"
+     ],
+     "verification_ref": "x³−3x：f′=3x²−3=0 臨界點{−1,1}（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ex-first",
+     "text": "一階變號法：看臨界點左右 f′ 的正負變化。如果 f′ 由「正變負」（左邊遞增、右邊遞減），那一點是極大；如果 f′ 由「負變正」（左邊遞減、右邊遞增），那一點是極小。例：f(x) ＝ x³ − 3x 在 x ＝ −1 左正右負 ⇒ 極大，在 x ＝ 1 左負右正 ⇒ 極小。",
+     "kind": "definition",
+     "source_refs": [
+      "一階導數判定極值（變號法）（高中數學 微積分）"
+     ],
+     "verification_ref": "x³−3x：x=−1 左正右負極大、x=1 左負右正極小（f′=3x²−3 符號 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ex-second",
+     "text": "二階判定法：在臨界點（f′ ＝ 0 的點）代入二階導數 f″。如果 f″ ＞ 0，圖形凹向上，那一點是極小；如果 f″ ＜ 0，圖形凹向下，那一點是極大。例：f(x) ＝ x³ − 3x 的 f″ ＝ 6x；f″(−1) ＝ −6 ＜ 0 ⇒ x ＝ −1 是極大（值 f(−1) ＝ 2），f″(1) ＝ 6 ＞ 0 ⇒ x ＝ 1 是極小（值 f(1) ＝ −2）。",
+     "kind": "definition",
+     "source_refs": [
+      "二階導數判定極值（高中數學 微積分）"
+     ],
+     "verification_ref": "x³−3x：f″(−1)=−6<0 極大 f(−1)=2、f″(1)=6>0 極小 f(1)=−2（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.extrema"
+     ],
+     "body": "這一單元學怎麼找函數的極大與極小（合稱極值）。下面先講極值只會出現在臨界點（f′ ＝ 0 的點）、要先解 f′ ＝ 0；再講兩種判定——一階變號法（看 f′ 正負怎麼變）和二階判定法（在臨界點代 f″ 的正負）；用 f(x) ＝ x³ − 3x 的曲線圖示範，最後練習。（本單元接在『微分公式』與『增減與凹凸』之後。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.extrema"
+     ],
+     "body": "① 臨界點：極值只可能在 f′(x) ＝ 0 的點，先解 f′ ＝ 0。② 一階變號法：臨界點左右 f′ 由正變負 ⇒ 極大、由負變正 ⇒ 極小。③ 二階判定法：在臨界點代 f″，f″ ＞ 0 ⇒ 極小、f″ ＜ 0 ⇒ 極大。以 f(x) ＝ x³ − 3x 為例：f′ ＝ 3x² − 3 ＝ 0 得臨界點 x ＝ −1、1；f″ ＝ 6x，f″(−1) ＝ −6 ＜ 0 ⇒ x ＝ −1 極大（值 2），f″(1) ＝ 6 ＞ 0 ⇒ x ＝ 1 極小（值 −2）。看下面的曲線，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.calc.extrema"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>極值判定：f(x)＝x³−3x 的極大與極小</text><line x1='58' y1='95' x2='304' y2='95' stroke='#99a7b5' stroke-width='1'/><line x1='125' y1='51' x2='125' y2='95' stroke='#c9d3dd' stroke-width='1' stroke-dasharray='3 2'/><line x1='235' y1='95' x2='235' y2='139' stroke='#c9d3dd' stroke-width='1' stroke-dasharray='3 2'/><path d='M70.0,139.0 L75.5,120.5 L81.0,104.5 L86.5,90.9 L92.0,79.5 L97.5,70.2 L103.0,63.0 L108.5,57.5 L114.0,53.8 L119.5,51.7 L125.0,51.0 L130.5,51.6 L136.0,53.5 L141.5,56.3 L147.0,60.2 L152.5,64.8 L158.0,70.0 L163.5,75.8 L169.0,82.0 L174.5,88.4 L180.0,95.0 L185.5,101.6 L191.0,108.0 L196.5,114.2 L202.0,120.0 L207.5,125.2 L213.0,129.8 L218.5,133.7 L224.0,136.5 L229.5,138.4 L235.0,139.0 L240.5,138.3 L246.0,136.2 L251.5,132.5 L257.0,127.0 L262.5,119.8 L268.0,110.5 L273.5,99.1 L279.0,85.5 L284.5,69.5 L290.0,51.0' fill='none' stroke='#33475b' stroke-width='1.8'/><circle cx='125' cy='51' r='3.5' fill='#c2535d'/><circle cx='235' cy='139' r='3.5' fill='#2f6f54'/><text x='125' y='44' font-family='sans-serif' font-size='9' fill='#c2535d' text-anchor='middle'>極大 (−1, 2)</text><text x='235' y='152' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='middle'>極小 (1, −2)</text><text x='180' y='164' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>二階判定：f″(−1)＝−6＜0 ⇒ 極大、f″(1)＝6＞0 ⇒ 極小</text></svg>",
+      "alt": "標題「極值判定：f(x)＝x³−3x 的極大與極小」。一條三次曲線由左下升起、在 x ＝ −1 到最高點後下降、在 x ＝ 1 到最低點後再上升；中間有一條水平的 x 軸。最高點用紅色圓點標「極大 (−1, 2)」，最低點用綠色圓點標「極小 (1, −2)」，兩個臨界點各有一條虛線對齊到 x 軸。下方註「二階判定：f″(−1)＝−6＜0 ⇒ 極大、f″(1)＝6＞0 ⇒ 極小」。",
+      "caption": "以 f(x)＝x³−3x 示範極值：解 f′＝3x²−3＝0 得臨界點 x＝−1、1；二階判定 f″＝6x，f″(−1)＝−6＜0 所以 x＝−1 是極大（值 2），f″(1)＝6＞0 所以 x＝1 是極小（值 −2）。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.extrema"
+     ],
+     "body": "最後練極值判定。重點：極值只在臨界點（f′ ＝ 0）出現，先解 f′ ＝ 0；再用一階變號法（f′ 正變負 ⇒ 極大、負變正 ⇒ 極小）或二階判定法（f″ ＞ 0 ⇒ 極小、f″ ＜ 0 ⇒ 極大）判斷。小提醒：f″ ＞ 0 是「凹向上」所以是極小、f″ ＜ 0 是「凹向下」所以是極大，別把兩個判反；還有臨界點只是候選，要判定後才知道是不是極值。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "函數的極值（極大或極小）只可能出現在哪種點？",
+     "answer": "f′(x) ＝ 0 的點（臨界點）",
+     "kp_ids": [
+      "math.t_sub.calc.extrema"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.extrema"
+     ],
+     "options": [
+      "f′(x) ＝ 0 的點（臨界點）",
+      "f(x) ＝ 0 的點",
+      "f″(x) ＝ 0 的點",
+      "任何一點都可能"
+     ],
+     "distractor_rationales": {
+      "f(x) ＝ 0 的點": "f(x) ＝ 0 是函數值為 0（圖形與 x 軸的交點），和極值無關；極值在 f′(x) ＝ 0 的臨界點。",
+      "f″(x) ＝ 0 的點": "f″(x) ＝ 0 是反曲點（凹凸改變）的候選，不是極值的位置；極值在 f′(x) ＝ 0。",
+      "任何一點都可能": "極值不會在任何一點隨便出現，一定先滿足 f′(x) ＝ 0；這是找極值的第一步。"
+     },
+     "answer_evidence": [
+      "c-ex-crit"
+     ],
+     "feedback": "極值只可能在臨界點，也就是 f′(x) ＝ 0 的點；找極值要先解 f′(x) ＝ 0。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "某臨界點處 f′(c) ＝ 0 且 f″(c) ＝ 5 ＞ 0。用二階判定法，x ＝ c 是極大還是極小？",
+     "answer": "極小",
+     "kp_ids": [
+      "math.t_sub.calc.extrema"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.extrema"
+     ],
+     "options": [
+      "極小",
+      "極大",
+      "反曲點",
+      "無法判斷"
+     ],
+     "distractor_rationales": {
+      "極大": "f″ ＜ 0 才是極大；這裡 f″(c) ＝ 5 ＞ 0（凹向上），是極小。",
+      "反曲點": "反曲點要 f″ 變號；這裡已知臨界點 f′ ＝ 0 且 f″ ＞ 0，二階判定直接得極小。",
+      "無法判斷": "只有 f″ ＝ 0 時二階判定才失效；這裡 f″(c) ＝ 5 ＞ 0 可直接判定是極小。"
+     },
+     "answer_evidence": [
+      "c-ex-second"
+     ],
+     "feedback": "二階判定法：臨界點處 f″ ＞ 0（凹向上）⇒ 極小。f″(c) ＝ 5 ＞ 0，所以 x ＝ c 是極小。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用一階變號法：如果在臨界點左右，f′ 由「正」變成「負」，那一點是？",
+     "answer": "極大",
+     "kp_ids": [
+      "math.t_sub.calc.extrema"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.extrema"
+     ],
+     "options": [
+      "極大",
+      "極小",
+      "反曲點",
+      "不是極值"
+     ],
+     "distractor_rationales": {
+      "極小": "f′ 由負變正才是極小；由正變負（左遞增、右遞減）是先升後降，那一點是極大。",
+      "反曲點": "反曲點看的是 f″ 變號（凹凸改變），不是 f′ 變號；f′ 由正變負是極大。",
+      "不是極值": "f′ 在臨界點兩側確實變號（正變負），就是極值；由正變負是極大。"
+     },
+     "answer_evidence": [
+      "c-ex-first"
+     ],
+     "feedback": "一階變號法：f′ 由正變負（左升右降）⇒ 極大；由負變正（左降右升）⇒ 極小。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "設 g(x) ＝ x² − 4x（g′(x) ＝ 2x − 4、g″(x) ＝ 2）。它的極值在哪裡、是極大還是極小？",
+     "answer": "x ＝ 2 處極小",
+     "kp_ids": [
+      "math.t_sub.calc.extrema"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.extrema"
+     ],
+     "options": [
+      "x ＝ 2 處極小",
+      "x ＝ 2 處極大",
+      "x ＝ 0 處極小",
+      "x ＝ 4 處極大"
+     ],
+     "distractor_rationales": {
+      "x ＝ 2 處極大": "臨界點 x ＝ 2 沒錯，但 g″ ＝ 2 ＞ 0（凹向上）是極小、不是極大。",
+      "x ＝ 0 處極小": "臨界點要解 g′ ＝ 2x − 4 ＝ 0 得 x ＝ 2，不是 x ＝ 0；且該點是極小。",
+      "x ＝ 4 處極大": "x ＝ 4 不是臨界點（g′(4) ＝ 4 ≠ 0）；臨界點是 x ＝ 2，二階判定為極小。"
+     },
+     "answer_evidence": [
+      "c-ex-second"
+     ],
+     "feedback": "解 g′ ＝ 2x − 4 ＝ 0 得臨界點 x ＝ 2；g″ ＝ 2 ＞ 0（凹向上）⇒ x ＝ 2 處極小。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（極值只在臨界點 f′=0 出現、先解 f′=0；一階變號法 f′ 正變負⇒極大、負變正⇒極小；二階判定法 f″>0⇒極小、f″<0⇒極大；以 x³−3x 為例 x=−1 極大值 2、x=1 極小值 −2；f″>0 凹向上是極小、別判反）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
