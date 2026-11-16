@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 10:53 stats strand pie-chart 圓形圖 5/5 DONE-GATE 全綠（t_base 國小，★按比例圓形圖 ½/¼/¼）→ stats 8/18
+- **math_stats_pie_chart frozen `167a03170539130b`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==167a0317／per_page_5clean pie_chart absent／iPad 四角色簽核（右緣0%，扇形按比例＋深字白描邊標籤＋legend 不裁切）。
+- 圓形圖＝整個圓代表全部、扇形大小表示占比（越大占越多）、最大扇形占最多、½＝一半/¼＝四分之一；選圖＝占整體比例用圓形圖、比較數量用長條圖。teach pie 走路½/騎腳踏車¼/坐車¼（cx=92 r=50 arc .venv 算）。Q1 讀最大扇形(蘋果)、Q2 圓=全部、Q3 半圓=占一半、Q4 選圓形圖(占比)。只用 ½/¼ 不教百分比/角度（t_base scope）。prereq＝bar-line-chart。
+- ★收斂過程三次 figure/註記修正（皆經四角色/panel）：(a) pre-freeze legend 右緣裁切→左移 pie(cx120→92)＋legend；(b) R1 2 minor：#49 _note 幾何 stale＋白字¼在淺金扇形對比1.98:1→深字白描邊(paint-order≥3:1)；(c)★R3 #49 major：_note Q1 寫「走路」實際用水果（蘋果）→誠實 de-converge（清 R1-R2）同步。重收斂 5 clean。R4 唯一 finding（重複「全班」）panel 0/5 判非 defect。
+- ★新教訓（已體現）：扇形/色塊內文字對比要對「填色」算（白字在淺色扇形不足）＝深字＋白描邊 paint-order 最穩；legend 文字務必核對右緣不溢出 viewBox；_note 要照抄實際題目（別留草稿描述）。
+- 下一步：stats 其餘 10 單元（table-read/frequency-table/cumulative-relative/variance-std/standardization/bivariate-scatter/correlation/regression-line/sampling-survey/risk-decision）；接著 calc/vector 等。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-16 10:15 stats strand bar-line-chart 長條圖與折線圖 5/5 DONE-GATE 全綠（t_base 國小，★按比例長條圖＋y軸刻度）→ stats 7/18
 - **math_stats_bar_line_chart frozen `a7f3e9d724047eb5`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==a7f3e9d7／per_page_5clean bar_line_chart absent／iPad 四角色簽核（右緣0%，長條按比例＋y軸刻度 0/2/4/6 對齊 bar 頂）。
 - 長條圖＝長條高度表示數量（越高越多、看頂端對到 y 軸刻度、比較類別）；折線圖＝點連成線（往上增加/往下減少/平的不變、看隨時間變化）；選圖＝比較類別用長條圖、看隨時間變化用折線圖。teach bar 紅4/藍6/黃3（★y 軸刻度 0/2/4/6，14px/票）、line 週一10/週二15/週三12。Q1 讀長條最多(黃9)、Q2 讀折線週二→週三減少、Q3 選長條圖(比較班級)、Q4 選折線圖(每日氣溫)。prereq＝collect-organize。
