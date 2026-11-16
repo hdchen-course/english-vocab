@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 微積分（calc）strand t_sub 單元。知識點 math.t_sub.calc.volume-revolution（旋轉體體積）。tier=t_sub（高中分科/選修深階，exam 分科-數甲）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換——見 math-unit defect #63）：旋轉體 (solid of revolution)、圓盤法 (disk method)、定積分 (definite integral)、半徑 (radius)。前置假設：會算定積分、會算圓面積 πr²（definite-integral 已教、圓面積為國中幾何）。★scope（t_sub）：圓盤法求旋轉體體積——把曲線 y＝f(x)（a≤x≤b）繞 x 軸旋轉一圈得到的立體，切成許多垂直於 x 軸的薄圓盤；每個圓盤半徑＝f(x)、面積＝π[f(x)]²、體積＝π[f(x)]² dx，累加得 V＝π∫ₐᵇ[f(x)]² dx。關鍵：圓面積是 π×半徑²，所以要『先把 f(x) 平方再積分』。以 y＝x 繞 x 軸 [0,1] 貫穿（旋轉成圓錐）：V＝π∫₀¹x² dx＝π·(1/3)＝π/3。只到繞 x 軸、圓盤法（實心、單一曲線）；不含繞 y 軸、不含墊圈法(washer)兩曲線之間、不含殼法(shell)。prereq＝definite-integral＋antiderivative。repro（tools/verify/math_checks7.py::calc.volume-revolution）：y＝x 繞 x 軸[0,1] π∫₀¹x²＝π/3（.venv 已核）；practice 另用 y＝x² 繞 x 軸[0,1]：π∫₀¹(x²)² dx＝π∫₀¹x⁴＝π/5 以 .venv sympy 另核。★自檢（math-unit defect-classes #1–#63）：figure＝y＝x 繞 x 軸旋轉成圓錐 SVG（x 軸、圓錐輪廓、一個薄圓盤 ellipse、右緣圓面 ellipse、左上 V＝π∫₀¹[f(x)]² dx／＝π∫₀¹x² dx＝π/3 紅、標 y＝x 與 x 軸、下註切薄圓盤累加 半徑＝f(x)），立體示意圖無角度/垂直幾何主張（不需等軸#62），alt 與 SVG text 逐字一致（#33）、標題『旋轉體體積（圓盤法）：y＝x 繞 x 軸』寫進 alt 開頭；practice 四答案＝{π∫ₐᵇ[f(x)]²dx(Q1 公式),f(x)(Q2 半徑),π/3(Q3 y=x hero retrieval),π/5(Q4 y=x² transfer)} 與 teach 關鍵值無 #10（Q3 hero retrieval、options 載入洗牌無位置 tell）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算：如漏平方 f、漏 π、多乘 2π 殼法係數、把半徑當 x）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_calc_volume_revolution.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.calc.volume-revolution",
+   "title_zh": "旋轉體體積",
+   "can_do": "我會用『圓盤法 (disk method)』求『旋轉體 (solid of revolution)』的體積：把曲線 y ＝ f(x)（a 到 b）繞 x 軸旋轉一圈得到的立體，切成許多垂直於 x 軸的薄圓盤。每個圓盤的『半徑 (radius)』就是該點的函數值 f(x)，圓面積 ＝ π[f(x)]²，薄圓盤體積 ＝ π[f(x)]² dx，全部累加得體積 V ＝ π∫ₐᵇ[f(x)]² dx。關鍵是「先把 f(x) 平方再積分」（因為圓面積是 π×半徑²）。例：y ＝ x 繞 x 軸 0 到 1（轉出一個圓錐），V ＝ π∫₀¹x² dx ＝ π/3。",
+   "situation_group": "微積分：旋轉體體積",
+   "subject": "math",
+   "strand": "calc",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.calc.volume-revolution"
+   ],
+   "prerequisites": [
+    "math.t_sub.calc.definite-integral",
+    "math.t_sub.calc.antiderivative"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-vr-disk",
+     "text": "圓盤法的想法：把曲線 y ＝ f(x) 繞 x 軸旋轉得到的立體，切成許多「垂直於 x 軸的薄圓盤」。在位置 x 的那一片，半徑就是 f(x)（曲線到 x 軸的高度），所以圓面積 ＝ π[f(x)]²，厚度是 dx，薄圓盤體積 ＝ π[f(x)]² dx。把所有薄圓盤從 a 到 b 累加（積分）起來，就得到旋轉體體積 V ＝ π∫ₐᵇ[f(x)]² dx。",
+     "kind": "definition",
+     "source_refs": [
+      "圓盤法求旋轉體體積（高中數學 微積分）"
+     ],
+     "verification_ref": "V=π∫ₐᵇ[f(x)]²dx（圓盤法：圓面積 π·半徑² 累加）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-vr-example",
+     "text": "示範：y ＝ x 繞 x 軸、從 0 到 1 旋轉（轉出來是一個圓錐）。每片圓盤半徑 ＝ f(x) ＝ x，所以 V ＝ π∫₀¹x² dx ＝ π·[x³/3]₀¹ ＝ π·(1/3) ＝ π/3。",
+     "kind": "definition",
+     "source_refs": [
+      "y=x 繞 x 軸旋轉體積（高中數學 微積分）"
+     ],
+     "verification_ref": "y=x 繞x軸[0,1]：V=π∫₀¹x²=π/3（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-vr-caution",
+     "text": "最關鍵、也最常錯的一步：要「先把 f(x) 平方、再積分」——因為圓盤面積是 π×半徑²，半徑是 f(x)，所以被積的是 [f(x)]² 不是 f(x)。例如 y ＝ x² 繞 x 軸旋轉，被積函數是 [x²]² ＝ x⁴（不是 x²）。另外別漏掉前面的 π。",
+     "kind": "definition",
+     "source_refs": [
+      "旋轉體體積常見錯誤（高中數學 微積分）"
+     ],
+     "verification_ref": "被積是 [f(x)]²（圓面積 πr²）、別漏 π；y=x² ⇒ ∫x⁴（.venv 驗 π/5）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.volume-revolution"
+     ],
+     "body": "這一單元學用「圓盤法」求旋轉體的體積。下面先講想法（把旋轉出來的立體切成薄圓盤，半徑是 f(x)、圓面積是 π[f(x)]²，累加成 V ＝ π∫ₐᵇ[f(x)]² dx）；用 y ＝ x 繞 x 軸從 0 到 1（轉出圓錐）完整示範一次；最後提醒最關鍵的「先平方再積分」，再練習。（本單元接在『定積分與微積分基本定理』之後，核心就是「把定積分用在體積上」。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.volume-revolution"
+     ],
+     "body": "① 想法：曲線 y ＝ f(x) 繞 x 軸轉一圈的立體，切成垂直薄圓盤；位置 x 那片半徑 ＝ f(x)、圓面積 ＝ π[f(x)]²、體積 ＝ π[f(x)]² dx，累加 V ＝ π∫ₐᵇ[f(x)]² dx。② 示範（y ＝ x 繞 x 軸，0 到 1，轉出圓錐）：半徑 ＝ x，V ＝ π∫₀¹x² dx ＝ π·(1/3) ＝ π/3。③ 關鍵：被積的是 [f(x)]²（圓面積 π×半徑²），要「先平方再積分」、別漏 π。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.calc.volume-revolution"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>旋轉體體積（圓盤法）：y＝x 繞 x 軸</text><text x='150' y='28' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='middle'>V ＝ π∫₀¹[f(x)]² dx</text><text x='150' y='44' font-family='sans-serif' font-size='11' fill='#c2535d' text-anchor='middle' font-weight='bold'>＝ π∫₀¹x² dx ＝ π/3</text><line x1='55' y1='92' x2='252' y2='92' stroke='#99a7b5' stroke-width='1' stroke-dasharray='3 2'/><line x1='55' y1='92' x2='235' y2='52' stroke='#33475b' stroke-width='1.6'/><line x1='55' y1='92' x2='235' y2='132' stroke='#33475b' stroke-width='1.6'/><ellipse cx='235' cy='92' rx='8' ry='40' fill='none' stroke='#33475b' stroke-width='1.6'/><ellipse cx='160' cy='92' rx='5' ry='23' fill='#e6edf3' stroke='#33475b' stroke-width='1.3'/><text x='243' y='44' font-family='sans-serif' font-size='9.5' fill='#33475b' text-anchor='start'>y ＝ x</text><text x='256' y='96' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>x</text><text x='180' y='160' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>把 y＝f(x) 繞 x 軸轉一圈、切成薄圓盤累加；圓盤半徑 ＝ f(x)</text></svg>",
+      "alt": "標題「旋轉體體積（圓盤法）：y＝x 繞 x 軸」。左上方寫出計算「V ＝ π∫₀¹[f(x)]² dx」「＝ π∫₀¹x² dx ＝ π/3」（第二行紅色）。圖是一個躺著的圓錐（直線 y ＝ x 繞水平的 x 軸旋轉而成）：一條虛線是 x 軸，圓錐從左邊的頂點向右張開，右邊的圓面用橢圓畫出；圓錐中間有一片淺色的薄圓盤（也是橢圓），代表切出來的一片。線旁標「y ＝ x」，軸右端標「x」。最下方註「把 y＝f(x) 繞 x 軸轉一圈、切成薄圓盤累加；圓盤半徑 ＝ f(x)」。",
+      "caption": "以 y ＝ x 繞 x 軸從 0 到 1 示範圓盤法：旋轉成一個圓錐，每片薄圓盤半徑 ＝ f(x) ＝ x、面積 ＝ π[x]²，累加得 V ＝ π∫₀¹x² dx ＝ π/3。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.volume-revolution"
+     ],
+     "body": "最後練旋轉體體積。重點：繞 x 軸旋轉，V ＝ π∫ₐᵇ[f(x)]² dx——每片圓盤半徑 ＝ f(x)、圓面積 ＝ π[f(x)]²。小提醒：(1) 一定要「先把 f(x) 平方」再積分（被積的是 [f(x)]²，不是 f(x)）；(2) 別漏掉前面的 π；(3) 例如 y ＝ x² 繞 x 軸，被積是 [x²]² ＝ x⁴，不是 x²。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用圓盤法，曲線 y ＝ f(x)（a 到 b）繞 x 軸旋轉的立體體積 V 等於下列哪一個？",
+     "answer": "π∫ₐᵇ[f(x)]² dx",
+     "kp_ids": [
+      "math.t_sub.calc.volume-revolution"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.volume-revolution"
+     ],
+     "options": [
+      "π∫ₐᵇ[f(x)]² dx",
+      "π∫ₐᵇ f(x) dx",
+      "∫ₐᵇ[f(x)]² dx",
+      "∫ₐᵇ f(x) dx"
+     ],
+     "distractor_rationales": {
+      "π∫ₐᵇ f(x) dx": "漏了把 f(x) 平方：圓盤面積是 π×半徑² ＝ π[f(x)]²，被積的要是 [f(x)]² 不是 f(x)。",
+      "∫ₐᵇ[f(x)]² dx": "漏了前面的 π：圓面積是 π[f(x)]²，體積公式要有 π。",
+      "∫ₐᵇ f(x) dx": "這是「面積」公式（曲線下面積），不是體積；旋轉體體積要 π 乘上 [f(x)]² 再積分。"
+     },
+     "answer_evidence": [
+      "c-vr-disk"
+     ],
+     "feedback": "圓盤法：V ＝ π∫ₐᵇ[f(x)]² dx（每片圓盤面積 π[f(x)]² 累加）。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "繞 x 軸旋轉時，位置 x 處那片薄圓盤的半徑等於什麼？",
+     "answer": "該點的函數值 f(x)",
+     "kp_ids": [
+      "math.t_sub.calc.volume-revolution"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.volume-revolution"
+     ],
+     "options": [
+      "該點的函數值 f(x)",
+      "x 本身",
+      "[f(x)]²",
+      "π·f(x)"
+     ],
+     "distractor_rationales": {
+      "x 本身": "x 是位置（在軸上的位置），不是圓盤半徑；半徑是曲線到 x 軸的高度 f(x)。",
+      "[f(x)]²": "[f(x)]² 是「圓面積去掉 π」的部分（半徑的平方），不是半徑本身；半徑是 f(x)。",
+      "π·f(x)": "半徑就是 f(x)，不用乘 π；π 是算圓面積 π×半徑² 時才乘上。"
+     },
+     "answer_evidence": [
+      "c-vr-disk"
+     ],
+     "feedback": "半徑 ＝ 曲線到 x 軸的高度 ＝ f(x)；圓面積才是 π[f(x)]²。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "y ＝ x 繞 x 軸、從 0 到 1 旋轉的體積是多少？（V ＝ π∫₀¹x² dx）",
+     "answer": "π/3",
+     "kp_ids": [
+      "math.t_sub.calc.volume-revolution"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.volume-revolution"
+     ],
+     "options": [
+      "π/3",
+      "π/2",
+      "1/3",
+      "2π/3"
+     ],
+     "distractor_rationales": {
+      "π/2": "漏了把半徑平方：用成 π∫₀¹x dx ＝ π/2；正確被積是 x²，π∫₀¹x² dx ＝ π/3。",
+      "1/3": "漏了前面的 π：∫₀¹x² dx ＝ 1/3，還要乘 π，得 π/3。",
+      "2π/3": "多乘了 2（像誤用了 2π 的係數）；圓盤法是 π∫₀¹x² ＝ π/3，不是 2π/3。"
+     },
+     "answer_evidence": [
+      "c-vr-example"
+     ],
+     "feedback": "V ＝ π∫₀¹x² dx ＝ π·[x³/3]₀¹ ＝ π·(1/3) ＝ π/3。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "y ＝ x² 繞 x 軸、從 0 到 1 旋轉的體積是多少？",
+     "answer": "π/5",
+     "kp_ids": [
+      "math.t_sub.calc.volume-revolution"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.volume-revolution"
+     ],
+     "options": [
+      "π/5",
+      "π/3",
+      "1/5",
+      "2π/5"
+     ],
+     "distractor_rationales": {
+      "π/3": "忘了先把 f(x) ＝ x² 平方：被積應是 [x²]² ＝ x⁴，不是 x²；π∫₀¹x⁴ dx ＝ π/5，不是 π∫₀¹x² ＝ π/3。",
+      "1/5": "漏了前面的 π：∫₀¹x⁴ dx ＝ 1/5，還要乘 π，得 π/5。",
+      "2π/5": "多乘了 2（像誤用 2π 係數）；圓盤法是 π∫₀¹x⁴ ＝ π/5，不是 2π/5。"
+     },
+     "answer_evidence": [
+      "c-vr-caution"
+     ],
+     "feedback": "半徑 ＝ x²，先平方得 [x²]² ＝ x⁴：V ＝ π∫₀¹x⁴ dx ＝ π·[x⁵/5]₀¹ ＝ π/5。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（圓盤法：繞 x 軸旋轉 V ＝ π∫ₐᵇ[f(x)]² dx；每片圓盤半徑＝f(x)、圓面積＝π[f(x)]²；y＝x 繞 x 軸[0,1]＝圓錐，V＝π∫₀¹x²＝π/3；y＝x² 繞 x 軸[0,1]，被積是 [x²]²＝x⁴，V＝π∫₀¹x⁴＝π/5；三鐵律＝先平方再積分、別漏 π、半徑是 f(x) 不是 x）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
