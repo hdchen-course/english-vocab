@@ -1,0 +1,200 @@
+{
+ "_note": "數學島 微積分（calc）strand t_sub 單元。知識點 math.t_sub.calc.sequence-limit（數列極限與收斂/發散判定）。tier=t_sub（高中分科/選修深階，exam 分科-數甲）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：數列 (sequence)、極限 (limit)、收斂 (convergent)、發散 (divergent)。★scope（t_sub）：數列極限 lim_{n→∞} aₙ＝L（n 越大 aₙ 越靠近固定有限值 L＝收斂；不趨近任何有限值＝發散）；基本 lim 1/n＝0、lim c＝c；有理式數列（分子分母皆 n 的多項式）用「同除最高次方」求極限——同次→最高次係數比、分子低次→0、分子高次→發散。只到有理式數列極限＋收斂/發散判定；不含 ε-N 嚴格定義、不含夾擠定理、不含遞迴數列/單調有界定理、不含無窮級數。prereq＝function-limit。repro（tools/verify/math_checks7.py::calc.sequence-limit）：lim(3n²+1)/(n²+n)=3、lim 1/n=0（.venv 已核）；教材用 lim 1/n=0、lim(2n²+1)/n²=2、lim(n+1)/n=1、lim(3n+2)/(n+1)=3、lim n/(n+1)=1、aₙ=n 發散 皆以 .venv sympy limit 另核。★自檢（math-unit defect-classes #1–#59）：figure＝1/n 收斂數線 SVG（0 到 1 數線，綠實心點 a₁=1、a₂=½、a₃a₄a₅ 擠向 0，x=0 處紅空心圈＝極限 0 未被任一項取到，標『越來越靠近 0』與『lim aₙ＝0（收斂）』），alt 與 SVG text 逐字一致（#33）、標題『數列極限：aₙ＝1/n 越來越靠近 0』寫進 alt 開頭；teach 值集{0(1/n),2((2n²+1)/n²)}與 practice 數值答案{1(Q2),3(Q3)}無交集避#10（Q4 為發散判定非數值）；practice：Q1 收斂意義(選項敘述)、Q2 lim(n+1)/n=1(選項數)、Q3 lim(3n+2)/(n+1)=3(選項數)、Q4 哪個數列發散(選項式)；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53，如把發散當收斂/同次係數比算錯/低次項沒歸零/把常數數列當發散）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_calc_sequence_limit.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.calc.sequence-limit",
+   "title_zh": "數列極限與收斂／發散判定",
+   "can_do": "我知道一個『數列 (sequence)』a₁, a₂, a₃, … 當項數 n 越來越大（n → ∞）時，如果 aₙ 越來越靠近某個固定的有限值 L，就說這個數列『收斂 (convergent)』到 L，記成 lim_{n→∞} aₙ ＝ L；如果不趨近任何有限值（衝向無限大、或上下跳不定），就是『發散 (divergent)』。我知道 lim 1/n ＝ 0；遇到分子、分母都是 n 的多項式時，我會用「同除最高次方」判斷『極限 (limit)』：同次就看最高次係數比、分子次數較低就是 0、分子次數較高就發散。",
+   "situation_group": "微積分：數列極限",
+   "subject": "math",
+   "strand": "calc",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.calc.sequence-limit"
+   ],
+   "prerequisites": [
+    "math.t_sub.calc.function-limit"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-sl-def",
+     "text": "數列 a₁, a₂, a₃, … 的極限：當項數 n 越來越大（n → ∞），如果 aₙ 越來越靠近某個固定的有限值 L，就說數列『收斂』到 L，記成 lim_{n→∞} aₙ ＝ L。如果 aₙ 不趨近任何有限值（例如一直變大衝向無限大、或上下跳動不定），就是『發散』。例：aₙ ＝ 1/n，當 n 越大 1/n 越靠近 0，所以 lim 1/n ＝ 0（收斂）。",
+     "kind": "definition",
+     "source_refs": [
+      "數列極限與收斂發散（高中數學 微積分）"
+     ],
+     "verification_ref": "lim 1/n=0（收斂）（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-sl-rational",
+     "text": "當 aₙ 是「分子、分母都是 n 的多項式」的有理式時，求極限的方法是「分子分母同除以最高次方的 n」，因為 1/n、1/n² 這些在 n → ∞ 時都趨近 0。判斷法：分子與分母最高次方「同次」→ 極限是最高次係數的比；分子次數「較低」→ 極限是 0；分子次數「較高」→ 發散（衝向無限大）。例：(2n² ＋ 1)/n² ＝ 2 ＋ 1/n² → 2。",
+     "kind": "definition",
+     "source_refs": [
+      "有理式數列極限（同除最高次方）（高中數學 微積分）"
+     ],
+     "verification_ref": "lim(2n²+1)/n²=2、lim(n+1)/n=1、lim(3n+2)/(n+1)=3、lim(3n²+1)/(n²+n)=3（.venv sympy limit 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.sequence-limit"
+     ],
+     "body": "這一單元學『數列極限』，以及怎麼判斷一個數列是收斂還是發散。下面先講數列極限的直觀意思（n 越來越大時 aₙ 靠近哪個值）和收斂／發散；再講分子分母都是 n 的多項式時，用「同除最高次方」求極限的方法；用一張 1/n 靠近 0 的圖示範，最後練習。（本單元接在『函數極限』之後，極限的直觀概念相同。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.sequence-limit"
+     ],
+     "body": "① 數列極限：數列 a₁, a₂, a₃, … 當 n → ∞ 時若 aₙ 越來越靠近某個固定有限值 L，就是收斂、記 lim aₙ ＝ L；不趨近任何有限值就是發散。例 aₙ ＝ 1/n → 0。② 有理式求極限（同除最高次方）：1/n、1/n² 在 n → ∞ 都 → 0，所以分子分母同除最高次方的 n 即可。判斷：最高次「同次」→ 看係數比；分子次數「較低」→ 0；分子次數「較高」→ 發散。例 (2n² ＋ 1)/n² ＝ 2 ＋ 1/n² → 2。看下面 1/n 一路靠近 0 的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.calc.sequence-limit"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>數列極限：aₙ ＝ 1/n 越來越靠近 0</text><line x1='160' y1='44' x2='54' y2='44' stroke='#2f9e6e' stroke-width='1.6'/><path d='M54,44 l9,-4 M54,44 l9,4' fill='none' stroke='#2f9e6e' stroke-width='1.6'/><text x='112' y='36' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='middle'>越來越靠近 0</text><line x1='40' y1='100' x2='330' y2='100' stroke='#99a7b5' stroke-width='1'/><line x1='40' y1='95' x2='40' y2='105' stroke='#99a7b5' stroke-width='1'/><line x1='320' y1='95' x2='320' y2='105' stroke='#99a7b5' stroke-width='1'/><circle cx='40' cy='100' r='4' fill='#ffffff' stroke='#c2535d' stroke-width='1.6'/><circle cx='320' cy='100' r='3.5' fill='#2f9e6e'/><circle cx='180' cy='100' r='3.5' fill='#2f9e6e'/><circle cx='133' cy='100' r='3.5' fill='#2f9e6e'/><circle cx='110' cy='100' r='3.5' fill='#2f9e6e'/><circle cx='96' cy='100' r='3.5' fill='#2f9e6e'/><text x='320' y='88' font-family='sans-serif' font-size='9.5' fill='#33475b' text-anchor='middle'>a₁＝1</text><text x='180' y='88' font-family='sans-serif' font-size='9.5' fill='#33475b' text-anchor='middle'>a₂＝½</text><text x='112' y='128' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>a₃, a₄, a₅ … 擠向 0</text><text x='40' y='120' font-family='sans-serif' font-size='9.5' fill='#33475b' text-anchor='middle'>0</text><text x='320' y='120' font-family='sans-serif' font-size='9.5' fill='#33475b' text-anchor='middle'>1</text><text x='180' y='156' font-family='sans-serif' font-size='11.5' fill='#c2535d' text-anchor='middle' font-weight='bold'>lim aₙ ＝ 0（收斂）</text></svg>",
+      "alt": "標題「數列極限：aₙ ＝ 1/n 越來越靠近 0」。一條 0 到 1 的數線，上方有一個向左的綠箭頭標「越來越靠近 0」。數線上綠色實心點由右而左：a₁＝1、a₂＝½，再往左是 a₃, a₄, a₅ … 擠向 0；最左端 0 的位置是一個紅色空心圈（極限 0，但沒有任何一項剛好等於 0）。數線兩端標「0」與「1」。下方紅字「lim aₙ ＝ 0（收斂）」。",
+      "caption": "以 aₙ ＝ 1/n 示範數列極限：項 a₁＝1、a₂＝½、a₃＝⅓…隨 n 變大一路往左擠向 0（紅色空心圈），雖然沒有任何一項剛好等於 0，但越來越靠近，所以 lim_{n→∞} 1/n ＝ 0，數列收斂。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.sequence-limit"
+     ],
+     "body": "最後練數列極限。重點：n → ∞ 時 aₙ 靠近固定有限值就收斂、記 lim aₙ ＝ L，否則發散；有理式數列同除最高次方求極限——同次看最高次係數比、分子次數較低為 0、分子次數較高則發散。小提醒：分子分母同次時極限是「最高次係數的比」，不是把整個式子的常數項或低次項拿來比；低次項（含 1/n、1/n²）在 n → ∞ 都趨近 0。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個數列「收斂」是什麼意思？",
+     "answer": "當 n 越來越大時，aₙ 越來越靠近某個固定的有限值",
+     "kp_ids": [
+      "math.t_sub.calc.sequence-limit"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.sequence-limit"
+     ],
+     "options": [
+      "當 n 越來越大時，aₙ 越來越靠近某個固定的有限值",
+      "當 n 越來越大時，aₙ 一直變大、衝向無限大",
+      "數列的每一項都要完全相等",
+      "數列的項要剛好等於極限值才算"
+     ],
+     "distractor_rationales": {
+      "當 n 越來越大時，aₙ 一直變大、衝向無限大": "一直變大、衝向無限大是「發散」，不是收斂；收斂是靠近一個固定有限值。",
+      "數列的每一項都要完全相等": "收斂不要求每項相等（例如 1/n 每項都不同），只要越來越靠近某個有限值即可。",
+      "數列的項要剛好等於極限值才算": "項不必剛好等於極限（1/n 沒有任何一項等於 0），只要無限靠近就收斂。"
+     },
+     "answer_evidence": [
+      "c-sl-def"
+     ],
+     "feedback": "收斂＝當 n → ∞ 時 aₙ 越來越靠近某個固定的有限值 L，記 lim aₙ ＝ L；不必每項相等、也不必剛好等於 L。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "求數列極限 lim_{n→∞} (n ＋ 1)/n。",
+     "answer": "1",
+     "kp_ids": [
+      "math.t_sub.calc.sequence-limit"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.sequence-limit"
+     ],
+     "options": [
+      "1",
+      "0",
+      "發散（衝向無限大）",
+      "2"
+     ],
+     "distractor_rationales": {
+      "0": "分子、分母最高次同為一次，極限是最高次係數比 1/1 ＝ 1，不是 0；(n＋1)/n ＝ 1 ＋ 1/n → 1。",
+      "發散（衝向無限大）": "分子分母同次（都是一次），會收斂到係數比，不會發散；極限是 1。",
+      "2": "沒有把常數項和變數項分清：(n＋1)/n ＝ 1 ＋ 1/n，1/n → 0，所以極限是 1、不是 2。"
+     },
+     "answer_evidence": [
+      "c-sl-rational"
+     ],
+     "feedback": "(n ＋ 1)/n ＝ 1 ＋ 1/n，當 n → ∞ 時 1/n → 0，所以極限 ＝ 1（分子分母同次、最高次係數比 1/1）。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "求數列極限 lim_{n→∞} (3n ＋ 2)/(n ＋ 1)。",
+     "answer": "3",
+     "kp_ids": [
+      "math.t_sub.calc.sequence-limit"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.sequence-limit"
+     ],
+     "options": [
+      "3",
+      "2",
+      "5",
+      "發散（衝向無限大）"
+     ],
+     "distractor_rationales": {
+      "2": "極限看的是最高次「係數」比（分子 3n 的 3、分母 n 的 1）＝ 3，不是分子的常數項 2。",
+      "5": "不能把分子的係數和常數相加（3 ＋ 2）；要看最高次係數比 3/1 ＝ 3。",
+      "發散（衝向無限大）": "分子分母同為一次（同次），會收斂到係數比 3，不會發散。"
+     },
+     "answer_evidence": [
+      "c-sl-rational"
+     ],
+     "feedback": "分子分母同除 n：(3 ＋ 2/n)/(1 ＋ 1/n)，當 n → ∞ 時 2/n、1/n → 0，極限 ＝ 3/1 ＝ 3（最高次係數比）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "下列哪一個數列是「發散」的（沒有有限極限）？",
+     "answer": "aₙ ＝ n",
+     "kp_ids": [
+      "math.t_sub.calc.sequence-limit"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.sequence-limit"
+     ],
+     "options": [
+      "aₙ ＝ n",
+      "aₙ ＝ 1/n",
+      "aₙ ＝ n/(n ＋ 1)",
+      "aₙ ＝ 5"
+     ],
+     "distractor_rationales": {
+      "aₙ ＝ 1/n": "1/n 當 n → ∞ 時靠近 0，有有限極限 0，是收斂、不是發散。",
+      "aₙ ＝ n/(n ＋ 1)": "分子分母同為一次，極限是係數比 1/1 ＝ 1，有有限極限，是收斂。",
+      "aₙ ＝ 5": "常數數列每項都是 5，極限就是 5（lim c ＝ c），有有限極限、收斂。"
+     },
+     "answer_evidence": [
+      "c-sl-def"
+     ],
+     "feedback": "aₙ ＝ n 當 n → ∞ 時一直變大、衝向無限大，不趨近任何有限值，所以發散；其餘三個都收斂到有限值。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（數列極限：n→∞ 時 aₙ 靠近固定有限值＝收斂 lim aₙ=L，否則發散；lim 1/n=0；有理式同除最高次方——同次看最高次係數比、分子低次為 0、分子高次發散）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
