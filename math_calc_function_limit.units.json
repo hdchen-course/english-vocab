@@ -1,0 +1,209 @@
+{
+ "_note": "數學島 微積分（calc）strand t_sub 單元。知識點 math.t_sub.calc.function-limit（函數極限的概念與運算）。tier=t_sub（高中探究/選修補充）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：極限 (limit)、左極限 (left-hand limit)、右極限 (right-hand limit)。★scope（t_sub）：函數極限的直觀概念——當 x 越來越接近某數 a（但不等於 a）時，f(x) 越來越接近的那個數 L，記 lim_{x→a}f(x)=L（看 x 趨近 a 時 f(x) 的趨勢，不是 x=a 的值，x=a 可能沒定義）；左極限（x 從左側趨近）、右極限（x 從右側趨近），極限存在⟺左極限＝右極限（同一有限值）；基本運算：連續函數（如多項式）直接代入 f(a)、和/差/積/商的極限＝各自極限的運算（分母極限≠0）、0/0 型先約分再代。只直觀概念＋左右極限＋代入/約分求值；不含 ε-δ 嚴格定義、不含無窮極限/漸近線深論。prereq＝無（calc strand 起點）。repro（tools/verify/math_checks7.py::calc.function-limit）：lim_{x→1}(x²−1)/(x−1)=2、lim sinx/x=1（.venv sympy 已核）；另 lim_{x→3}(2x+1)=7、lim_{x→2}(x²−4)/(x−2)=4（.venv 已核）。★自檢（math-unit defect-classes #1–#59）：figure＝函數極限 hole 圖 SVG（直線 f(x)=(x²−1)/(x−1)＝x+1，px=50+x*80、py=140−y*28；(1,2) 空心紅圈＝x=1 無定義，虛線標 x=1、y=2；lim=2），alt 與 SVG text 逐字一致（#33）、標題『函數極限：x 趨近 1 時 f(x) 趨近 2（x=1 沒有定義）』寫進 alt 開頭；teach 值集{1,2,(x²−1)/(x−1)}與 practice 數值答案{7,4}無交集避#10（Q1 用 2x+1→7、Q4 用 (x²−4)/(x−2)→4，皆非 teach 的 x→1、值 2）；practice：Q1 代入連續函數（lim_{x→3}2x+1＝7，選項數）、Q2 左右極限不等→極限不存在（選項說法）、Q3 極限意義（趨近值非 x=a 的值，選項說法）、Q4 0/0 型先約分（lim_{x→2}(x²−4)/(x−2)＝4，選項數/類別）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53，如漏加常數/把趨近值當答案/把 0/0 當 0 或當不存在/x,f 對調）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_calc_function_limit.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.calc.function-limit",
+   "title_zh": "函數極限的概念與運算",
+   "can_do": "我知道『極限 (limit)』的意思：當 x 越來越接近某一個數 a（但不等於 a）時，f(x) 越來越接近的那個數 L，就記成 lim_{x→a} f(x) ＝ L——看的是「x 趨近 a 時 f(x) 的趨勢」，不是 x 剛好等於 a 的值（x＝a 時函數甚至可能沒有定義）。我知道有『左極限 (left-hand limit)』（x 從左邊趨近）和『右極限 (right-hand limit)』（x 從右邊趨近），而且極限存在，就表示左極限和右極限相等（是同一個有限的數）。我也會算簡單的極限：若函數在 a 連續（例如多項式）就直接把 a 代進去；遇到代入變成 0/0 的，先約分化簡再代。",
+   "situation_group": "微積分：函數極限的概念與運算",
+   "subject": "math",
+   "strand": "calc",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.calc.function-limit"
+   ],
+   "prerequisites": [],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-lim-concept",
+     "text": "『極限 (limit)』講的是「趨勢」：當 x 越來越接近某數 a（但不等於 a）時，如果 f(x) 越來越接近某一個數 L，就說 x 趨近 a 時 f(x) 的極限是 L，記成 lim_{x→a} f(x) ＝ L。重點是看「x 趨近 a 時 f(x) 靠近哪裡」，不是看 x 剛好等於 a 時的值——x＝a 那一點函數可能沒有定義，極限還是可以存在。例：f(x) ＝ (x²−1)/(x−1) 在 x＝1 沒有定義（分母為 0），但 x 趨近 1 時 f(x) 趨近 2，所以 lim_{x→1} f(x) ＝ 2。",
+     "kind": "definition",
+     "source_refs": [
+      "函數極限的直觀定義（高中數學 微積分）"
+     ],
+     "verification_ref": "lim_{x→1}(x²−1)/(x−1)=2（math_checks7 .venv sympy 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-lim-onesided",
+     "text": "從不同方向趨近會得到『左極限 (left-hand limit)』和『右極限 (right-hand limit)』：x 從比 a 小的一側（左邊）趨近 a 得到左極限，x 從比 a 大的一側（右邊）趨近 a 得到右極限。極限存在的條件是：左極限和右極限相等，而且是同一個有限的數。如果左極限和右極限不相等，lim_{x→a} f(x) 就不存在。",
+     "kind": "definition",
+     "source_refs": [
+      "左極限、右極限與極限存在條件（高中數學 微積分）"
+     ],
+     "verification_ref": "極限存在⟺左極限＝右極限（同一有限值）（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-lim-compute",
+     "text": "算極限有兩個常用方法：① 連續函數直接代入——如果函數在 a 連續（例如多項式、以及在 a 有定義又不斷裂的函數），lim_{x→a} f(x) 就等於直接把 a 代進去的 f(a)；而且和、差、積、商的極限，等於各部分極限做同樣的運算（商要分母的極限不為 0）。② 遇到代入變成 0/0 的「不定型」，先把式子約分化簡，再代入。例：lim_{x→2} (x²−4)/(x−2)，直接代會得 0/0；先約分 (x²−4)/(x−2) ＝ x＋2，再代 x＝2 得 4。",
+     "kind": "definition",
+     "source_refs": [
+      "極限的基本運算與代入、約分求值（高中數學 微積分）"
+     ],
+     "verification_ref": "lim_{x→3}(2x+1)=7；lim_{x→2}(x²−4)/(x−2)=4（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.function-limit"
+     ],
+     "body": "這一單元學『函數極限』。下面先講極限的直觀概念——x 趨近某數時 f(x) 趨近的值（看趨勢，不是 x 剛好等於那個數的值）；再講左極限、右極限，以及極限存在的條件（左右極限相等）；接著講怎麼算極限——連續函數直接代入、遇到 0/0 先約分；用一張圖示範，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.function-limit"
+     ],
+     "body": "① 概念：當 x 越來越接近某數 a（但不等於 a）時，f(x) 越來越接近的那個數，就是 x 趨近 a 時 f(x) 的極限，記成 lim_{x→a} f(x)。看下面的圖：f(x) ＝ (x²−1)/(x−1) 在 x＝1 沒有定義（分母為 0，圖上畫成空心點），但 x 從 1 的兩側趨近時，f(x) 都趨近 2，所以 lim_{x→1} f(x) ＝ 2——極限看的是趨勢，不是 x＝1 那一點的值。② 左右極限：x 從左邊趨近得『左極限』、從右邊趨近得『右極限』；極限存在，就表示左極限和右極限相等（同一個有限的數），兩者不相等就不存在。③ 算法：函數若在 a 連續（如多項式）就直接代入 f(a)；若代入變成 0/0（不定型），先約分化簡再代，例如 (x²−1)/(x−1) 約分成 x＋1，代 x＝1 得 2。下面用這張圖整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.calc.function-limit"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>函數極限：x 趨近 1 時 f(x) 趨近 2（x=1 沒有定義）</text><line x1='50' y1='28' x2='50' y2='140' stroke='#99a7b5' stroke-width='1'/><line x1='50' y1='140' x2='300' y2='140' stroke='#99a7b5' stroke-width='1'/><text x='44' y='34' font-family='sans-serif' font-size='10' fill='#6b7785' text-anchor='end'>y</text><text x='296' y='153' font-family='sans-serif' font-size='10' fill='#6b7785' text-anchor='end'>x</text><line x1='50' y1='112' x2='290' y2='28' stroke='#2f9e6e' stroke-width='2'/><line x1='50' y1='84' x2='130' y2='84' stroke='#99a7b5' stroke-width='1' stroke-dasharray='3 3'/><line x1='130' y1='84' x2='130' y2='140' stroke='#99a7b5' stroke-width='1' stroke-dasharray='3 3'/><circle cx='130' cy='84' r='4.5' fill='#ffffff' stroke='#c2535d' stroke-width='2'/><text x='44' y='88' font-family='sans-serif' font-size='10.5' fill='#c2535d' text-anchor='end' font-weight='bold'>2</text><text x='130' y='153' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='middle'>1</text><text x='122' y='50' font-family='sans-serif' font-size='10' fill='#2f9e6e' text-anchor='middle'>f(x)＝(x²−1)/(x−1)</text><text x='188' y='112' font-family='sans-serif' font-size='10' fill='#6b7785' text-anchor='middle'>空心點：x＝1 無定義</text><text x='180' y='164' font-family='sans-serif' font-size='10.5' fill='#6b7785' text-anchor='middle'>x 從左右兩側趨近 1，f(x) 都趨近 2 → 極限＝2</text></svg>",
+      "alt": "標題「函數極限：x 趨近 1 時 f(x) 趨近 2（x=1 沒有定義）」。一張座標圖，橫軸 x、縱軸 y，一條綠色直線代表 f(x)＝(x²−1)/(x−1)；在 x＝1、y＝2 的位置有一個空心點，旁邊標「空心點：x＝1 無定義」，虛線標出 x＝1 與 y＝2。下方寫「x 從左右兩側趨近 1，f(x) 都趨近 2 → 極限＝2」。",
+      "caption": "函數極限圖：f(x)＝(x²−1)/(x−1) 在 x＝1 沒有定義（空心點），但 x 從左右兩側趨近 1 時 f(x) 都趨近 2，所以 lim_{x→1} f(x)＝2。極限看的是 x 趨近時 f(x) 的趨勢，不是 x＝1 那一點的值。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.function-limit"
+     ],
+     "body": "最後練函數極限。重點：極限是「x 趨近 a（但不等於 a）時 f(x) 趨近的值」，看趨勢、不是 x＝a 那一點的值；極限存在⟺左極限＝右極限（同一有限值）；連續函數（如多項式）直接代入求極限，遇到 0/0 先約分再代。小提醒：代入先試，若得 0/0 不要當 0、也不要馬上說不存在，先約分化簡。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "求極限 lim_{x→3} (2x ＋ 1)。（2x＋1 是多項式，在 x＝3 連續）",
+     "answer": "7",
+     "kp_ids": [
+      "math.t_sub.calc.function-limit"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.function-limit"
+     ],
+     "options": [
+      "7",
+      "6",
+      "3",
+      "1"
+     ],
+     "distractor_rationales": {
+      "6": "6 是只算了 2 × 3，漏掉後面的 ＋1；多項式連續可直接代入，2 × 3 ＋ 1 ＝ 7。",
+      "3": "3 是 x 趨近的值，不是極限；要把 x＝3 代進 2x＋1，得 2 × 3 ＋ 1 ＝ 7。",
+      "1": "1 只取了式子裡的常數項，沒算 2x 的部分；代入得 2 × 3 ＋ 1 ＝ 7。"
+     },
+     "answer_evidence": [
+      "c-lim-compute"
+     ],
+     "feedback": "2x＋1 是多項式、在 x＝3 連續，直接代入：2 × 3 ＋ 1 ＝ 7。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "某函數在 x 趨近 a 時，左極限是 3、右極限是 5。lim_{x→a} f(x) 的情況是？",
+     "answer": "不存在，因為左極限和右極限不相等",
+     "kp_ids": [
+      "math.t_sub.calc.function-limit"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.function-limit"
+     ],
+     "options": [
+      "不存在，因為左極限和右極限不相等",
+      "存在，等於 3（取左極限）",
+      "存在，等於 5（取右極限）",
+      "存在，等於 4（取兩者平均）"
+     ],
+     "distractor_rationales": {
+      "存在，等於 3（取左極限）": "極限不能只取左極限；左極限 3 和右極限 5 不相等時，極限就不存在。",
+      "存在，等於 5（取右極限）": "極限不能只取右極限；左右極限不相等（3 與 5）時極限不存在。",
+      "存在，等於 4（取兩者平均）": "極限不是左右極限的平均；必須左右極限相等才存在，3 與 5 不相等所以不存在。"
+     },
+     "answer_evidence": [
+      "c-lim-onesided"
+     ],
+     "feedback": "極限存在要左極限＝右極限；左極限 3、右極限 5 不相等，所以 lim_{x→a} f(x) 不存在。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "lim_{x→a} f(x) ＝ L 代表的意思是什麼？",
+     "answer": "x 趨近 a（但不等於 a）時，f(x) 趨近的值是 L",
+     "kp_ids": [
+      "math.t_sub.calc.function-limit"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.function-limit"
+     ],
+     "options": [
+      "x 趨近 a（但不等於 a）時，f(x) 趨近的值是 L",
+      "x 剛好等於 a 時，f(x) 的值是 L",
+      "L 是 f(x) 能達到的最大值",
+      "f(x) 趨近 a 時，x 趨近的值是 L"
+     ],
+     "distractor_rationales": {
+      "x 剛好等於 a 時，f(x) 的值是 L": "極限看的是 x 趨近 a 的趨勢，不是 x 剛好等於 a 的值；x＝a 可能沒有定義，極限仍可存在。",
+      "L 是 f(x) 能達到的最大值": "極限不是最大值；它是 x 趨近 a 時 f(x) 所趨近的那個值。",
+      "f(x) 趨近 a 時，x 趨近的值是 L": "這把 x 和 f(x) 的角色對調了；極限是「x 趨近 a 時 f(x) 趨近 L」，不是反過來。"
+     },
+     "answer_evidence": [
+      "c-lim-concept"
+     ],
+     "feedback": "lim_{x→a} f(x) ＝ L 的意思是：x 趨近 a（但不等於 a）時，f(x) 趨近的值是 L（看趨勢，不是 x＝a 的值）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "求極限 lim_{x→2} (x²−4)/(x−2)。（直接代入 x＝2 會得到 0/0）",
+     "answer": "4",
+     "kp_ids": [
+      "math.t_sub.calc.function-limit"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.function-limit"
+     ],
+     "options": [
+      "4",
+      "0",
+      "2",
+      "極限不存在"
+     ],
+     "distractor_rationales": {
+      "0": "代入得 0/0 不能當成 0；這是不定型，要先約分：(x²−4)/(x−2) ＝ x＋2，代 x＝2 得 4。",
+      "2": "2 是 x 趨近的值，不是極限；先約分成 x＋2 再代 x＝2，得 4。",
+      "極限不存在": "代入出現 0/0 不代表極限不存在；先約分成 x＋2，再代 x＝2 得 4，極限是存在的。"
+     },
+     "answer_evidence": [
+      "c-lim-compute"
+     ],
+     "feedback": "直接代入得 0/0（不定型），先約分：(x²−4)/(x−2) ＝ x＋2，再代 x＝2 得 4。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（極限＝x 趨近 a（但不等於 a）時 f(x) 趨近的值、看趨勢非 x＝a 的值；極限存在⟺左極限＝右極限；連續函數直接代入、遇 0/0 先約分再代）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
