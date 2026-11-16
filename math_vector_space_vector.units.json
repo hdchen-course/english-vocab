@@ -1,0 +1,209 @@
+{
+ "_note": "數學島 向量（vector）strand 單元。知識點 math.t_sub.vector.space-vector（空間向量的坐標與運算）。tier=t_sub（高中分科/選修深階）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；只列實際 render 給 reader 的術語）：空間向量 (space vector)、坐標 (coordinates)、模 (magnitude)。前置假設：已學平面向量的坐標、加減、係數積、模（平面向量各單元）。★scope（t_sub，空間向量入門、無 prereq KP 但接平面向量）：空間直角坐標系有 x、y、z 三軸；空間中一點或向量用三個坐標 (a, b, c) 表示。運算和平面向量一樣逐分量做：加 (a₁,a₂,a₃)+(b₁,b₂,b₃)=(a₁+b₁,a₂+b₂,a₃+b₃)、減同理、係數積 k(a,b,c)=(ka,kb,kc)。模（長度）|v|=√(a²+b²+c²)（比平面多一個 z 分量的平方）。平行＝一個是另一個的係數積（坐標成比例）。以 a=(1,2,3)、b=(4,5,6) 貫穿：a+b=(5,7,9)、a−b=(−3,−3,−3)、2a=(2,4,6)；模示範 |(2,3,6)|=7（乾淨）、|(1,2,3)|=√14（展示公式）。只到空間坐標/加減/係數積/模/平行；不含空間內積（下一單元 space-dot-product）、不含外積/平面方程。prereq=（空間向量入門，知識點本身無前置；教學上接平面向量）。repro（tools/verify/math_checks7.py::vector.space-vector，本 session 新增並跑過 PASS；binding 另有 math_checks6::vector.space-vector 驗加法/係數積概念）：(1,2,3)+(4,5,6)=(5,7,9)、差=(−3,−3,−3)、2(1,2,3)=(2,4,6)、|(2,3,6)|=7、|(1,2,3)|=√14、(2,4,6)∥(1,2,3)（.venv 驗）。★自檢（math-unit defect-classes #1–#64）：figure＝空間直角坐標系斜投影示意圖（z 上、y 右、x 左下三軸）、向量 OP 以灰虛線沿 x→y→z 三步補出 (a,b,c) 分解、OP 為深藍實線對角——★此為 3D 示意圖非 2D 度量圖，#62 等軸 N/A（但各組平行邊須畫成平行、箭頭端點方向正確 #43）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾圖畫的「OP 由 x、y、z 三坐標 (a,b,c) 決定」（#4/#46，加減/模/平行由 teach 文字教）；practice 四答案＝{(5,7,9)(Q1 加法 hero),7(Q2 模),(2,4,6)(Q3 係數積),(2,4,6)(Q4 平行 transfer)}——Q3 與 Q4 答案同為 (2,4,6) 但問的是不同運算（Q3 問 2a 的結果、Q4 問哪個與 a 平行），非 #10 碰撞（兩題各自 stem 清楚、答案來自不同概念路徑）；teach 關鍵值 a+b=(5,7,9)/2a=(2,4,6)/|(2,3,6)|=7 與各題 stem 對應、無誤導；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算：Q1 相減/分量相乘/混成內積一個數；Q2 分量直接相加/平方和忘開根/對和開根；Q3 只乘首分量/忘乘照抄/係數用加的；Q4 分量顛倒/只改一分量/第三分量非倍數）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_vector_space_vector.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.vector.space-vector",
+   "title_zh": "空間向量的坐標與運算",
+   "can_do": "我知道空間用 x、y、z 三個互相垂直的軸來定位，空間中的一個向量就用三個『坐標 (coordinates)』(a, b, c) 表示。我會做空間向量的運算，和平面向量一樣「逐分量」做：加法 (a₁, a₂, a₃) ＋ (b₁, b₂, b₃) ＝ (a₁＋b₁, a₂＋b₂, a₃＋b₃)、減法同理、係數積 k(a, b, c) ＝ (ka, kb, kc)。我會算『模 (magnitude)』（長度）|v| ＝ √(a² ＋ b² ＋ c²)，比平面只是多了一個 z 分量的平方。例：a ＝ (1, 2, 3)、b ＝ (4, 5, 6)，a ＋ b ＝ (5, 7, 9)、2a ＝ (2, 4, 6)、|(2, 3, 6)| ＝ √(4 ＋ 9 ＋ 36) ＝ √49 ＝ 7。",
+   "situation_group": "向量：空間向量入門",
+   "subject": "math",
+   "strand": "vector",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.vector.space-vector"
+   ],
+   "prerequisites": [],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-sv-coord",
+     "text": "空間用三個互相垂直的坐標軸 x、y、z 來定位。空間中的一個向量（或一個點）用三個坐標 (a, b, c) 表示：a 是沿 x 方向、b 是沿 y 方向、c 是沿 z 方向走的量。這和平面向量用兩個坐標 (a, b) 的想法一樣，只是多了一個「上下」的 z 方向。例：(1, 2, 3) 代表沿 x 走 1、沿 y 走 2、沿 z 走 3。",
+     "kind": "definition",
+     "source_refs": [
+      "空間向量的坐標（高中數學 空間向量）"
+     ],
+     "verification_ref": "空間向量=坐標 (a,b,c)；(1,2,3) 的三分量為 1,2,3（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-sv-ops",
+     "text": "空間向量的加法、減法、係數積都和平面向量一樣「逐分量」做。加法：(a₁, a₂, a₃) ＋ (b₁, b₂, b₃) ＝ (a₁＋b₁, a₂＋b₂, a₃＋b₃)；減法：對應分量相減；係數積：k(a, b, c) ＝ (ka, kb, kc)（每個分量都乘 k）。例：a ＝ (1, 2, 3)、b ＝ (4, 5, 6)，a ＋ b ＝ (5, 7, 9)、a − b ＝ (−3, −3, −3)、2a ＝ (2, 4, 6)。另外，如果一個向量是另一個的係數積（坐標成比例），兩者就平行：例 (2, 4, 6) ＝ 2(1, 2, 3)，所以 (2, 4, 6) 和 (1, 2, 3) 平行。",
+     "kind": "definition",
+     "source_refs": [
+      "空間向量的運算（高中數學 空間向量）"
+     ],
+     "verification_ref": "(1,2,3)+(4,5,6)=(5,7,9)；差=(−3,−3,−3)；2(1,2,3)=(2,4,6)；(2,4,6)∥(1,2,3)（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-sv-norm",
+     "text": "空間向量的模（長度）是把三個坐標各自平方、相加、再開根號：|v| ＝ √(a² ＋ b² ＋ c²)。這和平面向量 |(a, b)| ＝ √(a² ＋ b²) 一樣，只是多加一個 z 分量 c 的平方。例：|(2, 3, 6)| ＝ √(2² ＋ 3² ＋ 6²) ＝ √(4 ＋ 9 ＋ 36) ＝ √49 ＝ 7；|(1, 2, 3)| ＝ √(1 ＋ 4 ＋ 9) ＝ √14。注意：要先各自「平方」再相加開根，不是把坐標直接相加。",
+     "kind": "definition",
+     "source_refs": [
+      "空間向量的模（高中數學 空間向量）"
+     ],
+     "verification_ref": "|v|=√(a²+b²+c²)；|(2,3,6)|=7；|(1,2,3)|=√14（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.vector.space-vector"
+     ],
+     "body": "這一單元把向量從平面帶到空間。先講空間坐標（多了一個 z 軸，向量用三個坐標 (a, b, c)）；再講運算（加、減、係數積都逐分量做，和平面一樣）；最後講模 |v| ＝ √(a² ＋ b² ＋ c²)（比平面多一個 z 分量的平方）。用 a ＝ (1, 2, 3)、b ＝ (4, 5, 6) 示範，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.vector.space-vector"
+     ],
+     "body": "① 坐標：空間有 x、y、z 三個互相垂直的軸；一個向量用三個坐標 (a, b, c) 表示（a 沿 x、b 沿 y、c 沿 z）。② 運算（逐分量，和平面一樣）：加 (1, 2, 3) ＋ (4, 5, 6) ＝ (5, 7, 9)；減 (1, 2, 3) − (4, 5, 6) ＝ (−3, −3, −3)；係數積 2(1, 2, 3) ＝ (2, 4, 6)。若一個是另一個的係數積（坐標成比例），兩者平行，例 (2, 4, 6) ＝ 2(1, 2, 3)。③ 模（長度）：|v| ＝ √(a² ＋ b² ＋ c²)；例 |(2, 3, 6)| ＝ √(4 ＋ 9 ＋ 36) ＝ √49 ＝ 7。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.vector.space-vector"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>空間坐標：向量 OP 由 x、y、z 三坐標 (a, b, c) 決定</text><line x1='120' y1='125' x2='120' y2='30' stroke='#99a7b5' stroke-width='1'/><path d='M120,30 L116,38 M120,30 L124,38' fill='none' stroke='#99a7b5' stroke-width='1'/><line x1='120' y1='125' x2='308' y2='125' stroke='#99a7b5' stroke-width='1'/><path d='M308,125 L300,121 M308,125 L300,129' fill='none' stroke='#99a7b5' stroke-width='1'/><line x1='120' y1='125' x2='58' y2='158' stroke='#99a7b5' stroke-width='1'/><path d='M58,158 L66,156 M58,158 L62,150' fill='none' stroke='#99a7b5' stroke-width='1'/><line x1='120' y1='125' x2='88' y2='142' stroke='#c9d3dd' stroke-width='1' stroke-dasharray='4 3'/><line x1='88' y1='142' x2='196' y2='142' stroke='#c9d3dd' stroke-width='1' stroke-dasharray='4 3'/><line x1='196' y1='142' x2='196' y2='78' stroke='#c9d3dd' stroke-width='1' stroke-dasharray='4 3'/><line x1='120' y1='125' x2='196' y2='78' stroke='#33475b' stroke-width='2.2'/><path d='M196,78 L188.4,80.1 M196,78 L191.3,84.2' fill='none' stroke='#33475b' stroke-width='2.2'/><circle cx='120' cy='125' r='2.5' fill='#33475b'/><circle cx='196' cy='78' r='2.5' fill='#33475b'/><text x='126' y='34' font-family='sans-serif' font-size='9.5' fill='#6b7785' text-anchor='start'>z</text><text x='305' y='138' font-family='sans-serif' font-size='9.5' fill='#6b7785' text-anchor='middle'>y</text><text x='52' y='156' font-family='sans-serif' font-size='9.5' fill='#6b7785' text-anchor='middle'>x</text><text x='112' y='136' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='end'>O</text><text x='201' y='75' font-family='sans-serif' font-size='9.5' fill='#33475b' text-anchor='start'>P ＝ (a, b, c)</text><text x='180' y='162' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>沿 x 走 a、沿 y 走 b、沿 z 走 c，就到 P</text></svg>",
+      "alt": "標題「空間坐標：向量 OP 由 x、y、z 三坐標 (a, b, c) 決定」。一個空間直角坐標系的斜投影示意圖：從原點 O 畫出三條互相垂直的灰色坐標軸——z 軸朝上、y 軸朝右、x 軸朝左下，各有箭頭並標上「z」「y」「x」。從 O 出發，一組灰色虛線先沿 x 方向走 a、再沿 y 方向走 b、最後沿 z 方向往上走 c，三步補出一個長方體的邊，終點是 P。深藍色實線箭頭 OP 從 O 直接指向 P，P 旁標「P ＝ (a, b, c)」，原點標「O」。最下方註「沿 x 走 a、沿 y 走 b、沿 z 走 c，就到 P」。",
+      "caption": "空間向量用三個坐標 (a, b, c) 表示：從原點 O 沿 x 走 a、沿 y 走 b、沿 z 走 c 就到終點 P，OP 就是這個空間向量。這是把平面的兩個坐標多加一個「上下」的 z 方向。（此為空間的斜投影示意圖，用來看坐標怎麼組成，不是按比例量長度的平面圖。）"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.vector.space-vector"
+     ],
+     "body": "最後練空間向量。重點：向量用三個坐標 (a, b, c)；加、減、係數積都「逐分量」做（和平面一樣）；模 |v| ＝ √(a² ＋ b² ＋ c²)；一個是另一個的係數積（坐標成比例）就平行。小提醒：(1) 算模要先把每個坐標各自「平方」再相加開根，不是把坐標直接相加（例 |(2, 3, 6)| 是 √(4＋9＋36) ＝ 7，不是 2＋3＋6）；(2) 係數積是每個分量都乘同一個 k，不要只乘第一個。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "空間向量 (1, 2, 3) 和 (4, 5, 6) 相加，結果是多少？",
+     "answer": "(5, 7, 9)",
+     "kp_ids": [
+      "math.t_sub.vector.space-vector"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.vector.space-vector"
+     ],
+     "options": [
+      "(5, 7, 9)",
+      "(−3, −3, −3)",
+      "(4, 10, 18)",
+      "32"
+     ],
+     "distractor_rationales": {
+      "(−3, −3, −3)": "這是相減 (1, 2, 3) − (4, 5, 6) 的結果：題目要相加，應該對應分量相加 1＋4、2＋5、3＋6 ＝ (5, 7, 9)。",
+      "(4, 10, 18)": "這是把對應分量相乘（1×4, 2×5, 3×6）：加法是對應分量「相加」，得 (5, 7, 9)。",
+      "32": "這是把分量相乘再相加（1×4＋2×5＋3×6）變成一個數，那是內積不是加法：加法的結果仍是一個向量 (5, 7, 9)。"
+     },
+     "answer_evidence": [
+      "c-sv-ops"
+     ],
+     "feedback": "(1, 2, 3) ＋ (4, 5, 6) ＝ (1＋4, 2＋5, 3＋6) ＝ (5, 7, 9)，逐分量相加、結果仍是向量。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "空間向量 (2, 3, 6) 的模（長度）|（2, 3, 6）| 是多少？",
+     "answer": "7",
+     "kp_ids": [
+      "math.t_sub.vector.space-vector"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.vector.space-vector"
+     ],
+     "options": [
+      "7",
+      "11",
+      "49",
+      "√11"
+     ],
+     "distractor_rationales": {
+      "11": "這是把坐標直接相加 2 ＋ 3 ＋ 6：模要先各自平方再相加開根，√(4 ＋ 9 ＋ 36) ＝ √49 ＝ 7。",
+      "49": "這是平方和 2² ＋ 3² ＋ 6² ＝ 49，忘了最後開根號：|v| 還要開根，√49 ＝ 7。",
+      "√11": "這是把坐標先相加再開根 √(2 ＋ 3 ＋ 6)：要先「各自平方」再相加開根，√(4 ＋ 9 ＋ 36) ＝ 7。"
+     },
+     "answer_evidence": [
+      "c-sv-norm"
+     ],
+     "feedback": "|(2, 3, 6)| ＝ √(2² ＋ 3² ＋ 6²) ＝ √(4 ＋ 9 ＋ 36) ＝ √49 ＝ 7。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "空間向量 (1, 2, 3) 乘以係數 2，也就是 2(1, 2, 3)，結果是多少？",
+     "answer": "(2, 4, 6)",
+     "kp_ids": [
+      "math.t_sub.vector.space-vector"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.vector.space-vector"
+     ],
+     "options": [
+      "(2, 4, 6)",
+      "(2, 2, 3)",
+      "(1, 2, 3)",
+      "(3, 4, 5)"
+     ],
+     "distractor_rationales": {
+      "(2, 2, 3)": "這只把第一個分量乘了 2，其餘沒乘：係數積要「每個分量」都乘 2，得 (2, 4, 6)。",
+      "(1, 2, 3)": "這是原向量、忘了乘係數：乘以 2 要每個分量都乘 2，得 (2, 4, 6)。",
+      "(3, 4, 5)": "這是把係數 2「加」到每個分量（＋2）：係數積是「乘」不是加，2×每個分量得 (2, 4, 6)。"
+     },
+     "answer_evidence": [
+      "c-sv-ops"
+     ],
+     "feedback": "2(1, 2, 3) ＝ (2×1, 2×2, 2×3) ＝ (2, 4, 6)，每個分量都乘 2。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "下列哪一個空間向量和 (1, 2, 3) 平行？",
+     "answer": "(2, 4, 6)",
+     "kp_ids": [
+      "math.t_sub.vector.space-vector"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.vector.space-vector"
+     ],
+     "options": [
+      "(2, 4, 6)",
+      "(3, 2, 1)",
+      "(1, 2, 4)",
+      "(2, 4, 5)"
+     ],
+     "distractor_rationales": {
+      "(3, 2, 1)": "這是把坐標順序顛倒，不是 (1, 2, 3) 的係數積：平行要坐標「成比例」，(2, 4, 6) ＝ 2(1, 2, 3) 才對。",
+      "(1, 2, 4)": "只有第三個坐標改成 4、不成比例（1:1、2:2 但 3:4 不同）：平行要三個坐標同一個比例。",
+      "(2, 4, 5)": "前兩個是 2 倍但第三個不是（3 的 2 倍是 6 不是 5）、不成比例：要三個都同一比例，(2, 4, 6) 才平行。"
+     },
+     "answer_evidence": [
+      "c-sv-ops"
+     ],
+     "feedback": "(2, 4, 6) ＝ 2(1, 2, 3)，三個坐標都是 2 倍（成比例），所以和 (1, 2, 3) 平行。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（空間向量用三坐標 (a, b, c)；加減與係數積都逐分量做，(1,2,3)+(4,5,6)=(5,7,9)、2(1,2,3)=(2,4,6)；模 |v|=√(a²+b²+c²)、|(2,3,6)|=√(4+9+36)=7、|(1,2,3)|=√14；坐標成比例（一個是另一個係數積）就平行，(2,4,6)=2(1,2,3)；兩鐵律＝算模要先各自平方再相加開根不是直接相加、係數積要每個分量都乘同一個 k）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

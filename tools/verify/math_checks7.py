@@ -166,6 +166,15 @@ def c_vec_cross_product():
     assert cross((2, 4), (1, 2)) == 0                   # 平行 ⟺ 外積=0
     assert cross(u, v) == -cross(v, u)                  # 反對稱 u×v=−(v×u)
     return _ok("vector.cross-product", "(3,2)×(1,3)=7；內積=9≠7；平行四邊形面積=7；三角形=7/2；(2,4)×(1,2)=0(平行)；u×v=−v×u")
+def c_vec_space_vector():
+    a = sp.Matrix([1, 2, 3]); b = sp.Matrix([4, 5, 6])
+    assert list(a + b) == [5, 7, 9]                   # 空間加法逐分量 (1,2,3)+(4,5,6)=(5,7,9)
+    assert list(a - b) == [-3, -3, -3]                # 減法 (1,2,3)−(4,5,6)=(−3,−3,−3)
+    assert list(2 * a) == [2, 4, 6]                   # 係數積 2(1,2,3)=(2,4,6)
+    assert sp.Matrix([2, 3, 6]).norm() == 7           # 模 |(2,3,6)|=√(4+9+36)=√49=7
+    assert a.norm() == sp.sqrt(14)                    # |(1,2,3)|=√14（展示公式）
+    assert list(sp.Matrix([2, 4, 6])) == list(2 * a)  # (2,4,6)=2(1,2,3) 平行(係數成比例)
+    return _ok("vector.space-vector", "(1,2,3)+(4,5,6)=(5,7,9)；差=(−3,−3,−3)；2(1,2,3)=(2,4,6)；|(2,3,6)|=7；|(1,2,3)|=√14；(2,4,6)∥(1,2,3)")
 
 # ---------- stats（18）----------
 D = [2, 4, 4, 4, 5, 5, 7, 9]      # 共用樣本（std 範例，μ=5,σ=2）
@@ -307,6 +316,7 @@ CHECKS = {s: fn for s, fn in {
     "vector.dot-product": c_vec_dot_product,
     "vector.projection": c_vec_projection,
     "vector.cross-product": c_vec_cross_product,
+    "vector.space-vector": c_vec_space_vector,
     "stats.collect-organize": s_collect, "stats.bar-line-chart": s_bar_line,
     "stats.pie-chart": s_pie, "stats.table-read": s_table, "stats.mean": s_mean,
     "stats.frequency-table": s_freq_table, "stats.cumulative-relative": s_cumulative,
