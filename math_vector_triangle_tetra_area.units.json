@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 向量（vector）strand 單元。知識點 math.t_sub.vector.triangle-tetra-area（以內外積求三角形面積、平行四邊形面積與四面體體積）。tier=t_sub（高中分科/選修深階）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；只列實際 render 給 reader 的術語）：外積 (cross product)、純量三重積 (scalar triple product)、四面體 (tetrahedron)。前置假設：已學空間向量坐標/內積（space-vector、space-dot-product）、平面外積與面積（cross-product）。★scope（t_sub，prereq space-dot-product）：空間（3D）外積 a×b 是一個『向量』，同時垂直 a、b；其長度 |a×b| 等於 a、b 張出的平行四邊形面積（＝|a||b|sinθ）；三角形面積＝½|a×b|。純量三重積 (a×b)·c 的絕對值＝a、b、c 張出的平行六面體體積；四面體（三稜錐）體積＝⅙|(a×b)·c|。以 a＝(2,0,0)、b＝(0,3,0)、c＝(1,1,4) 貫穿：a×b＝(0,0,6)、|a×b|＝6（平行四邊形，此處恰為 2×3 矩形）、三角形＝3；(a×b)·c＝24（平行六面體）、四面體＝⅙×24＝4。只到用外積求面積、純量三重積求體積；不含外積的坐標公式逐項展開證明、不含一般多面體。prereq＝space-dot-product。repro（tools/verify/math_checks7.py::vector.triangle-tetra-area，本 session 新增並跑過 PASS；binding 另有 math_checks6::vector.triangle-tetra-area 驗 ½|a×b|、⅙|三重積| 概念）：a×b=(0,0,6)⊥a,b、|a×b|=6、三角形=3、(a×b)·c=24、四面體=4（.venv 驗）。★自檢（math-unit defect-classes #1–#64）：figure＝3D 斜投影、a=(2,0,0) 紅沿 x、b=(0,3,0) 綠沿 y、兩者張出的平行四邊形（此例為矩形）淺藍填、標面積=|a×b|=6——★3D 示意圖非 2D 度量圖 #62 N/A（但平行邊畫平行、箭頭方向正確 #43）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾圖畫的「平行四邊形面積=|a×b|=6」（#4/#46，三角形/四面體/三重積由 teach 文字教）；practice 四答案＝{6(Q1 平行四邊形),3(Q2 三角形),4(Q3 四面體),同時垂直 a 和 b(Q4 外積方向概念)}——各題不同運算、無 #10 碰撞（Q1 面積6 與 teach |a×b|=6 相同但那正是該題考點、非誤導）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算：Q1 給外積向量本身/|a|+|b|/取成三角形；Q2 給平行四邊形/乘2/多除一次2；Q3 給平行六面體/用½/用⅓；Q4 平行/相加/長度=內積）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_vector_triangle_tetra_area.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.vector.triangle-tetra-area",
+   "title_zh": "以內外積求三角形面積、平行四邊形面積與四面體體積",
+   "can_do": "我知道空間裡兩個向量的『外積 (cross product)』a×b 是一個「向量」，它同時垂直 a 和 b，而且它的長度 |a×b| 剛好等於 a、b 張出的平行四邊形面積，所以三角形面積就是 ½|a×b|。我也知道『純量三重積 (scalar triple product)』(a×b)·c 的絕對值等於 a、b、c 張出的平行六面體體積，而『四面體 (tetrahedron)』（三稜錐）體積是它的 ⅙。例：a ＝ (2, 0, 0)、b ＝ (0, 3, 0)、c ＝ (1, 1, 4)，a×b ＝ (0, 0, 6)，平行四邊形面積 ＝ |a×b| ＝ 6、三角形 ＝ 3；(a×b)·c ＝ 24，四面體體積 ＝ ⅙×24 ＝ 4。",
+   "situation_group": "向量：空間向量入門",
+   "subject": "math",
+   "strand": "vector",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.vector.triangle-tetra-area"
+   ],
+   "prerequisites": [
+    "math.t_sub.vector.space-dot-product"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-tt-cross",
+     "text": "空間（3D）裡兩個向量的外積 a×b 是一個「向量」（不像平面外積只是一個數），它的方向同時垂直 a 和 b。最重要的性質是：它的長度 |a×b| 剛好等於 a、b 張出的平行四邊形面積（也等於 |a||b|sinθ，θ 是 a、b 的夾角）。例：a ＝ (2, 0, 0)、b ＝ (0, 3, 0)，a×b ＝ (0, 0, 6)，|a×b| ＝ 6，所以平行四邊形面積是 6（這裡 a、b 互相垂直，剛好是一個 2×3 的矩形）。",
+     "kind": "definition",
+     "source_refs": [
+      "外積與面積（高中數學 空間向量）"
+     ],
+     "verification_ref": "a×b⊥a,b；|a×b|=平行四邊形面積；(2,0,0)×(0,3,0)=(0,0,6)、|a×b|=6（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-tt-triangle",
+     "text": "因為 |a×b| 是 a、b 張出的「平行四邊形」面積，而三角形剛好是平行四邊形的一半，所以 a、b 張出的三角形面積 ＝ ½|a×b|。例：上面 |a×b| ＝ 6，三角形面積就是 ½×6 ＝ 3。",
+     "kind": "definition",
+     "source_refs": [
+      "外積與三角形面積（高中數學 空間向量）"
+     ],
+     "verification_ref": "三角形面積=½|a×b|；½×6=3（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-tt-tetra",
+     "text": "三個向量 a、b、c 的「純量三重積」是 (a×b)·c（先算外積 a×b 這個向量，再和 c 做內積，得到一個數）。它的絕對值 |(a×b)·c| 等於 a、b、c 張出的平行六面體體積；而四面體（三稜錐）體積是它的 ⅙，也就是 ⅙|(a×b)·c|。例：a ＝ (2, 0, 0)、b ＝ (0, 3, 0)、c ＝ (1, 1, 4)，(a×b)·c ＝ (0, 0, 6)·(1, 1, 4) ＝ 24，平行六面體體積 ＝ 24、四面體體積 ＝ ⅙×24 ＝ 4。",
+     "kind": "definition",
+     "source_refs": [
+      "純量三重積與體積（高中數學 空間向量）"
+     ],
+     "verification_ref": "|(a×b)·c|=平行六面體體積、四面體=⅙|(a×b)·c|；(a×b)·c=24、四面體=4（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.vector.triangle-tetra-area"
+     ],
+     "body": "這一單元學用向量求面積和體積。先講空間外積 a×b（一個同時垂直 a、b 的向量，長度就是平行四邊形面積）；再由此得三角形面積 ½|a×b|；最後講純量三重積 (a×b)·c，用它求平行六面體與四面體體積。用 a ＝ (2, 0, 0)、b ＝ (0, 3, 0)、c ＝ (1, 1, 4) 示範，最後練習。（接在『空間向量內積與夾角』之後。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.vector.triangle-tetra-area"
+     ],
+     "body": "① 外積與平行四邊形面積：空間外積 a×b 是一個向量，同時垂直 a、b；它的長度 |a×b| ＝ a、b 張出的平行四邊形面積。例 a ＝ (2, 0, 0)、b ＝ (0, 3, 0)，a×b ＝ (0, 0, 6)，|a×b| ＝ 6。② 三角形面積：三角形是平行四邊形的一半，所以 ＝ ½|a×b| ＝ ½×6 ＝ 3。③ 純量三重積與體積：(a×b)·c 的絕對值 ＝ a、b、c 張出的平行六面體體積；四面體體積 ＝ ⅙|(a×b)·c|。例 c ＝ (1, 1, 4)，(a×b)·c ＝ 24，平行六面體 ＝ 24、四面體 ＝ ⅙×24 ＝ 4。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.vector.triangle-tetra-area"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>面積：a、b 張出的平行四邊形（面積 ＝ |a×b| ＝ 6）</text><polygon points='150,106 114,128 198,128 234,106' fill='#e6edf3' stroke='#99a7b5' stroke-width='1'/><line x1='150' y1='106' x2='150' y2='30' stroke='#99a7b5' stroke-width='1'/><path d='M150,30 L146,38 M150,30 L154,38' fill='none' stroke='#99a7b5' stroke-width='1'/><line x1='150' y1='106' x2='300' y2='106' stroke='#99a7b5' stroke-width='1'/><path d='M300,106 L292,102 M300,106 L292,110' fill='none' stroke='#99a7b5' stroke-width='1'/><line x1='150' y1='106' x2='96' y2='139' stroke='#99a7b5' stroke-width='1'/><path d='M96,139 L104,137 M96,139 L100,132' fill='none' stroke='#99a7b5' stroke-width='1'/><line x1='150' y1='106' x2='114' y2='128' stroke='#c2535d' stroke-width='2.2'/><path d='M114,128 L123,127 M114,128 L119,122' fill='none' stroke='#c2535d' stroke-width='2.2'/><line x1='150' y1='106' x2='234' y2='106' stroke='#2f6f54' stroke-width='2.2'/><path d='M234,106 L226,109 M234,106 L226,103' fill='none' stroke='#2f6f54' stroke-width='2.2'/><circle cx='150' cy='106' r='2.5' fill='#33475b'/><text x='156' y='34' font-family='sans-serif' font-size='9.5' fill='#6b7785' text-anchor='start'>z</text><text x='297' y='119' font-family='sans-serif' font-size='9.5' fill='#6b7785' text-anchor='middle'>y</text><text x='80' y='151' font-family='sans-serif' font-size='9.5' fill='#6b7785' text-anchor='middle'>x</text><text x='160' y='100' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='start'>O</text><text x='104' y='121' font-family='sans-serif' font-size='9.5' fill='#c2535d' text-anchor='end'>a ＝ (2, 0, 0)</text><text x='238' y='104' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='start'>b ＝ (0, 3, 0)</text><text x='180' y='160' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>平行四邊形面積 ＝ |a×b| ＝ |(0, 0, 6)| ＝ 6</text></svg>",
+      "alt": "標題「面積：a、b 張出的平行四邊形（面積 ＝ |a×b| ＝ 6）」。一個空間直角坐標系的斜投影示意圖：從原點 O 畫出灰色的 z 軸（朝上）、y 軸（朝右）、x 軸（朝左下），各標「z」「y」「x」。從 O 畫出紅色向量 a ＝ (2, 0, 0)（沿 x 方向）與綠色向量 b ＝ (0, 3, 0)（沿 y 方向），兩者張出一個淺藍色填滿的平行四邊形（因為 a、b 互相垂直，這裡是一個矩形），原點標「O」。最下方註「平行四邊形面積 ＝ |a×b| ＝ |(0, 0, 6)| ＝ 6」。",
+      "caption": "以 a ＝ (2, 0, 0)、b ＝ (0, 3, 0) 示範：外積 a×b ＝ (0, 0, 6) 是一個垂直 a、b 的向量，它的長度 |a×b| ＝ 6 就是 a、b 張出的平行四邊形面積（此例 a⊥b，剛好是 2×3 ＝ 6 的矩形）；三角形面積則是一半 ＝ 3。（此為空間的斜投影示意圖，用來看平行四邊形怎麼張出，不是按比例量長度的平面圖。）"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.vector.triangle-tetra-area"
+     ],
+     "body": "最後練用向量求面積與體積。重點：平行四邊形面積 ＝ |a×b|（外積的長度）；三角形面積 ＝ ½|a×b|；平行六面體體積 ＝ |(a×b)·c|（純量三重積的絕對值）；四面體體積 ＝ ⅙|(a×b)·c|。小提醒：(1) 平行四邊形面積是外積的「長度」|a×b|（一個數），不是外積向量 a×b（(0, 0, 6)）本身；(2) 三角形是平行四邊形的 ½、四面體是平行六面體的 ⅙，兩個分數別弄反。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "a ＝ (2, 0, 0)、b ＝ (0, 3, 0)，已知 a×b ＝ (0, 0, 6)。a、b 張出的平行四邊形面積是多少？",
+     "answer": "6",
+     "kp_ids": [
+      "math.t_sub.vector.triangle-tetra-area"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.vector.triangle-tetra-area"
+     ],
+     "options": [
+      "6",
+      "(0, 0, 6)",
+      "5",
+      "3"
+     ],
+     "distractor_rationales": {
+      "(0, 0, 6)": "這是外積向量 a×b 本身，不是面積：平行四邊形面積是它的「長度」|a×b| ＝ |(0, 0, 6)| ＝ 6（一個數）。",
+      "5": "這是把 |a|、|b| 相加 2 ＋ 3：面積是 |a×b|（＝|a||b|sinθ），a⊥b 時 ＝ 2×3 ＝ 6。",
+      "3": "這是三角形面積（平行四邊形的一半 ½×6）：平行四邊形面積是 |a×b| ＝ 6，三角形才是一半。"
+     },
+     "answer_evidence": [
+      "c-tt-cross"
+     ],
+     "feedback": "平行四邊形面積 ＝ |a×b| ＝ |(0, 0, 6)| ＝ 6（外積的長度，是一個數）。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "承上，a、b 張出的三角形面積是多少？（|a×b| ＝ 6）",
+     "answer": "3",
+     "kp_ids": [
+      "math.t_sub.vector.triangle-tetra-area"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.vector.triangle-tetra-area"
+     ],
+     "options": [
+      "3",
+      "6",
+      "12",
+      "1.5"
+     ],
+     "distractor_rationales": {
+      "6": "這是平行四邊形面積 |a×b|，忘了取一半：三角形是平行四邊形的 ½，所以 ½×6 ＝ 3。",
+      "12": "這是把 6 乘以 2：三角形是平行四邊形的一半（乘 ½），不是乘 2，應得 3。",
+      "1.5": "這是把 6 除了兩次 2（½ 又 ½）：只要取一半一次，½×6 ＝ 3。"
+     },
+     "answer_evidence": [
+      "c-tt-triangle"
+     ],
+     "feedback": "三角形面積 ＝ ½|a×b| ＝ ½×6 ＝ 3（平行四邊形的一半）。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "a、b、c 的純量三重積 (a×b)·c ＝ 24。a、b、c 張出的四面體體積是多少？",
+     "answer": "4",
+     "kp_ids": [
+      "math.t_sub.vector.triangle-tetra-area"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.vector.triangle-tetra-area"
+     ],
+     "options": [
+      "4",
+      "24",
+      "12",
+      "8"
+     ],
+     "distractor_rationales": {
+      "24": "這是平行六面體體積（純量三重積的絕對值本身）：四面體是它的 ⅙，所以 ⅙×24 ＝ 4。",
+      "12": "這是用了 ½（½×24）：四面體體積是平行六面體的 ⅙，不是 ½，應得 ⅙×24 ＝ 4。",
+      "8": "這是用了 ⅓（⅓×24）：四面體體積是 ⅙|(a×b)·c|，⅙×24 ＝ 4。"
+     },
+     "answer_evidence": [
+      "c-tt-tetra"
+     ],
+     "feedback": "四面體體積 ＝ ⅙|(a×b)·c| ＝ ⅙×24 ＝ 4（平行六面體體積 24 的 ⅙）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "空間外積 a×b 這個向量，和 a、b 有什麼關係？",
+     "answer": "同時垂直 a 和 b",
+     "kp_ids": [
+      "math.t_sub.vector.triangle-tetra-area"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.vector.triangle-tetra-area"
+     ],
+     "options": [
+      "同時垂直 a 和 b",
+      "和 a、b 都平行",
+      "等於 a 加 b",
+      "長度等於 a·b"
+     ],
+     "distractor_rationales": {
+      "和 a、b 都平行": "剛好相反：a×b 是同時「垂直」a 和 b 的向量，不是平行。",
+      "等於 a 加 b": "a×b 不是 a ＋ b：它是一個垂直 a、b 的新向量，長度等於平行四邊形面積。",
+      "長度等於 a·b": "a×b 的長度是 |a×b| ＝ |a||b|sinθ（平行四邊形面積），不是內積 a·b（＝|a||b|cosθ）。"
+     },
+     "answer_evidence": [
+      "c-tt-cross"
+     ],
+     "feedback": "空間外積 a×b 是一個同時「垂直」a 和 b 的向量，它的長度 |a×b| 等於 a、b 張出的平行四邊形面積。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（空間外積 a×b 是向量、同時垂直 a 和 b，|a×b|＝a、b 張出的平行四邊形面積；三角形面積＝½|a×b|；純量三重積 (a×b)·c 的絕對值＝平行六面體體積、四面體體積＝⅙|(a×b)·c|；a=(2,0,0)、b=(0,3,0)、c=(1,1,4)：a×b=(0,0,6)、|a×b|=6、三角形=3、(a×b)·c=24、四面體=4；兩鐵律＝面積是外積的長度|a×b|不是外積向量本身、三角形½與四面體⅙別弄反）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

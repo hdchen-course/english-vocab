@@ -186,6 +186,17 @@ def c_vec_space_dot_product():
     assert a.dot(c) == 0                               # 垂直 (1,2,2)·(2,−1,0)=2−2+0=0
     assert a.dot(a) == a.norm()**2 == 9                # 自身內積=模平方
     return _ok("vector.space-dot-product", "(1,2,2)·(2,0,1)=4；|a|=3、|b|=√5；cosθ=4/(3√5)；(1,2,2)·(2,−1,0)=0(垂直)；a·a=|a|²=9")
+def c_vec_triangle_tetra_area():
+    a = sp.Matrix([2, 0, 0]); b = sp.Matrix([0, 3, 0]); c = sp.Matrix([1, 1, 4])
+    cr = a.cross(b)
+    assert list(cr) == [0, 0, 6]                       # 3D 外積 a×b=(0,0,6)（垂直 a、b）
+    assert cr.dot(a) == 0 and cr.dot(b) == 0           # a×b 同時垂直 a 與 b
+    assert cr.norm() == 6                              # 平行四邊形面積=|a×b|=6
+    assert sp.Rational(1, 2) * cr.norm() == 3          # 三角形面積=½|a×b|=3
+    tp = cr.dot(c)
+    assert tp == 24                                    # 純量三重積 (a×b)·c=24=平行六面體體積
+    assert sp.Rational(1, 6) * abs(tp) == 4            # 四面體體積=⅙|(a×b)·c|=4
+    return _ok("vector.triangle-tetra-area", "a×b=(0,0,6)⊥a,b；|a×b|=6(平行四邊形)；三角形=3；(a×b)·c=24(平行六面體)；四面體=⅙·24=4")
 
 # ---------- stats（18）----------
 D = [2, 4, 4, 4, 5, 5, 7, 9]      # 共用樣本（std 範例，μ=5,σ=2）
@@ -329,6 +340,7 @@ CHECKS = {s: fn for s, fn in {
     "vector.cross-product": c_vec_cross_product,
     "vector.space-vector": c_vec_space_vector,
     "vector.space-dot-product": c_vec_space_dot_product,
+    "vector.triangle-tetra-area": c_vec_triangle_tetra_area,
     "stats.collect-organize": s_collect, "stats.bar-line-chart": s_bar_line,
     "stats.pie-chart": s_pie, "stats.table-read": s_table, "stats.mean": s_mean,
     "stats.frequency-table": s_freq_table, "stats.cumulative-relative": s_cumulative,
