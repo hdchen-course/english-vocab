@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 微積分（calc）strand t_sub 單元。知識點 math.t_sub.calc.higher-derivative（高階導數）。tier=t_sub（高中分科/選修深階，exam 分科-數甲）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：高階導數 (higher-order derivative)、二階導數 (second derivative)、加速度 (acceleration)。★scope（t_sub）：高階導數——把導數再微分：二階導數 f″(x)=d/dx(f′(x))、三階 f‴(x)、第 n 階 f⁽ⁿ⁾(x)；多項式連續微分每次次方降一、最後變常數再變 0；二階導數的意義＝導數的變化率（直線運動中位置的二階導數＝加速度）。只到多項式連續微分＋二階意義；不含隱函數高階、不含萊布尼茲乘積高階公式、不含泰勒展開。prereq＝differentiation-rules。repro（tools/verify/math_checks7.py::calc.higher-derivative）：d²(x⁴)=12x²（.venv 已核）；教材用 x⁴ 連鎖 f′=4x³/f″=12x²/f‴=24x/f⁽⁴⁾=24、x³→f″=6x、x⁴−x²→f″=12x²−2 皆以 .venv sympy 另核。★自檢（math-unit defect-classes #1–#59）：figure＝連續微分 cascade SVG（直向 5 列：f(x)=x⁴ ↓微分 f′(x)=4x³ ↓微分 f″(x)=12x²（標紅）↓微分 f‴(x)=24x ↓微分 f⁽⁴⁾(x)=24），alt 與 SVG text 逐字一致（#33）、標題『高階導數：一直微分下去（以 x⁴ 為例）』寫進 alt 開頭；teach 例 x⁴ cascade，practice 四答案＝{概念敘述(Q1),6x(Q2 用 x³),12x²−2(Q3 用 x⁴−x²),加速度(Q4 意義)} 與 teach cascade 值 {4x³,12x²,24x,24} 皆相異避#10；practice：Q1 二階導數定義(選項敘述)、Q2 f″ of x³(選項式)、Q3 f″ of x⁴−x²(選項式)、Q4 二階導數在直線運動的意義(選項詞)；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53，如給成一階/三階/次方降錯/漏微分某項/把速度當二階）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_calc_higher_derivative.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.calc.higher-derivative",
+   "title_zh": "高階導數",
+   "can_do": "我知道把『導數 (derivative)』再微分一次，就得到『二階導數 (second derivative)』f″(x) ＝ d/dx(f′(x))；再微分就是三階 f‴(x)，一般第 n 階寫成 f⁽ⁿ⁾(x)，統稱『高階導數 (higher-order derivative)』。我會把多項式一直微分下去（每微分一次次方就降一，最後變成常數、再微分就是 0）。我也知道二階導數是「導數的變化率」——在直線運動裡，位置的二階導數就是『加速度 (acceleration)』。",
+   "situation_group": "微積分：高階導數",
+   "subject": "math",
+   "strand": "calc",
+   "est_minutes": 11,
+   "knowledge_point_ids": [
+    "math.t_sub.calc.higher-derivative"
+   ],
+   "prerequisites": [
+    "math.t_sub.calc.differentiation-rules"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-hd-def",
+     "text": "把一個函數的導數『再微分一次』，得到的就是『二階導數』，記成 f″(x) ＝ d/dx(f′(x))。再微分一次是三階 f‴(x)，一般微分 n 次寫成 f⁽ⁿ⁾(x)，這些統稱『高階導數』。也就是：先有一階 f′(x)，對它再微分就往上一階。",
+     "kind": "definition",
+     "source_refs": [
+      "高階導數的定義（高中數學 微積分）"
+     ],
+     "verification_ref": "f″=d/dx(f′)、f⁽ⁿ⁾ 連續微分 n 次（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-hd-poly",
+     "text": "多項式可以一直微分下去：每微分一次，最高次方就降一，係數照冪函數公式算；一直微分最後會變成一個常數，再微分一次就變成 0。例：f(x) ＝ x⁴ → f′(x) ＝ 4x³ → f″(x) ＝ 12x² → f‴(x) ＝ 24x → f⁽⁴⁾(x) ＝ 24 → f⁽⁵⁾(x) ＝ 0。",
+     "kind": "definition",
+     "source_refs": [
+      "多項式的高階導數（高中數學 微積分）"
+     ],
+     "verification_ref": "x⁴：4x³,12x²,24x,24,0；d²(x⁴)=12x²（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-hd-meaning",
+     "text": "二階導數的意義是「導數的變化率」——它描述 f′(x) 本身變化得多快。一個常見的具體例子是直線運動：如果 s(t) 是位置，一階導數 s′(t) 是速度，二階導數 s″(t) 就是『加速度』（速度的變化率）。",
+     "kind": "definition",
+     "source_refs": [
+      "二階導數與加速度（高中數學 微積分）"
+     ],
+     "verification_ref": "位置→速度→加速度＝s→s′→s″（運動學定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.higher-derivative"
+     ],
+     "body": "這一單元學『高階導數』，就是把導數一再微分下去。下面先講什麼是二階、三階、第 n 階導數（把導數再微分）；再用 x⁴ 示範多項式怎麼一直微分到變 0；最後講二階導數的意義（導數的變化率、運動中的加速度），再練習。（本單元接在『微分公式』之後，會一直用到冪函數的微分。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.higher-derivative"
+     ],
+     "body": "① 定義：把一階導數 f′(x) 再微分一次，就是二階導數 f″(x) ＝ d/dx(f′(x))；再微分是三階 f‴(x)，微分 n 次寫成 f⁽ⁿ⁾(x)。② 多項式連續微分：每微分一次次方降一，最後變常數、再微分就是 0。看下面以 x⁴ 為例一路微分到 0 的表。③ 意義：二階導數是「導數的變化率」——直線運動裡，位置 s(t) 的一階導數 s′(t) 是速度，二階導數 s″(t) 就是加速度。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.calc.higher-derivative"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>高階導數：一直微分下去（以 x⁴ 為例）</text><text x='180' y='34' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>f(x) ＝ x⁴</text><text x='180' y='49' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>↓ 微分</text><text x='180' y='63' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>f′(x) ＝ 4x³</text><text x='180' y='78' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>↓ 微分</text><text x='180' y='92' font-family='sans-serif' font-size='12' fill='#c2535d' text-anchor='middle' font-weight='bold'>f″(x) ＝ 12x²</text><text x='180' y='107' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>↓ 微分</text><text x='180' y='121' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>f‴(x) ＝ 24x</text><text x='180' y='136' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>↓ 微分</text><text x='180' y='150' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>f⁽⁴⁾(x) ＝ 24</text><text x='180' y='164' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>再微分一次就是 0（常數的導數為 0）</text></svg>",
+      "alt": "標題「高階導數：一直微分下去（以 x⁴ 為例）」。由上而下一路微分：f(x) ＝ x⁴，↓ 微分，f′(x) ＝ 4x³，↓ 微分，f″(x) ＝ 12x²（標紅），↓ 微分，f‴(x) ＝ 24x，↓ 微分，f⁽⁴⁾(x) ＝ 24。最下方註「再微分一次就是 0（常數的導數為 0）」。",
+      "caption": "以 x⁴ 示範高階導數：每微分一次次方降一——f(x)＝x⁴、f′(x)＝4x³、f″(x)＝12x²、f‴(x)＝24x、f⁽⁴⁾(x)＝24，再微分一次就是 0（常數的導數為 0）。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.higher-derivative"
+     ],
+     "body": "最後練高階導數。重點：二階導數 f″(x) ＝ d/dx(f′(x))，就是把導數再微分一次；多項式連續微分每次次方降一、最後變常數再變 0；二階導數是「導數的變化率」，運動中位置的二階導數就是加速度。小提醒：要算 f″(x)，一定要「先算出 f′(x)、再微分一次」，不要把一階或三階的答案當成二階。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "「二階導數 f″(x)」是怎麼得到的？",
+     "answer": "先把 f(x) 微分得 f′(x)，再把 f′(x) 微分一次",
+     "kp_ids": [
+      "math.t_sub.calc.higher-derivative"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.higher-derivative"
+     ],
+     "options": [
+      "先把 f(x) 微分得 f′(x)，再把 f′(x) 微分一次",
+      "把 f(x) 只微分一次",
+      "把 f(x) 微分三次",
+      "把 f(x) 乘以 2"
+     ],
+     "distractor_rationales": {
+      "把 f(x) 只微分一次": "只微分一次得到的是「一階」導數 f′(x)；二階要再微分一次。",
+      "把 f(x) 微分三次": "微分三次得到的是「三階」導數 f‴(x)；二階是微分兩次。",
+      "把 f(x) 乘以 2": "「二階」指微分的「次數」是 2，不是把函數乘以 2；要微分兩次。"
+     },
+     "answer_evidence": [
+      "c-hd-def"
+     ],
+     "feedback": "二階導數 f″(x) ＝ d/dx(f′(x))：先微分得一階 f′(x)，再微分一次就是二階。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "設 f(x) ＝ x³，求二階導數 f″(x)。",
+     "answer": "6x",
+     "kp_ids": [
+      "math.t_sub.calc.higher-derivative"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.higher-derivative"
+     ],
+     "options": [
+      "6x",
+      "3x²",
+      "6",
+      "3x"
+     ],
+     "distractor_rationales": {
+      "3x²": "3x² 是「一階」導數 f′(x)；再微分一次才是二階，得 f″(x) ＝ 6x。",
+      "6": "6 是「三階」導數 f‴(x)（再多微分一次）；二階是 f″(x) ＝ 6x。",
+      "3x": "次方降錯了：f′(x) ＝ 3x²，再微分是 6x（係數 3×2、次方 2 降 1），不是 3x。"
+     },
+     "answer_evidence": [
+      "c-hd-poly"
+     ],
+     "feedback": "先算 f′(x) ＝ 3x²，再微分一次：f″(x) ＝ 6x。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "設 f(x) ＝ x⁴ − x²，求二階導數 f″(x)。",
+     "answer": "12x² − 2",
+     "kp_ids": [
+      "math.t_sub.calc.higher-derivative"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.higher-derivative"
+     ],
+     "options": [
+      "12x² − 2",
+      "4x³ − 2x",
+      "12x²",
+      "12x² − 2x"
+     ],
+     "distractor_rationales": {
+      "4x³ − 2x": "4x³ − 2x 是「一階」導數 f′(x)；再微分一次才是二階。",
+      "12x²": "只微分了第一項 x⁴ 兩次、漏掉 −x² 的二階；−x² 微分兩次是 −2，答案 12x² − 2。",
+      "12x² − 2x": "第二項算錯：−x² 的一階是 −2x、二階是 −2（不是 −2x）；答案 12x² − 2。"
+     },
+     "answer_evidence": [
+      "c-hd-poly"
+     ],
+     "feedback": "先算 f′(x) ＝ 4x³ − 2x，再微分一次：f″(x) ＝ 12x² − 2。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在直線運動中，位置 s(t) 對時間的二階導數 s″(t) 代表什麼？",
+     "answer": "加速度（速度的變化率）",
+     "kp_ids": [
+      "math.t_sub.calc.higher-derivative"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.higher-derivative"
+     ],
+     "options": [
+      "加速度（速度的變化率）",
+      "速度",
+      "位置",
+      "經過的總路程"
+     ],
+     "distractor_rationales": {
+      "速度": "速度是「一階」導數 s′(t)；再微分一次（二階）才是加速度。",
+      "位置": "位置就是 s(t) 本身（還沒微分）；二階導數是微分兩次後的加速度。",
+      "經過的總路程": "總路程是對速度大小累積（積分方向），不是微分；二階導數是加速度。"
+     },
+     "answer_evidence": [
+      "c-hd-meaning"
+     ],
+     "feedback": "位置 s(t) 的一階導數 s′(t) 是速度，二階導數 s″(t) 是加速度（速度的變化率）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（二階導數 f″=d/dx(f′) 把導數再微分一次；多項式連續微分每次次方降一、最後變常數再變 0；二階導數＝導數的變化率，運動中位置的二階導數＝加速度；算 f″ 要先算 f′ 再微分一次）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
