@@ -156,6 +156,16 @@ def c_vec_projection():
     u2 = sp.Matrix([5, 2]); v2 = sp.Matrix([0, 3])
     assert list((u2.dot(v2)/v2.dot(v2))*v2) == [0, 2]
     return _ok("vector.projection", "proj_(4,0)(3,4)=(3,0)；純量投影=3；u−proj⊥v；(5,2)→(0,3)=(0,2)")
+def c_vec_cross_product():
+    def cross(a, b): return a[0]*b[1] - a[1]*b[0]      # 2D 外積(純量)=u₁v₂−u₂v₁
+    u = (3, 2); v = (1, 3)
+    assert cross(u, v) == 7                             # (3,2)×(1,3)=3·3−2·1=7
+    assert u[0]*v[0] + u[1]*v[1] == 9                   # 內積=9≠外積7（避混淆）
+    assert abs(cross(u, v)) == 7                        # 平行四邊形面積=|u×v|=7
+    assert sp.Rational(abs(cross(u, v)), 2) == sp.Rational(7, 2)  # 三角形面積=7/2
+    assert cross((2, 4), (1, 2)) == 0                   # 平行 ⟺ 外積=0
+    assert cross(u, v) == -cross(v, u)                  # 反對稱 u×v=−(v×u)
+    return _ok("vector.cross-product", "(3,2)×(1,3)=7；內積=9≠7；平行四邊形面積=7；三角形=7/2；(2,4)×(1,2)=0(平行)；u×v=−v×u")
 
 # ---------- stats（18）----------
 D = [2, 4, 4, 4, 5, 5, 7, 9]      # 共用樣本（std 範例，μ=5,σ=2）
@@ -296,6 +306,7 @@ CHECKS = {s: fn for s, fn in {
     "vector.component": c_vec_component,
     "vector.dot-product": c_vec_dot_product,
     "vector.projection": c_vec_projection,
+    "vector.cross-product": c_vec_cross_product,
     "stats.collect-organize": s_collect, "stats.bar-line-chart": s_bar_line,
     "stats.pie-chart": s_pie, "stats.table-read": s_table, "stats.mean": s_mean,
     "stats.frequency-table": s_freq_table, "stats.cumulative-relative": s_cumulative,

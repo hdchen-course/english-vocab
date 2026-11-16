@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 向量（vector）strand 單元。知識點 math.t_sub.vector.cross-product（平面向量外積與面積）。tier=t_sub（高中分科/選修深階）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；只列實際 render 給 reader 的術語）：外積 (cross product)、平行四邊形 (parallelogram)、反對稱 (antisymmetric)。前置假設：已學內積（dot-product）、分量/模。★scope（t_sub，接 dot-product/projection）：平面向量外積（2D，取 3D 外積的 z 分量）u×v＝u₁v₂−u₂v₁——結果是一個『帶正負號的數』（不是向量）；反對稱 u×v＝−(v×u)。幾何：|u×v| 等於 u、v 張出的平行四邊形面積（＝|u||v|sinθ），因此 u、v 張的三角形面積＝|u×v|/2。平行判定：u×v＝0 ⟺ u、v 平行（共線）。★避免和內積混淆：內積＝u₁v₁+u₂v₂（相乘相加、垂直判定），外積＝u₁v₂−u₂v₁（交叉相乘相減、平行/面積判定）。以 u＝(3,2)、v＝(1,3) 貫穿：u×v＝7、平行四邊形面積＝7、三角形＝7/2；內積＝9≠7（刻意不碰撞）。只到 2D 外積純量/面積/平行判定；不含 3D 外積向量。prereq＝dot-product。repro（tools/verify/math_checks7.py::vector.cross-product，本 session 新增並跑過 PASS）：(3,2)×(1,3)=7、內積=9≠7、面積=7、三角形=7/2、(2,4)×(1,2)=0(平行)、u×v=−v×u（.venv 驗）；practice 另用 (2,4)×(1,2)=0 平行 以 .venv 另核。★自檢（math-unit defect-classes #1–#64）：figure＝坐標平面 u=(3,2) 紅、v=(1,3) 綠 從原點、兩虛線補成平行四邊形、內部淺藍、標面積=7——★等軸比例（#62，才看得出面積/平行關係）、箭頭端點方向正確（#43）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾圖畫的 u×v=面積=7（#4/#46，平行判定由 teach 文字教）；★內積/外積刻意用不碰撞數值（內積9≠外積7，避 #10 混淆）；practice 四答案＝{7(Q1 外積),7(Q2 面積),兩向量平行(Q3 平行判定),(2,4) 與 (1,2)(Q4 平行 transfer)} 與 teach 關鍵值無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算：算成內積、交叉相加、順序顛倒、三角形面積、多乘2、垂直混淆）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_vector_cross_product.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.vector.cross-product",
+   "title_zh": "平面向量的外積與面積",
+   "can_do": "我知道平面向量的『外積 (cross product)』u×v ＝ u₁v₂ − u₂v₁，結果是一個「帶正負號的數」（取三維外積的 z 分量）。我知道它和內積不一樣：內積是「相乘相加」u₁v₁ ＋ u₂v₂（判垂直），外積是「交叉相乘相減」u₁v₂ − u₂v₁（判平行、算面積）。我會用 |u×v| 算 u、v 張出的『平行四邊形 (parallelogram)』面積，三角形面積就是 |u×v|/2。我也知道 u×v ＝ 0 ⟺ u、v 平行。例：u ＝ (3, 2)、v ＝ (1, 3)，u×v ＝ 3×3 − 2×1 ＝ 7，平行四邊形面積 ＝ 7。",
+   "situation_group": "向量：平面向量進階",
+   "subject": "math",
+   "strand": "vector",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.vector.cross-product"
+   ],
+   "prerequisites": [
+    "math.t_adv.vector.dot-product"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-cx-def",
+     "text": "平面向量的「外積」定義是「交叉相乘再相減」：u ＝ (u₁, u₂)、v ＝ (v₁, v₂) 的 u×v ＝ u₁v₂ − u₂v₁。它的結果是一個「帶正負號的數」（其實是三維外積的 z 分量）。小心別和內積搞混：內積 u·v ＝ u₁v₁ ＋ u₂v₂ 是「相乘相加」，外積是「交叉相乘相減」。外積有「反對稱 (antisymmetric)」：交換順序會變號，u×v ＝ −(v×u)。例：u ＝ (3, 2)、v ＝ (1, 3)，u×v ＝ 3×3 − 2×1 ＝ 9 − 2 ＝ 7（而內積是 3×1 ＋ 2×3 ＝ 9，兩者不同）。",
+     "kind": "definition",
+     "source_refs": [
+      "平面向量的外積（高中數學 向量）"
+     ],
+     "verification_ref": "u×v=u₁v₂−u₂v₁；(3,2)×(1,3)=7；內積=9≠7；u×v=−(v×u)（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-cx-area",
+     "text": "外積的絕對值 |u×v| 剛好等於以 u、v 當兩邊所張出的平行四邊形面積，也等於 |u||v|sinθ（θ 為夾角）。因為三角形是平行四邊形的一半，所以以 u、v 當兩邊的三角形面積 ＝ |u×v|/2。例：u ＝ (3, 2)、v ＝ (1, 3)，u×v ＝ 7，平行四邊形面積 ＝ |7| ＝ 7，三角形面積 ＝ 7/2。",
+     "kind": "definition",
+     "source_refs": [
+      "外積與面積（高中數學 向量）"
+     ],
+     "verification_ref": "平行四邊形面積=|u×v|=|u||v|sinθ；三角形=|u×v|/2；(3,2)(1,3)→7、7/2（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-cx-parallel",
+     "text": "平行判定：u×v ＝ 0 ⟺ u、v 互相平行（同向、反向或共線）。因為 u×v ＝ |u||v|sinθ，當兩向量平行時夾角是 0° 或 180°、sinθ ＝ 0，所以外積為 0（它們張不出面積）。例：(2, 4)×(1, 2) ＝ 2×2 − 4×1 ＝ 4 − 4 ＝ 0，所以 (2, 4) 和 (1, 2) 平行（確實 (2, 4) ＝ 2×(1, 2)）。",
+     "kind": "definition",
+     "source_refs": [
+      "外積與平行判定（高中數學 向量）"
+     ],
+     "verification_ref": "u×v=0 ⟺ u∥v；(2,4)×(1,2)=0（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.vector.cross-product"
+     ],
+     "body": "這一單元學平面向量的「外積」。下面先講定義（交叉相乘相減 u₁v₂ − u₂v₁、結果是一個數、別和內積搞混）；再講它最有用的幾何意義——算平行四邊形和三角形面積；最後講平行判定（外積 ＝ 0 ⟺ 平行）；用 u ＝ (3, 2)、v ＝ (1, 3) 示範，最後練習。（接在『向量的內積』之後。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.vector.cross-product"
+     ],
+     "body": "① 定義：外積 u×v ＝ u₁v₂ − u₂v₁（交叉相乘再相減、結果是一個帶正負號的數）；交換順序變號 u×v ＝ −(v×u)。例 (3, 2)×(1, 3) ＝ 3×3 − 2×1 ＝ 7（別和內積 3×1 ＋ 2×3 ＝ 9 搞混）。② 面積：|u×v| ＝ u、v 張的平行四邊形面積（＝|u||v|sinθ），三角形面積 ＝ |u×v|/2；例面積 ＝ 7、三角形 ＝ 7/2。③ 平行判定：u×v ＝ 0 ⟺ u、v 平行；例 (2, 4)×(1, 2) ＝ 0。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.vector.cross-product"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>外積與面積：u×v ＝ 7 ＝ 平行四邊形面積（u＝(3,2)、v＝(1,3)）</text><line x1='50' y1='135' x2='300' y2='135' stroke='#99a7b5' stroke-width='1'/><line x1='90' y1='24' x2='90' y2='156' stroke='#99a7b5' stroke-width='1'/><polygon points='90,135 156,91 178,25 112,69' fill='#e6edf3' stroke='none'/><line x1='156' y1='91' x2='178' y2='25' stroke='#c9d3dd' stroke-width='1' stroke-dasharray='3 2'/><line x1='112' y1='69' x2='178' y2='25' stroke='#c9d3dd' stroke-width='1' stroke-dasharray='3 2'/><line x1='90' y1='135' x2='156' y2='91' stroke='#c2535d' stroke-width='2.2'/><path d='M156,91 L152.5,97 M156,91 L149.1,91.9' fill='none' stroke='#c2535d' stroke-width='2.2'/><line x1='90' y1='135' x2='112' y2='69' stroke='#2f6f54' stroke-width='2.2'/><path d='M112,69 L112.9,75.9 M112,69 L107.1,74' fill='none' stroke='#2f6f54' stroke-width='2.2'/><circle cx='90' cy='135' r='2.5' fill='#33475b'/><text x='82' y='147' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>O</text><text x='160' y='100' font-family='sans-serif' font-size='9.5' fill='#c2535d' text-anchor='start'>u ＝ (3, 2)</text><text x='64' y='64' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='start'>v ＝ (1, 3)</text><text x='134' y='83' font-family='sans-serif' font-size='9.5' fill='#33475b' text-anchor='middle'>面積 ＝ 7</text></svg>",
+      "alt": "標題「外積與面積：u×v ＝ 7 ＝ 平行四邊形面積（u＝(3,2)、v＝(1,3)）」。一個坐標平面（灰色坐標軸、原點 O）。從原點畫出兩個箭頭：紅色的 u ＝ (3, 2) 指向右上，綠色的 v ＝ (1, 3) 指向上方偏右。兩條灰色虛線把 u、v 補成一個平行四邊形，內部用淺藍色填滿，中間標「面積 ＝ 7」。紅色箭頭旁標「u ＝ (3, 2)」，綠色箭頭旁標「v ＝ (1, 3)」。",
+      "caption": "以 u ＝ (3, 2)、v ＝ (1, 3) 示範：外積 u×v ＝ 3×3 − 2×1 ＝ 7，它的絕對值就是 u、v 張出的平行四邊形面積 ＝ 7（淺藍區域）。這個三角形（平行四邊形的一半）面積則是 7/2。坐標用相同比例，才看得出面積。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.vector.cross-product"
+     ],
+     "body": "最後練外積。重點：外積 u×v ＝ u₁v₂ − u₂v₁（交叉相乘相減、是一個數）；|u×v| ＝ 平行四邊形面積、三角形面積 ＝ |u×v|/2；u×v ＝ 0 ⟺ 平行。小提醒：(1) 外積是「交叉相乘相減」（u₁v₂ − u₂v₁），不要和內積的「相乘相加」（u₁v₁ ＋ u₂v₂）搞混；(2) 交換順序會變號（u×v ＝ −(v×u)），但算面積取絕對值就不受影響。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "向量 (3, 2) 和 (1, 3) 的外積 (3, 2)×(1, 3) 是多少？",
+     "answer": "7",
+     "kp_ids": [
+      "math.t_sub.vector.cross-product"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.vector.cross-product"
+     ],
+     "options": [
+      "7",
+      "9",
+      "11",
+      "−7"
+     ],
+     "distractor_rationales": {
+      "9": "這是「內積」3×1 ＋ 2×3 ＝ 9（相乘相加）：外積是「交叉相乘相減」3×3 − 2×1 ＝ 7。",
+      "11": "交叉相乘後相加了（3×3 ＋ 2×1）：外積是相「減」，得 9 − 2 ＝ 7。",
+      "−7": "這是順序顛倒的 (1, 3)×(3, 2) ＝ 1×2 − 3×3 ＝ −7：題目是 (3, 2)×(1, 3) ＝ 7（外積交換會變號）。"
+     },
+     "answer_evidence": [
+      "c-cx-def"
+     ],
+     "feedback": "(3, 2)×(1, 3) ＝ 3×3 − 2×1 ＝ 9 − 2 ＝ 7（交叉相乘再相減）。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "以 u ＝ (3, 2)、v ＝ (1, 3) 為兩邊張出的平行四邊形面積是多少？",
+     "answer": "7",
+     "kp_ids": [
+      "math.t_sub.vector.cross-product"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.vector.cross-product"
+     ],
+     "options": [
+      "7",
+      "3.5",
+      "9",
+      "14"
+     ],
+     "distractor_rationales": {
+      "3.5": "3.5 ＝ 7/2 是「三角形」面積（平行四邊形的一半）：平行四邊形面積是 |u×v| ＝ 7。",
+      "9": "9 是「內積」不是面積：平行四邊形面積是外積的絕對值 |u×v| ＝ 7。",
+      "14": "多乘了 2：平行四邊形面積就是 |u×v| ＝ 7，不用再乘 2（乘 2 反而和三角形搞反了）。"
+     },
+     "answer_evidence": [
+      "c-cx-area"
+     ],
+     "feedback": "平行四邊形面積 ＝ |u×v| ＝ |7| ＝ 7（三角形則是 7/2）。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "兩個向量的外積等於 0，代表什麼？",
+     "answer": "兩向量互相平行（共線）",
+     "kp_ids": [
+      "math.t_sub.vector.cross-product"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.vector.cross-product"
+     ],
+     "options": [
+      "兩向量互相平行（共線）",
+      "兩向量互相垂直",
+      "兩向量長度相等",
+      "兩向量完全相等"
+     ],
+     "distractor_rationales": {
+      "兩向量互相垂直": "垂直是「內積」為 0；外積為 0 代表平行（因為 u×v ＝ |u||v|sinθ，平行時 sinθ ＝ 0）。",
+      "兩向量長度相等": "長度和外積是否為 0 無關：外積為 0 看的是方向平行、張不出面積。",
+      "兩向量完全相等": "相等只是平行的特例；外積為 0 的意思是「平行」，不一定完全相等（例如 (1, 2) 和 (2, 4)）。"
+     },
+     "answer_evidence": [
+      "c-cx-parallel"
+     ],
+     "feedback": "u×v ＝ 0 ⟺ u、v 平行（sinθ ＝ 0、張不出面積）；垂直才是內積 ＝ 0。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "下列哪一組向量互相平行（外積為 0）？",
+     "answer": "(2, 4) 與 (1, 2)",
+     "kp_ids": [
+      "math.t_sub.vector.cross-product"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.vector.cross-product"
+     ],
+     "options": [
+      "(2, 4) 與 (1, 2)",
+      "(2, 4) 與 (4, 2)",
+      "(2, 4) 與 (1, 3)",
+      "(2, 4) 與 (2, 1)"
+     ],
+     "distractor_rationales": {
+      "(2, 4) 與 (4, 2)": "外積 (2, 4)×(4, 2) ＝ 2×2 − 4×4 ＝ 4 − 16 ＝ −12 ≠ 0，不平行。",
+      "(2, 4) 與 (1, 3)": "外積 (2, 4)×(1, 3) ＝ 2×3 − 4×1 ＝ 6 − 4 ＝ 2 ≠ 0，不平行。",
+      "(2, 4) 與 (2, 1)": "外積 (2, 4)×(2, 1) ＝ 2×1 − 4×2 ＝ 2 − 8 ＝ −6 ≠ 0，不平行。"
+     },
+     "answer_evidence": [
+      "c-cx-parallel"
+     ],
+     "feedback": "(2, 4)×(1, 2) ＝ 2×2 − 4×1 ＝ 0，所以平行（(2, 4) ＝ 2×(1, 2)）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（外積 u×v＝u₁v₂−u₂v₁＝交叉相乘相減、是一個帶正負號的數、u×v＝−(v×u)；別和內積 u₁v₁+u₂v₂ 相乘相加搞混；|u×v|＝平行四邊形面積＝|u||v|sinθ、三角形＝|u×v|/2；u×v＝0 ⟺ 平行；u＝(3,2)、v＝(1,3)：外積＝7、面積＝7、三角形＝7/2、內積＝9；(2,4)×(1,2)＝0 平行；兩鐵律＝外積交叉相乘相減別混內積、交換順序變號但面積取絕對值不受影響）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
