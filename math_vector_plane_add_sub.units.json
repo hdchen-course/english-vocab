@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 向量（vector）strand 單元。知識點 math.t_adv.vector.plane-add-sub（平面向量的加法與減法）。tier=t_adv（高中進階/學測-分科）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；只列實際 render 給 reader 的術語，不含只在 claim/_note 的詞——見 plane-definition R5 教訓）：向量 (vector)、三角形法則 (triangle law)、平行四邊形法則 (parallelogram law)、反向量 (opposite vector)。前置假設：已學平面向量的定義/相等/係數積（plane-definition）、會坐標分量。★scope（t_adv，接 plane-definition）：向量加法——幾何上「三角形法則」（把 v 的起點接到 u 的箭頭尖端，從 u 起點到 v 尖端即 u＋v）或「平行四邊形法則」（u、v 共起點作平行四邊形，對角線即 u＋v）；坐標下分量各自相加 (a,b)＋(c,d)＝(a＋c,b＋d)。向量減法——u−v＝u＋(−v)（加上 v 的反向量）；坐標下分量相減 (a,b)−(c,d)＝(a−c,b−d)。以 u＝(3,1)、v＝(1,2) 貫穿：u＋v＝(4,3)、u−v＝(2,−1)。只到平面向量加減與坐標運算；不含線性組合展開（下一單元 linear-combination）、不含內積。prereq＝plane-definition。repro（tools/verify/math_checks7.py::vector.plane-add-sub，本 session 新增並跑過 PASS）：(3,1)+(1,2)=(4,3)、(3,1)−(1,2)=(2,−1)、|u+v|=|(4,3)|=5、u−v=u+(−v)、2u+v=(7,4)（.venv sympy Matrix 驗）；practice 另用 2u+v=(7,4) 以 sympy 另核。★自檢（math-unit defect-classes #1–#64）：figure＝坐標平面上 u=(3,1) 紅箭頭、v=(1,2) 綠箭頭、u+v=(4,3) 深色對角線，兩灰虛線補成平行四邊形——★等軸比例（#62，顯示平行四邊形/對角線幾何關係，x、y 同 20px/單位）、箭頭端點方向正確（#43）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾圖實際畫出的「加法：平行四邊形法則」（#4/#46，減法由 teach 文字教、不配圖，避 plane-definition R1 的 title-promise 缺陷）；practice 四答案＝{(a＋c,b＋d)(Q1 加法坐標規則),(2,−1)(Q2 減法),(4,3)(Q3 u+v hero retrieval),(7,4)(Q4 2u+v transfer)} 與 teach 關鍵值無 #10（Q3 hero、options 洗牌無位置 tell）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算：如把加做成減、只加一個分量、v−u 反過來、漏乘係數、整體乘係數）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_vector_plane_add_sub.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.vector.plane-add-sub",
+   "title_zh": "平面向量的加法與減法",
+   "can_do": "我知道『向量 (vector)』可以相加、相減。加法在幾何上有兩種看法：『三角形法則 (triangle law)』是把 v 的起點接到 u 的箭頭尖端，從 u 的起點連到 v 的尖端就是 u ＋ v；『平行四邊形法則 (parallelogram law)』是把 u、v 從同一個起點畫出、作成平行四邊形，對角線就是 u ＋ v。用坐標算最直接：(a, b) ＋ (c, d) ＝ (a ＋ c, b ＋ d)。減法 u − v ＝ u ＋ (−v)，也就是加上 v 的『反向量 (opposite vector)』；坐標上 (a, b) − (c, d) ＝ (a − c, b − d)。例：u ＝ (3, 1)、v ＝ (1, 2)，u ＋ v ＝ (4, 3)、u − v ＝ (2, −1)。",
+   "situation_group": "向量：平面向量入門",
+   "subject": "math",
+   "strand": "vector",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_adv.vector.plane-add-sub"
+   ],
+   "prerequisites": [
+    "math.t_adv.vector.plane-definition"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-vas-add",
+     "text": "向量加法有兩種幾何看法。三角形法則：把 v 平移、讓它的起點接在 u 的箭頭尖端，那麼從 u 的起點連到 v 的尖端這條新向量就是 u ＋ v（「頭接尾」）。平行四邊形法則：把 u 和 v 從同一個起點畫出，再補成一個平行四邊形，從共同起點拉出的那條對角線就是 u ＋ v。用坐標最簡單：(a, b) ＋ (c, d) ＝ (a ＋ c, b ＋ d)。例：(3, 1) ＋ (1, 2) ＝ (4, 3)。",
+     "kind": "definition",
+     "source_refs": [
+      "平面向量的加法（三角形法則、平行四邊形法則）（高中數學 向量）"
+     ],
+     "verification_ref": "(a,b)+(c,d)=(a+c,b+d)；(3,1)+(1,2)=(4,3)（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-vas-sub",
+     "text": "向量減法 u − v 定義成 u ＋ (−v)：先把 v 變成方向相反、長度相同的反向量 −v，再和 u 相加。用坐標看就是分量各自相減：(a, b) − (c, d) ＝ (a − c, b − d)。例：(3, 1) − (1, 2) ＝ (2, −1)。注意 u − v 和 v − u 方向相反（互為反向量）：v − u ＝ (−2, 1)。",
+     "kind": "definition",
+     "source_refs": [
+      "平面向量的減法（高中數學 向量）"
+     ],
+     "verification_ref": "(a,b)−(c,d)=(a−c,b−d)；(3,1)−(1,2)=(2,−1)；u−v=u+(−v)（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-vas-coord",
+     "text": "坐標運算的鐵律是「分量對分量」：x 分量和 x 分量加減、y 分量和 y 分量加減，彼此不混在一起。這也讓係數積和加法可以合用，例如 2u ＋ v：先把 u 每個分量乘 2 得 2u ＝ (6, 2)，再和 v ＝ (1, 2) 分量相加，得 (7, 4)。",
+     "kind": "definition",
+     "source_refs": [
+      "向量坐標運算（高中數學 向量）"
+     ],
+     "verification_ref": "分量對分量；2(3,1)+(1,2)=(7,4)（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.vector.plane-add-sub"
+     ],
+     "body": "這一單元學向量的加法與減法。下面先講加法（兩種幾何看法：三角形法則、平行四邊形法則；坐標下分量相加）；再講減法（u − v ＝ u ＋ (−v)、坐標下分量相減）；用 u ＝ (3, 1)、v ＝ (1, 2) 示範，最後練習。（接在『平面向量的定義、相等與係數積』之後。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.vector.plane-add-sub"
+     ],
+     "body": "① 加法：三角形法則 (triangle law) 是把 v 的起點接到 u 的尖端（頭接尾），從 u 起點到 v 尖端就是 u ＋ v；平行四邊形法則 (parallelogram law) 是把 u、v 從同一起點畫出、補成平行四邊形，對角線就是 u ＋ v。坐標：(a, b) ＋ (c, d) ＝ (a ＋ c, b ＋ d)，例 (3, 1) ＋ (1, 2) ＝ (4, 3)。② 減法：u − v ＝ u ＋ (−v)（加上 v 的反向量）；坐標 (a, b) − (c, d) ＝ (a − c, b − d)，例 (3, 1) − (1, 2) ＝ (2, −1)。看下面的圖（平行四邊形法則），最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.vector.plane-add-sub"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>平面向量加法：平行四邊形法則（u＋v＝(4,3)）</text><line x1='40' y1='130' x2='300' y2='130' stroke='#99a7b5' stroke-width='1'/><line x1='70' y1='28' x2='70' y2='160' stroke='#99a7b5' stroke-width='1'/><line x1='130' y1='110' x2='150' y2='70' stroke='#c9d3dd' stroke-width='1' stroke-dasharray='3 2'/><line x1='90' y1='90' x2='150' y2='70' stroke='#c9d3dd' stroke-width='1' stroke-dasharray='3 2'/><line x1='70' y1='130' x2='130' y2='110' stroke='#c2535d' stroke-width='2'/><path d='M130,110 L125,114.9 M130,110 L123.1,109.1' fill='none' stroke='#c2535d' stroke-width='2'/><line x1='70' y1='130' x2='90' y2='90' stroke='#2f6f54' stroke-width='2'/><path d='M90,90 L89.9,97 M90,90 L84.4,94.3' fill='none' stroke='#2f6f54' stroke-width='2'/><line x1='70' y1='130' x2='150' y2='70' stroke='#33475b' stroke-width='2.4'/><path d='M150,70 L146.8,76.2 M150,70 L143.1,71.3' fill='none' stroke='#33475b' stroke-width='2.4'/><circle cx='70' cy='130' r='2.5' fill='#33475b'/><text x='60' y='143' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>O</text><text x='133' y='123' font-family='sans-serif' font-size='9.5' fill='#c2535d' text-anchor='start'>u ＝ (3, 1)</text><text x='20' y='92' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='start'>v ＝ (1, 2)</text><text x='156' y='66' font-family='sans-serif' font-size='9.5' fill='#33475b' text-anchor='start'>u＋v ＝ (4, 3)</text></svg>",
+      "alt": "標題「平面向量加法：平行四邊形法則（u＋v＝(4,3)）」。一個坐標平面（水平和垂直的灰色坐標軸、原點 O）。從原點 O 畫出三個箭頭：紅色的是 u ＝ (3, 1)（指向右方偏上），綠色的是 v ＝ (1, 2)（指向上方偏右），深色較粗的對角線是 u＋v ＝ (4, 3)。兩條灰色虛線把 u、v 補成一個平行四邊形（u 的尖端連到對角線尖端、平行於 v，v 的尖端連到對角線尖端、平行於 u），顯示 u＋v 就是這個平行四邊形從原點拉出的對角線。原點標「O」，紅色箭頭旁標「u ＝ (3, 1)」，綠色箭頭旁標「v ＝ (1, 2)」，對角線旁標「u＋v ＝ (4, 3)」。",
+      "caption": "以 u ＝ (3, 1)、v ＝ (1, 2) 示範平行四邊形法則：把 u、v 從原點畫出、補成平行四邊形，對角線就是 u ＋ v ＝ (4, 3)。坐標上直接分量相加：(3 ＋ 1, 1 ＋ 2) ＝ (4, 3)。坐標用相同比例。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.vector.plane-add-sub"
+     ],
+     "body": "最後練向量的加法與減法。重點：坐標下分量各自加／減，(a, b) ± (c, d) ＝ (a ± c, b ± d)；加法幾何上＝三角形法則（頭接尾）或平行四邊形法則（共起點對角線）；減法 u − v ＝ u ＋ (−v)。小提醒：(1) u − v 和 v − u 方向相反（互為反向量），別弄反誰減誰；(2) 加減一定是「分量對分量」（x 配 x、y 配 y），不要把 x 和 y 混在一起。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "坐標下兩個向量相加，(a, b) ＋ (c, d) 等於什麼？",
+     "answer": "(a ＋ c, b ＋ d)",
+     "kp_ids": [
+      "math.t_adv.vector.plane-add-sub"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.vector.plane-add-sub"
+     ],
+     "options": [
+      "(a ＋ c, b ＋ d)",
+      "(a − c, b − d)",
+      "(a ＋ d, b ＋ c)",
+      "(a × c, b × d)"
+     ],
+     "distractor_rationales": {
+      "(a − c, b − d)": "這是「相減」的結果：題目問相加，分量要各自相加得 (a ＋ c, b ＋ d)。",
+      "(a ＋ d, b ＋ c)": "把分量配錯了（x 配到 y）：加法是 x 配 x、y 配 y，得 (a ＋ c, b ＋ d)。",
+      "(a × c, b × d)": "向量加法不是把分量相乘：是分量各自「相加」，得 (a ＋ c, b ＋ d)。"
+     },
+     "answer_evidence": [
+      "c-vas-add"
+     ],
+     "feedback": "向量加法＝分量對分量相加：(a, b) ＋ (c, d) ＝ (a ＋ c, b ＋ d)。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "u ＝ (3, 1)、v ＝ (1, 2) 時，u − v 等於什麼？",
+     "answer": "(2, −1)",
+     "kp_ids": [
+      "math.t_adv.vector.plane-add-sub"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.vector.plane-add-sub"
+     ],
+     "options": [
+      "(2, −1)",
+      "(4, 3)",
+      "(−2, 1)",
+      "(2, 1)"
+     ],
+     "distractor_rationales": {
+      "(4, 3)": "這是 u ＋ v（做成了加法）：u − v 要分量相減，得 (3 − 1, 1 − 2) ＝ (2, −1)。",
+      "(−2, 1)": "這是 v − u（誰減誰反了）：題目是 u − v ＝ (3 − 1, 1 − 2) ＝ (2, −1)，和 v − u 方向相反。",
+      "(2, 1)": "x 減對了（3 − 1 ＝ 2）、y 忘了減（保留 1）：y 也要相減，1 − 2 ＝ −1，得 (2, −1)。"
+     },
+     "answer_evidence": [
+      "c-vas-sub"
+     ],
+     "feedback": "u − v ＝ (3 − 1, 1 − 2) ＝ (2, −1)。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "u ＝ (3, 1)、v ＝ (1, 2) 時，u ＋ v 等於什麼？",
+     "answer": "(4, 3)",
+     "kp_ids": [
+      "math.t_adv.vector.plane-add-sub"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.vector.plane-add-sub"
+     ],
+     "options": [
+      "(4, 3)",
+      "(2, −1)",
+      "(3, 3)",
+      "(4, 1)"
+     ],
+     "distractor_rationales": {
+      "(2, −1)": "這是 u − v（做成了減法）：u ＋ v 要分量相加，得 (3 ＋ 1, 1 ＋ 2) ＝ (4, 3)。",
+      "(3, 3)": "x 忘了加（保留 3）、只加了 y：x 也要相加，3 ＋ 1 ＝ 4，得 (4, 3)。",
+      "(4, 1)": "y 忘了加（保留 1）、只加了 x：y 也要相加，1 ＋ 2 ＝ 3，得 (4, 3)。"
+     },
+     "answer_evidence": [
+      "c-vas-add"
+     ],
+     "feedback": "u ＋ v ＝ (3 ＋ 1, 1 ＋ 2) ＝ (4, 3)（平行四邊形的對角線）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "u ＝ (3, 1)、v ＝ (1, 2) 時，2u ＋ v 等於什麼？",
+     "answer": "(7, 4)",
+     "kp_ids": [
+      "math.t_adv.vector.plane-add-sub"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.vector.plane-add-sub"
+     ],
+     "options": [
+      "(7, 4)",
+      "(4, 3)",
+      "(6, 2)",
+      "(8, 6)"
+     ],
+     "distractor_rationales": {
+      "(4, 3)": "只算了 u ＋ v，忘了 u 要先乘 2：2u ＝ (6, 2)，再加 v 得 (7, 4)。",
+      "(6, 2)": "只算了 2u ＝ (6, 2)，忘了再加 v：加上 v ＝ (1, 2) 得 (7, 4)。",
+      "(8, 6)": "把整個 (u ＋ v) 乘 2 了（2 × (4, 3)）：題目只有 u 乘 2，得 2u ＋ v ＝ (7, 4)。"
+     },
+     "answer_evidence": [
+      "c-vas-coord"
+     ],
+     "feedback": "2u ＝ (6, 2)，再加 v ＝ (1, 2)：2u ＋ v ＝ (7, 4)。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（向量加法＝分量相加 (a,b)＋(c,d)＝(a＋c,b＋d)、幾何上三角形法則「頭接尾」或平行四邊形法則「共起點對角線」；減法 u−v＝u＋(−v)、分量相減 (a,b)−(c,d)＝(a−c,b−d)；u＝(3,1)、v＝(1,2)：u＋v＝(4,3)、u−v＝(2,−1)、2u＋v＝(7,4)；兩鐵律＝分量對分量（x 配 x、y 配 y）、u−v 與 v−u 方向相反別弄反）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

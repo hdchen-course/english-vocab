@@ -110,6 +110,14 @@ def c_vec_plane_def():
     assert list((-v)) == [-3, -4]                     # −v=(−3,−4) 等長反向
     assert sp.Matrix([3, 4]) == sp.Matrix([3, 4])     # 分量相同即相等
     return _ok("vector.plane-definition", "|(3,4)|=5；2(3,4)=(6,8)；−(3,4)=(−3,−4)；分量相同即相等")
+def c_vec_plane_addsub():
+    u = sp.Matrix([3, 1]); v = sp.Matrix([1, 2])
+    assert list(u + v) == [4, 3]                      # 加法分量相加 (3,1)+(1,2)=(4,3)
+    assert list(u - v) == [2, -1]                     # 減法分量相減 (3,1)−(1,2)=(2,−1)
+    assert (u + v).norm() == 5                         # |u+v|=|(4,3)|=5
+    assert list(u - v) == list(u + (-v))              # u−v = u+(−v)（三角形法則）
+    assert list(2*u + v) == [7, 4]                     # 線性組合 2u+v=(7,4)
+    return _ok("vector.plane-add-sub", "(3,1)+(1,2)=(4,3)；(3,1)−(1,2)=(2,−1)；|u+v|=5；u−v=u+(−v)")
 
 # ---------- stats（18）----------
 D = [2, 4, 4, 4, 5, 5, 7, 9]      # 共用樣本（std 範例，μ=5,σ=2）
@@ -245,6 +253,7 @@ CHECKS = {s: fn for s, fn in {
     "calc.integration-by-parts": c_integration_parts,
     "calc.exp-log-calculus": c_exp_log_calc, "calc.trig-calculus": c_trig_calc,
     "vector.plane-definition": c_vec_plane_def,
+    "vector.plane-add-sub": c_vec_plane_addsub,
     "stats.collect-organize": s_collect, "stats.bar-line-chart": s_bar_line,
     "stats.pie-chart": s_pie, "stats.table-read": s_table, "stats.mean": s_mean,
     "stats.frequency-table": s_freq_table, "stats.cumulative-relative": s_cumulative,
