@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 微積分（calc）strand t_sub 單元。知識點 math.t_sub.calc.chain-rule（鏈鎖法則 合成函數微分）。tier=t_sub（高中分科/選修深階，exam 分科-數甲）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：鏈鎖法則 (chain rule)、合成函數 (composite function)、導數 (derivative)。★scope（t_sub）：鏈鎖法則——合成函數 f(g(x)) 的微分 d/dx f(g(x))＝f′(g(x))·g′(x)（先微分外層、內層當整體代入，再乘內層的導數）；最常用的冪的合成 d((g(x))ⁿ)＝n·(g(x))ⁿ⁻¹·g′(x)。只到冪的合成＋多項式內層（prereq 只教過冪/和差/積/商，sin/cos 的導數屬後續 trig-calculus 單元，故本單元一律不用三角，避免斷層）；不含反函數微分、不含隱函數、不含對數微分法。prereq＝differentiation-rules。repro（tools/verify/math_checks7.py::calc.chain-rule）：d/dx sin(x²)=2x·cos(x²)（.venv 已核，僅作 KP 層驗證不入教材）；教材用之多項式合成例 d((x²+1)³)=6x(x²+1)²、d((3x+1)²)=6(3x+1)、d((x²+1)⁴)=8x(x²+1)³、d((2x+1)³)=6(2x+1)² 皆以 .venv sympy expand/factor 另核。★自檢（math-unit defect-classes #1–#59）：figure＝鏈鎖法則 worked-example SVG（標題＋d/dx (x²＋1)³＋外層盒 3(x²＋1)²＋內層盒 2x＋× 號＋結果 ＝6x(x²＋1)²），alt 與 SVG text 逐字一致（#33）、標題『鏈鎖法則：先微分外層、再乘內層的導數』寫進 alt 開頭；teach 例用 (x²＋1)³→6x(x²＋1)²，practice 四答案＝{f′(g(x))·g′(x)(Q1 概念),6(3x＋1)(Q2),8x(x²＋1)³(Q3),6(2x＋1)²(Q4)} 與 teach 答案值 6x(x²＋1)² 皆相異避#10；practice：Q1 公式(選項式)、Q2 冪合成線性內層(d((3x+1)²)=6(3x+1),選項式)、Q3 冪合成二次內層(d((x²+1)⁴)=8x(x²+1)³,選項式)、Q4 診斷漏乘內層導數(d((2x+1)³)=6(2x+1)²,選項式)；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53，如漏乘內層導數/內層導數算錯/次方沒減一/外層內層相加而非相乘/漏代入內層）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_calc_chain_rule.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.calc.chain-rule",
+   "title_zh": "鏈鎖法則（合成函數的微分）",
+   "can_do": "我知道『合成函數 (composite function)』就是一個函數套在另一個函數外面，像 (x² ＋ 1)³ 是外層的三次方套住內層的 x² ＋ 1。我會用『鏈鎖法則 (chain rule)』求它的『導數 (derivative)』：d/dx f(g(x)) ＝ f′(g(x))·g′(x)——先把外層微分（內層先當成一個整體、不動），再乘上內層自己的導數。最常用的是冪的合成：d((g(x))ⁿ) ＝ n·(g(x))ⁿ⁻¹·g′(x)。我會把它套用在內層是多項式的題目上。",
+   "situation_group": "微積分：鏈鎖法則",
+   "subject": "math",
+   "strand": "calc",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.calc.chain-rule"
+   ],
+   "prerequisites": [
+    "math.t_sub.calc.differentiation-rules"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-cr-composite",
+     "text": "『合成函數』是一個函數套在另一個函數外面：寫成 f(g(x))，其中 g 是內層（先作用在 x 上）、f 是外層（再作用在 g(x) 上）。例如 (x² ＋ 1)³ 的內層是 g(x) ＝ x² ＋ 1、外層是「把東西三次方」f(u) ＝ u³，合起來就是 f(g(x)) ＝ (x² ＋ 1)³。",
+     "kind": "definition",
+     "source_refs": [
+      "合成函數的概念（高中數學 微積分）"
+     ],
+     "verification_ref": "合成函數 f(g(x)) 定義；(x²+1)³ 內層 x²+1、外層 u³（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-cr-chain",
+     "text": "『鏈鎖法則』：合成函數 f(g(x)) 的導數 ＝ 外層的導數（把內層整個代進去）再乘內層的導數——d/dx f(g(x)) ＝ f′(g(x))·g′(x)。直觀上就是「由外而內，一層一層微分，每一層的導數相乘」。關鍵是外層微分完之後，一定要再乘內層自己的導數，不能漏掉。",
+     "kind": "definition",
+     "source_refs": [
+      "鏈鎖法則（高中數學 微積分）"
+     ],
+     "verification_ref": "d/dx f(g(x))=f′(g(x))·g′(x)；d/dx sin(x²)=2x·cos(x²)（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-cr-power",
+     "text": "最常用的是冪的合成：d((g(x))ⁿ) ＝ n·(g(x))ⁿ⁻¹·g′(x)——先把外層的次方照冪函數公式微分（內層當整體不動），再乘內層的導數。例：d((x² ＋ 1)³)，外層先微分得 3(x² ＋ 1)²，再乘內層 x² ＋ 1 的導數 2x，所以 ＝ 3(x² ＋ 1)²·2x ＝ 6x(x² ＋ 1)²。",
+     "kind": "definition",
+     "source_refs": [
+      "冪的合成與鏈鎖法則（高中數學 微積分）"
+     ],
+     "verification_ref": "d((g)ⁿ)=n(g)ⁿ⁻¹g′；d((x²+1)³)=3(x²+1)²·2x=6x(x²+1)²（.venv sympy expand/factor 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.chain-rule"
+     ],
+     "body": "這一單元學『鏈鎖法則』，專門用來微分「一個函數套在另一個函數外面」的合成函數。下面先講什麼是合成函數（外層套內層）；再講鏈鎖法則怎麼做——先微分外層、再乘內層的導數；接著用最常用的「冪的合成」示範一個完整例子；最後練習。（本單元接在『微分公式』之後，會用到冪函數的微分。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.chain-rule"
+     ],
+     "body": "① 合成函數：像 (x² ＋ 1)³，內層是 x² ＋ 1、外層是「把它三次方」，一個套著一個。② 鏈鎖法則：d/dx f(g(x)) ＝ f′(g(x))·g′(x)——先微分外層（內層先當成一個整體、不動），再乘內層自己的導數，「由外而內、每層導數相乘」。③ 冪的合成（最常用）：d((g(x))ⁿ) ＝ n·(g(x))ⁿ⁻¹·g′(x)。關鍵提醒：外層微分完一定要再乘內層的導數，漏掉就錯。看下面的例子，把 (x² ＋ 1)³ 一步一步拆開。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.calc.chain-rule"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>鏈鎖法則：先微分外層、再乘內層的導數</text><text x='180' y='36' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle' font-weight='bold'>d/dx (x²＋1)³</text><rect x='24' y='50' width='150' height='70' rx='4' fill='#eef4ff' stroke='#99a7b5' stroke-width='1'/><rect x='210' y='50' width='126' height='70' rx='4' fill='#eef4ff' stroke='#99a7b5' stroke-width='1'/><text x='192' y='90' font-family='sans-serif' font-size='16' fill='#33475b' text-anchor='middle' font-weight='bold'>×</text><text x='99' y='68' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='middle'>外層：把 ( )³ 微分</text><text x='99' y='92' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>3(x²＋1)²</text><text x='99' y='110' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='middle'>（內層當整體、先不動）</text><text x='273' y='68' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='middle'>內層：把 x²＋1 微分</text><text x='273' y='92' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>2x</text><text x='180' y='142' font-family='sans-serif' font-size='12' fill='#c2535d' text-anchor='middle' font-weight='bold'>＝ 6x(x²＋1)²</text><text x='180' y='160' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>兩層的導數相乘</text></svg>",
+      "alt": "標題「鏈鎖法則：先微分外層、再乘內層的導數」。示範 d/dx (x²＋1)³。左邊盒子「外層：把 ( )³ 微分」得「3(x²＋1)²」，下註「（內層當整體、先不動）」；中間一個「×」；右邊盒子「內層：把 x²＋1 微分」得「2x」。下方紅字結果「＝ 6x(x²＋1)²」，再註「兩層的導數相乘」。",
+      "caption": "鏈鎖法則示範：要微分 (x²＋1)³，先把外層的三次方微分、內層當整體不動，得 3(x²＋1)²；再乘內層 x²＋1 的導數 2x；兩層導數相乘得 3(x²＋1)²·2x ＝ 6x(x²＋1)²。外層微分完一定要再乘內層導數。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.chain-rule"
+     ],
+     "body": "最後練鏈鎖法則。重點：合成函數 f(g(x)) 的導數 ＝ f′(g(x))·g′(x)，先微分外層（內層當整體代入）、再乘內層的導數；冪的合成 d((g(x))ⁿ) ＝ n·(g(x))ⁿ⁻¹·g′(x)。小提醒：外層微分完一定要再乘「內層自己的導數」，最常見的錯就是漏掉這一步（例如只寫 3(x²＋1)² 卻忘了乘 2x）。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "鏈鎖法則說：合成函數 f(g(x)) 的導數 d/dx f(g(x)) 等於下面哪一個？",
+     "answer": "f′(g(x))·g′(x)",
+     "kp_ids": [
+      "math.t_sub.calc.chain-rule"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.chain-rule"
+     ],
+     "options": [
+      "f′(g(x))·g′(x)",
+      "f′(x)·g′(x)",
+      "f′(g(x))",
+      "f′(g(x)) ＋ g′(x)"
+     ],
+     "distractor_rationales": {
+      "f′(x)·g′(x)": "外層微分後要把「內層 g(x)」整個代進去，不是對 x 微分；正確是 f′(g(x))·g′(x)。",
+      "f′(g(x))": "只微分了外層、漏乘內層的導數 g′(x)；鏈鎖法則一定要再乘內層導數，f′(g(x))·g′(x)。",
+      "f′(g(x)) ＋ g′(x)": "兩層是相「乘」不是相加；鏈鎖法則是 f′(g(x))·g′(x)。"
+     },
+     "answer_evidence": [
+      "c-cr-composite",
+      "c-cr-chain"
+     ],
+     "feedback": "鏈鎖法則：d/dx f(g(x)) ＝ f′(g(x))·g′(x)——先微分外層（內層整個代入），再乘內層的導數。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用鏈鎖法則求 d/dx (3x ＋ 1)²。",
+     "answer": "6(3x ＋ 1)",
+     "kp_ids": [
+      "math.t_sub.calc.chain-rule"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.chain-rule"
+     ],
+     "options": [
+      "6(3x ＋ 1)",
+      "2(3x ＋ 1)",
+      "3(3x ＋ 1)",
+      "2(3x ＋ 1)²"
+     ],
+     "distractor_rationales": {
+      "2(3x ＋ 1)": "只微分了外層得 2(3x ＋ 1)，漏乘內層 3x ＋ 1 的導數 3；要再乘 3，得 6(3x ＋ 1)。",
+      "3(3x ＋ 1)": "只乘了內層的導數 3、卻漏掉外層次方該乘下來的 2；外層 2(3x ＋ 1) 再乘內層導數 3，得 6(3x ＋ 1)。",
+      "2(3x ＋ 1)²": "外層次方沒有減一（還留著 2 次方），且漏乘內層導數；正確是 2(3x ＋ 1)¹·3 ＝ 6(3x ＋ 1)。"
+     },
+     "answer_evidence": [
+      "c-cr-power"
+     ],
+     "feedback": "外層：d((　)²) 得 2(3x ＋ 1)；再乘內層 3x ＋ 1 的導數 3。2(3x ＋ 1)·3 ＝ 6(3x ＋ 1)。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用鏈鎖法則求 d/dx (x² ＋ 1)⁴。",
+     "answer": "8x(x² ＋ 1)³",
+     "kp_ids": [
+      "math.t_sub.calc.chain-rule"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.chain-rule"
+     ],
+     "options": [
+      "8x(x² ＋ 1)³",
+      "4(x² ＋ 1)³",
+      "4(x² ＋ 1)³·2",
+      "8x(x² ＋ 1)⁴"
+     ],
+     "distractor_rationales": {
+      "4(x² ＋ 1)³": "只微分了外層得 4(x² ＋ 1)³，漏乘內層 x² ＋ 1 的導數 2x；要再乘 2x，得 8x(x² ＋ 1)³。",
+      "4(x² ＋ 1)³·2": "內層 x² ＋ 1 的導數是 2x、不是 2；乘對變數後是 4(x² ＋ 1)³·2x ＝ 8x(x² ＋ 1)³。",
+      "8x(x² ＋ 1)⁴": "外層次方要「減一」變 3 次方，這裡還留著 4 次方；正確是 8x(x² ＋ 1)³。"
+     },
+     "answer_evidence": [
+      "c-cr-power"
+     ],
+     "feedback": "外層：d((　)⁴) 得 4(x² ＋ 1)³；再乘內層 x² ＋ 1 的導數 2x。4(x² ＋ 1)³·2x ＝ 8x(x² ＋ 1)³。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "求 d/dx (2x ＋ 1)³。有人先寫出外層 3(2x ＋ 1)²，接下來正確的下一步是什麼？",
+     "answer": "再乘內層 2x ＋ 1 的導數 2，得 6(2x ＋ 1)²",
+     "kp_ids": [
+      "math.t_sub.calc.chain-rule"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.chain-rule"
+     ],
+     "options": [
+      "再乘內層 2x ＋ 1 的導數 2，得 6(2x ＋ 1)²",
+      "到 3(2x ＋ 1)² 就結束了，不用再乘",
+      "再乘內層 2x ＋ 1 本身，得 3(2x ＋ 1)³",
+      "再乘內層的導數 x，得 3x(2x ＋ 1)²"
+     ],
+     "distractor_rationales": {
+      "到 3(2x ＋ 1)² 就結束了，不用再乘": "鏈鎖法則外層微分後一定要再乘內層的導數，漏掉就錯；要再乘 2，得 6(2x ＋ 1)²。",
+      "再乘內層 2x ＋ 1 本身，得 3(2x ＋ 1)³": "要乘的是內層的「導數」，不是內層本身；內層 2x ＋ 1 的導數是 2，得 6(2x ＋ 1)²。",
+      "再乘內層的導數 x，得 3x(2x ＋ 1)²": "內層 2x ＋ 1 的導數是 2、不是 x；再乘 2 得 6(2x ＋ 1)²。"
+     },
+     "answer_evidence": [
+      "c-cr-power"
+     ],
+     "feedback": "外層微分得 3(2x ＋ 1)² 後，要再乘內層 2x ＋ 1 的導數 2：3(2x ＋ 1)²·2 ＝ 6(2x ＋ 1)²。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（合成函數＝外層套內層；鏈鎖法則 d/dx f(g(x))=f′(g(x))·g′(x)，先微分外層、內層當整體代入，再乘內層導數；冪的合成 n·(g)ⁿ⁻¹·g′；最常見錯＝外層微分完漏乘內層導數）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
