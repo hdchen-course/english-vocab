@@ -207,6 +207,15 @@ def c_vec_geometry_apply():
     assert list((P + Q) / 2) == [3, 0]                 # 中點 M=(A+B)/2=(3,0)
     assert list((1 * P + 2 * Q) / 3) == [4, 0]         # 分點 分 PQ 為 2:1(從 P)=(A+2B)/3=(4,0)
     return _ok("vector.geometry-apply", "AB×AC=0⇒A,B,C 共線；重心 G=(3,2)；中點=(3,0)；分點 2:1=(4,0)")
+def c_conic_parabola():
+    # y²=4x：標準式 y²=4px，4p=4⇒p=1；焦點(p,0)=(1,0)、準線 x=−p=−1、頂點(0,0)
+    p = sp.Rational(4, 4); assert p == 1
+    F = sp.Point(1, 0)
+    P = sp.Point(1, 2)                                 # 2²=4·1 在拋物線上
+    assert P.distance(F) == 2 and abs(sp.Integer(1) - (-1)) == 2   # 到焦=到準線=2
+    Q = sp.Point(4, 4)                                 # 4²=16=4·4 在拋物線上
+    assert Q.distance(F) == 5 and abs(sp.Integer(4) - (-1)) == 5   # 到焦=到準線=5
+    return _ok("conic.parabola", "y²=4x：4p=4⇒p=1、焦點(1,0)、準線x=−1、頂點(0,0)；(1,2)到焦=到準線=2；(4,4)到焦=到準線=5")
 
 # ---------- stats（18）----------
 D = [2, 4, 4, 4, 5, 5, 7, 9]      # 共用樣本（std 範例，μ=5,σ=2）
@@ -352,6 +361,7 @@ CHECKS = {s: fn for s, fn in {
     "vector.space-dot-product": c_vec_space_dot_product,
     "vector.triangle-tetra-area": c_vec_triangle_tetra_area,
     "vector.geometry-apply": c_vec_geometry_apply,
+    "conic.parabola": c_conic_parabola,
     "stats.collect-organize": s_collect, "stats.bar-line-chart": s_bar_line,
     "stats.pie-chart": s_pie, "stats.table-read": s_table, "stats.mean": s_mean,
     "stats.frequency-table": s_freq_table, "stats.cumulative-relative": s_cumulative,

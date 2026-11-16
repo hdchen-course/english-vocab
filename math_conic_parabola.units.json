@@ -1,0 +1,209 @@
+{
+ "_note": "數學島 圓錐曲線（conic）strand 單元。知識點 math.t_sub.conic.parabola（拋物線的定義、標準式、焦點與準線）。tier=t_sub（高中分科/選修深階）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；只列實際 render 給 reader 的術語）：拋物線 (parabola)、焦點 (focus)、準線 (directrix)、頂點 (vertex)。前置假設：已學坐標平面、距離公式、二次函數圖形。★scope（t_sub，conic strand 入門）：拋物線定義＝平面上到一定點（焦點）與到一定直線（準線）距離相等的所有點；標準式（頂點在原點、開口向右）y²＝4px（p＞0）——焦點 (p,0)、準線 x＝−p、頂點 (0,0)、對稱軸 x 軸；由方程式比對 4p 求 p。以 y²＝4x 貫穿：4p＝4⇒p＝1、焦點 (1,0)、準線 x＝−1、頂點 (0,0)；線上點 (1,2) 到焦點＝到準線＝2；(4,4) 到焦點＝到準線＝5。只到開口向右的標準式 y²＝4px 與焦點/準線/頂點/定義等距；不含開口上下左 (x²=4py 等) 的完整四式（提一句方向）、不含平移（下一單元 translation）、不含離心率。prereq＝（conic 入門，教學上接坐標幾何）。repro（tools/verify/math_checks7.py::conic.parabola，本 session 新增並跑過 PASS；binding 另有 math_checks6::conic.parabola）：y²=4x⇒p=1、焦點(1,0)、準線x=−1、頂點(0,0)、(1,2)與(4,4)到焦=到準線（.venv 驗）。★自檢（math-unit defect-classes #1–#64）：figure＝等軸坐標平面、拋物線 y²=4x 曲線（開口向右）、焦點 F(1,0) 紅點、準線 x=−1 虛線、線上點 P(1,2)、P 到 F 與 P 到準線兩段虛線等長——★等軸比例（#62，才看得出兩段等長）、曲線不溢出 viewBox（#43 幾何正確）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾圖畫的「到焦點=到準線（定義）」（#4/#46，標準式求 p 由 teach 文字教）；practice 四答案＝{(1,0)(Q1 焦點),x=−1(Q2 準線),到焦點距離=到準線距離(Q3 定義),(2,0)(Q4 y²=8x 焦點 transfer)}與 teach 關鍵值無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算：Q1 用4p當焦點/xy顛倒/用準線值；Q2 符號錯/用4p/軸搞錯；Q4 沒解p/p算錯/xy顛倒）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_conic_parabola.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.conic.parabola",
+   "title_zh": "拋物線的定義、標準式、焦點與準線",
+   "can_do": "我知道『拋物線 (parabola)』的定義：平面上到一個定點（『焦點 (focus)』）和到一條定直線（『準線 (directrix)』）距離「相等」的所有點。我知道頂點在原點、開口向右的標準式是 y² ＝ 4px（p ＞ 0）：『頂點 (vertex)』在 (0, 0)、焦點在 (p, 0)、準線是 x ＝ −p、對稱軸是 x 軸。我會從方程式比對 4p 求出 p，再寫出焦點和準線。例：y² ＝ 4x，4p ＝ 4 ⇒ p ＝ 1，焦點 (1, 0)、準線 x ＝ −1；線上的點 (1, 2) 到焦點和到準線都是 2。",
+   "situation_group": "圓錐曲線：拋物線",
+   "subject": "math",
+   "strand": "conic",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.conic.parabola"
+   ],
+   "prerequisites": [],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-pb-def",
+     "text": "拋物線的定義：在平面上，給一個定點（焦點）和一條定直線（準線），到這兩者「距離相等」的所有點，合起來就是一條拋物線。也就是說，拋物線上的每一個點 P，都滿足「P 到焦點的距離 ＝ P 到準線的距離」。這條性質是拋物線最核心的定義，之後的焦點、準線、反射性質都從它來。",
+     "kind": "definition",
+     "source_refs": [
+      "拋物線的定義（高中數學 圓錐曲線）"
+     ],
+     "verification_ref": "拋物線＝到焦點=到準線的點；y²=4x 上(1,2)到焦(1,0)=到準線x=−1=2（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-pb-standard",
+     "text": "頂點在原點、開口向右的拋物線，標準式是 y² ＝ 4px（p ＞ 0）。其中：頂點在 (0, 0)、焦點在 (p, 0)（在 x 軸正向、離頂點 p）、準線是鉛直線 x ＝ −p（在頂點另一側、離頂點也是 p）、對稱軸是 x 軸。式子裡 y 是平方、x 是一次，所以開口沿 x 軸方向；4p 前面是正的就開口向右。（開口向左、向上、向下的式子方向會不同，這一單元先學向右的 y² ＝ 4px。）",
+     "kind": "definition",
+     "source_refs": [
+      "拋物線標準式（高中數學 圓錐曲線）"
+     ],
+     "verification_ref": "y²=4px：焦點(p,0)、準線x=−p、頂點(0,0)（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-pb-find",
+     "text": "給一個 y² ＝ 4x 這種方程式，求焦點和準線的方法：把它對照標準式 y² ＝ 4px，看 4p 等於多少。例：y² ＝ 4x，4p ＝ 4，所以 p ＝ 1，焦點 (1, 0)、準線 x ＝ −1、頂點 (0, 0)。可以用定義驗證：線上的點 (1, 2)，到焦點 (1, 0) 的距離是 2，到準線 x ＝ −1 的距離也是 1 − (−1) ＝ 2，兩者相等。另一點 (4, 4)（也在線上，因為 4² ＝ 4×4），到焦點和到準線都是 5。",
+     "kind": "definition",
+     "source_refs": [
+      "拋物線焦點與準線（高中數學 圓錐曲線）"
+     ],
+     "verification_ref": "y²=4x⇒p=1、焦點(1,0)、準線x=−1；(1,2)等距2、(4,4)等距5（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.conic.parabola"
+     ],
+     "body": "這一單元學拋物線。先講定義（到焦點距離 ＝ 到準線距離）；再講頂點在原點、開口向右的標準式 y² ＝ 4px（焦點 (p, 0)、準線 x ＝ −p）；最後練習從方程式求焦點和準線，並用定義驗證。用 y² ＝ 4x 示範，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.conic.parabola"
+     ],
+     "body": "① 定義：拋物線 ＝ 到定點（焦點）和到定直線（準線）距離相等的所有點，也就是線上每點都滿足「到焦點 ＝ 到準線」。② 標準式（頂點原點、開口向右）：y² ＝ 4px（p ＞ 0）——頂點 (0, 0)、焦點 (p, 0)、準線 x ＝ −p、對稱軸 x 軸。③ 由方程式求焦點準線：對照 y² ＝ 4px 看 4p。例 y² ＝ 4x，4p ＝ 4 ⇒ p ＝ 1，焦點 (1, 0)、準線 x ＝ −1。用定義驗證：線上點 (1, 2) 到焦點 ＝ 2、到準線 x ＝ −1 ＝ 2，相等。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.conic.parabola"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>拋物線 y²＝4x：線上每點到焦點 ＝ 到準線（定義）</text><line x1='60' y1='90' x2='320' y2='90' stroke='#99a7b5' stroke-width='1'/><line x1='130' y1='26' x2='130' y2='158' stroke='#99a7b5' stroke-width='1'/><polyline points='194,154 166,138 146,122 134,106 130,90 134,74 146,58 166,42 194,26' fill='none' stroke='#33475b' stroke-width='2'/><line x1='114' y1='26' x2='114' y2='158' stroke='#c2535d' stroke-width='1.4' stroke-dasharray='5 3'/><line x1='146' y1='58' x2='146' y2='90' stroke='#6b7785' stroke-width='1' stroke-dasharray='3 2'/><line x1='146' y1='58' x2='114' y2='58' stroke='#6b7785' stroke-width='1' stroke-dasharray='3 2'/><circle cx='146' cy='90' r='3' fill='#c2535d'/><circle cx='130' cy='90' r='2.5' fill='#33475b'/><circle cx='146' cy='58' r='2.5' fill='#2f6f54'/><text x='150' y='100' font-family='sans-serif' font-size='9.5' fill='#c2535d' text-anchor='start'>F (1, 0)</text><text x='126' y='102' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='end'>O</text><text x='150' y='55' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='start'>P (1, 2)</text><text x='112' y='24' font-family='sans-serif' font-size='9' fill='#c2535d' text-anchor='end'>準線 x ＝ −1</text><text x='128' y='74' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='end'>2</text><text x='130' y='52' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>2</text><text x='300' y='86' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>x</text></svg>",
+      "alt": "標題「拋物線 y²＝4x：線上每點到焦點 ＝ 到準線（定義）」。一個等比例的坐標平面，灰色 x 軸（右端標「x」）與一條鉛直灰線（y 軸）。一條開口向右的深藍色拋物線，頂點在原點 O。x 軸正向上有一個紅點焦點標「F (1, 0)」，左側有一條紅色鉛直虛線標「準線 x ＝ −1」。拋物線上有一個綠點標「P (1, 2)」。從 P 畫兩條灰色虛線：一條往下到焦點所在高度、一條往左到準線，兩段都標「2」，表示到焦點的距離和到準線的距離相等。",
+      "caption": "以 y² ＝ 4x 示範：對照標準式 y² ＝ 4px 得 4p ＝ 4、p ＝ 1，所以焦點 F (1, 0)、準線 x ＝ −1、頂點 O (0, 0)。拋物線上的點 P (1, 2) 到焦點的距離是 2、到準線的距離也是 2——這正是拋物線的定義（到焦點 ＝ 到準線）。坐標用相同比例，才看得出兩段一樣長。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.conic.parabola"
+     ],
+     "body": "最後練拋物線。重點：定義 ＝ 到焦點距離 ＝ 到準線距離；標準式（開口向右）y² ＝ 4px，焦點 (p, 0)、準線 x ＝ −p、頂點 (0, 0)；求焦點準線先對照 4p 求 p。小提醒：(1) 是先求出 p 再寫焦點 (p, 0)，不要把方程式裡的 4p（例如 4）直接當成焦點坐標；(2) 準線在頂點的「另一側」，所以是 x ＝ −p（負號別漏）。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "拋物線 y² ＝ 4x 的焦點是哪一點？",
+     "answer": "(1, 0)",
+     "kp_ids": [
+      "math.t_sub.conic.parabola"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.parabola"
+     ],
+     "options": [
+      "(1, 0)",
+      "(4, 0)",
+      "(0, 1)",
+      "(−1, 0)"
+     ],
+     "distractor_rationales": {
+      "(4, 0)": "這是把方程式裡的 4p ＝ 4 直接當成焦點坐標：要先解出 p，4p ＝ 4 ⇒ p ＝ 1，焦點才是 (1, 0)。",
+      "(0, 1)": "x、y 放反了：開口向右的拋物線焦點在 x 軸上，是 (p, 0) ＝ (1, 0)，不是 (0, 1)。",
+      "(−1, 0)": "這是準線位置的 x 值（x ＝ −1）：焦點在頂點「右邊」(1, 0)，準線在左邊 x ＝ −1。"
+     },
+     "answer_evidence": [
+      "c-pb-find"
+     ],
+     "feedback": "y² ＝ 4x 對照 y² ＝ 4px：4p ＝ 4 ⇒ p ＝ 1，焦點 (p, 0) ＝ (1, 0)。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "拋物線 y² ＝ 4x 的準線是哪一條直線？",
+     "answer": "x ＝ −1",
+     "kp_ids": [
+      "math.t_sub.conic.parabola"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.parabola"
+     ],
+     "options": [
+      "x ＝ −1",
+      "x ＝ 1",
+      "x ＝ −4",
+      "y ＝ −1"
+     ],
+     "distractor_rationales": {
+      "x ＝ 1": "少了負號：準線在頂點的另一側（和焦點相反方向），是 x ＝ −p ＝ −1；x ＝ 1 反而是焦點的 x 坐標。",
+      "x ＝ −4": "這是把 4p ＝ 4 當成 p：要先解 p ＝ 1，準線才是 x ＝ −p ＝ −1，不是 −4。",
+      "y ＝ −1": "準線方向搞錯了：開口向右的拋物線，準線是鉛直線 x ＝ −p ＝ −1，不是水平線 y ＝ −1。"
+     },
+     "answer_evidence": [
+      "c-pb-find"
+     ],
+     "feedback": "4p ＝ 4 ⇒ p ＝ 1，準線 x ＝ −p ＝ −1（鉛直線，在頂點左側）。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "拋物線上的任何一點，有什麼共同的特性？",
+     "answer": "到焦點的距離等於到準線的距離",
+     "kp_ids": [
+      "math.t_sub.conic.parabola"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.parabola"
+     ],
+     "options": [
+      "到焦點的距離等於到準線的距離",
+      "到焦點的距離等於到頂點的距離",
+      "到準線的距離都一樣",
+      "到 x 軸的距離等於到 y 軸的距離"
+     ],
+     "distractor_rationales": {
+      "到焦點的距離等於到頂點的距離": "拋物線比的是焦點和「準線」，不是焦點和頂點：定義是到焦點 ＝ 到準線。",
+      "到準線的距離都一樣": "線上各點到準線的距離並不相同（越往開口外越遠）：定義是每點「到焦點 ＝ 到自己對準線的距離」。",
+      "到 x 軸的距離等於到 y 軸的距離": "那是另一種圖形（例如 y ＝ x 附近）：拋物線的定義是到焦點 ＝ 到準線。"
+     },
+     "answer_evidence": [
+      "c-pb-def"
+     ],
+     "feedback": "拋物線的定義：線上每點到焦點的距離 ＝ 到準線的距離。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "拋物線 y² ＝ 8x 的焦點是哪一點？",
+     "answer": "(2, 0)",
+     "kp_ids": [
+      "math.t_sub.conic.parabola"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.parabola"
+     ],
+     "options": [
+      "(2, 0)",
+      "(8, 0)",
+      "(4, 0)",
+      "(0, 2)"
+     ],
+     "distractor_rationales": {
+      "(8, 0)": "這是把方程式裡的 8 直接當焦點 x：要先解 4p ＝ 8 ⇒ p ＝ 2，焦點 (2, 0)。",
+      "(4, 0)": "這是把 4p ＝ 8 算成 p ＝ 4（忘了除以 4 或只除以 2）：4p ＝ 8 ⇒ p ＝ 2，焦點 (2, 0)。",
+      "(0, 2)": "x、y 放反了：開口向右的拋物線焦點在 x 軸上 (p, 0) ＝ (2, 0)，不是 (0, 2)。"
+     },
+     "answer_evidence": [
+      "c-pb-standard"
+     ],
+     "feedback": "y² ＝ 8x 對照 y² ＝ 4px：4p ＝ 8 ⇒ p ＝ 2，焦點 (p, 0) ＝ (2, 0)。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（拋物線定義＝到焦點距離=到準線距離；標準式開口向右 y²=4px、頂點(0,0)、焦點(p,0)、準線 x=−p、對稱軸 x 軸；求焦點準線先對照 4p 解 p；y²=4x⇒p=1、焦點(1,0)、準線 x=−1、(1,2)等距2、(4,4)等距5；y²=8x⇒p=2、焦點(2,0)；兩鐵律＝先解 p 再寫焦點(p,0) 別把 4p 當焦點、準線 x=−p 負號別漏）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
