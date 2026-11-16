@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 06:51 vector triangle-tetra-area 以內外積求三角形/平行四邊形面積與四面體體積 5/5 DONE-GATE 全綠（t_sub 高中 分科/深階，★3D 平行四邊形面積 示意 SVG）→ vector strand 10/11
+- **math_vector_triangle_tetra_area frozen `27f9cbd9544abe00`**（R2 抓 major→de-converge→R1 抓 minor→修→R1-R5 連 5 clean、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==27f9cbd9／per_page_5clean 566/566 頁 0 違規（triangle_tetra absent）／repro PASS／iPad 四角色簽核（3D 斜投影、紅 a=(2,0,0) 沿 x、綠 b=(0,3,0) 沿 y、淺藍平行四邊形=2×3 矩形、標面積=|a×b|=6；a/x 標籤碰撞 render 時即修、★3D 示意圖 #62 N/A、箭頭 #43、右緣0%）。
+- 外積與面積/體積（t_sub，prereq space-dot-product）＝3D 外積 a×b 是「向量」、同時垂直 a,b、|a×b|=平行四邊形面積（=|a||b|sinθ）；三角形=½|a×b|；純量三重積 (a×b)·c 絕對值=平行六面體體積、四面體（三角錐）=⅙|(a×b)·c|。以 a=(2,0,0)、b=(0,3,0)、c=(1,1,4) 貫穿：a×b=(0,0,6)、|a×b|=6、三角形=3；(a×b)·c=24、四面體=4。
+- ★repro：binding＝math_checks6::vector.triangle-tetra-area（驗 ½|a×b|、⅙|三重積| 概念 PASS）；單元引 math_checks7::vector.triangle-tetra-area（本 session 新增 a×b=(0,0,6)⊥a,b/|a×b|=6/三角形3/(a×b)·c=24/四面體4，.venv PASS）。
+- practice：Q1 平行四邊形面積=6（hero）、Q2 三角形=3、Q3 四面體=4（給三重積24）、Q4 概念『a×b 同時垂直 a 和 b』。凍前 .venv 反算每誘答單一錯誤 #53。
+- ★收斂史（本單元共抓 2 真實缺陷，5-clean 迴圈價值再現）：R2 CONFIRMED major(readability)＝Q2「1.5」誘答「把 6 除了兩次 2」的「除了」中文首讀為 except、「甲除乙」方向相反→de-converge（清 rounds）改「連乘了兩次 ½（½×½×6）」；R1(修後) CONFIRMED minor(terminology)＝四面體 gloss「三稜錐」雖繁體但與站內幾何單元用的台灣標準「三角錐/角錐」不一致→直接改「三角錐」。★教訓：(a)誘答說明的除法敘述要用無歧義寫法（避「除了」）；(b)跨單元術語一致性—同一立體在全站要用同一台灣標準詞。
+- 下一步：vector 最後 1 單元＝geometry-apply（向量在幾何證明與重心/共線應用；已有 math_checks6 repro；t_sub）→ 完成整個 vector strand 11/11。接著 conic(7)/complex(6)/finmath(6)/space(5)/matrix(5)/linprog(2)/determinant(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 05:44 vector space-dot-product 空間向量內積與夾角 5/5 DONE-GATE 全綠（t_sub 高中 分科/深階，★3D 兩向量夾角θ 示意 SVG）→ vector strand 9/11
 - **math_vector_space_dot_product frozen `cecc7096a10f08c3`**（R1 抓 1 minor→修→R1-R5 連 5 clean、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==cecc7096／per_page_5clean 565/565 頁 0 違規（space_dot_product absent）／repro PASS／iPad 四角色簽核（3D 斜投影坐標系、紅 a=(1,2,2)、綠 b=(2,0,1) 從 O、夾角 θ 小弧、下註 a·b=4；★3D 示意圖 #62 N/A、箭頭方向正確 #43、右緣0%）。
 - 空間向量內積與夾角（t_sub，prereq space-vector）＝內積 a·b=a₁b₁+a₂b₂+a₃b₃（對應分量相乘再相加、比平面多一個 z 項、結果是數）；幾何 a·b=|a||b|cosθ、cosθ=a·b/(|a||b|) 求夾角；垂直判定 a·b=0 ⟺ a⊥b；自身 a·a=|a|²。以 a=(1,2,2)、b=(2,0,1) 貫穿：a·b=4、|a|=3、|b|=√5、cosθ=4/(3√5)；垂直示範 (1,2,2)·(2,−1,0)=0；自身 a·a=9。
