@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 統計（stats）strand t_sub 單元。知識點 math.t_sub.stats.sampling-survey（抽樣調查）。tier=t_sub（高中探究/選修補充）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：母體 (population)、樣本 (sample)、普查 (census)、抽樣 (sampling)、簡單隨機抽樣 (simple random sampling)。★scope（t_sub）：母體＝想研究的全部對象、樣本＝從母體取出的一部分；普查＝調查全部、抽樣調查＝只調查一部分再推估母體（母體大/成本高時用）；簡單隨機抽樣＝每個個體被抽中機率相同，N 個抽 n 個則每個機率＝n/N；抽樣要有代表性、避免偏差（抽樣方式讓某些對象特別容易/不易被抽到會失真）。只概念＋簡單 n/N 機率；不含抽樣誤差量化、信賴區間、分層/系統抽樣公式。prereq＝相關係數 correlation（統計判讀基礎）。repro（tools/verify/math_checks7.py::stats.sampling-survey）：N=100 取 n=10，每個體機率 n/N＝10/100＝0.1（.venv 已核）。★自檢（math-unit defect-classes #1–#59）：figure＝母體→抽樣→樣本 SVG（左大框 母體 N＝100 散點、箭頭標 簡單隨機抽樣、右小框 樣本 n＝10 少數點，下方註 每個個體被抽中機率＝10/100＝0.1），alt 與 SVG text 逐字一致（#33）、標題『抽樣調查：從母體隨機取一部分（樣本）來推估』寫進 alt 開頭；teach 值集{100,10,0.1}與 practice 數值答案{0.25}無交集避#10（Q1 用 N=200 n=50→0.25）；practice：Q1 機率（N200 抽50→50/200＝0.25，選項數）、Q2 名稱（只調查一部分推估＝抽樣調查，選項類別）、Q3 隨機抽樣特性（每個體機率相同，選項說法）、Q4 偏差（只在籃球場問→失真，選項做法）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53，如樣本數當機率/除反/母體數/把好抽樣當失真）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_stats_sampling_survey.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.stats.sampling-survey",
+   "title_zh": "抽樣調查",
+   "can_do": "我知道『母體 (population)』是想研究的全部對象，『樣本 (sample)』是從母體取出的一部分。『普查 (census)』是調查全部，『抽樣調查 (sampling)』是只調查一部分再用它推估母體——母體很大、普查太花時間或成本時就用抽樣。我知道『簡單隨機抽樣 (simple random sampling)』是每個個體被抽中的機會都相同，母體有 N 個、抽 n 個時每個被抽中的機率是 n／N。我也知道抽樣要有代表性，若抽樣方式有偏差（某些對象特別容易或不易被抽到）結果就會失真。",
+   "situation_group": "統計：抽樣調查",
+   "subject": "math",
+   "strand": "stats",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.stats.sampling-survey"
+   ],
+   "prerequisites": [
+    "math.t_adv.stats.correlation"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-smp-popsample",
+     "text": "『母體 (population)』是我們想研究的全部對象；『樣本 (sample)』是從母體裡取出來的一部分。調查全部對象叫『普查 (census)』；只調查一部分、再用這部分去推估整個母體，叫『抽樣調查 (sampling)』。當母體很大、全部調查太花時間或成本時，就用抽樣調查。",
+     "kind": "definition",
+     "source_refs": [
+      "母體、樣本、普查與抽樣（高中數學 統計）"
+     ],
+     "verification_ref": "母體＝全部、樣本＝一部分；普查全部、抽樣取部分推估（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-smp-random",
+     "text": "『簡單隨機抽樣 (simple random sampling)』是指每一個個體被抽中的機會都完全相同。如果母體有 N 個個體、要抽出 n 個，那麼每一個個體被抽中的機率就是 n／N。例：母體有 100 人、抽出 10 人，每個人被抽中的機率 ＝ 10／100 ＝ 0.1。",
+     "kind": "definition",
+     "source_refs": [
+      "簡單隨機抽樣與個體機率 n/N（高中數學 統計）"
+     ],
+     "verification_ref": "每個體機率 n/N；N=100 n=10→10/100=0.1（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-smp-bias",
+     "text": "抽樣要能「代表」母體，推估才會準。如果抽樣的方式讓某些對象特別容易被抽到、某些特別不容易被抽到（有偏差），樣本就不能代表母體，結果會失真。例：想知道全校學生喜不喜歡運動，卻只在籃球場問正在打球的人，樣本偏向愛運動的人，不能代表全校。",
+     "kind": "definition",
+     "source_refs": [
+      "抽樣的代表性與偏差（高中數學 統計）"
+     ],
+     "verification_ref": "有代表性才準；抽樣偏差→失真（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.stats.sampling-survey"
+     ],
+     "body": "這一單元學『抽樣調查』。下面先講母體、樣本，以及普查和抽樣的差別；再講簡單隨機抽樣——每個個體被抽中機會相同、機率是 n／N；接著講抽樣要有代表性、避免偏差；用一張母體到樣本的圖示範，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.stats.sampling-survey"
+     ],
+     "body": "① 母體與樣本：母體是想研究的全部對象，樣本是從中取出的一部分。調查全部叫普查；只調查一部分再推估整體，叫抽樣調查——母體很大、普查太花成本時就用它。② 簡單隨機抽樣：每個個體被抽中的機會都相同；母體 N 個、抽 n 個，每個機率 ＝ n／N。看下面的圖：母體有 100 人，隨機抽出 10 人當樣本，每個人被抽中的機率 ＝ 10／100 ＝ 0.1。③ 代表性：抽樣要能代表母體才準；若抽法有偏差（某些人特別容易或不容易被抽到），樣本就會失真——例如只在籃球場問「愛不愛運動」，就會偏向愛運動的人。下面用這張圖整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.stats.sampling-survey"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='15' font-family='sans-serif' font-size='11.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>抽樣調查：從母體隨機取一部分（樣本）來推估</text><rect x='18' y='34' width='150' height='92' rx='4' fill='#eef4ff' stroke='#99a7b5' stroke-width='1'/><text x='93' y='50' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>母體 N＝100</text><circle cx='40' cy='66' r='3' fill='#5b8def'/><circle cx='58' cy='66' r='3' fill='#5b8def'/><circle cx='76' cy='66' r='3' fill='#5b8def'/><circle cx='94' cy='66' r='3' fill='#5b8def'/><circle cx='112' cy='66' r='3' fill='#5b8def'/><circle cx='130' cy='66' r='3' fill='#5b8def'/><circle cx='148' cy='66' r='3' fill='#5b8def'/><circle cx='40' cy='84' r='3' fill='#5b8def'/><circle cx='58' cy='84' r='3' fill='#5b8def'/><circle cx='76' cy='84' r='3' fill='#5b8def'/><circle cx='94' cy='84' r='3' fill='#5b8def'/><circle cx='112' cy='84' r='3' fill='#5b8def'/><circle cx='130' cy='84' r='3' fill='#5b8def'/><circle cx='148' cy='84' r='3' fill='#5b8def'/><circle cx='40' cy='102' r='3' fill='#5b8def'/><circle cx='58' cy='102' r='3' fill='#5b8def'/><circle cx='76' cy='102' r='3' fill='#5b8def'/><circle cx='94' cy='102' r='3' fill='#5b8def'/><circle cx='112' cy='102' r='3' fill='#5b8def'/><circle cx='130' cy='102' r='3' fill='#5b8def'/><text x='150' y='106' font-family='sans-serif' font-size='13' fill='#5b8def' text-anchor='middle' font-weight='bold'>⋯</text><text x='93' y='120' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>（點為示意，共 100 人）</text><line x1='176' y1='80' x2='224' y2='80' stroke='#2f6f54' stroke-width='2'/><path d='M224,80 L216,75 L216,85 Z' fill='#2f6f54'/><text x='200' y='72' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='middle'>隨機抽樣</text><rect x='232' y='50' width='110' height='60' rx='4' fill='#eafaf2' stroke='#2f9e6e' stroke-width='1'/><text x='287' y='66' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>樣本 n＝10</text><circle cx='252' cy='84' r='3.5' fill='#2f9e6e'/><circle cx='270' cy='84' r='3.5' fill='#2f9e6e'/><circle cx='288' cy='84' r='3.5' fill='#2f9e6e'/><circle cx='306' cy='84' r='3.5' fill='#2f9e6e'/><circle cx='324' cy='84' r='3.5' fill='#2f9e6e'/><circle cx='252' cy='98' r='3.5' fill='#2f9e6e'/><circle cx='270' cy='98' r='3.5' fill='#2f9e6e'/><circle cx='288' cy='98' r='3.5' fill='#2f9e6e'/><circle cx='306' cy='98' r='3.5' fill='#2f9e6e'/><circle cx='324' cy='98' r='3.5' fill='#2f9e6e'/><text x='180' y='140' font-family='sans-serif' font-size='10.5' fill='#6b7785' text-anchor='middle'>每個個體被抽中的機率 ＝ 10 ／ 100 ＝ 0.1</text><text x='180' y='156' font-family='sans-serif' font-size='10.5' fill='#6b7785' text-anchor='middle'>用樣本推估母體；抽樣要有代表性才準</text></svg>",
+      "alt": "標題「抽樣調查：從母體隨機取一部分（樣本）來推估」。左邊藍色大框「母體 N＝100」裡有很多藍點，末尾以「⋯」與「（點為示意，共 100 人）」表示點只是示意、不是實際 100 個；一個綠色箭頭標「隨機抽樣」指向右邊綠色小框「樣本 n＝10」（裡面 10 個綠點）。下方寫「每個個體被抽中的機率 ＝ 10 ／ 100 ＝ 0.1」與「用樣本推估母體；抽樣要有代表性才準」。",
+      "caption": "抽樣調查：母體有 100 人（左），用簡單隨機抽樣抽出 10 人當樣本（右）。每個人被抽中的機率 ＝ 10 ／ 100 ＝ 0.1。再用樣本去推估整個母體；抽樣要有代表性，推估才會準。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.stats.sampling-survey"
+     ],
+     "body": "最後練抽樣調查。重點：母體是全部對象、樣本是取出的一部分；普查調查全部、抽樣調查只調查一部分再推估；簡單隨機抽樣每個個體機率相同、等於 n／N；抽樣要有代表性、避免偏差才不會失真。小提醒：被抽中的機率是「抽的個數 ÷ 母體個數」（n／N），不是抽的個數本身。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個母體有 200 人，用簡單隨機抽樣抽出 50 人。每一個人被抽中的機率是多少？",
+     "answer": "0.25",
+     "kp_ids": [
+      "math.t_sub.stats.sampling-survey"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.stats.sampling-survey"
+     ],
+     "options": [
+      "0.25",
+      "50",
+      "200",
+      "4"
+     ],
+     "distractor_rationales": {
+      "50": "50 是抽出的人數（樣本數），不是機率；機率要用抽的人數除以母體人數，50 ÷ 200 ＝ 0.25。",
+      "200": "200 是母體的總人數，不是機率；機率 ＝ 50 ÷ 200 ＝ 0.25。",
+      "4": "4 是把 200 ÷ 50 除反了；被抽中的機率是樣本數 ÷ 母體 ＝ 50 ÷ 200 ＝ 0.25。"
+     },
+     "answer_evidence": [
+      "c-smp-random"
+     ],
+     "feedback": "簡單隨機抽樣每個個體機率 ＝ n／N ＝ 50 ÷ 200 ＝ 0.25。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "只調查母體中的「一部分」，再用這一部分去推估整個母體。這種做法叫什麼？",
+     "answer": "抽樣調查",
+     "kp_ids": [
+      "math.t_sub.stats.sampling-survey"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.stats.sampling-survey"
+     ],
+     "options": [
+      "抽樣調查",
+      "普查",
+      "畫記",
+      "求平均數"
+     ],
+     "distractor_rationales": {
+      "普查": "普查是調查「全部」對象；只調查一部分再推估整體的是抽樣調查。",
+      "畫記": "畫記是蒐集資料時一筆一筆記下來的方法，不是「用一部分推估整體」的調查方式。",
+      "求平均數": "求平均數是算一組資料的集中趨勢，不是一種調查母體的方式；用部分推估整體叫抽樣調查。"
+     },
+     "answer_evidence": [
+      "c-smp-popsample"
+     ],
+     "feedback": "只調查一部分（樣本）再推估整個母體，就是抽樣調查；調查全部才是普查。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "「簡單隨機抽樣」最重要的特性是什麼？",
+     "answer": "母體裡每一個個體被抽中的機會都相同",
+     "kp_ids": [
+      "math.t_sub.stats.sampling-survey"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.stats.sampling-survey"
+     ],
+     "options": [
+      "母體裡每一個個體被抽中的機會都相同",
+      "只抽最方便、最容易找到的對象",
+      "只抽成績或表現最好的對象",
+      "抽出的樣本一定要超過母體的一半"
+     ],
+     "distractor_rationales": {
+      "只抽最方便、最容易找到的對象": "只抽方便找的對象會造成偏差、不隨機；簡單隨機抽樣是每個個體機會都相同。",
+      "只抽成績或表現最好的對象": "只抽表現好的對象會讓樣本偏差、不能代表母體；隨機抽樣不挑對象、機會相同。",
+      "抽出的樣本一定要超過母體的一半": "簡單隨機抽樣沒有規定要抽超過一半；重點是每個個體被抽中的機會相同。"
+     },
+     "answer_evidence": [
+      "c-smp-random"
+     ],
+     "feedback": "簡單隨機抽樣的關鍵就是：母體裡每一個個體被抽中的機會都相同。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "想知道「全校學生喜不喜歡運動」。下面哪一種抽樣方式最可能失真、沒有代表性？",
+     "answer": "只在籃球場上問正在打球的學生",
+     "kp_ids": [
+      "math.t_sub.stats.sampling-survey"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.stats.sampling-survey"
+     ],
+     "options": [
+      "只在籃球場上問正在打球的學生",
+      "從全校學生名單裡隨機抽一些人問",
+      "每個班級都隨機抽幾個人問",
+      "用電腦從全校學號裡隨機抽人問"
+     ],
+     "distractor_rationales": {
+      "從全校學生名單裡隨機抽一些人問": "從全校名單隨機抽，每個人機會相同、有代表性，是好的抽樣方式，不會特別失真。",
+      "每個班級都隨機抽幾個人問": "每個班都抽、涵蓋全校各班，代表性不錯，不是最可能失真的方式。",
+      "用電腦從全校學號裡隨機抽人問": "用電腦隨機抽學號是標準的隨機抽樣、每人機會相同，有代表性。"
+     },
+     "answer_evidence": [
+      "c-smp-bias"
+     ],
+     "feedback": "只在籃球場問打球的學生，樣本偏向愛運動的人（有偏差），不能代表全校，最可能失真。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（母體＝全部對象、樣本＝取出的一部分；普查查全部、抽樣查一部分再推估；簡單隨機抽樣每個體機率相同＝n／N；抽樣要有代表性、避免偏差）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
