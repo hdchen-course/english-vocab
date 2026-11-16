@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 微積分（calc）strand t_sub 單元。知識點 math.t_sub.calc.tangent-normal（切線與法線方程式）。tier=t_sub（高中分科/選修深階，exam 分科-數甲）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：切線 (tangent line)、法線 (normal line)、斜率 (slope)、導數 (derivative)、垂直 (perpendicular)。前置假設：會算導數（導數＝切線斜率的概念在 derivative-definition 已建立）、會寫點斜式直線方程式。★scope（t_sub）：曲線 y=f(x) 上一點 (x₀,y₀) 的切線斜率＝f′(x₀)，切線方程式 y−y₀＝f′(x₀)(x−x₀)；法線與切線垂直，法線斜率＝−1/f′(x₀)（兩斜率相乘＝−1），法線方程式 y−y₀＝−1/f′(x₀)·(x−x₀)。以 y=x² 於 (1,1) 貫穿：f′=2x、f′(1)=2，切線 y=2x−1、法線斜率 −½、法線 y=−½x+3/2。只到多項式曲線在一點的切線/法線；不含參數式/隱函數切線、不含 f′(x₀)=0（水平切線、法線鉛直）或 f′ 不存在的特例深究。prereq＝derivative-definition＋differentiation-rules。repro（tools/verify/math_checks7.py::calc.tangent-normal）：y=x² 於(1,1) 切線斜率2、法線斜率−½（.venv 已核）；practice 另用 y=x² 於 (2,4)（f′(2)=4、法線 −¼）與 y=x³ 於 (1,1)（f′(1)=3）皆以 .venv sympy 另核。★自檢（math-unit defect-classes #1–#61）：figure＝y=x² 切線法線 SVG（拋物線＋點 P(1,1)＋紅色切線(斜率2)＋綠色法線(斜率−½)兩線於 P 垂直相交，左上標 切線 y=2x−1／法線 y=−½x+3/2），切線/法線斜率乘積=−1 幾何真垂直（#43 線段方向與斜率一致），alt 與 SVG text 逐字一致（#33）、標題『切線與法線：y＝x² 於點 (1, 1)』寫進 alt 開頭；practice 四答案＝{f′(x₀)(Q1 概念),4(Q2 (2,4)切線斜率),−1/4(Q3 法線斜率),3(Q4 x³ 切線斜率)} 與 teach 關鍵值 2/−½ 無 #10 碰撞（Q2-Q4 換點/換曲線）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算：如用 −1/m 忘負號、用 f(x₀) 當斜率、法線用 +1/m、代錯點）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_calc_tangent_normal.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.calc.tangent-normal",
+   "title_zh": "切線與法線方程式",
+   "can_do": "我會求曲線 y＝f(x) 上一點 (x₀, y₀) 的『切線 (tangent line)』與『法線 (normal line)』。我知道切線的『斜率 (slope)』就是該點的『導數 (derivative)』f′(x₀)，所以切線方程式是 y − y₀ ＝ f′(x₀)(x − x₀)；法線與切線『垂直 (perpendicular)』，兩條線的斜率相乘等於 −1，所以法線斜率 ＝ −1 ∕ f′(x₀)。例：y ＝ x² 在 (1, 1)，f′ ＝ 2x、f′(1) ＝ 2，切線 y ＝ 2x − 1、法線斜率 ＝ −½、法線 y ＝ −½x ＋ 3∕2。",
+   "situation_group": "微積分：切線與法線",
+   "subject": "math",
+   "strand": "calc",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.calc.tangent-normal"
+   ],
+   "prerequisites": [
+    "math.t_sub.calc.derivative-definition",
+    "math.t_sub.calc.differentiation-rules"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-tn-tangent",
+     "text": "曲線 y ＝ f(x) 上一點 (x₀, y₀) 的切線斜率，就等於該點的導數 f′(x₀)。知道了斜率和一個點，就能用點斜式寫出切線方程式：y − y₀ ＝ f′(x₀)(x − x₀)。例：y ＝ x²，f′ ＝ 2x；在 (1, 1) 處切線斜率 f′(1) ＝ 2，切線方程式 y − 1 ＝ 2(x − 1)，整理成 y ＝ 2x − 1。",
+     "kind": "definition",
+     "source_refs": [
+      "切線斜率與切線方程式（高中數學 微積分）"
+     ],
+     "verification_ref": "y=x² 於(1,1)：f′(1)=2、切線 y=2x−1（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-tn-normal",
+     "text": "法線是「通過切點、而且與切線垂直」的直線。兩條互相垂直的直線，斜率相乘等於 −1，所以法線斜率 ＝ −1 ∕ f′(x₀)（把切線斜率取倒數再加負號）。例：y ＝ x² 在 (1, 1) 切線斜率是 2，所以法線斜率 ＝ −1∕2 ＝ −½，法線方程式 y − 1 ＝ −½(x − 1)，整理成 y ＝ −½x ＋ 3∕2。",
+     "kind": "definition",
+     "source_refs": [
+      "法線斜率（垂直於切線）（高中數學 微積分）"
+     ],
+     "verification_ref": "y=x² 於(1,1)：法線斜率=−1/2、法線 y=−½x+3/2（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-tn-caution",
+     "text": "求切線/法線時要注意：切線斜率是「導數」f′(x₀)，不是函數值 f(x₀)（f(x₀) 只是 y 座標）。法線斜率是切線斜率的「負倒數」−1∕f′(x₀)——要先取倒數再加負號，兩者缺一不可；只取倒數（忘了負號）或只加負號（忘了倒數）都錯。",
+     "kind": "definition",
+     "source_refs": [
+      "切線法線常見錯誤（高中數學 微積分）"
+     ],
+     "verification_ref": "切線斜率=f′(x₀)（非 f(x₀)）、法線斜率=負倒數（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.tangent-normal"
+     ],
+     "body": "這一單元學怎麼求曲線上一點的切線與法線方程式。下面先講切線——它的斜率就是該點的導數 f′(x₀)，用點斜式寫出方程式；再講法線——它和切線垂直、斜率是切線斜率的負倒數；用 y ＝ x² 在 (1, 1) 完整示範一次，最後練習。（本單元接在『導數的定義與切線斜率』與『微分公式』之後，核心就是「導數＝切線斜率」。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.tangent-normal"
+     ],
+     "body": "① 切線：斜率 ＝ 該點導數 f′(x₀)，方程式 y − y₀ ＝ f′(x₀)(x − x₀)。② 法線：與切線垂直，斜率 ＝ −1 ∕ f′(x₀)（負倒數），方程式 y − y₀ ＝ (−1 ∕ f′(x₀))(x − x₀)。以 y ＝ x² 在 (1, 1) 為例：f′ ＝ 2x，f′(1) ＝ 2 → 切線 y ＝ 2x − 1；法線斜率 ＝ −½ → 法線 y ＝ −½x ＋ 3∕2。看下面的圖（切線與法線在切點垂直相交），最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.calc.tangent-normal"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>切線與法線：y＝x² 於點 (1, 1)</text><text x='96' y='36' font-family='sans-serif' font-size='9.5' fill='#c2535d' text-anchor='middle'>切線 y＝2x−1</text><text x='100' y='52' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='middle'>法線 y＝−½x＋3∕2</text><path d='M60,150 L78,148.9 L96,145.5 L114,139.9 L132,132.1 L150,122 L168,109.7 L186,95.1 L204,78.3 L222,59.3 L240,38' fill='none' stroke='#33475b' stroke-width='1.8'/><line x1='100.5' y1='152.8' x2='213' y2='82.8' stroke='#c2535d' stroke-width='1.6'/><line x1='96' y1='113.6' x2='231' y2='134.6' stroke='#2f6f54' stroke-width='1.6'/><circle cx='150' cy='122' r='3.5' fill='#33475b'/><text x='150' y='138' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>P (1, 1)</text><text x='210' y='76' font-family='sans-serif' font-size='9' fill='#c2535d' text-anchor='middle'>切線</text><text x='246' y='139' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='middle'>法線</text><text x='180' y='163' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>切線斜率 2 × 法線斜率 (−½) ＝ −1（互相垂直）</text></svg>",
+      "alt": "標題「切線與法線：y＝x² 於點 (1, 1)」。一條開口向上的拋物線 y＝x²，上面標出切點 P (1, 1)。通過 P 有兩條直線：紅色的是切線（y＝2x−1，斜率 2），綠色的是法線（y＝−½x＋3∕2，斜率 −½），兩條線在 P 互相垂直。左上標「切線 y＝2x−1」「法線 y＝−½x＋3∕2」，線旁分別標「切線」「法線」，點標「P (1, 1)」。下方註「切線斜率 2 × 法線斜率 (−½) ＝ −1（互相垂直）」。",
+      "caption": "以 y＝x² 在 (1, 1) 示範切線與法線：切線斜率＝f′(1)＝2，切線 y＝2x−1；法線與切線垂直、斜率＝負倒數＝−½，法線 y＝−½x＋3∕2。兩斜率相乘 2×(−½)＝−1，正是互相垂直的條件。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.tangent-normal"
+     ],
+     "body": "最後練切線與法線。重點：切線斜率 ＝ 該點導數 f′(x₀)，切線 y − y₀ ＝ f′(x₀)(x − x₀)；法線與切線垂直，法線斜率 ＝ −1 ∕ f′(x₀)（負倒數）。小提醒：切線斜率要用「導數 f′(x₀)」不是函數值 f(x₀)；法線斜率是「負倒數」——先取倒數再加負號，別只做一半（像 2 的負倒數是 −½，不是 ½ 也不是 −2）。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "曲線 y ＝ f(x) 上一點 (x₀, y₀) 的切線斜率等於什麼？",
+     "answer": "該點的導數 f′(x₀)",
+     "kp_ids": [
+      "math.t_sub.calc.tangent-normal"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.tangent-normal"
+     ],
+     "options": [
+      "該點的導數 f′(x₀)",
+      "該點的函數值 f(x₀)",
+      "二階導數 f″(x₀)",
+      "x₀ 本身"
+     ],
+     "distractor_rationales": {
+      "該點的函數值 f(x₀)": "f(x₀) 是切點的 y 座標，不是斜率；切線斜率是「導數」f′(x₀)。",
+      "二階導數 f″(x₀)": "二階導數講的是凹凸（切線斜率的變化率），不是切線斜率本身；切線斜率是一階導數 f′(x₀)。",
+      "x₀ 本身": "x₀ 只是切點的 x 座標，和斜率無關；切線斜率是 f′(x₀)。"
+     },
+     "answer_evidence": [
+      "c-tn-tangent"
+     ],
+     "feedback": "切線斜率 ＝ 該點的導數 f′(x₀)（這就是「導數＝切線斜率」）。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "曲線 y ＝ x²（f′(x) ＝ 2x）在點 (2, 4) 的切線斜率是多少？",
+     "answer": "4",
+     "kp_ids": [
+      "math.t_sub.calc.tangent-normal"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.tangent-normal"
+     ],
+     "options": [
+      "4",
+      "2",
+      "8",
+      "−1∕4"
+     ],
+     "distractor_rationales": {
+      "2": "2 是 x 座標，不是斜率；切線斜率要代進導數 f′(2) ＝ 2·2 ＝ 4。",
+      "8": "把斜率再乘了一次 2（或與別的量相乘）；f′(2) ＝ 2×2 ＝ 4，不是 8。",
+      "−1∕4": "−1∕4 是「法線」斜率（切線斜率 4 的負倒數）；這題問的是切線斜率 4。"
+     },
+     "answer_evidence": [
+      "c-tn-tangent"
+     ],
+     "feedback": "切線斜率 ＝ f′(2) ＝ 2×2 ＝ 4。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "承上，y ＝ x² 在 (2, 4) 的切線斜率是 4。那麼法線斜率是多少？",
+     "answer": "−1∕4",
+     "kp_ids": [
+      "math.t_sub.calc.tangent-normal"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.tangent-normal"
+     ],
+     "options": [
+      "−1∕4",
+      "1∕4",
+      "−4",
+      "4"
+     ],
+     "distractor_rationales": {
+      "1∕4": "取了倒數卻忘了加負號；法線斜率是「負倒數」，要是 −1∕4。",
+      "−4": "只加了負號卻忘了取倒數；法線斜率是 −1∕4，不是 −4。",
+      "4": "4 是切線斜率本身；法線與切線垂直，斜率要取負倒數 −1∕4。"
+     },
+     "answer_evidence": [
+      "c-tn-normal"
+     ],
+     "feedback": "法線斜率 ＝ 切線斜率的負倒數 ＝ −1∕4（因為 4 × (−1∕4) ＝ −1，兩線垂直）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "曲線 y ＝ x³（f′(x) ＝ 3x²）在點 (1, 1) 的切線斜率是多少？",
+     "answer": "3",
+     "kp_ids": [
+      "math.t_sub.calc.tangent-normal"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.tangent-normal"
+     ],
+     "options": [
+      "3",
+      "1",
+      "−1∕3",
+      "6"
+     ],
+     "distractor_rationales": {
+      "1": "1 是切點的 y 座標（也是 x 座標），不是斜率；切線斜率 ＝ f′(1) ＝ 3·1² ＝ 3。",
+      "−1∕3": "−1∕3 是「法線」斜率（切線斜率 3 的負倒數）；這題問切線斜率 3。",
+      "6": "把 f′(x) ＝ 3x² 當成了 f″ 或多乘了一次；f′(1) ＝ 3×1² ＝ 3，不是 6。"
+     },
+     "answer_evidence": [
+      "c-tn-tangent"
+     ],
+     "feedback": "切線斜率 ＝ f′(1) ＝ 3×1² ＝ 3。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（切線斜率＝該點導數 f′(x₀)、切線 y−y₀=f′(x₀)(x−x₀)；法線與切線垂直、斜率＝−1/f′(x₀) 負倒數；y=x² 於(1,1) 切線 y=2x−1、法線 y=−½x+3/2；切線斜率用導數非函數值 f(x₀)、法線是負倒數別只做一半）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
