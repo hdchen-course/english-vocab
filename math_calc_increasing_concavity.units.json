@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 微積分（calc）strand t_sub 單元。知識點 math.t_sub.calc.increasing-concavity（函數的增減與凹凸，一階/二階判定）。tier=t_sub（高中分科/選修深階，exam 分科-數甲）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：導數 (derivative)、遞增 (increasing)、遞減 (decreasing)、二階導數 (second derivative)、凹向上 (concave up)、凹向下 (concave down)、反曲點 (inflection point)。前置假設：會算多項式的一階、二階導數（微分公式＋高階導數）。★scope（t_sub）：一階導數判增減——f′(x)>0 的區間遞增、f′(x)<0 遞減；二階導數判凹凸——f″(x)>0 凹向上、f″(x)<0 凹向下；反曲點＝f″ 變號（凹凸改變）的地方。以 f(x)＝x³−3x 貫穿（f′＝3x²−3 根 ±1、f″＝6x 反曲點 x＝0）。只到一階判增減＋二階判凹凸＋反曲點；不含極值的完整判定（屬 extrema 單元）、不含漸近線、不含完整描點作圖。prereq＝differentiation-rules＋higher-derivative。repro（tools/verify/math_checks7.py::calc.increasing-concavity）：x³−3x 的 f′(2)＝9>0 遞增、f″(1)＝6>0 凹向上（.venv 已核）；教材用 f′＝3x²−3（根 ±1）、f′(0)＝−3<0 遞減、f″＝6x、f″(−1)＝−6<0 凹向下、反曲點 x＝0 皆以 .venv sympy diff 另核。★自檢（math-unit defect-classes #1–#59）：figure＝增減凹凸雙符號帶 SVG（以 x³−3x 為例；上帶 一階 f′＝3x²−3 在 −1、1 兩處分界，符號 ＋｜－｜＋、標 遞增／遞減（紅）／遞增；下帶 二階 f″＝6x 在 0 處分界，符號 －｜＋、標 凹向下（紅）／凹向上，0 標反曲點），alt 與 SVG text 逐字一致（#33）、標題『增減與凹凸：以 f(x)＝x³−3x 為例』寫進 alt 開頭；practice 四答案＝{遞增(Q1 概念),遞減(Q2 x=0),凹向下(Q3 x=−1),x＝0(Q4 反曲點)} 與 teach 關鍵值無造成 #10 數值巧合（Q4 x=0 為直接考反曲點 retrieval、非巧合）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53，如一階二階混用／符號判反／把 f′=0 點當反曲點／f″≠0 處誤判反曲點）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_calc_increasing_concavity.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.calc.increasing-concavity",
+   "title_zh": "函數的增減與凹凸（一階／二階判定）",
+   "can_do": "我會用『導數 (derivative)』判斷函數的形狀：一階導數 f′(x) 看增減——f′(x) ＞ 0 的區間函數『遞增 (increasing)』、f′(x) ＜ 0 的區間『遞減 (decreasing)』；『二階導數 (second derivative)』f″(x) 看彎曲方向——f″(x) ＞ 0『凹向上 (concave up)』、f″(x) ＜ 0『凹向下 (concave down)』。我也知道『反曲點 (inflection point)』就是 f″ 變號（凹凸改變）的地方。以 f(x) ＝ x³ − 3x 為例：f′ ＝ 3x² − 3（在 x ＝ −1、1 分界），f″ ＝ 6x（在 x ＝ 0 變號，所以 x ＝ 0 是反曲點）。",
+   "situation_group": "微積分：增減與凹凸",
+   "subject": "math",
+   "strand": "calc",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.calc.increasing-concavity"
+   ],
+   "prerequisites": [
+    "math.t_sub.calc.differentiation-rules",
+    "math.t_sub.calc.higher-derivative"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ic-incr",
+     "text": "一階導數判增減：在某一區間裡，如果 f′(x) ＞ 0，函數在那裡遞增（往右上走）；如果 f′(x) ＜ 0，函數遞減（往右下走）。例：f(x) ＝ x³ − 3x 的 f′(x) ＝ 3x² − 3，根是 x ＝ −1、1；當 −1 ＜ x ＜ 1 時 f′ ＜ 0（遞減），當 x ＜ −1 或 x ＞ 1 時 f′ ＞ 0（遞增）。",
+     "kind": "definition",
+     "source_refs": [
+      "一階導數與函數增減（高中數學 微積分）"
+     ],
+     "verification_ref": "x³−3x：f′=3x²−3 根±1、f′(2)=9>0 遞增、f′(0)=−3<0 遞減（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ic-concave",
+     "text": "二階導數判凹凸：在某一區間裡，如果 f″(x) ＞ 0，圖形凹向上（像向上開口的碗 ∪）；如果 f″(x) ＜ 0，圖形凹向下（像向下開口的拱 ∩）。例：f(x) ＝ x³ − 3x 的 f″(x) ＝ 6x；當 x ＞ 0 時 f″ ＞ 0（凹向上），當 x ＜ 0 時 f″ ＜ 0（凹向下）。",
+     "kind": "definition",
+     "source_refs": [
+      "二階導數與凹凸（高中數學 微積分）"
+     ],
+     "verification_ref": "x³−3x：f″=6x、f″(1)=6>0 凹向上、f″(−1)=−6<0 凹向下（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ic-inflection",
+     "text": "反曲點是圖形「凹凸改變」的地方，也就是二階導數 f″ 由正變負、或由負變正（變號）的那一點。注意：只有 f″ ＝ 0 還不夠，必須真的「變號」才是反曲點。例：f(x) ＝ x³ − 3x 的 f″ ＝ 6x 在 x ＝ 0 由負變正（變號），所以 x ＝ 0 是反曲點。",
+     "kind": "definition",
+     "source_refs": [
+      "反曲點（二階導數變號）（高中數學 微積分）"
+     ],
+     "verification_ref": "x³−3x：f″=6x 在 x=0 變號（左負右正）＝反曲點（.venv sympy 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.increasing-concavity"
+     ],
+     "body": "這一單元學怎麼用導數看出函數圖形的「增減」和「凹凸」。下面先講一階導數 f′ 判斷增減（f′ 的正負）；再講二階導數 f″ 判斷凹凸（f″ 的正負）；接著講反曲點（凹凸改變的地方、f″ 變號）；用 f(x) ＝ x³ − 3x 的一張符號帶整理，最後練習。（本單元接在『微分公式』與『高階導數』之後，會用到一階和二階導數。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.increasing-concavity"
+     ],
+     "body": "① 增減（看一階 f′）：f′(x) ＞ 0 的區間遞增、f′(x) ＜ 0 的區間遞減。② 凹凸（看二階 f″）：f″(x) ＞ 0 凹向上（∪）、f″(x) ＜ 0 凹向下（∩）。③ 反曲點：f″ 變號（凹凸改變）的那一點。以 f(x) ＝ x³ − 3x 為例：f′ ＝ 3x² − 3（根 x ＝ −1、1，把數線分成遞增／遞減／遞增），f″ ＝ 6x（在 x ＝ 0 由負變正，x ＜ 0 凹向下、x ＞ 0 凹向上，x ＝ 0 是反曲點）。看下面的符號帶，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.calc.increasing-concavity"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>增減與凹凸：以 f(x)＝x³−3x 為例</text><text x='180' y='32' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>① 一階 f′＝3x²−3（看增減）</text><text x='85' y='49' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>＋</text><text x='180' y='49' font-family='sans-serif' font-size='11' fill='#c2535d' text-anchor='middle'>－</text><text x='275' y='49' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>＋</text><line x1='40' y1='56' x2='320' y2='56' stroke='#99a7b5' stroke-width='1'/><line x1='130' y1='51' x2='130' y2='61' stroke='#99a7b5' stroke-width='1'/><line x1='230' y1='51' x2='230' y2='61' stroke='#99a7b5' stroke-width='1'/><text x='130' y='72' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>−1</text><text x='230' y='72' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>1</text><text x='85' y='84' font-family='sans-serif' font-size='9.5' fill='#33475b' text-anchor='middle'>遞增</text><text x='180' y='84' font-family='sans-serif' font-size='9.5' fill='#c2535d' text-anchor='middle'>遞減</text><text x='275' y='84' font-family='sans-serif' font-size='9.5' fill='#33475b' text-anchor='middle'>遞增</text><text x='180' y='106' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>② 二階 f″＝6x（看凹凸）</text><text x='110' y='123' font-family='sans-serif' font-size='11' fill='#c2535d' text-anchor='middle'>－</text><text x='250' y='123' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>＋</text><line x1='40' y1='130' x2='320' y2='130' stroke='#99a7b5' stroke-width='1'/><line x1='180' y1='125' x2='180' y2='135' stroke='#99a7b5' stroke-width='1'/><text x='180' y='146' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>0（反曲點）</text><text x='110' y='160' font-family='sans-serif' font-size='9.5' fill='#c2535d' text-anchor='middle'>凹向下 ∩</text><text x='250' y='160' font-family='sans-serif' font-size='9.5' fill='#33475b' text-anchor='middle'>凹向上 ∪</text></svg>",
+      "alt": "標題「增減與凹凸：以 f(x)＝x³−3x 為例」。上帶「① 一階 f′＝3x²−3（看增減）」：一條數線在 −1 與 1 兩處分界，三段的符號由左而右是 ＋、－（標紅）、＋，分別標「遞增」、「遞減」（標紅）、「遞增」。下帶「② 二階 f″＝6x（看凹凸）」：一條數線在 0 處分界，兩段符號是 －（標紅）、＋，分別標「凹向下 ∩」（標紅）與「凹向上 ∪」，0 標為「反曲點」。",
+      "caption": "以 f(x)＝x³−3x 示範增減與凹凸：一階 f′＝3x²−3 在 x＝−1、1 分界，符號 ＋｜－｜＋ 對應 遞增／遞減／遞增；二階 f″＝6x 在 x＝0 分界，符號 －｜＋ 對應 凹向下／凹向上，x＝0 是反曲點（f″ 變號處）。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.increasing-concavity"
+     ],
+     "body": "最後練增減與凹凸。重點：增減看一階 f′ 的正負（f′ ＞ 0 遞增、f′ ＜ 0 遞減）；凹凸看二階 f″ 的正負（f″ ＞ 0 凹向上、f″ ＜ 0 凹向下）；反曲點是 f″ 變號（凹凸改變）的地方。小提醒：增減是「一階」的事、凹凸是「二階」的事，兩者不要混；反曲點一定要 f″ 真的「變號」，光 f″ ＝ 0 還不足以斷定。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在某一段區間裡，如果 f′(x) ＞ 0，這段區間的函數是？",
+     "answer": "遞增",
+     "kp_ids": [
+      "math.t_sub.calc.increasing-concavity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.increasing-concavity"
+     ],
+     "options": [
+      "遞增",
+      "遞減",
+      "凹向上",
+      "保持水平不變"
+     ],
+     "distractor_rationales": {
+      "遞減": "f′(x) ＜ 0 才是遞減；f′(x) ＞ 0 是遞增。",
+      "凹向上": "凹向上要看「二階」f″ 的正負；這裡問的是一階 f′，f′ ＞ 0 代表遞增。",
+      "保持水平不變": "只有 f′(x) ＝ 0 的那一點才水平；f′(x) ＞ 0 是往右上遞增。"
+     },
+     "answer_evidence": [
+      "c-ic-incr"
+     ],
+     "feedback": "f′(x) ＞ 0 ⇒ 函數遞增（往右上走）；f′(x) ＜ 0 ⇒ 遞減。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "設 f(x) ＝ x³ − 3x（f′(x) ＝ 3x² − 3）。在 x ＝ 0 處，函數是遞增還是遞減？",
+     "answer": "遞減",
+     "kp_ids": [
+      "math.t_sub.calc.increasing-concavity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.increasing-concavity"
+     ],
+     "options": [
+      "遞減",
+      "遞增",
+      "水平（不增不減）",
+      "凹向上"
+     ],
+     "distractor_rationales": {
+      "遞增": "代入 f′(0) ＝ 3·0² − 3 ＝ −3 ＜ 0，是遞減、不是遞增。",
+      "水平（不增不減）": "水平要 f′ ＝ 0；f′(0) ＝ −3 ≠ 0，所以不是水平、是遞減。",
+      "凹向上": "凹向上是二階 f″ 的事；這題問一階增減，f′(0) ＝ −3 ＜ 0 是遞減。"
+     },
+     "answer_evidence": [
+      "c-ic-incr"
+     ],
+     "feedback": "f′(0) ＝ 3·0² − 3 ＝ −3 ＜ 0，所以 x ＝ 0 處遞減。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "設 f(x) ＝ x³ − 3x，二階導數 f″(x) ＝ 6x。在 x ＝ −1 處，圖形凹向上還是凹向下？",
+     "answer": "凹向下",
+     "kp_ids": [
+      "math.t_sub.calc.increasing-concavity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.increasing-concavity"
+     ],
+     "options": [
+      "凹向下",
+      "凹向上",
+      "這一點是反曲點",
+      "圖形是直線"
+     ],
+     "distractor_rationales": {
+      "凹向上": "代入 f″(−1) ＝ 6·(−1) ＝ −6 ＜ 0，f″ ＜ 0 是凹向下、不是凹向上。",
+      "這一點是反曲點": "反曲點要 f″ ＝ 0 且變號；f″(−1) ＝ −6 ≠ 0，所以不是反曲點。",
+      "圖形是直線": "直線要 f″ 恆為 0；這裡 f″(−1) ＝ −6 ≠ 0，圖形凹向下。"
+     },
+     "answer_evidence": [
+      "c-ic-concave"
+     ],
+     "feedback": "f″(−1) ＝ 6·(−1) ＝ −6 ＜ 0，f″ ＜ 0 ⇒ 凹向下。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "承上，f(x) ＝ x³ − 3x（f″(x) ＝ 6x）的「反曲點」在哪裡？（反曲點 ＝ f″ 變號的地方）",
+     "answer": "x ＝ 0",
+     "kp_ids": [
+      "math.t_sub.calc.increasing-concavity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.increasing-concavity"
+     ],
+     "options": [
+      "x ＝ 0",
+      "x ＝ 1",
+      "x ＝ −1",
+      "x ＝ 3"
+     ],
+     "distractor_rationales": {
+      "x ＝ 1": "x ＝ 1 是 f′ ＝ 0（增減的分界），不是 f″ 變號處；f″ ＝ 6x 在 x ＝ 0 才變號。",
+      "x ＝ −1": "x ＝ −1 也是 f′ ＝ 0 的點，不是 f″ 變號處；反曲點在 f″ ＝ 6x ＝ 0 即 x ＝ 0。",
+      "x ＝ 3": "f″(3) ＝ 18 ≠ 0，不是 f″ 變號處；f″ ＝ 6x 在 x ＝ 0 變號。"
+     },
+     "answer_evidence": [
+      "c-ic-inflection"
+     ],
+     "feedback": "f″ ＝ 6x 在 x ＝ 0 由負變正（變號），所以反曲點在 x ＝ 0。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（增減看一階 f′ 正負：f′>0 遞增、f′<0 遞減；凹凸看二階 f″ 正負：f″>0 凹向上、f″<0 凹向下；反曲點＝f″ 變號處；以 x³−3x 為例 f′=3x²−3 根±1、f″=6x 反曲點 x=0；增減是一階、凹凸是二階，別混）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
