@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 統計（stats）strand t_adv 單元。知識點 math.t_adv.stats.standardization（資料的線性變換與標準化）。tier=t_adv（高中學測/分科）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：線性變換 (linear transformation)、標準分數 (standard score / z-score)、標準化 (standardization)。★scope（高中 t_adv，母體）：資料每筆加減同一常數 b（平移）→平均±b、標準差不變；每筆乘同一常數 a（縮放）→平均×a、標準差×|a|（變異數×a²）；合起來 y=ax+b → ȳ=a·x̄+b、σy=|a|·σx；標準分數 z=(x−μ)/σ＝先減平均再除以標準差，使新資料平均0、標準差1，便於比較不同組的相對位置。prereq＝變異數與標準差 variance-std。repro（tools/verify/math_checks7.py::stats.standardization）：a=2,b=3,Y=2x+3→mean(Y)=2·mean+3、std(Y)=2·std（.venv 已核）。只母體、不含共變數/相關、不含常態分布查表。★自檢（math-unit defect-classes #1–#59）：figure＝線性變換 y=2x+3 影響表 SVG（2 欄 原資料x／變換後y，列：資料 1,1,7,7→5,5,17,17；平均 4→11(=2×4+3)；標準差 3→6(=2×3)，標準差列變換後值標紅），alt 與 SVG text 逐字一致（#33）、標題『線性變換 y＝2x＋3：平均與標準差怎麼變』寫進 alt 開頭；teach 值集{4,3,11,6,2,1,7}與 practice 數值答案{25,20,10,0}無交集避#10（Q1 std given 7 與 teach 資料值7 不同語意、Q1 答案為 25/7 判讀題非回推）；practice：Q1 平移（平均20 std7 +5→平均25 std7，選項數對）、Q2 縮放（平均10 std5 ×2→平均20 std10，選項數對）、Q3 概念（加常數不改變＝標準差）、Q4 z-score（標準化後平均0 std1，選項數對）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53，如把常數加到std/平移當縮放/std平方）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_stats_standardization.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.stats.standardization",
+   "title_zh": "線性變換與標準化",
+   "can_do": "我知道把一組資料每一筆都『加減同一個數』（平移），平均數會跟著加減、但標準差不變；每一筆都『乘上同一個數』（縮放），平均變成那個倍數、標準差變成那個倍數的絕對值。合起來，若 y ＝ ax ＋ b，新平均 ＝ a × 舊平均 ＋ b、新標準差 ＝ |a| × 舊標準差。我也知道『標準分數 (z-score)』＝（資料 − 平均）÷ 標準差，這叫『標準化 (standardization)』，會讓新資料的平均變成 0、標準差變成 1，方便比較不同組資料裡某一筆的相對位置。",
+   "situation_group": "統計：線性變換與標準化",
+   "subject": "math",
+   "strand": "stats",
+   "est_minutes": 15,
+   "knowledge_point_ids": [
+    "math.t_adv.stats.standardization"
+   ],
+   "prerequisites": [
+    "math.t_adv.stats.variance-std"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-sd-shift",
+     "text": "把一組資料的每一筆都加上（或減去）同一個常數 b，叫『平移』。平移後，平均數也跟著加（或減）b，但因為每一筆和平均的相對距離完全沒變，所以分散程度不變——標準差和變異數都不變。例：全班成績每人都加 3 分，平均加 3，但標準差不變。",
+     "kind": "definition",
+     "source_refs": [
+      "資料加減常數對平均與標準差的影響（高中數學 統計）"
+     ],
+     "verification_ref": "x+b：平均+b、標準差不變；{1,1,7,7}+3→平均7、std 仍3（.venv 驗 pstdev）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-sd-scale",
+     "text": "把一組資料的每一筆都乘上同一個常數 a，叫『縮放』。縮放後，平均變成原來的 a 倍，標準差變成原來的 |a| 倍（取絕對值，因為標準差不會是負的），變異數則變成 a² 倍。合起來看線性變換 y ＝ ax ＋ b：新平均 ＝ a × 舊平均 ＋ b，新標準差 ＝ |a| × 舊標準差（加上去的 b 只平移、不影響標準差）。例：每筆乘 2，平均變 2 倍、標準差也變 2 倍。",
+     "kind": "definition",
+     "source_refs": [
+      "資料乘常數與線性變換 y=ax+b 對平均與標準差的影響（高中數學 統計）"
+     ],
+     "verification_ref": "y=ax+b：平均 aμ+b、標準差 |a|σ；{1,1,7,7}→2x+3 平均11 std6（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-sd-z",
+     "text": "『標準分數 (z-score)』＝（資料 − 平均）÷ 標準差，這個動作叫『標準化 (standardization)』：先把每一筆減去平均（平移，使平均變 0），再除以標準差（縮放，使標準差變 1）。所以標準化後的新資料，平均一定是 0、標準差一定是 1。標準化後可以比較不同組資料裡某一筆的相對位置（例如把不同科目的成績換成標準分數再比）。",
+     "kind": "definition",
+     "source_refs": [
+      "標準分數 z=(x−μ)/σ 與標準化（高中數學 統計）"
+     ],
+     "verification_ref": "z=(x−μ)/σ：標準化後 mean=0、std=1（.venv 驗 z mean0 std1）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.stats.standardization"
+     ],
+     "body": "這一單元學資料的『線性變換』和『標準化』。下面先講平移（每筆加減同一個數）對平均和標準差的影響；再講縮放（每筆乘同一個數）的影響，並合成 y ＝ ax ＋ b 的規則；接著講標準分數 z ＝（資料 − 平均）÷ 標準差；用一張 y ＝ 2x ＋ 3 的變換表示範，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.stats.standardization"
+     ],
+     "body": "① 平移（加減常數 b）：每筆都加 b，平均跟著加 b，但每筆和平均的距離沒變，所以標準差不變。② 縮放（乘常數 a）：每筆都乘 a，平均變 a 倍，標準差變 |a| 倍（變異數變 a² 倍）。合起來 y ＝ ax ＋ b：新平均 ＝ a × 舊平均 ＋ b、新標準差 ＝ |a| × 舊標準差。看下面的表（原資料 1、1、7、7，平均 4、標準差 3）：做 y ＝ 2x ＋ 3，新資料變成 5、5、17、17，平均 ＝ 2 × 4 ＋ 3 ＝ 11、標準差 ＝ 2 × 3 ＝ 6（加的 3 只平移、不影響標準差）。③ 標準分數：z ＝（資料 − 平均）÷ 標準差，就是先減平均（平均變 0）再除以標準差（標準差變 1），所以標準化後平均 0、標準差 1，方便比較不同組的相對位置。下面用這張變換表整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.stats.standardization"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='15' font-family='sans-serif' font-size='12' fill='#2f6f54' text-anchor='middle' font-weight='bold'>線性變換 y＝2x＋3：平均與標準差怎麼變</text><rect x='24' y='28' width='308' height='26' fill='#eef4ff'/><rect x='24' y='28' width='308' height='114' fill='none' stroke='#99a7b5' stroke-width='1'/><line x1='128' y1='28' x2='128' y2='142' stroke='#99a7b5' stroke-width='1'/><line x1='230' y1='28' x2='230' y2='142' stroke='#99a7b5' stroke-width='1'/><line x1='24' y1='54' x2='332' y2='54' stroke='#99a7b5' stroke-width='1'/><line x1='24' y1='92' x2='332' y2='92' stroke='#99a7b5' stroke-width='1'/><line x1='24' y1='117' x2='332' y2='117' stroke='#99a7b5' stroke-width='1'/><text x='76' y='45' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>項目</text><text x='179' y='45' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>原資料 x</text><text x='281' y='45' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>變換後 y</text><text x='76' y='77' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>資料</text><text x='179' y='77' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>1、1、7、7</text><text x='281' y='77' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>5、5、17、17</text><text x='76' y='108' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>平均</text><text x='179' y='108' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>4</text><text x='281' y='108' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>2×4＋3＝11</text><text x='76' y='133' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>標準差</text><text x='179' y='133' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>3</text><text x='281' y='133' font-family='sans-serif' font-size='11.5' fill='#c2535d' text-anchor='middle' font-weight='bold'>2×3＝6</text><text x='180' y='157' font-family='sans-serif' font-size='10' fill='#6b7785' text-anchor='middle'>乘 2 使平均、標準差都變 2 倍；加 3 只平移平均、不影響標準差</text></svg>",
+      "alt": "標題「線性變換 y＝2x＋3：平均與標準差怎麼變」。一張表，兩欄 原資料 x、變換後 y：資料列 1、1、7、7 → 5、5、17、17；平均列 4 → 2×4＋3＝11；標準差列 3 → 2×3＝6（標紅）。下方寫「乘 2 使平均、標準差都變 2 倍；加 3 只平移平均、不影響標準差」。",
+      "caption": "線性變換 y＝2x＋3 影響表（原資料 1、1、7、7，平均 4、標準差 3）：變換後資料 5、5、17、17，平均 ＝ 2×4＋3 ＝ 11、標準差 ＝ 2×3 ＝ 6。乘 2 讓平均和標準差都變 2 倍；加 3 只讓平均平移、不改變標準差。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.stats.standardization"
+     ],
+     "body": "最後練線性變換與標準化。重點：加減常數 b → 平均±b、標準差不變；乘常數 a → 平均×a、標準差×|a|、變異數×a²；合起來 y ＝ ax ＋ b → 新平均 ＝ a×舊平均＋b、新標準差 ＝ |a|×舊標準差；標準分數 z ＝（資料−平均）÷標準差，標準化後平均 0、標準差 1。小提醒：加減的常數「不影響標準差」，只有乘除才會改變標準差。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一組資料的平均是 20、標準差是 7。如果每一筆都加上 5，新的平均和標準差各是多少？",
+     "answer": "平均 25、標準差 7",
+     "kp_ids": [
+      "math.t_adv.stats.standardization"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.stats.standardization"
+     ],
+     "options": [
+      "平均 25、標準差 7",
+      "平均 25、標準差 12",
+      "平均 20、標準差 7",
+      "平均 25、標準差 35"
+     ],
+     "distractor_rationales": {
+      "平均 25、標準差 12": "平均算對了（20＋5＝25），但標準差不該加 5；加常數只平移、不改變標準差，標準差仍是 7。",
+      "平均 20、標準差 7": "標準差對（不變），但平均也要加 5；每筆加 5，平均從 20 變成 25。",
+      "平均 25、標準差 35": "標準差不是乘 5；加常數不改變標準差（仍 7）。35 是把 7×5，誤把平移當成縮放了。"
+     },
+     "answer_evidence": [
+      "c-sd-shift"
+     ],
+     "feedback": "每筆加同一個數（平移）：平均跟著加（20＋5＝25），標準差不變（仍 7）。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一組資料的平均是 10、標準差是 5。如果每一筆都乘以 2，新的平均和標準差各是多少？",
+     "answer": "平均 20、標準差 10",
+     "kp_ids": [
+      "math.t_adv.stats.standardization"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.stats.standardization"
+     ],
+     "options": [
+      "平均 20、標準差 10",
+      "平均 20、標準差 5",
+      "平均 12、標準差 10",
+      "平均 20、標準差 25"
+     ],
+     "distractor_rationales": {
+      "平均 20、標準差 5": "平均算對了（10×2＝20），但標準差也要乘 2；乘常數會縮放，標準差從 5 變成 10。",
+      "平均 12、標準差 10": "標準差對（5×2＝10），但平均不是加 2；每筆乘 2，平均是 10×2＝20，不是 10＋2。",
+      "平均 20、標準差 25": "標準差不是乘自己（5×5＝25）；每筆乘 2，標準差就乘 2，是 5×2＝10。（變異數才會變 a²＝4 倍）"
+     },
+     "answer_evidence": [
+      "c-sd-scale"
+     ],
+     "feedback": "每筆乘同一個數（縮放）：平均變那個倍數（10×2＝20），標準差也變那個倍數（5×2＝10）。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "把一組資料的每一筆都加上同一個數，下面哪一個「不會」改變？",
+     "answer": "標準差",
+     "kp_ids": [
+      "math.t_adv.stats.standardization"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.stats.standardization"
+     ],
+     "options": [
+      "標準差",
+      "平均數",
+      "每一筆資料的值",
+      "資料裡的最大值"
+     ],
+     "distractor_rationales": {
+      "平均數": "每筆都加同一個數，平均也會跟著加、會改變；不變的是標準差（分散程度）。",
+      "每一筆資料的值": "每一筆都加了一個數，值當然都變了；不變的是整組的分散程度（標準差）。",
+      "資料裡的最大值": "最大值也加了同一個數、會跟著變大；不變的是標準差。"
+     },
+     "answer_evidence": [
+      "c-sd-shift"
+     ],
+     "feedback": "加同一個常數是平移：每筆和平均的相對距離沒變，所以標準差（分散程度）不變；但平均、各筆的值、最大值都會跟著加。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "把一組資料做「標準化」（每一筆都減平均、再除以標準差）。標準化後的新資料，平均和標準差會變成多少？",
+     "answer": "平均 0、標準差 1",
+     "kp_ids": [
+      "math.t_adv.stats.standardization"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.stats.standardization"
+     ],
+     "options": [
+      "平均 0、標準差 1",
+      "平均 1、標準差 0",
+      "平均 0、標準差 0",
+      "和原來的平均、標準差一樣"
+     ],
+     "distractor_rationales": {
+      "平均 1、標準差 0": "順序弄反了：減平均使平均變 0、除以標準差使標準差變 1，所以是平均 0、標準差 1。",
+      "平均 0、標準差 0": "平均確實變 0，但標準差不會變 0（資料仍有分散）；除以標準差後標準差變成 1。",
+      "和原來的平均、標準差一樣": "標準化就是要把平均、標準差改成固定的 0 和 1（方便比較），不會和原來一樣。"
+     },
+     "answer_evidence": [
+      "c-sd-z"
+     ],
+     "feedback": "標準化＝先減平均（平均變 0）再除以標準差（標準差變 1），所以標準化後平均 0、標準差 1。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（加減常數 b→平均±b、標準差不變；乘常數 a→平均×a、標準差×|a|、變異數×a²；y=ax+b→新平均 a×舊平均＋b、新標準差 |a|×舊標準差；標準分數 z=(資料−平均)÷標準差、標準化後平均0標準差1）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
