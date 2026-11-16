@@ -102,6 +102,15 @@ def c_trig_calc():
     assert diff(sin(x), x) == cos(x) and integrate(sin(x), (x, 0, pi)) == 2
     return _ok("calc.trig-calculus", "d(sinx)=cosx；∫₀^π sinx dx=2")
 
+# ---------- vector（11）----------
+def c_vec_plane_def():
+    v = sp.Matrix([3, 4])
+    assert v.norm() == 5                              # |(3,4)|=5
+    assert list((2*v)) == [6, 8]                      # 2v=(6,8) 同向2倍
+    assert list((-v)) == [-3, -4]                     # −v=(−3,−4) 等長反向
+    assert sp.Matrix([3, 4]) == sp.Matrix([3, 4])     # 分量相同即相等
+    return _ok("vector.plane-definition", "|(3,4)|=5；2(3,4)=(6,8)；−(3,4)=(−3,−4)；分量相同即相等")
+
 # ---------- stats（18）----------
 D = [2, 4, 4, 4, 5, 5, 7, 9]      # 共用樣本（std 範例，μ=5,σ=2）
 def s_collect():
@@ -235,6 +244,7 @@ CHECKS = {s: fn for s, fn in {
     "calc.volume-revolution": c_volume_rev, "calc.integration-substitution": c_integration_sub,
     "calc.integration-by-parts": c_integration_parts,
     "calc.exp-log-calculus": c_exp_log_calc, "calc.trig-calculus": c_trig_calc,
+    "vector.plane-definition": c_vec_plane_def,
     "stats.collect-organize": s_collect, "stats.bar-line-chart": s_bar_line,
     "stats.pie-chart": s_pie, "stats.table-read": s_table, "stats.mean": s_mean,
     "stats.frequency-table": s_freq_table, "stats.cumulative-relative": s_cumulative,
