@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 05:44 vector space-dot-product 空間向量內積與夾角 5/5 DONE-GATE 全綠（t_sub 高中 分科/深階，★3D 兩向量夾角θ 示意 SVG）→ vector strand 9/11
+- **math_vector_space_dot_product frozen `cecc7096a10f08c3`**（R1 抓 1 minor→修→R1-R5 連 5 clean、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==cecc7096／per_page_5clean 565/565 頁 0 違規（space_dot_product absent）／repro PASS／iPad 四角色簽核（3D 斜投影坐標系、紅 a=(1,2,2)、綠 b=(2,0,1) 從 O、夾角 θ 小弧、下註 a·b=4；★3D 示意圖 #62 N/A、箭頭方向正確 #43、右緣0%）。
+- 空間向量內積與夾角（t_sub，prereq space-vector）＝內積 a·b=a₁b₁+a₂b₂+a₃b₃（對應分量相乘再相加、比平面多一個 z 項、結果是數）；幾何 a·b=|a||b|cosθ、cosθ=a·b/(|a||b|) 求夾角；垂直判定 a·b=0 ⟺ a⊥b；自身 a·a=|a|²。以 a=(1,2,2)、b=(2,0,1) 貫穿：a·b=4、|a|=3、|b|=√5、cosθ=4/(3√5)；垂直示範 (1,2,2)·(2,−1,0)=0；自身 a·a=9。
+- ★repro：binding＝math_checks6::vector.space-dot-product（驗 (1,2,2)·(2,0,1)=4、|a|=3 PASS）；單元引 math_checks7::vector.space-dot-product（本 session 新增，驗精確數值含 cosθ/垂直/自身，.venv PASS）。
+- practice：Q1 內積=4（hero，含 2×0=0 項）、Q2 垂直 transfer=(2,−1,0)、Q3 概念『內積0=垂直』、Q4 夾角 cosθ=4/(3√5)（給 |a|/|b|/a·b 套公式）。凍前 .venv 反算每誘答單一錯誤 #53：Q1 相乘沒相加寫成向量/2×0誤為2/見0就全0；Q2 取內積非0 向量；Q4 分母相加/分子分母顛倒/漏|b|。
+- ★收斂史：R1 panel 5/5 confirmed 1 minor（readability）＝Q3 誘答說明用「係數積」（此單元未定義的非標準用語，平行標準說法＝「倍數」）→ R1 無 banked rounds 故直接修為「一個向量是另一個的倍數」、重凍 cecc7096（原 c4b40274）、版面/figure 未變四角色延續 → R1-R5 重跑一次過。★教訓：跨單元借用的術語（係數積＝此前 space-vector 定義的 kv）在「未重新定義它的單元」裡出現會成非標準用語缺陷；誘答說明也要用該單元已教/標準的詞。
+- 下一步：vector 第 10 單元＝triangle-tetra-area（以內外積求三角形/平行四邊形面積與四面體體積；已有 math_checks6 repro；t_sub）；vector 共 11 KP，剩 2（triangle-tetra-area/geometry-apply）。接著 conic(7)/complex(6)/finmath(6)/space(5)/matrix(5)/linprog(2)/determinant(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 05:20 vector space-vector 空間向量的坐標與運算 5/5 DONE-GATE 全綠（t_sub 高中 分科/深階，★3D 斜投影坐標示意 SVG）→ vector strand 8/11
 - **math_vector_space_vector frozen `8873862c9b428ee3`**（R1-R5 連 5 clean、L3 每輪 exit 0；R1-R5 一次過無 panel-confirmed defect；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==8873862c／per_page_5clean 564/564 頁 0 違規（space_vector absent）／repro PASS／iPad 四角色簽核（3D 斜投影坐標系 z 上/y 右/x 左下、灰虛線 O→x→y→z 補出長方體落點 P、深藍 OP 對角、標 P=(a,b,c)；★此為 3D 示意圖非 2D 度量圖 #62 N/A、箭頭方向正確 #43、右緣0%）。
 - 空間向量的坐標與運算（t_sub，空間向量入門、KP 本身無前置、教學接平面向量）＝空間直角坐標 x/y/z 三軸；向量＝三坐標 (a,b,c)；加減/係數積逐分量（和平面一樣）；模 |v|=√(a²+b²+c²)（比平面多一個 z 分量平方、先平方再加開根）；平行＝坐標成比例（一個是另一個係數積）。以 a=(1,2,3)、b=(4,5,6) 貫穿：a+b=(5,7,9)、a−b=(−3,−3,−3)、2a=(2,4,6)；模 |(2,3,6)|=7（乾淨）、|(1,2,3)|=√14（展示公式）。
