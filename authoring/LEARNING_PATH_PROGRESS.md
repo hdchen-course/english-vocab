@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 13:31 stats strand correlation 相關係數 5/5 DONE-GATE 全綠（t_adv 高中，★r 數線 SVG）→ stats 15/18
+- **math_stats_correlation frozen `f89468eeff060be8`**（R1-R5 連 5 clean、L3 每輪 exit 0；R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==f89468ee／per_page_5clean correlation absent／iPad 四角色簽核（r 數線紅(−1)/灰(0)/綠(1)語意化配色、5 刻度對齊、端點標籤不重疊、右緣0%）。
+- 相關係數（t_adv）＝r∈[−1,1] 衡量直線關係方向與強弱；r>0 正相關、r<0 負相關、r≈0 幾乎無直線關係；|r| 越接近 1 越強、r=±1 完全相關；★相關≠因果（共同第三因素）。teach figure r 數線。practice：Q1 r=−0.8(負且強非完全)、Q2 範圍(−1~1)、Q3 強弱比較(0.9>0.3)、Q4 相關≠因果(冰淇淋/溺水共因天氣熱)。只定性讀、不教 r 計算公式。prereq＝bivariate-scatter。
+- ★L3 教訓（已銀行）：R2 首跑 content 乾淨但 L3 FAIL「deepest 50%」——因照抄 reviewer 回報的錨點文字（缺行尾逗號）建 L3 檔，exact-match 對不上最深錨點。我誤把 bank 排在 L3 之後仍執行→撤回誤 banked R2（commit 874730d0f）、重跑 R2。**修法＝L3 驗證檔一律用「實際檔案行文字」(python 讀該行) 建，不照抄 reviewer 回報**；R3-R5 皆此法、全過。Q2「之間」panel 5/5 NOT A DEFECT（之間含端點慣例、無端點對比選項）。
+- 下一步：stats 其餘 3 單元（regression-line/sampling-survey/risk-decision）；接著 calc/vector 等。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-16 13:09 stats strand bivariate-scatter 二維資料與散布圖 5/5 DONE-GATE 全綠（t_adv 高中，★散布圖 SVG）→ stats 14/18
 - **math_stats_bivariate_scatter frozen `f0c9f33f361c0ede`**（R1-R5 連 5 clean、L3 每輪 exit 0；R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==f0c9f33f／per_page_5clean bivariate_scatter absent／iPad 四角色簽核（散布圖 5 藍點左下→右上升高＝正關係清楚、兩軸齊、軸標籤分數/讀書時間、右緣0%）。
 - 二維資料與散布圖（t_adv）＝每對象記兩變數成對 (x,y)、對象數=成對數；散布圖每對畫一點、點數=成對數；點往右上＝正關係、右下＝負關係、散亂＝看不出關係（只定性讀方向，相關係數 r 在 correlation 另單元）。teach figure 讀書時間 vs 分數 5 點正關係。practice：Q1 點數(8 人→8 點)、Q2 正關係、Q3 負關係、Q4 散布圖用途(看兩變數關係 vs 折線/長條/圓形)。prereq＝standardization。首個 scatter-plot(點+軸)型 figure。
