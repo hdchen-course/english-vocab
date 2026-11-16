@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 統計（stats）strand t_adv 單元。知識點 math.t_adv.stats.bivariate-scatter（二維資料與散布圖）。tier=t_adv（高中學測/分科）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：二維資料 (bivariate data)、散布圖 (scatter plot)。★scope（高中 t_adv）：二維資料＝每個對象同時記錄兩個變數、成對 (x,y)；散布圖＝把每一對畫成平面一個點（橫軸一變數、縱軸另一變數），有幾對就幾點；看點的分布判斷關係趨勢：大致右上＝正關係（x 大 y 也大）、右下＝負關係（x 大 y 小）、散亂無方向＝看不出關係。只定性讀趨勢，相關係數 r 的數值在 correlation 另單元、最適直線在 regression-line 另單元。prereq＝線性變換與標準化 standardization。repro（tools/verify/math_checks7.py::stats.bivariate-scatter）：xs,ys 成對 len 相等（散布圖點數=成對數3，.venv 已核）。★自檢（math-unit defect-classes #1–#59）：figure＝散布圖 SVG（讀書時間 x vs 分數 y，5 點 (1,60)(2,65)(3,75)(4,80)(5,90) 往右上＝正關係，座標 .venv 算：px=50+(x/6)*270、py=135−(分數−50)*2；y 軸 x=50 自 y30→135、x 軸 y=135 自 x50→320；點 r=4 house 藍），alt 與 SVG text 逐字一致（#33）、標題『散布圖：兩個變數成對畫成點，看它們的關係』寫進 alt 開頭；teach 點值{1,2,3,4,5,60,65,75,80,90}與 practice 數值答案{8}無交集避#10；practice：Q1 點數（8 人兩變數→8 點，選項數）、Q2 讀正關係（右上→正關係，選項類別）、Q3 讀負關係（右下→負關係，選項類別）、Q4 散布圖用途（看兩變數關係，選項類別）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53，如點數×變數數/把正當負/當成折線長條圓形圖）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_stats_bivariate_scatter.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.stats.bivariate-scatter",
+   "title_zh": "二維資料與散布圖",
+   "can_do": "我知道『二維資料 (bivariate data)』是每個對象同時記錄兩個變數、成對出現（像每個人的身高和體重）。我會把二維資料畫成『散布圖 (scatter plot)』——把每一對 (x, y) 畫成平面上的一個點（橫軸放一個變數、縱軸放另一個）。我會從點的分布看兩個變數的關係：點大致往右上＝正關係（一個變大、另一個也變大）、往右下＝負關係（一個變大、另一個變小）、散亂看不出方向＝沒有明顯關係。",
+   "situation_group": "統計：二維資料與散布圖",
+   "subject": "math",
+   "strand": "stats",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_adv.stats.bivariate-scatter"
+   ],
+   "prerequisites": [
+    "math.t_adv.stats.standardization"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-bv-pair",
+     "text": "『二維資料 (bivariate data)』是指每一個對象同時記錄「兩個」變數，所以資料是成對出現的 (x, y)。例如對每一個同學都記錄「身高」和「體重」兩個數值，每個人就對應一對 (身高, 體重)。有幾個對象，就有幾對資料。",
+     "kind": "definition",
+     "source_refs": [
+      "二維（成對）資料的意義（高中數學 統計）"
+     ],
+     "verification_ref": "成對 (x,y)，對象數=成對數（定義；repro len(xs)==len(ys)）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-bv-plot",
+     "text": "『散布圖 (scatter plot)』是把二維資料畫出來的圖：橫軸放一個變數、縱軸放另一個變數，把每一對 (x, y) 畫成平面上的一個點。有幾對資料，散布圖上就有幾個點。例如 5 對 (讀書時間, 分數) 的資料，就在圖上畫 5 個點。",
+     "kind": "definition",
+     "source_refs": [
+      "散布圖的畫法（高中數學 統計）"
+     ],
+     "verification_ref": "每對一點、點數=成對數（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-bv-trend",
+     "text": "從散布圖上點的分布，可以看出兩個變數的關係方向：點大致沿「右上」方向分布（一個變數變大、另一個也跟著變大）叫『正關係』；點大致沿「右下」方向（一個變大、另一個反而變小）叫『負關係』；點散亂、看不出明顯方向，就代表「看不出明顯關係」。這裡只先看關係的方向，確切的強弱（相關係數）之後再學。",
+     "kind": "definition",
+     "source_refs": [
+      "散布圖判讀關係方向（高中數學 統計）"
+     ],
+     "verification_ref": "右上＝正、右下＝負、散亂＝無明顯關係（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.stats.bivariate-scatter"
+     ],
+     "body": "這一單元學『二維資料』和『散布圖』。下面先講二維資料——每個對象同時記錄兩個變數、成對出現；再講散布圖——把每一對畫成平面上一個點；接著講怎麼從點的分布看出兩個變數是正關係、負關係還是看不出關係；用一張讀書時間與分數的散布圖示範，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.stats.bivariate-scatter"
+     ],
+     "body": "① 二維資料：每個對象同時記錄兩個變數，成對 (x, y)，有幾個對象就有幾對。② 散布圖：橫軸放一個變數、縱軸放另一個，把每一對畫成一個點，有幾對就有幾個點。③ 看關係方向：點大致往右上（一個大、另一個也大）＝正關係；往右下（一個大、另一個小）＝負關係；散亂無方向＝看不出關係。看下面的圖（橫軸讀書時間、縱軸分數，5 位同學 5 個點）：點大致從左下往右上分布，表示讀書時間越多、分數大致越高，是正關係。下面用這張散布圖整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.stats.bivariate-scatter"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='15' font-family='sans-serif' font-size='12' fill='#2f6f54' text-anchor='middle' font-weight='bold'>散布圖：兩個變數成對畫成點，看它們的關係</text><line x1='50' y1='30' x2='50' y2='135' stroke='#99a7b5' stroke-width='1'/><line x1='50' y1='135' x2='320' y2='135' stroke='#99a7b5' stroke-width='1'/><text x='44' y='40' font-family='sans-serif' font-size='10' fill='#6b7785' text-anchor='end'>分數</text><text x='315' y='150' font-family='sans-serif' font-size='10' fill='#6b7785' text-anchor='end'>讀書時間</text><circle cx='95' cy='115' r='4' fill='#5b8def'/><circle cx='140' cy='105' r='4' fill='#5b8def'/><circle cx='185' cy='85' r='4' fill='#5b8def'/><circle cx='230' cy='75' r='4' fill='#5b8def'/><circle cx='275' cy='55' r='4' fill='#5b8def'/><text x='185' y='162' font-family='sans-serif' font-size='10.5' fill='#6b7785' text-anchor='middle'>點大致往右上 → 正關係（讀書時間越多，分數大致越高）</text></svg>",
+      "alt": "標題「散布圖：兩個變數成對畫成點，看它們的關係」。一張散布圖，橫軸是讀書時間、縱軸是分數，畫了 5 個點，位置從左下往右上一路升高。下方寫「點大致往右上 → 正關係（讀書時間越多，分數大致越高）」。",
+      "caption": "散布圖：橫軸讀書時間、縱軸分數，5 位同學 5 個點。點大致從左下往右上分布，表示讀書時間越多、分數大致越高，兩個變數是正關係。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.stats.bivariate-scatter"
+     ],
+     "body": "最後練二維資料與散布圖。重點：二維資料是每個對象同時記錄兩個變數、成對 (x, y)；散布圖把每一對畫成一個點，有幾對就有幾個點；點大致往右上＝正關係、往右下＝負關係、散亂＝看不出關係。小提醒：散布圖看的是「兩個變數之間的關係」，不是看單一變數隨時間的變化。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "有 8 個同學，每人都記錄「身高」和「體重」兩個數值。把這些二維資料畫成散布圖，圖上會有幾個點？",
+     "answer": "8 個",
+     "kp_ids": [
+      "math.t_adv.stats.bivariate-scatter"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.stats.bivariate-scatter"
+     ],
+     "options": [
+      "8 個",
+      "16 個",
+      "2 個",
+      "1 個"
+     ],
+     "distractor_rationales": {
+      "16 個": "16 是把 8 個人乘 2 個變數；但一個人的 (身高, 體重) 只畫成「一個」點，所以是 8 個點。",
+      "2 個": "2 是變數的個數（身高、體重）；散布圖的點數看的是對象（人）的個數，是 8 個。",
+      "1 個": "不是只有 1 個點；每個同學對應一個點，8 個同學就有 8 個點。"
+     },
+     "answer_evidence": [
+      "c-bv-pair",
+      "c-bv-plot"
+     ],
+     "feedback": "每個同學的 (身高, 體重) 是一對資料、畫成一個點；有幾個對象就有幾對、就有幾個點：8 個同學 ＝ 8 個點。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一張散布圖上，點大致從左下往右上分布（一個變數變大，另一個也跟著變大）。這代表兩個變數之間是什麼關係？",
+     "answer": "正關係",
+     "kp_ids": [
+      "math.t_adv.stats.bivariate-scatter"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.stats.bivariate-scatter"
+     ],
+     "options": [
+      "正關係",
+      "負關係",
+      "看不出明顯關係",
+      "圖上完全沒有資料"
+     ],
+     "distractor_rationales": {
+      "負關係": "負關係是點往「右下」（一個變大、另一個變小）；這裡點往右上、兩個一起變大，是正關係。",
+      "看不出明顯關係": "看不出關係是點散亂、沒有方向；這裡點明顯沿右上方向排列，看得出是正關係。",
+      "圖上完全沒有資料": "圖上有點就表示有資料；這些點往右上分布，代表正關係。"
+     },
+     "answer_evidence": [
+      "c-bv-trend"
+     ],
+     "feedback": "點往右上（兩個變數一起變大）就是正關係。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "另一張散布圖上，點大致從左上往右下分布（一個變數變大，另一個反而變小）。這代表兩個變數之間是什麼關係？",
+     "answer": "負關係",
+     "kp_ids": [
+      "math.t_adv.stats.bivariate-scatter"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.stats.bivariate-scatter"
+     ],
+     "options": [
+      "負關係",
+      "正關係",
+      "看不出明顯關係",
+      "兩個變數一定相等"
+     ],
+     "distractor_rationales": {
+      "正關係": "正關係是點往「右上」（兩個一起變大）；這裡點往右下、一個變大另一個變小，是負關係。",
+      "看不出明顯關係": "看不出關係是點散亂、沒有方向；這裡點明顯沿右下方向排列，看得出是負關係。",
+      "兩個變數一定相等": "負關係只表示一個變大另一個變小，不代表兩個數值相等；它們的關係方向是負的。"
+     },
+     "answer_evidence": [
+      "c-bv-trend"
+     ],
+     "feedback": "點往右下（一個變大、另一個變小）就是負關係。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "散布圖最適合用來看下面哪一件事？",
+     "answer": "兩個變數之間有沒有關係、是什麼方向的關係",
+     "kp_ids": [
+      "math.t_adv.stats.bivariate-scatter"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.stats.bivariate-scatter"
+     ],
+     "options": [
+      "兩個變數之間有沒有關係、是什麼方向的關係",
+      "一個變數隨時間怎麼變化",
+      "各個類別的數量誰多誰少",
+      "各部分占整體的比例"
+     ],
+     "distractor_rationales": {
+      "一個變數隨時間怎麼變化": "看一個量隨時間的變化是折線圖的用途；散布圖看的是「兩個變數」之間的關係。",
+      "各個類別的數量誰多誰少": "比較不同類別的數量多少是長條圖的用途；散布圖看的是兩個變數的關係。",
+      "各部分占整體的比例": "看各部分占整體的比例是圓形圖的用途；散布圖看的是兩個變數之間的關係。"
+     },
+     "answer_evidence": [
+      "c-bv-trend"
+     ],
+     "feedback": "散布圖把成對資料畫成點，最適合看「兩個變數之間有沒有關係、方向是正是負」。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（二維資料＝每對象記兩變數成對 (x,y)、對象數=成對數；散布圖＝每對畫一點、點數=成對數；點往右上＝正關係、右下＝負關係、散亂＝看不出關係；散布圖用來看兩變數的關係）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
