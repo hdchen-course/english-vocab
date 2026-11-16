@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 19:58 calc sequence-limit 數列極限與收斂/發散判定 5/5 DONE-GATE 全綠（t_sub 高中 分科-數甲，★1/n 收斂數線 SVG）→ calc 7/20
+- **math_calc_sequence_limit frozen `e5cbd86a18452ce3`**（R1-R5 連 5 clean、L3 每輪 exit 0 以實際檔案行文字建檔；R4/R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 violation／question_correctness CLEAN／pedagogy 0 hard+0 advisory／content_sha==e5cbd86a／per_page_5clean sequence_limit absent／iPad 四角色簽核（0–1 數線：綠實心點 a₁=1、a₂=½、a₃a₄a₅ 擠向 0、x=0 紅空心圈=極限0 未被任一項取到、綠箭頭「越來越靠近 0」、紅字「lim aₙ=0（收斂）」、右緣0%）。
+- 數列極限（t_sub，prereq function-limit）＝lim_{n→∞} aₙ=L（n 越大 aₙ 越靠近固定有限值＝收斂；不趨近任何有限值＝發散）；lim 1/n=0、lim c=c；有理式數列同除最高次方（同次→最高次係數比、分子低次→0、分子高次→發散）。teach figure 1/n 收斂數線（repro math_checks7::calc.sequence-limit lim(3n²+1)/(n²+n)=3、lim 1/n=0；lim(2n²+1)/n²=2、lim(n+1)/n=1、lim(3n+2)/(n+1)=3、aₙ=n 發散 皆 .venv sympy limit 另核）。practice：Q1 收斂意義、Q2 lim(n+1)/n=1、Q3 lim(3n+2)/(n+1)=3、Q4 aₙ=n 發散（其餘 1/n、n/(n+1)、5 收斂）。
+- ★收斂全程 0 正確性缺陷；R1 有 1 raw finding（Q4「lim c=c」常數數列收斂）經 7-agent panel 5/5 判 NOT A DEFECT（數學正確、就地白話 gloss、lim c=c 在 scope 內），依鐵律不改、記 knownFP。R2-R5 一次過無 panel-confirmed defect、無 L3 FAIL。
+- 下一步：calc 第 8 單元＝trig-calculus（三角函數微積分 sin/cos 導數，prereq chain-rule＋differentiation-rules；之後 chain-rule 例可用三角）或 exp-log-calculus；共 20 calc KP（已有 math_checks7 repro），剩 13（已完成 function-limit/continuity/derivative-definition/differentiation-rules/chain-rule/higher-derivative/sequence-limit）。接著 vector(11)/conic(7)/complex(6)/finmath(6)/space(5)/matrix(5)/linprog(2)/determinant(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-16 19:35 calc higher-derivative 高階導數 5/5 DONE-GATE 全綠（t_sub 高中 分科-數甲，★連續微分 cascade SVG）→ calc 6/20
 - **math_calc_higher_derivative frozen `fbb1746942d261c8`**（R1-R5 連 5 clean、L3 每輪 exit 0 以實際檔案行文字建檔；R4/R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 violation／question_correctness CLEAN／pedagogy 0 hard（2 length-cue advisory，HD out-of-scope 不改）／content_sha==fbb17469／per_page_5clean higher_derivative absent／iPad 四角色簽核（直向 cascade：f(x)=x⁴ ↓微分 f′=4x³ ↓微分 f″=12x²（標紅）↓微分 f‴=24x ↓微分 f⁽⁴⁾=24＋歸零註、右緣0%）。
 - 高階導數（t_sub，prereq differentiation-rules）＝二階 f″(x)=d/dx(f′(x))、三階 f‴、第 n 階 f⁽ⁿ⁾；多項式連續微分每次次方降一、最後變常數再變 0；二階導數意義＝導數變化率（直線運動位置的二階導數＝加速度 s″=a）。teach figure x⁴ cascade（repro math_checks7::calc.higher-derivative d²(x⁴)=12x²；x³→f″=6x、x⁴−x²→f″=12x²−2 皆 .venv sympy 另核）。practice：Q1 二階導數定義、Q2 x³→f″=6x、Q3 x⁴−x²→f″=12x²−2、Q4 位置二階導數＝加速度。
