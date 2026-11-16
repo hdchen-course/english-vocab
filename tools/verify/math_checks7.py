@@ -145,6 +145,17 @@ def c_vec_dot_product():
     # 自身內積=模平方
     assert u.dot(u) == u.norm()**2 == 25
     return _ok("vector.dot-product", "(3,4)·(2,1)=10；(3,4)·(4,−3)=0(垂直)；cosθ=2/√5；u·u=|u|²=25")
+def c_vec_projection():
+    u = sp.Matrix([3, 4]); v = sp.Matrix([4, 0])
+    proj = (u.dot(v) / v.dot(v)) * v
+    assert list(proj) == [3, 0]                        # proj_v u=(u·v/|v|²)v=(3,0)
+    scomp = u.dot(v) / v.norm()
+    assert scomp == 3                                  # 純量投影 u·v/|v|=12/4=3
+    assert (u - proj).dot(v) == 0                      # u−proj ⊥ v：(0,4)·(4,0)=0
+    # transfer：(5,2) 投影到 (0,3)=(0,2)
+    u2 = sp.Matrix([5, 2]); v2 = sp.Matrix([0, 3])
+    assert list((u2.dot(v2)/v2.dot(v2))*v2) == [0, 2]
+    return _ok("vector.projection", "proj_(4,0)(3,4)=(3,0)；純量投影=3；u−proj⊥v；(5,2)→(0,3)=(0,2)")
 
 # ---------- stats（18）----------
 D = [2, 4, 4, 4, 5, 5, 7, 9]      # 共用樣本（std 範例，μ=5,σ=2）
@@ -284,6 +295,7 @@ CHECKS = {s: fn for s, fn in {
     "vector.linear-combination": c_vec_linear_combination,
     "vector.component": c_vec_component,
     "vector.dot-product": c_vec_dot_product,
+    "vector.projection": c_vec_projection,
     "stats.collect-organize": s_collect, "stats.bar-line-chart": s_bar_line,
     "stats.pie-chart": s_pie, "stats.table-read": s_table, "stats.mean": s_mean,
     "stats.frequency-table": s_freq_table, "stats.cumulative-relative": s_cumulative,

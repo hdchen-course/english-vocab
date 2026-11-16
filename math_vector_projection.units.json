@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 向量（vector）strand 單元。知識點 math.t_adv.vector.projection（向量的正射影／投影）。tier=t_adv（高中進階/學測-分科）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；只列實際 render 給 reader 的術語）：正射影／投影 (projection)、純量投影 (scalar projection)。前置假設：已學內積（dot-product）、單位向量/模（component）。★scope（t_adv，接 dot-product）：向量 u 在向量 v 上的『正射影（投影）』是 u 在 v 方向上的『影子』向量 proj_v u＝(u·v/|v|²)v（方向沿 v、長度看影子）；『純量投影』＝u·v/|v|＝|u|cosθ（影子的帶正負號長度，θ 為夾角）。把 u 分解成「沿 v 的分量 proj_v u」加「垂直 v 的分量 u−proj_v u」，後者與 v 垂直（內積為 0）。以 u＝(3,4) 投影到 v＝(4,0)（x 方向）貫穿：proj＝(3,0)、純量投影＝3、u−proj＝(0,4) 垂直 v。只到平面正射影向量/純量投影/正交分解；不含三維、不含外積。prereq＝dot-product。repro（tools/verify/math_checks7.py::vector.projection，本 session 新增並跑過 PASS）：proj_(4,0)(3,4)=(3,0)、純量投影=3、(u−proj)·v=0、(5,2)投影到(0,3)=(0,2)（.venv sympy 驗）；practice 另用 (5,2)→(0,3)=(0,2) 以 .venv 另核。★自檢（math-unit defect-classes #1–#64）：figure＝坐標平面 u=(3,4) 深藍、v=(4,0) 紅沿 x 軸、proj=(3,0) 綠在軸上、u 尖端到垂足 (3,0) 灰虛線垂直、垂足直角記號——★等軸比例（#62，才看得出垂直投影）、箭頭端點方向正確（#43）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾圖畫的 u 投影到 v=(3,0)（#4/#46，純量投影/分解由 teach 文字教）；practice 四答案＝{(u·v/|v|²)v(Q1 公式),(3,0)(Q2 proj hero),3(Q3 純量投影),(0,2)(Q4 transfer)} 與 teach 關鍵值無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算：除成|v|/沒除/乘 u/沒投影/取垂直分量/取 v 本身/投錯軸）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_vector_projection.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.vector.projection",
+   "title_zh": "向量的正射影",
+   "can_do": "我知道向量 u 在向量 v 上的『正射影（投影）(projection)』就是 u 在 v 方向上的「影子」向量：proj_v u ＝ (u·v/|v|²) v，方向沿著 v。我也知道『純量投影 (scalar projection)』＝ u·v/|v| ＝ |u|cosθ，是這個影子的帶正負號長度。我會把 u 拆成「沿 v 的分量 proj_v u」加上「垂直 v 的分量 u − proj_v u」。例：u ＝ (3, 4) 投影到 v ＝ (4, 0)（x 方向），proj_v u ＝ (3, 0)、純量投影 ＝ 3，而 u − proj ＝ (0, 4) 和 v 垂直。",
+   "situation_group": "向量：平面向量入門",
+   "subject": "math",
+   "strand": "vector",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_adv.vector.projection"
+   ],
+   "prerequisites": [
+    "math.t_adv.vector.dot-product"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-pj-def",
+     "text": "向量 u 在向量 v 上的「正射影（投影）」是 u 投到 v 所在直線上的「影子」向量，記作 proj_v u。公式是 proj_v u ＝ (u·v/|v|²) v：先算純量 u·v/|v|²，再乘上 v，所以結果是一個「方向沿著 v」的向量。例：u ＝ (3, 4)、v ＝ (4, 0)，u·v ＝ 12、|v|² ＝ 16，proj_v u ＝ (12/16)(4, 0) ＝ (3, 0)。",
+     "kind": "definition",
+     "source_refs": [
+      "向量的正射影（高中數學 向量）"
+     ],
+     "verification_ref": "proj_v u=(u·v/|v|²)v；proj_(4,0)(3,4)=(3,0)（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-pj-scalar",
+     "text": "「純量投影」是這個影子的「帶正負號長度」，記作 u·v/|v|，也等於 |u|cosθ（θ 是 u 與 v 的夾角）。它是一個「數」：夾角是銳角時為正、鈍角時為負。它和正射影向量的關係是：正射影向量 ＝ 純量投影 × (v 的單位向量)。例：u ＝ (3, 4)、v ＝ (4, 0)，純量投影 ＝ u·v/|v| ＝ 12/4 ＝ 3。",
+     "kind": "definition",
+     "source_refs": [
+      "純量投影（高中數學 向量）"
+     ],
+     "verification_ref": "純量投影=u·v/|v|=|u|cosθ；(3,4)到(4,0)=3（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-pj-decomp",
+     "text": "正射影可以把一個向量 u「正交分解」成兩個互相垂直的部分：沿 v 方向的分量 proj_v u，加上垂直 v 的分量 u − proj_v u。這兩部分相加回來就是 u，而且後面那個分量和 v 垂直（內積為 0）。例：u ＝ (3, 4)、v ＝ (4, 0)，proj ＝ (3, 0)、u − proj ＝ (0, 4)，而 (0, 4)·(4, 0) ＝ 0，確實垂直。",
+     "kind": "definition",
+     "source_refs": [
+      "向量的正交分解（高中數學 向量）"
+     ],
+     "verification_ref": "u=proj+(u−proj)；(u−proj)⊥v；(0,4)·(4,0)=0（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.vector.projection"
+     ],
+     "body": "這一單元學向量的「正射影（投影）」。下面先講正射影向量 proj_v u ＝ (u·v/|v|²) v（u 在 v 方向的影子）；再講純量投影 u·v/|v| ＝ |u|cosθ（影子的帶正負號長度）；最後講正交分解（把 u 拆成沿 v 的分量加垂直 v 的分量）；用 u ＝ (3, 4) 投影到 v ＝ (4, 0) 示範，最後練習。（接在『向量的內積』之後。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.vector.projection"
+     ],
+     "body": "① 正射影向量：proj_v u ＝ (u·v/|v|²) v，方向沿 v。例 u ＝ (3, 4)、v ＝ (4, 0)：u·v ＝ 12、|v|² ＝ 16，proj ＝ (12/16)(4, 0) ＝ (3, 0)。② 純量投影：u·v/|v| ＝ |u|cosθ，是影子的帶正負號長度（銳角正、鈍角負）；例 12/4 ＝ 3。③ 正交分解：u ＝ proj_v u ＋ (u − proj_v u)，後者垂直 v；例 u − proj ＝ (0, 4)，和 v ＝ (4, 0) 垂直。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.vector.projection"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>向量投影：u＝(3,4) 在 v＝(4,0) 上的投影 ＝ (3, 0)</text><line x1='60' y1='120' x2='300' y2='120' stroke='#99a7b5' stroke-width='1'/><line x1='90' y1='28' x2='90' y2='150' stroke='#99a7b5' stroke-width='1'/><line x1='156' y1='32' x2='156' y2='120' stroke='#c9d3dd' stroke-width='1' stroke-dasharray='3 2'/><polyline points='146,120 146,110 156,110' fill='none' stroke='#6b7785' stroke-width='1'/><line x1='90' y1='120' x2='178' y2='120' stroke='#c2535d' stroke-width='1.6'/><path d='M178,120 L171.7,123.1 M178,120 L171.7,116.9' fill='none' stroke='#c2535d' stroke-width='1.6'/><line x1='90' y1='120' x2='156' y2='120' stroke='#2f6f54' stroke-width='3'/><line x1='90' y1='120' x2='156' y2='32' stroke='#33475b' stroke-width='2.2'/><path d='M156,32 L154.7,38.9 M156,32 L149.8,35.2' fill='none' stroke='#33475b' stroke-width='2.2'/><circle cx='90' cy='120' r='2.5' fill='#33475b'/><text x='82' y='132' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>O</text><text x='160' y='30' font-family='sans-serif' font-size='9.5' fill='#33475b' text-anchor='start'>u ＝ (3, 4)</text><text x='182' y='117' font-family='sans-serif' font-size='9.5' fill='#c2535d' text-anchor='start'>v ＝ (4, 0)</text><text x='120' y='135' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='middle'>投影 ＝ (3, 0)</text></svg>",
+      "alt": "標題「向量投影：u＝(3,4) 在 v＝(4,0) 上的投影 ＝ (3, 0)」。一個坐標平面（灰色坐標軸、原點 O）。深色較粗的箭頭是 u ＝ (3, 4)，指向右上；紅色箭頭是 v ＝ (4, 0)，沿著水平的 x 軸向右。從 u 的箭頭尖端往下拉一條灰色虛線，垂直落在 x 軸上的 (3, 0)，落點有一個小方角表示垂直。原點到 (3, 0) 這段用綠色粗線標出，就是 u 在 v 上的投影。深色箭頭旁標「u ＝ (3, 4)」，紅色箭頭旁標「v ＝ (4, 0)」，綠色粗線下方標「投影 ＝ (3, 0)」。",
+      "caption": "以 u ＝ (3, 4) 投影到 v ＝ (4, 0) 示範：從 u 的尖端垂直落到 v 所在的直線（x 軸），落點 (3, 0) 就是影子，所以正射影 ＝ (3, 0)（綠色粗線）。公式：(u·v/|v|²)v ＝ (12/16)(4, 0) ＝ (3, 0)。坐標用相同比例，才看得出是垂直投影。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.vector.projection"
+     ],
+     "body": "最後練正射影。重點：正射影向量 proj_v u ＝ (u·v/|v|²) v（方向沿 v、是一個向量）；純量投影 u·v/|v| ＝ |u|cosθ（是一個數）；u 可正交分解成 proj_v u（沿 v）加 u − proj_v u（垂直 v）。小提醒：(1) 正射影「向量」要乘上 v（結果是向量），純量投影是「數」別搞混；(2) 公式分母是 |v|²（算正射影向量）或 |v|（算純量投影），別用錯。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "向量 u 在向量 v 上的正射影向量 proj_v u 等於下列哪一個？",
+     "answer": "(u·v/|v|²) v",
+     "kp_ids": [
+      "math.t_adv.vector.projection"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.vector.projection"
+     ],
+     "options": [
+      "(u·v/|v|²) v",
+      "(u·v/|v|) v",
+      "(u·v) v",
+      "(u·v/|v|²) u"
+     ],
+     "distractor_rationales": {
+      "(u·v/|v|) v": "分母用錯了：這個 u·v/|v| 是「純量投影」（一個數）；正射影「向量」的係數是 u·v/|v|²，再乘 v。",
+      "(u·v) v": "少了除以 |v|²：直接乘 u·v 會讓長度不對；正射影向量是 (u·v/|v|²) v。",
+      "(u·v/|v|²) u": "乘錯向量了：正射影方向要「沿 v」，所以乘的是 v 不是 u，得 (u·v/|v|²) v。"
+     },
+     "answer_evidence": [
+      "c-pj-def"
+     ],
+     "feedback": "proj_v u ＝ (u·v/|v|²) v：係數 u·v/|v|² 再乘上 v（方向沿 v）。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "u ＝ (3, 4) 在 v ＝ (4, 0) 上的正射影向量是什麼？",
+     "answer": "(3, 0)",
+     "kp_ids": [
+      "math.t_adv.vector.projection"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.vector.projection"
+     ],
+     "options": [
+      "(3, 0)",
+      "(0, 4)",
+      "(4, 0)",
+      "(3, 4)"
+     ],
+     "distractor_rationales": {
+      "(0, 4)": "這是「垂直 v 的分量」u − proj，不是投影本身；沿 v（x 方向）的影子是 (3, 0)。",
+      "(4, 0)": "這是 v 本身，不是 u 的投影；proj ＝ (u·v/|v|²)v ＝ (12/16)(4, 0) ＝ (3, 0)。",
+      "(3, 4)": "這是 u 本身、沒有投影：要把 u 投到 v 的方向上，得 (3, 0)。"
+     },
+     "answer_evidence": [
+      "c-pj-def"
+     ],
+     "feedback": "proj ＝ (u·v/|v|²)v ＝ (12/16)(4, 0) ＝ (3, 0)（u 的影子落在 x 軸的 (3, 0)）。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "u ＝ (3, 4) 在 v ＝ (4, 0) 上的純量投影（u·v/|v|）是多少？",
+     "answer": "3",
+     "kp_ids": [
+      "math.t_adv.vector.projection"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.vector.projection"
+     ],
+     "options": [
+      "3",
+      "12",
+      "0.75",
+      "5"
+     ],
+     "distractor_rationales": {
+      "12": "這只是 u·v ＝ 12，還沒除以 |v|：純量投影 ＝ u·v/|v| ＝ 12/4 ＝ 3。",
+      "0.75": "這是 u·v/|v|² ＝ 12/16（正射影向量的係數），不是純量投影；純量投影分母是 |v| ＝ 4，得 3。",
+      "5": "這是 u 的長度 |u| ＝ 5，不是投影；純量投影 ＝ u·v/|v| ＝ 12/4 ＝ 3。"
+     },
+     "answer_evidence": [
+      "c-pj-scalar"
+     ],
+     "feedback": "純量投影 ＝ u·v/|v| ＝ 12/4 ＝ 3（影子的帶正負號長度）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "u ＝ (5, 2) 在 v ＝ (0, 3) 上的正射影向量是什麼？",
+     "answer": "(0, 2)",
+     "kp_ids": [
+      "math.t_adv.vector.projection"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.vector.projection"
+     ],
+     "options": [
+      "(0, 2)",
+      "(5, 0)",
+      "(0, 3)",
+      "(5, 2)"
+     ],
+     "distractor_rationales": {
+      "(5, 0)": "投錯方向了：v ＝ (0, 3) 是 y 方向，影子要落在 y 軸、取 y 分量，得 (0, 2) 不是 (5, 0)。",
+      "(0, 3)": "這是 v 本身，不是投影；proj ＝ (u·v/|v|²)v ＝ (6/9)(0, 3) ＝ (0, 2)。",
+      "(5, 2)": "這是 u 本身、沒有投影：投到 v ＝ (0, 3) 的方向得 (0, 2)。"
+     },
+     "answer_evidence": [
+      "c-pj-def"
+     ],
+     "feedback": "u·v ＝ 6、|v|² ＝ 9，proj ＝ (6/9)(0, 3) ＝ (0, 2)（落在 y 方向）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（正射影向量 proj_v u＝(u·v/|v|²)v＝u 在 v 方向的影子、是向量；純量投影＝u·v/|v|＝|u|cosθ＝影子帶正負號長度、是數；正交分解 u＝proj_v u＋(u−proj_v u)、後者垂直 v；u＝(3,4) 投影到 v＝(4,0)：proj＝(3,0)、純量投影＝3、u−proj＝(0,4)⊥v；(5,2)投影到(0,3)＝(0,2)；兩鐵律＝正射影向量乘 v 是向量、純量投影是數別混，分母 |v|² vs |v| 別用錯）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
