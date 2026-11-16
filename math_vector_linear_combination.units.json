@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 向量（vector）strand 單元。知識點 math.t_adv.vector.linear-combination（向量的線性組合）。tier=t_adv（高中進階/學測-分科）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；只列實際 render 給 reader 的術語，不含只在 claim/_note 的詞）：線性組合 (linear combination)、純量 (scalar)、基底 (basis)。前置假設：已學平面向量加減（plane-add-sub）、係數積（plane-definition）。★scope（t_adv，接 plane-add-sub）：線性組合 au＋bv（a、b 為純量）——先把 u 伸縮成 au、v 伸縮成 bv（係數積），再相加（加法）；坐標直接算 au＋bv＝(a·u₁＋b·v₁, a·u₂＋b·v₂)。幾何上＝把兩個「建構方塊」向量按比例放大縮小後頭接尾相加。重要性質：平面上任意兩個『不平行』向量可用線性組合組出平面上任何一個向量（它們構成平面的一組基底，basis 概念輕帶、不展開解聯立）。以 u＝(2,1)、v＝(1,3) 貫穿：2u＋v＝(5,5)、−u＋2v＝(0,5)。只到線性組合的定義/坐標計算/幾何建構與『不平行可張成平面』概念；不含解 au＋bv＝目標 的聯立、不含內積。prereq＝plane-add-sub。repro（tools/verify/math_checks7.py::vector.linear-combination，本 session 新增並跑過 PASS）：2u＋v＝(5,5)、−u＋2v＝(0,5)、au＋bv＝(2a＋b, a＋3b)、det[[2,1],[1,3]]＝5≠0（u、v 不平行可張成平面）（.venv sympy 驗）；practice 另用 3u−v＝(5,0) 以 sympy 另核。★自檢（math-unit defect-classes #1–#64）：figure＝坐標平面上 u=(2,1) 紅、v=(1,3) 綠，紅虛線把 u 延伸成 2u=(4,2)、綠虛線從 2u 尖端加 v 到 (5,5)，深藍粗箭頭＝2u+v=(5,5) 結果——★等軸比例（#62，顯示伸縮/頭接尾建構關係，x、y 同 18px/單位）、箭頭端點方向正確（#43）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾圖實際畫出的「2u+v=(5,5)」建構（#4/#46）；practice 四答案＝{(5,5)(Q1 2u+v hero),(0,5)(Q2 −u+2v),(不平行可組出平面任何向量)(Q3 概念),(5,0)(Q4 3u−v transfer)} 與 teach 關鍵值無 #10（Q1 hero、options 洗牌無位置 tell）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算：漏乘係數、漏加某項、符號放錯向量、整體乘係數、忘減號）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_vector_linear_combination.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.vector.linear-combination",
+   "title_zh": "向量的線性組合",
+   "can_do": "我知道『線性組合 (linear combination)』au ＋ bv 的意思：給兩個數 a、b（叫『純量 (scalar)』），先把 u 伸縮成 au、v 伸縮成 bv（係數積），再把它們相加。用坐標算最直接：au ＋ bv ＝ (a·u₁ ＋ b·v₁, a·u₂ ＋ b·v₂)。我也知道一個重要性質：平面上任意兩個『不平行』的向量，可以用線性組合組出平面上任何一個向量（它們構成一組『基底 (basis)』）。例：u ＝ (2, 1)、v ＝ (1, 3)，2u ＋ v ＝ (5, 5)、−u ＋ 2v ＝ (0, 5)。",
+   "situation_group": "向量：平面向量入門",
+   "subject": "math",
+   "strand": "vector",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_adv.vector.linear-combination"
+   ],
+   "prerequisites": [
+    "math.t_adv.vector.plane-add-sub"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-lc-def",
+     "text": "給兩個向量 u、v 和兩個數 a、b（a、b 叫純量），把 u 乘上 a、v 乘上 b 再相加，得到的 au ＋ bv 就叫 u 和 v 的「線性組合」。用坐標算很直接：au ＋ bv ＝ (a·u₁ ＋ b·v₁, a·u₂ ＋ b·v₂)，也就是先各自做係數積、再分量相加。例：u ＝ (2, 1)、v ＝ (1, 3)，2u ＋ v ＝ (4, 2) ＋ (1, 3) ＝ (5, 5)。",
+     "kind": "definition",
+     "source_refs": [
+      "向量的線性組合（高中數學 向量）"
+     ],
+     "verification_ref": "au+bv=(a·u₁+b·v₁, a·u₂+b·v₂)；2(2,1)+(1,3)=(5,5)（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-lc-geom",
+     "text": "線性組合在幾何上就是「先伸縮、再相加」：把 u 按比例放大或縮小成 au（係數積），把 v 放大縮小成 bv，再用加法（頭接尾或平行四邊形）把它們接起來。例如 2u ＋ v：先把 u 拉長成 2u，再從 2u 的尖端接上 v，終點就是 2u ＋ v。",
+     "kind": "definition",
+     "source_refs": [
+      "線性組合的幾何意義（高中數學 向量）"
+     ],
+     "verification_ref": "au+bv 幾何＝先係數積 au、bv 再加法（頭接尾）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-lc-basis",
+     "text": "一個重要性質：平面上任意兩個「不平行」的向量 u、v，可以用它們的線性組合 au ＋ bv 組出平面上「任何一個」向量（只要選對 a、b）。這兩個不平行的向量就構成平面的一組「基底」。如果 u、v 平行（方向相同或相反），它們的線性組合只會落在同一條直線上，就組不出整個平面。",
+     "kind": "definition",
+     "source_refs": [
+      "基底與線性組合（高中數學 向量）"
+     ],
+     "verification_ref": "兩不平行向量張成平面；u=(2,1)、v=(1,3) 不平行（det[[2,1],[1,3]]=5≠0，.venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.vector.linear-combination"
+     ],
+     "body": "這一單元學向量的「線性組合」au ＋ bv。下面先講定義（a、b 是純量，先各自做係數積再相加；坐標怎麼算）；再講幾何意義（先伸縮、再頭接尾相加）；最後講一個重要性質（兩個不平行向量可以組出平面上任何向量，構成基底）；用 u ＝ (2, 1)、v ＝ (1, 3) 示範，最後練習。（接在『平面向量的加法與減法』之後。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.vector.linear-combination"
+     ],
+     "body": "① 定義：給純量 a、b，au ＋ bv 叫 u、v 的線性組合。坐標直接算：au ＋ bv ＝ (a·u₁ ＋ b·v₁, a·u₂ ＋ b·v₂)。例 u ＝ (2, 1)、v ＝ (1, 3)：2u ＋ v ＝ (4, 2) ＋ (1, 3) ＝ (5, 5)。② 幾何：先把 u 伸縮成 au、v 伸縮成 bv（係數積），再頭接尾相加。③ 性質：兩個「不平行」的向量，可用線性組合組出平面上任何一個向量，構成一組基底 (basis)；若兩向量平行，組合只落在一條直線上。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.vector.linear-combination"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>線性組合建構：2u ＋ v ＝ (5, 5)（u＝(2,1)、v＝(1,3)）</text><line x1='30' y1='120' x2='300' y2='120' stroke='#99a7b5' stroke-width='1'/><line x1='60' y1='24' x2='60' y2='150' stroke='#99a7b5' stroke-width='1'/><line x1='60' y1='120' x2='132' y2='84' stroke='#c2535d' stroke-width='1' stroke-dasharray='3 2'/><line x1='132' y1='84' x2='150' y2='30' stroke='#2f6f54' stroke-width='1' stroke-dasharray='3 2'/><line x1='60' y1='120' x2='96' y2='102' stroke='#c2535d' stroke-width='2'/><path d='M96,102 L91.7,107.6 M96,102 L89,102.1' fill='none' stroke='#c2535d' stroke-width='2'/><line x1='60' y1='120' x2='78' y2='66' stroke='#2f6f54' stroke-width='2'/><path d='M78,66 L78.9,72.9 M78,66 L73.1,71' fill='none' stroke='#2f6f54' stroke-width='2'/><line x1='60' y1='120' x2='150' y2='30' stroke='#33475b' stroke-width='2.4'/><path d='M150,30 L147.7,36.6 M150,30 L143.4,32.3' fill='none' stroke='#33475b' stroke-width='2.4'/><circle cx='60' cy='120' r='2.5' fill='#33475b'/><text x='50' y='133' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>O</text><text x='84' y='114' font-family='sans-serif' font-size='9.5' fill='#c2535d' text-anchor='start'>u ＝ (2, 1)</text><text x='24' y='60' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='start'>v ＝ (1, 3)</text><text x='135' y='92' font-family='sans-serif' font-size='9' fill='#c98b92' text-anchor='start'>2u</text><text x='150' y='26' font-family='sans-serif' font-size='9.5' fill='#33475b' text-anchor='start'>2u＋v ＝ (5, 5)</text></svg>",
+      "alt": "標題「線性組合建構：2u ＋ v ＝ (5, 5)（u＝(2,1)、v＝(1,3)）」。一個坐標平面（灰色坐標軸、原點 O）。紅色箭頭是 u ＝ (2, 1)；綠色箭頭是 v ＝ (1, 3)。一條紅色虛線從原點把 u 延伸成兩倍長的 2u（到 (4, 2) 的位置），再從 2u 的尖端拉一條綠色虛線加上 v，終點落在 (5, 5)。深色較粗的箭頭就是線性組合的結果 2u ＋ v ＝ (5, 5)。紅色箭頭旁標「u ＝ (2, 1)」，綠色箭頭旁標「v ＝ (1, 3)」，紅虛線旁標「2u」，深色箭頭旁標「2u＋v ＝ (5, 5)」。",
+      "caption": "以 u ＝ (2, 1)、v ＝ (1, 3) 示範線性組合 2u ＋ v：先把 u 伸縮成 2u ＝ (4, 2)，再從 2u 的尖端接上 v ＝ (1, 3)，終點就是 2u ＋ v ＝ (5, 5)。坐標上直接算：(2×2 ＋ 1, 2×1 ＋ 3) ＝ (5, 5)。坐標用相同比例。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.vector.linear-combination"
+     ],
+     "body": "最後練線性組合。重點：au ＋ bv ＝ (a·u₁ ＋ b·v₁, a·u₂ ＋ b·v₂)——先各自做係數積（每個分量乘係數），再分量相加；幾何上＝先伸縮、再頭接尾相加；兩個不平行向量可組出平面上任何向量。小提醒：(1) 係數要乘進「每一個」分量，別只乘一個；(2) 注意係數的正負號跟對哪一個向量，例如 −u ＋ 2v 是把 u 變負、v 乘 2，不要張冠李戴。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "u ＝ (2, 1)、v ＝ (1, 3) 時，線性組合 2u ＋ v 等於什麼？",
+     "answer": "(5, 5)",
+     "kp_ids": [
+      "math.t_adv.vector.linear-combination"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.vector.linear-combination"
+     ],
+     "options": [
+      "(5, 5)",
+      "(3, 4)",
+      "(4, 2)",
+      "(6, 8)"
+     ],
+     "distractor_rationales": {
+      "(3, 4)": "只算了 u ＋ v，忘了 u 要先乘 2：2u ＝ (4, 2)，再加 v 得 (5, 5)。",
+      "(4, 2)": "只算了 2u ＝ (4, 2)，忘了再加 v：加上 v ＝ (1, 3) 得 (5, 5)。",
+      "(6, 8)": "把整個 (u ＋ v) 乘 2 了（2 × (3, 4)）：題目只有 u 乘 2，得 2u ＋ v ＝ (5, 5)。"
+     },
+     "answer_evidence": [
+      "c-lc-def"
+     ],
+     "feedback": "2u ＝ (4, 2)，再加 v ＝ (1, 3)：2u ＋ v ＝ (5, 5)。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "u ＝ (2, 1)、v ＝ (1, 3) 時，−u ＋ 2v 等於什麼？",
+     "answer": "(0, 5)",
+     "kp_ids": [
+      "math.t_adv.vector.linear-combination"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.vector.linear-combination"
+     ],
+     "options": [
+      "(0, 5)",
+      "(4, 7)",
+      "(−1, 2)",
+      "(0, −5)"
+     ],
+     "distractor_rationales": {
+      "(4, 7)": "忘了 u 前面的負號（算成 u ＋ 2v ＝ (2, 1) ＋ (2, 6)）：−u ＝ (−2, −1)，得 (0, 5)。",
+      "(−1, 2)": "v 忘了乘 2（算成 −u ＋ v ＝ (−2, −1) ＋ (1, 3)）：2v ＝ (2, 6)，得 (0, 5)。",
+      "(0, −5)": "把負號放到錯的向量了（算成 u − 2v）：題目是 −u ＋ 2v ＝ (−2, −1) ＋ (2, 6) ＝ (0, 5)。"
+     },
+     "answer_evidence": [
+      "c-lc-def"
+     ],
+     "feedback": "−u ＝ (−2, −1)，2v ＝ (2, 6)：−u ＋ 2v ＝ (0, 5)。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "為什麼平面上「兩個不平行的向量」特別重要？",
+     "answer": "用它們的線性組合可以組出平面上任何一個向量",
+     "kp_ids": [
+      "math.t_adv.vector.linear-combination"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.vector.linear-combination"
+     ],
+     "options": [
+      "用它們的線性組合可以組出平面上任何一個向量",
+      "兩個不平行的向量一定互相垂直",
+      "兩個不平行的向量長度一定相等",
+      "只有平行的向量才可以相加"
+     ],
+     "distractor_rationales": {
+      "兩個不平行的向量一定互相垂直": "不平行不等於垂直：夾角只要不是 0° 或 180° 都算不平行，不一定是 90°。",
+      "兩個不平行的向量長度一定相等": "不平行和長度沒有關係：兩個不平行的向量長度可以不同。",
+      "只有平行的向量才可以相加": "任何向量都可以相加：平行與否不影響能不能相加，重點是不平行才能組出整個平面。"
+     },
+     "answer_evidence": [
+      "c-lc-basis"
+     ],
+     "feedback": "兩個不平行的向量構成一組基底：它們的線性組合 au ＋ bv 可組出平面上任何向量。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "u ＝ (2, 1)、v ＝ (1, 3) 時，3u − v 等於什麼？",
+     "answer": "(5, 0)",
+     "kp_ids": [
+      "math.t_adv.vector.linear-combination"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.vector.linear-combination"
+     ],
+     "options": [
+      "(5, 0)",
+      "(7, 6)",
+      "(5, 3)",
+      "(1, −2)"
+     ],
+     "distractor_rationales": {
+      "(7, 6)": "忘了中間是減號（算成 3u ＋ v ＝ (6, 3) ＋ (1, 3)）：要減 v，得 (5, 0)。",
+      "(5, 3)": "x 減對了、y 忘了減 v（保留 3u 的 3）：y 也要減，3 − 3 ＝ 0，得 (5, 0)。",
+      "(1, −2)": "忘了 u 要乘 3（算成 u − v ＝ (2, 1) − (1, 3)）：3u ＝ (6, 3)，得 (5, 0)。"
+     },
+     "answer_evidence": [
+      "c-lc-def"
+     ],
+     "feedback": "3u ＝ (6, 3)，減 v ＝ (1, 3)：3u − v ＝ (5, 0)。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（線性組合 au＋bv＝(a·u₁＋b·v₁, a·u₂＋b·v₂)＝先各自係數積再分量相加；幾何＝先伸縮再頭接尾相加；兩個不平行向量可組出平面任何向量、構成基底；u＝(2,1)、v＝(1,3)：2u＋v＝(5,5)、−u＋2v＝(0,5)、3u−v＝(5,0)；兩鐵律＝係數乘進每個分量、符號跟對向量別張冠李戴）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

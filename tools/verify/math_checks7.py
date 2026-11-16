@@ -118,6 +118,14 @@ def c_vec_plane_addsub():
     assert list(u - v) == list(u + (-v))              # u−v = u+(−v)（三角形法則）
     assert list(2*u + v) == [7, 4]                     # 線性組合 2u+v=(7,4)
     return _ok("vector.plane-add-sub", "(3,1)+(1,2)=(4,3)；(3,1)−(1,2)=(2,−1)；|u+v|=5；u−v=u+(−v)")
+def c_vec_linear_combination():
+    u = sp.Matrix([2, 1]); v = sp.Matrix([1, 3])
+    assert list(2*u + v) == [5, 5]                     # 2u+v=(5,5) 線性組合
+    assert list(-u + 2*v) == [0, 5]                    # −u+2v=(0,5)
+    a, b = sp.symbols('a b')
+    assert list(a*u + b*v) == [2*a + b, a + 3*b]       # au+bv=(2a+b, a+3b) 分量
+    assert sp.Matrix([[2, 1], [1, 3]]).det() == 5      # det≠0 ⇒ u,v 不平行、可張成平面
+    return _ok("vector.linear-combination", "2u+v=(5,5)；−u+2v=(0,5)；au+bv=(2a+b,a+3b)；det=5≠0 張成平面")
 
 # ---------- stats（18）----------
 D = [2, 4, 4, 4, 5, 5, 7, 9]      # 共用樣本（std 範例，μ=5,σ=2）
@@ -254,6 +262,7 @@ CHECKS = {s: fn for s, fn in {
     "calc.exp-log-calculus": c_exp_log_calc, "calc.trig-calculus": c_trig_calc,
     "vector.plane-definition": c_vec_plane_def,
     "vector.plane-add-sub": c_vec_plane_addsub,
+    "vector.linear-combination": c_vec_linear_combination,
     "stats.collect-organize": s_collect, "stats.bar-line-chart": s_bar_line,
     "stats.pie-chart": s_pie, "stats.table-read": s_table, "stats.mean": s_mean,
     "stats.frequency-table": s_freq_table, "stats.cumulative-relative": s_cumulative,
