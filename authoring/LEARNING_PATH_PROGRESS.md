@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 13:50 stats strand regression-line 最適直線與預測 5/5 DONE-GATE 全綠（t_adv 高中，★散布圖+最適直線 SVG）→ stats 16/18
+- **math_stats_regression_line frozen `b41394ae0fcabb97`**（R1-R5 連 5 clean、L3 每輪 exit 0；R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==b41394ae／per_page_5clean regression_line absent／iPad 四角色簽核（散布圖 5 藍點＋綠最適直線貼近點群、y=2x 標籤不壓點、軸 x/y、右緣0%）。
+- 最適直線/迴歸（t_adv）＝最能代表散布圖趨勢、盡量靠近所有點的直線（不精確連每點）；斜率正→正相關、負→負相關；把值代入「給定的」直線可預測；資料範圍內較可靠、外插要小心。teach figure 散布圖+最適直線 y=2x（repro polyfit 斜率2 截距0）。practice：Q1 代入預測(y=3x,x=4→12)、Q2 斜率負→負相關、Q3 用途(代表趨勢+預測)、Q4 外插最不可靠。只定性+用給定直線代入、不教最小平方法公式。prereq＝correlation。
+- ★收斂全程 0 正確性缺陷、0 panel finding；Q3 length-cue advisory（用途述兩用途）依 HD 非 defect 不改。L3 全程用「實際檔案行文字」建檔（correlation 的逗號教訓之後一路沿用），R1-R5 一次過無 FAIL。
+- 下一步：stats 最後 2 單元（sampling-survey 抽樣調查 t_sub／risk-decision 風險決策 t_sub）；接著 calc/vector 等其他 strand。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-16 13:31 stats strand correlation 相關係數 5/5 DONE-GATE 全綠（t_adv 高中，★r 數線 SVG）→ stats 15/18
 - **math_stats_correlation frozen `f89468eeff060be8`**（R1-R5 連 5 clean、L3 每輪 exit 0；R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==f89468ee／per_page_5clean correlation absent／iPad 四角色簽核（r 數線紅(−1)/灰(0)/綠(1)語意化配色、5 刻度對齊、端點標籤不重疊、右緣0%）。
 - 相關係數（t_adv）＝r∈[−1,1] 衡量直線關係方向與強弱；r>0 正相關、r<0 負相關、r≈0 幾乎無直線關係；|r| 越接近 1 越強、r=±1 完全相關；★相關≠因果（共同第三因素）。teach figure r 數線。practice：Q1 r=−0.8(負且強非完全)、Q2 範圍(−1~1)、Q3 強弱比較(0.9>0.3)、Q4 相關≠因果(冰淇淋/溺水共因天氣熱)。只定性讀、不教 r 計算公式。prereq＝bivariate-scatter。
