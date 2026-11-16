@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 04:15 vector dot-product 向量的內積 5/5 DONE-GATE 全綠（t_adv 高中 學測-分科，★垂直案例 a⊥b 直角記號 等軸 SVG）→ vector strand 5/11（過半）
+- **math_vector_dot_product frozen `64f784b223379947`**（R1-R5 連 5 clean、L3 每輪 exit 0；R1 一次過無 panel-confirmed defect；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==64f784b2／per_page_5clean 561/561 頁 0 違規（dot_product absent）／repro PASS／iPad 四角色簽核（坐標平面 a=(3,4) 紅右上、b=(4,−3) 綠右下、原點灰小方角標直角、下註 a·b=0、等軸 #62、右緣0%）。
+- 內積（t_adv，prereq component）＝u·v=u₁v₁+u₂v₂（對應分量相乘再相加、結果是一個數）；幾何 u·v=|u||v|cosθ、cosθ=u·v/(|u||v|) 求夾角、正負看銳角/鈍角/直角；垂直判定 u·v=0 ⟺ u⊥v；自身內積 u·u=|u|²。以 u=(3,4)、v=(2,1)（內積10）與垂直 a=(3,4)、b=(4,−3)（a·b=0）貫穿。★本 session 新增 math_checks7::vector.dot-product repro（(3,4)·(2,1)=10／(3,4)·(4,−3)=0／cosθ=2/√5／u·u=|u|²=25，.venv sympy 驗 PASS）。practice：Q1 內積=10、Q2 (3,4)·(4,−3)=0（hero 垂直）、Q3 垂直判定=內積0、Q4 與(2,3)垂直=(3,−2)（transfer；凍前 .venv 反算每誘答單一錯誤 #53：乘不加/交叉配/相減/忘負號/自身內積/平行向量）。
+- ★收斂史：R1-R5 一次過、全程 0 正確性缺陷、無 L3 FAIL（無 de-converge）。
+- 下一步：vector 第 6 單元＝projection（投影量／正射影 proj_v u，prereq dot-product）；vector 共 11 KP，剩 6（projection/cross-product/space-vector/space-dot-product/triangle-tetra-area/geometry-apply）。各 KP 先加 math_checks7 repro（verify-first）再撰寫。接著 conic(7)/complex(6)/finmath(6)/space(5)/matrix(5)/linprog(2)/determinant(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 03:57 vector component 向量的分量與標準單位向量 5/5 DONE-GATE 全綠（t_adv 高中 學測-分科，★v=3i+4j 直角分解 等軸 SVG）→ vector strand 4/11
 - **math_vector_component frozen `559de6402fb0f999`**（post 移除冗餘灰虛線；R1-R5 連 5 clean、L3 每輪 exit 0；R1 一次過無 panel-confirmed defect；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==559de640／per_page_5clean 560/560 頁 0 違規（component absent）／repro PASS／iPad 四角色簽核（坐標平面 v=(3,4) 深藍斜邊、紅 3i 水平、綠 4j 垂直、直角三角形、標 |v|=5、等軸 #62、右緣0%）。
 - 分量與標準單位向量（t_adv，prereq linear-combination）＝標準單位向量 i=(1,0)、j=(0,1)（各沿一軸、長度 1）；任一 (a,b)=a·i+b·j、a/b 為 x/y 分量；用分量算模 |v|=√(a²+b²)（a·i 與 b·j 垂直組直角三角形）；單位向量 v̂=v/|v|（長度 1、表方向）、同方向向量共用同一單位向量。以 v=(3,4) 貫穿：=3i+4j、|v|=5、單位向量=(3/5,4/5)。★本 session 新增 math_checks7::vector.component repro（(3,4)=3i+4j／|v|=5／單位向量(3/5,4/5)／|單位向量|=1，.venv sympy 驗 PASS）。practice：Q1 (3,4)=3i+4j、Q2 單位向量(3/5,4/5)（hero）、Q3 i/j 定義、Q4 w=(6,8) 單位向量=(3/5,4/5)（transfer＝同方向同單位向量；凍前 .venv 反算每誘答單一錯誤 #53：分量對調/沒除模/除成模平方/i-j 顛倒）。
