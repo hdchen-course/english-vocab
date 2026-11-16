@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 16:32 calc derivative-definition 導數定義與切線斜率 5/5 DONE-GATE 全綠（t_sub 高中，★割線→切線趨近圖 SVG）→ calc 3/20
+- **math_calc_derivative_definition frozen `7515c9f409b96ab3`**（R1-R5 連 5 clean、L3 每輪 exit 0；R4/R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==7515c9f4／per_page_5clean derivative_definition absent／iPad 四角色簽核（藍拋物線 y=x²、P(1,1)紅/Q(2,4)深、灰虛線割線、綠切線、Q→P 彎箭頭、右緣0%）。
+- 導數定義（t_sub，prereq function-limit）＝差商 [f(a+h)−f(a)]/h＝割線斜率＝平均變化率；h→0 割線趨近切線、差商極限＝切線斜率＝瞬時變化率＝導數 f'(a)；用定義算 f(x)=x²→f'(x)=2x；導數=切線斜率。teach figure 割線PQ(斜率3)→切線(斜率2)（repro math_checks7 .venv：差商=2x+h→2x、f'(1)=2、f'(3)=6、割線[1,2]=3）。practice：Q1 差商公式、Q2 f'(3)=6、Q3 導數=切線斜率非 f(a)、Q4 h→0 割線→切線。只定義+割線→切線+用定義算，不含微分公式庫/高階/隱函數。
+- ★收斂抓到 3 可讀性缺陷（全同一句「小提醒」，嚴謹 panel 連三修）：R5 把「跳一下…不是把兩個函數值相加」中分子錯誤錯置分母（panel 5/5）→拆開；再 R2 分母用 operation「要除以 h」vs 分子 identity 不平行、字面「分母÷h」假（panel 4/5）→分母改 identity「分母是 h」。每次誠實 de-converge（清輪+_deconverge_trace+override harvest gate）重跑。0 正確性缺陷。
+- 下一步：calc 第 4 單元＝differentiation-rules（微分公式 冪/和差/積/商，prereq derivative-definition）；接 chain-rule/higher-derivative/sequence-limit…共 20 calc KP（已有 math_checks7 repro）。接著 vector/conic/complex 等 strand。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-16 15:46 calc continuity 函數的連續性 5/5 DONE-GATE 全綠（t_sub 高中，★連續 vs 不連續對比雙面板 SVG）→ calc 2/20
 - **math_calc_continuity frozen `8a843b4d69f7c688`**（R1-R5 連 5 clean、L3 每輪 exit 0；R4/R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==8a843b4d／per_page_5clean continuity absent／iPad 四角色簽核（左連續平滑線＋實心點、右不連續下段空心圈＋上段實心點跳躍、圖例○無值/●有值、右緣0%）。
 - 連續性（t_sub，prereq function-limit）＝f 在 x=a 連續⟺三條件(f(a)有定義∧極限存在∧極限=f(a))；直觀圖形不斷裂不跳不挖洞一筆畫過；多項式/sin/cos/指對在定義域內處處連續；連續點求極限直接代入。teach figure 連續 vs 跳躍對比（repro math_checks7 .venv：f=x² 於 x=2 連續；f(x)=x²+1 代入=極限、f(3)=10）。practice：Q1 三條件、Q2 代入(x²+1,x=2→5)、Q3 極限2≠f(1)=5 不連續(有洞型)、Q4 連續圖形特徵。
