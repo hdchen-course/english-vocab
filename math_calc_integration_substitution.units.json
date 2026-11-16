@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 微積分（calc）strand t_sub 單元。知識點 math.t_sub.calc.integration-substitution（積分技巧：代換法）。tier=t_sub（高中分科/選修深階，exam 分科-數甲）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換——見 math-unit defect #63）：代換積分法 (integration by substitution)、鏈鎖法則 (chain rule)、反導數 (antiderivative)、不定積分 (indefinite integral)、被積函數 (integrand)。前置假設：會求反導數、會用鏈鎖法則微分（antiderivative＋chain-rule 已教）。指數一律寫成 e^(x²) 形式（避免上標誤讀、alt 與 SVG text 逐字一致）。★scope（t_sub）：代換積分法＝鏈鎖法則的逆運算。當被積函數形如 f(g(x))·g′(x) 時，令 u＝g(x)，則 du＝g′(x) dx，把積分換成較簡單的 ∫f(u) du；算完（不定積分）把 u 換回 g(x)，或（定積分）把上下限一併換成 u 的值。以 ∫2x·e^(x²) dx 貫穿：令 u＝x²、du＝2x dx → ∫e^u du＝e^u＋C → 換回 ＝ e^(x²)＋C；定積分 ∫₀¹2x·e^(x²) dx＝[e^(x²)]₀¹＝e−1。只到單一代換（u＝多項式/簡單內函數、且 g′(x) 剛好出現在被積函數）；不含三角代換、不含分部、不含需湊常數倍的進階代換。prereq＝antiderivative＋chain-rule。repro（tools/verify/math_checks7.py::calc.integration-substitution）：∫₀¹2x·e^(x²) dx＝e−1（.venv 已核）；practice 另用 ∫2x·cos(x²) dx＝sin(x²)＋C 以 .venv sympy 另核。★自檢（math-unit defect-classes #1–#63）：figure＝代換法流程 SVG（∫2x·e^(x²) dx ↓令 u＝x²（du＝2x dx）→ ∫e^u du＝e^u＋C（紅）↓換回 u＝x² → ＝e^(x²)＋C，下註代換法＝鏈鎖法則的逆），流程圖無角度/垂直關係（不需等軸#62），alt 與 SVG text 逐字一致（#33）、標題『代換積分法：∫2x·e^(x²) dx』寫進 alt 開頭；practice 四答案＝{鏈鎖法則(Q1 概念),∫e^u du(Q2 代換後),e−1(Q3 定積分 hero retrieval),sin(x²)＋C(Q4 transfer)} 與 teach 關鍵值無 #10（Q3 hero retrieval、options 載入洗牌無位置 tell）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算：如 du 沒換掉殘留 2x、dx 沒換、只代上限漏減下限、上下限顛倒、積分符號錯）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★R15 gloss 運算/結果詞正確（#63）；★導讀承諾順序＝實際 teach 順序（#4/#46）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_calc_integration_substitution.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.calc.integration-substitution",
+   "title_zh": "積分技巧：代換法",
+   "can_do": "我會用『代換積分法 (integration by substitution)』算積分：它是『鏈鎖法則 (chain rule)』的逆運算。當『被積函數 (integrand)』長成 f(g(x))·g′(x) 的樣子時，我會令 u ＝ g(x)，則 du ＝ g′(x) dx，把積分換成比較簡單的 ∫f(u) du；算完再把 u 換回 g(x)（不定積分），或把上下限一起換成 u 的值（定積分）。例：∫2x·e^(x²) dx，令 u ＝ x²、du ＝ 2x dx，變成 ∫e^u du ＝ e^u ＋ C，換回得 e^(x²) ＋ C；定積分 ∫₀¹2x·e^(x²) dx ＝ [e^(x²)]₀¹ ＝ e − 1。",
+   "situation_group": "微積分：積分技巧（代換法）",
+   "subject": "math",
+   "strand": "calc",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.calc.integration-substitution"
+   ],
+   "prerequisites": [
+    "math.t_sub.calc.antiderivative",
+    "math.t_sub.calc.chain-rule"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-is-method",
+     "text": "代換積分法是鏈鎖法則的「逆運算」。鏈鎖法則說 d/dx[F(g(x))] ＝ F′(g(x))·g′(x)；反過來，如果被積函數長成 f(g(x))·g′(x) 的樣子，就可以令 u ＝ g(x)，那麼 du ＝ g′(x) dx，整個積分換成 ∫f(u) du——把裡面的 g(x) 當成一個新變數 u，積分就變簡單了。關鍵：要能看出被積函數裡「有一個內層函數 g(x)，而且它的導數 g′(x) 也（乘在）裡面」。",
+     "kind": "definition",
+     "source_refs": [
+      "代換積分法的原理（高中數學 微積分）"
+     ],
+     "verification_ref": "代換法＝鏈鎖法則逆運算：f(g(x))·g′(x) 令 u=g(x)、du=g′(x)dx → ∫f(u)du（原理）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-is-example",
+     "text": "示範 ∫2x·e^(x²) dx。看出內層是 g(x) ＝ x²，而它的導數 2x 剛好乘在前面。令 u ＝ x²，則 du ＝ 2x dx，所以「2x dx」整個換成「du」、「e^(x²)」換成「e^u」，積分變成 ∫e^u du ＝ e^u ＋ C。最後把 u 換回 x²，得 ∫2x·e^(x²) dx ＝ e^(x²) ＋ C。（可驗算：d/dx[e^(x²)] ＝ e^(x²)·2x，正是被積函數。）",
+     "kind": "definition",
+     "source_refs": [
+      "代換法求不定積分範例（高中數學 微積分）"
+     ],
+     "verification_ref": "∫2x·e^(x²)dx=e^(x²)+C（math_checks7 .venv 驗 ∫₀¹=e−1）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-is-bounds",
+     "text": "算定積分時有兩種作法：(1) 先當不定積分算完、把 u 換回 x，再代原來的上下限；或 (2) 直接把上下限換成 u 的值——例 ∫₀¹2x·e^(x²) dx，當 x 從 0 到 1，u ＝ x² 就從 0 到 1，於是 ∫₀¹e^u du ＝ [e^u]₀¹ ＝ e − 1。最關鍵的一步是：du 要把 g′(x) dx「整個」換掉，別讓式子裡還殘留 x（換了一半是最常見的錯）。",
+     "kind": "definition",
+     "source_refs": [
+      "代換法求定積分（換上下限）（高中數學 微積分）"
+     ],
+     "verification_ref": "∫₀¹2x·e^(x²)dx=[e^(x²)]₀¹=e−1（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.integration-substitution"
+     ],
+     "body": "這一單元學「代換積分法」——積分版的鏈鎖法則逆運算。下面先講原理（看出被積函數裡有內層 g(x) 和它的導數 g′(x)，令 u ＝ g(x) 把積分變簡單）；用 ∫2x·e^(x²) dx 完整示範一次；再講定積分怎麼換上下限，最後提醒常犯的錯，再練習。（本單元接在『反導數』與『鏈鎖法則』之後，核心就是「把鏈鎖法則倒過來用」。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.integration-substitution"
+     ],
+     "body": "① 原理：被積函數長成 f(g(x))·g′(x) 時，令 u ＝ g(x)、du ＝ g′(x) dx，積分換成 ∫f(u) du（鏈鎖法則的逆）。② 示範 ∫2x·e^(x²) dx：內層 g ＝ x²、導數 2x 剛好在前面；令 u ＝ x²、du ＝ 2x dx → ∫e^u du ＝ e^u ＋ C，換回 ＝ e^(x²) ＋ C。③ 定積分：把上下限換成 u 的值，∫₀¹2x·e^(x²) dx ＝ [e^u]₀¹ ＝ e − 1。看下面的流程圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.calc.integration-substitution"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>代換積分法：∫2x·e^(x²) dx</text><text x='180' y='40' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>∫2x · e^(x²) dx</text><text x='180' y='58' font-family='sans-serif' font-size='9.5' fill='#6b7785' text-anchor='middle'>↓ 令 u ＝ x²（du ＝ 2x dx）</text><text x='180' y='82' font-family='sans-serif' font-size='12.5' fill='#c2535d' text-anchor='middle' font-weight='bold'>∫e^u du ＝ e^u ＋ C</text><text x='180' y='100' font-family='sans-serif' font-size='9.5' fill='#6b7785' text-anchor='middle'>↓ 換回 u ＝ x²</text><text x='180' y='124' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>＝ e^(x²) ＋ C</text><text x='180' y='152' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>代換法 ＝ 鏈鎖法則的逆：把 f(g(x))·g′(x) 換成 ∫f(u) du</text></svg>",
+      "alt": "標題「代換積分法：∫2x·e^(x²) dx」。由上而下的流程：第一行「∫2x · e^(x²) dx」，往下標「↓ 令 u ＝ x²（du ＝ 2x dx）」，接著紅色的「∫e^u du ＝ e^u ＋ C」，再往下標「↓ 換回 u ＝ x²」，最後「＝ e^(x²) ＋ C」。最下方註「代換法 ＝ 鏈鎖法則的逆：把 f(g(x))·g′(x) 換成 ∫f(u) du」。",
+      "caption": "以 ∫2x·e^(x²) dx 示範代換法：令 u ＝ x²（du ＝ 2x dx），積分換成簡單的 ∫e^u du ＝ e^u ＋ C，再把 u 換回 x² 得 e^(x²) ＋ C。代換法就是把鏈鎖法則倒過來用。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.integration-substitution"
+     ],
+     "body": "最後練代換法。重點：被積函數形如 f(g(x))·g′(x) 時，令 u ＝ g(x)、du ＝ g′(x) dx，積分換成 ∫f(u) du，算完換回 u（或定積分換上下限）。小提醒：(1) du 要把 g′(x) dx「整個」換掉，別讓式子裡還殘留 x（換一半是最常見的錯）；(2) 不定積分最後一定要把 u 換回 g(x)；定積分則可直接把上下限換成 u 的值。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "代換積分法是哪一個微分法則的「逆運算」？",
+     "answer": "鏈鎖法則",
+     "kp_ids": [
+      "math.t_sub.calc.integration-substitution"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.integration-substitution"
+     ],
+     "options": [
+      "鏈鎖法則",
+      "乘積法則",
+      "商法則",
+      "冪法則"
+     ],
+     "distractor_rationales": {
+      "乘積法則": "乘積法則對應的積分技巧是「分部積分」，不是代換法；代換法對應的是鏈鎖法則。",
+      "商法則": "商法則是兩函數相除的微分，和代換法無關；代換法是鏈鎖法則的逆。",
+      "冪法則": "冪法則只處理 xⁿ 的微分/積分；代換法處理的是合成函數 f(g(x))，對應鏈鎖法則。"
+     },
+     "answer_evidence": [
+      "c-is-method"
+     ],
+     "feedback": "代換積分法是鏈鎖法則的逆運算：f(g(x))·g′(x) 令 u ＝ g(x) 就能化簡。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "∫2x·e^(x²) dx 令 u ＝ x²（du ＝ 2x dx）代換後，積分變成下列哪一個？",
+     "answer": "∫e^u du",
+     "kp_ids": [
+      "math.t_sub.calc.integration-substitution"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.integration-substitution"
+     ],
+     "options": [
+      "∫e^u du",
+      "∫2x·e^u du",
+      "∫e^u dx",
+      "∫2x·e^u dx"
+     ],
+     "distractor_rationales": {
+      "∫2x·e^u du": "2x 沒換掉：du ＝ 2x dx 已經把「2x dx」整個換成「du」，式子裡不該再留 2x。",
+      "∫e^u dx": "dx 沒換成 du：代換後微分符號要變成 du（＝2x dx），不是還留著 dx。",
+      "∫2x·e^u dx": "只把 e 的指數換成 u，2x 和 dx 都沒處理；應把 2x dx 整個換成 du，得 ∫e^u du。"
+     },
+     "answer_evidence": [
+      "c-is-example"
+     ],
+     "feedback": "u ＝ x²、du ＝ 2x dx：把「2x dx」換成「du」、「e^(x²)」換成「e^u」，積分 ＝ ∫e^u du。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "∫₀¹2x·e^(x²) dx 等於多少？（代換後 ∫₀¹e^u du，u 從 0 到 1）",
+     "answer": "e − 1",
+     "kp_ids": [
+      "math.t_sub.calc.integration-substitution"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.integration-substitution"
+     ],
+     "options": [
+      "e − 1",
+      "e",
+      "1 − e",
+      "2e − 2"
+     ],
+     "distractor_rationales": {
+      "e": "只代了上限：[e^u]₀¹ 要「上限減下限」＝ e¹ − e⁰ ＝ e − 1，漏掉了下限的 e⁰ ＝ 1。",
+      "1 − e": "上下限顛倒了：是上限減下限 e¹ − e⁰ ＝ e − 1，不是 e⁰ − e¹。",
+      "2e − 2": "多乘了 2：2x 的 2 已經在代換時併進 du，不該再乘；答案是 e − 1，不是 2(e − 1)。"
+     },
+     "answer_evidence": [
+      "c-is-bounds"
+     ],
+     "feedback": "∫₀¹e^u du ＝ [e^u]₀¹ ＝ e¹ − e⁰ ＝ e − 1。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用代換法求 ∫2x·cos(x²) dx（令 u ＝ x²）等於多少？",
+     "answer": "sin(x²) ＋ C",
+     "kp_ids": [
+      "math.t_sub.calc.integration-substitution"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.integration-substitution"
+     ],
+     "options": [
+      "sin(x²) ＋ C",
+      "− sin(x²) ＋ C",
+      "cos(x²) ＋ C",
+      "2x·sin(x²) ＋ C"
+     ],
+     "distractor_rationales": {
+      "− sin(x²) ＋ C": "符號反了：∫cos u du ＝ sin u（＋C），不是 − sin u；所以是 ＋ sin(x²)。",
+      "cos(x²) ＋ C": "沒有做積分、照抄了被積函數；∫cos u du ＝ sin u，換回得 sin(x²) ＋ C。",
+      "2x·sin(x²) ＋ C": "殘留了 2x：du ＝ 2x dx 已把 2x 併進去，積分結果不該再乘 2x。"
+     },
+     "answer_evidence": [
+      "c-is-method"
+     ],
+     "feedback": "令 u ＝ x²、du ＝ 2x dx → ∫cos u du ＝ sin u ＋ C，換回 ＝ sin(x²) ＋ C。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（代換法＝鏈鎖法則逆運算：被積函數 f(g(x))·g′(x) 令 u＝g(x)、du＝g′(x)dx → ∫f(u)du，算完換回 u 或換上下限；∫2x·e^(x²)dx：u＝x²、du＝2x dx → ∫e^u du＝e^u+C ＝ e^(x²)+C；∫₀¹=e−1；∫2x·cos(x²)dx=sin(x²)+C；兩鐵律＝du 要整個換掉別殘留 x、不定積分最後換回 u）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
