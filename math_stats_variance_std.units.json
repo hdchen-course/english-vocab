@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 統計（stats）strand t_adv 單元。知識點 math.t_adv.stats.variance-std（變異數與標準差）。tier=t_adv（高中學測/分科）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：離均差 (deviation from mean)、變異數 (variance)、標準差 (standard deviation)。★scope（高中 t_adv，母體 population）：離均差＝每筆資料減平均（xi−μ），因有正有負、和為0，故取平方；變異數＝離均差平方的平均 Σ(xi−μ)²/n；標準差＝√變異數（與原資料同單位、較好解讀）；變異數/標準差越大＝資料越分散；平均相同時用標準差比分散程度。只母體公式（除以 n，不教樣本除以 n−1）、不教線性變換（standardization 另單元）、不含 Σ 符號展開證明。prereq＝集中趨勢 central-tendency（先會平均數）。repro（tools/verify/math_checks7.py::stats.variance-std）：D=[2,4,4,4,5,5,7,9]→母體變異數4、標準差2（.venv 已核）。★自檢（math-unit defect-classes #1–#59）：figure＝乙組 {2,2,8,8} 離均差平方計算表 SVG（三欄 資料／離均差／離均差的平方，資料2/2/8/8、離均差 －3/－3/3/3、平方 9/9/9/9，平方和36 標紅，下方 變異數36÷4＝9、標準差√9＝3；負號用 U+FF0D 全形減），alt 與 SVG text 逐字一致（#33）、標題『變異數與標準差：離均差平方的平均』寫進 alt 開頭；teach 用甲{4,4,6,6}std1 vs 乙{2,2,8,8}std3 同平均5 對比示範分散；teach 值集{5,1,9,3,36,-3}與 practice 數值答案{2,4}無交集避#10；practice：Q1 算變異數（{2,4,4,6}→平方和8÷4＝2，選項數值）、Q2 由變異數求標準差（var16→√16＝4，選項數值）、Q3 概念（為何平方離均差＝正負抵消）、Q4 判讀（std 2 vs 5→乙較分散，選項類別）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53，如平方和沒除n/沒開根號/除錯分母）、誘答值取自計算中間值（#57 計算路徑）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_stats_variance_std.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.stats.variance-std",
+   "title_zh": "變異數與標準差",
+   "can_do": "我會算一組資料的『變異數 (variance)』和『標準差 (standard deviation)』來看資料有多分散。我知道先算每筆資料的『離均差 (deviation from mean)』（資料減平均），因為離均差有正有負、加起來會抵消，所以把它平方；變異數就是離均差平方的平均（除以資料個數），標準差就是變異數開根號。我也知道變異數、標準差越大代表資料越分散；兩組平均相同時，標準差大的那組比較分散。",
+   "situation_group": "統計：變異數與標準差",
+   "subject": "math",
+   "strand": "stats",
+   "est_minutes": 15,
+   "knowledge_point_ids": [
+    "math.t_adv.stats.variance-std"
+   ],
+   "prerequisites": [
+    "math.t_mid.stats.central-tendency"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-vs-dev",
+     "text": "要看一組資料有多分散，先算每一筆資料和平均數差多少，這個差叫『離均差 (deviation from mean)』，就是「資料減平均」（xi − μ）。但離均差有的正、有的負，直接加起來會互相抵消（總和剛好是 0），看不出分散程度，所以先把每個離均差平方（平方後都變成正數）。例：資料 2 的離均差是 2 － 5 ＝ －3，平方是 9。",
+     "kind": "definition",
+     "source_refs": [
+      "離均差與為何取平方（高中數學 統計）"
+     ],
+     "verification_ref": "離均差和＝0；平方使之皆正（定義）；2−5=−3、(−3)²=9",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-vs-var",
+     "text": "『變異數 (variance)』就是離均差平方的平均：把每一筆的離均差平方加起來，再除以資料的個數 n，也就是 Σ(xi − μ)² ÷ n。變異數越大，表示資料離平均越遠、越分散；變異數越小，表示資料越集中在平均附近。例：資料 2、2、8、8（平均 5），離均差平方都是 9，平方和 ＝ 36，變異數 ＝ 36 ÷ 4 ＝ 9。",
+     "kind": "definition",
+     "source_refs": [
+      "母體變異數的定義與計算（高中數學 統計）"
+     ],
+     "verification_ref": "Σ(xi−μ)²/n；{2,2,8,8}→36/4=9（math_checks7 .venv 驗 pvariance）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-vs-std",
+     "text": "『標準差 (standard deviation)』就是變異數開根號：標準差 ＝ √變異數。因為變異數是「平方」出來的、單位是原資料單位的平方（例如公分變成平方公分），不好解讀；開根號後，標準差就和原資料同單位，比較好懂。標準差越大代表資料越分散。例：變異數 ＝ 9，標準差 ＝ √9 ＝ 3。兩組資料平均相同時，標準差大的那組比較分散。",
+     "kind": "definition",
+     "source_refs": [
+      "標準差＝√變異數、單位與判讀（高中數學 統計）"
+     ],
+     "verification_ref": "√變異數；√9=3；{2,2,8,8}→pstdev=3（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.stats.variance-std"
+     ],
+     "body": "這一單元學『變異數』和『標準差』——用來看一組資料有多分散。下面先講離均差（資料減平均）以及為什麼要平方；再講變異數＝離均差平方的平均；接著講標準差＝變異數開根號、為什麼要開根號；用一組資料的計算表示範，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.stats.variance-std"
+     ],
+     "body": "① 離均差與平方：先算每筆資料減平均（離均差）。離均差有正有負、加起來會抵消（和為 0），所以先平方讓它們都變正數。② 變異數：把離均差平方加起來，再除以資料個數 n，就是變異數 Σ(xi − μ)² ÷ n。③ 標準差：變異數開根號就是標準差，開根號後單位和原資料一樣、比較好懂。為什麼要這些？因為平均相同的兩組資料，分散程度可能差很多。看兩組（平均都是 5）：甲 4、4、6、6 的標準差是 1；乙 2、2、8、8 的標準差是 3。兩組平均一樣，但乙的資料離平均更遠，所以標準差較大、比較分散。下面用乙這組的計算表整理（離均差平方 → 變異數 → 標準差）。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.stats.variance-std"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='12' fill='#2f6f54' text-anchor='middle' font-weight='bold'>變異數與標準差：離均差平方的平均</text><rect x='28' y='26' width='304' height='24' fill='#eef4ff'/><rect x='28' y='26' width='304' height='112' fill='none' stroke='#99a7b5' stroke-width='1'/><line x1='120' y1='26' x2='120' y2='138' stroke='#99a7b5' stroke-width='1'/><line x1='226' y1='26' x2='226' y2='138' stroke='#99a7b5' stroke-width='1'/><line x1='28' y1='50' x2='332' y2='50' stroke='#99a7b5' stroke-width='1'/><line x1='28' y1='72' x2='332' y2='72' stroke='#99a7b5' stroke-width='1'/><line x1='28' y1='94' x2='332' y2='94' stroke='#99a7b5' stroke-width='1'/><line x1='28' y1='116' x2='332' y2='116' stroke='#99a7b5' stroke-width='1'/><text x='74' y='43' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>資料</text><text x='173' y='43' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>離均差</text><text x='279' y='43' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>離均差的平方</text><text x='74' y='65' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>2</text><text x='173' y='65' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>－3</text><text x='279' y='65' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>9</text><text x='74' y='87' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>2</text><text x='173' y='87' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>－3</text><text x='279' y='87' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>9</text><text x='74' y='109' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>8</text><text x='173' y='109' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>3</text><text x='279' y='109' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>9</text><text x='74' y='131' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>8</text><text x='173' y='131' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>3</text><text x='279' y='131' font-family='sans-serif' font-size='11.5' fill='#33475b' text-anchor='middle'>9</text><text x='180' y='152' font-family='sans-serif' font-size='10.5' fill='#6b7785' text-anchor='middle'>平均＝5；離均差平方和＝9＋9＋9＋9＝<tspan fill='#c2535d' font-weight='bold'>36</tspan></text><text x='180' y='164' font-family='sans-serif' font-size='10.5' fill='#6b7785' text-anchor='middle'>變異數＝36÷4＝9；標準差＝√9＝3</text></svg>",
+      "alt": "標題「變異數與標準差：離均差平方的平均」。一張計算表（資料 2、2、8、8，平均 5），三欄 資料、離均差、離均差的平方：2 → 離均差 －3 → 平方 9；2 → －3 → 9；8 → 3 → 9；8 → 3 → 9。下方寫「平均＝5；離均差平方和＝9＋9＋9＋9＝36」與「變異數＝36÷4＝9；標準差＝√9＝3」。",
+      "caption": "變異數與標準差計算表（資料 2、2、8、8，平均 5）：每筆先算離均差（資料－5），再平方；離均差平方和 ＝ 36，變異數 ＝ 36 ÷ 4 ＝ 9，標準差 ＝ √9 ＝ 3。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.stats.variance-std"
+     ],
+     "body": "最後練變異數與標準差。重點：離均差＝資料減平均，因有正有負、和為 0，所以平方；變異數＝離均差平方和 ÷ 資料個數 n；標準差＝√變異數（和原資料同單位、好解讀）；變異數、標準差越大越分散，平均相同時標準差大的較分散。小提醒：算變異數時「平方和要除以個數」，別忘了除；標準差記得最後「開根號」。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一組資料是 2、4、4、6（平均數是 4）。它的變異數是多少？",
+     "answer": "2",
+     "kp_ids": [
+      "math.t_adv.stats.variance-std"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.stats.variance-std"
+     ],
+     "options": [
+      "2",
+      "8",
+      "4",
+      "1"
+     ],
+     "distractor_rationales": {
+      "8": "8 是離均差平方和（4＋0＋0＋4），還沒除以資料個數；變異數要再除以 4，8 ÷ 4 ＝ 2。",
+      "4": "4 是這組資料的平均數，不是變異數；變異數是離均差平方的平均，8 ÷ 4 ＝ 2。",
+      "1": "1 是把平方和 8 除以 8（個數的兩倍）、分母用錯了；要除以資料個數 4，8 ÷ 4 ＝ 2。"
+     },
+     "answer_evidence": [
+      "c-vs-var"
+     ],
+     "feedback": "離均差是 －2、0、0、2，平方 4、0、0、4，和 ＝ 8；變異數 ＝ 8 ÷ 4 ＝ 2。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一組資料的變異數是 16。它的標準差是多少？",
+     "answer": "4",
+     "kp_ids": [
+      "math.t_adv.stats.variance-std"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.stats.variance-std"
+     ],
+     "options": [
+      "4",
+      "16",
+      "256",
+      "8"
+     ],
+     "distractor_rationales": {
+      "16": "16 是變異數本身，不是標準差；標準差要把變異數開根號，√16 ＝ 4。",
+      "256": "256 是把變異數 16 再平方（16×16）；方向反了，標準差是把變異數開根號，√16 ＝ 4。",
+      "8": "8 是把變異數 16 除以 2，不是開根號；標準差 ＝ √16 ＝ 4。"
+     },
+     "answer_evidence": [
+      "c-vs-std"
+     ],
+     "feedback": "標準差 ＝ √變異數 ＝ √16 ＝ 4。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "計算變異數時，為什麼要先把每筆資料的「離均差」平方，而不是直接把離均差加起來？",
+     "answer": "因為離均差有正有負、直接加起來會互相抵消（和為 0），平方後都變正數才能反映分散程度",
+     "kp_ids": [
+      "math.t_adv.stats.variance-std"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.stats.variance-std"
+     ],
+     "options": [
+      "因為離均差有正有負、直接加起來會互相抵消（和為 0），平方後都變正數才能反映分散程度",
+      "因為平方以後數字比較大、算起來比較清楚",
+      "因為課本規定一定要先平方，沒有特別的原因",
+      "因為平方可以把資料變成整數、方便計算"
+     ],
+     "distractor_rationales": {
+      "因為平方以後數字比較大、算起來比較清楚": "重點不是把數字變大；是因為離均差正負會抵消（和為 0），平方後都變正數才能反映分散程度。",
+      "因為課本規定一定要先平方，沒有特別的原因": "平方是有原因的：離均差直接相加會正負抵消（和為 0），平方讓它們都變正數。",
+      "因為平方可以把資料變成整數、方便計算": "平方不是為了變整數（離均差平方不一定是整數）；是為了避免正負抵消、讓差距都用正數表示。"
+     },
+     "answer_evidence": [
+      "c-vs-dev"
+     ],
+     "feedback": "離均差有正有負，直接相加剛好抵消成 0，看不出分散；平方後都變正數，才能反映每筆資料離平均有多遠。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "甲、乙兩組資料的平均數相同，甲的標準差是 2、乙的標準差是 5。哪一組資料比較分散？",
+     "answer": "乙",
+     "kp_ids": [
+      "math.t_adv.stats.variance-std"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.stats.variance-std"
+     ],
+     "options": [
+      "乙",
+      "甲",
+      "兩組一樣分散",
+      "從標準差看不出來"
+     ],
+     "distractor_rationales": {
+      "甲": "甲的標準差 2 比乙的 5 小，表示甲比較集中、不是比較分散；標準差大的乙才比較分散。",
+      "兩組一樣分散": "兩組標準差不同（2 和 5），分散程度就不一樣；5 比 2 大，乙比較分散。",
+      "從標準差看不出來": "標準差正是用來看分散程度的：標準差大的（乙 5）比較分散。"
+     },
+     "answer_evidence": [
+      "c-vs-std"
+     ],
+     "feedback": "平均相同時，標準差越大代表越分散。乙的標準差 5 比甲的 2 大，所以乙比較分散。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（離均差＝資料減平均、因正負抵消故平方；變異數＝離均差平方和÷資料個數 n；標準差＝√變異數、與原資料同單位；變異數/標準差越大越分散、平均相同時標準差大的較分散）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
