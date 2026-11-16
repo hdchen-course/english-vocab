@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 向量（vector）strand 單元。知識點 math.t_sub.vector.geometry-apply（向量在幾何證明與重心/共線的應用）。tier=t_sub（高中分科/選修深階）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；只列實際 render 給 reader 的術語）：共線 (collinear)、重心 (centroid)、分點 (section point)。前置假設：已學平面向量坐標/加減/係數積（plane-add-sub、linear-combination）、平面外積（cross-product）。★scope（t_sub，prereq space-dot-product；本單元回到平面應用）：用向量判斷三點共線——A、B、C 共線 ⟺ 向量 AB 與 AC 平行 ⟺ 它們的平面外積 AB×AC＝0；中點 M＝(A＋B)/2；分點（P 把線段 AB 分成 AP:PB＝m:n、從 A 算）P＝(nA＋mB)/(m＋n)；三角形重心 G＝三頂點平均＝(A＋B＋C)/3（重心把每條中線分成 2:1）。以共線 A=(1,1)、B=(3,2)、C=(7,4)（AB×AC=0）、重心 三角形 (0,0)、(6,0)、(3,6)→G=(3,2) 貫穿。只到共線判定/中點/分點/重心；不含三維、不含面積（前一單元）。prereq＝space-dot-product（教學上回到平面幾何應用）。repro（tools/verify/math_checks7.py::vector.geometry-apply，本 session 新增並跑過 PASS；binding 另有 math_checks6::vector.geometry-apply 驗共線）：AB×AC=0⇒共線、重心 G=(3,2)、中點=(3,0)、分點 2:1=(4,0)（.venv 驗）。★自檢（math-unit defect-classes #1–#64）：figure＝等軸 2D 坐標平面、三角形 P(0,0)/Q(6,0)/R(3,6) 淺藍、重心 G=(3,2) 標點、R→PQ 中點 M(3,0) 的中線（G 在線上、分 2:1）——★等軸比例（#62，2D 度量圖才看得出重心位置）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾圖畫的「重心 G＝頂點平均＝(3,2)」（#4/#46，共線/中點/分點由 teach 文字教）；practice 四答案＝{(3,2)(Q1 重心),AB 和 AC 的外積是不是 0(Q2 共線判定),(3,0)(Q3 中點),(4,0)(Q4 分點 transfer)}——各題不同運算、無 #10 碰撞；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算：Q1 忘除3/除2當中點/xy顛倒；Q2 內積0=垂直/長度/坐標相加；Q3 沒除2/相減再除2/y錯；Q4 比例弄反/當中點/忘除3）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_vector_geometry_apply.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.vector.geometry-apply",
+   "title_zh": "向量在幾何證明與重心、共線的應用",
+   "can_do": "我會用向量處理幾何問題。判斷三點『共線 (collinear)』：A、B、C 共線 ⟺ 向量 AB 與 AC 平行 ⟺ 它們的平面外積 AB×AC ＝ 0。我會算線段中點 M ＝ (A ＋ B)/2，以及『分點 (section point)』：P 把線段 AB 分成 AP:PB ＝ m:n（從 A 算）時 P ＝ (nA ＋ mB)/(m ＋ n)。我也會算三角形的『重心 (centroid)』：就是三個頂點的平均 G ＝ (A ＋ B ＋ C)/3。例：三角形 (0, 0)、(6, 0)、(3, 6) 的重心 G ＝ (3, 2)。",
+   "situation_group": "向量：平面向量進階",
+   "subject": "math",
+   "strand": "vector",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.vector.geometry-apply"
+   ],
+   "prerequisites": [
+    "math.t_sub.vector.space-dot-product"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ga-collinear",
+     "text": "用向量判斷三點共線：A、B、C 三點共線（在同一條直線上）的充要條件是，從 A 出發的兩個向量 AB 和 AC 互相平行。而兩個平面向量平行 ⟺ 它們的平面外積等於 0。所以：A、B、C 共線 ⟺ AB×AC ＝ 0。例：A ＝ (1, 1)、B ＝ (3, 2)、C ＝ (7, 4)，AB ＝ (2, 1)、AC ＝ (6, 3)，AB×AC ＝ 2×3 − 1×6 ＝ 0，所以三點共線。",
+     "kind": "definition",
+     "source_refs": [
+      "向量與共線判定（高中數學 向量）"
+     ],
+     "verification_ref": "A,B,C 共線 ⟺ AB×AC=0；(1,1)(3,2)(7,4)：AB×AC=0（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ga-section",
+     "text": "線段的中點與分點用向量（坐標）算。中點 M 是兩端點的平均：M ＝ (A ＋ B)/2。更一般地，若 P 把線段 AB 分成 AP:PB ＝ m:n（從 A 這端算起），則 P ＝ (nA ＋ mB)/(m ＋ n)（離哪一端近，那一端的坐標權重就大）。例：A ＝ (0, 0)、B ＝ (6, 0)，中點 ＝ (3, 0)；P 分 AB 為 2:1（從 A）＝ (1×A ＋ 2×B)/3 ＝ (4, 0)。",
+     "kind": "definition",
+     "source_refs": [
+      "中點與分點公式（高中數學 向量）"
+     ],
+     "verification_ref": "M=(A+B)/2=(3,0)；分點 2:1(從A)=(A+2B)/3=(4,0)（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ga-centroid",
+     "text": "三角形的重心就是三個頂點的平均：G ＝ (A ＋ B ＋ C)/3。重心是三條中線（頂點到對邊中點的連線）的交點，而且它把每條中線分成 2:1（靠頂點那段是靠對邊那段的 2 倍）。例：三角形 (0, 0)、(6, 0)、(3, 6)，G ＝ ((0＋6＋3)/3, (0＋0＋6)/3) ＝ (3, 2)。",
+     "kind": "definition",
+     "source_refs": [
+      "三角形重心（高中數學 向量）"
+     ],
+     "verification_ref": "G=(A+B+C)/3；(0,0)(6,0)(3,6)→G=(3,2)（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.vector.geometry-apply"
+     ],
+     "body": "這一單元把向量用到幾何問題上。先講共線判定（AB×AC ＝ 0）；再講中點與分點（用坐標平均、加權平均）；最後講三角形重心（三頂點平均 G ＝ (A ＋ B ＋ C)/3）。用共線的 A ＝ (1, 1)、B ＝ (3, 2)、C ＝ (7, 4)，和三角形 (0, 0)、(6, 0)、(3, 6) 示範，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.vector.geometry-apply"
+     ],
+     "body": "① 共線判定：A、B、C 共線 ⟺ AB 與 AC 平行 ⟺ AB×AC ＝ 0。例 AB ＝ (2, 1)、AC ＝ (6, 3)，AB×AC ＝ 2×3 − 1×6 ＝ 0，三點共線。② 中點與分點：中點 M ＝ (A ＋ B)/2；P 分 AB 為 m:n（從 A）＝ (nA ＋ mB)/(m ＋ n)。例 (0, 0)、(6, 0) 中點 ＝ (3, 0)、分 2:1 ＝ (4, 0)。③ 重心：G ＝ (A ＋ B ＋ C)/3（三頂點平均），把每條中線分成 2:1。例 (0, 0)、(6, 0)、(3, 6)，G ＝ (3, 2)。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.vector.geometry-apply"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>重心：三角形 PQR 的重心 G ＝ 頂點平均 ＝ (3, 2)</text><polygon points='100,140 208,140 154,32' fill='#e6edf3' stroke='#99a7b5' stroke-width='1.4'/><line x1='154' y1='32' x2='154' y2='140' stroke='#c9d3dd' stroke-width='1' stroke-dasharray='4 3'/><circle cx='154' cy='104' r='3' fill='#c2535d'/><circle cx='100' cy='140' r='2.5' fill='#33475b'/><circle cx='208' cy='140' r='2.5' fill='#33475b'/><circle cx='154' cy='32' r='2.5' fill='#33475b'/><circle cx='154' cy='140' r='2' fill='#6b7785'/><text x='94' y='152' font-family='sans-serif' font-size='9.5' fill='#33475b' text-anchor='middle'>P (0, 0)</text><text x='214' y='152' font-family='sans-serif' font-size='9.5' fill='#33475b' text-anchor='middle'>Q (6, 0)</text><text x='154' y='27' font-family='sans-serif' font-size='9.5' fill='#33475b' text-anchor='middle'>R (3, 6)</text><text x='162' y='102' font-family='sans-serif' font-size='9.5' fill='#c2535d' text-anchor='start'>G (3, 2)</text><text x='160' y='152' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='start'>M (3, 0)</text><text x='180' y='162' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>G 把中線 RM 分成 RG:GM ＝ 2:1</text></svg>",
+      "alt": "標題「重心：三角形 PQR 的重心 G ＝ 頂點平均 ＝ (3, 2)」。一個等比例的坐標平面，畫出三角形 PQR，三個頂點標「P (0, 0)」（左下）、「Q (6, 0)」（右下）、「R (3, 6)」（上方），三角形內部淺藍色填滿。從頂點 R 到底邊 PQ 的中點 M（標「M (3, 0)」）畫一條灰色虛線中線。線上有一個紅點標「G (3, 2)」，就是三角形的重心。最下方註「G 把中線 RM 分成 RG:GM ＝ 2:1」。",
+      "caption": "以三角形 P (0, 0)、Q (6, 0)、R (3, 6) 示範重心：G ＝ 三頂點平均 ＝ ((0＋6＋3)/3, (0＋0＋6)/3) ＝ (3, 2)。重心落在每條中線上，並把中線分成 2:1（靠頂點 R 的那段是靠底邊 M 的那段的 2 倍）。坐標用相同比例，才看得出 G 的正確位置。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.vector.geometry-apply"
+     ],
+     "body": "最後練向量的幾何應用。重點：三點共線 ⟺ AB×AC ＝ 0；中點 M ＝ (A ＋ B)/2；分點 P ＝ (nA ＋ mB)/(m ＋ n)（AP:PB ＝ m:n，從 A 算）；三角形重心 G ＝ (A ＋ B ＋ C)/3。小提醒：(1) 重心是三個頂點相加「再除以 3」，不是除以 2（除以 2 是兩點中點的算法）；(2) 分點公式裡權重是「交叉」的——離 A 近（m 小）時 A 的權重 n 反而大，算時照 (nA ＋ mB)/(m ＋ n) 代就不會錯。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "三角形的三個頂點是 (0, 0)、(6, 0)、(3, 6)，它的重心是哪一點？",
+     "answer": "(3, 2)",
+     "kp_ids": [
+      "math.t_sub.vector.geometry-apply"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.vector.geometry-apply"
+     ],
+     "options": [
+      "(3, 2)",
+      "(9, 6)",
+      "(4.5, 3)",
+      "(2, 3)"
+     ],
+     "distractor_rationales": {
+      "(9, 6)": "這只是把三個頂點坐標相加、忘了除以 3：重心是三頂點的「平均」，(9, 6)/3 ＝ (3, 2)。",
+      "(4.5, 3)": "這是除以 2（把兩個數字平均的做法）：三角形重心有三個頂點，要除以 3，得 (3, 2)。",
+      "(2, 3)": "這是把 x、y 算反了：((0＋6＋3)/3, (0＋0＋6)/3) ＝ (3, 2)，不是 (2, 3)。"
+     },
+     "answer_evidence": [
+      "c-ga-centroid"
+     ],
+     "feedback": "重心 G ＝ (A ＋ B ＋ C)/3 ＝ ((0＋6＋3)/3, (0＋0＋6)/3) ＝ (3, 2)。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "要用向量判斷 A、B、C 三點是不是共線，應該看什麼？",
+     "answer": "AB 和 AC 的外積是不是 0",
+     "kp_ids": [
+      "math.t_sub.vector.geometry-apply"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.vector.geometry-apply"
+     ],
+     "options": [
+      "AB 和 AC 的外積是不是 0",
+      "AB 和 AC 的內積是不是 0",
+      "AB 和 AC 的長度是否相等",
+      "A、B、C 的坐標相加是不是 0"
+     ],
+     "distractor_rationales": {
+      "AB 和 AC 的內積是不是 0": "內積為 0 代表兩向量「垂直」，不是共線：共線（平行）要看外積 AB×AC 是不是 0。",
+      "AB 和 AC 的長度是否相等": "長度和共線無關：兩向量一樣長也可以不平行；共線要看外積是否為 0。",
+      "A、B、C 的坐標相加是不是 0": "把坐標相加沒有意義：判斷共線要看 AB 與 AC 是否平行，也就是外積 AB×AC ＝ 0。"
+     },
+     "answer_evidence": [
+      "c-ga-collinear"
+     ],
+     "feedback": "A、B、C 共線 ⟺ AB 與 AC 平行 ⟺ AB×AC ＝ 0（外積為 0）。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "A ＝ (0, 0)、B ＝ (6, 0)，線段 AB 的中點是哪一點？",
+     "answer": "(3, 0)",
+     "kp_ids": [
+      "math.t_sub.vector.geometry-apply"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.vector.geometry-apply"
+     ],
+     "options": [
+      "(3, 0)",
+      "(6, 0)",
+      "(−3, 0)",
+      "(3, 3)"
+     ],
+     "distractor_rationales": {
+      "(6, 0)": "這只是把兩端點相加 (0＋6, 0＋0)、忘了除以 2：中點 ＝ (A ＋ B)/2 ＝ (3, 0)。",
+      "(−3, 0)": "這是相減再除以 2（(A − B)/2）：中點是相「加」再除以 2，(0＋6)/2 ＝ 3。",
+      "(3, 3)": "x 算對了（3），但 y 錯了：兩端點 y 都是 0，(0＋0)/2 ＝ 0，中點是 (3, 0)。"
+     },
+     "answer_evidence": [
+      "c-ga-section"
+     ],
+     "feedback": "中點 M ＝ (A ＋ B)/2 ＝ ((0＋6)/2, (0＋0)/2) ＝ (3, 0)。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "A ＝ (0, 0)、B ＝ (6, 0)，點 P 把線段 AB 分成 AP:PB ＝ 2:1（從 A 算）。P 是哪一點？",
+     "answer": "(4, 0)",
+     "kp_ids": [
+      "math.t_sub.vector.geometry-apply"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.vector.geometry-apply"
+     ],
+     "options": [
+      "(4, 0)",
+      "(2, 0)",
+      "(3, 0)",
+      "(12, 0)"
+     ],
+     "distractor_rationales": {
+      "(2, 0)": "這把比例方向弄反了（當成 1:2）：AP:PB ＝ 2:1 代入 P ＝ (1×A ＋ 2×B)/3 ＝ (4, 0)，P 應該離 B 比較近。",
+      "(3, 0)": "這是中點（比例 1:1）：題目是 2:1，P 離 B 較近，P ＝ (A ＋ 2B)/3 ＝ (4, 0)。",
+      "(12, 0)": "這是 A ＋ 2B 沒除以 (m＋n) ＝ 3：分點要除以 3，(0＋12)/3 ＝ 4。"
+     },
+     "answer_evidence": [
+      "c-ga-section"
+     ],
+     "feedback": "AP:PB ＝ 2:1（從 A）⇒ P ＝ (1×A ＋ 2×B)/3 ＝ ((0＋12)/3, 0) ＝ (4, 0)（離 B 較近）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（共線 A,B,C 共線 ⟺ AB 與 AC 平行 ⟺ AB×AC＝0；中點 M＝(A＋B)/2；分點 AP:PB＝m:n(從A)⇒P＝(nA＋mB)/(m＋n)；三角形重心 G＝(A＋B＋C)/3＝三頂點平均、分中線 2:1；共線例 (1,1)(3,2)(7,4) AB×AC=0、重心例 (0,0)(6,0)(3,6)→(3,2)、中點 (0,0)(6,0)→(3,0)、分點 2:1→(4,0)；兩鐵律＝重心除以 3 不是 2、分點權重交叉照 (nA＋mB)/(m＋n) 代）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

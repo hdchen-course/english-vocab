@@ -197,6 +197,16 @@ def c_vec_triangle_tetra_area():
     assert tp == 24                                    # 純量三重積 (a×b)·c=24=平行六面體體積
     assert sp.Rational(1, 6) * abs(tp) == 4            # 四面體體積=⅙|(a×b)·c|=4
     return _ok("vector.triangle-tetra-area", "a×b=(0,0,6)⊥a,b；|a×b|=6(平行四邊形)；三角形=3；(a×b)·c=24(平行六面體)；四面體=⅙·24=4")
+def c_vec_geometry_apply():
+    def cross(u, v): return u[0]*v[1] - u[1]*v[0]      # 2D 外積(純量)
+    A = sp.Matrix([1, 1]); B = sp.Matrix([3, 2]); C = sp.Matrix([7, 4])
+    AB = B - A; AC = C - A
+    assert cross(AB, AC) == 0                          # 共線判定 AB×AC=0 ⟺ A,B,C 共線
+    P = sp.Matrix([0, 0]); Q = sp.Matrix([6, 0]); R = sp.Matrix([3, 6])
+    assert list((P + Q + R) / 3) == [3, 2]             # 重心 G=(A+B+C)/3=(3,2)
+    assert list((P + Q) / 2) == [3, 0]                 # 中點 M=(A+B)/2=(3,0)
+    assert list((1 * P + 2 * Q) / 3) == [4, 0]         # 分點 分 PQ 為 2:1(從 P)=(A+2B)/3=(4,0)
+    return _ok("vector.geometry-apply", "AB×AC=0⇒A,B,C 共線；重心 G=(3,2)；中點=(3,0)；分點 2:1=(4,0)")
 
 # ---------- stats（18）----------
 D = [2, 4, 4, 4, 5, 5, 7, 9]      # 共用樣本（std 範例，μ=5,σ=2）
@@ -341,6 +351,7 @@ CHECKS = {s: fn for s, fn in {
     "vector.space-vector": c_vec_space_vector,
     "vector.space-dot-product": c_vec_space_dot_product,
     "vector.triangle-tetra-area": c_vec_triangle_tetra_area,
+    "vector.geometry-apply": c_vec_geometry_apply,
     "stats.collect-organize": s_collect, "stats.bar-line-chart": s_bar_line,
     "stats.pie-chart": s_pie, "stats.table-read": s_table, "stats.mean": s_mean,
     "stats.frequency-table": s_freq_table, "stats.cumulative-relative": s_cumulative,
