@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 12:36 stats strand variance-std 變異數與標準差 5/5 DONE-GATE 全綠（t_adv 高中，★離均差平方計算表 SVG）→ stats 12/18（過三分之二）
+- **math_stats_variance_std frozen `86e4c83cd56fc46a`**（R1-R5 連 5 clean、L3 每輪 exit 0；R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==86e4c83c／per_page_5clean variance_std absent／iPad 四角色簽核（3 欄計算表 資料/離均差/離均差的平方 格線齊、負號 －3 清楚、平方和 36 標紅、變異數36÷4=9/標準差√9=3 兩行結論 √ 正常、右緣0%）。
+- 變異數/標準差（t_adv 母體）＝離均差(資料減平均，正負抵消故平方)→變異數 Σ(xi−μ)²÷n→標準差 √變異數(與原資料同單位)；越大越分散、平均相同時標準差大者較分散。teach 甲{4,4,6,6}std1 vs 乙{2,2,8,8}std3 同平均5 對比；figure 乙計算表 平方和36→var9→std3（repro math_checks7 .venv 驗 pvariance/pstdev）。practice：Q1 算變異數({2,4,4,6}→8÷4=2)、Q2 由變異數求標準差(√16=4)、Q3 概念(為何平方離均差＝正負抵消)、Q4 判讀(std 2 vs 5→乙較分散)。只母體公式(÷n)、不教樣本 n−1（scope）。prereq＝central-tendency。
+- ★收斂全程無正確性缺陷（repro .venv 驗證）；R1 的 2 length-cue advisory（Q3 概念正解較長、唯一帶括號補述）依 HD 2026-11-15 裁定 length/詳細度 cue 非 defect 且不得為長度改寫內容，不動；R3 唯一 finding＝Q4 重用甲/乙標籤（teach std1/3、Q4 std2/5）panel 5/5 判 NOT A DEFECT（甲/乙 為每題通用佔位、Q4 自足明列、乙仍較分散不矛盾）。
+- 下一步：stats 其餘 6 單元（standardization/bivariate-scatter/correlation/regression-line/sampling-survey/risk-decision）；接著 calc/vector 等。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-16 12:16 stats strand cumulative-relative 累積次數與相對次數 5/5 DONE-GATE 全綠（t_mid 國中，★三欄次數表 SVG）→ stats 11/18
 - **math_stats_cumulative_relative frozen `38037d4de5ffc7f1`**（R1-R5 連 5 clean、L3 每輪 exit 0；R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==38037d4d／per_page_5clean cumulative_relative absent／iPad 四角色簽核（四欄表 本數/次數/累積次數/相對次數 格線齊、10 標紅、右緣0%）。
 - 累積次數（t_mid）＝從第一組起一組一組往下累加、到某組為止＝該組與前面所有組總和、末項＝總筆數；相對次數＝一組次數÷總筆數（占比、小數）、所有組和＝1。teach 表 本數 0~2/3~5/6~8：次數 2/3/5、累積 2/5/10、相對 0.2/0.3/0.5（repro math_checks7 .venv 驗）。practice：Q1 到第二組累積(3+4=7)、Q2 相對次數(8÷20=0.4)、Q3 相對次數和(=1)、Q4 相對次數用途(甲30/乙40 人數不等→比占比用相對次數公平，c-cr-use)。prereq＝frequency-table。
