@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 統計（stats）strand t_adv 單元。知識點 math.t_adv.stats.correlation（相關係數）。tier=t_adv（高中學測/分科）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：相關係數 (correlation coefficient)。★scope（高中 t_adv）：相關係數 r 介於 −1 到 1（含端點），衡量兩變數「直線關係」的方向與強弱；r>0 正相關、r<0 負相關、r≈0 幾乎無直線關係；|r| 越接近 1 點越靠近一直線、關係越強，r=1 完全正相關（點都在一條右上直線上）、r=−1 完全負相關（右下直線）；★相關不等於因果（兩變數一起變動不代表一個造成另一個，可能有第三因素）。只定性讀 r 的方向/強弱＋range＋相關≠因果；不教 r 的計算公式、不查常態表。prereq＝二維資料與散布圖 bivariate-scatter。repro（tools/verify/math_checks7.py::stats.correlation）：[1,2,3,4]vs[2,4,6,8] r=1、vs[8,6,4,2] r=−1（.venv 已核 np.corrcoef）。★自檢（math-unit defect-classes #1–#59）：figure＝r 數線 SVG（−1 到 1，x=180+r*140：−1→x40(紅,完全負相關)、0→x180(灰,幾乎無直線關係)、1→x320(綠,完全正相關)，刻度 −1/−0.5/0/0.5/1），alt 與 SVG text 逐字一致（#33）、標題『相關係數 r：從 −1 到 1，看直線關係的方向與強弱』寫進 alt 開頭；teach 值集{−1,0,1}與 practice 數值答案（無純數值答案，皆類別/範圍）無交集避#10；practice：Q1 讀 r=−0.8（負相關且強，選項類別）、Q2 r range（−1 到 1，選項範圍）、Q3 比較強弱（r0.3 vs 0.9→0.9 強，選項類別）、Q4 相關≠因果（冰淇淋/溺水，選項說法）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53，如把負看成正/把強看成無/完全vs很強/因果倒置）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_stats_correlation.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.stats.correlation",
+   "title_zh": "相關係數",
+   "can_do": "我知道『相關係數 (correlation coefficient)』r 是一個介於 −1 到 1 之間的數，用來看兩個變數「直線關係」的方向和強弱：r 是正的就是正相關（一起變大）、r 是負的就是負相關（一個變大另一個變小）、r 接近 0 就是幾乎沒有直線關係。我知道 |r| 越接近 1 關係越強（r ＝ 1 完全正相關、r ＝ −1 完全負相關）、越接近 0 越弱。我也知道『相關不等於因果』——兩個變數相關，不代表一個造成另一個。",
+   "situation_group": "統計：相關係數",
+   "subject": "math",
+   "strand": "stats",
+   "est_minutes": 14,
+   "knowledge_point_ids": [
+    "math.t_adv.stats.correlation"
+   ],
+   "prerequisites": [
+    "math.t_adv.stats.bivariate-scatter"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-cor-dir",
+     "text": "『相關係數 (correlation coefficient)』r 是一個介於 −1 到 1 之間的數（包含 −1 和 1），用來衡量兩個變數「直線關係」的方向和強弱。r 是正的，表示正相關（一個變數變大、另一個也傾向變大）；r 是負的，表示負相關（一個變大、另一個傾向變小）；r 接近 0，表示兩個變數幾乎沒有直線關係。",
+     "kind": "definition",
+     "source_refs": [
+      "相關係數的意義與範圍（高中數學 統計）"
+     ],
+     "verification_ref": "r∈[−1,1]；正負號＝方向（定義）；r=1、r=−1（math_checks7 .venv 驗 corrcoef）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-cor-strength",
+     "text": "相關係數的「絕對值」|r| 越接近 1，散布圖上的點就越靠近一條直線、直線關係越「強」；|r| 越接近 0，點越散、關係越「弱」。特別地，r ＝ 1 是『完全正相關』（所有點剛好落在一條往右上的直線上），r ＝ −1 是『完全負相關』（所有點剛好落在一條往右下的直線上）。",
+     "kind": "definition",
+     "source_refs": [
+      "相關係數的強弱與 ±1 完全相關（高中數學 統計）"
+     ],
+     "verification_ref": "|r|→1 越強、→0 越弱；r=±1 點共線（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-cor-causation",
+     "text": "『相關不等於因果』：兩個變數有相關，只表示它們會「一起變動」，並不代表其中一個「造成」另一個。有時兩者的相關其實是因為第三個因素。例如夏天「冰淇淋銷量」和「溺水人數」會一起變多（正相關），但不是吃冰淇淋造成溺水，真正的共同原因是天氣熱（天熱使人多吃冰、也多去玩水）。",
+     "kind": "definition",
+     "source_refs": [
+      "相關不等於因果（高中數學 統計）"
+     ],
+     "verification_ref": "相關＝一起變動≠一個造成另一個；可能有共同第三因素（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.stats.correlation"
+     ],
+     "body": "這一單元學『相關係數 r』。下面先講 r 的意義和範圍（−1 到 1）、正負號代表的方向；再講 |r| 越接近 1 關係越強、r ＝ ±1 是完全相關；接著講一個很重要的提醒——相關不等於因果；用一張 r 數線圖示範，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.stats.correlation"
+     ],
+     "body": "① 方向與範圍：相關係數 r 一定介於 −1 到 1 之間。r 是正的＝正相關（一起變大）、r 是負的＝負相關（一增一減）、r 接近 0＝幾乎沒有直線關係。② 強弱：|r| 越接近 1，點越靠近一條直線、關係越強；越接近 0 越弱。r ＝ 1 是完全正相關（點都在一條往右上的直線上）、r ＝ −1 是完全負相關（往右下的直線）。看下面的 r 數線：最左 −1、中間 0、最右 1，越往兩端關係越強、越靠中間越弱。③ 重要提醒：相關不等於因果——兩個變數一起變動，不代表一個造成另一個，可能是第三個因素（例如天氣熱使冰淇淋銷量和溺水人數一起變多）。下面用這張 r 數線整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.stats.correlation"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='15' font-family='sans-serif' font-size='11.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>相關係數 r：從 −1 到 1，看直線關係的方向與強弱</text><line x1='40' y1='80' x2='320' y2='80' stroke='#99a7b5' stroke-width='2'/><line x1='40' y1='74' x2='40' y2='86' stroke='#99a7b5' stroke-width='1'/><line x1='110' y1='75' x2='110' y2='85' stroke='#99a7b5' stroke-width='1'/><line x1='180' y1='74' x2='180' y2='86' stroke='#99a7b5' stroke-width='1'/><line x1='250' y1='75' x2='250' y2='85' stroke='#99a7b5' stroke-width='1'/><line x1='320' y1='74' x2='320' y2='86' stroke='#99a7b5' stroke-width='1'/><text x='40' y='67' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='middle'>−1</text><text x='110' y='68' font-family='sans-serif' font-size='9.5' fill='#6b7785' text-anchor='middle'>−0.5</text><text x='180' y='67' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='middle'>0</text><text x='250' y='68' font-family='sans-serif' font-size='9.5' fill='#6b7785' text-anchor='middle'>0.5</text><text x='320' y='67' font-family='sans-serif' font-size='10.5' fill='#33475b' text-anchor='middle'>1</text><circle cx='40' cy='80' r='5' fill='#c2535d'/><circle cx='180' cy='80' r='5' fill='#9aa6b2'/><circle cx='320' cy='80' r='5' fill='#2f9e6e'/><text x='40' y='103' font-family='sans-serif' font-size='10' fill='#c2535d' text-anchor='middle' font-weight='bold'>完全負相關</text><text x='180' y='103' font-family='sans-serif' font-size='10' fill='#6b7785' text-anchor='middle'>幾乎無直線關係</text><text x='320' y='103' font-family='sans-serif' font-size='10' fill='#2f9e6e' text-anchor='middle' font-weight='bold'>完全正相關</text><text x='180' y='130' font-family='sans-serif' font-size='10.5' fill='#6b7785' text-anchor='middle'>r 越接近 ±1 關係越強、越接近 0 越弱</text><text x='180' y='148' font-family='sans-serif' font-size='10.5' fill='#6b7785' text-anchor='middle'>r 為正＝正相關、為負＝負相關</text></svg>",
+      "alt": "標題「相關係數 r：從 −1 到 1，看直線關係的方向與強弱」。一條數線從 −1 到 1，刻度 −1、−0.5、0、0.5、1；−1 處紅點標「完全負相關」、0 處灰點標「幾乎無直線關係」、1 處綠點標「完全正相關」。下方寫「r 越接近 ±1 關係越強、越接近 0 越弱」與「r 為正＝正相關、為負＝負相關」。",
+      "caption": "相關係數 r 數線：r 介於 −1 到 1。最左 −1 是完全負相關、中間 0 幾乎沒有直線關係、最右 1 是完全正相關。r 越接近兩端（±1）關係越強、越靠近 0 越弱；r 為正是正相關、為負是負相關。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.stats.correlation"
+     ],
+     "body": "最後練相關係數。重點：r 介於 −1 到 1；正號＝正相關、負號＝負相關、接近 0＝幾乎沒有直線關係；|r| 越接近 1 關係越強、r ＝ ±1 是完全相關；相關不等於因果，兩變數一起變動不代表一個造成另一個。小提醒：比較「關係強弱」看 |r|（離 0 多遠）、比較「方向」看正負號。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "兩個變數的相關係數 r ＝ −0.8。這代表它們的直線關係是？",
+     "answer": "負相關，而且關係相當強",
+     "kp_ids": [
+      "math.t_adv.stats.correlation"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.stats.correlation"
+     ],
+     "options": [
+      "負相關，而且關係相當強",
+      "正相關，而且關係相當強",
+      "幾乎沒有直線關係",
+      "完全負相關"
+     ],
+     "distractor_rationales": {
+      "正相關，而且關係相當強": "r 是負的（−0.8）表示負相關，不是正相關；強弱看絕對值，|−0.8| 接近 1 所以的確很強，但方向是負的。",
+      "幾乎沒有直線關係": "幾乎沒關係是 r 接近 0；−0.8 離 0 很遠、接近 −1，關係其實相當強。",
+      "完全負相關": "完全負相關要 r 剛好 ＝ −1；−0.8 是很強的負相關，但還沒到完全。"
+     },
+     "answer_evidence": [
+      "c-cor-dir",
+      "c-cor-strength"
+     ],
+     "feedback": "r 是負的 → 負相關；|−0.8| 接近 1 → 關係相當強（但還不是 −1 的完全負相關）。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "相關係數 r 的值一定落在哪一個範圍裡？",
+     "answer": "−1 到 1 之間",
+     "kp_ids": [
+      "math.t_adv.stats.correlation"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.stats.correlation"
+     ],
+     "options": [
+      "−1 到 1 之間",
+      "0 到 1 之間",
+      "0 到 100 之間",
+      "任何數都有可能"
+     ],
+     "distractor_rationales": {
+      "0 到 1 之間": "這漏掉了負的部分；r 可以是負的（負相關），範圍是 −1 到 1。",
+      "0 到 100 之間": "相關係數不是百分比、不會到 100；它一定在 −1 到 1 之間。",
+      "任何數都有可能": "r 有上下限，不會超過 1 也不會低於 −1；一定落在 −1 到 1 之間。"
+     },
+     "answer_evidence": [
+      "c-cor-dir"
+     ],
+     "feedback": "相關係數 r 一定介於 −1 到 1 之間（含兩端），不會超出這個範圍。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "甲組資料的相關係數 r ＝ 0.3，乙組 r ＝ 0.9（兩組都是正的）。哪一組兩個變數的直線關係比較強？",
+     "answer": "乙組",
+     "kp_ids": [
+      "math.t_adv.stats.correlation"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.stats.correlation"
+     ],
+     "options": [
+      "乙組",
+      "甲組",
+      "兩組一樣強",
+      "從相關係數看不出來"
+     ],
+     "distractor_rationales": {
+      "甲組": "甲組 r ＝ 0.3 比較接近 0，關係較弱；越接近 1 越強，乙組 0.9 才是較強的。",
+      "兩組一樣強": "0.3 和 0.9 不一樣；越接近 1 關係越強，0.9 比 0.3 強。",
+      "從相關係數看不出來": "比較 r 離 1 多近就看得出來：0.9 比 0.3 接近 1，乙組關係較強。"
+     },
+     "answer_evidence": [
+      "c-cor-strength"
+     ],
+     "feedback": "都是正的時，r 越接近 1 關係越強：乙組 0.9 比甲組 0.3 接近 1，所以乙組較強。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "夏天時，「冰淇淋銷量」和「溺水人數」有正相關（兩者會一起變多）。下面哪一個說法最正確？",
+     "answer": "兩者一起變多，但不代表吃冰淇淋造成溺水，可能都和天氣熱有關",
+     "kp_ids": [
+      "math.t_adv.stats.correlation"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.stats.correlation"
+     ],
+     "options": [
+      "兩者一起變多，但不代表吃冰淇淋造成溺水，可能都和天氣熱有關",
+      "吃冰淇淋會造成溺水",
+      "溺水會讓冰淇淋賣得更多",
+      "兩者一定完全沒有任何關係"
+     ],
+     "distractor_rationales": {
+      "吃冰淇淋會造成溺水": "相關不等於因果；兩者一起變多不代表冰淇淋造成溺水，真正的共同原因可能是天氣熱。",
+      "溺水會讓冰淇淋賣得更多": "這也是把相關當成因果、還倒過來說；兩者一起變多多半是因為共同因素（天氣熱），不是誰造成誰。",
+      "兩者一定完全沒有任何關係": "它們確實有正相關（會一起變多）；只是這個相關不代表因果，不是「沒有關係」。"
+     },
+     "answer_evidence": [
+      "c-cor-causation"
+     ],
+     "feedback": "相關不等於因果：兩者一起變多，常是因為第三個共同因素（天氣熱），不是一個造成另一個。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（相關係數 r 介於 −1 到 1；正號＝正相關、負號＝負相關、接近 0＝幾乎無直線關係；|r| 越接近 1 越強、r＝±1 完全相關；相關不等於因果，可能有第三個共同因素）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
