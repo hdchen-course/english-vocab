@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 微積分（calc）strand t_sub 單元。知識點 math.t_sub.calc.definite-integral（定積分與微積分基本定理）。tier=t_sub（高中分科/選修深階，exam 分科-數甲）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換——見 math-unit defect #63）：定積分 (definite integral)、微積分基本定理 (Fundamental Theorem of Calculus)、反導數 (antiderivative)、面積 (area)、評值 (evaluate)。前置假設：會求反導數（antiderivative 已教）、會算冪函數反導數。★scope（t_sub）：定積分 ∫ₐᵇf(x)dx 代表 x＝a 到 x＝b 之間曲線 y＝f(x) 與 x 軸之間的（有向）面積，它是一個『數值』（不像不定積分是函數族 F+C）；微積分基本定理 FTC：∫ₐᵇf(x)dx＝F(b)−F(a)，F 是 f 的任一反導數（F′＝f），記法 [F(x)]ₐᵇ＝F(b)−F(a)（因相減 ＋C 消掉、定積分不需 ＋C）。以 ∫₀³x²dx＝[x³/3]₀³＝27/3−0＝9 貫穿。只到多項式/基本函數在有限區間的定積分用 FTC 求值；不含瑕積分、不含數值積分、不含面積/體積的進階應用（area／volume-revolution 另單元）、不含代換/分部。prereq＝antiderivative＋differentiation-rules。repro（tools/verify/math_checks7.py::calc.definite-integral）：∫₀³x²dx＝9、FTC ∫f′＝f(b)−f(a)（.venv 已核）；practice 另用 ∫₀¹2x dx＝[x²]₀¹＝1 以 .venv sympy 另核。★自檢（math-unit defect-classes #1–#63）：figure＝y=x² 曲線下 0→3 的陰影面積 SVG（座標軸＋拋物線＋陰影區＋x=3 虛線，左上標 ∫₀³ x² dx／＝[x³/3]₀³／＝27/3＝9 紅，陰影內標『面積』，x 軸標 0、3，下註定積分＝曲線與 x 軸間面積用反導數算 F(b)−F(a)），面積概念圖無角度/垂直關係（不需等軸#62），alt 與 SVG text 逐字一致（#33）、標題『定積分：曲線下的面積（∫₀³ x² dx）』寫進 alt 開頭；practice 四答案＝{F(b)−F(a)(Q1 FTC),9(Q2 ∫₀³x² hero retrieval),定積分是數值(Q3 概念),1(Q4 ∫₀¹2x transfer)} 與 teach 關鍵值無 #10（Q2 hero retrieval、options 載入洗牌無位置 tell）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算：如 F(a)−F(b) 顛倒、漏除以3、誤微分代入、直接代上限、定積分誤加+C）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★R15 gloss 運算/結果詞正確（#63，反導數=antiderivative 結果詞、評值=evaluate 運算）；★導讀承諾順序＝實際 teach 順序（#4/#46）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_calc_definite_integral.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.calc.definite-integral",
+   "title_zh": "定積分與微積分基本定理",
+   "can_do": "我知道『定積分 (definite integral)』∫ₐᵇf(x) dx 代表 x ＝ a 到 x ＝ b 之間、曲線 y ＝ f(x) 與 x 軸之間的（有向）『面積 (area)』，它算出來是一個「數值」（不像不定積分是函數族 F ＋ C）。我會用『微積分基本定理 (Fundamental Theorem of Calculus)』求它：∫ₐᵇf(x) dx ＝ F(b) − F(a)，其中 F 是 f 的任一『反導數 (antiderivative)』；記法寫成 [F(x)]ₐᵇ ＝ F(b) − F(a)（相減時 ＋C 會消掉，所以定積分不必加 ＋C）。例：∫₀³x² dx ＝ [x³/3]₀³ ＝ 27/3 − 0 ＝ 9。",
+   "situation_group": "微積分：定積分與基本定理",
+   "subject": "math",
+   "strand": "calc",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.calc.definite-integral"
+   ],
+   "prerequisites": [
+    "math.t_sub.calc.antiderivative",
+    "math.t_sub.calc.differentiation-rules"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-di-area",
+     "text": "定積分 ∫ₐᵇf(x) dx 代表「x ＝ a 到 x ＝ b 之間，曲線 y ＝ f(x) 與 x 軸之間的面積」（f(x) 在 x 軸上方時為正面積，這也是為什麼叫「有向」面積）。它和不定積分最大的不同：定積分算出來是一個「數值」（一個數），不定積分 ∫f(x) dx 算出來是一整族函數 F(x) ＋ C。所以定積分有明確的上限 b 和下限 a，不定積分沒有。",
+     "kind": "definition",
+     "source_refs": [
+      "定積分的意義（面積）（高中數學 微積分）"
+     ],
+     "verification_ref": "∫ₐᵇf dx＝曲線與 x 軸間有向面積、是一個數值（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-di-ftc",
+     "text": "微積分基本定理（FTC）告訴我們怎麼算定積分：∫ₐᵇf(x) dx ＝ F(b) − F(a)，其中 F 是 f 的「任一」反導數（F′ ＝ f）。做法：先求反導數 F，再算「上限代進去 F(b)」減「下限代進去 F(a)」。常用記法 [F(x)]ₐᵇ ＝ F(b) − F(a)。注意兩件事：因為是相減，反導數的 ＋C 會互相消掉，所以定積分「不必」加 ＋C；而且是「上限減下限」，順序不能顛倒。",
+     "kind": "definition",
+     "source_refs": [
+      "微積分基本定理（高中數學 微積分）"
+     ],
+     "verification_ref": "FTC：∫ₐᵇf dx=F(b)−F(a)（math_checks7 .venv 驗 ∫f′=f(b)−f(a)）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-di-example",
+     "text": "示範 ∫₀³x² dx：第一步求反導數，x² 的反導數是 F(x) ＝ x³/3（冪法則：次方加一除以新次方）。第二步用 FTC 評值：[x³/3]₀³ ＝ F(3) − F(0) ＝ 3³/3 − 0³/3 ＝ 27/3 − 0 ＝ 9。所以 ∫₀³x² dx ＝ 9（這就是 y ＝ x² 在 0 到 3 之間與 x 軸圍出的面積）。",
+     "kind": "definition",
+     "source_refs": [
+      "定積分求值範例（高中數學 微積分）"
+     ],
+     "verification_ref": "∫₀³x²dx=[x³/3]₀³=27/3=9（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.definite-integral"
+     ],
+     "body": "這一單元學「定積分」與「微積分基本定理」。下面先講定積分是什麼（曲線與 x 軸之間的面積、算出來是一個數值，和不定積分的函數族不同）；再講微積分基本定理怎麼用反導數把它算出來（∫ₐᵇf dx ＝ F(b) − F(a)）；用 ∫₀³x² dx 完整示範一次，最後提醒常犯的錯，再練習。（本單元接在『反導數與不定積分』之後，核心就是「用反導數算曲線下的面積」。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.definite-integral"
+     ],
+     "body": "① 定積分 ∫ₐᵇf(x) dx ＝ a 到 b 之間曲線與 x 軸之間的面積，算出來是一個「數值」（不定積分 ∫f dx 則是函數族 F ＋ C）。② 微積分基本定理（FTC）：∫ₐᵇf(x) dx ＝ F(b) − F(a)（F 是 f 的反導數），記法 [F(x)]ₐᵇ；相減時 ＋C 消掉，所以定積分不必加 ＋C，且是「上限減下限」。③ 示範 ∫₀³x² dx：反導數 F ＝ x³/3，評值 [x³/3]₀³ ＝ 3³/3 − 0 ＝ 27/3 ＝ 9。看下面的圖（曲線下的面積就是這個定積分），最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.calc.definite-integral"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>定積分：曲線下的面積（∫₀³ x² dx）</text><path d='M60,140 L95,137 L130,128 L165,113 L200,92 L235,65 L270,32 L270,140 Z' fill='#e6edf3' stroke='none'/><line x1='40' y1='140' x2='322' y2='140' stroke='#99a7b5' stroke-width='1'/><line x1='60' y1='140' x2='60' y2='22' stroke='#99a7b5' stroke-width='1'/><path d='M60,140 L95,137 L130,128 L165,113 L200,92 L235,65 L270,32' fill='none' stroke='#33475b' stroke-width='1.8'/><line x1='270' y1='32' x2='270' y2='140' stroke='#c9d3dd' stroke-width='1' stroke-dasharray='3 2'/><text x='281' y='40' font-family='sans-serif' font-size='9.5' fill='#33475b' text-anchor='middle'>y ＝ x²</text><text x='150' y='44' font-family='sans-serif' font-size='10' fill='#33475b' text-anchor='middle'>∫₀³ x² dx</text><text x='150' y='60' font-family='sans-serif' font-size='10' fill='#33475b' text-anchor='middle'>＝ [x³/3]₀³</text><text x='150' y='76' font-family='sans-serif' font-size='10.5' fill='#c2535d' text-anchor='middle' font-weight='bold'>＝ 27/3 ＝ 9</text><text x='232' y='120' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>面積</text><text x='60' y='152' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>0</text><text x='270' y='152' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>3</text><text x='180' y='163' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>定積分 ＝ 曲線與 x 軸之間的面積，用反導數算 F(b) − F(a)</text></svg>",
+      "alt": "標題「定積分：曲線下的面積（∫₀³ x² dx）」。一組座標軸上畫出開口向上的曲線 y ＝ x²，曲線在 x ＝ 0 到 x ＝ 3 之間、與 x 軸之間的區域被塗上淺色陰影，x ＝ 3 處有一條虛線落到 x 軸。曲線旁標「y ＝ x²」，陰影區內標「面積」，x 軸標出「0」和「3」。左上方寫出計算：「∫₀³ x² dx」「＝ [x³/3]₀³」「＝ 27/3 ＝ 9」（最後一行紅色）。最下方註「定積分 ＝ 曲線與 x 軸之間的面積，用反導數算 F(b) − F(a)」。",
+      "caption": "以 ∫₀³ x² dx 示範定積分：它就是 y ＝ x² 在 0 到 3 之間與 x 軸圍出的面積。用微積分基本定理求值——反導數 F ＝ x³/3，評值 [x³/3]₀³ ＝ 27/3 − 0 ＝ 9。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.definite-integral"
+     ],
+     "body": "最後練定積分。重點：∫ₐᵇf(x) dx ＝ F(b) − F(a)（F 是反導數）＝ 曲線與 x 軸之間的面積，算出來是一個數值。小提醒：(1) 定積分是「數值」不是函數，不要加 ＋C（相減時已消掉）；(2) 是「上限減下限」F(b) − F(a)，順序別顛倒；(3) 先把反導數求對（例 x² 的反導數是 x³/3，別漏了除以 3），再代入上下限相減。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "微積分基本定理說：定積分 ∫ₐᵇf(x) dx 等於多少？（F 是 f 的反導數）",
+     "answer": "F(b) − F(a)",
+     "kp_ids": [
+      "math.t_sub.calc.definite-integral"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.definite-integral"
+     ],
+     "options": [
+      "F(b) − F(a)",
+      "F(a) − F(b)",
+      "F(b) ＋ F(a)",
+      "F(b) − F(a) ＋ C"
+     ],
+     "distractor_rationales": {
+      "F(a) − F(b)": "上下限顛倒了：微積分基本定理是「上限減下限」F(b) − F(a)，寫成 F(a) − F(b) 會差一個負號。",
+      "F(b) ＋ F(a)": "是相減不是相加：∫ₐᵇf dx ＝ F(b) − F(a)，用減號（這樣 ＋C 才會消掉）。",
+      "F(b) − F(a) ＋ C": "定積分不必加 ＋C：相減時兩個反導數的 ＋C 已經互相消掉，結果是一個確定的數值。"
+     },
+     "answer_evidence": [
+      "c-di-ftc"
+     ],
+     "feedback": "微積分基本定理：∫ₐᵇf(x) dx ＝ F(b) − F(a)（上限減下限，不加 ＋C）。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "∫₀³x² dx 等於多少？（x² 的反導數是 x³/3）",
+     "answer": "9",
+     "kp_ids": [
+      "math.t_sub.calc.definite-integral"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.definite-integral"
+     ],
+     "options": [
+      "9",
+      "27",
+      "6",
+      "3"
+     ],
+     "distractor_rationales": {
+      "27": "漏了除以 3：反導數是 x³/3 不是 x³；[x³/3]₀³ ＝ 27/3 ＝ 9，不是 27。",
+      "6": "把積分做成了微分：x² 微分得 2x、代入 x ＝ 3 得 6，方向相反；積分要用反導數 x³/3。",
+      "3": "直接把上限 3 當答案了：還沒求反導數也沒評值；正確要算 [x³/3]₀³ ＝ 9。"
+     },
+     "answer_evidence": [
+      "c-di-example"
+     ],
+     "feedback": "∫₀³x² dx ＝ [x³/3]₀³ ＝ 3³/3 − 0 ＝ 27/3 ＝ 9。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "定積分 ∫ₐᵇf(x) dx 和不定積分 ∫f(x) dx 最大的不同是什麼？",
+     "answer": "定積分算出來是一個數值；不定積分是一族函數 F(x) ＋ C",
+     "kp_ids": [
+      "math.t_sub.calc.definite-integral"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.definite-integral"
+     ],
+     "options": [
+      "定積分算出來是一個數值；不定積分是一族函數 F(x) ＋ C",
+      "兩者算出來完全一樣",
+      "定積分要加 ＋C，不定積分不用",
+      "定積分算出來一定是正數"
+     ],
+     "distractor_rationales": {
+      "兩者算出來完全一樣": "不一樣：定積分有上下限、算出一個數值；不定積分沒有上下限、算出一族函數 F ＋ C。",
+      "定積分要加 ＋C，不定積分不用": "剛好相反：不定積分才要加 ＋C；定積分相減時 ＋C 消掉，不必加。",
+      "定積分算出來一定是正數": "不一定：定積分是「有向」面積，曲線在 x 軸下方時會是負值，也可能為 0。"
+     },
+     "answer_evidence": [
+      "c-di-area"
+     ],
+     "feedback": "定積分是一個「數值」（曲線與 x 軸之間的有向面積）；不定積分是一族函數 F(x) ＋ C。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "∫₀¹2x dx 等於多少？（2x 的反導數是 x²）",
+     "answer": "1",
+     "kp_ids": [
+      "math.t_sub.calc.definite-integral"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.definite-integral"
+     ],
+     "options": [
+      "1",
+      "2",
+      "1/2",
+      "0"
+     ],
+     "distractor_rationales": {
+      "2": "沒有做積分：直接把 2x 代入 x ＝ 1 得 2（那是微分方向）；要用反導數 x² 評值 [x²]₀¹ ＝ 1。",
+      "1/2": "反導數算錯了：2x 的反導數是 x²（2 與分母 2 相消），不是 x²/2；[x²]₀¹ ＝ 1，不是 1/2。",
+      "0": "只代了下限 0：[x²]₀¹ 要「上限減下限」＝ 1² − 0² ＝ 1，不是只取下限的 0。"
+     },
+     "answer_evidence": [
+      "c-di-ftc"
+     ],
+     "feedback": "∫₀¹2x dx ＝ [x²]₀¹ ＝ 1² − 0² ＝ 1。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（定積分 ∫ₐᵇf dx＝曲線與 x 軸之間的有向面積、是一個數值；微積分基本定理 ∫ₐᵇf dx＝F(b)−F(a)（F 是反導數、上限減下限、不加 ＋C）；記法 [F(x)]ₐᵇ；∫₀³x²dx＝[x³/3]₀³＝27/3＝9；∫₀¹2x dx＝[x²]₀¹＝1；三鐵律＝不加+C、上限減下限別顛倒、反導數先求對）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
