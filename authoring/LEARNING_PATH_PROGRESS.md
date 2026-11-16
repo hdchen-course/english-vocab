@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 14:36 stats strand risk-decision 期望值與風險決策 5/5 DONE-GATE 全綠（t_sub 高中補充，★決策表 SVG）→ ★★ stats strand 18/18 整個完成 ★★
+- **math_stats_risk_decision frozen `38b2453639fdffbd`**（R1-R5 連 5 clean、L3 每輪 exit 0 以實際檔案行文字建檔；R4/R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard+0 advisory／content_sha==38b24536／per_page_5clean risk_decision absent／iPad 四角色簽核（決策表 方案A 0.5×100＋0.5×0＝50 標紅 vs 方案B 確定40、下註 E(A)50>E(B)40、house 藍表頭、右緣0%）。
+- 期望值與風險決策（t_sub）＝期望值 Σ(結果×機率)＝長期平均；用期望值比較方案選較高（只看平均報酬時）；★期望值只看平均、未反映風險（變動/最壞），實際決策還要看願不願意承擔風險。teach figure 決策表 E(A)=50 vs E(B)=40（repro math_checks7 .venv 驗 0.5×100+0.5×0=50、E(A)>E(B) 選 A）。practice：Q1 算期望值(0.5×20+0.5×0=10)、Q2 選較高(甲60>乙45)、Q3 期望值意義(長期平均)、Q4 風險觀念(期望值未含風險、看承受度、無唯一解)。只兩結果期望值+比較+風險觀念，不含變異數決策/效用函數/決策樹。prereq＝sampling-survey。
+- ★收斂全程 0 正確性缺陷、0 panel finding、R1-R5 一次過無 L3 FAIL（L3 全程用實際檔案行文字建檔）。**stats strand 全 18 單元至此全部 DONE-GATE 全綠完成**（次數分配/累積/平均/百分位/圓形圖/全距四分位/變異數標準差/標準化/二維散布圖/相關係數/最適直線/抽樣調查/期望值風險決策…）。
+- 下一步：開 calc strand（20 單元，最大 strand）；依 LEARNING_PATH_BUILD_PLAN.md 續做 vector(11)/conic(7)/complex(6)/finmath(6)/space(5)/matrix(5)/linprog(2)/determinant(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-16 14:12 stats strand sampling-survey 抽樣調查 5/5 DONE-GATE 全綠（t_sub 高中補充，★母體→樣本 SVG）→ stats 17/18
 - **math_stats_sampling_survey frozen `d56da8eed10311be`**（R1-R5 連 5 clean、L3 每輪 exit 0 以實際檔案行文字建檔；R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==d56da8ee／per_page_5clean sampling_survey absent／iPad 四角色簽核（母體藍框→綠箭頭→樣本綠框、語意化配色、右緣0%）。
 - 抽樣調查（t_sub）＝母體/樣本、普查 vs 抽樣、簡單隨機抽樣每個體機率 n/N、抽樣要有代表性避免偏差。teach figure 母體 N=100→隨機抽樣→樣本 n=10、機率 10/100=0.1（repro math_checks7 .venv 驗）。practice：Q1 機率(50/200=0.25)、Q2 用部分推估整體=抽樣調查、Q3 隨機=每個體機率相同、Q4 只在籃球場問=偏差失真。prereq＝correlation。
