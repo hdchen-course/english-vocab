@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 11:19 stats strand table-read 報讀統計表 5/5 DONE-GATE 全綠（t_base 國小，★統計表 grid SVG）→ stats 9/18（過半）
+- **math_stats_table_read frozen `adb51b5ee7120d68`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==adb51b5e／per_page_5clean table_read absent／iPad 四角色簽核（統計表 grid 清晰、9 標紅、右緣0%）。
+- 報讀統計表＝看列（橫）欄（直）交叉格讀值、一列/一欄合計、比較格子大小。teach 表 班級×書（甲 故8漫5、乙 故6漫9），讀乙漫9、甲合計13、比漫5vs9。practice 用另一張表（飲料×時段：早 紅12綠7、下午 紅9綠15）：Q1 讀格(下午綠15)、Q2 一列合計(早上12+7=19)、Q3 比較(下午綠15>早綠7→下午)、Q4 概念(找早上紅茶看列×欄交叉格)。prereq＝collect-organize。
+- ★R1 抓 2 blocker（panel 全票 a-wrong）：Q2 兩誘答 rationale 算式/格位標錯（「24」誤歸紅茶欄實為21、「21」把 9 稱下午綠茶實為下午紅茶）→R1 首輪直接修（24=下午列合計9+15、21=紅茶欄合計12+9，皆乾淨單一路徑 .venv 驗）、重收斂 5 clean。
+- ★教訓（已體現）：二維表誘答 rationale，每個誘答值的「算式＋它屬於哪一列哪一欄的標籤」都要逐一對照題幹 .venv 核（read-a-table 題最易把跨列/跨欄合計或鄰格標錯，panel 一次抓 2 blocker）。
+- 下一步：stats 其餘 9 單元（frequency-table/cumulative-relative/variance-std/standardization/bivariate-scatter/correlation/regression-line/sampling-survey/risk-decision）；接著 calc/vector 等。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-16 10:53 stats strand pie-chart 圓形圖 5/5 DONE-GATE 全綠（t_base 國小，★按比例圓形圖 ½/¼/¼）→ stats 8/18
 - **math_stats_pie_chart frozen `167a03170539130b`**（R1-R5 連 5 clean、L3 每輪 exit 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==167a0317／per_page_5clean pie_chart absent／iPad 四角色簽核（右緣0%，扇形按比例＋深字白描邊標籤＋legend 不裁切）。
 - 圓形圖＝整個圓代表全部、扇形大小表示占比（越大占越多）、最大扇形占最多、½＝一半/¼＝四分之一；選圖＝占整體比例用圓形圖、比較數量用長條圖。teach pie 走路½/騎腳踏車¼/坐車¼（cx=92 r=50 arc .venv 算）。Q1 讀最大扇形(蘋果)、Q2 圓=全部、Q3 半圓=占一半、Q4 選圓形圖(占比)。只用 ½/¼ 不教百分比/角度（t_base scope）。prereq＝bar-line-chart。
