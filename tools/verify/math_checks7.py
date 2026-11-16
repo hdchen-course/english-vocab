@@ -126,6 +126,14 @@ def c_vec_linear_combination():
     assert list(a*u + b*v) == [2*a + b, a + 3*b]       # au+bv=(2a+b, a+3b) 分量
     assert sp.Matrix([[2, 1], [1, 3]]).det() == 5      # det≠0 ⇒ u,v 不平行、可張成平面
     return _ok("vector.linear-combination", "2u+v=(5,5)；−u+2v=(0,5)；au+bv=(2a+b,a+3b)；det=5≠0 張成平面")
+def c_vec_component():
+    i = sp.Matrix([1, 0]); j = sp.Matrix([0, 1]); v = sp.Matrix([3, 4])
+    assert list(3*i + 4*j) == [3, 4]                   # v=(3,4)=3i+4j 標準基底分解
+    assert v.norm() == 5                               # |v|=5
+    uhat = v / v.norm()
+    assert list(uhat) == [sp.Rational(3, 5), sp.Rational(4, 5)]  # 單位向量=(3/5,4/5)
+    assert uhat.norm() == 1                             # 單位向量長度=1
+    return _ok("vector.component", "(3,4)=3i+4j；|v|=5；單位向量=(3/5,4/5)；|單位向量|=1")
 
 # ---------- stats（18）----------
 D = [2, 4, 4, 4, 5, 5, 7, 9]      # 共用樣本（std 範例，μ=5,σ=2）
@@ -263,6 +271,7 @@ CHECKS = {s: fn for s, fn in {
     "vector.plane-definition": c_vec_plane_def,
     "vector.plane-add-sub": c_vec_plane_addsub,
     "vector.linear-combination": c_vec_linear_combination,
+    "vector.component": c_vec_component,
     "stats.collect-organize": s_collect, "stats.bar-line-chart": s_bar_line,
     "stats.pie-chart": s_pie, "stats.table-read": s_table, "stats.mean": s_mean,
     "stats.frequency-table": s_freq_table, "stats.cumulative-relative": s_cumulative,
