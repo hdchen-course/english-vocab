@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 12:52 stats strand standardization 線性變換與標準化 5/5 DONE-GATE 全綠（t_adv 高中，★y=2x+3 影響表 SVG）→ stats 13/18
+- **math_stats_standardization frozen `ffc4b2548dc18678`**（R1-R5 連 5 clean、L3 每輪 exit 0；R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==ffc4b254／per_page_5clean standardization absent／iPad 四角色簽核（2 欄變換表 原資料x/變換後y 格線齊、算式 2×4＋3＝11 在欄內、2×3＝6 標紅、右緣0%）。
+- 線性變換與標準化（t_adv 母體）＝加減常數 b→平均±b、標準差不變（平移）；乘常數 a→平均×a、標準差×|a|、變異數×a²（縮放）；y=ax+b→新平均 a×舊+b、新標準差 |a|×舊；標準分數 z=(x−μ)/σ→標準化後平均0、標準差1。teach figure y=2x+3：x{1,1,7,7} mean4 std3→y{5,5,17,17} mean11 std6（repro math_checks7 .venv 驗）。practice：Q1 平移(20 std7 +5→25/7)、Q2 縮放(10 std5 ×2→20/10)、Q3 概念(加常數不改變＝標準差)、Q4 z-score(標準化後0/1)。prereq＝variance-std。
+- ★收斂全程 0 正確性缺陷（repro .venv 驗）；pre-freeze Q3 偵測 detail-cue advisory→主動把正解選項由「標準差（分散程度）」改 bare「標準差」（#47 bare option）消 advisory、括號 gloss 移入 feedback；R1-R5 全 clean 無 panel finding。
+- 下一步：stats 其餘 5 單元（bivariate-scatter/correlation/regression-line/sampling-survey/risk-decision）；接著 calc/vector 等。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-16 12:36 stats strand variance-std 變異數與標準差 5/5 DONE-GATE 全綠（t_adv 高中，★離均差平方計算表 SVG）→ stats 12/18（過三分之二）
 - **math_stats_variance_std frozen `86e4c83cd56fc46a`**（R1-R5 連 5 clean、L3 每輪 exit 0；R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==86e4c83c／per_page_5clean variance_std absent／iPad 四角色簽核（3 欄計算表 資料/離均差/離均差的平方 格線齊、負號 －3 清楚、平方和 36 標紅、變異數36÷4=9/標準差√9=3 兩行結論 √ 正常、右緣0%）。
 - 變異數/標準差（t_adv 母體）＝離均差(資料減平均，正負抵消故平方)→變異數 Σ(xi−μ)²÷n→標準差 √變異數(與原資料同單位)；越大越分散、平均相同時標準差大者較分散。teach 甲{4,4,6,6}std1 vs 乙{2,2,8,8}std3 同平均5 對比；figure 乙計算表 平方和36→var9→std3（repro math_checks7 .venv 驗 pvariance/pstdev）。practice：Q1 算變異數({2,4,4,6}→8÷4=2)、Q2 由變異數求標準差(√16=4)、Q3 概念(為何平方離均差＝正負抵消)、Q4 判讀(std 2 vs 5→乙較分散)。只母體公式(÷n)、不教樣本 n−1（scope）。prereq＝central-tendency。
