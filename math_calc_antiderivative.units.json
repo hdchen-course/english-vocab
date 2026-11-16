@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 微積分（calc）strand t_sub 單元。知識點 math.t_sub.calc.antiderivative（反導數與不定積分）。tier=t_sub（高中分科/選修深階，exam 分科-數甲）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：反導數 (antiderivative)、不定積分 (indefinite integral)、積分常數 (constant of integration)、導數 (derivative)、冪法則 (power rule)。前置假設：會算導數（冪函數、sin/cos 的微分已在 differentiation-rules／trig-calculus 建立）。★scope（t_sub）：反導數＝微分的逆運算——F 是 f 的反導數若 F′＝f；不定積分 ∫f(x)dx＝F(x)＋C（加積分常數 C，因任意常數微分＝0，所以反導數不唯一、差一個常數）。冪法則 ∫xⁿ dx＝xⁿ⁺¹∕(n+1)＋C（n≠−1）。基本：∫2x dx＝x²＋C、∫cos x dx＝sin x＋C。以 ∫2x dx＝x²＋C 貫穿（驗算 d/dx(x²＋C)＝2x）。只到冪函數與 sin/cos 的基本反導數、強調 ＋C；不含定積分求值（下一單元 definite-integral）、不含代換/分部、不含 1/x→ln|x|（exp-log-calculus 已另教）。prereq＝differentiation-rules＋trig-calculus。repro（tools/verify/math_checks7.py::calc.antiderivative）：∫2x dx＝x²、∫cos x dx＝sin x（.venv 已核，教材另標＋C）；practice 另用冪法則 ∫xⁿ dx＝xⁿ⁺¹∕(n+1)＋C 與 ∫cos x dx＝sin x＋C 皆以 .venv sympy integrate 另核。★自檢（math-unit defect-classes #1–#62）：figure＝『反導數＝微分的逆運算』雙箭頭 SVG（左框 F(x)＝x²＋C、右框 f(x)＝2x，上箭頭左→右標『微分 d/dx』、下箭頭右→左標『反導數 ∫（不定積分）』紅色，下方註 ∫2x dx＝x²＋C（C 任意常數、常數微分＝0）），無角度/垂直關係故不需等軸（#62 N/A）、箭頭端點接框緣（#43）、alt 與 SVG text 逐字一致（#33）、標題『反導數：微分的逆運算』寫進 alt 開頭；practice 四答案＝{微分的逆運算(Q1 概念),xⁿ⁺¹∕(n+1)＋C(Q2 冪法則),x²＋C(Q3 ∫2x hero retrieval),sin x＋C(Q4 ∫cos x transfer)} 與 teach 關鍵值無 #10 問題（Q3 即 hero example 屬刻意 retrieval、options 載入時洗牌無位置 tell）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算：如把微分當答案 nxⁿ⁻¹、忘除 n+1、忘＋C、次方沒加1、符號錯 −sin x）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_calc_antiderivative.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.calc.antiderivative",
+   "title_zh": "反導數與不定積分",
+   "can_do": "我知道『反導數 (antiderivative)』就是『微分 (derivative)』的逆運算：如果 F′(x) ＝ f(x)，就說 F 是 f 的反導數。求 f 的全部反導數就寫成『不定積分 (indefinite integral)』∫f(x) dx ＝ F(x) ＋ C——要加一個『積分常數 (constant of integration)』C，因為任意常數微分後都是 0，所以反導數不只一個、彼此差一個常數。我會用『冪法則 (power rule)』∫xⁿ dx ＝ xⁿ⁺¹ ∕ (n＋1) ＋ C（n ≠ −1）。例：∫2x dx ＝ x² ＋ C（驗算 d/dx(x² ＋ C) ＝ 2x）、∫cos x dx ＝ sin x ＋ C。",
+   "situation_group": "微積分：反導數與不定積分",
+   "subject": "math",
+   "strand": "calc",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.calc.antiderivative"
+   ],
+   "prerequisites": [
+    "math.t_sub.calc.differentiation-rules",
+    "math.t_sub.calc.trig-calculus"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ad-def",
+     "text": "反導數是「微分的逆運算」：如果 F′(x) ＝ f(x)，就說 F 是 f 的一個反導數。把 f 的「所有」反導數寫成不定積分 ∫f(x) dx ＝ F(x) ＋ C。為什麼要加 ＋ C？因為任意常數微分後都是 0，所以 F(x)、F(x)＋1、F(x)−5 … 微分起來都等於同一個 f(x)——反導數不只一個，彼此只差一個常數，用 ＋C 一次把它們全寫出來。",
+     "kind": "definition",
+     "source_refs": [
+      "反導數與不定積分的定義（高中數學 微積分）"
+     ],
+     "verification_ref": "F′=f ⇔ F 是 f 的反導數；∫f dx=F+C（常數微分=0 故不唯一）（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ad-power",
+     "text": "冪法則（積分版）：∫xⁿ dx ＝ xⁿ⁺¹ ∕ (n＋1) ＋ C，其中 n ≠ −1。做法剛好和微分相反——微分是「次方乘下來、次方減一」，積分是「次方加一、再除以新的次方」。例：∫x² dx ＝ x³ ∕ 3 ＋ C；∫2x dx ＝ 2 · x² ∕ 2 ＋ C ＝ x² ＋ C。（n ＝ −1 即 ∫(1∕x) dx 是特例，等於 ln|x| ＋ C，不適用這條冪法則。）",
+     "kind": "definition",
+     "source_refs": [
+      "不定積分的冪法則（高中數學 微積分）"
+     ],
+     "verification_ref": "∫xⁿ dx=xⁿ⁺¹/(n+1)+C（n≠−1）；∫2x dx=x²+C（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ad-caution",
+     "text": "求不定積分時要注意兩件事：(1) 一定要加 ＋ C，漏了 ＋C 就只寫出一個反導數、不是「全部」，是常見扣分點；(2) 算完可以用微分檢查——把答案微分回去，應該要等於原本的被積函數 f(x)。例：∫cos x dx ＝ sin x ＋ C，檢查 d/dx(sin x ＋ C) ＝ cos x ✓。微分與反導數互為逆運算，這個檢查很可靠。",
+     "kind": "definition",
+     "source_refs": [
+      "不定積分常見注意事項（高中數學 微積分）"
+     ],
+     "verification_ref": "＋C 不可漏；用微分 F′=f 檢查答案（d(sinx+C)=cosx）（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.antiderivative"
+     ],
+     "body": "這一單元學「反導數」與「不定積分」——它們是微分的逆運算。下面先講定義（F′ ＝ f 就說 F 是 f 的反導數，不定積分 ∫f dx ＝ F ＋ C，為什麼要加 ＋C）；再講冪法則 ∫xⁿ dx ＝ xⁿ⁺¹ ∕ (n＋1) ＋ C；用 ∫2x dx ＝ x² ＋ C 完整示範一次，最後提醒「別漏 ＋C、用微分檢查」，再練習。（本單元接在『微分公式』與『三角函數的微積分』之後，核心就是「把微分反過來做」。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.antiderivative"
+     ],
+     "body": "① 定義：若 F′(x) ＝ f(x)，則 F 是 f 的反導數；f 的全部反導數 ＝ 不定積分 ∫f(x) dx ＝ F(x) ＋ C（加 ＋C 因為常數微分 ＝ 0，反導數差一個常數）。② 冪法則：∫xⁿ dx ＝ xⁿ⁺¹ ∕ (n＋1) ＋ C（n ≠ −1）——次方加一、再除以新次方（和微分相反）。③ 示範：∫2x dx，把 2x 看成 2x¹，次方加一成 x²、除以 2 再乘回 2 ＝ x²，所以 ∫2x dx ＝ x² ＋ C（檢查 d/dx(x²) ＝ 2x ✓）。看下面的圖（微分與反導數互為逆運算），最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.calc.antiderivative"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='15' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>反導數：微分的逆運算</text><rect x='40' y='46' width='112' height='40' rx='5' fill='none' stroke='#33475b' stroke-width='1.4'/><text x='96' y='70' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>F(x) ＝ x² ＋ C</text><rect x='208' y='46' width='112' height='40' rx='5' fill='none' stroke='#33475b' stroke-width='1.4'/><text x='264' y='70' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>f(x) ＝ 2x</text><text x='180' y='40' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>微分 d/dx</text><line x1='152' y1='58' x2='204' y2='58' stroke='#6b7785' stroke-width='1.4'/><path d='M204,58 l-5,-3 M204,58 l-5,3' fill='none' stroke='#6b7785' stroke-width='1.4'/><line x1='208' y1='74' x2='156' y2='74' stroke='#c2535d' stroke-width='1.6'/><path d='M156,74 l5,-3 M156,74 l5,3' fill='none' stroke='#c2535d' stroke-width='1.6'/><text x='180' y='104' font-family='sans-serif' font-size='9.5' fill='#c2535d' text-anchor='middle'>反導數 ∫（不定積分）</text><text x='180' y='134' font-family='sans-serif' font-size='10' fill='#33475b' text-anchor='middle'>∫2x dx ＝ x² ＋ C</text><text x='180' y='152' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>C 是任意常數（因常數微分 ＝ 0，反導數不唯一）</text></svg>",
+      "alt": "標題「反導數：微分的逆運算」。左邊一個框寫「F(x) ＝ x² ＋ C」，右邊一個框寫「f(x) ＝ 2x」。上方一條由左框指向右框的箭頭，標「微分 d/dx」；下方一條由右框指回左框的箭頭（紅色），標「反導數 ∫（不定積分）」。下方寫「∫2x dx ＝ x² ＋ C」，最下一行註「C 是任意常數（因常數微分 ＝ 0，反導數不唯一）」。",
+      "caption": "微分與反導數互為逆運算：把 F(x) ＝ x² ＋ C 微分得 f(x) ＝ 2x，反過來求 2x 的反導數就寫成不定積分 ∫2x dx ＝ x² ＋ C。加 ＋C 是因為任意常數微分都是 0，所以反導數不只一個、彼此差一個常數。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.antiderivative"
+     ],
+     "body": "最後練反導數與不定積分。重點：∫f(x) dx ＝ F(x) ＋ C（F′ ＝ f）；冪法則 ∫xⁿ dx ＝ xⁿ⁺¹ ∕ (n＋1) ＋ C（n ≠ −1，次方加一再除以新次方）。小提醒：(1) 答案一定要加 ＋C，別只寫一個反導數；(2) 算完把答案微分回去檢查，應該等於原來的 f(x)（例：∫cos x dx ＝ sin x ＋ C，微分回去 d/dx(sin x) ＝ cos x ✓）。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "「反導數（不定積分）」是哪一種運算？",
+     "answer": "微分的逆運算（找一個 F 使 F′ ＝ f）",
+     "kp_ids": [
+      "math.t_sub.calc.antiderivative"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.antiderivative"
+     ],
+     "options": [
+      "微分的逆運算（找一個 F 使 F′ ＝ f）",
+      "微分本身（把 f 再微分一次）",
+      "求函數在某點的極限",
+      "求函數在某點的切線斜率"
+     ],
+     "distractor_rationales": {
+      "微分本身（把 f 再微分一次）": "方向相反：反導數是把微分「反過來」做（找 F 使 F′＝f），不是再微分一次。",
+      "求函數在某點的極限": "極限是另一個概念；反導數要找的是一個函數 F，使它微分後等於 f。",
+      "求函數在某點的切線斜率": "切線斜率是「導數」f′ 做的事；反導數剛好相反，是由 f 回頭找 F。"
+     },
+     "answer_evidence": [
+      "c-ad-def"
+     ],
+     "feedback": "反導數是微分的逆運算：找一個 F 使 F′(x) ＝ f(x)；全部反導數寫成 ∫f dx ＝ F ＋ C。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用冪法則，∫xⁿ dx 等於多少？（n ≠ −1）",
+     "answer": "xⁿ⁺¹ ∕ (n＋1) ＋ C",
+     "kp_ids": [
+      "math.t_sub.calc.antiderivative"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.antiderivative"
+     ],
+     "options": [
+      "xⁿ⁺¹ ∕ (n＋1) ＋ C",
+      "n·xⁿ⁻¹ ＋ C",
+      "xⁿ⁺¹ ＋ C",
+      "xⁿ ∕ (n＋1) ＋ C"
+     ],
+     "distractor_rationales": {
+      "n·xⁿ⁻¹ ＋ C": "這是「微分」xⁿ 的結果（次方乘下來、減一）；積分要反過來——次方加一、再除以新次方。",
+      "xⁿ⁺¹ ＋ C": "次方加一對了，但忘了除以新的次方 (n＋1)；正確是 xⁿ⁺¹ ∕ (n＋1) ＋ C。",
+      "xⁿ ∕ (n＋1) ＋ C": "次方沒有加一：積分要先把 n 變成 n＋1，分子應是 xⁿ⁺¹ 不是 xⁿ。"
+     },
+     "answer_evidence": [
+      "c-ad-power"
+     ],
+     "feedback": "冪法則：∫xⁿ dx ＝ xⁿ⁺¹ ∕ (n＋1) ＋ C（n ≠ −1）——次方加一，再除以新的次方。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "∫2x dx 等於多少？",
+     "answer": "x² ＋ C",
+     "kp_ids": [
+      "math.t_sub.calc.antiderivative"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.antiderivative"
+     ],
+     "options": [
+      "x² ＋ C",
+      "x²",
+      "2x² ＋ C",
+      "2 ＋ C"
+     ],
+     "distractor_rationales": {
+      "x²": "函數對了，但漏了 ＋C：不定積分一定要加積分常數，∫2x dx ＝ x² ＋ C。",
+      "2x² ＋ C": "多乘了一次、忘了除以新次方：2x ＝ 2x¹，次方加一成 x²、要除以 2 再乘回 2 ＝ x²，不是 2x²。",
+      "2 ＋ C": "這是把 2x「微分」得到的（方向相反）；反導數要讓答案微分後等於 2x，是 x² ＋ C。"
+     },
+     "answer_evidence": [
+      "c-ad-power"
+     ],
+     "feedback": "∫2x dx ＝ x² ＋ C（檢查：d/dx(x² ＋ C) ＝ 2x ✓）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "∫cos x dx 等於多少？",
+     "answer": "sin x ＋ C",
+     "kp_ids": [
+      "math.t_sub.calc.antiderivative"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.antiderivative"
+     ],
+     "options": [
+      "sin x ＋ C",
+      "−sin x ＋ C",
+      "cos x ＋ C",
+      "−cos x ＋ C"
+     ],
+     "distractor_rationales": {
+      "−sin x ＋ C": "符號反了：d/dx(sin x) ＝ cos x，所以 ∫cos x dx ＝ sin x ＋ C（＋sin x，不是 −sin x）。",
+      "cos x ＋ C": "沒有做運算、照抄被積函數；要找的是「微分後等於 cos x」的函數，那是 sin x。",
+      "−cos x ＋ C": "這是 ∫sin x dx 的結果（因 d/dx(−cos x) ＝ sin x）；本題被積函數是 cos x，答案是 sin x ＋ C。"
+     },
+     "answer_evidence": [
+      "c-ad-caution"
+     ],
+     "feedback": "∫cos x dx ＝ sin x ＋ C（檢查：d/dx(sin x ＋ C) ＝ cos x ✓）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（反導數＝微分逆運算：F′＝f 則 F 是 f 的反導數；不定積分 ∫f dx＝F＋C，加 ＋C 因常數微分＝0、反導數不唯一；冪法則 ∫xⁿ dx＝xⁿ⁺¹/(n+1)+C（n≠−1，次方加一再除新次方）；∫2x dx＝x²＋C、∫cos x dx＝sin x＋C；兩鐵律＝別漏＋C、算完微分回去檢查 F′＝f）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
