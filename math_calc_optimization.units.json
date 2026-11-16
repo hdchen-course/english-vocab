@@ -1,0 +1,212 @@
+{
+ "_note": "數學島 微積分（calc）strand t_sub 單元。知識點 math.t_sub.calc.optimization（最佳化／極值應用）。tier=t_sub（高中分科/選修深階，exam 分科-數甲）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：最佳化 (optimization)、目標函數 (objective function)、限制條件 (constraint)、導數 (derivative)、臨界點 (critical point)、極大 (maximum)。前置假設：會求極值（解 f′=0 找臨界點、用二階或變號判極大極小）——extrema 已教。★scope（t_sub）：最佳化應用步驟——(1)設變數、寫出要最大/最小的『目標函數』、(2)用限制條件把目標函數化成『單一變數』、(3)微分、令導數=0 找臨界點、(4)判定極大或極小、(5)作答。以『周長固定 20 的矩形求最大面積』貫穿：設長 x，寬＝10−x（因 2(長+寬)=20），面積 A＝x(10−x)＝10x−x²，A′＝10−2x＝0 得 x＝5，A″＝−2<0 為極大，最大面積 A(5)＝25（此時 5×5 正方形）。只到單一變數可化簡的多項式最佳化（固定周長/和求最大積等）；不含多變數 Lagrange、不含帶根號/三角的複雜模型。prereq＝differentiation-rules＋extrema。repro（tools/verify/math_checks7.py::calc.optimization）：周長20矩形 A=x(10−x) 最大在 x=5→25（.venv 已核）；practice 另用『兩正數和為 12 求最大乘積』P=x(12−x) 臨界點 6、P(6)=36（.venv sympy 另核）。★自檢（math-unit defect-classes #1–#61）：figure＝A=x(10−x) 向下拋物線 SVG（左上推導 A=x(10−x)／A′=10−2x=0／⇒x=5 紅，右側拋物線頂點 (180,40) 紅圈標『最大面積 25』、虛線落 x 軸標 x＝5（正方形）），alt 與 SVG text 逐字一致（#33）、標題『最佳化：周長 20 的矩形，面積最大』寫進 alt 開頭、頂點 marker 座標＝拋物線實際 apex（#43）；practice 四答案＝{一個變數(Q1 化簡),10−2x(Q2 A′),5(Q3 臨界點),36(Q4 和12積最大)} 與 teach 關鍵值 25 無 #10 碰撞（Q4 換情境）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算每個誘答路徑＝該值：如漏判極大極小/次方沒降/把長當面積/和積混淆）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_calc_optimization.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.calc.optimization",
+   "title_zh": "最佳化（極值的應用）",
+   "can_do": "我會用微分解『最佳化 (optimization)』問題（求某個量的最大或最小）。步驟是：(1) 設變數、寫出要最大化或最小化的『目標函數 (objective function)』；(2) 用題目的『限制條件 (constraint)』把目標函數化成「只含一個變數」；(3) 對它微分、令『導數 (derivative)』等於 0 找『臨界點 (critical point)』；(4) 判定那裡是『極大 (maximum)』還是極小；(5) 作答。例：周長固定 20 的矩形求最大面積——設長 x、寬 10−x，面積 A ＝ x(10−x)，A′ ＝ 10−2x ＝ 0 得 x ＝ 5，最大面積 25（此時是 5×5 正方形）。",
+   "situation_group": "微積分：最佳化應用",
+   "subject": "math",
+   "strand": "calc",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.calc.optimization"
+   ],
+   "prerequisites": [
+    "math.t_sub.calc.differentiation-rules",
+    "math.t_sub.calc.extrema"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-opt-steps",
+     "text": "最佳化問題的解法步驟：(1) 設變數，寫出要最大化或最小化的量（目標函數）；(2) 用題目的限制條件，把目標函數化成「只含一個變數」；(3) 對這個單變數函數微分、令導數等於 0 找臨界點；(4) 用二階導數或一階變號判定臨界點是極大還是極小；(5) 代回求出最大（或最小）值並作答。關鍵是第 (2) 步——先用限制條件消去多餘的變數，才能微分。",
+     "kind": "definition",
+     "source_refs": [
+      "最佳化解法步驟（高中數學 微積分）"
+     ],
+     "verification_ref": "最佳化五步驟：目標函數→限制條件化單變數→微分令0→判極值→作答（解法流程）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-opt-rect",
+     "text": "例：周長固定 20 的矩形，求最大面積。設長 x，由周長 2(長＋寬) ＝ 20 得 長＋寬 ＝ 10，所以寬 ＝ 10−x（限制條件化成單變數）。面積 A ＝ x(10−x) ＝ 10x − x²。微分 A′ ＝ 10 − 2x，令 A′ ＝ 0 得 x ＝ 5。A″ ＝ −2 ＜ 0 所以 x ＝ 5 是極大，最大面積 A(5) ＝ 5×5 ＝ 25（此時長寬都是 5，是正方形）。",
+     "kind": "definition",
+     "source_refs": [
+      "周長固定矩形最大面積（高中數學 微積分）"
+     ],
+     "verification_ref": "A=x(10−x) 臨界點 x=5、A″=−2<0 極大、A(5)=25（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-opt-insight",
+     "text": "最佳化不是把導數算完就好——找到臨界點後一定要「判定」它是極大還是極小（用二階導數的正負，或看一階導數變號），才能確定那裡真的是要找的最大（或最小）值。只解出 A′ ＝ 0 得 x ＝ 5 還不夠，要看出 A″ ＝ −2 ＜ 0（凹向下）才確定是最大面積。",
+     "kind": "definition",
+     "source_refs": [
+      "最佳化需判定極值類型（高中數學 微積分）"
+     ],
+     "verification_ref": "臨界點須判極大/極小（二階或變號）才確定最佳值（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.optimization"
+     ],
+     "body": "這一單元學怎麼用微分解「最佳化」問題——求某個量在限制下的最大或最小。下面先講五個步驟（設目標函數、用限制條件化成單變數、微分令導數為 0、判定極大極小、作答）；再用「周長固定 20 的矩形求最大面積」完整示範；最後提醒「一定要判定極值類型」，再練習。（本單元接在『微分公式』與『極值判定』之後，核心就是把應用情境化成求極值。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.optimization"
+     ],
+     "body": "① 五步驟：設變數寫目標函數 → 用限制條件化成單變數 → 微分、令導數＝0 找臨界點 → 判定極大或極小 → 作答。② 示範（周長 20 矩形求最大面積）：設長 x，由 2(長＋寬)＝20 得寬＝10−x；面積 A ＝ x(10−x) ＝ 10x−x²；A′ ＝ 10−2x ＝ 0 得 x ＝ 5；A″ ＝ −2 ＜ 0 是極大，最大面積 A(5) ＝ 25（5×5 正方形）。看下面的圖（面積隨 x 的變化、頂點就是最大），最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.calc.optimization"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>最佳化：周長 20 的矩形，面積最大</text><text x='72' y='40' font-family='sans-serif' font-size='9.5' fill='#33475b' text-anchor='middle'>A ＝ x(10−x)</text><text x='72' y='56' font-family='sans-serif' font-size='9.5' fill='#33475b' text-anchor='middle'>A′ ＝ 10−2x ＝ 0</text><text x='72' y='72' font-family='sans-serif' font-size='9.5' fill='#c2535d' text-anchor='middle'>⇒ x ＝ 5</text><line x1='40' y1='150' x2='322' y2='150' stroke='#99a7b5' stroke-width='1'/><line x1='180' y1='40' x2='180' y2='150' stroke='#c9d3dd' stroke-width='1' stroke-dasharray='3 2'/><path d='M40.0,150.0 L47.0,139.3 L54.0,129.1 L61.0,119.5 L68.0,110.4 L75.0,101.9 L82.0,93.9 L89.0,86.5 L96.0,79.6 L103.0,73.3 L110.0,67.5 L117.0,62.3 L124.0,57.6 L131.0,53.5 L138.0,49.9 L145.0,46.9 L152.0,44.4 L159.0,42.5 L166.0,41.1 L173.0,40.3 L180.0,40.0 L187.0,40.3 L194.0,41.1 L201.0,42.5 L208.0,44.4 L215.0,46.9 L222.0,49.9 L229.0,53.5 L236.0,57.6 L243.0,62.3 L250.0,67.5 L257.0,73.3 L264.0,79.6 L271.0,86.5 L278.0,93.9 L285.0,101.9 L292.0,110.4 L299.0,119.5 L306.0,129.1 L313.0,139.3 L320.0,150.0' fill='none' stroke='#33475b' stroke-width='1.8'/><circle cx='180' cy='40' r='3.5' fill='#c2535d'/><text x='180' y='31' font-family='sans-serif' font-size='9.5' fill='#c2535d' text-anchor='middle'>最大面積 25</text><text x='180' y='162' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>x ＝ 5（正方形）</text><text x='314' y='162' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>長 x →</text></svg>",
+      "alt": "標題「最佳化：周長 20 的矩形，面積最大」。左上方是推導：A ＝ x(10−x)、A′ ＝ 10−2x ＝ 0、⇒ x ＝ 5（紅色）。右側是一條開口向下的拋物線（面積 A 隨長 x 變化），最高點用紅色圓點標「最大面積 25」，從最高點往下有一條虛線落到 x 軸，標「x ＝ 5（正方形）」。x 軸右端標「長 x →」。",
+      "caption": "以周長 20 的矩形示範最佳化：面積 A＝x(10−x) 是開口向下的拋物線，微分 A′＝10−2x＝0 得頂點 x＝5，A″＝−2＜0 為極大，最大面積 25（此時長寬都是 5，是正方形）。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.optimization"
+     ],
+     "body": "最後練最佳化。重點：設目標函數 → 用限制條件化成單變數 → 微分令導數＝0 找臨界點 → 判定極大或極小 → 作答。小提醒：第 (2) 步「用限制條件消去多餘變數、化成單變數」最關鍵，少了它就沒辦法微分；還有找到臨界點後一定要判定是極大還是極小（看 A″ 的正負），不是解完 A′＝0 就算完。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在最佳化問題裡，微分之前一定要先用限制條件把目標函數化成含幾個變數？",
+     "answer": "一個變數",
+     "kp_ids": [
+      "math.t_sub.calc.optimization"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.optimization"
+     ],
+     "options": [
+      "一個變數",
+      "兩個變數",
+      "三個變數",
+      "不用化簡，直接微分"
+     ],
+     "distractor_rationales": {
+      "兩個變數": "還留著兩個變數就沒辦法對單一變數微分；要用限制條件再消去一個，化成一個變數。",
+      "三個變數": "變數越多越不能直接微分求極值；最佳化要先化到只剩一個變數。",
+      "不用化簡，直接微分": "目標函數常含多個變數（如長和寬），不先用限制條件化成單變數就無法微分；第 (2) 步不能省。"
+     },
+     "answer_evidence": [
+      "c-opt-steps"
+     ],
+     "feedback": "要先用限制條件把目標函數化成「只含一個變數」，才能對它微分求極值。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "周長固定 20 的矩形，面積 A ＝ x(10−x)（x 是長）。求 A′。",
+     "answer": "10 − 2x",
+     "kp_ids": [
+      "math.t_sub.calc.optimization"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.optimization"
+     ],
+     "options": [
+      "10 − 2x",
+      "10 − x",
+      "10x − x²",
+      "2x − 10"
+     ],
+     "distractor_rationales": {
+      "10 − x": "沒有把 −x² 微分對：先把 A 展開成 10x − x²，x² 微分是 2x，所以 A′ ＝ 10 − 2x，不是 10 − x。",
+      "10x − x²": "這是 A 本身（還沒微分）；微分後才是 A′ ＝ 10 − 2x。",
+      "2x − 10": "正負號相反：A ＝ 10x − x²，微分得 10 − 2x（10 的部分為正、−x² 微分成 −2x），不是 2x − 10。"
+     },
+     "answer_evidence": [
+      "c-opt-rect"
+     ],
+     "feedback": "A ＝ x(10−x) ＝ 10x − x²，微分：A′ ＝ 10 − 2x。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "承上，A′ ＝ 10 − 2x。面積最大時，x 等於多少？",
+     "answer": "5",
+     "kp_ids": [
+      "math.t_sub.calc.optimization"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.optimization"
+     ],
+     "options": [
+      "5",
+      "10",
+      "2",
+      "25"
+     ],
+     "distractor_rationales": {
+      "10": "10 是「長＋寬」的和，不是使面積最大的 x；令 A′ ＝ 10 − 2x ＝ 0 解得 x ＝ 5。",
+      "2": "把係數 2 當成答案了；要解 10 − 2x ＝ 0，即 2x ＝ 10、x ＝ 5。",
+      "25": "25 是最大面積 A(5) 的值，不是 x；使面積最大的 x ＝ 5。"
+     },
+     "answer_evidence": [
+      "c-opt-rect"
+     ],
+     "feedback": "令 A′ ＝ 10 − 2x ＝ 0：2x ＝ 10，x ＝ 5（A″ ＝ −2 ＜ 0 確認是極大）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "兩個正數的和固定為 12，問它們的乘積最大是多少？（設一數為 x，另一數為 12−x，乘積 P ＝ x(12−x)）",
+     "answer": "36",
+     "kp_ids": [
+      "math.t_sub.calc.optimization"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.optimization"
+     ],
+     "options": [
+      "36",
+      "35",
+      "12",
+      "72"
+     ],
+     "distractor_rationales": {
+      "35": "35 ＝ 5×7 是其中一組（和也是 12）的乘積，但不是最大；P′ ＝ 12 − 2x ＝ 0 得 x ＝ 6，兩數都 6、乘積 36 才最大。",
+      "12": "12 是兩數的和，不是乘積的最大值；乘積最大是 6×6 ＝ 36。",
+      "72": "把和 12 乘以某數得過大；乘積 P ＝ x(12−x) 的最大在 x ＝ 6，是 6×6 ＝ 36（不可能到 72）。"
+     },
+     "answer_evidence": [
+      "c-opt-steps"
+     ],
+     "feedback": "P ＝ x(12−x) ＝ 12x − x²，P′ ＝ 12 − 2x ＝ 0 得 x ＝ 6；兩數都是 6，最大乘積 6×6 ＝ 36。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（最佳化五步驟：設目標函數→用限制條件化單變數→微分令導數=0 找臨界點→判極大/極小→作答；周長 20 矩形 A=x(10−x)、A′=10−2x=0 得 x=5、最大面積 25 正方形；兩數和 12 乘積最大 6×6=36；關鍵＝先化單變數＋找到臨界點要判定極大極小）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
