@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 微積分（calc）strand t_sub 單元。知識點 math.t_sub.calc.continuity（函數的連續性）。tier=t_sub（高中探究/選修補充）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：連續 (continuous)、連續函數 (continuous function)。★scope（t_sub）：函數在一點連續的直觀與三條件——f 在 x=a 連續⟺(1)f(a) 有定義、(2)lim_{x→a}f(x) 存在、(3)lim_{x→a}f(x)＝f(a)；直觀＝圖形在該點不斷裂、不跳、不挖洞，可一筆畫過；多項式、sin/cos、指數對數在其定義域內處處連續；在連續點求極限＝直接代入 f(a)（承接 function-limit 的代入法）。只定性＋三條件＋連續點代入；不含一致連續、不含間斷點嚴格分類命名。prereq＝function-limit。repro（tools/verify/math_checks7.py::calc.continuity）：f=x² 於 x=2 連續（極限=函數值）；另 f(x)=x²+1 於 x=2 代入=極限=5、f(3)=10（.venv sympy 已核）。★自檢（math-unit defect-classes #1–#59）：figure＝連續 vs 不連續對比雙面板 SVG（左＝平滑線＋實心點＝連續；右＝下段止於空心圈、上段起於實心點、中間跳一下＝不連續），alt 與 SVG text 逐字一致（#33）、標題『連續 vs 不連續：圖形有沒有「斷開」』寫進 alt 開頭；teach 值集{x²+1 於 x=3→10}與 practice 數值答案{5}無交集避#10（Q2 用 x=2→5，teach 用 x=3→10）；practice：Q1 連續三條件（選項說法）、Q2 連續點代入（f(x)=x²+1,x=2→5，選項數）、Q3 極限≠f(a) 不連續（選項說法）、Q4 連續圖形特徵（選項說法）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53，如漏一條件/只算 x² 漏+1/把 x 當答案/(x+1)² 誤算/把直線通原點遞增當連續定義）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_calc_continuity.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.calc.continuity",
+   "title_zh": "函數的連續性",
+   "can_do": "我知道函數『連續 (continuous)』的意思：直觀上就是圖形在那一點不斷裂、不跳、不挖洞，筆可以一路畫過去。我也知道 f 在 x＝a 連續要同時滿足三個條件——(1) f(a) 有定義、(2) 極限 lim_{x→a} f(x) 存在、(3) 這個極限值剛好等於 f(a)；三個少一個都不連續。我知道多項式、sin/cos、指數與對數在它們的定義域內處處連續，所以在連續的點求極限，直接把 a 代進去就好。",
+   "situation_group": "微積分：函數的連續性",
+   "subject": "math",
+   "strand": "calc",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.calc.continuity"
+   ],
+   "prerequisites": [
+    "math.t_sub.calc.function-limit"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-cont-def",
+     "text": "函數 f 在 x＝a 『連續 (continuous)』的意思是：圖形在那一點不斷裂、不跳、不挖洞，可以一筆畫過。嚴謹一點，要同時滿足三個條件：(1) f(a) 有定義（那一點真的有值）；(2) 極限 lim_{x→a} f(x) 存在（左極限＝右極限）；(3) 這個極限值剛好等於 f(a)。三個條件只要少一個，f 在 x＝a 就不連續。",
+     "kind": "definition",
+     "source_refs": [
+      "函數在一點連續的三條件（高中數學 微積分）"
+     ],
+     "verification_ref": "連續⟺f(a)有定義∧極限存在∧極限=f(a)（定義）；f=x² 於 x=2 連續（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-cont-common",
+     "text": "許多常見的函數在它們的定義域內是『處處連續』的：多項式（如 x²＋1）、sin 和 cos、指數函數與對數函數（在定義域內）都是連續函數 (continuous function)。它們的圖形都畫得出一條不斷裂的線。",
+     "kind": "definition",
+     "source_refs": [
+      "常見連續函數（高中數學 微積分）"
+     ],
+     "verification_ref": "多項式/三角/指對在定義域內連續（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-cont-substitute",
+     "text": "連續性和上一單元「代入法求極限」是同一件事的兩面：正因為連續函數在 a 滿足「極限＝f(a)」，所以在連續的點求極限，可以直接把 a 代進去算 f(a)。例：f(x)＝x²＋1 是多項式、處處連續，所以 lim_{x→3} (x²＋1) ＝ f(3) ＝ 3²＋1 ＝ 10，直接代入即可。",
+     "kind": "definition",
+     "source_refs": [
+      "連續點求極限＝直接代入（高中數學 微積分）"
+     ],
+     "verification_ref": "連續點 lim=f(a)；f(x)=x²+1, f(3)=10（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.continuity"
+     ],
+     "body": "這一單元學函數的『連續性』。下面先講連續的直觀意思和三個條件；再講哪些常見函數處處連續；接著講連續和「代入法求極限」的關係——在連續的點可以直接代入；用一張連續 vs 不連續的對比圖示範，最後練習。（本單元接在『函數極限』之後，連續就是用極限定義的。）"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.continuity"
+     ],
+     "body": "① 連續的意思：f 在 x＝a 連續，直觀上就是圖形在那一點不斷裂、不跳、不挖洞，一筆畫得過去。嚴謹要同時滿足三條件——(1) f(a) 有定義、(2) 極限 lim_{x→a} f(x) 存在（左極限＝右極限）、(3) 極限值剛好等於 f(a)；少一個就不連續。看下面的圖：左邊一筆畫過＝連續，右邊中間跳一下（斷開）＝不連續。② 常見連續函數：多項式、sin/cos、指數與對數在定義域內都處處連續。③ 和代入法的關係：正因為連續點滿足「極限＝f(a)」，所以在連續的點求極限可以直接代入，例如 f(x)＝x²＋1 處處連續，lim_{x→3}(x²＋1)＝f(3)＝10。下面用這張對比圖整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.calc.continuity"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>連續 vs 不連續：圖形有沒有「斷開」</text><line x1='183' y1='26' x2='183' y2='140' stroke='#d7dee5' stroke-width='1'/><text x='100' y='34' font-family='sans-serif' font-size='10.5' fill='#2f9e6e' text-anchor='middle' font-weight='bold'>連續</text><line x1='35' y1='44' x2='35' y2='128' stroke='#99a7b5' stroke-width='1'/><line x1='35' y1='128' x2='165' y2='128' stroke='#99a7b5' stroke-width='1'/><line x1='45' y1='120' x2='158' y2='56' stroke='#2f9e6e' stroke-width='2'/><circle cx='100' cy='89' r='4' fill='#2f9e6e'/><text x='100' y='152' font-family='sans-serif' font-size='10' fill='#6b7785' text-anchor='middle'>一筆畫過、不斷裂</text><text x='266' y='34' font-family='sans-serif' font-size='10.5' fill='#c2535d' text-anchor='middle' font-weight='bold'>不連續</text><line x1='201' y1='44' x2='201' y2='128' stroke='#99a7b5' stroke-width='1'/><line x1='201' y1='128' x2='331' y2='128' stroke='#99a7b5' stroke-width='1'/><line x1='211' y1='112' x2='262' y2='99' stroke='#2f9e6e' stroke-width='2'/><circle cx='262' cy='99' r='4' fill='#ffffff' stroke='#c2535d' stroke-width='1.6'/><circle cx='266' cy='72' r='4' fill='#c2535d'/><line x1='266' y1='72' x2='320' y2='60' stroke='#2f9e6e' stroke-width='2'/><text x='266' y='152' font-family='sans-serif' font-size='10' fill='#6b7785' text-anchor='middle'>中間跳一下（斷開）</text><text x='180' y='164' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>○空心＝該點沒有值　●實心＝函數在該點的值</text></svg>",
+      "alt": "標題「連續 vs 不連續：圖形有沒有「斷開」」。左右兩個小座標圖對比：左邊標「連續」，一條綠線一筆畫過、線上有一個實心點，下方寫「一筆畫過、不斷裂」；右邊標「不連續」，綠線中間斷開跳一下，下段尾端是空心圈、上段起點是實心點，下方寫「中間跳一下（斷開）」。最下方說明「○空心＝該點沒有值　●實心＝函數在該點的值」。",
+      "caption": "連續 vs 不連續對比：左邊圖形一筆畫過、不斷裂，是連續；右邊圖形中間跳一下、斷開（下段止於空心圈、上段起於實心點，左右極限不相等），是不連續。連續要同時滿足 f(a) 有定義、極限存在、且極限＝f(a)。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.calc.continuity"
+     ],
+     "body": "最後練連續性。重點：連續＝圖形不斷裂、不跳、不挖洞，三條件（f(a) 有定義、極限存在、極限＝f(a)）同時成立；多項式、sin/cos、指數對數在定義域內處處連續；在連續的點求極限直接代入。小提醒：「f(a) 有定義」或「左右極限相等」只是其中一個條件，三個都要成立才算連續——極限存在但不等於 f(a)（有洞或跳一下）就不連續。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "函數 f 在 x＝a 連續，必須同時滿足哪些條件？",
+     "answer": "f(a) 有定義、極限存在、而且極限值等於 f(a)",
+     "kp_ids": [
+      "math.t_sub.calc.continuity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.continuity"
+     ],
+     "options": [
+      "f(a) 有定義、極限存在、而且極限值等於 f(a)",
+      "只要 f(a) 有定義就算連續",
+      "只要左、右極限存在就算連續",
+      "只要圖形是往上升的就算連續"
+     ],
+     "distractor_rationales": {
+      "只要 f(a) 有定義就算連續": "有定義只是三條件之一；還要極限存在、且極限值等於 f(a) 才連續（有洞或跳一下時 f(a) 可能有定義卻仍不連續）。",
+      "只要左、右極限存在就算連續": "極限存在只是三條件之一；還要 f(a) 有定義、且極限值等於 f(a)——極限存在但不等於 f(a) 仍不連續。",
+      "只要圖形是往上升的就算連續": "升或降和連續無關；連續看的是不斷裂、不跳、不挖洞（三條件），往上升的圖形也可能中間斷開。"
+     },
+     "answer_evidence": [
+      "c-cont-def"
+     ],
+     "feedback": "連續要三條件同時成立：f(a) 有定義、極限 lim_{x→a} f(x) 存在、而且極限值等於 f(a)。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "f(x) ＝ x² ＋ 1 是多項式、處處連續。求 lim_{x→2} (x² ＋ 1)。",
+     "answer": "5",
+     "kp_ids": [
+      "math.t_sub.calc.continuity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.continuity"
+     ],
+     "options": [
+      "5",
+      "4",
+      "2",
+      "9"
+     ],
+     "distractor_rationales": {
+      "4": "4 只算了 x²＝2²，漏掉後面的 ＋1；連續可直接代入，2² ＋ 1 ＝ 5。",
+      "2": "2 是 x 趨近的值，不是極限；連續函數直接代入 x＝2，得 2² ＋ 1 ＝ 5。",
+      "9": "9 是把式子誤當成 (x＋1)²＝(2＋1)²；本題是 x²＋1，代入得 2² ＋ 1 ＝ 5。"
+     },
+     "answer_evidence": [
+      "c-cont-substitute"
+     ],
+     "feedback": "x²＋1 處處連續，直接代入 x＝2：2² ＋ 1 ＝ 5。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "某函數在 x＝1 的左極限是 2、右極限也是 2，但 f(1) ＝ 5。它在 x＝1 連續嗎？",
+     "answer": "不連續，因為極限值 2 不等於 f(1)＝5",
+     "kp_ids": [
+      "math.t_sub.calc.continuity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.continuity"
+     ],
+     "options": [
+      "不連續，因為極限值 2 不等於 f(1)＝5",
+      "連續，因為左極限和右極限相等",
+      "連續，因為 f(1) 有定義",
+      "無法判斷連續或不連續"
+     ],
+     "distractor_rationales": {
+      "連續，因為左極限和右極限相等": "左右極限相等只讓極限存在（＝2），但第三條件還要極限值等於 f(1)；2 不等於 5，所以不連續。",
+      "連續，因為 f(1) 有定義": "f(1) 有定義只是其中一個條件；還要極限值等於 f(1)，這裡極限 2 不等於 f(1)＝5，所以不連續。",
+      "無法判斷連續或不連續": "三個條件都給了（極限 2 存在、f(1)＝5 有定義），可以判斷：極限 2 不等於 f(1)＝5，所以不連續。"
+     },
+     "answer_evidence": [
+      "c-cont-def"
+     ],
+     "feedback": "極限存在（＝2）、f(1) 也有定義（＝5），但極限值 2 不等於 f(1)＝5，第三條件不成立，所以在 x＝1 不連續。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "下列哪一句最能描述「連續函數」的圖形特徵？",
+     "answer": "圖形可以一筆畫過，不斷裂、不跳、不挖洞",
+     "kp_ids": [
+      "math.t_sub.calc.continuity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.calc.continuity"
+     ],
+     "options": [
+      "圖形可以一筆畫過，不斷裂、不跳、不挖洞",
+      "圖形一定是一條直線",
+      "圖形一定通過原點",
+      "圖形一定持續往上升"
+     ],
+     "distractor_rationales": {
+      "圖形一定是一條直線": "連續函數的圖形不一定是直線；曲線（如拋物線）只要不斷裂也是連續的。",
+      "圖形一定通過原點": "連續和有沒有通過原點無關；不過原點的連續函數多的是。",
+      "圖形一定持續往上升": "連續和升降無關；有升有降、甚至水平的圖形，只要不斷裂都連續。"
+     },
+     "answer_evidence": [
+      "c-cont-def"
+     ],
+     "feedback": "連續函數的圖形可以一筆畫過、不斷裂、不跳、不挖洞；和是不是直線、過不過原點、升或降都無關。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（連續＝圖形不斷裂、不跳、不挖洞，三條件 f(a) 有定義∧極限存在∧極限＝f(a) 同時成立；多項式/三角/指對在定義域內處處連續；連續點求極限直接代入）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
