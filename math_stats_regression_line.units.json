@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 統計（stats）strand t_adv 單元。知識點 math.t_adv.stats.regression-line（最適直線/迴歸直線）。tier=t_adv（高中學測/分科）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次）：最適直線 (line of best fit)、迴歸直線 (regression line)。★scope（高中 t_adv）：當散布圖點大致成一直線時，畫一條最能代表這些點趨勢、盡量靠近所有點的直線＝最適直線（迴歸直線）；斜率正→右上→正相關、斜率負→右下→負相關；可把一個變數的值代入直線『預測』另一個；預測在資料範圍內較可靠、外插（遠超資料範圍）要小心。只定性＋用「給定的」直線代入預測；不教最小平方法公式推導、不手算迴歸係數。prereq＝相關係數 correlation。repro（tools/verify/math_checks7.py::stats.regression-line）：[1,2,3,4]vs[2,4,6,8] polyfit 斜率2 截距0＝最適直線 y=2x（.venv 已核）。★自檢（math-unit defect-classes #1–#59）：figure＝散布圖＋最適直線 SVG（5 點 (1,1)(2,5)(3,6)(4,7)(5,11) 散佈於 y=2x 線周圍，px=50+x*45、py=135−y*8.75；最適直線由 (95,117.5)→(275,47.5) 標 y=2x，house 藍點＋綠線），alt 與 SVG text 逐字一致（#33）、標題『最適直線：用一條線代表散布圖的趨勢，還能預測』寫進 alt 開頭；teach 值集{2x line,斜率2,預測x=3→6,點座標}與 practice 數值答案{12}無交集避#10（Q1 用 y=3x 非 teach 的 y=2x）；practice：Q1 代入預測（y=3x, x=4→12，選項數）、Q2 斜率負→負相關（選項類別）、Q3 用途（代表趨勢＋預測，選項說法）、Q4 外插要小心（選項情況）；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53，如相加非相乘/x當y/連寫數字/把範圍內當不可靠）、兩兩相異（#29）、長度均衡（#28 不 padding）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_stats_regression_line.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.stats.regression-line",
+   "title_zh": "最適直線與預測",
+   "can_do": "我知道當散布圖的點大致排成一直線時，可以畫一條最能代表這些點趨勢、盡量靠近所有點的直線，叫『最適直線 (line of best fit)』（也叫迴歸直線）。我會看它的斜率：斜率為正、線往右上就是正相關，斜率為負、線往右下就是負相關。我也會用「給定的」最適直線來預測——把一個變數的值代入直線，算出另一個變數的估計值；我知道預測在資料範圍內比較可靠，離資料範圍太遠（外插）要小心。",
+   "situation_group": "統計：最適直線與預測",
+   "subject": "math",
+   "strand": "stats",
+   "est_minutes": 14,
+   "knowledge_point_ids": [
+    "math.t_adv.stats.regression-line"
+   ],
+   "prerequisites": [
+    "math.t_adv.stats.correlation"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-reg-fit",
+     "text": "當散布圖上的點大致排成一條直線時，可以畫一條「最能代表這些點趨勢、盡量靠近所有點」的直線，叫『最適直線 (line of best fit)』，也叫『迴歸直線 (regression line)』。它用一條直線總結兩個變數的關係——不是把每個點精確連起來，而是讓整條線盡量貼近所有的點。",
+     "kind": "definition",
+     "source_refs": [
+      "最適直線（迴歸直線）的意義（高中數學 統計）"
+     ],
+     "verification_ref": "最能代表趨勢、盡量靠近所有點的直線（定義）；repro polyfit 得 y=2x",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-reg-slope",
+     "text": "最適直線的斜率正負，代表兩個變數的關係方向：斜率為正，直線往右上，表示正相關（x 變大、y 也傾向變大）；斜率為負，直線往右下，表示負相關（x 變大、y 傾向變小）。斜率的大小大約表示「x 每增加 1，y 平均變化多少」。",
+     "kind": "definition",
+     "source_refs": [
+      "最適直線的斜率與關係方向（高中數學 統計）"
+     ],
+     "verification_ref": "斜率正→右上→正相關、負→右下→負相關（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-reg-predict",
+     "text": "有了最適直線，就能用它「預測」：把一個變數的值代入直線方程式，算出另一個變數的估計值。例：最適直線是 y ＝ 2x，當 x ＝ 3 時，預測 y ＝ 2 × 3 ＝ 6。要注意：預測若落在「原本蒐集資料的範圍內」比較可靠；如果預測的值遠遠超出資料範圍（外插），就不一定準，要小心。",
+     "kind": "definition",
+     "source_refs": [
+      "用最適直線預測與外插的注意（高中數學 統計）"
+     ],
+     "verification_ref": "代入直線預測；y=2x、x=3→6；外插較不可靠（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.stats.regression-line"
+     ],
+     "body": "這一單元學『最適直線』和用它『預測』。下面先講最適直線是什麼——當點大致成一直線時，畫一條最貼近所有點的直線；再講從斜率正負看關係方向；接著講怎麼把值代入直線來預測、以及外插要小心；用一張散布圖加最適直線示範，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.stats.regression-line"
+     ],
+     "body": "① 最適直線：當散布圖的點大致排成一直線時，畫一條最能代表趨勢、盡量靠近所有點的直線（不是精確連每個點）。看下面的圖：5 個點大致往右上排列，中間那條線就是最適直線 y ＝ 2x。② 斜率：這條線往右上、斜率是正的，表示正相關；若線往右下、斜率為負，就是負相關。③ 預測：把一個變數代入直線就能估計另一個。用 y ＝ 2x，當 x ＝ 3 時預測 y ＝ 2 × 3 ＝ 6。但要小心：預測落在資料範圍內（例如這裡 x 約 1 到 5）比較可靠，若拿去預測 x ＝ 100 這種遠超範圍的值（外插），就不一定準。下面用這張圖整理。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.stats.regression-line"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='15' font-family='sans-serif' font-size='11.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>最適直線：用一條線代表散布圖的趨勢，還能預測</text><line x1='50' y1='30' x2='50' y2='135' stroke='#99a7b5' stroke-width='1'/><line x1='50' y1='135' x2='320' y2='135' stroke='#99a7b5' stroke-width='1'/><text x='44' y='40' font-family='sans-serif' font-size='10' fill='#6b7785' text-anchor='end'>y</text><text x='315' y='150' font-family='sans-serif' font-size='10' fill='#6b7785' text-anchor='end'>x</text><line x1='95' y1='117.5' x2='275' y2='47.5' stroke='#2f9e6e' stroke-width='2'/><circle cx='95' cy='126' r='4' fill='#5b8def'/><circle cx='140' cy='91' r='4' fill='#5b8def'/><circle cx='185' cy='82.5' r='4' fill='#5b8def'/><circle cx='230' cy='74' r='4' fill='#5b8def'/><circle cx='275' cy='39' r='4' fill='#5b8def'/><text x='255' y='70' font-family='sans-serif' font-size='10.5' fill='#2f9e6e' text-anchor='start' font-weight='bold'>最適直線 y＝2x</text><text x='185' y='162' font-family='sans-serif' font-size='10.5' fill='#6b7785' text-anchor='middle'>線盡量靠近所有點；代入 x 可預測 y（x＝3 → y＝6）</text></svg>",
+      "alt": "標題「最適直線：用一條線代表散布圖的趨勢，還能預測」。一張散布圖，橫軸 x、縱軸 y，5 個藍點大致往右上排列，中間一條綠色直線盡量貼近這些點，標示「最適直線 y＝2x」。下方寫「線盡量靠近所有點；代入 x 可預測 y（x＝3 → y＝6）」。",
+      "caption": "最適直線：5 個點大致往右上排列，綠色直線 y＝2x 是最能代表趨勢、盡量靠近所有點的直線。斜率為正表示正相關；把 x 代入可預測 y，例如 x＝3 時預測 y＝2×3＝6。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.stats.regression-line"
+     ],
+     "body": "最後練最適直線與預測。重點：最適直線是最能代表散布圖趨勢、盡量靠近所有點的直線（不精確連每個點）；斜率正→正相關、負→負相關；把值代入直線可預測另一個變數；預測在資料範圍內較可靠、外插要小心。小提醒：預測是把 x「代入」直線方程式去算 y，不是把兩個數相加。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一組資料的最適直線是 y ＝ 3x。用這條直線預測：當 x ＝ 4 時，y 大約是多少？",
+     "answer": "12",
+     "kp_ids": [
+      "math.t_adv.stats.regression-line"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.stats.regression-line"
+     ],
+     "options": [
+      "12",
+      "7",
+      "4",
+      "34"
+     ],
+     "distractor_rationales": {
+      "7": "7 是把 3 和 4 相加（3 ＋ 4）；代入最適直線是相乘，y ＝ 3 × 4 ＝ 12。",
+      "4": "4 是 x 的值，不是預測的 y；要把 x 代入 y ＝ 3x，得 3 × 4 ＝ 12。",
+      "34": "34 是把 3 和 4 連在一起寫；應該是 3 乘以 4，3 × 4 ＝ 12。"
+     },
+     "answer_evidence": [
+      "c-reg-predict"
+     ],
+     "feedback": "預測是把 x 代入直線：y ＝ 3x ＝ 3 × 4 ＝ 12。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一條最適直線往右下方走（斜率是負的）。這代表兩個變數之間是什麼關係？",
+     "answer": "負相關",
+     "kp_ids": [
+      "math.t_adv.stats.regression-line"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.stats.regression-line"
+     ],
+     "options": [
+      "負相關",
+      "正相關",
+      "沒有任何關係",
+      "兩個變數一定相等"
+     ],
+     "distractor_rationales": {
+      "正相關": "正相關的最適直線往右上、斜率為正；這裡線往右下、斜率為負，是負相關。",
+      "沒有任何關係": "線有明確的往右下走向，就表示有（負的）關係；沒有關係是點散亂、畫不出明顯趨勢線。",
+      "兩個變數一定相等": "斜率為負只表示 x 變大時 y 傾向變小，不代表兩個數值相等。"
+     },
+     "answer_evidence": [
+      "c-reg-slope"
+     ],
+     "feedback": "最適直線往右下、斜率為負，就是負相關（x 變大、y 傾向變小）。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "最適直線最主要的用途是什麼？",
+     "answer": "用一條直線代表資料的整體趨勢，並用它預測另一個變數",
+     "kp_ids": [
+      "math.t_adv.stats.regression-line"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.stats.regression-line"
+     ],
+     "options": [
+      "用一條直線代表資料的整體趨勢，並用它預測另一個變數",
+      "把每一個點精確地連起來",
+      "找出資料裡的最大值和最小值",
+      "把資料分成大小相同的組別"
+     ],
+     "distractor_rationales": {
+      "把每一個點精確地連起來": "最適直線不是精確連每個點，而是盡量靠近所有點、代表整體趨勢。",
+      "找出資料裡的最大值和最小值": "找最大最小值不需要畫直線；最適直線是用來代表趨勢和預測的。",
+      "把資料分成大小相同的組別": "分組是次數分配表在做的事；最適直線是用一條線代表趨勢、做預測。"
+     },
+     "answer_evidence": [
+      "c-reg-fit"
+     ],
+     "feedback": "最適直線用一條線代表資料的整體趨勢，並可把值代入它來預測另一個變數。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用最適直線做預測時，下面哪一種情況最「不可靠」？",
+     "answer": "預測的 x 遠遠超出原本蒐集資料的範圍",
+     "kp_ids": [
+      "math.t_adv.stats.regression-line"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.stats.regression-line"
+     ],
+     "options": [
+      "預測的 x 遠遠超出原本蒐集資料的範圍",
+      "預測的 x 落在原本資料的範圍內",
+      "資料的點都很靠近最適直線",
+      "兩個變數的相關很強"
+     ],
+     "distractor_rationales": {
+      "預測的 x 落在原本資料的範圍內": "落在資料範圍內的預測反而比較可靠；不可靠的是遠超範圍的外插。",
+      "資料的點都很靠近最適直線": "點很靠近直線表示直線代表得好、預測更可信，不是不可靠的情況。",
+      "兩個變數的相關很強": "相關很強時最適直線更能代表資料、預測更可信；不可靠的是外插太遠。"
+     },
+     "answer_evidence": [
+      "c-reg-predict"
+     ],
+     "feedback": "預測的 x 遠超出蒐集資料的範圍（外插）時最不可靠，因為那段範圍沒有資料佐證直線仍成立。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（最適直線＝最能代表散布圖趨勢、盡量靠近所有點的直線；斜率正→正相關、負→負相關；把 x 代入直線可預測 y；預測在資料範圍內較可靠、外插要小心）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
