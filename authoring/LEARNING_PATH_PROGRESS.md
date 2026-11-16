@@ -7,6 +7,15 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 07:11 ★★ vector geometry-apply 向量在幾何證明與重心/共線應用 5/5 DONE-GATE 全綠 → **vector strand 11/11 全收（整個向量島完成）** ★★
+- **math_vector_geometry_apply frozen `8e2dcbdf954b05f8`**（R1-R5 連 5 clean、L3 每輪 exit 0；R1-R5 一次過無 panel-confirmed defect；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==8e2dcbdf／per_page_5clean 567/567 頁 0 違規（geometry_apply absent）／repro PASS／iPad 四角色簽核（等軸 2D、三角形 P(0,0)/Q(6,0)/R(3,6) 淺藍、中線 RM 虛線、重心 G=(3,2) 紅點標 2:1；#62 等軸、右緣0%）。
+- 向量幾何應用（t_sub，prereq space-dot-product）＝共線判定 A,B,C 共線 ⟺ AB 與 AC 平行 ⟺ AB×AC=0；中點 M=(A+B)/2；分點 P=(nA+mB)/(m+n)（AP:PB=m:n、從 A、權重交叉）；三角形重心 G=(A+B+C)/3（三頂點平均、分中線 2:1）。以共線 (1,1)(3,2)(7,4)（AB×AC=0）、重心三角形 (0,0)(6,0)(3,6)→(3,2) 貫穿。
+- ★repro：binding＝math_checks6::vector.geometry-apply（共線 PASS）；單元引 math_checks7::vector.geometry-apply（本 session 新增 AB×AC=0⇒共線/重心(3,2)/中點(3,0)/分點2:1=(4,0)，.venv PASS）。
+- practice：Q1 重心=(3,2)（hero）、Q2 共線判定法（外積=0）、Q3 中點=(3,0)、Q4 分點 2:1=(4,0)。凍前 .venv 反算每誘答單一錯誤 #53（重心忘除3/當中點除2/xy顛倒；分點比例弄反/當中點/忘除3）。
+- ★收斂史：R1-R5 一次過、全程 0 缺陷、無 L3 FAIL（無 de-converge）。
+- ★★★ **里程碑：vector strand 全 11 單元完成**（plane-definition/plane-add-sub/linear-combination/component/dot-product/projection〔t_adv 6〕＋cross-product/space-vector/space-dot-product/triangle-tetra-area/geometry-apply〔t_sub 5〕）。本 session 建 11 個向量單元全部 5/5 DONE-GATE＋push；全部 math_checks7 新增 repro .venv 驗證；共抓並修 2 真實缺陷（triangle-tetra Q2 除了歧義＋三稜錐；space-dot Q3 係數積）皆 5-clean 迴圈攔下。
+- 下一步：vector 島完成 → 進下一數學 strand。待建：conic(7)/complex(6)/finmath(6)/space(5)/matrix(5)/linprog(2)/determinant(2)。先讀 LEARNING_PATH_BUILD_PLAN.md 選下一 strand（建議 conic 圓錐曲線，t_adv 核心）。各 KP 先加 repro（verify-first）再撰寫。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 06:51 vector triangle-tetra-area 以內外積求三角形/平行四邊形面積與四面體體積 5/5 DONE-GATE 全綠（t_sub 高中 分科/深階，★3D 平行四邊形面積 示意 SVG）→ vector strand 10/11
 - **math_vector_triangle_tetra_area frozen `27f9cbd9544abe00`**（R2 抓 major→de-converge→R1 抓 minor→修→R1-R5 連 5 clean、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==27f9cbd9／per_page_5clean 566/566 頁 0 違規（triangle_tetra absent）／repro PASS／iPad 四角色簽核（3D 斜投影、紅 a=(2,0,0) 沿 x、綠 b=(0,3,0) 沿 y、淺藍平行四邊形=2×3 矩形、標面積=|a×b|=6；a/x 標籤碰撞 render 時即修、★3D 示意圖 #62 N/A、箭頭 #43、右緣0%）。
 - 外積與面積/體積（t_sub，prereq space-dot-product）＝3D 外積 a×b 是「向量」、同時垂直 a,b、|a×b|=平行四邊形面積（=|a||b|sinθ）；三角形=½|a×b|；純量三重積 (a×b)·c 絕對值=平行六面體體積、四面體（三角錐）=⅙|(a×b)·c|。以 a=(2,0,0)、b=(0,3,0)、c=(1,1,4) 貫穿：a×b=(0,0,6)、|a×b|=6、三角形=3；(a×b)·c=24、四面體=4。
