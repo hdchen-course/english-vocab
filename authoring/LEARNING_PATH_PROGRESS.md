@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 07:52 ★ conic parabola 拋物線定義/標準式/焦點與準線 5/5 DONE-GATE 全綠（t_sub，★等軸拋物線+焦點+準線+P 等距 SVG）→ 圓錐曲線島 conic strand 1/7（向量島後首個新 strand）
+- **math_conic_parabola frozen `0ed5cb474e5cb6c4`**（R2 抓 major→de-converge→R3 抓 minor→de-converge→R1-R5 連 5 clean、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==0ed5cb47／per_page_5clean 568/568 頁 0 違規（conic_parabola absent）／repro PASS／iPad 四角色簽核（等軸 2D、拋物線 y²=4x 開口向右、焦點 F(1,0) 紅點、準線 x=−1 紅虛線、點 P(1,2) 到焦與到準線兩段各標「2」等長；#62 等軸、右緣0%）。
+- 拋物線（t_sub，conic 入門）＝定義：到焦點距離=到準線距離的點集合；標準式（開口向右）y²=4px、頂點(0,0)、焦點(p,0)、準線 x=−p、對稱軸 x 軸；由方程式對照 4p 求 p。以 y²=4x 貫穿：p=1、焦點(1,0)、準線 x=−1；(1,2)與(4,4)到焦=到準線。
+- ★repro：binding＝math_checks6::conic.parabola；單元引 math_checks7::conic.parabola（本 session 新增 y²=4x⇒p=1/焦點(1,0)/準線x=−1/(1,2)等距2/(4,4)等距5，.venv PASS）。
+- practice：Q1 焦點(1,0)、Q2 準線 x=−1、Q3 定義概念、Q4 y²=8x 焦點(2,0) transfer。
+- ★收斂史（本單元共抓 2 真實缺陷）：R2 CONFIRMED major(correctness)＝Q4「(4,0)」誘答「忘了除以4」會得 p=8 撞 (8,0) 選項、誤植錯誤路徑→de-converge 改「只除以2」；R1(修後) CONFIRMED minor(readability)＝Q3「到x軸=到y軸」誘答用「y=x 附近」不精確(該軌跡=y=x 與 y=−x 兩直線、非附近區域、漏一支)→de-converge 改精確。★教訓：(a)每個誘答說明所述錯誤路徑必須真的產生該選項、且不與別的 distractor 撞（.venv 反算每條路徑）；(b)軌跡/圖形描述要精確到「是哪條線」不用「附近」這種模糊詞。
+- 下一步：conic 第 2 單元＝ellipse（橢圓定義/標準式/焦點長短軸；已有 math_checks6 repro）；conic 共 7 KP，剩 6（ellipse/hyperbola/eccentricity/translation/line-intersection/reflection-apply）。接著 complex(6)/finmath(6)/matrix(5)/space(5)/determinant(2)/linprog(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 07:11 ★★ vector geometry-apply 向量在幾何證明與重心/共線應用 5/5 DONE-GATE 全綠 → **vector strand 11/11 全收（整個向量島完成）** ★★
 - **math_vector_geometry_apply frozen `8e2dcbdf954b05f8`**（R1-R5 連 5 clean、L3 每輪 exit 0；R1-R5 一次過無 panel-confirmed defect；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==8e2dcbdf／per_page_5clean 567/567 頁 0 違規（geometry_apply absent）／repro PASS／iPad 四角色簽核（等軸 2D、三角形 P(0,0)/Q(6,0)/R(3,6) 淺藍、中線 RM 虛線、重心 G=(3,2) 紅點標 2:1；#62 等軸、右緣0%）。
 - 向量幾何應用（t_sub，prereq space-dot-product）＝共線判定 A,B,C 共線 ⟺ AB 與 AC 平行 ⟺ AB×AC=0；中點 M=(A+B)/2；分點 P=(nA+mB)/(m+n)（AP:PB=m:n、從 A、權重交叉）；三角形重心 G=(A+B+C)/3（三頂點平均、分中線 2:1）。以共線 (1,1)(3,2)(7,4)（AB×AC=0）、重心三角形 (0,0)(6,0)(3,6)→(3,2) 貫穿。
