@@ -7,6 +7,12 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-16 14:12 stats strand sampling-survey 抽樣調查 5/5 DONE-GATE 全綠（t_sub 高中補充，★母體→樣本 SVG）→ stats 17/18
+- **math_stats_sampling_survey frozen `d56da8eed10311be`**（R1-R5 連 5 clean、L3 每輪 exit 0 以實際檔案行文字建檔；R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==d56da8ee／per_page_5clean sampling_survey absent／iPad 四角色簽核（母體藍框→綠箭頭→樣本綠框、語意化配色、右緣0%）。
+- 抽樣調查（t_sub）＝母體/樣本、普查 vs 抽樣、簡單隨機抽樣每個體機率 n/N、抽樣要有代表性避免偏差。teach figure 母體 N=100→隨機抽樣→樣本 n=10、機率 10/100=0.1（repro math_checks7 .venv 驗）。practice：Q1 機率(50/200=0.25)、Q2 用部分推估整體=抽樣調查、Q3 隨機=每個體機率相同、Q4 只在籃球場問=偏差失真。prereq＝correlation。
+- ★R1 viz 鏡 CONFIRMED（owning-expert 決定性）：母體框 20 點 literal vs 樣本框 10 點 literal 混用→讀者可能誤讀與 10/100 矛盾。首輪直接修：母體框末加「⋯」＋「（點為示意，共 100 人）」、alt 同步（#33）、re-froze d56da8ee、4-role 重簽。**教訓（已體現）：schematic 點圖若另一框是 literal count，需明確加示意標記避免 1:1 count 誤讀**。R1 重跑→R5 全 clean。
+- 下一步：stats 最後 1 單元 risk-decision（風險/期望值決策 t_sub）→ 完成整個 stats strand 18/18；接著 calc(20)/vector(11)/conic(7)/complex(6)/finmath(6)/space(5)/matrix(5)/linprog(2)/determinant(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-16 13:50 stats strand regression-line 最適直線與預測 5/5 DONE-GATE 全綠（t_adv 高中，★散布圖+最適直線 SVG）→ stats 16/18
 - **math_stats_regression_line frozen `b41394ae0fcabb97`**（R1-R5 連 5 clean、L3 每輪 exit 0；R5 最終輪 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0 self／question_correctness CLEAN／pedagogy 0 hard／content_sha==b41394ae／per_page_5clean regression_line absent／iPad 四角色簽核（散布圖 5 藍點＋綠最適直線貼近點群、y=2x 標籤不壓點、軸 x/y、右緣0%）。
 - 最適直線/迴歸（t_adv）＝最能代表散布圖趨勢、盡量靠近所有點的直線（不精確連每點）；斜率正→正相關、負→負相關；把值代入「給定的」直線可預測；資料範圍內較可靠、外插要小心。teach figure 散布圖+最適直線 y=2x（repro polyfit 斜率2 截距0）。practice：Q1 代入預測(y=3x,x=4→12)、Q2 斜率負→負相關、Q3 用途(代表趨勢+預測)、Q4 外插最不可靠。只定性+用給定直線代入、不教最小平方法公式。prereq＝correlation。
