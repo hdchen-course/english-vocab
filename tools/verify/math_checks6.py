@@ -245,11 +245,13 @@ def lp_feasible():
     assert 0+3*2 == 6 and 4+0 == 4 and not feas(4, 4)
     return _ok("linprog.feasible-region", "限制式 x,y≥0,x+y≤4,x+3y≤6 可行區頂點(0,0)(4,0)(3,1)(0,2)；(3,1)=x+y=4∩x+3y=6；(4,4) 不可行")
 def lp_optimize():
-    # 目標 z=3x+2y 在上述頂點：max 在 (4,0)=12（頂點法）
-    verts = [(0, 0), (4, 0), (0, 4)]
-    z = {v: 3*v[0]+2*v[1] for v in verts}
-    assert max(z.values()) == 12 and max(z, key=z.get) == (4, 0)
-    return _ok("linprog.objective-optimize", "max z=3x+2y 於可行區頂點=(4,0)→12")
+    # 承 feasible-region 同可行區頂點 (0,0)(4,0)(3,1)(0,2)；目標 z=2x+3y 頂點法（角點定理）
+    verts = [(0, 0), (4, 0), (3, 1), (0, 2)]
+    z = {v: 2*v[0]+3*v[1] for v in verts}
+    assert z == {(0, 0): 0, (4, 0): 8, (3, 1): 9, (0, 2): 6}   # 逐頂點代入
+    assert max(z.values()) == 9 and max(z, key=z.get) == (3, 1)   # 最大 9 於 (3,1)（兩斜線交點）
+    assert min(z.values()) == 0 and min(z, key=z.get) == (0, 0)   # 最小 0 於 (0,0)
+    return _ok("linprog.objective-optimize", "目標 z=2x+3y 於可行區頂點 (0,0)=0,(4,0)=8,(3,1)=9,(0,2)=6 → max 9 於(3,1)、min 0 於(0,0)（頂點法/角點定理）")
 
 
 CHECKS = {s: fn for s, fn in {

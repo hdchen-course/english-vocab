@@ -1,0 +1,200 @@
+{
+ "_note": "數學島 線性規劃（linprog）strand 單元（第2、末）。知識點 math.t_sub.linprog.objective-optimize（線性規劃：目標函數的最佳化／頂點法）。tier=t_sub、exam=分科-數乙。全繁體零簡體零 PRC 詞（用「坐標」非「座標」）。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次：線性規劃 (linear programming)、目標函數 (objective function)、角點定理 (corner-point theorem)）。前置＝feasible-region（已會把限制式畫成可行解區域、找頂點）。★scope（t_sub）：(1) 目標函數 z=ax+by 是要求最大/最小的式子；(2) 角點定理（頂點法）：線性目標函數在有界可行解區域上的最大值與最小值一定出現在頂點，故把每個頂點代入 z 比大小即可。承上一單元同可行區：限制式 x≥0,y≥0,x+y≤4,x+3y≤6 → 頂點 (0,0)(4,0)(3,1)(0,2)；目標 z=2x+3y 代入得 0、8、9、6 → 最大 9 在 (3,1)、最小 0 在 (0,0)。不含無界區最佳化的存在性討論細節、不含單體法 (simplex)。repro（tools/verify/math_checks6.py::linprog.objective-optimize，repro_gate .venv PASS、registry 指紋 26831b1a88ec0810；本 session 強化改用同可行區＋z=2x+3y 逐頂點 0/8/9/6、max 9@(3,1)、min 0@(0,0) 並誠實更新指紋）。★與上一單元 feasible-region 共用同範例區。★自檢（math-unit defect-classes）：figure＝可行區四邊形＋四頂點各標 z 值（(0,0)z=0、(4,0)z=8、(0,2)z=6、(3,1)z=9 綠色較大點標「最大」）＋目標 z=2x+3y，座標幾何正確、z 值與 teach/claim 逐字一致、標籤移出免碰（#2）、alt 與 SVG text 逐字一致、★figure 標題只承諾頂點法示意（#4/#46）；practice 四答案＝{9(Q1 (3,1)代入),9(Q2 max),(3,1)(Q3 max 頂點),角點定理(Q4 概念)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 係數對調11/漏乘 y 係數7/丟第二項6；Q2 只比軸頂點8/取(0,2)值6/取最小0；Q3 各為非最大頂點；Q4 正中央/只檢查軸頂點/每點都一樣）、四 z 值兩兩相異（#29、#57：0/8/9/6 皆相異且 Q1 distractor 11/7/6 與答 9 相異）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）。claim kind=fact。figure-only example 無 body。",
+ "page": "math_linprog_objective_optimize.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.linprog.objective-optimize",
+   "title_zh": "線性規劃：目標函數的最佳化（頂點法）",
+   "can_do": "我會在可行解區域裡求『目標函數 (objective function)』z ＝ ax ＋ by 的最大值或最小值。我知道『角點定理 (corner-point theorem)』：線性目標函數在有界的可行解區域上，最大值和最小值一定出現在頂點，所以我只要把每個頂點代進 z、比大小，就能找到答案（這叫頂點法）。",
+   "situation_group": "線性規劃：頂點法最佳化",
+   "subject": "math",
+   "strand": "linprog",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.linprog.objective-optimize"
+   ],
+   "prerequisites": [
+    "math.t_sub.linprog.feasible-region"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-lp-objective",
+     "text": "『線性規劃 (linear programming)』的『目標函數 (objective function)』z ＝ ax ＋ by，是我們要在可行解區域裡求最大或最小的那個式子。例：z ＝ 2x ＋ 3y。a、b 是常數，x、y 要在可行解區域內取值。",
+     "kind": "fact",
+     "source_refs": [
+      "線性規劃 目標函數（高中 分科測驗 數乙）"
+     ],
+     "verification_ref": "目標函數 z=ax+by；例 z=2x+3y（math_checks6::linprog.objective-optimize .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-lp-cornerpoint",
+     "text": "『角點定理 (corner-point theorem)』：線性目標函數 z ＝ ax ＋ by 在一個有界的可行解區域上，最大值與最小值一定出現在區域的「頂點」。所以求最佳值的方法（頂點法）＝把每個頂點代入 z、比大小。例：可行區頂點 (0, 0)、(4, 0)、(3, 1)、(0, 2)，目標 z ＝ 2x ＋ 3y，代入得 0、8、9、6，所以最大值 9 在 (3, 1)、最小值 0 在 (0, 0)。",
+     "kind": "fact",
+     "source_refs": [
+      "線性規劃 角點定理／頂點法（高中 分科測驗 數乙）"
+     ],
+     "verification_ref": "z=2x+3y 於頂點 (0,0)=0,(4,0)=8,(3,1)=9,(0,2)=6 → max 9@(3,1)、min 0@(0,0)（math_checks6::linprog.objective-optimize .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.linprog.objective-optimize"
+     ],
+     "body": "上一單元學會把限制式畫成可行解區域、找出頂點；這一單元學在裡面求『目標函數 (objective function)』z ＝ ax ＋ by 的最大或最小值，用的是『角點定理 (corner-point theorem)』——又叫頂點法。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.linprog.objective-optimize"
+     ],
+     "body": "角點定理：線性目標函數在「有界」的可行解區域上，最大值與最小值一定出現在「頂點」。所以頂點法 ＝ ① 找出可行區所有頂點；② 把每個頂點代進 z；③ 比大小，最大的就是最大值、最小的就是最小值。例 頂點 (0, 0)、(4, 0)、(3, 1)、(0, 2)，目標 z ＝ 2x ＋ 3y：代入得 0、8、9、6 → 最大值 9 在 (3, 1)、最小值 0 在 (0, 0)。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.linprog.objective-optimize"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>頂點法：各頂點代入目標函數，挑最大／最小</text><line x1='40' y1='140' x2='322' y2='140' stroke='#99a7b5' stroke-width='1'/><polygon points='322,140 316,137 316,143' fill='#99a7b5'/><text x='326' y='143' font-family='sans-serif' font-size='7.5' fill='#99a7b5' text-anchor='start'>x</text><line x1='40' y1='140' x2='40' y2='22' stroke='#99a7b5' stroke-width='1'/><polygon points='40,22 37,28 43,28' fill='#99a7b5'/><text x='34' y='26' font-family='sans-serif' font-size='7.5' fill='#99a7b5' text-anchor='end'>y</text><line x1='208' y1='140' x2='40' y2='22' stroke='#c7cfd8' stroke-width='1'/><line x1='292' y1='140' x2='40' y2='80' stroke='#c7cfd8' stroke-width='1'/><polygon points='40,140 208,140 166,110 40,80' fill='#e6edf3' stroke='#2f6f54' stroke-width='1.4'/><text x='248' y='34' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='start' font-weight='bold'>z ＝ 2x ＋ 3y</text><circle cx='40' cy='140' r='2.4' fill='#c2535d'/><text x='46' y='152' font-family='sans-serif' font-size='7' fill='#33475b' text-anchor='start'>(0, 0) z＝0</text><circle cx='208' cy='140' r='2.4' fill='#c2535d'/><text x='214' y='140' font-family='sans-serif' font-size='7' fill='#33475b' text-anchor='start'>(4, 0) z＝8</text><circle cx='40' cy='80' r='2.4' fill='#c2535d'/><text x='36' y='76' font-family='sans-serif' font-size='7' fill='#33475b' text-anchor='end'>(0, 2) z＝6</text><circle cx='166' cy='110' r='3.6' fill='#2f6f54'/><text x='174' y='108' font-family='sans-serif' font-size='7.5' fill='#2f6f54' text-anchor='start' font-weight='bold'>(3, 1) z＝9 最大</text></svg>",
+      "alt": "標題「頂點法：各頂點代入目標函數，挑最大／最小」。圖中是一個坐標平面，淡藍色的可行解區域是一個四邊形（和上一單元同一塊）。右上方標著目標函數「z ＝ 2x ＋ 3y」。四個頂點都標了代入後的 z 值：(0, 0) 的 z＝0、(4, 0) 的 z＝8、(0, 2) 的 z＝6，以及用較大綠點標出的 (3, 1) 的 z＝9，旁邊寫「最大」。可以看出最大值 9 出現在頂點 (3, 1)。",
+      "caption": "頂點法：把可行解區域的每個頂點代進目標函數 z ＝ 2x ＋ 3y。(0, 0) 得 0、(4, 0) 得 8、(3, 1) 得 9、(0, 2) 得 6。比大小後，最大值是 9（在綠色的頂點 (3, 1)），最小值是 0（在 (0, 0)）。注意最大值出現在兩條斜邊界線的交點 (3, 1)，不是只看坐標軸上的頂點就找得到——所有頂點都要代進去比。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.linprog.objective-optimize"
+     ],
+     "body": "最後練目標函數的最佳化。重點：(1) 目標函數 z ＝ ax ＋ by 是要求最大／最小的式子；(2) 角點定理——最大值與最小值一定在頂點；(3) 頂點法 ＝ 把每個頂點（含兩條邊界線的交點，不只坐標軸上的）都代進 z、比大小。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "目標函數 z ＝ 2x ＋ 3y，在頂點 (3, 1) 代入後的值是多少？",
+     "answer": "9",
+     "kp_ids": [
+      "math.t_sub.linprog.objective-optimize"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.linprog.objective-optimize"
+     ],
+     "options": [
+      "9",
+      "11",
+      "7",
+      "6"
+     ],
+     "distractor_rationales": {
+      "11": "這是把 x、y 的係數對調成 z ＝ 3x ＋ 2y 來算（3×3 ＋ 2×1 ＝ 11）：題目是 z ＝ 2x ＋ 3y ＝ 2×3 ＋ 3×1 ＝ 9。",
+      "7": "這是把 y 的係數 3 漏乘了（2×3 ＋ 1×1 ＝ 7）：要 2×3 ＋ 3×1 ＝ 6 ＋ 3 ＝ 9。",
+      "6": "這是只算了 2x（2×3 ＝ 6）、漏掉 ＋ 3y：9 ＝ 6 ＋ 3。"
+     },
+     "answer_evidence": [
+      "c-lp-cornerpoint"
+     ],
+     "feedback": "z ＝ 2x ＋ 3y 在 (3, 1)：2×3 ＋ 3×1 ＝ 6 ＋ 3 ＝ 9。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "可行解區域的頂點是 (0, 0)、(4, 0)、(3, 1)、(0, 2)。用頂點法，目標函數 z ＝ 2x ＋ 3y 的最大值是多少？",
+     "answer": "9",
+     "kp_ids": [
+      "math.t_sub.linprog.objective-optimize"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.linprog.objective-optimize"
+     ],
+     "options": [
+      "9",
+      "8",
+      "6",
+      "0"
+     ],
+     "distractor_rationales": {
+      "8": "8 是頂點 (4, 0) 的值；但只比坐標軸上的頂點會漏掉兩斜線交點 (3, 1)＝9 ＞ 8，最大值是 9。",
+      "6": "6 是頂點 (0, 2) 的值，不是最大；代入全部頂點後最大的是 (3, 1) 的 9。",
+      "0": "0 是頂點 (0, 0) 的值，那是最小值；題目要的是最大值 9（在 (3, 1)）。"
+     },
+     "answer_evidence": [
+      "c-lp-cornerpoint"
+     ],
+     "feedback": "四頂點代入 z ＝ 2x ＋ 3y：(0, 0)→0、(4, 0)→8、(3, 1)→9、(0, 2)→6，最大值是 9。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "承上題，目標函數 z ＝ 2x ＋ 3y 的最大值出現在哪一個頂點？",
+     "answer": "(3, 1)",
+     "kp_ids": [
+      "math.t_sub.linprog.objective-optimize"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.linprog.objective-optimize"
+     ],
+     "options": [
+      "(3, 1)",
+      "(4, 0)",
+      "(0, 2)",
+      "(0, 0)"
+     ],
+     "distractor_rationales": {
+      "(4, 0)": "(4, 0) 的 z ＝ 2×4 ＋ 3×0 ＝ 8，不是最大；(3, 1) 的 z ＝ 9 才最大。",
+      "(0, 2)": "(0, 2) 的 z ＝ 2×0 ＋ 3×2 ＝ 6，不是最大；最大在 (3, 1)。",
+      "(0, 0)": "(0, 0) 的 z ＝ 0 是最小值，不是最大；最大在 (3, 1)。"
+     },
+     "answer_evidence": [
+      "c-lp-cornerpoint"
+     ],
+     "feedback": "各頂點的 z 值 0、8、9、6 中最大的是 9，出現在頂點 (3, 1)。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "角點定理（頂點法的根據）說的是什麼？",
+     "answer": "線性目標函數在有界可行解區域上的最大值和最小值，一定出現在區域的頂點",
+     "kp_ids": [
+      "math.t_sub.linprog.objective-optimize"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.linprog.objective-optimize"
+     ],
+     "options": [
+      "線性目標函數在有界可行解區域上的最大值和最小值，一定出現在區域的頂點",
+      "目標函數的最大值一定出現在可行解區域的正中央",
+      "只要檢查坐標軸上的頂點，就一定能找到最大值",
+      "可行解區域裡每一個點的目標函數值都一樣"
+     ],
+     "distractor_rationales": {
+      "目標函數的最大值一定出現在可行解區域的正中央": "不對：線性目標函數的最佳值出現在「頂點」（邊界的角），不是區域正中央。",
+      "只要檢查坐標軸上的頂點，就一定能找到最大值": "不對：最大值可能出現在兩條斜邊界線的交點（如 (3, 1)），只檢查坐標軸上的頂點會漏掉它；要代入「所有」頂點。",
+      "可行解區域裡每一個點的目標函數值都一樣": "不對：z ＝ ax ＋ by 隨 x、y 改變而不同（例 (0, 0) 得 0、(3, 1) 得 9），不是每點都一樣。"
+     },
+     "answer_evidence": [
+      "c-lp-cornerpoint"
+     ],
+     "feedback": "角點定理：線性目標函數在有界可行解區域上的最大值與最小值一定出現在頂點，所以把每個頂點代入比大小即可。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（目標函數 z=ax+by 是要求最大/最小的式子；角點定理＝線性目標函數在有界可行解區域上的最大值與最小值一定在頂點；頂點法＝把每個頂點代入 z 比大小。例 頂點 (0,0)(4,0)(3,1)(0,2) 代 z=2x+3y 得 0、8、9、6 → 最大 9 在 (3,1)、最小 0 在 (0,0)；三鐵律＝最佳值在頂點、要代入所有頂點含斜線交點、比大小挑最大/最小）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
