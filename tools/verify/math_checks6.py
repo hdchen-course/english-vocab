@@ -106,8 +106,12 @@ def mat_mult():
     return _ok("matrix.multiplication", "矩陣乘法以列乘行（內積）：[[1,2],[3,4]]·[[5,6],[7,8]]=[[19,22],[43,50]]；且 AB≠BA")
 def mat_inverse():
     A = Matrix([[1, 2], [3, 4]])
+    assert A.det() == -2                                 # det=ad−bc=1·4−2·3=−2
+    # 2×2 反方陣公式 A⁻¹ = 1/(ad−bc)·[[d,−b],[−c,a]]
+    assert A.inv() == Rational(1, -2) * Matrix([[4, -2], [-3, 1]])
     assert A*A.inv() == sp.eye(2) and A.inv() == Matrix([[-2, 1], [Rational(3, 2), Rational(-1, 2)]])
-    return _ok("matrix.inverse", "A·A⁻¹=I；[[1,2],[3,4]]⁻¹=[[−2,1],[3/2,−1/2]]")
+    assert Matrix([[1, 2], [2, 4]]).det() == 0           # det=0 → 不可逆
+    return _ok("matrix.inverse", "det=ad−bc；[[1,2],[3,4]] det=−2，A⁻¹=1/(−2)[[4,−2],[−3,1]]=[[−2,1],[3/2,−1/2]]，A·A⁻¹=I；det=0 不可逆")
 def mat_linear_system():
     A, bb = Matrix([[2, 1], [1, 3]]), Matrix([5, 10])
     x = A.solve(bb)

@@ -1,0 +1,220 @@
+{
+ "_note": "數學島 矩陣（matrix）strand 單元（第3/5）。知識點 math.t_sub.matrix.inverse（反方陣的求法與性質）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次：方陣 (square matrix)、行列式 (determinant)、反方陣 (inverse matrix)、單位矩陣 (identity matrix)、可逆 (invertible)）。前置假設：已會矩陣乘法（前一單元）、基本四則與分數。★scope（t_sub）：(1) 2×2 行列式 det＝ad−bc（A=[[a,b],[c,d]]）；例 [[1,2],[3,4]] det＝1×4−2×3＝−2。(2) det≠0 時反方陣 A⁻¹＝1/(ad−bc)·[[d,−b],[−c,a]]（主對角 a,d 對調、副對角 b,c 變號、再除以 det）；例 [[1,2],[3,4]]⁻¹＝1/(−2)·[[4,−2],[−3,1]]＝[[−2,1],[1.5,−0.5]]。(3) A·A⁻¹＝單位矩陣 I＝[[1,0],[0,1]]。(4) det＝0 時沒有反方陣（不可逆）；例 [[1,2],[2,4]] det＝0。不含高階反方陣、不含伴隨矩陣一般式。repro（tools/verify/math_checks6.py::matrix.inverse，repro_gate .venv PASS、registry 指紋 6408b04ae657e504；本 session 強化加 det=ad−bc、2×2 公式、det=0 不可逆並誠實更新指紋）。★自檢（math-unit defect-classes）：figure＝A→A⁻¹ 流程（A 標 det=−2、箭頭標『對調主對角｜副對角變號｜÷(−2)』、A⁻¹ 綠），座標幾何正確、數字置格中央不碰括號（#2）、alt 與 SVG text 逐字一致且方向相符（#33）、★figure 標題只承諾反方陣求法流程（#4/#46，det 定義與不可逆由 teach＋practice 補）；practice 四答案＝{−2(Q1 det),[[−2,1],[1.5,−0.5]](Q2 A⁻¹),[[1,0],[0,1]](Q3 A·A⁻¹=I),[[1,2],[2,4]](Q4 不可逆)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 顛倒bc−ad得2/相加ad+bc得10/只算−bc得−6；Q2 沒除det[[4,−2],[−3,1]]/只除沒對調變號/對調除但沒變號；Q3 零矩陣/全1/原矩陣；Q4 det=−2可逆/det=6可逆/det=1可逆）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_matrix_inverse.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.matrix.inverse",
+   "title_zh": "反方陣的求法與性質",
+   "can_do": "我知道 2×2『方陣 (square matrix)』A ＝ [[a, b], [c, d]] 的『行列式 (determinant)』det ＝ ad − bc。我知道當 det 不等於 0 時，它有『反方陣 (inverse matrix)』A⁻¹ ＝ 1/(ad − bc) × [[d, −b], [−c, a]]，就是把主對角的 a、d 對調，副對角的 b、c 變號，再整個除以 det。我知道 A 乘上 A⁻¹ 會得到『單位矩陣 (identity matrix)』I ＝ [[1, 0], [0, 1]]。我也知道當 det ＝ 0 時，這個矩陣沒有反方陣（不是『可逆 (invertible)』的）。",
+   "situation_group": "矩陣：反方陣",
+   "subject": "math",
+   "strand": "matrix",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.matrix.inverse"
+   ],
+   "prerequisites": [],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-mi-det",
+     "text": "2×2 方陣 A ＝ [[a, b], [c, d]] 的行列式 det ＝ ad − bc（主對角相乘減去副對角相乘）。例：[[1, 2], [3, 4]] 的 det ＝ 1×4 − 2×3 ＝ 4 − 6 ＝ −2。",
+     "kind": "definition",
+     "source_refs": [
+      "2×2 行列式（高中 選修數學）"
+     ],
+     "verification_ref": "det([[1,2],[3,4]])=1·4−2·3=−2（math_checks6::matrix.inverse .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-mi-formula",
+     "text": "當 det ＝ ad − bc 不等於 0 時，反方陣 A⁻¹ ＝ 1/(ad − bc) × [[d, −b], [−c, a]]：把主對角的 a、d 對調，副對角的 b、c 變號，再整個除以 det。例：[[1, 2], [3, 4]]⁻¹ ＝ 1/(−2) × [[4, −2], [−3, 1]] ＝ [[−2, 1], [1.5, −0.5]]。",
+     "kind": "definition",
+     "source_refs": [
+      "2×2 反方陣公式（高中 選修數學）"
+     ],
+     "verification_ref": "[[1,2],[3,4]]⁻¹=1/(−2)[[4,−2],[−3,1]]=[[−2,1],[3/2,−1/2]]（math_checks6::matrix.inverse .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-mi-identity",
+     "text": "反方陣的意思是「乘回去會變成單位矩陣」：A × A⁻¹ ＝ 單位矩陣 I ＝ [[1, 0], [0, 1]]（主對角都是 1、其餘都是 0）。單位矩陣 I 在矩陣乘法裡的角色，就像數字裡的 1。",
+     "kind": "definition",
+     "source_refs": [
+      "反方陣與單位矩陣（高中 選修數學）"
+     ],
+     "verification_ref": "A·A⁻¹=I=[[1,0],[0,1]]（math_checks6::matrix.inverse .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-mi-singular",
+     "text": "當 det ＝ ad − bc ＝ 0 時，公式要除以 0，所以沒有反方陣，這個矩陣是「不可逆」的。例：[[1, 2], [2, 4]] 的 det ＝ 1×4 − 2×2 ＝ 0，沒有反方陣。",
+     "kind": "definition",
+     "source_refs": [
+      "不可逆矩陣（高中 選修數學）"
+     ],
+     "verification_ref": "det([[1,2],[2,4]])=0 不可逆（math_checks6::matrix.inverse .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.matrix.inverse"
+     ],
+     "body": "這一單元學反方陣：先算行列式 det，再用公式把矩陣「反過來」。反方陣就像數字的倒數——數字 a 的倒數是 1/a，矩陣 A 的反方陣 A⁻¹ 乘回去會得到單位矩陣。先學 det，再學公式，再看乘回去變單位矩陣，最後看什麼時候沒有反方陣。最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.matrix.inverse"
+     ],
+     "body": "① 行列式：A ＝ [[a,b],[c,d]] 的 det ＝ ad − bc。例 [[1,2],[3,4]] → 1×4 − 2×3 ＝ −2。② 反方陣（det≠0）：A⁻¹ ＝ 1/(ad−bc) × [[d,−b],[−c,a]]——主對角 a,d 對調、副對角 b,c 變號、再除以 det。例 [[1,2],[3,4]]⁻¹ ＝ 1/(−2) × [[4,−2],[−3,1]] ＝ [[−2,1],[1.5,−0.5]]。③ 性質：A × A⁻¹ ＝ 單位矩陣 [[1,0],[0,1]]。④ det＝0 就不能除，沒有反方陣。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.matrix.inverse"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>反方陣：主對角對調、副對角變號、再除以 det</text><g stroke='#33475b' stroke-width='1.4' fill='none'><path d='M34 44 L28 44 L28 104 L34 104'/><path d='M78 44 L84 44 L84 104 L78 104'/></g><text x='46' y='68' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>1</text><text x='68' y='68' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>2</text><text x='46' y='96' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>3</text><text x='68' y='96' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>4</text><text x='56' y='124' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>det ＝ 1×4 − 2×3 ＝ −2</text><line x1='98' y1='74' x2='214' y2='74' stroke='#99a7b5' stroke-width='1.4'/><polygon points='214,74 207,70 207,78' fill='#99a7b5'/><text x='156' y='60' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='middle'>對調 1,4｜2,3 變號</text><text x='156' y='90' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='middle'>再 ÷ (−2)</text><g stroke='#2f6f54' stroke-width='1.4' fill='none'><path d='M240 44 L234 44 L234 104 L240 104'/><path d='M326 44 L332 44 L332 104 L326 104'/></g><text x='260' y='68' font-family='sans-serif' font-size='12' fill='#2f6f54' text-anchor='middle'>−2</text><text x='306' y='68' font-family='sans-serif' font-size='12' fill='#2f6f54' text-anchor='middle'>1</text><text x='262' y='96' font-family='sans-serif' font-size='12' fill='#2f6f54' text-anchor='middle'>1.5</text><text x='306' y='96' font-family='sans-serif' font-size='12' fill='#2f6f54' text-anchor='middle'>−0.5</text><text x='283' y='124' font-family='sans-serif' font-size='8.5' fill='#2f6f54' text-anchor='middle'>A⁻¹</text><text x='180' y='150' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='middle'>1/(−2) × [[4, −2], [−3, 1]] ＝ [[−2, 1], [1.5, −0.5]]；驗證 A × A⁻¹ ＝ [[1, 0], [0, 1]]</text></svg>",
+      "alt": "標題「反方陣：主對角對調、副對角變號、再除以 det」。左邊一個 2×2 矩陣 [[1, 2], [3, 4]]，下面寫「det ＝ 1×4 − 2×3 ＝ −2」。中間一個往右的灰色箭頭，箭頭上下寫「對調 1,4｜2,3 變號」和「再 ÷ (−2)」。右邊綠色的反方陣，第一列 −2、1，第二列 1.5、−0.5，標「A⁻¹」。最下面一行寫「1/(−2) × [[4, −2], [−3, 1]] ＝ [[−2, 1], [1.5, −0.5]]；驗證 A × A⁻¹ ＝ [[1, 0], [0, 1]]」。",
+      "caption": "求 [[1, 2], [3, 4]] 的反方陣：先算 det ＝ 1×4 − 2×3 ＝ −2（不等於 0，所以可逆）。接著把主對角的 1、4 對調、副對角的 2、3 變號，得到 [[4, −2], [−3, 1]]，再整個除以 det（−2），得到 A⁻¹ ＝ [[−2, 1], [1.5, −0.5]]。把 A 乘上 A⁻¹ 會剛好得到單位矩陣 [[1, 0], [0, 1]]，這就是反方陣的意義。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.matrix.inverse"
+     ],
+     "body": "最後練反方陣。重點：(1) 先算 det ＝ ad − bc（主對角相乘減副對角相乘，別把順序顛倒或改成相加）；(2) 公式三步——主對角對調、副對角變號、再除以 det，三步缺一不可；(3) A × A⁻¹ 一定是單位矩陣 [[1,0],[0,1]]；(4) det ＝ 0 時沒有反方陣。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "矩陣 [[1, 2], [3, 4]] 的行列式 det（＝ ad − bc）是多少？",
+     "answer": "−2",
+     "kp_ids": [
+      "math.t_sub.matrix.inverse"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.matrix.inverse"
+     ],
+     "options": [
+      "−2",
+      "2",
+      "10",
+      "−6"
+     ],
+     "distractor_rationales": {
+      "2": "把相減的順序顛倒了，算成 bc − ad ＝ 2×3 − 1×4 ＝ 2：行列式是 ad − bc ＝ 1×4 − 2×3 ＝ −2。",
+      "10": "把減號看成加號，算成 ad ＋ bc ＝ 4 ＋ 6 ＝ 10：行列式是相減 ad − bc ＝ 4 − 6 ＝ −2。",
+      "−6": "只算了副對角 −bc ＝ −(2×3) ＝ −6，漏掉主對角 ad：要 ad − bc ＝ 4 − 6 ＝ −2。"
+     },
+     "answer_evidence": [
+      "c-mi-det"
+     ],
+     "feedback": "det ＝ ad − bc ＝ 1×4 − 2×3 ＝ 4 − 6 ＝ −2。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "[[1, 2], [3, 4]] 的反方陣 A⁻¹ 是多少？（det ＝ −2）",
+     "answer": "[[−2, 1], [1.5, −0.5]]",
+     "kp_ids": [
+      "math.t_sub.matrix.inverse"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.matrix.inverse"
+     ],
+     "options": [
+      "[[−2, 1], [1.5, −0.5]]",
+      "[[4, −2], [−3, 1]]",
+      "[[−0.5, −1], [−1.5, 2]]",
+      "[[−2, −1], [−1.5, −0.5]]"
+     ],
+     "distractor_rationales": {
+      "[[4, −2], [−3, 1]]": "對調、變號都做了，但忘了最後「除以 det」：[[4, −2], [−3, 1]] 還要整個除以 −2，才得 [[−2, 1], [1.5, −0.5]]。",
+      "[[−0.5, −1], [−1.5, 2]]": "只把每個元素除以 det（−2），卻沒有先對調主對角、副對角變號：正確要先變成 [[4, −2], [−3, 1]] 再除以 −2。",
+      "[[−2, −1], [−1.5, −0.5]]": "有對調、有除以 det，但副對角忘了變號（2、3 應變成 −2、−3）：正確是 [[−2, 1], [1.5, −0.5]]。"
+     },
+     "answer_evidence": [
+      "c-mi-formula"
+     ],
+     "feedback": "A⁻¹ ＝ 1/(−2) × [[4, −2], [−3, 1]] ＝ [[−2, 1], [1.5, −0.5]]（對調、變號、再除以 det）。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個方陣 A 乘上它的反方陣 A⁻¹，結果一定是什麼？",
+     "answer": "[[1, 0], [0, 1]]",
+     "kp_ids": [
+      "math.t_sub.matrix.inverse"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.matrix.inverse"
+     ],
+     "options": [
+      "[[1, 0], [0, 1]]",
+      "[[0, 0], [0, 0]]",
+      "[[1, 1], [1, 1]]",
+      "原本的矩陣 A"
+     ],
+     "distractor_rationales": {
+      "[[0, 0], [0, 0]]": "A × A⁻¹ 不是零矩陣：反方陣的定義就是乘回去得到單位矩陣 [[1, 0], [0, 1]]，像數字乘以倒數得 1。",
+      "[[1, 1], [1, 1]]": "單位矩陣不是「全部都 1」：它只有主對角線是 1、其餘是 0，即 [[1, 0], [0, 1]]。",
+      "原本的矩陣 A": "乘回去不會還是 A：A × A⁻¹ 會抵消成單位矩陣 [[1, 0], [0, 1]]（除非 A 本身就是單位矩陣）。"
+     },
+     "answer_evidence": [
+      "c-mi-identity"
+     ],
+     "feedback": "反方陣的定義：A × A⁻¹ ＝ 單位矩陣 [[1, 0], [0, 1]]。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "下面哪一個矩陣「沒有」反方陣（不可逆）？",
+     "answer": "[[1, 2], [2, 4]]",
+     "kp_ids": [
+      "math.t_sub.matrix.inverse"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.matrix.inverse"
+     ],
+     "options": [
+      "[[1, 2], [2, 4]]",
+      "[[1, 2], [3, 4]]",
+      "[[2, 0], [0, 3]]",
+      "[[1, 0], [0, 1]]"
+     ],
+     "distractor_rationales": {
+      "[[1, 2], [3, 4]]": "它的 det ＝ 1×4 − 2×3 ＝ −2，不等於 0，所以可逆（有反方陣）。",
+      "[[2, 0], [0, 3]]": "它的 det ＝ 2×3 − 0×0 ＝ 6，不等於 0，所以可逆。",
+      "[[1, 0], [0, 1]]": "這是單位矩陣，det ＝ 1×1 − 0×0 ＝ 1，不等於 0，可逆（它的反方陣就是自己）。"
+     },
+     "answer_evidence": [
+      "c-mi-singular"
+     ],
+     "feedback": "[[1, 2], [2, 4]] 的 det ＝ 1×4 − 2×2 ＝ 0，要除以 0，所以沒有反方陣（不可逆）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（行列式 det ＝ ad − bc，例 [[1,2],[3,4]] det＝−2；反方陣 A⁻¹ ＝ 1/(ad−bc)×[[d,−b],[−c,a]]＝主對角對調、副對角變號、再除以 det，例 [[1,2],[3,4]]⁻¹＝[[−2,1],[1.5,−0.5]]；A×A⁻¹＝單位矩陣 [[1,0],[0,1]]；det＝0 不可逆，例 [[1,2],[2,4]]；三鐵律＝det 是 ad−bc 不可顛倒或改相加、公式三步對調/變號/除 det 缺一不可、det=0 無反方陣）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
