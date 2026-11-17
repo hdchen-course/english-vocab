@@ -1,0 +1,209 @@
+{
+ "_note": "數學島 矩陣（matrix）strand 單元（第2/5）。知識點 math.t_sub.matrix.multiplication（矩陣乘法）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次：矩陣 (matrix)、列 (row)、行 (column)、內積 (dot product)、矩陣乘法 (matrix multiplication)）。前置假設：已會矩陣加減與係數積（前一單元）、基本四則運算。★scope（t_sub）：(1) 矩陣乘法 AB 的「第 i 列、第 j 行」元素 ＝ A 的第 i 列與 B 的第 j 行「對應相乘再相加」（內積）；例 [[1,2],[3,4]]·[[5,6],[7,8]]＝[[19,22],[43,50]]（左上 1×5＋2×7＝19）。(2) 只有當前一個矩陣的「行數」＝後一個矩陣的「列數」時才能相乘，結果大小 ＝（前者列數）×（後者行數）。(3) 矩陣乘法一般不可交換：AB 不一定等於 BA（例 BA＝[[23,34],[31,46]]≠AB）。不含反方陣、不含結合律/分配律證明。repro（tools/verify/math_checks6.py::matrix.multiplication，repro_gate .venv PASS、registry 指紋 64ab49e06d34a7cd；本 session 強化該 check 加入 [[1,2],[3,4]]·[[5,6],[7,8]]=[[19,22],[43,50]] 與 BA=[[23,34],[31,46]] 並誠實更新指紋）。★自檢（math-unit defect-classes）：figure＝A·B 列乘行內積（A 第1列 1,2 橫向highlight、B 第1行 5,7 直向highlight、結果左上 19 綠、底部算式 1×5＋2×7＝19），座標幾何正確、數字置格中央不碰括號（#2）、alt 與 SVG text 逐字一致且位置/方向相符（#33）、★figure 標題只承諾列乘行內積求單一元素（#4/#46，不可交換由 teach＋practice 補）；practice 四答案＝{[[19,22],[43,50]](Q1 乘積),2×2(Q2 結果大小),19(Q3 左上內積),AB不一定等於BA(Q4不可交換)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 逐格相乘[[5,12],[21,32]]/逐格相加[[6,8],[10,12]]/乘錯順序BA[[23,34],[31,46]]；Q2 取內維3×3/抄前者2×3/誤判不能乘；Q3 只乘第一項5/用B第一列1×5+2×6=17/算成右上1×6+2×8=22；Q4 一定相等/一定不相等/大小相同就相等）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_matrix_multiplication.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.matrix.multiplication",
+   "title_zh": "矩陣乘法",
+   "can_do": "我知道『矩陣乘法 (matrix multiplication)』AB 的「第 i 『列 (row)』、第 j 『行 (column)』」那個元素，是把 A 的第 i 列和 B 的第 j 行「對應位置相乘再相加」（這種運算叫『內積 (dot product)』）。我知道只有當前一個『矩陣 (matrix)』的行數等於後一個矩陣的列數時才能相乘，結果的大小是（前者列數）×（後者行數）。我也知道矩陣乘法一般不可交換：AB 不一定等於 BA。",
+   "situation_group": "矩陣：矩陣乘法",
+   "subject": "math",
+   "strand": "matrix",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.matrix.multiplication"
+   ],
+   "prerequisites": [],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-mm-def",
+     "text": "矩陣乘法 AB 的「第 i 列、第 j 行」元素，是把 A 的「第 i 列」和 B 的「第 j 行」對應位置相乘再相加（內積）。例：[[1, 2], [3, 4]] · [[5, 6], [7, 8]]，左上角 ＝ 第 1 列 (1, 2) 配第 1 行 (5, 7) ＝ 1×5 ＋ 2×7 ＝ 19，整個結果 ＝ [[19, 22], [43, 50]]。",
+     "kind": "definition",
+     "source_refs": [
+      "矩陣乘法的定義（高中 選修數學）"
+     ],
+     "verification_ref": "[[1,2],[3,4]]·[[5,6],[7,8]]=[[19,22],[43,50]]（math_checks6::matrix.multiplication .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-mm-cond",
+     "text": "只有當前一個矩陣的「行數」等於後一個矩陣的「列數」時，兩個矩陣才能相乘；相乘後結果矩陣的大小 ＝（前者的列數）×（後者的行數）。例如一個 2×3 的矩陣乘一個 3×2 的矩陣（中間的 3 相等），可以相乘，結果是 2×2。",
+     "kind": "definition",
+     "source_refs": [
+      "矩陣相乘的條件與大小（高中 選修數學）"
+     ],
+     "verification_ref": "相乘條件＝前者行數=後者列數、結果=前者列數×後者行數（定義；math_checks6 以 2×2 例 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-mm-noncommute",
+     "text": "矩陣乘法一般不可交換：AB 不一定等於 BA（順序會影響結果）。例：上面 AB ＝ [[19, 22], [43, 50]]，但 BA ＝ [[5, 6], [7, 8]] · [[1, 2], [3, 4]] ＝ [[23, 34], [31, 46]]，兩者不同。",
+     "kind": "definition",
+     "source_refs": [
+      "矩陣乘法不可交換（高中 選修數學）"
+     ],
+     "verification_ref": "AB=[[19,22],[43,50]]≠BA=[[23,34],[31,46]]（math_checks6::matrix.multiplication .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.matrix.multiplication"
+     ],
+     "body": "這一單元學矩陣乘法。它不是相同位置相乘，而是「列配行」：結果的某一格，是用前一個矩陣的某一列，配後一個矩陣的某一行，對應相乘再相加。先學這個算法，再學什麼時候可以相乘、結果多大，最後學為什麼不可交換。最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.matrix.multiplication"
+     ],
+     "body": "① 算法：AB 的「第 i 列第 j 行」＝ A 的第 i 列 配 B 的第 j 行，對應相乘再相加（內積）。例 [[1,2],[3,4]]·[[5,6],[7,8]]：左上 ＝ (1,2)·(5,7) ＝ 1×5＋2×7 ＝ 19，全部算完 ＝ [[19,22],[43,50]]。② 條件：前者行數 ＝ 後者列數 才能乘，結果大小 ＝ 前者列數 × 後者行數。③ 不可交換：AB 不一定等於 BA。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.matrix.multiplication"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>矩陣乘法：第 1 列配第 1 行，對應相乘再相加</text><rect x='32' y='68' width='52' height='20' fill='#e6edf3'/><g stroke='#33475b' stroke-width='1.4' fill='none'><path d='M38 54 L32 54 L32 118 L38 118'/><path d='M86 54 L92 54 L92 118 L86 118'/></g><text x='50' y='82' font-family='sans-serif' font-size='12' fill='#c2535d' text-anchor='middle'>1</text><text x='74' y='82' font-family='sans-serif' font-size='12' fill='#c2535d' text-anchor='middle'>2</text><text x='50' y='110' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>3</text><text x='74' y='110' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>4</text><text x='104' y='90' font-family='sans-serif' font-size='13' fill='#6b7785' text-anchor='middle'>·</text><rect x='124' y='60' width='20' height='56' fill='#e6edf3'/><g stroke='#33475b' stroke-width='1.4' fill='none'><path d='M124 54 L118 54 L118 118 L124 118'/><path d='M172 54 L178 54 L178 118 L172 118'/></g><text x='134' y='82' font-family='sans-serif' font-size='12' fill='#c2535d' text-anchor='middle'>5</text><text x='160' y='82' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>6</text><text x='134' y='110' font-family='sans-serif' font-size='12' fill='#c2535d' text-anchor='middle'>7</text><text x='160' y='110' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>8</text><text x='192' y='90' font-family='sans-serif' font-size='13' fill='#6b7785' text-anchor='middle'>＝</text><g stroke='#2f6f54' stroke-width='1.4' fill='none'><path d='M216 54 L210 54 L210 118 L216 118'/><path d='M276 54 L282 54 L282 118 L276 118'/></g><text x='226' y='82' font-family='sans-serif' font-size='12' fill='#2f6f54' text-anchor='middle' font-weight='bold'>19</text><text x='258' y='82' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>22</text><text x='226' y='110' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>43</text><text x='258' y='110' font-family='sans-serif' font-size='12' fill='#33475b' text-anchor='middle'>50</text><text x='180' y='140' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>左上 19 ＝ 第1列 (1, 2) 配第1行 (5, 7) ＝ 1×5 ＋ 2×7 ＝ 19</text></svg>",
+      "alt": "標題「矩陣乘法：第 1 列配第 1 行，對應相乘再相加」。左邊一個 2×2 矩陣 [[1, 2], [3, 4]]，第一列 1、2 用淡底色橫向標起來（紅字）。中間一個點號「·」。接著一個 2×2 矩陣 [[5, 6], [7, 8]]，第一行 5、7 用淡底色直向標起來（紅字）。一個等號「＝」。最右邊綠色的結果矩陣，第一列 19、22，第二列 43、50，其中左上角 19 用綠色粗體標起來。最下面一行寫「左上 19 ＝ 第1列 (1, 2) 配第1行 (5, 7) ＝ 1×5 ＋ 2×7 ＝ 19」。",
+      "caption": "矩陣乘法是「列配行」：結果左上角 19，是用左邊矩陣的第 1 列 (1, 2) 配右邊矩陣的第 1 行 (5, 7)，對應相乘再相加 ＝ 1×5 ＋ 2×7 ＝ 19。其他三格同樣地用對應的列配行算出來，整個結果 ＝ [[19, 22], [43, 50]]。注意：這跟相同位置相乘完全不同。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.matrix.multiplication"
+     ],
+     "body": "最後練矩陣乘法。重點：(1) 是「列配行」對應相乘再相加（內積），不是相同位置相乘；(2) 前者行數要等於後者列數才能乘，結果大小 ＝ 前者列數 × 後者行數；(3) 一般不可交換，AB 不一定等於 BA，順序很重要。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "[[1, 2], [3, 4]] · [[5, 6], [7, 8]] ＝ ？（矩陣乘法）",
+     "answer": "[[19, 22], [43, 50]]",
+     "kp_ids": [
+      "math.t_sub.matrix.multiplication"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.matrix.multiplication"
+     ],
+     "options": [
+      "[[19, 22], [43, 50]]",
+      "[[5, 12], [21, 32]]",
+      "[[6, 8], [10, 12]]",
+      "[[23, 34], [31, 46]]"
+     ],
+     "distractor_rationales": {
+      "[[5, 12], [21, 32]]": "這是把相同位置的元素相乘（1×5、2×6、3×7、4×8）：矩陣乘法是「列配行」對應相乘再相加，左上 ＝ 1×5＋2×7 ＝ 19。",
+      "[[6, 8], [10, 12]]": "這是相同位置相「加」（矩陣加法）的結果：題目是矩陣乘法，要用列配行，得 [[19, 22], [43, 50]]。",
+      "[[23, 34], [31, 46]]": "這是乘錯順序算成 BA（[[5,6],[7,8]]·[[1,2],[3,4]]）：題目是 AB，順序不同結果不同，AB ＝ [[19, 22], [43, 50]]。"
+     },
+     "answer_evidence": [
+      "c-mm-def"
+     ],
+     "feedback": "列配行內積：左上 1×5＋2×7＝19、右上 1×6＋2×8＝22、左下 3×5＋4×7＝43、右下 3×6＋4×8＝50 ＝ [[19, 22], [43, 50]]。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個 2×3 的矩陣乘一個 3×2 的矩陣，結果矩陣的大小是多少？",
+     "answer": "2×2",
+     "kp_ids": [
+      "math.t_sub.matrix.multiplication"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.matrix.multiplication"
+     ],
+     "options": [
+      "2×2",
+      "3×3",
+      "2×3",
+      "不能相乘"
+     ],
+     "distractor_rationales": {
+      "3×3": "3 是「中間相等的那個數」（前者行數＝後者列數＝3），它只決定能不能相乘，不是結果大小：結果 ＝ 前者列數 2 × 後者行數 2 ＝ 2×2。",
+      "2×3": "這是直接抄前一個矩陣的大小：結果大小要取（前者列數）×（後者行數）＝ 2×2。",
+      "不能相乘": "其實可以：前者行數 3 ＝ 後者列數 3，條件成立，結果是 2×2。"
+     },
+     "answer_evidence": [
+      "c-mm-cond"
+     ],
+     "feedback": "前者行數 3 ＝ 後者列數 3，可以相乘；結果大小 ＝ 前者列數 2 × 後者行數 2 ＝ 2×2。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "[[1, 2], [3, 4]] · [[5, 6], [7, 8]] 的結果中，左上角那個元素是多少？",
+     "answer": "19",
+     "kp_ids": [
+      "math.t_sub.matrix.multiplication"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.matrix.multiplication"
+     ],
+     "options": [
+      "19",
+      "5",
+      "17",
+      "22"
+     ],
+     "distractor_rationales": {
+      "5": "只乘了第一項 1×5 就停了：內積要把對應相乘「全部加起來」，1×5 ＋ 2×7 ＝ 19。",
+      "17": "配錯了：用到後矩陣的第 1 列 (5, 6) 而不是第 1 行 (5, 7)，算成 1×5＋2×6 ＝ 17；左上角要配第 1 行 (5, 7)，得 1×5＋2×7 ＝ 19。",
+      "22": "這是「右上角」的值（第 1 列配第 2 行 (6, 8)）：1×6＋2×8 ＝ 22；左上角要配第 1 行 (5, 7)，得 19。"
+     },
+     "answer_evidence": [
+      "c-mm-def"
+     ],
+     "feedback": "左上角 ＝ 第 1 列 (1, 2) 配第 1 行 (5, 7) ＝ 1×5 ＋ 2×7 ＝ 19。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "關於矩陣乘法的 AB 和 BA，下面哪一句正確？",
+     "answer": "AB 不一定等於 BA（矩陣乘法一般不可交換）",
+     "kp_ids": [
+      "math.t_sub.matrix.multiplication"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.matrix.multiplication"
+     ],
+     "options": [
+      "AB 不一定等於 BA（矩陣乘法一般不可交換）",
+      "AB 一定等於 BA（矩陣乘法可以交換）",
+      "AB 一定不等於 BA",
+      "只要 A、B 大小相同，AB 就一定等於 BA"
+     ],
+     "distractor_rationales": {
+      "AB 一定等於 BA（矩陣乘法可以交換）": "矩陣乘法一般不可交換：例 AB ＝ [[19,22],[43,50]]、BA ＝ [[23,34],[31,46]]，兩者不同，所以不是一定相等。",
+      "AB 一定不等於 BA": "也不是「一定」不等於：有些特別情形（例如乘單位矩陣）AB 會等於 BA，所以正確說法是「不一定」相等。",
+      "只要 A、B 大小相同，AB 就一定等於 BA": "大小相同也不保證相等：上例 A、B 都是 2×2，但 AB ≠ BA，可見大小相同不代表可交換。"
+     },
+     "answer_evidence": [
+      "c-mm-noncommute"
+     ],
+     "feedback": "矩陣乘法一般不可交換，AB 不一定等於 BA（例 AB ＝ [[19,22],[43,50]]、BA ＝ [[23,34],[31,46]]）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（矩陣乘法＝列配行、對應相乘再相加的內積，例 [[1,2],[3,4]]·[[5,6],[7,8]]＝[[19,22],[43,50]]、左上 1×5＋2×7＝19；相乘條件＝前者行數=後者列數、結果大小＝前者列數×後者行數，2×3·3×2＝2×2；不可交換＝AB 不一定等於 BA，BA＝[[23,34],[31,46]]；三鐵律＝列配行非同位相乘、看行數列數是否相配、順序會影響結果）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

@@ -99,7 +99,11 @@ def mat_mult():
     A, B = Matrix([[1, 2], [3, 4]]), Matrix([[0, 1], [1, 0]])
     assert A*B == Matrix([[2, 1], [4, 3]])
     assert (A*B) != (B*A)                       # 不交換
-    return _ok("matrix.multiplication", "矩陣乘法且不可交換（AB≠BA）")
+    # 教學標準例：(AB)_ij = 第 i 列 · 第 j 行（內積）
+    C = Matrix([[5, 6], [7, 8]])
+    assert A*C == Matrix([[19, 22], [43, 50]])  # 1·5+2·7=19, 1·6+2·8=22, 3·5+4·7=43, 3·6+4·8=50
+    assert C*A == Matrix([[23, 34], [31, 46]]) and A*C != C*A  # 不可交換
+    return _ok("matrix.multiplication", "矩陣乘法以列乘行（內積）：[[1,2],[3,4]]·[[5,6],[7,8]]=[[19,22],[43,50]]；且 AB≠BA")
 def mat_inverse():
     A = Matrix([[1, 2], [3, 4]])
     assert A*A.inv() == sp.eye(2) and A.inv() == Matrix([[-2, 1], [Rational(3, 2), Rational(-1, 2)]])
