@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 16:37 ★ finmath growth-decay-model 指數成長與衰減 5/5 DONE-GATE 全綠 → 財務數學 finmath strand 4/6（t_sub，★半衰期序列 80→40→20→10 SVG）
+- **math_finmath_growth_decay_model frozen `5628b0b13224402a`**（R1-R5 連 5 clean；R1 曾抓 1 個 panel 全體 confirmed blocker[algorithm-correctness：Q3「300 隻」distractor rationale 寫 100+100×2=300 只算 2 區間、與宣稱線性誤解(60分=3區間應得400)及 claim c-gd-growth 的 100+100×3 矛盾]→ R1 未 bank 直接修：選項 300→400、rationale 對齊 100+100×3=400→ 重凍→四角色重簽→R1 重跑；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／content_sha==5628b0b／per_page_5clean PASS（finmath_growth absent）／repro PASS／iPad 四角色簽核（半衰期序列 80→40→20→10 克滿寬、三紅 ×½ 箭頭指向正確、0/5/10/15 天標籤箱下對齊、底部公式＋成長對照兩行、指數 (1/2)^(t/T) 正常、右緣0%）。
+- 指數成長與衰減（t_sub，接 simple-compound-interest）＝每過固定時間乘固定倍率（非加減固定量）；衰減（半衰期 T）N=N₀(1/2)^(t/T) 每過 T 剩一半、成長（倍增時間 D）N=N₀·2^(t/D) 每過 D 加倍。例 80 克 T=5 天：40/20/10，過 2T 剩 1/4；100 隻 D=20 分：200/400/800。
+- ★repro：本 session 強化 math_checks7::finmath.growth-decay-model（原僅 (0.5)²==0.25）＋加半衰期多期 80→40→20→10 與倍增 100·2³=800、100·2¹=200，.venv PASS；registry content_fingerprint 同步誠實更新 26c239d→e4d59e9（因 check 強化、非繞過，紅隊：改 check→指紋變→gate FAIL→--emit 更新→PASS）。binding 另有 math_checks6 待補。
+- practice：Q1 2T 剩 1/4、Q2 80克15天(3T)=10克、Q3 100隻60分(3倍增)=800、Q4 半衰期概念(每過T剩一半/不會歸0/T越長越慢)。distractor 單一誤解（1/2只1個/1/8三個/0；40過1T/20過2T/5過4T；400線性+100×3/200只加倍1次/600誤2×3；線性減固定量/2T消失/T越長越快）。
+- 下一步：finmath 第 5 單元＝geo-distance（經緯度：經度每15°差1小時、緯圈半徑 R·cosφ）；finmath 共 6 KP，剩 2（geo-distance/marginal-elasticity）。接著 matrix(5)/space(5)/determinant(2)/linprog(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 16:13 ★ finmath loan-installment 貸款等額攤還 5/5 DONE-GATE 全綠 → 財務數學 finmath strand 3/6（t_sub，★餘額歸零流程 1000→682.79→349.72→0 SVG）
 - **math_finmath_loan_installment frozen `f5e221a9b992accf`**（R1-R5 連 5 clean 一次過、無缺陷、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／content_sha==f5e221a／per_page_5clean PASS（finmath_loan absent）／repro PASS／iPad 四角色簽核（四箱 1000→682.79→349.72→0 滿寬、三箭頭「還 367.21」標籤無碰撞、綠歸零方塊、底部利息漸減/還本漸增兩行、指數 (1+r)⁻ⁿ 正常、右緣0%）。
 - 貸款等額攤還（t_sub，接 simple-compound-interest）＝借 P、每期還固定 PMT、n 期還清；PMT=P·r/(1−(1+r)⁻ⁿ)；每期還款＝利息(餘額×r)＋還本(PMT−利息)，餘額遞減；利息逐期變小、還本逐期變大，n 期後餘額=0。例 P=1000、r=5%、n=3：PMT≈367.21，攤還 1000→682.79→349.72→0，利息 50/34.14/17.49、還本 317.21/333.07/349.72。
