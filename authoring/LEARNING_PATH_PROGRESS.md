@@ -7,6 +7,17 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-18 05:02 ★ sci.t_base.phys-force.push-pull 推與拉是力、力能改變運動與形狀 5/5 DONE-GATE 全綠 → **自然島 sci 首個單元**（t_base·國小基礎，★力效果兩格 SVG）
+- **sci_phys_force_push_pull frozen `fe4b05b88d124d8b`**（新 streak R1-R5 連 5 clean；共 3 次 de-converge、修 3 個 panel-CONFIRMED 缺陷，驗證「數 clean 前挖乾淨」）。缺陷修復軌跡：
+  - R1（pre-bank）**blocker**：SVG 把「壓扁」後黏土畫成 rx=7 ry=15 的**高瘦**直立橢圓，與「扁＝矮而寬」及 oracle「壓黏土變扁」相反（7 角色一致 a-wrong，會教錯小孩）→ 改壓力箭頭由上往下壓＋變形後黏土改 rx=16 ry=6 矮寬扁橢圓，alt 同步。重凍 59a7bff4。
+  - de-converge#1（清 3 clean）**minor**（round4，owner=learning b-hard）：Q1 distractor「看著一顆放在桌上、沒有人碰的球」rationale 用絕對語氣「沒有力作用在球上」（物理上假：重力+正向力作用），會種下「靜止物體不受力」迷思 → class-wide 把 Q1 三個 rationale scope 到「沒有推或拉的力」（重力/摩擦明確 deferred 到 t_adv，本層力＝推拉）。重凍 cdfabe00。
+  - de-converge#2（清 1 clean）**minor**（round8，owner=zh b-hard）：R15 glosses 力(force)/運動(motion)/形狀(shape) 在 can_do（首次 render）與 teach① 重複 gloss，違反自訂「只在首次 rendered 處 gloss 一次」→ grep 全檔確認僅 teach① 逾量、移除其括號英語（can_do 保留）。重凍 **fe4b05b88d124d8b**，重數 5-clean 全淨。
+- DONE-GATE 全綠：scan PASS／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard／content_sha==fe4b05b／per_page_5clean PASS（absent）／repro-sci_phys_checks-phys-force.push-pull PASS（指紋 a7be9dd6f2febde0）／iPad 四角色簽核（兩格 SVG：左 綠推力箭頭→小車→虛線運動箭頭「車子動起來」；右 紅壓力箭頭由上往下→圓黏土→矮寬扁橢圓「變扁」；breadcrumb「自然科學·物理：力」、R11 不顯年段）。中文授課無音檔。
+- push-pull（t_base，phys-force strand 根單元，概念型無公式）＝(1) 力＝推或拉的作用、看不見但從「改變」看得出；(2) 力能改變物體的運動（靜↔動、變快慢、轉向）；(3) 力能改變物體的形狀（壓扁/拉長/折彎）。F=ma 在 t_adv newton2。verification_ref 錨 sci_phys_checks::phys-force.push-pull（F=ma 量化核心）；「力改變形狀」為 consensus_current 基本事實。
+- ★教訓（sci 新增）：figure 的形變方向必須與文字標籤語義一致——「壓扁」＝矮而寬（rx>ry），不可畫成高瘦（svg-figure-geometry-contradicts-caption-label 族）；t_base 力的定義限定「推或拉」時，distractor rationale 不可用絕對「沒有力作用」（會種 resting-object 迷思），須 scope 到「沒有推或拉的力」；R15「只 gloss 一次」要跨 can_do＋teach 檢查（can_do 先 render）。
+- ★★★里程碑：**自然島 sci 首個收斂單元**（sci 986 binding KP，最大 domain）。繼 eng 300/300、math 260/260 後開 sci。下一步：phys-force strand 其餘 16 binding KP，再 chem/bio/earth strands。
+- 下一步：接 phys-force 下一個 KP（查 build_status 取 strand 內未收斂項）。
+
 ## 2026-11-18 03:27 ★★★ linprog.objective-optimize 目標函數最佳化頂點法 5/5 DONE-GATE 全綠 → linprog 2/2 **全收** → **math domain 全收 260/260 KP** ★★★（t_sub·分科數乙，★頂點 z 值 SVG）
 - **math_linprog_objective_optimize frozen `48ccfca7245586cc`**（R1-R5 連 5 clean；R1 首輪即淨＝草稿帶 math defect-classes 教訓+knownFP 生效；round3 抓 1 minor[owner=zh b-hard，panel split domain/zh DEFECT]：teach① 角點定理「又叫頂點法」把〈定理=命題〉與〈頂點法=解法〉畫等號、與 teach②/④/can_do「依定理推出的程序」不一致 → de-converge 清 2 輪、改 teach① 區分定理/解法、重凍 **48ccfca7**、重數 5-clean 全淨；末輪 notDefects 1：_note 一處「座標」panel 0/7 NOT A DEFECT，非 rendered metadata、依記憶 #42 不為它 de-converge，保留）。
 - DONE-GATE 全綠：scan PASS／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard／content_sha==48ccfca7／per_page_5clean PASS（absent）／repro-math_checks6-linprog.objective-optimize PASS／iPad 四角色簽核（可行區四邊形＋四頂點標 z 值 (0,0)z=0/(4,0)z=8/(0,2)z=6/(3,1)z=9綠大點「最大」＋目標 z=2x+3y；(3,1) 綠點在兩斜線交點、右緣0%）／★hub 建議先學 render 實測（數學→線性規劃→objective-optimize 卡顯示「🔗 建議先學：線性規劃：限制式與可行解區域」）。數學中文授課無音檔。
