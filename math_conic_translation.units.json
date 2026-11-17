@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 圓錐曲線（conic）strand 單元。知識點 math.t_sub.conic.translation（圓錐曲線的平移、配方法、由平移式讀中心與焦點）。tier=t_sub（高中分科/選修深階）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；同級術語一律 gloss：平移 (translation)、中心 (center)、焦點 (focus)、配方法 (completing the square)、橢圓 (ellipse)、圓 (circle)）。前置假設：已學橢圓標準式、距離公式、配方法（二次式）。★scope（t_sub，接 ellipse/hyperbola）：中心不在原點時的圓錐曲線＝把原點標準式平移到 (h,k)：圓 (x−h)²+(y−k)²=r²、橢圓 (x−h)²/a²+(y−k)²/b²=1；(x−h) 表示右移 h、(y−k) 表示上移 k（h,k 可負）；中心、頂點、焦點全部跟著平移 (h,k)。由平移式直接讀中心 (h,k)。把一般式（展開式）用配方法化回標準式求中心。以兩例貫穿：圓 x²+y²−6x+4y−12=0 配方⇒(x−3)²+(y+2)²=25、中心(3,−2)、半徑5；橢圓 (x−2)²/25+(y+1)²/9=1、中心(2,−1)、a=5,b=3,c=4、長軸水平、焦點(2±4,−1)=(6,−1)&(−2,−1)、到兩焦和=2a=10。不含旋轉（xy 項）、不含參數式。repro（tools/verify/math_checks7.py::conic.translation，本 session 新增並跑過 PASS；binding 另有 math_checks6::conic.translation）：圓一般式配方⇒中心(3,−2)r=5；橢圓中心(2,−1)、焦點(6,−1)&(−2,−1)、中心=兩焦中點、到兩焦和=2a=10（.venv 驗）。★自檢（math-unit defect-classes）：figure＝等軸坐標平面、原點 O、平移橢圓 (x−2)²/25+(y+1)²/9=1、中心 (2,−1) 綠點、兩焦點 (6,−1)&(−2,−1) 紅點、O→中心虛線標平移——★等軸比例（#62，才看得出橢圓形狀與平移量）、不溢出 viewBox（#43）、標籤不重疊（#2）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾圖畫的「中心從原點移到 (2,−1)」（#4/#46，配方法由 teach 教）；practice 四答案＝{(2,−1)(Q1 中心),(6,−1)&(−2,−1)(Q2 焦點),(3,−2)(Q3 配方中心),(x−3)²/25+(y−2)²/9=1(Q4 平移式 transfer)}與 teach 關鍵值無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv/手驗：Q1 符號 h/k 看錯；Q2 用a頂點/放垂直/中心y符號；Q3 符號反/忘除2/y符號；Q4 符號反/y符號/h,k對調）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_conic_translation.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.conic.translation",
+   "title_zh": "圓錐曲線的平移、配方法與讀中心焦點",
+   "can_do": "我知道當中心不在原點時，圓錐曲線是把原點的標準式『平移 (translation)』到 (h, k)：『圓 (circle)』是 (x−h)² ＋ (y−k)² ＝ r²、『橢圓 (ellipse)』是 (x−h)²/a² ＋ (y−k)²/b² ＝ 1。我知道 (x−h) 表示右移 h、(y−k) 表示上移 k（h、k 可以是負的），而且『中心 (center)』、頂點、『焦點 (focus)』都跟著平移。我會從平移式直接讀出中心 (h, k)，也會用『配方法 (completing the square)』把一般式化回標準式。例：圓 x² ＋ y² − 6x ＋ 4y − 12 ＝ 0 配方後是 (x−3)² ＋ (y+2)² ＝ 25，中心 (3, −2)、半徑 5。",
+   "situation_group": "圓錐曲線：平移",
+   "subject": "math",
+   "strand": "conic",
+   "est_minutes": 14,
+   "knowledge_point_ids": [
+    "math.t_sub.conic.translation"
+   ],
+   "prerequisites": [
+    "math.t_sub.conic.eccentricity"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-tr-concept",
+     "text": "平移的概念：把中心在原點的標準式裡的 x 換成 (x−h)、y 換成 (y−k)，整條曲線就往右移 h、往上移 k，中心落在 (h, k)。例如橢圓 x²/a² ＋ y²/b² ＝ 1（中心原點）平移後變成 (x−h)²/a² ＋ (y−k)²/b² ＝ 1（中心 (h, k)）。重點：形狀、大小（a、b、c）都不變，只是整個搬到新位置——所以中心、頂點、焦點全部一起平移 (h, k)。h、k 可以是負的：(y+1) 要看成 (y−(−1))，所以 k ＝ −1。",
+     "kind": "definition",
+     "source_refs": [
+      "圓錐曲線的平移（高中數學 圓錐曲線）"
+     ],
+     "verification_ref": "(x−h)²/a²+(y−k)²/b²=1 中心(h,k)、a,b,c 不變（math_checks7 .venv 驗 中心=兩焦中點）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-tr-read",
+     "text": "由平移式讀中心和焦點的方法：看 (x−h) 和 (y−k) 的 h、k 就是中心。例：(x−2)²/25 ＋ (y+1)²/9 ＝ 1，(x−2) 給 h ＝ 2、(y+1) ＝ (y−(−1)) 給 k ＝ −1，所以中心 (2, −1)。再由 a ＝ 5、b ＝ 3、c ＝ √(25 − 9) ＝ 4，長軸在水平方向（x² 底下的分母大），焦點在中心的左右各 c，也就是 (2 ± 4, −1) ＝ (6, −1) 和 (−2, −1)。可驗證：中心剛好是兩焦點的中點。",
+     "kind": "definition",
+     "source_refs": [
+      "由平移式讀中心與焦點（高中數學 圓錐曲線）"
+     ],
+     "verification_ref": "(x−2)²/25+(y+1)²/9=1 中心(2,−1)、c=4、焦點(6,−1)&(−2,−1)、中心=兩焦中點（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-tr-complete",
+     "text": "用配方法把一般式（展開式）化回標準式：把 x 的項和 y 的項各自湊成完全平方。例：x² ＋ y² − 6x ＋ 4y − 12 ＝ 0，先把 x、y 的項分組：(x² − 6x) ＋ (y² ＋ 4y) ＝ 12；再配方：x² − 6x 補上 (−6/2)² ＝ 9 變 (x−3)²、y² ＋ 4y 補上 (4/2)² ＝ 4 變 (y+2)²，兩邊同加 9 ＋ 4：(x−3)² ＋ (y+2)² ＝ 12 ＋ 9 ＋ 4 ＝ 25。所以中心 (3, −2)、半徑 √25 ＝ 5。小技巧：中心的座標是「一次項係數除以 2，再變號」——x 項係數 −6 ⇒ 3、y 項係數 ＋4 ⇒ −2。",
+     "kind": "definition",
+     "source_refs": [
+      "配方法化標準式（高中數學 圓錐曲線）"
+     ],
+     "verification_ref": "x²+y²−6x+4y−12=0⇒(x−3)²+(y+2)²=25 中心(3,−2) r=5（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.conic.translation"
+     ],
+     "body": "這一單元學圓錐曲線的平移。先講概念（x 換 (x−h)、y 換 (y−k)，中心移到 (h, k)，形狀大小不變）；再講怎麼從平移式直接讀中心和焦點；最後講用配方法把一般式化回標準式。用一個平移橢圓和一個圓的例子示範，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.conic.translation"
+     ],
+     "body": "① 概念：x→(x−h)、y→(y−k)，中心移到 (h, k)，a、b、c 不變，中心/頂點/焦點一起平移（注意 (y+1) ＝ (y−(−1))，k ＝ −1）。② 讀中心焦點：(x−2)²/25 ＋ (y+1)²/9 ＝ 1，中心 (2, −1)，a ＝ 5、b ＝ 3、c ＝ 4，長軸水平，焦點 (2 ± 4, −1) ＝ (6, −1) 和 (−2, −1)。③ 配方法：x² ＋ y² − 6x ＋ 4y − 12 ＝ 0 ⇒ (x−3)² ＋ (y+2)² ＝ 25，中心 (3, −2)、半徑 5（中心座標 ＝ 一次項係數除以 2 再變號）。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.conic.translation"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='10.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>平移：中心從原點 O 移到 (2, −1) 的橢圓 (x−2)²/25＋(y+1)²/9＝1</text><line x1='96' y1='81' x2='300' y2='81' stroke='#99a7b5' stroke-width='1'/><line x1='152' y1='45' x2='152' y2='150' stroke='#99a7b5' stroke-width='1'/><text x='304' y='84' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='start'>x</text><text x='152' y='42' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>y</text><ellipse cx='180' cy='95' rx='70' ry='42' fill='#e6edf3' stroke='#33475b' stroke-width='2'/><line x1='152' y1='81' x2='180' y2='95' stroke='#6b7785' stroke-width='1' stroke-dasharray='3 2'/><circle cx='152' cy='81' r='2.5' fill='#6b7785'/><circle cx='180' cy='95' r='3' fill='#2f6f54'/><circle cx='236' cy='95' r='3' fill='#c2535d'/><circle cx='124' cy='95' r='3' fill='#c2535d'/><text x='146' y='78' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='end'>O</text><text x='180' y='112' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='middle'>中心 (2, −1)</text><text x='253' y='92' font-family='sans-serif' font-size='8' fill='#c2535d' text-anchor='start'>F₁ (6, −1)</text><text x='107' y='92' font-family='sans-serif' font-size='8' fill='#c2535d' text-anchor='end'>F₂ (−2, −1)</text><text x='166' y='74' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='middle'>平移</text><text x='180' y='162' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>中心、焦點都從原點位置往右 2、下 1 一起平移</text></svg>",
+      "alt": "標題「平移：中心從原點 O 移到 (2, −1) 的橢圓 (x−2)²/25＋(y+1)²/9＝1」。一個等比例坐標平面，灰色 x 軸（右端標「x」）與 y 軸（上端標「y」）交於原點，原點標「O」。一個橫向較長的淺藍色橢圓，中心不在原點、標「中心 (2, −1)」（綠點）。從原點 O 到中心畫一條灰色虛線，旁邊標「平移」。橢圓長軸上有兩個紅色焦點，右邊標「F₁ (6, −1)」、左邊標「F₂ (−2, −1)」。最下方註「中心、焦點都從原點位置往右 2、下 1 一起平移」。",
+      "caption": "橢圓 (x−2)²/25 ＋ (y+1)²/9 ＝ 1：(x−2) 給中心 x ＝ 2、(y+1) ＝ (y−(−1)) 給中心 y ＝ −1，所以中心 (2, −1)。a ＝ 5、b ＝ 3、c ＝ 4，長軸水平，焦點在中心左右各 4，是 (6, −1) 和 (−2, −1)。整個橢圓就是把中心在原點的 x²/25 ＋ y²/9 ＝ 1 往右 2、下 1 平移而成，形狀大小都沒變。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.conic.translation"
+     ],
+     "body": "最後練平移。重點：(x−h)²/a² ＋ (y−k)²/b² ＝ 1 的中心是 (h, k)，a、b、c 不變、中心/頂點/焦點一起平移；配方法把一般式化標準式（中心座標 ＝ 一次項係數除以 2 再變號）。小提醒：(1) (y+1) 要看成 (y−(−1))，中心 y 是 −1 不是 ＋1（符號最容易錯）；(2) 平移不改變 a、b、c，所以焦點到中心的距離 c 跟平移前一樣；(3) 配方時兩邊要「同加」補的數，等號右邊也要加。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "橢圓 (x−2)² / 25 ＋ (y+1)² / 9 ＝ 1 的中心是哪一點？",
+     "answer": "(2, −1)",
+     "kp_ids": [
+      "math.t_sub.conic.translation"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.translation"
+     ],
+     "options": [
+      "(2, −1)",
+      "(−2, 1)",
+      "(2, 1)",
+      "(−2, −1)"
+     ],
+     "distractor_rationales": {
+      "(−2, 1)": "兩個座標的符號都看反了：中心是 (x−h)、(y−k) 裡的 h、k，(x−2) 給 h ＝ 2（不是 −2）、(y+1) ＝ (y−(−1)) 給 k ＝ −1（不是 1）。",
+      "(2, 1)": "y 的符號看錯了：(y+1) 要寫成 (y−(−1))，所以中心 y ＝ −1，不是 ＋1。",
+      "(−2, −1)": "x 的符號看錯了：(x−2) 給的是 h ＝ 2（中心 x ＝ 2），不是 −2。"
+     },
+     "answer_evidence": [
+      "c-tr-read"
+     ],
+     "feedback": "(x−2) 給 h ＝ 2、(y+1) ＝ (y−(−1)) 給 k ＝ −1，中心 (2, −1)。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "橢圓 (x−2)² / 25 ＋ (y+1)² / 9 ＝ 1 的兩個焦點是哪兩點？",
+     "answer": "(6, −1) 和 (−2, −1)",
+     "kp_ids": [
+      "math.t_sub.conic.translation"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.translation"
+     ],
+     "options": [
+      "(6, −1) 和 (−2, −1)",
+      "(7, −1) 和 (−3, −1)",
+      "(2, 3) 和 (2, −5)",
+      "(6, 1) 和 (−2, 1)"
+     ],
+     "distractor_rationales": {
+      "(7, −1) 和 (−3, −1)": "這是用 a ＝ 5（頂點，中心左右各 5）：焦點要用 c ＝ √(25 − 9) ＝ 4，在中心左右各 4，是 (6, −1) 和 (−2, −1)。",
+      "(2, 3) 和 (2, −5)": "焦點放錯方向了（放到中心的上下）：這個橢圓長軸在水平（x² 底下的分母 25 比較大），焦點在中心的左右，不是上下。",
+      "(6, 1) 和 (−2, 1)": "中心的 y 用錯了：中心是 (2, −1)，焦點的 y 應該跟中心一樣是 −1，不是 ＋1。"
+     },
+     "answer_evidence": [
+      "c-tr-read"
+     ],
+     "feedback": "中心 (2, −1)、c ＝ 4、長軸水平，焦點 (2 ± 4, −1) ＝ (6, −1) 和 (−2, −1)。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "圓 x² ＋ y² − 6x ＋ 4y − 12 ＝ 0 配方後，圓心是哪一點？",
+     "answer": "(3, −2)",
+     "kp_ids": [
+      "math.t_sub.conic.translation"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.translation"
+     ],
+     "options": [
+      "(3, −2)",
+      "(−3, 2)",
+      "(6, −4)",
+      "(3, 2)"
+     ],
+     "distractor_rationales": {
+      "(−3, 2)": "符號全反了：圓心座標是「一次項係數除以 2 再變號」，x 項 −6 ⇒ ＋3、y 項 ＋4 ⇒ −2，是 (3, −2)。",
+      "(6, −4)": "忘了除以 2：只把一次項係數變號（−6 ⇒ 6、4 ⇒ −4），還要再除以 2，才得 (3, −2)。",
+      "(3, 2)": "y 的符號算錯了：y 項係數 ＋4，除以 2 再變號是 −2，不是 ＋2。"
+     },
+     "answer_evidence": [
+      "c-tr-complete"
+     ],
+     "feedback": "配方：(x−3)² ＋ (y+2)² ＝ 25，圓心 (3, −2)、半徑 5。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "把中心在原點的橢圓 x² / 25 ＋ y² / 9 ＝ 1 往右移 3、往上移 2，新的方程式是什麼？",
+     "answer": "(x−3)² / 25 ＋ (y−2)² / 9 ＝ 1",
+     "kp_ids": [
+      "math.t_sub.conic.translation"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.translation"
+     ],
+     "options": [
+      "(x−3)² / 25 ＋ (y−2)² / 9 ＝ 1",
+      "(x+3)² / 25 ＋ (y+2)² / 9 ＝ 1",
+      "(x−3)² / 25 ＋ (y+2)² / 9 ＝ 1",
+      "(x−2)² / 25 ＋ (y−3)² / 9 ＝ 1"
+     ],
+     "distractor_rationales": {
+      "(x+3)² / 25 ＋ (y+2)² / 9 ＝ 1": "符號相反了：往右移 3 是把 x 換成 (x−3)、往上移 2 是把 y 換成 (y−2)，用減號不是加號。",
+      "(x−3)² / 25 ＋ (y+2)² / 9 ＝ 1": "y 的符號錯了：往上移 2 要把 y 換成 (y−2)，不是 (y+2)。",
+      "(x−2)² / 25 ＋ (y−3)² / 9 ＝ 1": "把右移量和上移量對調了：右移 3 放進 x（x−3）、上移 2 放進 y（y−2），不要互換。"
+     },
+     "answer_evidence": [
+      "c-tr-concept"
+     ],
+     "feedback": "右移 3 ⇒ x 換 (x−3)、上移 2 ⇒ y 換 (y−2)，得 (x−3)²/25 ＋ (y−2)²/9 ＝ 1。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（平移＝x 換 (x−h)、y 換 (y−k)，中心移到 (h,k)，a,b,c 與形狀不變、中心/頂點/焦點一起平移；(y+1)=(y−(−1))⇒k=−1 符號最易錯；由平移式讀中心 (h,k)；配方法化一般式，中心座標＝一次項係數÷2 再變號；(x−2)²/25+(y+1)²/9=1 中心(2,−1)、c=4、焦點(6,−1)&(−2,−1)；x²+y²−6x+4y−12=0⇒(x−3)²+(y+2)²=25 圓心(3,−2) r=5；右移 a 換 (x−a)、上移 b 換 (y−b) 用減號）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

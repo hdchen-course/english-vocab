@@ -246,6 +246,18 @@ def c_conic_eccentricity():
     a, b = 4, 3; c = sp.sqrt(a**2 + b**2)            # 雙曲線 x²/16−y²/9=1：c=5、e=5/4
     assert c == 5 and sp.Rational(c, a) == sp.Rational(5, 4) and sp.Rational(5, 4) > 1
     return _ok("conic.eccentricity", "離心率 e=c/a：橢圓 x²/25+y²/9=1 e=4/5<1、x²/25+y²/16=1 e=3/5；雙曲線 x²/16−y²/9=1 e=5/4>1；拋物線 e=1")
+def c_conic_translation():
+    # 平移：中心從原點移到 (h,k)；配方法把一般式化回標準式
+    x, y = sp.symbols('x y')
+    expr = x**2 + y**2 - 6*x + 4*y - 12                 # 圓一般式
+    target = (x - 3)**2 + (y + 2)**2 - 25               # ⇒ 中心(3,−2)、r=5
+    assert sp.expand(expr - target) == 0
+    assert sp.sqrt(25) == 5
+    a, b = 5, 3; c = sp.sqrt(a**2 - b**2); assert c == 4  # 平移橢圓 (x−2)²/25+(y+1)²/9=1
+    V = sp.Point(7, -1)                                  # 右頂點 (2+5,−1)
+    assert V.distance(sp.Point(6, -1)) + V.distance(sp.Point(-2, -1)) == 10  # 到兩焦和=2a
+    assert sp.Point(6, -1).midpoint(sp.Point(-2, -1)) == sp.Point(2, -1)     # 中心=兩焦中點
+    return _ok("conic.translation", "平移：x²+y²−6x+4y−12=0⇒(x−3)²+(y+2)²=25 中心(3,−2)、r=5；橢圓 (x−2)²/25+(y+1)²/9=1 中心(2,−1)、c=4、焦點(6,−1)&(−2,−1)、到兩焦和=2a=10")
 
 # ---------- stats（18）----------
 D = [2, 4, 4, 4, 5, 5, 7, 9]      # 共用樣本（std 範例，μ=5,σ=2）
@@ -395,6 +407,7 @@ CHECKS = {s: fn for s, fn in {
     "conic.ellipse": c_conic_ellipse,
     "conic.hyperbola": c_conic_hyperbola,
     "conic.eccentricity": c_conic_eccentricity,
+    "conic.translation": c_conic_translation,
     "stats.collect-organize": s_collect, "stats.bar-line-chart": s_bar_line,
     "stats.pie-chart": s_pie, "stats.table-read": s_table, "stats.mean": s_mean,
     "stats.frequency-table": s_freq_table, "stats.cumulative-relative": s_cumulative,
