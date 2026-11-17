@@ -505,9 +505,13 @@ def f_geo_distance():
     assert cs == sorted(cs, reverse=True) and cs[3] == min(cs)   # 80° 緯圈最小
     return _ok("finmath.geo-distance", "經度15°=1時差；緯圈半徑 R·cosφ：赤道R、60°=R/2；cosφ遞減(80°最小)")
 def f_marginal():
-    # 邊際＝導數：成本 C=x²+10，邊際成本 dC/dx=2x
-    assert diff(x**2+10, x) == 2*x
-    return _ok("finmath.marginal-elasticity", "邊際成本=dC/dx；C=x²+10⇒MC=2x")
+    # 邊際＝導數：成本 C=x²+10，邊際成本 dC/dx=2x；x=3 時 MC=6
+    mc = diff(x**2+10, x)
+    assert mc == 2*x and mc.subs(x, 3) == 6
+    # 價格彈性＝|需求量變化% ÷ 價格變化%|。價 10→12(+20%)、量 100→90(−10%) ⇒ |−0.1/0.2|=0.5<1 缺乏彈性
+    dp = (12-10)/10; dq = (90-100)/100
+    assert abs(dq/dp) == 0.5
+    return _ok("finmath.marginal-elasticity", "邊際成本=dC/dx；C=x²+10⇒MC=2x(x=3→6)；彈性|−10%/+20%|=0.5<1")
 
 
 CHECKS = {s: fn for s, fn in {

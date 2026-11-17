@@ -1,0 +1,209 @@
+{
+ "_note": "數學島 財務數學（finmath）strand 單元（第6、末個）。知識點 math.t_sub.finmath.marginal-elasticity（邊際與彈性）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；同級術語一律 gloss：邊際 (marginal)、邊際成本 (marginal cost)、導數 (derivative)、彈性 (elasticity)）。前置假設：已會導數(微分)、百分比。★scope（t_sub）：(1) 邊際＝多做一單位帶來的「額外」量，用導數表示：邊際成本 MC＝dC/dx（總成本 C 對數量 x 的導數），幾何上＝總成本曲線的切線斜率；例 C(x)=x²+10 → MC=2x，x=3 時 MC=6。(2) 價格彈性＝需求量對價格的敏感度＝|需求量變化% ÷ 價格變化%|；>1 富有彈性、<1 缺乏彈性、=1 單位彈性；例 價 10→12(+20%)、量 100→90(−10%) → |−10%/+20%|=0.5<1 缺乏彈性。不含邊際收益/利潤最大化一階條件、不含點彈性微分式。repro（tools/verify/math_checks7.py::finmath.marginal-elasticity，本 session 強化並跑過 PASS、registry 指紋更新 9fdd456b）：MC=dC/dx，C=x²+10⇒2x(x=3→6)；彈性|−10%/+20%|=0.5。★自檢（math-unit defect-classes）：figure＝函數圖 C(x)=x²+10 拋物線＋x=3 處切線（斜率=MC=6）＋點 P(x=3,C=19)——座標幾何正確（#43，拋物線點、切線過 P 斜率6）、標籤移出免碰撞（#2）、alt 與 SVG text 逐字一致且方向/座標相符（#33，已知 geo 單元曾犯 alt 方向鏡像，草稿已對照座標）、★figure 標題只承諾邊際成本=切線斜率（#4/#46，彈性由 teach＋practice 補）；practice 四答案＝{2x(Q1 MC式),6(Q2 x=3),0.5(Q3彈性),缺乏彈性(Q4概念)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 總成本x²+10/常數10沒消2x+10/漏乘2得x；Q2 總成本19/3²=9/係數2；Q3 分母分子顛倒2/只取量%0.1/量差10；Q4 富有彈性/完全不受影響/同向變動）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_finmath_marginal_elasticity.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.finmath.marginal-elasticity",
+   "title_zh": "邊際與彈性",
+   "can_do": "我知道『邊際 (marginal)』是「多做（或多賣）一單位」帶來的額外量，可以用『導數 (derivative)』表示：『邊際成本 (marginal cost)』MC ＝ dC/dx，就是總成本 C 對數量 x 的導數，在圖上等於總成本曲線的切線斜率。我也知道『彈性 (elasticity)』是需求量對價格變化的敏感度：價格彈性 ＝ |需求量變化百分比 ÷ 價格變化百分比|；大於 1 叫富有彈性、小於 1 叫缺乏彈性、等於 1 叫單位彈性。",
+   "situation_group": "財務數學：邊際與彈性",
+   "subject": "math",
+   "strand": "finmath",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.finmath.marginal-elasticity"
+   ],
+   "prerequisites": [],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-me-marginal",
+     "text": "邊際的意思是「多一單位帶來的額外量」。邊際成本 MC 就是「多生產一單位，總成本多增加多少」，用導數寫成 MC ＝ dC/dx（總成本 C 對數量 x 的導數）。在圖上，MC 等於總成本曲線在該點的切線斜率。例：總成本 C(x) ＝ x² ＋ 10，MC ＝ dC/dx ＝ 2x；在 x ＝ 3 時，MC ＝ 2 × 3 ＝ 6。",
+     "kind": "definition",
+     "source_refs": [
+      "邊際成本（高中 經濟數學）"
+     ],
+     "verification_ref": "MC=dC/dx；C=x²+10⇒2x，x=3→6（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-me-elasticity",
+     "text": "彈性衡量「一個量對另一個量變化的敏感度」。價格彈性 ＝ |需求量變化百分比 ÷ 價格變化百分比|（取絕對值，因為價漲通常量跌、兩者反向）。例：價格從 10 漲到 12（漲 20%），需求量從 100 降到 90（降 10%），價格彈性 ＝ |−10% ÷ 20%| ＝ 0.5。",
+     "kind": "definition",
+     "source_refs": [
+      "價格彈性（高中 經濟數學）"
+     ],
+     "verification_ref": "|−10%/+20%|=0.5（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-me-interpret",
+     "text": "怎麼看彈性大小：價格彈性大於 1 叫「富有彈性」（價格一變，需求量變動更大，例如非必需品）；小於 1 叫「缺乏彈性」（價格變了，需求量變動較小，例如必需品）；等於 1 叫「單位彈性」。上面的例子彈性 ＝ 0.5 < 1，屬於缺乏彈性。",
+     "kind": "definition",
+     "source_refs": [
+      "彈性大小判讀（高中 經濟數學）"
+     ],
+     "verification_ref": "彈性 0.5<1 缺乏彈性（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.finmath.marginal-elasticity"
+     ],
+     "body": "這一單元學邊際與彈性。先講邊際成本（多一單位的額外成本 ＝ 導數 ＝ 切線斜率）；再講價格彈性（需求量對價格的敏感度 ＝ 百分比變化的比）；最後講怎麼看彈性大於或小於 1。最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.finmath.marginal-elasticity"
+     ],
+     "body": "① 邊際成本：MC ＝ dC/dx ＝ 總成本曲線的切線斜率。例 C(x) ＝ x² ＋ 10 → MC ＝ 2x，x ＝ 3 時 ＝ 6。② 價格彈性 ＝ |需求量變化% ÷ 價格變化%|。例 價 10→12（＋20%）、量 100→90（−10%）→ |−10% ÷ 20%| ＝ 0.5。③ 判讀：> 1 富有彈性、< 1 缺乏彈性、＝ 1 單位彈性。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.finmath.marginal-elasticity"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='10' fill='#2f6f54' text-anchor='middle' font-weight='bold'>邊際成本 ＝ 總成本曲線的切線斜率（C ＝ x² ＋ 10）</text><line x1='55' y1='150' x2='312' y2='150' stroke='#99a7b5' stroke-width='1'/><line x1='60' y1='156' x2='60' y2='26' stroke='#99a7b5' stroke-width='1'/><text x='315' y='153' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='start'>數量 x</text><text x='56' y='24' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='start'>成本 C</text><text x='180' y='162' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='middle'>3</text><line x1='180' y1='150' x2='180' y2='104.4' stroke='#c9d3dd' stroke-width='1' stroke-dasharray='3 2'/><polyline points='60,126 100,123.6 140,116.4 180,104.4 220,87.6 260,66 300,39.6' fill='none' stroke='#33475b' stroke-width='1.6'/><text x='300' y='34' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='end'>C ＝ x² ＋ 10</text><line x1='120' y1='126' x2='240' y2='82.8' stroke='#c2535d' stroke-width='1.6'/><circle cx='180' cy='104.4' r='3' fill='#2f6f54'/><text x='186' y='102' font-family='sans-serif' font-size='8.5' fill='#2f6f54' text-anchor='start'>P（x ＝ 3）</text><text x='250' y='140' font-family='sans-serif' font-size='8.5' fill='#c2535d' text-anchor='middle'>切線斜率 ＝ 邊際成本 ＝ 2×3 ＝ 6</text></svg>",
+      "alt": "標題「邊際成本 ＝ 總成本曲線的切線斜率（C ＝ x² ＋ 10）」。一個座標圖，灰色水平軸右端標「數量 x」、垂直軸上端標「成本 C」。一條深色曲線由左下向右上彎曲上升，標「C ＝ x² ＋ 10」。在數量 x ＝ 3（橫軸標「3」、虛線往上）的曲線上有一個綠點標「P（x ＝ 3）」，通過這點畫一條紅色直線（切線）。圖中一行紅字「切線斜率 ＝ 邊際成本 ＝ 2×3 ＝ 6」。",
+      "caption": "總成本曲線 C ＝ x² ＋ 10 越往右越陡。在數量 x ＝ 3 的點 P 畫一條切線（紅線），它的斜率就是這裡的邊際成本 MC ＝ 2 × 3 ＝ 6——也就是「從第 3 單位再多做一點」每單位增加的成本。曲線越陡，邊際成本越大。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.finmath.marginal-elasticity"
+     ],
+     "body": "最後練邊際與彈性。重點：邊際成本 MC ＝ dC/dx ＝ 切線斜率；價格彈性 ＝ |需求量變化% ÷ 價格變化%|，> 1 富有彈性、< 1 缺乏彈性。小提醒：(1) 邊際成本是「導數」不是總成本本身；(2) 算彈性時分母是「價格」變化%、分子是「需求量」變化%，別顛倒；(3) 彈性取絕對值，所以是正數。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "總成本是 C(x) ＝ x² ＋ 10，邊際成本 MC（＝ dC/dx）是多少？",
+     "answer": "2x",
+     "kp_ids": [
+      "math.t_sub.finmath.marginal-elasticity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.finmath.marginal-elasticity"
+     ],
+     "options": [
+      "2x",
+      "x² ＋ 10",
+      "2x ＋ 10",
+      "x"
+     ],
+     "distractor_rationales": {
+      "x² ＋ 10": "這是總成本 C 本身、不是邊際成本：邊際成本要對 x 微分，dC/dx ＝ 2x。",
+      "2x ＋ 10": "常數 10 微分後要變成 0：d(x² ＋ 10)/dx ＝ 2x，不會留著 ＋ 10。",
+      "x": "x² 微分少乘了 2：d(x²)/dx ＝ 2x，不是 x。"
+     },
+     "answer_evidence": [
+      "c-me-marginal"
+     ],
+     "feedback": "MC ＝ dC/dx ＝ d(x² ＋ 10)/dx ＝ 2x（常數 10 微分為 0）。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "總成本 C(x) ＝ x² ＋ 10，在數量 x ＝ 3 時的邊際成本是多少？",
+     "answer": "6",
+     "kp_ids": [
+      "math.t_sub.finmath.marginal-elasticity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.finmath.marginal-elasticity"
+     ],
+     "options": [
+      "6",
+      "19",
+      "9",
+      "2"
+     ],
+     "distractor_rationales": {
+      "19": "19 是 x ＝ 3 的「總成本」C(3) ＝ 3² ＋ 10，不是邊際成本：邊際成本 MC ＝ 2x ＝ 2 × 3 ＝ 6。",
+      "9": "9 是 3²，漏了乘 2：邊際成本 MC ＝ 2x，x ＝ 3 時 ＝ 6。",
+      "2": "2 只是 MC ＝ 2x 的係數，還要乘上 x ＝ 3，得 6。"
+     },
+     "answer_evidence": [
+      "c-me-marginal"
+     ],
+     "feedback": "MC ＝ 2x，x ＝ 3 時 MC ＝ 2 × 3 ＝ 6。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "價格從 10 漲到 12（漲 20%），需求量從 100 降到 90（降 10%）。價格彈性（取絕對值）是多少？",
+     "answer": "0.5",
+     "kp_ids": [
+      "math.t_sub.finmath.marginal-elasticity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.finmath.marginal-elasticity"
+     ],
+     "options": [
+      "0.5",
+      "2",
+      "0.1",
+      "10"
+     ],
+     "distractor_rationales": {
+      "2": "分子分母顛倒了：彈性 ＝ 需求量變化% ÷ 價格變化% ＝ 10% ÷ 20% ＝ 0.5，不是 20% ÷ 10% ＝ 2。",
+      "0.1": "0.1 只是需求量變化百分比（10%）：彈性還要除以價格變化 20%，得 0.5。",
+      "10": "10 是需求量減少的「數量」（100 → 90），不是百分比的比：要用 |−10% ÷ 20%| ＝ 0.5。"
+     },
+     "answer_evidence": [
+      "c-me-elasticity"
+     ],
+     "feedback": "價格彈性 ＝ |需求量變化% ÷ 價格變化%| ＝ |−10% ÷ 20%| ＝ 0.5。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "上一題算出價格彈性 ＝ 0.5（小於 1），這代表什麼？",
+     "answer": "缺乏彈性：價格變動時，需求量變動的比例比較小",
+     "kp_ids": [
+      "math.t_sub.finmath.marginal-elasticity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.finmath.marginal-elasticity"
+     ],
+     "options": [
+      "缺乏彈性：價格變動時，需求量變動的比例比較小",
+      "富有彈性：價格變動時，需求量變動的比例比較大",
+      "需求量完全不受價格影響",
+      "需求量和價格會同方向一起變"
+     ],
+     "distractor_rationales": {
+      "富有彈性：價格變動時，需求量變動的比例比較大": "富有彈性是彈性 > 1：這裡彈性 ＝ 0.5 < 1，屬於缺乏彈性（需求量變動比例較小）。",
+      "需求量完全不受價格影響": "那會是彈性 ＝ 0：這裡彈性 ＝ 0.5，需求量仍有變動，只是變動比例較小。",
+      "需求量和價格會同方向一起變": "一般商品是價漲量跌（反向），彈性才取絕對值；0.5 說的是變動比例大小，不是方向。"
+     },
+     "answer_evidence": [
+      "c-me-interpret"
+     ],
+     "feedback": "彈性 < 1 叫缺乏彈性：價格變了，需求量變動的比例比較小。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（邊際成本 MC ＝ dC/dx ＝ 總成本曲線切線斜率，C=x²+10⇒MC=2x、x=3→6；價格彈性 ＝ |需求量變化% ÷ 價格變化%|，例 價+20%量−10%⇒0.5；判讀 >1 富有彈性、<1 缺乏彈性、=1 單位彈性，0.5<1 缺乏彈性；三鐵律＝邊際是導數非總成本、彈性分母是價格變化%別顛倒、彈性取絕對值為正）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
