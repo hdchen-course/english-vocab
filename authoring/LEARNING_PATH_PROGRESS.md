@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 14:40 ★ complex de-moivre 棣美弗定理 5/5 DONE-GATE 全綠（t_sub，★單位圓 z/z²/z³ 輻角 30/60/90° SVG）→ 複數島 complex strand 5/6
+- **math_complex_de_moivre frozen `bcd84456f8712ccc`**（R1-R5 連 5 clean、L3 每輪 exit 0；R3 曾因 reviewer 503 server error 重跑一次[無缺陷、依誠實收斂不 bank 有 agent-error 的輪]；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==bcd84456／per_page_5clean 579/579 頁 0 違規（complex_de_moivre absent）／repro PASS／iPad 四角色簽核（單位圓第一象限弧、z(30°)/z²(60°)/z³=i(90°) 三綠向量端點在圓上、輻角依序 θ/2θ/3θ、右緣0%）。
+- 棣美弗定理（t_sub，接 polar-form）＝(r(cosθ+isinθ))ⁿ=rⁿ(cos nθ+i sin nθ)，模取 n 次方、輻角乘 n；算整數次方先化極式再套公式；幾何＝乘一次 z 旋轉 θ 長度乘 r，n 次方旋轉 nθ 長度 rⁿ。
+- ★repro：binding 待補 math_checks6；單元引 math_checks7::complex.de-moivre（(1+i)⁸=16；(cosθ+isinθ)²=cos2θ+isin2θ；(cos30°+isin30°)³=i；(cos20°+isin20°)⁹=−1，本 session 擴充單位圓旋轉鎖＋Q4 鎖，.venv PASS）。
+- practice：Q1 (r(cosθ+isinθ))³=r³(cos3θ+isin3θ)、Q2 (1+i)⁸=16、Q3 zⁿ 輻角=nθ、Q4 (cos20°+isin20°)⁹=−1。distractor 單一誤解（角沒乘/模乘n非次方/角取立方；r當2→256/沒取次方/角錯成i；θⁿ/θ÷n/θ+n；角成0°→1/角成90°→i/沒取次方）。
+- ★流程教訓：content_audit 回傳 `<failures>` 有 agent error（如 Bedrock 503）時，即使 confirmed:0/coverageComplete:true 也不 bank，重跑該輪確保 thorough——誠實收斂原則（每輪須真正證明無缺陷）。
+- 下一步：complex 末單元（第 6）＝roots-of-unity（單位根 zⁿ=1 的 n 根）；complex 共 6 KP，剩 1。完成後 complex strand 全收。接著 finmath(6)/matrix(5)/space(5)/determinant(2)/linprog(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 13:50 ★ complex polar-form 複數的極式 5/5 DONE-GATE 全綠（t_sub，★z=1+i 向量＋r=√2＋θ=45° SVG）→ 複數島 complex strand 4/6
 - **math_complex_polar_form frozen `971fa7e3c6c3eac6`**（R1-R5 連 5 clean 一次過、無缺陷、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==971fa7e3／per_page_5clean 578/578 頁 0 違規（complex_polar absent）／repro PASS／iPad 四角色簽核（複數平面 z=1+i 綠向量、r=√2 標於向量、θ=45° 紅弧自正實軸量到向量、虛線落實軸、右緣0%）。
 - 極式（t_sub，接 plane）＝z=r(cosθ+isinθ)，r=|z|=√(a²+b²) 模（≥0）、θ 輻角（向量與正實軸夾角、逆時針為正）；a+bi↔極式互換：cosθ=a/r、sinθ=b/r 配象限；反向 a=rcosθ、b=rsinθ。
