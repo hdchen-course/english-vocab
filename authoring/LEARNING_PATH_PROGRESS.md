@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 18:23 ★★ finmath marginal-elasticity 邊際與彈性 5/5 DONE-GATE 全綠 → **財務數學 finmath strand 6/6 全收（完整 strand）**（t_sub，★C(x)=x²+10 拋物線＋x=3 切線斜率=MC=6 SVG）
+- **math_finmath_marginal_elasticity frozen `b34e692a2f52b2d1`**（R1-R5 連 5 clean；R4 曾抓 1 個 panel 全體 confirmed major[algorithm-correctness：Q2 distractor「9」rationale 自相矛盾——「9 是 3²，漏了乘 2」兩個互斥誤解，「漏乘2」套 MC=2x@x=3 得 3 非 9，9 其實是 3² 平方誤解]→ 誠實 de-converge 清 3 輪+trace→改為「9 是把數量直接平方（3²=9）當成邊際成本了：邊際成本是導數 MC=2x，x=3 時=2×3=6」→ 重凍 b34e692a→四角色重簽→R1 重跑；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema CLEAN（無 marginal 違規）／question_correctness CLEAN／pedagogy 0 hard／content_sha==b34e692a／per_page_5clean PASS 586/586（finmath_marginal absent）／repro PASS／iPad 四角色簽核（拋物線 C=x²+10 由左下向右上、x=3 虛線、綠點 P、紅切線、「切線斜率=邊際成本=2×3=6」紅字無碰撞、caption gloss、兩欄選項齊整、右緣0%）。
+- 邊際與彈性（t_sub）＝(1) 邊際成本 MC=dC/dx＝總成本對數量的導數＝總成本曲線切線斜率；C(x)=x²+10 → MC=2x，x=3 時=6。(2) 價格彈性=|需求量變化% ÷ 價格變化%|；>1 富有彈性、<1 缺乏彈性、=1 單位彈性；例 價 10→12(+20%)、量 100→90(−10%) → |−10%/20%|=0.5<1 缺乏彈性。不含邊際收益/利潤最大化一階條件、不含點彈性微分式。
+- ★repro：本 session 強化 math_checks7::finmath.marginal-elasticity（加 mc.subs(x,3)==6＋彈性 |(12-10)/10 ÷ (90-100)/100|=0.5），.venv PASS；registry content_fingerprint 誠實更新 1502afa→9fdd456（check 強化非繞過）。
+- practice：Q1 MC=2x（總成本x²+10/常數10沒消2x+10/漏乘2得x）、Q2 x=3 時=6（總成本19/★3²=9 平方誤解[本次修]/係數2）、Q3 彈性=0.5（分母分子顛倒2/只取量%0.1/量差10）、Q4 缺乏彈性概念（富有彈性/完全不受影響/同向變動）。distractor 單一誤解、key 逐字相符。
+- ★教訓再確認：R4（對抗式 distractor 反算框架）抓到「單一 distractor rationale 把兩個互斥誤解混成一句（漏乘2→3 與 平方→9）」class——此類只有在逐個 distractor 獨立反算該誤解實際導出值時才現形；修法＝讓 rationale 誤解路徑單一且真的導出該選項值。誠實 de-converge（清 3 輪+trace→修→重凍 b34e692a→R1 重跑）非繞過。
+- 下一步：**finmath strand 6/6 全收**。接著依 BUILD_PLAN＝matrix(5)/space(5)/determinant(2)/linprog(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 17:40 ★ finmath geo-distance 經緯度與地球 5/5 DONE-GATE 全綠 → 財務數學 finmath strand 5/6（t_sub，★地球剖面緯圈半徑 R·cos60°=R/2 幾何 SVG）
 - **math_finmath_geo_distance frozen `f0a7700fb407a04d`**（R1-R5 連 5 clean；此單元缺陷最多、共 5 類 confirmed 全修：R1 抓①teach②/Q3「cos 越高緯度越小」語序倒置、②地軸 R15 gloss gap；R2 抓③alt「往左上」方向鏡像、④Q4「赤道通過球心」概念不精確——每個都 de-converge/直接修後重凍重跑；R5 confirmed 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／content_sha==f0a7700／per_page_5clean PASS（finmath_geo absent）／repro PASS／iPad 四角色簽核（地球剖面：地軸垂直、赤道水平、球心 O、P 緯度60°在圓右上、綠 OP=R、60°弧、紅水平鄰邊=緯圈半徑、虛線垂直、右側三行公式、底部經度時差、右緣0%）。
 - 經緯度與地球（t_sub）＝(1) 經度每差 15°（=360°÷24）時差 1 小時；(2) 緯圈半徑 ＝ R × cos（緯度），cosφ 在 0°~90° 遞減→緯度越高緯圈越小：赤道(0°)=R、60°=R/2、極點(90°)=0；幾何＝球心到地表點線 R 與赤道平面夾 φ、水平鄰邊 R cosφ；緯圈圓心在地軸上、赤道圓心就是球心。
