@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 12:56 ★ complex definition-operations 複數定義與四則運算 5/5 DONE-GATE 全綠（t_adv，★i 次方循環 i→−1→−i→1 SVG）→ 複數島 complex strand 1/6（開新 strand）
+- **math_complex_definition_operations frozen `d8a5c5347bcb6510`**（R1 抓 Q4「3+i」distractor 假錯誤路徑→直接修（rounds 尚空、無需 de-converge）→修後 R1-R5 連 5 clean、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==d8a5c534／per_page_5clean 575/575 頁 0 違規（complex_definition absent）／repro PASS／iPad 四角色簽核（i 次方循環四節點 i¹=i→i²=−1(紅)→i³=−i→i⁴=1、四 ×i 順時針箭頭起訖在圓邊、右緣0%，當前 sha 重 render 重看）。
+- 複數定義與四則（t_adv，複數 strand 首單元 root）＝i²=−1；複數 a+bi（a 實部 b 虛部）、相等⟺實部虛部分別相等；加減（實虛部分別加減）、乘（像多項式展開再把 i² 換成 −1）、除（分子分母同乘分母的共軛 c−di 使分母變實數 c²+d²，有理化）。
+- ★repro：binding 待補 math_checks6；單元引 math_checks7::complex.definition-operations（本 session 新增 complex strand 全 6 KP repro：i²=−1、(3+2i)+(1+4i)=4+6i、(3+2i)(1+4i)=−5+14i、(3+2i)/(1+2i)=(7−4i)/5 商×除數=被除數，.venv PASS）。
+- practice：Q1 (3+2i)+(1+4i)=4+6i、Q2 i³=−i、Q3 (3+2i)(1+4i)=−5+14i、Q4 (4+2i)/(1+i)=3−i（有理化）。distractor 單一誤解（相減/虛部併實部/實部取首虛部相乘；沒乘i²/算成i²/以為i⁴；i²當+1/漏i²項/分配律一半；分子虛部符號錯/沒除分母/沒有理化）。
+- ★收斂史（本單元抓 1 真實 blocker，algorithm-correctness）：R1 CONFIRMED（panel 全票）＝Q4「3+i」distractor 原 rationale 宣稱「乘 1+i（非共軛）使虛部反號得 3+i」在數學上為假——分子分母同乘任何非零數商不變仍 3−i→改為真實單一錯誤路徑「分子展開虛部符號算錯 (4+2i)(1−i)=6−2i 誤成 6+2i÷2=3+i」（.venv 驗 6+2i÷2=3+i）。★教訓同前：distractor 宣稱的錯誤路徑必須「.venv 反算真的產生該值」，否則是假路徑（#53/#59）。
+- 下一步：complex 第 2 單元＝conjugate-modulus（共軛與模）；complex 共 6 KP，剩 5（conjugate-modulus/plane/polar-form/de-moivre/roots-of-unity）。接著 finmath(6)/matrix(5)/space(5)/determinant(2)/linprog(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 12:02 ★★ conic reflection-apply 圓錐曲線反射性質與應用 5/5 DONE-GATE 全綠（t_sub，★拋物面天線 y²=4x 平行光聚焦 F(1,0) SVG）→ 🎉 圓錐曲線島 conic strand 7/7 全收（首個完整收斂的數學 strand）
 - **math_conic_reflection_apply frozen `8ebe4a86ca576b47`**（R1-R3 clean→R4 抓到 Q2「雙曲線」distractor 物理方向 blocker→.venv 鎖方向＋修正＋誠實 de-converge(清3輪+留痕)＋重凍→修後 R1-R5 連 5 clean、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==8ebe4a86／per_page_5clean 574/574 頁 0 違規（reflection_apply absent）／repro PASS／iPad 四角色簽核（拋物線 y²=4x 開口向右、4 灰平行入射線、4 紅反射線交會綠焦點 F(1,0)、軸標右、底部橢圓耳語廊註；figure byte-identical，當前 sha 重 render 重看，右緣0%）。
 - 反射性質（t_sub，教學接 line-intersection；conic strand 末單元）＝拋物線「平行軸光↔唯一焦點」（衛星天線/雷達/反射式望遠鏡/手電筒/車燈）、橢圓「一焦點↔另一焦點」（耳語廊/體外震波碎石）、原理切線當鏡面入射角=反射角、圓錐曲線幾何使相關兩方向對切線等角。
