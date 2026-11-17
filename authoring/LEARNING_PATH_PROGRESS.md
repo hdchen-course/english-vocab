@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-18 00:20 ★★ space.distance-angle 點線面距離與夾角 5/5 DONE-GATE 全綠 → 空間 space strand 5/5 **全收** ★★（t_sub，★點到平面垂直距離 SVG）
+- **math_space_distance_angle frozen `caa8dad522ec1414`**（R1-R5 連 5 clean；R2 抓 1 blocker[domain-precision：can_do/teach/selfeval 把兩直線夾角 0°~90° 整段稱「銳角」，但 90°(Q4 正解)是直角、與 claim c-da-line-angle 已正確寫「銳角或直角」矛盾]→de-converge 清 1 輪、把 4 處措辭改「0°~90°（銳角或直角）」、重凍 caa8dad5、重啟 R1 乾淨。末輪 confirmed 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard／content_sha==caa8dad5／per_page_5clean PASS 596/596（distance_angle absent）／repro-math_checks6-space.distance-angle PASS／iPad 四角色簽核（傾斜平面＋平面外點 P＋紅色垂直虛線到垂足＋直角記號＋標「距離」＋底部公式；垂線接 P 與垂足、直角記號清楚、右緣0%）。
+- 點線面距離與夾角（t_sub，space strand 第5末單元，接 point-line-plane）＝(1) 點到平面距離＝|ax₀+by₀+cz₀−d|/√(a²+b²+c²)（分子代入減常數 d 取絕對值、分母法向量長度）；例 O→2x+2y+z=6=6/3=2；(2) 兩直線夾角 cosθ=|d₁·d₂|/(|d₁||d₂|)，取絕對值得 0°~90°（銳角或直角）；例 (1,0,0)&(1,1,0)=45°、內積0→90°。距離用中文詞「距離」避免與平面常數 d 字母衝突。不含點到直線距離、一般二面角。
+- ★repro：本 session 強化 math_checks6::space.distance-angle 加 O→2x+2y+z=6=2、(1,0,0)&(1,1,0)=45°、(1,1,0)⊥(1,−1,0)；紅隊（指紋 d37511b0→FAIL→誠實更新 5cd31736e997b881→PASS）。非繞過。
+- ★教訓：**角度範圍「0°~90°」不可整段稱「銳角」——90° 是直角**；若 practice 有 90° 正解（內積0），教學文（can_do/teach/selfeval）與 claim 都要寫「銳角或直角」保持一致（R2 blocker 根因＝教學文過度簡化成「全為銳角」與受測答案矛盾）。
+- ★★里程碑：**space strand 5/5 全收**（coordinate→plane-equation→line-parametric→point-line-plane→distance-angle）。
+- 下一步：math 剩 determinant(2)／linprog(2)；完成即 **math domain 全收**（260/260 KP）。接著可轉其他 domain 或 hub AC-VIZ-1 figure_signoff 債（sha 4741b69d）。
+
 ## 2026-11-17 23:44 ★ space.point-line-plane 空間點線面位置關係（平行/垂直/歪斜）5/5 DONE-GATE 全綠 → 空間 space strand 4/5（t_sub，★三格 平行/垂直/歪斜 SVG）
 - **math_space_point_line_plane frozen `737e2480ea065082`**（R1-R5 連 5 clean；R2 抓 1 blocker[figure-geometry：歪斜 panel 虛線斷口放在空白處(300-306)、未蓋真正交點(288,93)→兩線看似相交、與「歪斜=不相交」矛盾]→de-converge 清 1 輪、把虛線斷口移到交點(seg1→(285,97)、GAP、seg2(292,88)→)、重凍 737e2480、重啟 R1 乾淨。另 R1 一處 _note「座」先前已統一。R5 首跑 clean 但一 reviewer 遭 content-filter error→不 bank、重跑取完整參與再 bank。末輪 confirmed 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard／content_sha==737e2480／per_page_5clean PASS 595/595（point_line_plane absent）／repro-math_checks6-space.point-line-plane PASS／iPad 四角色簽核（三格：平行兩同向綠箭頭、垂直兩箭頭夾直角＋小方塊、歪斜實線＋虛線交叉但虛線斷口在交點表示在後方不相交；箭頭方向正確、標籤不碰、右緣0%）。
 - 空間點線面位置關係（t_sub，space strand 第4單元，接 line-parametric）＝(1) 判斷工具：兩向量平行⟺成非零倍數(外積0)、垂直⟺內積0；(2) 兩直線用方向向量判平行/垂直，既不平行又不相交＝歪斜(空間特有)；(3) 直線⊥平面⟺方向向量∥法向量。例 (1,2,2)∥(2,4,4) 平行、(1,2,2)·(2,−2,1)=0 垂直。不含二面角大小、點到平面距離（在 distance-angle 單元）。
