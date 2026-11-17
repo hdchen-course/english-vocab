@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 09:30 ★ conic eccentricity 離心率 e=c/a 與圓錐曲線分類 5/5 DONE-GATE 全綠（t_sub，★e 數線分類 圓/橢圓/拋物線/雙曲線 SVG）→ 圓錐曲線島 conic strand 4/7
+- **math_conic_eccentricity frozen `5006df053d9baf4f`**（R5 抓 figure 分區下界不一致→de-converge→修後 R1 又抓 _note 未同步→修→再 R1-R5 連 5 clean、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==5006df05／per_page_5clean 571/571 頁 0 違規（conic_eccentricity absent）／repro PASS／iPad 四角色簽核（e 水平數線、刻度 0/0.8/1/1.25/2、三型三色點：橢圓 e=4/5 藍灰、拋物線 e=1 綠、雙曲線 e=5/4 紅、三區說明 0<e<1 橢圓/e=1 拋物線/e>1 雙曲線；無溢出右緣0%）。
+- 離心率（t_sub，教學接 ellipse/hyperbola）＝e=c/a（c 中心到焦點、a 半長軸或半貫軸）；分類：e=0 圓、0<e<1 橢圓、e=1 拋物線、e>1 雙曲線；由方程式先求 a,c 再算 e。貫穿：橢圓 x²/25+y²/9=1 e=4/5、x²/25+y²/16=1 e=3/5；雙曲線 x²/16−y²/9=1 e=5/4、x²/9−y²/16=1 e=5/3；拋物線 e=1。
+- ★repro：binding＝math_checks6::conic.eccentricity；單元引 math_checks7::conic.eccentricity（本 session 新增 e=c/a 橢圓 4/5<1、3/5；雙曲線 5/4>1；拋物線 e=1，.venv PASS）。
+- practice：Q1 橢圓 x²/25+y²/9=1 e=4/5（hero）、Q2 哪個 e 是雙曲線（e=5/4>1）、Q3 拋物線 e=1、Q4 雙曲線 x²/9−y²/16=1 e=5/3 transfer。凍前 .venv 反算每誘答單一錯誤 #53（Q1 用b/a=3/5、倒a/c=5/4、用c/b=4/3；Q4 倒a/c=3/5、用c/b=5/4、用b/a=4/3）。
+- ★收斂史（本單元共抓 3 真實缺陷，皆 minor 一致性/可讀）：R1(首) clean；R5 CONFIRMED（structure-consistency）＝figure 分區標籤「0≤e<1 橢圓」把圓併入橢圓，與全單元「e=0 圓、0<e<1 橢圓」四分類下界不一致→de-converge 改 figure「0<e<1」；修後 R1 CONFIRMED（domain a-wrong）＝`_note` 自檢仍留舊「0≤e<1 橢圓含 e=0 圓」與修正後內容矛盾、恐誤導未來作者回退→改 _note 同步。皆直接修（de-converge 時 rounds 已清空）。★教訓：(a)分類邊界（含/不含端點）要「全單元同一框架」——figure 分區、caption、teach、can_do 下界寫法必須一致；(b)★改了 reader 內容後，連 `_note` 撰寫自檢也要同步，否則殘留舊描述會被面板判 a-wrong（且可能誤導回退）——_note 雖非 render 但在 units.json 內、content_sha 綁 units.json 故改它會變 sha。
+- 下一步：conic 第 5 單元＝translation（圓錐曲線平移：(x−h)²/a²±(y−k)²/b²=1 中心移到 (h,k)、配方法；已有 math_checks6 repro）；conic 共 7 KP，剩 3（translation/line-intersection/reflection-apply）。接著 complex(6)/finmath(6)/matrix(5)/space(5)/determinant(2)/linprog(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 08:49 ★ conic hyperbola 雙曲線定義/標準式/焦點/頂點與漸近線 5/5 DONE-GATE 全綠（t_sub，★等軸雙曲線兩支+兩焦點+漸近線+P 焦半徑差 14−6=8 SVG）→ 圓錐曲線島 conic strand 3/7
 - **math_conic_hyperbola frozen `dcbbf20d6f4e1c5e`**（R1 抓 2 minor→直接修→修後 R1-R5 連 5 clean、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==dcbbf20d／per_page_5clean 570/570 頁 0 違規（conic_hyperbola absent）／repro PASS／iPad 四角色簽核（等軸 2D、雙曲線 x²/16−y²/9=1 兩支、兩焦點 F₁(5,0)/F₂(−5,0) 紅點、兩頂點 (±4,0) 綠點、兩漸近線灰虛線、右支點 P(8,3√3) 到兩焦兩段虛線標 6 與 14 差=8；焦點/頂點標籤移出曲線免 #2、#62 等軸顯斜率 3/4、右緣0%）。
 - 雙曲線（t_sub，教學接 ellipse）＝定義：到兩焦點距離「差」的絕對值=定值 2a（和橢圓的「和」相反）；標準式（貫軸在 x 軸）x²/a²−y²/b²=1（x² 項為正）、頂點 (±a,0)、★c=√(a²＋b²)（相「加」，和橢圓 √(a²−b²) 相反——最易記錯）、焦點 (±c,0)、漸近線 y=±(b/a)x；a² 永遠在 x² 底下不比大小。以 x²/16−y²/9=1 貫穿：a=4、b=3、c=5、頂點(±4,0)、焦點(±5,0)、漸近線±(3/4)x；右支 (8,3√3) 到兩焦 6 與 14、差=8。
