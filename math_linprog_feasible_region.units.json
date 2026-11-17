@@ -1,0 +1,198 @@
+{
+ "_note": "數學島 線性規劃（linprog）strand 單元（第1）。知識點 math.t_sub.linprog.feasible-region（線性規劃：限制式與可行解區域）。tier=t_sub、exam=分科-數乙。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次：線性規劃 (linear programming)、限制式 (constraints)、可行解區域 (feasible region)）。前置假設（泛述、不點名單元，linprog strand 根節點故 prerequisites=[]）：已能在坐標平面畫直線、判斷二元一次不等式所代表的半平面、求兩直線交點。★scope（t_sub）：(1) 把題目文字條件寫成一組限制式（二元一次不等式，含 x≥0、y≥0 非負限制）；(2) 每條不等式對應一個半平面，所有半平面的交集＝可行解區域（凸多邊形）；(3) 區域頂點＝相鄰兩邊界線的交點。例 x≥0,y≥0,x+y≤4,x+3y≤6 → 可行區頂點 (0,0)、(4,0)、(3,1)、(0,2)，其中 (3,1)=x+y=4∩x+3y=6。不含目標函數最佳化（在 objective-optimize 單元）、不含單體法 (simplex)。repro（tools/verify/math_checks6.py::linprog.feasible-region，repro_gate .venv PASS、registry 指紋 123abc81dff8d994；本 session 強化改用四邊形區（頂點 (0,0)(4,0)(3,1)(0,2)、交點 (3,1)、區外 (4,4) 不可行）並誠實更新指紋）。★與下一單元 objective-optimize 共用同一範例區。★自檢（math-unit defect-classes）：figure＝坐標平面＋兩條邊界線 x+y=4、x+3y=6＋淡藍可行區四邊形＋四頂點紅點與座標標籤＋區內標「可行解區域」，座標幾何正確、頂點座標與 teach/claim 逐字一致、標籤移出免碰（#2）、alt 與 SVG text 逐字一致、★figure 標題只承諾可行區示意（#4/#46）；practice 四答案＝{(3,1)在區內(Q1),x+y=4與x+3y=6(Q2 交點),4(Q3 頂點數),交集定義(Q4 概念)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 各違反剛好一條限制式；Q2 各為其他兩線交點；Q3 漏算/只軸點/誤無限；Q4 只需一條/一定三角形/忽略非負）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）。claim kind=fact。figure-only example 無 body。",
+ "page": "math_linprog_feasible_region.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.linprog.feasible-region",
+   "title_zh": "線性規劃：限制式與可行解區域",
+   "can_do": "我會把線性規劃題目的文字條件寫成一組『限制式 (constraints)』（二元一次不等式，別忘 x ≥ 0、y ≥ 0）。我會在坐標平面上為每條不等式畫邊界線、取滿足的半平面，所有半平面的共同範圍就是『可行解區域 (feasible region)』。我也會找出這個區域的頂點——相鄰兩條邊界線的交點。",
+   "situation_group": "線性規劃：可行解區域",
+   "subject": "math",
+   "strand": "linprog",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.linprog.feasible-region"
+   ],
+   "prerequisites": [],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-lp-constraints",
+     "text": "限制式 (constraints) ＝ 把題目的每個條件寫成二元一次不等式（包含 x ≥ 0、y ≥ 0 這類非負限制）。每一條不等式在坐標平面上對應一個「半平面」——邊界線的某一側。例：x ≥ 0、y ≥ 0、x + y ≤ 4、x + 3y ≤ 6，就是四條限制式。",
+     "kind": "fact",
+     "source_refs": [
+      "線性規劃 限制式（高中 分科測驗 數乙）"
+     ],
+     "verification_ref": "x≥0,y≥0,x+y≤4,x+3y≤6 四條限制式（math_checks6::linprog.feasible-region .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-lp-feasible",
+     "text": "可行解區域 (feasible region) ＝ 讓所有限制式同時成立的點所成的範圍，也就是各半平面的交集，通常是一個凸多邊形。它的頂點是相鄰兩條邊界線的交點。例：限制式 x ≥ 0、y ≥ 0、x + y ≤ 4、x + 3y ≤ 6 的可行解區域，是頂點 (0, 0)、(4, 0)、(3, 1)、(0, 2) 的四邊形；其中 (3, 1) 是邊界線 x + y ＝ 4 與 x + 3y ＝ 6 的交點。",
+     "kind": "fact",
+     "source_refs": [
+      "線性規劃 可行解區域（高中 分科測驗 數乙）"
+     ],
+     "verification_ref": "可行區頂點 (0,0)(4,0)(3,1)(0,2)；(3,1)=x+y=4∩x+3y=6；(4,4) 不可行（math_checks6::linprog.feasible-region .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.linprog.feasible-region"
+     ],
+     "body": "『線性規劃 (linear programming)』是在一組限制下求最好結果的方法。這一單元先學前半：把題目條件寫成限制式、在坐標平面畫出『可行解區域 (feasible region)』、再找出它的頂點（下一單元才用頂點求最佳值）。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.linprog.feasible-region"
+     ],
+     "body": "① 把每個條件寫成二元一次不等式（別忘 x ≥ 0、y ≥ 0）。② 每條不等式畫出邊界線、取滿足的那一側半平面。③ 所有半平面的共同部分 ＝ 可行解區域（凸多邊形）。④ 區域的頂點 ＝ 相鄰兩條邊界線的交點。例 x ≥ 0、y ≥ 0、x + y ≤ 4、x + 3y ≤ 6 → 可行區頂點 (0, 0)、(4, 0)、(3, 1)、(0, 2)，其中 (3, 1) 是 x + y ＝ 4 與 x + 3y ＝ 6 的交點。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.linprog.feasible-region"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>可行解區域：所有限制式都滿足的共同範圍</text><line x1='40' y1='140' x2='320' y2='140' stroke='#99a7b5' stroke-width='1'/><polygon points='320,140 314,137 314,143' fill='#99a7b5'/><text x='324' y='143' font-family='sans-serif' font-size='7.5' fill='#99a7b5' text-anchor='start'>x</text><line x1='40' y1='140' x2='40' y2='20' stroke='#99a7b5' stroke-width='1'/><polygon points='40,20 37,26 43,26' fill='#99a7b5'/><text x='34' y='24' font-family='sans-serif' font-size='7.5' fill='#99a7b5' text-anchor='end'>y</text><line x1='208' y1='140' x2='40' y2='20' stroke='#6b7785' stroke-width='1.2'/><line x1='292' y1='140' x2='40' y2='80' stroke='#6b7785' stroke-width='1.2'/><polygon points='40,140 208,140 166,110 40,80' fill='#e6edf3' stroke='#2f6f54' stroke-width='1.5'/><circle cx='40' cy='140' r='2.4' fill='#c2535d'/><circle cx='208' cy='140' r='2.4' fill='#c2535d'/><circle cx='166' cy='110' r='2.4' fill='#c2535d'/><circle cx='40' cy='80' r='2.4' fill='#c2535d'/><text x='108' y='122' font-family='sans-serif' font-size='8' fill='#2f6f54' text-anchor='middle' font-weight='bold'>可行解區域</text><text x='44' y='153' font-family='sans-serif' font-size='7.5' fill='#33475b' text-anchor='start'>(0, 0)</text><text x='208' y='153' font-family='sans-serif' font-size='7.5' fill='#33475b' text-anchor='middle'>(4, 0)</text><text x='173' y='108' font-family='sans-serif' font-size='7.5' fill='#33475b' text-anchor='start'>(3, 1)</text><text x='36' y='78' font-family='sans-serif' font-size='7.5' fill='#33475b' text-anchor='end'>(0, 2)</text><text x='150' y='58' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='start'>x ＋ y ＝ 4</text><text x='250' y='126' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='start'>x ＋ 3y ＝ 6</text></svg>",
+      "alt": "標題「可行解區域：所有限制式都滿足的共同範圍」。圖中是一個坐標平面（x 軸向右、y 軸向上）。畫了兩條邊界線：一條標「x ＋ y ＝ 4」（從 (4, 0) 斜向上到 (0, 4) 方向），一條標「x ＋ 3y ＝ 6」（從 (6, 0) 斜向上到 (0, 2)）。這兩條線和 x 軸、y 軸一起圍出一塊淡藍色的四邊形，區內標「可行解區域」。四邊形的四個頂點用紅點標出並標座標：(0, 0)、(4, 0)、(3, 1)、(0, 2)。其中 (3, 1) 是兩條斜線的交點。",
+      "caption": "把四條限制式 x ≥ 0、y ≥ 0、x + y ≤ 4、x + 3y ≤ 6 各自的半平面疊在一起，共同範圍就是這塊淡藍色的四邊形——可行解區域。它的四個頂點 (0, 0)、(4, 0)、(3, 1)、(0, 2) 都是相鄰兩條邊界線的交點，例如 (3, 1) 是 x + y ＝ 4 和 x + 3y ＝ 6 的交點。下一單元會用這些頂點求目標函數的最佳值。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.linprog.feasible-region"
+     ],
+     "body": "最後練限制式與可行解區域。重點：(1) 把條件寫成二元一次不等式（含 x ≥ 0、y ≥ 0）；(2) 可行解區域 ＝ 所有限制式同時成立的點（各半平面的交集），通常是凸多邊形；(3) 區域頂點 ＝ 相鄰兩條邊界線的交點，例如 (3, 1) ＝ x + y ＝ 4 與 x + 3y ＝ 6 的交點。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "限制式為 x ≥ 0、y ≥ 0、x + y ≤ 4、x + 3y ≤ 6。下列哪一個點在可行解區域內（四條限制式都滿足）？",
+     "answer": "(3, 1)",
+     "kp_ids": [
+      "math.t_sub.linprog.feasible-region"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.linprog.feasible-region"
+     ],
+     "options": [
+      "(3, 1)",
+      "(4, 4)",
+      "(0, 3)",
+      "(−1, 0)"
+     ],
+     "distractor_rationales": {
+      "(4, 4)": "(4, 4) 違反 x + y ≤ 4：4 + 4 ＝ 8 ＞ 4，所以不在可行解區域內。",
+      "(0, 3)": "(0, 3) 違反 x + 3y ≤ 6：0 + 3×3 ＝ 9 ＞ 6，所以不在可行解區域內。",
+      "(−1, 0)": "(−1, 0) 違反 x ≥ 0：x ＝ −1 ＜ 0，所以不在可行解區域內。"
+     },
+     "answer_evidence": [
+      "c-lp-feasible"
+     ],
+     "feedback": "(3, 1)：x ＝ 3 ≥ 0、y ＝ 1 ≥ 0、x + y ＝ 4 ≤ 4、x + 3y ＝ 6 ≤ 6，四條限制式都滿足，所以在可行解區域內。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "可行解區域的頂點 (3, 1) 是哪兩條邊界線的交點？",
+     "answer": "x + y ＝ 4 與 x + 3y ＝ 6",
+     "kp_ids": [
+      "math.t_sub.linprog.feasible-region"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.linprog.feasible-region"
+     ],
+     "options": [
+      "x + y ＝ 4 與 x + 3y ＝ 6",
+      "x ＝ 0 與 y ＝ 0",
+      "x + y ＝ 4 與 x ＝ 0",
+      "x + 3y ＝ 6 與 y ＝ 0"
+     ],
+     "distractor_rationales": {
+      "x ＝ 0 與 y ＝ 0": "x ＝ 0 與 y ＝ 0 的交點是原點 (0, 0)，不是 (3, 1)。",
+      "x + y ＝ 4 與 x ＝ 0": "x + y ＝ 4 與 x ＝ 0 的交點是 (0, 4)，不是 (3, 1)。",
+      "x + 3y ＝ 6 與 y ＝ 0": "x + 3y ＝ 6 與 y ＝ 0 的交點是 (6, 0)，不是 (3, 1)。"
+     },
+     "answer_evidence": [
+      "c-lp-feasible"
+     ],
+     "feedback": "把 x + y ＝ 4 與 x + 3y ＝ 6 聯立：相減得 2y ＝ 2、y ＝ 1，代回得 x ＝ 3，交點 (3, 1)。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "限制式 x ≥ 0、y ≥ 0、x + y ≤ 4、x + 3y ≤ 6 圍出的可行解區域有幾個頂點？",
+     "answer": "4 個",
+     "kp_ids": [
+      "math.t_sub.linprog.feasible-region"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.linprog.feasible-region"
+     ],
+     "options": [
+      "4 個",
+      "3 個",
+      "2 個",
+      "無限多個"
+     ],
+     "distractor_rationales": {
+      "3 個": "這塊區域是由 x ＝ 0、y ＝ 0、x + y ＝ 4、x + 3y ＝ 6 四條邊界線圍成的四邊形，頂點是 (0, 0)、(4, 0)、(3, 1)、(0, 2) 共 4 個，不是 3 個。",
+      "2 個": "只數了座標軸上的點就會漏算：這塊四邊形有 4 個頂點 (0, 0)、(4, 0)、(3, 1)、(0, 2)。",
+      "無限多個": "可行解區域是有界的凸多邊形，頂點數目是有限的——這裡剛好 4 個。"
+     },
+     "answer_evidence": [
+      "c-lp-feasible"
+     ],
+     "feedback": "這塊可行解區域是四邊形，頂點有 4 個：(0, 0)、(4, 0)、(3, 1)、(0, 2)。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "關於可行解區域，下列哪一個敘述正確？",
+     "answer": "它是讓所有限制式同時成立的點所成的範圍（各半平面的交集），頂點是相鄰兩條邊界線的交點",
+     "kp_ids": [
+      "math.t_sub.linprog.feasible-region"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.linprog.feasible-region"
+     ],
+     "options": [
+      "它是讓所有限制式同時成立的點所成的範圍（各半平面的交集），頂點是相鄰兩條邊界線的交點",
+      "只要滿足其中一條限制式，點就算在可行解區域內",
+      "可行解區域一定是一個三角形",
+      "x ≥ 0、y ≥ 0 這種非負限制不算限制式，可以忽略"
+     ],
+     "distractor_rationales": {
+      "只要滿足其中一條限制式，點就算在可行解區域內": "不對：要「所有」限制式同時成立才算在可行解區域內（各半平面的交集），只滿足一條不夠。",
+      "可行解區域一定是一個三角形": "不一定：形狀由限制式決定，可能是三角形、四邊形或其他凸多邊形，這個例子就是四邊形。",
+      "x ≥ 0、y ≥ 0 這種非負限制不算限制式，可以忽略": "不對：x ≥ 0、y ≥ 0 也是限制式，它們把可行範圍限制在第一象限，不能忽略。"
+     },
+     "answer_evidence": [
+      "c-lp-feasible"
+     ],
+     "feedback": "可行解區域 ＝ 所有限制式同時成立的點（各半平面的交集），通常是凸多邊形，頂點是相鄰兩條邊界線的交點。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（限制式＝把條件寫成二元一次不等式含 x≥0、y≥0；可行解區域＝所有限制式同時成立的點＝各半平面的交集，凸多邊形；頂點＝相鄰兩邊界線交點。例 x≥0,y≥0,x+y≤4,x+3y≤6 → 頂點 (0,0)、(4,0)、(3,1)、(0,2)，(3,1)=x+y=4∩x+3y=6；三鐵律＝全部同時成立、半平面交集、頂點是兩線交點）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

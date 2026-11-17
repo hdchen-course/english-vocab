@@ -233,10 +233,17 @@ def conic_reflection():
 
 # ---------- linprog（2）----------
 def lp_feasible():
-    # 可行解區域頂點：x≥0,y≥0,x+y≤4 → 頂點(0,0)(4,0)(0,4)
-    verts = [(0, 0), (4, 0), (0, 4)]
-    assert all(xx >= 0 and yy >= 0 and xx+yy <= 4 for xx, yy in verts)
-    return _ok("linprog.feasible-region", "x,y≥0,x+y≤4 可行區頂點(0,0)(4,0)(0,4)")
+    # 限制式 x≥0,y≥0,x+y≤4,x+3y≤6 → 可行區（凸多邊形）頂點 (0,0)(4,0)(3,1)(0,2)
+    def feas(x, y): return x >= 0 and y >= 0 and x+y <= 4 and x+3*y <= 6
+    verts = [(0, 0), (4, 0), (3, 1), (0, 2)]
+    assert all(feas(x, y) for x, y in verts)        # 四頂點皆滿足全部限制式
+    # (3,1) = 邊界線 x+y=4 與 x+3y=6 的交點
+    X, Y = Symbol('x'), Symbol('y')
+    sol = sp.solve([sp.Eq(X+Y, 4), sp.Eq(X+3*Y, 6)], [X, Y])
+    assert (sol[X], sol[Y]) == (3, 1)
+    # (0,2) 在 x+3y=6 上（6=6）、(4,0) 在 x+y=4 上；區外點 (4,4) 不可行（x+y=8>4）
+    assert 0+3*2 == 6 and 4+0 == 4 and not feas(4, 4)
+    return _ok("linprog.feasible-region", "限制式 x,y≥0,x+y≤4,x+3y≤6 可行區頂點(0,0)(4,0)(3,1)(0,2)；(3,1)=x+y=4∩x+3y=6；(4,4) 不可行")
 def lp_optimize():
     # 目標 z=3x+2y 在上述頂點：max 在 (4,0)=12（頂點法）
     verts = [(0, 0), (4, 0), (0, 4)]
