@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 13:50 ★ complex polar-form 複數的極式 5/5 DONE-GATE 全綠（t_sub，★z=1+i 向量＋r=√2＋θ=45° SVG）→ 複數島 complex strand 4/6
+- **math_complex_polar_form frozen `971fa7e3c6c3eac6`**（R1-R5 連 5 clean 一次過、無缺陷、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==971fa7e3／per_page_5clean 578/578 頁 0 違規（complex_polar absent）／repro PASS／iPad 四角色簽核（複數平面 z=1+i 綠向量、r=√2 標於向量、θ=45° 紅弧自正實軸量到向量、虛線落實軸、右緣0%）。
+- 極式（t_sub，接 plane）＝z=r(cosθ+isinθ)，r=|z|=√(a²+b²) 模（≥0）、θ 輻角（向量與正實軸夾角、逆時針為正）；a+bi↔極式互換：cosθ=a/r、sinθ=b/r 配象限；反向 a=rcosθ、b=rsinθ。
+- ★repro：binding 待補 math_checks6；單元引 math_checks7::complex.polar-form（1+i→r=√2 θ=π/4；1+√3i→r=2 θ=π/3；2(cos60°+isin60°)=1+√3i 還原，.venv PASS）。
+- practice：Q1 1+i→r=√2 θ=45°、Q2 2(cos60°+isin60°)=1+√3i、Q3 θ 是向量與正實軸夾角、Q4 1+√3i 輻角=60°。distractor 單一誤解（模沒開根/角錯/模只取一分量；cos-sin弄反/沒乘cos sin/沒乘r；向量長度/與正虛軸夾角/實部；tan對調30°/45°/象限錯120°）。
+- 下一步：complex 第 5 單元＝de-moivre（棣美弗定理 (r(cosθ+isinθ))ⁿ=rⁿ(cos nθ+i sin nθ)）；complex 共 6 KP，剩 2（de-moivre/roots-of-unity）。接著 finmath(6)/matrix(5)/space(5)/determinant(2)/linprog(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 13:34 ★ complex plane 複數平面（阿岡圖）5/5 DONE-GATE 全綠（t_sub，★向量加法 (1+2i)+(3+i)=4+3i 平行四邊形 SVG）→ 複數島 complex strand 3/6
 - **math_complex_plane frozen `905d5cf8d16ab4e1`**（R1-R5 連 5 clean 一次過、無缺陷、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==905d5cf8／per_page_5clean 577/577 頁 0 違規（complex_plane absent）／repro PASS／iPad 四角色簽核（複數平面兩藍向量 z₁=1+2i/z₂=3+i、綠合向量 z₁+z₂=4+3i、灰虛線平行四邊形、端點坐標正確、右緣0%）。
 - 複數平面（阿岡圖，t_sub，接 conjugate-modulus）＝把 a+bi 畫成點 (a,b)/從原點出發的向量（實部橫、虛部縱）；模 |z| 的幾何意義＝該點到原點的距離；複數加法＝向量加法 (a+c)+(b+d)i，平行四邊形法則。
