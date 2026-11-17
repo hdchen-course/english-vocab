@@ -216,6 +216,16 @@ def c_conic_parabola():
     Q = sp.Point(4, 4)                                 # 4²=16=4·4 在拋物線上
     assert Q.distance(F) == 5 and abs(sp.Integer(4) - (-1)) == 5   # 到焦=到準線=5
     return _ok("conic.parabola", "y²=4x：4p=4⇒p=1、焦點(1,0)、準線x=−1、頂點(0,0)；(1,2)到焦=到準線=2；(4,4)到焦=到準線=5")
+def c_conic_ellipse():
+    # x²/25+y²/9=1：a=5(長半軸)、b=3(短半軸)、c=√(a²−b²)=4；焦點(±4,0)
+    a, b = 5, 3
+    c = sp.sqrt(a**2 - b**2); assert c == 4
+    assert 2 * a == 10 and 2 * b == 6 and 2 * c == 8         # 長軸10、短軸6、焦距8
+    P = sp.Point(0, 3)                                        # 上頂點 到兩焦距和=2a=10
+    assert P.distance(sp.Point(4, 0)) + P.distance(sp.Point(-4, 0)) == 10
+    Q = sp.Point(5, 0)                                        # 右頂點 (5−4)+(5+4)=10
+    assert Q.distance(sp.Point(4, 0)) + Q.distance(sp.Point(-4, 0)) == 10
+    return _ok("conic.ellipse", "x²/25+y²/9=1：a=5、b=3、c=4、焦點(±4,0)；長軸10/短軸6/焦距8；到兩焦距和=2a=10")
 
 # ---------- stats（18）----------
 D = [2, 4, 4, 4, 5, 5, 7, 9]      # 共用樣本（std 範例，μ=5,σ=2）
@@ -362,6 +372,7 @@ CHECKS = {s: fn for s, fn in {
     "vector.triangle-tetra-area": c_vec_triangle_tetra_area,
     "vector.geometry-apply": c_vec_geometry_apply,
     "conic.parabola": c_conic_parabola,
+    "conic.ellipse": c_conic_ellipse,
     "stats.collect-organize": s_collect, "stats.bar-line-chart": s_bar_line,
     "stats.pie-chart": s_pie, "stats.table-read": s_table, "stats.mean": s_mean,
     "stats.frequency-table": s_freq_table, "stats.cumulative-relative": s_cumulative,

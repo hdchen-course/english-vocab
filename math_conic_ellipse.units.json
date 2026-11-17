@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 圓錐曲線（conic）strand 單元。知識點 math.t_sub.conic.ellipse（橢圓的定義、標準式、焦點與長短軸）。tier=t_sub（高中分科/選修深階）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；只列實際 render 給 reader 的術語）：橢圓 (ellipse)、焦點 (focus)、長軸 (major axis)、短軸 (minor axis)。前置假設：已學坐標平面、距離公式、拋物線（前一單元）。★scope（t_sub，接 parabola）：橢圓定義＝平面上到兩定點（兩焦點）距離「和」為定值（＝2a）的所有點；標準式（中心原點、長軸在 x 軸）x²/a²＋y²/b²＝1（a＞b＞0）——a 長半軸、b 短半軸、c＝√(a²−b²)、焦點 (±c, 0)、長軸長 2a、短軸長 2b、焦距 2c；由方程式比對分母（大的是 a²、小的是 b²）求 a、b、c。以 x²/25＋y²/9＝1 貫穿：a＝5、b＝3、c＝4、焦點 (±4, 0)、長軸長 10、短軸長 6；上頂點 (0,3) 到兩焦距和＝5＋5＝10、右頂點 (5,0) 到兩焦距和＝1＋9＝10。只到長軸在 x 軸的標準式與焦點/長短軸/定義距離和；不含長軸在 y 軸（提一句）、不含平移（translation 單元）、不含離心率（eccentricity 單元）。prereq＝（conic，教學上接 parabola）。repro（tools/verify/math_checks7.py::conic.ellipse，本 session 新增並跑過 PASS；binding 另有 math_checks6::conic.ellipse）：x²/25+y²/9=1⇒a=5,b=3,c=4、焦點(±4,0)、長軸10/短軸6/焦距8、到兩焦距和=2a=10（.venv 驗）。★自檢（math-unit defect-classes #1–#64）：figure＝等軸坐標平面、橢圓 x²/25+y²/9=1、兩焦點 F₁(4,0)/F₂(−4,0) 紅點、上頂點 P(0,3)、P 到兩焦點兩段虛線各 5、下註距離和=10——★等軸比例（#62，才看得出兩段各 5 相等、橢圓非圓）、曲線不溢出 viewBox（#43）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾圖畫的「到兩焦點距離和＝2a＝10」（#4/#46，標準式求 a,b,c 由 teach 教）；practice 四答案＝{(±4,0)(Q1 焦點),10(Q2 長軸長),等於長軸長(2a)是定值(Q3 定義),(±3,0)(Q4 x²/25+y²/16=1 焦點 transfer)}與 teach 關鍵值無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算：Q1 用a/用a²+b²開根/軸放錯；Q2 給a/給a²/給短軸；Q4 沒開根/用a²+b²/軸放錯）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；★導讀承諾順序＝實際 teach 順序（#4/#46）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_conic_ellipse.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.conic.ellipse",
+   "title_zh": "橢圓的定義、標準式、焦點與長短軸",
+   "can_do": "我知道『橢圓 (ellipse)』的定義：平面上到兩個定點（兩個『焦點 (focus)』）距離「和」固定（等於 2a）的所有點。我知道中心在原點、長軸在 x 軸的標準式是 x²/a² ＋ y²/b² ＝ 1（a ＞ b ＞ 0）：a 是長半軸、b 是短半軸、c ＝ √(a² − b²)、焦點在 (±c, 0)、『長軸 (major axis)』長 2a、『短軸 (minor axis)』長 2b。我會從方程式（分母大的是 a²、小的是 b²）求出 a、b、c。例：x²/25 ＋ y²/9 ＝ 1，a ＝ 5、b ＝ 3、c ＝ 4，焦點 (±4, 0)、長軸長 10。",
+   "situation_group": "圓錐曲線：橢圓",
+   "subject": "math",
+   "strand": "conic",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.conic.ellipse"
+   ],
+   "prerequisites": [
+    "math.t_sub.conic.parabola"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-el-def",
+     "text": "橢圓的定義：在平面上給兩個定點（兩個焦點），到這兩個焦點距離「和」等於一個固定值的所有點，合起來就是一個橢圓。這個固定的和規定等於 2a（a 就是長半軸）。所以橢圓上的每一個點 P，都滿足「P 到焦點一 ＋ P 到焦點二 ＝ 2a」。例：x²/25 ＋ y²/9 ＝ 1 的 a ＝ 5，距離和 ＝ 2a ＝ 10；上頂點 (0, 3) 到兩焦點 (±4, 0) 各是 5，和剛好 5 ＋ 5 ＝ 10。",
+     "kind": "definition",
+     "source_refs": [
+      "橢圓的定義（高中數學 圓錐曲線）"
+     ],
+     "verification_ref": "橢圓＝到兩焦距離和=2a；x²/25+y²/9=1 上(0,3)到(±4,0)和=10（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-el-standard",
+     "text": "中心在原點、長軸在 x 軸的橢圓，標準式是 x²/a² ＋ y²/b² ＝ 1（a ＞ b ＞ 0）。其中：a 是長半軸（長軸長 2a，沿 x 軸）、b 是短半軸（短軸長 2b，沿 y 軸）、c ＝ √(a² − b²)（注意是 a² 減 b²）、焦點在長軸上 (±c, 0)。焦點一定落在長軸上，所以兩焦點在 x 軸、對稱於中心。（如果分母大的在 y² 底下，長軸就改在 y 軸，這一單元先學長軸在 x 軸的。）",
+     "kind": "definition",
+     "source_refs": [
+      "橢圓標準式（高中數學 圓錐曲線）"
+     ],
+     "verification_ref": "x²/a²+y²/b²=1（a>b）：c=√(a²−b²)、焦點(±c,0)、長軸2a、短軸2b（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-el-find",
+     "text": "給一個 x²/25 ＋ y²/9 ＝ 1 這種方程式，求 a、b、c 和焦點的方法：看兩個分母，大的是 a²、小的是 b²。例：分母 25 ＞ 9，所以 a² ＝ 25、a ＝ 5；b² ＝ 9、b ＝ 3；c ＝ √(a² − b²) ＝ √(25 − 9) ＝ √16 ＝ 4，焦點 (±4, 0)。長軸長 2a ＝ 10、短軸長 2b ＝ 6。可用定義驗證：右頂點 (5, 0) 到兩焦點 (4, 0)、(−4, 0) 的距離是 1 ＋ 9 ＝ 10 ＝ 2a。",
+     "kind": "definition",
+     "source_refs": [
+      "橢圓焦點與長短軸（高中數學 圓錐曲線）"
+     ],
+     "verification_ref": "x²/25+y²/9=1⇒a=5,b=3,c=4、焦點(±4,0)、2a=10；(5,0)到兩焦和=10（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.conic.ellipse"
+     ],
+     "body": "這一單元學橢圓。先講定義（到兩個焦點的距離「和」固定 ＝ 2a）；再講中心在原點、長軸在 x 軸的標準式 x²/a² ＋ y²/b² ＝ 1（a ＞ b，c ＝ √(a² − b²)、焦點 (±c, 0)）；最後練習從方程式求 a、b、c 和焦點。用 x²/25 ＋ y²/9 ＝ 1 示範，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.conic.ellipse"
+     ],
+     "body": "① 定義：橢圓 ＝ 到兩焦點距離「和」固定的點，這個和 ＝ 2a。② 標準式（中心原點、長軸在 x 軸）：x²/a² ＋ y²/b² ＝ 1（a ＞ b ＞ 0）——a 長半軸、b 短半軸、c ＝ √(a² − b²)、焦點 (±c, 0)、長軸長 2a、短軸長 2b。③ 由方程式求：分母大的是 a²、小的是 b²。例 x²/25 ＋ y²/9 ＝ 1，a ＝ 5、b ＝ 3、c ＝ √(25 − 9) ＝ 4，焦點 (±4, 0)、長軸長 10。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.conic.ellipse"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>橢圓 x²/25＋y²/9＝1：到兩焦點距離和 ＝ 2a ＝ 10（定義）</text><line x1='96' y1='96' x2='264' y2='96' stroke='#99a7b5' stroke-width='1'/><line x1='180' y1='36' x2='180' y2='156' stroke='#99a7b5' stroke-width='1'/><ellipse cx='180' cy='96' rx='70' ry='42' fill='#e6edf3' stroke='#33475b' stroke-width='2'/><line x1='180' y1='54' x2='236' y2='96' stroke='#6b7785' stroke-width='1' stroke-dasharray='3 2'/><line x1='180' y1='54' x2='124' y2='96' stroke='#6b7785' stroke-width='1' stroke-dasharray='3 2'/><circle cx='236' cy='96' r='3' fill='#c2535d'/><circle cx='124' cy='96' r='3' fill='#c2535d'/><circle cx='180' cy='54' r='2.5' fill='#2f6f54'/><text x='250' y='113' font-family='sans-serif' font-size='9.5' fill='#c2535d' text-anchor='start'>F₁ (4, 0)</text><text x='110' y='113' font-family='sans-serif' font-size='9.5' fill='#c2535d' text-anchor='end'>F₂ (−4, 0)</text><text x='184' y='51' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='start'>P (0, 3)</text><text x='204' y='70' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>5</text><text x='156' y='70' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>5</text><text x='268' y='90' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='start'>x</text><text x='180' y='166' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>P 到兩焦點距離和 ＝ 5 ＋ 5 ＝ 10 ＝ 長軸長</text></svg>",
+      "alt": "標題「橢圓 x²/25＋y²/9＝1：到兩焦點距離和 ＝ 2a ＝ 10（定義）」。一個等比例的坐標平面，灰色 x 軸（右端標「x」）與 y 軸。一個橫向較長的淺藍色橢圓，中心在原點。長軸（x 軸方向）上有兩個紅色焦點，右邊標「F₁ (4, 0)」、左邊標「F₂ (−4, 0)」。橢圓最上面有一個綠點標「P (0, 3)」。從 P 畫兩條灰色虛線分別連到兩個焦點，兩段都標「5」。最下方註「P 到兩焦點距離和 ＝ 5 ＋ 5 ＝ 10 ＝ 長軸長」。",
+      "caption": "以 x²/25 ＋ y²/9 ＝ 1 示範：分母大的 25 給 a²（a ＝ 5）、小的 9 給 b²（b ＝ 3），c ＝ √(25 − 9) ＝ 4，所以焦點 F₁ (4, 0)、F₂ (−4, 0)。上頂點 P (0, 3) 到兩焦點各是 5，距離和 ＝ 5 ＋ 5 ＝ 10 ＝ 2a ＝ 長軸長——這正是橢圓的定義。坐標用相同比例，才看得出兩段一樣長、橢圓是扁的。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.conic.ellipse"
+     ],
+     "body": "最後練橢圓。重點：定義 ＝ 到兩焦點距離和 ＝ 2a；標準式（長軸在 x 軸）x²/a² ＋ y²/b² ＝ 1（a ＞ b），c ＝ √(a² − b²)、焦點 (±c, 0)、長軸長 2a、短軸長 2b。小提醒：(1) 橢圓的 c 是 √(a² − b²)（a² 「減」b²），和雙曲線的 √(a² ＋ b²) 不一樣，別記錯；(2) 焦點一定在「長軸」上，長軸在 x 軸時焦點就是 (±c, 0)，不是在 y 軸。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "橢圓 x²/25 ＋ y²/9 ＝ 1 的兩個焦點是哪兩點？",
+     "answer": "(±4, 0)",
+     "kp_ids": [
+      "math.t_sub.conic.ellipse"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.ellipse"
+     ],
+     "options": [
+      "(±4, 0)",
+      "(±5, 0)",
+      "(±√34, 0)",
+      "(0, ±4)"
+     ],
+     "distractor_rationales": {
+      "(±5, 0)": "這是 a（長半軸）＝ 5、是右左頂點的位置，不是焦點：焦點用 c ＝ √(a² − b²) ＝ √(25 − 9) ＝ 4，焦點 (±4, 0)。",
+      "(±√34, 0)": "這是用了 a² ＋ b²（＝ 25 ＋ 9 ＝ 34）——那是雙曲線的公式：橢圓的 c ＝ √(a² − b²) ＝ √16 ＝ 4。",
+      "(0, ±4)": "焦點放錯軸了：長軸在 x 軸（分母大的在 x²），焦點就在 x 軸 (±4, 0)，不是 (0, ±4)。"
+     },
+     "answer_evidence": [
+      "c-el-find"
+     ],
+     "feedback": "分母大的 25 ＝ a²（a ＝ 5）、9 ＝ b²（b ＝ 3），c ＝ √(25 − 9) ＝ 4，焦點 (±4, 0)。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "橢圓 x²/25 ＋ y²/9 ＝ 1 的長軸長是多少？",
+     "answer": "10",
+     "kp_ids": [
+      "math.t_sub.conic.ellipse"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.ellipse"
+     ],
+     "options": [
+      "10",
+      "5",
+      "25",
+      "6"
+     ],
+     "distractor_rationales": {
+      "5": "這是 a（長半軸、只有一半）：長軸長是 2a ＝ 2 × 5 ＝ 10。",
+      "25": "這是 a²（分母本身），不是長度：先開根得 a ＝ 5，長軸長 2a ＝ 10。",
+      "6": "這是短軸長 2b ＝ 2 × 3 ＝ 6：題目問的是「長」軸長 2a ＝ 10。"
+     },
+     "answer_evidence": [
+      "c-el-standard"
+     ],
+     "feedback": "a² ＝ 25 ⇒ a ＝ 5，長軸長 ＝ 2a ＝ 10。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "橢圓上任何一點到兩個焦點的距離「和」，有什麼特性？",
+     "answer": "等於長軸長（2a），是一個固定值",
+     "kp_ids": [
+      "math.t_sub.conic.ellipse"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.ellipse"
+     ],
+     "options": [
+      "等於長軸長（2a），是一個固定值",
+      "等於兩焦點的距離（2c）",
+      "每個點都不一樣",
+      "等於短軸長（2b）"
+     ],
+     "distractor_rationales": {
+      "等於兩焦點的距離（2c）": "2c 是兩焦點之間的距離，不是點到兩焦點的距離和：距離和是固定的 2a（比 2c 大）。",
+      "每個點都不一樣": "剛好相反：橢圓的定義就是這個距離和「對每個點都一樣」、固定等於 2a。",
+      "等於短軸長（2b）": "短軸長是 2b，和焦距離和無關：距離和固定等於長軸長 2a。"
+     },
+     "answer_evidence": [
+      "c-el-def"
+     ],
+     "feedback": "橢圓的定義：線上每點到兩焦點的距離和都等於固定值 2a（＝長軸長）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "橢圓 x²/25 ＋ y²/16 ＝ 1 的兩個焦點是哪兩點？",
+     "answer": "(±3, 0)",
+     "kp_ids": [
+      "math.t_sub.conic.ellipse"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.ellipse"
+     ],
+     "options": [
+      "(±3, 0)",
+      "(±9, 0)",
+      "(±√41, 0)",
+      "(0, ±3)"
+     ],
+     "distractor_rationales": {
+      "(±9, 0)": "這是 a² − b² ＝ 25 − 16 ＝ 9，忘了開根號：c ＝ √(25 − 16) ＝ √9 ＝ 3，焦點 (±3, 0)。",
+      "(±√41, 0)": "這是用了 a² ＋ b²（25 ＋ 16 ＝ 41）——那是雙曲線：橢圓用 c ＝ √(a² − b²) ＝ 3。",
+      "(0, ±3)": "焦點放錯軸了：長軸在 x 軸，焦點在 x 軸 (±3, 0)，不是 (0, ±3)。"
+     },
+     "answer_evidence": [
+      "c-el-find"
+     ],
+     "feedback": "a² ＝ 25、b² ＝ 16，c ＝ √(25 − 16) ＝ √9 ＝ 3，焦點 (±3, 0)。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（橢圓定義＝到兩焦點距離和固定＝2a；標準式長軸在 x 軸 x²/a²+y²/b²=1、a>b、c=√(a²−b²)、焦點(±c,0)、長軸長 2a、短軸長 2b；分母大的是 a²；x²/25+y²/9=1⇒a=5,b=3,c=4、焦點(±4,0)、長軸 10；x²/25+y²/16=1⇒c=√9=3、焦點(±3,0)；兩鐵律＝c 是 √(a²−b²) 相減不是相加(別和雙曲線混)、焦點在長軸上 x 軸時為 (±c,0)）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
