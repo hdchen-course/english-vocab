@@ -283,7 +283,16 @@ def c_conic_reflection_apply():
     assert sp.Rational(0, 25) + sp.Rational(9, 9) == 1
     assert (0 + (-4), 3 + (-3)) == (-4, 0)
     assert sp.simplify(abs(ang((1, 0), (4, -3))) - abs(ang((1, 0), (-4, -3)))) == 0  # 兩焦線與切線等角
-    return _ok("conic.reflection-apply", "反射性質：拋物線 y²=4x 上 P(1,2) 切線使平行軸光(1,0)反射聚焦到 F(1,0)（與 PF 等角45°）；橢圓 x²/25+y²/9=1 上 P(0,3) 由 F1(4,0) 來的光反射到 F2(−4,0)")
+    # 雙曲線方向鎖（distractor 事實防回歸）：x²−y²=1 右支 P(√2,1)，由 F1(−√2,0) 射出的光反射後
+    # 「好像從 F2(√2,0) 射出」(發散) —— 不是「射向一焦點」而是「從一焦點射出」
+    s2 = sp.sqrt(2)
+    P = sp.Matrix([s2, 1]); F1 = sp.Matrix([-s2, 0]); F2 = sp.Matrix([s2, 0])
+    t = sp.Matrix([1, s2])                             # 切線方向 y'=x/y=√2
+    d = P - F1                                         # 由 F1 射出、抵 P 的入射方向
+    dref = sp.simplify(2 * (d.dot(t) / t.dot(t)) * t - d)  # 對切線反射 ⇒ (0,3)
+    assert dref[0] == 0 and dref[1] > 0                # 反射後沿 +y
+    assert sp.simplify((F2 - P)[0] * dref[1] - (F2 - P)[1] * dref[0]) == 0  # 反射線(向後延長)過 F2 ⇒ 好像從 F2 射出
+    return _ok("conic.reflection-apply", "反射性質：拋物線 y²=4x 上 P(1,2) 切線使平行軸光(1,0)反射聚焦到 F(1,0)（與 PF 等角45°）；橢圓 x²/25+y²/9=1 上 P(0,3) 由 F1(4,0) 來的光反射到 F2(−4,0)；雙曲線 x²−y²=1 上由 F1 射出的光反射後好像從 F2 射出(發散)")
 
 # ---------- stats（18）----------
 D = [2, 4, 4, 4, 5, 5, 7, 9]      # 共用樣本（std 範例，μ=5,σ=2）
