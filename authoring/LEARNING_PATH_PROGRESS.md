@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 23:05 ★ space.line-parametric 空間直線的參數式與對稱式 5/5 DONE-GATE 全綠 → 空間 space strand 3/5（t_sub，★直線＋方向向量 d 從 P₀ 射出 SVG）
+- **math_space_line_parametric frozen `fa57f5f7f0971af7`**（R1-R5 連 5 clean；R1 panel 判 _note 一處「座」NOT A DEFECT 但零成本修齊重凍 b3997933；R3 抓 1 blocker[DOMAIN PRECISION：teach ②/總結 把『消去 t 得對稱式』當恆成立、漏『a,b,c≠0』條件（原只在內部 claim）→零分量方向除0]→de-converge 清 2 輪、補條件到 rendered teach ②與總結、重凍 fa57f5f7、重啟 R1 乾淨。末輪 confirmed 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard／content_sha==fa57f5f7／per_page_5clean PASS 594/594（line_parametric absent）／repro-math_checks6-space.line-parametric PASS／iPad 四角色簽核（斜虛線空間直線＋綠色方向向量箭頭 d 從 P₀(1,2,3) 沿線射出＋紅點 t=2→(3,4,5)＋底部式 (x,y,z)=(1,2,3)+t(1,1,1)；箭頭沿線方向正確、t=2 標籤移出虛線免碰、右緣0%）。
+- 空間直線的參數式與對稱式（t_sub，space strand 第3單元，接 plane-equation）＝(1) 參數式 (x,y,z)=P₀+t·d＝起點＋t×方向向量，代入 t 求線上點，例 (1,2,3)+2(1,1,1)=(3,4,5)；(2) 對稱式＝消去 t 得 (x−x₀)/a=(y−y₀)/b=(z−z₀)/c（**a,b,c 皆非 0 時**），例 過(1,2,3)方向(2,3,6)→(x−1)/2=(y−2)/3=(z−3)/6；(3) 方向向量＝直線上兩點相減，例 B−A=(2,2,2)。不含兩直線夾角、直線與平面關係（在 point-line-plane、distance-angle 單元）。
+- ★repro：本 session 強化 math_checks6::space.line-parametric 加 t=1、對稱式三比值(線上點(3,5,9))、方向=兩點相減(B−A=(2,2,2)/A+B=(4,6,8))；紅隊（指紋 c7b757bb→FAIL→誠實更新 01a5dce25e59882b→PASS）。非繞過。
+- ★教訓：**claim 裡的成立條件（如對稱式 a,b,c≠0）若只在內部 claim、未進 rendered teach，等於學生看不到→會誤用（零分量除0）**；凡 claim 有適用條件，teach 與總結都要呈現（R3 blocker 根因）。
+- ★續用「L3 以 reviewer 回報 coverage 驗」修正法（memory [[l3-coverage-check-reviewer-reported]]），R1–R5 全 PASS。
+- 下一步：space 第 4 單元＝point-line-plane（空間點線面位置關係 平行/垂直/歪斜）或 distance-angle；space 剩 2。接著 determinant(2)/linprog(2)＝math 全收。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 22:22 ★ space.plane-equation 平面方程式與法向量 5/5 DONE-GATE 全綠 → 空間 space strand 2/5（t_sub，★平面＋法向量⊥示意 SVG）
 - **math_space_plane_equation frozen `3de1db9523cb4736`**（R1-R5 連 5 clean，全程 confirmed 0、無 de-converge；5 輪不同 framing＝line-by-line／figure-geometry＋算數反驗／concept-precision＋teach-order／對抗式 distractor 反算／final end-to-end 皆空手）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard／content_sha==3de1db95／per_page_5clean PASS 593/593（plane_equation absent）／repro-math_checks6-space.plane-equation PASS／iPad 四角色簽核（傾斜平行四邊形當平面＋綠色法向量箭頭由點 P 垂直射出＋直角記號＋標 n=(2,3,6)、平面 2x+3y+6z=6；箭頭射出方向正確、標籤不碰線、右緣0%）。
 - 平面方程式與法向量（t_sub，space strand 第2單元，接 coordinate）＝(1) 平面 ax+by+cz=d，係數 (a,b,c) 就是法向量 n 且垂直於平面，例 2x+3y+6z=6→(2,3,6)；(2) 由法向量 (a,b,c) 與面上一點 (x₀,y₀,z₀)：d=ax₀+by₀+cz₀，例 (1,2,2) 過 (3,1,1)→d=7→x+2y+2z=7；(3) 檢查點在不在面上＝代入看等式成不成立，(3,0,0)代 2x+3y+6z=6 在面上。不含平面夾角、點到平面距離（在 distance-angle 單元）。
