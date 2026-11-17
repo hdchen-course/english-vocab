@@ -499,7 +499,11 @@ def f_geo_distance():
     # 經度每15°=1 小時時差；地球半徑 R，緯圈半徑 R·cosφ
     import math as _m
     assert 360/24 == 15 and abs(_m.cos(_m.radians(60)) - 0.5) < 1e-9
-    return _ok("finmath.geo-distance", "經度15°=1時差；緯度60°緯圈半徑=R·cos60°=R/2")
+    # 緯圈半徑 R·cosφ：赤道(0°)=R、30°=√3/2 R、60°=R/2；cosφ 在 0..90° 單調遞減 → 緯度越高緯圈越小
+    assert abs(_m.cos(0) - 1) < 1e-9 and abs(_m.cos(_m.radians(30)) - (3**0.5)/2) < 1e-9
+    cs = [_m.cos(_m.radians(a)) for a in (0, 30, 60, 80)]
+    assert cs == sorted(cs, reverse=True) and cs[3] == min(cs)   # 80° 緯圈最小
+    return _ok("finmath.geo-distance", "經度15°=1時差；緯圈半徑 R·cosφ：赤道R、60°=R/2；cosφ遞減(80°最小)")
 def f_marginal():
     # 邊際＝導數：成本 C=x²+10，邊際成本 dC/dx=2x
     assert diff(x**2+10, x) == 2*x

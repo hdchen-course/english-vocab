@@ -1,0 +1,209 @@
+{
+ "_note": "數學島 財務數學（finmath）strand 單元（第5個）。知識點 math.t_sub.finmath.geo-distance（經緯度與地球）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；同級術語一律 gloss：經度 (longitude)、緯度 (latitude)、緯圈 (circle of latitude)、地軸 (Earth's axis)、赤道 (equator)）。前置假設：已會三角函數 cos、特殊角。★scope（t_sub）：(1) 經度與時差：地球自轉一圈 360° 要 24 小時，經度每差 15°（＝360°÷24）時間差 1 小時。(2) 緯圈半徑：地球半徑 R，緯度 φ 的緯圈半徑 ＝ R × cos φ（從球心到地表點連線 R 與赤道平面夾 φ，水平鄰邊＝R cosφ）；cos φ 在 0°~90° 單調遞減，所以緯度越高緯圈越小：赤道(0°)＝R、60°＝R/2、極點(90°)＝0。不含大圓距離 haversine（另有 math.geo-distance 處理）、不含時區政治邊界。repro（tools/verify/math_checks7.py::finmath.geo-distance，本 session 強化並跑過 PASS、registry 補註冊＋指紋 609835b4；大圓距離另見 math_checks::geo-distance）：360÷24＝15；R cosφ 赤道R/60°=R/2；cosφ 遞減(80°最小)。★自檢（math-unit defect-classes）：figure＝地球剖面，球心 O、地軸、赤道、緯度60°點 P、半徑 OP=R、60°角、紅色水平段＝緯圈半徑 R cos60°=R/2——幾何正確（#43，P 在圓上、直角鄰邊）、標籤移出免碰撞（#2）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾緯圈半徑＝R×cos（緯度）、越高越小（#4/#46，經度時差由 teach＋caption 補）；practice 四答案＝{15°(Q1經度時差),1/2(Q2 cos60),緯度80°(Q3最小緯圈),鄰邊概念(Q4)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 24°把時數當度/30°=360÷12/1°；Q2 √3/2用sin/1以為同赤道/1/√2用cos45；Q3 赤道/30°/60°；Q4 地球非正球/高緯較冷/R會變小）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_finmath_geo_distance.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.finmath.geo-distance",
+   "title_zh": "經緯度與地球",
+   "can_do": "我知道地球用『經度 (longitude)』和『緯度 (latitude)』定位。地球自轉一圈 360° 要 24 小時，所以經度每差 15°（＝360°÷24）時間就差 1 小時。我也知道地球是一個半徑 R 的球：某一條『緯圈 (circle of latitude)』（同緯度連成的圓）半徑不是 R，而是 R × cos（緯度）——因為 cos 在 0° 到 90° 之間越來越小，所以緯度越高、緯圈越小；『赤道 (equator)』最大（半徑 ＝ R），越靠近極點越小（極點 ＝ 0）。",
+   "situation_group": "財務數學：經緯度與地球",
+   "subject": "math",
+   "strand": "finmath",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.finmath.geo-distance"
+   ],
+   "prerequisites": [],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-geo-longitude",
+     "text": "地球自轉一圈是 360°，花 24 小時。把 360° 平分成 24 份，每一份是 360° ÷ 24 ＝ 15°。所以「經度每差 15°，時間就差 1 小時」。往東邊，經度越大、時間越早（越快）。例如兩地經度差 30°，時間就差 30 ÷ 15 ＝ 2 小時。",
+     "kind": "definition",
+     "source_refs": [
+      "經度與時區（高中 地球與數學）"
+     ],
+     "verification_ref": "360÷24=15（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-geo-latitude",
+     "text": "地球是一個半徑 R 的球。同一個緯度的點連成一個圓，叫做緯圈。緯圈的半徑不是 R，而是 R × cos（緯度）。因為 cos 在 0° 到 90° 之間越來越小，所以緯度越高、緯圈越小：赤道（緯度 0°）的緯圈半徑 ＝ R × cos 0° ＝ R（最大）；緯度 60° 的 ＝ R × cos 60° ＝ R × 1/2 ＝ R/2；極點（緯度 90°）的 ＝ R × cos 90° ＝ 0。",
+     "kind": "definition",
+     "source_refs": [
+      "緯圈半徑（高中 地球與數學）"
+     ],
+     "verification_ref": "緯圈半徑 R cosφ；赤道R、60°=R/2、cosφ遞減（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-geo-why",
+     "text": "為什麼緯圈半徑是 R × cos（緯度）？從地球球心 O 連到緯度 φ 的地表點 P，這條線長就是球半徑 R，而且它和赤道平面夾 φ 角。P 到地軸的水平距離（也就是緯圈的半徑）正好是這個直角三角形裡 R 的「鄰邊」，所以 ＝ R × cos φ。只有赤道（φ ＝ 0）的那條線躺在赤道平面上，緯圈半徑才等於整個 R。",
+     "kind": "definition",
+     "source_refs": [
+      "緯圈半徑的幾何（高中 地球與數學）"
+     ],
+     "verification_ref": "鄰邊=R cosφ；φ=0 時=R（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.finmath.geo-distance"
+     ],
+     "body": "這一單元學經緯度與地球。先講經度和時差（每差 15° 差 1 小時）；再講緯圈半徑 ＝ R × cos（緯度）；最後看為什麼是 cos（直角三角形的鄰邊）。最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.finmath.geo-distance"
+     ],
+     "body": "① 經度與時差：地球轉一圈 360° 要 24 小時 → 每 360° ÷ 24 ＝ 15° 差 1 小時。② 緯圈半徑：R 是地球半徑，緯度 φ 的緯圈半徑 ＝ R × cos φ。cos 越高緯度越小：赤道 ＝ R、60° ＝ R/2、極點 ＝ 0。③ 為什麼：球心到地表點連線 ＝ R、和赤道平面夾 φ，水平鄰邊 ＝ R × cos φ。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.finmath.geo-distance"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='10' fill='#2f6f54' text-anchor='middle' font-weight='bold'>緯圈半徑 ＝ R × cos（緯度）：緯度越高、緯圈越小</text><circle cx='86' cy='78' r='46' fill='none' stroke='#c9d3dd' stroke-width='1.3'/><line x1='86' y1='28' x2='86' y2='128' stroke='#99a7b5' stroke-width='1'/><text x='86' y='24' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='middle'>地軸</text><line x1='34' y1='78' x2='138' y2='78' stroke='#99a7b5' stroke-width='1'/><text x='141' y='81' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='start'>赤道</text><text x='80' y='89' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='end'>O</text><line x1='86' y1='78' x2='109' y2='38' stroke='#2f6f54' stroke-width='1.8'/><circle cx='109' cy='38' r='3' fill='#2f6f54'/><text x='114' y='37' font-family='sans-serif' font-size='8.5' fill='#2f6f54' text-anchor='start'>P（緯度 60°）</text><text x='92' y='54' font-family='sans-serif' font-size='8.5' fill='#2f6f54' text-anchor='end'>R</text><path d='M 106 78 A 20 20 0 0 0 96 60.7' fill='none' stroke='#6b7785' stroke-width='1'/><text x='104' y='71' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='start'>60°</text><line x1='109' y1='38' x2='109' y2='78' stroke='#c9d3dd' stroke-width='1' stroke-dasharray='3 2'/><line x1='86' y1='78' x2='109' y2='78' stroke='#c2535d' stroke-width='2.6'/><text x='97' y='92' font-family='sans-serif' font-size='8' fill='#c2535d' text-anchor='middle'>緯圈半徑</text><text x='250' y='52' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>緯圈半徑 ＝ R × cos（緯度）</text><text x='250' y='72' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>緯度 60°：R × cos 60° ＝ R/2</text><text x='250' y='92' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='middle'>赤道（0°）＝ R、極點（90°）＝ 0</text><text x='180' y='150' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>經度每差 15°（＝ 360° ÷ 24），時間差 1 小時</text></svg>",
+      "alt": "標題「緯圈半徑 ＝ R × cos（緯度）：緯度越高、緯圈越小」。左邊一個圓代表地球：通過圓心的垂直線標「地軸」、水平線標「赤道」，圓心標「O」。從圓心 O 往左上畫一條綠線到圓上的點 P，標「P（緯度 60°）」，這條線標「R」，它和赤道的夾角標「60°」。從 P 垂直往下一條灰色虛線落到赤道，O 到落點之間的水平紅線標「緯圈半徑」。右邊三行字「緯圈半徑 ＝ R × cos（緯度）」「緯度 60°：R × cos 60° ＝ R/2」「赤道（0°）＝ R、極點（90°）＝ 0」。最下方一行「經度每差 15°（＝ 360° ÷ 24），時間差 1 小時」。",
+      "caption": "從地球球心 O 連到緯度 60° 的地表點 P，這條線長就是地球半徑 R，和赤道夾 60°。P 到地軸的水平距離（紅線）就是緯度 60° 的緯圈半徑 ＝ R × cos 60° ＝ R/2。緯度越高，cos 越小，緯圈就越小；赤道（0°）最大 ＝ R、極點（90°）＝ 0。另外，經度每差 15° 就差 1 小時（360° ÷ 24 ＝ 15°）。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.finmath.geo-distance"
+     ],
+     "body": "最後練經緯度與地球。重點：經度每差 15° 差 1 小時（360° ÷ 24）；緯圈半徑 ＝ R × cos（緯度），緯度越高越小。小提醒：(1) 15° 是用 360° ÷ 24 算出來的，不是 24 也不是 30；(2) 緯圈半徑用 cos（鄰邊），cos 60° ＝ 1/2；(3) 只有赤道的緯圈半徑等於地球半徑 R。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "地球自轉一圈 360° 要 24 小時。經度每差幾度，時間就差 1 小時？",
+     "answer": "15°",
+     "kp_ids": [
+      "math.t_sub.finmath.geo-distance"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.finmath.geo-distance"
+     ],
+     "options": [
+      "15°",
+      "24°",
+      "30°",
+      "1°"
+     ],
+     "distractor_rationales": {
+      "24°": "24 是「小時數」不是度數：要用 360° ÷ 24 小時 ＝ 每小時 15°，所以每差 15° 差 1 小時。",
+      "30°": "這是用 360° ÷ 12 算的：一天是 24 小時不是 12，360° ÷ 24 ＝ 15°。",
+      "1°": "不是每 1° 差 1 小時：那樣一圈要 360 小時；正確是 360° ÷ 24 ＝ 15° 差 1 小時。"
+     },
+     "answer_evidence": [
+      "c-geo-longitude"
+     ],
+     "feedback": "360° ÷ 24 小時 ＝ 15°，所以經度每差 15° 時間差 1 小時。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "地球半徑是 R，緯度 60° 的緯圈半徑是多少？",
+     "answer": "R/2",
+     "kp_ids": [
+      "math.t_sub.finmath.geo-distance"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.finmath.geo-distance"
+     ],
+     "options": [
+      "R/2",
+      "(√3/2) R",
+      "R",
+      "(1/√2) R"
+     ],
+     "distractor_rationales": {
+      "(√3/2) R": "用成 sin 60° 了：緯圈半徑是 R × cos 60°，cos 60° ＝ 1/2，不是 sin 60° ＝ √3/2。",
+      "R": "只有赤道（緯度 0°）的緯圈半徑才等於 R：緯度 60° 要乘 cos 60° ＝ 1/2，是 R/2。",
+      "(1/√2) R": "那是 cos 45°：這裡是緯度 60°，cos 60° ＝ 1/2，緯圈半徑 ＝ R/2。"
+     },
+     "answer_evidence": [
+      "c-geo-latitude"
+     ],
+     "feedback": "緯圈半徑 ＝ R × cos 60° ＝ R × 1/2 ＝ R/2。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "下列哪一條緯圈最小（半徑最短）？",
+     "answer": "緯度 80°",
+     "kp_ids": [
+      "math.t_sub.finmath.geo-distance"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.finmath.geo-distance"
+     ],
+     "options": [
+      "緯度 80°",
+      "赤道（0°）",
+      "緯度 30°",
+      "緯度 60°"
+     ],
+     "distractor_rationales": {
+      "赤道（0°）": "赤道其實最大：緯圈半徑 ＝ R × cos（緯度），赤道 cos 0° ＝ 1 最大；越高緯度越小。",
+      "緯度 30°": "緯度 30° 比 60°、80° 都大：cos 30° ＝ √3/2 ≈ 0.87，比 cos 80° 大很多。",
+      "緯度 60°": "緯度 60°（cos 60° ＝ 0.5）比 80°（cos 80° ≈ 0.17）大：最小的是緯度最高的 80°。"
+     },
+     "answer_evidence": [
+      "c-geo-latitude"
+     ],
+     "feedback": "緯圈半徑 ＝ R × cos（緯度），cos 越高緯度越小，所以 80° 的緯圈最小。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "為什麼緯度 φ 的緯圈半徑是 R × cos φ，而不是地球半徑 R？",
+     "answer": "緯圈不通過球心，它的半徑是直角三角形中 R 的鄰邊（R × cos φ）；只有赤道通過球心、半徑才等於 R",
+     "kp_ids": [
+      "math.t_sub.finmath.geo-distance"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.finmath.geo-distance"
+     ],
+     "options": [
+      "緯圈不通過球心，它的半徑是直角三角形中 R 的鄰邊（R × cos φ）；只有赤道通過球心、半徑才等於 R",
+      "因為地球其實是橢圓、不是正圓",
+      "因為緯度越高、地表離太陽越遠",
+      "因為地球半徑 R 在高緯度會變小"
+     ],
+     "distractor_rationales": {
+      "因為地球其實是橢圓、不是正圓": "這題把地球當成正球在算：緯圈半徑是 R × cos φ 是因為幾何（鄰邊），不是因為地球扁。",
+      "因為緯度越高、地表離太陽越遠": "和太陽距離無關：緯圈半徑只看球心到地表線的水平鄰邊 ＝ R × cos φ。",
+      "因為地球半徑 R 在高緯度會變小": "R（球半徑）是固定的、不會變：變小的是「緯圈」半徑，因為乘上 cos φ。"
+     },
+     "answer_evidence": [
+      "c-geo-why"
+     ],
+     "feedback": "球心到地表點的線長一律是 R，和赤道夾 φ；緯圈半徑是這條線的水平鄰邊 ＝ R × cos φ。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（經度與時差：地球轉 360° 要 24 小時，每 360°÷24＝15° 差 1 小時；緯圈半徑 ＝ R × cos（緯度），cos 在 0°~90° 遞減，赤道(0°)＝R、60°＝R/2、極點(90°)＝0；為什麼 cos：球心到地表線 ＝ R、和赤道夾 φ，水平鄰邊 ＝ R cos φ；三鐵律＝15°＝360÷24 非24非30、緯圈用 cos(鄰邊) cos60°=1/2、只有赤道緯圈＝R）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
