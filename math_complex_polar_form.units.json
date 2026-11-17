@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 複數（complex）strand 單元（第4個）。知識點 math.t_sub.complex.polar-form（極式）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；同級術語一律 gloss：複數 (complex number)、極式 (polar form)、模 (modulus)、輻角 (argument)）。前置假設：已學複數平面、模、三角函數（cos/sin 特殊角）、象限。★scope（t_sub，接 plane）：極式 z=r(cosθ+isinθ)，r=|z| 是模（≥0）、θ 是輻角（複數向量與正實軸的夾角、逆時針為正）；a+bi↔極式互換：r=√(a²+b²)、cosθ=a/r 且 sinθ=b/r（由象限定 θ）；反向 a=r cosθ、b=r sinθ。例 1+i→r=√2,θ=45°(π/4)；1+√3i→r=2,θ=60°(π/3)；2(cos60°+isin60°)=1+√3i。不含棣美弗次方（下一單元）、不含輻角的多值/主值嚴格討論。repro（tools/verify/math_checks7.py::complex.polar-form，本 session 新增並跑過 PASS；binding 另有 math_checks6 待補）：1+i r=√2 θ=π/4、1+√3i r=2 θ=π/3、極式還原。★自檢（math-unit defect-classes）：figure＝複數平面 z=1+i 綠向量、模 r=√2 標在向量、輻角 θ=45° 弧在原點——等軸比例（#62，45°要真的像45°）、向量端點 (1,1)（#43）、標籤移出免碰撞（#2）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾 r 是模、θ 是輻角（#4/#46，互換公式由 teach＋practice 補）；practice 四答案＝{r=√2 θ=45°(Q1),1+√3i(Q2 還原),向量與正實軸的夾角(Q3 θ義),60°(Q4 輻角)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 模沒開根/角錯/模只取一分量；Q2 cos-sin弄反/沒乘cos sin/沒乘r；Q3 長度/與正虛軸夾角/實部；Q4 tan對調30°/45°/象限錯120°）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_complex_polar_form.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.complex.polar-form",
+   "title_zh": "複數的極式",
+   "can_do": "我會把『複數 (complex number)』寫成『極式 (polar form)』z ＝ r(cos θ ＋ i sin θ)，其中 r ＝ |z| 是『模 (modulus)』（向量的長度，大於等於 0）、θ 是『輻角 (argument)』（複數向量和正實軸的夾角）。我會在 a ＋ bi 和極式之間互換：由 a ＋ bi 求 r ＝ √(a² ＋ b²)、再用 cos θ ＝ a/r、sin θ ＝ b/r 配合象限找出 θ；反過來由極式算回 a ＝ r cos θ、b ＝ r sin θ。",
+   "situation_group": "複數：極式",
+   "subject": "math",
+   "strand": "complex",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.complex.polar-form"
+   ],
+   "prerequisites": [
+    "math.t_sub.complex.plane"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-polar-def",
+     "text": "把複數畫在複數平面上時，除了用實部、虛部 (a, b)，也可以用「離原點多遠」加「朝哪個方向」來描述，這就是極式：z ＝ r(cos θ ＋ i sin θ)。其中 r ＝ |z| ＝ √(a² ＋ b²) 是模，也就是向量的長度，一定大於等於 0；θ 是輻角，也就是這個向量和正實軸（橫軸正向）的夾角，習慣上逆時針量為正。",
+     "kind": "definition",
+     "source_refs": [
+      "複數的極式（高中數學 複數）"
+     ],
+     "verification_ref": "z=r(cosθ+isinθ)，r=|z|、θ=輻角（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-polar-convert",
+     "text": "由 a ＋ bi 轉成極式：先算模 r ＝ √(a² ＋ b²)，再找輻角 θ，使 cos θ ＝ a/r 且 sin θ ＝ b/r（兩個條件一起看，才能確定 θ 在哪一個象限）。例：1 ＋ i，r ＝ √(1 ＋ 1) ＝ √2，cos θ ＝ sin θ ＝ 1/√2，所以 θ ＝ 45°（即 π/4），極式是 √2(cos 45° ＋ i sin 45°)。又例：1 ＋ √3 i，r ＝ √(1 ＋ 3) ＝ 2，cos θ ＝ 1/2、sin θ ＝ √3/2，所以 θ ＝ 60°（即 π/3）。",
+     "kind": "definition",
+     "source_refs": [
+      "直角式與極式互換（高中數學 複數）"
+     ],
+     "verification_ref": "1+i→r=√2,θ=π/4；1+√3i→r=2,θ=π/3（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-polar-back",
+     "text": "由極式轉回 a ＋ bi：用 a ＝ r cos θ、b ＝ r sin θ 算出實部和虛部。例：2(cos 60° ＋ i sin 60°)，a ＝ 2 × cos 60° ＝ 2 × 1/2 ＝ 1、b ＝ 2 × sin 60° ＝ 2 × √3/2 ＝ √3，所以等於 1 ＋ √3 i。記得「模 r 要乘進去」，不能只寫 cos θ ＋ i sin θ。",
+     "kind": "definition",
+     "source_refs": [
+      "極式轉直角式（高中數學 複數）"
+     ],
+     "verification_ref": "2(cos60°+isin60°)=1+√3i（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.complex.polar-form"
+     ],
+     "body": "這一單元學複數的極式。先講極式長什麼樣子（z ＝ r(cos θ ＋ i sin θ)，r 是模、θ 是輻角）；再講怎麼把 a ＋ bi 轉成極式（算 r、找 θ）；最後講怎麼從極式轉回 a ＋ bi。最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.complex.polar-form"
+     ],
+     "body": "① 極式：z ＝ r(cos θ ＋ i sin θ)，r ＝ |z| 是模（向量長度、≥ 0）、θ 是輻角（向量與正實軸的夾角、逆時針為正）。② 轉極式：r ＝ √(a² ＋ b²)，再用 cos θ ＝ a/r、sin θ ＝ b/r 配象限找 θ。例 1 ＋ i → r ＝ √2、θ ＝ 45°；1 ＋ √3 i → r ＝ 2、θ ＝ 60°。③ 轉回：a ＝ r cos θ、b ＝ r sin θ。例 2(cos 60° ＋ i sin 60°) ＝ 1 ＋ √3 i。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.complex.polar-form"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><defs><marker id='pfah' markerWidth='7' markerHeight='7' refX='5.5' refY='3' orient='auto'><path d='M0,0 L6,3 L0,6 z' fill='#2f6f54'/></marker></defs><text x='180' y='13' font-family='sans-serif' font-size='10' fill='#2f6f54' text-anchor='middle' font-weight='bold'>極式 z ＝ r(cos θ ＋ i sin θ)：r 是模、θ 是與正實軸的夾角</text><line x1='95' y1='120' x2='285' y2='120' stroke='#99a7b5' stroke-width='1'/><line x1='120' y1='150' x2='120' y2='30' stroke='#99a7b5' stroke-width='1'/><text x='289' y='123' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='start'>實軸</text><text x='125' y='36' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='start'>虛軸</text><text x='112' y='132' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='end'>O</text><line x1='175' y1='120' x2='175' y2='65' stroke='#c9d3dd' stroke-width='1' stroke-dasharray='3 2'/><path d='M 148 120 A 28 28 0 0 0 139.8 100.2' fill='none' stroke='#c2535d' stroke-width='1.3'/><text x='156' y='108' font-family='sans-serif' font-size='9' fill='#c2535d' text-anchor='start'>θ ＝ 45°</text><line x1='120' y1='120' x2='175' y2='65' stroke='#2f6f54' stroke-width='1.8' marker-end='url(#pfah)'/><circle cx='175' cy='65' r='3' fill='#2f6f54'/><text x='181' y='63' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='start'>z ＝ 1 ＋ i</text><text x='132' y='86' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='end'>r ＝ √2</text></svg>",
+      "alt": "標題「極式 z ＝ r(cos θ ＋ i sin θ)：r 是模、θ 是與正實軸的夾角」。一個複數平面，灰色水平實軸（右端標「實軸」）與垂直虛軸（上端標「虛軸」）交於原點 O。一條綠色向量從 O 指到點 (1, 1)，標「z ＝ 1 ＋ i」，向量旁標「r ＝ √2」。原點處有一段紅色圓弧，從正實軸量到這條向量，標「θ ＝ 45°」。另有一條灰色虛線從點 (1, 1) 垂直落到實軸。",
+      "caption": "把 z ＝ 1 ＋ i 畫成從原點出發的向量：它的長度就是模 r ＝ √(1² ＋ 1²) ＝ √2，它和正實軸的夾角就是輻角 θ ＝ 45°。所以 1 ＋ i 的極式是 √2(cos 45° ＋ i sin 45°)。只要知道 r 和 θ，就能用 a ＝ r cos θ、b ＝ r sin θ 算回 1 ＋ i。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.complex.polar-form"
+     ],
+     "body": "最後練複數的極式。重點：z ＝ r(cos θ ＋ i sin θ)，r ＝ √(a² ＋ b²) 是模、θ 是輻角；轉回用 a ＝ r cos θ、b ＝ r sin θ。小提醒：(1) 找 θ 要同時看 cos θ ＝ a/r 和 sin θ ＝ b/r，才能定出正確的象限；(2) 模 r 一定 ≥ 0，不會是負的；(3) 從極式算回 a ＋ bi 時，別忘了把 r 乘進 cos θ、sin θ。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "複數 1 ＋ i 寫成極式時，模 r 和輻角 θ 分別是多少？",
+     "answer": "r ＝ √2、θ ＝ 45°",
+     "kp_ids": [
+      "math.t_sub.complex.polar-form"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.complex.polar-form"
+     ],
+     "options": [
+      "r ＝ √2、θ ＝ 45°",
+      "r ＝ 2、θ ＝ 45°",
+      "r ＝ √2、θ ＝ 60°",
+      "r ＝ 1、θ ＝ 45°"
+     ],
+     "distractor_rationales": {
+      "r ＝ 2、θ ＝ 45°": "模忘了開根號：r ＝ √(1² ＋ 1²) ＝ √2，不是 1² ＋ 1² ＝ 2；θ ＝ 45° 對。",
+      "r ＝ √2、θ ＝ 60°": "角度錯了：cos θ ＝ sin θ ＝ 1/√2 對應 θ ＝ 45°，不是 60°；r ＝ √2 對。",
+      "r ＝ 1、θ ＝ 45°": "模只取了一個分量：r 要把兩個分量一起算 √(1² ＋ 1²) ＝ √2，不是 1。"
+     },
+     "answer_evidence": [
+      "c-polar-convert"
+     ],
+     "feedback": "r ＝ √(1² ＋ 1²) ＝ √2，cos θ ＝ sin θ ＝ 1/√2 ⇒ θ ＝ 45°。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "把極式 2(cos 60° ＋ i sin 60°) 化回 a ＋ bi，等於多少？",
+     "answer": "1 ＋ √3 i",
+     "kp_ids": [
+      "math.t_sub.complex.polar-form"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.complex.polar-form"
+     ],
+     "options": [
+      "1 ＋ √3 i",
+      "√3 ＋ i",
+      "2 ＋ 2i",
+      "1/2 ＋ (√3/2) i"
+     ],
+     "distractor_rationales": {
+      "√3 ＋ i": "把 cos 60° 和 sin 60° 弄反了：cos 60° ＝ 1/2（給實部）、sin 60° ＝ √3/2（給虛部），所以 a ＝ 2 × 1/2 ＝ 1、b ＝ 2 × √3/2 ＝ √3，是 1 ＋ √3 i。",
+      "2 ＋ 2i": "忘了乘上 cos 60°、sin 60°，直接把 r 當成實部和虛部：要 a ＝ 2 cos 60° ＝ 1、b ＝ 2 sin 60° ＝ √3。",
+      "1/2 ＋ (√3/2) i": "忘了乘上模 r ＝ 2：只寫了 cos 60° ＋ i sin 60°，要再乘 2 得 1 ＋ √3 i。"
+     },
+     "answer_evidence": [
+      "c-polar-back"
+     ],
+     "feedback": "a ＝ 2 cos 60° ＝ 1、b ＝ 2 sin 60° ＝ √3，所以是 1 ＋ √3 i。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在極式 z ＝ r(cos θ ＋ i sin θ) 裡，θ（輻角）代表什麼？",
+     "answer": "向量與正實軸的夾角",
+     "kp_ids": [
+      "math.t_sub.complex.polar-form"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.complex.polar-form"
+     ],
+     "options": [
+      "向量與正實軸的夾角",
+      "向量的長度",
+      "向量與正虛軸的夾角",
+      "複數的實部"
+     ],
+     "distractor_rationales": {
+      "向量的長度": "那是模 r，不是輻角：θ 是方向（和正實軸的夾角），r 才是長度。",
+      "向量與正虛軸的夾角": "輻角是量到「正實軸」（橫軸正向）的夾角，不是正虛軸：習慣從正實軸逆時針量。",
+      "複數的實部": "實部是 a ＝ r cos θ，不是 θ 本身：θ 是向量和正實軸的夾角。"
+     },
+     "answer_evidence": [
+      "c-polar-def"
+     ],
+     "feedback": "θ（輻角）就是複數向量和正實軸的夾角；r 才是向量長度。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "複數 1 ＋ √3 i 的輻角 θ 是多少？（它在第一象限）",
+     "answer": "60°",
+     "kp_ids": [
+      "math.t_sub.complex.polar-form"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.complex.polar-form"
+     ],
+     "options": [
+      "60°",
+      "30°",
+      "45°",
+      "120°"
+     ],
+     "distractor_rationales": {
+      "30°": "把實部、虛部的位置弄反了：tan θ ＝ 虛部/實部 ＝ √3/1 ＝ √3 ⇒ θ ＝ 60°；若算成 1/√3 才會得 30°。",
+      "45°": "這是實部、虛部相等（如 1 ＋ i）時的角：這裡虛部 √3 比實部 1 大，tan θ ＝ √3 ⇒ θ ＝ 60°。",
+      "120°": "象限判斷錯了：1 ＋ √3 i 的實部、虛部都是正的、在第一象限，θ ＝ 60°；120° 會落在第二象限。"
+     },
+     "answer_evidence": [
+      "c-polar-convert"
+     ],
+     "feedback": "r ＝ √(1 ＋ 3) ＝ 2，cos θ ＝ 1/2、sin θ ＝ √3/2 ⇒ θ ＝ 60°。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（極式 z ＝ r(cos θ ＋ i sin θ)，r ＝ √(a²＋b²) 模(≥0)、θ 輻角（與正實軸夾角、逆時針為正）；轉極式用 cos θ ＝ a/r、sin θ ＝ b/r 配象限；轉回用 a ＝ r cos θ、b ＝ r sin θ；1+i→r=√2 θ=45°、1+√3i→r=2 θ=60°、2(cos60°+isin60°)=1+√3i；三鐵律＝找 θ 要同時看 cos 和 sin 定象限、模 r≥0 不會負、轉回別忘把 r 乘進去）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
