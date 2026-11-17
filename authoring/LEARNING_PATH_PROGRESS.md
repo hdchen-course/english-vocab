@@ -7,6 +7,18 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-18 01:14 ★ determinant.2x2-3x3 二階三階行列式計算與幾何意義 5/5 DONE-GATE 全綠 → 行列式 determinant strand 1/2（t_sub，★|det|=平行四邊形面積 SVG）
+- **math_determinant_2x2_3x3 frozen `dbd6a8dbca10455c`**（R1-R5 連 5 clean）。缺陷修復軌跡：
+  - R1 抓 2 defect：①[blocker figure-geometry] SVG 兩軸用不同 px/unit（a=(3,0) 畫 120px＝40/unit、b=(0,4) 只畫 76px＝19/unit）→ 長度3 向量看起來比長度4 長、3×4 矩形畫成橫向，與 (3,0)/(0,4) 標籤矛盾 → 改統一 25px/unit（a=75px、b=100px、矩形直向 75×100）；②[minor terminology] distractor「兩列成比例」(rows) 與全單元「行向量」(columns) 框架不一致 → 改「兩個行向量 (1,2)、(2,4) 共線」。R1 在 pre-bank 直接修、重凍 f749dedca6。
+  - R2 淨（streak 1/5）→ R3 抓 1 major[used-before-taught]：Q4 評分正解/feedback 斷言「矩陣不可逆（反矩陣）」，但 can_do/三段 teach/figure caption 皆只教 det=0⟺共線（面積0），不可逆後果僅在 claim c-det-geo/scope 未進 rendered teach → **de-converge（rounds 歸零＋_deconverge_trace 留痕）**、把不可逆後果補進 can_do/teach③/summary/figure caption（現先教後測）、重凍 **dbd6a8db**、重啟 streak 乾淨跑滿 5。
+- DONE-GATE 全綠：scan PASS（units+html）／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard／content_sha==dbd6a8db／per_page_5clean PASS（determinant absent from violations）／repro-math_checks6-determinant.2x2-3x3 PASS／iPad 四角色簽核（坐標系＋綠向量 a=(3,0) 橫＋紅向量 b=(0,4) 直＋淡藍直向矩形 3×4＋「面積=|det|=12」置中＋底部式 3×4−0×0=12；向量由原點射出、a 短 b 長符合標籤、矩形直向、右緣0%）。數學中文授課無音檔。
+- 二階三階行列式（t_sub，determinant strand 第1單元）＝(1) 二階 det[[a,b],[c,d]]=ad−bc（主對角減副對角），例 [[1,2],[3,4]]=−2；(2) 三階沿第一列降階展開 +−+ 交錯、上三角＝對角線相乘，例 [[2,1,3],[0,3,4],[0,0,5]]=2×3×5=30；(3) 幾何 |det(2×2)|=兩行向量張成的平行四邊形面積、det=0⟺共線（面積0）、矩陣不可逆。不含四階以上、行列式性質證明、克拉瑪公式（另一單元）。
+- ★repro：本 session 強化 math_checks6::determinant.2x2-3x3 加上三角 det=30、det=0 例；紅隊（指紋 78505a8e→FAIL→誠實更新 40a2d5656dad2c29→PASS）。非繞過。
+- ★教訓1（已紅隊）：**SVG 幾何示意圖兩軸必須用同一 px/unit**，否則小數值向量畫得比大數值長、矩形長寬比顛倒，與標籤矛盾（R1 blocker，figure-geometry lens 抓到、deterministic gate 看不到）。
+- ★教訓2：**凡 practice 評分的後果（如 det=0⟹矩陣不可逆）即使在前置單元教過、也必須在本單元 rendered teach 先出現，否則 used-before-taught**（R3 major 根因）。這與 [[space.line-parametric]] R3「claim 條件須進 rendered teach」同類。
+- ★教訓3：**harvest-first hook（bank 1 輪後禁改 sidecar）正確擋下晚修**；誠實解＝先 de-converge（清 rounds＋trace）回 harvest 階段再改，非 touch override 繞過（classifier 亦擋 override，正確）。
+- 下一步：determinant 末單元＝cramer（克拉瑪公式，oracle det_cramer 已備）；之後 linprog(2)＝**math domain 全收（260/260 KP）**。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-18 00:20 ★★ space.distance-angle 點線面距離與夾角 5/5 DONE-GATE 全綠 → 空間 space strand 5/5 **全收** ★★（t_sub，★點到平面垂直距離 SVG）
 - **math_space_distance_angle frozen `caa8dad522ec1414`**（R1-R5 連 5 clean；R2 抓 1 blocker[domain-precision：can_do/teach/selfeval 把兩直線夾角 0°~90° 整段稱「銳角」，但 90°(Q4 正解)是直角、與 claim c-da-line-angle 已正確寫「銳角或直角」矛盾]→de-converge 清 1 輪、把 4 處措辭改「0°~90°（銳角或直角）」、重凍 caa8dad5、重啟 R1 乾淨。末輪 confirmed 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard／content_sha==caa8dad5／per_page_5clean PASS 596/596（distance_angle absent）／repro-math_checks6-space.distance-angle PASS／iPad 四角色簽核（傾斜平面＋平面外點 P＋紅色垂直虛線到垂足＋直角記號＋標「距離」＋底部公式；垂線接 P 與垂足、直角記號清楚、右緣0%）。
 - 點線面距離與夾角（t_sub，space strand 第5末單元，接 point-line-plane）＝(1) 點到平面距離＝|ax₀+by₀+cz₀−d|/√(a²+b²+c²)（分子代入減常數 d 取絕對值、分母法向量長度）；例 O→2x+2y+z=6=6/3=2；(2) 兩直線夾角 cosθ=|d₁·d₂|/(|d₁||d₂|)，取絕對值得 0°~90°（銳角或直角）；例 (1,0,0)&(1,1,0)=45°、內積0→90°。距離用中文詞「距離」避免與平面常數 d 字母衝突。不含點到直線距離、一般二面角。
