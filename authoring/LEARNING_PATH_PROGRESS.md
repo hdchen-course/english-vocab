@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 13:34 ★ complex plane 複數平面（阿岡圖）5/5 DONE-GATE 全綠（t_sub，★向量加法 (1+2i)+(3+i)=4+3i 平行四邊形 SVG）→ 複數島 complex strand 3/6
+- **math_complex_plane frozen `905d5cf8d16ab4e1`**（R1-R5 連 5 clean 一次過、無缺陷、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==905d5cf8／per_page_5clean 577/577 頁 0 違規（complex_plane absent）／repro PASS／iPad 四角色簽核（複數平面兩藍向量 z₁=1+2i/z₂=3+i、綠合向量 z₁+z₂=4+3i、灰虛線平行四邊形、端點坐標正確、右緣0%）。
+- 複數平面（阿岡圖，t_sub，接 conjugate-modulus）＝把 a+bi 畫成點 (a,b)/從原點出發的向量（實部橫、虛部縱）；模 |z| 的幾何意義＝該點到原點的距離；複數加法＝向量加法 (a+c)+(b+d)i，平行四邊形法則。
+- ★repro：binding 待補 math_checks6；單元引 math_checks7::complex.plane（3+4i↔(3,4) 距離5；(1+2i)+(3+i)=4+3i↔(1,2)+(3,1)=(4,3) 向量加；(6,8)↔6+8i 距離原點=10，本 session 擴充，.venv PASS）。
+- practice：Q1 2+3i↔(2,3)、Q2 (1+2i)+(3+i)=4+3i、Q3 |z| 是到原點距離、Q4 |6+8i|=10。distractor 單一誤解（坐標對調/虛部變號/實部變號；虛部漏加/實部漏加/做成相減；到實軸/到虛軸/橫坐標；相加/沒開根號/a+b放根號）。
+- 下一步：complex 第 4 單元＝polar-form（極式 z=r(cosθ+isinθ)）；complex 共 6 KP，剩 3（polar-form/de-moivre/roots-of-unity）。接著 finmath(6)/matrix(5)/space(5)/determinant(2)/linprog(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 13:14 ★ complex conjugate-modulus 複數的共軛與模 5/5 DONE-GATE 全綠（t_adv，★複數平面 z=3+4i／z̄ 對實軸鏡射／|z|=5 SVG）→ 複數島 complex strand 2/6
 - **math_complex_conjugate_modulus frozen `bbd5a908ef4c2a0e`**（R1-R5 連 5 clean 一次過、無缺陷、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==bbd5a908／per_page_5clean 576/576 頁 0 違規（complex_conjugate absent）／repro PASS／iPad 四角色簽核（複數平面 z=3+4i 綠點＋|z|=5 綠線、z̄=3−4i 灰點對實軸鏡射虛線相連、3-4-5 直角三角形、右緣0%）。
 - 共軛與模（t_adv，接 definition-operations）＝共軛 z̄=a−bi（只改虛部正負號、幾何上對實軸鏡射）；模 |z|=√(a²+b²)（複數平面上該點到原點的距離、非負實數）；性質 z·z̄=a²+b²=|z|²（共軛相乘得模的平方、是實數，正是除法有理化的原理）、|z₁z₂|=|z₁||z₂|（模的乘法性）。
