@@ -78,8 +78,8 @@ def sp_coordinate():
     assert (Matrix([1, 0, 0])-Matrix([1, 3, 4])).norm() == 5   # Δ=(0,3,4)→√25=5
     # 中點 = 兩點各座標平均
     assert (Matrix([2, 4, 6])+Matrix([0, 0, 0]))/2 == Matrix([1, 2, 3])
-    assert (Matrix([1, 2, 3])+Matrix([3, 6, 9]))/2 == Matrix([2, 4, 6])   # practice Q3
-    return _ok("space.coordinate", "空間兩點距離=√(Δx²+Δy²+Δz²)：O→(2,3,6)=√49=7、(1,0,0)→(1,3,4)=√25=5；中點=座標平均 (2,4,6)&O→(1,2,3)、(1,2,3)&(3,6,9)→(2,4,6)")
+    assert (Matrix([2, 2, 4])+Matrix([6, 8, 10]))/2 == Matrix([4, 5, 7])   # practice Q3
+    return _ok("space.coordinate", "空間兩點距離=√(Δx²+Δy²+Δz²)：O→(2,3,6)=√49=7、(1,0,0)→(1,3,4)=√25=5；中點=座標平均 (2,4,6)&O→(1,2,3)、(2,2,4)&(6,8,10)→(4,5,7)")
 def sp_plane_equation():
     # 平面 2x+3y+6z=6 法向量(2,3,6)；點(3,0,0)在面上
     n = Matrix([2, 3, 6]); P = Matrix([3, 0, 0])
