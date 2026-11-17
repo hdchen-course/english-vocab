@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 20:15 ★ matrix.inverse 反方陣的求法與性質 5/5 DONE-GATE 全綠 → 矩陣 matrix strand 3/5（t_sub，★A→A⁻¹ 流程 SVG）
+- **math_matrix_inverse frozen `8c576446f5721aed`**（R1-R5 連 5 clean；R1 抓 1 blocker[algorithm-correctness：Q2 第三 distractor [[−0.5,−1],[−1.5,2]] 右下 4÷(−2) 我筆誤寫 2 應 −2、與其「每元素÷det」路徑不符]→R1 pre-bank 直接修為 [[−0.5,−1],[−1.5,−2]]、重凍重跑；末輪 confirmed 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／content_sha==8c576446／per_page_5clean PASS 589/589（matrix_inverse absent）／repro PASS／iPad 四角色簽核（A=[[1,2],[3,4]]→灰箭頭「對調1,4｜2,3變號」「÷(−2)」→綠 A⁻¹=[[−2,1],[1.5,−0.5]]、det 標註、底部驗證 A×A⁻¹=I、箭頭指向正確、右緣0%）。
+- 反方陣（t_sub，接 matrix.multiplication）＝(1) 2×2 行列式 det=ad−bc；(2) det≠0 時 A⁻¹=1/(ad−bc)[[d,−b],[−c,a]]（主對角對調、副對角變號、除以 det）；(3) A·A⁻¹=單位矩陣 I=[[1,0],[0,1]]；(4) det=0 不可逆。例 [[1,2],[3,4]] det=−2、A⁻¹=[[−2,1],[1.5,−0.5]]；[[1,2],[2,4]] det=0 不可逆。不含高階反方陣/伴隨矩陣一般式。
+- ★repro：本 session 強化 tools/verify/math_checks6.py::matrix.inverse 加 det=ad−bc、2×2 公式、det=0 不可逆；紅隊（指紋 7c05934f→FAIL→誠實更新 6408b04ae657e504→PASS）。非繞過。
+- practice：Q1 det=−2、Q2 A⁻¹=[[−2,1],[1.5,−0.5]]、Q3 A·A⁻¹=[[1,0],[0,1]]、Q4 不可逆者=[[1,2],[2,4]](det=0)。distractor 單一誤解（顛倒bc−ad/相加ad+bc/只算−bc；沒除det/只除沒對調變號/對調除但未變號；零矩陣/全1/原矩陣；三個 det≠0 可逆者）。
+- ★教訓：distractor「逐元素運算」類值務必每格親算（4÷−2=−2 符號易錯）；distractor 值與 rationale 誤解路徑要逐格一致（#53/#59）——R1 panel 以「值與路徑不符、無乾淨單一誤解」判 a-wrong。
+- 下一步：matrix 第 4 單元＝linear-system（以矩陣解線性方程組/高斯消去）；matrix 共 5 KP，剩 2（linear-system/transformation）。接著 space(5)/determinant(2)/linprog(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 19:48 ★ matrix.multiplication 矩陣乘法 5/5 DONE-GATE 全綠 → 矩陣 matrix strand 2/5（t_sub，★列配行內積高亮 SVG）
 - **math_matrix_multiplication frozen `beb1bab8aeb0b5c5`**（R1-R5 連 5 clean；R3 抓 1 confirmed minor[term-before-taught：Q4 distractor rationale 用本單元未教的『單位矩陣』當例]→de-converge 清 2 輪、改通用『有些矩陣剛好 AB＝BA』、重凍重跑；R4 首跑 confirmed 0 但 L3 攔截[reviewer 用裸「]」anchor 對不上 line 52「],」→round INVALID 未 bank]→強化 anchor 要求重跑 R4 乾淨。末輪 confirmed 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／content_sha==beb1bab8／per_page_5clean PASS 588/588（matrix_multiplication absent）／repro PASS／iPad 四角色簽核（三個 2×2 矩陣 A 第1列(1,2)紅+淡藍橫 highlight、B 第1行(5,7)紅+淡藍直 highlight、結果 [[19,22],[43,50]] 左上 19 綠粗體、底部算式 1×5＋2×7＝19、無重疊裁切、選項2欄齊整、右緣0%）。
 - 矩陣乘法（t_sub，接 matrix.operations）＝(1) AB 的「第 i 列第 j 行」元素＝A 第 i 列與 B 第 j 行對應相乘再相加（內積）；例 [[1,2],[3,4]]·[[5,6],[7,8]]＝[[19,22],[43,50]]（左上 1×5＋2×7＝19）。(2) 相乘條件＝前者行數＝後者列數，結果大小＝前者列數×後者行數（2×3·3×2＝2×2）。(3) 一般不可交換 AB≠BA（BA＝[[23,34],[31,46]]）。不含反方陣/單位矩陣。
