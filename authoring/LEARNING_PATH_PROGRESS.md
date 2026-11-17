@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 23:44 ★ space.point-line-plane 空間點線面位置關係（平行/垂直/歪斜）5/5 DONE-GATE 全綠 → 空間 space strand 4/5（t_sub，★三格 平行/垂直/歪斜 SVG）
+- **math_space_point_line_plane frozen `737e2480ea065082`**（R1-R5 連 5 clean；R2 抓 1 blocker[figure-geometry：歪斜 panel 虛線斷口放在空白處(300-306)、未蓋真正交點(288,93)→兩線看似相交、與「歪斜=不相交」矛盾]→de-converge 清 1 輪、把虛線斷口移到交點(seg1→(285,97)、GAP、seg2(292,88)→)、重凍 737e2480、重啟 R1 乾淨。另 R1 一處 _note「座」先前已統一。R5 首跑 clean 但一 reviewer 遭 content-filter error→不 bank、重跑取完整參與再 bank。末輪 confirmed 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard／content_sha==737e2480／per_page_5clean PASS 595/595（point_line_plane absent）／repro-math_checks6-space.point-line-plane PASS／iPad 四角色簽核（三格：平行兩同向綠箭頭、垂直兩箭頭夾直角＋小方塊、歪斜實線＋虛線交叉但虛線斷口在交點表示在後方不相交；箭頭方向正確、標籤不碰、右緣0%）。
+- 空間點線面位置關係（t_sub，space strand 第4單元，接 line-parametric）＝(1) 判斷工具：兩向量平行⟺成非零倍數(外積0)、垂直⟺內積0；(2) 兩直線用方向向量判平行/垂直，既不平行又不相交＝歪斜(空間特有)；(3) 直線⊥平面⟺方向向量∥法向量。例 (1,2,2)∥(2,4,4) 平行、(1,2,2)·(2,−2,1)=0 垂直。不含二面角大小、點到平面距離（在 distance-angle 單元）。
+- ★repro：本 session 強化 math_checks6::space.point-line-plane 加 (1,2,2)∥(2,4,4)、(1,2,2)·(2,−2,1)=0、直線⊥平面⟺方向∥法向；紅隊（指紋 faef8dc3→FAIL→誠實更新 dac5fa6fabbab34a→PASS）。非繞過。
+- ★教訓（已紅隊）：**3D「歪斜/遮擋」示意圖，虛線（在後方）的斷口必須對齊兩線的「真正交點」**，否則缺口落在空白處、交點仍兩線都有墨→看似相交、與「不相交」概念矛盾（R2 blocker 根因，圖學類缺陷 content_audit 的 figure-geometry lens 抓到、deterministic gate 看不到）。
+- 下一步：space 末單元＝distance-angle（點/線/面間的距離與夾角計算）；完成即 space strand 5/5 全收。接著 determinant(2)/linprog(2)＝math 全收。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 23:05 ★ space.line-parametric 空間直線的參數式與對稱式 5/5 DONE-GATE 全綠 → 空間 space strand 3/5（t_sub，★直線＋方向向量 d 從 P₀ 射出 SVG）
 - **math_space_line_parametric frozen `fa57f5f7f0971af7`**（R1-R5 連 5 clean；R1 panel 判 _note 一處「座」NOT A DEFECT 但零成本修齊重凍 b3997933；R3 抓 1 blocker[DOMAIN PRECISION：teach ②/總結 把『消去 t 得對稱式』當恆成立、漏『a,b,c≠0』條件（原只在內部 claim）→零分量方向除0]→de-converge 清 2 輪、補條件到 rendered teach ②與總結、重凍 fa57f5f7、重啟 R1 乾淨。末輪 confirmed 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard／content_sha==fa57f5f7／per_page_5clean PASS 594/594（line_parametric absent）／repro-math_checks6-space.line-parametric PASS／iPad 四角色簽核（斜虛線空間直線＋綠色方向向量箭頭 d 從 P₀(1,2,3) 沿線射出＋紅點 t=2→(3,4,5)＋底部式 (x,y,z)=(1,2,3)+t(1,1,1)；箭頭沿線方向正確、t=2 標籤移出虛線免碰、右緣0%）。
 - 空間直線的參數式與對稱式（t_sub，space strand 第3單元，接 plane-equation）＝(1) 參數式 (x,y,z)=P₀+t·d＝起點＋t×方向向量，代入 t 求線上點，例 (1,2,3)+2(1,1,1)=(3,4,5)；(2) 對稱式＝消去 t 得 (x−x₀)/a=(y−y₀)/b=(z−z₀)/c（**a,b,c 皆非 0 時**），例 過(1,2,3)方向(2,3,6)→(x−1)/2=(y−2)/3=(z−3)/6；(3) 方向向量＝直線上兩點相減，例 B−A=(2,2,2)。不含兩直線夾角、直線與平面關係（在 point-line-plane、distance-angle 單元）。
