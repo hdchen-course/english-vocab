@@ -69,7 +69,13 @@ def sp_point_line_plane():
     d1, d2 = Matrix([1, 0, 0]), Matrix([2, 0, 0])
     assert d1.cross(d2).norm() == 0            # 平行
     assert Matrix([1, 0, 0]).dot(Matrix([0, 1, 0])) == 0
-    return _ok("space.point-line-plane", "方向向量平行(叉積0)/垂直(內積0)")
+    # 平行：(1,2,2) 與 (2,4,4)=2×(1,2,2)，叉積=0（Q1）
+    assert Matrix([1, 2, 2]).cross(Matrix([2, 4, 4])).norm() == 0
+    # 垂直：(1,2,2)·(2,−2,1)=2−4+2=0（Q2）
+    assert Matrix([1, 2, 2]).dot(Matrix([2, -2, 1])) == 0
+    # 直線⊥平面 ⟺ 方向向量 平行 法向量（d=(2,4,4) 平行 n=(1,2,2)，叉積0）（Q3）
+    assert Matrix([2, 4, 4]).cross(Matrix([1, 2, 2])).norm() == 0
+    return _ok("space.point-line-plane", "方向向量平行(叉積0)/垂直(內積0)；(1,2,2)∥(2,4,4) 叉積0、(1,2,2)·(2,−2,1)=0 垂直；直線⊥平面⟺方向∥法向量")
 def sp_coordinate():
     A, B = Matrix([1, 2, 2]), Matrix([4, 6, 2+6])  # B=(4,6,8)
     assert (A-B).norm() == sqrt(9+16+36)

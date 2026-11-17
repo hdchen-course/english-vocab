@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 空間（space）strand 單元（第4）。知識點 math.t_sub.space.point-line-plane（空間中點、線、面的位置關係：平行/垂直/歪斜）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次：平行 (parallel)、垂直 (perpendicular)、歪斜 (skew)、方向向量 (direction vector)、法向量 (normal vector)）。前置假設：已會空間向量內積、外積（叉積）、直線方向向量、平面法向量。★scope（t_sub）：(1) 判斷工具——兩向量平行 ⟺ 一個是另一個的非零倍數（外積＝0）；兩向量垂直 ⟺ 內積＝0。(2) 兩直線：用方向向量判斷平行（方向成倍數）、垂直（方向內積＝0）；若既不平行又不相交＝歪斜（skew，空間特有，平面上不平行必相交）。(3) 直線與平面：直線垂直於平面 ⟺ 方向向量 平行 法向量（方向是法向量的倍數）。例 方向 (1,2,2)∥(2,4,4) 平行；(1,2,2)·(2,−2,1)=2−4+2=0 垂直。不含兩平面二面角大小、不含點到平面距離（在 distance-angle 單元）。repro（tools/verify/math_checks6.py::space.point-line-plane，repro_gate .venv PASS、registry 指紋 dac5fa6fabbab34a；本 session 強化加 (1,2,2)∥(2,4,4)、(1,2,2)·(2,−2,1)=0、直線⊥平面⟺方向∥法向量並誠實更新指紋）。★自檢（math-unit defect-classes）：figure＝三 panel（平行：兩同向箭頭；垂直：兩箭頭夾直角＋直角記號；歪斜：兩箭頭投影交叉但一虛線在後、不相交），幾何正確、箭頭方向正確、標籤移出免碰（#2）、alt 與 SVG text 逐字一致、★figure 標題只承諾三種關係示意（#4/#46）；practice 四答案＝{平行(Q1),垂直(Q2),方向向量平行法向量(Q3 直線⊥平面),既不平行也不相交(Q4 歪斜)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 沒看出倍數→垂直/相交一點/歪斜；Q2 內積≠0 卻判→平行/歪斜/重合；Q3 把⊥平面誤為方向⊥法向量（內積0）/夾45°/任意；Q4 歪斜誤為一定垂直/平行不重合/相交成直角）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；向量平行含非零純量倍（含反向）皆算平行，判平行用外積0 不受方向影響。claim kind=definition/fact。figure-only example 無 body。",
+ "page": "math_space_point_line_plane.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.space.point-line-plane",
+   "title_zh": "空間中點、線、面的位置關係（平行／垂直／歪斜）",
+   "can_do": "我會用向量判斷空間中直線和平面的位置關係：兩個向量『平行 (parallel)』就是一個是另一個的倍數（外積＝0），兩個向量『垂直 (perpendicular)』就是內積＝0。我會用『方向向量 (direction vector)』判斷兩直線是平行還是垂直；也知道空間裡兩條直線可能既不平行又不相交，這叫『歪斜 (skew)』。我還知道一條直線垂直於一個平面，就是它的方向向量和平面的『法向量 (normal vector)』平行。",
+   "situation_group": "空間：點線面的位置關係",
+   "subject": "math",
+   "strand": "space",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.space.point-line-plane"
+   ],
+   "prerequisites": [],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-plp-tool",
+     "text": "判斷位置關係的兩個工具：兩個向量平行 ⟺ 一個是另一個的非零倍數（它們的外積 ＝ 0）；兩個向量垂直 ⟺ 它們的內積 ＝ 0。例：(1, 2, 2) 和 (2, 4, 4) ＝ 2×(1, 2, 2)，是平行；(1, 2, 2)·(2, −2, 1) ＝ 2 − 4 + 2 ＝ 0，是垂直。",
+     "kind": "fact",
+     "source_refs": [
+      "向量的平行與垂直判定（高中 選修數學）"
+     ],
+     "verification_ref": "(1,2,2)∥(2,4,4) 外積=0；(1,2,2)·(2,−2,1)=0（math_checks6::space.point-line-plane .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-plp-two-lines",
+     "text": "兩條空間直線的關係，用它們的方向向量判斷：方向向量平行就兩線平行、方向向量垂直就兩線垂直。若兩條直線既不平行、又不相交，就叫歪斜——這是空間裡特有的情形（在同一個平面上，兩條直線只要不平行就一定會相交）。",
+     "kind": "definition",
+     "source_refs": [
+      "空間兩直線的位置關係（高中 選修數學）"
+     ],
+     "verification_ref": "方向向量平行⇒線平行、內積0⇒線垂直；歪斜＝不平行且不相交（空間特有，定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-plp-line-plane",
+     "text": "一條直線垂直於一個平面 ⟺ 這條直線的方向向量和平面的法向量平行（方向向量是法向量的倍數）。因為法向量本來就垂直於整個平面，所以方向向量跟法向量同方向時，直線就「插」得跟平面垂直。例：方向向量 (2, 4, 4) 和法向量 (1, 2, 2) 平行，所以這條直線垂直於那個平面。",
+     "kind": "fact",
+     "source_refs": [
+      "直線與平面的垂直關係（高中 選修數學）"
+     ],
+     "verification_ref": "直線⊥平面⟺方向向量∥法向量；(2,4,4)∥(1,2,2) 外積=0（math_checks6::space.point-line-plane .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.space.point-line-plane"
+     ],
+     "body": "這一單元學怎麼判斷空間中直線和平面「擺」在一起的關係——是平行、垂直，還是歪斜。工具很簡單，就是前面學過的向量內積和外積。先記兩個判斷法，再看兩直線、直線與平面各種關係怎麼判。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.space.point-line-plane"
+     ],
+     "body": "① 兩個判斷工具：兩向量平行 ⟺ 一個是另一個的倍數（外積 ＝ 0）；兩向量垂直 ⟺ 內積 ＝ 0。② 兩直線：方向向量平行就兩線平行、方向向量內積 ＝ 0 就兩線垂直；既不平行又不相交 ＝ 歪斜（空間特有）。③ 直線垂直於平面 ⟺ 直線的方向向量和平面的法向量平行。例：(1, 2, 2) ∥ (2, 4, 4) 平行；(1, 2, 2)·(2, −2, 1) ＝ 0 垂直。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.space.point-line-plane"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>空間兩直線的三種關係：平行、垂直、歪斜</text><line x1='40' y1='112' x2='80' y2='74' stroke='#2f6f54' stroke-width='1.8'/><polygon points='80,74 74,78 79,81' fill='#2f6f54'/><line x1='54' y1='122' x2='94' y2='84' stroke='#2f6f54' stroke-width='1.8'/><polygon points='94,84 88,88 93,91' fill='#2f6f54'/><text x='66' y='140' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle'>平行</text><text x='66' y='152' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='middle'>方向成倍數</text><line x1='152' y1='104' x2='198' y2='104' stroke='#33475b' stroke-width='1.8'/><polygon points='198,104 192,101 192,107' fill='#33475b'/><line x1='174' y1='122' x2='174' y2='72' stroke='#33475b' stroke-width='1.8'/><polygon points='174,72 171,78 177,78' fill='#33475b'/><rect x='174' y='98' width='6' height='6' fill='none' stroke='#33475b' stroke-width='1'/><text x='178' y='140' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle'>垂直</text><text x='178' y='152' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='middle'>內積 ＝ 0</text><line x1='262' y1='84' x2='320' y2='104' stroke='#33475b' stroke-width='1.8'/><polygon points='320,104 313,103 316,97' fill='#33475b'/><line x1='270' y1='116' x2='300' y2='78' stroke='#99a7b5' stroke-width='1.8' stroke-dasharray='4 3'/><line x1='306' y1='70' x2='318' y2='55' stroke='#99a7b5' stroke-width='1.8' stroke-dasharray='4 3'/><polygon points='318,55 312,58 316,62' fill='#99a7b5'/><text x='291' y='140' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle'>歪斜</text><text x='291' y='152' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='middle'>不平行也不相交</text></svg>",
+      "alt": "標題「空間兩直線的三種關係：平行、垂直、歪斜」。左邊一組：兩支同方向、斜向右上的綠色箭頭互相平行，下面寫「平行」「方向成倍數」。中間一組：一支向右的箭頭和一支向上的箭頭在交點處成直角（畫了一個小直角記號），下面寫「垂直」「內積 ＝ 0」。右邊一組：一支實線箭頭斜向右下、一支灰色虛線箭頭斜向右上，兩支在畫面上看起來交叉、但虛線那支中間斷開表示它其實在後面、兩線並沒有真的相交，下面寫「歪斜」「不平行也不相交」。",
+      "caption": "空間中兩條直線有三種關係。平行：兩條線的方向向量成倍數（外積 ＝ 0）。垂直：兩條線的方向向量內積 ＝ 0（圖中的小方塊表示直角）。歪斜：兩條線既不平行、又不相交——這是平面上不會發生、只有在空間裡才有的情形（右圖用虛線中斷表示那條線其實從後面穿過，沒有和前面的線相交）。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.space.point-line-plane"
+     ],
+     "body": "最後練空間點線面的位置關係。重點：(1) 兩向量平行 ⟺ 成倍數（外積 ＝ 0）、垂直 ⟺ 內積 ＝ 0；(2) 兩直線用方向向量判平行或垂直，既不平行又不相交就是歪斜；(3) 直線垂直於平面 ⟺ 方向向量和法向量平行。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "兩條空間直線的方向向量分別是 (1, 2, 2) 和 (2, 4, 4)。這兩條直線的關係最可能是哪一個？",
+     "answer": "平行（方向向量成倍數）",
+     "kp_ids": [
+      "math.t_sub.space.point-line-plane"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.space.point-line-plane"
+     ],
+     "options": [
+      "平行（方向向量成倍數）",
+      "垂直（方向向量內積為 0）",
+      "一定相交於一點",
+      "一定歪斜（不平行也不相交）"
+     ],
+     "distractor_rationales": {
+      "垂直（方向向量內積為 0）": "它們的內積是 1×2 ＋ 2×4 ＋ 2×4 ＝ 18，不是 0，所以不是垂直；而 (2, 4, 4) ＝ 2×(1, 2, 2)，是倍數，所以平行。",
+      "一定相交於一點": "方向向量成倍數代表兩線平行；平行線不會只相交於一點（要嘛不相交、要嘛完全重合）。",
+      "一定歪斜（不平行也不相交）": "歪斜的前提是「不平行」；這裡方向向量成倍數，兩線是平行的，不可能歪斜。"
+     },
+     "answer_evidence": [
+      "c-plp-tool",
+      "c-plp-two-lines"
+     ],
+     "feedback": "(2, 4, 4) ＝ 2×(1, 2, 2)，方向向量成倍數（外積 ＝ 0），所以兩直線平行。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "兩條空間直線的方向向量分別是 (1, 2, 2) 和 (2, −2, 1)。這兩條直線的方向是什麼關係？",
+     "answer": "垂直（內積 ＝ 0）",
+     "kp_ids": [
+      "math.t_sub.space.point-line-plane"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.space.point-line-plane"
+     ],
+     "options": [
+      "垂直（內積 ＝ 0）",
+      "平行（方向成倍數）",
+      "歪斜（不平行也不相交）",
+      "完全重合（同一條線）"
+     ],
+     "distractor_rationales": {
+      "平行（方向成倍數）": "(2, −2, 1) 不是 (1, 2, 2) 的倍數（各分量的比例 2/1、−2/2、1/2 不相等），所以不平行；它們的內積是 0，是垂直。",
+      "歪斜（不平行也不相交）": "歪斜講的是兩條線的相對位置（不平行又不相交）；這題只給方向向量，而內積 ＝ 0 直接告訴我們兩方向是垂直。",
+      "完全重合（同一條線）": "重合要方向成倍數且通過同一點；這裡方向向量內積 ＝ 0（互相垂直），根本不是同方向，不可能重合。"
+     },
+     "answer_evidence": [
+      "c-plp-tool",
+      "c-plp-two-lines"
+     ],
+     "feedback": "(1, 2, 2)·(2, −2, 1) ＝ 1×2 ＋ 2×(−2) ＋ 2×1 ＝ 2 − 4 ＋ 2 ＝ 0，內積為 0，所以兩方向垂直。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一條直線要垂直於一個平面，它的方向向量和平面的法向量要是什麼關係？",
+     "answer": "方向向量和法向量平行（方向是法向量的倍數）",
+     "kp_ids": [
+      "math.t_sub.space.point-line-plane"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.space.point-line-plane"
+     ],
+     "options": [
+      "方向向量和法向量平行（方向是法向量的倍數）",
+      "方向向量和法向量垂直（內積為 0）",
+      "方向向量和法向量夾 45 度",
+      "方向向量和法向量沒有任何關係"
+     ],
+     "distractor_rationales": {
+      "方向向量和法向量垂直（內積為 0）": "方向向量和法向量垂直時，直線其實是「平行」於平面（躺在平面方向上），不是垂直於平面；垂直於平面要方向向量和法向量平行。",
+      "方向向量和法向量夾 45 度": "沒有固定的 45 度：直線垂直於平面的充要條件是方向向量和法向量平行（同方向），不是某個特定夾角。",
+      "方向向量和法向量沒有任何關係": "恰好相反，關係很緊密：法向量垂直於平面，所以方向向量跟法向量平行時，直線才會垂直於平面。"
+     },
+     "answer_evidence": [
+      "c-plp-line-plane"
+     ],
+     "feedback": "法向量本來就垂直於平面，所以當直線的方向向量和法向量平行（同方向）時，這條直線就垂直於平面。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "空間中兩條直線「歪斜」是什麼意思？",
+     "answer": "既不平行、也不相交（只有在空間裡才會發生）",
+     "kp_ids": [
+      "math.t_sub.space.point-line-plane"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.space.point-line-plane"
+     ],
+     "options": [
+      "既不平行、也不相交（只有在空間裡才會發生）",
+      "一定互相垂直",
+      "平行但不重合",
+      "相交而且剛好成直角"
+     ],
+     "distractor_rationales": {
+      "一定互相垂直": "歪斜的兩條線方向可以是任意角度，不一定垂直；歪斜講的是「不平行又不相交」，和夾角無關。",
+      "平行但不重合": "平行的兩條線正是「不歪斜」的；歪斜的第一個條件就是不平行。",
+      "相交而且剛好成直角": "歪斜的兩條線根本「不相交」；會相交（不論是不是直角）就不是歪斜。"
+     },
+     "answer_evidence": [
+      "c-plp-two-lines"
+     ],
+     "feedback": "歪斜 ＝ 兩條直線既不平行、又不相交。在同一個平面上，兩線不平行就一定相交，所以歪斜只會出現在空間裡。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（判斷工具＝兩向量平行⟺成倍數(外積0)、垂直⟺內積0；兩直線用方向向量判平行/垂直，既不平行又不相交＝歪斜(空間特有)；直線⊥平面⟺方向向量∥法向量；例 (1,2,2)∥(2,4,4) 平行、(1,2,2)·(2,−2,1)=0 垂直；三鐵律＝平行看倍數/外積0、垂直看內積0、直線垂直平面看方向平行法向量）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
