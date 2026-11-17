@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-18 01:46 ★★ determinant.cramer 克拉瑪公式解聯立方程組 5/5 DONE-GATE 全綠 → 行列式 determinant strand 2/2 **全收** ★★（t_sub·分科數甲，★三行列式 D/Dx/Dy 換行 SVG）
+- **math_determinant_cramer frozen `395171fc5cc84b93`**（R1-R5 連 5 clean；R1 抓 1 major[nav-cross-ref：prerequisites 空但本單元明示建基於 determinant.2x2-3x3、非合法根節點→抑制「🔗 建議先學」接線提示]→pre-bank 直接接線 prerequisites=["math.t_sub.determinant.2x2-3x3"]；因 content_sha 已剝除 prerequisites[HD 裁示 B]不作廢 frozen_sha、免重凍重審。streak 5 輪全淨）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard／content_sha==395171fc／per_page_5clean PASS（cramer absent）／repro-math_checks6-determinant.cramer PASS／iPad 四角色簽核（三個二階行列式 D/Dx/Dy 並排、被常數換掉的行數字標紅、各寫＝值、底部 x=Dx÷D=1 y=Dy÷D=3；det bars 對齊、紅行正確、右緣0%）／★hub 建議先學 visual render 實測（數學→行列式 strand→cramer 卡顯示「🔗 建議先學：二階與三階行列式的計算與幾何意義」，2x2-3x3 根節點無提示；eng 接線教訓滿足：使用者可見功能實際 render 看過）。數學中文授課無音檔。
+- 克拉瑪公式解二元聯立（t_sub，determinant strand 第2末單元，接 2x2-3x3）＝(1) 係數行列式 D=det[[a₁,b₁],[a₂,b₂]]；(2) 常數 (c₁,c₂) 換進 x 那一行得 Dx、換進 y 那一行得 Dy；(3) x=Dx÷D、y=Dy÷D（須 D≠0；D=0 兩行成比例→無唯一解、公式不適用）。例 {2x+y=5, x+3y=10}：D=5、Dx=5、Dy=15→x=1、y=3。不含三元克拉瑪、行列式性質證明。
+- ★repro：本 session 強化 math_checks6::determinant.cramer 明確斷言 D=5/Dx=5/Dy=15＋解 (1,3) 代回原方程組＋D=0([[1,2],[2,4]]) 不適用；紅隊（指紋 eb2b45f1→FAIL→誠實更新 03854a3aa97c8b5d→PASS）。非繞過。
+- ★教訓（已實測）：**非根節點單元的 prerequisites 不可留空**——即使 auto_wire 跳過 math（同 tier t_sub intra-strand 它不接），也要手動接；否則 hub「🔗 建議先學」提示被抑制、學習序斷鏈。且修 prerequisites 因 content_sha 剝除該欄（HD 裁示 B）不作廢教學 streak，可 pre-bank 直接修。宣告完成前以 hub_render 實際 render 看過該卡的接線提示（eng render-only 教訓）。
+- ★★里程碑：**determinant strand 2/2 全收**（2x2-3x3→cramer）。math domain 僅剩 linprog(2)＝feasible-region＋objective-optimize（oracle lp_feasible/lp_optimize 已備）；完成即 **math domain 全收 260/260 KP**。
+- 下一步：linprog.feasible-region（可行解區域頂點）→ linprog.objective-optimize（頂點法最佳化）→ math 全收。接著可轉其他 domain 或 hub AC-VIZ-1 figure_signoff 債（sha 4741b69d）。
+
 ## 2026-11-18 01:14 ★ determinant.2x2-3x3 二階三階行列式計算與幾何意義 5/5 DONE-GATE 全綠 → 行列式 determinant strand 1/2（t_sub，★|det|=平行四邊形面積 SVG）
 - **math_determinant_2x2_3x3 frozen `dbd6a8dbca10455c`**（R1-R5 連 5 clean）。缺陷修復軌跡：
   - R1 抓 2 defect：①[blocker figure-geometry] SVG 兩軸用不同 px/unit（a=(3,0) 畫 120px＝40/unit、b=(0,4) 只畫 76px＝19/unit）→ 長度3 向量看起來比長度4 長、3×4 矩形畫成橫向，與 (3,0)/(0,4) 標籤矛盾 → 改統一 25px/unit（a=75px、b=100px、矩形直向 75×100）；②[minor terminology] distractor「兩列成比例」(rows) 與全單元「行向量」(columns) 框架不一致 → 改「兩個行向量 (1,2)、(2,4) 共線」。R1 在 pre-bank 直接修、重凍 f749dedca6。
