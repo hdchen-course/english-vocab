@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 圓錐曲線（conic）strand 單元。知識點 math.t_sub.conic.line-intersection（直線與圓錐曲線的交點：代入消元、判別式判交點數）。tier=t_sub（高中分科/選修深階）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；同級術語一律 gloss：割線 (secant)、切線 (tangent)、判別式 (discriminant)）。前置假設：已學二次方程式、判別式 b²−4ac、圓/橢圓標準式、距離公式。★scope（t_sub，接 translation）：求直線與圓錐曲線交點＝把直線式代入曲線式、消去一個變數得一元二次式，解它得交點坐標；判別式 D=b²−4ac 定交點數：D>0 兩交點（直線為割線）、D=0 一交點（相切、為切線）、D<0 無交點。以圓 x²+y²=25 貫穿：割線 y=x+1 代入⇒x²+x−12=0、D=49>0、交 (3,4)&(−4,−3)；水平線 y=4⇒x²=9 兩交 (±3,4)；切線 y=5⇒x²=0 一交 (0,5)、D=0；y=6⇒x²=−11 無實解、D<0。不含直線與圓錐曲線所圍面積、不含切線方程式求法（只判相切與否）。repro（tools/verify/math_checks7.py::conic.line-intersection，本 session 新增並跑過 PASS；binding 另有 math_checks6::conic.line-intersection）：y=x+1∩圓⇒x²+x−12=0 D=49 交(3,4)&(−4,−3)；y=5 重根一點(0,5) D=0；y=6 無實解 D<0（.venv 驗）。★自檢（math-unit defect-classes）：figure＝等軸坐標平面、圓 x²+y²=25、割線 y=x+1、兩綠色交點 (3,4)&(−4,−3)、下註判別式三情形——★等軸比例（#62，圓要圓不能橢）、交點在圓上（#43）、交點標籤移出圓外免碰撞（#2）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾圖畫的割線兩交點（#4/#46，判別式三情形由下註+teach）；practice 四答案＝{(3,4)&(−4,−3)(Q1 割線交點),判別式=0(Q2 相切條件),0 個(Q3 y=6 無交點),(3,4)&(−3,4)(Q4 y=4 交點)}與 teach 關鍵值無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53：Q1 座標對調/用±5沒解二次/誤判無交點；Q2 割線>0/不相交<0/誤當具體值1；Q3 相切1/割線2/以為無法判斷；Q4 代錯變數/漏一根/誤判無交點）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_conic_line_intersection.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.conic.line-intersection",
+   "title_zh": "直線與圓錐曲線的交點與判別式",
+   "can_do": "我會求一條直線和圓錐曲線（圓、橢圓…）的交點：把直線的式子代入曲線的式子、消去一個變數，得到一個一元二次方程式，解出交點的坐標。我也會用『判別式 (discriminant)』D ＝ b² − 4ac 判斷交點個數：D ＞ 0 有兩個交點（直線是『割線 (secant)』）、D ＝ 0 有一個交點（直線與曲線相切，是『切線 (tangent)』）、D ＜ 0 沒有交點。例：直線 y ＝ x ＋ 1 代入圓 x² ＋ y² ＝ 25，得 x² ＋ x − 12 ＝ 0，D ＝ 49 ＞ 0，交點 (3, 4) 和 (−4, −3)。",
+   "situation_group": "圓錐曲線：直線與曲線的交點",
+   "subject": "math",
+   "strand": "conic",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.conic.line-intersection"
+   ],
+   "prerequisites": [
+    "math.t_sub.conic.translation"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-li-method",
+     "text": "求直線與圓錐曲線交點的方法：把直線式代入曲線式，消去一個變數，得到一個一元二次方程式；解它得到交點的 x（或 y），再代回直線式求另一個坐標。例：把 y ＝ x ＋ 1 代入 x² ＋ y² ＝ 25，得 x² ＋ (x ＋ 1)² ＝ 25，展開並整理成 x² ＋ x − 12 ＝ 0，解得 x ＝ 3 或 x ＝ −4；再用 y ＝ x ＋ 1 得交點 (3, 4) 和 (−4, −3)。",
+     "kind": "definition",
+     "source_refs": [
+      "直線與圓錐曲線交點（高中數學 圓錐曲線）"
+     ],
+     "verification_ref": "y=x+1 代入 x²+y²=25⇒x²+x−12=0⇒x=3,−4⇒(3,4)&(−4,−3)（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-li-discriminant",
+     "text": "不用真的解方程式，也能先知道交點個數：看代入後那個一元二次方程式 ax² ＋ bx ＋ c ＝ 0 的判別式 D ＝ b² − 4ac。D ＞ 0：兩個相異實根，有兩個交點，直線是割線；D ＝ 0：一個重根，有一個交點，直線與曲線相切（是切線）；D ＜ 0：沒有實根，沒有交點（直線與曲線不相交）。例：x² ＋ x − 12 ＝ 0 的 D ＝ 1² − 4 × 1 × (−12) ＝ 1 ＋ 48 ＝ 49 ＞ 0，所以有兩個交點。",
+     "kind": "definition",
+     "source_refs": [
+      "判別式與交點個數（高中數學 圓錐曲線）"
+     ],
+     "verification_ref": "D>0 兩交點割線、D=0 一交點切線、D<0 無交點（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-li-apply",
+     "text": "以圓 x² ＋ y² ＝ 25 配不同水平線示範三種情形：y ＝ 4 代入得 x² ＝ 9，x ＝ ±3，兩個交點 (3, 4)、(−3, 4)（割線、D ＞ 0）；y ＝ 5 代入得 x² ＝ 0，x ＝ 0，一個交點 (0, 5)（切線、D ＝ 0，剛好碰到圓最高點）；y ＝ 6 代入得 x² ＝ −11，沒有實數解，沒有交點（D ＜ 0，整條線在圓外）。可以看出：線越往上移，從割兩點 → 相切一點 → 完全錯過。",
+     "kind": "definition",
+     "source_refs": [
+      "直線與圓的位置關係（高中數學 圓錐曲線）"
+     ],
+     "verification_ref": "x²+y²=25：y=4⇒x=±3兩交；y=5⇒x=0一交(切)；y=6⇒無實解無交（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.conic.line-intersection"
+     ],
+     "body": "這一單元學直線和圓錐曲線的交點。先講方法（把直線代入曲線、消成一元二次式、解出交點）；再講用判別式 D ＝ b² − 4ac 判斷交點個數（D ＞ 0 兩個、D ＝ 0 一個相切、D ＜ 0 沒有）；最後用圓 x² ＋ y² ＝ 25 示範。最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.conic.line-intersection"
+     ],
+     "body": "① 方法：把直線式代入曲線式，消去一個變數，得一元二次式，解出交點坐標。例 y ＝ x ＋ 1 代入 x² ＋ y² ＝ 25 ⇒ x² ＋ x − 12 ＝ 0 ⇒ x ＝ 3 或 −4 ⇒ (3, 4)、(−4, −3)。② 判別式：D ＝ b² − 4ac。D ＞ 0 兩交點（割線）、D ＝ 0 一交點（切線、相切）、D ＜ 0 無交點。x² ＋ x − 12 ＝ 0 的 D ＝ 1 ＋ 48 ＝ 49 ＞ 0，故兩交點。③ 以圓配水平線：y ＝ 4 兩交 (±3, 4)、y ＝ 5 相切 (0, 5)、y ＝ 6 不相交。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.conic.line-intersection"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='10' fill='#2f6f54' text-anchor='middle' font-weight='bold'>直線 y＝x＋1 與圓 x²＋y²＝25：代入得 x²＋x−12＝0，交 (3, 4)、(−4, −3)</text><line x1='108' y1='84' x2='252' y2='84' stroke='#99a7b5' stroke-width='1'/><line x1='180' y1='18' x2='180' y2='150' stroke='#99a7b5' stroke-width='1'/><text x='256' y='87' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='start'>x</text><text x='184' y='24' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='start'>y</text><circle cx='180' cy='84' r='60' fill='#e6edf3' stroke='#33475b' stroke-width='2'/><line x1='108' y1='144' x2='240' y2='12' stroke='#c2535d' stroke-width='2'/><circle cx='216' cy='36' r='3.2' fill='#2f6f54'/><circle cx='132' cy='120' r='3.2' fill='#2f6f54'/><text x='222' y='34' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='start'>(3, 4)</text><text x='126' y='124' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='end'>(−4, −3)</text><text x='180' y='162' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle'>判別式 ＞ 0：兩交點（割線）｜＝ 0：一交點（切線）｜＜ 0：不相交</text></svg>",
+      "alt": "標題「直線 y＝x＋1 與圓 x²＋y²＝25：代入得 x²＋x−12＝0，交 (3, 4)、(−4, −3)」。一個等比例坐標平面，灰色 x 軸（右端標「x」）與 y 軸（上端標「y」），一個以原點為圓心的淺藍色圓。一條紅色直線（y＝x＋1）斜穿過圓，和圓相交於兩個綠色點，右上方的標「(3, 4)」、左下方的標「(−4, −3)」。最下方註「判別式 ＞ 0：兩交點（割線）｜＝ 0：一交點（切線）｜＜ 0：不相交」。",
+      "caption": "把 y ＝ x ＋ 1 代入 x² ＋ y² ＝ 25，整理成 x² ＋ x − 12 ＝ 0，解得 x ＝ 3 或 −4，交點 (3, 4) 和 (−4, −3)。這個二次式的判別式 D ＝ 1 ＋ 48 ＝ 49 ＞ 0，正好對應「兩個交點、直線是割線」。若 D ＝ 0 就相切（一個交點、切線），D ＜ 0 就不相交。坐標用相同比例，圓才會圓。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.conic.line-intersection"
+     ],
+     "body": "最後練直線與圓錐曲線的交點。重點：代入消元得一元二次式再解；判別式 D ＝ b² − 4ac，D ＞ 0 兩交點（割線）、D ＝ 0 一交點（切線、相切）、D ＜ 0 無交點。小提醒：(1) 代入後一定要「整理成 ax² ＋ bx ＋ c ＝ 0」才找 a、b、c 算 D；(2) 「相切」對應 D ＝ 0，不是某個特定數值；(3) 代入哪個變數都可以，但要代回「直線式」求另一個坐標（別代回曲線式，會多出假解）。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "直線 y ＝ x ＋ 1 與圓 x² ＋ y² ＝ 25 的交點是哪兩點？",
+     "answer": "(3, 4) 和 (−4, −3)",
+     "kp_ids": [
+      "math.t_sub.conic.line-intersection"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.line-intersection"
+     ],
+     "options": [
+      "(3, 4) 和 (−4, −3)",
+      "(4, 3) 和 (−3, −4)",
+      "(5, 6) 和 (−5, −4)",
+      "沒有交點"
+     ],
+     "distractor_rationales": {
+      "(4, 3) 和 (−3, −4)": "每個交點的 x、y 寫顛倒了：解 x² ＋ x − 12 ＝ 0 得 x ＝ 3、−4，再用 y ＝ x ＋ 1，交點是 (3, 4) 和 (−4, −3)。",
+      "(5, 6) 和 (−5, −4)": "直接用了 x ＝ ±5（圓與 x 軸的交點）沒有真的解代入後的二次式：代入得 x² ＋ x − 12 ＝ 0，x ＝ 3、−4，不是 ±5。",
+      "沒有交點": "判別式判斷錯了：x² ＋ x − 12 ＝ 0 的 D ＝ 1 ＋ 48 ＝ 49 ＞ 0，有兩個交點。"
+     },
+     "answer_evidence": [
+      "c-li-method"
+     ],
+     "feedback": "代入得 x² ＋ x − 12 ＝ 0，x ＝ 3 或 −4，交點 (3, 4) 和 (−4, −3)。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一條直線和圓錐曲線「相切」（只有一個交點）時，代入後那個一元二次方程式的判別式 D 是多少？",
+     "answer": "D ＝ 0",
+     "kp_ids": [
+      "math.t_sub.conic.line-intersection"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.line-intersection"
+     ],
+     "options": [
+      "D ＝ 0",
+      "D ＞ 0",
+      "D ＜ 0",
+      "D ＝ 1"
+     ],
+     "distractor_rationales": {
+      "D ＞ 0": "D ＞ 0 是有兩個相異交點（直線是割線），不是相切：相切是一個重根，D ＝ 0。",
+      "D ＜ 0": "D ＜ 0 是沒有交點（不相交），不是相切：相切要 D ＝ 0。",
+      "D ＝ 1": "相切的條件是 D 剛好等於 0，不是某個特定的正數；D ＝ 1 其實 ＞ 0，是兩個交點。"
+     },
+     "answer_evidence": [
+      "c-li-discriminant"
+     ],
+     "feedback": "相切 ⇔ 一個重根 ⇔ 判別式 D ＝ 0。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "直線 y ＝ 6 與圓 x² ＋ y² ＝ 25 有幾個交點？",
+     "answer": "0 個",
+     "kp_ids": [
+      "math.t_sub.conic.line-intersection"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.line-intersection"
+     ],
+     "options": [
+      "0 個",
+      "1 個",
+      "2 個",
+      "無法判斷"
+     ],
+     "distractor_rationales": {
+      "1 個": "1 個是相切（D ＝ 0）：這裡代入得 x² ＝ −11，沒有實數解，是 0 個交點，不是相切。",
+      "2 個": "2 個是割線（D ＞ 0）：這裡 x² ＝ −11 沒有實數解，所以 0 個交點。",
+      "無法判斷": "可以判斷：把 y ＝ 6 代入得 x² ＋ 36 ＝ 25，x² ＝ −11，沒有實數解，所以 0 個交點。"
+     },
+     "answer_evidence": [
+      "c-li-apply"
+     ],
+     "feedback": "代入得 x² ＝ 25 − 36 ＝ −11，沒有實數解，所以 0 個交點（y ＝ 6 整條線在圓外）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "直線 y ＝ 4 與圓 x² ＋ y² ＝ 25 的交點是哪些？",
+     "answer": "(3, 4) 和 (−3, 4)",
+     "kp_ids": [
+      "math.t_sub.conic.line-intersection"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.line-intersection"
+     ],
+     "options": [
+      "(3, 4) 和 (−3, 4)",
+      "(4, 3) 和 (−4, 3)",
+      "只有 (3, 4)",
+      "沒有交點"
+     ],
+     "distractor_rationales": {
+      "(4, 3) 和 (−4, 3)": "把 y ＝ 4 代錯成 x ＝ 4 了：題目是 y ＝ 4，代入得 x² ＝ 9、x ＝ ±3，交點 (3, 4) 和 (−3, 4)。",
+      "只有 (3, 4)": "漏了一個根：x² ＝ 9 有兩個解 x ＝ 3 和 x ＝ −3，所以有兩個交點。",
+      "沒有交點": "其實有交點：y ＝ 4 代入得 x² ＝ 9，有實數解 x ＝ ±3。"
+     },
+     "answer_evidence": [
+      "c-li-apply"
+     ],
+     "feedback": "y ＝ 4 代入得 x² ＝ 25 − 16 ＝ 9，x ＝ ±3，交點 (3, 4) 和 (−3, 4)。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（求交點＝直線代入曲線、消元得一元二次式 ax²+bx+c=0、解出交點坐標再代回直線式；判別式 D=b²−4ac：D>0 兩交點(割線)、D=0 一交點(相切、切線)、D<0 無交點；y=x+1 代入 x²+y²=25⇒x²+x−12=0 D=49 交(3,4)&(−4,−3)；y=4⇒x²=9 交(±3,4)、y=5⇒x²=0 切於(0,5)、y=6⇒x²=−11 無交；三鐵律＝先整理成 ax²+bx+c=0 再算 D、相切對應 D=0 非特定值、代回直線式別代回曲線式）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

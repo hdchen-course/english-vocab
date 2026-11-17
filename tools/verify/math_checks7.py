@@ -258,6 +258,18 @@ def c_conic_translation():
     assert V.distance(sp.Point(6, -1)) + V.distance(sp.Point(-2, -1)) == 10  # 到兩焦和=2a
     assert sp.Point(6, -1).midpoint(sp.Point(-2, -1)) == sp.Point(2, -1)     # 中心=兩焦中點
     return _ok("conic.translation", "平移：x²+y²−6x+4y−12=0⇒(x−3)²+(y+2)²=25 中心(3,−2)、r=5；橢圓 (x−2)²/25+(y+1)²/9=1 中心(2,−1)、c=4、焦點(6,−1)&(−2,−1)、到兩焦和=2a=10")
+def c_conic_line_intersection():
+    # 直線與圓錐曲線的交點：代入消元成二次式，判別式定交點數
+    x = sp.symbols('x')
+    sec = sp.expand(x**2 + (x + 1)**2 - 25)              # 圓 x²+y²=25 ∩ 割線 y=x+1
+    q = sp.simplify(sec / 2); assert sp.expand(q) == x**2 + x - 12
+    assert 1**2 - 4*1*(-12) == 49                        # 判別式>0 ⇒ 兩交點
+    assert sorted(sp.solve(q, x)) == [-4, 3]             # x=−4,3 ⇒ (−4,−3),(3,4)
+    for xv in (-4, 3): assert xv**2 + (xv + 1)**2 == 25
+    assert sp.solve(x**2, x) == [0]                      # 切線 y=5：x²=0 重根 ⇒ 一點(0,5)、判別式=0
+    assert 0**2 + 5**2 == 25
+    assert all(not r.is_real for r in sp.solve(x**2 + 36 - 25, x))  # y=6：x²=−11 無實解 ⇒ 判別式<0
+    return _ok("conic.line-intersection", "x²+y²=25：割線 y=x+1⇒x²+x−12=0 判別式49>0 交(3,4)&(−4,−3)；切線 y=5 判別式=0 交(0,5)；y=6 判別式<0 無交點")
 
 # ---------- stats（18）----------
 D = [2, 4, 4, 4, 5, 5, 7, 9]      # 共用樣本（std 範例，μ=5,σ=2）
@@ -408,6 +420,7 @@ CHECKS = {s: fn for s, fn in {
     "conic.hyperbola": c_conic_hyperbola,
     "conic.eccentricity": c_conic_eccentricity,
     "conic.translation": c_conic_translation,
+    "conic.line-intersection": c_conic_line_intersection,
     "stats.collect-organize": s_collect, "stats.bar-line-chart": s_bar_line,
     "stats.pie-chart": s_pie, "stats.table-read": s_table, "stats.mean": s_mean,
     "stats.frequency-table": s_freq_table, "stats.cumulative-relative": s_cumulative,
