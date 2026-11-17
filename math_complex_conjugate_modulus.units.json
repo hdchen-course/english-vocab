@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 複數（complex）strand 單元（第2個）。知識點 math.t_adv.complex.conjugate-modulus（共軛與模）。tier=t_adv（高中進階/學測）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；同級術語一律 gloss：複數 (complex number)、共軛 (conjugate)、模 (modulus)）。前置假設：已學複數定義與四則運算（前一單元）、畢氏定理/距離公式、根號。★scope（t_adv，接 definition-operations）：共軛 z=a+bi 的共軛 z̄=a−bi（只改虛部正負號、幾何上是對實軸鏡射）；模 |z|=√(a²+b²)（複數平面上該點到原點的距離、非負實數）；性質 z·z̄=a²+b²=|z|²（共軛相乘得模的平方、是實數，正是除法有理化的原理）、|z₁z₂|=|z₁||z₂|（模的乘法性）。不含輻角/極式（下一單元起）、不含共軛的加法性質證明。repro（tools/verify/math_checks7.py::complex.conjugate-modulus，本 session 新增並跑過 PASS；binding 另有 math_checks6 待補）：z=3+4i, z̄=3−4i, |z|=5, z·z̄=25=|z|²；|z₁z₂|=|z₁||z₂|。★自檢（math-unit defect-classes）：figure＝複數平面、實軸虛軸、z=3+4i 綠點、共軛 z̄=3−4i 灰點（對實軸鏡射、虛線相連）、O→z 綠線標 |z|=5——等軸比例（#62，直角三角形 3-4-5 要成立）、點在正確位置（#43）、標籤移出免碰撞（#2）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾圖畫的共軛鏡射與模距離（#4/#46，乘法性由 teach＋practice 補）；practice 四答案＝{3−4i(Q1 共軛),5(Q2 模),25(Q3 z·z̄),10(Q4 模乘法性)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 改實部/兩者都改/實虛對調；Q2 直接相加/沒開根號/把 a+b 放根號；Q3 i²當+1/只乘實部/−16i²誤成−16i；Q4 相加/√(a²+b²)距離式/相除）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_complex_conjugate_modulus.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.complex.conjugate-modulus",
+   "title_zh": "複數的共軛與模",
+   "can_do": "我知道『複數 (complex number)』z ＝ a ＋ bi 的『共軛 (conjugate)』是 z̄ ＝ a − bi（只把虛部的正負號改掉），在複數平面上就是把這個點對實軸鏡射。我也會算複數的『模 (modulus)』|z| ＝ √(a² ＋ b²)，它是這個點到原點的距離，一定是非負的實數。我還知道兩個有用的性質：z · z̄ ＝ a² ＋ b² ＝ |z|²（共軛相乘會得到模的平方，是個實數），以及 |z₁ · z₂| ＝ |z₁| · |z₂|（模有乘法性）。",
+   "situation_group": "複數：共軛與模",
+   "subject": "math",
+   "strand": "complex",
+   "est_minutes": 11,
+   "knowledge_point_ids": [
+    "math.t_adv.complex.conjugate-modulus"
+   ],
+   "prerequisites": [
+    "math.t_adv.complex.definition-operations"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-conj-def",
+     "text": "複數 z ＝ a ＋ bi 的共軛，記成 z̄，是把虛部的正負號改掉：z̄ ＝ a − bi。實部 a 不動，只有 bi 變成 −bi。例：3 ＋ 4i 的共軛是 3 − 4i；2 − 5i 的共軛是 2 ＋ 5i。在複數平面上（把 a ＋ bi 看成點 (a, b)），取共軛就是把這個點對「實軸」鏡射（上下翻）。",
+     "kind": "definition",
+     "source_refs": [
+      "複數的共軛（高中數學 複數）"
+     ],
+     "verification_ref": "z=3+4i ⇒ z̄=3−4i（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-mod-def",
+     "text": "複數 z ＝ a ＋ bi 的模，記成 |z|，定義為 |z| ＝ √(a² ＋ b²)。它就是複數平面上點 (a, b) 到原點的距離，所以一定是非負的實數。例：|3 ＋ 4i| ＝ √(3² ＋ 4²) ＝ √(9 ＋ 16) ＝ √25 ＝ 5。這跟直角三角形兩股 3、4、斜邊 5 是同一回事。",
+     "kind": "definition",
+     "source_refs": [
+      "複數的絕對值（模）（高中數學 複數）"
+     ],
+     "verification_ref": "|3+4i|=√(9+16)=5（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-mod-props",
+     "text": "兩個有用的性質：(1) 一個複數乘上它的共軛，會得到模的平方，而且是個實數：z · z̄ ＝ (a ＋ bi)(a − bi) ＝ a² ＋ b² ＝ |z|²。例：(3 ＋ 4i)(3 − 4i) ＝ 9 ＋ 16 ＝ 25 ＝ |3 ＋ 4i|²。這正是除法「乘分母的共軛」能把分母變實數的原因。(2) 模有乘法性：|z₁ · z₂| ＝ |z₁| · |z₂|，兩個複數相乘，模就是各自模相乘。",
+     "kind": "definition",
+     "source_refs": [
+      "共軛與模的性質（高中數學 複數）"
+     ],
+     "verification_ref": "z·z̄=25=|z|²；|z₁z₂|=|z₁||z₂|（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.complex.conjugate-modulus"
+     ],
+     "body": "這一單元學複數的共軛和模。先講共軛（把虛部正負號改掉、對實軸鏡射）；再講模（到原點的距離 √(a² ＋ b²)）；最後講兩個性質（z · z̄ ＝ |z|²、模有乘法性）。最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.complex.conjugate-modulus"
+     ],
+     "body": "① 共軛：z ＝ a ＋ bi 的共軛 z̄ ＝ a − bi，只改虛部的正負號；在複數平面上是把點對實軸鏡射。例 3 ＋ 4i 的共軛是 3 − 4i。② 模：|z| ＝ √(a² ＋ b²)，是點 (a, b) 到原點的距離、非負實數。例 |3 ＋ 4i| ＝ √(9 ＋ 16) ＝ 5（就是 3-4-5 直角三角形）。③ 性質：z · z̄ ＝ a² ＋ b² ＝ |z|²（共軛相乘得模的平方、是實數，這就是除法有理化的原理）；|z₁ · z₂| ＝ |z₁| · |z₂|（模有乘法性）。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.complex.conjugate-modulus"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='10' fill='#2f6f54' text-anchor='middle' font-weight='bold'>共軛 z̄ 是對實軸的鏡射；模 |z| 是到原點的距離</text><line x1='118' y1='86' x2='250' y2='86' stroke='#99a7b5' stroke-width='1'/><line x1='180' y1='26' x2='180' y2='150' stroke='#99a7b5' stroke-width='1'/><text x='254' y='89' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='start'>實軸</text><text x='186' y='32' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='start'>虛軸</text><text x='170' y='98' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='end'>O</text><line x1='222' y1='30' x2='222' y2='142' stroke='#c9d3dd' stroke-width='1.2' stroke-dasharray='3 2'/><line x1='180' y1='86' x2='222' y2='30' stroke='#2f6f54' stroke-width='1.6'/><circle cx='222' cy='30' r='3.2' fill='#2f6f54'/><circle cx='222' cy='142' r='3.2' fill='#99a7b5'/><text x='228' y='30' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='start'>z ＝ 3 ＋ 4i</text><text x='228' y='146' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='start'>z̄ ＝ 3 − 4i（對實軸鏡射）</text><text x='188' y='56' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='start'>|z| ＝ 5</text></svg>",
+      "alt": "標題「共軛 z̄ 是對實軸的鏡射；模 |z| 是到原點的距離」。一個複數平面，灰色水平實軸（右端標「實軸」）與垂直虛軸（上端標「虛軸」）交於原點 O。右上方有一個綠點標「z ＝ 3 ＋ 4i」，從原點到它畫一條綠線標「|z| ＝ 5」。右下方有一個灰點標「z̄ ＝ 3 − 4i（對實軸鏡射）」，和綠點用一條垂直虛線相連，顯示兩點對實軸上下對稱。",
+      "caption": "把 z ＝ 3 ＋ 4i 畫在複數平面上就是點 (3, 4)。它的共軛 z̄ ＝ 3 − 4i 是點 (3, −4)——把 z 對實軸上下翻（鏡射）。模 |z| ＝ √(3² ＋ 4²) ＝ 5 就是原點到 z 的距離（正好是 3-4-5 直角三角形）。而 z · z̄ ＝ 9 ＋ 16 ＝ 25 ＝ |z|²。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.complex.conjugate-modulus"
+     ],
+     "body": "最後練共軛與模。重點：共軛 z̄ ＝ a − bi（只改虛部正負號、對實軸鏡射）；模 |z| ＝ √(a² ＋ b²)（到原點距離、非負）；z · z̄ ＝ |z|²（是實數）；|z₁z₂| ＝ |z₁||z₂|。小提醒：(1) 共軛只改「虛部」的正負號，實部不動；(2) 模要先把實部、虛部「各自平方相加」再開根號，不是把它們直接相加；(3) z · z̄ 算出來是實數 a² ＋ b²，不會再有 i。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "複數 3 ＋ 4i 的共軛是多少？",
+     "answer": "3 − 4i",
+     "kp_ids": [
+      "math.t_adv.complex.conjugate-modulus"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.complex.conjugate-modulus"
+     ],
+     "options": [
+      "3 − 4i",
+      "−3 ＋ 4i",
+      "−3 − 4i",
+      "4 ＋ 3i"
+     ],
+     "distractor_rationales": {
+      "−3 ＋ 4i": "改錯了地方：共軛只改「虛部」的正負號、實部不動；3 ＋ 4i 的共軛是 3 − 4i，不是把實部變號。",
+      "−3 − 4i": "把實部和虛部都變號了：共軛只改虛部，實部 3 保持不變，答案是 3 − 4i。",
+      "4 ＋ 3i": "把實部和虛部對調了：共軛不是對調，是把虛部的正負號改掉，3 ＋ 4i 的共軛是 3 − 4i。"
+     },
+     "answer_evidence": [
+      "c-conj-def"
+     ],
+     "feedback": "共軛只改虛部正負號：3 ＋ 4i 的共軛是 3 − 4i。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "複數 3 ＋ 4i 的模 |3 ＋ 4i| 是多少？",
+     "answer": "5",
+     "kp_ids": [
+      "math.t_adv.complex.conjugate-modulus"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.complex.conjugate-modulus"
+     ],
+     "options": [
+      "5",
+      "7",
+      "25",
+      "√7"
+     ],
+     "distractor_rationales": {
+      "7": "把實部、虛部直接相加了（3 ＋ 4）：模要「各自平方相加再開根號」，√(3² ＋ 4²) ＝ √25 ＝ 5。",
+      "25": "算到 3² ＋ 4² ＝ 25 就停了，忘了開根號：|z| ＝ √(9 ＋ 16) ＝ √25 ＝ 5。",
+      "√7": "把 3 ＋ 4 ＝ 7 放進根號了：要先各自平方 3² ＋ 4² ＝ 25 再開根號，得 √25 ＝ 5。"
+     },
+     "answer_evidence": [
+      "c-mod-def"
+     ],
+     "feedback": "|3 ＋ 4i| ＝ √(3² ＋ 4²) ＝ √25 ＝ 5（3-4-5 直角三角形）。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "(3 ＋ 4i)(3 − 4i)（一個複數乘它的共軛）等於多少？",
+     "answer": "25",
+     "kp_ids": [
+      "math.t_adv.complex.conjugate-modulus"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.complex.conjugate-modulus"
+     ],
+     "options": [
+      "25",
+      "−7",
+      "9",
+      "9 − 16i"
+     ],
+     "distractor_rationales": {
+      "−7": "把 i² 當成 ＋1 了：展開是 9 − 16i²，i² ＝ −1 所以是 9 ＋ 16 ＝ 25，不是 9 − 16 ＝ −7。",
+      "9": "只乘了實部 3 × 3：要完整展開 (3 ＋ 4i)(3 − 4i) ＝ 9 − 16i² ＝ 9 ＋ 16 ＝ 25。",
+      "9 − 16i": "把 −16i² 誤寫成 −16i 了（忘了 i 要平方）：−16i² ＝ −16(−1) ＝ ＋16，所以結果是 9 ＋ 16 ＝ 25。"
+     },
+     "answer_evidence": [
+      "c-mod-props"
+     ],
+     "feedback": "(3 ＋ 4i)(3 − 4i) ＝ 9 − 16i² ＝ 9 ＋ 16 ＝ 25 ＝ |3 ＋ 4i|²。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "已知 |z₁| ＝ 5、|z₂| ＝ 2，則 |z₁ · z₂| 等於多少？（模有乘法性）",
+     "answer": "10",
+     "kp_ids": [
+      "math.t_adv.complex.conjugate-modulus"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.complex.conjugate-modulus"
+     ],
+     "options": [
+      "10",
+      "7",
+      "√29",
+      "2.5"
+     ],
+     "distractor_rationales": {
+      "7": "把兩個模相加了（5 ＋ 2）：模有「乘法性」，|z₁ · z₂| ＝ |z₁| · |z₂| ＝ 5 × 2 ＝ 10。",
+      "√29": "誤用了像距離的 √(5² ＋ 2²)：相乘的模是直接相乘 |z₁||z₂| ＝ 5 × 2 ＝ 10，不是平方相加再開根號。",
+      "2.5": "把兩個模相除了（5 ÷ 2）：相乘對應的是模相乘，|z₁ · z₂| ＝ 5 × 2 ＝ 10。"
+     },
+     "answer_evidence": [
+      "c-mod-props"
+     ],
+     "feedback": "模有乘法性：|z₁ · z₂| ＝ |z₁| · |z₂| ＝ 5 × 2 ＝ 10。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（共軛 z̄ ＝ a − bi 只改虛部正負號、對實軸鏡射；模 |z| ＝ √(a² ＋ b²) 到原點距離、非負實數，|3+4i|=5；性質 z·z̄ ＝ a²＋b² ＝ |z|² 是實數(除法有理化原理)、|z₁z₂| ＝ |z₁||z₂| 模有乘法性；三鐵律＝共軛只改虛部正負號實部不動、模先各自平方相加再開根號別直接相加、z·z̄ 是實數不再有 i）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
