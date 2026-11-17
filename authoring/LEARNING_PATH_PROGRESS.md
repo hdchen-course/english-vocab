@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 15:33 ★ finmath simple-compound-interest 單利與複利 5/5 DONE-GATE 全綠 → 財務數學 finmath strand 1/6（t_adv，★單利 vs 複利兩排時間線 SVG）
+- **math_finmath_simple_compound_interest frozen `3f9bc63329a29109`**（R1-R5 連 5 clean 一次過、無缺陷、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true、agents_error 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／content_sha==3f9bc63／per_page_5clean PASS（finmath_simple absent）／repro PASS／iPad 四角色簽核（兩排時間線 單利 1000→1050→1100 每期＋50、複利 1000→1050→1102.5 第2期＋52.5、底部說明多出2.5＝50×5%、方塊值正確、箭頭指向正確、標籤移出免碰撞、右緣0%）。
+- 單利與複利（t_adv，finmath 首單元）＝單利只對本金計息，每期利息固定 P·r，t 期後利息 I=P·r·t、本利和 P(1+rt)；複利利息滾入本金再生利息（利滾利），n 期後本利和 P(1+r)ⁿ；比較＝同本金同利率同期數下 n=1 相等、n≥2 複利較多，多出的是「利息再生的利息」。例 1000、5%、2 年：單利利息100本利和1100、複利1102.5、差 2.5=第1期利息50再以5%生的利息(50×0.05)。
+- ★repro：binding 待補 math_checks6；單元引 math_checks7::finmath.simple-compound-interest（單利 1000·5%·2=100、複利 1000·1.05²=1102.5，.venv PASS）。
+- practice：Q1 單利利息 1000×5%×2=100、Q2 複利本利和 1000×1.05²=1102.5、Q3 多出 2.5＝第1期利息50再生的利息、Q4 n=1 單利複利相等（都 1050）。distractor 單一誤解（只1年50/本利和1100當利息/用複利102.5；用單利1100/只1期1050/多算一期1157.625；利率較高/多存一年/本金多算；複利較多/單利較多/無法比較）。
+- 下一步：finmath 第 2 單元（annuity 年金／loan-installment 貸款攤還／growth-decay-model／geo-distance／marginal-elasticity，repro 均已於 math_checks7 具備 .venv PASS）；finmath 共 6 KP，剩 5。接著 matrix(5)/space(5)/determinant(2)/linprog(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 15:14 ★🎉 complex roots-of-unity 單位根 5/5 DONE-GATE 全綠 → 複數島 complex strand 6/6 全收（t_sub，★單位圓 3 次單位根 1/ω/ω² 正三角形 SVG）
 - **math_complex_roots_of_unity frozen `c12c826149c80ca1`**（R1-R5 連 5 clean、L3 每輪 exit 0；R1 曾抓兩缺陷[Q2 distractor 假路徑：原「(√3/2)＋(1/2)i」稱 cos/sin 弄反，實際弄反得 √3/2−(1/2)i → 改選項為「(√3/2) − (1/2)i」並重寫 rationale、.venv 驗非根；輻角 R15 gloss 缺 → 於 claim c-rou-def 首次 rendered 處補「輻角 (argument)」]；R3 曾 reviewer 503 重跑一次；R5 confirmed 0/coverageComplete true、agents_error 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／content_sha==c12c8261／per_page_5clean 580/580 頁 0 違規（complex_roots_of_unity absent）／repro PASS／iPad 四角色簽核（單位圓 r=1、3 綠點 1(0°)/ω(120°)/ω²(240°) 在圓上、灰虛線正三角形、標籤移出免碰撞[#2 曾抓實軸/「1（0°）」碰撞已修]、右緣0%）。
 - 單位根（t_sub，complex 末單元，接 de-moivre）＝方程式 zⁿ=1 的 n 個複數解，都在單位圓上（模=1）、把圓等分成 n 份（相鄰相隔 360°/n）、第 k 個＝cos(k·360°/n)+i sin(k·360°/n)、k=0 那個是 1；3 次單位根＝1、ω=−1/2+√3/2i(120°)、ω²=−1/2−√3/2i(240°) 構成正三角形；n≥2 時 n 個根相加=0（1+ω+ω²=0）。
