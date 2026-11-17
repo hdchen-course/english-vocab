@@ -226,6 +226,17 @@ def c_conic_ellipse():
     Q = sp.Point(5, 0)                                        # 右頂點 (5−4)+(5+4)=10
     assert Q.distance(sp.Point(4, 0)) + Q.distance(sp.Point(-4, 0)) == 10
     return _ok("conic.ellipse", "x²/25+y²/9=1：a=5、b=3、c=4、焦點(±4,0)；長軸10/短軸6/焦距8；到兩焦距和=2a=10")
+def c_conic_hyperbola():
+    # x²/16−y²/9=1：a=4、b=3、c=√(a²+b²)=5（雙曲線用「加」）；焦點(±5,0)、頂點(±4,0)
+    a, b = 4, 3
+    c = sp.sqrt(a**2 + b**2); assert c == 5
+    assert 2 * a == 8 and 2 * c == 10                           # 貫軸(實軸)長8、焦距10
+    V = sp.Point(4, 0)                                          # 右頂點 到兩焦距「差」=2a=8
+    assert abs(V.distance(sp.Point(5, 0)) - V.distance(sp.Point(-5, 0))) == 8
+    P = sp.Point(8, sp.sqrt(27))                                # 曲線上一點 x=8⇒y²=27
+    assert sp.simplify(abs(P.distance(sp.Point(5, 0)) - P.distance(sp.Point(-5, 0))) - 8) == 0
+    assert sp.Rational(b, a) == sp.Rational(3, 4)              # 漸近線斜率 ±b/a=±3/4
+    return _ok("conic.hyperbola", "x²/16−y²/9=1：a=4、b=3、c=√(a²+b²)=5、焦點(±5,0)、頂點(±4,0)；到兩焦距差=2a=8；漸近線 y=±(3/4)x")
 
 # ---------- stats（18）----------
 D = [2, 4, 4, 4, 5, 5, 7, 9]      # 共用樣本（std 範例，μ=5,σ=2）
@@ -373,6 +384,7 @@ CHECKS = {s: fn for s, fn in {
     "vector.geometry-apply": c_vec_geometry_apply,
     "conic.parabola": c_conic_parabola,
     "conic.ellipse": c_conic_ellipse,
+    "conic.hyperbola": c_conic_hyperbola,
     "stats.collect-organize": s_collect, "stats.bar-line-chart": s_bar_line,
     "stats.pie-chart": s_pie, "stats.table-read": s_table, "stats.mean": s_mean,
     "stats.frequency-table": s_freq_table, "stats.cumulative-relative": s_cumulative,
