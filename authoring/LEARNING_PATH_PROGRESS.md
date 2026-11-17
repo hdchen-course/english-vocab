@@ -7,6 +7,18 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-18 02:48 ★ linprog.feasible-region 限制式與可行解區域 5/5 DONE-GATE 全綠 → 線性規劃 linprog strand 1/2（t_sub·分科數乙，★可行區四邊形 SVG）
+- **math_linprog_feasible_region frozen `c38a716993de5511`**（R1-R5 連 5 clean）。缺陷修復軌跡（harvest 階段連抓 4 個真缺陷，驗證「數 clean 前挖乾淨」）：
+  - R1 抓 2：①[blocker domain-precision] Q3「無限多個」rationale 把「可行解區域是有界的凸多邊形」當無條件通則（通則下可無界、且頂點有限的真因是「有限條邊界線」非「有界」）→ 去「有界」通則、改正確理由；②[minor] Q1 distractor (4,4) 違反兩條限制式（x+y>4 且 x+3y>6）→ 改 (5,0) 乾淨只違反 x+y≤4。pre-bank 直接修、re-freeze 17352c5b。
+  - round2 抓 1[major]：Q3「2 個」distractor 無乾淨單一誤解路徑（「只數座標軸上的點」實得 3 點撞「3 個」）→「2 個」改「兩斜線截距 (4,0)(0,2)」2-path、「3 個」改「軸上頂點 (0,0)(4,0)(0,2)」3-path，各乾淨。re-freeze 0f40df89。
+  - 末輪抓 1[minor]：全檔混用「坐標/座標」→ de-converge（清 4 banked round＋trace）統一「坐標」6 處（記憶 #42 之複犯）→ re-freeze **c38a7169**、重數 5-clean 全淨。
+- DONE-GATE 全綠：scan PASS／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard／content_sha==c38a7169／per_page_5clean PASS（feasible-region absent）／repro-math_checks6-linprog.feasible-region PASS／iPad 四角色簽核（坐標平面＋兩邊界線 x+y=4、x+3y=6＋淡藍四邊形可行區＋4 紅頂點 (0,0)(4,0)(3,1)(0,2)＋「可行解區域」；(3,1) 落兩線交點、右緣0%、標籤無碰）。strand 根節點無先備提示。數學中文授課無音檔。
+- 限制式與可行解區域（t_sub，linprog strand 第1單元）＝(1) 條件寫成二元一次不等式（含 x≥0、y≥0）；(2) 各半平面交集＝可行解區域（凸多邊形）；(3) 頂點＝相鄰兩邊界線交點。例 x≥0,y≥0,x+y≤4,x+3y≤6 → 頂點 (0,0)(4,0)(3,1)(0,2)，(3,1)=x+y=4∩x+3y=6。不含目標函數最佳化（下一單元）、單體法。與 objective-optimize 共用同範例區。
+- ★repro：本 session 強化 math_checks6::linprog.feasible-region 改用四邊形可行區（頂點＋交點(3,1)＋區外(4,4)不可行）；紅隊（指紋 b68d871→FAIL→誠實更新 123abc81dff8d994→PASS）。非繞過。
+- ★教訓：(a) distractor 概念題的「數量/計數」誘答每個都要有「乾淨且相異」的 count path（別兩個 distractor 的迷思路徑撞到同值）——是 #53 的計數版；(b) 可行解區域勿斷言「一定有界」（通則可無界）、頂點有限的理由是「有限條邊界線」；(c)「坐/座」術語陷阱又複犯（記憶 #42），class-sweep 只看 learner-facing 欄位。
+- ★★里程碑：linprog strand 1/2。math domain 僅剩 **objective-optimize（頂點法，末單元）**；完成即 **math domain 全收 260/260 KP**。
+- 下一步：linprog.objective-optimize（目標函數頂點法最佳化，共用同可行區 (0,0)(4,0)(3,1)(0,2)，oracle lp_optimize 待強化）→ math 全收。接著其他 domain 或 hub AC-VIZ-1 figure_signoff 債（sha 4741b69d）。
+
 ## 2026-11-18 01:46 ★★ determinant.cramer 克拉瑪公式解聯立方程組 5/5 DONE-GATE 全綠 → 行列式 determinant strand 2/2 **全收** ★★（t_sub·分科數甲，★三行列式 D/Dx/Dy 換行 SVG）
 - **math_determinant_cramer frozen `395171fc5cc84b93`**（R1-R5 連 5 clean；R1 抓 1 major[nav-cross-ref：prerequisites 空但本單元明示建基於 determinant.2x2-3x3、非合法根節點→抑制「🔗 建議先學」接線提示]→pre-bank 直接接線 prerequisites=["math.t_sub.determinant.2x2-3x3"]；因 content_sha 已剝除 prerequisites[HD 裁示 B]不作廢 frozen_sha、免重凍重審。streak 5 輪全淨）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard／content_sha==395171fc／per_page_5clean PASS（cramer absent）／repro-math_checks6-determinant.cramer PASS／iPad 四角色簽核（三個二階行列式 D/Dx/Dy 並排、被常數換掉的行數字標紅、各寫＝值、底部 x=Dx÷D=1 y=Dy÷D=3；det bars 對齊、紅行正確、右緣0%）／★hub 建議先學 visual render 實測（數學→行列式 strand→cramer 卡顯示「🔗 建議先學：二階與三階行列式的計算與幾何意義」，2x2-3x3 根節點無提示；eng 接線教訓滿足：使用者可見功能實際 render 看過）。數學中文授課無音檔。
 - 克拉瑪公式解二元聯立（t_sub，determinant strand 第2末單元，接 2x2-3x3）＝(1) 係數行列式 D=det[[a₁,b₁],[a₂,b₂]]；(2) 常數 (c₁,c₂) 換進 x 那一行得 Dx、換進 y 那一行得 Dy；(3) x=Dx÷D、y=Dy÷D（須 D≠0；D=0 兩行成比例→無唯一解、公式不適用）。例 {2x+y=5, x+3y=10}：D=5、Dx=5、Dy=15→x=1、y=3。不含三元克拉瑪、行列式性質證明。
