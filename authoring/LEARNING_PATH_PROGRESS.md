@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 21:24 ★★ matrix.transformation 矩陣與平面線性變換（旋轉/伸縮/鏡射）5/5 DONE-GATE 全綠 → 矩陣 matrix strand 5/5 **全收** ★★（t_sub，★三格 旋轉/伸縮/鏡射 SVG）
+- **math_matrix_transformation frozen `08726346f2134a04`**（R1-R5 連 5 clean，全程 confirmed 0、無 de-converge；R1 line-by-line／R2 figure-geometry＋算數反驗／R3 concept-precision＋teach-order／R4 對抗式 distractor 反算／R5 final end-to-end dispute-prior，五輪不同 framing 皆空手）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard／content_sha==08726346／per_page_5clean PASS 591/591（matrix_transformation absent）／repro-math_checks6-matrix.transformation PASS／iPad 四角色簽核（三格 SVG：旋轉90° (1,0)→(0,1) 箭頭、伸縮 diag(2,3) 巢狀矩形 (1,1)→(2,3)、鏡射 x 軸虛線鏡像 (2,3)→(2,−3)；箭頭指向正確、frame 尺寸恆定、右緣0%，綁 sha 08726346）。
+- 矩陣與平面線性變換（t_sub，接 matrix.linear-system，matrix strand 末）＝(1) 2×2 矩陣作用於平面點＝矩陣乘向量；(2) 旋轉90°逆時針 [[0,−1],[1,0]]：(1,0)→(0,1)、det=1（保面積保定向）；(3) 伸縮 diag(2,3)：(1,1)→(2,3)、det=6（面積×6）；(4) 鏡射 x 軸 [[1,0],[0,−1]]：(2,3)→(2,−3)、det=−1（翻轉定向）；(5) 行列式幾何意義＝|det|=面積放大倍率、det 正負=定向是否翻轉。不含一般角度旋轉/合成變換一般式。
+- ★repro：前 session 已強化 math_checks6::matrix.transformation 加 R.det=1、R*(0,1)=(−1,0)、伸縮 det=6、鏡射 det=−1；紅隊誠實更新指紋 0900f9de9ea99de8→PASS。
+- practice：Q1 旋轉 (1,0)→(0,1)、Q2 伸縮 (1,1)→(2,3)、Q3 鏡射 (2,3)→(2,−3)、Q4 det 幾何意義。distractor 皆對應單一乾淨誤解操作（旋轉矩陣行列弄反/正負號弄反/(x,y)↔(y,x)；只縮 x/只縮 y/加法；y 不變號/兩者都變號/對調；det 當面積本身/當周長/忽略正負）。
+- ★里程碑：**matrix strand 5/5 全收**（operations→multiplication→inverse→linear-system→transformation）。接下來依 BUILD_PLAN：space(5)／determinant(2)／linprog(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 21:03 ★ matrix.linear-system 以矩陣解線性方程組（高斯消去）5/5 DONE-GATE 全綠 → 矩陣 matrix strand 4/5（t_sub，★增廣矩陣高斯消去 SVG）
 - **math_matrix_linear_system frozen `97c6b9484ade68ca`**（R1-R5 連 5 clean；共 2 輪 de-converge：R3(第一次) 抓術語漂移[minor：claims/teach 用「行」但 feedback/distractor 用「欄」指同概念]→統一 4 處 欄→行；R3(第二次) 抓 blocker[panel 5/5 domain-precision：列運算第三類「兩列相加減」漏「倍數」]→改「把某一列加上（或減去）另一列的倍數」。另 R1 一個「高斯消去 vs Gauss-Jordan 命名」finding 經 panel 全體判 NOT A DEFECT＝台灣高中選修慣例。末輪 confirmed 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／content_sha==97c6b948／per_page_5clean PASS 590/590（matrix_linear absent）／repro PASS／iPad 四角色簽核（增廣 [[2,1|5],[1,3|10]] 直虛線分隔→灰箭頭「高斯消去（列運算）」→綠 rref [[1,0|1],[0,1|3]]→讀出 x=1,y=3→代回驗證、箭頭指向正確、右緣0%）。
 - 以矩陣解線性方程組（t_sub，接 matrix.inverse）＝(1) 方程組寫成 Ax=b：{2x+y=5,x+3y=10}→係數 A=[[2,1],[1,3]]、b=[[5],[10]]；(2) 增廣矩陣 [[2,1,5],[1,3,10]]（左係數右常數）；(3) 高斯消去（列運算：某列乘非零常數、把某列加上（或減去）另一列的倍數、交換兩列）化左半成單位矩陣，右半即解，rref=[[1,0,1],[0,1,3]]⇒x=1,y=3；(4) 代回 2×1+1×3=5、1×1+3×3=10。不含三元以上/完整解存性分類。
