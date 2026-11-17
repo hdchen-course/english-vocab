@@ -294,6 +294,81 @@ def c_conic_reflection_apply():
     assert sp.simplify((F2 - P)[0] * dref[1] - (F2 - P)[1] * dref[0]) == 0  # 反射線(向後延長)過 F2 ⇒ 好像從 F2 射出
     return _ok("conic.reflection-apply", "反射性質：拋物線 y²=4x 上 P(1,2) 切線使平行軸光(1,0)反射聚焦到 F(1,0)（與 PF 等角45°）；橢圓 x²/25+y²/9=1 上 P(0,3) 由 F1(4,0) 來的光反射到 F2(−4,0)；雙曲線 x²−y²=1 上由 F1 射出的光反射後好像從 F2 射出(發散)")
 
+# ---------- complex 複數（6）----------
+def c_cplx_definition_operations():
+    I = sp.I
+    assert sp.expand(I**2) == -1                                  # i²=−1
+    assert sp.expand((3 + 2*I) + (1 + 4*I)) == 4 + 6*I            # 加
+    assert sp.expand((3 + 2*I) - (1 + 4*I)) == 2 - 2*I            # 減
+    assert sp.expand((3 + 2*I) * (1 + 4*I)) == -5 + 14*I          # 乘：3+14i+8i²=−5+14i
+    # 除：有理化（乘共軛）(3+2i)/(1+2i)=(3+2i)(1−2i)/5=(7−4i)/5
+    q = sp.simplify((3 + 2*I) / (1 + 2*I))
+    assert q == sp.Rational(7, 5) - sp.Rational(4, 5)*I
+    assert sp.simplify(q * (1 + 2*I) - (3 + 2*I)) == 0            # 驗證除法：商×除數=被除數
+    return _ok("complex.definition-operations", "複數四則：i²=−1；(3+2i)+(1+4i)=4+6i；(3+2i)(1+4i)=−5+14i；(3+2i)/(1+2i)=(7−4i)/5（乘共軛有理化）")
+
+def c_cplx_conjugate_modulus():
+    I = sp.I
+    z = 3 + 4*I
+    assert sp.conjugate(z) == 3 - 4*I                            # 共軛 z̄=a−bi
+    assert sp.Abs(z) == 5                                         # 模 |z|=√(3²+4²)=5
+    assert sp.expand(z * sp.conjugate(z)) == 25                  # z·z̄=|z|²=25
+    assert sp.expand(z * sp.conjugate(z)) == sp.Abs(z)**2
+    # |z1 z2|=|z1||z2|
+    z2 = 1 + 2*I
+    assert sp.simplify(sp.Abs(z*z2) - sp.Abs(z)*sp.Abs(z2)) == 0
+    return _ok("complex.conjugate-modulus", "共軛與模：z=3+4i, z̄=3−4i, |z|=5, z·z̄=25=|z|²；|z₁z₂|=|z₁||z₂|")
+
+def c_cplx_plane():
+    I = sp.I
+    # 複數平面：z=a+bi ↔ 點(a,b)；模=到原點距離；加法=向量加
+    z = 3 + 4*I
+    pt = (sp.re(z), sp.im(z))
+    assert pt == (3, 4)
+    assert sp.sqrt(pt[0]**2 + pt[1]**2) == 5                     # 模=到原點距離
+    # 加法對應向量加：(1+2i)+(3+i)=4+3i ↔ (1,2)+(3,1)=(4,3)
+    s = (1 + 2*I) + (3 + I)
+    assert (sp.re(s), sp.im(s)) == (4, 3) == (1 + 3, 2 + 1)
+    return _ok("complex.plane", "複數平面：3+4i↔點(3,4)，模=到原點距離5；(1+2i)+(3+i)=4+3i↔(1,2)+(3,1)=(4,3) 向量加")
+
+def c_cplx_polar_form():
+    I = sp.I
+    # 極式 z=r(cosθ+isinθ)，r=|z|，θ=arg
+    z = 1 + I
+    r = sp.Abs(z); th = sp.arg(z)
+    assert r == sp.sqrt(2) and th == sp.pi/4
+    assert sp.simplify(r*(sp.cos(th) + I*sp.sin(th)) - z) == 0   # 極式還原
+    z2 = 1 + sp.sqrt(3)*I
+    assert sp.Abs(z2) == 2 and sp.arg(z2) == sp.pi/3
+    assert sp.simplify(2*(sp.cos(sp.pi/3) + I*sp.sin(sp.pi/3)) - z2) == 0
+    return _ok("complex.polar-form", "極式 z=r(cosθ+isinθ)：1+i→r=√2,θ=π/4；1+√3i→r=2,θ=π/3（還原驗證）")
+
+def c_cplx_de_moivre():
+    I = sp.I
+    # 棣美弗 (r(cosθ+isinθ))ⁿ=rⁿ(cos nθ+i sin nθ)
+    # (1+i)⁸：r=√2,θ=π/4 → (√2)⁸(cos2π+isin2π)=16·1=16
+    assert sp.expand((1 + I)**8) == 16
+    r, th, n = sp.sqrt(2), sp.pi/4, 8
+    assert sp.simplify(r**n*(sp.cos(n*th) + I*sp.sin(n*th)) - 16) == 0
+    # (cosθ+isinθ)²=cos2θ+isin2θ，θ=π/6
+    th2 = sp.pi/6
+    lhs = sp.expand((sp.cos(th2) + I*sp.sin(th2))**2)
+    assert sp.simplify(lhs - (sp.cos(2*th2) + I*sp.sin(2*th2))) == 0
+    return _ok("complex.de-moivre", "棣美弗：(1+i)⁸=16（r=√2,θ=π/4,n=8→16(cos2π+isin2π)）；(cosθ+isinθ)²=cos2θ+isin2θ")
+
+def c_cplx_roots_of_unity():
+    I = sp.I
+    # n 次單位根 = cos(2kπ/n)+i sin(2kπ/n)，k=0..n−1；zⁿ=1；和=0（n≥2）；模皆1
+    n = 3
+    roots = [sp.simplify(sp.cos(2*sp.pi*k/n) + I*sp.sin(2*sp.pi*k/n)) for k in range(n)]
+    assert sp.simplify(roots[1] - (sp.Rational(-1, 2) + sp.sqrt(3)/2*I)) == 0   # ω
+    assert sp.simplify(roots[2] - (sp.Rational(-1, 2) - sp.sqrt(3)/2*I)) == 0   # ω²
+    for z in roots:
+        assert sp.simplify(z**n - 1) == 0                        # 每根 zⁿ=1
+        assert sp.simplify(sp.Abs(z) - 1) == 0                   # 模=1（在單位圓上）
+    assert sp.simplify(sum(roots)) == 0                          # 1+ω+ω²=0
+    return _ok("complex.roots-of-unity", "單位根：z³=1 的三根 1、−½+√3/2i、−½−√3/2i，各模=1 在單位圓等分、和=0")
+
 # ---------- stats（18）----------
 D = [2, 4, 4, 4, 5, 5, 7, 9]      # 共用樣本（std 範例，μ=5,σ=2）
 def s_collect():
@@ -445,6 +520,12 @@ CHECKS = {s: fn for s, fn in {
     "conic.translation": c_conic_translation,
     "conic.line-intersection": c_conic_line_intersection,
     "conic.reflection-apply": c_conic_reflection_apply,
+    "complex.definition-operations": c_cplx_definition_operations,
+    "complex.conjugate-modulus": c_cplx_conjugate_modulus,
+    "complex.plane": c_cplx_plane,
+    "complex.polar-form": c_cplx_polar_form,
+    "complex.de-moivre": c_cplx_de_moivre,
+    "complex.roots-of-unity": c_cplx_roots_of_unity,
     "stats.collect-organize": s_collect, "stats.bar-line-chart": s_bar_line,
     "stats.pie-chart": s_pie, "stats.table-read": s_table, "stats.mean": s_mean,
     "stats.frequency-table": s_freq_table, "stats.cumulative-relative": s_cumulative,
