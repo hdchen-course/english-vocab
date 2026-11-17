@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-18 07:40 ★ sci.t_mid.phys-force.hooke 虎克定律（彈力與形變量成正比 F=kx）5/5 DONE-GATE 全綠 → 自然島 phys-force 7/17（t_mid·國中中階，★F–x 正比直線圖＋彈簧 SVG）
+- **sci_phys_force_hooke frozen `16898429934032dc`**（R1-R5 連 5 clean、零 de-converge：草稿即乾淨，5 輪 panel 全無 CONFIRMED defect，pedagogy 零 advisory）。R15 gloss（虎克定律 Hooke's law／彈簧常數 spring constant／彈性限度 elastic limit 三術語）只放 can_do、grep -c 自檢 2/2/2、content_audit 零 R15 finding。
+- DONE-GATE 全綠：scan PASS／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard（零 advisory）／content_sha==16898429934032dc／per_page_5clean PASS（absent）／repro-sci_phys_checks-phys-force.hooke PASS（F=kx=200·0.05=10N）／iPad 四角色簽核（左：天花板吊彈簧＋砝碼＋綠色向下 F 箭頭＋「力越大彈簧伸越長」；右：F–x 過原點紅色直線＋「F＝k×x」＋「斜率＝彈簧常數 k」；breadcrumb「自然科學·物理：力」、R11 不顯年段）。中文授課無音檔。
+- hooke（t_mid，phys-force strand 第7）＝(1) 彈性限度內，彈簧伸長量 x 與外力 F 成正比 F＝k×x；(2) k＝彈簧常數（勁度係數）、單位 N/m、代表軟硬 k 越大越硬；(3) 超彈性限度彈簧回不了原狀、定律不再成立。★刻意不教彈力位能 ½kx²（高中）、不教串並聯彈簧等效 k（超綱）。4 題 MCQ＝{成正比 關係／軟硬程度 k 意義／10牛頓 F=kx=200·0.05／超限度回不了原狀 彈性限度}，distractor 乾淨單一誤解（關係→反比/無關/先增後減；k→長度/重量/顏色；計算→200÷0.05=4000/只取k=200/0.05÷200；限度→一定回原狀/伸越短/k會變）。
+- ★教訓：連三單元（force-add-1d、force-unit、hooke）零 de-converge 5 輪一次過——草稿前置累犯教訓＋knownFP 先聲明「刻意不教」範圍（避 F=ma／½kx²）＋Q3 計算 distractor 明列誤解路徑，panel 零爭議。force-unit→hooke 接線漂亮（彈簧伸長定性→升定量 F=kx）。
+- 下一步：phys-force strand 還有 10 binding KP（t_mid friction-factor；t_adv resolve-compose/equilibrium/newton1/newton2/newton3/incline/tension-system/friction-coeff；t_sub newton-2d）。接 friction-factor（靜摩擦與動摩擦及影響因素，oracle 已驗；承 friction-exist 定性→升靜/動摩擦區分）。
+
 ## 2026-11-18 07:27 ★ sci.t_mid.phys-force.force-unit 力的單位（牛頓）與彈簧測力計 5/5 DONE-GATE 全綠 → 自然島 phys-force 6/17（t_mid·國中中階，★彈簧測力計 SVG）
 - **sci_phys_force_unit frozen `c525d90952597004`**（R1-R5 連 5 clean、零 de-converge：草稿即乾淨，5 輪 panel 全無 CONFIRMED defect，pedagogy 零 advisory）。R15 gloss（牛頓 newton N／彈簧測力計 spring scale）只放 can_do、grep -c 自檢 2/2、content_audit 零 R15 finding。
 - DONE-GATE 全綠：scan PASS／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard（零 advisory）／content_sha==c525d90952597004／per_page_5clean PASS（absent）／repro-sci_phys_checks-phys-force.force-unit PASS（1 N=1 kg·m/s² 因次恆等）／iPad 四角色簽核（彈簧測力計：頂端掛環＋外殼內彈簧＋下方掛鉤吊「1公斤」＋左側刻度0/5/10＋紅色指針指近10標「≈9.8牛頓」＋右側說明；breadcrumb「自然科學·物理：力」、R11 不顯年段）。中文授課無音檔。

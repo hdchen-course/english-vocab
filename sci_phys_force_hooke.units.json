@@ -1,0 +1,222 @@
+{
+ "_note": "自然島 物理-力（phys-force）strand 單元（第7）。知識點 sci.t_mid.phys-force.hooke（虎克定律：彈力與形變量成正比 F=kx）。tier=t_mid（中階）、exam=會考。全繁體零簡體零 PRC 詞。中文授課無音檔。術語附國際英語（R15，★只在 can_do 首次 gloss 一次：虎克定律 (Hooke's law)、彈簧常數 (spring constant)、彈性限度 (elastic limit)；teach/claim body 不重複——記憶 r15-gloss-once-first-render，草稿後必 grep -c 自檢：\"(Hooke's law)\"=2、\"(spring constant)\"=2、\"(elastic limit)\"=2〔_note+can_do 各一〕）。R11 不顯年段。前置＝force-unit（彈簧測力計、施力越大彈簧伸越長的定性、牛頓單位）→本單元升定量。★scope（t_mid）：(1) 虎克定律＝在『彈性限度』內，彈簧伸長量（形變量）x 與所受外力 F 成正比：F ＝ k×x；(2) k＝彈簧常數（勁度係數），單位 N/m（牛頓/公尺），表示彈簧軟硬——k 越大越硬（同樣伸長需更大力）；(3) 超過彈性限度，彈簧可能回不到原狀、虎克定律不再成立。不含彈力位能 ½kx²（高中）、不含串並聯彈簧等效 k（超綱）。repro（tools/verify/sci_phys_checks.py::phys-force.hooke，repro_gate .venv PASS）錨定 F=kx=200·0.05=10N（力∝形變）。★自檢：figure＝兩區（左：天花板吊彈簧＋砝碼＋綠色向下 F 箭頭＋『力越大彈簧伸越長』；右：F–x 正比直線圖，過原點、標 F=k×x、斜率＝k），alt 與 SVG text 逐字一致、標籤位置與座標相符（friction round7 教訓）；practice 四答案＝{成正比(Q1 關係),軟硬程度(Q2 k 意義),10牛頓(Q3 F=kx=200·0.05),超限度回不了原狀(Q4 彈性限度)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：關係→反比/無關/先增後減；k→長度/重量/顏色；計算→200÷0.05=4000/0.05÷200/只取k=200；限度→一定回原狀/伸越短/k 會變）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 逐字相符（#59）；數值對齊 oracle（200/0.05/10）。claim kind=fact。figure-only example 無 body。",
+ "page": "sci_phys_force_hooke.html",
+ "units": [
+  {
+   "unit_id": "sci.t_mid.phys-force.hooke",
+   "title_zh": "虎克定律（彈力與形變量成正比）",
+   "can_do": "我知道『虎克定律 (Hooke's law)』：在「彈性限度」以內，彈簧被拉長的量（伸長量）和所受的外力「成正比」，寫成 F ＝ k × x（F 是施力、x 是伸長量）。我也知道 k 叫做『彈簧常數 (spring constant)』，單位是牛頓/公尺（N/m），它代表這條彈簧的「軟硬」——k 越大的彈簧越硬，要拉出同樣的長度就需要更大的力。我還知道『彈性限度 (elastic limit)』：施的力一旦超過彈性限度，彈簧可能就回不到原來的樣子，虎克定律也不再成立。",
+   "situation_group": "力：彈力與虎克定律",
+   "subject": "sci",
+   "strand": "phys-force",
+   "est_minutes": 11,
+   "knowledge_point_ids": [
+    "sci.t_mid.phys-force.hooke"
+   ],
+   "prerequisites": [
+    "sci.t_mid.phys-force.force-unit"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-hk-law",
+     "text": "虎克定律：在「彈性限度」以內，彈簧被拉長的量（伸長量）和它所受的外力成正比——力變成 2 倍，伸長量也變成 2 倍。寫成公式就是 F ＝ k × x，其中 F 是施的力、x 是伸長量。",
+     "kind": "fact",
+     "source_refs": [
+      "虎克定律 F=kx（十二年國教 自然 國中階段）"
+     ],
+     "verification_ref": "F=kx 線性關係（sci_phys_checks::phys-force.hooke .venv 驗，k=200、x=0.05→F=10N）；彈性限度內成正比為國中自然 consensus_current",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-hk-k",
+     "text": "公式裡的 k 叫做彈簧常數（也叫勁度係數），單位是牛頓/公尺（N/m）。它代表這條彈簧有多「硬」：k 越大，彈簧越硬——要把它拉出同樣的長度，就需要更大的力。",
+     "kind": "fact",
+     "source_refs": [
+      "彈簧常數的意義與單位（十二年國教 自然 國中階段）"
+     ],
+     "verification_ref": "k 為 F-x 直線斜率、單位 N/m（因次：N÷m）；k 越大同 x 需更大 F（sci_phys_checks::phys-force.hooke 線性 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-hk-calc",
+     "text": "例子：一條彈簧常數 k ＝ 200 牛頓/公尺的彈簧，把它拉長 0.05 公尺（也就是 5 公分），需要的力 F ＝ k × x ＝ 200 × 0.05 ＝ 10 牛頓。",
+     "kind": "fact",
+     "source_refs": [
+      "F=kx 計算例（十二年國教 自然 國中階段）"
+     ],
+     "verification_ref": "F=kx=200·0.05=10N（sci_phys_checks::phys-force.hooke .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-hk-limit",
+     "text": "虎克定律只在「彈性限度」以內成立。施的力一旦超過彈性限度，彈簧就可能被拉壞、回不到原來的長度，這時候伸長量和力就不再是簡單的成正比了。",
+     "kind": "fact",
+     "source_refs": [
+      "彈性限度（十二年國教 自然 國中階段）"
+     ],
+     "verification_ref": "超過彈性限度材料進入塑性、不再線性回復為國中自然 consensus_current",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-force.hooke"
+     ],
+     "body": "上一單元學到：彈簧受力會伸長，力越大伸得越長（彈簧測力計就靠這個量力）。這一單元把這件事講得更精準——它們之間到底是什麼關係？"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-force.hooke"
+     ],
+     "body": "① 虎克定律：在「彈性限度」以內，彈簧的伸長量 x 和所受外力 F 成正比——力變 2 倍，伸長量也變 2 倍。公式 F ＝ k × x。② k 叫彈簧常數，單位牛頓/公尺（N/m），代表彈簧的軟硬：k 越大越硬，拉同樣長需要更大的力。③ 例：k ＝ 200 N/m 的彈簧，拉長 0.05 公尺，需要 F ＝ 200 × 0.05 ＝ 10 牛頓。④ 但施力超過「彈性限度」時，彈簧可能回不了原狀、虎克定律就不再成立。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_mid.phys-force.hooke"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>虎克定律：伸長量 x 與施力 F 成正比（F ＝ k × x）</text><line x1='44' y1='28' x2='96' y2='28' stroke='#6b7785' stroke-width='2'/><polyline points='70,28 61,35 79,42 61,49 79,56 70,63' fill='none' stroke='#6b7785' stroke-width='1.4'/><line x1='70' y1='63' x2='70' y2='70' stroke='#6b7785' stroke-width='1.2'/><rect x='54' y='70' width='32' height='20' rx='2' fill='#e6edf3' stroke='#99a7b5' stroke-width='1.2'/><text x='70' y='84' font-family='sans-serif' font-size='7.5' fill='#33475b' text-anchor='middle'>砝碼</text><line x1='70' y1='92' x2='70' y2='114' stroke='#2f6f54' stroke-width='2.4'/><polygon points='70,114 66,106 74,106' fill='#2f6f54'/><text x='70' y='128' font-family='sans-serif' font-size='8' fill='#2f6f54' text-anchor='middle'>F（施力）</text><text x='70' y='150' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='middle'>力越大，彈簧伸越長</text><line x1='210' y1='38' x2='210' y2='126' stroke='#33475b' stroke-width='1.3'/><line x1='210' y1='126' x2='334' y2='126' stroke='#33475b' stroke-width='1.3'/><line x1='210' y1='126' x2='312' y2='52' stroke='#c2535d' stroke-width='2'/><circle cx='312' cy='52' r='2.5' fill='#c2535d'/><text x='205' y='36' font-family='sans-serif' font-size='8' fill='#33475b' text-anchor='end'>F</text><text x='339' y='129' font-family='sans-serif' font-size='8' fill='#33475b' text-anchor='start'>x</text><text x='248' y='70' font-family='sans-serif' font-size='8.5' fill='#c2535d' text-anchor='start'>F ＝ k × x</text><text x='272' y='150' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='middle'>直線過原點＝成正比，斜率＝彈簧常數 k</text></svg>",
+      "alt": "標題「虎克定律：伸長量 x 與施力 F 成正比（F ＝ k × x）」。圖分左右兩區。左區：天花板下吊著一條彈簧，彈簧下端掛著一個標「砝碼」的方塊，方塊下方有一支向下的綠色箭頭標「F（施力）」，再下面寫「力越大，彈簧伸越長」。右區是一張座標圖：直的 F 軸、橫的 x 軸，一條紅色直線從原點往右上延伸（終點有一個紅點），線旁標「F ＝ k × x」，圖下方寫「直線過原點＝成正比，斜率＝彈簧常數 k」。",
+      "caption": "左邊：彈簧掛上砝碼受力 F，力越大彈簧伸得越長。右邊的圖把這關係畫出來——伸長量 x 越大，需要的力 F 也越大，而且是一條「過原點的直線」，代表 F 和 x 成正比；這條直線的斜率就是彈簧常數 k。公式 F ＝ k × x 只在彈性限度以內成立。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-force.hooke"
+     ],
+     "body": "最後練「虎克定律」。重點：(1) 彈性限度內，伸長量 x 與施力 F 成正比，F ＝ k × x；(2) k 是彈簧常數（N/m），代表彈簧軟硬，k 越大越硬；(3) 超過彈性限度，虎克定律不再成立。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "根據虎克定律，在彈性限度內，彈簧的「伸長量」和它所受的「外力」是什麼關係？",
+     "answer": "成正比（力變幾倍，伸長量就變幾倍）",
+     "kp_ids": [
+      "sci.t_mid.phys-force.hooke"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-force.hooke"
+     ],
+     "options": [
+      "成正比（力變幾倍，伸長量就變幾倍）",
+      "成反比（力越大，伸長量越小）",
+      "完全沒有關係",
+      "先變大再變小"
+     ],
+     "distractor_rationales": {
+      "成反比（力越大，伸長量越小）": "方向相反：虎克定律是力越大伸長量越大（成正比），不是越小。",
+      "完全沒有關係": "有關係：力越大伸長量越大，而且成正比（F＝k×x）。",
+      "先變大再變小": "在彈性限度內是穩定的正比關係，不會先大再小。"
+     },
+     "answer_evidence": [
+      "c-hk-law"
+     ],
+     "feedback": "虎克定律：彈性限度內，伸長量與施力成正比——力變幾倍，伸長量就變幾倍（F ＝ k × x）。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "公式 F ＝ k × x 裡的 k（彈簧常數）代表什麼？",
+     "answer": "彈簧的軟硬程度（k 越大越硬）",
+     "kp_ids": [
+      "sci.t_mid.phys-force.hooke"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-force.hooke"
+     ],
+     "options": [
+      "彈簧的軟硬程度（k 越大越硬）",
+      "彈簧原本的長度",
+      "彈簧的重量",
+      "彈簧的顏色"
+     ],
+     "distractor_rationales": {
+      "彈簧原本的長度": "k 不是長度；它代表彈簧的軟硬，k 越大越硬（拉同樣長需要更大的力）。",
+      "彈簧的重量": "k 不是重量；它代表彈簧的軟硬程度，單位是牛頓/公尺（N/m）。",
+      "彈簧的顏色": "顏色與 k 無關；k 代表彈簧的軟硬——k 越大越硬。"
+     },
+     "answer_evidence": [
+      "c-hk-k"
+     ],
+     "feedback": "k 是彈簧常數（N/m），代表彈簧的軟硬：k 越大越硬，拉出同樣長度需要更大的力。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一條彈簧常數 k ＝ 200 牛頓/公尺的彈簧，把它拉長 0.05 公尺，需要多大的力？",
+     "answer": "10 牛頓",
+     "kp_ids": [
+      "sci.t_mid.phys-force.hooke"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-force.hooke"
+     ],
+     "options": [
+      "10 牛頓",
+      "4000 牛頓",
+      "200 牛頓",
+      "約 0.00025 牛頓"
+     ],
+     "distractor_rationales": {
+      "4000 牛頓": "這是把 200 除以 0.05（200÷0.05）；虎克定律是相乘：F ＝ k × x ＝ 200 × 0.05 ＝ 10。",
+      "200 牛頓": "這只拿了 k、忘了乘伸長量 x；要 F ＝ k × x ＝ 200 × 0.05 ＝ 10 牛頓。",
+      "約 0.00025 牛頓": "這是把 0.05 除以 200；應該是相乘：F ＝ 200 × 0.05 ＝ 10 牛頓。"
+     },
+     "answer_evidence": [
+      "c-hk-calc"
+     ],
+     "feedback": "F ＝ k × x ＝ 200 × 0.05 ＝ 10 牛頓。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "關於「彈性限度」，下列哪一個說法正確？",
+     "answer": "施的力超過彈性限度後，彈簧可能回不到原狀，虎克定律就不再成立",
+     "kp_ids": [
+      "sci.t_mid.phys-force.hooke"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-force.hooke"
+     ],
+     "options": [
+      "施的力超過彈性限度後，彈簧可能回不到原狀，虎克定律就不再成立",
+      "不管施多大的力，彈簧都一定會回到原狀",
+      "在彈性限度內，施的力越大，彈簧反而伸得越短",
+      "彈簧常數 k 會隨施力大小一直改變"
+     ],
+     "distractor_rationales": {
+      "不管施多大的力，彈簧都一定會回到原狀": "不對：超過彈性限度後彈簧可能回不了原狀，這正是彈性限度的意義。",
+      "在彈性限度內，施的力越大，彈簧反而伸得越短": "方向相反：彈性限度內力越大伸得越長（成正比），不是越短。",
+      "彈簧常數 k 會隨施力大小一直改變": "在彈性限度內 k 是固定值（直線斜率不變）；不是隨施力一直改變。"
+     },
+     "answer_evidence": [
+      "c-hk-limit"
+     ],
+     "feedback": "虎克定律只在彈性限度內成立；力超過彈性限度，彈簧可能回不了原狀，關係就不再是簡單的正比。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（虎克定律＝彈性限度內伸長量 x 與施力 F 成正比 F＝k×x；k＝彈簧常數、單位 N/m、代表軟硬 k 越大越硬；k=200 拉 0.05 公尺需 200×0.05＝10 牛頓；超過彈性限度彈簧回不了原狀、定律不再成立；三鐵律＝限度內成正比、F=k×x 相乘、k 越大越硬）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
