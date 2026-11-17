@@ -92,10 +92,18 @@ def sp_plane_equation():
     assert Matrix([2, 3, 6]).dot(Matrix([6, 0, 0])) == 12      # (6,0,0)=12≠6
     return _ok("space.plane-equation", "平面 ax+by+cz=d 法向量(a,b,c)；2x+3y+6z=6 法向量(2,3,6)、(3,0,0)在面上(=6)；(1,2,2)·(3,1,1)=7→x+2y+2z=7；(1,1,1)→11、O→0、(6,0,0)→12 皆不在面上")
 def sp_line_parametric():
-    # 過(1,2,3) 方向(1,1,1)：t=2 → (3,4,5)
+    # 過(1,2,3) 方向(1,1,1)：t=2 → (3,4,5)；t=1 → (2,3,4)（Q1 distractor）
     P0, d = Matrix([1, 2, 3]), Matrix([1, 1, 1])
     assert P0+2*d == Matrix([3, 4, 5])
-    return _ok("space.line-parametric", "參數式 (1,2,3)+t(1,1,1)，t=2→(3,4,5)")
+    assert P0+1*d == Matrix([2, 3, 4])
+    # 對稱式 (x−1)/2=(y−2)/3=(z−3)/6：方向(2,3,6)過(1,2,3)，線上點 t=1→(3,5,9)，三比值皆=1
+    d2 = Matrix([2, 3, 6]); Q = P0 + 1*d2
+    assert Q == Matrix([3, 5, 9])
+    assert (Q[0]-1)/2 == (Q[1]-2)/3 == (Q[2]-3)/6 == 1
+    # 方向向量 = 直線上兩點相減；A(1,2,3),B(3,4,5) → B−A=(2,2,2)；相加 A+B=(4,6,8)
+    A, B = Matrix([1, 2, 3]), Matrix([3, 4, 5])
+    assert B-A == Matrix([2, 2, 2]) and A+B == Matrix([4, 6, 8])
+    return _ok("space.line-parametric", "參數式 (1,2,3)+t(1,1,1)：t=2→(3,4,5)、t=1→(2,3,4)；對稱式 (x−1)/2=(y−2)/3=(z−3)/6（方向(2,3,6)過(1,2,3)，線上點(3,5,9)三比值=1）；方向=兩點相減 B−A=(2,2,2)、相加(4,6,8)")
 def sp_distance_angle():
     # 點(0,0,0)到平面 x+y+z=3 距離=|−3|/√3=√3
     n = Matrix([1, 1, 1])

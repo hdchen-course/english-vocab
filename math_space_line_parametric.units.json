@@ -1,0 +1,209 @@
+{
+ "_note": "數學島 空間（space）strand 單元（第3）。知識點 math.t_sub.space.line-parametric（空間直線的參數式與對稱式）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次：參數式 (parametric form)、方向向量 (direction vector)、對稱式 (symmetric form)）。前置假設：已會空間坐標 (x,y,z)、空間向量加法與係數積。★scope（t_sub）：(1) 空間直線過點 P₀=(x₀,y₀,z₀)、方向向量 d=(a,b,c)：參數式 (x,y,z)=(x₀,y₀,z₀)+t(a,b,c)，即 x=x₀+at、y=y₀+bt、z=z₀+ct；代入 t 得線上一點；例 過 (1,2,3) 方向 (1,1,1)：t=2→(3,4,5)、t=1→(2,3,4)。(2) 消去 t 得對稱式 (x−x₀)/a=(y−y₀)/b=(z−z₀)/c（a,b,c 皆非 0 時）；例 過 (1,2,3) 方向 (2,3,6)：(x−1)/2=(y−2)/3=(z−3)/6。(3) 方向向量可由直線上兩點相減得到；例 A(1,2,3),B(3,4,5)→方向 B−A=(2,2,2)。不含兩直線夾角/直線與平面關係（在 point-line-plane、distance-angle 單元）。repro（tools/verify/math_checks6.py::space.line-parametric，repro_gate .venv PASS、registry 指紋 01a5dce25e59882b；本 session 強化加 t=1、對稱式三比值、方向=兩點相減並誠實更新指紋）。★自檢（math-unit defect-classes）：figure＝一條斜線（空間直線）＋綠色方向向量箭頭 d 從 P₀ 射出＋標 t=2 的點，座標正確、箭頭沿線方向正確、標籤移出免碰線（#2）、alt 與 SVG text 逐字一致、★figure 標題只承諾直線＋方向示意（#4/#46）；practice 四答案＝{(3,4,5)(Q1 參數式 t=2),(x−1)/2=(y−2)/3=(z−3)/6(Q2 對稱式),(2,2,2)(Q3 方向=兩點相減),方向向量＝直線往哪延伸(Q4 概念)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 用 t=1 得 (2,3,4)/把點乘以 t 得 (2,4,6)/t=0 沒動 (1,2,3)；Q2 分子符號用加 (x+1).../點與方向互換 (x−2)/1=(y−3)/2=(z−6)/3/方向分量顛倒 (x−1)/6=(y−2)/3=(z−3)/2；Q3 兩點相加 (4,6,8)/只抄 B(3,4,5)/只抄 A(1,2,3)；Q4 方向向量＝固定點/長度/與 x 軸夾角）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；方向向量任意非零純量倍仍合法，distractor 刻意不用 (1,1,1) 或 (2,2,2) 純量倍。claim kind=definition/fact。figure-only example 無 body。",
+ "page": "math_space_line_parametric.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.space.line-parametric",
+   "title_zh": "空間直線的參數式與對稱式",
+   "can_do": "我知道空間中一條直線可以用『參數式 (parametric form)』寫出來：先給一個直線通過的點 P₀，再給一個『方向向量 (direction vector)』d 指出直線往哪個方向延伸，直線上的點就是 (x, y, z) ＝ P₀ ＋ t·d。我會把參數 t 代進去求出線上的點，也會把 t 消掉寫成『對稱式 (symmetric form)』，還會用直線上兩個點相減求出方向向量。",
+   "situation_group": "空間：直線的參數式",
+   "subject": "math",
+   "strand": "space",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.space.line-parametric"
+   ],
+   "prerequisites": [],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-lp-param",
+     "text": "空間直線過點 P₀ ＝ (x₀, y₀, z₀)、方向向量 d ＝ (a, b, c)，參數式是 (x, y, z) ＝ (x₀, y₀, z₀) ＋ t(a, b, c)，也就是 x ＝ x₀ ＋ at、y ＝ y₀ ＋ bt、z ＝ z₀ ＋ ct。把一個 t 值代進去，就得到直線上的一個點。例：過 (1, 2, 3) 方向 (1, 1, 1)，t ＝ 2 時得到 (1＋2, 2＋2, 3＋2) ＝ (3, 4, 5)。",
+     "kind": "fact",
+     "source_refs": [
+      "空間直線參數式（高中 選修數學）"
+     ],
+     "verification_ref": "(1,2,3)+t(1,1,1)：t=2→(3,4,5)、t=1→(2,3,4)（math_checks6::space.line-parametric .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-lp-symmetric",
+     "text": "把參數式裡的 t 消掉（由每一條 x ＝ x₀ ＋ at 解出 t ＝ (x−x₀)/a……），就得到對稱式 (x−x₀)/a ＝ (y−y₀)/b ＝ (z−z₀)/c（要在 a、b、c 都不是 0 時）。例：過 (1, 2, 3) 方向 (2, 3, 6) 的直線，對稱式是 (x−1)/2 ＝ (y−2)/3 ＝ (z−3)/6。",
+     "kind": "fact",
+     "source_refs": [
+      "空間直線對稱式（高中 選修數學）"
+     ],
+     "verification_ref": "過(1,2,3)方向(2,3,6)→(x−1)/2=(y−2)/3=(z−3)/6；線上點(3,5,9)三比值皆=1（math_checks6::space.line-parametric .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-lp-direction",
+     "text": "一條直線的方向向量，可以用直線上任意兩個點相減得到。例：直線通過 A ＝ (1, 2, 3) 和 B ＝ (3, 4, 5)，方向向量就是 B − A ＝ (3−1, 4−2, 5−3) ＝ (2, 2, 2)。",
+     "kind": "fact",
+     "source_refs": [
+      "方向向量（高中 選修數學）"
+     ],
+     "verification_ref": "A(1,2,3),B(3,4,5)→B−A=(2,2,2)；A+B=(4,6,8)（math_checks6::space.line-parametric .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.space.line-parametric"
+     ],
+     "body": "這一單元學怎麼用方程式描述空間中的一條直線。只要知道直線通過的一個點、還有它往哪個方向延伸（方向向量），就能寫出直線上所有的點。先學參數式，再學把它改寫成對稱式，最後學怎麼從兩個點求出方向向量。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.space.line-parametric"
+     ],
+     "body": "① 參數式：直線過點 P₀ ＝ (x₀, y₀, z₀)、方向向量 d ＝ (a, b, c)，則 (x, y, z) ＝ (x₀, y₀, z₀) ＋ t(a, b, c)。代入一個 t 就得到線上一點，例 過 (1, 2, 3) 方向 (1, 1, 1)：t ＝ 2 → (3, 4, 5)。② 對稱式：把 t 消掉得 (x−x₀)/a ＝ (y−y₀)/b ＝ (z−z₀)/c，例 過 (1, 2, 3) 方向 (2, 3, 6)：(x−1)/2 ＝ (y−2)/3 ＝ (z−3)/6。③ 方向向量 ＝ 直線上兩點相減，例 A(1,2,3)、B(3,4,5) → B − A ＝ (2, 2, 2)。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.space.line-parametric"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>空間直線：從一點 P₀ 沿方向 d 延伸</text><line x1='72' y1='129' x2='250' y2='41' stroke='#99a7b5' stroke-width='1.4' stroke-dasharray='4 3'/><circle cx='90' cy='120' r='3' fill='#33475b'/><text x='84' y='133' font-family='sans-serif' font-size='8' fill='#33475b' text-anchor='end'>P₀ (1, 2, 3)</text><line x1='90' y1='120' x2='140' y2='95' stroke='#2f6f54' stroke-width='2'/><polygon points='140,95 132,95 136,101' fill='#2f6f54'/><text x='116' y='88' font-family='sans-serif' font-size='8.5' fill='#2f6f54' text-anchor='start' font-weight='bold'>d ＝ (1, 1, 1)</text><circle cx='190' cy='70' r='3' fill='#c2535d'/><text x='196' y='86' font-family='sans-serif' font-size='8' fill='#c2535d' text-anchor='start'>t ＝ 2 → (3, 4, 5)</text><text x='180' y='156' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle'>(x, y, z) ＝ (1, 2, 3) ＋ t (1, 1, 1)</text></svg>",
+      "alt": "標題「空間直線：從一點 P₀ 沿方向 d 延伸」。圖中畫一條斜向右上的虛線代表一條空間直線。直線上有一個起點 P₀，標「P₀ (1, 2, 3)」。從 P₀ 沿著直線方向畫一支綠色箭頭，標「d ＝ (1, 1, 1)」，代表方向向量。直線上再往前標一個紅色的點，寫「t ＝ 2 → (3, 4, 5)」。最下面一行寫「(x, y, z) ＝ (1, 2, 3) ＋ t (1, 1, 1)」。",
+      "caption": "一條空間直線，只要有「一個起點 P₀」和「一個方向向量 d」就完全決定了。綠色箭頭 d ＝ (1, 1, 1) 指出直線往哪個方向延伸；沿著這個方向走 t 步，就到達 (x, y, z) ＝ (1, 2, 3) ＋ t(1, 1, 1)。例如 t ＝ 2 時，就到了紅色的點 (3, 4, 5)。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.space.line-parametric"
+     ],
+     "body": "最後練空間直線的參數式與對稱式。重點：(1) 參數式 ＝ 起點 ＋ t × 方向向量，代入 t 求線上的點；(2) 對稱式 ＝ 把 t 消掉，(x−x₀)/a ＝ (y−y₀)/b ＝ (z−z₀)/c；(3) 方向向量可由直線上兩點相減得到。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一條直線的參數式是 (x, y, z) ＝ (1, 2, 3) ＋ t(1, 1, 1)。當 t ＝ 2 時，得到直線上的哪一點？",
+     "answer": "(3, 4, 5)",
+     "kp_ids": [
+      "math.t_sub.space.line-parametric"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.space.line-parametric"
+     ],
+     "options": [
+      "(3, 4, 5)",
+      "(2, 3, 4)",
+      "(2, 4, 6)",
+      "(1, 2, 3)"
+     ],
+     "distractor_rationales": {
+      "(2, 3, 4)": "這是把 t 當成 1 算的：題目是 t ＝ 2，要加 2×(1, 1, 1)，得 (1＋2, 2＋2, 3＋2) ＝ (3, 4, 5)。",
+      "(2, 4, 6)": "這是把起點 (1, 2, 3) 直接乘以 2：參數式是「起點 ＋ t×方向」，不是「起點 × t」，正確是 (3, 4, 5)。",
+      "(1, 2, 3)": "這是 t ＝ 0（還沒走）的點：t ＝ 2 時要沿方向走 2 步，到 (3, 4, 5)。"
+     },
+     "answer_evidence": [
+      "c-lp-param"
+     ],
+     "feedback": "(1, 2, 3) ＋ 2×(1, 1, 1) ＝ (1＋2, 2＋2, 3＋2) ＝ (3, 4, 5)。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一條直線通過點 (1, 2, 3)，方向向量是 (2, 3, 6)。它的對稱式是哪一個？",
+     "answer": "(x−1)/2 ＝ (y−2)/3 ＝ (z−3)/6",
+     "kp_ids": [
+      "math.t_sub.space.line-parametric"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.space.line-parametric"
+     ],
+     "options": [
+      "(x−1)/2 ＝ (y−2)/3 ＝ (z−3)/6",
+      "(x＋1)/2 ＝ (y＋2)/3 ＝ (z＋3)/6",
+      "(x−2)/1 ＝ (y−3)/2 ＝ (z−6)/3",
+      "(x−1)/6 ＝ (y−2)/3 ＝ (z−3)/2"
+     ],
+     "distractor_rationales": {
+      "(x＋1)/2 ＝ (y＋2)/3 ＝ (z＋3)/6": "分子的符號錯了：對稱式分子是「坐標減去起點」x−x₀，所以是 (x−1)、(y−2)、(z−3)，不是加。",
+      "(x−2)/1 ＝ (y−3)/2 ＝ (z−6)/3": "把起點和方向向量的角色對調了：分子減的是起點 (1, 2, 3)，分母才是方向向量 (2, 3, 6)。",
+      "(x−1)/6 ＝ (y−2)/3 ＝ (z−3)/2": "分母的方向向量分量順序顛倒了：方向向量是 (2, 3, 6)，要照 x、y、z 順序當分母，是 2、3、6。"
+     },
+     "answer_evidence": [
+      "c-lp-symmetric"
+     ],
+     "feedback": "對稱式 ＝ (x−x₀)/a ＝ (y−y₀)/b ＝ (z−z₀)/c，起點 (1, 2, 3) 當分子被減、方向 (2, 3, 6) 當分母，得 (x−1)/2 ＝ (y−2)/3 ＝ (z−3)/6。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一條直線通過 A(1, 2, 3) 和 B(3, 4, 5) 兩點。用這兩點求出的方向向量 B − A 是哪一個？",
+     "answer": "(2, 2, 2)",
+     "kp_ids": [
+      "math.t_sub.space.line-parametric"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.space.line-parametric"
+     ],
+     "options": [
+      "(2, 2, 2)",
+      "(4, 6, 8)",
+      "(3, 4, 5)",
+      "(1, 2, 3)"
+     ],
+     "distractor_rationales": {
+      "(4, 6, 8)": "這是把兩點相加 A ＋ B：方向向量要用「相減」B − A，不是相加，得 (2, 2, 2)。",
+      "(3, 4, 5)": "這是直接抄了點 B 的坐標：方向向量要用 B − A，把對應坐標相減，得 (2, 2, 2)。",
+      "(1, 2, 3)": "這是直接抄了點 A 的坐標：方向向量要用 B − A，把對應坐標相減，得 (2, 2, 2)。"
+     },
+     "answer_evidence": [
+      "c-lp-direction"
+     ],
+     "feedback": "B − A ＝ (3−1, 4−2, 5−3) ＝ (2, 2, 2)。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在空間直線的參數式裡，方向向量 d 代表什麼？",
+     "answer": "直線往哪個方向延伸（直線的方向）",
+     "kp_ids": [
+      "math.t_sub.space.line-parametric"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.space.line-parametric"
+     ],
+     "options": [
+      "直線往哪個方向延伸（直線的方向）",
+      "直線通過的那個固定起點",
+      "直線的長度",
+      "直線和 x 軸的夾角"
+     ],
+     "distractor_rationales": {
+      "直線通過的那個固定起點": "固定起點是 P₀，不是方向向量：方向向量 d 指的是直線往哪延伸，起點和方向是參數式裡兩個不同的東西。",
+      "直線的長度": "直線是無限延伸的、沒有「長度」：方向向量描述的是方向，不是長度。",
+      "直線和 x 軸的夾角": "夾角是一個角度；方向向量是一個有方向的向量 (a, b, c)，描述直線指向哪邊，不是角度本身。"
+     },
+     "answer_evidence": [
+      "c-lp-param"
+     ],
+     "feedback": "方向向量 d ＝ (a, b, c) 指出直線往哪個方向延伸；配上一個起點 P₀，就用 (x, y, z) ＝ P₀ ＋ t·d 描述整條直線。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（參數式 (x,y,z)=P₀+t·d＝起點＋t×方向向量，代入 t 求線上點，例 (1,2,3)+t(1,1,1) t=2→(3,4,5)；對稱式＝消去 t 得 (x−x₀)/a=(y−y₀)/b=(z−z₀)/c，例 過(1,2,3)方向(2,3,6)→(x−1)/2=(y−2)/3=(z−3)/6；方向向量＝直線上兩點相減，例 B−A=(2,2,2)；三鐵律＝參數式是起點加 t 乘方向、對稱式分子減起點分母是方向、方向向量用兩點相減）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
