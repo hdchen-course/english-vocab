@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 22:22 ★ space.plane-equation 平面方程式與法向量 5/5 DONE-GATE 全綠 → 空間 space strand 2/5（t_sub，★平面＋法向量⊥示意 SVG）
+- **math_space_plane_equation frozen `3de1db9523cb4736`**（R1-R5 連 5 clean，全程 confirmed 0、無 de-converge；5 輪不同 framing＝line-by-line／figure-geometry＋算數反驗／concept-precision＋teach-order／對抗式 distractor 反算／final end-to-end 皆空手）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard／content_sha==3de1db95／per_page_5clean PASS 593/593（plane_equation absent）／repro-math_checks6-space.plane-equation PASS／iPad 四角色簽核（傾斜平行四邊形當平面＋綠色法向量箭頭由點 P 垂直射出＋直角記號＋標 n=(2,3,6)、平面 2x+3y+6z=6；箭頭射出方向正確、標籤不碰線、右緣0%）。
+- 平面方程式與法向量（t_sub，space strand 第2單元，接 coordinate）＝(1) 平面 ax+by+cz=d，係數 (a,b,c) 就是法向量 n 且垂直於平面，例 2x+3y+6z=6→(2,3,6)；(2) 由法向量 (a,b,c) 與面上一點 (x₀,y₀,z₀)：d=ax₀+by₀+cz₀，例 (1,2,2) 過 (3,1,1)→d=7→x+2y+2z=7；(3) 檢查點在不在面上＝代入看等式成不成立，(3,0,0)代 2x+3y+6z=6 在面上。不含平面夾角、點到平面距離（在 distance-angle 單元）。
+- ★repro：本 session 強化 math_checks6::space.plane-equation 加 d=7 求平面 + 三個不在面上的點代入（11/0/12）；紅隊（指紋 f7fe9b5f→FAIL→誠實更新 bb8a78111066fe90→PASS）。非繞過。
+- practice：Q1 法向量 (2,3,6)、Q2 平面 x+2y+2z=7、Q3 哪點在 2x+3y+6z=6 上＝(3,0,0)、Q4 法向量垂直於平面即係數。distractor 單一乾淨誤解（係數反序 (6,3,2)/把面上一點當法向量 (3,0,0)/一係數變號 (2,3,−6)；沒代點當過原點 =0/漏一項 =5/點與係數互換 3x+y+z=7；(1,1,1)→11、O→0、(6,0,0)→12 皆≠6；法向量平行躺面上/是面上一點坐標/是面到原點距離）。★法向量任意非零純量倍仍合法，distractor 刻意避開 (2,3,6) 純量倍。
+- ★續用「L3 以 reviewer 回報 coverage 驗」修正法（見 memory [[l3-coverage-check-reviewer-reported]]），R1–R5 全 PASS。
+- 下一步：space 第 3 單元＝line-parametric（空間直線參數式與對稱式）或 point-line-plane；space 剩 3（line-parametric/point-line-plane/distance-angle）。接著 determinant(2)/linprog(2)＝math 全收。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 22:00 ★ space.coordinate 空間坐標系與兩點距離 5/5 DONE-GATE 全綠 → 空間 space strand 1/5 起（t_sub，★長方體空間對角線 SVG）
 - **math_space_coordinate frozen `b405d045c9b46d84`**（R1-R5 連 5 clean；R1 抓 2 缺陷[major #53：Q3 distractor (1,2,3) 恰為題幹第一端點→「抄端點」誤解雙路徑；minor 術語：坐/座 混用]→R1 pre-bank 直接修：Q3 端點改 (2,2,4)&(6,8,10)→中點 (4,5,7)（相減÷2=(2,3,3)、相加忘除2=(8,10,14)、抄第一端點=(2,2,4) 皆不撞端點/正解）、全檔「座標」統一「坐標」（台灣課綱標準，KP 標題即「坐」）；重凍 b405d045、重跑 R1 乾淨。末輪 confirmed 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard／content_sha==b405d045／per_page_5clean PASS 592/592（space_coordinate absent）／repro-math_checks6-space.coordinate PASS／iPad 四角色簽核（長方體以 O(左下前)→B(2,3,6)(右上後) 空間對角線 d=7、三邊 Δx=2/Δy=3/Δz=6、底部式 √(2²+3²+6²)=√49=7；Δx 標籤移出對角線免碰撞、端點接 O/B 正確、右緣0%）。
 - 空間坐標系與兩點距離（t_sub，space strand 第1單元）＝(1) 空間坐標系：原點 O 拉三條互垂軸 x,y,z，一點用 (x,y,z) 三數定位（比平面多一個 z）；(2) 兩點距離 ＝ √((x₂−x₁)²+(y₂−y₁)²+(z₂−z₁)²)＝平面距離公式再加一個 z 差平方；例 O→(2,3,6)=√49=7、(1,0,0)→(1,3,4)=√25=5；(3) 中點 ＝ 兩點各坐標平均。不含球面方程式、點到平面距離（後面單元）。
