@@ -7,6 +7,15 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-18 03:27 ★★★ linprog.objective-optimize 目標函數最佳化頂點法 5/5 DONE-GATE 全綠 → linprog 2/2 **全收** → **math domain 全收 260/260 KP** ★★★（t_sub·分科數乙，★頂點 z 值 SVG）
+- **math_linprog_objective_optimize frozen `48ccfca7245586cc`**（R1-R5 連 5 clean；R1 首輪即淨＝草稿帶 math defect-classes 教訓+knownFP 生效；round3 抓 1 minor[owner=zh b-hard，panel split domain/zh DEFECT]：teach① 角點定理「又叫頂點法」把〈定理=命題〉與〈頂點法=解法〉畫等號、與 teach②/④/can_do「依定理推出的程序」不一致 → de-converge 清 2 輪、改 teach① 區分定理/解法、重凍 **48ccfca7**、重數 5-clean 全淨；末輪 notDefects 1：_note 一處「座標」panel 0/7 NOT A DEFECT，非 rendered metadata、依記憶 #42 不為它 de-converge，保留）。
+- DONE-GATE 全綠：scan PASS／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard／content_sha==48ccfca7／per_page_5clean PASS（absent）／repro-math_checks6-linprog.objective-optimize PASS／iPad 四角色簽核（可行區四邊形＋四頂點標 z 值 (0,0)z=0/(4,0)z=8/(0,2)z=6/(3,1)z=9綠大點「最大」＋目標 z=2x+3y；(3,1) 綠點在兩斜線交點、右緣0%）／★hub 建議先學 render 實測（數學→線性規劃→objective-optimize 卡顯示「🔗 建議先學：線性規劃：限制式與可行解區域」）。數學中文授課無音檔。
+- 目標函數最佳化頂點法（t_sub，linprog strand 第2末單元，接 feasible-region）＝(1) 目標函數 z=ax+by；(2) 角點定理：線性目標函數在有界可行解區域上最大/最小一定在頂點；(3) 頂點法＝把每個頂點代入 z 比大小。例 頂點 (0,0)(4,0)(3,1)(0,2) 代 z=2x+3y 得 0/8/9/6 → max 9@(3,1)、min 0@(0,0)。不含單體法。
+- ★repro：本 session 強化 math_checks6::linprog.objective-optimize 改用同可行區＋z=2x+3y 逐頂點值 0/8/9/6；紅隊（指紋 16f69682→FAIL→誠實更新 26831b1a88ec0810→PASS）。非繞過。
+- ★教訓：**「定理（命題）」與「以定理為根據的解法/程序」在同一單元內不可用「又叫」畫等號**（teach① 的概要句最易犯）——angle-relations/term-precision 族；owner=zh b-hard 即使 panel split 仍 decisive，修法＝「根據 X 定理、照它操作的解法叫 Y」。
+- ★★★里程碑：**math domain 全收 260/260 binding KP**（13 strand 全綠：geom 39、numquant 30、calc 21、algexpr 18、stats 18、equation 15、trig 14、prob 14、matrix 5、space 5、conic 7、determinant 2、linprog 2…）。繼英語島 eng 300/300（首個完整島）後，math 為第 2 個 binding KP 全覆蓋的 domain。
+- 下一步：math 已全收。轉其他 domain（nat/civ/geo/hist/life…binding KP 覆蓋率待查 build_status）或清 hub AC-VIZ-1 figure_signoff 債（sha 4741b69d）。先跑 tools/build_status.py 看全站下一個最有產出的 domain/strand。
+
 ## 2026-11-18 02:48 ★ linprog.feasible-region 限制式與可行解區域 5/5 DONE-GATE 全綠 → 線性規劃 linprog strand 1/2（t_sub·分科數乙，★可行區四邊形 SVG）
 - **math_linprog_feasible_region frozen `c38a716993de5511`**（R1-R5 連 5 clean）。缺陷修復軌跡（harvest 階段連抓 4 個真缺陷，驗證「數 clean 前挖乾淨」）：
   - R1 抓 2：①[blocker domain-precision] Q3「無限多個」rationale 把「可行解區域是有界的凸多邊形」當無條件通則（通則下可無界、且頂點有限的真因是「有限條邊界線」非「有界」）→ 去「有界」通則、改正確理由；②[minor] Q1 distractor (4,4) 違反兩條限制式（x+y>4 且 x+3y>6）→ 改 (5,0) 乾淨只違反 x+y≤4。pre-bank 直接修、re-freeze 17352c5b。
