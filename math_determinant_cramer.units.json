@@ -1,0 +1,198 @@
+{
+ "_note": "數學島 行列式（determinant）strand 單元（第2、末）。知識點 math.t_sub.determinant.cramer（克拉瑪公式解聯立方程組）。tier=t_sub、exam=分科-數甲。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次：克拉瑪公式 (Cramer's rule)、行列式 (determinant)）。前置假設：已會二階行列式 ad−bc（determinant.2x2-3x3 在先）、矩陣、解二元一次聯立。★scope（t_sub）：二元一次聯立 {a₁x+b₁y=c₁, a₂x+b₂y=c₂}，係數行列式 D=det[[a₁,b₁],[a₂,b₂]]；把常數 (c₁,c₂) 換進 x 所在的行得 Dx、換進 y 所在的行得 Dy，則 x=Dx÷D、y=Dy÷D（須 D≠0）。例 {2x+y=5, x+3y=10}：D=5、Dx=5、Dy=15 → x=1、y=3。D=0（如 [[1,2],[2,4]] 兩行成比例）則公式不適用（無唯一解）。不含三元克拉瑪、不含行列式性質證明。符號 Dx/Dy 採平直字母（D 的 x/y 分量行列式），teach 首次即定義。repro（tools/verify/math_checks6.py::determinant.cramer，repro_gate .venv PASS、registry 指紋 03854a3aa97c8b5d；本 session 強化明確斷言 D=5/Dx=5/Dy=15、解代回、D=0 不適用並誠實更新指紋）。★自檢（math-unit defect-classes）：figure＝並排三個二階行列式 D/Dx/Dy，被常數換掉的那一行數字標紅、下方各寫＝值，底部寫 x=Dx÷D=1、y=Dy÷D=3，數字與 teach/claim 逐字一致、★figure 標題只承諾「換行算行列式再相除」示意（#4/#46）、alt 與 SVG text 逐字一致、標籤移出免碰（#2）；practice 四答案＝{5(Q1 D),5(Q2 Dx),x=1 y=3(Q3 解),D≠0 才適用(Q4 概念)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 相加7/只主對角6/顛倒−5；Q2 誤取 Dy 15/相加25/顛倒−5；Q3 xy 互換/忘除 D/乘 D；Q4 任意都可/要乘 D/只 D=0 可用）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）。claim kind=fact。figure-only example 無 body。",
+ "page": "math_determinant_cramer.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.determinant.cramer",
+   "title_zh": "克拉瑪公式解聯立方程組",
+   "can_do": "我會用『克拉瑪公式 (Cramer's rule)』解二元一次聯立方程組：先把係數排成『行列式 (determinant)』算出係數行列式 D，再把常數換進 x 那一行、y 那一行，分別算出 Dx、Dy，然後 x ＝ Dx ÷ D、y ＝ Dy ÷ D（只在 D ≠ 0 時可用）。",
+   "situation_group": "行列式：克拉瑪公式解聯立",
+   "subject": "math",
+   "strand": "determinant",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.determinant.cramer"
+   ],
+   "prerequisites": [],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-cramer-rule",
+     "text": "克拉瑪公式解二元一次聯立方程組 {a₁x + b₁y ＝ c₁, a₂x + b₂y ＝ c₂}：令係數行列式 D ＝ det[[a₁, b₁], [a₂, b₂]]。把常數 (c₁, c₂) 換進 x 所在的那一行得 Dx，換進 y 所在的那一行得 Dy，則 x ＝ Dx ÷ D、y ＝ Dy ÷ D（須 D ≠ 0）。例：{2x + y ＝ 5, x + 3y ＝ 10}，D ＝ det[[2, 1], [1, 3]] ＝ 5、Dx ＝ det[[5, 1], [10, 3]] ＝ 5、Dy ＝ det[[2, 5], [1, 10]] ＝ 15，所以 x ＝ 5 ÷ 5 ＝ 1、y ＝ 15 ÷ 5 ＝ 3。",
+     "kind": "fact",
+     "source_refs": [
+      "克拉瑪公式（高中 分科測驗 數甲）"
+     ],
+     "verification_ref": "D=5、Dx=5、Dy=15 ⇒ (x,y)=(1,3)，代回 2·1+3=5、1+9=10 成立（math_checks6::determinant.cramer .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-cramer-condition",
+     "text": "克拉瑪公式只在係數行列式 D ≠ 0 時適用；此時方程組有唯一解 x ＝ Dx ÷ D、y ＝ Dy ÷ D。如果 D ＝ 0（例如 [[1, 2], [2, 4]] 兩行成比例、det ＝ 0），公式就不適用，這個方程組沒有唯一解（可能無解或有無限多解）。",
+     "kind": "fact",
+     "source_refs": [
+      "克拉瑪公式適用條件（高中 分科測驗 數甲）"
+     ],
+     "verification_ref": "D≠0 唯一解；D=0（[[1,2],[2,4]] det=0）不適用（math_checks6::determinant.cramer .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.determinant.cramer"
+     ],
+     "body": "這一單元學『克拉瑪公式 (Cramer's rule)』——用『行列式 (determinant)』來解二元一次聯立方程組。做法：先把係數排成一個行列式 D，再把常數換進某一行算出 Dx、Dy，最後相除就得到 x 和 y。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.determinant.cramer"
+     ],
+     "body": "解 {a₁x + b₁y ＝ c₁, a₂x + b₂y ＝ c₂}：① 係數行列式 D ＝ det[[a₁, b₁], [a₂, b₂]]。② 把常數 (c₁, c₂) 換進 x 那一行 → 得 Dx；換進 y 那一行 → 得 Dy。③ x ＝ Dx ÷ D、y ＝ Dy ÷ D（要 D ≠ 0；若 D ＝ 0 公式不適用，沒有唯一解）。例 {2x + y ＝ 5, x + 3y ＝ 10}：D ＝ 5、Dx ＝ 5、Dy ＝ 15 → x ＝ 1、y ＝ 3。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.determinant.cramer"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>克拉瑪公式：換行算行列式，再相除</text><text x='68' y='40' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle' font-weight='bold'>D</text><line x1='46' y1='52' x2='46' y2='92' stroke='#33475b' stroke-width='1.2'/><line x1='90' y1='52' x2='90' y2='92' stroke='#33475b' stroke-width='1.2'/><text x='58' y='67' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>2</text><text x='80' y='67' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>1</text><text x='58' y='85' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>1</text><text x='80' y='85' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>3</text><text x='68' y='106' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle'>＝ 5</text><text x='180' y='40' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle' font-weight='bold'>Dx</text><line x1='158' y1='52' x2='158' y2='92' stroke='#33475b' stroke-width='1.2'/><line x1='202' y1='52' x2='202' y2='92' stroke='#33475b' stroke-width='1.2'/><text x='170' y='67' font-family='sans-serif' font-size='9' fill='#c2535d' text-anchor='middle'>5</text><text x='192' y='67' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>1</text><text x='170' y='85' font-family='sans-serif' font-size='9' fill='#c2535d' text-anchor='middle'>10</text><text x='192' y='85' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>3</text><text x='180' y='106' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle'>＝ 5</text><text x='292' y='40' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle' font-weight='bold'>Dy</text><line x1='270' y1='52' x2='270' y2='92' stroke='#33475b' stroke-width='1.2'/><line x1='314' y1='52' x2='314' y2='92' stroke='#33475b' stroke-width='1.2'/><text x='282' y='67' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>2</text><text x='304' y='67' font-family='sans-serif' font-size='9' fill='#c2535d' text-anchor='middle'>5</text><text x='282' y='85' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>1</text><text x='304' y='85' font-family='sans-serif' font-size='9' fill='#c2535d' text-anchor='middle'>10</text><text x='292' y='106' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle'>＝ 15</text><text x='180' y='128' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='middle'>把常數 5、10 換進 x 那一行得 Dx、換進 y 那一行得 Dy（紅色）</text><text x='180' y='150' font-family='sans-serif' font-size='8' fill='#2f6f54' text-anchor='middle' font-weight='bold'>x ＝ Dx ÷ D ＝ 5 ÷ 5 ＝ 1　 y ＝ Dy ÷ D ＝ 15 ÷ 5 ＝ 3</text></svg>",
+      "alt": "標題「克拉瑪公式：換行算行列式，再相除」。圖中並排三個二階行列式。左邊是係數行列式 D，上排是 2、1，下排是 1、3，下方寫「＝ 5」。中間是 Dx：把 x 那一行（左行）換成常數，所以左行是紅色的 5、10，右行是 1、3，下方寫「＝ 5」。右邊是 Dy：把 y 那一行（右行）換成常數，所以左行是 2、1，右行是紅色的 5、10，下方寫「＝ 15」。再下面一行寫「把常數 5、10 換進 x 那一行得 Dx、換進 y 那一行得 Dy（紅色）」。最下面一行寫「x ＝ Dx ÷ D ＝ 5 ÷ 5 ＝ 1　 y ＝ Dy ÷ D ＝ 15 ÷ 5 ＝ 3」。",
+      "caption": "克拉瑪公式把聯立方程組的係數排成行列式 D。要算 x，就把常數 (5, 10) 換進 x 所在的那一行、得到 Dx（紅色那一行）；要算 y，就把常數換進 y 所在的那一行、得到 Dy。最後 x ＝ Dx ÷ D ＝ 5 ÷ 5 ＝ 1、y ＝ Dy ÷ D ＝ 15 ÷ 5 ＝ 3。注意只有在 D ≠ 0 時才能這樣算。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.determinant.cramer"
+     ],
+     "body": "最後練克拉瑪公式。重點：(1) 係數行列式 D ＝ det[[a₁, b₁], [a₂, b₂]]；(2) 把常數換進 x 那一行得 Dx、換進 y 那一行得 Dy；(3) x ＝ Dx ÷ D、y ＝ Dy ÷ D，且只在 D ≠ 0 時適用（D ＝ 0 就沒有唯一解）。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用克拉瑪公式解聯立方程組 {2x + y ＝ 5, x + 3y ＝ 10}。係數行列式 D ＝ det[[2, 1], [1, 3]] 是多少？",
+     "answer": "5",
+     "kp_ids": [
+      "math.t_sub.determinant.cramer"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.determinant.cramer"
+     ],
+     "options": [
+      "5",
+      "7",
+      "6",
+      "−5"
+     ],
+     "distractor_rationales": {
+      "7": "這是把主對角和副對角相加（2×3 ＋ 1×1 ＝ 7）：行列式是相減 ad − bc ＝ 6 − 1 ＝ 5。",
+      "6": "這是只算了主對角 2×3 ＝ 6，漏掉減副對角 1×1：D ＝ 6 − 1 ＝ 5。",
+      "−5": "這是把相減順序顛倒了（bc − ad ＝ 1 − 6 ＝ −5）：正確是 ad − bc ＝ 6 − 1 ＝ 5。"
+     },
+     "answer_evidence": [
+      "c-cramer-rule"
+     ],
+     "feedback": "D ＝ det[[2, 1], [1, 3]] ＝ 2×3 − 1×1 ＝ 6 − 1 ＝ 5。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "同一組方程式 {2x + y ＝ 5, x + 3y ＝ 10}，把常數 (5, 10) 換進 x 那一行得到 Dx ＝ det[[5, 1], [10, 3]]。Dx 是多少？",
+     "answer": "5",
+     "kp_ids": [
+      "math.t_sub.determinant.cramer"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.determinant.cramer"
+     ],
+     "options": [
+      "5",
+      "15",
+      "25",
+      "−5"
+     ],
+     "distractor_rationales": {
+      "15": "這是 Dy（把常數換進 y 那一行：det[[2, 5], [1, 10]] ＝ 20 − 5 ＝ 15），不是 Dx。Dx ＝ det[[5, 1], [10, 3]] ＝ 5。",
+      "25": "這是把兩個乘積相加（5×3 ＋ 1×10 ＝ 15 ＋ 10 ＝ 25）：行列式要相減 5×3 − 1×10 ＝ 5。",
+      "−5": "這是把相減順序顛倒了（1×10 − 5×3 ＝ 10 − 15 ＝ −5）：Dx ＝ 5×3 − 1×10 ＝ 15 − 10 ＝ 5。"
+     },
+     "answer_evidence": [
+      "c-cramer-rule"
+     ],
+     "feedback": "Dx ＝ det[[5, 1], [10, 3]] ＝ 5×3 − 1×10 ＝ 15 − 10 ＝ 5（把常數 5、10 換進 x 那一行）。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "承上題，已知 D ＝ 5、Dx ＝ 5、Dy ＝ 15。用克拉瑪公式求出的 x、y 各是多少？",
+     "answer": "x ＝ 1、y ＝ 3",
+     "kp_ids": [
+      "math.t_sub.determinant.cramer"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.determinant.cramer"
+     ],
+     "options": [
+      "x ＝ 1、y ＝ 3",
+      "x ＝ 3、y ＝ 1",
+      "x ＝ 5、y ＝ 15",
+      "x ＝ 25、y ＝ 75"
+     ],
+     "distractor_rationales": {
+      "x ＝ 3、y ＝ 1": "這是把 x、y 算反了：x ＝ Dx ÷ D ＝ 5 ÷ 5 ＝ 1、y ＝ Dy ÷ D ＝ 15 ÷ 5 ＝ 3。",
+      "x ＝ 5、y ＝ 15": "這是 Dx、Dy 本身，忘了除以 D：x ＝ Dx ÷ D ＝ 1、y ＝ Dy ÷ D ＝ 3。",
+      "x ＝ 25、y ＝ 75": "這是把 Dx、Dy 乘以 D（5×5、15×5）：克拉瑪公式是「除以」D，不是乘。"
+     },
+     "answer_evidence": [
+      "c-cramer-rule"
+     ],
+     "feedback": "x ＝ Dx ÷ D ＝ 5 ÷ 5 ＝ 1、y ＝ Dy ÷ D ＝ 15 ÷ 5 ＝ 3。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "關於克拉瑪公式，下列哪一個敘述正確？",
+     "answer": "只有在係數行列式 D ≠ 0 時才適用；此時 x ＝ Dx ÷ D、y ＝ Dy ÷ D",
+     "kp_ids": [
+      "math.t_sub.determinant.cramer"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.determinant.cramer"
+     ],
+     "options": [
+      "只有在係數行列式 D ≠ 0 時才適用；此時 x ＝ Dx ÷ D、y ＝ Dy ÷ D",
+      "任何二元一次聯立方程組都一定能用克拉瑪公式算出唯一解",
+      "算出的 x、y 要再乘以 D 才是最後答案",
+      "只有在係數行列式 D ＝ 0 時才能用"
+     ],
+     "distractor_rationales": {
+      "任何二元一次聯立方程組都一定能用克拉瑪公式算出唯一解": "不一定：當係數行列式 D ＝ 0（兩行成比例）時公式不適用，方程組沒有唯一解（無解或無限多解）。",
+      "算出的 x、y 要再乘以 D 才是最後答案": "剛好相反：克拉瑪公式是「除以」D，x ＝ Dx ÷ D、y ＝ Dy ÷ D，不是乘以 D。",
+      "只有在係數行列式 D ＝ 0 時才能用": "正好相反：D ＝ 0 時公式不適用；要 D ≠ 0 才有唯一解 x ＝ Dx ÷ D、y ＝ Dy ÷ D。"
+     },
+     "answer_evidence": [
+      "c-cramer-condition"
+     ],
+     "feedback": "克拉瑪公式只在係數行列式 D ≠ 0 時適用，此時 x ＝ Dx ÷ D、y ＝ Dy ÷ D；D ＝ 0 時沒有唯一解。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（克拉瑪公式解 {a₁x+b₁y=c₁, a₂x+b₂y=c₂}：係數行列式 D=det[[a₁,b₁],[a₂,b₂]]；常數換進 x 那一行得 Dx、換進 y 那一行得 Dy；x=Dx÷D、y=Dy÷D，須 D≠0。例 {2x+y=5, x+3y=10}：D=5、Dx=5、Dy=15→x=1、y=3；三鐵律＝先算係數行列式 D、換行得 Dx/Dy、相除且 D≠0 才適用）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

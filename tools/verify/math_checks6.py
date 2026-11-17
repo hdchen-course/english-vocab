@@ -180,12 +180,16 @@ def det_calc():
     assert Matrix([[1, 2], [2, 4]]).det() == 0
     return _ok("determinant.2x2-3x3", "2階 [[1,2],[3,4]] det=ad−bc=−2；3階 [[1,2,3],[0,1,4],[5,6,0]] det=1；diag(3,4) 面積=12；上三角 [[2,1,3],[0,3,4],[0,0,5]] det=2·3·5=30；[[1,2],[2,4]] det=0（成比例）")
 def det_cramer():
-    # 克拉瑪：ax=b，xᵢ=det(Aᵢ)/det(A)
+    # 克拉瑪：Ax=b，xᵢ=det(Aᵢ)/det(A)（須 D≠0）
     A = Matrix([[2, 1], [1, 3]]); b = Matrix([5, 10])
     D = A.det()
+    assert D == 5                                    # 係數行列式 D=2·3−1·1=5
     A1 = A.copy(); A1[:, 0] = b; A2 = A.copy(); A2[:, 1] = b
-    assert (A1.det()/D, A2.det()/D) == (1, 3)
-    return _ok("determinant.cramer", "克拉瑪 [[2,1],[1,3]]x=(5,10)⇒(1,3)")
+    assert A1.det() == 5 and A2.det() == 15          # Dx=5·3−1·10=5；Dy=2·10−1·5=15
+    assert (A1.det()/D, A2.det()/D) == (1, 3)        # x=Dx/D=1、y=Dy/D=3
+    assert 2*1 + 1*3 == 5 and 1*1 + 3*3 == 10        # 解 (1,3) 代回原方程組成立
+    assert Matrix([[1, 2], [2, 4]]).det() == 0       # D=0 ⇒ 克拉瑪不適用（無唯一解）
+    return _ok("determinant.cramer", "克拉瑪 [[2,1],[1,3]]x=(5,10)：D=5、Dx=5、Dy=15 ⇒ (x,y)=(1,3) 代回成立；D=0([[1,2],[2,4]]) 公式不適用")
 
 # ---------- conic（7）----------
 def conic_parabola():
