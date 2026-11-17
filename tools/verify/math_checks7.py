@@ -374,7 +374,13 @@ def c_cplx_roots_of_unity():
         assert sp.simplify(z**n - 1) == 0                        # 每根 zⁿ=1
         assert sp.simplify(sp.Abs(z) - 1) == 0                   # 模=1（在單位圓上）
     assert sp.simplify(sum(roots)) == 0                          # 1+ω+ω²=0
-    return _ok("complex.roots-of-unity", "單位根：z³=1 的三根 1、−½+√3/2i、−½−√3/2i，各模=1 在單位圓等分、和=0")
+    # 6 次單位根鎖（Q4）：6 根都在單位圓上、z⁶=1、相鄰相隔 360°/6=60°、和=0
+    assert sp.Integer(360) / 6 == 60
+    roots6 = [sp.simplify(sp.cos(2*sp.pi*k/6) + I*sp.sin(2*sp.pi*k/6)) for k in range(6)]
+    for z in roots6:
+        assert sp.simplify(z**6 - 1) == 0 and sp.simplify(sp.Abs(z) - 1) == 0
+    assert sp.simplify(sum(roots6)) == 0
+    return _ok("complex.roots-of-unity", "單位根：z³=1 的三根 1、−½+√3/2i、−½−√3/2i，各模=1 在單位圓等分、和=0；z⁶=1 六根相隔60°、和=0")
 
 # ---------- stats（18）----------
 D = [2, 4, 4, 4, 5, 5, 7, 9]      # 共用樣本（std 範例，μ=5,σ=2）
