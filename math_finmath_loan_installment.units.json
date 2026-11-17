@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 財務數學（finmath）strand 單元（第3個）。知識點 math.t_sub.finmath.loan-installment（貸款等額攤還）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；同級術語一律 gloss：本金 (principal)、年利率 (annual interest rate)、等額攤還 (amortization)、餘額 (balance)）。前置假設：已會單利與複利（finmath 首單元）、乘冪。★scope（t_sub，接 simple-compound-interest）：等額攤還＝借款 P、每期還固定金額 PMT、共 n 期還清；PMT=P·r/(1−(1+r)⁻ⁿ)；每期固定還款分兩部分＝利息(當期餘額×r)＋還本(PMT−利息)，餘額隨之減少；利息逐期變小、還本逐期變大，n 期後餘額=0。例 P=1000、r=5%、n=3：PMT≈367.21；攤還表 期1 餘額1000利息50還本317.21餘682.79、期2 利息34.14還本333.07餘349.72、期3 利息17.49還本349.72餘0。不含寬限期、不含提前還款、不含浮動利率。repro（tools/verify/math_checks7.py::finmath.loan-installment，.venv PASS；binding 另有 math_checks6 待補）：PMT=1000·0.05/(1−1.05⁻³)≈367.21，n 期攤還後餘額=0。★自檢（math-unit defect-classes）：figure＝餘額歸零流程 1000→682.79→349.72→0 三箭頭各標「還 367.21」＋底部一行利息漸減還本漸增——每箱值正確（#43）、箭頭指向正確、標籤移出免碰撞（#2）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾借1000/5%/3期每期還367.21、3期後餘額0（#4/#46，公式/攤還表由 teach＋caption 補）；practice 四答案＝{公式(Q1),367.21(Q2),利息逐期變小(Q3),50(Q4首期利息)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 分母加號/只平均本金 P÷n/指數漏負號；Q2 只平均本金333.33/本利和1050分3期350/平均本金+固定首期利息383.33；Q3 逐期變大/每期一樣/先大後小；Q4 全當利息367.21/單利全程150/最後一期利息17.49）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。數值含≈因 PMT 四捨五入、.venv 以精確值驗餘額=0。claim kind=definition。figure-only example 無 body。",
+ "page": "math_finmath_loan_installment.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.finmath.loan-installment",
+   "title_zh": "貸款等額攤還",
+   "can_do": "我知道『等額攤還 (amortization)』就是：向銀行借一筆『本金 (principal)』P，之後每一期都還「同樣多」的錢 PMT，還 n 期剛好把本金和利息全部還清。每期還款的公式是 PMT ＝ P × r ÷ (1 − (1 ＋ r)⁻ⁿ)，其中 r 是每期利率（本例每年一期、每年 5%，即『年利率 (annual interest rate)』5%）。我也知道每一期固定的還款會分成兩塊——利息（當期『餘額 (balance)』× r）和還本（PMT 減掉利息）；隨著餘額越還越少，利息部分逐期變小、還本部分逐期變大，n 期後餘額變成 0。",
+   "situation_group": "財務數學：貸款等額攤還",
+   "subject": "math",
+   "strand": "finmath",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.finmath.loan-installment"
+   ],
+   "prerequisites": [
+    "math.t_adv.finmath.simple-compound-interest"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-loan-def",
+     "text": "貸款等額攤還：借本金 P，每一期都還固定金額 PMT，共 n 期把本金加利息全部還清。每期還款金額用公式 PMT ＝ P × r ÷ (1 − (1 ＋ r)⁻ⁿ) 算出來（r 是每期利率）。例：借 1000、每期利率 5%、還 3 期，PMT ＝ 1000 × 0.05 ÷ (1 − 1.05⁻³) ≈ 367.21。",
+     "kind": "definition",
+     "source_refs": [
+      "貸款等額攤還（高中數學 財務數學）"
+     ],
+     "verification_ref": "PMT=1000·0.05/(1−1.05⁻³)≈367.21（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-loan-table",
+     "text": "每一期固定的還款 PMT 其實分成兩塊：利息（＝當期餘額 × r）和還本（＝PMT − 利息），還本會讓餘額減少。以借 1000、5%、3 期（PMT ≈ 367.21）為例：期 1 餘額 1000，利息 50、還本 317.21，剩 682.79；期 2 利息 34.14、還本 333.07，剩 349.72；期 3 利息 17.49、還本 349.72，剩 0。",
+     "kind": "definition",
+     "source_refs": [
+      "攤還表（高中數學 財務數學）"
+     ],
+     "verification_ref": "攤還表 1000→682.79→349.72→0（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-loan-insight",
+     "text": "雖然每一期還的錢一樣多（都是 367.21），但裡面的利息部分逐期變小（50 → 34.14 → 17.49）、還本部分逐期變大（317.21 → 333.07 → 349.72）。原因是餘額越還越少，利息（餘額 × r）就跟著變少，所以同樣的還款能還掉的本金越來越多。還到第 n 期，餘額剛好是 0。",
+     "kind": "definition",
+     "source_refs": [
+      "攤還的利息與還本變化（高中數學 財務數學）"
+     ],
+     "verification_ref": "利息 50/34.14/17.49 遞減、還本 317.21/333.07/349.72 遞增、餘額歸0（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.finmath.loan-installment"
+     ],
+     "body": "這一單元學貸款等額攤還。先講什麼是等額攤還、每期還款公式 PMT ＝ P × r ÷ (1 − (1 ＋ r)⁻ⁿ)；再看每期還款怎麼拆成利息和還本（攤還表）；最後看利息和還本怎麼變化。最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.finmath.loan-installment"
+     ],
+     "body": "① 等額攤還＝借 P、每期還固定 PMT、n 期還清，PMT ＝ P × r ÷ (1 − (1 ＋ r)⁻ⁿ)。例 1000、5%、3 期 → PMT ≈ 367.21。② 攤還表：每期還款 ＝ 利息（餘額 × r）＋ 還本（PMT − 利息），餘額跟著減少。③ 變化：每期還款一樣，但利息逐期變小、還本逐期變大，n 期後餘額 ＝ 0。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.finmath.loan-installment"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><defs><marker id='loah' markerWidth='7' markerHeight='7' refX='5.5' refY='3' orient='auto'><path d='M0,0 L6,3 L0,6 z' fill='#33475b'/></marker></defs><text x='180' y='13' font-family='sans-serif' font-size='10' fill='#2f6f54' text-anchor='middle' font-weight='bold'>借 1000、年利率 5%、3 期：每期還固定 367.21，餘額歸 0</text><text x='40' y='52' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='middle'>借款</text><rect x='17' y='60' width='46' height='22' rx='4' fill='#e6edf3' stroke='#99a7b5'/><text x='40' y='74' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>1000</text><line x1='63' y1='71' x2='113' y2='71' stroke='#33475b' stroke-width='1.2' marker-end='url(#loah)'/><text x='88' y='64' font-family='sans-serif' font-size='8' fill='#2f6f54' text-anchor='middle'>還 367.21</text><rect x='115' y='60' width='50' height='22' rx='4' fill='#e6edf3' stroke='#99a7b5'/><text x='140' y='74' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>682.79</text><line x1='165' y1='71' x2='213' y2='71' stroke='#33475b' stroke-width='1.2' marker-end='url(#loah)'/><text x='189' y='64' font-family='sans-serif' font-size='8' fill='#2f6f54' text-anchor='middle'>還 367.21</text><rect x='215' y='60' width='50' height='22' rx='4' fill='#e6edf3' stroke='#99a7b5'/><text x='240' y='74' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>349.72</text><line x1='265' y1='71' x2='307' y2='71' stroke='#33475b' stroke-width='1.2' marker-end='url(#loah)'/><text x='286' y='64' font-family='sans-serif' font-size='8' fill='#2f6f54' text-anchor='middle'>還 367.21</text><rect x='309' y='60' width='42' height='22' rx='4' fill='#d7e8de' stroke='#2f6f54'/><text x='330' y='74' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='middle'>0</text><text x='180' y='112' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>每期還的 367.21 ＝ 利息（餘額 × 5%）＋ 還本</text><text x='180' y='130' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>利息漸減 50 → 34.14 → 17.49；還本漸增 317.21 → 333.07 → 349.72</text></svg>",
+      "alt": "標題「借 1000、年利率 5%、3 期：每期還固定 367.21，餘額歸 0」。一排四個方塊用向右箭頭相連：標「借款」的方塊 1000，箭頭上標「還 367.21」到方塊 682.79，再「還 367.21」到方塊 349.72，再「還 367.21」到綠色方塊 0。下方兩行字「每期還的 367.21 ＝ 利息（餘額 × 5%）＋ 還本」「利息漸減 50 → 34.14 → 17.49；還本漸增 317.21 → 333.07 → 349.72」。",
+      "caption": "借 1000、每期 5%、還 3 期，每期都還固定的 367.21：餘額從 1000 依序降到 682.79、349.72，第 3 期還完剛好是 0。每期還的 367.21 裡，利息是「當期餘額 × 5%」、其餘是還本；餘額越還越少，利息就從 50 一路減到 17.49，還本則從 317.21 一路增到 349.72。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.finmath.loan-installment"
+     ],
+     "body": "最後練貸款等額攤還。重點：PMT ＝ P × r ÷ (1 − (1 ＋ r)⁻ⁿ)；每期還款 ＝ 利息（餘額 × r）＋ 還本；利息逐期變小、還本逐期變大，n 期後餘額 ＝ 0。小提醒：(1) 每期還款固定，但其中的利息、還本比例會一期期改變；(2) 公式分母是 1 − (1 ＋ r)⁻ⁿ，指數帶負號；(3) 第一期的利息最大（因為餘額最大）。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "借本金 P、每期利率 r、共 n 期等額攤還，每期還款 PMT 的公式是哪一個？",
+     "answer": "PMT ＝ P × r ÷ (1 − (1 ＋ r)⁻ⁿ)",
+     "kp_ids": [
+      "math.t_sub.finmath.loan-installment"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.finmath.loan-installment"
+     ],
+     "options": [
+      "PMT ＝ P × r ÷ (1 − (1 ＋ r)⁻ⁿ)",
+      "PMT ＝ P × r ÷ (1 ＋ (1 ＋ r)⁻ⁿ)",
+      "PMT ＝ P × r ÷ (1 − (1 ＋ r)ⁿ)",
+      "PMT ＝ P ÷ n"
+     ],
+     "distractor_rationales": {
+      "PMT ＝ P × r ÷ (1 ＋ (1 ＋ r)⁻ⁿ)": "分母的符號錯了：等額攤還公式的分母是「1 − (1 ＋ r)⁻ⁿ」（減號），不是加號。",
+      "PMT ＝ P × r ÷ (1 − (1 ＋ r)ⁿ)": "指數漏了負號：分母要用 (1 ＋ r)⁻ⁿ（負指數），寫成正的 (1 ＋ r)ⁿ 會讓分母變負、算出負的還款，不合理。",
+      "PMT ＝ P ÷ n": "這只是把本金平均分成 n 份、完全沒算利息：等額攤還每期還款要用 P × r ÷ (1 − (1 ＋ r)⁻ⁿ)。"
+     },
+     "answer_evidence": [
+      "c-loan-def"
+     ],
+     "feedback": "等額攤還每期還款 PMT ＝ P × r ÷ (1 − (1 ＋ r)⁻ⁿ)，分母是 1 減 (1 ＋ r) 的負 n 次方。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "借 1000、每期利率 5%、分 3 期等額攤還，每期要還多少？（取到小數點後兩位）",
+     "answer": "約 367.21",
+     "kp_ids": [
+      "math.t_sub.finmath.loan-installment"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.finmath.loan-installment"
+     ],
+     "options": [
+      "約 367.21",
+      "約 333.33",
+      "約 350",
+      "約 383.33"
+     ],
+     "distractor_rationales": {
+      "約 333.33": "只把本金平均分、忘了利息：1000 ÷ 3 ≈ 333.33 沒有算利息，實際每期還 1000 × 0.05 ÷ (1 − 1.05⁻³) ≈ 367.21。",
+      "約 350": "把利息只算一次當單利：(1000 ＋ 1000 × 5%) ÷ 3 ＝ 1050 ÷ 3 ＝ 350，但攤還是每期對「剩下的餘額」算利息，答案是 367.21。",
+      "約 383.33": "用「平均本金 ＋ 固定利息」在算：1000 ÷ 3 ＋ 1000 × 5% ≈ 383.33，但利息會隨餘額變小，不是每期都 50。"
+     },
+     "answer_evidence": [
+      "c-loan-def"
+     ],
+     "feedback": "PMT ＝ 1000 × 0.05 ÷ (1 − 1.05⁻³) ≈ 367.21。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "等額攤還時每期還的錢一樣多，隨著期數增加，每期還款裡的「利息」部分會怎樣變化？",
+     "answer": "逐期變小（因為餘額越還越少）",
+     "kp_ids": [
+      "math.t_sub.finmath.loan-installment"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.finmath.loan-installment"
+     ],
+     "options": [
+      "逐期變小（因為餘額越還越少）",
+      "逐期變大",
+      "每期都一樣",
+      "先變大再變小"
+     ],
+     "distractor_rationales": {
+      "逐期變大": "方向相反：利息 ＝ 餘額 × r，餘額越還越少，利息會越來越小，不是變大。",
+      "每期都一樣": "一樣的是「每期還款總額」，不是利息：利息隨餘額下降而逐期變小，還本則逐期變大。",
+      "先變大再變小": "沒有先變大：從第 1 期起餘額就一路減少，利息也就一路變小。"
+     },
+     "answer_evidence": [
+      "c-loan-insight"
+     ],
+     "feedback": "利息 ＝ 餘額 × r，餘額每期變少，利息就逐期變小（還本逐期變大）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "借 1000、每期利率 5%、分 3 期還，第 1 期還的 367.21 裡面，「利息」是多少？",
+     "answer": "50",
+     "kp_ids": [
+      "math.t_sub.finmath.loan-installment"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.finmath.loan-installment"
+     ],
+     "options": [
+      "50",
+      "367.21",
+      "150",
+      "約 17.49"
+     ],
+     "distractor_rationales": {
+      "367.21": "那是整筆還款、不是利息：第 1 期還款 367.21 裡，利息只有 1000 × 5% ＝ 50，其餘 317.21 是還本。",
+      "150": "把利息當單利算了全程：1000 × 5% × 3 ＝ 150 是三期的單利總和，第 1 期的利息只是 1000 × 5% ＝ 50。",
+      "約 17.49": "這是「第 3 期」的利息（餘額 349.72 × 5%）：第 1 期餘額還是 1000，利息是 1000 × 5% ＝ 50。"
+     },
+     "answer_evidence": [
+      "c-loan-table"
+     ],
+     "feedback": "第 1 期利息 ＝ 期初餘額 × r ＝ 1000 × 5% ＝ 50（其餘 317.21 是還本）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（等額攤還＝借 P、每期還固定 PMT、n 期還清；PMT ＝ P × r ÷ (1 − (1 ＋ r)⁻ⁿ)；每期還款 ＝ 利息(餘額 × r) ＋ 還本(PMT − 利息)，餘額遞減；利息逐期變小、還本逐期變大，n 期後餘額 ＝ 0；例 1000、5%、3 期：PMT ≈ 367.21，攤還 1000→682.79→349.72→0，利息 50/34.14/17.49、還本 317.21/333.07/349.72；三鐵律＝每期還款固定但利息還本比例逐期變、分母指數帶負號、第一期利息最大）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
