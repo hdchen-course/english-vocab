@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 15:57 ★ finmath annuity 年金終值 5/5 DONE-GATE 全綠 → 財務數學 finmath strand 2/6（t_sub，★三期逐筆滾到最後相加 SVG）
+- **math_finmath_annuity frozen `675aab266df2c5eb`**（R1-R5 連 5 clean；R2 曾抓 1 個 panel 全體一致 confirmed 缺陷[major terminology-consistency：can_do 稱 r「每期年利率」自相矛盾、與 claim c-ann-def 及兩題 MCQ 題幹的「每期利率」不一致]→ 誠實 de-converge 清 2 輪+trace→改為「r 是每期利率（本例每年一期、每年 5%，即年利率 5%）」→ 重凍→四角色重簽→R1 重跑；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／content_sha==675aab2／per_page_5clean PASS（finmath_annuity absent）／repro PASS／iPad 四角色簽核（三排 期1/2/3 100→×1.05²/×1.05/×1→110.25/105/100、綠色總值315.25含分隔線、底部公式、箭頭指向正確、標籤無碰撞、右緣0%）。
+- 年金終值（t_sub，接 simple-compound-interest）＝每期末存固定金額 PMT 的一系列付款；FV=PMT·((1+r)ⁿ−1)/r（期末年金，r 為每期利率）；機制＝第1期末付的滾 n−1 期、…、最後一期付的滾 0 期不賺利息。例 100、5%、3 期：110.25+105+100=315.25=100×((1.05)³−1)/0.05。
+- ★repro：binding 待補 math_checks6；單元引 math_checks7::finmath.annuity（FV=100·((1.05)³−1)/0.05≈315.25，.venv PASS）。
+- practice：Q1 公式 FV=PMT×((1+r)ⁿ−1)÷r、Q2 100/5%/3期=315.25、Q3 三筆拆解 100×1.05²+100×1.05+100、Q4 最後一期存的那筆賺 0 利息。distractor 單一誤解（÷改×/單筆複利/單利；無利息300/只2期205/每筆多滾一期331.0125；每筆多滾一期/無利息/當單筆；賺5/15.7625/跟第1期一樣）。
+- ★教訓再確認：R2（figure-geometry＋術語一致性框架）抓到「同一變數 r 在 can_do 與 claim/題幹稱呼不一致」class——不同輪用不同框架才挖得到；誠實 de-converge（清 ledger+trace→修→重凍→重跑）非繞過。
+- 下一步：finmath 第 3 單元＝loan-installment（貸款等額攤還 PMT=P·r/(1−(1+r)⁻ⁿ)）；finmath 共 6 KP，剩 4（loan-installment/growth-decay-model/geo-distance/marginal-elasticity）。接著 matrix(5)/space(5)/determinant(2)/linprog(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 15:33 ★ finmath simple-compound-interest 單利與複利 5/5 DONE-GATE 全綠 → 財務數學 finmath strand 1/6（t_adv，★單利 vs 複利兩排時間線 SVG）
 - **math_finmath_simple_compound_interest frozen `3f9bc63329a29109`**（R1-R5 連 5 clean 一次過、無缺陷、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true、agents_error 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／content_sha==3f9bc63／per_page_5clean PASS（finmath_simple absent）／repro PASS／iPad 四角色簽核（兩排時間線 單利 1000→1050→1100 每期＋50、複利 1000→1050→1102.5 第2期＋52.5、底部說明多出2.5＝50×5%、方塊值正確、箭頭指向正確、標籤移出免碰撞、右緣0%）。
 - 單利與複利（t_adv，finmath 首單元）＝單利只對本金計息，每期利息固定 P·r，t 期後利息 I=P·r·t、本利和 P(1+rt)；複利利息滾入本金再生利息（利滾利），n 期後本利和 P(1+r)ⁿ；比較＝同本金同利率同期數下 n=1 相等、n≥2 複利較多，多出的是「利息再生的利息」。例 1000、5%、2 年：單利利息100本利和1100、複利1102.5、差 2.5=第1期利息50再以5%生的利息(50×0.05)。
