@@ -237,6 +237,15 @@ def c_conic_hyperbola():
     assert sp.simplify(abs(P.distance(sp.Point(5, 0)) - P.distance(sp.Point(-5, 0))) - 8) == 0
     assert sp.Rational(b, a) == sp.Rational(3, 4)              # 漸近線斜率 ±b/a=±3/4
     return _ok("conic.hyperbola", "x²/16−y²/9=1：a=4、b=3、c=√(a²+b²)=5、焦點(±5,0)、頂點(±4,0)；到兩焦距差=2a=8；漸近線 y=±(3/4)x")
+def c_conic_eccentricity():
+    # 離心率 e=c/a：橢圓 0<e<1、拋物線 e=1、雙曲線 e>1
+    a, b = 5, 3; c = sp.sqrt(a**2 - b**2)            # 橢圓 x²/25+y²/9=1：c=4
+    assert c == 4 and sp.Rational(c, a) == sp.Rational(4, 5) and sp.Rational(4, 5) < 1
+    a, b = 5, 4; c = sp.sqrt(a**2 - b**2)            # 橢圓 x²/25+y²/16=1：c=3、e=3/5
+    assert c == 3 and sp.Rational(c, a) == sp.Rational(3, 5)
+    a, b = 4, 3; c = sp.sqrt(a**2 + b**2)            # 雙曲線 x²/16−y²/9=1：c=5、e=5/4
+    assert c == 5 and sp.Rational(c, a) == sp.Rational(5, 4) and sp.Rational(5, 4) > 1
+    return _ok("conic.eccentricity", "離心率 e=c/a：橢圓 x²/25+y²/9=1 e=4/5<1、x²/25+y²/16=1 e=3/5；雙曲線 x²/16−y²/9=1 e=5/4>1；拋物線 e=1")
 
 # ---------- stats（18）----------
 D = [2, 4, 4, 4, 5, 5, 7, 9]      # 共用樣本（std 範例，μ=5,σ=2）
@@ -385,6 +394,7 @@ CHECKS = {s: fn for s, fn in {
     "conic.parabola": c_conic_parabola,
     "conic.ellipse": c_conic_ellipse,
     "conic.hyperbola": c_conic_hyperbola,
+    "conic.eccentricity": c_conic_eccentricity,
     "stats.collect-organize": s_collect, "stats.bar-line-chart": s_bar_line,
     "stats.pie-chart": s_pie, "stats.table-read": s_table, "stats.mean": s_mean,
     "stats.frequency-table": s_freq_table, "stats.cumulative-relative": s_cumulative,

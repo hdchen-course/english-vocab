@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 圓錐曲線（conic）strand 單元。知識點 math.t_sub.conic.eccentricity（離心率 e=c/a 與圓錐曲線分類）。tier=t_sub（高中分科/選修深階）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；為與前幾單元一致，同級術語一律 gloss：離心率 (eccentricity)、焦點 (focus)、圓 (circle)、橢圓 (ellipse)、拋物線 (parabola)、雙曲線 (hyperbola)）。前置假設：已學橢圓、拋物線、雙曲線（三種圓錐曲線的 a、c）。★scope（t_sub，接 hyperbola）：離心率定義 e＝c/a（c＝中心到焦點距離、a＝半長軸或半貫軸長）；用 e 分類圓錐曲線——e＝0 圓、0＜e＜1 橢圓、e＝1 拋物線、e＞1 雙曲線；由方程式先求 a、c 再算 e。以 e=c/a 貫穿：橢圓 x²/25+y²/9=1（c=4,a=5,e=4/5）、x²/25+y²/16=1（c=3,a=5,e=3/5）、雙曲線 x²/16−y²/9=1（c=5,a=4,e=5/4）、x²/9−y²/16=1（c=5,a=3,e=5/3）、拋物線 e=1。不含離心率的幾何（準線距離比）推導細節、不含極坐標式。repro（tools/verify/math_checks7.py::conic.eccentricity，本 session 新增並跑過 PASS；binding 另有 math_checks6::conic.eccentricity）：e=c/a 橢圓 4/5<1、3/5；雙曲線 5/4>1；拋物線 e=1（.venv 驗）。★自檢（math-unit defect-classes）：figure＝水平 e 數線、刻度 0/0.8/1/1.25/2、三型圓錐曲線分區（0≤e<1 橢圓含 e=0 圓、e=1 拋物線、e>1 雙曲線）、標出橢圓 e=4/5 與雙曲線 e=5/4 兩 hero 點——alt 與 SVG text 逐字一致（#33）、文字/刻度不溢出 viewBox（#43）、標籤不重疊（#2）、★figure 標題只承諾圖畫的「e=c/a 決定圓錐曲線是哪一種」（#4/#46）；practice 四答案＝{4/5(Q1 橢圓離心率),e=5/4(Q2 哪個是雙曲線),e=1(Q3 拋物線離心率),5/3(Q4 雙曲線 transfer)}與 teach 關鍵值無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一錯誤（#53 凍前 .venv 反算：Q1 用b/a=3/5、倒a/c=5/4、用c/b=4/3；Q4 倒a/c=3/5、用c/b=5/4、用b/a=4/3）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）；離心率本身即本單元 scope（前幾單元排除、這裡教）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_conic_eccentricity.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.conic.eccentricity",
+   "title_zh": "離心率 e ＝ c/a 與圓錐曲線的分類",
+   "can_do": "我知道『離心率 (eccentricity)』的定義 e ＝ c/a（c 是中心到『焦點 (focus)』的距離、a 是半長軸或半貫軸長），它衡量一條圓錐曲線「開」的程度。我知道用 e 分類：e ＝ 0 是『圓 (circle)』、0 ＜ e ＜ 1 是『橢圓 (ellipse)』、e ＝ 1 是『拋物線 (parabola)』、e ＞ 1 是『雙曲線 (hyperbola)』。我會先從方程式求 a 和 c，再算 e。例：橢圓 x²/25 ＋ y²/9 ＝ 1，c ＝ 4、a ＝ 5，e ＝ 4/5；雙曲線 x²/16 − y²/9 ＝ 1，c ＝ 5、a ＝ 4，e ＝ 5/4。",
+   "situation_group": "圓錐曲線：離心率",
+   "subject": "math",
+   "strand": "conic",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.conic.eccentricity"
+   ],
+   "prerequisites": [
+    "math.t_sub.conic.hyperbola"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ec-def",
+     "text": "離心率的定義：e ＝ c/a。其中 c 是中心到焦點的距離，a 是半長軸長（橢圓）或半貫軸長（雙曲線）。離心率是一個沒有單位的比值，用來衡量一條圓錐曲線有多「開」、多偏離圓：e 越接近 0 越圓，e 越大曲線張得越開。例：橢圓 x²/25 ＋ y²/9 ＝ 1 的 c ＝ 4、a ＝ 5，所以 e ＝ 4/5 ＝ 0.8。",
+     "kind": "definition",
+     "source_refs": [
+      "離心率的定義（高中數學 圓錐曲線）"
+     ],
+     "verification_ref": "e=c/a；橢圓 x²/25+y²/9=1 c=4,a=5,e=4/5（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ec-classify",
+     "text": "用離心率可以分辨圓錐曲線是哪一種：e ＝ 0 是圓（兩焦點重合、c ＝ 0）；0 ＜ e ＜ 1 是橢圓（c ＜ a）；e ＝ 1 是拋物線；e ＞ 1 是雙曲線（c ＞ a）。可以把 e 想成一條由小到大的量尺：從 0（圓）慢慢變大，越過 1 之前都是橢圓，正好等於 1 是拋物線，超過 1 就變成雙曲線。",
+     "kind": "definition",
+     "source_refs": [
+      "圓錐曲線的離心率分類（高中數學 圓錐曲線）"
+     ],
+     "verification_ref": "e=0 圓、0<e<1 橢圓、e=1 拋物線、e>1 雙曲線（math_checks7 .venv 驗 e 大小關係）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ec-compute",
+     "text": "由方程式算離心率的方法：先照標準式求出 a 和 c（橢圓 c ＝ √(a² − b²)、雙曲線 c ＝ √(a² ＋ b²)），再算 e ＝ c/a。例：橢圓 x²/25 ＋ y²/9 ＝ 1，a ＝ 5、c ＝ √(25 − 9) ＝ 4，e ＝ 4/5；雙曲線 x²/16 − y²/9 ＝ 1，a ＝ 4、c ＝ √(16 ＋ 9) ＝ 5，e ＝ 5/4。注意順序永遠是 c 在上、a 在下（c/a），不要倒過來；且 a 是「半」軸長（到頂點），不是整條軸長。",
+     "kind": "definition",
+     "source_refs": [
+      "由標準式求離心率（高中數學 圓錐曲線）"
+     ],
+     "verification_ref": "橢圓 x²/25+y²/9=1 e=4/5；雙曲線 x²/16−y²/9=1 e=5/4（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.conic.eccentricity"
+     ],
+     "body": "這一單元學離心率。先講定義（e ＝ c/a，c 是中心到焦點的距離、a 是半長軸或半貫軸）；再講怎麼用 e 分類圓錐曲線（圓、橢圓、拋物線、雙曲線）；最後練習從方程式算 e。用前面學過的橢圓和雙曲線例子示範，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.conic.eccentricity"
+     ],
+     "body": "① 定義：e ＝ c/a（c 中心到焦點、a 半長軸或半貫軸）。② 分類：e ＝ 0 圓、0 ＜ e ＜ 1 橢圓、e ＝ 1 拋物線、e ＞ 1 雙曲線。③ 由方程式算：先求 a 和 c（橢圓 c ＝ √(a² − b²)、雙曲線 c ＝ √(a² ＋ b²)），再 e ＝ c/a。例：橢圓 x²/25 ＋ y²/9 ＝ 1，a ＝ 5、c ＝ 4，e ＝ 4/5；雙曲線 x²/16 − y²/9 ＝ 1，a ＝ 4、c ＝ 5，e ＝ 5/4。看下面的量尺圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.conic.eccentricity"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle' font-weight='bold'>離心率 e ＝ c/a 決定圓錐曲線是哪一種</text><line x1='30' y1='92' x2='312' y2='92' stroke='#33475b' stroke-width='1.5'/><polyline points='312,88 320,92 312,96' fill='none' stroke='#33475b' stroke-width='1.5'/><text x='326' y='95' font-family='sans-serif' font-size='10' fill='#33475b' text-anchor='start'>e</text><line x1='48' y1='87' x2='48' y2='97' stroke='#99a7b5' stroke-width='1'/><line x1='144' y1='87' x2='144' y2='97' stroke='#99a7b5' stroke-width='1'/><line x1='168' y1='87' x2='168' y2='97' stroke='#99a7b5' stroke-width='1'/><line x1='198' y1='87' x2='198' y2='97' stroke='#99a7b5' stroke-width='1'/><line x1='288' y1='87' x2='288' y2='97' stroke='#99a7b5' stroke-width='1'/><text x='48' y='107' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='middle'>0</text><text x='144' y='107' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='middle'>0.8</text><text x='168' y='107' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='middle'>1</text><text x='198' y='107' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='middle'>1.25</text><text x='288' y='107' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='middle'>2</text><line x1='144' y1='89' x2='144' y2='78' stroke='#c9d3dd' stroke-width='1'/><line x1='168' y1='89' x2='168' y2='64' stroke='#c9d3dd' stroke-width='1'/><line x1='198' y1='89' x2='198' y2='78' stroke='#c9d3dd' stroke-width='1'/><circle cx='144' cy='92' r='3' fill='#33475b'/><circle cx='168' cy='92' r='3' fill='#2f6f54'/><circle cx='198' cy='92' r='3' fill='#c2535d'/><text x='140' y='75' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='end'>橢圓 e＝4/5</text><text x='168' y='61' font-family='sans-serif' font-size='8.5' fill='#2f6f54' text-anchor='middle'>拋物線 e＝1</text><text x='202' y='75' font-family='sans-serif' font-size='8.5' fill='#c2535d' text-anchor='start'>雙曲線 e＝5/4</text><text x='108' y='124' font-family='sans-serif' font-size='8' fill='#33475b' text-anchor='middle'>0 ≤ e ＜ 1 是橢圓（e＝0 為圓）</text><text x='168' y='138' font-family='sans-serif' font-size='8' fill='#2f6f54' text-anchor='middle'>e ＝ 1 是拋物線</text><text x='252' y='124' font-family='sans-serif' font-size='8' fill='#c2535d' text-anchor='middle'>e ＞ 1 是雙曲線</text><text x='180' y='158' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>e 越大，曲線越「開」：圓 → 橢圓 → 拋物線 → 雙曲線</text></svg>",
+      "alt": "標題「離心率 e ＝ c/a 決定圓錐曲線是哪一種」。一條水平的 e 數線（最右端箭頭標「e」），上面有刻度「0」「0.8」「1」「1.25」「2」。線上有三個點：藍灰色點在 0.8、綠色點在 1、紅色點在 1.25，分別標「橢圓 e＝4/5」「拋物線 e＝1」「雙曲線 e＝5/4」。數線下方分三區說明「0 ≤ e ＜ 1 是橢圓（e＝0 為圓）」「e ＝ 1 是拋物線」「e ＞ 1 是雙曲線」。最下方註「e 越大，曲線越「開」：圓 → 橢圓 → 拋物線 → 雙曲線」。",
+      "caption": "離心率 e ＝ c/a 像一把量尺：e ＝ 0 是圓，0 ＜ e ＜ 1 的範圍是橢圓（例 x²/25 ＋ y²/9 ＝ 1，c ＝ 4、a ＝ 5，e ＝ 4/5），正好 e ＝ 1 是拋物線，e ＞ 1 就是雙曲線（例 x²/16 − y²/9 ＝ 1，c ＝ 5、a ＝ 4，e ＝ 5/4）。e 越大，曲線張得越開。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.conic.eccentricity"
+     ],
+     "body": "最後練離心率。重點：e ＝ c/a（c 中心到焦點、a 半長軸或半貫軸）；分類 e ＝ 0 圓、0 ＜ e ＜ 1 橢圓、e ＝ 1 拋物線、e ＞ 1 雙曲線。小提醒：(1) 永遠是 c/a（c 在上、a 在下），倒過來寫成 a/c 就錯了；(2) a 是「半」軸長（中心到頂點），不是整條軸長；(3) 橢圓的 c ＝ √(a² − b²)、雙曲線的 c ＝ √(a² ＋ b²)，別把兩個公式弄反。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "橢圓 x²/25 ＋ y²/9 ＝ 1 的離心率 e 是多少？",
+     "answer": "4/5",
+     "kp_ids": [
+      "math.t_sub.conic.eccentricity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.eccentricity"
+     ],
+     "options": [
+      "4/5",
+      "3/5",
+      "5/4",
+      "4/3"
+     ],
+     "distractor_rationales": {
+      "3/5": "這是 b/a（b ＝ 3、a ＝ 5）：離心率用的是 c/a，c ＝ √(25 − 9) ＝ 4，所以 e ＝ 4/5。",
+      "5/4": "分子分母倒過來了（寫成 a/c）：離心率是 c/a ＝ 4/5，不是 a/c。",
+      "4/3": "這是 c/b（c ＝ 4、b ＝ 3）：離心率的分母要用 a（半長軸）不是 b，e ＝ c/a ＝ 4/5。"
+     },
+     "answer_evidence": [
+      "c-ec-compute"
+     ],
+     "feedback": "a ＝ 5、c ＝ √(25 − 9) ＝ 4，e ＝ c/a ＝ 4/5。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "下列哪一個離心率代表的是雙曲線？",
+     "answer": "e ＝ 5/4",
+     "kp_ids": [
+      "math.t_sub.conic.eccentricity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.eccentricity"
+     ],
+     "options": [
+      "e ＝ 5/4",
+      "e ＝ 4/5",
+      "e ＝ 1",
+      "e ＝ 0"
+     ],
+     "distractor_rationales": {
+      "e ＝ 4/5": "4/5 小於 1（0 ＜ e ＜ 1），那是橢圓，不是雙曲線：雙曲線要 e ＞ 1。",
+      "e ＝ 1": "e ＝ 1 是拋物線，不是雙曲線：雙曲線要 e ＞ 1。",
+      "e ＝ 0": "e ＝ 0 是圓，不是雙曲線：雙曲線要 e ＞ 1。"
+     },
+     "answer_evidence": [
+      "c-ec-classify"
+     ],
+     "feedback": "雙曲線的離心率大於 1，5/4 ＞ 1，所以 e ＝ 5/4 代表雙曲線。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "拋物線的離心率 e 是多少？",
+     "answer": "e ＝ 1",
+     "kp_ids": [
+      "math.t_sub.conic.eccentricity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.eccentricity"
+     ],
+     "options": [
+      "e ＝ 1",
+      "e ＝ 0",
+      "0 ＜ e ＜ 1",
+      "e ＞ 1"
+     ],
+     "distractor_rationales": {
+      "e ＝ 0": "e ＝ 0 是圓：拋物線的離心率剛好等於 1。",
+      "0 ＜ e ＜ 1": "這個範圍是橢圓：拋物線的離心率剛好等於 1。",
+      "e ＞ 1": "這個範圍是雙曲線：拋物線的離心率剛好等於 1。"
+     },
+     "answer_evidence": [
+      "c-ec-classify"
+     ],
+     "feedback": "拋物線的離心率剛好 e ＝ 1，是橢圓（＜1）和雙曲線（＞1）的分界。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "雙曲線 x²/9 − y²/16 ＝ 1 的離心率 e 是多少？",
+     "answer": "5/3",
+     "kp_ids": [
+      "math.t_sub.conic.eccentricity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.eccentricity"
+     ],
+     "options": [
+      "5/3",
+      "3/5",
+      "5/4",
+      "4/3"
+     ],
+     "distractor_rationales": {
+      "3/5": "分子分母倒過來了（寫成 a/c）：離心率是 c/a ＝ 5/3，不是 a/c。",
+      "5/4": "這是 c/b（c ＝ 5、b ＝ 4）：離心率的分母要用 a（半貫軸）不是 b，e ＝ c/a ＝ 5/3。",
+      "4/3": "這是 b/a（b ＝ 4、a ＝ 3）：離心率的分子要用 c（＝ 5）不是 b，e ＝ c/a ＝ 5/3。"
+     },
+     "answer_evidence": [
+      "c-ec-compute"
+     ],
+     "feedback": "a ＝ 3、c ＝ √(9 ＋ 16) ＝ 5，e ＝ c/a ＝ 5/3。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（離心率 e＝c/a，c＝中心到焦點、a＝半長軸或半貫軸；分類 e＝0 圓、0<e<1 橢圓、e＝1 拋物線、e>1 雙曲線；由方程式先求 a,c 再 e=c/a；橢圓 x²/25+y²/9=1 c=4,a=5,e=4/5；雙曲線 x²/16−y²/9=1 c=5,a=4,e=5/4；x²/9−y²/16=1 c=5,a=3,e=5/3；三鐵律＝永遠 c/a 不倒寫、a 是半軸長到頂點、橢圓 c=√(a²−b²) 雙曲線 c=√(a²+b²) 別弄反）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
