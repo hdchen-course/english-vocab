@@ -170,11 +170,15 @@ def mat_transformation():
 
 # ---------- determinant（2）----------
 def det_calc():
-    assert Matrix([[1, 2], [3, 4]]).det() == -2
+    assert Matrix([[1, 2], [3, 4]]).det() == -2          # ad−bc=1·4−2·3=−2
     assert Matrix([[1, 2, 3], [0, 1, 4], [5, 6, 0]]).det() == 1
     # 幾何：2×2 行列式=平行四邊形有向面積
     assert Matrix([[3, 0], [0, 4]]).det() == 12
-    return _ok("determinant.2x2-3x3", "2階 det=−2、3階 det=1；diag(3,4) 面積=12")
+    # 上三角 3×3：det=對角線相乘（Q3）
+    assert Matrix([[2, 1, 3], [0, 3, 4], [0, 0, 5]]).det() == 30  # 2·3·5
+    # det=0：兩列成比例（面積0）
+    assert Matrix([[1, 2], [2, 4]]).det() == 0
+    return _ok("determinant.2x2-3x3", "2階 [[1,2],[3,4]] det=ad−bc=−2；3階 [[1,2,3],[0,1,4],[5,6,0]] det=1；diag(3,4) 面積=12；上三角 [[2,1,3],[0,3,4],[0,0,5]] det=2·3·5=30；[[1,2],[2,4]] det=0（成比例）")
 def det_cramer():
     # 克拉瑪：ax=b，xᵢ=det(Aᵢ)/det(A)
     A = Matrix([[2, 1], [1, 3]]); b = Matrix([5, 10])

@@ -1,0 +1,209 @@
+{
+ "_note": "數學島 行列式（determinant）strand 單元（第1）。知識點 math.t_sub.determinant.2x2-3x3（二階與三階行列式的計算與幾何意義）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次：行列式 (determinant)、降階展開 (cofactor expansion)、平行四邊形 (parallelogram)）。前置假設：已會矩陣、四則運算。★scope（t_sub）：(1) 二階 det[[a,b],[c,d]]=ad−bc（主對角相乘減副對角相乘）；例 [[1,2],[3,4]]=1×4−2×3=−2。(2) 三階沿第一列降階展開 det=a₁₁M₁₁−a₁₂M₁₂+a₁₃M₁₃（正負 +−+ 交錯，M 為二階餘子式）；上三角（左下全 0）det=對角線相乘；例 [[2,1,3],[0,3,4],[0,0,5]]=2×3×5=30。(3) 幾何：|det(2×2)|=以兩行向量為鄰邊的平行四邊形面積；det=0⟺兩向量共線（面積0、矩陣不可逆）；例 [[3,0],[0,4]] |det|=12=長3寬4矩形面積。不含四階以上、不含行列式所有性質證明。repro（tools/verify/math_checks6.py::determinant.2x2-3x3，repro_gate .venv PASS、registry 指紋 40a2d5656dad2c29；本 session 強化加上三角對角積30、det=0 例並誠實更新指紋）。★自檢（math-unit defect-classes）：figure＝兩行向量 a=(3,0)、b=(0,4) 張成的矩形＋標「面積=|det|=12」＋底部式 3×4−0×0=12，座標幾何正確、向量箭頭由原點射出、標籤移出免碰（#2）、alt 與 SVG text 逐字一致、★figure 標題只承諾 2×2 det＝面積示意（#4/#46）；practice 四答案＝{−2(Q1 2×2 det),12(Q2 面積),30(Q3 上三角),det=0 兩向量共線不可逆(Q4 概念)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 bc−ad 顛倒2/ad+bc 相加10/−(ad+bc)−10；Q2 長寬相加7/誤判det=0→0/只取一邊3；Q3 對角相加10/第一列相乘6/誤判有0→0；Q4 必為零矩陣/算錯/單位矩陣）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；主對角/副對角術語一致。claim kind=definition/fact。figure-only example 無 body。",
+ "page": "math_determinant_2x2_3x3.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.determinant.2x2-3x3",
+   "title_zh": "二階與三階行列式的計算與幾何意義",
+   "can_do": "我會算『行列式 (determinant)』：二階 det[[a, b], [c, d]] ＝ ad − bc（主對角線相乘，減掉副對角線相乘）。三階我會用『降階展開 (cofactor expansion)』沿第一列拆成三個二階行列式（正負號 ＋ − ＋ 交錯）；碰到上三角（左下方全是 0）時，行列式就等於對角線元素相乘。我也知道二階行列式的幾何意義：它的絕對值就是用兩個行向量當鄰邊的『平行四邊形 (parallelogram)』面積，det ＝ 0 代表兩向量共線（面積是 0）。",
+   "situation_group": "行列式：計算與幾何",
+   "subject": "math",
+   "strand": "determinant",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.determinant.2x2-3x3"
+   ],
+   "prerequisites": [],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-det-2x2",
+     "text": "二階行列式 det[[a, b], [c, d]] ＝ ad − bc：主對角線 a、d 相乘，減掉副對角線 b、c 相乘。例：[[1, 2], [3, 4]] 的行列式 ＝ 1×4 − 2×3 ＝ 4 − 6 ＝ −2。",
+     "kind": "definition",
+     "source_refs": [
+      "二階行列式（高中 選修數學）"
+     ],
+     "verification_ref": "det[[a,b],[c,d]]=ad−bc；[[1,2],[3,4]]=−2（math_checks6::determinant.2x2-3x3 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-det-3x3",
+     "text": "三階行列式用「降階展開」：沿第一列把它拆成三個二階行列式，符號 ＋ − ＋ 交錯——det ＝ a₁₁·M₁₁ − a₁₂·M₁₂ + a₁₃·M₁₃（Mᵢⱼ 是劃掉第 i 列第 j 行後剩下的二階行列式）。一個方便的特例：上三角矩陣（主對角線左下方全是 0）的行列式 ＝ 對角線元素相乘。例：[[2, 1, 3], [0, 3, 4], [0, 0, 5]] 的行列式 ＝ 2×3×5 ＝ 30。",
+     "kind": "fact",
+     "source_refs": [
+      "三階行列式降階展開（高中 選修數學）"
+     ],
+     "verification_ref": "上三角 [[2,1,3],[0,3,4],[0,0,5]] det=2·3·5=30；[[1,2,3],[0,1,4],[5,6,0]]=1（math_checks6::determinant.2x2-3x3 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-det-geo",
+     "text": "二階行列式的幾何意義：它的絕對值 |det| ＝ 以兩個行向量為鄰邊所張成的平行四邊形面積。如果 det ＝ 0，表示兩個向量共線（擠成一條線）、平行四邊形面積是 0，這個矩陣也不可逆。例：[[3, 0], [0, 4]] 的兩行向量是 (3, 0) 和 (0, 4)，張成一個長 3、寬 4 的矩形，面積 ＝ |det| ＝ 12。",
+     "kind": "fact",
+     "source_refs": [
+      "行列式的幾何意義（高中 選修數學）"
+     ],
+     "verification_ref": "|det[[3,0],[0,4]]|=12=面積；det=0⟺共線（[[1,2],[2,4]] det=0）（math_checks6::determinant.2x2-3x3 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.determinant.2x2-3x3"
+     ],
+     "body": "這一單元學行列式——一個把方陣算成一個數字的工具。先學二階怎麼算，再學三階的降階展開和上三角的快捷算法，最後看二階行列式的幾何意義：它其實就是一塊平行四邊形的面積。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.determinant.2x2-3x3"
+     ],
+     "body": "① 二階：det[[a, b], [c, d]] ＝ ad − bc（主對角 − 副對角）。例 [[1, 2], [3, 4]] ＝ 1×4 − 2×3 ＝ −2。② 三階：沿第一列降階展開成三個二階行列式、符號 ＋ − ＋ 交錯；上三角矩陣 ＝ 對角線相乘，例 [[2, 1, 3], [0, 3, 4], [0, 0, 5]] ＝ 2×3×5 ＝ 30。③ 幾何：|det(2×2)| ＝ 兩行向量張成的平行四邊形面積；det ＝ 0 ⟺ 兩向量共線（面積 0）。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.determinant.2x2-3x3"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>二階行列式的絕對值＝平行四邊形的面積</text><line x1='110' y1='134' x2='300' y2='134' stroke='#99a7b5' stroke-width='1'/><polygon points='300,134 294,131 294,137' fill='#99a7b5'/><text x='304' y='137' font-family='sans-serif' font-size='7.5' fill='#99a7b5' text-anchor='start'>x</text><line x1='110' y1='134' x2='110' y2='40' stroke='#99a7b5' stroke-width='1'/><polygon points='110,40 107,46 113,46' fill='#99a7b5'/><text x='104' y='44' font-family='sans-serif' font-size='7.5' fill='#99a7b5' text-anchor='end'>y</text><rect x='110' y='58' width='120' height='76' fill='#e6edf3' stroke='#99a7b5' stroke-width='1.2'/><line x1='110' y1='134' x2='230' y2='134' stroke='#2f6f54' stroke-width='2.4'/><polygon points='230,134 222,131 222,137' fill='#2f6f54'/><line x1='110' y1='134' x2='110' y2='58' stroke='#c2535d' stroke-width='2.4'/><polygon points='110,58 107,66 113,66' fill='#c2535d'/><text x='170' y='148' font-family='sans-serif' font-size='8' fill='#2f6f54' text-anchor='middle'>a ＝ (3, 0)</text><text x='92' y='98' font-family='sans-serif' font-size='8' fill='#c2535d' text-anchor='end'>b ＝ (0, 4)</text><text x='170' y='100' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle' font-weight='bold'>面積 ＝ |det| ＝ 12</text><text x='180' y='162' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='middle'>det [[3, 0], [0, 4]] ＝ 3×4 − 0×0 ＝ 12</text></svg>",
+      "alt": "標題「二階行列式的絕對值＝平行四邊形的面積」。圖中畫一個坐標系（x 軸向右、y 軸向上）。從原點拉出兩個向量：一個綠色向量 a ＝ (3, 0) 沿 x 軸向右，一個紅色向量 b ＝ (0, 4) 沿 y 軸向上。這兩個向量張成一個淡藍色的矩形（長 3、寬 4）。矩形中間寫「面積 ＝ |det| ＝ 12」。最下面一行寫「det [[3, 0], [0, 4]] ＝ 3×4 − 0×0 ＝ 12」。",
+      "caption": "二階行列式的絕對值，就是用矩陣的兩個行向量當鄰邊、所張成的平行四邊形面積。這裡兩個行向量是 a ＝ (3, 0)（綠）和 b ＝ (0, 4)（紅），它們張成一個長 3、寬 4 的矩形，面積 ＝ 3×4 ＝ 12，正好等於 |det [[3, 0], [0, 4]]| ＝ |3×4 − 0×0| ＝ 12。如果兩個向量共線，平行四邊形會擠成一條線、面積 ＝ 0，這時行列式也 ＝ 0。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.determinant.2x2-3x3"
+     ],
+     "body": "最後練行列式的計算與幾何。重點：(1) 二階 ＝ 主對角相乘減副對角相乘（ad − bc）；(2) 三階降階展開符號 ＋ − ＋ 交錯、上三角 ＝ 對角線相乘；(3) |det(2×2)| ＝ 平行四邊形面積，det ＝ 0 代表兩向量共線（面積 0）。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "二階行列式 det[[1, 2], [3, 4]] 的值是多少？",
+     "answer": "−2",
+     "kp_ids": [
+      "math.t_sub.determinant.2x2-3x3"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.determinant.2x2-3x3"
+     ],
+     "options": [
+      "−2",
+      "2",
+      "10",
+      "−10"
+     ],
+     "distractor_rationales": {
+      "2": "這是把主對角和副對角的相減順序顛倒了（bc − ad ＝ 6 − 4 ＝ 2）：公式是 ad − bc ＝ 4 − 6 ＝ −2。",
+      "10": "這是把兩個乘積相加（ad ＋ bc ＝ 4 ＋ 6 ＝ 10）：行列式是「相減」ad − bc，不是相加。",
+      "−10": "這是把兩個乘積相加再取負號（−(ad ＋ bc) ＝ −10）：正確是 ad − bc ＝ 4 − 6 ＝ −2。"
+     },
+     "answer_evidence": [
+      "c-det-2x2"
+     ],
+     "feedback": "det[[1, 2], [3, 4]] ＝ ad − bc ＝ 1×4 − 2×3 ＝ 4 − 6 ＝ −2。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "矩陣 [[3, 0], [0, 4]] 的兩個行向量張成一個平行四邊形，這個平行四邊形的面積（＝ |det|）是多少？",
+     "answer": "12",
+     "kp_ids": [
+      "math.t_sub.determinant.2x2-3x3"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.determinant.2x2-3x3"
+     ],
+     "options": [
+      "12",
+      "7",
+      "3",
+      "0"
+     ],
+     "distractor_rationales": {
+      "7": "這是把兩邊長相加（3 ＋ 4 ＝ 7）：面積是 |det| ＝ |3×4 − 0×0| ＝ 12，不是邊長相加。",
+      "3": "這是只取了其中一邊的長度 3：面積要兩邊相乘（也就是 |det| ＝ 12）。",
+      "0": "這是看到矩陣裡有 0 就以為行列式是 0：但 det ＝ 3×4 − 0×0 ＝ 12 ≠ 0，面積是 12。"
+     },
+     "answer_evidence": [
+      "c-det-geo"
+     ],
+     "feedback": "面積 ＝ |det[[3, 0], [0, 4]]| ＝ |3×4 − 0×0| ＝ 12（長 3、寬 4 的矩形）。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "上三角矩陣 [[2, 1, 3], [0, 3, 4], [0, 0, 5]] 的行列式是多少？",
+     "answer": "30",
+     "kp_ids": [
+      "math.t_sub.determinant.2x2-3x3"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.determinant.2x2-3x3"
+     ],
+     "options": [
+      "30",
+      "10",
+      "6",
+      "0"
+     ],
+     "distractor_rationales": {
+      "10": "這是把對角線元素相加（2 ＋ 3 ＋ 5 ＝ 10）：上三角行列式是對角線元素「相乘」2×3×5 ＝ 30。",
+      "6": "這是把第一列相乘（2×1×3 ＝ 6）：上三角行列式看的是主對角線 2、3、5 相乘，不是第一列。",
+      "0": "這是看到左下方有很多 0 就以為行列式是 0：上三角矩陣的行列式是對角線相乘 2×3×5 ＝ 30，不是 0。"
+     },
+     "answer_evidence": [
+      "c-det-3x3"
+     ],
+     "feedback": "上三角矩陣的行列式 ＝ 對角線元素相乘 ＝ 2×3×5 ＝ 30。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個 2×2 矩陣的行列式 ＝ 0，這代表什麼？",
+     "answer": "兩個行向量共線（平行四邊形面積為 0），矩陣不可逆",
+     "kp_ids": [
+      "math.t_sub.determinant.2x2-3x3"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.determinant.2x2-3x3"
+     ],
+     "options": [
+      "兩個行向量共線（平行四邊形面積為 0），矩陣不可逆",
+      "這個矩陣一定是零矩陣（每個元素都是 0）",
+      "這個矩陣一定是單位矩陣",
+      "一定是計算出錯了，行列式不可能是 0"
+     ],
+     "distractor_rationales": {
+      "這個矩陣一定是零矩陣（每個元素都是 0）": "不一定：例如 [[1, 2], [2, 4]] 不是零矩陣，但兩列成比例、det ＝ 0；det ＝ 0 只代表兩向量共線，不代表元素全為 0。",
+      "這個矩陣一定是單位矩陣": "剛好相反：單位矩陣 [[1, 0], [0, 1]] 的 det ＝ 1 ≠ 0；det ＝ 0 代表兩向量共線、矩陣不可逆。",
+      "一定是計算出錯了，行列式不可能是 0": "行列式可以是 0：當兩個行向量共線（平行四邊形壓扁成一條線）時 det 就是 0，這是合理的結果，不是算錯。"
+     },
+     "answer_evidence": [
+      "c-det-geo"
+     ],
+     "feedback": "det ＝ 0 代表兩個行向量共線、張成的平行四邊形面積為 0，這個矩陣沒有反矩陣（不可逆）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（二階 det=ad−bc 主對角減副對角，例 [[1,2],[3,4]]=−2；三階降階展開 +−+ 交錯、上三角＝對角線相乘，例 [[2,1,3],[0,3,4],[0,0,5]]=2×3×5=30；幾何 |det(2×2)|＝平行四邊形面積，det=0⟺兩向量共線面積0不可逆，例 [[3,0],[0,4]] 面積=12；三鐵律＝二階主對角減副對角、上三角對角相乘、det=0 共線不可逆）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
