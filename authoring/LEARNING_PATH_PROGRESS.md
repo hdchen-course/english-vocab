@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 21:03 ★ matrix.linear-system 以矩陣解線性方程組（高斯消去）5/5 DONE-GATE 全綠 → 矩陣 matrix strand 4/5（t_sub，★增廣矩陣高斯消去 SVG）
+- **math_matrix_linear_system frozen `97c6b9484ade68ca`**（R1-R5 連 5 clean；共 2 輪 de-converge：R3(第一次) 抓術語漂移[minor：claims/teach 用「行」但 feedback/distractor 用「欄」指同概念]→統一 4 處 欄→行；R3(第二次) 抓 blocker[panel 5/5 domain-precision：列運算第三類「兩列相加減」漏「倍數」]→改「把某一列加上（或減去）另一列的倍數」。另 R1 一個「高斯消去 vs Gauss-Jordan 命名」finding 經 panel 全體判 NOT A DEFECT＝台灣高中選修慣例。末輪 confirmed 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／content_sha==97c6b948／per_page_5clean PASS 590/590（matrix_linear absent）／repro PASS／iPad 四角色簽核（增廣 [[2,1|5],[1,3|10]] 直虛線分隔→灰箭頭「高斯消去（列運算）」→綠 rref [[1,0|1],[0,1|3]]→讀出 x=1,y=3→代回驗證、箭頭指向正確、右緣0%）。
+- 以矩陣解線性方程組（t_sub，接 matrix.inverse）＝(1) 方程組寫成 Ax=b：{2x+y=5,x+3y=10}→係數 A=[[2,1],[1,3]]、b=[[5],[10]]；(2) 增廣矩陣 [[2,1,5],[1,3,10]]（左係數右常數）；(3) 高斯消去（列運算：某列乘非零常數、把某列加上（或減去）另一列的倍數、交換兩列）化左半成單位矩陣，右半即解，rref=[[1,0,1],[0,1,3]]⇒x=1,y=3；(4) 代回 2×1+1×3=5、1×1+3×3=10。不含三元以上/完整解存性分類。
+- ★repro：本 session 強化 math_checks6::matrix.linear-system 加代回驗證 + 增廣 rref=[[1,0,1],[0,1,3]]；紅隊（指紋 24ecb60e→誠實更新 9ac45f062b0c4dbe→PASS）。
+- practice：Q1 係數矩陣 [[2,1],[1,3]]、Q2 增廣 [[2,1,5],[1,3,10]]、Q3 讀解 x=1 y=3、Q4 消去目標＝單位矩陣。distractor 單一誤解（含常數即增廣/第二式係數抄反/只取常數b；只係數無常數/常數擺前/常數擺中；兩解讀反/把0當解/把原常數當解；零矩陣/全1/原係數矩陣）。
+- ★教訓（2 條）：(1) 同概念術語全檔一致——claims/teach 與 feedback/distractor 用同一詞（矩陣用「列=row、行=column」勿混「欄」）；(2) 列運算三類表述須精確——第三類是「某列加上另一列的『倍數』」非「整列相加減」（缺倍數無法消去 R2−2·R1）。「高斯消去」涵蓋化到 rref 直讀解＝台灣高中慣例，panel 判非缺陷。
+- 下一步：matrix 最後單元＝transformation（矩陣與平面線性變換 旋轉/伸縮/鏡射）；完成即 matrix strand 5/5 全收。接著 space(5)/determinant(2)/linprog(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 20:15 ★ matrix.inverse 反方陣的求法與性質 5/5 DONE-GATE 全綠 → 矩陣 matrix strand 3/5（t_sub，★A→A⁻¹ 流程 SVG）
 - **math_matrix_inverse frozen `8c576446f5721aed`**（R1-R5 連 5 clean；R1 抓 1 blocker[algorithm-correctness：Q2 第三 distractor [[−0.5,−1],[−1.5,2]] 右下 4÷(−2) 我筆誤寫 2 應 −2、與其「每元素÷det」路徑不符]→R1 pre-bank 直接修為 [[−0.5,−1],[−1.5,−2]]、重凍重跑；末輪 confirmed 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／content_sha==8c576446／per_page_5clean PASS 589/589（matrix_inverse absent）／repro PASS／iPad 四角色簽核（A=[[1,2],[3,4]]→灰箭頭「對調1,4｜2,3變號」「÷(−2)」→綠 A⁻¹=[[−2,1],[1.5,−0.5]]、det 標註、底部驗證 A×A⁻¹=I、箭頭指向正確、右緣0%）。
 - 反方陣（t_sub，接 matrix.multiplication）＝(1) 2×2 行列式 det=ad−bc；(2) det≠0 時 A⁻¹=1/(ad−bc)[[d,−b],[−c,a]]（主對角對調、副對角變號、除以 det）；(3) A·A⁻¹=單位矩陣 I=[[1,0],[0,1]]；(4) det=0 不可逆。例 [[1,2],[3,4]] det=−2、A⁻¹=[[−2,1],[1.5,−0.5]]；[[1,2],[2,4]] det=0 不可逆。不含高階反方陣/伴隨矩陣一般式。
