@@ -355,7 +355,13 @@ def c_cplx_de_moivre():
     th2 = sp.pi/6
     lhs = sp.expand((sp.cos(th2) + I*sp.sin(th2))**2)
     assert sp.simplify(lhs - (sp.cos(2*th2) + I*sp.sin(2*th2))) == 0
-    return _ok("complex.de-moivre", "棣美弗：(1+i)⁸=16（r=√2,θ=π/4,n=8→16(cos2π+isin2π)）；(cosθ+isinθ)²=cos2θ+isin2θ")
+    # 單位圓旋轉鎖（figure）：(cos30°+isin30°)³=cos90°+isin90°=i（輻角 30→60→90）
+    th30 = sp.pi/6
+    assert sp.simplify((sp.cos(th30) + I*sp.sin(th30))**3 - I) == 0
+    # Q4 鎖：(cos20°+isin20°)⁹=cos180°+isin180°=−1
+    th20 = sp.pi*sp.Rational(20, 180)
+    assert sp.simplify((sp.cos(th20) + I*sp.sin(th20))**9 - (-1)) == 0
+    return _ok("complex.de-moivre", "棣美弗：(1+i)⁸=16（r=√2,θ=π/4,n=8→16(cos2π+isin2π)）；(cosθ+isinθ)²=cos2θ+isin2θ；(cos30°+isin30°)³=i；(cos20°+isin20°)⁹=−1")
 
 def c_cplx_roots_of_unity():
     I = sp.I
