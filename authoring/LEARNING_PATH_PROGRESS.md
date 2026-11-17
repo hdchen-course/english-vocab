@@ -7,6 +7,15 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 15:14 ★🎉 complex roots-of-unity 單位根 5/5 DONE-GATE 全綠 → 複數島 complex strand 6/6 全收（t_sub，★單位圓 3 次單位根 1/ω/ω² 正三角形 SVG）
+- **math_complex_roots_of_unity frozen `c12c826149c80ca1`**（R1-R5 連 5 clean、L3 每輪 exit 0；R1 曾抓兩缺陷[Q2 distractor 假路徑：原「(√3/2)＋(1/2)i」稱 cos/sin 弄反，實際弄反得 √3/2−(1/2)i → 改選項為「(√3/2) − (1/2)i」並重寫 rationale、.venv 驗非根；輻角 R15 gloss 缺 → 於 claim c-rou-def 首次 rendered 處補「輻角 (argument)」]；R3 曾 reviewer 503 重跑一次；R5 confirmed 0/coverageComplete true、agents_error 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／content_sha==c12c8261／per_page_5clean 580/580 頁 0 違規（complex_roots_of_unity absent）／repro PASS／iPad 四角色簽核（單位圓 r=1、3 綠點 1(0°)/ω(120°)/ω²(240°) 在圓上、灰虛線正三角形、標籤移出免碰撞[#2 曾抓實軸/「1（0°）」碰撞已修]、右緣0%）。
+- 單位根（t_sub，complex 末單元，接 de-moivre）＝方程式 zⁿ=1 的 n 個複數解，都在單位圓上（模=1）、把圓等分成 n 份（相鄰相隔 360°/n）、第 k 個＝cos(k·360°/n)+i sin(k·360°/n)、k=0 那個是 1；3 次單位根＝1、ω=−1/2+√3/2i(120°)、ω²=−1/2−√3/2i(240°) 構成正三角形；n≥2 時 n 個根相加=0（1+ω+ω²=0）。
+- ★repro：binding 待補 math_checks6；單元引 math_checks7::complex.roots-of-unity（z³=1 三根各模1和0；z⁶=1 六根隔60°和0，本 session 新增、.venv PASS）。
+- practice：Q1 zⁿ=1 有 n 個單位根、Q2 z³=1 非實根＝−1/2+√3/2i、Q3 n 個單位根相加=0、Q4 6 次單位根相鄰隔 60°。distractor 單一誤解（只1/只±1/無限多；cos-sin位置反得√3/2−1/2i/隨便複數1+i/誤為−1；1/n/−1；6°/30°(÷12)/120°(3次的間隔)）。
+- ★★ **複數島 complex strand 6/6 全收**：definition-operations／conjugate-modulus／plane／polar-form／de-moivre／roots-of-unity 全 5-clean+DONE-GATE 全綠+push。
+- ★流程教訓再確認：(a) content_audit 只審 JSON 看不到 figure 標籤碰撞（#2），render-view 紀律才抓得到（本單元 iPad render 抓到實軸/1(0°) 碰撞）；(b) distractor 選項的 .venv 反算誤解路徑必須真的產生該選項值，否則 R1 會擋（Q2 cos/sin 弄反實得 √3/2−1/2i，原選項寫反）。
+- 下一步：接 finmath(6)／matrix(5)／space(5)／determinant(2)／linprog(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 14:40 ★ complex de-moivre 棣美弗定理 5/5 DONE-GATE 全綠（t_sub，★單位圓 z/z²/z³ 輻角 30/60/90° SVG）→ 複數島 complex strand 5/6
 - **math_complex_de_moivre frozen `bcd84456f8712ccc`**（R1-R5 連 5 clean、L3 每輪 exit 0；R3 曾因 reviewer 503 server error 重跑一次[無缺陷、依誠實收斂不 bank 有 agent-error 的輪]；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==bcd84456／per_page_5clean 579/579 頁 0 違規（complex_de_moivre absent）／repro PASS／iPad 四角色簽核（單位圓第一象限弧、z(30°)/z²(60°)/z³=i(90°) 三綠向量端點在圓上、輻角依序 θ/2θ/3θ、右緣0%）。
 - 棣美弗定理（t_sub，接 polar-form）＝(r(cosθ+isinθ))ⁿ=rⁿ(cos nθ+i sin nθ)，模取 n 次方、輻角乘 n；算整數次方先化極式再套公式；幾何＝乘一次 z 旋轉 θ 長度乘 r，n 次方旋轉 nθ 長度 rⁿ。
