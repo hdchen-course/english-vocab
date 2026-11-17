@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-18 06:21 ★ sci.t_mid.phys-force.force-elements 力的三要素與力圖表示 5/5 DONE-GATE 全綠 → 自然島 phys-force 3/17（t_mid·國中中階，★力圖 SVG；首個 sci t_mid）
+- **sci_phys_force_elements frozen `1b6e6bc5e2e11bdf`**（R1-R5 連 5 clean；1 次 de-converge 修 1 個 panel-CONFIRMED minor）。★R15 gloss 累犯類教訓已套用成功：草稿即把 gloss 只放 can_do、`grep -c "(force diagram)"`=2 自檢通過，本單元 content_audit **零** R15 gloss finding（對比 friction 曾因此 de-converge）。
+  - round1（pre-bank 前即抓，但已 bank 1）**minor**（owner=learning b-hard）：selfeval_note 口訣「長度比大小」中「比」歧義（比較 vs 表示）→ de-converge 清 1 clean、改「箭頭越長代表力越大」。重凍 **1b6e6bc5**、重數 5-clean 全淨。
+- DONE-GATE 全綠：scan PASS／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard／content_sha==1b6e6bc5／per_page_5clean PASS（absent）／repro-sci_phys_checks-phys-force.force-elements PASS（力是向量 F=(3,4) 大小5）／iPad 四角色簽核（力圖：箱子＋紅點作用點＋綠色力箭頭，標「起點=作用點」「箭頭長度＝力的大小」「方向」；breadcrumb「自然科學·物理：力」、R11 不顯年段）。中文授課無音檔。
+- force-elements（t_mid，phys-force strand 第3，概念型無計算）＝(1) 力的三要素＝大小、方向、作用點，缺一不可；(2) 力圖用箭頭表示力——起點＝作用點、指向＝力的方向、長度＝力的大小（越長越大）。不含合成/分解（force-add-1d/resolve-compose）、不含牛頓單位（force-unit）。
+- ★教訓：odd-one-out（「不是」題）設計乾淨（3 distractor 皆真要素、答「顏色」）content_audit 零爭議；terse 口訣避免用「比」當「表示/對應」（會與「比大小＝比較」固定語撞義）。[[r15-gloss-once-first-render]] 預防生效。
+- 下一步：phys-force strand 還有 14 binding KP（t_mid force-add-1d/force-unit/friction-factor/hooke/weight-mass、t_adv×8、t_sub newton-2d）。接下一個（weight-mass 重力與質量 W=mg，oracle 已驗）。
+
 ## 2026-11-18 05:57 ★ sci.t_base.phys-force.friction-exist 摩擦力的存在與影響 5/5 DONE-GATE 全綠 → 自然島 phys-force 2/17（t_base·國小基礎，★摩擦力示意 SVG）
 - **sci_phys_force_friction_exist frozen `ed398236ac30524b`**（新 streak R1-R5 連 5 clean；共 3 次 de-converge、修 3 個 panel-CONFIRMED minor，harvest 階段逐一挖乾淨）。缺陷修復軌跡：
   - round2（pre-bank）**minor**（owner=zh/learning b-hard）：teach① 又重複 gloss『摩擦力 (friction)』（can_do 已 gloss）——與 push-pull de-converge#2 同類，**連兩單元累犯** → 移除 teach① 括號英語；★寫記憶 `r15-gloss-once-first-render` 防未來再犯（草稿後 `grep -c "(English)"` 應=2＝_note+can_do）。重凍 fe6f3b。
