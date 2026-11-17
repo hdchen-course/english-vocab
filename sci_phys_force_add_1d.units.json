@@ -1,0 +1,212 @@
+{
+ "_note": "自然島 物理-力（phys-force）strand 單元（第5）。知識點 sci.t_mid.phys-force.force-add-1d（一維同向/反向力的合成）。tier=t_mid（中階）、exam=會考。全繁體零簡體零 PRC 詞。中文授課無音檔。術語附國際英語（R15，★只在 can_do 首次 gloss 一次：合力 (net force)；teach/claim body 不重複——記憶 r15-gloss-once-first-render，已三單元犯過此錯、草稿後必 grep -c 自檢=2）。R11 不顯年段。前置＝force-elements（力有大小方向、力圖箭頭）。★scope（t_mid，一維直線）：(1) 同一直線上多個力可合成一個『合力』；(2) 同向力大小相加、合力方向不變（向右5N+向右3N=向右8N）；(3) 反向力大小相減、合力方向跟較大的力相同（向右5N、向左3N→合力2N向右）。不含二維合成/分解（resolve-compose）、不含力平衡細節（equilibrium）、不含 F=ma。repro（tools/verify/sci_phys_checks.py::phys-force.force-add-1d，repro_gate .venv PASS）錨定「同向 5+3=8；反向 5−3=2」。★自檢：figure＝兩格（① 同向：箱子＋兩支向右綠箭頭5N/3N→合力8N；② 反向：箱子＋向右綠5N＋向左紅3N→合力2N向右），箭頭長度與數值一致、方向與文字相符（friction round7 教訓）、alt 與 SVG text 逐字一致；practice 四答案＝{向右8N(Q1 同向),向右2N(Q2 反向),跟較大力同向(Q3 方向),同向加反向減(Q4 概念)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：同向當反向減/相乘/方向反；反向當同向加/取較小方向/以為一定抵銷）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 逐字相符（#59）；數值皆對齊 oracle（5/3/8/2）。claim kind=fact。figure-only example 無 body。",
+ "page": "sci_phys_force_add_1d.html",
+ "units": [
+  {
+   "unit_id": "sci.t_mid.phys-force.force-add-1d",
+   "title_zh": "一維同向／反向力的合成",
+   "can_do": "我會把「在同一條直線上」的幾個力合成一個『合力 (net force)』：方向相同的力，大小「相加」，合力方向不變（例：向右 5 牛頓 ＋ 向右 3 牛頓 ＝ 向右 8 牛頓）；方向相反的力，大小「相減」，合力方向跟「比較大」的那個力相同（例：向右 5 牛頓、向左 3 牛頓 → 合力 ＝ 5 − 3 ＝ 2 牛頓，向右）。",
+   "situation_group": "力：一維合成",
+   "subject": "sci",
+   "strand": "phys-force",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "sci.t_mid.phys-force.force-add-1d"
+   ],
+   "prerequisites": [
+    "sci.t_mid.phys-force.force-elements"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-add-net",
+     "text": "作用在同一條直線上的幾個力，可以合成一個「合力」（也叫淨力）——合力對物體的效果，跟那幾個力一起作用的效果一樣。這一單元只看「同一直線」上的力。",
+     "kind": "fact",
+     "source_refs": [
+      "合力（淨力）的概念（十二年國教 自然 國中階段）"
+     ],
+     "verification_ref": "合力＝同一直線上各力的向量和（一維）（國中自然 consensus_current；數值見 sci_phys_checks::phys-force.force-add-1d）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-add-same",
+     "text": "方向「相同」的力，合成時大小「相加」，合力的方向跟它們一樣。例如：向右 5 牛頓 ＋ 向右 3 牛頓 ＝ 向右 8 牛頓（5 ＋ 3 ＝ 8）。",
+     "kind": "fact",
+     "source_refs": [
+      "同向力相加（十二年國教 自然 國中階段）"
+     ],
+     "verification_ref": "同向相加 5＋3＝8（sci_phys_checks::phys-force.force-add-1d .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-add-opp",
+     "text": "方向「相反」的力，合成時大小「相減」（大的減小的），合力的方向跟「比較大」的那個力相同。例如：向右 5 牛頓、向左 3 牛頓 → 合力 ＝ 5 − 3 ＝ 2 牛頓，方向向右（因為向右的 5 牛頓比較大）。",
+     "kind": "fact",
+     "source_refs": [
+      "反向力相減（十二年國教 自然 國中階段）"
+     ],
+     "verification_ref": "反向相減 5−3＝2、方向從大者（sci_phys_checks::phys-force.force-add-1d .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-force.force-add-1d"
+     ],
+     "body": "上一單元學會用箭頭表示一個力。這一單元學：當同一條直線上有「好幾個力」一起作用時，怎麼把它們合成一個『合力』——合力的效果就等於那幾個力一起作用的效果。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-force.force-add-1d"
+     ],
+     "body": "① 同向（方向相同）：大小「相加」，合力方向不變。例：向右 5 牛頓 ＋ 向右 3 牛頓 ＝ 向右 8 牛頓。② 反向（方向相反）：大小「相減」（大減小），合力方向跟「比較大」的力相同。例：向右 5 牛頓、向左 3 牛頓 → 合力 ＝ 5 − 3 ＝ 2 牛頓、向右。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_mid.phys-force.force-add-1d"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>同一直線上的力：同向相加、反向相減</text><line x1='180' y1='28' x2='180' y2='150' stroke='#d5dde3' stroke-width='1'/><text x='90' y='40' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle' font-weight='bold'>① 同向：相加</text><rect x='40' y='62' width='26' height='28' rx='2' fill='#e6edf3' stroke='#99a7b5' stroke-width='1.2'/><line x1='66' y1='70' x2='118' y2='70' stroke='#2f6f54' stroke-width='2.4'/><polygon points='118,70 110,66 110,74' fill='#2f6f54'/><text x='124' y='73' font-family='sans-serif' font-size='7.5' fill='#2f6f54' text-anchor='start'>5N</text><line x1='66' y1='84' x2='106' y2='84' stroke='#2f6f54' stroke-width='2.4'/><polygon points='106,84 98,80 98,88' fill='#2f6f54'/><text x='112' y='87' font-family='sans-serif' font-size='7.5' fill='#2f6f54' text-anchor='start'>3N</text><text x='90' y='120' font-family='sans-serif' font-size='8' fill='#33475b' text-anchor='middle'>合力＝5＋3＝8N（向右）</text><text x='272' y='40' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle' font-weight='bold'>② 反向：相減</text><rect x='258' y='62' width='26' height='28' rx='2' fill='#e6edf3' stroke='#99a7b5' stroke-width='1.2'/><line x1='284' y1='70' x2='336' y2='70' stroke='#2f6f54' stroke-width='2.4'/><polygon points='336,70 328,66 328,74' fill='#2f6f54'/><text x='312' y='63' font-family='sans-serif' font-size='7.5' fill='#2f6f54' text-anchor='middle'>向右5N</text><line x1='258' y1='84' x2='222' y2='84' stroke='#c2535d' stroke-width='2.4'/><polygon points='222,84 230,80 230,88' fill='#c2535d'/><text x='240' y='95' font-family='sans-serif' font-size='7.5' fill='#c2535d' text-anchor='middle'>向左3N</text><text x='272' y='120' font-family='sans-serif' font-size='8' fill='#33475b' text-anchor='middle'>合力＝5−3＝2N（向右）</text></svg>",
+      "alt": "標題「同一直線上的力：同向相加、反向相減」。圖分左右兩格。左格「① 同向：相加」：一個方塊，右邊有兩支都指向右的綠色箭頭，分別標 5N（較長）和 3N（較短），下方寫「合力＝5＋3＝8N（向右）」。右格「② 反向：相減」：一個方塊，右邊有一支指向右的綠色箭頭標「向右5N」，左邊有一支指向左的紅色箭頭標「向左3N」，下方寫「合力＝5−3＝2N（向右）」。",
+      "caption": "同一條直線上的力怎麼合成：① 同向（都向右）時大小相加，向右 5N 加向右 3N 得合力向右 8N。② 反向時大小相減（大減小），向右 5N 和向左 3N 得合力 5−3＝2N；方向跟比較大的力（向右的 5N）一樣，所以合力向右 2N。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-force.force-add-1d"
+     ],
+     "body": "最後練「一維力的合成」。重點：(1) 同一直線上的力可合成一個合力；(2) 同向→大小相加、方向不變；(3) 反向→大小相減（大減小）、方向跟比較大的力相同。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "同一直線上，向右 5 牛頓和向右 3 牛頓兩個力，合力是多少？",
+     "answer": "向右 8 牛頓",
+     "kp_ids": [
+      "sci.t_mid.phys-force.force-add-1d"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-force.force-add-1d"
+     ],
+     "options": [
+      "向右 8 牛頓",
+      "向右 2 牛頓",
+      "向右 15 牛頓",
+      "向左 8 牛頓"
+     ],
+     "distractor_rationales": {
+      "向右 2 牛頓": "2 是「相減」的結果；但兩力同向（都向右）要相加，5＋3＝8。相減是用在反向的情況。",
+      "向右 15 牛頓": "15 是把兩力相乘（5×3）；力的合成是相加不是相乘，5＋3＝8。",
+      "向左 8 牛頓": "大小 8 對，但方向錯：兩力都向右，合力也向右，不是向左。"
+     },
+     "answer_evidence": [
+      "c-add-same"
+     ],
+     "feedback": "同向的力大小相加、方向不變：5＋3＝8，合力向右 8 牛頓。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "同一直線上，向右 5 牛頓和向左 3 牛頓兩個力，合力是多少？",
+     "answer": "向右 2 牛頓",
+     "kp_ids": [
+      "sci.t_mid.phys-force.force-add-1d"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-force.force-add-1d"
+     ],
+     "options": [
+      "向右 2 牛頓",
+      "向右 8 牛頓",
+      "向左 2 牛頓",
+      "0 牛頓"
+     ],
+     "distractor_rationales": {
+      "向右 8 牛頓": "8 是「相加」的結果；但兩力反向（一右一左）要相減，5−3＝2。相加是用在同向的情況。",
+      "向左 2 牛頓": "大小 2 對，但方向錯：合力方向跟「比較大」的力相同，向右的 5 牛頓比較大，所以合力向右。",
+      "0 牛頓": "只有兩個「大小相等」的反向力才會抵銷成 0；這裡 5 和 3 不相等，合力是 5−3＝2 牛頓。"
+     },
+     "answer_evidence": [
+      "c-add-opp"
+     ],
+     "feedback": "反向的力大小相減（大減小）、方向跟較大的力相同：5−3＝2，向右的 5 牛頓較大，所以合力向右 2 牛頓。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "兩個方向相反的力合成時，合力的方向是朝哪邊？",
+     "answer": "跟比較大的那個力同方向",
+     "kp_ids": [
+      "sci.t_mid.phys-force.force-add-1d"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-force.force-add-1d"
+     ],
+     "options": [
+      "跟比較大的那個力同方向",
+      "跟比較小的那個力同方向",
+      "兩個力的正中間方向",
+      "一定是零、沒有方向"
+     ],
+     "distractor_rationales": {
+      "跟比較小的那個力同方向": "相反，應是跟「比較大」的力同向——大的力贏過小的力，合力就朝大的那邊。",
+      "兩個力的正中間方向": "在同一直線上只有兩個相反方向，沒有「中間方向」；合力就在這條線上、朝較大的力那邊。",
+      "一定是零、沒有方向": "只有兩力大小相等時才會抵銷成 0；大小不相等時合力不為 0，方向朝較大的力。"
+     },
+     "answer_evidence": [
+      "c-add-opp"
+     ],
+     "feedback": "反向合成時，合力方向跟「比較大」的力相同（大小則是兩者相減）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "關於同一直線上力的合成，下列哪一個說法正確？",
+     "answer": "同方向的力大小相加，反方向的力大小相減",
+     "kp_ids": [
+      "sci.t_mid.phys-force.force-add-1d"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-force.force-add-1d"
+     ],
+     "options": [
+      "同方向的力大小相加，反方向的力大小相減",
+      "不管方向相同或相反，都把大小相加",
+      "不管方向相同或相反，都把大小相減",
+      "合力一定比其中任何一個力都大"
+     ],
+     "distractor_rationales": {
+      "不管方向相同或相反，都把大小相加": "只有同向才相加；反向要相減。方向會決定用加還是減。",
+      "不管方向相同或相反，都把大小相減": "只有反向才相減；同向要相加。方向會決定用加還是減。",
+      "合力一定比其中任何一個力都大": "不一定：反向合成時合力會比較小（5−3＝2，比 5 小），甚至相等時為 0。"
+     },
+     "answer_evidence": [
+      "c-add-same",
+      "c-add-opp"
+     ],
+     "feedback": "方向決定加或減：同向相加、反向相減。這是一維合成的關鍵。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（同一直線上的力可合成一個合力；同向→大小相加、方向不變，例向右5N+向右3N=向右8N；反向→大小相減大減小、方向跟較大的力相同，例向右5N與向左3N=向右2N；三鐵律＝先看方向、同向加反向減、反向時方向從大者）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

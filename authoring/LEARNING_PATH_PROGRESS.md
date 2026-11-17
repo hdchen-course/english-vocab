@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-18 07:10 ★ sci.t_mid.phys-force.force-add-1d 一維同向／反向力的合成 5/5 DONE-GATE 全綠 → 自然島 phys-force 5/17（t_mid·國中中階，★兩格合成 SVG：同向相加／反向相減）
+- **sci_phys_force_add_1d frozen `e7852d5d26ae47fb`**（R1-R5 連 5 clean、零 de-converge：草稿即乾淨，5 輪 panel 全無 CONFIRMED defect）。★R15 gloss 累犯類教訓再次套用成功：gloss（合力 net force）只放 can_do、`grep -c "(net force)"`=2 自檢通過，content_audit 零 R15 finding。
+- DONE-GATE 全綠：scan PASS／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard（c-add-net 合力概念 claim 為 can_do/title 支援性頭條、非獨立考點，5 輪 panel 放行，advisory 非 hard）／content_sha==e7852d5d／per_page_5clean PASS（absent）／repro-sci_phys_checks-phys-force.force-add-1d PASS（同向 5+3=8；反向 5−3=2）／iPad 四角色簽核（兩格：①同向 兩綠右箭頭5N/3N→合力8N向右；②反向 綠右5N＋紅左3N→合力2N向右、方向從大者；R11 不顯年段）。中文授課無音檔。
+- force-add-1d（t_mid，phys-force strand 第5）＝(1) 同一直線上多個力可合成一個「合力」；(2) 同向→大小相加、方向不變；(3) 反向→大小相減（大減小）、方向跟較大的力相同。不含二維合成/分解（resolve-compose）、不含力平衡（equilibrium）、不含 F=ma。4 題 MCQ＝{向右8N 同向／向右2N 反向／跟較大力同向 方向／同向加反向減 概念}，distractor 皆乾淨單一誤解（當反向減/相乘/方向反；當同向加/取較小方向/以為一定抵銷）。
+- ★教訓：草稿先避開全部累犯類（R15 單次 gloss、distractor 單一誤解、alt↔SVG 逐字、figure-only example 無 body）→ 本單元零 de-converge、5 輪一次過（對比前 4 單元平均 ~1.75 次 de-converge），驗證「把已銀行教訓前置到草稿」能顯著省輪次。
+- 下一步：phys-force strand 還有 12 binding KP（t_mid force-unit/friction-factor/hooke、t_adv×8、t_sub newton-2d）。接 hooke（虎克定律 F=kx，oracle 已驗）或 force-unit（力的單位牛頓）。
+
 ## 2026-11-18 06:43 ★ sci.t_mid.phys-force.weight-mass 重力與質量的區別（W＝mg）5/5 DONE-GATE 全綠 → 自然島 phys-force 4/17（t_mid·國中中階，★地球vs月球重量對比 SVG）
 - **sci_phys_force_weight_mass frozen `a98627e7374b4940`**（R1-R5 連 5 clean；1 次 de-converge 修 1 major＋草稿 grep 攔到 1 R15 重複 gloss）。
   - 草稿即抓（pre-freeze）：teach① 又重複 gloss『質量 (mass)』『重力 (weight)』——R15 累犯類**又犯**，但 grep -c 自檢=3≠2 當場攔下、未凍結前移除（安全網生效、未浪費輪次）。
