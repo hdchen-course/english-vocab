@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 11:10 ★ conic line-intersection 直線與圓錐曲線交點/判別式 5/5 DONE-GATE 全綠（t_sub，★圓 x²+y²=25 與割線 y=x+1 交兩點 SVG）→ 圓錐曲線島 conic strand 6/7
+- **math_conic_line_intersection frozen `ddefd95ba23b46de`**（R1 抓 Q4 distractor 與 rationale 路徑不符→直接修→修後 R1-R5 連 5 clean、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==ddefd95b／per_page_5clean 573/573 頁 0 違規（line_intersection absent）／repro PASS／iPad 四角色簽核（等軸正圓 x²+y²=25、紅割線 y=x+1 貫穿、兩綠交點 (3,4)/(−4,−3) 標籤在圓外、判別式三情形下註；右緣0%）。
+- 直線與圓錐曲線交點（t_sub，教學接 translation）＝直線代入曲線消元得一元二次式再解；判別式 D=b²−4ac：D>0 兩交點（割線）、D=0 一交點（相切、切線）、D<0 無交點。貫穿：y=x+1 代入 x²+y²=25⇒x²+x−12=0 D=49 交(3,4)&(−4,−3)；y=4⇒x²=9 交(±3,4)；y=5⇒x²=0 切(0,5)；y=6⇒x²=−11 無交。
+- ★repro：binding＝math_checks6::conic.line-intersection；單元引 math_checks7::conic.line-intersection（本 session 新增 y=x+1⇒x²+x−12=0 D=49 交(3,4)&(−4,−3)、y=5 重根(0,5)、y=6 無實解，.venv PASS）。
+- practice：Q1 y=x+1 交點、Q2 相切⇔D=0、Q3 y=6 有 0 個交點、Q4 y=4 交(±3,4)。distractor 單一錯誤（座標對調/用±5沒解二次/相切D=0 vs >0<0/代錯變數 x=4/漏根）。
+- ★收斂史（本單元抓 1 真實缺陷，major correctness）：R1 CONFIRMED＝Q4 distractor「(4,3) 和 (−4,3)」與其 rationale 的「把 y=4 代錯成 x=4」路徑不符（x=4⇒y=±3⇒應 (4,3),(4,−3)，第二點符號錯）→直接修為 (4,−3)。★教訓：distractor 選項值與其 rationale 宣稱的錯誤路徑必須「.venv 反算完全一致」，座標類選項尤其容易出現符號錯（#53/#59 同時把關）。
+- 下一步：conic 第 7（最後）單元＝reflection-apply（圓錐曲線反射性質應用：拋物線平行光聚焦、橢圓兩焦點反射；已有 math_checks6 repro）；conic 共 7 KP，剩 1。完成後 conic strand 全收。接著 complex(6)/finmath(6)/matrix(5)/space(5)/determinant(2)/linprog(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 10:20 ★ conic translation 圓錐曲線平移/配方法/讀中心焦點 5/5 DONE-GATE 全綠（t_sub，★平移橢圓 中心從 O 移到 (2,−1) SVG）→ 圓錐曲線島 conic strand 5/7
 - **math_conic_translation frozen `d779f546aa24f2da`**（R3 抓 Q3 圓心/中心不一致→de-converge→修後 R5 又抓圖下註「從原點位置」使焦點被誤讀起於原點→de-converge→再 R1-R5 連 5 clean、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==d779f546／per_page_5clean 572/572 頁 0 違規（conic_translation absent）／repro PASS／iPad 四角色簽核（等軸 2D、原點 O、平移橢圓 (x−2)²/25+(y+1)²/9=1 中心(2,−1) 綠點、兩焦點 F₁(6,−1)/F₂(−2,−1) 紅點、O→中心虛線標「平移」；焦點標籤移出曲線免 #2、右緣0%）。
 - 平移（t_sub，教學接 ellipse/hyperbola）＝x 換 (x−h)、y 換 (y−k)，中心移到 (h,k)、a/b/c 與形狀不變、中心/頂點/焦點一起平移；(y+1)=(y−(−1))⇒k=−1 符號最易錯；由平移式直接讀中心；配方法把一般式化標準式（中心座標＝一次項係數÷2 再變號）。貫穿：橢圓 (x−2)²/25+(y+1)²/9=1 中心(2,−1)、c=4、焦點(6,−1)&(−2,−1)；圓 x²+y²−6x+4y−12=0⇒(x−3)²+(y+2)²=25 中心(3,−2) r=5。
