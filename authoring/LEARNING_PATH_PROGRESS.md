@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 17:40 ★ finmath geo-distance 經緯度與地球 5/5 DONE-GATE 全綠 → 財務數學 finmath strand 5/6（t_sub，★地球剖面緯圈半徑 R·cos60°=R/2 幾何 SVG）
+- **math_finmath_geo_distance frozen `f0a7700fb407a04d`**（R1-R5 連 5 clean；此單元缺陷最多、共 5 類 confirmed 全修：R1 抓①teach②/Q3「cos 越高緯度越小」語序倒置、②地軸 R15 gloss gap；R2 抓③alt「往左上」方向鏡像、④Q4「赤道通過球心」概念不精確——每個都 de-converge/直接修後重凍重跑；R5 confirmed 0）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／content_sha==f0a7700／per_page_5clean PASS（finmath_geo absent）／repro PASS／iPad 四角色簽核（地球剖面：地軸垂直、赤道水平、球心 O、P 緯度60°在圓右上、綠 OP=R、60°弧、紅水平鄰邊=緯圈半徑、虛線垂直、右側三行公式、底部經度時差、右緣0%）。
+- 經緯度與地球（t_sub）＝(1) 經度每差 15°（=360°÷24）時差 1 小時；(2) 緯圈半徑 ＝ R × cos（緯度），cosφ 在 0°~90° 遞減→緯度越高緯圈越小：赤道(0°)=R、60°=R/2、極點(90°)=0；幾何＝球心到地表點線 R 與赤道平面夾 φ、水平鄰邊 R cosφ；緯圈圓心在地軸上、赤道圓心就是球心。
+- ★repro：本 session 強化 math_checks7::finmath.geo-distance（加 cos0°=1/cos30°=√3/2/cosφ 遞減 80° 最小）＋補註冊 registry 源（原僅 math_checks::geo-distance 大圓 haversine），.venv PASS、指紋 609835b4。
+- practice：Q1 經度每差 15°、Q2 緯度60°緯圈半徑=R/2、Q3 緯度80°緯圈最小、Q4 為何 R cosφ（圓心幾何）。distractor 單一誤解（24°時數當度/30°=360÷12/1°；√3/2=sin60/R=當赤道/1√2=cos45；赤道/30°/60°；地球橢圓/離太陽遠/R變小）。
+- ★教訓：此單元 render-view＋逐輪不同框架 panel 連抓 5 類不同缺陷（算式路徑、語序、gloss、alt 方向鏡像、概念精確度）——證明 5-clean 迴圈＋多框架對抗審查對「幾何圖＋alt 文字＋概念措辭」類單元尤其值得；草稿階段應預檢 alt 方向字對照 SVG 坐標、避免「越X越Y」省主詞句、幾何陳述用圓心/平面而非「通過球心」。
+- 下一步：finmath 第 6（末）單元＝marginal-elasticity（邊際與彈性：邊際成本=dC/dx、彈性）；完成即 finmath strand 6/6 全收。接著 matrix(5)/space(5)/determinant(2)/linprog(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 16:37 ★ finmath growth-decay-model 指數成長與衰減 5/5 DONE-GATE 全綠 → 財務數學 finmath strand 4/6（t_sub，★半衰期序列 80→40→20→10 SVG）
 - **math_finmath_growth_decay_model frozen `5628b0b13224402a`**（R1-R5 連 5 clean；R1 曾抓 1 個 panel 全體 confirmed blocker[algorithm-correctness：Q3「300 隻」distractor rationale 寫 100+100×2=300 只算 2 區間、與宣稱線性誤解(60分=3區間應得400)及 claim c-gd-growth 的 100+100×3 矛盾]→ R1 未 bank 直接修：選項 300→400、rationale 對齊 100+100×3=400→ 重凍→四角色重簽→R1 重跑；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／content_sha==5628b0b／per_page_5clean PASS（finmath_growth absent）／repro PASS／iPad 四角色簽核（半衰期序列 80→40→20→10 克滿寬、三紅 ×½ 箭頭指向正確、0/5/10/15 天標籤箱下對齊、底部公式＋成長對照兩行、指數 (1/2)^(t/T) 正常、右緣0%）。
 - 指數成長與衰減（t_sub，接 simple-compound-interest）＝每過固定時間乘固定倍率（非加減固定量）；衰減（半衰期 T）N=N₀(1/2)^(t/T) 每過 T 剩一半、成長（倍增時間 D）N=N₀·2^(t/D) 每過 D 加倍。例 80 克 T=5 天：40/20/10，過 2T 剩 1/4；100 隻 D=20 分：200/400/800。
