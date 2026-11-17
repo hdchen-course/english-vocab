@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 13:14 ★ complex conjugate-modulus 複數的共軛與模 5/5 DONE-GATE 全綠（t_adv，★複數平面 z=3+4i／z̄ 對實軸鏡射／|z|=5 SVG）→ 複數島 complex strand 2/6
+- **math_complex_conjugate_modulus frozen `bbd5a908ef4c2a0e`**（R1-R5 連 5 clean 一次過、無缺陷、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==bbd5a908／per_page_5clean 576/576 頁 0 違規（complex_conjugate absent）／repro PASS／iPad 四角色簽核（複數平面 z=3+4i 綠點＋|z|=5 綠線、z̄=3−4i 灰點對實軸鏡射虛線相連、3-4-5 直角三角形、右緣0%）。
+- 共軛與模（t_adv，接 definition-operations）＝共軛 z̄=a−bi（只改虛部正負號、幾何上對實軸鏡射）；模 |z|=√(a²+b²)（複數平面上該點到原點的距離、非負實數）；性質 z·z̄=a²+b²=|z|²（共軛相乘得模的平方、是實數，正是除法有理化的原理）、|z₁z₂|=|z₁||z₂|（模的乘法性）。
+- ★repro：binding 待補 math_checks6；單元引 math_checks7::complex.conjugate-modulus（z=3+4i, z̄=3−4i, |z|=5, z·z̄=25=|z|²；|z₁z₂|=|z₁||z₂|，.venv PASS）。
+- practice：Q1 3+4i 共軛=3−4i、Q2 |3+4i|=5、Q3 (3+4i)(3−4i)=25、Q4 |z₁z₂|=5×2=10（模乘法性）。distractor 單一誤解（改實部/兩者都改/實虛對調；直接相加/沒開根號/a+b放根號；i²當+1/只乘實部/−16i²誤成−16i；相加/√(a²+b²)距離式/相除）。
+- 下一步：complex 第 3 單元＝plane（複數平面）；complex 共 6 KP，剩 4（plane/polar-form/de-moivre/roots-of-unity）。接著 finmath(6)/matrix(5)/space(5)/determinant(2)/linprog(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 12:56 ★ complex definition-operations 複數定義與四則運算 5/5 DONE-GATE 全綠（t_adv，★i 次方循環 i→−1→−i→1 SVG）→ 複數島 complex strand 1/6（開新 strand）
 - **math_complex_definition_operations frozen `d8a5c5347bcb6510`**（R1 抓 Q4「3+i」distractor 假錯誤路徑→直接修（rounds 尚空、無需 de-converge）→修後 R1-R5 連 5 clean、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==d8a5c534／per_page_5clean 575/575 頁 0 違規（complex_definition absent）／repro PASS／iPad 四角色簽核（i 次方循環四節點 i¹=i→i²=−1(紅)→i³=−i→i⁴=1、四 ×i 順時針箭頭起訖在圓邊、右緣0%，當前 sha 重 render 重看）。
 - 複數定義與四則（t_adv，複數 strand 首單元 root）＝i²=−1；複數 a+bi（a 實部 b 虛部）、相等⟺實部虛部分別相等；加減（實虛部分別加減）、乘（像多項式展開再把 i² 換成 −1）、除（分子分母同乘分母的共軛 c−di 使分母變實數 c²+d²，有理化）。
