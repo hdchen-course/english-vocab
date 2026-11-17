@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 10:20 ★ conic translation 圓錐曲線平移/配方法/讀中心焦點 5/5 DONE-GATE 全綠（t_sub，★平移橢圓 中心從 O 移到 (2,−1) SVG）→ 圓錐曲線島 conic strand 5/7
+- **math_conic_translation frozen `d779f546aa24f2da`**（R3 抓 Q3 圓心/中心不一致→de-converge→修後 R5 又抓圖下註「從原點位置」使焦點被誤讀起於原點→de-converge→再 R1-R5 連 5 clean、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==d779f546／per_page_5clean 572/572 頁 0 違規（conic_translation absent）／repro PASS／iPad 四角色簽核（等軸 2D、原點 O、平移橢圓 (x−2)²/25+(y+1)²/9=1 中心(2,−1) 綠點、兩焦點 F₁(6,−1)/F₂(−2,−1) 紅點、O→中心虛線標「平移」；焦點標籤移出曲線免 #2、右緣0%）。
+- 平移（t_sub，教學接 ellipse/hyperbola）＝x 換 (x−h)、y 換 (y−k)，中心移到 (h,k)、a/b/c 與形狀不變、中心/頂點/焦點一起平移；(y+1)=(y−(−1))⇒k=−1 符號最易錯；由平移式直接讀中心；配方法把一般式化標準式（中心座標＝一次項係數÷2 再變號）。貫穿：橢圓 (x−2)²/25+(y+1)²/9=1 中心(2,−1)、c=4、焦點(6,−1)&(−2,−1)；圓 x²+y²−6x+4y−12=0⇒(x−3)²+(y+2)²=25 中心(3,−2) r=5。
+- ★repro：binding＝math_checks6::conic.translation；單元引 math_checks7::conic.translation（本 session 新增 圓配方⇒中心(3,−2)r=5、橢圓中心(2,−1)焦點(6,−1)&(−2,−1)、中心=兩焦中點、到兩焦和=2a=10，.venv PASS）。
+- practice：Q1 中心(2,−1)、Q2 焦點(6,−1)&(−2,−1)、Q3 配方圓心(3,−2)、Q4 x²/25+y²/9=1 往右3上2⇒(x−3)²/25+(y−2)²/9=1 transfer。distractor 單一錯誤（符號 h/k、用a頂點當焦點、放垂直、配方忘除2、h/k 對調）。
+- ★收斂史（本單元共抓 2 真實缺陷，皆 minor/major 可讀性/一致性）：R3 CONFIRMED（terminology）＝Q3「圓心」與全單元「中心」不一致（panel 4:2，圓心雖為台灣國小標準詞但 engine 判一致性缺陷）→統一為中心；R5 CONFIRMED major（readability，panel 一致）＝圖下註「中心、焦點都『從原點位置』往右2下1」字面套在焦點上、暗示焦點也起於原點（實際在(±4,0)、恐誤解 c 變）→刪「從原點位置」。皆 de-converge。★教訓：(a)同一單元同一概念術語要全文統一（中心 vs 圓心）；(b)★平移敘述的「從原點」等起點詞只能套在「原本真的在原點」的物件（中心），不能連帶套到原本不在原點的焦點/頂點——否則讀者會誤以為 c 改變。
+- 下一步：conic 第 6 單元＝line-intersection（直線與圓錐曲線的交點：代入消元求交點數/座標、判別式；已有 math_checks6 repro）；conic 共 7 KP，剩 2（line-intersection/reflection-apply）。接著 complex(6)/finmath(6)/matrix(5)/space(5)/determinant(2)/linprog(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 09:30 ★ conic eccentricity 離心率 e=c/a 與圓錐曲線分類 5/5 DONE-GATE 全綠（t_sub，★e 數線分類 圓/橢圓/拋物線/雙曲線 SVG）→ 圓錐曲線島 conic strand 4/7
 - **math_conic_eccentricity frozen `5006df053d9baf4f`**（R5 抓 figure 分區下界不一致→de-converge→修後 R1 又抓 _note 未同步→修→再 R1-R5 連 5 clean、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==5006df05／per_page_5clean 571/571 頁 0 違規（conic_eccentricity absent）／repro PASS／iPad 四角色簽核（e 水平數線、刻度 0/0.8/1/1.25/2、三型三色點：橢圓 e=4/5 藍灰、拋物線 e=1 綠、雙曲線 e=5/4 紅、三區說明 0<e<1 橢圓/e=1 拋物線/e>1 雙曲線；無溢出右緣0%）。
 - 離心率（t_sub，教學接 ellipse/hyperbola）＝e=c/a（c 中心到焦點、a 半長軸或半貫軸）；分類：e=0 圓、0<e<1 橢圓、e=1 拋物線、e>1 雙曲線；由方程式先求 a,c 再算 e。貫穿：橢圓 x²/25+y²/9=1 e=4/5、x²/25+y²/16=1 e=3/5；雙曲線 x²/16−y²/9=1 e=5/4、x²/9−y²/16=1 e=5/3；拋物線 e=1。
