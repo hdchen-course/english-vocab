@@ -329,7 +329,8 @@ def c_cplx_plane():
     # 加法對應向量加：(1+2i)+(3+i)=4+3i ↔ (1,2)+(3,1)=(4,3)
     s = (1 + 2*I) + (3 + I)
     assert (sp.re(s), sp.im(s)) == (4, 3) == (1 + 3, 2 + 1)
-    return _ok("complex.plane", "複數平面：3+4i↔點(3,4)，模=到原點距離5；(1+2i)+(3+i)=4+3i↔(1,2)+(3,1)=(4,3) 向量加")
+    assert sp.sqrt(sp.Integer(6)**2 + sp.Integer(8)**2) == 10        # (6,8)↔6+8i 到原點距離=10
+    return _ok("complex.plane", "複數平面：3+4i↔點(3,4)，模=到原點距離5；(1+2i)+(3+i)=4+3i↔(1,2)+(3,1)=(4,3) 向量加；(6,8)↔6+8i 距離原點=10")
 
 def c_cplx_polar_form():
     I = sp.I
