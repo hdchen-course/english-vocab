@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-18 07:27 ★ sci.t_mid.phys-force.force-unit 力的單位（牛頓）與彈簧測力計 5/5 DONE-GATE 全綠 → 自然島 phys-force 6/17（t_mid·國中中階，★彈簧測力計 SVG）
+- **sci_phys_force_unit frozen `c525d90952597004`**（R1-R5 連 5 clean、零 de-converge：草稿即乾淨，5 輪 panel 全無 CONFIRMED defect，pedagogy 零 advisory）。R15 gloss（牛頓 newton N／彈簧測力計 spring scale）只放 can_do、grep -c 自檢 2/2、content_audit 零 R15 finding。
+- DONE-GATE 全綠：scan PASS／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard（零 advisory）／content_sha==c525d90952597004／per_page_5clean PASS（absent）／repro-sci_phys_checks-phys-force.force-unit PASS（1 N=1 kg·m/s² 因次恆等）／iPad 四角色簽核（彈簧測力計：頂端掛環＋外殼內彈簧＋下方掛鉤吊「1公斤」＋左側刻度0/5/10＋紅色指針指近10標「≈9.8牛頓」＋右側說明；breadcrumb「自然科學·物理：力」、R11 不顯年段）。中文授課無音檔。
+- force-unit（t_mid，phys-force strand 第6，定性型）＝(1) 力的大小用牛頓（N）當單位（紀念科學家牛頓）；(2) 量力工具＝彈簧測力計，施力越大彈簧伸越長、指針指到的牛頓數越大，使用前先歸零、不超量程；(3) 地球上 1 公斤物體受的重力約 9.8 牛頓（承 weight-mass）。★刻意不教 1N=1kg·m/s² 加速度定義（避 F=ma＝newton2 斷層）、不教虎克定律定量 F=kx（hooke 下一單元，只給定性「伸越長力越大」）。4 題 MCQ＝{牛頓N 單位／彈簧測力計 工具／施力越大彈簧伸越長 原理／約9.8牛頓 1公斤讀數}，distractor 乾淨單一誤解（單位→質量/長度/時間；工具→量溫度/質量/體積；原理→縮短/變色/不變；讀數→當kg數字/×10/÷）。
+- ★教訓：連兩單元（force-add-1d、force-unit）零 de-converge 5 輪一次過——「把累犯教訓（R15 單次 gloss、distractor 單一誤解、alt↔SVG 逐字、figure-only 無 body、t_mid 避 F=ma 斷層）全部前置到草稿」持續省輪次；Q4 用 required_kp_ids⊇kp（含 weight-mass 依賴）並在 knownFP 先聲明，panel 零爭議。
+- 下一步：phys-force strand 還有 11 binding KP（t_mid hooke/friction-factor、t_adv×8、t_sub newton-2d）。接 hooke（虎克定律 F=kx，oracle 已驗；承 force-unit 彈簧伸長定性→升定量）。
+
 ## 2026-11-18 07:10 ★ sci.t_mid.phys-force.force-add-1d 一維同向／反向力的合成 5/5 DONE-GATE 全綠 → 自然島 phys-force 5/17（t_mid·國中中階，★兩格合成 SVG：同向相加／反向相減）
 - **sci_phys_force_add_1d frozen `e7852d5d26ae47fb`**（R1-R5 連 5 clean、零 de-converge：草稿即乾淨，5 輪 panel 全無 CONFIRMED defect）。★R15 gloss 累犯類教訓再次套用成功：gloss（合力 net force）只放 can_do、`grep -c "(net force)"`=2 自檢通過，content_audit 零 R15 finding。
 - DONE-GATE 全綠：scan PASS／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard（c-add-net 合力概念 claim 為 can_do/title 支援性頭條、非獨立考點，5 輪 panel 放行，advisory 非 hard）／content_sha==e7852d5d／per_page_5clean PASS（absent）／repro-sci_phys_checks-phys-force.force-add-1d PASS（同向 5+3=8；反向 5−3=2）／iPad 四角色簽核（兩格：①同向 兩綠右箭頭5N/3N→合力8N向右；②反向 綠右5N＋紅左3N→合力2N向右、方向從大者；R11 不顯年段）。中文授課無音檔。
