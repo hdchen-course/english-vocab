@@ -73,7 +73,13 @@ def sp_point_line_plane():
 def sp_coordinate():
     A, B = Matrix([1, 2, 2]), Matrix([4, 6, 2+6])  # B=(4,6,8)
     assert (A-B).norm() == sqrt(9+16+36)
-    return _ok("space.coordinate", "空間兩點距離=√(Δx²+Δy²+Δz²)")
+    # 乾淨例：原點到 (2,3,6) 距離 = √(4+9+36)=√49=7
+    assert (Matrix([0, 0, 0])-Matrix([2, 3, 6])).norm() == 7
+    assert (Matrix([1, 0, 0])-Matrix([1, 3, 4])).norm() == 5   # Δ=(0,3,4)→√25=5
+    # 中點 = 兩點各座標平均
+    assert (Matrix([2, 4, 6])+Matrix([0, 0, 0]))/2 == Matrix([1, 2, 3])
+    assert (Matrix([1, 2, 3])+Matrix([3, 6, 9]))/2 == Matrix([2, 4, 6])   # practice Q3
+    return _ok("space.coordinate", "空間兩點距離=√(Δx²+Δy²+Δz²)：O→(2,3,6)=√49=7、(1,0,0)→(1,3,4)=√25=5；中點=座標平均 (2,4,6)&O→(1,2,3)、(1,2,3)&(3,6,9)→(2,4,6)")
 def sp_plane_equation():
     # 平面 2x+3y+6z=6 法向量(2,3,6)；點(3,0,0)在面上
     n = Matrix([2, 3, 6]); P = Matrix([3, 0, 0])

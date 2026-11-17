@@ -1,0 +1,210 @@
+{
+ "_note": "數學島 空間（space）strand 單元（第1）。知識點 math.t_sub.space.coordinate（空間坐標系與兩點距離）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次：空間坐標系 (spatial coordinate system)、原點 (origin)、座標 (coordinates)、距離公式 (distance formula)、中點 (midpoint)）。前置假設：已會平面兩點距離公式、座標。★scope（t_sub）：(1) 空間坐標系＝從原點 O 拉出三條互相垂直的軸 x,y,z；空間一點用三個數 (x,y,z) 定位（比平面多一個 z）。(2) 兩點距離＝√((x₂−x₁)²+(y₂−y₁)²+(z₂−z₁)²)（平面距離公式再多加一個 z 方向差的平方）；例 O(0,0,0)→(2,3,6)＝√(4+9+36)＝√49＝7；(1,0,0)→(1,3,4)＝√(0+9+16)＝√25＝5。(3) 中點＝兩點各座標平均 ((x₁+x₂)/2,(y₁+y₂)/2,(z₁+z₂)/2)；例 (2,4,6)&(0,0,0)→(1,2,3)、(1,2,3)&(3,6,9)→(2,4,6)。不含球面方程式、不含點到平面距離（在後面單元）。repro（tools/verify/math_checks6.py::space.coordinate，repro_gate .venv PASS、registry 指紋 d98379b5ac57ddca；本 session 強化加乾淨例 7、5 與兩組中點並誠實更新指紋）。★自檢（math-unit defect-classes）：figure＝長方體把空間距離畫成對角線（三邊 Δx=2/Δy=3/Δz=6、紅色空間對角線 d=7），座標幾何正確、標籤移出免碰撞（#2）、alt 與 SVG text 逐字一致且方向相符、★figure 標題只承諾對角線距離示意（#4/#46）；practice 四答案＝{7(Q1 距離),5(Q2 距離),(2,4,6)(Q3 中點),多了z方向差的平方(Q4 概念)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 相加沒平方 11/沒開根號 49/只取最大項 6；Q2 相加 7/沒開根號 25/只取z 4；Q3 相加忘除2 (4,8,12)/相減再除2 (1,2,3)/直接抄端點 (3,6,9)；Q4 乘2/改相加/說沒差別）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；無裸『量』當動詞（#55）。claim kind=definition/fact。figure-only example 無 body。",
+ "page": "math_space_coordinate.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.space.coordinate",
+   "title_zh": "空間坐標系與兩點距離",
+   "can_do": "我知道『空間坐標系 (spatial coordinate system)』是從『原點 (origin)』O 拉出三條互相垂直的軸 x、y、z，空間裡的一個點要用三個數 (x, y, z) 來定位（比平面多了一個 z）。我會算空間中兩點的距離：把平面的『距離公式 (distance formula)』再多加一個 z 方向差的平方，距離 ＝ √((x₂−x₁)² + (y₂−y₁)² + (z₂−z₁)²)。我也會算兩點的『中點 (midpoint)』，就是把兩點的 x、y、z 各自取平均。",
+   "situation_group": "空間：坐標與距離",
+   "subject": "math",
+   "strand": "space",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.space.coordinate"
+   ],
+   "prerequisites": [],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-sc-coords",
+     "text": "空間坐標系：從原點 O 拉出三條互相垂直的軸——x 軸、y 軸、z 軸。空間中的一個點要用三個數 (x, y, z) 來定位，比平面（只要 (x, y) 兩個數）多了一個 z。",
+     "kind": "definition",
+     "source_refs": [
+      "空間坐標系（高中 選修數學）"
+     ],
+     "verification_ref": "空間點用三座標 (x,y,z) 定位；比平面多一維 z（定義）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-sc-distance",
+     "text": "空間兩點 (x₁, y₁, z₁) 與 (x₂, y₂, z₂) 的距離 ＝ √((x₂−x₁)² + (y₂−y₁)² + (z₂−z₁)²)，就是平面的距離公式再多加一個 z 方向差的平方。例：原點 (0, 0, 0) 到 (2, 3, 6) 的距離 ＝ √(2² + 3² + 6²) ＝ √(4 + 9 + 36) ＝ √49 ＝ 7。",
+     "kind": "fact",
+     "source_refs": [
+      "空間兩點距離公式（高中 選修數學）"
+     ],
+     "verification_ref": "√((x₂−x₁)²+(y₂−y₁)²+(z₂−z₁)²)；O→(2,3,6)=√49=7、(1,0,0)→(1,3,4)=√25=5（math_checks6::space.coordinate .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-sc-midpoint",
+     "text": "空間兩點的中點 ＝ 兩點各座標的平均：((x₁+x₂)/2, (y₁+y₂)/2, (z₁+z₂)/2)。例：(2, 4, 6) 與 (0, 0, 0) 的中點 ＝ (1, 2, 3)。",
+     "kind": "fact",
+     "source_refs": [
+      "空間中點座標（高中 選修數學）"
+     ],
+     "verification_ref": "中點=各座標平均；(2,4,6)&(0,0,0)→(1,2,3)、(1,2,3)&(3,6,9)→(2,4,6)（math_checks6::space.coordinate .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.space.coordinate"
+     ],
+     "body": "這一單元把平面的座標推廣到空間。平面上一個點要兩個數 (x, y)；空間裡要三個數 (x, y, z)，因為多了一條跟 x、y 都垂直的 z 軸。先看怎麼定位一個點，再學兩點之間的距離怎麼算，最後學中點。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.space.coordinate"
+     ],
+     "body": "① 空間坐標系：原點 O 拉出三條互相垂直的軸 x、y、z，一點記成 (x, y, z)。② 兩點距離 ＝ √((x₂−x₁)² + (y₂−y₁)² + (z₂−z₁)²)，就是平面距離公式多加一個 z 差的平方。例 (0,0,0)→(2,3,6)：√(4+9+36) ＝ √49 ＝ 7。③ 中點 ＝ 兩點各座標平均 ((x₁+x₂)/2, (y₁+y₂)/2, (z₁+z₂)/2)。例 (2,4,6) 與 (0,0,0) 的中點 ＝ (1,2,3)。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.space.coordinate"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>空間兩點距離＝長方體的對角線</text><line x1='80' y1='132' x2='170' y2='132' stroke='#99a7b5' stroke-width='1.4'/><line x1='170' y1='132' x2='170' y2='66' stroke='#99a7b5' stroke-width='1.4'/><line x1='170' y1='66' x2='80' y2='66' stroke='#99a7b5' stroke-width='1.4'/><line x1='80' y1='66' x2='80' y2='132' stroke='#99a7b5' stroke-width='1.4'/><line x1='80' y1='132' x2='114' y2='112' stroke='#99a7b5' stroke-width='1.4'/><line x1='170' y1='132' x2='204' y2='112' stroke='#99a7b5' stroke-width='1.4'/><line x1='170' y1='66' x2='204' y2='46' stroke='#99a7b5' stroke-width='1.4'/><line x1='80' y1='66' x2='114' y2='46' stroke='#99a7b5' stroke-width='1.4'/><line x1='114' y1='112' x2='204' y2='112' stroke='#99a7b5' stroke-width='1.4' stroke-dasharray='3 2'/><line x1='204' y1='112' x2='204' y2='46' stroke='#99a7b5' stroke-width='1.4'/><line x1='204' y1='46' x2='114' y2='46' stroke='#99a7b5' stroke-width='1.4'/><line x1='114' y1='46' x2='114' y2='112' stroke='#99a7b5' stroke-width='1.4' stroke-dasharray='3 2'/><line x1='80' y1='132' x2='204' y2='46' stroke='#c2535d' stroke-width='2'/><circle cx='80' cy='132' r='2.6' fill='#33475b'/><circle cx='204' cy='46' r='2.6' fill='#c2535d'/><text x='73' y='144' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle'>O</text><text x='214' y='44' font-family='sans-serif' font-size='8' fill='#c2535d' text-anchor='start'>B(2, 3, 6)</text><text x='125' y='146' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='middle'>Δy ＝ 3</text><text x='66' y='102' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='end'>Δz ＝ 6</text><text x='210' y='128' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='start'>Δx ＝ 2</text><text x='150' y='84' font-family='sans-serif' font-size='8.5' fill='#c2535d' text-anchor='end' font-weight='bold'>d ＝ 7</text><text x='180' y='162' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='middle'>d ＝ √(2² ＋ 3² ＋ 6²) ＝ √49 ＝ 7</text></svg>",
+      "alt": "標題「空間兩點距離＝長方體的對角線」。圖中畫一個斜放的長方體（立體盒子）：左下前角標「O」是原點，右上後角標「B(2, 3, 6)」。盒子的三條邊分別標上長度：底邊標「Δy ＝ 3」、左邊直立邊標「Δz ＝ 6」、往後斜的深度邊標「Δx ＝ 2」。一條紅色粗線從 O 直接連到對角的 B，標「d ＝ 7」，這就是兩點的距離（長方體的空間對角線）。最下面一行寫「d ＝ √(2² ＋ 3² ＋ 6²) ＝ √49 ＝ 7」。",
+      "caption": "空間兩點的距離，就是以這兩點為對角的長方體的「空間對角線」。三條邊長分別是兩點在 x、y、z 三個方向的差：Δx ＝ 2、Δy ＝ 3、Δz ＝ 6。把三個差各自平方、相加、再開根號，就得到距離 d ＝ √(2² ＋ 3² ＋ 6²) ＝ √49 ＝ 7。這正是平面距離公式多加一個 z 方向差的平方。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.space.coordinate"
+     ],
+     "body": "最後練空間坐標與距離。重點：(1) 空間一點用三個數 (x, y, z) 定位；(2) 兩點距離 ＝ √((x₂−x₁)² + (y₂−y₁)² + (z₂−z₁)²)，記得三個方向差都要先平方、相加、再開根號；(3) 中點 ＝ 兩點各座標的平均。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "空間中原點 O(0, 0, 0) 到點 (2, 3, 6) 的距離是多少？",
+     "answer": "7",
+     "kp_ids": [
+      "math.t_sub.space.coordinate"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.space.coordinate"
+     ],
+     "options": [
+      "7",
+      "11",
+      "49",
+      "6"
+     ],
+     "distractor_rationales": {
+      "11": "這是把 2 ＋ 3 ＋ 6 直接相加：距離要先把每個方向差平方（2²＋3²＋6²）再開根號，不是直接相加。",
+      "49": "這是平方和 2²＋3²＋6² ＝ 49，還沒開根號：距離是 √49 ＝ 7。",
+      "6": "這是只取最大的那個方向差 z ＝ 6：距離要把三個方向差一起平方相加再開根號，得 7。"
+     },
+     "answer_evidence": [
+      "c-sc-distance"
+     ],
+     "feedback": "距離 ＝ √((2−0)² ＋ (3−0)² ＋ (6−0)²) ＝ √(4 ＋ 9 ＋ 36) ＝ √49 ＝ 7。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "空間中點 (1, 0, 0) 到點 (1, 3, 4) 的距離是多少？",
+     "answer": "5",
+     "kp_ids": [
+      "math.t_sub.space.coordinate"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.space.coordinate"
+     ],
+     "options": [
+      "5",
+      "7",
+      "25",
+      "4"
+     ],
+     "distractor_rationales": {
+      "7": "這是把 0 ＋ 3 ＋ 4 直接相加：三個方向差是 (0, 3, 4)，要先平方相加（0²＋3²＋4²）再開根號。",
+      "25": "這是平方和 0²＋3²＋4² ＝ 25，還沒開根號：距離是 √25 ＝ 5。",
+      "4": "這是只取最大的方向差 z ＝ 4：距離要把三個方向差一起平方相加再開根號，得 5。"
+     },
+     "answer_evidence": [
+      "c-sc-distance"
+     ],
+     "feedback": "三個方向差 ＝ (1−1, 3−0, 4−0) ＝ (0, 3, 4)，距離 ＝ √(0² ＋ 3² ＋ 4²) ＝ √25 ＝ 5。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "空間中點 (1, 2, 3) 與點 (3, 6, 9) 的中點座標是哪一個？",
+     "answer": "(2, 4, 6)",
+     "kp_ids": [
+      "math.t_sub.space.coordinate"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.space.coordinate"
+     ],
+     "options": [
+      "(2, 4, 6)",
+      "(4, 8, 12)",
+      "(1, 2, 3)",
+      "(3, 6, 9)"
+     ],
+     "distractor_rationales": {
+      "(4, 8, 12)": "這是把兩點座標相加但忘了除以 2：中點是各座標的「平均」，相加後還要再除以 2。",
+      "(1, 2, 3)": "這是把兩點座標相減再除以 2：中點用的是相加再除以 2，不是相減。",
+      "(3, 6, 9)": "這是直接抄了其中一個端點：中點要把兩個端點的座標各自取平均。"
+     },
+     "answer_evidence": [
+      "c-sc-midpoint"
+     ],
+     "feedback": "中點 ＝ ((1＋3)/2, (2＋6)/2, (3＋9)/2) ＝ (2, 4, 6)。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "空間兩點距離公式，比平面（二維）兩點距離公式多了什麼？",
+     "answer": "多了一個 z 方向差的平方 (z₂−z₁)²",
+     "kp_ids": [
+      "math.t_sub.space.coordinate"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.space.coordinate"
+     ],
+     "options": [
+      "多了一個 z 方向差的平方 (z₂−z₁)²",
+      "把整個平面公式再乘以 2",
+      "把三個方向差改成直接相加、不用平方",
+      "完全沒有差別，公式跟平面一模一樣"
+     ],
+     "distractor_rationales": {
+      "把整個平面公式再乘以 2": "不是乘 2：空間公式是在根號裡「加上」一個 z 方向差的平方項 (z₂−z₁)²，不是把平面公式乘以 2。",
+      "把三個方向差改成直接相加、不用平方": "距離一定要先平方再開根號（來自畢氏定理）：直接相加會算錯，例 (0,0,0)→(2,3,6) 直接加是 11，正確是 7。",
+      "完全沒有差別，公式跟平面一模一樣": "有差別：空間多了一個方向 z，所以根號裡多一個 (z₂−z₁)² 項。"
+     },
+     "answer_evidence": [
+      "c-sc-distance",
+      "c-sc-coords"
+     ],
+     "feedback": "空間比平面多了一條 z 軸，所以距離公式在根號裡多加一個 z 方向差的平方：√((x₂−x₁)² ＋ (y₂−y₁)² ＋ (z₂−z₁)²)。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（空間一點用 (x,y,z) 三座標、比平面多一個 z；兩點距離＝√((x₂−x₁)²+(y₂−y₁)²+(z₂−z₁)²)＝平面公式多加 z 差平方，例 O→(2,3,6)=√49=7、(1,0,0)→(1,3,4)=√25=5；中點＝各座標平均，例 (1,2,3)&(3,6,9)→(2,4,6)；三鐵律＝三方向差都先平方再開根號、中點是相加除2不是相減、空間比平面多一個 z 項）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
