@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 圓錐曲線（conic）strand 單元（最後一個）。知識點 math.t_sub.conic.reflection-apply（圓錐曲線的反射性質與應用）。tier=t_sub（高中分科/選修深階）。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；同級術語一律 gloss：焦點 (focus)、對稱軸 (axis of symmetry)、準線 (directrix)、切線 (tangent)）。前置假設：已學拋物線（焦點/準線）、橢圓（兩焦點）、入射角=反射角。★scope（t_sub，接 line-intersection；conic strand 末單元）：圓錐曲線的反射（光學）性質與真實應用——拋物線：平行於對稱軸射入的光/電波反射後全部通過焦點（反之焦點光源→平行光），應用衛星天線/雷達/反射式望遠鏡/手電筒車燈；橢圓：從一焦點射出的光/聲反射後必通過另一焦點，應用耳語廊/體外震波碎石。原理＝曲線上每點的切線（鏡面）使入射角=反射角，而圓錐曲線幾何使相關兩方向對切線等角。不含雙曲線反射的完整處理（僅提一句）、不含反射的嚴格證明。repro（tools/verify/math_checks7.py::conic.reflection-apply，本 session 新增並跑過 PASS；binding 另有 math_checks6::conic.reflection-apply）：拋物線 y²=4x 上 P(1,2) 切線斜率1，平行軸(1,0) 與 P→F(1,0) 皆與切線成45°等角（平行光聚焦 F）；橢圓 x²/25+y²/9=1 上 P(0,3) 由 F1(4,0) 來的光對水平切線反射方向(−4,−3) 抵 F2(−4,0)（.venv 等角/反射向量驗）。★自檢（math-unit defect-classes）：figure＝拋物面衛星天線示意、拋物線 y²=4x 開口向右、焦點 F 綠點、數條平行軸入射灰線、反射紅線全聚焦 F——等軸（#62，拋物線形狀真實）、不溢出 viewBox（#43）、標籤不重疊（#2）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾圖畫的拋物線平行光聚焦（#4/#46，橢圓性質由下註+teach）；practice 四答案＝{聚到焦點(Q1 衛星天線),橢圓(Q2 耳語廊),焦點(Q3 手電筒燈泡位置),焦點(1,0)(Q4 拋物線平行光反射到)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：聚到中心/頂點/兩焦點；拋物線/雙曲線/圓；頂點/準線/中心；頂點(0,0)/準線上/對稱點(1,−2)）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）；應用情境真實（衛星天線/耳語廊/手電筒皆標準圓錐曲線應用、非杜撰）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_conic_reflection_apply.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.conic.reflection-apply",
+   "title_zh": "圓錐曲線的反射性質與應用",
+   "can_do": "我知道圓錐曲線的反射（光學）性質和它們的真實應用。拋物線：平行於『對稱軸 (axis of symmetry)』射進來的光或電波，反射後全部會通過『焦點 (focus)』；反過來，放在焦點的光源射出的光反射後會變成平行光束——這就是衛星天線、雷達、反射式望遠鏡、手電筒和車頭燈的原理。橢圓：從一個焦點射出的光或聲音，反射後一定會通過另一個焦點——這就是「耳語廊」和醫學體外震波碎石的原理。原理是：曲線上每一點的『切線 (tangent)』當作鏡面，入射角等於反射角。",
+   "situation_group": "圓錐曲線：反射性質與應用",
+   "subject": "math",
+   "strand": "conic",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.conic.reflection-apply"
+   ],
+   "prerequisites": [
+    "math.t_sub.conic.line-intersection"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ref-parabola",
+     "text": "拋物線的反射性質：平行於對稱軸射進來的光（或電波），碰到拋物線後反射，全部會通過焦點；反過來，放在焦點的光源射出的光，反射後會變成平行於軸的光束。應用：衛星天線（碟形天線）、雷達、反射式望遠鏡做成拋物面，把平行射來的訊號聚到焦點的接收器；手電筒和車頭燈把放在焦點的燈泡的光變成平行光柱射出去。",
+     "kind": "definition",
+     "source_refs": [
+      "拋物線的反射性質（高中數學 圓錐曲線應用）"
+     ],
+     "verification_ref": "y²=4x 上 P(1,2) 平行軸方向與 P→F(1,0) 皆與切線成45° ⇒ 平行光聚焦 F（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ref-ellipse",
+     "text": "橢圓的反射性質：從一個焦點射出的光（或聲音），碰到橢圓後反射，一定會通過另一個焦點。應用：耳語廊——把天花板做成橢圓面，站在一個焦點小聲說話，站在另一個焦點的人聽得很清楚；醫學的體外震波碎石機——在一個焦點產生震波，反射後聚到另一個焦點的結石把它打碎。",
+     "kind": "definition",
+     "source_refs": [
+      "橢圓的反射性質（高中數學 圓錐曲線應用）"
+     ],
+     "verification_ref": "x²/25+y²/9=1 上 P(0,3) 由 F1(4,0) 來的光反射方向(−4,−3) 抵 F2(−4,0)；兩焦線對切線等角（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ref-why",
+     "text": "為什麼會這樣？因為在曲線上任何一點，切線就像一面小鏡子，反射時「入射角等於反射角」。圓錐曲線的幾何剛好讓相關的兩個方向對切線成相等的角：拋物線上「平行軸的方向」和「這點連到焦點的方向」對切線等角，所以平行光反射後通過焦點；橢圓上「這點連到兩個焦點的兩條線」對切線等角，所以一焦點的光反射到另一焦點。例：拋物線 y² ＝ 4x 上的點 P(1, 2)，切線斜率是 1，平行軸的方向和 P 連到焦點 F(1, 0) 的方向都和切線成 45°，剛好相等。",
+     "kind": "definition",
+     "source_refs": [
+      "反射性質的原理（高中數學 圓錐曲線應用）"
+     ],
+     "verification_ref": "y²=4x 上 P(1,2) 切線斜率1、平行軸與 PF 皆45°等角（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.conic.reflection-apply"
+     ],
+     "body": "這一單元把圓錐曲線用到真實世界。先講拋物線的反射（平行光聚到焦點，或焦點光變平行光）和它的應用（衛星天線、手電筒）；再講橢圓的反射（一焦點射到另一焦點）和它的應用（耳語廊、碎石機）；最後講原理（切線當鏡面、入射角＝反射角）。最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.conic.reflection-apply"
+     ],
+     "body": "① 拋物線：平行軸的光反射後全聚到焦點（反過來，焦點光源→平行光）。衛星天線、雷達、反射式望遠鏡把平行訊號聚到焦點接收器；手電筒、車頭燈把焦點燈泡的光變平行光柱。② 橢圓：一焦點射出的光/聲反射後通過另一焦點。耳語廊、體外震波碎石。③ 原理：每點的切線當鏡面、入射角＝反射角；圓錐曲線幾何使相關兩方向對切線等角（例 y²＝4x 上 P(1,2) 切線斜率1，平行軸與 PF 都成45°）。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.conic.reflection-apply"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='12' font-family='sans-serif' font-size='10' fill='#2f6f54' text-anchor='middle' font-weight='bold'>拋物面天線：平行軸射入的光反射後全部通過焦點 F</text><line x1='118' y1='84' x2='330' y2='84' stroke='#99a7b5' stroke-width='1'/><text x='334' y='87' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='start'>軸</text><polyline points='190,24 163.75,39 145,54 133.75,69 130,84 133.75,99 145,114 163.75,129 190,144' fill='none' stroke='#33475b' stroke-width='2'/><line x1='320' y1='54' x2='145' y2='54' stroke='#99a7b5' stroke-width='1.3'/><line x1='320' y1='114' x2='145' y2='114' stroke='#99a7b5' stroke-width='1.3'/><line x1='320' y1='39' x2='163.75' y2='39' stroke='#99a7b5' stroke-width='1.3'/><line x1='320' y1='129' x2='163.75' y2='129' stroke='#99a7b5' stroke-width='1.3'/><line x1='145' y1='54' x2='145' y2='84' stroke='#c2535d' stroke-width='1.3'/><line x1='145' y1='114' x2='145' y2='84' stroke='#c2535d' stroke-width='1.3'/><line x1='163.75' y1='39' x2='145' y2='84' stroke='#c2535d' stroke-width='1.3'/><line x1='163.75' y1='129' x2='145' y2='84' stroke='#c2535d' stroke-width='1.3'/><circle cx='145' cy='84' r='3.2' fill='#2f6f54'/><text x='150' y='92' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='start'>焦點 F (1, 0)</text><text x='270' y='32' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>平行光射入</text><text x='180' y='162' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle'>橢圓：從一個焦點出發的光，反射後必通過另一個焦點（耳語廊原理）</text></svg>",
+      "alt": "標題「拋物面天線：平行軸射入的光反射後全部通過焦點 F」。一條灰色水平的對稱軸（右端標「軸」）。一條開口向右的深色拋物線。右方有四條灰色水平線（平行於軸的入射光，上方標「平行光射入」）射向拋物線；碰到拋物線後各有一條紅色反射線，四條紅線全部交會在拋物線內部的一個綠點，標「焦點 F (1, 0)」。最下方註「橢圓：從一個焦點出發的光，反射後必通過另一個焦點（耳語廊原理）」。",
+      "caption": "拋物面（像衛星天線）把平行於軸射來的光或電波，反射後全部聚到焦點 F——所以接收器放在焦點就能收到最強的訊號。反過來，把燈泡放在焦點（手電筒、車頭燈），射出的光反射後就變成平行光柱。原理是曲線上每點的切線當鏡面、入射角＝反射角。橢圓則是一個焦點的光反射到另一個焦點（耳語廊）。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.conic.reflection-apply"
+     ],
+     "body": "最後練反射性質的應用。重點：拋物線——平行軸的光 ↔ 焦點（天線聚訊號、手電筒放平行光）；橢圓——一焦點 ↔ 另一焦點（耳語廊、碎石機）；原理是切線當鏡面、入射角＝反射角。小提醒：(1) 拋物線只有「一個」焦點，平行光全聚到它；(2) 橢圓有「兩個」焦點，一個射到另一個；(3) 接收器或燈泡要放在「焦點」，不是頂點也不是中心。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "衛星天線（碟形天線）做成拋物面，是利用拋物線的什麼反射性質？",
+     "answer": "平行射入的電波反射後聚到焦點",
+     "kp_ids": [
+      "math.t_sub.conic.reflection-apply"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.reflection-apply"
+     ],
+     "options": [
+      "平行射入的電波反射後聚到焦點",
+      "平行射入的電波反射後聚到中心",
+      "平行射入的電波反射後聚到頂點",
+      "平行射入的電波反射後聚到兩個焦點"
+     ],
+     "distractor_rationales": {
+      "平行射入的電波反射後聚到中心": "拋物線沒有「中心」（那是橢圓、雙曲線才有）：拋物線的平行光聚到「焦點」，接收器放在焦點。",
+      "平行射入的電波反射後聚到頂點": "聚光點是焦點不是頂點：頂點是拋物線最彎的那一點，平行光反射後通過的是焦點 F。",
+      "平行射入的電波反射後聚到兩個焦點": "拋物線只有「一個」焦點：兩個焦點是橢圓或雙曲線，拋物線的平行光全聚到那唯一的焦點。"
+     },
+     "answer_evidence": [
+      "c-ref-parabola"
+     ],
+     "feedback": "拋物線的平行光（平行於軸）反射後全部通過唯一的焦點，所以接收器放在焦點。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "「耳語廊」把天花板做成某種曲面，站在一個點小聲說話，站在另一個特定點的人聽得很清楚。這是利用哪種圓錐曲線的反射性質？",
+     "answer": "橢圓",
+     "kp_ids": [
+      "math.t_sub.conic.reflection-apply"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.reflection-apply"
+     ],
+     "options": [
+      "橢圓",
+      "拋物線",
+      "雙曲線",
+      "圓"
+     ],
+     "distractor_rationales": {
+      "拋物線": "拋物線是「平行光 ↔ 一個焦點」（天線、手電筒），不是兩個固定點之間：耳語廊是一個焦點的聲音聚到另一個焦點，這是橢圓的性質。",
+      "雙曲線": "雙曲線的反射是把射向一焦點的光反射成好像從另一焦點射出（發散），不會把聲音聚到另一個焦點：耳語廊靠的是橢圓。",
+      "圓": "圓只有一個中心、沒有兩個焦點，沒有「一點聲音聚到另一特定點」的性質：耳語廊是橢圓。"
+     },
+     "answer_evidence": [
+      "c-ref-ellipse"
+     ],
+     "feedback": "橢圓：從一個焦點出發的聲音反射後通過另一個焦點，正是耳語廊的原理。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "手電筒的反射面做成拋物面，要把燈泡放在哪裡，射出的光才會變成平行光柱？",
+     "answer": "焦點",
+     "kp_ids": [
+      "math.t_sub.conic.reflection-apply"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.reflection-apply"
+     ],
+     "options": [
+      "焦點",
+      "頂點",
+      "準線上",
+      "對稱軸的無窮遠處"
+     ],
+     "distractor_rationales": {
+      "頂點": "放在頂點光不會變平行：拋物線的性質是「焦點的光 ↔ 平行光」，燈泡要放在焦點。",
+      "準線上": "『準線 (directrix)』是拋物線定義用的輔助線、不是光源位置：焦點的光才會反射成平行光，燈泡放焦點。",
+      "對稱軸的無窮遠處": "光源要放在焦點這個確定的點；放到無窮遠處沒有意義，也做不出手電筒：放焦點。"
+     },
+     "answer_evidence": [
+      "c-ref-parabola"
+     ],
+     "feedback": "把燈泡放在焦點，焦點射出的光反射後變成平行於軸的平行光柱。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "拋物線 y² ＝ 4x（焦點 (1, 0)）上一點 P(1, 2)，一束平行於 x 軸射入的光在 P 反射後，會通過哪一點？",
+     "answer": "焦點 (1, 0)",
+     "kp_ids": [
+      "math.t_sub.conic.reflection-apply"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.conic.reflection-apply"
+     ],
+     "options": [
+      "焦點 (1, 0)",
+      "頂點 (0, 0)",
+      "準線 x ＝ −1 上的點",
+      "對稱點 (1, −2)"
+     ],
+     "distractor_rationales": {
+      "頂點 (0, 0)": "平行光反射後通過的是焦點不是頂點：(0, 0) 是拋物線的頂點，反射光聚到焦點 (1, 0)。",
+      "準線 x ＝ −1 上的點": "準線是定義拋物線的輔助線、不是反射光通過的地方：平行光反射後通過焦點 (1, 0)。",
+      "對稱點 (1, −2)": "(1, −2) 只是 P 對 x 軸的對稱點、在拋物線上，不是光反射的去向：平行軸的光反射後通過焦點 (1, 0)。"
+     },
+     "answer_evidence": [
+      "c-ref-why"
+     ],
+     "feedback": "拋物線的平行光（平行於軸）反射後通過焦點，這題的焦點是 (1, 0)。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（拋物線反射：平行軸的光 ↔ 焦點，衛星天線/雷達/望遠鏡把平行訊號聚到焦點、手電筒/車燈把焦點燈泡光變平行光；橢圓反射：一焦點 ↔ 另一焦點，耳語廊/體外震波碎石；原理＝每點切線當鏡面、入射角＝反射角，圓錐曲線幾何使相關兩方向對切線等角；y²=4x 上 P(1,2) 切線斜率1、平行軸與 PF 皆45°；三鐵律＝拋物線只一個焦點平行光全聚它、橢圓兩焦點一個射到另一個、接收器/燈泡放焦點不是頂點或中心）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

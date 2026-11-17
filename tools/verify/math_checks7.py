@@ -270,6 +270,20 @@ def c_conic_line_intersection():
     assert 0**2 + 5**2 == 25
     assert all(not r.is_real for r in sp.solve(x**2 + 36 - 25, x))  # y=6：x²=−11 無實解 ⇒ 判別式<0
     return _ok("conic.line-intersection", "x²+y²=25：割線 y=x+1⇒x²+x−12=0 判別式49>0 交(3,4)&(−4,−3)；切線 y=5 判別式=0 交(0,5)；y=6 判別式<0 無交點")
+def c_conic_reflection_apply():
+    # 圓錐曲線反射性質：拋物線平行光聚焦於焦點；橢圓一焦點射到另一焦點
+    def ang(u, v):
+        u = sp.Matrix(u); v = sp.Matrix(v)
+        return sp.simplify(u.dot(v) / (sp.sqrt(u.dot(u)) * sp.sqrt(v.dot(v))))
+    assert 2**2 == 4 * 1                                   # 拋物線 y²=4x 上 P(1,2)
+    # 切線斜率 y'=2/y=1；切線方向(1,1) 與「平行軸(1,0)」及「P→F(0,−1)」夾角相等 ⇒ 平行光反射聚焦 F(1,0)
+    c1 = abs(ang((1, 1), (1, 0))); c2 = abs(ang((1, 1), (0, -1)))
+    assert sp.simplify(c1 - c2) == 0 and c1 == sp.sqrt(2) / 2
+    # 橢圓 x²/25+y²/9=1 上 P(0,3)，切線水平；入射 F1(4,0)→P 方向(−4,3) 對水平鏡反射成(−4,−3)，自 P 行進抵 F2(−4,0)
+    assert sp.Rational(0, 25) + sp.Rational(9, 9) == 1
+    assert (0 + (-4), 3 + (-3)) == (-4, 0)
+    assert sp.simplify(abs(ang((1, 0), (4, -3))) - abs(ang((1, 0), (-4, -3)))) == 0  # 兩焦線與切線等角
+    return _ok("conic.reflection-apply", "反射性質：拋物線 y²=4x 上 P(1,2) 切線使平行軸光(1,0)反射聚焦到 F(1,0)（與 PF 等角45°）；橢圓 x²/25+y²/9=1 上 P(0,3) 由 F1(4,0) 來的光反射到 F2(−4,0)")
 
 # ---------- stats（18）----------
 D = [2, 4, 4, 4, 5, 5, 7, 9]      # 共用樣本（std 範例，μ=5,σ=2）
@@ -421,6 +435,7 @@ CHECKS = {s: fn for s, fn in {
     "conic.eccentricity": c_conic_eccentricity,
     "conic.translation": c_conic_translation,
     "conic.line-intersection": c_conic_line_intersection,
+    "conic.reflection-apply": c_conic_reflection_apply,
     "stats.collect-organize": s_collect, "stats.bar-line-chart": s_bar_line,
     "stats.pie-chart": s_pie, "stats.table-read": s_table, "stats.mean": s_mean,
     "stats.frequency-table": s_freq_table, "stats.cumulative-relative": s_cumulative,
