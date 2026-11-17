@@ -7,6 +7,16 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-18 05:57 ★ sci.t_base.phys-force.friction-exist 摩擦力的存在與影響 5/5 DONE-GATE 全綠 → 自然島 phys-force 2/17（t_base·國小基礎，★摩擦力示意 SVG）
+- **sci_phys_force_friction_exist frozen `ed398236ac30524b`**（新 streak R1-R5 連 5 clean；共 3 次 de-converge、修 3 個 panel-CONFIRMED minor，harvest 階段逐一挖乾淨）。缺陷修復軌跡：
+  - round2（pre-bank）**minor**（owner=zh/learning b-hard）：teach① 又重複 gloss『摩擦力 (friction)』（can_do 已 gloss）——與 push-pull de-converge#2 同類，**連兩單元累犯** → 移除 teach① 括號英語；★寫記憶 `r15-gloss-once-first-render` 防未來再犯（草稿後 `grep -c "(English)"` 應=2＝_note+can_do）。重凍 fe6f3b。
+  - round4（pre-bank）**minor**（owner=learning b-hard）：caption「慢慢慢下來」三個連續「慢」疊字誤植感 → 改「慢慢停下來」。重凍 507aaa9。
+  - round7（de-converge 清 3 clean）**minor**（owner-decisive 6/7 DEFECT）：alt 說運動箭頭在「箱子上方」，但 SVG 幾何上箭頭(x214-266)在箱子右緣(x208)外、浮右上方，alt↔figure 位置不符 → 把 SVG 運動箭頭移到箱子正上方(x156-202)使「上方」成真。重凍 **ed398236**、重 render 四角色、重數 5-clean 全淨（round12 因 content-filter reviewer error 不採計、另補一輪）。
+- DONE-GATE 全綠：scan PASS／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard／content_sha==ed398236／per_page_5clean PASS（absent）／repro-sci_phys_checks-phys-force.friction-exist PASS（指紋 a7be9dd6… 之鄰，oracle f=μN=0.3·10=3N 阻礙運動）／iPad 四角色簽核（單格 SVG：箱子在粗糙地面向右運動，綠色「運動方向」箭頭在箱子正上方、紅色「摩擦力（擋住運動）」箭頭在接觸面指向左＝與運動相反；breadcrumb「自然科學·物理：力」、R11 不顯年段）。中文授課無音檔。
+- friction-exist（t_base，phys-force strand 第2，概念型無公式）＝(1) 摩擦力在兩物體接觸面之間產生；(2) 方向與運動相反、阻礙運動（移動物體慢下停下）；(3) 接觸面越粗糙摩擦越大、越光滑越小；增摩擦（粗糙鞋底輪胎防滑）/減摩擦（上油光滑冰刀）。f=μN 在 t_adv friction-coeff。
+- ★教訓（累犯類已銀行）：R15「只 gloss 一次」要跨 can_do＋teach 檢查（can_do 先 render）——push-pull+friction 連兩次犯，已寫 [[r15-gloss-once-first-render]]；SVG 圖元位置要與 alt 文字描述逐字一致（「上方」就要真的在正上方，不能浮在側邊）；caption 避免三字連續疊字。
+- 下一步：phys-force strand 還有 15 binding KP（t_mid force-add-1d/force-elements/force-unit/friction-factor/hooke/weight-mass、t_adv equilibrium/friction-coeff/incline/newton1/newton2/newton3/resolve-compose/tension-system、t_sub newton-2d）。接下一個（建議 t_mid 或續 t_base 已無剩，轉 t_mid force-elements 力的三要素）。
+
 ## 2026-11-18 05:02 ★ sci.t_base.phys-force.push-pull 推與拉是力、力能改變運動與形狀 5/5 DONE-GATE 全綠 → **自然島 sci 首個單元**（t_base·國小基礎，★力效果兩格 SVG）
 - **sci_phys_force_push_pull frozen `fe4b05b88d124d8b`**（新 streak R1-R5 連 5 clean；共 3 次 de-converge、修 3 個 panel-CONFIRMED 缺陷，驗證「數 clean 前挖乾淨」）。缺陷修復軌跡：
   - R1（pre-bank）**blocker**：SVG 把「壓扁」後黏土畫成 rx=7 ry=15 的**高瘦**直立橢圓，與「扁＝矮而寬」及 oracle「壓黏土變扁」相反（7 角色一致 a-wrong，會教錯小孩）→ 改壓力箭頭由上往下壓＋變形後黏土改 rx=16 ry=6 矮寬扁橢圓，alt 同步。重凍 59a7bff4。
