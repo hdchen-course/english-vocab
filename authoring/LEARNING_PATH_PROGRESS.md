@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 16:13 ★ finmath loan-installment 貸款等額攤還 5/5 DONE-GATE 全綠 → 財務數學 finmath strand 3/6（t_sub，★餘額歸零流程 1000→682.79→349.72→0 SVG）
+- **math_finmath_loan_installment frozen `f5e221a9b992accf`**（R1-R5 連 5 clean 一次過、無缺陷、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／content_sha==f5e221a／per_page_5clean PASS（finmath_loan absent）／repro PASS／iPad 四角色簽核（四箱 1000→682.79→349.72→0 滿寬、三箭頭「還 367.21」標籤無碰撞、綠歸零方塊、底部利息漸減/還本漸增兩行、指數 (1+r)⁻ⁿ 正常、右緣0%）。
+- 貸款等額攤還（t_sub，接 simple-compound-interest）＝借 P、每期還固定 PMT、n 期還清；PMT=P·r/(1−(1+r)⁻ⁿ)；每期還款＝利息(餘額×r)＋還本(PMT−利息)，餘額遞減；利息逐期變小、還本逐期變大，n 期後餘額=0。例 P=1000、r=5%、n=3：PMT≈367.21，攤還 1000→682.79→349.72→0，利息 50/34.14/17.49、還本 317.21/333.07/349.72。
+- ★repro：binding 待補 math_checks6；單元引 math_checks7::finmath.loan-installment（PMT=1000·0.05/(1−1.05⁻³)≈367.21、n 期攤還後餘額=0，.venv PASS）。
+- practice：Q1 公式 PMT=P×r÷(1−(1+r)⁻ⁿ)、Q2 1000/5%/3期≈367.21、Q3 利息逐期變小、Q4 第1期利息=50。distractor 單一誤解（分母加號/指數漏負號/P÷n；只平均本金333.33/本利和1050÷3=350/平均本金+固定首期利息383.33；逐期變大/每期一樣/先大後小；全當利息367.21/單利全程150/期3利息17.49）。數值含≈因 PMT 四捨五入、.venv 以精確值驗餘額=0。
+- 下一步：finmath 第 4 單元＝growth-decay-model（成長/衰減模型 N=N₀(½)^(t/T) 半衰期等）；finmath 共 6 KP，剩 3（growth-decay-model/geo-distance/marginal-elasticity）。接著 matrix(5)/space(5)/determinant(2)/linprog(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 15:57 ★ finmath annuity 年金終值 5/5 DONE-GATE 全綠 → 財務數學 finmath strand 2/6（t_sub，★三期逐筆滾到最後相加 SVG）
 - **math_finmath_annuity frozen `675aab266df2c5eb`**（R1-R5 連 5 clean；R2 曾抓 1 個 panel 全體一致 confirmed 缺陷[major terminology-consistency：can_do 稱 r「每期年利率」自相矛盾、與 claim c-ann-def 及兩題 MCQ 題幹的「每期利率」不一致]→ 誠實 de-converge 清 2 輪+trace→改為「r 是每期利率（本例每年一期、每年 5%，即年利率 5%）」→ 重凍→四角色重簽→R1 重跑；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema CLEAN／question_correctness CLEAN／pedagogy 0 hard／content_sha==675aab2／per_page_5clean PASS（finmath_annuity absent）／repro PASS／iPad 四角色簽核（三排 期1/2/3 100→×1.05²/×1.05/×1→110.25/105/100、綠色總值315.25含分隔線、底部公式、箭頭指向正確、標籤無碰撞、右緣0%）。
 - 年金終值（t_sub，接 simple-compound-interest）＝每期末存固定金額 PMT 的一系列付款；FV=PMT·((1+r)ⁿ−1)/r（期末年金，r 為每期利率）；機制＝第1期末付的滾 n−1 期、…、最後一期付的滾 0 期不賺利息。例 100、5%、3 期：110.25+105+100=315.25=100×((1.05)³−1)/0.05。
