@@ -114,9 +114,13 @@ def mat_inverse():
     return _ok("matrix.inverse", "det=ad−bc；[[1,2],[3,4]] det=−2，A⁻¹=1/(−2)[[4,−2],[−3,1]]=[[−2,1],[3/2,−1/2]]，A·A⁻¹=I；det=0 不可逆")
 def mat_linear_system():
     A, bb = Matrix([[2, 1], [1, 3]]), Matrix([5, 10])
+    # {2x+y=5, x+3y=10} 代回驗證 x=1,y=3
+    assert 2*1 + 1*3 == 5 and 1*1 + 3*3 == 10
     x = A.solve(bb)
     assert x == Matrix([1, 3])                  # 高斯消去解
-    return _ok("matrix.linear-system", "[[2,1],[1,3]]x=(5,10)⇒x=(1,3)")
+    # 增廣矩陣 [A|b] 化簡列階梯形 rref = [[1,0,1],[0,1,3]]（讀出 x=1, y=3）
+    assert A.row_join(bb).rref()[0] == Matrix([[1, 0, 1], [0, 1, 3]])
+    return _ok("matrix.linear-system", "{2x+y=5,x+3y=10}→x=1,y=3；增廣 rref=[[1,0,1],[0,1,3]]")
 def mat_transformation():
     # 旋轉90°矩陣作用於(1,0)→(0,1)
     R = Matrix([[0, -1], [1, 0]])

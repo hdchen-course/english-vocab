@@ -1,0 +1,220 @@
+{
+ "_note": "數學島 矩陣（matrix）strand 單元（第4/5）。知識點 math.t_sub.matrix.linear-system（以矩陣解線性方程組／高斯消去）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次：線性方程組 (system of linear equations)、係數矩陣 (coefficient matrix)、增廣矩陣 (augmented matrix)、高斯消去 (Gaussian elimination)、列運算 (row operation)、單位矩陣 (identity matrix)）。前置假設：已會解二元一次聯立方程式、矩陣基本概念。★scope（t_sub）：(1) 線性方程組寫成矩陣形式 Ax=b：{2x+y=5, x+3y=10} → 係數矩陣 A=[[2,1],[1,3]]、未知 x=[[x],[y]]、常數 b=[[5],[10]]。(2) 增廣矩陣 [A|b]=[[2,1,5],[1,3,10]]（直線左係數、右常數）。(3) 高斯消去（列運算：某列乘非零常數、兩列相加減、交換兩列）把左半化成單位矩陣 [[1,0],[0,1]]，右半即解；rref=[[1,0,1],[0,1,3]] 讀出 x=1、y=3。(4) 代回驗證 2×1+1×3=5、1×1+3×3=10。不含三元以上、不含無解/無限多解完整分類。repro（tools/verify/math_checks6.py::matrix.linear-system，repro_gate .venv PASS、registry 指紋 9ac45f062b0c4dbe；本 session 強化加代回驗證與增廣 rref 並誠實更新指紋）。★自檢（math-unit defect-classes）：figure＝增廣矩陣 [[2,1,5],[1,3,10]]→（高斯消去箭頭）→rref [[1,0,1],[0,1,3]]→x=1,y=3，座標幾何正確、數字置格中央不碰括號、增廣直線分隔清楚（#2）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾高斯消去化 rref 讀解（#4/#46）；practice 四答案＝{[[2,1],[1,3]](Q1 係數矩陣),[[2,1,5],[1,3,10]](Q2 增廣矩陣),x=1 y=3(Q3 讀解),單位矩陣[[1,0],[0,1]](Q4 消去目標)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 含常數即增廣/第二式係數抄反/只取常數b；Q2 只係數無常數/常數擺前/常數擺中；Q3 兩解讀反/把0當解/把原常數當解；Q4 零矩陣/全1/原係數矩陣）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_matrix_linear_system.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.matrix.linear-system",
+   "title_zh": "以矩陣解線性方程組（高斯消去）",
+   "can_do": "我知道一個『線性方程組 (system of linear equations)』可以寫成矩陣形式 Ax ＝ b：把每個方程式的係數排成『係數矩陣 (coefficient matrix)』A，未知數排成 x，等號右邊的常數排成 b。我知道把係數和常數合起來寫成『增廣矩陣 (augmented matrix)』[A|b]，再用『高斯消去 (Gaussian elimination)』做『列運算 (row operation)』，把左半化成『單位矩陣 (identity matrix)』[[1, 0], [0, 1]]，右半讀出來就是解。我也會把解代回原方程組驗證。",
+   "situation_group": "矩陣：解線性方程組",
+   "subject": "math",
+   "strand": "matrix",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.matrix.linear-system"
+   ],
+   "prerequisites": [],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ls-form",
+     "text": "線性方程組可以寫成矩陣形式 Ax ＝ b：把每個方程式等號左邊的係數排成係數矩陣 A，未知數排成一行 x，等號右邊的常數排成一行 b。例：{2x ＋ y ＝ 5, x ＋ 3y ＝ 10} → A ＝ [[2, 1], [1, 3]]、x ＝ [[x], [y]]、b ＝ [[5], [10]]。",
+     "kind": "definition",
+     "source_refs": [
+      "線性方程組的矩陣形式（高中 選修數學）"
+     ],
+     "verification_ref": "{2x+y=5,x+3y=10} 係數 A=[[2,1],[1,3]]（math_checks6::matrix.linear-system .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ls-augmented",
+     "text": "把係數矩陣和常數合在一起寫成增廣矩陣 [A|b]：一條直線的左邊放係數、右邊放常數。例：{2x ＋ y ＝ 5, x ＋ 3y ＝ 10} 的增廣矩陣是 [[2, 1, 5], [1, 3, 10]]（每一列對應一個方程式）。",
+     "kind": "definition",
+     "source_refs": [
+      "增廣矩陣（高中 選修數學）"
+     ],
+     "verification_ref": "增廣矩陣 [[2,1,5],[1,3,10]]（對應 {2x+y=5,x+3y=10}）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ls-gauss",
+     "text": "高斯消去就是用列運算（某一列乘上非零常數、兩列相加減、交換兩列）把增廣矩陣的左半慢慢化成單位矩陣 [[1, 0], [0, 1]]；化好之後，右半那一行就是解。例：[[2, 1, 5], [1, 3, 10]] 經高斯消去變成 [[1, 0, 1], [0, 1, 3]]，直接讀出 x ＝ 1、y ＝ 3。",
+     "kind": "definition",
+     "source_refs": [
+      "高斯消去法（高中 選修數學）"
+     ],
+     "verification_ref": "增廣 rref=[[1,0,1],[0,1,3]]⇒x=1,y=3（math_checks6::matrix.linear-system .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ls-verify",
+     "text": "解出來一定要代回原方程組驗證：把 x ＝ 1、y ＝ 3 代入，2×1 ＋ 1×3 ＝ 5（第一式成立）、1×1 ＋ 3×3 ＝ 10（第二式成立），兩式都對，所以解正確。",
+     "kind": "definition",
+     "source_refs": [
+      "解的驗證（高中 選修數學）"
+     ],
+     "verification_ref": "2·1+1·3=5、1·1+3·3=10（math_checks6::matrix.linear-system .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.matrix.linear-system"
+     ],
+     "body": "這一單元學用矩陣解線性方程組。先把方程組寫成矩陣形式 Ax ＝ b，再把係數和常數合成增廣矩陣，然後用高斯消去把左半變成單位矩陣，右半就是答案，最後代回驗證。這個方法對很多方程式也適用，是電腦解方程組的基礎。最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.matrix.linear-system"
+     ],
+     "body": "① 矩陣形式：{2x＋y＝5, x＋3y＝10} → A ＝ [[2,1],[1,3]]、x ＝ [[x],[y]]、b ＝ [[5],[10]]，寫成 Ax ＝ b。② 增廣矩陣：把係數和常數合起來 [[2,1,5],[1,3,10]]。③ 高斯消去：用列運算把左半化成 [[1,0],[0,1]]，得 [[1,0,1],[0,1,3]]，讀出 x ＝ 1、y ＝ 3。④ 代回：2×1＋1×3 ＝ 5、1×1＋3×3 ＝ 10，都對。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.matrix.linear-system"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>高斯消去：增廣矩陣左半化成單位矩陣，右半即解</text><g stroke='#33475b' stroke-width='1.4' fill='none'><path d='M30 44 L24 44 L24 108 L30 108'/><path d='M104 44 L110 44 L110 108 L104 108'/></g><line x1='84' y1='48' x2='84' y2='104' stroke='#c9d3dd' stroke-width='1' stroke-dasharray='3 2'/><text x='44' y='68' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>2</text><text x='64' y='68' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>1</text><text x='96' y='68' font-family='sans-serif' font-size='11' fill='#6b7785' text-anchor='middle'>5</text><text x='44' y='96' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>1</text><text x='64' y='96' font-family='sans-serif' font-size='11' fill='#33475b' text-anchor='middle'>3</text><text x='96' y='96' font-family='sans-serif' font-size='11' fill='#6b7785' text-anchor='middle'>10</text><line x1='124' y1='76' x2='214' y2='76' stroke='#99a7b5' stroke-width='1.4'/><polygon points='214,76 207,72 207,80' fill='#99a7b5'/><text x='169' y='68' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='middle'>高斯消去</text><text x='169' y='90' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='middle'>（列運算）</text><g stroke='#2f6f54' stroke-width='1.4' fill='none'><path d='M234 44 L228 44 L228 108 L234 108'/><path d='M312 44 L318 44 L318 108 L312 108'/></g><line x1='290' y1='48' x2='290' y2='104' stroke='#bfe0cf' stroke-width='1' stroke-dasharray='3 2'/><text x='250' y='68' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle'>1</text><text x='270' y='68' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle'>0</text><text x='303' y='68' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle'>1</text><text x='250' y='96' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle'>0</text><text x='270' y='96' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle'>1</text><text x='303' y='96' font-family='sans-serif' font-size='11' fill='#2f6f54' text-anchor='middle'>3</text><text x='180' y='134' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='middle'>讀出 x ＝ 1、y ＝ 3</text><text x='180' y='152' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='middle'>代回：2×1＋1×3 ＝ 5、1×1＋3×3 ＝ 10，都成立</text></svg>",
+      "alt": "標題「高斯消去：增廣矩陣左半化成單位矩陣，右半即解」。左邊一個增廣矩陣，用一條直的虛線分成左右：左半第一列 2、1，第二列 1、3；右半第一列 5，第二列 10。中間一個往右的灰色箭頭，標「高斯消去」「（列運算）」。右邊綠色的增廣矩陣，同樣有直虛線：左半第一列 1、0，第二列 0、1（單位矩陣），右半第一列 1，第二列 3。下面寫「讀出 x ＝ 1、y ＝ 3」，再下面寫「代回：2×1＋1×3 ＝ 5、1×1＋3×3 ＝ 10，都成立」。",
+      "caption": "把方程組 {2x ＋ y ＝ 5, x ＋ 3y ＝ 10} 寫成增廣矩陣 [[2, 1, 5], [1, 3, 10]]（直線左邊是係數、右邊是常數）。用高斯消去做列運算，把左半慢慢化成單位矩陣 [[1, 0], [0, 1]]，右半就變成 [[1], [3]]，直接讀出 x ＝ 1、y ＝ 3。最後代回原方程組：兩個式子都成立，確認解正確。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.matrix.linear-system"
+     ],
+     "body": "最後練用矩陣解方程組。重點：(1) 係數矩陣只放等號左邊的係數，常數要另外放；增廣矩陣才把常數也放進去；(2) 高斯消去的目標是把左半化成單位矩陣 [[1,0],[0,1]]，這時右半就是解；(3) 讀解時別把 x、y 的值讀反；(4) 一定要代回原方程組驗證。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "方程組 {2x ＋ y ＝ 5, x ＋ 3y ＝ 10} 的係數矩陣 A 是哪一個？",
+     "answer": "[[2, 1], [1, 3]]",
+     "kp_ids": [
+      "math.t_sub.matrix.linear-system"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.matrix.linear-system"
+     ],
+     "options": [
+      "[[2, 1], [1, 3]]",
+      "[[2, 1, 5], [1, 3, 10]]",
+      "[[2, 1], [3, 1]]",
+      "[[5], [10]]"
+     ],
+     "distractor_rationales": {
+      "[[2, 1, 5], [1, 3, 10]]": "這是把常數 5、10 也放進去的「增廣矩陣」：係數矩陣只放等號左邊的係數，是 [[2, 1], [1, 3]]。",
+      "[[2, 1], [3, 1]]": "第二個方程式的係數抄反了：x ＋ 3y 的係數依序是 1、3（不是 3、1），所以第二列是 1、3。",
+      "[[5], [10]]": "這是等號右邊的常數 b，不是係數矩陣：係數矩陣放左邊的係數 [[2, 1], [1, 3]]。"
+     },
+     "answer_evidence": [
+      "c-ls-form"
+     ],
+     "feedback": "係數矩陣只放每個方程式等號左邊的係數：第一式 2、1，第二式 1、3，即 [[2, 1], [1, 3]]。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "方程組 {2x ＋ y ＝ 5, x ＋ 3y ＝ 10} 的增廣矩陣 [A|b] 是哪一個？",
+     "answer": "[[2, 1, 5], [1, 3, 10]]",
+     "kp_ids": [
+      "math.t_sub.matrix.linear-system"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.matrix.linear-system"
+     ],
+     "options": [
+      "[[2, 1, 5], [1, 3, 10]]",
+      "[[2, 1], [1, 3]]",
+      "[[5, 2, 1], [10, 1, 3]]",
+      "[[2, 5, 1], [1, 10, 3]]"
+     ],
+     "distractor_rationales": {
+      "[[2, 1], [1, 3]]": "這只是係數矩陣，沒有把常數放進去：增廣矩陣要把常數接在每一列最後面，成為 [[2, 1, 5], [1, 3, 10]]。",
+      "[[5, 2, 1], [10, 1, 3]]": "把常數放到最前面了：增廣矩陣是「左係數、右常數」，常數要放在每一列的最後，得 [[2, 1, 5], [1, 3, 10]]。",
+      "[[2, 5, 1], [1, 10, 3]]": "把常數插到中間了：常數要放在係數的右邊（最後一欄），得 [[2, 1, 5], [1, 3, 10]]。"
+     },
+     "answer_evidence": [
+      "c-ls-augmented"
+     ],
+     "feedback": "增廣矩陣把每個方程式的係數和常數排成一列，常數放最後：[[2, 1, 5], [1, 3, 10]]。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "高斯消去後增廣矩陣變成 [[1, 0, 1], [0, 1, 3]]，這個方程組的解是什麼？",
+     "answer": "x ＝ 1、y ＝ 3",
+     "kp_ids": [
+      "math.t_sub.matrix.linear-system"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.matrix.linear-system"
+     ],
+     "options": [
+      "x ＝ 1、y ＝ 3",
+      "x ＝ 3、y ＝ 1",
+      "x ＝ 0、y ＝ 1",
+      "x ＝ 5、y ＝ 10"
+     ],
+     "distractor_rationales": {
+      "x ＝ 3、y ＝ 1": "把兩個解讀反了：第一列 [1, 0 | 1] 代表 x ＝ 1，第二列 [0, 1 | 3] 代表 y ＝ 3。",
+      "x ＝ 0、y ＝ 1": "把左半單位矩陣裡的 0、1 當成解了：解要讀「右半」那一欄，是 1 和 3。",
+      "x ＝ 5、y ＝ 10": "這是原本的常數，不是最後的解：高斯消去後右半已變成 1、3，解是 x ＝ 1、y ＝ 3。"
+     },
+     "answer_evidence": [
+      "c-ls-gauss"
+     ],
+     "feedback": "左半是單位矩陣時，右半那一欄就是解：第一列對應 x ＝ 1、第二列對應 y ＝ 3。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用高斯消去解方程組時，我們的目標是把增廣矩陣的「左半」化成哪一個矩陣？",
+     "answer": "單位矩陣 [[1, 0], [0, 1]]",
+     "kp_ids": [
+      "math.t_sub.matrix.linear-system"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.matrix.linear-system"
+     ],
+     "options": [
+      "單位矩陣 [[1, 0], [0, 1]]",
+      "零矩陣 [[0, 0], [0, 0]]",
+      "全部是 1 的矩陣 [[1, 1], [1, 1]]",
+      "原本的係數矩陣 [[2, 1], [1, 3]]"
+     ],
+     "distractor_rationales": {
+      "零矩陣 [[0, 0], [0, 0]]": "化成零矩陣就沒有資訊、讀不出解：目標是化成單位矩陣 [[1, 0], [0, 1]]，右半才會是解。",
+      "全部是 1 的矩陣 [[1, 1], [1, 1]]": "單位矩陣不是全部都 1：它只有主對角線是 1、其餘是 0，即 [[1, 0], [0, 1]]。",
+      "原本的係數矩陣 [[2, 1], [1, 3]]": "那是還沒消去的起點：高斯消去就是要把它「變成」單位矩陣 [[1, 0], [0, 1]]，才讀得出解。"
+     },
+     "answer_evidence": [
+      "c-ls-gauss"
+     ],
+     "feedback": "高斯消去的目標是把左半化成單位矩陣 [[1, 0], [0, 1]]，這時右半那一欄就是方程組的解。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（線性方程組寫成 Ax=b：係數矩陣 A=[[2,1],[1,3]]、常數 b=[[5],[10]]；增廣矩陣 [[2,1,5],[1,3,10]]；高斯消去用列運算把左半化成單位矩陣 [[1,0],[0,1]]，右半即解，[[1,0,1],[0,1,3]]⇒x=1,y=3；代回 2×1+1×3=5、1×1+3×3=10 驗證；三鐵律＝係數矩陣不含常數而增廣含、目標是左半化單位矩陣、讀解別把 x,y 讀反並代回驗證）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
