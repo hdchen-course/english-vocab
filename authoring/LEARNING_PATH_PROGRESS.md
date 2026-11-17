@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 12:02 ★★ conic reflection-apply 圓錐曲線反射性質與應用 5/5 DONE-GATE 全綠（t_sub，★拋物面天線 y²=4x 平行光聚焦 F(1,0) SVG）→ 🎉 圓錐曲線島 conic strand 7/7 全收（首個完整收斂的數學 strand）
+- **math_conic_reflection_apply frozen `8ebe4a86ca576b47`**（R1-R3 clean→R4 抓到 Q2「雙曲線」distractor 物理方向 blocker→.venv 鎖方向＋修正＋誠實 de-converge(清3輪+留痕)＋重凍→修後 R1-R5 連 5 clean、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==8ebe4a86／per_page_5clean 574/574 頁 0 違規（reflection_apply absent）／repro PASS／iPad 四角色簽核（拋物線 y²=4x 開口向右、4 灰平行入射線、4 紅反射線交會綠焦點 F(1,0)、軸標右、底部橢圓耳語廊註；figure byte-identical，當前 sha 重 render 重看，右緣0%）。
+- 反射性質（t_sub，教學接 line-intersection；conic strand 末單元）＝拋物線「平行軸光↔唯一焦點」（衛星天線/雷達/反射式望遠鏡/手電筒/車燈）、橢圓「一焦點↔另一焦點」（耳語廊/體外震波碎石）、原理切線當鏡面入射角=反射角、圓錐曲線幾何使相關兩方向對切線等角。
+- ★repro：binding＝math_checks6::conic.reflection-apply；單元引 math_checks7::conic.reflection-apply（本 session 新增：y²=4x 上 P(1,2) 平行軸與 PF 對切線皆45°等角；橢圓 x²/25+y²/9=1 上 P(0,3) F1→F2；★R4 後加雙曲線方向鎖 x²−y²=1 上由 F1 射出反射後好像從 F2 射出發散[反射方向(0,3)延長過 F2]，.venv PASS）。
+- practice：Q1 衛星天線=平行電波聚焦點、Q2 耳語廊=橢圓、Q3 手電筒燈泡放焦點、Q4 y²=4x 上 P(1,2) 平行軸光反射過焦點(1,0)。distractor 單一誤解（聚到中心/頂點/兩焦點；拋物線/雙曲線/圓；頂點/準線上/無窮遠；頂點(0,0)/準線上/對稱點(1,−2)）。
+- ★收斂史（本單元抓 1 真實 blocker，fact-check）：R4 CONFIRMED（panel 全票）＝Q2「雙曲線」distractor「把**射向**一焦點的光反射成好像從另一焦點射出（發散）」物理方向反——aim-toward 會聚向另一焦點，唯有「**從**一焦點射出」才發散似從另一焦點→改「射向」為「從…射出」。★教訓：distractor 即使只是「解釋為何此選項非正解」，其物理/數學事實仍須 .venv 可驗；凡在單元內陳述的事實（含雙曲線這種 scope 外只提一句者）都要鎖 repro 防回歸。
+- 下一步：conic 7 KP 全收 ✅。接著 complex(6)/finmath(6)/matrix(5)/space(5)/determinant(2)/linprog(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 11:10 ★ conic line-intersection 直線與圓錐曲線交點/判別式 5/5 DONE-GATE 全綠（t_sub，★圓 x²+y²=25 與割線 y=x+1 交兩點 SVG）→ 圓錐曲線島 conic strand 6/7
 - **math_conic_line_intersection frozen `ddefd95ba23b46de`**（R1 抓 Q4 distractor 與 rationale 路徑不符→直接修→修後 R1-R5 連 5 clean、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==ddefd95b／per_page_5clean 573/573 頁 0 違規（line_intersection absent）／repro PASS／iPad 四角色簽核（等軸正圓 x²+y²=25、紅割線 y=x+1 貫穿、兩綠交點 (3,4)/(−4,−3) 標籤在圓外、判別式三情形下註；右緣0%）。
 - 直線與圓錐曲線交點（t_sub，教學接 translation）＝直線代入曲線消元得一元二次式再解；判別式 D=b²−4ac：D>0 兩交點（割線）、D=0 一交點（相切、切線）、D<0 無交點。貫穿：y=x+1 代入 x²+y²=25⇒x²+x−12=0 D=49 交(3,4)&(−4,−3)；y=4⇒x²=9 交(±3,4)；y=5⇒x²=0 切(0,5)；y=6⇒x²=−11 無交。
