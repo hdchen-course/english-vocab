@@ -1,0 +1,209 @@
+{
+ "_note": "數學島 空間（space）strand 單元（第2）。知識點 math.t_sub.space.plane-equation（平面方程式與法向量）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次：平面方程式 (plane equation)、法向量 (normal vector)、垂直 (perpendicular)）。前置假設：已會空間坐標 (x,y,z)、空間向量內積。★scope（t_sub）：(1) 平面方程式 ax+by+cz=d；x,y,z 的係數 (a,b,c) 就是法向量 n，n 垂直於整個平面；例 2x+3y+6z=6 法向量 (2,3,6)。(2) 已知法向量 (a,b,c) 與平面上一點 (x₀,y₀,z₀)：平面＝a(x−x₀)+b(y−y₀)+c(z−z₀)=0 ⟺ ax+by+cz=ax₀+by₀+cz₀；例 法向量 (1,2,2) 過 (3,1,1)：d=1·3+2·1+2·1=7 → x+2y+2z=7。(3) 一點在平面上 ⟺ 代入後等式成立；例 (3,0,0) 代 2x+3y+6z 得 6 ✓；(1,1,1)→11、原點→0、(6,0,0)→12 皆不在面上。不含平面與平面夾角、不含點到平面距離公式（在 distance-angle 單元）。repro（tools/verify/math_checks6.py::space.plane-equation，repro_gate .venv PASS、registry 指紋 bb8a78111066fe90；本 session 強化加 d=7 求平面 + 三個點代入檢查並誠實更新指紋）。★自檢（math-unit defect-classes）：figure＝傾斜平面（平行四邊形）＋綠色法向量箭頭垂直射出＋直角記號＋標 n=(2,3,6)、平面 2x+3y+6z=6，幾何正確、箭頭確實由面射出且標直角（#33）、標籤移出免碰撞（#2）、alt 與 SVG text 逐字一致、★figure 標題只承諾法向量⊥平面示意（#4/#46）；practice 四答案＝{(2,3,6)(Q1 法向量),x+2y+2z=7(Q2 求平面),(3,0,0)(Q3 哪點在面上),法向量垂直於平面(Q4 概念)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 係數反序 (6,3,2)/把平面上一點當法向量 (3,0,0)/一係數變號 (2,3,−6)；Q2 沒代點當過原點 =0/漏一項 d=5/點與係數互換 3x+y+z=7；Q3 三個代入≠6：(1,1,1)→11、原點→0、(6,0,0)→12；Q4 法向量平行躺在面上/法向量是面上一點坐標/法向量是面到原點距離）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；法向量任意非零純量倍仍是法向量，故 distractor 刻意不用 (2,3,6) 的純量倍（避免把合法法向量標成錯）。claim kind=definition/fact。figure-only example 無 body。",
+ "page": "math_space_plane_equation.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.space.plane-equation",
+   "title_zh": "平面方程式與法向量",
+   "can_do": "我知道空間中一個平面可以寫成『平面方程式 (plane equation)』ax + by + cz = d，而 x、y、z 前面的係數 (a, b, c) 就是這個平面的『法向量 (normal vector)』n，它跟整個平面『垂直 (perpendicular)』。我會用法向量和平面上的一個點，把平面方程式寫出來；也會把一個點代進方程式，檢查它在不在這個平面上。",
+   "situation_group": "空間：平面與法向量",
+   "subject": "math",
+   "strand": "space",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.space.plane-equation"
+   ],
+   "prerequisites": [],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-pe-normal",
+     "text": "空間中的平面可以寫成 ax + by + cz = d。x、y、z 前面的係數排成的向量 (a, b, c) 就是這個平面的法向量 n，它和整個平面垂直。例：平面 2x + 3y + 6z = 6 的法向量是 (2, 3, 6)。",
+     "kind": "definition",
+     "source_refs": [
+      "平面方程式與法向量（高中 選修數學）"
+     ],
+     "verification_ref": "平面 ax+by+cz=d 法向量=(a,b,c)；2x+3y+6z=6 → (2,3,6)（math_checks6::space.plane-equation .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-pe-from-point-normal",
+     "text": "已知法向量 (a, b, c) 和平面上的一個點 (x₀, y₀, z₀)，平面方程式就是 a(x−x₀) + b(y−y₀) + c(z−z₀) = 0，整理後等號右邊的常數 d ＝ ax₀ + by₀ + cz₀。例：法向量 (1, 2, 2) 通過點 (3, 1, 1)，d ＝ 1×3 + 2×1 + 2×1 ＝ 7，所以平面是 x + 2y + 2z ＝ 7。",
+     "kind": "fact",
+     "source_refs": [
+      "點法式平面方程式（高中 選修數學）"
+     ],
+     "verification_ref": "(1,2,2)·(3,1,1)=7 → x+2y+2z=7（math_checks6::space.plane-equation .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-pe-check-point",
+     "text": "一個點在不在平面上，就把它的坐標代進平面方程式，看等式成不成立。例：把 (3, 0, 0) 代進 2x + 3y + 6z 得 2×3 ＝ 6，等於右邊的 6，所以 (3, 0, 0) 在平面上；把原點 (0, 0, 0) 代進去得 0，不等於 6，所以原點不在這個平面上。",
+     "kind": "fact",
+     "source_refs": [
+      "點與平面的關係（高中 選修數學）"
+     ],
+     "verification_ref": "(3,0,0)代2x+3y+6z=6在面上；(1,1,1)→11、O→0、(6,0,0)→12 不在面上（math_checks6::space.plane-equation .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.space.plane-equation"
+     ],
+     "body": "這一單元學怎麼用方程式描述空間中的一個平面，還有平面最重要的夥伴——法向量。先看平面方程式長什麼樣、法向量藏在哪裡，再學怎麼用法向量和一個點寫出平面，最後學怎麼檢查一個點在不在平面上。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.space.plane-equation"
+     ],
+     "body": "① 平面方程式 ＝ ax + by + cz = d，x、y、z 的係數 (a, b, c) 就是法向量 n，它垂直於整個平面。例 2x + 3y + 6z = 6 的法向量是 (2, 3, 6)。② 已知法向量 (a, b, c) 和面上一點 (x₀, y₀, z₀)：d ＝ ax₀ + by₀ + cz₀。例 法向量 (1, 2, 2) 過 (3, 1, 1)：d ＝ 3 + 2 + 2 ＝ 7，平面是 x + 2y + 2z ＝ 7。③ 檢查一點在不在面上：代進方程式看等式成不成立。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.space.plane-equation"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>平面與它的法向量（法向量 ⊥ 平面）</text><polygon points='78,132 214,132 268,96 132,96' fill='#e6edf3' stroke='#99a7b5' stroke-width='1.6'/><text x='250' y='126' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='start'>平面</text><circle cx='173' cy='114' r='2.6' fill='#33475b'/><text x='166' y='125' font-family='sans-serif' font-size='8' fill='#33475b' text-anchor='end'>P</text><line x1='173' y1='114' x2='201' y2='46' stroke='#2f6f54' stroke-width='2'/><polygon points='201,46 195,52 203,54' fill='#2f6f54'/><polyline points='183,110 188,112 190,104' fill='none' stroke='#2f6f54' stroke-width='1.2'/><text x='210' y='44' font-family='sans-serif' font-size='8.5' fill='#2f6f54' text-anchor='start' font-weight='bold'>n ＝ (2, 3, 6)</text><text x='210' y='56' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='start'>法向量</text><text x='180' y='156' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle'>平面：2x ＋ 3y ＋ 6z ＝ 6　→　法向量 (2, 3, 6)</text></svg>",
+      "alt": "標題「平面與它的法向量（法向量 ⊥ 平面）」。圖中畫一個傾斜的平行四邊形代表一個平面，右側標「平面」。平面上有一點 P。從 P 射出一支綠色箭頭，方向跟平面垂直（箭頭根部畫了一個小小的直角記號），箭頭旁邊標「n ＝ (2, 3, 6)」和「法向量」。最下面一行寫「平面：2x ＋ 3y ＋ 6z ＝ 6　→　法向量 (2, 3, 6)」。",
+      "caption": "一個平面可以用方程式 2x ＋ 3y ＋ 6z ＝ 6 描述。x、y、z 前面的係數 (2, 3, 6) 排起來，就是跟這個平面垂直的法向量 n。法向量像一支從平面上「直直插出去」的釘子（箭頭根部的小直角記號表示它和平面垂直），是描述一個平面方向最方便的工具。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.space.plane-equation"
+     ],
+     "body": "最後練平面方程式與法向量。重點：(1) 平面 ax + by + cz = d 的法向量就是係數 (a, b, c)，它垂直於平面；(2) 用法向量和面上一點求平面：d ＝ ax₀ + by₀ + cz₀；(3) 檢查一點在不在面上，就把坐標代進方程式看等式成不成立。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "平面 2x + 3y + 6z ＝ 6 的法向量是哪一個？",
+     "answer": "(2, 3, 6)",
+     "kp_ids": [
+      "math.t_sub.space.plane-equation"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.space.plane-equation"
+     ],
+     "options": [
+      "(2, 3, 6)",
+      "(6, 3, 2)",
+      "(3, 0, 0)",
+      "(2, 3, −6)"
+     ],
+     "distractor_rationales": {
+      "(6, 3, 2)": "這是把 x、y、z 的係數前後顛倒：法向量就照 x、y、z 的順序取係數，是 (2, 3, 6)。",
+      "(3, 0, 0)": "(3, 0, 0) 是平面上的一個點（代進去 2×3 ＝ 6），不是法向量：法向量是 x、y、z 的係數 (2, 3, 6)。",
+      "(2, 3, −6)": "z 的係數是 ＋6 不是 −6：照方程式原本的正負號取係數，法向量是 (2, 3, 6)。"
+     },
+     "answer_evidence": [
+      "c-pe-normal"
+     ],
+     "feedback": "平面 ax + by + cz ＝ d 的法向量就是 x、y、z 的係數 (a, b, c)，所以 2x + 3y + 6z ＝ 6 的法向量是 (2, 3, 6)。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個平面的法向量是 (1, 2, 2)，且通過點 (3, 1, 1)。這個平面的方程式是哪一個？",
+     "answer": "x + 2y + 2z ＝ 7",
+     "kp_ids": [
+      "math.t_sub.space.plane-equation"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.space.plane-equation"
+     ],
+     "options": [
+      "x + 2y + 2z ＝ 7",
+      "x + 2y + 2z ＝ 0",
+      "x + 2y + 2z ＝ 5",
+      "3x + y + z ＝ 7"
+     ],
+     "distractor_rationales": {
+      "x + 2y + 2z ＝ 0": "右邊的常數不是 0：要把點 (3, 1, 1) 代進去求 d ＝ 1×3 + 2×1 + 2×1 ＝ 7，寫成 0 等於假設平面過原點。",
+      "x + 2y + 2z ＝ 5": "少算了一項：d ＝ 1×3 + 2×1 + 2×1，三項都要加，是 3 + 2 + 2 ＝ 7，不是只加 3 + 2 ＝ 5。",
+      "3x + y + z ＝ 7": "把法向量和點的角色對調了：係數要用法向量 (1, 2, 2)，點 (3, 1, 1) 是拿來代入求常數 d 的，不是當係數。"
+     },
+     "answer_evidence": [
+      "c-pe-from-point-normal"
+     ],
+     "feedback": "係數用法向量 (1, 2, 2)，常數 d ＝ 1×3 + 2×1 + 2×1 ＝ 7，所以平面是 x + 2y + 2z ＝ 7。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "下列哪一個點在平面 2x + 3y + 6z ＝ 6 上？",
+     "answer": "(3, 0, 0)",
+     "kp_ids": [
+      "math.t_sub.space.plane-equation"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.space.plane-equation"
+     ],
+     "options": [
+      "(3, 0, 0)",
+      "(1, 1, 1)",
+      "(0, 0, 0)",
+      "(6, 0, 0)"
+     ],
+     "distractor_rationales": {
+      "(1, 1, 1)": "代進去 2×1 + 3×1 + 6×1 ＝ 11，不等於 6，所以 (1, 1, 1) 不在平面上。",
+      "(0, 0, 0)": "原點代進去得 0，不等於 6，所以原點不在這個平面上。",
+      "(6, 0, 0)": "把右邊的常數 6 直接當成 x 了：代進去 2×6 ＝ 12，不等於 6；正確的是 (3, 0, 0)，因為 2×3 ＝ 6。"
+     },
+     "answer_evidence": [
+      "c-pe-check-point"
+     ],
+     "feedback": "把 (3, 0, 0) 代進 2x + 3y + 6z 得 2×3 + 0 + 0 ＝ 6，等於右邊的 6，所以它在平面上。其他點代進去分別得 11、0、12，都不等於 6。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "關於平面的法向量，下列哪一個說法正確？",
+     "answer": "法向量垂直於整個平面，它就是方程式裡 x、y、z 的係數",
+     "kp_ids": [
+      "math.t_sub.space.plane-equation"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.space.plane-equation"
+     ],
+     "options": [
+      "法向量垂直於整個平面，它就是方程式裡 x、y、z 的係數",
+      "法向量平行於平面，躺在平面上面",
+      "法向量就是平面上任意一個點的坐標",
+      "法向量是平面到原點的距離"
+     ],
+     "distractor_rationales": {
+      "法向量平行於平面，躺在平面上面": "剛好相反：法向量是「垂直」於平面的，不是躺在平面上；躺在平面上的向量才跟平面平行。",
+      "法向量就是平面上任意一個點的坐標": "點的坐標和法向量是不同的東西：法向量是 x、y、z 的係數 (a, b, c)，一個點只是滿足方程式的某組 (x, y, z)。",
+      "法向量是平面到原點的距離": "距離是一個數（長度），法向量是一個有方向的向量 (a, b, c)；兩者不是同一回事。"
+     },
+     "answer_evidence": [
+      "c-pe-normal"
+     ],
+     "feedback": "法向量 n ＝ (a, b, c) 是平面 ax + by + cz ＝ d 裡 x、y、z 的係數，而且它垂直於整個平面。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（平面方程式 ax+by+cz=d、法向量＝係數 (a,b,c) 且垂直於平面，例 2x+3y+6z=6→(2,3,6)；由法向量+面上一點求平面 d=ax₀+by₀+cz₀，例 (1,2,2)過(3,1,1)→x+2y+2z=7；檢查點在不在面上就代入看等式成不成立，(3,0,0)代2x+3y+6z=6在面上；三鐵律＝法向量就是係數且垂直平面、d 用面上一點代入求、檢查點就代入比對）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

@@ -84,7 +84,13 @@ def sp_plane_equation():
     # 平面 2x+3y+6z=6 法向量(2,3,6)；點(3,0,0)在面上
     n = Matrix([2, 3, 6]); P = Matrix([3, 0, 0])
     assert n.dot(P) == 6
-    return _ok("space.plane-equation", "平面 2x+3y+6z=6 法向量(2,3,6)，(3,0,0)在面上")
+    # 由法向量+點求平面：n=(1,2,2) 過 (3,1,1) → d=1·3+2·1+2·1=7 → x+2y+2z=7
+    assert Matrix([1, 2, 2]).dot(Matrix([3, 1, 1])) == 7
+    # 點在平面 2x+3y+6z=6 上 ⟺ 代入=6；三個不在面上的點
+    assert Matrix([2, 3, 6]).dot(Matrix([1, 1, 1])) == 11      # (1,1,1) 代入=11≠6
+    assert Matrix([2, 3, 6]).dot(Matrix([0, 0, 0])) == 0       # 原點=0≠6
+    assert Matrix([2, 3, 6]).dot(Matrix([6, 0, 0])) == 12      # (6,0,0)=12≠6
+    return _ok("space.plane-equation", "平面 ax+by+cz=d 法向量(a,b,c)；2x+3y+6z=6 法向量(2,3,6)、(3,0,0)在面上(=6)；(1,2,2)·(3,1,1)=7→x+2y+2z=7；(1,1,1)→11、O→0、(6,0,0)→12 皆不在面上")
 def sp_line_parametric():
     # 過(1,2,3) 方向(1,1,1)：t=2 → (3,4,5)
     P0, d = Matrix([1, 2, 3]), Matrix([1, 1, 1])
