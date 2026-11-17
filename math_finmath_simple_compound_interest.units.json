@@ -1,0 +1,209 @@
+{
+ "_note": "數學島 財務數學（finmath）strand 單元（第1個）。知識點 math.t_adv.finmath.simple-compound-interest（單利與複利）。tier=t_adv。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；同級術語一律 gloss：單利 (simple interest)、複利 (compound interest)、本金 (principal)、年利率 (annual interest rate)、本利和 (總額)）。前置假設：已會百分率、乘冪。★scope（t_adv，finmath 首單元）：單利＝只對本金計息，每期利息固定＝P·r，t 期後利息 I=P·r·t、本利和＝P(1+rt)；複利＝利息滾入本金再生利息（利滾利），n 期後本利和＝P(1+r)ⁿ；比較＝同本金同利率同期數下 n=1 相等、n≥2 複利較多，多出的是「利息再生的利息」。例 P=1000、r=5%、t/n=2：單利利息100、本利和1100；複利本利和1102.5；差2.5=第1期利息50再以5%生的利息(50×0.05)。不含連續複利 e^(rt)、不含實質/名目利率換算。repro（tools/verify/math_checks7.py::finmath.simple-compound-interest，.venv PASS；binding 另有 math_checks6 待補）：單利 1000·5%·2=100；複利 1000·1.05²=1102.5。★自檢（math-unit defect-classes）：figure＝兩排時間線（單利 1000→1050→1100 每期＋50；複利 1000→1050→1102.5 第2期＋52.5）＋底部一行說明多出的2.5——節點值正確（#43）、標籤移出免碰撞（#2）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾兩排2年後本利和比較（#4/#46）；practice 四答案＝{100(Q1單利利息),1102.5(Q2複利本利和),第1期利息再生(Q3概念),一樣1050(Q4 n=1相等)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 只1年50/本利和1100當利息/用複利102.5；Q2 用單利1100/只1期1050/多算一期1157.625；Q3 利率較高/多存一年/本金多算；Q4 複利較多/單利較多/無法比較）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_finmath_simple_compound_interest.html",
+ "units": [
+  {
+   "unit_id": "math.t_adv.finmath.simple-compound-interest",
+   "title_zh": "單利與複利",
+   "can_do": "我會分辨『單利 (simple interest)』和『複利 (compound interest)』：單利是只對『本金 (principal)』計息，每期利息固定，t 期後『本利和 (總額)』＝P(1 ＋ r t)；複利是把利息滾入本金一起再生利息（利滾利），n 期後本利和 ＝ P(1 ＋ r)ⁿ。我也知道在相同本金、相同『年利率 (annual interest rate)』、相同期數下，當期數 ＝ 1 時單利和複利一樣多，當期數 ≥ 2 時複利的本利和會比單利多，多出來的就是「利息再生的利息」。",
+   "situation_group": "財務數學：單利與複利",
+   "subject": "math",
+   "strand": "finmath",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_adv.finmath.simple-compound-interest"
+   ],
+   "prerequisites": [],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-si-def",
+     "text": "單利只對本金計息：每一期的利息都固定是「本金 × 年利率」＝P × r。經過 t 期後，利息總共是 I ＝ P × r × t，本利和（本金加利息）＝ P(1 ＋ r t)。例：本金 1000、年利率 5%、存 2 年，利息 ＝ 1000 × 5% × 2 ＝ 100，本利和 ＝ 1100。",
+     "kind": "definition",
+     "source_refs": [
+      "單利（高中數學 財務數學）"
+     ],
+     "verification_ref": "單利 1000·5%·2=100、本利和1100（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ci-def",
+     "text": "複利會把每一期的利息滾入本金，下一期連同利息一起再生利息（俗稱「利滾利」）。經過 n 期後，本利和 ＝ P(1 ＋ r)ⁿ。例：本金 1000、年利率 5%、存 2 年，本利和 ＝ 1000 × (1.05)² ＝ 1102.5。",
+     "kind": "definition",
+     "source_refs": [
+      "複利（高中數學 財務數學）"
+     ],
+     "verification_ref": "複利 1000·1.05²=1102.5（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-compare",
+     "text": "在本金、年利率、期數都相同時：期數 ＝ 1 時單利和複利一樣多；期數 ≥ 2 時複利的本利和比單利多。例：上面兩個例子都是本金 1000、年利率 5%、2 年，複利 1102.5 比單利 1100 多了 2.5。這 2.5 就是第 1 期的利息 50 又以 5% 再生出的利息（50 × 5% ＝ 2.5）——這正是「利滾利」的效果。",
+     "kind": "definition",
+     "source_refs": [
+      "單利複利比較（高中數學 財務數學）"
+     ],
+     "verification_ref": "1102.5−1100=2.5=50×5%（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.finmath.simple-compound-interest"
+     ],
+     "body": "這一單元學單利和複利。先講單利（每期利息固定、本利和 ＝ P(1 ＋ r t)）；再講複利（利滾利、本利和 ＝ P(1 ＋ r)ⁿ）；最後比較兩者差在哪裡。最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.finmath.simple-compound-interest"
+     ],
+     "body": "① 單利：每期利息固定 ＝ P × r，t 期後本利和 ＝ P(1 ＋ r t)。例 1000、5%、2 年 → 利息 100、本利和 1100。② 複利：利息滾入本金再生利息，n 期後本利和 ＝ P(1 ＋ r)ⁿ。例 1000、5%、2 年 → 1000 × 1.05² ＝ 1102.5。③ 比較：n ＝ 1 時一樣多；n ≥ 2 時複利較多，多出來的是「利息再生的利息」。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_adv.finmath.simple-compound-interest"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><defs><marker id='fiah' markerWidth='7' markerHeight='7' refX='5.5' refY='3' orient='auto'><path d='M0,0 L6,3 L0,6 z' fill='#33475b'/></marker></defs><text x='180' y='13' font-family='sans-serif' font-size='10' fill='#2f6f54' text-anchor='middle' font-weight='bold'>單利 vs 複利（本金 1000、年利率 5%、2 年後本利和）</text><text x='6' y='63' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='start'>單利</text><rect x='49' y='48' width='46' height='22' rx='4' fill='#e6edf3' stroke='#99a7b5'/><text x='72' y='62' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>1000</text><rect x='162' y='48' width='46' height='22' rx='4' fill='#e6edf3' stroke='#99a7b5'/><text x='185' y='62' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>1050</text><rect x='277' y='48' width='46' height='22' rx='4' fill='#e6edf3' stroke='#99a7b5'/><text x='300' y='62' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>1100</text><line x1='95' y1='59' x2='160' y2='59' stroke='#33475b' stroke-width='1.3' marker-end='url(#fiah)'/><line x1='208' y1='59' x2='275' y2='59' stroke='#33475b' stroke-width='1.3' marker-end='url(#fiah)'/><text x='127' y='44' font-family='sans-serif' font-size='8.5' fill='#2f6f54' text-anchor='middle'>＋50</text><text x='241' y='44' font-family='sans-serif' font-size='8.5' fill='#2f6f54' text-anchor='middle'>＋50</text><text x='6' y='125' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='start'>複利</text><rect x='49' y='110' width='46' height='22' rx='4' fill='#e6edf3' stroke='#99a7b5'/><text x='72' y='124' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>1000</text><rect x='162' y='110' width='46' height='22' rx='4' fill='#e6edf3' stroke='#99a7b5'/><text x='185' y='124' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>1050</text><rect x='277' y='110' width='46' height='22' rx='4' fill='#d7e8de' stroke='#2f6f54'/><text x='300' y='124' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='middle'>1102.5</text><line x1='95' y1='121' x2='160' y2='121' stroke='#33475b' stroke-width='1.3' marker-end='url(#fiah)'/><line x1='208' y1='121' x2='275' y2='121' stroke='#33475b' stroke-width='1.3' marker-end='url(#fiah)'/><text x='127' y='106' font-family='sans-serif' font-size='8.5' fill='#2f6f54' text-anchor='middle'>＋50</text><text x='241' y='106' font-family='sans-serif' font-size='8.5' fill='#c2535d' text-anchor='middle'>＋52.5</text><text x='180' y='150' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>複利第 2 期多出的 2.5＝第 1 期利息 50 再生的利息（50×5%）</text></svg>",
+      "alt": "標題「單利 vs 複利（本金 1000、年利率 5%、2 年後本利和）」。上排標「單利」：三個方塊 1000 → 1050 → 1100，兩個向右箭頭上方各標「＋50」「＋50」（每期利息固定 50）。下排標「複利」：三個方塊 1000 → 1050 → 1102.5，兩個向右箭頭上方標「＋50」「＋52.5」（第 2 期利息變大）。最下方一行字「複利第 2 期多出的 2.5＝第 1 期利息 50 再生的利息（50×5%）」。",
+      "caption": "單利每一期的利息都固定是 50（只對本金 1000 計息），2 年後本利和 ＝ 1100。複利把第 1 期的利息 50 滾入本金，第 2 期就對 1050 計息，利息變成 52.5，2 年後本利和 ＝ 1102.5。多出的 2.5 ＝ 50 × 5%，就是「利滾利」的效果。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_adv.finmath.simple-compound-interest"
+     ],
+     "body": "最後練單利和複利。重點：單利本利和 ＝ P(1 ＋ r t)、複利本利和 ＝ P(1 ＋ r)ⁿ；n ≥ 2 時複利較多。小提醒：(1) 單利每期利息固定，複利的利息會逐期變大；(2) 複利要用乘冪 (1 ＋ r)ⁿ，不是乘以 n；(3) 利息和本利和不一樣——本利和已經把本金加進去了。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "本金 1000 元、年利率 5%，用單利存 2 年，一共得到多少「利息」？",
+     "answer": "100 元",
+     "kp_ids": [
+      "math.t_adv.finmath.simple-compound-interest"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.finmath.simple-compound-interest"
+     ],
+     "options": [
+      "100 元",
+      "50 元",
+      "1100 元",
+      "102.5 元"
+     ],
+     "distractor_rationales": {
+      "50 元": "只算了 1 年的利息：單利利息 ＝ 本金 × 年利率 × 年數 ＝ 1000 × 5% × 2 ＝ 100，要乘 2 年。",
+      "1100 元": "1100 是「本利和」（本金 ＋ 利息），不是利息：利息只有 1000 × 5% × 2 ＝ 100。",
+      "102.5 元": "這是用複利算出的利息（1000 × 1.05² − 1000 ＝ 102.5）：題目要的是單利，單利利息是 100。"
+     },
+     "answer_evidence": [
+      "c-si-def"
+     ],
+     "feedback": "單利利息 ＝ 本金 × 年利率 × 年數 ＝ 1000 × 5% × 2 ＝ 100 元。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "本金 1000 元、年利率 5%，用複利存 2 年，2 年後的本利和是多少？",
+     "answer": "1102.5 元",
+     "kp_ids": [
+      "math.t_adv.finmath.simple-compound-interest"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.finmath.simple-compound-interest"
+     ],
+     "options": [
+      "1102.5 元",
+      "1100 元",
+      "1050 元",
+      "1157.625 元"
+     ],
+     "distractor_rationales": {
+      "1100 元": "這是用單利算的本利和（1000 ＋ 1000 × 5% × 2）：複利要用 1000 × (1.05)² ＝ 1102.5。",
+      "1050 元": "只算了 1 期：1050 是存 1 年後的本利和，存 2 年要再乘一次 1.05，得 1102.5。",
+      "1157.625 元": "多算了一期（當成 3 年）：1000 × (1.05)³ ＝ 1157.625，存 2 年是 1000 × (1.05)² ＝ 1102.5。"
+     },
+     "answer_evidence": [
+      "c-ci-def"
+     ],
+     "feedback": "複利本利和 ＝ P(1 ＋ r)ⁿ ＝ 1000 × (1.05)² ＝ 1102.5 元。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "同樣本金 1000、年利率 5%、存 2 年，複利的本利和 1102.5 比單利的 1100 多了 2.5 元。這 2.5 元是怎麼來的？",
+     "answer": "第 1 期的利息 50 再以 5% 生出的利息（50 × 5% ＝ 2.5）",
+     "kp_ids": [
+      "math.t_adv.finmath.simple-compound-interest"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.finmath.simple-compound-interest"
+     ],
+     "options": [
+      "第 1 期的利息 50 再以 5% 生出的利息（50 × 5% ＝ 2.5）",
+      "複利的年利率比單利高",
+      "複利多存了一年",
+      "本金被多算了一次"
+     ],
+     "distractor_rationales": {
+      "複利的年利率比單利高": "兩者年利率都是 5%、完全相同：差別在複利把利息滾入本金再生利息，不是利率不同。",
+      "複利多存了一年": "兩者都存 2 年、期數相同：多出的 2.5 來自「利滾利」，不是多存一年。",
+      "本金被多算了一次": "本金都只有 1000、沒有被多算：多出的 2.5 是第 1 期利息 50 再生的利息。"
+     },
+     "answer_evidence": [
+      "c-compare"
+     ],
+     "feedback": "複利把第 1 期的利息 50 滾入本金，第 2 期多賺 50 × 5% ＝ 2.5，這就是利滾利。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "同樣本金 1000、年利率 5%，只存 1 期（1 年），單利和複利的本利和相比如何？",
+     "answer": "一樣，都是 1050",
+     "kp_ids": [
+      "math.t_adv.finmath.simple-compound-interest"
+     ],
+     "required_kp_ids": [
+      "math.t_adv.finmath.simple-compound-interest"
+     ],
+     "options": [
+      "一樣，都是 1050",
+      "複利比較多",
+      "單利比較多",
+      "無法比較"
+     ],
+     "distractor_rationales": {
+      "複利比較多": "只存 1 期時兩者相等：P(1 ＋ r) ＝ P(1 ＋ r × 1)，都是 1050；要存到 2 期以上複利才會比較多。",
+      "單利比較多": "單利不會比複利多：存 1 期時兩者相等（都 1050），存越多期複利越領先。",
+      "無法比較": "可以比較：存 1 期時 P(1 ＋ r) ＝ P(1 ＋ r t)，兩者都是 1050，一樣多。"
+     },
+     "answer_evidence": [
+      "c-compare"
+     ],
+     "feedback": "n ＝ 1 時 P(1 ＋ r) ＝ P(1 ＋ r × 1)，單利複利都是 1050；n ≥ 2 時複利才開始領先。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（單利＝只對本金計息，每期利息固定 P·r，t 期後利息 I=P·r·t、本利和 P(1+rt)；複利＝利息滾入本金再生利息，n 期後本利和 P(1+r)ⁿ；比較＝n=1 相等、n≥2 複利較多，多出的是利息再生的利息；例 1000、5%、2 年：單利利息100本利和1100、複利1102.5，差 2.5=50×5%；三鐵律＝利息≠本利和、複利用乘冪(1+r)ⁿ不是乘n、單利每期固定複利逐期變大）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
