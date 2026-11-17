@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 複數（complex）strand 單元（第6個、末單元）。知識點 math.t_sub.complex.roots-of-unity（單位根）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；同級術語一律 gloss：複數 (complex number)、單位根 (roots of unity)、單位圓 (unit circle)、模 (modulus)、輻角 (argument)）。前置假設：已學極式、棣美弗定理（前一單元）、單位圓、三角特殊角。★scope（t_sub，接 de-moivre；complex strand 末單元）：n 次單位根＝方程式 zⁿ=1 的 n 個複數解；它們都在單位圓上（模=1），把圓等分成 n 份（相鄰相隔 360°/n），第 k 個（k=0..n−1）＝cos(k·360°/n)+i sin(k·360°/n)；3 次單位根＝1、ω=−1/2+√3/2 i（120°）、ω²=−1/2−√3/2 i（240°）構成正三角形；n≥2 時 n 個根之和=0。不含單位根的因式分解應用、不含分圓多項式。repro（tools/verify/math_checks7.py::complex.roots-of-unity，本 session 新增並跑過 PASS；binding 另有 math_checks6 待補）：z³=1 三根 1、−½+√3/2i、−½−√3/2i 各模1、和0；z⁶=1 六根相隔60°、和0。★自檢（math-unit defect-classes）：figure＝單位圓 r=1、3 次單位根三綠點 1(0°)/ω(120°)/ω²(240°)＋正三角形虛線——等軸比例（#62，單位圓要圓、120° 真實）、點在圓上（#43）、標籤移出免碰撞（#2）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾單位圓等分 3 份相隔 120°（#4/#46，和=0 由 teach＋practice 補）；practice 四答案＝{n 個(Q1 個數),−½+√3/2i(Q2 非實根),0(Q3 和),60°(Q4 6根間隔)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 只1/只±1/無限多；Q2 cos-sin位置反/隨便複數/誤為−1；Q3 1/n/−1；Q4 6°/30°/120°）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_complex_roots_of_unity.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.complex.roots-of-unity",
+   "title_zh": "單位根",
+   "can_do": "我知道「n 次『單位根 (roots of unity)』」就是方程式 zⁿ ＝ 1 的 n 個『複數 (complex number)』解。它們都在『單位圓 (unit circle)』上（『模 (modulus)』都等於 1），而且把圓「等分成 n 份」——相鄰兩個根相隔 360°/n。第 k 個根是 cos(k × 360°/n) ＋ i sin(k × 360°/n)。我也知道當 n ≥ 2 時，這 n 個根加起來等於 0。",
+   "situation_group": "複數：單位根",
+   "subject": "math",
+   "strand": "complex",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.complex.roots-of-unity"
+   ],
+   "prerequisites": [
+    "math.t_sub.complex.de-moivre"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-rou-def",
+     "text": "n 次單位根就是方程式 zⁿ ＝ 1 的解。它一共有 n 個（都是複數），每一個的模都等於 1，所以全部落在單位圓上；而且它們把單位圓「等分成 n 份」，相鄰兩個根的輻角相差 360°/n。用公式寫：第 k 個根（k ＝ 0, 1, …, n − 1）是 cos(k × 360°/n) ＋ i sin(k × 360°/n)。其中 k ＝ 0 那個永遠是 1。",
+     "kind": "definition",
+     "source_refs": [
+      "單位根（高中數學 複數）"
+     ],
+     "verification_ref": "zⁿ=1 有 n 個根、模=1、相隔 360°/n（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-rou-cube",
+     "text": "以 3 次單位根（z³ ＝ 1 的解）為例：相鄰相隔 360°/3 ＝ 120°，三個根是 1（0°）、ω ＝ cos 120° ＋ i sin 120° ＝ −1/2 ＋ (√3/2)i、ω² ＝ cos 240° ＋ i sin 240° ＝ −1/2 − (√3/2)i。它們在單位圓上剛好構成一個正三角形。可以驗證：把每一個取 3 次方都會回到 1。",
+     "kind": "definition",
+     "source_refs": [
+      "三次單位根（高中數學 複數）"
+     ],
+     "verification_ref": "z³=1 三根 1、−½+√3/2i、−½−√3/2i（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-rou-sum",
+     "text": "當 n ≥ 2 時，n 個 n 次單位根加起來等於 0。因為它們平均分布在單位圓上、方向互相抵消。例：3 次單位根 1 ＋ ω ＋ ω² ＝ 1 ＋ (−1/2 ＋ (√3/2)i) ＋ (−1/2 − (√3/2)i) ＝ 0。這個「和為 0」對任何 n ≥ 2 都成立。",
+     "kind": "definition",
+     "source_refs": [
+      "單位根之和（高中數學 複數）"
+     ],
+     "verification_ref": "1+ω+ω²=0；z⁶=1 六根和=0（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.complex.roots-of-unity"
+     ],
+     "body": "這一單元學單位根。先講什麼是 n 次單位根（zⁿ ＝ 1 的 n 個解、都在單位圓上、把圓等分成 n 份）；再用 3 次單位根當例子；最後講一個漂亮的性質（n 個根相加等於 0）。最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.complex.roots-of-unity"
+     ],
+     "body": "① 定義：n 次單位根＝zⁿ ＝ 1 的 n 個解，模都是 1（在單位圓上），把圓等分成 n 份、相鄰相隔 360°/n；第 k 個＝cos(k × 360°/n) ＋ i sin(k × 360°/n)，k ＝ 0 那個是 1。② 例（3 次）：相隔 120°，是 1、ω ＝ −1/2 ＋ (√3/2)i、ω² ＝ −1/2 − (√3/2)i，構成正三角形。③ 性質：n ≥ 2 時 n 個根相加 ＝ 0（例 1 ＋ ω ＋ ω² ＝ 0）。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.complex.roots-of-unity"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='10' fill='#2f6f54' text-anchor='middle' font-weight='bold'>3 次單位根：在單位圓上等分成 3 份（相隔 120°）</text><line x1='110' y1='88' x2='252' y2='88' stroke='#99a7b5' stroke-width='1'/><line x1='180' y1='156' x2='180' y2='22' stroke='#99a7b5' stroke-width='1'/><text x='256' y='91' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='start'>實軸</text><text x='184' y='28' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='start'>虛軸</text><text x='172' y='99' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='end'>O</text><circle cx='180' cy='88' r='62' fill='none' stroke='#c9d3dd' stroke-width='1.3'/><polygon points='242,88 149,34.3 149,141.7' fill='none' stroke='#c9d3dd' stroke-width='1' stroke-dasharray='3 2'/><circle cx='242' cy='88' r='3.2' fill='#2f6f54'/><circle cx='149' cy='34.3' r='3.2' fill='#2f6f54'/><circle cx='149' cy='141.7' r='3.2' fill='#2f6f54'/><text x='248' y='91' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='start'>1（0°）</text><text x='144' y='32' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='end'>ω（120°）</text><text x='144' y='146' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='end'>ω²（240°）</text></svg>",
+      "alt": "標題「3 次單位根：在單位圓上等分成 3 份（相隔 120°）」。一個複數平面，灰色水平實軸（右端標「實軸」）與垂直虛軸（上端標「虛軸」）交於原點 O，畫一個以 O 為圓心的單位圓。圓上有三個綠點平均分布：右方 0° 的點標「1（0°）」、左上方 120° 的點標「ω（120°）」、左下方 240° 的點標「ω²（240°）」。三個綠點用灰色虛線連成一個正三角形。",
+      "caption": "3 次單位根是 z³ ＝ 1 的三個解，都在單位圓上、把圓等分成 3 份（每隔 120°）：1（在 0°）、ω ＝ −1/2 ＋ (√3/2)i（在 120°）、ω² ＝ −1/2 − (√3/2)i（在 240°），剛好是一個正三角形。它們相加 1 ＋ ω ＋ ω² ＝ 0。一般地，n 次單位根就是把單位圓等分成 n 份的 n 個點。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.complex.roots-of-unity"
+     ],
+     "body": "最後練單位根。重點：n 次單位根＝zⁿ ＝ 1 的 n 個解，都在單位圓上、把圓等分成 n 份（相隔 360°/n）；3 次的是 1、ω、ω² 構成正三角形；n ≥ 2 時 n 個根相加 ＝ 0。小提醒：(1) n 次單位根「剛好有 n 個」，不是只有 1；(2) 它們的模都是 1（在單位圓上），不是別的半徑；(3) 相鄰兩根的輻角相差 360°/n，不是別的角度。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "方程式 zⁿ ＝ 1 的「n 次單位根」一共有幾個？",
+     "answer": "n 個",
+     "kp_ids": [
+      "math.t_sub.complex.roots-of-unity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.complex.roots-of-unity"
+     ],
+     "options": [
+      "n 個",
+      "1 個",
+      "2 個",
+      "無限多個"
+     ],
+     "distractor_rationales": {
+      "1 個": "只想到實數根 z ＝ 1 了：在複數範圍裡 zⁿ ＝ 1 共有 n 個解，不是只有 1 個。",
+      "2 個": "只想到 ±1 了：那只有 n 是偶數時 −1 才是根；一般 zⁿ ＝ 1 共有 n 個複數根。",
+      "無限多個": "n 次方程式最多 n 個根：zⁿ ＝ 1 剛好有 n 個單位根，不是無限多個。"
+     },
+     "answer_evidence": [
+      "c-rou-def"
+     ],
+     "feedback": "zⁿ ＝ 1 在複數範圍恰好有 n 個解，就是 n 個單位根。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "z³ ＝ 1（3 次單位根）的一個「非實數」根是哪一個？",
+     "answer": "−1/2 ＋ (√3/2)i",
+     "kp_ids": [
+      "math.t_sub.complex.roots-of-unity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.complex.roots-of-unity"
+     ],
+     "options": [
+      "−1/2 ＋ (√3/2)i",
+      "(√3/2) ＋ (1/2)i",
+      "1 ＋ i",
+      "−1"
+     ],
+     "distractor_rationales": {
+      "(√3/2) ＋ (1/2)i": "把 cos 120° 和 sin 120° 的位置弄反了：cos 120° ＝ −1/2 給實部、sin 120° ＝ √3/2 給虛部，所以是 −1/2 ＋ (√3/2)i。",
+      "1 ＋ i": "這只是隨便一個複數、不是 z³ ＝ 1 的根：(1 ＋ i)³ ＝ −2 ＋ 2i ≠ 1；根是 −1/2 ＋ (√3/2)i。",
+      "−1": "(−1)³ ＝ −1 ≠ 1，所以 −1 不是 z³ ＝ 1 的根（它是 z³ ＝ −1 的根）：z³ ＝ 1 的非實數根是 −1/2 ± (√3/2)i。"
+     },
+     "answer_evidence": [
+      "c-rou-cube"
+     ],
+     "feedback": "z³ ＝ 1 的三根是 1、−1/2 ＋ (√3/2)i、−1/2 − (√3/2)i，後兩個是非實數根。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "把全部 n 個 n 次單位根相加（n ≥ 2），和是多少？",
+     "answer": "0",
+     "kp_ids": [
+      "math.t_sub.complex.roots-of-unity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.complex.roots-of-unity"
+     ],
+     "options": [
+      "0",
+      "1",
+      "n",
+      "−1"
+     ],
+     "distractor_rationales": {
+      "1": "1 只是其中一個根（k ＝ 0 那個），不是全部的和：n 個根平均分布在單位圓上、方向抵消，總和是 0。",
+      "n": "不是把 n 個根「各算 1」相加：它們是分布在圓上的複數，方向互相抵消，總和是 0。",
+      "−1": "不會剩下 −1：n ≥ 2 時 n 個單位根對稱分布、完全抵消，和恰好是 0。"
+     },
+     "answer_evidence": [
+      "c-rou-sum"
+     ],
+     "feedback": "n ≥ 2 時 n 個單位根平均分布、方向抵消，相加等於 0（例 1 ＋ ω ＋ ω² ＝ 0）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "6 次單位根在單位圓上，相鄰兩個根相隔幾度？",
+     "answer": "60°",
+     "kp_ids": [
+      "math.t_sub.complex.roots-of-unity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.complex.roots-of-unity"
+     ],
+     "options": [
+      "60°",
+      "6°",
+      "30°",
+      "120°"
+     ],
+     "distractor_rationales": {
+      "6°": "不是用 6 直接當度數：相鄰間隔是把整圈 360° 等分成 6 份，360° ÷ 6 ＝ 60°。",
+      "30°": "這是 360° ÷ 12：6 次單位根是把圓分成 6 份，每份 360° ÷ 6 ＝ 60°，不是 12 份。",
+      "120°": "120° 是「3 次」單位根的間隔（360° ÷ 3）：6 次單位根是 360° ÷ 6 ＝ 60°。"
+     },
+     "answer_evidence": [
+      "c-rou-def"
+     ],
+     "feedback": "n 次單位根相鄰相隔 360°/n，6 次就是 360° ÷ 6 ＝ 60°。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（n 次單位根＝zⁿ ＝ 1 的 n 個解，模都=1 在單位圓上、把圓等分成 n 份、相鄰相隔 360°/n，第 k 個＝cos(k·360°/n)+i sin(k·360°/n)、k=0 那個是 1；3 次單位根＝1、ω=−1/2+√3/2 i(120°)、ω²=−1/2−√3/2 i(240°) 構成正三角形；n≥2 時 n 個根相加=0，1+ω+ω²=0；三鐵律＝剛好 n 個非只 1、模都=1 在單位圓上、相鄰相隔 360°/n）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
