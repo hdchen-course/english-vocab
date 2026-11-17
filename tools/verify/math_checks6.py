@@ -122,12 +122,17 @@ def mat_linear_system():
     assert A.row_join(bb).rref()[0] == Matrix([[1, 0, 1], [0, 1, 3]])
     return _ok("matrix.linear-system", "{2x+y=5,x+3y=10}→x=1,y=3；增廣 rref=[[1,0,1],[0,1,3]]")
 def mat_transformation():
-    # 旋轉90°矩陣作用於(1,0)→(0,1)
+    # 旋轉90°矩陣作用於(1,0)→(0,1)、det=1（保面積、保定向）
     R = Matrix([[0, -1], [1, 0]])
-    assert R*Matrix([1, 0]) == Matrix([0, 1])
-    # 伸縮
-    assert Matrix([[2, 0], [0, 3]])*Matrix([1, 1]) == Matrix([2, 3])
-    return _ok("matrix.transformation", "旋轉90°(1,0)→(0,1)；伸縮 diag(2,3)(1,1)=(2,3)")
+    assert R*Matrix([1, 0]) == Matrix([0, 1]) and R.det() == 1
+    assert R*Matrix([0, 1]) == Matrix([-1, 0])        # (0,1)→(−1,0)
+    # 伸縮 diag(2,3)：(1,1)→(2,3)、det=6（面積×6）
+    S = Matrix([[2, 0], [0, 3]])
+    assert S*Matrix([1, 1]) == Matrix([2, 3]) and S.det() == 6
+    # 鏡射 x 軸 [[1,0],[0,−1]]：(2,3)→(2,−3)、det=−1（翻轉定向）
+    Mx = Matrix([[1, 0], [0, -1]])
+    assert Mx*Matrix([2, 3]) == Matrix([2, -3]) and Mx.det() == -1
+    return _ok("matrix.transformation", "旋轉90°[[0,−1],[1,0]](1,0)→(0,1)det=1；伸縮diag(2,3)(1,1)→(2,3)det=6；鏡射x軸(2,3)→(2,−3)det=−1")
 
 # ---------- determinant（2）----------
 def det_calc():

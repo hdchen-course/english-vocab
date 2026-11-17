@@ -1,0 +1,220 @@
+{
+ "_note": "數學島 矩陣（matrix）strand 單元（第5、末）。知識點 math.t_sub.matrix.transformation（矩陣與平面線性變換：旋轉/伸縮/鏡射）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次：線性變換 (linear transformation)、旋轉 (rotation)、伸縮 (scaling)、鏡射 (reflection)、行列式 (determinant)、定向 (orientation)）。前置假設：已會矩陣乘法、座標點。★scope（t_sub）：(1) 2×2 矩陣當平面線性變換——把點 (x,y) 寫成直行 [[x],[y]]，矩陣乘上去移到新位置。(2) 旋轉90°（逆時針）R=[[0,−1],[1,0]]：(1,0)→(0,1)、(0,1)→(−1,0)，det=1。(3) 伸縮 diag(a,b)=[[a,0],[0,b]]：x 向放大 a 倍、y 向放大 b 倍，(x,y)→(ax,by)；det=ab=面積放大倍率；例 diag(2,3)(1,1)=(2,3) det=6。(4) 鏡射(x 軸)[[1,0],[0,−1]]：(x,y)→(x,−y)；det=−1（定向翻轉）；例 (2,3)→(2,−3)。(5) 行列式幾何：|det|=面積放大倍率、det 正負=定向是否翻轉。不含一般角度旋轉 [[cosθ,−sinθ],[sinθ,cosθ]] 推導、不含合成變換一般式。repro（tools/verify/math_checks6.py::matrix.transformation，repro_gate .venv PASS、registry 指紋 0900f9de9ea99de8；本 session 強化加 (0,1)→(−1,0)、鏡射、三個 det 並誠實更新指紋）。★自檢（math-unit defect-classes）：figure＝三 panel（旋轉90°箭頭轉向/伸縮方塊放大/鏡射箭頭上下翻＋虛線鏡軸），各標 det=1/6/−1，座標幾何正確、箭頭方向正確（#33 旋轉逆時針、鏡射對 x 軸上下翻）、標籤移出免碰撞（#2）、alt 與 SVG text 逐字一致且方向相符、★figure 標題只承諾三種變換示意（#4/#46）；practice 四答案＝{(0,1)(Q1 旋轉),(2,3)(Q2 伸縮),(2,−3)(Q3 鏡射),|det|面積倍率/正負定向(Q4 行列式幾何)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 順時針(0,−1)/180°(−1,0)/沒動(1,0)；Q2 倍率反(3,2)/都×3(3,3)/都×2(2,2)；Q3 對y軸(−2,3)/對原點(−2,−3)/沒變(2,3)；Q4 det=元素相加/det 恆正/det 越大變換越快）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；速率無涉但 Q4 distractor「變換越快」為誤解非速率事實（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_matrix_transformation.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.matrix.transformation",
+   "title_zh": "矩陣與平面線性變換（旋轉／伸縮／鏡射）",
+   "can_do": "我知道一個 2×2 矩陣可以當成平面上的『線性變換 (linear transformation)』：把一個點 (x, y) 寫成直行 [[x], [y]]，矩陣乘上去就把它移到新位置。我知道三種基本變換的矩陣——『旋轉 (rotation)』90° 用 [[0, −1], [1, 0]]、『伸縮 (scaling)』用對角矩陣 [[a, 0], [0, b]]、『鏡射 (reflection)』對 x 軸用 [[1, 0], [0, −1]]。我也知道『行列式 (determinant)』det 的幾何意義：它的絕對值是面積放大的倍率，它的正負代表『定向 (orientation)』有沒有被翻轉。",
+   "situation_group": "矩陣：平面線性變換",
+   "subject": "math",
+   "strand": "matrix",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.matrix.transformation"
+   ],
+   "prerequisites": [],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-mt-rotation",
+     "text": "旋轉 90°（逆時針）用矩陣 R ＝ [[0, −1], [1, 0]]：把點乘上去就逆時針轉 90°。例如 (1, 0) → (0, 1)、(0, 1) → (−1, 0)。它的行列式 det ＝ 0×0 − (−1)×1 ＝ 1（旋轉不改變面積、也不翻轉定向）。",
+     "kind": "definition",
+     "source_refs": [
+      "平面旋轉矩陣（高中 選修數學）"
+     ],
+     "verification_ref": "[[0,−1],[1,0]](1,0)=(0,1)、(0,1)=(−1,0)、det=1（math_checks6::matrix.transformation .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-mt-scaling",
+     "text": "伸縮用對角矩陣 [[a, 0], [0, b]]：把 x 方向放大 a 倍、y 方向放大 b 倍，(x, y) → (ax, by)。例 [[2, 0], [0, 3]]：(1, 1) → (2, 3)。它的行列式 det ＝ a×b（例 2×3 ＝ 6），剛好是面積放大的倍率。",
+     "kind": "definition",
+     "source_refs": [
+      "伸縮變換（高中 選修數學）"
+     ],
+     "verification_ref": "[[2,0],[0,3]](1,1)=(2,3)、det=6（math_checks6::matrix.transformation .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-mt-reflection",
+     "text": "鏡射（對 x 軸）用矩陣 [[1, 0], [0, −1]]：把 y 座標變號，(x, y) → (x, −y)，像照鏡子上下翻過去。例 (2, 3) → (2, −3)。它的行列式 det ＝ 1×(−1) − 0×0 ＝ −1，負號代表定向被翻轉（左右手相反）。",
+     "kind": "definition",
+     "source_refs": [
+      "鏡射變換（高中 選修數學）"
+     ],
+     "verification_ref": "[[1,0],[0,−1]](2,3)=(2,−3)、det=−1（math_checks6::matrix.transformation .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-mt-det-geo",
+     "text": "行列式 det 的幾何意義：它的絕對值 |det| 是這個變換把面積放大的倍率（例如 det ＝ 6 表示面積變成 6 倍）；它的正負代表定向有沒有被翻轉——det 大於 0 保持定向，det 小於 0 翻轉定向（像鏡射）。",
+     "kind": "definition",
+     "source_refs": [
+      "行列式的幾何意義（高中 選修數學）"
+     ],
+     "verification_ref": "det 幾何：|det|=面積倍率、正負=定向（旋轉det=1、伸縮det=6、鏡射det=−1；math_checks6 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.matrix.transformation"
+     ],
+     "body": "這一單元學矩陣怎麼「搬動」平面上的點：一個 2×2 矩陣乘在點 (x, y) 上，就把它移到新位置，這叫線性變換。先看三種基本變換——旋轉、伸縮、鏡射，再看行列式 det 怎麼用一個數字告訴我們「面積放大幾倍」和「定向有沒有翻轉」。最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.matrix.transformation"
+     ],
+     "body": "① 旋轉 90°（逆時針）：[[0,−1],[1,0]]，(1,0)→(0,1)、(0,1)→(−1,0)，det＝1。② 伸縮：[[a,0],[0,b]] 把 x 向放大 a 倍、y 向放大 b 倍，例 [[2,0],[0,3]]：(1,1)→(2,3)，det＝2×3＝6。③ 鏡射（對 x 軸）：[[1,0],[0,−1]]，(x,y)→(x,−y)，例 (2,3)→(2,−3)，det＝−1。④ 行列式：|det|＝面積放大倍率、det 正負＝定向是否翻轉。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.matrix.transformation"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>三種平面變換：旋轉、伸縮、鏡射</text><line x1='48' y1='70' x2='80' y2='70' stroke='#99a7b5' stroke-width='1.6'/><polygon points='80,70 74,67 74,73' fill='#99a7b5'/><line x1='64' y1='86' x2='64' y2='54' stroke='#2f6f54' stroke-width='1.6'/><polygon points='64,54 61,60 67,60' fill='#2f6f54'/><text x='64' y='108' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle'>旋轉 90°</text><text x='64' y='122' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='middle'>det ＝ 1</text><rect x='168' y='64' width='12' height='12' fill='none' stroke='#99a7b5' stroke-width='1.4'/><rect x='156' y='40' width='24' height='36' fill='none' stroke='#2f6f54' stroke-width='1.6'/><text x='174' y='108' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle'>伸縮 ×(2, 3)</text><text x='174' y='122' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='middle'>det ＝ 6</text><line x1='258' y1='66' x2='322' y2='66' stroke='#c9d3dd' stroke-width='1' stroke-dasharray='3 2'/><text x='326' y='68' font-family='sans-serif' font-size='7' fill='#99a7b5' text-anchor='start'>x 軸</text><line x1='278' y1='66' x2='300' y2='48' stroke='#99a7b5' stroke-width='1.6'/><polygon points='300,48 294,49 297,54' fill='#99a7b5'/><line x1='278' y1='66' x2='300' y2='84' stroke='#c2535d' stroke-width='1.6'/><polygon points='300,84 294,78 297,83' fill='#c2535d'/><text x='289' y='108' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle'>鏡射 (x 軸)</text><text x='289' y='122' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='middle'>det ＝ −1</text><text x='180' y='146' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='middle'>灰色是原來、彩色是變換後；det 絕對值＝面積倍率、正負＝定向是否翻轉</text></svg>",
+      "alt": "標題「三種平面變換：旋轉、伸縮、鏡射」。左邊一組：一支灰色箭頭指向右邊（原來的方向），一支綠色箭頭指向上方（旋轉後），下面寫「旋轉 90°」「det ＝ 1」。中間一組：一個灰色小正方形，外面一個比較大的綠色長方形（寬 2 倍、高 3 倍），下面寫「伸縮 ×(2, 3)」「det ＝ 6」。右邊一組：一條水平虛線標「x 軸」當作鏡子，虛線上方一支灰色箭頭指向右上，虛線下方一支紅色箭頭指向右下（上下翻過去），下面寫「鏡射 (x 軸)」「det ＝ −1」。最下面一行寫「灰色是原來、彩色是變換後；det 絕對值＝面積倍率、正負＝定向是否翻轉」。",
+      "caption": "三種基本變換：旋轉 90° 把指右的箭頭轉成指上（det ＝ 1，面積和定向都不變）；伸縮 ×(2, 3) 把小正方形的寬拉成 2 倍、高拉成 3 倍（det ＝ 6，面積變 6 倍）；鏡射對 x 軸把指右上的箭頭上下翻成指右下（det ＝ −1，面積不變但定向翻轉）。行列式 det 用一個數字同時告訴我們面積放大幾倍（絕對值）和定向有沒有翻轉（正負號）。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.matrix.transformation"
+     ],
+     "body": "最後練平面線性變換。重點：(1) 變換就是矩陣乘上點 (x, y)（寫成直行）得到新點；(2) 旋轉 90° 用 [[0,−1],[1,0]]、伸縮用 [[a,0],[0,b]]、鏡射對 x 軸用 [[1,0],[0,−1]]；(3) 行列式 |det| 是面積放大倍率、det 的正負代表定向有沒有翻轉（鏡射的 det 是負的）。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用旋轉 90°（逆時針）的矩陣 [[0, −1], [1, 0]] 作用在點 (1, 0) 上，會得到哪一點？",
+     "answer": "(0, 1)",
+     "kp_ids": [
+      "math.t_sub.matrix.transformation"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.matrix.transformation"
+     ],
+     "options": [
+      "(0, 1)",
+      "(0, −1)",
+      "(−1, 0)",
+      "(1, 0)"
+     ],
+     "distractor_rationales": {
+      "(0, −1)": "這是「順時針」轉 90° 的結果：題目的 [[0,−1],[1,0]] 是逆時針，(1, 0) 往上轉成 (0, 1)。",
+      "(−1, 0)": "這是轉了 180° 的結果：轉 90°（逆時針）只會把指右的 (1, 0) 轉成指上的 (0, 1)。",
+      "(1, 0)": "這是「沒有轉」：矩陣乘上去 [[0,−1],[1,0]]·[[1],[0]] ＝ [[0],[1]]，點移到了 (0, 1)。"
+     },
+     "answer_evidence": [
+      "c-mt-rotation"
+     ],
+     "feedback": "[[0, −1], [1, 0]] · [[1], [0]] ＝ [[0×1 − 1×0], [1×1 + 0×0]] ＝ [[0], [1]]，即 (0, 1)。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用伸縮矩陣 [[2, 0], [0, 3]] 作用在點 (1, 1) 上，會得到哪一點？",
+     "answer": "(2, 3)",
+     "kp_ids": [
+      "math.t_sub.matrix.transformation"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.matrix.transformation"
+     ],
+     "options": [
+      "(2, 3)",
+      "(3, 2)",
+      "(3, 3)",
+      "(2, 2)"
+     ],
+     "distractor_rationales": {
+      "(3, 2)": "把 x、y 的放大倍率搞反了：[[2,0],[0,3]] 是 x 向 ×2、y 向 ×3，所以 (1,1)→(1×2, 1×3) ＝ (2, 3)。",
+      "(3, 3)": "把兩個方向都乘了 3：x 向其實是乘 2（矩陣左上是 2），得 (2, 3)。",
+      "(2, 2)": "把兩個方向都乘了 2：y 向其實是乘 3（矩陣右下是 3），得 (2, 3)。"
+     },
+     "answer_evidence": [
+      "c-mt-scaling"
+     ],
+     "feedback": "[[2, 0], [0, 3]] · [[1], [1]] ＝ [[2×1], [3×1]] ＝ [[2], [3]]，即 (2, 3)。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用鏡射（對 x 軸）的矩陣 [[1, 0], [0, −1]] 作用在點 (2, 3) 上，會得到哪一點？",
+     "answer": "(2, −3)",
+     "kp_ids": [
+      "math.t_sub.matrix.transformation"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.matrix.transformation"
+     ],
+     "options": [
+      "(2, −3)",
+      "(−2, 3)",
+      "(−2, −3)",
+      "(2, 3)"
+     ],
+     "distractor_rationales": {
+      "(−2, 3)": "這是對「y 軸」鏡射（x 變號）的結果：對 x 軸鏡射是 y 變號，(2, 3) → (2, −3)。",
+      "(−2, −3)": "這是對「原點」對稱（x、y 都變號）的結果：對 x 軸鏡射只有 y 變號，得 (2, −3)。",
+      "(2, 3)": "這是「沒有鏡射」：[[1,0],[0,−1]] 會把 y 座標變號，(2, 3) → (2, −3)。"
+     },
+     "answer_evidence": [
+      "c-mt-reflection"
+     ],
+     "feedback": "[[1, 0], [0, −1]] · [[2], [3]] ＝ [[2], [−3]]，即 (2, −3)（y 座標變號）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個平面變換矩陣的行列式 det，在幾何上代表什麼？",
+     "answer": "|det| 是面積放大的倍率，det 的正負代表定向有沒有被翻轉",
+     "kp_ids": [
+      "math.t_sub.matrix.transformation"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.matrix.transformation"
+     ],
+     "options": [
+      "|det| 是面積放大的倍率，det 的正負代表定向有沒有被翻轉",
+      "det 就是把矩陣裡所有元素相加起來",
+      "det 一定大於 0",
+      "det 越大，變換做得越快"
+     ],
+     "distractor_rationales": {
+      "det 就是把矩陣裡所有元素相加起來": "那不是行列式：2×2 的 det 是 ad − bc（主對角相乘減副對角相乘），幾何上 |det| 代表面積放大倍率。",
+      "det 一定大於 0": "鏡射的 det 就是負的（例 [[1,0],[0,−1]] 的 det ＝ −1）：det 的正負正好用來表示定向有沒有被翻轉。",
+      "det 越大，變換做得越快": "det 和「快慢」無關：它描述的是面積放大倍率（絕對值）和定向（正負），不是速度。"
+     },
+     "answer_evidence": [
+      "c-mt-det-geo"
+     ],
+     "feedback": "行列式的幾何意義：|det| 是面積放大倍率、det 的正負代表定向有沒有翻轉（例 旋轉 det ＝ 1、伸縮 det ＝ 6、鏡射 det ＝ −1）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（矩陣當平面線性變換＝矩陣乘上點 (x,y) 得新點；旋轉90°[[0,−1],[1,0]] (1,0)→(0,1) det=1；伸縮 [[2,0],[0,3]] (1,1)→(2,3) det=6；鏡射x軸 [[1,0],[0,−1]] (2,3)→(2,−3) det=−1；行列式幾何＝|det| 面積放大倍率、det 正負定向是否翻轉；三鐵律＝變換是矩陣乘點、三種基本矩陣要記、det 正負看定向鏡射為負）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
