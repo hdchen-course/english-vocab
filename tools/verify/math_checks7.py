@@ -489,9 +489,12 @@ def f_loan():
     assert abs(bal) < 1e-6
     return _ok("finmath.loan-installment", "1000 借5%分3期月付≈367.21，期末餘額=0")
 def f_growth_decay():
-    # 半衰期：N=N₀(½)^(t/T)，t=2T → ¼
+    # 半衰期衰減：N=N₀(½)^(t/T)。N₀=80, T=5：t=5→40, t=10(2T)→20, t=15(3T)→10；剩餘比例 2T→¼
     assert (0.5)**2 == 0.25
-    return _ok("finmath.growth-decay-model", "半衰期 t=2T → 剩¼")
+    assert 80*(0.5)**(5/5) == 40 and 80*(0.5)**(10/5) == 20 and 80*(0.5)**(15/5) == 10
+    # 指數成長（倍增）：N=N₀·2^(t/D)。N₀=100, D=20min：60min=3 倍增 → 800
+    assert 100*2**(60/20) == 800 and 100*2**(20/20) == 200
+    return _ok("finmath.growth-decay-model", "半衰期 80→40→20→10（2T 剩¼）；倍增 100·2³=800")
 def f_geo_distance():
     # 經度每15°=1 小時時差；地球半徑 R，緯圈半徑 R·cosφ
     import math as _m

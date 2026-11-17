@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 財務數學（finmath）strand 單元（第4個）。知識點 math.t_sub.finmath.growth-decay-model（指數成長與衰減模型）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；同級術語一律 gloss：指數成長 (exponential growth)、指數衰減 (exponential decay)、半衰期 (half-life)、倍增時間 (doubling time)）。前置假設：已會乘冪、單利與複利（finmath 首單元）。★scope（t_sub，接 simple-compound-interest）：指數模型＝量每固定一段時間就「乘以」固定倍率（非加減固定量）。衰減（半衰期 T）：N=N₀·(1/2)^(t/T)，每過 T 剩一半；例 N₀=80 克、T=5 天：5天→40、10天(2T)→20、15天(3T)→10，過 2T 剩 1/4。成長（倍增時間 D）：N=N₀·2^(t/D)，每過 D 加倍；例細菌 N₀=100、D=20 分鐘：20min→200、40min→400、60min→800。通式 N=N₀·b^(t/k)，b>1 成長、0<b<1 衰減。不含連續模型 e^(kt)、不含半衰期的對數求解。repro（tools/verify/math_checks7.py::finmath.growth-decay-model，本 session 強化並跑過 PASS、registry 指紋同步更新；binding 另有 math_checks6 待補）：80→40→20→10（2T 剩¼）；倍增 100·2³=800。★自檢（math-unit defect-classes）：figure＝半衰期衰減序列 80→40→20→10 三箭頭各標「×½（過一個半衰期）」＋底部成長對照一行——每箱值正確（#43）、箭頭指向正確、標籤移出免碰撞（#2）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾半衰期每過 T 剩一半（80 克、T=5 天）（#4/#46，公式/成長例由 teach＋caption 補）；practice 四答案＝{1/4(Q1 2T比例),10克(Q2 3T),800(Q3 倍增),每過T剩一半(Q4 概念)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 1/2只1個/1/8三個/0以為沒了；Q2 40過1T/20過2T/5過4T；Q3 300線性每20分+100/200只加倍1次/600誤2×3；Q4 線性減固定量/2T消失/半衰期越長衰減越快）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_finmath_growth_decay_model.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.finmath.growth-decay-model",
+   "title_zh": "指數成長與衰減模型",
+   "can_do": "我知道「指數模型」是：一個量每過固定一段時間，就「乘以」一個固定倍率（不是加、減固定的數）。倍率大於 1 就是『指數成長 (exponential growth)』、介於 0 和 1 之間就是『指數衰減 (exponential decay)』。衰減常用『半衰期 (half-life)』T：N ＝ N₀ × (1/2)^(t/T)，每過一個 T 就剩一半；成長常用『倍增時間 (doubling time)』D：N ＝ N₀ × 2^(t/D)，每過一個 D 就加倍。我會用這些公式算出經過一段時間後剩多少或變多少。",
+   "situation_group": "財務數學：指數成長與衰減",
+   "subject": "math",
+   "strand": "finmath",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.finmath.growth-decay-model"
+   ],
+   "prerequisites": [
+    "math.t_adv.finmath.simple-compound-interest"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-gd-idea",
+     "text": "指數成長與衰減的共同點是：每經過固定一段時間，量就「乘以」同一個固定倍率，而不是「加或減」固定的量。倍率大於 1 時量越變越大（指數成長），倍率在 0 到 1 之間時量越變越小（指數衰減）。這和「每期加固定數」的線性變化不同——指數變化每一步改變的量會越來越大（成長）或越來越小（衰減）。",
+     "kind": "definition",
+     "source_refs": [
+      "指數成長與衰減（高中數學 財務數學）"
+     ],
+     "verification_ref": "指數＝乘固定倍率（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-gd-decay",
+     "text": "指數衰減常用半衰期 T 來描述：N ＝ N₀ × (1/2)^(t/T)，其中 N₀ 是一開始的量、t 是經過的時間、T 是半衰期（量剩一半所需的時間）。每過一個 T 就剩前一刻的一半。例：80 克、半衰期 5 天，5 天後剩 40、10 天（2 個 T）後剩 20、15 天（3 個 T）後剩 10。經過 2 個半衰期剩 (1/2)² ＝ 1/4。",
+     "kind": "definition",
+     "source_refs": [
+      "半衰期（高中數學 財務數學）"
+     ],
+     "verification_ref": "80→40→20→10；2T 剩¼（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-gd-growth",
+     "text": "指數成長常用倍增時間 D 來描述：N ＝ N₀ × 2^(t/D)，每過一個 D 就加倍。例：細菌一開始 100 隻、每 20 分鐘加倍，20 分鐘後 200、40 分鐘後 400、60 分鐘後 800。要注意這是「乘以 2」不是「加 100」——60 分鐘是 3 個倍增時間，所以是 100 × 2³ ＝ 800，不是 100 ＋ 100 × 3。",
+     "kind": "definition",
+     "source_refs": [
+      "倍增時間（高中數學 財務數學）"
+     ],
+     "verification_ref": "100·2³=800（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.finmath.growth-decay-model"
+     ],
+     "body": "這一單元學指數成長與衰減模型。先講共同的想法（每過一段時間就乘固定倍率，不是加減固定量）；再看衰減（半衰期）；再看成長（倍增時間）。最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.finmath.growth-decay-model"
+     ],
+     "body": "① 想法：量每過固定時間就乘固定倍率。倍率 > 1 是成長、0 < 倍率 < 1 是衰減。② 衰減（半衰期 T）：N ＝ N₀ × (1/2)^(t/T)，每過 T 剩一半。例 80 克、T ＝ 5 天 → 40、20、10（過 2T 剩 1/4）。③ 成長（倍增時間 D）：N ＝ N₀ × 2^(t/D)，每過 D 加倍。例 100 隻、D ＝ 20 分 → 200、400、800。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.finmath.growth-decay-model"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><defs><marker id='gdah' markerWidth='7' markerHeight='7' refX='5.5' refY='3' orient='auto'><path d='M0,0 L6,3 L0,6 z' fill='#c2535d'/></marker></defs><text x='180' y='13' font-family='sans-serif' font-size='10' fill='#2f6f54' text-anchor='middle' font-weight='bold'>半衰期 T ＝ 5 天：每過一個 T 剩一半（一開始 80 克）</text><rect x='17' y='60' width='46' height='22' rx='4' fill='#e6edf3' stroke='#99a7b5'/><text x='40' y='74' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>80 克</text><line x1='63' y1='71' x2='113' y2='71' stroke='#c2535d' stroke-width='1.2' marker-end='url(#gdah)'/><text x='88' y='64' font-family='sans-serif' font-size='8' fill='#c2535d' text-anchor='middle'>× ½</text><rect x='115' y='60' width='46' height='22' rx='4' fill='#e6edf3' stroke='#99a7b5'/><text x='138' y='74' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>40 克</text><line x1='161' y1='71' x2='211' y2='71' stroke='#c2535d' stroke-width='1.2' marker-end='url(#gdah)'/><text x='186' y='64' font-family='sans-serif' font-size='8' fill='#c2535d' text-anchor='middle'>× ½</text><rect x='213' y='60' width='46' height='22' rx='4' fill='#e6edf3' stroke='#99a7b5'/><text x='236' y='74' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>20 克</text><line x1='259' y1='71' x2='307' y2='71' stroke='#c2535d' stroke-width='1.2' marker-end='url(#gdah)'/><text x='283' y='64' font-family='sans-serif' font-size='8' fill='#c2535d' text-anchor='middle'>× ½</text><rect x='309' y='60' width='44' height='22' rx='4' fill='#e6edf3' stroke='#99a7b5'/><text x='331' y='74' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>10 克</text><text x='40' y='96' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='middle'>0 天</text><text x='138' y='96' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='middle'>5 天</text><text x='236' y='96' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='middle'>10 天</text><text x='331' y='96' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='middle'>15 天</text><text x='180' y='120' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>N ＝ 80 × (1/2)^(t ÷ 5)；過 2 個 T（10 天）剩 1/4</text><text x='180' y='138' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>成長相反：每過倍增時間就 × 2，例 100 → 200 → 400 → 800</text></svg>",
+      "alt": "標題「半衰期 T ＝ 5 天：每過一個 T 剩一半（一開始 80 克）」。一排四個方塊用向右箭頭相連：標「0 天」的方塊 80 克，箭頭上標「× ½」到方塊 40 克（5 天），再「× ½」到方塊 20 克（10 天），再「× ½」到方塊 10 克（15 天）。下方兩行字「N ＝ 80 × (1/2)^(t ÷ 5)；過 2 個 T（10 天）剩 1/4」「成長相反：每過倍增時間就 × 2，例 100 → 200 → 400 → 800」。",
+      "caption": "一開始 80 克、半衰期 5 天：每過 5 天就乘以 ½，所以 80 → 40 → 20 → 10。過 2 個半衰期（10 天）剩 (1/2)² ＝ 1/4（也就是 20 克）。指數成長剛好相反：每過一個倍增時間就乘以 2，例如細菌 100 → 200 → 400 → 800。重點都是「乘固定倍率」，不是加減固定的量。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.finmath.growth-decay-model"
+     ],
+     "body": "最後練指數成長與衰減。重點：每過固定時間就乘固定倍率；衰減 N ＝ N₀ × (1/2)^(t/T)、成長 N ＝ N₀ × 2^(t/D)。小提醒：(1) 指數是「乘」倍率、不是「加減」固定量；(2) 過 2 個半衰期剩 1/4、3 個剩 1/8（不是減一半再減一半變 0）；(3) 看清楚經過了「幾個」半衰期或倍增時間（t ÷ T 或 t ÷ D）。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "某物質半衰期為 T。經過 2 個半衰期（t ＝ 2T）後，還剩下一開始的幾分之幾？",
+     "answer": "1/4",
+     "kp_ids": [
+      "math.t_sub.finmath.growth-decay-model"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.finmath.growth-decay-model"
+     ],
+     "options": [
+      "1/4",
+      "1/2",
+      "1/8",
+      "0"
+     ],
+     "distractor_rationales": {
+      "1/2": "那只是過 1 個半衰期剩的：過 2 個半衰期要再乘一次 1/2，是 (1/2)² ＝ 1/4。",
+      "1/8": "1/8 是過 3 個半衰期 (1/2)³：題目是 2 個半衰期，剩 (1/2)² ＝ 1/4。",
+      "0": "衰減不會變成 0：每次只剩一半，過 2 個半衰期剩 1/4，永遠剩下一些。"
+     },
+     "answer_evidence": [
+      "c-gd-decay"
+     ],
+     "feedback": "每過一個半衰期剩一半，2 個就是 (1/2)² ＝ 1/4。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一開始有 80 克、半衰期是 5 天，經過 15 天後還剩多少？",
+     "answer": "10 克",
+     "kp_ids": [
+      "math.t_sub.finmath.growth-decay-model"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.finmath.growth-decay-model"
+     ],
+     "options": [
+      "10 克",
+      "40 克",
+      "20 克",
+      "5 克"
+     ],
+     "distractor_rationales": {
+      "40 克": "那是只過 1 個半衰期（5 天）剩的：15 天是 3 個半衰期，80 → 40 → 20 → 10。",
+      "20 克": "那是過 2 個半衰期（10 天）剩的：15 天是 3 個半衰期，要再乘一次 1/2，剩 10。",
+      "5 克": "多算了一個半衰期（當成 20 天／4 個）：15 天 ÷ 5 天 ＝ 3 個半衰期，80 × (1/2)³ ＝ 10。"
+     },
+     "answer_evidence": [
+      "c-gd-decay"
+     ],
+     "feedback": "15 天 ÷ 5 天 ＝ 3 個半衰期，80 × (1/2)³ ＝ 10 克。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "細菌一開始 100 隻，每 20 分鐘數量加倍，經過 60 分鐘後有多少隻？",
+     "answer": "800 隻",
+     "kp_ids": [
+      "math.t_sub.finmath.growth-decay-model"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.finmath.growth-decay-model"
+     ],
+     "options": [
+      "800 隻",
+      "300 隻",
+      "200 隻",
+      "600 隻"
+     ],
+     "distractor_rationales": {
+      "300 隻": "這是把它當成「每 20 分鐘加 100」的線性增加（100 ＋ 100 × 2 ＝ 300）：其實是每次「乘以 2」，60 分鐘是 3 次，100 × 2³ ＝ 800。",
+      "200 隻": "那只是加倍 1 次（過 20 分鐘）：60 分鐘是 3 個倍增時間，要乘 3 次 2，得 800。",
+      "600 隻": "不是 100 × 2 × 3：三個倍增時間是連續「乘以 2」三次 ＝ 100 × 2³ ＝ 800，不是 100 × 2 再 × 3。"
+     },
+     "answer_evidence": [
+      "c-gd-growth"
+     ],
+     "feedback": "60 分鐘 ÷ 20 分鐘 ＝ 3 個倍增時間，100 × 2³ ＝ 800 隻。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "關於半衰期為 T 的指數衰減，下列哪個說法正確？",
+     "answer": "每經過一個 T，就剩下前一刻的一半",
+     "kp_ids": [
+      "math.t_sub.finmath.growth-decay-model"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.finmath.growth-decay-model"
+     ],
+     "options": [
+      "每經過一個 T，就剩下前一刻的一半",
+      "每經過一個 T，就減少固定的公克數",
+      "經過 2 個 T 就完全消失（剩 0）",
+      "半衰期 T 越長，衰減越快"
+     ],
+     "distractor_rationales": {
+      "每經過一個 T，就減少固定的公克數": "那是線性減少，不是指數衰減：指數衰減每次是「剩一半」（乘 1/2），減少的量會越來越小，不是每次減固定公克數。",
+      "經過 2 個 T 就完全消失（剩 0）": "不會消失：過 2 個 T 剩 1/4、3 個剩 1/8，每次只剩一半，永遠剩一些。",
+      "半衰期 T 越長，衰減越快": "剛好相反：T 越長表示要更久才剩一半，衰減越慢。"
+     },
+     "answer_evidence": [
+      "c-gd-decay"
+     ],
+     "feedback": "半衰期 T 的定義就是「每過一個 T 剩一半」；T 越長衰減越慢，而且永遠不會真的歸 0。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（指數模型＝每過固定時間乘固定倍率，非加減固定量；倍率 >1 成長、0<倍率<1 衰減；衰減 N ＝ N₀ × (1/2)^(t/T)，每過半衰期 T 剩一半，80→40→20→10、過 2T 剩 1/4；成長 N ＝ N₀ × 2^(t/D)，每過倍增時間 D 加倍，100→200→400→800；三鐵律＝指數是乘倍率非加減、過 nT 剩 (1/2)ⁿ 不會變 0、先看經過幾個 T 或 D（t÷T、t÷D））；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
