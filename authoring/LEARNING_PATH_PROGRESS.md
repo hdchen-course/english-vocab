@@ -7,6 +7,14 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-17 08:49 ★ conic hyperbola 雙曲線定義/標準式/焦點/頂點與漸近線 5/5 DONE-GATE 全綠（t_sub，★等軸雙曲線兩支+兩焦點+漸近線+P 焦半徑差 14−6=8 SVG）→ 圓錐曲線島 conic strand 3/7
+- **math_conic_hyperbola frozen `dcbbf20d6f4e1c5e`**（R1 抓 2 minor→直接修→修後 R1-R5 連 5 clean、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==dcbbf20d／per_page_5clean 570/570 頁 0 違規（conic_hyperbola absent）／repro PASS／iPad 四角色簽核（等軸 2D、雙曲線 x²/16−y²/9=1 兩支、兩焦點 F₁(5,0)/F₂(−5,0) 紅點、兩頂點 (±4,0) 綠點、兩漸近線灰虛線、右支點 P(8,3√3) 到兩焦兩段虛線標 6 與 14 差=8；焦點/頂點標籤移出曲線免 #2、#62 等軸顯斜率 3/4、右緣0%）。
+- 雙曲線（t_sub，教學接 ellipse）＝定義：到兩焦點距離「差」的絕對值=定值 2a（和橢圓的「和」相反）；標準式（貫軸在 x 軸）x²/a²−y²/b²=1（x² 項為正）、頂點 (±a,0)、★c=√(a²＋b²)（相「加」，和橢圓 √(a²−b²) 相反——最易記錯）、焦點 (±c,0)、漸近線 y=±(b/a)x；a² 永遠在 x² 底下不比大小。以 x²/16−y²/9=1 貫穿：a=4、b=3、c=5、頂點(±4,0)、焦點(±5,0)、漸近線±(3/4)x；右支 (8,3√3) 到兩焦 6 與 14、差=8。
+- ★repro：binding＝math_checks6::conic.hyperbola；單元引 math_checks7::conic.hyperbola（本 session 新增 x²/16−y²/9=1⇒a=4,b=3,c=√(a²+b²)=5/焦點(±5,0)/頂點(±4,0)/距離差=2a=8/漸近線±3/4x/(8,3√3)到兩焦 6、14 差 8，.venv PASS）。
+- practice：Q1 焦點(±5,0)（hero）、Q2 漸近線 y=±(3/4)x、Q3 定義概念（距離差絕對值=2a）、Q4 x²/9−y²/16=1 焦點(±5,0) transfer。凍前 .venv 反算每誘答單一錯誤 #53（Q1 用a/用橢圓√(a²−b²)=√7/軸放錯；Q2 a÷b 顛倒/用c÷a=5/4/用c÷b=5/3；Q4 用a/用b/軸放錯）。
+- ★收斂史（本單元共抓 2 真實缺陷，皆 minor）：R1 CONFIRMED×2＝(1) terminology「貫軸」(transverse axis) 是五個同級術語中唯一漏 R15 gloss→can_do 首現補一次；(2) instructional-design Q2 distractor「（和離心率有關）」引入本單元 scope 明文排除且未教的「離心率」→改「（用了焦點距離 c）」。皆直接修（R1 未 bank）。★教訓：(a)同一單元所有同級術語要一致都 gloss（漏一個就是缺陷）；(b)distractor rationale 不可引入 scope 外/未教術語，即使數學正確——換成已教概念說明。
+- 下一步：conic 第 4 單元＝eccentricity（離心率 e=c/a：橢圓 0<e<1、拋物線 e=1、雙曲線 e>1；已有 math_checks6 repro）；conic 共 7 KP，剩 4（eccentricity/translation/line-intersection/reflection-apply）。接著 complex(6)/finmath(6)/matrix(5)/space(5)/determinant(2)/linprog(2)。hub AC-VIZ-1 figure_signoff 債待清（sha 4741b69d）。
+
 ## 2026-11-17 08:19 ★ conic ellipse 橢圓定義/標準式/焦點與長短軸 5/5 DONE-GATE 全綠（t_sub，★等軸橢圓+兩焦點+P 焦半徑和=10 SVG）→ 圓錐曲線島 conic strand 2/7
 - **math_conic_ellipse frozen `fce29b5cf2e5c7ea`**（R1 抓 2 可讀性缺陷→直接修→修後 R1-R5 連 5 clean、L3 每輪 exit 0；R5 confirmed 0/coverageComplete true）。DONE-GATE 全綠：scan PASS（units+html）／unit_schema 0／question_correctness CLEAN／pedagogy 0 hard／content_sha==fce29b5c／per_page_5clean 569/569 頁 0 違規（conic_ellipse absent）／repro PASS／iPad 四角色簽核（等軸 2D、橢圓 x²/25+y²/9=1 淺藍、兩焦點 F₁(4,0)/F₂(−4,0) 紅點、上頂點 P(0,3) 到兩焦兩段虛線各標「5」和=10；焦點標籤移出曲線免 #2 碰撞、#62 等軸、右緣0%）。
 - 橢圓（t_sub，教學接 parabola）＝定義：到兩焦點距離「和」=定值 2a 的點集合；標準式（長軸在 x 軸）x²/a²+y²/b²=1（a>b>0）、a 長半軸、b 短半軸、c=√(a²−b²)（相「減」，別和雙曲線 √(a²+b²) 混）、焦點(±c,0)、長軸長 2a、短軸長 2b；由方程式分母大的是 a²。以 x²/25+y²/9=1 貫穿：a=5、b=3、c=4、焦點(±4,0)、長軸10/短軸6；上頂點(0,3)到兩焦各5和=10。
