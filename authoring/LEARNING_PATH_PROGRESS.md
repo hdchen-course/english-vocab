@@ -7,6 +7,15 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-18 06:43 ★ sci.t_mid.phys-force.weight-mass 重力與質量的區別（W＝mg）5/5 DONE-GATE 全綠 → 自然島 phys-force 4/17（t_mid·國中中階，★地球vs月球重量對比 SVG）
+- **sci_phys_force_weight_mass frozen `a98627e7374b4940`**（R1-R5 連 5 clean；1 次 de-converge 修 1 major＋草稿 grep 攔到 1 R15 重複 gloss）。
+  - 草稿即抓（pre-freeze）：teach① 又重複 gloss『質量 (mass)』『重力 (weight)』——R15 累犯類**又犯**，但 grep -c 自檢=3≠2 當場攔下、未凍結前移除（安全網生效、未浪費輪次）。
+  - round1（de-converge 清 1 clean）**major**（owner-decisive learning b-hard）：Q2 distractor「含有的物質總量」與同題「質量」同義（違反 distractor 兩兩相異 #29）→ 改「形狀」（另一不隨地點變屬性）。重凍 **a98627e7**、重數 5-clean 全淨。
+- DONE-GATE 全綠：scan PASS／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard／content_sha==a98627e7／per_page_5clean PASS（absent）／repro-sci_phys_checks-phys-force.weight-mass PASS（W=mg=5·9.8=49N）／iPad 四角色簽核（兩格對比：地球 g≈9.8 長箭頭「重量49牛頓」vs 月球 g≈地球1/6 短箭頭「重量約8牛頓」、質量皆5kg；R11 不顯年段）。中文授課無音檔。
+- weight-mass（t_mid，phys-force strand 第4）＝(1) 質量＝物質多少、公斤、不隨地點變；(2) 重量（重力）＝天體吸引力、是一種力、牛頓、隨 g 變；(3) W＝m×g，地球5公斤→49牛頓、月球同物體重量變小約8牛頓但質量不變。不含萬有引力定律、自由落體。
+- ★教訓：R15 重複 gloss 累犯（push-pull/friction/weight-mass 三犯）——`grep -c "(English)"` 自檢是可靠安全網（force-elements/weight-mass 皆在 pre-freeze 攔下）；MCQ 「哪個會變小/不變」題型，distractor 須挑**不同**的不變屬性（質量/體積/形狀），勿用與答案概念同義者（物質總量=質量）。
+- 下一步：phys-force strand 還有 13 binding KP（t_mid force-add-1d/force-unit/friction-factor/hooke、t_adv×8、t_sub newton-2d）。接 force-add-1d（一維同向/反向力合成，oracle 已驗）或 hooke（虎克定律 F=kx）。
+
 ## 2026-11-18 06:21 ★ sci.t_mid.phys-force.force-elements 力的三要素與力圖表示 5/5 DONE-GATE 全綠 → 自然島 phys-force 3/17（t_mid·國中中階，★力圖 SVG；首個 sci t_mid）
 - **sci_phys_force_elements frozen `1b6e6bc5e2e11bdf`**（R1-R5 連 5 clean；1 次 de-converge 修 1 個 panel-CONFIRMED minor）。★R15 gloss 累犯類教訓已套用成功：草稿即把 gloss 只放 can_do、`grep -c "(force diagram)"`=2 自檢通過，本單元 content_audit **零** R15 gloss finding（對比 friction 曾因此 de-converge）。
   - round1（pre-bank 前即抓，但已 bank 1）**minor**（owner=learning b-hard）：selfeval_note 口訣「長度比大小」中「比」歧義（比較 vs 表示）→ de-converge 清 1 clean、改「箭頭越長代表力越大」。重凍 **1b6e6bc5**、重數 5-clean 全淨。
