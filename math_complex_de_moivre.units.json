@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 複數（complex）strand 單元（第5個）。知識點 math.t_sub.complex.de-moivre（棣美弗定理）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；同級術語一律 gloss：複數 (complex number)、極式 (polar form)、模 (modulus)、輻角 (argument)、棣美弗定理 (De Moivre's theorem)）。前置假設：已學極式（前一單元）、三角特殊角、次方。★scope（t_sub，接 polar-form）：棣美弗定理 (r(cosθ+isinθ))ⁿ=rⁿ(cos nθ+i sin nθ)——模取 n 次方、輻角乘 n；用來算複數的整數次方：先化極式再套公式；幾何意義＝乘一次 z 就把向量旋轉 θ、長度乘 r，取 n 次方就是旋轉 nθ、長度變 rⁿ。不含單位根（下一單元）、不含分數次方/開方的完整處理。repro（tools/verify/math_checks7.py::complex.de-moivre，本 session 新增並跑過 PASS；binding 另有 math_checks6 待補）：(1+i)⁸=16（r=√2,θ=45°,n=8→16(cos360°+isin360°)）；(cosθ+isinθ)²=cos2θ+isin2θ；(cos30°+isin30°)³=i；(cos20°+isin20°)⁹=−1。★自檢（math-unit defect-classes）：figure＝單位圓第一象限弧 r=1、z(30°)/z²(60°)/z³=i(90°) 三綠向量＋點、輻角依序 θ/2θ/3θ——等軸比例（#62，單位圓要圓、角度真實）、向量端點在圓上（#43）、標籤移出免碰撞（#2）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾 z/z²/z³ 輻角依序 θ/2θ/3θ（#4/#46，模取次方因 r=1 看不出、由 teach＋practice 補）；practice 四答案＝{r³(cos3θ+isin3θ)(Q1 公式),16(Q2 (1+i)⁸),nθ(Q3 輻角變化),−1(Q4 (cos20°+isin20°)⁹)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 角沒乘/模乘n非次方/角取立方；Q2 r當2→256/沒取次方/角錯成i；Q3 θⁿ/θ÷n/θ+n；Q4 cos0→1/角成90°→i/沒取次方）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_complex_de_moivre.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.complex.de-moivre",
+   "title_zh": "棣美弗定理",
+   "can_do": "我會用『棣美弗定理 (De Moivre's theorem)』算『複數 (complex number)』的整數次方：把複數寫成『極式 (polar form)』z ＝ r(cos θ ＋ i sin θ) 後，(r(cos θ ＋ i sin θ))ⁿ ＝ rⁿ(cos nθ ＋ i sin nθ)——也就是『模 (modulus)』r 取 n 次方、『輻角 (argument)』θ 乘上 n。我也懂它的幾何意義：乘一次 z 就是把向量旋轉 θ、長度乘 r，取 n 次方就是旋轉 nθ、長度變 rⁿ。",
+   "situation_group": "複數：棣美弗定理",
+   "subject": "math",
+   "strand": "complex",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.complex.de-moivre"
+   ],
+   "prerequisites": [
+    "math.t_sub.complex.polar-form"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-dm-thm",
+     "text": "棣美弗定理：把複數寫成極式 z ＝ r(cos θ ＋ i sin θ)，則它的 n 次方是 (r(cos θ ＋ i sin θ))ⁿ ＝ rⁿ(cos nθ ＋ i sin nθ)。意思是：模 r 要取 n 次方（變成 rⁿ）、輻角 θ 要乘上 n（變成 nθ）。n 是整數時都成立。",
+     "kind": "definition",
+     "source_refs": [
+      "棣美弗定理（高中數學 複數）"
+     ],
+     "verification_ref": "(r(cosθ+isinθ))ⁿ=rⁿ(cos nθ+i sin nθ)；(cosθ+isinθ)²=cos2θ+isin2θ（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-dm-apply",
+     "text": "要算一個複數的高次方，直接乘很麻煩，用極式加棣美弗定理就很快：先把 a ＋ bi 化成極式，再把模取 n 次方、輻角乘 n。例：算 (1 ＋ i)⁸。先化極式：1 ＋ i ＝ √2(cos 45° ＋ i sin 45°)。再套公式：(1 ＋ i)⁸ ＝ (√2)⁸ (cos (8 × 45°) ＋ i sin (8 × 45°)) ＝ 16 (cos 360° ＋ i sin 360°) ＝ 16 × 1 ＝ 16。",
+     "kind": "definition",
+     "source_refs": [
+      "用極式算複數次方（高中數學 複數）"
+     ],
+     "verification_ref": "(1+i)⁸=16（r=√2,θ=45°,n=8→16(cos360°+isin360°)）（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-dm-rotate",
+     "text": "棣美弗定理的幾何意義：複數相乘會「旋轉又縮放」。乘一次 z ＝ r(cos θ ＋ i sin θ)，就是把向量逆時針旋轉 θ、長度乘上 r。所以取 n 次方 zⁿ，就是旋轉 nθ、長度變成 rⁿ。特別地，若 r ＝ 1（在單位圓上），長度都不變，只有方向在轉：例如 z ＝ cos 30° ＋ i sin 30°，則 z² 的輻角是 60°、z³ 的輻角是 90°（剛好 z³ ＝ cos 90° ＋ i sin 90° ＝ i）。",
+     "kind": "definition",
+     "source_refs": [
+      "複數次方的旋轉幾何（高中數學 複數）"
+     ],
+     "verification_ref": "(cos30°+isin30°)³=cos90°+isin90°=i（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.complex.de-moivre"
+     ],
+     "body": "這一單元學棣美弗定理。先講公式（(r(cos θ ＋ i sin θ))ⁿ ＝ rⁿ(cos nθ ＋ i sin nθ)，模取 n 次方、輻角乘 n）；再講怎麼用它算複數的高次方；最後講它的幾何意義（旋轉 nθ、長度變 rⁿ）。最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.complex.de-moivre"
+     ],
+     "body": "① 定理：(r(cos θ ＋ i sin θ))ⁿ ＝ rⁿ(cos nθ ＋ i sin nθ)——模取 n 次方、輻角乘 n。② 算次方：先化極式再套公式。例 (1 ＋ i)⁸：1 ＋ i ＝ √2(cos 45° ＋ i sin 45°)，所以 ＝ (√2)⁸(cos 360° ＋ i sin 360°) ＝ 16 × 1 ＝ 16。③ 幾何：乘一次 z 就旋轉 θ、長度乘 r；n 次方就旋轉 nθ、長度變 rⁿ。單位圓上（r ＝ 1）z、z²、z³ 的輻角依序是 θ、2θ、3θ。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.complex.de-moivre"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><defs><marker id='dmah' markerWidth='7' markerHeight='7' refX='5.5' refY='3' orient='auto'><path d='M0,0 L6,3 L0,6 z' fill='#2f6f54'/></marker></defs><text x='180' y='13' font-family='sans-serif' font-size='10' fill='#2f6f54' text-anchor='middle' font-weight='bold'>單位圓上 z、z²、z³ 的輻角依序是 θ、2θ、3θ（θ ＝ 30°）</text><line x1='70' y1='140' x2='210' y2='140' stroke='#99a7b5' stroke-width='1'/><line x1='90' y1='150' x2='90' y2='38' stroke='#99a7b5' stroke-width='1'/><text x='214' y='143' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='start'>實軸</text><text x='95' y='44' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='start'>虛軸</text><text x='83' y='151' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='end'>O</text><path d='M 180 140 A 90 90 0 0 1 90 50' fill='none' stroke='#c9d3dd' stroke-width='1.2'/><line x1='90' y1='140' x2='167.9' y2='95' stroke='#2f6f54' stroke-width='1.6' marker-end='url(#dmah)'/><line x1='90' y1='140' x2='135' y2='62.1' stroke='#2f6f54' stroke-width='1.6' marker-end='url(#dmah)'/><line x1='90' y1='140' x2='90' y2='50' stroke='#2f6f54' stroke-width='1.6' marker-end='url(#dmah)'/><circle cx='167.9' cy='95' r='2.6' fill='#2f6f54'/><circle cx='135' cy='62.1' r='2.6' fill='#2f6f54'/><circle cx='90' cy='50' r='3' fill='#2f6f54'/><text x='173' y='98' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='start'>z（30°）</text><text x='140' y='58' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='start'>z²（60°）</text><text x='96' y='52' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='start'>z³ ＝ i（90°）</text></svg>",
+      "alt": "標題「單位圓上 z、z²、z³ 的輻角依序是 θ、2θ、3θ（θ ＝ 30°）」。一個複數平面，灰色水平實軸（右端標「實軸」）與垂直虛軸（上端標「虛軸」）交於原點 O，第一象限畫一段灰色的單位圓弧。從 O 畫三條綠色向量到單位圓上：一條到 30° 的點標「z（30°）」、一條到 60° 的點標「z²（60°）」、一條到 90° 的點標「z³ ＝ i（90°）」。顯示每取一次次方，輻角就多加一個 30°。",
+      "caption": "取 z ＝ cos 30° ＋ i sin 30°（在單位圓上，r ＝ 1）。z² 的輻角變成 2 × 30° ＝ 60°、z³ 的輻角變成 3 × 30° ＝ 90°，剛好 z³ ＝ cos 90° ＋ i sin 90° ＝ i。因為 r ＝ 1，長度都不變，只有方向一次次轉 30°——這就是棣美弗定理「輻角乘 n」的樣子；若 r ≠ 1，長度還會一起變成 rⁿ。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.complex.de-moivre"
+     ],
+     "body": "最後練棣美弗定理。重點：(r(cos θ ＋ i sin θ))ⁿ ＝ rⁿ(cos nθ ＋ i sin nθ)，模取 n 次方、輻角乘 n；算高次方先化極式再套公式。小提醒：(1) 模是「取 n 次方」rⁿ，不是乘以 n；(2) 輻角是「乘以 n」nθ，不是取 n 次方；(3) 算到 nθ 後要記得化簡角度（例如 360° 等於回到 0°、cos 360° ＝ 1）。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "根據棣美弗定理，(r(cos θ ＋ i sin θ))³ 等於多少？",
+     "answer": "r³(cos 3θ ＋ i sin 3θ)",
+     "kp_ids": [
+      "math.t_sub.complex.de-moivre"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.complex.de-moivre"
+     ],
+     "options": [
+      "r³(cos 3θ ＋ i sin 3θ)",
+      "r³(cos θ ＋ i sin θ)",
+      "3r(cos 3θ ＋ i sin 3θ)",
+      "r³(cos θ³ ＋ i sin θ³)"
+     ],
+     "distractor_rationales": {
+      "r³(cos θ ＋ i sin θ)": "模取了 3 次方，但輻角忘了乘 3：輻角也要變成 3θ，答案是 r³(cos 3θ ＋ i sin 3θ)。",
+      "3r(cos 3θ ＋ i sin 3θ)": "模算成「乘以 3」了：模要「取 3 次方」r³，不是 3r；輻角 3θ 對。",
+      "r³(cos θ³ ＋ i sin θ³)": "輻角算成「取 3 次方」θ³ 了：輻角要「乘以 3」變 3θ，不是 θ³；是 r³(cos 3θ ＋ i sin 3θ)。"
+     },
+     "answer_evidence": [
+      "c-dm-thm"
+     ],
+     "feedback": "棣美弗定理：模取 n 次方、輻角乘 n，所以是 r³(cos 3θ ＋ i sin 3θ)。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用極式和棣美弗定理算 (1 ＋ i)⁸（已知 1 ＋ i ＝ √2(cos 45° ＋ i sin 45°)），等於多少？",
+     "answer": "16",
+     "kp_ids": [
+      "math.t_sub.complex.de-moivre"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.complex.de-moivre"
+     ],
+     "options": [
+      "16",
+      "256",
+      "√2",
+      "16i"
+     ],
+     "distractor_rationales": {
+      "256": "把模當成 2 了：模是 √2，(√2)⁸ ＝ 2⁴ ＝ 16；2⁸ 才是 256。",
+      "√2": "只寫了模 r、忘了取 8 次方：模要取 n 次方 (√2)⁸ ＝ 16。",
+      "16i": "輻角算錯了：8 × 45° ＝ 360°，cos 360° ＝ 1、sin 360° ＝ 0，是實數 16；若輻角是 90° 才會有 i。"
+     },
+     "answer_evidence": [
+      "c-dm-apply"
+     ],
+     "feedback": "(1 ＋ i)⁸ ＝ (√2)⁸(cos 360° ＋ i sin 360°) ＝ 16 × 1 ＝ 16。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "把複數 z ＝ r(cos θ ＋ i sin θ) 取 n 次方後，它的輻角會變成多少？",
+     "answer": "nθ",
+     "kp_ids": [
+      "math.t_sub.complex.de-moivre"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.complex.de-moivre"
+     ],
+     "options": [
+      "nθ",
+      "θⁿ",
+      "θ ÷ n",
+      "θ ＋ n"
+     ],
+     "distractor_rationales": {
+      "θⁿ": "輻角是「乘以 n」不是「取 n 次方」：zⁿ 的輻角是 nθ，不是 θⁿ。",
+      "θ ÷ n": "方向弄反了：取次方是把輻角「乘以 n」變大，不是除以 n；是 nθ。",
+      "θ ＋ n": "n 是次方不是角度，不能直接加到 θ 上：輻角要乘以 n 變成 nθ。"
+     },
+     "answer_evidence": [
+      "c-dm-thm"
+     ],
+     "feedback": "棣美弗定理：取 n 次方時輻角乘以 n，變成 nθ（模則取 n 次方 rⁿ）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "計算 (cos 20° ＋ i sin 20°)⁹ 等於多少？",
+     "answer": "−1",
+     "kp_ids": [
+      "math.t_sub.complex.de-moivre"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.complex.de-moivre"
+     ],
+     "options": [
+      "−1",
+      "1",
+      "i",
+      "cos 20° ＋ i sin 20°"
+     ],
+     "distractor_rationales": {
+      "1": "輻角算成 0°（或 360°）了：9 × 20° ＝ 180°，cos 180° ＝ −1、sin 180° ＝ 0，所以是 −1，不是 1。",
+      "i": "輻角算成 90° 了：9 × 20° ＝ 180° 不是 90°；cos 180° ＝ −1，答案是 −1。",
+      "cos 20° ＋ i sin 20°": "忘了取 9 次方、以為不變：要把輻角乘 9 變成 180°，模 1⁹ ＝ 1，得 cos 180° ＋ i sin 180° ＝ −1。"
+     },
+     "answer_evidence": [
+      "c-dm-rotate"
+     ],
+     "feedback": "模 1⁹ ＝ 1、輻角 9 × 20° ＝ 180°，所以 ＝ cos 180° ＋ i sin 180° ＝ −1。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（棣美弗定理 (r(cosθ+isinθ))ⁿ=rⁿ(cos nθ+i sin nθ)，模取 n 次方、輻角乘 n；算高次方先化極式再套公式，(1+i)⁸=(√2)⁸(cos360°+isin360°)=16；幾何＝乘一次 z 旋轉 θ 長度乘 r、n 次方旋轉 nθ 長度 rⁿ，單位圓 r=1 時 z/z²/z³ 輻角 θ/2θ/3θ、(cos30°+isin30°)³=i；(cos20°+isin20°)⁹=cos180°+isin180°=−1；三鐵律＝模取次方非乘 n、輻角乘 n 非取次方、算完 nθ 要化簡角度）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
