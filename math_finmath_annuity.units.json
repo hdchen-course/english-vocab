@@ -1,0 +1,211 @@
+{
+ "_note": "數學島 財務數學（finmath）strand 單元（第2個）。知識點 math.t_sub.finmath.annuity（年金終值）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次，運算詞/結果詞不可互換 #63；同級術語一律 gloss：年金 (annuity)、年金終值 (future value)、複利 (compound interest)、年利率 (annual interest rate)）。前置假設：已會單利與複利（前一單元）、乘冪、等比。★scope（t_sub，接 simple-compound-interest）：年金＝每期末存入固定金額 PMT 的一系列付款；年金終值 FV＝把每筆付款連同之後賺到的複利利息全部累加到最後一期末＝PMT·((1+r)ⁿ−1)/r（期末年金/ordinary annuity）；機制＝第1期末付的滾 n−1 期、…、最後一期付的滾 0 期（不賺利息）。例 PMT=100、r=5%、n=3：100×1.05²+100×1.05+100=110.25+105+100=315.25＝100×((1.05)³−1)/0.05。不含年金現值、不含期初年金(annuity-due)細節（僅作 distractor）、不含永續年金。repro（tools/verify/math_checks7.py::finmath.annuity，.venv PASS；binding 另有 math_checks6 待補）：FV=100·((1.05)³−1)/0.05≈315.25。★自檢（math-unit defect-classes）：figure＝三排（期1 100→×1.05²→110.25；期2 100→×1.05→105；期3 100→×1→100）＋底部總和 315.25——每排值正確（#43）、箭頭指向正確、標籤移出免碰撞（#2）、alt 與 SVG text 逐字一致（#33）、★figure 標題只承諾三期每期末存100、年利率5%的年金終值情境（#4/#46，公式由 teach＋caption 補）；practice 四答案＝{公式(Q1),315.25(Q2),三筆拆解(Q3),0(Q4最後一期不賺利息)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 ÷改×/當單筆複利/當單利；Q2 無利息300/只2期205/每筆多滾一期331.0125；Q3 每筆多滾一期/無利息/當單筆；Q4 5/15.7625/跟第1期一樣）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）；速率無涉（#60 N/A）；無裸『量』當動詞（#55）。claim kind=definition。figure-only example 無 body。",
+ "page": "math_finmath_annuity.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.finmath.annuity",
+   "title_zh": "年金終值",
+   "can_do": "我知道『年金 (annuity)』是每期末存入固定金額的一系列付款，也會算它的『年金終值 (future value)』——把每一筆付款連同之後賺到的『複利 (compound interest)』利息，全部累加到最後一期末的總值。公式是 FV ＝ PMT × ((1 ＋ r)ⁿ − 1) ÷ r，其中 PMT 是每期付款、r 是每期『年利率 (annual interest rate)』、n 是期數。我也會把它拆成「每一筆各自滾到最後再相加」來驗算。",
+   "situation_group": "財務數學：年金終值",
+   "subject": "math",
+   "strand": "finmath",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "math.t_sub.finmath.annuity"
+   ],
+   "prerequisites": [
+    "math.t_adv.finmath.simple-compound-interest"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ann-def",
+     "text": "年金是「每期末存入固定金額」的一系列付款（例如每年年底存 100）。它的年金終值，就是把每一筆存款連同它之後賺到的複利利息，全部累加到最後一期末的總值。公式是 FV ＝ PMT × ((1 ＋ r)ⁿ − 1) ÷ r，其中 PMT 是每期存的錢、r 是每期利率、n 是期數。",
+     "kind": "definition",
+     "source_refs": [
+      "年金終值（高中數學 財務數學）"
+     ],
+     "verification_ref": "FV=PMT·((1+r)ⁿ−1)/r（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ann-mechanism",
+     "text": "為什麼是這個公式？把每一筆存款各自滾到最後一期末再相加就懂了：第 1 期末存的那筆還能滾 n − 1 期，第 2 期末存的滾 n − 2 期……最後一期末存的剛存入就結算、滾 0 期（不賺利息）。例：每期存 100、利率 5%、共 3 期，三筆到第 3 期末分別是 100 × 1.05² ＝ 110.25、100 × 1.05 ＝ 105、100 × 1 ＝ 100，相加 ＝ 315.25。",
+     "kind": "definition",
+     "source_refs": [
+      "年金終值的推導（高中數學 財務數學）"
+     ],
+     "verification_ref": "100·1.05²+100·1.05+100=315.25（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ann-apply",
+     "text": "用公式算同一個例子：PMT ＝ 100、r ＝ 5%（0.05）、n ＝ 3，FV ＝ 100 × ((1.05)³ − 1) ÷ 0.05 ＝ 100 × (1.157625 − 1) ÷ 0.05 ＝ 100 × 0.157625 ÷ 0.05 ＝ 315.25。和「逐筆相加」得到的 315.25 完全一樣。",
+     "kind": "definition",
+     "source_refs": [
+      "年金終值計算（高中數學 財務數學）"
+     ],
+     "verification_ref": "100·((1.05)³−1)/0.05=315.25（math_checks7 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.finmath.annuity"
+     ],
+     "body": "這一單元學年金終值。先講什麼是年金、什麼是年金終值（公式 FV ＝ PMT × ((1 ＋ r)ⁿ − 1) ÷ r）；再用「逐筆滾到最後相加」看懂公式；最後用公式算一次。最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.finmath.annuity"
+     ],
+     "body": "① 年金＝每期末存固定金額；年金終值＝把每筆連同利息累加到最後一期末，公式 FV ＝ PMT × ((1 ＋ r)ⁿ − 1) ÷ r。② 機制：第 1 期末存的滾 n − 1 期、……、最後一期末存的滾 0 期（不賺利息）。例 100、5%、3 期 → 110.25 ＋ 105 ＋ 100 ＝ 315.25。③ 用公式：100 × ((1.05)³ − 1) ÷ 0.05 ＝ 315.25，和逐筆相加一樣。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.finmath.annuity"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><defs><marker id='anah' markerWidth='7' markerHeight='7' refX='5.5' refY='3' orient='auto'><path d='M0,0 L6,3 L0,6 z' fill='#33475b'/></marker></defs><text x='180' y='13' font-family='sans-serif' font-size='10' fill='#2f6f54' text-anchor='middle' font-weight='bold'>年金終值：每期末存 100、年利率 5%、共 3 期</text><text x='6' y='39' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='start'>期1</text><rect x='34' y='27' width='40' height='20' rx='4' fill='#e6edf3' stroke='#99a7b5'/><text x='54' y='40' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>100</text><line x1='74' y1='37' x2='250' y2='37' stroke='#33475b' stroke-width='1.2' marker-end='url(#anah)'/><text x='162' y='32' font-family='sans-serif' font-size='8.5' fill='#2f6f54' text-anchor='middle'>× 1.05²</text><rect x='254' y='27' width='56' height='20' rx='4' fill='#e6edf3' stroke='#99a7b5'/><text x='282' y='40' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>110.25</text><text x='6' y='69' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='start'>期2</text><rect x='34' y='57' width='40' height='20' rx='4' fill='#e6edf3' stroke='#99a7b5'/><text x='54' y='70' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>100</text><line x1='74' y1='67' x2='250' y2='67' stroke='#33475b' stroke-width='1.2' marker-end='url(#anah)'/><text x='162' y='62' font-family='sans-serif' font-size='8.5' fill='#2f6f54' text-anchor='middle'>× 1.05</text><rect x='254' y='57' width='56' height='20' rx='4' fill='#e6edf3' stroke='#99a7b5'/><text x='282' y='70' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>105</text><text x='6' y='99' font-family='sans-serif' font-size='9' fill='#6b7785' text-anchor='start'>期3</text><rect x='34' y='87' width='40' height='20' rx='4' fill='#e6edf3' stroke='#99a7b5'/><text x='54' y='100' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>100</text><line x1='74' y1='97' x2='250' y2='97' stroke='#33475b' stroke-width='1.2' marker-end='url(#anah)'/><text x='162' y='92' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>× 1（不賺利息）</text><rect x='254' y='87' width='56' height='20' rx='4' fill='#e6edf3' stroke='#99a7b5'/><text x='282' y='100' font-family='sans-serif' font-size='9' fill='#33475b' text-anchor='middle'>100</text><line x1='254' y1='118' x2='310' y2='118' stroke='#99a7b5' stroke-width='1'/><rect x='254' y='122' width='56' height='20' rx='4' fill='#d7e8de' stroke='#2f6f54'/><text x='282' y='135' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='middle'>315.25</text><text x='240' y='135' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='end'>年金終值 ＝</text><text x='180' y='158' font-family='sans-serif' font-size='8.5' fill='#6b7785' text-anchor='middle'>110.25 ＋ 105 ＋ 100 ＝ 315.25 ＝ 100 × ((1.05)³ − 1) ÷ 0.05</text></svg>",
+      "alt": "標題「年金終值：每期末存 100、年利率 5%、共 3 期」。三排：期1 的方塊 100，向右箭頭標「× 1.05²」指到方塊 110.25；期2 的方塊 100，箭頭標「× 1.05」指到方塊 105；期3 的方塊 100，箭頭標「× 1（不賺利息）」指到方塊 100。右下方「年金終值 ＝」接綠色方塊 315.25。最下方一行字「110.25 ＋ 105 ＋ 100 ＝ 315.25 ＝ 100 × ((1.05)³ − 1) ÷ 0.05」。",
+      "caption": "每期末存 100、共 3 期，把每一筆各自滾到第 3 期末：第 1 期的滾 2 期變 110.25、第 2 期的滾 1 期變 105、第 3 期的剛存入不賺利息還是 100。三筆相加 ＝ 315.25，正好等於公式 100 × ((1.05)³ − 1) ÷ 0.05 ＝ 315.25。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.finmath.annuity"
+     ],
+     "body": "最後練年金終值。重點：FV ＝ PMT × ((1 ＋ r)ⁿ − 1) ÷ r；也可以把每筆各自滾到最後再相加來驗算。小提醒：(1) 期末年金的最後一筆剛存入就結算，不賺利息；(2) 公式的分母是「÷ r」，不是「× r」；(3) 年金終值是「很多筆付款」的總值，和「單筆一次存入」的複利不一樣。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "每期末存入 PMT、每期利率 r、共 n 期，年金終值的公式是哪一個？",
+     "answer": "FV ＝ PMT × ((1 ＋ r)ⁿ − 1) ÷ r",
+     "kp_ids": [
+      "math.t_sub.finmath.annuity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.finmath.annuity"
+     ],
+     "options": [
+      "FV ＝ PMT × ((1 ＋ r)ⁿ − 1) ÷ r",
+      "FV ＝ PMT × ((1 ＋ r)ⁿ − 1) × r",
+      "FV ＝ PMT × (1 ＋ r)ⁿ",
+      "FV ＝ PMT × n × r"
+     ],
+     "distractor_rationales": {
+      "FV ＝ PMT × ((1 ＋ r)ⁿ − 1) × r": "分母寫錯成乘：公式是「÷ r」不是「× r」——FV ＝ PMT × ((1 ＋ r)ⁿ − 1) ÷ r。",
+      "FV ＝ PMT × (1 ＋ r)ⁿ": "這是「單筆一次存入 PMT」滾 n 期的複利，不是年金：年金是每期都存，要用 ((1 ＋ r)ⁿ − 1) ÷ r。",
+      "FV ＝ PMT × n × r": "這是把它當成單利在算：年金每筆都滾複利，要用 ((1 ＋ r)ⁿ − 1) ÷ r，不是 n × r。"
+     },
+     "answer_evidence": [
+      "c-ann-def"
+     ],
+     "feedback": "年金終值 FV ＝ PMT × ((1 ＋ r)ⁿ − 1) ÷ r，分母是 ÷ r。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "每期末存 100、每期利率 5%、共 3 期，年金終值是多少？",
+     "answer": "315.25",
+     "kp_ids": [
+      "math.t_sub.finmath.annuity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.finmath.annuity"
+     ],
+     "options": [
+      "315.25",
+      "300",
+      "205",
+      "331.0125"
+     ],
+     "distractor_rationales": {
+      "300": "只把 3 筆 100 直接相加、忘了利息：要算 100 × 1.05² ＋ 100 × 1.05 ＋ 100 ＝ 315.25。",
+      "205": "只算了 2 期（少算一期）：100 × 1.05 ＋ 100 ＝ 205 是 2 期的，3 期是 315.25。",
+      "331.0125": "每一筆都多滾了一期（當成期初存款）：期末年金最後一筆不賺利息，正確是 110.25 ＋ 105 ＋ 100 ＝ 315.25。"
+     },
+     "answer_evidence": [
+      "c-ann-apply"
+     ],
+     "feedback": "100 × ((1.05)³ − 1) ÷ 0.05 ＝ 315.25，也等於 110.25 ＋ 105 ＋ 100。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "每期末存 100、利率 5%、共 3 期，年金終值 315.25 是哪三筆加起來的？",
+     "answer": "100 × 1.05² ＋ 100 × 1.05 ＋ 100",
+     "kp_ids": [
+      "math.t_sub.finmath.annuity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.finmath.annuity"
+     ],
+     "options": [
+      "100 × 1.05² ＋ 100 × 1.05 ＋ 100",
+      "100 × 1.05³ ＋ 100 × 1.05² ＋ 100 × 1.05",
+      "100 ＋ 100 ＋ 100",
+      "100 × 3 × 1.05"
+     ],
+     "distractor_rationales": {
+      "100 × 1.05³ ＋ 100 × 1.05² ＋ 100 × 1.05": "每一筆都多滾了一期：期末年金第 1 期滾 2 期、第 2 期滾 1 期、第 3 期滾 0 期，是 100 × 1.05² ＋ 100 × 1.05 ＋ 100。",
+      "100 ＋ 100 ＋ 100": "這樣沒有算利息：前兩筆各自還會滾利息，應是 110.25 ＋ 105 ＋ 100 ＝ 315.25。",
+      "100 × 3 × 1.05": "這是把三筆當成一整筆只滾一次：每一筆滾的期數不同，要分別算再相加。"
+     },
+     "answer_evidence": [
+      "c-ann-mechanism"
+     ],
+     "feedback": "三筆分別滾 2、1、0 期：100 × 1.05² ＋ 100 × 1.05 ＋ 100 ＝ 315.25。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "每期末存 100、利率 5%、共 3 期，第 3 期（最後一期）存的那筆 100，到第 3 期末結算時賺了多少利息？",
+     "answer": "0（它剛存入就結算，沒有時間生利息）",
+     "kp_ids": [
+      "math.t_sub.finmath.annuity"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.finmath.annuity"
+     ],
+     "options": [
+      "0（它剛存入就結算，沒有時間生利息）",
+      "5（100 × 5%）",
+      "15.7625",
+      "和第 1 期那筆一樣多"
+     ],
+     "distractor_rationales": {
+      "5（100 × 5%）": "最後一筆沒有再滾一期：它在第 3 期末才存入、同時就結算，賺 0 利息，不是 100 × 5% ＝ 5。",
+      "15.7625": "這把它當成滾了 3 期在算：最後一筆根本沒有時間生利息，賺 0。",
+      "和第 1 期那筆一樣多": "每一筆賺的利息不一樣：第 1 期那筆滾 2 期賺 10.25，最後一筆滾 0 期賺 0。"
+     },
+     "answer_evidence": [
+      "c-ann-mechanism"
+     ],
+     "feedback": "期末年金的最後一筆剛存入就結算，滾 0 期、賺 0 利息，所以還是 100。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（年金＝每期末存固定金額；年金終值 FV＝PMT×((1+r)ⁿ−1)÷r＝把每筆連同利息累加到最後一期末；機制＝第1期滾 n−1 期、…、最後一期滾 0 期不賺利息；例 100、5%、3 期：110.25＋105＋100＝315.25＝100×((1.05)³−1)÷0.05；三鐵律＝最後一筆不賺利息、分母是 ÷r 非 ×r、年金是多筆總值非單筆複利）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
