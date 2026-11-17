@@ -1,0 +1,198 @@
+{
+ "_note": "數學島 空間（space）strand 單元（第5、末）。知識點 math.t_sub.space.distance-angle（點/線/面間的距離與夾角計算）。tier=t_sub。全繁體零簡體零 PRC 詞。數學中文授課無音檔。術語附國際英語（R15，只在首次 rendered 處 gloss 一次：距離 (distance)、夾角 (angle)、法向量 (normal vector)、方向向量 (direction vector)、銳角 (acute angle)）。前置假設：已會空間坐標、空間向量內積與長度、平面法向量、直線方向向量。★scope（t_sub）：(1) 點到平面距離＝|ax₀+by₀+cz₀−d|/√(a²+b²+c²)（分子＝點代入平面左邊再減常數 d 取絕對值；分母＝法向量長度）；例 原點到 2x+2y+z=6：|0−6|/√(4+4+1)=6/3=2。(2) 兩直線夾角 cosθ=|d₁·d₂|/(|d₁||d₂|)（內積取絕對值→得 0°~90° 的銳角）；例 (1,0,0)&(1,1,0) cos=1/√2→45°；(1,1,0)·(1,−1,0)=0→90°。不含點到直線距離、不含兩平面二面角一般式（beyond t_sub）。★距離用中文詞「距離」呈現、不用字母 d（避免與平面常數 d 字母衝突）。repro（tools/verify/math_checks6.py::space.distance-angle，repro_gate .venv PASS、registry 指紋 5cd31736e997b881；本 session 強化加 O→2x+2y+z=6=2、兩直線夾角 45°/90° 並誠實更新指紋）。★自檢（math-unit defect-classes）：figure＝傾斜平面＋平面外一點 P＋P 到平面的垂直虛線段（標直角記號、標「距離」），幾何正確、垂足直角記號正確、標籤移出免碰（#2）、alt 與 SVG text 逐字一致、★figure 標題只承諾點到平面垂直距離示意（#4/#46）；practice 四答案＝{2(Q1 點到平面距離),45°(Q2 兩直線夾角),法向量長度√(a²+b²+c²)(Q3 分母),90°(Q4 夾角)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1 分子沒除|n| 6/乘|n| 18/以為原點在面上 0；Q2 誤判垂直 90°/誤判平行 0°/cos 算錯 60°；Q3 平面常數 d/三係數相加 a+b+c/點到原點距離；Q4 以為平行 0°/以為45°/180°）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 與 option 逐字相符（#59）。claim kind=fact。figure-only example 無 body。",
+ "page": "math_space_distance_angle.html",
+ "units": [
+  {
+   "unit_id": "math.t_sub.space.distance-angle",
+   "title_zh": "點、線、面間的距離與夾角計算",
+   "can_do": "我會算空間中點到平面的『距離 (distance)』：把點代進平面方程式的左邊、減掉右邊的常數、取絕對值，再除以『法向量 (normal vector)』的長度。我也會用『方向向量 (direction vector)』算兩條直線的『夾角 (angle)』：cosθ ＝ |d₁·d₂| / (|d₁||d₂|)，取絕對值讓答案落在 0°~90° 的『銳角 (acute angle)』範圍。",
+   "situation_group": "空間：距離與夾角",
+   "subject": "math",
+   "strand": "space",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "math.t_sub.space.distance-angle"
+   ],
+   "prerequisites": [],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-da-point-plane",
+     "text": "點 (x₀, y₀, z₀) 到平面 ax + by + cz ＝ d 的距離 ＝ |ax₀ + by₀ + cz₀ − d| / √(a² + b² + c²)。分子是把點代進平面左邊、再減掉右邊的常數 d、取絕對值；分母是法向量 (a, b, c) 的長度。例：原點 (0, 0, 0) 到平面 2x + 2y + z ＝ 6 的距離 ＝ |0 − 6| / √(2² + 2² + 1²) ＝ 6 / 3 ＝ 2。",
+     "kind": "fact",
+     "source_refs": [
+      "點到平面距離公式（高中 選修數學）"
+     ],
+     "verification_ref": "|ax₀+by₀+cz₀−d|/√(a²+b²+c²)；O→2x+2y+z=6=6/3=2、O→x+y+z=3=√3（math_checks6::space.distance-angle .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-da-line-angle",
+     "text": "兩條直線的夾角 θ，用它們的方向向量算：cosθ ＝ |d₁·d₂| / (|d₁||d₂|)。內積取絕對值是為了讓夾角落在 0° 到 90° 的範圍（兩直線的夾角定義為銳角或直角）。例：方向 (1, 0, 0) 和 (1, 1, 0)，cosθ ＝ |1| / (1 × √2) ＝ 1/√2，所以 θ ＝ 45°。",
+     "kind": "fact",
+     "source_refs": [
+      "兩直線夾角公式（高中 選修數學）"
+     ],
+     "verification_ref": "cosθ=|d₁·d₂|/(|d₁||d₂|)；(1,0,0)&(1,1,0)=45°、(1,1,0)⊥(1,−1,0)=90°（math_checks6::space.distance-angle .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.space.distance-angle"
+     ],
+     "body": "這一單元學兩個常用的計算：點到平面有多遠（距離），還有兩條直線張開多大的角（夾角）。兩個都用前面學過的向量工具——法向量、方向向量、內積和長度。先學點到平面距離，再學兩直線夾角，最後練習。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.space.distance-angle"
+     ],
+     "body": "① 點到平面距離 ＝ |ax₀ + by₀ + cz₀ − d| / √(a² + b² + c²)：分子把點代進平面左邊、減常數 d、取絕對值；分母是法向量長度。例 原點到 2x + 2y + z ＝ 6：|0 − 6| / √(4 + 4 + 1) ＝ 6/3 ＝ 2。② 兩直線夾角 cosθ ＝ |d₁·d₂| / (|d₁||d₂|)，內積取絕對值取銳角。例 (1, 0, 0) 和 (1, 1, 0)：cosθ ＝ 1/√2 → θ ＝ 45°。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "math.t_sub.space.distance-angle"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>點到平面的距離＝點到平面的垂直長度</text><polygon points='70,122 212,122 264,88 122,88' fill='#e6edf3' stroke='#99a7b5' stroke-width='1.6'/><text x='250' y='116' font-family='sans-serif' font-size='8' fill='#6b7785' text-anchor='start'>平面</text><circle cx='166' cy='50' r='3' fill='#33475b'/><text x='166' y='44' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle'>P</text><line x1='166' y1='53' x2='166' y2='105' stroke='#c2535d' stroke-width='2' stroke-dasharray='4 3'/><circle cx='166' cy='105' r='2.4' fill='#c2535d'/><rect x='166' y='99' width='6' height='6' fill='none' stroke='#33475b' stroke-width='1'/><text x='158' y='82' font-family='sans-serif' font-size='8.5' fill='#c2535d' text-anchor='end' font-weight='bold'>距離</text><text x='180' y='152' font-family='sans-serif' font-size='8' fill='#33475b' text-anchor='middle'>距離 ＝ |ax₀ ＋ by₀ ＋ cz₀ − d| / √(a² ＋ b² ＋ c²)</text></svg>",
+      "alt": "標題「點到平面的距離＝點到平面的垂直長度」。圖中畫一個傾斜的平行四邊形代表一個平面，右側標「平面」。平面外上方有一個點 P。從 P 往平面畫一條紅色垂直虛線，落在平面上的垂足處畫了一個小直角記號（表示這條線和平面垂直），虛線旁標「距離」。最下面一行寫公式「距離 ＝ |ax₀ ＋ by₀ ＋ cz₀ − d| / √(a² ＋ b² ＋ c²)」。",
+      "caption": "點到平面的距離，指的是從這個點「垂直」落到平面上的那一段最短長度（紅色虛線，垂足的小直角記號表示它和平面垂直）。算法：把點的坐標代進平面左邊 ax ＋ by ＋ cz、減掉右邊的常數 d、取絕對值，再除以法向量 (a, b, c) 的長度 √(a² ＋ b² ＋ c²)。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "math.t_sub.space.distance-angle"
+     ],
+     "body": "最後練點、線、面間的距離與夾角。重點：(1) 點到平面距離 ＝ |ax₀ + by₀ + cz₀ − d| / √(a² + b² + c²)（分母是法向量長度）；(2) 兩直線夾角 cosθ ＝ |d₁·d₂| / (|d₁||d₂|)，取絕對值得銳角；(3) 這些都靠向量的內積和長度來算。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "原點 (0, 0, 0) 到平面 2x + 2y + z ＝ 6 的距離是多少？",
+     "answer": "2",
+     "kp_ids": [
+      "math.t_sub.space.distance-angle"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.space.distance-angle"
+     ],
+     "options": [
+      "2",
+      "6",
+      "18",
+      "0"
+     ],
+     "distractor_rationales": {
+      "6": "這是分子 |0 − 6| ＝ 6，還沒除以法向量長度：距離要再除以 √(2² + 2² + 1²) ＝ 3，得 6/3 ＝ 2。",
+      "18": "這是把分子乘以法向量長度（6 × 3）：公式是「除以」法向量長度，不是乘，應得 6/3 ＝ 2。",
+      "0": "這是以為原點在平面上：把原點代進 2x + 2y + z 得 0，不等於 6，所以原點不在平面上，距離不是 0。"
+     },
+     "answer_evidence": [
+      "c-da-point-plane"
+     ],
+     "feedback": "距離 ＝ |2×0 + 2×0 + 1×0 − 6| / √(2² + 2² + 1²) ＝ 6 / √9 ＝ 6/3 ＝ 2。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "兩條直線的方向向量分別是 (1, 0, 0) 和 (1, 1, 0)。這兩條直線的夾角是幾度？",
+     "answer": "45°",
+     "kp_ids": [
+      "math.t_sub.space.distance-angle"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.space.distance-angle"
+     ],
+     "options": [
+      "45°",
+      "90°",
+      "0°",
+      "60°"
+     ],
+     "distractor_rationales": {
+      "90°": "90° 要內積為 0 才對；這裡 (1, 0, 0)·(1, 1, 0) ＝ 1 ≠ 0，不是垂直。cosθ ＝ 1/√2 對應 45°。",
+      "0°": "0° 要兩方向成倍數（平行）；(1, 1, 0) 不是 (1, 0, 0) 的倍數，所以不是 0°。cosθ ＝ 1/√2 對應 45°。",
+      "60°": "60° 的 cos 是 1/2；這裡 cosθ ＝ |1| / (1 × √2) ＝ 1/√2（不是 1/2），對應的是 45°。"
+     },
+     "answer_evidence": [
+      "c-da-line-angle"
+     ],
+     "feedback": "cosθ ＝ |(1,0,0)·(1,1,0)| / (|(1,0,0)| × |(1,1,0)|) ＝ 1 / (1 × √2) ＝ 1/√2，所以 θ ＝ 45°。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "點到平面 ax + by + cz ＝ d 的距離公式，分母（除以的那個量）是什麼？",
+     "answer": "法向量的長度 √(a² + b² + c²)",
+     "kp_ids": [
+      "math.t_sub.space.distance-angle"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.space.distance-angle"
+     ],
+     "options": [
+      "法向量的長度 √(a² + b² + c²)",
+      "平面右邊的常數 d",
+      "三個係數相加 a + b + c",
+      "點到原點的距離"
+     ],
+     "distractor_rationales": {
+      "平面右邊的常數 d": "d 是用在分子裡（代入後要減 d），不是分母；分母是法向量 (a, b, c) 的長度 √(a² + b² + c²)。",
+      "三個係數相加 a + b + c": "分母是法向量的「長度」，要先平方再開根號 √(a² + b² + c²)，不是把係數直接相加。",
+      "點到原點的距離": "公式和點到原點的距離無關；分母固定是法向量的長度 √(a² + b² + c²)。"
+     },
+     "answer_evidence": [
+      "c-da-point-plane"
+     ],
+     "feedback": "點到平面距離 ＝ |ax₀ + by₀ + cz₀ − d| / √(a² + b² + c²)，分母是法向量 (a, b, c) 的長度。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "兩條直線的方向向量分別是 (1, 1, 0) 和 (1, −1, 0)。這兩條直線的夾角是幾度？",
+     "answer": "90°",
+     "kp_ids": [
+      "math.t_sub.space.distance-angle"
+     ],
+     "required_kp_ids": [
+      "math.t_sub.space.distance-angle"
+     ],
+     "options": [
+      "90°",
+      "0°",
+      "45°",
+      "180°"
+     ],
+     "distractor_rationales": {
+      "0°": "0° 要兩方向成倍數（平行）；(1, 1, 0) 和 (1, −1, 0) 不成倍數，而且內積 ＝ 0，是垂直。",
+      "45°": "45° 的 cosθ ＝ 1/√2 ≠ 0；這裡內積 (1)(1) + (1)(−1) + 0 ＝ 0，cosθ ＝ 0，對應 90°。",
+      "180°": "兩直線的夾角定義在 0°~90°，不會是 180°；內積 ＝ 0 表示垂直，夾角是 90°。"
+     },
+     "answer_evidence": [
+      "c-da-line-angle"
+     ],
+     "feedback": "(1, 1, 0)·(1, −1, 0) ＝ 1×1 + 1×(−1) + 0 ＝ 0，內積為 0，cosθ ＝ 0，所以夾角 ＝ 90°。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（點到平面距離＝|ax₀+by₀+cz₀−d|/√(a²+b²+c²)，分子代入減常數取絕對值、分母法向量長度，例 O→2x+2y+z=6=6/3=2；兩直線夾角 cosθ=|d₁·d₂|/(|d₁||d₂|) 取絕對值得銳角，例 (1,0,0)&(1,1,0)=45°、內積0→90°；三鐵律＝距離分母是法向量長度不是常數 d、夾角內積取絕對值取銳角、內積0即90°）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

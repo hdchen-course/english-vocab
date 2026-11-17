@@ -114,7 +114,15 @@ def sp_distance_angle():
     # 點(0,0,0)到平面 x+y+z=3 距離=|−3|/√3=√3
     n = Matrix([1, 1, 1])
     assert simplify(abs(sp.Integer(-3))/n.norm() - sqrt(3)) == 0
-    return _ok("space.distance-angle", "原點到 x+y+z=3 距離=3/√3=√3")
+    # 乾淨例：原點到 2x+2y+z=6 距離=|0−6|/√(4+4+1)=6/3=2（Q1）
+    n2 = Matrix([2, 2, 1])
+    assert abs(sp.Integer(2*0+2*0+1*0-6))/n2.norm() == 2
+    # 兩直線夾角 cosθ=|d1·d2|/(|d1||d2|)：(1,0,0)&(1,1,0) cos=1/√2 → 45°（Q2）
+    d1, d2 = Matrix([1, 0, 0]), Matrix([1, 1, 0])
+    assert simplify(abs(d1.dot(d2))/(d1.norm()*d2.norm()) - 1/sqrt(2)) == 0
+    # (1,1,0)·(1,−1,0)=0 → 夾角 90°（Q4）
+    assert Matrix([1, 1, 0]).dot(Matrix([1, -1, 0])) == 0
+    return _ok("space.distance-angle", "點到平面 |ax₀+by₀+cz₀−d|/√(a²+b²+c²)：O→x+y+z=3=√3、O→2x+2y+z=6=6/3=2；兩直線夾角 cosθ=|d1·d2|/(|d1||d2|)，(1,0,0)&(1,1,0)=45°、(1,1,0)⊥(1,−1,0)=90°")
 
 # ---------- matrix（5）----------
 def mat_ops():
