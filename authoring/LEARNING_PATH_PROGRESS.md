@@ -1,3 +1,10 @@
+## 2026-11-18 14:30 ★ sci.t_adv.phys-force.tension-system 阿特午機（a＝(m₁−m₂)g÷(m₁+m₂)）5/5 DONE-GATE 全綠 → 自然島 phys-force 16/17（新建 t_adv；滑輪+繩+兩方塊力圖）
+- **sci_phys_force_tension_system frozen `9208abc39170c60e`**（rounds 1-5 連 5 clean、L3 全 exit0）。R15 gloss（阿特午機 Atwood machine／張力 tension）只 can_do、grep -o 各 2。中文授課無音檔。units_index 616。
+- DONE-GATE 全綠：per_page 616/616 零違規／scan PASS／question CLEAN／pedagogy 0 hard／unit_schema rc0 無 hard／repro-phys-force.tension-system PASS（a=(3−2)g/5=g/5=1.96）／iPad render 四角色 PASS。
+- 內容：阿特午機＝兩物體用繩跨滑輪相連；重的往下輕的往上、共同 a＝質量差×g÷質量和；例 m₁=3 m₂=2 g=9.8→1.96＝g/5；等重 a=0 不動；a 依質量差佔總質量的比例（非絕對差）、只加重較重一邊則 a↑；繩兩端張力相等。
+- ★深 panel 連抓 5 缺陷（全修、各 de-converge）：(1) blocker「質量差越大 a 越大」無條件陳述物理錯誤（a 依比例非絕對差，(100,98)差2→0.099 < (3,2)差1→1.96）→限定「只加重較重一邊」＋比例概念；(2) can_do 懸空「兩邊」主語；(3) verification_ref「等比放大」誤用（真等比 a 不變）；(4) _note 自檢子句重嵌英文 literal 致 grep -o=3≠2；(5) _note 箭頭尺寸誤植 friction-coeff 的「N60/f18」（本圖實為往上/往下各24px/頭7）。★教訓：深 panel(7-9a) 持續抓 shallow 輪漏掉的正確性＋meta 自洽缺陷；長 _note 自我引用區塊是 meta-finding 來源，須與實體逐項核對；bank 前必 L3 rc0；sha 一變則 in-flight 輪作廢不計。
+- 下一步：phys-force 剩最後 1 binding KP＝newton-2d（t_sub 二維牛頓）→ 收尾整個 phys-force strand 17/17。
+
 ## 2026-11-18 13:36 ★ sci.t_adv.phys-force.friction-coeff 摩擦係數（μ＝f／N）5/5 DONE-GATE 全綠 → 自然島 phys-force 15/17（第7個 t_adv；力圖單格 SVG）
 - **sci_phys_force_friction_coeff frozen `a99803173b42edf1`**（箭頭 v3 修後 rounds 1-5 連 5 clean、L3 全 exit0）。R15 gloss（摩擦係數 coefficient of friction）只 can_do、grep 2/2。中文授課無音檔。
 - DONE-GATE 全綠：scan PASS／unit_schema rc0 無 hard／question CLEAN／pedagogy 0 hard（length-cue 僅 advisory，HD 2026-11-15 裁示 MCQ tell OUT OF SCOPE）／per_page friction absent／repro-phys-force.friction-coeff PASS（μ=3/10=0.3）／iPad render 四角色 PASS。
