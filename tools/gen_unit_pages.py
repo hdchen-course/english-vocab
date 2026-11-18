@@ -21,7 +21,7 @@ import json, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 UNITS_INDEX = os.path.join(ROOT, "data", "units_index.json")
-ASSET_VER = "20261102e"
+ASSET_VER = "20261118a"
 
 STRAND_EMOJI = {
     "phonics": "🔤", "listening": "👂", "reading": "📖", "writing": "✍️",

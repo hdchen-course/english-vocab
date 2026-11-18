@@ -99,8 +99,12 @@ def content_sha(path):
     except Exception:
         sidecar_bytes = b""   # 解析失敗→退回僅綁 HTML（不崩）
     teaching_bytes = _canonical_teaching_bytes(sidecar_bytes) if sidecar_bytes else b""
+    # 剝除資產快取破壞用的版本查詢字串 `?v=XXXX`（assets/unit.js?v=…、unit.css?v=…）：
+    # 版本號純為瀏覽器快取破壞、非教學內容，content_audit 不審；bump 版本不該作廢教學 5-clean
+    # 證據（同 _WIRING_FIELDS 剝除接線欄位之理，HD 裁示延伸）。改任何教學 HTML/sidecar 仍改指紋。
+    html_norm = re.sub(rb'\?v=[0-9A-Za-z._\-]+', b'', html_bytes)
     h = hashlib.sha256()
-    h.update(html_bytes)
+    h.update(html_norm)
     h.update(b"\x00")          # 分隔符，避免 bytes 串接歧義
     h.update(teaching_bytes)
     return h.hexdigest()[:16]

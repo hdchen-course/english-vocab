@@ -1,0 +1,224 @@
+{
+ "_note": "自然島 物理-力（phys-force）strand 單元（第14，t_adv）。知識點 sci.t_adv.phys-force.incline（斜面上的重力分解）。tier=t_adv（高階）、exam=學測。全繁體零簡體零 PRC 詞。中文授課無音檔。術語附國際英語（R15，★只在 can_do 首次 gloss 一次：正向力 (normal force)；teach/claim body 不重複——記憶 r15-gloss-once-first-render。自檢用描述文字、不在自檢子句重嵌英文 literal：grep -c 術語英文括號含行數＝2〔_note 本行一次＋can_do 一行〕、grep -o 亦=2）。R11 不顯年段。前置＝resolve-compose（力的分解成互相垂直的分量）。★scope（t_adv）：(1) 斜面上物體的重力 mg（鉛直向下）分解成互相垂直的兩個分量：沿斜面向下的分量 mg·sinθ（使物體傾向下滑）、垂直斜面的分量 mg·cosθ（壓向斜面），θ＝斜面傾角；(2) 垂直方向：斜面以『正向力 N』回推物體，大小等於 mg·cosθ，使物體不陷入斜面、垂直方向平衡；(3) 計算例 m=2 公斤、θ=30°、g=9.8：mg=19.6 N、沿斜面 mg·sinθ=19.6×0.5=9.8 N、垂直斜面 mg·cosθ=19.6×cos30°≈19.6×0.866≈16.97 N；(4) 傾角越大 sinθ 越大、cosθ 越小 → 沿斜面下滑分量越大、垂直分量越小（越陡越易滑）。不含摩擦定量（friction-coeff 另單元）、不含沿斜面運動加速度求解（超綱）。repro（tools/verify/sci_phys_checks.py::phys-force.incline，repro_gate .venv PASS）錨定『mg sinθ=9.8（沿面）、mg cosθ≈16.97（正向）』。★自檢：figure＝單格（斜面三角形 θ≈30°＋斜面上方塊＋綠色重力 mg 鉛直向下箭頭＋棕色沿斜面 mg·sinθ 分量＋藍色垂直斜面 mg·cosθ 分量＋右側色碼圖例三行＋θ 角標＋m/θ/g 參數），alt 與 SVG text 逐字一致、標籤移出不疊（friction round7 教訓；箭頭 polygon 兩翼須跨軸對稱＝equilibrium F2 教訓；改圖必同步 alt/_note——proportional/volume 教訓）；practice 四答案＝{9.8 N(Q1 沿斜面 sinθ),約16.97 N(Q2 正向力 cosθ),變大(Q3 θ越大下滑分量),沿斜面mg·sinθ垂直mg·cosθ(Q4 配對)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1→16.97 用cos／19.6 沒分解／0 以為無分量；Q2→9.8 用sin／19.6 沒分解／22.63 除反(mg÷cos30°)；Q3→變小／不變／先大後小；Q4→sin cos 顛倒／都sinθ／都mg）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 逐字相符（#59）；數值對齊 oracle（sin30°=0.5→9.8、cos30°≈0.866→16.97）。claim kind=fact。figure-only example 無 body。★定義不得窄化／顛倒：沿斜面配 sinθ、垂直斜面配 cosθ（θ為傾角）不得對調；cos30°寫『≈0.866』近似非等號。",
+ "page": "sci_phys_force_incline.html",
+ "units": [
+  {
+   "unit_id": "sci.t_adv.phys-force.incline",
+   "title_zh": "斜面上的重力分解（mg sinθ、mg cosθ）",
+   "can_do": "我懂斜面上的重力怎麼分解：放在斜面上的物體，重力 mg 是鉛直向下的，但在斜面上我們把它拆成互相垂直的兩個分量——沿著斜面向下的分量 mg×sinθ（它使物體傾向往下滑），和垂直斜面的分量 mg×cosθ（它把物體壓向斜面），其中 θ 是斜面的傾角。垂直方向上，斜面會以一個『正向力 (normal force)』回推物體，大小剛好等於 mg×cosθ，所以物體不會陷進斜面。我會計算：質量 2 公斤、傾角 30°（g 取 9.8）時，mg＝19.6 牛頓，沿斜面分量 ＝ 19.6×sin30° ＝ 19.6×0.5 ＝ 9.8 牛頓，垂直斜面分量 ＝ 19.6×cos30° ≈ 19.6×0.866 ≈ 16.97 牛頓。我也知道斜面越陡（θ 越大），沿斜面下滑的分量就越大。",
+   "situation_group": "力：向量的分解與合成",
+   "subject": "sci",
+   "strand": "phys-force",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "sci.t_adv.phys-force.incline"
+   ],
+   "prerequisites": [
+    "sci.t_adv.phys-force.resolve-compose"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-inc-decompose",
+     "text": "放在斜面上的物體，重力 mg 鉛直向下。在斜面上把重力分解成互相垂直的兩個分量：沿斜面向下的分量 mg×sinθ（使物體傾向下滑）、垂直斜面的分量 mg×cosθ（把物體壓向斜面），θ 是斜面的傾角。",
+     "kind": "fact",
+     "source_refs": [
+      "斜面上的重力分解（十二年國教 自然 高中必修）"
+     ],
+     "verification_ref": "沿斜面 mg·sinθ、垂直斜面 mg·cosθ（sci_phys_checks::phys-force.incline .venv 驗，m=2,θ=30°）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-inc-calc",
+     "text": "計算例：質量 2 公斤、傾角 30°、g 取 9.8。mg ＝ 2×9.8 ＝ 19.6 牛頓；沿斜面分量 ＝ mg×sin30° ＝ 19.6×0.5 ＝ 9.8 牛頓；垂直斜面分量 ＝ mg×cos30° ≈ 19.6×0.866 ≈ 16.97 牛頓。",
+     "kind": "fact",
+     "source_refs": [
+      "斜面重力分量計算例（十二年國教 自然 高中必修）"
+     ],
+     "verification_ref": "mg·sin30°=9.8、mg·cos30°≈16.97（sci_phys_checks::phys-force.incline .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-inc-normal",
+     "text": "垂直斜面的方向上，斜面會以一個「正向力」回推物體，大小剛好等於 mg×cosθ（此例 ≈ 16.97 牛頓），使物體不會陷進斜面、垂直斜面方向保持平衡。沿斜面的 mg×sinθ 則是使物體傾向下滑的分量。",
+     "kind": "fact",
+     "source_refs": [
+      "正向力與斜面平衡（十二年國教 自然 高中必修）"
+     ],
+     "verification_ref": "正向力 N=mg·cosθ（垂直方向平衡；高中 consensus_current，與分量分解一致）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-inc-steeper",
+     "text": "斜面越陡（傾角 θ 越大），sinθ 越大、cosθ 越小，所以沿斜面向下的分量 mg×sinθ 越大、垂直斜面的分量 mg×cosθ 越小——這就是為什麼斜面越陡，物體越容易往下滑。",
+     "kind": "fact",
+     "source_refs": [
+      "傾角與分量大小（十二年國教 自然 高中必修）"
+     ],
+     "verification_ref": "θ↑⇒sinθ↑、cosθ↓（0°–90° 單調；與 mg·sinθ、mg·cosθ 一致）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-force.incline"
+     ],
+     "body": "前面學會把一個斜向的力分解成互相垂直的兩個分量。這一單元把這招用在一個最常見的情境：物體放在斜面上，要把它受到的重力拆開來看。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-force.incline"
+     ],
+     "body": "① 斜面上物體的重力 mg 是鉛直向下的；我們沿著「斜面方向」和「垂直斜面方向」把它分解。② 沿斜面向下的分量 ＝ mg×sinθ（使物體傾向下滑）；垂直斜面的分量 ＝ mg×cosθ（把物體壓向斜面），θ 是斜面傾角。③ 垂直方向上斜面以正向力回推，大小等於 mg×cosθ，所以物體不會陷進斜面。④ 例：m＝2 公斤、θ＝30°、g＝9.8 → mg＝19.6 牛頓、沿斜面 ＝ 19.6×0.5 ＝ 9.8 牛頓、垂直斜面 ＝ 19.6×0.866 ≈ 16.97 牛頓。斜面越陡 θ 越大，下滑的 mg×sinθ 就越大。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_adv.phys-force.incline"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>斜面上的重力分解：沿斜面 mg sinθ、垂直斜面 mg cosθ</text><line x1='30' y1='150' x2='210' y2='150' stroke='#99a7b5' stroke-width='1.2'/><line x1='210' y1='150' x2='210' y2='46' stroke='#99a7b5' stroke-width='1.2'/><line x1='30' y1='150' x2='210' y2='46' stroke='#99a7b5' stroke-width='1.4'/><rect x='108' y='88' width='18' height='12' rx='1.5' transform='rotate(-30 117 94)' fill='#e6edf3' stroke='#6b7785' stroke-width='1'/><path d='M54,150 A24,24 0 0 1 50.8,138' fill='none' stroke='#6b7785' stroke-width='1'/><text x='66' y='146' font-family='sans-serif' font-size='8' fill='#33475b' text-anchor='middle'>θ＝30°</text><line x1='120' y1='96' x2='120' y2='138' stroke='#2f6f54' stroke-width='2.6'/><polygon points='120,138 116,130 124,130' fill='#2f6f54'/><line x1='120' y1='96' x2='101.8' y2='106.5' stroke='#c08a2d' stroke-width='2.6'/><polygon points='101.8,106.5 110.7,106 106.7,99' fill='#c08a2d'/><line x1='120' y1='96' x2='138.2' y2='127.5' stroke='#2563a6' stroke-width='2.6'/><polygon points='138.2,127.5 137.7,118.6 130.7,122.6' fill='#2563a6'/><line x1='101.8' y1='106.5' x2='120' y2='138' stroke='#c9ccd1' stroke-width='0.9' stroke-dasharray='3 3'/><line x1='138.2' y1='127.5' x2='120' y2='138' stroke='#c9ccd1' stroke-width='0.9' stroke-dasharray='3 3'/><text x='240' y='64' font-family='sans-serif' font-size='8' fill='#2f6f54' text-anchor='start'>重力 mg ＝ 19.6 N</text><text x='240' y='86' font-family='sans-serif' font-size='8' fill='#c08a2d' text-anchor='start'>沿斜面 mg sinθ ＝ 9.8 N</text><text x='240' y='108' font-family='sans-serif' font-size='8' fill='#2563a6' text-anchor='start'>垂直斜面 mg cosθ ≈ 16.97 N</text><text x='240' y='132' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='start'>m＝2 公斤、θ＝30°、g＝9.8</text></svg>",
+      "alt": "標題「斜面上的重力分解：沿斜面 mg sinθ、垂直斜面 mg cosθ」。左邊畫一個直角三角形當斜面，底角標「θ＝30°」，斜面上放一個小方塊。從方塊畫出三支箭頭：綠色箭頭鉛直向下（重力）、棕色箭頭沿著斜面向下、藍色箭頭垂直於斜面方向，灰色虛線把它們連成一個長方形。右邊用對應顏色列出三行：綠色「重力 mg ＝ 19.6 N」、棕色「沿斜面 mg sinθ ＝ 9.8 N」、藍色「垂直斜面 mg cosθ ≈ 16.97 N」，最下面一行寫「m＝2 公斤、θ＝30°、g＝9.8」。",
+      "caption": "斜面上的物體，重力 mg（鉛直向下、綠色）被分解成沿斜面向下的分量 mg sinθ（棕色，使物體下滑）和垂直斜面的分量 mg cosθ（藍色，壓向斜面）。以 m＝2 公斤、θ＝30° 計算：mg＝19.6 牛頓、沿斜面 ＝ 19.6×0.5 ＝ 9.8 牛頓、垂直斜面 ＝ 19.6×cos30° ≈ 16.97 牛頓。垂直方向斜面以同樣大小的正向力回推，所以物體不會陷進斜面。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-force.incline"
+     ],
+     "body": "最後練「斜面上的重力分解」。重點：(1) 重力 mg 分解成 沿斜面 mg×sinθ（使下滑）＋垂直斜面 mg×cosθ（壓向斜面）；(2) 垂直方向斜面以正向力 ＝ mg×cosθ 回推；(3) 例 m＝2、θ＝30°：沿斜面 9.8 牛頓、垂直斜面 ≈ 16.97 牛頓；(4) θ 越大，沿斜面下滑的 mg×sinθ 越大（越陡越易滑）。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個 2 公斤的物體放在傾角 30° 的斜面上（g 取 9.8，sin30°＝0.5）。沿著斜面方向、使它傾向下滑的分量是多少？",
+     "answer": "9.8 牛頓",
+     "kp_ids": [
+      "sci.t_adv.phys-force.incline"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-force.incline"
+     ],
+     "options": [
+      "9.8 牛頓",
+      "約 16.97 牛頓",
+      "19.6 牛頓",
+      "0 牛頓"
+     ],
+     "distractor_rationales": {
+      "約 16.97 牛頓": "這是用 cos30° 算出的垂直斜面分量；沿斜面分量要用 sinθ：mg×sin30° ＝ 19.6×0.5 ＝ 9.8。",
+      "19.6 牛頓": "這是整個重力 mg，還沒分解；沿斜面分量只是它的一部分：mg×sin30° ＝ 9.8。",
+      "0 牛頓": "沿斜面方向是有分量的（正是它使物體傾向下滑）：mg×sin30° ＝ 9.8，不是 0。"
+     },
+     "answer_evidence": [
+      "c-inc-decompose",
+      "c-inc-calc"
+     ],
+     "feedback": "沿斜面分量 ＝ mg×sinθ ＝ 19.6×0.5 ＝ 9.8 牛頓。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "同一個情況（2 公斤、傾角 30°、g＝9.8、cos30°≈0.866）。垂直斜面方向、把物體壓向斜面的分量（也等於斜面的正向力）大約是多少？",
+     "answer": "約 16.97 牛頓",
+     "kp_ids": [
+      "sci.t_adv.phys-force.incline"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-force.incline"
+     ],
+     "options": [
+      "約 16.97 牛頓",
+      "9.8 牛頓",
+      "19.6 牛頓",
+      "約 22.63 牛頓"
+     ],
+     "distractor_rationales": {
+      "9.8 牛頓": "這是用 sin30° 算出的沿斜面分量；垂直斜面分量要用 cosθ：mg×cos30° ≈ 19.6×0.866 ≈ 16.97。",
+      "19.6 牛頓": "這是整個重力 mg，還沒分解；垂直斜面分量只是它的一部分：mg×cos30° ≈ 16.97。",
+      "約 22.63 牛頓": "這是把 mg 除以 cos30°（19.6÷0.866≈22.63，除反了）；應該是相乘：mg×cos30° ≈ 19.6×0.866 ≈ 16.97。"
+     },
+     "answer_evidence": [
+      "c-inc-calc",
+      "c-inc-normal"
+     ],
+     "feedback": "垂直斜面分量 ＝ mg×cosθ ≈ 19.6×0.866 ≈ 16.97 牛頓，正向力也等於這個大小。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "把斜面變得更陡（傾角 θ 變大），同一個物體沿斜面向下、使它下滑的分量會怎樣？",
+     "answer": "變大",
+     "kp_ids": [
+      "sci.t_adv.phys-force.incline"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-force.incline"
+     ],
+     "options": [
+      "變大",
+      "變小",
+      "不變",
+      "先變大再變小"
+     ],
+     "distractor_rationales": {
+      "變小": "方向相反：θ 越大 sinθ 越大，沿斜面下滑分量 mg×sinθ 越大，不是越小（所以越陡越易滑）。",
+      "不變": "沿斜面分量 mg×sinθ 會隨傾角改變；θ 越大 sinθ 越大、分量越大。",
+      "先變大再變小": "在 0° 到 90° 之間 sinθ 一路變大，mg×sinθ 跟著一路變大，不會先大再小。"
+     },
+     "answer_evidence": [
+      "c-inc-steeper"
+     ],
+     "feedback": "沿斜面分量 ＝ mg×sinθ：θ 越大 sinθ 越大，下滑分量越大，所以斜面越陡越容易滑。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "把斜面上物體的重力分解，沿斜面方向和垂直斜面方向的分量各該用哪個式子（θ 為傾角）？",
+     "answer": "沿斜面 ＝ mg×sinθ、垂直斜面 ＝ mg×cosθ",
+     "kp_ids": [
+      "sci.t_adv.phys-force.incline"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-force.incline"
+     ],
+     "options": [
+      "沿斜面 ＝ mg×sinθ、垂直斜面 ＝ mg×cosθ",
+      "沿斜面 ＝ mg×cosθ、垂直斜面 ＝ mg×sinθ",
+      "沿斜面和垂直斜面都是 mg×sinθ",
+      "沿斜面和垂直斜面都是 mg"
+     ],
+     "distractor_rationales": {
+      "沿斜面 ＝ mg×cosθ、垂直斜面 ＝ mg×sinθ": "sin、cos 對調了：沿斜面配 sinθ、垂直斜面配 cosθ（θ 為傾角）。",
+      "沿斜面和垂直斜面都是 mg×sinθ": "兩個分量不會一樣；一個是 mg×sinθ、另一個是 mg×cosθ。",
+      "沿斜面和垂直斜面都是 mg": "mg 是還沒分解的整個重力；分解後兩個分量分別是 mg×sinθ 和 mg×cosθ。"
+     },
+     "answer_evidence": [
+      "c-inc-decompose"
+     ],
+     "feedback": "沿斜面 ＝ mg×sinθ、垂直斜面 ＝ mg×cosθ（θ 為斜面傾角）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（斜面上重力 mg 分解＝沿斜面 mg×sinθ〔使下滑〕＋垂直斜面 mg×cosθ〔壓向斜面〕，θ為傾角；垂直方向斜面以正向力 ＝ mg×cosθ 回推；例 m＝2、θ＝30°：沿斜面 9.8 牛頓、垂直斜面 ≈ 16.97 牛頓；θ 越大沿斜面下滑分量越大；三鐵律＝沿斜面配sinθ/垂直配cosθ、正向力＝mg cosθ、越陡越易滑）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

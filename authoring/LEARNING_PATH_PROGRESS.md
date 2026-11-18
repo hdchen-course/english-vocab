@@ -1,3 +1,10 @@
+## 2026-11-18 12:20 ★ HD 視覺 QA friction 三連擊：資產版本 bump（修「先聽」快取）＋content_sha 剝版本＋四邊形/斜面連線修圖
+- **訊號1「math 頁仍顯『① 先聽、先感覺』」根因＝瀏覽器快取舊 unit.js**（頁 pin 舊 `?v=20261102e/20261112a`，unit.js 的 hasAudio 標籤修復本身有效，cache-busted render 確顯「先讀」）。修：ASSET_VER→`20261118a`、perl 全站 614 頁 `assets/unit.{js,css}?v=` 統一 bump；HD 硬重載即顯「先讀」。
+- **content_sha 改為剝除 `?v=` 版本字串**（`tools/per_page_5clean_gate.py`）＝版本 bump 不再作廢教學 5-clean streak（比照剝除接線欄位）。紅隊：版本改→指紋同、教學改(sidecar/html)→指紋變。一次性遷移 `tools/migrate_content_sha_strip_version.py`（安全檢查：舊算法 sha==既存 streak sha 才 rekey）rekey 613 頁、0 mismatch；per_page gate --verify 612/614（2＝incline/quad 收斂中）。
+- **訊號2「四邊形階層樹線段沒接好」**：math_geom_quadrilateral_properties 連線起點在父框內/低於框底 6px→每條線改起點對齊父框底邊中心、終點對齊子框頂邊中心（四邊形→平行四邊形/梯形、平行四邊形→矩形/菱形、矩形/菱形→正方形綠線 V 會於頂邊中心）；render 確認貼齊。重收斂中。
+- **incline 斜面圖 content_audit r4/r5 另抓 3 幾何缺陷（同「線段沒接好」類）**：(1)力平行四邊形未閉合（分量和(0,39)≠重力(0,42)，分量畫太短）→brown/blue 加長至精確閉合 brown+blue=green=(0,42)；(2)θ 弧未在頂點→改以頂點(30,150) r24 弧貼兩邊；(3)三角形底線 x2=214 超出垂直邊 x=210 右下角突尾→改 x2=210。render 確認。重收斂中。
+- 教訓：render 小尺度肉眼易漏的向量閉合/端點對齊/角標錨點，深度 panel（23 agents）能抓；且「已 5-clean」不代表 figure 幾何零缺陷——content_audit 鏡數深時才現形。版本 bump 此後免 ledger churn。
+
 ## 2026-11-18 11:34 ★ sci.t_adv.phys-force.equilibrium 三力平衡（合力為零）5/5 DONE-GATE 全綠 → 自然島 phys-force 13/17（第5個 t_adv；三力箭頭單格 SVG）
 - **sci_phys_force_equilibrium frozen `3aa8a87280603056`**（rounds 1-5 連 5 clean、L3 全 exit0）。R15 gloss（平衡 equilibrium）只放 can_do、grep -c/-o 2/2。
 - DONE-GATE 全綠：scan PASS／unit_schema rc0 無 hard／question CLEAN／pedagogy 0 hard／per_page absent／repro-sci_phys_checks-phys-force.equilibrium PASS（(3,0)+(−3,4)+(0,−4)=(0,0)）／iPad render＋figure 4 角色簽核。中文授課無音檔。
