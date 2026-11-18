@@ -1,3 +1,10 @@
+## 2026-11-18 11:34 ★ sci.t_adv.phys-force.equilibrium 三力平衡（合力為零）5/5 DONE-GATE 全綠 → 自然島 phys-force 13/17（第5個 t_adv；三力箭頭單格 SVG）
+- **sci_phys_force_equilibrium frozen `3aa8a87280603056`**（rounds 1-5 連 5 clean、L3 全 exit0）。R15 gloss（平衡 equilibrium）只放 can_do、grep -c/-o 2/2。
+- DONE-GATE 全綠：scan PASS／unit_schema rc0 無 hard／question CLEAN／pedagogy 0 hard／per_page absent／repro-sci_phys_checks-phys-force.equilibrium PASS（(3,0)+(−3,4)+(0,−4)=(0,0)）／iPad render＋figure 4 角色簽核。中文授課無音檔。
+- equilibrium（t_adv，strand 第13）＝(1) 物體受多力但合力為零＝平衡，保持原運動狀態（靜者恆靜、動者恆作等速直線運動）；(2) 判斷用分量 ΣFx=0 且 ΣFy=0；(3) 例 水平 3+(−3)+0=0、鉛直 0+4+(−4)=0→平衡；(4) 三力首尾相接圍成封閉三角形（3-4-5）。figure＝中央圓點＋三力箭頭（綠 F1 右／藍 F2 左上／棕 F3 下）＋分量相加列。
+- ★2 次 de-converge（對抗式審查連抓兩真缺陷，render 肉眼皆漏）：(a) r2 domain+6鏡：F2 箭頭 polygon 兩底點同側（cross +11/+543）＝歪斜單側旗標→改對稱跨軸 points='110,33 120,38 112,44'（cross +330/−334）；(b) r5 domain a-wrong：teach/can_do/selfeval 裸「等速」與權威 claim/Q3「等速直線運動」不一致，t_adv 裸等速含等速圓周運動（需向心力、非平衡）→ 5 處學習者可見＋2 處 _note 全改「等速直線運動」。★教訓：小尺度箭頭幾何與術語精確性 render 易漏，panel 向量分析＋領域審查補捉——對抗式審查價值再印證。
+- 下一步：phys-force 剩 4 binding KP：t_adv×3（incline 斜面 mg·sinθ·cosθ／tension-system 阿特午機 a=g/5／friction-coeff μ=f/N=0.3）＋t_sub newton-2d。接 incline 或 newton-2d。
+
 ## 2026-11-18 10:49 ★ sci.t_adv.phys-force.resolve-compose 力的分解與合成（Fx＝F cosθ、Fy＝F sinθ）5/5 DONE-GATE 全綠 → 自然島 phys-force 12/17（第4個 t_adv；向量分解單格 worked example SVG）
 - **sci_phys_force_resolve_compose frozen `028c0fc0ba86cb3f`**（rounds 1-5 連 5 clean、L3 全 exit0、零 de-converge：草稿即乾淨）。R15 gloss（力的分解 resolving a force／分量 component）只放 can_do、grep -c 2/2。
 - DONE-GATE 全綠：scan PASS／unit_schema rc=0 無 hard／question_correctness CLEAN／pedagogy 0 hard（Q4 正解較長＝length-cue advisory，HD 2026-11-15 裁示 MCQ 可猜性 out-of-scope 非缺陷，不改）／content_sha==028c0fc0ba86cb3f／per_page_5clean PASS（absent）／repro-sci_phys_checks-phys-force.resolve-compose PASS（F=10,θ=37°→Fx≈7.99,Fy≈6.02）／iPad 三視圖 render＋figure 4 角色簽核（修掉綠色 F 標籤壓對角線 overlap，移至線上方空白區）。中文授課無音檔。

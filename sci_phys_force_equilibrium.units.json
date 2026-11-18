@@ -1,0 +1,223 @@
+{
+ "_note": "自然島 物理-力（phys-force）strand 單元（第13，t_adv）。知識點 sci.t_adv.phys-force.equilibrium（力的平衡／三力平衡）。tier=t_adv（高階）、exam=學測。全繁體零簡體零 PRC 詞。中文授課無音檔。術語附國際英語（R15，★只在 can_do 首次 gloss 一次：平衡 (equilibrium)；teach/claim body 不重複——記憶 r15-gloss-once-first-render。自檢用描述文字、不在自檢子句重嵌英文 literal：grep -c 術語英文括號含行數＝2〔_note 本行一次＋can_do 一行〕、grep -o 亦=2）。R11 不顯年段。前置＝resolve-compose（力的分解成分量）。★scope（t_adv）：(1) 物體受多個力但合力為零時處於『平衡』，保持原本運動狀態（靜者恆靜、動者恆作等速直線運動，接牛一）；(2) 判斷平衡用分量：所有力的水平分量相加＝0 且 鉛直分量相加＝0（ΣFx=0 且 ΣFy=0）；(3) 三力平衡例：F1=(水平3,鉛直0)、F2=(−3,4)、F3=(0,−4)，水平 3+(−3)+0=0、鉛直 0+4+(−4)=0 → 合力=0；(4) 這三個力首尾相接剛好圍成封閉三角形（此例為 3-4-5）；(5) 生活例：吊燈、被兩繩拉住的招牌、靜止在桌上的書都是力平衡。不含力矩/轉動平衡（超綱）、不含摩擦定量。repro（tools/verify/sci_phys_checks.py::phys-force.equilibrium，repro_gate .venv PASS）錨定『三力(3,0)(−3,4)(0,−4) 合力=(0,0)』。★自檢：figure＝單格（中央物體圓點＋三支力箭頭 綠 F1 向右3／藍 F2 左3上4／棕 F3 向下4＋底部分量相加列），alt 與 SVG text 逐字一致、標籤移出不疊（friction round7 教訓；改圖必同步 alt/_note——proportional/volume 教訓）；practice 四答案＝{合力為零ΣFx=0且ΣFy=0(Q1 條件),合力為零物體平衡(Q2 分量相加),靜者恆靜動者恆等速(Q3 運動狀態),封閉三角形(Q4 幾何)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1→力大小都相等／力數目偶數／合力朝上；Q2→向右6 忽略負號3+3／向上8 忽略負號4+4／14 全大小相加；Q3→一定靜止不動／一定加速／方向一定改變；Q4→越來越長直線／沒閉合折線／圓形）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 逐字相符（#59）；數值對齊 oracle（3,−3,0／0,4,−4 → 0）。claim kind=fact。figure-only example 無 body。★定義不得窄化：平衡＝合力為零（可靜止、或作等速直線運動；t_adv 層級用「等速直線運動」而非裸「等速」，裸等速含等速圓周運動＝非平衡），不得只寫成『靜止』。",
+ "page": "sci_phys_force_equilibrium.html",
+ "units": [
+  {
+   "unit_id": "sci.t_adv.phys-force.equilibrium",
+   "title_zh": "三力平衡（合力為零）",
+   "can_do": "我懂力的『平衡 (equilibrium)』：一個物體雖然同時受到好幾個力，但只要這些力的合力是零，它就處於平衡——會保持原本的運動狀態（原本靜止的保持靜止、原本等速運動的保持等速直線運動）。我知道怎麼判斷平衡：把每個力都分解成水平和鉛直分量，只要所有力的水平分量加起來等於 0、而且鉛直分量加起來也等於 0，合力就是零。我會檢查三力平衡的例子：三個力的水平分量是 3、−3、0，鉛直分量是 0、4、−4，水平加起來 3＋(−3)＋0 ＝ 0、鉛直加起來 0＋4＋(−4) ＝ 0，所以合力為零、物體平衡；這三個力首尾相接剛好圍成一個封閉的三角形。",
+   "situation_group": "力：向量的分解與合成",
+   "subject": "sci",
+   "strand": "phys-force",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "sci.t_adv.phys-force.equilibrium"
+   ],
+   "prerequisites": [
+    "sci.t_adv.phys-force.resolve-compose"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-eq-def",
+     "text": "當一個物體同時受到好幾個力，但這些力的合力為零時，它就處於「平衡」。處於平衡的物體會保持原本的運動狀態：原本靜止的保持靜止、原本等速運動的保持等速直線運動。",
+     "kind": "fact",
+     "source_refs": [
+      "力的平衡（十二年國教 自然 高中必修）"
+     ],
+     "verification_ref": "合力為零⇒加速度為零⇒運動狀態不變（與牛一一致，sci_phys_checks::phys-force.equilibrium 合力=0）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-eq-component",
+     "text": "判斷平衡的方法：把每個力都分解成水平分量和鉛直分量，只要所有力的水平分量加起來等於 0，而且所有力的鉛直分量加起來也等於 0，合力就是零，物體就平衡。",
+     "kind": "fact",
+     "source_refs": [
+      "平衡的分量判斷（十二年國教 自然 高中必修）"
+     ],
+     "verification_ref": "ΣFx=0 且 ΣFy=0 ⇔ 合力為零（向量相加，sci_phys_checks::phys-force.equilibrium .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-eq-example",
+     "text": "三力平衡例：三個力的水平分量分別是 3、−3、0，鉛直分量分別是 0、4、−4。水平加起來 3＋(−3)＋0 ＝ 0，鉛直加起來 0＋4＋(−4) ＝ 0，所以合力為零，物體平衡。",
+     "kind": "fact",
+     "source_refs": [
+      "三力平衡計算例（十二年國教 自然 高中必修）"
+     ],
+     "verification_ref": "(3,0)+(−3,4)+(0,−4)=(0,0)（sci_phys_checks::phys-force.equilibrium .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-eq-triangle",
+     "text": "三個力達到平衡時，把它們首尾相接畫出來，會剛好圍成一個封閉的三角形（最後回到起點）——這正好表示它們加起來等於零。生活中吊燈、被兩條繩子拉住的招牌、靜止放在桌上的書，都是力平衡的例子。",
+     "kind": "fact",
+     "source_refs": [
+      "平衡的三角形與生活實例（十二年國教 自然 高中必修）"
+     ],
+     "verification_ref": "首尾相接封閉⇔向量和為零（上例 3-4-5 封閉三角形；高中 consensus_current）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-force.equilibrium"
+     ],
+     "body": "前面學會把斜向的力分解成水平、鉛直分量。這一單元用分量來看一個常見又重要的情況：物體同時受好幾個力，但合力剛好是零。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-force.equilibrium"
+     ],
+     "body": "① 平衡：物體受到好幾個力，但合力為零，就處於平衡，會保持原本的運動狀態（靜者保持靜止、動者保持等速直線運動）。② 怎麼判斷？用分量：所有力的水平分量加起來＝0，而且鉛直分量加起來也＝0，合力就是零。③ 例：三個力的水平分量 3、−3、0，鉛直分量 0、4、−4 → 水平 3＋(−3)＋0 ＝ 0、鉛直 0＋4＋(−4) ＝ 0，合力為零、平衡。④ 這三個力首尾相接剛好圍成一個封閉三角形；生活裡吊燈、兩繩拉住的招牌、桌上的書都是力平衡。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_adv.phys-force.equilibrium"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>三力平衡：合力為零（水平分量和＝0、鉛直分量和＝0）</text><circle cx='150' cy='86' r='3.2' fill='#33475b'/><line x1='150' y1='86' x2='190' y2='86' stroke='#2f6f54' stroke-width='2.6'/><polygon points='190,86 181,81 181,91' fill='#2f6f54'/><text x='196' y='83' font-family='sans-serif' font-size='8' fill='#2f6f54' text-anchor='start'>F₁：向右 3</text><line x1='150' y1='86' x2='110' y2='33' stroke='#2563a6' stroke-width='2.6'/><polygon points='110,33 120,38 112,44' fill='#2563a6'/><text x='104' y='30' font-family='sans-serif' font-size='8' fill='#2563a6' text-anchor='end'>F₂：左3上4（大小5）</text><line x1='150' y1='86' x2='150' y2='139' stroke='#c08a2d' stroke-width='2.6'/><polygon points='150,139 145,130 155,130' fill='#c08a2d'/><text x='158' y='122' font-family='sans-serif' font-size='8' fill='#c08a2d' text-anchor='start'>F₃：向下 4</text><text x='180' y='160' font-family='sans-serif' font-size='7.5' fill='#33475b' text-anchor='middle'>水平：3＋(−3)＋0 ＝ 0；鉛直：0＋4＋(−4) ＝ 0 → 合力 ＝ 0，平衡</text></svg>",
+      "alt": "標題「三力平衡：合力為零（水平分量和＝0、鉛直分量和＝0）」。一個物體（中央的圓點）同時受到三個力，從圓點畫出三支箭頭：綠色箭頭向右，標「F₁：向右 3」；藍色箭頭指向左上方，標「F₂：左3上4（大小5）」；棕色箭頭向下，標「F₃：向下 4」。最下面一行寫「水平：3＋(−3)＋0 ＝ 0；鉛直：0＋4＋(−4) ＝ 0 → 合力 ＝ 0，平衡」。",
+      "caption": "物體同時受到三個力：F₁ 向右 3、F₂ 左 3 上 4（大小 5）、F₃ 向下 4。把它們分解成水平與鉛直分量來加：水平 3＋(−3)＋0 ＝ 0、鉛直 0＋4＋(−4) ＝ 0，合力正好是零，所以物體平衡。這三個力首尾相接，剛好圍成一個封閉的三角形（這一組是 3-4-5）。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-force.equilibrium"
+     ],
+     "body": "最後練「三力平衡」。重點：(1) 合力為零＝平衡，物體保持原本運動狀態（靜者恆靜、動者恆作等速直線運動）；(2) 判斷用分量：水平分量和＝0 且 鉛直分量和＝0；(3) 例：水平 3＋(−3)＋0＝0、鉛直 0＋4＋(−4)＝0 → 平衡；(4) 平衡的三個力首尾相接圍成封閉三角形。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個物體同時受到好幾個力。它處於「平衡」的條件是下列哪一個？",
+     "answer": "所有力的合力為零（水平分量和＝0、鉛直分量和＝0）",
+     "kp_ids": [
+      "sci.t_adv.phys-force.equilibrium"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-force.equilibrium"
+     ],
+     "options": [
+      "所有力的合力為零（水平分量和＝0、鉛直分量和＝0）",
+      "所有力的大小都必須相等",
+      "作用在物體上的力的數目一定是偶數",
+      "所有力的合力方向一定朝上"
+     ],
+     "distractor_rationales": {
+      "所有力的大小都必須相等": "平衡看的是合力為零，不是每個力一樣大；例子裡 3、5、4 三個力大小不同一樣能平衡。",
+      "作用在物體上的力的數目一定是偶數": "力的數目和平衡無關；三個力（奇數）也能平衡。",
+      "所有力的合力方向一定朝上": "平衡時合力是零，沒有方向；不是朝上也不是朝任何方向。"
+     },
+     "answer_evidence": [
+      "c-eq-def",
+      "c-eq-component"
+     ],
+     "feedback": "平衡＝合力為零：所有力的水平分量加起來＝0，而且鉛直分量加起來也＝0。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "三個力的水平分量分別是 3、−3、0 牛頓，鉛直分量分別是 0、4、−4 牛頓。這三個力的合力是多少？",
+     "answer": "合力為零，物體平衡",
+     "kp_ids": [
+      "sci.t_adv.phys-force.equilibrium"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-force.equilibrium"
+     ],
+     "options": [
+      "合力為零，物體平衡",
+      "合力向右 6 牛頓",
+      "合力向上 8 牛頓",
+      "合力 14 牛頓"
+     ],
+     "distractor_rationales": {
+      "合力向右 6 牛頓": "把 3 和 −3 的負號忽略相加成 3＋3 了；要帶負號：3＋(−3)＋0 ＝ 0。",
+      "合力向上 8 牛頓": "把 4 和 −4 的負號忽略相加成 4＋4 了；要帶負號：0＋4＋(−4) ＝ 0。",
+      "合力 14 牛頓": "把所有分量的大小不分方向全加（3＋3＋4＋4）；要分水平、鉛直並帶負號，結果都是 0。"
+     },
+     "answer_evidence": [
+      "c-eq-example"
+     ],
+     "feedback": "水平 3＋(−3)＋0 ＝ 0、鉛直 0＋4＋(−4) ＝ 0，合力為零，物體平衡。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "當一個物體所受各力達到平衡（合力為零）時，它的運動狀態會怎樣？",
+     "answer": "靜止的保持靜止，運動的保持等速直線運動",
+     "kp_ids": [
+      "sci.t_adv.phys-force.equilibrium"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-force.equilibrium"
+     ],
+     "options": [
+      "靜止的保持靜止，運動的保持等速直線運動",
+      "一定會靜止不動",
+      "一定會開始加速",
+      "運動方向一定會改變"
+     ],
+     "distractor_rationales": {
+      "一定會靜止不動": "平衡不一定靜止；原本在等速直線運動的物體合力為零時會保持等速直線運動，不會停下來。",
+      "一定會開始加速": "加速需要非零的合力；合力為零時速度不變，不會加速。",
+      "運動方向一定會改變": "改變方向也需要外力；合力為零時方向和快慢都不變。"
+     },
+     "answer_evidence": [
+      "c-eq-def"
+     ],
+     "feedback": "合力為零（平衡）＝運動狀態不變：靜者保持靜止、動者保持等速直線運動。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "三個力達到平衡時，把它們首尾相接畫出來，會剛好形成什麼圖形？",
+     "answer": "一個封閉的三角形，最後回到起點",
+     "kp_ids": [
+      "sci.t_adv.phys-force.equilibrium"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-force.equilibrium"
+     ],
+     "options": [
+      "一個封閉的三角形，最後回到起點",
+      "一條越來越長的直線",
+      "一條沒有閉合的折線",
+      "一個圓形"
+     ],
+     "distractor_rationales": {
+      "一條越來越長的直線": "只有三個力同方向才會排成一直線；平衡的三個力方向不同，會轉彎圍起來。",
+      "一條沒有閉合的折線": "沒閉合表示合力不是零、沒有平衡；平衡時終點一定回到起點、把圖形封閉。",
+      "一個圓形": "三個力是三段直直的箭頭，接起來是三角形，不會是圓形。"
+     },
+     "answer_evidence": [
+      "c-eq-triangle"
+     ],
+     "feedback": "平衡的三個力首尾相接會圍成一個封閉三角形（終點回到起點），表示它們加起來等於零。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（平衡＝物體受多力但合力為零、保持原本運動狀態〔靜者恆靜、動者恆作等速直線運動〕；判斷用分量＝水平分量和＝0 且 鉛直分量和＝0；例 水平 3＋(−3)＋0＝0、鉛直 0＋4＋(−4)＝0 → 平衡；平衡三力首尾相接圍成封閉三角形〔此例 3-4-5〕；三鐵律＝合力零即平衡、ΣFx=0且ΣFy=0、首尾相接封閉）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
