@@ -1,3 +1,9 @@
+## 2026-11-18 17:18 ★ HD friction 連環修圖：銳角三角比 + 廣義角三角比 figure 5/5 DONE-GATE
+- **math_trig_ratio_acute frozen `1834fee1caa52062`**（rounds 1-5 連 5 clean、L3 全 exit0）。HD [Image#14]：θ 角弧 'M55,140 A...' 從頂點本身起畫→成小勾沒貼角。修：弧改從鄰邊 (81,140) 掃到斜邊 (78.7,129.3)、圓心在頂點 θ。
+- **math_trig_ratio_generalized frozen `354ec3a7e39f8929`**（rounds 1-5 連 5 clean、L3 全 exit0）。HD：θ 角弧終點 (98,134)＝41.6° 超出終邊 OP(31.6°)→戳出 r 線。修：弧終點改落在終邊 OP 上 r=24 處 (100.4,137.4)。
+- DONE-GATE 兩單元全綠：scan PASS／pedagogy 0 hard／question_correctness CLEAN／unit_schema CLEAN／per_page 各 5/5（絕對座標算準、rsvg render 四角色過）。
+- ★class 教訓（SVG 角弧）：角弧起點/終點務必落在「兩邊上距頂點 r 處」，不可從頂點本身起畫（半徑0→小勾）、也不可超出邊（戳出線外）；畫完一定 render 實圖看。
+
 ## 2026-11-18 16:40 ★ HD friction [Image#12] math_function_exp_growth_decay 指數圖標籤移入透鏡區 5/5 DONE-GATE
 - **frozen `3fc1920441a62d81`**（de-converge 自 e751f7a2；rounds 1-5 連 5 clean、L3 全 exit0）。figure-only 修正。
 - HD：「文字儘可能不要蓋著…空間沒有不夠根本沒必要讓文字重疊」。成長（r＞1）/衰退（0＜r＜1）兩標籤原疊在各自曲線上 → 移入兩曲線間開放透鏡區（成長 y42→72、衰退 y134→108、起點 x150→140），彼此 36px 不疊、不碰線、不裁切。
