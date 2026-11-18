@@ -1,3 +1,8 @@
+## 2026-11-18 23:56 ★ sci.t_mid.phys-energy.power-def 功率的定義與單位（瓦特）5/5 DONE-GATE → phys-energy 3/22
+- **sci_phys_energy_power_def frozen `49ca44da2fc936e4`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha；三度 de-converge 自 `56f0889a`→`0224d2d7`→`86ebd191`→`49ca44da`，皆集中 c-pw-unit 一句）。t_mid 國中會考。前置＝work-def。R15 gloss（功率 power／瓦特 watt）grep -o 各＝2。
+- 內容：功率＝每單位時間所做的功，P＝W÷t；單位瓦特(W)＝焦耳/秒；同功時間短功率大。figure＝甲5秒60W vs 乙10秒30W（功都300J）。oracle en_power_def 錨 P=300/5=60W；Q4 distractor 1500(×5)/305(+5)/295(−5) 乾淨單一誤解。
+- DONE-GATE 全綠：per_page 634/634／scan PASS／pedagogy 0 hard／question CLEAN／schema rc0／repro PASS／figure 四角色簽核（SVG 未改沿用）。
+- ★收斂史（deep panel 連抓 3 筆真缺陷，皆 c-pw-unit 語句品質）：R4(7a) c-pw-def 裸數字「60」無單位（功/功率區辨課裡誤導，R1-12a/R2-9a 曾判 NOT 但「術語未教先用」前提錯誤——瓦特已於 can_do 先現）→補「60 瓦特」；R6(7a) 修正順帶引入「那部機器」懸空定指（機器首見 Q4）→改無主詞；R8(7a)「每秒做了」完成態與全檔其餘 4 處速率句不一致→刪「了」。最後 sha 49ca44da 連 5 clean。★class 教訓：(1)區辨單位的課裡每個算出的量都要帶單位；(2)修文迴避缺陷時勿引入指向前文未現實體的定指「那部/這個 X」；(3)per-unit-time 速率句勿用完成態「了」、全檔體貌一致。
 ## 2026-11-18 23:24 ★ sci.t_mid.phys-energy.work-def 功的定義（W＝Fd）5/5 DONE-GATE → phys-energy 2/22
 - **sci_phys_energy_work_def frozen `5fa5216a32354440`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha；de-converge 自 `01ec2a64`→`466e168`→`5fa5216a`）。t_mid 國中會考。前置＝energy-forms。R15 gloss（功 work）grep -o=2。
 - 內容：功＝力 × 物體沿力方向移動的距離，W＝F×d；單位焦耳(J)＝牛頓×公尺；兩種不做功＝d=0（推不動的牆）與力⊥位移（水平走路時向上提力）。figure＝地面箱子＋F=10N 水平紅箭頭＋d=3m 橘虛線→W=30J。oracle en_work_def 錨 10·3=30；Q4 distractor 13(加10+3)/10(只用力)/7(減10-3) 乾淨單一誤解。
