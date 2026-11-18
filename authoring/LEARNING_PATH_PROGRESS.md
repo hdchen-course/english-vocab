@@ -1,3 +1,10 @@
+## 2026-11-18 16:18 ★ HD friction 兩圖結案：math 比與比例「正比 y=kx」+「比例式」figure 重修 5/5 DONE-GATE
+- **HD [Image#10]「座標都標示在點的右邊就都不會蓋住了」**＋**[Image#11]「線似乎沒畫好」**兩 friction 訊號。
+- **math_ratio_direct_variation（正比 y=kx）frozen `b980cc3bdce4f471`**（rounds 1-5 連 5 clean、L3 全 exit0）。修三缺陷：(1) HD 指示三座標 (1,2)(2,4)(3,6) 移到各點右側(text-anchor=start)不蓋線；(2) 深 panel 抓藍線端點 x2=244 斜率−0.663≠精確−2/3→改 x2=243 精確過三點；(3) 深 panel 抓 caption/claim/distractor「向右1格就向上2格」但 SVG 無格線→三處改「單位」。render 四角色 PASS。
+- **math_ratio_proportion_equation（比例式）frozen `72a862d260da209c`**（rounds 1-5 連 5 clean、L3 全 exit0）。修：(1) HD「線沒畫好」＝交叉相乘弧端點未對準數字中心且 y=78 穿字→重畫外項綠弧貼 2↔6 上緣、內項棕弧貼 3↔4 下緣；(2) 深 panel 連抓「同樣價錢時」歧義（可讀成總價固定→與「數量與總價成比例」矛盾，真正條件是單價固定）→全檔 claim/teach/practice 題幹三處「價錢」→「單價」class-wide 消歧。render 四角色 PASS。
+- DONE-GATE：per_page 兩頁 absent from violations／scan PASS／question CLEAN／pedagogy 0 hard／schema CLEAN。
+- ★教訓：(a) 座標圖「點標籤壓線」靠移到點的淨空側（上升線→右下）解決；(b) 圖上畫格點的「線」必 x2 精確落格點（off-by-one 次像素斜率誤差深 panel 抓得到）；(c)「格」計數語只能用在有格線的圖；(d) 消歧用詞改動必 grep 全檔同步（claim/teach/practice/feedback），本次漏 practice 題幹被深 panel 連抓兩輪才補齊。
+
 ## 2026-11-18 15:28 ★ sci.t_mid.phys-kin.displacement-path 位移與路徑長的區別 5/5 DONE-GATE → phys-kin **2/14**
 - **sci_phys_kin_displacement_path frozen `8bb1b6acf6a3c087`**（rounds 1-5 連 5 clean、L3 全 exit0）。t_mid 國中。前置＝motion-describe。R15 gloss（位移 displacement／路徑長 path length）各只 can_do、grep -o 各=2。units_index 619。
 - 內容：路徑長＝實際走過總長、只有大小；位移＝起點到終點直線變化、有方向；走一圈回原點路徑長不為 0、位移為 0；例 A→B→A（各 50 公尺）路徑長 100、位移 0。figure＝A—B 路徑＋綠去程/棕回程箭頭（方向相反）＋路徑長100/位移0 兩行結論。不含二維向量合成/速度速率。
