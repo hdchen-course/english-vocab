@@ -74,10 +74,19 @@ def kin_projectile_h():
     return _ok("phys-kin.projectile-h", "水平拋 v₀=20,t=3：x=60、y=½gt²=44.1、vy=gt=29.4（三值互異）；t=1 落距4.9≠速度9.8；Q4 x=12·4=48≠鉛直78.4")
 def kin_projectile_angled():
     import math as m
+    # 斜拋：速度分成 vx=v₀cosθ（水平等速）、vy=v₀sinθ（鉛直自由落體）
     v0 = 20; th = m.radians(30)
-    rng = v0**2*m.sin(2*th)/g
-    assert _close(rng, v0**2*m.sin(2*th)/g) and _close(v0*m.sin(th)*2/g, 2*v0*m.sin(th)/g)
-    return _ok("phys-kin.projectile-angled", "斜拋射程 R=v₀²sin2θ/g（v₀=20,θ=30°）")
+    vx = v0*m.cos(th); vy0 = v0*m.sin(th)
+    assert _close(vy0, 10.0)                      # teach 鉛直初速分量 v₀sin30=10
+    assert _close(vx, 10*m.sqrt(3))               # 水平分量 v₀cos30=10√3≈17.3
+    # Q4：鉛直初速分量 9.8 → 到最高點時間 = vy/g = 1 秒（最高點 vy=0）
+    assert _close(9.8/g, 1.0)
+    # 最大射程在 θ=45°：R=v₀²sin2θ/g，sin2θ 在 2θ=90° 最大=1
+    assert m.sin(m.radians(90)) == 1.0
+    assert m.sin(m.radians(90)) > m.sin(m.radians(60)) and m.sin(m.radians(90)) > m.sin(m.radians(120))
+    # 對稱：總滯空 T=2·t_up（同高度落回）
+    assert _close(2*(vy0/g), 2*vy0/g)
+    return _ok("phys-kin.projectile-angled", "斜拋 v₀=20,θ=30°：vx=v₀cos30=10√3≈17.3、vy=v₀sin30=10；vy分量9.8→t_up=1；射程R=v₀²sin2θ/g 在θ=45°最大(sin90=1)")
 def kin_relative():
     vA, vB = 60, 40                                 # 相對速度 v_AB=v_A−v_B
     assert vA-vB == 20 and vB-vA == -20

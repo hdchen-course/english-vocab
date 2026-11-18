@@ -1,3 +1,9 @@
+## 2026-11-18 22:13 ★ sci.t_sub.phys-kin.projectile-angled 斜向拋射運動 5/5 DONE-GATE → phys-kin 13/14
+- **sci_phys_kin_projectile_angled frozen `8aa5dbe6990ca443`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha）。t_sub 分科。前置＝projectile-h＋vector-kinematics＋vertical-throw。R15 gloss（斜向拋射 projectile at an angle）grep -o=2。
+- 內容：v₀ 依仰角 θ 分解 vx＝v₀cosθ（水平等速）＋vy＝v₀sinθ（鉛直等加速度/鉛直上拋，非自由落體）；最高點 vy＝0 但 vx 不變、速度非零；t_up＝v₀sinθ÷g、總滯空 2t_up；射程 R＝v₀²sin2θ÷g、仰角 45° 最遠。figure＝拋物線＋v₀ 斜箭頭（30°）分解成 vx(長)/vy、最高點 vy=0 標頂點。oracle kin_projectile_angled 錨 v₀=20,θ=30°→vx=10√3≈17.3/vy=10＋Q4 vy分量9.8→t_up=1＋45°最大(sin90=1)；fingerprint e0dee3cd→59b61c15。
+- DONE-GATE 全綠：per_page 630/630／scan PASS／pedagogy 0 hard／question CLEAN／schema rc0／repro PASS／rsvg render 四角色過。
+- ★收斂史（深 panel 連抓 4 真缺陷，t_sub 進階內容價值顯著）：R1(12-agent) blocker＝鉛直分量 vy₀>0 誤稱「自由落體」（應等加速度/鉛直上拋，自由落體保留 vy₀=0）→7處 class-wide 改＋加 vertical-throw 前置；R1 又抓 Q1 複合 distractor→拆單一誤解。R3 抓 _note 漏同步 vertical-throw→補列（de-converge d073b07c→…）。R4(readability)+R5(correctness) 兩 panel 同抓 Q4「0.5 秒」distractor rationale 算術不自洽（「又除以2」=4.9≠0.5）→改用分母 2g(9.8÷19.6=0.5) 乾淨單一誤解（de-converge a380c962→8aa5dbe6）。figure 自審先修兩圖缺陷（最高點浮點、分解三角形等腿違反 30°）。★class 教訓：(1)斜拋鉛直分量有向上初速≠自由落體；(2)distractor rationale 算術須真能得該值（沿用 uniform-accel 教訓）；(3)加 prereq 要同步 _note。
+
 ## 2026-11-18 21:30 ★ sci.t_adv.phys-kin.projectile-h 水平拋射運動 5/5 DONE-GATE → phys-kin 12/14
 - **sci_phys_kin_projectile_h frozen `3b6e3fba436e6f55`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha）。t_adv 學測。前置＝free-fall＋vector-kinematics。R15 gloss（水平拋射 horizontal projectile）grep -o=2。
 - 內容：水平拋射＝水平等速（不受力 vx＝v₀、x＝v₀·t）＋鉛直自由落體（vy＝gt、y＝½gt²），兩分量各自獨立；落地時間只由高度決定、與水平初速無關（同高度同時落地）；軌跡拋物線、合速度 √(vx²+vy²)。figure＝高台邊拋出、藍拋物線向右下、紅 v₀ 水平箭頭、橘虛線標 x 水平射程/y 鉛直落距。oracle kin_projectile_h 錨 v₀=20,t=3→x=60/y=44.1/vy=29.4 三值互異＋Q3 t=1 落距4.9≠速度9.8＋Q4 x=48≠鉛直78.4；刻意避 t=2 的 vy=y=19.6 v/d 巧合 repro PASS（fingerprint 503f114→588666f0）。
