@@ -1,0 +1,212 @@
+{
+ "_note": "自然島 物理-運動學（phys-kin）strand 第10單元（t_adv 學測）。知識點 sci.t_adv.phys-kin.vertical-throw（鉛直上拋運動的分析）。tier=t_adv（學習者端不顯年段 R11）。全繁體零簡體零 PRC 詞。中文授課無音檔。前置＝uniform-accel-eq（等加速度三公式）、free-fall（重力加速度 g）。術語附國際英語（R15，★只在 can_do 首次 gloss 一次：鉛直上拋 (vertical throw)；teach/claim body 不重複；英文括號 grep -o 計數應＝2〔_note 本宣告行一次＋can_do 一次〕）。scope（學測 t_adv）：鉛直上拋＝初速度向上、只受重力，所以加速度是 g 向下（與上升方向相反，上升時一路減速），是等加速度運動。(1) 到最高點時速度＝0；(2) 最高高度 H＝v₀²÷(2g)、上升時間 t_up＝v₀÷g；(3) 對稱性：上升到最高點的時間＝從最高點掉回出發點的時間，回到出發高度時的速率（大小）＝初速率，運動方向則由向上變成向下。用三公式取『上為正、a＝−g』分析。例（g＝9.8）：v₀＝29.4 → 最高高度＝29.4²÷(2×9.8)＝44.1 公尺、上升時間＝29.4÷9.8＝3 秒（H 與 v₀ 數字不同、單位不同）。不含水平/斜向拋射（另單元）、不含空氣阻力。repro（tools/verify/sci_phys_checks.py::kin_vertical_throw，repro_gate .venv PASS）錨定 teach 例（v₀=29.4→H=44.1、t_up=3）與 practice 例（v₀=39.2→H=78.4、t_up=4）。figure 自檢：一條鉛直上拋軌跡，底部標初速度 v₀ 向上箭頭、最高點標 v＝0 與高度 H、右側標上升時間 t_up，並標『上升減速、下降加速，上下對稱』；標題『鉛直上拋：到最高點 v＝0，上下對稱』逐字入 alt 開頭；箭頭方向正確、標籤不疊不溢出、alt 與 SVG text 逐字一致。practice 四答案＝{0（Q1 最高點速度）,78.4 公尺（Q2 H=39.2²/(2×9.8)）,4 秒（Q3 t_up=39.2/9.8）,和初速率一樣大、此時改為向下運動（Q4 對稱回出發點；速率純量只講大小）}；MCQ options bare、每 distractor 乾淨單一誤解（最高點速度非最大/非 g；H 忘除 2g 或少算；t_up 用錯式；回出發速率誤判）、兩兩相異、長度均衡；distractor_rationales key 逐字相符；practice 數值(39.2,78.4,4)與 teach(29.4,44.1,3)不重疊避#10。claim kind=fact。figure-only example 無 body。定義不得反轉：上拋加速度 g 向下、最高點 v=0、H=v₀²/(2g)、t_up=v₀/g、上下對稱。",
+ "page": "sci_phys_kin_vertical_throw.html",
+ "units": [
+  {
+   "unit_id": "sci.t_adv.phys-kin.vertical-throw",
+   "title_zh": "鉛直上拋運動的分析",
+   "can_do": "我知道『鉛直上拋 (vertical throw)』是把物體以初速度向上丟出、之後只受重力的運動：加速度是 g、方向向下（和上升方向相反），所以上升時一路減速，是等加速度運動。我知道到最高點時速度等於 0，最高高度 H＝v₀²÷(2g)、上升時間 t_up＝v₀÷g，而且上升和下降上下對稱（回到出發高度時速率（大小）和初速率一樣大，運動方向從向上變成向下）。我會算：g＝9.8、初速度 29.4 公尺／秒上拋，最高高度＝29.4²÷(2×9.8)＝44.1 公尺、上升時間＝29.4÷9.8＝3 秒。",
+   "situation_group": "運動：描述物體怎麼動",
+   "subject": "sci",
+   "strand": "phys-kin",
+   "est_minutes": 14,
+   "knowledge_point_ids": [
+    "sci.t_adv.phys-kin.vertical-throw"
+   ],
+   "prerequisites": [
+    "sci.t_adv.phys-kin.uniform-accel-eq",
+    "sci.t_mid.phys-kin.free-fall"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-vt-setup",
+     "text": "鉛直上拋是把物體以初速度 v₀ 向上丟出，丟出後只受重力。因為重力一直向下，加速度就是 g（約 9.8 公尺／秒²）、方向向下，和上升方向相反，所以物體上升時速度越來越小。它是等加速度運動，可以取『向上為正、加速度 a＝−g』，用等加速度三公式分析。",
+     "kind": "fact",
+     "source_refs": [
+      "鉛直上拋的受力與加速度（高中物理 學測）"
+     ],
+     "verification_ref": "上拋只受重力⇒a=g 向下、等加速度（國中高中共識）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-vt-top",
+     "text": "物體上升到最高點的那一瞬間，速度剛好等於 0（再往上就不動了，接著開始往下掉）。用 v＝v₀−gt，令 v＝0 可得上升時間 t_up＝v₀÷g；用 v²＝v₀²−2gH，令 v＝0 可得最高高度 H＝v₀²÷(2g)。例（g＝9.8）：v₀＝29.4 → t_up＝29.4÷9.8＝3 秒、H＝29.4²÷(2×9.8)＝44.1 公尺。",
+     "kind": "fact",
+     "source_refs": [
+      "最高點速度為零與最高高度（高中物理 學測）"
+     ],
+     "verification_ref": "v₀=29.4,g=9.8：H=v₀²/(2g)=44.1、t_up=v₀/g=3（sci_phys_checks::kin_vertical_throw .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-vt-sym",
+     "text": "鉛直上拋上下對稱：物體從出發點上升到最高點所花的時間，和它從最高點掉回出發高度所花的時間一樣長；而且回到出發高度時的速率（大小），和一開始的初速率一樣大；運動方向則從向上變成向下（速率是純量、只講大小，方向是速度的性質）。所以整趟（上去再回到原高度）的時間是上升時間的兩倍。",
+     "kind": "fact",
+     "source_refs": [
+      "鉛直上拋的時間與速率對稱（高中物理 學測）"
+     ],
+     "verification_ref": "等加速度對稱性：t_down=t_up、落回速率=v₀（力學對稱，.venv 可驗特例）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.vertical-throw"
+     ],
+     "body": "前面學過重力加速度 g 和等加速度三公式。這一單元把它們用到一個常見情境：把東西往正上方丟出去——鉛直上拋。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.vertical-throw"
+     ],
+     "body": "① 上拋後只受重力，所以加速度是 g、方向向下（和上升相反），上升時一路減速，是等加速度運動（取上為正、a＝−g）。② 到最高點時速度＝0；由此得上升時間 t_up＝v₀÷g、最高高度 H＝v₀²÷(2g)。③ 上下對稱：上升時間＝下降回原高度時間，回到原高度的速率（大小）＝初速率，運動方向變成向下。④ 例（g＝9.8）：v₀＝29.4 → 上升時間＝29.4÷9.8＝3 秒、最高高度＝29.4²÷(2×9.8)＝44.1 公尺。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.vertical-throw"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 190' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='180' y='15' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>鉛直上拋：到最高點 v＝0，上下對稱</text><line x1='70' y1='170' x2='70' y2='40' stroke='#c7cfd8' stroke-width='1' stroke-dasharray='3 3'/><circle cx='70' cy='46' r='5' fill='#c2535d'/><text x='84' y='44' font-size='9' fill='#c2535d'>最高點：v ＝ 0</text><text x='84' y='56' font-size='8' fill='#33475b'>（速度剛好為 0，開始往下）</text><circle cx='70' cy='168' r='5' fill='#2563a6'/><line x1='70' y1='162' x2='70' y2='140' stroke='#2563a6' stroke-width='2'/><polygon points='70,134 66,144 74,144' fill='#2563a6'/><text x='84' y='170' font-size='9' fill='#2563a6'>出發：初速度 v₀ 向上</text><line x1='44' y1='46' x2='44' y2='168' stroke='#c08a2d' stroke-width='1.2'/><text x='30' y='110' font-size='9' fill='#c08a2d' text-anchor='middle' transform='rotate(-90 30 110)'>最高高度 H</text><text x='150' y='96' font-size='8.5' fill='#5b8def'>上升減速（a＝g 向下）</text><text x='150' y='112' font-size='8.5' fill='#5b8def'>下降加速；上升時間＝下降時間</text><text x='180' y='186' font-size='8.5' fill='#33475b' text-anchor='middle'>g＝9.8、v₀＝29.4 → H＝29.4²÷(2×9.8)＝44.1 公尺、上升時間＝29.4÷9.8＝3 秒</text></g></svg>",
+      "alt": "標題「鉛直上拋：到最高點 v＝0，上下對稱」。一條鉛直的虛線軌跡：底部一個藍點標「出發：初速度 v₀ 向上」、旁邊一個向上的藍箭頭；頂部一個紅點標「最高點：v ＝ 0」「（速度剛好為 0，開始往下）」。左側一條橘色線標「最高高度 H」，標示從出發點到最高點的高度。中間說明「上升減速（a＝g 向下）」「下降加速；上升時間＝下降時間」。下方寫「g＝9.8、v₀＝29.4 → H＝29.4²÷(2×9.8)＝44.1 公尺、上升時間＝29.4÷9.8＝3 秒」。",
+      "caption": "鉛直上拋：丟出後只受重力，加速度 g 向下（和上升相反），所以上升時一路減速，到最高點時速度剛好是 0。由此得上升時間 t_up＝v₀÷g、最高高度 H＝v₀²÷(2g)。運動上下對稱：上升和下降花的時間一樣，回到出發高度時速率（大小）和初速率一樣大，運動方向則變成向下。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.vertical-throw"
+     ],
+     "body": "最後練「鉛直上拋」。重點：(1) 上拋加速度是 g、方向向下，上升一路減速；(2) 最高點速度＝0，H＝v₀²÷(2g)、t_up＝v₀÷g；(3) 上下對稱，回到原高度速率（大小）＝初速率，運動方向變成向下。小提醒：最高點速度是 0 但加速度仍是 g（沒有變 0，所以會開始往下掉）；別把『速度 0』當成『加速度 0』。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QT-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個物體被鉛直上拋。當它到達最高點的那一瞬間，速度是多少？",
+     "answer": "0",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.vertical-throw"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-kin.vertical-throw"
+     ],
+     "options": [
+      "0",
+      "和初速度一樣大",
+      "等於重力加速度 g",
+      "最大，比初速度還大"
+     ],
+     "distractor_rationales": {
+      "和初速度一樣大": "上升時一路減速，到最高點已經減到 0 了；回到出發高度時才會又變回和初速度一樣大（但方向相反）。",
+      "等於重力加速度 g": "g 是加速度（公尺／秒²）不是速度；最高點的速度是 0，不過加速度仍是 g。",
+      "最大，比初速度還大": "上拋是減速，速度只會越來越小；最快是剛丟出時（v₀），最高點反而是最慢的 0。"
+     },
+     "answer_evidence": [
+      "c-vt-top"
+     ],
+     "feedback": "鉛直上拋一路減速，到最高點速度剛好減到 0（但加速度仍是 g，所以接著往下掉）。"
+    },
+    {
+     "question_id": "QT-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "g＝9.8 公尺／秒²。一個物體以初速度 39.2 公尺／秒鉛直上拋，它能上升的最高高度是多少？",
+     "answer": "78.4 公尺",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.vertical-throw"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-kin.vertical-throw"
+     ],
+     "options": [
+      "78.4 公尺",
+      "156.8 公尺",
+      "4 公尺",
+      "39.2 公尺"
+     ],
+     "distractor_rationales": {
+      "156.8 公尺": "這把 v₀² 只除以 g、忘了除以 2（39.2²÷9.8＝156.8）；最高高度要除以 2g，H＝39.2²÷(2×9.8)＝78.4。",
+      "4 公尺": "4 是上升時間（39.2÷9.8＝4 秒）不是高度；高度要用 H＝v₀²÷(2g)＝78.4 公尺。",
+      "39.2 公尺": "39.2 是初速度的數字，不是高度；高度要用 H＝v₀²÷(2g)＝39.2²÷19.6＝78.4 公尺。"
+     },
+     "answer_evidence": [
+      "c-vt-top"
+     ],
+     "feedback": "H＝v₀²÷(2g)＝39.2²÷(2×9.8)＝1536.64÷19.6＝78.4 公尺。"
+    },
+    {
+     "question_id": "QT-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "同一個物體（初速度 39.2 公尺／秒上拋，g＝9.8 公尺／秒²）。它上升到最高點要花多少時間？",
+     "answer": "4 秒",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.vertical-throw"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-kin.vertical-throw"
+     ],
+     "options": [
+      "4 秒",
+      "8 秒",
+      "2 秒",
+      "0.25 秒"
+     ],
+     "distractor_rationales": {
+      "8 秒": "8 秒是整趟（上去再掉回出發點）的時間；只上升到最高點是它的一半，t_up＝v₀÷g＝39.2÷9.8＝4 秒。",
+      "2 秒": "這把初速度誤除以 2g（39.2÷(2×9.8)＝2）；上升時間要除以 g 不是 2g，t_up＝v₀÷g＝39.2÷9.8＝4 秒。",
+      "0.25 秒": "這把式子上下顛倒了（用 g÷v₀＝9.8÷39.2＝0.25）；上升時間是 v₀÷g＝39.2÷9.8＝4 秒。"
+     },
+     "answer_evidence": [
+      "c-vt-top"
+     ],
+     "feedback": "到最高點時 v＝0，由 v＝v₀−gt 得 t_up＝v₀÷g＝39.2÷9.8＝4 秒。"
+    },
+    {
+     "question_id": "QT-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "鉛直上拋的物體掉回到原來出發的高度時，它的速率（和初速率比）會怎樣？",
+     "answer": "和初速率一樣大（物體這時改為往下運動）",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.vertical-throw"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-kin.vertical-throw"
+     ],
+     "options": [
+      "和初速率一樣大（物體這時改為往下運動）",
+      "變成 0",
+      "比初速率大很多",
+      "剛好是初速率的一半"
+     ],
+     "distractor_rationales": {
+      "變成 0": "速度是 0 發生在最高點，不是回到出發高度時；回到原高度時它又在運動，速率回到和初速率一樣大。",
+      "比初速率大很多": "沒有空氣阻力時能量守恆、上下對稱，回到原高度速率剛好等於初速率，不會更大。",
+      "剛好是初速率的一半": "上下對稱使回到原高度的速率等於初速率（不是一半）；只是方向反過來向下。"
+     },
+     "answer_evidence": [
+      "c-vt-sym"
+     ],
+     "feedback": "上下對稱：回到出發高度時速率（大小）和初速率一樣大；運動方向則從向上變成向下（速率是純量、只講大小）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（鉛直上拋：加速度 g 向下、上升減速；最高點 v＝0 但 a 仍是 g；H＝v₀²÷(2g)、t_up＝v₀÷g；上下對稱、回原高度速率（大小）＝初速率、運動方向變向下；例 v₀=29.4→H=44.1、t_up=3；v₀=39.2→H=39.2²÷19.6=78.4、t_up=39.2÷9.8=4）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

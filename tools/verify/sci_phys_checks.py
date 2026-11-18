@@ -51,9 +51,11 @@ def kin_uniform_accel():
     assert vb == 22 and xb == 60 and _close(vb**2, v0b**2+2*ab*xb)
     return _ok("phys-kin.uniform-accel-eq", "v=v₀+at=11、x=28 一致；practice v0=2,a=4,t=5→v=22、x=60 一致")
 def kin_vertical_throw():
-    v0 = 19.6
-    assert _close(v0**2/(2*g), 19.6) and _close(v0/g, 2)     # 最高/上升時間
-    return _ok("phys-kin.vertical-throw", "上拋 v₀=19.6：最高=v₀²/2g=19.6m、上升=2s")
+    v0 = 29.4                                                # teach 例；刻意避開 v₀=19.6→H=19.6 速度/距離同數字巧合
+    assert _close(v0**2/(2*g), 44.1) and _close(v0/g, 3)     # 最高高度 44.1m、上升時間 3s（H≠v₀）
+    v0b = 39.2                                               # practice 例（Q2/Q3），與 teach 數字相異避#10
+    assert _close(v0b**2/(2*g), 78.4) and _close(v0b/g, 4)   # H=78.4m、t_up=4s
+    return _ok("phys-kin.vertical-throw", "上拋 v₀=29.4：H=44.1m、t_up=3s（H≠v₀）；practice v₀=39.2→H=78.4m、t_up=4s")
 def kin_vector():
     r = sp.Matrix([3, 4]);
     assert r.norm() == 5                            # 平面位置向量模

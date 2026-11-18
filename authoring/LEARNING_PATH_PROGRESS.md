@@ -1,3 +1,9 @@
+## 2026-11-18 20:18 ★ sci.t_adv.phys-kin.vertical-throw 鉛直上拋運動的分析 5/5 DONE-GATE → phys-kin 10/14
+- **sci_phys_kin_vertical_throw frozen `f1af68b079959cf9`**（rounds 1-5 連 5 clean、L3 全 exit0）。t_adv 學測。前置＝uniform-accel+free-fall。R15 gloss（鉛直上拋 vertical throw）grep -o=2。
+- 內容：上拋加速度 g 向下、上升減速、是等加速度；最高點 v=0（但 a 仍是 g）；H=v₀²÷(2g)、t_up=v₀÷g；上下對稱（回原高度速率大小＝初速率、運動方向變向下）。figure＝上拋軌跡 出發 v₀ 向上箭頭→最高點 v=0＋最高高度 H＋上升減速/對稱說明。oracle kin_vertical_throw 錨 teach(v₀=29.4→H=44.1,t_up=3)＋practice(v₀=39.2→H=78.4,t_up=4)、刻意避 v₀=19.6→H=19.6 巧合 repro PASS。
+- DONE-GATE 全綠：per_page 627/627／scan PASS／pedagogy 0 hard／question CLEAN／schema rc0／repro PASS／rsvg render 四角色過。
+- ★收斂史：自審先改 Q3 distractor「384.16」→「0.25」（g÷v₀ 倒置乾淨單錯）。R2 深 panel（7-agent）CONFIRMED（major, domain-precision）：Q4 問純量「速率」卻附「方向相反（向下）」把方向加到速率上，混淆速率/速度。class 缺陷 10 處（can_do/claim/teach×2/figure caption/Q4/feedback/selfeval/_note）→ class-wide 修為「速率(大小)相同、運動方向變向下」；de-converge sha da95aaf0→f1af68b0 全新 5-clean（R4 一 reviewer 觸 content-filter 但 coverageComplete+L3 通過仍有效）。★class 教訓：速率是純量不可附方向，要講方向改變說「運動方向」或改問「速度」。
+
 ## 2026-11-18 19:52 ★ sci.t_adv.phys-kin.uniform-accel-eq 等加速度運動的三個公式 5/5 DONE-GATE → phys-kin 9/14
 - **sci_phys_kin_uniform_accel frozen `70653d3087012dda`**（rounds 1-5 連 5 clean、L3 全 exit0）。t_adv 學測。前置＝acceleration＋vt-graph。R15 gloss（等加速度運動 uniformly accelerated motion）grep -o=2。
 - 內容：三公式 v＝v₀＋at（沒 x）、x＝v₀t＋½at²（沒 v）、v²＝v₀²＋2ax（沒 t）；選式技巧＝看題目缺哪個量挑不含它的那式。figure＝三公式選式卡＋符號對照（←指向各式、標該式缺哪量）。oracle kin_uniform_accel 錨 teach(v0=3,a=2,t=4→v=11,x=28)＋practice(v0=2,a=4,t=5→v=22,x=60) 三公式一致 repro PASS。
