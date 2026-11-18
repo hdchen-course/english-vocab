@@ -1,0 +1,211 @@
+{
+ "_note": "自然島 物理-運動學（phys-kin）strand 第7單元（t_mid 國中會考）。知識點 sci.t_mid.phys-kin.vt-graph（等加速度 v-t 圖判讀：斜率＝加速度、線下面積＝位移）。tier=t_mid（學習者端不顯年段 R11）。全繁體零簡體零 PRC 詞。中文授課無音檔。前置＝acceleration（加速度的定義與單位）。術語附國際英語（R15，★只在 can_do 首次 gloss 一次：v-t 圖 (velocity-time graph)；teach/claim body 不重複；自檢用描述文字、不在自檢子句重嵌英文 literal：v-t 圖英文括號 grep -o 計數應＝2〔_note 本宣告行一次＋can_do 一次〕）。scope（t_mid 國中會考）：(1) v-t 圖＝橫軸時間 t、縱軸速度 v，畫出速度隨時間怎麼變；(2) 等加速度運動在 v-t 圖上是一條直線，直線的斜率（Δv÷Δt）就是加速度；(3) v-t 圖「線下面積」（直線與時間軸之間圍出的面積）就是位移；(4) 由圖求加速度（斜率）與位移（面積）。例：直線 v=2t，斜率＝2＝加速度；0 到 5 秒線下是一個三角形，面積＝½×5×10＝25，就是位移 25 公尺。不含等加速度三公式代數運算（uniform-accel 單元）、不含曲線（變加速度）、不含 x-t 圖（已於 xt-graph 單元）。repro（tools/verify/sci_phys_checks.py::kin_vt_graph，repro_gate .venv PASS）錨定『v=2t：斜率＝a＝2、[0,5]面積＝位移＝25』。figure 自檢：一個座標平面，橫軸標 t（秒）、縱軸標 v（公尺／秒），一條過原點往右上的直線 v=2t，線下三角形淡色填滿標『面積＝位移』，斜率標『斜率＝加速度』，結論『斜率＝2＝加速度；面積＝½×5×10＝25＝位移』；標題『等加速度的 v-t 圖：斜率＝加速度、面積＝位移』逐字入 alt 開頭；軸要有箭頭、標籤不疊不溢出、alt 與 SVG text 逐字一致；座標圖幾何 render 核對（直線過原點、三角形面積填在線與軸之間不溢出、不裁切）。practice 四答案＝{加速度(Q1 斜率),位移(Q2 線下面積),3 公尺／秒²(Q3 斜率 (12−0)÷(4−0)),24 公尺(Q4 面積 ½×4×12)}；Q3/Q4 共用同一條線 (0,0)→(4秒,12) 配對考斜率與面積；MCQ options bare、每 distractor 乾淨單一誤解（縱軸速度當答案／面積當斜率／忘×½／末速當位移／相乘）、兩兩相異、長度均衡；distractor_rationales key 逐字相符；Q3/Q4 數值(3,4,12,24,48)與 teach 的 v=2t 例(2,5,10,25)不重疊避#10。claim kind=fact。figure-only example 無 body。定義不得反轉：v-t 圖斜率＝加速度；線下面積＝位移。",
+ "page": "sci_phys_kin_vt_graph.html",
+ "units": [
+  {
+   "unit_id": "sci.t_mid.phys-kin.vt-graph",
+   "title_zh": "等加速度的 v-t 圖（斜率＝加速度、面積＝位移）",
+   "can_do": "我知道『v-t 圖 (velocity-time graph)』用橫軸時間、縱軸速度，畫出速度隨時間怎麼變。我知道等加速度運動在 v-t 圖上是一條直線，直線的斜率（Δv÷Δt）就是加速度；而直線下方和時間軸之間圍出的面積，就是位移。我會從圖算這兩樣：例如直線 v=2t，斜率是 2，所以加速度 2 公尺／秒²；0 到 5 秒線下是一個三角形，面積＝½×5×10＝25，所以位移是 25 公尺。",
+   "situation_group": "運動：描述物體怎麼動",
+   "subject": "sci",
+   "strand": "phys-kin",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "sci.t_mid.phys-kin.vt-graph"
+   ],
+   "prerequisites": [
+    "sci.t_mid.phys-kin.acceleration"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-vt-slope",
+     "text": "速度-時間圖（v-t 圖）的橫軸是時間 t、縱軸是速度 v，畫出物體的速度隨時間怎麼變。等加速度運動因為加速度固定，在 v-t 圖上是一條直線；這條直線的斜率（速度變化量 Δv 除以時間 Δt）就是加速度。例如直線 v=2t，每過 1 秒速度增加 2 公尺／秒，斜率是 2，所以加速度是 2 公尺／秒²。",
+     "kind": "fact",
+     "source_refs": [
+      "等加速度運動 v-t 圖斜率＝加速度（國中自然）"
+     ],
+     "verification_ref": "v=2t：斜率＝a＝2（sci_phys_checks::kin_vt_graph .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-vt-area",
+     "text": "v-t 圖還有一個重點：直線（或任何速度線）與時間軸之間「線下圍出的面積」就是位移。因為位移是速度乘以時間的累積，而面積剛好是「速度×時間」累加起來。例如直線 v=2t，從 0 到 5 秒線下是一個三角形，底是 5 秒、高是 10 公尺／秒，面積＝½×5×10＝25，所以這 5 秒的位移是 25 公尺。",
+     "kind": "fact",
+     "source_refs": [
+      "v-t 圖線下面積＝位移（國中自然）"
+     ],
+     "verification_ref": "v=2t：[0,5] 線下面積＝位移＝25（sci_phys_checks::kin_vt_graph .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-vt-read",
+     "text": "所以看 v-t 圖可以讀出兩樣東西：看「斜率」得到加速度，看「線下面積」得到位移。這兩樣不要搞混——斜率是線的傾斜程度（加速度），面積是線下蓋住的區域（位移）。縱軸本身讀到的是速度，不是加速度也不是位移。",
+     "kind": "fact",
+     "source_refs": [
+      "v-t 圖的斜率與面積判讀（國中自然）"
+     ],
+     "verification_ref": "斜率⇒加速度、面積⇒位移、縱軸⇒速度（國中自然共識）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.vt-graph"
+     ],
+     "body": "前面學過加速度（速度變化÷時間），也看過用 x-t 圖看位置。這一單元用「速度-時間圖」看等加速度運動，並學會從圖上讀出加速度和位移。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.vt-graph"
+     ],
+     "body": "① v-t 圖的橫軸是時間 t、縱軸是速度 v。② 等加速度運動在 v-t 圖上是一條直線，直線的斜率（Δv÷Δt）就是加速度。③ 直線與時間軸之間「線下的面積」就是位移（因為位移＝速度×時間的累積）。④ 例（看圖）：直線 v=2t，斜率是 2，所以加速度＝2 公尺／秒²；0 到 5 秒線下是一個三角形，面積＝½×5×10＝25，所以位移＝25 公尺。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.vt-graph"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 195' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='180' y='14' font-size='8.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>等加速度的 v-t 圖：斜率＝加速度、面積＝位移</text><polygon points='55,158 295,50 295,158' fill='#cfe3d6' stroke='none'/><line x1='55' y1='158' x2='330' y2='158' stroke='#9aa5b1' stroke-width='1.3'/><polygon points='330,158 322,154 322,162' fill='#9aa5b1'/><text x='332' y='170' font-size='8.5' fill='#33475b'>t（秒）</text><line x1='55' y1='158' x2='55' y2='30' stroke='#9aa5b1' stroke-width='1.3'/><polygon points='55,30 51,38 59,38' fill='#9aa5b1'/><text x='34' y='34' font-size='8.5' fill='#33475b'>v（公尺／秒）</text><line x1='55' y1='158' x2='295' y2='50' stroke='#2563a6' stroke-width='2'/><text x='300' y='48' font-size='8.5' fill='#2563a6'>v=2t</text><text x='188' y='140' font-size='8.5' fill='#2f6f54' text-anchor='middle'>面積 ＝ 位移</text><text x='150' y='92' font-size='8' fill='#c08a2d' transform='rotate(-24 150 92)'>斜率 ＝ 加速度</text><text x='180' y='187' font-size='8.5' fill='#33475b' text-anchor='middle'>斜率 ＝ 2 ＝ 加速度；面積 ＝ ½×5×10 ＝ 25 ＝ 位移</text></g></svg>",
+      "alt": "標題「等加速度的 v-t 圖：斜率＝加速度、面積＝位移」。一個座標平面：橫軸標「t（秒）」、縱軸標「v（公尺／秒）」。一條藍色過原點往右上的直線標「v=2t」。直線與時間軸之間的三角形區域用淡綠色填滿，標「面積 ＝ 位移」。直線旁沿著線標「斜率 ＝ 加速度」。下方寫「斜率 ＝ 2 ＝ 加速度；面積 ＝ ½×5×10 ＝ 25 ＝ 位移」。",
+      "caption": "等加速度運動在 v-t 圖上是一條直線（這裡是 v=2t）。直線的斜率就是加速度：每過 1 秒速度增加 2，所以加速度＝2 公尺／秒²。直線下方和時間軸圍出的三角形面積就是位移：底 5 秒、高 10 公尺／秒，面積＝½×5×10＝25，所以位移＝25 公尺。看斜率得加速度、看面積得位移。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.vt-graph"
+     ],
+     "body": "最後練「v-t 圖」。重點：(1) 等加速度運動在 v-t 圖上是一條直線；(2) 斜率（Δv÷Δt）＝加速度；(3) 線下面積＝位移。小提醒：斜率和面積是兩回事——斜率看線斜不斜（給你加速度），面積看線下蓋住多少（給你位移）；縱軸讀到的是速度本身，別把它當成加速度或位移。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QV-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在一張 v-t 圖上，一條直線的「斜率」代表什麼？",
+     "answer": "物體的加速度",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.vt-graph"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-kin.vt-graph"
+     ],
+     "options": [
+      "物體的加速度",
+      "物體的速度",
+      "物體的位移",
+      "物體走過的路程"
+     ],
+     "distractor_rationales": {
+      "物體的速度": "速度是直接讀 v-t 圖的縱軸；斜率（速度變化÷時間）代表的是加速度。",
+      "物體的位移": "位移是 v-t 圖的「線下面積」，不是斜率；斜率代表加速度。",
+      "物體走過的路程": "路程也是從線下面積來的（不是斜率）；斜率代表的是加速度。"
+     },
+     "answer_evidence": [
+      "c-vt-slope"
+     ],
+     "feedback": "v-t 圖上直線的斜率＝速度變化量÷時間＝加速度。"
+    },
+    {
+     "question_id": "QV-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在一張 v-t 圖上，直線和時間軸之間「線下圍出的面積」代表什麼？",
+     "answer": "物體的位移",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.vt-graph"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-kin.vt-graph"
+     ],
+     "options": [
+      "物體的位移",
+      "物體的加速度",
+      "物體的速度",
+      "經過的時間"
+     ],
+     "distractor_rationales": {
+      "物體的加速度": "加速度是 v-t 圖的「斜率」，不是面積；線下面積代表位移。",
+      "物體的速度": "速度是直接讀縱軸的高度；線下面積（速度×時間的累積）代表位移。",
+      "經過的時間": "時間是讀橫軸，不是面積；線下面積代表位移。"
+     },
+     "answer_evidence": [
+      "c-vt-area"
+     ],
+     "feedback": "v-t 圖的線下面積＝速度×時間的累積＝位移。"
+    },
+    {
+     "question_id": "QV-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個等加速度運動的 v-t 圖是一條直線，從 (0 秒, 0) 到 (4 秒, 12 公尺／秒)。這個物體的加速度是多少？",
+     "answer": "3 公尺／秒²",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.vt-graph"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-kin.vt-graph"
+     ],
+     "options": [
+      "3 公尺／秒²",
+      "12 公尺／秒²",
+      "24 公尺／秒²",
+      "48 公尺／秒²"
+     ],
+     "distractor_rationales": {
+      "12 公尺／秒²": "這只是末速度（讀縱軸的 12），不是加速度；加速度＝斜率＝(12−0)÷(4−0)＝3。",
+      "24 公尺／秒²": "這是線下面積（½×4×12＝24），那是位移不是加速度；加速度要用斜率＝3。",
+      "48 公尺／秒²": "這是把末速度和時間相乘（12×4）；加速度是斜率（速度差÷時間）＝12÷4＝3。"
+     },
+     "answer_evidence": [
+      "c-vt-slope"
+     ],
+     "feedback": "加速度＝斜率＝Δv÷Δt＝(12−0)÷(4−0)＝12÷4＝3 公尺／秒²。"
+    },
+    {
+     "question_id": "QV-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "同一張 v-t 圖：直線從 (0 秒, 0) 到 (4 秒, 12 公尺／秒)。這 4 秒的位移是多少？",
+     "answer": "24 公尺",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.vt-graph"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-kin.vt-graph"
+     ],
+     "options": [
+      "24 公尺",
+      "48 公尺",
+      "12 公尺",
+      "3 公尺"
+     ],
+     "distractor_rationales": {
+      "48 公尺": "這是底乘高（4×12）忘了乘 ½；線下是三角形，面積＝½×底×高＝½×4×12＝24。",
+      "12 公尺": "這只是末速度（讀縱軸的 12），不是位移；位移是線下面積＝½×4×12＝24。",
+      "3 公尺": "3 是這條線的加速度（斜率），不是位移；位移是線下面積＝½×4×12＝24。"
+     },
+     "answer_evidence": [
+      "c-vt-area"
+     ],
+     "feedback": "位移＝線下三角形面積＝½×底×高＝½×4×12＝24 公尺。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（v-t 圖：橫軸時間、縱軸速度；等加速度＝一條直線，斜率 Δv÷Δt＝加速度、線下面積＝位移；斜率和面積別搞混，縱軸讀到的是速度；例 v=2t 斜率2＝加速度、0到5秒面積½×5×10＝25＝位移；(0,0)→(4,12) 加速度＝12÷4＝3、位移＝½×4×12＝24）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

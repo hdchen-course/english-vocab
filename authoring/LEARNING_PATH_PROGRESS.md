@@ -1,3 +1,9 @@
+## 2026-11-18 18:57 ★ sci.t_mid.phys-kin.vt-graph 等加速度的 v-t 圖（斜率＝加速度、面積＝位移） 5/5 DONE-GATE → phys-kin 7/14
+- **sci_phys_kin_vt_graph frozen `4034e07fd9e398b3`**（rounds 1-5 連 5 clean、L3 全 exit0）。t_mid 國中會考。前置＝acceleration。R15 gloss（v-t 圖 velocity-time graph）grep -o=2。
+- 內容：v-t 圖（橫軸時間、縱軸速度）；等加速度＝一條直線、斜率 Δv÷Δt＝加速度；線下面積＝位移（速度×時間累積）；斜率與面積兩概念分清、縱軸讀到的是速度。figure＝座標平面 藍直線 v=2t＋淡綠三角形填色(面積=位移)＋沿線標(斜率=加速度)＋結論 斜率2=加速度、面積½×5×10=25=位移。Q3/Q4 共用 (0,0)→(4,12) 配對考斜率 12÷4=3 與面積 ½×4×12=24。oracle kin_vt_graph（v=2t、斜率2、[0,5]面積25）repro PASS。
+- DONE-GATE 全綠：per_page 624/624／scan PASS／pedagogy 0 hard／question CLEAN／schema rc0／repro PASS／rsvg render 四角色過（三角面積對應線下、斜率標沿線、軸箭頭齊、不疊不裁切）。
+- ★收斂史：五輪 panel（圖表判讀×2／學習神經+教學設計／小四→高一成長模擬／物理教育+繁中校對）全 confirmedCount:0；figure 一次過（三角形 polygon 與 v=2t 線重合、面積填線下）。核心教學設計＝斜率(加速度)與面積(位移)兩概念明確分流，distractor 專打「面積當斜率/斜率當位移/忘×½/末速當位移」互換迷思。
+
 ## 2026-11-18 18:45 ★ sci.t_mid.phys-kin.xt-graph 等速度運動的 x-t 圖（斜率＝速度） 5/5 DONE-GATE → phys-kin 6/14
 - **sci_phys_kin_xt_graph frozen `2c78500253fae8cf`**（rounds 1-5 連 5 clean、L3 全 exit0）。t_mid 國中會考。前置＝velocity-speed。R15 gloss（x-t 圖 position-time graph）grep -o=2。
 - 內容：x-t 圖（橫軸時間、縱軸位置）；等速度＝一條直線、斜率 Δx÷Δt＝速度；越陡越快、水平線（斜率0）＝靜止；由兩點求斜率。figure＝座標平面 藍直線 x=3t+2＋兩紅點 (1,5)(4,14)＋橘虛線 Δt=3/Δx=9＋斜率=9÷3=3=速度。oracle kin_xt_graph（x=3t+2 sympy 斜率=3）repro PASS。
