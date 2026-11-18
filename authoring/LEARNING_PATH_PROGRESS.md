@@ -1,3 +1,9 @@
+## 2026-11-18 18:11 ★ sci.t_mid.phys-kin.avg-inst 平均速度與瞬時速度 5/5 DONE-GATE → phys-kin 4/14
+- **sci_phys_kin_avg_inst frozen `6e78ec78695015d9`**（rounds 1-5 連 5 clean、L3 全 exit0）。t_mid 國中會考。前置＝velocity-speed。R15 gloss（平均速度 average velocity／瞬時速度 instantaneous velocity）各 grep -o=2。units_index 621。
+- 內容：平均速度＝整段位移÷整段時間（看整段）；瞬時速度＝某一瞬間速度（速度計當下讀數，國中不用微分）；通常不相等。figure＝位置數線三點(t=2/4m、t=3/9m、t=4/16m，點落位置比例位置)＋平均括號(16−4)÷(4−2)=6＋t=3 瞬時 6。oracle kin_avg_inst（x=t²）repro PASS。
+- DONE-GATE 全綠：per_page 621/621／scan PASS／pedagogy 0 hard／question CLEAN／schema CLEAN／repro PASS／rsvg render 四角色過。
+- ★收斂史：R1/R2/R3 深 panel（7/12/17-agent）一致抓到 blocker（教錯）：初稿 Q1「行駛 180 公里」、車程「走 100 公里」把路程當位移算平均速度，與前置 velocity-speed（速度用位移、速率用路程）矛盾。修：全改「沿直線、同方向（不回頭）使行駛距離＝位移」；de-converge 64d7113b→6e78ec78 重走 5-clean 全綠。★class 教訓：凡用「走/行駛 X 公里」算平均速度必先明述直線同方向（路程＝位移），否則只是平均速率。
+
 ## 2026-11-18 17:28 ★ HD friction 餘弦定理 figure 色碼對照＋角C弧+橋接句 5/5 DONE-GATE
 - **math_trig_law_of_cosines frozen `d9dc29d2973bf1e4`**（rounds 1-5 連 5 clean、L3 全 exit0）。
 - HD [Image#13]＋追問：(1) 角 C 弧線終點懸空→改落在邊 CA；(2) 角標「C」與橘邊 c 同色混淆→角 C 弧＋標改紅 #c2535d（孤立色）；(3) 底部公式 tspan 色碼：邊 a/b/c 橘、角 C 紅，與三角形一一對照；(4) 邊 b 標收緊與 a/c 一致；(5) HD 問「幹嘛突然用 C」→ teach1 補橋接句（θ=定義單一角用；餘弦要分辨三角各自對邊故用 A/B/C，且 Q3 對比 cosC vs cosA 需 A/B/C）；維持課綱 cosC（非 θ）。
