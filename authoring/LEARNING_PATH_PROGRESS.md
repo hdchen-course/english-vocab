@@ -1,3 +1,10 @@
+## 2026-11-18 10:36 ★ sci.t_adv.phys-force.newton3 牛頓第三運動定律（作用力與反作用力）5/5 DONE-GATE 全綠 → 自然島 phys-force 11/17（第3個 t_adv；手推牆單格情境 SVG）
+- **sci_phys_force_newton3 frozen `e36352f1eebdd89c`**（rounds 1-5 連 5 clean、L3 全 exit0）。R15 gloss（牛頓第三運動定律 Newton's third law／作用力與反作用力 action and reaction forces）只放 can_do、grep -c 2/2。
+- DONE-GATE 全綠：scan PASS／unit_schema rc=0 無 newton3 hard／question_correctness CLEAN／pedagogy 0 hard advisory=0／content_sha==e36352f1eebdd89c／per_page_5clean PASS（absent）／repro-sci_phys_checks-phys-force.newton3 PASS（作用反作用 10 與 −10 等大反向）。中文授課無音檔。
+- newton3（t_adv，phys-force strand 第11）＝(1) 作用力與反作用力等大、反向、分別作用在不同兩物體、同時生滅；(2) 因作用在不同物體→不會互相抵消（與同物體平衡力之別，核心易錯）；(3) 走路＝腳向後推地、地向前推腳；劃船/游泳/火箭同理。figure＝手推牆單格（綠箭頭 手推牆→、紅箭頭 牆推手←、等長反向、各標作用物體）。
+- ★2 個 de-converge 修（草稿後 panel 抓到，對抗式審查價值）：(a) can_do 原「施一個『作用力與反作用力』」把成對力當單一物體、量詞「一個」與「這兩個力」矛盾、牴觸核心教學→改「回施一個力；這兩個互相作用的力就叫作…」；(b) Q1 distractor「大小不相等…作用在同一物體」綑綁兩誤解＋重複同一物體→改「大小不相等，方向相反，分別作用在不同的兩個物體上」（孤立單一誤解＝大小不等）。
+- 下一步：phys-force 還有 6 binding KP：t_adv×5（resolve-compose 二維分解 Fcosθ/Fsinθ／equilibrium 三力平衡／incline 斜面 mg·sinθ·cosθ／tension-system 阿特午機 a=g/5／friction-coeff μ=f/N=0.3）＋t_sub newton-2d。接 resolve-compose 或 newton-2d。
+
 ## 2026-11-18 10:05 ★ HD 視覺 QA friction：5 個 math 圖/標籤修正＋全部重審 5-clean DONE-GATE（圖＝教學內容，honest de-converge 後重收斂）
 - **unit.js 階段①標籤依語音決定**（class 修）：hasAudio=teach 有 audio 或 shadowing → 有語音(英語島)「先聽、先感覺」、無語音(數學/自然/中文授課)「先讀、先感覺」。數學單元不再誤顯「先聽」。render 實測 math→先讀、eng(with shadowing)→先聽。content_sha 不綁 unit.js，既有 5-clean streak 不作廢。commit 7d519a0f9。
 - **5 個 figure SVG 修正＋各自 5-clean 重收斂＋DONE-GATE（scan/unit_schema/question/pedagogy/per_page 全綠）**：
