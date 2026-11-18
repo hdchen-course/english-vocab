@@ -88,9 +88,19 @@ def kin_projectile_angled():
     assert _close(2*(vy0/g), 2*vy0/g)
     return _ok("phys-kin.projectile-angled", "斜拋 v₀=20,θ=30°：vx=v₀cos30=10√3≈17.3、vy=v₀sin30=10；vy分量9.8→t_up=1；射程R=v₀²sin2θ/g 在θ=45°最大(sin90=1)")
 def kin_relative():
-    vA, vB = 60, 40                                 # 相對速度 v_AB=v_A−v_B
-    assert vA-vB == 20 and vB-vA == -20
-    return _ok("phys-kin.relative-motion", "相對速度 v_AB=60−40=20")
+    # 相對速度 v_AB = v_A − v_B（B 觀測 A），向量相減；直線帶正負號
+    vA, vB = 60, 40
+    assert vA - vB == 20 and vB - vA == -20          # 同向：相對速率＝差＝20
+    assert 60 - (-40) == 100                         # 相向(反向帶負號)：接近相對速率＝60−(−40)=100
+    # 2D：甲速度 (3,0)、乙 (0,4) → 甲相對乙 = (3,0)−(0,4) = (3,−4)，大小 5
+    d = sp.Matrix([3, 0]) - sp.Matrix([0, 4])
+    assert list(d) == [3, -4] and d.norm() == 5
+    # Q4 distractor 值驗證（互異、各對應單一誤解）
+    assert 3 + 4 == 7                                # 分量直接相加(忘平方開根)
+    assert 3**2 + 4**2 == 25                         # 忘開根號
+    assert abs(3 - 4) == 1                           # 把速率相減 |甲|−|乙|=|3−4|（非向量相減）
+    assert len({5, 7, 25, 1}) == 4
+    return _ok("phys-kin.relative-motion", "相對速度 v_AB=v_A−v_B：同向60−40=20、相向60−(−40)=100、2D (3,0)−(0,4)=(3,−4)模5；distractor 7/25/1")
 
 # ================= phys-force（17）=================
 def frc_push_pull():

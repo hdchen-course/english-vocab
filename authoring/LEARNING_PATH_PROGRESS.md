@@ -1,3 +1,10 @@
+## 2026-11-18 22:27 ★ sci.t_sub.phys-kin.relative-motion 相對運動（相對速度）5/5 DONE-GATE → phys-kin 14/14 ✅ STRAND 完成
+- **sci_phys_kin_relative frozen `3709e3725692e2e2`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha）。t_sub 分科，**phys-kin strand 最後一單元**。前置＝velocity-speed＋vector-kinematics。R15 gloss（相對速度 relative velocity）grep -o=2。
+- 內容：相對速度＝被看者速度 − 觀測者速度（向量相減）v_AB＝v_A−v_B；直線帶正負號「同向相減、相向相加」（同向60−40=20、相向60−(−40)=100）；平面向量相減（分量各減、大小√分量平方和）。figure＝上排同向（甲60→乙40→、相對20）／下排相向（甲60→乙←40、接近100）＋「向右為正」說明。oracle kin_relative 錨 同向20/相向100/2D (3,0)−(0,4)=(3,−4)模5＋Q4 distractor 7/25/1 互異；fingerprint 0c3801de→b03da67d。
+- DONE-GATE 全綠：per_page 631/631／scan PASS／pedagogy 0 hard／question CLEAN／schema rc0／repro PASS／rsvg render 四角色過。
+- ★收斂史：R1-R5 連 5 clean、首輪即零確認缺陷（oracle 擴充＋figure 自審箭頭比例/方向先到位）。R4(9-agent) raise 1 筆「alt 漏第 11 個 SVG text（箭頭長度 caveat）」經 panel 6/7 判 NOT-A-DEFECT（純視覺註解、螢幕報讀者已有確切數值與方向）→依 SOP 不修非缺陷、不 de-converge。★class 教訓：相對速度要向量相減非速率大小相減；相向別忘一方帶負號。
+- **🎉 phys-kin（運動學）strand 14/14 全數 DONE-GATE：** motion-describe/displacement-path/avg-inst/velocity-speed/acceleration/xt-graph/vt-graph/free-fall/uniform-accel-eq/vertical-throw/vector-kinematics/projectile-h/projectile-angled/relative-motion。
+
 ## 2026-11-18 22:13 ★ sci.t_sub.phys-kin.projectile-angled 斜向拋射運動 5/5 DONE-GATE → phys-kin 13/14
 - **sci_phys_kin_projectile_angled frozen `8aa5dbe6990ca443`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha）。t_sub 分科。前置＝projectile-h＋vector-kinematics＋vertical-throw。R15 gloss（斜向拋射 projectile at an angle）grep -o=2。
 - 內容：v₀ 依仰角 θ 分解 vx＝v₀cosθ（水平等速）＋vy＝v₀sinθ（鉛直等加速度/鉛直上拋，非自由落體）；最高點 vy＝0 但 vx 不變、速度非零；t_up＝v₀sinθ÷g、總滯空 2t_up；射程 R＝v₀²sin2θ÷g、仰角 45° 最遠。figure＝拋物線＋v₀ 斜箭頭（30°）分解成 vx(長)/vy、最高點 vy=0 標頂點。oracle kin_projectile_angled 錨 v₀=20,θ=30°→vx=10√3≈17.3/vy=10＋Q4 vy分量9.8→t_up=1＋45°最大(sin90=1)；fingerprint e0dee3cd→59b61c15。
