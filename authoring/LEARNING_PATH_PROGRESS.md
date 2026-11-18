@@ -1,3 +1,9 @@
+## 2026-11-18 22:57 ★ sci.t_base.phys-energy.energy-forms 能量的形式與轉換 5/5 DONE-GATE → phys-energy 1/22（新 strand 開跑）
+- **sci_phys_energy_forms frozen `30df0582df2d17e4`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha）。t_base 國小/國中基礎、phys-energy strand 首單元、無前置。R15 gloss（能量 energy）grep -o=2。
+- 內容：能量＝讓物體運動/產生變化的能力；形式（動/位/熱/光/聲/電/化學能）；能量轉換且總量不變（質性）；動能 ½mv²＝½·2·3²=9 焦耳一量化例。figure＝電池(化學能)→電能→燈泡→光能+熱能。oracle en_forms 錨 ½·2·3²=9；Q4 distractor 18(忘½)/4.5(漏質量)/3(漏平方)。
+- DONE-GATE 全綠：per_page 632/632／scan PASS／pedagogy 0 hard／question CLEAN／schema rc0／repro PASS／rsvg render 四角色過。
+- ★收斂史：figure 自審無缺陷直接過。深 panel（母語鏡）連抓 3 筆用詞/語法真缺陷（皆 de-converge 修正）：(R3-a6b5)Q4「3焦耳」rationale 把字句否定語序「把速率沒有平方」→「忘了把速率平方」；(R3-f0e6)c-ef-ke-pe「機械能量」非標準生造詞→「能量」；最後 sha 30df0582 連 5 clean。★class 教訓：(1)把字句否定詞須置於「把」之前；(2)能-後綴術語勿加「量」（機械能≠機械能量）——供後續 phys-energy 單元避開。
+
 ## 2026-11-18 22:27 ★ sci.t_sub.phys-kin.relative-motion 相對運動（相對速度）5/5 DONE-GATE → phys-kin 14/14 ✅ STRAND 完成
 - **sci_phys_kin_relative frozen `3709e3725692e2e2`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha）。t_sub 分科，**phys-kin strand 最後一單元**。前置＝velocity-speed＋vector-kinematics。R15 gloss（相對速度 relative velocity）grep -o=2。
 - 內容：相對速度＝被看者速度 − 觀測者速度（向量相減）v_AB＝v_A−v_B；直線帶正負號「同向相減、相向相加」（同向60−40=20、相向60−(−40)=100）；平面向量相減（分量各減、大小√分量平方和）。figure＝上排同向（甲60→乙40→、相對20）／下排相向（甲60→乙←40、接近100）＋「向右為正」說明。oracle kin_relative 錨 同向20/相向100/2D (3,0)−(0,4)=(3,−4)模5＋Q4 distractor 7/25/1 互異；fingerprint 0c3801de→b03da67d。
