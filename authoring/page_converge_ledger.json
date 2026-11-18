@@ -21768,52 +21768,25 @@
    ]
   },
   "math_geom_triangle_angle_exterior.html": {
-   "frozen_sha": "d38c08ceca11de5a",
+   "frozen_sha": "db908a77804f7a7c",
    "rounds": [
     {
-     "round": 3,
-     "content_sha": "d38c08ceca11de5a",
+     "round": 2,
+     "content_sha": "db908a77804f7a7c",
      "clean": true,
      "l3_exit": 0,
-     "recorded_at": "2026-11-12T10:09:23",
-     "audited": true,
-     "note": "streak 1/5 on 818d8754（R1/R2 修後首個 clean）"
+     "recorded_at": "2026-11-18T13:35:20+08:00",
+     "audited": "wlg3zpumh",
+     "note": "消歧後 學習神經 0 confirmed L3 rc0"
     },
     {
-     "round": 4,
-     "content_sha": "d38c08ceca11de5a",
+     "round": 1,
+     "content_sha": "db908a77804f7a7c",
      "clean": true,
      "l3_exit": 0,
-     "recorded_at": "2026-11-12T10:12:40",
-     "audited": true,
-     "note": "streak 2/5 on 818d8754"
-    },
-    {
-     "round": 5,
-     "content_sha": "d38c08ceca11de5a",
-     "clean": true,
-     "l3_exit": 0,
-     "recorded_at": "2026-11-12T10:15:53",
-     "audited": true,
-     "note": "streak 3/5 on 818d8754"
-    },
-    {
-     "round": 6,
-     "content_sha": "d38c08ceca11de5a",
-     "clean": true,
-     "l3_exit": 0,
-     "recorded_at": "2026-11-12T10:19:13",
-     "audited": true,
-     "note": "streak 4/5 on 818d8754"
-    },
-    {
-     "round": 7,
-     "content_sha": "d38c08ceca11de5a",
-     "clean": true,
-     "l3_exit": 0,
-     "recorded_at": "2026-11-12T10:22:23",
-     "audited": true,
-     "note": "streak 5/5 on 818d8754 — CONVERGED"
+     "recorded_at": "2026-11-18T13:35:50+08:00",
+     "audited": "wul5q58ry",
+     "note": "消歧後 幾何/溝通語言 0 confirmed L3 rc0"
     }
    ],
    "last_fix": "R2 修 1 major（a-wrong 7 鏡）：alt 把 CA 邊稱「斜邊」，但此三角形無直角（內角~83/50/47°），「斜邊」在國中課綱專指直角三角形對直角的邊＝術語誤用、螢幕報讀者會誤判直角三角形→改「往左上斜去的那條邊」中性說法。僅改 alt（螢幕報讀用、畫面不變）。重凍 818d8754。★教訓：alt/文字中勿用「斜邊」稱非直角三角形的斜向邊（斜邊＝hypotenuse 專指直角三角形對直角邊）。｜ R1 修 2 blocker（14-agent panel）：(1) 幾何 a-wrong（7 鏡 DEFECT）——SVG 外角綠弧終點 (243,107) 在頂點 C 右側、未達斜邊 CA（應 ~(218,109)），只畫 ~49° 而非真外角 ~133°→改弧 `M248,122 A18,18 0 0 1 218,109` 掃過延長線與斜邊之間的真外角、render 複驗正確；(2) b-hard（readability）——claim c-exterior 括號「算出來一樣是 115 度」懸空、會誤讀相鄰內角=115（實 65）→改寫「相鄰內角＝180−40−75＝65 度，所以外角＝180−65＝115 度，和直接相加一樣」寫明代入。重凍 a3ed02ed（streak 0 無需 de-converge）。pre-freeze 全綠＋iPad 四角色 render 複簽。★教訓：SVG 角弧終點必須落在角的兩條邊上（缺陷類#21 延伸：弧不只要貼對的線、兩端點要正好在構成該角的兩條射線上，否則畫錯角度）",
@@ -21824,6 +21797,29 @@
      "old_sha": "ef91bf61b00200b0",
      "new_sha": "d38c08ceca11de5a",
      "reason": "content_sha 改為剝除 ?v= 版本字串（版本 bump 不作廢 streak）；舊算法 sha==既存 streak sha 證明內容未變，rekey 保留 5-clean。"
+    }
+   ],
+   "_deconverge_trace": [
+    {
+     "at": "2026-11-18T13:17:00+08:00",
+     "prior_frozen_sha": "d38c08ceca11de5a",
+     "prior_rounds_cleared": [
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "reason": "HD friction(real-time 視覺 QA)：三角形內外角 figure 看起來沒畫好——頂點內角弧兩端點未落在兩條邊上(整段浮在頂點右側)、右下外角弧 sweep 方向與左下內角弧不一致。clean 輪後才由 HD 目視發現的真缺陷，設 harvest_override 留痕後重畫三弧(端點精確落邊、半徑18一致、sweep 一致)。"
+    },
+    {
+     "at": "2026-11-18T13:32:30+08:00",
+     "prior_frozen_sha": "c9d3337bf56de7fe",
+     "prior_rounds_cleared": [
+      1,
+      2
+     ],
+     "reason": "content_audit r3 深panel(17agent) CONFIRMED minor(b-hard-to-understand)：teach「綠色標的是外角」garden-path 歧義（「標的」=常見名詞 target）。改為「綠色標示的是外角」消歧後重收斂。"
     }
    ]
   },
@@ -33973,6 +33969,91 @@
      "old_sha": "a5def9b1d97a2fd0",
      "new_sha": "36022234b77d7aaf",
      "reason": "content_sha 改為剝除 ?v= 版本字串（版本 bump 不作廢 streak）；舊算法 sha==既存 streak sha 證明內容未變，rekey 保留 5-clean。"
+    }
+   ]
+  },
+  "sci_phys_force_friction_coeff.html": {
+   "frozen_sha": "a99803173b42edf1",
+   "rounds": [
+    {
+     "round": 1,
+     "content_sha": "a99803173b42edf1",
+     "clean": true,
+     "l3_exit": 0,
+     "recorded_at": "2026-11-18T13:26:40+08:00",
+     "audited": "wjv93y62e",
+     "note": "v3 箭頭修後 r1 物理/視覺化 0 confirmed L3 rc0"
+    },
+    {
+     "round": 2,
+     "content_sha": "a99803173b42edf1",
+     "clean": true,
+     "l3_exit": 0,
+     "recorded_at": "2026-11-18T13:27:00+08:00",
+     "audited": "w4gt4wxav",
+     "note": "v3 r2 學習神經 0 confirmed L3 rc0"
+    },
+    {
+     "round": 3,
+     "content_sha": "a99803173b42edf1",
+     "clean": true,
+     "l3_exit": 0,
+     "recorded_at": "2026-11-18T13:29:20+08:00",
+     "audited": "w42ymf4h5",
+     "note": "v3 r3 翻譯/溝通語言 0 confirmed L3 rc0"
+    },
+    {
+     "round": 4,
+     "content_sha": "a99803173b42edf1",
+     "clean": true,
+     "l3_exit": 0,
+     "recorded_at": "2026-11-18T13:30:00+08:00",
+     "audited": "whrmgg0f1",
+     "note": "v3 r4 PM/讀者 0 confirmed L3 rc0"
+    },
+    {
+     "round": 5,
+     "content_sha": "a99803173b42edf1",
+     "clean": true,
+     "l3_exit": 0,
+     "recorded_at": "2026-11-18T13:35:50+08:00",
+     "audited": "widd82dx8",
+     "note": "v3 r5 物理/視覺化最後防線 0 confirmed L3 rc0"
+    }
+   ],
+   "_deconverge_trace": [
+    {
+     "at": "2026-11-18T12:50:49+08:00",
+     "prior_frozen_sha": "b84d2d06be0ee054",
+     "prior_rounds_cleared": [],
+     "reason": "content_audit r3 CONFIRMED blocker(domain a-wrong): teach body 把正向力 N 註解為「把物體壓向接觸面的力」(朝下)，但正向力是接觸面對物體向上的支撐力，與本單元 figure 藍色上箭頭+caption 矛盾。修註解方向後重收斂。"
+    },
+    {
+     "at": "2026-11-18T13:00:00+08:00",
+     "prior_frozen_sha": "25c6617ae2893d42",
+     "prior_rounds_cleared": [],
+     "reason": "content_audit r1 一致 blocker(b-hard-to-understand)：figure caption 仍以舊措辭「把物體壓向地面的反作用、向上」定義正向力 N，與已修正的 teach body(line79) 矛盾、朝下心像會重植誤解。caption 改為「接觸面垂直向上撐住物體的力」對齊後重收斂。"
+    },
+    {
+     "at": "2026-11-18T13:10:30+08:00",
+     "prior_frozen_sha": "98926cd44fad9060",
+     "prior_rounds_cleared": [
+      1,
+      2,
+      3,
+      4
+     ],
+     "reason": "content_audit r5 CONFIRMED major(b-hard-to-understand)：figure 力箭頭長度與力大小反轉——f(3N) 畫 40px 比 N(10N) 38px 還長，違背 μ=f/N=3/10 教學重點、誤導視覺學習者。改為約 10:3 比例(N 長 f 短)後重收斂。"
+    },
+    {
+     "at": "2026-11-18T13:22:00+08:00",
+     "prior_frozen_sha": "ad644ed8eb8ebe07",
+     "prior_rounds_cleared": [
+      1,
+      2,
+      3
+     ],
+     "reason": "content_audit r4 CONFIRMED major(b-hard-to-understand)：f 箭頭 16px，箭頭頭 9px > 可見箭桿 7px＝畸形短樁（10:3 比例數值對，但固定 9px 箭頭頭在短箭上過大，看起來沒畫好）。改為 N=60px(頭8px)、f=18px(頭6px)，兩者箭桿皆長於箭頭頭、維持≈10:3。"
     }
    ]
   }

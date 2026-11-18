@@ -1,0 +1,223 @@
+{
+ "_note": "自然島 物理-力（phys-force）strand 單元（第15，t_adv）。知識點 sci.t_adv.phys-force.friction-coeff（摩擦係數 μ＝f／N）。tier=t_adv（高階）、exam=學測。全繁體零簡體零 PRC 詞。中文授課無音檔。術語附國際英語（R15，★只在 can_do 首次 gloss 一次：摩擦係數 (coefficient of friction)；teach/claim body 不重複——記憶 r15-gloss-once-first-render。自檢用描述文字、不在自檢子句重嵌英文 literal：grep -c 術語英文括號含行數＝2〔_note 本行一次＋can_do 一行〕、grep -o 亦=2）。R11 不顯年段。前置＝friction-factor（靜摩擦／動摩擦、影響因素）。★scope（t_adv）：(1) 摩擦係數 μ 描述兩接觸面的粗糙程度；摩擦力 f 與正向力 N 成正比，f＝μ×N，所以 μ＝f÷N；(2) μ 是兩個力相除、沒有單位（單位相消）；(3) μ 越大代表接觸面越粗糙、越難滑動；(4) 計算例 f＝3 牛頓、N＝10 牛頓 → μ＝3÷10＝0.3；(5) 反求：已知 μ 與 N 可得 f＝μ×N。不含靜／動摩擦係數之細分比較（friction-factor 已處理定性）、不含斜面上摩擦定量（超綱）。repro（tools/verify/sci_phys_checks.py::phys-force.friction-coeff，repro_gate .venv PASS）錨定『μ=f/N=3/10=0.3』。★自檢：figure＝單格（方塊在地面＋藍色正向力 N 向上箭頭＝10N＋棕色摩擦力 f 向左箭頭＝3N＋綠色公式 μ＝f÷N＝3÷10＝0.3（沒有單位）＋一句滑動方向說明），alt 與 SVG text 逐字一致、標籤移出不疊、箭頭 polygon 兩翼跨軸對稱（equilibrium/incline 教訓）；practice 四答案＝{0.3(Q1 μ=f/N),6 牛頓(Q2 f=μN 反求),沒有單位(Q3 μ 無單位),接觸面越粗糙越難滑動(Q4 μ 意義)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1→3.33 N/f 倒／30 相乘／7 相減；Q2→0.3 忘乘 N／66.7 N÷μ／0.015 μ÷N；Q3→牛頓／公尺／牛頓每公尺；Q4→越光滑／物體越重／正向力越大）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 逐字相符（#59）；數值對齊 oracle（3/10=0.3）。claim kind=fact。figure-only example 無 body。★定義不得反轉：μ＝f÷N（不是 N÷f）；μ 無單位不得標牛頓。",
+ "page": "sci_phys_force_friction_coeff.html",
+ "units": [
+  {
+   "unit_id": "sci.t_adv.phys-force.friction-coeff",
+   "title_zh": "摩擦係數（μ＝f／N）",
+   "can_do": "我懂『摩擦係數 (coefficient of friction)』μ：它描述兩個接觸面有多粗糙。摩擦力 f 和正向力 N 成正比，寫成 f ＝ μ × N，所以 μ ＝ f ÷ N。我知道 μ 是兩個力相除、沒有單位；μ 越大，表示接觸面越粗糙、物體越難滑動。我會計算：當摩擦力 f ＝ 3 牛頓、正向力 N ＝ 10 牛頓時，μ ＝ 3 ÷ 10 ＝ 0.3。我也會反過來用：知道 μ 和 N，就能求摩擦力 f ＝ μ × N——壓得越緊（N 越大），摩擦力也越大。",
+   "situation_group": "力：摩擦力",
+   "subject": "sci",
+   "strand": "phys-force",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "sci.t_adv.phys-force.friction-coeff"
+   ],
+   "prerequisites": [
+    "sci.t_mid.phys-force.friction-factor"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-fc-def",
+     "text": "摩擦係數 μ 描述兩個接觸面有多粗糙。摩擦力 f 和正向力 N 成正比，寫成 f ＝ μ × N，所以 μ ＝ f ÷ N。μ 越大，表示接觸面越粗糙、物體越難滑動。",
+     "kind": "fact",
+     "source_refs": [
+      "摩擦係數的定義（十二年國教 自然 高中必修）"
+     ],
+     "verification_ref": "μ=f/N（sci_phys_checks::phys-force.friction-coeff .venv 驗，f=3,N=10→μ=0.3）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-fc-nounit",
+     "text": "μ 是兩個力（摩擦力和正向力）相除得到的，兩個力的單位相消，所以摩擦係數沒有單位，只是一個純數字。",
+     "kind": "fact",
+     "source_refs": [
+      "摩擦係數為無因次量（十二年國教 自然 高中必修）"
+     ],
+     "verification_ref": "f/N 為力÷力＝無單位（因次分析；與 μ=f/N 一致）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-fc-calc",
+     "text": "計算例：摩擦力 f ＝ 3 牛頓、正向力 N ＝ 10 牛頓，則摩擦係數 μ ＝ f ÷ N ＝ 3 ÷ 10 ＝ 0.3。",
+     "kind": "fact",
+     "source_refs": [
+      "摩擦係數計算例（十二年國教 自然 高中必修）"
+     ],
+     "verification_ref": "μ=3/10=0.3（sci_phys_checks::phys-force.friction-coeff .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-fc-use",
+     "text": "反過來，知道摩擦係數 μ 和正向力 N，就能求摩擦力 f ＝ μ × N。所以把物體壓得越緊（N 越大），摩擦力 f 也越大。",
+     "kind": "fact",
+     "source_refs": [
+      "由 μ 與 N 反求摩擦力（十二年國教 自然 高中必修）"
+     ],
+     "verification_ref": "f=μN（μ=f/N 之移項；N↑⇒f↑，與正比一致）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-force.friction-coeff"
+     ],
+     "body": "前面學過摩擦力，也知道接觸面越粗糙、摩擦力越大。這一單元用一個數字把「粗糙程度」量化——摩擦係數。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-force.friction-coeff"
+     ],
+     "body": "① 摩擦力 f 和正向力 N（接觸面垂直撐住物體、方向向上的力，就是下圖那支藍色箭頭）成正比：f ＝ μ × N。這個比例常數 μ 就是摩擦係數。② 移項得 μ ＝ f ÷ N。③ μ 是力除以力，沒有單位，只是一個純數字；μ 越大代表越粗糙、越難滑動。④ 例：f ＝ 3 牛頓、N ＝ 10 牛頓 → μ ＝ 3 ÷ 10 ＝ 0.3。反過來知道 μ 與 N 也能求 f ＝ μ × N。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_adv.phys-force.friction-coeff"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='14' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>摩擦係數 μ＝f／N：摩擦力與正向力的比</text><line x1='34' y1='122' x2='326' y2='122' stroke='#99a7b5' stroke-width='1.2'/><rect x='120' y='94' width='64' height='28' rx='2' fill='#e6edf3' stroke='#99a7b5' stroke-width='1.2'/><line x1='152' y1='94' x2='152' y2='34' stroke='#2563a6' stroke-width='2.6'/><polygon points='152,34 148,42 156,42' fill='#2563a6'/><text x='160' y='58' font-family='sans-serif' font-size='8' fill='#2563a6' text-anchor='start'>正向力 N ＝ 10 牛頓</text><line x1='120' y1='108' x2='102' y2='108' stroke='#c08a2d' stroke-width='2.6'/><polygon points='102,108 108,105 108,111' fill='#c08a2d'/><text x='116' y='99' font-family='sans-serif' font-size='8' fill='#c08a2d' text-anchor='end'>摩擦力 f ＝ 3 牛頓</text><text x='214' y='112' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='start'>（物體向右滑，摩擦力向左擋）</text><text x='180' y='146' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>μ ＝ f ÷ N ＝ 3 ÷ 10 ＝ 0.3</text><text x='180' y='160' font-family='sans-serif' font-size='7.5' fill='#33475b' text-anchor='middle'>μ 是力÷力，沒有單位；μ 越大越粗糙、越難滑動。</text></svg>",
+      "alt": "標題「摩擦係數 μ＝f／N：摩擦力與正向力的比」。地面上有一個方塊。從方塊往上有一支藍色箭頭，標「正向力 N ＝ 10 牛頓」；從方塊往左有一支棕色箭頭，標「摩擦力 f ＝ 3 牛頓」，旁邊寫「（物體向右滑，摩擦力向左擋）」。下面用綠色寫出「μ ＝ f ÷ N ＝ 3 ÷ 10 ＝ 0.3」，最後一行寫「μ 是力÷力，沒有單位；μ 越大越粗糙、越難滑動。」",
+      "caption": "摩擦力 f（向左擋住滑動，棕色）和正向力 N（接觸面垂直向上撐住物體的力，藍色）相除就是摩擦係數：μ ＝ f ÷ N ＝ 3 ÷ 10 ＝ 0.3。因為是力除以力，μ 沒有單位，只是一個純數字；μ 越大代表接觸面越粗糙、物體越難滑動。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-force.friction-coeff"
+     ],
+     "body": "最後練「摩擦係數」。重點：(1) f ＝ μ × N，所以 μ ＝ f ÷ N；(2) μ 是力÷力、沒有單位；(3) μ 越大越粗糙、越難滑動；(4) 例：3 ÷ 10 ＝ 0.3；反求 f ＝ μ × N。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個物體滑動時，摩擦力 f ＝ 3 牛頓、正向力 N ＝ 10 牛頓。這兩個面之間的摩擦係數 μ 是多少？",
+     "answer": "0.3",
+     "kp_ids": [
+      "sci.t_adv.phys-force.friction-coeff"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-force.friction-coeff"
+     ],
+     "options": [
+      "0.3",
+      "約 3.33",
+      "30",
+      "7"
+     ],
+     "distractor_rationales": {
+      "約 3.33": "這是把正向力除以摩擦力（10 ÷ 3）、除反了；摩擦係數是 μ ＝ f ÷ N ＝ 3 ÷ 10 ＝ 0.3。",
+      "30": "這是把兩個力相乘（3 × 10）；摩擦係數是相除：μ ＝ f ÷ N ＝ 0.3。",
+      "7": "這是把兩個力相減（10 − 3）；摩擦係數是相除：μ ＝ f ÷ N ＝ 0.3。"
+     },
+     "answer_evidence": [
+      "c-fc-def",
+      "c-fc-calc"
+     ],
+     "feedback": "μ ＝ f ÷ N ＝ 3 ÷ 10 ＝ 0.3。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "兩個面的摩擦係數 μ ＝ 0.3。如果把正向力增加到 N ＝ 20 牛頓，這時的摩擦力 f 是多少？",
+     "answer": "6 牛頓",
+     "kp_ids": [
+      "sci.t_adv.phys-force.friction-coeff"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-force.friction-coeff"
+     ],
+     "options": [
+      "6 牛頓",
+      "0.3 牛頓",
+      "約 66.7 牛頓",
+      "0.015 牛頓"
+     ],
+     "distractor_rationales": {
+      "0.3 牛頓": "0.3 是摩擦係數本身，不是摩擦力；要再乘正向力：f ＝ μ × N ＝ 0.3 × 20 ＝ 6。",
+      "約 66.7 牛頓": "這是把正向力除以摩擦係數（20 ÷ 0.3）；應該是相乘：f ＝ μ × N ＝ 0.3 × 20 ＝ 6。",
+      "0.015 牛頓": "這是把摩擦係數除以正向力（0.3 ÷ 20）；應該是相乘：f ＝ μ × N ＝ 6。"
+     },
+     "answer_evidence": [
+      "c-fc-use"
+     ],
+     "feedback": "f ＝ μ × N ＝ 0.3 × 20 ＝ 6 牛頓。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "摩擦係數 μ 的單位是什麼？",
+     "answer": "沒有單位（是一個純數字）",
+     "kp_ids": [
+      "sci.t_adv.phys-force.friction-coeff"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-force.friction-coeff"
+     ],
+     "options": [
+      "沒有單位（是一個純數字）",
+      "牛頓",
+      "公尺",
+      "牛頓每公尺"
+     ],
+     "distractor_rationales": {
+      "牛頓": "牛頓是力的單位；μ 是力除以力、單位相消，所以沒有單位。",
+      "公尺": "公尺是長度單位，和摩擦係數無關；μ 沒有單位。",
+      "牛頓每公尺": "那是彈簧常數之類的單位；μ 是力÷力、沒有單位。"
+     },
+     "answer_evidence": [
+      "c-fc-nounit"
+     ],
+     "feedback": "μ ＝ f ÷ N 是力除以力，單位相消，所以摩擦係數沒有單位。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "甲、乙兩組接觸面，甲的摩擦係數比乙大。這代表什麼？",
+     "answer": "甲的接觸面比較粗糙、比較難滑動",
+     "kp_ids": [
+      "sci.t_adv.phys-force.friction-coeff"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-force.friction-coeff"
+     ],
+     "options": [
+      "甲的接觸面比較粗糙、比較難滑動",
+      "甲的接觸面比較光滑、比較好滑動",
+      "甲的物體一定比較重",
+      "甲的正向力一定比較大"
+     ],
+     "distractor_rationales": {
+      "甲的接觸面比較光滑、比較好滑動": "方向相反：μ 越大越粗糙、越難滑動，不是越光滑。",
+      "甲的物體一定比較重": "μ 只看接觸面的粗糙程度，和物體多重無關；重的物體只是正向力大，μ 不一定大。",
+      "甲的正向力一定比較大": "μ 和正向力大小無關；μ 是比例常數，正向力大不代表 μ 大。"
+     },
+     "answer_evidence": [
+      "c-fc-def"
+     ],
+     "feedback": "μ 越大代表接觸面越粗糙、物體越難滑動。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（摩擦係數 μ 描述接觸面粗糙程度；f＝μ×N、所以 μ＝f÷N；μ 是力÷力、沒有單位；μ 越大越粗糙越難滑動；例 3÷10＝0.3；反求 f＝μ×N，N 越大 f 越大；三鐵律＝μ=f÷N、無單位、越大越粗糙）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

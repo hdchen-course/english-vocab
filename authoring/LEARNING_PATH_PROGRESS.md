@@ -1,3 +1,14 @@
+## 2026-11-18 13:36 ★ sci.t_adv.phys-force.friction-coeff 摩擦係數（μ＝f／N）5/5 DONE-GATE 全綠 → 自然島 phys-force 15/17（第7個 t_adv；力圖單格 SVG）
+- **sci_phys_force_friction_coeff frozen `a99803173b42edf1`**（箭頭 v3 修後 rounds 1-5 連 5 clean、L3 全 exit0）。R15 gloss（摩擦係數 coefficient of friction）只 can_do、grep 2/2。中文授課無音檔。
+- DONE-GATE 全綠：scan PASS／unit_schema rc0 無 hard／question CLEAN／pedagogy 0 hard（length-cue 僅 advisory，HD 2026-11-15 裁示 MCQ tell OUT OF SCOPE）／per_page friction absent／repro-phys-force.friction-coeff PASS（μ=3/10=0.3）／iPad render 四角色 PASS。
+- friction-coeff＝μ 描述接觸面粗糙程度、f＝μ×N、μ＝f÷N、μ 無單位、μ 越大越粗糙越難滑動、例 3÷10＝0.3、反求 f＝μN。
+- ★4 次 de-converge（對抗式深 panel 連環抓，全圖形類）：(1) teach body 正向力 N 註解「把物體壓向接觸面的力」(朝下)＝錯，正向力向上→改「接觸面垂直撐住物體、向上」；(2) r1 figure caption 同舊措辭「壓向地面」→同步改「垂直向上撐住」；(3) r5 figure 力箭頭長度反轉（f 3N 畫 40px＞N 10N 38px，違 μ=f/N 教學點）→改 10:3 比例；(4) r4/r5 深 panel(9agent) 抓 f 16px 箭用固定 9px 箭頭頭＝頭>桿短樁→v3 N=60/頭8、f=18/頭6 桿皆>頭。★教訓：圖形比例/箭頭頭尺寸缺陷只在深 panel(7-9agent) 現形，shallow 2-agent 輪看不到；固定箭頭頭套不同長度箭會短樁（classHint 記：力圖箭頭頭須隨桿長縮放）。classHint 全域掃 incline/equilibrium 向量圖本依比例、唯 friction 兩獨立示意箭未綁比例。
+- 下一步：phys-force 剩 2 binding KP：t_adv tension-system（阿特午機 a=g/5）＋t_sub newton-2d。
+
+## 2026-11-18 13:36 ☲ HD friction 訊號（real-time 視覺 QA）：三角形內外角圖「沒畫好」＋math_geom_triangle_angle_exterior 重收斂中
+- HD 目視 math_geom_triangle_angle_exterior figure：頂點內角弧浮在頂點右側（兩端點未落在兩條邊）＋右下外角弧 sweep 方向與左下內角弧不一致→重畫三弧（端點精確落兩邊、半徑18一致、sweep 一致，frozen c9d3337bf56de7fe）。render 四角色 PASS。
+- r3 深 panel(17agent) 再抓 teach「綠色標的是外角」garden-path 歧義（「標的」=名詞 target）→改「用綠色標示的就是外角」消歧（frozen `db908a77804f7a7c`）。兩個 distractor(80/140度) finding panel 正確判 NOT A DEFECT（單一迷思機制是作者 note 偏好、讀者看不到）。目前重收斂 2/5（clean 輪才發現真缺陷，走 harvest_override 留痕）。
+
 ## 2026-11-18 12:40 ★ math_geom_quadrilateral_properties 四邊形分類階層圖連線修後重收斂 5/5 DONE-GATE（HD friction 訊號2 結案）
 - 連線端點對齊框邊修正後 frozen `b2b651b2025d2620`（rounds 1-5 連 5 clean、L3 全 exit0）。figure 已於 commit 688dccba6 push、此為 ledger 重收斂結案。DONE-GATE：scan PASS／schema rc0／question CLEAN／pedagogy 0 hard／per_page absent。
 - HD 三 friction 訊號全結案：(1) 先聽快取→版本 bump；(2) 四邊形連線→修圖＋重收斂；(3) 斜面圖幾何→incline 修圖＋5/5 DONE。
