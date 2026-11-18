@@ -1,3 +1,11 @@
+## 2026-11-18 14:57 ★★ sci.t_sub.phys-force.newton-2d 二維牛頓第二定律（a＝F÷m，大小用畢氏定理）5/5 DONE-GATE → 自然島 phys-force **17/17 全 binding KP release-grade（整個 phys-force strand 收尾）**
+- **sci_phys_force_newton_2d frozen `55d26ce5d0d6a79f`**（rounds 1-5 連 5 clean、L3 全 exit0）。新建 t_sub 分科單元。R15 gloss（向量 vector）只 can_do、grep -o=2。中文授課無音檔。units_index 617。
+- 內容：二維裡 F、a 都是向量，a＝F÷m＝逐分量各除以質量（ax＝Fx÷m、ay＝Fy÷m）；例 F=(6,8) m=2→a=(3,4)；大小 |a|＝√(ax²+ay²)＝√(3²+4²)＝5（3-4-5 直角三角形）；方向與合力 F 同向、不一定與速度同向。figure＝棕 ax=3／綠 ay=4 兩股＋藍斜邊加速度向量（含箭頭）＋直角標記。
+- DONE-GATE 全綠：per_page 617/617 零違規／scan PASS／question CLEAN(3037題)／unit_schema rc0 無 hard／pedagogy 0 hard／repro-phys-force.newton-2d PASS（a=(3,4)、|a|=5）／iPad render 四角色 PASS（3-4-5 直角三角形；SVG 未變、簽核仍有效）。
+- ★收斂史：r1/r2 深 panel(12agent) 抓 2 缺陷——(major) prerequisites 用非正準 id `sci.t_adv.phys-force.newton-2`（連字號），正準為 `newton2`（無連字號、見 knowledge_points.json／newton2.units.json）→死連結、hub「🔗建議先學」不解析；(minor) prerequisites 漏 resolve-compose（_note/teach 依賴分量分解）。兩者皆 wiring 欄位、content_sha 已排除故修它不作廢 teaching streak；另 Q3「分力」→「分量」與全單元一致（此為教學內容、sha 由 14e77cf→55d26ce）。修後 r1-r5 全 CLEAN。
+- ★教訓：(a) 死 prerequisite id（hyphen 變體 newton-2 vs 正準 newton2）是 cross-ref 類缺陷、只有深 panel 抓得到、shallow 2-agent 漏看；建單元時 prerequisites 的 KP id 必對照 knowledge_points.json 正準拼法；(b) wiring 欄位（prerequisites 等）改動 content_sha 不變、可在既凍 sha 上直接修並保留 clean streak；(c) `-I` isolated 模式會忽略 PYTHONPATH，算自家工具 sha 要用 `sys.path.insert` 而非 `-I`＋PYTHONPATH。
+- 下一步：phys-force strand 17/17 完成。續推 LEARNING_PATH_BUILD_PLAN 下一 strand/島。
+
 ## 2026-11-18 14:30 ★ sci.t_adv.phys-force.tension-system 阿特午機（a＝(m₁−m₂)g÷(m₁+m₂)）5/5 DONE-GATE 全綠 → 自然島 phys-force 16/17（新建 t_adv；滑輪+繩+兩方塊力圖）
 - **sci_phys_force_tension_system frozen `9208abc39170c60e`**（rounds 1-5 連 5 clean、L3 全 exit0）。R15 gloss（阿特午機 Atwood machine／張力 tension）只 can_do、grep -o 各 2。中文授課無音檔。units_index 616。
 - DONE-GATE 全綠：per_page 616/616 零違規／scan PASS／question CLEAN／pedagogy 0 hard／unit_schema rc0 無 hard／repro-phys-force.tension-system PASS（a=(3−2)g/5=g/5=1.96）／iPad render 四角色 PASS。

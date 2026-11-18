@@ -1,0 +1,224 @@
+{
+ "_note": "自然島 物理-力（phys-force）strand 單元（第17，t_sub 分科）。知識點 sci.t_sub.phys-force.newton-2d（二維牛頓第二定律：力與加速度都是向量，a＝F÷m 逐分量，大小用畢氏定理）。tier=t_sub（分科測驗；學習者端不顯年段 R11）。全繁體零簡體零 PRC 詞。中文授課無音檔。前置＝newton-2（一維 F＝ma）與 resolve-compose（分量）。術語附國際英語（R15）：向量 (vector) 只在 can_do 首次 gloss 一次，teach/claim body 不重複（記憶 r15-gloss-once-first-render）；自檢＝搜尋該英文括號 grep -o 應＝2（_note 這句宣告＋can_do），自檢子句不另寫該 literal。scope（t_sub）：(1) 二維裡力 F 與加速度 a 都是向量，牛二寫成向量式 a＝F÷m，等於把 x、y 分量各自除以質量：ax＝Fx÷m、ay＝Fy÷m；(2) 計算例 F＝(6, 8) 牛頓、m＝2 公斤 → a＝(6÷2, 8÷2)＝(3, 4) 公尺／秒²；(3) 加速度大小用畢氏定理 |a|＝√(ax²+ay²)＝√(3²+4²)＝√25＝5 公尺／秒²（3-4-5 直角三角形）；(4) 加速度方向與合力 F 方向相同（不一定與速度同向）。不含斜面/摩擦的二維合力分解（另單元）、不含相對運動。repro（tools/verify/sci_phys_checks.py::phys-force.newton-2d，repro_gate .venv PASS）錨定『F=(6,8),m=2→a=(3,4)、|a|=5』。figure 自檢：單格＝水平 ax 與垂直 ay 兩股（棕色 ax、綠色 ay）構成直角三角形、藍色斜邊為加速度向量 a（含箭頭、頭短於桿）、直角標記、|a|＝5 標在斜邊、公式一行；分量須向量閉合（ax、ay 兩股合成剛好等於斜邊 a；3-4-5）、alt 與 SVG text 逐字一致、標籤不疊不溢出。practice 四答案＝{(3,4)(Q1 逐分量除 m),5(Q2 畢氏),與合力 F 同向(Q3 方向),逐分量各除以 m(Q4 做法)}與 teach 無 #10；MCQ options bare、每 distractor 乾淨單一誤解（Q1→(12,16)×m／(6,8)忘除m／7 當一維相加除；Q2→7 分量相加／25 沒開根號／3.5 取平均；Q3→與速度同向／與較大分量同向／無固定方向；Q4→相加再除／只算較大分量／把 m 也拆兩份）、兩兩相異、長度均衡；distractor_rationales key 逐字相符；數值對齊 oracle（(3,4)、|a|=5）。claim kind=fact。figure-only example 無 body。定義不得反轉：a＝F÷m（力除以質量，不是乘）；|a| 要開根號不得停在 25。",
+ "page": "sci_phys_force_newton_2d.html",
+ "units": [
+  {
+   "unit_id": "sci.t_sub.phys-force.newton-2d",
+   "title_zh": "二維牛頓第二定律（a＝F÷m，大小用畢氏定理）",
+   "can_do": "我知道在二維（平面）裡，力 F 和加速度 a 都是『向量 (vector)』，牛頓第二定律寫成向量式 a ＝ F ÷ m，就是把力的水平分量和垂直分量各自除以質量：ax ＝ Fx ÷ m、ay ＝ Fy ÷ m。我會算：當 F ＝ (6, 8) 牛頓、m ＝ 2 公斤時，a ＝ (6÷2, 8÷2) ＝ (3, 4) 公尺／秒²，加速度大小用畢氏定理 |a| ＝ √(3²+4²) ＝ √25 ＝ 5 公尺／秒²。我也知道加速度的方向和合力 F 的方向相同。",
+   "situation_group": "力：牛頓運動定律的應用",
+   "subject": "sci",
+   "strand": "phys-force",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "sci.t_sub.phys-force.newton-2d"
+   ],
+   "prerequisites": [
+    "sci.t_adv.phys-force.newton2",
+    "sci.t_adv.phys-force.resolve-compose"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-n2d-def",
+     "text": "在二維裡力 F 和加速度 a 都是向量。牛頓第二定律寫成向量式 a ＝ F ÷ m，等於把力的水平分量和垂直分量各自除以質量：ax ＝ Fx ÷ m、ay ＝ Fy ÷ m。",
+     "kind": "fact",
+     "source_refs": [
+      "二維牛頓第二定律（十二年國教 自然 分科）"
+     ],
+     "verification_ref": "a=F/m 逐分量（sci_phys_checks::phys-force.newton-2d .venv 驗，F=(6,8),m=2→a=(3,4)）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-n2d-calc",
+     "text": "計算例：F ＝ (6, 8) 牛頓、m ＝ 2 公斤，則 a ＝ (6÷2, 8÷2) ＝ (3, 4) 公尺／秒²。",
+     "kind": "fact",
+     "source_refs": [
+      "二維牛二計算例（十二年國教 自然 分科）"
+     ],
+     "verification_ref": "a=(6/2,8/2)=(3,4)（sci_phys_checks::phys-force.newton-2d .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-n2d-mag",
+     "text": "加速度大小用畢氏定理：|a| ＝ √(ax²+ay²) ＝ √(3²+4²) ＝ √25 ＝ 5 公尺／秒²（剛好是 3-4-5 直角三角形）。",
+     "kind": "fact",
+     "source_refs": [
+      "向量大小（十二年國教 自然 分科）"
+     ],
+     "verification_ref": "|a|=√(3²+4²)=5（sci_phys_checks::phys-force.newton-2d .venv 驗，a.norm()=5）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-n2d-dir",
+     "text": "加速度的方向和合力 F 的方向相同（因為 a ＝ F ÷ m，除以一個正的質量不會改變方向）；它不一定和速度的方向相同。",
+     "kind": "fact",
+     "source_refs": [
+      "加速度方向與合力同向（十二年國教 自然 分科）"
+     ],
+     "verification_ref": "a=F/m、m>0 ⇒ a 與 F 同向（純量除法不改方向）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-force.newton-2d"
+     ],
+     "body": "前面學過一維的 F ＝ ma，也學過把力分成水平和垂直分量。這一單元把牛頓第二定律用在二維（平面）上。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-force.newton-2d"
+     ],
+     "body": "① 在二維裡，力 F 和加速度 a 都是向量。牛頓第二定律的向量式 a ＝ F ÷ m，意思是把力的水平分量、垂直分量各自除以質量：ax ＝ Fx ÷ m、ay ＝ Fy ÷ m。② 例：F ＝ (6, 8) 牛頓、m ＝ 2 公斤 → a ＝ (6÷2, 8÷2) ＝ (3, 4) 公尺／秒²。③ 加速度大小用畢氏定理：|a| ＝ √(ax²+ay²) ＝ √(3²+4²) ＝ √25 ＝ 5 公尺／秒²（這就是 3-4-5 直角三角形）。④ 加速度方向和合力 F 的方向相同，不一定和速度同向。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_sub.phys-force.newton-2d"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='180' y='13' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>二維牛頓第二定律：a ＝ F ÷ m，大小用畢氏定理</text><line x1='96' y1='132' x2='150' y2='132' stroke='#c08a2d' stroke-width='2.4'/><line x1='150' y1='132' x2='150' y2='60' stroke='#2f6f54' stroke-width='2.4'/><rect x='144' y='126' width='6' height='6' fill='none' stroke='#99a7b5' stroke-width='1'/><line x1='96' y1='132' x2='150' y2='60' stroke='#2563a6' stroke-width='2.8'/><polygon points='150,60 141.4,64.8 147.8,69.6' fill='#2563a6'/><text x='123' y='146' font-size='8' fill='#c08a2d' text-anchor='middle'>水平 ax ＝ 3</text><text x='156' y='98' font-size='8' fill='#2f6f54' text-anchor='start'>垂直 ay ＝ 4</text><text x='128' y='82' font-size='8' fill='#2563a6' text-anchor='end'>加速度 a，|a| ＝ 5</text></g><g font-family='sans-serif' text-anchor='middle'><text x='180' y='158' font-size='8' fill='#33475b'>F ＝ (6, 8) 牛頓、m ＝ 2 公斤 → a ＝ (3, 4)、|a| ＝ √(3²+4²) ＝ 5 公尺／秒²</text></g></svg>",
+      "alt": "一個直角三角形。從左下角往右有一條棕色水平線，標「水平 ax ＝ 3」；從右端往上有一條綠色垂直線，標「垂直 ay ＝ 4」，直角處畫了一個小方塊。從左下角到右上端有一條藍色斜線、末端有箭頭，代表加速度向量，標「加速度 a，|a| ＝ 5」。下面一行寫「F ＝ (6, 8) 牛頓、m ＝ 2 公斤 → a ＝ (3, 4)、|a| ＝ √(3²+4²) ＝ 5 公尺／秒²」。",
+      "caption": "二維牛頓第二定律：把力的水平、垂直分量各自除以質量，得到加速度的兩個分量 ax ＝ 3、ay ＝ 4（棕色、綠色兩股）。藍色斜邊是加速度向量 a，大小用畢氏定理 |a| ＝ √(3²+4²) ＝ 5 公尺／秒²（3-4-5 直角三角形）。加速度方向和合力 F 同向。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-force.newton-2d"
+     ],
+     "body": "最後練「二維牛頓第二定律」。重點：(1) a ＝ F ÷ m，把 x、y 分量各自除以質量；(2) 例 F＝(6,8)、m＝2 → a＝(3,4)；(3) 大小 |a|＝√(3²+4²)＝5；(4) 加速度方向和合力 F 同向。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個 2 公斤的物體受到合力 F ＝ (6, 8) 牛頓。它的加速度 a 是多少？",
+     "answer": "(3, 4) 公尺／秒²",
+     "kp_ids": [
+      "sci.t_sub.phys-force.newton-2d"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-force.newton-2d"
+     ],
+     "options": [
+      "(3, 4) 公尺／秒²",
+      "(12, 16) 公尺／秒²",
+      "(6, 8) 公尺／秒²",
+      "7 公尺／秒²"
+     ],
+     "distractor_rationales": {
+      "(12, 16) 公尺／秒²": "這是把合力乘以質量（6×2、8×2）；加速度要用 F ÷ m，是除的，＝(3, 4)。",
+      "(6, 8) 公尺／秒²": "這是合力 F 本身、忘了除以質量；a ＝ F ÷ m ＝ (6÷2, 8÷2) ＝ (3, 4)。",
+      "7 公尺／秒²": "這是把兩個分量相加再除（(6＋8)÷2）當成一維做了；二維要逐分量各除以質量，a ＝ (3, 4)。"
+     },
+     "answer_evidence": [
+      "c-n2d-def",
+      "c-n2d-calc"
+     ],
+     "feedback": "a ＝ F ÷ m ＝ (6÷2, 8÷2) ＝ (3, 4) 公尺／秒²。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "某物體的加速度分量是 ax ＝ 3、ay ＝ 4（公尺／秒²）。加速度的大小 |a| 是多少？",
+     "answer": "5 公尺／秒²",
+     "kp_ids": [
+      "sci.t_sub.phys-force.newton-2d"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-force.newton-2d"
+     ],
+     "options": [
+      "5 公尺／秒²",
+      "7 公尺／秒²",
+      "25 公尺／秒²",
+      "3.5 公尺／秒²"
+     ],
+     "distractor_rationales": {
+      "7 公尺／秒²": "這是把兩個分量直接相加（3＋4）；大小要用畢氏定理 √(3²+4²) ＝ 5。",
+      "25 公尺／秒²": "這是算了 3²+4² ＝ 25 卻忘了開平方根；|a| ＝ √25 ＝ 5。",
+      "3.5 公尺／秒²": "這是取了兩分量的平均（(3＋4)÷2）；大小要用畢氏定理 √(3²+4²) ＝ 5。"
+     },
+     "answer_evidence": [
+      "c-n2d-mag"
+     ],
+     "feedback": "|a| ＝ √(ax²+ay²) ＝ √(3²+4²) ＝ √25 ＝ 5 公尺／秒²。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "物體受到一個合力 F。它的加速度方向會和什麼相同？",
+     "answer": "和合力 F 的方向相同",
+     "kp_ids": [
+      "sci.t_sub.phys-force.newton-2d"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-force.newton-2d"
+     ],
+     "options": [
+      "和合力 F 的方向相同",
+      "和物體速度的方向相同",
+      "和比較大的那個分量同向",
+      "沒有固定方向"
+     ],
+     "distractor_rationales": {
+      "和物體速度的方向相同": "加速度方向跟合力同向，不一定跟速度同向；速度可能正朝別的方向。",
+      "和比較大的那個分量同向": "方向由兩個分量合成的合力決定，不是只看比較大的那一個分量。",
+      "沒有固定方向": "加速度方向是固定的，就等於合力 F 的方向（a ＝ F÷m、除以正的質量不改方向）。"
+     },
+     "answer_evidence": [
+      "c-n2d-dir"
+     ],
+     "feedback": "a ＝ F ÷ m，除以正的質量不改方向，所以加速度方向和合力 F 同向。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在二維裡，要由合力 F 和質量 m 算出加速度 a，正確的做法是什麼？",
+     "answer": "把力的 x、y 分量各自除以質量",
+     "kp_ids": [
+      "sci.t_sub.phys-force.newton-2d"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-force.newton-2d"
+     ],
+     "options": [
+      "把力的 x、y 分量各自除以質量",
+      "把兩個分量相加再除以質量",
+      "只算比較大的那個分量除以質量",
+      "把質量也拆成 x、y 兩份再除"
+     ],
+     "distractor_rationales": {
+      "把兩個分量相加再除以質量": "那是把二維當成一維做；二維要把 x、y 分量各自除以質量：ax＝Fx÷m、ay＝Fy÷m。",
+      "只算比較大的那個分量除以質量": "兩個分量都要算，各自除以質量，才得到完整的加速度向量。",
+      "把質量也拆成 x、y 兩份再除": "質量是純量、沒有方向，不用拆；只有力和加速度分 x、y 兩個分量。"
+     },
+     "answer_evidence": [
+      "c-n2d-def"
+     ],
+     "feedback": "二維牛二：把力的 x、y 分量各自除以質量，ax ＝ Fx÷m、ay ＝ Fy÷m。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（二維牛二：力 F 與加速度 a 都是向量；a＝F÷m＝把 x、y 分量各自除以質量；例 F=(6,8) m=2→a=(3,4)；大小 |a|＝√(ax²+ay²)＝√(3²+4²)＝5＝3-4-5；加速度方向與合力 F 同向、不一定與速度同向；三鐵律＝逐分量除以 m、大小要開根號不停在 25、方向跟合力同向）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
