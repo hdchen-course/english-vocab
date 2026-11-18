@@ -1,3 +1,9 @@
+## 2026-11-18 18:32 ★ sci.t_mid.phys-kin.acceleration 加速度的定義與單位 5/5 DONE-GATE → phys-kin 5/14
+- **sci_phys_kin_acceleration frozen `c2779814c97046c3`**（rounds 1-5 連 5 clean、L3 全 exit0）。t_mid 國中會考。前置＝velocity-speed。R15 gloss（加速度 acceleration）grep -o=2。
+- 內容：加速度＝(末速度−初速度)÷時間；單位公尺／秒²（每秒速度改變量）；有方向（同向加速正、反向減速負號，煞車例 (8−20)÷4=−3）。figure＝時間軸 初速度5(藍,開始)→經過3秒(棕箭頭)→末速度20(紅,3秒後)＋公式 a=(20−5)÷3=5。oracle kin_acceleration repro PASS。
+- DONE-GATE 全綠：per_page 622/622／scan PASS／pedagogy 0 hard／question CLEAN／schema rc0／repro PASS／rsvg render 四角色過。
+- ★收斂史：三個深 panel（各 7-agent，R1/R2/R3）一致抓到 major：Q1「3 公尺／秒²」distractor rationale 牽強（原寫 10÷4≈2.5 湊整、不等於3，無乾淨單一迷思路徑）。修：改乾淨路徑『初速+末速再除時間 (2+10)÷4=12÷4=3（該先相減）』；de-converge d983532f→c2779814 重走 5-clean 全綠。★class 教訓：distractor rationale 必對應一條乾淨單一誤解且其算式確實等於該 distractor 值。
+
 ## 2026-11-18 18:11 ★ sci.t_mid.phys-kin.avg-inst 平均速度與瞬時速度 5/5 DONE-GATE → phys-kin 4/14
 - **sci_phys_kin_avg_inst frozen `6e78ec78695015d9`**（rounds 1-5 連 5 clean、L3 全 exit0）。t_mid 國中會考。前置＝velocity-speed。R15 gloss（平均速度 average velocity／瞬時速度 instantaneous velocity）各 grep -o=2。units_index 621。
 - 內容：平均速度＝整段位移÷整段時間（看整段）；瞬時速度＝某一瞬間速度（速度計當下讀數，國中不用微分）；通常不相等。figure＝位置數線三點(t=2/4m、t=3/9m、t=4/16m，點落位置比例位置)＋平均括號(16−4)÷(4−2)=6＋t=3 瞬時 6。oracle kin_avg_inst（x=t²）repro PASS。
