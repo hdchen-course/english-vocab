@@ -1,0 +1,223 @@
+{
+ "_note": "自然島 物理-力（phys-force）strand 單元（第10，t_adv）。知識點 sci.t_adv.phys-force.newton2（牛頓第二運動定律 F=ma 應用）。tier=t_adv（高階）、exam=學測。全繁體零簡體零 PRC 詞。中文授課無音檔。術語附國際英語（R15，★只在 can_do 首次 gloss 一次：牛頓第二運動定律 (Newton's second law)、加速度 (acceleration)；teach/claim body 不重複——記憶 r15-gloss-once-first-render。自檢用描述文字、不在自檢子句重嵌英文 literal：grep -c 每術語英文括號含行數＝2〔_note 一行＋can_do 一行〕、grep -o 亦=2）。R11 不顯年段。前置＝newton1（合力為零→等速、慣性）＋force-unit（牛頓單位）。★本單元 teach 內自足引入『加速度』定義（速度改變的快慢，單位 公尺/秒² m/s²），避免用未教概念＝避 INV-1 斷層。★scope（t_adv）：(1) 合力不為零時物體產生加速度；(2) 牛頓第二運動定律＝加速度與合力成正比、與質量成反比：a＝F/m（即 F＝m×a）；(3) 合力越大 a 越大、質量越大 a 越小；(4) 單位 F牛頓/m公斤/a公尺每秒平方，1N 讓1kg 產生 1 m/s²；(5) 例：合力20N 作用於4kg → a＝20÷4＝5 m/s²。不含二維 F=ma（newton-2d，t_sub）、不含變力/微積分。repro（tools/verify/sci_phys_checks.py::phys-force.newton2，repro_gate .venv PASS）錨定 a=F/m=20/4=5 m/s²。★自檢：figure＝單格 worked example（4kg 方塊＋綠色合力箭頭20N＋a=F/m=20÷4=5 公尺/秒²＋公式橫幅 F=m×a＋兩比例句），alt 與 SVG text 逐字一致、標籤移出不疊（friction round7 教訓）；practice 四答案＝{5 m/s²(Q1 F=ma算),a變大(Q2 合力↑),a變小(Q3 質量↑),a與F正比與m反比(Q4 概念)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1→24=20+4加錯/80=20×4/0.2=4÷20倒；Q2→變小反/不變；Q3→變大反/不變；Q4→都正比/都反比/與速度有關）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 逐字相符（#59）；數值對齊 oracle（20/4/5）。claim kind=fact。figure-only example 無 body。★正向力/定義反轉教訓：加速度定義寫『速度改變的快慢（速度變化率）』勿窄化成『速度』本身。",
+ "page": "sci_phys_force_newton2.html",
+ "units": [
+  {
+   "unit_id": "sci.t_adv.phys-force.newton2",
+   "title_zh": "牛頓第二運動定律（F＝ma）",
+   "can_do": "我懂『牛頓第二運動定律 (Newton's second law)』：當一個物體所受的合力不是零時，它會產生『加速度 (acceleration)』（也就是速度會改變；加速度是「速度改變的快慢」，單位是公尺/秒²）。這個加速度跟合力成正比、跟質量成反比，寫成 a ＝ F ÷ m，也常寫成 F ＝ m × a。所以同一個物體、合力越大，加速度越大；同樣的合力下、質量越大，加速度越小。我也會用公式計算：合力 20 牛頓作用在質量 4 公斤的物體上，加速度 a ＝ 20 ÷ 4 ＝ 5 公尺/秒²。",
+   "situation_group": "力：牛頓運動定律",
+   "subject": "sci",
+   "strand": "phys-force",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "sci.t_adv.phys-force.newton2"
+   ],
+   "prerequisites": [
+    "sci.t_adv.phys-force.newton1",
+    "sci.t_mid.phys-force.force-unit"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-n2-accel",
+     "text": "當物體所受的合力不是零時，它的速度會改變，也就是產生「加速度」。加速度指的是「速度改變的快慢」（速度的變化率），單位是公尺/秒²（m/s²）。合力的方向就是加速度的方向。",
+     "kind": "fact",
+     "source_refs": [
+      "加速度與合力（十二年國教 自然 高中必修）"
+     ],
+     "verification_ref": "合力非零產生加速度、方向同合力（高中物理 consensus_current；與 a=F/m>0 一致）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-n2-law",
+     "text": "牛頓第二運動定律：物體的加速度跟它所受的合力「成正比」、跟它的質量「成反比」，寫成 a ＝ F ÷ m，也就是 F ＝ m × a。所以合力越大加速度越大，質量越大加速度越小。",
+     "kind": "fact",
+     "source_refs": [
+      "牛頓第二運動定律 F=ma（十二年國教 自然 高中必修）"
+     ],
+     "verification_ref": "a=F/m（sci_phys_checks::phys-force.newton2 .venv 驗，F=20,m=4→a=5）；a∝F、a∝1/m 為定律內容",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-n2-unit",
+     "text": "公式裡的單位：合力 F 用牛頓（N）、質量 m 用公斤（kg）、加速度 a 用公尺/秒²（m/s²）。其實 1 牛頓的定義就是「能讓 1 公斤的物體產生 1 公尺/秒² 加速度的力」。",
+     "kind": "fact",
+     "source_refs": [
+      "牛頓的定義 1 N=1 kg·m/s²（十二年國教 自然 高中必修）"
+     ],
+     "verification_ref": "1 N=1 kg·m/s²（sci_phys_checks::phys-force.force-unit 因次；與 F=ma 一致）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-n2-calc",
+     "text": "計算例：一個質量 4 公斤的物體，受到 20 牛頓的合力，它的加速度 a ＝ F ÷ m ＝ 20 ÷ 4 ＝ 5 公尺/秒²。",
+     "kind": "fact",
+     "source_refs": [
+      "F=ma 計算例（十二年國教 自然 高中必修）"
+     ],
+     "verification_ref": "a=F/m=20/4=5 m/s²（sci_phys_checks::phys-force.newton2 .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-force.newton2"
+     ],
+     "body": "上一單元學到：合力為零時，物體維持原本的運動狀態（靜者恆靜、動者恆等速）。那如果合力「不是零」呢？這一單元就講合力如何改變運動——牛頓第二運動定律。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-force.newton2"
+     ],
+     "body": "① 合力不為零時，物體的速度會改變，也就是產生「加速度」（加速度＝速度改變的快慢，單位公尺/秒²）。② 牛頓第二運動定律：加速度跟合力成正比、跟質量成反比——a ＝ F ÷ m（即 F ＝ m × a）。③ 所以合力越大 a 越大；質量越大 a 越小。④ 單位：F 牛頓、m 公斤、a 公尺/秒²；1 牛頓就是讓 1 公斤產生 1 公尺/秒² 的力。⑤ 例：20 牛頓作用在 4 公斤 → a ＝ 20 ÷ 4 ＝ 5 公尺/秒²。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_adv.phys-force.newton2"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='15' font-family='sans-serif' font-size='9.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>牛頓第二運動定律：F ＝ m × a（a ＝ F ÷ m）</text><line x1='30' y1='96' x2='250' y2='96' stroke='#99a7b5' stroke-width='1.2'/><rect x='64' y='64' width='54' height='32' rx='2' fill='#e6edf3' stroke='#99a7b5' stroke-width='1.2'/><text x='91' y='84' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle'>m ＝ 4 公斤</text><line x1='118' y1='80' x2='210' y2='80' stroke='#2f6f54' stroke-width='2.6'/><polygon points='210,80 201,75 201,85' fill='#2f6f54'/><text x='164' y='71' font-family='sans-serif' font-size='8' fill='#2f6f54' text-anchor='middle'>合力 F ＝ 20 牛頓</text><text x='140' y='120' font-family='sans-serif' font-size='9' fill='#c2535d' text-anchor='middle' font-weight='bold'>a ＝ F ÷ m ＝ 20 ÷ 4 ＝ 5 公尺/秒²</text><text x='180' y='142' font-family='sans-serif' font-size='8' fill='#33475b' text-anchor='middle'>合力越大 → 加速度越大；質量越大 → 加速度越小。</text></svg>",
+      "alt": "標題「牛頓第二運動定律：F ＝ m × a（a ＝ F ÷ m）」。地面上有一個方塊，標「m ＝ 4 公斤」，方塊右邊有一支指向右的綠色箭頭，標「合力 F ＝ 20 牛頓」。方塊下方用紅色寫出計算「a ＝ F ÷ m ＝ 20 ÷ 4 ＝ 5 公尺/秒²」。最下面一行寫「合力越大 → 加速度越大；質量越大 → 加速度越小。」",
+      "caption": "一個質量 4 公斤的物體受到 20 牛頓的合力，依牛頓第二運動定律 a ＝ F ÷ m，算出加速度 ＝ 20 ÷ 4 ＝ 5 公尺/秒²，方向和合力一樣（向右）。公式也告訴我們兩件事：同一物體合力越大、加速度越大（正比）；同樣合力下質量越大、加速度越小（反比）。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-force.newton2"
+     ],
+     "body": "最後練「牛頓第二運動定律」。重點：(1) 合力不為零→產生加速度（速度改變的快慢）；(2) a ＝ F ÷ m（F ＝ m × a）；(3) 合力越大 a 越大、質量越大 a 越小；(4) 例：20 牛頓÷4 公斤＝5 公尺/秒²。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個質量 4 公斤的物體，受到 20 牛頓的合力，它的加速度是多少？",
+     "answer": "5 公尺/秒²",
+     "kp_ids": [
+      "sci.t_adv.phys-force.newton2"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-force.newton2"
+     ],
+     "options": [
+      "5 公尺/秒²",
+      "24 公尺/秒²",
+      "80 公尺/秒²",
+      "0.2 公尺/秒²"
+     ],
+     "distractor_rationales": {
+      "24 公尺/秒²": "這是把合力和質量相加（20＋4）；牛頓第二定律是 a ＝ F ÷ m ＝ 20 ÷ 4 ＝ 5。",
+      "80 公尺/秒²": "這是把合力和質量相乘（20×4）；應該是相除：a ＝ F ÷ m ＝ 5。",
+      "0.2 公尺/秒²": "這是把質量除以合力（4 ÷ 20）、除反了；正確是 a ＝ F ÷ m ＝ 20 ÷ 4 ＝ 5。"
+     },
+     "answer_evidence": [
+      "c-n2-calc"
+     ],
+     "feedback": "a ＝ F ÷ m ＝ 20 ÷ 4 ＝ 5 公尺/秒²。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "同一個物體（質量不變），如果作用在它身上的合力變大，它的加速度會怎樣？",
+     "answer": "變大",
+     "kp_ids": [
+      "sci.t_adv.phys-force.newton2"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-force.newton2"
+     ],
+     "options": [
+      "變大",
+      "變小",
+      "不變",
+      "先變大再變小"
+     ],
+     "distractor_rationales": {
+      "變小": "方向相反：a ＝ F ÷ m，質量不變時合力越大、加速度越大，不是越小。",
+      "不變": "加速度會隨合力改變；質量不變、合力變大時加速度跟著變大（成正比）。",
+      "先變大再變小": "a 與 F 是穩定的正比關係，不會先大再小。"
+     },
+     "answer_evidence": [
+      "c-n2-law"
+     ],
+     "feedback": "a ＝ F ÷ m：質量不變時，合力越大加速度越大（成正比）。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "作用的合力不變，如果物體的質量變大，它的加速度會怎樣？",
+     "answer": "變小",
+     "kp_ids": [
+      "sci.t_adv.phys-force.newton2"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-force.newton2"
+     ],
+     "options": [
+      "變小",
+      "變大",
+      "不變",
+      "變成零"
+     ],
+     "distractor_rationales": {
+      "變大": "方向相反：a ＝ F ÷ m，合力不變時質量越大、加速度越小（成反比），不是越大。",
+      "不變": "加速度會隨質量改變；合力不變、質量變大時加速度跟著變小（成反比）。",
+      "變成零": "只要還有合力，加速度就不會是零；質量變大只是讓加速度變小，不會變成零。"
+     },
+     "answer_evidence": [
+      "c-n2-law"
+     ],
+     "feedback": "a ＝ F ÷ m：合力不變時，質量越大加速度越小（成反比）。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "關於牛頓第二運動定律 a ＝ F ÷ m，下列哪一個說法正確？",
+     "answer": "加速度與合力成正比，與質量成反比",
+     "kp_ids": [
+      "sci.t_adv.phys-force.newton2"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-force.newton2"
+     ],
+     "options": [
+      "加速度與合力成正比，與質量成反比",
+      "加速度與合力、質量都成正比",
+      "加速度與合力、質量都成反比",
+      "加速度只由物體本來的速度決定"
+     ],
+     "distractor_rationales": {
+      "加速度與合力、質量都成正比": "只有合力是正比；質量是反比（a ＝ F ÷ m，分母是質量）。",
+      "加速度與合力、質量都成反比": "只有質量是反比；合力是正比（a 隨 F 變大而變大）。",
+      "加速度只由物體本來的速度決定": "加速度由合力與質量決定（a ＝ F ÷ m），與物體本來的速度無關。"
+     },
+     "answer_evidence": [
+      "c-n2-law"
+     ],
+     "feedback": "a ＝ F ÷ m：加速度與合力成正比（分子）、與質量成反比（分母）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（合力不為零→產生加速度＝速度改變的快慢、單位公尺/秒²；牛頓第二運動定律 a＝F÷m（F＝m×a）、加速度與合力成正比與質量成反比；合力越大 a 越大、質量越大 a 越小；例 20÷4＝5 公尺/秒²；三鐵律＝合力生加速度、a=F÷m、正比合力反比質量）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

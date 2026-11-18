@@ -1,3 +1,10 @@
+## 2026-11-18 08:57 ★ sci.t_adv.phys-force.newton2 牛頓第二運動定律（F＝ma）5/5 DONE-GATE 全綠 → 自然島 phys-force 10/17（第2個 t_adv；單格 worked example SVG）
+- **sci_phys_force_newton2 frozen `271a170ee9d5bc7a`**（rounds 1-5 連 5 clean、L3 全 exit0、零 de-converge：草稿即乾淨，5 輪 panel 全無 CONFIRMED defect）。R15 gloss（牛頓第二運動定律 Newton's second law／加速度 acceleration）只放 can_do、grep -c 自檢 2/2、content_audit 零 R15 finding。
+- DONE-GATE 全綠：scan PASS／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard（c-n2-accel、c-n2-unit 兩 parity-advisory＝teach-only 支援 claim，panel 放行）／content_sha==271a170ee9d5bc7a／per_page_5clean PASS（absent）／repro-sci_phys_checks-phys-force.newton2 PASS（a=F/m=20/4=5 m/s²）／iPad 四角色簽核（單格：4公斤方塊＋綠色合力20N箭頭＋紅色 a＝F÷m＝20÷4＝5 公尺/秒²＋兩比例句；breadcrumb「自然科學·物理：力」、R11 不顯年段）。中文授課無音檔。
+- newton2（t_adv，phys-force strand 第10）＝(1) 合力不為零→產生加速度（速度改變的快慢，公尺/秒²）；(2) 牛頓第二運動定律 a＝F÷m（F＝m×a）、加速度與合力成正比、與質量成反比；(3) 合力越大 a 越大、質量越大 a 越小；(4) 1 牛頓＝讓 1 公斤產生 1 公尺/秒²；(5) 例 20÷4＝5。★teach 內自足引入『加速度』定義避 INV-1 斷層、刻意不教二維/變力。
+- 下一步：phys-force 還有 7 binding KP：t_adv×6（newton3 作用反作用／resolve-compose 二維分解／equilibrium 三力平衡／incline 斜面／tension-system 阿特午機／friction-coeff μ=f/N）＋t_sub newton-2d。接 newton3（作用力與反作用力，oracle 10=−(−10)）。
+
+
 # 學習路徑重構 — 實作進度記錄（LIVE，跨 session resume）
 
 > ★★ **先讀計畫再看流水帳**：導航總圖＝`authoring/LEARNING_PATH_BUILD_PLAN.md`（分階段計畫＋現狀＋完成定義），
