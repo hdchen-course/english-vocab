@@ -1,3 +1,15 @@
+## 2026-11-18 10:05 ★ HD 視覺 QA friction：5 個 math 圖/標籤修正＋全部重審 5-clean DONE-GATE（圖＝教學內容，honest de-converge 後重收斂）
+- **unit.js 階段①標籤依語音決定**（class 修）：hasAudio=teach 有 audio 或 shadowing → 有語音(英語島)「先聽、先感覺」、無語音(數學/自然/中文授課)「先讀、先感覺」。數學單元不再誤顯「先聽」。render 實測 math→先讀、eng(with shadowing)→先聽。content_sha 不綁 unit.js，既有 5-clean streak 不作廢。commit 7d519a0f9。
+- **5 個 figure SVG 修正＋各自 5-clean 重收斂＋DONE-GATE（scan/unit_schema/question/pedagogy/per_page 全綠）**：
+  1. math_numquant_rationaloperations：有理數符號表四列(±)公式改**固定欄位 x**，括號上下左右對齊（原單一置中因 ＋U+FF0B 比 −U+2212 寬度不一而錯位）。frozen 60c8284ed7895cf1。
+  2. math_geom_circlebasics：圓**置中 cx=190**（原 cx=150 左移留右空白），圓心/半徑/直徑標籤分三區不壓線。frozen 740061427bdd8c6f。
+  3. math_geom_circlemeasure：同 circlebasics 置中＋半徑/直徑標籤清楚。frozen 5faa9c510e5faa7d。
+  4. math_geom_volume：長方體長(橘#c08a2d)/寬(藍#2563a6)/高(綠#2f6f54)三邊各一色並與文字同色（dual-coding，HD 建議），其餘框線中性灰。_note 同步更新。frozen 43b8d0175463fc35。commit 7d519a0f9。
+  5. math_geom_proportional_segments：三角形 DE∥BC 平行記號重設計——原 DE 粗綠線中間箭頭像向量、BC 灰邊浮綠箭頭不成對、讀不出平行；改 **BC+DE 同綠各放相同箭號「›」**（平行記號慣例）＋D/E 端點圓點；底部 SVG 文字短版避溢出、說明移 caption。幾何座標驗證 D 在 AB、E 在 AC、DE∥BC 正確。frozen a1a406e0b98467fd→516bff71(alt修)。commit 492c84622。
+- **re-audit 自己抓到 2 個我改圖時沒同步的 metadata 缺陷**（對抗式審查價值）：proportional alt「下方綠色文字：」逐字轉錄夾帶 SVG 實際沒有的括註（5 鏡一致 b-hard）；volume _note 仍載舊「單一邊色」與新三色 dual-coding 矛盾（domain a-wrong）。皆修正重凍。commit 492c84622。
+- ★教訓：**改 figure SVG 時必須同步 alt（逐字轉錄不得夾帶 render 沒有的字）與 _note（設計規格描述）**，否則 re-audit 會判 alt-fidelity / 內部矛盾缺陷。
+- ★PENDING（待辦，未做）：unit.js 內容已改但全站頁面 pin `?v=20261102e`(444頁)/`?v=20261112a`(166頁)**未 bump**，故快取使用者仍拿到舊標籤。需 bump ASSET_VER→新版＋sed 全站 ?v=＋紅隊化 rekey migration（僅版本字串變＝version-only、sidecar 未動 → 重鍵 ledger frozen_sha+rounds content_sha，保留 5-clean）。此為 445 頁 ledger 重寫、須謹慎/紅隊，列為獨立遷移步驟。新載入頁已生效。
+
 ## 2026-11-18 08:57 ★ sci.t_adv.phys-force.newton2 牛頓第二運動定律（F＝ma）5/5 DONE-GATE 全綠 → 自然島 phys-force 10/17（第2個 t_adv；單格 worked example SVG）
 - **sci_phys_force_newton2 frozen `271a170ee9d5bc7a`**（rounds 1-5 連 5 clean、L3 全 exit0、零 de-converge：草稿即乾淨，5 輪 panel 全無 CONFIRMED defect）。R15 gloss（牛頓第二運動定律 Newton's second law／加速度 acceleration）只放 can_do、grep -c 自檢 2/2、content_audit 零 R15 finding。
 - DONE-GATE 全綠：scan PASS／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard（c-n2-accel、c-n2-unit 兩 parity-advisory＝teach-only 支援 claim，panel 放行）／content_sha==271a170ee9d5bc7a／per_page_5clean PASS（absent）／repro-sci_phys_checks-phys-force.newton2 PASS（a=F/m=20/4=5 m/s²）／iPad 四角色簽核（單格：4公斤方塊＋綠色合力20N箭頭＋紅色 a＝F÷m＝20÷4＝5 公尺/秒²＋兩比例句；breadcrumb「自然科學·物理：力」、R11 不顯年段）。中文授課無音檔。
