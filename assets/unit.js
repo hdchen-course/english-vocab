@@ -101,6 +101,11 @@
   fetch(src,{cache:'no-store'}).then(r=>r.json()).then(data=>{
     const u=data.units[0], root=document.getElementById('root');
     root.innerHTML='';
+    // 階段①標籤依「本單元是否真有語音」決定：有語音（英語島聽力單元）＝先聽；無語音（數學/自然/中文授課等）＝先讀。
+    // 避免數學/自然單元顯示「先聽、先感覺」卻無任何語音的違和（HD 2026-11-18 friction）。
+    const hasAudio=(u.teach||[]).some(t=>t.audio)||!!u.shadowing;
+    const S1_SHORT=hasAudio?'① 先聽':'① 先讀';
+    const S1_FULL =hasAudio?'① 先聽、先感覺':'① 先讀、先感覺';
     // 練習與應用脈絡（additive，§2.1）：?from=speaking&cat=<key> → 側欄改綁開口說情境；無參時下方邏輯完全等價（零回歸）。
     const PZQ=new URLSearchParams(location.search||'');
     const pzSpeakCat=(PZQ.get('from')==='speaking')?PZQ.get('cat'):null;
@@ -115,7 +120,7 @@
     const pBack=el('a','pill-nav','<span aria-hidden="true">←</span> 單元牆'); pBack.href=hashHref; pnl.appendChild(pBack);
     let firstStep=null;
     // ③ 跟讀僅在單元有 shadowing 時存在；無 shadowing（如數學單元）不列，避免連到不存在的 #s3 死連結。
-    [['s1','① 先聽'],['s2','② 練'],['s3','③ 跟讀'],['s4','④ 自評']].filter(([id])=>id!=='s3'||u.shadowing).forEach(([id,t],i)=>{
+    [['s1',S1_SHORT],['s2','② 練'],['s3','③ 跟讀'],['s4','④ 自評']].filter(([id])=>id!=='s3'||u.shadowing).forEach(([id,t],i)=>{
       const a=el('a','pill-nav',esc(t)); a.href='#'+id; pnl.appendChild(a); if(i===0) firstStep=a; });
     root.appendChild(pnl);
 
@@ -133,7 +138,7 @@
     const g2=el('div','sb-group'); g2.style.display='none'; side.appendChild(g2);
     // 側欄 group3「本單元流程」：①②③④（R11 不顯年段）
     const g3=el('div','sb-group'); g3.appendChild(el('div','sb-title','本單元流程'));
-    [['s1','① 先聽、先感覺'],['s2','② 練一練'],['s3','③ 跟著讀'],['s4','④ 我到哪一步了']].filter(([id])=>id!=='s3'||u.shadowing).forEach(([id,t])=>{
+    [['s1',S1_FULL],['s2','② 練一練'],['s3','③ 跟著讀'],['s4','④ 我到哪一步了']].filter(([id])=>id!=='s3'||u.shadowing).forEach(([id,t])=>{
       const a=el('a',null,esc(t)); a.href='#'+id; g3.appendChild(a); });
     side.appendChild(g3);
 
@@ -192,7 +197,7 @@
     main.appendChild(cd);
 
     // 右欄：① 教
-    main.appendChild(el('h2','gr-h','① 先聽、先感覺')).id='s1';
+    main.appendChild(el('h2','gr-h',S1_FULL)).id='s1';
     u.teach.forEach(t=>{
       const c=el('div','gr-card');
       // 控制列：🔊 與「中文對照」toggle 同一列、置於卡片頂端，省掉多餘的行。
