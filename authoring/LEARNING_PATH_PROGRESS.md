@@ -1,3 +1,9 @@
+## 2026-11-18 19:32 ★ sci.t_mid.phys-kin.free-fall 自由落體與重力加速度 g 5/5 DONE-GATE → phys-kin 8/14
+- **sci_phys_kin_free_fall frozen `60d15ea7edd4fc4f`**（rounds 1-5 連 5 clean、L3 全 exit0）。t_mid 國中會考。前置＝acceleration。R15 gloss（自由落體 free fall／重力加速度 gravitational acceleration）各 grep -o=2。
+- 內容：自由落體＝只受重力、從靜止往下掉（忽略空氣阻力）、是等加速度運動；g≈9.8 公尺／秒²、方向向下；v＝g×t、d＝½×g×t²；忽略空氣阻力輕重落下一樣快。figure＝鉛直落下 三球(t=0 v=0／t=1 v=9.8／t=2 v=19.6)間距遞增示等加速度＋g向下箭頭(三行含單位 公尺／秒²)＋結論 1 秒 v=9.8≠d=4.9（速度≠距離）。oracle kin_free_fall 錨 t=1（v=9.8、d=4.9）+t=2/t=3 速度 repro PASS。
+- DONE-GATE 全綠：per_page 625/625／scan PASS／pedagogy 0 hard／question CLEAN／schema rc0／repro PASS／rsvg render 四角色過。
+- ★收斂史（深 panel 連抓 4 真缺陷、三度 de-converge、全修無放水）：(1) R1 worked example 原 t=2 使 v=19.6＝d=19.6 數字相同坐實「別把 v/d 搞混」警告→改 t=1（v=9.8≠d=4.9）＋oracle 改錨＋registry 指紋更新；(2) R2 figure g 箭頭缺單位「g≈9.8」緊鄰「v=9.8 公尺／秒」坐實 g-是-速度迷思→g 標補三行含「公尺／秒²」、箭頭左移不溢出（harvest_override 留痕）；(3) R2' _note 殘留過時配對「t=2 例（19.6、4.9）」→更正；(4) R3 Q3 rationale 把速度值稱「g」→改「落下 1 秒的速度」。sha 鏈 8e0280f7→992260→29d4f5b6→60d15ea7。★class 教訓：改 worked-example 輸入值後務必掃清所有 _note/rationale 舊配對與單位錯稱；figure 量必帶單位尤其頁面另處同數字帶不同單位時。
+
 ## 2026-11-18 18:57 ★ sci.t_mid.phys-kin.vt-graph 等加速度的 v-t 圖（斜率＝加速度、面積＝位移） 5/5 DONE-GATE → phys-kin 7/14
 - **sci_phys_kin_vt_graph frozen `4034e07fd9e398b3`**（rounds 1-5 連 5 clean、L3 全 exit0）。t_mid 國中會考。前置＝acceleration。R15 gloss（v-t 圖 velocity-time graph）grep -o=2。
 - 內容：v-t 圖（橫軸時間、縱軸速度）；等加速度＝一條直線、斜率 Δv÷Δt＝加速度；線下面積＝位移（速度×時間累積）；斜率與面積兩概念分清、縱軸讀到的是速度。figure＝座標平面 藍直線 v=2t＋淡綠三角形填色(面積=位移)＋沿線標(斜率=加速度)＋結論 斜率2=加速度、面積½×5×10=25=位移。Q3/Q4 共用 (0,0)→(4,12) 配對考斜率 12÷4=3 與面積 ½×4×12=24。oracle kin_vt_graph（v=2t、斜率2、[0,5]面積25）repro PASS。

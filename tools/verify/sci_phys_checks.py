@@ -38,9 +38,10 @@ def kin_vt_graph():
     assert diff(v, t) == 2 and integrate(v, (t, 0, 5)) == 25
     return _ok("phys-kin.vt-graph", "v=2t：斜率=a=2、[0,5]面積=位移=25")
 def kin_free_fall():
-    t = 2
-    assert _close(g*t, 19.6) and _close(0.5*g*t**2, 19.6)  # v=gt, d=½gt²
-    return _ok("phys-kin.free-fall", "自由落體 t=2s：v=gt=19.6、d=½gt²=19.6")
+    # t=1：v 與 d 數字不同（9.8 vs 4.9），示範 v≠d，避免 t=2 的 19.6/19.6 巧合誤導
+    assert _close(g*1, 9.8) and _close(0.5*g*1**2, 4.9)      # v=gt, d=½gt²
+    assert _close(g*2, 19.6) and _close(g*3, 29.4)           # 末速度隨時間（Q3 t=3）
+    return _ok("phys-kin.free-fall", "自由落體 t=1s：v=gt=9.8、d=½gt²=4.9（v≠d）；v(2)=19.6、v(3)=29.4")
 def kin_uniform_accel():
     v0, a, t = 3, 2, 4
     v = v0+a*t; x = v0*t+0.5*a*t**2

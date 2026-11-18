@@ -1,0 +1,211 @@
+{
+ "_note": "自然島 物理-運動學（phys-kin）strand 第8單元（t_mid 國中會考）。知識點 sci.t_mid.phys-kin.free-fall（自由落體與重力加速度 g）。tier=t_mid（學習者端不顯年段 R11）。全繁體零簡體零 PRC 詞。中文授課無音檔。前置＝acceleration（加速度的定義與單位）。術語附國際英語（R15，★只在 can_do 首次 gloss 一次：自由落體 (free fall)、重力加速度 (gravitational acceleration)；teach/claim body 不重複；自檢用描述文字、不在自檢子句重嵌英文 literal：兩術語英文括號 grep -o 計數應各＝2〔_note 本宣告行一次＋can_do 一次〕）。scope（t_mid 國中會考）：(1) 自由落體＝物體只受重力、從靜止開始往下掉的運動（忽略空氣阻力）；(2) 重力加速度 g≈9.8 公尺／秒²、方向向下，是地球表面附近落體的加速度；(3) 自由落體是等加速度運動，加速度就是 g：末速度 v＝g×t、落下距離 d＝½×g×t²；(4) 忽略空氣阻力時，不同質量的物體落下一樣快（同樣的 g）。例（g＝9.8）：落下 1 秒，末速度＝9.8×1＝9.8 公尺／秒，落下距離＝½×9.8×1²＝4.9 公尺（★刻意用 t=1 使 v 與 d 數字不同，避免 t=2 的 19.6/19.6 巧合坐實『別把 v 和 d 搞混』警告——R1 深 panel 9-agent 一致 DEFECT 教訓）。不含鉛直上拋（vertical-throw 單元）、不含等加速度三公式一般代數運算（uniform-accel 單元）。repro（tools/verify/sci_phys_checks.py::kin_free_fall，repro_gate .venv PASS）錨定『g=9.8、t=1：v=gt=9.8、d=½gt²=4.9（v≠d）；v(2)=19.6、v(3)=29.4』。figure 自檢：一條鉛直落下路徑，物體在 t=0（v=0）、t=1（v=9.8）、t=2（v=19.6）三個位置（球只標速度避免 v/d 混淆），間距越往下越大（表示等加速度），旁邊一個向下箭頭標『g≈9.8 公尺／秒²（向下）』，下方結論『1 秒：末速 v＝9.8、落下距離 d＝4.9（速度≠距離）』；標題『自由落體：等加速度落下，加速度＝g』逐字入 alt 開頭；箭頭向下、標籤不疊不溢出、alt 與 SVG text 逐字一致；幾何 render 核對（三球在同一鉛直線、間距遞增、不裁切）。practice 四答案＝{只受重力從靜止往下掉(Q1 定義),約 9.8 公尺／秒² 方向向下(Q2 g 與方向),29.4 公尺／秒(Q3 v=gt=9.8×3),同時落地因為加速度都是 g(Q4 與質量無關)}；MCQ options bare、每 distractor 乾淨單一誤解（等速下落／單位錯／忘×t／末速距離混／質量影響）、兩兩相異、長度均衡；distractor_rationales key 逐字相符；Q3 用 t=3（v=29.4、d=44.1）與 teach worked 例 t=1（v=9.8、d=4.9）及 figure t=2 速度 19.6 皆不重疊避#10。claim kind=fact。figure-only example 無 body。定義不得反轉：自由落體＝只受重力從靜止落下；g≈9.8 向下；v=gt、d=½gt²。",
+ "page": "sci_phys_kin_free_fall.html",
+ "units": [
+  {
+   "unit_id": "sci.t_mid.phys-kin.free-fall",
+   "title_zh": "自由落體與重力加速度 g",
+   "can_do": "我知道『自由落體 (free fall)』是物體只受重力、從靜止開始往下掉的運動（忽略空氣阻力）。我知道『重力加速度 (gravitational acceleration)』g 大約是 9.8 公尺／秒²、方向向下。我知道自由落體是等加速度運動，加速度就是 g，末速度 v＝g×t、落下距離 d＝½×g×t²。我也知道忽略空氣阻力時，不同輕重的物體落下一樣快。我會算：落下 2 秒（g＝9.8），末速度＝9.8×2＝19.6 公尺／秒。",
+   "situation_group": "運動：描述物體怎麼動",
+   "subject": "sci",
+   "strand": "phys-kin",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "sci.t_mid.phys-kin.free-fall"
+   ],
+   "prerequisites": [
+    "sci.t_mid.phys-kin.acceleration"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ff-def",
+     "text": "自由落體是物體只受重力作用、從靜止開始往下掉的運動（忽略空氣阻力）。因為一路上只有重力拉著，它的加速度固定不變，所以自由落體是一種等加速度運動，這個固定的加速度就叫重力加速度 g。",
+     "kind": "fact",
+     "source_refs": [
+      "自由落體的定義（國中自然）"
+     ],
+     "verification_ref": "自由落體＝等加速度、加速度＝g（國中自然共識）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ff-g",
+     "text": "重力加速度 g 在地球表面附近大約是 9.8 公尺／秒²，方向永遠向下（指向地心）。它的意思和一般加速度一樣：每過 1 秒，往下掉的速度就增加約 9.8 公尺／秒。所以自由落體的末速度 v＝g×t，落下的距離 d＝½×g×t²。例如 g＝9.8、落下 1 秒：末速度＝9.8×1＝9.8 公尺／秒，落下距離＝½×9.8×1²＝4.9 公尺——注意這兩個是不同的量（一個是速度、單位公尺／秒；一個是距離、單位公尺），數字也不一樣。",
+     "kind": "fact",
+     "source_refs": [
+      "重力加速度 g≈9.8 m/s²（國中自然）"
+     ],
+     "verification_ref": "g=9.8,t=1：v=gt=9.8、d=½gt²=4.9（v≠d）（sci_phys_checks::kin_free_fall .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ff-mass",
+     "text": "忽略空氣阻力時，不同質量的物體自由落下一樣快：因為它們的加速度都是同一個 g，和輕重無關。所以一顆重球和一顆輕球從同樣高度同時放手，會同時落地。生活中羽毛比石頭慢，是因為空氣阻力，不是因為它比較輕；在沒有空氣的地方，羽毛和石頭會一起落下。",
+     "kind": "fact",
+     "source_refs": [
+      "落體與質量無關（國中自然）"
+     ],
+     "verification_ref": "同一 g⇒同高度同時落地（國中自然共識；空氣阻力為實務修正）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.free-fall"
+     ],
+     "body": "前面學過加速度（速度變化÷時間），也知道等加速度運動。這一單元看一個最常見的等加速度運動：東西從手上放開、往下掉——自由落體。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.free-fall"
+     ],
+     "body": "① 自由落體＝物體只受重力、從靜止往下掉（忽略空氣阻力）。② 它的加速度固定，叫重力加速度 g，約 9.8 公尺／秒²、方向向下；意思是每過 1 秒往下的速度就增加約 9.8 公尺／秒。③ 因為是等加速度，末速度 v＝g×t、落下距離 d＝½×g×t²。④ 忽略空氣阻力時，輕重不同的物體落下一樣快（加速度都是 g）。例（g＝9.8）：落下 1 秒，末速度＝9.8×1＝9.8 公尺／秒，落下距離＝½×9.8×1²＝4.9 公尺——速度和距離是不同的量，數字也不一樣。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.free-fall"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 200' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='180' y='14' font-size='8.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>自由落體：等加速度落下，加速度＝g</text><line x1='96' y1='34' x2='96' y2='172' stroke='#c7cfd8' stroke-width='1' stroke-dasharray='3 3'/><circle cx='96' cy='40' r='5' fill='#2563a6'/><text x='112' y='43' font-size='8.5' fill='#33475b'>t＝0 秒：v＝0</text><circle cx='96' cy='70' r='5' fill='#5b8def'/><text x='112' y='73' font-size='8.5' fill='#33475b'>t＝1 秒：v＝9.8 公尺／秒</text><circle cx='96' cy='162' r='5' fill='#c2535d'/><text x='112' y='165' font-size='8.5' fill='#33475b'>t＝2 秒：v＝19.6 公尺／秒</text><line x1='294' y1='46' x2='294' y2='150' stroke='#c08a2d' stroke-width='2'/><polygon points='294,158 289,148 299,148' fill='#c08a2d'/><text x='305' y='96' font-size='7.5' fill='#c08a2d'>g≈9.8</text><text x='305' y='107' font-size='7.5' fill='#c08a2d'>公尺／秒²</text><text x='305' y='118' font-size='7.5' fill='#c08a2d'>（向下）</text><text x='180' y='190' font-size='8.5' fill='#33475b' text-anchor='middle'>1 秒：末速 v＝g t＝9.8 公尺／秒、落下距離 d＝½g t²＝4.9 公尺（速度≠距離）</text></g></svg>",
+      "alt": "標題「自由落體：等加速度落下，加速度＝g」。一條鉛直的落下路徑（灰色虛線），上面三顆球：最上面藍球標「t＝0 秒：v＝0」，中間淺藍球標「t＝1 秒：v＝9.8 公尺／秒」，最下面紅球標「t＝2 秒：v＝19.6 公尺／秒」；球和球之間的距離越往下越大，表示越掉越快（等加速度）。右邊一個橘色向下箭頭標「g≈9.8 公尺／秒²（向下）」。下方寫「1 秒：末速 v＝g t＝9.8 公尺／秒、落下距離 d＝½g t²＝4.9 公尺（速度≠距離）」。",
+      "caption": "自由落體是等加速度運動，加速度就是重力加速度 g（約 9.8 公尺／秒²、向下）。每過 1 秒速度就增加約 9.8 公尺／秒，所以球越掉越快，位置間距越來越大。末速度 v＝g×t、落下距離 d＝½×g×t²是兩個不同的量：落下 1 秒時末速度是 9.8 公尺／秒、落下距離是 4.9 公尺（數字不一樣，單位也不同）。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.free-fall"
+     ],
+     "body": "最後練「自由落體」。重點：(1) 自由落體＝只受重力、從靜止往下掉；(2) 重力加速度 g≈9.8 公尺／秒²、向下，末速度 v＝g×t、距離 d＝½g t²；(3) 忽略空氣阻力時輕重不同的物體落下一樣快。小提醒：末速度（v＝gt）和落下距離（d＝½gt²）是兩個不同的量，別把它們搞混；g 是加速度（單位公尺／秒²），不是速度。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QF-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "下列哪一個最能描述「自由落體」？",
+     "answer": "物體只受重力、從靜止開始往下掉的運動",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.free-fall"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-kin.free-fall"
+     ],
+     "options": [
+      "物體只受重力、從靜止開始往下掉的運動",
+      "物體以固定速度（等速度）往下掉的運動",
+      "物體被用力往上丟出去的運動",
+      "物體主要被空氣阻力推著走的運動"
+     ],
+     "distractor_rationales": {
+      "物體以固定速度（等速度）往下掉的運動": "自由落體越掉越快（等加速度），不是等速度；它的速度一直在增加。",
+      "物體被用力往上丟出去的運動": "那是往上拋，不是自由落體；自由落體是從靜止開始、只受重力往下掉。",
+      "物體主要被空氣阻力推著走的運動": "自由落體的定義是忽略空氣阻力、只受重力；空氣阻力不是主角。"
+     },
+     "answer_evidence": [
+      "c-ff-def"
+     ],
+     "feedback": "自由落體＝只受重力、從靜止開始往下掉（忽略空氣阻力），是一種等加速度運動。"
+    },
+    {
+     "question_id": "QF-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "關於重力加速度 g，下列哪一個正確？",
+     "answer": "大約 9.8 公尺／秒²，方向向下",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.free-fall"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-kin.free-fall"
+     ],
+     "options": [
+      "大約 9.8 公尺／秒²，方向向下",
+      "大約 9.8 公尺／秒，方向向下",
+      "大約 9.8 公尺／秒²，方向向上",
+      "每個物體的 g 都不一樣大"
+     ],
+     "distractor_rationales": {
+      "大約 9.8 公尺／秒，方向向下": "單位錯了：g 是加速度，單位是公尺／秒²（每秒速度改變量），不是速度的公尺／秒。",
+      "大約 9.8 公尺／秒²，方向向上": "方向錯了：重力把物體往下拉，g 的方向是向下（指向地心），不是向上。",
+      "每個物體的 g 都不一樣大": "在同一個地方，g 對所有物體都一樣（約 9.8）；落體快慢和質量無關。"
+     },
+     "answer_evidence": [
+      "c-ff-g"
+     ],
+     "feedback": "重力加速度 g≈9.8 公尺／秒²（加速度單位），方向向下。"
+    },
+    {
+     "question_id": "QF-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個物體自由落下（g＝9.8 公尺／秒²），落了 3 秒。它這時的速度大約是多少？",
+     "answer": "29.4 公尺／秒",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.free-fall"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-kin.free-fall"
+     ],
+     "options": [
+      "29.4 公尺／秒",
+      "9.8 公尺／秒",
+      "44.1 公尺／秒",
+      "88.2 公尺／秒"
+     ],
+     "distractor_rationales": {
+      "9.8 公尺／秒": "這是只落下 1 秒時的速度（g×1＝9.8），忘了用題目給的 3 秒；末速度 v＝g×t＝9.8×3＝29.4。",
+      "44.1 公尺／秒": "44.1 是落下的距離 d＝½×9.8×3²，不是速度；末速度要用 v＝g×t＝29.4。",
+      "88.2 公尺／秒": "這把時間平方了（9.8×3²＝88.2）；末速度是 v＝g×t＝9.8×3＝29.4，時間不平方。"
+     },
+     "answer_evidence": [
+      "c-ff-g"
+     ],
+     "feedback": "末速度 v＝g×t＝9.8×3＝29.4 公尺／秒。（距離才用 ½gt²。）"
+    },
+    {
+     "question_id": "QF-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "忽略空氣阻力，把一顆重球和一顆輕球從同樣的高度同時放開。結果會怎樣？",
+     "answer": "兩顆同時落地，因為加速度都是 g",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.free-fall"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-kin.free-fall"
+     ],
+     "options": [
+      "兩顆同時落地，因為加速度都是 g",
+      "重球先落地，因為它比較重",
+      "輕球先落地，因為它比較輕",
+      "重球用一半的時間就落地"
+     ],
+     "distractor_rationales": {
+      "重球先落地，因為它比較重": "忽略空氣阻力時，落下快慢和質量無關；兩顆的加速度都是 g，會同時落地。",
+      "輕球先落地，因為它比較輕": "輕重都不影響；兩顆加速度都是 g，同時落地。生活中羽毛慢是空氣阻力造成的。",
+      "重球用一半的時間就落地": "時間和質量無關；同樣高度、同樣 g，兩顆落地時間一樣。"
+     },
+     "answer_evidence": [
+      "c-ff-mass"
+     ],
+     "feedback": "忽略空氣阻力時，所有物體的加速度都是 g，所以同高度同時放開會同時落地，和輕重無關。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（自由落體＝只受重力、從靜止往下掉，是等加速度運動；重力加速度 g≈9.8 公尺／秒²、向下；末速度 v＝g×t、距離 d＝½g t²，例 g=9.8 落 1 秒 v=9.8、d=4.9（速度與距離是不同的量、數字不同）；落 3 秒 v=9.8×3=29.4；忽略空氣阻力輕重落下一樣快）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

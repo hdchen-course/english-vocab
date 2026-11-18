@@ -25170,14 +25170,21 @@
     {
      "at": "2026-11-18T15:59:00+08:00",
      "prior_frozen_sha": "7ed9c65d1f6e3588",
-     "prior_rounds_cleared": ["wr2qwju6z", "wuuig59ve", "w1mmr1yvu", "w502tb43n"],
+     "prior_rounds_cleared": [
+      "wr2qwju6z",
+      "wuuig59ve",
+      "w1mmr1yvu",
+      "w502tb43n"
+     ],
      "reason": "r4 深 panel CONFIRMED(major,readability)：claim/teach 用「同樣價錢時」「照同樣價錢買」，但「價錢」可讀成總價固定→與「數量與總價成比例」矛盾；真正條件是單價固定→兩處改「同樣單價」。clean 輪才發現、設 harvest_override 留痕；figure 未動、四角色仍有效。重凍 7ed9c65d→c71cdefe 重收斂。",
      "harvest_override": true
     },
     {
      "at": "2026-11-18T15:42:00+08:00",
      "prior_frozen_sha": "204250d0f97e7eef",
-     "prior_rounds_cleared": ["r2-r6 2026-11-13"],
+     "prior_rounds_cleared": [
+      "r2-r6 2026-11-13"
+     ],
      "reason": "HD 目視 friction『線似乎沒畫好』：figure 交叉相乘弧端點未對準數字中心且 y=78 穿過數字字身→重畫，外項綠弧貼 2↔6 上緣(M67 68 Q143 30 219 68)、內項棕弧貼 3↔4 下緣(M111 96 Q143 126 175 96)。render 四角色 PASS。alt 位置無關、未動。重凍 204250d0→7ed9c65d 重收斂。"
     }
    ],
@@ -25435,7 +25442,9 @@
     {
      "at": "2026-11-18T15:42:30+08:00",
      "prior_frozen_sha": "3bd98f79ab3a188e",
-     "prior_rounds_cleared": ["r1-r5 2026-11-13"],
+     "prior_rounds_cleared": [
+      "r1-r5 2026-11-13"
+     ],
      "reason": "HD 目視 friction：正比圖三座標標籤 (1,2)(2,4)(3,6) 原在點左上、壓到藍線→依 HD 指示全部移到各點右側(text-anchor=start, x=點x+9, y=點y+4)、落在上升線的右下淨空區不蓋線。render 四角色 PASS。重凍 3bd98f79→5b92fe25 重收斂。"
     },
     {
@@ -34426,6 +34435,78 @@
     }
    ]
   },
+  "sci_phys_kin_free_fall.html": {
+   "frozen_sha": "60d15ea7edd4fc4f",
+   "rounds": [
+    {
+     "round": 1,
+     "content_sha": "60d15ea7edd4fc4f",
+     "clean": true,
+     "l3_exit": 0,
+     "recorded_at": "2026-11-18T19:27:00",
+     "audited": true,
+     "note": "最終 sha（4 缺陷皆修）R1 panel confirmedCount:0, coverageComplete:true, L3 exit0 anchors 49/103/159"
+    },
+    {
+     "round": 2,
+     "content_sha": "60d15ea7edd4fc4f",
+     "clean": true,
+     "l3_exit": 0,
+     "recorded_at": "2026-11-18T19:29:30",
+     "audited": true,
+     "note": "最終 sha R2 圖表判讀 panel confirmedCount:0, coverageComplete:true, L3 exit0 anchors 48/106/159"
+    },
+    {
+     "round": 3,
+     "content_sha": "60d15ea7edd4fc4f",
+     "clean": true,
+     "l3_exit": 0,
+     "recorded_at": "2026-11-18T19:29:50",
+     "audited": true,
+     "note": "最終 sha R3 學習神經/教學設計 panel confirmedCount:0, coverageComplete:true, L3 exit0 anchors 44/106/159"
+    },
+    {
+     "round": 4,
+     "content_sha": "60d15ea7edd4fc4f",
+     "clean": true,
+     "l3_exit": 0,
+     "recorded_at": "2026-11-18T19:30:30",
+     "audited": true,
+     "note": "最終 sha R4 小四→高一成長模擬 panel confirmedCount:0, coverageComplete:true, L3 exit0 anchors 55/106/159"
+    },
+    {
+     "round": 5,
+     "content_sha": "60d15ea7edd4fc4f",
+     "clean": true,
+     "l3_exit": 0,
+     "recorded_at": "2026-11-18T19:32:00",
+     "audited": true,
+     "note": "最終 sha R5 物理教育+繁中校對 panel confirmedCount:0, coverageComplete:true, L3 exit0 anchors 48/106/159（5 連續 clean 達成）"
+    }
+   ],
+   "_note": "phys-kin 8/14 free-fall（自由落體與重力加速度 g，t_mid 國中會考）。figure=鉛直落下 三球(t=0 v=0／t=1 v=9.8／t=2 v=19.6)間距遞增＋g向下箭頭(含單位 公尺／秒²)＋結論 1 秒 v=9.8≠d=4.9（速度≠距離）；oracle kin_free_fall 錨 t=1（v=9.8、d=4.9）+t=2/t=3 速度 repro PASS。前置 acceleration。",
+   "_defect_fix_trace2": [
+    {
+     "at": "2026-11-18T19:24:00+08:00",
+     "prior_frozen_sha": "29d4f5b621621f6f",
+     "harvest_override": "sci_phys_kin_free_fall.html（已 touch 留痕）",
+     "reason": "新 sha 兩真缺陷再修（R2 minor + R3 major，皆 harvest 後晚修）：(1) _note 殘留過時配對『teach 的 t=2 例（19.6、4.9）』——4.9 是 t=1 距離、19.6 是 t=2 速度，無單一 t=2 例同產此對（worked t=2→t=1 改後遺留，誤導後續作者）→改為『Q3 t=3（v=29.4、d=44.1）與 teach worked t=1（v=9.8、d=4.9）及 figure t=2 速度 19.6 皆不重疊』；(2) Q3「9.8 公尺／秒」distractor rationale 寫『這只是 g』把速度單位值稱為 g，與本單元 g＝加速度(m/s²)教學矛盾、恐重植 Q2 迷思→改『這是只落下 1 秒時的速度（g×1＝9.8），忘了用題目給的 3 秒』。sha 29d4f5b6→60d15ea7，全新 5-clean。★class 教訓：改 worked-example 的輸入值後，務必同步掃清所有 _note/rationale 的舊數字配對與『把速度值叫 g』這類單位錯稱。"
+    }
+   ],
+   "_defect_fix_trace": [
+    {
+     "at": "2026-11-18T19:05:00+08:00",
+     "prior_frozen_sha": "8e0280f77748f402",
+     "reason": "R1 深 panel（9-agent）一致 DEFECT（major, instructional-design, owned criterion b-hard-to-understand）：worked example 原用 t=2s，正好是 v=gt=19.6 公尺／秒 與 d=½gt²=19.6 公尺 數字相同的唯一非零時刻，反而坐實單元自己的警告『v 和 d 是不同的量、別搞混』。修：combined v+d 例改用 t=1（v=9.8、d=4.9 數字不同、單位不同），figure 三球速度進程保留、結論只在 t=1 算 d 並明標『速度≠距離』；oracle kin_free_fall 改錨 t=1 + 保留 t=2/t=3 速度檢查，registry 指紋 1ff921→774a680。新 content_sha 8e0280f7→992260292bee0aaa，走全新 5-clean。★class 教訓：worked-example 不可選『兩個要讀者分清的量數字恰好相同』的輸入，否則坐實『別搞混』的反效果。"
+    },
+    {
+     "at": "2026-11-18T19:15:00+08:00",
+     "prior_frozen_sha": "992260292bee0aaa",
+     "harvest_override": "sci_phys_kin_free_fall.html（已 touch，留痕晚修）",
+     "reason": "R2 深 panel（9-agent）晚修真缺陷（major, instructional-design, b-hard-to-understand）：figure g 箭頭標只寫『g≈9.8（向下）』無單位，緊鄰 t=1 球『v＝9.8 公尺／秒』，兩者同為 9.8 但只有 v 帶單位→坐實 Q2 要破除的『g 是速度』迷思，且與 _note 自檢規格『g≈9.8 公尺／秒²（向下）』不符。修：g 箭頭標改三行堆疊『g≈9.8／公尺／秒²／（向下）』補回加速度單位、箭頭左移至 x=294 使單位不溢出 viewBox、alt 同步補單位。前 3 輪 clean（R1/R3/R4，sha 992260）作廢，新 sha 29d4f5b6 走全新 5-clean。★class 教訓：figure 的量一定要帶單位，尤其當頁面另一處同數字的量帶不同單位時（9.8 m/s² vs 9.8 m/s），缺單位＝坐實單位混淆。"
+    }
+   ]
+  },
   "sci_phys_kin_vt_graph.html": {
    "frozen_sha": "4034e07fd9e398b3",
    "rounds": [
@@ -34639,7 +34720,10 @@
     {
      "at": "2026-11-18T15:38:00+08:00",
      "prior_frozen_sha": "80c951de055cdf5f",
-     "prior_rounds_cleared": ["w2rthgtte", "wp15uxd4i"],
+     "prior_rounds_cleared": [
+      "w2rthgtte",
+      "wp15uxd4i"
+     ],
      "reason": "r3 深 9-agent panel CONFIRMED(minor,instructional-design)：figure SVG 綠色標題『直線上往左移動 6 公尺、用 3 秒』未逐字入 alt、違反 _note 自宣告『alt 與 SVG text 逐字一致』且 3 秒 datum 僅隱含→把標題補進 alt 開頭。clean 輪才發現真缺陷、依流程設 harvest_override 留痕；alt 屬 sidecar、figure SVG 未動、四角色仍有效；重凍 80c951de→0d2ff9a3 重收斂。此 class＝SVG title 須逐字入 alt，往後 phys-kin 單元沿用。"
     }
    ]
