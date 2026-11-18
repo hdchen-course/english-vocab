@@ -1,3 +1,9 @@
+## 2026-11-18 19:52 ★ sci.t_adv.phys-kin.uniform-accel-eq 等加速度運動的三個公式 5/5 DONE-GATE → phys-kin 9/14
+- **sci_phys_kin_uniform_accel frozen `70653d3087012dda`**（rounds 1-5 連 5 clean、L3 全 exit0）。t_adv 學測。前置＝acceleration＋vt-graph。R15 gloss（等加速度運動 uniformly accelerated motion）grep -o=2。
+- 內容：三公式 v＝v₀＋at（沒 x）、x＝v₀t＋½at²（沒 v）、v²＝v₀²＋2ax（沒 t）；選式技巧＝看題目缺哪個量挑不含它的那式。figure＝三公式選式卡＋符號對照（←指向各式、標該式缺哪量）。oracle kin_uniform_accel 錨 teach(v0=3,a=2,t=4→v=11,x=28)＋practice(v0=2,a=4,t=5→v=22,x=60) 三公式一致 repro PASS。
+- DONE-GATE 全綠：per_page 626/626／scan PASS／pedagogy 0 hard／question CLEAN／schema rc0／repro PASS／rsvg render 四角色過。
+- ★收斂史：R1 深 panel(17-agent) 抓 3 真缺陷（含 1 blocker）全在 MCQ distractor rationale：Q3「110」rationale 說「t 沒平方」實得 20 非 110（真路徑＝忘½或 22×5）、Q3「30」無乾淨單錯路徑（需雙錯）→換「50」(漏 v₀t)、Q2「40」殘留不完整式「(2+4)×…」→刪。修後 Q3 四選項 60/110/50/20 各對應一條乾淨單錯。oracle 擴充錨 practice 數值防造假、registry 指紋 1ec7227d→9d31a826。sha 794203f9→70653d30。★class 教訓：distractor rationale 的算術必須真能得到該 distractor 值、且每值對應一條乾淨單一誤解（非雙錯）。
+
 ## 2026-11-18 19:32 ★ sci.t_mid.phys-kin.free-fall 自由落體與重力加速度 g 5/5 DONE-GATE → phys-kin 8/14
 - **sci_phys_kin_free_fall frozen `60d15ea7edd4fc4f`**（rounds 1-5 連 5 clean、L3 全 exit0）。t_mid 國中會考。前置＝acceleration。R15 gloss（自由落體 free fall／重力加速度 gravitational acceleration）各 grep -o=2。
 - 內容：自由落體＝只受重力、從靜止往下掉（忽略空氣阻力）、是等加速度運動；g≈9.8 公尺／秒²、方向向下；v＝g×t、d＝½×g×t²；忽略空氣阻力輕重落下一樣快。figure＝鉛直落下 三球(t=0 v=0／t=1 v=9.8／t=2 v=19.6)間距遞增示等加速度＋g向下箭頭(三行含單位 公尺／秒²)＋結論 1 秒 v=9.8≠d=4.9（速度≠距離）。oracle kin_free_fall 錨 t=1（v=9.8、d=4.9）+t=2/t=3 速度 repro PASS。

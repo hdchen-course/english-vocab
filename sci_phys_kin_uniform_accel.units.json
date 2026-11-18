@@ -1,0 +1,212 @@
+{
+ "_note": "自然島 物理-運動學（phys-kin）strand 第9單元（t_adv 學測）。知識點 sci.t_adv.phys-kin.uniform-accel-eq（等加速度運動三公式運用）。tier=t_adv（學習者端不顯年段 R11）。全繁體零簡體零 PRC 詞。中文授課無音檔。前置＝acceleration（加速度定義）、vt-graph（v-t 圖斜率=加速度、面積=位移，三公式由此導出）。術語附國際英語（R15，★只在 can_do 首次 gloss 一次：等加速度運動 (uniformly accelerated motion)；teach/claim body 不重複；英文括號 grep -o 計數應＝2〔_note 本宣告行一次＋can_do 一次〕）。scope（學測 t_adv）：加速度固定（等加速度）時，用符號 v₀＝初速度、v＝末速度、a＝加速度、t＝時間、x＝位移，三個公式都成立：(1) v＝v₀＋at（沒有 x）；(2) x＝v₀t＋½at²（沒有 v）；(3) v²＝v₀²＋2ax（沒有 t）。解題技巧：看題目缺哪個量、或不想算哪個量，就選剛好不含它的那一式。例：v₀=3、a=2、t=4 → v=3+2×4=11、x=3×4+½×2×4²=28（且 v²=11²=121=v₀²+2ax=9+2×2×28）。不含非等加速度、不含相對運動、不含鉛直上拋細節（另單元）。repro（tools/verify/sci_phys_checks.py::kin_uniform_accel，repro_gate .venv PASS）錨定 teach 例（v=11、x=28）與 practice 例（v0=2,a=4,t=5→v=22、x=60）三公式一致。figure 自檢：三張公式卡，各標該式『沒有用到的量』（卡1 v=v₀+at 沒有 x、卡2 x=v₀t+½at² 沒有 v、卡3 v²=v₀²+2ax 沒有 t），下方符號對照（v₀初速度、v末速度、a加速度、t時間、x位移）；標題『等加速度三公式：看題目缺哪個量選式子』逐字入 alt 開頭；卡片不疊不溢出、alt 與 SVG text 逐字一致。practice 四答案＝{v＝v₀＋at(Q1 沒有位移 x 的式子),22 公尺／秒(Q2 v=2+4×5),60 公尺(Q3 x=2×5+½×4×5²),v²＝v₀²＋2ax(Q4 沒有時間 t 的式子)}；Q2/Q3 共用 v₀=2、a=4、t=5；MCQ options bare、每 distractor 乾淨單一誤解（選錯式/忘½/漏初速項/t 未平方/相乘）、兩兩相異、長度均衡；distractor_rationales key 逐字相符；practice 數值(2,4,5,22,60)與 teach(3,2,4,11,28)不重疊避#10。claim kind=fact。figure-only example 無 body。定義不得反轉：三式分別不含 x / v / t；選不含你不要算的量的式子。",
+ "page": "sci_phys_kin_uniform_accel.html",
+ "units": [
+  {
+   "unit_id": "sci.t_adv.phys-kin.uniform-accel-eq",
+   "title_zh": "等加速度運動的三個公式",
+   "can_do": "我會用『等加速度運動 (uniformly accelerated motion)』的三個公式解題：v＝v₀＋at、x＝v₀t＋½at²、v²＝v₀²＋2ax（其中 v₀ 是初速度、v 是末速度、a 是加速度、t 是時間、x 是位移）。我知道加速度固定時這三式都成立，而且可以看題目缺哪個量、就選剛好不含那個量的式子。我會算：初速度 3、加速度 2、經過 4 秒，末速度＝3＋2×4＝11，位移＝3×4＋½×2×4²＝28。",
+   "situation_group": "運動：描述物體怎麼動",
+   "subject": "sci",
+   "strand": "phys-kin",
+   "est_minutes": 14,
+   "knowledge_point_ids": [
+    "sci.t_adv.phys-kin.uniform-accel-eq"
+   ],
+   "prerequisites": [
+    "sci.t_mid.phys-kin.acceleration",
+    "sci.t_mid.phys-kin.vt-graph"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ua-three",
+     "text": "當加速度固定（等加速度運動）時，用 v₀ 表示初速度、v 表示末速度、a 表示加速度、t 表示時間、x 表示位移，有三個公式同時成立：v＝v₀＋at、x＝v₀t＋½at²、v²＝v₀²＋2ax。第一式由加速度定義（a＝速度變化÷時間）得到；第二式由 v-t 圖線下面積（位移）得到；第三式把時間消掉、只連結速度、加速度與位移。",
+     "kind": "fact",
+     "source_refs": [
+      "等加速度運動三公式（高中物理 學測）"
+     ],
+     "verification_ref": "v0=3,a=2,t=4：v=11、x=28、v²=v₀²+2ax 一致（sci_phys_checks::kin_uniform_accel .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ua-pick",
+     "text": "解題技巧：這三個公式各自「少了一個量」——v＝v₀＋at 沒有位移 x、x＝v₀t＋½at² 沒有末速度 v、v²＝v₀²＋2ax 沒有時間 t。所以看題目沒給、或你不想算的是哪個量，就挑剛好不含那個量的式子，一步就能解，不必先算中間量。",
+     "kind": "fact",
+     "source_refs": [
+      "三公式的選用（高中物理 學測）"
+     ],
+     "verification_ref": "三式分別不含 x / v / t（代數恆等）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ua-worked",
+     "text": "示範：一個物體初速度 3 公尺／秒、加速度 2 公尺／秒²、經過 4 秒。求末速度用 v＝v₀＋at＝3＋2×4＝11 公尺／秒；求位移用 x＝v₀t＋½at²＝3×4＋½×2×4²＝12＋16＝28 公尺。檢查：v²＝11²＝121，v₀²＋2ax＝3²＋2×2×28＝9＋112＝121，兩者相等，三式彼此一致。",
+     "kind": "fact",
+     "source_refs": [
+      "三公式運用示範（高中物理 學測）"
+     ],
+     "verification_ref": "v=11、x=28、121=121（sci_phys_checks::kin_uniform_accel .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.uniform-accel-eq"
+     ],
+     "body": "前面學過加速度（速度變化÷時間）和 v-t 圖（斜率＝加速度、線下面積＝位移）。這一單元把加速度固定時的運動，整理成三個好用的公式，並學會怎麼挑式子。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.uniform-accel-eq"
+     ],
+     "body": "① 符號：v₀ 初速度、v 末速度、a 加速度、t 時間、x 位移。② 加速度固定時三個公式都成立：v＝v₀＋at、x＝v₀t＋½at²、v²＝v₀²＋2ax。③ 選式技巧：三式各少一個量（第一式沒有 x、第二式沒有 v、第三式沒有 t），看題目缺哪個量就選不含它的那式。④ 示範：v₀=3、a=2、t=4 → 末速度 v＝3＋2×4＝11；位移 x＝3×4＋½×2×4²＝28。看下面的圖整理，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.uniform-accel-eq"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 180' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='180' y='16' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>等加速度三公式：看題目缺哪個量選式子</text><rect x='24' y='30' width='312' height='30' rx='5' fill='#eef3f8' stroke='#5b8def' stroke-width='1'/><text x='36' y='49' font-size='11' fill='#2563a6' font-weight='bold'>v ＝ v₀ ＋ a t</text><text x='210' y='49' font-size='9' fill='#c2535d'>← 這式沒有用到 x（位移）</text><rect x='24' y='66' width='312' height='30' rx='5' fill='#eef3f8' stroke='#5b8def' stroke-width='1'/><text x='36' y='85' font-size='11' fill='#2563a6' font-weight='bold'>x ＝ v₀ t ＋ ½ a t²</text><text x='210' y='85' font-size='9' fill='#c2535d'>← 這式沒有用到 v（末速度）</text><rect x='24' y='102' width='312' height='30' rx='5' fill='#eef3f8' stroke='#5b8def' stroke-width='1'/><text x='36' y='121' font-size='11' fill='#2563a6' font-weight='bold'>v² ＝ v₀² ＋ 2 a x</text><text x='210' y='121' font-size='9' fill='#c2535d'>← 這式沒有用到 t（時間）</text><text x='180' y='152' font-size='8.5' fill='#33475b' text-anchor='middle'>v₀＝初速度　v＝末速度　a＝加速度　t＝時間　x＝位移</text><text x='180' y='170' font-size='8.5' fill='#33475b' text-anchor='middle'>題目沒給（或不想算）哪個量，就挑不含它的那一式</text></g></svg>",
+      "alt": "標題「等加速度三公式：看題目缺哪個量選式子」。三張淺藍色卡片由上而下：第一張寫「v ＝ v₀ ＋ a t」，右邊標「← 這式沒有用到 x（位移）」；第二張寫「x ＝ v₀ t ＋ ½ a t²」，右邊標「← 這式沒有用到 v（末速度）」；第三張寫「v² ＝ v₀² ＋ 2 a x」，右邊標「← 這式沒有用到 t（時間）」。下方符號對照：「v₀＝初速度　v＝末速度　a＝加速度　t＝時間　x＝位移」，以及「題目沒給（或不想算）哪個量，就挑不含它的那一式」。",
+      "caption": "等加速度運動的三個公式，重點是每一式都剛好少一個量：v＝v₀＋at 沒有位移 x、x＝v₀t＋½at² 沒有末速度 v、v²＝v₀²＋2ax 沒有時間 t。解題時看題目缺哪個量，就挑不含那個量的式子，一步到位。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.uniform-accel-eq"
+     ],
+     "body": "最後練「三公式運用」。重點：(1) 三式 v＝v₀＋at、x＝v₀t＋½at²、v²＝v₀²＋2ax 在加速度固定時都成立；(2) 三式各少一個量（x／v／t），看題目缺哪個就挑不含它的那式；(3) 代入前先把 v₀、v、a、t、x 哪些已知、哪些要求分清楚。小提醒：½at² 的 t 要平方，別只乘一次；a 若是減速要帶負號。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QU-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "題目給了初速度、加速度和時間，要直接求末速度（不必算位移）。用下列哪一個公式最直接？",
+     "answer": "v ＝ v₀ ＋ a t",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.uniform-accel-eq"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-kin.uniform-accel-eq"
+     ],
+     "options": [
+      "v ＝ v₀ ＋ a t",
+      "x ＝ v₀ t ＋ ½ a t²",
+      "v² ＝ v₀² ＋ 2 a x",
+      "x ＝ ½（v₀ ＋ v）t"
+     ],
+     "distractor_rationales": {
+      "x ＝ v₀ t ＋ ½ a t²": "這式算的是位移 x，而且沒有末速度 v；題目要直接求 v，應該用 v＝v₀＋at。",
+      "v² ＝ v₀² ＋ 2 a x": "這式沒有時間 t、卻需要位移 x；題目給的是時間、要求 v，用 v＝v₀＋at 一步就好。",
+      "x ＝ ½（v₀ ＋ v）t": "這式要先知道末速度 v 才能算（還含 x）；題目正是要求 v，不能用它直接求 v。"
+     },
+     "answer_evidence": [
+      "c-ua-pick"
+     ],
+     "feedback": "已知 v₀、a、t 要直接求末速度 v，用沒有位移 x 的那式：v＝v₀＋at。"
+    },
+    {
+     "question_id": "QU-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個物體做等加速度運動，初速度 2 公尺／秒、加速度 4 公尺／秒²，經過 5 秒。它的末速度是多少？",
+     "answer": "22 公尺／秒",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.uniform-accel-eq"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-kin.uniform-accel-eq"
+     ],
+     "options": [
+      "22 公尺／秒",
+      "20 公尺／秒",
+      "40 公尺／秒",
+      "11 公尺／秒"
+     ],
+     "distractor_rationales": {
+      "20 公尺／秒": "這只算了加速度×時間（4×5＝20），忘了加初速度；v＝v₀＋at＝2＋20＝22。",
+      "40 公尺／秒": "這是把三個數字相乘算錯（2×4×5＝40）；加速度要先乘時間再加初速度，v＝v₀＋at＝2＋4×5＝22。",
+      "11 公尺／秒": "這是另一組數字（v₀=3、a=2、t=4）的答案，不是本題；本題 v＝2＋4×5＝22。"
+     },
+     "answer_evidence": [
+      "c-ua-worked"
+     ],
+     "feedback": "v＝v₀＋at＝2＋4×5＝2＋20＝22 公尺／秒。"
+    },
+    {
+     "question_id": "QU-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "同一個物體（初速度 2 公尺／秒、加速度 4 公尺／秒²、經過 5 秒）。這 5 秒的位移是多少？",
+     "answer": "60 公尺",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.uniform-accel-eq"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-kin.uniform-accel-eq"
+     ],
+     "options": [
+      "60 公尺",
+      "110 公尺",
+      "50 公尺",
+      "20 公尺"
+     ],
+     "distractor_rationales": {
+      "110 公尺": "這把 ½ 忘了乘（2×5＋4×5²＝10＋100＝110），或把整段當末速度×時間（22×5＝110）；正確要乘 ½，x＝v₀t＋½at²＝10＋50＝60。",
+      "50 公尺": "這只算了 ½at²（½×4×5²＝50），漏掉初速度那一項 v₀t＝2×5＝10；完整是 x＝v₀t＋½at²＝10＋50＝60。",
+      "20 公尺": "這把 ½at² 的 t 只乘一次、沒有平方（½×4×5＝10），加上 v₀t＝10 得 20；t 要平方，½×4×5²＝50，x＝10＋50＝60。"
+     },
+     "answer_evidence": [
+      "c-ua-worked"
+     ],
+     "feedback": "x＝v₀t＋½at²＝2×5＋½×4×5²＝10＋½×4×25＝10＋50＝60 公尺。"
+    },
+    {
+     "question_id": "QU-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "題目給了初速度、加速度和位移，但沒有給時間，要求末速度。用哪一個公式最直接？",
+     "answer": "v² ＝ v₀² ＋ 2 a x",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.uniform-accel-eq"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-kin.uniform-accel-eq"
+     ],
+     "options": [
+      "v² ＝ v₀² ＋ 2 a x",
+      "v ＝ v₀ ＋ a t",
+      "x ＝ v₀ t ＋ ½ a t²",
+      "a ＝ （v － v₀） ÷ t"
+     ],
+     "distractor_rationales": {
+      "v ＝ v₀ ＋ a t": "這式需要時間 t，但題目沒給 t；要用不含 t 的那式 v²＝v₀²＋2ax。",
+      "x ＝ v₀ t ＋ ½ a t²": "這式也含時間 t（而且算的是位移不是末速度）；沒有 t 時要用 v²＝v₀²＋2ax。",
+      "a ＝ （v － v₀） ÷ t": "這是加速度的定義式、也含 t，而且要先知道 v；題目沒 t、要求 v，用 v²＝v₀²＋2ax。"
+     },
+     "answer_evidence": [
+      "c-ua-pick"
+     ],
+     "feedback": "沒有時間 t、要連結末速度與位移，用不含 t 的那式：v²＝v₀²＋2ax。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（等加速度三公式：v＝v₀＋at〔沒 x〕、x＝v₀t＋½at²〔沒 v〕、v²＝v₀²＋2ax〔沒 t〕；看題目缺哪個量挑不含它的式子；½at² 的 t 要平方；例 v₀=3,a=2,t=4→v=11、x=28；v₀=2,a=4,t=5→v=2+4×5=22、x=2×5+½×4×5²=60）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

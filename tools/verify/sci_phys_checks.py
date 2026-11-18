@@ -43,10 +43,13 @@ def kin_free_fall():
     assert _close(g*2, 19.6) and _close(g*3, 29.4)           # 末速度隨時間（Q3 t=3）
     return _ok("phys-kin.free-fall", "自由落體 t=1s：v=gt=9.8、d=½gt²=4.9（v≠d）；v(2)=19.6、v(3)=29.4")
 def kin_uniform_accel():
-    v0, a, t = 3, 2, 4
+    v0, a, t = 3, 2, 4                                          # teach 例
     v = v0+a*t; x = v0*t+0.5*a*t**2
-    assert v == 11 and x == 28 and _close(v**2, v0**2+2*a*x)  # 三公式一致
-    return _ok("phys-kin.uniform-accel-eq", "v=v₀+at=11、x=28、v²=v₀²+2ax 一致")
+    assert v == 11 and x == 28 and _close(v**2, v0**2+2*a*x)    # 三公式一致
+    v0b, ab, tb = 2, 4, 5                                       # practice 例（Q2/Q3）
+    vb = v0b+ab*tb; xb = v0b*tb+0.5*ab*tb**2
+    assert vb == 22 and xb == 60 and _close(vb**2, v0b**2+2*ab*xb)
+    return _ok("phys-kin.uniform-accel-eq", "v=v₀+at=11、x=28 一致；practice v0=2,a=4,t=5→v=22、x=60 一致")
 def kin_vertical_throw():
     v0 = 19.6
     assert _close(v0**2/(2*g), 19.6) and _close(v0/g, 2)     # 最高/上升時間
