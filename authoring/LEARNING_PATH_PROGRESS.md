@@ -1,3 +1,7 @@
+## 2026-11-18 12:40 ★ math_geom_quadrilateral_properties 四邊形分類階層圖連線修後重收斂 5/5 DONE-GATE（HD friction 訊號2 結案）
+- 連線端點對齊框邊修正後 frozen `b2b651b2025d2620`（rounds 1-5 連 5 clean、L3 全 exit0）。figure 已於 commit 688dccba6 push、此為 ledger 重收斂結案。DONE-GATE：scan PASS／schema rc0／question CLEAN／pedagogy 0 hard／per_page absent。
+- HD 三 friction 訊號全結案：(1) 先聽快取→版本 bump；(2) 四邊形連線→修圖＋重收斂；(3) 斜面圖幾何→incline 修圖＋5/5 DONE。
+
 ## 2026-11-18 12:33 ★ sci.t_adv.phys-force.incline 斜面上的重力分解 5/5 DONE-GATE 全綠 → 自然島 phys-force 14/17（第6個 t_adv；斜面重力分解單格 SVG）
 - **sci_phys_force_incline frozen `bd38330e78b9696f`**（修圖後 rounds 1-5 連 5 clean、L3 全 exit0）。R15 gloss（正向力 normal force）只 can_do、grep 2/2。
 - DONE-GATE 全綠：scan PASS／unit_schema rc0 無 hard／question CLEAN／pedagogy 0 hard／per_page absent／repro-sci_phys_checks-phys-force.incline PASS（mg sin30°=9.8、mg cos30°≈16.97）／iPad render 4 角色。中文授課無音檔。
