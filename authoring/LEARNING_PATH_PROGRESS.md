@@ -1,3 +1,10 @@
+## 2026-11-18 15:11 ★ sci.t_base.phys-kin.motion-describe 描述位置改變與運動快慢（速率＝距離÷時間）5/5 DONE-GATE → 自然島開新 strand **phys-kin（運動學）1/14**
+- **sci_phys_kin_motion_describe frozen `4131c0abce83ebd6`**（rounds 1-5 連 5 clean、L3 全 exit0）。phys-kin strand 根節點（prerequisites=[]）、t_base 國小。R15 gloss（速率 speed）只 can_do、grep -o=2。中文授課無音檔。units_index 618。
+- 內容：位置改變＝終點−起點（數線 3→8 改變 5 格）；比快慢＝同時間比誰走得遠、同距離比誰用時少；速率＝走的距離÷用的時間，例 100÷10＝每秒 10 公尺。figure＝數線（11刻度、藍起點第3格/紅終點第8格、棕箭頭標「改變5格」）＋速率例一行。不含位移vs路徑/帶號速度/向量（t_mid+）。
+- DONE-GATE 全綠：per_page 618/618 零違規／scan PASS／question CLEAN／pedagogy 0 hard／unit_schema CLEAN／repro-phys-kin.motion-describe PASS（改變5；100÷10＝10）／iPad render 四角色 PASS（數線幾何：刻度均勻、起終點落刻度、棕箭頭正確 attach 終點指向右、字級可讀整塊入視窗、無重疊裁切）。
+- ★phys-kin 全 14 oracle 已預先寫好於 tools/verify/sci_phys_checks.py 且全通過 repro（correctness 錨就緒），只需逐 KP 建 units.json 走 pipeline。首單元零 CONFIRMED 缺陷（r1-r5 全 CLEAN）。
+- 下一步：phys-kin 第2單元＝displacement-path（位移與路徑長的區別，t_mid）；之後 velocity-speed/avg-inst/acceleration/xt-graph/vt-graph/free-fall（t_mid）→ uniform-accel-eq/vertical-throw/vector-kinematics/projectile-h（t_adv）→ projectile-angled/relative-motion（t_sub）。
+
 ## 2026-11-18 14:57 ★★ sci.t_sub.phys-force.newton-2d 二維牛頓第二定律（a＝F÷m，大小用畢氏定理）5/5 DONE-GATE → 自然島 phys-force **17/17 全 binding KP release-grade（整個 phys-force strand 收尾）**
 - **sci_phys_force_newton_2d frozen `55d26ce5d0d6a79f`**（rounds 1-5 連 5 clean、L3 全 exit0）。新建 t_sub 分科單元。R15 gloss（向量 vector）只 can_do、grep -o=2。中文授課無音檔。units_index 617。
 - 內容：二維裡 F、a 都是向量，a＝F÷m＝逐分量各除以質量（ax＝Fx÷m、ay＝Fy÷m）；例 F=(6,8) m=2→a=(3,4)；大小 |a|＝√(ax²+ay²)＝√(3²+4²)＝5（3-4-5 直角三角形）；方向與合力 F 同向、不一定與速度同向。figure＝棕 ax=3／綠 ay=4 兩股＋藍斜邊加速度向量（含箭頭）＋直角標記。

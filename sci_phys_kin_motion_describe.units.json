@@ -1,0 +1,209 @@
+{
+ "_note": "自然島 物理-運動學（phys-kin）strand 第1單元（t_base 國小，運動學 strand 的根）。知識點 sci.t_base.phys-kin.motion-describe（描述物體位置改變與運動快慢）。tier=t_base（國小；學習者端不顯年段 R11）。全繁體零簡體零 PRC 詞。中文授課無音檔。無前置（strand 根節點，prerequisites=[]）。術語附國際英語（R15）：速率 (speed) 只在 can_do 首次 gloss 一次，teach/claim body 不重複（記憶 r15-gloss-once-first-render）；自檢＝搜尋該英文括號 grep -o 應＝2（_note 這句宣告＋can_do），自檢子句不另寫該 literal。scope（t_base 國小，只用國小語彙與整數；不引入位移vs路徑、帶號速度、向量——那些是 t_mid+）：(1) 物體的位置會改變，用『從哪裡到哪裡』描述；位置改變的大小＝終點位置−起點位置（數線上從第3格到第8格，改變了 8−3＝5 格）；(2) 運動有快有慢，比快慢：同樣時間誰走得遠就比較快，或走同樣距離誰用的時間少就比較快；(3) 用一個數量描述快慢＝速率，速率＝走的距離÷用的時間；例 走 100 公尺用 10 秒 → 100÷10＝每秒 10 公尺。repro（tools/verify/sci_phys_checks.py::phys-kin.motion-describe，repro_gate .venv PASS）錨定『位置 3→8 改變5；速率=距離/時間=100/10=10』。figure 自檢：單格＝一條數線（0 到 10、起點第3格、終點第8格、棕色箭頭從起點指終點標「改變 5 格」）＋下方一行速率例「走 100 公尺 ÷ 用 10 秒 ＝ 每秒 10 公尺」；箭頭 polygon 兩翼跨軸對稱、頭短於桿、標籤不疊不溢出、alt 與 SVG text 逐字一致。practice 四答案＝{5 格(Q1 位置改變=終點−起點),每秒 10 公尺(Q2 速率=距離÷時間),甲(Q3 同時間走得遠較快),速率＝走的距離÷用的時間(Q4 快慢的量化)}與 teach 無 #10；MCQ options bare、每 distractor 乾淨單一誤解（Q1→11(3+8相加)/3(起點)/8(終點)；Q2→1000(相乘)/90(相減)/0.1(時間÷距離倒除)；Q3→乙(走得近)/一樣快/無法比較；Q4→距離×時間/距離＋時間/只看走的距離）、兩兩相異、長度均衡；distractor_rationales key 逐字相符；數值對齊 oracle（改變5、100÷10＝10）。claim kind=fact。figure-only example 無 body。定義不得反轉：速率＝距離÷時間（不是時間÷距離）；位置改變＝終點−起點（不是相加）。",
+ "page": "sci_phys_kin_motion_describe.html",
+ "units": [
+  {
+   "unit_id": "sci.t_base.phys-kin.motion-describe",
+   "title_zh": "描述物體位置改變與運動快慢",
+   "can_do": "我會描述一個物體的位置怎麼改變：用『從哪裡到哪裡』來說，位置改變的大小就是終點位置減起點位置（在數線上從第 3 格移到第 8 格，就是改變了 8−3＝5 格）。我也會比快慢：同樣的時間裡誰走得比較遠，誰就比較快。我還會用一個數量描述快慢，叫做『速率 (speed)』：速率＝走的距離÷用的時間，例如走 100 公尺用了 10 秒，速率就是 100÷10＝每秒 10 公尺。",
+   "situation_group": "運動：描述物體怎麼動",
+   "subject": "sci",
+   "strand": "phys-kin",
+   "est_minutes": 10,
+   "knowledge_point_ids": [
+    "sci.t_base.phys-kin.motion-describe"
+   ],
+   "prerequisites": [],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-md-pos",
+     "text": "物體的位置會改變；位置改變的大小＝終點位置減起點位置。例如在數線上從第 3 格移到第 8 格，位置改變了 8−3＝5 格。",
+     "kind": "fact",
+     "source_refs": [
+      "位置與位置的改變（十二年國教 自然 國小）"
+     ],
+     "verification_ref": "位置改變=終點−起點（sci_phys_checks::phys-kin.motion-describe .venv 驗，3→8 改變 5）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-md-compare",
+     "text": "運動有快有慢。比快慢的方法：在同樣長的時間裡，誰走得比較遠誰就比較快；或走同樣長的距離，誰用的時間比較少誰就比較快。",
+     "kind": "fact",
+     "source_refs": [
+      "運動的快慢比較（十二年國教 自然 國小）"
+     ],
+     "verification_ref": "同時間比距離／同距離比時間（與速率=距離÷時間一致，單調）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-md-rate",
+     "text": "可以用一個數量描述運動的快慢，叫做速率：速率＝走的距離÷用的時間。例如走 100 公尺用了 10 秒，速率＝100÷10＝每秒 10 公尺。",
+     "kind": "fact",
+     "source_refs": [
+      "速率＝距離÷時間（十二年國教 自然 國小）"
+     ],
+     "verification_ref": "速率=距離÷時間（sci_phys_checks::phys-kin.motion-describe .venv 驗，100/10=10）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_base.phys-kin.motion-describe"
+     ],
+     "body": "東西會動，就表示它的位置改變了。這一單元學兩件事：怎麼說一個物體的位置改變了多少，還有怎麼比較兩個運動誰快誰慢。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_base.phys-kin.motion-describe"
+     ],
+     "body": "① 位置會改變：用『從哪裡到哪裡』來說。位置改變的大小＝終點位置減起點位置。像下圖數線上，從第 3 格移到第 8 格，就是改變了 8−3＝5 格。② 比快慢：同樣的時間裡，誰走得比較遠就比較快；走同樣的距離，誰用的時間比較少就比較快。③ 用一個數量描述快慢＝速率：速率＝走的距離÷用的時間。例：走 100 公尺用 10 秒 → 100÷10＝每秒 10 公尺。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_base.phys-kin.motion-describe"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 150' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='180' y='14' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>位置改變與快慢</text><line x1='30' y1='84' x2='330' y2='84' stroke='#99a7b5' stroke-width='1.6'/><g stroke='#99a7b5' stroke-width='1'><line x1='30' y1='80' x2='30' y2='88'/><line x1='60' y1='80' x2='60' y2='88'/><line x1='90' y1='80' x2='90' y2='88'/><line x1='120' y1='80' x2='120' y2='88'/><line x1='150' y1='80' x2='150' y2='88'/><line x1='180' y1='80' x2='180' y2='88'/><line x1='210' y1='80' x2='210' y2='88'/><line x1='240' y1='80' x2='240' y2='88'/><line x1='270' y1='80' x2='270' y2='88'/><line x1='300' y1='80' x2='300' y2='88'/><line x1='330' y1='80' x2='330' y2='88'/></g><circle cx='120' cy='84' r='4' fill='#2563a6'/><circle cx='270' cy='84' r='4' fill='#c2535d'/><line x1='120' y1='66' x2='270' y2='66' stroke='#c08a2d' stroke-width='2.4'/><polygon points='270,66 262,62 262,70' fill='#c08a2d'/><text x='195' y='58' font-size='8.5' fill='#c08a2d' text-anchor='middle'>改變 5 格</text><text x='120' y='102' font-size='8' fill='#2563a6' text-anchor='middle'>起點 第3格</text><text x='270' y='102' font-size='8' fill='#c2535d' text-anchor='middle'>終點 第8格</text></g><g font-family='sans-serif' text-anchor='middle'><text x='180' y='132' font-size='9' fill='#33475b'>速率：走 100 公尺 ÷ 用 10 秒 ＝ 每秒 10 公尺</text></g></svg>",
+      "alt": "一條數線，從 0 到 10 每格畫一個刻度。藍色圓點在第 3 格標「起點 第3格」，紅色圓點在第 8 格標「終點 第8格」，從起點到終點有一條棕色箭頭，標「改變 5 格」。下面一行寫「速率：走 100 公尺 ÷ 用 10 秒 ＝ 每秒 10 公尺」。",
+      "caption": "位置從第 3 格（起點）移到第 8 格（終點），改變了 8−3＝5 格。運動的快慢用速率描述：速率＝走的距離÷用的時間，例如走 100 公尺用 10 秒，就是每秒 10 公尺。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_base.phys-kin.motion-describe"
+     ],
+     "body": "最後練「位置改變與快慢」。重點：(1) 位置改變＝終點−起點（3→8 改變 5 格）；(2) 比快慢＝同時間比誰走得遠、同距離比誰用時少；(3) 速率＝走的距離÷用的時間，例 100÷10＝每秒 10 公尺。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在數線上，一個東西從第 3 格移到第 8 格。它的位置改變了幾格？",
+     "answer": "5 格",
+     "kp_ids": [
+      "sci.t_base.phys-kin.motion-describe"
+     ],
+     "required_kp_ids": [
+      "sci.t_base.phys-kin.motion-describe"
+     ],
+     "options": [
+      "5 格",
+      "11 格",
+      "3 格",
+      "8 格"
+     ],
+     "distractor_rationales": {
+      "11 格": "11 是把兩個位置相加（3＋8）；位置改變要相減：終點減起點＝8−3＝5 格。",
+      "3 格": "3 格是起點的位置，不是改變了多少；位置改變＝8−3＝5 格。",
+      "8 格": "8 格是終點的位置，不是改變了多少；位置改變＝終點減起點＝8−3＝5 格。"
+     },
+     "answer_evidence": [
+      "c-md-pos"
+     ],
+     "feedback": "位置改變＝終點位置減起點位置＝8−3＝5 格。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個人走了 100 公尺，用了 10 秒。他的速率（每秒走幾公尺）是多少？",
+     "answer": "每秒 10 公尺",
+     "kp_ids": [
+      "sci.t_base.phys-kin.motion-describe"
+     ],
+     "required_kp_ids": [
+      "sci.t_base.phys-kin.motion-describe"
+     ],
+     "options": [
+      "每秒 10 公尺",
+      "每秒 1000 公尺",
+      "每秒 90 公尺",
+      "每秒 0.1 公尺"
+     ],
+     "distractor_rationales": {
+      "每秒 1000 公尺": "這是把距離和時間相乘（100×10）；速率是相除：走的距離÷用的時間＝100÷10＝10。",
+      "每秒 90 公尺": "這是把距離和時間相減（100−10）；速率是相除：100÷10＝每秒 10 公尺。",
+      "每秒 0.1 公尺": "這是把時間除以距離（10÷100）、除反了；速率是走的距離÷用的時間＝100÷10＝10。"
+     },
+     "answer_evidence": [
+      "c-md-rate"
+     ],
+     "feedback": "速率＝走的距離÷用的時間＝100÷10＝每秒 10 公尺。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "甲和乙都跑了 10 秒。甲跑了 50 公尺，乙跑了 30 公尺。誰比較快？",
+     "answer": "甲比較快",
+     "kp_ids": [
+      "sci.t_base.phys-kin.motion-describe"
+     ],
+     "required_kp_ids": [
+      "sci.t_base.phys-kin.motion-describe"
+     ],
+     "options": [
+      "甲比較快",
+      "乙比較快",
+      "一樣快",
+      "沒辦法比較"
+     ],
+     "distractor_rationales": {
+      "乙比較快": "方向相反：同樣時間裡走得比較遠的才比較快；甲 50 公尺比乙 30 公尺遠，所以甲比較快。",
+      "一樣快": "兩人跑的距離不一樣（50 和 30），所以不會一樣快；甲走得遠、甲比較快。",
+      "沒辦法比較": "時間一樣長，就可以比誰走得遠；甲走 50 公尺比乙 30 公尺遠，甲比較快。"
+     },
+     "answer_evidence": [
+      "c-md-compare"
+     ],
+     "feedback": "時間一樣長時，走得比較遠的比較快。甲 50 公尺比乙 30 公尺遠，所以甲比較快。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "要用一個數量來描述運動的快慢（速率），正確的算法是什麼？",
+     "answer": "走的距離÷用的時間",
+     "kp_ids": [
+      "sci.t_base.phys-kin.motion-describe"
+     ],
+     "required_kp_ids": [
+      "sci.t_base.phys-kin.motion-describe"
+     ],
+     "options": [
+      "走的距離÷用的時間",
+      "走的距離×用的時間",
+      "走的距離＋用的時間",
+      "只看走了多遠的距離"
+     ],
+     "distractor_rationales": {
+      "走的距離×用的時間": "相乘不是速率；速率是走的距離÷用的時間，例 100÷10＝每秒 10 公尺。",
+      "走的距離＋用的時間": "距離和時間單位不一樣不能相加；速率是相除：走的距離÷用的時間。",
+      "只看走了多遠的距離": "只看距離不夠，還要看用了多少時間；速率＝走的距離÷用的時間。"
+     },
+     "answer_evidence": [
+      "c-md-rate"
+     ],
+     "feedback": "速率＝走的距離÷用的時間，例如 100 公尺÷10 秒＝每秒 10 公尺。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（位置改變＝終點−起點，3→8 改變 5 格；比快慢＝同時間比誰走得遠、同距離比誰用時少；速率＝走的距離÷用的時間，例 100÷10＝每秒 10 公尺；三鐵律＝位置改變用減的、快慢可比、速率用除的）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
