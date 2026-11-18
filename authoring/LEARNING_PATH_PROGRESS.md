@@ -1,3 +1,8 @@
+## 2026-11-18 16:40 ★ HD friction [Image#12] math_function_exp_growth_decay 指數圖標籤移入透鏡區 5/5 DONE-GATE
+- **frozen `3fc1920441a62d81`**（de-converge 自 e751f7a2；rounds 1-5 連 5 clean、L3 全 exit0）。figure-only 修正。
+- HD：「文字儘可能不要蓋著…空間沒有不夠根本沒必要讓文字重疊」。成長（r＞1）/衰退（0＜r＜1）兩標籤原疊在各自曲線上 → 移入兩曲線間開放透鏡區（成長 y42→72、衰退 y134→108、起點 x150→140），彼此 36px 不疊、不碰線、不裁切。
+- DONE-GATE：四 deterministic gate 全 CLEAN（scan/question/pedagogy/schema）＋ per_page 620 零違規（exp absent）＋ iPad render 4x PNG 四角色（美術/空間/眼科/動畫師）過。harvest_override 已設、_deconverge_trace 已記。
+
 ## 2026-11-18 16:24 ★ sci.t_mid.phys-kin.velocity-speed 速度與速率的區別 5/5 DONE-GATE → phys-kin **3/14**
 - **sci_phys_kin_velocity_speed frozen `0d2ff9a3a08ce6bf`**（rounds 1-5 連 5 clean、L3 全 exit0）。t_mid 國中。前置＝displacement-path。R15 gloss（速度 velocity／速率 speed）各 grep -o=2。units_index 620。
 - 內容：速率＝路徑長÷時間只有大小；速度＝位移÷時間有方向（直線用正負號）；例 位移 −6、時間 3 → 速度 −2（負＝往左）、速率 2。figure＝數線往左移動+棕左向箭頭+速度/速率兩行結論。
