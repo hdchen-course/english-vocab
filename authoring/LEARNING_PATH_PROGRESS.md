@@ -1,3 +1,8 @@
+## 2026-11-18 23:24 ★ sci.t_mid.phys-energy.work-def 功的定義（W＝Fd）5/5 DONE-GATE → phys-energy 2/22
+- **sci_phys_energy_work_def frozen `5fa5216a32354440`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha；de-converge 自 `01ec2a64`→`466e168`→`5fa5216a`）。t_mid 國中會考。前置＝energy-forms。R15 gloss（功 work）grep -o=2。
+- 內容：功＝力 × 物體沿力方向移動的距離，W＝F×d；單位焦耳(J)＝牛頓×公尺；兩種不做功＝d=0（推不動的牆）與力⊥位移（水平走路時向上提力）。figure＝地面箱子＋F=10N 水平紅箭頭＋d=3m 橘虛線→W=30J。oracle en_work_def 錨 10·3=30；Q4 distractor 13(加10+3)/10(只用力)/7(減10-3) 乾淨單一誤解。
+- DONE-GATE 全綠：per_page 633/633／scan PASS／pedagogy 0 hard／question CLEAN／schema rc0／repro PASS／figure 四角色簽核（SVG 未改沿用）。
+- ★收斂史：R1 深 panel 零確認。**R4(7-agent) 全票抓 Q3 題幹「水平提著…向前走」garden-path 歧義**（「水平」緊貼「提著」會誤讀成「把書包提成水平姿勢」，非「水平地向前走」）→minor DEFECT(b-hard-to-understand)。class-wide 修 can_do/c-wk-perp/teach④/Q3 stem/_note → 「提著重物、水平向前走」（水平改修飾向前走）。de-converge 後新 sha 5fa5216a 連 5 clean（含舊 in-flight R2 讀到已修文字獨立 0/5 NOT-A-DEFECT 佐證）。★class 教訓：方向狀語（水平/鉛直）須緊貼它修飾的「移動動詞」而非「持握動詞」，避 garden-path——供後續 phys-energy 力/功/能單元題幹避開。
 ## 2026-11-18 22:57 ★ sci.t_base.phys-energy.energy-forms 能量的形式與轉換 5/5 DONE-GATE → phys-energy 1/22（新 strand 開跑）
 - **sci_phys_energy_forms frozen `30df0582df2d17e4`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha）。t_base 國小/國中基礎、phys-energy strand 首單元、無前置。R15 gloss（能量 energy）grep -o=2。
 - 內容：能量＝讓物體運動/產生變化的能力；形式（動/位/熱/光/聲/電/化學能）；能量轉換且總量不變（質性）；動能 ½mv²＝½·2·3²=9 焦耳一量化例。figure＝電池(化學能)→電能→燈泡→光能+熱能。oracle en_forms 錨 ½·2·3²=9；Q4 distractor 18(忘½)/4.5(漏質量)/3(漏平方)。
