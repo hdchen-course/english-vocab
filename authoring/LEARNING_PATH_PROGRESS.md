@@ -1,3 +1,8 @@
+## 2026-11-19 00:32 ★ sci.t_mid.phys-energy.energy-conserve 能量守恆與形式轉換 5/5 DONE-GATE → phys-energy 5/22
+- **sci_phys_energy_energy_conserve frozen `5b7aa3df264ad413`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha，無 de-converge）。t_mid 國中會考。前置＝ke-pe。R15 gloss（能量守恆 conservation of energy／力學能 mechanical energy）grep -o 各＝2。
+- 內容：能量守恆＝總量不變只換形式；力學能＝動能＋位能、無摩擦時守恆（位能減少＝動能增加）；自由落下 PE↔KE。figure＝球5m落下 頂PE98/KE0→底PE0/KE98，力學能98不變。oracle en_conserve 錨 頂mgh=98＝底½mv²(v²=2gh)=98；Q3 distractor 0(以為落地停)/49(以為轉一半)/196(PE+KE重複加)。明確破除「落地瞬間停住動能為0」迷思（其實落地前最快、動能最大）。
+- DONE-GATE 全綠：per_page 636/636／scan PASS／pedagogy 0 hard／question CLEAN／schema rc0／repro PASS／figure 四角色簽核。
+- ★收斂史：首輪即零確認，R1-R5 連 5 clean 無 de-converge（承 ke-pe scope 裁定 in-scope＋唯一散文 anchor 教訓，knownFP 預帶→panel 未 raise scope、L3 全穩過）。R3 一 reviewer 觸 content-filter 但 coverageComplete:true、L3 rc0 仍有效。
 ## 2026-11-19 00:16 ★ sci.t_mid.phys-energy.ke-pe 動能與重力位能的概念 5/5 DONE-GATE → phys-energy 4/22
 - **sci_phys_energy_ke_pe frozen `f330ca03ea91a0c4`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha，無 de-converge）。t_mid 國中會考。前置＝energy-forms。R15 gloss（動能 kinetic energy／重力位能 gravitational potential energy）grep -o 各＝2。
 - 內容：動能 KE＝½mv²（速率平方、影響最大）；重力位能 PE＝mgh（質量×g×高度，g≈9.8）；動能看速率/位能看高度、單位都是焦耳。figure＝左高臺靜止球 PE=mgh／右地面移動球 KE=½mv²。oracle en_ke_pe 錨 ½·2·4²=16J、2·9.8·5=98J；Q3 distractor 32(忘½)/4(忘平方)/8(漏質量)、Q4 10(漏g)/19.6(漏高度)/49(漏質量)。
