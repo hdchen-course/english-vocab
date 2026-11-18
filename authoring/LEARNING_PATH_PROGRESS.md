@@ -1,3 +1,9 @@
+## 2026-11-18 18:45 ★ sci.t_mid.phys-kin.xt-graph 等速度運動的 x-t 圖（斜率＝速度） 5/5 DONE-GATE → phys-kin 6/14
+- **sci_phys_kin_xt_graph frozen `2c78500253fae8cf`**（rounds 1-5 連 5 clean、L3 全 exit0）。t_mid 國中會考。前置＝velocity-speed。R15 gloss（x-t 圖 position-time graph）grep -o=2。
+- 內容：x-t 圖（橫軸時間、縱軸位置）；等速度＝一條直線、斜率 Δx÷Δt＝速度；越陡越快、水平線（斜率0）＝靜止；由兩點求斜率。figure＝座標平面 藍直線 x=3t+2＋兩紅點 (1,5)(4,14)＋橘虛線 Δt=3/Δx=9＋斜率=9÷3=3=速度。oracle kin_xt_graph（x=3t+2 sympy 斜率=3）repro PASS。
+- DONE-GATE 全綠：per_page 623/623／scan PASS／pedagogy 0 hard／question CLEAN／schema rc0／repro PASS／rsvg render 四角色過（兩點貼線、Δx/Δt 直角 rise/run、軸箭頭齊、不疊不裁切）。
+- ★收斂史：五輪 panel（含物理教師/圖表判讀/學習神經+教學設計/小四→高一成長模擬/物理教育+繁中校對）全 confirmedCount:0；figure 初稿 (4,14) 紅點略低於線（線 y≈58.5、點 62）render 時發現，微調 cy 62→59、(1,5) 125→124 使兩點貼線後四角色過。★class 教訓：x-t 圖 figure 的點務必用直線方程式反算 pixel 落在線上，render 核對勿只看大致。
+
 ## 2026-11-18 18:32 ★ sci.t_mid.phys-kin.acceleration 加速度的定義與單位 5/5 DONE-GATE → phys-kin 5/14
 - **sci_phys_kin_acceleration frozen `c2779814c97046c3`**（rounds 1-5 連 5 clean、L3 全 exit0）。t_mid 國中會考。前置＝velocity-speed。R15 gloss（加速度 acceleration）grep -o=2。
 - 內容：加速度＝(末速度−初速度)÷時間；單位公尺／秒²（每秒速度改變量）；有方向（同向加速正、反向減速負號，煞車例 (8−20)÷4=−3）。figure＝時間軸 初速度5(藍,開始)→經過3秒(棕箭頭)→末速度20(紅,3秒後)＋公式 a=(20−5)÷3=5。oracle kin_acceleration repro PASS。
