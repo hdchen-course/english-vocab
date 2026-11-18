@@ -1,0 +1,214 @@
+{
+ "_note": "自然島 物理-運動學（phys-kin）strand 第2單元（t_mid 國中）。知識點 sci.t_mid.phys-kin.displacement-path（位移與路徑長的區別）。tier=t_mid（國中；學習者端不顯年段 R11）。全繁體零簡體零 PRC 詞。中文授課無音檔。前置＝motion-describe（描述位置改變與快慢）。術語附國際英語（R15，★只在 can_do 首次 gloss 一次：位移 (displacement)、路徑長 (path length)；teach/claim body 不重複——記憶 r15-gloss-once-first-render；自檢用描述文字、不在自檢子句重嵌英文 literal：各術語英文括號以 grep -o 計數應各＝2〔_note 本宣告行一次＋can_do 一次〕）。scope（t_mid 國中）：(1) 路徑長＝物體實際走過的路徑總長度，不管方向、一路累加，是只有大小的量；(2) 位移＝從起點到終點的直線變化，有大小也有方向（國中以直線往返為例，用方向或正負描述）；(3) 關鍵區別：走一圈回到原點，路徑長不為 0（走多遠就累加），位移為 0（起點＝終點）；(4) 例：從 A 走到 B（相距 50 公尺）再走回 A → 路徑長＝50＋50＝100 公尺、位移＝0。不含二維向量位移合成（t_adv vector-kinematics）、不含速度/速率（下一單元 velocity-speed）。repro（tools/verify/sci_phys_checks.py::phys-kin.displacement-path，repro_gate .venv PASS）錨定『往返位移=0、路徑長=2·50=100』。figure 自檢：單格＝一條 A—B 水平路徑（相距 50 公尺）＋綠色去程箭頭 A→B＋棕色回程箭頭 B→A＋兩行結論（路徑長＝50＋50＝100 公尺、位移＝0 回到起點）；箭頭 polygon 兩翼跨軸對稱、頭短於桿、去回箭頭指向相反、標籤不疊不溢出、alt 與 SVG text 逐字一致。practice 四答案＝{100 公尺(Q1 路徑長=實際走的總長),0(Q2 位移=起點到終點、回到原點為0),路徑長看實際走的總長而位移看起點到終點的直線變化(Q3 區別),路徑長等於跑道一圈長、位移等於0(Q4 繞一圈)}與 teach 無 #10；MCQ options bare、每 distractor 乾淨單一誤解（Q1→0(與位移混淆)/50(只算單程)/25(取平均)；Q2→100(與路徑長混淆)/50(單程)/沒辦法確定；Q3→兩個是一樣的/位移一定比路徑長大/路徑長一定是0；Q4→兩個都是0/兩個一樣大/位移是一圈長而路徑長是0）、兩兩相異、長度均衡；distractor_rationales key 逐字相符；數值對齊 oracle（路徑長100、位移0）。claim kind=fact。figure-only example 無 body。定義不得反轉：位移可為 0 而路徑長不為 0（走一圈）；路徑長只有大小、位移有方向。",
+ "page": "sci_phys_kin_displacement_path.html",
+ "units": [
+  {
+   "unit_id": "sci.t_mid.phys-kin.displacement-path",
+   "title_zh": "位移與路徑長的區別",
+   "can_do": "我知道『路徑長 (path length)』是物體實際走過的路徑總長度，不管方向、一路加起來，只有大小。我也知道『位移 (displacement)』是從起點到終點的直線變化，有大小也有方向。我會分辨兩者：走一圈回到原點時，路徑長不是 0（走了多遠就累加），但位移是 0（因為起點和終點同一個地方）。例如從 A 走到 B（相距 50 公尺）再走回 A，路徑長＝50＋50＝100 公尺，位移＝0。",
+   "situation_group": "運動：描述物體怎麼動",
+   "subject": "sci",
+   "strand": "phys-kin",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "sci.t_mid.phys-kin.displacement-path"
+   ],
+   "prerequisites": [
+    "sci.t_base.phys-kin.motion-describe"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-dp-path",
+     "text": "路徑長是物體實際走過的路徑總長度：不管往哪個方向，一路把走過的距離加起來。它只有大小，沒有方向。",
+     "kind": "fact",
+     "source_refs": [
+      "路徑長的定義（國中自然）"
+     ],
+     "verification_ref": "路徑長=實際走過累加（sci_phys_checks::phys-kin.displacement-path .venv 驗，往返=2·50=100）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-dp-disp",
+     "text": "位移是從起點到終點的直線變化，有大小也有方向。如果最後回到起點，位移就是 0，因為起點和終點是同一個地方。",
+     "kind": "fact",
+     "source_refs": [
+      "位移的定義（國中自然）"
+     ],
+     "verification_ref": "位移=終點−起點、回到起點為0（sci_phys_checks::phys-kin.displacement-path .venv 驗，往返位移=0）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-dp-diff",
+     "text": "關鍵區別：走一圈回到原點時，路徑長不是 0（走了多遠就累加多少），但位移是 0。例如從 A 走到 B（相距 50 公尺）再走回 A，路徑長＝50＋50＝100 公尺，位移＝0。",
+     "kind": "fact",
+     "source_refs": [
+      "位移與路徑長的比較（國中自然）"
+     ],
+     "verification_ref": "往返 A→B→A：路徑長=100、位移=0（sci_phys_checks::phys-kin.displacement-path .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.displacement-path"
+     ],
+     "body": "前面學過用『從哪裡到哪裡』描述位置改變。這一單元把『位置改變』分成兩個不一樣的量：路徑長和位移。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.displacement-path"
+     ],
+     "body": "① 路徑長：物體實際走過的路徑總長度，不管方向、一路加起來，只有大小。② 位移：從起點到終點的直線變化，有大小也有方向；如果最後回到起點，位移就是 0（起點和終點同一個地方）。③ 關鍵區別：走一圈回到原點，路徑長不是 0（走多遠就累加），位移卻是 0。④ 例：從 A 走到 B（相距 50 公尺）再走回 A → 路徑長＝50＋50＝100 公尺，位移＝0。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.displacement-path"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 158' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='180' y='14' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>從 A 走到 B 再走回 A</text><line x1='70' y1='74' x2='290' y2='74' stroke='#99a7b5' stroke-width='1.6'/><circle cx='70' cy='74' r='4' fill='#2563a6'/><circle cx='290' cy='74' r='4' fill='#2563a6'/><text x='62' y='78' font-size='9' fill='#2563a6' text-anchor='end'>A</text><text x='298' y='78' font-size='9' fill='#2563a6' text-anchor='start'>B</text><line x1='74' y1='56' x2='286' y2='56' stroke='#2f6f54' stroke-width='2.4'/><polygon points='286,56 278,52 278,60' fill='#2f6f54'/><text x='180' y='49' font-size='8' fill='#2f6f54' text-anchor='middle'>去程 A→B 50 公尺</text><line x1='286' y1='92' x2='74' y2='92' stroke='#c08a2d' stroke-width='2.4'/><polygon points='74,92 82,88 82,96' fill='#c08a2d'/><text x='180' y='104' font-size='8' fill='#c08a2d' text-anchor='middle'>回程 B→A 50 公尺</text></g><g font-family='sans-serif' text-anchor='middle'><text x='180' y='128' font-size='9' fill='#33475b'>路徑長 ＝ 50 ＋ 50 ＝ 100 公尺（實際走的總長）</text><text x='180' y='144' font-size='9' fill='#c2535d'>位移 ＝ 0（回到起點，起點＝終點）</text></g></svg>",
+      "alt": "一條水平路徑，左端藍點標 A、右端藍點標 B。上方有一條綠色箭頭從 A 指向 B，標「去程 A→B 50 公尺」；下方有一條棕色箭頭從 B 指回 A，標「回程 B→A 50 公尺」。下面兩行寫「路徑長 ＝ 50 ＋ 50 ＝ 100 公尺（實際走的總長）」和「位移 ＝ 0（回到起點，起點＝終點）」。",
+      "caption": "從 A 走到 B（50 公尺）再走回 A：實際走過的總長＝路徑長＝50＋50＝100 公尺；但起點和終點都是 A，所以位移＝0。這就是路徑長（只有大小）和位移（有方向、回到原點為 0）的差別。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.displacement-path"
+     ],
+     "body": "最後練「位移與路徑長」。重點：(1) 路徑長＝實際走過的總長、只有大小；(2) 位移＝起點到終點的直線變化、有方向；(3) 走一圈回到原點：路徑長不為 0、位移為 0；(4) 例 A→B→A：路徑長 100 公尺、位移 0。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "從 A 走到 B（相距 50 公尺），再從 B 走回 A。走過的路徑長是多少？",
+     "answer": "100 公尺",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.displacement-path"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-kin.displacement-path"
+     ],
+     "options": [
+      "100 公尺",
+      "0 公尺",
+      "50 公尺",
+      "25 公尺"
+     ],
+     "distractor_rationales": {
+      "0 公尺": "0 是位移（回到起點），不是路徑長；路徑長算實際走過的總長＝50＋50＝100 公尺。",
+      "50 公尺": "50 公尺只算了去程；路徑長要把去程和回程都加起來＝50＋50＝100 公尺。",
+      "25 公尺": "25 是把 50 除以 2（取平均）；路徑長是實際走過的總長＝50＋50＝100 公尺。"
+     },
+     "answer_evidence": [
+      "c-dp-path",
+      "c-dp-diff"
+     ],
+     "feedback": "路徑長＝實際走過的總長＝去程 50＋回程 50＝100 公尺。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "從 A 走到 B（相距 50 公尺），再從 B 走回 A。這整段的位移是多少？",
+     "answer": "0",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.displacement-path"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-kin.displacement-path"
+     ],
+     "options": [
+      "0",
+      "100 公尺",
+      "50 公尺",
+      "沒辦法確定"
+     ],
+     "distractor_rationales": {
+      "100 公尺": "100 公尺是路徑長（實際走的總長），不是位移；位移看起點到終點，回到 A 了所以位移＝0。",
+      "50 公尺": "50 公尺是 A 到 B 的距離；但最後又走回 A，起點終點同一個地方，位移＝0。",
+      "沒辦法確定": "可以確定：最後回到起點 A，起點和終點同一個地方，位移就是 0。"
+     },
+     "answer_evidence": [
+      "c-dp-disp",
+      "c-dp-diff"
+     ],
+     "feedback": "位移看起點到終點的直線變化。最後回到 A，起點＝終點，所以位移＝0。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "路徑長和位移最主要的差別是什麼？",
+     "answer": "路徑長看實際走過的總長（只有大小），位移看起點到終點的直線變化（有方向）",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.displacement-path"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-kin.displacement-path"
+     ],
+     "options": [
+      "路徑長看實際走過的總長（只有大小），位移看起點到終點的直線變化（有方向）",
+      "路徑長和位移其實是一樣的東西",
+      "位移一定比路徑長大",
+      "路徑長一定是 0"
+     ],
+     "distractor_rationales": {
+      "路徑長和位移其實是一樣的東西": "不一樣：走一圈回到原點時路徑長不為 0、位移卻是 0，可見兩者不同。",
+      "位移一定比路徑長大": "正好說反了：位移不會比路徑長大；走回頭路時位移還會比路徑長小（甚至為 0）。",
+      "路徑長一定是 0": "路徑長是實際走過的總長，只要有走就不是 0；會是 0 的是回到原點時的位移。"
+     },
+     "answer_evidence": [
+      "c-dp-path",
+      "c-dp-disp"
+     ],
+     "feedback": "路徑長＝實際走過的總長（只有大小）；位移＝起點到終點的直線變化（有方向），回到原點時為 0。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個人沿著操場跑道繞了整整一圈，回到出發點。下面哪一個是對的？",
+     "answer": "路徑長等於跑道一圈的長，位移等於 0",
+     "kp_ids": [
+      "sci.t_mid.phys-kin.displacement-path"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-kin.displacement-path"
+     ],
+     "options": [
+      "路徑長等於跑道一圈的長，位移等於 0",
+      "路徑長和位移都是 0",
+      "路徑長和位移一樣大",
+      "位移等於一圈的長，路徑長等於 0"
+     ],
+     "distractor_rationales": {
+      "路徑長和位移都是 0": "路徑長不是 0：實際跑了一圈，路徑長就是一圈的長；只有位移因為回到起點才是 0。",
+      "路徑長和位移一樣大": "不一樣：路徑長是一圈的長，位移是 0（回到起點），兩者不相等。",
+      "位移等於一圈的長，路徑長等於 0": "正好說反了：路徑長才是一圈的長，位移因為回到起點是 0。"
+     },
+     "answer_evidence": [
+      "c-dp-diff"
+     ],
+     "feedback": "跑一圈回到起點：實際跑過的總長＝路徑長＝一圈的長；起點＝終點，所以位移＝0。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（路徑長＝實際走過的總長、只有大小；位移＝起點到終點的直線變化、有方向；走一圈回到原點：路徑長不為 0、位移為 0；例 A→B→A 路徑長 100、位移 0；三鐵律＝路徑長累加、位移看起終點、回到原點位移為 0）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

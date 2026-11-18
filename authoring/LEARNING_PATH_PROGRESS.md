@@ -1,3 +1,11 @@
+## 2026-11-18 15:28 ★ sci.t_mid.phys-kin.displacement-path 位移與路徑長的區別 5/5 DONE-GATE → phys-kin **2/14**
+- **sci_phys_kin_displacement_path frozen `8bb1b6acf6a3c087`**（rounds 1-5 連 5 clean、L3 全 exit0）。t_mid 國中。前置＝motion-describe。R15 gloss（位移 displacement／路徑長 path length）各只 can_do、grep -o 各=2。units_index 619。
+- 內容：路徑長＝實際走過總長、只有大小；位移＝起點到終點直線變化、有方向；走一圈回原點路徑長不為 0、位移為 0；例 A→B→A（各 50 公尺）路徑長 100、位移 0。figure＝A—B 路徑＋綠去程/棕回程箭頭（方向相反）＋路徑長100/位移0 兩行結論。不含二維向量合成/速度速率。
+- DONE-GATE 全綠：per_page 619/619 零違規／scan PASS／question CLEAN／pedagogy 0 hard／unit_schema CLEAN／repro-phys-kin.displacement-path PASS（往返位移0、路徑長2·50=100）／iPad render 四角色 PASS（箭頭去右回左方向相反、端點對齊、無重疊裁切）。
+- ★收斂史：r2/r3 深 7-agent panel 獨立 CONFIRMED 同一 major（readability）：Q3 distractor「位移一定比路徑長大」說明以「方向相反」開頭，與本課核心術語『方向』撞讀有兩種讀法→改與 Q4 一致的「正好說反了」。rounds=[] 未 bank、無 clean 作廢；figure SVG 未動、四角色仍有效；重凍 8b6c5e69→8bb1b6ac 重收斂。r1 深 9-agent panel 另提「alt 省略 figure SVG title」經 0/7 判 NOT A DEFECT（title 與 caption 冗餘、screen-reader 讀得到 caption）。
+- ★教訓：(a) 在「正教某術語」的單元裡，distractor 說明別用該術語的字面詞當邏輯反轉開場（「方向相反」撞「方向」）——用「正好說反了／剛好相反」；(b) 建單元時 _note 自檢子句別重嵌英文 literal（grep -o 會多算→本檔首版 displacement/path length 各=3，修自檢子句後=2）。
+- 下一步：phys-kin 第3單元＝velocity-speed（速度與速率的區別，t_mid；oracle 已備：速度帶號−2、速率2）。
+
 ## 2026-11-18 15:11 ★ sci.t_base.phys-kin.motion-describe 描述位置改變與運動快慢（速率＝距離÷時間）5/5 DONE-GATE → 自然島開新 strand **phys-kin（運動學）1/14**
 - **sci_phys_kin_motion_describe frozen `4131c0abce83ebd6`**（rounds 1-5 連 5 clean、L3 全 exit0）。phys-kin strand 根節點（prerequisites=[]）、t_base 國小。R15 gloss（速率 speed）只 can_do、grep -o=2。中文授課無音檔。units_index 618。
 - 內容：位置改變＝終點−起點（數線 3→8 改變 5 格）；比快慢＝同時間比誰走得遠、同距離比誰用時少；速率＝走的距離÷用的時間，例 100÷10＝每秒 10 公尺。figure＝數線（11刻度、藍起點第3格/紅終點第8格、棕箭頭標「改變5格」）＋速率例一行。不含位移vs路徑/帶號速度/向量（t_mid+）。
