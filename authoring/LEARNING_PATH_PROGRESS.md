@@ -7,6 +7,13 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-18 08:41 ★ sci.t_adv.phys-force.newton1 牛頓第一運動定律（慣性）5/5 DONE-GATE 全綠 → 自然島 phys-force 9/17（★首個 t_adv 高階；兩格「合力=0→靜者恆靜/動者恆等速」SVG）
+- **sci_phys_force_newton1 frozen `aa92ecfc26a0467d`**（rounds 1-5 連 5 clean；1 次 de-converge 修 1 minor）。缺陷：round1（5 鏡一致 b-hard）claim c-n1-example/can_do 同句連用兩個「因為」（「因為乘客的身體因為慣性」）贅詞 → class-wide 改「這是因為…有慣性／因為身體有慣性」。重凍 aa92ecfc。
+- DONE-GATE 全綠：scan PASS／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard／content_sha==aa92ecfc／per_page_5clean PASS（absent）／repro-sci_phys_checks-phys-force.newton1 PASS（淨力0⇒a=0⇒等速）／iPad 四角色簽核（兩格：①本來靜止 v=0 合力=0→保持靜止；②本來等速運動 綠 v 箭頭 合力=0→保持等速直線；R11 不顯年段）。中文授課無音檔。
+- newton1（t_adv，phys-force strand 第9，首個高階）＝(1) 牛頓第一運動定律（慣性定律）＝合力為零時靜者保持靜止、動者保持等速直線運動；(2) 慣性＝維持原本運動狀態、抵抗改變的性質，所有物體都有；(3) 質量越大慣性越大、質量是慣性的量度；(4) 公車煞車乘客前傾＝慣性。★刻意不教 F=ma 定量（newton2 下一單元）、不含參考系。
+- ★教訓：t_adv 首單元；中文可讀性「同句勿連用兩個『因為』」是新 defect class（learning/zh owned b-hard），草稿時留意因果連接詞勿巢狀重複。
+- 下一步：phys-force 還有 8 binding KP：t_adv×7（newton2 F=ma／newton3 作用反作用／resolve-compose 二維分解／equilibrium 三力平衡／incline 斜面／tension-system 阿特午機／friction-coeff μ=f/N）＋t_sub newton-2d。接 newton2（F=ma，oracle a=F/m=20/4=5）。
+
 ## 2026-11-18 08:23 ★ sci.t_mid.phys-force.friction-factor 靜摩擦與動摩擦及影響因素 5/5 DONE-GATE 全綠 → 自然島 phys-force 8/17（★phys-force t_mid 全收 6/6；兩格靜/動對比 SVG）
 - **sci_phys_force_friction_factor frozen `c84b316221ef88f3`**（rounds 1/2/3/5/7 連 5 clean、L3 全過；**2 次 de-converge**，對抗審查連抓兩真缺陷）。缺陷軌跡：
   - 第一輪 round1（domain-decisive minor）：`_note` grep 自檢子句重嵌 literal 使「各一」註解不精確（grep -o=3）→ reword 為精確 grep -c 含行數=2（grep -c=2 且 grep -o=2 一致）。重凍 512227a8。

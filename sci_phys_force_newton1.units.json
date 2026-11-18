@@ -1,0 +1,222 @@
+{
+ "_note": "自然島 物理-力（phys-force）strand 單元（第9，首個 t_adv）。知識點 sci.t_adv.phys-force.newton1（牛頓第一運動定律／慣性）。tier=t_adv（高階）、exam=學測。全繁體零簡體零 PRC 詞。中文授課無音檔。術語附國際英語（R15，★只在 can_do 首次 gloss 一次：牛頓第一運動定律 (Newton's first law)、慣性 (inertia)；teach/claim body 不重複——記憶 r15-gloss-once-first-render。★自檢用描述性文字、不在自檢子句重嵌英文 literal：草稿後以 grep -c 計每個術語英文括號含行數＝2（_note 本行一次＋can_do 一行，teach/claim 皆無）；此法使 grep -c=2 且 grep -o=2 一致，避免 friction-factor round1 那種『各一』註解反轉誤判）。R11 不顯年段。前置＝force-add-1d（合力／淨力概念）。★scope（t_adv）：(1) 牛頓第一運動定律（慣性定律）＝物體不受外力、或所受『合力為零』時，靜者保持靜止、動者保持等速直線運動；(2) 慣性＝物體維持原本運動狀態、抵抗改變的性質，所有物體都有；(3) 質量越大、慣性越大（越難改變其運動狀態）；(4) 生活例：公車煞車乘客前傾（身體因慣性維持前進）。不含 F=ma 定量（newton2 下一單元）、不含參考系／非慣性系（超綱）。repro（tools/verify/sci_phys_checks.py::phys-force.newton1，repro_gate .venv PASS）錨定『淨力0 ⇒ a=0 ⇒ 等速』。★自檢：figure＝兩格（①本來靜止＋合力=0→保持靜止 v=0；②本來等速運動＋合力=0→保持等速直線，綠色 v 箭頭），兩格同 viewBox、alt 與 SVG text 逐字一致、標籤位置與座標相符（friction round7 教訓）；practice 四答案＝{靜者恆靜動者恆等速(Q1 定律),維持原運動狀態抵抗改變(Q2 慣性),身體慣性維持前進(Q3 煞車前傾),質量最大(Q4 慣性大小)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1→慢慢停/加速/改方向；Q2→受熱膨脹/導電/往地心掉；Q3→煞車往前推/引力往前拉/自己想走；Q4→質量最小/速度最快/體積最大）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 逐字相符（#59）。claim kind=fact。figure-only example 無 body。★正向力教訓（friction-factor）：具名物理術語定義不得反轉——本單元慣性定義寫『維持原本運動狀態、抵抗改變』勿寫成『物體不會動』之類窄化。",
+ "page": "sci_phys_force_newton1.html",
+ "units": [
+  {
+   "unit_id": "sci.t_adv.phys-force.newton1",
+   "title_zh": "牛頓第一運動定律（慣性）",
+   "can_do": "我懂『牛頓第一運動定律 (Newton's first law)』，也叫慣性定律：一個物體如果不受外力，或所受的合力為零，那麼原本靜止的會一直保持靜止、原本在運動的會保持「等速直線運動」（速度大小和方向都不變）。我知道『慣性 (inertia)』就是物體「維持原本運動狀態、抵抗改變」的性質——所有物體都有慣性；而且質量越大、慣性越大，越難改變它的運動狀態。我能用慣性解釋生活現象，例如公車突然煞車時，站著的乘客會向前傾（因為身體有慣性，還想保持原本前進的運動）。",
+   "situation_group": "力：牛頓運動定律",
+   "subject": "sci",
+   "strand": "phys-force",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "sci.t_adv.phys-force.newton1"
+   ],
+   "prerequisites": [
+    "sci.t_mid.phys-force.force-add-1d"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-n1-law",
+     "text": "牛頓第一運動定律（慣性定律）：當一個物體不受外力，或所受的合力為零時，原本靜止的物體會保持靜止，原本在運動的物體會保持「等速直線運動」——速度的大小和方向都不改變。",
+     "kind": "fact",
+     "source_refs": [
+      "牛頓第一運動定律（十二年國教 自然 高中必修）"
+     ],
+     "verification_ref": "合力為零 ⇒ 加速度為零 ⇒ 速度不變（等速）（sci_phys_checks::phys-force.newton1 .venv 驗，a=F/m=0/5=0）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-n1-inertia",
+     "text": "慣性是物體「維持原本運動狀態、抵抗改變」的性質：原本靜止的想繼續靜止、原本運動的想繼續以原速度運動。所有物體都有慣性。",
+     "kind": "fact",
+     "source_refs": [
+      "慣性的定義（十二年國教 自然 高中必修）"
+     ],
+     "verification_ref": "慣性為維持運動狀態之性質（高中物理 consensus_current；與牛一等速結論一致）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-n1-mass",
+     "text": "質量越大的物體，慣性越大，也就是越難改變它的運動狀態（越難推動、推動後也越難停下）。質量是物體慣性大小的量度。",
+     "kind": "fact",
+     "source_refs": [
+      "質量是慣性的量度（十二年國教 自然 高中必修）"
+     ],
+     "verification_ref": "質量為慣性量度：同一外力下質量越大加速度越小（a=F/m，與 newton2 一致；高中 consensus_current）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-n1-example",
+     "text": "用慣性解釋生活現象：公車原本在前進，突然煞車時，站著的乘客會向前傾——這是因為乘客的身體有慣性，還想保持原本「向前」的運動狀態。",
+     "kind": "fact",
+     "source_refs": [
+      "慣性的生活實例（十二年國教 自然 高中必修）"
+     ],
+     "verification_ref": "煞車時乘客相對車向前＝身體維持原速度（慣性）之標準高中實例 consensus_current",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-force.newton1"
+     ],
+     "body": "之前學會把同一直線上的力合成「合力」。這一單元問一個更根本的問題：當一個物體所受的合力為零（或完全不受力）時，它會怎麼運動？"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-force.newton1"
+     ],
+     "body": "① 牛頓第一運動定律（慣性定律）：合力為零時，靜者保持靜止、動者保持「等速直線運動」（速度大小與方向都不變）。② 慣性＝物體維持原本運動狀態、抵抗改變的性質，所有物體都有。③ 質量越大、慣性越大，越難改變它的運動狀態；質量就是慣性的量度。④ 生活例：公車突然煞車，乘客向前傾——身體因慣性還想保持原本前進的運動。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_adv.phys-force.newton1"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>合力為零時：靜者恆靜、動者恆等速（慣性）</text><line x1='180' y1='26' x2='180' y2='150' stroke='#d5dde3' stroke-width='1'/><text x='92' y='42' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle' font-weight='bold'>① 本來靜止</text><line x1='36' y1='96' x2='150' y2='96' stroke='#99a7b5' stroke-width='1.2'/><rect x='72' y='68' width='36' height='28' rx='2' fill='#e6edf3' stroke='#99a7b5' stroke-width='1.2'/><text x='90' y='86' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='middle'>v = 0</text><text x='92' y='116' font-family='sans-serif' font-size='8' fill='#2f6f54' text-anchor='middle'>合力 = 0</text><text x='92' y='132' font-family='sans-serif' font-size='7.5' fill='#33475b' text-anchor='middle'>→ 一直保持靜止</text><text x='270' y='42' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle' font-weight='bold'>② 本來等速運動</text><line x1='214' y1='96' x2='330' y2='96' stroke='#99a7b5' stroke-width='1.2'/><rect x='244' y='68' width='36' height='28' rx='2' fill='#e6edf3' stroke='#99a7b5' stroke-width='1.2'/><line x1='284' y1='82' x2='320' y2='82' stroke='#2f6f54' stroke-width='2.4'/><polygon points='320,82 312,78 312,86' fill='#2f6f54'/><text x='300' y='75' font-family='sans-serif' font-size='7.5' fill='#2f6f54' text-anchor='middle'>v</text><text x='270' y='116' font-family='sans-serif' font-size='8' fill='#2f6f54' text-anchor='middle'>合力 = 0</text><text x='270' y='132' font-family='sans-serif' font-size='7.5' fill='#33475b' text-anchor='middle'>→ 保持等速直線</text><text x='180' y='150' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='middle'>合力為零，物體就維持原本的運動狀態（這就是慣性）。</text></svg>",
+      "alt": "標題「合力為零時：靜者恆靜、動者恆等速（慣性）」。圖分左右兩格。左格「① 本來靜止」：地面上一個方塊，標「v = 0」，下方寫「合力 = 0」和「→ 一直保持靜止」。右格「② 本來等速運動」：地面上一個方塊，右邊有一支指向右的綠色箭頭標「v」，下方寫「合力 = 0」和「→ 保持等速直線」。最下方一行寫「合力為零，物體就維持原本的運動狀態（這就是慣性）。」",
+      "caption": "牛頓第一運動定律：只要合力為零，物體就維持原本的運動狀態。左格本來靜止的物體（v＝0）會一直靜止；右格本來以速度 v 等速運動的物體，會保持同樣的速度做等速直線運動（方向和快慢都不變）。這種「維持原本運動狀態、抵抗改變」的性質就是慣性。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-force.newton1"
+     ],
+     "body": "最後練「牛頓第一運動定律」。重點：(1) 合力為零→靜者恆靜、動者恆作等速直線運動；(2) 慣性＝維持原本運動狀態、抵抗改變的性質；(3) 質量越大慣性越大；(4) 公車煞車乘客前傾＝慣性。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "根據牛頓第一運動定律，一個物體所受的合力為零時，它會怎麼運動？",
+     "answer": "原本靜止的保持靜止，原本運動的保持等速直線運動",
+     "kp_ids": [
+      "sci.t_adv.phys-force.newton1"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-force.newton1"
+     ],
+     "options": [
+      "原本靜止的保持靜止，原本運動的保持等速直線運動",
+      "不管原本如何，都會慢慢停下來",
+      "不管原本如何，都會越跑越快",
+      "一定會改變運動的方向"
+     ],
+     "distractor_rationales": {
+      "不管原本如何，都會慢慢停下來": "會慢慢停是因為有摩擦力等外力；在合力為零時，運動中的物體反而保持等速、不會停。",
+      "不管原本如何，都會越跑越快": "加速需要非零的合力；合力為零時速度不變，不會越來越快。",
+      "一定會改變運動的方向": "改變方向也需要外力；合力為零時方向和快慢都不變（等速直線）。"
+     },
+     "answer_evidence": [
+      "c-n1-law"
+     ],
+     "feedback": "合力為零：靜者保持靜止、動者保持等速直線運動（速度大小與方向都不變）。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "物理學說的「慣性」，是指物體的什麼性質？",
+     "answer": "維持原本運動狀態、抵抗改變的性質",
+     "kp_ids": [
+      "sci.t_adv.phys-force.newton1"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-force.newton1"
+     ],
+     "options": [
+      "維持原本運動狀態、抵抗改變的性質",
+      "物體受熱會膨脹的性質",
+      "物體能導電的性質",
+      "物體會被地球往下吸引的性質"
+     ],
+     "distractor_rationales": {
+      "物體受熱會膨脹的性質": "那是熱脹冷縮，與慣性無關；慣性是維持原本運動狀態的性質。",
+      "物體能導電的性質": "導電是電學性質，與慣性無關。",
+      "物體會被地球往下吸引的性質": "那是重力；慣性是物體維持原本運動狀態、抵抗改變的性質。"
+     },
+     "answer_evidence": [
+      "c-n1-inertia"
+     ],
+     "feedback": "慣性＝維持原本運動狀態、抵抗改變的性質；所有物體都有慣性。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "公車原本在前進，突然煞車時，站著的乘客會向前傾。這是為什麼？",
+     "answer": "乘客的身體因為慣性，還想保持原本向前的運動",
+     "kp_ids": [
+      "sci.t_adv.phys-force.newton1"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-force.newton1"
+     ],
+     "options": [
+      "乘客的身體因為慣性，還想保持原本向前的運動",
+      "煞車時有一股力把乘客往前推",
+      "地球的引力把乘客往前拉",
+      "乘客自己想往前走"
+     ],
+     "distractor_rationales": {
+      "煞車時有一股力把乘客往前推": "沒有把人往前推的力；是車減速了，乘客身體因慣性維持原本前進，才相對車向前傾。",
+      "地球的引力把乘客往前拉": "重力方向向下，不會把人往前拉；向前傾是慣性造成的。",
+      "乘客自己想往前走": "與乘客的意願無關；是身體因慣性保持原本的前進運動。"
+     },
+     "answer_evidence": [
+      "c-n1-example"
+     ],
+     "feedback": "煞車時車慢下來，乘客身體因慣性仍保持原本前進的運動，所以相對車向前傾。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "其他條件相同時，下列哪一個物體的慣性最大（最難改變它的運動狀態）？",
+     "answer": "質量最大的那一個",
+     "kp_ids": [
+      "sci.t_adv.phys-force.newton1"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-force.newton1"
+     ],
+     "options": [
+      "質量最大的那一個",
+      "質量最小的那一個",
+      "速度最快的那一個",
+      "體積看起來最大的那一個"
+     ],
+     "distractor_rationales": {
+      "質量最小的那一個": "相反：質量越小慣性越小、越容易改變運動狀態；慣性最大的是質量最大的。",
+      "速度最快的那一個": "慣性大小由質量決定，不是由速度決定；速度快不代表慣性大。",
+      "體積看起來最大的那一個": "慣性看質量不看體積；體積大但質量小（如保麗龍）慣性不一定大。"
+     },
+     "answer_evidence": [
+      "c-n1-mass"
+     ],
+     "feedback": "質量是慣性的量度：質量越大慣性越大，越難改變其運動狀態。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（牛頓第一運動定律＝合力為零時靜者恆靜、動者恆作等速直線運動；慣性＝維持原本運動狀態、抵抗改變的性質，所有物體都有；質量越大慣性越大、質量是慣性的量度；公車煞車乘客前傾＝身體因慣性維持前進；三鐵律＝合力零則運動狀態不變、慣性是抵抗改變、質量大慣性大）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
