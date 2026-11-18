@@ -1,3 +1,10 @@
+## 2026-11-18 12:33 ★ sci.t_adv.phys-force.incline 斜面上的重力分解 5/5 DONE-GATE 全綠 → 自然島 phys-force 14/17（第6個 t_adv；斜面重力分解單格 SVG）
+- **sci_phys_force_incline frozen `bd38330e78b9696f`**（修圖後 rounds 1-5 連 5 clean、L3 全 exit0）。R15 gloss（正向力 normal force）只 can_do、grep 2/2。
+- DONE-GATE 全綠：scan PASS／unit_schema rc0 無 hard／question CLEAN／pedagogy 0 hard／per_page absent／repro-sci_phys_checks-phys-force.incline PASS（mg sin30°=9.8、mg cos30°≈16.97）／iPad render 4 角色。中文授課無音檔。
+- incline＝重力 mg 分解沿斜面 mg·sinθ（下滑）＋垂直斜面 mg·cosθ（壓向斜面）、正向力 N=mg·cosθ、例 m=2 θ=30°→9.8/16.97、θ 越大下滑分量越大。
+- ★3 次 de-converge（對抗式審查深挖連環抓）：(a) Q2 distractor 33.9→22.63（mg÷cos30° 除反值對齊）；(b)(c) r4/r5 深 panel(23/14 agents) 抓 figure 幾何＝力平行四邊形未閉合（分量畫太短 (0,39)≠(0,42)）＋θ弧未在頂點＋三角形底線超出右下角——全與 HD「線段沒接好」同類，修為精確閉合＋弧置頂點＋底線對齊。★教訓：「已 5-clean」≠figure 幾何零缺陷，深 panel 才現形；向量圖務必驗分量和＝合向量。
+- 下一步：phys-force 剩 3 binding KP：t_adv×2（tension-system 阿特午機 a=g/5／friction-coeff μ=f/N=0.3）＋t_sub newton-2d。
+
 ## 2026-11-18 12:20 ★ HD 視覺 QA friction 三連擊：資產版本 bump（修「先聽」快取）＋content_sha 剝版本＋四邊形/斜面連線修圖
 - **訊號1「math 頁仍顯『① 先聽、先感覺』」根因＝瀏覽器快取舊 unit.js**（頁 pin 舊 `?v=20261102e/20261112a`，unit.js 的 hasAudio 標籤修復本身有效，cache-busted render 確顯「先讀」）。修：ASSET_VER→`20261118a`、perl 全站 614 頁 `assets/unit.{js,css}?v=` 統一 bump；HD 硬重載即顯「先讀」。
 - **content_sha 改為剝除 `?v=` 版本字串**（`tools/per_page_5clean_gate.py`）＝版本 bump 不再作廢教學 5-clean streak（比照剝除接線欄位）。紅隊：版本改→指紋同、教學改(sidecar/html)→指紋變。一次性遷移 `tools/migrate_content_sha_strip_version.py`（安全檢查：舊算法 sha==既存 streak sha 才 rekey）rekey 613 頁、0 mismatch；per_page gate --verify 612/614（2＝incline/quad 收斂中）。
