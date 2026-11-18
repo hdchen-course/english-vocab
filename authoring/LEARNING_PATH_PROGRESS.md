@@ -1,3 +1,9 @@
+## 2026-11-18 17:28 ★ HD friction 餘弦定理 figure 色碼對照＋角C弧+橋接句 5/5 DONE-GATE
+- **math_trig_law_of_cosines frozen `d9dc29d2973bf1e4`**（rounds 1-5 連 5 clean、L3 全 exit0）。
+- HD [Image#13]＋追問：(1) 角 C 弧線終點懸空→改落在邊 CA；(2) 角標「C」與橘邊 c 同色混淆→角 C 弧＋標改紅 #c2535d（孤立色）；(3) 底部公式 tspan 色碼：邊 a/b/c 橘、角 C 紅，與三角形一一對照；(4) 邊 b 標收緊與 a/c 一致；(5) HD 問「幹嘛突然用 C」→ teach1 補橋接句（θ=定義單一角用；餘弦要分辨三角各自對邊故用 A/B/C，且 Q3 對比 cosC vs cosA 需 A/B/C）；維持課綱 cosC（非 θ）。
+- ★深 panel 連環抓到：prerequisites array 漏 ratio-generalized（補；sha 排除欄位）→ 補後 _note 仍寫 ratio-acute 漂移（7/7 DEFECT）→ _note 補齊一致。體現深 panel 對 prereq/metadata 一致性的價值。
+- DONE-GATE 全綠：scan PASS／pedagogy 0 hard／question_correctness CLEAN／unit_schema CLEAN／per_page 620/620 PASS／rsvg render 四角色過（紅角C與橘邊c一眼可分、公式色碼對照）。
+
 ## 2026-11-18 17:18 ★ HD friction 連環修圖：銳角三角比 + 廣義角三角比 figure 5/5 DONE-GATE
 - **math_trig_ratio_acute frozen `1834fee1caa52062`**（rounds 1-5 連 5 clean、L3 全 exit0）。HD [Image#14]：θ 角弧 'M55,140 A...' 從頂點本身起畫→成小勾沒貼角。修：弧改從鄰邊 (81,140) 掃到斜邊 (78.7,129.3)、圓心在頂點 θ。
 - **math_trig_ratio_generalized frozen `354ec3a7e39f8929`**（rounds 1-5 連 5 clean、L3 全 exit0）。HD：θ 角弧終點 (98,134)＝41.6° 超出終邊 OP(31.6°)→戳出 r 線。修：弧終點改落在終邊 OP 上 r=24 處 (100.4,137.4)。
