@@ -1,3 +1,9 @@
+## 2026-11-18 10:49 ★ sci.t_adv.phys-force.resolve-compose 力的分解與合成（Fx＝F cosθ、Fy＝F sinθ）5/5 DONE-GATE 全綠 → 自然島 phys-force 12/17（第4個 t_adv；向量分解單格 worked example SVG）
+- **sci_phys_force_resolve_compose frozen `028c0fc0ba86cb3f`**（rounds 1-5 連 5 clean、L3 全 exit0、零 de-converge：草稿即乾淨）。R15 gloss（力的分解 resolving a force／分量 component）只放 can_do、grep -c 2/2。
+- DONE-GATE 全綠：scan PASS／unit_schema rc=0 無 hard／question_correctness CLEAN／pedagogy 0 hard（Q4 正解較長＝length-cue advisory，HD 2026-11-15 裁示 MCQ 可猜性 out-of-scope 非缺陷，不改）／content_sha==028c0fc0ba86cb3f／per_page_5clean PASS（absent）／repro-sci_phys_checks-phys-force.resolve-compose PASS（F=10,θ=37°→Fx≈7.99,Fy≈6.02）／iPad 三視圖 render＋figure 4 角色簽核（修掉綠色 F 標籤壓對角線 overlap，移至線上方空白區）。中文授課無音檔。
+- resolve-compose（t_adv，phys-force strand 第12）＝(1) 斜向力可拆成互相垂直的水平分量 Fx＝F×cosθ、鉛直分量 Fy＝F×sinθ（θ＝與水平夾角）；(2) 教學用 37° 近似 cos≈0.8/sin≈0.6（寫≈非等號）→ F＝10 得 Fx＝8、Fy＝6；(3) 合成 F＝√(Fx²＋Fy²)＝√(8²＋6²)＝10 與原力一致；(4) 分解為等效表示、力大小不變。figure＝原點三箭頭（綠 F 對角線／棕 Fx 水平／藍 Fy 鉛直）＋θ＝37° 夾角＋直角記號＋灰虛線補長方形＋底部公式列。刻意不教三維/非垂直分解。
+- 下一步：phys-force 還有 5 binding KP：t_adv×4（equilibrium 三力平衡／incline 斜面 mg·sinθ·cosθ／tension-system 阿特午機 a=g/5／friction-coeff μ=f/N=0.3）＋t_sub newton-2d。接 equilibrium（三力(3,0)(−3,4)(0,−4) 合力=0，oracle 已驗）。
+
 ## 2026-11-18 10:36 ★ sci.t_adv.phys-force.newton3 牛頓第三運動定律（作用力與反作用力）5/5 DONE-GATE 全綠 → 自然島 phys-force 11/17（第3個 t_adv；手推牆單格情境 SVG）
 - **sci_phys_force_newton3 frozen `e36352f1eebdd89c`**（rounds 1-5 連 5 clean、L3 全 exit0）。R15 gloss（牛頓第三運動定律 Newton's third law／作用力與反作用力 action and reaction forces）只放 can_do、grep -c 2/2。
 - DONE-GATE 全綠：scan PASS／unit_schema rc=0 無 newton3 hard／question_correctness CLEAN／pedagogy 0 hard advisory=0／content_sha==e36352f1eebdd89c／per_page_5clean PASS（absent）／repro-sci_phys_checks-phys-force.newton3 PASS（作用反作用 10 與 −10 等大反向）。中文授課無音檔。
