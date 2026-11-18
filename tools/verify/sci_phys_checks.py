@@ -57,9 +57,12 @@ def kin_vertical_throw():
     assert _close(v0b**2/(2*g), 78.4) and _close(v0b/g, 4)   # H=78.4m、t_up=4s
     return _ok("phys-kin.vertical-throw", "上拋 v₀=29.4：H=44.1m、t_up=3s（H≠v₀）；practice v₀=39.2→H=78.4m、t_up=4s")
 def kin_vector():
-    r = sp.Matrix([3, 4]);
-    assert r.norm() == 5                            # 平面位置向量模
-    return _ok("phys-kin.vector-kinematics", "平面位置向量(3,4) 模=5")
+    assert sp.Matrix([3, 4]).norm() == 5            # teach 位置向量模
+    assert sp.Matrix([6, 8]).norm() == 10           # practice Q1 位置向量模
+    d = sp.Matrix([7, 13]) - sp.Matrix([2, 1])      # practice Q2 位移＝終−始
+    assert list(d) == [5, 12] and d.norm() == 13
+    assert sp.Matrix([9, 12]).norm() == 15          # practice Q4 速度向量大小
+    return _ok("phys-kin.vector-kinematics", "位置(3,4)模5；(6,8)模10；位移(2,1)→(7,13)=(5,12)模13；速度(9,12)模15")
 def kin_projectile_h():
     v0, t = 10, 2                                   # 水平拋：x=v0t、y=½gt²
     assert v0*t == 20 and _close(0.5*g*t**2, 19.6)

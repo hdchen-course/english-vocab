@@ -1,3 +1,9 @@
+## 2026-11-18 21:05 ★ sci.t_adv.phys-kin.vector-kinematics 平面運動的位置/速度/加速度向量 5/5 DONE-GATE → phys-kin 11/14
+- **sci_phys_kin_vector frozen `1b4837645c5d6618`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha）。t_adv 學測。前置＝velocity-speed＋acceleration。R15 gloss（位置向量 position vector）grep -o=2。
+- 內容：平面（二維）運動用向量描述。位置向量 r＝(x,y)、大小 |r|＝√(x²＋y²)（畢氏）；位移向量＝終點位置−起點位置（Δr＝r_終−r_始，分量各減，是向量）；平均速度向量＝位移÷時間（分 vx、vy）、加速度向量＝速度變化÷時間；x/y 分量各自獨立。例 (3,4)→5。figure＝座標平面位置向量箭頭到 P(3,4)＋x 分量 3/y 分量 4 虛線＋|r|＝5。oracle kin_vector 錨 teach(3,4)→5＋practice(6,8)→10、(2,1)→(7,13) 位移(5,12)→13、(9,12)→15 repro PASS。
+- DONE-GATE 全綠：per_page 628/628／scan PASS／pedagogy 0 hard／question CLEAN／schema rc0／repro PASS／rsvg render 四角色過。
+- ★收斂史：R3 深 panel（9-agent）CONFIRMED（major, b-hard-to-understand）：figure 用非均勻軸比例（x 分量標 3 卻畫 180px、y 分量標 4 卻畫 108px），使「3」那段看起來比「4」長、扭曲 3-4-5 三角形。harvest_override 後修為均勻 k=30px/單位（x 90px＜y 120px、|r| 旋轉 -53°），rsvg render 實測 y 腳比 x 腳長、真 3-4-5；de-converge sha 8320fd59→1b483764 全新 5-clean（R5 一 reviewer 觸 content-filter 但 coverageComplete+L3 通過仍有效）。★class 教訓：座標圖必須雙軸同一 px/單位比例，否則分量長度視覺矛盾於標值。
+
 ## 2026-11-18 20:18 ★ sci.t_adv.phys-kin.vertical-throw 鉛直上拋運動的分析 5/5 DONE-GATE → phys-kin 10/14
 - **sci_phys_kin_vertical_throw frozen `f1af68b079959cf9`**（rounds 1-5 連 5 clean、L3 全 exit0）。t_adv 學測。前置＝uniform-accel+free-fall。R15 gloss（鉛直上拋 vertical throw）grep -o=2。
 - 內容：上拋加速度 g 向下、上升減速、是等加速度；最高點 v=0（但 a 仍是 g）；H=v₀²÷(2g)、t_up=v₀÷g；上下對稱（回原高度速率大小＝初速率、運動方向變向下）。figure＝上拋軌跡 出發 v₀ 向上箭頭→最高點 v=0＋最高高度 H＋上升減速/對稱說明。oracle kin_vertical_throw 錨 teach(v₀=29.4→H=44.1,t_up=3)＋practice(v₀=39.2→H=78.4,t_up=4)、刻意避 v₀=19.6→H=19.6 巧合 repro PASS。
