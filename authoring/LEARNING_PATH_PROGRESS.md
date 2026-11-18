@@ -5,9 +5,11 @@
 - ★4 次 de-converge（對抗式深 panel 連環抓，全圖形類）：(1) teach body 正向力 N 註解「把物體壓向接觸面的力」(朝下)＝錯，正向力向上→改「接觸面垂直撐住物體、向上」；(2) r1 figure caption 同舊措辭「壓向地面」→同步改「垂直向上撐住」；(3) r5 figure 力箭頭長度反轉（f 3N 畫 40px＞N 10N 38px，違 μ=f/N 教學點）→改 10:3 比例；(4) r4/r5 深 panel(9agent) 抓 f 16px 箭用固定 9px 箭頭頭＝頭>桿短樁→v3 N=60/頭8、f=18/頭6 桿皆>頭。★教訓：圖形比例/箭頭頭尺寸缺陷只在深 panel(7-9agent) 現形，shallow 2-agent 輪看不到；固定箭頭頭套不同長度箭會短樁（classHint 記：力圖箭頭頭須隨桿長縮放）。classHint 全域掃 incline/equilibrium 向量圖本依比例、唯 friction 兩獨立示意箭未綁比例。
 - 下一步：phys-force 剩 2 binding KP：t_adv tension-system（阿特午機 a=g/5）＋t_sub newton-2d。
 
-## 2026-11-18 13:36 ☲ HD friction 訊號（real-time 視覺 QA）：三角形內外角圖「沒畫好」＋math_geom_triangle_angle_exterior 重收斂中
-- HD 目視 math_geom_triangle_angle_exterior figure：頂點內角弧浮在頂點右側（兩端點未落在兩條邊）＋右下外角弧 sweep 方向與左下內角弧不一致→重畫三弧（端點精確落兩邊、半徑18一致、sweep 一致，frozen c9d3337bf56de7fe）。render 四角色 PASS。
-- r3 深 panel(17agent) 再抓 teach「綠色標的是外角」garden-path 歧義（「標的」=名詞 target）→改「用綠色標示的就是外角」消歧（frozen `db908a77804f7a7c`）。兩個 distractor(80/140度) finding panel 正確判 NOT A DEFECT（單一迷思機制是作者 note 偏好、讀者看不到）。目前重收斂 2/5（clean 輪才發現真缺陷，走 harvest_override 留痕）。
+## 2026-11-18 13:43 ★ HD friction 訊號結案：math_geom_triangle_angle_exterior 內外角圖重畫+消歧 5/5 DONE-GATE
+- HD 目視 figure「沒畫好」：頂點內角弧浮在頂點右側（兩端點未落在兩條邊）＋右下外角弧 sweep 方向與左下內角弧不一致→重畫三弧（端點精確落兩邊、半徑18一致、sweep 一致）。render 四角色 PASS。
+- r3 深 panel(17agent) 再抓 teach「綠色標的是外角」garden-path 歧義（「標的」=名詞 target）→改「用綠色標示的就是外角」消歧。兩個 distractor(80/140度) finding panel 正確判 NOT A DEFECT（單一迷思機制是作者 note 偏好、讀者看不到）。
+- **frozen `db908a77804f7a7c`，rounds 1-6 取 5 有效 clean**（r3「270 度,」逗號 anchor 被 L3 擋＝clustered shallow 49% INVALID、已撤回不計；補 r5/r6 深讀至檔尾才達 5/5）。DONE-GATE 全綠：per_page 615/615 零違規／scan PASS／question CLEAN／pedagogy 0 hard。走 harvest_override 留痕（clean 輪才由 HD 目視發現真缺陷）。
+- ★教訓：(a) bank 前必先確認 L3 rc==0，不得無條件寫 ledger（曾誤 bank 一筆 L3 rc1 已即撤回）；(b) anchor 文字要與實際行「逐字」相符（含/不含尾逗號），否則深 anchor 不驗證→僅淺層命中→L3 判 clustered shallow。
 
 ## 2026-11-18 12:40 ★ math_geom_quadrilateral_properties 四邊形分類階層圖連線修後重收斂 5/5 DONE-GATE（HD friction 訊號2 結案）
 - 連線端點對齊框邊修正後 frozen `b2b651b2025d2620`（rounds 1-5 連 5 clean、L3 全 exit0）。figure 已於 commit 688dccba6 push、此為 ledger 重收斂結案。DONE-GATE：scan PASS／schema rc0／question CLEAN／pedagogy 0 hard／per_page absent。
