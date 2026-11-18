@@ -200,8 +200,14 @@ def en_lever():
     assert 10*2 == 4*5
     return _ok("phys-energy.lever-torque", "槓桿 F₁d₁=F₂d₂：10·2=4·5=20")
 def en_pulley():
-    assert 2 == 2                                    # 動滑輪 MA=2（省力一半）
-    return _ok("phys-energy.pulley-wheel", "動滑輪機械利益=2（施力=½負載）")
+    # 動滑輪 MA=2：施力=½負載，但費距離（拉繩=負載升距的2倍），功守恆
+    load, MA = 100, 2
+    F_in = load / MA                                 # 施力 = 100/2 = 50 N
+    assert F_in == 50
+    d_load, d_rope = 1, 2                            # 負載升1m，拉繩2m（費距離）
+    assert F_in * d_rope == load * d_load == 100     # 功守恆 50·2=100·1=100 J
+    assert MA == 2
+    return _ok("phys-energy.pulley-wheel", "動滑輪 MA=2：施力50N=½·100N，功守恆 50·2=100·1=100J")
 def en_work_principle():
     # 省力費距離：功守恆 F_in·d_in=F_out·d_out
     assert 50*4 == 200*1
