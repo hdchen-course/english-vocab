@@ -7,6 +7,16 @@
 > **規範唯一來源仍是 `LEARNING_PATH_REBUILD_SPEC.md`**（本檔不具 normative 力，衝突以 spec 為準）。
 > 每完成一個可 rollback 的步驟就 commit（pathspec）＋push，並在此追加一列。最新在最上。
 
+## 2026-11-18 08:23 ★ sci.t_mid.phys-force.friction-factor 靜摩擦與動摩擦及影響因素 5/5 DONE-GATE 全綠 → 自然島 phys-force 8/17（★phys-force t_mid 全收 6/6；兩格靜/動對比 SVG）
+- **sci_phys_force_friction_factor frozen `c84b316221ef88f3`**（rounds 1/2/3/5/7 連 5 clean、L3 全過；**2 次 de-converge**，對抗審查連抓兩真缺陷）。缺陷軌跡：
+  - 第一輪 round1（domain-decisive minor）：`_note` grep 自檢子句重嵌 literal 使「各一」註解不精確（grep -o=3）→ reword 為精確 grep -c 含行數=2（grep -c=2 且 grep -o=2 一致）。重凍 512227a8。
+  - 第二輪 round1（**5 鏡一致 MAJOR**，真實物理錯）：`正向力 (normal force)` 定義反轉——寫成「物體壓在面上的力」（物體對面＝牛三反作用力），正確應為「接觸面垂直撐住物體的力」（面對物體）；大小相等但施力對象/方向錯、種下「正向力向下」迷思、與日後 f=μN 的 N 衝突。class-wide 修 can_do/c-ff-factors/teach④/caption/distractor 五處（SVG「壓得越緊→正向力越大」大小 cue 正確保留），inversion 掃描=0、重 render＋四角色重簽。重凍 c84b3162。
+  - 收斂雜訊：round4 content-filter error 不計、round6 L3 anchors-shallow 不計 → 補 round7 達第 5 乾淨輪。
+- DONE-GATE 全綠：scan PASS／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard（c-ff-kinetic advisory 支援性 claim）／content_sha==c84b3162／per_page_5clean PASS（absent）／repro-sci_phys_checks-phys-force.friction-factor PASS（最大靜摩擦 μsN=5 ＞ 動摩擦 μkN=3，取定性 5>3，μ 不入教學）／iPad 四角色簽核（兩格：①推動前靜摩擦長紅箭頭5N、②推動後動摩擦短紅箭頭3N，綠推力箭頭長度編碼 5N>3N；R11 不顯年段）。中文授課無音檔。
+- friction-factor（t_mid，phys-force strand 第8）＝(1) 靜摩擦力＝還沒動、隨推力增大到最大靜摩擦力；(2) 動摩擦力＝滑動中、大致固定；(3) 最大靜摩擦力＞動摩擦力（推動前費力、推動後省力）；(4) 摩擦力大小＝接觸面粗糙程度＋正向力（接觸面垂直撐住物體的力）。★刻意不教摩擦係數 μ 定量 f=μN（friction-coeff，t_adv）。
+- ★教訓（記憶已更新）：(a) `_note` grep 自檢子句別重嵌 literal；(b) **正向力定義「面對物體 vs 物體對面」是常見易錯點**——R15 具名術語的定義一旦反轉，5 鏡會一致判 major，草稿時務必寫「接觸面垂直撐住物體的力」；(c) 長 anchor 若在檔內重複出現（answer 與 option 同文字）會讓 L3 誤判 shallow，補輪 prompt 要叮囑選短/唯一行。對抗式 content_audit 連抓兩真缺陷＝correctness gate 發揮價值。
+- 下一步：**phys-force t_mid 全收**（t_base 2＋t_mid 6＝8）。還有 9 binding KP：t_adv×8（resolve-compose/equilibrium/newton1/newton2/newton3/incline/tension-system/friction-coeff）＋t_sub newton-2d。接 t_adv 層（建議 newton1 慣性→newton2 F=ma→newton3，或 resolve-compose 二維合成）。
+
 ## 2026-11-18 07:40 ★ sci.t_mid.phys-force.hooke 虎克定律（彈力與形變量成正比 F=kx）5/5 DONE-GATE 全綠 → 自然島 phys-force 7/17（t_mid·國中中階，★F–x 正比直線圖＋彈簧 SVG）
 - **sci_phys_force_hooke frozen `16898429934032dc`**（R1-R5 連 5 clean、零 de-converge：草稿即乾淨，5 輪 panel 全無 CONFIRMED defect，pedagogy 零 advisory）。R15 gloss（虎克定律 Hooke's law／彈簧常數 spring constant／彈性限度 elastic limit 三術語）只放 can_do、grep -c 自檢 2/2/2、content_audit 零 R15 finding。
 - DONE-GATE 全綠：scan PASS／unit_schema rc=0／question_correctness CLEAN／pedagogy 0 hard（零 advisory）／content_sha==16898429934032dc／per_page_5clean PASS（absent）／repro-sci_phys_checks-phys-force.hooke PASS（F=kx=200·0.05=10N）／iPad 四角色簽核（左：天花板吊彈簧＋砝碼＋綠色向下 F 箭頭＋「力越大彈簧伸越長」；右：F–x 過原點紅色直線＋「F＝k×x」＋「斜率＝彈簧常數 k」；breadcrumb「自然科學·物理：力」、R11 不顯年段）。中文授課無音檔。

@@ -1,0 +1,223 @@
+{
+ "_note": "自然島 物理-力（phys-force）strand 單元（第8）。知識點 sci.t_mid.phys-force.friction-factor（靜摩擦與動摩擦及影響因素）。tier=t_mid（中階）、exam=會考。全繁體零簡體零 PRC 詞。中文授課無音檔。術語附國際英語（R15，★只在 can_do 首次 gloss 一次：靜摩擦力 (static friction)、動摩擦力 (kinetic friction)、正向力 (normal force)；teach/claim body 不重複——記憶 r15-gloss-once-first-render，草稿後以 grep -c（計「含該英文術語括號的行數」）自檢每個術語英文＝2：_note 本行一次（即上方 R15 gloss 清單）＋ can_do 一行，teach/claim 皆無；本自檢子句刻意不再重嵌各術語 literal，以免 _note 內出現第二次使 grep -o 計數失準）。R11 不顯年段。前置＝friction-exist（摩擦力存在、阻礙運動、方向與運動相反的定性）＋force-unit（牛頓單位）→本單元升靜/動區分。★scope（t_mid，定性為主，不用 μ 係數公式）：(1) 靜摩擦力＝物體還沒動時的摩擦力，會隨推力增大而增大以維持靜止，有上限『最大靜摩擦力』；(2) 動摩擦力＝物體滑動時的摩擦力，大致固定；(3) 最大靜摩擦力 ＞ 動摩擦力（所以推重物：推動前費力、推動後省力）；(4) 摩擦力大小的影響因素＝接觸面粗糙程度（越粗糙越大）＋正向力（壓得越緊/越重越大）。不含摩擦係數 μ 定量 f=μN（friction-coeff，t_adv）、不含與接觸面積關係的細節辯證。repro（tools/verify/sci_phys_checks.py::phys-force.friction-factor，repro_gate .venv PASS）錨定『最大靜摩擦 μsN=0.5·10=5 ＞ 動摩擦 μkN=0.3·10=3』（此處只取其『靜 5N ＞ 動 3N』定性結論，μ 不出現在教學）。★自檢：figure＝兩格（①推動前還沒動：box＋長綠推力5N＋長紅靜摩擦力，要5N才推得動；②推動後滑動中：box＋短綠推力3N＋短紅動摩擦力，只要3N維持滑動）＋底部影響因素句，箭頭長度編碼 5N>3N（兩格同 viewBox 比較、非 frame 尺寸不一，force-add-1d 教訓），alt 與 SVG text 逐字一致、標籤位置與座標相符（friction round7 教訓）；practice 四答案＝{最大靜摩擦>動摩擦(Q1 省力),接觸面更粗糙(Q2 因素),隨推力增大到最大(Q3 靜摩擦性質),靜5動3(Q4 讀數)}與 teach 無 #10；★MCQ options bare（#47）、每 distractor 乾淨單一誤解（#53：Q1→動>靜/變輕/沒摩擦；Q2→更光滑/換更輕/顏色；Q3→固定值/比動小/靜止沒摩擦；Q4→靜3動5反/都5/都3）、兩兩相異（#29）、長度均衡（#28）；★distractor_rationales key 逐字相符（#59）；數值對齊 oracle（5>3）。claim kind=fact。figure-only example 無 body。",
+ "page": "sci_phys_force_friction_factor.html",
+ "units": [
+  {
+   "unit_id": "sci.t_mid.phys-force.friction-factor",
+   "title_zh": "靜摩擦與動摩擦及影響因素",
+   "can_do": "我分得清『靜摩擦力 (static friction)』和『動摩擦力 (kinetic friction)』：物體還沒動時，摩擦力叫靜摩擦力，它會隨著我推的力變大而跟著變大（頂住物體不讓它動），一直到「最大靜摩擦力」為止；物體一旦滑動起來，摩擦力就變成動摩擦力，大小大致固定。我知道「最大靜摩擦力比動摩擦力大」，所以推一個重物「一開始推不動、推動以後反而比較省力」。我也知道摩擦力的大小跟兩件事有關：接觸面越粗糙摩擦力越大；還有跟『正向力 (normal force)』有關——正向力是接觸面「垂直撐住物體」的力，物體越重、把接觸面壓得越緊，正向力就越大，摩擦力也越大。",
+   "situation_group": "力：靜摩擦與動摩擦",
+   "subject": "sci",
+   "strand": "phys-force",
+   "est_minutes": 11,
+   "knowledge_point_ids": [
+    "sci.t_mid.phys-force.friction-factor"
+   ],
+   "prerequisites": [
+    "sci.t_base.phys-force.friction-exist",
+    "sci.t_mid.phys-force.force-unit"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ff-static",
+     "text": "物體還沒開始動的時候，接觸面給它的摩擦力叫「靜摩擦力」。它不是固定值：我推得越用力，靜摩擦力就跟著變得越大（剛好頂住、讓物體維持不動），一直到一個上限為止，這個上限叫「最大靜摩擦力」。",
+     "kind": "fact",
+     "source_refs": [
+      "靜摩擦力與最大靜摩擦力（十二年國教 自然 國中階段）"
+     ],
+     "verification_ref": "靜摩擦力隨外力增至最大靜摩擦（國中自然 consensus_current；數值關係見 sci_phys_checks::phys-force.friction-factor 最大靜摩擦 5N）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ff-kinetic",
+     "text": "物體一旦滑動起來，接觸面給它的摩擦力叫「動摩擦力」。物體在滑的時候，動摩擦力的大小大致是固定的。",
+     "kind": "fact",
+     "source_refs": [
+      "動摩擦力（十二年國教 自然 國中階段）"
+     ],
+     "verification_ref": "動摩擦力滑動時近似定值（國中自然 consensus_current；sci_phys_checks::phys-force.friction-factor 動摩擦 3N）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ff-compare",
+     "text": "最大靜摩擦力比動摩擦力大。這就是為什麼推一個很重的箱子時，「一開始推不動（要先克服比較大的最大靜摩擦力），一旦推動了反而比較省力（只要對抗比較小的動摩擦力）」。",
+     "kind": "fact",
+     "source_refs": [
+      "最大靜摩擦力大於動摩擦力（十二年國教 自然 國中階段）"
+     ],
+     "verification_ref": "最大靜摩擦 μsN=5 ＞ 動摩擦 μkN=3（sci_phys_checks::phys-force.friction-factor .venv 驗，取 5>3 定性結論）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ff-factors",
+     "text": "摩擦力的大小主要跟兩件事有關：(1) 接觸面的粗糙程度——接觸面越粗糙，摩擦力越大；(2) 正向力（接觸面垂直撐住物體的力，大小等於物體壓在面上的力）——物體越重、壓得越緊，正向力越大，摩擦力也越大。",
+     "kind": "fact",
+     "source_refs": [
+      "影響摩擦力大小的因素（十二年國教 自然 國中階段）"
+     ],
+     "verification_ref": "摩擦力隨接觸面粗糙度與正向力增大（國中自然 consensus_current；f=μN 定量屬 friction-coeff t_adv，此處定性）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-force.friction-factor"
+     ],
+     "body": "之前學過摩擦力會阻礙物體運動、方向和運動相反。這一單元看得更細：還沒動和正在滑，摩擦力其實不一樣；還有，什麼會讓摩擦力變大變小？"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-force.friction-factor"
+     ],
+     "body": "① 還沒動時的摩擦力叫靜摩擦力：我推得越用力，它就跟著變越大、頂住物體不讓它動，直到上限「最大靜摩擦力」。② 一旦滑動起來，摩擦力變成動摩擦力，大小大致固定。③ 最大靜摩擦力比動摩擦力大——所以推重物「一開始推不動、推動後反而省力」。④ 摩擦力大小看兩件事：接觸面越粗糙越大、正向力越大（正向力是接觸面垂直撐住物體的力；物體越重、把面壓得越緊，正向力越大）。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_mid.phys-force.friction-factor"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 168' xmlns='http://www.w3.org/2000/svg'><text x='180' y='13' font-family='sans-serif' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>最大靜摩擦力 ＞ 動摩擦力（推重物：推動前費力、推動後省力）</text><line x1='180' y1='26' x2='180' y2='150' stroke='#d5dde3' stroke-width='1'/><text x='92' y='40' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle' font-weight='bold'>① 推動前（還沒動）</text><line x1='34' y1='98' x2='150' y2='98' stroke='#99a7b5' stroke-width='1.2'/><rect x='70' y='66' width='38' height='28' rx='2' fill='#e6edf3' stroke='#99a7b5' stroke-width='1.2'/><line x1='34' y1='76' x2='70' y2='76' stroke='#2f6f54' stroke-width='2.4'/><polygon points='70,76 62,72 62,80' fill='#2f6f54'/><text x='36' y='60' font-family='sans-serif' font-size='7.5' fill='#2f6f54' text-anchor='start'>推力 5N</text><line x1='108' y1='96' x2='72' y2='96' stroke='#c2535d' stroke-width='2.4'/><polygon points='72,96 80,92 80,100' fill='#c2535d'/><text x='112' y='99' font-family='sans-serif' font-size='7.5' fill='#c2535d' text-anchor='start'>靜摩擦力</text><text x='92' y='114' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='middle'>要 5 牛頓才推得動</text><text x='270' y='40' font-family='sans-serif' font-size='8.5' fill='#33475b' text-anchor='middle' font-weight='bold'>② 推動後（滑動中）</text><line x1='214' y1='98' x2='330' y2='98' stroke='#99a7b5' stroke-width='1.2'/><rect x='252' y='66' width='38' height='28' rx='2' fill='#e6edf3' stroke='#99a7b5' stroke-width='1.2'/><line x1='228' y1='76' x2='252' y2='76' stroke='#2f6f54' stroke-width='2.4'/><polygon points='252,76 244,72 244,80' fill='#2f6f54'/><text x='224' y='60' font-family='sans-serif' font-size='7.5' fill='#2f6f54' text-anchor='start'>推力 3N</text><line x1='290' y1='96' x2='266' y2='96' stroke='#c2535d' stroke-width='2.4'/><polygon points='266,96 274,92 274,100' fill='#c2535d'/><text x='294' y='99' font-family='sans-serif' font-size='7.5' fill='#c2535d' text-anchor='start'>動摩擦力</text><text x='270' y='114' font-family='sans-serif' font-size='7.5' fill='#6b7785' text-anchor='middle'>只要 3 牛頓維持滑動</text><text x='180' y='136' font-family='sans-serif' font-size='7.5' fill='#33475b' text-anchor='middle'>摩擦力大小看：接觸面越粗糙、壓得越緊（正向力越大），摩擦力越大。</text></svg>",
+      "alt": "標題「最大靜摩擦力 ＞ 動摩擦力（推重物：推動前費力、推動後省力）」。圖分左右兩格。左格「① 推動前（還沒動）」：地面上一個方塊，方塊左邊有一支較長的綠色向右箭頭標「推力 5N」，方塊下方有一支較長的紅色向左箭頭標「靜摩擦力」，下面寫「要 5 牛頓才推得動」。右格「② 推動後（滑動中）」：地面上一個方塊，方塊左邊有一支較短的綠色向右箭頭標「推力 3N」，方塊下方有一支較短的紅色向左箭頭標「動摩擦力」，下面寫「只要 3 牛頓維持滑動」。最下方一行寫「摩擦力大小看：接觸面越粗糙、壓得越緊（正向力越大），摩擦力越大。」",
+      "caption": "左格：物體還沒動，要用比較大的力（5 牛頓）才能克服「最大靜摩擦力」把它推動。右格：物體滑動以後，只要比較小的力（3 牛頓）就能維持，因為「動摩擦力」比較小。綠色箭頭越長代表推力越大——推動前的 5 牛頓比推動後的 3 牛頓長，正說明最大靜摩擦力大於動摩擦力。摩擦力的大小則取決於接觸面粗不粗糙、以及正向力大不大（物體越重、壓得越緊，正向力越大）。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-force.friction-factor"
+     ],
+     "body": "最後練「靜摩擦與動摩擦」。重點：(1) 還沒動＝靜摩擦力（隨推力變大到最大靜摩擦力）；(2) 滑動中＝動摩擦力（大致固定）；(3) 最大靜摩擦力＞動摩擦力（推動前費力、推動後省力）；(4) 摩擦力大小看接觸面粗糙程度與正向力。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QG-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "推一個很重的箱子，常常「一開始推不動，推動以後反而比較省力」。這是為什麼？",
+     "answer": "因為最大靜摩擦力比動摩擦力大",
+     "kp_ids": [
+      "sci.t_mid.phys-force.friction-factor"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-force.friction-factor"
+     ],
+     "options": [
+      "因為最大靜摩擦力比動摩擦力大",
+      "因為動摩擦力比最大靜摩擦力大",
+      "因為箱子推動以後就變輕了",
+      "因為箱子推動以後就完全沒有摩擦力了"
+     ],
+     "distractor_rationales": {
+      "因為動摩擦力比最大靜摩擦力大": "剛好相反：最大靜摩擦力比較大，所以推動前（要克服它）比較費力，推動後只剩較小的動摩擦力。",
+      "因為箱子推動以後就變輕了": "箱子的重量沒變；省力是因為動摩擦力比最大靜摩擦力小，不是變輕。",
+      "因為箱子推動以後就完全沒有摩擦力了": "滑動時仍有摩擦力（動摩擦力），只是比最大靜摩擦力小，不是沒有。"
+     },
+     "answer_evidence": [
+      "c-ff-compare"
+     ],
+     "feedback": "最大靜摩擦力＞動摩擦力：推動前要先克服較大的最大靜摩擦力（費力），推動後只需對抗較小的動摩擦力（省力）。"
+    },
+    {
+     "question_id": "QG-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "下列哪一個做法會讓摩擦力「變大」？",
+     "answer": "把接觸面換成更粗糙的",
+     "kp_ids": [
+      "sci.t_mid.phys-force.friction-factor"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-force.friction-factor"
+     ],
+     "options": [
+      "把接觸面換成更粗糙的",
+      "把接觸面換成更光滑的",
+      "把物體換成更輕的",
+      "把物體漆成更深的顏色"
+     ],
+     "distractor_rationales": {
+      "把接觸面換成更光滑的": "更光滑會讓摩擦力變小，不是變大；越粗糙才越大。",
+      "把物體換成更輕的": "更輕表示正向力變小（物體越輕、壓面越鬆），摩擦力會變小，不是變大。",
+      "把物體漆成更深的顏色": "顏色與摩擦力無關；摩擦力大小看接觸面粗糙程度和正向力。"
+     },
+     "answer_evidence": [
+      "c-ff-factors"
+     ],
+     "feedback": "接觸面越粗糙，摩擦力越大；另一個會讓摩擦力變大的因素是正向力（物體越重、壓得越緊）。"
+    },
+    {
+     "question_id": "QG-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "關於「靜摩擦力」，下列哪一個說法正確？",
+     "answer": "物體還沒動時，靜摩擦力會隨著推力變大而變大，直到最大靜摩擦力",
+     "kp_ids": [
+      "sci.t_mid.phys-force.friction-factor"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-force.friction-factor"
+     ],
+     "options": [
+      "物體還沒動時，靜摩擦力會隨著推力變大而變大，直到最大靜摩擦力",
+      "靜摩擦力永遠是一個固定不變的值",
+      "靜摩擦力一定比動摩擦力小",
+      "靜止的物體完全不會有摩擦力"
+     ],
+     "distractor_rationales": {
+      "靜摩擦力永遠是一個固定不變的值": "靜摩擦力不是固定值：它會隨推力增大而增大，到最大靜摩擦力為止。",
+      "靜摩擦力一定比動摩擦力小": "相反：最大靜摩擦力比動摩擦力大（所以推動前比較費力）。",
+      "靜止的物體完全不會有摩擦力": "靜止時若有外力想推它，就有靜摩擦力頂住它，並非沒有摩擦力。"
+     },
+     "answer_evidence": [
+      "c-ff-static"
+     ],
+     "feedback": "靜摩擦力會隨外力增大而增大（維持物體不動），一直到最大靜摩擦力；它不是固定值。"
+    },
+    {
+     "question_id": "QG-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個箱子要用 5 牛頓的力才推得動，推動後只要 3 牛頓就能維持滑動。關於這個情形，下列哪一個說法正確？",
+     "answer": "最大靜摩擦力約 5 牛頓，動摩擦力約 3 牛頓",
+     "kp_ids": [
+      "sci.t_mid.phys-force.friction-factor"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-force.friction-factor"
+     ],
+     "options": [
+      "最大靜摩擦力約 5 牛頓，動摩擦力約 3 牛頓",
+      "最大靜摩擦力約 3 牛頓，動摩擦力約 5 牛頓",
+      "靜摩擦和動摩擦都是 5 牛頓",
+      "靜摩擦和動摩擦都是 3 牛頓"
+     ],
+     "distractor_rationales": {
+      "最大靜摩擦力約 3 牛頓，動摩擦力約 5 牛頓": "數字反了：要 5 牛頓才推得動＝最大靜摩擦力約 5 牛頓；推動後 3 牛頓維持＝動摩擦力約 3 牛頓。",
+      "靜摩擦和動摩擦都是 5 牛頓": "兩者不相等：推動後只要 3 牛頓，表示動摩擦力約 3 牛頓，比最大靜摩擦力（5 牛頓）小。",
+      "靜摩擦和動摩擦都是 3 牛頓": "兩者不相等：要 5 牛頓才推得動，表示最大靜摩擦力約 5 牛頓，比動摩擦力（3 牛頓）大。"
+     },
+     "answer_evidence": [
+      "c-ff-compare"
+     ],
+     "feedback": "推得動所需的力＝最大靜摩擦力（約 5 牛頓）；維持滑動所需的力＝動摩擦力（約 3 牛頓）。最大靜摩擦力比較大。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（靜摩擦力＝還沒動、隨推力增大到最大靜摩擦力；動摩擦力＝滑動中、大致固定；最大靜摩擦力＞動摩擦力＝推動前費力推動後省力；摩擦力大小看接觸面粗糙程度＋正向力；三鐵律＝還沒動是靜摩擦可變、滑動是動摩擦較小、粗糙與壓力越大摩擦越大）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
