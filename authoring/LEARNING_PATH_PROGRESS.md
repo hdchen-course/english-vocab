@@ -1,3 +1,8 @@
+## 2026-11-19 00:16 ★ sci.t_mid.phys-energy.ke-pe 動能與重力位能的概念 5/5 DONE-GATE → phys-energy 4/22
+- **sci_phys_energy_ke_pe frozen `f330ca03ea91a0c4`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha，無 de-converge）。t_mid 國中會考。前置＝energy-forms。R15 gloss（動能 kinetic energy／重力位能 gravitational potential energy）grep -o 各＝2。
+- 內容：動能 KE＝½mv²（速率平方、影響最大）；重力位能 PE＝mgh（質量×g×高度，g≈9.8）；動能看速率/位能看高度、單位都是焦耳。figure＝左高臺靜止球 PE=mgh／右地面移動球 KE=½mv²。oracle en_ke_pe 錨 ½·2·4²=16J、2·9.8·5=98J；Q3 distractor 32(忘½)/4(忘平方)/8(漏質量)、Q4 10(漏g)/19.6(漏高度)/49(漏質量)。
+- DONE-GATE 全綠：per_page 635/635／scan PASS／pedagogy 0 hard／question CLEAN／schema rc0／repro PASS／figure 四角色簽核。
+- ★收斂史：首輪即零確認。R3(7a) PM 單獨判 c-out-of-scope（定量 KE/PE 於 t_mid 超綱、屬高中），其餘 6 位（domain/learning/english/zh/viz/eye，含課綱 lens）判 NOT-A-DEFECT。**我裁定 in-scope（非缺陷、不改）**：動能 ½mv²、重力位能 mgh 是台灣國中理化 9 年級標準教材、會考有考簡單代入，且同 strand 已定量教功 W=Fd、energy-forms(基礎層)已用 ½mv²=9J 量化例——移除反而低教。scope 裁定寫進後續 round knownFP，R9/R10 未再 raise。★L3 教訓：此 JSON 重複結構鍵多（required_kp_ids/kp_ids/options/kind/kp id），reviewer 以之當 anchor 且行號不準→L3 行號核對（findLine 取最近 hint 之出現、±3 容差）屢假擋（R4/R7/R8 作廢）；改以「唯一散文字串（distractor/claim/verification_ref 全文）」當 anchor 即穩過（R6/R9/R10）。
 ## 2026-11-18 23:56 ★ sci.t_mid.phys-energy.power-def 功率的定義與單位（瓦特）5/5 DONE-GATE → phys-energy 3/22
 - **sci_phys_energy_power_def frozen `49ca44da2fc936e4`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha；三度 de-converge 自 `56f0889a`→`0224d2d7`→`86ebd191`→`49ca44da`，皆集中 c-pw-unit 一句）。t_mid 國中會考。前置＝work-def。R15 gloss（功率 power／瓦特 watt）grep -o 各＝2。
 - 內容：功率＝每單位時間所做的功，P＝W÷t；單位瓦特(W)＝焦耳/秒；同功時間短功率大。figure＝甲5秒60W vs 乙10秒30W（功都300J）。oracle en_power_def 錨 P=300/5=60W；Q4 distractor 1500(×5)/305(+5)/295(−5) 乾淨單一誤解。
