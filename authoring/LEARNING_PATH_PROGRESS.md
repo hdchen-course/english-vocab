@@ -1,3 +1,10 @@
+## 2026-11-18 16:24 ★ sci.t_mid.phys-kin.velocity-speed 速度與速率的區別 5/5 DONE-GATE → phys-kin **3/14**
+- **sci_phys_kin_velocity_speed frozen `0d2ff9a3a08ce6bf`**（rounds 1-5 連 5 clean、L3 全 exit0）。t_mid 國中。前置＝displacement-path。R15 gloss（速度 velocity／速率 speed）各 grep -o=2。units_index 620。
+- 內容：速率＝路徑長÷時間只有大小；速度＝位移÷時間有方向（直線用正負號）；例 位移 −6、時間 3 → 速度 −2（負＝往左）、速率 2。figure＝數線往左移動+棕左向箭頭+速度/速率兩行結論。
+- DONE-GATE 全綠：per_page 620/620 零違規／scan PASS／question CLEAN／pedagogy 0 hard／schema CLEAN／repro-phys-kin.velocity-speed PASS（速度−2、速率2）／iPad render 四角色 PASS。
+- ★收斂史：r3 深 9-agent panel CONFIRMED(minor)：figure SVG 標題未逐字入 alt（違 _note 自宣告「alt 與 SVG text 逐字一致」）→把標題補進 alt 開頭。de-converge 重凍 80c951de→0d2ff9a3。★class 教訓：往後 phys-kin 單元 figure SVG 標題一律逐字入 alt 開頭（避免此 class 重犯）。
+- 下一步：phys-kin 第4單元＝avg-inst（平均速度與瞬時速度，t_mid；oracle 已備：x=t² 瞬時 v(3)=6、[2,4]平均=6）。
+
 ## 2026-11-18 16:18 ★ HD friction 兩圖結案：math 比與比例「正比 y=kx」+「比例式」figure 重修 5/5 DONE-GATE
 - **HD [Image#10]「座標都標示在點的右邊就都不會蓋住了」**＋**[Image#11]「線似乎沒畫好」**兩 friction 訊號。
 - **math_ratio_direct_variation（正比 y=kx）frozen `b980cc3bdce4f471`**（rounds 1-5 連 5 clean、L3 全 exit0）。修三缺陷：(1) HD 指示三座標 (1,2)(2,4)(3,6) 移到各點右側(text-anchor=start)不蓋線；(2) 深 panel 抓藍線端點 x2=244 斜率−0.663≠精確−2/3→改 x2=243 精確過三點；(3) 深 panel 抓 caption/claim/distractor「向右1格就向上2格」但 SVG 無格線→三處改「單位」。render 四角色 PASS。
