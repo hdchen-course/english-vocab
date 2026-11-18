@@ -1,0 +1,212 @@
+{
+ "_note": "自然島 物理-運動學（phys-kin）strand 第12單元（t_adv 學測）。知識點 sci.t_adv.phys-kin.projectile-h（水平拋射運動）。tier=t_adv（學習者端不顯年段 R11）。全繁體零簡體零 PRC 詞。中文授課無音檔。前置＝free-fall（自由落體）、vector-kinematics（向量分量獨立）。術語附國際英語（R15，★只在 can_do 首次 gloss 一次：水平拋射 (horizontal projectile)；teach/claim body 不重複；英文括號 grep -o 計數應＝2〔_note 本宣告行一次＋can_do 一次〕）。scope（學測 t_adv）：物體以水平方向拋出。(1) 水平方向不受力（忽略空氣阻力）＝等速運動，vx＝v₀、水平射程 x＝v₀·t；(2) 鉛直方向只受重力＝自由落體，vy＝gt、落距 y＝½gt²；(3) 水平與鉛直兩分量各自獨立，互不影響；(4) 停留空中的時間只由拋出高度決定（與水平初速無關）＝同高度不同初速同時落地；(5) 軌跡是拋物線、合速度大小＝√(vx²＋vy²)。不含斜向拋射（另單元 projectile-angled）、不含空氣阻力。repro（tools/verify/sci_phys_checks.py::phys-kin.projectile-h，repro_gate .venv PASS，content_fingerprint 588666f0aee935b1）錨定 teach（v₀=20,t=3→x=60、y=½gt²=44.1、vy=gt=29.4，三值互異）與 practice（Q3 t=1 落距 y=½·9.8·1²=4.9 ≠ 速度 gt=9.8；Q4 水平 x=12·4=48 ≠ 鉛直落距 ½·9.8·4²=78.4）。★刻意避 t=2：t=2 時 vy=gt 與 y=½gt² 數值皆=19.6（v/d 巧合，free-fall 單元已踩過的 class 陷阱）。figure 自檢：左上高台邊拋出一顆球、藍色拋物線軌跡向右下、紅色水平 v₀ 箭頭、橘色虛線標 水平射程 x（底部水平）與 鉛直落距 y（左側鉛直）；標題『水平拋射：水平等速 ＋ 鉛直自由落體』逐字入 alt 開頭；箭頭不疊軌跡、標籤不溢出、alt 與 SVG text 逐字一致、拋物線幾何 render 核對。practice 四答案＝{保持不變（Q1 水平速度）, 兩顆同時落地（Q2 同高度落地時間）, 4.9 公尺（Q3 t=1 落距）, 48 公尺（Q4 水平射程）}；MCQ options bare、每 distractor 乾淨單一誤解（水平鉛直混淆／初速影響落地時間／忘½／當成速度／相加相除）、兩兩相異、長度均衡；distractor_rationales key 逐字相符。claim kind=fact。figure-only example 無 body。定義不得反轉：水平等速 x＝v₀·t；鉛直自由落體 y＝½gt²；兩分量獨立；落地時間只看高度。",
+ "page": "sci_phys_kin_projectile_h.html",
+ "units": [
+  {
+   "unit_id": "sci.t_adv.phys-kin.projectile-h",
+   "title_zh": "水平拋射運動",
+   "can_do": "我知道『水平拋射 (horizontal projectile)』可以拆成兩個各自獨立的運動：水平方向不受力（忽略空氣阻力），是等速運動，速度保持 v₀ 不變、水平射程 x＝v₀·t；鉛直方向只受重力，是自由落體，速度 vy＝gt、落距 y＝½gt²。我知道這兩個方向互不影響，所以停留在空中的時間只由拋出的高度決定，和水平初速沒有關係——同樣高度拋出，初速大小不同也會同時落地（初速大的只是飛得比較遠）。軌跡是一條拋物線。",
+   "situation_group": "運動：描述物體怎麼動",
+   "subject": "sci",
+   "strand": "phys-kin",
+   "est_minutes": 14,
+   "knowledge_point_ids": [
+    "sci.t_adv.phys-kin.projectile-h"
+   ],
+   "prerequisites": [
+    "sci.t_mid.phys-kin.free-fall",
+    "sci.t_adv.phys-kin.vector-kinematics"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ph-indep",
+     "text": "水平拋射可以拆成兩個互相獨立的方向。水平方向不受力（忽略空氣阻力），所以是等速運動：水平速度一直保持 vx＝v₀ 不變，水平距離 x＝v₀·t。鉛直方向只受重力，所以是自由落體：鉛直速度 vy＝gt 越來越快，落下的距離 y＝½gt²。兩個方向各算各的，互不影響。",
+     "kind": "fact",
+     "source_refs": [
+      "水平拋射＝水平等速＋鉛直自由落體（高中物理 學測）"
+     ],
+     "verification_ref": "v₀=20,t=3→x=60、y=½gt²=44.1、vy=gt=29.4（sci_phys_checks::phys-kin.projectile-h .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ph-time",
+     "text": "物體停留在空中的時間，只由拋出的高度決定，和水平初速無關。因為鉛直方向是從靜止開始的自由落體（y＝½gt²），把高度代進去就能解出落地時間。所以同一個高度水平拋出的兩顆球，不管初速大或小，都會同時落地——初速大的只是水平飛得比較遠。",
+     "kind": "fact",
+     "source_refs": [
+      "落地時間由高度決定、與水平初速獨立（高中物理 學測）"
+     ],
+     "verification_ref": "鉛直 y=½gt² 與水平初速獨立（力學共識）；t=1 落距 4.9≠速度 9.8（.venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ph-range",
+     "text": "水平射程（落地時水平飛了多遠）用水平等速算：x＝v₀·t，t 是落地時間。鉛直落距用自由落體算：y＝½gt²。這兩個是不同方向的量，不可以互相代入或搞混。落地時的合速度大小＝√(vx²＋vy²)，軌跡整體是一條拋物線。",
+     "kind": "fact",
+     "source_refs": [
+      "水平射程 x=v₀t、鉛直落距 y=½gt²（高中物理 學測）"
+     ],
+     "verification_ref": "x=12·4=48 ≠ 鉛直落距 ½·9.8·4²=78.4（sci_phys_checks::phys-kin.projectile-h .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.projectile-h"
+     ],
+     "body": "前面學過自由落體（只往下掉）和向量（運動可分成 x、y 分量）。這一單元把它們合起來：一顆球『水平』拋出去之後，會怎麼飛？"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.projectile-h"
+     ],
+     "body": "① 水平方向：不受力（忽略空氣阻力）＝等速，速度一直是 v₀、水平距離 x＝v₀·t。② 鉛直方向：只受重力＝自由落體，速度 vy＝gt、落距 y＝½gt²。③ 兩方向各自獨立，各算各的。④ 停留空中的時間只看『拋出高度』，和水平初速無關——同高度拋出，初速大小不同也同時落地。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.projectile-h"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 200' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='170' y='14' font-size='8.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>水平拋射：水平等速 ＋ 鉛直自由落體</text><rect x='8' y='40' width='47' height='34' fill='#e3e7eb' stroke='#9aa5b1' stroke-width='1'/><text x='31' y='60' font-size='7.5' fill='#8a95a1' text-anchor='middle'>高台</text><path d='M55,40 Q185,48 250,165' fill='none' stroke='#2563a6' stroke-width='2.2'/><circle cx='55' cy='40' r='3.2' fill='#2563a6'/><line x1='55' y1='40' x2='98' y2='40' stroke='#c0392b' stroke-width='2'/><polygon points='98,40 92,37 92,43' fill='#c0392b'/><text x='77' y='34' font-size='9' fill='#c0392b' text-anchor='middle'>v₀（水平）</text><circle cx='250' cy='165' r='3.2' fill='#2563a6'/><line x1='55' y1='165' x2='250' y2='165' stroke='#d08a3e' stroke-width='1.3' stroke-dasharray='4 3'/><text x='152' y='180' font-size='9' fill='#d08a3e' text-anchor='middle'>水平射程 x ＝ v₀·t</text><line x1='55' y1='40' x2='55' y2='165' stroke='#d08a3e' stroke-width='1.3' stroke-dasharray='4 3'/><text x='51' y='100' font-size='9' fill='#d08a3e' text-anchor='end'>鉛直落距</text><text x='51' y='112' font-size='9' fill='#d08a3e' text-anchor='end'>y ＝ ½gt²</text><text x='170' y='196' font-size='8' fill='#33475b' text-anchor='middle'>v₀=20、t=3 秒：x＝60 公尺、y＝½·9.8·3²＝44.1 公尺</text></g></svg>",
+      "alt": "標題「水平拋射：水平等速 ＋ 鉛直自由落體」。左上角有一座高台的邊緣，一顆藍色的球從高台邊水平拋出，紅色箭頭標「v₀（水平）」指向右方。藍色拋物線軌跡從高台邊往右下彎，落到右下角的地面。底部橘色虛線標「水平射程 x ＝ v₀·t」，左側鉛直橘色虛線標「鉛直落距 y ＝ ½gt²」。下方寫「v₀=20、t=3 秒：x＝60 公尺、y＝½·9.8·3²＝44.1 公尺」。",
+      "caption": "水平拋射：水平方向等速（紅箭頭 v₀ 不變，x＝v₀·t），鉛直方向自由落體（y＝½gt² 越掉越快），合起來是一條拋物線。例：v₀＝20 公尺／秒、飛 3 秒，水平飛 x＝20×3＝60 公尺、鉛直掉 y＝½×9.8×3²＝44.1 公尺（落地鉛直速度 vy＝9.8×3＝29.4 公尺／秒）。水平和鉛直各算各的，不可互相代入。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.projectile-h"
+     ],
+     "body": "最後練「水平拋射」。重點：(1) 水平不受力＝等速，x＝v₀·t、速度不變；(2) 鉛直是自由落體，y＝½gt²、vy＝gt；(3) 兩方向獨立、各算各的；(4) 落地時間只看高度，和水平初速無關。小提醒：別把鉛直的落距 ½gt² 當成水平距離；水平速度不會因為重力而變快。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QK-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一顆球以水平方向從高台邊拋出（忽略空氣阻力）。在飛行途中，它的水平速度怎麼變化？",
+     "answer": "保持不變",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.projectile-h"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-kin.projectile-h"
+     ],
+     "options": [
+      "保持不變",
+      "越來越快",
+      "越來越慢",
+      "先變快再變慢"
+     ],
+     "distractor_rationales": {
+      "越來越快": "這把水平和鉛直搞混了：越來越快的是鉛直方向（受重力加速），水平方向沒有受力，速度保持不變。",
+      "越來越慢": "水平方向沒有阻力（已忽略空氣阻力）也沒有其他水平力，不會變慢；水平速度保持 v₀ 不變。",
+      "先變快再變慢": "水平方向不受力，速度從頭到尾都一樣，不會先快後慢。"
+     },
+     "answer_evidence": [
+      "c-ph-indep"
+     ],
+     "feedback": "水平方向不受力（忽略空氣阻力），水平速度保持等速不變 vx＝v₀；會越來越快的是鉛直方向（自由落體）。"
+    },
+    {
+     "question_id": "QK-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "兩顆一樣的球從同樣高度的高台邊水平拋出，一顆初速較大、一顆較小（忽略空氣阻力）。哪一顆先落到地面？",
+     "answer": "兩顆同時落地",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.projectile-h"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-kin.projectile-h"
+     ],
+     "options": [
+      "兩顆同時落地",
+      "初速大的先落地",
+      "初速小的先落地",
+      "無法判斷"
+     ],
+     "distractor_rationales": {
+      "初速大的先落地": "落地時間只由鉛直的自由落體決定，和水平初速無關；同高度就同時落地（初速大的只是飛得比較遠）。",
+      "初速小的先落地": "水平初速不影響落地時間；鉛直方向都是從靜止開始的自由落體，同高度就同時落地。",
+      "無法判斷": "可以判斷：同高度的水平拋射，落地時間一樣，和水平初速無關。"
+     },
+     "answer_evidence": [
+      "c-ph-time"
+     ],
+     "feedback": "鉛直方向是自由落體、與水平初速獨立，落地時間只看高度；同高度拋出就同時落地（水平初速大的只是飛得比較遠）。"
+    },
+    {
+     "question_id": "QK-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一顆球從高台邊水平拋出後，經過 1 秒落到地面。這 1 秒內它鉛直方向掉落的距離約是多少？（g≈9.8 公尺／秒²）",
+     "answer": "4.9 公尺",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.projectile-h"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-kin.projectile-h"
+     ],
+     "options": [
+      "4.9 公尺",
+      "9.8 公尺",
+      "2.45 公尺",
+      "19.6 公尺"
+     ],
+     "distractor_rationales": {
+      "9.8 公尺": "這是 1 秒末的鉛直速度 vy＝gt＝9.8 公尺／秒（那是速度不是距離），或忘了公式裡的 ½；落距 y＝½gt²＝4.9 公尺。",
+      "2.45 公尺": "這把 ½ 又多除了一次（算成 ¼gt²）；正確是 ½gt²＝½×9.8×1²＝4.9 公尺。",
+      "19.6 公尺": "這是用 t＝2 代進去（½×9.8×2²）；題目是 1 秒，y＝½×9.8×1²＝4.9 公尺。"
+     },
+     "answer_evidence": [
+      "c-ph-range"
+     ],
+     "feedback": "鉛直是自由落體，落距 y＝½gt²＝½×9.8×1²＝4.9 公尺（別把它和鉛直速度 vy＝gt＝9.8 搞混）。"
+    },
+    {
+     "question_id": "QK-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一顆球以水平初速 12 公尺／秒從高台邊拋出，經過 4 秒落地。它落地時離高台的水平距離約是多少？（水平方向不受力）",
+     "answer": "48 公尺",
+     "kp_ids": [
+      "sci.t_adv.phys-kin.projectile-h"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-kin.projectile-h"
+     ],
+     "options": [
+      "48 公尺",
+      "78.4 公尺",
+      "16 公尺",
+      "3 公尺"
+     ],
+     "distractor_rationales": {
+      "78.4 公尺": "這是鉛直落距 ½gt²＝½×9.8×4²（把鉛直掉落的距離當成水平距離）；水平距離要用 x＝v₀·t＝12×4＝48 公尺。",
+      "16 公尺": "這是把初速和時間相加（12＋4）；水平距離要相乘 x＝v₀·t＝48 公尺。",
+      "3 公尺": "這是把初速除以時間（12÷4）；水平等速的距離是 v₀×t＝48 公尺。"
+     },
+     "answer_evidence": [
+      "c-ph-range"
+     ],
+     "feedback": "水平方向等速，水平距離 x＝v₀·t＝12×4＝48 公尺（鉛直的 ½gt²＝78.4 公尺是掉落高度，不是水平距離）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（水平拋射：水平不受力＝等速 x＝v₀·t、速度不變；鉛直＝自由落體 y＝½gt²、vy＝gt；兩方向獨立各算各的；落地時間只看高度、與水平初速無關＝同高度同時落地；例 v₀=20,t=3→x=60、y=44.1）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

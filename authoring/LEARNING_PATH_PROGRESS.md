@@ -1,3 +1,9 @@
+## 2026-11-18 21:30 ★ sci.t_adv.phys-kin.projectile-h 水平拋射運動 5/5 DONE-GATE → phys-kin 12/14
+- **sci_phys_kin_projectile_h frozen `3b6e3fba436e6f55`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha）。t_adv 學測。前置＝free-fall＋vector-kinematics。R15 gloss（水平拋射 horizontal projectile）grep -o=2。
+- 內容：水平拋射＝水平等速（不受力 vx＝v₀、x＝v₀·t）＋鉛直自由落體（vy＝gt、y＝½gt²），兩分量各自獨立；落地時間只由高度決定、與水平初速無關（同高度同時落地）；軌跡拋物線、合速度 √(vx²+vy²)。figure＝高台邊拋出、藍拋物線向右下、紅 v₀ 水平箭頭、橘虛線標 x 水平射程/y 鉛直落距。oracle kin_projectile_h 錨 v₀=20,t=3→x=60/y=44.1/vy=29.4 三值互異＋Q3 t=1 落距4.9≠速度9.8＋Q4 x=48≠鉛直78.4；刻意避 t=2 的 vy=y=19.6 v/d 巧合 repro PASS（fingerprint 503f114→588666f0）。
+- DONE-GATE 全綠：per_page 629/629／scan PASS／pedagogy 0 hard／question CLEAN／schema rc0／repro PASS／rsvg render 四角色過。
+- ★收斂史：R1 深 panel（7-agent 5-lens 全 DEFECT）CONFIRMED（major, instructional-design）：拋出點設「桌邊/桌子」（約 0.75 公尺）卻配 t=1/3/4 秒落地（隱含落距 4.9/44.1/78.4 公尺），情境與數值物理矛盾、細心學測生反推高度會卡住。class-wide 改「高台」（figure table→platform block、Q1-4 stem/alt/_note 全改，數值全留），figure 重 render 四角色 re-signoff 綁新 sha 3b6e3fba；全新 5-clean。★class 教訓：拋射/落體情境的「拋出點物體」必須與題給落地時間反推的高度物理相容（桌子不可配數秒落地），改用「高台/高處」。
+
 ## 2026-11-18 21:05 ★ sci.t_adv.phys-kin.vector-kinematics 平面運動的位置/速度/加速度向量 5/5 DONE-GATE → phys-kin 11/14
 - **sci_phys_kin_vector frozen `1b4837645c5d6618`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha）。t_adv 學測。前置＝velocity-speed＋acceleration。R15 gloss（位置向量 position vector）grep -o=2。
 - 內容：平面（二維）運動用向量描述。位置向量 r＝(x,y)、大小 |r|＝√(x²＋y²)（畢氏）；位移向量＝終點位置−起點位置（Δr＝r_終−r_始，分量各減，是向量）；平均速度向量＝位移÷時間（分 vx、vy）、加速度向量＝速度變化÷時間；x/y 分量各自獨立。例 (3,4)→5。figure＝座標平面位置向量箭頭到 P(3,4)＋x 分量 3/y 分量 4 虛線＋|r|＝5。oracle kin_vector 錨 teach(3,4)→5＋practice(6,8)→10、(2,1)→(7,13) 位移(5,12)→13、(9,12)→15 repro PASS。

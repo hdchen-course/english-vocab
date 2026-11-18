@@ -64,9 +64,14 @@ def kin_vector():
     assert sp.Matrix([9, 12]).norm() == 15          # practice Q4 速度向量大小
     return _ok("phys-kin.vector-kinematics", "位置(3,4)模5；(6,8)模10；位移(2,1)→(7,13)=(5,12)模13；速度(9,12)模15")
 def kin_projectile_h():
-    v0, t = 10, 2                                   # 水平拋：x=v0t、y=½gt²
-    assert v0*t == 20 and _close(0.5*g*t**2, 19.6)
-    return _ok("phys-kin.projectile-h", "水平拋 v₀=10,t=2：x=20、y=½gt²=19.6")
+    # 水平拋：水平等速 vx=v0、鉛直自由落體 vy=gt、落距 y=½gt²；兩分量獨立
+    v0, t = 20, 3                                   # teach 範例（避 t=2：t=2 時 vy=gt 與 y=½gt² 數值皆=19.6 之 v/d 巧合）
+    x = v0*t; y = 0.5*g*t**2; vy = g*t
+    assert x == 60 and _close(y, 44.1) and _close(vy, 29.4)
+    assert len({round(x, 1), round(y, 1), round(vy, 1)}) == 3   # 三值互異
+    assert _close(0.5*g*1**2, 4.9) and _close(g*1, 9.8)         # Q3 t=1：落距4.9 ≠ 速度9.8
+    assert 12*4 == 48 and _close(0.5*g*4**2, 78.4) and 48 != round(0.5*g*4**2, 1)  # Q4 水平x=48 vs 鉛直落距78.4（混淆用）
+    return _ok("phys-kin.projectile-h", "水平拋 v₀=20,t=3：x=60、y=½gt²=44.1、vy=gt=29.4（三值互異）；t=1 落距4.9≠速度9.8；Q4 x=12·4=48≠鉛直78.4")
 def kin_projectile_angled():
     import math as m
     v0 = 20; th = m.radians(30)
