@@ -1,3 +1,9 @@
+## 2026-11-19 14:19 ★ sci.t_sub.phys-energy.collision-2d 二維碰撞（x、y 方向各自守恆）5/5 DONE-GATE → phys-energy 18/22 ＋ HD 回報 kin_vector 箭頭 render 修正
+- **sci_phys_energy_collision_2d frozen `0226fc27db64a52a`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha；補跑 R6 替代 R4(anchor 超容差 INVALID)；一度 de-converge：_note 自檢 distractor 漂移修正 2e567→…→0226fc27）。**tier=t_sub 分科-物理**（manifest 裁定，初稿誤用 t_adv 已修 unit_id/kp_ids/required_kp_ids/tier 用詞）。前置＝momentum-conserve。R15 gloss 分量 (component) grep=2；動量/動量守恆 前置已 gloss。
+- 內容：二維碰撞動量在 x、y 方向各自獨立守恆；每物體動量拆 x/y 分量相加；合動量＝√(px²+py²)。figure＝A2kg沿x3m/s＋B2kg沿y4m/s→px6 py8，碰後黏合4kg vx1.5 vy2，合動量√(6²+8²)=√100=10（6-8-10 直角三角形）。oracle collision-2d 強化含 vx/vy/合動量＋honest re-key 962fc52c→d380c5c5bc916d8b；Q3 合動量10 distractor 14(相加)/2(相減)/100(未開根號)、Q4 vx1.5 distractor 6(忘除總質量)/3(除A質量)/2(誤填vy)。
+- DONE-GATE 全綠：per_page 649/649 PASS、live=frozen 0226fc27／scan PASS／pedagogy 0 hard／question CLEAN／schema clean／repro collision-2d PASS／figure 四角色簽核。
+- ★併修 HD 視覺回報：sci_phys_kin_vector（平面運動向量，t_adv）位置向量箭頭 polygon 原為懸在 P 下方的垂直三角形（未沿向量方向、與藍點重疊成浮動小三角形）→ 改沿向量方向對齊、藍點縮小融入；render-only 缺陷、content_audit 看不到、靠視覺 QA 現形。de-converge 1b483764→**48d0342a979e8e60** 重新 5-clean 達成；四角色簽核過。★class 教訓：SVG 箭頭 polygon 必須沿線段方向構造(尖端+沿 -unit 回退兩翼)，不可用固定垂直三角形充當斜向量箭頭。
+
 ## 2026-11-19 13:45 ★ sci.t_adv.phys-energy.collision-1d 一維完全非彈性碰撞（黏在一起的共同速度）5/5 DONE-GATE → phys-energy 17/22
 - **sci_phys_energy_collision_1d frozen `2b77f0bbaaa96f0a`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha；首輪即零、零 de-converge）。t_adv 高中學測。前置＝momentum-conserve。R15 gloss（完全非彈性碰撞 perfectly inelastic collision）grep -o＝2；動量/動量守恆/動能 前置已 gloss 不重複。
 - 內容：完全非彈性碰撞＝碰後黏在一起、以共同速度前進；動量守恆但動能不守恆（部分變成熱與聲音、總動能變小）；共同速度＝總動量÷總質量＝(m1u1+m2u2)/(m1+m2)。figure＝碰前 2kg→4m/s＋3kg 靜止→碰後 5kg 合成→1.6m/s＋公式 (2×4+3×0)/(2+3)=8÷5=1.6＋紅字「動量守恆、動能變小」。oracle collision-1d 錨 (2·4+3·0)/(2+3)=1.6；Q3 共速 1.6 distractor 8(忘除總質量)/4(沿用撞擊速度)/2(兩速度平均沒加權)、Q4 動量守恆動能不守恆 distractor 都守恆/動能守恆動量不守恆/都不守恆。

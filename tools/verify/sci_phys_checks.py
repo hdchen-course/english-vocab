@@ -280,10 +280,16 @@ def en_collision_1d():
     assert (2*4+3*0)/(2+3) == 1.6
     return _ok("phys-energy.collision-1d", "完全非彈性碰撞共速=(2·4)/(5)=1.6")
 def en_collision_2d():
-    # 二維動量分量各守恆
-    px = 2*3+0; py = 0+2*4
+    # 二維動量分量各守恆：A 2kg 沿 x 3m/s、B 2kg 沿 y 4m/s
+    m_a, m_b = 2, 2
+    px = m_a*3 + 0          # x 方向總動量 = 6
+    py = 0 + m_b*4          # y 方向總動量 = 8
     assert px == 6 and py == 8
-    return _ok("phys-energy.collision-2d", "二維碰撞 px=6、py=8 各守恆")
+    # 碰後黏合 M=4kg：分量速度 vx=px/M、vy=py/M；合動量大小 √(px²+py²)（6-8-10 直角三角形）
+    M = m_a + m_b
+    assert px/M == 1.5 and py/M == 2.0
+    assert (px**2 + py**2) == 100 and _close(sp.sqrt(px**2+py**2), 10)
+    return _ok("phys-energy.collision-2d", "二維碰撞 px=6、py=8 各守恆；黏合 M=4 → vx=1.5、vy=2、合動量 √(6²+8²)=10")
 def en_elastic_formula():
     # 等質量彈性碰撞交換速度：v1'=u2, v2'=u1
     m0, u1, u2 = 1, 5, 2

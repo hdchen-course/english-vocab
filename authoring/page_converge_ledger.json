@@ -34436,53 +34436,13 @@
    ]
   },
   "sci_phys_kin_vector.html": {
-   "frozen_sha": "1b4837645c5d6618",
+   "frozen_sha": "48d0342a979e8e60",
    "rounds": [
-    {
-     "round": 1,
-     "content_sha": "1b4837645c5d6618",
-     "clean": true,
-     "l3_exit": 0,
-     "recorded_at": "2026-11-18T20:56:54",
-     "audited": true,
-     "note": "R1 new sha post figure-scale fix; panel 0 confirmed, coverageComplete, L3 rc0"
-    },
-    {
-     "round": 2,
-     "content_sha": "1b4837645c5d6618",
-     "clean": true,
-     "l3_exit": 0,
-     "recorded_at": "2026-11-18T20:58:48",
-     "audited": true,
-     "note": "R2 adversarial-frame panel 0 confirmed, coverageComplete, L3 rc0 (same anchors as R3)"
-    },
-    {
-     "round": 3,
-     "content_sha": "1b4837645c5d6618",
-     "clean": true,
-     "l3_exit": 0,
-     "recorded_at": "2026-11-18T20:58:48",
-     "audited": true,
-     "note": "R3 numeric-self-consistency panel 0 confirmed, coverageComplete, L3 rc0"
-    },
-    {
-     "round": 4,
-     "content_sha": "1b4837645c5d6618",
-     "clean": true,
-     "l3_exit": 0,
-     "recorded_at": "2026-11-18T21:00:28",
-     "audited": true,
-     "note": "R4 language+figure-readability panel 0 confirmed, coverageComplete, L3 rc0"
-    },
-    {
-     "round": 5,
-     "content_sha": "1b4837645c5d6618",
-     "clean": true,
-     "l3_exit": 0,
-     "recorded_at": "2026-11-18T21:05:43",
-     "audited": true,
-     "note": "R5 max-adversarial final panel 0 confirmed, coverageComplete (1 reviewer content-filtered, judge passed), L3 rc0"
-    }
+    {"round": 1, "content_sha": "48d0342a979e8e60", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T14:15:30+08:00", "audited": true, "note": "R1 new sha post arrowhead-direction fix; content_audit confirmed=0 coverageComplete=true; L3 rc0"},
+    {"round": 3, "content_sha": "48d0342a979e8e60", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T14:16:25+08:00", "audited": true, "note": "content_audit confirmed=0 coverageComplete=true; L3 coverage_check exit 0"},
+    {"round": 2, "content_sha": "48d0342a979e8e60", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T14:16:42+08:00", "audited": true, "note": "content_audit confirmed=0 coverageComplete=true; L3 coverage_check exit 0"},
+    {"round": 4, "content_sha": "48d0342a979e8e60", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T14:19:00+08:00", "audited": true, "note": "content_audit confirmed=0 coverageComplete=true; L3 coverage_check exit 0"},
+    {"round": 5, "content_sha": "48d0342a979e8e60", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T14:18:58+08:00", "audited": true, "note": "content_audit confirmed=0 coverageComplete=true; L3 coverage_check exit 0"}
    ],
    "_note": "phys-kin 11/14 vector-kinematics（平面運動位置/速度/加速度向量，t_adv 學測）。figure=座標平面 位置向量 r=(3,4)＋x/y 分量虛線＋|r|=5；oracle kin_vector 錨 (3,4)模5／(6,8)模10／位移(2,1)→(7,13)=(5,12)模13／(9,12)模15 repro PASS。前置 velocity-speed+acceleration。",
    "_defect_fix_trace": [
@@ -34491,6 +34451,12 @@
      "prior_frozen_sha": "8320fd59cf521f7f",
      "harvest_override": "sci_phys_kin_vector.html（已 touch 留痕）",
      "reason": "R3 深 panel（9-agent）CONFIRMED（major, b-hard-to-understand）：figure 非均勻軸比例（x≈60px/單位、y≈27px/單位），使標『3』的 x 分量(180px)畫得比標『4』的 y 分量(108px)還長，視覺顛倒 3<4、扭曲 worked example 要教的 3-4-5 直角三角形。修：改均勻比例 k=30px/單位，P 像素 (55,165)→(145,45)（x 分量 90px＜y 分量 120px），向量落真 3-4-5 角 ~53°，標籤/模角度重置。sha 8320fd59→1b4837645c5d6618 全新 5-clean。★class 教訓：座標圖必須 x/y 同一 px-per-unit，否則標籤比例與圖形比例相矛盾。"
+    },
+    {
+     "at": "2026-11-19T14:10:00+08:00",
+     "prior_frozen_sha": "1b4837645c5d6618",
+     "harvest_override": "sci_phys_kin_vector.html（已 touch 留痕）",
+     "reason": "HD 收斂後視覺回報『藍點跟類似三角形不確定有沒有問題』。render 檢查確認 render-only 幾何缺陷：位置向量箭頭 polygon points='145,45 140,55 149,57' 未沿向量方向（原點→P 單位向量 (0.6,-0.8)），而是近乎垂直、懸在 P 點正下方的三角形、僅頂點(145,45)觸及 P，又與 P 的 circle 藍點重疊→視覺上像多出來的浮動小三角形。修：箭頭改沿向量方向 points='145,45 134.8,51.1 139.6,57.4'（尖端在 P、兩翼沿 -unit 回退），藍點 r3→2.4 融入終點、P 標籤上移避讓；3-4-5 直角三角形本就正確未動。content_audit 審 JSON 文字看不到此 render-only 缺陷，靠視覺 QA 現形（同 shadowing-undefined class）。sha 1b483764→48d0342a979e8e60 全新 5-clean。★class 教訓：SVG 箭頭 polygon 必須沿線段方向構造(尖端+沿 -unit 回退兩翼)，不可用固定垂直三角形充當斜向量的箭頭。"
     }
    ]
   },
@@ -35853,6 +35819,20 @@
     {"round": 5, "content_sha": "2b77f0bbaaa96f0a", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T13:45:45+08:00", "audited": true, "note": "content_audit confirmed=0 coverageComplete=true; L3 coverage_check exit 0"}
    ],
    "_note": "phys-energy 17/22 collision-1d t_adv; 一維完全非彈性碰撞＝黏合共同速度、動量守恆但動能變小(部分變熱聲音)；oracle (2·4+3·0)/(2+3)=1.6；例 2kg·4m/s 撞 3kg 靜止黏合→共同速度 8÷5=1.6 m/s; figure 碰前2kg→4m/s+3kg靜止 → 碰後5kg合成→1.6m/s+紅字動量守恆動能變小"
+  },
+  "sci_phys_energy_collision_2d.html": {
+   "frozen_sha": "0226fc27db64a52a",
+   "rounds": [
+    {"round": 1, "content_sha": "0226fc27db64a52a", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T14:00:35+08:00", "audited": true, "note": "content_audit confirmed=0 coverageComplete=true; L3 coverage_check exit 0（新sha，_note 修正後）"},
+    {"round": 3, "content_sha": "0226fc27db64a52a", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T14:00:50+08:00", "audited": true, "note": "content_audit confirmed=0 coverageComplete=true; L3 coverage_check exit 0"},
+    {"round": 2, "content_sha": "0226fc27db64a52a", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T14:04:05+08:00", "audited": true, "note": "content_audit confirmed=0 coverageComplete=true（1 verify agent 遭內容過濾、不影響 review 覆蓋）; L3 coverage_check exit 0"},
+    {"round": 5, "content_sha": "0226fc27db64a52a", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T14:06:45+08:00", "audited": true, "note": "content_audit confirmed=0 coverageComplete=true; L3 coverage_check exit 0"},
+    {"round": 6, "content_sha": "0226fc27db64a52a", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T14:09:30+08:00", "audited": true, "note": "content_audit confirmed=0 coverageComplete=true; L3 coverage_check exit 0（補跑，R4 因 anchor 行號超容差 INVALID 不計）"}
+   ],
+   "_note": "phys-energy 18/22 collision-2d t_sub(分科-物理); 二維碰撞動量在 x、y 方向各自獨立守恆；oracle px=6、py=8、黏合 vx=1.5、vy=2、合動量√(6²+8²)=10(指紋 d380c5c5bc916d8b honest re-key); 例 A2kg沿x 3m/s+B2kg沿y 4m/s→px6 py8 碰後4kg vx1.5 vy2 合動量10; 修正: KP id 應 t_sub 非 t_adv(manifest 裁定),已改 unit_id/kp_ids/required_kp_ids/tier 用詞",
+   "_defect_fix_trace": [
+    {"from_sha": "c6f93254d8f670c3", "to_sha": "0226fc27db64a52a", "at": "2026-11-19T13:56:40+08:00", "defect": "R1 confirmed algorithm-code-correctness(blocker, 5 鏡皆 DEFECT a-wrong)：_note 規劃自檢的 Q2/Q4 distractor 列舉與實際出題漂移且凌亂——把 Q2 的『7』誤標為兩分量相加(應=14；實際是平均(6+8)/2)、列出不存在的 Q2『10=先合成』與 Q4『0.75=px/(2M)』選項、漏列真正的 Q2『px=8/py=6 弄反』與 Q4『2=vy』。學習者可見內容(options/rationales/feedback)全對，但 _note 事實錯誤會誤導維護者對帳。修：_note 改寫為與實際出題逐字相符的 distractor 對照(Q2 7=平均/0=抵消/8·6弄反；Q3 14=相加/2=相減/100=未開根號；Q4 6=忘除/3=除A質量/2=誤填vy)。figure/題目未變四角色簽核沿用；R1 未 clean、無 banked round，無需 harvest_override，於新 sha 重跑 R1-R5。"}
+   ]
   }
  }
 }
