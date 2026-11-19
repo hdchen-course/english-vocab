@@ -1,0 +1,211 @@
+{
+ "_note": "自然島 物理-熱學（phys-heat）strand 第17單元（t_sub 高中分科）。知識點 sci.t_sub.phys-heat.pv-processes（氣體過程與作功）。tier=t_sub。exam=分科。全繁體零簡體零 PRC 詞（★『恆』一律用教育部正字 U+6046，不用其 U+6052 異體；本檔實際未用到守恆字）。中文授課無音檔。前置＝thermo1（熱力學第一定律 ΔU＝Q−W 已於前置 gloss，本單元用到但不重複 gloss；功 W 即熱一裡『系統對外作的功』）。術語附國際英語（R15，★只在 can_do 首次 gloss 一次；本單元新術語（★can_do 與全 body 一律用「定壓/定容」，不混用「等壓/等容」）：『定壓過程 (isobaric process)』英文 gloss 應＝2、『定容過程 (isochoric process)』英文 gloss 應＝2〔各＝_note 本宣告一次＋can_do 一次〕；teach/claim body 不重複 gloss）。scope（t_sub 分科）：(1) 氣體對外作功要看『過程』；定壓過程（壓力 P 不變）時 W＝PΔV（壓力 × 體積變化）；(2) 在 P-V 圖（橫軸體積 V、縱軸壓力 P）上，氣體對外作的功＝過程曲線下方到 V 軸之間的面積；定壓過程的面積剛好是矩形 P×ΔV；(3) 定容過程（體積 V 不變，ΔV＝0）氣體不對外作功，W＝0；(4) 算出 W 後可配合熱力學第一定律 ΔU＝Q−W 求內能變化或吸放熱。不含等溫過程 W＝nRT ln(V₂/V₁) 的對數積分、不含絕熱過程 PV^γ 細算、不含循環與效率（carnot 另單元）、不含莫耳熱容 Cp/Cv（molar-heat 另單元）。repro（tools/verify/sci_phys_checks.py::phys-heat.pv-processes，repro_gate .venv PASS、source_registry 已註冊 reproduction）錨定 W＝PΔV＝101325×0.001≈101.3 J（1 大氣壓下體積增加 0.001 m³＝1 公升）。figure 自檢：P-V 圖，橫軸 V 縱軸 P，一條水平線代表定壓過程（P 固定由 V₁ 到 V₂），其下方到 V 軸的矩形陰影標『功 W＝P×ΔV』，旁標數值例『P＝101325 Pa、ΔV＝0.001 m³ → W≈101 J』；座標軸標示清楚、陰影不溢出座標框、箭頭/文字不疊、alt 與 SVG text 逐字一致。practice 四答案＝{W＝P×ΔV（Q1 定壓作功）, 約 101 焦耳（Q2 1大氣壓體積增0.001）, 過程曲線下方到 V 軸之間的面積（Q3 P-V 圖功對應）, 0（Q4 定容作功）}；MCQ options bare、每 distractor 乾淨單一誤解（Q1：P÷ΔV／ΔV÷P／P＋ΔV；Q2：約 1013 焦耳／約 10 焦耳／0 焦耳；Q3：曲線的斜率／曲線的最高點／兩端點的距離；Q4：等於吸收的熱／等於壓力大小／無法計算）、兩兩相異、長度均衡；distractor_rationales key 逐字相符。claim kind=fact。figure-only example 無 body。定義不得反轉：定壓 W＝PΔV、P-V 圖功＝曲線下面積、定容 ΔV＝0 則 W＝0。全檔算式運算子與等號全形（＝ × ÷ −），下標 V₁ V₂，壓力單位 Pa、體積 m³、功 J 一致。",
+ "page": "sci_phys_heat_pv_processes.html",
+ "units": [
+  {
+   "unit_id": "sci.t_sub.phys-heat.pv-processes",
+   "title_zh": "氣體怎麼作功：P-V 圖與 W＝PΔV",
+   "can_do": "我知道氣體對外作了多少功，要看它是經過什麼『過程』。我知道在『定壓過程 (isobaric process)』（壓力不變）裡，氣體對外作的功 W＝PΔV，也就是壓力乘以體積的變化。我知道在 P-V 圖（橫軸是體積、縱軸是壓力）上，氣體對外作的功就等於過程曲線下方到體積軸之間的面積；定壓過程的那塊面積剛好是一個矩形。我也知道在『定容過程 (isochoric process)』（體積完全不變）裡，因為體積沒有變化，氣體不對外作功，W＝0。算出功以後，就能配合熱力學第一定律 ΔU＝Q−W 去求內能變化或吸放的熱。",
+   "situation_group": "能量：讓世界運作的能力",
+   "subject": "sci",
+   "strand": "phys-heat",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "sci.t_sub.phys-heat.pv-processes"
+   ],
+   "prerequisites": [
+    "sci.t_sub.phys-heat.thermo1"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-pv-isobaric",
+     "text": "氣體對外作了多少功，要看它走的是什麼過程。最常算的是定壓過程（壓力 P 保持不變）：這時氣體對外作的功 W＝PΔV，也就是壓力乘以體積的變化量（ΔV＝V₂−V₁）。例如在 1 大氣壓（約 101325 帕）下，氣體體積增加 0.001 立方公尺（也就是 1 公升），對外作的功就是 W＝101325×0.001，大約 101 焦耳。",
+     "kind": "fact",
+     "source_refs": [
+      "定壓過程作功 W=PΔV（高中物理 分科）"
+     ],
+     "verification_ref": "定壓 W=PΔV；W=101325×0.001≈101.3 J（sci_phys_checks::phys-heat.pv-processes .venv 驗、source_registry 註冊 reproduction）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-pv-area",
+     "text": "把氣體的過程畫在 P-V 圖上（橫軸是體積 V、縱軸是壓力 P），氣體對外作的功就等於『過程曲線下方到體積軸之間的面積』。對定壓過程來說，那塊面積剛好是一個矩形——高是壓力 P、寬是體積變化 ΔV，所以面積就是 P×ΔV，和公式 W＝PΔV 完全一致。對壓力會變的過程，面積不是矩形，但功仍然等於曲線下的面積。",
+     "kind": "fact",
+     "source_refs": [
+      "P-V 圖作功＝曲線下面積（高中物理 分科）"
+     ],
+     "verification_ref": "P-V 圖上 W＝過程曲線下到 V 軸的面積，定壓時為矩形 P×ΔV（科學共識）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-pv-isochoric",
+     "text": "如果是定容過程（體積 V 完全不變，ΔV＝0），那麼不管壓力怎麼變，氣體都不對外作功，W＝0——因為沒有體積的變化就沒有『推動』外界。這時把 W＝0 代進熱力學第一定律 ΔU＝Q−W，就得到 ΔU＝Q：定容下吸收的熱全部變成內能。算功永遠先問『體積有沒有變、壓力變不變』，再決定用哪一招。",
+     "kind": "fact",
+     "source_refs": [
+      "定容過程 W=0 與熱一應用（高中物理 分科）"
+     ],
+     "verification_ref": "定容 ΔV=0 → W=0，代入 ΔU=Q−W 得 ΔU=Q（科學共識）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-heat.pv-processes"
+     ],
+     "body": "上一課的熱力學第一定律 ΔU＝Q−W 裡有一個「功 W」。可是氣體對外作的功到底怎麼算？就算同樣是從 A 狀態到 B 狀態，走不同的路（過程），作的功也可能不一樣。這一課就來算氣體在不同過程裡對外作的功。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-heat.pv-processes"
+     ],
+     "body": "① 定壓過程（壓力 P 不變）：氣體對外作的功 W＝PΔV（壓力 × 體積變化）。② 畫在 P-V 圖（橫軸體積、縱軸壓力）上，功就是過程曲線下方到體積軸之間的面積；定壓時這塊面積是矩形 P×ΔV。③ 定容過程（體積不變，ΔV＝0）：W＝0，代入 ΔU＝Q−W 得 ΔU＝Q。④ 例：1 大氣壓下體積增加 1 公升（0.001 m³），W＝101325×0.001≈101 焦耳。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_sub.phys-heat.pv-processes"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 200' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='170' y='15' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>P-V 圖：定壓過程對外作的功＝矩形面積 P×ΔV</text><line x1='60' y1='40' x2='60' y2='150' stroke='#33475b' stroke-width='1.3'/><line x1='60' y1='150' x2='300' y2='150' stroke='#33475b' stroke-width='1.3'/><text x='46' y='46' font-size='8' fill='#33475b' text-anchor='middle'>P</text><text x='300' y='165' font-size='8' fill='#33475b' text-anchor='middle'>V</text><rect x='110' y='80' width='120' height='70' fill='#cfe0cf' stroke='none'/><line x1='110' y1='80' x2='230' y2='80' stroke='#c0392b' stroke-width='2'/><circle cx='110' cy='80' r='3' fill='#c0392b'/><circle cx='230' cy='80' r='3' fill='#c0392b'/><text x='170' y='74' font-size='8' fill='#c0392b' text-anchor='middle' font-weight='bold'>定壓過程（P 固定）</text><text x='170' y='120' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>功 W＝P×ΔV</text><text x='170' y='136' font-size='7.5' fill='#2f6f54' text-anchor='middle'>（陰影矩形面積）</text><line x1='110' y1='150' x2='110' y2='158' stroke='#33475b' stroke-width='1'/><line x1='230' y1='150' x2='230' y2='158' stroke='#33475b' stroke-width='1'/><text x='110' y='168' font-size='7.5' fill='#33475b' text-anchor='middle'>V₁</text><text x='230' y='168' font-size='7.5' fill='#33475b' text-anchor='middle'>V₂</text><text x='250' y='110' font-size='7.5' fill='#33475b' text-anchor='start'>高＝P</text><text x='170' y='184' font-size='7.5' fill='#6b7680' text-anchor='middle'>例：P＝101325 Pa、ΔV＝0.001 m³ → W≈101 J；定容(ΔV＝0)則 W＝0</text></g></svg>",
+      "alt": "一張 P-V 圖，縱軸標 P（壓力）、橫軸標 V（體積）。圖中一條紅色水平線從 V₁ 到 V₂，標「定壓過程（P 固定）」，兩端各有一個紅點。這條線下方到體積軸之間是一塊綠色陰影矩形，中間標「功 W＝P×ΔV」「（陰影矩形面積）」，矩形右側標「高＝P」，橫軸下方標出 V₁ 和 V₂ 兩點。最下面一行：「例：P＝101325 Pa、ΔV＝0.001 m³ → W≈101 J；定容(ΔV＝0)則 W＝0」。",
+      "caption": "在 P-V 圖上，氣體對外作的功等於過程曲線下方到體積軸之間的面積。定壓過程（壓力 P 固定、體積從 V₁ 到 V₂）的那塊面積是一個矩形，高是 P、寬是 ΔV，所以 W＝P×ΔV。例如 1 大氣壓下體積增加 0.001 立方公尺，W≈101 焦耳；若是定容過程（ΔV＝0）則不作功，W＝0。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-heat.pv-processes"
+     ],
+     "body": "最後練「氣體作功」。重點：(1) 定壓過程 W＝PΔV（壓力 × 體積變化）；(2) P-V 圖上功＝過程曲線下方到體積軸之間的面積，定壓時是矩形 P×ΔV；(3) 定容過程 ΔV＝0 → W＝0，代入 ΔU＝Q−W 得 ΔU＝Q；(4) 例 1 大氣壓下體積增加 1 公升 W≈101 焦耳。小提醒：算功前先看體積有沒有變——沒變就 W＝0，有變且定壓就用 PΔV。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QP-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在定壓過程（壓力 P 保持不變）裡，氣體對外作的功要怎麼算？",
+     "answer": "W＝P×ΔV（壓力乘以體積變化）",
+     "kp_ids": [
+      "sci.t_sub.phys-heat.pv-processes"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-heat.pv-processes"
+     ],
+     "options": [
+      "W＝P×ΔV（壓力乘以體積變化）",
+      "W＝P÷ΔV（壓力除以體積變化）",
+      "W＝ΔV÷P（體積變化除以壓力）",
+      "W＝P＋ΔV（壓力加上體積變化）"
+     ],
+     "distractor_rationales": {
+      "W＝P÷ΔV（壓力除以體積變化）": "不是相除；定壓作功是壓力乘以體積變化 W＝PΔV。",
+      "W＝ΔV÷P（體積變化除以壓力）": "也不是相除，而且順序反了；定壓作功 W＝PΔV。",
+      "W＝P＋ΔV（壓力加上體積變化）": "不是相加；壓力和體積單位不同不能直接相加，定壓作功是相乘 W＝PΔV。"
+     },
+     "answer_evidence": [
+      "c-pv-isobaric"
+     ],
+     "feedback": "定壓過程 W＝PΔV：壓力乘以體積的變化量。"
+    },
+    {
+     "question_id": "QP-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在 1 大氣壓（約 101325 帕）下，氣體體積增加 0.001 立方公尺（1 公升），它對外作的功大約是多少？",
+     "answer": "約 101 焦耳",
+     "kp_ids": [
+      "sci.t_sub.phys-heat.pv-processes"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-heat.pv-processes"
+     ],
+     "options": [
+      "約 101 焦耳",
+      "約 1013 焦耳",
+      "約 10 焦耳",
+      "0 焦耳"
+     ],
+     "distractor_rationales": {
+      "約 1013 焦耳": "多算了十倍；W＝101325×0.001≈101 焦耳，不是 1013。",
+      "約 10 焦耳": "少算了十倍；101325×0.001≈101 焦耳，不是 10。",
+      "0 焦耳": "體積有變化（增加了 0.001 m³）就有作功；只有定容 ΔV＝0 才是 W＝0。"
+     },
+     "answer_evidence": [
+      "c-pv-isobaric"
+     ],
+     "feedback": "W＝PΔV＝101325×0.001≈101 焦耳。"
+    },
+    {
+     "question_id": "QP-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "把氣體的過程畫在 P-V 圖（橫軸體積、縱軸壓力）上，氣體對外作的功對應圖上的什麼？",
+     "answer": "過程曲線下方到體積軸之間的面積",
+     "kp_ids": [
+      "sci.t_sub.phys-heat.pv-processes"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-heat.pv-processes"
+     ],
+     "options": [
+      "過程曲線下方到體積軸之間的面積",
+      "過程曲線的斜率",
+      "過程曲線的最高點",
+      "起點和終點之間的直線距離"
+     ],
+     "distractor_rationales": {
+      "過程曲線的斜率": "斜率代表壓力隨體積變化的快慢，不是功；功是曲線下的面積。",
+      "過程曲線的最高點": "最高點只是最大壓力，不代表整段過程作的功；功是曲線下的面積。",
+      "起點和終點之間的直線距離": "P-V 圖上的距離沒有物理意義；功是過程曲線下方的面積。"
+     },
+     "answer_evidence": [
+      "c-pv-area"
+     ],
+     "feedback": "P-V 圖上，氣體對外作的功＝過程曲線下方到體積軸之間的面積。"
+    },
+    {
+     "question_id": "QP-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在定容過程（體積完全不變）裡，氣體對外作的功是多少？",
+     "answer": "0（因為體積沒有變化）",
+     "kp_ids": [
+      "sci.t_sub.phys-heat.pv-processes"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-heat.pv-processes"
+     ],
+     "options": [
+      "0（因為體積沒有變化）",
+      "等於這段過程吸收的熱",
+      "等於當時的壓力大小",
+      "體積不變所以無法計算"
+     ],
+     "distractor_rationales": {
+      "等於這段過程吸收的熱": "那是定容下 ΔU＝Q 的結果（熱全變內能），不是功；定容作功 W＝0。",
+      "等於當時的壓力大小": "功不等於壓力；定容時體積沒變，W＝PΔV＝P×0＝0。",
+      "體積不變所以無法計算": "正好相反；體積不變代表 ΔV＝0，功剛好可算出為 0。"
+     },
+     "answer_evidence": [
+      "c-pv-isochoric"
+     ],
+     "feedback": "定容過程 ΔV＝0，所以 W＝PΔV＝0；此時 ΔU＝Q。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（氣體作功看過程；定壓過程 W＝PΔV＝壓力×體積變化；P-V 圖上功＝過程曲線下方到體積軸之間的面積，定壓時是矩形 P×ΔV；定容過程 ΔV＝0 → W＝0，代入 ΔU＝Q−W 得 ΔU＝Q；例 1 大氣壓下體積增 0.001 m³ → W≈101 焦耳；算功前先看體積有沒有變）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

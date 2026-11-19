@@ -1,3 +1,9 @@
+## 2026-11-20 01:14 ★ sci.t_sub.phys-heat.pv-processes 氣體怎麼作功：P-V 圖與 W＝PΔV 5/5 DONE-GATE → phys-heat 17/20
+- **sci_phys_heat_pv_processes frozen `21bba300ecf09741`**（R21-R25 連 5 clean、L3 全 exit0、同 sha）。tier=t_sub、exam=分科。前置＝thermo1。R15 gloss 定壓過程 (isobaric process)/定容過程 (isochoric process) 各＝2（★can_do 與全 body 統一用「定壓/定容」，不混「等壓/等容」）。
+- 內容：氣體對外作功看「過程」；定壓過程（P 不變）W＝PΔV（壓力×體積變化）；P-V 圖（橫 V 縱 P）上功＝過程曲線下方到體積軸之間的面積，定壓時為矩形 P×ΔV；定容過程 ΔV＝0 則 W＝0，代入 ΔU＝Q−W 得 ΔU＝Q。scope：不含等溫對數積分 W=nRT ln(V₂/V₁)／絕熱 PV^γ／循環效率（carnot 另單元）／莫耳熱容（molar-heat 另單元）。repro（sci_phys_checks::phys-heat.pv-processes .venv PASS，錨 101325×0.001≈101.3 J）。figure＝P-V 圖紅水平線定壓過程 V₁→V₂＋綠陰影矩形 W＝P×ΔV＋高＝P＋數值例。
+- **審查抓到真缺陷×3（我草稿漏掉），其一由我新補的 gate 自攔**：(1) 建檔時 _note 誤打異體字 恒(U+6052)→被前一單元新補的 scan_simplified 0x6052 碼點當場攔下（gate 修補即時見效）→改措辭避開。(2) **R2 term-unify**：gloss 用「等壓/等容」但 body 用「定壓/定容」不一致→全檔統一「定壓/定容」。(3) **R14 讀順 garden-path**：teach 開場「同樣從 A 到 B…」易讀成單一路徑→改讓步「就算同樣是從 A 狀態到 B 狀態…也可能不一樣」。三次 de-converge。
+- DONE-GATE：per_page PASS（669/670，pv-processes absent from violations；唯一違規 specific_heat 係前輪遺留的未提交圖加寬暫存編輯、與本單元無關，另行處理）、scan（含 0x6052 新碼點）/pedagogy/question/schema/repro PASS、figure 四角色兩方向簽核。phys-heat strand 進度 17/20（t_sub 第 1 單元完成）。
+
 ## 2026-11-20 00:22 ★ sci.t_adv.phys-heat.thermo1 熱力學第一定律：熱、功和內能的收支表 5/5 DONE-GATE → phys-heat 16/20
 - **sci_phys_heat_thermo1 frozen `fbf61e597854550c`**（R21-R25 連 5 clean、L3 全 exit0、同 sha）。tier=t_adv、exam=學測/分科。前置＝internal-energy。R15 gloss 熱力學第一定律 (first law of thermodynamics)＝2。
 - 內容：ΔU＝Q−W 是能量守恆在熱學的表現（系統內能變化＝吸收的熱 Q − 系統對外作的功 W）；符號約定（本課固定）Q 吸熱為正放熱為負、W 對外作功為正被外界作功為負；例 吸熱 100 J 對外作功 30 J → ΔU＝100−30＝70 J（內能增加 70 J）；推論 ΔU＝0 時 Q＝W（熱全拿去對外作功）。repro（sci_phys_checks::phys-heat.thermo1 .venv PASS，錨 100−30＝70）。figure＝中央系統（氣體）框 ΔU＝+70J、左紅箭頭 Q=100J 流入、右藍箭頭 W=30J 流出、底部 ΔU＝Q−W＝100−30＝70J 能量守恆（箭頭方向 Q 入 W 出正確）。
