@@ -1,0 +1,211 @@
+{
+ "_note": "自然島 物理-熱學（phys-heat）strand 第20單元（t_sub 高中分科-物理，strand 最後一單元）。知識點 sci.t_sub.phys-heat.carnot（熱機效率與卡諾循環）。tier=t_sub。exam=分科。全繁體零簡體零 PRC 詞（★『恆』一律用教育部正字 U+6046；本檔『能量守恆』出現於 claim c-ca-engine body＋其 verification_ref 共 2 處，皆採 U+6046 恆，無 U+6052 異體；scan_simplified 須對該 2 處皆驗 U+6046）。中文授課無音檔。前置＝entropy（熱力學第二定律 已於前置教，本單元用到熱二『不能把熱全變功』的限制但不重複 gloss）。術語附國際英語（R15，★只在 can_do 首次 gloss 一次；本單元新術語：『熱機 (heat engine)』英文 gloss 應＝2、『效率 (efficiency)』英文 gloss 應＝2、『卡諾循環 (Carnot cycle)』英文 gloss 應＝2〔各＝_note 本宣告一次＋can_do 一次〕；teach/claim body 不重複 gloss）。scope（t_sub 分科-物理）：(1) 熱機＝把熱能部分轉成功的機器（引擎/蒸汽機/發電廠）；工作時從高溫熱庫 Th 吸熱 Qh、對外作功 W、把剩餘的熱 Qc 排給低溫熱庫 Tc；(2) 效率 η＝W÷Qh＝(Qh−Qc)÷Qh＝1−Qc÷Qh；因熱二，熱機一定要排一部分熱給低溫庫，不可能 η＝100%；(3) 卡諾循環＝理論上效率最高的理想（可逆）循環，其效率只由兩熱庫絕對溫度決定：η_carnot＝1−Tc÷Th（Tc、Th 用絕對溫度 K）；任何實際熱機效率 ≤ 卡諾效率；(4) 例 Th＝600 K、Tc＝300 K → η_carnot＝1−300÷600＝0.5＝50%；想提高效率就拉大溫差。不含卡諾循環四步驟 PV 圖細節推導、不含製冷係數 COP、不含熵在循環的積分。repro（tools/verify/sci_phys_checks.py::phys-heat.carnot，repro_gate .venv PASS、source_registry 已註冊 reproduction）錨定 卡諾效率 η＝1−Tc/Th＝1−300/600＝0.5。figure 自檢：上方紅色高溫熱庫 Th、中間熱機方塊、下方藍色低溫熱庫 Tc，紅色箭頭由 Th 向下入熱機標『吸熱 Qh』、綠色箭頭由熱機向右標『對外作功 W』、藍色箭頭由熱機向下入 Tc 標『排熱 Qc』；底部 η＝W÷Qh＝1−Qc÷Qh、卡諾(理想上限) η＝1−Tc÷Th、例 1−300÷600＝0.5；箭頭方向正確（Qh 入、W 出側、Qc 出下）、不疊不溢出、alt 與 SVG text 逐字一致。practice 四答案＝{一部分變成對外作的功 W，剩下的熱 Qc 排給低溫熱庫（Q1 熱吸收分配）, η＝W÷Qh（Q2 效率公式）, 兩個熱庫的絕對溫度：η＝1−Tc÷Th（Q3 卡諾效率決定因素）, 0.5（50%）（Q4 Th600 Tc300 卡諾效率）}；MCQ options bare、每 distractor 乾淨單一誤解（Q1：全部變成功／全部排給低溫庫不作功／全部留在熱機變內能；Q2：η＝Qh÷W／η＝W÷Qc／η＝Qc÷Qh；Q3：熱機的大小／吸收的熱 Qh 多少／工作物質是什麼氣體；Q4：1(100%)／2(200%)／0(0%)）、兩兩相異、長度均衡；distractor_rationales key 逐字相符。claim kind=fact。figure-only example 無 body。定義不得反轉：η＝W/Qh＝1−Qc/Qh、卡諾 η＝1−Tc/Th（絕對溫度）、實際 η≤卡諾、熱機不可能 100%。全檔算式運算子與等號全形（＝ − ÷ ×），絕對溫度 K、熱量/功 焦耳 J 一致。",
+ "page": "sci_phys_heat_carnot.html",
+ "units": [
+  {
+   "unit_id": "sci.t_sub.phys-heat.carnot",
+   "title_zh": "熱機效率與卡諾循環：為什麼引擎不可能把熱全部變成功",
+   "can_do": "我知道『熱機 (heat engine)』是把熱能部分變成功的機器（像引擎、蒸汽機、發電廠）：它從高溫熱庫吸熱 Qh、對外作功 W，再把剩下的熱 Qc 排給低溫熱庫。我知道它的『效率 (efficiency)』η＝W÷Qh＝1−Qc÷Qh；而且因為熱力學第二定律，熱機一定要排掉一部分熱，不可能把吸的熱全部變成功（η 不可能等於 100%）。我知道理論上效率最高的理想熱機，是運作在『卡諾循環 (Carnot cycle)』這個理想可逆循環上的卡諾熱機；它的效率只由兩個熱庫的絕對溫度決定：η＝1−Tc÷Th，任何實際熱機的效率都不會超過它。例如高溫 600 K、低溫 300 K 時，卡諾效率是 1−300÷600＝0.5，也就是 50%。",
+   "situation_group": "能量：讓世界運作的能力",
+   "subject": "sci",
+   "strand": "phys-heat",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "sci.t_sub.phys-heat.carnot"
+   ],
+   "prerequisites": [
+    "sci.t_sub.phys-heat.entropy"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ca-engine",
+     "text": "熱機是把熱能部分轉換成功的機器，像汽車引擎、蒸汽機、火力發電廠都是。它的運作要有兩個不同溫度的熱庫：從高溫熱庫吸進熱量 Qh，拿其中一部分對外作功 W（推動活塞、轉動輪軸），再把剩下沒用掉的熱量 Qc 排放到低溫熱庫。能量守恆告訴我們 Qh＝W＋Qc，也就是吸進來的熱＝作的功＋排掉的熱。",
+     "kind": "fact",
+     "source_refs": [
+      "熱機運作：高溫吸熱 Qh、作功 W、低溫排熱 Qc，Qh=W+Qc（高中物理 分科）"
+     ],
+     "verification_ref": "熱機 Qh=W+Qc（能量守恆）；高溫吸熱、對外作功、低溫排熱（科學共識）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ca-efficiency",
+     "text": "熱機的效率 η 定義成「對外作的功佔吸收的熱的比例」：η＝W÷Qh。因為 W＝Qh−Qc，所以也可以寫成 η＝1−Qc÷Qh。這裡有個很重要的限制：根據熱力學第二定律，熱機一定要把一部分熱 Qc 排給低溫熱庫，不可能讓 Qc＝0，所以效率永遠小於 100%——沒有任何熱機能把吸進來的熱全部變成功。",
+     "kind": "fact",
+     "source_refs": [
+      "熱機效率 η=W/Qh=1−Qc/Qh；η<100%（熱二限制）（高中物理 分科）"
+     ],
+     "verification_ref": "η=W/Qh=1−Qc/Qh；熱二 → Qc>0 → η<1（科學共識）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ca-carnot",
+     "text": "理論上效率最高的熱機，是用「卡諾循環」運作的理想可逆熱機。它的效率只由兩個熱庫的絕對溫度決定：η＝1−Tc÷Th，其中 Th 是高溫熱庫的絕對溫度、Tc 是低溫熱庫的絕對溫度（都要用克耳文 K）。任何在相同兩個溫度之間運作的實際熱機，效率都不可能超過這個卡諾效率。例如高溫 600 K、低溫 300 K 時，卡諾效率＝1−300÷600＝0.5（50%）。要提高效率，就要把高溫拉得更高、低溫壓得更低（拉大溫差）。",
+     "kind": "fact",
+     "source_refs": [
+      "卡諾效率 η=1−Tc/Th（絕對溫度）；實際熱機 η≤卡諾（高中物理 分科）"
+     ],
+     "verification_ref": "卡諾 η=1−Tc/Th=1−300/600=0.5（sci_phys_checks::phys-heat.carnot .venv 驗、source_registry 註冊 reproduction）；實際 η≤卡諾",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-heat.carnot"
+     ],
+     "body": "汽車引擎燒汽油、火力發電廠燒煤，都是把熱變成有用的功。但你可能聽過「引擎效率只有三成多」——為什麼不能把燒出來的熱全部變成動力？這一課用熱機和卡諾循環回答：這不是工程師不夠厲害，而是熱力學第二定律訂下的天花板。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-heat.carnot"
+     ],
+     "body": "① 熱機：從高溫熱庫吸熱 Qh、對外作功 W、把剩下的熱 Qc 排給低溫熱庫（Qh＝W＋Qc）。② 效率 η＝W÷Qh＝1−Qc÷Qh。③ 熱二的限制：Qc 不可能是 0，所以 η 永遠小於 100%。④ 效率的理想上限＝運作在卡諾循環上的卡諾熱機：η＝1−Tc÷Th（絕對溫度），實際熱機都不超過它；例 Th＝600 K、Tc＝300 K → η＝1−300÷600＝0.5。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_sub.phys-heat.carnot"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 200' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='170' y='13' font-size='8.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>熱機：高溫吸熱、對外作功、把剩下的熱排給低溫</text><rect x='66' y='24' width='128' height='24' rx='3' fill='#f3c6c0' stroke='#c0392b' stroke-width='1.3'/><text x='130' y='40' font-size='8.5' fill='#a5281b' text-anchor='middle' font-weight='bold'>高溫熱庫 Th</text><rect x='96' y='78' width='68' height='34' rx='4' fill='#eef3f7' stroke='#33475b' stroke-width='1.3'/><text x='130' y='99' font-size='9' fill='#1b3a5b' text-anchor='middle' font-weight='bold'>熱機</text><rect x='66' y='140' width='128' height='24' rx='3' fill='#cfe0f0' stroke='#2563a6' stroke-width='1.3'/><text x='130' y='156' font-size='8.5' fill='#1f4e79' text-anchor='middle' font-weight='bold'>低溫熱庫 Tc</text><line x1='130' y1='48' x2='130' y2='74' stroke='#c0392b' stroke-width='2'/><polygon points='126,74 130,80 134,74' fill='#c0392b'/><text x='122' y='64' font-size='7.5' fill='#c0392b' text-anchor='end' font-weight='bold'>吸熱 Qh</text><line x1='130' y1='112' x2='130' y2='136' stroke='#2563a6' stroke-width='2'/><polygon points='126,136 130,142 134,136' fill='#2563a6'/><text x='122' y='128' font-size='7.5' fill='#2563a6' text-anchor='end' font-weight='bold'>排熱 Qc</text><line x1='164' y1='95' x2='250' y2='95' stroke='#1b7a3d' stroke-width='2'/><polygon points='250,91 256,95 250,99' fill='#1b7a3d'/><text x='260' y='92' font-size='7.5' fill='#1b7a3d' text-anchor='start' font-weight='bold'>對外</text><text x='260' y='102' font-size='7.5' fill='#1b7a3d' text-anchor='start' font-weight='bold'>作功 W</text><text x='170' y='178' font-size='9' fill='#1b3a5b' text-anchor='middle' font-weight='bold'>效率 η ＝ W ÷ Qh ＝ 1 − Qc ÷ Qh</text><text x='170' y='193' font-size='7.5' fill='#6b7680' text-anchor='middle'>卡諾(理想上限) η＝1−Tc÷Th；例 Th＝600 K、Tc＝300 K → η＝1−300÷600＝0.5</text></g></svg>",
+      "alt": "一張熱機運作圖，標題「熱機：高溫吸熱、對外作功、把剩下的熱排給低溫」。最上面一個紅色長條標「高溫熱庫 Th」，中間一個方塊標「熱機」，最下面一個藍色長條標「低溫熱庫 Tc」。從高溫熱庫往下有一支紅色箭頭指進熱機，標「吸熱 Qh」；從熱機往下有一支藍色箭頭指進低溫熱庫，標「排熱 Qc」；從熱機往右有一支綠色箭頭，標「對外作功 W」。圖下方兩行：「效率 η ＝ W ÷ Qh ＝ 1 − Qc ÷ Qh」「卡諾(理想上限) η＝1−Tc÷Th；例 Th＝600 K、Tc＝300 K → η＝1−300÷600＝0.5」。",
+      "caption": "熱機從高溫熱庫吸熱 Qh（紅箭頭），拿一部分對外作功 W（綠箭頭），把剩下的熱 Qc 排給低溫熱庫（藍箭頭）。效率 η＝W÷Qh＝1−Qc÷Qh。因為熱力學第二定律規定 Qc 不可能是 0，效率永遠小於 100%。理想上限是卡諾效率 η＝1−Tc÷Th，只看兩個熱庫的絕對溫度；例如 600 K 與 300 K，上限是 0.5（50%）。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-heat.carnot"
+     ],
+     "body": "最後練「熱機與卡諾循環」。重點：(1) 熱機從高溫吸熱 Qh、作功 W、向低溫排熱 Qc，Qh＝W＋Qc；(2) 效率 η＝W÷Qh＝1−Qc÷Qh；(3) 熱二規定 Qc 不可能為 0，所以 η 永遠小於 100%；(4) 理想上限＝卡諾效率 η＝1−Tc÷Th（絕對溫度），例 600 K 與 300 K → 0.5。小提醒：卡諾效率只看兩個熱庫的絕對溫度，和熱機大小、吸多少熱、用什麼氣體都無關。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QC-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "熱機從高溫熱庫吸進熱量 Qh 之後，這些熱會怎麼分配？",
+     "answer": "一部分變成對外作的功 W，剩下的熱 Qc 排給低溫熱庫",
+     "kp_ids": [
+      "sci.t_sub.phys-heat.carnot"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-heat.carnot"
+     ],
+     "options": [
+      "一部分變成對外作的功 W，剩下的熱 Qc 排給低溫熱庫",
+      "全部變成對外作的功 W，不排放任何熱",
+      "全部排給低溫熱庫，完全不對外作功",
+      "全部留在熱機裡變成它自己的內能"
+     ],
+     "distractor_rationales": {
+      "全部變成對外作的功 W，不排放任何熱": "做不到；熱力學第二定律規定一定要排一部分熱 Qc 給低溫庫，不可能全變成功。",
+      "全部排給低溫熱庫，完全不對外作功": "那就不是熱機了；熱機的目的正是把一部分熱變成對外作的功 W。",
+      "全部留在熱機裡變成它自己的內能": "熱機是循環運作、回到原狀態，內能不會一直累積；吸的熱分成作功 W 與排熱 Qc。"
+     },
+     "answer_evidence": [
+      "c-ca-engine"
+     ],
+     "feedback": "熱機：Qh＝W＋Qc——吸的熱一部分變功 W，剩下的 Qc 排給低溫熱庫。"
+    },
+    {
+     "question_id": "QC-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "熱機的效率 η 要怎麼算？",
+     "answer": "η ＝ W ÷ Qh（對外作的功 ÷ 吸收的熱）",
+     "kp_ids": [
+      "sci.t_sub.phys-heat.carnot"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-heat.carnot"
+     ],
+     "options": [
+      "η ＝ W ÷ Qh（對外作的功 ÷ 吸收的熱）",
+      "η ＝ Qh ÷ W（吸收的熱 ÷ 對外作的功）",
+      "η ＝ W ÷ Qc（對外作的功 ÷ 排掉的熱）",
+      "η ＝ Qc ÷ Qh（排掉的熱 ÷ 吸收的熱）"
+     ],
+     "distractor_rationales": {
+      "η ＝ Qh ÷ W（吸收的熱 ÷ 對外作的功）": "分子分母反了；效率是作的功佔吸收的熱的比例 W÷Qh，一定小於 1。",
+      "η ＝ W ÷ Qc（對外作的功 ÷ 排掉的熱）": "分母錯了；效率的分母是吸收的熱 Qh，不是排掉的熱 Qc。",
+      "η ＝ Qc ÷ Qh（排掉的熱 ÷ 吸收的熱）": "這是「排掉的比例」；效率要的是作功的比例，η＝1−Qc÷Qh 才對。"
+     },
+     "answer_evidence": [
+      "c-ca-efficiency"
+     ],
+     "feedback": "效率 η＝W÷Qh＝1−Qc÷Qh：對外作的功佔吸收的熱的比例。"
+    },
+    {
+     "question_id": "QC-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "運作在卡諾循環上的理想可逆熱機（卡諾熱機），它的效率只由什麼決定？",
+     "answer": "兩個熱庫的絕對溫度：η ＝ 1 − Tc ÷ Th",
+     "kp_ids": [
+      "sci.t_sub.phys-heat.carnot"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-heat.carnot"
+     ],
+     "options": [
+      "兩個熱庫的絕對溫度：η ＝ 1 − Tc ÷ Th",
+      "熱機本身做得多大台",
+      "每次吸收的熱 Qh 有多少",
+      "熱機裡用的是哪一種氣體"
+     ],
+     "distractor_rationales": {
+      "熱機本身做得多大台": "卡諾效率和熱機大小無關；只看高溫與低溫兩個熱庫的絕對溫度。",
+      "每次吸收的熱 Qh 有多少": "吸多少熱不影響效率上限；卡諾效率只由 Tc 和 Th 決定。",
+      "熱機裡用的是哪一種氣體": "卡諾效率與工作物質無關，只由兩個熱庫的絕對溫度 η＝1−Tc÷Th 決定。"
+     },
+     "answer_evidence": [
+      "c-ca-carnot"
+     ],
+     "feedback": "卡諾效率 η＝1−Tc÷Th，只由兩個熱庫的絕對溫度決定，和大小、吸熱量、氣體種類都無關。"
+    },
+    {
+     "question_id": "QC-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "高溫熱庫 600 K、低溫熱庫 300 K，在這兩個溫度之間運作的卡諾熱機，最高效率是多少？",
+     "answer": "0.5（也就是 50%）",
+     "kp_ids": [
+      "sci.t_sub.phys-heat.carnot"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-heat.carnot"
+     ],
+     "options": [
+      "0.5（也就是 50%）",
+      "1（也就是 100%）",
+      "2（也就是 200%）",
+      "0（也就是 0%）"
+     ],
+     "distractor_rationales": {
+      "1（也就是 100%）": "沒有熱機能達到 100%；η＝1−300÷600＝0.5，不是 1。",
+      "2（也就是 200%）": "效率不可能超過 1（100%）；而且不是 Th÷Tc，是 1−Tc÷Th＝0.5。",
+      "0（也就是 0%）": "只要兩個熱庫有溫差就能作功、效率大於 0；1−300÷600＝0.5。"
+     },
+     "answer_evidence": [
+      "c-ca-carnot"
+     ],
+     "feedback": "卡諾效率 η＝1−Tc÷Th＝1−300÷600＝0.5，也就是 50%。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（熱機從高溫吸熱 Qh、對外作功 W、向低溫排熱 Qc，Qh＝W＋Qc；效率 η＝W÷Qh＝1−Qc÷Qh；熱二規定 Qc 不可能為 0 故 η 永遠小於 100%；理想上限＝卡諾效率 η＝1−Tc÷Th 用絕對溫度，例 600 K 與 300 K → 0.5；卡諾效率只看兩熱庫絕對溫度，和大小/吸熱量/氣體無關）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

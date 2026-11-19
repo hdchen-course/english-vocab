@@ -2,6 +2,76 @@
  "_doc": "AC-UNIT-2 每頁 content_audit 5-clean 證據。round 僅於實跑 content_audit＋L3 coverage_check exit 0 後誠實記入；content_sha=HTML+sidecar 聯集（per_page_5clean_gate 同步）。",
  "required_clean": 5,
  "pages": {
+  "sci_phys_heat_carnot.html": {
+   "frozen_sha": "0023187c98f9c97f",
+   "rounds": [
+    {
+     "round": 31,
+     "content_sha": "0023187c98f9c97f",
+     "clean": true,
+     "l3_exit": 0,
+     "recorded_at": "2026-11-20T02:23:23+08:00",
+     "audited": true,
+     "note": "content_audit confirmed=0 coverageComplete=true (最終 sha, device/process＋讀順 全修後); L3 exit0 (anchors line55/106/160)"
+    },
+    {
+     "round": 32,
+     "content_sha": "0023187c98f9c97f",
+     "clean": true,
+     "l3_exit": 0,
+     "recorded_at": "2026-11-20T02:24:37+08:00",
+     "audited": true,
+     "note": "content_audit confirmed=0 coverageComplete=true (alt/數值/並列讀順複核); L3 exit0 (anchors line52/106/160)"
+    },
+    {
+     "round": 33,
+     "content_sha": "0023187c98f9c97f",
+     "clean": true,
+     "l3_exit": 0,
+     "recorded_at": "2026-11-20T02:26:09+08:00",
+     "audited": true,
+     "note": "content_audit confirmed=0 coverageComplete=true (代名詞/讀順/distractor 複核); L3 exit0 (anchors line46/106/159)"
+    },
+    {
+     "round": 34,
+     "content_sha": "0023187c98f9c97f",
+     "clean": true,
+     "l3_exit": 0,
+     "recorded_at": "2026-11-20T02:27:49+08:00",
+     "audited": true,
+     "note": "content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line44/105/159)"
+    },
+    {
+     "round": 35,
+     "content_sha": "0023187c98f9c97f",
+     "clean": true,
+     "l3_exit": 0,
+     "recorded_at": "2026-11-20T02:28:46+08:00",
+     "audited": true,
+     "note": "content_audit confirmed=0 coverageComplete=true (終輪複核); L3 exit0 (anchors line55/105/160)"
+    }
+   ],
+   "_harvest_note": "sha 911782a1→0023187c98f9c97f 為 harvest 階段(rounds 當時=[])補修，非 de-converge：claim c-ca-carnot『Th 是高溫熱庫、Tc 是低溫熱庫的絕對溫度』並列省略共用尾修飾語致前項字面誤讀 Th=熱庫(物理錯,Th 是溫度)→補足為『Th 是高溫熱庫的絕對溫度、Tc 是低溫熱庫的絕對溫度』(R13 於舊 sha 抓到的 major 讀順缺陷,我 device/cycle 修時未動此處故仍在)。此處未 bank 過 clean 故毋須 override。最終 harvest sha=0023187c98f9c97f，於此跑 5-clean。",
+   "_defect_fix_trace": [
+    {
+     "prev_sha": "4fc760691948ac2a",
+     "new_sha": "b02602e53e7c0b9d",
+     "found_round": 1,
+     "severity": "minor",
+     "dimension": "terminology-consistency",
+     "fix": "_note 自述『本檔實際未用守恆字』事實錯誤（能量守恆 實際在 c-ca-engine body＋verification_ref 共 3 處 U+6046）→ 改寫為正確描述。此為同 entropy 的 _note metadata class 缺陷（見記憶 note-metadata-must-match-file），同一 strand 連兩單元犯＝草稿時慣性複製 _note 模板未核對本檔實況。僅 metadata。harvest_override 留痕；舊 sha R2 作廢，新 sha b02602e53e7c0b9d 重跑 5-clean。"
+    },
+    {
+     "prev_sha": "b02602e53e7c0b9d",
+     "new_sha": "911782a1c0cf0eb3",
+     "found_round": 11,
+     "severity": "major",
+     "dimension": "domain-precision",
+     "fix": "can_do「理論上效率最高的理想熱機叫『卡諾循環』」＝device(熱機) vs process(卡諾循環) 混淆真缺陷(5 鏡一致)，會種『Carnot cycle 是一種引擎』迷思，與 claim c-ca-carnot 正確區分矛盾。依 classHint sweep 全檔：can_do 改『運作在卡諾循環上的卡諾熱機』、teach④『效率的理想上限＝運作在卡諾循環上的卡諾熱機』、Q3 stem『運作在卡諾循環上的理想可逆熱機（卡諾熱機）』。claim/最後練/selfeval 原本已用『卡諾效率/用卡諾循環運作的熱機』正確。這是 learner-facing 內容修(非 metadata)。harvest_override 留痕；舊 sha R12 作廢，新 sha 911782a1c0cf0eb3 重跑 5-clean。"
+    }
+   ],
+   "_note": "phys-heat 20/20 carnot t_sub(分科-物理, strand 最後一單元); 熱機效率與卡諾循環。★卡諾循環＝熱力學循環(過程)、卡諾熱機＝運作在該循環上的理想可逆裝置,兩者勿混為同名(can_do/teach④/Q3 已精確區分,R11 抓過此 major)。熱機從高溫熱庫吸熱 Qh、對外作功 W、向低溫熱庫排熱 Qc(Qh=W+Qc); 效率 η=W÷Qh=1−Qc÷Qh; 熱二規定 Qc 不可能為 0 故 η<100%; 卡諾循環=理想可逆最高效率 η=1−Tc÷Th(絕對溫度), 實際熱機 η≤卡諾; 例 Th=600K Tc=300K→η=1−300÷600=0.5(50%)。前置 entropy。R15 gloss 熱機 (heat engine)/效率 (efficiency)/卡諾循環 (Carnot cycle) 各=2。repro(sci_phys_checks::phys-heat.carnot .venv PASS 已註冊 fingerprint a8d666982c4b3101, 錨 η=1−Tc/Th=1−300/600=0.5)。figure=上紅高溫熱庫 Th/中熱機/下藍低溫熱庫 Tc,紅箭頭 Qh 入熱機、綠箭頭 W 向右作功、藍箭頭 Qc 排下,底部 η=W÷Qh=1−Qc÷Qh/卡諾 η=1−Tc÷Th/例 1−300÷600=0.5。scope:不含卡諾四步驟 PV 推導/製冷係數 COP/熵積分。全繁體恆用 U+6046(本檔未用守恆字)。四角色兩方向簽核過(land+port iPad render 開 PNG)。scan/pedagogy/question/schema/repro PASS。"
+  },
   "sci_phys_heat_entropy.html": {
    "frozen_sha": "4cadddd608f85020",
    "rounds": [
