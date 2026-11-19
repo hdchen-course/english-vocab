@@ -1,3 +1,10 @@
+## 2026-11-20 02:53 ★ sci.t_base.phys-estatic.static-basic 摩擦起電與靜電現象 5/5 DONE-GATE → phys-estatic 1/25（新 strand 起手）
+- **sci_phys_estatic_static_basic frozen `9690d8e189390a45`**（R11-R15 連 5 clean、L3 全 exit0、同 sha）。tier=t_base、exam=無（國小入門，為後續會考電學鋪底）。strand 起點無前置。R15 gloss 靜電 (static electricity)/摩擦起電 (charging by friction) 各＝2。定性單元無數值 repro（verification_ref＝科學共識，比照 phys-heat conduction-basic）。
+- 內容：兩物互相摩擦會帶電（靜電）；帶靜電物吸引輕小物（小紙屑/頭髮）；累積靜電碰導體（金屬門把）放電，可能火花/劈啪/被電感＝正常現象非觸電危險。figure＝三步 ①摩擦(氣球摩頭髮)②帶靜電③吸起輕小物。scope：不含電荷正負/庫侖/電路/微觀電子轉移。
+- **審查抓到真 blocker（我草稿＋四角色目視＋gate 全漏，靠 content_audit 領域鏡）**：R2＋R4（獨立兩輪、7 鏡含 viz/eye 一致）判圖把氣球摩頭髮標「＋＋」正電＝事實錯誤（橡膠氣球摩頭髮實際帶負電、得到電子；頭髮才帶正電），且本單元刻意不教電荷正負卻硬畫極性＝超 scope。修：SVG text＋alt＋teach② 三處同步改為極性中性的閃電符號 ⚡（表達帶電但不指定正負）。de-converge 舊 sha 7e1c9163→新 sha 9690d8e189390a45。
+- **class 教訓（已 bank 記憶 figure-symbols-are-factual-claims）**：示意圖上任何可查證符號（電荷正負＋/−、箭頭方向、數量）即事實陳述，課文不教該細節也必須正確或改中性；建圖後要查證式核對符號語意，別只目視。
+- DONE-GATE 全綠：per_page PASS（674/674、static-basic absent）、scan/pedagogy/question/schema PASS（定性無 repro）、figure 四角色兩方向簽核（綁新 sha）。phys-estatic strand 進度 1/25（t_base 第 1 單元）。
+
 ## 2026-11-20 02:28 ★★ sci.t_sub.phys-heat.carnot 熱機效率與卡諾循環 5/5 DONE-GATE → phys-heat 20/20 完成（strand 全收斂）
 - **sci_phys_heat_carnot frozen `0023187c98f9c97f`**（R31-R35 連 5 clean、L3 全 exit0、同 sha）。tier=t_sub、exam=分科-物理。前置＝entropy。R15 gloss 熱機 (heat engine)/效率 (efficiency)/卡諾循環 (Carnot cycle) 各＝2。
 - 內容：熱機從高溫熱庫吸熱 Qh、對外作功 W、向低溫熱庫排熱 Qc（Qh＝W＋Qc）；效率 η＝W÷Qh＝1−Qc÷Qh；熱二規定 Qc 不可能為 0 故 η＜100%；卡諾熱機（運作在卡諾循環上的理想可逆熱機）η＝1−Tc÷Th（絕對溫度）為理想上限、實際 η≤卡諾；例 Th＝600 K、Tc＝300 K → η＝0.5。scope：不含卡諾四步驟 PV 推導／製冷係數 COP／熵積分。repro（sci_phys_checks::phys-heat.carnot .venv PASS，本單元建置時新註冊 phys-heat.entropy＋phys-heat.carnot oracle，fingerprint a8d666982c4b3101，錨 η=1−Tc/Th=1−300/600=0.5）。figure＝上紅高溫熱庫 Th／中熱機／下藍低溫熱庫 Tc＋紅 Qh 入／綠 W 右作功／藍 Qc 排下＋底部 η 公式。
