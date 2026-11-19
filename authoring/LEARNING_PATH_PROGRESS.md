@@ -1,3 +1,10 @@
+## 2026-11-20 06:28 ★ sci.t_mid.phys-estatic.electroscope 驗電器的原理 5/5 DONE-GATE → phys-estatic 6/25
+- **sci_phys_estatic_electroscope frozen `113b7a863c3e905f`**（R1-R5 連 5 clean、L3 全 exit0；一次 de-converge）。tier=t_mid、exam=會考。前置＝charge＋charging。R15 gloss 驗電器 (electroscope)/金屬箔片 (metal leaf) 各＝2。概念單元無數值 repro（verification_ref＝科學共識）。
+- 內容：驗電器＝金屬球＋金屬桿＋兩片金屬箔片＋玻璃瓶（擋風保護箔片）；原理同性相斥——帶電時兩片箔片帶同號電互相排斥而張開、不帶電時下垂閉合；箔片張得越開表示帶的電越多（定性比較電量）。figure＝雙 panel 左不帶電閉合 vs 右帶電 V 張開（各標−、同性相斥、兩側皆 2 片等數）。scope：不含判正負操作、庫侖數值、電路（各留另單元/較進階）。
+- **缺陷修正**：撰寫時誤植英文「framed」入 alt（自檢 grep ASCII 時抓到、立即改「罩在」）。content_audit R1 揪 Q1 distractor「箔片變重了，所以垂下去張開」自相矛盾（垂下去＝閉合 vs 張開相反、且與自身 rationale 打架）（5 專家一致 major，clean 階段 override 晚修）→改乾淨單一誤解「箔片本來就一直張開與帶電無關」＋rationale＋_note 同步。de-converge 1db12f6a→113b7a86。
+- **class 教訓**：**MCQ distractor 自相矛盾 class**——誘答選項內部敘述不可自相矛盾（如同時說「垂下去」又「張開」）、也不可與自身 rationale 打架；撰寫 distractor 時要讓「宣稱的因果」在選項內自洽。另：撰寫中混入英文單字（framed）＝低級錯，已靠 grep ASCII 自檢攔下。
+- DONE-GATE 全綠：per_page PASS（679/679、electroscope absent）、scan/schema/question/pedagogy PASS、gloss 各=2、figure 四角色簽核（綁最終 sha 113b7a86、雙 panel 閉合/張開對比＋箔片等數＋同性相斥）。phys-estatic strand 進度 6/25（t_base 3＋t_mid 3）。
+
 ## 2026-11-20 06:08 ★ sci.t_mid.phys-estatic.charging 三種起電方式（摩擦/接觸/感應）5/5 DONE-GATE → phys-estatic 5/25
 - **sci_phys_estatic_charging frozen `ea78d475209c447a`**（R1-R5 連 5 clean、L3 全 exit0；期間三次 de-converge）。tier=t_mid、exam=會考。前置＝charge。R15 gloss 摩擦起電 (charging by friction)/接觸起電 (charging by contact)/感應起電 (charging by induction) 各＝2。概念單元無數值 repro（verification_ref＝科學共識）。
 - 內容：摩擦起電（兩不帶電物互相摩擦、電子轉移、一正一負）；接觸起電（帶電體碰不帶電導體、電荷移過去、導體帶同號電）；感應起電（帶電體靠近不碰、導體電荷重新分布近端異號遠端同號、整體仍中性；接地讓遠端電荷流走、先移開手再移開帶電體則留異號淨電）。figure＝三欄①摩擦②接觸③感應，符號物理正確。scope：不含庫侖定律數值公式、電場電位、電路電流電壓電阻。
