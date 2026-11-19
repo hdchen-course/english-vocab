@@ -1,3 +1,8 @@
+## 2026-11-19 13:37 ★ sci.t_adv.phys-energy.momentum-conserve 動量守恆（系統不受外力時總動量不變）5/5 DONE-GATE → phys-energy 16/22
+- **sci_phys_energy_momentum_conserve frozen `2d5d607227b0cbb6`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha；首輪即零、零 de-converge）。t_adv 高中學測。前置＝momentum-impulse。R15 gloss（動量守恆 conservation of momentum）grep -o＝2；動量 momentum 前置已 gloss 不重複。
+- 內容：動量守恆＝系統合外力為零時碰撞前後總動量不變；總動量＝各物體質量×速度相加；碰前總動量＝碰後總動量解速度。figure＝碰撞前 2kg→3m/s＋3kg 靜止 總動量 2×3＋3×0＝6；碰撞後黏成 5kg→1.2m/s 總動量 (2+3)×1.2＝6。oracle momentum-conserve 錨 2·3+3·0=(2+3)·1.2=6；Q2 碰前總動量 6 distractor 5(質量相加)/3(只看速度)/1.2(混淆碰後速度)、Q3 共同速度 1.2 distractor 6(忘除總質量)/3(除2)/2(除3)、Q4 碰後總動量 6 distractor 0(以為停)/1.2(當速度)/5(當質量)。
+- DONE-GATE 全綠：per_page（momentum-conserve 不在 violations、647/647 PASS、live=frozen 2d5d6072）／scan PASS／pedagogy 0 hard／question CLEAN／schema clean／repro（phys-energy.momentum-conserve）PASS／figure 四角色簽核。
+
 ## 2026-11-19 13:27 ★ sci.t_adv.phys-energy.momentum-impulse 衝量與動量變化（衝量-動量定理 I＝Ft＝Δp）5/5 DONE-GATE → phys-energy 15/22
 - **sci_phys_energy_momentum_impulse frozen `9c65ba2d36dc6ad3`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha；一度 de-converge 自引入：2e567dc6→9c65ba2d）。t_adv 高中學測。前置＝ke-pe（質量/速度/動能）。R15 gloss（動量 momentum／衝量 impulse／衝量-動量定理 impulse-momentum theorem）各 grep -o＝2（_note＋can_do）。
 - 內容：動量 p＝mv（運動的多少、方向同速度）；衝量 I＝Ft（力×作用時間）；衝量-動量定理 I＝Δp＝mΔv。figure＝推之前 3kg 靜止（動量0）→力 6N×2s（衝量12 牛頓·秒）→推之後 v＝4 公尺/秒（動量 3×4＝12），下方「衝量12＝動量變化(0→12)」「末速＝動量÷質量＝12÷3＝4」。oracle en_momentum_impulse 錨 I＝Ft＝6·2＝12 N·s＝Δp、v＝12/3＝4 m/s（registry honest re-key f15f059f→fbced5bb）；Q3 衝量 12 distractor 3(÷)/8(+)/6(只寫力)、Q4 末速 4 distractor 36(×m)/15(+m)/9(−m)。
