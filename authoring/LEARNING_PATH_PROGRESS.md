@@ -1,3 +1,11 @@
+## 2026-11-20 07:22 ★ sci.t_mid.phys-estatic.voltage 電壓（電位差）與電池 W＝qV 5/5 DONE-GATE → phys-estatic 8/25
+- **sci_phys_estatic_voltage frozen `877a85da2d354ffa`**（v2 R1-R5 連 5 clean、L3 全 exit0；一次 de-converge：v1 達 1/5 後 round1+round2 兩輪揪同一真 blocker→修→v2 重跑 5-clean）。tier=t_mid、exam=會考。前置＝charge。R15 gloss 電壓 (voltage)/電位差 (potential difference)/伏特 (volt) 各＝2。
+- **定量單元**：W＝qV＝2×5＝10 焦耳 經 oracle `sci_phys2_checks::phys-estatic.voltage` 以 `.venv` repro_gate PASS（未造假）；Q1 同式正確。
+- 內容：電壓＝電位差＝推動電荷流動的「電位高低差」（像水位差推水流）、單位伏特（V）；電荷 q 通過電位差 V 時電做功 W＝qV（電荷量乘電位差）；電池在兩端持續維持電位差、像幫浦一直推水、電壓越大推動能力越強。figure＝電池（長線＋短線−）＋電位差 V＝5 伏特＋紅＋電荷 q＝2 庫侖＋綠箭頭被推動＋公式 W＝qV＝2×5＝10 焦耳。scope：不含電流電阻歐姆定律 I＝V÷R、串並聯分壓、電場電位定量公式（各留另單元/較進階）。
+- **content_audit 揪真 blocker（1 次 de-converge）**：v1 round1+round2 兩輪 7/9 專家一致 DEFECT（a-wrong）——我把核心定義寫成「電壓＝推動電荷流動的**電位能差**」，物理錯誤：電位能差 ΔU＝qV 量綱焦耳（本例＝10 J＝功 W），而電壓＝電位差＝每單位電荷的電位能差（ΔU÷q）量綱伏特，差一個電荷量 q，且與同檔「單位伏特」「W＝qV＝10 焦耳」自相矛盾（等於宣稱 5＝10），植入「電壓＝能量」會考迷思。→全 7 處（_note/can_do/claim c-v-what/teach①/teach末/figure caption/selfeval）「電位能差」→「電位高低差」（＝電位的高低差、量綱伏特、與水位差類比對齊、與 W＝qV/單位伏特一致）。de-converge 3fc2dee1→877a85da、rounds 歸零重跑 v2 5-clean。
+- **class 教訓（新，建自然/數理「每單位量」概念單元必讀）**：**強度量 vs 總量（intensive vs extensive）量綱混淆 class**——電位差 V（每單位電荷能量，伏特）≠電位能差 ΔU（總能量，焦耳＝qV），差一個 q；同類：電場 E vs 電位能、功率 vs 功、密度 vs 質量、電流 I（速率）vs 電量 Q（current_def 的 Q/I class）。定義「每單位 X 的 Y」型量時，**不可直接等同於「Y 的差」或「Y 本身」**；若單位、公式（W＝qV）、定義三者在同檔並列，content_audit 領域/學習科學鏡會抓出量綱自相矛盾（5＝10），機械 gate 與目視不會。draft 時：凡定義帶單位的強度量，先確認「定義措辭的量綱＝宣稱單位」。
+- DONE-GATE 全綠：per_page PASS（681/681、voltage absent from violations）、scan/schema/question PASS、gloss 各=2、figure 四角色簽核（綁最終 sha 877a85da、雙向 iPad render 看過：電池符號＋電位差＋紅＋電荷＋綠箭頭＋公式，無重疊裁切）。phys-estatic strand 進度 8/25（t_base 3＋t_mid 5）。
+
 ## 2026-11-20 07:01 ★ sci.t_mid.phys-estatic.current-def 電流的定義與方向 I＝Q÷t 5/5 DONE-GATE → phys-estatic 7/25（首個定量單元）
 - **sci_phys_estatic_current_def frozen `207e19b5ac4e8493`**（v2 R1-R5 連 5 clean、L3 全 exit0；一次 de-converge：v1 達 4/5 後 round7 揪真缺陷→修→v2 重跑 5-clean）。tier=t_mid、exam=會考。前置＝charge。R15 gloss 電流 (electric current)/安培 (ampere) 各＝2。
 - **首個 phys-estatic 定量單元**：I＝Q÷t＝6÷2＝3 安培 經 oracle `sci_phys2_checks::phys-estatic.current-def` 以 `.venv` repro_gate PASS（fingerprint abdeb20ea3a1a1e8，未造假）；practice Q1 10÷2＝5 安培亦正確。
