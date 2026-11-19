@@ -1,3 +1,10 @@
+## 2026-11-19 15:45 ★ sci.t_base.phys-energy.simple-machine 簡單機械省力（槓桿/滑輪/輪軸）5/5 DONE-GATE → phys-energy 22/22 ★★ strand 收官（全 22 KP 完成）
+- **sci_phys_energy_simple_machine frozen `a56d88642c6c079c`**（post-fix rounds 1-5 連 5 clean、L3 全 exit0、同 sha）。tier=t_base 初級、exam=無。前置＝push-pull（力已 gloss）。R15 gloss 簡單機械/機械利益/槓桿/滑輪/輪軸 各=2。
+- 內容：簡單機械＝省力（槓桿/滑輪/輪軸）；省力費距離、機械不生能量（用省力換距離把小力放大，非「力守恆/重新分配」）；機械利益 MA＝輸出力÷輸入力、MA>1 省力。figure＝槓桿撬棒+支點(靠右)+施力臂長/抗力臂短+輸入25牛頓向下+石頭100牛頓+MA=100÷25=4。oracle simple-machine 錨 MA=100/25=4（repro PASS、無需 re-key）。Q3 答 4 distractor 0.25(算反25÷100)/75(相減)/125(相加)、Q4 答「輸出力是輸入力4倍」distractor 輸入是輸出4倍(反)/力沒放大只改方向(=MA1定滑輪)/做的功變4倍(違能量守恆)。
+- **de-converge（真缺陷，content_audit R2 5 鏡 blocker）**：claim c-sm-advantage 與 distractor rationale 原寫「機械不會憑空製造能量，只是把力重新分配」——字面暗示「力守恆/被搬移」，與本單元核心「MA=4、輸出力被放大 4 倍」矛盾，易植入「力守恆」迷思（真正守恆的是能量，省力代價是距離）。修兩處為「用省力換距離把小力放大成大力」，de-converge a403ea9b→a56d88642c6c079c 重跑 5-clean、figure 未變沿用簽核。★class 教訓：教「簡單機械省力」時守恆的量是能量/功（不是力），省力機制＝放大力+費距離，勿用「重新分配力」框架。
+- DONE-GATE 全綠：per_page 653/653 PASS、live=frozen a56d8864／scan PASS／pedagogy 0 hard／question CLEAN／schema clean／repro simple-machine PASS／figure 四角色簽核。
+- **★★ phys-energy strand 22 個 binding KP 全數 5/5 DONE-GATE 完成**（能量形式/功/功率/動能/位能/機械能守恆/彈力位能/功能定理/效率/熱功/P=Fv/衝量動量/動量守恆/一維二維碰撞/彈性碰撞/質心/變力作功/簡單機械…）。
+
 ## 2026-11-19 15:28 ★ sci.t_sub.phys-energy.variable-force-work 變力作功（力-位移圖的面積）5/5 DONE-GATE → phys-energy 21/22
 - **sci_phys_energy_variable_force_work frozen `58b460b4f9ab559a`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha；首輪即零零、無 de-converge）。tier=t_sub 分科-物理。前置＝work-def。R15 gloss 積分 (integral) grep=2、彈力常數 (spring constant) grep=2；功/作功 前置已 gloss。
 - 內容：定力 W=Fd 只在力固定時成立；變力作功＝力-位移圖線下面積（幾何即積分）；彈簧 F=kx→過原點斜直線→三角形面積＝½kx²。figure＝力-位移圖斜線 F=100x 從原點到(0.2m,20N)+三角形填色+面積 ½×0.2×20＝2.0 焦耳。oracle variable-force-work 錨 ∫₀^0.2 100x dx＝½kx²＝2.0（repro PASS、無需 re-key）；Q2 ½kX² distractor kX²(矩形忘½)/½kX(漏一X)/kX(終點力非功)、Q3 2.0 distractor 4.0(矩形最大力)/20(終點力當功)/10(½kX漏一X)、Q4 2倍 distractor 一樣多/一半/需更多資訊。
