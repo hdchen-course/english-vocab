@@ -252,8 +252,15 @@ def en_conservative():
     return _ok("phys-energy.conservative",
                "保守力(重力/彈力)做功與路徑無關、力學能守恆；非保守力(摩擦)f=μN=0.3·20=6N、生熱 Q=f·d=6·5=30J、力學能 50−30=20J 不守恆")
 def en_power_fv():
-    assert 200*3 == 600                              # P=Fv
-    return _ok("phys-energy.power-fv", "瞬時功率 P=Fv=200·3=600W")
+    # 瞬時功率 P=Fv（t_adv）。力 F 沿運動方向、速率 v。
+    F, v = 200, 3
+    P = F*v                                          # P=Fv=200·3=600W
+    assert _close(P, 600.0)
+    # 與前置 P=W/t 一致：時間 t=4s、位移 d=v·t=12m、功 W=F·d=2400J、P=W/t=600W
+    t = 4; d = v*t; W = F*d
+    assert _close(d, 12.0) and _close(W, 2400.0) and _close(W/t, 600.0)
+    return _ok("phys-energy.power-fv",
+               "瞬時功率 P=Fv=200·3=600W；與 P=W/t 一致：d=vt=12m、W=Fd=2400J、W/t=600W")
 def en_momentum_impulse():
     assert 5*2 == 10 and 3*4-3*0 == 12               # I=Ft；Δp=mΔv
     return _ok("phys-energy.momentum-impulse", "衝量 I=Ft=10；Δp=mΔv=12")

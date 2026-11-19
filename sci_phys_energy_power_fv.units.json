@@ -1,0 +1,212 @@
+{
+ "_note": "自然島 物理-能量（phys-energy）strand 第14單元（t_adv 高中學測）。知識點 sci.t_adv.phys-energy.power-fv（瞬時功率 P＝Fv）。tier=t_adv。全繁體零簡體零 PRC 詞。中文授課無音檔。前置＝power-def（功率 P=W/t、瓦特）＋work-def（功 W=Fd）。術語附國際英語（R15，★只在 can_do 首次 gloss 一次；英文括號 grep -o 計數：『瞬時功率 (instantaneous power)』應＝2〔_note 本宣告行一次＋can_do 一次〕；功率英語 power 已於前置 power-def gloss、本單元只用中文『功率』；teach/claim body 不重複 gloss）。scope（t_adv 學測）：(1) 當力 F 沿運動方向作用在以速率 v 移動的物體上，物體當下得到的瞬時功率＝P＝F×v；這是功率 P=W/t 的即時版本（力×當下速率）；(2) 推導：很短時間 t 內物體移動 d＝v×t，力做功 W＝F×d＝F×v×t，功率 P＝W/t＝F×v；(3) 同樣的力下，速率越快功率越大（P 與 v 成正比）。量化例：引擎以 200 牛頓的力推車、車速 3 公尺/秒 → P＝200×3＝600 瓦特；一致性：4 秒內移動 d＝vt＝12 公尺、做功 W＝Fd＝2400 焦耳、P＝W/t＝2400/4＝600 瓦特。不含變力瞬時功率積分（t_sub）。repro（tools/verify/sci_phys_checks.py::phys-energy.power-fv，repro_gate .venv PASS，指紋 ed765eef336bf1cf）錨定 P=Fv=200·3=600W、d=vt=12m、W=Fd=2400J、W/t=600W。figure 自檢：一台車受引擎施力 F＝200 牛頓沿運動方向（向右），車速 v＝3 公尺/秒，瞬時功率 P＝F×v＝600 瓦特；並示同力下速率加倍（3→6）功率加倍（600→1200）；標籤不疊不溢出、alt 與 SVG text 逐字一致。practice 四答案＝{P＝F×v（Q1 公式）, 600 瓦特（Q2 計算）, 變成 2 倍（Q3 P∝v）, 2400 焦耳（Q4 W=Pt 一致）}；MCQ options bare、每 distractor 乾淨單一誤解（Q2：200=忘乘速率只寫力／66.7=用F÷v／203=用F＋v；Q4：150=用P÷t／604=用P＋t／600=把功率當成功忘乘時間）、兩兩相異、長度均衡；distractor_rationales key 逐字相符。claim kind=fact。figure-only example 無 body。定義不得反轉：瞬時功率 P＝F×v、同力速率越快功率越大、與 P=W/t 一致。",
+ "page": "sci_phys_energy_power_fv.html",
+ "units": [
+  {
+   "unit_id": "sci.t_adv.phys-energy.power-fv",
+   "title_zh": "瞬時功率 P＝Fv（力×速率）",
+   "can_do": "我知道當一個力 F 沿著運動方向作用在以速率 v 移動的物體上時，物體當下得到的『瞬時功率 (instantaneous power)』＝P＝F×v。我知道它其實就是前面功率 P＝W÷t 的即時版本：在很短的時間 t 裡，物體移動 d＝v×t，力做的功 W＝F×d＝F×v×t，所以功率 P＝W÷t＝F×v。我也知道同樣的力之下，速率越快、功率越大（功率和速率成正比）。我會算：引擎用 200 牛頓的力推車、車速 3 公尺/秒，瞬時功率＝200×3＝600 瓦特；而且可以驗證一致：4 秒內移動 12 公尺、做功 2400 焦耳，功率＝2400÷4＝600 瓦特。",
+   "situation_group": "能量：讓世界運作的能力",
+   "subject": "sci",
+   "strand": "phys-energy",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "sci.t_adv.phys-energy.power-fv"
+   ],
+   "prerequisites": [
+    "sci.t_mid.phys-energy.power-def",
+    "sci.t_mid.phys-energy.work-def"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-pfv-formula",
+     "text": "當一個力 F 沿著物體運動的方向作用、物體以速率 v 移動時，物體當下得到的瞬時功率是 P＝F×v。「瞬時」是指「這一刻」的功率，和前面學的功率 P＝W÷t（那其實是整段時間的平均功率）是同一件事的即時版本——一個看整段時間的總功，一個看當下的力乘速率。",
+     "kind": "fact",
+     "source_refs": [
+      "瞬時功率 P=Fv（高中物理 學測）"
+     ],
+     "verification_ref": "P=Fv（力沿運動方向、瞬時功率；科學共識）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-pfv-derive",
+     "text": "為什麼 P＝F×v？用功率的定義推一次：在很短的時間 t 裡，物體以速率 v 移動了 d＝v×t 的距離，力做的功 W＝F×d＝F×（v×t）＝F×v×t。再代進功率定義 P＝W÷t＝（F×v×t）÷t＝F×v。所以「力乘以當下速率」就是當下的功率。",
+     "kind": "fact",
+     "source_refs": [
+      "P=Fv 由 P=W/t 推導（高中物理 學測）"
+     ],
+     "verification_ref": "W=Fd=F·v·t、P=W/t=Fv（代數推導；科學共識）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-pfv-example",
+     "text": "計算例：引擎用 200 牛頓的力推車，車以 3 公尺/秒前進。瞬時功率 P＝F×v＝200×3＝600 瓦特。驗證它和 P＝W÷t 一致：4 秒內車移動 d＝v×t＝3×4＝12 公尺，力做的功 W＝F×d＝200×12＝2400 焦耳，功率 P＝W÷t＝2400÷4＝600 瓦特，兩種算法一樣。重點含意：同樣的力之下，速率加倍（3→6 公尺/秒），瞬時功率也加倍（600→1200 瓦特），因為功率和速率成正比。",
+     "kind": "fact",
+     "source_refs": [
+      "P=Fv 計算例 200·3=600W（高中物理 學測）"
+     ],
+     "verification_ref": "P=Fv=200·3=600W、d=vt=12m、W=Fd=2400J、W/t=600W（sci_phys_checks::phys-energy.power-fv .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-energy.power-fv"
+     ],
+     "body": "前面學過功率＝每單位時間做的功（P＝W÷t）。這一課看一個常用的即時算法：當力沿運動方向、物體正在以某個速率移動時，當下的功率就是「力×速率」。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-energy.power-fv"
+     ],
+     "body": "① 瞬時功率 P＝F×v（F 沿運動方向、v 是當下速率）。② 為什麼：短時間 t 內移動 d＝v×t、做功 W＝F×v×t，P＝W÷t＝F×v，和 P＝W÷t 一致。③ 同樣的力，速率越快功率越大（P 與 v 成正比）。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_adv.phys-energy.power-fv"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 200' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='170' y='15' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>瞬時功率 P ＝ 力 × 速率</text><line x1='20' y1='96' x2='320' y2='96' stroke='#9aa5b1' stroke-width='1.2'/><rect x='56' y='74' width='48' height='22' rx='3' fill='#cdd6de' stroke='#9aa5b1'/><circle cx='68' cy='98' r='5' fill='#8a94a0'/><circle cx='92' cy='98' r='5' fill='#8a94a0'/><line x1='104' y1='78' x2='150' y2='78' stroke='#c0392b' stroke-width='2.6'/><polygon points='150,78 142,74 142,82' fill='#c0392b'/><text x='127' y='70' font-size='8' fill='#c0392b' text-anchor='middle'>施力 F ＝ 200 N</text><line x1='104' y1='90' x2='150' y2='90' stroke='#2563a6' stroke-width='2'/><polygon points='150,90 143,87 143,93' fill='#2563a6'/><text x='128' y='108' font-size='8' fill='#2563a6' text-anchor='middle'>速率 v ＝ 3 m/s</text><text x='235' y='86' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>P ＝ 200×3 ＝ 600 W</text><rect x='40' y='128' width='264' height='52' rx='4' fill='#f3f6f8' stroke='#c3cbd3'/><text x='170' y='144' font-size='8' fill='#33475b' text-anchor='middle' font-weight='bold'>同樣的力，速率加倍 → 功率加倍（P 與 v 成正比）</text><text x='110' y='162' font-size='8' fill='#6b7680' text-anchor='middle'>v ＝ 3 m/s</text><text x='110' y='174' font-size='8.5' fill='#2563a6' text-anchor='middle'>P ＝ 600 W</text><text x='170' y='168' font-size='10' fill='#6b7680' text-anchor='middle'>→</text><text x='235' y='162' font-size='8' fill='#6b7680' text-anchor='middle'>v ＝ 6 m/s</text><text x='235' y='174' font-size='8.5' fill='#2563a6' text-anchor='middle'>P ＝ 1200 W</text></g></svg>",
+      "alt": "標題「瞬時功率 P ＝ 力 × 速率」。一台車在地面上，受紅色箭頭標「施力 F ＝ 200 N」沿運動方向向右，下方藍色箭頭標「速率 v ＝ 3 m/s」，右邊標「P ＝ 200×3 ＝ 600 W」。下方一個方框說明「同樣的力，速率加倍 → 功率加倍（P 與 v 成正比）」，左邊「v ＝ 3 m/s，P ＝ 600 W」，用箭頭指到右邊「v ＝ 6 m/s，P ＝ 1200 W」。",
+      "caption": "引擎用 200 牛頓的力推車、車速 3 公尺/秒，瞬時功率 P＝F×v＝200×3＝600 瓦特。同樣的力之下，速率加倍到 6 公尺/秒，功率也加倍到 1200 瓦特——功率和速率成正比。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-energy.power-fv"
+     ],
+     "body": "最後練「瞬時功率」。重點：(1) P＝F×v（力沿運動方向、v 是當下速率）；(2) 它和 P＝W÷t 一致（短時間推導出來）；(3) 同力下速率越快功率越大。小提醒：P＝F×v 是相乘，不是相除也不是相加；而功 W＝P×t（功率乘時間）。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QK-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個力 F 沿運動方向作用在以速率 v 移動的物體上。這個力給物體的瞬時功率怎麼算？",
+     "answer": "P ＝ F × v",
+     "kp_ids": [
+      "sci.t_adv.phys-energy.power-fv"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-energy.power-fv"
+     ],
+     "options": [
+      "P ＝ F × v",
+      "P ＝ F × t",
+      "P ＝ F ÷ v",
+      "P ＝ F ＋ v"
+     ],
+     "distractor_rationales": {
+      "P ＝ F × t": "力乘時間是衝量不是功率；瞬時功率是力乘當下速率，P＝F×v。",
+      "P ＝ F ÷ v": "功率不是力除以速率；由 P＝W÷t 推導得 P＝F×v（相乘）。",
+      "P ＝ F ＋ v": "力和速率單位不同、不能相加；瞬時功率是兩者相乘 P＝F×v。"
+     },
+     "answer_evidence": [
+      "c-pfv-formula"
+     ],
+     "feedback": "瞬時功率 P＝F×v（力沿運動方向，v 是當下速率）。"
+    },
+    {
+     "question_id": "QK-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "引擎用 200 牛頓的力推車，車以 3 公尺/秒前進。這一刻引擎輸出的瞬時功率是多少？",
+     "answer": "600 瓦特",
+     "kp_ids": [
+      "sci.t_adv.phys-energy.power-fv"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-energy.power-fv"
+     ],
+     "options": [
+      "600 瓦特",
+      "200 瓦特",
+      "66.7 瓦特",
+      "203 瓦特"
+     ],
+     "distractor_rationales": {
+      "200 瓦特": "這只寫了力、忘了乘速率；瞬時功率＝力×速率＝200×3＝600 瓦特。",
+      "66.7 瓦特": "這用了力÷速率（200÷3）；應該是相乘，200×3＝600 瓦特。",
+      "203 瓦特": "這把力和速率相加（200＋3）；功率是相乘，200×3＝600 瓦特。"
+     },
+     "answer_evidence": [
+      "c-pfv-example"
+     ],
+     "feedback": "瞬時功率 P＝F×v＝200×3＝600 瓦特。"
+    },
+    {
+     "question_id": "QK-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "同樣的力，車速從 3 公尺/秒變成 6 公尺/秒（變成 2 倍）。瞬時功率會變成原來的幾倍？",
+     "answer": "2 倍",
+     "kp_ids": [
+      "sci.t_adv.phys-energy.power-fv"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-energy.power-fv"
+     ],
+     "options": [
+      "2 倍",
+      "不變",
+      "4 倍",
+      "一半"
+     ],
+     "distractor_rationales": {
+      "不變": "功率會變；P＝F×v，力不變但速率變 2 倍，功率就變 2 倍。",
+      "4 倍": "P＝F×v 裡 v 是一次方、不是平方；速率變 2 倍，功率變 2 倍（不是 4 倍）。",
+      "一半": "速率變大、功率應變大不是變小；P 與 v 成正比，速率 2 倍則功率 2 倍。"
+     },
+     "answer_evidence": [
+      "c-pfv-example"
+     ],
+     "feedback": "P＝F×v，力不變時功率與速率成正比；速率變 2 倍，功率變 2 倍。"
+    },
+    {
+     "question_id": "QK-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "引擎的功率是 600 瓦特，持續作用 4 秒。這 4 秒內引擎做了多少功？（功＝功率×時間）",
+     "answer": "2400 焦耳",
+     "kp_ids": [
+      "sci.t_adv.phys-energy.power-fv"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-energy.power-fv"
+     ],
+     "options": [
+      "2400 焦耳",
+      "150 焦耳",
+      "604 焦耳",
+      "600 焦耳"
+     ],
+     "distractor_rationales": {
+      "150 焦耳": "這用了功率÷時間（600÷4）；功＝功率×時間＝600×4＝2400 焦耳。",
+      "604 焦耳": "這把功率和時間相加（600＋4）；功是相乘，600×4＝2400 焦耳。",
+      "600 焦耳": "600 是功率（每秒做的功），不是 4 秒的總功；總功＝600×4＝2400 焦耳。"
+     },
+     "answer_evidence": [
+      "c-pfv-example"
+     ],
+     "feedback": "功＝功率×時間＝600×4＝2400 焦耳（這也等於 P＝W÷t 反推的結果）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（瞬時功率 P＝F×v、力沿運動方向、v 是當下速率；由 P＝W÷t 推導〔W＝F×v×t〕；同力下速率越快功率越大、P 與 v 成正比；例 200×3＝600 瓦特，驗證 W＝Fd＝2400 焦耳、P＝W÷t＝600 瓦特；功＝功率×時間）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
