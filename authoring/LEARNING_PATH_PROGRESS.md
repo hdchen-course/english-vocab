@@ -1,3 +1,10 @@
+## 2026-11-20 05:23 ★ sci.t_base.phys-estatic.circuit-basic 簡單電路 5/5 DONE-GATE → phys-estatic 3/25（t_base 入門）
+- **sci_phys_estatic_circuit_basic frozen `cee1f5d8281f1c2d`**（R1-R5 連 5 clean、L3 全 exit0、同 sha；期間兩次 de-converge）。tier=t_base、exam=無（國小入門，為後續會考電學鋪底）。無前置。R15 gloss 電路 (circuit)/通路 (closed circuit)/斷路 (open circuit) 各＝2。定性單元無數值 repro（verification_ref＝科學共識）。
+- 內容：簡單電路＝電池＋燈泡＋導線接成一個圈圈（迴路）；圈圈完整接通（通路）電繞一整圈、燈泡才亮；導線斷掉或開關沒接上＝斷路、電繞不成圈、燈泡不亮；開關接通或切斷迴路。figure＝左通路（黃燈泡亮＋綠點接通）vs 右斷路（灰燈泡不亮＋紅翹槓缺口）對照。scope：不含電流/電壓/電阻數值、串並聯、電流方向電荷正負、歐姆定律（各留另單元）。
+- **content_audit 揪 2 真缺陷（我草稿＋四角色目視＋deterministic gate 全漏，靠領域鏡＋對抗式框架）→ 兩次 de-converge**：(1) R4＋R5（獨立兩輪、7 專家一致）major b-hard-to-understand：claim c-cb-open 及 figure svg/alt/caption/Q3 feedback 用「把開關**打開**…燈泡滅」garden-path——國小日常「打開開關」＝通電/亮，此處卻指斷路/滅、與對稱句「接上」不配對、正撞本單元要教的開關概念。修：5 處「打開」統一改「斷開」。de-converge d2a787f1→19da6dc1。(2) R8 minor b-hard-to-understand：Q1 distractor「斷掉一個缺口」動賓搭配不當（缺口是斷開後產生的結果、非被斷掉的對象）。修：_note/option/rationale key 3 處改「缺了一個口（斷開）的迴路」。de-converge 19da6dc1→cee1f5d8。
+- **class 教訓**：①「everyday-vs-technical 詞撞」＝國小教材可讀性 major 類（日常動詞的生活語感與電學術語義相反時會種迷思，須用與對稱句配對的無歧義詞）；②動作動詞（斷掉/破壞）直接接結果名詞（缺口）＝動賓搭配不當，母語讀者卡頓。兩者 deterministic gate 與目視都看不到、靠 content_audit 對抗式領域鏡。
+- DONE-GATE 全綠：per_page PASS（676/676、circuit_basic absent from violations）、scan/schema/question/pedagogy PASS、figure 四角色目視簽核（綁 sha cee1f5d8；靜態對照圖無 frame 問題、標籤不壓線、底行「斷開就切斷整個圈圈」無溢出）。phys-estatic strand 進度 3/25。
+
 ## 2026-11-20 04:49 ★ 連帶修已上線單元 molar_heat(18/25) 重收斂 5/5 DONE（_note 模板缺陷＋圖面劃線修正）
 - **sci_phys_heat_molar_heat re-frozen `7d0d003394c2cee1`**（R1-R5 連 5 clean、L3 全 exit0）。修 3 處：①_note「本檔實際未用守恆字」自我否定句（守恆＝0）②「alt 與 SVG text 逐字一致」假宣稱→改準確措辭 ③practice 自述四答案對齊實際 answer verbatim。
 - **再審 viz 鏡揪出原圖（746274b94）潛在圖面缺陷**：右汽缸藍色「活塞上移」箭頭（x=258 y29-44）與正上方置中標籤「定壓（活塞上移膨脹）」(y40) 同 x 重疊、線像刪除線劃過標籤中央字（6/6 panel b-hard-to-understand）。修：兩側標籤 y40→y26 上移到箭頭尖以上（保持左右對稱）；針對圖元素 render 實測不再劃過、無撞標題、箭頭方向正確、四角色簽核。
