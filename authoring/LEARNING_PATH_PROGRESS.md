@@ -1,3 +1,8 @@
+## 2026-11-20 04:49 ★ 連帶修已上線單元 molar_heat(18/25) 重收斂 5/5 DONE（_note 模板缺陷＋圖面劃線修正）
+- **sci_phys_heat_molar_heat re-frozen `7d0d003394c2cee1`**（R1-R5 連 5 clean、L3 全 exit0）。修 3 處：①_note「本檔實際未用守恆字」自我否定句（守恆＝0）②「alt 與 SVG text 逐字一致」假宣稱→改準確措辭 ③practice 自述四答案對齊實際 answer verbatim。
+- **再審 viz 鏡揪出原圖（746274b94）潛在圖面缺陷**：右汽缸藍色「活塞上移」箭頭（x=258 y29-44）與正上方置中標籤「定壓（活塞上移膨脹）」(y40) 同 x 重疊、線像刪除線劃過標籤中央字（6/6 panel b-hard-to-understand）。修：兩側標籤 y40→y26 上移到箭頭尖以上（保持左右對稱）；針對圖元素 render 實測不再劃過、無撞標題、箭頭方向正確、四角色簽核。
+- DONE-GATE 全綠：per_page/scan/question/pedagogy。教學內容（Cp/Cv/梅耶/自由度 repro 已驗）不變。
+
 ## 2026-11-20 04:22 ★ 連帶修已上線單元 static_basic(1/25) 重收斂 5/5 DONE（_note 模板缺陷修正）
 - **sci_phys_estatic_static_basic re-frozen `72d52c782f19f638`**（R1-R5 連 5 clean、L3 全 exit0；一輪 L3 FAIL 淺層 skim 已剔除補跑）。修 _note 三處同款模板缺陷：①「本檔未用守恆字」自我否定句（守恆＝0）②「alt 與 SVG text 逐字一致」假宣稱→改準確措辭 ③practice 自述三答案對齊實際 answer verbatim。教學內容與 figure（⚡ 中性）不變。per_page/scan/question/pedagogy 全綠。
 - molar_heat(18/25) 同款修正收斂中。
