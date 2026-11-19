@@ -1,3 +1,8 @@
+## 2026-11-19 11:32 ★ sci.t_adv.phys-energy.work-energy-thm 功能定理（淨功＝動能變化量）5/5 DONE-GATE → phys-energy 10/22
+- **sci_phys_energy_work_energy_thm frozen `e0c39e073c2bbbf9`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha；**首輪即零確認、零 de-converge**）。t_adv 高中學測。前置＝ke-pe＋work-def。R15 gloss（功能定理 work-energy theorem）grep -o＝2。
+- 內容：W淨＝ΔKE＝末動能−初動能；正淨功加速/負淨功減速/零淨功等速；末動能＝初動能＋淨功（不乘質量不乘½）。figure＝左 2kg 靜止 KE=0、淨力 4N 移 5m、淨功=4×5=20J、右 2kg 變快 KE=20J。oracle en_work_energy_thm 錨 W=4·5=20J=ΔKE；Q3 末動能 20J distractor 40(乘質量)/10(乘½)/4(忘乘距離)。
+- DONE-GATE 全綠：per_page（work_energy_thm 不在 violations，live=frozen e0c39e07）／scan PASS／pedagogy 0 hard／question CLEAN／schema clean／repro（phys-energy.work-energy-thm）PASS／figure 四角色簽核。
+- ★收斂史：首輪即零確認、R1-R5 連 5 clean 無 de-converge（前兩 t_adv 單元的 figure 角度/術語政策教訓已內化：figure freeze 前先驗角度與標籤、_note 政策與內容一致、術語 can_do gloss 一次不原地複述）。figure 唯一 freeze 前微調＝「淨功＝4×5＝20 焦耳」綠字右移避開淨力箭頭頭部（無成本）。
 ## 2026-11-19 11:19 ★ sci.t_adv.phys-energy.work-cos 功的一般式 W＝Fs cosθ 5/5 DONE-GATE → phys-energy 9/22
 - **sci_phys_energy_work_cos frozen `7a6e17cc311e7ed4`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha；兩度 de-converge `8c4e6647`→`95831ed1`→`7a6e17cc`，皆我自己修正引入的措辭問題）。**t_adv 高中學測**（本 strand 首個高中單元）。前置＝work-def。R15 gloss（功 work／分量 component）grep -o 各＝2。
 - 內容：力與位移夾角 θ 時只有沿移動方向的分量做功，W＝F×s×cosθ；θ=0° cos=1 退回 Fs、θ=90° cos=0 不做功；例 10×5×cos60°=25J。figure＝箱子水平移動 5m、施力 10N 與水平真 60°、垂直投影虛線、綠色分量 F cosθ，W=10×5×0.5=25J。oracle en_work_cos 錨 10×5×cos60°=25J；Q3 distractor 50(忘cosθ)/0(以為有夾角就不做功)/12.5(cos60°記成0.25)。
