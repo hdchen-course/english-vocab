@@ -1,0 +1,200 @@
+{
+ "_note": "自然島 物理-能量（phys-energy）strand 第21單元（t_sub 高中分科測驗-物理）。知識點 sci.t_sub.phys-energy.variable-force-work（變力作功：力-位移圖曲線下的面積／積分）。tier=t_sub。全繁體零簡體零 PRC 詞。中文授課無音檔。前置＝work-def（定力作功 W=Fd）。術語附國際英語（R15，★只在 can_do 首次 gloss 一次；英文括號 grep -o 計數：『積分 (integral)』應＝2、『彈力常數 (spring constant)』應＝2〔各＝_note 本宣告行一次＋can_do 一次〕；『功／作功 (work)』已於前置 work-def gloss，本單元不重複；teach/claim body 不重複 gloss）。scope（t_sub 分科）：(1) 定力作功 W=Fd 只在力固定時成立；力隨位移改變（變力）時不能用單一 F；(2) 變力作功＝『力-位移圖』（縱軸力 F、橫軸位移 x）曲線下的面積（幾何上即積分）；定力時圖是矩形（面積＝Fd 與舊公式一致），變力時是斜線/曲線下的面積；(3) 彈簧力 F＝kx（k＝彈力常數）與伸長量成正比，力-位移圖是過原點的斜直線，下方是三角形，面積＝½×底×高＝½×x×(kx)＝½kx²；(4) 量化例：彈簧 k＝100 牛頓/公尺，從 x＝0 拉到 x＝0.2 公尺，終點力 F＝100×0.2＝20 牛頓，作功＝½×0.2×20＝2.0 焦耳（＝½kx²＝½×100×0.2²）。不含一般曲線積分技巧、不含彈力位能公式推導細節、不含簡諧運動。repro（tools/verify/sci_phys_checks.py::phys-energy.variable-force-work，repro_gate .venv PASS）錨定 ∫₀^0.2 100x dx＝½kx²＝2.0。figure 自檢：一個力-位移圖，橫軸位移 x（公尺）、縱軸力 F（牛頓），一條過原點的藍色斜直線 F＝100x，下方三角形面積填色、標『面積 ＝ ½×0.2×20 ＝ 2.0 焦耳』；x 刻度 0.2 公尺、y 刻度 20 牛頓；標籤不疊不溢出、marker 不與軸刻度數字同區（class 教訓）、alt 與 SVG text 逐字一致。practice 四答案＝{力-位移圖曲線下的面積（Q1 方法）, ½kX²（Q2 彈簧公式）, 2.0 焦耳（Q3 計算）, 2 倍（Q4 定力vs變力比較）}；MCQ options bare、每 distractor 乾淨單一誤解（Q1：最大力×總位移／起點力×總位移(=0)／力×時間(混衝量)；Q2：kX²(當矩形忘½)／½kX(漏一個X)／kX(終點力非功)；Q3：4.0(矩形=最大力20×0.2)／20(終點力當功)／10(½kX漏一個X=½×100×0.2)；Q4：一樣多／一半(算反)／需更多資訊(其實比值與k,X無關)）、兩兩相異、長度均衡；distractor_rationales key 逐字相符。claim kind=fact。figure-only example 無 body。定義不得反轉：變力作功＝力-位移圖面積；彈簧三角形面積＝½kx²。",
+ "page": "sci_phys_energy_variable_force_work.html",
+ "units": [
+  {
+   "unit_id": "sci.t_sub.phys-energy.variable-force-work",
+   "title_zh": "變力作功（力-位移圖的面積）",
+   "can_do": "我知道定力作功 W＝Fd 只有在力固定時才成立；當施力隨位移改變（變力，例如拉彈簧，拉得越長、要用的力越大）時，不能用單一個 F。這時『變力作功』等於『力-位移圖』（縱軸是力 F、橫軸是位移 x）曲線下方的面積——這塊面積在數學上就是『積分 (integral)』。我知道彈簧的力 F＝kx（k 是『彈力常數 (spring constant)』）與伸長量成正比，它的力-位移圖是一條過原點的斜直線，下方是三角形，面積＝½×底×高＝½×x×(kx)＝½kx²。我會算：彈簧 k＝100 牛頓/公尺，從 x＝0 拉到 x＝0.2 公尺，終點力 F＝100×0.2＝20 牛頓，作功＝½×0.2×20＝2.0 焦耳（也就是 ½kx²＝½×100×0.2²）。",
+   "situation_group": "能量：讓世界運作的能力",
+   "subject": "sci",
+   "strand": "phys-energy",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "sci.t_sub.phys-energy.variable-force-work"
+   ],
+   "prerequisites": [
+    "sci.t_mid.phys-energy.work-def"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-vfw-area",
+     "text": "定力作功 W＝Fd 只在力固定時成立。當施力隨位移改變（變力）時，要改用『力-位移圖』：縱軸畫力 F、橫軸畫位移 x，變力所作的功就等於這條力-位移線下方的面積（幾何上就是積分的意義）。如果力是固定的，圖是一個矩形，面積＝F×d，和舊公式一致；力會變時，圖是斜線或曲線，就要算斜線/曲線下方的面積。",
+     "kind": "fact",
+     "source_refs": [
+      "變力作功＝力-位移圖面積（高中物理 分科）"
+     ],
+     "verification_ref": "變力作功＝力-位移曲線下面積（科學共識）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-vfw-spring",
+     "text": "彈簧的力與伸長量成正比：F＝kx（k 是彈力常數）。從 x＝0 拉到某伸長量，力-位移圖是一條過原點的斜直線，線下方是一個三角形，面積＝½×底×高＝½×x×(kx)＝½kx²，這就是拉彈簧所作的功。計算例：k＝100 牛頓/公尺，從 x＝0 拉到 x＝0.2 公尺，終點力 F＝100×0.2＝20 牛頓，作功＝½×0.2×20＝2.0 焦耳（＝½kx²＝½×100×0.2²＝2.0）。注意不是用終點最大力 20 牛頓一路乘（那會多算一倍），因為一開始力是 0、慢慢才增大。",
+     "kind": "fact",
+     "source_refs": [
+      "彈簧變力作功 ½kx²（高中物理 分科）"
+     ],
+     "verification_ref": "∫₀^0.2 100x dx＝½kx²＝2.0（sci_phys_checks::phys-energy.variable-force-work .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-energy.variable-force-work"
+     ],
+     "body": "前面學過：力固定時，作功 W＝力×位移（Fd）。但很多情況力會『變』——拉彈簧拉得越長、要用的力越大。力一直在變，W＝Fd 的 F 要填哪一個？這一課給答案。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-energy.variable-force-work"
+     ],
+     "body": "① 力會變時，作功＝『力-位移圖』（縱軸力 F、橫軸位移 x）線下方的面積。② 力固定→圖是矩形→面積＝Fd（和舊公式一致）。③ 彈簧 F＝kx→圖是過原點斜直線→線下是三角形→面積＝½×x×(kx)＝½kx²。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_sub.phys-energy.variable-force-work"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 190' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='170' y='14' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>變力作功 ＝ 力-位移圖的面積</text><line x1='60' y1='155' x2='300' y2='155' stroke='#9aa5b1' stroke-width='1.2'/><polygon points='300,155 292,151 292,159' fill='#9aa5b1'/><text x='295' y='150' font-size='8' fill='#6b7680'>x</text><line x1='60' y1='155' x2='60' y2='34' stroke='#9aa5b1' stroke-width='1.2'/><polygon points='60,34 56,42 64,42' fill='#9aa5b1'/><text x='68' y='40' font-size='8' fill='#6b7680'>F</text><polygon points='60,155 275,155 275,48' fill='#aebfce' fill-opacity='0.45'/><line x1='60' y1='155' x2='275' y2='48' stroke='#2563a6' stroke-width='2.2'/><line x1='275' y1='155' x2='275' y2='48' stroke='#d08a3e' stroke-width='1' stroke-dasharray='3 2'/><text x='55' y='52' font-size='7.5' fill='#6b7680' text-anchor='end'>20 牛頓</text><text x='55' y='158' font-size='7.5' fill='#6b7680' text-anchor='end'>0</text><text x='275' y='167' font-size='7.5' fill='#6b7680' text-anchor='middle'>0.2 公尺</text><text x='148' y='95' font-size='8.5' fill='#2563a6' font-weight='bold' transform='rotate(-26 148 95)'>F ＝ 100x</text><text x='190' y='130' font-size='8' fill='#33475b' text-anchor='middle'>面積 ＝ ½×0.2×20 ＝ 2.0 焦耳</text></g></svg>",
+      "alt": "標題「變力作功 ＝ 力-位移圖的面積」。一個力-位移圖：橫軸是位移、標記「x」與刻度「0.2 公尺」，縱軸是力、標記「F」與刻度「20 牛頓」、原點標「0」。從原點畫一條藍色斜直線標「F ＝ 100x」上升到位移 0.2 公尺、力 20 牛頓那一點，斜線下方的三角形填上淡藍色，三角形中標「面積 ＝ ½×0.2×20 ＝ 2.0 焦耳」。",
+      "caption": "彈簧力 F＝100x（k＝100 牛頓/公尺）。從 x＝0 拉到 x＝0.2 公尺，力從 0 增加到 20 牛頓。變力作功＝力-位移線下方三角形的面積＝½×底×高＝½×0.2×20＝2.0 焦耳（＝½kx²）。不是用最大力 20 牛頓一路乘（那是矩形、會多算一倍）。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-energy.variable-force-work"
+     ],
+     "body": "最後練「變力作功」。重點：(1) 力會變→作功＝力-位移圖線下的面積；(2) 彈簧 F＝kx→三角形面積＝½kx²；(3) 別用終點的最大力一路乘（那會多算一倍）。小提醒：力固定時圖是矩形、面積就回到 W＝Fd，新舊方法一致。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QK-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "當施力的大小隨位移改變（變力）時，要怎麼算它所作的功？",
+     "answer": "算力-位移圖中，力的線下方的面積",
+     "kp_ids": [
+      "sci.t_sub.phys-energy.variable-force-work"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-energy.variable-force-work"
+     ],
+     "options": [
+      "算力-位移圖中，力的線下方的面積",
+      "用整段過程中最大的力乘以總位移",
+      "用一開始（起點）的力乘以總位移",
+      "用力乘以經過的時間"
+     ],
+     "distractor_rationales": {
+      "用整段過程中最大的力乘以總位移": "那是把變力當定力、用矩形算，會多算；變力要算力-位移線下的真實面積。",
+      "用一開始（起點）的力乘以總位移": "起點彈簧力是 0，這樣算會得到 0；要算整條線下方的面積，不是某一點的力×位移。",
+      "用力乘以經過的時間": "力×時間是衝量（I＝Ft），不是功；功要用力對位移累積（力-位移圖面積）。"
+     },
+     "answer_evidence": [
+      "c-vfw-area"
+     ],
+     "feedback": "變力作功＝力-位移圖中那條力的線下方的面積（幾何上就是積分）。"
+    },
+    {
+     "question_id": "QK-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "彈簧的力 F＝kx。從 x＝0 拉到伸長量 X，拉彈簧所作的功等於多少？",
+     "answer": "½kX²",
+     "kp_ids": [
+      "sci.t_sub.phys-energy.variable-force-work"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-energy.variable-force-work"
+     ],
+     "options": [
+      "½kX²",
+      "kX²",
+      "½kX",
+      "kX"
+     ],
+     "distractor_rationales": {
+      "kX²": "這是把圖當成矩形（用終點最大力 kX 一路乘 X），忘了變力的圖是三角形、面積只有一半。",
+      "½kX": "少了一個 X；三角形面積＝½×底(X)×高(kX)＝½kX²，兩個都要乘。",
+      "kX": "kX 是伸長到 X 時終點的『力』，不是『功』；功是面積 ½kX²。"
+     },
+     "answer_evidence": [
+      "c-vfw-spring"
+     ],
+     "feedback": "力-位移圖是過原點斜直線，線下三角形面積＝½×X×(kX)＝½kX²。"
+    },
+    {
+     "question_id": "QK-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "彈簧 k＝100 牛頓/公尺，從 x＝0 拉到 x＝0.2 公尺。拉彈簧所作的功是多少？",
+     "answer": "2.0 焦耳",
+     "kp_ids": [
+      "sci.t_sub.phys-energy.variable-force-work"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-energy.variable-force-work"
+     ],
+     "options": [
+      "2.0 焦耳",
+      "4.0 焦耳",
+      "20 焦耳",
+      "10 焦耳"
+     ],
+     "distractor_rationales": {
+      "4.0 焦耳": "這是用終點最大力 20 牛頓×位移 0.2＝4.0（把變力當矩形算，多算一倍）；三角形只有一半＝2.0。",
+      "20 焦耳": "20 是終點的『力』（100×0.2＝20 牛頓），不是功；功是面積 ½×0.2×20＝2.0。",
+      "10 焦耳": "這少乘了一個位移（½×100×0.2＝10，漏掉一個 x）；正解是 ½kx²＝½×100×0.2²＝2.0。"
+     },
+     "answer_evidence": [
+      "c-vfw-spring"
+     ],
+     "feedback": "作功＝½×底×高＝½×0.2×20＝2.0 焦耳（＝½kx²＝½×100×0.2²）。"
+    },
+    {
+     "question_id": "QK-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "同樣從 x＝0 拉到 X，如果改用「一路都出終點那個最大力 kX」去拉（定力），所作的功會是拉彈簧（變力）的幾倍？",
+     "answer": "2 倍",
+     "kp_ids": [
+      "sci.t_sub.phys-energy.variable-force-work"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-energy.variable-force-work"
+     ],
+     "options": [
+      "2 倍",
+      "一樣多",
+      "一半",
+      "要知道 k 和 X 的數值才能算"
+     ],
+     "distractor_rationales": {
+      "一樣多": "不一樣：定力是矩形 kX²、彈簧是三角形 ½kX²，差一倍。",
+      "一半": "倍數算反了；定力(矩形)比較大，是變力(三角形)的 2 倍，不是一半。",
+      "要知道 k 和 X 的數值才能算": "不需要：kX² ÷ ½kX² ＝ 2，k 和 X 都約掉了，比值恆為 2。"
+     },
+     "answer_evidence": [
+      "c-vfw-spring"
+     ],
+     "feedback": "定力(矩形)＝kX²、變力(三角形)＝½kX²，kX² ÷ ½kX² ＝ 2 倍，與 k、X 數值無關。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（定力 W=Fd 只在力固定時成立；變力作功＝力-位移圖線下的面積(積分)；彈簧 F=kx→三角形面積 ½kx²；別用終點最大力一路乘(矩形會多算一倍)；例 k=100 從 0 拉到 0.2→½×0.2×20＝2.0 焦耳；定力vs變力＝矩形vs三角形＝2 倍）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

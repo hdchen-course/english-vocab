@@ -1,3 +1,8 @@
+## 2026-11-19 15:28 ★ sci.t_sub.phys-energy.variable-force-work 變力作功（力-位移圖的面積）5/5 DONE-GATE → phys-energy 21/22
+- **sci_phys_energy_variable_force_work frozen `58b460b4f9ab559a`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha；首輪即零零、無 de-converge）。tier=t_sub 分科-物理。前置＝work-def。R15 gloss 積分 (integral) grep=2、彈力常數 (spring constant) grep=2；功/作功 前置已 gloss。
+- 內容：定力 W=Fd 只在力固定時成立；變力作功＝力-位移圖線下面積（幾何即積分）；彈簧 F=kx→過原點斜直線→三角形面積＝½kx²。figure＝力-位移圖斜線 F=100x 從原點到(0.2m,20N)+三角形填色+面積 ½×0.2×20＝2.0 焦耳。oracle variable-force-work 錨 ∫₀^0.2 100x dx＝½kx²＝2.0（repro PASS、無需 re-key）；Q2 ½kX² distractor kX²(矩形忘½)/½kX(漏一X)/kX(終點力非功)、Q3 2.0 distractor 4.0(矩形最大力)/20(終點力當功)/10(½kX漏一X)、Q4 2倍 distractor 一樣多/一半/需更多資訊。
+- DONE-GATE 全綠：per_page 652/652 PASS、live=frozen 58b460b4／scan PASS／pedagogy 0 hard／question CLEAN／schema clean／repro variable-force-work PASS／figure 四角色簽核（force-displacement 圖、marker 不與軸刻度同區、class 教訓已守）。
+
 ## 2026-11-19 15:15 ★ sci.t_sub.phys-energy.center-of-mass 質心座標（質量加權的平均位置）5/5 DONE-GATE → phys-energy 20/22
 - **sci_phys_energy_center_of_mass frozen `5784ced0a0bd44f4`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha；一度 de-converge：11dc5a3b→5784ced0 修 figure 1 真缺陷）。tier=t_sub 分科-物理。前置＝momentum-conserve。R15 gloss 質心 (center of mass) grep=2；質量為常識不 gloss。
 - 內容：質心＝以質量為權重的平均位置、非幾何中點、質量大者把質心拉向自己；一維 x_cm＝(各質量×位置相加)÷總質量＝Σmx/Σm。figure＝數線0-5，2kg 小圓@x0、3kg 大圓@x5、質心綠三角（數線上方向下指）@x3。oracle center-of-mass 錨 (2·0+3·5)/(2+3)=3（repro PASS、無需 re-key）；Q3 x=3 distractor 2.5(幾何中點)/5(重物處)/2(權重用反)、Q4 靠近3kg distractor 靠近2kg/正中間/無法判斷。
