@@ -1,3 +1,10 @@
+## 2026-11-20 07:36 ★ sci.t_mid.phys-estatic.resistance 電阻的概念與影響因素 R＝ρL÷A 5/5 DONE-GATE → phys-estatic 9/25
+- **sci_phys_estatic_resistance frozen `ccda130cbfae49cf`**（R1-R5 連 5 clean、L3 全 exit0；**一次收斂、無 de-converge**）。tier=t_mid、exam=會考。前置＝current-def。R15 gloss 電阻 (resistance)/歐姆 (ohm)/電阻率 (resistivity) 各＝2。
+- **定量單元**：R＝ρL÷A 比例關係（長度加倍→電阻加倍、截面積加倍→電阻減半）經 oracle `sci_phys2_checks::phys-estatic.resistance` 以 `.venv` repro_gate PASS（未造假）。
+- 內容：電阻＝導體對電流流動的阻礙、單位歐姆（Ω）；四影響因素——材質（電阻率 ρ）、長度（正比）、截面積（反比）、溫度（金屬越熱電阻越大），整理成 R＝ρL÷A；長度加倍電阻加倍、截面積加倍電阻減半（又細又長電阻大、又粗又短電阻小）。figure＝上排比長度（短→小/長→大 R∝L）、下排比截面積（細→大/粗→小 R∝1÷A）＋公式 R＝ρL÷A＋材質/溫度。scope：不含歐姆定律 V＝IR、串並聯等效電阻、電阻率隨溫度定量公式（各留另單元/較進階）。
+- **一次收斂（5 輪 0 缺陷）**：套用本 session 剛學的強度量/總量區分教訓（[[intensive-vs-extensive-dimension-conflation]]），草稿即刻意把「電阻率 ρ＝材質本性（同材質粗細長短都一樣）」與「電阻 R＝這段導體的阻礙（依材質+長度+截面積+溫度）」清楚分開、不混同量綱；加上草稿先避雷（distractor 乾淨單一誤解、全形 ÷、gloss 各2），content_audit 三框架五輪 0 confirmed。印證「把前單元的缺陷 class 內化進草稿」能一次收斂。
+- DONE-GATE 全綠：per_page PASS（682/682、resistance absent from violations）、scan/schema/question/pedagogy PASS、gloss 各=2、figure 四角色簽核（綁最終 sha ccda130c、雙向 iPad render 看過：比長度/比截面積兩排＋公式，無重疊裁切、編碼正確）。phys-estatic strand 進度 9/25（t_base 3＋t_mid 6）。
+
 ## 2026-11-20 07:22 ★ sci.t_mid.phys-estatic.voltage 電壓（電位差）與電池 W＝qV 5/5 DONE-GATE → phys-estatic 8/25
 - **sci_phys_estatic_voltage frozen `877a85da2d354ffa`**（v2 R1-R5 連 5 clean、L3 全 exit0；一次 de-converge：v1 達 1/5 後 round1+round2 兩輪揪同一真 blocker→修→v2 重跑 5-clean）。tier=t_mid、exam=會考。前置＝charge。R15 gloss 電壓 (voltage)/電位差 (potential difference)/伏特 (volt) 各＝2。
 - **定量單元**：W＝qV＝2×5＝10 焦耳 經 oracle `sci_phys2_checks::phys-estatic.voltage` 以 `.venv` repro_gate PASS（未造假）；Q1 同式正確。
