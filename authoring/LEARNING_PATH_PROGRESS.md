@@ -1,3 +1,11 @@
+## 2026-11-20 04:07 ★ sci.t_base.phys-estatic.conductor-insulator 導體與絕緣體 5/5 DONE-GATE → phys-estatic 2/25（t_base 入門）
+- **sci_phys_estatic_conductor_insulator frozen `dada83a4c34333a0`**（R1-R5 連 5 clean、L3 全 exit0、同 sha）。tier=t_base、exam=無（國小入門，為後續會考電學鋪底）。無前置。R15 gloss 導體 (conductor)/絕緣體 (insulator) 各＝2。定性單元無數值 repro（verification_ref＝科學共識）。
+- 內容：導體＝電容易通過的材料（金屬銅鐵鋁）；絕緣體＝電不容易通過（塑膠橡膠玻璃乾木）；電線中間銅（導體）導電、外包塑膠（絕緣體）保護手。figure＝電線剖面＋兩欄分類（導體:鐵湯匙/銅線/鐵釘｜絕緣體:塑膠尺/橡皮擦/玻璃杯）。scope：不含電阻數值/電流電壓定義/半導體微觀機制。
+- **content_audit 領域鏡揪出 7 個真缺陷（我草稿＋四角色目視＋deterministic gate 全漏）**：①圖 `#dCe6f0`大小寫不一致→統一小寫；②_note figure 自檢『』引述與 SVG 實際標籤不符（note-metadata class）；③Q2 誘答「讓電流得比較快」與術語「電流」garden-path→「讓電跑得比較快」；④_note「本檔未用守恆字」自我否定句含「守恆」＝假敘述→刪；⑤_note「alt 與 SVG text 逐字一致」假宣稱（alt 是 a11y 散文）→改準確措辭；⑥圖/標題絕對語「電不會通過」與散文審慎語「電不容易通過」矛盾＋過度斷言→全統一審慎語；⑦_note practice 自述三答案與實際 answer 不符（掉「很/拿電線的/尺」）→對齊 verbatim。
+- **class 教訓（已 bank 記憶）**：⑤屬跨 75 sci 單元的 _note 模板地雷（見 note-alt-verbatim-overclaim）；④⑦屬 note-metadata-must-match-file；⑥屬圖面絕對 vs 散文審慎語一致性。**根因：_note 放大量近似引用自述，content_audit 當 fact 逐字核對、任一偏差即 major**。
+- DONE-GATE 全綠：per_page PASS（conductor absent from violations）、scan/schema/question/pedagogy PASS、figure 四角色兩方向簽核（綁 sha dada）。phys-estatic strand 進度 2/25。
+- **連帶修（同款 _note 模板缺陷、已上線單元）**：static_basic(1/25)＋molar_heat(18/20) 的「本檔未用守恆字」自我否定句＋「alt 與 SVG text 逐字一致」假宣稱已修 _note（守恆 count 歸 0）、de-converge 待重跑 5-clean 後 re-commit。其餘 72 個 sci 單元同款 alt 模板句列 standing-audit sweep 債（不連鎖 de-converge，守 reader 正確性＋loop 進度）。
+
 ## 2026-11-20 02:53 ★ sci.t_base.phys-estatic.static-basic 摩擦起電與靜電現象 5/5 DONE-GATE → phys-estatic 1/25（新 strand 起手）
 - **sci_phys_estatic_static_basic frozen `9690d8e189390a45`**（R11-R15 連 5 clean、L3 全 exit0、同 sha）。tier=t_base、exam=無（國小入門，為後續會考電學鋪底）。strand 起點無前置。R15 gloss 靜電 (static electricity)/摩擦起電 (charging by friction) 各＝2。定性單元無數值 repro（verification_ref＝科學共識，比照 phys-heat conduction-basic）。
 - 內容：兩物互相摩擦會帶電（靜電）；帶靜電物吸引輕小物（小紙屑/頭髮）；累積靜電碰導體（金屬門把）放電，可能火花/劈啪/被電感＝正常現象非觸電危險。figure＝三步 ①摩擦(氣球摩頭髮)②帶靜電③吸起輕小物。scope：不含電荷正負/庫侖/電路/微觀電子轉移。
