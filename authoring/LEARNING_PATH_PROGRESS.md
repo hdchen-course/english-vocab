@@ -1,3 +1,11 @@
+## 2026-11-20 07:01 ★ sci.t_mid.phys-estatic.current-def 電流的定義與方向 I＝Q÷t 5/5 DONE-GATE → phys-estatic 7/25（首個定量單元）
+- **sci_phys_estatic_current_def frozen `207e19b5ac4e8493`**（v2 R1-R5 連 5 clean、L3 全 exit0；一次 de-converge：v1 達 4/5 後 round7 揪真缺陷→修→v2 重跑 5-clean）。tier=t_mid、exam=會考。前置＝charge。R15 gloss 電流 (electric current)/安培 (ampere) 各＝2。
+- **首個 phys-estatic 定量單元**：I＝Q÷t＝6÷2＝3 安培 經 oracle `sci_phys2_checks::phys-estatic.current-def` 以 `.venv` repro_gate PASS（fingerprint abdeb20ea3a1a1e8，未造假）；practice Q1 10÷2＝5 安培亦正確。
+- 內容：電流＝電荷流動，大小＝單位時間通過導線某處的電量 I＝Q÷t（I 電流、Q 電量、t 時間）；單位安培（A），1 A＝每秒 1 庫侖；電流方向規定為正電荷流動方向、金屬導線中電子為載流子、方向與電流相反。figure＝導線內 3＋電荷、綠箭頭電流 I 向右、藍箭頭電子 e⁻ 向左、公式 I＝Q÷t＝6÷2＝3 安培。scope：不含電壓電阻歐姆定律、串並聯、微觀漂移速度（各留另單元）。
+- **content_audit 揪真缺陷（1 次 de-converge）**：v1 達 4/5 後對抗式終審 round7（5 專家一致 DEFECT，criterion b 難理解）揪 claim c-cd-what 以「換句話說」把『在一段時間裡通過的電量有多少』（＝總電量 Q、隨時間長短改變）錯誤等同『單位時間內通過的電量』（＝速率 I），初學者停在前半句會把電流誤解成總電量，正中會考 Q/I 不分迷思。→改寫為「每單位時間（例如每一秒）通過…的電量…，也就是用通過的電量除以所花的時間」，移除總電量措辭與假等價，末句補「因為時間變小」說明速率。de-converge 9b526ef0→207e19b5、rounds 歸零重跑 v2 5-clean。
+- **class 教訓**：**定義「換句話說」假等價 class**——用「換句話說／也就是」連接「總量」與「速率／單位量」兩個**不等價**概念＝埋迷思（電流 I vs 總電量 Q、密度 vs 總質量、速度 vs 總位移…同類）；定義速率型量時，首句就要直接寫成「每單位 X 的 Y」，不可先寫「一段 X 裡的 Y 總共多少」再假裝等同。content_audit 學習科學/領域鏡會抓、四角色目視與機械 gate 不會。
+- DONE-GATE 全綠：per_page PASS（680/680、current_def absent from violations）、scan/schema/question PASS、gloss 各=2、figure 四角色簽核（綁最終 sha 207e19b5、雙向 iPad render 看過：導線＋3＋電荷＋綠/藍反向箭頭＋公式，無重疊裁切）。phys-estatic strand 進度 7/25（t_base 3＋t_mid 4）。
+
 ## 2026-11-20 06:28 ★ sci.t_mid.phys-estatic.electroscope 驗電器的原理 5/5 DONE-GATE → phys-estatic 6/25
 - **sci_phys_estatic_electroscope frozen `113b7a863c3e905f`**（R1-R5 連 5 clean、L3 全 exit0；一次 de-converge）。tier=t_mid、exam=會考。前置＝charge＋charging。R15 gloss 驗電器 (electroscope)/金屬箔片 (metal leaf) 各＝2。概念單元無數值 repro（verification_ref＝科學共識）。
 - 內容：驗電器＝金屬球＋金屬桿＋兩片金屬箔片＋玻璃瓶（擋風保護箔片）；原理同性相斥——帶電時兩片箔片帶同號電互相排斥而張開、不帶電時下垂閉合；箔片張得越開表示帶的電越多（定性比較電量）。figure＝雙 panel 左不帶電閉合 vs 右帶電 V 張開（各標−、同性相斥、兩側皆 2 片等數）。scope：不含判正負操作、庫侖數值、電路（各留另單元/較進階）。
