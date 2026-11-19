@@ -1,3 +1,9 @@
+## 2026-11-19 16:20 ★ sci.t_base.phys-heat.thermometer 溫度與溫度計的使用 5/5 DONE-GATE → phys-heat 1/20（strand 開工）
+- **sci_phys_heat_thermometer frozen `e267a12945df92c2`**（rounds 1/2/3/5/6 連 5 有效 clean、L3 全 exit0、同 sha；R4 因 L3 anchor 過淺(最深49%)判 INVALID 不採、補跑 R6 取第5輪，未繞過）。tier=t_base 初級、exam=無、phys-heat strand 根節點（prerequisites 空）。R15 gloss 溫度/溫度計/攝氏/華氏 各=2。
+- 內容：溫度＝冷熱程度、用溫度計量（手摸不準）；攝氏℃ 冰點0沸點100平分100格；正確使用＝感溫泡完全接觸不碰壁底+視線平視+數字穩定再讀；華氏℉ 冰點32沸點212，同段華氏180格÷攝氏100格＝1.8倍（華氏一格較小）。figure＝直立溫度計左攝氏右華氏+冰點/沸點對齊+(212−32)÷(100−0)=1.8。oracle phys-heat.thermometer 錨 (212−32)/(100−0)=1.8（repro PASS、無需 re-key）。Q4 答 1.8倍 distractor 一樣多/80倍(減法180−100)/0.56倍(算反100÷180)。
+- DONE-GATE 全綠：per_page 654/654 PASS、live=frozen e267a1294／scan PASS／pedagogy 0 hard／question CLEAN／schema clean／repro thermometer PASS／figure 四角色簽核。
+- ★ phys-heat 熱學 strand 開工（sci 物理第 4 條 strand，共 20 KP；已完成 phys-kin/phys-force/phys-energy 三 strand）。
+
 ## 2026-11-19 15:45 ★ sci.t_base.phys-energy.simple-machine 簡單機械省力（槓桿/滑輪/輪軸）5/5 DONE-GATE → phys-energy 22/22 ★★ strand 收官（全 22 KP 完成）
 - **sci_phys_energy_simple_machine frozen `a56d88642c6c079c`**（post-fix rounds 1-5 連 5 clean、L3 全 exit0、同 sha）。tier=t_base 初級、exam=無。前置＝push-pull（力已 gloss）。R15 gloss 簡單機械/機械利益/槓桿/滑輪/輪軸 各=2。
 - 內容：簡單機械＝省力（槓桿/滑輪/輪軸）；省力費距離、機械不生能量（用省力換距離把小力放大，非「力守恆/重新分配」）；機械利益 MA＝輸出力÷輸入力、MA>1 省力。figure＝槓桿撬棒+支點(靠右)+施力臂長/抗力臂短+輸入25牛頓向下+石頭100牛頓+MA=100÷25=4。oracle simple-machine 錨 MA=100/25=4（repro PASS、無需 re-key）。Q3 答 4 distractor 0.25(算反25÷100)/75(相減)/125(相加)、Q4 答「輸出力是輸入力4倍」distractor 輸入是輸出4倍(反)/力沒放大只改方向(=MA1定滑輪)/做的功變4倍(違能量守恆)。
