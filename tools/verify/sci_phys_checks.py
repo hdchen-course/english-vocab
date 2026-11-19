@@ -240,9 +240,17 @@ def en_mech_conserve():
     return _ok("phys-energy.mech-conserve",
                "力學能守恆 E=KE+PE 任意點定值：頂 mgh=2·9.8·20=392J＝中(PE294+KE98)＝底 KE392J")
 def en_conservative():
-    # 摩擦生熱：損失功=f·d
-    assert 0.3*20*5 == 30
-    return _ok("phys-energy.conservative", "非保守力摩擦生熱 Q=f·d=0.3·20·5=30J")
+    # 保守力 vs 非保守力（t_adv）。非保守力(摩擦)做功=損失的力學能=生成的熱。
+    mu, N, d = 0.3, 20, 5
+    f = mu*N                           # 摩擦力 f=μN=0.3·20=6N
+    assert _close(f, 6.0)
+    Q = f*d                            # 摩擦生熱 Q=f·d=6·5=30J
+    assert _close(Q, 30.0)
+    # 力學能不守恆：初動能 50J − 摩擦損失 30J = 末動能 20J（力學能減少，轉成熱）
+    ke0 = 50
+    assert _close(ke0 - Q, 20.0)
+    return _ok("phys-energy.conservative",
+               "保守力(重力/彈力)做功與路徑無關、力學能守恆；非保守力(摩擦)f=μN=0.3·20=6N、生熱 Q=f·d=6·5=30J、力學能 50−30=20J 不守恆")
 def en_power_fv():
     assert 200*3 == 600                              # P=Fv
     return _ok("phys-energy.power-fv", "瞬時功率 P=Fv=200·3=600W")

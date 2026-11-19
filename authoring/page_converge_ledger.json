@@ -35789,6 +35789,20 @@
     {"from_sha": "0e03086ccd9138ec", "to_sha": "cf359ccb03f5411f", "at": "2026-11-19T12:03:10+08:00", "defect": "R2 全票 figure-geometry(major, viz 判 a-wrong)：左側數字高度軸非等比(20→15 佔82px、15→0 僅45px)，使 15m 點畫在~1/3 高而非3/4，與 PE∝h(294≈3/4×392)矛盾。修：移除誤導數字軸(各點已標高度)＋三台車依實際高度等比定位(頂 y42/中 y76≈73%高/底 y166 地面)＋alt 改述等比位置。重 render＋四角色重簽(圖已變)。rounds 未 bank 任何輪故不涉 streak 歸零。"},
     {"from_sha": "cf359ccb03f5411f", "to_sha": "936a7a8216ee3480", "at": "2026-11-19T12:10:48+08:00", "defect": "R1(round1) 5 位判 readability(minor b-hard-to-understand)：alt『滑到 15 公尺處（只稍微比頂端低一點，約四分之三高）』——『只稍微比頂端低一點』與『約四分之三高』(其實降 1/4) 自相矛盾、誤導 alt 讀者。clean 輪才發現之真缺陷，依 SOP 設 harvest_override 留痕後改 alt→『約四分之三高，比頂端下降了四分之一』。圖 SVG/PNG 未變、四角色簽核沿用。此前已 bank 的 R2/R3(cf359cc)作廢、streak 歸零，重跑 R1-R5 於新 sha。"}
    ]
+  },
+  "sci_phys_energy_conservative.html": {
+   "frozen_sha": "6406da3075b80ca8",
+   "rounds": [
+    {"round": 1, "content_sha": "6406da3075b80ca8", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T12:39:31+08:00", "audited": true, "note": "content_audit confirmed=0 coverageComplete=true; L3 coverage_check exit 0"},
+    {"round": 2, "content_sha": "6406da3075b80ca8", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T12:40:22+08:00", "audited": true, "note": "content_audit confirmed=0 coverageComplete=true; L3 coverage_check exit 0"},
+    {"round": 3, "content_sha": "6406da3075b80ca8", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T12:40:22+08:00", "audited": true, "note": "content_audit confirmed=0 coverageComplete=true; L3 coverage_check exit 0"},
+    {"round": 4, "content_sha": "6406da3075b80ca8", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T12:43:26+08:00", "audited": true, "note": "content_audit confirmed=0 coverageComplete=true; L3 coverage_check exit 0"},
+    {"round": 5, "content_sha": "6406da3075b80ca8", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T12:44:10+08:00", "audited": true, "note": "content_audit confirmed=0 coverageComplete=true; L3 coverage_check exit 0"}
+   ],
+   "_note": "phys-energy 13/22 conservative t_adv; 保守力 vs 非保守力；oracle f=μN=0.3·20=6N、Q=f·d=6·5=30J、末動能50−30=20J; figure 箱子粗糙地面滑行摩擦生熱力學能50→20不守恆",
+   "_defect_fix_trace": [
+    {"from_sha": "f0afae0454e939da", "to_sha": "6406da3075b80ca8", "at": "2026-11-19T12:35:14+08:00", "defect": "R2 confirmed terminology-consistency(minor, learning owned-criterion b-hard-to-understand；domain 判 NOT 但 learning/zh/pm/viz/eye 判 DEFECT)：figure SVG/alt 熱量標籤用中點『Q＝f·d』，但 caption/teach/can_do 全用叉號『Q＝f×d』；同區塊乘號不一致，且在功/力學能脈絡『·』易誤讀為點積(W=F·d)。修：figure+alt『f·d』→『f×d』與全單元一致(meta _note/verification_ref 的 oracle 記法 6·5 保留、非 learner-facing)。clean 輪才發現之真缺陷，依 SOP 設 harvest_override 留痕；圖重 render 四角色重簽(僅符號改)。此前已 bank R1/R3(f0afae04)作廢、streak 歸零，重跑 R1-R5 於新 sha。"}
+   ]
   }
  }
 }
