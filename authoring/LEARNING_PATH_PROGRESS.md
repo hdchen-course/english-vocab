@@ -1,3 +1,9 @@
+## 2026-11-19 16:37 ★ sci.t_base.phys-heat.conduction-basic 熱由高溫傳向低溫 5/5 DONE-GATE → phys-heat 2/20
+- **sci_phys_heat_conduction_basic frozen `c342855b5da82908`**（post-fix rounds 1-5 連 5 clean、L3 全 exit0、同 sha）。tier=t_base、exam=無。前置＝thermometer（溫度已 gloss）。R15 gloss 傳導/導體 各=2。
+- 內容：熱自己從高溫→低溫流直到兩邊一樣、不會倒流；傳導＝熱沿物體(尤固體)一點一點傳；金屬好導體、木塑空氣不良導體可隔熱。figure＝左熱80℃右冷20℃+金屬棒+3紅箭 hot→cold+傳導。**定性共識事實**（非可重現 reproduction、未註冊 source_registry；80>20 僅示意方向，已於初稿修正 overclaim）。
+- **de-converge（真缺陷，content_audit R2 4/5 鏡 minor）**：_note practice 自檢列舉 Q2『熱靠光跳過去』/Q4『熱從手流向湯』與 shipped options（『熱只能靠大聲叫才會過去』/『熱從湯匙流向湯，湯匙會變冷』）不符＝stale self-check metadata。修 _note 同步（figure/options/teach 未動、四角色沿用），a547f8→c342855b 重跑 5-clean。★class 教訓（重現）：改題務必同步 _note distractor 列舉。
+- DONE-GATE 全綠：per_page 655/655 PASS、live=frozen c342855b／scan PASS／pedagogy 0 hard／question CLEAN／schema clean／figure 四角色簽核。phys-heat strand 進度 2/20。
+
 ## 2026-11-19 16:20 ★ sci.t_base.phys-heat.thermometer 溫度與溫度計的使用 5/5 DONE-GATE → phys-heat 1/20（strand 開工）
 - **sci_phys_heat_thermometer frozen `e267a12945df92c2`**（rounds 1/2/3/5/6 連 5 有效 clean、L3 全 exit0、同 sha；R4 因 L3 anchor 過淺(最深49%)判 INVALID 不採、補跑 R6 取第5輪，未繞過）。tier=t_base 初級、exam=無、phys-heat strand 根節點（prerequisites 空）。R15 gloss 溫度/溫度計/攝氏/華氏 各=2。
 - 內容：溫度＝冷熱程度、用溫度計量（手摸不準）；攝氏℃ 冰點0沸點100平分100格；正確使用＝感溫泡完全接觸不碰壁底+視線平視+數字穩定再讀；華氏℉ 冰點32沸點212，同段華氏180格÷攝氏100格＝1.8倍（華氏一格較小）。figure＝直立溫度計左攝氏右華氏+冰點/沸點對齊+(212−32)÷(100−0)=1.8。oracle phys-heat.thermometer 錨 (212−32)/(100−0)=1.8（repro PASS、無需 re-key）。Q4 答 1.8倍 distractor 一樣多/80倍(減法180−100)/0.56倍(算反100÷180)。
