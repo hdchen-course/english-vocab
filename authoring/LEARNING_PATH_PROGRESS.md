@@ -1,3 +1,9 @@
+## 2026-11-19 15:15 ★ sci.t_sub.phys-energy.center-of-mass 質心座標（質量加權的平均位置）5/5 DONE-GATE → phys-energy 20/22
+- **sci_phys_energy_center_of_mass frozen `5784ced0a0bd44f4`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha；一度 de-converge：11dc5a3b→5784ced0 修 figure 1 真缺陷）。tier=t_sub 分科-物理。前置＝momentum-conserve。R15 gloss 質心 (center of mass) grep=2；質量為常識不 gloss。
+- 內容：質心＝以質量為權重的平均位置、非幾何中點、質量大者把質心拉向自己；一維 x_cm＝(各質量×位置相加)÷總質量＝Σmx/Σm。figure＝數線0-5，2kg 小圓@x0、3kg 大圓@x5、質心綠三角（數線上方向下指）@x3。oracle center-of-mass 錨 (2·0+3·5)/(2+3)=3（repro PASS、無需 re-key）；Q3 x=3 distractor 2.5(幾何中點)/5(重物處)/2(權重用反)、Q4 靠近3kg distractor 靠近2kg/正中間/無法判斷。
+- DONE-GATE 全綠：per_page 650/650 PASS、live=frozen 5784ced0／scan PASS／pedagogy 0 hard／question CLEAN／schema clean／repro center-of-mass PASS／figure 四角色簽核。
+- de-converge：clean 輪(R5)多鏡(domain/learning/zh/pm DEFECT b-hard-to-understand、english NOT)抓 figure 綠色質心三角 polygon(apex 200,132、base y=146)與數線刻度數字『3』(x=200 y=136)重疊、綠片蓋數字下半、抵觸 _note『標籤不疊不溢出』。修：三角改到數線上方向下指(200,119→194/206,108)、質心 x=3 標籤移 y=102（三角上方），與線下方刻度 0-5 完全分離。設 harvest_override 留痕、R1-R4(11dc5a3b)作廢歸零、新 sha 重跑 5 輪、四角色重簽。★class 教訓：座標圖指標 marker 不可與軸刻度數字共用同一 (x,y) 區域，marker 置線另一側或錯開。
+
 ## 2026-11-19 14:51 ★ sci.t_sub.phys-energy.elastic-formula 彈性碰撞（等質量交換速度）5/5 DONE-GATE → phys-energy 19/22
 - **sci_phys_energy_elastic_formula frozen `bf0700478260081c`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha；兩度 de-converge：9fc6d5→bf070047 修 figure 兩真缺陷）。tier=t_sub 分科-物理。前置＝collision-1d。R15 gloss 彈性碰撞 (elastic collision) grep=2；動量/動量守恆/動能 前置已 gloss。
 - 內容：彈性碰撞＝動量守恆『且』動能守恆（對比完全非彈性動能變小）；等質量一維正面彈性碰撞交換速度 v1'=u2、v2'=u1。figure 碰前甲5乙2→碰後甲2乙5（速度互換），動量碰前後都7、動能都½×1×5²＋½×1×2²=14.5J。oracle elastic-formula 錨 u1=5,u2=2→2,5；Q3 甲碰後2 distractor 5(不變)/3.5(平均)/7(相加)、Q4 乙碰後5 distractor 2(不變)/3.5(平均)/0(停)。

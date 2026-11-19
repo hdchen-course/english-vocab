@@ -1,0 +1,200 @@
+{
+ "_note": "自然島 物理-能量（phys-energy）strand 第20單元（t_sub 高中分科測驗-物理）。知識點 sci.t_sub.phys-energy.center-of-mass（質心座標：質量加權平均位置 x_cm=Σmx/Σm）。tier=t_sub。全繁體零簡體零 PRC 詞。中文授課無音檔。前置＝momentum-conserve（系統、總質量概念）。術語附國際英語（R15，★只在 can_do 首次 gloss 一次；英文括號 grep -o 計數：『質心 (center of mass)』應＝2〔_note 本宣告行一次＋can_do 一次〕；『質量』為常識不 gloss；teach/claim body 不重複 gloss）。scope（t_sub 分科）：(1) 質心＝一個系統『以質量為權重的平均位置』，不是幾何中點；質量大的物體會把質心拉向自己；(2) 一維質心座標公式 x_cm＝(各物體質量×位置 相加)÷總質量＝Σmx/Σm；(3) 量化例：2 公斤在 x＝0、3 公斤在 x＝5，質心 x_cm＝(2×0＋3×5)÷(2＋3)＝15÷5＝3，比較靠近質量大的 3 公斤。不含二維/三維質心、不含質心運動定理（外力與質心加速度）、不含連續物體積分。repro（tools/verify/sci_phys_checks.py::phys-energy.center-of-mass，repro_gate .venv PASS）錨定 (2·0+3·5)/(2+3)=3。figure 自檢：一條數線 0 到 5，2 公斤畫在 x=0、3 公斤畫在 x=5，質心標在 x=3（靠近 3 公斤那側），標公式 x_cm=(2×0+3×5)/(2+3)=3；標籤不疊不溢出、alt 與 SVG text 逐字一致。practice 四答案＝{以質量為權重的平均位置（Q1 定義）, (各質量×位置相加)÷總質量（Q2 公式）, x=3（Q3 計算）, 靠近質量大的 3 公斤（Q4 概念）}；MCQ options bare、每 distractor 乾淨單一誤解（Q3：2.5=幾何中點(0+5)/2／5=以為在重物處／2=權重用反 (2×5+3×0)/5；Q4：靠近2kg／正中間／無法決定）、兩兩相異、長度均衡；distractor_rationales key 逐字相符。claim kind=fact。figure-only example 無 body。定義不得反轉：質心＝質量加權平均位置、靠近重物。",
+ "page": "sci_phys_energy_center_of_mass.html",
+ "units": [
+  {
+   "unit_id": "sci.t_sub.phys-energy.center-of-mass",
+   "title_zh": "質心座標（質量加權的平均位置）",
+   "can_do": "我知道『質心 (center of mass)』是一個系統「以質量為權重的平均位置」，不是單純的幾何中點——質量越大的物體，會把質心拉向它那一邊。我會用一維公式算：質心座標 x_cm＝(各物體的質量×位置 相加)÷總質量＝Σmx/Σm。例如一個 2 公斤的物體在 x＝0、一個 3 公斤的物體在 x＝5，質心 x_cm＝(2×0＋3×5)÷(2＋3)＝15÷5＝3，比較靠近質量大的 3 公斤那一邊。",
+   "situation_group": "能量：讓世界運作的能力",
+   "subject": "sci",
+   "strand": "phys-energy",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "sci.t_sub.phys-energy.center-of-mass"
+   ],
+   "prerequisites": [
+    "sci.t_adv.phys-energy.momentum-conserve"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-cm-def",
+     "text": "質心是一個系統「以質量為權重的平均位置」。它不是幾何上的正中點：質量越大的物體，對質心位置的影響越大，會把質心拉向自己那一邊。一維質心座標的公式是 x_cm＝(各物體質量×位置 全部相加)÷總質量，寫成 x_cm＝Σmx/Σm。",
+     "kind": "fact",
+     "source_refs": [
+      "質心座標 x_cm=Σmx/Σm（高中物理 分科）"
+     ],
+     "verification_ref": "質心＝質量加權平均位置（科學共識）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-cm-example",
+     "text": "計算例：一個 2 公斤的物體放在 x＝0、一個 3 公斤的物體放在 x＝5。質心座標 x_cm＝(2×0＋3×5)÷(2＋3)＝(0＋15)÷5＝15÷5＝3。質心在 x＝3，介於兩物體之間，而且比較靠近質量大的 3 公斤（距離它 2、距離 2 公斤那端 3）——質量大的把質心拉過去了。",
+     "kind": "fact",
+     "source_refs": [
+      "一維兩質點質心（高中物理 分科）"
+     ],
+     "verification_ref": "(2·0+3·5)/(2+3)=3（sci_phys_checks::phys-energy.center-of-mass .venv 驗）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-energy.center-of-mass"
+     ],
+     "body": "一根鐵鎚丟出去會翻滾，但有一個點走的是漂亮的拋物線——那個點就是質心。這一課學怎麼算一個系統的質心位置。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-energy.center-of-mass"
+     ],
+     "body": "① 質心＝以質量為權重的平均位置，不是幾何中點。② 質量大的物體把質心拉向自己。③ 一維公式 x_cm＝(各質量×位置相加)÷總質量。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_sub.phys-energy.center-of-mass"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 190' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='170' y='16' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>質心 ＝ 質量加權的平均位置</text><line x1='40' y1='120' x2='300' y2='120' stroke='#9aa5b1' stroke-width='1.2'/><g font-size='7.5' fill='#6b7680' text-anchor='middle'><line x1='50' y1='116' x2='50' y2='124' stroke='#9aa5b1'/><text x='50' y='136'>0</text><line x1='100' y1='116' x2='100' y2='124' stroke='#9aa5b1'/><text x='100' y='136'>1</text><line x1='150' y1='116' x2='150' y2='124' stroke='#9aa5b1'/><text x='150' y='136'>2</text><line x1='200' y1='116' x2='200' y2='124' stroke='#9aa5b1'/><text x='200' y='136'>3</text><line x1='250' y1='116' x2='250' y2='124' stroke='#9aa5b1'/><text x='250' y='136'>4</text><line x1='300' y1='116' x2='300' y2='124' stroke='#9aa5b1'/><text x='300' y='136'>5</text></g><text x='315' y='124' font-size='8' fill='#6b7680'>x</text><circle cx='50' cy='120' r='9' fill='#cdd6de' stroke='#9aa5b1'/><text x='50' y='104' font-size='8' fill='#33475b' text-anchor='middle'>2 kg</text><circle cx='300' cy='120' r='12' fill='#aebfce' stroke='#6b7f96'/><text x='300' y='100' font-size='8' fill='#33475b' text-anchor='middle'>3 kg</text><polygon points='200,119 194,108 206,108' fill='#2f6f54'/><text x='200' y='102' font-size='8.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>質心 x＝3</text><text x='170' y='182' font-size='8.5' fill='#6b7680' text-anchor='middle'>x_cm ＝ (2×0 ＋ 3×5) ÷ (2＋3) ＝ 15 ÷ 5 ＝ 3（靠近 3 kg）</text></g></svg>",
+      "alt": "標題「質心 ＝ 質量加權的平均位置」。一條數線從 0 標到 5。x＝0 處有一個小圓標「2 kg」，x＝5 處有一個比較大的圓標「3 kg」。在 x＝3 處有一個綠色三角形指標標「質心 x＝3」，位置比較靠近 3 kg 那一端。最下面寫「x_cm ＝ (2×0 ＋ 3×5) ÷ (2＋3) ＝ 15 ÷ 5 ＝ 3（靠近 3 kg）」。",
+      "caption": "2 公斤放在 x＝0、3 公斤放在 x＝5。質心 x_cm＝(2×0＋3×5)÷(2＋3)＝15÷5＝3，落在 x＝3，比較靠近質量大的 3 公斤（圖中 3 kg 的圓畫得比較大）。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-energy.center-of-mass"
+     ],
+     "body": "最後練「質心座標」。重點：(1) 質心是以質量為權重的平均位置，不是幾何中點；(2) 公式 x_cm＝(各質量×位置相加)÷總質量；(3) 質量大的物體把質心拉向自己。小提醒：代公式時位置要乘上『自己的』質量，不要把質量配錯位置。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QK-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "「質心」指的是什麼？",
+     "answer": "系統以質量為權重的平均位置",
+     "kp_ids": [
+      "sci.t_sub.phys-energy.center-of-mass"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-energy.center-of-mass"
+     ],
+     "options": [
+      "系統以質量為權重的平均位置",
+      "系統在空間上的幾何中點",
+      "系統裡最重那個物體的位置",
+      "系統裡速度最快的位置"
+     ],
+     "distractor_rationales": {
+      "系統在空間上的幾何中點": "幾何中點沒考慮質量；質心會被質量大的物體拉過去，不一定在正中間。",
+      "系統裡最重那個物體的位置": "質心通常不在任一物體上，而是介於各物體之間、偏向重的那邊。",
+      "系統裡速度最快的位置": "質心是位置的概念、與速度快慢無關。"
+     },
+     "answer_evidence": [
+      "c-cm-def"
+     ],
+     "feedback": "質心＝以質量為權重的平均位置（Σmx/Σm），會偏向質量大的物體。"
+    },
+    {
+     "question_id": "QK-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一維質心座標 x_cm 的公式是什麼？",
+     "answer": "(各物體質量×位置 相加) ÷ 總質量",
+     "kp_ids": [
+      "sci.t_sub.phys-energy.center-of-mass"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-energy.center-of-mass"
+     ],
+     "options": [
+      "(各物體質量×位置 相加) ÷ 總質量",
+      "(各物體位置 相加) ÷ 物體個數",
+      "(各物體質量 相加) ÷ 總位置",
+      "最大質量 × 它的位置"
+     ],
+     "distractor_rationales": {
+      "(各物體位置 相加) ÷ 物體個數": "那是位置的平均、沒用質量加權；質心要乘上各自的質量。",
+      "(各物體質量 相加) ÷ 總位置": "分子分母放錯；質心＝(質量×位置相加)÷總質量。",
+      "最大質量 × 它的位置": "只看最重的物體不對；要把每個物體的質量×位置都加進來再除以總質量。"
+     },
+     "answer_evidence": [
+      "c-cm-def"
+     ],
+     "feedback": "x_cm＝(各物體質量×位置 相加)÷總質量＝Σmx/Σm。"
+    },
+    {
+     "question_id": "QK-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個 2 公斤物體在 x＝0、一個 3 公斤物體在 x＝5。質心座標是多少？",
+     "answer": "x ＝ 3",
+     "kp_ids": [
+      "sci.t_sub.phys-energy.center-of-mass"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-energy.center-of-mass"
+     ],
+     "options": [
+      "x ＝ 3",
+      "x ＝ 2.5",
+      "x ＝ 5",
+      "x ＝ 2"
+     ],
+     "distractor_rationales": {
+      "x ＝ 2.5": "2.5 是幾何中點 (0＋5)÷2，沒用質量加權；要算 (2×0＋3×5)÷5＝3。",
+      "x ＝ 5": "5 是重物的位置；質心介於兩物體之間、在 x＝3。",
+      "x ＝ 2": "這把質量配錯位置了（(2×5＋3×0)÷5＝2）；應是 2 配 x=0、3 配 x=5，得 3。"
+     },
+     "answer_evidence": [
+      "c-cm-example"
+     ],
+     "feedback": "x_cm＝(2×0＋3×5)÷(2＋3)＝15÷5＝3。"
+    },
+    {
+     "question_id": "QK-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "承上題，質心 x＝3 比較靠近哪一個物體？為什麼？",
+     "answer": "靠近 3 公斤，因為它質量比較大",
+     "kp_ids": [
+      "sci.t_sub.phys-energy.center-of-mass"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-energy.center-of-mass"
+     ],
+     "options": [
+      "靠近 3 公斤，因為它質量比較大",
+      "靠近 2 公斤，因為它質量比較小",
+      "剛好在兩物體正中間",
+      "無法判斷靠近哪一個"
+     ],
+     "distractor_rationales": {
+      "靠近 2 公斤，因為它質量比較小": "剛好相反；質心被質量大的拉過去，所以靠近 3 公斤。",
+      "剛好在兩物體正中間": "正中間是 x＝2.5；質心在 x＝3，偏向 3 公斤那邊。",
+      "無法判斷靠近哪一個": "算得出來：x＝3 距 3 公斤只有 2、距 2 公斤有 3，明顯靠近 3 公斤。"
+     },
+     "answer_evidence": [
+      "c-cm-example"
+     ],
+     "feedback": "質心 x＝3 距 3 公斤（x=5）為 2、距 2 公斤（x=0）為 3，靠近質量大的 3 公斤。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（質心＝以質量為權重的平均位置、非幾何中點、偏向重物；公式 x_cm＝(各質量×位置相加)÷總質量；例 (2×0＋3×5)÷(2＋3)＝15÷5＝3、靠近 3 公斤；代公式時質量要配對自己的位置）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

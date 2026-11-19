@@ -35847,6 +35847,20 @@
    "_defect_fix_trace": [
     {"from_sha": "9fc6d5dddf35c8ff", "to_sha": "bf0700478260081c", "at": "2026-11-19T14:30:00+08:00", "defect": "R1/R2/R3 皆 CONFIRMED 兩真缺陷(viz/eye/domain/learning 多鏡)：(1) figure 箭頭長度編碼速率,但乙碰後 5m/s 箭頭被 viewBox 右緣擠成最短(16px<2m/s 的 20px<碰前5m/s 的 32px),視覺把速率畫反、抵觸『交換速度』教學重點,label 又被擠到框下;根因=乙碰後框頂右緣。(2) KE 列寫成 ½·5²＋½·2² 省略質量、讀如 ½v²、與同段動量列(1×5＋1×2)及 claim body(½×1×5²＋½×1×2²)不一致,分科讀者恐誤認 KE=½v²。修:(1) 全圖重排,箭頭長度與速率嚴格成比例(5m/s=24px、2m/s=10px)、四速度標籤統一置框上 y49、乙碰後框移左留 36px 邊距;(2) figure/alt 的 KE 補質量為 ½×1×5²＋½×1×2²＝14.5 焦耳。四角色重 render 簽核。rounds 未 bank、無需 override,新 sha 重跑 R1-R5。★class 教訓:速度圖箭頭長度必須與標示速率成比例(尤其交換/對比場景),且勿讓物件頂到 viewBox 邊緣壓縮箭頭;KE 一律顯示 ½mv² 完整含質量,勿因 m=1 省略。"}
    ]
+  },
+  "sci_phys_energy_center_of_mass.html": {
+   "frozen_sha": "5784ced0a0bd44f4",
+   "rounds": [
+    {"round": 1, "content_sha": "5784ced0a0bd44f4", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T15:08:10+08:00", "audited": true, "note": "R1 new sha post 質心 marker 移位修正; content_audit confirmed=0 coverageComplete=true; L3 rc0"},
+    {"round": 2, "content_sha": "5784ced0a0bd44f4", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T15:08:18+08:00", "audited": true, "note": "content_audit confirmed=0 coverageComplete=true; L3 coverage_check exit 0"},
+    {"round": 3, "content_sha": "5784ced0a0bd44f4", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T15:09:06+08:00", "audited": true, "note": "content_audit confirmed=0 coverageComplete=true; L3 coverage_check exit 0"},
+    {"round": 4, "content_sha": "5784ced0a0bd44f4", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T15:11:40+08:00", "audited": true, "note": "content_audit confirmed=0 coverageComplete=true; L3 coverage_check exit 0 (anchors line48/102/150)"},
+    {"round": 5, "content_sha": "5784ced0a0bd44f4", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T15:12:10+08:00", "audited": true, "note": "content_audit confirmed=0 coverageComplete=true; L3 coverage_check exit 0 (anchors line46/102/150); 5/5 達成"}
+   ],
+   "_note": "phys-energy 20/22 center-of-mass t_sub(分科-物理); 質心=質量加權平均位置 x_cm=Σmx/Σm、非幾何中點、偏向重物；oracle 錨 (2·0+3·5)/(2+3)=3; 例 2kg@x0+3kg@x5→質心 x=3 靠近3kg; figure 數線0-5,2kg小圓@0/3kg大圓@5/質心三角(數線上方向下指)@3",
+   "_defect_fix_trace": [
+    {"from_sha": "11dc5a3ba02c828e", "to_sha": "5784ced0a0bd44f4", "at": "2026-11-19T15:04:30+08:00", "defect": "R5 confirmed structure-design(minor, domain/learning/zh/pm DEFECT b-hard-to-understand、english NOT)：figure 綠色質心三角 polygon(apex 200,132、base y=146)與數線刻度數字『3』(text x=200 y=136)重疊,綠色細片蓋住數字下半,牴觸 _note『標籤不疊不溢出』。修:質心三角改到數線上方向下指(points 200,119→194/206,108)、質心 x=3 標籤移至 y=102(三角上方),與線下方的刻度數字 0-5 完全分離。figure 其餘未變、數值正確。clean 輪(R5)才發現、R1-R4 已 bank(11dc5a3b)作廢、streak 歸零,設 harvest_override 留痕,新 sha 重跑 R1-R5。四角色重簽。★class 教訓:座標圖的指標 marker 不可與軸刻度數字共用同一 (x,y) 區域,marker 置線另一側或錯開。"}
+   ]
   }
  }
 }
