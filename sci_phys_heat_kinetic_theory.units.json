@@ -1,0 +1,211 @@
+{
+ "_note": "自然島 物理-熱學（phys-heat）strand 第14單元（t_adv 高中）。知識點 sci.t_adv.phys-heat.kinetic-theory（分子運動論）。tier=t_adv。exam=學測/分科。全繁體零簡體零 PRC 詞。中文授課無音檔。前置＝kelvin（絕對溫度 已 gloss；平均動能與絕對溫度成正比）。術語附國際英語（R15，★只在 can_do 首次 gloss 一次；英文括號 grep -o 計數：『分子運動論 (kinetic theory)』應＝2、『平均動能 (average kinetic energy)』應＝2、『波茲曼常數 (Boltzmann constant)』應＝2〔各＝_note 本宣告行一次＋can_do 一次〕；『絕對溫度』已於 kelvin gloss 不重複；teach/claim body 不重複 gloss）。scope（t_adv 學測）：(1) 氣體由大量不停亂動、互相碰撞的分子組成（分子運動論的基本圖像）；(2) 溫度是分子平均動能的巨觀表現：絕對溫度越高、分子平均動能越大、動得越快；平均動能和絕對溫度成正比（平均動能＝(3/2)kT，k 是波茲曼常數；T 用絕對溫度）；(3) 氣體壓力來自大量分子不斷撞擊容器壁，撞得越頻繁、越用力壓力越大；(4) 它解釋巨觀現象：定容加熱→分子動更快撞更猛→壓力變大（接給呂薩克）、絕對零度時分子熱運動最小（接 kelvin）。不含方均根速率完整推導、不含馬克士威速率分布、不含自由度均分細節。repro（tools/verify/sci_phys_checks.py::phys-heat.kinetic-theory，repro_gate .venv PASS、source_registry 已註冊 reproduction）錨定 平均動能＝(3/2)kT ∝ 絕對溫度（比例關係）。figure 自檢：左右兩盒氣體分子—★兩盒分子數必須相同（各 5 顆、套用 before/after 等量教訓），差異只在速度箭頭長短：左『低溫』短箭頭（動得慢、平均動能小、撞牆較輕）、右『高溫』長箭頭（動得快、平均動能大、撞牆較猛→壓力大）；底部標『平均動能 ∝ 絕對溫度 T』；分子/箭頭不疊不溢出、alt 與 SVG text 逐字一致。practice 四答案＝{分子的平均動能（溫度越高平均動能越大）（Q1 溫度微觀意義）, 大量分子不斷撞擊容器壁（Q2 壓力微觀來源）, 分子動得更快、撞牆更頻繁也更用力（Q3 定容加熱壓力變大）, 成正比（絕對溫度加倍、平均動能也加倍）（Q4 平均動能與絕對溫度關係）}；MCQ options bare、每 distractor 乾淨單一誤解（Q1：分子的大小／分子的總數量／分子的顏色；Q2：分子本身會發出壓力這種力／容器自己收縮／空氣的重量壓下來才有壓力；Q3：分子變大把容器撐大／分子數量突然變多／分子釋放出新的氣體；Q4：成反比溫度高動能小／沒有關係／溫度加倍動能變四倍）、兩兩相異、長度均衡；distractor_rationales key 逐字相符。claim kind=fact。figure-only example 無 body。定義不得反轉：溫度＝分子平均動能表現、平均動能∝絕對溫度、壓力＝分子撞牆、溫度升分子動更快。全檔算式運算子與等號全形（＝）、比例用 ∝、(3/2)kT 保留。",
+ "page": "sci_phys_heat_kinetic_theory.html",
+ "units": [
+  {
+   "unit_id": "sci.t_adv.phys-heat.kinetic-theory",
+   "title_zh": "分子運動論：溫度與壓力，其實是分子在動",
+   "can_do": "我知道『分子運動論 (kinetic theory)』把氣體看成大量不停亂動、互相碰撞的分子。我知道溫度其實是這些分子『平均動能 (average kinetic energy)』的巨觀表現：絕對溫度越高，分子的平均動能越大、動得越快；平均動能和絕對溫度成正比（平均動能＝(3/2)kT，其中 k 是『波茲曼常數 (Boltzmann constant)』，T 要用絕對溫度）。我也知道氣體的壓力來自大量分子不斷撞擊容器壁——撞得越頻繁、越用力，壓力就越大。我能用這個微觀圖像解釋巨觀現象：定容加熱時分子動得更快、撞牆更猛，所以壓力升高；絕對零度時分子的熱運動降到最小。",
+   "situation_group": "能量：讓世界運作的能力",
+   "subject": "sci",
+   "strand": "phys-heat",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "sci.t_adv.phys-heat.kinetic-theory"
+   ],
+   "prerequisites": [
+    "sci.t_adv.phys-heat.kelvin"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-kt-picture",
+     "text": "分子運動論把氣體看成一大群不停亂動、彼此之間、以及與容器壁不斷碰撞的分子。這些分子的運動是雜亂的、各個方向都有。我們平常摸得到、量得到的巨觀性質（溫度、壓力），其實都是這一大群分子微觀運動的整體表現。這個「用分子的運動去解釋氣體現象」的想法，就是分子運動論。",
+     "kind": "fact",
+     "source_refs": [
+      "分子運動論基本圖像（高中物理 學測）"
+     ],
+     "verification_ref": "氣體＝大量亂動互撞的分子、巨觀性質為微觀運動的整體表現（科學共識）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-kt-temp",
+     "text": "溫度其實是分子平均動能的巨觀表現：絕對溫度越高，分子的平均動能越大、平均來說動得越快；而且平均動能和絕對溫度成正比（平均動能＝(3/2)kT，k 是波茲曼常數，T 必須用絕對溫度）。所以「加熱讓溫度升高」在微觀上就是「讓分子動得更快」，而絕對零度（0 K）就是分子熱運動降到最小的狀態——這正是為什麼溫度不可能再更低。",
+     "kind": "fact",
+     "source_refs": [
+      "溫度與分子平均動能、平均動能正比絕對溫度（高中物理 學測）"
+     ],
+     "verification_ref": "平均動能＝(3/2)kT ∝ 絕對溫度（sci_phys_checks::phys-heat.kinetic-theory .venv 驗、source_registry 註冊 reproduction）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-kt-pressure",
+     "text": "氣體的壓力來自大量分子不斷撞擊容器壁：每一次撞擊都對牆壁施一點力，無數次撞擊平均起來，就成了我們量到的壓力。撞得越頻繁、每次越用力，壓力就越大。這解釋了前面的巨觀定律：定容下加熱，分子動得更快、撞牆更頻繁也更用力，壓力就升高（這正是給呂薩克定律）；而壓縮體積讓分子更密集、單位面積撞擊更多，壓力也會變大（波以耳定律）。",
+     "kind": "fact",
+     "source_refs": [
+      "壓力來自分子撞壁、解釋氣體定律（高中物理 學測）"
+     ],
+     "verification_ref": "壓力＝大量分子撞擊容器壁的平均效果，可解釋給呂薩克/波以耳（科學共識）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.kinetic-theory"
+     ],
+     "body": "前面學的溫度、壓力、氣體定律，都是「摸得到、量得到」的巨觀性質。但氣體其實是一大群看不見、不停亂飛亂撞的分子。如果我們改用「分子在動」的角度來看，這些巨觀現象就都說得通了。這一課認識分子運動論。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.kinetic-theory"
+     ],
+     "body": "① 氣體＝大量不停亂動、互相碰撞的分子。② 溫度是分子平均動能的表現：絕對溫度越高、分子平均動能越大、動得越快；平均動能 ∝ 絕對溫度（平均動能＝(3/2)kT，k＝波茲曼常數）。③ 壓力來自大量分子不斷撞擊容器壁，撞得越頻繁越用力壓力越大。④ 這解釋了巨觀定律：定容加熱→分子撞更猛→壓力升（給呂薩克）；絕對零度＝分子熱運動最小。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.kinetic-theory"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 200' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='170' y='14' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>溫度就是分子的平均動能：越熱，分子動得越快</text><text x='86' y='32' font-size='8.5' fill='#2563a6' text-anchor='middle' font-weight='bold'>低溫（動得慢）</text><rect x='26' y='40' width='120' height='78' rx='3' fill='#eef3f7' stroke='#2563a6'/><circle cx='52' cy='64' r='4' fill='#2563a6'/><line x1='56' y1='64' x2='64' y2='64' stroke='#2563a6' stroke-width='1.5'/><polygon points='64,64 60,62 60,66' fill='#2563a6'/><circle cx='104' cy='58' r='4' fill='#2563a6'/><line x1='108' y1='58' x2='116' y2='58' stroke='#2563a6' stroke-width='1.5'/><polygon points='116,58 112,56 112,60' fill='#2563a6'/><circle cx='70' cy='96' r='4' fill='#2563a6'/><line x1='70' y1='92' x2='70' y2='84' stroke='#2563a6' stroke-width='1.5'/><polygon points='70,84 68,88 72,88' fill='#2563a6'/><circle cx='118' cy='98' r='4' fill='#2563a6'/><line x1='118' y1='98' x2='110' y2='98' stroke='#2563a6' stroke-width='1.5'/><polygon points='110,98 114,96 114,100' fill='#2563a6'/><circle cx='40' cy='100' r='4' fill='#2563a6'/><line x1='44' y1='100' x2='52' y2='100' stroke='#2563a6' stroke-width='1.5'/><polygon points='52,100 48,98 48,102' fill='#2563a6'/><text x='86' y='113' font-size='7' fill='#6b7680' text-anchor='middle'>平均動能小、撞牆較輕</text><text x='254' y='32' font-size='8.5' fill='#c0392b' text-anchor='middle' font-weight='bold'>高溫（動得快）</text><rect x='194' y='40' width='120' height='78' rx='3' fill='#fbeee9' stroke='#c0392b'/><circle cx='220' cy='64' r='4' fill='#c0392b'/><line x1='224' y1='64' x2='244' y2='64' stroke='#c0392b' stroke-width='1.5'/><polygon points='244,64 239,62 239,66' fill='#c0392b'/><circle cx='278' cy='58' r='4' fill='#c0392b'/><line x1='282' y1='58' x2='302' y2='58' stroke='#c0392b' stroke-width='1.5'/><polygon points='302,58 297,56 297,60' fill='#c0392b'/><circle cx='238' cy='96' r='4' fill='#c0392b'/><line x1='238' y1='92' x2='238' y2='78' stroke='#c0392b' stroke-width='1.5'/><polygon points='238,78 236,83 240,83' fill='#c0392b'/><circle cx='292' cy='98' r='4' fill='#c0392b'/><line x1='288' y1='98' x2='270' y2='98' stroke='#c0392b' stroke-width='1.5'/><polygon points='270,98 275,96 275,100' fill='#c0392b'/><circle cx='206' cy='100' r='4' fill='#c0392b'/><line x1='210' y1='100' x2='228' y2='100' stroke='#c0392b' stroke-width='1.5'/><polygon points='228,100 223,98 223,102' fill='#c0392b'/><text x='254' y='113' font-size='7' fill='#6b7680' text-anchor='middle'>平均動能大、撞牆較猛→壓力大</text><text x='170' y='140' font-size='9' fill='#33475b' text-anchor='middle'>兩邊分子數一樣多，差別只在「動得多快」</text><text x='170' y='158' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>平均動能 ∝ 絕對溫度 T</text><text x='170' y='176' font-size='7.5' fill='#6b7680' text-anchor='middle'>壓力＝大量分子不斷撞擊容器壁的整體效果</text></g></svg>",
+      "alt": "一張分子運動論的圖，標題「溫度就是分子的平均動能：越熱，分子動得越快」。左邊藍色方盒標「低溫（動得慢）」，裡面有 5 顆分子（圓點），每顆帶一支短短的速度箭頭，標「平均動能小、撞牆較輕」。右邊紅色方盒標「高溫（動得快）」，裡面同樣有 5 顆分子，但每顆帶一支比較長的速度箭頭，標「平均動能大、撞牆較猛→壓力大」。中間下方三行：「兩邊分子數一樣多，差別只在『動得多快』」「平均動能 ∝ 絕對溫度 T」「壓力＝大量分子不斷撞擊容器壁的整體效果」。",
+      "caption": "同樣一盒氣體，低溫（左）和高溫（右）的分子數目一樣多，差別只在分子動得多快：溫度越高，分子平均動能越大、速度箭頭越長，撞擊容器壁也越頻繁越用力，壓力因此越大。平均動能和絕對溫度成正比（平均動能 ∝ 絕對溫度 T）；壓力則是大量分子不斷撞牆的整體效果。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.kinetic-theory"
+     ],
+     "body": "最後練「分子運動論」。重點：(1) 氣體＝大量亂動互撞的分子；(2) 溫度＝分子平均動能的表現，平均動能 ∝ 絕對溫度（平均動能＝(3/2)kT）；(3) 壓力＝大量分子撞擊容器壁的整體效果，撞得越頻繁越用力壓力越大；(4) 可解釋巨觀定律（定容加熱壓力升＝給呂薩克；絕對零度＝分子熱運動最小）。小提醒：是「平均」動能——個別分子有快有慢，溫度反映的是整群的平均。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QK-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "從分子運動論來看，一團氣體的「溫度」在微觀上反映的是什麼？",
+     "answer": "分子的平均動能——溫度越高，分子平均動能越大",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.kinetic-theory"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-heat.kinetic-theory"
+     ],
+     "options": [
+      "分子的平均動能——溫度越高，分子平均動能越大",
+      "分子的大小——溫度越高，每顆分子越大",
+      "分子的總數量——溫度越高，分子數目越多",
+      "分子的顏色——溫度越高，分子顏色越深"
+     ],
+     "distractor_rationales": {
+      "分子的大小——溫度越高，每顆分子越大": "溫度和分子大小無關；溫度反映的是分子動得多快（平均動能），不是分子變大。",
+      "分子的總數量——溫度越高，分子數目越多": "加熱不會憑空多出分子；溫度反映平均動能，分子數目不變。",
+      "分子的顏色——溫度越高，分子顏色越深": "分子沒有我們看到的那種顏色；溫度反映的是平均動能。"
+     },
+     "answer_evidence": [
+      "c-kt-temp"
+     ],
+     "feedback": "溫度是分子平均動能的表現——溫度越高，分子平均動能越大、動得越快。"
+    },
+    {
+     "question_id": "QK-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "從分子運動論來看，氣體對容器壁的「壓力」是怎麼來的？",
+     "answer": "來自大量分子不斷撞擊容器壁",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.kinetic-theory"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-heat.kinetic-theory"
+     ],
+     "options": [
+      "來自大量分子不斷撞擊容器壁",
+      "來自空氣的重量壓在容器壁上",
+      "來自容器自己慢慢收縮擠壓氣體",
+      "來自每顆分子本身主動發出的一種推力"
+     ],
+     "distractor_rationales": {
+      "來自空氣的重量壓在容器壁上": "氣體壓力主要是分子撞壁造成的，不是靠重量；就算在無重力下氣體一樣有壓力。",
+      "來自容器自己慢慢收縮擠壓氣體": "壓力不是容器收縮造成；是裡面的分子不斷撞牆。",
+      "來自每顆分子本身主動發出的一種推力": "分子不會「發出推力」；壓力是它們撞擊牆壁的碰撞效果。"
+     },
+     "answer_evidence": [
+      "c-kt-pressure"
+     ],
+     "feedback": "壓力來自大量分子不斷撞擊容器壁，撞得越頻繁越用力壓力越大。"
+    },
+    {
+     "question_id": "QK-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "把一個體積固定的密閉容器裡的氣體加熱，溫度升高，壓力也跟著變大。用分子運動論看，為什麼？",
+     "answer": "因為分子動得更快，撞擊容器壁更頻繁也更用力",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.kinetic-theory"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-heat.kinetic-theory"
+     ],
+     "options": [
+      "因為分子動得更快，撞擊容器壁更頻繁也更用力",
+      "因為每顆分子受熱後體積變大，把容器撐大",
+      "因為加熱讓容器裡的分子數量突然變多",
+      "因為加熱讓分子釋放出新的氣體"
+     ],
+     "distractor_rationales": {
+      "因為每顆分子受熱後體積變大，把容器撐大": "分子本身不會變大；壓力變大是因為分子動得更快、撞牆更猛。",
+      "因為加熱讓容器裡的分子數量突然變多": "密閉容器裡分子數目不變；是分子動得更快讓壓力上升。",
+      "因為加熱讓分子釋放出新的氣體": "沒有新氣體產生；壓力升高是分子撞牆更頻繁更用力。"
+     },
+     "answer_evidence": [
+      "c-kt-pressure"
+     ],
+     "feedback": "加熱使分子平均動能變大、動得更快，撞牆更頻繁更用力，所以定容下壓力升高（給呂薩克定律的微觀解釋）。"
+    },
+    {
+     "question_id": "QK-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "分子的「平均動能」和「絕對溫度」之間是什麼關係？",
+     "answer": "成正比：絕對溫度加倍，分子平均動能也加倍",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.kinetic-theory"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-heat.kinetic-theory"
+     ],
+     "options": [
+      "成正比：絕對溫度加倍，分子平均動能也加倍",
+      "成反比：絕對溫度越高，分子平均動能反而越小",
+      "沒有關係：溫度怎麼變，平均動能都不受影響",
+      "絕對溫度加倍，平均動能會變成四倍"
+     ],
+     "distractor_rationales": {
+      "成反比：絕對溫度越高，分子平均動能反而越小": "方向反了；溫度越高分子動得越快、平均動能越大，是成正比。",
+      "沒有關係：溫度怎麼變，平均動能都不受影響": "有關係；溫度正是分子平均動能的表現，兩者成正比。",
+      "絕對溫度加倍，平均動能會變成四倍": "不是平方關係；平均動能＝(3/2)kT 與絕對溫度成正比，加倍就是加倍。"
+     },
+     "answer_evidence": [
+      "c-kt-temp"
+     ],
+     "feedback": "平均動能和絕對溫度成正比（平均動能＝(3/2)kT）：絕對溫度加倍，平均動能也加倍。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（分子運動論＝氣體是大量亂動互撞的分子、巨觀性質是微觀運動的整體表現；溫度＝分子平均動能的表現，平均動能 ∝ 絕對溫度〔平均動能＝(3/2)kT，k＝波茲曼常數〕；壓力＝大量分子撞擊容器壁的整體效果，撞越頻繁越用力壓力越大；可解釋給呂薩克〔定容加熱壓力升〕與絕對零度〔分子熱運動最小〕；是「平均」動能、個別分子有快有慢）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

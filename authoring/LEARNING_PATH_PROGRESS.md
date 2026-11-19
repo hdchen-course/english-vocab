@@ -1,3 +1,9 @@
+## 2026-11-19 23:03 ★ sci.t_adv.phys-heat.kinetic-theory 分子運動論：溫度與壓力，其實是分子在動 5/5 DONE-GATE → phys-heat 14/20
+- **sci_phys_heat_kinetic_theory frozen `5f66b448befd6383`**（R1-R4+R7 連 5 clean、L3 全 exit0、同 sha）。tier=t_adv、exam=學測/分科。前置＝kelvin。R15 gloss 分子運動論 (kinetic theory)/平均動能 (average kinetic energy)/波茲曼常數 (Boltzmann constant) 各=2。
+- 內容：氣體＝大量亂動互撞分子；溫度＝分子平均動能表現，平均動能∝絕對溫度（平均動能＝(3/2)kT，k 波茲曼常數，T 用絕對溫度）；壓力＝大量分子撞擊容器壁的整體效果，撞越頻繁越用力壓力越大；可解釋巨觀定律（定容加熱→分子撞更猛→壓力升＝給呂薩克；絕對零度＝分子熱運動最小）。scope：不含方均根速率完整推導／馬克士威速率分布。repro（sci_phys_checks::phys-heat.kinetic-theory .venv PASS，錨 平均動能＝(3/2)kT ∝ 絕對溫度）。figure＝左低溫／右高溫兩盒分子（各 5 顆等量，套用 before/after 等量教訓），差異僅速度箭頭長短＋底部 平均動能∝絕對溫度 T。
+- **審查抓到真 minor（我目視漏掉）**：R4 native-speaker-naturalness：can-do「彼此之間和跟容器壁」近義虛詞「和」（連接詞）＋「跟」（介詞）相鄰拗口→改「彼此之間、以及與容器壁」。de-converge faf9974c→5f66b448。另 R5 clean 但 line159 anchor 漏行尾逗號（<40 字需精確比對）＝L3 不可證 discard；R6 兩 reviewer 遭 API content-filter 誤擋（coverageComplete=false）discard；R7 補足第 5 valid clean。
+- DONE-GATE 全綠：per_page PASS（667/667、kinetic absent）、scan/pedagogy/question/schema/repro PASS、figure 四角色兩方向簽核（兩盒等量 5 顆、高溫箭頭較長）。phys-heat strand 進度 14/20（t_adv 第 4 單元完成）。
+
 ## 2026-11-19 22:01 ★ sci.t_adv.phys-heat.gas-laws 氣體三定律：波以耳、查理、給呂薩克 5/5 DONE-GATE → phys-heat 13/20
 - **sci_phys_heat_gas_laws frozen `1d06daa689504135`**（R11-R15 連 5 clean、L3 全 exit0、同 sha）。tier=t_adv、exam=學測/分科。前置＝ideal-gas-law。R15 gloss 波以耳定律 (Boyle's law)/查理定律 (Charles's law)/給呂薩克定律 (Gay-Lussac's law) 各=2。
 - 內容：波以耳（定溫 P₁V₁＝P₂V₂ 成反比）/查理（定壓 V₁÷T₁＝V₂÷T₂ 成正比）/給呂薩克（定容 P₁÷T₁＝P₂÷T₂ 成正比）；查理+給呂薩克 T 必用絕對溫度（K）；三者皆 PV＝nRT 特例。repro（sci_phys_checks::phys-heat.gas-laws .venv PASS，錨 100×2==200×1 且 1÷300≈2÷600）。figure＝左波以耳 P–V 反比曲線＋右查理 V–T 正比直線、各帶公式＋數值例。
