@@ -1,3 +1,9 @@
+## 2026-11-19 20:42 ★ sci.t_mid.phys-heat.latent-heat 潛熱：為什麼水滾了溫度卻不再上升 5/5 DONE-GATE → phys-heat 10/20
+- **sci_phys_heat_latent_heat frozen `b9ac5a816bb24a71`**（R11-R15 連 5 clean、L3 全 exit0、同 sha）。tier=t_mid、exam=會考。前置＝specific-heat＋heat-unit。R15 gloss 潛熱 (latent heat)/相變化 (phase change) 各=2。
+- 內容：相變化（熔化⇄凝固、汽化⇄凝結）時吸放熱但溫度維持不變＝潛熱；原因＝熱拿去改變狀態（拆開/重排粒子排列）非升溫，變完才再升溫；定量 Q＝m×L，水汽化熱約每公斤 2260 千焦、熔化熱約 334 千焦；例 0.5 公斤 100°C 水全汽化 Q＝0.5×2260＝1130 千焦、過程溫度停 100°C。6 公釐…（錯）→潛熱值＝repro（sci_phys_checks::phys-heat.latent-heat .venv PASS、source_registry 註冊，錨 0.5×2260==1130）。figure＝水加熱曲線雙平台（0°C 熔化、100°C 汽化）。
+- **審查抓到真 major（我目視漏掉）×2 類**：(1) 建圖後 iPad render 自檢發現底部兩行文字過擠（x 軸標題與冗餘底註 6px 疊）→移除冗餘底註、x 軸標題下移（282b0c68）。(2) content_audit R1/R2/R3 三輪獨立 7/7 判 alt↔SVG fidelity：我修底部擁擠時移除了 SVG 的「藍色平台＝…」text，卻漏改 alt（alt 仍描述已不存在的那行）→alt 改述實際 x 軸標題、與 SVG 12 個 text 逐字一致（b9ac5a81）。**class 教訓：改 figure SVG（移除/新增/改字）時 alt＋caption 必須同步逐字核對，『alt↔SVG 逐字一致』自檢每次 figure 編輯後重跑。**
+- DONE-GATE 全綠：per_page gate PASS（latent absent from violations）、scan_simplified PASS、pedagogy 0 hard、question_correctness CLEAN、unit_schema clean、repro PASS、figure 四角色兩方向簽核。phys-heat strand 進度 10/20（t_mid 段落全數完成：celsius/heat-unit/specific-heat/thermal-equilibrium/heat-transfer/expansion/latent-heat ＋前置 thermometer/conduction-basic/temp-vs-heat）。
+
 ## 2026-11-19 20:20 ★ sci.t_mid.phys-heat.expansion 熱脹冷縮：為什麼鐵軌要留縫 5/5 DONE-GATE → phys-heat 9/20
 - **sci_phys_heat_expansion frozen `5d841af6c0bb281e`**（R11-R15 連 5 clean、L3 全 exit0、同 sha）。tier=t_mid、exam=會考。前置＝temp-vs-heat。R15 gloss 熱脹冷縮 (thermal expansion)=2。
 - 內容：大多數物質受熱體積膨脹、遇冷收縮＝熱脹冷縮；微觀＝溫度升高粒子運動更劇烈、彼此平均距離變大故體積脹大（粒子本身沒變大、物質沒變多）；相同升溫膨脹程度一般氣體>液體>固體；生活應用＝鐵軌/橋梁伸縮縫、電線夏鬆冬緊、溫度計、金屬瓶蓋泡熱水。**scope 邊界**：不教線膨脹係數 α 符號公式 ΔL=αL₀ΔT（屬高中），只用具體數字生活例（10 公尺鋼軌升溫約 50°C 大約變長 6 公釐）。6mm＝repro（sci_phys_checks::phys-heat.expansion .venv PASS、source_registry 註冊 reproduction，錨 1.2e−5·10·50==6e−3）；其餘定性事實＝科學共識。

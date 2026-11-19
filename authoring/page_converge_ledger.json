@@ -2,6 +2,21 @@
  "_doc": "AC-UNIT-2 每頁 content_audit 5-clean 證據。round 僅於實跑 content_audit＋L3 coverage_check exit 0 後誠實記入；content_sha=HTML+sidecar 聯集（per_page_5clean_gate 同步）。",
  "required_clean": 5,
  "pages": {
+  "sci_phys_heat_latent_heat.html": {
+   "frozen_sha": "b9ac5a816bb24a71",
+   "rounds": [
+    {"round": 11, "content_sha": "b9ac5a816bb24a71", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T20:37:30+08:00", "audited": true, "note": "post-alt-fix; content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line53/106/159, deep75%)"},
+    {"round": 12, "content_sha": "b9ac5a816bb24a71", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T20:38:30+08:00", "audited": true, "note": "post-alt-fix; content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line53/106/159, deep75%)"},
+    {"round": 13, "content_sha": "b9ac5a816bb24a71", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T20:39:10+08:00", "audited": true, "note": "post-alt-fix; content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line49/106/160, deep75%)"},
+    {"round": 14, "content_sha": "b9ac5a816bb24a71", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T20:42:20+08:00", "audited": true, "note": "post-alt-fix; content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line53/106/159, deep75%)"},
+    {"round": 15, "content_sha": "b9ac5a816bb24a71", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T20:42:33+08:00", "audited": true, "note": "post-alt-fix; content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line53/106/160, deep75%); 5/5 達成(R11-R15 連5clean、同sha b9ac5a81)"}
+   ],
+   "_note": "phys-heat 10/20 latent-heat t_mid(會考); 潛熱=相變化(熔化⇄凝固、汽化⇄凝結)時吸熱或放熱但溫度維持不變的那段熱; 原因=熱拿去改變狀態(拆開/重排粒子排列)不是升溫,變完才再升溫; 定量 Q=m×L,水汽化熱約每公斤2260千焦、熔化熱約334千焦; 例 0.5公斤100°C水全汽化 Q=0.5×2260=1130千焦、過程溫度停100°C。前置 specific-heat(Q=mcΔT/比熱已gloss)+heat-unit(卡/焦耳/千焦已gloss); R15 gloss 潛熱 (latent heat)/相變化 (phase change) 各=2(熔化熱/汽化熱為中文複合子詞不另gloss)。scope:不含過冷過熱/克勞修斯/莫耳潛熱(t_sub)。repro(sci_phys_checks::phys-heat.latent-heat .venv PASS、source_registry 註冊 reproduction,錨 0.5*2260==1130)。figure=水加熱曲線(x=持續加入的熱、y=溫度),五段 冰升溫(斜)→0°C熔化平台(藍、潛熱)→水升溫(斜)→100°C汽化平台(藍、潛熱)→水蒸氣升溫(斜);底部擁擠已修(移除冗餘註、x軸標題獨立置底、冰升溫離軸線)。Q2沸騰續加熱溫度停=熱去汽化 distractor 溫度計壞/熱消失/質量變重; Q3 Q=mL=0.5×2260=1130千焦 distractor 2260(沒乘質量)/565(多除2)/1130卡(單位錯); Q4沸騰續加熱=停100°C distractor 超過100/下降/瞬間不見。全檔算式 ＝ × 全形。四角色 iPad land+port 兩方向簽核過。pedagogy 0 hard、scan PASS、schema/question/repro PASS。",
+   "_defect_fix_trace": [
+    {"from_sha": "65ff95e1c55b9755", "to_sha": "282b0c68ea37aca6", "at": "2026-11-19T20:24:00+08:00", "defect": "建圖後 iPad render 自檢(eye-comfort/animator 鏡): 加熱曲線底部兩行文字過擠——x軸標題『持續加入的熱→』(y=192)與冗餘底註『藍色平台＝一直吸熱但溫度不變』(y=186)僅6px間距會重疊;且『冰升溫』label(y=171)壓在x軸線(y=170)上。修:移除冗餘底註(標題『相變化時溫度不變』+caption+平台『熔化·潛熱/汽化·潛熱』標示已充分傳達該訊息)、x軸標題下移 y=189、冰升溫/水升溫/水蒸氣升溫 label 位置微調離開軸線與曲線。僅改 figure SVG 文字位置(無banked輪、ledger條目建立前就地修,frozen 直接設修後值)。65ff95e1→282b0c68。★沿用 before/after 建圖後必 render 看、底部多行文字留足行距的教訓。"},
+    {"from_sha": "282b0c68ea37aca6", "to_sha": "b9ac5a816bb24a71", "at": "2026-11-19T20:34:00+08:00", "defect": "R1+R2(各7/7 panel 一致)confirmed major figure-alt-fidelity a-wrong：前一步修 figure 底部擁擠時移除了 SVG 的『藍色平台＝一直吸熱但溫度不變（熱拿去改變狀態）』text 元素，卻漏改 alt——alt 仍寫『最下面一行字：「藍色平台＝…」』，描述一個已不存在於 SVG 的文字，違反本檔 _note『alt 與 SVG text 逐字一致』自檢、且讓螢幕閱讀者被告知不存在的圖內文字。修:alt 該句改述實際存在的 x 軸標題『橫軸下方標「持續加入的熱 →」』,與 SVG 12 個 text 元素逐字一致(grep 藍色平台=0)。alt-only 改動、渲染圖像不變(四角色簽核沿用)。282b0c68→b9ac5a81。R1/R2(審282b0c68)+在飛 R3 全作廢(rounds 本就空、無 banked 損失)。★class 教訓:改 figure SVG(移除/新增/改字 text)時,alt 與 caption 必須同步逐字核對;『alt↔SVG 逐字一致』自檢要在每次 figure 編輯後重跑(grep 被移除字串應=0、新增字串 alt 要補)。"}
+   ]
+  },
   "sci_phys_heat_expansion.html": {
    "frozen_sha": "5d841af6c0bb281e",
    "rounds": [
