@@ -1,3 +1,8 @@
+## 2026-11-19 18:53 ★ sci.t_mid.phys-heat.specific-heat 比熱：為什麼水不容易變溫 5/5 DONE-GATE → phys-heat 6/20
+- **sci_phys_heat_specific_heat frozen `9b57cb124d427fd7`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha，無缺陷無 de-converge）。tier=t_mid、exam=會考。前置＝temp-vs-heat（熱量/比熱已 gloss）＋heat-unit（卡/焦耳已 gloss）。★learner-facing gloss count=0（刻意，無新術語；不引入熱容量避免混淆）。
+- 內容：比熱＝讓 1 公斤某物質升高 1°C 所需熱量＝物質特性、不同物質不同；水比熱特別大（約 1 大卡/(公斤·°C)＝4186 焦耳/(公斤·°C)）故耐熱耐冷、溫度不易變（沙燙水溫、海邊日夜溫差小）；Q＝mcΔT 例 2 公斤水升 10°C＝2×4186×10＝83720 焦耳（約 20 大卡，與 temp-vs-heat 一致）。figure 同太陽等量供熱沙(比熱小升溫快燙)vs水(比熱大升溫慢溫)+Q=mcΔT+水比熱值。oracle specific-heat 錨 2×4186×10==83720（repro_gate .venv PASS、source_registry 註冊 reproduction）。Q3 答83720 distractor 41860(漏質量)/8372(漏ΔT)/837200(多一位)；Q4 答水比熱大溫度不易變 distractor 比熱小(反)/海水自產熱/離太陽近。
+- DONE-GATE 全綠：per_page 659/659 PASS、live=frozen 9b57cb12／scan PASS／pedagogy 0 hard／question CLEAN／schema clean／repro specific-heat PASS／figure 四角色簽核。phys-heat strand 進度 6/20。
+
 ## 2026-11-19 18:43 ★ sci.t_mid.phys-heat.heat-unit 熱量的單位：卡與焦耳 5/5 DONE-GATE → phys-heat 5/20
 - **sci_phys_heat_heat_unit frozen `5514da9010e13dba`**（post-3fix rounds 11-15 連 5 clean、L3 全 exit0、同 sha）。tier=t_mid、exam=會考。前置＝temp-vs-heat（熱量已 gloss 不重複）。R15 gloss 卡 (calorie)/焦耳 (joule)/熱功當量 (mechanical equivalent of heat) 各=2。
 - 內容：熱量是能量可用卡(cal)/焦耳(J)量；1 卡＝使 1 公克純水升高 1°C 所需熱量、1 大卡＝1000 卡（食物熱量用大卡）；1 卡≈4.186 焦耳＝熱功當量（同份熱量卡或焦耳只單位不同）。figure 左 1 卡(cal,=1公克水升1°C)×4.186→右 4.186 焦耳(J)+1 大卡=1000 卡。oracle heat-unit 錨 1*4.186==4.186（repro_gate .venv PASS、source_registry 註冊 reproduction、fingerprint bc72aad279721041）。Q3 答約4.186焦耳 distractor 1/100/1000(1000為大卡換卡倍數)；Q4 答1000卡 distractor 10/100/4.186(與J值混淆)。
