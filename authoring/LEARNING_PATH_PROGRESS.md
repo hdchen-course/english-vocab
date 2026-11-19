@@ -1,3 +1,9 @@
+## 2026-11-19 21:20 ★ sci.t_adv.phys-heat.ideal-gas-law 理想氣體方程式：PV＝nRT 把氣體綁在一起 5/5 DONE-GATE → phys-heat 12/20
+- **sci_phys_heat_ideal_gas_law frozen `ca65dbc72dd22f34`**（R1-R5 連 5 clean、L3 全 exit0、同 sha；無 de-converge，一次過）。tier=t_adv、exam=學測/分科。前置＝kelvin。R15 gloss 理想氣體 (ideal gas)/莫耳 (mole)/氣體常數 (gas constant) 各=2。
+- 內容：PV＝nRT 綁 P 壓力/V 體積/n 莫耳數/T 絕對溫度，R 氣體常數約 8.31 J/(mol·K)；T 必須用絕對溫度（K）不能用攝氏；三特例（n 固定）＝定溫 PV 定值（波以耳）/定壓 V∝T（查理）/定容 P∝T；STP（0°C、1 大氣壓）下 1 莫耳理想氣體≈22.4 公升；理想氣體＝分子體積可忽略、分子間除碰撞外無作用力。repro（sci_phys_checks::phys-heat.ideal-gas-law .venv PASS，錨 V＝1×8.314×273.15÷101325≈0.02241 m³＝22.4 L）。figure＝中央 PV＝nRT 框＋左符號逐行註解（T 紅字強調用 K）＋右 STP 綠框。
+- 審查：content_audit R1-R5 全 0 真缺陷（一次過，無 de-converge）；R1 一 reviewer 觸 content filter 但 coverageComplete=true（judge 過、其餘覆蓋）照慣例 bank；L3 全用 reviewer 原文（含引號逗號）驗 exit0。
+- DONE-GATE 全綠：per_page PASS（ideal_gas absent）、scan/pedagogy/question/schema/repro PASS、figure 四角色兩方向簽核。phys-heat strand 進度 12/20（t_adv 第 2 單元完成）。
+
 ## 2026-11-19 21:06 ★ sci.t_adv.phys-heat.kelvin 絕對溫標：溫度有沒有最低極限？ 5/5 DONE-GATE → phys-heat 11/20（t_adv 開跑）
 - **sci_phys_heat_kelvin frozen `40ca0928f21e18aa`**（R11-R15 連 5 clean、L3 全 exit0、同 sha）。tier=t_adv、exam=學測/分科。前置＝celsius。R15 gloss 絕對溫標 (Kelvin scale)/絕對零度 (absolute zero)/克耳文 (kelvin) 各=2。
 - 內容：絕對溫標（克氏溫標）單位克耳文 K、刻度間隔與攝氏相同（升 1 K＝升 1°C）只是起點不同；絕對零度＝−273.15°C＝0 K＝溫度最低極限（粒子熱運動降到最低）；換算 克耳文＝攝氏＋273.15，25°C＝298.15 K、冰點 0°C＝273.15 K；很多定律需絕對溫度。**scope**：不教氣體定律本身（僅帶條件提及為何用絕對溫度）。換算值＝repro（sci_phys_checks::phys-heat.kelvin .venv PASS，錨 25+273.15==298.15 且 −273.15+273.15==0）。figure＝左右雙溫標直尺對照。

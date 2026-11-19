@@ -1,0 +1,211 @@
+{
+ "_note": "自然島 物理-熱學（phys-heat）strand 第12單元（t_adv 高中）。知識點 sci.t_adv.phys-heat.ideal-gas-law（理想氣體方程式）。tier=t_adv。exam=學測/分科。全繁體零簡體零 PRC 詞。中文授課無音檔。前置＝kelvin（絕對溫度/克耳文 已 gloss，PV=nRT 的 T 必須用絕對溫度）。術語附國際英語（R15，★只在 can_do 首次 gloss 一次；英文括號 grep -o 計數：『理想氣體 (ideal gas)』應＝2、『莫耳 (mole)』應＝2、『氣體常數 (gas constant)』應＝2〔各＝_note 本宣告行一次＋can_do 一次〕；『絕對溫度/克耳文』已於 kelvin gloss 不重複；teach/claim body 不重複 gloss）。scope（t_adv 學測）：(1) 理想氣體方程式 PV＝nRT 把壓力 P、體積 V、莫耳數 n、絕對溫度 T 綁在一起，R 是氣體常數（約 8.31 J/(mol·K)）；(2) T 必須用絕對溫度（克耳文），不能用攝氏；(3) 三個特例＝定溫 PV＝定值（波以耳）、定壓 V 與 T 成正比（查理）、定容 P 與 T 成正比；(4) 標準狀況 STP（0°C＝273.15 K、1 大氣壓≈101325 帕）下 1 莫耳理想氣體體積約 22.4 公升；(5) 『理想氣體』是簡化模型：假設分子本身體積可忽略、分子間除了碰撞以外沒有作用力，一般常溫常壓的氣體可近似理想。不含凡得瓦修正方程式、不含分壓定律細算（另單元）、不含動力論完整推導（kinetic-theory 另單元）。repro（tools/verify/sci_phys_checks.py::phys-heat.ideal-gas-law，repro_gate .venv PASS、source_registry 已註冊 reproduction）錨定 V＝1×8.314×273.15/101325≈0.02241 m³＝22.4 L。figure 自檢：中央方程式 PV＝nRT 置中，下方逐符號註解（P 壓力／V 體積／n 莫耳數／R 氣體常數≈8.31／T 絕對溫度 K），右側 STP 小框『1 莫耳 @ 0°C、1 大氣壓 ≈ 22.4 公升』；符號與註解對齊、不疊不溢出、alt 與 SVG text 逐字一致。practice 四答案＝{絕對溫度（克耳文 K），不能用攝氏（Q1 T 用什麼溫度）, 變成原來的兩倍（Q2 定溫體積減半壓力）, 約 22.4 公升（Q3 STP 1 莫耳體積）, 分子本身體積可忽略、分子間除碰撞外無作用力（Q4 理想氣體假設）}；MCQ options bare、每 distractor 乾淨單一誤解（Q1：攝氏溫度／華氏溫度／哪種都可以；Q2：也變成一半／維持不變／變成四倍；Q3：11.2 公升／44.8 公升／1 公升；Q4：分子體積很大彼此緊貼／分子間有很強的吸引力／氣體完全不會流動）、兩兩相異、長度均衡；distractor_rationales key 逐字相符。claim kind=fact。figure-only example 無 body。定義不得反轉：PV＝nRT、T 用絕對溫度、定溫 PV 定值、STP 1 莫耳≈22.4 公升、理想氣體＝分子體積可忽略且除碰撞外無作用力。全檔算式運算子與等號全形（＝ × ÷），單位 J/(mol·K) 與帕(Pa) 一致。",
+ "page": "sci_phys_heat_ideal_gas_law.html",
+ "units": [
+  {
+   "unit_id": "sci.t_adv.phys-heat.ideal-gas-law",
+   "title_zh": "理想氣體方程式：PV＝nRT 把氣體綁在一起",
+   "can_do": "我知道『理想氣體 (ideal gas)』方程式是 PV＝nRT，它把一團氣體的壓力 P、體積 V、『莫耳 (mole)』數 n（氣體的量）和絕對溫度 T 綁在一個式子裡，其中 R 是『氣體常數 (gas constant)』，大約是 8.31 J/(mol·K)。我知道式子裡的 T 一定要用絕對溫度（克耳文 K），不能用攝氏。我知道由這個式子可以得到三個常見特例：定溫時 PV 是定值（壓力和體積成反比）、定壓時體積和絕對溫度成正比、定容時壓力和絕對溫度成正比。我也知道在標準狀況（0°C、1 大氣壓）下，1 莫耳的理想氣體體積大約是 22.4 公升。",
+   "situation_group": "能量：讓世界運作的能力",
+   "subject": "sci",
+   "strand": "phys-heat",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "sci.t_adv.phys-heat.ideal-gas-law"
+   ],
+   "prerequisites": [
+    "sci.t_adv.phys-heat.kelvin"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ig-eq",
+     "text": "理想氣體方程式是 PV＝nRT：P 是壓力、V 是體積、n 是莫耳數（氣體有多少量）、T 是絕對溫度，R 是氣體常數（約 8.31 J/(mol·K)，對所有理想氣體都一樣）。它把本來要分開記的幾條氣體規律合成一條式子。要特別注意：式子裡的 T 一定要用絕對溫度（克耳文 K），因為氣體的體積、壓力是跟絕對溫度成比例的，用會出現負值的攝氏溫度去代就會算錯。",
+     "kind": "fact",
+     "source_refs": [
+      "理想氣體方程式 PV=nRT（高中物理/化學 學測）"
+     ],
+     "verification_ref": "PV=nRT、R≈8.31 J/(mol·K)、T 用絕對溫度（科學共識；STP 1 mol≈22.4 L 見 c-ig-stp）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ig-cases",
+     "text": "從 PV＝nRT 可以得到三個常見特例（氣體量 n 固定時）：定溫（T 不變）時 PV 是定值，壓力和體積成反比——把氣體壓小一半，壓力就變兩倍；定壓（P 不變）時體積和絕對溫度成正比——加熱使絕對溫度變兩倍，體積也變兩倍；定容（V 不變）時壓力和絕對溫度成正比。這些都是同一條式子在「固定某個量」下的結果。",
+     "kind": "fact",
+     "source_refs": [
+      "波以耳/查理定律為 PV=nRT 特例（高中物理 學測）"
+     ],
+     "verification_ref": "定溫 PV 定值、定壓 V∝T、定容 P∝T，皆 PV=nRT 特例（科學共識）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ig-stp",
+     "text": "在標準狀況（STP：0°C 也就是 273.15 K、1 大氣壓約 101325 帕）下，1 莫耳的理想氣體體積大約是 22.4 公升。這可以直接把數字代進 PV＝nRT 算出來：V＝nRT÷P＝1×8.31×273.15÷101325，大約是 0.0224 立方公尺，也就是 22.4 公升。所謂『理想氣體』是一個簡化模型：假設氣體分子本身的體積小到可以忽略、分子之間除了互相碰撞以外沒有作用力；一般常溫常壓下的空氣、氧氣等都可以近似當成理想氣體。",
+     "kind": "fact",
+     "source_refs": [
+      "STP 莫耳體積 22.4 公升、理想氣體假設（高中物理/化學 學測）"
+     ],
+     "verification_ref": "STP 1 mol 理想氣體≈22.4 L（sci_phys_checks::phys-heat.ideal-gas-law .venv 驗 V=1×8.314×273.15/101325≈0.02241 m³、source_registry 註冊 reproduction）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.ideal-gas-law"
+     ],
+     "body": "打氣筒壓下去、裡面變熱又變硬；夏天輪胎胎壓會變高；氣球拿到高山上會脹大。氣體的壓力、體積、溫度好像牽一髮動全身。有沒有一條式子一次把它們綁在一起？有，就是理想氣體方程式 PV＝nRT。這一課認識它。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.ideal-gas-law"
+     ],
+     "body": "① PV＝nRT：P 壓力、V 體積、n 莫耳數、T 絕對溫度、R 氣體常數（約 8.31 J/(mol·K)）。② T 一定要用絕對溫度（克耳文 K），不能用攝氏。③ 氣體量固定時三特例：定溫 PV＝定值（壓小一半壓力變兩倍）、定壓 V 與 T 成正比、定容 P 與 T 成正比。④ 標準狀況（0°C、1 大氣壓）下 1 莫耳理想氣體約 22.4 公升。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.ideal-gas-law"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 200' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='170' y='15' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>理想氣體方程式：把壓力、體積、量、溫度綁在一起</text><rect x='84' y='30' width='110' height='34' rx='5' fill='#eef3f7' stroke='#2563a6'/><text x='139' y='54' font-size='19' fill='#1b3a5b' text-anchor='middle' font-weight='bold'>PV＝nRT</text><text x='60' y='92' font-size='8' fill='#33475b' text-anchor='start'>P＝壓力</text><text x='60' y='108' font-size='8' fill='#33475b' text-anchor='start'>V＝體積</text><text x='60' y='124' font-size='8' fill='#33475b' text-anchor='start'>n＝莫耳數（氣體的量）</text><text x='60' y='140' font-size='8' fill='#33475b' text-anchor='start'>R＝氣體常數（約 8.31）</text><text x='60' y='156' font-size='8' fill='#c0392b' text-anchor='start'>T＝絕對溫度（K，不能用攝氏）</text><rect x='210' y='84' width='116' height='80' rx='5' fill='#cfe0cf' stroke='#4a8c54'/><text x='268' y='102' font-size='8.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>標準狀況（STP）</text><text x='268' y='120' font-size='8' fill='#33475b' text-anchor='middle'>0°C、1 大氣壓</text><text x='268' y='138' font-size='8' fill='#33475b' text-anchor='middle'>1 莫耳理想氣體</text><text x='268' y='154' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>≈ 22.4 公升</text><text x='170' y='182' font-size='7.5' fill='#6b7680' text-anchor='middle'>定溫 PV＝定值 ・ 定壓 V 與 T 成正比 ・ 定容 P 與 T 成正比</text><text x='170' y='195' font-size='7.5' fill='#6b7680' text-anchor='middle'>（氣體量 n 固定時的三個特例）</text></g></svg>",
+      "alt": "一張理想氣體方程式的圖，標題「理想氣體方程式：把壓力、體積、量、溫度綁在一起」。中間一個藍框，裡面是大大的式子「PV＝nRT」。左下方逐行列出符號意義：「P＝壓力」「V＝體積」「n＝莫耳數（氣體的量）」「R＝氣體常數（約 8.31）」，以及紅色的「T＝絕對溫度（K，不能用攝氏）」。右邊一個綠框標「標準狀況（STP）」「0°C、1 大氣壓」「1 莫耳理想氣體」「≈ 22.4 公升」。最下面兩行：「定溫 PV＝定值 ・ 定壓 V 與 T 成正比 ・ 定容 P 與 T 成正比」「（氣體量 n 固定時的三個特例）」。",
+      "caption": "理想氣體方程式 PV＝nRT 把壓力 P、體積 V、莫耳數 n、絕對溫度 T 綁在一起（R 是氣體常數，約 8.31）。式子裡的 T 一定要用絕對溫度（克耳文 K）。在標準狀況（0°C、1 大氣壓）下 1 莫耳理想氣體約 22.4 公升。固定氣體量時可得三個特例：定溫 PV 定值、定壓 V 與 T 成正比、定容 P 與 T 成正比。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.ideal-gas-law"
+     ],
+     "body": "最後練「理想氣體方程式」。重點：(1) PV＝nRT 綁住 P、V、n、T，R 約 8.31 J/(mol·K)；(2) T 用絕對溫度（K）不能用攝氏；(3) 定溫 PV＝定值（壓小一半壓力變兩倍）、定壓 V∝T、定容 P∝T；(4) STP 下 1 莫耳約 22.4 公升；(5) 理想氣體＝分子體積可忽略、除碰撞外無作用力。小提醒：算之前先把攝氏換成克耳文（加 273.15），不然一定算錯。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QK-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在 PV＝nRT 裡，溫度 T 要用哪一種溫度來代入？",
+     "answer": "絕對溫度（克耳文 K），不能用攝氏",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.ideal-gas-law"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-heat.ideal-gas-law"
+     ],
+     "options": [
+      "絕對溫度（克耳文 K），不能用攝氏",
+      "攝氏溫度就可以，不用換算",
+      "華氏溫度",
+      "哪一種溫度都可以，反正算出來一樣"
+     ],
+     "distractor_rationales": {
+      "攝氏溫度就可以，不用換算": "不行；攝氏會出現負值，代進去會算錯，必須先換成絕對溫度（加 273.15）。",
+      "華氏溫度": "不是華氏；PV＝nRT 的 T 要用絕對溫度（克耳文 K）。",
+      "哪一種溫度都可以，反正算出來一樣": "不一樣；只有絕對溫度對，攝氏/華氏代進去會得到錯的答案。"
+     },
+     "answer_evidence": [
+      "c-ig-eq"
+     ],
+     "feedback": "PV＝nRT 的 T 一定要用絕對溫度（克耳文 K），先把攝氏加 273.15 換算。"
+    },
+    {
+     "question_id": "QK-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "溫度不變（定溫）時，把一團氣體的體積壓到原來的一半，它的壓力會變成原來的幾倍？",
+     "answer": "變成原來的兩倍",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.ideal-gas-law"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-heat.ideal-gas-law"
+     ],
+     "options": [
+      "變成原來的兩倍",
+      "也變成原來的一半",
+      "維持不變",
+      "變成原來的四倍"
+     ],
+     "distractor_rationales": {
+      "也變成原來的一半": "方向反了；定溫時 PV 是定值，體積變小壓力要變大，不是一起變小。",
+      "維持不變": "體積變了壓力就會變；定溫 PV＝定值，體積減半壓力會加倍。",
+      "變成原來的四倍": "不是平方關係；PV＝定值是成反比，體積減半壓力變兩倍，不是四倍。"
+     },
+     "answer_evidence": [
+      "c-ig-cases"
+     ],
+     "feedback": "定溫時 PV＝定值（成反比），體積變一半，壓力就變兩倍。"
+    },
+    {
+     "question_id": "QK-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在標準狀況（0°C、1 大氣壓）下，1 莫耳的理想氣體體積大約是多少？",
+     "answer": "約 22.4 公升",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.ideal-gas-law"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-heat.ideal-gas-law"
+     ],
+     "options": [
+      "約 22.4 公升",
+      "約 11.2 公升",
+      "約 44.8 公升",
+      "約 1 公升"
+     ],
+     "distractor_rationales": {
+      "約 11.2 公升": "11.2 公升是 0.5 莫耳的體積；1 莫耳在 STP 約 22.4 公升。",
+      "約 44.8 公升": "44.8 公升是 2 莫耳的體積；1 莫耳約 22.4 公升。",
+      "約 1 公升": "太小了；STP 下 1 莫耳理想氣體約 22.4 公升。"
+     },
+     "answer_evidence": [
+      "c-ig-stp"
+     ],
+     "feedback": "STP（0°C、1 大氣壓）下 1 莫耳理想氣體約 22.4 公升（由 PV＝nRT 算出）。"
+    },
+    {
+     "question_id": "QK-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "物理上說的「理想氣體」是一個簡化模型，它假設了什麼？",
+     "answer": "分子本身的體積小到可以忽略，分子之間除了碰撞以外沒有作用力",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.ideal-gas-law"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-heat.ideal-gas-law"
+     ],
+     "options": [
+      "分子本身的體積小到可以忽略，分子之間除了碰撞以外沒有作用力",
+      "分子本身的體積很大，而且彼此緊緊貼在一起",
+      "分子之間有很強的吸引力把它們拉在一起",
+      "氣體完全不會流動，固定在原地不動"
+     ],
+     "distractor_rationales": {
+      "分子本身的體積很大，而且彼此緊緊貼在一起": "剛好相反；理想氣體假設分子體積可忽略、分子間距很大，不是緊貼。",
+      "分子之間有很強的吸引力把它們拉在一起": "理想氣體假設分子間除了碰撞以外沒有作用力，不是有很強吸引力。",
+      "氣體完全不會流動，固定在原地不動": "氣體分子一直在亂動；理想氣體並沒有假設它不動。"
+     },
+     "answer_evidence": [
+      "c-ig-stp"
+     ],
+     "feedback": "理想氣體＝假設分子本身體積可忽略、分子間除了碰撞以外沒有作用力。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（理想氣體方程式 PV＝nRT：P 壓力、V 體積、n 莫耳數、T 絕對溫度、R 氣體常數約 8.31；T 一定要用絕對溫度 K 不能用攝氏；三特例＝定溫 PV 定值（壓小一半壓力變兩倍）、定壓 V∝T、定容 P∝T；STP（0°C、1 大氣壓）下 1 莫耳約 22.4 公升；理想氣體＝分子體積可忽略、除碰撞外無作用力；算前先把攝氏加 273.15 換成克耳文）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
