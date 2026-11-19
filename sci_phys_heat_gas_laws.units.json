@@ -1,0 +1,211 @@
+{
+ "_note": "自然島 物理-熱學（phys-heat）strand 第13單元（t_adv 高中）。知識點 sci.t_adv.phys-heat.gas-laws（氣體定律：波以耳/查理/給呂薩克）。tier=t_adv。exam=學測/分科。全繁體零簡體零 PRC 詞。中文授課無音檔。前置＝ideal-gas-law（PV=nRT 與三特例、T 須用絕對溫度 已教；莫耳/氣體常數 已 gloss）。術語附國際英語（R15，★只在 can_do 首次 gloss 一次；英文括號 grep -o 計數：『波以耳定律 (Boyle's law)』應＝2、『查理定律 (Charles's law)』應＝2、『給呂薩克定律 (Gay-Lussac's law)』應＝2〔各＝_note 本宣告行一次＋can_do 一次〕；『絕對溫度/莫耳/氣體常數』已於前置 gloss 不重複；teach/claim body 不重複 gloss）。scope（t_adv 學測）：(1) 波以耳定律＝定溫、定量氣體，壓力與體積成反比 P₁V₁＝P₂V₂；(2) 查理定律＝定壓、定量氣體，體積與絕對溫度成正比 V₁÷T₁＝V₂÷T₂（T 用絕對溫度 K）；(3) 給呂薩克定律＝定容、定量氣體，壓力與絕對溫度成正比 P₁÷T₁＝P₂÷T₂；(4) 三者都是 PV=nRT 在固定某量下的特例；算查理/給呂薩克 T 一定要用絕對溫度（連回 kelvin）；(5) 計算例：波以耳 100 kPa×2 L 定溫壓到 1 L→壓力 200 kPa（100×2＝200×1）、查理 300 K 時 1 L 加熱到 600 K→2 L（1÷300＝2÷600）。不含真實氣體偏差/凡得瓦、不含氣體擴散（格銳目）。repro（tools/verify/sci_phys_checks.py::phys-heat.gas-laws，repro_gate .venv PASS、source_registry 已註冊 reproduction）錨定 100*2==200*1 且 _close(1/300,2/600)。figure 自檢：左面板『波以耳（定溫）』P–V 反比曲線＋P₁V₁＝P₂V₂、100×2＝200×1；右面板『查理（定壓）』V–T 過原點直線＋V₁÷T₁＝V₂÷T₂、1÷300＝2÷600；座標軸標示、曲線/直線不疊不溢出、alt 與 SVG text 逐字一致。practice 四答案＝{定溫下壓力和體積成反比，P₁V₁＝P₂V₂（Q1 波以耳）, 絕對溫度（克耳文 K）（Q2 查理用什麼溫度）, 200 kPa（Q3 定溫 2L→1L 壓力）, 2 公升（Q4 定壓 300K→600K 體積）}；MCQ options bare、每 distractor 乾淨單一誤解（Q1：成正比一起變大／完全不變／成平方反比；Q2：攝氏溫度／華氏溫度／都可以；Q3：50 kPa（算成正比）／100 kPa（不變）／400 kPa（平方）；Q4：0.5 公升（算成反比）／1 公升（不變）／4 公升（平方））、兩兩相異、長度均衡；distractor_rationales key 逐字相符。claim kind=fact。figure-only example 無 body。定義不得反轉：波以耳定溫 PV 定值（反比）、查理定壓 V∝T、給呂薩克定容 P∝T、查理/給呂薩克 T 用絕對溫度。全檔算式運算子與等號全形（＝ × ÷），下標用 ₁ ₂。",
+ "page": "sci_phys_heat_gas_laws.html",
+ "units": [
+  {
+   "unit_id": "sci.t_adv.phys-heat.gas-laws",
+   "title_zh": "氣體三定律：波以耳、查理、給呂薩克",
+   "can_do": "我知道由理想氣體方程式可以得到三條常用的氣體定律：『波以耳定律 (Boyle's law)』是定溫、定量氣體時，壓力和體積成反比，寫成 P₁V₁＝P₂V₂；『查理定律 (Charles's law)』是定壓、定量氣體時，體積和絕對溫度成正比，寫成 V₁÷T₁＝V₂÷T₂；『給呂薩克定律 (Gay-Lussac's law)』是定容、定量氣體時，壓力和絕對溫度成正比，寫成 P₁÷T₁＝P₂÷T₂。我知道算查理和給呂薩克時，溫度 T 一定要用絕對溫度（克耳文 K），不能用攝氏。我會用它們算：定溫下把 2 公升、100 kPa 的氣體壓到 1 公升，壓力變成 200 kPa；定壓下 300 K、1 公升的氣體加熱到 600 K，體積變成 2 公升。",
+   "situation_group": "能量：讓世界運作的能力",
+   "subject": "sci",
+   "strand": "phys-heat",
+   "est_minutes": 13,
+   "knowledge_point_ids": [
+    "sci.t_adv.phys-heat.gas-laws"
+   ],
+   "prerequisites": [
+    "sci.t_adv.phys-heat.ideal-gas-law"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-gl-boyle",
+     "text": "波以耳定律：在溫度不變、氣體量不變的情況下，氣體的壓力和體積成反比——壓力變大，體積就按比例變小，兩者相乘是定值，寫成 P₁V₁＝P₂V₂。例如定溫下把 2 公升、100 kPa 的氣體壓縮到 1 公升（體積變一半），壓力就變成兩倍 200 kPa：100×2＝200×1。這也就是為什麼打氣筒壓下去時裡面會變得越來越硬（壓力變大）。",
+     "kind": "fact",
+     "source_refs": [
+      "波以耳定律（高中物理 學測）"
+     ],
+     "verification_ref": "定溫 P₁V₁＝P₂V₂；100×2＝200×1（sci_phys_checks::phys-heat.gas-laws .venv 驗、source_registry 註冊 reproduction）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-gl-charles",
+     "text": "查理定律：在壓力不變、氣體量不變的情況下，氣體的體積和絕對溫度成正比，寫成 V₁÷T₁＝V₂÷T₂。注意這裡的溫度一定要用絕對溫度（克耳文 K），不能用攝氏——因為體積是跟絕對溫度成比例的。例如定壓下 300 K、1 公升的氣體，加熱到 600 K（絕對溫度變兩倍），體積也變成兩倍 2 公升：1÷300＝2÷600。",
+     "kind": "fact",
+     "source_refs": [
+      "查理定律（高中物理 學測）"
+     ],
+     "verification_ref": "定壓 V₁÷T₁＝V₂÷T₂、T 用絕對溫度；1÷300＝2÷600（sci_phys_checks::phys-heat.gas-laws .venv 驗、source_registry 註冊 reproduction）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-gl-gaylussac",
+     "text": "給呂薩克定律：在體積不變、氣體量不變的情況下，氣體的壓力和絕對溫度成正比，寫成 P₁÷T₁＝P₂÷T₂（溫度一樣要用絕對溫度 K）。這就是為什麼密閉容器（體積固定）加熱時裡面的壓力會升高，例如密封罐頭丟進火裡會因為壓力變大而爆開。這三條定律其實都是同一條 PV＝nRT 在「固定某一個量」時的特例，不是各自獨立的新規則。",
+     "kind": "fact",
+     "source_refs": [
+      "給呂薩克定律、氣體定律為 PV=nRT 特例（高中物理 學測）"
+     ],
+     "verification_ref": "定容 P₁÷T₁＝P₂÷T₂、T 用絕對溫度；三定律皆 PV=nRT 特例（科學共識）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.gas-laws"
+     ],
+     "body": "上一課的 PV＝nRT 很強大，但考試和生活裡常常是「固定一個量、看另外兩個怎麼變」。固定溫度？固定壓力？固定體積？各自會得到一條好用的小定律。這一課認識三條：波以耳、查理、給呂薩克。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.gas-laws"
+     ],
+     "body": "① 波以耳（定溫）：壓力和體積成反比，P₁V₁＝P₂V₂（體積壓到一半，壓力就變兩倍）。② 查理（定壓）：體積和絕對溫度成正比，V₁÷T₁＝V₂÷T₂。③ 給呂薩克（定容）：壓力和絕對溫度成正比，P₁÷T₁＝P₂÷T₂。④ 查理、給呂薩克的 T 一定要用絕對溫度（K）。三條都是 PV＝nRT 的特例。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.gas-laws"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 200' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='170' y='14' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>兩條氣體定律：定溫看波以耳、定壓看查理</text><text x='86' y='32' font-size='8.5' fill='#c0392b' text-anchor='middle' font-weight='bold'>波以耳（定溫）</text><line x1='34' y1='120' x2='150' y2='120' stroke='#9aa5b1'/><line x1='34' y1='44' x2='34' y2='120' stroke='#9aa5b1'/><text x='150' y='132' font-size='7' fill='#6b7680' text-anchor='end'>體積 V</text><text x='30' y='50' font-size='7' fill='#6b7680' text-anchor='end'>壓力 P</text><path d='M44,52 Q70,118 144,114' fill='none' stroke='#c0392b' stroke-width='2'/><text x='92' y='150' font-size='7.5' fill='#33475b' text-anchor='middle'>壓力↑ 體積↓（成反比）</text><text x='92' y='164' font-size='8' fill='#c0392b' text-anchor='middle'>P₁V₁＝P₂V₂</text><text x='92' y='178' font-size='7.5' fill='#6b7680' text-anchor='middle'>100×2＝200×1</text><text x='254' y='32' font-size='8.5' fill='#2563a6' text-anchor='middle' font-weight='bold'>查理（定壓）</text><line x1='202' y1='120' x2='318' y2='120' stroke='#9aa5b1'/><line x1='202' y1='44' x2='202' y2='120' stroke='#9aa5b1'/><text x='318' y='132' font-size='7' fill='#6b7680' text-anchor='end'>絕對溫度 T</text><text x='198' y='50' font-size='7' fill='#6b7680' text-anchor='end'>體積 V</text><line x1='202' y1='120' x2='308' y2='52' stroke='#2563a6' stroke-width='2'/><text x='260' y='150' font-size='7.5' fill='#33475b' text-anchor='middle'>溫度↑ 體積↑（成正比）</text><text x='260' y='164' font-size='8' fill='#2563a6' text-anchor='middle'>V₁÷T₁＝V₂÷T₂</text><text x='260' y='178' font-size='7.5' fill='#6b7680' text-anchor='middle'>1÷300＝2÷600（T 用 K）</text><text x='170' y='194' font-size='7.5' fill='#6b7680' text-anchor='middle'>都是 PV＝nRT 的特例；另有給呂薩克（定容）P₁÷T₁＝P₂÷T₂</text></g></svg>",
+      "alt": "一張兩面板的氣體定律圖，標題「兩條氣體定律：定溫看波以耳、定壓看查理」。左面板紅色「波以耳（定溫）」：橫軸「體積 V」、縱軸「壓力 P」，畫一條向右下彎的反比曲線，標「壓力↑ 體積↓（成反比）」「P₁V₁＝P₂V₂」「100×2＝200×1」。右面板藍色「查理（定壓）」：橫軸「絕對溫度 T」、縱軸「體積 V」，畫一條從原點向右上的直線，標「溫度↑ 體積↑（成正比）」「V₁÷T₁＝V₂÷T₂」「1÷300＝2÷600（T 用 K）」。最下面一行：「都是 PV＝nRT 的特例；另有給呂薩克（定容）P₁÷T₁＝P₂÷T₂」。",
+      "caption": "波以耳定律（定溫）：壓力和體積成反比，曲線向右下彎，P₁V₁＝P₂V₂（100×2＝200×1）。查理定律（定壓）：體積和絕對溫度成正比，是一條過原點的直線，V₁÷T₁＝V₂÷T₂（1÷300＝2÷600，T 要用絕對溫度 K）。再加上給呂薩克定律（定容）P₁÷T₁＝P₂÷T₂，三條都是 PV＝nRT 的特例。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.gas-laws"
+     ],
+     "body": "最後練「氣體三定律」。重點：(1) 波以耳（定溫）P₁V₁＝P₂V₂，壓力體積成反比；(2) 查理（定壓）V₁÷T₁＝V₂÷T₂，體積與絕對溫度成正比；(3) 給呂薩克（定容）P₁÷T₁＝P₂÷T₂，壓力與絕對溫度成正比；(4) 查理、給呂薩克的 T 一定要用絕對溫度（K）。小提醒：波以耳是「成反比」（相乘定值），查理和給呂薩克是「成正比」（相除定值），別記反了。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QK-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "波以耳定律（溫度、氣體量都不變）說的是壓力和體積有什麼關係？",
+     "answer": "成反比：壓力變大，體積就按比例變小，P₁V₁＝P₂V₂",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.gas-laws"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-heat.gas-laws"
+     ],
+     "options": [
+      "成反比：壓力變大，體積就按比例變小，P₁V₁＝P₂V₂",
+      "成正比：壓力變大，體積也一起變大",
+      "壓力和體積完全沒有關係，誰變都不影響另一個",
+      "成平方反比：壓力變兩倍，體積變成四分之一"
+     ],
+     "distractor_rationales": {
+      "成正比：壓力變大，體積也一起變大": "方向反了；定溫時壓力變大體積要變小（成反比），不是一起變大。",
+      "壓力和體積完全沒有關係，誰變都不影響另一個": "有關係；定溫時 P₁V₁＝P₂V₂，壓力和體積成反比互相牽動。",
+      "成平方反比：壓力變兩倍，體積變成四分之一": "不是平方；是單純反比，壓力變兩倍體積變一半（P₁V₁＝P₂V₂）。"
+     },
+     "answer_evidence": [
+      "c-gl-boyle"
+     ],
+     "feedback": "波以耳定律：定溫下壓力和體積成反比，P₁V₁＝P₂V₂。"
+    },
+    {
+     "question_id": "QK-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用查理定律 V₁÷T₁＝V₂÷T₂ 計算時，溫度 T 要用哪一種溫度？",
+     "answer": "絕對溫度（克耳文 K）",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.gas-laws"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-heat.gas-laws"
+     ],
+     "options": [
+      "絕對溫度（克耳文 K）",
+      "攝氏溫度",
+      "華氏溫度",
+      "哪一種溫度都可以"
+     ],
+     "distractor_rationales": {
+      "攝氏溫度": "不行；體積是和絕對溫度成正比，用會出現負值的攝氏會算錯，要先換成克耳文。",
+      "華氏溫度": "不是華氏；查理定律的 T 要用絕對溫度（克耳文 K）。",
+      "哪一種溫度都可以": "不行；只有絕對溫度對，用攝氏或華氏代進去都會算錯。"
+     },
+     "answer_evidence": [
+      "c-gl-charles"
+     ],
+     "feedback": "查理定律（和給呂薩克定律）的 T 一定要用絕對溫度（克耳文 K）。"
+    },
+    {
+     "question_id": "QK-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "定溫下，把 2 公升、100 kPa 的氣體壓縮到 1 公升，壓力會變成多少？（用 P₁V₁＝P₂V₂）",
+     "answer": "200 kPa",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.gas-laws"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-heat.gas-laws"
+     ],
+     "options": [
+      "200 kPa",
+      "50 kPa",
+      "100 kPa",
+      "400 kPa"
+     ],
+     "distractor_rationales": {
+      "50 kPa": "方向反了；體積變小壓力要變大，100×2＝P₂×1 得 P₂＝200 kPa，不是變小。",
+      "100 kPa": "體積變了壓力就會變；100×2＝P₂×1 得 200 kPa，不會維持不變。",
+      "400 kPa": "體積只變一半、不是四分之一；100×2＝200×1，壓力是 200 kPa 不是 400。"
+     },
+     "answer_evidence": [
+      "c-gl-boyle"
+     ],
+     "feedback": "P₁V₁＝P₂V₂：100×2＝P₂×1，P₂＝200 kPa。"
+    },
+    {
+     "question_id": "QK-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "定壓下，300 K、1 公升的氣體加熱到 600 K，體積會變成多少？（用 V₁÷T₁＝V₂÷T₂）",
+     "answer": "2 公升",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.gas-laws"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-heat.gas-laws"
+     ],
+     "options": [
+      "2 公升",
+      "0.5 公升",
+      "1 公升",
+      "4 公升"
+     ],
+     "distractor_rationales": {
+      "0.5 公升": "方向反了；定壓下溫度變兩倍體積也變兩倍（成正比），不是變小。",
+      "1 公升": "溫度變了體積就會變；1÷300＝V₂÷600 得 V₂＝2 公升，不會不變。",
+      "4 公升": "溫度只變兩倍、不是四倍；1÷300＝V₂÷600 得 2 公升，不是 4。"
+     },
+     "answer_evidence": [
+      "c-gl-charles"
+     ],
+     "feedback": "V₁÷T₁＝V₂÷T₂：1÷300＝V₂÷600，V₂＝2 公升（T 用絕對溫度 K）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（波以耳定律＝定溫，壓力體積成反比 P₁V₁＝P₂V₂，100×2＝200×1；查理定律＝定壓，體積與絕對溫度成正比 V₁÷T₁＝V₂÷T₂，1÷300＝2÷600；給呂薩克定律＝定容，壓力與絕對溫度成正比 P₁÷T₁＝P₂÷T₂；查理、給呂薩克的 T 一定要用絕對溫度 K；三條都是 PV＝nRT 特例；波以耳成反比〔相乘定值〕、查理給呂薩克成正比〔相除定值〕別記反）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

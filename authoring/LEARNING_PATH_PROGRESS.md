@@ -1,3 +1,9 @@
+## 2026-11-19 22:01 ★ sci.t_adv.phys-heat.gas-laws 氣體三定律：波以耳、查理、給呂薩克 5/5 DONE-GATE → phys-heat 13/20
+- **sci_phys_heat_gas_laws frozen `1d06daa689504135`**（R11-R15 連 5 clean、L3 全 exit0、同 sha）。tier=t_adv、exam=學測/分科。前置＝ideal-gas-law。R15 gloss 波以耳定律 (Boyle's law)/查理定律 (Charles's law)/給呂薩克定律 (Gay-Lussac's law) 各=2。
+- 內容：波以耳（定溫 P₁V₁＝P₂V₂ 成反比）/查理（定壓 V₁÷T₁＝V₂÷T₂ 成正比）/給呂薩克（定容 P₁÷T₁＝P₂÷T₂ 成正比）；查理+給呂薩克 T 必用絕對溫度（K）；三者皆 PV＝nRT 特例。repro（sci_phys_checks::phys-heat.gas-laws .venv PASS，錨 100×2==200×1 且 1÷300≈2÷600）。figure＝左波以耳 P–V 反比曲線＋右查理 V–T 正比直線、各帶公式＋數值例。
+- **審查抓到真 minor（我目視漏掉）**：R1 teach 波以耳括號「壓小一半壓力變兩倍」省略主詞體積、「壓小」與「壓力」garden-path（易讀成壓力減半、與「壓力變兩倍」矛盾），與 claim 的「體積變一半」不一致→改「（體積壓到一半，壓力就變兩倍）」補主詞＋加逗號分句。de-converge 044a64ab→1d06daa6。
+- DONE-GATE 全綠：per_page PASS（gas_laws absent）、scan/pedagogy/question/schema/repro PASS、figure 四角色兩方向簽核。phys-heat strand 進度 13/20（t_adv 第 3 單元完成）。
+
 ## 2026-11-19 21:20 ★ sci.t_adv.phys-heat.ideal-gas-law 理想氣體方程式：PV＝nRT 把氣體綁在一起 5/5 DONE-GATE → phys-heat 12/20
 - **sci_phys_heat_ideal_gas_law frozen `ca65dbc72dd22f34`**（R1-R5 連 5 clean、L3 全 exit0、同 sha；無 de-converge，一次過）。tier=t_adv、exam=學測/分科。前置＝kelvin。R15 gloss 理想氣體 (ideal gas)/莫耳 (mole)/氣體常數 (gas constant) 各=2。
 - 內容：PV＝nRT 綁 P 壓力/V 體積/n 莫耳數/T 絕對溫度，R 氣體常數約 8.31 J/(mol·K)；T 必須用絕對溫度（K）不能用攝氏；三特例（n 固定）＝定溫 PV 定值（波以耳）/定壓 V∝T（查理）/定容 P∝T；STP（0°C、1 大氣壓）下 1 莫耳理想氣體≈22.4 公升；理想氣體＝分子體積可忽略、分子間除碰撞外無作用力。repro（sci_phys_checks::phys-heat.ideal-gas-law .venv PASS，錨 V＝1×8.314×273.15÷101325≈0.02241 m³＝22.4 L）。figure＝中央 PV＝nRT 框＋左符號逐行註解（T 紅字強調用 K）＋右 STP 綠框。
