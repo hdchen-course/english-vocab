@@ -1,3 +1,7 @@
+## 2026-11-20 04:22 ★ 連帶修已上線單元 static_basic(1/25) 重收斂 5/5 DONE（_note 模板缺陷修正）
+- **sci_phys_estatic_static_basic re-frozen `72d52c782f19f638`**（R1-R5 連 5 clean、L3 全 exit0；一輪 L3 FAIL 淺層 skim 已剔除補跑）。修 _note 三處同款模板缺陷：①「本檔未用守恆字」自我否定句（守恆＝0）②「alt 與 SVG text 逐字一致」假宣稱→改準確措辭 ③practice 自述三答案對齊實際 answer verbatim。教學內容與 figure（⚡ 中性）不變。per_page/scan/question/pedagogy 全綠。
+- molar_heat(18/25) 同款修正收斂中。
+
 ## 2026-11-20 04:07 ★ sci.t_base.phys-estatic.conductor-insulator 導體與絕緣體 5/5 DONE-GATE → phys-estatic 2/25（t_base 入門）
 - **sci_phys_estatic_conductor_insulator frozen `dada83a4c34333a0`**（R1-R5 連 5 clean、L3 全 exit0、同 sha）。tier=t_base、exam=無（國小入門，為後續會考電學鋪底）。無前置。R15 gloss 導體 (conductor)/絕緣體 (insulator) 各＝2。定性單元無數值 repro（verification_ref＝科學共識）。
 - 內容：導體＝電容易通過的材料（金屬銅鐵鋁）；絕緣體＝電不容易通過（塑膠橡膠玻璃乾木）；電線中間銅（導體）導電、外包塑膠（絕緣體）保護手。figure＝電線剖面＋兩欄分類（導體:鐵湯匙/銅線/鐵釘｜絕緣體:塑膠尺/橡皮擦/玻璃杯）。scope：不含電阻數值/電流電壓定義/半導體微觀機制。
