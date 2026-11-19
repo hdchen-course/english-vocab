@@ -1,3 +1,10 @@
+## 2026-11-19 23:37 ★ sci.t_adv.phys-heat.internal-energy 內能：一團氣體裡到底藏了多少能量 5/5 DONE-GATE → phys-heat 15/20
+- **sci_phys_heat_internal_energy frozen `0915a347271bc95f`**（R11-R15 連 5 clean、L3 全 exit0、同 sha）。tier=t_adv、exam=學測/分科。前置＝kinetic-theory。R15 gloss 內能 (internal energy)＝2。
+- 內容：內能＝一團氣體所有分子微觀能量的總和；理想氣體（分子間除碰撞外無作用力、無分子間位能）＝所有分子動能的總和。單原子理想氣體 U＝(3/2)nRT（★公式處一律加「單原子」限定，雙原子＝(5/2)nRT 不在 scope）；U 只由絕對溫度 T 和莫耳數 n 決定、與體積壓力無關（此對所有理想氣體成立）；U∝絕對溫度 T，T 加倍 U 加倍；定溫定量下壓縮/膨脹不改內能。repro（sci_phys_checks::phys-heat.internal-energy .venv PASS，錨 1.5×1×R×600＝2×(1.5×1×R×300)）。figure＝左低溫 T／右高溫 2T 兩盒各 5 顆等量分子、右箭頭較長、中央 U＝(3/2)nRT。
+- **審查抓到真缺陷×3（我草稿/目視漏掉）**：(1) **blocker 事實錯誤**（R1 panel 5/5）：U＝(3/2)nRT 只對**單原子**理想氣體成立（雙原子 N₂/O₂＝(5/2)nRT），原文當一般「理想氣體」陳述＝對雙原子錯，且與自己 source_ref（單原子理想氣體內能）矛盾→公式處全加「單原子」限定，概念與「只與 T,n 有關」保持一般（對所有理想氣體正確）。(2) **figure 幾何溢出**（R1/R2/R3 三輪獨立判）：右盒(2T)向下速度箭頭 polygon 尖端 y=132 超出盒底 y=130（rect y=34+height=96）2px、與左盒(y=126)不對稱→縮短入框（y2=122、尖端 y=128）。(3) can_do「放大」→「膨脹」術語一致。三修 de-converge b5b2c447→0915a347。
+- **class 教訓（值得入記憶）**：係數專屬公式（如單原子 (3/2)nRT）誤當通則陳述、丟掉 source_ref 本身自帶的限定詞＝事實過度一般化 blocker；草稿階段凡「X 理想氣體 U＝…」「某定律」帶係數者，先核對該係數的成立條件並把限定詞寫進 claim body＋teach＋figure＋can_do，不可只留在 source_ref。
+- DONE-GATE 全綠：per_page PASS（668/668、internal-energy absent from violations）、scan/pedagogy/question/schema/repro PASS、figure 四角色兩方向簽核。phys-heat strand 進度 15/20（t_adv 第 5 單元完成）。
+
 ## 2026-11-19 23:03 ★ sci.t_adv.phys-heat.kinetic-theory 分子運動論：溫度與壓力，其實是分子在動 5/5 DONE-GATE → phys-heat 14/20
 - **sci_phys_heat_kinetic_theory frozen `5f66b448befd6383`**（R1-R4+R7 連 5 clean、L3 全 exit0、同 sha）。tier=t_adv、exam=學測/分科。前置＝kelvin。R15 gloss 分子運動論 (kinetic theory)/平均動能 (average kinetic energy)/波茲曼常數 (Boltzmann constant) 各=2。
 - 內容：氣體＝大量亂動互撞分子；溫度＝分子平均動能表現，平均動能∝絕對溫度（平均動能＝(3/2)kT，k 波茲曼常數，T 用絕對溫度）；壓力＝大量分子撞擊容器壁的整體效果，撞越頻繁越用力壓力越大；可解釋巨觀定律（定容加熱→分子撞更猛→壓力升＝給呂薩克；絕對零度＝分子熱運動最小）。scope：不含方均根速率完整推導／馬克士威速率分布。repro（sci_phys_checks::phys-heat.kinetic-theory .venv PASS，錨 平均動能＝(3/2)kT ∝ 絕對溫度）。figure＝左低溫／右高溫兩盒分子（各 5 顆等量，套用 before/after 等量教訓），差異僅速度箭頭長短＋底部 平均動能∝絕對溫度 T。

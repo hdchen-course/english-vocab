@@ -1,0 +1,211 @@
+{
+ "_note": "自然島 物理-熱學（phys-heat）strand 第15單元（t_adv 高中）。知識點 sci.t_adv.phys-heat.internal-energy（內能）。tier=t_adv。exam=學測/分科。全繁體零簡體零 PRC 詞。中文授課無音檔。前置＝kinetic-theory（分子運動論／平均動能 已於前置 gloss，內能是平均動能的延伸：溫度↑→平均動能↑→內能↑）。術語附國際英語（R15，★只在 can_do 首次 gloss 一次；本單元只有一個新術語『內能 (internal energy)』，英文括號 grep -o 計數應＝2〔_note 本宣告一次＋can_do 一次〕；『分子運動論／平均動能』已於前置 kinetic-theory gloss 不重複；teach/claim body 不重複 gloss）。scope（t_adv 學測）：(1) 內能＝一團氣體裡所有分子微觀能量的總和；對『理想氣體』（分子間除碰撞外無作用力、無分子間位能）而言，內能就是所有分子動能的總和；(2) 單原子理想氣體內能 U＝(3/2)nRT（雙原子為 (5/2)nRT 不在本單元 scope；公式處一律加『單原子』限定，與 source_ref 一致）：只由絕對溫度 T 與莫耳數 n 決定，與體積、壓力無關；(3) U 與絕對溫度 T 成正比——T（絕對溫度）加倍，U 加倍；這是分子運動論的延伸（溫度是分子平均動能的表現，內能是全部分子動能的總和）；(4) 定溫（T、n 不變）壓縮或膨脹不改變理想氣體內能，因為 U 只跟 T、n 有關；(5) U＝(3/2)nRT 的 T 必須用絕對溫度（克耳文 K）不能用攝氏。不含熱力學第一定律 ΔU＝Q−W 的收支計算（thermo1 另單元）、不含雙原子分子自由度 (5/2)nRT 細節、不含實際氣體分子間位能修正。repro（tools/verify/sci_phys_checks.py::phys-heat.internal-energy，repro_gate .venv PASS、source_registry 已註冊 reproduction）錨定 U＝(3/2)nRT ∝ T：1.5×1×R×600＝2×(1.5×1×R×300)（T 加倍 U 加倍）。figure 自檢：左右兩盒同一團理想氣體（★兩盒分子數相等，各 5 顆，套用 before/after 等量教訓；差異只在速度箭頭長短與 U 標示），左盒絕對溫度 T（內能 U、箭頭短），右盒絕對溫度 2T（內能 2U、箭頭長），中間／底部標『U＝(3/2)nRT』『絕對溫度加倍 → 內能加倍』；箭頭不疊不溢出、alt 與 SVG text 逐字一致。practice 四答案＝{所有分子動能的總和（Q1 內能是什麼能量的總和）, 變成原來的兩倍（Q2 絕對溫度加倍內能幾倍）, 不變（Q3 定溫壓縮內能如何變）, 絕對溫度（克耳文 K），不能用攝氏（Q4 U=(3/2)nRT 的 T 用什麼溫度）}；MCQ options bare、每 distractor 乾淨單一誤解（Q1：分子之間的位能／容器本身的能量／氣體發出的聲音能；Q2：變成原來的一半／維持不變／變成原來的四倍；Q3：變成原來的兩倍／變成原來的一半／變成原來的四倍；Q4：攝氏溫度就可以／華氏溫度／哪一種都可以）、兩兩相異、長度均衡；distractor_rationales key 逐字相符。claim kind=fact。figure-only example 無 body。定義不得反轉：內能＝分子微觀能量總和（理想氣體＝分子動能總和）、單原子理想氣體 U＝(3/2)nRT、U∝絕對溫度 T、T 加倍 U 加倍、定溫壓縮不改內能、T 用絕對溫度。全檔算式運算子與等號全形（＝ × ÷），(3/2)nRT 保留。",
+ "page": "sci_phys_heat_internal_energy.html",
+ "units": [
+  {
+   "unit_id": "sci.t_adv.phys-heat.internal-energy",
+   "title_zh": "內能：一團氣體裡到底藏了多少能量",
+   "can_do": "我知道一團氣體的『內能 (internal energy)』就是它裡面所有分子微觀能量的總和。對理想氣體來說，分子之間除了碰撞以外沒有作用力，所以內能就等於所有分子動能的總和。我知道對單原子理想氣體（例如氦、氖），內能可以寫成 U＝(3/2)nRT，它只由絕對溫度 T 和莫耳數 n 決定，和體積、壓力沒有關係。我知道內能和絕對溫度成正比：絕對溫度加倍，內能就加倍。我也知道在溫度和氣體量都不變的情況下，單純把氣體壓縮或膨脹，內能不會改變，因為內能只跟絕對溫度和分子數目有關。",
+   "situation_group": "能量：讓世界運作的能力",
+   "subject": "sci",
+   "strand": "phys-heat",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "sci.t_adv.phys-heat.internal-energy"
+   ],
+   "prerequisites": [
+    "sci.t_adv.phys-heat.kinetic-theory"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-ie-def",
+     "text": "內能是一團氣體裡所有分子微觀能量的總和。分子運動論告訴我們，氣體是一大群不停亂動的分子；把這些分子各自的能量全部加起來，就是這團氣體的內能。對理想氣體來說，分子之間除了互相碰撞以外沒有作用力，也就沒有分子之間的位能，所以它的內能就等於所有分子動能的總和。溫度越高，分子動得越快、平均動能越大，內能也就越大。",
+     "kind": "fact",
+     "source_refs": [
+      "理想氣體內能＝分子總動能（高中物理 學測）"
+     ],
+     "verification_ref": "內能＝分子微觀能量總和；理想氣體＝分子動能總和（分子運動論延伸；科學共識）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ie-formula",
+     "text": "單原子理想氣體（像氦、氖這類一顆一顆單獨存在的氣體）的內能可以寫成 U＝(3/2)nRT，其中 n 是莫耳數、R 是氣體常數、T 是絕對溫度。這個式子告訴我們：內能和絕對溫度成正比——在氣體量 n 不變的情況下，絕對溫度 T 加倍，內能 U 也加倍。式子裡的 T 一定要用絕對溫度（克耳文 K）不能用攝氏，因為內能是跟絕對溫度成比例的，用會出現負值的攝氏去代就會算錯。",
+     "kind": "fact",
+     "source_refs": [
+      "單原子理想氣體內能 U=(3/2)nRT（高中物理 學測）"
+     ],
+     "verification_ref": "U＝(3/2)nRT ∝ 絕對溫度 T，T 加倍 U 加倍（sci_phys_checks::phys-heat.internal-energy .venv 驗 1.5×1×R×600＝2×(1.5×1×R×300)、source_registry 註冊 reproduction）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-ie-depends",
+     "text": "理想氣體的內能只由絕對溫度 T 和莫耳數 n 決定，和體積、壓力都沒有關係。所以在溫度和氣體量都不變（定溫、定量）的情況下，單純把氣體壓縮到比較小、或讓它膨脹到比較大，內能都不會改變——因為 T 和 n 都沒變。要改變一團氣體的內能，必須去改變它的絕對溫度（例如加熱讓它升溫，內能就增加）。",
+     "kind": "fact",
+     "source_refs": [
+      "理想氣體內能只與 T、n 有關（高中物理 學測）"
+     ],
+     "verification_ref": "理想氣體 U＝(3/2)nRT 僅與 T、n 有關，定溫定量時壓縮/膨脹不改內能（科學共識）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.internal-energy"
+     ],
+     "body": "上一課我們學到：氣體是一大群不停亂動的分子，溫度越高分子動得越快。那如果把這一團氣體裡每一顆分子的能量全部加起來，會得到什麼？那就是這團氣體的「內能」。這一課認識內能，以及它跟溫度的關係。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.internal-energy"
+     ],
+     "body": "① 內能＝一團氣體裡所有分子微觀能量的總和；對理想氣體（分子間除碰撞外無作用力）而言，內能就是所有分子動能的總和。② 單原子理想氣體內能 U＝(3/2)nRT：只由絕對溫度 T 和莫耳數 n 決定，與體積、壓力無關。③ 內能和絕對溫度成正比——絕對溫度加倍，內能加倍。④ 定溫、定量下單純壓縮或膨脹不改變內能（因為 T、n 沒變）。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.internal-energy"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 200' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='170' y='15' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>內能＝全部分子動能的總和：絕對溫度越高，內能越大</text><rect x='24' y='34' width='140' height='96' rx='6' fill='#eef3f7' stroke='#2563a6'/><text x='94' y='50' font-size='8.5' fill='#2563a6' text-anchor='middle' font-weight='bold'>絕對溫度 T（內能 U）</text><circle cx='52' cy='74' r='4.5' fill='#2563a6'/><line x1='58' y1='74' x2='70' y2='74' stroke='#2563a6' stroke-width='1.6'/><polygon points='70,71 76,74 70,77' fill='#2563a6'/><circle cx='112' cy='70' r='4.5' fill='#2563a6'/><line x1='118' y1='70' x2='130' y2='70' stroke='#2563a6' stroke-width='1.6'/><polygon points='130,67 136,70 130,73' fill='#2563a6'/><circle cx='70' cy='100' r='4.5' fill='#2563a6'/><line x1='60' y1='100' x2='48' y2='100' stroke='#2563a6' stroke-width='1.6'/><polygon points='48,97 42,100 48,103' fill='#2563a6'/><circle cx='120' cy='104' r='4.5' fill='#2563a6'/><line x1='120' y1='110' x2='120' y2='120' stroke='#2563a6' stroke-width='1.6'/><polygon points='117,120 120,126 123,120' fill='#2563a6'/><circle cx='90' cy='118' r='4.5' fill='#2563a6'/><line x1='96' y1='118' x2='106' y2='118' stroke='#2563a6' stroke-width='1.6'/><polygon points='106,115 112,118 106,121' fill='#2563a6'/><rect x='176' y='34' width='140' height='96' rx='6' fill='#fdecea' stroke='#c0392b'/><text x='246' y='50' font-size='8.5' fill='#c0392b' text-anchor='middle' font-weight='bold'>絕對溫度 2T（內能 2U）</text><circle cx='204' cy='74' r='4.5' fill='#c0392b'/><line x1='210' y1='74' x2='230' y2='74' stroke='#c0392b' stroke-width='1.6'/><polygon points='230,71 236,74 230,77' fill='#c0392b'/><circle cx='270' cy='70' r='4.5' fill='#c0392b'/><line x1='276' y1='70' x2='296' y2='70' stroke='#c0392b' stroke-width='1.6'/><polygon points='296,67 302,70 296,73' fill='#c0392b'/><circle cx='222' cy='102' r='4.5' fill='#c0392b'/><line x1='216' y1='102' x2='196' y2='102' stroke='#c0392b' stroke-width='1.6'/><polygon points='196,99 190,102 196,105' fill='#c0392b'/><circle cx='286' cy='104' r='4.5' fill='#c0392b'/><line x1='286' y1='110' x2='286' y2='122' stroke='#c0392b' stroke-width='1.6'/><polygon points='283,122 286,128 289,122' fill='#c0392b'/><circle cx='250' cy='116' r='4.5' fill='#c0392b'/><line x1='256' y1='116' x2='276' y2='116' stroke='#c0392b' stroke-width='1.6'/><polygon points='276,113 282,116 276,119' fill='#c0392b'/><text x='170' y='152' font-size='13' fill='#1b3a5b' text-anchor='middle' font-weight='bold'>U＝(3/2)nRT</text><text x='170' y='170' font-size='9' fill='#2f6f54' text-anchor='middle' font-weight='bold'>絕對溫度加倍 → 內能加倍</text><text x='170' y='188' font-size='7.5' fill='#6b7680' text-anchor='middle'>兩邊分子數一樣多，只有絕對溫度（動得多快）不同；內能只跟絕對溫度 T 和分子數 n 有關</text></g></svg>",
+      "alt": "一張內能的圖，標題「內能＝全部分子動能的總和：絕對溫度越高，內能越大」。左邊藍框標「絕對溫度 T（內能 U）」，裡面有 5 顆分子，速度箭頭比較短。右邊紅框標「絕對溫度 2T（內能 2U）」，裡面也有 5 顆分子，數目和左邊一樣多，但速度箭頭比較長。中間下方一行大字「U＝(3/2)nRT」，下面綠色一行「絕對溫度加倍 → 內能加倍」。最下面一行小字「兩邊分子數一樣多，只有絕對溫度（動得多快）不同；內能只跟絕對溫度 T 和分子數 n 有關」。",
+      "caption": "同樣一團理想氣體，左邊絕對溫度 T、右邊絕對溫度 2T，兩邊分子數目一樣多，差別只在右邊分子動得比較快（速度箭頭較長）。單原子理想氣體的內能 U＝(3/2)nRT 是全部分子動能的總和，只由絕對溫度 T 和莫耳數 n 決定；絕對溫度加倍，內能就加倍。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.internal-energy"
+     ],
+     "body": "最後練「內能」。重點：(1) 內能＝一團氣體所有分子微觀能量的總和，理想氣體＝全部分子動能的總和；(2) 單原子理想氣體內能 U＝(3/2)nRT，只由絕對溫度 T 和莫耳數 n 決定，與體積、壓力無關；(3) 內能和絕對溫度成正比，絕對溫度加倍內能加倍；(4) 定溫、定量下單純壓縮或膨脹不改變內能。小提醒：式子裡的 T 要用絕對溫度（克耳文 K），先把攝氏加 273.15 換算。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QI-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一團理想氣體的內能，主要是裡面所有分子的什麼能量加起來的總和？",
+     "answer": "所有分子動能的總和",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.internal-energy"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-heat.internal-energy"
+     ],
+     "options": [
+      "所有分子動能的總和",
+      "分子之間互相吸引的位能的總和",
+      "裝氣體的容器本身的能量",
+      "氣體流動時發出的聲音能"
+     ],
+     "distractor_rationales": {
+      "分子之間互相吸引的位能的總和": "理想氣體假設分子之間除了碰撞以外沒有作用力，所以沒有分子間位能；內能是分子動能的總和。",
+      "裝氣體的容器本身的能量": "內能指的是氣體裡分子的能量，不是容器的能量。",
+      "氣體流動時發出的聲音能": "內能是分子微觀亂動的能量總和，不是聲音能。"
+     },
+     "answer_evidence": [
+      "c-ie-def"
+     ],
+     "feedback": "理想氣體的內能＝裡面所有分子動能的總和（分子間無作用力、沒有分子間位能）。"
+    },
+    {
+     "question_id": "QI-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一團理想氣體的莫耳數不變，把它的絕對溫度加倍，內能會變成原來的幾倍？",
+     "answer": "變成原來的兩倍",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.internal-energy"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-heat.internal-energy"
+     ],
+     "options": [
+      "變成原來的兩倍",
+      "變成原來的一半",
+      "維持不變",
+      "變成原來的四倍"
+     ],
+     "distractor_rationales": {
+      "變成原來的一半": "方向反了；內能和絕對溫度成正比，溫度加倍內能也加倍，不是減半。",
+      "維持不變": "內能和絕對溫度成正比，絕對溫度變了內能一定跟著變。",
+      "變成原來的四倍": "不是平方關係；U＝(3/2)nRT 是正比，絕對溫度加倍內能加倍，不是四倍。"
+     },
+     "answer_evidence": [
+      "c-ie-formula"
+     ],
+     "feedback": "理想氣體內能 U＝(3/2)nRT 和絕對溫度成正比，絕對溫度加倍，內能就加倍。"
+    },
+    {
+     "question_id": "QI-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "在溫度和氣體量都不變的情況下，把一團理想氣體壓縮到比較小的體積，它的內能會怎麼變化？",
+     "answer": "不變",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.internal-energy"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-heat.internal-energy"
+     ],
+     "options": [
+      "不變",
+      "變成原來的兩倍",
+      "變成原來的一半",
+      "變成原來的四倍"
+     ],
+     "distractor_rationales": {
+      "變成原來的兩倍": "體積不影響內能；理想氣體內能只跟絕對溫度和莫耳數有關，溫度沒變內能就不變。",
+      "變成原來的一半": "內能不隨體積改變；溫度和氣體量都沒變，內能維持不變。",
+      "變成原來的四倍": "內能和體積無關；溫度、氣體量不變時內能不變。"
+     },
+     "answer_evidence": [
+      "c-ie-depends"
+     ],
+     "feedback": "理想氣體內能只跟絕對溫度 T 和莫耳數 n 有關；溫度、氣體量不變，單純改變體積內能不變。"
+    },
+    {
+     "question_id": "QI-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用 U＝(3/2)nRT 計算單原子理想氣體的內能時，式子裡的 T 要用哪一種溫度？",
+     "answer": "絕對溫度（克耳文 K），不能用攝氏",
+     "kp_ids": [
+      "sci.t_adv.phys-heat.internal-energy"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-heat.internal-energy"
+     ],
+     "options": [
+      "絕對溫度（克耳文 K），不能用攝氏",
+      "攝氏溫度就可以，不用換算",
+      "華氏溫度",
+      "哪一種溫度都可以，反正算出來一樣"
+     ],
+     "distractor_rationales": {
+      "攝氏溫度就可以，不用換算": "不行；攝氏會出現負值，代進去會算錯，必須先換成絕對溫度（加 273.15）。",
+      "華氏溫度": "不是華氏；U＝(3/2)nRT 的 T 要用絕對溫度（克耳文 K）。",
+      "哪一種溫度都可以，反正算出來一樣": "不一樣；內能和絕對溫度成正比，只有用絕對溫度才算得對。"
+     },
+     "answer_evidence": [
+      "c-ie-formula"
+     ],
+     "feedback": "U＝(3/2)nRT 的 T 一定要用絕對溫度（克耳文 K），先把攝氏加 273.15 換算。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（內能＝一團氣體所有分子微觀能量的總和，理想氣體＝全部分子動能的總和；單原子理想氣體內能 U＝(3/2)nRT，只由絕對溫度 T 和莫耳數 n 決定、與體積壓力無關；內能和絕對溫度成正比，絕對溫度加倍內能加倍；定溫定量下單純壓縮或膨脹不改內能；式子裡的 T 要用絕對溫度 K，先把攝氏加 273.15 換算）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
