@@ -1,3 +1,9 @@
+## 2026-11-20 01:32 ★ sci.t_sub.phys-heat.molar-heat 氣體的莫耳比熱：為什麼定壓比定容更能吃熱（Cp、Cv 與自由度）5/5 DONE-GATE → phys-heat 18/20
+- **sci_phys_heat_molar_heat frozen `f80a62228d0580d9`**（R1-R5 連 5 clean、L3 全 exit0、同 sha；無 de-converge，一次過）。tier=t_sub、exam=分科-物理。前置＝pv-processes。R15 gloss 定容莫耳比熱 (molar heat capacity at constant volume)/定壓莫耳比熱 (molar heat capacity at constant pressure)/自由度 (degree of freedom)/梅耶關係 (Mayer's relation) 各＝2。
+- 內容：氣體有兩種莫耳比熱——Cv（定容，W＝0 吸的熱全變內能、反映內能隨溫度變化）、Cp（定壓，升溫時氣體膨脹要分一部分熱對外作功，故 Cp＞Cv）；梅耶關係 Cp−Cv＝R（約 8.31 焦耳/(莫耳·K)，多吸的 R 正好拿去對外作功，因定壓下 PΔV＝nR·ΔT 每莫耳每 K＝R）；Cv＝(自由度數÷2)×R，單原子 f＝3 → Cv＝(3/2)R、Cp＝(5/2)R，雙原子常溫 f＝5 → Cv＝(5/2)R。scope：不含 γ＝Cp/Cv 絕熱 PV^γ 細算／振動自由度量子激發／能量均分統計力學推導。repro（sci_phys_checks::phys-heat.molar-heat .venv PASS，錨 Cp−Cv==R 單原子 Cv＝1.5R Cp＝2.5R）。figure＝並排兩汽缸（左定容活塞固定 W＝0 Cv、右定壓活塞上移膨脹藍箭頭 一部分作功 Cp）＋紅 Q 箭頭入缸＋底部 Cp−Cv＝R／單原子 Cv＝(3/2)R Cp＝(5/2)R f＝3／R≈8.31。
+- 審查：content_audit R1-R5 全 0 真缺陷（一次過，無 de-converge）；五輪皆 confirmedCount=0、coverageComplete=true、L3 全 exit0（用 reviewer 原文含引號逗號驗）。圖 iPad Air 13 land+port render 開 PNG、四角色（美術/空間/眼科/動畫）兩方向逐張簽核綁 sha。
+- DONE-GATE 全綠：per_page PASS（671/671、molar-heat absent from violations）、scan（含 0x6052 碼點）/pedagogy/question/schema/repro PASS。phys-heat strand 進度 18/20（t_sub 第 2 單元完成）。
+
 ## 2026-11-20 01:14 ★ sci.t_sub.phys-heat.pv-processes 氣體怎麼作功：P-V 圖與 W＝PΔV 5/5 DONE-GATE → phys-heat 17/20
 - **sci_phys_heat_pv_processes frozen `21bba300ecf09741`**（R21-R25 連 5 clean、L3 全 exit0、同 sha）。tier=t_sub、exam=分科。前置＝thermo1。R15 gloss 定壓過程 (isobaric process)/定容過程 (isochoric process) 各＝2（★can_do 與全 body 統一用「定壓/定容」，不混「等壓/等容」）。
 - 內容：氣體對外作功看「過程」；定壓過程（P 不變）W＝PΔV（壓力×體積變化）；P-V 圖（橫 V 縱 P）上功＝過程曲線下方到體積軸之間的面積，定壓時為矩形 P×ΔV；定容過程 ΔV＝0 則 W＝0，代入 ΔU＝Q−W 得 ΔU＝Q。scope：不含等溫對數積分 W=nRT ln(V₂/V₁)／絕熱 PV^γ／循環效率（carnot 另單元）／莫耳熱容（molar-heat 另單元）。repro（sci_phys_checks::phys-heat.pv-processes .venv PASS，錨 101325×0.001≈101.3 J）。figure＝P-V 圖紅水平線定壓過程 V₁→V₂＋綠陰影矩形 W＝P×ΔV＋高＝P＋數值例。
