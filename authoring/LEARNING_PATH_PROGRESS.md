@@ -1,3 +1,10 @@
+## 2026-11-20 06:08 ★ sci.t_mid.phys-estatic.charging 三種起電方式（摩擦/接觸/感應）5/5 DONE-GATE → phys-estatic 5/25
+- **sci_phys_estatic_charging frozen `ea78d475209c447a`**（R1-R5 連 5 clean、L3 全 exit0；期間三次 de-converge）。tier=t_mid、exam=會考。前置＝charge。R15 gloss 摩擦起電 (charging by friction)/接觸起電 (charging by contact)/感應起電 (charging by induction) 各＝2。概念單元無數值 repro（verification_ref＝科學共識）。
+- 內容：摩擦起電（兩不帶電物互相摩擦、電子轉移、一正一負）；接觸起電（帶電體碰不帶電導體、電荷移過去、導體帶同號電）；感應起電（帶電體靠近不碰、導體電荷重新分布近端異號遠端同號、整體仍中性；接地讓遠端電荷流走、先移開手再移開帶電體則留異號淨電）。figure＝三欄①摩擦②接觸③感應，符號物理正確。scope：不含庫侖定律數值公式、電場電位、電路電流電壓電阻。
+- **content_audit 揪 3 真缺陷（三次 de-converge）**：(1) R1 5專家 minor：claim「摩頭髮/摩毛布」單字「摩」clip（台灣慣用摩擦、易誤讀摩挲）→5處統一「摩擦」。(2) R2 5專家 minor：can_do 感應段「然後移開」指涉不明＋丟失「先移開手、最後才移開帶電體」關鍵順序（錯序留不住淨電）→改明確順序。(3) R4 6/7專家 major（clean 階段 override 晚修）：②接觸 panel 棒與球 7px 間隙、alt 說「碰到」但圖未觸及、與③感應「不碰」對比崩壞→棒降到球心 y78、右緣觸球面 x173、電子箭頭入球內，清楚畫出碰到。
+- **class 教訓**：①單字動詞 clip（摩→摩擦）＝繁體教材可讀性 class；②can_do 壓縮多步驟程序時易丟關鍵順序＋指涉不明；③**圖文一致 class：圖幾何必須真的畫出文字聲稱的動作（「碰到」就要真的接觸），否則與對比概念（接觸 vs 感應＝碰 vs 不碰）崩壞**——此為 render-only 缺陷，content_audit 審 SVG 座標才抓得到、目視易漏。
+- DONE-GATE 全綠：per_page PASS（678/678、charging absent）、scan/schema/question/pedagogy PASS、gloss 各=2、figure 四角色簽核（綁最終 sha ea78d475、三欄符號物理正確＋碰/不碰對比清楚）。phys-estatic strand 進度 5/25（t_base 3＋t_mid 2）。
+
 ## 2026-11-20 05:37 ★ sci.t_mid.phys-estatic.charge 電荷正負與同性相斥異性相吸 5/5 DONE-GATE → phys-estatic 4/25（t_mid 會考首個）
 - **sci_phys_estatic_charge frozen `22bcac82db1e40c9`**（R1-R5 連 5 clean、L3 全 exit0、同 sha；一次性收斂、無 de-converge）。tier=t_mid、exam=會考。前置＝static-basic（摩擦起電）。R15 gloss 電荷 (electric charge)/電子 (electron)/質子 (proton) 各＝2。概念單元無數值 repro（verification_ref＝科學共識）。
 - 內容：物質由原子組成，原子有帶正電質子與帶負電電子，電荷分正負兩種，正負等量＝電中性；得電子（電子比質子多）帶負電、失電子（電子比質子少）帶正電；摩擦起電＝電子從一物轉移到另一物、一正一負、電荷總量不變；同性相斥（都正或都負互相推開）、異性相吸（一正一負互相吸引）。scope：不含庫侖定律數值公式、電場電位、電路電流電壓電阻、原子更細結構（各留另單元）。
