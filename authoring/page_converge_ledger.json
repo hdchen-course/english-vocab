@@ -2,6 +2,20 @@
  "_doc": "AC-UNIT-2 每頁 content_audit 5-clean 證據。round 僅於實跑 content_audit＋L3 coverage_check exit 0 後誠實記入；content_sha=HTML+sidecar 聯集（per_page_5clean_gate 同步）。",
  "required_clean": 5,
  "pages": {
+  "sci_phys_heat_expansion.html": {
+   "frozen_sha": "5d841af6c0bb281e",
+   "rounds": [
+    {"round": 11, "content_sha": "5d841af6c0bb281e", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T20:15:30+08:00", "audited": true, "note": "post-particle-fix(冷熱各7顆); content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line55/106/159, deep75%)"},
+    {"round": 12, "content_sha": "5d841af6c0bb281e", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T20:16:30+08:00", "audited": true, "note": "post-particle-fix; content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line50/106/150, deep71%)"},
+    {"round": 13, "content_sha": "5d841af6c0bb281e", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T20:17:10+08:00", "audited": true, "note": "post-particle-fix; content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line52/106/151, deep72%)"},
+    {"round": 14, "content_sha": "5d841af6c0bb281e", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T20:20:20+08:00", "audited": true, "note": "post-particle-fix; content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line55/106/158, deep75%)"},
+    {"round": 15, "content_sha": "5d841af6c0bb281e", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T20:20:30+08:00", "audited": true, "note": "post-particle-fix; content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line50/106/159, deep75%); 5/5 達成(R11-R15 連5clean、同sha 5d841af6)"}
+   ],
+   "_defect_fix_trace": [
+    {"from_sha": "e6e999a51b1d3226", "to_sha": "5d841af6c0bb281e", "at": "2026-11-19T20:12:00+08:00", "defect": "R2(7/7 panel 一致)＋R3(獨立重現,7/7) confirmed BLOCKER a-wrong figure-correctness：figure 微觀粒子示意圖『冷』panel 畫 7 顆(上4 cx=54/70/86/102＋下3 cx=62/78/94)、『熱』panel 卻畫 8 顆(上5 cx=210/232/254/276/298＋下3)，熱態多一顆→圖面編碼『受熱＝粒子變多』的錯誤物理，與本課 can_do/claim c-ex-def/teach/figure caption/SVG 底部文字反覆強調的『粒子本身沒變大、也沒變多』『物質也沒有變多』正面矛盾，強化正要破除的迷思。修:移除熱 panel 上排第5顆(cx=298)，並把熱態 7 顆重排為上4(cx=214/242/270/298 間距28)＋下3(cx=228/256/284 間距28)，與冷態 7 顆(間距16)數量相同、僅間距拉大，正確傳達『數量守恆、只是間距變大』。僅改 figure SVG 粒子(其餘未動)，重 render iPad land+port 兩方向四角色重簽核過(冷7=熱7、間距熱>冷)。alt 未述及數量不需改。e6e999a5→5d841af6 重跑 5-clean。先 bank 之 R1(e6e999a5)作廢、streak 歸零，設 harvest_override 留痕。★class 教訓:before/after 對照圖(尤其粒子/分子示意)兩側『數量必須相等』，差異只能用間距/大小/排列表達;四眼目視易漏數粒子數,建圖時務必程式化核對兩側 count 一致，特別是在專門破除『受熱使物質/粒子變多』迷思的單元。"}
+   ],
+   "_note": "phys-heat 9/20 expansion t_mid(會考); 熱脹冷縮=大多數物質受熱體積膨脹、遇冷收縮; 微觀原因=溫度升高粒子運動更劇烈、彼此平均距離變大故體積脹大(粒子本身沒變大、物質沒變多); 相同升溫膨脹程度一般氣體>液體>固體; 生活應用=鐵軌/橋梁伸縮縫、電線夏鬆冬緊、溫度計、金屬瓶蓋泡熱水。scope 邊界:不教線膨脹係數 α 符號公式 ΔL=αL₀ΔT(超國中屬高中),只用具體數字生活例(10 公尺鋼軌升溫約 50°C 大約變長 6 公釐)說明鐵軌為何留縫;不含水 0–4°C 反常膨脹、不含氣體方程。驗證:定性事實=熱學科學共識; 唯一具體數字 6mm=repro(sci_phys_checks::phys-heat.expansion .venv PASS、source_registry 註冊 reproduction,錨 1.2e−5·10·50==6e−3,不引入 α 符號給讀者)。前置 temp-vs-heat(溫度/熱量已gloss不重複); R15 gloss 熱脹冷縮 (thermal expansion)=2。figure 上排鐵軌冬天(短縫寬)/夏天(長縫窄)+中標 6 公釐 + 下排粒子冷靠近/熱間距大。Q2鐵軌留縫=夏天變長 distractor 變短(反)/通風防鏽/好停車; Q3相同升溫最明顯=氣體 distractor 固/液/一樣; Q4瓶蓋泡熱水=金屬蓋膨脹變鬆 distractor 洗乾淨/玻璃縮小/手有力。全檔無符號算式、6 公釐只當事實陳述。四角色 iPad land+port 兩方向簽核過(art/spatial/eye/animator 全 PASS)。pedagogy 0 hard、scan_simplified PASS、unit_schema/question_correctness/repro PASS。"
+  },
   "sci_phys_heat_heat_transfer.html": {
    "frozen_sha": "73be1474bbbe9911",
    "rounds": [

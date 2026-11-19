@@ -1,3 +1,9 @@
+## 2026-11-19 20:20 ★ sci.t_mid.phys-heat.expansion 熱脹冷縮：為什麼鐵軌要留縫 5/5 DONE-GATE → phys-heat 9/20
+- **sci_phys_heat_expansion frozen `5d841af6c0bb281e`**（R11-R15 連 5 clean、L3 全 exit0、同 sha）。tier=t_mid、exam=會考。前置＝temp-vs-heat。R15 gloss 熱脹冷縮 (thermal expansion)=2。
+- 內容：大多數物質受熱體積膨脹、遇冷收縮＝熱脹冷縮；微觀＝溫度升高粒子運動更劇烈、彼此平均距離變大故體積脹大（粒子本身沒變大、物質沒變多）；相同升溫膨脹程度一般氣體>液體>固體；生活應用＝鐵軌/橋梁伸縮縫、電線夏鬆冬緊、溫度計、金屬瓶蓋泡熱水。**scope 邊界**：不教線膨脹係數 α 符號公式 ΔL=αL₀ΔT（屬高中），只用具體數字生活例（10 公尺鋼軌升溫約 50°C 大約變長 6 公釐）。6mm＝repro（sci_phys_checks::phys-heat.expansion .venv PASS、source_registry 註冊 reproduction，錨 1.2e−5·10·50==6e−3）；其餘定性事實＝科學共識。
+- **審查抓到真 blocker（我四角色目視漏掉）**：content_audit R2＋R3 獨立都以 7/7 panel 一致判 a-wrong — figure 微觀粒子圖『冷』panel 畫 7 顆、『熱』panel 畫 8 顆（熱上排多一顆 cx=298），暗示『受熱＝粒子變多』，與本課反覆強調的『粒子本身沒變大、也沒變多』『物質也沒有變多』正面矛盾、強化迷思。修：移除熱 panel 第 5 顆、冷熱皆重排為 7 顆（上4下3），熱態只把間距拉大（28px vs 冷 16px），正確傳達『數量守恆、只是間距變大』；重 render iPad land+port 兩方向四角色重簽過。e6e999a5→5d841af6 de-converge 重跑 5-clean。**class 教訓：before/after 對照圖兩側『數量必須相等』，差異只能用間距/大小/排列；建圖時務必程式化核對兩側 count，四眼目視易漏數粒子。**
+- DONE-GATE 全綠：per_page gate PASS（expansion absent from violations）、scan_simplified PASS、pedagogy 0 hard、question_correctness CLEAN、unit_schema clean、repro PASS、figure 四角色兩方向簽核。phys-heat strand 進度 9/20。
+
 ## 2026-11-19 19:54 ★ sci.t_mid.phys-heat.heat-transfer 熱的三種傳播方式 5/5 DONE-GATE → phys-heat 8/20
 - **sci_phys_heat_heat_transfer frozen `73be1474bbbe9911`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha，無缺陷無 de-converge；一次過）。tier=t_mid、exam=會考。前置＝conduction-basic（傳導已 gloss 不重複）。R15 gloss 對流 (convection)/輻射 (radiation) 各=2。
 - 內容：熱三種傳播＝傳導、對流、輻射；傳導沿固體一點一點傳（金屬快）；對流＝液/氣受熱膨脹上升、較冷下沉形成循環（煮水整鍋熱、冷暖氣）；輻射＝熱以電磁波（光）直接傳、不需介質、可穿真空（太陽穿真空到地球、烤火正面熱）。figure 三欄 傳導(金屬棒箭頭)/對流(鍋水循環)/輻射(太陽→波紋→人)。分類為科學共識（oracle len({傳導,對流,輻射})==3 僅標記 3 類、未註冊 source_registry、非 repro）。Q2 太陽穿真空＝輻射（真空只輻射傳得過）；Q4 冷氣裝高處＝冷空氣較重下沉。
