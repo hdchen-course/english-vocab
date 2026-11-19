@@ -1,3 +1,10 @@
+## 2026-11-19 18:43 ★ sci.t_mid.phys-heat.heat-unit 熱量的單位：卡與焦耳 5/5 DONE-GATE → phys-heat 5/20
+- **sci_phys_heat_heat_unit frozen `5514da9010e13dba`**（post-3fix rounds 11-15 連 5 clean、L3 全 exit0、同 sha）。tier=t_mid、exam=會考。前置＝temp-vs-heat（熱量已 gloss 不重複）。R15 gloss 卡 (calorie)/焦耳 (joule)/熱功當量 (mechanical equivalent of heat) 各=2。
+- 內容：熱量是能量可用卡(cal)/焦耳(J)量；1 卡＝使 1 公克純水升高 1°C 所需熱量、1 大卡＝1000 卡（食物熱量用大卡）；1 卡≈4.186 焦耳＝熱功當量（同份熱量卡或焦耳只單位不同）。figure 左 1 卡(cal,=1公克水升1°C)×4.186→右 4.186 焦耳(J)+1 大卡=1000 卡。oracle heat-unit 錨 1*4.186==4.186（repro_gate .venv PASS、source_registry 註冊 reproduction、fingerprint bc72aad279721041）。Q3 答約4.186焦耳 distractor 1/100/1000(1000為大卡換卡倍數)；Q4 答1000卡 distractor 10/100/4.186(與J值混淆)。
+- **content_audit 連抓 3 真缺陷、歷 3 次 de-converge/就地修（★本單元是 content_audit 價值的強力範例，4 眼校對全漏）**：(1) R1/R2 blocker-adjacent：Q2 distractor rationale『公斤的熱量…（那接近 1 大卡）』——依單元自身定義 1 公斤水升 1°C ＝1000 卡＝**剛好** 1 大卡(定義性恆等)，用『接近』hedge 與剛教的精確定義矛盾→改『剛好等於 1 大卡（1000 卡）』(8aa19645→5da9cb66)。(2) R1'(新sha) minor garden-path：teach＋selfeval『食物標的「大卡」』省略『示』撞固定名詞『標的』(投資標的)→改『食物包裝上標示的』(5da9cb66→6f441d7a)。(3) R5 **blocker a-wrong**：teach 開場『運動手環…消耗 300 卡』——手環顯示大卡(kcal)，字面 300 卡=0.3 大卡物理荒謬(應 300 大卡)、且與同句『80 大卡』不一致、正犯本課結尾卡/大卡混淆警告→改『消耗 300 大卡』(6f441d7a→5514da90)。
+- ★3 條 class 教訓入 _defect_fix_trace：①distractor/feedback 對「依定義為精確恆等」的量不得用『接近/大約』hedge（用『剛好等於』）；②『標示的』勿壓縮成『標的』(撞投資標的固定名詞)；③真實情境範例(運動手環/食物)口語『卡』實指 kcal(大卡)，教卡 vs 大卡的單元內情境數字務必用正確單位、勿自打核心警告。
+- DONE-GATE 全綠：per_page 657/657 PASS、live=frozen 5514da90／scan PASS／pedagogy 0 hard／question CLEAN／schema clean／repro heat-unit PASS／figure 四角色簽核。phys-heat strand 進度 5/20。
+
 ## 2026-11-19 18:15 ★ sci.t_mid.phys-heat.celsius 攝氏溫標與溫度計原理 5/5 DONE-GATE → phys-heat 4/20
 - **sci_phys_heat_celsius frozen `3aba20e96fe2cd82`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha，無缺陷無 de-converge）。tier=t_mid、exam=會考。前置＝thermometer（溫度/攝氏/溫度計 已 gloss 不重複）。R15 gloss 固定點 (fixed point)=2。
 - 內容：溫度計原理＝測溫液受熱膨脹(液柱升)/遇冷收縮(液柱降)、液柱高低對應溫度；攝氏溫標＝一標準大氣壓下取純水冰點定0℃、沸點定100℃兩「固定點」、中間等分100格每格1℃；用固定點是因其在固定條件下溫度恆定、各地刻度才一致可校正。figure＝直立溫度計低0℃冰點(冰水混合)高100℃沸點(沸水)+大括號「等分100格每格1℃」+原理「測溫液受熱上升遇冷下降」。

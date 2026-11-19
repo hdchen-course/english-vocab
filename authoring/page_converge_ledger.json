@@ -2,6 +2,22 @@
  "_doc": "AC-UNIT-2 每頁 content_audit 5-clean 證據。round 僅於實跑 content_audit＋L3 coverage_check exit 0 後誠實記入；content_sha=HTML+sidecar 聯集（per_page_5clean_gate 同步）。",
  "required_clean": 5,
  "pages": {
+  "sci_phys_heat_heat_unit.html": {
+   "frozen_sha": "5514da9010e13dba",
+   "rounds": [
+    {"round": 11, "content_sha": "5514da9010e13dba", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T18:37:00+08:00", "audited": true, "note": "post-3fix; content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line44/106/158, deep75%)"},
+    {"round": 12, "content_sha": "5514da9010e13dba", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T18:39:30+08:00", "audited": true, "note": "post-3fix; content_audit confirmed=0 coverageComplete=true(1 reviewer content-filter err,judge通過其餘覆蓋完整); L3 exit0 (anchors line44/106/159, deep75%)"},
+    {"round": 13, "content_sha": "5514da9010e13dba", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T18:40:10+08:00", "audited": true, "note": "post-3fix; content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line55/105/159, deep75%)"},
+    {"round": 14, "content_sha": "5514da9010e13dba", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T18:40:30+08:00", "audited": true, "note": "post-3fix; content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line55/106/151, deep71.5%)"},
+    {"round": 15, "content_sha": "5514da9010e13dba", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T18:43:20+08:00", "audited": true, "note": "post-3fix; content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line55/106/159, deep75%); 5/5 達成(R11-R15 連5clean、同sha 5514da90)"}
+   ],
+   "_note": "phys-heat 5/20 heat-unit t_mid(會考); 熱量是能量可用卡(cal)/焦耳(J)量; 1卡=使1公克純水升高1°C所需熱量、1大卡=1000卡(食物熱量用大卡); 1卡≈4.186焦耳=熱功當量(同份熱量卡或焦耳只單位不同); repro(sci_phys_checks::phys-heat.heat-unit, 1*4.186==4.186, repro_gate .venv PASS、source_registry 註冊 reproduction、fingerprint bc72aad279721041)錨 1cal=4.186J; figure 左1卡(cal,=1公克水升1°C)×4.186→右4.186焦耳(J)+1大卡=1000卡; 前置 temp-vs-heat(熱量已gloss不重複); R15 gloss 卡 (calorie)/焦耳 (joule)/熱功當量 (mechanical equivalent of heat) 各=2; 不含 Q=mcΔT 比熱計算(specific-heat 單元)。Q3答約4.186焦耳 distractor 1/100/1000(1000為大卡換卡倍數混淆); Q4答1000卡 distractor 10/100/4.186(與J值混淆)。pedagogy 0 hard。",
+   "_defect_fix_trace": [
+    {"from_sha": "8aa196459d92f763", "to_sha": "5da9cb6606fb5cff", "at": "2026-11-19T18:24:30+08:00", "defect": "R1(5/5鏡一致)＋R2(4/5鏡,僅english判precision-preference) confirmed major fact-check/b-hard-to-understand：Q2 distractor「使1公斤純水升高1°C」之 rationale 原寫『公斤的熱量會大1000倍（那接近1大卡）』——依本單元自身定義(1卡=1公克升1°C、1大卡=1000卡)，1公斤水升1°C 恰為1000卡＝剛好1大卡(定義性恆等)，用『接近』的 hedge 暗示僅近似、與剛教的精確定義矛盾、可誤讀。修:改為『1公斤的水是1000公克，需要的熱量大1000倍，剛好等於1大卡（1000卡）』。僅改 Q2 單一 distractor_rationale(圖/選項/teach/其他 rationale 未動、四角色簽核沿用)，8aa19645→5da9cb66 重跑 5-clean。先 bank 之 R3(舊sha)作廢、streak 歸零，設 harvest_override 留痕；R2 審舊內容亦丟棄不採。★class 教訓:distractor_rationale/feedback 不得對『依單元定義為精確恆等』的量用『接近/大約』等 hedge（會與定義矛盾、讀者誤為近似）；定義性等式用『剛好等於/正好是』。"},
+    {"from_sha": "5da9cb6606fb5cff", "to_sha": "6f441d7a575ca84d", "at": "2026-11-19T18:30:00+08:00", "defect": "新sha R1(5/5鏡一致) confirmed minor b-hard-to-understand：teach line86 小提醒＋selfeval_note 用『食物標的「大卡」』——省略『示』使『標的』撞固定名詞『標的』(投資標的/biāodì)，國中讀者 garden-path 誤讀再回頭重解。修:兩處『食物標的』→『食物包裝上標示的』。僅改 teach 小提醒＋selfeval_note 散文(圖/選項/claim 未動、四角色沿用)，5da9cb66→6f441d7a 重跑 5-clean。先 bank 之 R2/R3(5da9cb66)作廢、streak 再歸零；在飛 R4/R5 審舊sha丟棄。★class 教訓:勿把『標示的』壓縮成『標的』(撞投資標的固定名詞)；完整寫『標示的/包裝上標示的』。"},
+    {"from_sha": "6f441d7a575ca84d", "to_sha": "5514da9010e13dba", "at": "2026-11-19T18:33:30+08:00", "defect": "舊sha R5(5/5鏡一致) confirmed blocker a-wrong(缺陷在新sha 6f441d7a 仍存在故必修)：teach 開場 line61『運動手環上寫「消耗 300 卡」』——運動手環能量實以大卡(kcal)顯示，字面『300 卡』=0.3 大卡、物理荒謬(運動消耗約 300 大卡)，且與同句『80 大卡』不一致、正犯本課結尾(別把大卡和卡看成一樣)警告的卡/大卡混淆。修:『消耗 300 卡』→『消耗 300 大卡』，與同句一致。rounds 當時已空(前次 de-converge 後尚未 bank)故就地修+更新 frozen 6f441d7a→5514da9010e13dba，無需再 reset。在飛新sha R1(w2i3c87r2)審 6f441d7a 內容→丟棄。★class 教訓:真實情境範例(運動手環/食物)口語『卡』實指 kcal(大卡)，教『卡 vs 大卡』精確定義的單元內，情境數字務必用正確單位(運動/食物熱量一律大卡)，勿與課程核心警告自相矛盾。"}
+   ]
+  },
   "sci_phys_heat_celsius.html": {
    "frozen_sha": "3aba20e96fe2cd82",
    "rounds": [
