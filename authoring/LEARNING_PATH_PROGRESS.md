@@ -1,3 +1,9 @@
+## 2026-11-19 14:51 ★ sci.t_sub.phys-energy.elastic-formula 彈性碰撞（等質量交換速度）5/5 DONE-GATE → phys-energy 19/22
+- **sci_phys_energy_elastic_formula frozen `bf0700478260081c`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha；兩度 de-converge：9fc6d5→bf070047 修 figure 兩真缺陷）。tier=t_sub 分科-物理。前置＝collision-1d。R15 gloss 彈性碰撞 (elastic collision) grep=2；動量/動量守恆/動能 前置已 gloss。
+- 內容：彈性碰撞＝動量守恆『且』動能守恆（對比完全非彈性動能變小）；等質量一維正面彈性碰撞交換速度 v1'=u2、v2'=u1。figure 碰前甲5乙2→碰後甲2乙5（速度互換），動量碰前後都7、動能都½×1×5²＋½×1×2²=14.5J。oracle elastic-formula 錨 u1=5,u2=2→2,5；Q3 甲碰後2 distractor 5(不變)/3.5(平均)/7(相加)、Q4 乙碰後5 distractor 2(不變)/3.5(平均)/0(停)。
+- DONE-GATE 全綠：per_page 650/650 PASS、live=frozen bf070047／scan PASS／pedagogy 0 hard／question CLEAN／schema clean／repro elastic-formula PASS／figure 四角色簽核。
+- de-converge：R1/R2/R3 多鏡(viz/eye/domain/learning)抓 figure 兩真缺陷——(1) 箭頭長度未依速率成比例(乙碰後 5m/s 被 viewBox 右緣擠成最短、視覺把速率畫反、抵觸交換速度教學)；(2) KE 寫 ½·5²＋½·2² 省略質量讀如 ½v²、與動量列/claim body 不一致。修：箭頭嚴格依速率比例(5=24px/2=10px)+四標籤統一置框上+乙碰後框左移留 36px 邊距；KE 補質量 ½×1×5²＋½×1×2²。★class 教訓：速度圖箭頭長度必與標示速率成比例(尤其交換/對比場景)、勿頂 viewBox 邊緣壓縮；KE 一律完整 ½mv² 顯示質量勿因 m=1 省略。我初次四角色漏放箭頭比例、由 content_audit viz/eye 鏡補抓。
+
 ## 2026-11-19 14:19 ★ sci.t_sub.phys-energy.collision-2d 二維碰撞（x、y 方向各自守恆）5/5 DONE-GATE → phys-energy 18/22 ＋ HD 回報 kin_vector 箭頭 render 修正
 - **sci_phys_energy_collision_2d frozen `0226fc27db64a52a`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha；補跑 R6 替代 R4(anchor 超容差 INVALID)；一度 de-converge：_note 自檢 distractor 漂移修正 2e567→…→0226fc27）。**tier=t_sub 分科-物理**（manifest 裁定，初稿誤用 t_adv 已修 unit_id/kp_ids/required_kp_ids/tier 用詞）。前置＝momentum-conserve。R15 gloss 分量 (component) grep=2；動量/動量守恆 前置已 gloss。
 - 內容：二維碰撞動量在 x、y 方向各自獨立守恆；每物體動量拆 x/y 分量相加；合動量＝√(px²+py²)。figure＝A2kg沿x3m/s＋B2kg沿y4m/s→px6 py8，碰後黏合4kg vx1.5 vy2，合動量√(6²+8²)=√100=10（6-8-10 直角三角形）。oracle collision-2d 強化含 vx/vy/合動量＋honest re-key 962fc52c→d380c5c5bc916d8b；Q3 合動量10 distractor 14(相加)/2(相減)/100(未開根號)、Q4 vx1.5 distractor 6(忘除總質量)/3(除A質量)/2(誤填vy)。
