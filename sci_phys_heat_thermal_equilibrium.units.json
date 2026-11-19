@@ -1,0 +1,201 @@
+{
+ "_note": "自然島 物理-熱學（phys-heat）strand 第7單元（t_mid 國中會考）。知識點 sci.t_mid.phys-heat.thermal-equilibrium（熱平衡）。tier=t_mid。exam=會考。全繁體零簡體零 PRC 詞。中文授課無音檔。前置＝conduction-basic（熱由高溫→低溫流、已 gloss 傳導/導體）＋specific-heat（Q=mcΔT、比熱）。術語附國際英語（R15，★只在 can_do 首次 gloss 一次；英文括號 grep -o 計數：『熱平衡 (thermal equilibrium)』應＝2〔_note 本宣告行一次＋can_do 一次〕；『傳導』已於 conduction-basic gloss、『比熱/熱量』已於前置 gloss，皆不重複；teach/claim body 不重複 gloss）。scope（t_mid 會考）：(1) 兩個溫度不同的物體接觸，熱會從高溫流向低溫，高溫者降溫、低溫者升溫，直到兩邊溫度一樣、不再有淨熱流動＝達到『熱平衡』；(2) 熱平衡時兩邊溫度相等，介於原本高溫與低溫之間（不會超過高溫、也不會低於低溫）；(3) 量化（等量、同物質）：高溫放出的熱＝低溫吸收的熱，等量冷熱水混合終溫＝兩溫度的平均；例 1 公斤 80°C 水 + 1 公斤 20°C 水 → (80＋20)÷2＝50°C。不含不等量/不同物質的加權終溫細算(超出國中基礎)、不含相變化潛熱(latent-heat)、不含熱機。repro（tools/verify/sci_phys_checks.py::phys-heat.thermal-equilibrium，repro_gate .venv PASS、source_registry 已註冊 reproduction）錨定 (1×80+1×20)/(1+1)==50。figure 自檢：左 80°C 熱水＋右 20°C 冷水（等量）接觸，熱由熱→冷流，最終兩邊都 50°C（熱平衡），標終溫=(80＋20)÷2=50°C；標籤不疊不溢出、alt 與 SVG text 逐字一致。practice 四答案＝{熱從高溫流向低溫、直到兩邊溫度一樣、不再淨流動（Q1 定義）, 50°C（Q2 等量混合終溫）, 介於 20°C 與 80°C 之間（Q3 範圍）, 不會，熱不會自己從冷流回熱（Q4 方向性）}；MCQ options bare、每 distractor 乾淨單一誤解（Q1：熱會一直流到冷的比熱的更熱／兩邊都不會變／溫度會一直上升；Q2：100°C(相加)／20°C(只看冷)／80°C(只看熱)；Q3：剛好 100°C／超過 80°C／低於 20°C；Q4：會，最後熱水更熱／會，兩邊一起變冷／無法判斷）、兩兩相異、長度均衡；distractor_rationales key 逐字相符。claim kind=fact。figure-only example 無 body。定義不得反轉：熱高→低流至溫度相等=熱平衡、終溫介於冷熱之間、等量同物質混合取平均、熱不會自己倒流。",
+ "page": "sci_phys_heat_thermal_equilibrium.html",
+ "units": [
+  {
+   "unit_id": "sci.t_mid.phys-heat.thermal-equilibrium",
+   "title_zh": "熱平衡：冷熱相遇最後會一樣溫",
+   "can_do": "我知道當兩個溫度不同的物體接觸時，熱會從高溫的一邊流向低溫的一邊：高溫的會降溫、低溫的會升溫，一直到兩邊溫度一樣、不再有熱淨流動為止，這個狀態叫做『熱平衡 (thermal equilibrium)』。我知道達到熱平衡時，兩邊的溫度會相等，而且一定落在原本高溫和低溫之間（不會比原本最熱的還熱，也不會比原本最冷的還冷）。對於等量、同一種的冷熱水混合，因為高溫放出的熱等於低溫吸收的熱，最後的溫度就是兩個溫度的平均——例如 1 公斤 80°C 的水和 1 公斤 20°C 的水混在一起，最後會變成 (80＋20)÷2＝50°C。",
+   "situation_group": "能量：讓世界運作的能力",
+   "subject": "sci",
+   "strand": "phys-heat",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "sci.t_mid.phys-heat.thermal-equilibrium"
+   ],
+   "prerequisites": [
+    "sci.t_base.phys-heat.conduction-basic",
+    "sci.t_mid.phys-heat.specific-heat"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-te-def",
+     "text": "當兩個溫度不同的物體接觸時，熱會從高溫的一邊流向低溫的一邊：高溫的降溫、低溫的升溫，一直到兩邊溫度一樣、不再有熱的淨流動為止。這個『兩邊溫度相等、不再有淨熱流動』的狀態就叫做熱平衡。達到熱平衡後，溫度一定落在原本高溫和低溫之間——不會比原本最熱的更熱，也不會比原本最冷的更冷。",
+     "kind": "fact",
+     "source_refs": [
+      "熱平衡（國中理化 會考）"
+     ],
+     "verification_ref": "熱由高溫流向低溫至溫度相等、終溫介於冷熱之間（科學共識）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-te-mix",
+     "text": "對於等量、同一種的冷熱水混合，高溫那邊放出的熱，剛好等於低溫那邊吸收的熱，所以最後的溫度就是兩個溫度的平均。例：1 公斤 80°C 的水和 1 公斤 20°C 的水混在一起，最後會變成 (80＋20)÷2＝50°C。注意：熱不會自己從冷的一邊倒流回熱的一邊，所以混合後不可能出現『熱水更熱、冷水更冷』。",
+     "kind": "fact",
+     "source_refs": [
+      "等量冷熱水混合終溫（國中理化 會考）"
+     ],
+     "verification_ref": "等量同物質混合終溫＝(80＋20)÷2＝50°C（sci_phys_checks::phys-heat.thermal-equilibrium .venv 驗、source_registry 註冊 reproduction）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-heat.thermal-equilibrium"
+     ],
+     "body": "把一杯熱水和一杯冷水倒在一起，過一下子，整杯水變成不冷不熱的溫水——為什麼最後會『一樣溫』？這一課看冷熱相遇後會怎麼變，以及最後停在什麼溫度。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-heat.thermal-equilibrium"
+     ],
+     "body": "① 兩物體接觸，熱從高溫流向低溫：熱的降溫、冷的升溫，直到兩邊溫度一樣、不再有淨熱流動＝熱平衡。② 熱平衡時溫度相等，且介於原本冷熱之間（不會更熱也不會更冷）。③ 等量、同物質時，高溫放的熱＝低溫吸的熱，終溫＝平均：1 公斤 80°C ＋ 1 公斤 20°C → (80＋20)÷2＝50°C。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_mid.phys-heat.thermal-equilibrium"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 185' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='170' y='14' font-size='8.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>熱平衡：等量冷熱水混合，最後一樣溫</text><rect x='34' y='46' width='52' height='50' rx='3' fill='#e8a08a' stroke='#c0392b'/><text x='60' y='40' font-size='8' fill='#c0392b' text-anchor='middle' font-weight='bold'>1 公斤 80°C</text><text x='60' y='74' font-size='8' fill='#33475b' text-anchor='middle'>熱水</text><rect x='96' y='46' width='52' height='50' rx='3' fill='#aec6e0' stroke='#2563a6'/><text x='122' y='40' font-size='8' fill='#2563a6' text-anchor='middle' font-weight='bold'>1 公斤 20°C</text><text x='122' y='74' font-size='8' fill='#33475b' text-anchor='middle'>冷水</text><line x1='86' y1='66' x2='96' y2='66' stroke='#c0392b' stroke-width='2'/><polygon points='96,66 89,63 89,69' fill='#c0392b'/><text x='91' y='110' font-size='7' fill='#c0392b' text-anchor='middle'>熱→冷</text><line x1='158' y1='70' x2='192' y2='70' stroke='#6b7680' stroke-width='1.5'/><polygon points='192,70 184,67 184,73' fill='#6b7680'/><text x='175' y='63' font-size='7.5' fill='#6b7680' text-anchor='middle'>混合</text><rect x='200' y='46' width='106' height='50' rx='3' fill='#cfe0cf' stroke='#4a8c54'/><text x='253' y='40' font-size='8.5' fill='#2f6f54' text-anchor='middle' font-weight='bold'>2 公斤 50°C</text><text x='253' y='68' font-size='8' fill='#33475b' text-anchor='middle'>兩邊一樣溫</text><text x='253' y='82' font-size='8' fill='#2f6f54' text-anchor='middle' font-weight='bold'>＝熱平衡</text><text x='170' y='128' font-size='9' fill='#33475b' text-anchor='middle'>熱從高溫流向低溫，直到兩邊溫度相等（熱平衡）</text><text x='170' y='147' font-size='9' fill='#33475b' text-anchor='middle'>等量同物質混合：終溫 ＝ (80＋20) ÷ 2 ＝ 50°C</text><text x='170' y='165' font-size='8' fill='#6b7680' text-anchor='middle'>終溫一定介於 20°C 與 80°C 之間，熱不會自己倒流</text></g></svg>",
+      "alt": "標題「熱平衡：等量冷熱水混合，最後一樣溫」。左邊紅色方塊「1 公斤 80°C」「熱水」，中間藍色方塊「1 公斤 20°C」「冷水」，兩者之間有一個紅色箭頭標「熱→冷」。再一個灰色箭頭標「混合」指向右邊綠色方塊「2 公斤 50°C」「兩邊一樣溫」「＝熱平衡」。下方三行：「熱從高溫流向低溫，直到兩邊溫度相等（熱平衡）」「等量同物質混合：終溫 ＝ (80＋20) ÷ 2 ＝ 50°C」「終溫一定介於 20°C 與 80°C 之間，熱不會自己倒流」。",
+      "caption": "1 公斤 80°C 的熱水和 1 公斤 20°C 的冷水接觸，熱從熱水流向冷水，熱水降溫、冷水升溫，直到兩邊都變成 50°C、不再有淨熱流動——這就是熱平衡。等量、同物質時終溫是兩溫度的平均：(80＋20)÷2＝50°C。終溫一定落在 20°C 和 80°C 之間，熱不會自己從冷倒流回熱。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-heat.thermal-equilibrium"
+     ],
+     "body": "最後練「熱平衡」。重點：(1) 熱從高溫流向低溫，直到兩邊溫度一樣＝熱平衡；(2) 終溫介於原本冷熱之間，不會更熱也不會更冷；(3) 等量同物質混合，終溫＝平均，(80＋20)÷2＝50°C。小提醒：『等量、同一種水』才剛好取平均；如果量不一樣或不是同種液體，終溫會偏向『量比較多』或『比熱比較大』的那一邊，但一樣會停在冷熱之間。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QK-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "什麼是「熱平衡」？",
+     "answer": "熱從高溫流向低溫，直到兩邊溫度一樣、不再有淨熱流動的狀態",
+     "kp_ids": [
+      "sci.t_mid.phys-heat.thermal-equilibrium"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-heat.thermal-equilibrium"
+     ],
+     "options": [
+      "熱從高溫流向低溫，直到兩邊溫度一樣、不再有淨熱流動的狀態",
+      "熱一直流動，讓本來熱的一邊變得比冷的那邊更熱",
+      "兩個物體接觸後，兩邊的溫度都完全不會改變",
+      "兩個物體接觸後，溫度會一直不停地上升"
+     ],
+     "distractor_rationales": {
+      "熱一直流動，讓本來熱的一邊變得比冷的那邊更熱": "相反；熱是從高溫流向低溫，不會讓熱的更熱，最後兩邊一樣。",
+      "兩個物體接觸後，兩邊的溫度都完全不會改變": "只要有溫差就會有熱流動，高溫降、低溫升，不是都不變。",
+      "兩個物體接觸後，溫度會一直不停地上升": "不會一直上升；到兩邊溫度相等就停（熱平衡），且終溫在冷熱之間。"
+     },
+     "answer_evidence": [
+      "c-te-def"
+     ],
+     "feedback": "熱平衡＝熱從高溫流向低溫，直到兩邊溫度一樣、不再有淨熱流動。"
+    },
+    {
+     "question_id": "QK-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "把 1 公斤 80°C 的水和 1 公斤 20°C 的水（同樣是水）混在一起，最後的溫度大約是多少？",
+     "answer": "50°C",
+     "kp_ids": [
+      "sci.t_mid.phys-heat.thermal-equilibrium"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-heat.thermal-equilibrium"
+     ],
+     "options": [
+      "50°C",
+      "100°C",
+      "20°C",
+      "80°C"
+     ],
+     "distractor_rationales": {
+      "100°C": "不是把兩個溫度相加；等量混合是取平均 (80＋20)÷2＝50°C。",
+      "20°C": "只看冷水那邊了；熱水會把冷水加溫、冷水把熱水降溫，取平均 50°C。",
+      "80°C": "只看熱水那邊了；混合後熱水會降溫，最後是平均 50°C。"
+     },
+     "answer_evidence": [
+      "c-te-mix"
+     ],
+     "feedback": "等量同物質混合取平均：(80＋20)÷2＝50°C。"
+    },
+    {
+     "question_id": "QK-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "80°C 的熱水和 20°C 的冷水混合後，最後的溫度會落在哪個範圍？",
+     "answer": "介於 20°C 與 80°C 之間",
+     "kp_ids": [
+      "sci.t_mid.phys-heat.thermal-equilibrium"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-heat.thermal-equilibrium"
+     ],
+     "options": [
+      "介於 20°C 與 80°C 之間",
+      "剛好 100°C",
+      "比 80°C 還高",
+      "比 20°C 還低"
+     ],
+     "distractor_rationales": {
+      "剛好 100°C": "100°C 是把兩個溫度相加，不對；終溫在冷熱之間。",
+      "比 80°C 還高": "不會比原本最熱的還熱；熱平衡後溫度在冷熱之間。",
+      "比 20°C 還低": "不會比原本最冷的還冷；混合後冷水被加溫，溫度在冷熱之間。"
+     },
+     "answer_evidence": [
+      "c-te-def"
+     ],
+     "feedback": "熱平衡後的溫度一定落在原本高溫和低溫之間，所以在 20°C 到 80°C 之間。"
+    },
+    {
+     "question_id": "QK-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "冷熱水混合到一樣溫之後，有沒有可能熱又自己跑回熱水那邊、讓熱水重新變得比冷水熱？",
+     "answer": "不會，熱不會自己從冷的一邊流回熱的一邊",
+     "kp_ids": [
+      "sci.t_mid.phys-heat.thermal-equilibrium"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-heat.thermal-equilibrium"
+     ],
+     "options": [
+      "不會，熱不會自己從冷的一邊流回熱的一邊",
+      "會，最後熱水那邊會重新變得更熱",
+      "會，兩邊會一起慢慢變得更冷",
+      "無法判斷，要看當天天氣"
+     ],
+     "distractor_rationales": {
+      "會，最後熱水那邊會重新變得更熱": "熱不會自己從冷倒流回熱；達到熱平衡後就維持一樣溫，不會自己再分開。",
+      "會，兩邊會一起慢慢變得更冷": "這題只看兩杯水之間；它們之間已達熱平衡、不會自己再變；和周圍散熱是另一回事。",
+      "無法判斷，要看當天天氣": "熱的流動方向（高溫→低溫、不自己倒流）是固定的，和當天天氣無關。"
+     },
+     "answer_evidence": [
+      "c-te-mix"
+     ],
+     "feedback": "熱只會從高溫流向低溫、不會自己倒流；達到熱平衡後兩邊維持一樣溫。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（熱平衡＝熱從高溫流向低溫、直到兩邊溫度一樣不再淨流動；終溫介於原本冷熱之間、不會更熱也不會更冷；等量同物質混合終溫＝平均，1 公斤 80°C＋1 公斤 20°C＝(80＋20)÷2＝50°C；熱不會自己從冷倒流回熱；量不同或不同液體時終溫偏向『量比較多』或『比熱比較大』的那一邊、但仍在冷熱之間）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}

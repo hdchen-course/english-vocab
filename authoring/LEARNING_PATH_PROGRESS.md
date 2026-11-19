@@ -1,3 +1,10 @@
+## 2026-11-19 19:42 ★ sci.t_mid.phys-heat.thermal-equilibrium 熱平衡：冷熱相遇最後會一樣溫 5/5 DONE-GATE → phys-heat 7/20
+- **sci_phys_heat_thermal_equilibrium frozen `cc6e539da187e258`**（post-4fix rounds 41-45 連 5 clean、L3 全 exit0、同 sha）。tier=t_mid、exam=會考。前置＝conduction-basic（熱高→低、傳導已 gloss）＋specific-heat（Q=mcΔT/比熱已 gloss）。R15 gloss 熱平衡 (thermal equilibrium)=2。
+- 內容：兩溫度不同物體接觸熱由高溫→低溫流、高溫降低溫升、直到兩邊溫度一樣不再淨流動＝熱平衡；終溫介於原本冷熱之間；等量同物質混合終溫＝平均，1 公斤 80°C＋1 公斤 20°C＝(80＋20)÷2＝50°C。figure 左 80°C 熱水＋右 20°C 冷水→混合→兩邊 50°C 熱平衡。oracle thermal-equilibrium 錨 (1×80+1×20)/(1+1)==50（repro_gate .venv PASS、source_registry 註冊）。
+- **★content_audit 連抓 4 缺陷、歷 4 次 de-converge（本單元是 content_audit 價值的最強範例；我 4 眼全漏）**：(1) R3 figure『熱→冷』label 疊盒低對比→移 y=110 盒下淨空；(2) R12 teach(3)『(80＋20)÷2』省略 ÷2 成「80+20=50」假加法強化相加迷思→補回 ÷2；(3) R23/R24 算式全半形不一致＋「偏向量多」garden-path→統一全形運算子＋改寫；(4) R31 漏網半形等號 `=`→全檔等號統一全形 ＝。
+- ★3 條 class 教訓入 _defect_fix_trace＋記憶 [[sci-unit-notation-consistency]]：①SVG text-anchor=middle label 寬勿超圖形間隙（算寬度非目視）；②worked example 勿省關鍵運算子；③全檔算式符號（÷＋× **連等號＝**）一開始就全形統一，否則 cosmetic 一致性在 panel 間擺盪耗輪；中文連寫勿撞既有詞（偏向+量多→向量）。
+- DONE-GATE 全綠：per_page 660/660 PASS、live=frozen cc6e539d／scan PASS／pedagogy 0 hard／question CLEAN／schema clean／repro thermal-equilibrium PASS／figure 四角色簽核。phys-heat strand 進度 7/20。
+
 ## 2026-11-19 18:53 ★ sci.t_mid.phys-heat.specific-heat 比熱：為什麼水不容易變溫 5/5 DONE-GATE → phys-heat 6/20
 - **sci_phys_heat_specific_heat frozen `9b57cb124d427fd7`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha，無缺陷無 de-converge）。tier=t_mid、exam=會考。前置＝temp-vs-heat（熱量/比熱已 gloss）＋heat-unit（卡/焦耳已 gloss）。★learner-facing gloss count=0（刻意，無新術語；不引入熱容量避免混淆）。
 - 內容：比熱＝讓 1 公斤某物質升高 1°C 所需熱量＝物質特性、不同物質不同；水比熱特別大（約 1 大卡/(公斤·°C)＝4186 焦耳/(公斤·°C)）故耐熱耐冷、溫度不易變（沙燙水溫、海邊日夜溫差小）；Q＝mcΔT 例 2 公斤水升 10°C＝2×4186×10＝83720 焦耳（約 20 大卡，與 temp-vs-heat 一致）。figure 同太陽等量供熱沙(比熱小升溫快燙)vs水(比熱大升溫慢溫)+Q=mcΔT+水比熱值。oracle specific-heat 錨 2×4186×10==83720（repro_gate .venv PASS、source_registry 註冊 reproduction）。Q3 答83720 distractor 41860(漏質量)/8372(漏ΔT)/837200(多一位)；Q4 答水比熱大溫度不易變 distractor 比熱小(反)/海水自產熱/離太陽近。
