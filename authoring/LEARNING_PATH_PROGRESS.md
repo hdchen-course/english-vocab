@@ -1,3 +1,9 @@
+## 2026-11-19 18:15 ★ sci.t_mid.phys-heat.celsius 攝氏溫標與溫度計原理 5/5 DONE-GATE → phys-heat 4/20
+- **sci_phys_heat_celsius frozen `3aba20e96fe2cd82`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha，無缺陷無 de-converge）。tier=t_mid、exam=會考。前置＝thermometer（溫度/攝氏/溫度計 已 gloss 不重複）。R15 gloss 固定點 (fixed point)=2。
+- 內容：溫度計原理＝測溫液受熱膨脹(液柱升)/遇冷收縮(液柱降)、液柱高低對應溫度；攝氏溫標＝一標準大氣壓下取純水冰點定0℃、沸點定100℃兩「固定點」、中間等分100格每格1℃；用固定點是因其在固定條件下溫度恆定、各地刻度才一致可校正。figure＝直立溫度計低0℃冰點(冰水混合)高100℃沸點(沸水)+大括號「等分100格每格1℃」+原理「測溫液受熱上升遇冷下降」。
+- **定義慣例/科學共識**（非可重現 reproduction；oracle ht_celsius 的 0==0/100==100 僅標記定義、未註冊 source_registry；比照 conduction-basic 以共識事實查核、未 overclaim repro）。Q3 答 100 格 distractor 10/50/212(華氏沸點數字)。pedagogy length-cue/lead-in-cue 為 soft 提醒（HD 2026-11-15 裁定 MCQ tell 非 gate 非缺陷，未改）。
+- DONE-GATE 全綠：per_page 657/657 PASS、live=frozen 3aba20e9／scan PASS／pedagogy 0 hard／question CLEAN／schema clean／figure 四角色簽核。phys-heat strand 進度 4/20。
+
 ## 2026-11-19 17:38 ★ sci.t_mid.phys-heat.temp-vs-heat 溫度與熱量的區別 5/5 DONE-GATE → phys-heat 3/20
 - **sci_phys_heat_temp_vs_heat frozen `297c31564dc148e2`**（post-fix rounds 1-5 連 5 clean、L3 全 exit0、同 sha）。tier=t_mid、exam=會考。前置＝thermometer（溫度已 gloss）。R15 gloss 熱量/比熱 各=2。
 - 內容：溫度＝冷熱程度(與量無關)、熱量＝熱的量(與質量及溫度變化有關)；同溫不代表同熱量(大鍋水熱量多)；Q=mcΔT 水比熱≈1 大卡/(公斤·°C)。figure 兩鍋水同升10°C(2kg鍋較大需20大卡、1kg鍋較小需10大卡)+火焰+Q=mcΔT。oracle temp-vs-heat 錨 2×1×10>1×1×10（repro PASS、source_registry 已註冊）。Q3 答20大卡 distractor 10(漏質量)/12(2+10相加)/2(漏ΔT)。
