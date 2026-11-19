@@ -1,3 +1,9 @@
+## 2026-11-19 17:38 ★ sci.t_mid.phys-heat.temp-vs-heat 溫度與熱量的區別 5/5 DONE-GATE → phys-heat 3/20
+- **sci_phys_heat_temp_vs_heat frozen `297c31564dc148e2`**（post-fix rounds 1-5 連 5 clean、L3 全 exit0、同 sha）。tier=t_mid、exam=會考。前置＝thermometer（溫度已 gloss）。R15 gloss 熱量/比熱 各=2。
+- 內容：溫度＝冷熱程度(與量無關)、熱量＝熱的量(與質量及溫度變化有關)；同溫不代表同熱量(大鍋水熱量多)；Q=mcΔT 水比熱≈1 大卡/(公斤·°C)。figure 兩鍋水同升10°C(2kg鍋較大需20大卡、1kg鍋較小需10大卡)+火焰+Q=mcΔT。oracle temp-vs-heat 錨 2×1×10>1×1×10（repro PASS、source_registry 已註冊）。Q3 答20大卡 distractor 10(漏質量)/12(2+10相加)/2(漏ΔT)。
+- **pre-freeze 修（未 bank 即由初版 R1/R2/R3 抓 2 缺陷、凍 sha 前修畢，無 streak 作廢）**：(a) blocker teach 開場類比原用「燙傷/煮熟」（溫度門檻結果）illustrate 溫水「熱量多」→ ~40°C 溫水無法煮熟/燙傷、反強化溫度↔熱量混淆；改為火柴高溫但熱量少(丟冰水幾乎不變溫) vs 大缸溫水熱量多(可融冰/暖房)等與總熱量相關之結果。(b) minor 單位「大卡/公斤·°C」無括號依優先序誤讀→caption+Q3 兩處補「大卡/(公斤·°C)」。figure 體積修為 2kg 鍋大於 1kg 鍋。cc92ab37→297c31564。★class 教訓：熱量≠溫度單元舉例「效果」須選與總熱量相關者(融冰/暖房)、勿用溫度門檻結果(煮熟/燙傷/沸騰)；複合單位分母務必加括號。
+- DONE-GATE 全綠：per_page 656/656 PASS、live=frozen 297c3156／scan PASS／pedagogy 0 hard／question CLEAN／schema clean／repro temp-vs-heat PASS／figure 四角色簽核。phys-heat strand 進度 3/20。
+
 ## 2026-11-19 16:37 ★ sci.t_base.phys-heat.conduction-basic 熱由高溫傳向低溫 5/5 DONE-GATE → phys-heat 2/20
 - **sci_phys_heat_conduction_basic frozen `c342855b5da82908`**（post-fix rounds 1-5 連 5 clean、L3 全 exit0、同 sha）。tier=t_base、exam=無。前置＝thermometer（溫度已 gloss）。R15 gloss 傳導/導體 各=2。
 - 內容：熱自己從高溫→低溫流直到兩邊一樣、不會倒流；傳導＝熱沿物體(尤固體)一點一點傳；金屬好導體、木塑空氣不良導體可隔熱。figure＝左熱80℃右冷20℃+金屬棒+3紅箭 hot→cold+傳導。**定性共識事實**（非可重現 reproduction、未註冊 source_registry；80>20 僅示意方向，已於初稿修正 overclaim）。
