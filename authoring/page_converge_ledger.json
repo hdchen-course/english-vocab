@@ -2,6 +2,22 @@
  "_doc": "AC-UNIT-2 每頁 content_audit 5-clean 證據。round 僅於實跑 content_audit＋L3 coverage_check exit 0 後誠實記入；content_sha=HTML+sidecar 聯集（per_page_5clean_gate 同步）。",
  "required_clean": 5,
  "pages": {
+  "sci_phys_heat_kelvin.html": {
+   "frozen_sha": "40ca0928f21e18aa",
+   "rounds": [
+    {"round": 11, "content_sha": "40ca0928f21e18aa", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T20:58:30+08:00", "audited": true, "note": "post-2fix(rationale+氣體定律條件); content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line52/106/159, deep75%; reviewer原文含引號逗號)"},
+    {"round": 12, "content_sha": "40ca0928f21e18aa", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T20:59:30+08:00", "audited": true, "note": "post-2fix; content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line44/106/160, deep76%)"},
+    {"round": 13, "content_sha": "40ca0928f21e18aa", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T21:00:00+08:00", "audited": true, "note": "post-2fix; content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line48/106/159, deep75%)"},
+    {"round": 15, "content_sha": "40ca0928f21e18aa", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T21:05:00+08:00", "audited": true, "note": "post-2fix; content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line50/106/159, deep75%)"},
+    {"round": 14, "content_sha": "40ca0928f21e18aa", "clean": true, "l3_exit": 0, "recorded_at": "2026-11-19T21:06:00+08:00", "audited": true, "note": "post-2fix; content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line52/106/159, deep75%); 5/5 達成(R11-R15 連5clean、同sha 40ca0928)"}
+   ],
+   "_defect_fix_trace": [
+    {"from_sha": "c56e9986ff94f4f2", "to_sha": "40ca0928f21e18aa", "at": "2026-11-19T20:54:30+08:00", "defect": "R3(7鏡一致)confirmed major FACT-CHECK a-wrong(同批與R2併修)：claim c-k-why 原寫『氣體的體積、壓力和「絕對溫度」成正比關係』無條件並列,隱含 V∝T 且 P∝T 同時成立——對定量氣體物理上不可能(會得 PV∝T²,與 PV∝T 矛盾);V∝T 僅定壓、P∝T 僅定容。修:改為帶條件『壓力固定時體積和絕對溫度成正比；體積固定時壓力和絕對溫度成正比——這些關係都必須用絕對溫度才算得對』,不過度教氣體定律但不再暗示同時無條件正比。僅改 c-k-why 散文(圖/選項/其餘未動,四角色沿用)。c56e9986→40ca0928。R3(審70c6154)作廢。★class 教訓:提及 V/P 與 T 的正比務必附定壓/定容條件,勿無條件並列(否則讀成 PV∝T² 之錯模型)。"},
+    {"from_sha": "70c6154230d72194", "to_sha": "c56e9986ff94f4f2", "at": "2026-11-19T20:53:00+08:00", "defect": "R2(5/5 panel 一致)confirmed major algorithm-correctness a-wrong：Q2 distractor『248.15 K』的 rationale 原寫『這是減了 273.15』,但 25−273.15＝−248.15(負值),而 248.15 實際＝273.15−25,錯誤路徑的算術與所示數值不符、會誤導自己驗算的學生。修:rationale 改述真實錯誤路徑『這是把 273.15 減掉 25（273.15 − 25）算出來的；換算要用「加法」25 ＋ 273.15 ＝ 298.15 K。』,_note 的 distractor 描述同步改『248.15(誤算273.15−25)』。僅改散文 rationale＋_note metadata(圖/選項值/claim 未動,四角色簽核沿用)。70c6154→c56e9986 重跑 5-clean。先 bank 之 R1(70c6154)作廢、在飛 R3 丟棄,設 harvest_override 留痕。★class 教訓:distractor_rationale 描述的『錯誤算法路徑』必須真的能算出該 distractor 值(含正負號);負數換算題尤其要核對 a−b vs b−a 的正負,別把 273.15−25 說成『減了273.15』。"}
+   ],
+   "_note": "phys-heat 11/20 kelvin t_adv(學測/分科); 絕對溫標(克氏溫標)單位克耳文(K),刻度間隔與攝氏一樣大(升1K=升1°C)只是起點不同; 絕對零度=−273.15°C=0K=溫度最低極限(粒子熱運動降到最低不能再低); 換算 克耳文=攝氏+273.15,25°C=298.15K、冰點0°C=273.15K; 很多定律(氣體定律)需絕對溫度、不出現負值、與分子平均動能成正比。前置 celsius(攝氏已gloss); R15 gloss 絕對溫標 (Kelvin scale)/絕對零度 (absolute zero)/克耳文 (kelvin) 各=2。scope:不含三相點精確定義/熱力學溫標嚴格推導/氣體定律本身(另單元)。repro(sci_phys_checks::phys-heat.kelvin .venv PASS、source_registry 註冊,錨 25+273.15==298.15 且 −273.15+273.15==0)。figure=左右並列雙溫標直尺(左攝氏°C紅、右克氏K藍)三對齊橫刻度(25°C/298.15K、冰點0°C/273.15K、−273.15°C/0K絕對零度)+底部換算註。Q1絕對零度=−273.15°C(0K) distractor 0°C/−100°C/無最低; Q2 25°C→298.15K distractor 273.15(忘加25)/25(沒換算)/248.15(減273.15); Q3升1K=升1°C(刻度同) distractor 大很多/小很多/無法比; Q4不能再低=粒子熱運動最低 distractor 量不到/0°C結冰/水消失。全檔算式 ＝ ＋ 全形、負號全形減號 −。四角色 iPad land+port 兩方向簽核過。pedagogy 0 hard、scan/schema/question/repro PASS。",
+   "_phys_heat_tmid_complete": "phys-heat t_mid 段落(celsius/heat-unit/specific-heat/thermal-equilibrium/heat-transfer/expansion/latent-heat)+t_base(thermometer/conduction-basic)+temp-vs-heat 全完成,此為 t_adv 第1單元。"
+  },
   "sci_phys_heat_latent_heat.html": {
    "frozen_sha": "b9ac5a816bb24a71",
    "rounds": [

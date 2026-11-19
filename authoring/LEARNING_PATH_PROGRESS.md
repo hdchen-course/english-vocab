@@ -1,3 +1,9 @@
+## 2026-11-19 21:06 ★ sci.t_adv.phys-heat.kelvin 絕對溫標：溫度有沒有最低極限？ 5/5 DONE-GATE → phys-heat 11/20（t_adv 開跑）
+- **sci_phys_heat_kelvin frozen `40ca0928f21e18aa`**（R11-R15 連 5 clean、L3 全 exit0、同 sha）。tier=t_adv、exam=學測/分科。前置＝celsius。R15 gloss 絕對溫標 (Kelvin scale)/絕對零度 (absolute zero)/克耳文 (kelvin) 各=2。
+- 內容：絕對溫標（克氏溫標）單位克耳文 K、刻度間隔與攝氏相同（升 1 K＝升 1°C）只是起點不同；絕對零度＝−273.15°C＝0 K＝溫度最低極限（粒子熱運動降到最低）；換算 克耳文＝攝氏＋273.15，25°C＝298.15 K、冰點 0°C＝273.15 K；很多定律需絕對溫度。**scope**：不教氣體定律本身（僅帶條件提及為何用絕對溫度）。換算值＝repro（sci_phys_checks::phys-heat.kelvin .venv PASS，錨 25+273.15==298.15 且 −273.15+273.15==0）。figure＝左右雙溫標直尺對照。
+- **審查抓到真 major（我目視漏掉）×2**：(a) R2 Q2 distractor「248.15 K」rationale 原寫「減了 273.15」，但 25−273.15＝−248.15（負），248.15 實為 273.15−25→改述真實錯誤路徑。(b) **R3 claim c-k-why 物理錯誤**：原寫「體積、壓力和絕對溫度成正比」無條件並列，隱含 V∝T 且 P∝T 同時成立（對定量氣體不可能、會得 PV∝T²）→改為「定壓時 V∝T、定容時 P∝T」帶條件。兩者併修 de-converge（70c6154→c56e9986→40ca0928）。**另記 L3 教訓**：手建 coverage JSON 要用 reviewer 原文（含引號/逗號），`norm` 只 trim 空白不去引號，清掉會假性 FAIL（非 gate 錯、非 skim）。
+- DONE-GATE 全綠：per_page PASS（kelvin absent）、scan/pedagogy/question/schema/repro PASS、figure 四角色兩方向簽核。phys-heat strand 進度 11/20（t_adv 第 1 單元完成）。
+
 ## 2026-11-19 20:42 ★ sci.t_mid.phys-heat.latent-heat 潛熱：為什麼水滾了溫度卻不再上升 5/5 DONE-GATE → phys-heat 10/20
 - **sci_phys_heat_latent_heat frozen `b9ac5a816bb24a71`**（R11-R15 連 5 clean、L3 全 exit0、同 sha）。tier=t_mid、exam=會考。前置＝specific-heat＋heat-unit。R15 gloss 潛熱 (latent heat)/相變化 (phase change) 各=2。
 - 內容：相變化（熔化⇄凝固、汽化⇄凝結）時吸放熱但溫度維持不變＝潛熱；原因＝熱拿去改變狀態（拆開/重排粒子排列）非升溫，變完才再升溫；定量 Q＝m×L，水汽化熱約每公斤 2260 千焦、熔化熱約 334 千焦；例 0.5 公斤 100°C 水全汽化 Q＝0.5×2260＝1130 千焦、過程溫度停 100°C。6 公釐…（錯）→潛熱值＝repro（sci_phys_checks::phys-heat.latent-heat .venv PASS、source_registry 註冊，錨 0.5×2260==1130）。figure＝水加熱曲線雙平台（0°C 熔化、100°C 汽化）。
