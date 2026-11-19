@@ -1,3 +1,10 @@
+## 2026-11-20 05:37 ★ sci.t_mid.phys-estatic.charge 電荷正負與同性相斥異性相吸 5/5 DONE-GATE → phys-estatic 4/25（t_mid 會考首個）
+- **sci_phys_estatic_charge frozen `22bcac82db1e40c9`**（R1-R5 連 5 clean、L3 全 exit0、同 sha；一次性收斂、無 de-converge）。tier=t_mid、exam=會考。前置＝static-basic（摩擦起電）。R15 gloss 電荷 (electric charge)/電子 (electron)/質子 (proton) 各＝2。概念單元無數值 repro（verification_ref＝科學共識）。
+- 內容：物質由原子組成，原子有帶正電質子與帶負電電子，電荷分正負兩種，正負等量＝電中性；得電子（電子比質子多）帶負電、失電子（電子比質子少）帶正電；摩擦起電＝電子從一物轉移到另一物、一正一負、電荷總量不變；同性相斥（都正或都負互相推開）、異性相吸（一正一負互相吸引）。scope：不含庫侖定律數值公式、電場電位、電路電流電壓電阻、原子更細結構（各留另單元）。
+- figure＝三組對照：左「同性相斥」兩紅＋球箭頭朝外、中「同性相斥」兩藍−球箭頭朝外、右「異性相吸」紅＋藍−球外側箭頭朝內；圖例紅＝正電/藍＝負電。**pre-audit 圖預驗揪出並修正**：右組「異性相吸」原把向內箭頭擠在兩球 6px 間隙→糊成綠團、看不出箭頭；改到兩球外側朝內指（鏡像相斥版方向相反），清楚表達吸引。四角色目視簽核 PASS（綁 sha 22bcac82）。
+- **一次收斂（5 輪 0 缺陷）**：此單元草稿即避開本 session 已學到的 _note 模板缺陷類（守恆否定句/alt逐字/practice自述對齊/garden-path/動賓搭配），加上 pre-audit 圖預驗先修箭頭，content_audit 7-專家 panel 五輪 0 confirmed。印證「草稿先避雷＋圖預驗」大幅縮短收斂輪數。
+- DONE-GATE 全綠：per_page PASS（677/677、charge absent from violations）、scan/schema/question/pedagogy PASS（pedagogy 0 advisory，選項長度均衡）、gloss 各=2、figure 四角色簽核。phys-estatic strand 進度 4/25（t_base 3＋t_mid 1）。
+
 ## 2026-11-20 05:23 ★ sci.t_base.phys-estatic.circuit-basic 簡單電路 5/5 DONE-GATE → phys-estatic 3/25（t_base 入門）
 - **sci_phys_estatic_circuit_basic frozen `cee1f5d8281f1c2d`**（R1-R5 連 5 clean、L3 全 exit0、同 sha；期間兩次 de-converge）。tier=t_base、exam=無（國小入門，為後續會考電學鋪底）。無前置。R15 gloss 電路 (circuit)/通路 (closed circuit)/斷路 (open circuit) 各＝2。定性單元無數值 repro（verification_ref＝科學共識）。
 - 內容：簡單電路＝電池＋燈泡＋導線接成一個圈圈（迴路）；圈圈完整接通（通路）電繞一整圈、燈泡才亮；導線斷掉或開關沒接上＝斷路、電繞不成圈、燈泡不亮；開關接通或切斷迴路。figure＝左通路（黃燈泡亮＋綠點接通）vs 右斷路（灰燈泡不亮＋紅翹槓缺口）對照。scope：不含電流/電壓/電阻數值、串並聯、電流方向電荷正負、歐姆定律（各留另單元）。
