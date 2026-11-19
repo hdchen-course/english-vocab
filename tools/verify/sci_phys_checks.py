@@ -225,10 +225,20 @@ def en_pe_types():
     assert _close(2*g*3, 58.8) and _close(0.5*k*x**2, 1.0)  # 重力位能、彈性位能
     return _ok("phys-energy.pe-types", "重力位能 mgh=58.8J；彈性 ½kx²=1.0J")
 def en_mech_conserve():
-    m0, h = 1, 10
-    v2 = 2*g*h
-    assert _close(m0*g*h, 0.5*m0*v2)
-    return _ok("phys-energy.mech-conserve", "力學能守恆 ½mv²+mgh 定值")
+    # 力學能守恆：E=KE+PE 在任意點恆定（t_adv）。2kg 車自靜止於 h_top=20m 的無摩擦軌道。
+    m0, htop = 2, 20
+    E = m0*g*htop                      # 總力學能＝頂端位能 2·9.8·20=392J
+    assert _close(E, 392.0)
+    # 中間點 h=15m：位能 294J、動能＝E−PE=98J，和仍＝392J
+    hmid = 15
+    pe_mid = m0*g*hmid
+    ke_mid = E - pe_mid
+    assert _close(pe_mid, 294.0) and _close(ke_mid, 98.0) and _close(pe_mid+ke_mid, 392.0)
+    # 底端 h=0：位能 0、動能＝392J（末速只看高度差、與軌道形狀無關）
+    ke_bot = E - 0
+    assert _close(ke_bot, 392.0)
+    return _ok("phys-energy.mech-conserve",
+               "力學能守恆 E=KE+PE 任意點定值：頂 mgh=2·9.8·20=392J＝中(PE294+KE98)＝底 KE392J")
 def en_conservative():
     # 摩擦生熱：損失功=f·d
     assert 0.3*20*5 == 30
