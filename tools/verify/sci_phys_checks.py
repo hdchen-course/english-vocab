@@ -262,8 +262,15 @@ def en_power_fv():
     return _ok("phys-energy.power-fv",
                "瞬時功率 P=Fv=200·3=600W；與 P=W/t 一致：d=vt=12m、W=Fd=2400J、W/t=600W")
 def en_momentum_impulse():
-    assert 5*2 == 10 and 3*4-3*0 == 12               # I=Ft；Δp=mΔv
-    return _ok("phys-energy.momentum-impulse", "衝量 I=Ft=10；Δp=mΔv=12")
+    # 衝量-動量定理 I=Δp（t_adv）。F=6N 作用 t=2s 於 m=3kg 靜止物體。
+    F, t, m, u = 6, 2, 3, 0
+    I = F*t                            # 衝量 I=Ft=6·2=12 N·s
+    assert _close(I, 12.0)
+    dp = I                             # 衝量-動量定理：Δp=I=12 kg·m/s
+    v = u + dp/m                        # 末速 v=u+Δp/m=0+12/3=4 m/s
+    assert _close(v, 4.0) and _close(m*v - m*u, 12.0)
+    return _ok("phys-energy.momentum-impulse",
+               "衝量-動量定理 I=Ft=6·2=12 N·s=Δp=mΔv；m=3kg 靜止受此衝量末速 v=12/3=4 m/s")
 def en_momentum_conserve():
     # 碰撞前後總動量守恆：2·3+3·0 = (2+3)·1.2
     assert 2*3+3*0 == (2+3)*1.2

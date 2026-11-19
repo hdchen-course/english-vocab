@@ -1,3 +1,9 @@
+## 2026-11-19 13:27 ★ sci.t_adv.phys-energy.momentum-impulse 衝量與動量變化（衝量-動量定理 I＝Ft＝Δp）5/5 DONE-GATE → phys-energy 15/22
+- **sci_phys_energy_momentum_impulse frozen `9c65ba2d36dc6ad3`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha；一度 de-converge 自引入：2e567dc6→9c65ba2d）。t_adv 高中學測。前置＝ke-pe（質量/速度/動能）。R15 gloss（動量 momentum／衝量 impulse／衝量-動量定理 impulse-momentum theorem）各 grep -o＝2（_note＋can_do）。
+- 內容：動量 p＝mv（運動的多少、方向同速度）；衝量 I＝Ft（力×作用時間）；衝量-動量定理 I＝Δp＝mΔv。figure＝推之前 3kg 靜止（動量0）→力 6N×2s（衝量12 牛頓·秒）→推之後 v＝4 公尺/秒（動量 3×4＝12），下方「衝量12＝動量變化(0→12)」「末速＝動量÷質量＝12÷3＝4」。oracle en_momentum_impulse 錨 I＝Ft＝6·2＝12 N·s＝Δp、v＝12/3＝4 m/s（registry honest re-key f15f059f→fbced5bb）；Q3 衝量 12 distractor 3(÷)/8(+)/6(只寫力)、Q4 末速 4 distractor 36(×m)/15(+m)/9(−m)。
+- DONE-GATE 全綠：per_page（momentum-impulse 不在 violations、646/646 PASS、live=frozen 9c65ba2d）／scan PASS／pedagogy 0 hard／question CLEAN／schema clean／repro（phys-energy.momentum-impulse）PASS／figure 四角色簽核。
+- de-converge：R2 抓真實 blocker（5 鏡 domain/learning/english/zh/pm 皆 DEFECT a-wrong）——teach 末段小提醒原寫「衝量和動量…本來就相等」把 I＝Δp 誤成無條件「衝量＝動量」、循環論證、與同段 (3) 矛盾，會種下「衝量永遠等於動量」誤概念；修為「衝量等於動量的變化量(I＝Δp)、不是動量本身；本例因原本靜止(動量0)末動量才剛好等於衝量12」。figure 未變四角色簽核沿用。
+
 ## 2026-11-19 13:05 ★ sci.t_adv.phys-energy.power-fv 瞬時功率 P＝Fv（力×速率）5/5 DONE-GATE → phys-energy 14/22
 - **sci_phys_energy_power_fv frozen `5713b3aa443606f4`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha；一度 de-converge 自引入：100d7606→5713b3a）。t_adv 高中學測。前置＝power-def（功率 P=W/t）＋work-def。R15 gloss（瞬時功率 instantaneous power）grep -o＝2；功率英語 power 前置已 gloss。
 - 內容：瞬時功率 P＝F×v（力沿運動方向、v 當下速率）；由 P=W/t 推導（短時間 d=vt、W=Fvt、P=W/t=Fv）；同力速率越快功率越大（P∝v）。figure＝車受引擎 F=200N 沿運動方向、v=3m/s、P=200×3=600W，下方對比框「速率加倍→功率加倍」v3→P600、v6→P1200。oracle en_power_fv 錨 P=Fv=200·3=600W、d=vt=12m、W=Fd=2400J、W/t=600W（registry honest re-key 0abfa554→ed765eef）；Q2 瞬時功率 600W distractor 200(忘乘v)/66.7(÷)/203(+)、Q4 功 W=Pt=2400J distractor 150(÷)/604(+)/600(忘乘t)。
