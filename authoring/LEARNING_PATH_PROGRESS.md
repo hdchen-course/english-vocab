@@ -1,3 +1,9 @@
+## 2026-11-19 19:54 ★ sci.t_mid.phys-heat.heat-transfer 熱的三種傳播方式 5/5 DONE-GATE → phys-heat 8/20
+- **sci_phys_heat_heat_transfer frozen `73be1474bbbe9911`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha，無缺陷無 de-converge；一次過）。tier=t_mid、exam=會考。前置＝conduction-basic（傳導已 gloss 不重複）。R15 gloss 對流 (convection)/輻射 (radiation) 各=2。
+- 內容：熱三種傳播＝傳導、對流、輻射；傳導沿固體一點一點傳（金屬快）；對流＝液/氣受熱膨脹上升、較冷下沉形成循環（煮水整鍋熱、冷暖氣）；輻射＝熱以電磁波（光）直接傳、不需介質、可穿真空（太陽穿真空到地球、烤火正面熱）。figure 三欄 傳導(金屬棒箭頭)/對流(鍋水循環)/輻射(太陽→波紋→人)。分類為科學共識（oracle len({傳導,對流,輻射})==3 僅標記 3 類、未註冊 source_registry、非 repro）。Q2 太陽穿真空＝輻射（真空只輻射傳得過）；Q4 冷氣裝高處＝冷空氣較重下沉。
+- 審查：content_audit R1-R5 皆 0 真缺陷；唯一反覆 raw＝SVG 內一個退化零面積 polygon（我草稿遺留），panel 連兩輪 0/7 一致裁 NOT-a-defect（不可見死碼、無 reader 影響），依 SOP 不改、避免無謂 de-converge。
+- DONE-GATE 全綠：per_page 661/661 PASS、live=frozen 73be1474／scan PASS／pedagogy 0 hard／question CLEAN／schema clean／figure 四角色簽核。phys-heat strand 進度 8/20。
+
 ## 2026-11-19 19:42 ★ sci.t_mid.phys-heat.thermal-equilibrium 熱平衡：冷熱相遇最後會一樣溫 5/5 DONE-GATE → phys-heat 7/20
 - **sci_phys_heat_thermal_equilibrium frozen `cc6e539da187e258`**（post-4fix rounds 41-45 連 5 clean、L3 全 exit0、同 sha）。tier=t_mid、exam=會考。前置＝conduction-basic（熱高→低、傳導已 gloss）＋specific-heat（Q=mcΔT/比熱已 gloss）。R15 gloss 熱平衡 (thermal equilibrium)=2。
 - 內容：兩溫度不同物體接觸熱由高溫→低溫流、高溫降低溫升、直到兩邊溫度一樣不再淨流動＝熱平衡；終溫介於原本冷熱之間；等量同物質混合終溫＝平均，1 公斤 80°C＋1 公斤 20°C＝(80＋20)÷2＝50°C。figure 左 80°C 熱水＋右 20°C 冷水→混合→兩邊 50°C 熱平衡。oracle thermal-equilibrium 錨 (1×80+1×20)/(1+1)==50（repro_gate .venv PASS、source_registry 註冊）。
