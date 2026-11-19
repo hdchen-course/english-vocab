@@ -1,3 +1,8 @@
+## 2026-11-19 13:45 ★ sci.t_adv.phys-energy.collision-1d 一維完全非彈性碰撞（黏在一起的共同速度）5/5 DONE-GATE → phys-energy 17/22
+- **sci_phys_energy_collision_1d frozen `2b77f0bbaaa96f0a`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha；首輪即零、零 de-converge）。t_adv 高中學測。前置＝momentum-conserve。R15 gloss（完全非彈性碰撞 perfectly inelastic collision）grep -o＝2；動量/動量守恆/動能 前置已 gloss 不重複。
+- 內容：完全非彈性碰撞＝碰後黏在一起、以共同速度前進；動量守恆但動能不守恆（部分變成熱與聲音、總動能變小）；共同速度＝總動量÷總質量＝(m1u1+m2u2)/(m1+m2)。figure＝碰前 2kg→4m/s＋3kg 靜止→碰後 5kg 合成→1.6m/s＋公式 (2×4+3×0)/(2+3)=8÷5=1.6＋紅字「動量守恆、動能變小」。oracle collision-1d 錨 (2·4+3·0)/(2+3)=1.6；Q3 共速 1.6 distractor 8(忘除總質量)/4(沿用撞擊速度)/2(兩速度平均沒加權)、Q4 動量守恆動能不守恆 distractor 都守恆/動能守恆動量不守恆/都不守恆。
+- DONE-GATE 全綠：per_page（collision-1d 不在 violations、648/648 PASS、live=frozen 2b77f0bb）／scan PASS／pedagogy 0 hard／question CLEAN／schema clean／repro（phys-energy.collision-1d）PASS／figure 四角色簽核。
+
 ## 2026-11-19 13:37 ★ sci.t_adv.phys-energy.momentum-conserve 動量守恆（系統不受外力時總動量不變）5/5 DONE-GATE → phys-energy 16/22
 - **sci_phys_energy_momentum_conserve frozen `2d5d607227b0cbb6`**（rounds 1-5 連 5 clean、L3 全 exit0、同 sha；首輪即零、零 de-converge）。t_adv 高中學測。前置＝momentum-impulse。R15 gloss（動量守恆 conservation of momentum）grep -o＝2；動量 momentum 前置已 gloss 不重複。
 - 內容：動量守恆＝系統合外力為零時碰撞前後總動量不變；總動量＝各物體質量×速度相加；碰前總動量＝碰後總動量解速度。figure＝碰撞前 2kg→3m/s＋3kg 靜止 總動量 2×3＋3×0＝6；碰撞後黏成 5kg→1.2m/s 總動量 (2+3)×1.2＝6。oracle momentum-conserve 錨 2·3+3·0=(2+3)·1.2=6；Q2 碰前總動量 6 distractor 5(質量相加)/3(只看速度)/1.2(混淆碰後速度)、Q3 共同速度 1.2 distractor 6(忘除總質量)/3(除2)/2(除3)、Q4 碰後總動量 6 distractor 0(以為停)/1.2(當速度)/5(當質量)。
