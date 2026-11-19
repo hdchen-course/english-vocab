@@ -2,6 +2,71 @@
  "_doc": "AC-UNIT-2 每頁 content_audit 5-clean 證據。round 僅於實跑 content_audit＋L3 coverage_check exit 0 後誠實記入；content_sha=HTML+sidecar 聯集（per_page_5clean_gate 同步）。",
  "required_clean": 5,
  "pages": {
+  "sci_phys_heat_thermo1.html": {
+   "frozen_sha": "fbf61e597854550c",
+   "rounds": [
+    {
+     "round": 21,
+     "content_sha": "fbf61e597854550c",
+     "clean": true,
+     "l3_exit": 0,
+     "recorded_at": "2026-11-20T00:18:00+08:00",
+     "audited": true,
+     "note": "content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line52/106/158)"
+    },
+    {
+     "round": 22,
+     "content_sha": "fbf61e597854550c",
+     "clean": true,
+     "l3_exit": 0,
+     "recorded_at": "2026-11-20T00:19:00+08:00",
+     "audited": true,
+     "note": "content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line55/106/158)"
+    },
+    {
+     "round": 23,
+     "content_sha": "fbf61e597854550c",
+     "clean": true,
+     "l3_exit": 0,
+     "recorded_at": "2026-11-20T00:18:30+08:00",
+     "audited": true,
+     "note": "content_audit confirmed=0 coverageComplete=true (終輪複核); L3 exit0 (anchors line52/106/159)"
+    },
+    {
+     "round": 24,
+     "content_sha": "fbf61e597854550c",
+     "clean": true,
+     "l3_exit": 0,
+     "recorded_at": "2026-11-20T00:21:00+08:00",
+     "audited": true,
+     "note": "content_audit confirmed=0 coverageComplete=true; L3 exit0 (anchors line55/106/158)"
+    },
+    {
+     "round": 25,
+     "content_sha": "fbf61e597854550c",
+     "clean": true,
+     "l3_exit": 0,
+     "recorded_at": "2026-11-20T00:22:00+08:00",
+     "audited": true,
+     "note": "content_audit confirmed=0 coverageComplete=true (終輪複核); L3 exit0 (anchors line57/106/159)"
+    }
+   ],
+   "_note": "phys-heat 16/20 thermo1 t_adv(學測/分科); 熱力學第一定律 ΔU=Q−W 能量守恆在熱學的表現(系統內能變化=吸收的熱Q−系統對外作的功W); 符號約定(本課固定)Q 吸熱為正放熱為負、W 對外作功為正被外界作功為負; 例 吸熱100J對外作功30J→ΔU=100−30=70J(內能增加70J); 推論 ΔU=0 時 Q=W(熱全拿去對外作功)。前置 internal-energy(內能已gloss不重複); R15 gloss 熱力學第一定律 (first law of thermodynamics)=2。repro(sci_phys_checks::phys-heat.thermo1 .venv PASS,錨 100−30==70)。figure=中央系統(氣體)框 ΔU=+70J、左紅箭頭 Q=100J 流入、右藍箭頭 W=30J 流出、底部 ΔU=Q−W=100−30=70J 能量守恆; 箭頭方向 Q入W出正確。scope:不含各過程(等溫/絕熱/等壓/等容)逐一公式細算(pv-processes另單元)/熵與第二定律/莫耳熱容。四角色兩方向簽核過。scan/pedagogy/question/schema/repro PASS。★R1/R2 content_audit 抓到真 blocker:全檔『守恒』誤用異體/PRC 字 恒(U+6052),教育部正字為 恆(U+6046)→30 處全改 恆;且 scan_simplified gate 原無此碼點(誤 PASS)→已補 0x6052:恆 並紅隊(壞案例 exit1、好案例 PASS、全樹無誤報)。de-converge b7b1a3ed→769d59f4。",
+   "_defect_fix_trace": [
+    {
+     "from_sha": "b7b1a3ed97d27862",
+     "to_sha": "769d59f4eed21308",
+     "at": "2026-11-20T00:06+08:00",
+     "defect": "R1/R2 blocker 簡體/異體字:全檔 30 處『守恒/能量守恒』用 恒(U+6052)應為教育部正字 恆(U+6046)→全改;scan_simplified gate 盲點已補 0x6052 並紅隊"
+    },
+    {
+     "from_sha": "769d59f4eed21308",
+     "to_sha": "fbf61e597854550c",
+     "at": "2026-11-20T00:13+08:00",
+     "defect": "R12 major 可讀性:teach 開場『給氣體加熱，它一部分變熱…』代名詞『它』最近前詞是氣體(字面讀成氣體本身分兩份,物理錯;分成內能與作功的是加進去的能量)→改『加進去的熱一部分變成內能…一部分推動活塞對外作功』"
+    }
+   ]
+  },
   "sci_phys_heat_internal_energy.html": {
    "frozen_sha": "0915a347271bc95f",
    "rounds": [

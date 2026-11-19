@@ -1,3 +1,10 @@
+## 2026-11-20 00:22 ★ sci.t_adv.phys-heat.thermo1 熱力學第一定律：熱、功和內能的收支表 5/5 DONE-GATE → phys-heat 16/20
+- **sci_phys_heat_thermo1 frozen `fbf61e597854550c`**（R21-R25 連 5 clean、L3 全 exit0、同 sha）。tier=t_adv、exam=學測/分科。前置＝internal-energy。R15 gloss 熱力學第一定律 (first law of thermodynamics)＝2。
+- 內容：ΔU＝Q−W 是能量守恆在熱學的表現（系統內能變化＝吸收的熱 Q − 系統對外作的功 W）；符號約定（本課固定）Q 吸熱為正放熱為負、W 對外作功為正被外界作功為負；例 吸熱 100 J 對外作功 30 J → ΔU＝100−30＝70 J（內能增加 70 J）；推論 ΔU＝0 時 Q＝W（熱全拿去對外作功）。repro（sci_phys_checks::phys-heat.thermo1 .venv PASS，錨 100−30＝70）。figure＝中央系統（氣體）框 ΔU＝+70J、左紅箭頭 Q=100J 流入、右藍箭頭 W=30J 流出、底部 ΔU＝Q−W＝100−30＝70J 能量守恆（箭頭方向 Q 入 W 出正確）。
+- **審查抓到真缺陷×3（我草稿漏掉），其中一個順手補強 gate**：(1) **blocker 簡體/異體字**（R1/R2 panel 5-6/7）：全檔 30 處「守恒/能量守恒」誤用異體/PRC 字 恒(U+6052)，教育部正字為 恆(U+6046)→全改；**且 scan_simplified gate 原無此碼點（誤 PASS）＝gate 漏洞**，依 rule 7 補 `0x6052:恆` 並**紅隊通過**（壞案例 exit1 擋下／好案例 PASS／全樹無誤報）。(2) **major 可讀性**（R12）：teach 開場「給氣體加熱，它一部分變熱…」代名詞「它」最近前詞是「氣體」（字面讀成氣體本身分兩份＝物理錯；真正分成內能與作功的是「加進去的能量」）→改「加進去的熱一部分變成內能…一部分推動活塞對外作功」。兩次 de-converge（b7b1a3ed→769d59f4→fbf61e59）。
+- **class 教訓**：異體字 恒/恆（U+6052/U+6046）屬 scan_simplified 盲點已補；代名詞「它/其」在中文教材要確認最近前詞＝真正主體（能量 vs 物體），否則字面物理錯。
+- DONE-GATE 全綠：per_page PASS（669/669、thermo1 absent）、scan（含新碼點）/pedagogy/question/schema/repro PASS、figure 四角色兩方向簽核。phys-heat strand 進度 16/20（t_adv 第 6 單元完成）。
+
 ## 2026-11-19 23:37 ★ sci.t_adv.phys-heat.internal-energy 內能：一團氣體裡到底藏了多少能量 5/5 DONE-GATE → phys-heat 15/20
 - **sci_phys_heat_internal_energy frozen `0915a347271bc95f`**（R11-R15 連 5 clean、L3 全 exit0、同 sha）。tier=t_adv、exam=學測/分科。前置＝kinetic-theory。R15 gloss 內能 (internal energy)＝2。
 - 內容：內能＝一團氣體所有分子微觀能量的總和；理想氣體（分子間除碰撞外無作用力、無分子間位能）＝所有分子動能的總和。單原子理想氣體 U＝(3/2)nRT（★公式處一律加「單原子」限定，雙原子＝(5/2)nRT 不在 scope）；U 只由絕對溫度 T 和莫耳數 n 決定、與體積壓力無關（此對所有理想氣體成立）；U∝絕對溫度 T，T 加倍 U 加倍；定溫定量下壓縮/膨脹不改內能。repro（sci_phys_checks::phys-heat.internal-energy .venv PASS，錨 1.5×1×R×600＝2×(1.5×1×R×300)）。figure＝左低溫 T／右高溫 2T 兩盒各 5 顆等量分子、右箭頭較長、中央 U＝(3/2)nRT。

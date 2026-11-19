@@ -51,6 +51,9 @@ SIMPLIFIED = {
     0x6807: "標", 0x7F51: "網", 0x7EDC: "絡",
     # 註：鼠(U+9F20)/硬(U+786C) 繁簡同形、非簡體，不得入表（否則誤報滑鼠/硬體）。
     0x53F0: "臺",  # 台 is tolerated in TW too; report as info, not hard-fail
+    # 異體/PRC 標準字形盲點補強（content_audit 於 phys-heat thermo1 抓到「守恒」用 恒 而 gate 誤 PASS）：
+    # 恒(U+6052) 為教育部正字 恆(U+6046) 的異體/PRC 通用規範字形；繁體 K-12 一律用「恆」（守恆/能量守恆/恆星）。
+    0x6052: "恆",
 }
 # Code points to report only as INFO (accepted in Taiwan usage), never fail on.
 INFO_ONLY = {0x53F0}
