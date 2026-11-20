@@ -4,79 +4,151 @@ with a proof-guard that ONLY arrowhead polygon coordinates changed.
 
 HD 2026-11-20: the hand-placed `<polygon>` arrowheads across ~75 sci figures are
 short/blunt wedges (base width ≈ length), not crisp pointed triangles. This
-rewrites each AXIS-ALIGNED 3-point arrowhead polygon into a crisp pointed
-triangle — tip kept exactly where it was (so it stays attached to the line),
-base lengthened back along the arrow axis and narrowed — so the arrow reads as a
-sharp arrowhead. Diagonal/odd polygons are left untouched (needs manual/marker).
+rewrites each AXIS-ALIGNED arrowhead polygon into a crisp pointed triangle — tip
+kept exactly on the associated line's endpoint (so it stays attached and points
+the right way), base lengthened back along the arrow axis and narrowed.
+
+LINE-AWARE (fixed 2026-11-20 after a diagonal 光能 arrowhead was mis-rewritten):
+the TIP of a correct arrowhead sits on one endpoint of its line. We therefore
+find, for each 3-point polygon, the polygon vertex closest to any `<line>`
+endpoint — that vertex is the true tip, and the line's OTHER endpoint gives the
+true arrow direction. We ONLY sharpen when that matched line is axis-aligned
+(horizontal or vertical). A DIAGONAL arrow is left untouched (hand/marker job) —
+even if two of its vertices happen to share an x or y coordinate (the old bug:
+a diagonal head whose base vertex was level with the tip was misread as a
+vertical arrow and rebuilt pointing the wrong way). If no line endpoint is near
+any vertex (TIP_TOL), the polygon is left untouched (we cannot trust it).
 
 SAFETY: after transforming, it PROVES the only bytes that changed in the SVG are
-inside `points='...'` attributes (everything else — text nodes, labels, lines,
-markers, geometry of non-arrowhead shapes — byte-identical). If anything else
-changed, it ABORTS without writing. This bounds the blast radius; the VISION
-signoff (render + look) is the second backstop that the new triangles look right
-and still point correctly. A figure change still de-converges the page and must
-re-run the full 5-clean + visual signoff — this tool does NOT touch the ledger.
+inside `points='...'` attributes. If anything else changed, it ABORTS without
+writing. A figure change still de-converges the page and must re-run the full
+5-clean + visual signoff — this tool does NOT touch the ledger.
 
 Usage:
     python3 -I tools/figure_arrowhead_sweep.py <page>.units.json [--check]
       (default) apply in place if proof passes; --check = dry-run, report only.
+    python3 -I tools/figure_arrowhead_sweep.py <page>.units.json --audit
+      detect arrowhead polygons whose tip is NOT on any line endpoint
+      (possible mis-sharpen / detached head); report only, exit=suspect count.
 """
 import json
 import re
 import sys
 
+TIP_TOL = 2.0     # a true tip sits within this many px of a line endpoint
+AXIS_TOL = 0.6    # |dx| or |dy| below this => the line is axis-aligned
+
+
+def _lines(svg):
+    out = []
+    for m in re.finditer(r"<line\b[^>]*?x1='([-\d.]+)'[^>]*?y1='([-\d.]+)'[^>]*?x2='([-\d.]+)'[^>]*?y2='([-\d.]+)'", svg):
+        x1, y1, x2, y2 = (float(g) for g in m.groups())
+        out.append(((x1, y1), (x2, y2)))
+    return out
+
+
+def _match_tip(P, lines):
+    """Return (tip_pt_exact_on_line, other_end) for the polygon vertex nearest a
+    line endpoint, or None if nothing is within TIP_TOL."""
+    best = None
+    for (a, b) in lines:
+        for e, o in ((a, b), (b, a)):
+            for v in P:
+                d = ((v[0] - e[0]) ** 2 + (v[1] - e[1]) ** 2) ** 0.5
+                if best is None or d < best[0]:
+                    best = (d, v, e, o)
+    if best is None or best[0] > TIP_TOL:
+        return None
+    return best[2], best[3]   # exact line endpoint (tip), other end (tail)
+
+
+def _parse_poly(points):
+    nums = re.findall(r'-?\d+\.?\d*', points)
+    if len(nums) != 6:
+        return None
+    p = [float(x) for x in nums]
+    return [(p[0], p[1]), (p[2], p[3]), (p[4], p[5])]
+
 
 def sharpen_svg(svg):
+    lines = _lines(svg)
+
     def repl(m):
-        nums = re.findall(r'-?\d+\.?\d*', m.group(1))
-        if len(nums) != 6:
+        P = _parse_poly(m.group(1))
+        if P is None:
             return m.group(0)
-        p = [float(x) for x in nums]
-        P = [(p[0], p[1]), (p[2], p[3]), (p[4], p[5])]
-        base = tip = None
-        for i, j in [(0, 1), (0, 2), (1, 2)]:
-            k = 3 - i - j
-            if abs(P[i][0] - P[j][0]) < 0.6:      # shared x -> horizontal arrow
-                base = ('x', P[i], P[j]); tip = P[k]; break
-            if abs(P[i][1] - P[j][1]) < 0.6:      # shared y -> vertical arrow
-                base = ('y', P[i], P[j]); tip = P[k]; break
-        if not base:
-            return m.group(0)                      # diagonal: leave for manual/marker
-        axis, b1, b2 = base
-        if axis == 'x':
-            bx = b1[0]; my = (b1[1] + b2[1]) / 2.0; tx, ty = tip
-            if abs(tx - bx) < 0.6:
-                return m.group(0)
-            sign = 1 if tx > bx else -1
-            L = max(abs(tx - bx), 9.0) * 1.25      # lengthen
-            half = L * 0.34                         # narrow -> pointed (len:width ~1.5:1)
+        tip = _match_tip(P, lines)
+        if tip is None:
+            return m.group(0)          # tip not on any line end -> don't touch
+        (tx, ty), (ox, oy) = tip
+        dx, dy = tx - ox, ty - oy      # arrow direction (tail -> tip)
+        if abs(dy) < AXIS_TOL and abs(dx) >= AXIS_TOL:
+            # horizontal arrow
+            sign = 1 if dx > 0 else -1
+            L = max(abs(dx), 9.0) * 1.25
+            half = L * 0.34
             nbx = tx - sign * L
-            return "points='%g,%g %.1f,%.1f %.1f,%.1f'" % (tx, ty, nbx, my - half, nbx, my + half)
-        else:
-            by = b1[1]; mx = (b1[0] + b2[0]) / 2.0; tx, ty = tip
-            if abs(ty - by) < 0.6:
-                return m.group(0)
-            sign = 1 if ty > by else -1
-            L = max(abs(ty - by), 9.0) * 1.25
+            return "points='%g,%g %.1f,%.1f %.1f,%.1f'" % (tx, ty, nbx, ty - half, nbx, ty + half)
+        if abs(dx) < AXIS_TOL and abs(dy) >= AXIS_TOL:
+            # vertical arrow
+            sign = 1 if dy > 0 else -1
+            L = max(abs(dy), 9.0) * 1.25
             half = L * 0.34
             nby = ty - sign * L
-            return "points='%.1f,%g %.1f,%g %g,%g'" % (mx - half, nby, mx + half, nby, tx, ty)
+            return "points='%.1f,%g %.1f,%g %g,%g'" % (tx - half, nby, tx + half, nby, tx, ty)
+        return m.group(0)              # diagonal arrow -> leave for manual/marker
     return re.sub(r"points='([-\d., ]+)'", repl, svg)
 
 
+def audit_svg(svg):
+    """Report arrowhead polygons whose nearest line endpoint is > TIP_TOL away
+    (detached head / possible mis-sharpen). Returns list of (points, dist)."""
+    lines = _lines(svg)
+    suspects = []
+    for m in re.finditer(r"points='([-\d., ]+)'", svg):
+        P = _parse_poly(m.group(1))
+        if P is None:
+            continue
+        best = None
+        for (a, b) in lines:
+            for e in (a, b):
+                for v in P:
+                    d = ((v[0] - e[0]) ** 2 + (v[1] - e[1]) ** 2) ** 0.5
+                    if best is None or d < best:
+                        best = d
+        if best is not None and best > TIP_TOL:
+            suspects.append((m.group(1), round(best, 2)))
+    return suspects
+
+
 def prove_only_points_changed(old, new):
-    """True iff old and new differ ONLY inside points='...' attributes."""
     norm = lambda s: re.sub(r"points='[-\d., ]+'", "points='@'", s)
     return norm(old) == norm(new)
 
 
 def main():
     if len(sys.argv) < 2:
-        print("usage: figure_arrowhead_sweep.py <page>.units.json [--check]")
+        print("usage: figure_arrowhead_sweep.py <page>.units.json [--check|--audit]")
         sys.exit(2)
     path = sys.argv[1]
     check = "--check" in sys.argv[2:]
+    audit = "--audit" in sys.argv[2:]
     d = json.load(open(path, encoding="utf-8"))
+
+    if audit:
+        total = 0
+        for u in d.get("units", []):
+            for t in u.get("teach", []):
+                fig = t.get("figure")
+                if not fig or not fig.get("svg"):
+                    continue
+                for pts, dist in audit_svg(fig["svg"]):
+                    print(f"SUSPECT {path}: polygon points='{pts}' nearest line-end {dist}px (> {TIP_TOL})")
+                    total += 1
+        if total == 0:
+            print(f"{path}: audit clean (every arrowhead tip sits on a line endpoint)")
+        sys.exit(total)
+
     changed = 0
     for u in d.get("units", []):
         for t in u.get("teach", []):

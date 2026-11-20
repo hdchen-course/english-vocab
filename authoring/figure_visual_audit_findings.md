@@ -21,3 +21,9 @@
 - 箭頭已銳利範例(勿動)：power_def、variable_force_work、pulley_wheel、lever_torque、energy_conserve
 - 構圖(非箭頭)：上方留白重心偏下 lever_torque/work_def/work_energy_thm/momentum_impulse/center_of_mass；mech_conserve「底0m」紅字脫節應移右下底球旁；center_of_mass 右球壓刻度5與軸末x；ke_pe 中段大留白
 - 無裁切/無嚴重壓線/無方向畫反。
+
+## sweep 工具 bug（2026-11-20，已修+紅隊）
+- 根因：舊 `figure_arrowhead_sweep.py` 把任何「兩頂點同 x 或同 y」的 3 點 polygon 當軸對齊箭頭，odd 點當 tip。forms 的光能斜箭頭 `250,66 242,66 246,73`（tip 在線端 250,66，但 250,66 與 242,66 同 y）被誤判成垂直箭頭→重建成朝下三角、方向反（content_audit 9-agent 判 blocker a-wrong）。
+- 修：工具改 **line-aware**——以「最接近某 `<line>` 端點的 polygon 頂點」為真 tip、line 另一端為方向，只有該 line 軸對齊才銳化，斜線一律放過；加 `--audit` 偵測 tip 不在任何 line 端點的脫節頭。紅隊 9 案全 PASS（/tmp/rt_sweep.py：壞案例斜線放過、好案例 h/v 銳化、audit 抓脫節頭/clean 正確頭）。
+- 回掃全 sci_phys 圖：我實際 sweep 的 12 檔（force4+energy6+work_def/conservative/forms）無一在 --audit suspect 清單（forms 已修）→ 證明 buggy sweep 只傷 forms。
+- --audit 另報 41 個 SUSPECT 為**既有手繪頭/marker def/附著 path 或方塊邊**（如 `0,0 5,3 0,6` marker、`73,0 73,0 73,0` 退化點、estatic/heat/kin/optics 未 sweep 檔）＝非本次回歸，記 standing-audit 既有債、不連鎖 de-converge。
