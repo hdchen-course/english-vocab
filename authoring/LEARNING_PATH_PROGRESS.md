@@ -1,3 +1,9 @@
+## 2026-11-20 20:09 — HD 回報 figure 全修復 + 視覺稽核制度化
+- HD 連環回報 figure「沒畫好」且質問為何 audit 不自動抓。根因：content_audit 只讀文字、不算繪 SVG 看像素(render-only 盲點)。
+- 已修復收斂並 push 的四圖：kirchhoff(文字壓線)、charge-in-field(箭頭 orient 轉向)、plane-mirror(屏幕→屏 PRC詞+歧義)、work-cos(構圖失衡+位移被基線吃掉+方頭)。加先前 specific_heat 共 5 圖。
+- 制度化：建 tools/figure_visual_audit.py(算繪供視覺 agent 真看)+commit；視覺 agent 已看完 force(17)+energy(22) 全 39 圖，缺陷清單在 authoring/figure_visual_audit_findings.md。建 tools/prc_term_gate.py(繁體寫的中國詞)+紅隊。
+- 系統性待辦(sweep)：方頭箭頭約 25 圖(手繪短鈍 polygon→換尖三角 marker；原型已驗證於 newton2)＋數張構圖(上方留白/標籤脫節/元素相疊)。尚待掃 estatic/optics/heat/kin＋英數島。每圖走 render→視覺簽核→de-converge 5-clean。視覺關卡要正式寫進每檔 gate 與 STANDING_AUDIT_SOP。
+
 ## 2026-11-20 19:35 — phys-optics strand 進度
 - HD 回報三個 figure 缺陷全修復收斂：specific_heat(比熱,先前)、kirchhoff(克希荷夫,文字壓線→viewBox加寬/標籤讓位) 5/5 DONE、charge-in-field(電場帶電粒子,箭頭 orient=auto 轉向→右向三角) 5/5 DONE。
 - 平面鏡成像 plane-mirror 5/5 DONE-GATE（strand 5/21, HEAD 9d443812d）；過程 de-converge 兩次：c-pm-flip「鏡子上的字」歧義、以及「屏幕」(PRC詞)x16→「屏」零-PRC 修正。
