@@ -1,3 +1,10 @@
+## 2026-11-20 09:18 ★ sci.t_mid.phys-estatic.home-safety 家庭用電安全 5/5 DONE-GATE → phys-estatic 14/25（t_mid strand 完成）
+- **sci_phys_estatic_home_safety frozen `756551443d5ac41f`**（v2 r4-r8 連 5 clean、L3 全 exit0；一次 de-converge：v1 r1 揪 claim c-hs-protect 引號命名『過大電流保護裝置』與全檔標準術語『過電流保護裝置』不一致＋_note自述『全檔用語一致』矛盾、r2/r3 false-clean→改標準術語、rounds 歸零（1f9bf646→75655144）重跑 r4-8 5-clean）。tier=t_mid、exam=會考。前置＝current-def/electric-power。R15 gloss 保險絲 (fuse)/斷路器 (circuit breaker)/接地 (grounding)/短路 (short circuit) 各＝2。
+- **安全/共識單元，無數值 oracle**：verification_ref＝電路/公共用電安全科學共識（KP verified_by 含 domain:自然科學/實驗安全＋adversarial:公共安全獨立複審）。
+- 內容：保險絲/斷路器＝過電流保護裝置（過載或短路時切斷防電線過熱走火，保險絲低熔點熔斷/斷路器可復位）；接地＝漏電時電流經接地線流入大地、不經人體降低觸電；守則濕手勿碰電器插頭/插座勿超載/破損電線要換/保險絲不可用鐵絲代替（皆以後果框架說明為何危險、非恐嚇）。figure＝配電箱(保險絲/斷路器)＋電器金屬外殼＋接地線通大地＋守則。scope：不含 ELCB/RCD 定量、三相電、電費定量。
+- **class 教訓（補強 note-metadata-must-match-file）**：claim 引號內命名術語要用全檔一致的**標準會考術語**（過電流保護裝置），不可自創變體（過大電流…）；_note 若自述『全檔用語一致』，content_audit 會把它當 fact 查核、任一處不一致即 major。安全單元雖無 oracle，但術語一致性/安全敘述正確性仍是硬缺陷。
+- DONE-GATE 全綠：per_page PASS（687/687、home_safety absent）、scan/schema/question/pedagogy PASS、gloss 四術語各=2、figure 四角色雙向 iPad render 簽核（配電箱/接地線/大地符號、守則紅字，無重疊裁切、電路拓撲合理）。**phys-estatic strand t_mid 11 個 KP 全數完成**（charge/charging/current-def/electroscope/charging-methods/voltage/resistance/ohm-law/series/parallel/electric-power/home-safety；strand 進度 14/25＝t_base 3＋t_mid 11）。
+
 ## 2026-11-20 08:59 ★ sci.t_mid.phys-estatic.electric-power 電功率 P＝IV 5/5 DONE-GATE → phys-estatic 13/25
 - **sci_phys_estatic_electric_power frozen `b7ab03966f71fab6`**（v2 r4-r8 連 5 clean、L3 全 exit0；一次 de-converge：v1 r1/r2 false-clean 後 r3 揪 _note Q3 第四 distractor 列舉『無法判斷（以為缺少資料，其實同時間比功率即可）』與實際選項『無法判斷（以為缺少資料）』不符→去除多出句、rounds 歸零（cc834459→b7ab0396）重跑 r4-8 5-clean）。tier=t_mid、exam=會考。前置＝ohm-law/current-def/voltage。R15 gloss 電功率 (electric power)＝2、瓦特 (watt)＝2。
 - **定量單元**：P＝IV＝110×2＝220 瓦特 經 oracle `sci_phys2_checks::phys-estatic.electric-power` 以 `.venv` repro_gate PASS（未造假）。
