@@ -1,3 +1,7 @@
+## 2026-11-20 17:02:33 +08:00
+- phys-optics 光的反射與鏡子成像 5/5 DONE-GATE (frozen 6387deda, r1-r5, 全輪 unpiped L3 exit0; per_page+phase1 全綠; 定性單元無 reproduction). phys-optics strand 2/21.
+- 收斂過程修 2 真缺陷: (a) _note 底部 『』 自述併兩 SVG 節點+丟結尾(r5 note-figure-label-quote-not-verbatim)→改非逐字描述; (b) c-rm-image 虛像句 garden-path(r2 b-hard-to-understand)→主詞明確化. pipe-gotcha 抓出並撤回 1 skim 輪(coverage_check 必 unpiped 讀 exit).
+
 ## 2026-11-20 16:11:38 +08:00
 - phys-heat 比熱 figure 破圖修復 DONE-GATE 完成: _note alt 自述 over-claim (r1 confirmed major note-alt-verbatim-overclaim) 已修; frozen 145fc1a4 r1-r5 5-clean (L3 全 exit0); per_page+repro+phase1 全綠. HD 回報的文字蓋線+箭頭已於 319fcde71 修, 本次補 alt 自述並重收斂.
 
