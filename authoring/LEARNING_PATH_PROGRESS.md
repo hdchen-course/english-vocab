@@ -4075,3 +4075,10 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - power_fv（P=Fv 施力紅+速率藍）、momentum_impulse（I=Ft=Δp 兩藍）箭頭鈍楔形→尖三角（figure_arrowhead_sweep proof-guarded 僅 points）；各 rounds=[r1..r5] clean、L3 exit0。
 - frozen：power_fv=8fe7005cb7a6fea7、momentum_impulse=dcbede416c74154e；DONE-GATE：per_page absent from violations、prc PASS、scan PASS。視覺 figure_visual_audit 已 Read 確認尖三角附著方向正確。
 - work_energy_thm 同批箭頭已尖化，但 7-agent 審另抓到既有文字缺陷（垂直力「物體等速」歧義）已修（→速率不變＋方向可變），正重新 5-clean（新 sha 633e515f4dab494a）。
+
+## 2026-11-20 21:48 — work_energy_thm 5/5（尖箭頭＋「等速」歧義內容修正，批次3 完成）
+- 箭頭：淨力藍鈍楔形→尖三角（proof-guarded）。
+- 內容缺陷（27-agent 深輪揪出，正確性）：「淨功=0→物體等速」在垂直力情形（速率不變但方向變，如等速率圓周運動）會被台灣慣例讀成「等速度直線」而誤導。修正：claim/_note/teach(69)→「速率不變＋方向可變」。**第一次修不乾淨**（can_do/verification_ref/teach總結/Q2feedback/selfeval 通則摘要仍殘留「等速」）→ 2-agent 淺輪漏抓、27-agent 深輪抓到 → 全檔通則一律改「速率不變」（MCQ 線性被推動物體選項保留「物體等速」＝正確）。
+- frozen sha 08dc0d353cbdcb3e；rounds=[r1..r5] 全 clean、L3 exit0；DONE-GATE：per_page rc0、prc/scan PASS。視覺 figure 尖三角已確認。
+- **教訓（重申 internal-fix-self-clean）**：內部改詞必須 grep 全檔 class-wide 掃乾淨（can_do/teach總結/feedback/selfeval/verification_ref 全部），不能只改主 claim；淺輪會漏抓殘留不一致、深輪才現形。
+- ENERGY 尖箭頭 sweep 進度：power_fv/momentum_impulse/work_energy_thm 完成；剩 ke_pe(＋構圖)/collision_1d/2d/elastic_formula/momentum_conserve/work_def/conservative/forms。
