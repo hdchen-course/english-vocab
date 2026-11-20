@@ -1,3 +1,10 @@
+## 2026-11-20 08:25 ★ sci.t_mid.phys-estatic.series 串聯電路 R＝R₁＋R₂ 5/5 DONE-GATE → phys-estatic 11/25
+- **sci_phys_estatic_series frozen `35e589fca45f2c19`**（v2 r4-r8 連 5 clean、L3 全 exit0；一次 de-converge：v1 r1+r3 兩輪一致揪 claim c-s-resistance『串聯的電阻越接越大』措辭生硬/兩讀（「電阻」當「接」主詞、與全檔「串越多越大」不一致）→改『串接的電阻越多，總電阻就越大』、rounds 歸零（68c53f66→35e589fc）重跑 r4-8 5-clean）。tier=t_mid、exam=會考。前置＝ohm-law/resistance/current-def。R15 gloss 串聯 (series circuit)＝2。
+- **定量單元**：R＝R₁＋R₂＝3＋5＝8 歐姆、I＝12÷8＝1.5 安培、分壓 V₁＝1.5×3＝4.5 伏特、V₂＝7.5 伏特（V₁＋V₂＝12）經 oracle `sci_phys2_checks::phys-estatic.series` 以 `.venv` repro_gate PASS（未造假）。
+- 內容：串聯＝元件首尾相接成「一條」電流路徑；①電流處處相同（單一路徑電荷守恆）；②總電阻＝各電阻相加 R＝R₁＋R₂（串越多越大）；③電壓分配（分壓）、各段相加等於總電壓、電阻大者分壓大（V₁:V₂=R₁:R₂，由 V=IR 且 I 相同）。figure＝單一迴路（電池＋R₁＋R₂）＋電流 I 處處相同箭頭＋公式＋分壓。scope：不含並聯/串並聯混合/電功率（各留另單元）。
+- **class 教訓（補強既有語感類）**：同一概念在單元內用語要統一——can_do/teach 已一致用「串越多越大」，claim 卻冒出省略受詞、生硬的「越接越大」（且「接」緊接前句「一個接一個」語意切換），兩輪獨立 reviewer 皆判 b-hard-to-understand。draft 時同概念的口語化描述要全檔對齊、避免「越X越大」式省略受詞句把抽象量（電阻）當動作主語。
+- DONE-GATE 全綠：per_page PASS（684/684、series absent from violations）、scan/schema/question/pedagogy PASS、gloss=2、figure 四角色雙向 iPad render 簽核（單一迴路串聯電路、電流處處相同箭頭、分壓公式 V₁=4.5/V₂=7.5，無重疊裁切、電路拓撲正確）。phys-estatic strand 進度 11/25（t_base 3＋t_mid 8）。
+
 ## 2026-11-20 08:06 ★ sci.t_mid.phys-estatic.ohm-law 歐姆定律 V＝IR 5/5 DONE-GATE → phys-estatic 10/25
 - **sci_phys_estatic_ohm_law frozen `409040e08cbc17c9`**（r16-r20 連 5 clean、L3 全 exit0；**兩次 de-converge**：①v1 figure 三角形水平分隔線鬍鬚 x1=46/x2=134 超出斜邊→縮 x1=66/x2=114 落斜邊內（ddd04c44→8233a633）；②8233a633 上 r1-3 false-clean 後 r11 對抗式終審揪 _note kp 標題回顯 ASCII『V=IR』與同檔自述「全檔等號全形」矛盾→改全形『V＝IR』、rounds 歸零（8233a633→409040e0）重跑 r16-20 5-clean）。tier=t_mid、exam=會考。前置＝voltage/resistance/current-def。R15 gloss 歐姆定律 (Ohm's law)＝2。
 - **定量單元**：I＝V÷R＝12÷4＝3 安培 經 oracle `sci_phys2_checks::phys-estatic.ohm-law` 以 `.venv` repro_gate PASS（未造假）；R＝V÷I 為 V＝IR 代數變形。
