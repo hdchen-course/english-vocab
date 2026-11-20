@@ -4111,3 +4111,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - **教訓**：line-aware 改寫同時要保留「頭尺寸來自原圖形、非 line」；每次改 sweep 工具都要重算繪實圖驗證尺寸，不能只看方向。
 - **ENERGY 群 figure 視覺稽核 sweep 至此全部完成**（批次1–6：friction群4 + power_fv/momentum_impulse/work_energy_thm/collision_1d/collision_2d/momentum_conserve/work_def/forms/conservative/ke_pe/elastic_formula）。
 - **QUEUED**：estatic/optics/heat/kin 群 figure sweep（先 --audit 掃可疑、逐檔 sweep+render+5-clean）；41 個既有手繪頭 suspects 併入評估。
+
+## 視覺稽核批次7 完成（2026-11-21 02:24 台北）commit b7b687ed2 pushed
+- **heat_temp_vs_heat 5/5 收斂**：火焰 teardrop 修復（批次7初）＋r2 confirmed「含的熱量」熱含量迷思（claim/can_do 改傳遞語氣）→ **r5 深輪(12ag) 抓到 teach L50 hook+L75 recap 漏改殘留**（完整修復 claim/can_do/teach/recap 全改「放出的熱/能放出的熱量」）→ r2 深輪(7ag) 再抓「變溫」非地道繁體→「水溫幾乎不變」。三次 de-converge，最終 frozen 20bd14ad。
+- **optics_reflection_mirror 5/5 收斂**：構圖上移 30px（批次7初）＋distractor 自我矛盾修復＋r2 confirmed 漫反射入射光非真平行(ray2 dx24dy24 vs dy22)→2px 對齊真平行（反射仍散開=物理正確）。frozen c55fc294。圖 render+四角色目視通過。
+- **教訓（已 bank 記憶）**：(1) 定義迷思的修復必須掃全檔 teach/claim/can_do/recap——只改 claim/can_do 會在 teach body 殘留；class-wide grep 自檢是必要步驟。(2) 淺輪(2ag)連過不代表乾淨，深輪(7/12ag)才抓得到 teach 殘留與地道性問題——5-clean 的價值在於會觸發深輪。
+- QUEUED：FORCE 群剩餘「真鈍頭」箭圖（elements/friction_coeff/incline/newton1/resolve_compose/weight_mass/add_1d），只掃真鈍頭、已可接受者不動。
