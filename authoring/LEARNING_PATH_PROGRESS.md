@@ -4129,3 +4129,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - content_audit 連抓兩類真缺陷後才收斂：(1) _note over-claim「alt與SVG逐字一致」→模板句；(2) **domain-precision**：claim+_note 把「斜面」當成「分到水平/鉛直」的例子＝物理不準確（斜面便於分解軸應沿斜面/垂直斜面 mg sinθ/cosθ，與 incline 單元矛盾）→改「斜拉繩/斜向推拉箱子」。5/5 CONVERGED frozen 8df2c1db082b477e。
 - 本批 commit：876ea4404(圖)/ _note修 / 斜面修 / bc95c480e(ledger定案)。前批 weight_mass/friction_coeff/incline 5/5 已 8b5da54b0 定案。
 - **教訓（新）**：figure_arrowhead_sweep 對「封閉向量矩形」(三箭頭 tip 都在水平+垂直輔助線共用角點) 會全部誤翻向——這類圖一律手動逐箭頭保向銳化，先用 --check 看 old→new 比對確認無翻向再決定。
+
+## [2026-11-21 06:20:42] phys-optics strand 補 gap 進度（新單元 spec-first 建置）
+- **pinhole（光的直進與針孔成像，t_mid）5/5 CONVERGED**（10ec9b8a6）：深輪連抓 _note over-claim→斜面…等類後，第4深輪抓 BLOCKER「會聚」(針孔不聚焦、光在小孔交叉後發散到光屏)→6處class-wide改「實際到達光屏形成」；已 bank 記憶 [[pinhole-lensless-imaging-no-converge]]。
+- **refraction-idea（光的折射現象初步，t_mid）5/5 CONVERGED**：r1 深輪抓 major out-of-scope——Q2 distractor 引用「臨界角」(本單元明文 out-of-scope 且空氣入水疏→密不存在臨界角)→刪離題旁白。圖「空氣入水偏向法線」θ1≈51°>θ2≈27° 幾何正確、四角色簽核。
+- **教訓（新）**：distractor_rationale 勿引用本單元 _note 明列 out-of-scope 的更高階術語（臨界角/全反射…）——既離題又常物理誤植（臨界角僅密→疏、本題疏→密不存在）。
+- phys-optics strand 進度：16 缺 → 14 缺（pinhole+refraction 收斂）。sci 覆蓋 103→105。
