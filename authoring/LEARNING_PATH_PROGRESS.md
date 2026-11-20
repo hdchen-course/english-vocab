@@ -4064,3 +4064,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - DONE-GATE 全綠：per_page_5clean_gate --verify rc0（三檔 absent from violations）、prc_term_gate PASS、scan_simplified PASS。
 - 視覺確認：figure_visual_audit.py 算繪三圖、逐張 Read 實看 — 箭頭皆尖三角、附著端點、方向正確（newton2 綠合力右指；newton3 綠手推牆右、紅牆推手左；friction_factor 綠推力右、紅摩擦左）；newton2 紅公式「公尺/秒²」PNG 疑似穿線經核 SVG 無雜線（僅地面 y96＋綠箭頭 y80，公式在 y120）＝rsvg 算繪假影。
 - 尖箭頭 sweep backlog 續：FORCE 剩 friction_exist(需紅箭頭離地)、ENERGY 群 work_energy_thm/power_fv/ke_pe/momentum_impulse/碰撞系列等（見 authoring/figure_visual_audit_findings.md）。
+
+## 2026-11-20 21:07 — 方頭箭頭 sweep 批次2：friction_exist 5/5 收斂 + DONE-GATE 全綠
+- figure 修：紅摩擦力箭頭原在 y=131（埋進地面 hatch 刻線 122→131、被地面線「吃掉」）→ 上移 y=119（地面線上方、box 底接觸處、離 hatch 清楚）；兩箭頭（綠運動＋紅摩擦）換尖三角；_note「alt 與 SVG text 逐字一致」over-claim 改「完整涵蓋…散文非逐字」（記憶 note-alt-verbatim-overclaim）。
+- frozen sha 283bef23d0070214 → 6a493863669ce74a；rounds=[r1..r5] 全 clean、L3 exit0；DONE-GATE：per_page --verify rc0（absent from violations）、prc PASS、scan_simplified PASS。
+- 視覺確認：figure_visual_audit.py 算繪 Read 實看 — 紅摩擦箭頭已離地面線、尖三角左指、與綠運動箭頭對稱清楚；構圖平衡、無壓線/裁切。harvest override 已移除。
+- 尖箭頭 sweep backlog：FORCE 群完成（newton2/newton3/friction_factor/friction_exist）；續 ENERGY 群 work_energy_thm/power_fv/ke_pe/momentum_impulse/碰撞系列（authoring/figure_visual_audit_findings.md）。
