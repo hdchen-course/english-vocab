@@ -4091,3 +4091,15 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - 兩檔箭頭鈍→尖三角＋_note「alt 與 SVG text 逐字一致」over-claim 修（note-alt-verbatim-overclaim class）；frozen collision_2d=0576576882ab855c、momentum_conserve=85bfc8003e703a1b；各 5 clean 輪、L3 exit0；DONE-GATE per_page rc0、prc/scan PASS。視覺尖三角已確認。
 - **ENERGY 尖箭頭 sweep 進度**：power_fv/momentum_impulse/work_energy_thm/collision_1d/collision_2d/momentum_conserve 全完成（6 檔）。剩 ke_pe(＋中段留白構圖)/elastic_formula/work_def/conservative/forms。
 - FORCE 群先前完成（newton2/newton3/friction_factor/friction_exist）。
+
+## 視覺稽核批次5（2026-11-20 深夜）— ENERGY 尖箭頭 sweep 續 work_def/forms/conservative
+- **work_def** 5/5 (commit 3b766e22f)：尖箭頭 sweep + _note 「alt 逐字一致」over-claim 修。
+- **forms** 5/5 (commit 6fc184bdb)：sweep 工具 bug 把光能斜箭頭誤改朝下→改正指右上；光能/熱能雙斜頭重建為對軸對稱尖三角。
+- **conservative** 5/5 (commit 3374a7d24)：深輪（7–14 agent）累計揪出 6 真缺陷全修——
+  (1) claim「摩擦力總是跟運動方向相反」過度一般化(t_adv 靜摩擦可同向)→限定「物體滑動時，滑動摩擦力…」；
+  (2) 能量條右標缺單位→「末動能 20 焦耳」；(3) 能量條未按比例(我加寬框反製造)→右 47px 按 50:20、標籤移條下方、viewBox 加高；
+  (4)「滑行 d=5 m」→「5 公尺」(單位一致＋避 m 誤為質量)；(5) _note「前置」同時指 mech-conserve/energy-conserve→改「上游 t_mid energy-conserve」；
+  (6) c-noncons「熱(還有聲音等)」與 c-heat-example「Q=f×d 正是力學能減少量」不一致→刪聲音、統一全轉熱(符 repro oracle)。
+- **sweep 工具根因修復 (commit 19c7fc99d)**：figure_arrowhead_sweep.py 改 line-aware（以最接近 line 端點的頂點為 tip、只銳化軸對齊、斜線放過），加 --audit；9 案紅隊全 PASS；全 sci_phys --audit 回掃確認只 forms 受傷(已修)，另 41 suspect 為既有手繪頭/marker 非本次回歸(standing-audit 債)。
+- **教訓**：(a) 自動幾何工具對「斜線箭頭底點恰好同軸」會誤判，需 line-aware；(b) 為塞文字加寬 viz 元素會破壞「長度編碼數值」的比例語義——標籤應移到元素外(上/下方)而非撐大元素；(c) t_adv 的「摩擦力方向」敘述不可用 t_base 的絕對簡化(靜摩擦可同向)。
+- **QUEUED**：ke_pe(尖箭頭+中段大留白構圖)、elastic_formula；之後 estatic/optics/heat/kin 群 figure sweep。
