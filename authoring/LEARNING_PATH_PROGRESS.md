@@ -1,3 +1,10 @@
+## 2026-11-20 15:04 ★ sci.t_sub.phys-estatic.rc-circuit RC 充放電與時間常數 τ＝RC 5/5 DONE-GATE → phys-estatic 25/25（strand 完成）
+- **sci_phys_estatic_rc_circuit frozen `a2bdbe10af4abecf`**（r1-r5 連 5 clean、L3 全 exit0 深度 74-80%；**零 de-converge**，凍前自檢＋曲線物理修正把關、首凍即 5 連 clean）。tier＝t_sub、exam＝分科-物理。前置＝capacitor。R15 新術語 時間常數（time constant）＝2（_note＋can_do）。
+- **定量單元**：充電一個時間常數達最終值約 63%（一減 e 分之一≈0.632）經 oracle `sci_phys2_checks::phys-estatic.rc-circuit` 以 `.venv` repro_gate PASS；**該 oracle 的 source_registry reproduction entry 為本單元建前補登**（fingerprint cbb344a41464f1f5 由 repro_gate --emit 實跑算出、非造假、已 commit）。例 τ＝RC＝1000 歐姆×0.001 法拉＝1 秒。
+- 內容：RC 電路＝電阻＋電容器串接；充電電壓隨時間先快後慢上升趨近最終值（非瞬間）、放電隨時間下降；時間常數 τ＝RC（單位秒）、τ 越大越慢；充電一個 τ 約到 63%、約五個 τ 接近充滿、放電一個 τ 降到約 37%；充電是曲線非等速直線。figure＝RC 充電曲線圖（橫軸時間縱軸電壓、紅色先快後慢趨近最終電壓虛線、63%＠t＝τ 綠虛線標記、右側 τ＝RC＝1 秒＋例）。3 MCQ＝τ 計算 1 秒／充電一個 τ 達 63%／τ＝RC 越大越慢。
+- **class 教訓（正向：凍前自檢＋曲線物理修正＝零 de-converge）**：(a) 套用 wheatstone 學到的全部 _note 自檢（U+2212 歸零、prose 無半形斜線用頓號、『』figure 標籤逐一驗對應單一 SVG text 節點＝7/7 OK、gloss 時間常數＝2、全形運算子）＝凍前機械自檢全清；(b)★**render 後發現充電曲線 bezier 畫成 S 形（起點平緩中段才陡）＝物理錯**——RC 充電曲線應起點最陡、單調趨緩（concave down），修 path 控制點為 `M40,150 C58,116 78,98 100,90 C135,78 165,69 195,62` 起點即陡；此為 render 才現形的缺陷、content_audit（審 JSON）看不到，印證視覺 QA 不可省。四角色雙向 iPad render 簽核通過（曲線物理正確、63%/t＝τ 虛線交於曲線、無重疊裁切、善用寬度）。
+- DONE-GATE 全綠：per_page PASS（698/698、rc_circuit absent）、scan/schema/question/pedagogy PASS、repro_gate PASS、gloss 時間常數＝2、半形運算子 0、figure 『』標籤全對單節點、figure 四角色雙向 render 簽核。phys-estatic 進度 **25/25（t_base 3＋t_mid 11＋t_adv 7＋t_sub 4）＝strand 全數完成**。下一＝依 LEARNING_PATH_BUILD_PLAN 取下一 strand/科目。
+
 ## 2026-11-20 14:43 ★ sci.t_sub.phys-estatic.wheatstone 惠斯登電橋（平衡 R₁÷R₂＝R₃÷R₄）5/5 DONE-GATE → phys-estatic 24/25
 - **sci_phys_estatic_wheatstone frozen `84b9a69f7427873d`**（r9-r13 連 5 clean、L3 全 exit0 深度 73-80%）。tier=t_sub、exam=分科-物理。前置＝kirchhoff。R15 新術語 惠斯登電橋（Wheatstone bridge）/檢流計（galvanometer）各＝2。
 - **定量單元**：R₁＝2、R₂＝4、R₃＝3 求 R₄＝R₃×R₂÷R₁＝6 歐姆；平衡條件 2÷4＝3÷6＝0.5 經 oracle `sci_phys2_checks::phys-estatic.wheatstone` 以 `.venv` repro_gate PASS。
