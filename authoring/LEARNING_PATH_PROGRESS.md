@@ -4103,3 +4103,11 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - **sweep 工具根因修復 (commit 19c7fc99d)**：figure_arrowhead_sweep.py 改 line-aware（以最接近 line 端點的頂點為 tip、只銳化軸對齊、斜線放過），加 --audit；9 案紅隊全 PASS；全 sci_phys --audit 回掃確認只 forms 受傷(已修)，另 41 suspect 為既有手繪頭/marker 非本次回歸(standing-audit 債)。
 - **教訓**：(a) 自動幾何工具對「斜線箭頭底點恰好同軸」會誤判，需 line-aware；(b) 為塞文字加寬 viz 元素會破壞「長度編碼數值」的比例語義——標籤應移到元素外(上/下方)而非撐大元素；(c) t_adv 的「摩擦力方向」敘述不可用 t_base 的絕對簡化(靜摩擦可同向)。
 - **QUEUED**：ke_pe(尖箭頭+中段大留白構圖)、elastic_formula；之後 estatic/optics/heat/kin 群 figure sweep。
+
+## 視覺稽核批次6（2026-11-21）— ENERGY 尖箭頭 sweep 收尾 ke_pe/elastic_formula
+- **ke_pe** 5/5 (commit 64e25f5db)：尖箭頭 sweep + _note over-claim + 中段大留白構圖重排（「單位都是焦耳」副標移到標題下、加中央淡色虛線分隔左 PE/右 KE、兩概念欄平衡、物件略放大、箭頭小尖）。
+- **elastic_formula** 5/5 (commit 下一行)：尖箭頭 sweep + _note over-claim + 深輪(19-agent)抓動量「=7」裸數字無單位→補「公斤·公尺/秒」與動能「焦耳」對稱(claim/svg/alt/caption/selfeval 同步)。2 notDefect(m/s vs 公尺/秒、u/v' 記法)不動。
+- **sweep 工具第二個 bug 修復 (commit 0b0f36382)**：line-aware 版用「整條 line 長度」當頭長→箭頭放大成巨楔(render 立即抓到)；改用原 polygon tip→base 軸向距離為頭長。紅隊加 size 斷言(頭長 8.4px 不再巨大)全 PASS。只影響本批次(ke_pe/elastic 已重掃修正)。
+- **教訓**：line-aware 改寫同時要保留「頭尺寸來自原圖形、非 line」；每次改 sweep 工具都要重算繪實圖驗證尺寸，不能只看方向。
+- **ENERGY 群 figure 視覺稽核 sweep 至此全部完成**（批次1–6：friction群4 + power_fv/momentum_impulse/work_energy_thm/collision_1d/collision_2d/momentum_conserve/work_def/forms/conservative/ke_pe/elastic_formula）。
+- **QUEUED**：estatic/optics/heat/kin 群 figure sweep（先 --audit 掃可疑、逐檔 sweep+render+5-clean）；41 個既有手繪頭 suspects 併入評估。
