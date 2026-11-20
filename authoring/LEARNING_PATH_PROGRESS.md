@@ -4070,3 +4070,8 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - frozen sha 283bef23d0070214 → 6a493863669ce74a；rounds=[r1..r5] 全 clean、L3 exit0；DONE-GATE：per_page --verify rc0（absent from violations）、prc PASS、scan_simplified PASS。
 - 視覺確認：figure_visual_audit.py 算繪 Read 實看 — 紅摩擦箭頭已離地面線、尖三角左指、與綠運動箭頭對稱清楚；構圖平衡、無壓線/裁切。harvest override 已移除。
 - 尖箭頭 sweep backlog：FORCE 群完成（newton2/newton3/friction_factor/friction_exist）；續 ENERGY 群 work_energy_thm/power_fv/ke_pe/momentum_impulse/碰撞系列（authoring/figure_visual_audit_findings.md）。
+
+## 2026-11-20 21:33 — 尖箭頭 sweep 批次3（ENERGY 部分）：power_fv + momentum_impulse 5/5
+- power_fv（P=Fv 施力紅+速率藍）、momentum_impulse（I=Ft=Δp 兩藍）箭頭鈍楔形→尖三角（figure_arrowhead_sweep proof-guarded 僅 points）；各 rounds=[r1..r5] clean、L3 exit0。
+- frozen：power_fv=8fe7005cb7a6fea7、momentum_impulse=dcbede416c74154e；DONE-GATE：per_page absent from violations、prc PASS、scan PASS。視覺 figure_visual_audit 已 Read 確認尖三角附著方向正確。
+- work_energy_thm 同批箭頭已尖化，但 7-agent 審另抓到既有文字缺陷（垂直力「物體等速」歧義）已修（→速率不變＋方向可變），正重新 5-clean（新 sha 633e515f4dab494a）。
