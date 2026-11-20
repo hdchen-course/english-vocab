@@ -4086,3 +4086,8 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 ## 2026-11-20 22:11 — 尖箭頭 sweep 批次4（碰撞系列）：collision_1d 5/5
 - collision_1d（完全非彈性碰撞）箭頭鈍→尖三角＋_note「alt 與 SVG text 逐字一致」over-claim 修（9-agent 深輪揪出）；frozen 3251310ed41d81ba、rounds=[r1..r5] clean、L3 exit0；DONE-GATE per_page rc0、prc/scan PASS。視覺尖三角已確認。
 - collision_2d / momentum_conserve 同批（箭頭+_note）重收斂中。
+
+## 2026-11-20 22:21 — 尖箭頭 sweep 批次4 完成：collision_2d + momentum_conserve 5/5
+- 兩檔箭頭鈍→尖三角＋_note「alt 與 SVG text 逐字一致」over-claim 修（note-alt-verbatim-overclaim class）；frozen collision_2d=0576576882ab855c、momentum_conserve=85bfc8003e703a1b；各 5 clean 輪、L3 exit0；DONE-GATE per_page rc0、prc/scan PASS。視覺尖三角已確認。
+- **ENERGY 尖箭頭 sweep 進度**：power_fv/momentum_impulse/work_energy_thm/collision_1d/collision_2d/momentum_conserve 全完成（6 檔）。剩 ke_pe(＋中段留白構圖)/elastic_formula/work_def/conservative/forms。
+- FORCE 群先前完成（newton2/newton3/friction_factor/friction_exist）。
