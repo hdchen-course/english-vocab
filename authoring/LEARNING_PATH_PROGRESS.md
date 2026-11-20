@@ -4123,3 +4123,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - **triage 修正**：findings 的 4 個「major」(newton2/friction_factor/friction_exist/newton3) 經驗證箭頭已達 1.47:1 尖三角標準（sweep 報 0-change）＝視覺過度判定、**不需修**。
 - **教訓**：圖改觸發深輪→必帶出既有 `_note` over-claim（跨 72 sci_phys 模板債）＋可能帶出 magnitude-channel 非比例。**下批 de-converge 時應在同一 commit 預先修 `_note` over-claim**（grep「alt 與 SVG text 逐字一致」）省掉重凍輪。
 - QUEUED 下批：friction_coeff/incline/resolve_compose/weight_mass（含垂直/斜向頭，sweep 可能誤判→逐箭頭 render 確認避 forms 誤判）＋friction_exist 紅摩擦箭頭上移（手改）＋weight_mass 49N:8N 比例（手改，同 add_1d class）。
+
+## [2026-11-21 04:57:11] FORCE 方頭箭頭圖批次 — 全部完成
+- **resolve_compose**（最後一張）：三向量頭(Fx右/Fy上/F斜右上)鈍 1:1→尖三角 1.47:1，**手動保向銳化**（sweep 因 tip 落在虛線矩形角點會把右頭翻下/上頭翻左/斜頭翻上，故不可用 sweep）。四角色簽核通過。
+- content_audit 連抓兩類真缺陷後才收斂：(1) _note over-claim「alt與SVG逐字一致」→模板句；(2) **domain-precision**：claim+_note 把「斜面」當成「分到水平/鉛直」的例子＝物理不準確（斜面便於分解軸應沿斜面/垂直斜面 mg sinθ/cosθ，與 incline 單元矛盾）→改「斜拉繩/斜向推拉箱子」。5/5 CONVERGED frozen 8df2c1db082b477e。
+- 本批 commit：876ea4404(圖)/ _note修 / 斜面修 / bc95c480e(ledger定案)。前批 weight_mass/friction_coeff/incline 5/5 已 8b5da54b0 定案。
+- **教訓（新）**：figure_arrowhead_sweep 對「封閉向量矩形」(三箭頭 tip 都在水平+垂直輔助線共用角點) 會全部誤翻向——這類圖一律手動逐箭頭保向銳化，先用 --check 看 old→new 比對確認無翻向再決定。
