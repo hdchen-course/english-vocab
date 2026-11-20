@@ -1,3 +1,10 @@
+## 2026-11-20 08:59 ★ sci.t_mid.phys-estatic.electric-power 電功率 P＝IV 5/5 DONE-GATE → phys-estatic 13/25
+- **sci_phys_estatic_electric_power frozen `b7ab03966f71fab6`**（v2 r4-r8 連 5 clean、L3 全 exit0；一次 de-converge：v1 r1/r2 false-clean 後 r3 揪 _note Q3 第四 distractor 列舉『無法判斷（以為缺少資料，其實同時間比功率即可）』與實際選項『無法判斷（以為缺少資料）』不符→去除多出句、rounds 歸零（cc834459→b7ab0396）重跑 r4-8 5-clean）。tier=t_mid、exam=會考。前置＝ohm-law/current-def/voltage。R15 gloss 電功率 (electric power)＝2、瓦特 (watt)＝2。
+- **定量單元**：P＝IV＝110×2＝220 瓦特 經 oracle `sci_phys2_checks::phys-estatic.electric-power` 以 `.venv` repro_gate PASS（未造假）。
+- 內容：電功率＝用電的快慢（每單位時間用掉的電能，非電能總量——強度量 vs 總量刻意分開）、單位瓦特；P＝IV 例 110×2=220 瓦特；功率越大越耗電；電能＝功率×時間、電費單位「度」（1 度=1 千瓦用 1 小時）。figure＝電器接電源示意＋V/I 標示＋P=220 瓦特公式＋度的說明。刻意避用未 gloss 的「焦耳」（只在 _note scope 排除句出現、非教學內容）。scope：不含 P=I²R/P=V²÷R 變形、焦耳定量換算、電流熱效應實驗（各較進階/另單元）。
+- **class 教訓（補強既有 [[note-metadata-must-match-file]]）**：_note 以逐字列舉慣例描述 MCQ 選項時，**列舉文字必須與實際選項逐字相符**，不可把只該放在 distractor_rationale 的「糾正語句」混進選項列舉（本案 Q3 第四選項多出『，其實同時間比功率即可』）。content_audit 把 _note 當 fact 查核、其餘 7 個 distractor 皆逐字相符時，唯一不符者＝major DEFECT 並作廢 streak；且 r1/r2 連 clean 仍被 r3 揪出（印證對抗式終審框架不可省、streak 必須同 sha）。
+- DONE-GATE 全綠：per_page PASS（686/686、electric_power absent from violations）、scan/schema/question/pedagogy PASS、gloss 電功率2/瓦特2、焦耳 0（僅 _note meta）、figure 四角色雙向 iPad render 簽核（電器接電源、V/I 標示、P=220 瓦特、度說明，無重疊裁切）。phys-estatic strand 進度 13/25（t_base 3＋t_mid 10）。t_mid phys-estatic 僅剩 home-safety 一單元。
+
 ## 2026-11-20 08:38 ★ sci.t_mid.phys-estatic.parallel 並聯電路 1÷R＝1÷R₁＋1÷R₂ 5/5 DONE-GATE → phys-estatic 12/25
 - **sci_phys_estatic_parallel frozen `5765989a12fe03a5`**（r1-r5 連 5 clean、L3 全 exit0；**一次收斂、無 de-converge**）。tier=t_mid、exam=會考。前置＝series/ohm-law/resistance。R15 gloss 並聯 (parallel circuit)＝2。
 - **定量單元**：R＝(1÷3＋1÷6)⁻¹＝2 歐姆 經 oracle `sci_phys2_checks::phys-estatic.parallel` 以 `.venv` repro_gate PASS（未造假）；6V 例 I₁＝6÷3＝2、I₂＝6÷6＝1、主幹 3 安培、R＝6÷3＝2 歐姆 皆代數一致。
