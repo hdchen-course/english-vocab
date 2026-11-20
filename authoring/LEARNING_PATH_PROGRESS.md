@@ -1,3 +1,10 @@
+## 2026-11-20 10:53 ★ sci.t_adv.phys-estatic.e-field 電場與電場線（E＝F÷q、E＝k·Q÷r²）5/5 DONE-GATE → phys-estatic 16/25
+- **sci_phys_estatic_e_field frozen `6c5577df1d7c97ba`**（r19-r23 連 5 clean、L3 全 exit0）。tier=t_adv、exam=學測。前置＝coulomb。R15 gloss 電場 (electric field)/電場強度 (electric field strength)/電場線 (electric field line) 各＝2。
+- **定量單元**：E＝k·Q÷r²＝9×10⁹×(1×10⁻⁶)÷0.1²≈9×10⁵ N/C 經 oracle `sci_phys2_checks::phys-estatic.e-field` repro_gate PASS。
+- 內容：電場＝會對電荷施力的空間；電場強度 E＝F÷q（N/C、方向＝正電荷受力方向）；點電荷的電場強度 E＝k·Q÷r²（平方反比）；電場線（正電荷向外、入負電荷、越密越強、不相交）。figure＝正點電荷六條等角均勻電場線＋正測試電荷 q 受向外力 F＋公式＋例 9×10⁵ N/C。3 MCQ＝E=F/q 定義/平方反比/電場線方向。
+- **class 教訓（本單元連修 8 類缺陷、7 次 de-converge，過程最長的一課）**：(1) _note『claim kind=fact』籠統自述→列實際 kind（補強 [[note-metadata-must-match-file]]）；(2)★**figure 符號即事實**：測試電荷 q 原畫藍色（系列紅=正/藍=負慣例）被讀成負電荷、與向外斥力 F 矛盾→改紅色正電荷＋「＋」標記（補強 [[figure-symbols-are-factual-claims]]）；(3)★**點電荷電場線必等角均勻**：原六線左密右疏（為避開 q 標註），而圖文教「越密越強」→等向性點電荷被畫成「左邊較強」＝blocker 錯誤物理→改等角 60°＋marker 箭頭（**新教訓，已擬記 memory**）；(4)★**量綱 conflation**：E＝k·Q÷r² 全檔多處標成「電場」而非「電場強度」（title/teach/figure/caption/feedback/selfeval/alt），與本課核心「電場＝空間 vs 電場強度 E＝量」矛盾→全檔統一「電場強度」（補強 [[intensive-vs-extensive-dimension-conflation]]）；(5) 9.0×10⁵ vs 9×10⁵ 記法不一致→統一；(6)「或和」garden-path→改寫；(7) caption「電場越弱」→「電場強度越弱」。**教訓：figure 的每個可查證符號（電荷正負色、場線疏密/角度分佈）都是事實宣稱，草稿後必須程式化＋逐角色核對，四角色簽核兩次仍可能漏 blocker（場線分佈），content_audit 領域鏡才抓到。**
+- DONE-GATE 全綠：per_page PASS（689/689、e_field absent）、scan/schema/question/pedagogy PASS、repro_gate PASS、gloss 三術語各=2、figure 三度重 render＋四角色重簽核（正電荷色/場線等角均勻/標題電場強度）。phys-estatic 進度 16/25（t_base 3＋t_mid 11＋t_adv 2）。下一＝potential（電位）。
+
 ## 2026-11-20 09:53 ★ sci.t_adv.phys-estatic.coulomb 庫侖定律 F＝k·q₁q₂÷r² 5/5 DONE-GATE → phys-estatic 15/25（t_adv 學測首單元）
 - **sci_phys_estatic_coulomb frozen `52c7ff316250927a`**（r10-r14 連 5 clean、L3 全 exit0）。tier=t_adv、exam=學測。前置＝charge。R15 gloss 庫侖定律 (Coulomb's law)/點電荷 (point charge)/庫侖常數 (Coulomb constant) 各＝2。
 - **定量單元**：F＝k·q₁q₂÷r²＝9×10⁹×(1×10⁻⁶×2×10⁻⁶)÷0.1²≈1.8 牛頓 經 oracle `sci_phys2_checks::phys-estatic.coulomb` 以 `.venv` repro_gate PASS（未造假）。
