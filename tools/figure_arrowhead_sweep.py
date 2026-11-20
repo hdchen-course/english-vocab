@@ -82,17 +82,24 @@ def sharpen_svg(svg):
             return m.group(0)          # tip not on any line end -> don't touch
         (tx, ty), (ox, oy) = tip
         dx, dy = tx - ox, ty - oy      # arrow direction (tail -> tip)
+        # The head LENGTH must come from the ORIGINAL arrowhead polygon (tip vertex
+        # -> base-midpoint axial distance), NOT from the full line length — using the
+        # line length makes the head as long as the whole arrow (giant-wedge bug).
+        ti = min(range(3), key=lambda i: (P[i][0] - tx) ** 2 + (P[i][1] - ty) ** 2)
+        base = [P[i] for i in range(3) if i != ti]
+        bmx = (base[0][0] + base[1][0]) / 2.0
+        bmy = (base[0][1] + base[1][1]) / 2.0
         if abs(dy) < AXIS_TOL and abs(dx) >= AXIS_TOL:
             # horizontal arrow
             sign = 1 if dx > 0 else -1
-            L = max(abs(dx), 9.0) * 1.25
-            half = L * 0.34
+            L = max(abs(tx - bmx), 7.0)        # original head length along axis
+            half = L * 0.34                     # narrow -> pointed (len:width ~1.5:1)
             nbx = tx - sign * L
             return "points='%g,%g %.1f,%.1f %.1f,%.1f'" % (tx, ty, nbx, ty - half, nbx, ty + half)
         if abs(dx) < AXIS_TOL and abs(dy) >= AXIS_TOL:
             # vertical arrow
             sign = 1 if dy > 0 else -1
-            L = max(abs(dy), 9.0) * 1.25
+            L = max(abs(ty - bmy), 7.0)
             half = L * 0.34
             nby = ty - sign * L
             return "points='%.1f,%g %.1f,%g %g,%g'" % (tx - half, nby, tx + half, nby, tx, ty)
