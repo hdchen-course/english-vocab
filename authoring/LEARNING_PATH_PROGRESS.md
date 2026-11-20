@@ -1,3 +1,9 @@
+## 2026-11-20 19:35 — phys-optics strand 進度
+- HD 回報三個 figure 缺陷全修復收斂：specific_heat(比熱,先前)、kirchhoff(克希荷夫,文字壓線→viewBox加寬/標籤讓位) 5/5 DONE、charge-in-field(電場帶電粒子,箭頭 orient=auto 轉向→右向三角) 5/5 DONE。
+- 平面鏡成像 plane-mirror 5/5 DONE-GATE（strand 5/21, HEAD 9d443812d）；過程 de-converge 兩次：c-pm-flip「鏡子上的字」歧義、以及「屏幕」(PRC詞)x16→「屏」零-PRC 修正。
+- **新建 tools/prc_term_gate.py**：確定性掃「用繁體寫的中國詞」(屏幕/軟件/視頻/激光…)，補 scan_simplified 只抓簡體字元盲點；紅隊通過(屏幕→FAIL、屏→PASS)、納入 phase1 預檢。
+- 下一步佇列：phys-optics t_mid 針孔成像 pinhole（oracle op_pinhole 已註冊）；其後 refraction-idea/lens-action/convex-image/curved-mirror…→ t_adv(imaging-eq/snell/refractive-index/total-reflection)→ t_sub(diffraction/double-slit/em-spectrum/thin-film)。
+
 ## 2026-11-20 18:05:43 +08:00
 - phys-optics 反射定律（入射角＝反射角）5/5 DONE-GATE (frozen b783bc94, r1-r5 全輪 unpiped L3 exit0; per_page+repro(oracle op_reflection_law 入射角=反射角)+phase1 全綠). phys-optics strand 4/21 (t_base 3 全完成+t_mid reflection-law). 零 de-converge(凍前自檢全清:7 方角引號標籤各對單一 SVG 節點/R15 三術語 gloss 各=2/半形斜線運算子=0/全形°＝).
 
