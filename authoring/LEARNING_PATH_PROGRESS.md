@@ -1,3 +1,10 @@
+## 2026-11-20 08:06 ★ sci.t_mid.phys-estatic.ohm-law 歐姆定律 V＝IR 5/5 DONE-GATE → phys-estatic 10/25
+- **sci_phys_estatic_ohm_law frozen `409040e08cbc17c9`**（r16-r20 連 5 clean、L3 全 exit0；**兩次 de-converge**：①v1 figure 三角形水平分隔線鬍鬚 x1=46/x2=134 超出斜邊→縮 x1=66/x2=114 落斜邊內（ddd04c44→8233a633）；②8233a633 上 r1-3 false-clean 後 r11 對抗式終審揪 _note kp 標題回顯 ASCII『V=IR』與同檔自述「全檔等號全形」矛盾→改全形『V＝IR』、rounds 歸零（8233a633→409040e0）重跑 r16-20 5-clean）。tier=t_mid、exam=會考。前置＝voltage/resistance/current-def。R15 gloss 歐姆定律 (Ohm's law)＝2。
+- **定量單元**：I＝V÷R＝12÷4＝3 安培 經 oracle `sci_phys2_checks::phys-estatic.ohm-law` 以 `.venv` repro_gate PASS（未造假）；R＝V÷I 為 V＝IR 代數變形。
+- 內容：歐姆定律 V＝IR（電壓＝電流×電阻）；變形 I＝V÷R（求電流）、R＝V÷I（求電阻）；電阻不變時 I 與 V 成正比、電壓不變時 I 與 R 成反比。figure＝V/I/R 關係三角形（上 V、下 I 與 R，蓋住要求的量剩兩個就是算式）＋例 12÷4＝3 安培。scope：不含串並聯等效電阻/分壓分流、非歐姆性元件（各留另單元/較進階）。
+- **class 教訓（補強既有 [[note-metadata-must-match-file]]）**：_note 自述「全檔等號全形（＝÷×）」時，**連 kp 知識點標題回顯**（『歐姆定律（V=IR）』）裡的算式等號也要全形——ASCII『=』在算式脈絡即違反自述、content_audit 把 _note 當 fact 查核會判 minor DEFECT 並作廢 streak。但 `tier=`/`exam=`/`kind=` 是 metadata key=value 標記記法（非算式、前單元同寫法、panel 未報），不是缺陷、勿過度全形化。**另一教訓**：coarse「clean」是最弱證據——8233a633 上 r1-3 連 clean 仍被 r11 對抗式終審揪出此缺陷（r1-3 false-clean），印證 5-clean 必須含對抗式終審框架、且 streak 要在**完全相同 sha** 上連續。
+- DONE-GATE 全綠：per_page PASS（683/683、ohm_law absent from violations）、scan/schema/question/pedagogy PASS、gloss=2、figure 四角色簽核（綁 whisker 修後 sha、雙向 iPad render 看過：V/I/R 三角形分隔線落斜邊內無鬍鬚＋三行蓋法＋例題，無重疊裁切）。phys-estatic strand 進度 10/25（t_base 3＋t_mid 7）。
+
 ## 2026-11-20 07:36 ★ sci.t_mid.phys-estatic.resistance 電阻的概念與影響因素 R＝ρL÷A 5/5 DONE-GATE → phys-estatic 9/25
 - **sci_phys_estatic_resistance frozen `ccda130cbfae49cf`**（R1-R5 連 5 clean、L3 全 exit0；**一次收斂、無 de-converge**）。tier=t_mid、exam=會考。前置＝current-def。R15 gloss 電阻 (resistance)/歐姆 (ohm)/電阻率 (resistivity) 各＝2。
 - **定量單元**：R＝ρL÷A 比例關係（長度加倍→電阻加倍、截面積加倍→電阻減半）經 oracle `sci_phys2_checks::phys-estatic.resistance` 以 `.venv` repro_gate PASS（未造假）。
