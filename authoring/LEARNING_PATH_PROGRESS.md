@@ -1,3 +1,6 @@
+## 2026-11-20 18:05:43 +08:00
+- phys-optics 反射定律（入射角＝反射角）5/5 DONE-GATE (frozen b783bc94, r1-r5 全輪 unpiped L3 exit0; per_page+repro(oracle op_reflection_law 入射角=反射角)+phase1 全綠). phys-optics strand 4/21 (t_base 3 全完成+t_mid reflection-law). 零 de-converge(凍前自檢全清:7 方角引號標籤各對單一 SVG 節點/R15 三術語 gloss 各=2/半形斜線運算子=0/全形°＝).
+
 ## 2026-11-20 17:26:59 +08:00
 - phys-optics 光的色散與顏色（彩虹與三稜鏡）5/5 DONE-GATE (frozen 8408ffde, r1-r5 全輪 unpiped L3 exit0; per_page+phase1 全綠; 定性無 reproduction). phys-optics strand 3/21.
 - 收斂修 1 真缺陷: r3 _note 宣告「不用半形斜線」卻在 practice 描述寫「（三稜鏡/彩虹）」半形斜線→改「或」. 教訓: 定性單元不再放「不用半形斜線」自宣告(自陷), 從源頭消除.
