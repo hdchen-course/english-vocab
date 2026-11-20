@@ -4057,3 +4057,10 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - math numquant 進度：30 KP → 12 收斂（place-value、compare-order、rounding-estimate、add-sub-vertical、multiplication-table、multi-digit-mult、division-remainder、mixed-operations-order、decimal-place-value、factors-multiples、prime-composite、gcd-lcm），18 待建。
 - 本 session 累計完成數學島 numquant 6→12 共 7 個單元。
 - 下一步：math.t_base.numquant.fraction-concept（分數概念：部分與整體）或 decimal-arithmetic。預設 fraction-concept（分數族群起點，為等值分數/分數運算鋪路）。
+
+## 2026-11-20 20:58 — 方頭箭頭→尖三角 sweep 批次1 三檔 5/5 收斂 + DONE-GATE 全綠
+- newton2 / newton3 / friction_factor：SVG 手繪鈍楔形 polygon 箭頭已於 1e8a804f3 以 figure_arrowhead_sweep.py（proof-guard：僅 points 改）換成尖三角；本輪完成 de-converge 後 5-clean 重收斂。
+- frozen sha：newton2=84a8a12879688b16、newton3=b2c115e6608af5cf、friction_factor=095874334bd0772e；各 rounds=[r1..r5] 全 clean、L3 exit0（皆 bank 前 L3 unpiped + coverage_check rc0）。
+- DONE-GATE 全綠：per_page_5clean_gate --verify rc0（三檔 absent from violations）、prc_term_gate PASS、scan_simplified PASS。
+- 視覺確認：figure_visual_audit.py 算繪三圖、逐張 Read 實看 — 箭頭皆尖三角、附著端點、方向正確（newton2 綠合力右指；newton3 綠手推牆右、紅牆推手左；friction_factor 綠推力右、紅摩擦左）；newton2 紅公式「公尺/秒²」PNG 疑似穿線經核 SVG 無雜線（僅地面 y96＋綠箭頭 y80，公式在 y120）＝rsvg 算繪假影。
+- 尖箭頭 sweep backlog 續：FORCE 剩 friction_exist(需紅箭頭離地)、ENERGY 群 work_energy_thm/power_fv/ke_pe/momentum_impulse/碰撞系列等（見 authoring/figure_visual_audit_findings.md）。
