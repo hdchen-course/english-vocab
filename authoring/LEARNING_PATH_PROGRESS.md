@@ -1,3 +1,7 @@
+## 2026-11-20 17:26:59 +08:00
+- phys-optics 光的色散與顏色（彩虹與三稜鏡）5/5 DONE-GATE (frozen 8408ffde, r1-r5 全輪 unpiped L3 exit0; per_page+phase1 全綠; 定性無 reproduction). phys-optics strand 3/21.
+- 收斂修 1 真缺陷: r3 _note 宣告「不用半形斜線」卻在 practice 描述寫「（三稜鏡/彩虹）」半形斜線→改「或」. 教訓: 定性單元不再放「不用半形斜線」自宣告(自陷), 從源頭消除.
+
 ## 2026-11-20 17:02:33 +08:00
 - phys-optics 光的反射與鏡子成像 5/5 DONE-GATE (frozen 6387deda, r1-r5, 全輪 unpiped L3 exit0; per_page+phase1 全綠; 定性單元無 reproduction). phys-optics strand 2/21.
 - 收斂過程修 2 真缺陷: (a) _note 底部 『』 自述併兩 SVG 節點+丟結尾(r5 note-figure-label-quote-not-verbatim)→改非逐字描述; (b) c-rm-image 虛像句 garden-path(r2 b-hard-to-understand)→主詞明確化. pipe-gotcha 抓出並撤回 1 skim 輪(coverage_check 必 unpiped 讀 exit).
