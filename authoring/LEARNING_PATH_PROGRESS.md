@@ -1,3 +1,10 @@
+## 2026-11-20 08:38 ★ sci.t_mid.phys-estatic.parallel 並聯電路 1÷R＝1÷R₁＋1÷R₂ 5/5 DONE-GATE → phys-estatic 12/25
+- **sci_phys_estatic_parallel frozen `5765989a12fe03a5`**（r1-r5 連 5 clean、L3 全 exit0；**一次收斂、無 de-converge**）。tier=t_mid、exam=會考。前置＝series/ohm-law/resistance。R15 gloss 並聯 (parallel circuit)＝2。
+- **定量單元**：R＝(1÷3＋1÷6)⁻¹＝2 歐姆 經 oracle `sci_phys2_checks::phys-estatic.parallel` 以 `.venv` repro_gate PASS（未造假）；6V 例 I₁＝6÷3＝2、I₂＝6÷6＝1、主幹 3 安培、R＝6÷3＝2 歐姆 皆代數一致。
+- 內容：並聯＝接在同兩點之間的好幾條路；①各支路電壓相同（都等於電源電壓）；②分流（主幹＝各支路相加、電阻小分到電流大，I＝V÷R）；③總電阻 1÷R＝1÷R₁＋1÷R₂ 且比任何一條支路都小。figure＝並聯電路（電池＋R₁、R₂ 橋接同上下兩軌）＋各支路標示＋公式。明確對照串聯（串聯電流處處相同/電壓分配；並聯電壓處處相同/電流分配）。scope：不含串聯/串並聯混合/電功率（各留另單元）。
+- **一次收斂**：延續 series 教訓，draft 同概念用語全檔對齊（分流/各支路電壓相同反覆一致）、串並聯對照明確寫出避免混淆、distractor 乾淨單一誤解（9=串聯相加、18=相乘、4.5=平均）、全形運算子，content_audit 三框架五輪 0 confirmed。
+- DONE-GATE 全綠：per_page PASS（685/685、parallel absent from violations）、scan/schema/question/pedagogy PASS、gloss=2、figure 四角色雙向 iPad render 簽核（並聯拓撲正確＝兩支路橋接同兩軌、電流分流標示、1÷R 公式與 R=2Ω<兩支路，無重疊裁切）。phys-estatic strand 進度 12/25（t_base 3＋t_mid 9）。
+
 ## 2026-11-20 08:25 ★ sci.t_mid.phys-estatic.series 串聯電路 R＝R₁＋R₂ 5/5 DONE-GATE → phys-estatic 11/25
 - **sci_phys_estatic_series frozen `35e589fca45f2c19`**（v2 r4-r8 連 5 clean、L3 全 exit0；一次 de-converge：v1 r1+r3 兩輪一致揪 claim c-s-resistance『串聯的電阻越接越大』措辭生硬/兩讀（「電阻」當「接」主詞、與全檔「串越多越大」不一致）→改『串接的電阻越多，總電阻就越大』、rounds 歸零（68c53f66→35e589fc）重跑 r4-8 5-clean）。tier=t_mid、exam=會考。前置＝ohm-law/resistance/current-def。R15 gloss 串聯 (series circuit)＝2。
 - **定量單元**：R＝R₁＋R₂＝3＋5＝8 歐姆、I＝12÷8＝1.5 安培、分壓 V₁＝1.5×3＝4.5 伏特、V₂＝7.5 伏特（V₁＋V₂＝12）經 oracle `sci_phys2_checks::phys-estatic.series` 以 `.venv` repro_gate PASS（未造假）。
