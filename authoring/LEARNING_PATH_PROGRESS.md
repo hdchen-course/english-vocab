@@ -4117,3 +4117,9 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - **optics_reflection_mirror 5/5 收斂**：構圖上移 30px（批次7初）＋distractor 自我矛盾修復＋r2 confirmed 漫反射入射光非真平行(ray2 dx24dy24 vs dy22)→2px 對齊真平行（反射仍散開=物理正確）。frozen c55fc294。圖 render+四角色目視通過。
 - **教訓（已 bank 記憶）**：(1) 定義迷思的修復必須掃全檔 teach/claim/can_do/recap——只改 claim/can_do 會在 teach body 殘留；class-wide grep 自檢是必要步驟。(2) 淺輪(2ag)連過不代表乾淨，深輪(7/12ag)才抓得到 teach 殘留與地道性問題——5-clean 的價值在於會觸發深輪。
 - QUEUED：FORCE 群剩餘「真鈍頭」箭圖（elements/friction_coeff/incline/newton1/resolve_compose/weight_mass/add_1d），只掃真鈍頭、已可接受者不動。
+
+## 視覺稽核 FORCE 群 批次8（2026-11-21 03:24 台北）commit ac8149265 pushed
+- **newton1 / add_1d / elements 各 5/5 收斂**：純水平方頭 1:1→尖三角 1.48:1（figure_arrowhead_sweep）；add_1d 另修箭頭長度非比例→統一 10px/N（5N=50/3N=30px 兩面板一致）＝magnitude-channel 修；三檔深輪皆抓到 `_note` over-claim「alt 與 SVG text 逐字一致」→散文非逐字（class-wide 修）。render 四角色目視通過、DONE-GATE 全綠。
+- **triage 修正**：findings 的 4 個「major」(newton2/friction_factor/friction_exist/newton3) 經驗證箭頭已達 1.47:1 尖三角標準（sweep 報 0-change）＝視覺過度判定、**不需修**。
+- **教訓**：圖改觸發深輪→必帶出既有 `_note` over-claim（跨 72 sci_phys 模板債）＋可能帶出 magnitude-channel 非比例。**下批 de-converge 時應在同一 commit 預先修 `_note` over-claim**（grep「alt 與 SVG text 逐字一致」）省掉重凍輪。
+- QUEUED 下批：friction_coeff/incline/resolve_compose/weight_mass（含垂直/斜向頭，sweep 可能誤判→逐箭頭 render 確認避 forms 誤判）＋friction_exist 紅摩擦箭頭上移（手改）＋weight_mass 49N:8N 比例（手改，同 add_1d class）。
