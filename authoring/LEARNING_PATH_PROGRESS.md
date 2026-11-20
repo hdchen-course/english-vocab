@@ -1,3 +1,6 @@
+## 2026-11-20 16:11:38 +08:00
+- phys-heat 比熱 figure 破圖修復 DONE-GATE 完成: _note alt 自述 over-claim (r1 confirmed major note-alt-verbatim-overclaim) 已修; frozen 145fc1a4 r1-r5 5-clean (L3 全 exit0); per_page+repro+phase1 全綠. HD 回報的文字蓋線+箭頭已於 319fcde71 修, 本次補 alt 自述並重收斂.
+
 ## 2026-11-20 15:58:19 +08:00
 - phys-optics 光的直進與影子 5/5 DONE-GATE (frozen 17b89200, r7-r11, repro op_straight_shadow PASS, phase1 全綠, iPad 雙向 render 四角色過). phys-optics strand 1/21.
 - HD 回報 phys-heat 比熱 figure SVG 破圖(文字蓋線+手搓箭頭歪)→修: caption y=52→66 落 V 中央避線, 箭頭改 <marker> 三角頭 orient=auto 正確指入沙/水框; iPad 雙向 render 四角色過; de-converge 重凍 sha 6691d818, 重跑 5-clean 進行中(r1 wx27l2xod). 答 HD: 頁面非 stale(27行薄殼 runtime fetch units.json), 破圖真在來源.
