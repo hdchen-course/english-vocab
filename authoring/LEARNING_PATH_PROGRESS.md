@@ -1,3 +1,10 @@
+## 2026-11-20 13:23 ★ sci.t_sub.phys-estatic.cap-energy 電容器儲存能量（½CV²）與充放電 5/5 DONE-GATE → phys-estatic 22/25（t_sub 首單元）
+- **sci_phys_estatic_cap_energy frozen `62333a454db1134c`**（r1-r5 連 5 clean、L3 全 exit0；**零 de-converge**，凍前自檢攔截 3 處後首凍即 5 連 clean）。tier=t_sub、exam=分科-物理。前置＝capacitor。本單元無新 R15 術語（電容器/電容/法拉/焦耳/微法拉 皆前單元或國中已 gloss）。
+- **定量單元**：電容 2 微法拉、電壓 100 伏特→儲能＝½×2 微法拉×100²＝0.01 焦耳 經 oracle `sci_phys2_checks::phys-estatic.cap-energy` 以 `.venv` repro_gate PASS（未造假）。
+- 內容：充飽電電容器儲能 E＝½CV²（C 電容、V 兩端電壓）；充電＝把電荷與能量存進電容器、放電＝放出（相機閃光燈先充再瞬放）；能量與電壓平方成正比、電壓加倍能量變 4 倍；電容器儲存而非產生電荷、靠正負電荷分開建立電場儲能。figure＝電容器（紅＋Q/藍−Q 兩極板＋三綠電場線）＋電容/電壓標籤＋公式 E＝½CV²＝0.01 焦耳＋充放電/平方正比註。3 MCQ＝儲能計算 0.01J/為何能儲能（正負電荷分開建電場）/電壓加倍能量變 4 倍。
+- **class 教訓（凍前自檢再攔 3 處 _note 自觸）**：(a)★**_note 自訂「本檔只用中文無英文括註」禁令會被自身違反**＝_note 兩處寫「前置＝電容器與電容（capacitor）」「皆已於前單元（capacitor）」英文括註，自觸禁令（同 capacitor 單元 ★術語區分句自觸類）→移除英文括註改「電容器與電容單元」；(b)★**_note MCQ distractor 摘要內的半形等號**＝「（Q1 C=2微法拉…」半形 C=2 違反全檔全形→改 C＝2；(c) prerequisite id 字串 sci.t_adv.phys-estatic.capacitor 含 capacitor＝機器識別碼非英文 gloss、寫入 knownFP 免誤報。**教訓：_note 自訂「無英文括註」禁令時，連前置單元的名稱參照也不能帶英文括註（用「X 單元」）；_note 內描述 MCQ 的算式片段（C=2 等）也屬全檔全形範圍。**
+- DONE-GATE 全綠：per_page PASS（695/695、cap_energy absent from violations）、scan/schema/question/pedagogy PASS、repro_gate PASS、無新 gloss、半形運算子 0（排除 xmlns/id/tier=）、figure 標籤全逐字、figure 四角色雙向 iPad render 簽核（電容器雙極板＋三電場線＋公式區善用空間，無重疊裁切）。phys-estatic 進度 22/25（t_base 3＋t_mid 11＋t_adv 7＋t_sub 1）。下一＝charge-in-field（電場中帶電粒子運動，oracle a=qE/m≈1.76e14 電子）。
+
 ## 2026-11-20 13:07 ★ sci.t_adv.phys-estatic.emf-internal-r 電動勢與內電阻（端電壓 V＝ε−Ir）5/5 DONE-GATE → phys-estatic 21/25（t_adv 全 6 單元完成）
 - **sci_phys_estatic_emf_internal_r frozen `5b4b5e03453d5ae2`**（r1-r5 連 5 clean、L3 全 exit0；**零 de-converge**——凍前機械＋語意自檢＋四角色 render 簽核把關，首凍即 5 連 clean）。tier=t_adv、exam=學測。前置＝歐姆定律（ohm-law）。R15 gloss 電動勢 (electromotive force, EMF)/內電阻 (internal resistance)/端電壓 (terminal voltage) 各＝2。
 - **定量單元**：電動勢 12 伏特、內電阻 0.5 歐姆、電流 2 安培→端電壓＝12−2×0.5＝11 伏特 經 oracle `sci_phys2_checks::phys-estatic.emf-internal-r` 以 `.venv` repro_gate PASS（未造假）。
