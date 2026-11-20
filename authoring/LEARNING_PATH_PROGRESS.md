@@ -1,3 +1,10 @@
+## 2026-11-20 12:16 ★ sci.t_adv.phys-estatic.equivalent-r 電阻串並聯等效電阻計算 5/5 DONE-GATE → phys-estatic 19/25
+- **sci_phys_estatic_equivalent_r frozen `292ddae23b95e4be`**（r10-r14 連 5 clean、L3 全 exit0；一次 de-converge＝Q3 distractor 算式）。tier=t_adv、exam=學測。前置＝series/parallel/ohm-law。R15 gloss 僅等效電阻 (equivalent resistance)＝2（串聯/並聯/電阻/歐姆已前單元 gloss）。
+- **定量單元**：混聯 3Ω 串聯（6Ω 並 6Ω＝3Ω）＝6Ω 經 oracle `sci_phys2_checks::phys-estatic.equivalent-r` 以 `.venv` repro_gate PASS（3＋(1÷(1÷6＋1÷6))＝6）。
+- 內容：等效電阻＝用一個電阻取代一組、對外電壓電流關係不變；串聯 R＝R₁＋R₂（相加變大）；並聯 1÷R＝1÷R₁＋1÷R₂（倒數相加、比最小支路還小）；混聯先算並聯等效再和串聯相加。figure＝原電路（3Ω 串聯兩並聯 6Ω）→步驟1 並聯 6∥6＝3Ω→步驟2 ＋3Ω→綠框總等效 6Ω。3 MCQ＝串聯相加 5Ω／並聯 6∥6＝3Ω／混聯 6Ω。
+- **class 教訓（★銳化自檢生效＋新增 distractor 算式驗算）**：(a)**凍 sha 前銳化自檢攔截兩處**（_note「禁半形（= + / * ·）」清單字面嵌入 · 自觸掃描→改文字描述；禁令句重寫「等效電阻 (equivalent resistance)」致 gloss＝3→改「該術語」），**在 content_audit 前就擋下、省 de-converge**（補強 [[note-metadata-must-match-file]] 的凍前自檢清單生效）；(b)**唯一 de-converge＝distractor rationale 算式亂寫**：Q3「1.5Ω」rationale 原寫「1÷3＋1÷6＝1÷6＝…≈1.5」漏第三項、1÷3＋1÷6 誤寫＝1÷6（實 1÷2）、又混 1÷R 與 R，雖最終值 1.5 對但推導全錯（panel a-wrong blocker）→改「1÷3＋1÷6＋1÷6＝4÷6＝2÷3，R＝1.5」並以 .venv Fraction 驗證。**教訓：distractor rationale 裡的多步算式本身也是教學內容、每一步都要能被學生核對；草稿後把每個 rationale 的算式用 .venv 實算一遍（尤其並聯倒數相加這種易漏項/易把 1÷R 當 R 的）。**
+- DONE-GATE 全綠：per_page PASS（692/692、equivalent_r absent）、scan/schema/question/pedagogy PASS、repro_gate PASS、gloss 等效電阻=2、figure 四角色雙向 iPad render 簽核（原混聯電路→兩步化簡→綠框總等效 6Ω、電路拓撲正確無重疊裁切）。phys-estatic 進度 19/25（t_base 3＋t_mid 11＋t_adv 5）。下一＝kirchhoff（克希荷夫定律）。
+
 ## 2026-11-20 11:55 ★ sci.t_adv.phys-estatic.capacitor 電容器與電容（C＝Q÷V、平行板電容）5/5 DONE-GATE → phys-estatic 18/25
 - **sci_phys_estatic_capacitor frozen `5964659cedb30fd9`**（r20-r24 連 5 clean、L3 全 exit0；**三次 de-converge**，全為 _note/verification_ref 符號自述一致性缺陷，非教學事實錯）。tier=t_adv、exam=學測。前置＝potential。R15 gloss 電容器 (capacitor)/電容 (capacitance)/法拉 (farad) 各＝2；電荷量/電壓/伏特 已於前單元 gloss、不再 gloss。
 - **定量單元**：Q＝C×V＝1 微法拉×12 伏特＝12 微庫侖 經 oracle `sci_phys2_checks::phys-estatic.capacitor` 以 `.venv` repro_gate PASS（未造假）。
