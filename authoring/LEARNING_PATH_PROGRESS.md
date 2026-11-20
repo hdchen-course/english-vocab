@@ -1,3 +1,7 @@
+## 2026-11-20 15:58:19 +08:00
+- phys-optics 光的直進與影子 5/5 DONE-GATE (frozen 17b89200, r7-r11, repro op_straight_shadow PASS, phase1 全綠, iPad 雙向 render 四角色過). phys-optics strand 1/21.
+- HD 回報 phys-heat 比熱 figure SVG 破圖(文字蓋線+手搓箭頭歪)→修: caption y=52→66 落 V 中央避線, 箭頭改 <marker> 三角頭 orient=auto 正確指入沙/水框; iPad 雙向 render 四角色過; de-converge 重凍 sha 6691d818, 重跑 5-clean 進行中(r1 wx27l2xod). 答 HD: 頁面非 stale(27行薄殼 runtime fetch units.json), 破圖真在來源.
+
 ## 2026-11-20 15:04 ★ sci.t_sub.phys-estatic.rc-circuit RC 充放電與時間常數 τ＝RC 5/5 DONE-GATE → phys-estatic 25/25（strand 完成）
 - **sci_phys_estatic_rc_circuit frozen `a2bdbe10af4abecf`**（r1-r5 連 5 clean、L3 全 exit0 深度 74-80%；**零 de-converge**，凍前自檢＋曲線物理修正把關、首凍即 5 連 clean）。tier＝t_sub、exam＝分科-物理。前置＝capacitor。R15 新術語 時間常數（time constant）＝2（_note＋can_do）。
 - **定量單元**：充電一個時間常數達最終值約 63%（一減 e 分之一≈0.632）經 oracle `sci_phys2_checks::phys-estatic.rc-circuit` 以 `.venv` repro_gate PASS；**該 oracle 的 source_registry reproduction entry 為本單元建前補登**（fingerprint cbb344a41464f1f5 由 repro_gate --emit 實跑算出、非造假、已 commit）。例 τ＝RC＝1000 歐姆×0.001 法拉＝1 秒。
