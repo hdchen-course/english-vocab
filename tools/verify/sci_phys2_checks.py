@@ -258,11 +258,27 @@ def op_imaging_eq():
     assert _close(q, 30) and _close(-q/p, -2)
     return _ok("phys-optics.imaging-eq", "成像 1/f=1/p+1/q：f=10,p=15→q=30,m=−2")
 def op_convex_image():
-    # 凸透鏡 p>2f 成倒立縮小實像（q<p）：f=10,p=30→q=15<30
-    f, p = 10, 30
-    q = 1/(1/f-1/p)
-    assert _close(q, 15) and q < p and -q/p < 0
-    return _ok("phys-optics.convex-image", "凸透鏡 p>2f：倒立縮小實像（f=10,p=30→q=15）")
+    # 凸透鏡成像規律表（薄透鏡式 1/f=1/p+1/q 當獨立 derivation；單元本身定性不顯式）
+    # 正號規約：q>0 實像（異側、可倒立），q<0 虛像（同側、正立）；放大率 m=-q/p，|m|>1 放大。
+    f = 10
+    def img(p):
+        q = 1/(1/f - 1/p)   # p=f 時發散，單獨處理
+        return q, -q/p
+    # 列1 p>2f：倒立縮小實像（相機）q 在 f~2f 之間、|m|<1
+    q, m = img(30);  assert _close(q, 15) and q > 0 and m < 0 and abs(m) < 1 and f < q < 2*f
+    # 列2 p=2f：倒立等大實像，q=2f、|m|=1
+    q, m = img(20);  assert _close(q, 20) and q > 0 and m < 0 and _close(abs(m), 1)
+    # 列3 f<p<2f：倒立放大實像（投影機），q>2f、|m|>1
+    q, m = img(15);  assert _close(q, 30) and q > 0 and m < 0 and abs(m) > 1 and q > 2*f
+    # 列4 p=f：折射後成平行光，不成像（分母為零）
+    try:
+        _ = 1/(1/f - 1/f); p_eq_f_no_image = False
+    except ZeroDivisionError:
+        p_eq_f_no_image = True
+    assert p_eq_f_no_image
+    # 列5 p<f：正立放大虛像（放大鏡），q<0、m>0、|m|>1
+    q, m = img(5);   assert q < 0 and m > 0 and abs(m) > 1
+    return _ok("phys-optics.convex-image", "凸透鏡成像規律：p>2f 倒立縮小實像(相機)、p=2f 倒立等大、f<p<2f 倒立放大實像(投影機)、p=f 不成像、p<f 正立放大虛像(放大鏡)")
 def op_double_slit():
     # 楊氏雙狹縫亮紋 d sinθ=mλ；間距 Δy=λL/d
     lam, L, d = 5e-7, 1, 1e-3
