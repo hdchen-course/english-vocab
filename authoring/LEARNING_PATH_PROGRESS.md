@@ -1,3 +1,12 @@
+## 2026-11-21 12:28 ★ phys-optics t_mid 批次推進（lens-action 收斂定案 + convex-image/curved-mirror/dispersion-color 起草凍結待 audit）
+- **lens-action 5/5 收斂定案**（frozen f9d50e8957b5759f，r1-r5 全 clean L3 exit0；DONE-GATE simp/prc/5clean 全綠）commit 6759729fa、已 push。
+- **擴充 op_convex_image oracle**：原僅驗 p>2f 一列→擴充以薄透鏡式（獨立 derivation）驗全五列成像規律（p>2f/p=2f/f<p<2f/p=f/p<f）之倒正·大小·虛實；re-emit 指紋 90c121f0ea2ce004、更新 source_registry、repro_gate PASS（commit 9f19110ec）。
+- **convex-image**（凸透鏡成像規律，frozen 4dd72030470bc05d）：定性五列成像表（相機/投影機/放大鏡）；figure p>2f 光線圖（中心光線過鏡心、平行光線過焦點、交於倒立縮小實像，幾何經座標驗算+四角色簽核）；pre-freeze 全綠。**content_audit r1 已 bank clean**；r2 因 AWS token 過期（judge/reviewer 403 ExpiredToken）INVALID 未 bank。commit 1a0623052。
+- **curved-mirror**（凹/凸面鏡成像初步，frozen 05cd353f953280ef）：定性（凹面鏡會聚/凸面鏡發散/面鏡靠反射 vs 透鏡折射/手電筒頭燈後照鏡廣角鏡）；figure 雙格反射光線圖（凹會聚鏡前焦點/凸發散虛線交鏡後虛焦點）四角色簽核；pre-freeze 全綠。commit d6210411d。**待 audit**。
+- **dispersion-color**（可見光光譜與物體顏色，frozen 32296b91a01c325a）：additive 於 color-basic（紅光偏折最少紫最多成固定光譜序/透明物體看透過色光/單色光下紅物變黑）；figure 單色光對照（白光紅蘋果反射紅 vs 綠光下變黑）四角色簽核；pre-freeze 全綠。commit b02a474f7。**待 audit**。
+- **BLOCKER（環境）**：AWS SSO token 過期（約 2026-11-21 07:4x 起），content_audit 需 Bedrock 無法跑。需 HD 刷新憑證（mwinit / ada credentials update）。憑證恢復後批次 audit：convex-image r2-r5、curved-mirror r1-r5、dispersion-color r1-r5 各到 5-clean→DONE-GATE→push。
+- phys-optics strand：t_base 3 + t_mid 全 8（含本批 3 待收斂）已作者化；剩 t_adv 5（imaging-eq/snell/refractive-index/total-reflection/optical-instr）+ t_sub 5（double-slit/diffraction/thin-film/polarization/em-spectrum）。
+
 ## 2026-11-20 20:09 — HD 回報 figure 全修復 + 視覺稽核制度化
 - HD 連環回報 figure「沒畫好」且質問為何 audit 不自動抓。根因：content_audit 只讀文字、不算繪 SVG 看像素(render-only 盲點)。
 - 已修復收斂並 push 的四圖：kirchhoff(文字壓線)、charge-in-field(箭頭 orient 轉向)、plane-mirror(屏幕→屏 PRC詞+歧義)、work-cos(構圖失衡+位移被基線吃掉+方頭)。加先前 specific_heat 共 5 圖。
