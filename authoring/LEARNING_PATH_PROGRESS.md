@@ -1,3 +1,10 @@
+## 2026-11-22 06:49 ★ phys-em 12/20（faraday-law push；lenz 進行中）
+- **faraday-law**（法拉第電磁感應定律 Φ＝BA 與 |ε|＝N×ΔΦ／Δt，t_adv 學測，frozen 33da824caeee02e5，HEAD f2662d4c3）5/5 CONVERGED + push。數值 N=100 ΔΦ=0.02 Wb Δt=0.1s→20 V 與三 distractor(0.2漏N/2.0漏除Δt/200位數錯) .venv 驗算。
+- **深輪累計抓修 7 真缺陷（淺輪 2ag 全漏）**：_note Q4 舊版草稿；QD-mcq-2 stem/選項體例不一致（改敘述題）；一般式 Φ＝BA cosθ 未定義 θ(cos/sin 歧義→刪，本單元只教垂直)；R15 gloss 漏 induced(→induced electromotive force)；selfeval_note 半形＝；teach/can_do/_note「單位伏特」指涉歧義(綁回 |ε|)；_note 圖公式引用 over-claim(去前綴對齊 SVG)。
+- **★冷次定律＝Lenz's law 臺灣正體標準譯名**（維基 zh-tw 地區詞轉換：冷次＝臺灣、楞次＝PRC）；審計多次報「冷次→楞次」blocker 經查證為假陽性、不改（改楞次反注入 PRC 詞）。記憶 [[lenz-law-taiwan-term-is-lengci]]。
+- **lenz**（冷次定律 感應電流方向，t_adv 學測，frozen 2413309912861b07）draft+gates 全綠+figure 四角色簽核，content_audit r1-3 跑中。感應電流反抗磁通變化、N 插入近端感應 N 相斥、能量守恆、ε 負號方向；無新 R15(人名定律中文呈現)。
+- **下一步**：lenz 收斂 push 後 → motor-generator、ac-basic(t_adv) → t_sub(flux-emf-calc/transformer/circular-in-field/mass-spec/em-wave-gen)。phys-circ(13) 未起。
+
 ## 2026-11-22 06:01 ★ phys-em 11/20（本 session 再 push 6 單元：electromagnet/motor-basic/induction-basic/field-of-current/force-on-wire/lorentz）
 - **6 單元全 5/5 CONVERGED + push**：electromagnet(t_mid 電磁鐵/電鈴繼電器, frozen 838e13b8, HEAD 108dc29ff)、motor-basic(t_mid 電流磁場中受力/馬達, 6983e67d, c5f6fc6fb)、induction-basic(t_mid 電磁感應/發電機, f260a7e5, c94649bcb)、field-of-current(t_adv學測 直導線/線圈/螺線管磁場方向強度 B=μ₀I/(2πr)等, 23040c51, 586c17f8f)、force-on-wire(t_adv F=BIL+佛萊明左手定則, 2378a128, 3bf6759f6)、lorentz(t_adv 勞侖茲力F=qvB, 2e384d6c, a28ae7f8d)。
 - **t_adv 量化單元數值全 .venv 驗算**：field-of-current 三公式(4e-6/3.77e-5/2.51e-3 T)、force-on-wire F=BIL=0.1N、lorentz F=qvB=8e-14N；數值題 distractor 皆為相異誤算路徑且 .venv 核過（漏某因子/位數錯/相加非相乘）。
