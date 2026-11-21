@@ -5,7 +5,9 @@
 - **curved-mirror**（凹/凸面鏡成像初步，frozen 05cd353f953280ef）：定性（凹面鏡會聚/凸面鏡發散/面鏡靠反射 vs 透鏡折射/手電筒頭燈後照鏡廣角鏡）；figure 雙格反射光線圖（凹會聚鏡前焦點/凸發散虛線交鏡後虛焦點）四角色簽核；pre-freeze 全綠。commit d6210411d。**待 audit**。
 - **dispersion-color**（可見光光譜與物體顏色，frozen 32296b91a01c325a）：additive 於 color-basic（紅光偏折最少紫最多成固定光譜序/透明物體看透過色光/單色光下紅物變黑）；figure 單色光對照（白光紅蘋果反射紅 vs 綠光下變黑）四角色簽核；pre-freeze 全綠。commit b02a474f7。**待 audit**。
 - **BLOCKER（環境）**：AWS SSO token 過期（約 2026-11-21 07:4x 起），content_audit 需 Bedrock 無法跑。需 HD 刷新憑證（mwinit / ada credentials update）。憑證恢復後批次 audit：convex-image r2-r5、curved-mirror r1-r5、dispersion-color r1-r5 各到 5-clean→DONE-GATE→push。
-- phys-optics strand：t_base 3 + t_mid 全 8（含本批 3 待收斂）已作者化；剩 t_adv 5（imaging-eq/snell/refractive-index/total-reflection/optical-instr）+ t_sub 5（double-slit/diffraction/thin-film/polarization/em-spectrum）。
+- **imaging-eq**（透鏡成像公式 1÷f＝1÷p＋1÷q 與放大率，t_adv 學測，frozen 9807698610d8469b）：量化 convex-image；oracle f＝10,p＝15→q＝30,m＝−2 真值；符號規約（q 正實像負虛像、凸透鏡 f 正凹負、m 負倒立正正立）；figure 定義 p/q/f＋公式（焦距 f 標示避開透鏡）四角色簽核；全形運算子、pre-freeze 全綠。commit c002e3d28。**待 audit**。claim_id c-ie-magnification 含 magnification 為機器碼非 R15 gloss（gloss 實=2：note＋can_do）、列 knownFP。
+- phys-optics strand：t_base 3 + t_mid 全 8 + t_adv imaging-eq 已作者化；**待 audit 佇列共 4 檔**（convex-image r2-5、curved-mirror、dispersion-color、imaging-eq）。剩 t_adv 4（snell/refractive-index/total-reflection/optical-instr）+ t_sub 5（double-slit/diffraction/thin-film/polarization/em-spectrum）。
+- **停止續 draft（審計債上限）**：AWS 憑證恢復前不再新增單元，先把 4 檔 audit 到 5-clean。
 
 ## 2026-11-20 20:09 — HD 回報 figure 全修復 + 視覺稽核制度化
 - HD 連環回報 figure「沒畫好」且質問為何 audit 不自動抓。根因：content_audit 只讀文字、不算繪 SVG 看像素(render-only 盲點)。
