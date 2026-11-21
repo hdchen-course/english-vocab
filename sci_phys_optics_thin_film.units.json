@@ -1,0 +1,222 @@
+{
+ "_note": "自然島 物理-光學（phys-optics）strand t_sub 分科測驗單元（薄膜干涉：反射光的光程差、半波損失與亮暗條件，定量）。知識點 sci.t_sub.phys-optics.thin-film。tier＝t_sub、exam＝分科-物理。本單元直接前置＝楊氏雙狹縫干涉（double-slit，相干光疊加與建設性／破壞性干涉已教），即 prerequisites 欄唯一一筆；double-slit 再前接波的反射／折射／干涉（wave-behavior）等，干涉、反射、波長 經該遞移鏈已教，依直接邊（transitive-reduction）慣例不另列。折射率來自 refractive-index 鏈。全繁體零簡體零 PRC 詞（中國，非大陸）。中文授課無音檔。★術語附國際英語（R15）：本單元新術語有二——薄膜干涉（thin-film interference）、半波損失（half-wave loss）；每個只在 can_do 內首次出現時以中文（English）gloss 一次，本 _note 這一行各宣告一次，故每個英文括註全檔各計二（_note 宣告一次＋can_do 一次）；teach、claim、figure、practice 一律只用中文、不得再出現這些英文括註。干涉、反射、折射、折射率、波長、相位 等來自前置單元，不 gloss。★算式記號：一律用全形除號（÷）、等號（＝）、乘號（×）、加號（＋）、減號（U+2212）等運算子，不使用半形運算符號；數字與英文字母、角標 m 用半形；波長以 λ、膜厚以 t、折射率以 n、級數以 m 表示。★符號規約／定義與正確性鐵律（此單元採『空氣中的薄膜、光自空氣入射』此一標準情形，全檔一致不得混用別的慣例）：光照在薄膜上，一部分在上表面反射（光線1），一部分折射進膜內、在下表面反射後再穿出（光線2），兩道反射光相干疊加形成薄膜干涉。膜內來回的光程差為 2nt（n 膜的折射率、t 膜厚；垂直入射近似）。半波損失＝光由光疏介質（折射率小）射向光密介質（折射率大）時，反射光相位突變半個波長（相當於多走 λ÷2）；本情形只有『上表面（空氣→膜，n 變大）』發生半波損失，下表面（膜→空氣，n 變小）不發生，故兩反射光間淨多出 λ÷2。因此：反射最強（建設性干涉、看起來最亮）條件為 2nt＝(m＋½)λ（m＝0、1、2…）；反射最弱（破壞性干涉、該色消失）條件為 2nt＝mλ（m＝1、2…）。★定義不得反轉：建設性為 2nt＝(m＋½)λ、破壞性為 2nt＝mλ；兩者絕不可互換，且半波損失只計上表面一次。肥皂泡與水面油膜呈現彩色，是因為白光中不同波長在不同膜厚處滿足建設性干涉、各自被反射加強。★fact 重現：oracle sci_phys2_checks::phys-optics.thin-film 以 .venv 重跑驗證來回光程 2nt：n＝1.33、t＝1×10⁻⁷ 公尺（100 奈米）→ 2nt＝2×1.33×1×10⁻⁷＝2.66×10⁻⁷ 公尺（光程差）。figure 自檢：一道入射光射到薄膜上表面，分成『光線1（上表面反射、標半波損失）』與『光線2（進入膜、下表面反射後穿出）』兩道往上的反射光；薄膜畫成水平帶、標膜厚 t 與折射率 n，上下皆為空氣；標『入射光』『光線1（上表面反射）』『光線2（下表面反射）』『半波損失』『薄膜 n、厚 t』與式『反射最亮：2nt＝(m＋½)λ』；元素不裁切、不壓線；箭頭用共用三角 marker、tip 落在線端；alt 完整涵蓋 SVG 全部標籤文字與資訊（散文描述、非逐字複製）。practice 四答案＝{上表面反射光與下表面反射光的干涉（Q1 薄膜干涉來源）, 2nt（Q2 膜內來回光程差，半波損失另計）, 2nt＝(m＋½)λ（Q3 反射最亮條件）, 不同波長在不同膜厚處建設性干涉（Q4 肥皂泡彩色成因）}；MCQ options bare、每 distractor 乾淨單一誤解（Q1：入射光與折射光／兩道穿透膜後的透射光／光在膜內被吸收後再放出；Q2：nt（漏乘來回的 2）／2t（漏乘折射率 n）／2nt＋λ（把半波損失併進光程差本身）；Q3：2nt＝mλ（那是破壞性／反射最弱條件）／2nt＝mλ÷2（把半波長奇數倍寫錯）／nt＝(m＋½)λ（漏掉來回的 2）；Q4：薄膜把白光折射成像三稜鏡一樣散開／薄膜只反射綠光／肥皂含有各種顏色的色素）、兩兩相異、長度均衡；distractor_rationales key 逐字相符。claim kind＝fact。figure-only example 無 body。本註解內分隔用頓號或「或」，不使用半形（ASCII）斜線。",
+ "page": "sci_phys_optics_thin_film.html",
+ "units": [
+  {
+   "unit_id": "sci.t_sub.phys-optics.thin-film",
+   "title_zh": "薄膜干涉",
+   "can_do": "我知道光照在很薄的透明薄膜（例如肥皂泡、水面的油膜）上時，一部分在薄膜上表面反射、一部分進入膜內從下表面反射後再穿出，這兩道反射光相干疊加，產生薄膜干涉（thin-film interference）。我知道光在膜內來回造成的光程差是 2nt（n 是膜的折射率、t 是膜厚）。我也知道半波損失（half-wave loss）：光從折射率小的介質射向折射率大的介質反射時，反射光會多出半個波長的相位變化；在『空氣中的薄膜、光從空氣入射』這個標準情形，只有上表面（空氣進入膜）發生半波損失。把這個半波損失算進去後，反射看起來最亮（建設性干涉）的條件是 2nt＝(m＋½)λ（m＝0、1、2…），反射最弱（破壞性干涉、該顏色消失）的條件是 2nt＝mλ。我也知道肥皂泡和油膜會呈現彩色，是因為白光中不同波長在不同膜厚處剛好滿足建設性干涉、各自被反射加強。",
+   "situation_group": "光：看見世界的方式",
+   "subject": "sci",
+   "strand": "phys-optics",
+   "est_minutes": 12,
+   "knowledge_point_ids": [
+    "sci.t_sub.phys-optics.thin-film"
+   ],
+   "prerequisites": [
+    "sci.t_sub.phys-optics.double-slit"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-tf-source",
+     "text": "薄膜干涉來自兩道反射光的疊加：光照到透明薄膜時，一部分在上表面直接反射（光線1），另一部分折射進入膜內、在下表面反射後再穿出膜面（光線2）。這兩道光來自同一束入射光、是相干光，疊加後依路徑差加強或抵消，形成干涉。常見的肥皂泡、水面油膜的彩色花紋就是薄膜干涉。",
+     "kind": "fact",
+     "source_refs": [
+      "薄膜干涉由上下表面兩道反射光疊加（高中物理 分科測驗）"
+     ],
+     "verification_ref": "薄膜干涉為上下表面反射光干涉（波動光學，科學共識＋教科書 cross_check）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-tf-path",
+     "text": "光線2比光線1多走的路徑，主要是在膜內來回一趟。因為膜的折射率是 n、膜厚是 t，這段來回的光程差（光程＝折射率乘幾何路徑）為 2nt（垂直入射的近似）。這是「膜造成的」光程差，半波損失要另外計入、不包含在 2nt 裡。",
+     "kind": "fact",
+     "source_refs": [
+      "薄膜內來回光程差 2nt（高中物理 分科測驗）"
+     ],
+     "verification_ref": "sci_phys2_checks::phys-optics.thin-film 以 .venv 重跑驗證 2nt＝2×1.33×1×10⁻⁷＝2.66×10⁻⁷ 公尺（n＝1.33、t＝100 奈米）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-tf-halfwave",
+     "text": "半波損失：光從折射率較小的介質射向折射率較大的介質，反射光會有半個波長（λ÷2）的相位突變。在「空氣中的薄膜、光從空氣入射」這個標準情形，只有上表面（空氣→膜，折射率變大）發生半波損失，下表面（膜→空氣，折射率變小）不發生，所以兩道反射光之間除了 2nt 之外還淨多出 λ÷2。把它算進去後：反射最亮（建設性干涉）條件是 2nt＝(m＋½)λ，反射最弱（破壞性干涉、該色消失）條件是 2nt＝mλ，其中 m＝0、1、2…。",
+     "kind": "fact",
+     "source_refs": [
+      "半波損失與薄膜反射亮暗條件（高中物理 分科測驗）"
+     ],
+     "verification_ref": "反射半波損失致建設性 2nt＝(m＋½)λ、破壞性 2nt＝mλ（波動光學，科學共識）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-tf-color",
+     "text": "肥皂泡和水面的油膜之所以呈現彩色，是薄膜干涉的結果：白光含有各種波長，在膜的某個厚度處，某一波長剛好滿足反射建設性干涉（2nt＝(m＋½)λ）而被反射加強，於是那個位置就顯出那個顏色。膜厚不均勻，不同厚度處加強不同波長，就看到一片片不同的顏色；膜厚改變時顏色也跟著變。這不是色素，而是光的干涉。",
+     "kind": "fact",
+     "source_refs": [
+      "肥皂泡／油膜彩色為薄膜干涉（高中物理 分科測驗）"
+     ],
+     "verification_ref": "薄膜干涉造成結構色（波動光學，科學共識）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-optics.thin-film"
+     ],
+     "body": "肥皂泡表面為什麼有一圈圈彩色？不是染料，而是光的干涉。這一課看光打在很薄的透明膜上，上表面和下表面各反射一道光，兩道光疊加就形成薄膜干涉。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-optics.thin-film"
+     ],
+     "body": "① 兩道反射光：光線1 在上表面反射，光線2 進入膜、從下表面反射後穿出。② 膜內來回的光程差＝2nt（n 折射率、t 膜厚）。③ 半波損失：光由折射率小射向折射率大反射時多出 λ÷2；本情形只有上表面有，故兩光再多差 λ÷2。④ 算進去後——反射最亮（建設性）：2nt＝(m＋½)λ；反射最弱（破壞性）：2nt＝mλ（m＝0、1、2…）。⑤ 白光中不同波長在不同膜厚處建設性加強，就看到肥皂泡、油膜的彩色。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_sub.phys-optics.thin-film"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 360 200' xmlns='http://www.w3.org/2000/svg'><defs><marker id='tf-ah' markerWidth='7' markerHeight='7' refX='5.2' refY='3' orient='auto'><path d='M0,0 L6,3 L0,6 Z' fill='#2563a6'/></marker></defs><g font-family='sans-serif'><rect x='40' y='96' width='280' height='22' fill='#cfe6f7'/><line x1='40' y1='96' x2='320' y2='96' stroke='#2563a6' stroke-width='1'/><line x1='40' y1='118' x2='320' y2='118' stroke='#2563a6' stroke-width='1'/><text x='300' y='78' font-size='8' fill='#6b7680' text-anchor='middle'>空氣</text><text x='300' y='140' font-size='8' fill='#6b7680' text-anchor='middle'>空氣</text><text x='56' y='111' font-size='8' fill='#1d5a86'>薄膜 n、厚 t</text><line x1='118' y1='96' x2='118' y2='118' stroke='#b5651d' stroke-width='0.8'/><text x='123' y='112' font-size='7' fill='#b5651d'>t</text><line x1='60' y1='40' x2='140' y2='96' stroke='#2563a6' stroke-width='1.6' marker-end='url(#tf-ah)'/><text x='52' y='40' font-size='8' fill='#2563a6' text-anchor='end'>入射光</text><line x1='140' y1='96' x2='214' y2='44' stroke='#2563a6' stroke-width='1.6' marker-end='url(#tf-ah)'/><text x='210' y='38' font-size='7.5' fill='#2563a6'>光線1（上表面反射）</text><circle cx='140' cy='96' r='3' fill='#d64545'/><text x='120' y='90' font-size='7' fill='#d64545' text-anchor='end'>半波損失</text><line x1='140' y1='96' x2='168' y2='118' stroke='#9ab7d6' stroke-width='1.2'/><line x1='168' y1='118' x2='196' y2='96' stroke='#9ab7d6' stroke-width='1.2'/><line x1='196' y1='96' x2='270' y2='48' stroke='#2563a6' stroke-width='1.6' marker-end='url(#tf-ah)'/><text x='250' y='60' font-size='7.5' fill='#2563a6'>光線2（下表面反射）</text><text x='180' y='190' font-size='8' fill='#2563a6' text-anchor='middle' font-weight='bold'>反射最亮：2nt＝(m＋½)λ（m＝0、1、2…）</text></g></svg>",
+      "alt": "一張薄膜干涉示意圖。中央一條水平的淺色帶是薄膜，上下緣各一條線代表上表面與下表面，帶內標「薄膜 n、厚 t」，薄膜的上方與下方都標「空氣」。一道「入射光」從左上方射到薄膜上表面的入射點。到了上表面，光分成兩路：一路直接反射向右上方，標「光線1（上表面反射）」，並在入射點標紅點「半波損失」；另一路折射進入薄膜、到下表面反射、再穿出上表面向右上方，標「光線2（下表面反射）」，與光線1 大致平行。薄膜厚度以一小段垂直線標為「t」。最下方一行寫出反射最亮（建設性干涉）的條件「2nt＝(m＋½)λ（m＝0、1、2…）」。",
+      "caption": "光在薄膜上、下表面各反射一道光（光線1、光線2）疊加成薄膜干涉。膜內來回光程差為 2nt，上表面另有半波損失 λ÷2；反射最亮（建設性）時 2nt＝(m＋½)λ，最弱（破壞性）時 2nt＝mλ。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-optics.thin-film"
+     ],
+     "body": "最後練「薄膜干涉」。重點：(1) 兩道反射光（上表面光線1、下表面光線2）疊加成干涉；(2) 膜內來回光程差＝2nt；(3) 半波損失只在上表面（空氣→膜）發生、多出 λ÷2；(4) 反射最亮 2nt＝(m＋½)λ、最弱 2nt＝mλ；(5) 肥皂泡、油膜彩色＝不同波長在不同膜厚處建設性加強。小提醒：2nt 只是膜造成的光程差，半波損失要另外加，別把它併進 2nt 裡。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QT-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "薄膜干涉是哪兩道光疊加造成的？",
+     "answer": "上表面反射光與下表面反射光的干涉",
+     "kp_ids": [
+      "sci.t_sub.phys-optics.thin-film"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-optics.thin-film"
+     ],
+     "options": [
+      "上表面反射光與下表面反射光的干涉",
+      "入射光與折射進膜內的光的干涉",
+      "兩道穿透薄膜後射出下方的透射光的干涉",
+      "光在膜內被吸收後再放出的光"
+     ],
+     "distractor_rationales": {
+      "入射光與折射進膜內的光的干涉": "入射光只有一道、尚未分出兩道相干反射光；薄膜干涉是上表面反射與下表面反射這兩道反射光疊加。",
+      "兩道穿透薄膜後射出下方的透射光的干涉": "日常看到肥皂泡、油膜的彩色是『反射』的干涉；本單元討論的是上、下表面兩道反射光，不是下方的透射光。",
+      "光在膜內被吸收後再放出的光": "薄膜干涉與吸收後再放出（螢光）無關；它純粹是兩道反射光的路徑差造成的干涉。"
+     },
+     "answer_evidence": [
+      "c-tf-source"
+     ],
+     "feedback": "薄膜干涉＝上表面反射的光線1 與下表面反射後穿出的光線2 兩道相干反射光疊加。"
+    },
+    {
+     "question_id": "QT-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "折射率為 n、厚度為 t 的薄膜，光大致垂直入射。光在膜內來回造成的光程差是多少（半波損失另外計、不含在內）？",
+     "answer": "2nt",
+     "kp_ids": [
+      "sci.t_sub.phys-optics.thin-film"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-optics.thin-film"
+     ],
+     "options": [
+      "2nt",
+      "nt",
+      "2t",
+      "2nt＋λ"
+     ],
+     "distractor_rationales": {
+      "nt": "光在膜內是「來回」走了兩個膜厚，漏掉了來回的因數 2；光程差是 2nt 不是 nt。",
+      "2t": "光程要乘折射率（光程＝折射率×幾何路徑），漏乘 n 了；膜內來回光程差是 2nt。",
+      "2nt＋λ": "半波損失是另外計入的 λ÷2、不是一整個 λ，也不屬於膜造成的光程差 2nt 本身；膜內來回光程差就是 2nt。"
+     },
+     "answer_evidence": [
+      "c-tf-path"
+     ],
+     "feedback": "光程＝折射率×幾何路徑，膜內來回走 2 個膜厚，所以光程差＝2nt；半波損失 λ÷2 另外計入。"
+    },
+    {
+     "question_id": "QT-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "空氣中的薄膜、光從空氣入射（只有上表面有半波損失）。反射看起來最亮（建設性干涉）的條件是下列何者？",
+     "answer": "2nt＝(m＋½)λ",
+     "kp_ids": [
+      "sci.t_sub.phys-optics.thin-film"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-optics.thin-film"
+     ],
+     "options": [
+      "2nt＝(m＋½)λ",
+      "2nt＝mλ",
+      "2nt＝mλ÷2",
+      "nt＝(m＋½)λ"
+     ],
+     "distractor_rationales": {
+      "2nt＝mλ": "那是反射最弱（破壞性干涉、該色消失）的條件；因為上表面有半波損失，建設性反而是 2nt＝(m＋½)λ。",
+      "2nt＝mλ÷2": "半波長的奇數倍應寫成 (m＋½)λ，不是 mλ÷2（後者連偶數倍也包含進去、並不對應建設性）；正確是 2nt＝(m＋½)λ。",
+      "nt＝(m＋½)λ": "漏掉了光在膜內來回的因數 2；左邊應是 2nt 不是 nt。"
+     },
+     "answer_evidence": [
+      "c-tf-halfwave"
+     ],
+     "feedback": "上表面半波損失使兩反射光多差 λ÷2，所以反射最亮（建設性）時 2nt＝(m＋½)λ、最弱（破壞性）時 2nt＝mλ。"
+    },
+    {
+     "question_id": "QT-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "肥皂泡表面為什麼會出現一圈圈的彩色？",
+     "answer": "白光中不同波長在不同膜厚處建設性干涉、各自被反射加強",
+     "kp_ids": [
+      "sci.t_sub.phys-optics.thin-film"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-optics.thin-film"
+     ],
+     "options": [
+      "白光中不同波長在不同膜厚處建設性干涉、各自被反射加強",
+      "薄膜像三稜鏡一樣把白光折射散開成各色",
+      "薄膜只會反射綠色的光",
+      "肥皂水裡含有各種顏色的色素"
+     ],
+     "distractor_rationales": {
+      "薄膜像三稜鏡一樣把白光折射散開成各色": "三稜鏡是靠色散（不同波長折射角不同）；肥皂泡彩色是薄膜干涉，靠的是不同波長在不同膜厚滿足建設性干涉而被反射加強。",
+      "薄膜只會反射綠色的光": "薄膜對各波長都可能反射，端看膜厚是否讓該波長建設性干涉；不同膜厚加強不同顏色，才會看到一圈圈不同的彩色。",
+      "肥皂水裡含有各種顏色的色素": "那是結構色、不是色素；純透明的肥皂水靠薄膜干涉就能顯色，膜厚改變顏色也跟著變。"
+     },
+     "answer_evidence": [
+      "c-tf-color"
+     ],
+     "feedback": "白光各波長在不同膜厚處滿足 2nt＝(m＋½)λ 的被反射加強，膜厚不均就看到一圈圈不同顏色——這是干涉造成的結構色，不是色素。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案／說明自己判斷（薄膜干涉＝上表面反射光線1 與下表面反射光線2 疊加；膜內來回光程差＝2nt；半波損失只在上表面、多出 λ÷2；反射最亮建設性 2nt＝(m＋½)λ、最弱破壞性 2nt＝mλ；肥皂泡／油膜彩色＝不同波長在不同膜厚處建設性加強的結構色，非色素）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
