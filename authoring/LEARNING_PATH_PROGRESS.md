@@ -4165,3 +4165,14 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 → **phys-optics t_adv 五單元全收齊**（另 imaging-eq 前 session 已收）。
 **教訓**：figure 幾何（光線角度、角弧半徑/接線、共頂點、標籤壓線）與 _note 逐字標籤一致性是深輪(7-9ag)反覆抓到、淺輪(2ag)與四角色目視常漏的缺陷類；每個新 figure 單元幾乎都被深輪抓 1-2 個幾何/一致性 nit，deep round 不可省。
 下一步佇列：phys-optics t_sub（double-slit 有 oracle op_double_slit 先做／diffraction／thin-film／polarization／em-spectrum）。
+
+## 2026-11-21（續）phys-optics strand 全 10 單元收齊＝strand 完成
+本 session（續 t_sub）依序完成並 push，每單元 5/5 CONVERGED + DONE-GATE（simp/prc/per_page 5clean 全綠）+ figure 四角色簽核：
+- double-slit（楊氏雙狹縫 d sinθ=mλ／(m+½)λ／Δy=λL÷d，oracle op_double_slit，frozen 1a40aab，commit ae45b343c/8fc2a86d9）；深輪修 Δy 漏小角度(近軸)限定詞「當角度不大時」（與同單元精確 d sinθ=mλ 內部不一致）。
+- diffraction（單狹縫繞射＋繞射光柵 d sinθ=mλ，oracle op_diffraction 500線/mm→sinθ=0.25，frozen 77efd44d，commit c2a0145eb/6d07c4602）；深輪連修兩真缺陷：Q3 distractor「約2.5」機制算不出值→改真值「約4」(d÷(mλ)=4)；**光柵vs雙狹縫因果 blocker**：「相鄰亮紋分得更開」誤歸因狹縫數多（主極大角位置只由 d 決定、與 N 無關；N 只使亮紋變窄變銳）→misconception 全欄掃清＋把迷思設為 distractor 直接測。
+- thin-film（薄膜干涉 2nt 光程差＋半波損失，建設性 2nt=(m+½)λ／破壞性 2nt=mλ，oracle op_thin_film，frozen ef09bfef，commit 7d3d89557）；**半波損失正確性連修三輪**：m 範圍自矛盾→**我 r1 誤排除破壞性 m=0，深輪 domain/viz/eye 指正：m=0(2nt=0 零厚度)是真實黑紋(肥皂膜頂/牛頓環中心)→反轉回 m=0,1,2…**；另修「的→而」語法、「乘→全形×」記號。
+- polarization（光的偏振與偏振片，定性 cross_check，frozen 06a8845c，commit 53730d986）；深輪修 Q1 distractor「偏振和波…」garden-path→加引號消歧。
+- em-spectrum（電磁波譜與光的電磁波本質，定性 cross_check，frozen 5aea9e44，commit 6565774b1）；深輪修 _note note-metadata-mismatch（加 Q5 後仍寫「四答案」）→改五答案。
+→ **phys-optics strand 全 10 單元收齊**（t_adv5：imaging-eq/refractive-index/snell/total-reflection/optical-instr；t_sub5：double-slit/diffraction/thin-film/polarization/em-spectrum），加前批 t_base/t_mid 共 21/21 KP 全覆蓋。sci 覆蓋達 119/977（6 物理 strand 完成：estatic/energy/optics/heat/force/kin）。
+**教訓（新）**：(1) 深輪(7-12ag)是物理正確性最後防線——thin-film 半波損失 m=0 黑紋我自己判斷錯、靠 domain/viz/eye 深輪反轉；淺輪(2ag)與四角色目視均漏。(2) 加 practice 題後**必須同步更新 _note 的「N答案」計數與條目列**（_note 被當 fact 核對）。(3) MCQ 量化 distractor 的 rationale 機制必須精確重建選項值（double-slit Q3/diffraction Q3 同類）。
+下一步佇列：phys-wave strand（18 KP，optics 依賴根 wave-quantities v=fλ[oracle wv_wave_quantities]/wave-type 橫縱波/wave-behavior 反射折射繞射干涉）；由基礎往上建。
