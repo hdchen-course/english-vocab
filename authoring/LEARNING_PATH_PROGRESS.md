@@ -4185,3 +4185,11 @@ phys-wave 4/18 單元收齊並 push：wave-quantities(v=fλ,t_mid)、wave-type(�
 - 雙向箭頭 marker-start 須用 orient=auto-start-reverse（否則兩端同向 render-only 缺陷，三波動圖全中已修）[[svg-double-arrow-marker-start-reverse]]
 - misconception/caveat 修正必掃「所有讀者可見欄位」含 Q feedback/rationale；_note「凡…皆」絕對自述要與實作一致
 下一步佇列：phys-wave 其餘 14 KP（sound-three 三要素/medium/sound-medium 聲速v=331+0.6T/echo/resonance/wave-behavior + t_adv/t_sub shm/doppler/standing-wave 等）。
+
+## 2026-11-22 00:00 — phys-wave strand 進度（續，本 session 第二批）
+phys-wave 9/18 單元收齊並 push（+5）：sound-three(三要素 響度/音調/音品,t_mid,oracle 523≈2×261)、sound-medium(聲速 v=331+0.6T,t_mid,oracle 25°C→346)、echo(回聲 d=vt/2,t_mid,oracle)、resonance(共振 驅動頻率=自然頻率,t_mid,oracle)、medium(力學波需介質+電磁波例外,t_mid,qualitative無oracle)。各單元 pre-freeze 全綠(simp/prc/schema/correctness/pedagogy/repro)＋figure 四角色簽核＋content_audit 5連續clean同sha(L3+covcheck)＋DONE-GATE。
+本批 content_audit 深輪(7ag)抓到並修復的真缺陷：
+- echo _note 列 practice 答案 Q2 寫簡述「除以2」非逐字 answer「因為聲音來回走了兩段距離」→改逐字一致(note-metadata-must-match-file)；de-frozen 重凍重跑。
+- medium _note 與 selfeval_note 混用半形「/」與全形「／」、且違反 _note 自述「不使用半形斜線」→全改全形頓號(notation-consistency)；de-frozen 重凍重跑。教訓：_note 宣告的分隔符慣例要套用全檔含 selfeval_note，未來 selfeval_note 一律全形頓號 [[sci-unit-notation-consistency]]。
+- figure 雙向箭頭(↕/↔)持續沿用 auto-start-reverse marker(medium 繩波↕、echo 去/回程兩獨立單端箭頭)避 svg-double-arrow class [[svg-double-arrow-marker-start-reverse]]。
+剩餘 phys-wave 9 KP：wave-behavior(t_adv 反射/折射/繞射/干涉)、shm/shm-period/shm-energy(t_adv/t_sub 簡諧)、doppler/doppler-calc(t_adv/t_sub 都卜勒)、superposition/standing-wave/standing-quant(t_sub 疊加/駐波)。多數有 oracle(repro_gate 已驗)。下一個：wave-behavior。
