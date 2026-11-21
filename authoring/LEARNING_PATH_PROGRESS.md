@@ -1,3 +1,10 @@
+## 2026-11-22 04:00 ★ phys-em strand 開跑 5/20 收齊 + push（magnet-basic/mag-field/geomagnetism/oersted/coil-field）
+- **5 單元全 5/5 CONVERGED + push**：magnet-basic(t_base 磁極/吸引/指南針, frozen 8507fde8, HEAD 36d71170d)、mag-field(t_mid 磁場磁力線, frozen 1ea955e2, 6c1ac908e)、geomagnetism(t_mid 地磁/指南針, frozen 4aca1261, e38a5bfc5)、oersted(t_mid 電流磁效應/右手定則, frozen d597376f, 52ec70f04)、coil-field(t_mid 螺線管磁場, frozen d177029917, 67889943c)。
+- **教學鏈**：magnet-basic→mag-field→(geomagnetism)／oersted→coil-field；地磁含「地理北附近＝地磁 S 極」易混點（已過深輪）。
+- **figure render 目視＋深輪連抓多缺陷（均修）**：mag-field 四弧共磁極端點視覺相交 blocker→巢狀不共點（記憶 [[field-lines-must-not-share-pole-endpoint]]）；mag-field/coil-field _note『X 極』逐字引用但 SVG 僅畫 X（note verbatim-quote mismatch，均改）；geomagnetism 指南針 marker 旋轉錯朝左→改向上三角 polygon；oersted/coil-field 標註壓線→重排。深輪(7/9ag)持續抓淺輪(2ag)漏的 figure/_note 缺陷。
+- **下一步**：phys-em 剩 15 binding KP。續 t_mid electromagnet(電磁鐵/電鈴繼電器)、motor-basic(馬達原理)、induction-basic(電磁感應發電機初步)→ t_adv(field-of-current/force-on-wire/lorentz/faraday-law/lenz/motor-generator/ac-basic)→ t_sub(flux-emf-calc/transformer/circular-in-field/mass-spec/em-wave-gen)。物理島其餘：phys-circ(13) 未起。
+- **物理島總計**：8 strand 中 phys-wave 18/18、phys-estatic 25、phys-energy 22、phys-optics 21、phys-heat 20、phys-force 17、phys-kin 14 全收；phys-em 5/20 進行中、phys-circ 0/13 未起。
+
 ## 2026-11-22 02:39 ★ phys-wave strand 18/18 收齊（standing-quant 收斂定案 + push，HEAD b4f1ed1c6）
 - **standing-quant**（駐波諧波與泛音定量，t_sub 分科-物理，frozen 6198eff835b18f4c）5/5 CONVERGED、三度 de-converge。第 n 諧波 f_n＝n×f₁（整數倍）、n 個腹點 n＋1 個節點、泛音＝基音以外諧波、音色由各泛音振幅組合決定（非頻率）；oracle f₁＝170→f₃＝510 赫茲；figure 三列紡錘形（基音/第2/第3諧波）四角色簽核。
 - **三度 de-converge（全由深輪 7ag 抓、淺輪 2ag 全漏，再證深輪必要）**：(1) r3-v2 音色誤歸因「整數倍頻率決定音色」＝物理錯+與 teach⑤ 自相矛盾 blocker → 改「各泛音振幅組合」；(2) r1/r2-v3 括註「所有弦共用同一組整數倍頻率」字面假（不同音 f₁ 不同、頻率組不同、只共用整數倍規律）blocker+major → 限定「同一個音」；(3) r5-v3「諧波（泛音）」把超集/子集兩詞等同的歧義 minor → 改「泛音」與 can_do/teach⑤ 一致。記憶 [[timbre-is-amplitude-mix-not-harmonic-frequencies]]。
