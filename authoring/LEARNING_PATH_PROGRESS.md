@@ -4155,3 +4155,13 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 - **refraction-idea（光的折射現象初步，t_mid）5/5 CONVERGED**：r1 深輪抓 major out-of-scope——Q2 distractor 引用「臨界角」(本單元明文 out-of-scope 且空氣入水疏→密不存在臨界角)→刪離題旁白。圖「空氣入水偏向法線」θ1≈51°>θ2≈27° 幾何正確、四角色簽核。
 - **教訓（新）**：distractor_rationale 勿引用本單元 _note 明列 out-of-scope 的更高階術語（臨界角/全反射…）——既離題又常物理誤植（臨界角僅密→疏、本題疏→密不存在）。
 - phys-optics strand 進度：16 缺 → 14 缺（pinhole+refraction 收斂）。sci 覆蓋 103→105。
+
+## 2026-11-21（續）phys-optics t_adv 批次收齊（4 單元 session）
+本 session（resume 自 refractive-index）依序完成並 push：
+- refractive-index（折射率與光速 n＝c÷v，5/5，commit 8f570b0d8）
+- snell（司乃耳定律 n₁sinθ₁＝n₂sinθ₂，5/5，commit e3741e98f；深輪連修 figure 入射角34→30°/θ₂弧半徑59→30接線/_note前置一致性三缺陷）
+- total-reflection（全反射與臨界角 θc＝arcsin(1÷1.33)≈48.8°＋光纖，5/5，commit 73d546675；深輪修 figure 入射線共頂點/_note標籤逐字一致）
+- optical-instr（放大鏡/顯微鏡/望遠鏡成像原理，定性 cross_check，5/5，commit d4a19688c；深輪修放大鏡用語）
+→ **phys-optics t_adv 五單元全收齊**（另 imaging-eq 前 session 已收）。
+**教訓**：figure 幾何（光線角度、角弧半徑/接線、共頂點、標籤壓線）與 _note 逐字標籤一致性是深輪(7-9ag)反覆抓到、淺輪(2ag)與四角色目視常漏的缺陷類；每個新 figure 單元幾乎都被深輪抓 1-2 個幾何/一致性 nit，deep round 不可省。
+下一步佇列：phys-optics t_sub（double-slit 有 oracle op_double_slit 先做／diffraction／thin-film／polarization／em-spectrum）。
