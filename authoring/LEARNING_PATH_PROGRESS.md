@@ -1,3 +1,11 @@
+## 2026-11-22 02:39 ★ phys-wave strand 18/18 收齊（standing-quant 收斂定案 + push，HEAD b4f1ed1c6）
+- **standing-quant**（駐波諧波與泛音定量，t_sub 分科-物理，frozen 6198eff835b18f4c）5/5 CONVERGED、三度 de-converge。第 n 諧波 f_n＝n×f₁（整數倍）、n 個腹點 n＋1 個節點、泛音＝基音以外諧波、音色由各泛音振幅組合決定（非頻率）；oracle f₁＝170→f₃＝510 赫茲；figure 三列紡錘形（基音/第2/第3諧波）四角色簽核。
+- **三度 de-converge（全由深輪 7ag 抓、淺輪 2ag 全漏，再證深輪必要）**：(1) r3-v2 音色誤歸因「整數倍頻率決定音色」＝物理錯+與 teach⑤ 自相矛盾 blocker → 改「各泛音振幅組合」；(2) r1/r2-v3 括註「所有弦共用同一組整數倍頻率」字面假（不同音 f₁ 不同、頻率組不同、只共用整數倍規律）blocker+major → 限定「同一個音」；(3) r5-v3「諧波（泛音）」把超集/子集兩詞等同的歧義 minor → 改「泛音」與 can_do/teach⑤ 一致。記憶 [[timbre-is-amplitude-mix-not-harmonic-frequencies]]。
+- DONE-GATE 全綠（scan_simplified/prc_term/per_page_5clean standing_quant absent from violations、verify rc=0）。
+- **phys-wave 18/18 全收**（wave-behavior/wave-type/wave-quantities/sound-produce/… shm/shm-period/shm-energy/doppler/doppler-calc/superposition/standing-wave/standing-quant）。
+- **物理島進度**：7 strand 全收（phys-estatic 25、phys-energy 22、phys-optics 21、phys-heat 20、phys-wave 18、phys-force 17、phys-kin 14）。剩 phys-em(20)、phys-circ(13) 未起。
+- **下一步**：續 LEARNING_PATH_BUILD_PLAN；建議收尾物理＝phys-em（20 KP 電磁學）→ phys-circ（13）；或依計畫轉 chem/bio/earth。預設先開 phys-em 第一單元。
+
 ## 2026-11-21 17:30 ★ phys-optics 四單元批次全收斂定案 + push（convex-image/curved-mirror/dispersion-color/imaging-eq）
 - **convex-image**（凸透鏡成像規律，frozen 49020f559a26d185）5/5 CONVERGED。r4 深輪抓 minor（selfeval_note 後半 2f/f 小寫與全檔大寫 F/2F 不一致、光學小寫 f 常指焦距易誤導）→統一大寫、de-converge 重凍後 r1-5 全 clean。oracle op_convex_image 擴充驗全五列成像規律（指紋 90c121f0ea2ce004）。
 - **curved-mirror**（凹/凸面鏡成像初步，frozen 05cd353f953280ef）5/5 CONVERGED、零 de-converge。定性＝凹面鏡會聚（手電筒/車頭燈/化妝鏡）、凸面鏡發散恆正立縮小虛像且視野廣（後照鏡/廣角鏡）、面鏡靠反射 vs 透鏡折射。cross_check 單元無 repro。
