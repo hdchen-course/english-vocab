@@ -1,3 +1,11 @@
+## 2026-11-22 06:01 ★ phys-em 11/20（本 session 再 push 6 單元：electromagnet/motor-basic/induction-basic/field-of-current/force-on-wire/lorentz）
+- **6 單元全 5/5 CONVERGED + push**：electromagnet(t_mid 電磁鐵/電鈴繼電器, frozen 838e13b8, HEAD 108dc29ff)、motor-basic(t_mid 電流磁場中受力/馬達, 6983e67d, c5f6fc6fb)、induction-basic(t_mid 電磁感應/發電機, f260a7e5, c94649bcb)、field-of-current(t_adv學測 直導線/線圈/螺線管磁場方向強度 B=μ₀I/(2πr)等, 23040c51, 586c17f8f)、force-on-wire(t_adv F=BIL+佛萊明左手定則, 2378a128, 3bf6759f6)、lorentz(t_adv 勞侖茲力F=qvB, 2e384d6c, a28ae7f8d)。
+- **t_adv 量化單元數值全 .venv 驗算**：field-of-current 三公式(4e-6/3.77e-5/2.51e-3 T)、force-on-wire F=BIL=0.1N、lorentz F=qvB=8e-14N；數值題 distractor 皆為相異誤算路徑且 .venv 核過（漏某因子/位數錯/相加非相乘）。
+- **深輪(7-14ag)連抓真缺陷、de-converge（淺輪 2ag 全漏）**：electromagnet 圖電路斷口=開路 blocker(補導線，記憶 [[sci-circuit-figure-loop-continuous]])＋_note ASCII 斜線；motor-basic _note 斜線×2＋受力箭頭壓頂部場線(斷開修)；field-of-current Q4 stem『這些電流』泛指三情形但 distractor 對螺線管正確=雙解 blocker(stem 收斂直導線，記憶 [[mcq-stem-scope-vs-keyed-answer]])；force-on-wire 三度(壓線＋_note『全檔英文括註計零』自含 Fleming＋_note Q4 distractor『受力不變』≠選項『和垂直時一樣』，記憶 [[note-metadata-keep-lean]])；lorentz 零 de-converge(_note 精簡見效)。
+- **figure 慣例**：直導線磁場一律 ⊙ 剖面+同心圓(避穿線)；向量箭頭穿場線一律於穿越處斷開場線；三公式比較圖三欄分隔。
+- **下一步**：phys-em 剩 9 KP。續 t_adv faraday-law(法拉第定律 ε=−dΦ/dt 量化)、lenz(冷次定律)、motor-generator、ac-basic → t_sub(flux-emf-calc/transformer/circular-in-field/mass-spec/em-wave-gen)。再 phys-circ(13) 未起。
+- **物理島**：phys-wave 18/18 等 7 strand 全收；phys-em 11/20 進行中、phys-circ 0/13 未起。
+
 ## 2026-11-22 04:00 ★ phys-em strand 開跑 5/20 收齊 + push（magnet-basic/mag-field/geomagnetism/oersted/coil-field）
 - **5 單元全 5/5 CONVERGED + push**：magnet-basic(t_base 磁極/吸引/指南針, frozen 8507fde8, HEAD 36d71170d)、mag-field(t_mid 磁場磁力線, frozen 1ea955e2, 6c1ac908e)、geomagnetism(t_mid 地磁/指南針, frozen 4aca1261, e38a5bfc5)、oersted(t_mid 電流磁效應/右手定則, frozen d597376f, 52ec70f04)、coil-field(t_mid 螺線管磁場, frozen d177029917, 67889943c)。
 - **教學鏈**：magnet-basic→mag-field→(geomagnetism)／oersted→coil-field；地磁含「地理北附近＝地磁 S 極」易混點（已過深輪）。
