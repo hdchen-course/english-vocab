@@ -4176,3 +4176,12 @@ HD 指出英語島**內容未完成**（非僅未收斂）：300 eng binding KP 
 → **phys-optics strand 全 10 單元收齊**（t_adv5：imaging-eq/refractive-index/snell/total-reflection/optical-instr；t_sub5：double-slit/diffraction/thin-film/polarization/em-spectrum），加前批 t_base/t_mid 共 21/21 KP 全覆蓋。sci 覆蓋達 119/977（6 物理 strand 完成：estatic/energy/optics/heat/force/kin）。
 **教訓（新）**：(1) 深輪(7-12ag)是物理正確性最後防線——thin-film 半波損失 m=0 黑紋我自己判斷錯、靠 domain/viz/eye 深輪反轉；淺輪(2ag)與四角色目視均漏。(2) 加 practice 題後**必須同步更新 _note 的「N答案」計數與條目列**（_note 被當 fact 核對）。(3) MCQ 量化 distractor 的 rationale 機制必須精確重建選項值（double-slit Q3/diffraction Q3 同類）。
 下一步佇列：phys-wave strand（18 KP，optics 依賴根 wave-quantities v=fλ[oracle wv_wave_quantities]/wave-type 橫縱波/wave-behavior 反射折射繞射干涉）；由基礎往上建。
+
+## 2026-11-21 23:05 — phys-wave strand 進度（本 session）
+phys-wave 4/18 單元收齊並 push：wave-quantities(v=fλ,t_mid)、wave-type(橫/縱波,t_mid)、sound-produce(聲音產生傳播,t_base)、loud-pitch(響度音調,t_base)。
+本 session 抓到並修復的 class 缺陷（已入記憶）：
+- 二次貝茲波形量測箭頭須指實際極值(0.25P0+0.5P1+0.25P2)非控制點 [[sci-bezier-wave-peak-not-control-point]]
+- 介質框架定義橫波卻舉光(電磁波)例→乙太迷思；定義改通用「振動方向」+光加「不需介質」caveat [[sci-medium-framed-def-vs-mediumless-example]]
+- 雙向箭頭 marker-start 須用 orient=auto-start-reverse（否則兩端同向 render-only 缺陷，三波動圖全中已修）[[svg-double-arrow-marker-start-reverse]]
+- misconception/caveat 修正必掃「所有讀者可見欄位」含 Q feedback/rationale；_note「凡…皆」絕對自述要與實作一致
+下一步佇列：phys-wave 其餘 14 KP（sound-three 三要素/medium/sound-medium 聲速v=331+0.6T/echo/resonance/wave-behavior + t_adv/t_sub shm/doppler/standing-wave 等）。
