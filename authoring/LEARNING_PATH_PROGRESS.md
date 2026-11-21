@@ -1,3 +1,12 @@
+## 2026-11-21 17:30 ★ phys-optics 四單元批次全收斂定案 + push（convex-image/curved-mirror/dispersion-color/imaging-eq）
+- **convex-image**（凸透鏡成像規律，frozen 49020f559a26d185）5/5 CONVERGED。r4 深輪抓 minor（selfeval_note 後半 2f/f 小寫與全檔大寫 F/2F 不一致、光學小寫 f 常指焦距易誤導）→統一大寫、de-converge 重凍後 r1-5 全 clean。oracle op_convex_image 擴充驗全五列成像規律（指紋 90c121f0ea2ce004）。
+- **curved-mirror**（凹/凸面鏡成像初步，frozen 05cd353f953280ef）5/5 CONVERGED、零 de-converge。定性＝凹面鏡會聚（手電筒/車頭燈/化妝鏡）、凸面鏡發散恆正立縮小虛像且視野廣（後照鏡/廣角鏡）、面鏡靠反射 vs 透鏡折射。cross_check 單元無 repro。
+- **dispersion-color**（可見光光譜與物體顏色，frozen e78e0a9bec88cb02）5/5 CONVERGED。additive 於 color-basic（紅偏折最少紫最多成固定光譜序/透明物體看透過色光/單色光下紅物變黑）。r4 深輪 9ag 抓 minor figure-consistency（右格暗蘋果上亮綠裝飾葉柄與『看起來黑/無反射光』及 alt 牴觸）→移除葉柄、四角色重簽核、de-converge 重凍後 r1-5 全 clean。
+- **imaging-eq**（透鏡成像公式 1÷f＝1÷p＋1÷q 與放大率，frozen a1db7f59df3dcd34）5/5 CONVERGED。r1 深輪 7ag 抓 major c-out-of-scope（can_do+claim『(和)面鏡』：公式同形但『實像在另一側』符號規約只對透鏡、凹面鏡實像在同側、本單元全透鏡＝面鏡誤導）→移除面鏡字樣只談透鏡、de-converge 重凍後 r1-5 全 clean。oracle f=10,p=15→q=30,m=−2 以 .venv 重跑。
+- DONE-GATE 全綠（scan_simplified/prc_term/per_page_5clean 各頁 absent from violations）。四單元 push 於 HEAD 47ed50eb5。
+- **過程教訓**：深輪（7-9ag）對每個新單元都抓到淺輪漏掉的真缺陷（大小寫一致性/裝飾元素圖文牴觸/公式套用範圍 out-of-scope），印證深輪必要；content_audit 走 Bedrock，session 曾遇 AWS token 過期全擋（HD 刷新後恢復）。並行上限＝workflow-size hook 480s 窗口 6 launches，實測批次 audit 以 3 並行滾動最有效率。
+- **phys-optics 進度**：t_base 3 + t_mid 全 8 + t_adv imaging-eq ＝ 12 單元作者化並收斂。剩 t_adv 4（snell/refractive-index/total-reflection/optical-instr）+ t_sub 5（double-slit/diffraction/thin-film/polarization/em-spectrum）。下一＝refractive-index（絕對/相對折射率與光速變化）。
+
 ## 2026-11-21 12:28 ★ phys-optics t_mid 批次推進（lens-action 收斂定案 + convex-image/curved-mirror/dispersion-color 起草凍結待 audit）
 - **lens-action 5/5 收斂定案**（frozen f9d50e8957b5759f，r1-r5 全 clean L3 exit0；DONE-GATE simp/prc/5clean 全綠）commit 6759729fa、已 push。
 - **擴充 op_convex_image oracle**：原僅驗 p>2f 一列→擴充以薄透鏡式（獨立 derivation）驗全五列成像規律（p>2f/p=2f/f<p<2f/p=f/p<f）之倒正·大小·虛實；re-emit 指紋 90c121f0ea2ce004、更新 source_registry、repro_gate PASS（commit 9f19110ec）。
