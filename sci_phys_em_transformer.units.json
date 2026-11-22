@@ -1,0 +1,211 @@
+{
+ "_note": "自然島 物理-電磁（phys-em）strand t_sub 單元（自感、互感與變壓器原理）。知識點 sci.t_sub.phys-em.transformer、tier＝t_sub、exam＝分科-物理。直接前置＝ac-basic（已教交流電與有效值；變壓器只能用交流電），prerequisites 欄唯一一筆。全繁體零簡體零 PRC 詞（中國，非大陸）。中文授課無音檔。★R15 術語：本單元新術語三——自感（self-inductance）、互感（mutual inductance）、變壓器（transformer）；每個只在 can_do 內首次出現以中文（英文）gloss 一次，本 _note 這一行各宣告一次。原線圈、副線圈、鐵芯、匝數、電壓、電流、功率、磁通量、感應電動勢 皆前置或日常、描述性用語不 gloss；伏特（V）為單位符號不 gloss。★符號與定義（全檔一致）：自感＝線圈自己的電流變化時，會在自己身上產生反抗該變化的感應電動勢。互感＝一個線圈的電流變化，使鄰近另一個線圈產生感應電動勢。變壓器＝兩組線圈繞在同一鐵芯上，原線圈（接電源那側）通交流電產生變化磁通，經鐵芯耦合使副線圈（輸出那側）感應出電壓；理想變壓器電壓比等於匝數比：V_s／V_p＝N_s／N_p。理想變壓器功率守恆 V_p×I_p＝V_s×I_s，故降壓（輸出電壓較低）時輸出電流較大、升壓時輸出電流較小。變壓器只能用交流電：直流電的電流與磁通量不變（ΔΦ＝0），副線圈不會有感應電動勢。★數值已以 .venv 驗算：V_p＝100 V、N_p＝200 匝、N_s＝50 匝時 V_s＝V_p×N_s／N_p＝100×50／200＝25 V（降壓）；功率守恆下 I_s／I_p＝N_p／N_s＝4。practice 題號用 QT；QT-mcq-1 以 V_p＝100、N_p＝200、N_s＝50 為例正解 25 V，三 distractor 相異誤算（皆 .venv 核過）：400 V＝把匝數比倒過來乘（V_p×N_p／N_s）、100 V＝以為電壓與匝數無關、50 V＝以為『降壓就是打對折』。★figure 自檢：單一面板『變壓器：電壓比＝匝數比』。左畫交流電源（圓內標 ～）接原線圈（左鐵芯柱上較多個橘色線圈、標 原線圈 N_p 匝）；中間畫一個灰色矩形鐵芯框（標 鐵芯）；右畫副線圈（右鐵芯柱上較少個綠色線圈、標 副線圈 N_s 匝）接輸出（標 V_s 輸出）；原線圈線圈畫得比副線圈多以示意 N_p＞N_s（降壓）；下方標公式 V_s／V_p＝N_s／N_p。所有線條不壓字、元素不重疊、無裁切、接線連續不斷口。alt 完整涵蓋 SVG 全部標籤文字（散文、非逐字）。★figure 符號即事實：原線圈接交流電源、副線圈接輸出、同繞一鐵芯；原線圈線圈畫得比副線圈多，示意 N_p＞N_s（降壓），與算例 N_p＝200、N_s＝50 一致；V_s／V_p＝N_s／N_p。practice 四答案＝{25 V（Q1 V_s 數值）, 直流電磁通量不變、副線圈不會有感應電動勢（Q2 為何只能用交流電）, 互感（Q3 一線圈電流變化使另一線圈感應）, 比輸入電流大（Q4 降壓時電流）}；MCQ options bare、兩兩相異、長度均衡；distractor rationale 各寫清為何錯。claim kind＝fact。figure-only example 無 body。定義不得反轉：V_s／V_p＝N_s／N_p、只能用交流電（直流無變化磁通）、功率守恆降壓電流增大。本註解內分隔用頓號、「或」或全形斜線「／」，不用半形 ASCII 斜線。",
+ "page": "sci_phys_em_transformer.html",
+ "units": [
+  {
+   "unit_id": "sci.t_sub.phys-em.transformer",
+   "title_zh": "自感、互感與變壓器原理",
+   "can_do": "我知道自感（self-inductance）是線圈自己的電流變化時、在自己身上產生反抗該變化的感應電動勢；互感（mutual inductance）是一個線圈的電流變化使鄰近另一個線圈產生感應電動勢。我知道變壓器（transformer）是兩組線圈繞在同一鐵芯上，原線圈通交流電產生變化磁通、使副線圈感應出電壓，理想變壓器的電壓比等於匝數比：V_s／V_p＝N_s／N_p。我也知道變壓器只能用交流電（直流電磁通不變、副線圈不會有感應電動勢），而且理想變壓器功率守恆，所以降壓時輸出電流會變大。",
+   "situation_group": "磁與電：看不見的力",
+   "subject": "sci",
+   "strand": "phys-em",
+   "est_minutes": 15,
+   "knowledge_point_ids": [
+    "sci.t_sub.phys-em.transformer"
+   ],
+   "prerequisites": [
+    "sci.t_adv.phys-em.ac-basic"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-tr-induct",
+     "text": "自感是線圈自己的電流變化時、在自己身上產生反抗該變化的感應電動勢；互感是一個線圈的電流變化使鄰近另一個線圈產生感應電動勢。",
+     "kind": "fact",
+     "source_refs": [
+      "自感與互感（分科物理）"
+     ],
+     "verification_ref": "自感(self-inductance)、互感(mutual inductance)＝電磁學標準定義（教科書 cross_check）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-tr-ratio",
+     "text": "變壓器兩組線圈繞在同一鐵芯上，原線圈通交流電產生變化磁通使副線圈感應出電壓；理想變壓器電壓比等於匝數比 V_s／V_p＝N_s／N_p。",
+     "kind": "fact",
+     "source_refs": [
+      "變壓器電壓比＝匝數比 V_s/V_p=N_s/N_p（分科物理）"
+     ],
+     "verification_ref": "理想變壓器 V_s/V_p=N_s/N_p＝電磁學標準結果（教科書 cross_check；V_p=100 N_p=200 N_s=50→V_s=25 V 以 .venv 驗算）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-tr-ac-power",
+     "text": "變壓器只能用交流電：直流電的電流與磁通量不變（ΔΦ＝0），副線圈不會有感應電動勢。理想變壓器功率守恆 V_p×I_p＝V_s×I_s，所以降壓時輸出電流會變大。",
+     "kind": "fact",
+     "source_refs": [
+      "變壓器需交流電、功率守恆（分科物理）"
+     ],
+     "verification_ref": "變壓器需變化磁通(交流)、理想功率守恆 V_pI_p=V_sI_s＝電磁學標準結果（教科書 cross_check）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-em.transformer"
+     ],
+     "body": "法拉第定律說磁通量變化會生感應電動勢。這一課看三個應用：線圈對自己的「自感」、線圈對鄰居的「互感」，以及把互感做成實用裝置的「變壓器」。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-em.transformer"
+     ],
+     "body": "① 自感：線圈自己的電流一變，通過自己的磁通量就變，於是在自己身上生出一個「反抗這個變化」的感應電動勢。② 互感：把兩個線圈靠近，一個線圈的電流變化會讓另一個線圈的磁通量變，使另一個線圈也生出感應電動勢。③ 變壓器：兩組線圈繞在同一個鐵芯上，原線圈通交流電、產生變化的磁通，經鐵芯傳到副線圈，使副線圈感應出電壓。理想變壓器的電壓比等於匝數比：V_s／V_p＝N_s／N_p。例如原線圈 200 匝、接 100 V，副線圈 50 匝，則 V_s＝100×50／200＝25 V（降壓）。④ 兩個重點：變壓器只能用交流電（直流電磁通不變、副線圈沒有感應電動勢）；理想變壓器功率守恆（V_p×I_p＝V_s×I_s），所以降壓時輸出電流反而變大。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_sub.phys-em.transformer"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 185' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='8' y='14' font-size='9.5' fill='#2563a6' font-weight='bold'>變壓器：電壓比＝匝數比</text><rect x='150' y='48' width='52' height='88' fill='none' stroke='#9aa0a6' stroke-width='7'/><text x='158' y='96' font-size='7' fill='#6b7075'>鐵芯</text><circle cx='48' cy='92' r='13' fill='none' stroke='#c0392b' stroke-width='1.4'/><text x='42' y='96' font-size='11' fill='#c0392b'>～</text><text x='16' y='134' font-size='7' fill='#c0392b'>交流電源</text><line x1='48' y1='79' x2='48' y2='60' stroke='#444' stroke-width='1'/><line x1='48' y1='60' x2='150' y2='60' stroke='#444' stroke-width='1'/><line x1='48' y1='105' x2='48' y2='113' stroke='#444' stroke-width='1'/><line x1='48' y1='113' x2='150' y2='113' stroke='#444' stroke-width='1'/><g stroke='#b5651d' stroke-width='2' fill='none'><ellipse cx='150' cy='66' rx='9' ry='5'/><ellipse cx='150' cy='77' rx='9' ry='5'/><ellipse cx='150' cy='87' rx='9' ry='5'/><ellipse cx='150' cy='98' rx='9' ry='5'/><ellipse cx='150' cy='108' rx='9' ry='5'/></g><text x='96' y='44' font-size='7.5' fill='#b5651d'>原線圈 N_p 匝</text><g stroke='#2f6f54' stroke-width='2' fill='none'><ellipse cx='202' cy='66' rx='9' ry='5'/><ellipse cx='202' cy='87' rx='9' ry='5'/><ellipse cx='202' cy='108' rx='9' ry='5'/></g><text x='210' y='44' font-size='7.5' fill='#2f6f54'>副線圈 N_s 匝</text><line x1='202' y1='60' x2='300' y2='60' stroke='#444' stroke-width='1'/><line x1='202' y1='113' x2='300' y2='113' stroke='#444' stroke-width='1'/><text x='270' y='90' font-size='8' fill='#2f6f54'>V_s</text><text x='262' y='102' font-size='7' fill='#6b7075'>（輸出）</text><text x='78' y='170' font-size='10' fill='#2563a6' font-weight='bold'>V_s／V_p＝N_s／N_p</text></g></svg>",
+      "alt": "一張變壓器的示意圖，標題「變壓器：電壓比＝匝數比」。最左邊是一個紅色圓圈裡標「～」代表交流電源，下方標「交流電源」；兩條導線從電源接到中間左側的原線圈。中間是一個灰色的矩形鐵芯框，標「鐵芯」。鐵芯左柱上繞著較多個（五個）橘色線圈，上方標「原線圈 N_p 匝」；鐵芯右柱上繞著較少個（三個）綠色線圈，上方標「副線圈 N_s 匝」，用線圈多寡示意原線圈匝數較多（此例為降壓）。兩條導線從副線圈接到右邊，標「V_s（輸出）」。圖下方標公式「V_s／V_p＝N_s／N_p」。整張圖說明：原線圈通交流電、透過同一個鐵芯把變化磁通傳到副線圈，副線圈感應出的電壓與原線圈電壓的比，等於兩者的匝數比。",
+      "caption": "原線圈接交流電源，電流隨時間變化、產生變化的磁通，經由共用的鐵芯傳到副線圈，使副線圈感應出電壓。理想變壓器的電壓比等於匝數比：V_s／V_p＝N_s／N_p。副線圈匝數比原線圈少就是降壓、多就是升壓。因為只有「變化」的磁通才有感應電動勢，變壓器只能用交流電。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-em.transformer"
+     ],
+     "body": "最後練「變壓器」。重點：(1) 自感＝對自己、互感＝對鄰居的感應電動勢；(2) 變壓器電壓比＝匝數比 V_s／V_p＝N_s／N_p；(3) 只能用交流電（直流磁通不變、副線圈無感應電動勢）；(4) 理想變壓器功率守恆，降壓時電流變大。小提醒：電壓比跟匝數比同方向（匝多電壓高），但電流剛好相反（電壓高的那側電流小）。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QT-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個理想變壓器，原線圈 200 匝接 100 伏特交流電，副線圈 50 匝。副線圈的輸出電壓 V_s 是多少？",
+     "answer": "25 伏特",
+     "kp_ids": [
+      "sci.t_sub.phys-em.transformer"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-em.transformer"
+     ],
+     "options": [
+      "25 伏特",
+      "400 伏特",
+      "100 伏特",
+      "50 伏特"
+     ],
+     "distractor_rationales": {
+      "400 伏特": "把匝數比倒過來乘（100×200／50）才會得到 400 伏特；公式是 V_s＝V_p×N_s／N_p＝100×50／200。",
+      "100 伏特": "以為電壓和匝數無關、輸出等於輸入才會是 100 伏特；匝數少的一側電壓會按比例變低。",
+      "50 伏特": "以為『降壓就是打對折』才會得到 50 伏特；實際要按匝數比 50／200＝1／4，得 25 伏特。"
+     },
+     "answer_evidence": [
+      "c-tr-ratio"
+     ],
+     "feedback": "V_s＝V_p×N_s／N_p＝100×50／200＝25 伏特（匝數少的副線圈是降壓）。"
+    },
+    {
+     "question_id": "QT-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "為什麼變壓器只能用交流電，不能用穩定的直流電？",
+     "answer": "直流電的磁通量不變，副線圈不會有感應電動勢",
+     "kp_ids": [
+      "sci.t_sub.phys-em.transformer"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-em.transformer"
+     ],
+     "options": [
+      "直流電的磁通量不變，副線圈不會有感應電動勢",
+      "直流電的電壓一定太低，不夠用",
+      "直流電會把鐵芯燒壞",
+      "直流電無法在線圈裡流動"
+     ],
+     "distractor_rationales": {
+      "直流電的電壓一定太低，不夠用": "直流電壓高低與此無關；關鍵是穩定直流的磁通不變化，副線圈才沒有感應電動勢。",
+      "直流電會把鐵芯燒壞": "鐵芯不會因直流而燒壞；變壓器失效是因為不變的磁通產生不了感應電動勢。",
+      "直流電無法在線圈裡流動": "直流電可以在線圈裡流動；問題在於它的磁通量穩定不變、無法在副線圈感應出電壓。"
+     },
+     "answer_evidence": [
+      "c-tr-ac-power"
+     ],
+     "feedback": "穩定直流電的磁通量不變（ΔΦ＝0），副線圈沒有感應電動勢；要用會變化的交流電。"
+    },
+    {
+     "question_id": "QT-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "「一個線圈的電流變化，使旁邊『另一個』線圈產生感應電動勢」——這是哪一種現象？（也是變壓器的原理）",
+     "answer": "互感",
+     "kp_ids": [
+      "sci.t_sub.phys-em.transformer"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-em.transformer"
+     ],
+     "options": [
+      "互感",
+      "自感",
+      "靜電感應",
+      "電阻發熱"
+     ],
+     "distractor_rationales": {
+      "自感": "自感是線圈對『自己』——自己的電流變化、在自己身上生感應電動勢；影響『另一個』線圈的是互感。",
+      "靜電感應": "靜電感應是靜止電荷造成的感應，與線圈電流變化產生感應電動勢的電磁感應不同。",
+      "電阻發熱": "電阻發熱是電流通過電阻放出熱，和一個線圈使另一個線圈感應出電動勢無關。"
+     },
+     "answer_evidence": [
+      "c-tr-induct"
+     ],
+     "feedback": "一個線圈的電流變化使『另一個』線圈感應出電動勢，叫互感；變壓器正是靠互感運作。"
+    },
+    {
+     "question_id": "QT-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個理想變壓器把電壓降低（降壓）。因為理想變壓器功率守恆，它輸出的電流會怎樣？",
+     "answer": "比輸入電流大",
+     "kp_ids": [
+      "sci.t_sub.phys-em.transformer"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-em.transformer"
+     ],
+     "options": [
+      "比輸入電流大",
+      "比輸入電流小",
+      "和輸入電流完全相同",
+      "直接變成零"
+     ],
+     "distractor_rationales": {
+      "比輸入電流小": "若電壓降低、電流又變小，輸出功率會比輸入小，違反理想變壓器功率守恆；應該是電流變大。",
+      "和輸入電流完全相同": "電壓改變時電流必須反方向改變才能守恆功率；電壓降低則電流變大，不會相同。",
+      "直接變成零": "輸出仍在供電、電流不為零；功率守恆下降壓那側電流變大。"
+     },
+     "answer_evidence": [
+      "c-tr-ac-power"
+     ],
+     "feedback": "理想變壓器 V_p×I_p＝V_s×I_s；電壓降低，電流就按比例變大（功率守恆）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案、說明自己判斷（自感＝對自己、互感＝對鄰居的感應電動勢；變壓器電壓比＝匝數比 V_s／V_p＝N_s／N_p，代入 V_p＝100 N_p＝200 N_s＝50 得 25 V；只能用交流電＝直流磁通不變副線圈無感應電動勢；理想變壓器功率守恆、降壓時電流變大）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
