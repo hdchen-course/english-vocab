@@ -5,7 +5,9 @@
 - **★L3 教訓**：relativity r1 content clean 但 coverage 第三 anchor 未對位(最深僅 51%)→L3 FAIL 作廢重跑；bank 前務必先驗 cc_exit=0 再 append，anchor 深度需含 75% 處（審查要完整讀到檔尾）。
 - **R15 本 session 新術語**：核分裂/核融合、放射性/半衰期(radioactivity 既有)、功函數/遏止電壓、康普頓效應/波長、里德伯公式/巴耳麥系、不確定性原理、時間膨脹/長度收縮；各 can_do gloss 一次(grep=2)。
 - **★物理島 8 strand 全數完成**：phys-estatic/energy/optics/em/heat/wave/force/kin + phys-circ + phys-modern 皆收齊（sci domain 物理部分 100%）。
-- **下一步**：依 BUILD_PLAN 轉 chem/bio/earth。預設起點＝**chem-atom**(18 binding KP，化學基礎)，順序 t_mid dalton→subatomic→atomic-number→symbols→periodic-basic→atom-molecule → t_adv(8) → t_sub(4)。chem repro 模組 sci_chem_checks.py 已備(chem-atom 6 可程式 oracle)。首單元 dalton(道耳頓原子說，概念型 cross_check)建置中。
+- **化學島 chem-atom 1/18 上線**：**dalton**(原子概念與道耳頓原子說，t_mid 會考，frozen 2d8f0821，push 035052ec2)5-clean 收斂。概念型 cross_check；R15 原子(atom)；figure 反應前後原子數守恆(2H₂+O₂→2H₂O 兩側 4H+2O)。**3 次 de-converge**(teach②漏『不能再分割』致與 teach③/④ 矛盾 major、QD-mcq-4『單質』PRC 詞、_note『配平』PRC 詞)——化學 PRC 術語是 scan 盲點、靠 content_audit panel；已 banked 記憶 [[chem-prc-terms-blindspot]]+MEMORY 指標。
+- **★chem 建檔鐵律(新)**：凍結前先 grep 掃 PRC 化學詞(單質/配平/化合价/摩尔/周期/相对原子质量/守恒/阿伏…)應全 0，含 _note(content_sha 納入 _note，改 _note 會 de-converge)。
+- **下一步**：續 chem-atom **subatomic**(原子結構 質子/中子/電子與電性，t_mid 會考，概念型) → atomic-number(repro at_atomic_number 碳12/14 同 Z=6)→symbols→periodic-basic→atom-molecule(repro 分子式原子計數) → t_adv(8: model-evolution/electron-config[repro]/valence-octet/periodic-structure/radius-trend/ionization-trend/electronegativity-trend/metal-nonmetal) → t_sub(4: quantum-numbers[repro]/aufbau-rules[repro]/successive-ie/isoelectronic[repro])。命名 sci_chem_atom_<kp>。chem repro 模組 tools/verify/sci_chem_checks.py。
 
 ## 2026-11-22 06:49 ★ phys-em 12/20（faraday-law push；lenz 進行中）
 - **faraday-law**（法拉第電磁感應定律 Φ＝BA 與 |ε|＝N×ΔΦ／Δt，t_adv 學測，frozen 33da824caeee02e5，HEAD f2662d4c3）5/5 CONVERGED + push。數值 N=100 ΔΦ=0.02 Wb Δt=0.1s→20 V 與三 distractor(0.2漏N/2.0漏除Δt/200位數錯) .venv 驗算。
