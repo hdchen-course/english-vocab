@@ -4260,3 +4260,6 @@ phys-circ strand 全數 13 單元完成（5-clean + DONE-GATE + figure 4-role �
 - **solid-pressure（3/13，t_mid 會考）完成**：固體壓力沿施力方向作用於實際接觸面、受力面積＝接觸面積、同重量面積越小壓力越大、P＝F／A。5-clean 收斂（frozen 7d5194da）＋DONE-GATE 綠＋figure 四角色簽核。push 6dfb070f7。
   - r1 抓 2 defect 已修：(a) blocker 兩 F（體重）箭頭 render 不等長（左32px/右46px）牴觸『兩箭頭等長』同重量前提 → 右改 y74→106=32px 等長（memory sci-equal-force-pair 更新「算px長度勿目視」）；(b) minor QS-mcq-3 distractor 混用 ÷ 與全檔全形／ → 統一全形／。
 - **liquid-pressure（4/13，t_mid 會考）建置中**：液體壓力 P＝ρgh、三特性（只跟密度深度有關/深越大/各向同性）、連通管液面等高。R15 gloss 密度（density）。figure 左半深度壓力遞增＋右半連通管等高。frozen 91ceecf0，content_audit 進行中。
+- **atm-pressure（5/13，t_mid 會考）完成**：大氣壓力源於空氣重量、標準 1.013×10⁵ Pa＝760 mmHg、托里切利水銀柱實驗 P＝ρ_Hg·g·h、為何用水銀。5-clean（frozen 496c1a65）+DONE-GATE+push 65e4fd493。r1 抓 figure 公式量綱不一致（×76公分 vs SI→10⁷Pa）major→改 0.76公尺。
+- **buoyancy-idea（6/13，t_mid 會考）完成**：浮力向上、成因＝液體壓力深度差（底面向上壓力>頂面向下壓力）、視重差量法 F＝W−W′。5-clean（frozen 918da118）+DONE-GATE+push。r1 抓 _note 『』逐字引述與 SVG/alt/caption 不符 major→改逐字一致。
+- **phys-fluid strand 進度：6/13 完成**（float-sink/pressure-def/solid-pressure/liquid-pressure/atm-pressure/buoyancy-idea）；下一 archimedes(7/13 阿基米德原理)。
