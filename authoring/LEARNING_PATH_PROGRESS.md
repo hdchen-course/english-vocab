@@ -4223,3 +4223,15 @@ phys-wave 9/18 單元收齊並 push（+5）：sound-three(三要素 響度/音�
 - medium _note 與 selfeval_note 混用半形「/」與全形「／」、且違反 _note 自述「不使用半形斜線」→全改全形頓號(notation-consistency)；de-frozen 重凍重跑。教訓：_note 宣告的分隔符慣例要套用全檔含 selfeval_note，未來 selfeval_note 一律全形頓號 [[sci-unit-notation-consistency]]。
 - figure 雙向箭頭(↕/↔)持續沿用 auto-start-reverse marker(medium 繩波↕、echo 去/回程兩獨立單端箭頭)避 svg-double-arrow class [[svg-double-arrow-marker-start-reverse]]。
 剩餘 phys-wave 9 KP：wave-behavior(t_adv 反射/折射/繞射/干涉)、shm/shm-period/shm-energy(t_adv/t_sub 簡諧)、doppler/doppler-calc(t_adv/t_sub 都卜勒)、superposition/standing-wave/standing-quant(t_sub 疊加/駐波)。多數有 oracle(repro_gate 已驗)。下一個：wave-behavior。
+
+## 2026-11-22 10:33 — phys-em strand 收齊 + phys-force 補完（本 session）
+- **phys-em strand 20/20 完成**：本 session 最後補 em-wave-gen（LC 振盪 f＝1／(2π√(LC))、能量在電容電場能↔電感磁場能守恆來回；電磁波產生＝變化電場生磁場、變化磁場生電場相互感應；橫波 E⊥B⊥傳播、真空光速 c＝1／√(μ₀ε₀)≈3×10⁸、不需介質、c＝fλ。.venv 驗 f/c/λ）。5/5 CONVERGED frozen e04e425a，DONE-GATE 全綠，commit 0f38f85e6。深輪抓 figure 電容引線未接極板(開路 blocker)+_note marker 自述不符→修；另我自審抓雙向箭頭 marker 用錯三角形朝向(+y 配 auto 歪折)→改標準 +x 朝向。
+- **phys-force strand 18/18 完成**：補最後一檔 noninertial（非慣性座標系與假想力：慣性力＝m×參考系加速度反向、離心力是旋轉系假想力 mv²／r 向外≠真實向心力；t_enrich beyond）。5/5 CONVERGED frozen f6ab2f5d，DONE-GATE 全綠，commit 9435bcd51。
+- **本批深輪(7ag)抓到並修的真缺陷類（印證「深輪才抓得到」）**：
+  (1) **symbol-before-defined**：ω（角速度）在 teach+claim「mv²／r（＝mω²r）」首次出現未定義、且超出本單元 mv²／r scope→移除學習者可見處 ω、只留 mv²／r（_note .venv provenance 可留 ω）。
+  (2) **magnitude-channel 事實錯誤**：旋轉座標系中向心力與離心力**大小相等**（皆 mv²／r、物體在該系平衡），但 figure 綠箭頭 31px vs 紅箭頭 25px 不等長＝用長度錯誤編碼「向心力＞離心力」→兩箭頭改等長 26px、alt/caption/_note 補「大小相等、方向相反、該系平衡」。[[sci-figure-magnitude-channel-and-diagonal-arrowheads]] 同類。
+  (3) harvest-first hook 正確擋下「clean 輪後才改 sidecar」→設 override 留痕、de-converge（append _defect_fix_trace、rounds=[]）、一次 harvest 修完兩深輪缺陷再重數 5-clean。
+  (4) content_audit reviewer 偶爾誤觸 content-filter policy（agents_error=1）→該輪不 bank、重跑取完整輪。
+- **教訓（新，待 bank 記憶）**：等大的一對力（向心/離心、作用/反作用）在 figure 必須畫**等長**箭頭；長度是量值視覺編碼，不等長＝宣稱不等大＝事實錯誤 blocker。enrichment 單元引用更高階符號（ω）要嘛就地定義、要嘛移除只留 in-scope 形式。
+- **物理島現況**：8 strand 完成（em/energy/estatic/force/heat/kin/optics/wave）。剩 phys-circ(13)/phys-fluid(13)/phys-meas(13)/phys-modern(13) 未起。
+- **下一步**：phys-circ strand（圓周運動，為 em/noninertial 所倚賴的向心力正式教學家），從根 circular-idea(t_mid 會考) 往上建。
