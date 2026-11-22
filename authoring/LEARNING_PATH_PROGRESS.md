@@ -1,3 +1,12 @@
+## 2026-11-23 04:00 ★ phys-modern strand 13/13 收齊（物理島全 strand 完成）
+- **本 session 收齊 phys-modern 後 6 單元 + push**：matter-wave(4/13, f5430ff5d)、nucleus(5/13, b8c8c8934)、radioactivity(6/13, ca7ba9569)、photoeq(7/13, 9e59f9bff)、compton(8/13, 6b792189c)、spectral-lines(9/13, 944cad6c6) 為前次；本 session：**nuclear-reaction(10/13, frozen 389b33b, push 1415ff317)、half-life-calc(11/13, afcd82ee, e418098c3)、uncertainty(12/13, 4c0cf152, 6e95f9853)、relativity(13/13, 7af25cb1, 586ae0e10)**。全 5-clean + DONE-GATE(810/810) + scan PASS。
+- **.venv repro 全驗**：nuclear-reaction 1u≈931.5 MeV、half-life t=3T→1/8、relativity γ=1/√(1−0.6²)=1.25；uncertainty 為概念型 cross_check(無 repro)。
+- **本 session de-converge 抓修 4 真缺陷（深輪/L3，淺輪漏）**：nuclear-reaction 核>化學能誤歸因 c²(共用常數)→改質量轉換比例+註化學亦符 E=Δmc²(r3 blocker)、_note『標氫』與 SVG 不符→『未標字』(r1 major)；half-life-calc can_do『初始量的 N₀/8』相對框架接絕對量雙解→『初始量的八分之一(N₀/8)』(r1 minor)；uncertainty 普朗克常數裸值 6.6e-34 省單位(有量綱量不完整)→補『焦耳·秒(J·s)』claim+teach④(r3 minor)；relativity figure 底部『速度 v→』與註記重疊(viz-qa)→凍結前移除(pre-freeze)。
+- **★L3 教訓**：relativity r1 content clean 但 coverage 第三 anchor 未對位(最深僅 51%)→L3 FAIL 作廢重跑；bank 前務必先驗 cc_exit=0 再 append，anchor 深度需含 75% 處（審查要完整讀到檔尾）。
+- **R15 本 session 新術語**：核分裂/核融合、放射性/半衰期(radioactivity 既有)、功函數/遏止電壓、康普頓效應/波長、里德伯公式/巴耳麥系、不確定性原理、時間膨脹/長度收縮；各 can_do gloss 一次(grep=2)。
+- **★物理島 8 strand 全數完成**：phys-estatic/energy/optics/em/heat/wave/force/kin + phys-circ + phys-modern 皆收齊（sci domain 物理部分 100%）。
+- **下一步**：依 BUILD_PLAN 轉 chem/bio/earth。預設起點＝**chem-atom**(18 binding KP，化學基礎)，順序 t_mid dalton→subatomic→atomic-number→symbols→periodic-basic→atom-molecule → t_adv(8) → t_sub(4)。chem repro 模組 sci_chem_checks.py 已備(chem-atom 6 可程式 oracle)。首單元 dalton(道耳頓原子說，概念型 cross_check)建置中。
+
 ## 2026-11-22 06:49 ★ phys-em 12/20（faraday-law push；lenz 進行中）
 - **faraday-law**（法拉第電磁感應定律 Φ＝BA 與 |ε|＝N×ΔΦ／Δt，t_adv 學測，frozen 33da824caeee02e5，HEAD f2662d4c3）5/5 CONVERGED + push。數值 N=100 ΔΦ=0.02 Wb Δt=0.1s→20 V 與三 distractor(0.2漏N/2.0漏除Δt/200位數錯) .venv 驗算。
 - **深輪累計抓修 7 真缺陷（淺輪 2ag 全漏）**：_note Q4 舊版草稿；QD-mcq-2 stem/選項體例不一致（改敘述題）；一般式 Φ＝BA cosθ 未定義 θ(cos/sin 歧義→刪，本單元只教垂直)；R15 gloss 漏 induced(→induced electromotive force)；selfeval_note 半形＝；teach/can_do/_note「單位伏特」指涉歧義(綁回 |ε|)；_note 圖公式引用 over-claim(去前綴對齊 SVG)。
