@@ -4272,3 +4272,6 @@ phys-circ strand 全數 13 單元完成（5-clean + DONE-GATE + figure 4-role �
 - **pascal（9/13，t_mid 會考）完成**：帕斯卡原理（密閉流體壓力不減弱傳遞）＋液壓機 F2＝F1×（A2／A1）力放大＋省力不省功 F1d1＝F2d2（體積守恆 A1d1＝A2d2）。R15 gloss 帕斯卡原理（Pascal's principle）。A1=10 F1=50 A2=200→P=5→F2=1000 N（.venv 驗算）。5-clean（frozen 1e85387e）＋DONE-GATE（scan PASS/5-clean 780頁 PASS/figure 四角色簽核）＋push。
   - 建置期自審抓 figure 缺陷：F2（大活塞輸出力）箭頭 render 朝下且比 F1 短 → 應朝上（輸出向上）且較長（F2＞F1 量值編碼）；修 SVG 後才簽核。(banked lesson：液壓機輸出力箭頭方向＝向上、長度須＞輸入力 F1。)
   - **phys-fluid 9/13**；下一 buoyancy-calc(10/13 浮力與視重定量計算, t_adv 學測)。
+- **buoyancy-calc（10/13，t_adv 學測）完成**：完全浸入三力平衡 W′+F=W→浮力 F=W−W′；浮力定量 F=ρ流gV；反推 V=F/(ρ流g)、ρ物=W/(gV)、完全浸入 ρ物/ρ流=W/(W−W′)。R15 gloss 視重（apparent weight）。W=8 W′=5→F=3 N、V=300 cm³、ρ物/ρ水=8/3≈2.7（.venv 驗算）。5-clean（frozen 1fd1396f）＋DONE-GATE（scan PASS/5-clean 781頁 PASS/figure 四角色簽核：三力箭頭8:5:3、力平衡5+3=8）＋push。
+  - 深輪抓 3 真缺陷（含兩次重凍）：① r1 blocker QC-mcq-4 distractor 3／8 標「約0.6倍」算術錯（=0.375≈0.4）→0.4；② figure 視重箭頭26px→25px（精確8:5:3）；③ teach「2.7倍密」中文生硬→「物體的密度約是水的2.7倍」。(banked lessons：distractor 十進位須與括號分數一致、figure 箭頭長度按整數px比例、避免「倍+性質字」黏合。)
+  - **phys-fluid 10/13**；下一 float-quant(11/13 浮體/沉體/懸浮定量分析, t_adv 學測)。
