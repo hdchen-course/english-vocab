@@ -115,13 +115,25 @@ const YLE_ZH={starters:'Starters',movers:'Movers',flyers:'Flyers'};
 const flipEl=()=>document.getElementById('wd-flip');
 const rateSlot=()=>document.getElementById('wd-rate-slot');
 function playAudio(f){ if(!f) return; try{ new Audio(AUD+f).play().catch(()=>{}); }catch(e){} }
-function blankExample(text, hw){
-  const re=new RegExp('\\b'+hw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(s|es|ed|ing|d)?\\b','ig');
-  return esc(text).replace(re,'<span class="wm-blank">____</span>');
+// 用建置期（lemminflect）預算好的實際表面形 form 來挖空，才涵蓋不規則變化（became/began）
+// 與拼寫變化（carried/buried/enemies）；form 缺時才退回舊的規則字尾正則（相容舊資料）。
+function reEsc(s){ return String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+function formRe(form){
+  const e=reEsc(form);
+  // 先要求前後皆非字母（完整字）；不中則退回僅前界（涵蓋縮寫詞幹，如 do 之於 don't）
+  return [new RegExp('(?<![A-Za-z])'+e+'(?![A-Za-z])','i'), new RegExp('(?<![A-Za-z])'+e,'i')];
 }
-function restoreExample(text, hw){
-  const re=new RegExp('\\b'+hw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(s|es|ed|ing|d)?\\b','ig');
-  return esc(text).replace(re,m=>'<span class="wm-ans">'+m+'</span>');
+function blankExample(text, hw, form){
+  const E=esc(text);
+  if(form){ for(const re of formRe(esc(form))){ if(re.test(E)) return E.replace(re,'<span class="wm-blank">____</span>'); } }
+  const re=new RegExp('\\b'+reEsc(hw)+'(s|es|ed|ing|d)?\\b','ig');
+  return E.replace(re,'<span class="wm-blank">____</span>');
+}
+function restoreExample(text, hw, form){
+  const E=esc(text);
+  if(form){ for(const re of formRe(esc(form))){ if(re.test(E)) return E.replace(re,m=>'<span class="wm-ans">'+m+'</span>'); } }
+  const re=new RegExp('\\b'+reEsc(hw)+'(s|es|ed|ing|d)?\\b','ig');
+  return E.replace(re,m=>'<span class="wm-ans">'+m+'</span>');
 }
 function hintMask(w){ return w[0]+' '+Array(Math.max(0,w.length-1)).fill('_').join(' '); }
 function levelChips(c){
@@ -158,12 +170,12 @@ function render(){
   front.innerHTML=`<div class="wm-tag">${levelChips(c)}</div>`+
     `<div class="wm-def">${esc(c.def)}</div>`+
     `<div class="wm-pos">${esc(c.pos||'')}</div>`+hintHtml+`<hr class="wm-hr">`+
-    exs.map(e=>`<div class="wm-ex">${blankExample(e,c.hw)}</div>`).join('');
+    exs.map((e,i)=>`<div class="wm-ex">${blankExample(e,c.hw,c.exb&&c.exb[i])}</div>`).join('');
   // 背面：單字＋發音＋IPA＋例句（填回）
   back.innerHTML=`<div class="wm-wordrow"><span class="wm-word">${esc(c.hw)}</span>`+
     `<button class="wm-rnd" id="wAudio" title="播放單字發音" aria-label="播放單字發音">🔊</button></div>`+
     `<div class="wm-ipa">US <b>/${esc(c.ipaus)}/</b> &nbsp; UK <b>/${esc(c.ipauk)}/</b></div>`+
-    exs.map((e,i)=>`<div class="wm-exrow"><div class="wm-ex">${restoreExample(e,c.hw)}</div>`+
+    exs.map((e,i)=>`<div class="wm-exrow"><div class="wm-ex">${restoreExample(e,c.hw,c.exb&&c.exb[i])}</div>`+
       ((c.ae&&c.ae[i])?`<button class="wm-rnd sm" data-ae="${i}" title="播放例句" aria-label="播放例句">🔊</button>`:'')+`</div>`).join('')+
     masteryLine(c.sk);
   { const wmH=document.getElementById('wmHint'); if(wmH&&window.HintFirstLetter) window.HintFirstLetter.create(wmH,{minLen:3}).setWord(c.hw); }
