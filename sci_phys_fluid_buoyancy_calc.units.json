@@ -1,0 +1,201 @@
+{
+ "_note": "自然島 物理-流體（phys-fluid）strand t_adv 單元（浮力與視重的定量計算）。知識點 sci.t_adv.phys-fluid.buoyancy-calc、tier＝t_adv、exam＝學測。直接前置＝buoyancy-idea（視重差 F＝W−W′）＋archimedes（浮力＝排開流體重＝ρ流體×g×V排開）。全繁體零簡體零 PRC 詞（中國，非大陸）。中文授課無音檔。★R15 術語：本單元新術語一——視重（apparent weight）；只在 can_do 內首次出現以中文（英文）gloss 一次，本 _note 這一行宣告一次。浮力、流體、浸入、彈簧秤、密度 為中文教學用語不另附英文 gloss；F、W、ρ、g、V、T、N 為符號或單位不 gloss。★概念與定義（全檔一致）：把 buoyancy-idea 的定性視重差升級為定量計算。物體完全浸入流體、以彈簧秤懸吊靜止時，三力平衡：繩張力（彈簧秤讀數＝視重 W′，向上）＋浮力 F（向上）＝重量 W（向下），故 W′＋F＝W，即浮力 F＝W−W′。浮力定量＝F＝ρ流×g×V排；完全浸入時 V排＝物體體積 V。由此可反推：V＝F／（ρ流×g）；物體密度 ρ物＝W／（g×V）；完全浸入時 ρ物／ρ流＝W／F＝W／（W−W′）。★數值已以 .venv 驗算（g＝10 N／kg、ρ水＝1000 kg／m³）：空氣中 W＝8 N、水中視重 W′＝5 N→浮力 F＝3 N；V＝3／（1000×10）＝3×10⁻⁴ m³＝300 cm³；ρ物＝8／（10×3×10⁻⁴）≈2667 kg／m³，ρ物／ρ水＝8／3≈2.7。practice 題號用 QC；QC-mcq-3 求體積正解 300 cm³（3×10⁻⁴ m³），distractor 800（用空氣中重 8 N 沒減視重）、500（用視重 5 N）、30（小數點／單位錯 10 倍）；QC-mcq-4 求密度比正解 8／3≈2.7 倍，distractor 1.6（8／5＝W／W′）、1.7（5／3＝W′／F）、0.6（3／8＝F／W）。★figure 自檢：單一面板『浮力與視重：三力平衡與定量計算』。左半：一杯水、水中懸一物體，物體上方有繩接到彈簧秤（讀數 5 N）；物體上畫三支力箭頭——向下紅色長箭頭標『重 W＝8 N』、向上藍色中箭頭標『T＝5 N（視重）』、向上綠色短箭頭標『浮力 3 N』；箭頭長度按 8：5：3 比例（8 最長、3 最短）。並標 T＋浮力＝重（5＋3＝8）。右半：浮力＝重−視重＝8−5＝3 N；浮力＝ρ水×g×V排→V排＝300 cm³；ρ物／ρ水＝8／3≈2.7。alt 完整涵蓋 SVG 全部標籤文字（散文、非逐字）。★figure 符號即事實：三箭頭長度與力量值成正比（重 8 最長、視重 5 居中、浮力 3 最短）；重向下、視重與浮力向上；兩向上力之和＝向下的重（5＋3＝8）。箭頭長度比 8：5：3、方向（重下、張力上、浮力上）、力平衡 5＋3＝8 為鐵律。★figure marker 鐵律：apex 沿本地 +x（path M0,0 L6,3 L0,6 Z、refX5 refY3）配 orient=auto，鉛直向上與向下線才會正確 render 指向線末端。★out-of-scope：浮體/沉體/懸浮的定量分析（float-quant 另單元，涉及部分浮出比例）、連續方程與白努利（continuity、bernoulli t_enrich）；本單元聚焦『完全浸入』的浮力與視重定量（F＝ρgV、W′＝W−F、ρ物／ρ流＝W／F）。practice 四答案＝{ρ流×g×V排（Q1 浮力定量公式）, 重量減浮力 W−F（Q2 視重）, 300 cm³（Q3 V＝F／ρg）, 約 2.7 倍（Q4 ρ物／ρ水＝8／3）}；MCQ options bare、兩兩相異；distractor rationale 各寫清為何錯。claim kind＝fact。figure-only example 無 body。定義不得反轉：浮力 F＝ρ流gV、視重 W′＝W−F、完全浸入 ρ物／ρ流＝W／（W−W′）。本註解內分隔用頓號、「或」或全形斜線「／」，不用半形 ASCII 斜線。",
+ "page": "sci_phys_fluid_buoyancy_calc.html",
+ "units": [
+  {
+   "unit_id": "sci.t_adv.phys-fluid.buoyancy-calc",
+   "title_zh": "浮力與視重的定量計算",
+   "can_do": "我會把浮力和視重（apparent weight）算成數字：物體完全浸入、用彈簧秤吊著靜止時，視重＋浮力＝重量，所以浮力 F＝W−W′。我會用 F＝ρ流×g×V 算浮力，並反推物體體積 V＝F／（ρ流×g）、物體密度 ρ物＝W／（g×V）。我也知道完全浸入時 ρ物／ρ流＝W／（W−W′）。",
+   "situation_group": "流體：浮力與壓力",
+   "subject": "sci",
+   "strand": "phys-fluid",
+   "est_minutes": 15,
+   "knowledge_point_ids": [
+    "sci.t_adv.phys-fluid.buoyancy-calc"
+   ],
+   "prerequisites": [
+    "sci.t_mid.phys-fluid.buoyancy-idea",
+    "sci.t_mid.phys-fluid.archimedes"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-bc-balance",
+     "text": "物體完全浸入流體、以彈簧秤懸吊靜止時三力平衡：繩張力（彈簧秤讀數＝視重 W′，向上）＋浮力 F（向上）＝重量 W（向下），故 W′＋F＝W，即浮力 F＝W−W′。",
+     "kind": "fact",
+     "source_refs": [
+      "三力平衡 視重＋浮力＝重（高中物理 學測）"
+     ],
+     "verification_ref": "靜止三力平衡 W′＋F＝W＝牛頓第一定律標準結論（教科書 cross_check；8＝5＋3 以 .venv 驗算）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-bc-quant",
+     "text": "浮力定量 F＝ρ流×g×V（完全浸入時 V＝物體體積）。由此反推：V＝F／（ρ流×g）；物體密度 ρ物＝W／（g×V）；完全浸入時 ρ物／ρ流＝W／F＝W／（W−W′）。",
+     "kind": "fact",
+     "source_refs": [
+      "浮力定量與密度反推 F=ρgV、ρ物/ρ流=W/F（高中物理 學測）"
+     ],
+     "verification_ref": "F=ρ流gV 與 ρ物/ρ流=W/(W−W′)＝標準結論（以 .venv 驗算：W=8 W′=5→F=3→V=300 cm³、ρ物/ρ水=8/3≈2.7）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-fluid.buoyancy-calc"
+     ],
+     "body": "前面學過浮力＝物體排開的流體重，也會用視重差量浮力。這一課把它算成數字：給你彈簧秤的兩個讀數，就能算出浮力、物體體積，甚至物體的密度。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-fluid.buoyancy-calc"
+     ],
+     "body": "① 三力平衡：把物體用彈簧秤吊著、完全泡進水裡、靜止不動。這時物體受三個力：向下的重量 W、向上的浮力 F、向上的繩張力（就是彈簧秤讀到的『視重』W′）。靜止表示合力為零，所以 W′＋F＝W，移項得浮力 F＝W−W′。② 浮力定量：浮力 F＝ρ流×g×V（V 是排開流體的體積；完全浸入時就等於物體體積）。③ 反推體積與密度：既然 F＝ρ流×g×V，就能反推 V＝F／（ρ流×g）；再用 ρ物＝W／（g×V） 算出物體密度。把兩式合起來，完全浸入時 ρ物／ρ流＝W／F＝W／（W−W′）。④ 例子：空氣中秤得 W＝8 N、水中視重 W′＝5 N，g 取 10、ρ水＝1000。浮力 F＝8−5＝3 N；體積 V＝3／（1000×10）＝3×10⁻⁴ m³＝300 cm³；物體密度 ρ物／ρ水＝8／3≈2.7，所以物體約是水的 2.7 倍密。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_adv.phys-fluid.buoyancy-calc"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 195' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='8' y='13' font-size='9.5' fill='#2563a6' font-weight='bold'>浮力與視重：三力平衡與定量計算</text><rect x='20' y='46' width='150' height='134' fill='none' stroke='#8a9199' stroke-width='1.2'/><rect x='21' y='60' width='148' height='119' fill='#cfe6f2'/><line x1='21' y1='60' x2='169' y2='60' stroke='#5b9bd5' stroke-width='1'/><rect x='78' y='28' width='34' height='14' rx='2' fill='none' stroke='#8a9199' stroke-width='1'/><text x='82' y='38' font-size='8' fill='#1f3a52'>5 N</text><line x1='95' y1='42' x2='95' y2='92' stroke='#5a6066' stroke-width='0.8'/><rect x='80' y='92' width='30' height='26' fill='#9099a3'/><line x1='88' y1='118' x2='88' y2='158' stroke='#c0392b' stroke-width='2.2' marker-end='url(#cd)'/><text x='40' y='150' font-size='7.5' fill='#c0392b'>重 W＝8 N</text><line x1='95' y1='92' x2='95' y2='66' stroke='#2f6fb0' stroke-width='2' marker-end='url(#cu)'/><text x='99' y='64' font-size='7' fill='#2f6fb0'>T＝5 N（視重）</text><line x1='112' y1='118' x2='112' y2='103' stroke='#2f6f54' stroke-width='2' marker-end='url(#cg)'/><text x='116' y='116' font-size='7' fill='#2f6f54'>浮力 3 N</text><text x='36' y='174' font-size='7.5' fill='#3a6ea5'>T＋浮力＝重（5＋3＝8）</text><text x='185' y='66' font-size='8.5' fill='#2563a6'>浮力＝重−視重</text><text x='185' y='80' font-size='8.5' fill='#2563a6'>＝8−5＝3 N</text><text x='185' y='100' font-size='8.5' fill='#2563a6'>浮力＝ρ水×g×V排</text><text x='185' y='114' font-size='8.5' fill='#2563a6'>→ V排＝300 cm³</text><text x='185' y='140' font-size='8.5' fill='#2563a6'>物體密度：</text><text x='185' y='154' font-size='8.5' fill='#2563a6'>ρ物／ρ水＝8／3≈2.7</text></g><defs><marker id='cd' markerWidth='7' markerHeight='7' refX='5' refY='3' orient='auto'><path d='M0,0 L6,3 L0,6 Z' fill='#c0392b'/></marker><marker id='cu' markerWidth='7' markerHeight='7' refX='5' refY='3' orient='auto'><path d='M0,0 L6,3 L0,6 Z' fill='#2f6fb0'/></marker><marker id='cg' markerWidth='7' markerHeight='7' refX='5' refY='3' orient='auto'><path d='M0,0 L6,3 L0,6 Z' fill='#2f6f54'/></marker></defs></svg>",
+      "alt": "一張浮力與視重定量計算的示意圖，標題「浮力與視重：三力平衡與定量計算」。左半邊是一杯水，水中懸著一個灰色物體，物體上方用繩子接到一個彈簧秤（讀數 5 N）。物體上畫三支力箭頭：一支向下、較長的紅色箭頭標「重 W＝8 N」，一支向上、中等長度的藍色箭頭標「T＝5 N（視重）」，一支向上、較短的綠色箭頭標「浮力 3 N」；三支箭頭長度按 8：5：3 的比例。下方標「T＋浮力＝重（5＋3＝8）」。右半邊列出計算：「浮力＝重−視重＝8−5＝3 N」「浮力＝ρ水×g×V排 → V排＝300 cm³」「物體密度：ρ物／ρ水＝8／3≈2.7」。整張圖說明三力平衡求浮力，再用浮力反推體積與密度。",
+      "caption": "三力平衡：物體靜止時，向上的視重 T（5 N）加向上的浮力（3 N）等於向下的重量 W（8 N），所以浮力＝重−視重＝3 N（箭頭長度按 8：5：3）。再用浮力＝ρ水×g×V排 反推體積 V排＝300 cm³，並得物體密度約為水的 2.7 倍。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-fluid.buoyancy-calc"
+     ],
+     "body": "最後練「浮力與視重定量」。重點：(1) 完全浸入靜止時 W′＋F＝W，浮力 F＝W−W′；(2) 浮力定量 F＝ρ流×g×V；(3) 反推 V＝F／（ρ流×g）、ρ物＝W／（g×V）；(4) 完全浸入時 ρ物／ρ流＝W／（W−W′）。小提醒：算體積要用『浮力 F』不是用『重量 W』或『視重 W′』去除以 ρg；先把浮力 F＝W−W′ 算出來再代入。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QC-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "物體完全浸入流體時，浮力的定量公式是什麼？",
+     "answer": "ρ流×g×V排（排開流體的密度×g×排開體積）",
+     "kp_ids": [
+      "sci.t_adv.phys-fluid.buoyancy-calc"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-fluid.buoyancy-calc"
+     ],
+     "options": [
+      "ρ流×g×V排（排開流體的密度×g×排開體積）",
+      "ρ物×g×V物（物體密度×g×物體體積）",
+      "ρ流×g×h（流體密度×g×深度）",
+      "W×V排（重量×排開體積）"
+     ],
+     "distractor_rationales": {
+      "ρ物×g×V物（物體密度×g×物體體積）": "那是物體自己的重量 W，不是浮力；浮力用的是『流體』的密度，不是物體的密度。",
+      "ρ流×g×h（流體密度×g×深度）": "ρ流×g×h 是某深度的液體壓力，不是浮力；浮力要乘的是排開的『體積』V，不是深度 h。",
+      "W×V排（重量×排開體積）": "重量乘體積單位不對、也不是浮力公式；浮力＝ρ流×g×V排。"
+     },
+     "answer_evidence": [
+      "c-bc-quant"
+     ],
+     "feedback": "浮力 F＝ρ流×g×V排（用流體密度與排開體積）。"
+    },
+    {
+     "question_id": "QC-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "用彈簧秤把物體完全浸入水中、靜止不動時，彈簧秤讀到的『視重 W′』等於什麼？",
+     "answer": "重量減浮力（W−F）",
+     "kp_ids": [
+      "sci.t_adv.phys-fluid.buoyancy-calc"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-fluid.buoyancy-calc"
+     ],
+     "options": [
+      "重量減浮力（W−F）",
+      "重量加浮力（W＋F）",
+      "浮力減重量（F−W）",
+      "就等於物體原本的重量 W"
+     ],
+     "distractor_rationales": {
+      "重量加浮力（W＋F）": "浮力向上會幫忙托住物體、讓彈簧秤少拉，讀數應比重量小（是減不是加）。",
+      "浮力減重量（F−W）": "一般物體重量比浮力大，F−W 會是負的；視重是 W−F，不是 F−W。",
+      "就等於物體原本的重量 W": "浸水後有浮力分擔，視重會變小、不等於原重量 W；W′＝W−F。"
+     },
+     "answer_evidence": [
+      "c-bc-balance"
+     ],
+     "feedback": "三力平衡 W′＋F＝W，所以視重 W′＝W−F。"
+    },
+    {
+     "question_id": "QC-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個物體在空氣中秤得 8 N、完全浸入水中視重 5 N。g 取 10 N／kg、ρ水＝1000 kg／m³。物體的體積約是多少？",
+     "answer": "300 cm³（3×10⁻⁴ m³）",
+     "kp_ids": [
+      "sci.t_adv.phys-fluid.buoyancy-calc"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-fluid.buoyancy-calc"
+     ],
+     "options": [
+      "300 cm³（3×10⁻⁴ m³）",
+      "800 cm³（8×10⁻⁴ m³）",
+      "500 cm³（5×10⁻⁴ m³）",
+      "30 cm³（3×10⁻⁵ m³）"
+     ],
+     "distractor_rationales": {
+      "800 cm³（8×10⁻⁴ m³）": "那是用空氣中重量 8 N 去算、忘了先減視重；要先算浮力 F＝8−5＝3 N，V＝F／（ρ水g）。",
+      "500 cm³（5×10⁻⁴ m³）": "那是用水中視重 5 N 去算；體積要用浮力 F＝3 N，不是視重。",
+      "30 cm³（3×10⁻⁵ m³）": "數量級差了 10 倍；V＝3／（1000×10）＝3×10⁻⁴ m³＝300 cm³，不是 30。"
+     },
+     "answer_evidence": [
+      "c-bc-quant"
+     ],
+     "feedback": "浮力 F＝8−5＝3 N，V＝F／（ρ水g）＝3／（1000×10）＝3×10⁻⁴ m³＝300 cm³。"
+    },
+    {
+     "question_id": "QC-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "承上題（空氣中 8 N、水中視重 5 N，完全浸入）。這個物體的密度約是水的幾倍？",
+     "answer": "約 2.7 倍（ρ物／ρ水＝8／3）",
+     "kp_ids": [
+      "sci.t_adv.phys-fluid.buoyancy-calc"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-fluid.buoyancy-calc"
+     ],
+     "options": [
+      "約 2.7 倍（ρ物／ρ水＝8／3）",
+      "約 1.6 倍（8／5）",
+      "約 1.7 倍（5／3）",
+      "約 0.6 倍（3／8）"
+     ],
+     "distractor_rationales": {
+      "約 1.6 倍（8／5）": "那是用空氣中重量除以視重（W／W′）；密度比要用 W／F＝W／（W−W′）＝8／3。",
+      "約 1.7 倍（5／3）": "那是視重除以浮力（W′／F）；正確是 W／F＝8／3≈2.7。",
+      "約 0.6 倍（3／8）": "那是浮力除以重量（F／W），剛好倒過來；且比水小就會浮，與完全沉入矛盾。密度比＝W／F＝8／3。"
+     },
+     "answer_evidence": [
+      "c-bc-quant"
+     ],
+     "feedback": "完全浸入時 ρ物／ρ水＝W／F＝W／（W−W′）＝8／3≈2.7 倍。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案、說明自己判斷（三力平衡 W′＋F＝W→F＝W−W′；浮力 F＝ρ流gV；反推 V＝F／ρg、ρ物＝W／gV；完全浸入 ρ物／ρ流＝W／（W−W′）；W=8 W′=5→F=3 N、V=300 cm³、ρ物/ρ水=8/3≈2.7）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
