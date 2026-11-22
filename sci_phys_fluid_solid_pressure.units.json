@@ -1,0 +1,200 @@
+{
+ "_note": "自然島 物理-流體（phys-fluid）strand t_mid 單元（固體壓力與受力面積的關係）。知識點 sci.t_mid.phys-fluid.solid-pressure、tier＝t_mid、exam＝會考。直接前置＝pressure-def（已教壓力定義 P＝F／A、單位帕、面積反比）。全繁體零簡體零 PRC 詞（中國，非大陸）。中文授課無音檔。★R15 術語：本單元不引入新的英文術語——壓力、受力面積、接觸面、重量、固體 皆前置（壓力於 pressure-def 已 gloss）或日常用語，不另附英文 gloss；F、A、P、Pa、N 為符號不 gloss。★概念與定義（全檔一致）：固體壓力的特性——固體把它受到的力（例如本身的重量）沿施力方向垂直壓在它與支撐面『實際接觸』的面積上；壓力只作用在這塊接觸面、不會像液體那樣往各方向傳（液體壓力留待後續單元）。所以計算固體壓力時，公式仍是 P＝F／A，但 A 要用『實際接觸面積』。同一個重量，接觸面積越小壓力越大、越大壓力越小：人站著（雙腳接觸面積小）對地面壓力大，躺著（全身接觸面積大）壓力小；尖的腳、細的支柱接觸面積小、壓力大。★數值已以 .venv 驗算：體重 600 N 的人，站立雙腳接觸地面約 0.03 m²→P＝600／0.03＝20000 Pa；躺下全身接觸約 0.6 m²→P＝600／0.6＝1000 Pa（面積 20 倍、壓力 1／20）。practice 題號用 QS；QS-mcq-3 以 F＝600、接觸面積 A＝0.03 求壓力正解 20000 Pa，三 distractor 相異誤算（皆 .venv 核過）：18（誤用 F×A＝600×0.03）、600（忘了除以面積、直接寫力）、2000（把 0.03 看成 0.3、面積放大十倍，600／0.3＝2000）。★figure 自檢：單一面板『固體壓力：同重量，接觸面積越小壓力越大』。左右兩情境，相同的重量 F（兩支向下箭頭等長、apex 沿 +x 的房屋 marker、orient=auto render 朝下）：左邊接觸面積小（窄底、如站立）標『接觸面積小→壓力大（約 20000 Pa）』、右邊接觸面積大（寬底、如躺下）標『接觸面積大→壓力小（約 1000 Pa）』；下方標 P＝F／A（A＝實際接觸面積）。alt 完整涵蓋 SVG 全部標籤文字（散文、非逐字）。★figure 符號即事實：兩支重量箭頭等長且朝下（同一重量）、左接觸底比右窄、左壓力數值大於右；P＝F／A。兩箭頭等長為鐵律（同一重量不因姿勢改變）。★figure marker 鐵律：apex 沿本地 +x（path M0,0 L6,3 L0,6 Z、refX5 refY3）配 orient=auto，鉛直向下線才會正確 render 朝下（勿用 apex 沿 +y 的朝下三角形＋orient=auto，會旋轉 90° 朝側向）。★out-of-scope：液體壓力 P＝ρgh（往各方向傳）、大氣壓力、浮力、帕斯卡原理 屬後續單元；本單元只到固體壓力沿施力方向作用於接觸面、受力面積＝接觸面積、同重量下面積越小壓力越大與 P＝F／A 計算。practice 四答案＝{作用在實際接觸面上、沿施力（重力）方向（Q1 特性）, 固體與支撐面實際接觸的面積（Q2 受力面積）, 20000 Pa（Q3 F＝600 A＝0.03）, 站著接觸面積小壓力大、躺著接觸面積大壓力小（Q4 站vs躺）}；MCQ options bare、兩兩相異；distractor rationale 各寫清為何錯。claim kind＝fact。figure-only example 無 body。定義不得反轉：固體壓力沿施力方向作用於實際接觸面、A＝接觸面積、同重量面積越小壓力越大、P＝F／A。本註解內分隔用頓號、「或」或全形斜線「／」，不用半形 ASCII 斜線。",
+ "page": "sci_phys_fluid_solid_pressure.html",
+ "units": [
+  {
+   "unit_id": "sci.t_mid.phys-fluid.solid-pressure",
+   "title_zh": "固體壓力與受力面積的關係",
+   "can_do": "我知道固體把它受到的力（例如本身的重量）沿施力方向垂直壓在它與支撐面『實際接觸』的面積上，壓力只作用在這塊接觸面。我知道計算固體壓力一樣用 P＝F／A，但 A 要用實際接觸面積。我也知道同一個重量，接觸面積越小壓力越大、越大壓力越小，所以人站著比躺著對地面的壓力大，細腳、尖柱的壓力也大。",
+   "situation_group": "流體：浮力與壓力",
+   "subject": "sci",
+   "strand": "phys-fluid",
+   "est_minutes": 15,
+   "knowledge_point_ids": [
+    "sci.t_mid.phys-fluid.solid-pressure"
+   ],
+   "prerequisites": [
+    "sci.t_mid.phys-fluid.pressure-def"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-sp-contact",
+     "text": "固體把它受到的力（例如重量）沿施力方向垂直壓在它與支撐面實際接觸的面積上，壓力只作用在這塊接觸面；計算固體壓力仍用 P＝F／A，其中 A 是實際接觸面積。",
+     "kind": "fact",
+     "source_refs": [
+      "固體壓力作用於接觸面、沿施力方向、A=接觸面積（國中自然 會考）"
+     ],
+     "verification_ref": "固體壓力沿施力方向作用於實際接觸面、A=接觸面積＝標準定性結論（教科書 cross_check）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-sp-area",
+     "text": "同一個重量，接觸面積越小壓力越大、越大壓力越小；體重 600 N 的人站立雙腳接觸約 0.03 m²，壓力 P＝600／0.03＝20000 Pa，躺下全身接觸約 0.6 m²，壓力只有 600／0.6＝1000 Pa。",
+     "kind": "fact",
+     "source_refs": [
+      "同重量下固體壓力與接觸面積成反比、站vs躺（國中自然 會考）"
+     ],
+     "verification_ref": "P=F/A 中 F 固定、A=接觸面積，站 600/0.03=20000 Pa、躺 600/0.6=1000 Pa 以 .venv 驗算",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-fluid.solid-pressure"
+     ],
+     "body": "前面學了壓力 P＝F／A。這一課看固體怎麼對接觸的表面施壓：同樣的重量，為什麼站著比躺著對地面『壓』得更兇？為什麼細細的高跟鞋跟容易把地板踩出凹痕？"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-fluid.solid-pressure"
+     ],
+     "body": "① 固體壓力作用在哪裡：固體把它受到的力（常見是本身的重量）沿施力方向，垂直壓在它和支撐面『實際接觸』的那塊面積上。壓力只作用在這塊接觸面，不會像液體那樣往四面八方傳。② 面積要用接觸面積：算固體壓力一樣用 P＝F／A，但這裡的 A 一定是『實際接觸面積』，不是物體整個表面積。③ 同重量，面積決定壓力：重量不變時，接觸面積越小，壓力越大；接觸面積越大，壓力越小。所以同一個人，站著時只有雙腳接觸地面、面積小，壓力大；躺下來全身接觸、面積大，壓力小。細的桌腳、尖的釘子、高跟鞋細跟，都是用很小的接觸面積把壓力變得很大。④ 例子：體重 600 牛頓的人，站立雙腳接觸地面約 0.03 平方公尺，壓力 P＝600／0.03＝20000 Pa；躺下時全身接觸約 0.6 平方公尺，壓力只剩 600／0.6＝1000 Pa。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_mid.phys-fluid.solid-pressure"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 185' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='8' y='14' font-size='9.5' fill='#2563a6' font-weight='bold'>固體壓力：同重量，接觸面積越小壓力越大</text><line x1='20' y1='120' x2='320' y2='120' stroke='#b9a98c' stroke-width='1.3'/><rect x='70' y='96' width='20' height='24' fill='#7fa8c9'/><line x1='80' y1='60' x2='80' y2='92' stroke='#c0392b' stroke-width='2' marker-end='url(#wd)'/><text x='66' y='54' font-size='8' fill='#c0392b'>F（體重）</text><text x='36' y='136' font-size='7.5' fill='#1f3a52'>接觸面積小→壓力大</text><text x='54' y='148' font-size='7.5' fill='#a8341f'>約 20000 Pa（站立）</text><rect x='210' y='110' width='74' height='10' fill='#7fa8c9'/><line x1='247' y1='60' x2='247' y2='106' stroke='#c0392b' stroke-width='2' marker-end='url(#wd)'/><text x='233' y='54' font-size='8' fill='#c0392b'>F（體重）</text><text x='206' y='136' font-size='7.5' fill='#1f3a52'>接觸面積大→壓力小</text><text x='216' y='148' font-size='7.5' fill='#2f6f54'>約 1000 Pa（躺下）</text><text x='92' y='172' font-size='9' fill='#2563a6'>P＝F／A（A＝實際接觸面積）</text></g><defs><marker id='wd' markerWidth='7' markerHeight='7' refX='5' refY='3' orient='auto'><path d='M0,0 L6,3 L0,6 Z' fill='#c0392b'/></marker></defs></svg>",
+      "alt": "一張固體壓力的對照示意圖，標題「固體壓力：同重量，接觸面積越小壓力越大」。畫面有一條代表地面的水平線，上面並排兩個情境，代表同一個人體重相同。左邊是一個窄窄的藍色長方塊（像人站立、雙腳接觸面積小），頂上有一支紅色向下的箭頭標「F（體重）」，下方標「接觸面積小→壓力大」與「約 20000 Pa（站立）」。右邊是一個扁扁寬寬的藍色長方塊（像人躺下、全身接觸面積大），頂上有一支和左邊一樣長的紅色向下箭頭標「F（體重）」，下方標「接觸面積大→壓力小」與「約 1000 Pa（躺下）」。兩支箭頭一樣長，代表體重相同。下方標公式「P＝F／A（A＝實際接觸面積）」。整張圖說明：同一個重量，接觸面積越小壓力越大。",
+      "caption": "固體壓力 P＝F／A，A 用實際接觸面積。同一個人（體重 F 相同，兩支箭頭等長）站立時雙腳接觸面積小、壓力大（約 20000 Pa），躺下時全身接觸面積大、壓力小（約 1000 Pa）。接觸面積越小，壓力越大。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_mid.phys-fluid.solid-pressure"
+     ],
+     "body": "最後練「固體壓力」。重點：(1) 固體壓力作用在實際接觸面上、沿施力（重力）方向；(2) 算壓力用 P＝F／A，A 是實際接觸面積；(3) 同重量時，接觸面積越小壓力越大；(4) 站著比躺著壓力大、細腳尖柱壓力大。小提醒：A 要用『接觸』的面積，不是物體整個表面積；躺下壓力變小是因為接觸面積變大。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QS-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個固體放在地面上，它的壓力作用在哪裡、沿什麼方向？",
+     "answer": "作用在它與地面實際接觸的面上，沿施力（重力）方向往下壓",
+     "kp_ids": [
+      "sci.t_mid.phys-fluid.solid-pressure"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-fluid.solid-pressure"
+     ],
+     "options": [
+      "作用在它與地面實際接觸的面上，沿施力（重力）方向往下壓",
+      "往上下左右四面八方均勻傳開",
+      "只作用在物體最上面那一面",
+      "作用在物體的整個表面積上，包括沒接觸地面的部分"
+     ],
+     "distractor_rationales": {
+      "往上下左右四面八方均勻傳開": "那是液體壓力的特性；固體壓力沿施力方向作用在接觸面上，不會往各方向均勻傳。",
+      "只作用在物體最上面那一面": "壓力作用在它『壓到』地面的那塊接觸面（底部），不是最上面。",
+      "作用在物體的整個表面積上，包括沒接觸地面的部分": "只有實際接觸地面的面積才承受這個壓力；沒接觸的部分不算。"
+     },
+     "answer_evidence": [
+      "c-sp-contact"
+     ],
+     "feedback": "固體壓力沿施力（重力）方向，作用在與支撐面實際接觸的那塊面上。"
+    },
+    {
+     "question_id": "QS-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "計算固體壓力 P＝F／A 時，式子裡的受力面積 A 指的是什麼？",
+     "answer": "固體與支撐面實際接觸的面積",
+     "kp_ids": [
+      "sci.t_mid.phys-fluid.solid-pressure"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-fluid.solid-pressure"
+     ],
+     "options": [
+      "固體與支撐面實際接觸的面積",
+      "固體整個外表面的總面積",
+      "固體最大那一面的面積，不管有沒有接觸",
+      "固體的體積"
+     ],
+     "distractor_rationales": {
+      "固體整個外表面的總面積": "壓力只作用在接觸面上，所以 A 用實際接觸面積，不是整個外表面積。",
+      "固體最大那一面的面積，不管有沒有接觸": "要看『實際接觸』的那一面；若最大面沒接觸地面，就不是它。",
+      "固體的體積": "體積的單位是立方公尺、不是面積；壓力公式要除以接觸『面積』，不是體積。"
+     },
+     "answer_evidence": [
+      "c-sp-contact"
+     ],
+     "feedback": "固體壓力的 A 是它與支撐面實際接觸的面積。"
+    },
+    {
+     "question_id": "QS-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "體重 600 牛頓的人站立時，雙腳與地面的接觸面積約 0.03 平方公尺。他對地面的壓力約是多少？",
+     "answer": "20000 Pa",
+     "kp_ids": [
+      "sci.t_mid.phys-fluid.solid-pressure"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-fluid.solid-pressure"
+     ],
+     "options": [
+      "20000 Pa",
+      "18 Pa",
+      "600 Pa",
+      "2000 Pa"
+     ],
+     "distractor_rationales": {
+      "18 Pa": "那是把力和面積相乘（600×0.03＝18）；壓力是力÷面積，600／0.03＝20000。",
+      "600 Pa": "那是忘了除以面積、直接把體重當壓力；要除以 0.03 m²，得 20000。",
+      "2000 Pa": "那是把 0.03 看成 0.3（面積放大了十倍）算成 600／0.3＝2000；正確面積 0.03，600／0.03＝20000。"
+     },
+     "answer_evidence": [
+      "c-sp-area"
+     ],
+     "feedback": "P＝F／A＝600／0.03＝20000 Pa。"
+    },
+    {
+     "question_id": "QS-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "同一個人站著和躺著，對地面的壓力相比會怎樣？",
+     "answer": "站著接觸面積小、壓力大；躺著接觸面積大、壓力小",
+     "kp_ids": [
+      "sci.t_mid.phys-fluid.solid-pressure"
+     ],
+     "required_kp_ids": [
+      "sci.t_mid.phys-fluid.solid-pressure"
+     ],
+     "options": [
+      "站著接觸面積小、壓力大；躺著接觸面積大、壓力小",
+      "站著接觸面積小、壓力小；躺著接觸面積大、壓力大",
+      "站著和躺著壓力一樣，因為體重沒變",
+      "躺著壓力比較大，因為身體貼著地面更用力"
+     ],
+     "distractor_rationales": {
+      "站著接觸面積小、壓力小；躺著接觸面積大、壓力大": "方向反了；P＝F／A，體重不變時面積越小壓力越大，所以站著壓力大。",
+      "站著和躺著壓力一樣，因為體重沒變": "體重（F）雖沒變，但接觸面積（A）變了，壓力 P＝F／A 就不同；躺下面積大、壓力小。",
+      "躺著壓力比較大，因為身體貼著地面更用力": "躺下沒有『更用力』，體重一樣；接觸面積變大反而讓壓力變小。"
+     },
+     "answer_evidence": [
+      "c-sp-area"
+     ],
+     "feedback": "體重相同，站著接觸面積小壓力大、躺著接觸面積大壓力小。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案、說明自己判斷（固體壓力沿施力方向作用在實際接觸面；P＝F／A 的 A＝接觸面積；同重量面積越小壓力越大；站 600／0.03＝20000 Pa、躺 600／0.6＝1000 Pa）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
