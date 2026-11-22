@@ -47,19 +47,32 @@ def _lines(svg):
     return out
 
 
-def _match_tip(P, lines):
-    """Return (tip_pt_exact_on_line, other_end) for the polygon vertex nearest a
-    line endpoint, or None if nothing is within TIP_TOL."""
+def _intrinsic_apex(P):
+    """The arrowhead's OWN tip + direction, read from the polygon geometry ALONE
+    (never from a line — a line pairing can be ambiguous when the tip abuts a
+    second collinear segment's endpoint, which silently reversed a correct arrow,
+    2026-11-22). The tip is the vertex farthest from the midpoint of the other
+    two (the base edge); the arrow points base-midpoint -> tip.
+    Returns (apex, (bmx, bmy))."""
     best = None
+    for i in range(3):
+        others = [P[j] for j in range(3) if j != i]
+        bmx = (others[0][0] + others[1][0]) / 2.0
+        bmy = (others[0][1] + others[1][1]) / 2.0
+        d = ((P[i][0] - bmx) ** 2 + (P[i][1] - bmy) ** 2) ** 0.5
+        if best is None or d > best[0]:
+            best = (d, P[i], (bmx, bmy))
+    return best[1], best[2]
+
+
+def _tip_on_line(apex, lines):
+    """True iff the apex sits (within TIP_TOL) on some line endpoint — i.e. the
+    arrowhead is attached. Used ONLY to gate sharpening, NOT to pick direction."""
     for (a, b) in lines:
-        for e, o in ((a, b), (b, a)):
-            for v in P:
-                d = ((v[0] - e[0]) ** 2 + (v[1] - e[1]) ** 2) ** 0.5
-                if best is None or d < best[0]:
-                    best = (d, v, e, o)
-    if best is None or best[0] > TIP_TOL:
-        return None
-    return best[2], best[3]   # exact line endpoint (tip), other end (tail)
+        for e in (a, b):
+            if ((apex[0] - e[0]) ** 2 + (apex[1] - e[1]) ** 2) ** 0.5 <= TIP_TOL:
+                return True
+    return False
 
 
 def _parse_poly(points):
@@ -77,18 +90,14 @@ def sharpen_svg(svg):
         P = _parse_poly(m.group(1))
         if P is None:
             return m.group(0)
-        tip = _match_tip(P, lines)
-        if tip is None:
+        # Direction + tip come from the polygon's OWN geometry, never from a line
+        # (line pairing is ambiguous when the tip abuts a second collinear
+        # segment and silently reversed a correct arrow). The line is consulted
+        # ONLY to confirm the tip is attached to an endpoint.
+        (tx, ty), (bmx, bmy) = _intrinsic_apex(P)
+        if not _tip_on_line((tx, ty), lines):
             return m.group(0)          # tip not on any line end -> don't touch
-        (tx, ty), (ox, oy) = tip
-        dx, dy = tx - ox, ty - oy      # arrow direction (tail -> tip)
-        # The head LENGTH must come from the ORIGINAL arrowhead polygon (tip vertex
-        # -> base-midpoint axial distance), NOT from the full line length — using the
-        # line length makes the head as long as the whole arrow (giant-wedge bug).
-        ti = min(range(3), key=lambda i: (P[i][0] - tx) ** 2 + (P[i][1] - ty) ** 2)
-        base = [P[i] for i in range(3) if i != ti]
-        bmx = (base[0][0] + base[1][0]) / 2.0
-        bmy = (base[0][1] + base[1][1]) / 2.0
+        dx, dy = tx - bmx, ty - bmy    # arrow direction (base-midpoint -> tip)
         if abs(dy) < AXIS_TOL and abs(dx) >= AXIS_TOL:
             # horizontal arrow
             sign = 1 if dx > 0 else -1
