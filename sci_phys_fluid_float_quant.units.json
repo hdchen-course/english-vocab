@@ -1,0 +1,201 @@
+{
+ "_note": "自然島 物理-流體（phys-fluid）strand t_adv 單元（浮體/沉體/懸浮的定量分析）。知識點 sci.t_adv.phys-fluid.float-quant、tier＝t_adv、exam＝學測。直接前置＝float-condition（浮沉比密度）＋buoyancy-calc（浮力定量 F＝ρ流gV）＋archimedes（浮力＝排開流體重）。全繁體零簡體零 PRC 詞（中國，非大陸）。中文授課無音檔。★R15 術語：本單元無新增須 gloss 的術語（浮力、密度、視重 已於前置單元 float-condition／buoyancy-calc／buoyancy-idea 首次 gloss；浮體／沉體／懸浮／浸入／露出 為中文教學用語不另附英文 gloss；ρ、g、V、F、W 為符號不 gloss），故 can_do 不含新英文括號。★概念與定義（全檔一致）：把 float-condition 的定性浮沉升級為定量。（1）浮體（ρ物＜ρ流）漂浮『靜止』時合力為零→浮力＝重量，即 ρ流×g×V排＝ρ物×g×V物，約去 g 得 V排／V物＝ρ物／ρ流——即『浸入流體的體積占整個物體體積的比例＝密度比 ρ物／ρ流』，露出比例＝1−ρ物／ρ流。（2）沉體（ρ物＞ρ流）無法靠浮力平衡重量，會沉到底（底部另有支撐力），此時 V排＝V物（全浸）但浮力＜重量。（3）懸浮（ρ物＝ρ流）全部浸入 V排＝V物、浮力＝重量，可停在液體中任一深度。★數值已以 .venv 驗算：木塊 ρ物＝0.6、水 ρ流＝1.0→V排／V物＝0.6，浸入 60%、露出 40%；冰 ρ≈0.92 浮於純水→浸入約 92%（冰山大部分在水下）。practice 題號用 QQ；QQ-mcq-3 木塊 ρ＝0.6 浮於水求露出比例正解 40%，distractor 60%（把浸入比例當露出）、6%（小數點錯）、100%（以為全露出）。★figure 自檢：單一面板『浮體：浸入比例＝密度比』。左半：一杯水，一個木塊跨越水面漂浮；木塊分兩段——水面以上較短段（露出，佔 40%、較淺色）、水面以下較長段（浸入，佔 60%、較深色）；標『露出 40%』『浸入 60%』『木塊 ρ物＝0.6』。右半：浮力＝重量→ρ水×g×V排＝ρ物×g×V物→V排／V物＝ρ物／ρ水；ρ物＝0.6→浸入 0.6（60%）、露出 40%。alt 完整涵蓋 SVG 全部標籤文字（散文、非逐字）。★figure 符號即事實：水面下（浸入）段比水面上（露出）段長（60%＞40%）；浸入段占全高 60%、露出段占 40%；木塊跨越水面漂浮（ρ物＜ρ水）。浸入段較長（60%）、露出段較短（40%）、跨水面漂浮為鐵律。★out-of-scope：連續方程、白努利（continuity、bernoulli t_enrich）；本單元聚焦浮體浸入比例 V排／V物＝ρ物／ρ流 與沉/懸浮的定量條件。practice 四答案＝{相等（浮力＝重量）（Q1 浮體靜止）, ρ物／ρ流（Q2 浸入比例）, 40%（Q3 木塊 0.6 露出）, 密度等於流體、全部浸入、浮力＝重量（Q4 懸浮）}；MCQ options bare、兩兩相異；distractor rationale 各寫清為何錯。claim kind＝fact。figure-only example 無 body。定義不得反轉：浮體 V排／V物＝ρ物／ρ流、露出＝1−ρ物／ρ流；懸浮 ρ物＝ρ流 全浸；沉體 ρ物＞ρ流。本註解內分隔用頓號、「或」或全形斜線「／」，不用半形 ASCII 斜線。",
+ "page": "sci_phys_fluid_float_quant.html",
+ "units": [
+  {
+   "unit_id": "sci.t_adv.phys-fluid.float-quant",
+   "title_zh": "浮體/沉體/懸浮的定量分析",
+   "can_do": "我會定量分析漂浮：浮體靜止時浮力等於重量，由 ρ流×g×V排＝ρ物×g×V物 約去 g，得到浸入體積比例 V排／V物＝ρ物／ρ流，露出比例＝1−ρ物／ρ流。我也知道沉體（ρ物＞ρ流）會沉到底、懸浮（ρ物＝ρ流）全部浸入並可停在任一深度。",
+   "situation_group": "流體：浮力與壓力",
+   "subject": "sci",
+   "strand": "phys-fluid",
+   "est_minutes": 15,
+   "knowledge_point_ids": [
+    "sci.t_adv.phys-fluid.float-quant"
+   ],
+   "prerequisites": [
+    "sci.t_mid.phys-fluid.float-condition",
+    "sci.t_adv.phys-fluid.buoyancy-calc"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-fq-float",
+     "text": "浮體（ρ物＜ρ流）漂浮靜止時浮力等於重量：ρ流×g×V排＝ρ物×g×V物，約去 g 得浸入體積比例 V排／V物＝ρ物／ρ流，露出比例＝1−ρ物／ρ流。",
+     "kind": "fact",
+     "source_refs": [
+      "浮體浸入比例 V排/V物=ρ物/ρ流（高中物理 學測）"
+     ],
+     "verification_ref": "浮體平衡 ρ流gV排=ρ物gV物→V排/V物=ρ物/ρ流＝標準結論（以 .venv 驗算：ρ物=0.6 ρ水=1→浸入0.6=60%）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-fq-sinksuspend",
+     "text": "沉體（ρ物＞ρ流）無法靠浮力平衡重量，會沉到底（全浸 V排＝V物 但浮力＜重量，底部另有支撐力）；懸浮（ρ物＝ρ流）全部浸入 V排＝V物、浮力＝重量，可停在液體中任一深度。",
+     "kind": "fact",
+     "source_refs": [
+      "沉體/懸浮定量條件（高中物理 學測）"
+     ],
+     "verification_ref": "ρ物＞ρ流沉、ρ物＝ρ流懸浮＝標準結論（教科書 cross_check，承接 float-condition 定性判準的定量版）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-fluid.float-quant"
+     ],
+     "body": "前面知道密度比流體小就會浮。那浮在水面的東西，到底有多少露在外面、多少泡在水裡？這一課用一條很漂亮的關係算出來——而且它解釋了為什麼『冰山一角』大部分藏在水下。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-fluid.float-quant"
+     ],
+     "body": "① 浮體（漂浮，ρ物＜ρ流）：物體靜止漂在水面，合力為零，所以浮力剛好等於重量——ρ流×g×V排＝ρ物×g×V物。兩邊都有 g，約掉，得到 V排／V物＝ρ物／ρ流。這就是說：『浸入水中的體積，占整個物體體積的比例，剛好等於密度比 ρ物／ρ流』；露出水面的比例就是 1−ρ物／ρ流。② 沉體（ρ物＞ρ流）：浮力頂不住重量，物體沉到底，靠底部支撐；這時整個泡在水裡（V排＝V物），但浮力仍小於重量。③ 懸浮（ρ物＝ρ流）：全部浸入、浮力等於重量，可以停在水中任一深度。④ 例子：木塊密度 0.6、水是 1.0，浸入比例＝0.6／1.0＝0.6，所以 60% 泡在水裡、40% 露出水面。冰的密度約 0.92，浮在純水上時浸入約 92%——難怪冰山只露出一小角。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_adv.phys-fluid.float-quant"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 190' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='8' y='14' font-size='9.5' fill='#2563a6' font-weight='bold'>浮體：浸入比例＝密度比</text><rect x='24' y='42' width='150' height='138' fill='none' stroke='#8a9199' stroke-width='1.2'/><rect x='25' y='106' width='148' height='73' fill='#cfe6f2'/><line x1='25' y1='106' x2='173' y2='106' stroke='#5b9bd5' stroke-width='1.2'/><text x='28' y='102' font-size='7' fill='#3a6ea5'>水面</text><rect x='70' y='86' width='48' height='20' fill='#b5bcc4'/><rect x='70' y='106' width='48' height='30' fill='#9099a3'/><text x='122' y='98' font-size='7.5' fill='#5a6066'>露出 40%</text><text x='122' y='124' font-size='7.5' fill='#2f6f54'>浸入 60%</text><text x='58' y='150' font-size='7.5' fill='#1f3a52'>木塊 ρ物＝0.6</text><text x='185' y='66' font-size='8.5' fill='#2563a6'>浮力＝重量</text><text x='185' y='82' font-size='8.5' fill='#2563a6'>ρ水×g×V排＝ρ物×g×V物</text><text x='185' y='98' font-size='8.5' fill='#2563a6'>→ V排／V物＝ρ物／ρ水</text><text x='185' y='122' font-size='8.5' fill='#2563a6'>ρ物＝0.6 →</text><text x='185' y='136' font-size='8.5' fill='#2563a6'>浸入 0.6（60%）、露出 40%</text></g></svg>",
+      "alt": "一張浮體定量的示意圖，標題「浮體：浸入比例＝密度比」。左半邊是一杯水（上緣標「水面」），一個木塊跨越水面漂浮：水面以上是較短的淺灰色段，標「露出 40%」；水面以下是較長的深灰色段，標「浸入 60%」；木塊旁標「木塊 ρ物＝0.6」。右半邊列出推導：「浮力＝重量」「ρ水×g×V排＝ρ物×g×V物」「→ V排／V物＝ρ物／ρ水」，並代入「ρ物＝0.6 → 浸入 0.6（60%）、露出 40%」。整張圖說明浮體浸入水中的體積比例等於密度比，密度 0.6 的木塊有 60% 在水下、40% 露出。",
+      "caption": "浮體漂浮靜止時浮力＝重量，約去 g 得浸入比例 V排／V物＝ρ物／ρ水。木塊密度 0.6 時，60% 浸入水中（深色、較長的下段）、40% 露出水面（淺色、較短的上段）；這也是冰山大半藏在水下的原因。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_adv.phys-fluid.float-quant"
+     ],
+     "body": "最後練「浮體/沉體/懸浮定量」。重點：(1) 浮體靜止浮力＝重量；(2) 浸入比例 V排／V物＝ρ物／ρ流、露出比例＝1−ρ物／ρ流；(3) 沉體 ρ物＞ρ流 沉底（全浸但浮力＜重）、懸浮 ρ物＝ρ流 全浸可停任一深度。小提醒：V排／V物 算的是『浸入』比例；題目問『露出』要再用 1 減掉。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QQ-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個物體漂浮在水面、靜止不動。這時它受到的浮力和它的重量，關係是什麼？",
+     "answer": "相等（浮力＝重量）",
+     "kp_ids": [
+      "sci.t_adv.phys-fluid.float-quant"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-fluid.float-quant"
+     ],
+     "options": [
+      "相等（浮力＝重量）",
+      "浮力比重量大",
+      "重量比浮力大",
+      "兩者沒有一定關係"
+     ],
+     "distractor_rationales": {
+      "浮力比重量大": "若浮力大於重量，物體會繼續被往上推、不會靜止；靜止表示合力為零、浮力等於重量。",
+      "重量比浮力大": "若重量大於浮力，物體會下沉、不會漂浮靜止；漂浮靜止時兩者相等。",
+      "兩者沒有一定關係": "漂浮靜止是力平衡的結果，浮力必等於重量，並非沒有關係。"
+     },
+     "answer_evidence": [
+      "c-fq-float"
+     ],
+     "feedback": "漂浮靜止＝合力為零，浮力等於重量。"
+    },
+    {
+     "question_id": "QQ-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個漂浮的物體，它「浸入水中的體積 V排」占「整個物體體積 V物」的比例，等於什麼？",
+     "answer": "ρ物／ρ流（物體密度除以流體密度）",
+     "kp_ids": [
+      "sci.t_adv.phys-fluid.float-quant"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-fluid.float-quant"
+     ],
+     "options": [
+      "ρ物／ρ流（物體密度除以流體密度）",
+      "ρ流／ρ物（流體密度除以物體密度）",
+      "永遠是 1（整個泡在水裡）",
+      "ρ物×ρ流（兩密度相乘）"
+     ],
+     "distractor_rationales": {
+      "ρ流／ρ物（流體密度除以物體密度）": "比例剛好倒過來了；由 ρ流gV排＝ρ物gV物 解出的是 V排／V物＝ρ物／ρ流。",
+      "永遠是 1（整個泡在水裡）": "全部浸入（比例＝1）是懸浮或剛好 ρ物＝ρ流 的情形；一般浮體只有一部分浸入，比例＝ρ物／ρ流＜1。",
+      "ρ物×ρ流（兩密度相乘）": "兩密度相乘沒有物理意義也不是比例；浸入比例是相除 ρ物／ρ流。"
+     },
+     "answer_evidence": [
+      "c-fq-float"
+     ],
+     "feedback": "由浮力＝重量約去 g，得 V排／V物＝ρ物／ρ流。"
+    },
+    {
+     "question_id": "QQ-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一塊密度 0.6 g／cm³ 的木塊，漂浮在水（密度 1.0 g／cm³）上。它露出水面的體積約占整塊木塊的多少比例？",
+     "answer": "40%",
+     "kp_ids": [
+      "sci.t_adv.phys-fluid.float-quant"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-fluid.float-quant"
+     ],
+     "options": [
+      "40%",
+      "60%",
+      "6%",
+      "100%"
+     ],
+     "distractor_rationales": {
+      "60%": "60% 是『浸入』水中的比例（＝ρ物／ρ水＝0.6）；題目問『露出』，要用 1−0.6＝0.4＝40%。",
+      "6%": "小數點錯了；浸入比例＝0.6＝60%，露出＝40%，不是 6%。",
+      "100%": "100% 代表整塊都露出、完全不沾水，這不可能漂浮；露出 40%、浸入 60%。"
+     },
+     "answer_evidence": [
+      "c-fq-float"
+     ],
+     "feedback": "浸入比例＝ρ物／ρ水＝0.6（60%），露出＝1−0.6＝40%。"
+    },
+    {
+     "question_id": "QQ-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個物體放進某液體裡會「懸浮」——停在液體中間、不浮上去也不沉下去。這代表什麼？",
+     "answer": "物體密度等於液體密度，整個浸入、浮力等於重量",
+     "kp_ids": [
+      "sci.t_adv.phys-fluid.float-quant"
+     ],
+     "required_kp_ids": [
+      "sci.t_adv.phys-fluid.float-quant"
+     ],
+     "options": [
+      "物體密度等於液體密度，整個浸入、浮力等於重量",
+      "物體密度比液體小，所以停在中間",
+      "物體密度比液體大，所以停在中間",
+      "物體體積剛好等於液體體積"
+     ],
+     "distractor_rationales": {
+      "物體密度比液體小，所以停在中間": "密度比液體小會上浮到水面（部分露出），不會停在中間；懸浮要密度相等。",
+      "物體密度比液體大，所以停在中間": "密度比液體大會下沉到底，不會停在中間；懸浮要密度相等。",
+      "物體體積剛好等於液體體積": "和液體有多少體積無關；懸浮的條件是物體密度等於液體密度。"
+     },
+     "answer_evidence": [
+      "c-fq-sinksuspend"
+     ],
+     "feedback": "懸浮＝ρ物＝ρ流，全部浸入且浮力等於重量，可停在任一深度。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案、說明自己判斷（浮體靜止浮力＝重量；V排／V物＝ρ物／ρ流、露出＝1−ρ物／ρ流；沉體 ρ物＞ρ流 沉底、懸浮 ρ物＝ρ流 全浸；木塊 0.6→浸入60%露出40%）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
