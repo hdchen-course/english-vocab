@@ -4235,3 +4235,9 @@ phys-wave 9/18 單元收齊並 push（+5）：sound-three(三要素 響度/音�
 - **教訓（新，待 bank 記憶）**：等大的一對力（向心/離心、作用/反作用）在 figure 必須畫**等長**箭頭；長度是量值視覺編碼，不等長＝宣稱不等大＝事實錯誤 blocker。enrichment 單元引用更高階符號（ω）要嘛就地定義、要嘛移除只留 in-scope 形式。
 - **物理島現況**：8 strand 完成（em/energy/estatic/force/heat/kin/optics/wave）。剩 phys-circ(13)/phys-fluid(13)/phys-meas(13)/phys-modern(13) 未起。
 - **下一步**：phys-circ strand（圓周運動，為 em/noninertial 所倚賴的向心力正式教學家），從根 circular-idea(t_mid 會考) 往上建。
+
+## 2026-11-22 phys-circ t_adv 全完成（本 session 自主 loop）
+phys-circ strand t_adv 9 單元全數 5-clean + DONE-GATE + figure 4-role 簽核 + commit/push：
+- circular-idea(t_mid會考)、angular-speed、centripetal-accel、centripetal-force、vertical-circle、kepler、gravitation、g-variation、satellite(皆 t_adv學測)。
+- HEAD 24fa68f74。phys-circ 9/13（剩 t_sub 4：shm-link/kepler3-derive/orbit-energy/grav-pe 分科-物理）。
+- 深輪抓到並修正的缺陷類：note-metadata 位置描述(移 figure 元素後要同步)、術語漂移(半徑vs半長軸)、figure 幾何事實(太陽須在真實焦點 c=√(rx²−ry²)、地表點須錨地球邊緣)、數值 distractor factor 必須真能算出該選項值(19.6=9.8×2 非×4)、等面積視覺難誠實呈現時改用其他正確編碼。
