@@ -1,0 +1,200 @@
+{
+ "_note": "自然島 物理-近代物理（phys-modern）strand t_sub 單元（半衰期的定量計算）。知識點 sci.t_sub.phys-modern.half-life-calc、manifest tier＝t_sub、beyond＝false、exam＝分科-物理。注意：知識點 id 第 2 段為建立時命名痕跡（opaque），tier 一律以 manifest tier 欄（t_sub）為準。直接前置＝radioactivity（已知半衰期＝數量減半所需時間、每過一個半衰期數量減半的定性概念）。全繁體零簡體零 PRC 詞（中國，非大陸）。中文授課無音檔。★驗證：數值以 .venv 驗（tools/verify/sci_phys2_checks.py::phys-modern.half-life-calc，衰變公式 N＝N₀·(½)^(t/T)，t＝3T 時剩 (½)³＝1／8）PASS。★R15 術語：本單元不新增 R15 術語——半衰期（half-life）已於前置單元 radioactivity 首次以中文（English）gloss，依 R15 不重複；本單元只用中文教學用語（半衰期、剩餘量、衰變、初始量）。本 _note 不宣告任何新 R15 術語。★概念與定義（全檔一致）：放射性物質會隨時間減少，每經過一個半衰期 T，數量就變成原來的一半。經過 t 時間相當於經過 n＝t／T 個半衰期，所以剩餘量 N＝N₀·(½)^(t/T)，其中 N₀ 是初始量。換句話說，經過 n 個半衰期後剩下初始量的 (½)ⁿ：n＝1 剩二分之一、n＝2 剩四分之一、n＝3 剩八分之一、n＝4 剩十六分之一。要算剩多少，先數『經過幾個半衰期』n＝t／T，再取 (½)ⁿ。★數值（.venv 驗）：t＝3T（例如半衰期 T＝10 天、經過 t＝30 天）時 n＝3，剩 N₀·(½)³＝N₀／8。★figure 自檢（散文、非逐字）：標題『每過一個半衰期，數量減半』；一組由左到右逐漸變矮的直條圖，四根直條代表 t＝0、t＝T、t＝2T、t＝3T 時的剩餘量，高度比例為 8：4：2：1（分別標 N₀、N₀／2、N₀／4、N₀／8），橫軸由左到右標時間 t＝0、t＝T、t＝2T、t＝3T；最下一行寫公式 N＝N₀·(½)^(t/T)。直條高度與剩餘量成正比（8：4：2：1），標籤不撐高直條。SVG 內不含 polygon 箭頭。alt 完整涵蓋 SVG 全部標籤文字（散文、非逐字）。★figure 符號即事實：四直條高度比＝8：4：2：1；對應 t＝0／T／2T／3T 的剩餘量 N₀／(N₀÷2)／(N₀÷4)／(N₀÷8)。每過一個半衰期剩餘量減半、t＝3T 剩 N₀／8 為鐵律。★out-of-scope：以指數 e 與衰變常數 λ 表示（N＝N₀e^(−λt)、λ＝ln2／T）、放射性定年法數值、活度 A＝λN 與貝克勒單位、非整數個半衰期需用對數求解的題型；本單元只到『知道 N＝N₀·(½)^(t/T)、會先數經過幾個半衰期 n＝t／T 再取 (½)ⁿ、會算 t＝3T 剩 N₀／8 這類整數個半衰期的題』。practice 四答案＝{四分之一（Q1 經過 2 個半衰期）, 經過了幾個半衰期（Q2 t／T 的意義）, 八分之一（Q3 T＝5 年、15 年後）, 4 個半衰期（Q4 剩十六分之一）}；MCQ options bare、兩兩相異；distractor rationale 各寫清為何錯（數值選項寫出該錯誤算法）。claim kind＝fact。figure-only example 無 body。定義不得反轉：每過一個半衰期剩餘量減半、N＝N₀·(½)^(t/T)、n＝t／T。本註解內分隔用頓號、『或』或全形斜線『／』，不用半形 ASCII 斜線（公式與記號中的符號不在此限）。",
+ "page": "sci_phys_modern_half_life_calc.html",
+ "units": [
+  {
+   "unit_id": "sci.t_sub.phys-modern.half-life-calc",
+   "title_zh": "半衰期的定量計算",
+   "can_do": "我知道放射性物質經過一個半衰期 T 數量就減半，經過 t 時間相當於經過 n＝t／T 個半衰期，所以剩餘量 N＝N₀·(½)^(t/T)，N₀ 是初始量。我會先數『經過幾個半衰期』n，再取 (½)ⁿ：n＝1 剩二分之一、n＝2 剩四分之一、n＝3 剩八分之一。例如半衰期 10 天、經過 30 天（＝3 個半衰期），剩下初始量的八分之一（N₀／8）。",
+   "situation_group": "近代物理：原子與量子",
+   "subject": "sci",
+   "strand": "phys-modern",
+   "est_minutes": 16,
+   "knowledge_point_ids": [
+    "sci.t_sub.phys-modern.half-life-calc"
+   ],
+   "prerequisites": [
+    "sci.t_adv.phys-modern.radioactivity"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-hlc-formula",
+     "text": "放射性物質每經過一個半衰期 T，數量就變成原來的一半。經過 t 時間相當於經過 n＝t／T 個半衰期，所以剩餘量 N＝N₀·(½)^(t/T)，其中 N₀ 是初始量。換句話說，經過 n 個半衰期後剩下初始量的 (½)ⁿ：n＝1 剩二分之一、n＝2 剩四分之一、n＝3 剩八分之一、n＝4 剩十六分之一。",
+     "kind": "fact",
+     "source_refs": [
+      "半衰期衰變公式 N=N₀(½)^(t/T)（高中物理 分科）"
+     ],
+     "verification_ref": "N＝N₀·(½)^(t/T)、經過 n＝t／T 個半衰期剩 (½)ⁿ＝半衰期衰變標準式（以 .venv sci_phys2_checks::phys-modern.half-life-calc 驗：t＝3T→(½)³＝1／8）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-hlc-count",
+     "text": "要算剩多少，先數『經過幾個半衰期』n＝t／T（總時間除以一個半衰期的長度），再取 (½)ⁿ。例如半衰期 T＝10 天、經過 t＝30 天，n＝30／10＝3，剩下 N₀·(½)³＝N₀／8。注意每個半衰期是『乘以二分之一』（一半的一半的一半），不是每次減掉固定的量。",
+     "kind": "fact",
+     "source_refs": [
+      "整數個半衰期的剩餘量計算（高中物理 分科）"
+     ],
+     "verification_ref": "n＝t／T、剩餘量＝N₀·(½)ⁿ、t＝3T→N₀／8＝半衰期計算標準結論（以 .venv sci_phys2_checks::phys-modern.half-life-calc 驗：(½)³＝0.125）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-modern.half-life-calc"
+     ],
+     "body": "前面知道『半衰期』T 是放射性物質數量減半所需的時間，每過一個半衰期就少一半。這一課把它變成算式：給你半衰期和經過的時間，算出到底還剩多少。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-modern.half-life-calc"
+     ],
+     "body": "① 衰變公式：每過一個半衰期數量減半，所以剩餘量 N＝N₀·(½)^(t/T)，N₀ 是一開始的量、T 是半衰期、t 是經過的時間。② 關鍵一步——先數『經過幾個半衰期』：指數 t／T 其實就是『總時間裡有幾個半衰期』，記成 n＝t／T。數出 n 以後，剩餘量就是 N₀·(½)ⁿ。③ 把 (½)ⁿ 記熟：n＝1 剩二分之一、n＝2 剩四分之一、n＝3 剩八分之一、n＝4 剩十六分之一——每多一個半衰期就再砍一半。④ 算一個例子：某物質半衰期 T＝10 天，問經過 30 天還剩多少？先算 n＝30／10＝3，所以剩 N₀·(½)³＝N₀／8。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_sub.phys-modern.half-life-calc"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 178' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='10' y='15' font-size='9.5' fill='#2563a6' font-weight='bold'>每過一個半衰期，數量減半</text><rect x='40' y='38' width='36' height='112' fill='#3858b0'/><text x='58' y='32' font-size='8' fill='#1f3a52' text-anchor='middle'>N₀</text><rect x='110' y='94' width='36' height='56' fill='#5a76c8'/><text x='128' y='88' font-size='8' fill='#1f3a52' text-anchor='middle'>N₀／2</text><rect x='180' y='122' width='36' height='28' fill='#8aa0dd'/><text x='198' y='116' font-size='8' fill='#1f3a52' text-anchor='middle'>N₀／4</text><rect x='250' y='136' width='36' height='14' fill='#b8c6ec'/><text x='268' y='130' font-size='8' fill='#1f3a52' text-anchor='middle'>N₀／8</text><line x1='30' y1='150' x2='300' y2='150' stroke='#5a6066' stroke-width='1'/><text x='58' y='162' font-size='7.5' fill='#3a4046' text-anchor='middle'>t＝0</text><text x='128' y='162' font-size='7.5' fill='#3a4046' text-anchor='middle'>t＝T</text><text x='198' y='162' font-size='7.5' fill='#3a4046' text-anchor='middle'>t＝2T</text><text x='268' y='162' font-size='7.5' fill='#3a4046' text-anchor='middle'>t＝3T</text><text x='10' y='174' font-size='8' fill='#5a6066'>N ＝ N₀·(½)^(t/T)　每過一個半衰期 T，剩餘量乘以二分之一。</text></g></svg>",
+      "alt": "一張半衰期遞減的直條圖，標題「每過一個半衰期，數量減半」。由左到右有四根逐漸變矮的直條，代表時間 t＝0、t＝T、t＝2T、t＝3T 時放射性物質的剩餘量。第一根最高，標「N₀」（初始量）；第二根只有一半高，標「N₀／2」；第三根再砍一半，標「N₀／4」；第四根最矮，標「N₀／8」。四根直條的高度比是 8：4：2：1。橫軸由左到右標出 t＝0、t＝T、t＝2T、t＝3T。圖最下方寫公式「N ＝ N₀·(½)^(t/T)」，並註「每過一個半衰期 T，剩餘量乘以二分之一」。整張圖說明每經過一個半衰期，剩餘量就變成前一刻的一半。",
+      "caption": "每過一個半衰期 T，剩餘量就減半：t＝0 時是 N₀、t＝T 剩 N₀／2、t＝2T 剩 N₀／4、t＝3T 剩 N₀／8（高度比 8：4：2：1）。用公式寫就是 N＝N₀·(½)^(t/T)，先數經過幾個半衰期 n＝t／T，再取 (½)ⁿ。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-modern.half-life-calc"
+     ],
+     "body": "最後練「半衰期計算」。重點：(1) 衰變公式 N＝N₀·(½)^(t/T)；(2) 先數經過幾個半衰期 n＝t／T，再取 (½)ⁿ；(3) 記熟 n＝1、2、3、4 分別剩二分之一、四分之一、八分之一、十六分之一。小提醒：每個半衰期是『再乘一半』，不是每次減掉固定的量；指數 t／T 算的是『幾個半衰期』，不要直接拿 t 當次數。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QH-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一個放射性樣本經過「2 個半衰期」後，數量剩下原來的多少？",
+     "answer": "四分之一",
+     "kp_ids": [
+      "sci.t_sub.phys-modern.half-life-calc"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-modern.half-life-calc"
+     ],
+     "options": [
+      "四分之一",
+      "二分之一",
+      "八分之一",
+      "三分之一"
+     ],
+     "distractor_rationales": {
+      "二分之一": "二分之一是只經過『1 個』半衰期後的量；2 個半衰期要再減半一次，是 (½)²＝四分之一。",
+      "八分之一": "八分之一是經過『3 個』半衰期的量 (½)³；2 個半衰期是 (½)²＝四分之一。",
+      "三分之一": "半衰期是每次『乘以二分之一』（一半的一半），不是除以半衰期數；2 個半衰期是 (½)²＝四分之一，不是 1／3。"
+     },
+     "answer_evidence": [
+      "c-hlc-formula"
+     ],
+     "feedback": "經過 2 個半衰期剩 (½)²＝四分之一。"
+    },
+    {
+     "question_id": "QH-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "衰變公式 N＝N₀·(½)^(t/T) 裡的指數「t／T」代表什麼？",
+     "answer": "經過了幾個半衰期",
+     "kp_ids": [
+      "sci.t_sub.phys-modern.half-life-calc"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-modern.half-life-calc"
+     ],
+     "options": [
+      "經過了幾個半衰期",
+      "還剩下多少質量",
+      "已經衰變掉的比例",
+      "一個半衰期有多長"
+     ],
+     "distractor_rationales": {
+      "還剩下多少質量": "剩餘量是整個 N＝N₀·(½)^(t/T) 算出來的結果，不是指數本身；指數 t／T 是『經過幾個半衰期』。",
+      "已經衰變掉的比例": "衰變掉的比例是 1 減掉剩餘比例，也不是指數；t／T 代表經過幾個半衰期。",
+      "一個半衰期有多長": "一個半衰期的長度是 T（分母）；t／T 是總時間裡有幾個 T，也就是經過幾個半衰期。"
+     },
+     "answer_evidence": [
+      "c-hlc-count"
+     ],
+     "feedback": "t／T＝總時間 ÷ 一個半衰期＝經過了幾個半衰期。"
+    },
+    {
+     "question_id": "QH-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "某放射性物質半衰期 T＝5 年。經過 15 年後，它的數量剩下原來的多少？",
+     "answer": "八分之一",
+     "kp_ids": [
+      "sci.t_sub.phys-modern.half-life-calc"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-modern.half-life-calc"
+     ],
+     "options": [
+      "八分之一",
+      "四分之一",
+      "十六分之一",
+      "三分之一"
+     ],
+     "distractor_rationales": {
+      "四分之一": "四分之一是經過 2 個半衰期的量；15／5＝3 個半衰期，少數了一個，應是 (½)³＝八分之一。",
+      "十六分之一": "十六分之一是 4 個半衰期 (½)⁴；15／5＝3 個半衰期，多數了一個，應是八分之一。",
+      "三分之一": "把『3 個半衰期』誤當成除以 3；其實是乘 3 次二分之一 (½)³＝八分之一，不是 1／3。"
+     },
+     "answer_evidence": [
+      "c-hlc-count"
+     ],
+     "feedback": "n＝15／5＝3，剩 (½)³＝八分之一。"
+    },
+    {
+     "question_id": "QH-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "測量發現某樣本只剩下原來的「十六分之一」。它總共經過了幾個半衰期？",
+     "answer": "4 個半衰期",
+     "kp_ids": [
+      "sci.t_sub.phys-modern.half-life-calc"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-modern.half-life-calc"
+     ],
+     "options": [
+      "4 個半衰期",
+      "8 個半衰期",
+      "16 個半衰期",
+      "5 個半衰期"
+     ],
+     "distractor_rationales": {
+      "8 個半衰期": "8 個半衰期會剩 (½)⁸＝256 分之一，太少了；十六分之一＝(½)⁴，是 4 個半衰期。",
+      "16 個半衰期": "把分母的 16 直接當成半衰期數；其實要問 (½) 的幾次方等於十六分之一，是 4 次（2⁴＝16），不是 16 個。",
+      "5 個半衰期": "5 個半衰期剩 (½)⁵＝三十二分之一；十六分之一是 (½)⁴，只經過 4 個半衰期。"
+     },
+     "answer_evidence": [
+      "c-hlc-formula"
+     ],
+     "feedback": "十六分之一＝(½)⁴，所以經過 4 個半衰期（2⁴＝16）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案、說明自己判斷（衰變公式 N＝N₀·(½)^(t/T)；先數經過幾個半衰期 n＝t／T，再取 (½)ⁿ；n＝1／2／3／4 分別剩二分之一／四分之一／八分之一／十六分之一；t＝3T 剩 N₀／8）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
