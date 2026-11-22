@@ -4266,3 +4266,6 @@ phys-circ strand 全數 13 單元完成（5-clean + DONE-GATE + figure 4-role �
 - **archimedes（7/13，t_mid 會考）完成**：阿基米德原理 浮力＝排開流體重＝ρ流體×g×V排開、V排開＝浸入體積、與視重差同一浮力；排開 300 公克水 g=10→浮力 3 N。5-clean（frozen 067c0fda，r1–r5 clean@L3）＋DONE-GATE（scan PASS/5-clean 778頁 PASS/figure 四角色簽核）＋push 57f3e0041。
   - r1 major：recap(4) 混淆「排開更多流體(體積)」與密度（越密只更重不更多體積，易種迷思）→改以重量表述。r4 minor：阿基米德洗澡 Eureka 軼事當確定史實（傳說，Vitruvius 後兩百年記載）→改「相傳…得到靈感」。各 void 重凍。
   - **phys-fluid 7/13**；下一 float-condition(8/13 浮沉條件 密度判準)。
+- **float-condition（8/13，t_mid 會考）完成**：浮沉比密度 ρ物 vs ρ流——ρ物＜ρ流 浮、ρ物＞ρ流 沉、ρ物＝ρ流 懸浮；原因＝完全浸入時浮力＝ρ流gV、重＝ρ物gV 體積相同故比密度＝比浮力與重量。R15 gloss 密度（density）。5-clean（frozen 27c1ed6d）＋DONE-GATE（scan PASS/5-clean 779頁 PASS/figure 四角色簽核：浮跨水面、懸浮全浸不觸底、沉觸底）＋push。
+  - r1 深輪 minor（readability，五鏡 panel 判 DEFECT）：「最後部分浮出液面靜止」花園小徑歧義（「最後部分」易讀成名詞片語 the final portion），claim/_note/QF-mcq-2 措辭不一致 → 全改「最後會有一部分浮出液面、靜止在水面」；void 2輪重凍 27c1ed6d。(banked lesson：緊縮子句缺頓號造成名詞片語誤讀，且 claim/MCQ 須與較清楚的 teach 措辭一致。)
+  - **phys-fluid 8/13**；下一 pascal(9/13 帕斯卡原理與液壓機)。
