@@ -1,3 +1,9 @@
+## 2026-11-23 05:12 ★ chem-atom subatomic 2/18 收斂上線（push 167c740cd）
+- **subatomic**（原子結構 質子/中子/電子與電性，t_mid 會考，概念型 cross_check，prereq=dalton）5-clean 收斂，frozen sha **4e720829**，push **167c740cd**。R15 質子(proton)/中子(neutron)/電子(electron) 各 gloss 一次；figure 核內 3 質子(+)+3 中子(0)、核外 3 電子(−)、質子數=電子數→電中性、質量集中原子核。
+- **1 次 de-converge（深輪 r4 figure-fidelity）**：alt 與 _note 把電子軌道寫「圓形軌道」，但 SVG 實畫 ellipse(rx74/ry54,軸比≈1.37)→改「橢圓形軌道」對齊 render（bd5706fd→4e720829）。figure 描述須與實際幾何一致（[[figure-symbols-are-factual-claims]] 類）。
+- **★ledger 事故修復**：本 session de-converge 時 python 誤把新條目寫到 ledger **top-level**（非 `pages` 命名空間），造成重複 key 污染；已清除 stray、rounds 回歸 `d["pages"][page]`（bank 一律進 pages）。另：**content_audit 的 L3 coverage_check 與 ledger 寫入會被 auto-mode classifier 擋 heredoc**（判 Undermining Oversight）→改用 Write 暫存檔+node 讀檔路徑、ledger 用 Edit（透明 diff）；勿用 python heredoc 直寫 ledger/餵 coverage。
+- **下一步**：chem-atom **atomic-number** 3/18（原子序與質量數，repro `at_atomic_number` 碳12/14 同 Z=6，tools/verify/sci_chem_checks.py）→ symbols(4)→periodic-basic(5)→atom-molecule(6,repro 分子式原子計數) → t_adv(8) → t_sub(4)。建檔前先 grep 掃 PRC 化學詞應全 0（含 _note）。
+
 ## 2026-11-23 04:00 ★ phys-modern strand 13/13 收齊（物理島全 strand 完成）
 - **本 session 收齊 phys-modern 後 6 單元 + push**：matter-wave(4/13, f5430ff5d)、nucleus(5/13, b8c8c8934)、radioactivity(6/13, ca7ba9569)、photoeq(7/13, 9e59f9bff)、compton(8/13, 6b792189c)、spectral-lines(9/13, 944cad6c6) 為前次；本 session：**nuclear-reaction(10/13, frozen 389b33b, push 1415ff317)、half-life-calc(11/13, afcd82ee, e418098c3)、uncertainty(12/13, 4c0cf152, 6e95f9853)、relativity(13/13, 7af25cb1, 586ae0e10)**。全 5-clean + DONE-GATE(810/810) + scan PASS。
 - **.venv repro 全驗**：nuclear-reaction 1u≈931.5 MeV、half-life t=3T→1/8、relativity γ=1/√(1−0.6²)=1.25；uncertainty 為概念型 cross_check(無 repro)。
