@@ -4282,3 +4282,9 @@ phys-circ strand 全數 13 單元完成（5-clean + DONE-GATE + figure 4-role �
   - **phys-fluid 13/13** bernoulli 白努利原理與應用（t_enrich 超綱）5-clean 收斂，frozen 0e95e843，commit cf5d5e282。事實錨：OpenStax University Physics 14.6＋UCLA cross_check（xcheck-sol-batch1-23）——穩定/不可壓縮/可忽黏滯、沿流線 P＋½ρv²＋ρgh＝定值；同高度流速快→靜壓小。數值 .venv 驗：ρ=1000、v₁=2、v₂=6→ΔP＝½ρ(v₂²−v₁²)＝16000 Pa。figure：Venturi＋兩測壓管（粗段慢液柱高＝P高、細段快液柱矮＝P低，液柱高度作定性編碼不表絕對數值）。四角色簽核 PASS、pre-freeze gates 全綠、無建置期 de-converge（一次凍結即 5/5 乾淨）。
   - **★phys-fluid strand 13/13 完結**（float-sink/pressure-def/solid-pressure/liquid-pressure/atm-pressure/buoyancy-idea/archimedes/float-condition/pascal/buoyancy-calc/float-quant/continuity/bernoulli）。物理島 strand 完成數：9（circ/em/energy/estatic/force/fluid/heat/kin/optics/wave）＋ wave…等，實為 10 strand 完成。剩 phys-meas(13)、phys-modern(13) 未起。
   - **下一步**：phys-meas strand（13 KP，測量與單位/估計/誤差等），從根往上建；接著 phys-modern(13)。
+
+## 2026-11-22（續2）phys-meas strand 推進（phys-fluid 完結後）
+- **phys-meas 1/13** measure-tools（用適當工具測量 長度/質量/時間/溫度, t_base 根）5-clean 收斂 frozen b45f2077, push 0f5bdd63d。figure 2×2 四工具↔量配對。r1 一 rawFinding「質量=東西有多重」panel 一致 not-a-defect（t_base 兒童化 gloss、質量/重量超綱、teach#4已補）。
+- **phys-meas 2/13** unit-idea（量需要單位、常見生活單位, t_base）5-clean 收斂 frozen 0e6eb615, push 23e4c1dfb。兩次 de-converge：(a) note-metadata _note figure 自檢與 SVG 不符（左卡大字15非鉛筆長15）；(b) 溫度值「25 攝氏度」PRC 語序→臺灣「攝氏溫度」/「攝氏 25 度」全9處。
+- **phys-meas 3/13** si-base（SI 基本量與基本單位, t_mid 會考）5-clean 收斂 frozen 9b1c0694, push（下一commit）。figure 5列量↔單位↔符號表。**兩次 de-converge（量/單位層級混淆）**：caption/SVG footer/alt/can_do/recap/selfeval 把「導出量由基本單位組合」「速度＝公尺／秒」(量=單位)——第一次只修 caption、漏掃其他欄位（r1/r2 再抓 SVG+alt+can_do），第二次掃全檔一致。**強化教訓 misconception-fix-must-sweep-all-fields：修概念錯必一次掃 claim/teach/figure-svg/alt/caption/_note/can_do/recap/selfeval 全欄位。**
+- **下一步**：phys-meas unit-convert(4/13 單位換算含詞頭 k/m/μ, t_mid 會考)；接 sci-notation→sigfig-read→err-type→accuracy-precision→scalar-vector→dimension→sigfig-ops→mean-sd→err-propagation。
