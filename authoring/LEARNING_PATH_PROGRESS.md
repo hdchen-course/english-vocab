@@ -4263,3 +4263,6 @@ phys-circ strand 全數 13 單元完成（5-clean + DONE-GATE + figure 4-role �
 - **atm-pressure（5/13，t_mid 會考）完成**：大氣壓力源於空氣重量、標準 1.013×10⁵ Pa＝760 mmHg、托里切利水銀柱實驗 P＝ρ_Hg·g·h、為何用水銀。5-clean（frozen 496c1a65）+DONE-GATE+push 65e4fd493。r1 抓 figure 公式量綱不一致（×76公分 vs SI→10⁷Pa）major→改 0.76公尺。
 - **buoyancy-idea（6/13，t_mid 會考）完成**：浮力向上、成因＝液體壓力深度差（底面向上壓力>頂面向下壓力）、視重差量法 F＝W−W′。5-clean（frozen 918da118）+DONE-GATE+push。r1 抓 _note 『』逐字引述與 SVG/alt/caption 不符 major→改逐字一致。
 - **phys-fluid strand 進度：6/13 完成**（float-sink/pressure-def/solid-pressure/liquid-pressure/atm-pressure/buoyancy-idea）；下一 archimedes(7/13 阿基米德原理)。
+- **archimedes（7/13，t_mid 會考）完成**：阿基米德原理 浮力＝排開流體重＝ρ流體×g×V排開、V排開＝浸入體積、與視重差同一浮力；排開 300 公克水 g=10→浮力 3 N。5-clean（frozen 067c0fda，r1–r5 clean@L3）＋DONE-GATE（scan PASS/5-clean 778頁 PASS/figure 四角色簽核）＋push 57f3e0041。
+  - r1 major：recap(4) 混淆「排開更多流體(體積)」與密度（越密只更重不更多體積，易種迷思）→改以重量表述。r4 minor：阿基米德洗澡 Eureka 軼事當確定史實（傳說，Vitruvius 後兩百年記載）→改「相傳…得到靈感」。各 void 重凍。
+  - **phys-fluid 7/13**；下一 float-condition(8/13 浮沉條件 密度判準)。
