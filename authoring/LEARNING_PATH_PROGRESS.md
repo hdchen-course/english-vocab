@@ -4241,3 +4241,17 @@ phys-circ strand t_adv 9 單元全數 5-clean + DONE-GATE + figure 4-role 簽核
 - circular-idea(t_mid會考)、angular-speed、centripetal-accel、centripetal-force、vertical-circle、kepler、gravitation、g-variation、satellite(皆 t_adv學測)。
 - HEAD 24fa68f74。phys-circ 9/13（剩 t_sub 4：shm-link/kepler3-derive/orbit-energy/grav-pe 分科-物理）。
 - 深輪抓到並修正的缺陷類：note-metadata 位置描述(移 figure 元素後要同步)、術語漂移(半徑vs半長軸)、figure 幾何事實(太陽須在真實焦點 c=√(rx²−ry²)、地表點須錨地球邊緣)、數值 distractor factor 必須真能算出該選項值(19.6=9.8×2 非×4)、等面積視覺難誠實呈現時改用其他正確編碼。
+
+## 2026-11-22 phys-circ strand 13/13 完成（t_sub 分科-物理 4 單元，本 session 自主 loop）
+phys-circ strand 全數 13 單元完成（5-clean + DONE-GATE + figure 4-role 簽核 + commit/push）：
+- t_sub 分科-物理 4 單元：shm-link(圓周運動與簡諧運動關係, 4bf3360ee)、kepler3-derive(克卜勒第三定律圓軌道推導 T²=4π²r³/GM, 4379de5c9)、grav-pe(重力位能−GMm/r與重力位, 5d6cc1017)、orbit-energy(軌道能量E=−GMm/2r/束縛能/能量法脫離速度, c3b267938)。
+- HEAD c3b267938。phys-circ 13/13 整條 strand DONE。
+- 本輪深輪抓到並修正的缺陷類（banked lessons）：
+  (1) 同一公式檔內記號一致(mv² vs m v² 空格)、質量 vs 口語「多重」用詞一致(重力單元尤忌)。
+  (2) _note 色名須與 SVG fill + alt 一致(橘色 vs #c9a24b 金色)。
+  (3) teach 以前置單元符號開場(T²∝a³ 半長軸 a)卻推得另一符號(T²∝r³)時，須補 a=r 特例銜接，否則讀者看不出推得的即是該定律。
+  (4) 數值 distractor 的「標題路徑」必須真能算出該選項值(2GMm/r 標「動能+位能大小相加」錯，實為 3GMm/(2r))。
+  (5) distractor_rationale key 必與 option 字串逐字一致(全形逗號 vs 冒號→綁定失敗、該選項無回饋)。
+  (6) 懸在基準線下方的負值 bar，bracket 跨距描述須指 bar 底端(E 值)非頂端(與基準線重合=零高度)。
+  (7) teach「前面學過 X」若 X 只在非祖先 sibling 單元教，須把該單元加入 prerequisites(orbit-energy 加 satellite)。
+- 下一步：phys-fluid strand 13 單元(未開始)：float-sink(t_base)→t_mid 8 單元(壓力/浮力/阿基米德/帕斯卡)→t_adv 2→t_enrich 2(連續方程/白努利)。接著 phys-meas、phys-modern。
