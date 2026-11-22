@@ -4255,3 +4255,8 @@ phys-circ strand 全數 13 單元完成（5-clean + DONE-GATE + figure 4-role �
   (6) 懸在基準線下方的負值 bar，bracket 跨距描述須指 bar 底端(E 值)非頂端(與基準線重合=零高度)。
   (7) teach「前面學過 X」若 X 只在非祖先 sibling 單元教，須把該單元加入 prerequisites(orbit-energy 加 satellite)。
 - 下一步：phys-fluid strand 13 單元(未開始)：float-sink(t_base)→t_mid 8 單元(壓力/浮力/阿基米德/帕斯卡)→t_adv 2→t_enrich 2(連續方程/白努利)。接著 phys-meas、phys-modern。
+
+## 2026-11-22（續）phys-fluid strand 推進
+- **solid-pressure（3/13，t_mid 會考）完成**：固體壓力沿施力方向作用於實際接觸面、受力面積＝接觸面積、同重量面積越小壓力越大、P＝F／A。5-clean 收斂（frozen 7d5194da）＋DONE-GATE 綠＋figure 四角色簽核。push 6dfb070f7。
+  - r1 抓 2 defect 已修：(a) blocker 兩 F（體重）箭頭 render 不等長（左32px/右46px）牴觸『兩箭頭等長』同重量前提 → 右改 y74→106=32px 等長（memory sci-equal-force-pair 更新「算px長度勿目視」）；(b) minor QS-mcq-3 distractor 混用 ÷ 與全檔全形／ → 統一全形／。
+- **liquid-pressure（4/13，t_mid 會考）建置中**：液體壓力 P＝ρgh、三特性（只跟密度深度有關/深越大/各向同性）、連通管液面等高。R15 gloss 密度（density）。figure 左半深度壓力遞增＋右半連通管等高。frozen 91ceecf0，content_audit 進行中。
