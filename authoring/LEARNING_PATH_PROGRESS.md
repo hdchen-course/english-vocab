@@ -4275,3 +4275,6 @@ phys-circ strand 全數 13 單元完成（5-clean + DONE-GATE + figure 4-role �
 - **buoyancy-calc（10/13，t_adv 學測）完成**：完全浸入三力平衡 W′+F=W→浮力 F=W−W′；浮力定量 F=ρ流gV；反推 V=F/(ρ流g)、ρ物=W/(gV)、完全浸入 ρ物/ρ流=W/(W−W′)。R15 gloss 視重（apparent weight）。W=8 W′=5→F=3 N、V=300 cm³、ρ物/ρ水=8/3≈2.7（.venv 驗算）。5-clean（frozen 1fd1396f）＋DONE-GATE（scan PASS/5-clean 781頁 PASS/figure 四角色簽核：三力箭頭8:5:3、力平衡5+3=8）＋push。
   - 深輪抓 3 真缺陷（含兩次重凍）：① r1 blocker QC-mcq-4 distractor 3／8 標「約0.6倍」算術錯（=0.375≈0.4）→0.4；② figure 視重箭頭26px→25px（精確8:5:3）；③ teach「2.7倍密」中文生硬→「物體的密度約是水的2.7倍」。(banked lessons：distractor 十進位須與括號分數一致、figure 箭頭長度按整數px比例、避免「倍+性質字」黏合。)
   - **phys-fluid 10/13**；下一 float-quant(11/13 浮體/沉體/懸浮定量分析, t_adv 學測)。
+- **float-quant（11/13，t_adv 學測）完成**：浮體靜止浮力＝重量→V排／V物＝ρ物／ρ流（浸入比例＝密度比）、露出＝1−ρ物／ρ流；沉體 ρ物＞ρ流 沉底、懸浮 ρ物＝ρ流 全浸可停任一深度。木塊 0.6→浸入60%露出40%、冰 0.92→浸入92%（.venv 驗算）。5-clean（frozen 859696fd）＋DONE-GATE（scan PASS/5-clean 782頁 PASS/figure 四角色簽核：浸入段60%>露出段40%跨水面）＋push。
+  - r1 深輪 major：_note 自述「直接前置」含 archimedes 但 prerequisites 欄只列 float-condition+buoyancy-calc（note-metadata-must-match-file）→ _note 改述 archimedes 為遞移前置、不列入；void 2輪重凍。figure 建置期修水面標籤與露出標籤重疊。(banked lesson：_note 自述的直接前置清單必與 prerequisites 欄位一致；_note 計入 page content_sha。)
+  - **phys-fluid 11/13**；下一 continuity(12/13 連續方程 A·v=定值, t_enrich)。
