@@ -4269,3 +4269,6 @@ phys-circ strand 全數 13 單元完成（5-clean + DONE-GATE + figure 4-role �
 - **float-condition（8/13，t_mid 會考）完成**：浮沉比密度 ρ物 vs ρ流——ρ物＜ρ流 浮、ρ物＞ρ流 沉、ρ物＝ρ流 懸浮；原因＝完全浸入時浮力＝ρ流gV、重＝ρ物gV 體積相同故比密度＝比浮力與重量。R15 gloss 密度（density）。5-clean（frozen 27c1ed6d）＋DONE-GATE（scan PASS/5-clean 779頁 PASS/figure 四角色簽核：浮跨水面、懸浮全浸不觸底、沉觸底）＋push。
   - r1 深輪 minor（readability，五鏡 panel 判 DEFECT）：「最後部分浮出液面靜止」花園小徑歧義（「最後部分」易讀成名詞片語 the final portion），claim/_note/QF-mcq-2 措辭不一致 → 全改「最後會有一部分浮出液面、靜止在水面」；void 2輪重凍 27c1ed6d。(banked lesson：緊縮子句缺頓號造成名詞片語誤讀，且 claim/MCQ 須與較清楚的 teach 措辭一致。)
   - **phys-fluid 8/13**；下一 pascal(9/13 帕斯卡原理與液壓機)。
+- **pascal（9/13，t_mid 會考）完成**：帕斯卡原理（密閉流體壓力不減弱傳遞）＋液壓機 F2＝F1×（A2／A1）力放大＋省力不省功 F1d1＝F2d2（體積守恆 A1d1＝A2d2）。R15 gloss 帕斯卡原理（Pascal's principle）。A1=10 F1=50 A2=200→P=5→F2=1000 N（.venv 驗算）。5-clean（frozen 1e85387e）＋DONE-GATE（scan PASS/5-clean 780頁 PASS/figure 四角色簽核）＋push。
+  - 建置期自審抓 figure 缺陷：F2（大活塞輸出力）箭頭 render 朝下且比 F1 短 → 應朝上（輸出向上）且較長（F2＞F1 量值編碼）；修 SVG 後才簽核。(banked lesson：液壓機輸出力箭頭方向＝向上、長度須＞輸入力 F1。)
+  - **phys-fluid 9/13**；下一 buoyancy-calc(10/13 浮力與視重定量計算, t_adv 學測)。
