@@ -1,0 +1,211 @@
+{
+ "_note": "自然島 物理-電磁（phys-em）strand t_sub 單元（磁通量與感應電動勢的定量計算）。知識點 sci.t_sub.phys-em.flux-emf-calc、tier＝t_sub、exam＝分科-物理。直接前置＝faraday-law（t_adv 已教 Φ＝BA 垂直式與 |ε|＝N×ΔΦ／Δt），prerequisites 欄唯一一筆；本單元把磁通量推廣到含夾角的一般式、並加入動生電動勢的定量計算。全繁體零簡體零 PRC 詞（中國，非大陸）。中文授課無音檔。★R15 術語：本單元新術語一——動生電動勢（motional electromotive force）；只在 can_do 內首次出現以中文（英文）gloss 一次，本 _note 這一行宣告一次。磁通量、感應電動勢、磁場、面積、線圈、磁力線、速度 皆前置或日常用語不 gloss；韋伯（Wb）、伏特（V）為單位符號不 gloss；法線在內文以『垂直於面的線』說明、不加英文括註。★符號與定義（全檔一致）：一般磁通量 Φ＝BA cosθ，θ 是磁場 B 的方向與線圈平面法線（垂直於面的線）之間的夾角；B 垂直穿過面（θ＝0）時 Φ＝BA 為最大，B 與面平行（θ＝90°）時 Φ＝0。動生電動勢：一根長度 L 的導線，以速度 v 垂直切割磁場 B 運動（B、L、v 三者互相垂直）時，導線兩端產生動生電動勢 ε＝BLv；它來自法拉第定律——導線掃過面積的變化率 ΔA／Δt＝Lv，故 ΔΦ／Δt＝B×Lv＝BLv。若導線沿磁力線方向運動（不切割磁場、磁通量不變），則不產生動生電動勢。★數值已以 .venv 驗算（python）：Φ＝BA cosθ 於 B＝0.4 T、A＝0.05 m²、θ＝60° 時＝0.4×0.05×0.5＝0.01 Wb（θ＝0 時最大＝0.02 Wb、θ＝90° 時＝0）；ε＝BLv 於 B＝0.5 T、L＝0.2 m、v＝3 m／s 時＝0.3 V。practice 題號用 QF；QF-mcq-2 以 B＝0.4、A＝0.05、θ＝60° 為例正解 0.01 Wb，三 distractor 相異誤算（皆 .venv 核過）：0.02 Wb＝漏乘 cosθ（用 θ＝0 的 Φ＝BA）、0.017 Wb＝誤用 sinθ（sin60°≈0.866）、0.04 Wb＝把 cosθ 拿來除而非乘（0.02／0.5）。QF-mcq-3 以 B＝0.5、L＝0.2、v＝3 為例正解 0.3 V，三 distractor：0.1 V＝漏乘 v（只算 BL）、0.6 V＝漏乘 B（只算 Lv）、1.5 V＝漏乘 L（只算 Bv）。★figure 自檢：單一面板『動生電動勢 ε＝BLv：導線切割磁場』。畫上下兩條水平導軌、左端一個電阻（綠色方框）、中間一根直立導線（橘色、標長度 L），導線上有向右的速度箭頭 v；導軌之間畫數個『圓中打叉』符號（⊗）代表磁場射入頁面、標 磁場 B（⊗ 射入頁面）；⊗ 不碰導線與導軌、彼此不重疊；左端兩段接線把電阻接到上下導軌、閉合迴路；右下標公式 ε＝BLv。所有箭頭單向、不壓線不裁切。alt 完整涵蓋 SVG 全部標籤文字（散文、非逐字）。★figure 符號即事實：⊗＝磁場射入頁面；導線以 v 向右切割磁場、長度 L、ε＝BLv。practice 四答案＝{B 垂直穿過線圈面（θ＝0）時（Q1 Φ 何時最大）, 0.01 Wb（Q2 Φ 數值）, 0.3 V（Q3 ε 數值）, 不會產生動生電動勢（Q4 導線沿磁力線方向運動）}；MCQ options bare、兩兩相異、長度均衡；distractor rationale 各寫清為何錯。claim kind＝fact。figure-only example 無 body。定義不得反轉：Φ＝BA cosθ（θ＝0 最大、θ＝90° 為零）、ε＝BLv（三者互相垂直）、沿磁力線運動無電動勢。本註解內分隔用頓號、「或」或全形斜線「／」，不用半形 ASCII 斜線。",
+ "page": "sci_phys_em_flux_emf_calc.html",
+ "units": [
+  {
+   "unit_id": "sci.t_sub.phys-em.flux-emf-calc",
+   "title_zh": "磁通量與感應電動勢的定量計算",
+   "can_do": "我會用一般式 Φ＝BA cosθ 算磁通量：θ 是磁場方向與面的垂直線（法線）的夾角，B 垂直穿過面（θ＝0）時 Φ＝BA 最大、B 與面平行（θ＝90°）時 Φ＝0。我會算動生電動勢（motional electromotive force）：長度 L 的導線以速度 v 垂直切割磁場 B（三者互相垂直）時 ε＝BLv，因為導線掃過面積的變化率 ΔA／Δt＝Lv，所以 ΔΦ／Δt＝BLv。我也知道若導線沿磁力線方向運動、不切割磁場，就不會產生動生電動勢。",
+   "situation_group": "磁與電：看不見的力",
+   "subject": "sci",
+   "strand": "phys-em",
+   "est_minutes": 15,
+   "knowledge_point_ids": [
+    "sci.t_sub.phys-em.flux-emf-calc"
+   ],
+   "prerequisites": [
+    "sci.t_adv.phys-em.faraday-law"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-fe-flux",
+     "text": "一般磁通量 Φ＝BA cosθ，θ 是磁場 B 的方向與面的法線（垂直於面的線）之間的夾角；B 垂直穿過面（θ＝0）時 Φ＝BA 為最大，B 與面平行（θ＝90°）時 Φ＝0。",
+     "kind": "fact",
+     "source_refs": [
+      "磁通量一般式 Φ=BA cosθ（分科物理）"
+     ],
+     "verification_ref": "Φ=BA cosθ、θ 為 B 與面法線夾角＝電磁學標準定義（教科書 cross_check；B=0.4 A=0.05 θ=60°→0.01 Wb 以 .venv 驗算）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-fe-motional",
+     "text": "動生電動勢：長度 L 的導線以速度 v 垂直切割磁場 B 運動（B、L、v 三者互相垂直）時，導線兩端產生 ε＝BLv；因為導線掃過面積的變化率 ΔA／Δt＝Lv，所以 ΔΦ／Δt＝BLv。",
+     "kind": "fact",
+     "source_refs": [
+      "動生電動勢 ε=BLv（分科物理）"
+     ],
+     "verification_ref": "動生電動勢 ε=BLv（B、L、v 互相垂直）＝電磁學標準結果、由 ε=ΔΦ/Δt 導出（教科書 cross_check；B=0.5 L=0.2 v=3→0.3 V 以 .venv 驗算）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-fe-nocut",
+     "text": "若導線沿磁力線方向運動、不切割磁場（掃過的磁通量不變、ΔΦ＝0），就不會產生動生電動勢。",
+     "kind": "fact",
+     "source_refs": [
+      "切割磁力線才有動生電動勢（分科物理）"
+     ],
+     "verification_ref": "動生電動勢來自切割磁力線（ΔΦ/Δt≠0）；沿磁力線運動 ΔΦ=0 故 ε=0＝電磁學標準結果（教科書 cross_check）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-em.flux-emf-calc"
+     ],
+     "body": "上一課的法拉第定律用 Φ＝BA（B 垂直穿過面）和 |ε|＝N×ΔΦ／Δt。這一課做兩件定量的事：一是把磁通量推廣到「有夾角」的一般式，二是算一根導線切割磁場時的動生電動勢。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-em.flux-emf-calc"
+     ],
+     "body": "① 一般磁通量 Φ＝BA cosθ：θ 是磁場 B 的方向與「面的法線」（垂直於面的那條線）的夾角。B 垂直穿過面時 θ＝0、cosθ＝1，Φ＝BA 最大；B 與面平行時 θ＝90°、cosθ＝0，Φ＝0。例如 B＝0.4 T、A＝0.05 m²、θ＝60°，Φ＝0.4×0.05×cos60°＝0.4×0.05×0.5＝0.01 Wb。② 動生電動勢：一根長度 L 的導線以速度 v 垂直切割磁場 B（B、L、v 三者互相垂直），兩端會產生 ε＝BLv。道理是導線每秒掃過的面積是 Lv，磁通量變化率 ΔΦ／Δt＝B×Lv＝BLv。例如 B＝0.5 T、L＝0.2 m、v＝3 m／s，ε＝0.5×0.2×3＝0.3 V。看下面的圖，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_sub.phys-em.flux-emf-calc"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 340 185' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='8' y='14' font-size='9.5' fill='#2563a6' font-weight='bold'>動生電動勢 ε＝BLv：導線切割磁場</text><line x1='40' y1='55' x2='300' y2='55' stroke='#444' stroke-width='1.4'/><line x1='40' y1='130' x2='300' y2='130' stroke='#444' stroke-width='1.4'/><line x1='40' y1='55' x2='40' y2='78' stroke='#444' stroke-width='1.4'/><line x1='40' y1='106' x2='40' y2='130' stroke='#444' stroke-width='1.4'/><rect x='34' y='78' width='12' height='28' fill='none' stroke='#2f6f54' stroke-width='1.6'/><line x1='180' y1='55' x2='180' y2='130' stroke='#b5651d' stroke-width='3.4'/><text x='150' y='50' font-size='8' fill='#b5651d'>導線（長 L）</text><line x1='186' y1='92' x2='232' y2='92' stroke='#c0392b' stroke-width='1.6' marker-end='url(#mv)'/><text x='192' y='86' font-size='8' fill='#c0392b'>速度 v</text><g stroke='#2563a6' stroke-width='1' fill='none'><circle cx='80' cy='78' r='5.5'/><circle cx='120' cy='78' r='5.5'/><circle cx='235' cy='78' r='5.5'/><circle cx='270' cy='78' r='5.5'/><circle cx='80' cy='112' r='5.5'/><circle cx='120' cy='112' r='5.5'/><circle cx='235' cy='112' r='5.5'/><circle cx='270' cy='112' r='5.5'/></g><g stroke='#2563a6' stroke-width='1'><line x1='76.1' y1='74.1' x2='83.9' y2='81.9'/><line x1='83.9' y1='74.1' x2='76.1' y2='81.9'/><line x1='116.1' y1='74.1' x2='123.9' y2='81.9'/><line x1='123.9' y1='74.1' x2='116.1' y2='81.9'/><line x1='231.1' y1='74.1' x2='238.9' y2='81.9'/><line x1='238.9' y1='74.1' x2='231.1' y2='81.9'/><line x1='266.1' y1='74.1' x2='273.9' y2='81.9'/><line x1='273.9' y1='74.1' x2='266.1' y2='81.9'/><line x1='76.1' y1='108.1' x2='83.9' y2='115.9'/><line x1='83.9' y1='108.1' x2='76.1' y2='115.9'/><line x1='116.1' y1='108.1' x2='123.9' y2='115.9'/><line x1='123.9' y1='108.1' x2='116.1' y2='115.9'/><line x1='231.1' y1='108.1' x2='238.9' y2='115.9'/><line x1='238.9' y1='108.1' x2='231.1' y2='115.9'/><line x1='266.1' y1='108.1' x2='273.9' y2='115.9'/><line x1='273.9' y1='108.1' x2='266.1' y2='115.9'/></g><text x='52' y='150' font-size='7.5' fill='#2563a6'>磁場 B 射入頁面（⊗）</text><text x='210' y='150' font-size='10' fill='#c0392b' font-weight='bold'>ε＝BLv</text></g><defs><marker id='mv' markerWidth='7' markerHeight='7' refX='5.5' refY='3' orient='auto'><path d='M0,0 L6,3 L0,6 Z' fill='#c0392b'/></marker></defs></svg>",
+      "alt": "一張動生電動勢的示意圖，標題「動生電動勢 ε＝BLv：導線切割磁場」。畫面有上下兩條水平導軌，左端有一個綠色方框代表電阻（連成電路）。中間有一根直立的橘色導線，上方標「導線（長 L）」；導線上有一個向右的紅色箭頭標「速度 v」，表示導線以速度 v 向右移動。上下導軌之間有八個藍色「圓中打叉」符號（⊗），代表磁場垂直射入頁面，下方標「磁場 B 射入頁面（⊗）」；⊗ 符號都不碰到導線與導軌、彼此不重疊。右下方標公式「ε＝BLv」。整張圖說明：長度 L 的導線以速度 v 垂直切割射入頁面的磁場 B 時，兩端產生動生電動勢 ε＝BLv。",
+      "caption": "一根長度 L 的導線在導軌上以速度 v 向右移動，垂直切割射入頁面的磁場 B。導線每秒掃過的面積是 Lv，磁通量的變化率 ΔΦ／Δt＝B×Lv，所以兩端的動生電動勢 ε＝BLv。B、L、v 三者互相垂直時這個式子才成立；若導線不切割磁場（沿磁力線方向動），磁通量不變，就沒有動生電動勢。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.phys-em.flux-emf-calc"
+     ],
+     "body": "最後練「磁通量與動生電動勢的計算」。重點：(1) 一般磁通量 Φ＝BA cosθ，θ＝0（B 垂直穿過面）時最大、θ＝90° 時為零；(2) 動生電動勢 ε＝BLv（B、L、v 互相垂直）；(3) 式子來自 ΔΦ／Δt＝B×Lv；(4) 沿磁力線方向運動、不切割磁場，就沒有動生電動勢。小提醒：Φ 的夾角是跟「面的法線」比，不是跟面本身比。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QF-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "磁通量 Φ＝BA cosθ（θ 是磁場與面的法線的夾角），在下列哪種情形下磁通量最大？",
+     "answer": "磁場垂直穿過線圈面（θ＝0）時",
+     "kp_ids": [
+      "sci.t_sub.phys-em.flux-emf-calc"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-em.flux-emf-calc"
+     ],
+     "options": [
+      "磁場垂直穿過線圈面（θ＝0）時",
+      "磁場與線圈面平行（θ＝90°）時",
+      "磁場與法線夾 45 度（θ＝45°）時",
+      "磁通量與角度無關、永遠一樣大"
+     ],
+     "distractor_rationales": {
+      "磁場與線圈面平行（θ＝90°）時": "θ＝90° 時 cosθ＝0，Φ＝0 反而最小；此時磁場不穿過面。",
+      "磁場與法線夾 45 度（θ＝45°）時": "cos45°≈0.707 小於 1，比 θ＝0 時小；最大是 θ＝0。",
+      "磁通量與角度無關、永遠一樣大": "Φ＝BA cosθ 明確隨 θ 改變；θ 從 0 變到 90° 時 Φ 從最大變到零。"
+     },
+     "answer_evidence": [
+      "c-fe-flux"
+     ],
+     "feedback": "Φ＝BA cosθ，θ＝0（B 垂直穿過面、cosθ＝1）時磁通量最大＝BA。"
+    },
+    {
+     "question_id": "QF-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "磁場 B＝0.4 T 與一個面積 A＝0.05 m² 的線圈面，B 與面的法線夾角 θ＝60°。通過線圈的磁通量 Φ 約為多少？",
+     "answer": "0.01 Wb",
+     "kp_ids": [
+      "sci.t_sub.phys-em.flux-emf-calc"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-em.flux-emf-calc"
+     ],
+     "options": [
+      "0.01 Wb",
+      "0.02 Wb",
+      "0.017 Wb",
+      "0.04 Wb"
+     ],
+     "distractor_rationales": {
+      "0.02 Wb": "漏乘 cosθ（直接用 θ＝0 的 Φ＝BA＝0.4×0.05）才會得到 0.02 Wb；要再乘 cos60°＝0.5。",
+      "0.017 Wb": "誤用 sinθ（sin60°≈0.866）才會得到約 0.017 Wb；一般式用的是 cosθ。",
+      "0.04 Wb": "把 cosθ 拿來『除』而非『乘』（0.02／0.5）才會得到 0.04 Wb；公式是乘以 cosθ。"
+     },
+     "answer_evidence": [
+      "c-fe-flux"
+     ],
+     "feedback": "Φ＝BA cosθ＝0.4×0.05×cos60°＝0.4×0.05×0.5＝0.01 Wb。"
+    },
+    {
+     "question_id": "QF-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "一根長度 L＝0.2 m 的導線，以速度 v＝3 m／s 垂直切割 B＝0.5 T 的磁場（三者互相垂直）。它產生的動生電動勢約為多少？",
+     "answer": "0.3 V",
+     "kp_ids": [
+      "sci.t_sub.phys-em.flux-emf-calc"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-em.flux-emf-calc"
+     ],
+     "options": [
+      "0.3 V",
+      "0.1 V",
+      "0.6 V",
+      "1.5 V"
+     ],
+     "distractor_rationales": {
+      "0.1 V": "漏乘速度 v（只算 B×L＝0.5×0.2）才會得到 0.1 V；要再乘 v＝3。",
+      "0.6 V": "漏乘磁場 B（只算 L×v＝0.2×3）才會得到 0.6 V；要再乘 B＝0.5。",
+      "1.5 V": "漏乘導線長 L（只算 B×v＝0.5×3）才會得到 1.5 V；要再乘 L＝0.2。"
+     },
+     "answer_evidence": [
+      "c-fe-motional"
+     ],
+     "feedback": "ε＝BLv＝0.5×0.2×3＝0.3 V。"
+    },
+    {
+     "question_id": "QF-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "如果讓導線沿著磁力線的方向移動（也就是不切割磁場），結果會怎樣？",
+     "answer": "不會產生動生電動勢",
+     "kp_ids": [
+      "sci.t_sub.phys-em.flux-emf-calc"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.phys-em.flux-emf-calc"
+     ],
+     "options": [
+      "不會產生動生電動勢",
+      "會產生比垂直切割時更大的電動勢",
+      "會產生和垂直切割時相同的電動勢",
+      "電動勢會變成原來的兩倍"
+     ],
+     "distractor_rationales": {
+      "會產生比垂直切割時更大的電動勢": "沿磁力線方向不切割磁場、磁通量不變，電動勢是零而不是更大。",
+      "會產生和垂直切割時相同的電動勢": "動生電動勢要靠切割磁力線；沿磁力線方向移動掃過的磁通量不變，不會有電動勢。",
+      "電動勢會變成原來的兩倍": "沒有切割磁場就沒有磁通量變化，電動勢是零，談不上變兩倍。"
+     },
+     "answer_evidence": [
+      "c-fe-nocut"
+     ],
+     "feedback": "動生電動勢來自切割磁力線；沿磁力線方向移動時磁通量不變（ΔΦ＝0），所以 ε＝0。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案、說明自己判斷（一般磁通量 Φ＝BA cosθ、θ＝0 最大 θ＝90° 為零；動生電動勢 ε＝BLv，代入 B＝0.5 L＝0.2 v＝3 得 0.3 V；代入 B＝0.4 A＝0.05 θ＝60° 得 Φ＝0.01 Wb；沿磁力線方向運動不切割磁場則無動生電動勢）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
