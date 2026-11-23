@@ -1,3 +1,7 @@
+## 2026-11-23 15:13 ★ chem-atom model-evolution 7/18 收斂上線（push 3b5a5c16e）— 零 de-converge
+- **model-evolution**（原子模型演進：道耳頓→湯姆森→拉塞福→波耳→電子雲，t_adv 學測，科學史 cross_check，prereq=subatomic）5-clean 收斂，frozen sha **8f4f0711**，push **3b5a5c16e**。R15 原子模型/能階 各 gloss 1；figure 5 列演進表（rect+text+line 分隔、無 polygon）四角色簽核綠；人名臺灣譯名（道耳頓/湯姆森/拉塞福/波耳）、PRC/簡譯名 0。**零 de-converge**（5 列表 figure + 科學史歸屬精確，一次過）。
+- **下一步**：chem-atom t_adv 續 **electron-config** 8/18（電子組態/殼層 2n²，repro `at_electron_config` Na(11)=2,8,1，t_adv）→ valence-octet(9)→periodic-structure(10)→radius-trend(11)→ionization-trend(12)→electronegativity-trend(13)→metal-nonmetal(14) → t_sub(4: quantum-numbers/aufbau-rules/successive-ie/isoelectronic)。
+
 ## 2026-11-23 15:01 ★ chem-atom atom-molecule 6/18 收斂上線（push 5fbf45128）— chem-atom t_mid 6 單元全收
 - **atom-molecule**（分子與分子式、由分子式數原子，t_mid 會考，repro `at_atom_molecule` H₂O=3/C₆H₁₂O₆=24，prereq=symbols）5-clean 收斂，frozen sha **322b8f5f**，push **5fbf45128**。R15 分子/分子式 各 gloss 1；figure 水分子(1O+2H=3)+葡萄糖拆解(6+12+6=24) 四角色簽核綠。
 - **★2 次 de-converge（皆對抗審查真缺陷）**：(1st, r1-3 一致) QM-mcq-4「18」distractor 誤算路徑「漏算氫6+6=12」算出12≠18 → 改「只加兩項6+12或12+6漏一個6」＋ 分子定義 can_do/teach「性質」補「化學」與 claim/_note 一致（四處統一）；(2nd, r2) QM-mcq-4「72」rationale「6×12相乘又搞錯」——6×12恰=72無第二錯、「又搞錯」誤導 → 改「把前兩數相乘(6×12=72)非相加」。**教訓**：數值 distractor rationale 具體算式必須真正算出該選項值、且勿加暗示第二個錯誤的措辭（[[numeric-distractor-rationale-mechanism]]）；定義限定詞須 claim/_note/can_do/teach 四處一致。
