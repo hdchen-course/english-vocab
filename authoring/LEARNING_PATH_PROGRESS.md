@@ -1,3 +1,7 @@
+## 2026-11-23 14:13 ★ chem-atom symbols 4/18 收斂上線（push 576fd898b）
+- **symbols**（元素符號大小寫規則＋核種符號 ᴬ_Z X 左上質量數/左下原子序＋由符號讀 Z/中子A−Z/電子，t_mid 會考，表示法概念型 cross_check，prereq=atomic-number）5-clean 收斂，frozen sha **37db5e48**，push **576fd898b**。R15 元素符號/核種符號 各 gloss 1；figure ₆¹²C 核種符號四角色簽核綠；PRC/大陸 0。**零 de-converge**。distractor 教學點：CO（一氧化碳）vs Co（鈷）大小寫別。
+- **下一步**：chem-atom **periodic-basic** 5/18（週期表基本結構：週期/族、金屬/非金屬/類金屬分區，t_mid 會考）→ atom-molecule(6,repro 分子式原子計數 at_atom_molecule H₂O=3/C₆H₁₂O₆=24) → t_adv(8: model-evolution/electron-config[repro]/valence-octet/periodic-structure/radius-trend/ionization-trend/electronegativity-trend/metal-nonmetal) → t_sub(4: quantum-numbers/aufbau-rules/successive-ie/isoelectronic)。注意『週期』用『週』非 PRC『周』。
+
 ## 2026-11-23 05:53 ★ chem-atom atomic-number 3/18 收斂上線（push ce67ab29e）
 - **atomic-number**（原子序Z=質子數、質量數A=p+n、同位素=同Z異中子數，t_mid 會考，prereq=subatomic）5-clean 收斂，frozen sha **401f46cc**，push **ce67ab29e**。數值 repro `at_atomic_number` PASS（碳-12=6+6、碳-14=6+8、同 Z=6）；R15 原子序/質量數/同位素 各 gloss 1；figure 碳12/碳14 同位素對照（質子皆6、中子6 vs 8）四角色簽核綠；PRC 詞 0、大陸清零。**零 de-converge**（一次凍結即 5 連 clean）。
 - **★classifier 偶發擋 /tmp coverage 暫存 Write**：L3 改以直接 Read units.json anchor 三行（比對 reviewer 回報文字 + 深度 25/50/75%）等價驗證，免寫暫存；ledger 一律 Edit（透明）。commit 訊息避免「繞道」等字樣（會觸 Undermining-Oversight 誤擋）。
