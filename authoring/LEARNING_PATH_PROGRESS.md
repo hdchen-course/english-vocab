@@ -1,3 +1,7 @@
+## 2026-11-23 22:56 ★ chem-bond coordinate 配位共價鍵 收斂上線（push ba10dd569）— strand 6/16、零 de-converge
+- **coordinate**（配位共價鍵，t_adv 學測，概念型 cross_check 學測／OpenStax 無 repro，fact_source xcheck-sci5-0，prereq=covalent-lewis）5-clean 收斂，frozen sha **b1c781a1**，push **ba10dd569**。配位共價鍵＝也是共用一對電子但那對電子全由其中一個原子提供(另一原子只提供可接受的空位)、不像一般共價鍵兩原子各出一個；形成後與一般共價鍵完全相同、分辨不出；需提供者有孤對電子＋接受者有空位；經典例 NH₃ 的氮用孤對電子提供給 H⁺ 成銨根離子 NH₄⁺(四個 N–H 鍵完全相同)。R15 配位共價鍵(coordinate covalent bond) gloss 1；figure 兩欄兩列比較表(一般共價鍵 vs 配位共價鍵｜那對電子從哪來)四角色簽核綠；錯合物/配位數/配位子命名、路易斯酸鹼、鍵能鍵長、σ/π out-of-scope。DONE-GATE 綠（5-clean 834/834＋簡體掃描 PASS）。**零 de-converge**。NH₄⁺(多原子離子)在 t_mid out-of-scope 但 t_adv 配位鍵正課即此例。
+- **下一步**：chem-bond t_adv 續 **metallic**（金屬鍵與金屬性質：導電/延展）→ bond-polarity → molecule-polarity → vsepr → intermolecular。
+
 ## 2026-11-23 22:45 ★ chem-bond covalent-lewis 收斂上線（push 8c4376cf6）— strand 5/16、零 de-converge
 - **covalent-lewis**（共價鍵單/雙/參鍵與路易斯結構，t_adv 學測，概念型 cross_check 學測／OpenStax 無 repro，fact_source xcheck-sol-batch7-18，prereq=covalent-basic）5-clean 收斂，frozen sha **846ab265**，push **8c4376cf6**。共用 1 對＝單鍵(H₂ H–H)/2 對＝雙鍵(O₂ O=O)/3 對＝參鍵(N₂ N≡N)；路易斯結構一條線＝一對共用電子＝一個共價鍵(雙鍵兩條線、參鍵三條線)、沒共用的成對電子＝孤對電子用點表示(H₂O 氧有 2 對孤對電子)。R15 路易斯結構(Lewis structure)/孤對電子(lone pair) 各 gloss 1；單/雙/參鍵以中文表達(臺灣用『參鍵』)；figure 兩欄三列鍵種類表(鍵種類｜共用對數｜例子 H–H/O=O/N≡N)四角色簽核綠；鍵能鍵長(sigma-pi t_sub)、σ/π鍵、配位鍵、鍵極性、VSEPR、共振、形式電荷、複雜分子完整路易斯結構繪法 out-of-scope。DONE-GATE 綠（5-clean 833/833＋簡體掃描 PASS）。**零 de-converge**（r1-r5 一次連過，含深輪）。
 - **下一步**：chem-bond t_adv 續 **coordinate**（配位共價鍵）→ metallic（金屬鍵）→ bond-polarity（電負度差與鍵極性）→ molecule-polarity → vsepr → intermolecular。
