@@ -1,3 +1,8 @@
+## 2026-11-23 19:04 ★ chem-atom electronegativity-trend 13/18 收斂上線（push 8a5487f11）— 1 de-converge（比較句語感）
+- **electronegativity-trend**（電負度與電子親和力的週期趨勢：電負度無單位、沿週期左→右增大、沿族上→下減小、氟最大；電子親和力有能量單位、趨勢不規則、氯放能比氟多；兩者明確區分，t_adv 學測，概念型 cross_check＋sol-batch7 已驗，prereq=ionization-trend）5-clean 收斂，frozen sha **2a0158a7**，push **8a5487f11**。R15 電負度(electronegativity)/電子親和力(electron affinity) 各 gloss 1（臺灣用語）；figure 2 列對照表（性質｜說明：電負度列＝無單位/左→右增/上→下減/氟最大、電子親和力列＝有能量單位/趨勢不規則/氯放能比氟多）＋底部『兩者不同；電負度方向和游離能相同』四角色簽核綠；精確鮑林值/多種標度(Pauling/Mulliken)/不規則逐一成因(副殼層,t_sub)/鍵極性偶極矩(chem-bond) out-of-scope。DONE-GATE 綠（5clean 823/823 PASS＋simplified scan PASS）。
+- **★1 次 de-converge（深輪 r2 naturalness minor，translator-owned、engine confirmed）**：claim c-en-affinity『它的週期趨勢比電負度不規則』以『比』直接接否定形容詞缺程度詞、正體中文不自然且與 can_do『趨勢較不規則』/teach『不像電負度那麼單調』不一致 → 改『比電負度更不規則』(加程度詞更)；sha 2e717564→2a0158a7，前 r1 bank 作廢重跑 r1-r5 全 clean。**教訓**：比較句『比 X＋否定形容詞』需程度詞（更/還），且全檔同一概念的描述語氣要一致。
+- **下一步**：chem-atom t_adv 最後一單元 **metal-nonmetal** 14/18（金屬/非金屬/類金屬分區與性質，sol-batch7 已驗）→ t_sub(4: quantum-numbers[repro]/aufbau-rules[repro]/successive-ie/isoelectronic[repro])。
+
 ## 2026-11-23 18:49 ★ chem-atom ionization-trend 12/18 收斂上線（push 7c6292600）— 零 de-converge
 - **ionization-trend**（游離能週期趨勢：同週期左→右大致變大、同族上→下變小、與半徑相反，t_adv 學測，概念型 cross_check，prereq=radius-trend）5-clean 收斂，frozen sha **bf0e1f22**，push **7c6292600**。R15 游離能(ionization energy) gloss 1（臺灣用語非 PRC『電離能』）；figure 2 列趨勢表＋底部『與半徑相反／惰性氣體同週期最大』四角色簽核綠；『大致變大』加限定詞、同週期小例外（Be→B、N→O）因需副殼層概念列 out-of-scope（t_sub）。**零 de-converge**（_note 凍前已自檢零 ASCII 斜線，避開 radius-trend 的 note-self-rule 坑）。
 - **下一步**：chem-atom t_adv 續 **electronegativity-trend** 13/18（電子親和力與電負度的週期趨勢）→metal-nonmetal(14) → t_sub(4: quantum-numbers[repro]/aufbau-rules[repro]/successive-ie/isoelectronic[repro])。
