@@ -1,3 +1,8 @@
+## 2026-11-23 16:25 ★ chem-atom periodic-structure 10/18 收斂上線（push 506831274）— 4 de-converge（連環深輪潤飾/metadata）
+- **periodic-structure**（週期表結構：週期數＝電子層數、主族同族最外層價電子數相同→性質相似，t_adv 學測，概念型 cross_check，prereq=electron-config＋valence-octet）5-clean 收斂，frozen sha **14a45913**，push **506831274**。figure 四元素對照表（Li/Na/F/Cl｜電子組態｜週期(層數)｜價電子）四角色簽核綠；**s·p·d·f 區塊因需軌域概念（electron-config 已不教軌域）列 out-of-scope 留 t_sub**；本單元無新 R15 術語（週期/族 前置已 gloss）。
+- **★4 次 de-converge（皆深輪 7-9 agent panel 確認，淺輪 2-agent 連過時漏；內容始終正確，皆潤飾/metadata 級）**：(1)title『族＝價電子數』並列真等式易誤讀為『族數＝價電子數』編號宣稱→改『同族＝價電子數相同』；(2)teach③④漏『主族』限定詞（對過渡元素假）→補；(3) _note 稱直接前置兩個但 prerequisites 欄只列一個＋ _note figure 自檢用『』引表頭與 SVG 不符→prereq 補 electron-config（該欄排除於 content_sha）＋表頭對齊；(4)QP-mcq-1 stem『…有多少個什麼？』與選項『等於原子的…數』重複『等於』拗口→stem/選項改名詞片語。**教訓**：t_adv 概念單元的 readability/note-metadata 潤飾項會被深輪連環觸發，content-only 淺輪看不到；首凍前宜自我紅隊 title 平行結構誤讀＋限定詞一致＋_note 引號逐字＋prereq 欄 vs _note。
+- **下一步**：chem-atom t_adv 續 **radius-trend** 11/18（原子/離子半徑的週期趨勢）→ionization-trend(12)→electronegativity-trend(13)→metal-nonmetal(14) → t_sub(4: quantum-numbers[repro]/aufbau-rules[repro]/successive-ie/isoelectronic[repro])。
+
 ## 2026-11-23 15:56 ★ chem-atom valence-octet 9/18 收斂上線（push 948094981）— 零 de-converge
 - **valence-octet**（價電子與八隅體規則，t_adv 學測，概念型 cross_check＋sol-batch7 已驗，prereq=electron-config）5-clean 收斂，frozen sha **de7cb122**，push **948094981**。R15 價電子(valence electron)/八隅體規則(octet rule) 各 gloss 1；figure 價電子對照表（元素/電子組態/價電子數：Na 2,8,1→1、O 2,6→6、Ne 2,8→8八隅體滿、H 1→1滿為2，rect+text+line、無 polygon）四角色簽核綠。**★八隅體明寫為「有例外的經驗通則」（非普遍定律）、氫雙電子例外已寫**（守 sol-batch7 concern：不可寫成普遍定律；BF₃/SF₆/NO 等具體例外分子列 out-of-scope 不舉）。**零 de-converge**。
 - **★建檔教訓**：_note 裡寫 PRC 反例「价电子」本身含簡體字（价/电）會觸 scan_simplified FAIL——**反例也不能寫出被禁字形**，改成正體描述（『價電子的價一律用正體』）。
