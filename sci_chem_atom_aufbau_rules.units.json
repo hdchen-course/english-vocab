@@ -1,0 +1,200 @@
+{
+ "_note": "自然島 化學-原子與週期表（chem-atom）strand t_sub 單元（構築原理、包立不相容原理與洪德定則）。知識點 sci.t_sub.chem-atom.aufbau-rules、manifest tier＝t_sub、beyond＝false、exam＝分科-化學。注意：知識點 id 第 2 段為建立時命名痕跡（opaque），tier 一律以 manifest tier 欄（t_sub）為準。直接前置＝quantum-numbers（已知四個量子數 n、l、m、s 與軌域、副殼層、每軌域最多 2 電子自旋相反）。全繁體零簡體零 PRC 詞（指稱國家一律用『中國』；化學詞用臺灣用語：軌域、副殼層、自旋、能階；人名用臺灣譯名）。中文授課無音檔。★驗證：本單元有可程式 repro oracle＝sci_chem_checks::chem-atom.aufbau-rules（.venv 重跑，source_registry fingerprint 01ee3347ac9b6934）：構築順序 1s<2s<2p<3s<3p<4s<3d（4s 先於 3d）、洪德先各軌半填。oracle 已 PASS。★R15 術語：本單元新術語三——構築原理（Aufbau principle）、包立不相容原理（Pauli exclusion principle）、洪德定則（Hund's rule）；各只在 can_do 內首次出現以中文（English）gloss 一次，本 _note 這一行各宣告一次。軌域、副殼層、能階、自旋 為前置已 gloss 或教學用語。★概念與定義（全檔一致）：(1) 構築原理：電子一定從能量最低的軌域開始、由低而高一個一個填；常見順序是 1s、2s、2p、3s、3p、4s、3d、4p…，其中 4s 的能量比 3d 低，所以 4s 先填。(2) 包立不相容原理：同一個原子裡，沒有任何兩個電子的四個量子數會完全相同；因此一個軌域最多只能放 2 個電子，而且這 2 個電子自旋必須相反。(3) 洪德定則：電子填入同一個副殼層中能量相同（簡併）的幾個軌域時，會先『各佔一個軌域、自旋平行』，等到每個軌域都有一個電子之後，才開始成對；例如 2p 有 3 個軌域，3 個電子會先各佔一個（↑ ↑ ↑），不會先擠在同一個軌域。(4) 三者關係：構築原理決定『先填哪個軌域』、包立不相容決定『一個軌域最多 2 個且自旋相反』、洪德定則決定『同能量軌域先分開再成對』。★figure 自檢（散文、非逐字）：標題『電子填入的三個規則』；一個方框內一張表，表頭兩欄『規則』『內容』，以細 line 分隔；由上而下三列：構築原理｜從能量最低的軌域開始由低而高填（4s 先於 3d）、包立不相容原理｜一個軌域最多 2 個電子、且自旋相反、洪德定則｜同能量的軌域先各佔一個（自旋平行）再成對，例 2p³＝↑ ↑ ↑；框底一行小字『填入順序：1s→2s→2p→3s→3p→4s→3d…』。SVG 以 rect 與 text 呈現、列以細 line 分隔、箭頭以文字字元『↑』呈現、不含 polygon。alt 完整涵蓋 SVG 全部標籤文字（散文、非逐字）。★figure 符號即事實：表中構築原理列＝能量低先填、4s 先於 3d；包立列＝每軌域最多 2 電子自旋相反；洪德列＝同能量軌域先各佔一個再成對（2p³＝↑↑↑）；框底 填入順序 1s→2s→2p→3s→3p→4s→3d。構築能量低先填 4s 先於 3d、包立每軌域最多 2 電子自旋相反、洪德先各佔一軌再成對 為鐵律。★out-of-scope：完整 Madelung（n+l）規則推導、全部元素的電子組態逐一背誦、Cr／Cu 等半填滿全填滿的例外組態、軌域能量為何交錯的量子力學成因、激發態組態；本單元只到『知道構築原理（能量低先填、4s 先於 3d）、包立不相容（每軌域最多 2 電子自旋相反）、洪德定則（同能量軌域先各佔一個再成對）三個規則的內容與關係』。practice 四答案＝{先填 4s 再填 3d，因為 4s 能量較低（Q1 構築原理與 4s/3d 順序）, 最多 2 個，且自旋相反（Q2 包立不相容每軌域電子數）, 先各佔一個軌域、自旋平行，再成對（Q3 洪德定則）, 1s→2s→2p→3s→3p→4s→3d（Q4 填入順序）}；MCQ options bare、兩兩相異；distractor rationale 各寫清為何錯。claim kind＝fact。figure-only example 無 body。定義不得反轉：4s 先於 3d（非 3d 先於 4s）、每軌域最多 2 電子（非 1 或 8）、洪德先分開再成對（非先成對）。本註解內分隔用頓號、『或』或全形斜線『／』，不用半形 ASCII 斜線（公式與記號中的符號不在此限）。全檔已核無 PRC 化學術語與簡體字。",
+ "page": "sci_chem_atom_aufbau_rules.html",
+ "units": [
+  {
+   "unit_id": "sci.t_sub.chem-atom.aufbau-rules",
+   "title_zh": "構築原理、包立不相容與洪德定則",
+   "can_do": "我知道電子填入軌域要遵守三個規則。構築原理（Aufbau principle）：電子從能量最低的軌域開始、由低而高一個一個填，常見順序中 4s 的能量比 3d 低、所以 4s 先填。包立不相容原理（Pauli exclusion principle）：同一原子裡沒有兩個電子的四個量子數完全相同，所以一個軌域最多 2 個電子、且自旋相反。洪德定則（Hund's rule）：填入同一副殼層中能量相同的幾個軌域時，電子會先各佔一個軌域（自旋平行），之後才成對。",
+   "situation_group": "化學：物質的組成",
+   "subject": "sci",
+   "strand": "chem-atom",
+   "est_minutes": 18,
+   "knowledge_point_ids": [
+    "sci.t_sub.chem-atom.aufbau-rules"
+   ],
+   "prerequisites": [
+    "sci.t_sub.chem-atom.quantum-numbers"
+   ],
+   "reuse_pages": [],
+   "claims": [
+    {
+     "claim_id": "c-au-aufbau",
+     "text": "構築原理：電子一定從能量最低的軌域開始，由低而高一個一個填入。常見的填入順序是 1s、2s、2p、3s、3p、4s、3d、4p…；其中 4s 的能量比 3d 低，所以會先填 4s 再填 3d。",
+     "kind": "fact",
+     "source_refs": [
+      "構築原理與 4s 先於 3d 的填入順序（分科測驗 化學；OpenStax chemistry 2e 6.4 cross_check）"
+     ],
+     "verification_ref": "構築原理能量低先填、順序 1s<2s<2p<3s<3p<4s<3d（4s 先於 3d）＝標準敘述（教科書 cross_check；repro oracle sci_chem_checks::chem-atom.aufbau-rules）",
+     "risk_class": "normal",
+     "status": "provisional"
+    },
+    {
+     "claim_id": "c-au-pauli-hund",
+     "text": "包立不相容原理：同一個原子裡，沒有任何兩個電子的四個量子數會完全相同，因此一個軌域最多只能容納 2 個電子，而且這 2 個電子自旋必須相反。洪德定則：電子填入同一副殼層中能量相同（簡併）的幾個軌域時，會先各佔一個軌域、自旋平行，等每個軌域都有一個電子後才開始成對；例如 2p 的 3 個電子會先各佔一個軌域（↑ ↑ ↑），而不是先擠在同一個軌域。",
+     "kind": "fact",
+     "source_refs": [
+      "包立不相容（每軌域最多 2 電子自旋相反）與洪德定則（先各佔一軌再成對）（分科測驗 化學；OpenStax cross_check）"
+     ],
+     "verification_ref": "包立每軌域最多 2 電子自旋相反、洪德先半填再成對＝標準敘述（教科書 cross_check；repro oracle：洪德先各軌半填）",
+     "risk_class": "normal",
+     "status": "provisional"
+    }
+   ],
+   "teach": [
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.chem-atom.aufbau-rules"
+     ],
+     "body": "知道了軌域之後，接下來的問題是：電子要怎麼一個一個填進這些軌域？這一課介紹三個規則：構築原理、包立不相容原理、洪德定則。"
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.chem-atom.aufbau-rules"
+     ],
+     "body": "① 構築原理：電子一定從能量最低的軌域開始、由低而高一個一個填。常見順序是 1s、2s、2p、3s、3p、4s、3d、4p…。要特別注意：4s 的能量比 3d 低，所以會先填 4s，再填 3d。② 包立不相容原理：同一個原子裡，沒有兩個電子的四個量子數會完全相同。結果就是——一個軌域最多只能放 2 個電子，而且這 2 個電子自旋必須相反（一個 ↑、一個 ↓）。③ 洪德定則：當電子要填入同一個副殼層中『能量相同』的幾個軌域時，會先各佔一個軌域、自旋平行，等每個軌域都有一個電子之後，才開始成對。例如 2p 有 3 個軌域，3 個電子會先排成 ↑ ↑ ↑，而不是先擠在同一個軌域。④ 三個規則合起來：構築原理決定先填哪個軌域、包立不相容決定一個軌域最多 2 個且自旋相反、洪德定則決定同能量的軌域先分開再成對。看下表，最後練習。"
+    },
+    {
+     "kind": "example",
+     "kp_ids": [
+      "sci.t_sub.chem-atom.aufbau-rules"
+     ],
+     "figure": {
+      "svg": "<svg viewBox='0 0 352 196' xmlns='http://www.w3.org/2000/svg'><g font-family='sans-serif'><text x='10' y='15' font-size='9.5' fill='#2563a6' font-weight='bold'>電子填入的三個規則</text><rect x='16' y='26' width='320' height='162' rx='6' fill='#f6f8fb' stroke='#c7cedb' stroke-width='1'/><text x='26' y='44' font-size='8.5' fill='#1f3a52' font-weight='bold'>規則</text><text x='128' y='44' font-size='8.5' fill='#1f3a52' font-weight='bold'>內容</text><line x1='20' y1='50' x2='332' y2='50' stroke='#c7cedb' stroke-width='1'/><text x='26' y='72' font-size='8' fill='#2563a6' font-weight='bold'>構築原理</text><text x='128' y='72' font-size='8' fill='#3a4046'>從能量最低的軌域開始、由低而高填（4s 先於 3d）</text><line x1='20' y1='92' x2='332' y2='92' stroke='#e1e6ee' stroke-width='1'/><text x='26' y='114' font-size='8' fill='#2563a6' font-weight='bold'>包立不相容原理</text><text x='128' y='114' font-size='8' fill='#3a4046'>一個軌域最多 2 個電子，且自旋相反（↑↓）</text><line x1='20' y1='134' x2='332' y2='134' stroke='#e1e6ee' stroke-width='1'/><text x='26' y='156' font-size='8' fill='#2563a6' font-weight='bold'>洪德定則</text><text x='128' y='156' font-size='8' fill='#3a4046'>同能量軌域先各佔一個再成對，例 2p³＝↑ ↑ ↑</text><line x1='20' y1='176' x2='332' y2='176' stroke='#c7cedb' stroke-width='1'/><text x='26' y='186' font-size='7.5' fill='#5a6066'>填入順序：1s→2s→2p→3s→3p→4s→3d…</text></g></svg>",
+      "alt": "一張電子填入三個規則的表，標題「電子填入的三個規則」。表頭兩欄為「規則」與「內容」，以細線分隔，由上而下三列：構築原理，從能量最低的軌域開始、由低而高填入，4s 先於 3d；包立不相容原理，一個軌域最多 2 個電子且自旋相反（以上下箭頭表示）；洪德定則，填入同能量的軌域時先各佔一個再成對，例如 2p 有 3 個電子時排成三個向上箭頭。表框底部一行小字寫「填入順序：1s→2s→2p→3s→3p→4s→3d…」。整張表顯示電子依能量由低而高填入、每個軌域最多 2 個電子且自旋相反、同能量的軌域先各佔一個再成對。",
+      "caption": "電子填入軌域的三個規則：構築原理（從能量最低的軌域開始、4s 先於 3d）、包立不相容原理（一個軌域最多 2 個電子且自旋相反）、洪德定則（同能量的軌域先各佔一個再成對，如 2p³＝↑ ↑ ↑）。填入順序：1s→2s→2p→3s→3p→4s→3d…。"
+     }
+    },
+    {
+     "kind": "text",
+     "kp_ids": [
+      "sci.t_sub.chem-atom.aufbau-rules"
+     ],
+     "body": "最後練「電子填入的三個規則」。重點：(1) 構築原理＝能量低的軌域先填，4s 先於 3d；(2) 包立不相容＝一個軌域最多 2 個電子、自旋相反；(3) 洪德定則＝同能量的軌域先各佔一個（↑ ↑ ↑）再成對；(4) 順序 1s→2s→2p→3s→3p→4s→3d。小提醒：4s 比 3d 先填；洪德是『先分開、後成對』。"
+    }
+   ],
+   "practice": [
+    {
+     "question_id": "QA-mcq-1",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "根據構築原理，4s 與 3d 這兩個軌域，電子會先填哪一個？為什麼？",
+     "answer": "先填 4s 再填 3d，因為 4s 的能量比 3d 低",
+     "kp_ids": [
+      "sci.t_sub.chem-atom.aufbau-rules"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.chem-atom.aufbau-rules"
+     ],
+     "options": [
+      "先填 4s 再填 3d，因為 4s 的能量比 3d 低",
+      "先填 3d 再填 4s，因為 3 比 4 小",
+      "兩個同時填，因為能量完全相同",
+      "先填 3d，因為 d 軌域比 s 軌域穩定"
+     ],
+     "distractor_rationales": {
+      "先填 3d 再填 4s，因為 3 比 4 小": "填入順序看的是能量高低，不是主量子數數字大小；4s 能量比 3d 低，所以 4s 先填。",
+      "兩個同時填，因為能量完全相同": "4s 與 3d 能量並不相同（4s 較低），不會同時填。",
+      "先填 3d，因為 d 軌域比 s 軌域穩定": "穩定與否由能量決定；此處 4s 能量較低、較先填，不是 d 比 s 穩定。"
+     },
+     "answer_evidence": [
+      "c-au-aufbau"
+     ],
+     "feedback": "構築原理＝能量低的先填；4s 能量比 3d 低，所以先填 4s 再填 3d。"
+    },
+    {
+     "question_id": "QA-mcq-2",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "根據包立不相容原理，一個軌域最多能容納幾個電子？有什麼條件？",
+     "answer": "最多 2 個，且這 2 個電子自旋相反",
+     "kp_ids": [
+      "sci.t_sub.chem-atom.aufbau-rules"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.chem-atom.aufbau-rules"
+     ],
+     "options": [
+      "最多 2 個，且這 2 個電子自旋相反",
+      "最多 1 個",
+      "最多 8 個",
+      "沒有上限，可以放任意多個"
+     ],
+     "distractor_rationales": {
+      "最多 1 個": "一個軌域可放 2 個電子（自旋相反），不是 1 個。",
+      "最多 8 個": "8 是第二殼層（n＝2）能容納的電子總數，不是單一軌域；一個軌域最多 2 個。",
+      "沒有上限，可以放任意多個": "包立不相容原理正是限制：一個軌域最多 2 個電子且自旋相反，不是沒有上限。"
+     },
+     "answer_evidence": [
+      "c-au-pauli-hund"
+     ],
+     "feedback": "包立不相容原理＝一個軌域最多 2 個電子，且自旋必須相反。"
+    },
+    {
+     "question_id": "QA-mcq-3",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "根據洪德定則，電子填入同一副殼層中能量相同的幾個軌域時，會怎麼排？",
+     "answer": "先各佔一個軌域、自旋平行，之後才成對",
+     "kp_ids": [
+      "sci.t_sub.chem-atom.aufbau-rules"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.chem-atom.aufbau-rules"
+     ],
+     "options": [
+      "先各佔一個軌域、自旋平行，之後才成對",
+      "先把一個軌域填滿 2 個，再填下一個",
+      "平均分散到所有殼層",
+      "全部擠在能量最高的那個軌域"
+     ],
+     "distractor_rationales": {
+      "先把一個軌域填滿 2 個，再填下一個": "那和洪德定則相反；洪德是先各佔一個軌域（分開），等都有一個後才成對。",
+      "平均分散到所有殼層": "洪德定則說的是同一副殼層內『能量相同的軌域』之間，不是分散到不同殼層。",
+      "全部擠在能量最高的那個軌域": "電子會先填能量低的，且同能量軌域先分開佔；不會全部擠在最高的軌域。"
+     },
+     "answer_evidence": [
+      "c-au-pauli-hund"
+     ],
+     "feedback": "洪德定則＝同能量的軌域先各佔一個（自旋平行）再成對，例如 2p³＝↑ ↑ ↑。"
+    },
+    {
+     "question_id": "QA-mcq-4",
+     "type": "mcq",
+     "validation_method": "exhaustive",
+     "stem": "下列哪一個是正確的電子填入順序（由先到後）？",
+     "answer": "1s → 2s → 2p → 3s → 3p → 4s → 3d",
+     "kp_ids": [
+      "sci.t_sub.chem-atom.aufbau-rules"
+     ],
+     "required_kp_ids": [
+      "sci.t_sub.chem-atom.aufbau-rules"
+     ],
+     "options": [
+      "1s → 2s → 2p → 3s → 3p → 4s → 3d",
+      "1s → 2s → 2p → 3s → 3p → 3d → 4s",
+      "1s → 2p → 2s → 3p → 3s → 3d → 4s",
+      "1s → 2s → 3s → 4s → 2p → 3p → 3d"
+     ],
+     "distractor_rationales": {
+      "1s → 2s → 2p → 3s → 3p → 3d → 4s": "3d 與 4s 的順序反了——4s 能量較低，應先填 4s 再填 3d。",
+      "1s → 2p → 2s → 3p → 3s → 3d → 4s": "2s 應在 2p 之前（2s 能量較低）、3s 應在 3p 之前，此順序把它們排反了。",
+      "1s → 2s → 3s → 4s → 2p → 3p → 3d": "不能把所有 s 先填完再填 p；要依能量，2p 在 3s 之後、但在 4s 之前。"
+     },
+     "answer_evidence": [
+      "c-au-aufbau"
+     ],
+     "feedback": "依能量由低而高：1s→2s→2p→3s→3p→4s→3d（4s 先於 3d）。"
+    }
+   ],
+   "selfeval": [
+    "還不熟",
+    "快會了",
+    "會了"
+   ],
+   "selfeval_note": "翻看答案、說明自己判斷（構築原理＝能量低先填、4s 先於 3d；包立不相容＝每軌域最多 2 電子自旋相反；洪德定則＝同能量軌域先各佔一個再成對；順序 1s→2s→2p→3s→3p→4s→3d）；選完進入 SRS 間隔複習。"
+  }
+ ]
+}
