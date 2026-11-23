@@ -1,3 +1,9 @@
+## 2026-11-23 15:01 ★ chem-atom atom-molecule 6/18 收斂上線（push 5fbf45128）— chem-atom t_mid 6 單元全收
+- **atom-molecule**（分子與分子式、由分子式數原子，t_mid 會考，repro `at_atom_molecule` H₂O=3/C₆H₁₂O₆=24，prereq=symbols）5-clean 收斂，frozen sha **322b8f5f**，push **5fbf45128**。R15 分子/分子式 各 gloss 1；figure 水分子(1O+2H=3)+葡萄糖拆解(6+12+6=24) 四角色簽核綠。
+- **★2 次 de-converge（皆對抗審查真缺陷）**：(1st, r1-3 一致) QM-mcq-4「18」distractor 誤算路徑「漏算氫6+6=12」算出12≠18 → 改「只加兩項6+12或12+6漏一個6」＋ 分子定義 can_do/teach「性質」補「化學」與 claim/_note 一致（四處統一）；(2nd, r2) QM-mcq-4「72」rationale「6×12相乘又搞錯」——6×12恰=72無第二錯、「又搞錯」誤導 → 改「把前兩數相乘(6×12=72)非相加」。**教訓**：數值 distractor rationale 具體算式必須真正算出該選項值、且勿加暗示第二個錯誤的措辭（[[numeric-distractor-rationale-mechanism]]）；定義限定詞須 claim/_note/can_do/teach 四處一致。
+- **★chem-atom t_mid 全數收斂（6/6）**：dalton(1)/subatomic(2)/atomic-number(3)/symbols(4)/periodic-basic(5)/atom-molecule(6)。
+- **下一步**：chem-atom **t_adv**（8 單元）：model-evolution(7)→electron-config(repro at_electron_config Na=2,8,1)→valence-octet→periodic-structure→radius-trend→ionization-trend→electronegativity-trend→metal-nonmetal → t_sub(4: quantum-numbers[repro]/aufbau-rules[repro]/successive-ie/isoelectronic[repro])。
+
 ## 2026-11-23 14:41 ★ chem-atom periodic-basic 5/18 收斂上線（push 5c2379e01）
 - **periodic-basic**（週期表基本結構：依原子序排、週期=橫列、族=直行同族性質相似、金屬/非金屬/類金屬分區，t_mid 會考，概念型 cross_check，prereq=atomic-number）5-clean 收斂，frozen sha **e47d2716**，push **5c2379e01**。R15 週期表/週期/族 各 gloss 1；figure 三色區（藍金屬最大/綠類金屬窄帶/粉紅非金屬右上）純 rect 四角色簽核綠；PRC/大陸/半金屬/準金屬/周 0。
 - **★2 次 de-converge（皆 note-metadata，figure 自述與 SVG 不符）**：(r3) _note『左側文字標週期』但 SVG 實際在最底 y=185→改『下方(最底)』；(r2) _note『外框格狀示意』但 SVG 純 rect 無格線→改『色塊示意(純rect無格線)』。**教訓**：figure 自檢的位置詞（左側/最底/上方）與形狀詞（格狀/色塊）必須逐字對照實際 SVG 元素，否則連環觸 note-metadata major（已 banked [[note-metadata-must-match-file]] 類；本次強化：relaunch 前先把 _note figure 自檢逐項比對 SVG rect/text）。pre-freeze figure polygon→rect（避免 arrows 誤判）、_note PRC 詞「半金屬/準金屬」移除亦在此檔。
