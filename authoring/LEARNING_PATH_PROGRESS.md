@@ -1,3 +1,7 @@
+## 2026-11-23 18:49 ★ chem-atom ionization-trend 12/18 收斂上線（push 7c6292600）— 零 de-converge
+- **ionization-trend**（游離能週期趨勢：同週期左→右大致變大、同族上→下變小、與半徑相反，t_adv 學測，概念型 cross_check，prereq=radius-trend）5-clean 收斂，frozen sha **bf0e1f22**，push **7c6292600**。R15 游離能(ionization energy) gloss 1（臺灣用語非 PRC『電離能』）；figure 2 列趨勢表＋底部『與半徑相反／惰性氣體同週期最大』四角色簽核綠；『大致變大』加限定詞、同週期小例外（Be→B、N→O）因需副殼層概念列 out-of-scope（t_sub）。**零 de-converge**（_note 凍前已自檢零 ASCII 斜線，避開 radius-trend 的 note-self-rule 坑）。
+- **下一步**：chem-atom t_adv 續 **electronegativity-trend** 13/18（電子親和力與電負度的週期趨勢）→metal-nonmetal(14) → t_sub(4: quantum-numbers[repro]/aufbau-rules[repro]/successive-ie/isoelectronic[repro])。
+
 ## 2026-11-23 18:39 ★ chem-atom radius-trend 11/18 收斂上線（push e9be6629b）— 1 de-converge
 - **radius-trend**（原子／離子半徑週期趨勢：同週期左→右變小、同族上→下變大、陽離子＜原子＜陰離子，t_adv 學測，概念型 cross_check，prereq=periodic-structure）5-clean 收斂，frozen sha **a746c873**，push **e9be6629b**。R15 原子半徑(atomic radius)/離子半徑(ionic radius) 各 gloss 1；陽離子/陰離子＝國中前置以機制描述不另附英文；figure 4 列趨勢表（情形｜半徑怎麼變＋原因）＋底部 陽離子＜原子＜陰離子（Na⁺＜Na、Cl＜Cl⁻）四角色簽核綠；精確 pm/Zeff/等電子系列/過渡元素/游離能電負度 out-of-scope。
 - **★1 次 de-converge（深輪 note-metadata major）**：_note 自訂『不用半形 ASCII 斜線（公式記號不在此限）』、但開頭『原子/離子半徑』用半形 ASCII 斜線違反自身規則（5/5 panel DEFECT）→改全形『原子／離子半徑』、ASCII 斜線 count 0。**教訓（新）**：_note 若自訂標點/用字規則，凍前必 grep 自檢 _note 本身是否違反該規則（self-declared-rule-violation 類，同 note-metadata）。
