@@ -1,3 +1,8 @@
+## 2026-11-23 14:41 ★ chem-atom periodic-basic 5/18 收斂上線（push 5c2379e01）
+- **periodic-basic**（週期表基本結構：依原子序排、週期=橫列、族=直行同族性質相似、金屬/非金屬/類金屬分區，t_mid 會考，概念型 cross_check，prereq=atomic-number）5-clean 收斂，frozen sha **e47d2716**，push **5c2379e01**。R15 週期表/週期/族 各 gloss 1；figure 三色區（藍金屬最大/綠類金屬窄帶/粉紅非金屬右上）純 rect 四角色簽核綠；PRC/大陸/半金屬/準金屬/周 0。
+- **★2 次 de-converge（皆 note-metadata，figure 自述與 SVG 不符）**：(r3) _note『左側文字標週期』但 SVG 實際在最底 y=185→改『下方(最底)』；(r2) _note『外框格狀示意』但 SVG 純 rect 無格線→改『色塊示意(純rect無格線)』。**教訓**：figure 自檢的位置詞（左側/最底/上方）與形狀詞（格狀/色塊）必須逐字對照實際 SVG 元素，否則連環觸 note-metadata major（已 banked [[note-metadata-must-match-file]] 類；本次強化：relaunch 前先把 _note figure 自檢逐項比對 SVG rect/text）。pre-freeze figure polygon→rect（避免 arrows 誤判）、_note PRC 詞「半金屬/準金屬」移除亦在此檔。
+- **下一步**：chem-atom **atom-molecule** 6/18（分子與分子式、由分子式數原子，repro `at_atom_molecule`：H₂O=3、C₆H₁₂O₆=24，t_mid 會考）→ 收完 t_mid 6 單元 → t_adv(8: model-evolution/electron-config[repro]/valence-octet/periodic-structure/radius/ionization/electronegativity/metal-nonmetal) → t_sub(4)。
+
 ## 2026-11-23 14:13 ★ chem-atom symbols 4/18 收斂上線（push 576fd898b）
 - **symbols**（元素符號大小寫規則＋核種符號 ᴬ_Z X 左上質量數/左下原子序＋由符號讀 Z/中子A−Z/電子，t_mid 會考，表示法概念型 cross_check，prereq=atomic-number）5-clean 收斂，frozen sha **37db5e48**，push **576fd898b**。R15 元素符號/核種符號 各 gloss 1；figure ₆¹²C 核種符號四角色簽核綠；PRC/大陸 0。**零 de-converge**。distractor 教學點：CO（一氧化碳）vs Co（鈷）大小寫別。
 - **下一步**：chem-atom **periodic-basic** 5/18（週期表基本結構：週期/族、金屬/非金屬/類金屬分區，t_mid 會考）→ atom-molecule(6,repro 分子式原子計數 at_atom_molecule H₂O=3/C₆H₁₂O₆=24) → t_adv(8: model-evolution/electron-config[repro]/valence-octet/periodic-structure/radius-trend/ionization-trend/electronegativity-trend/metal-nonmetal) → t_sub(4: quantum-numbers/aufbau-rules/successive-ie/isoelectronic)。注意『週期』用『週』非 PRC『周』。
