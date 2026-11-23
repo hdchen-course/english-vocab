@@ -1,3 +1,8 @@
+## 2026-11-23 19:53 ★ chem-atom aufbau-rules 16/18 收斂上線（push e06a88cc2）— 1 de-converge（能階序 blocker）
+- **aufbau-rules**（構築原理/包立不相容/洪德定則，t_sub 分科，repro oracle `chem-atom.aufbau-rules` PASS fp 01ee3347，prereq=quantum-numbers）5-clean 收斂，frozen sha **510b3198**，push **e06a88cc2**。構築能量低先填(4s 先於 3d)/包立每軌域最多 2 電子自旋相反/洪德同能量軌域先各佔一個(自旋平行)再成對(2p³＝↑↑↑)；順序 1s→2s→2p→3s→3p→4s→3d。R15 構築原理(Aufbau principle)/包立不相容原理(Pauli exclusion principle)/洪德定則(Hund's rule) 各 gloss 1；figure 三列規則表(↑↓/↑↑↑ 文字箭頭)四角色簽核綠；完整 Madelung 推導/全元素組態/Cr Cu 例外組態 out-of-scope。臺灣譯名包立(非泡利)/洪德(非洪特)。
+- **★1 次 de-converge（深輪 r1/r2/r3 三輪皆獨立抓到同一 blocker，5/5 panel FACT-CHECK）**：QA-mcq-4 distractor『1s→2s→3s→4s→2p→3p→3d』rationale 誤寫『2p 在 3s 之後』，但 2p 能量低於 3s、應在 3s **之前**(與本檔正準順序 1s→2s→2p→3s… 自相矛盾、教錯能階) → 改『2p 能量比 3s 低，應在 2s 之後、3s 之前就填』；sha 5becba16→510b3198。**教訓**：distractor rationale 描述能階相對位置(之前/之後)時，必須與本檔正準填入順序逐一核對，勿把『不選此錯序』的理由本身寫成另一個錯序。
+- **下一步**：chem-atom t_sub 續 **successive-ie** 17/18（連續游離能與價電子數判定，概念型 cross_check 無 repro）→ isoelectronic(18, repro chem-atom.isoelectronic fp 1ff2e47d) → chem-atom 18/18 全收。
+
 ## 2026-11-23 19:37 ★ chem-atom quantum-numbers 15/18 收斂上線（push 2a8c26d8b）— 零 de-converge｜t_sub 開跑
 - **quantum-numbers**（量子數 n/l/m/s 與軌域，t_sub 分科，repro oracle `chem-atom.quantum-numbers` PASS fp 9d253063，prereq=electron-config）5-clean 收斂，frozen sha **6479a447**，push **2a8c26d8b**。n＝1,2,3…決定殼層能量/l＝0~n−1 對應 s,p,d,f/m＝−l~+l 共 2l+1 個/s＝±½；軌域數＝2l+1（s1 p3 d5 f7）、每軌域最多 2 電子自旋相反。R15 量子數(quantum number)/軌域(orbital) 各 gloss 1；figure 四列量子數表（量子數｜可能值與意義）四角色簽核綠；軌域實際形狀繪製/能階交錯填法(aufbau)/波函數數學/自旋-軌道耦合 out-of-scope。**與 electron-config 分工**：後者限殼層層級(2n²)，本單元首次把殼層細分為軌域/副殼層。**零 de-converge**。
 - **★建檔教訓（預防性）**：_note 原寫『軌域非軌道』負面提及 PRC 詞，依 [[note-metadata-keep-lean]] 凍前改為『軌域』不提替代詞，降深輪 note-metadata 表面。
